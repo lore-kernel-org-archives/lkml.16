@@ -1,210 +1,70 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BFF2741DF
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 12:54:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A1025B301;
+	Tue,  1 Jul 2025 12:54:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751374459; cv=none; b=b5TAWpUGp+vv9OElyp2uxPxX5moHcwIE7Nwnbb8BQ1iJlvVdhBw4XizbmHEoXvsc0OA9QPZss9Qv61382p9gnKDw+laBZhybnmx5zziJlrPQE822whAfXmcuQLKbeR5sQXov6DuYlRNsKZk+lFNvRIihBsPvbz+thEERAdPoysY=
+	t=1751374491; cv=none; b=IgEkWthivlm6u8sQox7m20IHFts622yOoEgHQGggGnAXjv4IG5yyaD+1XrApn8z7pVpT9y+28Q1pf4DwF9t/Xo3AkbhUYihVIdkbW+Tr2uZsbHZmP9sFixoRmPJir4o5IaVW3ylZMZizR1TkyOu2hcI9C3Zq2QkgyT9TF4DP0WQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751374459; c=relaxed/simple;
-	bh=3gJtS77mHK7VTcYFcjrd5hF6WARIXk6d2X2+wZ3Hta4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IU20O83KXUuVjoOcPIbmPMOvaE7HX92SnP3zXpt4IY6aYwvzRInWcrnV7Hh6jtfPV3evxyQeo7dG4po8C4S44GRPPS8u1zaiNVgCuAruyoNxwcH5wv1p44mLm28vRwDw8l6PIkOHPz3OWs01wBjHVeYVb0UiyR8mZXFOuXonrlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=d4Ru7rwo; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1751374491; c=relaxed/simple;
+	bh=JUxBJ96sPF/IqLs5HjgYnXkzV4UCixqIj5B+O9WFJhc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=kTrSDdCSNy0yZuZEuPU1FtXRkS1dxWcLZc0XyfaEcsE1FsfLwtyBcvJqpnjhPiIIluzCh3kXRiLm1kxVZ10xU63imGG3VAYIea8ye+Cruqi17ey5wmLStpIF6/gaBMo4hyfUL2iKel51VR9HuDlh8PCw55I0+NG0JbdECz1Nx60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=PNnwL05N; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d4Ru7rwo"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-235e389599fso210995ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 05:54:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751374456; x=1751979256; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/L74aNTJbvTixP9x7JPOzIa2qX6+0XWisdXXC8NLNbk=;
-        b=d4Ru7rwoQzfB3csNgghl+4OAHNVE8nwC/hAydeK7QGvo5WMiXQI3SSloC1IqOaWsLC
-         YFc800xNEqvT0W1CmcvLe4ynmK6gDN2P2g0UrDDnWGOBSayFqeMNe/NC/nFdbkD9ptqS
-         0MbOagxwj2+1T4l/RYc8KJyzsNlX1WVKeT6z/cBy+tdmOH3bQHuviNAb+tK+VFuwMhST
-         xuimo4dGxLNb8OwJhQIkQDS8xsz+AEZq2ydUeJYjk9EpmkNgl/HZfQmGF8a0LUoLITRc
-         5J3qH+Apx1jJGDbe0iqKl0UlZzRQ13w121sPIGh2fN6BKiW/rKvm11lONNbu83egHwvE
-         cGbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751374456; x=1751979256;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/L74aNTJbvTixP9x7JPOzIa2qX6+0XWisdXXC8NLNbk=;
-        b=LmH9e+ULUxEKczrb8GIWI17kPMhMzt/zO6pa+pXTELaxZzjWeO9NWGQrJUAYIfOKCt
-         TKvKnsEJZ6Vt85xwMTwNiA5/A6UyEprDyJZqe1c/mduCoUErg1irzYnzrBdQJ4zV5KHp
-         jaAMhSEcKTGMfTrsKdx5N6j7azFTCWvKJzIutjT0auHDWLtFfzmLid2bNtrdocB2Rn7b
-         wnsCZoqplnpzyaL5TE1kcLTtDurqMP9NffIw/ufeRiDAPDs5w0d9cb9IHzJ2rbTvZ7Z7
-         mhDAJU4wc2Gf5okg/SUJtNtUpoGN/ipNg42UYtPXCvIg+WnNJ4Gju+/KTrjcrUzh3EvN
-         e37Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVN/2PONgJwF9/gH4MC2IUOGQ24iZITieZKovpWSha65ztVOQTC+ykfkQD0OzaOhhpMu7NTq5soB/M+CgY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7ZiZ971O+QqwbeaXPL+OTgHimZakKsUSDcbMs63k7SqD3/Bdr
-	Jc7+t3WPCgKVxwPVtQL9Q/av9i7LYFzLLUWUp9NpaMHGx8F/kdr/HipTGV8OuQku1g==
-X-Gm-Gg: ASbGncuzpPXVQKeNHvWjyclA9fjea0kE+c1oCsNtvwh1ImXy0fnf2hhe/f2krdUQX4J
-	zytpoIFeJLpuxaOXLGCU2leBzBNDf8FIiO8w9dqeSFPnggZ3pP/pzEGUwkP3NJCXx6kvmolTTgB
-	ZYl7EGxo5TwjSluLemkg1WEit9AKScRWanvuy/RH5qzxp6wL0LNQp8GbsNySJntKmW54PpTUPBJ
-	SyLMInT3/wqKLoVHuLIQr945xWo8z64ia+AFmoNd1hSFkUYSKO1JLpZHnAgu/878n7YiYKOFTWY
-	GhC5JzrVycevlZ5LGpLsZHvILNYF3uf2q5A3Otu1L+97JBOwlAJprvNAXamlJnjKCiGL3cDvaOI
-	UrQgJbSTz/KELDDdR9+3S
-X-Google-Smtp-Source: AGHT+IFmb6IkHO5vc0UO9aOVGDXMpB2kmzp4LmZ2sU6rPiqzBx0SBn3BZ18jaHfT4NmGETFHxk/nSg==
-X-Received: by 2002:a17:902:f688:b0:231:ed22:e230 with SMTP id d9443c01a7336-23c6010f25amr2110315ad.15.1751374455431;
-        Tue, 01 Jul 2025 05:54:15 -0700 (PDT)
-Received: from google.com (232.98.126.34.bc.googleusercontent.com. [34.126.98.232])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3b7a47sm108535025ad.166.2025.07.01.05.54.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 05:54:13 -0700 (PDT)
-Date: Tue, 1 Jul 2025 12:54:05 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
-	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
-	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
-	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
-	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
-	zhangzekun11@huawei.com, iommu@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
-	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com,
-	dwmw2@infradead.org, baolu.lu@linux.intel.com
-Subject: Re: [PATCH v7 19/28] iommu: Allow an input type in hw_info op
-Message-ID: <aGPabX6M2REffzjY@google.com>
-References: <cover.1750966133.git.nicolinc@nvidia.com>
- <d8c395d6956045fd1fa1349538d29e3b6f9fada8.1750966133.git.nicolinc@nvidia.com>
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="PNnwL05N"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net A727640700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1751374488; bh=0dzsmgWlqJLGfMOQQ7Vy3xLEXExKhldgLTdaqXjyC6w=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=PNnwL05N0KkuN59lN1vvfgx7XdEk388aCs7ZkpKdgI4t+QQFhBhU8xe2XojQVhdR5
+	 tDR/y0CPOOM3cWXXaZN+R0W0Xyn9W2HenYgsBXlUua6+0y0SsHwS1oGwvWKrVG7Rul
+	 cQvIQZYTQhqw+bYBt6kcZK5Zp7PGoAnNpzs6nMofoDYgV+SUQIdV1iqgx8XSgb5sIs
+	 LBHefaXscYb2/y0e1qikQhokvmmEkc4nxEFuL4vtMkwcOyzIb4kSlT1RA+HoobDH35
+	 ayzRB8cq2E/WeFypVEWCl9wAPQcMHjkfacR07UhlXiVFGImP1lfjBEP1qfclztKYZz
+	 EbT6XCjNJacwQ==
+Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id A727640700;
+	Tue,  1 Jul 2025 12:54:48 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Petr Tesarik <ptesarik@suse.com>, Randy Dunlap <rdunlap@infradead.org>
+Cc: Robin Murphy <robin.murphy@arm.com>, Marek Szyprowski
+ <m.szyprowski@samsung.com>, Andrew Morton <akpm@linux-foundation.org>,
+ Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, Bagas
+ Sanjaya <bagasdotme@gmail.com>, "open
+ list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list
+ <linux-kernel@vger.kernel.org>, "open list:MEMORY MANAGEMENT"
+ <linux-mm@kvack.org>
+Subject: Re: [PATCH v2 4/8] docs: dma-api: add a kernel-doc comment for
+ dma_pool_zalloc()
+In-Reply-To: <20250701133833.4060f406@mordecai.tesarici.cz>
+References: <20250627101015.1600042-1-ptesarik@suse.com>
+ <20250627101015.1600042-5-ptesarik@suse.com>
+ <5a997777-fd14-40e1-919b-2e61a6e8d570@infradead.org>
+ <20250701133833.4060f406@mordecai.tesarici.cz>
+Date: Tue, 01 Jul 2025 06:54:47 -0600
+Message-ID: <875xgct6js.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d8c395d6956045fd1fa1349538d29e3b6f9fada8.1750966133.git.nicolinc@nvidia.com>
+Content-Type: text/plain
 
-On Thu, Jun 26, 2025 at 12:34:50PM -0700, Nicolin Chen wrote:
-> The hw_info uAPI will support a bidirectional data_type field that can be
-> used as an input field for user space to request for a specific info data.
-> 
-> To prepare for the uAPI update, change the iommu layer first:
->  - Add a new IOMMU_HW_INFO_TYPE_DEFAULT as an input, for which driver can
->    output its only (or firstly) supported type
->  - Update the kdoc accordingly
->  - Roll out the type validation in the existing drivers
-> 
-> Reviewed-by: Kevin Tian <kevin.tian@intel.com>
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-> Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
-> ---
->  include/linux/iommu.h                               | 3 ++-
->  include/uapi/linux/iommufd.h                        | 4 +++-
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c | 4 ++++
->  drivers/iommu/intel/iommu.c                         | 4 ++++
->  drivers/iommu/iommufd/device.c                      | 3 +++
->  drivers/iommu/iommufd/selftest.c                    | 4 ++++
->  6 files changed, 20 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-> index e06a0fbe4bc7..e8b59ef54e48 100644
-> --- a/include/linux/iommu.h
-> +++ b/include/linux/iommu.h
-> @@ -603,7 +603,8 @@ __iommu_copy_struct_to_user(const struct iommu_user_data *dst_data,
->   * @capable: check capability
->   * @hw_info: report iommu hardware information. The data buffer returned by this
->   *           op is allocated in the iommu driver and freed by the caller after
-> - *           use.
-> + *           use. @type can input a requested type and output a supported type.
-> + *           Driver should reject an unsupported data @type input
->   * @domain_alloc: Do not use in new drivers
->   * @domain_alloc_identity: allocate an IDENTITY domain. Drivers should prefer to
->   *                         use identity_domain instead. This should only be used
-> diff --git a/include/uapi/linux/iommufd.h b/include/uapi/linux/iommufd.h
-> index f091ea072c5f..6ad361ff9b06 100644
-> --- a/include/uapi/linux/iommufd.h
-> +++ b/include/uapi/linux/iommufd.h
-> @@ -593,13 +593,15 @@ struct iommu_hw_info_arm_smmuv3 {
->  
->  /**
->   * enum iommu_hw_info_type - IOMMU Hardware Info Types
-> - * @IOMMU_HW_INFO_TYPE_NONE: Used by the drivers that do not report hardware
-> + * @IOMMU_HW_INFO_TYPE_NONE: Output by the drivers that do not report hardware
->   *                           info
-> + * @IOMMU_HW_INFO_TYPE_DEFAULT: Input to request for a default type
->   * @IOMMU_HW_INFO_TYPE_INTEL_VTD: Intel VT-d iommu info type
->   * @IOMMU_HW_INFO_TYPE_ARM_SMMUV3: ARM SMMUv3 iommu info type
->   */
->  enum iommu_hw_info_type {
->  	IOMMU_HW_INFO_TYPE_NONE = 0,
-> +	IOMMU_HW_INFO_TYPE_DEFAULT = 0,
->  	IOMMU_HW_INFO_TYPE_INTEL_VTD = 1,
->  	IOMMU_HW_INFO_TYPE_ARM_SMMUV3 = 2,
->  };
-> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
-> index 170d69162848..eb9fe1f6311a 100644
-> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
-> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
-> @@ -15,6 +15,10 @@ void *arm_smmu_hw_info(struct device *dev, u32 *length,
->  	u32 __iomem *base_idr;
->  	unsigned int i;
->  
-> +	if (*type != IOMMU_HW_INFO_TYPE_DEFAULT &&
-> +	    *type != IOMMU_HW_INFO_TYPE_ARM_SMMUV3)
-> +		return ERR_PTR(-EOPNOTSUPP);
-> +
->  	info = kzalloc(sizeof(*info), GFP_KERNEL);
->  	if (!info)
->  		return ERR_PTR(-ENOMEM);
-> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-> index 850f1a6f548c..5f75faffca15 100644
-> --- a/drivers/iommu/intel/iommu.c
-> +++ b/drivers/iommu/intel/iommu.c
-> @@ -4098,6 +4098,10 @@ static void *intel_iommu_hw_info(struct device *dev, u32 *length,
->  	struct intel_iommu *iommu = info->iommu;
->  	struct iommu_hw_info_vtd *vtd;
->  
-> +	if (*type != IOMMU_HW_INFO_TYPE_DEFAULT &&
-> +	    *type != IOMMU_HW_INFO_TYPE_INTEL_VTD)
-> +		return ERR_PTR(-EOPNOTSUPP);
-> +
->  	vtd = kzalloc(sizeof(*vtd), GFP_KERNEL);
->  	if (!vtd)
->  		return ERR_PTR(-ENOMEM);
-> diff --git a/drivers/iommu/iommufd/device.c b/drivers/iommu/iommufd/device.c
-> index 8f078fda795a..64a51993e6a1 100644
-> --- a/drivers/iommu/iommufd/device.c
-> +++ b/drivers/iommu/iommufd/device.c
-> @@ -1519,6 +1519,9 @@ int iommufd_get_hw_info(struct iommufd_ucmd *ucmd)
->  	    cmd->__reserved[2])
->  		return -EOPNOTSUPP;
->  
-> +	/* Clear the type field since drivers don't support a random input */
-> +	cmd->out_data_type = IOMMU_HW_INFO_TYPE_DEFAULT;
-> +
->  	idev = iommufd_get_device(ucmd, cmd->dev_id);
->  	if (IS_ERR(idev))
->  		return PTR_ERR(idev);
-> diff --git a/drivers/iommu/iommufd/selftest.c b/drivers/iommu/iommufd/selftest.c
-> index 8b2c44b32530..a5dc36219a90 100644
-> --- a/drivers/iommu/iommufd/selftest.c
-> +++ b/drivers/iommu/iommufd/selftest.c
-> @@ -310,6 +310,10 @@ static void *mock_domain_hw_info(struct device *dev, u32 *length,
->  {
->  	struct iommu_test_hw_info *info;
->  
-> +	if (*type != IOMMU_HW_INFO_TYPE_DEFAULT &&
-> +	    *type != IOMMU_HW_INFO_TYPE_SELFTEST)
-> +		return ERR_PTR(-EOPNOTSUPP);
-> +
->  	info = kzalloc(sizeof(*info), GFP_KERNEL);
->  	if (!info)
->  		return ERR_PTR(-ENOMEM);
+Petr Tesarik <ptesarik@suse.com> writes:
 
-Reviewed-by: Pranjal Shrivastava <praan@google.com>
+> Do I have to submit a v3 then?
 
-> -- 
-> 2.43.0
-> 
+What path were you planning for this to go upstream?  If it goes through
+docs, I can apply that tweak on the way in.
+
+Thanks,
+
+jon
