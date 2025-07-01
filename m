@@ -1,24 +1,24 @@
 Received: from rtg-sunil-navi33.amd.com (unknown [165.204.156.251])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D3B625B2FA
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 06:40:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F34CC25C838
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 06:40:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=165.204.156.251
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751352002; cv=none; b=mgbcJdqEq37pseEIR/muqg+0eBB9BRzn70VLIB9+BrSfttIizkyEfVoFbIsAZUjzFOM/UEbNIPgcm9ChXb1pYG+xbpziPVhV4uPOndn1kuHbNyy7ss6/nEPDuGH8Zpm4gUFuie+ASC70X/pXC8Pe0n573T/qf2RcDydfpr1dFMI=
+	t=1751352004; cv=none; b=sAYvsRP4XcMtugEwgfjzSClq/IJOB/bx0n/G3CXKxxrn9ZtAB59sYFruq5/NZs+Vymysuqe/NNUsPMc2i7WWrrnby2bSdmx1T/ZAEaaWulTaLRmx8QOWVLfizKJ7mi5z+/MGOk7HUi1ss45xc8SFLCUxnWEKRghik+MBguw4XMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751352002; c=relaxed/simple;
-	bh=uruHLmBt6+JvLgk8Pu9ULlppJQ3Swr+N+70PO99RdPM=;
+	s=arc-20240116; t=1751352004; c=relaxed/simple;
+	bh=B5hkSd0EsUueC6Y1fGp5WWTTuf7yRNXHu/xaBjo9QRM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AinV9FQyQoFpaz/IihRe4FcqhywFUaVNjXvVWwJQ/YuWOcoJDBSQAGJL4zyVZECDiQvvnmVUNSosS2nHvrSCZQZDz18SAie8PT7c8SKAn/oqeN2mHF2vM8OHXY0f2L2jy/fkabFjo5iB6RFCBZB25W8F56yyoKH8HAx1D1zdoeE=
+	 MIME-Version:Content-Type; b=RMkl/bCD7KhAkltApRBsf7DOzr6ynRaJyeOUEEXxu6vVTW+mEhGjbAoMXldoQhWLlMm51UyRQsn0GC6PYCfFi8Z3vJBlG1tz/S/i5k/pN8lEZtB31c0KVsmcdvbMAu0wxYWf1RuCNrAWfryDqnAO+DPy+yJ37EOEnX/mq0tEKeo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com; spf=none smtp.mailfrom=rtg-sunil-navi33.amd.com; arc=none smtp.client-ip=165.204.156.251
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=rtg-sunil-navi33.amd.com
 Received: from rtg-sunil-navi33.amd.com (localhost [127.0.0.1])
-	by rtg-sunil-navi33.amd.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 5616X94t3210763;
+	by rtg-sunil-navi33.amd.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 5616X96U3210757;
 	Tue, 1 Jul 2025 12:03:09 +0530
 Received: (from sunil@localhost)
-	by rtg-sunil-navi33.amd.com (8.15.2/8.15.2/Submit) id 5616X9wk3210761;
+	by rtg-sunil-navi33.amd.com (8.15.2/8.15.2/Submit) id 5616X9Va3210756;
 	Tue, 1 Jul 2025 12:03:09 +0530
 From: Sunil Khatri <sunil.khatri@amd.com>
 To: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
@@ -27,9 +27,9 @@ Cc: amd-gfx@lists.freedesktop.org, simona@ffwll.ch, tzimmermann@suse.de,
         tursulin@ursulin.net, phasta@kernel.org, dakr@kernel.org,
         linux-kernel@vger.kernel.org, Oded Gabbay <ogabbay@kernel.org>,
         Sunil Khatri <sunil.khatri@amd.com>
-Subject: [PATCH v8 3/4] drm/amdgpu: add debugfs support for VM pagetable per client
-Date: Tue,  1 Jul 2025 12:03:02 +0530
-Message-Id: <20250701063303.3210665-3-sunil.khatri@amd.com>
+Subject: [PATCH v8 2/4] drm: add debugfs support on per client-id basis
+Date: Tue,  1 Jul 2025 12:03:01 +0530
+Message-Id: <20250701063303.3210665-2-sunil.khatri@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250701063303.3210665-1-sunil.khatri@amd.com>
 References: <20250701063303.3210665-1-sunil.khatri@amd.com>
@@ -39,158 +39,208 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Add a debugfs file under the client directory which shares
-the root page table base address of the VM.
+add support to add a directory for each client-id
+with root at the dri level. Since the clients are
+unique and not just related to one single drm device,
+so it makes more sense to add all the client based
+nodes with root as dri.
 
-This address could be used to dump the pagetable for debug
-memory issues.
+Also create a debugfs file which show the process
+information for the client and create a symlink back
+to the parent drm device from each client.
 
 Signed-off-by: Sunil Khatri <sunil.khatri@amd.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c | 52 +++++++++++++++++++++
- drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.h |  1 +
- drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c     |  2 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c      |  4 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_vm.h      |  4 +-
- 5 files changed, 60 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/drm_debugfs.c | 81 +++++++++++++++++++++++++++++++++++
+ drivers/gpu/drm/drm_file.c    |  9 ++++
+ include/drm/drm_debugfs.h     | 11 +++++
+ include/drm/drm_file.h        |  7 +++
+ 4 files changed, 108 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
-index f81608330a3d..6762dd11f00c 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
-@@ -2131,6 +2131,55 @@ int amdgpu_debugfs_init(struct amdgpu_device *adev)
- 	return 0;
+diff --git a/drivers/gpu/drm/drm_debugfs.c b/drivers/gpu/drm/drm_debugfs.c
+index 04da7c27ff7c..6d1f1ca7ad9e 100644
+--- a/drivers/gpu/drm/drm_debugfs.c
++++ b/drivers/gpu/drm/drm_debugfs.c
+@@ -305,6 +305,87 @@ void drm_debugfs_remove_root(void)
+ 	debugfs_remove(drm_debugfs_root);
  }
  
-+static int amdgpu_pt_info_read(struct seq_file *m, void *unused)
++static int drm_debugfs_proc_info_show(struct seq_file *m, void *unused)
 +{
-+	struct drm_file *file;
-+	struct amdgpu_fpriv *fpriv;
-+	struct amdgpu_bo *root_bo;
-+	int r;
++	struct pid *pid;
++	struct task_struct *task;
++	struct drm_file *file = m->private;
 +
-+	file = m->private;
 +	if (!file)
 +		return -EINVAL;
 +
-+	fpriv = file->driver_priv;
-+	if (!fpriv && !fpriv->vm.root.bo)
-+		return -ENODEV;
++	rcu_read_lock();
++	pid = rcu_dereference(file->pid);
++	task = pid_task(pid, PIDTYPE_TGID);
 +
-+	root_bo = amdgpu_bo_ref(fpriv->vm.root.bo);
-+	r = amdgpu_bo_reserve(root_bo, true);
-+	if (r) {
-+		amdgpu_bo_unref(&root_bo);
-+		return -EINVAL;
-+	}
-+
-+	seq_printf(m, "gpu_address: 0x%llx\n", amdgpu_bo_gpu_offset(fpriv->vm.root.bo));
-+
-+	amdgpu_bo_unreserve(root_bo);
-+	amdgpu_bo_unref(&root_bo);
-+
++	seq_printf(m, "pid: %d\n", task ? task->pid : 0);
++	seq_printf(m, "comm: %s\n", task ? task->comm : "Unset");
++	rcu_read_unlock();
 +	return 0;
 +}
 +
-+static int amdgpu_pt_info_open(struct inode *inode, struct file *file)
++static int drm_debufs_proc_info_open(struct inode *inode, struct file *file)
 +{
-+	return single_open(file, amdgpu_pt_info_read, inode->i_private);
++	return single_open(file, drm_debugfs_proc_info_show, inode->i_private);
 +}
 +
-+static const struct file_operations amdgpu_pt_info_fops = {
++static const struct file_operations drm_debugfs_proc_info_fops = {
 +	.owner = THIS_MODULE,
-+	.open = amdgpu_pt_info_open,
++	.open = drm_debufs_proc_info_open,
 +	.read = seq_read,
 +	.llseek = seq_lseek,
 +	.release = single_release,
 +};
 +
-+void amdgpu_debugfs_vm_init(struct drm_file *file)
++/**
++ * drm_debugfs_clients_add - Add a per client debugfs directory
++ * @file: drm_file for a client
++ *
++ * Create the debugfs directory for each client. This will be used to populate
++ * driver specific data for each client.
++ *
++ * Also add the process information debugfs file for each client to tag
++ * which client belongs to which process.
++ */
++void drm_debugfs_clients_add(struct drm_file *file)
 +{
-+	debugfs_create_file("vm_pagetable_info", 0444, file->debugfs_client, file,
-+			    &amdgpu_pt_info_fops);
++	char *client;
++
++	client = kasprintf(GFP_KERNEL, "client-%llu", file->client_id);
++	if (!client)
++		return;
++
++	/* Create a debugfs directory for the client in root on drm debugfs */
++	file->debugfs_client = debugfs_create_dir(client, drm_debugfs_root);
++	kfree(client);
++
++	debugfs_create_file("proc_info", 0444, file->debugfs_client, file,
++			    &drm_debugfs_proc_info_fops);
++
++	client = kasprintf(GFP_KERNEL, "../%s", file->minor->dev->unique);
++	if (!client)
++		return;
++
++	/* Create a link from client_id to the drm device this client id belongs to */
++	debugfs_create_symlink("device", file->debugfs_client, client);
++	kfree(client);
 +}
 +
++/**
++ * drm_debugfs_clients_remove - removes all debugfs directories and files
++ * @file: drm_file for a client
++ *
++ * Removes the debugfs directories recursively from the client directory.
++ *
++ * There is also a possibility that debugfs files are open while the drm_file
++ * is released.
++ */
++void drm_debugfs_clients_remove(struct drm_file *file)
++{
++	debugfs_remove_recursive(file->debugfs_client);
++	file->debugfs_client = NULL;
++}
++
+ /**
+  * drm_debugfs_dev_init - create debugfs directory for the device
+  * @dev: the device which we want to create the directory for
+diff --git a/drivers/gpu/drm/drm_file.c b/drivers/gpu/drm/drm_file.c
+index 06ba6dcbf5ae..3f4c52d00540 100644
+--- a/drivers/gpu/drm/drm_file.c
++++ b/drivers/gpu/drm/drm_file.c
+@@ -45,6 +45,7 @@
+ #include <drm/drm_file.h>
+ #include <drm/drm_gem.h>
+ #include <drm/drm_print.h>
++#include <drm/drm_debugfs.h>
+ 
+ #include "drm_crtc_internal.h"
+ #include "drm_internal.h"
+@@ -167,6 +168,9 @@ struct drm_file *drm_file_alloc(struct drm_minor *minor)
+ 
+ 	drm_prime_init_file_private(&file->prime);
+ 
++	if (!drm_core_check_feature(dev, DRIVER_COMPUTE_ACCEL))
++		drm_debugfs_clients_add(file);
++
+ 	if (dev->driver->open) {
+ 		ret = dev->driver->open(dev, file);
+ 		if (ret < 0)
+@@ -181,6 +185,8 @@ struct drm_file *drm_file_alloc(struct drm_minor *minor)
+ 		drm_syncobj_release(file);
+ 	if (drm_core_check_feature(dev, DRIVER_GEM))
+ 		drm_gem_release(dev, file);
++
++	drm_debugfs_clients_remove(file);
+ 	put_pid(rcu_access_pointer(file->pid));
+ 	kfree(file);
+ 
+@@ -235,6 +241,9 @@ void drm_file_free(struct drm_file *file)
+ 		     (long)old_encode_dev(file->minor->kdev->devt),
+ 		     atomic_read(&dev->open_count));
+ 
++	if (!drm_core_check_feature(dev, DRIVER_COMPUTE_ACCEL))
++		drm_debugfs_clients_remove(file);
++
+ 	drm_events_release(file);
+ 
+ 	if (drm_core_check_feature(dev, DRIVER_MODESET)) {
+diff --git a/include/drm/drm_debugfs.h b/include/drm/drm_debugfs.h
+index cf06cee4343f..ea8cba94208a 100644
+--- a/include/drm/drm_debugfs.h
++++ b/include/drm/drm_debugfs.h
+@@ -153,6 +153,9 @@ void drm_debugfs_add_files(struct drm_device *dev,
+ 
+ int drm_debugfs_gpuva_info(struct seq_file *m,
+ 			   struct drm_gpuvm *gpuvm);
++
++void drm_debugfs_clients_add(struct drm_file *file);
++void drm_debugfs_clients_remove(struct drm_file *file);
  #else
- int amdgpu_debugfs_init(struct amdgpu_device *adev)
- {
-@@ -2140,4 +2189,7 @@ int amdgpu_debugfs_regs_init(struct amdgpu_device *adev)
+ static inline void drm_debugfs_create_files(const struct drm_info_list *files,
+ 					    int count, struct dentry *root,
+@@ -181,6 +184,14 @@ static inline int drm_debugfs_gpuva_info(struct seq_file *m,
  {
  	return 0;
  }
-+void amdgpu_debugfs_vm_init(struct drm_file *file)
++
++static inline void drm_debugfs_clients_add(struct drm_file *file)
++{
++}
++
++static inline void drm_debugfs_clients_remove(struct drm_file *file)
 +{
 +}
  #endif
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.h
-index 0425432d8659..e7b3c38e5186 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.h
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.h
-@@ -33,4 +33,5 @@ void amdgpu_debugfs_fence_init(struct amdgpu_device *adev);
- void amdgpu_debugfs_firmware_init(struct amdgpu_device *adev);
- void amdgpu_debugfs_gem_init(struct amdgpu_device *adev);
- void amdgpu_debugfs_mes_event_log_init(struct amdgpu_device *adev);
-+void amdgpu_debugfs_vm_init(struct drm_file *file);
  
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-index 195ed81d39ff..27aa1b551dbf 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-@@ -1395,7 +1395,7 @@ int amdgpu_driver_open_kms(struct drm_device *dev, struct drm_file *file_priv)
- 	if (r)
- 		goto error_pasid;
- 
--	r = amdgpu_vm_init(adev, &fpriv->vm, fpriv->xcp_id);
-+	r = amdgpu_vm_init(adev, &fpriv->vm, fpriv->xcp_id, file_priv);
- 	if (r)
- 		goto error_pasid;
- 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-index f042372d9f2e..7e31fb5f6f33 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-@@ -2527,6 +2527,7 @@ void amdgpu_vm_set_task_info(struct amdgpu_vm *vm)
-  * @adev: amdgpu_device pointer
-  * @vm: requested vm
-  * @xcp_id: GPU partition selection id
-+ * @file: drm_file
-  *
-  * Init @vm fields.
-  *
-@@ -2534,7 +2535,7 @@ void amdgpu_vm_set_task_info(struct amdgpu_vm *vm)
-  * 0 for success, error for failure.
-  */
- int amdgpu_vm_init(struct amdgpu_device *adev, struct amdgpu_vm *vm,
--		   int32_t xcp_id)
-+		   int32_t xcp_id, struct drm_file *file)
- {
- 	struct amdgpu_bo *root_bo;
- 	struct amdgpu_bo_vm *root;
-@@ -2610,6 +2611,7 @@ int amdgpu_vm_init(struct amdgpu_device *adev, struct amdgpu_vm *vm,
- 	if (r)
- 		dev_dbg(adev->dev, "Failed to create task info for VM\n");
- 
-+	amdgpu_debugfs_vm_init(file);
- 	amdgpu_bo_unreserve(vm->root.bo);
- 	amdgpu_bo_unref(&root_bo);
- 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.h
-index f3ad687125ad..555afaf867c4 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.h
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.h
-@@ -487,7 +487,9 @@ int amdgpu_vm_set_pasid(struct amdgpu_device *adev, struct amdgpu_vm *vm,
- 			u32 pasid);
- 
- long amdgpu_vm_wait_idle(struct amdgpu_vm *vm, long timeout);
--int amdgpu_vm_init(struct amdgpu_device *adev, struct amdgpu_vm *vm, int32_t xcp_id);
-+int amdgpu_vm_init(struct amdgpu_device *adev, struct amdgpu_vm *vm, int32_t xcp_id,
-+		   struct drm_file *file);
+ #endif /* _DRM_DEBUGFS_H_ */
+diff --git a/include/drm/drm_file.h b/include/drm/drm_file.h
+index 5c3b2aa3e69d..eab7546aad79 100644
+--- a/include/drm/drm_file.h
++++ b/include/drm/drm_file.h
+@@ -400,6 +400,13 @@ struct drm_file {
+ 	 * @client_name_lock: Protects @client_name.
+ 	 */
+ 	struct mutex client_name_lock;
 +
- int amdgpu_vm_make_compute(struct amdgpu_device *adev, struct amdgpu_vm *vm);
- void amdgpu_vm_fini(struct amdgpu_device *adev, struct amdgpu_vm *vm);
- int amdgpu_vm_lock_pd(struct amdgpu_vm *vm, struct drm_exec *exec,
++	/**
++	 * @debugfs_client:
++	 *
++	 * debugfs directory for each client under a drm node.
++	 */
++	struct dentry *debugfs_client;
+ };
+ 
+ /**
 -- 
 2.34.1
 
