@@ -1,139 +1,177 @@
-Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E512527511A
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 14:01:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82E4D275AF7
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 14:03:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751378478; cv=none; b=hYRSvhMzWKzzWmZyc5ZzJDNUqKYQFh1LuFLva+jV/w9h1ngJCgg06fUcrJo+x29OuePEgX+5bcBi4F2TYmIogMXmR7XyLFMDYrbyHlORLPxxQIPKgbOyFjQbbvol5jtF+A7NQrq8oDVRjkPXj7Gm+3PpgwO+U07VqvK0jO8DN1k=
+	t=1751378589; cv=none; b=QoWY381Pr5c/EZ2I0k5JHwLDEL3Xmf13QB//rxO8NXoZTItjevIl2qIjs/eyPoFiOH2Cz5Bbvoffm3s1T0Jnu5IbcY3qwwc70GvkBPDX3Ek2z02FbpdrdtlIr/Mpv7jHzxRqT4BWs1Z73NDnboled6e12R9g6j9zhdCvr0b1Rws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751378478; c=relaxed/simple;
-	bh=ltEx6jvo6nYVWdnOQsoJw/R1uj9wItt+k2vwzOvAp4A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OEU2C9QMDcExw+Z50kAC+iqF9EVQ2smejYBAknQJnCkNk9eKbhl9C8t0IhhmaNRU6i3828AfXxE+of1clJNoTB6wBZdrPoqWn7/PiYIXgHH8V6/x3Ad9GXAVWwoK+DgtaJkyeNnmIUh3cCj0Jvi0sVJ4yZALmZmWhjyHYEWf8ME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=l8d0axci; arc=none smtp.client-ip=209.85.166.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1751378589; c=relaxed/simple;
+	bh=5WYg2d/Rob7yBYCn1RGW5LTwmcKdVGpURzqVWpoSMMQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mkJWWzWOuMJQKEK1VurXVSuhw6hTwQfosvgLmqjH642bK1ONM1wk35Xo5bSPd4ZSiGrFEXV63cmRaAyf5kZODhPxnv63bTPuUdTlJ7S3CGsdmt/o1oWrixsCGIYC8JdSjz/OJlvNbO4XST51RDpbvjRSjqqwc4IOb9cL5vDKHI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kQgA6uEU; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="l8d0axci"
-Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-86d029e2bdeso215443739f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 07:01:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kQgA6uEU"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-237f270513bso153775ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 07:03:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1751378475; x=1751983275; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=23lX53iztVdwKzQA/gaISc5zdHS2upabAhTnbt71HPQ=;
-        b=l8d0axcifn19z27nPBKYoL6EGp4Y5q+yei5PC1gg7mhAVE+0XuG+Ud7vBYWwJ9pxtu
-         br3gVU5YCtALUejwMy3pTtVuZHz7XhFsq9jWxm0PPsK6KLAj2sGaETMY7z/cjtjAJHtu
-         Rx1+BrB1HSj1FTR3js+dgTeKZUzXb28IpxVMlN8y7WEI7dQxUGbo3cAdE/bIVJB+bSOE
-         s8ntgfZATZ6AwZZ0D4ap3wRPp+2ftSD7mf21eehIWMriIUEkMWYabmv9d0C/jJof6vy7
-         gXcBtVFWHSzOvnS+HTWwhl1Ln/VyKlKdSFFVTzNOjAFKBba3wNFJwGDo2vhWQ8DkO/LU
-         72PA==
+        d=google.com; s=20230601; t=1751378587; x=1751983387; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5WYg2d/Rob7yBYCn1RGW5LTwmcKdVGpURzqVWpoSMMQ=;
+        b=kQgA6uEUaQHnEj38Xcxrf523AT1P769SHpdPF1Qjup3vWY+dqGyUC9OREnvpsyu7T5
+         qxpPo/GyUdV0j8NwsMz5OPSoF0GzGfOWP50yKSomFmipHf+TBLiL827SbII2uleVZt69
+         G9ydtCjZ0MYdmg50NudMHzoaXhjqrBMtJPXP+UtNvch1Undsef0bdaEVwwjVE3o+abw/
+         BJDux/ZsvtBFWvzEP4yFFudKXripFBqWqDPwFTTViUg6uFb9BL3HisTtrY7jZ4Ti7rIv
+         6mHa22f/4Z523M00MrbK4qPLegG4dpuxDC3Rp9xpu39T6QgLDienA/Y/uhcPHmofKpun
+         eCgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751378475; x=1751983275;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=23lX53iztVdwKzQA/gaISc5zdHS2upabAhTnbt71HPQ=;
-        b=JjhDnQMxuOMJHxhpHtsBKHd+enutMgui9NEfBGZ5CFYKq/nxtWibSuWAKyabzSOQEM
-         J3klouzRci+UQcYPmxLb5wiocWmc2zi6xMTy5h9iU8jBYqoR167crua7aeP9gCs0MUW9
-         eAAXWFJyTjCfjKWRckHm/1BTBG648PyyvluCBO1WWD3/ocMRU1X4+LkDNV0su3gGesUM
-         EUiLfoktTJ9zBSy5LU7IsUeXTd4FOiFoK1PtrU/p8Owp9MF1f7fLN3aC7J7hEPMgyLHv
-         RxYqO6A4WYPspxwUETtiQcQS6NLDzfrSjljgM+KUNWTx8ChQCJrYCpg21R/6Yc1R77Ud
-         NqXA==
-X-Forwarded-Encrypted: i=1; AJvYcCWUkIZsbTMqZnGoKl+0+weiSo8Uhrvjs8aVviF2x26VvcRU7xQcdedFj8YTnerDzXLv7av7CPmphWL40SY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQhqBux2mDif0oW2hK/vPN72YpvNFwJdpcX85yH+VOfK9Us6f5
-	gCKjwKigg5sXVbws0jIA/m9Ty7mADLvC/ViDtf06m9JlCGjq9StFJBOh1JdfCubNIrE=
-X-Gm-Gg: ASbGncuwQJQvUj5N/yDo480Q/XXxmiWauZ+eFFXvlOspSLecsChg0nNW/i+AfRSw5lf
-	MX1QRGLX2EG+BvX0sYb8hGbNjOWGb7pm9OhqX8Cq4+EOcqfhcgT0GFkYJnImEwA/ohGPxsP6ZDJ
-	aPHjrhTiUhN39HSyqn31JPOP/XrcRVUpj9y+6TozFHxRV+HmbvgLErOp6YCKVR7RWwPLQi4pLS5
-	NrEP3ce7ZlAmlQC+M7I4P8HFMlQvKQMPPkBuqIm7Ea9ai222LpxYm7VAAxaeDwxB98OJc8FMlNV
-	ETfbLu6ag0LJk+ln25a2+6wiiTFXUy7/fTRN9TMMyt7l1sKiQZ37QAkx9uM=
-X-Google-Smtp-Source: AGHT+IH7s/tbao9vydR4ZOjiMA3DZDvHBP/HWhYsSP7tBBODe9ykCLvPJfEwE0xkWIrIZy9LIkMfSQ==
-X-Received: by 2002:a5e:dc02:0:b0:86a:441:25ca with SMTP id ca18e2360f4ac-876b910a0dfmr389475139f.6.1751378474803;
-        Tue, 01 Jul 2025 07:01:14 -0700 (PDT)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-502048d3f57sm2471449173.57.2025.07.01.07.01.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 07:01:13 -0700 (PDT)
-Message-ID: <bcb75734-7f72-4b9a-86ea-6d607b29556f@kernel.dk>
-Date: Tue, 1 Jul 2025 08:01:12 -0600
+        d=1e100.net; s=20230601; t=1751378587; x=1751983387;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5WYg2d/Rob7yBYCn1RGW5LTwmcKdVGpURzqVWpoSMMQ=;
+        b=K8rLqQOgO2oUfsypgo6xvSmBpKYVQ0WJVwfPqq7n08ved15VTGQzLLTfNx5Qsl0XD6
+         V5bUspCI6z2v2bMwAviJfvZ2mL4yqMFv38FMPscNJTiZn33tt08Xzxd7hIlgEsBGqiAt
+         qpEnc2JE4ap3V1lAvOd+tPQs65k2JhxVJESb+VQv1/g8Q9pPWPQ8tJkmDkADW9Fu5aCf
+         OHXWmBfTwEzpYQsyvsraDUs4rSYuTcHCe/w9VWlKaLfuEDs75+RYFcRMBuLUT4KbLV7d
+         Y7AQYaWpk5WnCkcDHaWevR1lZy5+BEouT0hEH28f0usm/rhx1OpkgKz57sfcxSVDCXVA
+         d6cg==
+X-Forwarded-Encrypted: i=1; AJvYcCW391tvIsMpocRsIbpkcCjdsrAVFJsYoBSaF9p5OdOXLFSlNSZnFJte45B3L+ZEu+k8mUzAaRUUZKiWZ2U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzr57DOebaK8Wa/jdhYxTo70FUq57wBYLF9lbfNjSaIUMt91P+X
+	qyy/da1ski/2/PN4Z8EGF/z03QZdDfdWz8o75CotEIZsLI48RIlv821GutrzmFV8VBO+ICcJ4h/
+	JzMDitOkdh4IVZY4BFAvGd/8TCnUQkmXP2L+effV6
+X-Gm-Gg: ASbGnctJ0PVqZY0lSLHFJVsVBh2Xc9G479L3VS4obSsdw8lvgcV42SDWsQ+giF9fqcf
+	MZ6HLpfJMZAqZ+PzyAi/MAJXIzLlnaRVQbL4OLd02A86TNPilHoP19cebB1g6RwbJQ1AqxN/SNa
+	93jC57dG9Mp2vmBor6uYw4S7HWu0kn4PIeJVMMr0OCXqK4EukgXcA+7C/HLlSD3rnREMZdWzcBD
+	vbN
+X-Google-Smtp-Source: AGHT+IH77wLMkIJG2GhwBQq6SijmzRz8oWkXPewQMD4twhGCGw0STRER4GN8G5BudlzOjktWBK9HI5JZrEqv4LxVUr8=
+X-Received: by 2002:a17:903:1207:b0:237:e45b:4f45 with SMTP id
+ d9443c01a7336-23c5fedc406mr2334445ad.1.1751378586208; Tue, 01 Jul 2025
+ 07:03:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] brd: fix sleeping function called from invalid context
- in brd_insert_page()
-To: Yu Kuai <yukuai1@huaweicloud.com>, hch@lst.de
-Cc: penguin-kernel@I-love.SAKURA.ne.jp, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- johnny.chenyi@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20250630112828.421219-1-yukuai1@huaweicloud.com>
- <eb41cab3-5946-4fe3-a1be-843dd6fca159@kernel.dk>
- <a2dc2566-44e1-4460-bbff-bb813f4655d9@kernel.dk>
- <773a49cf-3908-85d2-5693-5cbd6530a933@huaweicloud.com>
- <c28dd90a-3777-49fa-a662-32c61da22860@kernel.dk>
- <c76c61ac-9335-b116-31dd-5ecfb32dd7dd@huaweicloud.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <c76c61ac-9335-b116-31dd-5ecfb32dd7dd@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <c69ed125c25cd3b7f7400ed3ef9206cd56ebe3c9.camel@intel.com>
+ <diqz34bolnta.fsf@ackerleytng-ctop.c.googlers.com> <a3cace55ee878fefc50c68bb2b1fa38851a67dd8.camel@intel.com>
+ <diqzms9vju5j.fsf@ackerleytng-ctop.c.googlers.com> <447bae3b7f5f2439b0cb4eb77976d9be843f689b.camel@intel.com>
+ <zlxgzuoqwrbuf54wfqycnuxzxz2yduqtsjinr5uq4ss7iuk2rt@qaaolzwsy6ki>
+ <4cbdfd3128a6dcc67df41b47336a4479a07bf1bd.camel@intel.com>
+ <diqz5xghjca4.fsf@ackerleytng-ctop.c.googlers.com> <aGJxU95VvQvQ3bj6@yzhao56-desk.sh.intel.com>
+ <a40d2c0105652dfcc01169775d6852bd4729c0a3.camel@intel.com>
+ <aGOr90RZDLEJhieE@yzhao56-desk.sh.intel.com> <CAGtprH86-HkfnTMmwdPsKgXxjTomvMWWAeCuZKSieb5o6MvRPQ@mail.gmail.com>
+In-Reply-To: <CAGtprH86-HkfnTMmwdPsKgXxjTomvMWWAeCuZKSieb5o6MvRPQ@mail.gmail.com>
+From: Vishal Annapurve <vannapurve@google.com>
+Date: Tue, 1 Jul 2025 07:02:52 -0700
+X-Gm-Features: Ac12FXzMpiCi2jcBFPGTVhv3KCVhzRRQZPEPOJXk0dx6V9jeUU3nUxROty-k2Dk
+Message-ID: <CAGtprH92EddcAi6YgfT+Z0LjduRm7=sG-xWwdSudUCt18i=VSw@mail.gmail.com>
+Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge pages
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, 
+	"ackerleytng@google.com" <ackerleytng@google.com>, "Shutemov, Kirill" <kirill.shutemov@intel.com>, 
+	"Li, Xiaoyao" <xiaoyao.li@intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"Hansen, Dave" <dave.hansen@intel.com>, "david@redhat.com" <david@redhat.com>, 
+	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, "tabba@google.com" <tabba@google.com>, 
+	"vbabka@suse.cz" <vbabka@suse.cz>, "quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, 
+	"michael.roth@amd.com" <michael.roth@amd.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "seanjc@google.com" <seanjc@google.com>, 
+	"Peng, Chao P" <chao.p.peng@intel.com>, "Du, Fan" <fan.du@intel.com>, 
+	"Yamahata, Isaku" <isaku.yamahata@intel.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "Weiny, Ira" <ira.weiny@intel.com>, 
+	"Li, Zhiquan1" <zhiquan1.li@intel.com>, "jroedel@suse.de" <jroedel@suse.de>, 
+	"Miao, Jun" <jun.miao@intel.com>, "pgonda@google.com" <pgonda@google.com>, 
+	"x86@kernel.org" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 7/1/25 1:38 AM, Yu Kuai wrote:
-> Hi,
-> 
-> 在 2025/07/01 11:00, Jens Axboe 写道:
->> On 6/30/25 7:28 PM, Yu Kuai wrote:
->>> Hi,
->>>
->>> ? 2025/06/30 23:28, Jens Axboe ??:
->>>> On 6/30/25 9:24 AM, Jens Axboe wrote:
->>>>> On 6/30/25 5:28 AM, Yu Kuai wrote:
->>>>>> From: Yu Kuai <yukuai3@huawei.com>
->>>>>>
->>>>>> __xa_cmpxchg() is called with rcu_read_lock(), and it will allocate
->>>>>> memory if necessary.
->>>>>>
->>>>>> Fix the problem by moving rcu_read_lock() after __xa_cmpxchg(), meanwhile,
->>>>>> it still should be held before xa_unlock(), prevent returned page to be
->>>>>> freed by concurrent discard.
->>>>>
->>>>> The rcu locking in there is a bit of a mess, imho. What _exactly_ is the
->>>>> rcu read side locking protecting? Is it only needed around the lookup
->>>>> and insert? We even hold it over the kmap and copy, which seems very
->>>>> heavy handed.
->>>>
->>>> Gah it's holding the page alive too. Can't we just grab a ref to the
->>>> page when inserting it, and drop that at free time? It would be a lot
->>>> better to have only the lookup be RCU protected, having the full
->>>> copies under it seems kind of crazy.
->>>
->>> In this case, we must grab a ref to the page for each read/write as
->>> well, I choose RCU because I think it has less performance overhead than
->>> page ref, which is atomic. BTW, I thought copy at most one page is
->>> lightweight, if this is not true, I agree page ref is better.
->>
->> Right, you'd need to grab a ref. I do think that is (by far) the better
->> solution. Yes if you microbenchmark I'm sure the current approach will
->> look fine, but it's a heavy section inside an rcu read lock and will
->> hold off the grace period.
->>
->> So yeah, I do think it'd be a lot better to do proper page references on
->> lookup+free, and have just the lookup be behind rcu.
->>
-> 
-> Ok, and just to be sure, since the rcu is introduced before the fixed
-> tag, do you think it's better to do cleanups after this patch, I prefer
-> this way, or fix this problem directly by page ref?
+On Tue, Jul 1, 2025 at 6:32=E2=80=AFAM Vishal Annapurve <vannapurve@google.=
+com> wrote:
+>
+> On Tue, Jul 1, 2025 at 2:38=E2=80=AFAM Yan Zhao <yan.y.zhao@intel.com> wr=
+ote:
+> >
+> > On Tue, Jul 01, 2025 at 01:55:43AM +0800, Edgecombe, Rick P wrote:
+> > > So for this we can do something similar. Have the arch/x86 side of TD=
+X grow a
+> > > new tdx_buggy_shutdown(). Have it do an all-cpu IPI to kick CPUs out =
+of
+> > > SEAMMODE, wbivnd, and set a "no more seamcalls" bool. Then any SEAMCA=
+LLs after
+> > > that will return a TDX_BUGGY_SHUTDOWN error, or similar. All TDs in t=
+he system
+> > > die. Zap/cleanup paths return success in the buggy shutdown case.
+> > All TDs in the system die could be too severe for unmap errors due to K=
+VM bugs.
+>
+> At this point, I don't see a way to quantify how bad a KVM bug can get
+> unless you have explicit ideas about the severity. We should work on
+> minimizing KVM side bugs too and assuming it would be a rare
+> occurrence I think it's ok to take this intrusive measure.
+>
+> >
+> > > Does it fit? Or, can you guys argue that the failures here are actual=
+ly non-
+> > > special cases that are worth more complex recovery? I remember we tal=
+ked about
+> > > IOMMU patterns that are similar, but it seems like the remaining case=
+s under
+> > > discussion are about TDX bugs.
+> > I didn't mention TDX connect previously to avoid introducing unnecessar=
+y
+> > complexity.
+> >
+> > For TDX connect, S-EPT is used for private mappings in IOMMU. Unmap cou=
+ld
+> > therefore fail due to pages being pinned for DMA.
+>
+> We are discussing this scenario already[1], where the host will not
+> pin the pages used by secure DMA for the same reasons why we can't
+> have KVM pin the guest_memfd pages mapped in SEPT. Is there some other
+> kind of pinning you are referring to?
+>
+> If there is an ordering in which pages should be unmapped e.g. first
+> in secure IOMMU and then KVM SEPT, then we can ensure the right
+> ordering between invalidation callbacks from guest_memfd.
+>
+> [1] https://lore.kernel.org/lkml/CAGtprH_qh8sEY3s-JucW3n1Wvoq7jdVZDDokvG5=
+HzPf0HV2=3Dpg@mail.gmail.com/#t
+>
+> >
+> > So, my thinking was that if that happens, KVM could set a special flag =
+to folios
+> > pinned for private DMA.
+> >
+> > Then guest_memfd could check the special flag before allowing private-t=
+o-shared
+> > conversion, or punch hole.
+> > guest_memfd could check this special flag and choose to poison or leak =
+the
+> > folio.
+> >
+> > Otherwise, if we choose tdx_buggy_shutdown() to "do an all-cpu IPI to k=
+ick CPUs
+> > out of SEAMMODE, wbivnd, and set a "no more seamcalls" bool", DMAs may =
+still
+> > have access to the private pages mapped in S-EPT.
+>
+> guest_memfd will have to ensure that pages are unmapped from secure
+> IOMMU pagetables before allowing them to be used by the host.
+>
+> If secure IOMMU pagetables unmapping fails, I would assume it fails in
+> the similar category of rare "KVM/TDX module/IOMMUFD" bug and I think
+> it makes sense to do the same tdx_buggy_shutdown() with such failures
+> as well.
 
-Yeah probably best to do the simple fix, and then base the further work
-on that.
-
--- 
-Jens Axboe
-
+In addition we will need a way to fail all further Secure IOMMU table
+walks or some way to stop the active secure DMA by unbinding all the
+TDIs. Maybe such scenarios warrant a BUG_ON() if recovery is not
+possible as possibly any or all of the KVM/IOMMUFD/TDX module can't be
+trusted for reliable functionality anymore.
