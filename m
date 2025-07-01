@@ -1,67 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD1E155725;
-	Tue,  1 Jul 2025 02:06:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 724AB15B0EF
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 02:10:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751335607; cv=none; b=Pz4R+uo+1//REnyip1TboZbdUVPmvpSbVz8CSloA62/5KCobxFm0m+NTr90EzP9PARVsuGequyzxhJWJYBeEo121fwk/Ik8YMOFdN4hxzOLgI7Bp9O+4K0NEk+0V0dZbexQJBw6jZZRmojeZNDDccw4LMW9+ZI7PvBH0nhYbph8=
+	t=1751335832; cv=none; b=efBE+EQjYBFciWz8E+OoHPKbShPvObhlQMIj4Xgs7pYAikV1vbRSZQowQWeXGPTvsOzRYbicWUVDUefr/oXwxGWsvWEXQ8rzMbiBxahZ1faRlIr6VmHcwJhmRS2FTSApYPMWrW/bY+Ehr1D+zQoLdFjLqRg2SOeFOOFoCTwF0rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751335607; c=relaxed/simple;
-	bh=jjdeV77YRjJRdpCL6TzaNWPsTnTXTv9+xqV6FCjiGPA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IeXDkMFUdD7+qumhciUfTVG4w9fT5KBYFlz8vUr5/SHTXWadNkTd0BSNULHAniOdBXJmzg0dGRs35Y52Ei1EeUkudtsLXA8yFBlSmjStGaHT0pQWloyC3QIC0V3cCVSgYTMg4a1CCXO35bX3h+y8b2OsRUq4OzbeBRyd5iLIGmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BMiM0iFB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751335832; c=relaxed/simple;
+	bh=chZSupA45hhC66A5Nbn69IBMjngEXaYkp2gQAo5xfl4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TfnESKUB9PA2bnZPOHDvSvPDsgSkgk4V/9v0N2ycq8G4ul0055iZ5sGuMxrriPrf1scvolrdNCCL9iLkg89t/VPi0DXCZ/veD6mhpr4Bf+gAe75GTjQyNEWbKBL9YPr1oh1gLO2pQHLu2RnUGrbk8C3IdR/LaGg33v4AgCsqnMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=MEFUQOZ+; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BMiM0iFB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88E2FC4CEE3;
-	Tue,  1 Jul 2025 02:06:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751335606;
-	bh=jjdeV77YRjJRdpCL6TzaNWPsTnTXTv9+xqV6FCjiGPA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=BMiM0iFB1m8KyDdY9lYt142u0ARB4gj/Wc2i+M2iE6oO1ZJdHf1Xke9//essG7QOY
-	 zoKTIDMk0mkG1fY9jG+V/tnpyLysZ+MjQR/ntdr1TXUwkgIsQn9tlpFvy8pGCSU3Bd
-	 D7vedNO/pNHJHZUiXXmhtDrnoJfh/K4vECF9xPMoUvvLJox4adzIPCN0+y5zJAgDdN
-	 pHCH+9lhhV16EhVAHyUTHqJ9mhEAvc4oCuWnP/8KBdsmKpItdfdiIiUJNmRNz+ArAS
-	 9hYFN+ndX7keVVhTpnu77XYbtCSioelKmMP3+89+ZVfjknUrihXbDrUbySBDBSdFOQ
-	 OjUKn/rzUY73w==
-Date: Mon, 30 Jun 2025 19:06:45 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Harshitha Ramamurthy <hramamurthy@google.com>
-Cc: netdev@vger.kernel.org, jeroendb@google.com, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
- willemb@google.com, bcf@google.com, pkaligineedi@google.com,
- joshwash@google.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] gve: make IRQ handlers and page allocation
- NUMA aware
-Message-ID: <20250630190645.5423949e@kernel.org>
-In-Reply-To: <20250627183141.3781516-1-hramamurthy@google.com>
-References: <20250627183141.3781516-1-hramamurthy@google.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="MEFUQOZ+"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-addda47ebeaso1088447466b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 19:10:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1751335828; x=1751940628; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=//ycUvlATJpUfVbD8kzQ8AkDWoLdct992Z4BuFsvuYY=;
+        b=MEFUQOZ+0WGMFGL7MXbQhVFwa2rZn+0U0qBc6Ihobd0h12Sxfm2RTM8viARA3+JD5D
+         ZXuJleKmb9pD2tXYzl11QkiEb4QeSmA+80JlLKd5E2a65w9iYm2gdrlGFZwmch3Qmbgx
+         qjOLN3If0QMLBQHSvwOKr/moZ3ZiU8Rcvli1s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751335828; x=1751940628;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=//ycUvlATJpUfVbD8kzQ8AkDWoLdct992Z4BuFsvuYY=;
+        b=rzn4SZeZXJtlwuowrXtECwGJ+bzQ+Ry/eMOyjrLbWVBCJti2mcqzTt93neOsYiW5TM
+         viM/YqYpUQyJFwoxdooeMnNK5pXPAl6qaG7MehgbGNvH/k7RDV82KkahfN0XgCAxJNs5
+         fqbC7puESDWPFy7zBMQFuvEmh/GVviyokeXMi/BlxL/jQE9pxL59eZKBgWht40I0Ishv
+         c7DaFblz13FnQEQSMKQ9jpIYffBOoywpGYQQw+BHvffo7mqxtEIXitkspnH7OgiWa4Nf
+         25R8ZkicqbVZdiUbC8FmESdWm9oOs154hrknwBX3scVmfV0yZsKVqZ9WJFs393uvonbk
+         1bFA==
+X-Gm-Message-State: AOJu0YyBgYik168M3J+Xb33I4D2cNJrK2s/Sg8ilUkkqwrARkKmdmQL5
+	iU/ZjNRIvr6jo35kdQlnF9ylD+Of+td48QnmQCBRRYQKKHQb+osWUeXfFchoUsHrPC2+4+tIe+d
+	O2XUNqK0=
+X-Gm-Gg: ASbGnctL1tp7nc+DDSu09gZ0E+/CPv9AEn0HwyX6EUjDAwOx6PFd9uoEMO7MWpvH2iF
+	szg6aAxmCr7qUAB7cIo3k2ElNslYne3xaJ0XnkFLXcgxnRyDfnyvklmAlQ/6cc74zaqmZWtB70v
+	shvcC069bJUIhIpH1U+KPBhFPeR/bqr/nGP5OpoTq47VQHHPCMQqyqlsWwgvav5zSVOTHChWrc+
+	NkOpxe4Z8WN7yq52zZlChXtc+zimbRPjzlU8AeTqDbQV3Xg+bHmhEHIpQm+U8cFCxKaBg8LPIV6
+	GE/hHE+3E9QZVC1HH1NlUHnZn5ajsOxT0mS/hgrJSy9CM+dBN1YWYpskQtdSBRecYnxKMgDp1iC
+	8WXT3lDpOAQjuaV5b+z+4oHTWmCTGXItsNJ+X
+X-Google-Smtp-Source: AGHT+IHck/eW59+XL0nAeV95Mty8g7sm3qU18hB/+CsjMvMbAxSZLEIc8OwDGCCO5MtgHhO4HLX4tA==
+X-Received: by 2002:a17:907:9713:b0:ae1:a6a0:f2fe with SMTP id a640c23a62f3a-ae35010fc9bmr1668428166b.36.1751335828432;
+        Mon, 30 Jun 2025 19:10:28 -0700 (PDT)
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com. [209.85.208.49])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353c6bcd7sm752768166b.121.2025.06.30.19.10.26
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Jun 2025 19:10:26 -0700 (PDT)
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-6097b404f58so8614623a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 19:10:26 -0700 (PDT)
+X-Received: by 2002:a05:6402:90a:b0:5fd:c426:9d17 with SMTP id
+ 4fb4d7f45d1cf-60c88e750a8mr13090570a12.34.1751335826112; Mon, 30 Jun 2025
+ 19:10:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250701005321.942306427@goodmis.org> <20250701005450.888492528@goodmis.org>
+In-Reply-To: <20250701005450.888492528@goodmis.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 30 Jun 2025 19:10:09 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiWOYB4c3E-Cc=D89j0txbN4AGqm0j1dojqHq3uzJ+LqQ@mail.gmail.com>
+X-Gm-Features: Ac12FXySn_pdB3lLzP12Vm5gk2T8ADap-82-V7Zr3xVfhtlJ2K8g-e3E8mi3zzI
+Message-ID: <CAHk-=wiWOYB4c3E-Cc=D89j0txbN4AGqm0j1dojqHq3uzJ+LqQ@mail.gmail.com>
+Subject: Re: [PATCH v12 02/14] unwind_user: Add frame pointer support
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Andrii Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, 
+	"Jose E. Marchesi" <jemarch@gnu.org>, Beau Belgrave <beaub@linux.microsoft.com>, 
+	Jens Remus <jremus@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 27 Jun 2025 18:31:41 +0000 Harshitha Ramamurthy wrote:
-> -	rx->qpl_copy_pool = kvcalloc(rx->qpl_copy_pool_mask + 1,
-> -				     sizeof(rx->qpl_copy_pool[0]),
-> -				     GFP_KERNEL);
-> +	rx->qpl_copy_pool =
-> +		kvzalloc_node(array_size(rx->qpl_copy_pool_mask + 1,
-> +					 sizeof(rx->qpl_copy_pool[0])),
-> +			      GFP_KERNEL, priv->numa_node);
->  
->  	if (!rx->qpl_copy_pool) {
+On Mon, 30 Jun 2025 at 17:54, Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> +       /* stack going in wrong direction? */
+> +       if (cfa <= state->sp)
+> +               goto done;
 
-kvcalloc_node() exists for more than a year now.
+I suspect this should do a lot more testing.
 
-nit: when you respin could you shift the allocation so that the empty
-line appears before the kvcalloc_node() call rather than between it
-and the error check?
--- 
-pw-bot: cr
+> +       /* Find the Return Address (RA) */
+> +       if (get_user(ra, (unsigned long *)(cfa + frame->ra_off)))
+> +               goto done;
+> +
+> +       if (frame->fp_off && get_user(fp, (unsigned long __user *)(cfa + frame->fp_off)))
+> +               goto done;
+
+.. and this should check the frame for validity too.  At a minimum it
+should be properly aligned, but things like "it had better be above
+the current frame" to avoid having some loop would seem to be a good
+idea.
+
+Maybe even check that it's the same vma?
+
+             Linus
