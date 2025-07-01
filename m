@@ -1,63 +1,61 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CB901E2858;
-	Tue,  1 Jul 2025 04:10:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F241E871
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 04:11:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751343034; cv=none; b=ZrbzIdJxb+ObEChr8mNhWQ426a52XtAQuJ+r30YY+AG3N83a6uUmLcDe+DBvRrWcYxiuiZDXy9SgNGsABXWBHxmGShOPluNT3QS3I3F/2hoZJQnlVruAwljSQOXBjRSq1k0ez61ipjN3vRaqChoe2horgI0c5KeS/pLPgoWlt4Y=
+	t=1751343116; cv=none; b=DL16fW0b4LtQBTZ3+kDGmUadke3ZUAJ2Tzr7aGMHYqXF7bvDLZkj7suxSMUm5vA+9XVgRinsKBtV78CVzUw204pwFkt96eadt8Kv8/h45O92hzslh0oCltYbzlPmRkvsptm9slsDDnKlZe6Z0ARPMg2rJQDvy0XAzjzPWmY7Q9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751343034; c=relaxed/simple;
-	bh=5JbsaJo9u0TrLmzNGqZM/nMXEajQm6eUT1Qn9/HjkDA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c/m54NA4Ctu1qleEK6iKH9rjNz2DEn3MypLgQ3bmnray2nvmq8BDVFqVMNtlkgfCIgxq6m2mJEoZeEtASdMHMzLkUS+Jz0Dc6LiCGtQznuTYoYE87R8T4KQgG7qVWE9I2uSX3pXvP7fCrYKX/+nMAPQVxqhw/I4rSSbdbEAnCiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PBOIJuD+; arc=none smtp.client-ip=192.198.163.16
+	s=arc-20240116; t=1751343116; c=relaxed/simple;
+	bh=adc7pZKq1MSJo1rdLRI8hkyib2Ib4HfnVFTEDqOfmHs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=NFGaE7cJslBlm5nCwbrDTkmxs0KkA+nzCCpl66iRsZHGqQ8UBefXmJtxYrK8EitZBuTOzD4/ylrbzhqhZzaHipuR5kX0acuSujw6eGN9VuWhyyqsttim47efnwiLib6d3Rt9TTG3MC8w1vwWzLH1N1wIl+RxAs1ikfoA1GlmlMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GWzdr7QQ; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PBOIJuD+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GWzdr7QQ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751343033; x=1782879033;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5JbsaJo9u0TrLmzNGqZM/nMXEajQm6eUT1Qn9/HjkDA=;
-  b=PBOIJuD+KBiB0IZt3/OQ0I/7EB6VjBMm4sTv+neHCil0YVk5n9zqGIVi
-   8i+7kCzzVFlT1Q8Pfe971VLGURdnPrTv14GUfCcc+61l0i/VVJpWcx0dC
-   y8pSPndWi7jd5fwokc5mSP0bYdRm4oMrqiCK9Gha1fCX60zo+HNd1u6LC
-   l68+KaKHSgC4j9H2xzGwOUC/LIgf4sS23WO4PJpSIoksnmmcVonszcC6b
-   0cOLCThy/UmtT+HFkVWMU098utn8a/2iekMiK0xtENmSIR4IbhHXJJvez
-   pgViElFxUc7gXxxu9pvs4FYhsQ+HYJUDRYLqRltXIaLDZvL4TyaUXEy+c
-   A==;
-X-CSE-ConnectionGUID: tByB1ZcpRMSHy9opF87R/w==
-X-CSE-MsgGUID: KA5KFiMZSWWOB/aTP5piVw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="41216124"
+  t=1751343115; x=1782879115;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=adc7pZKq1MSJo1rdLRI8hkyib2Ib4HfnVFTEDqOfmHs=;
+  b=GWzdr7QQtc7iGI+hlLpdjUfpZ9VHLFj+MwQbjMafUJiGFqI/1w7pRNG1
+   iAAZkHSC0yCaCwWJoVhb0DKjJoCv2HkdTg4wl8V8Y6LOqVuG9rK2t/e59
+   tABd031L5GA7EaIvHJJLc9m90YMo4jzZB5qXF4/Wx3Gn+ixG+3P5aI235
+   fFw9US36cx2q+IyxdjUt37/RQgXThVuFtyiAldvkrZyIFOkq4//1e1tsc
+   7RThGSZMRKeb+oT24mmAOSG918fTKEkNexrZqya5wbXGNafjQOS43u0GQ
+   Ado7t7NMawssQa0laOUQuN51ZzGBPYsP4Bd9ONabbdTkUFcLgNWX8cuIH
+   g==;
+X-CSE-ConnectionGUID: F4Oi0LsFTjmQKuznI96Q2A==
+X-CSE-MsgGUID: brkbw5RiSnao9SrvbXDlPw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="57393593"
 X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="41216124"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 21:10:33 -0700
-X-CSE-ConnectionGUID: zruNx06+ROSRDz2s/oclFg==
-X-CSE-MsgGUID: Ho6XgQr/RpCuBexgRqxCQA==
+   d="scan'208";a="57393593"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 21:11:54 -0700
+X-CSE-ConnectionGUID: xze2ByH5QLiQbc87werCWw==
+X-CSE-MsgGUID: sdYGBr3rSLiuMhyMF+TPAQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="157913406"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 30 Jun 2025 21:10:30 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+   d="scan'208";a="153734372"
+Received: from igk-lkp-server01.igk.intel.com (HELO e588e990b675) ([10.91.175.65])
+  by fmviesa006.fm.intel.com with ESMTP; 30 Jun 2025 21:11:53 -0700
+Received: from kbuild by e588e990b675 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1uWSKC-000Zhy-0a;
-	Tue, 01 Jul 2025 04:10:28 +0000
-Date: Tue, 1 Jul 2025 12:09:45 +0800
+	id 1uWSLX-0001PD-0a;
+	Tue, 01 Jul 2025 04:11:51 +0000
+Date: Tue, 1 Jul 2025 06:11:31 +0200
 From: kernel test robot <lkp@intel.com>
-To: Ryan Chung <seokwoo.chung130@gmail.com>, hao.wu@intel.com,
-	trix@redhat.com, mdf@kernel.org, yilun.xu@intel.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-fpga@vger.kernel.org, linux-kernel-mentees@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Ryan Chung <seokwoo.chung130@gmail.com>
-Subject: Re: [PATCH] fpga: dfl: Replace scnprintf() with sysfs_emit()
-Message-ID: <202507011110.nJmYZDdm-lkp@intel.com>
-References: <20250630125018.48417-1-seokwoo.chung130@gmail.com>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev,
+	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: [gustavoars:testing/wfamnae-next20250616 1/19]
+ kernel/bpf/core.c:2582:22: warning: comparison of distinct pointer types
+ lacks a cast
+Message-ID: <202507010611.pCKM7IGa-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,67 +64,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250630125018.48417-1-seokwoo.chung130@gmail.com>
 
-Hi Ryan,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on linus/master]
-[also build test ERROR on v6.16-rc4 next-20250630]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Ryan-Chung/fpga-dfl-Replace-scnprintf-with-sysfs_emit/20250630-205221
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250630125018.48417-1-seokwoo.chung130%40gmail.com
-patch subject: [PATCH] fpga: dfl: Replace scnprintf() with sysfs_emit()
-config: i386-randconfig-011-20250701 (https://download.01.org/0day-ci/archive/20250701/202507011110.nJmYZDdm-lkp@intel.com/config)
-compiler: clang version 20.1.7 (https://github.com/llvm/llvm-project 6146a88f60492b520a36f8f8f3231e15f3cc6082)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250701/202507011110.nJmYZDdm-lkp@intel.com/reproduce)
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git testing/wfamnae-next20250616
+head:   78f053980ba50a0becae798ab7d07527d97e790d
+commit: 58bb0d96c1e2ad5ef83b1565b441ae40b9da2652 [1/19] treewide_some: fix multiple -Wfamnae warnings that must be audited separately
+config: nios2-randconfig-2001-20250701 (https://download.01.org/0day-ci/archive/20250701/202507010611.pCKM7IGa-lkp@intel.com/config)
+compiler: nios2-linux-gcc (GCC) 8.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250701/202507010611.pCKM7IGa-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507011110.nJmYZDdm-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507010611.pCKM7IGa-lkp@intel.com/
 
-All errors (new ones prefixed by >>):
+All warnings (new ones prefixed by >>):
 
->> drivers/fpga/dfl-afu-main.c:159:25: error: incompatible integer to pointer conversion passing 'unsigned long' to parameter of type 'const char *' [-Wint-conversion]
-     159 |         return sysfs_emit(buf, PAGE_SIZE, "%d\n", id);
-         |                                ^~~~~~~~~
-   include/vdso/page.h:15:19: note: expanded from macro 'PAGE_SIZE'
-      15 | #define PAGE_SIZE       (_AC(1,UL) << CONFIG_PAGE_SHIFT)
-         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/sysfs.h:492:39: note: passing argument to parameter 'fmt' here
-     492 | int sysfs_emit(char *buf, const char *fmt, ...);
-         |                                       ^
-   drivers/fpga/dfl-afu-main.c:478:25: error: incompatible integer to pointer conversion passing 'unsigned long' to parameter of type 'const char *' [-Wint-conversion]
-     478 |         return sysfs_emit(buf, PAGE_SIZE, "%016llx%016llx\n", guidh, guidl);
-         |                                ^~~~~~~~~
-   include/vdso/page.h:15:19: note: expanded from macro 'PAGE_SIZE'
-      15 | #define PAGE_SIZE       (_AC(1,UL) << CONFIG_PAGE_SHIFT)
-         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/sysfs.h:492:39: note: passing argument to parameter 'fmt' here
-     492 | int sysfs_emit(char *buf, const char *fmt, ...);
-         |                                       ^
-   2 errors generated.
+   kernel/bpf/core.c: In function 'bpf_prog_array_free_sleepable':
+>> kernel/bpf/core.c:2582:22: warning: comparison of distinct pointer types lacks a cast
+     if (!progs || progs == &bpf_empty_prog_array.hdr)
+                         ^~
 
 
-vim +159 drivers/fpga/dfl-afu-main.c
+vim +2582 kernel/bpf/core.c
 
-   152	
-   153	static ssize_t
-   154	id_show(struct device *dev, struct device_attribute *attr, char *buf)
-   155	{
-   156		struct dfl_feature_dev_data *fdata = to_dfl_feature_dev_data(dev);
-   157		int id = port_get_id(fdata);
-   158	
- > 159		return sysfs_emit(buf, PAGE_SIZE, "%d\n", id);
-   160	}
-   161	static DEVICE_ATTR_RO(id);
-   162	
+8c7dcb84e3b744 Delyan Kratunov 2022-06-14  2579  
+8c7dcb84e3b744 Delyan Kratunov 2022-06-14  2580  void bpf_prog_array_free_sleepable(struct bpf_prog_array *progs)
+8c7dcb84e3b744 Delyan Kratunov 2022-06-14  2581  {
+8c7dcb84e3b744 Delyan Kratunov 2022-06-14 @2582  	if (!progs || progs == &bpf_empty_prog_array.hdr)
+8c7dcb84e3b744 Delyan Kratunov 2022-06-14  2583  		return;
+8c7dcb84e3b744 Delyan Kratunov 2022-06-14  2584  	call_rcu_tasks_trace(&progs->rcu, __bpf_prog_array_free_sleepable_cb);
+8c7dcb84e3b744 Delyan Kratunov 2022-06-14  2585  }
+8c7dcb84e3b744 Delyan Kratunov 2022-06-14  2586  
+
+:::::: The code at line 2582 was first introduced by commit
+:::::: 8c7dcb84e3b744b2b70baa7a44a9b1881c33a9c9 bpf: implement sleepable uprobes by chaining gps
+
+:::::: TO: Delyan Kratunov <delyank@fb.com>
+:::::: CC: Alexei Starovoitov <ast@kernel.org>
 
 -- 
 0-DAY CI Kernel Test Service
