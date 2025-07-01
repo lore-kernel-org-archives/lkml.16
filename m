@@ -1,111 +1,176 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F4B1E515;
-	Tue,  1 Jul 2025 07:11:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1AD9258CD0;
+	Tue,  1 Jul 2025 07:12:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751353920; cv=none; b=Ma6eGaTUmXNJ+L8EqFaOQy0Fe2Yi44AYazRvMbH49JJnqJvu5ip+LOwTMTXBjUJSA3b5n77K0wWf6VxuA6PsMziX++37JRlt5vkVQngrqbXdvjKNLIFoeiWVv9iaSJ2hu7G8bYzi31F050LROaygUbEs1aM7TvJl4FZVARTqdtE=
+	t=1751353938; cv=none; b=b4M47tkzCiVVl82mptWNqkYX1tMKImK8cfYQ8CVQh/diIn0CCvwqZJ6ASfwY1NAwnj3WIfy7DaI9ngQ6QSOUB/oqRF4BfHFL4YxB4VQDHmhuae/o1J5mH1ww7zehecBJbAR8KNIYWBjk8pqQXfRGnTpuF96Nn1erA6stBwPWRBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751353920; c=relaxed/simple;
-	bh=r9eNb2w072WvQ8hTLi0qds1C3mGmLZw/n+2hp5N2wPQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=h2K/43qZ/PD0U2T3prN+36s2CHRi/mqovLZdQJfr/lQt3mtJB87oqHPA4uYbB9P+4o5tf48btw/HlR4UqVS/dgLnO/zrmUWXSWO5n61/STDFYQfTn78AZIrOPvn+0qzFOMCymqWD33iz5At76mgLhj+9w1P2KTa4jfIwrM5JaCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Jn7H8vOc; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1751353938; c=relaxed/simple;
+	bh=oDlHROwnSUQAjiRI45qrW1tco2YeBy9XuAhSB10GC4I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=by5q+peidXxgkHFTvXY+ipWVCcSNeK9gKGo3b43FD0qoDXkqDtqGgnoKYAzsYIJcYJMmRZIUJqW4KB1AECTjohfTu34rAkDutmOigBNR8KizMy6+njWfxJ54yvBWZYlIg3F2jCLxp3MKcfChlcfL6ijV6EXQDKqh/CnzJOA+8vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pdxa7Ygw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Jn7H8vOc"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5612IZfh012666;
-	Tue, 1 Jul 2025 09:11:37 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	pjEU9ubolXq6bNyzBdOl3AlCHglaTXh8+re7Vdnli3k=; b=Jn7H8vOcNMzX2slj
-	XzBW1YVZpqYxreG+phG/EWQUK5cjaSMAFvyr4ircFjTLgeyKt/K/GVEr9JmSJ7H+
-	sZ0DgzlhQ2WFAoKx1IXs9k4bktUtqGc18MBGdoNiEzPCWWQp4BZ/g7/rgiwwOVqT
-	XzRf3NYqKYM60MspwnJpyyBGLV1eyk04Aa0O7UFWXEjt+mnlXnUHfHsZLqUPPS3v
-	SHd2IL+MfukystmnC4Od8EGySAYy0Hv8ItD5EstgTqqcfEfG/0emb5z2TjW8nI1q
-	dtQzGNLKNIXjV7wTNqjZ2nbXLW7YGFK62EuOBrnheoU3cLfAoh7QBK09MaokwTFI
-	xRoIhg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47j7r637m7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 01 Jul 2025 09:11:37 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 5F4CC40058;
-	Tue,  1 Jul 2025 09:10:30 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8B1A5B83746;
-	Tue,  1 Jul 2025 09:09:33 +0200 (CEST)
-Received: from [10.48.86.185] (10.48.86.185) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 1 Jul
- 2025 09:09:32 +0200
-Message-ID: <cd2f6752-6d3a-4fca-93c5-70ad7529617f@foss.st.com>
-Date: Tue, 1 Jul 2025 09:09:32 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pdxa7Ygw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00C02C4CEEB;
+	Tue,  1 Jul 2025 07:12:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751353938;
+	bh=oDlHROwnSUQAjiRI45qrW1tco2YeBy9XuAhSB10GC4I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pdxa7Ygw0iJhae1lmE6peOvCQtLgifNJK5c0mRyb3+SFBZLhdLNY0bFDrJ3SUGD0u
+	 ImPPVaUPmNG7KQQaVsPfr4SRenJxTXESTN4Ho9vHaxONsdrzWLQGCGwdCuEOqijCa+
+	 7HbfMqyIZpHZUVguVWh5fFgx5gO5TkmWUi3qRLa0ekyGhNYefhRy95kMYljud5+wJG
+	 ANUfwQM2wzzKsOEKdRtS1jAW2TnjM2NHPixM5R4Eo1bAS4rmOXFqVhhKnEOMxZmD7A
+	 FKJCOfBX8oXEB5oxIxcWTxmrPuAMlK7KPn3trYtQf7YgPZjI8XD/xDVu+FStj5kvkp
+	 5OufS2d464zQw==
+Date: Tue, 1 Jul 2025 09:12:15 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Saravana Kannan <saravanak@google.com>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
+	Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, 
+	"T.J. Mercier" <tjmercier@google.com>, Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>, 
+	Jared Kangas <jkangas@redhat.com>, Mattijs Korpershoek <mkorpershoek@kernel.org>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+Subject: Re: [PATCH v5 1/2] dt-bindings: reserved-memory: Introduce
+ carved-out memory region binding
+Message-ID: <20250701-frisky-resolute-hamster-3dfedc@houat>
+References: <20250617-dma-buf-ecc-heap-v5-0-0abdc5863a4f@kernel.org>
+ <20250617-dma-buf-ecc-heap-v5-1-0abdc5863a4f@kernel.org>
+ <20250627193132.GB4032621-robh@kernel.org>
+ <20250630-attentive-fortunate-turaco-2e36d2@houat>
+ <20250630220819.GA3454648-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] spi: stm32: delete stray tabs in
- stm32h7_spi_data_idleness()
-To: Dan Carpenter <dan.carpenter@linaro.org>
-CC: Alain Volmat <alain.volmat@foss.st.com>, Mark Brown <broonie@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        <linux-spi@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-References: <2033b9fa-7b0f-4617-b94e-7b0a51c5c4b1@sabinyo.mountain>
-Content-Language: en-US
-From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
-In-Reply-To: <2033b9fa-7b0f-4617-b94e-7b0a51c5c4b1@sabinyo.mountain>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-01_01,2025-06-27_01,2025-03-28_01
-
-Hi Dan,
-
-Thank you.
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="rehsid5ue72jvztb"
+Content-Disposition: inline
+In-Reply-To: <20250630220819.GA3454648-robh@kernel.org>
 
 
-On 6/30/25 21:35, Dan Carpenter wrote:
-> These lines were indented one tab more than they should be.  Delete
-> the stray tabs.
-> 
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> ---
->   drivers/spi/spi-stm32.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
-> index 3d20f09f1ae7..afb54198bde7 100644
-> --- a/drivers/spi/spi-stm32.c
-> +++ b/drivers/spi/spi-stm32.c
-> @@ -1895,8 +1895,8 @@ static void stm32h7_spi_data_idleness(struct stm32_spi *spi, struct spi_transfer
->   		if (spi_delay_ns) {
->   			dev_warn(spi->dev, "Overriding st,spi-midi-ns with word_delay_ns %d\n",
->   				 spi_delay_ns);
-> -				spi->cur_midi = spi_delay_ns;
-> -			}
-> +			spi->cur_midi = spi_delay_ns;
-> +		}
->   	} else {
->   		spi->cur_midi = spi_delay_ns;
->   	}
+--rehsid5ue72jvztb
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v5 1/2] dt-bindings: reserved-memory: Introduce
+ carved-out memory region binding
+MIME-Version: 1.0
 
-Reviewed-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+On Mon, Jun 30, 2025 at 05:08:19PM -0500, Rob Herring wrote:
+> On Mon, Jun 30, 2025 at 06:41:38PM +0200, Maxime Ripard wrote:
+> > Hi Rob,
+> >=20
+> > On Fri, Jun 27, 2025 at 02:31:32PM -0500, Rob Herring wrote:
+> > > On Tue, Jun 17, 2025 at 02:25:40PM +0200, Maxime Ripard wrote:
+> > > > Some parts of the memory can be dedicated to specific purposes and
+> > > > exposed as a dedicated memory allocator.
+> > > >=20
+> > > > This is especially useful if that particular region has a particular
+> > > > properties the rest of the memory doesn't have. For example, some
+> > > > platforms have their entire RAM covered by ECC but for a small area
+> > > > meant to be used by applications that don't need ECC, and its assoc=
+iated
+> > > > overhead.
+> > > >=20
+> > > > Let's introduce a binding to describe such a region and allow the O=
+S to
+> > > > create a dedicated memory allocator for it.
+> > > >=20
+> > > > Signed-off-by: Maxime Ripard <mripard@kernel.org>
+> > > > ---
+> > > >  .../bindings/reserved-memory/carved-out.yaml       | 49 ++++++++++=
+++++++++++++
+> > > >  1 file changed, 49 insertions(+)
+> > > >=20
+> > > > diff --git a/Documentation/devicetree/bindings/reserved-memory/carv=
+ed-out.yaml b/Documentation/devicetree/bindings/reserved-memory/carved-out.=
+yaml
+> > > > new file mode 100644
+> > > > index 0000000000000000000000000000000000000000..9ab5d1ebd9ebd9111b7=
+c064fabe1c45e752da83b
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/reserved-memory/carved-out.=
+yaml
+> > > > @@ -0,0 +1,49 @@
+> > > > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/reserved-memory/carved-out.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Carved-out Memory Region
+> > > > +
+> > > > +description: |
+> > >=20
+> > > Don't need '|'.
+> > >=20
+> > > > +  Specifies that the reserved memory region has been carved out of=
+ the
+> > > > +  main memory allocator, and is intended to be used by the OS as a
+> > > > +  dedicated memory allocator.
+> > >=20
+> > > Other than the commit msg, it is completely lost that this is for=20
+> > > ECC-less memory.
+> >=20
+> > Because it's not. One of the first feedback I got was that the way to
+> > identify what a heap provides was the heap name.
+> >=20
+> > So, as far as the binding go, a heap just exposes a chunk of memory the
+> > memory allocator wouldn't use. The actual semantics of that chunk of
+> > memory don't matter.
+>=20
+> But they do because you use one carve out for one thing and another=20
+> carve out for another purpose and they probably aren't interchangeable.
 
-Best regards,
-Clément
+That was also my initial thought, but it was then discussed that the
+name of the region is enough of a discriminant. And it makes sense too,
+it's a sufficient discriminant for the device tree to uniquely identify
+a given memory region on a given platform already, so we don't really
+need anything else.
+
+> For the most part, everything in /reserved-memory is a carve out from=20
+> regular memory though we failed to enforce that.
+>=20
+> > > This description applies to CMA area as well. So what's the differenc=
+e?
+> >=20
+> > Yeah, I kind of agree, which is why I initially started with a property,
+> > and you then asked for a compatible.
+>=20
+> My issues with properties is we have to support N factorial cases for=20
+> combinations of N properties. It's already fragile. Whereas a compatible=
+=20
+> is (hopefully) well defined as to what's needed and is only 1 more case=
+=20
+> to support.
+
+I think that's also what John especially wanted to avoid. If we have a
+generic compatible, but the attributes/properties/whatever of the
+buffers allocated from that region differ (like ecc vs non-ecc,
+protected vs non-protected, etc.) we will need properties in the device
+tree to describe them too.
+
+Maxime
+
+--rehsid5ue72jvztb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaGOKSgAKCRAnX84Zoj2+
+drdWAX9sIEhbIgQPAplf8S31a/8A+5wsrLKgnLMLcjff1DMeHSs96RQVVeLyGvXL
+12TzaegBf1HuvPhapoA7UkipLJ02FrPK1L91laUNIvV3mjRVccezFspf68+ATWbr
+/C5budOfXA==
+=akIL
+-----END PGP SIGNATURE-----
+
+--rehsid5ue72jvztb--
