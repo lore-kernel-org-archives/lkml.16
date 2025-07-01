@@ -1,74 +1,71 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6CD21D5BC
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 12:55:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B28825B1CE
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 12:56:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751374555; cv=none; b=bzZR7XzMiEdPeAfqcUWHL1ytZ28xJSd9EooDNiSsL+97fwPr/ZhouoAN7miI87pIbSUXw+DYFQai5cmSPE4IsRTM8Wvj6y23tLz1PSktiPlHVm/68107Dg3sIeHvJeT3MvRwMxna6ES2NaqQXX0oOQuCYiM0MJZWxbMZG8v8bd0=
+	t=1751374568; cv=none; b=HDhzGdRgMD4sifW7Lv7ntRYfi7lFe8bpEH38ZXv+JxHNmu4YrOYVtW5/6tQQg27BYf2aRiVvys1pzTMWUfsQM7oqMk6AQB7hmFIhG+I0l0Lqrcyn2XqokydGDOdXgc4jwtbe1jp4nePOGJwV5Nb6BA/yZZGJND0T3Ww46ATRzUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751374555; c=relaxed/simple;
-	bh=sHS9MBxXhSjtQP3YCYQvE5WOQhueivRjaySe1XeeqxQ=;
+	s=arc-20240116; t=1751374568; c=relaxed/simple;
+	bh=TKG5IymVnkXJex1Gwu3CospUcoxQz3nNTflPsWghNUs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OayXEmUpSkmIwVxGIAnxNVuGG4NckvUC+9pzMBZovzZ97ZCrxA99/xG8Dja68vtFn4N0+LKmtnq5ABxDoZheqEWVbtyVS4PIvHAcORKiQZPa40oRj0xL8v2A3eew2cYEz/1HMaSRCQa2Ey/yviV1rOorE8qT0Y3XR772rNadDZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b3Wz2YK/; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=UDnN1yS0jJxKcFSrpbrsht8jbUbAgMMZo9GpLDMJ1sdtgGP16n2YFEeCMITY35EKstTpKJIuqZJoamdnkZtApyIayRUFgc/m+peNhRzyYu+3nBrERxjp+5P2REvVTOGX8v1Y1f57OLTeQpXgb2QI4TFiQGcpPnLkrWF/7nHRUds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UpTKZY0l; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b3Wz2YK/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UpTKZY0l"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751374552;
+	s=mimecast20190719; t=1751374566;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=fnB33XQoGQDBHvWZjbh/j4QK8wEM7ZCiM3Xa5XDZLWE=;
-	b=b3Wz2YK/g//a2x1oGYZPSOZGVR9M00xJL5d3snW05Lp/bJTibN5PrOq3tpxmq7WsGSGpuu
-	rhxv/uIdBN+VNj+If0MoAsFz+tlhAnpF7WKrs6JtVy305eWM8Wnvo0YTeT13FctcYmiLKz
-	ZSQsjdJ9iwyCc9rc1yM3tcrXjXRKxkM=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZBTTVjLLJBrVGUELHkLxjKRb9WdjU8gNsqCCuiEsmE4=;
+	b=UpTKZY0lWq/di5n9flfildEPiDACfJxCz7AXgfORlUIra4Ni41EXN/jqltnP6aUWkXmOEl
+	V+Skv/ulqxWiacWD06IZOWlfIYH7sgwM0qV/pNxaCeB+oznzxi9AMu9FD+5ixfcpJ7JjD9
+	f3nud99PN3PNJeUWB5vhCeA2xGij0Lw=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-421-lLrvcdCMOJOunjVTEfp8_Q-1; Tue, 01 Jul 2025 08:55:51 -0400
-X-MC-Unique: lLrvcdCMOJOunjVTEfp8_Q-1
-X-Mimecast-MFC-AGG-ID: lLrvcdCMOJOunjVTEfp8_Q_1751374550
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a6d1394b07so3608287f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 05:55:51 -0700 (PDT)
+ us-mta-593-EGl9WnKKPgaxBTs9US8coQ-1; Tue, 01 Jul 2025 08:56:05 -0400
+X-MC-Unique: EGl9WnKKPgaxBTs9US8coQ-1
+X-Mimecast-MFC-AGG-ID: EGl9WnKKPgaxBTs9US8coQ_1751374564
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-451d5600a54so38251025e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 05:56:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751374550; x=1751979350;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=fnB33XQoGQDBHvWZjbh/j4QK8wEM7ZCiM3Xa5XDZLWE=;
-        b=mNGtxGZqKRiWAYNyg3XiCgNt2gr8b5qjP6jY6DrPTjAAjrBY7Rw+mLJrZEHEnRJqOo
-         R0wbwdY0N+LxKcITCHJGw5Ovt+N8450IBwqbyxN+Hqzr+ZWLNGestKqCyF81izoCKJCK
-         DKMXcBjgWdzvFe8cdrah/DhEn/6g2klSKhRxDkNAIAUW6CmMtLVUdPlqd7XJmSBjQTAz
-         COtQu9HDhOkMEgxKLKt07vaRXzWQm0inw8O38xTs3HxBLORC8N++fEaEwjGT3N+HmZoQ
-         29QcQXqYlzGOlKr9vMNZcLnjpLqeXosdQg/PY/EMuXaot2moaFQoZzGoW7X4hplngaO+
-         VRvg==
-X-Forwarded-Encrypted: i=1; AJvYcCUc3kr97WTLVw56sTmg+DUiH6UGIXLhAV7pXWC7Sw2BPLQ46XFDbKrZeBY1qgx92xZW8vZIKvDVbGH+wFA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYY371lGjr1b5dyNMVbknmFlx4ylWmtvkc9HN5AFRKOYNazw68
-	f12+mjWDMlyp0eCV4Kj82dNgQ2XQVVSseY7+hUPYCvdjDoYDa6ORvpVM2tzxAZEQs8gsdzlXavx
-	ZadRCoDtPZY8QvNdCf+ml2lGWi4nmQrtLKO57Hv5WSTr8ZGlxeGH+iVRtG1Yje59ZIVgk9vRN1t
-	f1
-X-Gm-Gg: ASbGncuN8P7iBEDXGjDEEaHhI+fS/qsAJpfkq2HbLn0WKyrBR15/o+tIDH4AfRAje6k
-	BLBLVO50I4V3RP0xRfM5P4vQQRm18jLg//2D7UYw3WGsYMclMCz9tsJ/cIg6NYsHVXrm5mzUJ4V
-	dtJkXFyj7yuXOhq67d5xetkg2VtgRIFWQOHXgf9A3110xv2YamVHwJ8695MaWm2JGnlcCjpG6R/
-	SiRz77RHoVwh5jGYncQ66J1gDAyKT+k35vJNHC00MzthxivTqCXp4YH4SL6ug416CJkwzxfElXu
-	aXEjk1575cwICeXfvaeB5ZhZ+37HU6C0D7GNFZwmWVrFKW+DS3A4a47/zWK41plww7INTxsgiuA
-	hKwy4JgYwX60BXNIAPViokYFss5imoApYbIOVroqr3UEvn5xH3A==
-X-Received: by 2002:adf:e981:0:b0:3a5:243c:6042 with SMTP id ffacd0b85a97d-3a90d0d6e02mr13646460f8f.2.1751374550027;
-        Tue, 01 Jul 2025 05:55:50 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHPtFa0jHrm/VwBn2EFiFfCmF+UQrcUJ7KtnwtFkjtKof7fiR73gTPqt4rSIH3zxChk5ou/ow==
-X-Received: by 2002:adf:e981:0:b0:3a5:243c:6042 with SMTP id ffacd0b85a97d-3a90d0d6e02mr13646440f8f.2.1751374549611;
-        Tue, 01 Jul 2025 05:55:49 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f18:7500:202e:b0f1:76d6:f9af? (p200300d82f187500202eb0f176d6f9af.dip0.t-ipconnect.de. [2003:d8:2f18:7500:202e:b0f1:76d6:f9af])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e52ca4sm13292732f8f.58.2025.07.01.05.55.48
+        d=1e100.net; s=20230601; t=1751374564; x=1751979364;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZBTTVjLLJBrVGUELHkLxjKRb9WdjU8gNsqCCuiEsmE4=;
+        b=m54Z/oMsD2Rq/4//nN3QqipTJZEEZwtZktiH1t7AVjfAK5n4PeYnT5TagvzbbiW7SU
+         smVVpqBwUDuMmtA/YjOp/KAXgEvDwr2M+xW1tb6YRYYsCG88uy+qsAfmRj0ZffukbQof
+         5XJXX75JBFtI5IVfik3UNps1wBHdjgedZdqTqcmHZmmH6cpCoZ5mjSJuaVX+grf8sObq
+         GTF6Udhm3q3Md6I8T75Xba93CQhAZkYRPawW2H1fsh3HLxZLV7Vn5KvomEY/0V76M6I+
+         9Zp5+gM5kMq93VfhMQtHJJHhBusxXmn8AjtLggcgywmyrw2da0hZI2jY3bSSF0lWKHqP
+         /GBg==
+X-Forwarded-Encrypted: i=1; AJvYcCXJ8Mmlo4YNr/hLOe/YnMXcmupl6BhRQJ76mrtagtjHfeSf+st7YcFI0g+KgpEioAapryqfoTuqbLXGK4M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBxLb2Ig1tKggOxxWplqBJzDqI6RYZ8GInNCY5/81dlk4+7YOP
+	58olD47jCgX/0WxUeMvXy7TK05IJ6iSXLx2VPI++glEBDCRhYlBmOBhRRqvxtRaDO7hdD1gj9hz
+	Imc5ade48irWwUI6zTH4zLX0RwgMUOEbqEyF5q6cWkYhpWK8Ndt0i2kC3Se+ldYEUkQ==
+X-Gm-Gg: ASbGnctGE56UUO2PTiiqLvjxwXTqvxRds3pT0Qia/lqsTXs5Xps/4vyh7Gz9mtgBqo/
+	BIxh5roTDJaRjdmO5/CMk42oFA9wWA9PJ9e+CXFM8Ki0O2LkU9bMpJZLEtthbiB1GeTT8dKsTJ/
+	C1HuUHGTtZI5Jltp3SO69dcw8BfsGXdd5sb0tlfOU/Mldc1SY2XXBYiau8NHh7ByrtxfifAL+ca
+	nG1BFLUvbeNUM1Z5qOFx0wjm5r3ZNwoSEeoUYUhIlXaoV7t1xPiPNUPyHOKuiey5qO6FPCFnS47
+	38dZM/Npq6yoOSuiMQ908EG/VzeYT6IaidUrpSRmunPu1q/ToUkC591DDsXKUCeYptm9mg==
+X-Received: by 2002:a05:600c:4752:b0:453:a95:f07d with SMTP id 5b1f17b1804b1-4538ee27811mr225406315e9.10.1751374563674;
+        Tue, 01 Jul 2025 05:56:03 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFaw4kk4Kktx3Hecxbs6t1i/0jp4a/LW9tAythw2vOj1c39nlQ1UxxFJwKx+MpgP7+zm22KQw==
+X-Received: by 2002:a05:600c:4752:b0:453:a95:f07d with SMTP id 5b1f17b1804b1-4538ee27811mr225405765e9.10.1751374563208;
+        Tue, 01 Jul 2025 05:56:03 -0700 (PDT)
+Received: from ?IPV6:2a0d:3344:247b:5810:4909:7796:7ec9:5af2? ([2a0d:3344:247b:5810:4909:7796:7ec9:5af2])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e595c6sm13522571f8f.66.2025.07.01.05.56.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 05:55:49 -0700 (PDT)
-Message-ID: <378617e0-f325-4d46-a97f-d98e1a657500@redhat.com>
-Date: Tue, 1 Jul 2025 14:55:48 +0200
+        Tue, 01 Jul 2025 05:56:02 -0700 (PDT)
+Message-ID: <f875faa2-718d-4244-bb86-2178fed55922@redhat.com>
+Date: Tue, 1 Jul 2025 14:56:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,77 +73,118 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/hugetlb: Use str_plural() in report_hugepages()
-To: Thorsten Blum <thorsten.blum@linux.dev>,
- Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20250630171826.114008-2-thorsten.blum@linux.dev>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH net-next v06 4/8] hinic3: Command Queue interfaces
+To: Fan Gong <gongfan1@huawei.com>, Zhu Yikai <zhuyikai1@h-partners.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, linux-doc@vger.kernel.org,
+ Jonathan Corbet <corbet@lwn.net>, Bjorn Helgaas <helgaas@kernel.org>,
+ luosifu <luosifu@huawei.com>, Xin Guo <guoxin09@huawei.com>,
+ Shen Chenyang <shenchenyang1@hisilicon.com>,
+ Zhou Shuai <zhoushuai28@huawei.com>, Wu Like <wulike1@huawei.com>,
+ Shi Jing <shijing34@huawei.com>, Meny Yossefi <meny.yossefi@huawei.com>,
+ Gur Stavi <gur.stavi@huawei.com>, Lee Trager <lee@trager.us>,
+ Michael Ellerman <mpe@ellerman.id.au>,
+ Vadim Fedorenko <vadim.fedorenko@linux.dev>, Suman Ghosh
+ <sumang@marvell.com>, Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+ Joe Damato <jdamato@fastly.com>,
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+References: <cover.1750937080.git.zhuyikai1@h-partners.com>
+ <6c5406f1e4981a5c4eb3345199f480e37a5e7223.1750937080.git.zhuyikai1@h-partners.com>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250630171826.114008-2-thorsten.blum@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <6c5406f1e4981a5c4eb3345199f480e37a5e7223.1750937080.git.zhuyikai1@h-partners.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 30.06.25 19:18, Thorsten Blum wrote:
-> Use the string choice helper function str_plural() to simplify the code
-> and to fix the following Coccinelle/coccicheck warning reported by
-> string_choices.cocci:
-> 
->    opportunity for str_plural(nrinvalid)
-> 
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> ---
+On 6/27/25 8:12 AM, Fan Gong wrote:
+> +static void cmdq_sync_cmd_handler(struct hinic3_cmdq *cmdq,
+> +				  struct cmdq_wqe *wqe, u16 ci)
+> +{
+> +	spin_lock(&cmdq->cmdq_lock);
+> +	cmdq_update_cmd_status(cmdq, ci, wqe);
+> +	if (cmdq->cmd_infos[ci].cmpt_code) {
+> +		*cmdq->cmd_infos[ci].cmpt_code = CMDQ_DIRECT_SYNC_CMPT_CODE;
+> +		cmdq->cmd_infos[ci].cmpt_code = NULL;
+> +	}
+> +
+> +	/* Ensure that completion code has been updated before updating done */
+> +	smp_rmb();
 
-Acked-by: David Hildenbrand <david@redhat.com>
+There is something off with the above barrier. It's not clear where is
+the paired wmb() and the comment looks misleading as this barrier order
+reads operation and not writes (as implied by 'updating').
 
--- 
-Cheers,
++static int cmdq_sync_cmd_direct_resp(struct hinic3_cmdq *cmdq, u8 mod,
+u8 cmd,
+> +				     struct hinic3_cmd_buf *buf_in,
+> +				     u64 *out_param)
+> +{
+> +	struct hinic3_cmdq_cmd_info *cmd_info, saved_cmd_info;
+> +	int cmpt_code = CMDQ_SEND_CMPT_CODE;
+> +	struct cmdq_wqe *curr_wqe, wqe = {};
+> +	struct hinic3_wq *wq = &cmdq->wq;
+> +	u16 curr_prod_idx, next_prod_idx;
+> +	struct completion done;
+> +	u64 curr_msg_id;
+> +	int errcode;
+> +	u8 wrapped;
+> +	int err;
+> +
+> +	spin_lock_bh(&cmdq->cmdq_lock);
+> +	curr_wqe = cmdq_get_wqe(wq, &curr_prod_idx);
+> +	if (!curr_wqe) {
+> +		spin_unlock_bh(&cmdq->cmdq_lock);
+> +		return -EBUSY;
+> +	}
+> +
+> +	wrapped = cmdq->wrapped;
+> +	next_prod_idx = curr_prod_idx + CMDQ_WQE_NUM_WQEBBS;
+> +	if (next_prod_idx >= wq->q_depth) {
+> +		cmdq->wrapped ^= 1;
+> +		next_prod_idx -= wq->q_depth;
+> +	}
+> +
+> +	cmd_info = &cmdq->cmd_infos[curr_prod_idx];
+> +	init_completion(&done);
+> +	refcount_inc(&buf_in->ref_cnt);
+> +	cmd_info->cmd_type = HINIC3_CMD_TYPE_DIRECT_RESP;
+> +	cmd_info->done = &done;
+> +	cmd_info->errcode = &errcode;
+> +	cmd_info->direct_resp = out_param;
+> +	cmd_info->cmpt_code = &cmpt_code;
+> +	cmd_info->buf_in = buf_in;
+> +	saved_cmd_info = *cmd_info;
+> +	cmdq_set_lcmd_wqe(&wqe, CMDQ_CMD_DIRECT_RESP, buf_in, NULL,
+> +			  wrapped, mod, cmd, curr_prod_idx);
+> +
+> +	cmdq_wqe_fill(curr_wqe, &wqe);
+> +	(cmd_info->cmdq_msg_id)++;
+> +	curr_msg_id = cmd_info->cmdq_msg_id;
+> +	cmdq_set_db(cmdq, HINIC3_CMDQ_SYNC, next_prod_idx);
+> +	spin_unlock_bh(&cmdq->cmdq_lock);
+> +
+> +	err = wait_cmdq_sync_cmd_completion(cmdq, cmd_info, &saved_cmd_info,
+> +					    curr_msg_id, curr_prod_idx,
+> +					    curr_wqe, CMDQ_CMD_TIMEOUT);
+> +	if (err) {
+> +		dev_err(cmdq->hwdev->dev,
+> +			"Cmdq sync command timeout, mod: %u, cmd: %u, prod idx: 0x%x\n",
+> +			mod, cmd, curr_prod_idx);
+> +		err = -ETIMEDOUT;
+> +	}
+> +
+> +	if (cmpt_code == CMDQ_FORCE_STOP_CMPT_CODE) {
+> +		dev_dbg(cmdq->hwdev->dev,
+> +			"Force stop cmdq cmd, mod: %u, cmd: %u\n", mod, cmd);
+> +		err = -EAGAIN;
+> +	}
+> +
+> +	smp_rmb(); /* read error code after completion */
 
-David / dhildenb
+Isn't the errcode updated under the spinlock protection? Why is this
+barrier neeed?
+
+/P
 
