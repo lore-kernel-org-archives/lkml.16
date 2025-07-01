@@ -1,51 +1,71 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6846225B1CE;
-	Tue,  1 Jul 2025 12:55:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37B80274658;
+	Tue,  1 Jul 2025 12:55:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751374510; cv=none; b=rizWQeN7cHs6YrcsymorKq+xLobrVHXZu3auCidn4GLjrAIzVV0PfH9YjbGtvpY+73ewY15s74FHYttBA10vrj+aMqoNksJGwb0U1Vvfw2ppPOlUrpsyu4vjVRqpfCuRMjHCdbksP1re/dZBI3XfEdggHIeCgCI6fbUPO9p0fNQ=
+	t=1751374516; cv=none; b=enCyMt5Yk/PvCBXfgl3Ew31CR53YWr1XBG4JGWL9I7uSMaekPoSsJy0s1AfVkwK/bcViYKLYB1t0xAijfm18csliQPQUynmMYH6rMXb0de39aNnhAWSrU6L39kntUH17kQTSJYwfwKMBO8Yaqve1qoXqmceMD1Va46HolKCmTTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751374510; c=relaxed/simple;
-	bh=nzggGWx4p+gDrJfbB0Id3oN2NbnVR5ofyjmtoHxcMXY=;
+	s=arc-20240116; t=1751374516; c=relaxed/simple;
+	bh=+yY+3KSt3ynAhcXYbFssvIUhcWthWIfrF7Ct2jTDnvE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sPdpq9hwc/obOo9Hqx57YQlU8HxPAzDO6t3g4wBoKkfDhJzUP/s1pDcAM87mqG0AFcDKDhH04G6uL1GzOuDDp3OQEY5yY8zvGgKj7botAzf/5QZ6w9VKDIww+IrNV1JFAECnhecQREN7ZXBfDnAhqaWu/3RldFhXoJGqD9v1oQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=KoPp5MBr; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=bjgBuFTbY3Fi5b1EiJz2oekJpE5EB7D6TWzbeSizyaCwRBLFZ1q3CqICBLI/nX1Qc6owIBRRP8RaZ6q9ayEMpQtsdnG/xdfP3UKoNFT7Z2ERtFSM76Gkain5qMbUUUSMdAJz0NOLBfD7+/sIiPxZXgT4niMwLYtQdxV0ZTQMaPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E3XnNBvb; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KoPp5MBr"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=4HIb0Zr48fpHIexI58bU8KpKg1eiHR/L5Tbs/Tkn9xM=; b=KoPp5MBrWseJ+RbevAO5vx0MwF
-	w62up+Ht+FyTrHV6PZO2Ub2vXUb8mjQDwF1fKYoFfY+NPel4+3EXhM8d5bK3iu2Lnl09Or56H6P2h
-	Gr5V4lWHeKHdY9lGOHaHqKJ+dmE8gxt9x6s6DAAJmlMvIhCKrSIVkzpMZT/aepRUGi1Dv3sjS3/gJ
-	mmmYGtNPNvobmCsYRKMH/tKZyod6u2H2fPEt+j90ZQBRuHNj0lXn1BTuscRvMuLud4+if3WErRH2y
-	/LnOylwI+qGeaIUmHLIW4x7lPZMGWdfczFjv4gkmPG1JUGqqC4OHSRvO5kw+3Hdtoa9N8WqceA9Pg
-	6c1Bbrmw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uWaVo-000000075RC-3HBK;
-	Tue, 01 Jul 2025 12:55:01 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id CF88B30012D; Tue, 01 Jul 2025 14:54:59 +0200 (CEST)
-Date: Tue, 1 Jul 2025 14:54:59 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Andy Lutomirski <luto@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] tracing: Fix inconsistency in irq tracking on NMIs
-Message-ID: <20250701125459.GL1613200@noisy.programming.kicks-ass.net>
-References: <20250625120823.60600-1-gmonaco@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E3XnNBvb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751374515; x=1782910515;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+yY+3KSt3ynAhcXYbFssvIUhcWthWIfrF7Ct2jTDnvE=;
+  b=E3XnNBvbwc5PMaWc6qqXuJQiGubgUQUNv0tA4bVkmzHlcTAghMvoWLqT
+   dsHRC/GW+LzorjKGBaLSLFNL0drM7NnsrS6gTOLo/lXWpjzlLtNDV4etc
+   OHyqtNLzKj+7Dt+V8WTOQIk9R0gEEGscZmSyF8ArETb1mkcUE81YnlE5Q
+   4U9fwVnQwdB75PUfmBthzaseVhTOCInfKQx9dvAUFUTvap0uKz1WgPr+s
+   mReNnUuQzzA1Fh5oXgH74q5QH208v9Bkujh35tLgW1PZda7VZGgWx+uNp
+   IBoZ7TV7fng7M4fmzHxP0E+hM2fJI9pnfa9vS/qDZjY79wuWcUzAdNLvw
+   w==;
+X-CSE-ConnectionGUID: nrL0BwRMTAelmzWj4L1m2A==
+X-CSE-MsgGUID: g+/zTLSmS4KjUSNnriQXrw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="53508848"
+X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
+   d="scan'208";a="53508848"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 05:55:14 -0700
+X-CSE-ConnectionGUID: Ttnvo9hlSQCNzeMQoACEKQ==
+X-CSE-MsgGUID: 1FfFZIGZQ+mRVtirxIX0NA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
+   d="scan'208";a="154081383"
+Received: from kuha.fi.intel.com ([10.237.72.152])
+  by fmviesa009.fm.intel.com with SMTP; 01 Jul 2025 05:55:09 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 01 Jul 2025 15:55:08 +0300
+Date: Tue, 1 Jul 2025 15:55:08 +0300
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Lucas De Marchi <lucas.demarchi@intel.com>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Jan Dabros <jsd@semihalf.com>, Andi Shyti <andi.shyti@kernel.org>,
+	Raag Jadav <raag.jadav@intel.com>,
+	"Tauro, Riana" <riana.tauro@intel.com>,
+	"Adatrao, Srinivasa" <srinivasa.adatrao@intel.com>,
+	"Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+	intel-xe@lists.freedesktop.org, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 1/5] i2c: designware: Use polling by default when
+ there is no irq resource
+Message-ID: <aGParHQ3GSdAA8rL@kuha.fi.intel.com>
+References: <20250701122252.2590230-1-heikki.krogerus@linux.intel.com>
+ <20250701122252.2590230-2-heikki.krogerus@linux.intel.com>
+ <aGPXwll6Hh2cZfnp@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,125 +74,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250625120823.60600-1-gmonaco@redhat.com>
+In-Reply-To: <aGPXwll6Hh2cZfnp@smile.fi.intel.com>
 
-On Wed, Jun 25, 2025 at 02:08:22PM +0200, Gabriele Monaco wrote:
-> The irq_enable/irq_disable tracepoints fire only when there's an actual
-> transition (enabled->disabled and vice versa), this needs special care
-> in NMIs, as they can potentially start with interrupts already disabled.
-> The current implementation takes care of this by tracking the lockdep
-> state on nmi_entry as well as using the variable tracing_irq_cpu to
-> synchronise with other calls (e.g. local_irq_disable/enable).
+On Tue, Jul 01, 2025 at 03:42:42PM +0300, Andy Shevchenko wrote:
+> On Tue, Jul 01, 2025 at 03:22:48PM +0300, Heikki Krogerus wrote:
+> > The irq resource itself can be used as a generic way to
+> > determine when polling is needed.
+> > 
+> > This not only removes the need for special additional device
+> > properties that would soon be needed when the platform may
+> > or may not have the irq, but it also removes the need to
+> > check the platform in the first place in order to determine
+> > is polling needed or not.
 > 
-> This can be racy in case of NMIs when lockdep is enabled, and can lead
-> to missing events when lockdep is disabled.
+> > Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > ---
+> > Hi guys,
+> > 
+> > I found the thread with Jarkko's comments from my archives. He wanted
+> > the local flags variable to be added because he wants the order of the
+> > calls to remain as it is now - the device is allocated only after the
+> > irq is checked.
 > 
-> Remove dependency on the lockdep status in the NMI common entry/exit
-> code and adapt the tracing code to make sure that:
+> Yes, thanks.
 > 
-> - The first call disabling interrupts fires the tracepoint
-> - The first non-NMI call enabling interrupts fires the tracepoint
-> - The last NMI call enabling interrupts fires the tracepoint unless
->   interrupts were disabled before the NMI
-> - All other calls don't fire
-
-I'm not at all convinced this is correct. Nor can I understand anything
-much about what you wrote above.
-
-
->  arch/arm64/kernel/entry-common.c |  5 ++---
->  kernel/entry/common.c            |  5 ++---
->  kernel/trace/trace_preemptirq.c  | 12 +++++++-----
->  3 files changed, 11 insertions(+), 11 deletions(-)
+> ...
 > 
-> diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
-> index 7c1970b341b8c..7f1844123642e 100644
-> --- a/arch/arm64/kernel/entry-common.c
-> +++ b/arch/arm64/kernel/entry-common.c
-> @@ -213,10 +213,9 @@ static void noinstr arm64_exit_nmi(struct pt_regs *regs)
->  	bool restore = regs->lockdep_hardirqs;
->  
->  	ftrace_nmi_exit();
-> -	if (restore) {
-> -		trace_hardirqs_on_prepare();
-> +	trace_hardirqs_on_prepare();
-> +	if (restore)
->  		lockdep_hardirqs_on_prepare();
-> -	}
->  
->  	ct_nmi_exit();
->  	lockdep_hardirq_exit();
-> diff --git a/kernel/entry/common.c b/kernel/entry/common.c
-> index a8dd1f27417cf..e234f264fb495 100644
-> --- a/kernel/entry/common.c
-> +++ b/kernel/entry/common.c
-> @@ -343,10 +343,9 @@ void noinstr irqentry_nmi_exit(struct pt_regs *regs, irqentry_state_t irq_state)
->  {
->  	instrumentation_begin();
->  	ftrace_nmi_exit();
-> -	if (irq_state.lockdep) {
-> -		trace_hardirqs_on_prepare();
-> +	trace_hardirqs_on_prepare();
-> +	if (irq_state.lockdep)
->  		lockdep_hardirqs_on_prepare();
-> -	}
->  	instrumentation_end();
->  
->  	ct_nmi_exit();
-> diff --git a/kernel/trace/trace_preemptirq.c b/kernel/trace/trace_preemptirq.c
-> index 0c42b15c38004..fa45474fc54f1 100644
-> --- a/kernel/trace/trace_preemptirq.c
-> +++ b/kernel/trace/trace_preemptirq.c
-> @@ -58,7 +58,11 @@ static DEFINE_PER_CPU(int, tracing_irq_cpu);
->   */
->  void trace_hardirqs_on_prepare(void)
->  {
-> -	if (this_cpu_read(tracing_irq_cpu)) {
-> +	int tracing_count = this_cpu_read(tracing_irq_cpu);
-> +
-> +	if (in_nmi() && tracing_count > 1)
-> +		this_cpu_dec(tracing_irq_cpu);
-> +	else if (tracing_count) {
->  		trace(irq_enable, TP_ARGS(CALLER_ADDR0, CALLER_ADDR1));
->  		tracer_hardirqs_on(CALLER_ADDR0, CALLER_ADDR1);
->  		this_cpu_write(tracing_irq_cpu, 0);
-> @@ -89,8 +93,7 @@ NOKPROBE_SYMBOL(trace_hardirqs_on);
->   */
->  void trace_hardirqs_off_finish(void)
->  {
-> -	if (!this_cpu_read(tracing_irq_cpu)) {
-> -		this_cpu_write(tracing_irq_cpu, 1);
-> +	if (this_cpu_inc_return(tracing_irq_cpu) == 1) {
->  		tracer_hardirqs_off(CALLER_ADDR0, CALLER_ADDR1);
->  		trace(irq_disable, TP_ARGS(CALLER_ADDR0, CALLER_ADDR1));
->  	}
-> @@ -103,8 +106,7 @@ void trace_hardirqs_off(void)
->  {
->  	lockdep_hardirqs_off(CALLER_ADDR0);
->  
-> -	if (!this_cpu_read(tracing_irq_cpu)) {
-> -		this_cpu_write(tracing_irq_cpu, 1);
-> +	if (this_cpu_inc_return(tracing_irq_cpu) == 1) {
->  		tracer_hardirqs_off(CALLER_ADDR0, CALLER_ADDR1);
->  		trace(irq_disable, TP_ARGS(CALLER_ADDR0, CALLER_ADDR1));
->  	}
+> > +	u32 flags = (uintptr_t)device_get_match_data(&pdev->dev);
+> 
+> > +	irq = platform_get_irq_optional(pdev, 0);
+> > +	if (irq == -ENXIO)
+> > +		flags |= ACCESS_POLLING;
+> > +	else if (irq < 0)
+> >  		return irq;
+> 
+> >  	if (device_property_present(device, "wx,i2c-snps-model"))
+> > +		flags = MODEL_WANGXUN_SP | ACCESS_POLLING;
+> 
+> Now I'm a bit puzzled why do we need to add this flag explicitly here?
+> Does Wnagxun provides an IRQ and chooses at the same time to poll?
+> Shouldn't this patch rather fix that?
 
-So what about lovely things like:
+No. I do not want to touch the behavior here. The flags were
+overwritten and continue to be overwritten.
 
-trace_hardirqs_on_prepare()
-  if (tracing_irq_cpu) {
-    tracer_hardirqs_on();
-    <NMI>
-      trace_hardirqs_off_finish();
-        if (this_cpu_inc_return() == 1) // will be > 1
+I will propose an improvement for that together with some other
+modifications to this file later, but those are out side the scope of
+this series.
 
+thanks,
 
-So now we've traced IRQs are on, start an NMI, and loose the IRQs off
-event. Well done.
-
-
-This was all safe in that it would occasionally emit a duplicate state,
-but no state was wrong. Both your attempts have broken things.
-
-How about you fix you tool to accept duplicate state in the face of NMI
-instead?
+-- 
+heikki
