@@ -1,116 +1,332 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507071D07BA
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 09:11:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62FC726C39C
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 09:11:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751361113; cv=none; b=E2plWOmIcfnUrxHtGdqmnsa5XbCCX0/fI/nWV8jZrysRD4nV3+NmOIcSM4txM/KiBy510cq4JbrIlQz+gHiIQvmHXkTZQUOFclxYBtlSGnwYmrCW+bF/gC8ZMJMIPcdSEypQpvFIsNIZwF5xD6xKktdwgvDdXuGF9Dv/GrBaOyw=
+	t=1751361112; cv=none; b=tdxJ55BOPZsnWdIBhE5XpKvh1ancbMN+e4Ztq2X4UPIRGjUTr9qFkH7i9mWzyLMUqE0jWpuWy8s3rKJtIFo6wFX8R+powvEabmZ/5SX73OjyP8rDbRDQe28s0RYcoOSsYJQ4MjprmbCtwA34Tb2pUKgHdu0DZ5/veVBma9I38Jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751361113; c=relaxed/simple;
-	bh=ql5tyJqNB6nfkdC7XaszFpWVQHpSsM1UUL3yjnkQif4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LOlRi8Z3Ke5BIZuRshrMCCFk29aDBLaIEUm9i1gl/3JgtKU80u+t+PkkkIECmh5OHjnEvApUJFo/3A0va075oxK3dCow6YU+8pcdYE6rtJSAqBY9og9KE9mvRe3fXPc8nqJ54rPqcr14kmFigFHLKiOnCN2gQPRPTvAxNPLdVao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jWnipLBO; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751361112; c=relaxed/simple;
+	bh=1i0ryR5cBWV6GtdEGU8s3EojruIksTv9gJs15V/sUpU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ozaCOfhMyV7sQ+pber3XepL5yE8DKfRJq99ufbahi0VnUyDIJIt9HD+hOSBZcwC+3o8Lx7rLYSUuKAsN9gi/BmrGlSvgen4lgz7MkEejYtWMkd4WeZhEGXWit16TZZPwp0qcZ+nGNzSUoGug5Z6vWXz9luM3LYAS4G4widyw5VE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=SM2FqGem; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jWnipLBO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751361112; x=1782897112;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ql5tyJqNB6nfkdC7XaszFpWVQHpSsM1UUL3yjnkQif4=;
-  b=jWnipLBObx9huNLDy0KT5FPgSERedyc+WmFwgkfsvA3syNj6fa27UmT+
-   ykdw3Gs1l6UY72UTUbC7CP0HZSGc5n6WUGXW30ZlwcQ/3NSxhnZFIY1D9
-   Z63OPmu7tiTefQUD30sy9+E3jEAHztKZ8jqbHlR3puYcuEUa1aFw0DpRY
-   bkji7Yiyf9GPNsPuG7L6UeuTQeqGuFu04U9bDc7i7Ppyqyxd5Nost1n5b
-   AdDS+FZYcYSjbk3qE6/ep1YawWvwJA8u9puTayh61NuY+nAq5tLK9eYjT
-   pq5cVKYqBw7Tpc8EWxDkorc9QQwQPHdUtyaYgcibd/hSs91LPgIDiehQe
-   A==;
-X-CSE-ConnectionGUID: L5k+tvvDRCWAkNnIqCRRSw==
-X-CSE-MsgGUID: sJJnX9YHTp+vwvM0Ygb8vQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="64670881"
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="64670881"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 02:11:49 -0700
-X-CSE-ConnectionGUID: U4ronh2YTXu2QS7XOxfy+Q==
-X-CSE-MsgGUID: KOcH3pjeSXekrzqqtcKi7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="157992814"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa005.fm.intel.com with ESMTP; 01 Jul 2025 02:11:47 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 35DB515D; Tue, 01 Jul 2025 12:11:45 +0300 (EEST)
-Date: Tue, 1 Jul 2025 12:11:45 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Kai Huang <kai.huang@intel.com>
-Cc: dave.hansen@intel.com, peterz@infradead.org, tglx@linutronix.de, 
-	bp@alien8.de, mingo@redhat.com, hpa@zytor.com, rick.p.edgecombe@intel.com, 
-	pbonzini@redhat.com, seanjc@google.com, x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] x86/virt/tdx: Further fix tdh_vp_enter() calls
- instrumentable code warning
-Message-ID: <gtaaadq6asaxiop2f6cph2dffarruw2lq5yolltiy5snqwc5fr@pofskdkfamqh>
-References: <20250630232742.8991-1-kai.huang@intel.com>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="SM2FqGem"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-748feca4a61so1717685b3a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 02:11:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1751361110; x=1751965910; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s7ZtbDhifmulp6X+CGsmi42q8oGid7NOjLwBd1zaIRg=;
+        b=SM2FqGemMkfIVO+UDTjx2N0aDWsd896H0/mWq5qKSCsB6F6btDV7CDIY+Mof/sBdF1
+         YdVhqX+x+Q6kfOj5tPvqdXL4xvdkDKE5wtBIvOgMJ3+f0zDbdhpKe5EE2fUofGiC2Ljd
+         lUX2kqq6TEOqMbKrEBIEh5pADAZjDMPy8m7j4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751361110; x=1751965910;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=s7ZtbDhifmulp6X+CGsmi42q8oGid7NOjLwBd1zaIRg=;
+        b=T4WSMIF8ntG5lUNMEHnzkWF1ZnLHCcuyqp0bZm0K39jrfBVFZyU+SNby3DNkzGucXb
+         cs3jOUI/hDAbEOaMej0YJmuWyBASmH6o9fgIYmq9Du8ssDaRkF5t7BhaCUW/1xVPUysV
+         5X8tpkYqviM87lhLd1HHnpK62UiganC2RbbVx7Dw3J7T0RkBnvduEu4EeF78EkwY9TG7
+         /VLzjmGk6YfY3DQVbhFAKN8CZLUGSv9RdlhhoC/SQm8iZvssaCTkRIyMqU/uG1a2Yf9m
+         lO1wrouLJepSFeHN0vbf1kEU7jcy1QbpAAbGf8we1HDK5sxnBUv7dtymjEC8dBGoFnTt
+         Q+QQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXQNPi92Nuk3i6L3HHuE3IVmvVBcc2cRs+CS/rhgv8a7z9L5/mztgddDGlZWBN1jpGgBGY1NTSKZr1G4T4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9mPzbS/7rFdLmW+mEp6WPFsbMsWSiq962Z9SbLbjSiTZElF0K
+	qJPspMBdK0EKNcnETW/TtKgl8zuS9MLt4Kcx622o3POi6wnj2eEMg1u2zknl5okTGQ==
+X-Gm-Gg: ASbGncu9YSlaj3dWf8R5XmpnfMwOuoWapt/cT5Abz+oc3j8RIuMAQmbiTsjTarnCxKo
+	n+zZikFDfJhV5uq+mGLpeDSJtI2+fzdegjJ50t3kbx5kkO+qfUEGQwL9E8svxsP7RdsT2r6BhBP
+	xSM9E9nEju42UXQ8ftZ5Egl/lbN/dDQPgZtqBEbwFWVsjLZF0z2JrYifB2oULmosZ5O4BzLe/7E
+	clQEPpNM3QZ70Sy/hkmwyx8RVHghZ13SlrNGuXqBwAAE7z4bgXc+XDiHrCipevhU+h80jnzNpTe
+	/idcj+kpWw0G5l14e2LAhaenraxx5NsDlEPmUzO9M8IA1xSbR36XzNvRkW4BFNRAeIWBBPl2hvf
+	48EJgI5HArNopDFzvfQPvVdOeiE7c
+X-Google-Smtp-Source: AGHT+IFgJDHAkl2TOYiic4+miA72HcRH5YO5MM7i/Qv0249LYR+6NMvnvGl+aUIzCISEeLulTfE1PQ==
+X-Received: by 2002:a05:6a20:3d8d:b0:220:1ca5:957c with SMTP id adf61e73a8af0-220a16c4113mr31231334637.31.1751361110519;
+        Tue, 01 Jul 2025 02:11:50 -0700 (PDT)
+Received: from localhost.localdomain ([192.19.203.250])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e30201c1sm8893603a12.22.2025.07.01.02.11.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 02:11:50 -0700 (PDT)
+From: Vikas Gupta <vikas.gupta@broadcom.com>
+To: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	andrew+netdev@lunn.ch,
+	horms@kernel.org
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	michael.chan@broadcom.com,
+	pavan.chebbi@broadcom.com,
+	vsrama-krishna.nemani@broadcom.com,
+	Vikas Gupta <vikas.gupta@broadcom.com>,
+	Bhargava Chenna Marreddy <bhargava.marreddy@broadcom.com>,
+	Rajashekar Hudumula <rajashekar.hudumula@broadcom.com>
+Subject: [net-next, v3 01/10] bng_en: Add PCI interface
+Date: Tue,  1 Jul 2025 14:34:59 +0000
+Message-ID: <20250701143511.280702-2-vikas.gupta@broadcom.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250701143511.280702-1-vikas.gupta@broadcom.com>
+References: <20250701143511.280702-1-vikas.gupta@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250630232742.8991-1-kai.huang@intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 01, 2025 at 11:27:42AM +1200, Kai Huang wrote:
-> tdh_vp_enter() needs to be marked noinstr, which means it can't call any
-> non-inlined noinstr functions.  Commit e9f17038d814 ("x86/tdx: mark
-> tdh_vp_enter() as __flatten") tried to address a build warning caused by
-> tdx_tdvpr_pa() not getting inlined.  Unfortunately that commit didn't
-> fix the warning completely due to the inconsistent behavior of the
-> __flatten annotation.
-> 
-> There are two problems that can come up depending on the compiler and
-> config.  One is that tdx_tdvpr_pa() doesn't get inlined, the other is
-> that page_to_phys() doesn't get inlined.
-> 
-> The __flatten annotation makes the compiler inline all function calls
-> that the annotated function makes, and the aforementioned commit assumed
-> this is always honored, recursively.  But it turns out it's not always
-> true:
-> 
->  - Gcc may ignore __flatten when CONFIG_CC_OPTIMIZE_FOR_SIZE=y.
->  - Clang doesn't support recursive inlining for __flatten, which can
->    trigger another similar warning when page_to_phys() calls pfn_valid()
->    when CONFIG_DEBUG_VIRTUAL=y.
-> 
-> Therefore using __flatten is not the right fix.
-> 
-> To fix the first problem, remove the __flatten for tdh_vp_enter() and
-> instead annotate tdx_tdvpr_pa() with __always_inline to make sure it is
-> always inlined.
-> 
-> To fix the second problem, change tdx_tdvpr_pa() to use
-> PFN_PHYS(page_to_pfn()) instead of page_to_phys() so that there will be
-> no more function call inside tdx_tdvpr_pa()[*].
-> 
-> The TDVPR page is always an actual page out of page allocator, so the
-> additional warning around pfn_valid() check in page_to_phys() doesn't
-> help a lot anyway.  It's not worth complicating the code for such
-> warning when CONFIG_DEBUG_VIRTUAL=y.
-> 
-> [*] Since commit cba5d9b3e99d ("x86/mm/64: Make SPARSEMEM_VMEMMAP the
->     only memory model") page_to_pfn() has been a simple macro without
->     any function call.
-> 
-> Fixes: e9f17038d814 ("x86/tdx: mark tdh_vp_enter() as __flatten")
-> Signed-off-by: Kai Huang <kai.huang@intel.com>
-> Reviewed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Add basic pci interface to the driver which supports
+the BCM5770X NIC family.
 
-Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: Vikas Gupta <vikas.gupta@broadcom.com>
+Reviewed-by: Bhargava Chenna Marreddy <bhargava.marreddy@broadcom.com>
+Reviewed-by: Rajashekar Hudumula <rajashekar.hudumula@broadcom.com>
+---
+ MAINTAINERS                                   |   6 +
+ drivers/net/ethernet/broadcom/Kconfig         |   8 +
+ drivers/net/ethernet/broadcom/Makefile        |   1 +
+ drivers/net/ethernet/broadcom/bnge/Makefile   |   5 +
+ drivers/net/ethernet/broadcom/bnge/bnge.h     |  16 ++
+ .../net/ethernet/broadcom/bnge/bnge_core.c    | 141 ++++++++++++++++++
+ 6 files changed, 177 insertions(+)
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/Makefile
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge.h
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_core.c
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index bb9df569a3ff..4a9b9d14e0df 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4853,6 +4853,12 @@ F:	drivers/firmware/broadcom/tee_bnxt_fw.c
+ F:	drivers/net/ethernet/broadcom/bnxt/
+ F:	include/linux/firmware/broadcom/tee_bnxt_fw.h
+ 
++BROADCOM BNG_EN 800 GIGABIT ETHERNET DRIVER
++M:	Vikas Gupta <vikas.gupta@broadcom.com>
++L:	netdev@vger.kernel.org
++S:	Maintained
++F:	drivers/net/ethernet/broadcom/bnge/
++
+ BROADCOM BRCM80211 IEEE802.11 WIRELESS DRIVERS
+ M:	Arend van Spriel <arend.vanspriel@broadcom.com>
+ L:	linux-wireless@vger.kernel.org
+diff --git a/drivers/net/ethernet/broadcom/Kconfig b/drivers/net/ethernet/broadcom/Kconfig
+index 81a74e07464f..e2c1ac91708e 100644
+--- a/drivers/net/ethernet/broadcom/Kconfig
++++ b/drivers/net/ethernet/broadcom/Kconfig
+@@ -253,6 +253,14 @@ config BNXT_HWMON
+ 	  Say Y if you want to expose the thermal sensor data on NetXtreme-C/E
+ 	  devices, via the hwmon sysfs interface.
+ 
++config BNGE
++	tristate "Broadcom Ethernet device support"
++	depends on PCI
++	help
++	  This driver supports Broadcom 50/100/200/400/800 gigabit Ethernet cards.
++	  The module will be called bng_en. To compile this driver as a module,
++	  choose M here.
++
+ config BCMASP
+ 	tristate "Broadcom ASP 2.0 Ethernet support"
+ 	depends on ARCH_BRCMSTB || COMPILE_TEST
+diff --git a/drivers/net/ethernet/broadcom/Makefile b/drivers/net/ethernet/broadcom/Makefile
+index bac5cb6ad0cd..10cc1c92ecfc 100644
+--- a/drivers/net/ethernet/broadcom/Makefile
++++ b/drivers/net/ethernet/broadcom/Makefile
+@@ -18,3 +18,4 @@ obj-$(CONFIG_BGMAC_PLATFORM) += bgmac-platform.o
+ obj-$(CONFIG_SYSTEMPORT) += bcmsysport.o
+ obj-$(CONFIG_BNXT) += bnxt/
+ obj-$(CONFIG_BCMASP) += asp2/
++obj-$(CONFIG_BNGE) += bnge/
+diff --git a/drivers/net/ethernet/broadcom/bnge/Makefile b/drivers/net/ethernet/broadcom/bnge/Makefile
+new file mode 100644
+index 000000000000..0c3d632805d1
+--- /dev/null
++++ b/drivers/net/ethernet/broadcom/bnge/Makefile
+@@ -0,0 +1,5 @@
++# SPDX-License-Identifier: GPL-2.0-only
++
++obj-$(CONFIG_BNGE) += bng_en.o
++
++bng_en-y := bnge_core.o
+diff --git a/drivers/net/ethernet/broadcom/bnge/bnge.h b/drivers/net/ethernet/broadcom/bnge/bnge.h
+new file mode 100644
+index 000000000000..b49c51b44473
+--- /dev/null
++++ b/drivers/net/ethernet/broadcom/bnge/bnge.h
+@@ -0,0 +1,16 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Copyright (c) 2025 Broadcom */
++
++#ifndef _BNGE_H_
++#define _BNGE_H_
++
++#define DRV_NAME	"bng_en"
++#define DRV_SUMMARY	"Broadcom 800G Ethernet Linux Driver"
++
++extern char bnge_driver_name[];
++
++enum board_idx {
++	BCM57708,
++};
++
++#endif /* _BNGE_H_ */
+diff --git a/drivers/net/ethernet/broadcom/bnge/bnge_core.c b/drivers/net/ethernet/broadcom/bnge/bnge_core.c
+new file mode 100644
+index 000000000000..514602555cd1
+--- /dev/null
++++ b/drivers/net/ethernet/broadcom/bnge/bnge_core.c
+@@ -0,0 +1,141 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (c) 2025 Broadcom.
++
++#include <linux/init.h>
++#include <linux/crash_dump.h>
++#include <linux/module.h>
++#include <linux/pci.h>
++
++#include "bnge.h"
++
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION(DRV_SUMMARY);
++
++char bnge_driver_name[] = DRV_NAME;
++
++static const struct {
++	char *name;
++} board_info[] = {
++	[BCM57708] = { "Broadcom BCM57708 50Gb/100Gb/200Gb/400Gb/800Gb Ethernet" },
++};
++
++static const struct pci_device_id bnge_pci_tbl[] = {
++	{ PCI_VDEVICE(BROADCOM, 0x1780), .driver_data = BCM57708 },
++	/* Required last entry */
++	{0, }
++};
++MODULE_DEVICE_TABLE(pci, bnge_pci_tbl);
++
++static void bnge_print_device_info(struct pci_dev *pdev, enum board_idx idx)
++{
++	struct device *dev = &pdev->dev;
++
++	dev_info(dev, "%s found at mem %lx\n", board_info[idx].name,
++		 (long)pci_resource_start(pdev, 0));
++
++	pcie_print_link_status(pdev);
++}
++
++static void bnge_pci_disable(struct pci_dev *pdev)
++{
++	pci_release_regions(pdev);
++	if (pci_is_enabled(pdev))
++		pci_disable_device(pdev);
++}
++
++static int bnge_pci_enable(struct pci_dev *pdev)
++{
++	int rc;
++
++	rc = pci_enable_device(pdev);
++	if (rc) {
++		dev_err(&pdev->dev, "Cannot enable PCI device, aborting\n");
++		return rc;
++	}
++
++	if (!(pci_resource_flags(pdev, 0) & IORESOURCE_MEM)) {
++		dev_err(&pdev->dev,
++			"Cannot find PCI device base address, aborting\n");
++		rc = -ENODEV;
++		goto err_pci_disable;
++	}
++
++	rc = pci_request_regions(pdev, bnge_driver_name);
++	if (rc) {
++		dev_err(&pdev->dev, "Cannot obtain PCI resources, aborting\n");
++		goto err_pci_disable;
++	}
++
++	dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
++
++	pci_set_master(pdev);
++
++	return 0;
++
++err_pci_disable:
++	pci_disable_device(pdev);
++	return rc;
++}
++
++static int bnge_probe_one(struct pci_dev *pdev, const struct pci_device_id *ent)
++{
++	int rc;
++
++	if (pci_is_bridge(pdev))
++		return -ENODEV;
++
++	if (!pdev->msix_cap) {
++		dev_err(&pdev->dev, "MSIX capability missing, aborting\n");
++		return -ENODEV;
++	}
++
++	if (is_kdump_kernel()) {
++		pci_clear_master(pdev);
++		pcie_flr(pdev);
++	}
++
++	rc = bnge_pci_enable(pdev);
++	if (rc)
++		return rc;
++
++	bnge_print_device_info(pdev, ent->driver_data);
++
++	pci_save_state(pdev);
++
++	return 0;
++}
++
++static void bnge_remove_one(struct pci_dev *pdev)
++{
++	bnge_pci_disable(pdev);
++}
++
++static void bnge_shutdown(struct pci_dev *pdev)
++{
++	pci_disable_device(pdev);
++
++	if (system_state == SYSTEM_POWER_OFF) {
++		pci_wake_from_d3(pdev, 0);
++		pci_set_power_state(pdev, PCI_D3hot);
++	}
++}
++
++static struct pci_driver bnge_driver = {
++	.name		= bnge_driver_name,
++	.id_table	= bnge_pci_tbl,
++	.probe		= bnge_probe_one,
++	.remove		= bnge_remove_one,
++	.shutdown	= bnge_shutdown,
++};
++
++static int __init bnge_init_module(void)
++{
++	return pci_register_driver(&bnge_driver);
++}
++module_init(bnge_init_module);
++
++static void __exit bnge_exit_module(void)
++{
++	pci_unregister_driver(&bnge_driver);
++}
++module_exit(bnge_exit_module);
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+2.47.1
+
