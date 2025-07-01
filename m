@@ -1,320 +1,323 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65491276056
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 13:56:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0700027A127;
+	Tue,  1 Jul 2025 13:56:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751378218; cv=none; b=StPEhx+GXdBuWy1ksa57E1sykvIFQeah1KSofMQFeeQjGzqcBg/hXblfIcVmiiRZzi4seofBQHRMwEJ9gDG3p8+w8SxLPGbA4905fUOaq/mZdMsSn3LtT5PMZJQ80JM19ptvlIQwLDRArDwqEFAkXUkTYlErG/l/fUTFpZCsPZA=
+	t=1751378218; cv=none; b=EpzVgiqfe1/zcIOuIgRnxlK7dgExPeAq4uWQmyyV3xrVytB/3M4dbSNjKYrElrHz7bZZtrOph3FLAcyhuaPicLoBzZ2eSDZcXu4PkR7Q4i3lCn4xXa0pBqeGsebA8kbUm846IzDqkLk/2y95MWryVCsdEgT7rlYk4s7ghuD2OTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751378218; c=relaxed/simple;
-	bh=QEecqqYm5ptJidNitchwQFGG978GrPeS1095Tw6Fcmw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=J+l4JesmjiuKh7jKhScMKoqHSkkRDooKCTzW/rriFqgo2aFuiwiUBWYzeE+jJqyfsBya8oyGXXlPgbx5DJmkm8YXD50oOD9w5SlAulweUzQl91hBCJQfxr4FUMuARNGCoT3i2n4DytdHWvAFBlw9F66jji9YsrG/ZTOrTTI2T9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA1D22E98;
-	Tue,  1 Jul 2025 06:56:40 -0700 (PDT)
-Received: from e133380.cambridge.arm.com (e133380.arm.com [10.1.197.52])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6CABC3F58B;
-	Tue,  1 Jul 2025 06:56:54 -0700 (PDT)
-From: Dave Martin <Dave.Martin@arm.com>
-To: linux-kernel@vger.kernel.org
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Kees Cook <kees@kernel.org>,
-	Akihiko Odaki <akihiko.odaki@daynix.com>,
-	linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH 15/23] powerpc/ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
-Date: Tue,  1 Jul 2025 14:56:08 +0100
-Message-Id: <20250701135616.29630-16-Dave.Martin@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250701135616.29630-1-Dave.Martin@arm.com>
-References: <20250701135616.29630-1-Dave.Martin@arm.com>
+	bh=Z1BzRknngBIxH7d9GNoJJiTwd8p6a5uKI4XIyALfOTc=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=k4leOOVDDrMeSRH3tbOHQMcJ/ObkMl9c4xnp1YWo49RZtbbD5ulfQimVlpbCHX+o05h8H7lgokHqX0vu5ygUwIkByPHtEexKvJ4hzU3JWu7mNSuEATlkg2b8MYTC/6sAMKsmT6ZG7aqXU1RF63nIND3x0oAWjO7anFVkSK4bxZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bWl1B487yz6M4jF;
+	Tue,  1 Jul 2025 21:55:58 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id BBC9C1402F4;
+	Tue,  1 Jul 2025 21:56:52 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 1 Jul
+ 2025 15:56:52 +0200
+Date: Tue, 1 Jul 2025 14:56:50 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Dongsheng Yang <dongsheng.yang@linux.dev>
+CC: <mpatocka@redhat.com>, <agk@redhat.com>, <snitzer@kernel.org>,
+	<axboe@kernel.dk>, <hch@lst.de>, <dan.j.williams@intel.com>,
+	<linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+	<dm-devel@lists.linux.dev>
+Subject: Re: [PATCH v1 02/11] dm-pcache: add backing device management
+Message-ID: <20250701145650.00004e72@huawei.com>
+In-Reply-To: <20250624073359.2041340-3-dongsheng.yang@linux.dev>
+References: <20250624073359.2041340-1-dongsheng.yang@linux.dev>
+	<20250624073359.2041340-3-dongsheng.yang@linux.dev>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Instead of having the core code guess the note name for each regset,
-use USER_REGSET_NOTE_TYPE() to pick the correct name from elf.h.
+On Tue, 24 Jun 2025 07:33:49 +0000
+Dongsheng Yang <dongsheng.yang@linux.dev> wrote:
 
-Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Kees Cook <kees@kernel.org>
-Cc: Akihiko Odaki <akihiko.odaki@daynix.com>
-Cc: linuxppc-dev@lists.ozlabs.org
----
- arch/powerpc/kernel/ptrace/ptrace-view.c | 74 ++++++++++++------------
- 1 file changed, 37 insertions(+), 37 deletions(-)
+> This patch introduces *backing_dev.{c,h}*, a self-contained layer that
+> handles all interaction with the *backing block device* where cache
+> write-back and cache-miss reads are serviced.  Isolating this logic
+> keeps the core dm-pcache code free of low-level bio plumbing.
+>=20
+> * Device setup / teardown
+>   - Opens the target with `dm_get_device()`, stores `bdev`, file and
+>     size, and initialises a dedicated `bioset`.
+>   - Gracefully releases resources via `backing_dev_stop()`.
+>=20
+> * Request object (`struct pcache_backing_dev_req`)
+>   - Two request flavours:
+>     - REQ-type =E2=80=93 cloned from an upper `struct bio` issued to
+>       dm-pcache; trimmed and re-targeted to the backing LBA.
+>     - KMEM-type =E2=80=93 maps an arbitrary kernel memory buffer
+>       into a freshly built.
+>   - Private completion callback (`end_req`) propagates status to the
+>     upper layer and handles resource recycling.
+>=20
+> * Submission & completion path
+>   - Lock-protected submit queue + worker (`req_submit_work`) let pcache
+>     push many requests asynchronously, at the same time, allow caller
+>     to submit backing_dev_req in atomic context.
+>   - End-io handler moves finished requests to a completion list processed
+>     by `req_complete_work`, ensuring callbacks run in process context.
+>   - Direct-submit option for non-atomic context.
+>=20
+> * Flush
+>   - `backing_dev_flush()` issues a flush to persist backing-device data.
+>=20
+> Signed-off-by: Dongsheng Yang <dongsheng.yang@linux.dev>
+> ---
+>  drivers/md/dm-pcache/backing_dev.c | 292 +++++++++++++++++++++++++++++
+>  drivers/md/dm-pcache/backing_dev.h |  88 +++++++++
+>  2 files changed, 380 insertions(+)
+>  create mode 100644 drivers/md/dm-pcache/backing_dev.c
+>  create mode 100644 drivers/md/dm-pcache/backing_dev.h
+>=20
+> diff --git a/drivers/md/dm-pcache/backing_dev.c b/drivers/md/dm-pcache/ba=
+cking_dev.c
+> new file mode 100644
+> index 000000000000..590c6415319d
+> --- /dev/null
+> +++ b/drivers/md/dm-pcache/backing_dev.c
+> @@ -0,0 +1,292 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +#include <linux/blkdev.h>
+> +
+> +#include "../dm-core.h"
+> +#include "pcache_internal.h"
+> +#include "cache_dev.h"
+> +#include "backing_dev.h"
+> +#include "cache.h"
+> +#include "dm_pcache.h"
+> +
+> +static void backing_dev_exit(struct pcache_backing_dev *backing_dev)
+> +{
+> +	kmem_cache_destroy(backing_dev->backing_req_cache);
+> +}
+> +
+> +static void req_submit_fn(struct work_struct *work);
+> +static void req_complete_fn(struct work_struct *work);
+> +static int backing_dev_init(struct dm_pcache *pcache)
+> +{
+> +	struct pcache_backing_dev *backing_dev =3D &pcache->backing_dev;
+> +	int ret;
+> +
+> +	backing_dev->backing_req_cache =3D KMEM_CACHE(pcache_backing_dev_req, 0=
+);
+> +	if (!backing_dev->backing_req_cache) {
+> +		ret =3D -ENOMEM;
 
-diff --git a/arch/powerpc/kernel/ptrace/ptrace-view.c b/arch/powerpc/kernel/ptrace/ptrace-view.c
-index c1819e0a6684..0310f9097e39 100644
---- a/arch/powerpc/kernel/ptrace/ptrace-view.c
-+++ b/arch/powerpc/kernel/ptrace/ptrace-view.c
-@@ -568,114 +568,114 @@ static int pkey_set(struct task_struct *target, const struct user_regset *regset
- 
- static const struct user_regset native_regsets[] = {
- 	[REGSET_GPR] = {
--		.core_note_type = NT_PRSTATUS, .n = ELF_NGREG,
-+		USER_REGSET_NOTE_TYPE(PRSTATUS), .n = ELF_NGREG,
- 		.size = sizeof(long), .align = sizeof(long),
- 		.regset_get = gpr_get, .set = gpr_set
- 	},
- 	[REGSET_FPR] = {
--		.core_note_type = NT_PRFPREG, .n = ELF_NFPREG,
-+		USER_REGSET_NOTE_TYPE(PRFPREG), .n = ELF_NFPREG,
- 		.size = sizeof(double), .align = sizeof(double),
- 		.regset_get = fpr_get, .set = fpr_set
- 	},
- #ifdef CONFIG_ALTIVEC
- 	[REGSET_VMX] = {
--		.core_note_type = NT_PPC_VMX, .n = 34,
-+		USER_REGSET_NOTE_TYPE(PPC_VMX), .n = 34,
- 		.size = sizeof(vector128), .align = sizeof(vector128),
- 		.active = vr_active, .regset_get = vr_get, .set = vr_set
- 	},
- #endif
- #ifdef CONFIG_VSX
- 	[REGSET_VSX] = {
--		.core_note_type = NT_PPC_VSX, .n = 32,
-+		USER_REGSET_NOTE_TYPE(PPC_VSX), .n = 32,
- 		.size = sizeof(double), .align = sizeof(double),
- 		.active = vsr_active, .regset_get = vsr_get, .set = vsr_set
- 	},
- #endif
- #ifdef CONFIG_SPE
- 	[REGSET_SPE] = {
--		.core_note_type = NT_PPC_SPE, .n = 35,
-+		USER_REGSET_NOTE_TYPE(PPC_SPE), .n = 35,
- 		.size = sizeof(u32), .align = sizeof(u32),
- 		.active = evr_active, .regset_get = evr_get, .set = evr_set
- 	},
- #endif
- #ifdef CONFIG_PPC_TRANSACTIONAL_MEM
- 	[REGSET_TM_CGPR] = {
--		.core_note_type = NT_PPC_TM_CGPR, .n = ELF_NGREG,
-+		USER_REGSET_NOTE_TYPE(PPC_TM_CGPR), .n = ELF_NGREG,
- 		.size = sizeof(long), .align = sizeof(long),
- 		.active = tm_cgpr_active, .regset_get = tm_cgpr_get, .set = tm_cgpr_set
- 	},
- 	[REGSET_TM_CFPR] = {
--		.core_note_type = NT_PPC_TM_CFPR, .n = ELF_NFPREG,
-+		USER_REGSET_NOTE_TYPE(PPC_TM_CFPR), .n = ELF_NFPREG,
- 		.size = sizeof(double), .align = sizeof(double),
- 		.active = tm_cfpr_active, .regset_get = tm_cfpr_get, .set = tm_cfpr_set
- 	},
- 	[REGSET_TM_CVMX] = {
--		.core_note_type = NT_PPC_TM_CVMX, .n = ELF_NVMX,
-+		USER_REGSET_NOTE_TYPE(PPC_TM_CVMX), .n = ELF_NVMX,
- 		.size = sizeof(vector128), .align = sizeof(vector128),
- 		.active = tm_cvmx_active, .regset_get = tm_cvmx_get, .set = tm_cvmx_set
- 	},
- 	[REGSET_TM_CVSX] = {
--		.core_note_type = NT_PPC_TM_CVSX, .n = ELF_NVSX,
-+		USER_REGSET_NOTE_TYPE(PPC_TM_CVSX), .n = ELF_NVSX,
- 		.size = sizeof(double), .align = sizeof(double),
- 		.active = tm_cvsx_active, .regset_get = tm_cvsx_get, .set = tm_cvsx_set
- 	},
- 	[REGSET_TM_SPR] = {
--		.core_note_type = NT_PPC_TM_SPR, .n = ELF_NTMSPRREG,
-+		USER_REGSET_NOTE_TYPE(PPC_TM_SPR), .n = ELF_NTMSPRREG,
- 		.size = sizeof(u64), .align = sizeof(u64),
- 		.active = tm_spr_active, .regset_get = tm_spr_get, .set = tm_spr_set
- 	},
- 	[REGSET_TM_CTAR] = {
--		.core_note_type = NT_PPC_TM_CTAR, .n = 1,
-+		USER_REGSET_NOTE_TYPE(PPC_TM_CTAR), .n = 1,
- 		.size = sizeof(u64), .align = sizeof(u64),
- 		.active = tm_tar_active, .regset_get = tm_tar_get, .set = tm_tar_set
- 	},
- 	[REGSET_TM_CPPR] = {
--		.core_note_type = NT_PPC_TM_CPPR, .n = 1,
-+		USER_REGSET_NOTE_TYPE(PPC_TM_CPPR), .n = 1,
- 		.size = sizeof(u64), .align = sizeof(u64),
- 		.active = tm_ppr_active, .regset_get = tm_ppr_get, .set = tm_ppr_set
- 	},
- 	[REGSET_TM_CDSCR] = {
--		.core_note_type = NT_PPC_TM_CDSCR, .n = 1,
-+		USER_REGSET_NOTE_TYPE(PPC_TM_CDSCR), .n = 1,
- 		.size = sizeof(u64), .align = sizeof(u64),
- 		.active = tm_dscr_active, .regset_get = tm_dscr_get, .set = tm_dscr_set
- 	},
- #endif
- #ifdef CONFIG_PPC64
- 	[REGSET_PPR] = {
--		.core_note_type = NT_PPC_PPR, .n = 1,
-+		USER_REGSET_NOTE_TYPE(PPC_PPR), .n = 1,
- 		.size = sizeof(u64), .align = sizeof(u64),
- 		.regset_get = ppr_get, .set = ppr_set
- 	},
- 	[REGSET_DSCR] = {
--		.core_note_type = NT_PPC_DSCR, .n = 1,
-+		USER_REGSET_NOTE_TYPE(PPC_DSCR), .n = 1,
- 		.size = sizeof(u64), .align = sizeof(u64),
- 		.regset_get = dscr_get, .set = dscr_set
- 	},
- #endif
- #ifdef CONFIG_PPC_BOOK3S_64
- 	[REGSET_TAR] = {
--		.core_note_type = NT_PPC_TAR, .n = 1,
-+		USER_REGSET_NOTE_TYPE(PPC_TAR), .n = 1,
- 		.size = sizeof(u64), .align = sizeof(u64),
- 		.regset_get = tar_get, .set = tar_set
- 	},
- 	[REGSET_EBB] = {
--		.core_note_type = NT_PPC_EBB, .n = ELF_NEBB,
-+		USER_REGSET_NOTE_TYPE(PPC_EBB), .n = ELF_NEBB,
- 		.size = sizeof(u64), .align = sizeof(u64),
- 		.active = ebb_active, .regset_get = ebb_get, .set = ebb_set
- 	},
- 	[REGSET_PMR] = {
--		.core_note_type = NT_PPC_PMU, .n = ELF_NPMU,
-+		USER_REGSET_NOTE_TYPE(PPC_PMU), .n = ELF_NPMU,
- 		.size = sizeof(u64), .align = sizeof(u64),
- 		.active = pmu_active, .regset_get = pmu_get, .set = pmu_set
- 	},
- 	[REGSET_DEXCR] = {
--		.core_note_type = NT_PPC_DEXCR, .n = ELF_NDEXCR,
-+		USER_REGSET_NOTE_TYPE(PPC_DEXCR), .n = ELF_NDEXCR,
- 		.size = sizeof(u64), .align = sizeof(u64),
- 		.active = dexcr_active, .regset_get = dexcr_get
- 	},
- #ifdef CONFIG_CHECKPOINT_RESTORE
- 	[REGSET_HASHKEYR] = {
--		.core_note_type = NT_PPC_HASHKEYR, .n = ELF_NHASHKEYR,
-+		USER_REGSET_NOTE_TYPE(PPC_HASHKEYR), .n = ELF_NHASHKEYR,
- 		.size = sizeof(u64), .align = sizeof(u64),
- 		.active = hashkeyr_active, .regset_get = hashkeyr_get, .set = hashkeyr_set
- 	},
-@@ -683,7 +683,7 @@ static const struct user_regset native_regsets[] = {
- #endif
- #ifdef CONFIG_PPC_MEM_KEYS
- 	[REGSET_PKEY] = {
--		.core_note_type = NT_PPC_PKEY, .n = ELF_NPKEY,
-+		USER_REGSET_NOTE_TYPE(PPC_PKEY), .n = ELF_NPKEY,
- 		.size = sizeof(u64), .align = sizeof(u64),
- 		.active = pkey_active, .regset_get = pkey_get, .set = pkey_set
- 	},
-@@ -843,92 +843,92 @@ static int gpr32_set(struct task_struct *target,
-  */
- static const struct user_regset compat_regsets[] = {
- 	[REGSET_GPR] = {
--		.core_note_type = NT_PRSTATUS, .n = ELF_NGREG,
-+		USER_REGSET_NOTE_TYPE(PRSTATUS), .n = ELF_NGREG,
- 		.size = sizeof(compat_long_t), .align = sizeof(compat_long_t),
- 		.regset_get = gpr32_get, .set = gpr32_set
- 	},
- 	[REGSET_FPR] = {
--		.core_note_type = NT_PRFPREG, .n = ELF_NFPREG,
-+		USER_REGSET_NOTE_TYPE(PRFPREG), .n = ELF_NFPREG,
- 		.size = sizeof(double), .align = sizeof(double),
- 		.regset_get = fpr_get, .set = fpr_set
- 	},
- #ifdef CONFIG_ALTIVEC
- 	[REGSET_VMX] = {
--		.core_note_type = NT_PPC_VMX, .n = 34,
-+		USER_REGSET_NOTE_TYPE(PPC_VMX), .n = 34,
- 		.size = sizeof(vector128), .align = sizeof(vector128),
- 		.active = vr_active, .regset_get = vr_get, .set = vr_set
- 	},
- #endif
- #ifdef CONFIG_SPE
- 	[REGSET_SPE] = {
--		.core_note_type = NT_PPC_SPE, .n = 35,
-+		USER_REGSET_NOTE_TYPE(PPC_SPE), .n = 35,
- 		.size = sizeof(u32), .align = sizeof(u32),
- 		.active = evr_active, .regset_get = evr_get, .set = evr_set
- 	},
- #endif
- #ifdef CONFIG_PPC_TRANSACTIONAL_MEM
- 	[REGSET_TM_CGPR] = {
--		.core_note_type = NT_PPC_TM_CGPR, .n = ELF_NGREG,
-+		USER_REGSET_NOTE_TYPE(PPC_TM_CGPR), .n = ELF_NGREG,
- 		.size = sizeof(long), .align = sizeof(long),
- 		.active = tm_cgpr_active,
- 		.regset_get = tm_cgpr32_get, .set = tm_cgpr32_set
- 	},
- 	[REGSET_TM_CFPR] = {
--		.core_note_type = NT_PPC_TM_CFPR, .n = ELF_NFPREG,
-+		USER_REGSET_NOTE_TYPE(PPC_TM_CFPR), .n = ELF_NFPREG,
- 		.size = sizeof(double), .align = sizeof(double),
- 		.active = tm_cfpr_active, .regset_get = tm_cfpr_get, .set = tm_cfpr_set
- 	},
- 	[REGSET_TM_CVMX] = {
--		.core_note_type = NT_PPC_TM_CVMX, .n = ELF_NVMX,
-+		USER_REGSET_NOTE_TYPE(PPC_TM_CVMX), .n = ELF_NVMX,
- 		.size = sizeof(vector128), .align = sizeof(vector128),
- 		.active = tm_cvmx_active, .regset_get = tm_cvmx_get, .set = tm_cvmx_set
- 	},
- 	[REGSET_TM_CVSX] = {
--		.core_note_type = NT_PPC_TM_CVSX, .n = ELF_NVSX,
-+		USER_REGSET_NOTE_TYPE(PPC_TM_CVSX), .n = ELF_NVSX,
- 		.size = sizeof(double), .align = sizeof(double),
- 		.active = tm_cvsx_active, .regset_get = tm_cvsx_get, .set = tm_cvsx_set
- 	},
- 	[REGSET_TM_SPR] = {
--		.core_note_type = NT_PPC_TM_SPR, .n = ELF_NTMSPRREG,
-+		USER_REGSET_NOTE_TYPE(PPC_TM_SPR), .n = ELF_NTMSPRREG,
- 		.size = sizeof(u64), .align = sizeof(u64),
- 		.active = tm_spr_active, .regset_get = tm_spr_get, .set = tm_spr_set
- 	},
- 	[REGSET_TM_CTAR] = {
--		.core_note_type = NT_PPC_TM_CTAR, .n = 1,
-+		USER_REGSET_NOTE_TYPE(PPC_TM_CTAR), .n = 1,
- 		.size = sizeof(u64), .align = sizeof(u64),
- 		.active = tm_tar_active, .regset_get = tm_tar_get, .set = tm_tar_set
- 	},
- 	[REGSET_TM_CPPR] = {
--		.core_note_type = NT_PPC_TM_CPPR, .n = 1,
-+		USER_REGSET_NOTE_TYPE(PPC_TM_CPPR), .n = 1,
- 		.size = sizeof(u64), .align = sizeof(u64),
- 		.active = tm_ppr_active, .regset_get = tm_ppr_get, .set = tm_ppr_set
- 	},
- 	[REGSET_TM_CDSCR] = {
--		.core_note_type = NT_PPC_TM_CDSCR, .n = 1,
-+		USER_REGSET_NOTE_TYPE(PPC_TM_CDSCR), .n = 1,
- 		.size = sizeof(u64), .align = sizeof(u64),
- 		.active = tm_dscr_active, .regset_get = tm_dscr_get, .set = tm_dscr_set
- 	},
- #endif
- #ifdef CONFIG_PPC64
- 	[REGSET_PPR] = {
--		.core_note_type = NT_PPC_PPR, .n = 1,
-+		USER_REGSET_NOTE_TYPE(PPC_PPR), .n = 1,
- 		.size = sizeof(u64), .align = sizeof(u64),
- 		.regset_get = ppr_get, .set = ppr_set
- 	},
- 	[REGSET_DSCR] = {
--		.core_note_type = NT_PPC_DSCR, .n = 1,
-+		USER_REGSET_NOTE_TYPE(PPC_DSCR), .n = 1,
- 		.size = sizeof(u64), .align = sizeof(u64),
- 		.regset_get = dscr_get, .set = dscr_set
- 	},
- #endif
- #ifdef CONFIG_PPC_BOOK3S_64
- 	[REGSET_TAR] = {
--		.core_note_type = NT_PPC_TAR, .n = 1,
-+		USER_REGSET_NOTE_TYPE(PPC_TAR), .n = 1,
- 		.size = sizeof(u64), .align = sizeof(u64),
- 		.regset_get = tar_get, .set = tar_set
- 	},
- 	[REGSET_EBB] = {
--		.core_note_type = NT_PPC_EBB, .n = ELF_NEBB,
-+		USER_REGSET_NOTE_TYPE(PPC_EBB), .n = ELF_NEBB,
- 		.size = sizeof(u64), .align = sizeof(u64),
- 		.active = ebb_active, .regset_get = ebb_get, .set = ebb_set
- 	},
--- 
-2.34.1
+return -ENOMEM;=20
+
+and drop the err label.
+
+> +		goto err;
+> +	}
+> +
+> +	INIT_LIST_HEAD(&backing_dev->submit_list);
+> +	INIT_LIST_HEAD(&backing_dev->complete_list);
+> +	spin_lock_init(&backing_dev->submit_lock);
+> +	spin_lock_init(&backing_dev->complete_lock);
+> +	INIT_WORK(&backing_dev->req_submit_work, req_submit_fn);
+> +	INIT_WORK(&backing_dev->req_complete_work, req_complete_fn);
+> +
+> +	return 0;
+> +err:
+> +	return ret;
+> +}
+
+> +static void req_complete_fn(struct work_struct *work)
+> +{
+> +	struct pcache_backing_dev *backing_dev =3D container_of(work, struct pc=
+ache_backing_dev, req_complete_work);
+
+Very long line.  Wrap it somewhere.
+
+> +	struct pcache_backing_dev_req *backing_req;
+> +	LIST_HEAD(tmp_list);
+> +
+> +	spin_lock_irq(&backing_dev->complete_lock);
+> +	list_splice_init(&backing_dev->complete_list, &tmp_list);
+> +	spin_unlock_irq(&backing_dev->complete_lock);
+> +
+> +	while (!list_empty(&tmp_list)) {
+> +		backing_req =3D list_first_entry(&tmp_list,
+> +					    struct pcache_backing_dev_req, node);
+> +		list_del_init(&backing_req->node);
+> +		backing_dev_req_end(backing_req);
+> +	}
+> +}
+> +
+> +static void backing_dev_bio_end(struct bio *bio)
+> +{
+> +	struct pcache_backing_dev_req *backing_req =3D bio->bi_private;
+> +	struct pcache_backing_dev *backing_dev =3D backing_req->backing_dev;
+> +	unsigned long flags;
+> +
+> +	backing_req->ret =3D bio->bi_status;
+> +
+> +	spin_lock_irqsave(&backing_dev->complete_lock, flags);
+> +	list_move_tail(&backing_req->node, &backing_dev->complete_list);
+> +	queue_work(BACKING_DEV_TO_PCACHE(backing_dev)->task_wq, &backing_dev->r=
+eq_complete_work);
+> +	spin_unlock_irqrestore(&backing_dev->complete_lock, flags);
+> +}
+> +
+> +static void req_submit_fn(struct work_struct *work)
+> +{
+> +	struct pcache_backing_dev *backing_dev =3D container_of(work, struct pc=
+ache_backing_dev, req_submit_work);
+
+Very long line.  Wrap after =3D
+
+
+> +	struct pcache_backing_dev_req *backing_req;
+> +	LIST_HEAD(tmp_list);
+> +
+> +	spin_lock(&backing_dev->submit_lock);
+> +	list_splice_init(&backing_dev->submit_list, &tmp_list);
+> +	spin_unlock(&backing_dev->submit_lock);
+> +
+> +	while (!list_empty(&tmp_list)) {
+> +		backing_req =3D list_first_entry(&tmp_list,
+> +					    struct pcache_backing_dev_req, node);
+> +		list_del_init(&backing_req->node);
+> +		submit_bio_noacct(&backing_req->bio);
+> +	}
+> +}
+
+> +
+> +static void bio_map(struct bio *bio, void *base, size_t size)
+> +{
+> +	struct page *page;
+> +	unsigned int offset;
+> +	unsigned int len;
+> +
+> +	if (!is_vmalloc_addr(base)) {
+> +		page =3D virt_to_page(base);
+> +		offset =3D offset_in_page(base);
+> +
+> +		BUG_ON(!bio_add_page(bio, page, size, offset));
+
+		BUG_ON(!bio_add_page(bio, virt_to_page(base), size
+				     offset_in_page(base));
+
+Seems readable enough. Obviously that depends on whether those
+local variables get more useage in later patches.
+
+> +		return;
+> +	}
+> +
+> +	flush_kernel_vmap_range(base, size);
+> +	while (size) {
+> +		page =3D vmalloc_to_page(base);
+> +		offset =3D offset_in_page(base);
+> +		len =3D min_t(size_t, PAGE_SIZE - offset, size);
+> +
+> +		BUG_ON(!bio_add_page(bio, page, len, offset));
+> +		size -=3D len;
+> +		base +=3D len;
+> +	}
+> +}
+
+> +
+> +static struct pcache_backing_dev_req *kmem_type_req_create(struct pcache=
+_backing_dev *backing_dev,
+> +						struct pcache_backing_dev_req_opts *opts)
+> +{
+> +	struct pcache_backing_dev_req *backing_req;
+> +	struct bio *backing_bio;
+> +	u32 n_vecs =3D get_n_vecs(opts->kmem.data, opts->kmem.len);
+> +
+> +	backing_req =3D kmem_cache_zalloc(backing_dev->backing_req_cache, opts-=
+>gfp_mask);
+> +	if (!backing_req)
+> +		return NULL;
+> +
+> +	if (n_vecs > BACKING_DEV_REQ_INLINE_BVECS) {
+> +		backing_req->kmem.bvecs =3D kmalloc_array(n_vecs, sizeof(struct bio_ve=
+c), opts->gfp_mask);
+> +		if (!backing_req->kmem.bvecs)
+> +			goto err_free_req;
+> +	} else {
+> +		backing_req->kmem.bvecs =3D backing_req->kmem.inline_bvecs;
+> +	}
+> +
+> +	backing_req->type =3D BACKING_DEV_REQ_TYPE_KMEM;
+> +
+> +	bio_init(&backing_req->bio, backing_dev->dm_dev->bdev, backing_req->kme=
+m.bvecs,
+> +			n_vecs, opts->kmem.opf);
+
+Odd alignment.  Align second line under &
+
+> +
+> +	backing_bio =3D &backing_req->bio;
+> +	bio_map(backing_bio, opts->kmem.data, opts->kmem.len);
+> +
+> +	backing_bio->bi_iter.bi_sector =3D (opts->kmem.backing_off) >> SECTOR_S=
+HIFT;
+> +	backing_bio->bi_private =3D backing_req;
+> +	backing_bio->bi_end_io =3D backing_dev_bio_end;
+> +
+> +	backing_req->backing_dev =3D backing_dev;
+> +	INIT_LIST_HEAD(&backing_req->node);
+> +	backing_req->end_req	=3D opts->end_fn;
+> +	backing_req->priv_data	=3D opts->priv_data;
+
+Bit of a mixture of formatting between aligned =3D and not.  Pick one style.
+I prefer never forcing alignment but others do like it.  I'm fine with that
+too, just not a mix.
+
+
+> +
+> +	return backing_req;
+> +
+> +err_free_req:
+> +	kmem_cache_free(backing_dev->backing_req_cache, backing_req);
+> +	return NULL;
+> +}
+> +
+> +struct pcache_backing_dev_req *backing_dev_req_create(struct pcache_back=
+ing_dev *backing_dev,
+> +						struct pcache_backing_dev_req_opts *opts)
+> +{
+> +	if (opts->type =3D=3D BACKING_DEV_REQ_TYPE_REQ)
+> +		return req_type_req_create(backing_dev, opts);
+> +	else if (opts->type =3D=3D BACKING_DEV_REQ_TYPE_KMEM)
+
+returned in earlier branch so go with simpler
+
+	if (opts->type..)
+
+Or use a switch statement if you expect to get more entries in this over ti=
+me.
+
+> +		return kmem_type_req_create(backing_dev, opts);
+> +
+> +	return NULL;
+> +}
+> +
+> +void backing_dev_flush(struct pcache_backing_dev *backing_dev)
+> +{
+> +	blkdev_issue_flush(backing_dev->dm_dev->bdev);
+> +}
+
 
