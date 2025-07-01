@@ -1,209 +1,127 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27281B0F0A
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 19:32:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8407A25B1FC;
+	Tue,  1 Jul 2025 19:32:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751398325; cv=none; b=fI1AggwcKcMEyEjwFMi0VsfFl00Fk2svw6mQW1yKcagemITVRWJy7fdY8VqwguPwJaJ4pPLNNz0J72tgTxYGesrFwgwyd9mArnAB5nU4AJepO9VHqOONj6+XJOxsTpeSWMUrqJqyTMCJtxt2ebaMzmMsYpmuaA70HkEsJvwxJwY=
+	t=1751398365; cv=none; b=jLtG+eYqpt2QjEXH0KNq4rSaebw2DiUKR2nUuZLLOVQyekdH5e6Qfhj4vEaXN1qOf8U3M3sqGK06r/vyGCfsRQifiKlb6KLc+EhTvKpQUCwgiIS3cqoKxGQXON5hII0PI+alEot7A2AbmBCIVIWUGvt284ISAwGRzDHcRKUcGnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751398325; c=relaxed/simple;
-	bh=kXopyC6c5M9a9rWPFBYHZbv8zu6NBxoYlUYtgbPR6Dc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ccjxZSoqnf6rQDPnd+TpD0kAYpHGIVZ5wYJdE5u5Eeeg6JNYkcfMGIq4KUHxKR2dHw2hMRwb0zTGrlEi4Qka7eWLQUs6HgkQN2zoRnTuTesJPY5rehb4Zq44GOPsdGb27rzyof3jh0N/grDLjXhC8cJXt6+5NkqLWaabhk1VHyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KioT3ObY; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751398365; c=relaxed/simple;
+	bh=niNzJeXLvd5lsHTembyVglZRkYxCH3CvL+tZgUzKEfY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TaX77UP326RdMtL3aLAclr9rbfVDTJTfB+SgO0WKqbUJdV+hO2RIXtPbFY7Tgxr27ySxF0MSzhJqjWvEQpTw7RVy3nd6FnKmGngZ2WQNYMDC97CZQSBmvdmuJFlVDjIx8r0IlThsrlaasIYuEPIgBAli68tGLBRu15z7Y8ab42U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=COv/WEvL; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KioT3ObY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751398322;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=pan++p2TzQShdGmkALz5U+1UZhqUiE8i0SNRToHfyJg=;
-	b=KioT3ObYk4WraBSDwnKFFpJ6ZKq0YMx6eX3lRc0wLV2U0QsJcOzxpgqN9yZAv6ucCS8cim
-	dOR9FZcgQJeCP1+JJPpFEXqL3nIytfi3XP5OTHZKvryDnE2TDW3+fdx9Zhc9DvR+hqiUyh
-	pnBq+Vff4sibl6tVfmoBdXcwMEJNWSU=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-76-78jXOO5EPd-Xz9qDA65bIQ-1; Tue, 01 Jul 2025 15:32:01 -0400
-X-MC-Unique: 78jXOO5EPd-Xz9qDA65bIQ-1
-X-Mimecast-MFC-AGG-ID: 78jXOO5EPd-Xz9qDA65bIQ_1751398320
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-450de98b28eso33068885e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 12:32:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751398320; x=1752003120;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=pan++p2TzQShdGmkALz5U+1UZhqUiE8i0SNRToHfyJg=;
-        b=owN/3yolbYAmzbbIdPSAtpF35Bz/hX8uHycW9vO1p3+OTaM5XKu0s4WS/rGSiJIATS
-         BSAVcnL0ucOP8hGCsBcFVSZRZHoi5LcDEfQP7zbxrKwHPhbfjLxFwT/mG/7bGkUqrjek
-         Z+XamAeDbDre5wXUw631UtGdNdF+HSdL+PoLV53Gg4rxPXUIL1j5Rv65cJ1IvYC9ou9x
-         RvJyL592FCBmQBj/l+2GSmbXGtx3bvcTy5eve7dPNRzUrn/NFr1p1zBOdtLFGGZsRk5r
-         hwJd3P2ZVroPuq7hj6baYDNoi0Xr3g2qPsnI8TBcgew7Wn98xGck+tdjOPan+YDprFXY
-         2vsg==
-X-Gm-Message-State: AOJu0YzXJHGcsLcoeb6mUbUbnYOtGqtja2wQ19TjXlN+RTsWb8K3fElE
-	RFlXDxPfhCWRwgf0lpbyc0jtLsLFefkWedZQADI/eO/Lbp3XkevkgqrVShICq/7Nr6Q1gExVynX
-	yhws8+q7DVJbl1704AdkDZCgoBZ7IuzL7M3RGkeDMVQOlKQpktEmcRokqFp4mD1kRtw==
-X-Gm-Gg: ASbGnctItKHH/g9cXvWyZaynyiQnErkFdC8ctk6SiZsDB0RmdU0ML/yv+NpyRCj4N23
-	xA8Km7XM+c7SY4T5Hy9z2GgU96z+FmKoaUcakcEAB13DMfQ9I4QctY6UYQHrbWvWuv7QjcbD78Q
-	FFTMo+Y91iJleOp7EDIhsNBqzJEIEBG6m/DOg4DZoD2venF+pJSEuZ4Ga6J6PO0iQKUligwf0BO
-	Y5vUYNjnxgO9M4Nf9oXM/RNpd4Uky3UGgmCvhbA4coh6Jc0XRp0wQf5Wd15Q3zVQqVmoukPuMws
-	UPMHetcmamOLl+aGgjMGAEVJH68BQjYLraZw/atkS98Q4hlZbOHwZsbHyWJWQwd/ORHqhm647Sm
-	YyIZPSRe4Lld7Lx5hYJUIHVSt6Ob4WD7vkn9TJ4X7pZv8n9U5tg==
-X-Received: by 2002:a05:600c:8211:b0:43b:c857:e9d7 with SMTP id 5b1f17b1804b1-454a36e495amr3357335e9.5.1751398320072;
-        Tue, 01 Jul 2025 12:32:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG5TyN7r+4oBk64JocA+5QoglGL345dK2Fcu0b1IazgnSHOIgn7V2SOlRTU0EkUwtcUGQo9tg==
-X-Received: by 2002:a05:600c:8211:b0:43b:c857:e9d7 with SMTP id 5b1f17b1804b1-454a36e495amr3356625e9.5.1751398319493;
-        Tue, 01 Jul 2025 12:31:59 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f18:7500:202e:b0f1:76d6:f9af? (p200300d82f187500202eb0f176d6f9af.dip0.t-ipconnect.de. [2003:d8:2f18:7500:202e:b0f1:76d6:f9af])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823ad01csm206159325e9.22.2025.07.01.12.31.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 12:31:59 -0700 (PDT)
-Message-ID: <48e9a5de-3131-4e36-8a21-5f77669116a9@redhat.com>
-Date: Tue, 1 Jul 2025 21:31:56 +0200
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="COv/WEvL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To;
+	bh=Dj2RXbZ/Tv5yAxHz/6WWadAXm0f+rEasqd5wSxNrNfk=; b=COv/WEvLADeJ6fd21KY0S80AoD
+	XAN2jdqZDbmJLuHjkwzeQOPC/J+uLnEp4cOPZMr64nMBTTT7O9tyv1Eo5P3D9VzrPR9ii5R68h9u8
+	x0wMgRHL8MjOUXKpx0bTeMlN96lBxW0hVtxOE/OolJEMZsQgACj71Dk+raYFqFUv+5Gt3KAdnqG5O
+	zQjvfJUL9d9YX9i6ONayuZX4GPHZyO0Ot9qQXBgoQ4iOfk84Nb3DKg+BwfGpR8mQuFu0N7a1Z0iag
+	J4Vn9kQA332jEckCkT25MeMr0VHE/7KDpvPcC6ylfJlD/Vwf3GgBc+asJkJag5aiUgs2e71ApfHnG
+	sFw0nDZw==;
+Received: from i53875bc7.versanet.de ([83.135.91.199] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uWgi0-0007Fd-TC; Tue, 01 Jul 2025 21:32:00 +0200
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Oded Gabbay <ogabbay@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
+ Kever Yang <kever.yang@rock-chips.com>, Robin Murphy <robin.murphy@arm.com>,
+ Daniel Stone <daniel@fooishbar.org>, Da Xue <da@libre.computer>,
+ Jeff Hugo <jeff.hugo@oss.qualcomm.com>, Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
+ linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+ Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Subject: Re: [PATCH v7 03/10] accel/rocket: Add IOCTL for BO creation
+Date: Tue, 01 Jul 2025 21:31:59 +0200
+Message-ID: <8888010.K2JlShyGXD@diego>
+In-Reply-To: <20250606-6-10-rocket-v7-3-dc16cfe6fe4e@tomeuvizoso.net>
+References:
+ <20250606-6-10-rocket-v7-0-dc16cfe6fe4e@tomeuvizoso.net>
+ <20250606-6-10-rocket-v7-3-dc16cfe6fe4e@tomeuvizoso.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 22/29] mm/page-flags: rename PAGE_MAPPING_MOVABLE to
- PAGE_MAPPING_ANON_KSM
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- virtualization@lists.linux.dev, linux-fsdevel@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Jerrin Shaji George <jerrin.shaji-george@broadcom.com>,
- Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
- Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
- Ying Huang <ying.huang@linux.alibaba.com>,
- Alistair Popple <apopple@nvidia.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Minchan Kim <minchan@kernel.org>,
- Sergey Senozhatsky <senozhatsky@chromium.org>,
- Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
- Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
- Peter Xu <peterx@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>,
- Chengming Zhou <chengming.zhou@linux.dev>, Miaohe Lin
- <linmiaohe@huawei.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>,
- Oscar Salvador <osalvador@suse.de>, Rik van Riel <riel@surriel.com>,
- Harry Yoo <harry.yoo@oracle.com>, Qi Zheng <zhengqi.arch@bytedance.com>,
- Shakeel Butt <shakeel.butt@linux.dev>
-References: <20250630130011.330477-1-david@redhat.com>
- <20250630130011.330477-23-david@redhat.com>
- <5357d4d9-d817-4351-9927-bcd03794964c@lucifer.local>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <5357d4d9-d817-4351-9927-bcd03794964c@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On 01.07.25 14:54, Lorenzo Stoakes wrote:
-> On Mon, Jun 30, 2025 at 03:00:03PM +0200, David Hildenbrand wrote:
->> KSM is the only remaining user, let's rename the flag. While at it,
->> adjust to remaining page -> folio in the doc.
-> 
-> Hm I wonder if we could just ideally have this be a separate flag rather than a
-> bitwise combination, however I bet there's code that does somehow rely on this.
+Am Freitag, 6. Juni 2025, 08:28:23 Mitteleurop=C3=A4ische Sommerzeit schrie=
+b Tomeu Vizoso:
+> This uses the SHMEM DRM helpers and we map right away to the CPU and NPU
+> sides, as all buffers are expected to be accessed from both.
+>=20
+> v2:
+> - Sync the IOMMUs for the other cores when mapping and unmapping.
+>=20
+> v3:
+> - Make use of GPL-2.0-only for the copyright notice (Jeff Hugo)
+>=20
+> v6:
+> - Use mutexes guard (Markus Elfring)
+>=20
+> v7:
+> - Assign its own IOMMU domain to each client, for isolation (Daniel
+>   Stone and Robin Murphy)
+>=20
+> Reviewed-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
+> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> ---
 
-Well, KSM folios are anon folios, so that must hold.
+> diff --git a/drivers/accel/rocket/rocket_gem.c b/drivers/accel/rocket/roc=
+ket_gem.c
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..61b7f970a6885aa13784daa12=
+22611a02aa10dee
+> --- /dev/null
+> +++ b/drivers/accel/rocket/rocket_gem.c
+> @@ -0,0 +1,115 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/* Copyright 2024-2025 Tomeu Vizoso <tomeu@tomeuvizoso.net> */
+> +
+> +#include <drm/drm_device.h>
+> +#include <drm/drm_utils.h>
+> +#include <drm/rocket_accel.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/iommu.h>
+> +
+> +#include "rocket_device.h"
+> +#include "rocket_drv.h"
+> +#include "rocket_gem.h"
+> +
+> +static void rocket_gem_bo_free(struct drm_gem_object *obj)
+> +{
+> +	struct rocket_device *rdev =3D to_rocket_device(obj->dev);
+> +	struct rocket_gem_object *bo =3D to_rocket_bo(obj);
+> +	size_t unmapped;
+> +
+> +	drm_WARN_ON(obj->dev, bo->base.pages_use_count > 1);
 
-Of course, now you could make folio_test_anon() test both bits, and have 
-KSM folios only set a PAGE_MAPPING_KSM bit.
+This should probably be
+    drm_WARN_ON(obj->dev, refcount_read(&bo->base.pages_use_count) > 1);
 
-That should be possible on top of this change, but not sure if that's 
-really what we want. After all, KSM folios are special ANON folios.
+as pages_use_count is of type refcount_t since
+commit 051b6646d36d ("drm/shmem-helper: Use refcount_t for pages_use_count")
 
-> 
-> I know for sure there's code that has to do a folio_test_ksm() on something
-> folio_test_anon()'d because the latter isn't sufficient.
- > > But this is one for the future I guess :)
+Heiko
 
-Yes :)
-
-> 
-> Nice: re change to folio, that is a nice cleanup based on fact you've now made
-> the per-page mapping op stuff not be part of this.
-> 
->>
->> Reviewed-by: Zi Yan <ziy@nvidia.com>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
-> 
-> LGTM, so:
-> 
-> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-
-Thanks!
-
-
--- 
-Cheers,
-
-David / dhildenb
 
