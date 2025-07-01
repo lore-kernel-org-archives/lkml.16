@@ -1,192 +1,137 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5438726C39F
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 08:54:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAB4822259D;
+	Tue,  1 Jul 2025 08:55:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751360073; cv=none; b=h4zP7UAOTSlyd8U8JrXnRyu3hVo+b4mXCE6u1xWUMeeiiVPlW9EULMsPziYaZhSE5weioFlV3AtzVWYooIb7w1c6jLab73Guq8PJrc7JJ1lMVup1LOb/S5J5ExIuZcBJ31m8zTEK3K/xd+nNEU5hDafE9UXqqENdkr23uQYXoR4=
+	t=1751360132; cv=none; b=jaXs3mPgppBwZSV1BSrfmi++vDOH+1o9L1M/ApAPqU2PuTtUzFjou1y365pJ0B6hgGk//OO0IUIrdzc0n+qu8KzeLnNKqISXYKhp/9Q01h4YGo3mJ075rbKEUezKX+WI1TLQFV7lpLm4jxF4dOtlrE8uWWtB8YWpgEbDo+b+1Uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751360073; c=relaxed/simple;
-	bh=TcJDRCy2YRDnqox1Wxw7tyraONe0LQN9BSKHDNITpCQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oWRSC2nCE5nw054ollL1Qkha5lxrIoLncjazDFK34kAcMnl0pSCZ6P7/AzQs4W0THOO565L1VSyS32kYo9UE6bHYDfoCybW2ixhInS/pzwP5Wv9Z1T9vI/7lYw6Etcaqa66s7ixyA3bj9FpshsN7h9IcrrY+uV+apI4qra7EEhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-79-6863a23dd9db
-From: Yunjeong Mun <yunjeong.mun@sk.com>
-To: sj@kernel.org
-Cc: akpm@linux-foundation.org,
-	damon@lists.linux.dev,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	kernel_team@skhynix.com,
-	honggyu.kim@sk.com
-Subject: [RFC PATCH 2/2] samples/damon: add `migrate_hot` and `migrate_cold` knobs
-Date: Tue,  1 Jul 2025 17:54:17 +0900
-Message-ID: <20250701085417.1734-3-yunjeong.mun@sk.com>
-X-Mailer: git-send-email 2.48.1.windows.1
-In-Reply-To: <20250701085417.1734-1-yunjeong.mun@sk.com>
-References: <20250701085417.1734-1-yunjeong.mun@sk.com>
+	s=arc-20240116; t=1751360132; c=relaxed/simple;
+	bh=bpUYSyg7FQSqalfiLvbpqYi9zHballtSu0yKxalold4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=tS9aY+qtNnW70DTVgQLRQTTrWp7dw62ix2s84m0Yl1o6jF+KZhj0yp8uz52SeLIZea2mfD7Y9Msp63UF/QUHBpxeL1/i9bWuVRC/PP2tyusNom5xUbMtgkn+5Aj+dpgo+AU6Zinf7QHi+Fhz9qMEu4NtM6tBuCnb2PuMzn/acfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=nN+kiD6y; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="nN+kiD6y"
+Received: from [192.168.1.60] (unknown [IPv6:2001:b07:6462:5de2:520d:d7a3:63ca:99e8])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id C497A7E0;
+	Tue,  1 Jul 2025 10:55:05 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1751360106;
+	bh=bpUYSyg7FQSqalfiLvbpqYi9zHballtSu0yKxalold4=;
+	h=From:Date:Subject:To:Cc:From;
+	b=nN+kiD6yZxa3A5kEP9rRpCkA6c0lCYFnWJTbNQIpcgDa57LJTwlA/wMyEZQOB7iA2
+	 U9ZcjqJ5lVe7XVUxsB6ihrNMIDSJU0LzSsddYwqbQ4gKiadF9b2ibNB9ywuR8VUMYl
+	 Bfg8xiQi9P9tXzkJqxzEBEu8nEVOnx1Hc+/Ziyps=
+From: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+Date: Tue, 01 Jul 2025 10:55:05 +0200
+Subject: [PATCH] media: pisp_be: Use clamp() and define max sizes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKLMWRmVeSWpSXmKPExsXC9ZZnka7touQMg5dTLS3mrF/DZvHk/29W
-	i8u75rBZ3Fvzn9Xi8Nc3TA6sHptWdbJ5bPo0id3jxIzfLB4vNs9k9Pi8SS6ANYrLJiU1J7Ms
-	tUjfLoEr49Ovv+wFHfIVa1afYmxgPC/ZxcjJISFgIjFx33omGPvzl4usIDabgIbEwUMnmUFs
-	EQFBif7HM4DiXBzMAnMZJY6cec8IkhAWCJKYeP08UBEHB4uAqsTsx1EgYV4Bc4nrf6cwQszU
-	lGi4dA9sPqeAhcSJmc/A4kJANff/zmeHqBeUODnzCQuIzSwgL9G8dTYzRO8cNokvTeIQtqTE
-	wRU3WCYw8s9C0jILScsCRqZVjEKZeWW5iZk5JnoZlXmZFXrJ+bmbGIGBuaz2T/QOxk8Xgg8x
-	CnAwKvHwzjiZlCHEmlhWXJl7iFGCg1lJhJdPNjlDiDclsbIqtSg/vqg0J7X4EKM0B4uSOK/R
-	t/IUIYH0xJLU7NTUgtQimCwTB6dUA6PMDHeHUGWdnaIhyleW/9hrP2GOH/Pzi99+3uG6nHyP
-	fe++nbMrZ8lufn6q/MK1FMnZh1fa9Udcvf5uqdi5AJtOJ5n9ehprLqb+uOvQqW3kc2PfjEeS
-	9za8L8lX2/rpv+XaO9371gqeqUwyyjK4cK/5yWkNh3X6FX4N+1S6j1VfjAgoOlHzanaTEktx
-	RqKhFnNRcSIAZ+lwLkgCAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGLMWRmVeSWpSXmKPExsXCNUNWR9d2UXKGwaIPGhZz1q9hs3jy/zer
-	xednr5ktDs89yWpxedccNot7a/6zWhz++obJgd1j06pONo9Nnyaxe5yY8ZvF48XmmYwe3257
-	eCx+8YHJ4/MmuQD2KC6blNSczLLUIn27BK6MT7/+shd0yFesWX2KsYHxvGQXIyeHhICJxOcv
-	F1lBbDYBDYmDh04yg9giAoIS/Y9nAMW5OJgF5jJKHDnznhEkISwQJDHx+nmgIg4OFgFVidmP
-	o0DCvALmEtf/TmGEmKkp0XDpHhOIzSlgIXFi5jOwuBBQzf2/89kh6gUlTs58wgJiMwvISzRv
-	nc08gZFnFpLULCSpBYxMqxhFMvPKchMzc0z1irMzKvMyK/SS83M3MQJDb1ntn4k7GL9cdj/E
-	KMDBqMTDa5CXlCHEmlhWXJl7iFGCg1lJhJdPNjlDiDclsbIqtSg/vqg0J7X4EKM0B4uSOK9X
-	eGqCkEB6YklqdmpqQWoRTJaJg1OqgfERu657xuXi72cVH97I+d6lsIJp+7X91zzVbVL5nx65
-	wdL7p2qS1t3ylFlTzj3Y/P/nErPTBdvedxdsLV7Ct5uXS+WS/N5PZ7wXNHO+7Vi+hpnP5bOT
-	659VfUr9jP4Hf+x1nffJTnyi4nKxCd7pJuxVK5at33cjKTPiDtP7Jsn5YUL1Lvu3dj1WYinO
-	SDTUYi4qTgQAgu2CGDkCAAA=
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250701-pispbe-clamp-v1-1-31243db3439b@ideasonboard.com>
+X-B4-Tracking: v=1; b=H4sIAGiiY2gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDMyNj3YLM4oKkVN3knMTcAl2TJGNjA0PDFINUC1MloJaCotS0zAqwcdG
+ xtbUAsSezGF4AAAA=
+X-Change-ID: 20250623-pispbe-clamp-4b33011d0e85
+To: Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-media@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2889;
+ i=jacopo.mondi@ideasonboard.com; h=from:subject:message-id;
+ bh=bpUYSyg7FQSqalfiLvbpqYi9zHballtSu0yKxalold4=;
+ b=owEBbQKS/ZANAwAKAXI0Bo8WoVY8AcsmYgBoY6J/2GyckB7PTepmFR9Z8KBIt+ohmQEHr0vtF
+ 636rRe1tgeJAjMEAAEKAB0WIQS1xD1IgJogio9YOMByNAaPFqFWPAUCaGOifwAKCRByNAaPFqFW
+ PNf+D/9Q7XpnGWqW2Z/2gS0FAMzczkz9mx1p7mIuhqfnDUHB7C48ri0voT/7XctuGnbkAsfLr+O
+ G4Yx5tLfV9yxG3HhIMPf4Ph8X3OMxILQJJrO3FQun7KWgNZhGY3QJKEAm3I7XMfhOlgkPz8bC8M
+ aecrDBchSO3KOlk5Hwk9SQ2JuVlLDPlpczbrA6uVgWwFyxjO0lDIWCFtm40cPhfwrphr/IRgs1V
+ P91dSY3MCumILB82OYa6wkOBY2OJ8JTxP3dgP9zfkGx/r+LChaaDx9W52ZcuYK5BW04zK7E7rGI
+ ydpiYZTmait1JJDkEe7BSZLM5bNs5mCfcpLkJjFrxavUxiTWPvdhPw7LXFX4c9kwCmF2DFhe+cf
+ lC7W5er3qVxbQzYJblU4qqjzvh4dvEUHvE+cqNhj+mpE+dRIVYEwBJexxIbUyNG3fJl4Psj1/7I
+ fBmvWBQx6HUKdKCJdhApWz9+4+Yj4Up8eqrtP0+9XHOZ+4s5izodm+giPJJ7RAfKp01+6Azx+qa
+ JYr0phCnRge2L6U9o6nUPTHeb1CB/+uYnF6xUm3n7uAPwT9xX6XY+7jEqQAaqwPpnVHEYev/OPZ
+ DwZndwwSi6c3Ttqs61EYrrUcsd9jD6cWCAb11o2j+SyxZPcCYegWFeVlkPsPnHTbPNHPgtW67JA
+ aelnvDpRJt7sLag==
+X-Developer-Key: i=jacopo.mondi@ideasonboard.com; a=openpgp;
+ fpr=72392EDC88144A65C701EA9BA5826A2587AD026B
 
-This patch introduces two new konbs for promotion/demotion:
-`migrate_hot` and `migrate_cold`. It receives node ids for migration in
-a comma-separated format as `<src,dst>`. The usage is as follows:
+Use the clamp() from minmax.h and provide a define for the max size as
+they will be used in sequent patches.
 
-    # demote pages from nid 0 to nid 1
-    $ echo 0,1 > /sys/module/mtier/parameters/migrate_cold
-    # promote pages from nid 1 to nid 0
-    $ echo 1,0 > /sys/module/mtier/parameters/migrate_hot
-
-Susggested-by: Honggyu Kim <honggyu.kim@sk.com>
-Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
+Signed-off-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
 ---
- samples/damon/mtier.c | 68 +++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 66 insertions(+), 2 deletions(-)
+ drivers/media/platform/raspberrypi/pisp_be/pisp_be.c  | 11 +++++++----
+ include/uapi/linux/media/raspberrypi/pisp_be_config.h |  9 +++++----
+ 2 files changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/samples/damon/mtier.c b/samples/damon/mtier.c
-index ba6938a89c21..55d2edb84d7e 100644
---- a/samples/damon/mtier.c
-+++ b/samples/damon/mtier.c
-@@ -11,6 +11,7 @@
- #include <linux/init.h>
+diff --git a/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c b/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
+index 7596ae1f7de6671484d4d351015b234829f642d4..ac5840b4be478ccdd7da9d6d0745649e0c1b2b6f 100644
+--- a/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
++++ b/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
+@@ -9,6 +9,7 @@
+ #include <linux/io.h>
  #include <linux/kernel.h>
+ #include <linux/lockdep.h>
++#include <linux/minmax.h>
  #include <linux/module.h>
-+#include <linux/string.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+@@ -1114,10 +1115,12 @@ static void pispbe_try_format(struct v4l2_format *f, struct pispbe_node *node)
+ 	f->fmt.pix_mp.pixelformat = fmt->fourcc;
+ 	f->fmt.pix_mp.num_planes = fmt->num_planes;
+ 	f->fmt.pix_mp.field = V4L2_FIELD_NONE;
+-	f->fmt.pix_mp.width = max(min(f->fmt.pix_mp.width, 65536u),
+-				  PISP_BACK_END_MIN_TILE_WIDTH);
+-	f->fmt.pix_mp.height = max(min(f->fmt.pix_mp.height, 65536u),
+-				   PISP_BACK_END_MIN_TILE_HEIGHT);
++	f->fmt.pix_mp.width = clamp(f->fmt.pix_mp.width,
++				    PISP_BACK_END_MIN_TILE_WIDTH,
++				    PISP_BACK_END_MAX_TILE_WIDTH);
++	f->fmt.pix_mp.height = clamp(f->fmt.pix_mp.height,
++				     PISP_BACK_END_MIN_TILE_HEIGHT,
++				     PISP_BACK_END_MAX_TILE_HEIGHT);
  
- static unsigned long node0_mem_used_bp __read_mostly = 9970;
- module_param(node0_mem_used_bp, ulong, 0600);
-@@ -18,6 +19,32 @@ module_param(node0_mem_used_bp, ulong, 0600);
- static unsigned long node0_mem_free_bp __read_mostly = 50;
- module_param(node0_mem_free_bp, ulong, 0600);
+ 	/*
+ 	 * Fill in the actual colour space when the requested one was
+diff --git a/include/uapi/linux/media/raspberrypi/pisp_be_config.h b/include/uapi/linux/media/raspberrypi/pisp_be_config.h
+index cbeb714f4d61ad53162c0450f2303431a5958040..2ad3b90684d7be80776af75b5c5009f7b677f466 100644
+--- a/include/uapi/linux/media/raspberrypi/pisp_be_config.h
++++ b/include/uapi/linux/media/raspberrypi/pisp_be_config.h
+@@ -21,10 +21,11 @@
+ /* preferred byte alignment for outputs */
+ #define PISP_BACK_END_OUTPUT_MAX_ALIGN 64u
  
-+static int get_migrate_hot(
-+		char *val, const struct kernel_param *kp);
-+
-+static const struct kernel_param_ops migrate_hot_ops = {
-+	.set = param_set_charp,
-+	.get = get_migrate_hot,
-+};
-+
-+static char *migrate_hot __read_mostly = "";
-+module_param_cb(migrate_hot, &migrate_hot_ops, &migrate_hot, 0600);
-+MODULE_PARM_DESC(migrate_hot,
-+	"Specify source and destination node id as a comma-seperated pair");
-+
-+static int get_migrate_cold(
-+		char *val, const struct kernel_param *kp);
-+
-+static const struct kernel_param_ops migrate_cold_ops = {
-+	.set = param_set_charp,
-+	.get = get_migrate_cold,
-+};
-+
-+static char *migrate_cold __read_mostly = "";
-+module_param_cb(migrate_cold, &migrate_cold_ops, &migrate_cold, 0600);
-+MODULE_PARM_DESC(migrate_cold,
-+	"Specify source and destination node id as a comma-seperated pair");
-+
- static int damon_sample_mtier_enable_store(
- 		const char *val, const struct kernel_param *kp);
+-/* minimum allowed tile width anywhere in the pipeline */
+-#define PISP_BACK_END_MIN_TILE_WIDTH 16u
+-/* minimum allowed tile width anywhere in the pipeline */
+-#define PISP_BACK_END_MIN_TILE_HEIGHT 16u
++/* minimum allowed tile sizes anywhere in the pipeline */
++#define PISP_BACK_END_MIN_TILE_WIDTH	16u
++#define PISP_BACK_END_MIN_TILE_HEIGHT	16u
++#define PISP_BACK_END_MAX_TILE_WIDTH	65536u
++#define PISP_BACK_END_MAX_TILE_HEIGHT	65536u
  
-@@ -37,6 +64,30 @@ struct region_range {
- 	phys_addr_t end;
- };
- 
-+static int parse_migrate_node(int *src, int *dst, bool promote) {
-+	char *comma;
-+	char buf[32];
-+
-+	if (promote)
-+		strscpy(buf, migrate_hot, sizeof(buf));
-+	else
-+		strscpy(buf, migrate_cold, sizeof(buf));
-+
-+	comma = strchr(buf, ',');
-+	if (!comma)
-+		return -EINVAL;
-+
-+	*comma = '\0';
-+	comma++;
-+
-+	if (kstrtoint(buf, 0, src))
-+		return -EINVAL;
-+	if (kstrtoint(comma, 0, dst))
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
- static int numa_info_init(int target_node, struct region_range *range) {
- 
- 	if (!node_online(target_node)) {
-@@ -64,6 +115,7 @@ static struct damon_ctx *damon_sample_mtier_build_ctx(bool promote)
- 	struct damos_quota_goal *quota_goal;
- 	struct damos_filter *filter;
- 	struct region_range addr;
-+	int src, dst;
- 
- 	ctx = damon_new_ctx();
- 	if (!ctx)
-@@ -94,8 +146,10 @@ static struct damon_ctx *damon_sample_mtier_build_ctx(bool promote)
- 		goto free_out;
- 	damon_add_target(ctx, target);
- 
--	int ret = promote ? numa_info_init(1, &addr) : numa_info_init(0, &addr);
--	if (ret)
-+	if (parse_migrate_node(&src, &dst, promote))
-+		goto free_out;
-+
-+	if (numa_info_init(src, &addr))
- 		goto free_out;
- 
- 	region = damon_new_region(addr.start, addr.end);
-@@ -171,6 +225,16 @@ static void damon_sample_mtier_stop(void)
- 	damon_destroy_ctx(ctxs[1]);
- }
- 
-+static int get_migrate_hot(char *buf, const struct kernel_param *kp)
-+{
-+       return scnprintf(buf, PAGE_SIZE, "%s", migrate_hot);
-+}
-+
-+static int get_migrate_cold(char *buf, const struct kernel_param *kp)
-+{
-+       return scnprintf(buf, PAGE_SIZE, "%s", migrate_cold);
-+}
-+
- static int damon_sample_mtier_enable_store(
- 		const char *val, const struct kernel_param *kp)
- {
+ #define PISP_BACK_END_NUM_OUTPUTS 2
+ #define PISP_BACK_END_HOG_OUTPUT 1
+
+---
+base-commit: 35392e855abf7d02ad3b061cbc75c7c7c37f0577
+change-id: 20250623-pispbe-clamp-4b33011d0e85
+
+Best regards,
 -- 
-2.34.1
+Jacopo Mondi <jacopo.mondi@ideasonboard.com>
 
