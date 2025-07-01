@@ -1,313 +1,144 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtpbgbr2.qq.com (smtpbgbr2.qq.com [54.207.22.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 897E81E51F6
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 07:55:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2EB9264628;
+	Tue,  1 Jul 2025 07:55:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.22.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751356520; cv=none; b=NUDzNWI4jI9vC9Nhk4Er2bNi7br9HPTnLLZQb6KZA7XmWfDMGnFVdaQo/u0EMUnCeYnPpp/5tNXvij0XZH0BUTskO0hlTFzByWoVjyoxCRdXwwNrsLnAYVvK/zS0Ig1Tu35lRJmm4uW+dbyfsz6AD683Y3kyxBrRnPjZ1s2T3Xs=
+	t=1751356528; cv=none; b=WopNewf9+6UIKd3UDQdV8qbxvrWZC4le2kEgSzFKMAkSQ6JjE8LLFgdiP/gQJAT9KcGPSTKVwY2jrxEeI4tnPLbv7Sessr5SScZdNBB12M0uyQtHimqO8LmZRGAzXNZOdYWTaeqGl6JABi2xpNUvdN7aCvHlJqdtkkWseai6/V8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751356520; c=relaxed/simple;
-	bh=jFA2Vl0jPD75ev7E43ytDZByT+SH8CFGnuV65782Ojw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=I8a1cq2ODdoUfIoEAamIkolxdAoakMkQtVFzQgIHhy4OxcrOVi4lpjQ9M3HSHhAhIFAP2ektZ0H2ttLn3OB9ohyYJp39pO6JYk/Bli0WT4UDDoyBzsgnenVhX+IYDlOEMrqcyWe47Q6nCM2kslWTfP6O37NHSmpxseFLIhdJOS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SEg/HyLm; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751356528; c=relaxed/simple;
+	bh=9ec1u3X1hswUlL/D+46m55ZLYNmlwFlrlevyxirbW94=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ANOKtGVKc9F81SQ3D8QugsZquq3VWPQfUTPKVd+jlroqjRpHP7/2OvV8ytA/9Zhj9JKD0dC8X/FwW9LlFas0WfX86eHTfbaTgx090kGIx+3dnj49ovWbA8TJKmltzgTugHIpWg0Wt6w9zETZdFgYVHJ9eZCTzF4a1LptX97koOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=RPCVe6qW; arc=none smtp.client-ip=54.207.22.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SEg/HyLm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751356515;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eHdMzgFfQJGJTVG/4M9MM8/CUYx5m9feJxrpAo8o1hk=;
-	b=SEg/HyLmhyDWz0uurN5AcnMWaJzPboxaS/Tv+MG2SaFUgGyZ0JoCH2ik2sMX3T+nbTqM7t
-	Ms/XqFtWTkIJfvv17zxmSbvTt4nU5N08BbqIL9xfDohyNcFuJKSFdGPiGEalpslaPa/p2X
-	FG25LBsgBAj418o/KTDjTvcf1SiCuGQ=
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com
- [209.85.210.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-307-GQq7f134Nc2EzMnOjrPIQw-1; Tue, 01 Jul 2025 03:55:08 -0400
-X-MC-Unique: GQq7f134Nc2EzMnOjrPIQw-1
-X-Mimecast-MFC-AGG-ID: GQq7f134Nc2EzMnOjrPIQw_1751356507
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-748cf01de06so7093962b3a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 00:55:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751356506; x=1751961306;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=eHdMzgFfQJGJTVG/4M9MM8/CUYx5m9feJxrpAo8o1hk=;
-        b=un/wOtvtUYZeV2qRjR+wmj3WIhgsjwG+X+7+c2ah6frM3/2HKzIPSHsgVFQRFiQN84
-         DnpzHJ2eaj4Sz5IazjOqmKlLThP5DzqA9YSfEp5nz+zs4XSF31L5SbZFsWrDNVHI7OEm
-         +ekWyHJYRq2WQRi3B6yjhzgbIv3/OLm/RX6ZRjQSqbgAj9QQqlY7Hlug40sc6hIwR49J
-         TLx/u8jpyS20MPQDnMHIbJEL2Iw6uLOZac4zXbU/wZAEjyBCvAWgi4o61VZcZ+Wb9aRD
-         nf+OqlYNkExU+qcaF8cyztaawVTE+HoXQffRWfCwrVLQYJnVR9vJ5//r67gAtVibG8XM
-         Ug/g==
-X-Forwarded-Encrypted: i=1; AJvYcCUFRu9hGCFIodrXi+E/cWB2Ivv4ymy1XwTDZz+u5Dyvxexlne/vNTNetL5JTwKtUkNOAfmPrxQQV2O8eRw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKvsztO9PGUhvU6WQ0SV5/x0/duTTE/RImnB1V04av118yk2rX
-	f3Lm7lhxr3tBoJTltD7etE8/1fYWSB+NC76XDChw/9+Yr2iFyBdKaRlXxDy5AILZXOo+JONGMRv
-	JzZURsJPkgWYoezJL3hBieOPrAotLH7jw1ZMiKUrMUY7m6A6dKCeSO4WoUFgfAcz9YQ==
-X-Gm-Gg: ASbGncsh7rCA9GpD4eC7jgFHFrqw+DPzgIZwBNx+oEFnJCKdRv8rcvHBKcqdxrAZF5H
-	9qLSsTjcVgQ2ouYdPJLsGGIsjDr5rnFuaJ2nYaCni2lGbRJ5590CieR2OJJroVieevJoX5lX4uD
-	5bqFnX5JGDvXSk994dc1zPQ4WQ0y807uFNxdg8WuU6q5q96cw8IW2rlYqDjLBGVai+H2IlJ3hq5
-	bxoec4Wnw2106jocCmSZcLbSaWbZluXvL/1qrJGnl68MbsPNB6qhohEWj1o3c97HVss0hRWoACc
-	/WGF1SZ3IeMmJeOic/zPuDOLSpcVW2i+KwrEFLTwxuC9E9UF
-X-Received: by 2002:a05:6a00:1495:b0:736:5c8e:baaa with SMTP id d2e1a72fcca58-74af6ebdffdmr22051632b3a.2.1751356506618;
-        Tue, 01 Jul 2025 00:55:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHLLY/eKZv2t5yuLjLiXwRD/wN1GO4pT44DogAvkkhU/DiOVmH3mQAj6VLHh0UEaPV5yfZWTg==
-X-Received: by 2002:a05:6a00:1495:b0:736:5c8e:baaa with SMTP id d2e1a72fcca58-74af6ebdffdmr22051587b3a.2.1751356506152;
-        Tue, 01 Jul 2025 00:55:06 -0700 (PDT)
-Received: from [10.200.68.91] (nat-pool-muc-u.redhat.com. [149.14.88.27])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af557439csm11016401b3a.80.2025.07.01.00.54.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 00:55:05 -0700 (PDT)
-Message-ID: <ce0fdbf2753075056c227ce7567a69386a5aa0a3.camel@redhat.com>
-Subject: Re: [RESEND PATCH v9 1/4] PCI: rockchip: Use standard PCIe defines
-From: Philipp Stanner <pstanner@redhat.com>
-To: Geraldo Nascimento <geraldogabriel@gmail.com>, 
-	linux-rockchip@lists.infradead.org
-Cc: Shawn Lin <shawn.lin@rock-chips.com>, Lorenzo Pieralisi
- <lpieralisi@kernel.org>, Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?=
- <kw@linux.com>,  Manivannan Sadhasivam <mani@kernel.org>, Rob Herring
- <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner
- <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
- <kishon@kernel.org>, Rick wertenbroek <rick.wertenbroek@gmail.com>, Neil
- Armstrong <neil.armstrong@linaro.org>, Valmantas Paliksa
- <walmis@gmail.com>, linux-phy@lists.infradead.org,
- linux-pci@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Date: Tue, 01 Jul 2025 09:54:51 +0200
-In-Reply-To: <e81700ef4b49f584bc8834bfb07b6d8995fc1f42.1751322015.git.geraldogabriel@gmail.com>
-References: <cover.1751322015.git.geraldogabriel@gmail.com>
-	 <e81700ef4b49f584bc8834bfb07b6d8995fc1f42.1751322015.git.geraldogabriel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="RPCVe6qW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1751356516;
+	bh=kVonl+PK1ESVmG9azZvdAt29T3vBY7t0t1HKeM85rhI=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To;
+	b=RPCVe6qWMeh0L1KoCAaUpToeJF73nl/4uaOz8Tesl0qQkVZxkF7smEdDfSJZicN5s
+	 fxui5Td9gen7am0Z4N9YAqtA5nGts/xMLZA3Ws5sbXKfXFkKXB6sb0d9HGnL6x9VNJ
+	 phgkYjSch/FgCZuJpUk4ufBea22s/ZA7lPoN4Hb0=
+X-QQ-mid: esmtpgz11t1751356511t3eee1c54
+X-QQ-Originating-IP: uIMIDLdsZ/D1XDMaTtdpyHRjJA4q6V7tfk6huzd3aRk=
+Received: from mail-yw1-f174.google.com ( [209.85.128.174])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 01 Jul 2025 15:55:09 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 13363238083336646326
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-710bbd7a9e2so30045547b3.0;
+        Tue, 01 Jul 2025 00:55:10 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW0bEt/iv64aiNz+f2jdKskcFb2/32SuqHi5zIgUN0ehYP9MzpFdj49uP1QPf5UEn+4uG793Pka@vger.kernel.org, AJvYcCWTc8nspshMCLgdF7o6ZUYzjq7nZ8VSlMa6oe7DwxOlfoLNrBx+yTEVVjbSoMBEr97pX4YgQOxM2xBpgwg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmxLDX982cRFLjUyVX8vaGxCrc5VAwOSqB+fWm/JMaomNCjiBT
+	pJ2+SXnn+t5yoetWS0soNb/H2kwKJlzBczhsjG0Uzb0y4+vsp93BxfHUa61DMUF3uoFqxZRD+eX
+	gOgDo3DdbushoPat7Jf8VqaQaBOwKS7g=
+X-Google-Smtp-Source: AGHT+IF/JrE6CmFtz4xVWDk4L0eQar4iOXSbDoU2gCX5TO7LfKfgwY1Hcpg+2UwgYT4HAN5Wey2cPhMzu7MT0Sf0EwM=
+X-Received: by 2002:a05:690c:319:b0:712:d824:9202 with SMTP id
+ 00721157ae682-715171471femr202620807b3.9.1751356508652; Tue, 01 Jul 2025
+ 00:55:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <9EE5B02BB2EF6895+20250623041104.61044-1-wangyuli@uniontech.com>
+ <20250623131141.332c631c@kernel.org> <CAC1kPDMkYdPVy-dG3uv92-JG2Ui8BxRqYt2U86ey7fKuJxBa0w@mail.gmail.com>
+In-Reply-To: <CAC1kPDMkYdPVy-dG3uv92-JG2Ui8BxRqYt2U86ey7fKuJxBa0w@mail.gmail.com>
+From: Chen Linxuan <chenlinxuan@uniontech.com>
+Date: Tue, 1 Jul 2025 15:54:57 +0800
+X-Gmail-Original-Message-ID: <0F513DA3FF23E8A1+CAC1kPDNE+io5=KEXZkLq5DOQi2qzBEmgAwOj6x4qvhiNmC1rtQ@mail.gmail.com>
+X-Gm-Features: Ac12FXxOBex4Jesig6QUABAVCPRvvFOqEWQBN0RMoBwV77dRdQuVcwEsTNxzev8
+Message-ID: <CAC1kPDNE+io5=KEXZkLq5DOQi2qzBEmgAwOj6x4qvhiNmC1rtQ@mail.gmail.com>
+Subject: Re: [PATCH] nfp: nfp_alloc_bar: Fix double unlock
+To: Chen Linxuan <chenlinxuan@uniontech.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, WangYuli <wangyuli@uniontech.com>, louis.peens@corigine.com, 
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
+	pabeni@redhat.com, viro@zeniv.linux.org.uk, oss-drivers@corigine.com, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	guanwentao@uniontech.com, niecheng1@uniontech.com, 
+	Jun Zhan <zhanjun@uniontech.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpgz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
+X-QQ-XMAILINFO: Mtnmbwz1r7Eqqjl1CQl6m32qcgPJFhDXzPap09HT4oh6a0GfGQS9QuZT
+	D8Q56fOUGzNceoSYjYYLfA+5NzFTmlCOI7zv+kE29qfBXvB2yMFkZb6E1nrH5AcFHh+Xo8U
+	PrWaEKdPgXqtQAuT75YacrRTQ8b7z1rrNVjggNi/VItZjX3fydy5WkKadTfym2Xy4Si50wV
+	XxJMbGzZk2PT/kEON8wIlDceyNlaq93c0yuLbUU40yyRPtq3u1L3ed77bdUYaxO6CMAbMBK
+	o+yhQmLnpmgdMoOAZqsgBgEllHj2FnsJrKZ7VNDtAputjLasCs1wzWzhv/m8MoLXhwS0Rtn
+	9OM0nykb9D3uozgkmt+ZMzHGmTi2nHkrbdp7Q3Ry75WCyN10HbDculP7ypLVv7SEUKwY3oG
+	oGnxCiQiZmSGXMNXY9G9lw95Ix8Qa4U1Rxuv6cBprk9uqBF4Q0SkKv5L30J4ieHWQg+2xKE
+	o98rBjsF+OrhijPsdcpmObgxssOEslik6Uw+vlqRxq2wmAqb5R43piHH31WyBHL8QURT1Ba
+	zlzMDS6rtwY+gPujmvXAAb9JzlwzVTBEMal/KE8o1mcnmqgNOaUdQTjtmpcqWJnoY8D3yQC
+	xe8mbgv5Xtbtdbv9/C8t6kRtl25+dR4QxnJU8r4CHeJh5wjV5/FV3Y/17nEFe+UKYHonoll
+	53jHkbF9bEuFsuPIEjKVSuB8c4nnKm/an1HBIF8/FvSmj7rF+CJO0kEkKW2K0+7vRhP+EQh
+	iNZCh75ccuFmTDS1WpqSv8e7UOxXyohF+cn2NovW+PvwQhlaMmiGn810IiGQ+NxIb6n3Ej4
+	dkkXIpD5WA76M3gis1d/MHMdmol2gHGOBXAPS4O7GCNzm5TOmG2PdJ57sElTm3+BkzYxlBx
+	BNofIoB+vPY2Lymi/wp0aZ0sBQowpwP9HdTLH9Sub4KB3kSCzUIYLKljDAva05zU1R14E+j
+	xdgH9mBP17Req7KEBXXIL1ub3Kya4Vwq5QBFTDkfyjwYg+yO6+ndC22M2o/8rDxE8kIzJ7n
+	3D2wjvaQR21a5ass+7pW8l7PHfY9QUol8LaAF4ynwfNftaIRdm4f4tSVsfCt3hWVQS/54zy
+	BzVqGZS8aNW3cFO77qvK2jNQJMZ/mJSVPXJWfkwg7XXNNlWEuc+2Lo=
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+X-QQ-RECHKSPAM: 0
 
-On Mon, 2025-06-30 at 19:24 -0300, Geraldo Nascimento wrote:
-> Current code uses custom-defined register offsets and bitfields for
-> standard PCIe registers. Change to using standard PCIe defines. Since
-> we are now using standard PCIe defines, drop unused custom-defined
-> ones,
-> which are now referenced from offset at added Capabilities Register.
+On Tue, Jul 1, 2025 at 3:45=E2=80=AFPM Chen Linxuan <chenlinxuan@uniontech.=
+com> wrote:
+>
+> On Tue, Jun 24, 2025 at 4:12=E2=80=AFAM Jakub Kicinski <kuba@kernel.org> =
+wrote:
+> >
+> > On Mon, 23 Jun 2025 12:11:04 +0800 WangYuli wrote:
+> > > The lock management in the nfp_alloc_bar function is problematic:
+> > >
+> > >  *1. The function acquires the lock at the beginning:
+> > > spin_lock_irqsave(&nfp->bar_lock, irqflags).
+> > >
+> > >   2. When barnum < 0 and in non-blocking mode, the code jumps to
+> > > the err_nobar label. However, in this non-blocking path, if
+> > > barnum < 0, the code releases the lock and calls nfp_wait_for_bar.
+> > >
+> > >   3. Inside nfp_wait_for_bar, find_unused_bar_and_lock is called,
+> > > which holds the lock upon success (indicated by the __release
+> > > annotation). Consequently, when nfp_wait_for_bar returns
+> > > successfully, the lock is still held.
+> > >
+> > >   4. But at the err_nobar label, the code always executes
+> > > spin_unlock_irqrestore(&nfp->bar_lock, irqflags).
+> > >
+> > >   5. The problem arises when nfp_wait_for_bar successfully finds a
+> > > BAR: the lock is still held, but if a subsequent reconfigure_bar
+> > > fails, the code will attempt to unlock it again at err_nobar,
+> > > leading to a double unlock.
+> >
+> > I don't understand what you're trying to say.
+> > If you think your analysis is correct please provide a more exact
+> > execution path with a code listing.
+>
+> In nfp_alloc_bar(), if
+>
+> - find_matching_bar() fails to find a bar
+> - find_unused_bar_noblock also fails to find a bar
+> - nonblocking =3D=3D false
+> - nfp_wait_for_bar returns 0
+>
+> In this situation, when executing nfp_bar_get(nfp, &nfp->bar[barnum]),
+> the code does not hold &nfp->bar_lock.
+> We referred to similar logic in other drivers:
+> https://elixir.bootlin.com/linux/v6.13/source/sound/usb/line6/driver.c#L5=
+65
+> It seems that a lock should be acquired here again.
 
-This could be phrased a bit more cleanly. At least I don't get exactly
-what "from offset" means. You mean you replace the unused custom ones?
-But if they're unused, why are they even being replaced?
+Sorry, I found that find_unused_bar_and_lock already re-locks it. I
+didn't notice it before. Please ignore the entire thread.
 
-
->=20
-> Suggested-By: Bjorn Helgaas <bhelgaas@google.com>
-
-s/By/by
-
-
-P.
-
-> Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
-> ---
-> =C2=A0drivers/pci/controller/pcie-rockchip-ep.c=C2=A0=C2=A0 |=C2=A0 4 +-
-> =C2=A0drivers/pci/controller/pcie-rockchip-host.c | 44 ++++++++++--------=
--
-> --
-> =C2=A0drivers/pci/controller/pcie-rockchip.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 | 12 +-----
-> =C2=A03 files changed, 25 insertions(+), 35 deletions(-)
->=20
-> diff --git a/drivers/pci/controller/pcie-rockchip-ep.c
-> b/drivers/pci/controller/pcie-rockchip-ep.c
-> index 55416b8311dd..300cd85fa035 100644
-> --- a/drivers/pci/controller/pcie-rockchip-ep.c
-> +++ b/drivers/pci/controller/pcie-rockchip-ep.c
-> @@ -518,9 +518,9 @@ static void rockchip_pcie_ep_retrain_link(struct
-> rockchip_pcie *rockchip)
-> =C2=A0{
-> =C2=A0	u32 status;
-> =C2=A0
-> -	status =3D rockchip_pcie_read(rockchip, PCIE_EP_CONFIG_LCS);
-> +	status =3D rockchip_pcie_read(rockchip, PCIE_EP_CONFIG_BASE +
-> PCI_EXP_LNKCTL);
-> =C2=A0	status |=3D PCI_EXP_LNKCTL_RL;
-> -	rockchip_pcie_write(rockchip, status, PCIE_EP_CONFIG_LCS);
-> +	rockchip_pcie_write(rockchip, status, PCIE_EP_CONFIG_BASE +
-> PCI_EXP_LNKCTL);
-> =C2=A0}
-> =C2=A0
-> =C2=A0static bool rockchip_pcie_ep_link_up(struct rockchip_pcie *rockchip=
-)
-> diff --git a/drivers/pci/controller/pcie-rockchip-host.c
-> b/drivers/pci/controller/pcie-rockchip-host.c
-> index b9e7a8710cf0..65653218b9ab 100644
-> --- a/drivers/pci/controller/pcie-rockchip-host.c
-> +++ b/drivers/pci/controller/pcie-rockchip-host.c
-> @@ -40,18 +40,18 @@ static void rockchip_pcie_enable_bw_int(struct
-> rockchip_pcie *rockchip)
-> =C2=A0{
-> =C2=A0	u32 status;
-> =C2=A0
-> -	status =3D rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
-> +	status =3D rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR +
-> PCI_EXP_LNKCTL);
-> =C2=A0	status |=3D (PCI_EXP_LNKCTL_LBMIE | PCI_EXP_LNKCTL_LABIE);
-> -	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
-> +	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_CR +
-> PCI_EXP_LNKCTL);
-> =C2=A0}
-> =C2=A0
-> =C2=A0static void rockchip_pcie_clr_bw_int(struct rockchip_pcie *rockchip=
-)
-> =C2=A0{
-> =C2=A0	u32 status;
-> =C2=A0
-> -	status =3D rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
-> +	status =3D rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR +
-> PCI_EXP_LNKCTL);
-> =C2=A0	status |=3D (PCI_EXP_LNKSTA_LBMS | PCI_EXP_LNKSTA_LABS) << 16;
-> -	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
-> +	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_CR +
-> PCI_EXP_LNKCTL);
-> =C2=A0}
-> =C2=A0
-> =C2=A0static void rockchip_pcie_update_txcredit_mui(struct rockchip_pcie
-> *rockchip)
-> @@ -269,7 +269,7 @@ static void rockchip_pcie_set_power_limit(struct
-> rockchip_pcie *rockchip)
-> =C2=A0	scale =3D 3; /* 0.001x */
-> =C2=A0	curr =3D curr / 1000; /* convert to mA */
-> =C2=A0	power =3D (curr * 3300) / 1000; /* milliwatt */
-> -	while (power > PCIE_RC_CONFIG_DCR_CSPL_LIMIT) {
-> +	while (power > FIELD_MAX(PCI_EXP_DEVCAP_PWR_VAL)) {
-> =C2=A0		if (!scale) {
-> =C2=A0			dev_warn(rockchip->dev, "invalid power
-> supply\n");
-> =C2=A0			return;
-> @@ -278,10 +278,10 @@ static void
-> rockchip_pcie_set_power_limit(struct rockchip_pcie *rockchip)
-> =C2=A0		power =3D power / 10;
-> =C2=A0	}
-> =C2=A0
-> -	status =3D rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_DCR);
-> -	status |=3D (power << PCIE_RC_CONFIG_DCR_CSPL_SHIFT) |
-> -		=C2=A0 (scale << PCIE_RC_CONFIG_DCR_CPLS_SHIFT);
-> -	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_DCR);
-> +	status =3D rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR +
-> PCI_EXP_DEVCAP);
-> +	status |=3D FIELD_PREP(PCI_EXP_DEVCAP_PWR_VAL, power);
-> +	status |=3D FIELD_PREP(PCI_EXP_DEVCAP_PWR_SCL, scale);
-> +	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_CR +
-> PCI_EXP_DEVCAP);
-> =C2=A0}
-> =C2=A0
-> =C2=A0/**
-> @@ -309,14 +309,14 @@ static int rockchip_pcie_host_init_port(struct
-> rockchip_pcie *rockchip)
-> =C2=A0	rockchip_pcie_set_power_limit(rockchip);
-> =C2=A0
-> =C2=A0	/* Set RC's clock architecture as common clock */
-> -	status =3D rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
-> +	status =3D rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR +
-> PCI_EXP_LNKCTL);
-> =C2=A0	status |=3D PCI_EXP_LNKSTA_SLC << 16;
-> -	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
-> +	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_CR +
-> PCI_EXP_LNKCTL);
-> =C2=A0
-> =C2=A0	/* Set RC's RCB to 128 */
-> -	status =3D rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
-> +	status =3D rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR +
-> PCI_EXP_LNKCTL);
-> =C2=A0	status |=3D PCI_EXP_LNKCTL_RCB;
-> -	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
-> +	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_CR +
-> PCI_EXP_LNKCTL);
-> =C2=A0
-> =C2=A0	/* Enable Gen1 training */
-> =C2=A0	rockchip_pcie_write(rockchip, PCIE_CLIENT_LINK_TRAIN_ENABLE,
-> @@ -341,9 +341,9 @@ static int rockchip_pcie_host_init_port(struct
-> rockchip_pcie *rockchip)
-> =C2=A0		 * Enable retrain for gen2. This should be
-> configured only after
-> =C2=A0		 * gen1 finished.
-> =C2=A0		 */
-> -		status =3D rockchip_pcie_read(rockchip,
-> PCIE_RC_CONFIG_LCS);
-> +		status =3D rockchip_pcie_read(rockchip,
-> PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL);
-> =C2=A0		status |=3D PCI_EXP_LNKCTL_RL;
-> -		rockchip_pcie_write(rockchip, status,
-> PCIE_RC_CONFIG_LCS);
-> +		rockchip_pcie_write(rockchip, status,
-> PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL);
-> =C2=A0
-> =C2=A0		err =3D readl_poll_timeout(rockchip->apb_base +
-> PCIE_CORE_CTRL,
-> =C2=A0					 status,
-> PCIE_LINK_IS_GEN2(status), 20,
-> @@ -380,15 +380,15 @@ static int rockchip_pcie_host_init_port(struct
-> rockchip_pcie *rockchip)
-> =C2=A0
-> =C2=A0	/* Clear L0s from RC's link cap */
-> =C2=A0	if (of_property_read_bool(dev->of_node, "aspm-no-l0s")) {
-> -		status =3D rockchip_pcie_read(rockchip,
-> PCIE_RC_CONFIG_LINK_CAP);
-> -		status &=3D ~PCIE_RC_CONFIG_LINK_CAP_L0S;
-> -		rockchip_pcie_write(rockchip, status,
-> PCIE_RC_CONFIG_LINK_CAP);
-> +		status =3D rockchip_pcie_read(rockchip,
-> PCIE_RC_CONFIG_CR + PCI_EXP_LNKCAP);
-> +		status &=3D ~PCI_EXP_LNKCAP_ASPM_L0S;
-> +		rockchip_pcie_write(rockchip, status,
-> PCIE_RC_CONFIG_CR + PCI_EXP_LNKCAP);
-> =C2=A0	}
-> =C2=A0
-> -	status =3D rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_DCSR);
-> -	status &=3D ~PCIE_RC_CONFIG_DCSR_MPS_MASK;
-> -	status |=3D PCIE_RC_CONFIG_DCSR_MPS_256;
-> -	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_DCSR);
-> +	status =3D rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_CR +
-> PCI_EXP_DEVCTL);
-> +	status &=3D ~PCI_EXP_DEVCTL_PAYLOAD;
-> +	status |=3D PCI_EXP_DEVCTL_PAYLOAD_256B;
-> +	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_CR +
-> PCI_EXP_DEVCTL);
-> =C2=A0
-> =C2=A0	return 0;
-> =C2=A0err_power_off_phy:
-> diff --git a/drivers/pci/controller/pcie-rockchip.h
-> b/drivers/pci/controller/pcie-rockchip.h
-> index 5864a20323f2..f5cbf3c9d2d9 100644
-> --- a/drivers/pci/controller/pcie-rockchip.h
-> +++ b/drivers/pci/controller/pcie-rockchip.h
-> @@ -155,17 +155,7 @@
-> =C2=A0#define PCIE_EP_CONFIG_DID_VID		(PCIE_EP_CONFIG_BASE + 0x00)
-> =C2=A0#define PCIE_EP_CONFIG_LCS		(PCIE_EP_CONFIG_BASE + 0xd0)
-> =C2=A0#define PCIE_RC_CONFIG_RID_CCR		(PCIE_RC_CONFIG_BASE + 0x08)
-> -#define PCIE_RC_CONFIG_DCR		(PCIE_RC_CONFIG_BASE + 0xc4)
-> -#define=C2=A0=C2=A0 PCIE_RC_CONFIG_DCR_CSPL_SHIFT		18
-> -#define=C2=A0=C2=A0 PCIE_RC_CONFIG_DCR_CSPL_LIMIT		0xff
-> -#define=C2=A0=C2=A0 PCIE_RC_CONFIG_DCR_CPLS_SHIFT		26
-> -#define PCIE_RC_CONFIG_DCSR		(PCIE_RC_CONFIG_BASE + 0xc8)
-> -#define=C2=A0=C2=A0 PCIE_RC_CONFIG_DCSR_MPS_MASK		GENMASK(7, 5)
-> -#define=C2=A0=C2=A0 PCIE_RC_CONFIG_DCSR_MPS_256		(0x1 << 5)
-> -#define PCIE_RC_CONFIG_LINK_CAP		(PCIE_RC_CONFIG_BASE
-> + 0xcc)
-> -#define=C2=A0=C2=A0 PCIE_RC_CONFIG_LINK_CAP_L0S		BIT(10)
-> -#define PCIE_RC_CONFIG_LCS		(PCIE_RC_CONFIG_BASE + 0xd0)
-> -#define PCIE_EP_CONFIG_LCS		(PCIE_EP_CONFIG_BASE + 0xd0)
-> +#define PCIE_RC_CONFIG_CR		(PCIE_RC_CONFIG_BASE + 0xc0)
-> =C2=A0#define PCIE_RC_CONFIG_L1_SUBSTATE_CTRL2 (PCIE_RC_CONFIG_BASE +
-> 0x90c)
-> =C2=A0#define PCIE_RC_CONFIG_THP_CAP		(PCIE_RC_CONFIG_BASE +
-> 0x274)
-> =C2=A0#define=C2=A0=C2=A0 PCIE_RC_CONFIG_THP_CAP_NEXT_MASK	GENMASK(31, 20=
-)
-
+>
+> > --
+> > pw-bot: cr
+> >
+> >
