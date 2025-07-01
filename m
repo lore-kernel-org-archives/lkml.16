@@ -1,89 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE25F23185E
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 11:06:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5170E23185E;
+	Tue,  1 Jul 2025 11:06:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751367979; cv=none; b=VY/e2bkFSKtYLDZkReFUaWyLBvZ0K+FUYU9KK6V0idJIeTZeG04l0o738qCa/EmF8yGG+1+BwFO3juW9TRO++UshDJNyvlaD9Z1D6qcb13FCH52DaqMfZPQKqsVmglauJg+t2djF+UfNNgsLlR5XfQPxdcSBEudcQ+8lVv905FU=
+	t=1751368014; cv=none; b=Bwdo5qr7btRffKJB01kcPcZ6OnYT+dTGeujo9GT93zpj+yalYMDYy+DBt+RmCMprbnvd5L3b7m8L69l8qeBCL00XlSbEpTxsdfLetFxQbgnKePWKwWexUipsLe4PIuNg3lA2kHK+kjWLoPRcsasARViRTBp1RG5qGZBdsOgSfww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751367979; c=relaxed/simple;
-	bh=CWIRlpgPJRqEG5Un9ajpiNt3bGaNLmXXcKnSn4AJta4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VQma3xOrg/2LrDJTp7TIfX1orUtsgtpwdl3p+uUGmiJ7wqzUMG5Rwz6SH654c9akKBakcR/OjY5m8piHw0mQPMX8smJinxS+9yk30xpeVNaBCzV+qKPJwIoUkSDZjZdq9h58j6wz1XF1PZvAwdLzOHlzUBMxcsK9QbagKfabP0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=FtnDwuQw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751368014; c=relaxed/simple;
+	bh=ch8rmZW0C5CiGXt2M3zLaPifKAaE9CqIGZusfMCbRic=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=WAcpz8EoeB76szBB+vkwQopokN2g62WWVuvhPJEhr542TUBNKrD0JCHXOp8xrKKNTxHVXsGk5W1Acuwu7FQcREADCNHTpUT7UKYNLZl7MYGJwpN4bRnAizRAoahq59LV9YUcZzbr6KBjRHpSbXS6c2astvDPgj+cZREpXezi4Z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=v2DiUrVz; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="FtnDwuQw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B799CC4CEEE;
-	Tue,  1 Jul 2025 11:06:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1751367979;
-	bh=CWIRlpgPJRqEG5Un9ajpiNt3bGaNLmXXcKnSn4AJta4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=FtnDwuQwkMxAT9f1eJ/rE/Zdvsg+3Jr/kyuJ41TpUXVwCDoVvaVig0w+DrNvMWrJt
-	 3wVy99Gh7bdfBeNe3uZFBvynE0f1SjF1v86R67C9pBmHaV9gATcL4LG4m+Oj7OMm+p
-	 QJlxa6B58hMUyfiot6109412KaKn7qpkXDjluNyQ=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Johan Hovold <johan@kernel.org>,
-	Alex Elder <elder@kernel.org>,
-	greybus-dev@lists.linaro.org
-Subject: [PATCH v2] staging: greybus: gbphy: fix up const issue with the match callback
-Date: Tue,  1 Jul 2025 13:06:16 +0200
-Message-ID: <2025070115-reoccupy-showy-e2ad@gregkh>
-X-Mailer: git-send-email 2.50.0
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="v2DiUrVz"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=2U0iMkfr1aZU35nLWrIQMlyrU651eqYDp0UZC1bQLwo=;
+	t=1751368013; x=1752577613; b=v2DiUrVzl+vEt14uj83Cbz3+OQAlqGFZ8LbHB8MFKcof9vI
+	kh4EXDeDBzYqiqP3uNFvRw263VmUwsy6XB10RXiUjzkOxmof8GjZVXqqCyQTyNzPUOi82AFjN4oJg
+	1C7WRBbR9hMcoPPGvCX2yykP+gpNcT8pzz5da2q+DFmr0vmumPuNZPUtYb1IXIfdePUcFTOQLRQiQ
+	EP5IfyOAzp2KVDcgjlwDgW8e34RthQlbfoul+6X1oIkMG+kbKEPNLvpiy+VYm0oYUufEjAa+R460E
+	7UppuhlhcENZPxJn+BC4tGfnLvP+NH7OEkQ20F8F5XQcCUdVwf9etQ3pAr4b+jEg==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.2)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1uWYp5-00000002iG2-0UND;
+	Tue, 01 Jul 2025 13:06:47 +0200
+Message-ID: <0004f9e5eb62f9ccad3dec52ebc935bfec42c949.camel@sipsolutions.net>
+Subject: Re: [PATCH v5] wifi: cfg80211: move away from using a fake platform
+ device
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	linux-kernel@vger.kernel.org
+Cc: linux-wireless@vger.kernel.org
+Date: Tue, 01 Jul 2025 13:06:46 +0200
+In-Reply-To: <2025070116-growing-skeptic-494c@gregkh>
+References: <2025070116-growing-skeptic-494c@gregkh>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1745; i=gregkh@linuxfoundation.org; h=from:subject:message-id; bh=CWIRlpgPJRqEG5Un9ajpiNt3bGaNLmXXcKnSn4AJta4=; b=owGbwMvMwCRo6H6F97bub03G02pJDBnJB9Vfrck+sH3dpot/T2hazL8Vr8CbVVG/V82noZSnR 97PYZNBRywLgyATg6yYIsuXbTxH91ccUvQytD0NM4eVCWQIAxenAEzEx5xhfu3pzcpBjwXatbak 5gmkC1wyZnq/g2GuzOvAmA23z02+5FMUPFdxt3HORw0TAA==
-X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
-Content-Transfer-Encoding: 8bit
+X-malware-bazaar: not-scanned
 
-gbphy_dev_match_id() should be taking a const pointer, as the pointer
-passed to it from the container_of() call was const to start with (it
-was accidentally cast away with the call.)  Fix this all up by correctly
-marking the pointer types.
+On Tue, 2025-07-01 at 12:56 +0200, Greg Kroah-Hartman wrote:
+> Downloading regulatory "firmware" needs a device to hang off of, and so
+> a platform device seemed like the simplest way to do this.  Now that we
+> have a faux device interface, use that instead as this "regulatory
+> device" is not anything resembling a platform device at all.
+>=20
+> Cc: Johannes Berg <johannes@sipsolutions.net>
+> Cc: <linux-wireless@vger.kernel.org>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+> v5: - rebase against 6.16-rc4 and actually cc: the relevant maintainers
+>       and mailing lists this time, doh!
 
-Cc: Johan Hovold <johan@kernel.org>
-Cc: Alex Elder <elder@kernel.org>
-Cc: greybus-dev@lists.linaro.org
-Fixes: d69d80484598 ("driver core: have match() callback in struct bus_type take a const *")
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
-v2: - add Fixes: line as pointed out by Johan
-    - don't make gbphy_dev const, it's not needed, as pointed out by
-      Johan
+I did wonder for a second why it's v5 and I never saw it ;-)
 
- drivers/staging/greybus/gbphy.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+>  int __init regulatory_init(void)
+>  {
+> -	reg_pdev =3D platform_device_register_simple("regulatory", 0, NULL, 0);
+> -	if (IS_ERR(reg_pdev))
+> -		return PTR_ERR(reg_pdev);
+> +	reg_fdev =3D faux_device_create("regulatory", NULL, NULL);
+> +	if (!reg_fdev)
+> +		return -ENODEV;
 
-diff --git a/drivers/staging/greybus/gbphy.c b/drivers/staging/greybus/gbphy.c
-index 6adcad286633..60cf09a302a7 100644
---- a/drivers/staging/greybus/gbphy.c
-+++ b/drivers/staging/greybus/gbphy.c
-@@ -102,8 +102,8 @@ static int gbphy_dev_uevent(const struct device *dev, struct kobj_uevent_env *en
- }
- 
- static const struct gbphy_device_id *
--gbphy_dev_match_id(struct gbphy_device *gbphy_dev,
--		   struct gbphy_driver *gbphy_drv)
-+gbphy_dev_match_id(const struct gbphy_device *gbphy_dev,
-+		   const struct gbphy_driver *gbphy_drv)
- {
- 	const struct gbphy_device_id *id = gbphy_drv->id_table;
- 
-@@ -119,7 +119,7 @@ gbphy_dev_match_id(struct gbphy_device *gbphy_dev,
- 
- static int gbphy_dev_match(struct device *dev, const struct device_driver *drv)
- {
--	struct gbphy_driver *gbphy_drv = to_gbphy_driver(drv);
-+	const struct gbphy_driver *gbphy_drv = to_gbphy_driver(drv);
- 	struct gbphy_device *gbphy_dev = to_gbphy_dev(dev);
- 	const struct gbphy_device_id *id;
- 
--- 
-2.50.0
+Is that really -ENODEV rather than say -ENOMEM? Having a hard time
+imagining how a faux device creation would end up failing in any other
+case, there's no underlying device to bind to, after all? :)
 
+Anyway, that's not really all that relevant. I assume you want me to
+merge it through wireless-next, since we have faux.h in the tree now?
+
+johannes
