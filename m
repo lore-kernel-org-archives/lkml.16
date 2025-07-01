@@ -1,86 +1,110 @@
-Received: from localhost.localdomain (gate.crashing.org [63.228.1.57])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 060A8274B55
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 13:33:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.228.1.57
+Received: from mta-64-228.siemens.flowmailer.net (mta-64-228.siemens.flowmailer.net [185.136.64.228])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE732749F6
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 13:33:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751376821; cv=none; b=URsrUZdRN4xZ0lHuAc0UQW2enMgHsD0iiqRE4NEOS3PT+Iq6LeBOH3K+LXdSO63KEb00wvo7YR7A4Na75W1lTEKwq8MsAIRUX8HdUJI6Ptkn0S2XRJ7C88kw76SgFI93PctNVSRIvDhN9/YKvlyaZCsWNFp9ttl8YD9SxPdqFJg=
+	t=1751376829; cv=none; b=MHsPpKWKpprQTAXYlvSB9fh6UKfsxJin3HicG9szuGxywkqBNVuy3IqLDNHyRWlSoJ6S9GHy3HKO8OR1J/LHSFGLTOxvFY3Bu3c6HCvglPxebt/OiqiKeijoxwora4P5XkF8JV73Rl9f+6b1+BwKY1F7rtvIatxVVzbMCk+0Pwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751376821; c=relaxed/simple;
-	bh=3O9Bocf04cDOQjZf+ATa67M6TGafSS/3zYMlGKvCCPw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eJlKPSEf8hkvLYxD5JXkvnqMKdS90qV/x6qvs2wXnvJBXn4N+0rvpPWVnMBGUo/y9eNCENlDiAvQY1Vs2ejboXR1pTECqY2NidGODNPRKIf2Lzq/lWPCbHvlCV18VIE5lbpuXGEY+GqjeVRDAjL8sKH1zh+7+W10VNTCVJnJ6Iw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org; spf=pass smtp.mailfrom=kernel.crashing.org; arc=none smtp.client-ip=63.228.1.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.crashing.org
-Received: from gate.crashing.org (localhost [127.0.0.1])
-	by localhost.localdomain (8.18.1/8.18.1/Debian-2) with ESMTP id 561DWwgs128265;
-	Tue, 1 Jul 2025 08:32:58 -0500
-Received: (from segher@localhost)
-	by gate.crashing.org (8.18.1/8.18.1/Submit) id 561DWv95128261;
-	Tue, 1 Jul 2025 08:32:57 -0500
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date: Tue, 1 Jul 2025 08:32:57 -0500
-From: Segher Boessenkool <segher@kernel.crashing.org>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
-        Naveen N Rao <naveen@kernel.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH] arch/powerpc: Remove .interp section in vmlinux
-Message-ID: <aGPjibUcPDubyFY1@gate>
-References: <eeaf8fd6628a75d19872ab31cf7e7179e2baef5e.1751366959.git.christophe.leroy@csgroup.eu>
+	s=arc-20240116; t=1751376829; c=relaxed/simple;
+	bh=axIwVupvXGcOX7KDMuxqYaiGemEvjrs+9BecGDGb8nk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=U60W51VjiM5Cg4We6zBnxxfjOAeMAxXHwjglbLh8mbJq9Mr6yP3N+6vydwX9SgZu9Ptvq8rRfIj8A7jz+p7KSahJ3g/M1+Ry1WmaKeT9hSVOVK8JAAb7hORcwfqKoA8se3JhLRYWF51msweosuPdMqr6vtlGtzykCg0hO6zPa1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=alexander.sverdlin@siemens.com header.b=NT0/xHW6; arc=none smtp.client-ip=185.136.64.228
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=siemens.com header.i=alexander.sverdlin@siemens.com header.b="NT0/xHW6"
+Received: by mta-64-228.siemens.flowmailer.net with ESMTPSA id 20250701133337a2e56ca67b5358737d
+        for <linux-kernel@vger.kernel.org>;
+        Tue, 01 Jul 2025 15:33:37 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm1;
+ d=siemens.com; i=alexander.sverdlin@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc;
+ bh=YhxdcWDoChMeKmCKFHUBRgx8Fy37YPqEiFc2G1XZk/I=;
+ b=NT0/xHW6kCxGPbT2r9IA2uCj2BwYytVU4zBooT76wG4djkO052AKLKBGKI6R7ptSMfv1eJ
+ LxneKxMSRmfdxcs2wHR1BP4Mq9ijo/x8elVuh7E54tc2P5RicaWiB6V110bABX7oL4/33xx8
+ PIujI8DMQQbMI23ckyP9MIoAU+DEaohpJKGHT1Fq9Tgnwh30kFXM52z5tdtap/794luuoOK4
+ QR2vUhhP4n9ZV5GX2xAVvgBsT2BiaeA/jdjh6wGf6/ogS1Q2ezEzMNB0yzBw87T7lCql6/4I
+ 4HmpD7R2/wwjtodREGMGGv0iPNc9D00KYxZnpWiRt38FsTxBfjdvYqug==;
+From: "A. Sverdlin" <alexander.sverdlin@siemens.com>
+To: Boris Brezillon <bbrezillon@kernel.org>,
+	linux-mtd@lists.infradead.org
+Cc: Alexander Sverdlin <alexander.sverdlin@siemens.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] mtd: nand: raw: atmel: Respect tAR, tCLR in read setup timing
+Date: Tue,  1 Jul 2025 15:33:28 +0200
+Message-ID: <20250701133333.3871085-1-alexander.sverdlin@siemens.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <eeaf8fd6628a75d19872ab31cf7e7179e2baef5e.1751366959.git.christophe.leroy@csgroup.eu>
+Content-Transfer-Encoding: 8bit
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-456497:519-21489:flowmailer
 
-Hi!
+From: Alexander Sverdlin <alexander.sverdlin@siemens.com>
 
-On Tue, Jul 01, 2025 at 12:49:29PM +0200, Christophe Leroy wrote:
-> When building with CONFIG_RELOCATABLE, there is a .interp section
-> which contains the name of the expected ELF interpreter:
-> 
-> Contents of section .interp:
->  c0000000021c1bac 2f757372 2f6c6962 2f6c642e 736f2e31  /usr/lib/ld.so.1
->  c0000000021c1bbc 00                                   .
-> 
-> That information is useless and even likely wrong. Remove it.
+Having setup time 0 violates tAR, tCLR of some chips, for instance
+TOSHIBA TC58NVG2S3ETAI0 cannot be detected successfully (first ID byte
+being read duplicated, i.e. 98 98 dc 90 15 76 14 03 instead of
+98 dc 90 15 76 ...).
 
-s/ likely//
+Atmel Application Notes postulated 1 cycle NRD_SETUP without explanation
+[1], but it looks more appropriate to just calculate setup time properly.
 
-You cannot run the kernel as some dynamic object (under control of some
-interpreter that will load DSOs for you), hehe.
+Without the fix we've measured -2ns tAR delay (REn asserted before ALE
+deassert!); with the fix -- 60ns (subject to module clock).
 
-The various bfd/elf*.c (in binutils/ld) have code like
+[1] Link: https://ww1.microchip.com/downloads/aemDocuments/documents/MPU32/ApplicationNotes/ApplicationNotes/doc6255.pdf
+Fixes: f9ce2eddf176 ("mtd: nand: atmel: Add ->setup_data_interface() hooks")
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
+---
+ drivers/mtd/nand/raw/atmel/nand-controller.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-  if (htab->elf.dynamic_sections_created)
-    {
-      /* Set the contents of the .interp section to the interpreter.  */
-      if (bfd_link_executable (info) && !info->nointerp)
-        {
-          s = bfd_get_linker_section (dynobj, ".interp");
-          if (s == NULL)
-            abort ();
-          s->size = sizeof ELF_DYNAMIC_INTERPRETER;
-          s->contents = (unsigned char *) ELF_DYNAMIC_INTERPRETER;
-        }
-    }
+diff --git a/drivers/mtd/nand/raw/atmel/nand-controller.c b/drivers/mtd/nand/raw/atmel/nand-controller.c
+index dedcca87defc7..844df72f45063 100644
+--- a/drivers/mtd/nand/raw/atmel/nand-controller.c
++++ b/drivers/mtd/nand/raw/atmel/nand-controller.c
+@@ -1377,14 +1377,25 @@ static int atmel_smc_nand_prepare_smcconf(struct atmel_nand *nand,
+ 	if (ret)
+ 		return ret;
+ 
++	/*
++	 * Read setup timing depends on the operation done on the NAND:
++	 *
++	 * NRD_SETUP = max(tAR, tCLR)
++	 */
++	timeps = max(conf->timings.sdr.tAR_min, conf->timings.sdr.tCLR_min);
++	ncycles = DIV_ROUND_UP(timeps, mckperiodps);
++	totalcycles += ncycles;
++	ret = atmel_smc_cs_conf_set_setup(smcconf, ATMEL_SMC_NRD_SHIFT,
++					  ncycles);
++	if (ret)
++		return ret;
++
+ 	/*
+ 	 * The read cycle timing is directly matching tRC, but is also
+ 	 * dependent on the setup and hold timings we calculated earlier,
+ 	 * which gives:
+ 	 *
+-	 * NRD_CYCLE = max(tRC, NRD_PULSE + NRD_HOLD)
+-	 *
+-	 * NRD_SETUP is always 0.
++	 * NRD_CYCLE = max(tRC, NRD_SETUP + NRD_PULSE + NRD_HOLD)
+ 	 */
+ 	ncycles = DIV_ROUND_UP(conf->timings.sdr.tRC_min, mckperiodps);
+ 	ncycles = max(totalcycles, ncycles);
+-- 
+2.50.0
 
-(yes there are about a hundred copies of this code, that could be
-improved :-) )
-
-whenever producing dynamic objects, so this code just sets that text and
-that's all, no side effect to be worried of.
-
-Acked-by: Segher Boessenkool <segher@kernel.crashing.org>
-
-(Maybe this could or should be in generic code though, not architecture
-code?)
-
-
-Segher
