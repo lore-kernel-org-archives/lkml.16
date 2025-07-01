@@ -1,107 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC66242D93;
-	Tue,  1 Jul 2025 19:14:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0548F1D07BA
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 19:16:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751397254; cv=none; b=r3NahVOAt6s/DO4sXsxgTFIt6YfyLgI041y/UT/vyuB42BvY+/vqZ5LvdPxrZA8yMsPiNeHFzvITH5Ly7dkoiEtmm5Bv3YV/QFM2nPSuytNM5PryvRbhga3J3+/6MrOulGbtdWEZQQzz+XTcMgQDqsOZ3ziFNywHja1DKiEBPg0=
+	t=1751397422; cv=none; b=UKgmX96cD8VRZY2wJ05CVEYwyICZsf2u3dGwK3zBAip2YKblWmk/hfqdKMFQ2xpf6Wya3Y/Orrp+Btnk6EN7icIdcA3PsNQDn5u8e4476Gm+uT1hVSdNZz4BAd0IX1Z+2de5CUGFPwDIgQ4IwF6mpWzu0nMDAoYAP8gDyUU1Li8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751397254; c=relaxed/simple;
-	bh=XYN3mzgdO/2luMn1U6HxRQ5T0E1xv80oyWqd6OuQ5Ek=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jeBRJKGmdcRhc7o15Ir0dNUMJQhb6IIL8ucgL1xUfYFOJVkKQ38StICaNaPdUO1LIbwQ1kYLb9Ok7T16Qu3z6iLe0jUqinCY+2qLawbXq68PnM0mT3Bu2ZQ8suw+CieksYVi2OCxx9pGKCtwRV75KyRX0mARCNXOXeCpunGkuXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Sd7m0wAM; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751397422; c=relaxed/simple;
+	bh=FcYa0P68tMu4irkQQIVFEWw6CjVH7GiWKQ0vAIynfuc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YqfHyXlU8uPTOw9TEGvTWkiQbQOFbwpQziF18HbvxyMUj/EIHNv+0GqBjkMl2eXsuI4q/XBCBxrOQrZBJ7UYsgDYCQTZaENZZiHnO9V9qsAJe0v6xd1OgaDiLJsOjJ/a+esmGCWGvuHUHWlBVwwPhhKeOSFGstADjYFM/1lhScc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Bw5vtEz2; arc=none smtp.client-ip=209.85.166.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Sd7m0wAM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751397253; x=1782933253;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=XYN3mzgdO/2luMn1U6HxRQ5T0E1xv80oyWqd6OuQ5Ek=;
-  b=Sd7m0wAMGl8XCGE+ReVTZ6NVdqtn19obgX4s0vUSdxYDz69U5Tqyjw4I
-   zmhHi2niG0VY7QcTx384WaRSBnaBj5CqDC/FK67LoQHAL3WQhaUq2xi/c
-   BpaR4pzYvQLu3tHPK5OuTw6acjGPkjVs3iy9iwnuexVmfHmembd7ypsa/
-   BYnW5nWBTU2s1l7n1/lCoUOtnODJRApLHQedsUgajTQZT9Jm311KN9VWZ
-   Yr/krTE7taaTXHMWsRCCkl+7Wzg9MYbWKzy906JU7SfUDeMYexgKdS3YX
-   2r4GlcfV5alXqaGJLs+2IjgAgX1XeU+Zdr7h0sqfMkyCnRJEjv49dNBFU
-   A==;
-X-CSE-ConnectionGUID: zV1tJXXiQQC/1geGC2yrMw==
-X-CSE-MsgGUID: +SwTfH2yRuyo0B+c0byktw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="53613005"
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="53613005"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 12:14:12 -0700
-X-CSE-ConnectionGUID: PkObRcHOTyWoGiQUDQ9+rA==
-X-CSE-MsgGUID: YodDBZ8cRDunpR6tiykgIg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="154392091"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 12:14:10 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uWgQh-0000000Bfu8-0qFJ;
-	Tue, 01 Jul 2025 22:14:07 +0300
-Date: Tue, 1 Jul 2025 22:14:06 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: Nathan Chancellor <nathan@kernel.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cxl: Include range.h in cxl.h
-Message-ID: <aGQzfh-36CnS_Jxg@smile.fi.intel.com>
-References: <20250701-cxl-fix-struct-range-error-v1-1-1f199bddc7c9@kernel.org>
- <6863fcb649c0d_2ff1fe29428@iweiny-mobl.notmuch>
- <20250701153820.GA3922159@ax162>
- <6864095bc5ecd_30815d2948c@iweiny-mobl.notmuch>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Bw5vtEz2"
+Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-8733548c627so207302639f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 12:16:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1751397419; x=1752002219; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=w9WagJ9l2OBOz2LHi7f/cwLGTFcCqNNX4A8nF5wosIo=;
+        b=Bw5vtEz2+uyY5TVm1bEkX1IY7F9mZSZVRq6VRJ6ezFUf1L9yQ8ISH7LViepaaUcAbL
+         WhUFf70oFkVQKDr20Qv8PSa3kfApytQL1/4cYXKJyOe5R7CMFYMBs8XHsvifZPDyjZNA
+         ZA0tbx0qZ9iYA1k8t04vVJ5hB/eDY8cXoSvQ8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751397419; x=1752002219;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=w9WagJ9l2OBOz2LHi7f/cwLGTFcCqNNX4A8nF5wosIo=;
+        b=TxfXNOHGM/hm4KHHjHpEx6BdrySrx9QOU0Wi+2KBvAYDLE/UieyfpVk6Ar0ASPawYo
+         ZLDktdmmxhTqzjKFcWouDuvaXJ0iap48U9zFZJV/Yfbirbhb0JcO/DntWaC+QX1wCvxW
+         lQTwYmF3Ajba/Jmrjz2FV/QI39Yy8rOHnyzjXo3jk7PiQel0LRuPzN9KvvE4wzk/pvh4
+         Z3tcH1tPMaAxZX7JZXLCw73Lqk5EKBB+VvS+mLvqPLQdeWZL3lvTUVQ50jNMB+gi9QBa
+         U3/YaoE736GpD9Z9tl4DOZA1TsJGL0zKx/dw4bYvB5MMiOmiM+8HIUOTUr85mHphiLiC
+         epsg==
+X-Forwarded-Encrypted: i=1; AJvYcCX/GZbOeaS0+3YNqVfwz0eHZyQg9WBvgkis9xgKsLy1X+zQNShiOX2xqokvvvXI1MEo5qumG2+XOxnbI/0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5NrytkGekYO8VUmiichRdDROGnsnBwdVwc+wot/S/oCbUCl9e
+	IWlQQncE/hHQRfwR2wG7Sf2I/ejii8zoHgsiIMoNft/dz46gJaFAPrJ3N+jKtfA8Ecc=
+X-Gm-Gg: ASbGncuX956d+B76angGyffZ7r7/ksSO4GEzQ59VV1HUbBwcv+LPFE+pE7oGVqlqQYf
+	FQp6JWeuVckdPhIWfvqt4JAtbSJ1is54scccZJ4MxOIdoYxHD4rRhjZ6XXX3DvSulnCWal6xLzL
+	vsJjJ4dQOmWUI0C26BUs1Lf/qkxlt1FO6GC8bELlQ3nbw2fLzcQYOIyJ2YySaI96766j5SLa72C
+	6458xYPIkcTYdnSHYUjYLpjty5LS1elMoRwWZNKrr7YoW2REmL8gtLgjp4qfQKBxLrfRwQFkXX6
+	EAlnBhvN/6H7O4vqg8c0sjk6k7tWbakMq4pBGyHy3v6VIIWU76en8aGWB+S+hQlhngndOaUDNA=
+	=
+X-Google-Smtp-Source: AGHT+IE44w/SVGV9VP6dFhYt54g3cS7ykKIhCvzjksCEeynlm/mCTHQaDqHedT31nr9Tl1C9TYKb4Q==
+X-Received: by 2002:a05:6e02:3108:b0:3d9:6cb6:fa52 with SMTP id e9e14a558f8ab-3e0549ae93emr2275695ab.12.1751397418976;
+        Tue, 01 Jul 2025 12:16:58 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-50204aae3ccsm2622022173.116.2025.07.01.12.16.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Jul 2025 12:16:58 -0700 (PDT)
+Message-ID: <ebd094e8-2b7c-4267-9a6b-6e2c821988dd@linuxfoundation.org>
+Date: Tue, 1 Jul 2025 13:16:57 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6864095bc5ecd_30815d2948c@iweiny-mobl.notmuch>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] selftests: ptrace: add set_syscall_info to .gitignore
+To: Moon Hee Lee <moonhee.lee.ca@gmail.com>, shuah@kernel.org
+Cc: oleg@redhat.com, ldv@strace.io, akpm@linux-foundation.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kernel-mentees@lists.linux.dev, Shuah Khan <skhan@linuxfoundation.org>
+References: <20250623183405.133434-2-moonhee.lee.ca@gmail.com>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20250623183405.133434-2-moonhee.lee.ca@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jul 01, 2025 at 11:14:19AM -0500, Ira Weiny wrote:
-> Nathan Chancellor wrote:
-> > On Tue, Jul 01, 2025 at 10:20:22AM -0500, Ira Weiny wrote:
-> > > Nathan Chancellor wrote:
-> > > > After commit aefeb286b960 ("libnvdimm: Don't use "proxy" headers"),
-> > > > range.h may not be implicitly included, resulting in a build error:
-> > > 
-> > > That said, I'm not seeing this issue.  What config caught this?
-> > 
-> > Fedora's aarch64 configuration [1] is where I initially noticed this.
-> > Fedora's rpm site seems to be under the weather for me but I have it
-> > mirrored [2] for my own test setup.
+On 6/23/25 12:34, Moon Hee Lee wrote:
+> Add the set_syscall_info test binary to .gitignore to avoid tracking
+> build artifacts in the ptrace selftests directory.
 > 
-> Ah, I suspected it was a non-x86 build.
+> Signed-off-by: Moon Hee Lee <moonhee.lee.ca@gmail.com>
+> ---
+>   tools/testing/selftests/ptrace/.gitignore | 1 +
+>   1 file changed, 1 insertion(+)
 > 
-> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> Dave, I'll pull this in right now.
+> diff --git a/tools/testing/selftests/ptrace/.gitignore b/tools/testing/selftests/ptrace/.gitignore
+> index b7dde152e75a..f6be8efd57ea 100644
+> --- a/tools/testing/selftests/ptrace/.gitignore
+> +++ b/tools/testing/selftests/ptrace/.gitignore
+> @@ -3,3 +3,4 @@ get_syscall_info
+>   get_set_sud
+>   peeksiginfo
+>   vmaccess
+> +set_syscall_info
 
-Thanks, I haven't seen issues and 0-day haven't given any (bad) report so far.
+Applied to linux-kselftest next branch for 6.17-rc1
 
-> > [1]: https://src.fedoraproject.org/rpms/kernel/raw/rawhide/f/kernel-aarch64-fedora.config
-> > [2]: https://github.com/nathanchance/llvm-kernel-testing/raw/refs/heads/main/configs/fedora/aarch64.config
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+thanks,
+-- Shuah
