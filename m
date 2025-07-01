@@ -1,35 +1,49 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mta22.hihonor.com (mta22.honor.com [81.70.192.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3561DAC92;
-	Tue,  1 Jul 2025 01:40:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 502318821
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 01:53:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.192.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751334003; cv=none; b=Q8J+r7bSVqoHPXlkW+giDGlwZvLc9+j9TTe6m/YAiIpbP6/dCMgbdtsN4788iL2Ubd/kkc7YpUVooGd+4hXD0k58yhqFkg/qU56Lqiiq1LEqElQVGCZo7p580DCVff8BuS+QEJAzK3iBDq39VcTwi0IehHMlBDfOl2SimJqdQaM=
+	t=1751334806; cv=none; b=ix1cSG/B7bi9kKShalN8eZmcaWW5za1lzvg+IhKI7LayGabBCQmb53iAk7Dh8A9tt17p6h6Ea4d9hr2Ddp4GMqiFLt1x+jn1u+jTReX9WYIqJjeYcsOOnRABjgOZbSWvgA9KrqoTTxqwZff2m0xJxLkVZIz5MExLlRrrUXe5jnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751334003; c=relaxed/simple;
-	bh=Ax8Fs8mCGbljMAB53rmtXkX7OhWmdhkBT6P6VTaSB7s=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Z1mG/VisDeNwzkZC16dgLwtl7OEZ3yVy7skFAcRZg3Cu3ieRj8UCAxnPgUIjRs2tQXYN3YPLJ2CZTQC/ddGxmY9kvngE2T0Z4NCIFojWINPg7pt9YeoU31bBUipKl1MsNlpE3aA8jHjb+zXkN4/4TzRCyP5jGQTXkdK+H820mzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iDQK8E0B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751334806; c=relaxed/simple;
+	bh=W6vvtnRSZ102gc75JsOn7MO33MJvMtgi3iPmyv3xahk=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=riP8rdT0MJIVNACK+NNxIIqkPQfCRAU5Cgk41e8O1DY1Ti66XWm9iaLLkoOMH7UCTQ9+QM4vZYumWqBskmGomMbYOiuit+0z6Snh74OMI56aAmQgrInA07lRp55SJF9CLpd7n/NFJrvTSDwvbL91vdiAQwdmmDkDH90ME5GL38Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; dkim=pass (1024-bit key) header.d=honor.com header.i=@honor.com header.b=UGHnmP+C; arc=none smtp.client-ip=81.70.192.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iDQK8E0B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDF41C4CEE3;
-	Tue,  1 Jul 2025 01:40:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751334002;
-	bh=Ax8Fs8mCGbljMAB53rmtXkX7OhWmdhkBT6P6VTaSB7s=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=iDQK8E0BSFygBFu1T9URj5lj647S+ODVX9+zi5SOuX5P0oXPJZnxitbX6lmwX7WEB
-	 lR6MfLOMy0CsKSW9LG9vFOt0WH5Je57qBRZsp6y976vH26ymKZXoGhdggKckm7Onhq
-	 ivyN9Fa7Fh5QJyc0pMuePT8ExQumc1Ck23hyU3W9QXzItODdvFEaTXMjm/Y5DZaiPL
-	 AaVInz6Tl9X7dNgQUctMMmDXy11XZO0fMOE5jOzrmGbWXjNs0GQkP60Fyv+RQkKhJ3
-	 wj1Cn0NPtNJ2Zi7eCNtvkf0wxXXYplO7sO3O9c5bU+y3I6+perkLoKkUfYDAitiFHR
-	 Bi8Dh/R+c8BYA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33C4D38111CE;
-	Tue,  1 Jul 2025 01:40:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=honor.com header.i=@honor.com header.b="UGHnmP+C"
+dkim-signature: v=1; a=rsa-sha256; d=honor.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=To:From;
+	bh=CzLVF+OdJ4rPOyfgWhzZMsL6Rpd9UR6mT9Ip2y6JX/0=;
+	b=UGHnmP+CpE+C+0MvQjaC3u6HEzXVfoq5805ntOM0lcsAx14xyTvSAu1VkU+/At//9zPVMgHze
+	oA1fxhRFuZ2nxD8yFhOrnLF4QBSHYYwwBXvWNYfwj5Rv6bDKTCxme3Mn0WZyD2AhxOVkGvTSMXo
+	TSYrzO9Ck3cwGvd+h/V5vz0=
+Received: from w001.hihonor.com (unknown [10.68.25.235])
+	by mta22.hihonor.com (SkyGuard) with ESMTPS id 4bWQwr5pKqzYm8BD;
+	Tue,  1 Jul 2025 09:51:08 +0800 (CST)
+Received: from a011.hihonor.com (10.68.31.243) by w001.hihonor.com
+ (10.68.25.235) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 1 Jul
+ 2025 09:53:15 +0800
+Received: from localhost.localdomain (10.144.23.14) by a011.hihonor.com
+ (10.68.31.243) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 1 Jul
+ 2025 09:53:15 +0800
+From: wangzijie <wangzijie1@honor.com>
+To: <linux-f2fs-devel@lists.sourceforge.net>
+CC: <feng.han@honor.com>, <jaegeuk@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <wangzijie1@honor.com>
+Subject: Re: [f2fs-dev] [PATCH v5 2/2] f2fs: don't allow unaligned truncation to smaller/equal size on pinned file
+Date: Tue, 1 Jul 2025 09:53:14 +0800
+Message-ID: <20250701015314.3992659-1-wangzijie1@honor.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <aGK85SAE9kDcVAMe@google.com>
+References: <aGK85SAE9kDcVAMe@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,43 +51,66 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2] net: fec: allow disable coalescing
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175133402775.3632945.1815291289264821015.git-patchwork-notify@kernel.org>
-Date: Tue, 01 Jul 2025 01:40:27 +0000
-References: 
- <20250626-fec_deactivate_coalescing-v2-1-0b217f2e80da@pengutronix.de>
-In-Reply-To: 
- <20250626-fec_deactivate_coalescing-v2-1-0b217f2e80da@pengutronix.de>
-To: Jonas Rebmann <jre@pengutronix.de>
-Cc: wei.fang@nxp.com, shenwei.wang@nxp.com, xiaoning.wang@nxp.com,
- andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, imx@lists.linux.dev,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@pengutronix.de
+Content-Type: text/plain
+X-ClientProxiedBy: w010.hihonor.com (10.68.28.113) To a011.hihonor.com
+ (10.68.31.243)
 
-Hello:
+>I think we can clean up more like this?
+>
+>https://lore.kernel.org/linux-f2fs-devel/20250630160839.1142073-1-jaegeuk@kernel.org/T/#u
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Hi Kim,
+Yes, I think we can apply the patch you showed and v4 of this patch. Thank you.
+ 
+https://lore.kernel.org/linux-f2fs-devel/20250624035938.3176350-1-wangzijie1@honor.com/
+https://lore.kernel.org/linux-f2fs-devel/20250624035938.3176350-2-wangzijie1@honor.com/
 
-On Thu, 26 Jun 2025 15:44:02 +0200 you wrote:
-> In the current implementation, IP coalescing is always enabled and
-> cannot be disabled.
-> 
-> As setting maximum frames to 0 or 1, or setting delay to zero implies
-> immediate delivery of single packets/IRQs, disable coalescing in
-> hardware in these cases.
-> 
-> [...]
-
-Here is the summary with links:
-  - [v2] net: fec: allow disable coalescing
-    https://git.kernel.org/netdev/net-next/c/b7ad21258f9e
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+>On 06/30, wangzijie wrote:
+>> To prevent scattered pin block generation, don't allow non-section aligned truncation
+>> to smaller or equal size on pinned file. But for truncation to larger size, after
+>> commit 3fdd89b452c2("f2fs: prevent writing without fallocate() for pinned files"),
+>> we only support overwrite IO to pinned file, so we don't need to consider
+>> attr->ia_size > i_size case.
+>> In addition, xfstests #494 assumes truncation on active swapfile(pinned) will return
+>> ETXTBSY by setattr_prepare() -> inode_newsize_ok(), so we relocate this check after
+>> setattr_prepare().
+>> 
+>> Signed-off-by: wangzijie <wangzijie1@honor.com>
+>> ---
+>> v5:
+>> - fix xfstests #494 fail
+>> ---
+>>  fs/f2fs/file.c | 17 +++++++++++++++++
+>>  1 file changed, 17 insertions(+)
+>> 
+>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+>> index 78368b793..d4feea44b 100644
+>> --- a/fs/f2fs/file.c
+>> +++ b/fs/f2fs/file.c
+>> @@ -1070,6 +1070,23 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+>>  	if (err)
+>>  		return err;
+>>  
+>> +	/*
+>> +	 * To prevent scattered pin block generation, we don't allow
+>> +	 * smaller/equal size unaligned truncation for pinned file.
+>> +	 * We only support overwrite IO to pinned file, so don't
+>> +	 * care about larger size truncation.
+>> +	 * We need to check this after setattr_prepare() because xfstests
+>> +	 * #494 assumes truncation on active swapfile(pinned) will
+>> +	 * return ETXTBSY by setattr_prepare() -> inode_newsize_ok().
+>> +	 */
+>> +	if (attr->ia_valid & ATTR_SIZE) {
+>> +		if (f2fs_is_pinned_file(inode) &&
+>> +			attr->ia_size <= i_size_read(inode) &&
+>> +			!IS_ALIGNED(attr->ia_size,
+>> +			F2FS_BLK_TO_BYTES(CAP_BLKS_PER_SEC(sbi))))
+>> +			return -EINVAL;
+>> +	}
+>> +
+>>  	err = fscrypt_prepare_setattr(dentry, attr);
+>>  	if (err)
+>>  		return err;
+>> -- 
+>> 2.25.1
 
