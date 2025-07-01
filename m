@@ -1,146 +1,160 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F8372737FC
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 13:04:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15518223707;
+	Tue,  1 Jul 2025 13:05:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751375088; cv=none; b=hbIt6EcI86LJpLNQW7tAZlPjoI+CaSeufoSQ9bgttlk4q/cTstmB9qhM910ozXAsdWbWYA20D1Di2VVf4EY6x1/jNyNoKz0vEbodMm9ep27NTR7zq6ZwIxVZpM7M7UgGVhmEYrdzqDVnLpczDAdHKgeEERpWdm8REIzVzRkqJSU=
+	t=1751375110; cv=none; b=gVcY94qGK3ypOMhna2TkOaYuRLNo9cds1GCoGSPpjSgJSpDbP/9g0198qEwXpVBHgQnNDFpJwDOOnWX8DL6UbAP3Z0QC2ngIhJIXGNCGPT1651nRGqQb6GNFg0uda+c6K8SfrkqfD7jNJaiHqoZ5OGf0Iea8QmXrx8zgtXI+qAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751375088; c=relaxed/simple;
-	bh=1u6LtBFBZpYRhcRKXCfqg8lwwnGpi9KXfabJfPSkfec=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=HDcdATSJLT0uhtTaOHxAMAZn7E6DOj4C3Y4FQxG2sxKEdhch43Lbg9Pa8rc5HUNMV7uzH3NVOse159vBSHYKtsmwTV1MIodSLUZwd3H0ZF83alBEBiegjhMivNtECIRBedYu9/hZKiU3ZtJhQCexkM8NqBKbtoh6zPffrOO7Ipo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ep/rOLKD; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ep/rOLKD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751375085;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0Qg+m2/pNVkQnC5aBRNuH+sXdMQvLaC9DgJfu+jNhg0=;
-	b=ep/rOLKDcNWGehsgIEYxfmdkGHdRgpPYayV4InvVQMTJEumwv7G7EPRkmPfpHrVdo5iUNk
-	PD9l5JNKGEYlmH4NPOcjVf6kw2TclKYffHbCsFlyio7S33ZX+9hS0jv1pV/RS47/hcagxW
-	+PCf6AyYo9dDnSh8c2IozperJvjaF8s=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-28-POXgQ4c1P4CO4Div8OCWJg-1; Tue, 01 Jul 2025 09:04:44 -0400
-X-MC-Unique: POXgQ4c1P4CO4Div8OCWJg-1
-X-Mimecast-MFC-AGG-ID: POXgQ4c1P4CO4Div8OCWJg_1751375083
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4530c186394so14912305e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 06:04:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751375083; x=1751979883;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0Qg+m2/pNVkQnC5aBRNuH+sXdMQvLaC9DgJfu+jNhg0=;
-        b=jw1AxU18N87yvLJzjwnzNTaR7MrOcxG3pf6DqI1RhKi4kRJRA4m/UMoN3kjqBFARz3
-         OtEdCwhHqT92NWUsdcyizWWY32fOQIa0iaI6Xqyu1wCW7Mk0EhbyKthzIbhMtyqQGuIB
-         UKH+g1l3Jz3eqB86yD1rROgaBJdyvMp65aHFxWBPXOj6P2CIawJ2lJfjhLZMt3w7viV3
-         vCBak1UdTmkBW5CYV9cBt15x9hsM986UlVFVarxB91FAOIeceq6rHNiNY2n9DGRw+Chv
-         0kUVVOgreuvkkl1qshWhJouf1gK9wMVnt14E/DtpPZdRahfm3qnnITENq8xrZycKdDBK
-         WWnw==
-X-Forwarded-Encrypted: i=1; AJvYcCWEXO1HQdqLFcLTCtbsdD0cDt+jG/6TQGPteq1ZgevJBBDPa41VcwivLS2FgoK7k31RWl8mhNpWqcM4LCU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWsMXsVaQrGkOkeWV2pYCspTb72dxN0d4Efuya5PuwyEZB17pC
-	9JK3Tu9/Ny8ozAsWOA9J0uELqQQ1YbjfdKcNj3MQm407jopGInET3hJac+Rk5cW3gNNi9Ig4lTS
-	vGEj0W4XFk7+07FNfbT2BmI/oMFU3sbCEgqvqaJ/TjoW/0aTUHPzYVE9kcsNe2pIO+g==
-X-Gm-Gg: ASbGncuK6rqk+0A7LojyPlKUn0ytq06TQHwc+DBwzkD9U0CrfiyBxZOqKlZIITsP9qd
-	GrbtDFSR4T1K+7fvdi1QyIYh1vr6YoUQRkjImQ0yFfYDfLBTEzzReZ13vXOy43tfYWcPNAtFn8j
-	TObHGiTqdcycwTWm1FeI5IACucKraMpZmM/kTOK7jJSEZUYKf1C8ir1WLjMqSdODe1aNmgCFDaK
-	7qBWMuzhAoSxHoalds04JorOUxFPAHyXMTcGUJ1+p2l5KO4lG4ziy4uIi0NPM7/9LM55Pqomzcf
-	Jt5+sHUmfUHL8UvEwZCZC5FXv+YLgZfFp4HfXQjhbKNK/OC2GhT3Tz+EIrN6M951lWSKig==
-X-Received: by 2002:a05:600c:6218:b0:453:6ca:16a6 with SMTP id 5b1f17b1804b1-4538ee3996cmr207008505e9.10.1751375082766;
-        Tue, 01 Jul 2025 06:04:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGC9ko9vvQce71TOy0RBCS6sjywmO9bKtkGNw+DoVv+ofxTAO7zJYiibP6bcuGbZwr39XyKgA==
-X-Received: by 2002:a05:600c:6218:b0:453:6ca:16a6 with SMTP id 5b1f17b1804b1-4538ee3996cmr207005335e9.10.1751375080189;
-        Tue, 01 Jul 2025 06:04:40 -0700 (PDT)
-Received: from ?IPV6:2a0d:3344:247b:5810:4909:7796:7ec9:5af2? ([2a0d:3344:247b:5810:4909:7796:7ec9:5af2])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a3a5b7fsm169229505e9.10.2025.07.01.06.04.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 06:04:39 -0700 (PDT)
-Message-ID: <346e4b8a-2e62-420b-9816-6a35b8b63da1@redhat.com>
-Date: Tue, 1 Jul 2025 15:04:37 +0200
+	s=arc-20240116; t=1751375110; c=relaxed/simple;
+	bh=hKeiZFqaAZmfcsCW85Fv7xa/9DAFVCrUvTyCASY0EEU=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=faAv2nR1V6ktetq1kuKHbzojyZ9yZJyHtWjKN9votSdvoEcguehS5uU00RqUqya7Pm24jKkARSryvsNBvAhBzDJWhVl5QTVid0D0btffczBCrL1C9iYrzB6cJwb/nPx6q6CuDD+tMCeZ7yH0TCHSZ4XRkVup9fznggvRnJEzif8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bWjt25brXz6L5Y7;
+	Tue,  1 Jul 2025 21:04:42 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7EEF31402F8;
+	Tue,  1 Jul 2025 21:05:05 +0800 (CST)
+Received: from localhost (10.122.19.247) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 1 Jul
+ 2025 15:05:04 +0200
+Date: Tue, 1 Jul 2025 14:05:03 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+CC: <linux-cxl@vger.kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>,
+	"Len Brown" <lenb@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>, Dave
+ Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan
+ Williams <dan.j.williams@intel.com>, Mahesh J Salgaonkar
+	<mahesh@linux.ibm.com>, Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas
+	<bhelgaas@google.com>, Tony Luck <tony.luck@intel.com>, Borislav Petkov
+	<bp@alien8.de>, <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linuxppc-dev@lists.ozlabs.org>, <linux-pci@vger.kernel.org>,
+	<linux-edac@vger.kernel.org>, Kuppuswamy Sathyanarayanan
+	<sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [PATCH 3/3 v4] ACPI: extlog: Trace CPER CXL Protocol Error
+ Section
+Message-ID: <20250701140503.00006a48@huawei.com>
+In-Reply-To: <20250623145453.1046660-4-fabio.m.de.francesco@linux.intel.com>
+References: <20250623145453.1046660-1-fabio.m.de.francesco@linux.intel.com>
+	<20250623145453.1046660-4-fabio.m.de.francesco@linux.intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] hv_sock: Return the readable bytes in
- hvs_stream_has_data()
-To: Dexuan Cui <decui@microsoft.com>, niuxuewei97@gmail.com,
- kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- sgarzare@redhat.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, horms@kernel.org, linux-hyperv@vger.kernel.org,
- virtualization@lists.linux.dev, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <1751013889-4951-1-git-send-email-decui@microsoft.com>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <1751013889-4951-1-git-send-email-decui@microsoft.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On 6/27/25 10:44 AM, Dexuan Cui wrote:
-> When hv_sock was originally added, __vsock_stream_recvmsg() and
-> vsock_stream_has_data() actually only needed to know whether there
-> is any readable data or not, so hvs_stream_has_data() was written to
-> return 1 or 0 for simplicity.
+On Mon, 23 Jun 2025 16:54:20 +0200
+"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com> wrote:
+
+> When Firmware First is enabled, BIOS handles errors first and then it makes
+> them available to the kernel via the Common Platform Error Record (CPER)
+> sections (UEFI 2.10 Appendix N). Linux parses the CPER sections via one of
+> two similar paths, either ELOG or GHES. The errors managed by ELOG are
+> signaled to the BIOS by the I/O Machine Check Architecture (I/O MCA).
 > 
-> However, now hvs_stream_has_data() should return the readable bytes
-> because vsock_data_ready() -> vsock_stream_has_data() needs to know the
-> actual bytes rather than a boolean value of 1 or 0.
+> Currently, ELOG and GHES show some inconsistencies in how they report to
+> userspace via trace events.
 > 
-> The SIOCINQ ioctl support also needs hvs_stream_has_data() to return
-> the readable bytes.
+> Therefore, make the two mentioned paths act similarly by tracing the CPER
+> CXL Protocol Error Section (UEFI v2.10, Appendix N.2.13).
 > 
-> Let hvs_stream_has_data() return the readable bytes of the payload in
-> the next host-to-guest VMBus hv_sock packet.
-> 
-> Note: there may be multpile incoming hv_sock packets pending in the
-> VMBus channel's ringbuffer, but so far there is not a VMBus API that
-> allows us to know all the readable bytes in total without reading and
-> caching the payload of the multiple packets, so let's just return the
-> readable bytes of the next single packet. In the future, we'll either
-> add a VMBus API that allows us to know the total readable bytes without
-> touching the data in the ringbuffer, or the hv_sock driver needs to
-> understand the VMBus packet format and parse the packets directly.
-> 
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
 > ---
+>  drivers/acpi/acpi_extlog.c | 62 ++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/core/ras.c     |  6 ++++
+>  include/cxl/event.h        |  2 ++
+>  3 files changed, 70 insertions(+)
 > 
-> Hi maintainers, please don't take the patch for now.
-> 
-> Hi Xuewei Niu, please help to re-post this patch with the next version
-> of your patchset "vsock: Introduce SIOCINQ ioctl support". See
-> https://lore.kernel.org/virtualization/BL1PR21MB3115F69C544B0FAA145FA4EABF7BA@BL1PR21MB3115.namprd21.prod.outlook.com/#t
-> https://lore.kernel.org/virtualization/20250626050219.1847316-1-niuxuewei.nxw@antgroup.com/
-> Feel free to add your Signed-off-by, if you need.
-> 
->  net/vmw_vsock/hyperv_transport.c | 16 +++++++++++++---
->  1 file changed, 13 insertions(+), 3 deletions(-)
-> 
-> diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
-> index 31342ab502b4..64f1290a9ae7 100644
-> --- a/net/vmw_vsock/hyperv_transport.c
-> +++ b/net/vmw_vsock/hyperv_transport.c
-> @@ -694,15 +694,25 @@ static ssize_t hvs_stream_enqueue(struct vsock_sock *vsk, struct msghdr *msg,
->  static s64 hvs_stream_has_data(struct vsock_sock *vsk)
->  {
->  	struct hvsock *hvs = vsk->trans;
-> +	bool need_refill = !hvs->recv_desc;
->  	s64 ret;
+> diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
+> index cefe8d2d8affc..9a37b08aacfea 100644
+> --- a/drivers/acpi/acpi_extlog.c
+> +++ b/drivers/acpi/acpi_extlog.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/ratelimit.h>
+>  #include <linux/edac.h>
+>  #include <linux/ras.h>
+> +#include <cxl/event.h>
+>  #include <acpi/ghes.h>
+>  #include <asm/cpu.h>
+>  #include <asm/mce.h>
+> @@ -160,6 +161,60 @@ static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
+>  	pci_dev_put(pdev);
+>  }
+>  
+> +static void
+> +extlog_cxl_cper_handle_prot_err(struct cxl_cper_sec_prot_err *prot_err,
+> +				int severity)
+> +{
+> +	struct cxl_cper_prot_err_work_data wd;
+> +	u8 *dvsec_start, *cap_start;
 
-Minor nit: when reposting please respect the reverse christmas tree
-order above moving 'need_refill' initialization after the following 'if'
-statement.
 
-/P
+A bunch of this is identical to cxl_cper_post_prot_err()
+Can we factor that stuff out for common use?
 
+> +
+> +	if (!(prot_err->valid_bits & PROT_ERR_VALID_AGENT_ADDRESS)) {
+> +		pr_warn_ratelimited("CXL CPER invalid agent type\n");
+> +		return;
+> +	}
+> +
+> +	if (!(prot_err->valid_bits & PROT_ERR_VALID_ERROR_LOG)) {
+> +		pr_warn_ratelimited("CXL CPER invalid protocol error log\n");
+> +		return;
+> +	}
+> +
+> +	if (prot_err->err_len != sizeof(struct cxl_ras_capability_regs)) {
+> +		pr_warn_ratelimited("CXL CPER invalid RAS Cap size (%u)\n",
+> +				    prot_err->err_len);
+> +		return;
+> +	}
+> +
+> +	if ((prot_err->agent_type == RCD || prot_err->agent_type == DEVICE ||
+> +	     prot_err->agent_type == LD || prot_err->agent_type == FMLD) &&
+> +	    !(prot_err->valid_bits & PROT_ERR_VALID_SERIAL_NUMBER))
+> +		pr_warn_ratelimited(FW_WARN
+> +				    "CXL CPER no device serial number\n");
+
+Whilst some of this check isn't present in cxl_cper_post_prot_err(), it should
+be harmless.
+
+> +
+> +	switch (prot_err->agent_type) {
+> +	case RCD:
+> +	case DEVICE:
+> +	case LD:
+> +	case FMLD:
+> +	case RP:
+> +	case DSP:
+> +	case USP:
+> +		memcpy(&wd.prot_err, prot_err, sizeof(wd.prot_err));
+> +
+> +		dvsec_start = (u8 *)(prot_err + 1);
+> +		cap_start = dvsec_start + prot_err->dvsec_len;
+> +
+> +		memcpy(&wd.ras_cap, cap_start, sizeof(wd.ras_cap));
+> +		wd.severity = cper_severity_to_aer(severity);
+> +		break;
+> +	default:
+> +		pr_err_ratelimited("CXL CPER reserved agent type: %d\n",
+> +				   prot_err->agent_type);
+> +		return;
+> +	}
+> +
+> +	cxl_cper_ras_handle_prot_err(&wd);
+> +}
