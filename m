@@ -1,137 +1,189 @@
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DEF6284B3F
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 19:53:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD13279785;
+	Tue,  1 Jul 2025 19:54:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751399619; cv=none; b=BRPaSZYihZrAGJ0lq1R7uV6cUjDZpO+FoA5OD1JUaeIZFtvYKqkwAUBwgeVQUjp0b0zWQ2Sv5sLr1edfXubuFGuCgO27wW8D8EhSeVJh9QUf6ITjcB2PyUOq3rf05C1ZAnZ9Y0lKN/gpFV7SoBQ/5oPkVK673mdegX8+y7bMJvE=
+	t=1751399647; cv=none; b=Ca81HKuwI/LKByimTV47rwnEzJs3BJyyZYAIgDdYxIuUAQDHSbye6uycS5IVSP5iI3ERtpe0q3S3I7zjmFxKhv2AZPvSeJ3hlCgOZXPAzAgRBDlPNx2rfF1kyW6qEEvyXSXXIbMjq/O6VP7c6gRxINsO6TE2vhmHAAC5U72S/FU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751399619; c=relaxed/simple;
-	bh=xv85BblxpwCPLhEN59S0LbhTMVwob3/UmnwNbwObM+A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SmL9+iOoFzOXUuvRT6Os2QhU0kmZCfqqeCiDY1+1Wj8A9zMzb8UMgt/nq2BN6VGLB3tGMBvJZ3dwf9RxHZbgaMtx6xwAWBwJVtP1M9dOdjf5/fxSKQ1PbTWwO6SB+voYrSIG8EG6uKFZ9HddhAqLvQMRhQMKP+tDgWtrcNhenWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=AtfbNXVW; arc=none smtp.client-ip=209.85.166.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1751399647; c=relaxed/simple;
+	bh=Yd/r5g9u2NZIWZkYoik90fsPSnjEUF3dw7edlX++I9M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dE54+FqtmqLoxq+Cmq1K02gpDMvcwamSelzYmrFGwXxcacWWUJJEmpaMuwbX/MTR5C44FlzUCP7xdH6JZT+F8AZKuw91VxEd1sOImfU3FQRyJZ3AGf+2GONV5htfw2n6O+P1Q3TobTOzxfxtgh8MWwzaoKXFyFjO3lYN9gHFOuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fo/YxcRz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="AtfbNXVW"
-Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-876ae3f7768so209017339f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 12:53:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1751399616; x=1752004416; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=05DvOPnYJvLbjXIZfvA3qU8pEVrHcgb4vIodN8pGWR8=;
-        b=AtfbNXVW6F1eDK9HtZkg5mQORIEOipqrj25/hFWE6wt83NplrKDKzlp+beYz1TjtM6
-         TYGgK4L/RDDGPVlyMStuRvYUqrIvLpKkhcBX77jE9W48sHmpK8ZNBek5tOqg8DjA7JAm
-         3x4tlMK+hAZtH2leFp6F9So9SaGLs47FoiOYk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751399616; x=1752004416;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=05DvOPnYJvLbjXIZfvA3qU8pEVrHcgb4vIodN8pGWR8=;
-        b=SD040Zx9JbeTUUFvE3gHawe8Ra2QTsY9fmMNg7ppekgTR7pdQCg/28s6GpX2YCpCTD
-         aigpOQ2pTLMvXz3lhc+goT06hHYog6NKQ11MEyNF8sR5IBQ9uASc52HmhjRmFGw4BLKz
-         aoef3gytRjXiNd4Wl/K7i0fYL0v8Z+i1HCaBqCT/g1w/GEECKtj2V+UA0IfnP86XeJ6N
-         VYtNJHF7Eo9pcb9ljcbaFlyOovQyy3EV90pTcuwxV1IWKQDtTQgHHLfLTIeRFrDmnxHQ
-         Km2HFZGKLfZ0TYQTj22zeNlUiiGxx+oFsE/NPpSgNs5xdnyawYNXVCB8houNqAb6pXdj
-         cRmg==
-X-Forwarded-Encrypted: i=1; AJvYcCVsYTLqgV/LOHf7GJsjUDthJCqhG9UevXV3ekmiU4GCa+7dPu0x3PUTmQlfZQP6SNrDQqeRfKzQx7kt6V8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypEb2o9IYLbYaXvk4ONZ3jsu5sFMoPeap8yks9T5Uj9dwVUON8
-	cbsso1Qk/yAIQn2ID1MTTYaNkcZ+z2lQG5jbqvrvNGfjSPULxQS44fmrKQjVlxIXEqk=
-X-Gm-Gg: ASbGncuYQunKGPSNDWwnSDQLv2iEumoHTxrrQ0FGil+R5DhMnzvTqXoAZaaTsMs5/D/
-	vwSkAo2wf5B+2W/P87ZBAB3+rUVTrpYnZzAays8RbTYztyqeurH5iXCPpOx795uRxcUkqilGsWT
-	lmjDvrpBKW+SX4JmGmDswHLTjF3QHhiXufriqEecE9Qw9NMJqYx8+jmIWEgdBpPN8gsVVgRrg1m
-	84XnV1qFrpBV1GIFf72WkW2r/ljmhtm+bM18ULZ0PeBflAuNH2ZRCAFTpEnJYd56GeiEkOueJ7N
-	gOrqT5a3hLXU76an3JVzRCpfSZIKxuRCZX/Ip7FJbQL1aVPUtf14coPq4+V0862ShEDnXpOgyQ=
-	=
-X-Google-Smtp-Source: AGHT+IFvgVmTDNSS6N+w+PWK6OvUgtAsoQ5EvKqtlmkInV+s6ra/2LpzaFJdJKj+QGj0od2XQYkO0w==
-X-Received: by 2002:a05:6e02:310b:b0:3dd:b808:be74 with SMTP id e9e14a558f8ab-3e0549e27a5mr3374255ab.13.1751399616134;
-        Tue, 01 Jul 2025 12:53:36 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-502048636ccsm2592165173.13.2025.07.01.12.53.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 12:53:35 -0700 (PDT)
-Message-ID: <744bd439-2613-45d7-8724-5959d25100aa@linuxfoundation.org>
-Date: Tue, 1 Jul 2025 13:53:35 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fo/YxcRz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3D23C4CEEE;
+	Tue,  1 Jul 2025 19:54:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751399647;
+	bh=Yd/r5g9u2NZIWZkYoik90fsPSnjEUF3dw7edlX++I9M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fo/YxcRzlenSelFr/HeCpGRrtCh4Zt6Lfd7LXrBJ22cPEXJfPzuxG7ag0WmRhXySO
+	 uhiZkXZMKOvat1Rql6K5NuO11XbWbNrlHvm/F7mzL9ai0j8dcLvD86WCDDtlQFbB4+
+	 wQiSu3ov2gQMfgZEHW54DAQFxqfMyPwI8en1GTFXGk2rraSoRheueiF4OnndjL4C8r
+	 bgr5SLw8ZTQL/LlkXSINOes6L+kdz3uPuZWwYss3tePpBy+RBdGdeIqjo/mOyvTYI8
+	 /sFJiG/X8nwyqHNhKeindoBxO4STpx1k+jroNUfAN3PmCzfA1kQqPV+PE6ZfnktV5Q
+	 hYqDcA+hRpA5Q==
+Received: by pali.im (Postfix)
+	id 631775D6; Tue,  1 Jul 2025 21:54:05 +0200 (CEST)
+Date: Tue, 1 Jul 2025 21:54:05 +0200
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Amir Goldstein <amir73il@gmail.com>,
+	Andrey Albershteyn <aalbersh@redhat.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Casey Schaufler <casey@schaufler-ca.com>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Paul Moore <paul@paul-moore.com>, linux-api@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-xfs@vger.kernel.org, selinux@vger.kernel.org,
+	Andrey Albershteyn <aalbersh@kernel.org>
+Subject: Re: [PATCH v6 5/6] fs: prepare for extending file_get/setattr()
+Message-ID: <20250701195405.xf27mjknu5bnunue@pali>
+References: <20250630-xattrat-syscall-v6-0-c4e3bc35227b@kernel.org>
+ <20250630-xattrat-syscall-v6-5-c4e3bc35227b@kernel.org>
+ <20250701183105.GP10009@frogsfrogsfrogs>
+ <CAOQ4uxiCpGcZ7V8OqssP2xKsN0ZiAO7mQ_1Qt705BrcHeSPmBg@mail.gmail.com>
+ <20250701194002.GS10009@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/kexec: fix test_kexec_jump build and ignore
- generated binary
-To: Moon Hee Lee <moonhee.lee.ca@gmail.com>, kexec@lists.infradead.org
-Cc: dwmw@amazon.co.uk, mingo@kernel.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev,
- shuah@kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <20250624201438.89391-1-moonhee.lee.ca@gmail.com>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250624201438.89391-1-moonhee.lee.ca@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250701194002.GS10009@frogsfrogsfrogs>
+User-Agent: NeoMutt/20180716
 
-On 6/24/25 14:14, Moon Hee Lee wrote:
-> The test_kexec_jump program builds correctly when invoked from the top-level
-> selftests/Makefile, which explicitly sets the OUTPUT variable. However,
-> building directly in tools/testing/selftests/kexec fails with:
+On Tuesday 01 July 2025 12:40:02 Darrick J. Wong wrote:
+> On Tue, Jul 01, 2025 at 09:27:38PM +0200, Amir Goldstein wrote:
+> > On Tue, Jul 1, 2025 at 8:31 PM Darrick J. Wong <djwong@kernel.org> wrote:
+> > >
+> > > On Mon, Jun 30, 2025 at 06:20:15PM +0200, Andrey Albershteyn wrote:
+> > > > From: Amir Goldstein <amir73il@gmail.com>
+> > > >
+> > > > We intend to add support for more xflags to selective filesystems and
+> > > > We cannot rely on copy_struct_from_user() to detect this extension.
+> > > >
+> > > > In preparation of extending the API, do not allow setting xflags unknown
+> > > > by this kernel version.
+> > > >
+> > > > Also do not pass the read-only flags and read-only field fsx_nextents to
+> > > > filesystem.
+> > > >
+> > > > These changes should not affect existing chattr programs that use the
+> > > > ioctl to get fsxattr before setting the new values.
+> > > >
+> > > > Link: https://lore.kernel.org/linux-fsdevel/20250216164029.20673-4-pali@kernel.org/
+> > > > Cc: Pali Rohár <pali@kernel.org>
+> > > > Cc: Andrey Albershteyn <aalbersh@redhat.com>
+> > > > Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+> > > > Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
+> > > > ---
+> > > >  fs/file_attr.c           |  8 +++++++-
+> > > >  include/linux/fileattr.h | 20 ++++++++++++++++++++
+> > > >  2 files changed, 27 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/fs/file_attr.c b/fs/file_attr.c
+> > > > index 4e85fa00c092..62f08872d4ad 100644
+> > > > --- a/fs/file_attr.c
+> > > > +++ b/fs/file_attr.c
+> > > > @@ -99,9 +99,10 @@ EXPORT_SYMBOL(vfs_fileattr_get);
+> > > >  int copy_fsxattr_to_user(const struct fileattr *fa, struct fsxattr __user *ufa)
+> > > >  {
+> > > >       struct fsxattr xfa;
+> > > > +     __u32 mask = FS_XFLAGS_MASK;
+> > > >
+> > > >       memset(&xfa, 0, sizeof(xfa));
+> > > > -     xfa.fsx_xflags = fa->fsx_xflags;
+> > > > +     xfa.fsx_xflags = fa->fsx_xflags & mask;
+> > >
+> > > I wonder, should it be an error if a filesystem sets an fsx_xflags bit
+> > > outside of FS_XFLAGS_MASK?  I guess that's one way to prevent
+> > > filesystems from overriding the VFS bits. ;)
+> > 
+> > I think Pali has a plan on how to ensure that later
+> > when the mask is provided via the API.
+> > 
+> > >
+> > > Though couldn't that be:
+> > >
+> > >         xfa.fsx_xflags = fa->fsx_xflags & FS_XFLAGS_MASK;
+> > >
+> > > instead?  And same below?
+> > >
+> > 
+> > Indeed. There is a reason for the var, because the next series
+> > by Pali will use a user provided mask, which defaults to FS_XFLAGS_MASK,
+> > so I left it this way.
+> > 
+> > I don't see a problem with it keeping as is, but if it bothers you
+> > I guess we can re-add the var later.
 > 
->    make: *** No rule to make target '/test_kexec_jump', needed by 'test_kexec_jump.sh'.  Stop.
+> Nah, it doesn't bother me that much.
 > 
-> This failure occurs because the Makefile rule relies on $(OUTPUT), which is
-> undefined in direct builds.
+> > > >       xfa.fsx_extsize = fa->fsx_extsize;
+> > > >       xfa.fsx_nextents = fa->fsx_nextents;
+> > > >       xfa.fsx_projid = fa->fsx_projid;
+> > > > @@ -118,11 +119,16 @@ static int copy_fsxattr_from_user(struct fileattr *fa,
+> > > >                                 struct fsxattr __user *ufa)
+> > > >  {
+> > > >       struct fsxattr xfa;
+> > > > +     __u32 mask = FS_XFLAGS_MASK;
+> > > >
+> > > >       if (copy_from_user(&xfa, ufa, sizeof(xfa)))
+> > > >               return -EFAULT;
+> > > >
+> > > > +     if (xfa.fsx_xflags & ~mask)
+> > > > +             return -EINVAL;
+> > >
+> > > I wonder if you want EOPNOTSUPP here?  We don't know how to support
+> > > unknown xflags.  OTOH if you all have beaten this to death while I was
+> > > out then don't start another round just for me. :P
+> > 
+> > We have beaten this API almost to death for sure ;)
+> > I don't remember if we discussed this specific aspect,
+> > but I am personally in favor of
+> > EOPNOTSUPP := the fs does not support the set/get operation
+> > EINVAL := some flags provided as value is invalid
+> > 
+> > For example, if the get API provides you with a mask of the
+> > valid flags that you can set, if you try to set flags outside of
+> > that mask you get EINVAL.
+> > 
+> > That's my interpretation, but I agree that EOPNOTSUPP can also
+> > make sense in this situation.
 > 
-> Fix this by listing test_kexec_jump in TEST_GEN_PROGS, the standard way to
-> declare generated test binaries in the kselftest framework. This ensures the
-> binary is built regardless of invocation context and properly removed by
-> make clean.
+> <nod> I think I'd rather EOPNOTSUPP for "bits are set that the kernel
+> doesn't recognize" and EINVAL (or maybe something else like
+> EPROTONOSUPPORT) for "fs driver will not let you change this bit".
+> At least for the syscall interface; we probably have to flatten that to
+> EOPNOTSUPP for both legacy ioctls.
 
-The change looks good to me.
+... and this starting to be complicated if the "fs driver" is network
+based (as fs driver can support, but remote server not). See also:
+https://lore.kernel.org/linux-fsdevel/20241224160535.pi6nazpugqkhvfns@pali/t/#u
 
-Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+For backup/restore application it would be very useful to distinguish between:
+- "kernel does not support flag X"
+- "target filesystem does not support flag X"
+- "wrong structure was passed / syscall incorrectly called"
 
+third option is bug in application - fatal error. second option is just
+a warning for user (sorry, we cannot set NEW FEATURE on FAT32, but if
+you would do restore to other fs, it is supported). and first option
+happens when you run new application on older kernel version, it is an
+recoverable error (or warning to user, but with more important level
+then second option as switching to different FS would not help).
+
+Could we return different errnos for these 3 situations?
+
+> --D
 > 
-> Also add the binary to .gitignore to avoid tracking it in version control.
-
-There is another patch that adds the executable to .gitignore
-https://lore.kernel.org/r/20250623232549.3263273-1-dyudaken@gmail.com
-
-I think you are missing kexec@lists.infradead.org - added it
-> 
-> Signed-off-by: Moon Hee Lee <moonhee.lee.ca@gmail.com>
-> ---
->   tools/testing/selftests/kexec/.gitignore | 2 ++
->   tools/testing/selftests/kexec/Makefile   | 2 +-
->   2 files changed, 3 insertions(+), 1 deletion(-)
->   create mode 100644 tools/testing/selftests/kexec/.gitignore
-> 
-> diff --git a/tools/testing/selftests/kexec/.gitignore b/tools/testing/selftests/kexec/.gitignore
-> new file mode 100644
-> index 000000000000..5f3d9e089ae8
-> --- /dev/null
-> +++ b/tools/testing/selftests/kexec/.gitignore
-> @@ -0,0 +1,2 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +test_kexec_jump
-> diff --git a/tools/testing/selftests/kexec/Makefile b/tools/testing/selftests/kexec/Makefile
-> index e3000ccb9a5d..874cfdd3b75b 100644
-> --- a/tools/testing/selftests/kexec/Makefile
-> +++ b/tools/testing/selftests/kexec/Makefile
-> @@ -12,7 +12,7 @@ include ../../../scripts/Makefile.arch
->   
->   ifeq ($(IS_64_BIT)$(ARCH_PROCESSED),1x86)
->   TEST_PROGS += test_kexec_jump.sh
-> -test_kexec_jump.sh: $(OUTPUT)/test_kexec_jump
-> +TEST_GEN_PROGS := test_kexec_jump
->   endif
->   
->   include ../lib.mk
-
-thanks,
--- Shuah
+> > Thanks,
+> > Amir.
+> > 
