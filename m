@@ -1,194 +1,146 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4F6FC0A
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 16:36:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D06919994F;
+	Tue,  1 Jul 2025 16:36:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751387770; cv=none; b=iodacWWaiOgciUHVjwJE1CDPpmb6Ds3evJuhyvUr/j7fn/r6AP7GGXnqzkj6pv54Foi5R5I9fCTB7f/e9JYIrvPwwHHb8Ba2aMRoBjc1hQQ5Q4toReXNpp29A/QzyD4aAI8CldU97thIZ0DzATno/zqTgPE+ZQyAke3j8wXLIrE=
+	t=1751387821; cv=none; b=Eol5qAUY5htkR5rRbuhoMrYj8FYl8n9SE/lZ4xhcik9kgXfYAld7NwL4R8gWnvhrC72WQbZa4bXqd3MelTEF8fEguQf+4+kuGz0vcLbbPY8FvLmyvEEzj7fap7Xuy0TrdA7f3GXQCqZ3gVmlyZjtcGY3Um+BQfn89vBu16LgjGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751387770; c=relaxed/simple;
-	bh=R9pyu6SxVDRYySBOUHsmmz60FWD4QzVyTLXu21JzGQ0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Q/mySNL4Lg4sc1SYGLtCAYP2xozDjHbUhYKWJ70ePzM5oTbOioLpH5Anet9KoeDsnnVVv92dqdLtfsDJrKUc7DyWJg4q1Tl+suGUGL7pZ0w+HGGPbGqHtPsnhbRkK/Jl3GIdqTpL0xFYs9qnvnO8PEqm5wfbLm3xoF2ZT72BQCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=JZZ9bWDb; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1751387821; c=relaxed/simple;
+	bh=9DgFIrLkwE3noyfPke5sVBHJbvoThEKAcnkbqSUaWWY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AxxE8YReVfKZ7Cu8j2KPRErHB7d1uTnpOP4k57SsRRjp7f4YLTHSgQArdzkjfLVDCJuRcSjWIWGqQ4tFNhGMVf64BNX5QEgWVHUKyTx6vm896bT36PlchEClJ94eUGHBv7VVmG3jFbQTjsZuI7BYXUXR/v8A5TubGkKxudNeU2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mCDr6Bkw; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="JZZ9bWDb"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2363497cc4dso49535965ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 09:36:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mCDr6Bkw"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-32b5931037eso46364431fa.2;
+        Tue, 01 Jul 2025 09:36:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1751387767; x=1751992567; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qOLuztNj03vJ+Lvv7ZhlIY6sagSprwhtrTY8mKCjRT8=;
-        b=JZZ9bWDbR1bzi5ypi9RoirJEkfmLBfXY9erDBdzcU9Ubwd8qnYv+z88DsdiI++sLEt
-         legKHfr2KSuGUlaFlMwXAhe4NpsGxqdhtCLkQ9fhkrvgf6ai6gRSmFX8e+1qUKHKnZtb
-         Fk3gdQnRXLrSi4mOxNi0KL5lsxUDuoJchura34uDDVHQGqYz/hf86Nay288gYwLz6/A7
-         ROsUY5D6xoLf2cw0Z8V/hV9wekorGqpbi2VZ53S5wc9UBJXHqTkX90wWshkA/dJBCdHs
-         g4dM8MaS1cQBsu7eBDtGr2y1gnOs5qXpUmJfF0s7oxvoiwcmzNHSacnG0XbRNm83HPLl
-         xz9A==
+        d=gmail.com; s=20230601; t=1751387818; x=1751992618; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hgyVkx3d9RLCvXLZyf3F2xIgeVZ3LcaqlbEZ/2Q1Ka0=;
+        b=mCDr6BkwzALZnfZNGiZdKPtaRl8MfTqjEU5fwma+lbawBfCZKdXaq2IdlfSUdVZRVf
+         jrYYSRUYnD3iVNOwzxKFYnw1VBQNruBi3EzpvnxfVOnCMvI/x1pllG9DnZhEcD3BKsLC
+         atOnPFrFUs3rKyodhjkE/jwYz/0R+jd1A2RjVQ9E9jLbjiLm9VB39Q5swyVmU5hUYgga
+         kZL7KbbKEWI5iTztNvRG9ZN1F7vkfTPM9SMbOzlwiQ5T7kI4UrmZj5rcIqyMmm07PYZz
+         SF+DUfz9YbGPriKTY2QWSYTWI3lcjlX7lWSsj8zIwo0bBCCJ9NCKq3tgpi3zOIzx36W6
+         pr6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751387767; x=1751992567;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qOLuztNj03vJ+Lvv7ZhlIY6sagSprwhtrTY8mKCjRT8=;
-        b=T3wHPdCfa5ZYqNEUhKDgM5iSZypyQdXY6xG5QPJaT1hHKEXPbDN2An+wqbe2ZzAw1d
-         NHjE2189Dez290bkjOPgdFedm9dtVTWODt/uKqYIEmOwBhlSyEa6trXuWQlEuPuUqHRb
-         ufiaXpClDj64oZJvSgJrZhMQRJYgo3GyR4sfHl0bfVbOhBJaqNFtHgTJAStnOIxz8vHO
-         FxrExPn2WwTs28lvAJgNLqrn7BX0SRLz1+4qWJ/ommVBlhLM6cuBlrN57h000kK7+glj
-         MKmnr3eaEVoWi0Hud/aL+7mZLAMauAM8jthaTmhgti8oeTDUM4XtUFakxFtrd8oSFRu5
-         LO4Q==
-X-Gm-Message-State: AOJu0Yx8UlT+Vv6cRgLcTNHbM/q3XgTlJzMIag0hY9PUV0kjfZ0xaS3d
-	N2R/NIZiLl+JNqSFiprrv2sbnym2a0UfSBaYhk5wemdLxfj4e2yY9iR2SFbelYC7eZU=
-X-Gm-Gg: ASbGnctF9KI2EBVSGdYsOvIA89spD/tV0sqVzhMXK4EOe1/xZ0+gLkkAR7actgz8cSp
-	pgA1FTo/50gaFTswXHMLKzf+8x60+uRmCqrX1zNP1ZR0unOcRYjjDCU/WQukm3/QfXMPALVoHko
-	os6JuIoDEegObDznnGB1+hu0GntWRztK97X4Hh+is2wqUCLPRHqlKlmmjfsZxqrTpprQaeUyZiR
-	d9KJ+zgRm74N6iMD/MTPAJGO2obJ2YhaSd25SHFHzFX6L0ykRXHn7QqhmYJnHIjITy9LdupjzBh
-	FMr9cd9PcCnv3tOLhLmaPWGSnUPtHLLCNUKeEkxc838WcvmkktteR8t1hWdt5ttSdTa25OQsoRZ
-	qEaHlZA7lYcRcQcT0glS7
-X-Google-Smtp-Source: AGHT+IFRsIbIEGD4GNMK9TygYJzEo5UAIfTX604PERX0zlKTw3v0A1OTc8v+I9D0f4GgwQUBlwA7Tw==
-X-Received: by 2002:a17:903:2a87:b0:234:cf24:3be8 with SMTP id d9443c01a7336-23ac45e3721mr292368605ad.28.1751387767026;
-        Tue, 01 Jul 2025 09:36:07 -0700 (PDT)
-Received: from n37-056-208.byted.org ([115.190.40.15])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3b8d96sm108567135ad.188.2025.07.01.09.36.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 09:36:06 -0700 (PDT)
-From: Liangyan <liangyan.peng@bytedance.com>
-To: tglx@linutronix.de
-Cc: linux-kernel@vger.kernel.org,
-	Liangyan <liangyan.peng@bytedance.com>,
-	Yicong Shen <shenyicong.1023@bytedance.com>
-Subject: [RFC] genirq: Fix lockup in handle_edge_irq
-Date: Wed,  2 Jul 2025 00:35:58 +0800
-Message-Id: <20250701163558.2588435-1-liangyan.peng@bytedance.com>
-X-Mailer: git-send-email 2.20.1
+        d=1e100.net; s=20230601; t=1751387818; x=1751992618;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hgyVkx3d9RLCvXLZyf3F2xIgeVZ3LcaqlbEZ/2Q1Ka0=;
+        b=LOBwz9b2VVAPVTfEhtp3yPsGxJP0rwYI0EOWu7JiFCuzqwxIWRr/iHM+bqIfPAcYdd
+         12xOBOPYZeviCSE/3DnjuNKN61/MpRiZoHvvngMoioAQ3rsyxKR66AOOx62l/LMiNoyz
+         c1ahNoSnoxTuj9HsSXZI/RrTeRdhunNSpmIziBmK9YHqiSnkvdzeS2wobQPeVr6Ldnkj
+         BsySv0C5yxiX5nlXA1lOn8onfaz9Rwv245qOwCf9BVN7b+JRvrGgfRBzuZ3Bn7iXi4sb
+         lYtBIaPaEhBpVTRTiKJgrUDPL6c3rpJ+B59UrbrM/CSpNf4NJkiM4Vbscp5SURH/WyC3
+         N4BQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUJhEbfUSCqH8cZxUdAeirC08CJD6zw7rboq2zrNM/1NGNfa9zADvbQOU/D/UsOT3dAkhHbYUJDRHukl9p3@vger.kernel.org, AJvYcCW34wJktDaUasUZdbTkdXv5+5m3HtJX0+Gk/xmegnk5yOJwnKFmgxiavrXZfTPuKaRF8czuQq01gz6M7Z96@vger.kernel.org, AJvYcCXovkcXPyh6KQFOwIERhqNX962SoeAQJGChOZFDahcYWyUmCJ+f34nuPvk8PU58o1pS2F3DANA0LQXZcQliHt0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeVcLlD1pz9CJGgbd9mgmRxBjpcAZmLSqESZ9CpXaJFyRzuR/6
+	4N8mYim9E87JJPhWiz8WSXEox5xd+XCqK0gnQxU9PEJddHeKrHzJI/fUPNJIEGSvf3004H/6emR
+	S9iqkxjaHCaOJxZFHIB+9MiDHwG5rhrc=
+X-Gm-Gg: ASbGncv9/GD+zkbOu/suh79P6uLZVdVAQb+u0pap54LFvEESnX/FGugUYSq3RxcjB7o
+	Pe32rTI0TWk5jHNcwGjHK9SDLklTD6/RAt0ladtf8W3PlxBZD0HooZAf95k34iZHwkXlhcTqlvu
+	JQhnE7fc645aBtoaN/XG+GO2Ifh952v3v48Izf0HpIgd1jUk8jLE3Y/FPwB4XN89UkHuz3u54Q7
+	HMyhqGi/RkzWtj4
+X-Google-Smtp-Source: AGHT+IEqCqt2bO97VSw5brojzdV3SZzJg+MkUJyR8sldEgfU+5WSPMAXAbtSk5Z703LmfE/XJzygq6h09VCa1Ovh93Q=
+X-Received: by 2002:a05:651c:3248:20b0:30b:f52d:148f with SMTP id
+ 38308e7fff4ca-32cdc482b6fmr28085101fa.18.1751387817386; Tue, 01 Jul 2025
+ 09:36:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250701-xarray-insert-reserve-v1-0-25df2b0d706a@gmail.com>
+ <20250701-xarray-insert-reserve-v1-1-25df2b0d706a@gmail.com> <aGQORK02N8jMOhy6@Mac.home>
+In-Reply-To: <aGQORK02N8jMOhy6@Mac.home>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Tue, 1 Jul 2025 12:36:20 -0400
+X-Gm-Features: Ac12FXzwtYZh48LsIbouap6aPSYLMEtyprvogrYztvEYzaNQhpMD-bJ8UxP3Ra4
+Message-ID: <CAJ-ks9nqWHSJjjeg=QReVh3pq87LSLE-+NDOD5scp1axYV7k7Q@mail.gmail.com>
+Subject: Re: [PATCH 1/3] rust: xarray: use the prelude
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: Andreas Hindborg <a.hindborg@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Matthew Wilcox <willy@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	Daniel Almeida <daniel.almeida@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Yicong reported a softlockup in guest vm triggered by setting NIC IRQ
-affinity in irqbalance service.
-
-When a NIC IRQ affinity is changed from cpu 0 to cpu 1 and cpu 0 is
-handling the first interrupt of this IRQ in handle_edge_irq, the second
-interrupt is activated and handled in cpu 1 which sets IRQS_PENDING flag,
-cpu 0 will invoke handle_irq_event again after finish the first interrupt.
-If the interval between two interrupts is smaller than the latency of
-handling one interrupt in the loop of handle_edge_irq (i.e., unmask_irq +
-handle_irq_event), cpu 0 may repeat to invoke handle_irq_event and not
-exit handle_edge_irq which causes softlockup at last(hardlockup is
-not enabled in guest vm).
-
-In our online guest vm, we have some heavy network traffic business,
-the number of NIC interrupt is more that 1000 per second, the NIC
-mask/unmask_irq will trap to host and consume more than 1ms, this
-softlockup is easy to reproduce. By bpftrace, we can see cpu 0 invokes
-handle_irq_event more than 5000 times in handle_edge_irq when
-softlockup occurs.
-
-To fix this, we can limit the repeat times of calling handle_irq_event.
-
-       cpu 0                                        cpu 1
-
-  handle_edge_irq
-    spin_lock
-    do {
-        unmask_irq if IRQS_PENDING
-                                                handle_edge_irq
-        handle_irq_event
-          istate &= ~IRQS_PENDING
-          spin_unlock
-                                                  spin_lock
-                                                  istate |= IRQS_PENDING
-          handle_irq_event_percpu                 mask_ack_irq
-                                                  spin_unlock
-          spin_lock
-      } while(istate & IRQS_PENDING)
-      spin_unlock
-
-The softlockup traces look something like this:
------
-watchdog: BUG: soft lockup - CPU#1 stuck for 22s! [swapper/1:0]
-CPU: 1 PID: 0 Comm: swapper/1 Tainted: G             L
-Hardware name: ByteDance Inc. OpenStack Nova, BIOS
-RIP: 0010:__do_softirq+0x78/0x2ac
-RSP: 0018:ffffa02a00134f98 EFLAGS: 00000246
-RAX: 00000000ffffffff RBX: 0000000000000000 RCX: 00000000ffffffff
-RDX: 00000000000000c1 RSI: ffffffff9e801040 RDI: 0000000000000016
-RBP: ffffa02a000c7dd8 R08: 000002ea2320b76b R09: 7fffffffffffffff
-R10: 000002ea3a1c0080 R11: 00000000002fefff R12: 0000000000000001
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000080
-FS:  0000000000000000(0000) GS:ffff89323e840000(0000)
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f2e5957c000 CR3: 0000000167a9a005 CR4: 0000000000770ee0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7: 0000000000000400
-PKRU: 55555554
-Call Trace:
- <IRQ>
- __irq_exit_rcu+0xb9/0xf0
- sysvec_apic_timer_interrupt+0x72/0x90
- </IRQ>
- <TASK>
- asm_sysvec_apic_timer_interrupt+0x16/0x20
-RIP: 0010:cpuidle_enter_state+0xd2/0x400
-RSP: 0018:ffffa02a000c7e80 EFLAGS: 00000202
-RAX: ffff89323e870bc0 RBX: 0000000000000001 RCX: 00000000ffffffff
-RDX: 0000000000000016 RSI: ffffffff9e801040 RDI: 0000000000000000
-RBP: ffff89323e87c700 R08: 000002ea22ebdf87 R09: 0000000000000018
-R10: 000000000000010d R11: 000000000000020a R12: ffffffff9dab58e0
-R13: 000002ea22ebdf87 R14: 0000000000000001 R15: 0000000000000000
- cpuidle_enter+0x29/0x40
- cpuidle_idle_call+0xfa/0x160
- do_idle+0x7b/0xe0
- cpu_startup_entry+0x19/0x20
- start_secondary+0x116/0x140
- secondary_startup_64_no_verify+0xe5/0xeb
- </TASK>
-
-Signed-off-by: Liangyan <liangyan.peng@bytedance.com>
-Reported-by: Yicong Shen <shenyicong.1023@bytedance.com>
----
- kernel/irq/chip.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
-index 2b274007e8ba..9f5c50e75e6b 100644
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -764,6 +764,8 @@ EXPORT_SYMBOL_GPL(handle_fasteoi_nmi);
-  */
- void handle_edge_irq(struct irq_desc *desc)
+On Tue, Jul 1, 2025 at 12:35=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> w=
+rote:
+>
+> On Tue, Jul 01, 2025 at 12:27:17PM -0400, Tamir Duberstein wrote:
+> > Using the prelude is customary in the kernel crate.
+> >
+> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> > ---
+> >  rust/kernel/xarray.rs | 34 ++++++++++++++++++++--------------
+> >  1 file changed, 20 insertions(+), 14 deletions(-)
+> >
+> > diff --git a/rust/kernel/xarray.rs b/rust/kernel/xarray.rs
+> > index 75719e7bb491..436faad99c89 100644
+> > --- a/rust/kernel/xarray.rs
+> > +++ b/rust/kernel/xarray.rs
+> > @@ -5,16 +5,15 @@
+> >  //! C header: [`include/linux/xarray.h`](srctree/include/linux/xarray.=
+h)
+> >
+> >  use crate::{
+> > -    alloc, bindings, build_assert,
+> > -    error::{Error, Result},
+> > +    alloc,
+> > +    prelude::*,
+> >      types::{ForeignOwnable, NotThreadSafe, Opaque},
+> >  };
+> > -use core::{iter, marker::PhantomData, mem, pin::Pin, ptr::NonNull};
+> > -use pin_init::{pin_data, pin_init, pinned_drop, PinInit};
+> > +use core::{iter, marker::PhantomData, mem, ptr::NonNull};
+> >
+> >  /// An array which efficiently maps sparse integer indices to owned ob=
+jects.
+> >  ///
+> > -/// This is similar to a [`crate::alloc::kvec::Vec<Option<T>>`], but m=
+ore efficient when there are
+> > +/// This is similar to a [`Vec<Option<T>>`], but more efficient when t=
+here are
+> >  /// holes in the index space, and can be efficiently grown.
+> >  ///
+> >  /// # Invariants
+> > @@ -104,16 +103,23 @@ pub fn new(kind: AllocKind) -> impl PinInit<Self>=
  {
-+	bool need_unmask = false;
-+
- 	guard(raw_spinlock)(&desc->lock);
- 
- 	if (!irq_can_handle(desc)) {
-@@ -791,12 +793,16 @@ void handle_edge_irq(struct irq_desc *desc)
- 		if (unlikely(desc->istate & IRQS_PENDING)) {
- 			if (!irqd_irq_disabled(&desc->irq_data) &&
- 			    irqd_irq_masked(&desc->irq_data))
--				unmask_irq(desc);
-+				need_unmask = true;
- 		}
- 
- 		handle_irq_event(desc);
- 
- 	} while ((desc->istate & IRQS_PENDING) && !irqd_irq_disabled(&desc->irq_data));
-+
-+	if (need_unmask && !irqd_irq_disabled(&desc->irq_data) &&
-+	    irqd_irq_masked(&desc->irq_data))
-+		unmask_irq(desc);
- }
- EXPORT_SYMBOL(handle_edge_irq);
- 
--- 
-2.20.1
+> >      fn iter(&self) -> impl Iterator<Item =3D NonNull<T::PointedTo>> + =
+'_ {
+> >          let mut index =3D 0;
+> >
+> > -        // SAFETY: `self.xa` is always valid by the type invariant.
+> > -        iter::once(unsafe {
+> > -            bindings::xa_find(self.xa.get(), &mut index, usize::MAX, b=
+indings::XA_PRESENT)
+> > -        })
+> > -        .chain(iter::from_fn(move || {
+> > +        core::iter::Iterator::chain(
+>
+> Does this part come from using the prelude? If not, either we need to
+> split the patch or we need to mention it in the changelog at least.
 
+Yes, it's from using the prelude - PinInit also has a chain method
+that causes ambiguity here.
+
+> Also since we `use core::iter` above, we can avoid the `core::` here.
+
+Good point.
