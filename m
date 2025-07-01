@@ -1,42 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 313D726A1DE;
-	Tue,  1 Jul 2025 09:26:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6307526B0A7
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 09:27:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751362011; cv=none; b=GtizhHgyzo3BFoBDFKr/dO5vi7o5kp7vQk/yHA5tYB8BfSTUTlCDu8G1UXH2mEDR3Q3za5/q2S3rr5LAlWwOEaLllvYnsm1AK60R2C4YkfXH6tCg+h3+togQaeyeEIdj7qB05vdaW+VjhfLkg7Qr4mdexXl9qbrznLibL2sTGrI=
+	t=1751362024; cv=none; b=C3DFNa4xoDjsYrc7Vi+j28uN/GzU4/szjRhk2yPRVOUS5P+aouq7bQsoIqubPbgO8oh7LsHA9UBQEkK14RDGRTfYUusdZWG/wkgXE/IJ8INxW/1V5mfZPZ5KzLpu5YoeQNV7w9zpfvyGFKuX3SjFrFsreFDSWdCVJ5SNptyACOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751362011; c=relaxed/simple;
-	bh=XVDtWrwGsRf2D1Pcn9zPRRPHJof0gGW1U59MqvgZPC4=;
+	s=arc-20240116; t=1751362024; c=relaxed/simple;
+	bh=Hr3g8/dr2I51Hz/UKUxC6s7OaYARDzimfDOgbgb3nNM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K4nNW8t9xl7VTeTvZEulpGjmRk7OKzs6YP0kznThFCyUYqQ35h8vE76N5UL6LqFJVyuKO1XOOV4cyTX5zk8YD02qqJZC/1K1VjFtECcixiM3mrWg4ymdrDmtX5tHUJZT8171q//vuMwPsJcKhVzHxsG/w0Y0nqKwGfwSiVlfj8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Blfen4Bi; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=AmEK20A3eXsEVu2m/XbZP71cMHXIN3jLPwClftc2xF83r/pSP33SKqJBGd1ISwp2VO+z2BnZq9Sd3HvXFoQeY4wFJGzQog/5EIhb2sKx3Wl2+eQtBaF4ieqX6NQwJv6MrneGnWro7UyxRbJGRldCZekCjWBqDTnuPSth1N8z9WI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=COpKYWZL; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Blfen4Bi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A243C4CEEB;
-	Tue,  1 Jul 2025 09:26:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1751362010;
-	bh=XVDtWrwGsRf2D1Pcn9zPRRPHJof0gGW1U59MqvgZPC4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Blfen4Bi/UVNcXN99j+WsLB/rMmhPkM7aFloqLC0X4ytqLTnAvG+O6e9q004M/rs+
-	 cx7QytKEZ3/8hkxA+sHq2zG8r46cA6niljd3lv85aEBzCX8RaqCaG89EPmtFslh9gq
-	 kgQnCcdbQDmvIJ/byxKQ4smyVW01KC6QRAWdV2K0=
-Date: Tue, 1 Jul 2025 11:26:47 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: rafael@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com,
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com,
-	tmgross@umich.edu, david.m.ertman@intel.com, ira.weiny@intel.com,
-	leon@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/8] rust: device: introduce device::Internal
-Message-ID: <2025070110-renounce-blinks-b28f@gregkh>
-References: <20250621195118.124245-1-dakr@kernel.org>
- <20250621195118.124245-2-dakr@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="COpKYWZL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751362024; x=1782898024;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Hr3g8/dr2I51Hz/UKUxC6s7OaYARDzimfDOgbgb3nNM=;
+  b=COpKYWZL4gNNzr48CJUP9O9R0AlpVkERQWwG0JBN+ikzVmdDhBBzNekT
+   ouu0VLGhw+LOWHg7yWJlt8Pi8+ekMqyLPmxTDD/0Rst/jwYVLWQHqncBj
+   oRPhRFdI28n+gCYMlhHGtP40pveDOSx/7TRalRBk2m0w0O5ko+HO4fNgQ
+   gu7PoqN8HxHHIFCQVsxsgTaDfUBvN4e7kTm8YU6QCmdMIabEJRe/z97dj
+   gIFGV+xAMLipseboFINH19zOr7oSxIiqN8LxGw6dKBb7mxy3A+xKHzeVE
+   w+1NyD+099XLN8XkfdayzlUw1pNe6AeHbHfjseeGx6bWJrGjWTlsq5m51
+   w==;
+X-CSE-ConnectionGUID: 02diy6iFRaWjVH91xjTvEg==
+X-CSE-MsgGUID: PfcBvY09TyqCYnwgDbKrLg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="53578571"
+X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
+   d="scan'208";a="53578571"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 02:27:03 -0700
+X-CSE-ConnectionGUID: ihnzyz2rRE6Ln3ibE1kwTA==
+X-CSE-MsgGUID: E1H5n1WVQ0Ka/0tREbX5kg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
+   d="scan'208";a="158269398"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa004.jf.intel.com with ESMTP; 01 Jul 2025 02:27:00 -0700
+Date: Tue, 1 Jul 2025 17:19:05 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: "Tian, Kevin" <kevin.tian@intel.com>,
+	"will@kernel.org" <will@kernel.org>,
+	"aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"joro@8bytes.org" <joro@8bytes.org>,
+	"robin.murphy@arm.com" <robin.murphy@arm.com>,
+	"shuah@kernel.org" <shuah@kernel.org>,
+	"nicolinc@nvidia.com" <nicolinc@nvidia.com>,
+	"aik@amd.com" <aik@amd.com>,
+	"Williams, Dan J" <dan.j.williams@intel.com>,
+	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+	"Xu, Yilun" <yilun.xu@intel.com>
+Subject: Re: [PATCH v3 2/5] iommufd: Destroy vdevice on idevice destroy
+Message-ID: <aGOoCa3BkV7KrwVz@yilunxu-OptiPlex-7050>
+References: <20250627033809.1730752-1-yilun.xu@linux.intel.com>
+ <20250627033809.1730752-3-yilun.xu@linux.intel.com>
+ <BL1PR11MB52712CE938B57E41C34580908C46A@BL1PR11MB5271.namprd11.prod.outlook.com>
+ <aGJkitx6wjfQ888t@yilunxu-OptiPlex-7050>
+ <20250630145051.GY167785@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,39 +74,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250621195118.124245-2-dakr@kernel.org>
+In-Reply-To: <20250630145051.GY167785@nvidia.com>
 
-On Sat, Jun 21, 2025 at 09:43:27PM +0200, Danilo Krummrich wrote:
-> Introduce an internal device context, which is semantically equivalent
-> to the Core device context, but reserved for bus abstractions.
+On Mon, Jun 30, 2025 at 11:50:51AM -0300, Jason Gunthorpe wrote:
+> On Mon, Jun 30, 2025 at 06:18:50PM +0800, Xu Yilun wrote:
 > 
-> This allows implementing methods for the Device type, which are limited
-> to be used within the core context of bus abstractions, i.e. restrict
-> the availability for drivers.
+> > I need to reconsider this, seems we need a dedicated vdev lock to
+> > synchronize concurrent vdev abort/destroy.
 > 
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> ---
->  rust/kernel/device.rs | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+> It is not possible to be concurrent
 > 
-> diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
-> index 665f5ceadecc..e9094d8322d5 100644
-> --- a/rust/kernel/device.rs
-> +++ b/rust/kernel/device.rs
-> @@ -261,6 +261,10 @@ pub trait DeviceContext: private::Sealed {}
->  /// any of the bus callbacks, such as `probe()`.
->  pub struct Core;
->  
-> +/// Semantically the same as [`Core`] but reserved for internal usage of the corresponding bus
-> +/// abstraction.
-> +pub struct Internal;
+> destroy is only called once after it is no longer possible to call
+> abort.
 
-Naming is hard :)
+I'm almost about to drop the "abort twice" idea. [1]
 
-As this is ONLY for the bus code to touch, why not call it Bus_Internal?
+[1]: https://lore.kernel.org/linux-iommu/20250625123832.GF167785@nvidia.com/
 
-And can a driver touch this, or only the bus owner?
+See from the flow below,
 
-thanks,
+  T1. iommufd_device_unbind(idev)
+	iommufd_device_destroy(obj)
+		mutex_lock(&idev->igroup->lock)
+ 		iommufd_vdevice_abort(idev->vdev.obj)
+		mutex_unlock(&idev->igroup->lock)
+	kfree(obj)
 
-greg k-h
+  T2. iommufd_destroy(vdev_id)
+	iommufd_vdevice_destroy(obj)
+		mutex_lock(&vdev->idev->igroup->lock)
+		iommufd_vdevice_abort(obj);
+		mutex_unlock(&vdev->idev->igroup->lock)
+	kfree(obj)
+
+iommufd_vdevice_destroy() will access idev->igroup->lock, but it is
+possible the idev is already freed at that time:
+
+                                            iommufd_destroy(vdev_id)
+                                            iommufd_vdevice_destroy(obj)
+  iommufd_device_unbind(idev)
+  iommufd_device_destroy(obj)
+  mutex_lock(&idev->igroup->lock)
+                                            mutex_lock(&vdev->idev->igroup->lock) (wait)
+  iommufd_vdevice_abort(idev->vdev.obj)
+  mutex_unlock(&idev->igroup->lock)
+  kfree(obj)
+                                            mutex_lock(&vdev->idev->igroup->lock) (PANIC)
+                                            iommufd_vdevice_abort(obj)
+                                            ...
+
+We also can't introduce some vdev side lock instead of idev side lock,
+vdev could also be freed right after iommufd_vdevice_destroy().
+
+I think the only simple way is to let idev destruction wait for vdev
+destruction, that go back to the wait_event idea ...
+
+Thanks,
+Yilun
