@@ -1,102 +1,104 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69B52149C4A;
-	Tue,  1 Jul 2025 13:38:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA1D242D82
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 13:38:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751377115; cv=none; b=Gpy3YjnadEnhjBqvRgyLqE2qujXcCgQ5BkFZRaiJ79/MiSjIGFGU7gN1sJTAuX+yrMlOWTXYtGECkpd8zO2IubzkYrZzMixz02bym9IfUjbcGQTlR6x9E82FGh044T4W+X/BAoLMdnKcrB1L595a3C6d/ZnSHWB85VQOaWMjeDo=
+	t=1751377118; cv=none; b=hi+Ji3vMn2fa940ltOiv48cWE/zJ4wXupmBxrLv+38vth4KdZBwj15OIQADYET4LTp+wAQ3WFztKJOyEYoZ+Kg6tHPjRzF/Qbg3Ha+pqUoisE1O69FJkkXuBKAoQuvTQI0qTH/Zq1sR6sJ5QprlQxU4q1nnuWDl2qaDMvmHByp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751377115; c=relaxed/simple;
-	bh=ky8QQKUkLUeo9kQ2DpMPnzJve9+QP9MZpm3w/wowHOE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z4BtazOB92VoPUzW4NJbWw0OwUNFLVjkkJ0VLdCmJADNOYfF11SnaWaWzbrYmFGeudqxd9NmVJA7UO5GNBMHSVRvhUoD3fv4tLPC19O0a1J2ZxW1+SHxyOw4EhufkazLvbxw7B+YIdCaZ1IEhxgq0uJgPJYXf5QbDH/a+O8FCrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iqKuCiIq; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iqKuCiIq"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-453608ed113so33731395e9.0;
-        Tue, 01 Jul 2025 06:38:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751377112; x=1751981912; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=f9FP0m4sJ7CU9BSLCQyAkJvmbq4Wt41GfyUXSn+7VCA=;
-        b=iqKuCiIqSNIYxiq0o02s5b6FOL/vVUsCNyCU27AKbL9b6nLvhGOcjFC2FfW9JGTXpF
-         clqAW2ORkcMfuLQls0jZdtemK2lldCutPswZB02EUDKoHJbosrtQ3YX8swkIfRhz5ykc
-         71+hO66W1Aw9A2phYJ4cYu8MwIsyjUe8Kwmo+UrP0NK62abaNq+TGrEeTduNJljNLjHM
-         NVyHLEbMZkNYToKj4bx9NZo0+B1IcfrUdWjeYUS4ZhJjLVIT5IMnfZ5lbMKDfs22dRIB
-         Z4Fy5ncxhe/AX6jzhPBP3N7Cbaszipws2ikKx9RNldzDrOGXn8myFpOxUI0zPltGgmTW
-         DsWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751377112; x=1751981912;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=f9FP0m4sJ7CU9BSLCQyAkJvmbq4Wt41GfyUXSn+7VCA=;
-        b=CDXHSi/DmnsglohcT1bM6hklYT2c9Ua7pAD3Z5NsrpXTGdXH5U9VyBH0+lBD51Dx+d
-         bIpNONdkSVI/idCGDq1Qx0bs4MHcg4c9yamM8AvhoanTFCig4Fd5trWC2MT/nDOnx/HF
-         CQgfy813vkJNVbPXT9ti7K0SUDNnhSw7u66k4RGJKcWK5TLBVgKtM7PUP9X8LyZQvmaS
-         TGs1BQbZIJYcwMkH0PIxXsggC2W8c7Wy4i0vBQnoLCqhvx5a/GLn1j5W6B8pfIqgA2vt
-         Vug8rDLz0RQfPbRClju19KwW1Bw+K08RSZUdhQHkk7W7GUyjhN5rdn+x5bJ4qrLp4jJo
-         4Xtg==
-X-Forwarded-Encrypted: i=1; AJvYcCU30BmfxjBbIiGy21sIy3PTcdhtS2FYh6Rb+2dDBNp23ftFObdMNyL1F9fFypaqFSJFntaiVVV6@vger.kernel.org, AJvYcCVHwHWZTGiEUy9yYzI5vt5DgZhLr6HooGKWxZR1dsZTvwY3Qtmzk9SFd4ARSzbHsrqqgh10e8MO8DDS3Z8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOU61toZhZNT+EaHg3CJk0uvfZ8cGzIYP4BCYUe9kPtCN3AIoY
-	Z8581gYmYEXzI1wxaAe3XidVN8WOwhmdp2ufAYPNzkKgTHOFbdnBrrwz
-X-Gm-Gg: ASbGncvXIDTOF7UU0qQAfjV0EI70v3HJ6YhBPHZrGJ+tXbY6PcuHR7hHafjaqCXMnvu
-	IEUUOIu6lFA5sw7m3Zyo9adgZt98CUWrrPeuSL5T/PaCRdhp2Vro/O3ZApAqfYKfUZY00guzrwF
-	J5ja7GHU67HQas7K+LcqcQ5dOR+ZkrH6gDqwUwdr7/+0l5QfRD0cn/sB0BaiVO07CCbtojZjnoM
-	JoZ0Oqz6pwuHQ7XY1Rnwx7tqHTmx+yQ8HnlfDgYJHD+rRkCAmSrRicryQdel1MCTnfbla/eqeiY
-	kV8hIMRhit7FaJJv5rQ84EK1Q5D7bdmJfvtdEJWuAbcL6npvCsqsgWUve7pKofgPr9CDqnP2qJF
-	os7do6zLi2pLQOVzMmuejMLMVd/dnlFMhwYsvo6WjlpMJqAFHYw==
-X-Google-Smtp-Source: AGHT+IHaFf0Kw7NnYflYgrVPZhks6XoL/+RtlTxnQ9ccF2rkKiyPzeCKe7KHzLRHAEAQpbzFnNfzOw==
-X-Received: by 2002:a05:600c:1c94:b0:43d:1b74:e89a with SMTP id 5b1f17b1804b1-453a9171809mr33540925e9.9.1751377111387;
-        Tue, 01 Jul 2025 06:38:31 -0700 (PDT)
-Received: from [192.168.1.122] (cpc159313-cmbg20-2-0-cust161.5-4.cable.virginm.net. [82.0.78.162])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823ad01csm197629375e9.22.2025.07.01.06.38.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 06:38:31 -0700 (PDT)
-Message-ID: <cc3dd44a-b94a-4537-b68b-49a800acc935@gmail.com>
-Date: Tue, 1 Jul 2025 14:38:30 +0100
+	s=arc-20240116; t=1751377118; c=relaxed/simple;
+	bh=Cdqq6uYHA0DExUvdil2feGBxPPppW6P4hoP6tp8w+dI=;
+	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=ff8E13xROkY7Be+s/QKnz52rlKQd0EVxMto9NjFO2lp6tWjjld1YUMEjjCyWRBBgyea8v0kgOU0SY/JK0fVp5d6DdYBhMNJuTxYiqJn683PPav/ZDjrGO10/ZdEKb5lzGSSR1jU7qHlJ1RL3fQoOHtykfRAGmV6zB+guueY2wRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=h-partners.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h-partners.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4bWkXK4cHKzHrFv;
+	Tue,  1 Jul 2025 21:34:25 +0800 (CST)
+Received: from dggemv705-chm.china.huawei.com (unknown [10.3.19.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id 364CF180B63;
+	Tue,  1 Jul 2025 21:38:26 +0800 (CST)
+Received: from kwepemn500004.china.huawei.com (7.202.194.145) by
+ dggemv705-chm.china.huawei.com (10.3.19.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 1 Jul 2025 21:38:25 +0800
+Received: from [10.67.120.218] (10.67.120.218) by
+ kwepemn500004.china.huawei.com (7.202.194.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 1 Jul 2025 21:38:25 +0800
+Subject: Re: [PATCH v2 1/3] coresight: tmc: Add missing doc of
+ tmc_drvdata::reading
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, <linuxarm@huawei.com>
+References: <20250620075412.952934-1-hejunhao3@huawei.com>
+ <20250620075412.952934-2-hejunhao3@huawei.com>
+ <20250620125330.00004fa7@huawei.com>
+CC: <suzuki.poulose@arm.com>, <james.clark@arm.com>, <leo.yan@arm.com>,
+	<anshuman.khandual@arm.com>, <coresight@lists.linaro.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<yangyicong@huawei.com>, <prime.zeng@hisilicon.com>
+From: hejunhao <hejunhao3@huawei.com>
+Message-ID: <c4cede5e-4f0f-73e2-9b3a-96654c19a4a2@huawei.com>
+Date: Tue, 1 Jul 2025 21:38:24 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v2] sfc: siena: eliminate xdp_rxq_info_valid
- using XDP base API
-To: Larysa Zaremba <larysa.zaremba@intel.com>,
- Fushuai Wang <wangfushuai@baidu.com>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
- linux-net-drivers@amd.com, linux-kernel@vger.kernel.org
-References: <20250628051033.51133-1-wangfushuai@baidu.com>
- <aGPiqlNRMBsQQCgt@soc-5CG4396X81.clients.intel.com>
-Content-Language: en-GB
-From: Edward Cree <ecree.xilinx@gmail.com>
-In-Reply-To: <aGPiqlNRMBsQQCgt@soc-5CG4396X81.clients.intel.com>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20250620125330.00004fa7@huawei.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ kwepemn500004.china.huawei.com (7.202.194.145)
 
-On 01/07/2025 14:29, Larysa Zaremba wrote:
-> On Sat, Jun 28, 2025 at 01:10:33PM +0800, Fushuai Wang wrote:
->> Commit d48523cb88e0 ("sfc: Copy shared files needed for Siena (part 2)")
->> use xdp_rxq_info_valid to track failures of xdp_rxq_info_reg().
->> However, this driver-maintained state becomes redundant since the XDP
->> framework already provides xdp_rxq_info_is_reg() for checking registration
->> status.
+
+
+On 2025/6/20 19:53, Jonathan Cameron wrote:
+> On Fri, 20 Jun 2025 15:54:10 +0800
+> Junhao He <hejunhao3@huawei.com> wrote:
+>
+>> From: Yicong Yang <yangyicong@hisilicon.com>
 >>
->> Signed-off-by: Fushuai Wang <wangfushuai@baidu.com>
-> 
-> You could have sent those patches in a single patchset, but the patches 
-> themselves are fine.
+>> tmc_drvdata::reading is used to indicate whether a reading process
+>> is performed through /dev/xyz.tmc. Document it.
+>>
+>> Reviewed-by: James Clark <james.clark@linaro.org>
+>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+>> Signed-off-by: Junhao He <hejunhao3@huawei.com>
+>> ---
+>>   drivers/hwtracing/coresight/coresight-tmc.h | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/hwtracing/coresight/coresight-tmc.h b/drivers/hwtracing/coresight/coresight-tmc.h
+>> index 6541a27a018e..3ca0d40c580d 100644
+>> --- a/drivers/hwtracing/coresight/coresight-tmc.h
+>> +++ b/drivers/hwtracing/coresight/coresight-tmc.h
+>> @@ -220,6 +220,7 @@ struct tmc_resrv_buf {
+>>    * @pid:	Process ID of the process that owns the session that is using
+>>    *		this component. For example this would be the pid of the Perf
+>>    *		process.
+>> + * @reading:	buffer's in the reading through "/dev/xyz.tmc" entry
+> Hi,
+>
+> Perhaps reword:
+>
+> "buffer is being read through "/dev/xyz.tmc" entry" or
+> "buffer read in progress through "/dev/xyz.tmc" entry"
+>
+> I've not checked what this actually means - just looking at what you have here.
 
-I asked him to split it, for a few reasons (different blamed commits,
- clearer Subject: lines, Siena is EOL).
-So if you don't like it, blame me ;-)
+Will update this. Thanks
 
-> Reviewed-by: Larysa Zaremba <larysa.zaremba@intel.com>
+Best regards,
+Junhao.
+
+>>    * @stop_on_flush: Stop on flush trigger user configuration.
+>>    * @buf:	Snapshot of the trace data for ETF/ETB.
+>>    * @etr_buf:	details of buffer used in TMC-ETR
+> .
+>
+
