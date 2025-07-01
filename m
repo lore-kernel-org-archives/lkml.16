@@ -1,138 +1,144 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C22277CB0;
-	Tue,  1 Jul 2025 12:23:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E28B02737FC;
+	Tue,  1 Jul 2025 12:23:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751372605; cv=none; b=HEQJBampk3cF6lzsRYm52rglxXqDqWJBCTmQuBjchCMy7oeYFLPC7QomKo5twL8Vf4iHJP1EgnI6Uph6AciuAFj0sGf6mgIZV0MVAUylogZZBUpdX6pVY5Gq3aRznaWKIbIgNjk4nUX0mM72vzt+MsOOwSr73sap9cVOSQH9yBQ=
+	t=1751372618; cv=none; b=Co8MOvwNqD6YnluwKQkPu3Y5ZEQUMBqOvq2eytEAoNgBXKiWwe3scnfWYznj1IiVMe66BepNkkvdtH52R559r5liXYST2L5oxlb6XfPXPcCKqtK1nTz8GZl64g0xe3EozpAFV8g2g3gih7+IjXIN2ODJvaYSfXg3OkUMlCiBBzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751372605; c=relaxed/simple;
-	bh=gSq3WGMYzI+A+QnZWcrD3MEiKdYLg+CcJwmyoCfVs74=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=enXcyjQGvimleO5AHhzoz6pwhgwWiR5PW04jVlzMuQJJ5RDOuYZbuF32FAH21mFid8o+Az8/yiyv5PVWzo2bgcfRe/NZe0Fbp+Yf3hr+ExKSls0Qghc/kgoY4gDWHQuDF6BvZIConRSo9k0T55FTQyVYL17AO8x+vF1nR0PkFk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fRcf4BYZ; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751372618; c=relaxed/simple;
+	bh=1IJZmycdygb2FNMX3Uuv4XKld9BxDXJf7I34c2THYzE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KbAw4hsV9MzhyffLNIwuqjviAtDIDk31r8XyxLLurNS0FIxF/S/dsPu4+l7qVzjbNtApC1taNc89DaOqKgAOd2oW/dvz0SR2x6Y4e5g+ZRw9Gk7LtqXRc/5IVE1xWJj1+CB6nFiOZxwmL/TbgoSQDUGLjpt4DVdpXTO7HSv37jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jGAMvX4p; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fRcf4BYZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751372604; x=1782908604;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=gSq3WGMYzI+A+QnZWcrD3MEiKdYLg+CcJwmyoCfVs74=;
-  b=fRcf4BYZAKsjsR45hCQ1VaWH+S4SsOIocNEDKJMtvJqmFeO8DX4aSjxV
-   jwrMdXWNrJwxjODvGmG6xV/3Db8WU3WAjI2nBzFAsSm8RIb1g5eoXKyFO
-   QRAHxKUGHHUAS0Tc8JBsyN4kOCt8zeaqRZvwtUyHRZr7sSO+FJMOa36DD
-   iu7icWDJlBCkdB0aqLLrIGijEEL5tFPyjYcg6ZYlK5Pvit3ktDqp2Py2i
-   yBsTtr4ibVQtd2liuHmqkn9A+ZXV+VGpZ4zLbwMNsQouHWB0xXwPkDOIp
-   g5IQtxX4t6HsBSeLdv67XwkihRANCzrU1TNvwDJLezpI9Ujfm8xh7rY3V
-   Q==;
-X-CSE-ConnectionGUID: 7ixQ2MI4Q5KdWiI0J1OrEQ==
-X-CSE-MsgGUID: 1ErhId1BS9K8FWVe0f0b6A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="71196745"
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="71196745"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 05:23:23 -0700
-X-CSE-ConnectionGUID: t+h40ustS4ub470TWJPQ2w==
-X-CSE-MsgGUID: pwwSlZYKQK+CGBavYDtJeA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="153157528"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by orviesa010.jf.intel.com with ESMTP; 01 Jul 2025 05:23:18 -0700
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: Lucas De Marchi <lucas.demarchi@intel.com>,
-	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>
-Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Jan Dabros <jsd@semihalf.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Raag Jadav <raag.jadav@intel.com>,
-	"Tauro, Riana" <riana.tauro@intel.com>,
-	"Adatrao, Srinivasa" <srinivasa.adatrao@intel.com>,
-	"Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-	intel-xe@lists.freedesktop.org,
-	linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Andi Shyti <andi.shyti@linux.intel.com>
-Subject: [PATCH v6 5/5] drm/xe/xe_i2c: Add support for i2c in survivability mode
-Date: Tue,  1 Jul 2025 15:22:52 +0300
-Message-ID: <20250701122252.2590230-6-heikki.krogerus@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250701122252.2590230-1-heikki.krogerus@linux.intel.com>
-References: <20250701122252.2590230-1-heikki.krogerus@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jGAMvX4p"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4537edf2c3cso55573765e9.3;
+        Tue, 01 Jul 2025 05:23:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751372615; x=1751977415; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1OeOZKa+V1VR3U9TmZkrX8cCU7YzI//R+gnVShUPhgI=;
+        b=jGAMvX4psJ+9GnF5N53URavy0izagKypJJXXfWldEJJUL/IvuWYsm8wWKHiNNL/ArR
+         j4xDtaKKdQhN9SmBVKWJ+ReUVU3fb5+xI4ZIyA6Rq1buSlA+U41W9s6TbXgOFGXsQg/B
+         Fht2VZ/TC6vpMB84fy/aXa0GaoYHhESh1kXQJI6oLFxhTjGkn1JWMWNNQp5En02aaJYx
+         y2lR6BuLh0TtbukaoH2DueZuGXuPZ3hTCPWq/UUDCtsYm+LGQSDG+VC6ejCzmYhrUqX3
+         KcDSiLOUlAAPeocw1YhPMiVrPGyEeWnp2orw7iiNZYzbuV7Xf+gkX8SvXOQMau9adtt0
+         KPRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751372615; x=1751977415;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1OeOZKa+V1VR3U9TmZkrX8cCU7YzI//R+gnVShUPhgI=;
+        b=D+MDM9ib0mTivNY5XHuFuGSMOydifOLpblQM2H9jabInDXSKDBrdRZA03nf9C4+1Wp
+         nk6AvdTcwZi5SDuRjlNF8Q4WljewAhOeeRZRsQDbgDu9po90r6SZesNDsG6t5k4ic6do
+         NYmyv/GBqBd9o27aWb6XTY6eDhwSIi+/VJCobZUAPdLVIUzsxw1Be83gc3VUZ6jMJbgg
+         cs+1t7CzJaxepQcBjFFeUg6fLjzORUjHL4wihQNS+VzByipAEzCisgrVJjwfaOlm8WHX
+         2BEWFHsE05mmgzh9RNg58kUheWFPIOqHA0W8vwfmm20qYpTsOj/0qvz5CO/N7eq3ALY5
+         LlDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUyX47wQA4citBqCv4Ka/4sisjisp3ZF7G/uWCSDCUpKlXynrgmsXjBoKBOZooXk+Fe7c8flHHsYSNoq1w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxcdCahb7Qpk/nXx3CqcaNZeMAnpJ/A5mihdfXWvfPqtn0pTbz
+	/5aYxgA8ljP+ImzdZ06yt0LRW/nFS57WskHu/SgAZ2KnigAJnG9t+5ys
+X-Gm-Gg: ASbGnctUQAGoBd4ZQtr9isnwC9p1rRDXkcyn3IMZckwf9weAEC8TaARXnknPVnxkskX
+	oGC43/YXGyz3cv1WQp/IGLgDJpmavSeAshlmPogPsCDmmF8zuavd0ic0dtXb6QQvmwB/j0yO7lp
+	x/jfcecMEKLB0U7eVs6OKEj05m6Xs1WZPjMHDcTudsBZikHbOoQuKXrVyndmFw5KUSWyPqAu7fU
+	3QdxS6v7Vf5HwHjwoCVX+MVXrRPRJrfeuoo+V8o4WzB/DYY2xMEebc/TT+2rCpjqD+A53eoA+7z
+	uvC8GXmhQKdaFWFcvEMLZ3R7M7gIZUMH+TNWqSw3f2Vtzq/aoV5piDUL/g8qEwAGz0Xay/zBsHo
+	ZLqdzvXOB8YpGBW5/FdO5Da3lxFP+5ydllkM+v1dsErih+j2S2Q==
+X-Google-Smtp-Source: AGHT+IEI8DrVM5bM76qZ1eWDUC0X+amlHQWQ4U0tbSmI4ccGNui2QsTm1Y2Im3xc0PZ2bueeF8L6WQ==
+X-Received: by 2002:a05:600c:1d1c:b0:451:833f:483c with SMTP id 5b1f17b1804b1-4538ee15b83mr174442105e9.7.1751372614689;
+        Tue, 01 Jul 2025 05:23:34 -0700 (PDT)
+Received: from [192.168.1.122] (cpc159313-cmbg20-2-0-cust161.5-4.cable.virginm.net. [82.0.78.162])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823ba553sm190420435e9.31.2025.07.01.05.23.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Jul 2025 05:23:34 -0700 (PDT)
+Message-ID: <c84d46e5-7aae-4110-9b81-76a0d73bc12c@gmail.com>
+Date: Tue, 1 Jul 2025 13:23:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v2] sfc: siena: eliminate xdp_rxq_info_valid
+ using XDP base API
+To: Fushuai Wang <wangfushuai@baidu.com>, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com
+Cc: netdev@vger.kernel.org, linux-net-drivers@amd.com,
+ linux-kernel@vger.kernel.org
+References: <20250628051033.51133-1-wangfushuai@baidu.com>
+Content-Language: en-GB
+From: Edward Cree <ecree.xilinx@gmail.com>
+In-Reply-To: <20250628051033.51133-1-wangfushuai@baidu.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Riana Tauro <riana.tauro@intel.com>
+On 28/06/2025 06:10, Fushuai Wang wrote:
+> Commit d48523cb88e0 ("sfc: Copy shared files needed for Siena (part 2)")
+> use xdp_rxq_info_valid to track failures of xdp_rxq_info_reg().
+> However, this driver-maintained state becomes redundant since the XDP
+> framework already provides xdp_rxq_info_is_reg() for checking registration
+> status.
+> 
+> Signed-off-by: Fushuai Wang <wangfushuai@baidu.com>
 
-Initialize i2c in survivability mode to allow firmware
-update of Add-In Management Controller (AMC) in
-survivability mode.
+Acked-by: Edward Cree <ecree.xilinx@gmail.com>
 
-Signed-off-by: Riana Tauro <riana.tauro@intel.com>
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Reviewed-by: Raag Jadav <raag.jadav@intel.com>
-Reviewed-by: Andi Shyti <andi.shyti@linux.intel.com>
----
- drivers/gpu/drm/xe/xe_survivability_mode.c | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/gpu/drm/xe/xe_survivability_mode.c b/drivers/gpu/drm/xe/xe_survivability_mode.c
-index 1f710b3fc599..41705f5d52e3 100644
---- a/drivers/gpu/drm/xe/xe_survivability_mode.c
-+++ b/drivers/gpu/drm/xe/xe_survivability_mode.c
-@@ -14,6 +14,7 @@
- #include "xe_device.h"
- #include "xe_gt.h"
- #include "xe_heci_gsc.h"
-+#include "xe_i2c.h"
- #include "xe_mmio.h"
- #include "xe_pcode_api.h"
- #include "xe_vsec.h"
-@@ -173,20 +174,22 @@ static int enable_survivability_mode(struct pci_dev *pdev)
- 	survivability->mode = true;
- 
- 	ret = xe_heci_gsc_init(xe);
--	if (ret) {
--		/*
--		 * But if it fails, device can't enter survivability
--		 * so move it back for correct error handling
--		 */
--		survivability->mode = false;
--		return ret;
--	}
-+	if (ret)
-+		goto err;
- 
- 	xe_vsec_init(xe);
- 
-+	ret = xe_i2c_probe(xe);
-+	if (ret)
-+		goto err;
-+
- 	dev_err(dev, "In Survivability Mode\n");
- 
- 	return 0;
-+
-+err:
-+	survivability->mode = false;
-+	return ret;
- }
- 
- /**
--- 
-2.47.2
+> ---
+>  drivers/net/ethernet/sfc/siena/net_driver.h | 2 --
+>  drivers/net/ethernet/sfc/siena/rx_common.c  | 6 +-----
+>  2 files changed, 1 insertion(+), 7 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/sfc/siena/net_driver.h b/drivers/net/ethernet/sfc/siena/net_driver.h
+> index 2be3bad3c993..4cf556782133 100644
+> --- a/drivers/net/ethernet/sfc/siena/net_driver.h
+> +++ b/drivers/net/ethernet/sfc/siena/net_driver.h
+> @@ -384,7 +384,6 @@ struct efx_rx_page_state {
+>   * @recycle_count: RX buffer recycle counter.
+>   * @slow_fill: Timer used to defer efx_nic_generate_fill_event().
+>   * @xdp_rxq_info: XDP specific RX queue information.
+> - * @xdp_rxq_info_valid: Is xdp_rxq_info valid data?.
+>   */
+>  struct efx_rx_queue {
+>  	struct efx_nic *efx;
+> @@ -417,7 +416,6 @@ struct efx_rx_queue {
+>  	/* Statistics to supplement MAC stats */
+>  	unsigned long rx_packets;
+>  	struct xdp_rxq_info xdp_rxq_info;
+> -	bool xdp_rxq_info_valid;
+>  };
+>  
+>  enum efx_sync_events_state {
+> diff --git a/drivers/net/ethernet/sfc/siena/rx_common.c b/drivers/net/ethernet/sfc/siena/rx_common.c
+> index 98d27174015d..4ae09505e417 100644
+> --- a/drivers/net/ethernet/sfc/siena/rx_common.c
+> +++ b/drivers/net/ethernet/sfc/siena/rx_common.c
+> @@ -268,8 +268,6 @@ void efx_siena_init_rx_queue(struct efx_rx_queue *rx_queue)
+>  			  "Failure to initialise XDP queue information rc=%d\n",
+>  			  rc);
+>  		efx->xdp_rxq_info_failed = true;
+> -	} else {
+> -		rx_queue->xdp_rxq_info_valid = true;
+>  	}
+>  
+>  	/* Set up RX descriptor ring */
+> @@ -299,10 +297,8 @@ void efx_siena_fini_rx_queue(struct efx_rx_queue *rx_queue)
+>  
+>  	efx_fini_rx_recycle_ring(rx_queue);
+>  
+> -	if (rx_queue->xdp_rxq_info_valid)
+> +	if (xdp_rxq_info_is_reg(&rx_queue->xdp_rxq_info))
+>  		xdp_rxq_info_unreg(&rx_queue->xdp_rxq_info);
+> -
+> -	rx_queue->xdp_rxq_info_valid = false;
+>  }
+>  
+>  void efx_siena_remove_rx_queue(struct efx_rx_queue *rx_queue)
 
