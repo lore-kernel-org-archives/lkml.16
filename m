@@ -1,186 +1,116 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C4311D07BA
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 09:11:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507071D07BA
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 09:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751361108; cv=none; b=p6M+BAfNVY3bARU5LUJCd6zq5Tqr2WdMcS9DXQohtjaqBZGi/iJMJQQ87XM4IMvhjRvBPbF537fqsTYSzpwEtIc9h/nfFrG9TfSNe3Gss5KxtpBNJC4oaFAXWivuUsyXsgGqwyW819mP2nokSNU0EIBEVnIHF241TneNRCeng8c=
+	t=1751361113; cv=none; b=E2plWOmIcfnUrxHtGdqmnsa5XbCCX0/fI/nWV8jZrysRD4nV3+NmOIcSM4txM/KiBy510cq4JbrIlQz+gHiIQvmHXkTZQUOFclxYBtlSGnwYmrCW+bF/gC8ZMJMIPcdSEypQpvFIsNIZwF5xD6xKktdwgvDdXuGF9Dv/GrBaOyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751361108; c=relaxed/simple;
-	bh=qBn7O+oadgbDt/1DtKOEuIzBWBkB2LI6zoWM54Khkxo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Gogmw4jvGpdAIA13G5l4sl+XotYYZPB1+rhNBeqNkIjA2o+oMHeVYoU8pexA2qYJQyRocAZU10rA4qaznkX3a5ph4L6fvBgiDitjvvaQDZUS8GxxQK94d1K/PnxIPky9HyTGYL9n9SLRmXgrNg4CXb+QQYRLQRKE/Biid/aotiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=f6oy0p8R; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1751361113; c=relaxed/simple;
+	bh=ql5tyJqNB6nfkdC7XaszFpWVQHpSsM1UUL3yjnkQif4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LOlRi8Z3Ke5BIZuRshrMCCFk29aDBLaIEUm9i1gl/3JgtKU80u+t+PkkkIECmh5OHjnEvApUJFo/3A0va075oxK3dCow6YU+8pcdYE6rtJSAqBY9og9KE9mvRe3fXPc8nqJ54rPqcr14kmFigFHLKiOnCN2gQPRPTvAxNPLdVao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jWnipLBO; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="f6oy0p8R"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-234f17910d8so50933065ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 02:11:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1751361106; x=1751965906; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Uz6fO0/Nn0kDVM5mJ4z1SaT0UByDPCAgmjtmOz31sy4=;
-        b=f6oy0p8RIwn9sUruT9UoO4seTJc1rqt4F20gzhlvR99eF/1wGN6nv2NvAL1pw3Bmwj
-         6JIYSgaZEh65VUG+mfqWCblyqiW528TcCaBlasEI+Bg+jOE+LsZSfVWLBX/rZFsmIYNa
-         WRAgN+iZX1iQ/WlpVL3mWZXiS1L75Tc/hHxqY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751361106; x=1751965906;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Uz6fO0/Nn0kDVM5mJ4z1SaT0UByDPCAgmjtmOz31sy4=;
-        b=rh/pi9NJczT3xeLIpNsNRHU2LHAhwnC+z9YyubdWHW1AouvYC3b99EWSbK6j7WoWAw
-         GCgGk2vgIjZ0W/fy3vutpxRauLQCCEvG05gFkvKrNPlNiJtd50wWNmKQ7h3Ntsj70iHs
-         WFh6ygN6+WuLRBHe8cIefWa1rAp6a2vBsUWNKU2zzyYKpZzaw5LzlvcVkwRBM0Fblxhm
-         F2QsGXgUWklgBK5NPFz7wIekdiuiubf9ShaEB0k2AGCsW6B0eEYhrOymlmtYhVSuPKVE
-         nHnxOPEeOzVC0A89sxUS+B3SgyEDhSAVQXWYSe4vOt4FteQCtP7TwZieIqh/Ulncgw3R
-         6wPw==
-X-Forwarded-Encrypted: i=1; AJvYcCWz35jwcg61B26ptE3I3kTzd/GUs0leOwY7tGofi6jrXFSttK3BXTlxp0/v547jktz7en2dVast1NYJC7c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3QSRklFydqsbKiuBv0GQQPbCnB1IQgZ5Y6/3A+ay7TFDgSBE9
-	hoFrIdCLcHPoeCpIsnHlhUDks59fF6fZQc+Fh8Ftt/gJ9cyeJcoQ2PVasrYnyicPDA==
-X-Gm-Gg: ASbGncvzsuB/2nFg7T2klPKTcuI9u7xh3pL137emjGmUH/jzN9fbOTMggbDOmjGG20F
-	UdTMDG/ejYmc3ucqK+m0BK7WEiYzBch2TeubJ8kHV6wrbplY0REg7njQYmTzZAcNtJ1tPhhHhu9
-	cMevdIlDcpi3A7tA/G3aMLV6getZ4RhwgCadyRTIvsoFxSHFOqNRQ7aSqAUoTBU4gVS1a6IRXk3
-	SDgm4Y3grUyzfxeujWBYcvJMjmwG2z95LGtavnTIZlaqNWwcmDTjR95e1gV7G2raoi9E1BiFq8R
-	JThZTlbbaRGAzSKgVNaDowfTSuicY4E5B4fqlrf1/8vUo5cL8vBsg2uM98bW6yMa6OcSNIIhIpn
-	2qejX6LXveUbCkwzOigWEXGsM4MGY
-X-Google-Smtp-Source: AGHT+IGlEfsc3kdlXA6znsbIc1Wgfe0QgYv/xrPpW5Q033ESONRrc8Fk+iDwl2r+2FNtPlf8BGI5rg==
-X-Received: by 2002:a17:903:2407:b0:235:7c6:eba2 with SMTP id d9443c01a7336-23ac4880248mr256526095ad.37.1751361106221;
-        Tue, 01 Jul 2025 02:11:46 -0700 (PDT)
-Received: from localhost.localdomain ([192.19.203.250])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e30201c1sm8893603a12.22.2025.07.01.02.11.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 02:11:45 -0700 (PDT)
-From: Vikas Gupta <vikas.gupta@broadcom.com>
-To: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	andrew+netdev@lunn.ch,
-	horms@kernel.org
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	michael.chan@broadcom.com,
-	pavan.chebbi@broadcom.com,
-	vsrama-krishna.nemani@broadcom.com,
-	Vikas Gupta <vikas.gupta@broadcom.com>
-Subject: [net-next, v3 00/10] Introducing Broadcom BNGE Ethernet Driver
-Date: Tue,  1 Jul 2025 14:34:58 +0000
-Message-ID: <20250701143511.280702-1-vikas.gupta@broadcom.com>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jWnipLBO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751361112; x=1782897112;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ql5tyJqNB6nfkdC7XaszFpWVQHpSsM1UUL3yjnkQif4=;
+  b=jWnipLBObx9huNLDy0KT5FPgSERedyc+WmFwgkfsvA3syNj6fa27UmT+
+   ykdw3Gs1l6UY72UTUbC7CP0HZSGc5n6WUGXW30ZlwcQ/3NSxhnZFIY1D9
+   Z63OPmu7tiTefQUD30sy9+E3jEAHztKZ8jqbHlR3puYcuEUa1aFw0DpRY
+   bkji7Yiyf9GPNsPuG7L6UeuTQeqGuFu04U9bDc7i7Ppyqyxd5Nost1n5b
+   AdDS+FZYcYSjbk3qE6/ep1YawWvwJA8u9puTayh61NuY+nAq5tLK9eYjT
+   pq5cVKYqBw7Tpc8EWxDkorc9QQwQPHdUtyaYgcibd/hSs91LPgIDiehQe
+   A==;
+X-CSE-ConnectionGUID: L5k+tvvDRCWAkNnIqCRRSw==
+X-CSE-MsgGUID: sJJnX9YHTp+vwvM0Ygb8vQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="64670881"
+X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
+   d="scan'208";a="64670881"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 02:11:49 -0700
+X-CSE-ConnectionGUID: U4ronh2YTXu2QS7XOxfy+Q==
+X-CSE-MsgGUID: KOcH3pjeSXekrzqqtcKi7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
+   d="scan'208";a="157992814"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa005.fm.intel.com with ESMTP; 01 Jul 2025 02:11:47 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 35DB515D; Tue, 01 Jul 2025 12:11:45 +0300 (EEST)
+Date: Tue, 1 Jul 2025 12:11:45 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Kai Huang <kai.huang@intel.com>
+Cc: dave.hansen@intel.com, peterz@infradead.org, tglx@linutronix.de, 
+	bp@alien8.de, mingo@redhat.com, hpa@zytor.com, rick.p.edgecombe@intel.com, 
+	pbonzini@redhat.com, seanjc@google.com, x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] x86/virt/tdx: Further fix tdh_vp_enter() calls
+ instrumentable code warning
+Message-ID: <gtaaadq6asaxiop2f6cph2dffarruw2lq5yolltiy5snqwc5fr@pofskdkfamqh>
+References: <20250630232742.8991-1-kai.huang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250630232742.8991-1-kai.huang@intel.com>
 
-Hi,
+On Tue, Jul 01, 2025 at 11:27:42AM +1200, Kai Huang wrote:
+> tdh_vp_enter() needs to be marked noinstr, which means it can't call any
+> non-inlined noinstr functions.  Commit e9f17038d814 ("x86/tdx: mark
+> tdh_vp_enter() as __flatten") tried to address a build warning caused by
+> tdx_tdvpr_pa() not getting inlined.  Unfortunately that commit didn't
+> fix the warning completely due to the inconsistent behavior of the
+> __flatten annotation.
+> 
+> There are two problems that can come up depending on the compiler and
+> config.  One is that tdx_tdvpr_pa() doesn't get inlined, the other is
+> that page_to_phys() doesn't get inlined.
+> 
+> The __flatten annotation makes the compiler inline all function calls
+> that the annotated function makes, and the aforementioned commit assumed
+> this is always honored, recursively.  But it turns out it's not always
+> true:
+> 
+>  - Gcc may ignore __flatten when CONFIG_CC_OPTIMIZE_FOR_SIZE=y.
+>  - Clang doesn't support recursive inlining for __flatten, which can
+>    trigger another similar warning when page_to_phys() calls pfn_valid()
+>    when CONFIG_DEBUG_VIRTUAL=y.
+> 
+> Therefore using __flatten is not the right fix.
+> 
+> To fix the first problem, remove the __flatten for tdh_vp_enter() and
+> instead annotate tdx_tdvpr_pa() with __always_inline to make sure it is
+> always inlined.
+> 
+> To fix the second problem, change tdx_tdvpr_pa() to use
+> PFN_PHYS(page_to_pfn()) instead of page_to_phys() so that there will be
+> no more function call inside tdx_tdvpr_pa()[*].
+> 
+> The TDVPR page is always an actual page out of page allocator, so the
+> additional warning around pfn_valid() check in page_to_phys() doesn't
+> help a lot anyway.  It's not worth complicating the code for such
+> warning when CONFIG_DEBUG_VIRTUAL=y.
+> 
+> [*] Since commit cba5d9b3e99d ("x86/mm/64: Make SPARSEMEM_VMEMMAP the
+>     only memory model") page_to_pfn() has been a simple macro without
+>     any function call.
+> 
+> Fixes: e9f17038d814 ("x86/tdx: mark tdh_vp_enter() as __flatten")
+> Signed-off-by: Kai Huang <kai.huang@intel.com>
+> Reviewed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 
-This patch series introduces the Ethernet driver for Broadcom’s
-BCM5770X chip family, which supports 50/100/200/400/800 Gbps
-link speeds. The driver is built as the bng_en.ko kernel module.
-
-To keep the series within a reviewable size (~5K lines of code), this initial
-submission focuses on the core infrastructure and initialization, including:
-1) PCIe support (device IDs, probe/remove)
-2) Devlink support
-3) Firmware communication mechanism
-4) Creation of network device
-5) PF Resource management (rings, IRQs, etc. for netdev & aux dev)
-
-Support for Tx/Rx datapaths, link management, ethtool/devlink operations and
-additional features will be introduced in the subsequent patch series.
-
-The bng_en driver shares the bnxt_hsi.h file with the bnxt_en driver, as the bng_en
-driver leverages the hardware communication protocol used by the bnxt_en driver.
-
-Changes from:
-=====================================================================
-v2->v3
- Addressed following comments by Jakub Kicinski
- Patch 04/10:
-  - Move devlink register at appropriate place.
- Patch 10/10:
-  - Free skb in xmit call
-
-=====================================================================
-v1->v2
-
-Addressed warnings and errors in the following patches:
--Patch 8/10
--Patch 10/10
-
-Addressed the following major comments by Vadim Fedorenko on Patch 1/10:
-Patch 1/10:
-  - Use of the dma_set_mask_and_coherent() API.
-Patch 2/10:
-  - Added error logs via extack.
-Patch 3/10:
-  - Renamed functions to use the hwrm prefix. This change affects other
-patches in the series as well.
-=====================================================================
-
-
-Thanks,
-Vikas
-
-
-Vikas Gupta (10):
-  bng_en: Add PCI interface
-  bng_en: Add devlink interface
-  bng_en: Add firmware communication mechanism
-  bng_en: Add initial interaction with firmware
-  bng_en: Add ring memory allocation support
-  bng_en: Add backing store support
-  bng_en: Add resource management support
-  bng_en: Add irq allocation support
-  bng_en: Initialize default configuration
-  bng_en: Add a network device
-
- MAINTAINERS                                   |   6 +
- drivers/net/ethernet/broadcom/Kconfig         |   9 +
- drivers/net/ethernet/broadcom/Makefile        |   1 +
- drivers/net/ethernet/broadcom/bnge/Makefile   |  12 +
- drivers/net/ethernet/broadcom/bnge/bnge.h     | 218 ++++++
- .../net/ethernet/broadcom/bnge/bnge_core.c    | 388 ++++++++++
- .../net/ethernet/broadcom/bnge/bnge_devlink.c | 306 ++++++++
- .../net/ethernet/broadcom/bnge/bnge_devlink.h |  18 +
- .../net/ethernet/broadcom/bnge/bnge_ethtool.c |  33 +
- .../net/ethernet/broadcom/bnge/bnge_ethtool.h |   9 +
- .../net/ethernet/broadcom/bnge/bnge_hwrm.c    | 508 +++++++++++++
- .../net/ethernet/broadcom/bnge/bnge_hwrm.h    | 110 +++
- .../ethernet/broadcom/bnge/bnge_hwrm_lib.c    | 703 ++++++++++++++++++
- .../ethernet/broadcom/bnge/bnge_hwrm_lib.h    |  27 +
- .../net/ethernet/broadcom/bnge/bnge_netdev.c  | 268 +++++++
- .../net/ethernet/broadcom/bnge/bnge_netdev.h  | 206 +++++
- .../net/ethernet/broadcom/bnge/bnge_resc.c    | 605 +++++++++++++++
- .../net/ethernet/broadcom/bnge/bnge_resc.h    |  94 +++
- .../net/ethernet/broadcom/bnge/bnge_rmem.c    | 438 +++++++++++
- .../net/ethernet/broadcom/bnge/bnge_rmem.h    | 188 +++++
- 20 files changed, 4147 insertions(+)
- create mode 100644 drivers/net/ethernet/broadcom/bnge/Makefile
- create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge.h
- create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_core.c
- create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_devlink.c
- create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_devlink.h
- create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_ethtool.c
- create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_ethtool.h
- create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_hwrm.c
- create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_hwrm.h
- create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_hwrm_lib.c
- create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_hwrm_lib.h
- create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_netdev.c
- create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_netdev.h
- create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_resc.c
- create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_resc.h
- create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_rmem.c
- create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_rmem.h
+Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
 -- 
-2.47.1
-
+  Kiryl Shutsemau / Kirill A. Shutemov
