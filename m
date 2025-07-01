@@ -1,120 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 150E2283137;
-	Tue,  1 Jul 2025 16:58:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C571C1F3B98
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 16:58:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751389091; cv=none; b=eTlxdEhsdL1Dfac4rtZws6vXDuaz+/DUC7j56te5FIQyt/Kc3xEt97r75JZB2wxhrP2ufpe0wHBT+etheF4CGezNtfJ8Uaovg5BpotnmJDWOTElHBeffvCYTXTHt9y6YGxSL86zr4EhdMu+DefiHd4HzgF/fi3MewnvUQ71+zKY=
+	t=1751389123; cv=none; b=pNUmjxTtWZM3M7Ws3EU2CKurJsTQFFnm5RXnJUE5R8QhDNIn3EAWFFdx9E6ciOUHmDVdTtPWq06+7rB5laoHvOUIdc0fjYLAJlTSzE4x0GPYgYWp50+0Rp7g5twBWTlhXvNCbT1cTd9e1O/fUhumFiK7wiQ52pKY4tCiDlcxXCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751389091; c=relaxed/simple;
-	bh=j7Lagu/ioOP+Y5D/rwX6JgmvfumPp+N8fvcZmVNzTSw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ae/T7t9/67cjMvWGldSQGjmtSyvKmpRRnZzhh2BvImVy/0tIPdzGfy8Rc/o/te34jM5bjYP6qOfkNwlj/ttEOQTIZW9YFKXV6v+5NJeJYgjRKB6Nl2w7wPiTKG1xeWcKT3K2IhtuveMU8Sv6qnryNXeq1TialIn1gZv98OZoWjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C6PJlYcF; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C6PJlYcF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A57DBC4AF0C;
-	Tue,  1 Jul 2025 16:58:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751389090;
-	bh=j7Lagu/ioOP+Y5D/rwX6JgmvfumPp+N8fvcZmVNzTSw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=C6PJlYcF2qBb+/ZYvfG329LCeiaiH6rmhvyQV7WOEJ+4NYO1ZxnXnaxSSO8r59TOL
-	 0O0vvYjFEhWkIqVFDNGaFCTbeZKekyvNZfsPCkvLzElCwLHCcfUmzAHDJQRmB8XrB4
-	 XeIkPgL7KB/a4HCdY3z82n4YovYPK5AXlq1CcmuY0XO76Akvf9y4J2AH7C747ZieNM
-	 JUk2Xc7tGGdDQA9SM7KqORMiozFcoQDoPZKi5QT3SlxXGbNwGj/UW0QIBZqiLt329v
-	 OiGiPNIZnkBBJAL5XlnYQljC4PKTznTmz+H0XSSojW/DrJsLU7hFq+I4OM1xKof9Sa
-	 Xa1EX00DjtuKA==
-Received: by wens.tw (Postfix, from userid 1000)
-	id 27BC260157; Wed,  2 Jul 2025 00:58:06 +0800 (CST)
-From: Chen-Yu Tsai <wens@kernel.org>
-To: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej@kernel.org>,
-	Samuel Holland <samuel@sholland.org>
-Cc: netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Andre Przywara <andre.przywara@arm.com>
-Subject: [PATCH RFT net-next 10/10] arm64: dts: allwinner: t527: orangepi-4a: Enable Ethernet port
-Date: Wed,  2 Jul 2025 00:57:56 +0800
-Message-Id: <20250701165756.258356-11-wens@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250701165756.258356-1-wens@kernel.org>
-References: <20250701165756.258356-1-wens@kernel.org>
+	s=arc-20240116; t=1751389123; c=relaxed/simple;
+	bh=siBLe9gz6RUe359Fx/TSWWC2MOEWurtX3C+0q9hk098=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=rVYtnREx+6qusEqj4SqgJhVuGPQW9P9YEWxPNySNCJI7wsRb+lFompaflfhSLWA3oqsl1L5C8SVzSzwyWCcJSlofR1RQdAFA+OiCS5mslJni8QEZtzQ5T1wxiNM4qNTwh0tzwVwT531pK5c2TivG95pvzOaJu3w6MdL/aDwxwJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=df7cb.de; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=df7cb.de
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4bWq3r1njDz9sqc;
+	Tue,  1 Jul 2025 18:58:32 +0200 (CEST)
+Date: Tue, 1 Jul 2025 18:58:28 +0200
+From: Christoph Berg <myon@debian.org>
+To: David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>,
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+	Byungchul Park <byungchul@sk.com>,
+	Gregory Price <gourry@gourry.net>,
+	Ying Huang <ying.huang@linux.alibaba.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	"open list:MEMORY MANAGEMENT - MEMORY POLICY AND MIGRATION" <linux-mm@kvack.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] mm/migrate: Fix do_pages_stat in 32-bit mode
+Message-ID: <aGQTtCkgH4kQTNlp@msg.df7cb.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250625133909.1a054c24d933cd97afd0027d@linux-foundation.org>
+ <bff12005-4957-417a-a54f-2a5a327720f2@redhat.com>
+X-Rspamd-Queue-Id: 4bWq3r1njDz9sqc
 
-From: Chen-Yu Tsai <wens@csie.org>
+Re: David Hildenbrand
+> Subject should start with "mm/migrate:"
+> Likely we want a
+> Fixes:
+> and then this is probably "Reported-by:" paired with a "Closes:" link
+> to any such report.
 
-On the Orangepi 4A board, the second Ethernet controller, aka the GMAC200,
-is connected to an external Motorcomm YT8531 PHY. The PHY uses an external
-25MHz crystal, has the SoC's PI15 pin connected to its reset pin, and
-the PI16 pin for its interrupt pin.
+I included these now, except for "Closes:" which I have to idea what
+to put in.
 
-Enable it.
+> But I'm wondering how long this has already been like that. :)
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+The now-offending "pages += chunk_nr" line is from 2010, but I think
+the bug is rather from 5b1b561ba73c8ab9c98e5dfd14dc7ee47efb6530 (2021)
+which reshuffled the array-vs-32-bit handling.
+
+> Something a bit more elegant might be:
+
+Thanks, I used your patch draft with some minor changes.
+
+>  static int get_compat_pages_array(const void __user *chunk_pages[],
+>                                   const void __user * __user *pages,
+> +                                 unsigned long chunk_offs,
+
+I replaced chunk_offs with "chunk_offset" since "offs" looked too much
+like plural (list of offsets) to me.
+
+>                 if (in_compat_syscall()) {
+>                         if (get_compat_pages_array(chunk_pages, pages,
+> -                                                  chunk_nr))
+> +                                                  chunk_offs, chunk_nr))
+>                                 break;
+>                 } else {
+>                         if (copy_from_user(chunk_pages, pages,
+
+The else branch here needs tweaking as well:
+
+                } else {
+-                       if (copy_from_user(chunk_pages, pages,
++                       if (copy_from_user(chunk_pages, pages + chunk_offset,
+                                      chunk_nr * sizeof(*chunk_pages)))
+
+
+> @@ -2440,11 +2442,11 @@ static int do_pages_stat(struct mm_struct *mm, unsigned long nr_pages,
+>                 do_pages_stat_array(mm, chunk_nr, chunk_pages, chunk_status);
+> -               if (copy_to_user(status, chunk_status, chunk_nr * sizeof(*status)))
+> +               if (copy_to_user(status + chunk_offs, chunk_status,
+> +                                chunk_nr * sizeof(*status)))
+
+This seems to work, but honestly I am wondering, if copy_from_user
+needs a special 32-bit case, doesn't copy_to_user need special casing
+as well?
+
+> (untested, of course)
+
+The attached patch makes PG18's new numa test pass on amd64 kernels
+both in amd64 and i386 userlands.
+
+(In the meantime, PG git head got a workaround that limits the chunk
+size to the same 16 as used in do_pages_stat; I tested with the
+version before that.)
+
+Christoph
+
+
+From fdbcbc88825bc2e857dfeeebc91d62864e0774dd Mon Sep 17 00:00:00 2001
+From: Christoph Berg <myon@debian.org>
+Date: Tue, 24 Jun 2025 16:44:27 +0200
+Subject: [PATCH v2] mm/migrate: Fix do_pages_stat in 32-bit mode
+
+For arrays with more than 16 entries, the old code would incorrectly
+advance the pages pointer by 16 words instead of 16 compat_uptr_t.
+Fix by doing the pointer arithmetic inside get_compat_pages_array where
+pages32 is already a correctly-typed pointer.
+
+Discovered while working on PostgreSQL 18's new NUMA introspection code.
+
+Signed-off-by: Christoph Berg <myon@debian.org>
+Reported-by: Bertrand Drouvot <bertranddrouvot.pg@gmail.com>
+Reported-by: Tomas Vondra <tomas@vondra.me>
+Suggested-by: David Hildenbrand <david@redhat.com>
+Fixes: 5b1b561ba73c8ab9c98e5dfd14dc7ee47efb6530
 ---
- .../dts/allwinner/sun55i-t527-orangepi-4a.dts | 23 +++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ mm/migrate.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun55i-t527-orangepi-4a.dts b/arch/arm64/boot/dts/allwinner/sun55i-t527-orangepi-4a.dts
-index 5f97505ec8f9..83bc359029ba 100644
---- a/arch/arm64/boot/dts/allwinner/sun55i-t527-orangepi-4a.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun55i-t527-orangepi-4a.dts
-@@ -15,6 +15,7 @@ / {
- 	compatible = "xunlong,orangepi-4a", "allwinner,sun55i-t527";
+diff --git a/mm/migrate.c b/mm/migrate.c
+index 8cf0f9c9599d..2c88f3b33833 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -2399,6 +2399,7 @@ static void do_pages_stat_array(struct mm_struct *mm, unsigned long nr_pages,
  
- 	aliases {
-+		ethernet0 = &gmac1;
- 		serial0 = &uart0;
- 	};
+ static int get_compat_pages_array(const void __user *chunk_pages[],
+ 				  const void __user * __user *pages,
++				  unsigned long chunk_offset,
+ 				  unsigned long chunk_nr)
+ {
+ 	compat_uptr_t __user *pages32 = (compat_uptr_t __user *)pages;
+@@ -2406,7 +2407,7 @@ static int get_compat_pages_array(const void __user *chunk_pages[],
+ 	int i;
  
-@@ -95,6 +96,28 @@ &ehci1 {
- 	status = "okay";
- };
+ 	for (i = 0; i < chunk_nr; i++) {
+-		if (get_user(p, pages32 + i))
++		if (get_user(p, pages32 + chunk_offset + i))
+ 			return -EFAULT;
+ 		chunk_pages[i] = compat_ptr(p);
+ 	}
+@@ -2425,27 +2426,28 @@ static int do_pages_stat(struct mm_struct *mm, unsigned long nr_pages,
+ #define DO_PAGES_STAT_CHUNK_NR 16UL
+ 	const void __user *chunk_pages[DO_PAGES_STAT_CHUNK_NR];
+ 	int chunk_status[DO_PAGES_STAT_CHUNK_NR];
++	unsigned long chunk_offset = 0;
  
-+&gmac1 {
-+	phy-mode = "rgmii-id";
-+	phy-handle = <&ext_rgmii_phy>;
-+	phy-supply = <&reg_cldo4>;
-+
-+	allwinner,tx-delay-ps = <0>;
-+	allwinner,rx-delay-ps = <300>;
-+
-+	status = "okay";
-+};
-+
-+&mdio1 {
-+	ext_rgmii_phy: ethernet-phy@1 {
-+		compatible = "ethernet-phy-ieee802.3-c22";
-+		reg = <1>;
-+		interrupts-extended = <&pio 8 16 IRQ_TYPE_LEVEL_LOW>; /* PI16 */
-+		reset-gpios = <&pio 8 15 GPIO_ACTIVE_LOW>; /* PI15 */
-+		reset-assert-us = <10000>;
-+		reset-deassert-us = <150000>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_cldo3>;
- 	cd-gpios = <&pio 5 6 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>; /* PF6 */
+ 	while (nr_pages) {
+ 		unsigned long chunk_nr = min(nr_pages, DO_PAGES_STAT_CHUNK_NR);
+ 
+ 		if (in_compat_syscall()) {
+ 			if (get_compat_pages_array(chunk_pages, pages,
+-						   chunk_nr))
++						   chunk_offset, chunk_nr))
+ 				break;
+ 		} else {
+-			if (copy_from_user(chunk_pages, pages,
++			if (copy_from_user(chunk_pages, pages + chunk_offset,
+ 				      chunk_nr * sizeof(*chunk_pages)))
+ 				break;
+ 		}
+ 
+ 		do_pages_stat_array(mm, chunk_nr, chunk_pages, chunk_status);
+ 
+-		if (copy_to_user(status, chunk_status, chunk_nr * sizeof(*status)))
++		if (copy_to_user(status + chunk_offset, chunk_status,
++				 chunk_nr * sizeof(*status)))
+ 			break;
+ 
+-		pages += chunk_nr;
+-		status += chunk_nr;
++		chunk_offset += chunk_nr;
+ 		nr_pages -= chunk_nr;
+ 	}
+ 	return nr_pages ? -EFAULT : 0;
 -- 
-2.39.5
+2.47.2
 
