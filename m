@@ -1,100 +1,123 @@
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F6B827C172
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 17:11:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9122027C172
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 17:12:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751389877; cv=none; b=C271IJboqd44d4K0pm9mEPFvcNrbR+3rrTB3GZxX2g8LVlAUeMAcCHZ4BTX7mWSUTGozZ9tXFXwFI3hgJXNcormI8ILZpnvCVRHx/pgu3x/hnL7SKWJhbKTjWSi6PvC52RTaxlGwUQiqtA+Q7kI+UIxDpf6SWkwA0jrWoKROV+Y=
+	t=1751389922; cv=none; b=PThqxzsl+u5YkXGIi11cGeuskxPSgqyKUcGWPj5vX3Rdv8WZaucbMb+PqKPUCoHAyCG+apwz/wWZ3qt/UTuORQIMAQ1raYK6QzM7tp0BT7u2v94aKWmQAJPDmHAUeQO1q8UdNIvXCktFP4StjreGM5LGniG2cnYNTlXx9TrfqPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751389877; c=relaxed/simple;
-	bh=iH0TDbe8VNWwvdmFqK8APOT2xukPLMWBMeyUf5tfGg0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b/jw5vG8ZVzB48CFO4cUrb+1m/vOk4mbM9aAX47I7WPZzsLR4L1bp+N3XqlB+XTLj4w2FFn6GLxEoJCHuctwqPnFIyB9gtDzmwJFCl4Oy2xDj7xC2tp60kA4kAUKoJ1gfzQqskOUq8pCuOIZYAO8AMHXeiX15Yj+u6GhHlXUUzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=MGdmuOlR; arc=none smtp.client-ip=209.85.166.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1751389922; c=relaxed/simple;
+	bh=SX2heC/Qk6afxGMZKjrW09kyPvYeBI0adPXbi3Fnvpc=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=k97T/jy/5F/JshydD/74Ikfm3BqxDkKO+zceuj5IrPwl/UJaqW5zGsXgQfMpF2Irgp9WGNmUIER9tbo6j4SfTKIqYfHC43I2nexB9loOv/K3vt1ojYb76NW8ZpKV1TUwSSV4Ia2t9x+hBHqnUsN0j0h1DQcMJgTwYyhyaeGFoik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=XS9t/U9R; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="MGdmuOlR"
-Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-875dd57d63bso247236639f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 10:11:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1751389875; x=1751994675; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=I+wX+K4f2/MFAj/Jdnu+2FqfSGpN09EzrvZCmNS2CqY=;
-        b=MGdmuOlRV2A1/zuFbhcTdWXDeqacwusDIJb9eMw2wM1EyEQIAYPykxCeXY6UN9OQmw
-         52GnFhzTMA8JvvgEBWBohPwqCCxlvQnFWAwGuZNecaOdXw0Bn3puT5wKq04J8aoacYNk
-         Gykl1uQqKnNZB0j0rcmcBNggqHNHaBU8Qxeh8=
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="XS9t/U9R"
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com [209.85.208.69])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id D1B123F717
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 17:11:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1751389918;
+	bh=sU2Tqd6bdvzOLtqB6osCLzx8U1+d3a8Z2ezfvd4F1oM=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version;
+	b=XS9t/U9R+3zUPjGMo8TXfF8V4bFRO48sGEJTHDFEwALEQlklu34q5iWKNWJAxeJDN
+	 +K3J8c/GIUaMzj/GAXRLelvWCBv1t1aNu430TZblitWvrwTVWBchyyxHwyT9K2nFJV
+	 2SWUvcYUGjOfRYSLdpCwNODR9T1Oe/hhRKxARi7O1Z4AJmUcQosDyXFPrM9D3+2a97
+	 w2pqLs5qGElOjXvgryvDOJ7FE1c8xrUPTzjxFZdV2sZU22COfpkD6ECGQ0PtD7Jyp5
+	 u1S0HgtOspnVPWIHNGHSQOAgw/iDhvS32Yt2ki1VYu1t0R/B2Mce+anQPsZXBmoaSU
+	 nEIFsheOI6nHA==
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-6077af4c313so5263050a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 10:11:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751389875; x=1751994675;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I+wX+K4f2/MFAj/Jdnu+2FqfSGpN09EzrvZCmNS2CqY=;
-        b=S4fcSkNPZfC7yyBelg+9bEXX37nX2ENELa45TzJkfMxsQYarnFll57UwSl2AuZfeKb
-         dz2JgqwWI1ZndDN4Vqh0PrahT+Hzam1HuPOwK8n0emiUZvT4GZArp2C6BqabIHIDPFzM
-         B0O1O6u0xoJxNdzImcktKWdsfFI7EW+hLLwYJzyC6bIfWsm4LLs4M1qn7pYip52bBSXp
-         m+w4ZSIcDDZ6tBi1an3hOrB6OyLiBYVbHLx1bVUaCHi06Hk/O7E98Jk0E5fqKwfh6VuK
-         ExI6Fm7d2hDuC4btfcs6AQ75mDgGQAy/gF2UfcJfUj2tzXULjWKYNZgxCeoB62GxtAuG
-         Xylw==
-X-Forwarded-Encrypted: i=1; AJvYcCV1hui9hS7V12phQ+3XEiSlGcICMsGYTGjiCGCcSmYKLUuA0xN+M5hUlyIaUrBgzGhHeuhmWEiC+WAznA0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEUOzi2q1ulN3CjxmMGzeWRAx4n2fQ2EhB7PJJWE6snKUh1nNS
-	D2W5XRYSnsSscfZ/1v28ge5MMynR49N6nrkgdoCX9iyOrmj9+OLoWZpkGK1gkbD/Gio=
-X-Gm-Gg: ASbGncvJxEsnEC989YL9lK1jnsZ9j6C33vGMhrVAAEu0BzP3NQGjIE0VdGaYVWEGgtO
-	rGhagQnfrU4Cib5FzAjZ63USnVY+ISo7s1ObZwuiGi8vF+8aXaVX+c1ofCz2B6MfWeFnSwdDERA
-	wmWqT3F1jh7h2Zu8g/FPTKyu56FBod4GBwBbfXQLJXtgJScCGxX92zG27eCA0b4SUxQC62u69Ms
-	m1xaDH3dIEc3ndr+FjB8LgiO7MHtVAnapdATv9Zr45FA+/hdz8hrKl2kebLiFRLfOB9x96X7GLo
-	yxLh/s1EYbjhAONXs1pzBZJusyrihU6eRgLGErs/n10SjDgxV8sdL01AhZ3U3gT8N4aCVfx7kA=
-	=
-X-Google-Smtp-Source: AGHT+IGWgeEaEK/0GkLqXIvblpd+mixokpaJEx481G3pNqH6IXmxkbQDpSGr13gQ+qGaEdVblqLgqA==
-X-Received: by 2002:a05:6602:4142:b0:85e:73da:c56a with SMTP id ca18e2360f4ac-876b90cab8bmr546249039f.3.1751389874133;
-        Tue, 01 Jul 2025 10:11:14 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-50204a8c2eesm2557194173.94.2025.07.01.10.11.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 10:11:13 -0700 (PDT)
-Message-ID: <2ad5a6e4-23b6-41c1-a2c9-3190e9bd256d@linuxfoundation.org>
-Date: Tue, 1 Jul 2025 11:11:12 -0600
+        d=1e100.net; s=20230601; t=1751389918; x=1751994718;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sU2Tqd6bdvzOLtqB6osCLzx8U1+d3a8Z2ezfvd4F1oM=;
+        b=bcza+UV05HkykUPS0S09jLzvjS7H+FESQLr1DZfBZQiWIPtzPo+NkJPd1VMIKjG4mx
+         7uSp8o8pPRkujW22aT4u40BsfCCiTo6zQbOuUDDcOpFEdC3YQfbH8vpf8qdpOi14pLx2
+         DIvoMiN7cly8dxa6+b2rxtfQEF8c+I4GWd2wdEm7NFAIPbPZMPUzdvZAZTnNcWHIXUFG
+         RENhpFLQbkPojEkn7g9r+GJFDLrPoq8tGun7OvmiKSmZ/rZM5fpBgSmhsDVFMAJQiNNe
+         31oojfSoZ67CFXDIN3fnzSXUCMafxNPARgraT6l30EPSndHui2DeqGR9ZC45nxVNtLmj
+         eh7g==
+X-Forwarded-Encrypted: i=1; AJvYcCWk1/TzichOCP63Z8m3koqe0uP9eXYLhyl3/2JxN5xlZbtrQcgU8j3uCL6/ni9nfT8CuxDYZ1jIzFBsti4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzC48UCf3TNvVCI25VOP7GaO0T4cVY5fRSe4DkprRFI80pdPwdp
+	qM3G1BM7r9BU0IuRd2rizEo//gQSQhZzx+2gNdwVeJCno1SXy5nKgBnPigHmZsMSH5x1DrCVFEV
+	0oFcHdSCPc6m9+0+3AvZTXpE7B83ZqzanTwHoSL2a3NfV+BCznqW9nPM79nhKp2MH1yQWS9ZySH
+	yn6/Kl3A==
+X-Gm-Gg: ASbGncsI/hl75EuS/HsPo7TBr1pgUeCqs0teHpHjZhLwXOC8Te3prFg2DzDPkHGDRew
+	CtdKcT/J+C9ptgkoCKEUXIPoQa8sFj9os2pcfZ/3i9f7Rh0u7n/u7bNKXB4wN41voMKJUT1J1e5
+	s1ehhCHLQPBpsZP6V7E4oG/9YsYplfFAX7F9cTSmdEr02JfCCFlvYxfzPwlMaA6EI85RsRJYrfo
+	LU99aLIqAQvBHgqF5Rn4BIPrmqPY7Fm23+OVUBD6v/+LeVKzRgab1YlNY5DlejXIG5nI0e7DugS
+	fHmZT1NaSZ0bfsjV6yuKA6G5Xev3L/n4ZtoW7FaiZvykn5bQ/RL5cc/XDo7PKLN9
+X-Received: by 2002:a50:ed87:0:b0:608:40bf:caed with SMTP id 4fb4d7f45d1cf-60e3a8f3b4cmr2512628a12.7.1751389917974;
+        Tue, 01 Jul 2025 10:11:57 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEu8J6lVnS+AjHzqRmWb7aXWSa8lc+z3NV7ufWDiI84tWqPRb7bwIpffBsf/O52QDBXHBTQ1w==
+X-Received: by 2002:a50:ed87:0:b0:608:40bf:caed with SMTP id 4fb4d7f45d1cf-60e3a8f3b4cmr2512601a12.7.1751389917513;
+        Tue, 01 Jul 2025 10:11:57 -0700 (PDT)
+Received: from t14s.. (adsl-6.109.242.31.tellas.gr. [109.242.31.6])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c828bbea9sm7818156a12.1.2025.07.01.10.11.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 10:11:57 -0700 (PDT)
+From: Ioanna Alifieraki <ioanna-maria.alifieraki@canonical.com>
+To: baolu.lu@linux.intel.com,
+	kevin.tian@intel.com,
+	jroedel@suse.de,
+	robin.murphy@arm.com,
+	will@kernel.org,
+	joro@8bytes.org,
+	dwmw2@infradead.org,
+	iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: [REGRESSION][BISECTED] Performance Regression in IOMMU/VT-d Since Kernel 6.10
+Date: Tue,  1 Jul 2025 20:11:54 +0300
+Message-Id: <20250701171154.52435-1-ioanna-maria.alifieraki@canonical.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cpupower: Improve Python binding's Makefile
-To: "John B. Wyatt IV" <jwyatt@redhat.com>, Thomas Renninger <trenn@suse.com>
-Cc: linux-pm@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, linux-kernel@vger.kernel.org,
- John Kacur <jkacur@redhat.com>, "John B. Wyatt IV"
- <sageofredondo@gmail.com>, Thorsten Leemhuis <linux@leemhuis.info>,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20250624204105.457971-1-jwyatt@redhat.com>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250624204105.457971-1-jwyatt@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/24/25 14:41, John B. Wyatt IV wrote:
-> Add a few build variables to make it easier for distributions to
-> package the bindings. Allow current variables to be overwritten by
-> environment variables that are passed to make.
-> 
-> CCing Thorsten Leemhuis <linux@leemhuis.info>.
-> 
-> Signed-off-by: John B. Wyatt IV <jwyatt@redhat.com>
-> Signed-off-by: John B. Wyatt IV <sageofredondo@gmail.com>
-> ---
->   tools/power/cpupower/bindings/python/Makefile | 12 +++++++-----
->   1 file changed, 7 insertions(+), 5 deletions(-)
-> 
+#regzbot introduced: 129dab6e1286
 
-Thank you. Applied to git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux cpupower
+Hello everyone,
 
-Will include this in my next PR to Rafael.
+We've identified a performance regression that starts with linux
+kernel 6.10 and persists through 6.16(tested at commit e540341508ce).
+Bisection pointed to commit:
+129dab6e1286 ("iommu/vt-d: Use cache_tag_flush_range_np() in iotlb_sync_map").
 
-thanks,
--- Shuah
+The issue occurs when running fio against two NVMe devices located
+under the same PCIe bridge (dual-port NVMe configuration). Performance
+drops compared to configurations where the devices are on different
+bridges.
+
+Observed Performance:
+- Before the commit: ~6150 MiB/s, regardless of NVMe device placement.
+- After the commit:
+  -- Same PCIe bridge: ~4985 MiB/s
+  -- Different PCIe bridges: ~6150 MiB/s
+
+
+Currently we can only reproduce the issue on a Z3 metal instance on
+gcp. I suspect the issue can be reproducible if you have a dual port
+nvme on any machine.
+At [1] there's a more detailed description of the issue and details
+on the reproducer. 
+
+Could you please advise on the appropriate path forward to mitigate or
+address this regression?
+
+Thanks,
+Jo
+
+[1] https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2115738
