@@ -1,176 +1,131 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E8111CA81;
-	Tue,  1 Jul 2025 22:11:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085772820B9
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 22:11:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751407887; cv=none; b=Ysv/RhKwFZa49A+oUujGt9m8NVKCMIMnN2NgYHwbyDECFdpLrjbV27ZCeTvnGgoks1fqZr4RxZvJWGq8OxNb4B5gf8NCL0eFucxrr1qFVAXgwKAs/V5IcYhDM2VdajZlkjnb6OaTCoJ+3yd4/wszQOrI0Df35tFAIU1lX3H3yd4=
+	t=1751407904; cv=none; b=i7p+dmUOZ5mDXsAvPMVUKqlO7zY9RStCjY+z4GvEkXqHNt8TnRGXdmhFhKZKKly8agZlX3c2FglYKX7PgPKldWmW5W9n6lkFuWw+tnFN2oVFEPQfx+k1g8xagZvID3Zav97KXV4xHWJC7+PlKe8Hwpi/hSIQySiFtmJMWwOjHRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751407887; c=relaxed/simple;
-	bh=fwzeZnsPwoY03IrV93gOz4MH43a/7r1n5nJHBDXSrJs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=n4t/+GrAfGXOSPnvSjVGKwsOUT3MwNDoXvpBkkbfi9NTW8r8fupSFhWsB7DZDoFJ8NkKMOcDZMVe+Y7cawD/PnqPDMaOJfsZJo64F4K1LfKCYZpm060o496umg4XN4nnN5RVXmCpIllpp9nvmZJKyhbcwJmI6Xj93rGOtsYpikA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id EBA4B16066C;
-	Tue,  1 Jul 2025 22:11:22 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 0F8F560016;
-	Tue,  1 Jul 2025 22:11:20 +0000 (UTC)
-Date: Tue, 1 Jul 2025 18:11:19 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Gabriele Paoloni <gpaoloni@redhat.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- acarmina@redhat.com, chuck.wolber@boeing.com
-Subject: Re: [RFC PATCH 2/2] tracing: add testable specifications for
- event_enable_write/read
-Message-ID: <20250701181119.7b0bc5d6@batman.local.home>
-In-Reply-To: <20250612104349.5047-3-gpaoloni@redhat.com>
-References: <20250612104349.5047-1-gpaoloni@redhat.com>
-	<20250612104349.5047-3-gpaoloni@redhat.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1751407904; c=relaxed/simple;
+	bh=lbMGo6TWThDq7KR2bXJch7rViTDDcfpd9TbPVD0/+qA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=BdVWYDAjUp3YMeiwUFgLiOQDKAsfz+MygkKRtPffg5/B2XayTEGARZ5bE3A7U8i6ZtudliQEFni+mp0j82JOunCfD+ZD80U7S660JFsOmlpiD0nKYMHf3/AJCfKUU2NDbgMTqbTDRhKmbvM9yIk5nXEG0z9rOe6ohb+qgGhCVsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=j+9N8xKI; arc=none smtp.client-ip=209.85.166.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="j+9N8xKI"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3df2dbe85d1so36985325ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 15:11:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1751407899; x=1752012699; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=/C6lLyMUeqaFXwqsOrVIFnQt3qm9OCpZxXP3pjLWLMQ=;
+        b=j+9N8xKIMEJeDZFRLHkadjXoOjxQcRFdv3IrPtuDp9zQiqdWiWgIQ27HGRrGzt+xQm
+         6QZRd2akixnrz0Cexdg26X3HNPF1ihTICZV6nzHm6i9+KsQ4IOQ8C6dDB5W5f9ECUIsa
+         GNNRosIvNswNcZwGCJxR7puSJjQo+5XW6LbjmUgvWkcJ+FJZuxKB4Qp42qdoX6DxYzUS
+         i3Y+8N2x7nmx6r2PrSmEUDWEbEO2ouLlbWpr04dZf6ksRHSXr7C1JZxZkzx0VmJNP7gO
+         PDnNvNeVdBbfXzrOrhH5RTMlGnPHMwoFpTy0PMBRK+xuxGu+P2F4wznM9KE2TH6lFUkR
+         Cbdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751407899; x=1752012699;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/C6lLyMUeqaFXwqsOrVIFnQt3qm9OCpZxXP3pjLWLMQ=;
+        b=jy9O0DdY1l/tWIxBgArsDRvYXg58FDHXLqnR5snGx1AGF5eec5KkeiwhD2MdLEzdxy
+         i01xV9HUBYPnPgCcIsxc7yGfP4msWySCZuaqrdPo7LPumVegPdl6vAXEhpaFgNMoEt3C
+         Xkdj9+7YVsBvjxb9HrJRD1Z6Ubpz4BAt4a2OCH/xUSnB+P+ouGmOT/OJZPmDIrCNBfn3
+         HiFGuoYR1BzbIJ4D85pMOkqr6MvAGENyEvx2j76S8/WxiJSXM7740ifHX8P6fSRjthBX
+         K+y5g+LcTZn3a7aOpC+JFq2pnW9ltcHwpbBS9tSxS9lpN13nimTuEwUNuvFJgv6Pw3Sa
+         tgAA==
+X-Forwarded-Encrypted: i=1; AJvYcCWaW03IhNuIYcKEC/Cp6UCdHZPomaDXYAxs809L8g2S3j9KFANDb+U3Hlk2ikUAEH/LEw7/PX/9HbnP/z4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxC78FmobAu4kCuYQopvJpnTC72IzMyEnEVSerY3ZIJWG+sn8s4
+	G8erUY9QY/S37OUXQU3PiNv2iTNgDx4wtesz0c0NIU9EYLDuXT7F8HuExD2jZyc4nxw=
+X-Gm-Gg: ASbGncudAlYb1wh20AJyr1tLX+R/EDboYT4oZKCK6vmyf1UjkOh0R18jR/x4EQdmgRg
+	hWjg0bNkW+cNSFbfZbcd7yG28LQksdwB7M95KIvPS7gvGFGvOuxrnmcw1qDN+9iDaTy41nTeCdh
+	USHN98tFsb1IEos/qOjqU9BkXt+oelGhSJBa2dng2JUGULGqwUetivWiom5zp88YHWqISj48+6t
+	pteeV7CF4y3Std/Ch7irbTL1iHpOlbsRc2ICOo4ihhGCpNxoQiAz3TLPXYJkX/uDkxbPWsxc3t/
+	p0TK4CkAjPG+Bnfb/zucrrmyfzHmrxar50hETS4A2MeXmaFHpaX1x3iGXKc=
+X-Google-Smtp-Source: AGHT+IHBL+x2rxNNPfn7H3hH8BaYEbswfG0ZtGkE794RnSeRPX6UIVwaxDaqDIxVYhRcKkCp3nEgUg==
+X-Received: by 2002:a05:6e02:18c7:b0:3dc:88ca:5ebd with SMTP id e9e14a558f8ab-3e054a4d268mr7817595ab.20.1751407899020;
+        Tue, 01 Jul 2025 15:11:39 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3df4a0915a0sm32002225ab.45.2025.07.01.15.11.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Jul 2025 15:11:38 -0700 (PDT)
+Message-ID: <90fa0bd9-71b7-44f7-9175-641d43e9fe1b@kernel.dk>
+Date: Tue, 1 Jul 2025 16:11:37 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: Weird delay introduced in v6.16-rc only, possible regression
+To: Qu Wenruo <quwenruo.btrfs@gmx.com>,
+ "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>
+References: <e597d8c6-ed77-47ae-b030-1016727d6abe@gmx.com>
+ <20f07b3b-194a-4dfe-936e-0f159bf44485@kernel.dk>
+ <69ea6e7a-a6f9-4199-9dc4-01b37092795f@gmx.com>
+From: Jens Axboe <axboe@kernel.dk>
+Content-Language: en-US
+In-Reply-To: <69ea6e7a-a6f9-4199-9dc4-01b37092795f@gmx.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: w6jcuxx8rb699hp9p9dhyz3a3uiqfsdo
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 0F8F560016
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX189n404bB2lDgycaIoKc0jEy6ui6CG92Vw=
-X-HE-Tag: 1751407880-615471
-X-HE-Meta: U2FsdGVkX18q2sKeAnqXOYlQBfW7JoKiB6kNFFT04Zt8cTzVabZJNeN6WPdRX+prZ6dtXnZwk/gSMiCn9awSITF6QE13oPjhfcKrEIWYs0OZXeNdmkBPV+sNlAK1SWM45LTAkkAH6kaVi0xhlqaF8AkPVmamELB7ZvrJT10RKnqcnGcc721UnnFM7TcqrttjwAhQYNF4MeEhR5qdz8ZZoF7SmTrVjerwNJtuaI74EKu9C+7iHPPxUVjwKbHW6X3uYCc8FERlpEyf+JiFRYxMyic4eQcKqog8nTT/n8k+Xdm+dRLZlt934wA763BxkLpmgeQze+ZKzPrUeB5nqirBlufGCeEWjlC2
 
-On Thu, 12 Jun 2025 12:43:49 +0200
-Gabriele Paoloni <gpaoloni@redhat.com> wrote:
-
-> This patch implements the documentation of event_enable_write and
-> event_enable_read in the form of testable function's expectations.
+On 7/1/25 4:07 PM, Qu Wenruo wrote:
 > 
-> Signed-off-by: Gabriele Paoloni <gpaoloni@redhat.com>
-> ---
->  kernel/trace/trace_events.c | 72 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 72 insertions(+)
 > 
-> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-> index 5e84ef01d0c8..eb3c5e6e557d 100644
-> --- a/kernel/trace/trace_events.c
-> +++ b/kernel/trace/trace_events.c
-> @@ -1771,6 +1771,46 @@ static void p_stop(struct seq_file *m, void *p)
->  	mutex_unlock(&event_mutex);
->  }
->  
-> +/**
-> + * event_enable_read - read from a trace event file to retrieve its status.
-> + * @filp: file pointer associated with the target trace event;
-> + * @ubuf: user space buffer where the event status is copied to;
-> + * @cnt: number of bytes to be copied to the user space buffer;
+> ? 2025/7/2 02:00, Jens Axboe ??:
+>> On 6/29/25 3:45 PM, Qu Wenruo wrote:
+>>> Hi,
+>>>
+>>> Recently I'm hitting a very weird delay when doing development inside a x86_64 VM.
+>>>
+>>> The dmesg shows the delay (10+ sec) between virtio blk and device-mapper:
+>>>
+>>> [    3.651377] virtio_blk virtio4: 10/0/0 default/read/poll queues
+>>> [    3.653075] virtio_scsi virtio2: 10/0/0 default/read/poll queues
+>>> [    3.670269] virtio_blk virtio4: [vda] 83886080 512-byte logical blocks (42.9 GB/40.0 GiB)
+>>> [    3.672096] scsi host6: Virtio SCSI HBA
+>>> [    3.708452]  vda: vda1 vda2
+>>> [    3.711073] virtio_blk virtio5: 10/0/0 default/read/poll queues
+>>> [    3.729879] virtio_blk virtio5: [vdb] 167772160 512-byte logical blocks (85.9 GB/80.0 GiB)
+>>> [    3.737535] virtio_blk virtio8: 10/0/0 default/read/poll queues
+>>> [    3.747045] virtio_blk virtio8: [vdc] 83886080 512-byte logical blocks (42.9 GB/40.0 GiB)
+>>> [   17.453833] device-mapper: uevent: version 1.0.3
+>>> [   17.455689] device-mapper: ioctl: 4.50.0-ioctl (2025-04-28) initialised: dm-devel@lists.linux.dev
+>>> :: performing fsck on '/dev/os/root'
+>>> /dev/mapper/os-root: clean, 240299/1048576 files, 3372218/4194304 blocks
+>>> :: mounting '/dev/os/root' on real root
+>>> [   17.871671] EXT4-fs (dm-0): mounted filesystem 00a85626-d289-4817-8183-ee828e221f76 r/w with ordered data mode. Quota mode: none.
+>>>
+>>> The VM is running kernel based on upstream commit 78f4e737a53e ("Merge tag 'for-6.16/dm-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm"), with a lot of extra btrfs patches.
+>>>
+>>>
+>>> The v6.15 kernel from Archlinux is totally fine without any delay.
+>>>
+>>> The v6.16-rc kernel may have some different configs, but the config is used for a long long time, way before v6.15, so it looks like it's something in the v6.16 cycle causing problems.
+>>>
+>>> I can definitely do a bisection, but any clue would be appreciated.
+>>
+>> Probably a good idea to go ahead with a bisect to help pin it down.
+>>
+> 
+> BTW, a little more digging shows it's the `udevadm settle` causing the long delay in the initramfs.
+> 
+> The rootfs is an ext4 on a LVM lv, so initramfs is required to mount the rootfs.
+> 
+> So it may not be the block/dm layer causing the problem.
 
-Why is the above ending with semicolons?
+Even the more reason to bisect it then, if we don't quite know why it's
+slow.
 
-> + * @ppos: the current position in the buffer.
-> + *
-> + * This is a way for user space executables to retrieve the status of a
-> + * specific event
-> + *
-> + * Function's expectations:
-> + * - This function shall lock the global event_mutex before performing any
-> + *   operation on the target event file and unlock it after all operations on
-> + *   the target event file have completed;
-> + * - This function shall retrieve the status flags from the file associated
-> + *   with the target event;
-> + * - This function shall format the string to report the event status to user
-> + *   space:
-> + *   - The first character of the string to be copied to user space shall be
-> + *     set to "1" if the enabled flag is set AND the soft_disabled flag is not
-> + *     set, else it shall be set to "0";
-> + *   - The second character of the string to be copied to user space shall be
-> + *     set to "*" if either the soft_disabled flag or the soft_mode flag is
-> + *     set, else it shall be set to "\n";
-> + *   - The third character of the string to be copied to user space shall b
-> + *     set to "\n" if either the soft_disabled flag or the soft_mode flag is
-> + *     set, else it shall be set to "0";
-> + *   - Any other character in the string to be copied to user space shall be
-> + *     set to "0";
-
-The above could use some new lines. Like between each bullet. My
-eyesight isn't as good anymore and I find reading gobs of text more
-difficult. Newlines give my eyes a break.
-
-I know this is being written so that a tool could parse it, but also
-needs to be parsed by aging developers. ;-)
-
-> + * - This function shall check if the requested cnt bytes are equal or greater
-> + *   than the length of the string to be copied to user space (else a
-> + *   corrupted event status could be reported);
-> + * - This function shall invoke simple_read_from_buffer() to perform the copy
-> + *   of the kernel space string to ubuf.
-
-Hmm, and it is also verbose. This is a relatively simple function, and
-it caused quite a bit of requirements. I wonder if it could be
-shortened a bit. Otherwise more complex and larger functions are going
-to be overwhelming and likely not acceptable. And those are the
-functions that I think this will benefit the most!
-
-> + *
-> + * Returns the number of copied bytes on success, -ENODEV if the event file
-> + * cannot be retrieved from the input filp, -EINVAL if cnt is less than the
-> + * length of the string to be copied to ubuf, any error returned by
-> + * simple_read_from_buffer
-
-Returns should be formatted better where each return value is on a
-separate line.
-
--- Steve
-
-> + */
->  static ssize_t
->  event_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
->  		  loff_t *ppos)
-> @@ -1808,6 +1848,38 @@ event_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
->  	return simple_read_from_buffer(ubuf, cnt, ppos, buf, strlen(buf));
->  }
->  
-> +/**
-> + * event_enable_write - write to a trace event file to enable/disable it.
-> + * @filp: file pointer associated with the target trace event;
-> + * @ubuf: user space buffer where the enable/disable value is copied from;
-> + * @cnt: number of bytes to be copied from the user space buffer;
-> + * @ppos: the current position in the buffer.
-> + *
-> + * This is a way for user space executables to enable or disable event
-> + * recording.
-> + *
-> + * Function's expectations:
-> + * - This function shall copy cnt bytes from the input ubuf buffer to a kernel
-> + *   space buffer (or the whole input ubuf if cnt is larger than ubuf size)
-> + *   and shall convert the string within the kernel space buffer into a decimal
-> + *   base format number;
-> + * - This function shall lock the global event_mutex before performing any
-> + *   operation on the target event file and unlock it after all operations on
-> + *   the target event file have completed;
-> + * - This function shall check the size of the per-cpu ring-buffers used for
-> + *   the event trace data and, if smaller than TRACE_BUF_SIZE_DEFAULT, expand
-> + *   them to TRACE_BUF_SIZE_DEFAULT bytes (sizes larger than
-> + *   TRACE_BUF_SIZE_DEFAULT are not allowed);
-> + * - This function shall invoke ftrace_event_enable_disable to enable or
-> + *   disable the target trace event according to the value read from user space
-> + *   (0 - disable, 1 - enable);
-> + *
-> + * Returns 0 on success, any error returned by kstrtoul_from_user, -ENODEV if
-> + * the event file cannot be retrieved from the input filp, any error returned by
-> + * tracing_update_buffers, any error returned by ftrace_event_enable_disable,
-> + * -EINVAL if the value copied from the user space ubuf is different from 0 or
-> + *  1.
-> + */
->  static ssize_t
->  event_enable_write(struct file *filp, const char __user *ubuf, size_t cnt,
->  		   loff_t *ppos)
-
+-- 
+Jens Axboe
