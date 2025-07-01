@@ -1,188 +1,120 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DEB71DE89A;
-	Tue,  1 Jul 2025 16:25:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 568CC1D5CC6;
+	Tue,  1 Jul 2025 16:27:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751387146; cv=none; b=PJm0RjpE11z6YTgGxbpgyEAGnDypxassDp+KPb3CCBmCPhwUaMWg7aYxxasLzMfAUsds5gIG9KPNipbXpSUuTb2F7LlljgbEsqRd6GQMmhJ9hSAGLwji6wOQxYn+axF9Tt5G3Bb93wwPAcYs+s3CFP7TCNpIh4PB6+EGnhs4M1M=
+	t=1751387242; cv=none; b=rX1m0qs52nX1TIqke5+ucqepaUOZ4FCyDdkrRjWtsXNRXIaPV6OqEdNqjR1lIoLpEMYv37Xo/xeCQ+EsnBxln6tuQuKY3WDHxMY6HohAXPUgRV/6VL1rW2mjrNQTejHxe2UMsY3Rj+rbPtfsfyudeqBeTgsHe3AjsemS9Ks4DX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751387146; c=relaxed/simple;
-	bh=ZUqpZFwfZJt5F5fCgCl/+TyIxH9HhSMeCYCIU8CIEkU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=polFHdK2v9tASY8hdUCeKW+Jc7G3/mnY8XsP2ujmUISG4lwqHmM+SgB5Hqt56cTI4IwmDKuiE78Y/nhEW9yFKQzdtMnDyBf02RJsH+aLtk84WRWvMvW2eAx9eB+rUQWpay7pp9vlpqdkajWz75StrapS3FK4FZyaTu0zqdopdZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V3VyhwdT; arc=none smtp.client-ip=209.85.222.175
+	s=arc-20240116; t=1751387242; c=relaxed/simple;
+	bh=QQ2aSCMKAO1QDeQotHKimD7/9eejXBabA/tAb+LKHdo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=B27AZJN1PnU77BeDThdnAbJIRO5gQ/EAtmKokDA+e4FgPtxQiw2PMR9poZBFfgTczqP1hO8FYLheg2KJLMF7p0ATkf9dQC+doWEzCpIDAJIvNPt89vYwJsstbW8K3h8gNcT4al4NoXO8REFthkjwvJjFqSE/ZqsBtl6fxOeUtDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iQM3aRKf; arc=none smtp.client-ip=209.85.160.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V3VyhwdT"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7d4495753a7so395036185a.0;
-        Tue, 01 Jul 2025 09:25:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iQM3aRKf"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4a774209cf0so38307111cf.0;
+        Tue, 01 Jul 2025 09:27:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751387144; x=1751991944; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MwCrqmYe9TCJHuYWG2jCcUWVn5259lJARsV/a3PINFE=;
-        b=V3VyhwdTLToEsXD1YWSqIQIEN6M3yFpJxlHafcEkdsyuTU9kSsPawgEKuYVZvt+63y
-         AOkMQ4WeD95HEDyK1kzTWz++3vmfla148a7LUsMaMLO1aNT/lOnPACDhbx8hjueMLFsZ
-         H7/fNbaqWg5132GcfBK14esSecPdDu6iMMQ2fgfdvxEbnETs5OR4+I7/TKEuwTcpnfho
-         a+PnYguIWf1Evfd8NsDq7Qfl5337xSqEv/r/D32QT/N904G74urtm0eWHqsMHkRi7wrB
-         oYA8vTYXRaKAaXfPIbD5z5ppixsWVnZZbgtQ94I+GloXToT31vjnJNqIpu2bCz2lA4Iv
-         GoPw==
+        d=gmail.com; s=20230601; t=1751387240; x=1751992040; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BywMu5xeUMjOjbU7hpP8f/Jz2OUlepXACB1q3I9VG38=;
+        b=iQM3aRKfdGGG23gwRur9YWSplxANwDcvm+Tvbkg55revEpnMG+umvoYDcCS1XgtGO+
+         mySms15Cjcj8QVYfVdxpMguMB6DP9mB6mGUV6+PHwTc4uurFJ6X0NBeOh2LEnYRD9x0H
+         +nkTE4huRFrWHZWVGOxb8BWNXDIcaXLqg0q5qToLFGNlYHB4pTwj7Y3S1WalysCVqoZV
+         NCYjXW5ajlcaZmG/5IgqTsWORt6ksDilybJSTQbER4/BuMHVmuUCthRij/V0zCzyrGvc
+         NdtfipNLkNEWx1n1P+6jDhyBsTlY9LkMmRsNyvWFFzbrqNYPAvDPk+E49KXjYnmVyxhh
+         2vNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751387144; x=1751991944;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MwCrqmYe9TCJHuYWG2jCcUWVn5259lJARsV/a3PINFE=;
-        b=d3O1Q46y7GjYeFmuj+LvpbB4ZFa2pZQTC8AQVn3YmoKFwkFQYUIkrpV/OZt1XxlCqB
-         njaQomCBFWAbsijnTMfA9K2zNmUbptriDmOmf/OXdRgqhaZOGUyFXPeS+s3y8kU3w1PU
-         3zgrUSgLTlStJLGKMNMG7rRRWXzKIzlvbJzqtPMEKWwywP4f1d07qv8DJVtA1QsNhX2n
-         SdM8oQmDifqxZ08RRMaV1wKGvXsHMpaMmemiC+zpkraTmE4Vps4Hn9SCuMV/L/SNmXWg
-         BidniE91X97ZmOkwb+ke1rK5+O7goxvOgfkQsY++y84FWHGrtDPsosuj0/WLZHzy99d0
-         xYPg==
-X-Forwarded-Encrypted: i=1; AJvYcCUHQ/OyfIFrD+b08yZBhlRbcDZY7PkU0hf+HwnnIRV/NzShVI3WbfRxuf/n7AKhIZ6vw2jClEX1KhGD9Nd6nMc/bS0=@vger.kernel.org, AJvYcCUQKasfDe+rp3DwfSrtQ/ueJLBfFE/ekA7+wLOXrbTHwbkjZc6DBWE5qHlTHpoKkQonYxPnebsDZm2X@vger.kernel.org, AJvYcCUTtwMQXxOiku1W4DPoznOpC9GAHgze7aQxkD7Hhv4CnTwJPjcuJZ8uiKrjkLA7IwybLZAsyl1BVdr/@vger.kernel.org, AJvYcCUd3JZIEKW40w8Yxq+s7tETHdbkO6ZFHggwoI2kXl6azfEOOCgbfUTaxPUxaOtUHfS1oV7OrAAfgWFB@vger.kernel.org, AJvYcCVMu6p0Xj9ttwa4s+9GUymFzAICct63LcCjIIFSSLADQDPMME0APx6mZFiUv2UB+Uel5mj5SfhcyTKauw==@vger.kernel.org, AJvYcCVeBI+pPUT4Nn+ttTiR5Dkz3X52TEI0hmH+y5InBDyLXaozNVqXfIB/BOYjcIMq5RgCftOGMfnTpTeE@vger.kernel.org, AJvYcCWZM09PhLExxb8BbF43SbstG2tuyVMjw5m1LwIj5Y1f80QHnSkR9IIdewtPtfJgkKWs+L3YSA6PpYs=@vger.kernel.org, AJvYcCWZXg2Jz2+urxdnVTWy+xiSfCKCNjXc1b3eRwyhPpwUaHVfn69m5H1lgGguKTXT+//TcxP+8IoPpDGhZg==@vger.kernel.org, AJvYcCWaCOSTSRPZ4j0ioatChp/2r3ZzF670v7xKRaM+0uRWQgDAWOtzeJnzMa+aHlqyPrczUYGdz+C6lC3P62eK@vger.kernel.org, AJvYcCWt97SJoMr75UwejnOtHzs3HPHYKHSBJiye1THCLaD/CicDGlUvRe6XEuQYMLFbLcwSM05qDTvPry0meT67@vger.kernel.org, AJvYcCWw2O0e5YKiQmsX20BaCE+sq63vNbBtFLOBHzVHSabPxt00omU+ltiyfAMMm+U72j47zm4ZNqTDyepXel8=@vger.kernel.org, AJvYcCX6wIcpVo2H30Czq9L/WWZHQ4+CK9nntWKpFruy4k4/WWjfYNAIUOcsc8i5oR9wY0kK/y01V9nZbsNq@vger.kernel.org, AJvYcCX8isyPjbEqlX+ncRcW0i4zBx25Cxo2hQQm8sbOdsrjahW/FvvOdT/cGXiOUcb7p6wwKUpfqEcmLYJKwA==@vger.kernel.org, AJvYcCXZmS8nR/XEooGubYFQAQv3KRzuMiddPGhyTG4qvsf/7hisRCoUOambrJQcYMJF4zDtcVTAnMUTFWFU9W4=@vger.kernel.org, AJvYcCXnEAbBSVNl6iw5Jj6Be9UwqX2i9gOhLDYY7TiLMFF8btW36t7LLUknaTjsz5Q8urK+0eEikg2/4m5+@vger.kernel.org, AJvYcCXsUQAuhCc9ZXqG5nYlC1tSXwRxllGi92h43jp51KoAxZHJDC2gu2OvZ09ZsPlUjMUJ5KwhBjTb@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqLCXNyFyfh4/UXw2sSskVfZwqcJ95Ja7QgTGS9zoBx6Akd/Mc
-	5lDQUqPcRTOSCFfPAHJW2y3vrapRW/daK5PmWSrvvxjb7dOTLMOfbMT5
-X-Gm-Gg: ASbGnctj8faWoiIgfFIvgrprRXQi9O+Yh+cst0zqdVw4mNc1V962QZzUy9fKKegXMwM
-	z9/3RxcQZC2MjO4HAM8uVk7XEM1/xQGrhfy+C3nkSMAuiiUdlmt+3uNE5Axxr0/IJ61pnZTsYg1
-	sZAU2hgbsOiC6/AE2nyPhDFGzkvtsIZFj8OZ/7z+IsSdy4oGTseOvBiUAQnMve8+c3H/2LW2hOT
-	7I9EcKNVvm9hYpyKXUoGhO3zw+zEUan5qb+mVJFYcpsgg54P6iQvcYh4PsfGqinxvtrTqIfb2nI
-	Fas4VO0EBFTZoRSodESSv4RcBYTbiMILwKVKWvLC9ycHnFV29Q==
-X-Google-Smtp-Source: AGHT+IFaquJkOuj7GD/t4hRYC7j2CE8mxqIujMtOYOepN4kjeXyf+EKHtvQBv03/JpyXmxYQUG4sHA==
-X-Received: by 2002:a05:620a:1a1a:b0:7c5:95e6:ce1d with SMTP id af79cd13be357-7d4438566f9mr2476294085a.0.1751387143543;
-        Tue, 01 Jul 2025 09:25:43 -0700 (PDT)
-Received: from geday ([2804:7f2:800b:55e2::dead:c001])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd772e4305sm86349236d6.66.2025.07.01.09.25.22
+        d=1e100.net; s=20230601; t=1751387240; x=1751992040;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BywMu5xeUMjOjbU7hpP8f/Jz2OUlepXACB1q3I9VG38=;
+        b=fYsJYSohqIMTnwaBBAgddRQiSHrT4+kMcAdX0nvvQlVcjsxyDMdEIH1aXVGOCY4y+/
+         VKrQlWGiK4NSu8LBVI1TYTtB4+NnMquKKPQN25y6DqmEt7cEqUz+Sb9oWQTO45B1gCKd
+         l2Q10J3lQgJ0mtQaYCKe+Nx0q4sjsmu0otmjcsG6hcGvpDil4JiHq857dZVgYd2jN1vm
+         k41V73NxbXJitISwSpDPb1N3Iw80B/s5QTHo8fMnYFXcSZIs8OxpJ7xjFOHTTuGK/6ry
+         6JoGYlumM2CYt4Iucfv6supfBDuk/SUrow7opR2pSbzG0VnXHRHNJWSDnxJMH6Ax+b2T
+         cY+A==
+X-Forwarded-Encrypted: i=1; AJvYcCUm348NvidzT6sP83SfI9EGpnq2yf/Me2H4jZNhbxIQqMkkW1kPddvwTbsnRT4DbLHrS/hbB6MEq4PUuzD4@vger.kernel.org, AJvYcCXg2w2m5fFNfH1hXOVOFwXWaE7zcDsITVbOs8BNY16y2EtQXq9ukLwpyPM4ZCGeEtzXSLmiBuCZPk/GRCvC@vger.kernel.org
+X-Gm-Message-State: AOJu0YyffNXSkQncOlDNnIV4ZuNCkYVhCM4T/jLc2SfrcC5tmQCwayPI
+	CmXogXCpGV25g1YE17Ij9LYWeQHy5eS9Hkm4QX7/+/+Js/RAEDmBkm41
+X-Gm-Gg: ASbGnctqrlMS3DkNha+gG+ODakltbncfpCGSL7aFLW9hv5d9oVEc/x7nXDdvMKH6esX
+	RAYc7DlgiEOBRN7nkYRM5rNPTt3F2gvgtoahu1G06nOIk4ZUbKrGOlv3Xg52RMo+KcO/uvctqL2
+	LoxGNv+9Lsjxkr7jKH83IO3eMGR9xF1d0/UcqeB7YNw/Jsuhy/y2KyMkJ8K/ENV5nLUjxl441jL
+	nILLpgMQh4A82lHRtjUBG5/KhV/e4DwHMe2ynqwGxSbbwJtNmFa3DohYP0raJEDNIhYXOkVLWNX
+	384GdVAdQ1hQLQSKWdBl2uCfP7cNPB1PEEVdFSwuMp36ANJNzDTTUlAMNsN4RMTnTWoL0ry5I2W
+	4pg0qrmf63OBqKeg00yCLN/IJrh2YicsehJCxndhI4NjdsgIFgE/RQMCDaUE8rUGocIN+vv7R9A
+	==
+X-Google-Smtp-Source: AGHT+IHxC+kmVUhZKx8BbrHsNUwmheKfilrtzu0NtWxS3jwNAmYLNyl5sct6HxLhHPEwNHl4qIBmTA==
+X-Received: by 2002:a05:622a:1114:b0:4a8:18fd:fd2a with SMTP id d75a77b69052e-4a85bf69b80mr53998271cf.52.1751387239903;
+        Tue, 01 Jul 2025 09:27:19 -0700 (PDT)
+Received: from a.1.b.d.0.e.7.9.6.4.2.0.b.3.4.b.0.0.1.1.e.f.b.5.1.4.0.4.0.0.6.2.ip6.arpa ([2600:4041:5bfe:1100:70ac:5fd8:4c25:89ec])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7fc57d530sm78032551cf.61.2025.07.01.09.27.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 09:25:43 -0700 (PDT)
-Date: Tue, 1 Jul 2025 13:25:19 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: Waqar Hameed <waqar.hameed@axis.com>
-Cc: Vignesh Raghavendra <vigneshr@ti.com>,
-	Julien Panis <jpanis@baylibre.com>,
-	William Breathitt Gray <wbg@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Peter Rosin <peda@axentia.se>,
-	Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Cosmin Tanislav <cosmin.tanislav@analog.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Matteo Martelli <matteomartelli3@gmail.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Francesco Dolcini <francesco@dolcini.it>,
-	=?utf-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <jpaulo.silvagoncalves@gmail.com>,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	Subhajit Ghosh <subhajit.ghosh@tweaklogic.com>,
-	Mudit Sharma <muditsharma.info@gmail.com>,
-	Gerald Loacker <gerald.loacker@wolfvision.net>,
-	Song Qiang <songqiang1304521@gmail.com>, Crt Mori <cmo@melexis.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Karol Gugala <kgugala@antmicro.com>,
-	Mateusz Holenko <mholenko@antmicro.com>,
-	Gabriel Somlo <gsomlo@gmail.com>, Joel Stanley <joel@jms.id.au>,
-	Claudiu Manoil <claudiu.manoil@nxp.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Wei Fang <wei.fang@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Sebastian Reichel <sre@kernel.org>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Han Xu <han.xu@nxp.com>, Haibo Chen <haibo.chen@nxp.com>,
-	Yogesh Gaur <yogeshgaur.83@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Avri Altman <avri.altman@wdc.com>,
-	Bart Van Assche <bvanassche@acm.org>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Souradeep Chowdhury <quic_schowdhu@quicinc.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
-	Bard Liao <yung-chuan.liao@linux.intel.com>,
-	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-	Daniel Baluta <daniel.baluta@nxp.com>,
-	Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, kernel@axis.com,
-	linux-iio@vger.kernel.org, linux-omap@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-input@vger.kernel.org,
-	linux-mmc@vger.kernel.org, imx@lists.linux.dev,
-	netdev@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-pwm@vger.kernel.org, linux-amlogic@lists.infradead.org,
-	linux-spi@vger.kernel.org, linux-scsi@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-	sound-open-firmware@alsa-project.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH] Remove error prints for devm_add_action_or_reset()
-Message-ID: <aGQL72Ssa4RHShIp@geday>
-References: <pnd7c0s6ji2.fsf@axis.com>
- <aGP92Aqcxt-x78nu@geday>
- <pndsejf6g5k.fsf@axis.com>
+        Tue, 01 Jul 2025 09:27:19 -0700 (PDT)
+From: Tamir Duberstein <tamird@gmail.com>
+Subject: [PATCH 0/3] rust: xarray: add `insert` and `reserve`
+Date: Tue, 01 Jul 2025 12:27:16 -0400
+Message-Id: <20250701-xarray-insert-reserve-v1-0-25df2b0d706a@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <pndsejf6g5k.fsf@axis.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGQMZGgC/x2MywoCMQwAf6XkbKApvvBXFg9ZGzWXKulSupT+u
+ 8HTMIeZAVVMpcItDDBpWvVTXOgQ4PHm8hLU7A4pplO8RMLOZryjFg83NHE0wTVfiTgfz0wZvP2
+ aPLX/v8t9zh+xMsGIZwAAAA==
+X-Change-ID: 20250701-xarray-insert-reserve-bd811ad46a1d
+To: Andreas Hindborg <a.hindborg@kernel.org>, 
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <lossin@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+ Matthew Wilcox <willy@infradead.org>, 
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+ Daniel Almeida <daniel.almeida@collabora.com>, 
+ Tamir Duberstein <tamird@gmail.com>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openssh-sha256; t=1751387238; l=666;
+ i=tamird@gmail.com; h=from:subject:message-id;
+ bh=QQ2aSCMKAO1QDeQotHKimD7/9eejXBabA/tAb+LKHdo=;
+ b=U1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAgtYz36g7iDMSkY5K7Ab51ksGX7hJgs
+ MRt+XVZTrIzMVIAAAAGcGF0YXR0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5AAAA
+ QEQUd2YduvFwfOVKbXlpDNmBqkBI/rF2LKj9l/IICgYOws4KMg90w9AnSSVSXN2q6E0+ceGIEE+
+ Pe1gh1zwQXww=
+X-Developer-Key: i=tamird@gmail.com; a=openssh;
+ fpr=SHA256:264rPmnnrb+ERkS7DDS3tuwqcJss/zevJRzoylqMsbc
 
-On Tue, Jul 01, 2025 at 06:15:51PM +0200, Waqar Hameed wrote:
-> On Tue, Jul 01, 2025 at 12:25 -0300 Geraldo Nascimento <geraldogabriel@gmail.com> wrote:
-> 
-> > [Some people who received this message don't often get email from geraldogabriel@gmail.com. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
-> >
-> > On Tue, Jul 01, 2025 at 05:03:33PM +0200, Waqar Hameed wrote:
-> >> When `devm_add_action_or_reset()` fails, it is due to a failed memory
-> >> allocation and will thus return `-ENOMEM`. `dev_err_probe()` doesn't do
-> >> anything when error is `-ENOMEM`. Therefore, remove the useless call to
-> >> `dev_err_probe()` when `devm_add_action_or_reset()` fails, and just
-> >> return the value instead.
-> >
-> > Hi Waqar,
-> >
-> > thank you for the patch. However I personally advise you to split the
-> > patches per-file and remember to then precede each individual patch
-> > subject with the proper subsystem and driver touched.
-> >
-> > While this looks like a nit-pick, it really isn't, and my suggestion
-> > will make reviewing much more easier and you'll get your Reviewed-by's
-> > and Acked-by's much more smoothly.
-> >
-> > The cover-letter should probably be preceded by "treewide" instead of
-> > a specific subsystem.
-> 
-> Thank you for the suggestion Geraldo! I will do that (as also answered
-> to David).
+Please see individual patches.
 
-You're welcome Waqar! Note that David's suggestion is even smarter than
-mine: instead of patch-bombing lots of maintainers with changes unrelated
-to their subsystems through a treewide change, he suggests you split the
-patch into one series per subsystem. This is indeed advisable.
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+---
+Tamir Duberstein (3):
+      rust: xarray: use the prelude
+      rust: xarray: implement Default for AllocKind
+      rust: xarray: add `insert` and `reserve`
 
-Thanks,
-Geraldo Nascimento
+ include/linux/xarray.h |   2 +
+ lib/xarray.c           |  28 ++-
+ rust/helpers/xarray.c  |   5 +
+ rust/kernel/xarray.rs  | 460 +++++++++++++++++++++++++++++++++++++++++++++++--
+ 4 files changed, 472 insertions(+), 23 deletions(-)
+---
+base-commit: 769e324b66b0d92d04f315d0c45a0f72737c7494
+change-id: 20250701-xarray-insert-reserve-bd811ad46a1d
+
+Best regards,
+--  
+Tamir Duberstein <tamird@gmail.com>
+
