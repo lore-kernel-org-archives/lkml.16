@@ -1,95 +1,153 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B101E1DF2;
-	Tue,  1 Jul 2025 12:12:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ED58272E7E;
+	Tue,  1 Jul 2025 12:12:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751371930; cv=none; b=JLLhHV9ZU4M5zFsJBdwz4llw2vKViTmnkoFjF4h3UCiHygEydNBYzzhJj08s8ozIBpwzymmPkv5anKjfpNi81jFckHa+c96kUDNM+r6uFYhBRHJgtPaKPQWMwD4AZBRBEZxQzTSiaU1eAW3TuuxY23G3wPOBnmcA9XwmCnJPH18=
+	t=1751371975; cv=none; b=Yz3p44LARh0HsxsJG+vgsV9mWfhla6GsKq0Nk34pX6zDNEII4p/ChI7Dp9vbk81TkpJo+BRIvArGmPBdXZiEzvoWVRneugisUMES8+ZehkdbVxATfr8kcP+aH9DQY/gDfTJRIFtRsES8umejPJXSn8V80b2SexPJo+9p6e0C8SQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751371930; c=relaxed/simple;
-	bh=AoUFXLo7D7QQsry62v//yPqbsOuPy2TxjHRdRdOxK78=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XPUCXmTlPFpULHAGfi3zI8Fn/Hc1AZGEfSu5cEO9Z4q8nrxWHjWmHNO+MqJqpg/exQzK7MKkrlcj2Pfjr6BoFqsIYEszUb5CvS78r9qu091GpEp+9OH4PYHUQWw1D/qal5w8EHH1q4G957QSXJKv+LUqdfaLDaOuESrTKSdn9G8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7d3cc0017fdso340773585a.3;
-        Tue, 01 Jul 2025 05:12:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751371928; x=1751976728;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VOAD2tb6Dh85dGzwJxy3RcScPy/E8XEt4srq5E9c1Z8=;
-        b=NVVNeD0TUr02KMQRp6JbusA0ULS7+A1o52tzpXBMgy+zzJEQTG9lLqfO32h208Bw3y
-         5z0al1/m75UPNZhp5lBKWFActl91J616hXNdkCmNhQpsYFGwEyQ/+od2oe4OzwJFu644
-         XZomtAHAiqbankuVcOYgP7H7nGC+GfpGsvaFW7OxmraXDZwgqYZ9fwStpFpxI9lbZCs3
-         mIlg/ee67q6mOw7DLiSNfQAtbw3wiYdtEAPPKXUZ7KYw0H6qdO/M/0urJh7GxGNVy/so
-         oH4oCoj8+2RLQqj/PMiUke3PRbwcXmQR1MDVBf4UPjp1zzmiphfajtT+zSvNcfhkEG6A
-         u/VA==
-X-Forwarded-Encrypted: i=1; AJvYcCU6KbFMPE2EmuClM1Oa/4mMFhxhqOjW68oeT/ITJ3fwYlDhqznmR1NorGYwNerS6BLaTEBNi3VjWE4jFPN8@vger.kernel.org, AJvYcCVb8xShF1+5g8i2UJ4tZkyShLslIIBLQp9OuYXRg7cU5V9SDhAbxy7eu3zJublNIbH397cVYAOvTRCmYSrgpcZ09cQ=@vger.kernel.org, AJvYcCXEBIfJ5UAVtofcTsGzqtvQ8qQV+8Sx5CvMgsTytMWSPCLAZe/d88G0O3vPU0LW+SwInqNn02WyqpVm@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIXrBhClDFfOKstOYl+rGZFI0r9XV7QlSbwQIzfasoHPZiyxzq
-	et7VUR9VNdyRK01ImyDa/bgkN1XVUJTIsy+cdvQYrHgfUT1mZ1dCsDKnMz2XzoqO
-X-Gm-Gg: ASbGncubNKJCxdwoJuRbv6r6FDEewpcsw7ndXYqdLY6VZuFemTKOtoi+mNl1vX6iGjA
-	U7wnW5hWpdOXk/n5ln7f3JR47EAIwoUcXVrfz0WsqRR7Dz9pxThTyCT3DUDJO14nkGtlX7IMfqw
-	aISuu4l6fWlWcUCzNX2aBS55vHM7yP730Gwq3vpjjt4eEMNyHqf2ufovx+Cu1BR8f7ku+iCmNkN
-	+X+BaTTXKFk+BwCAVinhaP9EKlUom217NZJ4UBlsLMf9Vgssib1hn2K8AwIEmVab3YmxxfrTMSP
-	o62H3n8p61qDB5VgGLOMf5+uhnAe0vspo0EfKFxJWCJoJo14kW8MBuL6es8eV+MDCyFJ0tluNwL
-	4doeLjI7ZFZ2PyylPs7wwB/aVwtmV
-X-Google-Smtp-Source: AGHT+IFmwRaEPl2BFv3KnLxo3Ag22AA9eMiITWIRtPyRhx4fMEfr6S1a5BYR198czQR78HzSUdFv9Q==
-X-Received: by 2002:a05:620a:424d:b0:7d3:f0b0:39b2 with SMTP id af79cd13be357-7d443944ff4mr2448156385a.22.1751371927457;
-        Tue, 01 Jul 2025 05:12:07 -0700 (PDT)
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com. [209.85.222.169])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d443201a7csm762596885a.64.2025.07.01.05.12.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 05:12:07 -0700 (PDT)
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7d3cc0017fdso340771385a.3;
-        Tue, 01 Jul 2025 05:12:07 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUGmblqo1X7ng4+noxuYehPjRQp4bUYKp7AarVHd/MPiZ3ad/DpKmZCi3lG+KmV02dXDZGKmkhQAxDSpkaJ@vger.kernel.org, AJvYcCVWDWIes//xVTXuQzhpZUbKO2eYXEqoxtvo16Xs0PmEL+2EBGqYzabHGUOOm9cxKGg8MxfH9JSXQWn2@vger.kernel.org, AJvYcCWvPkhqGMnf+GSkJUh6UE9saUFZn+14AgvzIJlditj/nluG85JbBNPCiZ8ssrCQ9tt1jiiXGrSn1ZzoyWwrdVmKMbM=@vger.kernel.org
-X-Received: by 2002:a05:620a:ac1a:b0:7d3:e710:1d3 with SMTP id
- af79cd13be357-7d443923593mr2349956685a.7.1751371927017; Tue, 01 Jul 2025
- 05:12:07 -0700 (PDT)
+	s=arc-20240116; t=1751371975; c=relaxed/simple;
+	bh=3wnoHoKhyAyG96eGcEYegIFhqP678K43NhXgCAcN7m8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ls1LBecAyEMkhnQm9TEyCzKMsUKhRBawpRj6TdnQpj2TMGKsi/Y1FTxLNvWPChnIvlyZar7pehGwW2MHSI+0GsB71DXc15hPVSiQVcgKb608urmHsJcURKj1EqwMZrjyfZA01YlLA1h04DEJ5LM/KY/YJ30DQ5QCC6FTUu1h+2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=fail (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=P+tiwVbj reason="signature verification failed"; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="P+tiwVbj"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 560E640E0213;
+	Tue,  1 Jul 2025 12:12:50 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=fail (4096-bit key)
+	reason="fail (body has been altered)" header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id SVdnG-6_SDU9; Tue,  1 Jul 2025 12:12:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1751371964; bh=3jvGCEtZYunx69KW5dVUx7Rc541oTHidTbbd0WAhMQ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=P+tiwVbjhDOXk/b+xVCCbcXS8uvF7/6zEEXC5h6VEtMkZfBYVoaS7uydtOYQSvagy
+	 ccbigF0AW9DTEYlNww0+3VRX++bfFbv6yCK8j2mPisuzWGQgnUaT0LfdFKs4SLkISe
+	 7yQHWuC1tIyG0W9EytouWOHU4ed2RQeb0d/f5nhCRoh86ZJYoIpDdCop5i2lYYU6ow
+	 9xLXd5tVH1pPyFWj+Zxg9shiidOCgtFL1IpCFpBmN5Ws3dHEp53fRhYkCjZi4MsTpu
+	 WzBD++Ii9vUWoG+MNPkXdZlNhhltfjFZ76lDpbVacKHUp+mZd3z+k9o6gt+R60ue6F
+	 O/TL/0O3PX1RvWJaoVw23Q0eCzstCuUE2t2Zf0n8iczuUmrgyXapaNp0+TPPRQga3Z
+	 +n+v8slwpr9I+sxT+1ZcA0e3QD2it++gpiTjiuDDjqPDW+tsmEc+2SGo3iMa3aUOlu
+	 latvAcGMSS9Z3SthI9jth4ldaO+iSeUKng0DaG1GsoKtdzJ+oZYEGkYQbZaFkUfoE4
+	 ijwA+T0CjWbdvZoVsVHKPfk4/6k95mjLlSI1fj6fbKvzO4aWSPxQwuFudd0rJFAtFg
+	 6OhnJe787YH0ta78SAhITF4ph6nrccMXThmYjZCZ2/k1HCfg4MCykt3HU5chPDXGGO
+	 V1KTJDKuMo5uoEPR4hduzcfs=
+Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 776F640E0200;
+	Tue,  1 Jul 2025 12:12:24 +0000 (UTC)
+Date: Tue, 1 Jul 2025 14:12:18 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "Huang, Kai" <kai.huang@intel.com>
+Cc: "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"ashish.kalra@amd.com" <ashish.kalra@amd.com>,
+	"Hansen, Dave" <dave.hansen@intel.com>,
+	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+	"Chatre, Reinette" <reinette.chatre@intel.com>,
+	"seanjc@google.com" <seanjc@google.com>,
+	"pbonzini@redhat.com" <pbonzini@redhat.com>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"Yamahata, Isaku" <isaku.yamahata@intel.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"nik.borisov@suse.com" <nik.borisov@suse.com>,
+	"hpa@zytor.com" <hpa@zytor.com>,
+	"peterz@infradead.org" <peterz@infradead.org>,
+	"sagis@google.com" <sagis@google.com>,
+	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"Williams, Dan J" <dan.j.williams@intel.com>
+Subject: Re: [PATCH v3 1/6] x86/sme: Use percpu boolean to control wbinvd
+ during kexec
+Message-ID: <20250701121218.GBaGPQold6Kw2M-nuc@fat_crate.local>
+References: <cover.1750934177.git.kai.huang@intel.com>
+ <b963fcd60abe26c7ec5dc20b42f1a2ebbcc72397.1750934177.git.kai.huang@intel.com>
+ <20250628125001.GDaF_k-e2KTo4QlKjl@fat_crate.local>
+ <e7d539757247e603e0e5511d1e26bfcd58d308d1.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624174033.475401-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250624174033.475401-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250624174033.475401-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 1 Jul 2025 14:11:55 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUmfT=n8qf-2bPBd6VDvbomB1j9urkwX579MtttmPTVrw@mail.gmail.com>
-X-Gm-Features: Ac12FXx3DBPZG5FjFsQQAhJewDGEvSimKkmZHXwnLAwtprfWeNtS85ox4V0IBQQ
-Message-ID: <CAMuHMdUmfT=n8qf-2bPBd6VDvbomB1j9urkwX579MtttmPTVrw@mail.gmail.com>
-Subject: Re: [PATCH 3/4] arm64: dts: renesas: r9a09g056n48-rzv2n-evk: Enable
- serial NOR FLASH
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <e7d539757247e603e0e5511d1e26bfcd58d308d1.camel@intel.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 24 Jun 2025 at 19:40, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Enable MT25QU512ABB8E12 FLASH connected to XSPI.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Mon, Jun 30, 2025 at 11:34:34AM +0000, Huang, Kai wrote:
+> Yeah I agree the text can be improved.  I tried to run AI to simplify b=
+ut so
+> far I am not quite happy about the result yet.  I'll try more.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Ask it to simplify it. I get it that you want to be exhaustive in your co=
+mmit
+message but there really is such thing as too much text.
 
-Gr{oetje,eeting}s,
+Think of it this way: is the text I'm writing optimal when anyone needs t=
+o
+read it in the future to know why a change has been done. If not, try to =
+make
+it so.
 
-                        Geert
+> Yeah I agree a single u32 + flags is better.  However this is the probl=
+em in
+> the existing code (this patch only does renaming).
+>=20
+> I think I can come up with a patch to clean this up and put it as the f=
+irst
+> patch of this series, or I can do a patch to clean this up after this s=
+eries
+> (either together with this series, or separately at a later time).  Whi=
+ch
+> way do you prefer?
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Clean ups go first, so yeah, please do a cleanup pre-patch.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>   /*
+>    * The cache may be in an incoherent state (e.g., due to memory=C2=A0
+>    * encryption) and needs flushing during kexec.
+>    */
+
+Better than nothing. I'd try to explain with 1-2 sentences what can happe=
+n due
+to memory encryption and why cache invalidation is required. So that the
+comment is standalone and is not sending you on a wild goose chasing ride=
+.
+
+> IIUC the X86_FEATURE_SME could be cleared via 'clearcpuid' kernel cmdli=
+ne.
+>=20
+> Please also see my reply to Tom.
+
+I know but we have never said that clearcpuid=3D should be used in produc=
+tion.
+If you break the kernel using it, you get to keep the pieces. clearcpuid=3D
+taints the kernel and screams bloody murder. So I'm not too worried about
+that.
+
+What is more relevant is this:
+
+"I did verify that booting with mem_encrypt=3Doff will start with
+X86_FEATURE_SME set, the BSP will clear it and then all APs will not see
+it set after that."
+
+which should be put there in the comment.
+
+Thx.
+
+--=20
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
