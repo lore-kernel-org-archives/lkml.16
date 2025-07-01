@@ -1,187 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DCF4277CB9;
-	Tue,  1 Jul 2025 13:22:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4851E277CB9
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 13:22:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751376169; cv=none; b=EmnWt6eCTsCCgKuFpAEPBeclRVtz7hsGIu0SRe0B01OwwLB6HWxSi6YsNe86Oxu/6GhnXhmxO/XKOepCt33CQ1wduaE7fxnS+adDop9wAY5bZmC7JOTooaTDBVGne48h3z2OM0DE9Di6VdkeaRDnCZ6P94J19SEs2nyQynTqLGE=
+	t=1751376180; cv=none; b=lVqsUSNqqWApGxDPDnZzAEC4iybxq/9KnXThwhaAYfmtdmjDkdE9WhI3xPgWrT2Ei8tKOQCfNTw1dWi3N+HDINN4crqPI41zbaEYPg+ygZIMw0mR5DN2mp4IY8YU6j1d9uUz+OihaMAbGQozUvgpa5DsfmbXTxKOzf4SnQGsKIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751376169; c=relaxed/simple;
-	bh=kFeQuslhr/3hnNLg6rE8C4RDktELrENqA7ibJjiDglQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Kid2pCn6OmqTNFE+l3/Av6U4M+f/d9JulGMsVI1+0l2Q+MA1iup01QzyUb66+B0ldW0s1d4RTqo7qf8qV9i9TqpfGUw4oIwZIIxcMqW9LU0R5pLwsh1uH/sVu3Cq7VxUi9i7xXQvKYPNLLFMvvvVtqUJLHtyFr9akffPUyFLLEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qVMYqytS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751376180; c=relaxed/simple;
+	bh=M2TOy5psDFxo7ZBmqD/2Phn31Srm6PKEbj9e6rTEogM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RI8Qjwnb2JQQyJY9+Sc2Wc9oPbKFl0/qSmW1yFO8TrXLBo81Y/DjWggz779QpUF24KCwXS71vcrDmE4yIUaF0CVwm4V3iLc6yJ1K4AdRGTSz3W5wUEY+Ry3tS1sfT5gm2IvhznrchJ67UK6iLBrNTqek6w9//OONBdUcN/mHgHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=crrWlB+H; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qVMYqytS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 985E3C4CEEB;
-	Tue,  1 Jul 2025 13:22:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751376168;
-	bh=kFeQuslhr/3hnNLg6rE8C4RDktELrENqA7ibJjiDglQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qVMYqytSw4c+fOMd9l6LPJD418MTvLPABae9DgFK+vaNEH1vhTzBpc9VyIPGUMBd+
-	 67F+gIEdEkgPGeoBLs+MSn5KLtNV9/ImU4Ogas2XPmphymo7NE659PBCiONYHE4Gb5
-	 sA+RkUa4y8aPlSMY2v/mzMzSiP53nfZV4rSdsb+4IxxciCaVQJUlVh8Ts9uSSFsPDf
-	 xoVErj0Q7+AutJ7ZX2T2WQ/N6PXU9Tx3Bt/kVwnDaoxAVJu+x0Fm9z+r6RTxvsQ7pH
-	 XxqGScWN/T4f43vb4VvDg/x7PZhhIjSHwnb7rKSUlHExD2+QKk4eIA1UoFuCQ/24ui
-	 YnOKOoZmuHC+A==
-From: Philipp Stanner <phasta@kernel.org>
-To: Lyude Paul <lyude@redhat.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Philipp Stanner <phasta@kernel.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Tvrtko Ursulin <tvrtko.ursulin@igalia.com>,
-	Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
-Cc: dri-devel@lists.freedesktop.org,
-	nouveau@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	linaro-mm-sig@lists.linaro.org
-Subject: [PATCH 6/6] drm/nouveau: Remove waitque for sched teardown
-Date: Tue,  1 Jul 2025 15:21:44 +0200
-Message-ID: <20250701132142.76899-9-phasta@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250701132142.76899-3-phasta@kernel.org>
-References: <20250701132142.76899-3-phasta@kernel.org>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="crrWlB+H"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-6088d856c6eso10595353a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 06:22:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1751376176; x=1751980976; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=azprNnXK+qMmn0stkjujoWcCe9uzMbdfT07On0LmLBM=;
+        b=crrWlB+H+qGqCf0QV6fU9RZHVidUcKUOuF2TfbdusmcR141hO3rr9JNDqnBkgW28c1
+         OFNndq68ZknfNJbayO0Cgf5/1lkB12vLr8jLmEsnWK28z9aWYP0q5fsNRKS2kcTdPV4t
+         WsbEpQ1rxfr/C2xH99kWHH5g//8f3hk9cBPdirtbGgf2FcJ6gGo0qwVSs4sK+gUaxoWH
+         3xHJ4kKkR8XQHToSdFo6YCTxSuLbtz4k0ctcfgoLH7CqD/n+LcEMfClN59RKntFez+6S
+         GVjcwapBFAO68SpU1Z/pFXCMoQmQvdxq2+wVCXczqhvC0wMdY7KCKKfuKSHG4efkkbaR
+         IKzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751376176; x=1751980976;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=azprNnXK+qMmn0stkjujoWcCe9uzMbdfT07On0LmLBM=;
+        b=NqtfkuQJvcggJH96oIn9iBP8I8tlY4VAi1Rq/ivpQkstHUq/wYixyeVJc+djVrN8tz
+         tbc+sdfw0CgJqSM9Ka3ayuEFJiag/TPaL0R7Vs8gCK0D36fvZqxDeQRDfj8sCEKEnt9B
+         UjbocDp/ET9KVojq8rUe017troIbIiDNaTlY8OpDY0exFSiT+Pk72jK2VF4RBt09SACA
+         4PnXpQrsVy6YrGaHdaDECDe0/15k0lBR/GBEW0QEBRKgw9DyFP/H9FEQpRNSpZkDTRmv
+         Lkbg3IkiIHR+Z3mPI98lEUNcMDxVA/ogYHJ266erkMicqBIdqQ3iULpuQiaeKVNHuwS0
+         v4mg==
+X-Forwarded-Encrypted: i=1; AJvYcCW0+r/3sCqeI8OMUhSh/R+PzrBmcBWGIncVp82Lmkd10tNmWIL4MCorQYJ+SAMd1ONwNN4Q6/E9sQzHJnM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxB1zTGVJOT5faVw3eYGn5IjiN8PQEOxyJ0zwooi9EStGqyoqFG
+	i2GbKJPFNKEc53A+FZOgamDfkdfwlMZaKbV8bO2o9uuldtBo3cUTcO62Jb4qtytHrX4=
+X-Gm-Gg: ASbGnctcSMY+NcpT4KoWjIu5Viar2b2RGo5wWBX4Yn9Vkiswl7AruLUayH4phXvdM7U
+	qdEjiloKyu4CualJAbAIzAjMPwq5uTEPlcjw5zi56kvnb+kyFVl678ZC5ri0Jkj0aM3WRheTJRi
+	Hns6PmGCGruMrPKX6eSn5L1eNYUgWg1nLXHKa+EU2PkIHb5N8ppqdEkxupuk9P1OzBV9ohhHe2f
+	NraTWjEIcXd2JLc+VA+Dkm4/kR+oiKQUDHxTDyq07jrxVr8npTIdXcbiZo4ASg1PV3voC+FP6Vq
+	GcxQ1QTYUjGkH60Ar2zxl1XxBtTzgJmz/vNA1V4/c2R0Uh82f4b0CWYBXBRy0bq28a2bENeuH6q
+	qJqd2aa3utmvx3hxCaRVJY3tDLVoZ
+X-Google-Smtp-Source: AGHT+IFdlcq4Z1/1ZJmJ8k0tRF9kAcq1ga6wtmW543q51nxSjyxVLxkksVhic/2JaL3ZDFS+rayJKA==
+X-Received: by 2002:a17:907:97cc:b0:ad5:74cd:1824 with SMTP id a640c23a62f3a-ae3500f27abmr1787598666b.38.1751376176429;
+        Tue, 01 Jul 2025 06:22:56 -0700 (PDT)
+Received: from ?IPV6:2a02:3033:264:3f6c:c824:546f:eed:ab8a? ([2a02:3033:264:3f6c:c824:546f:eed:ab8a])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353ca201asm871356066b.150.2025.07.01.06.22.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Jul 2025 06:22:56 -0700 (PDT)
+Message-ID: <ebd0bb9b-8e66-4119-b011-c1a737749fb2@suse.com>
+Date: Tue, 1 Jul 2025 15:22:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] net: usb: usbnet: fix use-after-free in race on workqueue
+To: Paolo Abeni <pabeni@redhat.com>, "Peter GJ. Park"
+ <gyujoon.park@samsung.com>, Oliver Neukum <oneukum@suse.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <CGME20250625093354epcas1p1c9817df6e1d1599e8b4eb16c5715a6fd@epcas1p1.samsung.com>
+ <20250625-usbnet-uaf-fix-v1-1-421eb05ae6ea@samsung.com>
+ <87a7f8a6-71b1-4b90-abc7-0a680f2a99cf@redhat.com>
+Content-Language: en-US
+From: Oliver Neukum <oneukum@suse.com>
+In-Reply-To: <87a7f8a6-71b1-4b90-abc7-0a680f2a99cf@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-struct nouveau_sched contains a waitque needed to prevent
-drm_sched_fini() from being called while there are still jobs pending.
-Doing so so far would have caused memory leaks.
+Hi,
 
-With the new memleak-free mode of operation switched on in
-drm_sched_fini() by providing the callback
-nouveau_sched_fence_context_kill() the waitque is not necessary anymore.
+On 26.06.25 11:21, Paolo Abeni wrote:
+>>   drivers/net/usb/usbnet.c | 3 +++
+>>   1 file changed, 3 insertions(+)
+>>
+>> diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
+>> index c04e715a4c2ade3bc5587b0df71643a25cf88c55..3c5d9ba7fa6660273137c80106746103f84f5a37 100644
+>> --- a/drivers/net/usb/usbnet.c
+>> +++ b/drivers/net/usb/usbnet.c
+>> @@ -1660,6 +1660,9 @@ void usbnet_disconnect (struct usb_interface *intf)
+>>   	usb_free_urb(dev->interrupt);
+>>   	kfree(dev->padding_pkt);
+>>   
+>> +	timer_delete_sync(&dev->delay);
+>> +	tasklet_kill(&dev->bh);
+>> +	cancel_work_sync(&dev->kevent);
+>>   	free_netdev(net);
+> This happens after unregister_netdev(), which calls usbnet_stop() that
+> already performs the above cleanup. How the race is supposed to take place?
 
-Remove the waitque.
+That is indeed a core question, which we really need an answer to.
+Do I interpret dev_close_many() correctly, if I state that the
+ndo_stop() method will _not_ be called if the device has never been
+opened?
 
-Signed-off-by: Philipp Stanner <phasta@kernel.org>
----
- drivers/gpu/drm/nouveau/nouveau_sched.c | 20 +++++++-------------
- drivers/gpu/drm/nouveau/nouveau_sched.h |  9 +++------
- drivers/gpu/drm/nouveau/nouveau_uvmm.c  |  8 ++++----
- 3 files changed, 14 insertions(+), 23 deletions(-)
+I am sorry to be a stickler here, but if that turns out to be true,
+usbnet is not the only driver that has this bug.
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_sched.c b/drivers/gpu/drm/nouveau/nouveau_sched.c
-index 2ec62059c351..7d9c3418e76b 100644
---- a/drivers/gpu/drm/nouveau/nouveau_sched.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_sched.c
-@@ -122,11 +122,9 @@ nouveau_job_done(struct nouveau_job *job)
- {
- 	struct nouveau_sched *sched = job->sched;
- 
--	spin_lock(&sched->job.list.lock);
-+	spin_lock(&sched->job_list.lock);
- 	list_del(&job->entry);
--	spin_unlock(&sched->job.list.lock);
--
--	wake_up(&sched->job.wq);
-+	spin_unlock(&sched->job_list.lock);
- }
- 
- void
-@@ -307,9 +305,9 @@ nouveau_job_submit(struct nouveau_job *job)
- 	}
- 
- 	/* Submit was successful; add the job to the schedulers job list. */
--	spin_lock(&sched->job.list.lock);
--	list_add(&job->entry, &sched->job.list.head);
--	spin_unlock(&sched->job.list.lock);
-+	spin_lock(&sched->job_list.lock);
-+	list_add(&job->entry, &sched->job_list.head);
-+	spin_unlock(&sched->job_list.lock);
- 
- 	drm_sched_job_arm(&job->base);
- 	job->done_fence = dma_fence_get(&job->base.s_fence->finished);
-@@ -460,9 +458,8 @@ nouveau_sched_init(struct nouveau_sched *sched, struct nouveau_drm *drm,
- 		goto fail_sched;
- 
- 	mutex_init(&sched->mutex);
--	spin_lock_init(&sched->job.list.lock);
--	INIT_LIST_HEAD(&sched->job.list.head);
--	init_waitqueue_head(&sched->job.wq);
-+	spin_lock_init(&sched->job_list.lock);
-+	INIT_LIST_HEAD(&sched->job_list.head);
- 
- 	return 0;
- 
-@@ -502,9 +499,6 @@ nouveau_sched_fini(struct nouveau_sched *sched)
- 	struct drm_gpu_scheduler *drm_sched = &sched->base;
- 	struct drm_sched_entity *entity = &sched->entity;
- 
--	rmb(); /* for list_empty to work without lock */
--	wait_event(sched->job.wq, list_empty(&sched->job.list.head));
--
- 	drm_sched_entity_fini(entity);
- 	drm_sched_fini(drm_sched);
- 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_sched.h b/drivers/gpu/drm/nouveau/nouveau_sched.h
-index 20cd1da8db73..b98c3f0bef30 100644
---- a/drivers/gpu/drm/nouveau/nouveau_sched.h
-+++ b/drivers/gpu/drm/nouveau/nouveau_sched.h
-@@ -103,12 +103,9 @@ struct nouveau_sched {
- 	struct mutex mutex;
- 
- 	struct {
--		struct {
--			struct list_head head;
--			spinlock_t lock;
--		} list;
--		struct wait_queue_head wq;
--	} job;
-+		struct list_head head;
-+		spinlock_t lock;
-+	} job_list;
- };
- 
- int nouveau_sched_create(struct nouveau_sched **psched, struct nouveau_drm *drm,
-diff --git a/drivers/gpu/drm/nouveau/nouveau_uvmm.c b/drivers/gpu/drm/nouveau/nouveau_uvmm.c
-index 48f105239f42..ddfc46bc1b3e 100644
---- a/drivers/gpu/drm/nouveau/nouveau_uvmm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_uvmm.c
-@@ -1019,8 +1019,8 @@ bind_validate_map_sparse(struct nouveau_job *job, u64 addr, u64 range)
- 	u64 end = addr + range;
- 
- again:
--	spin_lock(&sched->job.list.lock);
--	list_for_each_entry(__job, &sched->job.list.head, entry) {
-+	spin_lock(&sched->job_list.lock);
-+	list_for_each_entry(__job, &sched->job_list.head, entry) {
- 		struct nouveau_uvmm_bind_job *bind_job = to_uvmm_bind_job(__job);
- 
- 		list_for_each_op(op, &bind_job->ops) {
-@@ -1030,7 +1030,7 @@ bind_validate_map_sparse(struct nouveau_job *job, u64 addr, u64 range)
- 
- 				if (!(end <= op_addr || addr >= op_end)) {
- 					nouveau_uvmm_bind_job_get(bind_job);
--					spin_unlock(&sched->job.list.lock);
-+					spin_unlock(&sched->job_list.lock);
- 					wait_for_completion(&bind_job->complete);
- 					nouveau_uvmm_bind_job_put(bind_job);
- 					goto again;
-@@ -1038,7 +1038,7 @@ bind_validate_map_sparse(struct nouveau_job *job, u64 addr, u64 range)
- 			}
- 		}
- 	}
--	spin_unlock(&sched->job.list.lock);
-+	spin_unlock(&sched->job_list.lock);
- }
- 
- static int
--- 
-2.49.0
+	TIA
+		Oliver
 
