@@ -1,218 +1,289 @@
-Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011018.outbound.protection.outlook.com [52.101.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A5B274B53;
-	Tue,  1 Jul 2025 13:24:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751376248; cv=fail; b=O5nKn4d7+owDrOV5W0dJFi82HChglU47d1VQ7RpjSl0q821nK//La0Ie3GHBrkvAfPgwzb3i43oHgCHgCmleIWIuzRMxIPbJMi4kAkmzDwe6yxgCGvixamEfEuQF71Wl0+VhJLoKIqdFHItW1iNvPy2pUyqJk/Vd8PBC/EdCXCY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751376248; c=relaxed/simple;
-	bh=UvT0nuVA+YtswpL8TP4g5pL/7ZGieIKy4p7+WZl5+a8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=oV2Iwa2GtHKbP03a2aCVKiY7qQ77vQ8MjU88HA2ahvI0Ig3WR3GzxAlCTXuFFnxALGzZEi8AqD7AJts+UxFKPq4xndZRuPhW4YIuWz5n40Qr+aV8GV0xiV2U5WsIpwDYnejsBzffbxM2tVdIrTrFt6JOqKpnatCygCvFydVGv6M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=UvtfmaQS; arc=fail smtp.client-ip=52.101.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C179E2798FB
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 13:24:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751376252; cv=none; b=m1lje8taNLiZFdEYu6jRCoDNzZYJOGdINHvCdV+1HoBubYYtwTcJmE9CJ4F5alEv+uPO8AoAt8VLt+QjUFNUh1yVODQYlYwyE0t2tXsfOViWX8wsY+Nen05gQ+C6VMnoFqf5N/kpINJlPlBAuXYEJ44sKI7ZqbGiZGYNDcV+s00=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751376252; c=relaxed/simple;
+	bh=xXqDj1wJ7/Ymtp0P5loQ2F/FbTjzYl1Bd3O0meHUjcM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FrxsVac1/fDTW0X5xQbCOXLL7N28kcvQlRKb2bTg/uhPiHW0JLo6pY/rR7t4V7ZwX4ifmpwbEKrf76UHtQevsirRGLZP9Wc16DF/6x4l/FEPc3q+4wzuGhHwhlIA8olDas6ymDZtM00A4GD9jNqcQ3RXeS/6VTi7myx60M420Bg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=0KfyUxeE; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=DSHFGY1d; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=k2g4a9TZ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=pC2n33Vt; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="UvtfmaQS"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ONXUxtFAicoIpaCpxVfMxRmIKcLOQQPu7cPonGFm2UZiImmoPqGlEgl6GLFNz8I4lbOSz0zVYwcpIWqgIXtUW1dr92Zs5qaBcR1MckZ/NTNKcy3ix+yomFhExOyng3pWdY5Khb/al6LUrNoh/Td0QJPf0eHDgSIpZQxaloM/JJ5mlFKBTwDauF0kZRdt9kA9fhXNSq6mAHJiAxDE+UV7wIJSCM3Q9FxmysNCBMoDRQ2pffl+fIMdYp9nZQB+emOZi4xNabTfZshYCeU2j0N9ch+HJ0ZReHxU9mWfaIzLdC6TObPmmY3kZ+Fr9N3Eze8LDFQzuyshlC0sVhbmAMxB9A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Wu3eB8uqgpffjIj3biODbLbSjeFmZ6za1NKqg+WiZms=;
- b=oN6RlPitG8OwrXOC+b+6NiB8Y31uNQ1u2+rUu2AqS0IlzhslGk78NOwhmzmfqlc+JEKwpMKUDF0ArXVM0MsL569pcpjY08cbVK5PJOgTXXynFO+iE1H3En0803Wu35uswD9eHNDqfV38LgUcjBAfWNi0f8d0jleGelQRfNtU4btUTy/g2GXZJF4xtNI4WfSwCZa2atOaN/licI8NLrCs1xfKKTby3nkqEuOpUxem+88O0wXhGWn9I3H4N9MIjZsoFvPSMb7XwSw2pf6xJQgCYsANbUqW7254Z3XvYEytX/OAW1QSgAqt1B62f/9/8Z6GSDy/PmBU4dqgyBvJ6EHShA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Wu3eB8uqgpffjIj3biODbLbSjeFmZ6za1NKqg+WiZms=;
- b=UvtfmaQSWgifYOzRfVDlBpyneOBVH9kqoPntkv6nYrwfWliPN974n3jFkw66uGQIt/2u/WXSE9buWbCsPLSnFO8udA+0D/EGyuekdllq+kZUSOPIstki6Ae2zyIW2mfGluTj+5aXLTywHBgTIQ0VM3YbrgZcAv2T9FtRv9pkHDuUCJqvIlJya/BV68CYf87fjmc8GAtlg2bxs2XhWPBp7XlLOkqhR5bjRUqTxtLZZAG0tuX4BU0mFGj0zu4BaET5akM9yNrm9Ed/lZIOVvye7lol2ltC2c7RgvU7gcYR6ZatCqyzsBoFzI57BqeKges9FdXS+mpBc5pXsu3BxxqKQQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by AM8PR04MB7267.eurprd04.prod.outlook.com (2603:10a6:20b:1df::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.32; Tue, 1 Jul
- 2025 13:24:01 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630%6]) with mapi id 15.20.8880.029; Tue, 1 Jul 2025
- 13:24:01 +0000
-Date: Tue, 1 Jul 2025 22:34:33 +0800
-From: Peng Fan <peng.fan@oss.nxp.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Peng Fan <peng.fan@nxp.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Abel Vesa <abelvesa@kernel.org>,
-	Frank Li <frank.li@nxp.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Abel Vesa <abel.vesa@linaro.org>
-Subject: Re: [PATCH 5/5] arm64: dts: imx943: Add LVDS/DISPLAY CSR nodes
-Message-ID: <20250701143432.GA20538@nxa18884-linux>
-References: <20250701-imx95-blk-ctl-7-1-v1-0-00db23bd8876@nxp.com>
- <20250701-imx95-blk-ctl-7-1-v1-5-00db23bd8876@nxp.com>
- <466b4352-91b9-4259-94b0-b8228d8282e9@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <466b4352-91b9-4259-94b0-b8228d8282e9@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: MAXPR01CA0098.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:5d::16) To PAXPR04MB8459.eurprd04.prod.outlook.com
- (2603:10a6:102:1da::15)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="0KfyUxeE";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="DSHFGY1d";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="k2g4a9TZ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="pC2n33Vt"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id F1C8A1F399;
+	Tue,  1 Jul 2025 13:24:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751376249; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Gj7LAvBX+B7AFcpf2gN6CbdwlzROH86VQ90+DxHz4P4=;
+	b=0KfyUxeE9gLBsCJl6eFvUMl/NUkTwajv4ObGZdRbU9BJPnT17eN3+orNTrZUNlyam1yXXq
+	XV7r9x/2czpeZ1D6E0r647nrpwd2MW6ulGGcQUxubUEUp8nA99+WEFC2+b5m4v05aCKuAo
+	iOtfao8NFhGvgGSnoTDUMtn4Oha+Dic=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751376249;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Gj7LAvBX+B7AFcpf2gN6CbdwlzROH86VQ90+DxHz4P4=;
+	b=DSHFGY1dGBz2SIn1yXZcWDXIe31d+V1yj+mcqKsiyfB1TxLqz/tVQ2ym6WB65EYrbFsSGf
+	aasJqY5mJ2tdZhAQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751376248; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Gj7LAvBX+B7AFcpf2gN6CbdwlzROH86VQ90+DxHz4P4=;
+	b=k2g4a9TZ+mEeo+99ew/RtFpR81VTJ4o9bmhNLlBQQaYKRWFzS1pHslK6NUtRFJra+R8IIj
+	CC4TsxvTjOukEnrjsOqEeL+eR9VOj9qcz9ABPhhHGSSX/8zvUGRaVMYoTvY28lGBLAOWP5
+	oYFsG2rilj42FLn9xM83FVkqK1Bfq0k=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751376248;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Gj7LAvBX+B7AFcpf2gN6CbdwlzROH86VQ90+DxHz4P4=;
+	b=pC2n33VtzF+BIZOKEpB/xiCUBZENOCZvw1fRQrsMUNXxwdVQsmFLtK+R29KPL8KuthqJcQ
+	I5Nt7F47EfbQFACg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E08B413890;
+	Tue,  1 Jul 2025 13:24:08 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id m5fbNnjhY2jBegAAD6G6ig
+	(envelope-from <jack@suse.cz>); Tue, 01 Jul 2025 13:24:08 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id B30ECA0A23; Tue,  1 Jul 2025 15:24:07 +0200 (CEST)
+Date: Tue, 1 Jul 2025 15:24:07 +0200
+From: Jan Kara <jack@suse.cz>
+To: Andrey Albershteyn <aalbersh@redhat.com>
+Cc: Amir Goldstein <amir73il@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Casey Schaufler <casey@schaufler-ca.com>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>, Paul Moore <paul@paul-moore.com>, linux-api@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
+	selinux@vger.kernel.org, Andrey Albershteyn <aalbersh@kernel.org>
+Subject: Re: [PATCH v6 6/6] fs: introduce file_getattr and file_setattr
+ syscalls
+Message-ID: <uvxftp37cpvn7emugit7zsmyjmkaivuzxerwfw36ukzrycxtfp@krnv7y7akpjl>
+References: <20250630-xattrat-syscall-v6-0-c4e3bc35227b@kernel.org>
+ <20250630-xattrat-syscall-v6-6-c4e3bc35227b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|AM8PR04MB7267:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4e50c1e4-adb1-4be8-bb76-08ddb8a28acb
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|52116014|1800799024|366016|19092799006|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?zVqL6F598ZprRyfFLVMH1hpGxZ+lRjzm1DxOhAmqPla5PWlM/znzV1zDVSre?=
- =?us-ascii?Q?alBreb3JxIqSyP3T97rytFpjNijdlNM6eBH0NEUiGB2A+eeZiZxsyjHAfJRZ?=
- =?us-ascii?Q?V2sXhnxyhFVQrrNmOcwrfO3YYshnW5hjfkXacrzG75illP7U0XhsFf8DITWD?=
- =?us-ascii?Q?RaMPqEJrkoDkdJYMjCMDdRC3zjOyV4wRBdTZqZeqQSsOe+KCyHiQ7qvgBe3x?=
- =?us-ascii?Q?p1yz+yiRMVZcSWyvJkBO8eji6wt2NPr4E72fPM3xxLpBf0+gdjIxNGg5mcsD?=
- =?us-ascii?Q?d9edNAYQ9X+2kXzmozX0MpU3JFlGTzl5pQ/ejZBUGyGaGZbFGJVHzPNmVtMG?=
- =?us-ascii?Q?GPrib+FXXS97rFOUYUgtCNY8x3KpKX3FQDJc0dWZAMDzaBL+s4/8pIdN++19?=
- =?us-ascii?Q?0gxwk3AmarvOnhleC+S/wQ2DkOr2mt5QSItgx995Z1GWLlcJsznHJ12nadPu?=
- =?us-ascii?Q?9XY+25MZ+td3/5xahaFzDBHyQbdD2S0G5gs59NSANwNBx9hAeC0IaD5O4XI7?=
- =?us-ascii?Q?eAlnr5awjYENFjEoNE9iA2xi002u2Ia8Ilh5sIHo8P2hcVFCnzihN2QniDiu?=
- =?us-ascii?Q?YpjAV2TyWUCiBIqe19bzhi1NE4G+ZkMXUI1TCSn6oiAT2TzjmgDnJe2sekC+?=
- =?us-ascii?Q?yl4gCeeU6XjRPAufvrEOCPj3rCpNjzj3oHl10N20kaAKtK39C0V1zcCpzHfa?=
- =?us-ascii?Q?oZdzRa9GGDgeRrRMLlXx/qgmY+cmwH/tNNZe+6Ur3Qb0L1jRbgup/CF1pVvj?=
- =?us-ascii?Q?twMRYeohtEt/O37lSUSmTl01zkuFB3V6dP9Z+taMcopbUtv6vHAr+eUnVjLh?=
- =?us-ascii?Q?IvVWP+WWHul8j4FcgEWlTh893OevuhVWAilwa8nUpCT5wTADF9grJFLNwT5m?=
- =?us-ascii?Q?UiwHJ86ACdltiVUnbVpiOekxU5z72vLSHhlq4N3XEvNmrMAho1hKsHUIAtMG?=
- =?us-ascii?Q?IyX1QuBcMohX9QLM39lKuk6auuQzhCMrvlxr9txvEER08zFDRmadyzypiofP?=
- =?us-ascii?Q?Z0cXi2x0ZvSsY+hRCpkt3bGy0lLxAKL9NvxNX9twXe03bxLWC6TNHyHR6MCw?=
- =?us-ascii?Q?lv4Vee1Do0P32rk9d3NbvABAhGmU1cw51Aeib5OVjGgESR9+YCwj2fSXUuWP?=
- =?us-ascii?Q?UqtX6dqkzV2/V4ize8hzTRdxnQ+WFqfVKnHZvU8EyO8sCHNCi14+CX7x1zlD?=
- =?us-ascii?Q?jDNipWJNYZlzddU9nuolOk/dF3PbWzBdYa5EWZ1ZGJc4dxnWIdR+Rz4ARw1X?=
- =?us-ascii?Q?TBLHjYBC1PsUKwIBH4CinxK6A5BMp1nBd9ikZv7SX/KnMcSiRMa/IyfYZvQK?=
- =?us-ascii?Q?YUlCki3rh7XbeQ6EpaYUavUtvNP1amGitDYBrySf+AsuFy2p/nz7puX8qpTI?=
- =?us-ascii?Q?TYyt++LvAVr3ZJL6/te+U70AwAGW7wq3jJI0lNf0COBsjflvlsJntDlDr0Tp?=
- =?us-ascii?Q?8vIxc/xA+uKBwONMqUkUYSWfnVtqx9gJdWoQrDDzveFhLyrdSdZtLG3EhqvQ?=
- =?us-ascii?Q?DC1My43QsIdTfLw=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(52116014)(1800799024)(366016)(19092799006)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?J+/hejWtEYoAvEj9bRjQ1LCY3t+1es3tjKjrzs3of9Mfdu6XzWs9JknBTaaG?=
- =?us-ascii?Q?8mdgJtNtOi7jANchvmP+VRtWsND0S4tCqKfUBFKMauMaWe17ljBx6YzVgi8f?=
- =?us-ascii?Q?ZHqvx3c1enmI2yE896DmVEXbxA70UaBAu91rC3ZjGuiPOFFMuV/9waMjIENM?=
- =?us-ascii?Q?L9ajPSrWne3wFjtJrHIEwW7yX/+OP/nI+yud5CvnbSeKTq8Ztru/ImCwP2St?=
- =?us-ascii?Q?HnVJz+PFfYuZ+UJk5J6DX+hLJHfm5dBU/1QJJquyXG0LZ+Lrjhpd8rxmNlZ/?=
- =?us-ascii?Q?/+ctG3dOrTA0Oi4Yg7N6NfODzpr7AJpJs/IbWDdQUcN7iF1AFUUxL+1IPYSA?=
- =?us-ascii?Q?e0x6NMWxgVcRM+gTwiWEg3A+Dety88hqxOsGN1TGLWdOJLRd8dzjycHK+9gD?=
- =?us-ascii?Q?0aNTQzfFY3KeoebUl4EjcjNTM46D+unA/zsQ6H8Qo6m4B1PiUTsn4THslk6o?=
- =?us-ascii?Q?DZbdehzexeVQldjDNvpWlEAdtOeFaDN6EhHi59EWmjIgELk5srymXCm3zgmN?=
- =?us-ascii?Q?EBRXg8yYb0cPHoo3bioTibJ4uz+fuArP79dnI0oa3jTp7yBu2W6YZpdKmbjP?=
- =?us-ascii?Q?w3iIb+JL37Urasjo7F4mmEApUg4mBCPqss5NwVVW6jzwTCUui0ff7wx8bfX9?=
- =?us-ascii?Q?2zzDZouphqIqqf/Np/ffgpBayBLECMMBv/f/hwKSxmeyk3Du+2WBMcEjtsKX?=
- =?us-ascii?Q?MLz4h1rW9qCVOxIlLVDvtPnSrGmPSNqQGETR2Sr6Vl3+qZqI4+fFHHVjJd+l?=
- =?us-ascii?Q?F+O9KoHHt8LySawnc8g7BcClBUVFV7ci77DUPfdNcLFcdvtKAG6LowPixAku?=
- =?us-ascii?Q?qlWO3MQcJ2wzl0JhsvNHVOtwFhh6sgiA0GEZei0xEgSkxOanNXNu9TTEm/OH?=
- =?us-ascii?Q?w1GC7vbBWp7MlQsJSdcGaEqa/R7M+qTQO+OxeDXpZG1jGbT/84KyXn2erUFC?=
- =?us-ascii?Q?mbTx2IZPVfVAugbSH4eotBWDMhaKczEgERobdF7Hl7nE0MXdf3NyAV74ITlX?=
- =?us-ascii?Q?+OPPZ7Vr4vOi5FLE3FmE45pA57HSqbUlFeDSK5Op9JuGy8ifjq93jrmwH9ef?=
- =?us-ascii?Q?Rjgo9O1Er699z4zI/Z7KHbHRG5j+PgZvWDp+ZQq9IKosfkdW7q0OAU17z23e?=
- =?us-ascii?Q?Ow4mm1NJIYJaFqDq5WnTKqkUj4YD00DkbOU9gFnICXdLGY/UyDpfQ8AVWjqr?=
- =?us-ascii?Q?tgkQO8dtmdh3gu8GPObfgsBCzO5ViEXKk7A4lQiOEuo/apmkLQkk3YCbw8Tj?=
- =?us-ascii?Q?e74gONUIABCjRPJuENw0NouVGGx2Xn8il3ojJ5ipB92YK+P5Yqe1MvFMIrHq?=
- =?us-ascii?Q?ceHf9rlO8LcrnK/zJVI8mLGSWkAF4vRl/wBKsi4LdKBEDsVfvpV0WMTazL/b?=
- =?us-ascii?Q?/U7ebG/+hYW/uwrh/TVTNQTiemu47Bk4ZrTZu8NcDMX8u7sYEDHz9I2AzRt2?=
- =?us-ascii?Q?dFvzuQyuBeHGhJC0CIH0uJNVJmNP/iWL0hWjpE7mO7k5mB9hr8KFZwqSOTMy?=
- =?us-ascii?Q?UiNd1IAB9KrXR24250DamzIzuqSmuSCkXicer0Hn+Tjb7senTzomkyp07gbW?=
- =?us-ascii?Q?+Y4b5gEtrmsLNMnYJRK9SJ0AJ6ufNsRLdFl5evTf?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4e50c1e4-adb1-4be8-bb76-08ddb8a28acb
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2025 13:24:01.2260
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bKuXJPfhtoIFdIVuYEqVkQpzUyFztHz/cwXviUK7CJdRqikEK0kYs4yfIaeIONxNeCIfVOxObEo6NecrzTGkQg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7267
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250630-xattrat-syscall-v6-6-c4e3bc35227b@kernel.org>
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[3];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,arndb.de,schaufler-ca.com,kernel.org,suse.cz,paul-moore.com,vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email,suse.cz:email]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
 
-On Tue, Jul 01, 2025 at 01:38:11PM +0200, Krzysztof Kozlowski wrote:
->On 01/07/2025 09:04, Peng Fan wrote:
->> Add nodes for LVDS/DISPLAY CSR.
->> 
->> Add ldb_pll_div7 node which is used for clock source of DISPLAY CSR.
->> 
->> Signed-off-by: Peng Fan <peng.fan@nxp.com>
->> ---
->>  arch/arm64/boot/dts/freescale/imx943.dtsi | 34 +++++++++++++++++++++++++++++++
->>  1 file changed, 34 insertions(+)
->> 
->> diff --git a/arch/arm64/boot/dts/freescale/imx943.dtsi b/arch/arm64/boot/dts/freescale/imx943.dtsi
->> index 45b8da758e87771c0775eb799ce2da3aac37c060..cf67dba21e4f6f27fff7e5d29744086e4ec9c021 100644
->> --- a/arch/arm64/boot/dts/freescale/imx943.dtsi
->> +++ b/arch/arm64/boot/dts/freescale/imx943.dtsi
->> @@ -3,6 +3,8 @@
->>   * Copyright 2025 NXP
->>   */
->>  
->> +#include <dt-bindings/clock/nxp,imx94-clock.h>
->> +
->>  #include "imx94.dtsi"
->>  
->>  / {
->> @@ -145,4 +147,36 @@ l3_cache: l3-cache {
->>  			cache-unified;
->>  		};
->>  	};
->> +
->> +	ldb_pll_pixel: ldb_pll_div7 {
->
->Not a DTS coding style.
->
->Please use name for all fixed clocks which matches current format
->recommendation: 'clock-<freq>' (see also the pattern in the binding for
->any other options).
+On Mon 30-06-25 18:20:16, Andrey Albershteyn wrote:
+> From: Andrey Albershteyn <aalbersh@redhat.com>
+> 
+> Introduce file_getattr() and file_setattr() syscalls to manipulate inode
+> extended attributes. The syscalls takes pair of file descriptor and
+> pathname. Then it operates on inode opened accroding to openat()
+						^^^ according
 
-oops, I should use '-'. And the rate is not fixed, so not able to
-use clock-<freq> for node name.
+> semantics. The struct fsx_fileattr is passed to obtain/change extended
+> attributes.
+> 
+> This is an alternative to FS_IOC_FSSETXATTR ioctl with a difference
+> that file don't need to be open as we can reference it with a path
+            ^^^ doesn't
 
-grep "fixed-factor-clock" ./Documentation/devicetree/bindings/ -rn, I
-checked renesas,emev2-smu.yaml, fixed-factor-clock.yaml,
-I could use "ldb-pll-div7-clk" in V2.
+> instead of fd. By having this we can manipulated inode extended
+> attributes not only on regular files but also on special ones. This
+> is not possible with FS_IOC_FSSETXATTR ioctl as with special files
+> we can not call ioctl() directly on the filesystem inode using fd.
+> 
+> This patch adds two new syscalls which allows userspace to get/set
+> extended inode attributes on special files by using parent directory
+> and a path - *at() like syscall.
+> 
+> CC: linux-api@vger.kernel.org
+> CC: linux-fsdevel@vger.kernel.org
+> CC: linux-xfs@vger.kernel.org
+> Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
 
-Thanks,
-Peng
+There's possible NULL ptr deref bug below (2x) that's easy to fix. Once
+done feel free to add:
 
->
->https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/clock/fixed-clock.yaml?h=v6.11-rc1
->
->> +		compatible = "fixed-factor-clock";
->> +		#clock-cells = <0>;
->> +		clocks = <&scmi_clk IMX94_CLK_LDBPLL>;
->> +		clock-div = <7>;
->> +		clock-mult = <1>;
->> +		clock-output-names = "ldb_pll_div7";
->> +	};
->
->
->
->Best regards,
->Krzysztof
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+> @@ -343,3 +377,117 @@ int ioctl_fssetxattr(struct file *file, void __user *argp)
+>  	return err;
+>  }
+>  EXPORT_SYMBOL(ioctl_fssetxattr);
+> +
+> +SYSCALL_DEFINE5(file_getattr, int, dfd, const char __user *, filename,
+> +		struct fsx_fileattr __user *, ufsx, size_t, usize,
+> +		unsigned int, at_flags)
+> +{
+> +	struct fileattr fa;
+> +	struct path filepath __free(path_put) = {};
+> +	int error;
+> +	unsigned int lookup_flags = 0;
+> +	struct filename *name __free(putname) = NULL;
+> +	struct fsx_fileattr fsx;
+> +
+> +	BUILD_BUG_ON(sizeof(struct fsx_fileattr) < FSX_FILEATTR_SIZE_VER0);
+> +	BUILD_BUG_ON(sizeof(struct fsx_fileattr) != FSX_FILEATTR_SIZE_LATEST);
+> +
+> +	if ((at_flags & ~(AT_SYMLINK_NOFOLLOW | AT_EMPTY_PATH)) != 0)
+> +		return -EINVAL;
+> +
+> +	if (!(at_flags & AT_SYMLINK_NOFOLLOW))
+> +		lookup_flags |= LOOKUP_FOLLOW;
+> +
+> +	if (usize > PAGE_SIZE)
+> +		return -E2BIG;
+> +
+> +	if (usize < FSX_FILEATTR_SIZE_VER0)
+> +		return -EINVAL;
+> +
+> +	name = getname_maybe_null(filename, at_flags);
+> +	if (IS_ERR(name))
+> +		return PTR_ERR(name);
+> +
+> +	if (!name && dfd >= 0) {
+> +		CLASS(fd, f)(dfd);
+> +
+> +		filepath = fd_file(f)->f_path;
+
+If dfd is not correct fd, then this will dereference NULL AFAICT. I think
+you need here:
+
+		if (fd_empty(f))
+			return -EBADF;
+
+> +		path_get(&filepath);
+> +	} else {
+> +		error = filename_lookup(dfd, name, lookup_flags, &filepath,
+> +					NULL);
+> +		if (error)
+> +			return error;
+> +	}
+> +
+> +	error = vfs_fileattr_get(filepath.dentry, &fa);
+> +	if (error)
+> +		return error;
+> +
+> +	fileattr_to_fsx_fileattr(&fa, &fsx);
+> +	error = copy_struct_to_user(ufsx, usize, &fsx,
+> +				    sizeof(struct fsx_fileattr), NULL);
+> +
+> +	return error;
+> +}
+> +
+> +SYSCALL_DEFINE5(file_setattr, int, dfd, const char __user *, filename,
+> +		struct fsx_fileattr __user *, ufsx, size_t, usize,
+> +		unsigned int, at_flags)
+> +{
+> +	struct fileattr fa;
+> +	struct path filepath __free(path_put) = {};
+> +	int error;
+> +	unsigned int lookup_flags = 0;
+> +	struct filename *name __free(putname) = NULL;
+> +	struct fsx_fileattr fsx;
+> +
+> +	BUILD_BUG_ON(sizeof(struct fsx_fileattr) < FSX_FILEATTR_SIZE_VER0);
+> +	BUILD_BUG_ON(sizeof(struct fsx_fileattr) != FSX_FILEATTR_SIZE_LATEST);
+> +
+> +	if ((at_flags & ~(AT_SYMLINK_NOFOLLOW | AT_EMPTY_PATH)) != 0)
+> +		return -EINVAL;
+> +
+> +	if (!(at_flags & AT_SYMLINK_NOFOLLOW))
+> +		lookup_flags |= LOOKUP_FOLLOW;
+> +
+> +	if (usize > PAGE_SIZE)
+> +		return -E2BIG;
+> +
+> +	if (usize < FSX_FILEATTR_SIZE_VER0)
+> +		return -EINVAL;
+> +
+> +	error = copy_struct_from_user(&fsx, sizeof(struct fsx_fileattr), ufsx,
+> +				      usize);
+> +	if (error)
+> +		return error;
+> +
+> +	error = fsx_fileattr_to_fileattr(&fsx, &fa);
+> +	if (error)
+> +		return error;
+> +
+> +	name = getname_maybe_null(filename, at_flags);
+> +	if (IS_ERR(name))
+> +		return PTR_ERR(name);
+> +
+> +	if (!name && dfd >= 0) {
+> +		CLASS(fd, f)(dfd);
+> +
+
+Same comment here as above.
+
+> +		filepath = fd_file(f)->f_path;
+> +		path_get(&filepath);
+> +	} else {
+> +		error = filename_lookup(dfd, name, lookup_flags, &filepath,
+> +					NULL);
+> +		if (error)
+> +			return error;
+> +	}
+> +
+> +	error = mnt_want_write(filepath.mnt);
+> +	if (!error) {
+> +		error = vfs_fileattr_set(mnt_idmap(filepath.mnt),
+> +					 filepath.dentry, &fa);
+> +		mnt_drop_write(filepath.mnt);
+> +	}
+> +
+> +	return error;
+> +}
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
