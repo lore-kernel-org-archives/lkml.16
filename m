@@ -1,105 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 130094C97;
-	Tue,  1 Jul 2025 01:24:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B98194C97;
+	Tue,  1 Jul 2025 01:29:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751333094; cv=none; b=fwGLsCTn80SJjylxm+O5tR/QNHV50sdKZWZtR8wqoGYR//pFjCrlVBQSX393FZi1xM7DMJC8CHjtIOUORsy2udskZhZ3aKz1bKPVH57PCSQvE+W2RAhykmRxVdMv3XmYkwLTGomo2xd7Ofc54/rUioLFfPuLD4yIwkYWLaKrDik=
+	t=1751333346; cv=none; b=iUN9qX+g8x+e4x4D1ujdMxLKiP1ZddZJibNT0euntgquRu+lRlouDxg1qGQjAGECnKmr/YOQT9Be0UgcSa8AMaphuSvOEUudIAKTrNei9aUZKfpNnYlP+v68xj8TvadCfauk6PRdZ0sME60ZiZJgxg/AOTE3lSBmwRQuPUNmPp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751333094; c=relaxed/simple;
-	bh=Mb1v2xak7UyBtCzZCdehsNqtQQX38Vfh8VcEH6S2pk4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fcuQxnPspGumJQm9WUYfQCcbJ7AyuIRu7nk/LalutfWLzmtbDXagMNyyVLHN+ZYD6uKM/n+n/x/HcQTm8nShlbwRDIJU5fI+HI4xBdkxgr/9u8aeebC/Drx2lMa+VFTtpjLKhlhHvUAkSAhjbHh1+DxxROtuCHW/+SwhDou4WHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jTu0RpTE; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jTu0RpTE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751333092; x=1782869092;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Mb1v2xak7UyBtCzZCdehsNqtQQX38Vfh8VcEH6S2pk4=;
-  b=jTu0RpTEsD9xd0M4uiP5rtETRBetLJPSFjEItx+lnqs96+2ln03wwZ2Z
-   +mxg63fz2aL95NbIKJkXt9LAsJcLwG9ztX7drjOmsMVcuVKNXsVBb1Cw2
-   omrq2DuG7WceRU9exHV1o04qw0EXE6QhPjagd5fjx+iuTTZ6SehTrVi+l
-   NX+mS4nx3gX8dFObKqkRvRHXKFI3xF7K0RoxlZvgUsP2plX08KcqVdc49
-   J6dTN9/0BIjJF1QOGFgMZn6ZVgOpLn0GSgnMaquUk12w0OkWVfutkoWMD
-   qalX51YCPjexv1G6RtMtTcoyJoikyLclXzmtEn94BCo3KLbiTblUay/5M
-   w==;
-X-CSE-ConnectionGUID: xnS6VOfDT2+d6EQa0bQHHQ==
-X-CSE-MsgGUID: +faKAyFNQ724avNx4hd9Gg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="41203091"
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="41203091"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 18:24:51 -0700
-X-CSE-ConnectionGUID: Xauj1Xu3TU6gU9z3sSOa1Q==
-X-CSE-MsgGUID: FI/2PDSsRm+aM6eLiJ+fBA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="159130714"
-Received: from litbin-desktop.sh.intel.com ([10.239.156.93])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 18:24:49 -0700
-From: Binbin Wu <binbin.wu@linux.intel.com>
-To: pbonzini@redhat.com,
-	seanjc@google.com,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: sfr@canb.auug.org.au,
-	rick.p.edgecombe@intel.com,
-	kai.huang@intel.com,
-	adrian.hunter@intel.com,
-	reinette.chatre@intel.com,
-	xiaoyao.li@intel.com,
-	tony.lindgren@intel.com,
-	isaku.yamahata@intel.com,
-	yan.y.zhao@intel.com,
-	binbin.wu@linux.intel.com
-Subject: [PATCH next] Documentation: KVM: Fix unexpected unindent warning
-Date: Tue,  1 Jul 2025 09:25:36 +0800
-Message-ID: <20250701012536.1281367-1-binbin.wu@linux.intel.com>
-X-Mailer: git-send-email 2.46.0
+	s=arc-20240116; t=1751333346; c=relaxed/simple;
+	bh=D8UqOOsEY/NopVE3CbDsVtjbT/fYg5AELD/acega2Mw=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=G7/texkIUQMfLa8uHFIr+ZwGw5qWzouoiwLfcsPW4vSqretil4c8xvY+DaJU/SAZpnfGo0dsINpW7FAizVwRoPxcLnc5JdQ0S9ikiPZ3Rg/yEzeFSAF1GpIZ3HBCkuFX6wz/XIedjjUFZjhwLxvEn4Bx56r3Dx2O66m9sSGKYOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bWQRL6R3YzKHMxk;
+	Tue,  1 Jul 2025 09:29:02 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 49FA21A0D86;
+	Tue,  1 Jul 2025 09:29:01 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP2 (Coremail) with SMTP id Syh0CgAX_wzbOWNoPK4SAQ--.17602S3;
+	Tue, 01 Jul 2025 09:29:01 +0800 (CST)
+Subject: Re: [PATCH v2] brd: fix sleeping function called from invalid context
+ in brd_insert_page()
+To: Jens Axboe <axboe@kernel.dk>, Yu Kuai <yukuai1@huaweicloud.com>,
+ hch@lst.de
+Cc: penguin-kernel@I-love.SAKURA.ne.jp, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
+ johnny.chenyi@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
+References: <20250630112828.421219-1-yukuai1@huaweicloud.com>
+ <eb41cab3-5946-4fe3-a1be-843dd6fca159@kernel.dk>
+ <a2dc2566-44e1-4460-bbff-bb813f4655d9@kernel.dk>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <773a49cf-3908-85d2-5693-5cbd6530a933@huaweicloud.com>
+Date: Tue, 1 Jul 2025 09:28:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <a2dc2566-44e1-4460-bbff-bb813f4655d9@kernel.dk>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:Syh0CgAX_wzbOWNoPK4SAQ--.17602S3
+X-Coremail-Antispam: 1UD129KBjvJXoWruw1fGw1fGFy7Xr13Zr1fWFg_yoW8JF1fpF
+	Wjga4Yyr4ku3sFya17u3WDJFyrtw4kKr4UC3WrKFyUZFZIgF93XrW7A3y5Wr9Iqrn2qw1Y
+	qa1j93s3uFZ3AaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBY14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUbGQ6JUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Add proper indentations to bullet list item to resolve the warning:
-"Bullet list ends without a blank line; unexpected unindent."
+Hi,
 
-Fixes: 4580dbef5ce0 ("KVM: TDX: Exit to userspace for SetupEventNotifyInterrupt")
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Closes:https://lore.kernel.org/kvm/20250623162110.6e2f4241@canb.auug.org.au
-Signed-off-by: Binbin Wu <binbin.wu@linux.intel.com>
----
-Fix the remaining one on the next branch. The other two are handled by
-https://lore.kernel.org/kvm/20250625014829.82289-1-binbin.wu@linux.intel.com/
----
- Documentation/virt/kvm/api.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+在 2025/06/30 23:28, Jens Axboe 写道:
+> On 6/30/25 9:24 AM, Jens Axboe wrote:
+>> On 6/30/25 5:28 AM, Yu Kuai wrote:
+>>> From: Yu Kuai <yukuai3@huawei.com>
+>>>
+>>> __xa_cmpxchg() is called with rcu_read_lock(), and it will allocate
+>>> memory if necessary.
+>>>
+>>> Fix the problem by moving rcu_read_lock() after __xa_cmpxchg(), meanwhile,
+>>> it still should be held before xa_unlock(), prevent returned page to be
+>>> freed by concurrent discard.
+>>
+>> The rcu locking in there is a bit of a mess, imho. What _exactly_ is the
+>> rcu read side locking protecting? Is it only needed around the lookup
+>> and insert? We even hold it over the kmap and copy, which seems very
+>> heavy handed.
+> 
+> Gah it's holding the page alive too. Can't we just grab a ref to the
+> page when inserting it, and drop that at free time? It would be a lot
+> better to have only the lookup be RCU protected, having the full
+> copies under it seems kind of crazy.
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 43ed57e048a8..6ab242418c92 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -7230,8 +7230,8 @@ inputs and outputs of the TDVMCALL.  Currently the following values of
-    placed in fields from ``r11`` to ``r14`` of the ``get_tdvmcall_info``
-    field of the union.
- 
--* ``TDVMCALL_SETUP_EVENT_NOTIFY_INTERRUPT``: the guest has requested to
--set up a notification interrupt for vector ``vector``.
-+ * ``TDVMCALL_SETUP_EVENT_NOTIFY_INTERRUPT``: the guest has requested to
-+   set up a notification interrupt for vector ``vector``.
- 
- KVM may add support for more values in the future that may cause a userspace
- exit, even without calls to ``KVM_ENABLE_CAP`` or similar.  In this case,
+In this case, we must grab a ref to the page for each read/write as
+well, I choose RCU because I think it has less performance overhead than
+page ref, which is atomic. BTW, I thought copy at most one page is
+lightweight, if this is not true, I agree page ref is better.
 
-base-commit: 6c7ecd725e503bf2ca69ff52c6cc48bb650b1f11
--- 
-2.46.0
+Thanks,
+Kuai
+
+> 
+> IOW, I think there's room for some good cleanups here.
+> 
 
