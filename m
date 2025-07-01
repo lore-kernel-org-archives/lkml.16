@@ -1,64 +1,64 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C7441E834C;
-	Tue,  1 Jul 2025 03:13:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ED761EDA2C;
+	Tue,  1 Jul 2025 03:13:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751339593; cv=none; b=T8m8MM40ouFEkkbfgPyfOgluW2s6dA/0olw9FUAKrZKhN+ijQJuQ6ldPToBXVLP7btMlee3wZ1JVcvihwzaLKFXNGTjmxPdYyLW7tmZGxv1oTl3a5l0aWFjzr0lWfnxkPiEhIkAiwwwEmMx6bSCEKtcKZM9SkbzMfc6aMUgubSs=
+	t=1751339594; cv=none; b=peoF9KxVQRRc2H4piFcm84ObMUYAWCrqXojyBHl9F5NmMC9PCS7EhulZ5YJUbwgK42Rw7/RteYJ8NcIvGxgE7P+xS32SyfXHvtLleYGxryTCey6p4Z8/nwpHYdOkHqTCLnoRLxqjVSHhl3vHuYrZMUDM5fIWNTn4Gatl8tJOqZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751339593; c=relaxed/simple;
-	bh=nS/NTSuPs88jg1URWrCr30ZzpSYqdiIYV17z2elsRmA=;
+	s=arc-20240116; t=1751339594; c=relaxed/simple;
+	bh=Mo3qLJAqGtaw/5KsjboFvgs0yCHJgHSanxBj1p5XsGU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=arVVsw1xXstw1+Ag3hJhWqsbRUUUAUtsLCzeahApJErPxjNOjzjiVLg0XIoVeCMferhesLxywAluQ1upq3i19sFkzWIgrkHQ2KR/w9UN04cdJRH56OVpoDH0UMgWo/59t+MqCfxHbJrRtV1rsk5JgJrAU68rdCEECJNr7hf9nqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=amjmgf1G; arc=none smtp.client-ip=209.85.215.175
+	 MIME-Version; b=m9IdwEU1xa2aySUyfSsY0R6cMQ+H6qVq7byw10HZzW5ZjHMJayqLZxw+ZI53uW5CkendBWfpw8rMcW/ZhicSPtKS+UAWhYZfKY9EFRF+8RLfcw/+jKeWZP8GXZuTjLTXRQKh+n0d0x16ELR5mKMaIRu2tmvXBiwE2jM+UZexchU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d1u0kWnr; arc=none smtp.client-ip=209.85.215.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="amjmgf1G"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-b34a78bb6e7so2062282a12.3;
-        Mon, 30 Jun 2025 20:13:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d1u0kWnr"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b3220c39cffso3088499a12.0;
+        Mon, 30 Jun 2025 20:13:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751339591; x=1751944391; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1751339592; x=1751944392; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=y5WSgjCKP1WBN2c2e+KmwFrodJbjd4SEl3Pp7kvf7f4=;
-        b=amjmgf1GUZztOomJjkTtPUcjO3UlV5GKphBf2UAYkDduVKJGIN7vZgO+r9OQ7s9f0r
-         BySr5y8kuL6ou6f6og/5+LeuKbc31RvAZJkov7B6amjTOkYBORSyxfBLNe2nQO33dZbZ
-         lPgRcfhMat0c8/8yq+I3VP7cPZ47yKRGGJprBL8x4pXLR+RcOB2BJyRS3Gl2cycLLoh9
-         x/Bx8Ry86tHiUfcade4UZMvVO+E/IzX5Vxo3tQrp35ylVSgal8fq+fmeN+SKJkflyYL7
-         PxmMU1iaHk2vbPku8iWCJAR8ItQavhoyxtl/M0L4aTsSSTYN56Ojb6ZjT8EsGCAYhu7n
-         EBgg==
+        bh=ZD26qqoj7KryJYkEgO4QEZYoJxSM1+Fc8ROnt89bQJU=;
+        b=d1u0kWnrAkERRJcgh1Z5gnQKWMLvwo009eUNViqUqQ++3/XFXlTsly3zpDZ5KabCIB
+         Hibocrr6AmG4bKQtifrCZ3h0laaiXt/w3gzfZO58dX4CaZprXI64DVjWxBy7Aj3mtYGc
+         xsxiQpPxHHBt/59IeuvDwyQipKwyioR63E+BSO1xSpmWk0e4lao+E1fZ7x18+bfiTXvz
+         BSucrZ1UeM5H+CvZn1XbiUwloDU3iFrKAogY5gJgqBO98YjnJ/DapA7vADPWzVU5kVAL
+         0ugF3Zg7ieg6CO7sbOCdCMKYyRtUaTua0Oc/BSJcz0baDkObPPLt/AU8FG2u4yi0yaUH
+         QPww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751339591; x=1751944391;
+        d=1e100.net; s=20230601; t=1751339592; x=1751944392;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=y5WSgjCKP1WBN2c2e+KmwFrodJbjd4SEl3Pp7kvf7f4=;
-        b=hRCKAymdHbQXPDsUD63+0oiAdpef3LCaGR4lfJqDjrIpek07tHJ8sLnn1wVm1+97/b
-         /eNvwhaw2uJ1goL8+R1FvLeq5B2CJoZEoBofwzs/5gvthQEFGeRL6ui+4XLG+2HnNgT9
-         WO2U954APTM69JEUiqDkFBSg/rgM6ve9urT08tszu39Q3blK3jlYv3d/V+ROS/iqWiN5
-         BfJ3mc9G/u+SoSxEdeT1OjnDg8w0n9rOoyssA7pM1KGxMQnIkBNdrPfRYf2g/IE3SFzB
-         pGUlzwX9d+GNaxS7Bd45A5tNWXTtT2s8QLCLgjXdjpX/kg057ERY4UTOK9NRpj7yR4u6
-         +vmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW0rTi4mflVMggf/ybBP9hyCz9LO0XOwljC8Xf6xRAESHBXS07+TBccfDtGAsEFykcWRWGbMxzHeq0=@vger.kernel.org, AJvYcCXKvj+bdC6b9FMow9jw4DManuYuaLUKTx8a4Le3/xCdbvl88ShIOYpESNyThTzsRfZKevI90+9T@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywb6nyVJoh/MeU4ewZUV5pS5hJS1mP4wK2fkf2aWmlra6DNikh1
-	XYBz40k3t1q0l7JJdqCNfbAivjzCsZI5ejRm+1EVirkIHqP/On9YDQt9
-X-Gm-Gg: ASbGncvBSZ5XIfM/2oeITyNg+iwTc4jVu4SO0AlYjoD64qseCc12fElWVmmU6+9LHbD
-	3tuCIk7vOqVZt0C9eKaEnOGXP2cc00vS8FE7joZEWZ4vF+Prtt8Xh0YchI4kvf5d1L5lo6ytqZP
-	fedHJRMmA5RsZGkwNJMFMVgavkMSd4YntvTJQK/3VH9Zygvqc7SnEqCKqmJ0fxmpJNj6lFVc/x7
-	GJegTIYYSCKzLR507r1KZt4n2wFRRqYDtZ1RkGb4XcCQWfUecu+n9zFdGPKhhIgmOP37YGAGPMQ
-	Y2wwwKgasYaHB0BkseCTTknfYkZQJtZqJuy+qa0PB7abVGLRifsFd+t5sFquCg==
-X-Google-Smtp-Source: AGHT+IGsbHbDLP4vTSZ831gE0/BF8Wg2PYwslcfB+I390l+J1xredhihPZYg9krTcJVKSQL501d5/A==
-X-Received: by 2002:a17:90b:1f87:b0:311:fde5:c4be with SMTP id 98e67ed59e1d1-318c9316409mr20798224a91.35.1751339591271;
+        bh=ZD26qqoj7KryJYkEgO4QEZYoJxSM1+Fc8ROnt89bQJU=;
+        b=pzbIBjb79YwHHb3AgNrWbdBbT7oySymyYyBV2RHTgJNWn1KAfjx2fgX0IzADKwKo70
+         e2R6ACBz1mOEb1ySR4Cr9Wm5rjF1hGxlXi1HwjEWYqIk09tM/p2n7Jp3CyFhLS4KpBYZ
+         jGmeV+pyYt+nD398sUYFQ2Ezb74vYNAmACoWooCaa9mqHb8JHwDWjx5bod8jluVz6UZ6
+         iKMwnGfpSbr2qnbNQrw9X4b6ApcCqtM3m6G3QEZp1ayOM4sNE9r+wiMuyQQ6xQtT8ww3
+         1CGsog9IfJudY/HaDOPC71Q/aE+X85dNs9m7vfi1pM/IJSeSFs78nJxRY6UeE6AuTZXE
+         6XKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVrqR9CByTwGNEWPyYBUvc5zNVZxJ852jmSIwDHOFUpnAbQgjD0XlOVvwVa+OhwKRgSZX1tlE47@vger.kernel.org, AJvYcCXF53LdSiZ2+6Fvi4/5i78x4SGvn5PDzaCq8rWU2gw4AlLfrcUSusCN/fvGIf2JMri/wIqcvqpaiCc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxb7lzegGtbl6kLOYJPPYO7TNbTbg1ftTwxhVW/5VUgHjdoOCje
+	G81Jkk8lMjsKqUdJ/Nydgac7GGQU6m86Aqodd2lwQ2tdWVwZXn9MMUUG
+X-Gm-Gg: ASbGnctNLuCBZHqcvM5KlqCbPbXORs3k/K7+h2fo5B0jAw98Bkfh/9h74HLeYowdKet
+	ZefUWRjdDcbLKnYK+gEGBw7FpslMI7oWWBboRs3FHyWDQFAWIesBzSzpfaf7QSgVzqV0nRZMlhv
+	8FLjxdE9vCXVLcQ7ME8MQ9xaMcIJpFu0WKG7eNuklBphn2IuWARwgaSJEMN5zFT9BFh6IZgfpsV
+	mfatMXK3smy+i+FKgfvggJrsdElwk73aBGIuDO3TxUVblUoJ0ZZz9HbPpAxAFmH+HBAblp/cTAo
+	qE3H16RY1YuL16Ye5EzWluRVst+Kynomaxo/luOfSJf/skfZmdzwOY5q9xfLPA==
+X-Google-Smtp-Source: AGHT+IHlUGhjqylUe5S18JNbzZrmzumkoAqADG+jDL11BXHVjDo1BIfDikKmJyypp2Go/bi2ccn1zw==
+X-Received: by 2002:a17:90b:2dd0:b0:312:db8:dbd1 with SMTP id 98e67ed59e1d1-318c8ff231fmr20332533a91.5.1751339591611;
         Mon, 30 Jun 2025 20:13:11 -0700 (PDT)
 Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-318c13a15c2sm10054694a91.12.2025.06.30.20.13.08
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-318c1502b9bsm10548857a91.42.2025.06.30.20.13.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 30 Jun 2025 20:13:09 -0700 (PDT)
 Received: by archie.me (Postfix, from userid 1000)
-	id CF556420A82A; Tue, 01 Jul 2025 10:13:03 +0700 (WIB)
+	id 3A3BF420A784; Tue, 01 Jul 2025 10:13:02 +0700 (WIB)
 From: Bagas Sanjaya <bagasdotme@gmail.com>
 To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
 	Linux Documentation <linux-doc@vger.kernel.org>,
@@ -71,9 +71,9 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	Jonathan Corbet <corbet@lwn.net>,
 	Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>,
 	Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: [PATCH net-next 4/5] net: ip-sysctl: Format SCTP-related memory parameters description as bullet list
-Date: Tue,  1 Jul 2025 10:12:59 +0700
-Message-ID: <20250701031300.19088-5-bagasdotme@gmail.com>
+Subject: [PATCH net-next 1/5] net: ip-sysctl: Format Private VLAN proxy arp aliases as bullet list
+Date: Tue,  1 Jul 2025 10:12:56 +0700
+Message-ID: <20250701031300.19088-2-bagasdotme@gmail.com>
 X-Mailer: git-send-email 2.50.0
 In-Reply-To: <20250701031300.19088-1-bagasdotme@gmail.com>
 References: <20250701031300.19088-1-bagasdotme@gmail.com>
@@ -83,68 +83,38 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2578; i=bagasdotme@gmail.com; h=from:subject; bh=nS/NTSuPs88jg1URWrCr30ZzpSYqdiIYV17z2elsRmA=; b=owGbwMvMwCX2bWenZ2ig32LG02pJDBnJ/sdMz/H4b2FgWvnp3k27m/cFFF4k9FR27t3cuuV7r Fy0t9i7jlIWBjEuBlkxRZZJiXxNp3cZiVxoX+sIM4eVCWQIAxenAEzE4QTDP8t3J40reDRPP97m +iS3K/mPxtY3Olun/Z//kpdDIkJ9qwfDP7s2c6kM6dorTI9K513N1/868YwXryZ/2D27FZvP/2N R4AEA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1228; i=bagasdotme@gmail.com; h=from:subject; bh=Mo3qLJAqGtaw/5KsjboFvgs0yCHJgHSanxBj1p5XsGU=; b=owGbwMvMwCX2bWenZ2ig32LG02pJDBnJ/kcPiMZ865U6c/LI4sL3jtYqn2tnl/7xr6ibUbBUJ qZ9acWLjhIWBjEuBlkxRZZJiXxNp3cZiVxoX+sIM4eVCWQIAxenAEzk1QGGHwtCniy1Omm23zrM Qzx35rbfiSEswkveWIrK/8n6xszvwfBXULCa78gry8K28265Ggs8lil9mXPy9ve/21JXSy15+r2 NFwA=
 X-Developer-Key: i=bagasdotme@gmail.com; a=openpgp; fpr=701B806FDCA5D3A58FFB8F7D7C276C64A5E44A1D
 Content-Transfer-Encoding: 8bit
 
-The description for vector elements of SCTP-related memory usage
-parameters (sctp{r,w,}mem) is formatted as normal paragraphs rather than
-bullet list. Convert the description to the latter.
+Alias names list for private VLAN proxy arp technology is formatted as
+indented paragraph instead. Make it bullet list as it is better fit for
+this purpose.
 
 Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
 ---
- Documentation/networking/ip-sysctl.rst | 24 +++++++++++-------------
- 1 file changed, 11 insertions(+), 13 deletions(-)
+ Documentation/networking/ip-sysctl.rst | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/Documentation/networking/ip-sysctl.rst b/Documentation/networking/ip-sysctl.rst
-index 774fbf462ccd65..12c8a236456e4e 100644
+index 9af5a8935d575b..a736035216f9b7 100644
 --- a/Documentation/networking/ip-sysctl.rst
 +++ b/Documentation/networking/ip-sysctl.rst
-@@ -3542,13 +3542,11 @@ sndbuf_policy - INTEGER
- sctp_mem - vector of 3 INTEGERs: min, pressure, max
- 	Number of pages allowed for queueing by all SCTP sockets.
+@@ -1891,10 +1891,10 @@ proxy_arp_pvlan - BOOLEAN
  
--	min: Below this number of pages SCTP is not bothered about its
--	memory appetite. When amount of memory allocated by SCTP exceeds
--	this number, SCTP starts to moderate memory usage.
--
--	pressure: This value was introduced to follow format of tcp_mem.
--
--	max: Number of pages allowed for queueing by all SCTP sockets.
-+	* min: Below this number of pages SCTP is not bothered about its
-+	  memory usage. When amount of memory allocated by SCTP exceeds
-+	  this number, SCTP starts to moderate memory usage.
-+	* pressure: This value was introduced to follow format of tcp_mem.
-+	* max: Maximum number of allowed pages.
+ 	This technology is known by different names:
  
- 	Default is calculated at boot time from amount of available memory.
+-	  In RFC 3069 it is called VLAN Aggregation.
+-	  Cisco and Allied Telesyn call it Private VLAN.
+-	  Hewlett-Packard call it Source-Port filtering or port-isolation.
+-	  Ericsson call it MAC-Forced Forwarding (RFC Draft).
++	- In RFC 3069 it is called VLAN Aggregation.
++	- Cisco and Allied Telesyn call it Private VLAN.
++	- Hewlett-Packard call it Source-Port filtering or port-isolation.
++	- Ericsson call it MAC-Forced Forwarding (RFC Draft).
  
-@@ -3556,9 +3554,9 @@ sctp_rmem - vector of 3 INTEGERs: min, default, max
- 	Only the first value ("min") is used, "default" and "max" are
- 	ignored.
- 
--	min: Minimal size of receive buffer used by SCTP socket.
--	It is guaranteed to each SCTP socket (but not association) even
--	under moderate memory pressure.
-+	* min: Minimal size of receive buffer used by SCTP socket.
-+	  It is guaranteed to each SCTP socket (but not association) even
-+	  under moderate memory pressure.
- 
- 	Default: 4K
- 
-@@ -3566,9 +3564,9 @@ sctp_wmem  - vector of 3 INTEGERs: min, default, max
- 	Only the first value ("min") is used, "default" and "max" are
- 	ignored.
- 
--	min: Minimum size of send buffer that can be used by SCTP sockets.
--	It is guaranteed to each SCTP socket (but not association) even
--	under moderate memory pressure.
-+	* min: Minimum size of send buffer that can be used by SCTP sockets.
-+	  It is guaranteed to each SCTP socket (but not association) even
-+	  under moderate memory pressure.
- 
- 	Default: 4K
- 
+ proxy_delay - INTEGER
+ 	Delay proxy response.
 -- 
 An old man doll... just what I always wanted! - Clara
 
