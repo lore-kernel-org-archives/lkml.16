@@ -1,115 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0AF3275B0F;
-	Tue,  1 Jul 2025 14:07:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E36A82AE97
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 14:11:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751378853; cv=none; b=Da0/maHN8O/Dbu1bpgvYzH47qI2KeJCbxSfrweqDNVgs9Ht8cr8Eqvkz+biqV+aqOo66P4DsihPTHwQAAxyTU1f7Tuh27UgYinnk1EVHCQ2wqUQF52sIFGUdKVEMc503e500NmyMb+cR81KjxkvscpJ1qYQXZNFuVdt/+sRnf+w=
+	t=1751379067; cv=none; b=CS+U4/7dsX5WQSItkNUC5dDYWqVajjs/IrF7JfVI2gMGm/ikJu08z4woERUsWtQ6cBGXI3/Mo5xSqmsHJOpcgdM2EBrXIZkaA8mUGGwydjwjKpMWeSRE1tSCh+LJtbkPKQVbqstM6Afwwv5GYv6DsFA8SRuf3LKBDiQSByUwPas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751378853; c=relaxed/simple;
-	bh=OycoOkoLhHBvnekRqOGdTwCNdtAIEjmFOv3yyuw9LiI=;
+	s=arc-20240116; t=1751379067; c=relaxed/simple;
+	bh=2K9ZivYXUuwV2vkpZBcFHQhkKQ12wzxuV9+F7FGnQiI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oZ2Bg69WuhPaVak+0esfNRWtlGdBheO7y3OWcsskoYKxyO9WdoQ1cPZH90WKnP9BrLaWIFkiGSnEbqu78x4sYZEBs++4fIDhePIW30AMmgW5eErbWYTjZ4PkYX08f67K2XBFb02ai/ptjv/TskZJ8SKtOon1U5bo593Frfj+RfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=KSVzv1HN; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=esrdsJympYxFS+MjeFEUsBZ4ixSiXIKtzR+KHIy41NYYmadRhOmZaydzVVlqN1PGvoS7TtZnwLp9RO7IY/ZnfH7HBocdjmeSLtPpp2rN1WnwBaSfmVvLRyNQ1Saxd7/S9h0xsiorQDf+byDZ5gPf/u/0e/qZqyWTIkTmEAIJPR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=B8cLmJOW; arc=none smtp.client-ip=209.85.160.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="KSVzv1HN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4AB2C4CEED;
-	Tue,  1 Jul 2025 14:07:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1751378853;
-	bh=OycoOkoLhHBvnekRqOGdTwCNdtAIEjmFOv3yyuw9LiI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KSVzv1HNWQ35IVpyzbLDw1WFkDAvFLks/MX6tdtic1/MaqbRZwD0k0AXGA6YKbmTa
-	 MpGkCgMT2DNolDd3JoZoLvU+c3FahI3P0YJeFaSDq3I2Xk0RO7xiqrf+TO5Ljzfzdy
-	 zBsIQJSeroTPWitnE1d0OIXPeX2/W0WokbpAAy6s=
-Date: Tue, 1 Jul 2025 16:07:29 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Thomas Fourier <fourier.thomas@gmail.com>
-Cc: Jiri Slaby <jirislaby@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Tomoya MORINAGA <tomoya-linux@dsn.okisemi.com>,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [PATCH v3] pch_uart: Fix dma_sync_sg_for_device() nents value
-Message-ID: <2025070119-borrowing-smith-2e15@gregkh>
-References: <20250701113452.18590-2-fourier.thomas@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B8cLmJOW"
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2efb0b03e40so978142fac.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 07:11:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751379065; x=1751983865; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=zBZDo+iIbaRT38p2M2Gt1DuCw7wsjHy8MPcNuCpg9Jk=;
+        b=B8cLmJOWZ85dvlR0loL4sewjAfNI5G3ID6fjYVEbTA+sMvm8ltokHdskJm2RBrG5KZ
+         OPUGpIge5PdeahyZQsCsmRBgMa5bPeoFbsZlKwsxWh1mLfw8/51bSKVEoLzVzBQfcmHH
+         w5lIJdGxtgIa5e/OyHNOji0Ggn8do/Y0C6OCQb+dM+TsZ69Mi5QIZzMxc4SS+iPvoDj7
+         sbuDxzvFtbW8mK8YfSt+vyrkcz66COd3QXoT0hUSSG7vF4K1UM5UFNLQbvXcXen8CMvK
+         pdzTKzloeOA84kJCDJwekfyzBlqHJNG578h2a+AY4F5iQOAct4P6RI8AfexGi5NiiS3J
+         Ky9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751379065; x=1751983865;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zBZDo+iIbaRT38p2M2Gt1DuCw7wsjHy8MPcNuCpg9Jk=;
+        b=R6chJljkH8O4RQkF0Oex4yUEtgXJilcBxasl4VW81gPt2tBK56lh/Hf3voib7o6WRu
+         2c1E5lcLURjuXcm0wBWe48z/MRRb+E3m2FR2OilVQtcqYTMgyZ1LIW6PdbM3/kDXO8SA
+         SnUd+ipQ8QjOAmH1Rj7HVwwP2TXcbKr2+8RM05c5CVryiHdEQfO/0dHqyyKo2ZecvbMQ
+         AAxcHqD2gMMnPZG8uN4wqt5YJmyeoqkK3w1ndLHsGPUS81f6sdfiNgcBTjT49FRcbOVn
+         /GtNJym7Gb9ytXcbyVFZJvip/EvWbtb5WXyWyt5vCupR3/U0F8SykTH8VFfuTsdkyHLC
+         ekKw==
+X-Forwarded-Encrypted: i=1; AJvYcCU/gHXW4bnwN92KenSAo1MbE7mGSixiIhq+TU2d8dTlPABDqUYIO/1V6JWeCcvauowQR7wkYHQkU8SFDeY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlhkqlJw1gwgKC01AlRQULEwi/x1K5aZAmBIow0n9am1ei0jWc
+	5RsLqrI1R76YAAb7cQQtuEFmxam68Oh66l+3RdaPfKcdMnr/MZ3WArHsk/nNYGZ0HqA=
+X-Gm-Gg: ASbGncu64yziz2w3AaIarq85zmCnjYlWlBW5mkzgS+fo1k29lWzpKwdw/ptUppU5d5T
+	kcl9nWRfkNUISN2H2mSbwb27SVY00NI5gOh/TXoQpHxyur88x1GsDeV4JgOrHuibOEpRYOdOA/w
+	6nwkc4qIqpl2XUdXrHTQ/0CfZ03vODDN6+k9lSAPG8RUIGNwaIAEgB4CCcKAfvZeIh1zyOrgbDp
+	eZpsF3VwOhpyI1JEYBJ165v781YsDHQFpB2h7ifcyUqz4s0ktCOKYDoz4Yqbj/NKu6W4yEuhiw+
+	1/TAAiFLXwgGSqU7msUYjEP+eKjVNAB3rxpEl4KqJRpvSb01lu97Rz6L+/WnVITyIo1VnQ==
+X-Google-Smtp-Source: AGHT+IFLkQYxN+cJSXm+bghahO0tFjg9oH443l9I3mmEiA3RIQYgQ4k8orQ+i61VslSoHfkS0P+xRg==
+X-Received: by 2002:a05:6870:b689:b0:2c7:6150:fff7 with SMTP id 586e51a60fabf-2efed776901mr13786145fac.35.1751379061278;
+        Tue, 01 Jul 2025 07:11:01 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:8ebc:82eb:65f7:565e])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2efd4ef026esm3306223fac.11.2025.07.01.07.10.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 07:11:00 -0700 (PDT)
+Date: Tue, 1 Jul 2025 17:10:58 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Marcos Garcia <magazo2005@gmail.com>
+Cc: gregkh@linuxfoundation.org, philipp.g.hortmann@gmail.com,
+	karanja99erick@gmail.com, rodrigo.gobbi.7@gmail.com,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH staging] staging: rtl8723bs: replace magic numbers in
+ rtl8723b_InitBeaconParameters()
+Message-ID: <9f4ae2d7-5a8b-4785-9df8-3d22925b8f3a@suswa.mountain>
+References: <20250701074243.1300186-1-magazo2005@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250701113452.18590-2-fourier.thomas@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250701074243.1300186-1-magazo2005@gmail.com>
 
-On Tue, Jul 01, 2025 at 01:34:52PM +0200, Thomas Fourier wrote:
-> The dma_sync_sg_for_device() functions should be called with the same
-> nents as the dma_map_sg(), not the value the map function returned
-> according to the documentation in Documentation/core-api/dma-api.rst:450:
-> 	With the sync_sg API, all the parameters must be the same
-> 	as those passed into the sg mapping API.
+On Tue, Jul 01, 2025 at 09:40:49AM +0200, Marcos Garcia wrote:
 > 
 > 
-> Fixes: da3564ee027e ("pch_uart: add multi-scatter processing")
-> Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
-> ---
+> Replace hardcoded values in rtl8723b_InitBeaconParameters() with defined constants
+> TBTT_PROHIBIT_VENDOR_DEFAULT (0x6404) and BCNTCFG_AIFS_MAX (0x660F) for clarity and
+> maintainability, addressing the TODO comment in the code.
 > 
-> v2 -> v3:
+> The values were sourced from the following documentation:
+> - REG_TBTT_PROHIBIT (Offset 0x0540): Bits [15:8] = 0x64 (100ms prohibit time, 1ms units),
+>   Bits [7:0] = 0x04 (2ms margin, 0.5ms units), as per RTL8723BS Datasheet v1.5,
+>   Section 7.3.1.5 and RTL8723BS Programming Guide, p. 112.
+> - REG_BCNTCFG (Offset 0x0510): 0x660F sets max AIFS (0x0F) to prioritize beacon
+>   transmission, as per RTL8723BS Datasheet v1.5, Section 7.3.1.3.
 > 
-> - Adding reference to documentation
+> Hi Dan,
 > 
-> v1 -> v2:
-> 
-> - Fixing value
-> 
->  drivers/tty/serial/pch_uart.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/tty/serial/pch_uart.c b/drivers/tty/serial/pch_uart.c
-> index 508e8c6f01d4..884fefbfd5a1 100644
-> --- a/drivers/tty/serial/pch_uart.c
-> +++ b/drivers/tty/serial/pch_uart.c
-> @@ -954,7 +954,7 @@ static unsigned int dma_handle_tx(struct eg20t_port *priv)
->  			__func__);
->  		return 0;
->  	}
-> -	dma_sync_sg_for_device(port->dev, priv->sg_tx_p, nent, DMA_TO_DEVICE);
-> +	dma_sync_sg_for_device(port->dev, priv->sg_tx_p, num, DMA_TO_DEVICE);
->  	priv->desc_tx = desc;
->  	desc->callback = pch_dma_tx_complete;
->  	desc->callback_param = priv;
-> -- 
-> 2.43.0
-> 
+> Thank you for your detailed feedback — I truly appreciate it. I tried to contact you
+> earlier, but it seems my email didn't reach you. This is my first kernel contribution,
+> and I started by addressing TODO comments, thinking they were straightforward. I now
+> realize even these changes require deep hardware understanding. I used AI to assist with
+> parts of the commit message, but I didn't review it thoroughly enough, and I take full
+> responsibility for the vague comments. I could only find limited references to these
+> values, and the documentation seems restricted. I apologize for any oversight and
+> promise to research more carefully in the future. Thank you for your guidance.
 > 
 
-Hi,
+I feel like there needs to be some kind of notice on patches which are
+generated with AI.  I was so puzzled when it said that the units were
+in half miliseconds, but AI sounds so confident and professional and
+people do crazy things all the time.
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
+I have sent my fair share of guesswork patch where it's like "I think
+the code is correct, but it's just indented incorrectly" or whatever.
+And I try to put a note to say that it's guesswork so, "Please, review
+this one extra carefully."  With AI it's all 100% guesswork, but it's
+formatted as if it's quoting a spec.  There is a lot of potential for
+confusion.
 
-You are receiving this message because of the following common error(s)
-as indicated below:
+regards,
+dan carpenter
 
-- You have marked a patch with a "Fixes:" tag for a commit that is in an
-  older released kernel, yet you do not have a cc: stable line in the
-  signed-off-by area at all, which means that the patch will not be
-  applied to any older kernel releases.  To properly fix this, please
-  follow the documented rules in the
-  Documentation/process/stable-kernel-rules.rst file for how to resolve
-  this.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
