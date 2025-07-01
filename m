@@ -1,48 +1,73 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4023C27A900
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 15:20:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E8862741DC
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 15:21:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751383234; cv=none; b=O9f5nAAa/olYj+PZ6ZlfiEfbt7OGv/nnMHj05X4gTEk42xJWynsUSeTUTMLyuB13NTGC/BUt6b5LHKN+cVI5YdA02sK0JzBVyI///rgb2kKk5/9z7usVohzwLeW17En3fB1JTy5YBo853QT+/0Jvhy4vAZhuBmhXX/Q5DYtdWR0=
+	t=1751383262; cv=none; b=lIohYmmLZC8yjPJEFG/3Jt1kRFF8mDY9YlFt8ycwcX6PdoSeF9jBaung4uYrfN7r75umRPBMIoODY5HUYMLm8rpM9fpTH/whq+pjXL1YfP1UDcFVe1jUo0BYAfOiJdCSvFFOoMxdDSGU7xOPEsyDxwd+3yPk8mVL2kgzkLVjVaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751383234; c=relaxed/simple;
-	bh=YHKFuGE35A4Aa0dREmXAp8IwwFwiIVWsYuMOqi4QHaM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=dkYNjHaR8cZx5TtzBvo2JsWfOz42ep+Mwjgbi27P6SzDBHuUgHA+KnjMMGJt02xyt1ADkYUQzk4MSepNSowITaskSrix/HFX8dOcWaVwvGtfH04mv4T89fCN6zyGpEx81nGCTcBvU9iduWr7dyDRsYVJkzQ0tKgyRrAVzyf+/cI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=crxqb/+U; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1751383262; c=relaxed/simple;
+	bh=DmYqBjCiA5PBwNdCUtV6L0uTXBOKuI8YmxQZJktB0Yc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fT0IFCh34EgOSvyB02RzkUwk0UOk8VWLQ1lyJsiDwZdOIQJJhdO7keSC8VctFtQNk8U5V3PoU5NubAZz+e2sbu/96gt8i2PVvYaEsBgcnTGTkdZLVF33qXijp6ltqpjnT7QBD9p9ghAbaJHaVoUbQDEtDYYdYv+VdDHi1ZCM2lY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=UIlakh6W; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="crxqb/+U"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5619qJ0J028627;
-	Tue, 1 Jul 2025 15:20:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="UIlakh6W"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5619kvUM007227
+	for <linux-kernel@vger.kernel.org>; Tue, 1 Jul 2025 15:21:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	5VjOrehgu67gGQhS/OJrOelLzd1u65qTrNycDObBlgU=; b=crxqb/+UGn4UAyWL
-	uHCpSS2MrrFfshzDF8QKlom4W0WYDjIVTi8SNaATW8Bv6PfU+htr4HACE2wNNpvj
-	N/94UCq+kDFSvhYBpL6j0h6cKCsSUPRxLepI42kv5o1exjkVVtZNYk1aevYqT033
-	O2voVPpn3RwnS0aWvh7nh+rybHXX2KHdD87JvYE27Fa9+eezq2CIGMRqgtHM/akr
-	Ku1WxqYzw3ovLuHuEHGge+k7kJ0VydQdmOmNlqWIpTCB/aKjgwwvbLsanD5eA85t
-	MyYQHViqsB3ekeH1mbM8bntr0LdfROrx/4i8af6cuX6az0jrPXdafKL9uMxB3FY2
-	8lxCLw==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j7bvsbkr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 01 Jul 2025 15:20:26 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 561FKQqR017226
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 1 Jul 2025 15:20:26 GMT
-Received: from [10.110.56.217] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Tue, 1 Jul
- 2025 08:20:24 -0700
-Message-ID: <cba8a539-b6f9-428a-be6a-52169ab0de56@quicinc.com>
-Date: Tue, 1 Jul 2025 20:49:59 +0530
+	nWs/xb1vRSVrZ23orH469KqPX5Uv0VM7XaZIbkm6Jh4=; b=UIlakh6W1MCgTS0w
+	dQ8YPd0+SU/cW248W90o4Yn+WukQbWtsRGcboMH8I+RWg6rWgEse+YqacUs29E0v
+	oRiJ+a0dDL5ayDgStgmik0I26Nhnx+x/LkFotu4/Ns1kxcPWo4TluIq1qiRj3GY+
+	GMxyh6bkcsDfxD9uSWeGtu0qnhuVNtdoUE5NFXmkh2r4OHzpoTXe4KvkuOYgXrn/
+	Kul5rvlt4XmBwOigbvoWEZnZOebN8vwkou5DuEAXjhzEij8FbdTYZ/C8Py8qiH+2
+	WjLotb9uB8PRQa+EdoKYLd/cAk9vVbNEyj7y1FCM/qVnHKBaQoM5qyqjbxIs9a/u
+	bHVwtA==
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47kn5jdr8c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 15:21:00 +0000 (GMT)
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-235e3f93687so49305595ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 08:21:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751383259; x=1751988059;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nWs/xb1vRSVrZ23orH469KqPX5Uv0VM7XaZIbkm6Jh4=;
+        b=p2rjhEWDJQGcnZOkwQDPdVfpvQWYVx0mR00d+wEAv4Or9MsXrUfxxeDICtdxc9p5NZ
+         XN6ZTXTLQHmyvz8PAmohIGSiXZPAjfO4re5lQuKUmTLAmtvdCiINrr7hr6HOAdfz/8EM
+         Nf7RrLVd2mmn9NY5BvgU7gpTA9YrXZcN4r9uIGZbJZT5KUuABJHfX+bhatVLA0qhSlkL
+         RfJ2rSvhs9oPYT3AJeFCM/stCXxLmo3m96V+csDCCdsKMyUDK3/uaL6ZwHBY3YFxqRrw
+         c1BeR80SJk1mzB3fqNhvPWDxaE4/0SqcJTSUeiWbp+vRCrTVYGdBEfr8RkBHlZijXx2J
+         6iPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXFKF7VItLdo/xgGfSj6zOcmPhvELZWdeE59r13bQy242Sr7hGL8VLaBN/sZ/k43VFZnDfNhZKUWsEFlMU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJMsFClKPbAfJ15VLaiH3l+9H+85+yRVMoMgq7zKC7iqiwdxk4
+	r2yDZIe2ifzcjqfrjTgmNDfAbN983ZvixBzoRh+6K3FFGkviQxNlrn47GYDSCL/eRJczDlNfW9M
+	0hvT6pNp9JQDdtWKXNuVRZjgJWGxqKwNH5CvbkFtWxxJ/HOG+HOi6yC7cGT56GUvVsyyDcIrrx4
+	A=
+X-Gm-Gg: ASbGncsBwg3Upc+PWiyeJrcfosC7gqdUe6YI/ElecyEl1YuVbNz+pKEz9aIVgrRikQE
+	FVxZffpjMSfoOjpyQ6M2H9ZuwXCcYZGEs/UbZ92RMd55DUJa+8Y6TCgPtiIsCZc3WTzf/ANAuDq
+	iCDLWfyc4R3Zsf3WCslfgqdC8tT1Ddm2AksDTd/fGT48+eYJe47xGtk64meSM58rrekJEwYlg4S
+	viE1adn71G4msA8iLJssqNwMCTqQ1m9LirSjD3ovxni8YGxdEc7nXA92ScS94bIyta+YW96pqVR
+	3o5tY3HzpeCg2zQi5VWgn53QPhfXj2+hsO3HcI1t18g1bosb8IUc/oVuSyG+F7iVZNMjv9RQ
+X-Received: by 2002:a17:903:2acc:b0:234:a139:11fa with SMTP id d9443c01a7336-23ac381b1efmr236944125ad.3.1751383259296;
+        Tue, 01 Jul 2025 08:20:59 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFStwjk67YEUI9Oq8heAN5eBmkoywGIh/1YJEVqnxjaukSDuHrgyVq2fd/MD04Ev/pgKWVXWg==
+X-Received: by 2002:a17:903:2acc:b0:234:a139:11fa with SMTP id d9443c01a7336-23ac381b1efmr236943785ad.3.1751383258925;
+        Tue, 01 Jul 2025 08:20:58 -0700 (PDT)
+Received: from [10.226.59.182] (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb2e1b49sm110555205ad.22.2025.07.01.08.20.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Jul 2025 08:20:58 -0700 (PDT)
+Message-ID: <04216cc3-c8ec-4782-a021-705f53c0fefc@oss.qualcomm.com>
+Date: Tue, 1 Jul 2025 09:20:56 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,180 +75,53 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tracing/perf: disable preemption in perf_trace calls
-To: Steven Rostedt <rostedt@goodmis.org>
-CC: Ingo Molnar <mingo@redhat.com>, <linux-kernel@vger.kernel.org>
-References: <20250630-fix-perf-trace-null-access-v1-1-8c15bf5f402c@quicinc.com>
- <20250630143230.25b7a38a@batman.local.home>
+Subject: Re: [PATCH v8 1/4] drm: move drm based debugfs funcs to drm_debugfs.c
+To: "Khatri, Sunil" <Sunil.Khatri@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+Cc: "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "simona@ffwll.ch" <simona@ffwll.ch>,
+        "tzimmermann@suse.de" <tzimmermann@suse.de>,
+        "tursulin@ursulin.net" <tursulin@ursulin.net>,
+        "phasta@kernel.org" <phasta@kernel.org>,
+        "dakr@kernel.org"
+ <dakr@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Oded Gabbay <ogabbay@kernel.org>
+References: <20250701063303.3210665-1-sunil.khatri@amd.com>
+ <BL1PR12MB575314D550E85AAB35321DA79341A@BL1PR12MB5753.namprd12.prod.outlook.com>
 Content-Language: en-US
-From: Aditya Chillara <quic_achillar@quicinc.com>
-In-Reply-To: <20250630143230.25b7a38a@batman.local.home>
-Content-Type: text/plain; charset="UTF-8"
+From: Jeff Hugo <jeff.hugo@oss.qualcomm.com>
+In-Reply-To: <BL1PR12MB575314D550E85AAB35321DA79341A@BL1PR12MB5753.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: bHvnHshZeI8gojKFnITDLSmxz6TSSH4h
-X-Authority-Analysis: v=2.4 cv=RJCzH5i+ c=1 sm=1 tr=0 ts=6863fcba cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8
- a=-RQ7FLaKujfTUwwmNdEA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: bHvnHshZeI8gojKFnITDLSmxz6TSSH4h
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAxMDEwMiBTYWx0ZWRfX2M+PgjHs9NWf
- uOVApBrAWLqOtwVQHQ42sUNykLhQsDFLVj1xRxAV6GZsiaZ1MOiLExImLEkKo3KTy/zTsiymimQ
- V32DAqVnWOgDB1PLS6b5ygqGjyImNTPodO0JZ8RNFTe3FuGNtbuJVFU8xjfeyODYf1CANx27zS5
- HvYDvo/eWM6FHOrgqkHAIAF+Mf0QIZMd0V9uwS71f++1WCNOu9jmzs6p7P7sBabIOAah6OapYEA
- WaMeHhsPYNxVbZlkP8ajQOlPIC/NKV6N3VT9/rdi3fTP7KEykjbb0fbZeFVrNv9FTgttF0y66Tc
- Ru/S9dcb58j9MtOoO/wUR+EaQbbHPoHorBUUYErQyEAfKiTNbVUTVA+Ixj3QR7CHwo1Z1dBkk+D
- XTFA8CEDMl0cslE/EZ2TA1tvKqCdiWz0oRis4xsvgERa7BbFDw8OUlj74L0M6qxg9zkOLA/F
+X-Authority-Analysis: v=2.4 cv=KtJN2XWN c=1 sm=1 tr=0 ts=6863fcdc cx=c_pps
+ a=IZJwPbhc+fLeJZngyXXI0A==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=RAJSH83syF66xFRst6sA:9
+ a=QEXdDO2ut3YA:10 a=uG9DUKGECoFWVXl0Dc02:22
+X-Proofpoint-ORIG-GUID: 7wf9nyLy5Fv4lslT0j5BpCRhjiEFno-q
+X-Proofpoint-GUID: 7wf9nyLy5Fv4lslT0j5BpCRhjiEFno-q
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAxMDEwMiBTYWx0ZWRfX/7F4qwZvnK9G
+ PE3kLqIGkvT3hbNiGGxQ5IqjlvZspkhnzYCAZ/7HNBPNZdH80VP8xgYWERpdr+tsRQP6qefykPh
+ 0F5BGG5kBXLxGU2N0yQNLjQnby4752dbSXwZIbO3s0kBsvIsNQGxlQekfAVDLr7oyqxiXXAYARU
+ R0DrY9WF1oTXw6gU7eMa4UebHbuaBeSWz6ZRVVNvZQQ++cwa5fAeBUxSSl3z8CKvm3lGJUYXKCN
+ c7rPYQs5qnWc6MYxpxcMzGx6iGTJwcqwkHFpKqQHg1GRcj//Ql21pBGon6vomQf9vUcK1DgeRtV
+ eYScQYhJocrJjaY+mi+HaOIeYg+X1OkJaLobEf6sJbg4/h7E55Y994XVy6o6EQOCuX7+4z+st0t
+ 3OXxnDnG3M9eUbvlUHyzjTqwRX6HbFXdRrpPPgkMZCCq+l0gLCqWKQdz11s23XbylqzmDBs0
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
  definitions=2025-07-01_02,2025-06-27_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 impostorscore=0 priorityscore=1501 mlxlogscore=999 adultscore=0
- malwarescore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 phishscore=0
- bulkscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ impostorscore=0 bulkscore=0 priorityscore=1501 malwarescore=0 suspectscore=0
+ mlxscore=0 spamscore=0 adultscore=0 lowpriorityscore=0 phishscore=0
+ clxscore=1015 mlxlogscore=870 classifier=spam authscore=0 authtc=n/a authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
  definitions=main-2507010102
 
-On 7/1/2025 12:02 AM, Steven Rostedt wrote:
-> On Mon, 30 Jun 2025 22:35:28 +0530
-> Aditya Chillara <quic_achillar@quicinc.com> wrote:
-> 
->> It is possible that perf_trace_sched_switch call is rescheduled causing
->> NULL access in perf_trace_buf_alloc because of perf_trace_event_unreg
->> called in between, leading to data abort:
->>
->> [  363.202351][    T0] Unable to handle kernel paging request at virtual address ffffffba56d0a03c
->> [  363.202355][    T0] Mem abort info:
->> [  363.202355][    T0]   ESR = 0x0000000096000045
->> [  363.202357][    T0]   EC = 0x25: DABT (current EL), IL = 32 bits
->> [  363.202359][    T0]   SET = 0, FnV = 0
->> [  363.202360][    T0]   EA = 0, S1PTW = 0
->> [  363.202361][    T0]   FSC = 0x05: level 1 translation fault
->> [  363.202363][    T0] Data abort info:
->> [  363.202364][    T0]   ISV = 0, ISS = 0x00000045, ISS2 = 0x00000000
->> [  363.202365][    T0]   CM = 0, WnR = 1, TnD = 0, TagAccess = 0
->> [  363.202367][    T0]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
->> [  363.202369][    T0] swapper pgtable: 4k pages, 39-bit VAs, pgdp=00000000c9795000
->> [  363.202371][    T0] [ffffffba56d0a03c] pgd=0000000000000000, p4d=0000000000000000, pud=0000000000000000
->> [  363.202377][    T0] Internal error: Oops: 0000000096000045 [#1] PREEMPT SMP
->> [  363.202383][    T0] Dumping ftrace buffer:
->> [  363.202385][    T0]    (ftrace buffer empty)
->> .
->> .
->> [  363.203036][    T0] CPU: 4 UID: 0 PID: 0 Comm: swapper/4 Tainted: G W  O \
->> 	6.12.23-android16-5-maybe-dirty-4k #1 6d534d25cf9b12caecb741d5004c181a6a432b53
->> [  363.203042][    T0] Tainted: [W]=WARN, [O]=OOT_MODULE
->> [  363.203045][    T0] pstate: 834000c5 (Nzcv daIF +PAN -UAO +TCO +DIT -SSBS BTYPE=--)
->> [  363.203048][    T0] pc : perf_trace_buf_alloc+0x90/0xe0
->> [  363.203057][    T0] lr : perf_trace_buf_alloc+0x40/0xe0
->> [  363.203060][    T0] sp : ffffffc08016bc90
->> [  363.203062][    T0] x29: ffffffc08016bc90 x28: 0000000000000000 x27: ffffff88083d0000
->> [  363.203066][    T0] x26: ffffffba56d0a000 x25: 00000044684e8bd8 x24: 1198f2d01457f4e4
->> [  363.203070][    T0] x23: 0000000000000000 x22: ffffff88083d0000 x21: ffffffc08016bccc
->> [  363.203073][    T0] x20: ffffffc08016bcd0 x19: 0000000000000044 x18: ffffffd01580bec0
->> [  363.203077][    T0] x17: 00000000d2dc9ceb x16: 00000000d2dc9ceb x15: 0000000000000010
->> [  363.203080][    T0] x14: 0000000000000100 x13: 0000000000000100 x12: 0000000000000100
->> [  363.203083][    T0] x11: 0000000000ff0100 x10: 0000000000000001 x9 : ffffffba56d0a000
->> [  363.203087][    T0] x8 : ffffffba56d0a044 x7 : 0000000000000001 x6 : 000000548fd2bf93
->> [  363.203090][    T0] x5 : 00000054908be990 x4 : 0000000000000000 x3 : ffffff8808329640
->> [  363.203094][    T0] x2 : ffffffc08016bccc x1 : ffffffc08016bcd0 x0 : ffffffba56d0a000
->> [  363.203097][    T0] Call trace:
->> [  363.203098][    T0]  perf_trace_buf_alloc+0x90/0xe0
->> [  363.203102][    T0]  perf_trace_sched_switch+0x74/0x190
->> [  363.203107][    T0]  __schedule+0xbb0/0xeac
->> [  363.203112][    T0]  schedule_idle+0x24/0x48
->> [  363.203114][    T0]  do_idle+0x214/0x25c
->> [  363.203117][    T0]  cpu_startup_entry+0x34/0x3c
->> [  363.203119][    T0]  secondary_start_kernel+0x130/0x150
->> [  363.203124][    T0]  __secondary_switched+0xc0/0xc4
->> [  363.203129][    T0] Code: f8605908 d538d089 8b080120 8b33c008 (f81f811f)
->> [  363.203131][    T0] ---[ end trace 0000000000000000 ]---
->> [  363.203133][    T0] Kernel panic - not syncing: Oops: Fatal exception
->> [  363.203135][    T0] SMP: stopping secondary CPUs
->> [  363.203276][    T0]
->> [  363.203276][    T0] Total active clients count: 0
->> [  363.203280][    T0] Dumping ftrace buffer:
->> [  363.203281][    T0]    (ftrace buffer empty)
->>
->> Fix the issue by disabling preemption in perf_trace calls.
-> 
-> Does it really fix the issue?
-No, wanted to confirm that perf_trace_##call() should not get
-scheduled out.
+On 7/1/2025 7:02 AM, Khatri, Sunil wrote:
+> [AMD Official Use Only - AMD Internal Distribution Only]
 
-The following is also present in the logs:
-[<ffffffd4cde44348>] do_mem_abort+0x54
-[<ffffffd4cef79b5c>] el1_abort+0x3c
-[<ffffffd4cef79ad4>] el1h_64_sync_handler[jt]+0xb4
-[<ffffffd4cde11298>] ret_to_kernel[jt]+0x0
-[<ffffffd4ce05a19c>] perf_trace_buf_alloc+0x90
-[<ffffffd4cdf137fc>] perf_trace_sched_process_template+0x64
-[<ffffffd4cdf115f4>] __traceiter_sched_process_free+0x48
-[<ffffffd4cded7eb8>] delayed_put_task_struct+0x94
-[<ffffffd4cdfb1564>] rcu_do_batch+0x1f0
-[<ffffffd4cdfb3ec8>] rcu_nocb_cb_kthread+0x250
-[<ffffffd4cdf08420>] kthread+0x11c
-[<ffffffd4cde1f174>] ret_from_fork+0x10
-> 
-> 1. perf_trace_##call() gets called either by DECLARE_EVENT_CLASS or by
->    DECLARE_EVENT_SYSCALL_CLASS. The latter already disables preemption
->    but the former does not because it is called by the tracepoint logic
->    that has:
-> 
-> #define __DECLARE_TRACE(name, proto, args, cond, data_proto)		\
-> 	__DECLARE_TRACE_COMMON(name, PARAMS(proto), PARAMS(args), PARAMS(data_proto)) \
-> 	static inline void __do_trace_##name(proto)			\
-> 	{								\
-> 		if (cond) {						\
-> 			guard(preempt_notrace)();			\
-> 			__DO_TRACE_CALL(name, TP_ARGS(args));		\
-> 		}							\
-> 	}
-> 
->    Where preemption should already be disabled.
-DECLARE_EVENT_SYSCALL_CLASS in not present in our tree.
-> 
-> 2. trace_sched_switch() is called with interrupts disabled. So there
->    should be no scheduling out in this trace event. So how did it get
->    scheduled out in that trace event?
-Thank you for confirming that trace_sched_switch() should not be
-scheduled out.
-> 
-> I think there's something else going on.
-I will try my luck with CONFIG_DEBUG_PREEMPT to check for any
-preemption underflows. Any other idea what could be going on?
-> 
-> -- Steve
-> 
-> 
->>
->> Signed-off-by: Aditya Chillara <quic_achillar@quicinc.com>
->> ---
->> Change-Id: I787347a7db4554cfd2cb74e0fc985699f1824c92
->> ---
->>  include/trace/perf.h | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/include/trace/perf.h b/include/trace/perf.h
->> index 5800d13146c3d0cdf4eb474a3bb895dd71753de4..76994a5d8c55f4ca071070ff551a53a84fb1d95c 100644
->> --- a/include/trace/perf.h
->> +++ b/include/trace/perf.h
->> @@ -66,6 +66,8 @@ perf_trace_##call(void *__data, proto)					\
->>  	int __data_size;						\
->>  	int rctx;							\
->>  									\
->> +	guard(preempt_notrace)();		\
->> +									\
->>  	__data_size = trace_event_get_offsets_##call(&__data_offsets, args); \
->>  									\
->>  	head = this_cpu_ptr(event_call->perf_events);			\
->>
->> ---
->> base-commit: 70575e77839f4c5337ce2653b39b86bb365a870e
->> change-id: 20250630-fix-perf-trace-null-access-9661f910df72
->>
->> Best regards,
-> 
+I cannot review this message with this restriction.  In my opinion, your 
+email client is not properly configured for interfacing with the community.
+
+-Jeff
