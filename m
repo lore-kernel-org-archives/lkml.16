@@ -1,98 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF9727935F;
-	Tue,  1 Jul 2025 14:57:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D502F2797AA
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 14:58:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751381857; cv=none; b=SS+7Fo6MzEqbYpLYQoEK6SEsnnzYCILU10uMzTw1l5bIzYK2BrUiRwMsINSEI0upQ1xLr26MrjTxPIoIKWrZH1sMggKw50LxcNB4AnyxuE+Lt5k4eZttC0b5OGG9tv2vPQQoGtNYEiHrIjwvss1S188N3rgOuACUxJRlySlFedw=
+	t=1751381892; cv=none; b=TS+CZvjmxQ/wZEFiWZ3w15CsLBR55ej0HY+rCswjRjl6FMJzInlciAQRNylO6Yu4EK9DxksEsCgHfdMsmYH59wB67buhh4K0wnrWUKaUEJ66SQ2ztyj+rhNu65yfstuTg7Z/Y+rr4uAThinOOpsAycVCtMgG5fU0GQ5B7YDqQZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751381857; c=relaxed/simple;
-	bh=zytX0gt/ByuFXfsGeNFtSW+Q9wpGSV3HZoRdbykqG+4=;
+	s=arc-20240116; t=1751381892; c=relaxed/simple;
+	bh=4GU+SucA8xO5x9jGSJw4NepXwe+RzMW6HINk1NQxuTk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cfeOTHXIHQRRmeo/saFl19OYpPbiJDB+HXHGADk2i84jv2dGZt9NwVOZUDZh95wr08DeULD1fWrHbNPuhgjiecalN5a27Ty86QQNfoXC8o4ZBkN8laNAIyHa7V/eEArhBkWPaEtYIbe36t0LMrXVWHgs20NZ7LRvGSmajKSRQPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mReJQHnz; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=QPLcSythNRVTEBPgubFgU73PqonxjfGwx553YrJQnyUt7TEOE9k9du9nAvJ3vIPbfOoHxpAdBb3aoc7FxuI0adGF9hjhR2HvqHkczkSaeErSbhVsADuKw8AXT1Hl94lIh30z3oxcyc/sRk5xjvJNU07y2DUOVJzoFncrhx8bpZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=UyQDF4xW; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mReJQHnz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9FC3C4CEEB;
-	Tue,  1 Jul 2025 14:57:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751381856;
-	bh=zytX0gt/ByuFXfsGeNFtSW+Q9wpGSV3HZoRdbykqG+4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mReJQHnzEMiLZyiRv5ZVnjueyz7RXQzy4om0oFgY5nY6S21Oy+sd9oeu6drqAIgsN
-	 vM6ev8ykHWkd6K+wo5bQ4BW0nF7Zvqv1JbXUAuXS5yberQiWwBJf2OjLaRbDK60BEk
-	 rOy495/HCSpiWhFVcevnOt6yezZoJ/WSV/AZUSZpNHuAwsklSMX+tW3viCIWFWsGVi
-	 svnbA/VCgr0KlsbDTYhFxIgtTExy9lILQoe76Sc/r8oVMIcH1SqgMAFrJTN+s3Pn9d
-	 WY5LfBRS7GfZKEDkGy5G3XoawxGrBHJCuVVYE9exu4dzKa3gQZQEvVZs3AcGJ/rpgp
-	 SfSX70wxzpoCw==
-Date: Tue, 1 Jul 2025 07:57:36 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Pranav Tyagi <pranav.tyagi03@gmail.com>
-Cc: Brahmajit Das <listout@listout.xyz>, Carlos Maiolino <cem@kernel.org>,
-	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev,
-	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs/xfs: replace strncpy with strscpy
-Message-ID: <20250701145736.GE10009@frogsfrogsfrogs>
-References: <BgUaxdxshFCssVdvh_jiOf_C2IyUDDKB9gNz_bt5pLaC8fFmFa0E_Cvq6s9eXOGe8M0fvBUFYG3bqVQAsCyz3w==@protonmail.internalid>
- <20250617124546.24102-1-pranav.tyagi03@gmail.com>
- <qlogdnggv2y4nbzzt62oq4yguitq4ytkqavdwele3xrqi6gwfo@aj45rl7f3eik>
- <CAH4c4jLjiBEqVxgRG0GH37RELDp=Py3EoY6bcJhzA+ydfV=Q1A@mail.gmail.com>
- <ldak3a3zmqlkv67mjproobt4g7pe6ii7pkqzzohd5o5kyv64xw@r63jjlqzafzp>
- <CAH4c4jJcyA+=x5y3BrW7dQkWOM3bVTepH0W16cm+_CLqHr4hfw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="UyQDF4xW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
+	:Subject; bh=cLdKwBjdtMYs1S3eoRSM/jaCM07jbCHMulV+8woZtEs=; b=UyQDF4xW4kC8zfR4
+	wLDsQIkicUozIWHZqxh4eXGyTVoWeddBud/Aw1oZIOXf1FxMtMskJQPb0oLHFQojONqWN0CDuqd8j
+	6YZDH1AQG/9LjiLgCi01kp+pxrqO6Y5GF+lB9eWqYI6VVCVt5KP642AcXWkDl7lPJxq9GkDT37UMT
+	v26mQawoTDXrlY2MJdh5zANnh9RLKeVZcl9d95jFm6OoRCiahnjuq/ktq0bMBzZa7yl/oJf3XOJQE
+	WoDn9ihsll9E1E8bq3L8mUFWdlXZA6xkZdfGzgcjFAziqfNDaj4HzIRfDJZsiRTnjRGRto+zS1OGu
+	h16Bc0oD0W+qgtjjxg==;
+Received: from dg by mx.treblig.org with local (Exim 4.96)
+	(envelope-from <dg@treblig.org>)
+	id 1uWcQw-00DKOM-1o;
+	Tue, 01 Jul 2025 14:58:06 +0000
+Date: Tue, 1 Jul 2025 14:58:06 +0000
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
+To: lee@kernel.org
+Cc: kernel.org@treblig.org, arnd@arndb.de, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Input: pcf50633-input - Remove
+Message-ID: <aGP3fvnDpYqzQlYU@gallifrey>
+References: <20250629212820.319584-1-linux@treblig.org>
+ <j3pkekg2mmbdbmguewoc5rks7263rxhveggkimbhmvkgxb5ikh@nwz553og3qtz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAH4c4jJcyA+=x5y3BrW7dQkWOM3bVTepH0W16cm+_CLqHr4hfw@mail.gmail.com>
+In-Reply-To: <j3pkekg2mmbdbmguewoc5rks7263rxhveggkimbhmvkgxb5ikh@nwz553og3qtz>
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/6.1.0-34-amd64 (x86_64)
+X-Uptime: 14:57:04 up 64 days, 23:10,  1 user,  load average: 0.11, 0.06, 0.01
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-On Tue, Jul 01, 2025 at 02:18:12PM +0530, Pranav Tyagi wrote:
-> On Mon, Jun 30, 2025 at 7:48 PM Brahmajit Das <listout@listout.xyz> wrote:
-> >
-> > On 30.06.2025 14:36, Pranav Tyagi wrote:
-> > ... snip ...
-> > > > >       spin_unlock(&mp->m_sb_lock);
-> > > > >
-> > > > >       if (copy_to_user(user_label, label, sizeof(label)))
-> > > > > --
-> > > > > 2.49.0
-> > > > >
-> > >
-> > > Hi,
-> > >
-> > > Thank you for the feedback. I understand that my patch is incorrect and
-> > > it causes a buffer overrun. The destination buffer is indeed, already, null
-> > > terminated. Would you like me to send a corrected patch which uses
-> > > strscpy() (as strncpy() is deprecated)?
-> > >
-> > If the destination buffer is already NUL terminated, you can use either
-> > strtomem or strtomem_pad [0].
-> >
-> > [0]: https://docs.kernel.org/core-api/kernel-api.html#c.strncpy
-> > (Description)
+Lee:
+
+* Dmitry Torokhov (dmitry.torokhov@gmail.com) wrote:
+> On Sun, Jun 29, 2025 at 10:28:20PM +0100, linux@treblig.org wrote:
+> > From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> > 
+> > The pcf50633 was used as part of the OpenMoko devices but
+> > the support for its main chip was recently removed in:
+> > commit 61b7f8920b17 ("ARM: s3c: remove all s3c24xx support")
+> > 
+> > Remove the input code.
+> > 
+> > This was originally posted as a set of pcf50633 removals in March,
+> > and is the only major component that hasn't been picked up.
+> > https://lore.kernel.org/all/20250311014959.743322-1-linux@treblig.org/
+> > 
+> > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 > 
-> Thank you for the suggestion. On going through [0], I see that,
-> both, strtomem and strscpy require the src to be null
-> terminated. As far as I know, sb_fname buffer has a size of
-> XFSLABEL_MAX (12 bytes). This means no terminating NULL
-> for the src. So shouldn't memcpy() be the right function to use here?
+> Applied, thank you.
 
-memtostr_pad?
+I see Dmitry has got that into -next, so I've posted a patch to take
+out the pcf50633 header which is the last bit left.
 
---D
+Dave
 
-> > > Regret the inconvenience.
-> > >
-> > > Regards
-> > > Pranav Tyagi
-> > >
-> >
-> > --
-> > Regards,
-> > listout
-> 
+> -- 
+> Dmitry
+-- 
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
