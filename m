@@ -1,195 +1,236 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2050.outbound.protection.outlook.com [40.107.101.50])
+Received: from lgeamrelo07.lge.com (lgeamrelo07.lge.com [156.147.51.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF09627816A
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 13:23:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751376188; cv=fail; b=V4Eu8KsVYMbPlce1Jn6hGs0VMwOzLPPYF52piZAL5EKErQoIcQp8qZTgnV0NyUvLMt+jsmr1uqc8tHxm/wbdipNIHKpeXt+o2xLk/udew1j5++aSWn8AqCQomKwGw7H1Q1/y+qXh+udC1ZZivLA2aQmjT2ZwCsKcSjoQDDe+y30=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751376188; c=relaxed/simple;
-	bh=AohNndIwIYLycKS4Odh6vYp6E8oMR5NzwMP9U5H4NMQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=k19d5yr9xex9RizDhqFXQQVv9V80isqzDLTFG034L2It/Md22cEtQblbSyjk5jlGDjUD6lVsDNyMoc8OBaBodSHu5LobzAGQTgyKtera5UMEym+dPPMJtQToCyz1TlwxHDKHf0//CQWyJ4J8IsN/3d9wqmHGUwbqApTAphs2oP0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=d3uN0zLJ; arc=fail smtp.client-ip=40.107.101.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="d3uN0zLJ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ohmxnx/kM23sNUu31QhJuQfXkjANTYCrM671js1CA5ZQ5zptGB6z/FwbrCEMQBItVxG7xY6z6kAe50+iHuOo3A2DM0lJH5WtywT7VO71OyxVwBE+SuFtaWjZPmbh6w59kppCYsGyUbCAwZeBAyHzmuB6TyfqxKTRDnm7ehCmS0H5KQh76p9pZ7GQds5ObeefUeHQp+Od8mI4FN9MTKjpUVmQOl/XM8JqClXiD1fDW/wplpf/cTTXQoxMp+I3a1Cesn+HwflicdH2z2gVydOk8pqtExPE5XDUJqhTpvlgctNJQ1/p3C9/fEQbRcKhMqCrX0AX9W0hFFiQsi729aPBtQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AohNndIwIYLycKS4Odh6vYp6E8oMR5NzwMP9U5H4NMQ=;
- b=ujAn0OhF8Q+FRt4qmNefsKDPPYRnxrFLvhy+K2i24AudGqUmmw0ungNvWv1Z1W1VB4JEnYgSkSD41U7LiFxfwKpncINuSgXnAd8J/NC44ZISl379GA6641kcw4cgV3UIIz5+lrpPwhI/OEq7jWGlPDv+LTskac9FnmOxYShzy1lllZc7Y4non3nmlqHmfquh5cGgy0LVCxPuMpRjMlKgOyg/TKZ6H0lAdRgdU3QEm8GWm1FENDbVBJF682knVh00O8ZbW006+WMsgGtJPMooxMMdfaCuZl1Hyaac0x0Uz02J818snkZIxU5myu/67LHkUxYwm3FLRnTGDtYbD1eu2A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AohNndIwIYLycKS4Odh6vYp6E8oMR5NzwMP9U5H4NMQ=;
- b=d3uN0zLJ7NLYcW55zULr+lA4HpiiAa5JwYc39RhOWuhMp0n22vofzXReP//9NKIFef7v0G2eSVYa4KphWfUdJq6rMhhlk+NmvQuICSoZvQa5XnXO7NmTD/E7ifuE9D0hccuIJ5e0OIrG01z7hACSL0Z4O6s6hwDoaTM1I8lOA6NAoR59Fg//4yC3K7t2X+9XhLJEaurhfMf9EpYOJTqNgqc87E8MK0dMbZoaiUqiqukAFs8NiGLkzdAbFwRNl3Hv2Vr0laU3Fnu9oQRD4eDPl0lvTLKQu6s5hQoijRKHLe6K824atN9BHR2vDn/Xb/n+y1E9uWDln30x/J6PlhB9fw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
- by SJ2PR12MB8033.namprd12.prod.outlook.com (2603:10b6:a03:4c7::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Tue, 1 Jul
- 2025 13:23:03 +0000
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91%7]) with mapi id 15.20.8901.018; Tue, 1 Jul 2025
- 13:23:03 +0000
-Message-ID: <fe794099-50d4-49f2-ad75-b586157793ac@nvidia.com>
-Date: Tue, 1 Jul 2025 09:23:00 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 08/14] sched/ext: Add a DL server for sched_ext tasks
-To: Tejun Heo <tj@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
- David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
- Changwoo Min <changwoo@igalia.com>,
- Luigi De Matteis <ldematteis123@gmail.com>, sched-ext@lists.linux.dev
-References: <20250620203234.3349930-1-joelagnelf@nvidia.com>
- <20250620203234.3349930-9-joelagnelf@nvidia.com>
- <aFnQ-3L6ixL7nSz0@slm.duckdns.org> <20250630151252.GA2443566@joelnvbox>
- <aGKvW08eOgK-RyQ3@slm.duckdns.org>
-Content-Language: en-US
-From: Joel Fernandes <joelagnelf@nvidia.com>
-In-Reply-To: <aGKvW08eOgK-RyQ3@slm.duckdns.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BL0PR0102CA0006.prod.exchangelabs.com
- (2603:10b6:207:18::19) To SN7PR12MB8059.namprd12.prod.outlook.com
- (2603:10b6:806:32b::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C90F27466E
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 13:23:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.147.51.103
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751376231; cv=none; b=IKWt51YR2O1VEHX9t/GwzUi/78tavX6V3HdLKUqTfLTKEFSQvN+h9Bc0ivm8JF1mqGTDMjcXs9Y2nsqx7kgItW9yY6tjSyzUYRYFK2yOdwUlUZlAQemjON7Pn9sg7rls4SUziS3SQy9oYC+Ct8xf02fnz4jsgTM/iH09+qbUCL4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751376231; c=relaxed/simple;
+	bh=r0Qq+d5yiYc+tQ/JPUYcbNQRbrbArG3O8z/RqToMgaU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gIviYU3/SJD53A6Au/Z0SBh7pi6lLp/mbFs+kkho/X7N0Dcyb/crxkFYNVJmcswg3gUethorP/8+z9BzK2FBwwUbHrb5YMPTlXZGI+A2yawfqIeRBsWlz7peL6aJXuTx1766KdHyzEo4S3J2/8yrbgBu2JW59NhIY/cpuYE1bC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lge.com; spf=pass smtp.mailfrom=lge.com; arc=none smtp.client-ip=156.147.51.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lge.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lge.com
+Received: from unknown (HELO yjaykim-PowerEdge-T330) (10.177.112.156)
+	by 156.147.51.103 with ESMTP; 1 Jul 2025 22:08:46 +0900
+X-Original-SENDERIP: 10.177.112.156
+X-Original-MAILFROM: youngjun.park@lge.com
+Date: Tue, 1 Jul 2025 22:08:46 +0900
+From: YoungJun Park <youngjun.park@lge.com>
+To: Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hannes@cmpxchg.org,
+	mhocko@kernel.org, roman.gushchin@linux.dev, shakeel.butt@linux.dev,
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+	shikemeng@huaweicloud.com, kasong@tencent.com, nphamcs@gmail.com,
+	bhe@redhat.com, baohua@kernel.org, chrisl@kernel.org,
+	muchun.song@linux.dev, iamjoonsoo.kim@lge.com, taejoon.song@lge.com,
+	gunho.lee@lge.com
+Subject: Re: [RFC PATCH 1/2] mm/swap, memcg: basic structure and logic for
+ per cgroup swap priority control
+Message-ID: <aGPd3hIuEVF2Ykoy@yjaykim-PowerEdge-T330>
+References: <20250612103743.3385842-1-youngjun.park@lge.com>
+ <20250612103743.3385842-2-youngjun.park@lge.com>
+ <pcji4n5tjsgjwbp7r65gfevkr3wyghlbi2vi4mndafzs4w7zs4@2k4citaugdz2>
+ <aFIJDQeHmTPJrK57@yjaykim-PowerEdge-T330>
+ <rivwhhhkuqy7p4r6mmuhpheaj3c7vcw4w4kavp42avpz7es5vp@hbnvrmgzb5tr>
+ <aFKsF9GaI3tZL7C+@yjaykim-PowerEdge-T330>
+ <bhcx37fve7sgyod3bxsky5wb3zixn4o3dwuiknmpy7fsbqgtli@rmrxmvjro4ht>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|SJ2PR12MB8033:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7be139df-1384-4e67-78f1-08ddb8a26882
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VmsvME01S2pHczZSSTRiMkk0dVhkQVc0eWN5RVR6L0ZLbEYxZHVrYUNFWm5I?=
- =?utf-8?B?MEhWeS81Y092T0FJZmcxYm1MM0xBZm14RHlVSWF6MVp1L3J6VkRIT0sxMUZS?=
- =?utf-8?B?cGIvRHNIR2ljT3lkN1RkUG5tY1FrZTh0dTN4QytjS2lpc2d5alZzRWdtbkI5?=
- =?utf-8?B?RTVnYkF0NHF6YnRxRXdrZ3Y1VEhuL3FQOEU2bjJIQ1ZSWXFTdWlZZ25QMTky?=
- =?utf-8?B?dG1uQlp0NEc5cVF0VThFeFRkenNGY3lrTXdrMnhpVUp4dFRkRlNSZHhHei9N?=
- =?utf-8?B?cjVkL2wxRTh5NGJjTHNraFpaTmtvWkhEYzdwcTV6bUxNVDQ1QjZsL0kvTVpZ?=
- =?utf-8?B?L0F0ZUVJSVZDWjNldTJPUHVpRUdGMit6aHVaL1FZN2t6dkp2M2VPamNXdUU4?=
- =?utf-8?B?cWxKMkQ1NnZOWDJQK2x4Q1FIaC9YeElKbm1DY2hHWFFmaXhEaGlLcVFSSDEr?=
- =?utf-8?B?N1VrVkgzeVY0ZEpnMVl0OG8rYk1NWEZyeWNodGlXaklKMGsrUDdFQ1BoWEZJ?=
- =?utf-8?B?TnMwSW5pVXZZYkppR0tBTFpoazVXVkM0UzRjd3ZiM1RkbUI1T0R1aUFRMFov?=
- =?utf-8?B?Ym16cDhTcCt6bTlUbjdsckc2RGo2OExvc1lMRFdqY2JmRnFrYjdZN0VLNlln?=
- =?utf-8?B?dHhrSkwxOUt6cllwcmVwWVlYYVRMVTF5a1BBUklVVWQzNnRjS1lnTlQ0SkxT?=
- =?utf-8?B?cVdQK3cwazJnOVZoMWxoSlpEZmZzd3QzT0FXdUZSRDRmekRHNldwMGJLU1do?=
- =?utf-8?B?QVBqQnVMMjJLbmJMR2xsekJ4NUZLUnp1TFF1eXYzN2RTTHhlOFdpcmpEcmlh?=
- =?utf-8?B?MVJnZzQrMVJlUXpOV1FabXF2ZjVTVHN3dVhkYzBiK1pGU2RUZ3lyOU1GUGdh?=
- =?utf-8?B?UlF0VTBpWS9UaXdNYTE4a1NRK1dRZDZNeDVDMzZVMnhiL1lDeHZ6Qnk0RzZN?=
- =?utf-8?B?Tk9rOGdsTk90WHEzVCt3eWM2ZlFPTGpldmFjOWFEMTJ5Z3BYV2h4b1lHZUZq?=
- =?utf-8?B?OXlsWTRsODF5Q2FvTXEybFBLTEhONnlBQ3NJRktyUUk1WGF4UmZxK2hlYUtI?=
- =?utf-8?B?SVByQ3IyakxOZU9rSWpyU0p5MGxiWWp5YW9mbE1FYUFINmx5WDhsdm9UbkZu?=
- =?utf-8?B?L0h4OGlnMkx1MEh6OW96cVp4cmFPUTRRVmY1a0R3NG53ZHkxV1NxdDJVdG9T?=
- =?utf-8?B?RXc0SzBlNWdvVWEzVVhZcGliSk5nLzhIS2pnUWJIU2xob1c2bmF1Y0VTeHBG?=
- =?utf-8?B?ZUlqR2xLcmQ4NWgzRHJGRUIzQ0JxYWpXanJQZkp4M0oxS3FHNmdLaU05RWll?=
- =?utf-8?B?bjdhSlBUek9RZ1YxTWVlK3Z0d1FmTE9VaWUzMXh3RExwSEJyZmNXK25SN0Vi?=
- =?utf-8?B?bFNKRXJKd1R5ZHZUdmJlbUMrYjV2ZktlWHdhVFZib1ZuS0VURHV5MTNuTk0v?=
- =?utf-8?B?NkxBK0N1SkhkUnYxSFRiZXk3dzhZdDNNajZsTGo1NXJJY0JwZjk2S1AvT1o3?=
- =?utf-8?B?b0ZCa1VKWXdyVkpvN3NBT1NnaUVmV0t3MXJQQVJ1bjVaOHhQb1dvRG92RUo2?=
- =?utf-8?B?RTh3eEk1K082RmtEaTB3bWJVLzRqeDFjL3Z0VkhzQVRKKzM1cHJHUUxWZHM2?=
- =?utf-8?B?ZFlHRStmQW9abnI4ZmpuVmlRWERNTmpzcGpURFlNNm5mc3BuU1pMRTQ0VDYr?=
- =?utf-8?B?MFVFYy9kQ3c3RDR2eTB4SUpuNVg2cERiaUJtZ1Q0U0hIYmNRcjBDb1NNenRR?=
- =?utf-8?B?TmF2WlIwQzB6NGlIYjNWZ2ZKMGF0WWYwd1QzamlYUEFtMWFPaFptWTZQQ1R4?=
- =?utf-8?B?NGpxdUR1K2FnYUExNFVLYk1Yd3dGZjZ0Y21MMDRtdnZRbTgwVlBoQVQwOWVw?=
- =?utf-8?B?WmJnYjE0ZHdGL2FOWWdEWjE5NkhzaGtHMGNLQkx0azJVeEE9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?akd6V2dBZG4rYmZXZVBqYnU5U3RsN3k0bjFsYzIwMDU4TVc2VW4xZXplOGV6?=
- =?utf-8?B?K00zVHRENmtUWEh1OFNZN1p1VnoxK3hidSs1WXJpWUZpelp0OXYvTHNmUkw5?=
- =?utf-8?B?SFFaVXBkOVQxZjIxSUgvbUNOMkVRZGpmVHJ1bHFScjJoNCs2Tk1ndGJnRWtB?=
- =?utf-8?B?VUp3STVHdnhNS1l3UmFHN1ZUdUxjMjZma0dIVWJjT0FuSnRNazZJckJJZFFq?=
- =?utf-8?B?ZnNPT0ZYL0RQYkVSSUR1OHk3VEN4WTFKdlNHS1E5R29LcEp3bU5kS1YvNFhx?=
- =?utf-8?B?ZjJlT3Q5VkFZYUdoYUc4eVdGK1lLR1ZtSkhCVWI1K0xYT2VjVW5pN1BaWktl?=
- =?utf-8?B?MnN6OVBVblZwK3ZSTWFhSngvOGNpdmszVGJlUnd5OUt0b2Z2UXZldDJUTytt?=
- =?utf-8?B?RGpKRVhYM3J4eU5qekdNUWV2aks4TGFNc3dDVFNQVXZabDZOQ3JSMHBlR09n?=
- =?utf-8?B?b2pkZkJMd0JScFZqTjFNem8vLzE4dzc2SmdneDJibm5MSFZYK1pDMUxUc3h5?=
- =?utf-8?B?d2ZHM3lvMFNmOWRNRTkwUG44U0JZWExFZVhkMDBUNXcrbHlqWGc3ZWtXdkpv?=
- =?utf-8?B?VVkrYlRuZUdFWjd3S29IUmcvWUl6UXpIZTJyeHkzd1VjY0dvVFhmSTZpSkxT?=
- =?utf-8?B?OFY0Szc5SGJPTVlVem9OT1d0azBYZXFjT2NnNUZpWlVnTWF3NXBpWFNmQTVR?=
- =?utf-8?B?VHYzU0N4bE5wTjlEVWNNWHNaaVJQVjRyWmZObkhmeklhQXlXQUYrNC8yMTRP?=
- =?utf-8?B?Tmladmc4TmRXa0lKOVFpWko2aWdtZGZtK1RXL21qTDAwbklaZE03Z2xMdEtK?=
- =?utf-8?B?d1Q1VkJiZityMXBVd3gycHZ4ZjJxWTlwSGNiNW9pRzZkUjNrR2xzd1JpcXY1?=
- =?utf-8?B?TzRkTFpMdngvVGd3aXUvdWxtZWUvbmM5bzNORWpKT21PdWh0OUJrbkY5OW5K?=
- =?utf-8?B?UTQyWWRUa1krMEhUZmlBVW1ERXkzSm9FM25HUHVBb0JaVE1zc2Q2Rk1zSEdW?=
- =?utf-8?B?cWNMTExJU3dpb3V1bkxKSEE3SGtubGtBTWYwTFphNi9VMHlSL3JhcU0wYmh3?=
- =?utf-8?B?K2Q0Z0xRSUE3Y0Jza3dIZXBaU0Q5U2dsdDh0U3BOU3d4bC95M1JWSVpHK3E0?=
- =?utf-8?B?UTdDUUhIcUFXL1kybzF6L01kTk1FR3dIQXE0RFkzaTFQRlg0K2Q1NHd5ZmZI?=
- =?utf-8?B?Tjh5WDRsNnNzcVNaZEJGOHQ1QXNpU0IxLzFRcWhmcHoxbDhTT3ZiNkZqK0Vr?=
- =?utf-8?B?TkVraFFlOFhCZjlmaGs5MUVxQlZFdDJBOUtJMGpKaHNuOWFFMlBNNlJXait2?=
- =?utf-8?B?QS9SMXM3NWovMUpZNnhhSDRodWtWc3RMV1NoRjF4K1N6aGFEOGVvUjhjcXBM?=
- =?utf-8?B?OTFSckFsR3Rza0lhREM5T1A5ZHVGemdHbStsMmpLMDBHbHBNeVdNUSt3ZkNZ?=
- =?utf-8?B?OTBWNDFkbDA0MnhRV0JnWHFhL2NyRWdwZnRRM25Wa3h4N1QzRlRBVkVWU0RL?=
- =?utf-8?B?S0owY0RSSWZ5R0F6LzBiMjRvSkRpazZZT1c4R0krcUdnSU1PdkE5STVHNmlP?=
- =?utf-8?B?WmRPaWZ5ellBaHNWVkhDa1cxQ20wM1ZOTU43OEl6MnJCR0h5RUhBS0dnNXBK?=
- =?utf-8?B?YzRiME9jTmFVak5mV014QUNheUpKaTRaMVFLUUZ4TmI0dWpnZlhjMlRoRzdR?=
- =?utf-8?B?ck51YzZyVGV1Y1huY3ZqVEZrdzhCUGdQNXNCR1cxL3llN1RjeG9xU3dTNUsv?=
- =?utf-8?B?MlJDUkJEVWdPNkhWRUV5cWdlanFRWm5waVU3cUlYM1VpSHVteUs5U0VDRVhQ?=
- =?utf-8?B?OENZUUUvcnduUitseVRYSW5VWVo5OXllcklWVmVUTm5iYXpnTDFkSENQVm5u?=
- =?utf-8?B?OUMxZFhaeVFwV3ZMOGNWSWF2dGZjaTNPM3RsbjZXK0c1QnpodjVaM1kyM0pE?=
- =?utf-8?B?VDJBZS9TeEpoTUZZcXNSTDM0aEZNREdlUWdZRzkwVWRlMEFTbHNBcldETVhC?=
- =?utf-8?B?aXJuY0RxaHcrUzNHL3BpNnArYlkzNENvSFpmaDQ3RDZ5ajkyQkVMWXA1Rmdn?=
- =?utf-8?B?TGhPS09FQWkyOWNBNzhRVWdNaE53MmZRWFNIVVNXMmErcXhTN1Bja1M0aXJl?=
- =?utf-8?Q?6j9v9Q+CyCZhM30qAS3+5U6Gn?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7be139df-1384-4e67-78f1-08ddb8a26882
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2025 13:23:03.5897
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zalO7Vrm5aNO8hHiL8BVVtx5xK2W6oFRsC/M03upZ+QgzEbQ6ZY2q7SgGjIZbSVhiYBN+rXC42fRVVC91FSJ4Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8033
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <bhcx37fve7sgyod3bxsky5wb3zixn4o3dwuiknmpy7fsbqgtli@rmrxmvjro4ht>
 
-Hi Tejun,
+On Mon, Jun 30, 2025 at 07:39:47PM +0200, Michal Koutný wrote:
+> On Wed, Jun 18, 2025 at 09:07:51PM +0900, YoungJun Park <youngjun.park@lge.com> wrote:
+> > This is because cgroups can still restrict swap device usage and control 
+> > device order without requiring explicit priorities for all devices.
+> > In this view, the cgroup interface serves more as a limit or preference 
+> > mechanism across the full set of available swap devices, rather than
+> > requiring full enumeration and configuration.
 
-On 6/30/2025 11:38 AM, Tejun Heo wrote:
->> This changes the signature of the pick_task_dl function, which in turn
->> changes the signature of class->pick_task.
->>
->> How about I pass NULL to pick_task_scx() from ext_server_pick_task(), and
->> also annotate all functions where rf is unused, by naming the argument as
->> rf_unused (except for DL), would that make it more clear that the rq lock
->> should not be arbitrarily dropped just because rf was passed? And perhaps
->> sprinkling some more code comments.
->
-> I think what bothers me is that this erases the distinction between
-> ->balance() and ->pick_task(). However, I'm not sure the distinction means
-> anything anymore especially given the removal of !CONFIG_SMP paths. Looking
-> at the balance callsites, I think we can just fold each ->balance() into the
-> head of the corresponding ->pick_task(). Peter, what do you think?
+Hello Michal,
 
-I think one added complexity with that would be, the ->balance() would be have
-to be embedded into the other sister ->pick_next_task() as well?
+Thank you very much for your thoughtful review and for sharing your
+insights.
 
-And core scheduling paths add complexity there, I'd vouch for keeping it
-separate but curious what Peter has to say as well.
+I’d like to share my thoughts and the reasoning behind my current
+direction, including some points I considered in relation to your
+suggestions.
 
-thanks,
+> I was wondering whether your use cases would be catered by having
+> memory.swap.max limit per device (essentially disable swap to undesired
+> device(s) for given group). The disadvantage is that memory.swap.max is
+> already existing as scalar. Alternatively, remapping priorities to
 
- - Joel
+I did consider implementing this kind of control.
+In that design, it would work similarly to memory.swap.max but per
+device: the implementation would iterate through the swap devices in
+priority order and maintain per-cgroup counters for each device’s usage.
+It would also need to handle proper counter cleanup after use, and
+ensure that usage checks also happen on the fastpath where per-CPU
+caches for swap device clusters come into play.
 
+From a runtime behavior perspective, the priority-based approach seemed
+preferable, as it allows more flexible control: the configured cgroup
+can strongly prefer the desired device and benefit from faster selection
+at allocation time.
+
+I also considered how this would coexist with the existing swap.max
+interface, but given the additional implementation and runtime overhead
+this would introduce, I decided to hold it back and chose a priority-based
+approach instead.
+
+> already existing as scalar. Alternatively, remapping priorities to
+> memory.swap.weight -- with sibling vs sibling competition and children
+> treated with weight of parent when approached from the top. I find this
+> weight semantics little weird as it'd clash with other .weight which are
+> dual to this (cgroups compete over one device vs cgroup is choosing
+> between multiple devices).
+
+Your point about the semantic mismatch is very valid. I agree that
+reusing .weight semantics here could be confusing: .weight usually
+expresses competition among siblings for a shared resource, whereas
+here, the goal is to steer selection among multiple devices within a
+single cgroup’s scope.
+
+The swap priority concept already exists as an
+independent mechanism, so mapping it into a .weight field might not
+align well in practice.
+ 
+> Please try to take the existing distribution models into account not to
+> make something overly unidiomatic,
+
+I also thought about possible alignment with existing mechanisms like
+zswap.writeback. One alternative could be to adopt an on/off style mechanism
+similar to zswap.writeback including propagation strategy. 
+On implementation-wise, this could be handled by including
+or excluding devices from the cgroup’s swap device priority list.
+(The direction I suggested on)
+
+However, this approach also has limitations in certain use cases. For
+example, if we want to enforce a different ordering than the global
+system swap priority, an on/off switch alone is not sufficient.
+
+One possible example would be:
+(Some cgroup use the slowest available swap device but with a larger capacity
+avoiding swap failure.)
+
+Global swap: A (fast) -> B (slower) -> C (slowest)
+Cgroup swap: C (slowest) -> B (slower) -> A (fast)
+
+This kind of configuration cannot be achieved only with an on/off
+switch.
+
+I think that priority approach might not map perfectly to the existing
+major distribution models (like limit, weight, etc.),
+I cautiously see this as an extension of the resource control interfaces, 
+building on the solid foundation that the cgroup mechanism already provides.
+
+I am working to ensure that the proposed interface and propagation
+behavior integrate properly with parent cgroups and follow the same
+interface style. Here is the current version I am working on now.
+(It turned out a bit long, but I felt it might be useful to share it with you.)
+
+  memory.swap.priority
+        A read-write flat-keyed file which exists on non-root cgroups.
+
+        Example: (after swapon)
+          $ swapon
+          NAME     TYPE      SIZE  USED PRIO
+          /dev/sdb partition 300M   0B   10
+          /dev/sdc partition 300M   0B    5
+          /dev/sdd partition 300M   0B   -2
+
+        To assign priorities to swap devices in the current cgroup,
+        write one or more lines in the following format:
+
+          <swap_device_unique_id> <priority>
+
+        Example: (writing priorities)
+          $ echo "1 4" > memory.swap.priority
+          $ echo "2 -2" > memory.swap.priority
+          $ echo "3 -1" > memory.swap.priority
+
+        Example: (reading after write)
+          $ cat memory.swap.priority
+          1 4
+          2 -2
+          3 -1
+
+        The priority semantics are consistent with the global swap
+        system:
+
+          - Higher values indicate higher preference.
+          - See Documentation/admin-guide/mm/swap_numa.rst for swap numa
+            autobinding.
+
+        Note:
+          A special value of -1 means the swap device is completely
+          excluded from use by this cgroup. Unlike the global swap
+          priority, where negative values simply lower the priority,
+          setting -1 here disables allocation from that device for the
+          current cgroup only.
+
+        If any ancestor cgroup has set a swap priority configuration, it
+        is inherited by all descendants. In that case, the child’s own
+        configuration is ignored and the topmost configured ancestor
+        determines the effective priority ordering.
+
+  memory.swap.priority.effective
+        A read-only file showing the effective swap priority ordering
+        actually applied to this cgroup, after resolving inheritance
+        from ancestors.
+
+        If there is no configuration in the current cgroup and its
+        ancestors, this file shows the global swap device priority from
+        `swapon`, in the form of unique_id priority pairs.
+
+        Example: (global only)
+          $ swapon
+          NAME     TYPE      SIZE  USED PRIO
+          /dev/sdb partition 300M   0B   10
+          /dev/sdc partition 300M   0B    5
+          /dev/sdd partition 300M   0B   -2
+
+          $ cat /sys/fs/cgroup/parent/child/memory.swap.priority.effective
+          1 10
+          2 5
+          3 -2
+
+        Example: (with parent override)
+          # Parent cgroup configuration
+          $ cat /sys/fs/cgroup/parent/memory.swap.priority
+          1 4
+          2 -2
+
+          # Child cgroup configuration (ignored because parent overrides)
+          $ cat /sys/fs/cgroup/parent/child/memory.swap.priority
+          1 8
+          2 5
+
+          # Effective priority seen by the child
+          $ cat /sys/fs/cgroup/parent/child/memory.swap.priority.effective
+          1 4
+          2 -2
+
+        In this case:
+          - If no cgroup sets any configuration, the output matches the
+            global `swapon` priority.
+          - If an ancestor has a configuration, the child inherits it
+            and ignores its own setting.
+
+I hope my explanation clarifies my intention, 
+and I would truly appreciate your positive consideration 
+and any further thoughts you might have.
+
+Best regards, 
+Youngjun Park
