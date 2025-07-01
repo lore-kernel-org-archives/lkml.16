@@ -1,92 +1,145 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6C9433C4;
-	Tue,  1 Jul 2025 12:16:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14570433A0
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 12:17:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751372186; cv=none; b=GUn5zxOu6dfp7ci4Qc+W3WMPxVx/NnMaZnGjikIpLrFIsl6Qa6aymklY4jEZHH5on/nN+mwLRpRnXXEZxjNskGhaG+R1s2n9iy22vSqQMFAKGue0HC/VfsS0nlPZqOtS0yRd6j7T8GyqaPv/8DndYz64eeZbh21TyJDUd+d23Cw=
+	t=1751372267; cv=none; b=fpX3Yw27HBlV6ncOIckktxgho/W3dZFqakAEfly/Zs8Y7GVva41ZKWcfirautzg3QI+NZADT3BArBjB/kvWPf7lN/wHReKB2C8gkHYm0UxnModYzwTbuqV3hhjIl2+PdyOzF2b5+tdJAj+jH+OgmSAyv6Zfgfd3Zb6gsHjEcTsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751372186; c=relaxed/simple;
-	bh=8RTvthheWftb0PKThQnvoyTc85D/KFEGam022IXgHEU=;
+	s=arc-20240116; t=1751372267; c=relaxed/simple;
+	bh=wYk9AylY09l8uNGrSbHX4zHJJrhd4ZCoh4vmrv5C+yk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dvGxJghNbgxV+eKVjZl75ajFrJONUx1dYkB+Fol8021E+LMQusXKxNrcoMGXyCyUpGchJRiuVWHBh4sr6asw220ybe8tCYjdsjR6pthPGCVJLvZwfcDw2NmW3hHqJs8yKrIkiD5y5bW7XS46fki8E5iU1/CrE3rvFCs4HWkgUEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=YY9sc2uM; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=cOx5ezx7mMdkxO+Q+XTPW7ew58p7aQVg6+P2GkPUPVPHg7V9qZ7hNtmjrNwftup7uwG+wwgxXbMRT7Vysq+EIipkfvBIh8C71PfbqCTdOJ4MR/uYLkA/sbfadfKIltNbP855wu93GfDKHk7LCx4WMlzvacZtQs0ilkUGEu6QH/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j9dHqDUu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="YY9sc2uM"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A303540E0200;
-	Tue,  1 Jul 2025 12:16:22 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id M9cxXZzrn7sa; Tue,  1 Jul 2025 12:16:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1751372179; bh=pLAQpJpx73Sd85ACs9Vy75P3EDa4RokGPwB1/GszqKk=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j9dHqDUu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 201CBC4CEEB;
+	Tue,  1 Jul 2025 12:17:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751372265;
+	bh=wYk9AylY09l8uNGrSbHX4zHJJrhd4ZCoh4vmrv5C+yk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YY9sc2uM8qbv2hmQ/FmOQtv14X/DTyDfqY+auWSgh7QOmEod8dvTy2EJtdL0f8C7U
-	 3fKwsGtZjxz3PjkqmRbwSAE9jTc2TWJiisztvJXC/E03zmZQebF5VfF1I12mkkcX24
-	 xsZ+wDQm6vF8gXHG7NHzrWvJzMG9CMyc8B4cI02MBM0bLIhVtEHPMA9C53sWhTDh5y
-	 AuYhtpT8T9aqhW/d6U27U3B8tE2G9bkwOzgFafst61lrWi+xkcfMGCkGZIomSkNEzj
-	 wrT0ZCJKXTPcWLUIeJARggI93QV4jJUSY6+Xrrm3w472hTjVo9Do5zYFMvp7TKUNLm
-	 mQnlQZDpew385PsWqK1YbIF47whoX+1pL2pbz7+p45BLyogj/dwdRSnlogMw23eOHX
-	 HHFr76XXNriRqBWyotAGJhJvO0/BIQWksV1XY7mlJxFgF7q2jfbLPwepWcPUccTrfx
-	 LbjuPaSGM2HyiIHPqXh9hQWeQyv1Q3HzNvIzrMFVCtI+C0rUg8mAY3CWlC+uuyqQm3
-	 TUt8BXZ8f1ppIgOY9VADXyB0llGLGBOwcweJkwa1wRSGFHnC4NUl4n6kgZhCqKGk73
-	 1fvge9rt1aVWanAYcrP8Epd0HBJD1M668tOxUF74Jtv7WrfzzH6ToER/plvrMDhZCw
-	 7sm2M9RseRxu0U2ql50xTTfU=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6861340E01FC;
-	Tue,  1 Jul 2025 12:16:09 +0000 (UTC)
-Date: Tue, 1 Jul 2025 14:16:08 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Datta, Shubhrajyoti" <shubhrajyoti.datta@amd.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"git (AMD-Xilinx)" <git@amd.com>,
-	"Simek, Michal" <michal.simek@amd.com>,
-	Tony Luck <tony.luck@intel.com>, James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>
-Subject: Re: [PATCH] EDAC/synopsys: Clear the ecc counters at init
-Message-ID: <20250701121608.GIaGPRiLn_pmIUvvUO@fat_crate.local>
-References: <20250528065650.27646-1-shubhrajyoti.datta@amd.com>
- <20250603090536.GCaD664IbJB5IoR06g@fat_crate.local>
- <SA1PR12MB894764756C6538EE985BDE24816CA@SA1PR12MB8947.namprd12.prod.outlook.com>
- <20250604093735.GAaEAT39KGW1KJDrjD@fat_crate.local>
- <SA1PR12MB89471067967E0A5F46CEE1DF8175A@SA1PR12MB8947.namprd12.prod.outlook.com>
- <20250611164018.GAaEmxctC+ESUCvBNT@fat_crate.local>
- <SA1PR12MB894766DFAD90E9DB15A3268F8174A@SA1PR12MB8947.namprd12.prod.outlook.com>
- <20250626141023.GBaF1UzwF9ITE8-LBQ@fat_crate.local>
- <SA1PR12MB894730DD2C29CB3492C734B38146A@SA1PR12MB8947.namprd12.prod.outlook.com>
+	b=j9dHqDUuFXoCVwqI0YMxOssOe9e0EytYKobmLZerE6qLZSotIufSHY0BMRuaN+RCm
+	 3NSPZIhccwqUjUltprtiGRR79Jof+bTYUcMti+GCiGxFiJGOpcse0NpWOp2uHn9TkX
+	 dKZCdVdwKv8pCcab2WprAF8bRpTcQZ8SKkTlalbXf1sHng8KW59mwCKHABaN3/x6EL
+	 YkexOiUfruzLMztOhsKtQzIeLiiPLQdjhKxih55ufbMEv6py4C1FKHDSXIWmoW6Bin
+	 7zFtxCvXUtvK/wti+bI5eTfseJDSHarq4IseZ1tNNwbi7n4+R2SsOuv9akGLVzqtjK
+	 eaCChCEo4V3PA==
+Date: Tue, 1 Jul 2025 14:17:42 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Shrikanth Hegde <sshegde@linux.ibm.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Marcelo Tosatti <mtosatti@redhat.com>,
+	Michal Hocko <mhocko@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org
+Subject: Re: [PATCH 4/6] tick/nohz: Move nohz_full related fields out of hot
+ task struct's places
+Message-ID: <aGPR5srdOX8UWakS@localhost.localdomain>
+References: <20250410152327.24504-1-frederic@kernel.org>
+ <20250410152327.24504-5-frederic@kernel.org>
+ <cd6d72c7-cdc7-4af6-b070-076f64887ee7@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <SA1PR12MB894730DD2C29CB3492C734B38146A@SA1PR12MB8947.namprd12.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cd6d72c7-cdc7-4af6-b070-076f64887ee7@linux.ibm.com>
 
-On Mon, Jun 30, 2025 at 09:40:38AM +0000, Datta, Shubhrajyoti wrote:
-> - Added a new `platform` enum field to `synps_platform_data` to identify the
->   target hardware platform
+Le Thu, Apr 24, 2025 at 12:10:26AM +0530, Shrikanth Hegde a écrit :
+> 
+> 
+> On 4/10/25 20:53, Frederic Weisbecker wrote:
+> > nohz_full is a feature that only fits into rare and very corner cases.
+> > Yet distros enable it by default and therefore the related fields are
+> > always reserved in the task struct.
+> > 
+> > Those task fields are stored in the middle of cacheline hot places such
+> > as cputime accounting and context switch counting, which doesn't make
+> > any sense for a feature that is disabled most of the time.
+> > 
+> > Move the nohz_full storage to colder places.
+> > 
+> > Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+> > ---
+> >   include/linux/sched.h | 14 ++++++++------
+> >   1 file changed, 8 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/include/linux/sched.h b/include/linux/sched.h
+> > index f96ac1982893..b5ce76db6d75 100644
+> > --- a/include/linux/sched.h
+> > +++ b/include/linux/sched.h
+> > @@ -1110,13 +1110,7 @@ struct task_struct {
+> >   #endif
+> >   	u64				gtime;
+> >   	struct prev_cputime		prev_cputime;
+> > -#ifdef CONFIG_VIRT_CPU_ACCOUNTING_GEN
+> > -	struct vtime			vtime;
+> > -#endif
+> > -#ifdef CONFIG_NO_HZ_FULL
+> > -	atomic_t			tick_dep_mask;
+> > -#endif
+> >   	/* Context switch counts: */
+> >   	unsigned long			nvcsw;
+> >   	unsigned long			nivcsw;
+> > @@ -1438,6 +1432,14 @@ struct task_struct {
+> >   	struct task_delay_info		*delays;
+> >   #endif
+> > +#ifdef CONFIG_VIRT_CPU_ACCOUNTING_GEN
+> > +	struct vtime			vtime;
+> > +#endif
+> > +
+> > +#ifdef CONFIG_NO_HZ_FULL
+> > +	atomic_t			tick_dep_mask;
+> > +#endif
+> > +
+> >   #ifdef CONFIG_FAULT_INJECTION
+> >   	int				make_it_fail;
+> >   	unsigned int			fail_nth;
+> > 
+> 
+> Hi Frederic.
+> 
+> maybe move these nohz related fields into their own cacheline instead?
+> 
+> 
+> on PowerPC where we have 128byte cache instead, i see
+> these fields are crossing a cache line boundary.
+> 
+> without patch:
+> 	/* XXX last struct has 4 bytes of padding */
+> 
+> 	struct vtime               vtime;                /*  2360    48 */
+> 	atomic_t                   tick_dep_mask;        /*  2408     4 */
+> 	/* XXX 4 bytes hole, try to pack */
+> 
+> 	long unsigned int          nvcsw;                /*  2416     8 */
+> 	long unsigned int          nivcsw;               /*  2424     8 */
+> 	/* --- cacheline 19 boundary (2432 bytes) --- */
+> 
+> 
+> With patch:
+> 	struct vtime               vtime;                /*  3272    48 */
+> 	struct callback_head       nohz_full_work;       /*  3320    16 */
+> 	/* --- cacheline 26 boundary (3328 bytes) was 8 bytes ago --- */
+> 	atomic_t                   tick_dep_mask;        /*  3336     4 */
+> 
 
-Better. Feel free to send a properly tested patch.
+It's not much a big deal because those fields shouldn't be accessed much
+closely in time. Also such a cache alignement is hard to maintain everywhere
+when there are so many ifdefferies in that structure.
 
-Thx.
+Thanks.
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Frederic Weisbecker
+SUSE Labs
