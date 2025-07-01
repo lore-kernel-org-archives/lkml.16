@@ -1,110 +1,144 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3DE26A0EB;
-	Tue,  1 Jul 2025 08:43:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E1031D7989;
+	Tue,  1 Jul 2025 08:44:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751359434; cv=none; b=fZk32UnaXtddZAL6T6hQDCDogbWisuP1nDmptRRQSZD+3eMJwU0YBIt+LGCydIupMM8FGfCBkLbj/RY3z6WqhKPcYrROBQuZjhCC28qNUJqHUq8t1Qi3vMJvPiNS8Ei0HmtYFtrt0sMSZNb1POiPqqaSI1CM7qJ5LBbdRAUkEFI=
+	t=1751359448; cv=none; b=lJ4oMhOUIrdjTOIK4tiyzU/s+zPUbWdbcgSSva4oYKYzvxJjEuk5dRZPwp0dNILoZj9Tsx4jFJOq8CARI+U8vwrFAFVpOIJYq6G5A2mIt2VBVmI5EM4EzIk9RmLNGPCUIbq64i8Z36M1XXV7f/dlIBKmCXPbpCegWllEaSHkMdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751359434; c=relaxed/simple;
-	bh=zEtteRShEKxsilU1Hd798Yj8bqUgtyrPa4gMPVvltBA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GZk2H6Xe0Ya0GegRpVF5vyidsHXWj4t+P2s5ReJkKiF2wz75VFANJota42Bt2Aq/uadyJYdLlxDTsMbuguKsgcKRwsWVWefcWLgQKh8fFEO9nKMA9jr7CDi/OaBiX9iNXN/gfC3PB6MSD2VwaFyEbtDP4jeV9UiDclxP0ezAQtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=QTca0xQ6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751359448; c=relaxed/simple;
+	bh=JQnJ50WwtWPmuUmhqUal++GEN46ier5irpKnyb6pzhk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=AIt+ApAqQKorU/heenE2hWNmo7aa1sOElvDgiS2sYL5gMNUXW2NdH+7LmNssW3RvTLsOp8dmhjb1z7WeFtuUpiattq3jES8s1K0Ks1bcrdP1xxta6lDIZW+EEPQ4WQ10l11eJ8PRQB+gF4zvagTgscsR9N4Az4zXBlPG/Rj+1Bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W5FB23ln; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="QTca0xQ6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24D8BC4CEEB;
-	Tue,  1 Jul 2025 08:43:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1751359433;
-	bh=zEtteRShEKxsilU1Hd798Yj8bqUgtyrPa4gMPVvltBA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QTca0xQ6usblgn0H54MJyFZyL9ZmPDGrAlA4LGrzuO1VJiUauh+qK/CUxeFlTL5dX
-	 UscJa3DxZM42Q76n7oBLLmiGaoU8ZWPIWQkqVSMNFj/3q4V7QQORhbz8GV+WrOHzEw
-	 O9n/nG5o4+q+Tzl7xOo2l0wRcFsSY/lY8U0UJTlw=
-Date: Tue, 1 Jul 2025 10:43:50 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Sergio =?iso-8859-1?Q?P=E9rez?= <sperezglz@gmail.com>
-Cc: michal.simek@amd.com, linux-usb@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	shuah@kernel.org
-Subject: Re: [PATCH] usb: gadget: udc-xilinx: validate ep number before
- indexing rambase[]
-Message-ID: <2025070120-outhouse-lubricant-ff47@gregkh>
-References: <20250627060125.176663-1-sperezglz@gmail.com>
- <2025062834-botanist-crop-4aec@gregkh>
- <CAMCbnubpfO0y9oMnJnYHQ3ALTPmF1W80sPhbNPzaR59hy+cDQQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W5FB23ln"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DF3AC4CEEB;
+	Tue,  1 Jul 2025 08:44:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751359447;
+	bh=JQnJ50WwtWPmuUmhqUal++GEN46ier5irpKnyb6pzhk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=W5FB23lnRmqMblxQRYfHg3U8Cb96WoRZP9N91S7HABOR21skwzV5IaYGRpc3SMCED
+	 0jmWPuRHRM9Of1mZsV142+GoRxobrpP+f2JUis8pCQX8jsHc2hToAqMlDSA4cEQc6W
+	 7zmUtc+x8mJc0qKbiE5E/u17/kIbXirUJOaHd88F33v/Qv43qtn6ngBW8W5yiZw2qc
+	 +zBd1BXmKL1Fr/5+eieLu+o+5OhUZ8nVt1L6qP3xR+StIRlCaLYZ75R6+sguURrD8a
+	 VJpWu8tLOa/LXp4BPDOKn97dd/kfB7eDKmTmFb5/nEKuMmcejKsXNuueOLc3ZdR+GD
+	 KAXHLMCtD9EHw==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Benno Lossin" <lossin@kernel.org>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
+ <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Alice
+ Ryhl" <aliceryhl@google.com>,  "Masahiro Yamada" <masahiroy@kernel.org>,
+  "Nathan Chancellor" <nathan@kernel.org>,  "Luis Chamberlain"
+ <mcgrof@kernel.org>,  "Danilo Krummrich" <dakr@kernel.org>,  "Nicolas
+ Schier" <nicolas.schier@linux.dev>,  "Trevor Gross" <tmgross@umich.edu>,
+  "Adam Bratschi-Kaye" <ark.email@gmail.com>,
+  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
+  <linux-kbuild@vger.kernel.org>,  "Petr Pavlu" <petr.pavlu@suse.com>,
+  "Sami Tolvanen" <samitolvanen@google.com>,  "Daniel Gomez"
+ <da.gomez@samsung.com>,  "Simona Vetter" <simona.vetter@ffwll.ch>,  "Greg
+ KH" <gregkh@linuxfoundation.org>,  "Fiona Behrens" <me@kloenk.dev>,
+  "Daniel Almeida" <daniel.almeida@collabora.com>,
+  <linux-modules@vger.kernel.org>
+Subject: Re: [PATCH v13 2/6] rust: introduce module_param module
+In-Reply-To: <DB03MZI2FCOW.2JBFL3TY38FK@kernel.org> (Benno Lossin's message of
+	"Mon, 30 Jun 2025 21:02:37 +0200")
+References: <20250612-module-params-v3-v13-0-bc219cd1a3f8@kernel.org>
+	<DAQJCUE1C2JE.204A8IS7LBIVZ@kernel.org> <87ikkq648o.fsf@kernel.org>
+	<smOfUo2mEmQu-lykKKMiNOUWq2ze6p_CoEEpgGE0dtAnoJDGEpvQMkP1q-n13MiUxLK1xAiM-4QLsivPrG57sg==@protonmail.internalid>
+	<DARCZYNPIJVZ.3JJSZ6PSAEMEC@kernel.org> <877c126bce.fsf@kernel.org>
+	<Mg1_h6lRpg9tdi0VjiyDfIEy2juzgDWxOhYX61qSUfyEpeMMksWW1e-blTka_G1dXUvpZVktdD-zL3X1a6T6Cg==@protonmail.internalid>
+	<DATW0XWNN45X.1L2WMZ41JJ5O8@kernel.org> <87v7om4jhq.fsf@kernel.org>
+	<RPPvXQKnjK77Kp9mKaiFxbNj1fTHKb_I7_nbY81fZop-Wz8n5TTi4_lpXP9U9AwjocvZKqJPI8PGKufJn9cIzQ==@protonmail.internalid>
+	<DAU0J3T0IEVM.2K7ZRQOVOHF8H@kernel.org> <878qlh4aj1.fsf@kernel.org>
+	<87plepzke5.fsf@kernel.org>
+	<xFouVLxX1_t1mH69FDYwlIhBlI72M0IzQEKn0ntG_wT9z7V5DtbxiwVP_frH_yiS-Gf0q_AhqetbLmuvJ_yP5Q==@protonmail.internalid>
+	<DAX65TRN0TGP.25VZ9DYV86XWY@kernel.org> <87wm8txysl.fsf@kernel.org>
+	<9G3W1seaM7elcwWXaeoaa2nfpFYCf-AmBdvZhACGP13KGUtTPVMwGNYdTQsdtp8ru7GIP3-UYTzXscC1MRUKrg==@protonmail.internalid>
+	<DAZV8OGL8BMH.11SLXBXQ17ZJ9@kernel.org> <87h5zxxtdw.fsf@kernel.org>
+	<H78pT7YnQEhAXdxzl_hhnGVUiQuFpibB21_bjH658fMz_5JYbwsPLYYVh8u1gYnzK3N3ilTEAvqOpkuptVx3rg==@protonmail.internalid>
+	<DB03MZI2FCOW.2JBFL3TY38FK@kernel.org>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Tue, 01 Jul 2025 10:43:56 +0200
+Message-ID: <87bjq4xpv7.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMCbnubpfO0y9oMnJnYHQ3ALTPmF1W80sPhbNPzaR59hy+cDQQ@mail.gmail.com>
+Content-Type: text/plain
 
-On Mon, Jun 30, 2025 at 02:20:35PM -0600, Sergio Pérez wrote:
-> > On Fri, Jun 27, 2025 at 12:01:22AM -0600, Sergio Perez Gonzalez wrote:
-> > > Issue flagged by coverity. The size of the rambase array is 8,
-> > > usb_enpoint_num() can return 0 to 15, prevent out of bounds reads.
-> >
-> > But how can that happen with this hardware?  As the array states, this
-> > hardware only has that many endpoints availble to it, so how can it ever
-> > be larger?
-> >
-> 
-> Hardware will likely behave and not report more endpoints than it
-> supports, but I thought that there is still a possibility that this
-> can be exploited, taking into account this patch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=7f14c7227f342d9932f9b918893c8814f86d2a0d
+"Benno Lossin" <lossin@kernel.org> writes:
 
-That patch is probably not needed, for this same reason.
+> On Mon Jun 30, 2025 at 3:15 PM CEST, Andreas Hindborg wrote:
+>> "Benno Lossin" <lossin@kernel.org> writes:
+>>> On Mon Jun 30, 2025 at 1:18 PM CEST, Andreas Hindborg wrote:
+>>>> "Benno Lossin" <lossin@kernel.org> writes:
+>>>>> (no idea if the orderings are correct, I always have to think way to
+>>>>> much about that... especially since our atomics seem to only take one
+>>>>> ordering in compare_exchange?)
+>>>>>
+>>>>>> As far as I can tell, atomics may not land in v6.17, so this series
+>>>>>> will probably not be ready for merge until v6.18 at the earliest.
+>>>>>
+>>>>> Yeah, sorry about that :(
+>>>>
+>>>> Actually, perhaps we could aim at merging this code without this
+>>>> synchronization?
+>>>
+>>> I won't remember this issue in a few weeks and I fear that it will just
+>>> get buried. In fact, I already had to re-read now what the actual issue
+>>> was...
+>>>
+>>>> The lack of synchronization is only a problem if we
+>>>> support custom parsing. This patch set does not allow custom parsing
+>>>> code, so it does not suffer this issue.
+>>>
+>>> ... In doing that, I saw my original example of UB:
+>>>
+>>>     module! {
+>>>         // ...
+>>>         params: {
+>>>             my_param: i64 {
+>>>                 default: 0,
+>>>                 description: "",
+>>>             },
+>>>         },
+>>>     }
+>>>
+>>>     static BAD: &'static i64 = module_parameters::my_param.get();
+>>>
+>>> That can happen without custom parsing, so it's still a problem...
+>>
+>> Ah, got it. Thanks.
+>
+> On second thought, we *could* just make the accessor function `unsafe`.
+> Of course with a pinky promise to make the implementation safe once
+> atomics land. But I think if it helps you get your driver faster along,
+> then we should do it.
 
-> and this CVE:
-> https://www.cvedetails.com/cve/CVE-2022-27223/
+No, I am OK for now with configfs.
 
-Odds are we should reject that CVE, want me to go do that?
+But, progress is still great. How about if we add a copy accessor
+instead for now, I think you proposed that a few million emails ago:
 
-> However, looking more closely the above patch, the endpoint number is
-> extracted from a struct different than the "usb_endpoint_descriptor":
-> "epnum = udc->setup.wIndex & USB_ENDPOINT_NUMBER_MASK;"
-> in contrast with the code that I'm touching. The CVE does not add more
-> details to understand if the part of the code that I'm changing is not
-> subject to the vulnerability.
+    pub fn get(&self) -> T;
 
-Please dig deeper to determine this :)
+or maybe rename:
 
-> > > ---
-> > >  drivers/usb/gadget/udc/udc-xilinx.c | 6 ++++++
-> > >  1 file changed, 6 insertions(+)
-> > >
-> > > diff --git a/drivers/usb/gadget/udc/udc-xilinx.c b/drivers/usb/gadget/udc/udc-xilinx.c
-> > > index 8d803a612bb1..0c3714de2e3b 100644
-> > > --- a/drivers/usb/gadget/udc/udc-xilinx.c
-> > > +++ b/drivers/usb/gadget/udc/udc-xilinx.c
-> > > @@ -814,6 +814,12 @@ static int __xudc_ep_enable(struct xusb_ep *ep,
-> > >       ep->is_in = ((desc->bEndpointAddress & USB_DIR_IN) != 0);
-> > >       /* Bit 3...0:endpoint number */
-> > >       ep->epnumber = usb_endpoint_num(desc);
-> > > +     if (ep->epnumber >= XUSB_MAX_ENDPOINTS) {
-> > > +             dev_dbg(udc->dev, "bad endpoint index %d: only 0 to %d supported\n",
-> > > +                             ep->epnumber, (XUSB_MAX_ENDPOINTS - 1));
-> > > +             return -EINVAL;
-> >
-> > Any hints as to how this was tested?
-> 
-> I don't have access to such xilinx hardware, given that it was marked
-> as a high severity defect in coverity and it is basically extending a
-> validation that was already added in other parts of the code, I
-> decided to propose the patch without runtime testing.
+    pub fn copy(&self) -> T;
 
-Never trust static analysis tools blindly.  The number of
-false-positives stuff like coverity creates because it can not determine
-where data actually comes from is way too high.
+Then we are fine safety wise for now, right? It is even sensible for
+these `T: Copy` types.
 
-thanks,
 
-greg k-h
+Best regards,
+Andreas Hindborg
+
+
+
