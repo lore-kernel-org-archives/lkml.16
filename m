@@ -1,136 +1,188 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0021D27935A;
-	Tue,  1 Jul 2025 16:25:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DEB71DE89A;
+	Tue,  1 Jul 2025 16:25:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751387117; cv=none; b=HBzRkv32iYY4zxgaeVOwJRB6kO+l8WjUWCR6lTLkVGOihA3FzomhMjuc0k1uM2VrlPt0cbbm8RjwTvXL3guQL6+sjRrt56TJ2wtjpD1j3ZPKt9CcNKihH81s/mjKmU7jTsUssy80b0/tw1hQo7iesbBpfJwIcoRAKQyI5zFrqPs=
+	t=1751387146; cv=none; b=PJm0RjpE11z6YTgGxbpgyEAGnDypxassDp+KPb3CCBmCPhwUaMWg7aYxxasLzMfAUsds5gIG9KPNipbXpSUuTb2F7LlljgbEsqRd6GQMmhJ9hSAGLwji6wOQxYn+axF9Tt5G3Bb93wwPAcYs+s3CFP7TCNpIh4PB6+EGnhs4M1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751387117; c=relaxed/simple;
-	bh=5wzV07OONkCcGVSYEmRpzbVKPetUPjrh4BiFdFLy65Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pN0OpyOS48Kj1KGWuHAWXVfye6YrHLw9Aq8ztTiyWSrfUpPbIG+BcST/LHIJM6QZtbNWhEXqkaATnQtw2rW1BVJd8NavKQSKf474LT90grRSYi+/nBX0+E+mzba0lNmtOuqV1z2eZoladzlNoG0eZn2oCNMVs9pGua6MAab69+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RGaaHLIs; arc=none smtp.client-ip=209.85.128.41
+	s=arc-20240116; t=1751387146; c=relaxed/simple;
+	bh=ZUqpZFwfZJt5F5fCgCl/+TyIxH9HhSMeCYCIU8CIEkU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=polFHdK2v9tASY8hdUCeKW+Jc7G3/mnY8XsP2ujmUISG4lwqHmM+SgB5Hqt56cTI4IwmDKuiE78Y/nhEW9yFKQzdtMnDyBf02RJsH+aLtk84WRWvMvW2eAx9eB+rUQWpay7pp9vlpqdkajWz75StrapS3FK4FZyaTu0zqdopdZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V3VyhwdT; arc=none smtp.client-ip=209.85.222.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RGaaHLIs"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-45363645a8eso41118515e9.1;
-        Tue, 01 Jul 2025 09:25:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V3VyhwdT"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7d4495753a7so395036185a.0;
+        Tue, 01 Jul 2025 09:25:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751387114; x=1751991914; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5wzV07OONkCcGVSYEmRpzbVKPetUPjrh4BiFdFLy65Q=;
-        b=RGaaHLIseCOWHPK71dnsnVSEeZPJiUEMFgCX5H/nCRjoFTiYFM3ItTnuPHk5E2vK1Q
-         +KSEMw1ORE8Y3sPnGIegXhodOVzBxtBvo48M/QgGyPT26tM5g5RSMpHIDKI1mdORAv00
-         vWkhPKongMnVqZacWHUufMxEbcQKaXWcbfuPo40Wa1y3hnBbI8essJ3vrBOnPD+vadeq
-         cGS2S5NAoNyc4+nHWJpJjXkcvCzmQFRRZZHtlwBmw2TFS/VjPH5PALJk9R7gaI64Knnb
-         qcDmBXn6g95wPIZ4cbaFBFVsNr0LgN/NwsmbpY32I5FXMpznVB2yN+f0n8ezEEfTJP2T
-         6Awg==
+        d=gmail.com; s=20230601; t=1751387144; x=1751991944; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MwCrqmYe9TCJHuYWG2jCcUWVn5259lJARsV/a3PINFE=;
+        b=V3VyhwdTLToEsXD1YWSqIQIEN6M3yFpJxlHafcEkdsyuTU9kSsPawgEKuYVZvt+63y
+         AOkMQ4WeD95HEDyK1kzTWz++3vmfla148a7LUsMaMLO1aNT/lOnPACDhbx8hjueMLFsZ
+         H7/fNbaqWg5132GcfBK14esSecPdDu6iMMQ2fgfdvxEbnETs5OR4+I7/TKEuwTcpnfho
+         a+PnYguIWf1Evfd8NsDq7Qfl5337xSqEv/r/D32QT/N904G74urtm0eWHqsMHkRi7wrB
+         oYA8vTYXRaKAaXfPIbD5z5ppixsWVnZZbgtQ94I+GloXToT31vjnJNqIpu2bCz2lA4Iv
+         GoPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751387114; x=1751991914;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5wzV07OONkCcGVSYEmRpzbVKPetUPjrh4BiFdFLy65Q=;
-        b=dZXJwhd/dv1QsnLfu07p1tA8P5RImAe/Y9zrGpanUQfcAyDSUQh0W9dMFzoTKo3hLo
-         5/xYwtx6xspG1LqsRfIVfBHmYU/zao/ki5eOy0PjV0JQSL97iIfSwxfUMNls0s8yRUtQ
-         uQGxl7/2PW4JjxLrwfONfUynGra4GK1b6h1cUrlP48IKhY01+XAIHp72mTH1FclxyA5A
-         QujsIvR12O9BuM6b+TwBcSbtw4qrIPXxuYOpSgLwoXA3aXc7Tr/AX3Jt0vn63XNvmdqD
-         D4UAe2VxHdv16dTXuLDqfU4AVDZqGZkEKQzvZ4X9w8EF21AVdbHMtUZLHRUj6KDkt1zL
-         jeng==
-X-Forwarded-Encrypted: i=1; AJvYcCWQJyZsF+zWzumR0zZciX66dvJyAylHvAudfVgKSnbf7/hIkzWqvUQ/SQElMevyCqndwsOzRlOv09OydZJC@vger.kernel.org, AJvYcCX/v4YelcGDZrfDmoEf9w5h8+JM8hLfNk7f8WmeuVsV60/rYlvu2GfM6YhpvEE33WqjcGY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5vC+5dj5/hBmow8TRsNX0ACwwD7+QwX34ggkig9csrcDaZz/2
-	SWds+Dcb/cRG5YuZdad/rZrp7KnXSQBQ70pZAQ2cLRcttSdzdk6sl0qCM/C0BNQGc8XP69s6d76
-	SwOZInA3unlT7vrxlWkdg9EfxXAdQ1oA=
-X-Gm-Gg: ASbGncvkWszU5Qi3W2KE8ypeuIGpXWH9pQ23xhix4czgbj2uPhXfxWXNZ90rl73PpGn
-	hiIJyxfkQWHM6duVz+EEIheIDjC1H5g+4xP0oOxj14a2Ch+KyMfijSeN/tsxQhtidI5WO2RqCq8
-	rBxVFUahtiXVRc2cZp3HOe2djVQh1L7yv2848QO9OgABx99EI/X6NPwtH8pUI=
-X-Google-Smtp-Source: AGHT+IGrbRuO8nnh6J7e2fn2C9dp4PIQ8S2KOPjswAGJgv02hKqPZh/BsJ/5lrQamHMIxxw8q9iaIkK1Xqmf/umPzGI=
-X-Received: by 2002:a05:600c:a11b:b0:453:5d8d:d1b8 with SMTP id
- 5b1f17b1804b1-4538ee712f5mr157779215e9.30.1751387113839; Tue, 01 Jul 2025
- 09:25:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751387144; x=1751991944;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MwCrqmYe9TCJHuYWG2jCcUWVn5259lJARsV/a3PINFE=;
+        b=d3O1Q46y7GjYeFmuj+LvpbB4ZFa2pZQTC8AQVn3YmoKFwkFQYUIkrpV/OZt1XxlCqB
+         njaQomCBFWAbsijnTMfA9K2zNmUbptriDmOmf/OXdRgqhaZOGUyFXPeS+s3y8kU3w1PU
+         3zgrUSgLTlStJLGKMNMG7rRRWXzKIzlvbJzqtPMEKWwywP4f1d07qv8DJVtA1QsNhX2n
+         SdM8oQmDifqxZ08RRMaV1wKGvXsHMpaMmemiC+zpkraTmE4Vps4Hn9SCuMV/L/SNmXWg
+         BidniE91X97ZmOkwb+ke1rK5+O7goxvOgfkQsY++y84FWHGrtDPsosuj0/WLZHzy99d0
+         xYPg==
+X-Forwarded-Encrypted: i=1; AJvYcCUHQ/OyfIFrD+b08yZBhlRbcDZY7PkU0hf+HwnnIRV/NzShVI3WbfRxuf/n7AKhIZ6vw2jClEX1KhGD9Nd6nMc/bS0=@vger.kernel.org, AJvYcCUQKasfDe+rp3DwfSrtQ/ueJLBfFE/ekA7+wLOXrbTHwbkjZc6DBWE5qHlTHpoKkQonYxPnebsDZm2X@vger.kernel.org, AJvYcCUTtwMQXxOiku1W4DPoznOpC9GAHgze7aQxkD7Hhv4CnTwJPjcuJZ8uiKrjkLA7IwybLZAsyl1BVdr/@vger.kernel.org, AJvYcCUd3JZIEKW40w8Yxq+s7tETHdbkO6ZFHggwoI2kXl6azfEOOCgbfUTaxPUxaOtUHfS1oV7OrAAfgWFB@vger.kernel.org, AJvYcCVMu6p0Xj9ttwa4s+9GUymFzAICct63LcCjIIFSSLADQDPMME0APx6mZFiUv2UB+Uel5mj5SfhcyTKauw==@vger.kernel.org, AJvYcCVeBI+pPUT4Nn+ttTiR5Dkz3X52TEI0hmH+y5InBDyLXaozNVqXfIB/BOYjcIMq5RgCftOGMfnTpTeE@vger.kernel.org, AJvYcCWZM09PhLExxb8BbF43SbstG2tuyVMjw5m1LwIj5Y1f80QHnSkR9IIdewtPtfJgkKWs+L3YSA6PpYs=@vger.kernel.org, AJvYcCWZXg2Jz2+urxdnVTWy+xiSfCKCNjXc1b3eRwyhPpwUaHVfn69m5H1lgGguKTXT+//TcxP+8IoPpDGhZg==@vger.kernel.org, AJvYcCWaCOSTSRPZ4j0ioatChp/2r3ZzF670v7xKRaM+0uRWQgDAWOtzeJnzMa+aHlqyPrczUYGdz+C6lC3P62eK@vger.kernel.org, AJvYcCWt97SJoMr75UwejnOtHzs3HPHYKHSBJiye1THCLaD/CicDGlUvRe6XEuQYMLFbLcwSM05qDTvPry0meT67@vger.kernel.org, AJvYcCWw2O0e5YKiQmsX20BaCE+sq63vNbBtFLOBHzVHSabPxt00omU+ltiyfAMMm+U72j47zm4ZNqTDyepXel8=@vger.kernel.org, AJvYcCX6wIcpVo2H30Czq9L/WWZHQ4+CK9nntWKpFruy4k4/WWjfYNAIUOcsc8i5oR9wY0kK/y01V9nZbsNq@vger.kernel.org, AJvYcCX8isyPjbEqlX+ncRcW0i4zBx25Cxo2hQQm8sbOdsrjahW/FvvOdT/cGXiOUcb7p6wwKUpfqEcmLYJKwA==@vger.kernel.org, AJvYcCXZmS8nR/XEooGubYFQAQv3KRzuMiddPGhyTG4qvsf/7hisRCoUOambrJQcYMJF4zDtcVTAnMUTFWFU9W4=@vger.kernel.org, AJvYcCXnEAbBSVNl6iw5Jj6Be9UwqX2i9gOhLDYY7TiLMFF8btW36t7LLUknaTjsz5Q8urK+0eEikg2/4m5+@vger.kernel.org, AJvYcCXsUQAuhCc9ZXqG5nYlC1tSXwRxllGi92h43jp51KoAxZHJDC2gu2OvZ09ZsPlUjMUJ5KwhBjTb@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqLCXNyFyfh4/UXw2sSskVfZwqcJ95Ja7QgTGS9zoBx6Akd/Mc
+	5lDQUqPcRTOSCFfPAHJW2y3vrapRW/daK5PmWSrvvxjb7dOTLMOfbMT5
+X-Gm-Gg: ASbGnctj8faWoiIgfFIvgrprRXQi9O+Yh+cst0zqdVw4mNc1V962QZzUy9fKKegXMwM
+	z9/3RxcQZC2MjO4HAM8uVk7XEM1/xQGrhfy+C3nkSMAuiiUdlmt+3uNE5Axxr0/IJ61pnZTsYg1
+	sZAU2hgbsOiC6/AE2nyPhDFGzkvtsIZFj8OZ/7z+IsSdy4oGTseOvBiUAQnMve8+c3H/2LW2hOT
+	7I9EcKNVvm9hYpyKXUoGhO3zw+zEUan5qb+mVJFYcpsgg54P6iQvcYh4PsfGqinxvtrTqIfb2nI
+	Fas4VO0EBFTZoRSodESSv4RcBYTbiMILwKVKWvLC9ycHnFV29Q==
+X-Google-Smtp-Source: AGHT+IFaquJkOuj7GD/t4hRYC7j2CE8mxqIujMtOYOepN4kjeXyf+EKHtvQBv03/JpyXmxYQUG4sHA==
+X-Received: by 2002:a05:620a:1a1a:b0:7c5:95e6:ce1d with SMTP id af79cd13be357-7d4438566f9mr2476294085a.0.1751387143543;
+        Tue, 01 Jul 2025 09:25:43 -0700 (PDT)
+Received: from geday ([2804:7f2:800b:55e2::dead:c001])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd772e4305sm86349236d6.66.2025.07.01.09.25.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 09:25:43 -0700 (PDT)
+Date: Tue, 1 Jul 2025 13:25:19 -0300
+From: Geraldo Nascimento <geraldogabriel@gmail.com>
+To: Waqar Hameed <waqar.hameed@axis.com>
+Cc: Vignesh Raghavendra <vigneshr@ti.com>,
+	Julien Panis <jpanis@baylibre.com>,
+	William Breathitt Gray <wbg@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Peter Rosin <peda@axentia.se>,
+	Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Cosmin Tanislav <cosmin.tanislav@analog.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Matteo Martelli <matteomartelli3@gmail.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Francesco Dolcini <francesco@dolcini.it>,
+	=?utf-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <jpaulo.silvagoncalves@gmail.com>,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+	Subhajit Ghosh <subhajit.ghosh@tweaklogic.com>,
+	Mudit Sharma <muditsharma.info@gmail.com>,
+	Gerald Loacker <gerald.loacker@wolfvision.net>,
+	Song Qiang <songqiang1304521@gmail.com>, Crt Mori <cmo@melexis.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Karol Gugala <kgugala@antmicro.com>,
+	Mateusz Holenko <mholenko@antmicro.com>,
+	Gabriel Somlo <gsomlo@gmail.com>, Joel Stanley <joel@jms.id.au>,
+	Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	Wei Fang <wei.fang@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Sebastian Reichel <sre@kernel.org>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Han Xu <han.xu@nxp.com>, Haibo Chen <haibo.chen@nxp.com>,
+	Yogesh Gaur <yogeshgaur.83@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Avri Altman <avri.altman@wdc.com>,
+	Bart Van Assche <bvanassche@acm.org>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Souradeep Chowdhury <quic_schowdhu@quicinc.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
+	Bard Liao <yung-chuan.liao@linux.intel.com>,
+	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+	Daniel Baluta <daniel.baluta@nxp.com>,
+	Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, kernel@axis.com,
+	linux-iio@vger.kernel.org, linux-omap@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-input@vger.kernel.org,
+	linux-mmc@vger.kernel.org, imx@lists.linux.dev,
+	netdev@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-pwm@vger.kernel.org, linux-amlogic@lists.infradead.org,
+	linux-spi@vger.kernel.org, linux-scsi@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+	sound-open-firmware@alsa-project.org, linux-sound@vger.kernel.org
+Subject: Re: [PATCH] Remove error prints for devm_add_action_or_reset()
+Message-ID: <aGQL72Ssa4RHShIp@geday>
+References: <pnd7c0s6ji2.fsf@axis.com>
+ <aGP92Aqcxt-x78nu@geday>
+ <pndsejf6g5k.fsf@axis.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616095532.47020-1-matt@readmodwrite.com> <CAPhsuW4ie=vvDSc97pk5qH+faoKjz+b51MDYGA3shaJwNd677Q@mail.gmail.com>
- <CAENh_SQPLHC8pswTRoqh0bQR84HHQmnO3bM07UQa1Xu9uY_3WA@mail.gmail.com>
- <CAADnVQ+QyPqi7XJ2p=S9FVDbOxMXvVPU859n+2ApuRQv5T2S5w@mail.gmail.com>
- <CAENh_SQgZ5yVpshKRhiezhGMDAMvgV7SmwD_8u++mACE33oNrg@mail.gmail.com>
- <CAADnVQJgOyBCCySnBkTk-VCsz0dy+ppdGHpggxbtDpBBGhaXVg@mail.gmail.com>
- <CALrw=nFvUwmpjUMYh5iJqjo6SbAO8fZt8pkys7iDjZHfpF2DxQ@mail.gmail.com>
- <CAADnVQLC44+D-FAW=k=iw+RQA057_ohTdwTYePm5PVMY-BEyqw@mail.gmail.com>
- <CAENh_SSduKpUtkW_=L5Gg0PYcgDCpkgX4g+7grm4kxucWmq0Ag@mail.gmail.com>
- <CAADnVQ+_UZ2xUaV-=mb63f+Hy2aVcfC+y9ds1X70tbZhV8W9gw@mail.gmail.com> <CAGis_TUNfUOD3+GdbJn1U33W8wW5pWmASxiMa5e5+5-BqJ-PKw@mail.gmail.com>
-In-Reply-To: <CAGis_TUNfUOD3+GdbJn1U33W8wW5pWmASxiMa5e5+5-BqJ-PKw@mail.gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 1 Jul 2025 09:25:00 -0700
-X-Gm-Features: Ac12FXwru2RjEeaSQs6NLU8YH1f68FRveHhLdYSTc7Dp87lT_tm2nHkVaU2Cv1A
-Message-ID: <CAADnVQJp-AtrRj_XESbE5TUj6_dGNDwpRWwu2vEHv1HGOb4Fdw@mail.gmail.com>
-Subject: Re: [PATCH] bpf: Call cond_resched() to avoid soft lockup in trie_free()
-To: Matt Fleming <mfleming@cloudflare.com>
-Cc: Matt Fleming <matt@readmodwrite.com>, Ignat Korchagin <ignat@cloudflare.com>, 
-	Song Liu <song@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Yonghong Song <yonghong.song@linux.dev>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	kernel-team <kernel-team@cloudflare.com>, Jesper Dangaard Brouer <hawk@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <pndsejf6g5k.fsf@axis.com>
 
-On Mon, Jun 30, 2025 at 6:28=E2=80=AFAM Matt Fleming <mfleming@cloudflare.c=
-om> wrote:
->
-> On Fri, 27 Jun 2025 at 20:36, Alexei Starovoitov
-> <alexei.starovoitov@gmail.com> wrote:
+On Tue, Jul 01, 2025 at 06:15:51PM +0200, Waqar Hameed wrote:
+> On Tue, Jul 01, 2025 at 12:25 -0300 Geraldo Nascimento <geraldogabriel@gmail.com> wrote:
+> 
+> > [Some people who received this message don't often get email from geraldogabriel@gmail.com. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
 > >
-> > Good. Now you see my point, right?
-> > The cond_resched() doesn't fix the issue.
-> > 1hr to free a trie of 100M elements is horrible.
-> > Try 100M kmalloc/kfree to see that slab is not the issue.
-> > trie_free() algorithm is to blame. It doesn't need to start
-> > from the root for every element. Fix the root cause.
->
-> It doesn't take an hour to free 100M entries, the table showed it
-> takes about a minute (67 or 62 seconds).
+> > On Tue, Jul 01, 2025 at 05:03:33PM +0200, Waqar Hameed wrote:
+> >> When `devm_add_action_or_reset()` fails, it is due to a failed memory
+> >> allocation and will thus return `-ENOMEM`. `dev_err_probe()` doesn't do
+> >> anything when error is `-ENOMEM`. Therefore, remove the useless call to
+> >> `dev_err_probe()` when `devm_add_action_or_reset()` fails, and just
+> >> return the value instead.
+> >
+> > Hi Waqar,
+> >
+> > thank you for the patch. However I personally advise you to split the
+> > patches per-file and remember to then precede each individual patch
+> > subject with the proper subsystem and driver touched.
+> >
+> > While this looks like a nit-pick, it really isn't, and my suggestion
+> > will make reviewing much more easier and you'll get your Reviewed-by's
+> > and Acked-by's much more smoothly.
+> >
+> > The cover-letter should probably be preceded by "treewide" instead of
+> > a specific subsystem.
+> 
+> Thank you for the suggestion Geraldo! I will do that (as also answered
+> to David).
 
-yeah. I misread the numbers.
+You're welcome Waqar! Note that David's suggestion is even smarter than
+mine: instead of patch-bombing lots of maintainers with changes unrelated
+to their subsystems through a treewide change, he suggests you split the
+patch into one series per subsystem. This is indeed advisable.
 
-> I never claimed that kmalloc/kfree was at fault. I said that the loop
-> in trie_free() has no preemption, and that's a problem with tries with
-> millions of entries.
->
-> Of course, rewriting the algorithm used in the lpm trie code would
-> make this less of an issue. But this would require a major rework.
-> It's not as simple as improving trie_free() alone. FWIW I tried using
-> a recursive algorithm in trie_free() and the results are slightly
-> better, but it still takes multiple seconds to free 10M entries (4.3s)
-> and under a minute for 100M (56.7s). To fix this properly it's
-> necessary to use more than two children per node to reduce the height
-> of the trie.
-
-What is the height of 100m tree ?
-
-What kind of "recursive algo" you have in mind?
-Could you try to keep a stack of nodes visited and once leaf is
-freed pop a node and continue walking.
-Then total height won't be a factor.
-The stack would need to be kmalloc-ed, of course,
-but still should be faster than walking from the root.
-
-> And in the meantime, anyone who uses maps with millions
-> of entries is gonna have the kthread spin in a loop without
-> preemption.
-
-Yes, because judging by this thread I don't believe you'll come
-back and fix it properly.
-I'd rather have this acute pain bothering somebody to fix it
-for good instead of papering over.
+Thanks,
+Geraldo Nascimento
