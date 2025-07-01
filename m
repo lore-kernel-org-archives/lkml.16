@@ -1,93 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F666246784
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 11:14:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F74A8821;
+	Tue,  1 Jul 2025 11:15:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751368495; cv=none; b=clk/LPvq+HBoy08SNUL7qJZuOv56vrmAHv1V1Cq0svrumDrA5Odi00b6uFmLPIjtKSqYIxSP6QO/W5cMrGVeUE3yHhXqpd4JTlk3cXoD70amMTb6Hb1iuI2Itqvc1TKvG7nn2vCvQMvENu0co/XwHCv5tOP7RyqbW9ONSfoikQ0=
+	t=1751368553; cv=none; b=aElERXsC9AToqVQP8y4Gs5EGTKFRXPJrYRSIy/jFpZ64A9V+MpHNvHUXW6p3NBziV3qMpbInJAQW8B++BQLO0OPSyn2LsrVktikwUvQG5e5awU/V60H/gKyC4HWhBeJoqHe/66Pd78WJmR9B3hSz/mE0F7z/vTS2+3Vcazu0feQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751368495; c=relaxed/simple;
-	bh=jyI04bOTNCJGvthTNBpaMWus3XFWb8oj70r4Ft+22ys=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bO112fnsWtFsxYO1UebZSzkVgl6X1d0ILWResqhDPFhk0AbCvSDkz4MOt8dixHJrqsZJRrg9HXfEyYcaUjymsfUyH3Kxa7mTt+azDFpDp9HMyTXOB8Z0G/mWz97cBnKHFz+pDqmMQrNhlK+5xafH0+9ugRpbchuibjIkFrvtYas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=bagG4cM1; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="bagG4cM1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25F68C4CEEB;
-	Tue,  1 Jul 2025 11:14:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1751368494;
-	bh=jyI04bOTNCJGvthTNBpaMWus3XFWb8oj70r4Ft+22ys=;
-	h=From:To:Cc:Subject:Date:From;
-	b=bagG4cM1l1i9lMNX942NwAKbr6HT5MwIII3ndsr8TYgGL0yf4zWMynf5bthVs6zKc
-	 HIbzjmvjCS0cAMr40GnkJrwiKDgBdwc3rQtmoyZudNNvAmCTOLW275czZg0OQBCuMB
-	 H2pUjl++j/dkdwz57U65UunjTuEMedWm/GSpNv3c=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nipun Gupta <nipun.gupta@amd.com>,
-	Nikhil Agarwal <nikhil.agarwal@amd.com>
-Subject: [PATCH] cdx: make cdx_bus_type constant
-Date: Tue,  1 Jul 2025 13:14:51 +0200
-Message-ID: <2025070150-resize-ninetieth-31f1@gregkh>
-X-Mailer: git-send-email 2.50.0
+	s=arc-20240116; t=1751368553; c=relaxed/simple;
+	bh=sIHLF/03qzznOY1kF3mGCrsDOoVA3PeIx2kY/q8U6zE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=k5rMu9JAb6QCta5tYfJolPL3tPXVKqKjg0BalOHjy0kS/Jei2J7rsp0V7kEodbjBPJIUxy9VkVPXrV8fyM5Sq7ZCED69LxGUnkkfbgu6204CTDK/RZ0gt/1Nd4zsncreCOvR6AurNMCIObk5w9/gBu60MHwjrJdZJVYkC6gPWyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bWgSH5QX1zKHMtp;
+	Tue,  1 Jul 2025 19:15:43 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id 295331A0F0F;
+	Tue,  1 Jul 2025 19:15:42 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP3 (Coremail) with SMTP id _Ch0CgBnxyRcw2NouS89AQ--.19855S4;
+	Tue, 01 Jul 2025 19:15:41 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: willy@infradead.org,
+	akpm@linux-foundation.org
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	yukuai3@huawei.com,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com,
+	johnny.chenyi@huawei.com
+Subject: [PATCH RFC] mm/readahead: improve randread performance with readahead disabled
+Date: Tue,  1 Jul 2025 19:08:34 +0800
+Message-Id: <20250701110834.3237307-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1711; i=gregkh@linuxfoundation.org; h=from:subject:message-id; bh=jyI04bOTNCJGvthTNBpaMWus3XFWb8oj70r4Ft+22ys=; b=owGbwMvMwCRo6H6F97bub03G02pJDBnJh7VuS2b3zklcejthyt+2S0XxxSUGk27l+dw3dvjxb t709gVbOmJZGASZGGTFFFm+bOM5ur/ikKKXoe1pmDmsTCBDGLg4BWAiy58yzBW2U8pL4fd1/XbQ ZCfj+xDOVrW5hxjmGfue5J4Vdy134ZWWmP3MuVpHE3ruAgA=
-X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_Ch0CgBnxyRcw2NouS89AQ--.19855S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7Kr4rWF18CrykCF47CFyUJrb_yoW8CF1fpr
+	W3CF4xtr18XryrZrWxJa4UXr4fKFs3ZF4fJFy3J345Aw13Gr4akr97Xw4UuFW0yr1xXay2
+	9r4DZF9xZr4jvrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
+	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
+	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
+	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
+	nIWIevJa73UjIFyTuYvjfUonmRUUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Now that the driver core can properly handle constant struct bus_type,
-move the cdx_bus_type variable to be a constant structure as well,
-placing it into read-only memory which can not be modified at runtime.
+From: Yu Kuai <yukuai3@huawei.com>
 
-Cc: Nipun Gupta <nipun.gupta@amd.com>
-Cc: Nikhil Agarwal <nikhil.agarwal@amd.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+We have a workload of random 4k-128k read on a HDD, from iostat we observed
+that average request size is 256k+ and bandwidth is 100MB+, this is because
+readahead waste lots of disk bandwidth. Hence we disable readahead and
+performance from user side is indeed much better(2x+), however, from
+iostat we observed request size is just 4k and bandwidth is just around
+40MB.
+
+Then we do a simple dd test and found out if readahead is disabled,
+page_cache_sync_ra() will force to read one page at a time, and this
+really doesn't make sense because we can just issue user requested size
+request to disk.
+
+Fix this problem by removing the limit to read one page at a time from
+page_cache_sync_ra(), this way the random read workload can get better
+performance with readahead disabled.
+
+PS: I'm not sure if I miss anything, so this version is RFC
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- drivers/cdx/cdx.c           | 4 ++--
- include/linux/cdx/cdx_bus.h | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ mm/readahead.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/cdx/cdx.c b/drivers/cdx/cdx.c
-index 092306ca2541..26f296b4a489 100644
---- a/drivers/cdx/cdx.c
-+++ b/drivers/cdx/cdx.c
-@@ -170,7 +170,7 @@ static int cdx_unregister_device(struct device *dev,
- 	return 0;
- }
+diff --git a/mm/readahead.c b/mm/readahead.c
+index 20d36d6b055e..1df85ccba575 100644
+--- a/mm/readahead.c
++++ b/mm/readahead.c
+@@ -561,13 +561,21 @@ void page_cache_sync_ra(struct readahead_control *ractl,
+ 	 * Even if readahead is disabled, issue this request as readahead
+ 	 * as we'll need it to satisfy the requested range. The forced
+ 	 * readahead will do the right thing and limit the read to just the
+-	 * requested range, which we'll set to 1 page for this case.
++	 * requested range.
+ 	 */
+-	if (!ra->ra_pages || blk_cgroup_congested()) {
++	if (blk_cgroup_congested()) {
+ 		if (!ractl->file)
+ 			return;
++		/*
++		 * If the cgroup is congested, ensure to do at least 1 page of
++		 * readahead to make progress on the read.
++		 */
+ 		req_count = 1;
+ 		do_forced_ra = true;
++	} else if (!ra->ra_pages) {
++		if (!ractl->file)
++			return;
++		do_forced_ra = true;
+ 	}
  
--static void cdx_unregister_devices(struct bus_type *bus)
-+static void cdx_unregister_devices(const struct bus_type *bus)
- {
- 	/* Reset all the devices attached to cdx bus */
- 	bus_for_each_dev(bus, NULL, NULL, cdx_unregister_device);
-@@ -651,7 +651,7 @@ static struct attribute *cdx_bus_attrs[] = {
- };
- ATTRIBUTE_GROUPS(cdx_bus);
- 
--struct bus_type cdx_bus_type = {
-+const struct bus_type cdx_bus_type = {
- 	.name		= "cdx",
- 	.match		= cdx_bus_match,
- 	.probe		= cdx_probe,
-diff --git a/include/linux/cdx/cdx_bus.h b/include/linux/cdx/cdx_bus.h
-index 79bb80e56790..b1ba97f6c9ad 100644
---- a/include/linux/cdx/cdx_bus.h
-+++ b/include/linux/cdx/cdx_bus.h
-@@ -234,7 +234,7 @@ int __must_check __cdx_driver_register(struct cdx_driver *cdx_driver,
-  */
- void cdx_driver_unregister(struct cdx_driver *cdx_driver);
- 
--extern struct bus_type cdx_bus_type;
-+extern const struct bus_type cdx_bus_type;
- 
- /**
-  * cdx_dev_reset - Reset CDX device
+ 	/* be dumb */
 -- 
-2.50.0
+2.39.2
 
