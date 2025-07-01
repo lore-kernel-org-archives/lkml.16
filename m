@@ -1,86 +1,93 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5170E23185E;
-	Tue,  1 Jul 2025 11:06:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE874270EDD;
+	Tue,  1 Jul 2025 11:07:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751368014; cv=none; b=Bwdo5qr7btRffKJB01kcPcZ6OnYT+dTGeujo9GT93zpj+yalYMDYy+DBt+RmCMprbnvd5L3b7m8L69l8qeBCL00XlSbEpTxsdfLetFxQbgnKePWKwWexUipsLe4PIuNg3lA2kHK+kjWLoPRcsasARViRTBp1RG5qGZBdsOgSfww=
+	t=1751368040; cv=none; b=R7lEThe3D7fyK6XiuZyt1gLCA7WUVzSj5ljjOcnhig9vMdjNnJ0aAewq6SBef//cAHpgo7SZHSVEyMZ1ETVfX8/TNqgXuf/1puBtts4JDhbqo8sP/f49hqAkie0guU/3eFdg2peFeVJ2o7buik8kjDo7bZR+6Fh9q5YFexpZuqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751368014; c=relaxed/simple;
-	bh=ch8rmZW0C5CiGXt2M3zLaPifKAaE9CqIGZusfMCbRic=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WAcpz8EoeB76szBB+vkwQopokN2g62WWVuvhPJEhr542TUBNKrD0JCHXOp8xrKKNTxHVXsGk5W1Acuwu7FQcREADCNHTpUT7UKYNLZl7MYGJwpN4bRnAizRAoahq59LV9YUcZzbr6KBjRHpSbXS6c2astvDPgj+cZREpXezi4Z4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=v2DiUrVz; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1751368040; c=relaxed/simple;
+	bh=QvUkAIj85QispQ/Cda6kxqhm5CHP0RxSRAtQsd9DPbY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kEMyVxmTFYjFBZbQ0jNNX5yxisawFeS0Dxb6dM73rPhNBnjlSKf2LmDcl8ILOrRtxPh8Ah1RSml+ZgCGFfIxdH2vhMUa/0jPEbbZaTs7TaPv7cs+hCkiHibsdedtFh7eslwonCB5p08Ox/fUfkycg4zpxV4QHlOnXX/Bu20K+/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k7GZChhX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="v2DiUrVz"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=2U0iMkfr1aZU35nLWrIQMlyrU651eqYDp0UZC1bQLwo=;
-	t=1751368013; x=1752577613; b=v2DiUrVzl+vEt14uj83Cbz3+OQAlqGFZ8LbHB8MFKcof9vI
-	kh4EXDeDBzYqiqP3uNFvRw263VmUwsy6XB10RXiUjzkOxmof8GjZVXqqCyQTyNzPUOi82AFjN4oJg
-	1C7WRBbR9hMcoPPGvCX2yykP+gpNcT8pzz5da2q+DFmr0vmumPuNZPUtYb1IXIfdePUcFTOQLRQiQ
-	EP5IfyOAzp2KVDcgjlwDgW8e34RthQlbfoul+6X1oIkMG+kbKEPNLvpiy+VYm0oYUufEjAa+R460E
-	7UppuhlhcENZPxJn+BC4tGfnLvP+NH7OEkQ20F8F5XQcCUdVwf9etQ3pAr4b+jEg==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98.2)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1uWYp5-00000002iG2-0UND;
-	Tue, 01 Jul 2025 13:06:47 +0200
-Message-ID: <0004f9e5eb62f9ccad3dec52ebc935bfec42c949.camel@sipsolutions.net>
-Subject: Re: [PATCH v5] wifi: cfg80211: move away from using a fake platform
- device
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	linux-kernel@vger.kernel.org
-Cc: linux-wireless@vger.kernel.org
-Date: Tue, 01 Jul 2025 13:06:46 +0200
-In-Reply-To: <2025070116-growing-skeptic-494c@gregkh>
-References: <2025070116-growing-skeptic-494c@gregkh>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k7GZChhX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2E43C4CEEB;
+	Tue,  1 Jul 2025 11:07:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751368039;
+	bh=QvUkAIj85QispQ/Cda6kxqhm5CHP0RxSRAtQsd9DPbY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k7GZChhX1jIGglTCB6ytto/fvvg7NWrSPNfZQwWfVXH4VPxJ37v2OCyFpfp8ZMofi
+	 yzD6f21+FrwFsN6thLLYUbL89IDVsaJcI3rcY5r3we9p0EcOO0ZkdH9vQYjFeHLOAc
+	 vjF8cQqH27UlHDnmQr8w542/Wd3U5bgEigvxAmG/pO+kdfvctNi3tNeD+hkJo8XBvn
+	 AGnDrS+QOPOJ2lql/PMSLP4x0+drp3IILj/Ax06aJcixFn8w36sa30oRzZw/lRK7Fl
+	 xNk+CqlU9x1is+X07hzCaNGH0XONGITOUgiU31yJtkTUfgZrXe9sLlJz9TLMUG2wlF
+	 JafNuKRYR6ZNg==
+Date: Tue, 1 Jul 2025 12:07:13 +0100
+From: Lee Jones <lee@kernel.org>
+To: Alex Elder <elder@riscstar.com>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, alexandre.belloni@bootlin.com,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	mat.jonczyk@o2.pl, dlan@gentoo.org, paul.walmsley@sifive.com,
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+	troymitchell988@gmail.com, linux-rtc@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	spacemit@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/7] mfd: simple-mfd-i2c: add SpacemiT P1 support
+Message-ID: <20250701110713.GL10134@google.com>
+References: <20250625164119.1068842-1-elder@riscstar.com>
+ <20250625164119.1068842-3-elder@riscstar.com>
+ <20250627125119.GF10134@google.com>
+ <0eda5bf4-ce63-43da-9c2f-7d4ec902758c@riscstar.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0eda5bf4-ce63-43da-9c2f-7d4ec902758c@riscstar.com>
 
-On Tue, 2025-07-01 at 12:56 +0200, Greg Kroah-Hartman wrote:
-> Downloading regulatory "firmware" needs a device to hang off of, and so
-> a platform device seemed like the simplest way to do this.  Now that we
-> have a faux device interface, use that instead as this "regulatory
-> device" is not anything resembling a platform device at all.
->=20
-> Cc: Johannes Berg <johannes@sipsolutions.net>
-> Cc: <linux-wireless@vger.kernel.org>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
-> v5: - rebase against 6.16-rc4 and actually cc: the relevant maintainers
->       and mailing lists this time, doh!
+On Fri, 27 Jun 2025, Alex Elder wrote:
 
-I did wonder for a second why it's v5 and I never saw it ;-)
+> On 6/27/25 7:51 AM, Lee Jones wrote:
+> > > @@ -93,12 +93,30 @@ static const struct simple_mfd_data maxim_mon_max77705 = {
+> > >   	.mfd_cell_size = ARRAY_SIZE(max77705_sensor_cells),
+> > >   };
+> > > +static const struct regmap_config spacemit_p1_regmap_config = {
+> > > +	.reg_bits = 8,
+> > > +	.val_bits = 8,
+> > > +	.max_register = 0xaa,
+> > > +};
+> > Suggest making this more widely useful by adding the 'max_register'
+> > attribute to 'struct simple_mfd' and conditionally overriding
+> > regmap_config_8r_8v's value during probe.
+> 
+> So you're suggesting I make a general improvement to
+> "simple-mfd-i2c.c", because everybody else just uses
+> the generic fallback regmap config?
 
->  int __init regulatory_init(void)
->  {
-> -	reg_pdev =3D platform_device_register_simple("regulatory", 0, NULL, 0);
-> -	if (IS_ERR(reg_pdev))
-> -		return PTR_ERR(reg_pdev);
-> +	reg_fdev =3D faux_device_create("regulatory", NULL, NULL);
-> +	if (!reg_fdev)
-> +		return -ENODEV;
+Yes, exactly that.
 
-Is that really -ENODEV rather than say -ENOMEM? Having a hard time
-imagining how a faux device creation would end up failing in any other
-case, there's no underlying device to bind to, after all? :)
+> (I'm asking because at first I didn't understand your
+> statement, and the "more widely useful" comment).
+> 
+> I would be happy to do this, and it's not that hard.
+> Can I do it as a follow-on patch though?  It's adding
+> scope (again), beyond what I anticipated and honestly
+> I'm ready to be done with this...
 
-Anyway, that's not really all that relevant. I assume you want me to
-merge it through wireless-next, since we have faux.h in the tree now?
+Good job you're not working on a complex addition then.  =;-)
 
-johannes
+> Anyway, if you say "no" I'll send another version of
+> this series today.
+
+A follow-up would be good, thanks.
+
+-- 
+Lee Jones [李琼斯]
