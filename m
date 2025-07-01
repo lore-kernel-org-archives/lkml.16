@@ -1,98 +1,245 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECBB225CC70;
-	Tue,  1 Jul 2025 18:35:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57CA41386B4
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 18:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751394918; cv=none; b=se3J8yH+5rGq0rI+BKj+aALP18k4cyrIbW0leSczudxLAnRORuP3rrJdiKESugSkdXoUpdMgXulvAb3M39PZA19jqd6m5PCTKhKFz6Z9pzacoJf244G9ZLCK4OnewosuKDwNAuPL+RELJd46iGhMkbJhD2xhwKwUnjsso9r1WOc=
+	t=1751394946; cv=none; b=W5M12KW2KKk0YRZ1Rm0cXIkYc0t1sMj/D5O9PbszL9IP01CGC+8WB1dxuxjBG+2YaAX3mzaaDJwxbeFerxn5WkReWe7GUwgdbzrnXpYmPinUYZA1waHqcY9KG6HsvhWbTMf1c9Mi5QrNpLoJIPtU7aGIcTtKWWHVxvvbZqEC5bA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751394918; c=relaxed/simple;
-	bh=z1+Uc9srPvD1/R3lIeqlBunoBkXDL5bkXA03CQVpf50=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KBwwFFpqCRPMeyTlSsizT0U/1cR0koUk84j2cpxTJSFvlEf4xjlvJDqwLAClyLyWxO6gcQ/p6DI4YReg43K7ocxqH4LpIkde3ACyh+uKDZ4TvLz59zjs0acvcy6oU8hgiPpypVbV/xtyygYugSLkrFc1aMmeBZHH2Ibw5Qp9QnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y6GSAIVi; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751394946; c=relaxed/simple;
+	bh=c2RhFuOovKH8cruUl7l5/QuJDFYyICSNcAchlL5X3C8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jRhZxT7RNuNRBBKm/JC9pzWyBkHIRZ+Q6aOZR+/279S1pe2gF07UJQw+tZKoOBr0EesEexyJXbBZuZpeSYqC9x+cVZzalGqS9izyUtDMOxLCapO+jrWE/sg+uLsc5zhjSBRAfCz/3WRO3s4QAi88KLnOsqdFx/Vnsb6l0AOWMQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LS4YGSf5; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y6GSAIVi"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7490702fc7cso4385165b3a.1;
-        Tue, 01 Jul 2025 11:35:16 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LS4YGSf5"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-748fe69a7baso5815504b3a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 11:35:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751394916; x=1751999716; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Da9hPRD/ytYbduZJlqkXBHQRUjaFlL1rFU3+1oIjeEY=;
-        b=Y6GSAIVistF8UJ63Cbv0rU0NyiyimmMMg0F+DKp4Wtaqk4qfrIyBIYVK1V5f68+ZO+
-         TxqktcaNZvaNgVw8Y6iXBweY9oglJUJOw0Y1bWn8nkHx+hpIZH1CtbMjY2J/r8gbvNuQ
-         NcbMtqy5AIur6uu2eGrQH4cmfeMmFYiceR1hB21ZWZRD8vQHqaQmjUa1lxAj6o0o0Cft
-         Nq5rd65BdbDgfEdUm9uZaEWHkVlqCncxEO1jZLoCah/mvWnVw5NUlg1FUPgfCHhsUL6Y
-         cqwVQsEQYVTeUq13DK5aarn83Sw320jTLNsPUeAvBBGwAqbb6WEO+e1Lwkdl9S3CgFHz
-         HQgQ==
+        d=chromium.org; s=google; t=1751394945; x=1751999745; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=c0U+s0Vyp4n94b4KR+Hv16kd0qrpXrvauaZ60DPcAJM=;
+        b=LS4YGSf5lUUhIFfLt6pOjWai/CavTgk2tYzeXgI8OnTHtcqGjtfgWvKfq2hqdKavpl
+         gOQk67hS0ZDdE7tUhzSYusT8Hgi+5ZPaL3K9Dzo20ADlpu/lV6EzoBjxTZpIa3XgU9Ky
+         nsW7vYlP+C+ijkbHC6CiidLnDfOlNsnWqsRUM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751394916; x=1751999716;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Da9hPRD/ytYbduZJlqkXBHQRUjaFlL1rFU3+1oIjeEY=;
-        b=sqIrp8m0NrbUcxog+vQUhjEC2WS2WTIOgH6RSfvi8kZWmLe/egt+RKhGgcNmDIrI2K
-         gMbq65BaPHETrrCioriTCb23ImUh9qxtV+KEgdaJfNDc2Xd6gPiOUgCYsykx/4cqF/3M
-         oi0JR6e4P8+b1By3xmEsW6bZtyEe50E5FBI9SquzZtAIoCqiVXQ0B+L56rBQyXpR7YQi
-         KamA8tWUBy4n+CTX9ND0Py3YuZmAEvJ6lNV97/32kEAnCbDc0tRIXUTZi04ys9uYwe7x
-         vKtetm0kWw1uaDvwcQjgNFB9aK49EX3PxCJfoYoxCI9fLLIhFowVChkRJpxFTv1BHeCa
-         NpKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWvgDych4fSxYO6xjI4QZcdXGg0PqPWB/BPCicZ0rPZfiQ9WbbYE9jFOFkmGXXu9G1BGWn7j4HrAJCLc9UL@vger.kernel.org, AJvYcCX6IPPasgPw1ngdLd6bZDpepTg9R9hDqyQooYUUApFqM3uxIB5TrDK1S1qtxLblcI2sjzZpv0kEU5k1ZA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7nGhOHDj1vtXQ0b0jXeBUUUuYGbkGiRnMBY7yImMmSH/8mngn
-	dnwn86h/sEwaER7YIilHnqpvbEbJ8ijSHUbp/OlLigFA+7WUeKSFUFcU
-X-Gm-Gg: ASbGncv0oqWoieuExxUin+3jjs/UF8GrIofeEoia4pczfqqPIxsH8YWuoebLkxAvWl+
-	h6skyyF5+ID3Xa1kZ89Eat2Vxk6JA5h/7crQaBut2dlNzB9rHvFT4ij5cr06MJDEc1uVGxXA3zc
-	KHH2xMfGICUeFGoKXCbL9iOkVQwQH2P05CuguG9G1GvZb05LEZfSP+riJHKEwgvhupppHbW7gnj
-	Ur7u8vjHyrFRxdKnzRxr+23uePUY4IexeK9nb2N9UENoF7jh6E9VNYZXYaDAlzx5CB27ZhYwTzn
-	z4aTH54V8gcApN4oqj9+5ZLMooOtCUiGbA2VokeYKReKY7XuU/nuT7/tOPw9pPY=
-X-Google-Smtp-Source: AGHT+IEZpLnOqvqrhYyHtVT4XdqwOH/huTE5huFXU9wBMlO5za2DQi9dmFfn8rUkcfYVTx3d+XTmww==
-X-Received: by 2002:a05:6a00:4fc7:b0:748:e38d:fecc with SMTP id d2e1a72fcca58-74af6fcd5e6mr24493660b3a.22.1751394916165;
-        Tue, 01 Jul 2025 11:35:16 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:7bb0:b5bc:35bb:1cb4])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af55c8437sm11909074b3a.115.2025.07.01.11.35.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 11:35:15 -0700 (PDT)
-Date: Tue, 1 Jul 2025 11:35:12 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Chen Ni <nichen@iscas.ac.cn>
-Cc: jogletre@opensource.cirrus.com, fred.treven@cirrus.com, 
-	ben.bright@cirrus.com, patches@opensource.cirrus.com, linux-input@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Input: cs40l50 - Remove redundant 'flush_workqueue()'
- calls
-Message-ID: <zgj74w3pui3mybsa3vovspotsuz6hj732hy5g6ezosaxfpoard@ijq6h4kkw3md>
-References: <20250312072940.1429931-1-nichen@iscas.ac.cn>
+        d=1e100.net; s=20230601; t=1751394945; x=1751999745;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=c0U+s0Vyp4n94b4KR+Hv16kd0qrpXrvauaZ60DPcAJM=;
+        b=gdC/+V9cWhOiyNb+X9IPcW9QdKRjqLSkK5H3gG2mqglgnwGA+5zf+sdra0z+wgSq9/
+         QqABpB/RvdElFvzVwLTWVLHufrc+8zJoi7XleVT1T6AA7cfIRjEeys2390LAh4Jry0dK
+         H1TzM03oXqDCi7ynPHuf3qz0uD9VvsfRMmDAOGnep/yDhjx+uL3nteeUwHYh7t3ZgTas
+         yJdqcBd/5p+KrWU0MjLaTI7e+u4y8oMNLer5tq0cI2VbjftDPfxkeDMF+asKZrNrTMvh
+         uZhqV0F6omR3KiZIRDWG+KTI4U+EfcVJuXXc2cBrvdkUpX+Ni591ZgYwpiBWjEGr5Oge
+         3+IQ==
+X-Gm-Message-State: AOJu0Ywmrl6Mr1wsLW3Xm9J4wmqZpgeo2TyxO4KIZuyI9gxTT7g93nQQ
+	aHLo5wLgB4d4lIQtTLfThfERzmqv27g8MDp0unYMCTgiPzgTS56PNWKWHrq3xm8Epw==
+X-Gm-Gg: ASbGnctNxyBl1G/O9FFU7J6c8+/kZ0+9MJVmpWTjwk+sm7zqLvfbWFOyLo4j/XtKnx6
+	3aRhOw1Zv9ydd+B/BzN4Vn4kWBYiztE7NBJ1N2tJIIe/RAoJBRvR63EmQqXLjpkwQIm7py83mqr
+	sVyoPgm/jxcT9j3WyG1XhlQqzXotRxvEmhjeDqDt5pP0d9Z6/64qN8le/oA3Jm2g3nZocQcSdbd
+	c3r3+3D1CKqpp1Vv7qATdLLFNRpFPwXDfPUAl4TwnpbHcAgr9GUJKw4SGWUcm2QKLF2GnNZ+/yJ
+	mnJvJ3luZSXJk90p6yFB8vpgP/0MfWaApveuHR5YeJ/lJ5NQYuuSVVdoneWl2sK6OFMVla08FY6
+	8/GzsAtHnmZoJ1wDvNBmwz3A6
+X-Google-Smtp-Source: AGHT+IF+6ZLLBRZomIJJdPMOAh4wc+2Ijkc9vDXh1llkvdnbb8AaWnGCg/lc8coDH2IswaSx1grzmw==
+X-Received: by 2002:a05:6a00:18a7:b0:736:4644:86ee with SMTP id d2e1a72fcca58-74af6f4078bmr24502776b3a.14.1751394944650;
+        Tue, 01 Jul 2025 11:35:44 -0700 (PDT)
+Received: from localhost ([2a00:79e0:2e14:7:ff18:310e:c453:9166])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-74af541cc81sm12246277b3a.58.2025.07.01.11.35.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Jul 2025 11:35:44 -0700 (PDT)
+From: Brian Norris <briannorris@chromium.org>
+To: Andy Whitcroft <apw@canonical.com>,
+	Joe Perches <joe@perches.com>
+Cc: linux-kernel@vger.kernel.org,
+	Brian Norris <briannorris@chromium.org>,
+	Dwaipayan Ray <dwaipayanray1@gmail.com>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH v3] checkpatch: Check for missing sentinels in ID arrays
+Date: Tue,  1 Jul 2025 11:34:00 -0700
+Message-ID: <20250701183537.501225-1-briannorris@chromium.org>
+X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250312072940.1429931-1-nichen@iscas.ac.cn>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 12, 2025 at 03:29:40PM +0800, Chen Ni wrote:
-> 'destroy_workqueue()' already drains the queue before destroying it, so
-> there is no need to flush it explicitly.
-> 
-> Remove the redundant 'flush_workqueue()' calls.
-> 
-> This was generated with coccinelle:
-> 
-> @@
-> expression E;
-> @@
-> - flush_workqueue(E);
->   destroy_workqueue(E);
-> 
-> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+All of the ID tables based on <linux/mod_devicetable.h> (of_device_id,
+pci_device_id, ...) require their arrays to end in an empty sentinel
+value. That's usually spelled with an empty initializer entry (e.g.,
+"{}"), but also sometimes with explicit 0 entries, field initializers
+(e.g., '.id = ""'), or even a macro entry (like PCMCIA_DEVICE_NULL).
 
-Applied, thank you.
+Without a sentinel, device-matching code may read out of bounds.
 
+I've found a number of such bugs in driver reviews, and we even
+occasionally commit one to the tree. See commit 5751eee5c620 ("i2c:
+nomadik: Add missing sentinel to match table") for example.
+
+Teach checkpatch to find these ID tables, and complain if it looks like
+there wasn't a sentinel value.
+
+Test output:
+
+  $ git format-patch -1 a0d15cc47f29be6d --stdout | scripts/checkpatch.pl -
+  ERROR: missing sentinel in ID array
+  #57: FILE: drivers/i2c/busses/i2c-nomadik.c:1073:
+  +static const struct of_device_id nmk_i2c_eyeq_match_table[] = {
+   	{
+   		.compatible = "XXXXXXXXXXXXXXXXXX",
+   		.data = (void *)(NMK_I2C_EYEQ_FLAG_32B_BUS | NMK_I2C_EYEQ_FLAG_IS_EYEQ5),
+   	},
+   };
+
+  total: 1 errors, 0 warnings, 66 lines checked
+
+  NOTE: For some of the reported defects, checkpatch may be able to
+        mechanically convert to the typical style using --fix or --fix-inplace.
+
+  "[PATCH] i2c: nomadik: switch from of_device_is_compatible() to" has style problems, please review.
+
+  NOTE: If any of the errors are false positives, please report
+        them to the maintainer, see CHECKPATCH in MAINTAINERS.
+
+When run across the entire tree (scripts/checkpatch.pl -q --types
+MISSING_SENTINEL -f ...), false positives exist:
+
+* where macros are used that hide the table from analysis
+  (e.g., drivers/gpu/drm/radeon/radeon_drv.c / radeon_PCI_IDS).
+  There are fewer than 5 of these.
+
+* where such tables are processed correctly via ARRAY_SIZE() (fewer than
+  5 instances). This is by far not the typical usage of *_device_id
+  arrays.
+
+* some odd parsing artifacts, where ctx_statement_block() seems to quit
+  in the middle of a block due to #if/#else/#endif.
+
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+---
+ v1: https://lore.kernel.org/all/20241218232716.3624531-1-briannorris@chromium.org/
+
+Changes in v3:
+ * actually CC LKML this time (sorry, I accidentally sent v2 directly to
+   maintainers)
+ * no other change
+
+Changes in v2:
+ * add a few ID types I missed (i2c, i3c, ieee1394); this time I parsed:
+     grep 'struct .*_device_id {' include/linux/mod_devicetable.h
+ * account for some alternative sentinels (e.g.,
+   ISAPNP_DEVICE_SINGLE_END)
+
+ scripts/checkpatch.pl | 82 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 82 insertions(+)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 664f7b7a622c..cfa7db17fe0b 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -685,6 +685,64 @@ our $tracing_logging_tags = qr{(?xi:
+ 	[\.\!:\s]*
+ )};
+ 
++# Device ID types from include/linux/mod_devicetable.h.
++our $dev_id_types = qr{(?x:
++	acpi |
++	ap |
++	apr |
++	auxiliary |
++	bcma |
++	ccw |
++	cdx |
++	coreboot |
++	css |
++	dfl |
++	eisa |
++	fsl_mc |
++	hda |
++	hid |
++	hv_vmbus |
++	i2c |
++	i3c |
++	ieee1394 |
++	input |
++	ipack |
++	isapnp |
++	ishtp |
++	mcb |
++	mdio |
++	mei_cl |
++	mhi |
++	mips_cdmm |
++	of |
++	parisc |
++	pci |
++	pci_epf |
++	pcmcia |
++	platform |
++	pnp |
++	pnp_card |
++	rio |
++	rpmsg |
++	sdio |
++	sdw |
++	serio |
++	slim |
++	spi |
++	spmi |
++	ssam |
++	ssb |
++	tee_client |
++	typec |
++	ulpi |
++	usb |
++	vchiq |
++	vio |
++	virtio |
++	wmi |
++	zorro
++)_device_id};
++
+ sub edit_distance_min {
+ 	my (@arr) = @_;
+ 	my $len = scalar @arr;
+@@ -7678,6 +7736,30 @@ sub process {
+ 			WARN("DUPLICATED_SYSCTL_CONST",
+ 				"duplicated sysctl range checking value '$1', consider using the shared one in include/linux/sysctl.h\n" . $herecurr);
+ 		}
++
++# Check that *_device_id tables have sentinel entries.
++		if (defined $stat && $line =~ /struct $dev_id_types .*\[\] = \{/) {
++			my $stripped = $stat;
++
++			# Strip diff line prefixes.
++			$stripped =~ s/(^|\n)./$1/g;
++			# Line continuations.
++			$stripped =~ s/\\\n/\n/g;
++			# Strip whitespace, empty strings, zeroes, and commas.
++			$stripped =~ s/""//g;
++			$stripped =~ s/0x0//g;
++			$stripped =~ s/[\s$;,0]//g;
++			# Strip field assignments.
++			$stripped =~ s/\.$Ident=//g;
++
++			if (!(substr($stripped, -4) eq "{}};" ||
++			      substr($stripped, -6) eq "{{}}};" ||
++			      $stripped =~ /PCMCIA_DEVICE_NULL};$/ ||
++			      $stripped =~ /ISAPNP_DEVICE_SINGLE_END}};$/ ||
++			      $stripped =~ /ISAPNP_CARD_END}};$/)) {
++				ERROR("MISSING_SENTINEL", "missing sentinel in ID array\n" . "$here\n$stat\n");
++			}
++		}
+ 	}
+ 
+ 	# If we have no input at all, then there is nothing to report on
 -- 
-Dmitry
+2.50.0.727.gbf7dc18ff4-goog
+
