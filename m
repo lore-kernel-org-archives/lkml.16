@@ -1,75 +1,41 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from mout.web.de (mout.web.de [212.227.15.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01AC726C38E
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 09:16:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29184266B41;
+	Tue,  1 Jul 2025 09:18:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751361398; cv=none; b=GYKaetqyx1e37QKMra0hQ+CvhNNAhVvgCAyCRtGYBQ8ZxGkK9GuwQHh7M3l2pls23hUYgic9iTOeZmt9Gi/wxG/Ck4CCYd4EjRc8gIiL6H0SUPsjB98JUg7+uR3x/oMrDKvi6HlPIQjY04OC+eT045hOT6PNx0/V7DKN+yA3bdU=
+	t=1751361533; cv=none; b=NeAalLooSnc+C/lwa/nCbsRTRyrtn1Es4to+inOoyJtupFjpMzdIpUYqQJUBFGlJmmhAfaA7mtUG5T1E/KbplIWBBU4OVmExaBwnOpEUyjoK8Mw9V5guGPpHOP151EScxXS0uaqPwFzhWMkMLr5i+wEXF2zbvyIOHuxkXJb0mZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751361398; c=relaxed/simple;
-	bh=cnZfAXC7sGnFz3wmUcDfLnou2Wmc4swTjyswjZmiaWE=;
+	s=arc-20240116; t=1751361533; c=relaxed/simple;
+	bh=rf4CGdCHUYs1dOhweYzyYABZwQzYP0vkcgLdE2l/Kzw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tlQUHnlNV4McxQfXj2LL5G7k98R/fir8R+mFOS2w++URt9efW99l9BSLX0RE8rzjWKbNPCyXjmKSV0jcuAFXFdh5CP3hRC9HfcuYU8lfr/hd9FmOhj+tGi9iyrxJ6qc0OBBhOLxHD1b8x7UCkPxlWNYTxZELMjE21N6bMaN0OJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=MMp/qo6J; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	 In-Reply-To:Content-Type; b=gAZOEgmIX7lP+A6vm1JSuYvC2WwsZJEl0GknqSzTOOA1TZ6I3mEE6jB1qzc93Zi67f9N/T6ZjF9CU5K2+/4YBgKGPIJYXAS22na3roNBR1hjdCzui9b36x6HCFvjFIS4jSm0x8zp62KIZbA39kzGgwhfM3CDDYVT+jyerfK4OdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=iVpcNRk5; arc=none smtp.client-ip=212.227.15.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="MMp/qo6J"
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 15DDE3F26A
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 09:16:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1751361395;
-	bh=dVcX/aApl1bOZ7xau++gCdWkwO+zwwT+04d8AsO394Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type;
-	b=MMp/qo6J3GoR3PognZ9YM1khHc28/IWMyLfNpZSYjnC3P/dbQLZJVMay/PsUsoPys
-	 Z4tGO5pSivHF0Mcu4c18IF79/w73nJ0Uq1R39cribPwjRv0QYGBRVP2xOdDwkTyeSj
-	 C53rxvDS9LkAE8uUP8dac6DIfg+zWXpGEFttziT1RnqNl68HUw4h+rl85YJxTzHcO+
-	 dxMG6o/NoTIF/Sr6rxVew+KevYQP54zy5GzqFAidzhIKijBRBbzP3YPrdbBzFDsCos
-	 9qwmygQPHnSPOkN/fh4v0GjmuqBWerKCcWlgKcR0TtuKoR/cfBnndRGi0dXXsp5DzF
-	 ULCib4S8Bnxww==
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-451dda846a0so20533215e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 02:16:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751361394; x=1751966194;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dVcX/aApl1bOZ7xau++gCdWkwO+zwwT+04d8AsO394Y=;
-        b=Ucymh41s8fnqWhaQvMcOeWz7G4/IJjX0mX2j7S8e8tiCZTbwOcP11381THNHk52jxx
-         LKfFXFhS9W+VfNpgEXDe6SNGtOSq29Bzk212aZ7qmBToCY4Gk6EAhAzQtcB96gU5nEr9
-         8rRmUOKHGCuowF6Dxmy34QCGREfVU2DcJ1zMN3Olc9u7LUtAwZhxn4/fyaLNfEfdsOMN
-         wRo25Lc+fbw2j3cPI3CaS7/Q66nMBoJmUxUZZEMSYU+ziTLBzIyrjxnDhsJRNU6gjJ9k
-         228ZOIFaKAZcftmocpxpxvOn9LB/3YJ/s3qV0RbNsvMj/siUNEWZH/5O11T23snoxNT8
-         x0tg==
-X-Forwarded-Encrypted: i=1; AJvYcCX1K2SnGQk40v3C6LuwtW/jUx9KVzcomTvLyVmodgzQRS0Hnc8m9NXcmMSAuQ90tenkVAfNJPD5Fn80C8k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPji//bTWbjf/PTqGI/VMIxVwiTASVvwbKocO6G2b6npuVDk58
-	ShgvKQOzhFPKbedcdMMtVHhLpnddKjzeQEp+0IxreTJVJWp6zXdPSR0qd2iZBngAMfJjUEKMOU6
-	1hoxHGfn0dp+xa8g+sOpvZylozK7ldEY0UMQ5VcyOaSI+KWbjxERSnCp4WiLYpFNhDS71H5bPxK
-	zenVYikQ==
-X-Gm-Gg: ASbGncttLpm5QElw5aJyd+AHKQ1Q9RYo+YpBTYPunzobplOevzu/5V1bImDTgEANmW3
-	rvVDwg6y6kbyQBgxgZTy9LtIuZozT9xqfBzYyMb70/VbLfmDhAyfBXjg5Oy3Mvmg2ay/hXTfQ7e
-	yhERPGhgV3JAZ5qPMjKwPbIwS4cnWmnxkRVMrbJw3FIIWL0mSjpZ7qV0164x5q7KMkN3/uhbzQQ
-	G+kQ3+sBb4I9ri6WnNuFSt/MofN+P79z2cjmJDcyfKrRkJkaZHWjh1DbrDKCQ5JT2r4XAikNryx
-	bjQZVEKqctP3jL56/4Q7J+XZBL5ivi/z3ASqQ4x/BJN9uSuaV6kEep354EnVlemdQjZy3xMzMou
-	Cdg==
-X-Received: by 2002:a05:600c:1caa:b0:453:6150:de41 with SMTP id 5b1f17b1804b1-453936a4bcbmr162959755e9.17.1751361393932;
-        Tue, 01 Jul 2025 02:16:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGOOqyJLr4ZGrfOkvegHE3h2BS+hNoKU0ZEkODM/DAdkz3AR7uaEpoRcficw8Y2fcSj2XPNjA==
-X-Received: by 2002:a05:600c:1caa:b0:453:6150:de41 with SMTP id 5b1f17b1804b1-453936a4bcbmr162957165e9.17.1751361391309;
-        Tue, 01 Jul 2025 02:16:31 -0700 (PDT)
-Received: from ?IPV6:2001:861:3280:410:2ef0:5dff:fe60:6274? ([2001:861:3280:410:2ef0:5dff:fe60:6274])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e52c99sm12500699f8f.49.2025.07.01.02.16.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 02:16:30 -0700 (PDT)
-Message-ID: <6cd857e8-8f96-4ea1-81f6-e1895c208c20@canonical.com>
-Date: Tue, 1 Jul 2025 11:16:30 +0200
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="iVpcNRk5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1751361497; x=1751966297; i=markus.elfring@web.de;
+	bh=rf4CGdCHUYs1dOhweYzyYABZwQzYP0vkcgLdE2l/Kzw=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=iVpcNRk5sF1p84NA1BzyN7RdA6bVU1D52ORf74wrZwsJHXlUmxO5vtzryIUT2ivn
+	 fKhDV+n1/mDAx0Lbstq/JQZ47wpRDabiSPHyAwpPer7UThijYyG206exxwiCSOUc6
+	 1l3Exam7tTGW+7jZB9p7J+pHgoy77zbf9OqynnRnQ3/kPn5Ntp+5tAz3KCMNthwsX
+	 BzBn1mrz9K6PPxrPZbQt19UYjT3juVBH+a6B4zK5wj31GH0wORcASKGihq2z5AHE3
+	 OCcASwy/xduYhtMc+iuhe/BTxqrdlf5ewXl7n3C1w77M1387eRt2+C8RslU4u9C6N
+	 qkVwan+gXx3hHGjZ6w==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.92.242]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MGQGH-1uV91Q10of-000hlo; Tue, 01
+ Jul 2025 11:18:17 +0200
+Message-ID: <35924ff7-4703-4cac-88da-dc01d22c8dd8@web.de>
+Date: Tue, 1 Jul 2025 11:18:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,84 +43,83 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] lsm: introduce security_lsm_config_*_policy hooks
-To: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
- linux-security-module@vger.kernel.org
-Cc: john.johansen@canonical.com, paul@paul-moore.com, jmorris@namei.org,
- serge@hallyn.com, mic@digikod.net, kees@kernel.org,
- stephen.smalley.work@gmail.com, casey@schaufler-ca.com,
- takedakn@nttdata.co.jp, song@kernel.org, rdunlap@infradead.org,
- linux-api@vger.kernel.org, apparmor@lists.ubuntu.com,
- linux-kernel@vger.kernel.org
-References: <20250624143211.436045-1-maxime.belair@canonical.com>
- <20250624143211.436045-3-maxime.belair@canonical.com>
- <945bf443-32b4-4432-8702-41ff7b15e420@I-love.SAKURA.ne.jp>
-Content-Language: en-US
-From: =?UTF-8?Q?Maxime_B=C3=A9lair?= <maxime.belair@canonical.com>
-Autocrypt: addr=maxime.belair@canonical.com; keydata=
- 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
- yriCIKEAbLqHTyj+RhbroZmv5q3X7iVq
-In-Reply-To: <945bf443-32b4-4432-8702-41ff7b15e420@I-love.SAKURA.ne.jp>
+Subject: Re: [v2 0/5] media: i2c: imx214: Add some style improvements
+To: =?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>,
+ linux-media@vger.kernel.org, phone-devel@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ ~postmarketos/upstreaming@lists.sr.ht,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Ricardo Ribalda Delgado <ribalda@kernel.org>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>
+References: <20250630-imx214_fixes-v2-0-cd1a76c412c0@apitzsch.eu>
+Content-Language: en-GB, de-DE
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250630-imx214_fixes-v2-0-cd1a76c412c0@apitzsch.eu>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:dhr0VNQ99MR4kUX866Kelg7mQlii5oZLe86NT+j7lKybosK1ez3
+ Glabh4DZj0pxiSpapz0aT1QqEWpVyAp19e5bLNn/ZJ8v7GeYkbAnP6doKY7lQ9CrJdKSOkD
+ sn3szAJm1QHkZAKo36LHPuhiAZnhZKpMtZ4/0svUB27mU6e/FHYjnghj44tTs+H6jm2XhFQ
+ xbpL4X5XMxd2UAeA+Eomg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Hwzo/Mfj13E=;0/qKqkeTsQibfMaoSz9biGyBu9P
+ 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
 
+=E2=80=A6> ---
+> Changes in v2:
+=E2=80=A6
+> - Use imperative mood for commit message (patch =E2=80=A6)
+=E2=80=A6
 
+Will this review concern become relevant for further update steps?
 
-On 6/25/25 03:08, Tetsuo Handa wrote:
-> On 2025/06/24 23:30, Maxime Bélair wrote:
->> +config LSM_CONFIG_SELF_POLICY_MAX_BUFFER_SIZE
->> +	int "Maximum buffer size for lsm_config_self_policy"
->> +	range 16384 1073741824
->> +	depends on SECURITY
->> +	default 4194304
->> +	help
->> +	  The maximum size of the buffer argument of lsm_config_self_policy.
->> +
->> +	  The default value of 4194304 (4MiB) is reasonable and should be large
->> +	  enough to fit policies in for most cases.
->> +
-> 
-> Do we want to define LSM_CONFIG_{SELF,SYSTEM}_POLICY_MAX_BUFFER_SIZE as Kconfig?
-> 
-> If security_lsm_config_{self,system}_policy() are meant to be used by multiple
-> LSM modules, the upper limit each LSM module wants to impose would vary. Also,
-> 1073741824 is larger than KMALLOC_MAX_SIZE; kmalloc()-based memory copying
-> functions will hit WARN_ON_ONCE_GFP() at __alloc_frozen_pages_noprof().
-> 
-> Since some of LSM modules might use vmalloc()-based memory copying functions from
-> security_lsm_config_{self,system}_policy(), the upper limit should be imposed by
-> individual LSM module which provides security_lsm_config_{self,system}_policy().
-> 
-That makes sense. I removed this global Kconfig and the maximum buffer
-size is now defined per module.
+Regards,
+Markus
