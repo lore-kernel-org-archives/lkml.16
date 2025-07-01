@@ -1,65 +1,94 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E54428F1;
-	Tue,  1 Jul 2025 07:33:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ACBB72627;
+	Tue,  1 Jul 2025 07:34:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751355232; cv=none; b=B4D3+bLe+LPkYBr/b+VG4AHqVoFY2hKYKlAb8TjWCWJqyAqPuUgncRgpFhgV+1fURMgB2tRppeSeI5j66ylXnZu7f+EHHKQ/fnJTjzl1+/dZ2cnB2IQzuNwiUUN33TubfVVEA+glyPksKkbXtIKrcKkNEJI2BhyqnmMGaewOA10=
+	t=1751355280; cv=none; b=QpWKl8HYudSePBOXLy1KcF5V5hfjikIcEyTpB+6oGVou2qH64fpGCSEzsdUjZF/qlbUsk9vxBxtCOshsbK13wO28YJRpVP1iHYeeSoYQAOsCopoA/O2PD4i01oIOBxKi2ql9IUOmTXCteFMjA+oY4xrNGo3pfrC4n8C9joIEK1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751355232; c=relaxed/simple;
-	bh=2VqbAPJtUfnkDlAF8rcNfBYvaCT+VVnZ4zdP9Nu994k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NDCys0VNrbBY+zVXHykusoV3L6YrXJzxLvsy1+P4yr26mCaMXW+rPvJX1VZXVfbsu8w/jlyw+j6EEyladrAQoUtJ9WhKVAwDLlutL4VbClMGBTCmaSNVPiYugdZcheRngI293Ygg84QwbBd0NiK4eRAhKih8xIRUv/auW4Z6axw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=P//OOnOm; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1751355280; c=relaxed/simple;
+	bh=dS1a8X8mecDd8BkSyMpP3EvQWIdgfqU7mZdTt5g+WV4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=tl09jGE83Wg16lPkPW0u6aWa851+A1QK2zXrv581Nh1Pj9bco8laZEkuV5oBV7tmDSrbz5fTZNwCE4WPxcU+H8KIfHrCxUAbl/4noEgx1WNRYtsWwdgnlrCGxckLpWiw83jMkr6sV2QB92XVFNIsnduidg0z3ItWnU/YZmlUwPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SLeZn/oI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kq9kpmEI; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="P//OOnOm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=6Lcv9nTvAgKsJXFRPrOjjHvHtdAeBlh7A4eHDwh00wk=; b=P//OOnOm5stv/kbXHC5u15pFPT
-	IYA2JY03mW/qZZm/KKowsf07U1qsvHsCf6ZTgovpvKth50CI8ZbWdoSKlxbdt4dVR+0NoV26w3YHV
-	Eb3hDqmH4FBWNMztMtM0D/4HHuHt72VL1SK7Dj8FIn1bg84nO9t8DkzgSIAOSFae8pbk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uWVUZ-00HRFJ-L8; Tue, 01 Jul 2025 09:33:23 +0200
-Date: Tue, 1 Jul 2025 09:33:23 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: "Lucien.Jheng" <lucienzx159@gmail.com>
-Cc: linux-clk@vger.kernel.org, hkallweit1@gmail.com, linux@armlinux.org.uk,
-	kuba@kernel.org, davem@davemloft.net, edumazet@google.com,
-	pabeni@redhat.com, daniel@makrotopia.org, ericwouds@gmail.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	joseph.lin@airoha.com, wenshin.chung@airoha.com,
-	lucien.jheng@airoha.com, albert-al.lee@airoha.com
-Subject: Re: [PATCH v2 net-next PATCH 1/1] net: phy: air_en8811h: Introduce
- resume/suspend and clk_restore_context to ensure correct CKO settings after
- network interface reinitialization.
-Message-ID: <90321dbf-cca3-4f00-9f2e-3d09756761f6@lunn.ch>
-References: <20250630154147.80388-1-lucienzx159@gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SLeZn/oI";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kq9kpmEI"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751355270;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q3pTxglj7rUaxTbf+kwFx+KhAmOnfuP/vGPEozKgxCs=;
+	b=SLeZn/oISCskojCC5wqqgkJTMqAEjmNuH4xDYrPBA0i6op+Z97AmYXCL+HlD+S5KcDZp8J
+	nQY5EOq6Z3HVLD9yg7HySrFYQjHt1VW6/WiQbtknVAac7IwUQ1V3+SsO0gFDs1aLg4nfiY
+	lpFfnmVp8ycxnL3nOZvpIxLIRypW6+ud0sLtDt7IBn/xtRfyqqdXf0wRO4HKzk7CFI2LJW
+	CiUdtztRAczzn/EMp9Kxo4Kib0whDuR5R1Aq/NIJNCipHuGjHd+sbA6FbVnrlJURW+WK7D
+	wWRLWcRmmCB27pSSSoohceSFres5pESoTLkbb1SvFWGUYzAmKhInlpkN51f10A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751355270;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q3pTxglj7rUaxTbf+kwFx+KhAmOnfuP/vGPEozKgxCs=;
+	b=kq9kpmEIKmCa77n3xHqg9PI3O5HFmJRcwwTQpSTIlSYRrEyYHYsWXuF8zWLoho7nDnwtFh
+	OlNhQPLGg8OnahDQ==
+To: Anup Patel <apatel@ventanamicro.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Anup Patel <anup@brainfault.org>,
+ Atish Patra <atish.patra@linux.dev>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Alexandre Ghiti <alex@ghiti.fr>,
+ Andrew Jones <ajones@ventanamicro.com>, linux-doc@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] irqchip: riscv-imsic: Add kernel parameter to disable IPIs
+In-Reply-To: <CAK9=C2Ue36iF8X17n-D70BkMk69bGKb+8dSmro6SEo5i2d+OSg@mail.gmail.com>
+References: <20250625161715.1003948-1-apatel@ventanamicro.com>
+ <87wm8tmcsr.ffs@tglx>
+ <CAK9=C2Ue36iF8X17n-D70BkMk69bGKb+8dSmro6SEo5i2d+OSg@mail.gmail.com>
+Date: Tue, 01 Jul 2025 09:34:29 +0200
+Message-ID: <87ikkcmkje.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250630154147.80388-1-lucienzx159@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 30, 2025 at 11:41:47PM +0800, Lucien.Jheng wrote:
-> If the user reinitializes the network interface, the PHY will reinitialize,
-> and the CKO settings will revert to their initial configuration(be enabled).
-> To prevent CKO from being re-enabled,
-> en8811h_clk_restore_context and en8811h_resume were added
-> to ensure the CKO settings remain correct.
-> 
-> Signed-off-by: Lucien.Jheng <lucienzx159@gmail.com>
+On Tue, Jul 01 2025 at 12:00, Anup Patel wrote:
+> On Mon, Jun 30, 2025 at 9:39=E2=80=AFPM Thomas Gleixner <tglx@linutronix.=
+de> wrote:
+>> > When injecting IPIs to a set of harts, the IMSIC IPI support will
+>> > do a separate MMIO write to SETIPNUM_LE register of each target
+>> > hart. This means on a platform where IMSIC is trap-n-emulated,
+>> > there will be N MMIO traps when injecting IPI to N target harts
+>> > hence IPIs based on IMSIC software injected MSI is slow compared
+>> > to the SBI IPI extension.
+>> >
+>> > Add a kernel parameter to disable IPIs in IMSIC driver for platforms
+>> > with trap-n-emulated IMSIC.
+>>
+>> Why do you need a kernel parameter for that. If the platform uses trap-n
+>> emulation, then disable the IPI muck automatically, no?
+>>
+> Unfortunately, we don't have DT, ACPI, or any other way of discovering
+> whether underlying IMSIC is trap-n-emulated. In fact, the DT or ACPI
+> passed to a KVM Guest is the same irrespective of whether underlying
+> IMSIC is trap-n-emulated or backed by hardware IMSIC VS-file.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Sigh.
 
-    Andrew
+> Using software injected MSIs as IPIs is purely a software choice in the
+> IMSIC driver so this new kernel parameter allows users to override it.
+
+Please add that information to the change log.
+
+Thanks,
+
+        tglx
