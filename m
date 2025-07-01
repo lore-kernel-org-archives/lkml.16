@@ -1,152 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC34267B6D;
-	Tue,  1 Jul 2025 09:31:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CFB64A0C;
+	Tue,  1 Jul 2025 09:32:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751362264; cv=none; b=Bl8Hm1v5YLRCXtYzARm6aTiLgiYc08COBsZ2jyrvlyjVNwcDYnGJgrGV+cZOMugPQy81yytYdpa358P4+riU6pPfgYQjGVKOqdg0eWpKccIH50gRKH1Aw0hw78yeEeFdfwKLO48mYJSggROAMgFEM1G6YCwbJIAbaX5i0P3/0Cw=
+	t=1751362361; cv=none; b=d557v8CJsuA9MLCcurWJuQAad1fkFS0eu8w4lo4asho+luPoqSttzZQdXh/+omUXlMkD1JBMCmyGwiyPKicpd3i0eQouTN1MpdqMFha7fjMZ4b9E8M8yx4y2ecc1gdENTsMahn7tS2bFe9BAHMBdThsQoYu+6YG/b0+SmIsMB2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751362264; c=relaxed/simple;
-	bh=ou1WGpY1B6KhDjtHPcrYf0u8zfiX7PXTX8+wLqltyZo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l02+3wgqchw15PgLvYqU4oSZhgXa465RWRD1lB8tnnk8aBNwGNJFfaxu7G1W/6NTQpCj4oOuxMPi6QENH8AMx2u5jbJfrpKImZptjI09w8JhvnzrZEA0F9XbL0gqETDfjoNXd6HRP008FJmXL9PFbt2bLeZngeoj+QZs4v5sTKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZkCn6cGQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751362361; c=relaxed/simple;
+	bh=I11qWhbNN6U3C+Rd/QDSNHcVavQao4wKdPiAqL+l9x0=;
+	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
+	 To:Date:Message-ID; b=QqliQD5lznGWCgg3NApGOSOOS8rzx4AXO1FT7Ncpz5eKTsAwEobqMq2naQJiWE2FemS4b4nS3gmtre7HaNbVn/g4Rdy3LjLxc6/5wQDM5+2x5xuJLW02G904Fgo8+Tc5gdZDZs7A/H7fTyvKy8LkcEqkW4iRB1IbOHwH1THAWt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=V+yUEP0b; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZkCn6cGQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F230CC4CEEB;
-	Tue,  1 Jul 2025 09:30:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751362263;
-	bh=ou1WGpY1B6KhDjtHPcrYf0u8zfiX7PXTX8+wLqltyZo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZkCn6cGQ+UG8FpUa2F/+hEfGTKsRCB7Kc5gGqSFd09vvCmP32SbyiUljPX7CegrrL
-	 1Z5T5uW+YSvvbUNCkRwvnKPhVjyrXADRSJW2SwfC0Lk/R8iRjB6eBe1oIIVEkSIgKH
-	 rP2IYyAZQ8jC34htfOcR2sc0SOjDYe1UYAytJuFIk+U2ZwxMJuFwBlZS6k7DS2+tav
-	 piyZn0UD6Xs3qwbGAjEcDoYbacKfr1ATjOeNLHZNPDlbXJNwsn/fyplHKjT7Qdls6a
-	 1FC+Z/AFQPVD7ghnuY/GePbSZwKzyqx5eYNnthZWS90l+ouDLGKYid3RmNi6/GZYvm
-	 Fq2emaLk0qV5g==
-Message-ID: <83f88dd5-8c74-4c2f-b94e-6c16dcbd44f1@kernel.org>
-Date: Tue, 1 Jul 2025 11:30:53 +0200
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="V+yUEP0b"
+Received: from ideasonboard.com (unknown [IPv6:2a00:6020:448c:6c00:7cdc:2548:b8ee:3b98])
+	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id 2CD5C6F3;
+	Tue,  1 Jul 2025 11:32:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1751362335;
+	bh=I11qWhbNN6U3C+Rd/QDSNHcVavQao4wKdPiAqL+l9x0=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=V+yUEP0bAH1keElCHZayO0cnWaM3hDlCDOArE6a6uGOLxtHNTX7ZxHt4gvIyLfDZJ
+	 2xZu5y8TcVZGYP51FZq0Je9wMu+9ZQGpaoLObGv8CU4R24SiluO9keRtI/+2St87E7
+	 uJhf97xrzvUXqspGXqAXeNYlIXqwbBO1DxlMTJKA=
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 2/4] dt-bindings: mmc: controller: Add
- max-sd-hs-frequency property
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Sarthak Garg <quic_sartgarg@quicinc.com>,
- Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Adrian Hunter <adrian.hunter@intel.com>
-Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- quic_cang@quicinc.com, quic_nguyenb@quicinc.com, quic_rampraka@quicinc.com,
- quic_pragalla@quicinc.com, quic_sayalil@quicinc.com,
- quic_nitirawa@quicinc.com, quic_bhaskarv@quicinc.com, kernel@oss.qualcomm.com
-References: <20250618072818.1667097-1-quic_sartgarg@quicinc.com>
- <20250618072818.1667097-3-quic_sartgarg@quicinc.com>
- <6040afd9-a2a8-49f0-85e9-95257b938156@kernel.org>
- <9627ed6f-2bb8-40b0-b647-5f659d87f2f9@oss.qualcomm.com>
- <bba062a3-f96c-456b-8e9e-fdeb0dc2d28d@kernel.org>
- <5bdae07b-a7b1-49be-b843-1704981bc63b@oss.qualcomm.com>
- <ffc62906-c3bb-4968-8f7c-fa7ae5028ad5@kernel.org>
- <fd73a142-3b22-407f-8e6d-00f4e1e1c8eb@oss.qualcomm.com>
- <e0e66895-e68a-4420-a61b-98a689798ce4@kernel.org>
- <a6117473-fa38-48db-94a1-892b76abc10f@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
- QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
- +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
- ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
- 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
- hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
- tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
- 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
- naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
- hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
- whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
- qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
- RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
- Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
- H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
- dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
- AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
- jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
- zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
- XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <a6117473-fa38-48db-94a1-892b76abc10f@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250701-pispbe-clamp-v1-1-31243db3439b@ideasonboard.com>
+References: <20250701-pispbe-clamp-v1-1-31243db3439b@ideasonboard.com>
+Subject: Re: [PATCH] media: pisp_be: Use clamp() and define max sizes
+From: Stefan Klug <stefan.klug@ideasonboard.com>
+Cc: linux-media@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+To: Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Florian Fainelli <florian.fainelli@broadcom.com>, Jacopo Mondi <jacopo.mondi@ideasonboard.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>
+Date: Tue, 01 Jul 2025 11:32:34 +0200
+Message-ID: <175136235475.2426344.4455960698221532956@localhost>
+User-Agent: alot/0.12.dev8+g2c003385c862.d20250602
 
-On 01/07/2025 11:04, Konrad Dybcio wrote:
->>>>>
->>>>> Looking at the docs, a number of platforms have various limitations
->>>>> with regards to frequency at specific speed-modes, some of which seem
->>>>> to be handled implicitly by rounding in the clock framework's
->>>>> round/set_rate().
->>>>>
->>>>> I can very easily imagine there are either boards or platforms in the
->>>>> wild, where the speed must be limited for various reasons, maybe some
->>>>> of them currently don't advertise it (like sm8550 on next/master) to
->>>>> hide that
->>>>
->>>> But there are no such now. The only argument (fact) provided in this
->>>> patchset is: this is issue specific to SM8550 SoC, not the board. See
->>>> last patch. Therefore this is compatible-deducible and this makes
->>>> property without any upstream user.
->>>
->>> When one appears, we will have to carry code to repeat what the property
->>> does, based on a specific compatible.. And all OS implementations will
->>> have to do the same, instead of parsing the explicit information
->>
->> Adding new property in such case will be trivial and simple, unlike
->> having to maintain unused ABI.
->>
->> And it will be unused, because last patch DTS should be rejected on that
->> basis: adding redundant properties which are already defined by the
->> compatible.
-> 
-> Got some more fresh information.. This apparently *does* vary across
-> boards, as there is a recommended hardware workaround to this rate
-> limitation (requiring an external clock source, which is up to the
-> OEM to implement or not)
+Hi Jacopo,
 
+Thank you for the patch.=20
 
-This should be clearly explained in commit msg and the DTS patch
-re-written because it seems it is not a property of the SoC.
+Quoting Jacopo Mondi (2025-07-01 10:55:05)
+> Use the clamp() from minmax.h and provide a define for the max size as
+> they will be used in sequent patches.
 
-I mean, really, that last patch here makes entire discussion pointless,
-because till it is in the patchset is a proof this is a SoC level property.
+nit-picking: I believe either "Use clamp() from" or "Use the clamp() functi=
+on
+from"
 
-Best regards,
-Krzysztof
+>=20
+> Signed-off-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+
+Reviewed-by: Stefan Klug <stefan.klug@ideasonboard.com>=20
+
+> ---
+>  drivers/media/platform/raspberrypi/pisp_be/pisp_be.c  | 11 +++++++----
+>  include/uapi/linux/media/raspberrypi/pisp_be_config.h |  9 +++++----
+>  2 files changed, 12 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c b/drive=
+rs/media/platform/raspberrypi/pisp_be/pisp_be.c
+> index 7596ae1f7de6671484d4d351015b234829f642d4..ac5840b4be478ccdd7da9d6d0=
+745649e0c1b2b6f 100644
+> --- a/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
+> +++ b/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/io.h>
+>  #include <linux/kernel.h>
+>  #include <linux/lockdep.h>
+> +#include <linux/minmax.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pm_runtime.h>
+> @@ -1114,10 +1115,12 @@ static void pispbe_try_format(struct v4l2_format =
+*f, struct pispbe_node *node)
+>         f->fmt.pix_mp.pixelformat =3D fmt->fourcc;
+>         f->fmt.pix_mp.num_planes =3D fmt->num_planes;
+>         f->fmt.pix_mp.field =3D V4L2_FIELD_NONE;
+> -       f->fmt.pix_mp.width =3D max(min(f->fmt.pix_mp.width, 65536u),
+> -                                 PISP_BACK_END_MIN_TILE_WIDTH);
+> -       f->fmt.pix_mp.height =3D max(min(f->fmt.pix_mp.height, 65536u),
+> -                                  PISP_BACK_END_MIN_TILE_HEIGHT);
+> +       f->fmt.pix_mp.width =3D clamp(f->fmt.pix_mp.width,
+> +                                   PISP_BACK_END_MIN_TILE_WIDTH,
+> +                                   PISP_BACK_END_MAX_TILE_WIDTH);
+> +       f->fmt.pix_mp.height =3D clamp(f->fmt.pix_mp.height,
+> +                                    PISP_BACK_END_MIN_TILE_HEIGHT,
+> +                                    PISP_BACK_END_MAX_TILE_HEIGHT);
+> =20
+>         /*
+>          * Fill in the actual colour space when the requested one was
+> diff --git a/include/uapi/linux/media/raspberrypi/pisp_be_config.h b/incl=
+ude/uapi/linux/media/raspberrypi/pisp_be_config.h
+> index cbeb714f4d61ad53162c0450f2303431a5958040..2ad3b90684d7be80776af75b5=
+c5009f7b677f466 100644
+> --- a/include/uapi/linux/media/raspberrypi/pisp_be_config.h
+> +++ b/include/uapi/linux/media/raspberrypi/pisp_be_config.h
+> @@ -21,10 +21,11 @@
+>  /* preferred byte alignment for outputs */
+>  #define PISP_BACK_END_OUTPUT_MAX_ALIGN 64u
+> =20
+> -/* minimum allowed tile width anywhere in the pipeline */
+> -#define PISP_BACK_END_MIN_TILE_WIDTH 16u
+> -/* minimum allowed tile width anywhere in the pipeline */
+> -#define PISP_BACK_END_MIN_TILE_HEIGHT 16u
+> +/* minimum allowed tile sizes anywhere in the pipeline */
+> +#define PISP_BACK_END_MIN_TILE_WIDTH   16u
+> +#define PISP_BACK_END_MIN_TILE_HEIGHT  16u
+> +#define PISP_BACK_END_MAX_TILE_WIDTH   65536u
+> +#define PISP_BACK_END_MAX_TILE_HEIGHT  65536u
+> =20
+>  #define PISP_BACK_END_NUM_OUTPUTS 2
+>  #define PISP_BACK_END_HOG_OUTPUT 1
+>=20
+> ---
+> base-commit: 35392e855abf7d02ad3b061cbc75c7c7c37f0577
+> change-id: 20250623-pispbe-clamp-4b33011d0e85
+>=20
+> Best regards,
+> --=20
+> Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+>=20
+>
