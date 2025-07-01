@@ -1,136 +1,103 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF24419995E
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 22:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B62E7260F;
+	Tue,  1 Jul 2025 22:02:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751407278; cv=none; b=lJARmZRc1g8tHHzyrOFPW1Loeux0ijWm/Jby5DsX3jpJwad7VAuPrg0Jy0TPZBk8xFkpJZrpz8Mdqyw/hTB4kmKjZZIGDnLaDp9u4CfehTs+70eD5sSnPcXDF+4IVJvMaXl4HXhdmWmDYi++XHC5O0HK9/m9OBVIMdIaUdj3uu4=
+	t=1751407341; cv=none; b=mEq94+nwEwEzYCowhcO4HI/AkLqb35T1HNNJMh0HKrG8v8Eh3NDK+MWZwW509KiU0mjx2Cv31e0TgLiUYBeieRcEj8qa5B8z3/iO5rCBV4Lt2buqT5rJkj5pQrVilnElsnga38wyYcrQrr1lHenqRQjQAVpb/5upgnLzvnKSHLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751407278; c=relaxed/simple;
-	bh=ym4G6ufKkIWzagLIfI+OhFmb/6iNAI1xtHVDilZhmaw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Z0q1OCJf5KLWbowutC1mZEHjySxcOrgl/4x8JOuj4J5Rt/xznvp4Mpd7+9RgtNuoCMNUHRf+uh8klYbZKU/6U8sk8HpKcqVbDIPtaet2pXik2pCeQu+WXDnkG6FGW5yO6sxbj3zNAtlA3xf+Gu+aJGzFZh+gJPOPTIFj/uvQfLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZHz+0HE4; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+	s=arc-20240116; t=1751407341; c=relaxed/simple;
+	bh=/UEZb8NkTVMB0RuIfOdOOTMZsG9K+IXgRCinG9NNSXs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iR9s8ShvVG+30BlAEQ4SJrp+1IjBvtwSLl+ugjm4LnSWmFd0GbKh2JmwlfDbBs0dSu9/wFxOGr9KF/F4OYZCefrReVJvKalUGTXMnnP31xQtUAVSatPek0O1JuQ01mEVgxuS4dnxWmrscEiqrk+Xg8/0ovPmkPy+CFn85BA+hn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nb6q70EP; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZHz+0HE4"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-74943a7cd9aso5803575b3a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 15:01:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nb6q70EP"
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e85e06a7f63so3133517276.1;
+        Tue, 01 Jul 2025 15:02:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751407276; x=1752012076; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sZpSfMGCY39joD2VC5bXg87sm6OUeYjHe/LMyzT4YGA=;
-        b=ZHz+0HE42hZqtmU9rg2tJEY2N2iuOH72Kq0J9aUOgxRXbBufm+KN9q65AMUkjhpkNF
-         s4lRyv4/diVr61Waahi8gmZ5eYItKwm85Xdm+M3CvrS8dQZqlwepjKxy6i1fMphJlkJ8
-         bOxuDFc9jP6WSNNgVdqDM5nImMcebBKXs8MsIP1LZQrSfbHGWZH2CVLLPeiucXrSTmRF
-         Dr8RZEnbZz2B3RdaF7mtJxGN7L0J8hYkfgTG3R5RP3C3yZQ2Tn1UspkVVw7WTq6Zjhm4
-         m3fiASrRpGGAIGCqf28TZ1BaxD5eHUO9v0uismIfsbr8frJr+8iPn2cbErThb2p49n5E
-         7UwA==
+        d=gmail.com; s=20230601; t=1751407338; x=1752012138; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r+3A1kXTvGxPm2wKLJImng/HgBPkwj3/5xTfa5vLd9M=;
+        b=Nb6q70EPN0pkXppjque2cH+WtCPP5r5Ykw0ry/PzhSF497qwEbgLICcEpxRK0qNrPx
+         IWvo6JrMILw3rhIb4HSbtOIAZM+yDTSwDGgVGg2vmjhM1m7xHSxsK5li5sCytVvt1GGu
+         dmfw51ZE5mjJjGjmVVDdyLYYX6LiNu/rXvDBXR54wXW6+flIrsYtVM5pY1WP7fgn2VFl
+         QHziO2KKGNAnRvWP/gpQzI6ofgKVTpAQ2T7HtqSOuC0KM6en3t8Rdwni9snSj1UZHCbt
+         4XecUtl11bC16Cqix8exunJQ61lwkev6W1eh4GJKOXc1Rf9OjUFkI3t2JCCsAEnZIW3y
+         h4hQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751407276; x=1752012076;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sZpSfMGCY39joD2VC5bXg87sm6OUeYjHe/LMyzT4YGA=;
-        b=qkjLQsXlOFH+FWp6FoWIJMPtX3rBz5fb3eCT5B2Qb7BPNPDWvCvAVjcfbWHCM1y791
-         ff+YlwUDLv/Bat8g0/VG72AGKIbmqYxHdYczwTnP+uPnoiN12ibtoWspn0eUWNGvWBx0
-         4Z28wwi0YYgS6qcVLIZnSIy6/ahEGZTa7ua5InouGqCbxW/oGXeiwR6ad0odvgQGX6xR
-         JpGpR6sUWzyIhD8mKCyKTKwx14Ndi87ifCyagPgnWKJdBfsbA9O8UuWjfeiYFfdDaAn6
-         bn/SmmOqsbMQRruhgu5rigPuH8mMKtdVBdxym9zO08Xvy/+WE74Ej4ZT+JKfpVrF593y
-         00nw==
-X-Forwarded-Encrypted: i=1; AJvYcCWT2DZmGvCM8vDJckNnjAosD4p4UW1MvZuV1LPFL+jADF46xfbOvCeFDNFyazhuHD0pxTDSiAxMoNVn02c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRvdDNJZASwjQW+MIpIh7u68mv46mhe+aONHVfDnj0vw1F4PKQ
-	PRqDGOhMu2WVno7EbJ+GoobwQODNUWiQubSGiJIbjSWdyp2G/uay5E7b/+Kope8lJS3FhwgrRbk
-	ZTMEmqV0h9fhJwi5ikS+gHeHdHg==
-X-Google-Smtp-Source: AGHT+IEd9keGJPvtO1uRbJlDNElYmO2f0J3qSttebwAES17DT1AOdOkvIO1LIuYSPiK3tQDScGLMbN+3Qhbuix38Cw==
-X-Received: from pfbbk11.prod.google.com ([2002:aa7:830b:0:b0:748:f98a:d97b])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a21:618f:b0:216:1ea0:a51a with SMTP id adf61e73a8af0-222d7f25634mr1088275637.38.1751407276143;
- Tue, 01 Jul 2025 15:01:16 -0700 (PDT)
-Date: Tue, 01 Jul 2025 15:01:14 -0700
-In-Reply-To: <aGNtA+E9FT0Q2OUZ@yzhao56-desk.sh.intel.com>
+        d=1e100.net; s=20230601; t=1751407338; x=1752012138;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=r+3A1kXTvGxPm2wKLJImng/HgBPkwj3/5xTfa5vLd9M=;
+        b=rTwx+NH6xFJ1aabo/FNsVX/4+nS/SEoPPEYXzIFFYubcS8risdvHWDGO4AEzKihqme
+         /4y27PHK9tgl74aqXRb33KeOc0OSf3IniVSX6uRObEhXywZZap4en7Sgy6f2GlxToNn3
+         ZoguuCjGL9IpiJgQ6E4QsIfDuA1BRER/PNiYRl8Jpl+b1lsFfjW78t8Ph5kVHSXNy+FC
+         gJ7pgfxPsspQyxi6HmmFMsyI4PQLM6OKDWUUuv9CtlReMSDOFCa44x6g776X8mXwEtEn
+         M7M3F7KRxomheG22WJB9XhUkFQBIByZCk6B9eujIEW80PnmMFl8KoADo6JVncMVmpMrv
+         m6vQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU6hcI/P/I2YuUUuP/wLodRzc/hID1bWWvvhrHRJ2i1mLh6q0LTQIMytnngOxwTwnYDUf2UQLdPBts=@vger.kernel.org, AJvYcCVwBtltbo2X1hzX2FxUTntpYEdQVFyLHwRzrneHxFdsVRRcVkykX6GIu69daf7BO0M+OSEUPI/ztyI2jRU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwweZ/w9Fbyhv2Z5vE78rw6n0BNVNV2OMRRocHQ4VpQJ9aHons6
+	EITKe0CEBe3XzeSZa+AOVRs1WnmAegDSK46qaDhb5vVTqhkGG47OWXbb0yRFqNzDIW6yEjJI1T+
+	HXLbciBqsP9fLqHclzYJ51TL4UN/WlK4E3Siskk8=
+X-Gm-Gg: ASbGncvRp5ZBX1DS4STzMspdv3mCwuf3qmyDIGyTkPMmatt5y+CwZsDwugK08Ssrlr6
+	A+0S+zA5qvrctTKjQdXIedAkAeHWiXl6dmXjoU68xdp32PNTG2sr5gIEL3UqLjD3CFSGc2Edjxw
+	JZdwLKnvgKyUFpI39RHLpxBlxdSJSbRuk1TKH571p4
+X-Google-Smtp-Source: AGHT+IF2UwMzQTrU3c/1ff/h/O/X4HdiWRMl22fU7K+HHjqvTPMz+NeEM0BS0HZeGjnyecFyCDlnJtDG71RLt/iQtNg=
+X-Received: by 2002:a05:690c:ec3:b0:70e:1771:c165 with SMTP id
+ 00721157ae682-7164d47332amr5473697b3.29.1751407338021; Tue, 01 Jul 2025
+ 15:02:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <diqz34bolnta.fsf@ackerleytng-ctop.c.googlers.com>
- <a3cace55ee878fefc50c68bb2b1fa38851a67dd8.camel@intel.com>
- <diqzms9vju5j.fsf@ackerleytng-ctop.c.googlers.com> <447bae3b7f5f2439b0cb4eb77976d9be843f689b.camel@intel.com>
- <zlxgzuoqwrbuf54wfqycnuxzxz2yduqtsjinr5uq4ss7iuk2rt@qaaolzwsy6ki>
- <4cbdfd3128a6dcc67df41b47336a4479a07bf1bd.camel@intel.com>
- <diqz5xghjca4.fsf@ackerleytng-ctop.c.googlers.com> <aGJxU95VvQvQ3bj6@yzhao56-desk.sh.intel.com>
- <a40d2c0105652dfcc01169775d6852bd4729c0a3.camel@intel.com>
- <diqzms9pjaki.fsf@ackerleytng-ctop.c.googlers.com> <aGNtA+E9FT0Q2OUZ@yzhao56-desk.sh.intel.com>
-Message-ID: <diqzplej4llh.fsf@ackerleytng-ctop.c.googlers.com>
-Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge pages
-From: Ackerley Tng <ackerleytng@google.com>
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, 
-	"Shutemov, Kirill" <kirill.shutemov@intel.com>, "Li, Xiaoyao" <xiaoyao.li@intel.com>, 
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "Hansen, Dave" <dave.hansen@intel.com>, 
-	"david@redhat.com" <david@redhat.com>, "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, 
-	"tabba@google.com" <tabba@google.com>, "vbabka@suse.cz" <vbabka@suse.cz>, 
-	"quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, "michael.roth@amd.com" <michael.roth@amd.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "seanjc@google.com" <seanjc@google.com>, 
-	"Peng, Chao P" <chao.p.peng@intel.com>, "Du, Fan" <fan.du@intel.com>, 
-	"Yamahata, Isaku" <isaku.yamahata@intel.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "Weiny, Ira" <ira.weiny@intel.com>, 
-	"Li, Zhiquan1" <zhiquan1.li@intel.com>, "Annapurve, Vishal" <vannapurve@google.com>, 
-	"jroedel@suse.de" <jroedel@suse.de>, "Miao, Jun" <jun.miao@intel.com>, 
-	"pgonda@google.com" <pgonda@google.com>, "x86@kernel.org" <x86@kernel.org>
+MIME-Version: 1.0
+References: <20250701215648.95912-1-sivany32@gmail.com>
+In-Reply-To: <20250701215648.95912-1-sivany32@gmail.com>
+From: Sivan Zohar Kotzer <sivany32@gmail.com>
+Date: Wed, 2 Jul 2025 01:02:06 +0300
+X-Gm-Features: Ac12FXyoix9dUSUaftAXwYQOV8H9M1SaO6QN7zS1MwNHDnFdaMqKkUFGl-8U9sU
+Message-ID: <CAB_eDKbTzZh7Dp8E1LroEOb4zVA6Mo0guoRqh3p18ipaZuUAug@mail.gmail.com>
+Subject: Re: [PATCH v1] Linux 6.16-rc2
+To: Daniel Lezcano <daniel.lezcano@kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>
+Cc: elazarl@gmail.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Linus Torvalds <torvalds@linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Yan Zhao <yan.y.zhao@intel.com> writes:
+This email was sent by accident, my apologies.
 
-> On Mon, Jun 30, 2025 at 12:25:49PM -0700, Ackerley Tng wrote:
->> "Edgecombe, Rick P" <rick.p.edgecombe@intel.com> writes:
->> 
->> > On Mon, 2025-06-30 at 19:13 +0800, Yan Zhao wrote:
->> >> > > ok! Lets go f/g. Unless Yan objects.
->> >> I'm ok with f/g. But I have two implementation specific questions:
->> >> 
->> >> 1. How to set the HWPoison bit in TDX?
->> 
->> I was thinking to set the HWpoison flag based on page type. If regular
->> 4K page, set the flag. If THP page (not (yet) supported by guest_memfd),
->> set the has_hwpoison flag, and if HugeTLB page, call
->> folio_set_hugetlb_hwpoison().
-> Could you elaborate on how to call folio_set_hugetlb_hwpoison()?
+=E2=80=AB=D7=91=D7=AA=D7=90=D7=A8=D7=99=D7=9A =D7=99=D7=95=D7=9D =D7=93=D7=
+=B3, 2 =D7=91=D7=99=D7=95=D7=9C=D7=99 2025 =D7=91-0:56 =D7=9E=D7=90=D7=AA =
+=E2=80=AASivan Zohar-Kotzer=E2=80=AC=E2=80=8F
+<=E2=80=AAsivany32@gmail.com=E2=80=AC=E2=80=8F>:=E2=80=AC
 >
-
-Sorry I meant "in TDX" as in the part of the kernel that performs the
-unmap. I'm assuming something like
-
-int ret = tdx_do_unmap(page)
-if (ret)
-	set_hwpoison_based_on_folio_type(page_folio(page))
-
-And set_hwpoison_based_on_folio_type() would have to be written to know
-how to set the HWpoison flag based on type of the folio.
-
-I think I might have used the wrong terminology elsewhere. Sorry about
-that. I don't mean to call folio_set_hugetlb_hwpoison() from within the
-TDX module. I meant to set HWpoison in the kernel, based on return value
-to the kernel from the TDX module.
-
->> But if we go with Rick's suggestion below, then we don't have to figure
->> this out.
->> 
->> >> 2. Should we set this bit for non-guest-memfd pages (e.g. for S-EPT pages) ?
->> >
->> > Argh, I guess we can keep the existing ref count based approach for the other
->> > types of TDX owned pages?
->> >
->> 
->> Wait TDX can only use guest_memfd pages, right? Even if TDX can use
->> non-guest_memfd pages, why not also set HWpoison for non-guest_memfd
->> pages?
-> As in https://lore.kernel.org/all/aGJxU95VvQvQ3bj6@yzhao56-desk.sh.intel.com/,
-> I don't find a proper interface for TDX to set HWpoison bit on non-guset_memfd
-> pages.
+> From: Linus Torvalds <torvalds@linux-foundation.org>
 >
-> Neither memory_failure() nor memory_failure_queue() seem fit.
+> ---
+>  Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Makefile b/Makefile
+> index 69c534982415..ba0827a1fccd 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -2,7 +2,7 @@
+>  VERSION =3D 6
+>  PATCHLEVEL =3D 16
+>  SUBLEVEL =3D 0
+> -EXTRAVERSION =3D -rc1
+> +EXTRAVERSION =3D -rc2
+>  NAME =3D Baby Opossum Posse
+>
+>  # *DOCUMENTATION*
+> --
+> 2.45.2
+>
