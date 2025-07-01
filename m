@@ -1,276 +1,231 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57920129A78
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 00:36:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF2C25760;
+	Tue,  1 Jul 2025 00:36:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751330172; cv=none; b=BR0SnHwI/wICJuDeK3BiDP88YppzzcD5pNhfkiSkfvaVKMbJtP78jhohft12GxjvWdZ++OWICKuw/OvefSWxePOPJvI2FpTjFjKq82EJSUATFgNsk7KiY3lt+Vu1fk2OEUL83meBrz5Gni2fQoorib8gfXY3wyV5A8d2z3U6524=
+	t=1751330194; cv=none; b=Vu2GGAxV6wr9t6GosF8EhZlKMMxRs6bYjdYcABKwrLq+hN/f+JcMjfP5x1WubxeggAR0BKu8k2Kb+mD1Nr1sMouFASLkWUabkhO/9xbW60H75gsTdvKGZCk5SXfZuncBOaIW26MkgJIsZPM6q7KLh1aUN8vud55FWMhuY7JfCPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751330172; c=relaxed/simple;
-	bh=bp85Nb1SqHOkZt8dKzTMcsAOLOjBh44N/vR/2utVHaw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qF3slF46kMIiMxSeQ5nNgX5s0qr6qlR9oEIlp9ZUplafC251URGPUUDPVem2V+3Ms15kd8pY8LQy37KZSvrAF2gybZyGf5P3bjy7vKmIZjiBMmpGTZdkfCRB04jng1WsgB5ts1uS21uEhKDegTxmQ6Hck9aqV/uB0UDEre3W5Po=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nc/5SMAS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751330194; c=relaxed/simple;
+	bh=U29TfWta/+jEYM0KLBYGjTQGmU2hqhx1SBmhAIlL0Y4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iEqP8uWs6hYcWY97l1zfssgE8mZP6ROt3cXfMjwsgpHGy+iCrJcUhb1Tb/EAclLXkXyY37UhhNafdmbhJBXqalX234xqsR5rX4iEC5ydvw9JAYETFm2dk+QIJbpj8uLyw45cqKJEBQSnI6g9WaZdrFCvpjAgfO2l4+1iMMU5S1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q5K51t3K; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nc/5SMAS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11ADAC4CEE3;
-	Tue,  1 Jul 2025 00:36:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751330170;
-	bh=bp85Nb1SqHOkZt8dKzTMcsAOLOjBh44N/vR/2utVHaw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Nc/5SMAS1+bbub/Krsn3J35YjtGboTAnFJ1fIl3LGz/1WqPpVZo/EpxH2gfh7yNUQ
-	 KgNfkerkmSCK7Dq8zDv4x7qDyv4HsdKDxzG10lanRdBKsnTGB6xRtiYw+Hvno8U9BH
-	 cYNcgxPuOKKyoy5PYJT9aGfZ89P0Xraj/GNXWFsT+sLT2/wCjugb6T3wGGu9hRsErf
-	 K0VwnNmcZn7XVAkp4veu9RRibGzEkZoOM2dzTkJZM0GWhKZVt9EoXVuyB9zCyT4D9Q
-	 t4qkeoL+DYLN6+y5kwyN8lobp/O4rv2djgAr8Qu7jDt6NhkfsCRJQUsn3NJdwEwHbQ
-	 s3zUmTj7ddXXA==
-Message-ID: <132c1bdf-e100-4e3a-883f-27f9e9b78020@kernel.org>
-Date: Tue, 1 Jul 2025 09:34:00 +0900
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q5K51t3K"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso3305853b3a.2;
+        Mon, 30 Jun 2025 17:36:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751330190; x=1751934990; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=fYK0EMxlksXo/Dbg3CdSxsVmRLSPWk16y3vUzHbd8ns=;
+        b=Q5K51t3KUHDBiMS2cC5tnAy7cPxxzVN7lOMiqS1T1JAjIKFrUNpVyz9VSR1UcUq9ss
+         6/ecEtPJZKW6XMzsWoR2fej39BNTF9xR5Q5ipCRJT1XC9rkyrOqLGs2+ikH0QPnV/nm2
+         K5QsT8glw6ninzCisyaXVwOPxQ5c9ui1UpRzVbtDtx9xdRmLMdVljGjm2TjDup8Y0mnI
+         8QizOgv8IhZg/AqYA3z/usJJHynCL2cukFcOuFTz1POGQB2vsFTMrTjfBV4q0vsHthb0
+         tZoeh735NLd+K0vhfpX/y/R9lmn+TQVlwZqlxNUsPvPAwGYpzgose5zZACM7a6qEXxT0
+         XdvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751330190; x=1751934990;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fYK0EMxlksXo/Dbg3CdSxsVmRLSPWk16y3vUzHbd8ns=;
+        b=Hy/Y5zR4mM/1az3q1/VliKBTqLqsehc6KwdNbemmLDPJJldLcJjcKffzXgfXgGuFGw
+         WKvLDo15ZpdfPVLI5pO4dkRDEBhmUJI7AZaXFXbPD7WZ7GiWLoulqx+3sE1qdeT78oJw
+         70x2v4jUCyEJWSITtFK8KcPP5qhRyloEr8bhxC9f9V93ef/aWnqO97GFDhFaEZ6Hk64R
+         2XKiMAqkFKGBmQuE84ScxIcxn8v48jKszPRPC34pSFGes6Ik7Tn+lNibC8sy48bmENhD
+         CM2XWwtS8uOkTVKq/Dw8BjlPhCkmAYM02e1/h8MYn6TPm2jyMuO7EgZcPYq0iLRDQvlP
+         oWCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUuvB/ynGVNu4CyxH35LS/pfu3RYaRzyiIotD5BdtTSPUfEJZvlFoidLSnBs05BTHyV7I9Y4qyjPo9O@vger.kernel.org, AJvYcCXlFHIH49+UwSGoHC9ySTciH7Js3ic0XRLpIBYE8qOz6Jix1ycCCWmwMko8dujnnvR8lvrIouZo3a3TKyh5@vger.kernel.org
+X-Gm-Message-State: AOJu0YzaMlpXLU4CxpwqPtOYGzr7PDjHi4AI9UASfjHXqwYjbgpcYnzq
+	AzCDybz6WdR0vgjGr5s1JkcI4/zb3M9CSD4Wbp9n5P1YDaA9aVuNdqqO
+X-Gm-Gg: ASbGncsvMxMXvlezq1kHGzn680v3ALsElm8Vn3kBAvzOr6Scx9EaA7KQ/KmKp+ISlzG
+	xkdbj5wLyHyIXpGL4uqXHwQONyNo20+MD9bHr0ozFHNAl2fhT7+TWTLcmJpGWPX0iOOBRVwqTB0
+	K3tBPqN8aRatebS71bPXZ7v1A4t+Noj0r51v3AawYF5hYHdnjxsRNEkBRmLUrqQu6n4+xqdHBIN
+	NAXpL6AJBXXJAGB0P/l9KbiyIyxk3l1GsWWyDg8pVO5/qpMk7VDdUp1SO2Y0Ndch6w6DbB0Gmj4
+	cDTld8RE26KBG7/cJy/3wxl1hTY0D5zbu4c4aCva32+8Ve/yasbYU6CE2Jcf5kA0+7hL25TB
+X-Google-Smtp-Source: AGHT+IGKImkUMqI2z1gYD78QbviBmg1fxYvY1gFIlaFkYpHjQXCCeDUr0So2MH05sHoga4eLCxoPHg==
+X-Received: by 2002:a05:6a00:b42:b0:736:31cf:2590 with SMTP id d2e1a72fcca58-74af70291e3mr20221152b3a.16.1751330190407;
+        Mon, 30 Jun 2025 17:36:30 -0700 (PDT)
+Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-74af541b6e5sm9662133b3a.43.2025.06.30.17.36.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 17:36:29 -0700 (PDT)
+Date: Tue, 1 Jul 2025 08:36:12 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
+	Inochi Amaoto <inochiama@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	Yixun Lan <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>
+Subject: Re: [PATCH net-next 2/2] net: mdio-mux: Add MDIO mux driver for
+ Sophgo CV1800 SoCs
+Message-ID: <255j5pbi3pty5n3dmcalq4uhsoj37rsq5263fijn76o3vrkbs5@cctlwa5567om>
+References: <20250611080228.1166090-1-inochiama@gmail.com>
+ <20250611080228.1166090-3-inochiama@gmail.com>
+ <b8e37f3b89209f6674b0419ec28e0302de6b3c4e.camel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] nvmet: Make blksize_shift configurable
-To: Richard Weinberger <richard@nod.at>, linux-nvme@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, kch@nvidia.com, sagi@grimberg.me,
- hch@lst.de, upstream+nvme@sigma-star.at
-References: <20250630191341.1263000-1-richard@nod.at>
-From: Damien Le Moal <dlemoal@kernel.org>
-Content-Language: en-US
-Organization: Western Digital Research
-In-Reply-To: <20250630191341.1263000-1-richard@nod.at>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b8e37f3b89209f6674b0419ec28e0302de6b3c4e.camel@gmail.com>
 
-On 7/1/25 4:13 AM, Richard Weinberger wrote:
-> Currently, the block size is automatically configured, and for
-> file-backed namespaces it is likely to be 4K.
-> While this is a reasonable default for modern storage, it can
-> cause confusion if someone wants to export a pre-created disk image
-> that uses a 512-byte block size.
-> As a result, partition parsing will fail.
+On Mon, Jun 30, 2025 at 11:08:37PM +0200, Alexander Sverdlin wrote:
+> Hi Inochi!
 > 
-> So, just like we already do for the loop block device, let the user
-> configure the block size if they know better.
-
-Hmm... That fine with me but this explanation does not match what the patch
-does: you allow configuring the block size bit shift, not the size. That is not
-super user friendly :)
-
-Even if internally you use the block size bit shift, I think it would be better
-if the user facing interface is the block size as that is much easier to
-manipulate without having to remember the exponent for powers of 2 values :)
-
+> On Wed, 2025-06-11 at 16:02 +0800, Inochi Amaoto wrote:
+> > Add device driver for the mux driver for Sophgo CV18XX/SG200X
+> > series SoCs.
+> > 
+> > Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+> > ---
+> >  drivers/net/mdio/Kconfig            |  10 +++
+> >  drivers/net/mdio/Makefile           |   1 +
+> >  drivers/net/mdio/mdio-mux-cv1800b.c | 119 ++++++++++++++++++++++++++++
+> >  3 files changed, 130 insertions(+)
+> >  create mode 100644 drivers/net/mdio/mdio-mux-cv1800b.c
+> > 
+> > diff --git a/drivers/net/mdio/Kconfig b/drivers/net/mdio/Kconfig
+> > index 7db40aaa079d..fe553016b77d 100644
+> > --- a/drivers/net/mdio/Kconfig
+> > +++ b/drivers/net/mdio/Kconfig
+> > @@ -278,5 +278,15 @@ config MDIO_BUS_MUX_MMIOREG
+> >  
+> >  	  Currently, only 8/16/32 bits registers are supported.
+> >  
+> > +config MDIO_BUS_MUX_SOPHGO_CV1800B
+> > +	tristate "Sophgo CV1800 MDIO multiplexer driver"
+> > +	depends on ARCH_SOPHGO || COMPILE_TEST
+> > +	depends on OF_MDIO && HAS_IOMEM
+> > +	select MDIO_BUS_MUX
+> > +	default m if ARCH_SOPHGO
+> > +	help
+> > +	  This module provides a driver for the MDIO multiplexer/glue of
+> > +	  the Sophgo CV1800 series SoC. The multiplexer connects either
+> > +	  the external or the internal MDIO bus to the parent bus.
+> >  
+> >  endif
+> > diff --git a/drivers/net/mdio/Makefile b/drivers/net/mdio/Makefile
+> > index c23778e73890..a67be2abc343 100644
+> > --- a/drivers/net/mdio/Makefile
+> > +++ b/drivers/net/mdio/Makefile
+> > @@ -33,3 +33,4 @@ obj-$(CONFIG_MDIO_BUS_MUX_MESON_G12A)	+= mdio-mux-meson-g12a.o
+> >  obj-$(CONFIG_MDIO_BUS_MUX_MESON_GXL)	+= mdio-mux-meson-gxl.o
+> >  obj-$(CONFIG_MDIO_BUS_MUX_MMIOREG) 	+= mdio-mux-mmioreg.o
+> >  obj-$(CONFIG_MDIO_BUS_MUX_MULTIPLEXER) 	+= mdio-mux-multiplexer.o
+> > +obj-$(CONFIG_MDIO_BUS_MUX_SOPHGO_CV1800B) += mdio-mux-cv1800b.o
+> > diff --git a/drivers/net/mdio/mdio-mux-cv1800b.c b/drivers/net/mdio/mdio-mux-cv1800b.c
+> > new file mode 100644
+> > index 000000000000..6c69e83c3dcd
+> > --- /dev/null
+> > +++ b/drivers/net/mdio/mdio-mux-cv1800b.c
+> > @@ -0,0 +1,119 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Sophgo CV1800 MDIO multiplexer driver
+> > + *
+> > + * Copyright (C) 2025 Inochi Amaoto <inochiama@gmail.com>
+> > + */
+> > +
+> > +#include <linux/bitfield.h>
+> > +#include <linux/bits.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/clk.h>
+> > +#include <linux/io.h>
+> > +#include <linux/mdio-mux.h>
+> > +#include <linux/module.h>
+> > +#include <linux/platform_device.h>
+> > +
+> > +#define EPHY_PAGE_SELECT		0x07c
+> > +#define EPHY_CTRL			0x800
+> > +#define EPHY_REG_SELECT			0x804
+> > +
+> > +#define EPHY_PAGE_SELECT_SRC		GENMASK(12, 8)
+> > +
+> > +#define EPHY_CTRL_ANALOG_SHUTDOWN	BIT(0)
+> > +#define EPHY_CTRL_USE_EXTPHY		BIT(7)
+> > +#define EPHY_CTRL_PHYMODE		BIT(8)
+> > +#define EPHY_CTRL_PHYMODE_SMI_RMII	1
+> > +#define EPHY_CTRL_EXTPHY_ID		GENMASK(15, 11)
+> > +
+> > +#define EPHY_REG_SELECT_MDIO		0
+> > +#define EPHY_REG_SELECT_APB		1
+> > +
+> > +#define CV1800B_MDIO_INTERNAL_ID	1
+> > +#define CV1800B_MDIO_EXTERNAL_ID	0
+> > +
+> > +struct cv1800b_mdio_mux {
+> > +	void __iomem *regs;
+> > +	void *mux_handle;
+> > +};
+> > +
+> > +static int cv1800b_enable_mdio(struct cv1800b_mdio_mux *mdmux, bool internal_phy)
+> > +{
+> > +	u32 val;
+> > +
+> > +	val = readl(mdmux->regs + EPHY_CTRL);
+> > +
+> > +	if (internal_phy)
+> > +		val &= ~EPHY_CTRL_USE_EXTPHY;
+> > +	else
+> > +		val |= EPHY_CTRL_USE_EXTPHY;
+> > +
+> > +	writel(val, mdmux->regs + EPHY_CTRL);
+> > +
+> > +	writel(EPHY_REG_SELECT_MDIO, mdmux->regs + EPHY_REG_SELECT);
+> > +
+> > +	return 0;
+> > +}
 > 
-> Signed-off-by: Richard Weinberger <richard@nod.at>
-> ---
-> Changes since v1 (RFC)[0]:
+> Seems that it actually doesn't multiplex the buses? As seen on SG2000:
 > 
-> - Make sure blksize_shift is in general within reason
-> - In the bdev case and when using direct IO, blksize_shift has to be
->   smaller than the logical block it the device
-> - In the file case and when using direct IO try to use STATX_DIOALIGN,
->   just like the loop device does
+
+A switch is also a multiplexer.
+
+> # mdio mdio_mux-0.0
+>  DEV      PHY-ID  LINK
+> 0x00  0x00435649  up
+> 0x01  0x00435649  up
+> 0x02  0x00000000  down
+> ...
+> # mdio mdio_mux-0.1
+>  DEV      PHY-ID  LINK
+> 0x00  0x00435649  up
+> 0x01  0x00435649  up
+> ...
 > 
-> [0] https://lore.kernel.org/linux-nvme/20250418090834.2755289-1-richard@nod.at/
+> The single internal PHY appears on two addresses (0 and 1) and on both buses.
+
+Only address 1 is right, all phy will respond address 0.
+And you should not probe bus 1 when using internal bus,
+it is not existed.
+
+> Maybe it just switches the external MDIO master on/off?
+
+Yes
+
+> Seems that we need the documentation for this thing ;-)
 > 
-> Thanks,
-> //richard
-> ---
->  drivers/nvme/target/configfs.c    | 37 +++++++++++++++++++++++++++++++
->  drivers/nvme/target/io-cmd-bdev.c | 13 ++++++++++-
->  drivers/nvme/target/io-cmd-file.c | 28 ++++++++++++++++++-----
->  3 files changed, 71 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/nvme/target/configfs.c b/drivers/nvme/target/configfs.c
-> index e44ef69dffc24..26175c37374ab 100644
-> --- a/drivers/nvme/target/configfs.c
-> +++ b/drivers/nvme/target/configfs.c
-> @@ -797,6 +797,42 @@ static ssize_t nvmet_ns_resv_enable_store(struct config_item *item,
->  }
->  CONFIGFS_ATTR(nvmet_ns_, resv_enable);
->  
-> +static ssize_t nvmet_ns_blksize_shift_show(struct config_item *item, char *page)
 
-As mentioned above, I think this should be nvmet_ns_blksize_show().
+Please ask for the vendor.
 
-> +{
-> +	return sysfs_emit(page, "%u\n", to_nvmet_ns(item)->blksize_shift);
+> BTW, above LINK up is unfortunately without any cable attached...
 
-And you can do:
+I have repeat the led problem. After setting the right pinctrl,
+It is always light and not blink. I guess there may be a internal
+bug for it. I will ignore this problem as it is not the driver
+issue.
 
-	return sysfs_emit(page, "%u\n",
-			  1U << to_nvmet_ns(item)->blksize_shift);
-
-> +}
-> +
-> +static ssize_t nvmet_ns_blksize_shift_store(struct config_item *item,
-> +		const char *page, size_t count)
-
-Similar here: nvmet_ns_blksize_store()
-
-> +{
-> +	struct nvmet_ns *ns = to_nvmet_ns(item);
-> +	u32 shift;
-> +	int ret;
-> +
-> +	ret = kstrtou32(page, 0, &shift);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/*
-> +	 * Make sure block size is within reason, something between 512 and
-> +	 * BLK_MAX_BLOCK_SIZE.
-> +	 */
-> +	if (shift < 9 || shift > 16)
-> +		return -EINVAL;
-
-And this would be simpler:
-
-	if (blksz < SECTOR_SIZE || blksz > BLK_MAX_BLOCK_SIZE ||
-	    !is_power_of_2(blksz))
-		return -EINVAL;
-
-> +
-> +	mutex_lock(&ns->subsys->lock);
-> +	if (ns->enabled) {
-> +		pr_err("the ns:%d is already enabled.\n", ns->nsid);
-> +		mutex_unlock(&ns->subsys->lock);
-> +		return -EINVAL;
-> +	}
-> +	ns->blksize_shift = shift;
-
-and here:
-
-	ns->blksize_shift = ilog2(blksz);
-
-> +	mutex_unlock(&ns->subsys->lock);
-> +
-> +	return count;
-> +}
-> +CONFIGFS_ATTR(nvmet_ns_, blksize_shift);
-> +
->  static struct configfs_attribute *nvmet_ns_attrs[] = {
->  	&nvmet_ns_attr_device_path,
->  	&nvmet_ns_attr_device_nguid,
-> @@ -806,6 +842,7 @@ static struct configfs_attribute *nvmet_ns_attrs[] = {
->  	&nvmet_ns_attr_buffered_io,
->  	&nvmet_ns_attr_revalidate_size,
->  	&nvmet_ns_attr_resv_enable,
-> +	&nvmet_ns_attr_blksize_shift,
->  #ifdef CONFIG_PCI_P2PDMA
->  	&nvmet_ns_attr_p2pmem,
->  #endif
-> diff --git a/drivers/nvme/target/io-cmd-bdev.c b/drivers/nvme/target/io-cmd-bdev.c
-> index eba42df2f8215..be39837d4d792 100644
-> --- a/drivers/nvme/target/io-cmd-bdev.c
-> +++ b/drivers/nvme/target/io-cmd-bdev.c
-> @@ -77,6 +77,7 @@ static void nvmet_bdev_ns_enable_integrity(struct nvmet_ns *ns)
->  
->  int nvmet_bdev_ns_enable(struct nvmet_ns *ns)
->  {
-> +	int bdev_blksize_shift;
->  	int ret;
->  
->  	/*
-> @@ -100,7 +101,17 @@ int nvmet_bdev_ns_enable(struct nvmet_ns *ns)
->  	}
->  	ns->bdev = file_bdev(ns->bdev_file);
->  	ns->size = bdev_nr_bytes(ns->bdev);
-> -	ns->blksize_shift = blksize_bits(bdev_logical_block_size(ns->bdev));
-> +	bdev_blksize_shift = blksize_bits(bdev_logical_block_size(ns->bdev));
-> +
-> +	if (ns->blksize_shift) {
-> +		if (ns->blksize_shift < bdev_blksize_shift) {
-> +			pr_err("Configured blksize_shift needs to be at least %d for device %s\n",
-> +				bdev_blksize_shift, ns->device_path);
-> +			return -EINVAL;
-> +		}
-> +	} else {
-> +		ns->blksize_shift = bdev_blksize_shift;
-> +	}
-
-Nit: to avoid the indented if, may be write this like this: ?
-
-	if (!ns->blksize_shift)
-		ns->blksize_shift = bdev_blksize_shift;
-
-	if (ns->blksize_shift < bdev_blksize_shift) {
-		pr_err("Configured blksize needs to be at least %u for device %s\n",
-			bdev_logical_block_size(ns->bdev),
-			ns->device_path);
-		return -EINVAL;
-	}
-
-Also, if the backend is an HDD, do we want to allow the user to configure a
-block size that is less than the *physical* block size ? Performance will
-suffer on regular HDDs and writes may fail with SMR HDDs.
-
->  
->  	ns->pi_type = 0;
->  	ns->metadata_size = 0;
-> diff --git a/drivers/nvme/target/io-cmd-file.c b/drivers/nvme/target/io-cmd-file.c
-> index 2d068439b129c..a4066b5a1dc97 100644
-> --- a/drivers/nvme/target/io-cmd-file.c
-> +++ b/drivers/nvme/target/io-cmd-file.c
-> @@ -49,12 +49,28 @@ int nvmet_file_ns_enable(struct nvmet_ns *ns)
->  
->  	nvmet_file_ns_revalidate(ns);
->  
-> -	/*
-> -	 * i_blkbits can be greater than the universally accepted upper bound,
-> -	 * so make sure we export a sane namespace lba_shift.
-> -	 */
-> -	ns->blksize_shift = min_t(u8,
-> -			file_inode(ns->file)->i_blkbits, 12);
-> +	if (ns->blksize_shift) {
-> +		if (!ns->buffered_io) {
-> +			struct block_device *sb_bdev = ns->file->f_mapping->host->i_sb->s_bdev;
-> +			struct kstat st;
-> +
-> +			if (!vfs_getattr(&ns->file->f_path, &st, STATX_DIOALIGN, 0) &&
-> +			    (st.result_mask & STATX_DIOALIGN) &&
-> +			    (1 << ns->blksize_shift) < st.dio_offset_align)
-> +				return -EINVAL;
-> +
-> +			if (sb_bdev && (1 << ns->blksize_shift < bdev_logical_block_size(sb_bdev)))
-> +				return -EINVAL;
-
-I am confused... This is going to check both... But if you got STATX_DIOALIGN
-and it is OK, you do not need (and probably should not) do the second if, no ?
-
-Also, the second condition of the second if is essentially the same check as
-for the block dev case. So maybe reuse that by creating a small helper function ?
-
-> +		}
-> +	} else {
-> +		/*
-> +		 * i_blkbits can be greater than the universally accepted
-> +		 * upper bound, so make sure we export a sane namespace
-> +		 * lba_shift.
-> +		 */
-> +		ns->blksize_shift = min_t(u8,
-> +				file_inode(ns->file)->i_blkbits, 12);
-> +	}
-
-It feels like this entire hunk should be a helper function as that would allow
-making it a lot more readable with early returns. This code here whould be
-something like:
-
-	ret = nvmet_file_set_ns_blksize_shift(ns);
-	if (ret)
-		return ret;
-
->  
->  	ns->bvec_pool = mempool_create(NVMET_MIN_MPOOL_OBJ, mempool_alloc_slab,
->  			mempool_free_slab, nvmet_bvec_cache);
-
-
--- 
-Damien Le Moal
-Western Digital Research
+Regards,
+Inochi
