@@ -1,214 +1,145 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486D425B66A
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 12:29:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E92631DA60D
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 12:30:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751372988; cv=none; b=oYRhew8eXEo5aiGClqxjdoxl4sc4H1hpOj78hd51g+BGmXv1BMY/+brnvNI1dLPrfFqerLldb9wQsL4YpACp+xAIFkZujBe1aoAO2Qxl9aqHS200zxbo2WPYhS3+4puAuGi6U1Ot9ZRD+ACylpEoFIIlj/Q9usbS+ck+v0hPlHQ=
+	t=1751373030; cv=none; b=gvprSx5byKnm/m7O6OVX5uvngqmUMRP8wKqT0j06loRnBexu8utIwF0Y2wb/E8hz3ngdlP0PZY9JK6pLxi3DOmPnnaV6US8n48keAsRpwuenng2ZRPEHHdYP85SMJ0HEF+ID8/wLlevJBwbHozQbu0mlypOgsuD/HLu9MJGWGRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751372988; c=relaxed/simple;
-	bh=HA/IaYAtviTzbiEGMrzWF/n5gDTxFeZ2JLbcBiPxXXw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=vCecBPQOcAgI9d1aH8b174+rJM91OrZExVdoC/OqSo7qQi9LyCklvH7MISAsX2yiqx7x+jTmxj7thEIKMSPyXFHUhULrLbJjYaciaVP7Q9QicqqWzH6fuj5hLT9DCJ85MAYvWveateOAmoUKfjXkas6bP/kF3AiP5saUUatAUPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H+XFP51X; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H+XFP51X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751372986;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=TrbuVM+ppzwgXrUIdBEtP31BskfLOvpW3vqC5pXRcG0=;
-	b=H+XFP51XMXNiVBVRKduFIYtRMcpYgBuvGf1RlVIUZA8CbkMgQdLbG6XMkWru8JlrttEliU
-	HxnEhKitQjNK+AUXN53jFTyJWQJrYaX0GyG7pZemaw8h/tmBxZWNXM88HE7c8132N5XsCc
-	Rg0QY2AVBmaZyyum++sBO1SPwKmx7Nw=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-483-eQx65NnAM-mU0wt_a8V6_Q-1; Tue, 01 Jul 2025 08:29:43 -0400
-X-MC-Unique: eQx65NnAM-mU0wt_a8V6_Q-1
-X-Mimecast-MFC-AGG-ID: eQx65NnAM-mU0wt_a8V6_Q_1751372982
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-450d244bfabso28531795e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 05:29:42 -0700 (PDT)
+	s=arc-20240116; t=1751373030; c=relaxed/simple;
+	bh=kpA2ciu3Ka93Ok86leflif+v4PM3jren9a+lmBCYc3o=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Mx4BP3Wc+2LdpxQJsFRh6IlvuteEtLkenot6nNLEIl4UWJ753IEysNZigYt76EGpeV+8B71WaCEbIggRCn1PtrL+j6BbyJZTYrWJXKVuseAV+PO48XVgUtF7ekzcZYVM4XMo2vFVbgkamVIbDK8PqbSNTnbrI2yOMMU3iPSymCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-86d01ff56ebso598878039f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 05:30:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751372982; x=1751977782;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=TrbuVM+ppzwgXrUIdBEtP31BskfLOvpW3vqC5pXRcG0=;
-        b=SkKRwHtkmmLchuEPS1t1gnxK+MgDh/x/Gr9QeV93StmTOS9BgNtyO15THYT8Lo+p5u
-         2P1sBZTaMBeVSxPYGvEbSeoProLfwauIkBjhT6286PbGm4qkrd79S+vGkHoggVwWLvyh
-         iSyMF9kfOJveVQsKxZwfTBfAY1KXk0wrhTnVYiiNay20jFHYGnbBL4yrGgl/ttp6dw0j
-         e+YByfYZ6Jeu7zcfDIdN74/+FRZAV2BhSnyVsJyuKOD7osOgbGDWzDl7dCv76F+C7AS/
-         N7Xjm4ECSHsREPh1mygd9+K/XqL2tlCdoU+fjimIDacCWTsqtIwcP2ADkO3ssOpUqKyo
-         D/nw==
-X-Gm-Message-State: AOJu0YzToD5yAC6iLRYRxmsUFgphpvhSinGJgUlr6a+u5cj4oh6KRM+/
-	LLPxtE+HgQs9mj4cmL+YJvwEnvfExo6PnoMGEycLWagKMRWB54GKYOr3xDtOcqG5LqF8qH9w2Y1
-	Cqq6JDffASlbXuCqknEeRTG69WWhMmGceMU372C+ffPbkWBBOKkBDpuY49KAt5GcDNw==
-X-Gm-Gg: ASbGncuMD6poGjAaUOT6i0ttGsfHAdw4t88g+6OTY9I9hCPGAwLp+xHuZYvwhb8Ypem
-	Nnl/OxSKIOdla/1Y53p18HG0S2TTGEbFd/pqivNsnt9lk/KtfwP5JRqOKINssUkc2gHCneYv3FN
-	2zrSZtphRDEjOHFqevJV30ca+kmfmYAWM5m2ANiqWurvabOhjNaqI1QH7PxHSC6uzcn62SjaHWm
-	BBWs3PvcEkDVZ1ZUoHB/kbUwCelpkO4BRQFbGRMU3XtvhzVn6ddmgjAI5LnWNBZ/YHa8DAPgUu7
-	gE4+Ig0I2KibeNaBNpA0t2+Am+6l3NTC30lJX5klupaeFyO0igNoS8A7yfrVEHGFh0YnZJLuTF8
-	8DxaHxwWBg1y9s70GBB6tyfaV86Y0tBe56O7w2pN2WACYs3arVA==
-X-Received: by 2002:a05:600c:470a:b0:43d:878c:7c40 with SMTP id 5b1f17b1804b1-4538ee5d02dmr227232515e9.10.1751372981718;
-        Tue, 01 Jul 2025 05:29:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEWGLUM6qAW2QhCkuZ0jAVZEDYU8qdTgiLFCHykWjvjhd9I7XaZDJCAwUz6gENIyzN0qXG81w==
-X-Received: by 2002:a05:600c:470a:b0:43d:878c:7c40 with SMTP id 5b1f17b1804b1-4538ee5d02dmr227232065e9.10.1751372981213;
-        Tue, 01 Jul 2025 05:29:41 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f18:7500:202e:b0f1:76d6:f9af? (p200300d82f187500202eb0f176d6f9af.dip0.t-ipconnect.de. [2003:d8:2f18:7500:202e:b0f1:76d6:f9af])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823c42e1sm193198075e9.37.2025.07.01.05.29.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 05:29:40 -0700 (PDT)
-Message-ID: <c476d5e6-8b4a-44ab-91aa-c4cb95a46d62@redhat.com>
-Date: Tue, 1 Jul 2025 14:29:38 +0200
+        d=1e100.net; s=20230601; t=1751373028; x=1751977828;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cN9KWDOuzT7EKHnK6OkzJ66VwAcB0QwTMr9rV89pQOM=;
+        b=uOB9QKj3k3Rg0yf9GIYaTrv/6t1Dh8XFKtm5lnPTLv1LVRS4Hs6IIPqM3SFwVb4B4x
+         nDx1VXnXWiHwmmmVJ5cNf6ICRS/o31jxncZCaFW/e+E2UGqdyFUebtAK5EqYi6GhFFZw
+         0DYldeRfzabmCBZ3U6z8ZGLku5zSGR1yysIH+5GnO73j7I/C20aP77vZjjwMTGjM8IZm
+         b4tOyESFnrDKeBWPxwT/wkO5MKMFJZNnsnkawHmrGuawSxJ3sP9OBIbSACbcBqUXTdTE
+         iFC2q5QRNhlfPrPTBAdE1C7t7LRFgXliXq8pL/9DxM8zXnNexEchQ7WtTFjFchsujkpf
+         VnQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXxn4YTlbY1XKfq+mft9g63HbI0zak+BDgcFDJ+b5kpjFhfBAjcCznT5l5TVyuklzc9ffV0sGaPZ9KowzE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzX/BXg/su0hN3WewfZEJiFFt0f9WlNuaO6E7BRvB0tuNxcWmcx
+	KHUrw5JW71ZvsDyB5fuFka1H3Yz0mmxvJRKpbKomuXSSM417MjqXygX/vOjWswghsPoxOQrLBhd
+	rqSaHKEjBHV/0TqEvhS173WPUm012DJY4iK243glG/lLnDtMqX0dVclTEa8Q=
+X-Google-Smtp-Source: AGHT+IERN3pxkDYMRbEkhigbfvZBzWzDLued9o0vB/EMrAVwvaA2COhWMpFzCQ4yoitiyN1h5iAIwdwDzJKrLz2UkyxfxkRnGA9t
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 16/29] mm: rename __PageMovable() to
- page_has_movable_ops()
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- virtualization@lists.linux.dev, linux-fsdevel@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Jerrin Shaji George <jerrin.shaji-george@broadcom.com>,
- Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
- Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
- Ying Huang <ying.huang@linux.alibaba.com>,
- Alistair Popple <apopple@nvidia.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Minchan Kim <minchan@kernel.org>,
- Sergey Senozhatsky <senozhatsky@chromium.org>,
- Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
- Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
- Peter Xu <peterx@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>,
- Chengming Zhou <chengming.zhou@linux.dev>, Miaohe Lin
- <linmiaohe@huawei.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>,
- Oscar Salvador <osalvador@suse.de>, Rik van Riel <riel@surriel.com>,
- Harry Yoo <harry.yoo@oracle.com>, Qi Zheng <zhengqi.arch@bytedance.com>,
- Shakeel Butt <shakeel.butt@linux.dev>
-References: <20250630130011.330477-1-david@redhat.com>
- <20250630130011.330477-17-david@redhat.com>
- <9a6b403e-ac92-4e4a-8d72-86dade5b9653@lucifer.local>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <9a6b403e-ac92-4e4a-8d72-86dade5b9653@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6602:2c08:b0:86d:1218:de96 with SMTP id
+ ca18e2360f4ac-8768839ebd9mr1945168839f.12.1751373027931; Tue, 01 Jul 2025
+ 05:30:27 -0700 (PDT)
+Date: Tue, 01 Jul 2025 05:30:27 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6863d4e3.a70a0220.3b7e22.1b12.GAE@google.com>
+Subject: [syzbot] [fs?] linux-next test error: WARNING: suspicious RCU usage
+ in proc_sys_compare
+From: syzbot <syzbot+37d54f0f58ba8519cdbe@syzkaller.appspotmail.com>
+To: joel.granados@kernel.org, kees@kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-next@vger.kernel.org, 
+	sfr@canb.auug.org.au, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 01.07.25 12:59, Lorenzo Stoakes wrote:
-> On Mon, Jun 30, 2025 at 02:59:57PM +0200, David Hildenbrand wrote:
->> Let's make it clearer that we are talking about movable_ops pages.
->>
->> While at it, convert a VM_BUG_ON to a VM_WARN_ON_ONCE_PAGE.
-> 
-> <3
-> 
->>
->> Reviewed-by: Zi Yan <ziy@nvidia.com>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
-> 
-> Great, love it.
-> 
-> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> 
-> I noticed that the Simplified Chinese documentation has references for this, but
-> again we have to defer to somebody fluent in this of course!
-> 
-> but also in mm/memory_hotplug.c in scan_movable_pages():
-> 
-> 		/*
-> 		 * PageOffline() pages that are not marked __PageMovable() and
-> 
-> Trivial one but might be worth fixing that up also?
+Hello,
 
-Ah, yes, missed that, burried under the the Chinese doc occurrences.
+syzbot found the following issue on:
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 5fad126949d08..69a636e20f7bb 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1763,7 +1763,7 @@ static int scan_movable_pages(unsigned long start, unsigned long end,
-                         goto found;
-  
-                 /*
--                * PageOffline() pages that are not marked __PageMovable() and
-+                * PageOffline() pages that do not have movable_ops and
-                  * have a reference count > 0 (after MEM_GOING_OFFLINE) are
-                  * definitely unmovable. If their reference count would be 0,
-                  * they could at least be skipped when offlining memory.
+HEAD commit:    3f804361f3b9 Add linux-next specific files for 20250701
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=14e11770580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=46111759e155f4cc
+dashboard link: https://syzkaller.appspot.com/bug?extid=37d54f0f58ba8519cdbe
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/c371987646a7/disk-3f804361.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/94a8f81e003e/vmlinux-3f804361.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/a126fddf774b/bzImage-3f804361.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+37d54f0f58ba8519cdbe@syzkaller.appspotmail.com
+
+=============================
+WARNING: suspicious RCU usage
+6.16.0-rc4-next-20250701-syzkaller #0 Not tainted
+-----------------------------
+fs/proc/proc_sysctl.c:934 suspicious rcu_dereference_check() usage!
+
+other info that might help us debug this:
 
 
--- 
-Cheers,
+rcu_scheduler_active = 2, debug_locks = 1
+3 locks held by syz-executor/5832:
+ #0: ffff888030574428 (sb_writers#3){.+.+}-{0:0}, at: mnt_want_write+0x41/0x90 fs/namespace.c:557
+ #1: ffff8880230d8190 (&sb->s_type->i_mutex_key#10){++++}-{4:4}, at: inode_lock_shared include/linux/fs.h:884 [inline]
+ #1: ffff8880230d8190 (&sb->s_type->i_mutex_key#10){++++}-{4:4}, at: open_last_lookups fs/namei.c:3806 [inline]
+ #1: ffff8880230d8190 (&sb->s_type->i_mutex_key#10){++++}-{4:4}, at: path_openat+0x8cb/0x3830 fs/namei.c:4043
+ #2: ffff88807e2779c8 (&lockref->lock){+.+.}-{3:3}, at: spin_lock include/linux/spinlock.h:351 [inline]
+ #2: ffff88807e2779c8 (&lockref->lock){+.+.}-{3:3}, at: d_wait_lookup fs/dcache.c:2537 [inline]
+ #2: ffff88807e2779c8 (&lockref->lock){+.+.}-{3:3}, at: d_alloc_parallel+0xbe4/0x15e0 fs/dcache.c:2624
 
-David / dhildenb
+stack backtrace:
+CPU: 0 UID: 0 PID: 5832 Comm: syz-executor Not tainted 6.16.0-rc4-next-20250701-syzkaller #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
+ lockdep_rcu_suspicious+0x140/0x1d0 kernel/locking/lockdep.c:6871
+ proc_sys_compare+0x27d/0x2c0 fs/proc/proc_sysctl.c:934
+ d_same_name fs/dcache.c:2179 [inline]
+ d_alloc_parallel+0x105d/0x15e0 fs/dcache.c:2637
+ lookup_open fs/namei.c:3630 [inline]
+ open_last_lookups fs/namei.c:3807 [inline]
+ path_openat+0xa3b/0x3830 fs/namei.c:4043
+ do_filp_open+0x1fa/0x410 fs/namei.c:4073
+ do_sys_openat2+0x121/0x1c0 fs/open.c:1434
+ do_sys_open fs/open.c:1449 [inline]
+ __do_sys_openat fs/open.c:1465 [inline]
+ __se_sys_openat fs/open.c:1460 [inline]
+ __x64_sys_openat+0x138/0x170 fs/open.c:1460
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fa66218d211
+Code: 75 57 89 f0 25 00 00 41 00 3d 00 00 41 00 74 49 80 3d 3a 83 1f 00 00 74 6d 89 da 48 89 ee bf 9c ff ff ff b8 01 01 00 00 0f 05 <48> 3d 00 f0 ff ff 0f 87 93 00 00 00 48 8b 54 24 28 64 48 2b 14 25
+RSP: 002b:00007ffe575748d0 EFLAGS: 00000202 ORIG_RAX: 0000000000000101
+RAX: ffffffffffffffda RBX: 0000000000080001 RCX: 00007fa66218d211
+RDX: 0000000000080001 RSI: 00007fa66222ae2b RDI: 00000000ffffff9c
+RBP: 00007fa66222ae2b R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000009
+R13: 00007ffe57574970 R14: 0000000000000009 R15: 0000000000000000
+ </TASK>
 
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
