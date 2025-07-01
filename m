@@ -1,85 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434C32459C7;
-	Tue,  1 Jul 2025 13:53:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 046EA2749C9;
+	Tue,  1 Jul 2025 13:54:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751378036; cv=none; b=IKtVkRLL/3XnLeRxWFLiYS2ik4r4n0L2DCXpojcan0Gv9h7sEfWQRRlI22tj4AkWOnG4tPFo7Pd3l/d3BGI8mSXpCw99dPXyrAhSAvr3av12t0tNmT87SqNsE+O4vAZDQDm6chNZTzKalC4ZcbmeazUknqCngTdkBdC2KCAa/KE=
+	t=1751378062; cv=none; b=r25W0TphJmXjU4ave5X4C33+pTjujXf/4LglDn7J0c5bQkzvT+f9mS49O/SQA3t1zaQYl6qNHiHhL1WPvRG+FxIqH8VwpX6ypBVuOtK5gNoCcFHO0ofcLc0JkCOf2FWkSTkHC7DembXuIxgj81va09/p3bRobFKc3DO2oydBOnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751378036; c=relaxed/simple;
-	bh=w3O6JX+TFxgUQvh9AQY+xLMJfuINSkF/pchzYSsDsm4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NGKWZMgW+JphHRiOy0y5pW2kc0mB9MSJPUMwE83V41SU94yzgenR0hLc6BnqOjjzxJU7yRE8ZVRWfNaIM2osy8yWqfgUL8q1/z14cpfKYtVu3b06QX4xg7oYzxCLrvsPxf69hSFMyaRRm2qnBVDDaO084jQKPyZOiFQAX05UGvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JVnWrVc4; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751378062; c=relaxed/simple;
+	bh=Jng3wkmeznNgaZJCbfupk58RsqV3AADGX9KcfOwgqY0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=J3Gzjtrwm6a8DKJw9Yn1x+eU8jfWlLivp4E4ANGQs9WTwOTs909z24ZcwgGhri2fIPI2wnNgQt3e4V2Fp64jFAUg9PjQZXees92k41BOqOgBkGHpt6w2R09+EHHa3Ll0YSPPVNBjCVWXVYwHnlEdgRzsQad6U7XPiTRdxiRC4IU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uUKq4jIP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JVnWrVc4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751378035; x=1782914035;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=w3O6JX+TFxgUQvh9AQY+xLMJfuINSkF/pchzYSsDsm4=;
-  b=JVnWrVc4Sdg6EuEXewWhX66nVQBw4yf0Npr3eospz/L4pOlQmmuy9mNM
-   6DViAW7/FafB4umssOy87J3xTZuBXIMAFU2vBEnC8QUZTS1xwOkXJJDZK
-   zObekoEsw/LsQq/nZ6F0FdahlAlwnxdmFSfZmcMXhxPfo8psUsWrzitwR
-   Mjl+HM1sNI0HTkFfam+gcAsB7/ev8/B+T/aTwJQA2+G9lHLeZYNv15hdB
-   gqtCDku3fUhKfI7bEtFbbwfn96HJdMtxf60kwpZKGfOT+vReo5ZBDLsUQ
-   ju6jcNTMZyn/XcaWkYLOjT4a+PGrP8JtQ5g5pZlKsOepSlc/16kFaIIJv
-   A==;
-X-CSE-ConnectionGUID: 9/x2d6VJQDWN/fIqY9P4WQ==
-X-CSE-MsgGUID: +0/1kwUkRDaZIRnEoNcazA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="57421218"
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="57421218"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 06:53:54 -0700
-X-CSE-ConnectionGUID: gbz6/TwyQreIlfdtoHgxDQ==
-X-CSE-MsgGUID: jcOZJOwzQwabrl2Jj/NP8g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="158057304"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 06:53:52 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uWbQj-0000000Bc1W-2mr5;
-	Tue, 01 Jul 2025 16:53:49 +0300
-Date: Tue, 1 Jul 2025 16:53:49 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Thomas Fourier <fourier.thomas@gmail.com>
-Cc: Jiri Slaby <jirislaby@kernel.org>,
-	Tomoya MORINAGA <tomoya-linux@dsn.okisemi.com>,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [PATCH v3] pch_uart: Fix dma_sync_sg_for_device() nents value
-Message-ID: <aGPobZ6reAWrRtV0@smile.fi.intel.com>
-References: <20250701113452.18590-2-fourier.thomas@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uUKq4jIP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EA55C4CEF3;
+	Tue,  1 Jul 2025 13:54:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751378061;
+	bh=Jng3wkmeznNgaZJCbfupk58RsqV3AADGX9KcfOwgqY0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=uUKq4jIPUxYByK6SlEFyvyt/h0fGGotsrjQ6Q3Xe4WxxwEeNQTBhOVmVeHIXwomb4
+	 Cf/wkVx1zZ6E2MbtfuDxJI9dZK2dzucNRIwix+R17zFavhXsQWYLprFY+/xy1ic/UA
+	 ditp3Bqh2xRhYEJNmEfoZ9jdd7Z1ysUwnpw9RDYkuXkAYveQeJVw+hXO4T297IfE9m
+	 7qlezuIDgzHIHF0zOy1bbu2nmQUzWLWltV+XT5ERreJPYYFObopx6XTZTsldEE+K00
+	 37w0xaDyD0p99AVc8uCWl/+pJ7ia/8ggqYNJ3CcHHgmek+DCJ1723zrRyN7Bqrw8hi
+	 vZn16wYO9hlMw==
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-6116d9bb6ecso1852018eaf.3;
+        Tue, 01 Jul 2025 06:54:21 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU9rwdMQQo/8e5RYcuIj2Pu/qcS5W8vlt6at0bEpGDf5spu/NxXY8O07O7ohviem7hFZbO4eYskQJdb@vger.kernel.org, AJvYcCXzTQBfvbmbEkrVr3GhRUfKKxFnQMGFX51bT3o8tCQKeqQa24iEZ5CN0CfPVi6KfDk/JUCiptEj0TQB5Rmx@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQklBWdd/EVtTTQ+6waF4wlt/oQ4B/bkR6s6MG6GA7nO/Qa1uf
+	MqT78TwO5hxu4anYUOfxQNWCEPWKSo2I7ez1nM/Pj27gRr6xqI8fooclLUxg8YbKXKXgRihN735
+	WQzii0zZrvoGvHQcKtJDOw+oSJ/QObko=
+X-Google-Smtp-Source: AGHT+IF8seE+Id7xG8WQlhFiBqridThxc49oWjknLWJxi/lTNTz9icUtsuqR9A2rhC3Lo+dq/lpP/fUkCq2qp3nRons=
+X-Received: by 2002:a05:6820:994:b0:611:b561:258e with SMTP id
+ 006d021491bc7-611b90965aemr11674984eaf.3.1751378060915; Tue, 01 Jul 2025
+ 06:54:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250701113452.18590-2-fourier.thomas@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+References: <20250620131309.126555-1-me@linux.beauty> <20250620131309.126555-2-me@linux.beauty>
+ <aGPMM9Nw2-99sWRL@arm.com>
+In-Reply-To: <aGPMM9Nw2-99sWRL@arm.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 1 Jul 2025 15:54:09 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0h06-uQq57So7GzBMJ48dr42z3hY0EBFHSUmsjsVaUgjw@mail.gmail.com>
+X-Gm-Features: Ac12FXz4Xi7TozQTSvDj_v42bWdO4aRE3ZuU9eQvEt5OUBffGU8gt-jQaTTOshI
+Message-ID: <CAJZ5v0h06-uQq57So7GzBMJ48dr42z3hY0EBFHSUmsjsVaUgjw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] ACPI: Return -ENODEV from acpi_parse_spcr() when
+ SPCR support is disabled
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Li Chen <me@linux.beauty>, "Rafael J . Wysocki" <rafael@kernel.org>, 
+	Hanjun Guo <guohanjun@huawei.com>, Will Deacon <will@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Liu Wei <liuwei09@cestc.cn>, Ryan Roberts <ryan.roberts@arm.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 01, 2025 at 01:34:52PM +0200, Thomas Fourier wrote:
-> The dma_sync_sg_for_device() functions should be called with the same
-> nents as the dma_map_sg(), not the value the map function returned
-> according to the documentation in Documentation/core-api/dma-api.rst:450:
-> 	With the sync_sg API, all the parameters must be the same
-> 	as those passed into the sg mapping API.
+On Tue, Jul 1, 2025 at 1:53=E2=80=AFPM Catalin Marinas <catalin.marinas@arm=
+.com> wrote:
+>
+> On Fri, Jun 20, 2025 at 09:13:07PM +0800, Li Chen wrote:
+> > From: Li Chen <chenl311@chinatelecom.cn>
+> >
+> > If CONFIG_ACPI_SPCR_TABLE is disabled, acpi_parse_spcr()
+> > currently returns 0, which may incorrectly suggest that
+> > SPCR parsing was successful. This patch changes the behavior
+> > to return -ENODEV to clearly indicate that SPCR support
+> > is not available.
+> >
+> > This prepares the codebase for future changes that depend
+> > on acpi_parse_spcr() failure detection, such as suppressing
+> > misleading console messages.
+> >
+> > Signed-off-by: Li Chen <chenl311@chinatelecom.cn>
+> > ---
+> >  include/linux/acpi.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> > index f102c0fe34318..71e692f952905 100644
+> > --- a/include/linux/acpi.h
+> > +++ b/include/linux/acpi.h
+> > @@ -1503,7 +1503,7 @@ int acpi_parse_spcr(bool enable_earlycon, bool en=
+able_console);
+> >  #else
+> >  static inline int acpi_parse_spcr(bool enable_earlycon, bool enable_co=
+nsole)
+> >  {
+> > -     return 0;
+> > +     return -ENODEV;
+> >  }
+> >  #endif
+>
+> Rafael, are you ok with this patch going via the arm64 tree?
 
-Good enough to me,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Yes, I am, thanks!
