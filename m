@@ -1,95 +1,152 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8516C264FA6
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 08:22:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EB36264638;
+	Tue,  1 Jul 2025 08:22:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751358151; cv=none; b=WZBYC7V9sNlT3wGP+w55v99AfF4GM5s4FBCprSWhlw6rN/gjCL3QiFxxsqad8munP2VdLxzpGlUXU2JoBDJP1DswaX/WMoGPyv4n1wPPs+/D1ySe4BYNEhDTc9O6ZxBjArfqkJSSM+hVIGlsfwWTFj94ib5ibg4AETAZOxARvK8=
+	t=1751358155; cv=none; b=rtrAY4/NFFX1NYUVBBc9MVnv/tTteJw9Q4P1CvNh9TKnYBO+4ZNYnXxAI0DhmYjQrX0IEFV3e0H21FhegCxcZXq8Ax0td/564D0mZbnasjZw/9IdvfaTTaBIeOtikzgXnp46NZf6W/GWWwrou7Hg86zOXhRgZ+AZnR/gaD+3SRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751358151; c=relaxed/simple;
-	bh=CGvpDvM5j/bwOEQRCkUI4OYbS6nHhVG70Rau6zpqaMY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jcQqxv8UimG7PxQUp8Dwss+xuvTudXqdU1zRqbJ6UDxuwL7rc/6TH83oh3IkzizgJHu9FR4xx1bY02HPxh3dnSiA43B8FrYnBd18SZftTINSWYcIG9PRVdOPHnMqPRUUouEPusIQIUNY76yDbsKW6nH91IPbrQwQrwLEep+ydLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=ZQ8SnUty; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1751358155; c=relaxed/simple;
+	bh=aNmVXBFvp+oOEwr66jDZuE77bJXKpgGM030ZO2mjHy4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aH6rKaZu5jVSFWUNh67pWZK3Qzkv4CjccBNd40GdZfgCTx8cAUtyQ2vhUuUt7m+nxxq6l8enT6isbHUM08ciQ8XnhTmNUgzO+IHzbj7/yt3TZw4KfBRgT7vPeG1UpqXk0+w8XZ3H7T5lwa1xoAVFVjPhAWdnXlmNPsWgPyz5eWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E/G7wm6C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="ZQ8SnUty"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4bWbcC4Hwhz9tVh;
-	Tue,  1 Jul 2025 10:22:19 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1751358139;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8abd5Nv5jm00iYcLM3I0EbpnyCM02PFsqJnuhqVrqAY=;
-	b=ZQ8SnUtyAzXwzDmQvmTv/mddIHgKlV8jYMNog8Vh3zbqQ4XBPdwK8u9eXW9d2v9Vn5A7Pa
-	U4XKCtPc4x2qqbDJoeQXjUbNbV25ihhqlA5U3m63/qGFNsPIycLH6G4a9FpsSFRK5KhSgV
-	2JPfEZDwahGqKy6Ev8OZly7qxCYPN+W7Pcx30ewQOJn077AHuKCoOoZ2LlcsjiqOgCFlf4
-	xpJlBdYMsKIYKV79Cc3IotrfRxwQb8760m6UzuamXF4aTOVg8+VSoW5ks+aRXfy4oyvxo0
-	n1oIa59zWEmjKZhuCBSsF2MEjVMr60+3uo03R/GK8iJCXQ6vJRSGZiD6n74ONQ==
-Message-ID: <6c2e44cc-c01a-4331-b139-152ccdbd0401@mailbox.org>
-Date: Tue, 1 Jul 2025 10:22:13 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E/G7wm6C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4E83C4CEEE;
+	Tue,  1 Jul 2025 08:22:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751358154;
+	bh=aNmVXBFvp+oOEwr66jDZuE77bJXKpgGM030ZO2mjHy4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=E/G7wm6C5AuMjrIvU4l39LHdafufPMXKLFxveG+LYZ99NKTbODQNImWRM306pWtam
+	 DdLaG2J7kCW5+Us5nXz9wyEvdv2xbMOSSNcSH4VucS5nOtkD98X9spEnuXaqcdXTav
+	 yM3CN1ESPqtqULUdevukehKMs3JZNkBUP1khMeOFh2sdiHsaeYMGAM80/oTdot7dUU
+	 QOvhxGVO3ZikHM5ioNc/afb3NMjaL8K6WpJkkEgqHF2z4d12Ap5oaTjWGNwvSrOXNq
+	 3eFMUX6H5LZzE8jUrZ0x1kBI/2L2lv34dwEmhzjpE/zeZeNaWOkxhm0IuUHueqdgG9
+	 YgPN4oxr7n0nA==
+Date: Tue, 1 Jul 2025 10:22:31 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Luo Jie <quic_luoj@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Georgi Djakov <djakov@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Richard Cochran <richardcochran@gmail.com>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Anusha Rao <quic_anusha@quicinc.com>, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, quic_kkumarcs@quicinc.com, 
+	quic_linchen@quicinc.com, quic_leiwei@quicinc.com, quic_suruchia@quicinc.com, 
+	quic_pavir@quicinc.com
+Subject: Re: [PATCH v2 5/8] dt-bindings: clock: qcom: Add NSS clock
+ controller for IPQ5424 SoC
+Message-ID: <20250701-optimistic-esoteric-swallow-d93fc6@krzk-bin>
+References: <20250627-qcom_ipq5424_nsscc-v2-0-8d392f65102a@quicinc.com>
+ <20250627-qcom_ipq5424_nsscc-v2-5-8d392f65102a@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/2] drm/tests: Fix endian warning
-To: =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>,
- maarten.lankhorst@linux.intel.com
-Cc: mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
- simona@ffwll.ch, lumag@kernel.org, cristian.ciocaltea@collabora.com,
- gcarlos@disroot.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-References: <20250630090054.353246-1-jose.exposito89@gmail.com>
-From: =?UTF-8?Q?Michel_D=C3=A4nzer?= <michel.daenzer@mailbox.org>
-Content-Language: en-CA
-In-Reply-To: <20250630090054.353246-1-jose.exposito89@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-MBO-RS-META: rwysntwm1x4zea7tzcbewmpp7cygsg7y
-X-MBO-RS-ID: 54a2c9e95496840bd12
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250627-qcom_ipq5424_nsscc-v2-5-8d392f65102a@quicinc.com>
 
-On 30.06.25 11:00, José Expósito wrote:
-> When compiling with sparse enabled, this warning is thrown:
+On Fri, Jun 27, 2025 at 08:09:21PM +0800, Luo Jie wrote:
+> NSS clock controller provides the clocks and resets to the networking
+> blocks such as PPE (Packet Process Engine) and UNIPHY (PCS) on IPQ5424
+> devices.
 > 
->   warning: incorrect type in argument 2 (different base types)
->      expected restricted __le32 const [usertype] *buf
->      got unsigned int [usertype] *[assigned] buf
+> Add the compatible "qcom,ipq5424-nsscc" support based on the current
+> IPQ9574 NSS clock controller DT binding file. ICC clocks are always
+> provided by the NSS clock controller of IPQ9574 and IPQ5424, so add
+> interconnect-cells as required DT property.
 > 
-> Add a cast to fix it.
+> Also add master/slave ids for IPQ5424 networking interfaces, which is
+> used by nss-ipq5424 driver for providing interconnect services using
+> icc-clk framework.
 > 
-> Fixes: 453114319699 ("drm/format-helper: Add KUnit tests for drm_fb_xrgb8888_to_xrgb2101010()")
-> Signed-off-by: José Expósito <jose.exposito89@gmail.com>
+> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
 > ---
->  drivers/gpu/drm/tests/drm_format_helper_test.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../bindings/clock/qcom,ipq9574-nsscc.yaml         | 70 +++++++++++++++++++---
+>  include/dt-bindings/clock/qcom,ipq5424-nsscc.h     | 65 ++++++++++++++++++++
+>  include/dt-bindings/interconnect/qcom,ipq5424.h    | 13 ++++
+>  include/dt-bindings/reset/qcom,ipq5424-nsscc.h     | 46 ++++++++++++++
+>  4 files changed, 186 insertions(+), 8 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/tests/drm_format_helper_test.c b/drivers/gpu/drm/tests/drm_format_helper_test.c
-> index 7299fa8971ce..86829e1cb7f0 100644
-> --- a/drivers/gpu/drm/tests/drm_format_helper_test.c
-> +++ b/drivers/gpu/drm/tests/drm_format_helper_test.c
-> @@ -1033,7 +1033,7 @@ static void drm_test_fb_xrgb8888_to_xrgb2101010(struct kunit *test)
->  		NULL : &result->dst_pitch;
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,ipq9574-nsscc.yaml b/Documentation/devicetree/bindings/clock/qcom,ipq9574-nsscc.yaml
+> index 17252b6ea3be..0029a148a397 100644
+> --- a/Documentation/devicetree/bindings/clock/qcom,ipq9574-nsscc.yaml
+> +++ b/Documentation/devicetree/bindings/clock/qcom,ipq9574-nsscc.yaml
+> @@ -4,7 +4,7 @@
+>  $id: http://devicetree.org/schemas/clock/qcom,ipq9574-nsscc.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
 >  
->  	drm_fb_xrgb8888_to_xrgb2101010(&dst, dst_pitch, &src, &fb, &params->clip, &fmtcnv_state);
-> -	buf = le32buf_to_cpu(test, buf, dst_size / sizeof(u32));
-> +	buf = le32buf_to_cpu(test, (__force const __le32 *)buf, dst_size / sizeof(u32));
->  	KUNIT_EXPECT_MEMEQ(test, buf, result->expected, dst_size);
+> -title: Qualcomm Networking Sub System Clock & Reset Controller on IPQ9574
+> +title: Qualcomm Networking Sub System Clock & Reset Controller on IPQ9574 and IPQ5424
 >  
->  	buf = dst.vaddr; /* restore original value of buf */
+>  maintainers:
+>    - Bjorn Andersson <andersson@kernel.org>
+> @@ -12,21 +12,29 @@ maintainers:
+>  
+>  description: |
+>    Qualcomm networking sub system clock control module provides the clocks,
+> -  resets on IPQ9574
+> +  resets on IPQ9574 and IPQ5424
+>  
+> -  See also::
+> +  See also:
+> +    include/dt-bindings/clock/qcom,ipq5424-nsscc.h
+>      include/dt-bindings/clock/qcom,ipq9574-nsscc.h
+> +    include/dt-bindings/reset/qcom,ipq5424-nsscc.h
+>      include/dt-bindings/reset/qcom,ipq9574-nsscc.h
+>  
+>  properties:
+>    compatible:
+> -    const: qcom,ipq9574-nsscc
+> +    enum:
+> +      - qcom,ipq5424-nsscc
+> +      - qcom,ipq9574-nsscc
+>  
+>    clocks:
+>      items:
+>        - description: Board XO source
+> -      - description: CMN_PLL NSS 1200MHz (Bias PLL cc) clock source
+> -      - description: CMN_PLL PPE 353MHz (Bias PLL ubi nc) clock source
+> +      - description: CMN_PLL NSS (Bias PLL cc) clock source. This clock rate
+> +          can vary for different IPQ SoCs. For example, it is 1200 MHz on the
+> +          IPQ9574 and 300 MHz on the IPQ5424.
+> +      - description: CMN_PLL PPE (Bias PLL ubi nc) clock source. The clock
+> +          rate can vary for different IPQ SoCs. For example, it is 353 MHz
+> +          on the IPQ9574 and 375 MHz on the IPQ5424
+>        - description: GCC GPLL0 OUT AUX clock source
+>        - description: Uniphy0 NSS Rx clock source
+>        - description: Uniphy0 NSS Tx clock source
+> @@ -42,8 +50,12 @@ properties:
+>    clock-names:
+>      items:
+>        - const: xo
+> -      - const: nss_1200
+> -      - const: ppe_353
+> +      - enum:
+> +          - nss_1200
+> +          - nss
 
-It might be cleaner to use two separate variables instead of using "buf" as both little endian and host byte order. (Same for patch 2)
+No, that's the same clock.
 
 
--- 
-Earthling Michel Dänzer       \        GNOME / Xwayland / Mesa developer
-https://redhat.com             \               Libre software enthusiast
+> +      - enum:
+> +          - ppe_353
+> +          - ppe
+
+No, that's the same clock!
+
+The frequencies are not part of input pin. Input pin tells you this is
+clock for PPE, not this is clock for PPE 353 and another for PPE xxx.
+
+Best regards,
+Krzysztof
+
