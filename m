@@ -1,108 +1,197 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F09264F87
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 09:26:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E59B6239E77
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 09:26:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751361980; cv=none; b=sd0oMWP9zyOAfXy1BoZu66CtcbkkBsyO3NF4Glsv9euUSW84fHzLx86KR6AHoScFkNULcFoc50+PCcFbsP0qZ2j4BAJ+tZRF/cQXucd/QW9NoxFz1t/sMmKsVWRlCZuhZyEjQIoE3uLy05jB88iQSFkd1Apq98JLASs5+0YnXu0=
+	t=1751361981; cv=none; b=Pm57AsAxwkHbXyrqCJBqrdx8hWsHfd6PKVSrt7HsoLnK/ebTNQG0ZQxOCmSwhbVBaslNAcbGqLcGHtMD5gCq3DH5RBv4jHUakH4jkY0J3x/z6jrFEvXx3EEX9w8t505bRbAMNYRpFDX5Lq1lJSbKP+4kTasFBjMMpNABXd9o2Zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751361980; c=relaxed/simple;
-	bh=Hv5oD2MchPa+sxKfOPqs/fhxZY2OH/uArq2h36gdvl4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kl5xE0TzWAJVkHnBxDCLdp9hfx8uXO8bjjlxbXXmlot3tX9kr9kqyHNTkbHiDK8Cg+Zhf0VHFmY2Ha3FSrWHWUWHbayraT1siHg/tOt5C5POtTPMHWRoA5QKPc/OGWSpi9j0O1Xplgfqv18UKmGdW/R4xlk+p6EH69BHfGXEges=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=la7ebupb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751361981; c=relaxed/simple;
+	bh=b3E5PyKAcXeZDA12BYvEIlGAVmvRJU5sMlRNNzj40jw=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=YQQUUkdJ0A56rALa+3uc4PI8mSKx+50QwQldPpxSKeTeCv693XVpw1J1NPXvUvkYyg1cM8zStAvr+KIT7O+d/akhzIYbHumOB2e8C9OcHDfN1J8nRSJdOo+XqUJ9iTrXgTOqp//VByrB7jVmQGHa+wFvvkG+rsZISbIWz5mSCt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DldP4Ldq; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="la7ebupb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A3EDC4CEEE;
-	Tue,  1 Jul 2025 09:26:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751361978;
-	bh=Hv5oD2MchPa+sxKfOPqs/fhxZY2OH/uArq2h36gdvl4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=la7ebupbPz7HaRXwt44Dr/c+fm1u/pZfXfSGQvCUMq1y5jCbO0LdmkqriaZiR9Un7
-	 b0xGtYwCTTUFGvxQJ9HxifPTSi3z2nXcIg4vNMb2BSOgYDZwzq9SY7jkgsdng5zj9t
-	 AUWpHXOtp4ilRzYP5n1RTgGH7yWsU18NlhqkMrUn0/1GN0t2UBJtJeGPLqL1tBha25
-	 zzOKmBCs6t+6C/QgH1xWUslmqIyrGstPRYyU0TNySxogMns3P/wSoy5RgGlk799L3h
-	 /b1Nt8qbjnH3GGwQYiAHt84q0yTLRSKj53TlafozsallWQeGNtMXF8/ZWxZrvEHpDa
-	 lOjaTPG6/RBjA==
-From: Chao Yu <chao@kernel.org>
-To: jaegeuk@kernel.org
-Cc: linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	Chao Yu <chao@kernel.org>,
-	syzbot+9201a61c060513d4be38@syzkaller.appspotmail.com
-Subject: [PATCH] f2fs: fix to use f2fs_is_valid_blkaddr_raw() in do_write_page()
-Date: Tue,  1 Jul 2025 17:26:10 +0800
-Message-ID: <20250701092610.511964-1-chao@kernel.org>
-X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DldP4Ldq"
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e82314f9a51so3459807276.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 02:26:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751361979; x=1751966779; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=EupNRo0trcAWCs6vsdgAY86X+dOc2p/qAaWvLgfZk/s=;
+        b=DldP4LdqhArBJq+WHU8H7NzJHxP8ADLBC6ESzU90u5SeKrWJ+eCOWmgArY4oPeyqh0
+         Qlnat5/9RsoHvO+Lg91F3clWyZCbQAWys00bdQc2GHKIJWnF78f4OVA/XQ3XoGlS3Kt/
+         ZJHAKojMeHUQ9MBTAvlVZce6NmlDxRW68Ld6SR7SJpTuwiHJo9PXKy3KTyaFxq7yBUzL
+         RuXfNiqjlGLX/J5Jk7Ew1RVo5ASj0P1O43DrQGfa33g+z4RLifwtcM4HJKMv+2u0asHK
+         rC5mkeoaWHzb/EyoQn20az4N7CE75gqkSu3JJ1eJi/CxnCx7Jp8GLBogDmDyDAl8Uqtz
+         MBQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751361979; x=1751966779;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EupNRo0trcAWCs6vsdgAY86X+dOc2p/qAaWvLgfZk/s=;
+        b=gVieGlaQe6/7AVlj3htnqwYOdcO70NO4JQeNIjh93mMcotGJ3BsPzawtr8h9Cfinkr
+         w+EVvsVrO6Vt4Lj5ntjTqDX1Nb7n4Mw3Z5eVW1D29yn2/1wLvJaPYDoAmAlNlb81M/cN
+         CYxHkqTG+vXAYvyxCIYye0dFjKMC8sBC4LjA6u0AC56zHWnk6RBxx5NihuwdGa8rt2Nf
+         BY8aS+OHqKXWKXPDAL6Og/wzT9BFPZ2airxwfpaixdU4wiE2rIpTXQSIshNQWFICbPIS
+         odS5AWek+R9cUzxDqtFazlKHDs1XyP/Bftff3rHCr0RyvuAXHCzmGJEkCz4UpZG7rAHB
+         jM9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVUxysB9seq46YrsemH5deFCMWwxORCRtTaVQJDepABxht9F2yJud8O28Z25hsRw3XwHOcJ/j7zt/oUFIo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzb+ULFCqxNE4uRRxTlMLcbm52H6o0kAhVbnx7I1ICXUwSbuecV
+	IGwWoVEyMMYKFuWxPHQNBn9hPtVYc2Hi59Nsob4H9zqCKiQVh8FDv8bclPygDepxgV4kqGbQPnw
+	sBvRFHjsxodyGWIhzTsnXL+55cLhcXufQzf1/
+X-Gm-Gg: ASbGncu97MB8Mr5L6DIvo4FZmwBTzsww+gh+nHCZ2Z4YXvY/B1OgnUzdQ8EsxWxeGab
+	NFqzf22XxfgAIDirCwnwqAQYsJ8uTMfsOv7aPT5LeRq6pCYBVB7RgRMTmcOrCpfI4fZ2+AqakLC
+	Gu7n/16YGtfX2w/DtdwBE4TAEkoBBe6GMZ3X9jICUmS3s=
+X-Google-Smtp-Source: AGHT+IF4Gr5KmCtnNo0LWfUDfT4PLnfH5wUHYdqYph8uEg2+kXZAnwFxZJFSHUoBF7jawFVvXvjmCRHumDcw0lrxr9I=
+X-Received: by 2002:a05:6902:298b:b0:e82:5dca:92fc with SMTP id
+ 3f1490d57ef6-e87a7b25998mr15426132276.21.1751361978537; Tue, 01 Jul 2025
+ 02:26:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Rafal Vonau <rafal.vonau@gmail.com>
+Date: Tue, 1 Jul 2025 11:26:07 +0200
+X-Gm-Features: Ac12FXyHbvy0yXh3GMk5OClAO7Zffy5s-SYihUM60J1EHRus-36CxjfnrlQln1A
+Message-ID: <CABj3Bj_gak3B6VNX0e22VBhYwinUK3f76hgZ-Kk0wgRVs=nVpQ@mail.gmail.com>
+Subject: [PATCH] mtd: rawnand: pl35x: Fix BBT write operations by adding pure
+ data out pattern
+To: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/mixed; boundary="0000000000009acf660638dabcf1"
 
-As syzbot reported as below:
+--0000000000009acf660638dabcf1
+Content-Type: multipart/alternative; boundary="0000000000009acf640638dabcef"
 
-F2FS-fs (loop9): inject invalid blkaddr in f2fs_is_valid_blkaddr of do_write_page+0x277/0xb10 fs/f2fs/segment.c:3956
-------------[ cut here ]------------
-kernel BUG at fs/f2fs/segment.c:3957!
-Oops: invalid opcode: 0000 [#1] SMP KASAN PTI
-CPU: 0 UID: 0 PID: 10538 Comm: syz-executor Not tainted 6.16.0-rc3-next-20250627-syzkaller #0 PREEMPT(full)
-Call Trace:
- <TASK>
- f2fs_outplace_write_data+0x11a/0x220 fs/f2fs/segment.c:4017
- f2fs_do_write_data_page+0x12ea/0x1a40 fs/f2fs/data.c:2752
- f2fs_write_single_data_page+0xa68/0x1680 fs/f2fs/data.c:2851
- f2fs_write_cache_pages fs/f2fs/data.c:3133 [inline]
- __f2fs_write_data_pages fs/f2fs/data.c:3282 [inline]
- f2fs_write_data_pages+0x195b/0x3000 fs/f2fs/data.c:3309
- do_writepages+0x32b/0x550 mm/page-writeback.c:2636
- filemap_fdatawrite_wbc mm/filemap.c:386 [inline]
- __filemap_fdatawrite_range mm/filemap.c:419 [inline]
- __filemap_fdatawrite mm/filemap.c:425 [inline]
- filemap_fdatawrite+0x199/0x240 mm/filemap.c:430
- f2fs_sync_dirty_inodes+0x31f/0x830 fs/f2fs/checkpoint.c:1108
- block_operations fs/f2fs/checkpoint.c:1247 [inline]
- f2fs_write_checkpoint+0x95a/0x1df0 fs/f2fs/checkpoint.c:1638
- kill_f2fs_super+0x2c3/0x6c0 fs/f2fs/super.c:5081
- deactivate_locked_super+0xb9/0x130 fs/super.c:474
- cleanup_mnt+0x425/0x4c0 fs/namespace.c:1417
- task_work_run+0x1d4/0x260 kernel/task_work.c:227
- resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
- exit_to_user_mode_loop+0xec/0x110 kernel/entry/common.c:114
- exit_to_user_mode_prepare include/linux/entry-common.h:330 [inline]
- syscall_exit_to_user_mode_work include/linux/entry-common.h:414 [inline]
- syscall_exit_to_user_mode include/linux/entry-common.h:449 [inline]
- do_syscall_64+0x2bd/0x3b0 arch/x86/entry/syscall_64.c:100
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+--0000000000009acf640638dabcef
+Content-Type: text/plain; charset="UTF-8"
 
-If we inject block address fault, it may trigger kernel panic, we need
-to use f2fs_is_valid_blkaddr_raw() instead of f2fs_is_valid_blkaddr()
-in do_write_page() to avoid such issue.
+The PL35x NAND controller driver was failing to write Bad Block Tables
+due to missing support for pure data out operations. When the NAND subsystem
+attempted to write BBT data using just DATA_OUT commands without preceding
+address cycles or commands, the operation parser failed to match any
+pattern.
 
-Fixes: 70b6e8500431 ("f2fs: do sanity check on fio.new_blkaddr in do_write_page()")
-Reported-by: syzbot+9201a61c060513d4be38@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/linux-f2fs-devel/68639520.a70a0220.3b7e22.17e6.GAE@google.com
-Signed-off-by: Chao Yu <chao@kernel.org>
----
- fs/f2fs/segment.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This patch:
 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 5653716460ea..b89bdb867508 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -3953,7 +3953,7 @@ static void do_write_page(struct f2fs_summary *sum, struct f2fs_io_info *fio)
- 		goto out;
- 	}
- 
--	f2fs_bug_on(fio->sbi, !f2fs_is_valid_blkaddr(fio->sbi,
-+	f2fs_bug_on(fio->sbi, !f2fs_is_valid_blkaddr_raw(fio->sbi,
- 				fio->new_blkaddr, DATA_GENERIC_ENHANCE));
- 
- 	if (GET_SEGNO(fio->sbi, fio->old_blkaddr) != NULL_SEGNO)
--- 
-2.49.0
+   1.
 
+   Adds a dedicated execution function for pure data out operations
+   2.
+
+   Includes a new pattern in the op parser for DATA_OUT only operation
+
+The fix maintains proper separation of concerns where:
+
+   -
+
+   Command sequences are handled by nand_prog_page_begin_op/end_op
+   -
+
+   Data writing is handled by the controller's data out operation
+   -
+
+   BBT writes now complete successfully
+
+Tested on Xilinx Zynq with Micron MT29F2G08ABBEAH4 NAND flash.
+
+Signed-off-by: Rafal Vonau <r <https://mailto:your.email@example.com/>
+afal.vonau@gmail.com>
+
+--0000000000009acf640638dabcef
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><p class=3D"gmail-ds-markdown-paragraph" style=3D"font-siz=
+e:16.002px;color:rgb(64,64,64);font-family:quote-cjk-patch,Inter,system-ui,=
+-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Roboto,&quot;Noto San=
+s&quot;,Ubuntu,Cantarell,&quot;Helvetica Neue&quot;,Oxygen,&quot;Open Sans&=
+quot;,sans-serif">The PL35x NAND controller driver was failing to write Bad=
+ Block Tables<br>due to missing support for pure data out operations. When =
+the NAND subsystem<br>attempted to write BBT data using just DATA_OUT comma=
+nds without preceding<br>address cycles or commands, the operation parser f=
+ailed to match any pattern.</p><p class=3D"gmail-ds-markdown-paragraph" sty=
+le=3D"font-size:16.002px;color:rgb(64,64,64);font-family:quote-cjk-patch,In=
+ter,system-ui,-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Roboto,=
+&quot;Noto Sans&quot;,Ubuntu,Cantarell,&quot;Helvetica Neue&quot;,Oxygen,&q=
+uot;Open Sans&quot;,sans-serif">This patch:</p><ol start=3D"1" style=3D"col=
+or:rgb(64,64,64);font-family:quote-cjk-patch,Inter,system-ui,-apple-system,=
+BlinkMacSystemFont,&quot;Segoe UI&quot;,Roboto,&quot;Noto Sans&quot;,Ubuntu=
+,Cantarell,&quot;Helvetica Neue&quot;,Oxygen,&quot;Open Sans&quot;,sans-ser=
+if;font-size:16.002px"><li><p class=3D"gmail-ds-markdown-paragraph" style=
+=3D"margin:0px">Adds a dedicated execution function for pure data out opera=
+tions</p></li><li style=3D"margin-top:4px"><p class=3D"gmail-ds-markdown-pa=
+ragraph" style=3D"margin:0px">Includes a new pattern in the op parser for D=
+ATA_OUT only operation</p></li></ol><p class=3D"gmail-ds-markdown-paragraph=
+" style=3D"font-size:16.002px;color:rgb(64,64,64);font-family:quote-cjk-pat=
+ch,Inter,system-ui,-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Ro=
+boto,&quot;Noto Sans&quot;,Ubuntu,Cantarell,&quot;Helvetica Neue&quot;,Oxyg=
+en,&quot;Open Sans&quot;,sans-serif">The fix maintains proper separation of=
+ concerns where:</p><ul style=3D"color:rgb(64,64,64);font-family:quote-cjk-=
+patch,Inter,system-ui,-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;=
+,Roboto,&quot;Noto Sans&quot;,Ubuntu,Cantarell,&quot;Helvetica Neue&quot;,O=
+xygen,&quot;Open Sans&quot;,sans-serif;font-size:16.002px"><li><p class=3D"=
+gmail-ds-markdown-paragraph" style=3D"margin:0px">Command sequences are han=
+dled by nand_prog_page_begin_op/end_op</p></li><li style=3D"margin-top:4px"=
+><p class=3D"gmail-ds-markdown-paragraph" style=3D"margin:0px">Data writing=
+ is handled by the controller&#39;s data out operation</p></li><li style=3D=
+"margin-top:4px"><p class=3D"gmail-ds-markdown-paragraph" style=3D"margin:0=
+px">BBT writes now complete successfully</p></li></ul><p class=3D"gmail-ds-=
+markdown-paragraph" style=3D"font-size:16.002px;color:rgb(64,64,64);font-fa=
+mily:quote-cjk-patch,Inter,system-ui,-apple-system,BlinkMacSystemFont,&quot=
+;Segoe UI&quot;,Roboto,&quot;Noto Sans&quot;,Ubuntu,Cantarell,&quot;Helveti=
+ca Neue&quot;,Oxygen,&quot;Open Sans&quot;,sans-serif">Tested on Xilinx Zyn=
+q with Micron MT29F2G08ABBEAH4 NAND flash.</p><p class=3D"gmail-ds-markdown=
+-paragraph" style=3D"font-size:16.002px;color:rgb(64,64,64);font-family:quo=
+te-cjk-patch,Inter,system-ui,-apple-system,BlinkMacSystemFont,&quot;Segoe U=
+I&quot;,Roboto,&quot;Noto Sans&quot;,Ubuntu,Cantarell,&quot;Helvetica Neue&=
+quot;,Oxygen,&quot;Open Sans&quot;,sans-serif">Signed-off-by: Rafal Vonau &=
+lt;<a href=3D"https://mailto:your.email@example.com/" target=3D"_blank" rel=
+=3D"noreferrer" style=3D"text-decoration-line:none">r</a><a href=3D"mailto:=
+afal.vonau@gmail.com">afal.vonau@gmail.com</a>&gt;</p></div>
+
+--0000000000009acf640638dabcef--
+--0000000000009acf660638dabcf1
+Content-Type: text/x-patch; charset="US-ASCII"; name="zynq-pl35x-bbt-patch.patch"
+Content-Disposition: attachment; filename="zynq-pl35x-bbt-patch.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_mckboxlz0>
+X-Attachment-Id: f_mckboxlz0
+
+ZGlmZiAtLWdpdCBhL2xpbnV4L2RyaXZlcnMvbXRkL25hbmQvcmF3L3BsMzV4LW5hbmQtY29udHJv
+bGxlci5jIGIvbGludXgvZHJpdmVycy9tdGQvbmFuZC9yYXcvcGwzNXgtbmFuZC1jb250cm9sbGVy
+LmMKaW5kZXggMWQzZjAyNjFhNy4uYTJlOGJhOWRjNCAxMDA2NDQKLS0tIGEvbGludXgvZHJpdmVy
+cy9tdGQvbmFuZC9yYXcvcGwzNXgtbmFuZC1jb250cm9sbGVyLmMKKysrIGIvbGludXgvZHJpdmVy
+cy9tdGQvbmFuZC9yYXcvcGwzNXgtbmFuZC1jb250cm9sbGVyLmMKQEAgLTc1NSw2ICs3NTUsMzMg
+QEAgc3RhdGljIGludCBwbDM1eF9uYW5kX2V4ZWNfb3Aoc3RydWN0IG5hbmRfY2hpcCAqY2hpcCwK
+IAlyZXR1cm4gMDsKIH0KIAorCitzdGF0aWMgaW50IHBsMzV4X25hbmRfZXhlY19kYXRhX291dF9v
+cChzdHJ1Y3QgbmFuZF9jaGlwICpjaGlwLAorCQkJCSAgICAgIGNvbnN0IHN0cnVjdCBuYW5kX3N1
+Ym9wICpzdWJvcCkKK3sKKwlzdHJ1Y3QgcGwzNXhfbmFuZGMgKm5mYyA9IHRvX3BsMzV4X25hbmRj
+KGNoaXAtPmNvbnRyb2xsZXIpOworCWNvbnN0IHN0cnVjdCBuYW5kX29wX2luc3RyICppbnN0cjsK
+Kwl1bnNpZ25lZCBpbnQgbGVuLCBvZmZzZXQ7CisKKwlpZiAoc3Vib3AtPm5pbnN0cnMgIT0gMSB8
+fCBzdWJvcC0+aW5zdHJzWzBdLnR5cGUgIT0gTkFORF9PUF9EQVRBX09VVF9JTlNUUikgeworCQlk
+ZXZfZXJyKG5mYy0+ZGV2LCAiSW52YWxpZCBkYXRhIG91dCBvcGVyYXRpb25cbiIpOworCQlyZXR1
+cm4gLUVJTlZBTDsKKwl9CisKKwlpbnN0ciA9ICZzdWJvcC0+aW5zdHJzWzBdOworCW9mZnNldCA9
+IG5hbmRfc3Vib3BfZ2V0X2RhdGFfc3RhcnRfb2ZmKHN1Ym9wLCAwKTsKKwlsZW4gPSBuYW5kX3N1
+Ym9wX2dldF9kYXRhX2xlbihzdWJvcCwgMCk7CisKKwlkZXZfZGJnKG5mYy0+ZGV2LCAiRXhlY3V0
+aW5nIGRhdGEgb3V0IG9wOiBsZW49JXUsIG9mZnNldD0ldVxuIiwgbGVuLCBvZmZzZXQpOworCisJ
+cGwzNXhfbmFuZF93cml0ZV9kYXRhX29wKGNoaXAsIGluc3RyLT5jdHguZGF0YS5idWYub3V0ICsg
+b2Zmc2V0LAorCQkJCSBsZW4sIGluc3RyLT5jdHguZGF0YS5mb3JjZV84Yml0LAorCQkJCSAwLCBQ
+TDM1WF9TTUNfREFUQV9QSEFTRV9DTEVBUl9DUyk7CisKKwlyZXR1cm4gMDsKK30KKworCiBzdGF0
+aWMgY29uc3Qgc3RydWN0IG5hbmRfb3BfcGFyc2VyIHBsMzV4X25hbmRjX29wX3BhcnNlciA9IE5B
+TkRfT1BfUEFSU0VSKAogCU5BTkRfT1BfUEFSU0VSX1BBVFRFUk4ocGwzNXhfbmFuZF9leGVjX29w
+LAogCQkJICAgICAgIE5BTkRfT1BfUEFSU0VSX1BBVF9DTURfRUxFTSh0cnVlKSwKQEAgLTc3NCw2
+ICs4MDEsOSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG5hbmRfb3BfcGFyc2VyIHBsMzV4X25hbmRj
+X29wX3BhcnNlciA9IE5BTkRfT1BfUEFSU0VSKAogCQkJICAgICAgIE5BTkRfT1BfUEFSU0VSX1BB
+VF9EQVRBX09VVF9FTEVNKGZhbHNlLCAyMTEyKSwKIAkJCSAgICAgICBOQU5EX09QX1BBUlNFUl9Q
+QVRfQ01EX0VMRU0odHJ1ZSksCiAJCQkgICAgICAgTkFORF9PUF9QQVJTRVJfUEFUX1dBSVRSRFlf
+RUxFTSh0cnVlKSksCisJLyogUHVyZSBkYXRhIG91dCBvcGVyYXRpb24gKGZvciBCQlQgd3JpdGVz
+KSAqLworCU5BTkRfT1BfUEFSU0VSX1BBVFRFUk4ocGwzNXhfbmFuZF9leGVjX2RhdGFfb3V0X29w
+LAorCQkJICAgICAgIE5BTkRfT1BfUEFSU0VSX1BBVF9EQVRBX09VVF9FTEVNKGZhbHNlLCAyMTEy
+KSksCiAJKTsKIAo=
+--0000000000009acf660638dabcf1--
