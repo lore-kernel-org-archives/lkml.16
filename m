@@ -1,169 +1,116 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from sonic312-23.consmr.mail.gq1.yahoo.com (sonic312-23.consmr.mail.gq1.yahoo.com [98.137.69.204])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0BC52741AD
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 11:53:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 366352737E6
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 11:55:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.137.69.204
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751370829; cv=none; b=fZJbsBgHDQfihIvEPlRnrUvVVuzvgFIQo9o5NPU7ZZOsHCWYjuJIgal72vnpAqdPgCR7324laePv8pb6KxaYJFi8CYytw7BTfWm8jhUkJOUVnWXZWCc3xzY7NcW4G2t4bIFM5TCVTpQ51IWuH6jAyS1xKBMxcdOuvyryVdhPFDU=
+	t=1751370921; cv=none; b=L+bHeEWV99QfppLYW4sBeFHlVeu5FKDQbB2EmJnT8v375kCP6Ry4bQwgpJ0N99OewL+NwDKLvrmvMDkte9WKzUrSvvYHsmKunVkwwBSSWBilbGKsnsSuPz9NUPebsHuBrKTj9vv4RExtptlwWsU2LMEkyxSOexg9D3P3Oe6QzcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751370829; c=relaxed/simple;
-	bh=rjrY0UcfYzhGh3nptymPMyVZaoTcDeUStqnL3Fj+Oww=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VjDocDZsaPqDZtY0aZVfMEs/zqOHYgc8YXBh8Atosj5DZwjXumtbb8ushNJ0tpDrVQcWx30Z0NZp974MAZzTyEZqvtm/EIn+sENM+H/zeb+iGgk+jBBzh4u3oXfSc72+jDNRRzAxZUi4tqx1DKVPouL/tO+2NmSpM1bIEDN/MpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=OoBENp7n; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=vPXZg+2O; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=OoBENp7n; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=vPXZg+2O; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1751370921; c=relaxed/simple;
+	bh=X5hh9ni/ndT4PbRk86wKuiKR0kizraRa1d46dT3fi+Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:References; b=YeGUgdGqBkkgs/ZrqU1DB9663gyTXSXvDoT2uaj/9Jobb8UakBTP075H6c4i4Smf0/TNl2rSNtFhqbc8D9BkMXMO0GBmJAa03RRlbvtW46WM018b9EUwwe8OPAFgl5pMRe2W1o0iHHk+6p9k7uxklWAwq/KI4rwHEXiTKkgwTMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aol.com; spf=pass smtp.mailfrom=aol.com; dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b=ZFnZwAvK; arc=none smtp.client-ip=98.137.69.204
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aol.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aol.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="OoBENp7n";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="vPXZg+2O";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="OoBENp7n";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="vPXZg+2O"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 238D81F393;
-	Tue,  1 Jul 2025 11:53:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751370826; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gt9j52YdjlIgYtCP79xXhGZK0KZ5GBrDVyKMwfSQnOQ=;
-	b=OoBENp7n9l+w/rbijUgz1E9cmGSgu2dTPy60vpbh7Hh2PFW7Zfu3Z2RE6cK3R3uRhmMWKn
-	pJ+xnbLq8xYvo6DKwS7jGNojKgiwAR0kdssfaqAhIPsqKgwzU+pRZ7tyUgGCfbbgs4sqJt
-	pze1s1+PQH2h0Y7RcLzZybJRBNUBqok=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751370826;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gt9j52YdjlIgYtCP79xXhGZK0KZ5GBrDVyKMwfSQnOQ=;
-	b=vPXZg+2OFrWHstzHqqLoVKKuFa2lYLsuPrqnbt5/S1TEACmVOrcDk7f8Qadn+V+Wd8PapO
-	bvbdsduATi01lOAA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751370826; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gt9j52YdjlIgYtCP79xXhGZK0KZ5GBrDVyKMwfSQnOQ=;
-	b=OoBENp7n9l+w/rbijUgz1E9cmGSgu2dTPy60vpbh7Hh2PFW7Zfu3Z2RE6cK3R3uRhmMWKn
-	pJ+xnbLq8xYvo6DKwS7jGNojKgiwAR0kdssfaqAhIPsqKgwzU+pRZ7tyUgGCfbbgs4sqJt
-	pze1s1+PQH2h0Y7RcLzZybJRBNUBqok=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751370826;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gt9j52YdjlIgYtCP79xXhGZK0KZ5GBrDVyKMwfSQnOQ=;
-	b=vPXZg+2OFrWHstzHqqLoVKKuFa2lYLsuPrqnbt5/S1TEACmVOrcDk7f8Qadn+V+Wd8PapO
-	bvbdsduATi01lOAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 176C11364B;
-	Tue,  1 Jul 2025 11:53:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id hOqxBUrMY2g0XQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Tue, 01 Jul 2025 11:53:46 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 65800A0A23; Tue,  1 Jul 2025 13:53:45 +0200 (CEST)
-Date: Tue, 1 Jul 2025 13:53:45 +0200
-From: Jan Kara <jack@suse.cz>
-To: Baokun Li <libaokun1@huawei.com>
-Cc: Jan Kara <jack@suse.cz>, linux-ext4@vger.kernel.org, tytso@mit.edu, 
-	adilger.kernel@dilger.ca, ojaswin@linux.ibm.com, linux-kernel@vger.kernel.org, 
-	yi.zhang@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH v2 04/16] ext4: utilize multiple global goals to reduce
- contention
-Message-ID: <36bqxyj7gbozrewg2vk5mbfa4vwetwrl4iyae4h47eb5mlcs4s@ms56slymlwn4>
-References: <20250623073304.3275702-1-libaokun1@huawei.com>
- <20250623073304.3275702-5-libaokun1@huawei.com>
- <xmhuzjcgujdvmgmnc3mfd45txehmq73fiyg32vr6h7ldznctlq@rosxe25scojb>
- <77077598-45d6-43dd-90a0-f3668a27ca15@huawei.com>
- <qtdxe2rmnvrxdjmp26ro4l5erwq5lrbvmvysxfgqddadnpr7x4@xrkrdjkgsh67>
- <4f15d0aa-39e0-42ef-a9ca-ddbb3ff36060@huawei.com>
- <trjf7lqckchx6bc3p4lwh5yy3bqczo6yvdll7ujguhvvezwtja@cpfhj6ai7gzp>
- <4cbb9bc3-617d-43f7-a1cd-9afbd864fc68@huawei.com>
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="ZFnZwAvK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1751370918; bh=aCdpH5QZRxMfssKfq9MICezlKlSbdc2MH2kmzXnJ2dI=; h=From:To:Cc:Subject:Date:References:From:Subject:Reply-To; b=ZFnZwAvKIIhqjJ52Zj/7iUUBcIEf/mHH1htbeW8P+sq30Q1ywStBOS7Ez9Oavf6VeXKm9sy2RetmTqoT4TqQ6Vf+EUIB1kvpteH4PSzoknb91ztTbrEKnqRzq6Lv0kLfExnA8DKhrJZP1POGIzBIqFSEeB6WBxPZlcaJ/tVNCPyEb4k1f/AQLo6UwiHrwaG7B9KzwZb22SGndvw4n02twG/d8foG5MWsT1Y6ocUkLB/UzfEgawJvwLXbE4LbfZchwc0WSmOYUtoHTQPXnEbLR/7LERHUneEiduZuC4YChEOLD0d7m49dF0rtQqFIFRo36DOLIMtAV3cGtMZKy2ATMQ==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1751370918; bh=v8bG7XB8tKg7bwdZFw0VLugV2SIGSnEhgHXjkJlsy85=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=MJl1BeNV1xr9aHMg5Rb3uuUXoqO3yxIwT5AjGWID3Dy90da6U6I4XFPwFqYTHhsrA2AQbasI1oUUhe4DRaBgL2Fum2LzvFCNQqebx0ye0KTewsPjUKu6TcIahYyHtNIcJ3u1X8+o7dSKVncTAC55UdOHJzOvcqKjIEZRmirnOP1eqwOu3o8dmWmq2QFFUiuKaQVV89Ro8f9tP1meWwnJCUkmaXStq/H1pAE/I/KCzZOwGRCkQDPpIzkOIsCTUuKHlGhPUrOaIvbsrFauIPUkz9C0vL3AsAWCyXxf84sMAN6JDVW1vm/by4IQqfui6HA8Cx7pm3/8GZcu+od0L8gcGg==
+X-YMail-OSG: KR.Ns.UVM1mSa7XqjYhWmVahUAEuePOIydPVTeSeF6rM0psOVTkYvrrESbxF1FP
+ 9HQR.wxRkItXnCUB.NGKigiB64yBDsnaXPeK0fEBJfZH2KS4wq54sTmoM37WNnJhhcbw8eA2spby
+ UUONNfvy4RXbukpKTswmu49iiUgNySSkBCZrQb46hBJKtfqh7oE.fYCbio5i1VWJyD_tWlx2A6i3
+ TwQvIk_ABJOw3lmFBUf1W7b0vm2o8jSOJu2yv3aYLs5kTAEzeYR0r2jEqF9YCePazQTI_dp0v90W
+ kOOvFNadGFnix7SBw3xOvXzApQYjirSiHoV3d80OGSfMxxoqeLGiBArwskGQRRaXWcyTNi.8qUTA
+ SVwB.M4gZ8su8n.UYPAEiU5ImZjwpv7XfNSqgvMPBMDiKlz6QcxOA6uWW7Su18bj5jaOZDL0vxcv
+ H3DC41xDQjFpXV_6F1xiOlIXMaKUrvVIf8t1tc4MqdqDiPYQBfj_2gOXmjKb4E.cLU_2H.TjifV2
+ 5iviHPjGJyeUoJUp1EhgHTZUa6aTO9Ajwt9ni6DxdwXdLgR59.4PxvTxkaW23JfqECMSyk01N_Bd
+ XqkMe7X7bE.3XcSiD10tGlf34V.7h8OleMBTdXMZlblmAd_SW6R.FK_Y0XthE603dLeXfvEzjINZ
+ ikyOgdB07aYXzMBIGZb5Dodgf9Z0AkWnJKkYztQCffsBSTANX_IzYc4C0R7bxoMru58fsvR5N9_U
+ hGpNbcz_Ns9NqbJ08Ju8CEIBZUvUgQJGi_TxMc4dBgZO15PByzxtr1NQAeIEnD0Je8pT.jqSsYIR
+ qHVmt7K7ht4kBcCFs.K_74q.gMHhzn1a24jk2WRkJR1eTkN68.6RGPPKkgqHle11HJj9nTNTjPuC
+ 2IqMEG4z8ISsUtvD3gvWYrYt0lmqTwCgcHwHQhPrqNRjy5Q5hXc95eBf0FrDPPNsvEBO6X8gY1a.
+ bOUafHhB.AI21zL3d1qOvPSMgZz0R0eqKLdUsuTbu0vLUrC3AlgM7gUJkwe2KxphE8fXwh_5vTbp
+ 5RS9eMcmP8q.647Ulv1SzUetS_AtX77zzaYsf5COhWcPx02B7QY9RcT8qWU_0R32N8zjTvx9W57v
+ htewEbkSWsNBAGD0XgW.FuQM.9g9GnjnRPxW73aEO1MmReD5WQ4MCrDAozNXvI0tBKLCgVGEkXK_
+ qu8PLycF7wcSUS1kDzn6nD5P49z23dEETV4LWznGdQXLD_jKHksFnQ7aEi_QPjq3T0QM9T0rOrnU
+ 4AuA3h_DGwz.rfPNnkScNYv_Do1DY6cdeT8BaJ5U6nipFBlIODa8QtCNXj8xoZ.SkTDJonUgxOMG
+ dKuYqN0KgxYgvKx9MQgYgUysgHEXJ1zEOenMj4K9M5D48yokwnyTkHIwtXuWC37A.HxlRKcWCL.7
+ alMoqZoS9yU7DXUdBMeFstaUAIv8DlAPK9KkZHjbZr_e6TO6au0WQlPKHGNg6Qc_JEpUk16qOIkV
+ B8eM0UHfcaP0Z9XFYgtsci8pB9BTbgYSU9chuMYUgGQKkVhXjs2UFNZcH4luMecb42RSBAgJcOgY
+ Vx_r0btRnZmia8QSZb8JNVJi_x_CiQdbmZpdtZdco4fJ2QYH4XlTezt8qQVLe1Xk9E2TRwt6wV2G
+ 3KyNWrKUNjoYo0r5Y1PFkoZSb6IWuc3osgD8Qr9MoPhljclDEbVhzOJx0VrhWeEwHHdmy2pu_Pe7
+ dS8ntEbo8Rp7YxTXdgIbcpNSxFyBg8wQ90h53iPsvLhizlgtGDs4XDbTy1i04I4kLwdBWPSOIZq0
+ d.BFIl5abwJcN4Zwunco.8G0VqfYkc_lnr39OaOPtYiOZ6QzI1SuVaED.qu3gDDCuqNGuM0A9q1y
+ zT1vO9zfzQKyPiZ0dVee2EAUQx_n7Z9iUnQ0NtbKy3e8oFeNYsu2NfvyuHtfzFdUir4NpLnMUrjx
+ 8UOxaFWAZZ3BEBgmE_kR7WzOhnfJDhr4CVHuKBdc2XAEEd6_ybs6AxLOcZito3nIjS4FVqr4hzhB
+ FKSW0fb6OF88ahYTQ7qiYCtXzp42PRq0qXIRSd3lmLyO1MfNx.CwVJKDVR66Efwh8MtMf0wselza
+ qwZ3M_uvHrpc637r8GI5sxXoBtdmLaS_PQFTkdJxDoZzjKsyigvZ5SPU.pBNHhGLi1MKj8UZUK3_
+ mc7BH.PYKUxxoqrky_57hWW5zAW394Vu7sE1nJnpr_nsP7nnJ6QZztiByPrQrl6pkIHN_LoZeq03
+ irDHnFeptHzM3zdD0u7qb3lezkh.vtOijxCqL1xh4T7B4io7TO1fJ2ZANZkXnhQBu5VQU9Inlqz2
+ L
+X-Sonic-MF: <rubenru09@aol.com>
+X-Sonic-ID: 25e66419-7370-4560-a4e8-3595986d5bb5
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic312.consmr.mail.gq1.yahoo.com with HTTP; Tue, 1 Jul 2025 11:55:18 +0000
+Received: by hermes--production-ir2-858bd4ff7b-nknbf (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 557e0d14bcf47e6d0b13962042679d71;
+          Tue, 01 Jul 2025 11:55:16 +0000 (UTC)
+From: Ruben Wauters <rubenru09@aol.com>
+To: Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>
+Cc: Ruben Wauters <rubenru09@aol.com>,
+	intel-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH v2] drm/i915: replace DRM_DEBUG_SELFTEST with DRM_KUNIT_TEST
+Date: Tue,  1 Jul 2025 12:54:51 +0100
+Message-ID: <20250701115511.5445-1-rubenru09@aol.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4cbb9bc3-617d-43f7-a1cd-9afbd864fc68@huawei.com>
-X-Spam-Flag: NO
-X-Spam-Score: -3.80
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email]
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
+References: <20250701115511.5445-1-rubenru09.ref@aol.com>
 
-On Tue 01-07-25 11:32:23, Baokun Li wrote:
-> On 2025/7/1 1:41, Jan Kara wrote:
-> > On Mon 30-06-25 18:02:49, Baokun Li wrote:
-> > > On 2025/6/30 16:38, Jan Kara wrote:
-> > > > We could make streaming goal to be ext4_fsblk_t so that also offset of the
-> > > > last big allocation in the group is recorded as I wrote above. That would
-> > > > tend to pack big allocations in each group together which is benefitial to
-> > > > combat fragmentation even with higher proportion of groups that are streaming
-> > > > goals (and likely becomes more important as the blocksize and thus group
-> > > > size grow). We can discuss proper number of slots for streaming allocation
-> > > > (I'm not hung up on it being quarter of the group count) but I'm convinced
-> > > > sb->s_groups_count is too much :)
-> > > > 
-> > > > 								Honza
-> > > I think sbi->s_groups_count / 4 is indeed acceptable. However, I don't
-> > > believe recording offsets is necessary. As groups become larger,
-> > > contention for groups will intensify, and adding offsets would only
-> > > make this contention worse.
-> > I agree the contention for groups will increase when the group count goes
-> > down. I just thought offsets may help to find free space faster in large
-> > groups (and thus reduce contention) and also reduce free space
-> > fragmentation within a group (by having higher chances of placing large
-> > allocations close together within a group) but maybe that's not the case.
-> > Offsets are definitely not requirement at this point.
-> > 
-> > 								Honza
-> > 
-> Thinking this over, with LBS support coming, if our block size jumps from
-> 4KB to 64KB, the maximum group size will dramatically increase from 128MB
-> to 32GB (even with the current 4GB group limit). If free space within a
-> group gets heavily fragmented, iterating through that single group could
-> become quite time-consuming.
-> 
-> Your idea of recording offsets to prevent redundant scanning of
-> already-checked extents within a group definitely makes sense. But with
-> reference to the idea of optimizing linear traversal of groups, I think it
-> might be better to record the offset of the first occurrence of each order
-> in the same way that bb_counters records the number of each order.
+DRM_DEBUG_SELFTEST was removed in commit fc8d29e298cf (drm: selftest:
+convert drm_mm selftest to KUnit) and all functions under it were
+converted to KUnit, under the DRM_KUNIT_TEST option
 
-Yes, something like that makes sense. But I guess that's a material for the
-next patch set :)
+This conversion however did not occur in the Kconfig.debug file in the
+i915 directory.
 
-								Honza
+This patch replaces the select for DRM_DEBUG_SELFTEST, an option that no
+longer exists, with the correct select, DRM_KUNIT_TEST.
+
+Signed-off-by: Ruben Wauters <rubenru09@aol.com>
+---
+v2 changes:
+- update commit message to contain more detail about the background of
+  the change and why it is necessary
+---
+ drivers/gpu/drm/i915/Kconfig.debug | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/i915/Kconfig.debug b/drivers/gpu/drm/i915/Kconfig.debug
+index 1852e0804942..b15b1cecb3aa 100644
+--- a/drivers/gpu/drm/i915/Kconfig.debug
++++ b/drivers/gpu/drm/i915/Kconfig.debug
+@@ -50,7 +50,7 @@ config DRM_I915_DEBUG
+ 	select DRM_VGEM # used by igt/prime_vgem (dmabuf interop checks)
+ 	select DRM_DEBUG_MM if DRM=y
+ 	select DRM_EXPORT_FOR_TESTS if m
+-	select DRM_DEBUG_SELFTEST
++	select DRM_KUNIT_TEST
+ 	select DMABUF_SELFTESTS
+ 	select SW_SYNC # signaling validation framework (igt/syncobj*)
+ 	select DRM_I915_WERROR
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.48.1
+
