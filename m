@@ -1,164 +1,171 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC07F223716;
-	Tue,  1 Jul 2025 09:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB1E1220F36;
+	Tue,  1 Jul 2025 09:09:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751360945; cv=none; b=qoVbX9stopa86gEqL+B7USEOskTlByeWs5843buRmni5/L2wGoejBJOG9c4DnK855KK5BY7BOSrjGmyu6T5twfd2ObiWz5+Ihz8vOHLaKcdaBgjVThqQwt+B7KuVGhOcV2CGb2OM2uUBQFowx2Ov5EgYfVCDAtK/6Oz9BgiGBao=
+	t=1751360991; cv=none; b=hD5fVMRgWZiyA55HaOueyvyPjaMiAzukdcRpstFZ28V28eyc29NEcfLNcTbCCkHJMjAtf8vgxs/XwyQnC5t9XYaajmXiA6B7DX4M3qBYBUjO1iVfblS6BjQaOXIs2mOFN7yTP9Vx/U7cLGy761SRlzfRlMg4U1dj7v0RvEfVuwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751360945; c=relaxed/simple;
-	bh=6UDM5fNF57aJf6DmBghu+lhkpkzxGnJVIa2mlP4nq4w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GaVMwEAIALjG+093Dq9M/44D1VAadTq/UmhAWAEUpkcu6iI9Kk4le8BQ8dzXyE6gZ6B/kyG7PtBXDI6e9SwrGNhg5DJhg6HC1lZcAVth1UWmf12PVBdWQeK4ktFomM+eCpUHOlakjf5/xGZOfEARpxup08swpJth035eep5ijUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RWBF/aL9; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751360991; c=relaxed/simple;
+	bh=uA087uJ67e7A8AlIZXGViEZobK9A8ZE5VGDbvUT8jLk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tC6eDUkGG3SZWH5uqhC0vPku49gy2+tkeD07h/0FJO0ylYQ4szmLiETwqIyCQLht6Tvw5N01zH1muuCaYKfmF9+JqK2rK2nNLp+tr9rmvuD7dQw3U4CU4ZGbIHjwH3uwCmoeX8OKn/3+EX4VYtJH3Bp9L4VNurIXOkyXyHtLTyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=f85xjx3X; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RWBF/aL9"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-236192f8770so34420895ad.0;
-        Tue, 01 Jul 2025 02:09:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751360943; x=1751965743; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NWlbP5Cgher1hLjR8FaEXf/IQPBYBpXZBtIHixSbQv0=;
-        b=RWBF/aL9KYhzkwdrl251fDfGgZfE4J30C0eV5nZCVrJbf7SOtWGkLQllKycWr+saWm
-         B0m2qEwKrfP+wCjG3zFVAb79GQ4HbPFY/QX2bKc2WdrdzbbDY2TkRZy7714LuZDOPTgn
-         4g2Ae8AubkBuumy7OTGnWPsI6MFe+THn9HHoLyXBfPYNMdEfHTk7QjAhPGLzKSDT8MLW
-         kB+A8nD6QpnTNDI+X1ALdhYZPY5U/IHZEtBm5UIMSZNiws+38G209fiadkhwhaGnnslo
-         d3aE+qQjOV/8vwpb9bpNBMnf8sNifCcG5ViIS8LSLQ6NXLCfleXfzjQgDjwsjxEGcBlk
-         gV5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751360943; x=1751965743;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NWlbP5Cgher1hLjR8FaEXf/IQPBYBpXZBtIHixSbQv0=;
-        b=nc9C5ppkZjG9Y4l3ahY10r/MI9+6OLsRQDReYqdSWY2/XL+iOK0PogMnilKixrmvXu
-         3k1Yxv/vqJEvnOfRCeiz5EPRBBZK01MWiPjmwn74FzBDSqQgeame7NOMXzepJvt9Nexl
-         BLSzj9160kdyAqBwLpufnGyG4Sm9grsdyFlNOdBHNPH2TsWH8nEld56AYpigVdgaR0h2
-         +hOzS7aaLnTJ+TeUaN8g25Mpfy/CBZQ5xPqIiCfVDExXeZPWwVv9HQwt8ZRZsslPrCB6
-         le7bkEb1sYfzjHqx4L2znOIJ61sfwYdyvBPhqXLR1mHowPcWx9ALS7plKajGPqTVcmDk
-         9+lg==
-X-Forwarded-Encrypted: i=1; AJvYcCVOyMHDrcjNnI8J9PixdZVGuUrKQ4djtVbWqmiLg7+AmyYtUvpxCHj3zc2/53DWmJ2bui5GYNwL@vger.kernel.org, AJvYcCWB+gpu/dGRdRu4BEvRnKLRWfuj2A6npSSBRNID2+9QNpHIX1EwpAJLX0EEyD3vNISxeM+cZeXUhJMUvLY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwN24AkCkcuK04+ALcCCo6OsNlW/kA7YIjInda9rf/QIBvIQdDi
-	EAqOgEh/bsRtRGD9UpZLcOjONQPZbbXJneyGHxsAYAR7Ua46OAoibrLq
-X-Gm-Gg: ASbGncteChIaifGN9NUvxja5lVN8ga94EypTG/AliqqnOGHebSlqBetxuRRBZJdZqYF
-	Iz+GGdASEYuHLjThFKM1/Vu4Dkg88xaaGmiMYOrGCG6cvwLNIloEfbirrOxA+wIP8D11FeeXxvb
-	GJc1oXL9mNCR0DedtkkKks69N+jbs2CIB2YfJHFjtB3pDEmAtiyqC8Ol5GptwE2Dz/BQD7r4tUJ
-	tYFEJd/wcKrh4wRHxG4LNVVQx3Yez2Ykkvbk3PXlyylvpTSS/O5vof+4rtbqbmXC4h4cp8RVIsD
-	SHNc8wVXZoB5azb0J41Gcdz00HOVO+SKSfzTn6H2HvRzf6OMPHbIQDBmJUrRhrLkGMwmcDA12jI
-	8XGZ7dZs5nUcyMwfyddZub0cOsu5Gmt0e
-X-Google-Smtp-Source: AGHT+IH4br/vkS1TA5kOB0JT6na6FWAWji5Ksq2QJ8zm41vhk8hFAwkD6uASfLWv3LauaAlZIzweIQ==
-X-Received: by 2002:a17:902:da48:b0:235:e94b:62dd with SMTP id d9443c01a7336-23b355469f9mr44669715ad.12.1751360943048;
-        Tue, 01 Jul 2025 02:09:03 -0700 (PDT)
-Received: from DESKTOP-NBGHJ1C.local.valinux.co.jp (vagw.valinux.co.jp. [210.128.90.14])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb39bcbcsm99758425ad.134.2025.07.01.02.09.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 02:09:02 -0700 (PDT)
-From: Ryo Takakura <ryotkkr98@gmail.com>
-To: horms@kernel.org
-Cc: andrew+netdev@lunn.ch,
-	bcm-kernel-feedback-list@broadcom.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	florian.fainelli@broadcom.com,
-	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	opendmb@gmail.com,
-	pabeni@redhat.com,
-	ryotkkr98@gmail.com,
-	zakkemble@gmail.com
-Subject: Re: [PATCH] net: bcmgenet: Initialize u64 stats seq counter
-Date: Tue,  1 Jul 2025 18:08:58 +0900
-Message-Id: <20250701090858.7954-1-ryotkkr98@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250630162147.GJ41770@horms.kernel.org>
-References: <20250630162147.GJ41770@horms.kernel.org>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="f85xjx3X"
+Received: from [192.168.0.43] (cpc141996-chfd3-2-0-cust928.12-3.cable.virginm.net [86.13.91.161])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 81D70C74;
+	Tue,  1 Jul 2025 11:09:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1751360966;
+	bh=uA087uJ67e7A8AlIZXGViEZobK9A8ZE5VGDbvUT8jLk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=f85xjx3XHd6cdXvcO5zBY8dLuwPVDtSPBrBTePAVCxMSQs3MfcXl60zFehajMNz4X
+	 owdv62riaGJOQdBkEAJHUzH0Xxlqi1S5GNrT4fydrhbZkEBaNf0G43cnAA2RJIhW0A
+	 K+tcJjdMvPnr7BU+/4a4JSayR+2rVC7sA3aZTvns=
+Message-ID: <d7f001a8-b5b4-4174-ad27-3d0739d1f375@ideasonboard.com>
+Date: Tue, 1 Jul 2025 10:09:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] media: pisp_be: Use clamp() and define max sizes
+To: Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
+ Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Florian Fainelli <florian.fainelli@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-media@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250701-pispbe-clamp-v1-1-31243db3439b@ideasonboard.com>
+Content-Language: en-US
+From: Dan Scally <dan.scally@ideasonboard.com>
+Autocrypt: addr=dan.scally@ideasonboard.com; keydata=
+ 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
+In-Reply-To: <20250701-pispbe-clamp-v1-1-31243db3439b@ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello Horman-san!
+Hi Jacopo, thanks for the patch
 
-On Mon, 30 Jun 2025 17:21:47 +0100, Simon Horman wrote:
->On Sun, Jun 29, 2025 at 11:41:09AM +0000, Ryo Takakura wrote:
->> Initialize u64 stats as it uses seq counter on 32bit machines
->> as suggested by lockdep below.
->> 
->> [    1.830953][    T1] INFO: trying to register non-static key.
->> [    1.830993][    T1] The code is fine but needs lockdep annotation, or maybe
->> [    1.831027][    T1] you didn't initialize this object before use?
->> [    1.831057][    T1] turning off the locking correctness validator.
->> [    1.831090][    T1] CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Tainted: G        W           6.16.0-rc2-v7l+ #1 PREEMPT
->> [    1.831097][    T1] Tainted: [W]=WARN
->> [    1.831099][    T1] Hardware name: BCM2711
->> [    1.831101][    T1] Call trace:
->> [    1.831104][    T1]  unwind_backtrace from show_stack+0x18/0x1c
->> [    1.831120][    T1]  show_stack from dump_stack_lvl+0x8c/0xcc
->> [    1.831129][    T1]  dump_stack_lvl from register_lock_class+0x9e8/0x9fc
->> [    1.831141][    T1]  register_lock_class from __lock_acquire+0x420/0x22c0
->> [    1.831154][    T1]  __lock_acquire from lock_acquire+0x130/0x3f8
->> [    1.831166][    T1]  lock_acquire from bcmgenet_get_stats64+0x4a4/0x4c8
->> [    1.831176][    T1]  bcmgenet_get_stats64 from dev_get_stats+0x4c/0x408
->> [    1.831184][    T1]  dev_get_stats from rtnl_fill_stats+0x38/0x120
->> [    1.831193][    T1]  rtnl_fill_stats from rtnl_fill_ifinfo+0x7f8/0x1890
->> [    1.831203][    T1]  rtnl_fill_ifinfo from rtmsg_ifinfo_build_skb+0xd0/0x138
->> [    1.831214][    T1]  rtmsg_ifinfo_build_skb from rtmsg_ifinfo+0x48/0x8c
->> [    1.831225][    T1]  rtmsg_ifinfo from register_netdevice+0x8c0/0x95c
->> [    1.831237][    T1]  register_netdevice from register_netdev+0x28/0x40
->> [    1.831247][    T1]  register_netdev from bcmgenet_probe+0x690/0x6bc
->> [    1.831255][    T1]  bcmgenet_probe from platform_probe+0x64/0xbc
->> [    1.831263][    T1]  platform_probe from really_probe+0xd0/0x2d4
->> [    1.831269][    T1]  really_probe from __driver_probe_device+0x90/0x1a4
->> [    1.831273][    T1]  __driver_probe_device from driver_probe_device+0x38/0x11c
->> [    1.831278][    T1]  driver_probe_device from __driver_attach+0x9c/0x18c
->> [    1.831282][    T1]  __driver_attach from bus_for_each_dev+0x84/0xd4
->> [    1.831291][    T1]  bus_for_each_dev from bus_add_driver+0xd4/0x1f4
->> [    1.831303][    T1]  bus_add_driver from driver_register+0x88/0x120
->> [    1.831312][    T1]  driver_register from do_one_initcall+0x78/0x360
->> [    1.831320][    T1]  do_one_initcall from kernel_init_freeable+0x2bc/0x314
->> [    1.831331][    T1]  kernel_init_freeable from kernel_init+0x1c/0x144
->> [    1.831339][    T1]  kernel_init from ret_from_fork+0x14/0x20
->> [    1.831344][    T1] Exception stack(0xf082dfb0 to 0xf082dff8)
->> [    1.831349][    T1] dfa0:                                     00000000 00000000 00000000 00000000
->> [    1.831353][    T1] dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
->> [    1.831356][    T1] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
->> 
->> Fixes: 59aa6e3072aa ("net: bcmgenet: switch to use 64bit statistics")
->> Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
->
->Hi Takakura-san,
->
->Thanks for your patch.
->
->Unfortunately it doesn't apply cleanly which is needed by our CI to process
->your patch.
->
->Please:
->
->* Rebase and repost your patch on the net tree
->
->* Target your patch at net (as opposed to net-next) like this
->
->	Subject: [PATCH net v2] ...
->
->* And include Florian's tag in v2
->
->* Post v2 as a new thread
->
->For more information please see
->https://docs.kernel.org/process/maintainer-netdev.html
+On 01/07/2025 09:55, Jacopo Mondi wrote:
+> Use the clamp() from minmax.h and provide a define for the max size as
+> they will be used in sequent patches.
 
-Thank you for elaborating.
-I'll resend v2 accordingly!
+s/sequent/subsequent
 
-Sincerely,
-Ryo Takakura
+
+Reviewed-by: Daniel Scally <dan.scally@ideasonboard.com>
+
+>
+> Signed-off-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+> ---
+>   drivers/media/platform/raspberrypi/pisp_be/pisp_be.c  | 11 +++++++----
+>   include/uapi/linux/media/raspberrypi/pisp_be_config.h |  9 +++++----
+>   2 files changed, 12 insertions(+), 8 deletions(-)
+>
+>
+> ---
+> base-commit: 35392e855abf7d02ad3b061cbc75c7c7c37f0577
+> change-id: 20250623-pispbe-clamp-4b33011d0e85
+>
+> Best regards,
+>
+> diff --git a/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c b/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
+> index 7596ae1f7de6671484d4d351015b234829f642d4..ac5840b4be478ccdd7da9d6d0745649e0c1b2b6f 100644
+> --- a/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
+> +++ b/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
+> @@ -9,6 +9,7 @@
+>   #include <linux/io.h>
+>   #include <linux/kernel.h>
+>   #include <linux/lockdep.h>
+> +#include <linux/minmax.h>
+>   #include <linux/module.h>
+>   #include <linux/platform_device.h>
+>   #include <linux/pm_runtime.h>
+> @@ -1114,10 +1115,12 @@ static void pispbe_try_format(struct v4l2_format *f, struct pispbe_node *node)
+>   	f->fmt.pix_mp.pixelformat = fmt->fourcc;
+>   	f->fmt.pix_mp.num_planes = fmt->num_planes;
+>   	f->fmt.pix_mp.field = V4L2_FIELD_NONE;
+> -	f->fmt.pix_mp.width = max(min(f->fmt.pix_mp.width, 65536u),
+> -				  PISP_BACK_END_MIN_TILE_WIDTH);
+> -	f->fmt.pix_mp.height = max(min(f->fmt.pix_mp.height, 65536u),
+> -				   PISP_BACK_END_MIN_TILE_HEIGHT);
+> +	f->fmt.pix_mp.width = clamp(f->fmt.pix_mp.width,
+> +				    PISP_BACK_END_MIN_TILE_WIDTH,
+> +				    PISP_BACK_END_MAX_TILE_WIDTH);
+> +	f->fmt.pix_mp.height = clamp(f->fmt.pix_mp.height,
+> +				     PISP_BACK_END_MIN_TILE_HEIGHT,
+> +				     PISP_BACK_END_MAX_TILE_HEIGHT);
+>   
+>   	/*
+>   	 * Fill in the actual colour space when the requested one was
+> diff --git a/include/uapi/linux/media/raspberrypi/pisp_be_config.h b/include/uapi/linux/media/raspberrypi/pisp_be_config.h
+> index cbeb714f4d61ad53162c0450f2303431a5958040..2ad3b90684d7be80776af75b5c5009f7b677f466 100644
+> --- a/include/uapi/linux/media/raspberrypi/pisp_be_config.h
+> +++ b/include/uapi/linux/media/raspberrypi/pisp_be_config.h
+> @@ -21,10 +21,11 @@
+>   /* preferred byte alignment for outputs */
+>   #define PISP_BACK_END_OUTPUT_MAX_ALIGN 64u
+>   
+> -/* minimum allowed tile width anywhere in the pipeline */
+> -#define PISP_BACK_END_MIN_TILE_WIDTH 16u
+> -/* minimum allowed tile width anywhere in the pipeline */
+> -#define PISP_BACK_END_MIN_TILE_HEIGHT 16u
+> +/* minimum allowed tile sizes anywhere in the pipeline */
+> +#define PISP_BACK_END_MIN_TILE_WIDTH	16u
+> +#define PISP_BACK_END_MIN_TILE_HEIGHT	16u
+> +#define PISP_BACK_END_MAX_TILE_WIDTH	65536u
+> +#define PISP_BACK_END_MAX_TILE_HEIGHT	65536u
+>   
+>   #define PISP_BACK_END_NUM_OUTPUTS 2
+>   #define PISP_BACK_END_HOG_OUTPUT 1
