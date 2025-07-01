@@ -1,26 +1,27 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8F3D27F4CE
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 14:54:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4061527FB03
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 14:54:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751381676; cv=none; b=EIuhzwjSOkF4BQe6TQWr6N/88kEKm4bmITHioy++f3wC8Tc+t7YEqfY8JJ0uhfETb1BpWs336hvCuCx+l72Y2s8Jn1ADP8NL6wFh8tsUPz7wDNTsPdrhWGi6l9nhd4zwQGSvuOndnYAeBfZMopJNcXSo/befoaYxpIDQ7Bzdnh8=
+	t=1751381678; cv=none; b=FeemcYvOxxP4mBY5D9Sfwn2bbnznvXa+goU3VkPYDLUT382r5tOvS8ASpilSgMeZWBSC+JM3CsNKxT/bK03+KRD3Dnf397LlM2QhGU41hqDA6M1tyreBeQmUYIcGEcJyg8zyWgcu99U6UWR66qO0sDw+FDR1OU7/aMWiCpLy24o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751381676; c=relaxed/simple;
-	bh=dUVCxCleBxxUB4v4KfgM+Nv1nRicpaEXJZrToKUmeQM=;
+	s=arc-20240116; t=1751381678; c=relaxed/simple;
+	bh=bnoqGLGLvkQZM71kWFaBE9XSAfVwfMZlT8ssFD7sZow=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LEdkHcaMr0KHHIWVgrqGpgUz/ueVqvQIhwrLDuJOnsHn0t+74kk6QsmWgvgc4YRiExcEnWpXAQZ+xprl82NNSPjW2uUOM6FKlntxS2wRnp1ssG57Z0Wd+IsjYCWkeY9ZExmyAvJv1yAwnyXYGLLAuEwIyZXVpSTTIkIjviVww7s=
+	 In-Reply-To:To:Cc; b=Vhn43DU6xJbuofKVZ5KSXiYSxsaJKxWrtNZ2xdfI02mBIutACoJrzEtsj/GE0CQJizJmoZDBHgX19gcG8DDUKE7lgXUQC77uoTfCjOY2/lM9An0M+tji7nhjBvYp3xCWmnnaSNb0vzdrN7YV+y6gdtt5UTbydLA9ciL77nzeeGc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2BFAA236D;
-	Tue,  1 Jul 2025 07:54:19 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81E4E2379;
+	Tue,  1 Jul 2025 07:54:21 -0700 (PDT)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 71F123F66E;
-	Tue,  1 Jul 2025 07:54:32 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C79453F66E;
+	Tue,  1 Jul 2025 07:54:34 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
-Date: Tue, 01 Jul 2025 15:53:44 +0100
-Subject: [PATCH v2 19/28] coresight: cti: Introduce CS_MODE_DEBUG mode
+Date: Tue, 01 Jul 2025 15:53:45 +0100
+Subject: [PATCH v2 20/28] coresight: cti: Properly handle modes in CPU PM
+ notifiers
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -29,7 +30,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250701-arm_cs_pm_fix_v3-v2-19-23ebb864fcc1@arm.com>
+Message-Id: <20250701-arm_cs_pm_fix_v3-v2-20-23ebb864fcc1@arm.com>
 References: <20250701-arm_cs_pm_fix_v3-v2-0-23ebb864fcc1@arm.com>
 In-Reply-To: <20250701-arm_cs_pm_fix_v3-v2-0-23ebb864fcc1@arm.com>
 To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
@@ -42,87 +43,86 @@ To: Suzuki K Poulose <suzuki.poulose@arm.com>,
 Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
  linux-kernel@vger.kernel.org, Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751381627; l=3360;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751381627; l=2826;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=dUVCxCleBxxUB4v4KfgM+Nv1nRicpaEXJZrToKUmeQM=;
- b=T2iLltm5cFDcWtdXXfS9QOJVQ2mwIUR8E3K5IUI2RH2hkrfGxC0c23ZuOmX8h7/vShKaCNZ+J
- Y/pjxM+5bb7D5+HUVswH4FuLrUq4gCvEAVlaDkOOG1a5TDSR7baCDI8
+ bh=bnoqGLGLvkQZM71kWFaBE9XSAfVwfMZlT8ssFD7sZow=;
+ b=80Tlb6gH6ObmrEHBgVOfdT7YeEX140AFqPYxSUE3gKFwvgSlzUEa/uQP08pPsuEaTGf5bqG+A
+ tfqjQQn6r88AiBRNfj94GxraPPJRdmpTR0cUO1gBxagTwDmMlHltaUg
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Introduce a new CS_MODE_DEBUG mode to indicate that a device is being
-used for debugging purposes, e.g, if a system enables CTI for debugging
-but not for hardware trace
+This commit distinguishes CPU PM flows based on the mode.
 
-Update ETM4x driver to mute compiler warnings for the newly added mode.
+The CTI driver retains its existing behavior for the CS_MODE_DEBUG mode.
+
+For modes other than DEBUG, a future change will be made to manage CTI
+devices by iterating through the CoreSight path in the core layer. To
+avoid conflicts, the CTI driver no longer controls CTI hardware in CPU
+PM notifiers for non DEBUG modes.
+
+However, the CTI driver continues to update the hw_powered flag for all
+modes to reflect the device's power state.
 
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- drivers/hwtracing/coresight/coresight-cti-sysfs.c  | 2 +-
- drivers/hwtracing/coresight/coresight-etm4x-core.c | 2 ++
- include/linux/coresight.h                          | 9 +++++----
- 3 files changed, 8 insertions(+), 5 deletions(-)
+ drivers/hwtracing/coresight/coresight-cti-core.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-cti-sysfs.c b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
-index 572b80ee96fbf18ec8cf9abc30d109a676dfbc5d..3e0039f75f5aad104cb86561bf37971c7dc4e408 100644
---- a/drivers/hwtracing/coresight/coresight-cti-sysfs.c
-+++ b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
-@@ -112,7 +112,7 @@ static ssize_t enable_store(struct device *dev,
- 		ret = pm_runtime_resume_and_get(dev->parent);
- 		if (ret)
- 			return ret;
--		ret = cti_enable(drvdata->csdev, CS_MODE_SYSFS, NULL);
-+		ret = cti_enable(drvdata->csdev, CS_MODE_DEBUG, NULL);
- 		if (ret)
- 			pm_runtime_put(dev->parent);
- 	} else {
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-index d71ac055c3d0b74053279a86ede7e5592f2b2909..93ae8590ae2459db317f6367b6cffbf658b0e2f2 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-@@ -932,6 +932,7 @@ static int etm4_enable(struct coresight_device *csdev, struct perf_event *event,
- 	case CS_MODE_PERF:
- 		ret = etm4_enable_perf(csdev, event, path);
- 		break;
-+	case CS_MODE_DEBUG:
- 	default:
- 		ret = -EINVAL;
- 	}
-@@ -1130,6 +1131,7 @@ static void etm4_disable(struct coresight_device *csdev,
- 	mode = coresight_get_mode(csdev);
+diff --git a/drivers/hwtracing/coresight/coresight-cti-core.c b/drivers/hwtracing/coresight/coresight-cti-core.c
+index ba4635dfc2e30b4e9ae4972f91bdc6647975b719..c91d339d7ccbf71db71cb7156f9a6f2961ae2198 100644
+--- a/drivers/hwtracing/coresight/coresight-cti-core.c
++++ b/drivers/hwtracing/coresight/coresight-cti-core.c
+@@ -141,6 +141,9 @@ static void cti_cpuhp_enable_hw(struct cti_drvdata *drvdata)
+ 	raw_spin_lock(&drvdata->spinlock);
+ 	config->hw_powered = true;
  
- 	switch (mode) {
-+	case CS_MODE_DEBUG:
- 	case CS_MODE_DISABLED:
++	if (coresight_get_mode(drvdata->csdev) != CS_MODE_DEBUG)
++		goto cti_hp_not_enabled;
++
+ 	/* no need to do anything if no enable request */
+ 	if (!drvdata->config.enable_req_count)
+ 		goto cti_hp_not_enabled;
+@@ -697,21 +700,27 @@ static int cti_cpu_pm_notify(struct notifier_block *nb, unsigned long cmd,
+ 	case CPU_PM_ENTER:
+ 		/* CTI regs all static - we have a copy & nothing to save */
+ 		drvdata->config.hw_powered = false;
+-		if (drvdata->config.hw_enabled)
++		if ((coresight_get_mode(drvdata->csdev) == CS_MODE_DEBUG) &&
++		    drvdata->config.hw_enabled)
+ 			coresight_disclaim_device(csdev);
  		break;
- 	case CS_MODE_SYSFS:
-diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-index 4d5c07b7ddc67991a3871851fe45463f92bd32c8..f52e834640b72534ea83ab223aae7544b195bbaa 100644
---- a/include/linux/coresight.h
-+++ b/include/linux/coresight.h
-@@ -253,10 +253,10 @@ struct coresight_trace_id_map {
-  *		by @coresight_ops.
-  * @access:	Device i/o access abstraction for this device.
-  * @dev:	The device entity associated to this component.
-- * @mode:	The device mode, i.e sysFS, Perf or disabled. This is actually
-- *		an 'enum cs_mode' but stored in an atomic type. Access is always
-- *		through atomic APIs, ensuring SMP-safe synchronisation between
-- *		racing from sysFS and Perf mode. A compare-and-exchange
-+ * @mode:	The device mode, i.e sysFS, Perf, debug or disabled. This is
-+ *		actually an 'enum cs_mode' but stored in an atomic type. Access
-+ *		is always through atomic APIs, ensuring SMP-safe synchronisation
-+ *		between racing from sysFS and Perf mode. A compare-and-exchange
-  *		operation is done to atomically claim one mode or the other.
-  * @refcnt:	keep track of what is in use. Only access this outside of the
-  *		device's spinlock when the coresight_mutex held and mode ==
-@@ -344,6 +344,7 @@ enum cs_mode {
- 	CS_MODE_DISABLED,
- 	CS_MODE_SYSFS,
- 	CS_MODE_PERF,
-+	CS_MODE_DEBUG,
- };
  
- #define coresight_ops(csdev)	csdev->ops
+ 	case CPU_PM_ENTER_FAILED:
+ 		drvdata->config.hw_powered = true;
+-		if (drvdata->config.hw_enabled) {
++		if ((coresight_get_mode(drvdata->csdev) == CS_MODE_DEBUG) &&
++		    drvdata->config.hw_enabled) {
+ 			if (coresight_claim_device(csdev))
+ 				drvdata->config.hw_enabled = false;
+ 		}
+ 		break;
+ 
+ 	case CPU_PM_EXIT:
+-		/* write hardware registers to re-enable. */
+ 		drvdata->config.hw_powered = true;
++
++		if (coresight_get_mode(drvdata->csdev) != CS_MODE_DEBUG)
++			break;
++
++		/* write hardware registers to re-enable. */
+ 		drvdata->config.hw_enabled = false;
+ 
+ 		/* check enable reference count to enable HW */
+@@ -760,7 +769,8 @@ static int cti_dying_cpu(unsigned int cpu)
+ 
+ 	raw_spin_lock(&drvdata->spinlock);
+ 	drvdata->config.hw_powered = false;
+-	if (drvdata->config.hw_enabled)
++	if ((coresight_get_mode(drvdata->csdev) == CS_MODE_DEBUG) &&
++	    drvdata->config.hw_enabled)
+ 		coresight_disclaim_device(drvdata->csdev);
+ 	raw_spin_unlock(&drvdata->spinlock);
+ 	return 0;
 
 -- 
 2.34.1
