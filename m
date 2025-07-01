@@ -1,206 +1,544 @@
-Received: from mx0a-000eb902.pphosted.com (mx0a-000eb902.pphosted.com [205.220.165.212])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8A5B274643;
-	Tue,  1 Jul 2025 19:37:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.212
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751398647; cv=fail; b=Ul5J1NW87XCHAOwC+3I4tzxdLaef8RCqOY+cOE+H/lBw3DdP0Z9gUrN+w2MyX444mpF+GHpHSNEnx+1Ngy3rx4gT0Ss/32DggCRXdQnSJ8dhAiabD3FykZxnJKUeBWKl40IsXvagq+jlnR8w4DHBq8co/G30eWmlYNjnhQFDZ0c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751398647; c=relaxed/simple;
-	bh=KO3G3Rc9luCNIKAEZcUOxyF5mH+nddPxk1Gpiut4xho=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=T8V+DuXq9iX9sVDivAceb4ohnVeLzT1QTjDmC5w1v92ce5A9SzNnQkNnT0Vdw7IfYxKjecdd8GL/Fd8Bn8o6p+ufufhGLPXoI6cHWWaw9A/5CS+cNzRSvDkNJR9CRV33l59WLRIVeIhQXvTz01WybRuks4OKR0lT7+6y9HEY8yU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=garmin.com; spf=pass smtp.mailfrom=garmin.com; dkim=pass (2048-bit key) header.d=garmin.com header.i=@garmin.com header.b=rhbDbiyb; dkim=pass (2048-bit key) header.d=garmin.com header.i=@garmin.com header.b=CvXJeaiJ; arc=fail smtp.client-ip=205.220.165.212
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=garmin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=garmin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24B221F76A5
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 19:38:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751398686; cv=none; b=GkBd117bQ4s5ROJ0gXYfNZkL9GxfH27EgBdhmOWerM/KG0A5yxgvwKqvudTXniQbd5os8YYx46MeEnST2ZZ5Al9mmm/JcFA6b3gysodoR7otxi3+H1YtTqPXlvH35fMEFGXouq5GXspgPbmBsvZgHO05qx+u9sltzp6LG+IbQbY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751398686; c=relaxed/simple;
+	bh=/lK0+qtB+epXNXVi910JA9jCw4TFXXOULdsayjFiHJ8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qLunMrZP1h2QcfToN2b+KGyaSij1mVz8m8G+da22yPqle9kfKOGJQsKdAZIsL5AZ3zr0FLmfuEer8bBp0/QTsykUQuoa0LnIuSAOGDxbr5hBk8ZPZMe4piy/37rU1JMDRMPhWIaE9DIWxIvfCifiVr9mV/An/wRoCmoCo3rus/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hlgQ8Qsr; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=garmin.com header.i=@garmin.com header.b="rhbDbiyb";
-	dkim=pass (2048-bit key) header.d=garmin.com header.i=@garmin.com header.b="CvXJeaiJ"
-Received: from pps.filterd (m0220296.ppops.net [127.0.0.1])
-	by mx0a-000eb902.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 561ICrNj031777;
-	Tue, 1 Jul 2025 14:36:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garmin.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pps1; bh=FwYBsxvIr7+ATBUeI16S+8hGTv7
-	H8fNzltVuMyykou8=; b=rhbDbiybxZOA68guhoVeDbdkMO3c69WyPbvcj9TgfQ0
-	5OOTYfKbF/Ps5cuQ9Di8MfGMjs/0WfPtB2ybtAk74RJfIp1yBsgJWd21HiFhBYTE
-	9py3zcFrSYCkiHU4ZT1NR7ncclHgup/Ti/QXnhQV2jYl2DlltfqIDjTdygDTL7Ci
-	0doaIBK3D3W1zEwtXw5VkQO0tfeqoNUD/7rONqervXtYugKWEzEDyAj6+gh9JITM
-	Pf+JHaQU9Kbxb0ubABQmF0pyq4FKOqdApqhZ6wVMT78e8N5aJ8tliIbuog/PuOEM
-	f8z9kBpcNgGR7bxqAkt88OJ5SRqvauycyomfk0Huscg==
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11on2107.outbound.protection.outlook.com [40.107.220.107])
-	by mx0a-000eb902.pphosted.com (PPS) with ESMTPS id 47mmrp04ub-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 01 Jul 2025 14:36:58 -0500 (CDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iioPcBk7EjsL5nDoB6RCM08zDt1cbiPe4w+RzY0RkZfd2dmzW5URQhYM+euePkuIiY7Iw3nfj4pz4GJbQTjhsl0gIDnehgLQXm4yYp0z7wpPzrgPhx5sJ9x86wHh2qJK5dVYTlgNJv1vFJtKIfu0sL3WWUVtio8iJWIMza669EhACLSVGliYCY9Q4L0cPe9P/qQZSOH599xyVBEZ7WedELDSs8aUsvjtlVoMgMGOrs9LJXhqnxg3b7Af6t6l3cwAhjcjgayXZ8TJC/nZrQ3XiDfJjSKOtW1aEnkxhTu0lfTWyMB/MuagOT8qrASJqHnTN2PvZkATsR6qcrU9Hm39oQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FwYBsxvIr7+ATBUeI16S+8hGTv7H8fNzltVuMyykou8=;
- b=q09pNZyplYqqwUXyG5CfN3sda9YWTsuP2Jd/rsB9GH5R4KepJveg0QPaaOqKyUsicW+VfygIeEsC+J0YUysMblbbbujXXReM6BMCH1MUjMgF+K8aGTyjUBEZ+X0zZr4RfB5b6QOfDmhAKidTCTi6aWQ8y+ehMOQtfxjD8exmlFkKp+JWGC83Av8e7EldwfoWUJgmr6kBvFgI5+aSLFgKiXV5FVlGMsCJRhNFivCpO/rM5P+hOwRVlQLBDJerxTHet8Prt4H38QwgFV8k1Gz4dJmLgTGmc1gecxCEZDZw0qxjhDbcj/IFbxHtbaSX6U+zAlX5Cu2eMvCp4nmsARTWcg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 204.77.163.244) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=garmin.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=garmin.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garmin.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FwYBsxvIr7+ATBUeI16S+8hGTv7H8fNzltVuMyykou8=;
- b=CvXJeaiJJNG6y7maQjVhtPecvJSnEujWne1j/ysflSD0BRKBIthGuY1dy6ZsoJt2khhyp3urA52SGKtsuiqqont64BDKLud786dt9IovT6ZPtXN48IJZkARh5eOTTD7ohxEoZi6GvkiIMOKvpuPaYAeLNxjA9KIAlz/77AgAHtIk0+cgTbDwmNIg+5FHy/KJ5LwADnQXP8br3iih2pQyVaHU8FgZGBk5dFdocD7JHWDwj7w0S/lxtXNdO7raKCL5QF/K2iPSxq5wxlzJ9IUWG660hp8N54IVIYES1jrr3zjao5xb0GEF08rIzECrYo86JVjWzb06FMp3uxBONGL4Lw==
-Received: from BY1P220CA0009.NAMP220.PROD.OUTLOOK.COM (2603:10b6:a03:59d::7)
- by CO6PR04MB7602.namprd04.prod.outlook.com (2603:10b6:303:a8::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.32; Tue, 1 Jul
- 2025 19:36:54 +0000
-Received: from CO1PEPF000042AE.namprd03.prod.outlook.com
- (2603:10b6:a03:59d:cafe::db) by BY1P220CA0009.outlook.office365.com
- (2603:10b6:a03:59d::7) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.19 via Frontend Transport; Tue,
- 1 Jul 2025 19:36:54 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 204.77.163.244)
- smtp.mailfrom=garmin.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=garmin.com;
-Received-SPF: Pass (protection.outlook.com: domain of garmin.com designates
- 204.77.163.244 as permitted sender) receiver=protection.outlook.com;
- client-ip=204.77.163.244; helo=edgetransport.garmin.com; pr=C
-Received: from edgetransport.garmin.com (204.77.163.244) by
- CO1PEPF000042AE.mail.protection.outlook.com (10.167.243.43) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8901.15 via Frontend Transport; Tue, 1 Jul 2025 19:36:54 +0000
-Received: from OLAWPA-EXMB13.ad.garmin.com (10.5.144.17) by cv1wpa-edge1
- (10.60.4.252) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 1 Jul 2025
- 14:36:47 -0500
-Received: from cv1wpa-exmb1.ad.garmin.com (10.5.144.71) by
- OLAWPA-EXMB13.ad.garmin.com (10.5.144.17) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1258.34; Tue, 1 Jul 2025 14:36:48 -0500
-Received: from cv1wpa-exmb3.ad.garmin.com (10.5.144.73) by
- CV1WPA-EXMB1.ad.garmin.com (10.5.144.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 1 Jul 2025 14:36:48 -0500
-Received: from CAR-4RCMR33.ad.garmin.com (10.5.209.17) by smtp.garmin.com
- (10.5.144.73) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Tue, 1 Jul 2025 14:36:47 -0500
-From: Joseph Huang <Joseph.Huang@garmin.com>
-To: <netdev@vger.kernel.org>
-CC: Joseph Huang <Joseph.Huang@garmin.com>,
-        Nikolay Aleksandrov
-	<razor@blackwall.org>,
-        Ido Schimmel <idosch@nvidia.com>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Simon Horman
-	<horms@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vladimir Oltean
-	<vladimir.oltean@nxp.com>,
-        Tobias Waldekranz <tobias@waldekranz.com>, <bridge@lists.linux.dev>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH net] net: bridge: Do not offload IGMP/MLD messages
-Date: Tue, 1 Jul 2025 15:36:38 -0400
-Message-ID: <20250701193639.836027-1-Joseph.Huang@garmin.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hlgQ8Qsr"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6fabb948e5aso44523776d6.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 12:38:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751398683; x=1752003483; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=27d5UOVKtmUDtEAp0ADASEkYYcjYFsb0lXgD4PRdwFA=;
+        b=hlgQ8QsrOQD0tPv6zDbEn83kD1hcRXGTbvpxuWdR2rLuyF77f/Yb2uN+HtuToauRgN
+         N/vaL+KirQgHyJsEv6hStP/8VfTkG3wZSJNArHAsQ4Lh2DmvgB3hj9kOsWVWPL8PUl+Y
+         OuDoaa76Dc2NshL/EN7IIDsVeBn08tsFKDRZomd9wcVTM0Swrug3nJBB9PuzYXo3gCZo
+         smgLXEs+n3qHzB43DTH679uyZe3bDeOKyjpfjvKTfuYALv8DzcIoO2lvywReOO/RwAlf
+         OizydkOCiAN055dR0UONTXySryBMZ/pf+3n6SOcywkHPGvwCFSNrIkFMpi9seR4Rl0eD
+         z+7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751398683; x=1752003483;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=27d5UOVKtmUDtEAp0ADASEkYYcjYFsb0lXgD4PRdwFA=;
+        b=W1w/O8T54iGYEBZ48NOX5FZrxONZRF4UQz/Jz8LsXKaF5JtumhontURqVI9EIKDQ8b
+         hfT7Bb/vIA4mw225aX1/9Zj4L5STP2TA5lDoghCbtSPOxLQIHc8vJGlBt9/75zAk8v30
+         DQtos9P1Z7YNKXfB+CE70O79goK5fftyT25tVEcjGhyXtuzXXqCzJA0HKwwPlSrqq9L5
+         ODdTOp9y83cfmlbbaTUSZ9le01pNzg3pjJXnEnW5rW8f9B0t7VArXrznjz6abjke0izI
+         2wRkyfAVFZsfXIxZV30uRSLdpoMbB9eZuZ5aGzaG//IDAAEgS9ksM22OqgElVuyXDBQm
+         FmQw==
+X-Gm-Message-State: AOJu0YynixVvF3ZplwnmoH8FyybX06B6bBNQFcYwURmN/Qrtnol14pb3
+	EJR33nVgzPY1eptjIHgGa01o3/adwgXYrIxuSn+QbFP9Z+4PHWvRLw/NKcQlPBalVrt18PnyVWb
+	PtgQk2QCaTGjvMoE0vhssXQ2Kz3qD5ajaumRqrBEy
+X-Gm-Gg: ASbGncuzfuXdl9U9+hKskRJz0ytyNL/P6k6LN31hwB4tvdRFmqKe4TCqiuJK8N5n5EF
+	+KO3MzE+/RR2WGx+rM4nOOhU3bB3czn3+lVioVGq722iru1JtmZvvbiHhYOTomRodqF/iwk3TcW
+	u0Kig2hU0fmqNL0xA8ZVTz5JK03N8d4RFxTfIYewlqAvvSo5wsON7qp9cIXEXCZ/o5kt4VzNGqb
+	g==
+X-Google-Smtp-Source: AGHT+IFz7T2uE8dy5m5GbgnwVJKSFJA9QIy2PcPgBqOkm6cOGfLOrvTYDxmXiYflYuiPwALuCcLpbxfwruVZMtMFPHU=
+X-Received: by 2002:a05:6214:2aae:b0:6fa:c41e:cc6c with SMTP id
+ 6a1803df08f44-70002dec8ccmr307945216d6.15.1751398682506; Tue, 01 Jul 2025
+ 12:38:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000042AE:EE_|CO6PR04MB7602:EE_
-X-MS-Office365-Filtering-Correlation-Id: cb3a3747-3a6a-4a9f-1c1a-08ddb8d6a258
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|36860700013|82310400026|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?hGh/emQdjtl05UCFBNShHuqtLvWb77+qehgEy8wzUT2VyXJnAcGrQQPxI6by?=
- =?us-ascii?Q?6+UzR6/+i6HmLZY+aNHC2B5vUYV4ScMWHwopia6/QtwiFiiaRNCZFc/sp6Ys?=
- =?us-ascii?Q?3fBCmBBdTFVYvMvX2+AaBaO2tiz1pSsiBjnMprlxg6eNA1c7cs1W4rDROoXH?=
- =?us-ascii?Q?DtvSdctoDYM/77M1T5JcsjoBTzG3S7NkKJ45UlCxGtmGohuttPtx84xhmmQg?=
- =?us-ascii?Q?se1ljSvkNZV3CCggadZdsbK1D3hM0N8q56kvvhiph0BKZp1A8wmSGvXqfYCd?=
- =?us-ascii?Q?yvQeXXL+H59Ycn4Nq5SjzOXGyHe9KhlvIkrgrTxv7GCxoJCD9KLQLP+ZYTq5?=
- =?us-ascii?Q?e8610/oXiG/KtIzQF1C5XQcv8DUs9SMn0AelPCDoT1h+Vs2NJT5lrY12eU48?=
- =?us-ascii?Q?EHU5LveTz6BfnJbkiEb4hgKMrUFIYJY77/ZoL44Zs5u4wf35tQ/8uyFnkuox?=
- =?us-ascii?Q?ftfj1/6qb8ssITB0uB6mF9ecLHYtAyefxa8LMRDua8CrPyQBYZx5OTBvRJRP?=
- =?us-ascii?Q?9eBd7UNRpXp2qBj2QjlObvGZPayU0YrZ+qiQxcPopp7SIMZ/is9KqmaSLoN3?=
- =?us-ascii?Q?8zV9ZJkroqLXUmdA+lAO0mtKPN6RPaRT0OfKbLKK3mXy8w5vktkpKYFq03z2?=
- =?us-ascii?Q?HhI3Pt+lU+lJsm6y+YHom7EjX/HQUldWi1QnudVTHodDAejwYuTKiT4G0nqa?=
- =?us-ascii?Q?QoWdvYcye6r8TTl+F8sMhIcIJKY6Pw5TEz8hVLoMMSHEpWZyezsuHJ/X90Gk?=
- =?us-ascii?Q?dk6/Ku/IZ/A3dj8/PFMeOVEHi2lBKNv/IVTV4+Y30ZOtCyNi/irQB/keX1pZ?=
- =?us-ascii?Q?p+rRBZCl00u2KrBvz+3mpEiPUTPEMI4iU2G0aGXxHuwaO5SGMMGl9dSGvlII?=
- =?us-ascii?Q?S35SrQ6ARJAJQQgwgbqVkn5D3q4aA2ovWHU1nant6fENFKSMfh1dqxcWkJse?=
- =?us-ascii?Q?iMtM0eknxqXzAt0M6+s4AhF3qKhRcdxZ4VnoL2jcPRdQS/dkFJZLslvTLDaT?=
- =?us-ascii?Q?up3r1OjK/yNZgWhy0/hl3p4RCKK3UEDGgRj8Sw8db5WzIUgLZX+rRIP2By4T?=
- =?us-ascii?Q?dn2S1ksp/klkhBl1l5jJsqK3eNtZ4dh/uhahHE2ebAz5adpKLT0yfhP4ohvq?=
- =?us-ascii?Q?yGJcGnWN7/rE6sFkAC2flS+FQC8LhfyyTwycKQxCcbZAGm2zmQMY2rFhja/p?=
- =?us-ascii?Q?6eoT1+OoLntyuwO/A5XiCTsjnpLmwaEPLILcUO08WjsXbsO1aQ43Kkcl9xo8?=
- =?us-ascii?Q?w1rBkFGT/4qbvl41nzkftvg+FxTF6XJ68g8lsTSFYfyoMdH2+HfXVVUo6C+t?=
- =?us-ascii?Q?AaKLvGB3fHaHD40ZBxy2AZZulSOuIBKbqhb3iClOv7NPEPlHurJ/SlXGpFmT?=
- =?us-ascii?Q?rbEbYIo/VZnNJuYz9WX1ww0ZkQW3YBJvxy7pBKBJn6W6a8O8I3WtsXFYy/SF?=
- =?us-ascii?Q?qMcVQElT40BXrPBDLgKZheZg8iH1Y1CATtmrwYGee89jeXSI9EvKVWQwHKup?=
- =?us-ascii?Q?NCGFFU3FCTmKXbN+cIYt3BerTbTpkBL2dWx6?=
-X-Forefront-Antispam-Report:
-	CIP:204.77.163.244;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:edgetransport.garmin.com;PTR:extedge.garmin.com;CAT:NONE;SFS:(13230040)(7416014)(376014)(36860700013)(82310400026)(1800799024);DIR:OUT;SFP:1102;
-X-OriginatorOrg: garmin.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2025 19:36:54.1242
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: cb3a3747-3a6a-4a9f-1c1a-08ddb8d6a258
-X-MS-Exchange-CrossTenant-Id: 38d0d425-ba52-4c0a-a03e-2a65c8e82e2d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=38d0d425-ba52-4c0a-a03e-2a65c8e82e2d;Ip=[204.77.163.244];Helo=[edgetransport.garmin.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000042AE.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR04MB7602
-X-Proofpoint-ORIG-GUID: Cwunfg_zsvjjkZyPI8edD7Km-b9hE0MR
-X-Authority-Analysis: v=2.4 cv=Bd/Y0qt2 c=1 sm=1 tr=0 ts=686438da cx=c_pps a=QkMd9A5hkDPJHF1mgsh70Q==:117 a=YA0UzX50FYCGjWi3QxTvkg==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=h8e1o3o8w34MuCiiGQrqVE4VwXA=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=Wb1JkmetP80A:10 a=qm69fr9Wx_0A:10 a=NbHB2C0EAAAA:8 a=6AO1rQK50EryyGBc9MEA:9 cc=ntf
-X-Proofpoint-GUID: Cwunfg_zsvjjkZyPI8edD7Km-b9hE0MR
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAxMDEzNiBTYWx0ZWRfXwvRQb6F9DsJg TJAHh+7+PfFnNQtydGB0/sXBQH82Pa8Rkkh6gFTfijPwHyAbrIgyVW1PiPQYsPpKAUlzV2JlRiw HNxwnDiwmPUaEeeAy7I216yOMNzYgOYztNQVsw0Lk5uRk2gyAstqmZOVBuqg6dtPavupUv5UCwR
- gU3aTu5TgJY2Bf4UpKAeKCDZ2M14cF071/d/EI9iFSQDk6FsZ2jHeSEAVCdEpk0iYo/JE8lEdTA DBIFMZJARl6yv3Yr0Msu5DcUIH99LPemQqGRLnbEROzIHgxtX3cN1Bk4EeksRm/LzUjpoVpZkch XGpIr9DFFPiNmP9TcT4Oj+AkpAWU3a8TuQweK2c46je4tl+Ave/5RUvqM7S/zUwAtNNkFOUZxCy
- X9obDVtAbxMsgD3SlGOkq9M+R6QYVUyCcQEqfdrJB29ktDys6HlMQZgprZy3kQAYGZuv84uB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-01_02,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
- priorityscore=1501 phishscore=0 spamscore=0 mlxlogscore=999 bulkscore=0
- impostorscore=0 lowpriorityscore=0 adultscore=0 malwarescore=0
- suspectscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a
- authcc=notification route=outbound adjust=0 reason=mlx scancount=1
- engine=8.21.0-2505280000 definitions=main-2507010136
+References: <20250627203748.881022-1-ynaffit@google.com> <20250627203748.881022-4-ynaffit@google.com>
+In-Reply-To: <20250627203748.881022-4-ynaffit@google.com>
+From: Rae Moar <rmoar@google.com>
+Date: Tue, 1 Jul 2025 15:37:51 -0400
+X-Gm-Features: Ac12FXyiQxpwMy3Ou_goXXRYDwkBDqJMpZvPHPmZb_Q_6w8ri7WriIsTyrmWiGg
+Message-ID: <CA+GJov7QJWtWkOj3vg5HD+mibqQ78gyWg34umL1u1FMOfnQBWw@mail.gmail.com>
+Subject: Re: [PATCH 3/5] binder: Scaffolding for binder_alloc KUnit tests
+To: Tiffany Yang <ynaffit@google.com>
+Cc: linux-kernel@vger.kernel.org, keescook@google.com, kernel-team@android.com, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
+	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
+	Joel Fernandes <joelagnelf@nvidia.com>, Christian Brauner <brauner@kernel.org>, 
+	Carlos Llamas <cmllamas@google.com>, Suren Baghdasaryan <surenb@google.com>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Do not offload IGMP/MLD messages as it could lead to IGMP/MLD Reports
-being unintentionally flooded to Hosts. Instead, let the bridge decide
-where to send these IGMP/MLD messages.
+On Fri, Jun 27, 2025 at 4:38=E2=80=AFPM Tiffany Yang <ynaffit@google.com> w=
+rote:
+>
+> Add setup and teardown for testing binder allocator code with KUnit.
+> Include minimal test cases to verify that tests are initialized
+> correctly.
+>
+> Signed-off-by: Tiffany Yang <ynaffit@google.com>
+> ---
+>  drivers/android/Kconfig                    |  11 ++
+>  drivers/android/Makefile                   |   1 +
+>  drivers/android/binder.c                   |   5 +-
+>  drivers/android/binder_alloc.c             |  15 +-
+>  drivers/android/binder_alloc.h             |   6 +
+>  drivers/android/binder_internal.h          |   4 +
+>  drivers/android/tests/.kunitconfig         |   3 +
+>  drivers/android/tests/Makefile             |   3 +
+>  drivers/android/tests/binder_alloc_kunit.c | 166 +++++++++++++++++++++
+>  include/kunit/test.h                       |  12 ++
+>  lib/kunit/user_alloc.c                     |   4 +-
+>  11 files changed, 222 insertions(+), 8 deletions(-)
+>  create mode 100644 drivers/android/tests/.kunitconfig
+>  create mode 100644 drivers/android/tests/Makefile
+>  create mode 100644 drivers/android/tests/binder_alloc_kunit.c
+>
+> diff --git a/drivers/android/Kconfig b/drivers/android/Kconfig
+> index 07aa8ae0a058..b1bc7183366c 100644
+> --- a/drivers/android/Kconfig
+> +++ b/drivers/android/Kconfig
+> @@ -47,4 +47,15 @@ config ANDROID_BINDER_IPC_SELFTEST
+>           exhaustively with combinations of various buffer sizes and
+>           alignments.
+>
+> +config ANDROID_BINDER_ALLOC_KUNIT_TEST
+> +       tristate "KUnit Tests for Android Binder Alloc" if !KUNIT_ALL_TES=
+TS
+> +       depends on ANDROID_BINDER_IPC && KUNIT
+> +       default KUNIT_ALL_TESTS
+> +       help
+> +         This feature builds the binder alloc KUnit tests.
+> +
+> +         Each test case runs using a pared-down binder_alloc struct and
+> +         test-specific freelist, which allows this KUnit module to be lo=
+aded
+> +         for testing without interfering with a running system.
+> +
+>  endmenu
+> diff --git a/drivers/android/Makefile b/drivers/android/Makefile
+> index c9d3d0c99c25..74d02a335d4e 100644
+> --- a/drivers/android/Makefile
+> +++ b/drivers/android/Makefile
+> @@ -4,3 +4,4 @@ ccflags-y +=3D -I$(src)                   # needed for tr=
+ace events
+>  obj-$(CONFIG_ANDROID_BINDERFS)         +=3D binderfs.o
+>  obj-$(CONFIG_ANDROID_BINDER_IPC)       +=3D binder.o binder_alloc.o
+>  obj-$(CONFIG_ANDROID_BINDER_IPC_SELFTEST) +=3D binder_alloc_selftest.o
+> +obj-$(CONFIG_ANDROID_BINDER_ALLOC_KUNIT_TEST)  +=3D tests/
+> diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+> index c463ca4a8fff..9dfe90c284fc 100644
+> --- a/drivers/android/binder.c
+> +++ b/drivers/android/binder.c
+> @@ -68,6 +68,8 @@
+>  #include <linux/sizes.h>
+>  #include <linux/ktime.h>
+>
+> +#include <kunit/visibility.h>
+> +
+>  #include <uapi/linux/android/binder.h>
+>
+>  #include <linux/cacheflush.h>
+> @@ -5956,10 +5958,11 @@ static void binder_vma_close(struct vm_area_struc=
+t *vma)
+>         binder_alloc_vma_close(&proc->alloc);
+>  }
+>
+> -static vm_fault_t binder_vm_fault(struct vm_fault *vmf)
+> +VISIBLE_IF_KUNIT vm_fault_t binder_vm_fault(struct vm_fault *vmf)
+>  {
+>         return VM_FAULT_SIGBUS;
+>  }
+> +EXPORT_SYMBOL_IF_KUNIT(binder_vm_fault);
+>
+>  static const struct vm_operations_struct binder_vm_ops =3D {
+>         .open =3D binder_vma_open,
+> diff --git a/drivers/android/binder_alloc.c b/drivers/android/binder_allo=
+c.c
+> index 2e89f9127883..c79e5c6721f0 100644
+> --- a/drivers/android/binder_alloc.c
+> +++ b/drivers/android/binder_alloc.c
+> @@ -23,6 +23,7 @@
+>  #include <linux/uaccess.h>
+>  #include <linux/highmem.h>
+>  #include <linux/sizes.h>
+> +#include <kunit/visibility.h>
+>  #include "binder_alloc.h"
+>  #include "binder_trace.h"
+>
+> @@ -57,13 +58,14 @@ static struct binder_buffer *binder_buffer_prev(struc=
+t binder_buffer *buffer)
+>         return list_entry(buffer->entry.prev, struct binder_buffer, entry=
+);
+>  }
+>
+> -static size_t binder_alloc_buffer_size(struct binder_alloc *alloc,
+> -                                      struct binder_buffer *buffer)
+> +VISIBLE_IF_KUNIT size_t binder_alloc_buffer_size(struct binder_alloc *al=
+loc,
+> +                                                struct binder_buffer *bu=
+ffer)
+>  {
+>         if (list_is_last(&buffer->entry, &alloc->buffers))
+>                 return alloc->vm_start + alloc->buffer_size - buffer->use=
+r_data;
+>         return binder_buffer_next(buffer)->user_data - buffer->user_data;
+>  }
+> +EXPORT_SYMBOL_IF_KUNIT(binder_alloc_buffer_size);
+>
+>  static void binder_insert_free_buffer(struct binder_alloc *alloc,
+>                                       struct binder_buffer *new_buffer)
+> @@ -959,7 +961,7 @@ int binder_alloc_mmap_handler(struct binder_alloc *al=
+loc,
+>                            failure_string, ret);
+>         return ret;
+>  }
+> -
+> +EXPORT_SYMBOL_IF_KUNIT(binder_alloc_mmap_handler);
+>
+>  void binder_alloc_deferred_release(struct binder_alloc *alloc)
+>  {
+> @@ -1028,6 +1030,7 @@ void binder_alloc_deferred_release(struct binder_al=
+loc *alloc)
+>                      "%s: %d buffers %d, pages %d\n",
+>                      __func__, alloc->pid, buffers, page_count);
+>  }
+> +EXPORT_SYMBOL_IF_KUNIT(binder_alloc_deferred_release);
+>
+>  /**
+>   * binder_alloc_print_allocated() - print buffer info
+> @@ -1122,6 +1125,7 @@ void binder_alloc_vma_close(struct binder_alloc *al=
+loc)
+>  {
+>         binder_alloc_set_mapped(alloc, false);
+>  }
+> +EXPORT_SYMBOL_IF_KUNIT(binder_alloc_vma_close);
+>
+>  /**
+>   * binder_alloc_free_page() - shrinker callback to free pages
+> @@ -1229,8 +1233,8 @@ binder_shrink_scan(struct shrinker *shrink, struct =
+shrink_control *sc)
+>
+>  static struct shrinker *binder_shrinker;
+>
+> -static void __binder_alloc_init(struct binder_alloc *alloc,
+> -                               struct list_lru *freelist)
+> +VISIBLE_IF_KUNIT void __binder_alloc_init(struct binder_alloc *alloc,
+> +                                         struct list_lru *freelist)
+>  {
+>         alloc->pid =3D current->group_leader->pid;
+>         alloc->mm =3D current->mm;
+> @@ -1239,6 +1243,7 @@ static void __binder_alloc_init(struct binder_alloc=
+ *alloc,
+>         INIT_LIST_HEAD(&alloc->buffers);
+>         alloc->freelist =3D freelist;
+>  }
+> +EXPORT_SYMBOL_IF_KUNIT(__binder_alloc_init);
+>
+>  /**
+>   * binder_alloc_init() - called by binder_open() for per-proc initializa=
+tion
+> diff --git a/drivers/android/binder_alloc.h b/drivers/android/binder_allo=
+c.h
+> index aa05a9df1360..dc8dce2469a7 100644
+> --- a/drivers/android/binder_alloc.h
+> +++ b/drivers/android/binder_alloc.h
+> @@ -188,5 +188,11 @@ int binder_alloc_copy_from_buffer(struct binder_allo=
+c *alloc,
+>                                   binder_size_t buffer_offset,
+>                                   size_t bytes);
+>
+> +#if IS_ENABLED(CONFIG_KUNIT)
+> +void __binder_alloc_init(struct binder_alloc *alloc, struct list_lru *fr=
+eelist);
+> +size_t binder_alloc_buffer_size(struct binder_alloc *alloc,
+> +                               struct binder_buffer *buffer);
+> +#endif
+> +
+>  #endif /* _LINUX_BINDER_ALLOC_H */
+>
+> diff --git a/drivers/android/binder_internal.h b/drivers/android/binder_i=
+nternal.h
+> index 1ba5caf1d88d..b5d3014fb4dc 100644
+> --- a/drivers/android/binder_internal.h
+> +++ b/drivers/android/binder_internal.h
+> @@ -592,4 +592,8 @@ void binder_add_device(struct binder_device *device);
+>   */
+>  void binder_remove_device(struct binder_device *device);
+>
+> +#if IS_ENABLED(CONFIG_KUNIT)
+> +vm_fault_t binder_vm_fault(struct vm_fault *vmf);
+> +#endif
+> +
+>  #endif /* _LINUX_BINDER_INTERNAL_H */
+> diff --git a/drivers/android/tests/.kunitconfig b/drivers/android/tests/.=
+kunitconfig
+> new file mode 100644
+> index 000000000000..a73601231049
+> --- /dev/null
+> +++ b/drivers/android/tests/.kunitconfig
+> @@ -0,0 +1,3 @@
+> +CONFIG_KUNIT=3Dy
+> +CONFIG_ANDROID_BINDER_IPC=3Dy
+> +CONFIG_ANDROID_BINDER_ALLOC_KUNIT_TEST=3Dy
+> diff --git a/drivers/android/tests/Makefile b/drivers/android/tests/Makef=
+ile
+> new file mode 100644
+> index 000000000000..6780967e573b
+> --- /dev/null
+> +++ b/drivers/android/tests/Makefile
+> @@ -0,0 +1,3 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +
+> +obj-$(CONFIG_ANDROID_BINDER_ALLOC_KUNIT_TEST)  +=3D binder_alloc_kunit.o
+> diff --git a/drivers/android/tests/binder_alloc_kunit.c b/drivers/android=
+/tests/binder_alloc_kunit.c
+> new file mode 100644
+> index 000000000000..4b68b5687d33
+> --- /dev/null
+> +++ b/drivers/android/tests/binder_alloc_kunit.c
+> @@ -0,0 +1,166 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Test cases for binder allocator code
+> + */
+> +
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include <kunit/test.h>
+> +#include <linux/anon_inodes.h>
+> +#include <linux/err.h>
+> +#include <linux/file.h>
+> +#include <linux/fs.h>
+> +#include <linux/mm.h>
+> +#include <linux/mman.h>
+> +#include <linux/sizes.h>
+> +
+> +#include "../binder_alloc.h"
+> +#include "../binder_internal.h"
+> +
+> +MODULE_IMPORT_NS("EXPORTED_FOR_KUNIT_TESTING");
+> +
+> +#define BINDER_MMAP_SIZE SZ_128K
+> +
+> +struct binder_alloc_test {
+> +       struct binder_alloc alloc;
+> +       struct list_lru binder_test_freelist;
+> +       struct file *filp;
+> +       unsigned long mmap_uaddr;
+> +};
+> +
+> +static void binder_alloc_test_init_freelist(struct kunit *test)
+> +{
+> +       struct binder_alloc_test *priv =3D test->priv;
+> +
+> +       KUNIT_EXPECT_PTR_EQ(test, priv->alloc.freelist,
+> +                           &priv->binder_test_freelist);
+> +}
+> +
+> +static void binder_alloc_test_mmap(struct kunit *test)
+> +{
+> +       struct binder_alloc_test *priv =3D test->priv;
+> +       struct binder_alloc *alloc =3D &priv->alloc;
+> +       struct binder_buffer *buf;
+> +       struct rb_node *n;
+> +
+> +       KUNIT_EXPECT_EQ(test, alloc->mapped, true);
+> +       KUNIT_EXPECT_EQ(test, alloc->buffer_size, BINDER_MMAP_SIZE);
+> +
+> +       n =3D rb_first(&alloc->allocated_buffers);
+> +       KUNIT_EXPECT_PTR_EQ(test, n, NULL);
+> +
+> +       n =3D rb_first(&alloc->free_buffers);
+> +       buf =3D rb_entry(n, struct binder_buffer, rb_node);
+> +       KUNIT_EXPECT_EQ(test, binder_alloc_buffer_size(alloc, buf),
+> +                       BINDER_MMAP_SIZE);
+> +       KUNIT_EXPECT_TRUE(test, list_is_last(&buf->entry, &alloc->buffers=
+));
+> +}
+> +
+> +/* =3D=3D=3D=3D=3D End test cases =3D=3D=3D=3D=3D */
+> +
+> +static void binder_alloc_test_vma_close(struct vm_area_struct *vma)
+> +{
+> +       struct binder_alloc *alloc =3D vma->vm_private_data;
+> +
+> +       binder_alloc_vma_close(alloc);
+> +}
+> +
+> +static const struct vm_operations_struct binder_alloc_test_vm_ops =3D {
+> +       .close =3D binder_alloc_test_vma_close,
+> +       .fault =3D binder_vm_fault,
+> +};
+> +
+> +static int binder_alloc_test_mmap_handler(struct file *filp,
+> +                                         struct vm_area_struct *vma)
+> +{
+> +       struct binder_alloc *alloc =3D filp->private_data;
+> +
+> +       vm_flags_mod(vma, VM_DONTCOPY | VM_MIXEDMAP, VM_MAYWRITE);
+> +
+> +       vma->vm_ops =3D &binder_alloc_test_vm_ops;
+> +       vma->vm_private_data =3D alloc;
+> +
+> +       return binder_alloc_mmap_handler(alloc, vma);
+> +}
+> +
+> +static const struct file_operations binder_alloc_test_fops =3D {
+> +       .mmap =3D binder_alloc_test_mmap_handler,
+> +};
+> +
+> +static int binder_alloc_test_init(struct kunit *test)
+> +{
+> +       struct binder_alloc_test *priv;
+> +       int ret;
+> +
+> +       priv =3D kunit_kzalloc(test, sizeof(*priv), GFP_KERNEL);
+> +       if (!priv)
+> +               return -ENOMEM;
+> +       test->priv =3D priv;
+> +
+> +       ret =3D list_lru_init(&priv->binder_test_freelist);
+> +       if (ret) {
+> +               kunit_err(test, "Failed to initialize test freelist\n");
+> +               return ret;
+> +       }
+> +
+> +       /* __binder_alloc_init requires mm to be attached */
+> +       ret =3D kunit_attach_mm();
+> +       if (ret) {
+> +               kunit_err(test, "Failed to attach mm\n");
+> +               return ret;
+> +       }
+> +       __binder_alloc_init(&priv->alloc, &priv->binder_test_freelist);
+> +
+> +       priv->filp =3D anon_inode_getfile("binder_alloc_kunit",
+> +                                       &binder_alloc_test_fops, &priv->a=
+lloc,
+> +                                       O_RDWR | O_CLOEXEC);
+> +       if (IS_ERR_OR_NULL(priv->filp)) {
+> +               kunit_err(test, "Failed to open binder alloc test driver =
+file\n");
+> +               return priv->filp ? PTR_ERR(priv->filp) : -ENOMEM;
+> +       }
+> +
+> +       priv->mmap_uaddr =3D kunit_vm_mmap(test, priv->filp, 0, BINDER_MM=
+AP_SIZE,
+> +                                        PROT_READ, MAP_PRIVATE | MAP_NOR=
+ESERVE,
+> +                                        0);
+> +       if (!priv->mmap_uaddr) {
+> +               kunit_err(test, "Could not map the test's transaction mem=
+ory\n");
+> +               return -ENOMEM;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static void binder_alloc_test_exit(struct kunit *test)
+> +{
+> +       struct binder_alloc_test *priv =3D test->priv;
+> +
+> +       /* Close the backing file to make sure binder_alloc_vma_close run=
+s */
+> +       if (!IS_ERR_OR_NULL(priv->filp))
+> +               fput(priv->filp);
+> +
+> +       if (priv->alloc.mm)
+> +               binder_alloc_deferred_release(&priv->alloc);
+> +
+> +       /* Make sure freelist is empty */
+> +       KUNIT_EXPECT_EQ(test, list_lru_count(&priv->binder_test_freelist)=
+, 0);
+> +       list_lru_destroy(&priv->binder_test_freelist);
+> +}
+> +
+> +static struct kunit_case binder_alloc_test_cases[] =3D {
+> +       KUNIT_CASE(binder_alloc_test_init_freelist),
+> +       KUNIT_CASE(binder_alloc_test_mmap),
+> +       {}
+> +};
+> +
+> +static struct kunit_suite binder_alloc_test_suite =3D {
+> +       .name =3D "binder_alloc",
+> +       .test_cases =3D binder_alloc_test_cases,
+> +       .init =3D binder_alloc_test_init,
+> +       .exit =3D binder_alloc_test_exit,
+> +};
+> +
+> +kunit_test_suite(binder_alloc_test_suite);
+> +
+> +MODULE_AUTHOR("Tiffany Yang <ynaffit@google.com>");
+> +MODULE_DESCRIPTION("Binder Alloc KUnit tests");
+> +MODULE_LICENSE("GPL");
+> diff --git a/include/kunit/test.h b/include/kunit/test.h
+> index 39c768f87dc9..d958ee53050e 100644
+> --- a/include/kunit/test.h
+> +++ b/include/kunit/test.h
+> @@ -531,6 +531,18 @@ static inline char *kunit_kstrdup(struct kunit *test=
+, const char *str, gfp_t gfp
+>   */
+>  const char *kunit_kstrdup_const(struct kunit *test, const char *str, gfp=
+_t gfp);
+>
+> +/**
+> + * kunit_attach_mm() - Create and attach a new mm if it doesn't already =
+exist.
+> + *
+> + * Allocates a &struct mm_struct and attaches it to @current. In most ca=
+ses, call
+> + * kunit_vm_mmap() without calling kunit_attach_mm() directly. Only nece=
+ssary when
+> + * code under test accesses the mm before executing the mmap (e.g., to p=
+erform
+> + * additional initialization beforehand).
+> + *
+> + * Return: 0 on success, -errno on failure.
+> + */
+> +int kunit_attach_mm(void);
+> +
+>  /**
+>   * kunit_vm_mmap() - Allocate KUnit-tracked vm_mmap() area
+>   * @test: The test context object.
+> diff --git a/lib/kunit/user_alloc.c b/lib/kunit/user_alloc.c
+> index 46951be018be..b8cac765e620 100644
+> --- a/lib/kunit/user_alloc.c
+> +++ b/lib/kunit/user_alloc.c
+> @@ -22,8 +22,7 @@ struct kunit_vm_mmap_params {
+>         unsigned long offset;
+>  };
+>
+> -/* Create and attach a new mm if it doesn't already exist. */
+> -static int kunit_attach_mm(void)
+> +int kunit_attach_mm(void)
+>  {
+>         struct mm_struct *mm;
+>
+> @@ -49,6 +48,7 @@ static int kunit_attach_mm(void)
+>
+>         return 0;
+>  }
+> +EXPORT_SYMBOL_GPL(kunit_attach_mm);
+>
+>  static int kunit_vm_mmap_init(struct kunit_resource *res, void *context)
+>  {
+> --
+> 2.50.0.727.gbf7dc18ff4-goog
+>
 
-Fixes: 472111920f1c ("net: bridge: switchdev: allow the TX data plane forwarding to be offloaded")
-Signed-off-by: Joseph Huang <Joseph.Huang@garmin.com>
----
- net/bridge/br_switchdev.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+These KUnit changes to include/kunit/test.h and lib/kunit/user_alloc.c
+seem ok to me. I also tested this and it seems to be running well.
 
-diff --git a/net/bridge/br_switchdev.c b/net/bridge/br_switchdev.c
-index 95d7355a0407..757c34bf5931 100644
---- a/net/bridge/br_switchdev.c
-+++ b/net/bridge/br_switchdev.c
-@@ -18,7 +18,8 @@ static bool nbp_switchdev_can_offload_tx_fwd(const struct net_bridge_port *p,
- 		return false;
- 
- 	return (p->flags & BR_TX_FWD_OFFLOAD) &&
--	       (p->hwdom != BR_INPUT_SKB_CB(skb)->src_hwdom);
-+	       (p->hwdom != BR_INPUT_SKB_CB(skb)->src_hwdom) &&
-+	       !br_multicast_igmp_type(skb);
- }
- 
- bool br_switchdev_frame_uses_tx_fwd_offload(struct sk_buff *skb)
--- 
-2.49.0
+Tested-by: Rae Moar <rmoar@google.com>
 
+Thanks!
+-Rae
