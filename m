@@ -1,47 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF23B26A0B3;
-	Tue,  1 Jul 2025 08:58:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E91F26D4EB;
+	Tue,  1 Jul 2025 08:58:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751360290; cv=none; b=U45tuArxaDw6vJtmIHmD6GYd4DCgAJcylUiIpyOGsmIvECxGcw8QJ6PFxMLQCfUGUkbXiOzngjzYW1TToZvLonnc3/ThiqruK7RUDHr2RpOVwAx4rYuW+4EhjNROQhdWP1hz9EN4akgf8WjLQWDxsmYbf3gc7GQVynX9xTc+D3s=
+	t=1751360293; cv=none; b=poE1eVnr5ffYxd+fwJJfvLYTuFsiiAQNPeHaOUSN8varjZH975h0HtfheqNyhSloRCTpEW0TsIW+3qug2aMGgWMSZe2YO7iefHVo5mxjH+Q10AJk+7/sywEo7MV0Ky/j5PyYL718Thchk347JmA2ty99hcQGwC4dsgecQV9yBZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751360290; c=relaxed/simple;
-	bh=sd/v7cGkj/tjrSz2ZYvXIB3XB5Mae2DoLyqaD2YDD50=;
+	s=arc-20240116; t=1751360293; c=relaxed/simple;
+	bh=dRtOLc0Ah0kuXXHJncEp4KlW6Rn2+hYOmoEn9rpo9FQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Dtxwwjd2Rtjunz4+2jkUX6y/1+8YcXSXp5avR1rvTbPbEnVwNkQhv4lDXmWvh2eDivVtwRqiXdb7GzgmGYe6PzyxRyQc7rANsH2+iO7t4pUWNcqb21h2scklIGiTPN5VKNnQQ9UMebkeMJ/Wa1FjP569n+CNnosCLBw/xCgugu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=krhzk1D7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xmufFQQ4; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=N85NzJoW2HRLmO2bG32DywmK9GUKQj6XRmf8EGmPIf3qgLIYRuhu2FqrgvOWyov4X4j/XuPUYAPnDMPOu6ePnkECE37SzeARZl2JgyBhi/8lqB2EP98G6tF+O2PXUtuYMf2BULCSCtUqHD7NoUHqOMY0TBUTwiwUmNes0sysOQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hCdg9J/c; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SODPMp3s; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="krhzk1D7";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xmufFQQ4"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hCdg9J/c";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SODPMp3s"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751360287;
+	s=2020; t=1751360289;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=joYJ/MT5CmKtbgnKXRG/YOnvLpHO2Kz90MtG4Gjijrg=;
-	b=krhzk1D7lMKjKujXnkLtewos+ZEzFtnviygSNaOH81NLdcFvKN/5rDRHKcXOviJlF3+ScF
-	sSILpbPEvg02UQ1tMXjR5TaSdR/FfpEQQqNmxduF9+Ik3MltL4gtmiTPuYMBbT6NeHj/05
-	A3uixZ4X0oVqt3aL+jlBkOEGFbdSJvTlpGtuHIpX7MX93qQdlwlv1aQSBYGRWGbiXcqsmQ
-	g2Dgs2/mnFTJpWcmNXUDJaA+lnr+OK6wH5Ml/yKwi7detYOtAGVs/lDEe9ZV8sPaucJVAh
-	BBwMxWYo4/YRtsZk1pdnC/QcBBaBwHLByplJSYT7HkirgcFaobHSVwpbFaWTrw==
+	bh=xLGlXBLoHCl8iTZFGkpWl+4cLC4fbRbFQ1Cna6OA294=;
+	b=hCdg9J/c9E6RT0wp6/DhGRc8l2ths+F2e0C3PVLM5LyMtcRgzSnaJkHkcQPPghkg/XeIpd
+	LWGQ7lX3WJUFxu3ek2BvL8C6SIKdZZCnnfAazdnoDGestgjVmLWS7pp8l9vtfnfLKRJCbr
+	XJXluEsSZP/mJ3JhmR2CxKsF1IugmZxvxhTTY235Ij3lq6ld4ULlPsfC9olhKlyxHYgWTC
+	NEb5IBp538bTUXHNDpo7FJPd/m1D4oK/x4gPmt5lejA0NpMusHSEhEYSIkfUR9IhQqKnXh
+	/5nUYmD7mc2ugRKGfjNgNfpa0roYwNLQgrs/CeQU6Hcca6RY3aKTm6HfPSUclw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751360287;
+	s=2020e; t=1751360289;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=joYJ/MT5CmKtbgnKXRG/YOnvLpHO2Kz90MtG4Gjijrg=;
-	b=xmufFQQ4bBO6kk1ikyfHdIQHNbO5pST5YTXQizxVBEE+zeJrwv081AC82PS6mNifoki68y
-	WZNpjH/czo0tVLAg==
-Date: Tue, 01 Jul 2025 10:57:58 +0200
-Subject: [PATCH 04/14] vdso/helpers: Add helpers for seqlocks of single
- vdso_clock
+	bh=xLGlXBLoHCl8iTZFGkpWl+4cLC4fbRbFQ1Cna6OA294=;
+	b=SODPMp3s/oAwW35AK1TnWm29pKng8GpRaNdGr9v2vbfuSLyfCFSWsbW6EBxgbSwh5NqAtV
+	LeWbBp4VXN/84xCw==
+Date: Tue, 01 Jul 2025 10:58:01 +0200
+Subject: [PATCH 07/14] vdso/gettimeofday: Introduce vdso_clockid_valid()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,7 +49,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250701-vdso-auxclock-v1-4-df7d9f87b9b8@linutronix.de>
+Message-Id: <20250701-vdso-auxclock-v1-7-df7d9f87b9b8@linutronix.de>
 References: <20250701-vdso-auxclock-v1-0-df7d9f87b9b8@linutronix.de>
 In-Reply-To: <20250701-vdso-auxclock-v1-0-df7d9f87b9b8@linutronix.de>
 To: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
@@ -72,88 +71,60 @@ Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
  Kurt Kanzenbach <kurt@linutronix.de>, Nam Cao <namcao@linutronix.de>, 
  Antoine Tenart <atenart@kernel.org>, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751360285; l=2571;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751360285; l=1538;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=sd/v7cGkj/tjrSz2ZYvXIB3XB5Mae2DoLyqaD2YDD50=;
- b=xHNJy1mqucZQ/T+0vCZcI6A5yV4d5Wm2CvBT6moVq8zEmS9PmdFRxsLmxUq/vJzGB524dlpsL
- qipcU3XvOpkCtiYJVJhEl2zHKlPnzAMS3lIQiV9mGiAkdtMch9Ht/rp
+ bh=dRtOLc0Ah0kuXXHJncEp4KlW6Rn2+hYOmoEn9rpo9FQ=;
+ b=HTm3jtAk7vagm4p603uxzJ6EQojuf/6O5qSR9JWQUCAE793nMRMynN0XVRWXyboEG1fCIAwoE
+ 4hpXQVIhcWLCO71c9GbNNfwf5IiU8zNqmXABKY3tM0pBQK7mnBSSfn1
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Auxiliary clocks will have their vDSO data in a dedicated 'struct vdso_clock',
-which needs to be synchronized independently.
-
-Add a helper to synchronize a single vDSO clock.
+With the upcoming addition of auxiliary clocks the clockid validation will
+become more complicated. Split it into a dedicated function to keep the
+code readable.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- include/vdso/helpers.h | 40 +++++++++++++++++++++++++++-------------
- 1 file changed, 27 insertions(+), 13 deletions(-)
+ lib/vdso/gettimeofday.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/include/vdso/helpers.h b/include/vdso/helpers.h
-index 0a98fed550ba66a84a620fbbd6aee3e3029b4772..a5679f5efdfdcaaf6efd5f4a317d1f132c3dc617 100644
---- a/include/vdso/helpers.h
-+++ b/include/vdso/helpers.h
-@@ -28,32 +28,46 @@ static __always_inline u32 vdso_read_retry(const struct vdso_clock *vc,
- 	return seq != start;
+diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
+index c5266532a097c06f33d12e345c695357d75abf42..215151bd5a1320ee6edda8f334d47c739577f696 100644
+--- a/lib/vdso/gettimeofday.c
++++ b/lib/vdso/gettimeofday.c
+@@ -71,6 +71,12 @@ static inline bool vdso_cycles_ok(u64 cycles)
  }
+ #endif
  
--static __always_inline void vdso_write_begin(struct vdso_time_data *vd)
-+static __always_inline void vdso_write_begin_clock(struct vdso_clock *vc, bool last)
- {
--	struct vdso_clock *vc = vd->clock_data;
--
- 	/*
- 	 * WRITE_ONCE() is required otherwise the compiler can validly tear
--	 * updates to vd[x].seq and it is possible that the value seen by the
-+	 * updates to vc->seq and it is possible that the value seen by the
- 	 * reader is inconsistent.
- 	 */
--	WRITE_ONCE(vc[CS_HRES_COARSE].seq, vc[CS_HRES_COARSE].seq + 1);
--	WRITE_ONCE(vc[CS_RAW].seq, vc[CS_RAW].seq + 1);
--	smp_wmb();
-+	WRITE_ONCE(vc->seq, vc->seq + 1);
-+
-+	if (last)
-+		smp_wmb();
- }
- 
--static __always_inline void vdso_write_end(struct vdso_time_data *vd)
-+static __always_inline void vdso_write_end_clock(struct vdso_clock *vc, bool first)
- {
--	struct vdso_clock *vc = vd->clock_data;
-+	if (first)
-+		smp_wmb();
- 
--	smp_wmb();
- 	/*
- 	 * WRITE_ONCE() is required otherwise the compiler can validly tear
--	 * updates to vd[x].seq and it is possible that the value seen by the
-+	 * updates to vc->seq and it is possible that the value seen by the
- 	 * reader is inconsistent.
- 	 */
--	WRITE_ONCE(vc[CS_HRES_COARSE].seq, vc[CS_HRES_COARSE].seq + 1);
--	WRITE_ONCE(vc[CS_RAW].seq, vc[CS_RAW].seq + 1);
-+	WRITE_ONCE(vc->seq, vc->seq + 1);
++static __always_inline bool vdso_clockid_valid(clockid_t clock)
++{
++	/* Check for negative values or invalid clocks */
++	return likely((u32) clock < MAX_CLOCKS);
 +}
 +
-+static __always_inline void vdso_write_begin(struct vdso_time_data *vd)
-+{
-+	struct vdso_clock *vc = vd->clock_data;
-+
-+	vdso_write_begin_clock(&vc[CS_HRES_COARSE], false);
-+	vdso_write_begin_clock(&vc[CS_RAW], true);
-+}
-+
-+static __always_inline void vdso_write_end(struct vdso_time_data *vd)
-+{
-+	struct vdso_clock *vc = vd->clock_data;
-+
-+	vdso_write_end_clock(&vc[CS_HRES_COARSE], true);
-+	vdso_write_end_clock(&vc[CS_RAW], false);
- }
+ #ifdef CONFIG_TIME_NS
  
- #endif /* !__ASSEMBLY__ */
+ #ifdef CONFIG_GENERIC_VDSO_DATA_STORE
+@@ -268,8 +274,7 @@ __cvdso_clock_gettime_common(const struct vdso_time_data *vd, clockid_t clock,
+ 	const struct vdso_clock *vc = vd->clock_data;
+ 	u32 msk;
+ 
+-	/* Check for negative values or invalid clocks */
+-	if (unlikely((u32) clock >= MAX_CLOCKS))
++	if (!vdso_clockid_valid(clock))
+ 		return false;
+ 
+ 	/*
+@@ -405,8 +410,7 @@ bool __cvdso_clock_getres_common(const struct vdso_time_data *vd, clockid_t cloc
+ 	u32 msk;
+ 	u64 ns;
+ 
+-	/* Check for negative values or invalid clocks */
+-	if (unlikely((u32) clock >= MAX_CLOCKS))
++	if (!vdso_clockid_valid(clock))
+ 		return false;
+ 
+ 	if (IS_ENABLED(CONFIG_TIME_NS) &&
 
 -- 
 2.50.0
