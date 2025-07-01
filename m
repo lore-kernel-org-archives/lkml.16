@@ -1,415 +1,169 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CDB627380B;
-	Tue,  1 Jul 2025 12:36:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFD55273D94;
+	Tue,  1 Jul 2025 12:36:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751373398; cv=none; b=mQFccRN1Lbg89tqmNBQKvY6wLs9B22DMajvvC0lMCpsIK7LceKBuY+WVBm8HicAcnavZ98daB8ALtqtPCVdnuKEAAJdsl9m6calPTp7LFBCoL2XXu1+Iu1CriwivrieviHT3EvQ/wRYX5E05y6eRzf8LB5IJZzu6KPtP9Hp59AM=
+	t=1751373402; cv=none; b=pQdpH3iWKN8BulwNDC0g9iX8txkzf5SjCFcQIl1+0V2RFz5vTP5uq325vEdFNh/f3/OmZogxkvZqSQMUs96hVGofkmDoki2jBN2jrpz4D4ikCwD/FdFUFr/iNxB14gxUSMny9BrwTi+WMb/nRRAC+XJlJ7GzrDwyQRFE+m9nta0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751373398; c=relaxed/simple;
-	bh=Nd+PoXGJseXlQ84rElI6bHZVU9EObgcACAxSth1bZ4I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=an2B9AHpUf8pvLQUYxsBcU4G0NxBUQ5kBV34iJiNg9fgSPA5WJJypyYNbVygQ+BiwGUVltBrQ/LbPQO1ZaeY2y7CkgK5OQFtBE9KcPT3QkHl0Nrx4YJp5yCkNBd+PdlB5G84R5SQsKgQKmNaYXhPOTcwHtcUFRBc4zv5XLQtaK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NOU+XryH; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751373402; c=relaxed/simple;
+	bh=YWeKmkvE2nshyPO+2BHN91uF4zdQRmWK/b609E9Ke5k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=aFhylYJOtmKSZIc4pVfJUcURfvE8MlFYqZra23KqQ/quG4y33LnFJPUG/KHho8OsWOi5vlWjQyB7ouQ9I5EKnNKpeelvZ3PVHqVsWewJPP1BqjogUt74pX8bBuuvS4VFmBbVP8RIMlzpDjX7XtCLWbPm4BW+e91NOsOb8D1x0rA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Tivybn3q; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NOU+XryH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751373395; x=1782909395;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Nd+PoXGJseXlQ84rElI6bHZVU9EObgcACAxSth1bZ4I=;
-  b=NOU+XryHgfRiXikKWf6YwbWjVFL+6jpeqjvGCabJRVplc/xvPab2FXiq
-   BnNciP8bAQMnA5y10jyldH4TgV+urJ5RRSdT76CK7f43RMLaXpJrxxHPs
-   SyiKJkOVKtil1mhzM/PzgLsFzzByflko0QC/tDkDf8xO77/wG6KdEVG7Z
-   yHwLcCSqYtu60q5q+uVrbZTcJZuI1EJTJP3Jjvb0EVa0Sa4L4KTVq8U6d
-   rByMg8tMoXxHU+8yVHkbsdO2HZVUtXx3wsdYwqhvJD4dUh7UuhmIg7yml
-   9Czr3NkybJmP6QiJQt7zM5zxD2GXjRVNPsYaHULjB8Q5GUglMaxhsmt4w
-   w==;
-X-CSE-ConnectionGUID: aHly9T+4QgGq8lB6sHRj1w==
-X-CSE-MsgGUID: 2NPFQNeFTmuHATZaY7Y32w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="56263523"
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="56263523"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 05:36:34 -0700
-X-CSE-ConnectionGUID: PQWY0j4GRtyp/OtvXgyDnA==
-X-CSE-MsgGUID: /mYoMBFYRiarGfuQkVN/oA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="154254176"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 01 Jul 2025 05:36:29 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uWaDq-000a9G-2H;
-	Tue, 01 Jul 2025 12:36:26 +0000
-Date: Tue, 1 Jul 2025 20:36:08 +0800
-From: kernel test robot <lkp@intel.com>
-To: Wander Lairson Costa <wander@redhat.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	David Woodhouse <dwmw@amazon.co.uk>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Clark Williams <williams@redhat.com>,
-	Gabriele Monaco <gmonaco@redhat.com>
-Subject: Re: [PATCH v2 2/2] tracing/preemptirq: Optimize
- preempt_disable/enable() tracepoint overhead
-Message-ID: <202507011942.sCSGnb2M-lkp@intel.com>
-References: <20250630195243.701516-3-wander@redhat.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Tivybn3q"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5619q5tJ032421;
+	Tue, 1 Jul 2025 12:36:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	yoARzbA2DxUDKFyYQNcEmf1O1r1hsrMQdeSsxiUJ8+Y=; b=Tivybn3qFcPRcSpl
+	amxACRcHpjj7qOoVJ1hQK7fK/Ag603Q4V3B3xI61jYBSZf01+PzDlMVKQWvVJppJ
+	jMLTGK/WAGz4vQeuzEH/LNrEPYGJPUn6vELGquvpwJf/BdBOW80i/x0yDf/YMK+E
+	xt/8Xjcx5XxgCd2vjrDYJSZdw+JreYZXMX7LGX8r6EjPGWAWMV3poEtTASQRySyB
+	99lT1+1oKnvBycvrJkjzamgog56NUCXCDEM+BCCWWNvjgy9Dwi7eUoabmyAjr8i0
+	ukDwgcbwTqrM0FE7CtNC0b1l/s0d968JmmTv9G4hMwz3HPLdKW6aAxAUIHQH37Wu
+	xheuZQ==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j63k8ykb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 01 Jul 2025 12:36:27 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 561CaR4m032439
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 1 Jul 2025 12:36:27 GMT
+Received: from [10.235.9.75] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Tue, 1 Jul
+ 2025 05:36:21 -0700
+Message-ID: <b1d88ceb-9021-4233-abaa-7d742e7a8f58@quicinc.com>
+Date: Tue, 1 Jul 2025 20:36:19 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250630195243.701516-3-wander@redhat.com>
-
-Hi Wander,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on trace/for-next]
-[also build test ERROR on tip/sched/core linus/master v6.16-rc4 next-20250701]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Wander-Lairson-Costa/trace-preemptirq-reduce-overhead-of-irq_enable-disable-tracepoints/20250701-035446
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
-patch link:    https://lore.kernel.org/r/20250630195243.701516-3-wander%40redhat.com
-patch subject: [PATCH v2 2/2] tracing/preemptirq: Optimize preempt_disable/enable() tracepoint overhead
-config: powerpc-randconfig-003-20250701 (https://download.01.org/0day-ci/archive/20250701/202507011942.sCSGnb2M-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project e04c938cc08a90ae60440ce22d072ebc69d67ee8)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250701/202507011942.sCSGnb2M-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507011942.sCSGnb2M-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from arch/powerpc/kernel/asm-offsets.c:12:
-   In file included from include/linux/compat.h:14:
-   In file included from include/linux/sem.h:5:
-   In file included from include/uapi/linux/sem.h:5:
-   In file included from include/linux/ipc.h:7:
-   In file included from include/linux/rhashtable-types.h:12:
-   In file included from include/linux/alloc_tag.h:11:
-   In file included from include/linux/preempt.h:13:
-   In file included from include/linux/tracepoint-defs.h:11:
-   In file included from include/linux/atomic.h:7:
-   In file included from arch/powerpc/include/asm/atomic.h:11:
-   In file included from arch/powerpc/include/asm/cmpxchg.h:755:
-   In file included from include/asm-generic/cmpxchg-local.h:6:
-   include/linux/irqflags.h:201:1: error: type specifier missing, defaults to 'int'; ISO C99 and later do not support implicit int [-Wimplicit-int]
-     201 | DECLARE_TRACEPOINT(irq_enable);
-         | ^
-         | int
-   include/linux/irqflags.h:201:20: error: a parameter list without types is only allowed in a function definition
-     201 | DECLARE_TRACEPOINT(irq_enable);
-         |                    ^
-   include/linux/irqflags.h:202:1: error: type specifier missing, defaults to 'int'; ISO C99 and later do not support implicit int [-Wimplicit-int]
-     202 | DECLARE_TRACEPOINT(irq_disable);
-         | ^
-         | int
-   include/linux/irqflags.h:202:20: error: a parameter list without types is only allowed in a function definition
-     202 | DECLARE_TRACEPOINT(irq_disable);
-         |                    ^
-   include/linux/irqflags.h:277:47: error: call to undeclared function 'tracepoint_enabled'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     277 | DEFINE_LOCK_GUARD_0(irq, local_irq_disable(), local_irq_enable())
-         |                                               ^
-   include/linux/irqflags.h:210:7: note: expanded from macro 'local_irq_enable'
-     210 |                 if (__trace_enabled(irq_enable))        \
-         |                     ^
-   include/linux/irqflags.h:206:3: note: expanded from macro '__trace_enabled'
-     206 |          tracepoint_enabled(tp))
-         |          ^
-   include/linux/irqflags.h:277:47: error: use of undeclared identifier 'irq_enable'
-     277 | DEFINE_LOCK_GUARD_0(irq, local_irq_disable(), local_irq_enable())
-         |                                               ^~~~~~~~~~~~~~~~~~
-   include/linux/irqflags.h:210:23: note: expanded from macro 'local_irq_enable'
-     210 |                 if (__trace_enabled(irq_enable))        \
-         |                                     ^~~~~~~~~~
-   include/linux/irqflags.h:277:26: error: call to undeclared function 'tracepoint_enabled'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     277 | DEFINE_LOCK_GUARD_0(irq, local_irq_disable(), local_irq_enable())
-         |                          ^
-   include/linux/irqflags.h:219:7: note: expanded from macro 'local_irq_disable'
-     219 |                 if (__trace_enabled(irq_disable) &&     \
-         |                     ^
-   include/linux/irqflags.h:206:3: note: expanded from macro '__trace_enabled'
-     206 |          tracepoint_enabled(tp))
-         |          ^
-   include/linux/irqflags.h:277:26: error: use of undeclared identifier 'irq_disable'
-     277 | DEFINE_LOCK_GUARD_0(irq, local_irq_disable(), local_irq_enable())
-         |                          ^~~~~~~~~~~~~~~~~~~
-   include/linux/irqflags.h:219:23: note: expanded from macro 'local_irq_disable'
-     219 |                 if (__trace_enabled(irq_disable) &&     \
-         |                                     ^~~~~~~~~~~
-   include/linux/irqflags.h:280:7: error: call to undeclared function 'tracepoint_enabled'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     280 |                     local_irq_restore(_T->flags),
-         |                     ^
-   include/linux/irqflags.h:234:7: note: expanded from macro 'local_irq_restore'
-     234 |                 if (__trace_enabled(irq_enable) &&      \
-         |                     ^
-   include/linux/irqflags.h:206:3: note: expanded from macro '__trace_enabled'
-     206 |          tracepoint_enabled(tp))
-         |          ^
-   include/linux/irqflags.h:280:7: error: use of undeclared identifier 'irq_enable'
-     280 |                     local_irq_restore(_T->flags),
-         |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/irqflags.h:234:23: note: expanded from macro 'local_irq_restore'
-     234 |                 if (__trace_enabled(irq_enable) &&      \
-         |                                     ^~~~~~~~~~
-   include/linux/irqflags.h:279:7: error: call to undeclared function 'tracepoint_enabled'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     279 |                     local_irq_save(_T->flags),
-         |                     ^
-   include/linux/irqflags.h:227:7: note: expanded from macro 'local_irq_save'
-     227 |                 if (__trace_enabled(irq_disable) &&     \
-         |                     ^
-   include/linux/irqflags.h:206:3: note: expanded from macro '__trace_enabled'
-     206 |          tracepoint_enabled(tp))
-         |          ^
-   include/linux/irqflags.h:279:7: error: use of undeclared identifier 'irq_disable'
-     279 |                     local_irq_save(_T->flags),
-         |                     ^~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/irqflags.h:227:23: note: expanded from macro 'local_irq_save'
-     227 |                 if (__trace_enabled(irq_disable) &&     \
-         |                                     ^~~~~~~~~~~
-   In file included from arch/powerpc/kernel/asm-offsets.c:12:
-   In file included from include/linux/compat.h:15:
-   In file included from include/linux/socket.h:8:
-   In file included from include/linux/uio.h:9:
-   In file included from include/linux/mm_types.h:8:
-   In file included from include/linux/kref.h:16:
-   In file included from include/linux/spinlock.h:312:
->> include/linux/spinlock_api_smp.h:151:2: error: use of undeclared identifier '__tracepoint_irq_enable'; did you mean '__tracepoint_preempt_enable'?
-     151 |         local_irq_restore(flags);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/irqflags.h:234:7: note: expanded from macro 'local_irq_restore'
-     234 |                 if (__trace_enabled(irq_enable) &&      \
-         |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/irqflags.h:206:3: note: expanded from macro '__trace_enabled'
-     206 |          tracepoint_enabled(tp))
-         |          ^~~~~~~~~~~~~~~~~~~~~~
-   include/linux/tracepoint-defs.h:92:27: note: expanded from macro 'tracepoint_enabled'
-      92 |         static_branch_unlikely(&(__tracepoint_##tp).key)
-         |                                  ^~~~~~~~~~~~~~~~~
-   <scratch space>:103:1: note: expanded from here
-     103 | __tracepoint_irq_enable
-         | ^~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/preempt.h:202:1: note: '__tracepoint_preempt_enable' declared here
-     202 | DECLARE_TRACEPOINT(preempt_enable);
-         | ^
-   include/linux/tracepoint-defs.h:88:27: note: expanded from macro 'DECLARE_TRACEPOINT'
-      88 |         extern struct tracepoint __tracepoint_##tp
-         |                                  ^
-   <scratch space>:104:1: note: expanded from here
-     104 | __tracepoint_preempt_enable
-         | ^
-   In file included from arch/powerpc/kernel/asm-offsets.c:12:
-   In file included from include/linux/compat.h:15:
-   In file included from include/linux/socket.h:8:
-   In file included from include/linux/uio.h:9:
-   In file included from include/linux/mm_types.h:8:
-   In file included from include/linux/kref.h:16:
-   In file included from include/linux/spinlock.h:312:
->> include/linux/spinlock_api_smp.h:151:2: error: use of undeclared identifier '__tracepoint_irq_enable'; did you mean '__tracepoint_preempt_enable'?
-     151 |         local_irq_restore(flags);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/irqflags.h:234:7: note: expanded from macro 'local_irq_restore'
-     234 |                 if (__trace_enabled(irq_enable) &&      \
-         |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/irqflags.h:206:3: note: expanded from macro '__trace_enabled'
-     206 |          tracepoint_enabled(tp))
-         |          ^~~~~~~~~~~~~~~~~~~~~~
-   include/linux/tracepoint-defs.h:92:27: note: expanded from macro 'tracepoint_enabled'
-      92 |         static_branch_unlikely(&(__tracepoint_##tp).key)
-         |                                  ^~~~~~~~~~~~~~~~~
-   <scratch space>:103:1: note: expanded from here
-     103 | __tracepoint_irq_enable
-         | ^~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/preempt.h:202:1: note: '__tracepoint_preempt_enable' declared here
-     202 | DECLARE_TRACEPOINT(preempt_enable);
-         | ^
-   include/linux/tracepoint-defs.h:88:27: note: expanded from macro 'DECLARE_TRACEPOINT'
-      88 |         extern struct tracepoint __tracepoint_##tp
-         |                                  ^
-   <scratch space>:104:1: note: expanded from here
-     104 | __tracepoint_preempt_enable
-         | ^
-   In file included from arch/powerpc/kernel/asm-offsets.c:12:
-   In file included from include/linux/compat.h:15:
-   In file included from include/linux/socket.h:8:
-   In file included from include/linux/uio.h:9:
-   In file included from include/linux/mm_types.h:8:
-   In file included from include/linux/kref.h:16:
-   In file included from include/linux/spinlock.h:312:
->> include/linux/spinlock_api_smp.h:151:2: error: use of undeclared identifier '__tracepoint_irq_enable'; did you mean '__tracepoint_preempt_enable'?
-     151 |         local_irq_restore(flags);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/irqflags.h:234:7: note: expanded from macro 'local_irq_restore'
-     234 |                 if (__trace_enabled(irq_enable) &&      \
-         |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/irqflags.h:206:3: note: expanded from macro '__trace_enabled'
-     206 |          tracepoint_enabled(tp))
-         |          ^~~~~~~~~~~~~~~~~~~~~~
-   include/linux/tracepoint-defs.h:92:27: note: expanded from macro 'tracepoint_enabled'
-      92 |         static_branch_unlikely(&(__tracepoint_##tp).key)
-         |                                  ^~~~~~~~~~~~~~~~~
-   <scratch space>:103:1: note: expanded from here
-     103 | __tracepoint_irq_enable
-         | ^~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/preempt.h:202:1: note: '__tracepoint_preempt_enable' declared here
-     202 | DECLARE_TRACEPOINT(preempt_enable);
-         | ^
-   include/linux/tracepoint-defs.h:88:27: note: expanded from macro 'DECLARE_TRACEPOINT'
-      88 |         extern struct tracepoint __tracepoint_##tp
-         |                                  ^
-   <scratch space>:104:1: note: expanded from here
-     104 | __tracepoint_preempt_enable
-         | ^
-   In file included from arch/powerpc/kernel/asm-offsets.c:12:
-   In file included from include/linux/compat.h:15:
-   In file included from include/linux/socket.h:8:
-   In file included from include/linux/uio.h:9:
-   In file included from include/linux/mm_types.h:8:
-   In file included from include/linux/kref.h:16:
-   In file included from include/linux/spinlock.h:312:
->> include/linux/spinlock_api_smp.h:151:2: error: use of undeclared identifier '__tracepoint_irq_enable'; did you mean '__tracepoint_preempt_enable'?
-     151 |         local_irq_restore(flags);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/irqflags.h:234:7: note: expanded from macro 'local_irq_restore'
-     234 |                 if (__trace_enabled(irq_enable) &&      \
-         |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/irqflags.h:206:3: note: expanded from macro '__trace_enabled'
-     206 |          tracepoint_enabled(tp))
-         |          ^~~~~~~~~~~~~~~~~~~~~~
-   include/linux/tracepoint-defs.h:92:27: note: expanded from macro 'tracepoint_enabled'
-      92 |         static_branch_unlikely(&(__tracepoint_##tp).key)
-         |                                  ^~~~~~~~~~~~~~~~~
-   <scratch space>:103:1: note: expanded from here
-     103 | __tracepoint_irq_enable
-         | ^~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/preempt.h:202:1: note: '__tracepoint_preempt_enable' declared here
-     202 | DECLARE_TRACEPOINT(preempt_enable);
-         | ^
-   include/linux/tracepoint-defs.h:88:27: note: expanded from macro 'DECLARE_TRACEPOINT'
-      88 |         extern struct tracepoint __tracepoint_##tp
-         |                                  ^
-   <scratch space>:104:1: note: expanded from here
-     104 | __tracepoint_preempt_enable
-         | ^
-   In file included from arch/powerpc/kernel/asm-offsets.c:12:
-   In file included from include/linux/compat.h:15:
-   In file included from include/linux/socket.h:8:
-   In file included from include/linux/uio.h:9:
-   In file included from include/linux/mm_types.h:8:
-   In file included from include/linux/kref.h:16:
-   In file included from include/linux/spinlock.h:312:
-   include/linux/spinlock_api_smp.h:159:2: error: use of undeclared identifier '__tracepoint_irq_enable'; did you mean '__tracepoint_preempt_enable'?
-     159 |         local_irq_enable();
-         |         ^~~~~~~~~~~~~~~~~~
-   include/linux/irqflags.h:210:7: note: expanded from macro 'local_irq_enable'
-     210 |                 if (__trace_enabled(irq_enable))        \
-         |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/irqflags.h:206:3: note: expanded from macro '__trace_enabled'
-     206 |          tracepoint_enabled(tp))
-         |          ^~~~~~~~~~~~~~~~~~~~~~
-   include/linux/tracepoint-defs.h:92:27: note: expanded from macro 'tracepoint_enabled'
-      92 |         static_branch_unlikely(&(__tracepoint_##tp).key)
-         |                                  ^~~~~~~~~~~~~~~~~
-   <scratch space>:108:1: note: expanded from here
-     108 | __tracepoint_irq_enable
-         | ^~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/preempt.h:202:1: note: '__tracepoint_preempt_enable' declared here
-     202 | DECLARE_TRACEPOINT(preempt_enable);
-         | ^
-   include/linux/tracepoint-defs.h:88:27: note: expanded from macro 'DECLARE_TRACEPOINT'
-      88 |         extern struct tracepoint __tracepoint_##tp
-         |                                  ^
-   <scratch space>:104:1: note: expanded from here
-     104 | __tracepoint_preempt_enable
-         | ^
-   In file included from arch/powerpc/kernel/asm-offsets.c:12:
-   In file included from include/linux/compat.h:15:
-   In file included from include/linux/socket.h:8:
-   In file included from include/linux/uio.h:9:
-   In file included from include/linux/mm_types.h:8:
-   In file included from include/linux/kref.h:16:
-   In file included from include/linux/spinlock.h:312:
-   include/linux/spinlock_api_smp.h:159:2: error: use of undeclared identifier '__tracepoint_irq_enable'; did you mean '__tracepoint_preempt_enable'?
-     159 |         local_irq_enable();
-         |         ^~~~~~~~~~~~~~~~~~
-   include/linux/irqflags.h:210:7: note: expanded from macro 'local_irq_enable'
-     210 |                 if (__trace_enabled(irq_enable))        \
-         |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/irqflags.h:206:3: note: expanded from macro '__trace_enabled'
-     206 |          tracepoint_enabled(tp))
-         |          ^~~~~~~~~~~~~~~~~~~~~~
-   include/linux/tracepoint-defs.h:92:27: note: expanded from macro 'tracepoint_enabled'
-      92 |         static_branch_unlikely(&(__tracepoint_##tp).key)
-         |                                  ^~~~~~~~~~~~~~~~~
-   <scratch space>:108:1: note: expanded from here
-     108 | __tracepoint_irq_enable
-         | ^~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/preempt.h:202:1: note: '__tracepoint_preempt_enable' declared here
-     202 | DECLARE_TRACEPOINT(preempt_enable);
-         | ^
-   include/linux/tracepoint-defs.h:88:27: note: expanded from macro 'DECLARE_TRACEPOINT'
-      88 |         extern struct tracepoint __tracepoint_##tp
-         |                                  ^
-   <scratch space>:104:1: note: expanded from here
-     104 | __tracepoint_preempt_enable
-         | ^
-   In file included from arch/powerpc/kernel/asm-offsets.c:12:
-   In file included from include/linux/compat.h:15:
-   In file included from include/linux/socket.h:8:
-   In file included from include/linux/uio.h:9:
-   In file included from include/linux/mm_types.h:8:
-   In file included from include/linux/kref.h:16:
-   In file included from include/linux/spinlock.h:312:
-   include/linux/spinlock_api_smp.h:159:2: error: use of undeclared identifier '__tracepoint_irq_enable'; did you mean '__tracepoint_preempt_enable'?
-     159 |         local_irq_enable();
-         |         ^~~~~~~~~~~~~~~~~~
-   include/linux/irqflags.h:210:7: note: expanded from macro 'local_irq_enable'
-     210 |                 if (__trace_enabled(irq_enable))        \
-         |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/irqflags.h:206:3: note: expanded from macro '__trace_enabled'
-     206 |          tracepoint_enabled(tp))
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 7/8] arm64: dts: qcom: ipq5424: Add NSS clock
+ controller node
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        "Stephen
+ Boyd" <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Georgi Djakov
+	<djakov@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Richard Cochran
+	<richardcochran@gmail.com>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        "Catalin
+ Marinas" <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Anusha Rao
+	<quic_anusha@quicinc.com>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <quic_kkumarcs@quicinc.com>,
+        <quic_linchen@quicinc.com>, <quic_leiwei@quicinc.com>,
+        <quic_suruchia@quicinc.com>, <quic_pavir@quicinc.com>
+References: <20250627-qcom_ipq5424_nsscc-v2-0-8d392f65102a@quicinc.com>
+ <20250627-qcom_ipq5424_nsscc-v2-7-8d392f65102a@quicinc.com>
+ <cd6f018d-5653-47d8-abd2-a13f780eb38f@oss.qualcomm.com>
+ <db1d07f4-f87d-403a-9ab3-bf8e5b9465b3@quicinc.com>
+ <a873f197-1ad6-4a7a-ba66-5fef10f32c57@oss.qualcomm.com>
+Content-Language: en-US
+From: Luo Jie <quic_luoj@quicinc.com>
+In-Reply-To: <a873f197-1ad6-4a7a-ba66-5fef10f32c57@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=ZKfXmW7b c=1 sm=1 tr=0 ts=6863d64b cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8
+ a=EUspDBNiAAAA:8 a=wZv0aL5qe_EQj9OG14cA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAxMDA3OCBTYWx0ZWRfXxZa597Slz5L9
+ AmdpGrCIOpOtlppRjkZRcFzAdwk3GYMOh5n5ejywGCXzNDOqiWc4XSTbX2KSfeEC+cJserz+OOG
+ xE/4H9i4Yu7N68/WGQq+K9L97KsygEckzeREJUoLwTbJV7dDh8z4BoEeukYw7YU4TmfY1AXEp3l
+ gM5rKuubfnO8fT8FBvyIU34pLpfX9rabQQIEVcDzTJiWpfU+ORqcmUej6dHME+lDCHaS8QtoKsw
+ PiNew8V/KcczMterynlIh+JUy48cdv/TJwCd5oCIABZU/NZ6W3nf639+Tw6e3j9jqS4J+b98Qwr
+ tEiuv4HZQOC/PyYIwY+GxHWXje8MkkvGmvOzrWDThI2oSmprzlhacNFN8f5wGjmR7DvOYasdD7O
+ fDToPB8HvUM1sLnY1vfSr3tAJQ1E81Tjy3Sb8KTL/DSXYvp1+n+AvpdKy30+eSvVZh0pcNk8
+X-Proofpoint-ORIG-GUID: n4wJd_yJgHq0Rsmgt5mIYaEvtlb0yQJq
+X-Proofpoint-GUID: n4wJd_yJgHq0Rsmgt5mIYaEvtlb0yQJq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-01_02,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 mlxscore=0 mlxlogscore=999 spamscore=0 suspectscore=0
+ bulkscore=0 priorityscore=1501 lowpriorityscore=0 phishscore=0
+ impostorscore=0 malwarescore=0 clxscore=1015 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2507010078
 
 
-vim +151 include/linux/spinlock_api_smp.h
 
-69d0ee7377eef80 Heiko Carstens  2009-08-31  145  
-9c1721aa4994f66 Thomas Gleixner 2009-12-03  146  static inline void __raw_spin_unlock_irqrestore(raw_spinlock_t *lock,
-69d0ee7377eef80 Heiko Carstens  2009-08-31  147  					    unsigned long flags)
-69d0ee7377eef80 Heiko Carstens  2009-08-31  148  {
-5facae4f3549b5c Qian Cai        2019-09-19  149  	spin_release(&lock->dep_map, _RET_IP_);
-9828ea9d75c38fe Thomas Gleixner 2009-12-03  150  	do_raw_spin_unlock(lock);
-69d0ee7377eef80 Heiko Carstens  2009-08-31 @151  	local_irq_restore(flags);
-69d0ee7377eef80 Heiko Carstens  2009-08-31  152  	preempt_enable();
-69d0ee7377eef80 Heiko Carstens  2009-08-31  153  }
-69d0ee7377eef80 Heiko Carstens  2009-08-31  154  
+On 7/1/2025 8:10 PM, Konrad Dybcio wrote:
+> 
+> 
+> On 01-Jul-25 14:08, Luo Jie wrote:
+>>
+>>
+>> On 6/28/2025 12:27 AM, Konrad Dybcio wrote:
+>>> On 6/27/25 2:09 PM, Luo Jie wrote:
+>>>> NSS clock controller provides the clocks and resets to the networking
+>>>> hardware blocks on the IPQ5424, such as PPE (Packet Process Engine) and
+>>>> UNIPHY (PCS) blocks.
+>>>>
+>>>> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
+>>>> ---
+>>>>    arch/arm64/boot/dts/qcom/ipq5424.dtsi | 30 ++++++++++++++++++++++++++++++
+>>>>    1 file changed, 30 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/qcom/ipq5424.dtsi b/arch/arm64/boot/dts/qcom/ipq5424.dtsi
+>>>> index 2eea8a078595..eb4aa778269c 100644
+>>>> --- a/arch/arm64/boot/dts/qcom/ipq5424.dtsi
+>>>> +++ b/arch/arm64/boot/dts/qcom/ipq5424.dtsi
+>>>> @@ -730,6 +730,36 @@ frame@f42d000 {
+>>>>                };
+>>>>            };
+>>>>    +        clock-controller@39b00000 {
+>>>> +            compatible = "qcom,ipq5424-nsscc";
+>>>> +            reg = <0 0x39b00000 0 0x800>;
+>>>
+>>> size = 0x100_000
+>>>
+>>> with that:
+>>>
+>>> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>>>
+>>> Konrad
+>>
+>> I initially thought that a block size of 0x800 would be sufficient, as
+>> it covers the maximum address range needed for the clock configurations.
+>> However, the NSS clock controller block actually occupies an address
+>> range of 0x80000. I will update this to 0x80000 in the next version.
+>> Thank you for your feedback.
+> 
+> 0x80_000 excludes the wrapper region. Please mark it as the entire
+> 0x100_000 that it occupies, no matter if there's anything in there
+> 
+> Konrad
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+I will update the register region to use the full 0x100_000 range to
+cover the entire area, including the wrapper region, as suggested,
+thanks.
+
