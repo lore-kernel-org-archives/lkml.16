@@ -1,137 +1,137 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64F0D2798FA;
-	Tue,  1 Jul 2025 16:47:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8292227E04C
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 16:48:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751388438; cv=none; b=fpYzDT7R+Ymw6OrGv05jqTohCIePFrepWX02h6uadsNyIRmgBHcO6ncIJU6MESHQNpln5GHo2WdeIMF24r7WEQp7Q6cGX6ebraDD3NwatLc3Wei8H/ZIhLMs3Sx5P135sFwYUsc2SbwEL+40F2Lqf6IjsQsIe4CbAHDhaaB5z4I=
+	t=1751388518; cv=none; b=u6w0LS1lScaU4ffPOCadDdjJ7DnOZnsqrupQp+s6tVCYGnMGHn4oNhWUANdAr9pAwAMmbSee128xtwN2TG1jIcUyP1ngobNoUE3HIx3Dgvt86y6hs1Evzwk5gXL5o9fB3jjtY/PGb40rIxGeV2hu0K50jA0QlFR8nF+a2sDRAD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751388438; c=relaxed/simple;
-	bh=ymyz98G6WAIWhgot7OyS3l+nPaHFTvJsU8EnPPnV3hw=;
+	s=arc-20240116; t=1751388518; c=relaxed/simple;
+	bh=tI+4wKtSKHs0zOZaF0kRYAvQFo9ILAwIjWfI+LgVGds=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jmYlgSW7XfGHmNWqBy6Tl0YPHjO6d4MlhSz9MDHSRtTmq2tZZ6YMhiqHIxYNIlOt80Tv6T02gBxmNxwgSDGhlFePvajGANFpaxPmJpLDbgfVAk3EcJPRIrxkEGYcpB/JhfwHTIwxm8+eYwG96hkhYsMcwZFM0FecioILuuMZBxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RZFC/jGu; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=o6ql7eLJ0dRoytRum9GDHrcraekflaDoBQRbvpFRD9isWYZZMcTfX9wuGkwt2GxAURSbPvo0UfgM7g/HL3UhfoTxjJ4ilfmaAKWr/rV7Hu85726F6JmgkKnsj4RjJnb2+o74+f4eAxz2bLSQ5pf7Kxjnxgi9JVVjHkrqZc9GpSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Gn7tnQPJ; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RZFC/jGu"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-32cdc9544ceso30043591fa.0;
-        Tue, 01 Jul 2025 09:47:16 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Gn7tnQPJ"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-553bcf41440so6038675e87.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 09:48:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751388434; x=1751993234; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ymyz98G6WAIWhgot7OyS3l+nPaHFTvJsU8EnPPnV3hw=;
-        b=RZFC/jGuvOhElYbJdSKVKR+vOQ4+ZCR5TVwAlqWpR2svkdoOXBQ9obkYcTh6Drma3q
-         qLSzWR+QgCL6X4MWR1DN9tEqLnHXcxUTYcilIKS/atsW/RvgLB+upBteOGFIl9fTbF1l
-         4xE41/q1EtjI88Xt+knbYXFoZQvkX0TfO5HWKJbTbO/tsj0HSJFFddPM0xDtEMvmHftH
-         ReNeMxfA9FV0sNqcwUY1qjSEvKibnZn7G/3SNk+bUp160VwTk10+1Zk7WRplNsYWrxm0
-         KGpjqcsiMGd7kkJ2RBrAAWPPqrZTxwD080I+AfFINLots+G9BGUVVu9JQzuXwAapYdFW
-         uzlg==
+        d=chromium.org; s=google; t=1751388515; x=1751993315; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=P8f/YI2ig587JvEzYvoYDEUyD2K6VzX+ZT6F/a8hE1A=;
+        b=Gn7tnQPJoiH5qGeItQ6A/GaH2ZSrC85k8kUQaLapl+/rWZRZa5gM/NIn0oXEpEXJZs
+         s/WC3ZuLq42Yf+fNbCwqmi4kdFovTDorvlHCELTZ4m5gAm+Iy9WzO7iVcGTnBm+msl/Q
+         HpxY+dBcftMQ7sFkQ1fCkvSQeC2X1a6tCzPiM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751388434; x=1751993234;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ymyz98G6WAIWhgot7OyS3l+nPaHFTvJsU8EnPPnV3hw=;
-        b=UL5BwIdbe57vfJQs9UWHMO1QN/CxnfkmdxDXtLijDyBsFi2K9eWXEmM9PS65Y1mmlr
-         an+yC6PGZ5xKy3ulYXRv4x7uYwQe46tw1G8UBTgm9bdB2WdN6qnDipmJMkBSM+b+Xp7f
-         7cNrA/0d220r0dC/Kt8rqnubn78ayw6CdqzFt7YSHgTbbHmNt0sIhmOcxrxwp2dueWLw
-         Imlr4puauuiwmlGfvvSJhTl0ZW1Tt83AWfQJWmZ4XExb1/Zjlicc5bOuTGJWxb1y4s00
-         r9qlq7aeJ0LKbRM7AKZchFyjQC/ngRTZmEQFV9lMuIt+fPxGJsLNT6FTIFlPZ+H4bXiZ
-         7FyA==
-X-Forwarded-Encrypted: i=1; AJvYcCUCOQd8i4kOBLmqHPjJ7RU9Xt7JcxESpHk2lH73uHcfRsh3aQzMrCTqB8rDkCiidHcKxbCLwSqUP65qKBD6xVk=@vger.kernel.org, AJvYcCUaCbzxPxuDts8/ImtrFbDERuCI+i3tuGeCIVG05mUba4eNYZuKGmS3U8MGPs67eCCfMw7TCB4lirM=@vger.kernel.org, AJvYcCUwcQi0sai9VUZeb3fDcwuxtPuj2Tnk8L5rdHz+TI84/qQcMEIndGEq5aR+5EUTvvwNIiPfdLaBpHTrYF1XBAk8@vger.kernel.org, AJvYcCW9EaHS62g1Hp0LNcXCoJgABJKv99UbzF1FM9DKFTy6EDjWNJw1dHEd9+/BlNcz+6AKs3DejxIbCtT1@vger.kernel.org, AJvYcCWZilvt5uJ0QLlxhaZqtU75xC85cG5kQULsrJ1JwBA9DXIGEnR/sBTTnq34vUlQnJBfRkuH7zS2@vger.kernel.org, AJvYcCWk/npMOtG8kAP4cMk/j2zje4SoYmXE9n+f3VsCFVa+Yq+RSx260W8YdLx+kf4n/XZXGpSu79mTBerPvpM=@vger.kernel.org, AJvYcCXVWhtUytKw40WInDMflfrQNGrugDPSDo08xE0uCjY/5eXSsWmuvnTLA8PfYtzvRpxkraUCuPD3Ap2GtN2U@vger.kernel.org, AJvYcCXZ1FkRVTHPbHwRvUt1GSQkOGOy51TsZaVZEtGpR/7xn/kzXxi+RipI7GbV8TUNc2sl53VfhURzM2UX@vger.kernel.org, AJvYcCXegcSZlhgS2mPJoagurMt9GAlI+I7x37E1NDSxFSJy78Dp/DFiq2c2q6AabknG5QDfubkySY0uT2An@vger.kernel.org
-X-Gm-Message-State: AOJu0YwP+mYa/dIb+AvWsYjOwL4xbmeQ/6zqedOf3Th66C1KGDCWjonT
-	uiqwwOt/OJsDmT99Nkk/gp9mbSxxyukREEeEIA0qKtFPe4QrP+h27ogMBQP7uPCAyK3aPda6MEm
-	CX2yLE5sLGK/Xe3t1F9ZWl1Ipbs8/Hd0=
-X-Gm-Gg: ASbGncvIdJreVaPaH7bakggtW/bhmClPzk720Z47WTO5BhHBaqdQjD2wUYCIURKr/5f
-	VFY4OFPTjy7fCVC/qTMTp5L/4MS9MzeDK2leoId1Y2xmkCmtzqwRkjo9ujlBMNx1a6VCpBSx+Py
-	T2z0H6CYwj5yp5huePfRMX1dv8uZyTlofJ3Kj9HSMF1bvtR4uTTLr038I1epeayeKDSF+zJwVnz
-	Fu21g==
-X-Google-Smtp-Source: AGHT+IFASHXyh6nKAuBWNflJbwzC1dxAvHKvYXKVWM4leUPhMKpN6FRK5U0/hoCDkOtFemkDVZIaXGSG2DOrBLCq8Rk=
-X-Received: by 2002:a2e:7c08:0:b0:32c:a907:491f with SMTP id
- 38308e7fff4ca-32cdc464463mr36198291fa.15.1751388434129; Tue, 01 Jul 2025
- 09:47:14 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751388515; x=1751993315;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=P8f/YI2ig587JvEzYvoYDEUyD2K6VzX+ZT6F/a8hE1A=;
+        b=GL86vQ6Sa2akMYN4o12rDezxDa+2yBLvzFsVt6huKeKVmOlt+Bnyp6Boq0ASE6zdyK
+         T0iIxrmDRQT1ziQH7mkALCju07D1qMEeYmI3ch2Ak+4R5D/BLxwBmOC+rbJaNalRNGEg
+         zU7ZxqLANm6XuyM4rwHF7vjDnuaQJsnBcn8PNNcEK7Ke+biqatewyOfexCB3Ijkntckn
+         //ZtVmtVCax32c5YY7FMAjQj8YF7K8KHf1zwB8jl5i3S4Q9Uns+ys77cqZAra4Nxl2qC
+         x+yT2TUJnzwEd4awm601GKd8sVsjjtG1y8aB8hpS//70KHVuMT0wPaQrtdCtFEq2+Jrc
+         euPg==
+X-Forwarded-Encrypted: i=1; AJvYcCWy7Om1ZCPL8ZP5sX49sLpT7WvKTC//NZOEBOqZ78+jjBQUB15sl1OdD/Tjfp8JQfUjkVM+crhsb2r8jt8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQOv06mgzHng6aooKr+qYz1hmTwxNEuT8uy3FneCHe0b+nlT5a
+	8R4yLPLk4TFH3mj/Ibb5mouce2cBeJerKU2g1xM2e8iWDn4BatR1B1uYa3p/NX9A/sCjpli4Mdd
+	eik9OSA==
+X-Gm-Gg: ASbGncv2yDp17AjnDfElo9MW+jvmjtZyPG4BeoUIjaysavxr/Rphu07b2urMfxKjMT5
+	NjVIotAhkKRzCjmbCMURdYXty8Ni+oBRBdpYQ7rKhjvVpYrC7scGrvFjHQTmGI0ftSh1qmBgkoG
+	fvro+X/LSlieNOkxAP1BSOeazgqax/Sb0q2deHPhYlqUXWaEopfrnVzzivRdnG0l+Pfk3mR3H2v
+	BEhGx0u0cOHcR8pf5kRGLdoRIEu2ZazyCX8VTUVKU5+1w4LC0Srtc93ORnySWa7nHv/perMKy3A
+	KnHTwj+ufj20mdhfvhbPLtZCBb2l6yW/pFGNrUFDmrS0V6uS3AxGMGaalde0m1HdOkCgCyJYxZ8
+	XMAysIzH5UNfGasO9l5NdnCyg
+X-Google-Smtp-Source: AGHT+IHeV9ZxCWkbbpWP/6LZW1huh4fBGOM+GugJbGkU80/eDKDBiDZHp9svgLx5olHlbhVXdos8ZA==
+X-Received: by 2002:a05:6512:3d10:b0:553:af30:1e8b with SMTP id 2adb3069b0e04-5550ba114bfmr5656503e87.38.1751388514523;
+        Tue, 01 Jul 2025 09:48:34 -0700 (PDT)
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b24028esm1889177e87.19.2025.07.01.09.48.33
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Jul 2025 09:48:34 -0700 (PDT)
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5551a770828so2765092e87.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 09:48:33 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXpB6QYqnMub2gJK05xRuGmFvVsfZwskXMzj4ce//D6h8pMBsprac8shNp41nYzw82nxL2YlMz/vzV/yYo=@vger.kernel.org
+X-Received: by 2002:a05:6512:b97:b0:553:adff:87da with SMTP id
+ 2adb3069b0e04-5550b9eec3cmr5635002e87.29.1751388513261; Tue, 01 Jul 2025
+ 09:48:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250619-cstr-core-v12-0-80c9c7b45900@gmail.com> <aGO7-SQUUgg6kSVU@google.com>
-In-Reply-To: <aGO7-SQUUgg6kSVU@google.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Tue, 1 Jul 2025 12:46:37 -0400
-X-Gm-Features: Ac12FXw8AGP83JXgR8yzKwPiapZfBBkrNyDazktnve1kCOVkl79eviuMomA9o84
-Message-ID: <CAJ-ks9kbsTRrRN4yP7GmphozPyZHgbaAGJmLXR42NVgJ1ie_SQ@mail.gmail.com>
-Subject: Re: [PATCH v12 0/5] rust: replace kernel::str::CStr w/ core::ffi::CStr
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Michal Rostecki <vadorovsky@protonmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, Danilo Krummrich <dakr@kernel.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
-	FUJITA Tomonori <fujita.tomonori@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Andrew Lunn <andrew@lunn.ch>, 
-	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>, Benno Lossin <lossin@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Leon Romanovsky <leon@kernel.org>, Breno Leitao <leitao@debian.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, dri-devel@lists.freedesktop.org, 
-	netdev@vger.kernel.org, devicetree@vger.kernel.org, llvm@lists.linux.dev, 
-	linux-pci@vger.kernel.org, nouveau@lists.freedesktop.org, 
-	linux-block@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-clk@vger.kernel.org
+References: <20250701145240.105959-1-desnesn@redhat.com>
+In-Reply-To: <20250701145240.105959-1-desnesn@redhat.com>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Tue, 1 Jul 2025 18:48:20 +0200
+X-Gmail-Original-Message-ID: <CANiDSCs_Pz-wgnYNVA7Zt4RhtgN256i32aCw0mE4XFv3b49ygw@mail.gmail.com>
+X-Gm-Features: Ac12FXySL1Z_QmxcJurW6V_oa_rceHTH3CgKaysROWFAC3NSUzFBeTQCoFgVYQw
+Message-ID: <CANiDSCs_Pz-wgnYNVA7Zt4RhtgN256i32aCw0mE4XFv3b49ygw@mail.gmail.com>
+Subject: Re: [PATCH] media: uvcvideo: avoid variable shadowing in uvc_ctrl_cleanup_fh
+To: Desnes Nunes <desnesn@redhat.com>
+Cc: laurent.pinchart@ideasonboard.com, hansg@kernel.org, 
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 1, 2025 at 6:44=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> wr=
-ote:
+Hi Desnes
+
+On Tue, 1 Jul 2025 at 16:59, Desnes Nunes <desnesn@redhat.com> wrote:
 >
-> On Thu, Jun 19, 2025 at 11:06:24AM -0400, Tamir Duberstein wrote:
-> > This picks up from Michal Rostecki's work[0]. Per Michal's guidance I
-> > have omitted Co-authored tags, as the end result is quite different.
-> >
-> > Link: https://lore.kernel.org/rust-for-linux/20240819153656.28807-2-vad=
-orovsky@protonmail.com/t/#u [0]
-> > Closes: https://github.com/Rust-for-Linux/linux/issues/1075
-> >
-> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> This avoids a variable loop shadowing occurring between the local loop
+> iterating through the uvc_entity's controls and the global one going
+> through the pending async controls of the file handle
 >
-> Overall LGTM. Only question is whether we should re-export
-> core::ffi::CStr from kernel::ffi. Reason being that right now we are
-> telling people to never use core::ffi as the integer types are wrong,
-> and I think it would be nice if we can continue to tell people "never
-> use core::ffi".
+> Fixes: 10acb9101355 ("media: uvcvideo: Increase/decrease the PM counter per IOCTL")
+If you add a fixes you need to add
+Cc: stable@kernel.org
 
-I agree that'd be nice. There are existing references to items in
-`core::ffi` scattered around (e.g. in rust/kernel/drm/file.rs); it
-would be good to clean all those up together with CStr provided we
-have some ability to lint against new occurrences.
-
-I'll leave this as-is for now since this series has already churned
-quite a lot, and the cleanup can be a reasonable first task for
-someone.
-
+Reviewed-by: Ricardo Ribalda <ribalda@chromium.org>
+> Signed-off-by: Desnes Nunes <desnesn@redhat.com>
+> ---
+>  drivers/media/usb/uvc/uvc_ctrl.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 >
-> Either way, for the whole series:
-> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
+> index 44b6513c5264..91cc874da798 100644
+> --- a/drivers/media/usb/uvc/uvc_ctrl.c
+> +++ b/drivers/media/usb/uvc/uvc_ctrl.c
+> @@ -3260,7 +3260,6 @@ int uvc_ctrl_init_device(struct uvc_device *dev)
+>  void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
+>  {
+>         struct uvc_entity *entity;
+> -       int i;
+>
+>         guard(mutex)(&handle->chain->ctrl_mutex);
+>
+> @@ -3278,7 +3277,7 @@ void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
+>         if (!WARN_ON(handle->pending_async_ctrls))
+>                 return;
+>
+> -       for (i = 0; i < handle->pending_async_ctrls; i++)
 
-Thanks! I'll send the rebase on rc3 momentarily.
-Tamir
+nitpick: I would have called the variable i, not j.  For me j usually
+means nested loop. But up to you
+
+I am also not against your first version with a different commit message.
+
+Thanks!
+> +       for (unsigned int j = 0; j < handle->pending_async_ctrls; j++)
+>                 uvc_pm_put(handle->stream->dev);
+>  }
+>
+> --
+> 2.49.0
+>
+>
+
+
+-- 
+Ricardo Ribalda
