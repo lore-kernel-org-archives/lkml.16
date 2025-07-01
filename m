@@ -1,85 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E94551E4A4;
-	Tue,  1 Jul 2025 01:05:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F4FAB660
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 01:14:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751331955; cv=none; b=CUxEuoLkywli2vXtYIbMx7c5g5ZdoYyKMVEeFkfFqyKHvYxG8TV/cKfAmsaaNrPvMmcBPPgnKZkpUK4kNX5LrCHNwNNAIPVKCu592Rw9pX2ZVn7PePmroylDfbdO9knHBoAtseOqUETstekyNBJFB1A6QvhjAsJY0h2KLLGyvUY=
+	t=1751332460; cv=none; b=CS0fqjbPSYcVOBHjNfG4grYTCw3uclgSbMkoarW/Ro25Gj6mRo7/4pTITjjsC7QnH+z0HCSahWgqIl5mtkjojjRU+6Hto/rHCbaWu/eLABSwXioi4nR/yEOdtnhmfFJDu59Z5PTYxInmQoMBHw3nKG6Hd45jPOWtvRXMQmPBL9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751331955; c=relaxed/simple;
-	bh=iI2aTGNA3c7KUOp3mEmuzi+6XcgZXj+IEo9Fcm/BwHc=;
-	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=YXYTC1qsOEzapfsRqVBqkiDgze49dEekzKqJIstV7U/c4+r1LZ0GfLOc7VGTn11nQKyPydTdO3rJTFzUKrMHWErdDk5VFOtWlkRrvk1t2d7Zj9LAOAWg5b39654DjwBGj+FHg+shno5no5Plf9FL+b0plU34F77kxTSZ17lnNLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RObX+mQf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751332460; c=relaxed/simple;
+	bh=XkeZ/W7R7uJJgTpVhG8GUB87rZj4NsF/whf372deIG8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dHPRRHfYwatiSftwrXIFt3cv2+IlonrEhYM31lWkHnEUpAldMPuGBMq7ZJ+5dNEvbRjXPPgX4VYUHdRaW9X5y/dO6CFjDwzGdxR7DBEycWtxEpa2Rgt1GQturCAHelxUBJx2ONf/h82HX1gwq2rgsdd+73vwID58B9yD0lIqhiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SJug5mG1; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RObX+mQf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CC73C4CEE3;
-	Tue,  1 Jul 2025 01:05:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751331954;
-	bh=iI2aTGNA3c7KUOp3mEmuzi+6XcgZXj+IEo9Fcm/BwHc=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=RObX+mQfMOTd+dnkK5YqCpzEIgFOn9B+oK+NLutuToTH0vH6N/z62Sa2vQAG6MKGf
-	 iZs+0b7PbJZKO2gMrjc/ArMxKPuWgLjIj1GZp/cZcr6KQBMohxy025W0aYssHFuB5K
-	 saiaaGmKE0xfznqO8xtZfwSen/CvqHYHz5lqsM9h032Q4k7bU3SBfvZayKiTQAdly8
-	 e8+qFYf5fP7GW2yUvztieaFZNxLHJ8lGfEb1t3pmPCkFn6DNLDhlz9KSL/hZtTlkHK
-	 jPV3XWLrtV5owsBtPjfXOsSuAjqfJbUUT9hUZwF5EElXEqjj5KL73C82/6imiluDTk
-	 cKYQiF7jo71Tw==
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SJug5mG1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751332455;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=QrIjcCx706fQWFFH4EkxErfqPhyvfTmDbbhOUGJv6Qg=;
+	b=SJug5mG1PF+6wmQIuzDf58CGmjp965eENnToQUN8rP5J4u7WdRXc0ZnFQcP9veR+NrE4Gg
+	YY3Et588uvnBrzioCt+yzI7aRiylFKDekaEL/YTk3KVzlUYBGJ8LJn0II9xKWLtuqkXHjR
+	QB7ZllDCu86Gz1OsR+jb3YbBOLEBveA=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-326-jDeXJOS4OBe_qySYCDXKCw-1; Mon,
+ 30 Jun 2025 21:14:11 -0400
+X-MC-Unique: jDeXJOS4OBe_qySYCDXKCw-1
+X-Mimecast-MFC-AGG-ID: jDeXJOS4OBe_qySYCDXKCw_1751332450
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 353BE1800368;
+	Tue,  1 Jul 2025 01:14:10 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.72.112.134])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2DEE530001B1;
+	Tue,  1 Jul 2025 01:14:04 +0000 (UTC)
+From: Jason Wang <jasowang@redhat.com>
+To: mst@redhat.com,
+	jasowang@redhat.com,
+	xuanzhuo@linux.alibaba.com,
+	eperezma@redhat.com
+Cc: virtualization@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	hch@infradead.org,
+	xieyongji@bytedance.com
+Subject: [PATCH 0/9] Refine virtio mapping API
+Date: Tue,  1 Jul 2025 09:13:52 +0800
+Message-ID: <20250701011401.74851-1-jasowang@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250513234837.2859-1-matthew.gerlach@altera.com>
-References: <20250513234837.2859-1-matthew.gerlach@altera.com>
-Subject: Re: [PATCH v5] clk: socfpga: agilex: add support for the Intel Agilex5
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>, Teh Wen Ping <wen.ping.teh@intel.com>, Matthew Gerlach <matthew.gerlach@altera.com>
-To: Matthew Gerlach <matthew.gerlach@altera.com>, dinguyen@kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, mturquette@baylibre.com, netdev@vger.kernel.org, richardcochran@gmail.com
-Date: Mon, 30 Jun 2025 18:05:55 -0700
-Message-ID: <175133195554.4372.1414444579635929023@lazor>
-User-Agent: alot/0.11
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Quoting Matthew Gerlach (2025-05-13 16:48:37)
-> diff --git a/drivers/clk/socfpga/clk-agilex.c b/drivers/clk/socfpga/clk-a=
-gilex.c
-> index 8dd94f64756b..43c1e4e26cf0 100644
-> --- a/drivers/clk/socfpga/clk-agilex.c
-> +++ b/drivers/clk/socfpga/clk-agilex.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
-> - * Copyright (C) 2019, Intel Corporation
-> + * Copyright (C) 2019-2024, Intel Corporation
-> + * Copyright (C) 2025, Altera Corporation
->   */
->  #include <linux/slab.h>
->  #include <linux/clk-provider.h>
-> @@ -8,6 +9,7 @@
->  #include <linux/platform_device.h>
-> =20
->  #include <dt-bindings/clock/agilex-clock.h>
-> +#include <dt-bindings/clock/intel,agilex5-clkmgr.h>
-> =20
->  #include "stratix10-clk.h"
-> =20
-> @@ -334,6 +336,375 @@ static const struct stratix10_gate_clock agilex_gat=
-e_clks[] =3D {
->           10, 0, 0, 0, 0, 0, 4},
->  };
-> =20
-> +static const struct clk_parent_data agilex5_pll_mux[] =3D {
-> +       { .name =3D "osc1", },
-> +       { .name =3D "cb-intosc-hs-div2-clk", },
-> +       { .name =3D "f2s-free-clk", },
+Hi all:
 
-Please don't use clk_parent_data with only .name set with dot
-initializers. This is actually { .index =3D 0, .name =3D "..." } which means
-the core is looking at the DT node for the first index of the 'clocks'
-property. If you're using clk_parent_data you should have a DT node that
-has a 'clocks' property. If the clks are all internal to the device then
-use clk_hw pointers directly with clk_hws.
+Virtio used to be coupled with DMA API. This works fine for the device
+that do real DMA but not the others. For example, VDUSE nees to craft
+with DMA API in order to let the virtio-vdpa driver to work.
+
+This series tries to solve this issue by introducing the mapping API
+in the virtio core. So transport like vDPA can implement their own
+mapping logic without the need to hack with DMA API. The mapping API
+are abstracted with a new map operations in order to be re-used by
+transprot or device. So device like VDUSE can implement its own
+mapping loigc.
+
+Please review.
+
+Thanks
+
+Jason Wang (9):
+  virtio_ring: constify virtqueue pointer for DMA helpers
+  virtio_ring: switch to use dma_{map|unmap}_page()
+  virtio: rename dma helpers
+  virtio: rename dma_dev to map_token
+  virtio_ring: rename dma_handle to map_handle
+  virtio: introduce map ops in virtio core
+  vdpa: rename dma_dev to map_token
+  vdpa: introduce map ops
+  vduse: switch to use virtio map API instead of DMA API
+
+ drivers/net/virtio_net.c                 |  32 +-
+ drivers/vdpa/alibaba/eni_vdpa.c          |   5 +-
+ drivers/vdpa/ifcvf/ifcvf_main.c          |   5 +-
+ drivers/vdpa/octeon_ep/octep_vdpa_main.c |   6 +-
+ drivers/vdpa/pds/vdpa_dev.c              |   3 +-
+ drivers/vdpa/solidrun/snet_main.c        |   4 +-
+ drivers/vdpa/vdpa.c                      |   5 +-
+ drivers/vdpa/vdpa_sim/vdpa_sim.c         |   4 +-
+ drivers/vdpa/vdpa_user/iova_domain.c     |   8 +-
+ drivers/vdpa/vdpa_user/iova_domain.h     |   5 +-
+ drivers/vdpa/vdpa_user/vduse_dev.c       |  34 +-
+ drivers/vdpa/virtio_pci/vp_vdpa.c        |   5 +-
+ drivers/vhost/vdpa.c                     |  11 +-
+ drivers/virtio/virtio_ring.c             | 440 ++++++++++++++---------
+ drivers/virtio/virtio_vdpa.c             |  15 +-
+ include/linux/vdpa.h                     |  22 +-
+ include/linux/virtio.h                   |  36 +-
+ include/linux/virtio_config.h            |  68 ++++
+ include/linux/virtio_ring.h              |   6 +-
+ 19 files changed, 476 insertions(+), 238 deletions(-)
+
+-- 
+2.34.1
+
