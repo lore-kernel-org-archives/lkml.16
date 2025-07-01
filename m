@@ -1,37 +1,35 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D8EA27BF6F;
-	Tue,  1 Jul 2025 13:57:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49D0E27CCEE;
+	Tue,  1 Jul 2025 13:57:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751378222; cv=none; b=KA50QRqBYREjbmoc0WDLmd9e3EU3sW9SStRXZdiJi6H/V02vsbJ3Mkk4f4aJOmZqauL4xw9cnJixTscqKBCAfyjFTnimdujsl+Z7rH8zHfvZI55dnrGIPMFivRWvck6/IOQ1ArIsC30vpf6IEJUKulNxRaaMzoprVrFb+ajzlJU=
+	t=1751378224; cv=none; b=VdqRgn9T2tBDuu0rbPXOX1VNkBZwvbX83M5MeMJdzB5I7O8RcsFl/vS53TeBZOhYv29eO7ioSxf7MDrnwL9/XlzHAKVCIRGjupekbBC0yWRJzmpvtUTQYe2FqPAc2WLjarPkVwvKjf/hbDbQwxjNY5r0YgxsN4vgpTMNom73Cmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751378222; c=relaxed/simple;
-	bh=ksjSGJsA16QDgnP8ZRbvd8mS8M+1nfxBIUQwECqghLk=;
+	s=arc-20240116; t=1751378224; c=relaxed/simple;
+	bh=emrIt1jwMG6e8kMZ1aiwJ+UL6mDNQoGRBlRr53mFPnA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kSQ0IUL/Z8Sr8jswA36aTj2gfOmzJjSy/wmnNcR0GBiDPsIKQ377RHFTIwTURSOadO3JkeMJ+3uUvMIixdpfMBetahCl1Wj899iwsq0Qwd7uH4B7EQXkjBpWOaPaTk+aYXF1xQYoNLx1hHsgkAOG1cBvcrpzE4hFQqQwv678pSI=
+	 MIME-Version; b=DWKQS1h/THipWdWJk7lthBtZ3BasYU75KUGqRJknLXo+ZyLsQolO5FSmLmhAi/+RL9bKuH32Fut0hXH6xu/CU5p1THe7Qkg9UT6i9FTXvpdlgzL3yng3JU5EFLxKDMVY8IzFC4rMwaX4KA5N66pmWb2lp/HklpjifQSCrYSwRw0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A4DBE2E96;
-	Tue,  1 Jul 2025 06:56:44 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6C8F82F27;
+	Tue,  1 Jul 2025 06:56:46 -0700 (PDT)
 Received: from e133380.cambridge.arm.com (e133380.arm.com [10.1.197.52])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 437A43F58B;
-	Tue,  1 Jul 2025 06:56:58 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 526543F58B;
+	Tue,  1 Jul 2025 06:57:00 -0700 (PDT)
 From: Dave Martin <Dave.Martin@arm.com>
 To: linux-kernel@vger.kernel.org
-Cc: Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
 	Oleg Nesterov <oleg@redhat.com>,
 	Kees Cook <kees@kernel.org>,
 	Akihiko Odaki <akihiko.odaki@daynix.com>,
-	linux-s390@vger.kernel.org
-Subject: [PATCH 17/23] s390/ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
-Date: Tue,  1 Jul 2025 14:56:10 +0100
-Message-Id: <20250701135616.29630-18-Dave.Martin@arm.com>
+	linux-sh@vger.kernel.org
+Subject: [PATCH 18/23] sh: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
+Date: Tue,  1 Jul 2025 14:56:11 +0100
+Message-Id: <20250701135616.29630-19-Dave.Martin@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250701135616.29630-1-Dave.Martin@arm.com>
 References: <20250701135616.29630-1-Dave.Martin@arm.com>
@@ -47,212 +45,39 @@ Instead of having the core code guess the note name for each regset,
 use USER_REGSET_NOTE_TYPE() to pick the correct name from elf.h.
 
 Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-Cc: Heiko Carstens <hca@linux.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
-Cc: Sven Schnelle <svens@linux.ibm.com>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Rich Felker <dalias@libc.org>
+Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
 Cc: Oleg Nesterov <oleg@redhat.com>
 Cc: Kees Cook <kees@kernel.org>
 Cc: Akihiko Odaki <akihiko.odaki@daynix.com>
-Cc: linux-s390@vger.kernel.org
+Cc: linux-sh@vger.kernel.org
 ---
- arch/s390/kernel/ptrace.c | 42 +++++++++++++++++++--------------------
- 1 file changed, 21 insertions(+), 21 deletions(-)
+ arch/sh/kernel/ptrace_32.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
-index e1240f6b29fa..494216c4b4f3 100644
---- a/arch/s390/kernel/ptrace.c
-+++ b/arch/s390/kernel/ptrace.c
-@@ -1209,7 +1209,7 @@ static int s390_runtime_instr_set(struct task_struct *target,
- 
- static const struct user_regset s390_regsets[] = {
- 	{
--		.core_note_type = NT_PRSTATUS,
+diff --git a/arch/sh/kernel/ptrace_32.c b/arch/sh/kernel/ptrace_32.c
+index 36f50ad81e83..06f765d71a29 100644
+--- a/arch/sh/kernel/ptrace_32.c
++++ b/arch/sh/kernel/ptrace_32.c
+@@ -291,7 +291,7 @@ static const struct user_regset sh_regsets[] = {
+ 	 *	PC, PR, SR, GBR, MACH, MACL, TRA
+ 	 */
+ 	[REGSET_GENERAL] = {
+-		.core_note_type	= NT_PRSTATUS,
 +		USER_REGSET_NOTE_TYPE(PRSTATUS),
- 		.n = sizeof(s390_regs) / sizeof(long),
- 		.size = sizeof(long),
- 		.align = sizeof(long),
-@@ -1217,7 +1217,7 @@ static const struct user_regset s390_regsets[] = {
- 		.set = s390_regs_set,
- 	},
- 	{
--		.core_note_type = NT_PRFPREG,
-+		USER_REGSET_NOTE_TYPE(PRFPREG),
- 		.n = sizeof(s390_fp_regs) / sizeof(long),
- 		.size = sizeof(long),
- 		.align = sizeof(long),
-@@ -1225,7 +1225,7 @@ static const struct user_regset s390_regsets[] = {
- 		.set = s390_fpregs_set,
- 	},
- 	{
--		.core_note_type = NT_S390_SYSTEM_CALL,
-+		USER_REGSET_NOTE_TYPE(S390_SYSTEM_CALL),
- 		.n = 1,
- 		.size = sizeof(unsigned int),
- 		.align = sizeof(unsigned int),
-@@ -1233,7 +1233,7 @@ static const struct user_regset s390_regsets[] = {
- 		.set = s390_system_call_set,
- 	},
- 	{
--		.core_note_type = NT_S390_LAST_BREAK,
-+		USER_REGSET_NOTE_TYPE(S390_LAST_BREAK),
- 		.n = 1,
- 		.size = sizeof(long),
- 		.align = sizeof(long),
-@@ -1241,7 +1241,7 @@ static const struct user_regset s390_regsets[] = {
- 		.set = s390_last_break_set,
- 	},
- 	{
--		.core_note_type = NT_S390_TDB,
-+		USER_REGSET_NOTE_TYPE(S390_TDB),
- 		.n = 1,
- 		.size = 256,
- 		.align = 1,
-@@ -1249,7 +1249,7 @@ static const struct user_regset s390_regsets[] = {
- 		.set = s390_tdb_set,
- 	},
- 	{
--		.core_note_type = NT_S390_VXRS_LOW,
-+		USER_REGSET_NOTE_TYPE(S390_VXRS_LOW),
- 		.n = __NUM_VXRS_LOW,
- 		.size = sizeof(__u64),
- 		.align = sizeof(__u64),
-@@ -1257,7 +1257,7 @@ static const struct user_regset s390_regsets[] = {
- 		.set = s390_vxrs_low_set,
- 	},
- 	{
--		.core_note_type = NT_S390_VXRS_HIGH,
-+		USER_REGSET_NOTE_TYPE(S390_VXRS_HIGH),
- 		.n = __NUM_VXRS_HIGH,
- 		.size = sizeof(__vector128),
- 		.align = sizeof(__vector128),
-@@ -1265,7 +1265,7 @@ static const struct user_regset s390_regsets[] = {
- 		.set = s390_vxrs_high_set,
- 	},
- 	{
--		.core_note_type = NT_S390_GS_CB,
-+		USER_REGSET_NOTE_TYPE(S390_GS_CB),
- 		.n = sizeof(struct gs_cb) / sizeof(__u64),
- 		.size = sizeof(__u64),
- 		.align = sizeof(__u64),
-@@ -1273,7 +1273,7 @@ static const struct user_regset s390_regsets[] = {
- 		.set = s390_gs_cb_set,
- 	},
- 	{
--		.core_note_type = NT_S390_GS_BC,
-+		USER_REGSET_NOTE_TYPE(S390_GS_BC),
- 		.n = sizeof(struct gs_cb) / sizeof(__u64),
- 		.size = sizeof(__u64),
- 		.align = sizeof(__u64),
-@@ -1281,7 +1281,7 @@ static const struct user_regset s390_regsets[] = {
- 		.set = s390_gs_bc_set,
- 	},
- 	{
--		.core_note_type = NT_S390_RI_CB,
-+		USER_REGSET_NOTE_TYPE(S390_RI_CB),
- 		.n = sizeof(struct runtime_instr_cb) / sizeof(__u64),
- 		.size = sizeof(__u64),
- 		.align = sizeof(__u64),
-@@ -1413,7 +1413,7 @@ static int s390_compat_last_break_set(struct task_struct *target,
+ 		.n		= ELF_NGREG,
+ 		.size		= sizeof(long),
+ 		.align		= sizeof(long),
+@@ -301,7 +301,7 @@ static const struct user_regset sh_regsets[] = {
  
- static const struct user_regset s390_compat_regsets[] = {
- 	{
--		.core_note_type = NT_PRSTATUS,
-+		USER_REGSET_NOTE_TYPE(PRSTATUS),
- 		.n = sizeof(s390_compat_regs) / sizeof(compat_long_t),
- 		.size = sizeof(compat_long_t),
- 		.align = sizeof(compat_long_t),
-@@ -1421,7 +1421,7 @@ static const struct user_regset s390_compat_regsets[] = {
- 		.set = s390_compat_regs_set,
- 	},
- 	{
--		.core_note_type = NT_PRFPREG,
+ #ifdef CONFIG_SH_FPU
+ 	[REGSET_FPU] = {
+-		.core_note_type	= NT_PRFPREG,
 +		USER_REGSET_NOTE_TYPE(PRFPREG),
- 		.n = sizeof(s390_fp_regs) / sizeof(compat_long_t),
- 		.size = sizeof(compat_long_t),
- 		.align = sizeof(compat_long_t),
-@@ -1429,7 +1429,7 @@ static const struct user_regset s390_compat_regsets[] = {
- 		.set = s390_fpregs_set,
- 	},
- 	{
--		.core_note_type = NT_S390_SYSTEM_CALL,
-+		USER_REGSET_NOTE_TYPE(S390_SYSTEM_CALL),
- 		.n = 1,
- 		.size = sizeof(compat_uint_t),
- 		.align = sizeof(compat_uint_t),
-@@ -1437,7 +1437,7 @@ static const struct user_regset s390_compat_regsets[] = {
- 		.set = s390_system_call_set,
- 	},
- 	{
--		.core_note_type = NT_S390_LAST_BREAK,
-+		USER_REGSET_NOTE_TYPE(S390_LAST_BREAK),
- 		.n = 1,
- 		.size = sizeof(long),
- 		.align = sizeof(long),
-@@ -1445,7 +1445,7 @@ static const struct user_regset s390_compat_regsets[] = {
- 		.set = s390_compat_last_break_set,
- 	},
- 	{
--		.core_note_type = NT_S390_TDB,
-+		USER_REGSET_NOTE_TYPE(S390_TDB),
- 		.n = 1,
- 		.size = 256,
- 		.align = 1,
-@@ -1453,7 +1453,7 @@ static const struct user_regset s390_compat_regsets[] = {
- 		.set = s390_tdb_set,
- 	},
- 	{
--		.core_note_type = NT_S390_VXRS_LOW,
-+		USER_REGSET_NOTE_TYPE(S390_VXRS_LOW),
- 		.n = __NUM_VXRS_LOW,
- 		.size = sizeof(__u64),
- 		.align = sizeof(__u64),
-@@ -1461,7 +1461,7 @@ static const struct user_regset s390_compat_regsets[] = {
- 		.set = s390_vxrs_low_set,
- 	},
- 	{
--		.core_note_type = NT_S390_VXRS_HIGH,
-+		USER_REGSET_NOTE_TYPE(S390_VXRS_HIGH),
- 		.n = __NUM_VXRS_HIGH,
- 		.size = sizeof(__vector128),
- 		.align = sizeof(__vector128),
-@@ -1469,7 +1469,7 @@ static const struct user_regset s390_compat_regsets[] = {
- 		.set = s390_vxrs_high_set,
- 	},
- 	{
--		.core_note_type = NT_S390_HIGH_GPRS,
-+		USER_REGSET_NOTE_TYPE(S390_HIGH_GPRS),
- 		.n = sizeof(s390_compat_regs_high) / sizeof(compat_long_t),
- 		.size = sizeof(compat_long_t),
- 		.align = sizeof(compat_long_t),
-@@ -1477,7 +1477,7 @@ static const struct user_regset s390_compat_regsets[] = {
- 		.set = s390_compat_regs_high_set,
- 	},
- 	{
--		.core_note_type = NT_S390_GS_CB,
-+		USER_REGSET_NOTE_TYPE(S390_GS_CB),
- 		.n = sizeof(struct gs_cb) / sizeof(__u64),
- 		.size = sizeof(__u64),
- 		.align = sizeof(__u64),
-@@ -1485,7 +1485,7 @@ static const struct user_regset s390_compat_regsets[] = {
- 		.set = s390_gs_cb_set,
- 	},
- 	{
--		.core_note_type = NT_S390_GS_BC,
-+		USER_REGSET_NOTE_TYPE(S390_GS_BC),
- 		.n = sizeof(struct gs_cb) / sizeof(__u64),
- 		.size = sizeof(__u64),
- 		.align = sizeof(__u64),
-@@ -1493,7 +1493,7 @@ static const struct user_regset s390_compat_regsets[] = {
- 		.set = s390_gs_bc_set,
- 	},
- 	{
--		.core_note_type = NT_S390_RI_CB,
-+		USER_REGSET_NOTE_TYPE(S390_RI_CB),
- 		.n = sizeof(struct runtime_instr_cb) / sizeof(__u64),
- 		.size = sizeof(__u64),
- 		.align = sizeof(__u64),
+ 		.n		= sizeof(struct user_fpu_struct) / sizeof(long),
+ 		.size		= sizeof(long),
+ 		.align		= sizeof(long),
 -- 
 2.34.1
 
