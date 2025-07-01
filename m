@@ -1,110 +1,131 @@
-Received: from smtp-8faa.mail.infomaniak.ch (smtp-8faa.mail.infomaniak.ch [83.166.143.170])
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E3A949620
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 09:07:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9CE323A9A3;
+	Tue,  1 Jul 2025 09:08:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751360840; cv=none; b=o5ACfwpZhvdroMFZesN4/jXOYrnJrMatFOd+mEsErhciSf8TMkdhy4rNEF6lE+7SrAOaHhYFZtO5LLKkB0McX1G/JWfIm3zjfboZ6ru/b3BY2KV34UUrTcRV/8ctRgYBp2jAB6gYYIV5X51Pj2nvH6Bk7Viapo502EuUuJCvVAY=
+	t=1751360892; cv=none; b=U1TKMsnZsiJUlto51cZxRij8/oAM6DOk23X/mv8fJbKkAD9k7dPHkA+DXs7TaX53azC/LWZuT1hQ6/jFhBtQ4M33yA5u0yWmt/dNzL06xxT/nfTkRCRiSxQTIiCHhD+Yktv3N6GIAQQ1pD/N3cb2woJFQMnbB8O/qk6WSUzve08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751360840; c=relaxed/simple;
-	bh=sHXLU4YJ58g4jatzLFEY9dC0mPDHancbCEteeL570UI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tu0ezzplQqkvCMqa5BO3A6LVsgj+6LsfMWZSfBGjFTGHb+qO031+f1qZnIMlO5QJyKXHTolbc5tkYAtUst9f2pxXg1+v6hxMOYSZ9/sM87WzBiyQamFdpBoc34jBYlm+/qiVckLEuKdMleE5dyMNarzF2/9rOb8Z+GkWjeHTihE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=zrcl+Vbf; arc=none smtp.client-ip=83.166.143.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1751360892; c=relaxed/simple;
+	bh=sQOR5Ukb5Jem/GnNplbF10cI9ssq5tp3I425VLznSko=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=LDmZ6v/9QP72Jz6IPH0DcUUfAGm2z/69hhT97xmDfo7LRuQo4Xtm9Wcw0VUHZwIx0AV6qJWz0QIP0mhqg/HJm9I3xAfXtx39W6/AkOM4BWN8oHN5lV3FB9ZyE7UfJN1w0OZz6dn4ziB2asTyC+nepdftk/ZNdM4xhGlBDDLrUxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=hwwkWF8S; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="zrcl+Vbf"
-Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4bWcbv4TJWzhZ1;
-	Tue,  1 Jul 2025 11:07:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1751360827;
-	bh=wYwVNPXhYK1JR5u40nQeLrzk7KnWvJbBV52hgZXlY1E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=zrcl+VbfPPR6eOXylRxFta9QMLOVL0+toJpuoXiFG6HrdajMYnhGTR+XOF6VslmE1
-	 PqAbZVrfs86X12xCheP2rLrVij9m2/D9MbeFAxC5EmQ57QZm8HQn/AuGhe5W9dbpxq
-	 v9TdlYi0o+930PLfl4MZJjicljx8Vn0MtZSWQUhU=
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4bWcbv0NrFzRGs;
-	Tue,  1 Jul 2025 11:07:07 +0200 (CEST)
-Date: Tue, 1 Jul 2025 11:07:06 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Brahmajit Das <listout@listout.xyz>, kees@kernel.org
-Cc: linux-kernel@vger.kernel.org, gnoack3000@gmail.com
-Subject: Re: [RFC PATCH] samples/check-exec: Fix building on musl libc
-Message-ID: <20250701.daeghaimaL0s@digikod.net>
-References: <20250630202353.28439-1-listout@listout.xyz>
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="hwwkWF8S"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250630202353.28439-1-listout@listout.xyz>
-X-Infomaniak-Routing: alpha
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1751360887;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sCKhaBsg8xUAooQ2UnBR99qEvYpdT0zIlTvlGHqxLsI=;
+	b=hwwkWF8SmOXJLw9wzALqdogqAoTe/5RQm7bPFyxQrcWnFMjdT2GuLKk21ZDWysMGviZ5f9
+	bFW5nLhOSzTFNd/KKAgJys6NIt5GGPMzTN5ExlBdQ+ttoSfDQf813i2zfAhSjBy5T9S5nm
+	29imL8mAXYjoMtwg6ieAmEp4bhhpPxmNV3e4mokzW0Q5uHpiToqxC+UdhwIeghoW2Rr5Yc
+	MEgpH9jb0lb+sGuLV3r7uZu3Xe32CPkiZyHDzGbG2mp5HMb9juEXMXYXFjErEa7CJNckxS
+	o2HuCpmNUldlDxBTa1/KBP1Tidc4c6apZEkK2BCsDZDzHI0/9eb/zNK1mHafGQ==
+Content-Type: multipart/signed;
+ boundary=b8323306f1bbbc5afcc52f8f8b6518b1db3b53e34623a0a8a033e4200c2d;
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Date: Tue, 01 Jul 2025 11:07:51 +0200
+Message-Id: <DB0LM56C47LH.YYFY0ZGCVVKC@cknow.org>
+Cc: "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
+ <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Heiko
+ Stuebner" <heiko@sntech.de>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-rockchip@lists.infradead.org>,
+ <kernel@collabora.com>, <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 1/3] arm64: dts: rockchip: adjust dcin regulator on ROCK
+ 4D
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Diederik de Haas" <didi.debian@cknow.org>
+To: "Nicolas Frattaroli" <nicolas.frattaroli@collabora.com>, "Sebastian
+ Reichel" <sebastian.reichel@collabora.com>
+References: <20250630-rock4d-reg-usb-wifi-v1-0-1057f412d98c@collabora.com>
+ <5acizoywvjolaffojiawqlzixiclrqzohuhq55lbsjm6yhhlwi@w2amqugl3ee2>
+ <DB0KL629S4E4.3ENNM27XN3IYM@cknow.org> <5039013.31r3eYUQgx@workhorse>
+In-Reply-To: <5039013.31r3eYUQgx@workhorse>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Jul 01, 2025 at 01:53:53AM +0530, Brahmajit Das wrote:
-> Building with make allyesconfig on musl results in the following
-> 
-> In file included from samples/check-exec/inc.c:23:
-> /usr/include/sys/prctl.h:88:8: error: redefinition of 'struct prctl_mm_map'
->    88 | struct prctl_mm_map {
->       |        ^~~~~~~~~~~~
-> In file included from samples/check-exec/inc.c:17:
-> usr/include/linux/prctl.h:134:8: note: originally defined here
->   134 | struct prctl_mm_map {
->       |        ^~~~~~~~~~~~
-> 
-> This is mainly due to differnece in the sys/prctl.h between glibC and
-> musl. The struct prctl_mm_map is defined in sys/prctl.h in musl.
-> 
-> Signed-off-by: Brahmajit Das <listout@listout.xyz>
+--b8323306f1bbbc5afcc52f8f8b6518b1db3b53e34623a0a8a033e4200c2d
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-Thanks!
+On Tue Jul 1, 2025 at 10:55 AM CEST, Nicolas Frattaroli wrote:
+> On Tuesday, 1 July 2025 10:19:33 Central European Summer Time Diederik de=
+ Haas wrote:
+>> On Tue Jul 1, 2025 at 1:10 AM CEST, Sebastian Reichel wrote:
+>> > On Mon, Jun 30, 2025 at 08:12:27PM +0200, Diederik de Haas wrote:
+>> >> On Mon Jun 30, 2025 at 5:36 PM CEST, Nicolas Frattaroli wrote:
+>> >> > The ROCK 4D's actual DC input is 5V, and the schematic names it as =
+being
+>> >> > 5V as well.
+>> >> >
+>> >> > Rename the regulator, and change the voltage it claims to be at.
+>> >>=20
+>> >> Shouldn't it have a fixes tag then? Providing 12V where 5V is expecte=
+d
+>> >> sounds problematic ;-)
+>> >
+>> > This is basically "just" documentation, as the DT just describes
+>> > a fixed regulator (i.e. nothing software controllable). This just
+>> > changes a number in sysfs :)
+>> >
+>> > Note, that the 5V DCIN is a USB-C port, which does not do any PD
+>> > negotiation, but has the 5K1 resistors on the CC lines to "request"
+>> > 5V. If for whatever reason a higher voltage is applied (which does
+>> > not happen as long as the power is provided by anything remotely
+>> > following the USB specifications) there also is an over-voltage
+>> > protection chip. So it's not problematic :)
+>>=20
+>> I was worried about and wondered why I/we did NOT receive reports about
+>> boards being fried. Good to know, thanks!
+>>=20
+>> > OTOH adding a Fixes tag does not hurt ;)
+>
+> to add to what Sebastian already said: I purposefully didn't include the
+> Fixes: tag because there is no functional change here. I don't think
+> cosmetic fixes are worth pulling into stable kernels unless they're a
 
-Reviewed-by: Mickaël Salaün <mic@digikod.net>
+Then I agree with you. I didn't realize it was not a functional change.
+I guess I didn't (fully) understand the "just documentation" remark.
 
-Kees, feel free to take it in your tree.  FYI, for the equivalent
-changes in Landlock, I moved down the if/include/endif block to ease
-sorting of include lines.
+Cheers,
+  Diederik
 
-> ---
->  samples/check-exec/inc.c      | 2 ++
->  samples/check-exec/set-exec.c | 2 ++
->  2 files changed, 4 insertions(+)
-> 
-> diff --git a/samples/check-exec/inc.c b/samples/check-exec/inc.c
-> index 7f6ef06a2f06..775ae8613782 100644
-> --- a/samples/check-exec/inc.c
-> +++ b/samples/check-exec/inc.c
-> @@ -14,7 +14,9 @@
->  #define _GNU_SOURCE
->  #include <errno.h>
->  #include <linux/fcntl.h>
-> +#if defined(__GLIBC__)
->  #include <linux/prctl.h>
-> +#endif
->  #include <linux/securebits.h>
->  #include <stdbool.h>
->  #include <stdio.h>
-> diff --git a/samples/check-exec/set-exec.c b/samples/check-exec/set-exec.c
-> index ba86a60a20dd..a75b8c6e6b11 100644
-> --- a/samples/check-exec/set-exec.c
-> +++ b/samples/check-exec/set-exec.c
-> @@ -9,7 +9,9 @@
->  #define _GNU_SOURCE
->  #define __SANE_USERSPACE_TYPES__
->  #include <errno.h>
-> +#if defined(__GLIBC__)
->  #include <linux/prctl.h>
-> +#endif
->  #include <linux/securebits.h>
->  #include <stdbool.h>
->  #include <stdio.h>
-> -- 
-> 2.50.0
-> 
+> dependency of a follow-up functional fix patch, which isn't the case
+> right now. If such a functional fix patch does emerge, it can explicitly
+> declare its dependence on this patch, or even have our robot overlords
+> figure it out itself.
+>
+> In that sense, I do think a Fixes tag hurts, because it needlessly
+> adds to the patch queue of the stable kernel people, and it's worth
+> pointing out that while I claim this patch has no functional change,
+> that's always predicated on the understanding that it does not
+> unintentionally break anything. In this case the chance is essentially
+> zero though, but I won't bother re-rolling this for that tag alone.
+>
+> Regards,
+> Nicolas Frattaroli
+
+
+--b8323306f1bbbc5afcc52f8f8b6518b1db3b53e34623a0a8a033e4200c2d
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaGOlcAAKCRDXblvOeH7b
+bhLJAP97JDpJXhGMfDQaNL37OzPukLBLbOqLs8V/lgGwI5aFpAEAhggtFpJ3o9PL
+NRBJV2vUQPI7/xkFk0EFLqPv3aJFcAo=
+=mOO0
+-----END PGP SIGNATURE-----
+
+--b8323306f1bbbc5afcc52f8f8b6518b1db3b53e34623a0a8a033e4200c2d--
