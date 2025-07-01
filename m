@@ -1,61 +1,90 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A345718E25
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 01:15:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67BBAB660;
+	Tue,  1 Jul 2025 01:17:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751332512; cv=none; b=XVMLH6Jf+dm/3ha10Eyuyi992BtD9l2F1VH1d00SdD+BhwMCyzT7owEu3Z/6nuaKyyPGK+cZ/F7zWnpHI+qan4fsPfwOMwtte/mv4BDsu/S4wiuh6MQbZj6r4rlLrdCu+ozvhhElImc5k6qEWRrWedXOk0MIljIOrpWtL51XcuU=
+	t=1751332671; cv=none; b=entENkWs3xBX0v1KqVhgkxlxuEC1RTVqv25+kJm8L3x+fZ+TqDm8W5XQCFWj6rT8EJBLo6Rlmz2qmaM2qdLkZyAsAE8KbAWgLSkzSurYYKcnJRIhMCz1vdUHhW1dfBJJXlyL6t6g5mpEqBVrWizRjw6hoX7rmdP3f4h0J3s975o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751332512; c=relaxed/simple;
-	bh=VUVsBfN9svwjFZAwqjMlXux23lDyc72bG0JSXdyitQI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ovKPrj7n7fWKAqtjChT3GC57U7IrRyIbFAJFUHh7lqQHa9Xk4HjfYW4bvgxW3ArpIVqf7hdEr66e1dks2BkwYWTMxTJfW4lFwbvssvWRmMivfRPe8omL+SI9JGtwwI/gf4GjKKWulWwkFVzzEGfiBU7GGvKLqf5U5azu7J8KW6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QgRYUPRU; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751332671; c=relaxed/simple;
+	bh=TGlE1ClG5lRsETj4AoTpjuZ+SJ6lqQwK3MaW0+seb5w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TH5fNWhvTj1y+WhJC7MZIlhqUDhqSXcTYsWyKowG6xg2kM21hkuNOM9/tGkJR9ta59bQsm8Qvk35ahIu+wfjem5onhg2gwa9iqadZ8jk8y5PkJ1RY+BgPKPJeb48YjzV2o5gen+ylMjfvzdjykiIdBdSZjY3JQn5OPP+RW+clRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jmKIPdZG; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QgRYUPRU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751332509;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ztKCE441E4iY+w5SsH1xNzKVblctvlPQOmwjwNGLiFI=;
-	b=QgRYUPRUIQSpO1QdzFT7LI6e/yCOOz6bWtpHzCcYKYcm2NCnspBTrA1vJoIIgS3X4shkea
-	2/5jFBzNeFpOr6XbCl5ipdU0IyTfRLzZhqHqLEg/870ZeCjASMikcFyoW3/iGl9DEf7o2U
-	v8bVqhWe11liAfOh4O70blngf9+Na+g=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-663-XtNNRmT3N0WeBEmXCozKYA-1; Mon,
- 30 Jun 2025 21:15:08 -0400
-X-MC-Unique: XtNNRmT3N0WeBEmXCozKYA-1
-X-Mimecast-MFC-AGG-ID: XtNNRmT3N0WeBEmXCozKYA_1751332506
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CDC1918002EC;
-	Tue,  1 Jul 2025 01:15:06 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.72.112.134])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C6F4030001B1;
-	Tue,  1 Jul 2025 01:15:01 +0000 (UTC)
-From: Jason Wang <jasowang@redhat.com>
-To: mst@redhat.com,
-	jasowang@redhat.com,
-	xuanzhuo@linux.alibaba.com,
-	eperezma@redhat.com
-Cc: virtualization@lists.linux.dev,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jmKIPdZG"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-747fc7506d4so2419036b3a.0;
+        Mon, 30 Jun 2025 18:17:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751332670; x=1751937470; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BQ5PSiL5QPW5hfxzuODNHVt+lrCUk5bVb4SwiUVsQ4U=;
+        b=jmKIPdZGOWDMW7T4SFvcFqLI88pWDXbmrr7nD5B1frVySYhbF46agB1JyNc5Y0nmSA
+         4oKVDCOJAnXClqkeaH8xZf1/911+2m4tcMOlp2C2gGsf/9OAg8hIOupZxet6zCnLVLYm
+         vuaFSmefvqHFzDTQ5g3xntIi9l5tWgjSbt1U/BnXSjTnHmrZOEFmJ3Fuk/BvtNwmjxZo
+         thoZww93YfLigvTTSYtt0o3DDvg2OmOQ/v4ezHv/Y6aDfeiQRPCBPWvXYnUTXtvaAkON
+         dU/GvMhdSa/ywl8lpcRaWy56FxPwYec/R5Qdo6UHBxeAsaCRpdt+YCkYOPsgJZQjSiXD
+         AyLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751332670; x=1751937470;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BQ5PSiL5QPW5hfxzuODNHVt+lrCUk5bVb4SwiUVsQ4U=;
+        b=BlupS2EP/90CPhfDmg+I3WMJN5dtGvXXZ+Z13EGeMvVVmrFGkunnU3yW2kHImGlJlV
+         yLwO0Rdl3fd3dGYGU8zgVGSQcB8nXMIdNhATwgHSSdlLPlQf2uZ/eSoNPE+G1/4N27R+
+         HkuSK40DDODVtv1D3Kq/8fcHplh6FA+xm1xkQQUJ17qKd+ZMSPsG5IDa40OJMxVZorAj
+         fcxepVXmYw4MdrvBpaPwBG2IxL5vLCwKycCxROObHGJ7+MXbC2rTo4YE8y1tCLyAUB5s
+         WWyQE8mbRGKHs8PaMYVbnRa2yw60yKm9aIJhulvD6AbZa4J95SjUiQizNytGevd2RPkR
+         RSdA==
+X-Forwarded-Encrypted: i=1; AJvYcCU7Axy+7oMrdvop1L0jO1iSZyNYGI+NiiwsG0A9cYhrJkMn3esn75hnAfj6YFwGnOK6QTn+TKZhIaIZ@vger.kernel.org, AJvYcCV1pxf3aY0pA5oKgqCG5DXPGzbfEHiSiTEPGBNHKp2/CjRVwxGY1u7tEJddtybVbSh3Wv3NfcM4RW78T0l2@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpjohrzF1UuLkkoAPV52aF0cJngqt7M0VHgMUbMol+zPW3OGWj
+	Jvb1QUOpHUJNTdP6Yh992js+mG5FPdX71xLHlWM7hdZuxFs1XZhmKkzJ
+X-Gm-Gg: ASbGnctQNWQgbFTKevXFB6xSuRNn9JErjZTQHSEWDiMrhtqdMKSVl16+FKACHAqWD48
+	smLntTMa5IwPREN7XbjmKScHg1iKgtSOys9ZVjv6tDzKUtHvqv0UTXge7KVB098uBA8oW4yYYe7
+	Th5nPJW/B+PJaerJZ++0r2tqlTL0TS/M2Yjtfh/i83C+xINtHa3eLEj9hrQhQCmkQcfoK5qZe1S
+	ImCpCQ7dQ0WNEPl7r4xfYOOP2zdnG+wm+gKYEbMkM7LLfsREgbwAkhpZce/cXDDuvaVLx8rFJxX
+	guQB1KOLGLY+uTMa80VkU9HFsYI6EgfhMMZFIer1EwKrBc1HU5nQhAr/EmS0lQ==
+X-Google-Smtp-Source: AGHT+IElz440y4qt2E6KOe7YdVb1HqXdStD0Ju2Kyn/eXs9IIdlP1Xrn5joO/n/a2gIxs2JVHnRjPg==
+X-Received: by 2002:a17:903:2f0d:b0:237:ec18:eae5 with SMTP id d9443c01a7336-23ac4633e8cmr229326945ad.27.1751332669591;
+        Mon, 30 Jun 2025 18:17:49 -0700 (PDT)
+Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
+        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-b34e301cd38sm9250116a12.17.2025.06.30.18.17.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 18:17:49 -0700 (PDT)
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Inochi Amaoto <inochiama@gmail.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+	Yixun Lan <dlan@gentoo.org>,
+	Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
+	Ze Huang <huangze@whut.edu.cn>
+Cc: netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	sophgo@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	hch@infradead.org,
-	xieyongji@bytedance.com
-Subject: [PATCH 9/9] vduse: switch to use virtio map API instead of DMA API
-Date: Tue,  1 Jul 2025 09:14:01 +0800
-Message-ID: <20250701011401.74851-10-jasowang@redhat.com>
-In-Reply-To: <20250701011401.74851-1-jasowang@redhat.com>
-References: <20250701011401.74851-1-jasowang@redhat.com>
+	linux-riscv@lists.infradead.org,
+	Longbin Li <looong.bin@gmail.com>
+Subject: [PATCH net-next RFC v4 0/4] riscv: dts: sophgo: Add ethernet support for cv18xx
+Date: Tue,  1 Jul 2025 09:17:25 +0800
+Message-ID: <20250701011730.136002-1-inochiama@gmail.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,175 +92,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Lacking the support of device specific mapping supported in virtio,
-VDUSE must trick the DMA API in order to make virtio-vdpa transport
-work. This is done by advertising vDPA device as dma device with a
-VDUSE specific dma_ops even if it doesn't do DMA at all.
+Add device binding and dts for CV18XX series SoC, this dts change series
+required the reset patch [1] for the dts, which is already taken.
 
-This will be fixed by this patch. Thanks to the new mapping operations
-support by virtio and vDPA. VDUSE can simply switch to advertise its
-specific mappings operations to virtio via virtio-vdpa then DMA API is
-not needed for VDUSE any more.
+[1] https://lore.kernel.org/all/20250617070144.1149926-1-inochiama@gmail.com
 
-Signed-off-by: Jason Wang <jasowang@redhat.com>
----
- drivers/vdpa/vdpa_user/iova_domain.c |  2 +-
- drivers/vdpa/vdpa_user/iova_domain.h |  2 +-
- drivers/vdpa/vdpa_user/vduse_dev.c   | 31 ++++++++++++++++------------
- 3 files changed, 20 insertions(+), 15 deletions(-)
+The patch is marked as RFC as it require reset dts.
 
-diff --git a/drivers/vdpa/vdpa_user/iova_domain.c b/drivers/vdpa/vdpa_user/iova_domain.c
-index 019f3305c0ac..8ea311692545 100644
---- a/drivers/vdpa/vdpa_user/iova_domain.c
-+++ b/drivers/vdpa/vdpa_user/iova_domain.c
-@@ -447,7 +447,7 @@ void vduse_domain_unmap_page(struct vduse_iova_domain *domain,
- 
- void *vduse_domain_alloc_coherent(struct vduse_iova_domain *domain,
- 				  size_t size, dma_addr_t *dma_addr,
--				  gfp_t flag, unsigned long attrs)
-+				  gfp_t flag)
- {
- 	struct iova_domain *iovad = &domain->consistent_iovad;
- 	unsigned long limit = domain->iova_limit;
-diff --git a/drivers/vdpa/vdpa_user/iova_domain.h b/drivers/vdpa/vdpa_user/iova_domain.h
-index 846572b95c23..a2316571671f 100644
---- a/drivers/vdpa/vdpa_user/iova_domain.h
-+++ b/drivers/vdpa/vdpa_user/iova_domain.h
-@@ -64,7 +64,7 @@ void vduse_domain_unmap_page(struct vduse_iova_domain *domain,
- 
- void *vduse_domain_alloc_coherent(struct vduse_iova_domain *domain,
- 				  size_t size, dma_addr_t *dma_addr,
--				  gfp_t flag, unsigned long attrs);
-+				  gfp_t flag);
- 
- void vduse_domain_free_coherent(struct vduse_iova_domain *domain, size_t size,
- 				void *vaddr, dma_addr_t dma_addr,
-diff --git a/drivers/vdpa/vdpa_user/vduse_dev.c b/drivers/vdpa/vdpa_user/vduse_dev.c
-index 64bc39722007..f86d7111e103 100644
---- a/drivers/vdpa/vdpa_user/vduse_dev.c
-+++ b/drivers/vdpa/vdpa_user/vduse_dev.c
-@@ -814,51 +814,55 @@ static const struct vdpa_config_ops vduse_vdpa_config_ops = {
- 	.free			= vduse_vdpa_free,
- };
- 
--static void vduse_dev_sync_single_for_device(struct device *dev,
-+static void vduse_dev_sync_single_for_device(void *token,
- 					     dma_addr_t dma_addr, size_t size,
- 					     enum dma_data_direction dir)
- {
-+	struct device *dev = token;
- 	struct vduse_dev *vdev = dev_to_vduse(dev);
- 	struct vduse_iova_domain *domain = vdev->domain;
- 
- 	vduse_domain_sync_single_for_device(domain, dma_addr, size, dir);
- }
- 
--static void vduse_dev_sync_single_for_cpu(struct device *dev,
-+static void vduse_dev_sync_single_for_cpu(void *token,
- 					     dma_addr_t dma_addr, size_t size,
- 					     enum dma_data_direction dir)
- {
-+	struct device *dev = token;
- 	struct vduse_dev *vdev = dev_to_vduse(dev);
- 	struct vduse_iova_domain *domain = vdev->domain;
- 
- 	vduse_domain_sync_single_for_cpu(domain, dma_addr, size, dir);
- }
- 
--static dma_addr_t vduse_dev_map_page(struct device *dev, struct page *page,
-+static dma_addr_t vduse_dev_map_page(void *token, struct page *page,
- 				     unsigned long offset, size_t size,
- 				     enum dma_data_direction dir,
- 				     unsigned long attrs)
- {
-+	struct device *dev = token;
- 	struct vduse_dev *vdev = dev_to_vduse(dev);
- 	struct vduse_iova_domain *domain = vdev->domain;
- 
- 	return vduse_domain_map_page(domain, page, offset, size, dir, attrs);
- }
- 
--static void vduse_dev_unmap_page(struct device *dev, dma_addr_t dma_addr,
-+static void vduse_dev_unmap_page(void *token, dma_addr_t dma_addr,
- 				size_t size, enum dma_data_direction dir,
- 				unsigned long attrs)
- {
-+	struct device *dev = token;
- 	struct vduse_dev *vdev = dev_to_vduse(dev);
- 	struct vduse_iova_domain *domain = vdev->domain;
- 
- 	return vduse_domain_unmap_page(domain, dma_addr, size, dir, attrs);
- }
- 
--static void *vduse_dev_alloc_coherent(struct device *dev, size_t size,
--					dma_addr_t *dma_addr, gfp_t flag,
--					unsigned long attrs)
-+static void *vduse_dev_alloc_coherent(void *token, size_t size,
-+				      dma_addr_t *dma_addr, gfp_t flag)
- {
-+	struct device *dev = token;
- 	struct vduse_dev *vdev = dev_to_vduse(dev);
- 	struct vduse_iova_domain *domain = vdev->domain;
- 	unsigned long iova;
-@@ -866,7 +870,7 @@ static void *vduse_dev_alloc_coherent(struct device *dev, size_t size,
- 
- 	*dma_addr = DMA_MAPPING_ERROR;
- 	addr = vduse_domain_alloc_coherent(domain, size,
--				(dma_addr_t *)&iova, flag, attrs);
-+					   (dma_addr_t *)&iova, flag);
- 	if (!addr)
- 		return NULL;
- 
-@@ -875,25 +879,27 @@ static void *vduse_dev_alloc_coherent(struct device *dev, size_t size,
- 	return addr;
- }
- 
--static void vduse_dev_free_coherent(struct device *dev, size_t size,
-+static void vduse_dev_free_coherent(void *token, size_t size,
- 					void *vaddr, dma_addr_t dma_addr,
- 					unsigned long attrs)
- {
-+	struct device *dev = token;
- 	struct vduse_dev *vdev = dev_to_vduse(dev);
- 	struct vduse_iova_domain *domain = vdev->domain;
- 
- 	vduse_domain_free_coherent(domain, size, vaddr, dma_addr, attrs);
- }
- 
--static size_t vduse_dev_max_mapping_size(struct device *dev)
-+static size_t vduse_dev_max_mapping_size(void *token)
- {
-+	struct device *dev = token;
- 	struct vduse_dev *vdev = dev_to_vduse(dev);
- 	struct vduse_iova_domain *domain = vdev->domain;
- 
- 	return domain->bounce_size;
- }
- 
--static const struct dma_map_ops vduse_dev_dma_ops = {
-+static const struct virtio_map_ops vduse_map_ops = {
- 	.sync_single_for_device = vduse_dev_sync_single_for_device,
- 	.sync_single_for_cpu = vduse_dev_sync_single_for_cpu,
- 	.map_page = vduse_dev_map_page,
-@@ -2009,7 +2015,7 @@ static int vduse_dev_init_vdpa(struct vduse_dev *dev, const char *name)
- 		return -EEXIST;
- 
- 	vdev = vdpa_alloc_device(struct vduse_vdpa, vdpa, dev->dev,
--				 &vduse_vdpa_config_ops, NULL,
-+				 &vduse_vdpa_config_ops, &vduse_map_ops,
- 				 1, 1, name, true);
- 	if (IS_ERR(vdev))
- 		return PTR_ERR(vdev);
-@@ -2022,7 +2028,6 @@ static int vduse_dev_init_vdpa(struct vduse_dev *dev, const char *name)
- 		put_device(&vdev->vdpa.dev);
- 		return ret;
- 	}
--	set_dma_ops(&vdev->vdpa.dev, &vduse_dev_dma_ops);
- 	vdev->vdpa.map_token = &vdev->vdpa.dev;
- 	vdev->vdpa.mdev = &vduse_mgmt->mgmt_dev;
- 
--- 
-2.34.1
+Change from RFC v3:
+- https://lore.kernel.org/all/20250626080056.325496-1-inochiama@gmail.com
+1. patch 3: change internal phy id from 0 to 1
+
+Change from RFC v2:
+- https://lore.kernel.org/all/20250623003049.574821-1-inochiama@gmail.com
+1. patch 1: fix wrong binding title
+2. patch 3: fix unmatched mdio bus number
+3. patch 4: remove setting phy-mode and phy-handle in board dts and move
+	    them into patch 3.
+
+Change from RFC v1:
+- https://lore.kernel.org/all/20250611080709.1182183-1-inochiama@gmail.com
+1. patch 3: switch to mdio-mux-mmioreg
+2. patch 4: add configuration for Huashan Pi
+
+Inochi Amaoto (4):
+  dt-bindings: net: Add support for Sophgo CV1800 dwmac
+  riscv: dts: sophgo: Add ethernet device for cv18xx
+  riscv: dts: sophgo: Add mdio multiplexer device for cv18xx
+  riscv: dts: sophgo: Enable ethernet device for Huashan Pi
+
+ .../bindings/net/sophgo,cv1800b-dwmac.yaml    | 113 ++++++++++++++++++
+ arch/riscv/boot/dts/sophgo/cv180x.dtsi        |  73 +++++++++++
+ .../boot/dts/sophgo/cv1812h-huashan-pi.dts    |   8 ++
+ 3 files changed, 194 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/sophgo,cv1800b-dwmac.yaml
+
+--
+2.50.0
 
