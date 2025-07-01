@@ -1,189 +1,181 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C8978F5D
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 21:48:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8D21442F4
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 21:48:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751406504; cv=none; b=XxX2a/HOI4NzIFvyzC/oLLtgye30poUYBSOyeRRkjUgzKnugNob96lDIGO6HrwtJ39pw3QsyEiVJikW/J+rtohoj8IbwSpGl2vQtgNYimwbdNLfdKPSN6xzheb6ptI1/V9Wc5BHtce5CFJFcac86G946KV1qXMEnPvvUzxnqZdg=
+	t=1751406539; cv=none; b=atDtmaqtUBZsdDFy6KmGR+st1N7ZgPGo4xm4rX+LgYpXiiJaYz7Azj8XA5Xgf/ycaCoiA5EgauOh4B/RhAxSwRi+M3sKN3LNge5cgRxLja9VIXyHdoJPCAfm8VDahTKVdPem0WwEmKuOo4onm+gdtXNctkqpJKtZfRxWfZDn2m8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751406504; c=relaxed/simple;
-	bh=CNQeL0AVKKXXQObalktsPXjZ3U3vEt/CVME5p+04xrs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DON+JgBE2iCIG3UHG/A4NGf1+eGciI+mA0OnSwfC8dxpb44Ay43NkFqaG+ecQjS7OsboNPK2QkQF7FDe2HN7O/uAHhXowboe10gIqsbnZJG2gsV7CHaO3l3NhzWOHRPG/IJSg8En2z7mBha8qOx4WhMt2gAc3UK5vmWj3OUJixk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool; spf=pass smtp.mailfrom=packett.cool; dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b=pp9qTw7E; arc=none smtp.client-ip=91.218.175.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=packett.cool
+	s=arc-20240116; t=1751406539; c=relaxed/simple;
+	bh=MhBzcmRs4IbfRWvXPt/N6EYZPgvX5eYGeFtXHWVxwhM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Q+/tulRM6MWwaapsp4NeFWDy9mq+r5Z0PyqCE1ZLuVzTD51Sjqobmoz8nbQC0KHhhFFBDKUr0CpfQBm0RPLbN7FU56xp2Pv4GpTgPfFLfwlgm9L/Hf1reJJso49iNy01gTTohHwK+1RsFbxs2smzBjjr3c1eOfqqFwBZ+lagagM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2RrCxWNN; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b="pp9qTw7E"
-Message-ID: <266fdeb50ba3926a3edbda71201ffa021afecd62.camel@packett.cool>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=packett.cool;
-	s=key1; t=1751406499;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CNQeL0AVKKXXQObalktsPXjZ3U3vEt/CVME5p+04xrs=;
-	b=pp9qTw7ESFqxrGZMSW/YWxUvgzUZ9Z9V2uY85UnxjMqygmm2ZQmGzjGY2PaAJdehfKIQXy
-	Susdp+6wxB/qvC4Ddv0hqzQ3XPa70Pyr2kyyMahnfRHMIWUPgxVs6kOixR7QkLiYaa8Nvk
-	nr/+NFaPBdylhzdWHp2Co3ggaE86H3R5SRN1jrYGNSkyv8CGlXOuDosIk/iWYVjQ0Eu/Jt
-	/fUFPBn2HCBQBRY+XW7NQC3joi9lVBas7SxaRZ4rLmIBaWlPvuzTvbvpPG/+Rx/sCUOHqx
-	L/Jh2NQ/3qcyAvtYU4QyUsunaEZl89zN7FCj7Da0N7f9gkUo/lvoD3AWLljGCQ==
-Subject: Re: [PATCH 0/3] Add x1e Dell Inpsiron 14p
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Val Packett <val@packett.cool>
-To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>, Bryan O'Donoghue	
- <bryan.odonoghue@linaro.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski	 <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Tue, 01 Jul 2025 18:48:07 -0300
-In-Reply-To: <86116ada-51e6-4eef-bff1-f8b10a5edacc@gmail.com>
-References: 
-	<20250424-qcom-linux-arm64-for-6-16-dell-inspiron14p-v1-0-ace76b31d024@linaro.org>
-	 <86116ada-51e6-4eef-bff1-f8b10a5edacc@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2RrCxWNN"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-748efefedb5so7545910b3a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 14:48:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751406537; x=1752011337; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JVZ4nZhVYWad2CbXoDJ3BSKbLb9HI8Q+JMXYt3i56nA=;
+        b=2RrCxWNN5QSMXMPHnWSoqOdkh9ufz7M11PsiwyocYOQ4QHpNc440fdv0qcJicqD0kL
+         lXg5XdpyBM3aaTQeAbMDrP024yMtT7C6jz8ShY8CaO0fBwjNch2Gefgn0OXgL6IF07xd
+         Vbb5cwTH6iUyiOFHAcvunbMZK21Q1/ZhMDGlXWzdfXX2d5Jrr62lcqUcXW1/x9fKkJs1
+         A3imWjXv0oAGdpQPdeo0Ln0nSjtjykiVh3SIClor82XO9Ta/LxxIpG+rM2+IGusQtowT
+         KDMMtArV5EA5IizsTXkWjMvnKDkjBbC5wYAU7VTwKI0QlHwJdhGd7HM/tmxJsycN0JXk
+         lMeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751406537; x=1752011337;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=JVZ4nZhVYWad2CbXoDJ3BSKbLb9HI8Q+JMXYt3i56nA=;
+        b=Y3XE33SbnkgUKDirJxzE4Zj0Ltz6d4A/PYb3uy25O62GtJdozRi6lSJhkPTnV4BDKy
+         JJZJqiB47BB6CImVSdvlCPOe+mpwGc1L7yLD5kwPWDaFSkhm/o+WRfIiTEzMDX53JBRk
+         vDwv4OHh+1UU22TVMKGnyZI6mfgHpgfJT4koGddPIRCRx50hZH5/d2rXeyvXo/JmqA4t
+         fw5KG64ihYnM1ziy032C8sn/mG6loV+wByvyZsgRIwZ6YTR27pxV3PiPuc905oZ0jEb0
+         FpAxhF81KdJTcHnBTMOAx/+/XD+i8+Sg0Ey1KMkqNsHasgMA0LmqrLIKJqIypsi/XYQF
+         YaOg==
+X-Forwarded-Encrypted: i=1; AJvYcCWhSJnU7MTzYC01ZeAp/5WQNr7UjB+AFlElt6KicQbgDKCU5AKF9Ne8Aa/OJNEYAdJ3s4Miws7PVmm+McU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvSIipKK+NI9qRRnKCxjnw+n6aTlmqHfz3RimxtKZXqa46ayk9
+	tJ4bJdbsM4be8EtO0z/VLFOhBxd/wfqyG9xewoA6VDoVTb4tgrF/ZUJsGW0I5Wqgw/6sDNXik4L
+	hTM0lhMgrf7nIV4w4Wy20EdHlKQ==
+X-Google-Smtp-Source: AGHT+IEqcUpBnNJRKMdnLvZ2ZSUMUS2quj2Z66sgnJlgrefu2emFNr4Z97aJIzGPcQ4MClhKH9r+grsT8hfglCP6lg==
+X-Received: from pfbbx9.prod.google.com ([2002:a05:6a00:4289:b0:747:a97f:513f])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a00:889:b0:742:a77b:8c3 with SMTP id d2e1a72fcca58-74b50e69a06mr725062b3a.4.1751406536971;
+ Tue, 01 Jul 2025 14:48:56 -0700 (PDT)
+Date: Tue, 01 Jul 2025 14:48:54 -0700
+In-Reply-To: <cd806e9a190c6915cde16a6d411c32df133a265b.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+References: <a3cace55ee878fefc50c68bb2b1fa38851a67dd8.camel@intel.com>
+ <diqzms9vju5j.fsf@ackerleytng-ctop.c.googlers.com> <447bae3b7f5f2439b0cb4eb77976d9be843f689b.camel@intel.com>
+ <zlxgzuoqwrbuf54wfqycnuxzxz2yduqtsjinr5uq4ss7iuk2rt@qaaolzwsy6ki>
+ <4cbdfd3128a6dcc67df41b47336a4479a07bf1bd.camel@intel.com>
+ <diqz5xghjca4.fsf@ackerleytng-ctop.c.googlers.com> <aGJxU95VvQvQ3bj6@yzhao56-desk.sh.intel.com>
+ <a40d2c0105652dfcc01169775d6852bd4729c0a3.camel@intel.com>
+ <diqzms9pjaki.fsf@ackerleytng-ctop.c.googlers.com> <fe6de7e7d72d0eed6c7a8df4ebff5f79259bd008.camel@intel.com>
+ <aGNrlWw1K6nkWdmg@yzhao56-desk.sh.intel.com> <cd806e9a190c6915cde16a6d411c32df133a265b.camel@intel.com>
+Message-ID: <diqzy0t74m61.fsf@ackerleytng-ctop.c.googlers.com>
+Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge pages
+From: Ackerley Tng <ackerleytng@google.com>
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, "Zhao, Yan Y" <yan.y.zhao@intel.com>
+Cc: "quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, "Li, Xiaoyao" <xiaoyao.li@intel.com>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "Hansen, Dave" <dave.hansen@intel.com>, 
+	"david@redhat.com" <david@redhat.com>, "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, 
+	"vbabka@suse.cz" <vbabka@suse.cz>, "tabba@google.com" <tabba@google.com>, 
+	"Shutemov, Kirill" <kirill.shutemov@intel.com>, "michael.roth@amd.com" <michael.roth@amd.com>, 
+	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "seanjc@google.com" <seanjc@google.com>, 
+	"Peng, Chao P" <chao.p.peng@intel.com>, "Du, Fan" <fan.du@intel.com>, 
+	"Yamahata, Isaku" <isaku.yamahata@intel.com>, "Weiny, Ira" <ira.weiny@intel.com>, 
+	"pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Annapurve, Vishal" <vannapurve@google.com>, 
+	"jroedel@suse.de" <jroedel@suse.de>, "Miao, Jun" <jun.miao@intel.com>, 
+	"Li, Zhiquan1" <zhiquan1.li@intel.com>, "pgonda@google.com" <pgonda@google.com>, 
+	"x86@kernel.org" <x86@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2025-07-01 at 22:43 +0200, Aleksandrs Vinarskis wrote:
->=20
-> On 4/24/25 01:53, Bryan O'Donoghue wrote:
-> > Add in a dtsi for the Dell Inspiron 14p.
-> >=20
-> > I'm currently using this as a daily driver including sending this
-> > series
-> > from. Its reasonably stable on 6.15-rcX.
-> >=20
-> > The first two patches can be applied without dependency, the final
-> > patch
-> > relies on patches staged for -next in the media tree to be applied,
-> > presently.
-> >=20
-> > https://gitlab.freedesktop.org/linux-media/media-committers/-/commit/2a=
-b7f87a7f4bf392e3836a2600f115a1baa1415c
-> > https://lore.kernel.org/linux-media/20250407-b4-media-comitters-next-25=
--03-13-ov02e10-v4-0-211e3e6fae90@linaro.org/
-> >=20
-> > Working for me included in this series:
-> >=20
-> > - USB
-> > =C2=A0=C2=A0 Both Type-C USB ports
-> > =C2=A0=C2=A0 Type-A port
-> > =C2=A0=C2=A0 Fingerprint reader
-> > - WiFi
-> > - Bluetooth
-> > - RGB Camera
-> > - Toucpad, keyboard
-> > - Display
-> >=20
-> > Working for me but not included:
-> > - Audio jack
-> > - Iris
-> >=20
-> > Not working:
-> > - Speaker output
-> > =C2=A0=C2=A0 Still WiP haven't touched this in a while
-> >=20
-> > - Battery
-> > =C2=A0=C2=A0 Dell has its own Embedded Controller likely from the x86
-> > platform reused
-> > =C2=A0=C2=A0 on Qcom which we need to reverse engineer or get some
-> > information on to
-> > =C2=A0=C2=A0 make faster progress on.
-> >=20
-> > - cDSP
-> > =C2=A0=C2=A0 Haven't tried to bring this up.
-> >=20
-> > - EVA
-> > =C2=A0=C2=A0 No driver haven't tried it.
-> >=20
-> > - Bugs
-> > =C2=A0=C2=A0 Occasionally when resuming I get a fencing error with hype=
-rlock
-> > and
-> > =C2=A0=C2=A0 freedreno, TBH it looks like something in the GPU or SMMU
-> > according to
-> > =C2=A0=C2=A0 Rob Clark: https://pastebin.com/AWjCyaap
-> >=20
-> > =C2=A0=C2=A0 Ath12k has been splatting for me up to 6.14 when removing =
-a
-> > SSID.
-> > =C2=A0=C2=A0 I switched on ath12k debug when going to 6.15 and predicta=
-bly
-> > couldn't
-> > =C2=A0=C2=A0 reproduce the bug, either because the timings have changed=
- as a
-> > result
-> > =C2=A0=C2=A0 of Heisenbugging or because a fix has been slipped into at=
-h12k.
-> >=20
-> > =C2=A0=C2=A0 Other than those two I'm pretty happy with this system.
-> >=20
-> > =C2=A0=C2=A0 The DTS is based on Aleksandrs Vinarskis XPS, Lenovo T14s =
-and
-> > Qcom CRD.
-> > =C2=A0=20
-> >=20
-> > Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
->=20
-> Hi,
->=20
-> Just noticed that the device name is misspelled in a few occasions,
-> need=20
-> to s/inspirion/inspiron/. DT filename is wrong, model name in DT is=20
-> wrong, one of commit messages is wrong. Firmware paths and compatible
-> in=20
-> DT are correct.
+"Edgecombe, Rick P" <rick.p.edgecombe@intel.com> writes:
 
-(BTW, in this submission in particular, firmware paths are not
-consistent with existing models: the XPS uses lowercase 'dell')
+> On Tue, 2025-07-01 at 13:01 +0800, Yan Zhao wrote:
+>> > Maybe Yan can clarify here. I thought the HWpoison scenario was about =
+TDX
+>> > module
+>> My thinking is to set HWPoison to private pages whenever KVM_BUG_ON() wa=
+s hit
+>> in
+>> TDX. i.e., when the page is still mapped in S-EPT but the TD is bugged o=
+n and
+>> about to tear down.
+>>=20
+>> So, it could be due to KVM or TDX module bugs, which retries can't help.
+>
+> We were going to call back into guestmemfd for this, right? Not set it in=
+side
+> KVM code.
+>
 
-> Otherwise, is the plan to wait for CAMSS to land, and then land this=20
-> one, or perhaps the rest of it can go in already? There is also
-> Latitude=20
-> that was recently submitted which is very similar, perhaps those
-> should=20
-> be unified (CC: Val), probably easier to do if Inspiron lands first.
->=20
+Perhaps we had different understandings of f/g :P
 
-I have a unified patchset pretty much ready to go since yesterday.
-With the way I have it, landing any one of the non-unified
-submissions would only increase churn. I'll submit it now.
+I meant that TDX module should directly set the HWpoison flag on the
+folio (HugeTLB or 4K, guest_memfd or not), not call into guest_memfd.
 
-> Regards,
-> Alex
->=20
-> > ---
-> > Bryan O'Donoghue (3):
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dt-bindings: arm: qcom: Add Dell I=
-nspiron 14 Plus 7441
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 arm64: dts: qcom: Add support for =
-X1E80100 Dell Inspirion 14
-> > Plus 7441
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 arm64: dts: qcom: x1e80100-dell-in=
-spiron14-7441: Switch on
-> > CAMSS RGB sensor
-> >=20
-> > =C2=A0 Documentation/devicetree/bindings/arm/qcom.yaml=C2=A0=C2=A0=C2=
-=A0 |=C2=A0=C2=A0=C2=A0 1 +
-> > =C2=A0 arch/arm64/boot/dts/qcom/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
-=C2=A0=C2=A0=C2=A0 1 +
-> > =C2=A0 .../qcom/x1e80100-dell-inspirion-14-plus-7441.dts=C2=A0 | 1490
-> > ++++++++++++++++++++
-> > =C2=A0 3 files changed, 1492 insertions(+)
-> > ---
-> > base-commit: f7570505263aff2b63142f0d68fa607cd60eb060
-> > change-id: 20250417-qcom-linux-arm64-for-6-16-dell-inspiron14p-
-> > ed68cd65ebad
-> >=20
-> > Best regards,
+guest_memfd will then check this flag when necessary, specifically:
+
+* On faults, either into guest or host page tables=20
+* When freeing the page
+    * guest_memfd will not return HugeTLB pages that are poisoned to
+      HugeTLB and just leak it
+    * 4K pages will be freed normally, because free_pages_prepare() will
+      check for HWpoison and skip freeing, from __folio_put() ->
+      free_frozen_pages() -> __free_frozen_pages() ->
+      free_pages_prepare()
+* I believe guest_memfd doesn't need to check HWpoison on conversions [1]
+
+[1] https://lore.kernel.org/all/diqz5xghjca4.fsf@ackerleytng-ctop.c.googler=
+s.com/
+
+> What about a kvm_gmem_buggy_cleanup() instead of the system wide one. KVM=
+ calls
+> it and then proceeds to bug the TD only from the KVM side. It's not as sa=
+fe for
+> the system, because who knows what a buggy TDX module could do. But TDX m=
+odule
+> could also be buggy without the kernel catching wind of it.
+>
+> Having a single callback to basically bug the fd would solve the atomic c=
+ontext
+> issue. Then guestmemfd could dump the entire fd into memory_failure() ins=
+tead of
+> returning the pages. And developers could respond by fixing the bug.
+>
+
+This could work too.
+
+I'm in favor of buying into the HWpoison system though, since we're
+quite sure this is fair use of HWpoison.
+
+Are you saying kvm_gmem_buggy_cleanup() will just set the HWpoison flag
+on the parts of the folios in trouble?
+
+> IMO maintainability needs to be balanced with efforts to minimize the fal=
+lout
+> from bugs. In the end a system that is too complex is going to have more =
+bugs
+> anyway.
+>
+>>=20
+>> > bugs. Not TDX busy errors, demote failures, etc. If there are "normal"
+>> > failures,
+>> > like the ones that can be fixed with retries, then I think HWPoison is=
+ not a
+>> > good option though.
+>> >=20
+>> > > =C2=A0 there is a way to make 100%
+>> > > sure all memory becomes re-usable by the rest of the host, using
+>> > > tdx_buggy_shutdown(), wbinvd, etc?
+>>=20
+>> Not sure about this approach. When TDX module is buggy and the page is s=
+till
+>> accessible to guest as private pages, even with no-more SEAMCALLs flag, =
+is it
+>> safe enough for guest_memfd/hugetlb to re-assign the page to allow
+>> simultaneous
+>> access in shared memory with potential private access from TD or TDX mod=
+ule?
+>
+> With the no more seamcall's approach it should be safe (for the system). =
+This is
+> essentially what we are doing for kexec.
