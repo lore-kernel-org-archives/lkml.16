@@ -1,441 +1,145 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2828E25C6EC
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 08:41:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B2B825EFBD
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 08:42:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751359312; cv=none; b=ZF8lieoPzxWPyrlgr+jy5TbfycORNMNd/YAMH+WDICVhCqNdfCTquuu8qiD5iIBiU0XuGW4QdP7Hv2U3C08RD0fs0jz98TGJlgAmS6MI8T7uf8nd6IJWap9tbNf5bt+mWgnB0Vs655aqt4qb1vK1z0gYd2TyDNFihfVY2FF8/ng=
+	t=1751359338; cv=none; b=TQE1PAMBIdEDOYZFyBdgJKE4kSZxUQxTDG91YSRzoyWBzLnRcy70+/UEBm5zXJTmjQsY3wHGtFqbLX+t3hdrt8rLgaKVh7EHK0spJBsYBFAKeZrjE3U38vne1Z5ls6DpZ68SfcRQP0uw32ffJ3o60ri9efzMZ8ljjujSdBNKBgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751359312; c=relaxed/simple;
-	bh=sNMgYuRRHDM5tU1JOzxhsMgU93et6+sqxnzyafhvyOg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Jas6PIUJBf2DHC/Rgb5PigY14kaunavD1AeY+h10M4tRgEOMVhNhUOa5ocR48Bz8QCTTcjSBWpYYWMcxMtLr8cb2SxkZ0hlAZSc6hIqskAw4ksH5gaPD/4iu93EdSj13ZgUcG5jYv17BA+Nt5Sy1+5AFd11wAiSJOmyIvB7mNGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=kM0G5mz2; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1751359338; c=relaxed/simple;
+	bh=RVVKzcxnlx7nOWu7Gu0pvyl7lRMUct8fsNs9VBvYeW0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q49LUzx3kggHzJ/j72qdMkV7cVhxDa/GIU5hCXSlR6vKfGHyMzo4zA0GGgLzEIfsWuBLE8UE36N9D8T0wS8o/l4DghNEL2g1AE2mM5jLR4CY/XoCcv9A27rxXawFZpjnMlMyH0210dAhUfojYQqbHQSU9pUowyFgsa5TIF17yjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=XKECikuy; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="kM0G5mz2"
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com [209.85.218.71])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id AAF073FE20
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 08:41:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1751359309;
-	bh=3ACJj1pibTp1hDCcnssHwfTz2N2iBLhUH85nRukXflM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version;
-	b=kM0G5mz2pMxPJB5zRYHp+KjnQrbo9HDrLRCBOZDY2uSJtTn7j8F89HOgjjMuePkqA
-	 Cz0k/w1CZ4Rq9ZTdYuCl/Tau8xNEewyQCfjMJOSfXlb/ZXs6DVHBUBP10n+3cWV8WS
-	 bg3GBvNX+FdwxVISGElXIOiyf7FMUpmBOB9HfPjU2CHhEiLbYMFZ6sf2AybK5JFUeH
-	 yXkZvOVpQ4QkS85LfdS4Pfo5pNBpWn/wd83LgBL0UfQwu8g61CabIRwVRYp0H7Ay6H
-	 UR7HRjhykX4iX9XYvPKQ5WjV6/Hms98woqgEMB1E1Ym3jkvt+0W3lFV00TdD6YoP7O
-	 OK6rARG2nN8DA==
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ade81d27cddso521477466b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 01:41:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="XKECikuy"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5616pnPt030208
+	for <linux-kernel@vger.kernel.org>; Tue, 1 Jul 2025 08:42:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	tutfviu70uAl7UTDUY4zJ/1EBwlos06c3KUfZrmg1A4=; b=XKECikuyYRU+pWA3
+	Jl1M1QpC33RbExyX9FmCh7NBXBaJpQRHu6Ua+DwurZkIHZvzI0v0D6Ezp9/Y5yCz
+	isJ4Wfu0clSXCwmihsCs2xvVNS3m1K2tWRLgNqQ0DY/BDZP+i+m2918pDQCBbR2y
+	2rP9DaZzRJWuGZREs+Agl1o8fRPpcqQoYJQvzTaaUJs6gwxcOnii8Fq4zHH0eP8E
+	9ZgGbjVFl+5evPyuxtQgcVJYpHdxu41tUvyfptDkgPhxdjgzkXRalmBH/fOZIsWg
+	RA5/OGfhuIcbW0UH+HisdlrSzwBcslPJm40BFPXwGN0hvW9RsqAaS74Vy78/2tjt
+	TpsBpw==
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47m02v1y0q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 08:42:16 +0000 (GMT)
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4a824fa4c86so341671cf.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 01:42:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751359309; x=1751964109;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3ACJj1pibTp1hDCcnssHwfTz2N2iBLhUH85nRukXflM=;
-        b=gkOIdxQped/Llv9IGvjYQFQjB8XqLPw/MMsei3KQNAKwEIQVDWyJ+7TI+jlsGUpp7a
-         FEdYN2clAP2o571okZQruuewcTLBJZRaeLrW6l9Xd0puUSp+MiM/qkD7LYmbFk6U4u+P
-         kBrl3Szf+VybqiGK2nYM2FAk3rplvNjvQTOFgwMfnGVHDbY+BP2RWyH+kNsSlR9aR+rF
-         XTc2pHXsCe6/UuU/6n84MJbdSmEhRRnEwfAdizq5qgZFbVxpkYku/XPDLwY903VsJURO
-         HERsLP1gDK6wV/osjAEyrnXh5Ftw7ZxjIpiG9+jGb4SGYfxTrULJ/DLweqtmilwRx8AS
-         0gSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWaEnkKGsehP7OXj7zgSHKoWfHzn6mc9dBDb1Pnu+Bp9ckLNhZUCfeQ3iDCr1kAQgEBr58FWWyiDNO85Io=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGALqnfE40BEfdAlGpOOwmpannwi7Aesew0/f+WJ5rvUWQ+wtP
-	sVFk1zsLJoO4CeTc55nS2Jjl70sGr2t3YVPMg8O6Rv0q/60o+tUyqAqpFUOGaYlQGh66unr5jm9
-	S+l/uCqvuxxyGadmL2Np/kEIG6O3rwUVmuxKacbvOjPfgli0PJKhr8i9B7G/34j4bonIcA+LwfT
-	WPRKya0g==
-X-Gm-Gg: ASbGncvjWfaTwJ7V/gU8En2/us+DBM8hXNKJ3Bgg0io58BxycxyMO9U98Sd3jEe7iMi
-	aNF3E5H9PPFHqlGKrWmf7XqHP51JcRPxkTHw9vtDZOnlcXfP+VDSy13Z8Y5Ja400YkEKHpQ0xeP
-	MLRMXjymh0oBeckedgrTU0nrsXwDd0Vf0X74MJ93Ik+QMeXgNrlukYTqd9RJ+2oqCyolzI+cY3A
-	2MtJIB1eR9oKWfO3QO67n23wZKtqXHo4OilbDwWc1jp0J5UiNliSk5ajPGlfBodr/3kaQd/Baho
-	Ybm/WjQawjUrVtGF2CWh5uwYespAT3fKjuzPEHe9I+98gJeZKg==
-X-Received: by 2002:a17:907:d2c8:b0:ae3:b654:165b with SMTP id a640c23a62f3a-ae3b6542a2bmr37281866b.24.1751359309008;
-        Tue, 01 Jul 2025 01:41:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGPvyXkJ7xxlUFVfvGUBKe1qmn9gYzE1YPTdbDiV+whqqCBKDQi+KNw6Dqm3Yw3xYlwRh9jZg==
-X-Received: by 2002:a17:907:d2c8:b0:ae3:b654:165b with SMTP id a640c23a62f3a-ae3b6542a2bmr37278266b.24.1751359308447;
-        Tue, 01 Jul 2025 01:41:48 -0700 (PDT)
-Received: from amikhalitsyn.lan ([178.24.219.243])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae35363b416sm812427166b.28.2025.07.01.01.41.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 01:41:48 -0700 (PDT)
-From: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
-To: kuniyu@google.com
-Cc: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	Shuah Khan <shuah@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Lennart Poettering <mzxreary@0pointer.de>,
-	Luca Boccassi <bluca@debian.org>,
-	David Rheinsberg <david@readahead.eu>
-Subject: [PATCH net-next v2 6/6] selftests: net: extend SCM_PIDFD test to cover stale pidfds
-Date: Tue,  1 Jul 2025 10:39:21 +0200
-Message-ID: <20250701083922.97928-13-aleksandr.mikhalitsyn@canonical.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250701083922.97928-1-aleksandr.mikhalitsyn@canonical.com>
-References: <20250701083922.97928-1-aleksandr.mikhalitsyn@canonical.com>
+        d=1e100.net; s=20230601; t=1751359335; x=1751964135;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tutfviu70uAl7UTDUY4zJ/1EBwlos06c3KUfZrmg1A4=;
+        b=sj3pQOremc/3HeuozRs1QBL1geX3U+VPkH+GwSdac1JRPoB2Bf9mox2xSQbOelzBDM
+         oG6FQNQHjRmnBufSM1DTS7iARjybAxKSCtTsmS7F8CAYhCtTNVqHnh4YJbdLsx+AdMhE
+         tGlwHYVZnsp93gCsyJkRYaC2L6a5wRnFrBOlWg/HzIITF2yjBgyeMnnBE1hjYjWPvTSA
+         K7vwQTnTGO3UvsMhmSgKIKEvFJSPZZMwLT71hi8Agyk7/SKyUl/RPDiiwA8YqhA8iqVD
+         Jeb20hFLL6QcPD4tX0Cwh4LDryu5KtWtUl7POXOPDdRRaJfH7iBsfTQkEISgIPy4mvTM
+         xIHg==
+X-Forwarded-Encrypted: i=1; AJvYcCXToYUJby1GpgaQ7k6tupjGNSGZbpve8T8mC2fRiVb+94Ny+c88ZCHYAR+DGz2+ZUvBdW/sQHYE2f7QwRQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9z4UQHRW/9gEXbTRYxDFrpFFBNWrQ/mCWB9CuuYO4073+V6Xj
+	P6HlwMAWqFUb8/OKKmSi9bn0353EC+2YvQ5WCJDwwcKgkB2jyAIEQ3TUIfgf5h4lZ7c8DwoyJgk
+	VvbpKyn0ygxCk75gQAvHnzIR66Zx6l0beHusTW7Cz+HlPXcUSvXHjm7Tho/15dnXxnnA=
+X-Gm-Gg: ASbGncudrfKvHvIKb0pVEBoPgtG8aZHeeswsJRsQ8NlqWRjAtP/IIuFf8aCccXKcZig
+	kzfV0YDSuyJ/7tNDMXqbFnNLIOcrTUBuQezHgv4Jbwo+RduNkjOgoCvyJLVWpqBagtDw00dx5aL
+	MqA7XX+LTKqJB8fu+IVA6HBK+yhEIiDaUG+SllKZ6eGSSQr3POjBE8wUajpzfphEXmKaZFzDEqc
+	afgA0tzw+a5AnGjMqgasATYRQkkAw3+wjvyS3rF4z4w3tSlVOtFe3KAkn4sTUW0rKD9ncWXJ0rr
+	1+zjxWEaOEsYdu5t+P2X3tvQalPlHmNKy/UvrhNk3hSzatlwI0iROCPum2UxkCzEPt0QNQbxG3p
+	gq+ux/urX
+X-Received: by 2002:ac8:7f0a:0:b0:4a7:79e1:cd54 with SMTP id d75a77b69052e-4a82fb4a7ccmr13336211cf.6.1751359335189;
+        Tue, 01 Jul 2025 01:42:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGIiylmVmPpd7FS2xOPQGYFcHkmg9ybF8Pa29w5MBFMzjhMUeUBetWA8IVnYLdjBQ6zWunoAQ==
+X-Received: by 2002:ac8:7f0a:0:b0:4a7:79e1:cd54 with SMTP id d75a77b69052e-4a82fb4a7ccmr13336081cf.6.1751359334787;
+        Tue, 01 Jul 2025 01:42:14 -0700 (PDT)
+Received: from [192.168.1.114] (83.9.29.190.neoplus.adsl.tpnet.pl. [83.9.29.190])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae362cbf19asm736054966b.128.2025.07.01.01.42.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Jul 2025 01:42:14 -0700 (PDT)
+Message-ID: <59f46b2c-5966-4ec2-89d9-305ca52f5111@oss.qualcomm.com>
+Date: Tue, 1 Jul 2025 10:42:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/5] Introduce "non-pixel" sub node within iris video
+ node
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+        Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Dikshita Agarwal <quic_dikshita@quicinc.com>,
+        Abhinav Kumar <abhinav.kumar@linux.dev>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250627-video_cb-v3-0-51e18c0ffbce@quicinc.com>
+ <6c5d9ff2-fa59-4151-99fe-3bddae46b507@linaro.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <6c5d9ff2-fa59-4151-99fe-3bddae46b507@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAxMDA1MCBTYWx0ZWRfX70SdxYUhffbb
+ /LFqSiN1CsepFTs+uEpuUHLiRoj8iqokICy/aVGtPx+pL+C6lQFg7CNOgtrsteo/MF9qL1R9aqz
+ bqMIYFhVbMxVvb1zAZaQHKjPB9lUVit8U+9Y9bIa2HIL1CzRPZQ+vU5Ww1nJc/O8mz7aRW55lDG
+ 2w/wDQzbWIxjSHEnc2bSJaxmBMq2qI5skfyu7c8s7qGAN0+yrywUud2skZVhk3clsOhoj5rotcf
+ Wo1HVcR6iNWAZ32OuUkiRZHcNOs1pjQUdFmifBsBt3ebKr8CJN8ubqoQFI+7ViP2BDglmkZUMwc
+ W6h730GI/6IQg38XZzwZ/FHqmtb1Qp6iy3mU/xJkpuEgNwTjUMvP172pMAx7KcVsrVn7usCT9qV
+ i2NJZjuuaAxAQ3ZovcLWQn/m6B+kGFDL5Ipi6SaVBLeN86aUmALbibKS0KplyDZoc5NoNmvg
+X-Authority-Analysis: v=2.4 cv=Y8L4sgeN c=1 sm=1 tr=0 ts=68639f68 cx=c_pps
+ a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=fKQzr7EGRj+VoE0XNsDNvQ==:17
+ a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=qC_FGOx9AAAA:8 a=KKAkSRfTAAAA:8
+ a=FHDPKuC8_rlVOAf1JN8A:9 a=QEXdDO2ut3YA:10 a=dawVfQjAaf238kedN5IG:22
+ a=fsdK_YakeE02zTmptMdW:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: iv5Dix9rAo_T-v1Fwwjq7IS_JiiLhTy6
+X-Proofpoint-ORIG-GUID: iv5Dix9rAo_T-v1Fwwjq7IS_JiiLhTy6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-01_01,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 clxscore=1015 priorityscore=1501 mlxlogscore=743
+ lowpriorityscore=0 impostorscore=0 malwarescore=0 bulkscore=0 phishscore=0
+ mlxscore=0 spamscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2507010050
 
-Extend SCM_PIDFD test scenarios to also cover dead task's
-pidfd retrieval and reading its exit info.
 
-Cc: linux-kselftest@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: Simon Horman <horms@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Kuniyuki Iwashima <kuniyu@google.com>
-Cc: Lennart Poettering <mzxreary@0pointer.de>
-Cc: Luca Boccassi <bluca@debian.org>
-Cc: David Rheinsberg <david@readahead.eu>
-Signed-off-by: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
-Reviewed-by: Christian Brauner <brauner@kernel.org>
----
- .../testing/selftests/net/af_unix/scm_pidfd.c | 217 ++++++++++++++----
- 1 file changed, 173 insertions(+), 44 deletions(-)
 
-diff --git a/tools/testing/selftests/net/af_unix/scm_pidfd.c b/tools/testing/selftests/net/af_unix/scm_pidfd.c
-index 7e534594167e..37e034874034 100644
---- a/tools/testing/selftests/net/af_unix/scm_pidfd.c
-+++ b/tools/testing/selftests/net/af_unix/scm_pidfd.c
-@@ -15,6 +15,7 @@
- #include <sys/types.h>
- #include <sys/wait.h>
- 
-+#include "../../pidfd/pidfd.h"
- #include "../../kselftest_harness.h"
- 
- #define clean_errno() (errno == 0 ? "None" : strerror(errno))
-@@ -26,6 +27,8 @@
- #define SCM_PIDFD 0x04
- #endif
- 
-+#define CHILD_EXIT_CODE_OK 123
-+
- static void child_die()
- {
- 	exit(1);
-@@ -126,16 +129,65 @@ static pid_t get_pid_from_fdinfo_file(int pidfd, const char *key, size_t keylen)
- 	return result;
- }
- 
-+struct cmsg_data {
-+	struct ucred *ucred;
-+	int *pidfd;
-+};
-+
-+static int parse_cmsg(struct msghdr *msg, struct cmsg_data *res)
-+{
-+	struct cmsghdr *cmsg;
-+	int data = 0;
-+
-+	if (msg->msg_flags & (MSG_TRUNC | MSG_CTRUNC)) {
-+		log_err("recvmsg: truncated");
-+		return 1;
-+	}
-+
-+	for (cmsg = CMSG_FIRSTHDR(msg); cmsg != NULL;
-+	     cmsg = CMSG_NXTHDR(msg, cmsg)) {
-+		if (cmsg->cmsg_level == SOL_SOCKET &&
-+		    cmsg->cmsg_type == SCM_PIDFD) {
-+			if (cmsg->cmsg_len < sizeof(*res->pidfd)) {
-+				log_err("CMSG parse: SCM_PIDFD wrong len");
-+				return 1;
-+			}
-+
-+			res->pidfd = (void *)CMSG_DATA(cmsg);
-+		}
-+
-+		if (cmsg->cmsg_level == SOL_SOCKET &&
-+		    cmsg->cmsg_type == SCM_CREDENTIALS) {
-+			if (cmsg->cmsg_len < sizeof(*res->ucred)) {
-+				log_err("CMSG parse: SCM_CREDENTIALS wrong len");
-+				return 1;
-+			}
-+
-+			res->ucred = (void *)CMSG_DATA(cmsg);
-+		}
-+	}
-+
-+	if (!res->pidfd) {
-+		log_err("CMSG parse: SCM_PIDFD not found");
-+		return 1;
-+	}
-+
-+	if (!res->ucred) {
-+		log_err("CMSG parse: SCM_CREDENTIALS not found");
-+		return 1;
-+	}
-+
-+	return 0;
-+}
-+
- static int cmsg_check(int fd)
- {
- 	struct msghdr msg = { 0 };
--	struct cmsghdr *cmsg;
-+	struct cmsg_data res;
- 	struct iovec iov;
--	struct ucred *ucred = NULL;
- 	int data = 0;
- 	char control[CMSG_SPACE(sizeof(struct ucred)) +
- 		     CMSG_SPACE(sizeof(int))] = { 0 };
--	int *pidfd = NULL;
- 	pid_t parent_pid;
- 	int err;
- 
-@@ -158,53 +210,99 @@ static int cmsg_check(int fd)
- 		return 1;
- 	}
- 
--	for (cmsg = CMSG_FIRSTHDR(&msg); cmsg != NULL;
--	     cmsg = CMSG_NXTHDR(&msg, cmsg)) {
--		if (cmsg->cmsg_level == SOL_SOCKET &&
--		    cmsg->cmsg_type == SCM_PIDFD) {
--			if (cmsg->cmsg_len < sizeof(*pidfd)) {
--				log_err("CMSG parse: SCM_PIDFD wrong len");
--				return 1;
--			}
-+	/* send(pfd, "x", sizeof(char), 0) */
-+	if (data != 'x') {
-+		log_err("recvmsg: data corruption");
-+		return 1;
-+	}
- 
--			pidfd = (void *)CMSG_DATA(cmsg);
--		}
-+	if (parse_cmsg(&msg, &res)) {
-+		log_err("CMSG parse: parse_cmsg() failed");
-+		return 1;
-+	}
- 
--		if (cmsg->cmsg_level == SOL_SOCKET &&
--		    cmsg->cmsg_type == SCM_CREDENTIALS) {
--			if (cmsg->cmsg_len < sizeof(*ucred)) {
--				log_err("CMSG parse: SCM_CREDENTIALS wrong len");
--				return 1;
--			}
-+	/* pidfd from SCM_PIDFD should point to the parent process PID */
-+	parent_pid =
-+		get_pid_from_fdinfo_file(*res.pidfd, "Pid:", sizeof("Pid:") - 1);
-+	if (parent_pid != getppid()) {
-+		log_err("wrong SCM_PIDFD %d != %d", parent_pid, getppid());
-+		close(*res.pidfd);
-+		return 1;
-+	}
- 
--			ucred = (void *)CMSG_DATA(cmsg);
--		}
-+	close(*res.pidfd);
-+	return 0;
-+}
-+
-+static int cmsg_check_dead(int fd, int expected_pid)
-+{
-+	int err;
-+	struct msghdr msg = { 0 };
-+	struct cmsg_data res;
-+	struct iovec iov;
-+	int data = 0;
-+	char control[CMSG_SPACE(sizeof(struct ucred)) +
-+		     CMSG_SPACE(sizeof(int))] = { 0 };
-+	pid_t client_pid;
-+	struct pidfd_info info = {
-+		.mask = PIDFD_INFO_EXIT,
-+	};
-+
-+	iov.iov_base = &data;
-+	iov.iov_len = sizeof(data);
-+
-+	msg.msg_iov = &iov;
-+	msg.msg_iovlen = 1;
-+	msg.msg_control = control;
-+	msg.msg_controllen = sizeof(control);
-+
-+	err = recvmsg(fd, &msg, 0);
-+	if (err < 0) {
-+		log_err("recvmsg");
-+		return 1;
- 	}
- 
--	/* send(pfd, "x", sizeof(char), 0) */
--	if (data != 'x') {
-+	if (msg.msg_flags & (MSG_TRUNC | MSG_CTRUNC)) {
-+		log_err("recvmsg: truncated");
-+		return 1;
-+	}
-+
-+	/* send(cfd, "y", sizeof(char), 0) */
-+	if (data != 'y') {
- 		log_err("recvmsg: data corruption");
- 		return 1;
- 	}
- 
--	if (!pidfd) {
--		log_err("CMSG parse: SCM_PIDFD not found");
-+	if (parse_cmsg(&msg, &res)) {
-+		log_err("CMSG parse: parse_cmsg() failed");
- 		return 1;
- 	}
- 
--	if (!ucred) {
--		log_err("CMSG parse: SCM_CREDENTIALS not found");
-+	/*
-+	 * pidfd from SCM_PIDFD should point to the client_pid.
-+	 * Let's read exit information and check if it's what
-+	 * we expect to see.
-+	 */
-+	if (ioctl(*res.pidfd, PIDFD_GET_INFO, &info)) {
-+		log_err("%s: ioctl(PIDFD_GET_INFO) failed", __func__);
-+		close(*res.pidfd);
- 		return 1;
- 	}
- 
--	/* pidfd from SCM_PIDFD should point to the parent process PID */
--	parent_pid =
--		get_pid_from_fdinfo_file(*pidfd, "Pid:", sizeof("Pid:") - 1);
--	if (parent_pid != getppid()) {
--		log_err("wrong SCM_PIDFD %d != %d", parent_pid, getppid());
-+	if (!(info.mask & PIDFD_INFO_EXIT)) {
-+		log_err("%s: No exit information from ioctl(PIDFD_GET_INFO)", __func__);
-+		close(*res.pidfd);
- 		return 1;
- 	}
- 
-+	err = WIFEXITED(info.exit_code) ? WEXITSTATUS(info.exit_code) : 1;
-+	if (err != CHILD_EXIT_CODE_OK) {
-+		log_err("%s: wrong exit_code %d != %d", __func__, err, CHILD_EXIT_CODE_OK);
-+		close(*res.pidfd);
-+		return 1;
-+	}
-+
-+	close(*res.pidfd);
- 	return 0;
- }
- 
-@@ -291,6 +389,24 @@ static void fill_sockaddr(struct sock_addr *addr, bool abstract)
- 	memcpy(sun_path_buf, addr->sock_name, strlen(addr->sock_name));
- }
- 
-+static int sk_enable_cred_pass(int sk)
-+{
-+	int on = 0;
-+
-+	on = 1;
-+	if (setsockopt(sk, SOL_SOCKET, SO_PASSCRED, &on, sizeof(on))) {
-+		log_err("Failed to set SO_PASSCRED");
-+		return 1;
-+	}
-+
-+	if (setsockopt(sk, SOL_SOCKET, SO_PASSPIDFD, &on, sizeof(on))) {
-+		log_err("Failed to set SO_PASSPIDFD");
-+		return 1;
-+	}
-+
-+	return 0;
-+}
-+
- static void client(FIXTURE_DATA(scm_pidfd) *self,
- 		   const FIXTURE_VARIANT(scm_pidfd) *variant)
- {
-@@ -299,7 +415,6 @@ static void client(FIXTURE_DATA(scm_pidfd) *self,
- 	struct ucred peer_cred;
- 	int peer_pidfd;
- 	pid_t peer_pid;
--	int on = 0;
- 
- 	cfd = socket(AF_UNIX, variant->type, 0);
- 	if (cfd < 0) {
-@@ -322,14 +437,8 @@ static void client(FIXTURE_DATA(scm_pidfd) *self,
- 		child_die();
- 	}
- 
--	on = 1;
--	if (setsockopt(cfd, SOL_SOCKET, SO_PASSCRED, &on, sizeof(on))) {
--		log_err("Failed to set SO_PASSCRED");
--		child_die();
--	}
--
--	if (setsockopt(cfd, SOL_SOCKET, SO_PASSPIDFD, &on, sizeof(on))) {
--		log_err("Failed to set SO_PASSPIDFD");
-+	if (sk_enable_cred_pass(cfd)) {
-+		log_err("sk_enable_cred_pass() failed");
- 		child_die();
- 	}
- 
-@@ -340,6 +449,12 @@ static void client(FIXTURE_DATA(scm_pidfd) *self,
- 		child_die();
- 	}
- 
-+	/* send something to the parent so it can receive SCM_PIDFD too and validate it */
-+	if (send(cfd, "y", sizeof(char), 0) == -1) {
-+		log_err("Failed to send(cfd, \"y\", sizeof(char), 0)");
-+		child_die();
-+	}
-+
- 	/* skip further for SOCK_DGRAM as it's not applicable */
- 	if (variant->type == SOCK_DGRAM)
- 		return;
-@@ -398,7 +513,13 @@ TEST_F(scm_pidfd, test)
- 		close(self->server);
- 		close(self->startup_pipe[0]);
- 		client(self, variant);
--		exit(0);
-+
-+		/*
-+		 * It's a bit unusual, but in case of success we return non-zero
-+		 * exit code (CHILD_EXIT_CODE_OK) and then we expect to read it
-+		 * from ioctl(PIDFD_GET_INFO) in cmsg_check_dead().
-+		 */
-+		exit(CHILD_EXIT_CODE_OK);
- 	}
- 	close(self->startup_pipe[1]);
- 
-@@ -421,9 +542,17 @@ TEST_F(scm_pidfd, test)
- 		ASSERT_NE(-1, err);
- 	}
- 
--	close(pfd);
- 	waitpid(self->client_pid, &child_status, 0);
--	ASSERT_EQ(0, WIFEXITED(child_status) ? WEXITSTATUS(child_status) : 1);
-+	/* see comment before exit(CHILD_EXIT_CODE_OK) */
-+	ASSERT_EQ(CHILD_EXIT_CODE_OK, WIFEXITED(child_status) ? WEXITSTATUS(child_status) : 1);
-+
-+	err = sk_enable_cred_pass(pfd);
-+	ASSERT_EQ(0, err);
-+
-+	err = cmsg_check_dead(pfd, self->client_pid);
-+	ASSERT_EQ(0, err);
-+
-+	close(pfd);
- }
- 
- TEST_HARNESS_MAIN
--- 
-2.43.0
+On 30-Jun-25 20:04, neil.armstrong@linaro.org wrote:
+> On 27/06/2025 17:48, Vikash Garodia wrote:
+>> This series introduces a sub node "non-pixel" within iris video node.
+>> Video driver registers this sub node as a platform device and configure
+>> it for DMA operations. All non pixel buffers, i.e bitstream, HFI queues
+>> and internal buffers related to bitstream processing, would be managed
+>> by this non_pixel device.
 
+[...]
+
+> I tried the patchset on SM8550 QRD and SM8650 QRD/HDK and the system just reboots
+> a few millisecond after probing iris, no error messages nor reboot to sahara mode.
+> 
+> The DT changeset for reference:
+> https://git.codelinaro.org/neil.armstrong/linux/-/commit/e1b3628469c038559a60d310386f006f353e3d59
+
+I think that's because of the majorly suboptimal 'define disallowed
+ranges' approach with the iommu-addresses bindings.. 8550 (and most
+64-bit QC SoCs) also have DRAM mapped above 32bits, meaning you'd have
+to add a whole lot of boilerplate to disallow these ranges as well
+
+Konrad
