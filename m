@@ -1,47 +1,58 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from leonov.paulk.fr (leonov.paulk.fr [185.233.101.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 736D5283FEB;
-	Tue,  1 Jul 2025 20:10:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3087C1B95B;
+	Tue,  1 Jul 2025 20:12:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.101.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751400629; cv=none; b=m/Bn8TSW2OnSSIEZoXiX1HAwuFJzFLwZ/E+BBSxhcK+NMwnQzcPQ+lN/QVd05EFnZg61FxHpWjdxTNNOtQzm/Z2QggkJ+pVj5k79YO1v048bw4fsrE21/RLy9QV4EdptNvDXZrudIrIoBLgQDYUgB9OrqETf54EWYpqImXYOku4=
+	t=1751400774; cv=none; b=LZMu7U3RXF/1Pa535y7JKuNTfPNcOG5wtadd/rjf6EGIaXFmiLYOJxJgJhSYAmcR1cP3COVqsXX0Npivo4Brxt9VOdT4Ky/hYXGk82CuYnO0T72J2BqtirHD/9udXI7t4+GKbrfYma9/aN94mnTYxp8/UDJYFdVgNzXoT8qSL58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751400629; c=relaxed/simple;
-	bh=x/5s4J6/OTlD9f6oui9G3mjn+w+/x+w57+m2VNsLM1E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tnlKdCynkg6hUGuLuuPecDhWhNup7K8DSwUkiL4xHVniH48JAb2M38zQCiRbIFaBvLkdJyV1sLSQNuUuknWJFQjZTg/LQqSL9Bt8NKtQkZ0flVcksWUXnsdmKNMUm0Ne46w78LvtRiq4iNuYAYzfMaHP4lN/9tgL5++ADtr0ILs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U+BCvdeo; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U+BCvdeo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC641C4CEF3;
-	Tue,  1 Jul 2025 20:10:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751400629;
-	bh=x/5s4J6/OTlD9f6oui9G3mjn+w+/x+w57+m2VNsLM1E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=U+BCvdeo1cmca9l8ZVxpggYM47Mzux1ylSpxvUFJU3ciYBv46iqTHt+NSw5TtqgGP
-	 tEFBVMkOWtehGGYY3vPc1WXMOICGzg7d9K6INX1GdMIqyzT1+Hmqdhb0E/XelzsKtW
-	 /WXJvpwRgddPVBDu/fkI3bSdfpvNjHdIJ3expw+Kshy/JSclR1+aao97Td02nFDUmW
-	 N2yeH/NNOO9RgH30lexA7UXkuIGVUsa7EVdZrmDPis3KpFATwTxpSjY9phHpje1dzo
-	 WnevEb2BLwf5viqV5RQ9QvB5nu7Tp5Quh5jZEwzkxUR6pK/neKR55VJMTjOIAEsE5G
-	 bPOZ7NksshPYQ==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 3/3] perf tools: Fix use-after-free in help_unknown_cmd()
-Date: Tue,  1 Jul 2025 13:10:27 -0700
-Message-ID: <20250701201027.1171561-3-namhyung@kernel.org>
-X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-In-Reply-To: <20250701201027.1171561-1-namhyung@kernel.org>
-References: <20250701201027.1171561-1-namhyung@kernel.org>
+	s=arc-20240116; t=1751400774; c=relaxed/simple;
+	bh=dgl5hIOq6GycYqWdHrpk1fFDgkuYnSrk119emMBzkZ0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Mo0gZgxxENnU5lw/pWRckfKQ+h3+JO1zfhNBut5aVYeFTaDmnTAWqZyMdap0dLhLbCCv/O68L22bQGbOB5gMJQQFZbi7abGofPURid//FcV2ESQL0Vn6KIZYqmMO69prmfQugHUOCGNgTZBz01gSbY1zsW/qF8W7VYdGr2SxOGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io; spf=pass smtp.mailfrom=sys-base.io; arc=none smtp.client-ip=185.233.101.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sys-base.io
+Received: from laika.paulk.fr (12.234.24.109.rev.sfr.net [109.24.234.12])
+	by leonov.paulk.fr (Postfix) with ESMTPS id CFBD81F00036;
+	Tue,  1 Jul 2025 20:12:49 +0000 (UTC)
+Received: by laika.paulk.fr (Postfix, from userid 65534)
+	id 55ACFAC968A; Tue,  1 Jul 2025 20:12:49 +0000 (UTC)
+X-Spam-Level: *
+Received: from localhost.localdomain (unknown [192.168.1.64])
+	by laika.paulk.fr (Postfix) with ESMTP id 5A449AC967D;
+	Tue,  1 Jul 2025 20:11:30 +0000 (UTC)
+From: Paul Kocialkowski <paulk@sys-base.io>
+To: linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-gpio@vger.kernel.org
+Cc: Yong Deng <yong.deng@magewell.com>,
+	Paul Kocialkowski <paulk@sys-base.io>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Maxime Ripard <mripard@kernel.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Icenowy Zheng <icenowy@aosc.xyz>,
+	Andre Przywara <andre.przywara@arm.com>
+Subject: [PATCH 0/5] sunxi: Various minor V3s clock/pinctrl fixes
+Date: Tue,  1 Jul 2025 22:11:19 +0200
+Message-ID: <20250701201124.812882-1-paulk@sys-base.io>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,91 +61,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently perf aborts when it finds an invalid command.  I guess it
-depends on the environment as I have some custom commands in the path.
+This is a mixed-bag of minor fixes for V3s clocks and pinctrl.
 
-  $ perf bad-command
-  perf: 'bad-command' is not a perf-command. See 'perf --help'.
-  Aborted (core dumped)
+The last patch is a weak attempt at accomodating using both the display
+engine and tcon along with the camera subsystem. The main issue is that
+the tcon and de need to have the same clock parent, which may not be
+the case depending on the pixel rate. Bringing the de block to the same
+clock rate as the csi block helps in some cases.
 
-It's because the exclude_cmds() in libsubcmd has a use-after-free when
-it removes some entries.  After copying one to another entry, it keeps
-the pointer in the both position.  And the next copy operation will free
-the later one but it's the same entry in the previous one.
+Paul Kocialkowski (5):
+  pinctrl: sunxi: v3s: Fix wrong comment about UART2 pinmux
+  clk: sunxi-ng: v3s: Fix CSI SCLK clock name
+  clk: sunxi-ng: v3s: Fix CSI1 MCLK clock name
+  clk: sunxi-ng: v3s: Fix TCON clock parents
+  drm/sun4i: Run the mixer clock at 297 MHz on V3s
 
-For example, let's say cmds = { A, B, C, D, E } and excludes = { B, E }.
+ .../bindings/media/allwinner,sun6i-a31-csi.yaml    |  2 +-
+ .../bindings/media/allwinner,sun6i-a31-isp.yaml    |  2 +-
+ .../media/allwinner,sun6i-a31-mipi-csi2.yaml       |  2 +-
+ arch/arm/boot/dts/allwinner/sun8i-v3s.dtsi         |  2 +-
+ drivers/clk/sunxi-ng/ccu-sun8i-v3s.c               | 14 +++++++-------
+ drivers/gpu/drm/sun4i/sun8i_mixer.c                | 12 ++++++------
+ drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c          |  2 +-
+ include/dt-bindings/clock/sun8i-v3s-ccu.h          |  2 +-
+ 8 files changed, 19 insertions(+), 19 deletions(-)
 
-  ci  cj  ei   cmds-name  excludes
-  -----------+--------------------
-   0   0   0 |     A         B       :    cmp < 0, ci == cj
-   1   1   0 |     B         B       :    cmp == 0
-   2   1   1 |     C         E       :    cmp < 0, ci != cj
-
-At this point, it frees cmds->names[1] and cmds->names[1] is assigned to
-cmds->names[2].
-
-   3   2   1 |     D         E       :    cmp < 0, ci != cj
-
-Now it frees cmds->names[2] but it's the same as cmds->names[1].  So
-accessing cmds->names[1] will be invalid.
-
-This makes the subcmd tests succeed.
-
-  $ perf test subcmd
-   69: libsubcmd help tests                                            :
-   69.1: Load subcmd names                                             : Ok
-   69.2: Uniquify subcmd names                                         : Ok
-   69.3: Exclude duplicate subcmd names                                : Ok
-
-Fixes: 657a3efee43a ("libsubcmd: Avoid SEGV/use-after-free when commands aren't excluded")
-Reviewed-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/lib/subcmd/help.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
-
-diff --git a/tools/lib/subcmd/help.c b/tools/lib/subcmd/help.c
-index 8561b0f01a247690..9ef569492560efd7 100644
---- a/tools/lib/subcmd/help.c
-+++ b/tools/lib/subcmd/help.c
-@@ -9,6 +9,7 @@
- #include <sys/stat.h>
- #include <unistd.h>
- #include <dirent.h>
-+#include <assert.h>
- #include "subcmd-util.h"
- #include "help.h"
- #include "exec-cmd.h"
-@@ -82,10 +83,11 @@ void exclude_cmds(struct cmdnames *cmds, struct cmdnames *excludes)
- 				ci++;
- 				cj++;
- 			} else {
--				zfree(&cmds->names[cj]);
--				cmds->names[cj++] = cmds->names[ci++];
-+				cmds->names[cj++] = cmds->names[ci];
-+				cmds->names[ci++] = NULL;
- 			}
- 		} else if (cmp == 0) {
-+			zfree(&cmds->names[ci]);
- 			ci++;
- 			ei++;
- 		} else if (cmp > 0) {
-@@ -94,12 +96,12 @@ void exclude_cmds(struct cmdnames *cmds, struct cmdnames *excludes)
- 	}
- 	if (ci != cj) {
- 		while (ci < cmds->cnt) {
--			zfree(&cmds->names[cj]);
--			cmds->names[cj++] = cmds->names[ci++];
-+			cmds->names[cj++] = cmds->names[ci];
-+			cmds->names[ci++] = NULL;
- 		}
- 	}
- 	for (ci = cj; ci < cmds->cnt; ci++)
--		zfree(&cmds->names[ci]);
-+		assert(cmds->names[ci] == NULL);
- 	cmds->cnt = cj;
- }
- 
 -- 
-2.50.0.727.gbf7dc18ff4-goog
+2.49.0
 
