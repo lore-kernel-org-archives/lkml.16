@@ -1,492 +1,189 @@
-Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PNZPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19011026.outbound.protection.outlook.com [52.103.68.26])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABCFE272816
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 23:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.67
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751413945; cv=none; b=g577nOvghBqgJTCaGZJsdAKM+tI7cflgAQexgcW5XkRM9gLn/yWK6TMX/OKa7F0Tg107yWKYgylviB/nQIuuVkCAlamQ/XVF6Ncl3fuQfpLjYDCIa3zmpE4CLjPRZjmF+JsEjPoCKmIHMip8xswtXJnLz2Fi+YW73HzycrK26xc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751413945; c=relaxed/simple;
-	bh=tjiBDIKJyNGh8slRUYHUGlQb2/fH8IzZ3HuZgUfr64c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=o/5N6drs8u25yfLy9Y/qjTFwQ2rEY56CrNEO+DLYPfHhfADc+F1DMa9JpfrYHOdLU8K0AYe0Zqtwkcj+fkshjs2Ejc5/vy0b1ZvtiyOhrzMn+jdX+D24XYzyYUQ5NT0mvamQWZ3nbIbmW6rSNfN3Lu8kbXYww8HM+s5l2+MMDHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jFL4gCHH; arc=none smtp.client-ip=209.85.221.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 247F5271456;
+	Tue,  1 Jul 2025 23:52:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.26
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751413960; cv=fail; b=LDSSUJSfq44/G11qQdZ4zTF0oooyAuznPpxSQ0BpXXBewDNVriWAkYtY0qGP0CE1SpbhmOQCgR2gtDrqPGKLZd4qM0VjvVzz/HTLoE+pro69g26+0arGm5TcitNA9KTqeNfBT/WGm5lEISo88VUL0ORWH//qrmqY9YA4bsi/5SA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751413960; c=relaxed/simple;
+	bh=zaZ4cuXFWzYbpFYmJr2zyPf0uDksiLzokTQXakwEX2E=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=QUQR5RqX5/45h4xQuFSgWAPygVVjfRyfmnLvZBA1/lyih3HbX5cUAmKLVQQKlGHmR8b4f/xkwNsGGFlqo6EfJh/3iKcA+hA1wlMnHi5jN3vxjLpKOw9FcuvbZOVX4JsX/r8GAxzbSbaNGJ735+StXIe6a07+fjxytA6DaOWvtLk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Z/28YBsv; arc=fail smtp.client-ip=52.103.68.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jFL4gCHH"
-Received: by mail-wr1-f67.google.com with SMTP id ffacd0b85a97d-3a54690d369so3618820f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 16:52:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751413942; x=1752018742; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gMsx/bLIwdUCshMr1seZaeKRpQ4k80hDurVAGXv2D4o=;
-        b=jFL4gCHH+WqdlTy0CV6zUEiwL02zyJvruvTRxRCtWIl6+ujKo9R9rHgEEKehyXWDsJ
-         XJhA35DYCYMLb6VCPNekr0K4WMqfetbFskavCwUCtieal7Jar21WLAeKonq05f2+FZet
-         z8p4jy6Sag4ynTKZraqygo+jbOgu/cZshbhE++m9+sOjAZnks4+xwRZEjefKoPyy1Eku
-         /h16BB5y7o76DfwzWtHT3Ywtql12xGGRuLjIZ+MD2AAbZcmiuf7YUlC/z+3A4Gj5Ne50
-         VqIc+B18gXesNyzyZsb+DTqh7B1RoG5VFvaWNlfnmxQhb2ECbd2NDpz3SM2rdjTLWv/h
-         zhuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751413942; x=1752018742;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gMsx/bLIwdUCshMr1seZaeKRpQ4k80hDurVAGXv2D4o=;
-        b=kBhL7269pCS3dwxwxwi3bPtIgszXQHSEdPnOJG4a5t7RWsQTDlnfn1n8WZerv8WTtI
-         O+lPynPc/5BhzDsYbme6qHsE7qeMAD6KKnbYKrFDxzRM/I0pTUtQ3cn/yA3/dOOwFBRg
-         QW22gVDFPSGpBUaJT5rvxQXu+/ZEqPTlaoh7LdiMMyj6O5gG4okKBwSZqDWVDMKvpYta
-         s9aIs/Uxca2BxLaeD4/5zx8v3NWlJZa0HtPx+hCWW7ETqwE8+eHkKJdsonjv1p/Oc07m
-         X5eW11q4rPenJdxGJxdjk0INpa1vyL0E79fcl61GS69Hk3Bh7/1GCJssCfZieGsZtkJ+
-         4JVw==
-X-Forwarded-Encrypted: i=1; AJvYcCXAXSaCFAXEWsBU6C05YT2OY3CkFw9QAzrtUpkzT4PO2I2+OzVryWU5vS1FmbGTMyESGRmP9hnpp+P8WUY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZSNz9riM1hxxrO/qWBH+rpt2R25Y25FhD7Qevh6Pu++Wjy/cW
-	NBIQ2/qbf+CU+/bni53yoJBKqdFUV4SbvOFp3TOK94sSTbCMoouFqS3RQlZpAvWRRQU=
-X-Gm-Gg: ASbGncu4YL2nof/Zh3+hli3bwsA1JTx6uyXjOhYme4uJln91rUYJm/uz9aSu2lxv3Ll
-	I403Ei4oayXyTt0Qs4F7CYByxB4wQAE6cIxXZ3DBAkIAVoXaIrpY/Zy2vS+6uSjgWKRJtdnOJ6k
-	HSF7lGp2uCAIPVW+Twgd362L8Q8YFLFVGpo1e7DjqkYtbRzpGDN9auyX6elUYpskLQECqkc6rkN
-	0K4DtdABg1SFAey/7duqMW51YeVFd5i9IueWibJRx/YWYkWmGhlIbvNENST4Y2T1FlAjdzimFUJ
-	CMzT099SP1h7JuJfjEWqYwIg69RwjTBWvQHYmcb7/GXy1FC9petglc38kcWi10DqiQanvTuiio3
-	hMyybgeBJ0mlgHcen/E1SPwWA2Qc=
-X-Google-Smtp-Source: AGHT+IFS1vP/5Cv9BvmFda2HPKdYYULEow4Xi68llcAGBd3LmZMnsBWVzW/6pzfXnP5YQBBWppl8zQ==
-X-Received: by 2002:a05:6000:2087:b0:3a4:cfbf:5199 with SMTP id ffacd0b85a97d-3b1fdc20c7amr273041f8f.9.1751413941878;
-        Tue, 01 Jul 2025 16:52:21 -0700 (PDT)
-Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a3a5fd2sm179141475e9.15.2025.07.01.16.52.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 16:52:21 -0700 (PDT)
-Message-ID: <d787c6ea-c47b-4dcb-a0a3-15ca8f15528b@linaro.org>
-Date: Wed, 2 Jul 2025 00:52:19 +0100
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Z/28YBsv"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=QuzHjZ186zepETRMFnt1G3V6cFzLhcoG6dhi5/zR2yZ4zm/DO/ZPBujaZxR6FRoDsOPYmd9RprtTeZkTnQeaYiISfBNZiOH9M8T0alcmY0yiLd3ITgWCfvJYywcprwNghGSztK3lkOdUtuz6a9KlXGwqnmdG3SJWUorPB/LvthIx+kWUrnijawDxaG6O4QMbfsD2gabqfmNbeKvrXkSUbP8Fw57zjDUBdbcLzgR2iRg44kxaV9ydawPYyXbmZSoEY7vru1MZmTXt+JXdfu9fmh3rZ8GE4u/PK0yw2A8XrWnZjLBGIbQhVZmTDt67VvSE2yVCZlr+lu8vyGvpZnQ/dA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DLquz5kfLmRz5jL8K0delPQcirn5GTSlbsOgPMNGK44=;
+ b=JTedAsigKKfvkttQNtNwTagqc+eG+mhuVwWVwTzek5wVCx7aO8/SWyffomJrIz5Stwd6dGJqoklH+wblV9iinDUPweWznTFPBCiH4lNZS/d/v/BsQdmF0LvQeiJfIP9ZCukd49AV5aOId0flTOhZSosqBIOX9XT5PYL9h4K5zShTGewPOoMO8Knhp56mZoTlYKPT6UfP11qh/+sJwvkt8LvnmLZA+yiGwaHd5BWNvF6EDYnMwZAzHlcbNDelqSCfgbxKL2fbNYewW9RpdjGobkxmqCpiBVSC49jIIoc1uOtbEfn2E/WrdAWsZ3f3JebAXSkip0bnGt+qKgAsG/KN9Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DLquz5kfLmRz5jL8K0delPQcirn5GTSlbsOgPMNGK44=;
+ b=Z/28YBsvKu2bF25Q55QbA/fPuZl4mTAls+XLoi2TApHHqdw3F9Q+lgNBfTRG47+qkexXbV+3seDyAilKs3mZinOfLmIRLO3ucdezTraIH7gPdjwq8PnBOM24KuruNn15NCYgUxzvHn14txV82k/raGVocH53zpJYj1my0VHGG+Qt7TIHV4KnpzAD3hy34EtuUEEptG+0H6DplHOeeZdnM2uA1dfK0fNV50bqD5LLVm210bhWFzXndx8/1M8C2mkQIc5K58MkC6q6pfjP4l0Bovi1HTw1kjQNPnnyTwIIaATPwe0Ga5G+jF4iWQMOuhwA3hI81SLckWk3i3hKxK/vYg==
+Received: from PNYPR01MB11171.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:2aa::8)
+ by MA0PR01MB6693.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a01:79::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.20; Tue, 1 Jul
+ 2025 23:52:29 +0000
+Received: from PNYPR01MB11171.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::7f30:f566:cb62:9b0c]) by PNYPR01MB11171.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::7f30:f566:cb62:9b0c%7]) with mapi id 15.20.8835.018; Tue, 1 Jul 2025
+ 23:52:29 +0000
+Message-ID:
+ <PNYPR01MB11171E0C90DE8A30FEF50A9F5FE41A@PNYPR01MB11171.INDPRD01.PROD.OUTLOOK.COM>
+Date: Wed, 2 Jul 2025 07:52:23 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net] dt-bindings: net: sophgo,sg2044-dwmac: Drop status
+ from the example
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Inochi Amaoto <inochiama@gmail.com>,
+ netdev@vger.kernel.org, devicetree@vger.kernel.org, sophgo@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+References: <20250701063621.23808-2-krzysztof.kozlowski@linaro.org>
+From: Chen Wang <unicorn_wang@outlook.com>
+In-Reply-To: <20250701063621.23808-2-krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SG2PR04CA0172.apcprd04.prod.outlook.com (2603:1096:4::34)
+ To PNYPR01MB11171.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:2aa::8)
+X-Microsoft-Original-Message-ID:
+ <a2b4e3dd-fdf1-4bd3-b308-aca7ab1d6e71@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/5] arm64: dts: qcom: Add support for Dell Inspiron
- 7441 / Latitude 7455
-To: Val Packett <val@packett.cool>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250701231643.568854-1-val@packett.cool>
- <20250701231643.568854-4-val@packett.cool>
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Content-Language: en-US
-In-Reply-To: <20250701231643.568854-4-val@packett.cool>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PNYPR01MB11171:EE_|MA0PR01MB6693:EE_
+X-MS-Office365-Filtering-Correlation-Id: 311e2fe1-9374-4498-1830-08ddb8fa5655
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199028|8060799009|15080799009|7092599006|19110799006|6090799003|5072599009|440099028|13041999003|40105399003|3412199025;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TkV5NmRIU1kxeC9JcVcxWUZ1QjNueFlsNC9Ic1kwYWthK0NDVUFyK28wU1JF?=
+ =?utf-8?B?VFd6dUk3bHBQdnUvL051bGNoYmtEV0FYVlp3UzU5ck8vYXJZcjlyM05aR3dz?=
+ =?utf-8?B?QitCYWlFTkI1cHdOUm01bXVTNWZHN2ZEWFFuQ1I1a1FnN2NEV0RoM0JxME93?=
+ =?utf-8?B?VzZNSVBDQVVYN3E0MjdZenROWlluMzFibW5XQi90QXJPNmRYZDNVb0wyT1Jt?=
+ =?utf-8?B?bXJFaVZTUDM2eEZHcXdSem5PYk82enZVVVp1YnVhRHA1TThWVDFuY09iQnBJ?=
+ =?utf-8?B?clJOcDlwMXdJQlQ4ZW1hQTR5TXRuRGF6aUJIK2lISm80ZVlRanp1VTZVTVpI?=
+ =?utf-8?B?czBoT1ljVEVmZFJXVzMzSVJoOFRlUU5TcFFhQjgwQ2sxalFNQnR3K2F4d0Ri?=
+ =?utf-8?B?VEtUdGhEdlBNdlUxVXlLUncwcFVKa0MvNDZCVS8rWVprMjZTcHNMOGxoeEtl?=
+ =?utf-8?B?S1c4NWdwT3BGUnJiRnpTRkxJM2tVc2ZEalJ0VmJPV3UyQzk0YnkzcXI3R01M?=
+ =?utf-8?B?RkpHL0RaRHVSaG5qbWI5VGdaaUtqY3AzTzd6bDBqWDNuYUJQdUMwbFU0bWZn?=
+ =?utf-8?B?dDkrZGU0RnZBV0dMSWJyVWE1STZiclN0YUdXZ3hGTk1qREg2NUlBS0ZPcWZP?=
+ =?utf-8?B?MEtQOGxyUGVZNUw3SXdCTjVuSm1pRVZWOTAxMWUwZUxZU3laV2RvL1hqNzJm?=
+ =?utf-8?B?R2JqeFd2dWMybFY3dmt3UHpKb2Y5Yk43RnRheW9kMDJhaDJCemNFQUpJaW5l?=
+ =?utf-8?B?VFVqNFBUU2lFdTNabzJDZ3FPR2d2MExLcXgrUVVGL1ZmME9DSGlhWGkwcVdn?=
+ =?utf-8?B?VVE5SzUwUE1qbzFJR2xrZFN3Q3FOVzZiOUQra1dLdVA1YnlONXo3QU9lMTg4?=
+ =?utf-8?B?ZDZmY1EwVDVQSzFnQlpMMllPdzhrYlNsTkg3YnROWW9nM0RlV29BLzZkVSt2?=
+ =?utf-8?B?ZlZhcWI0WGJEZ1hFVVdFb1owc1NQdHp1c3N2NDJoa096WXVsS1A0MFdkZHVz?=
+ =?utf-8?B?NHhPTHliK0ZIc3ZBdTdsazdvQVVPUXVXNVdVYkhLblgxWFhia09vdmtIeDU2?=
+ =?utf-8?B?NExWTHJnODIwSVFpckkxT3Buc2J3b0NFVlhSNE1YazZtMmFUVzZaRTYvZXY3?=
+ =?utf-8?B?R2hEd2ZMTjhrYTdsaytCZmF1UmpmbGVxbVNUL1htT2RUTER0SW53WWh3L3VB?=
+ =?utf-8?B?cmJZN0prQ3dFNWVwdFVFVlcvamtPKy9zWnV2OWNLWThCRS9hRDEyckU2TDBB?=
+ =?utf-8?B?SWY5VGZ2R0hiR2dnNlU4SElzOGo5bGt0NkVuQ3B3SFZKNVhiL1FLcGhReFI4?=
+ =?utf-8?B?QW04cnk0SUVXT0UzYWxZQkFrMTFJRTFMRHBiSTVJVm5pSjFCOXBGZUoycDVK?=
+ =?utf-8?B?V0dpR1VaTzR2UVF5Q040c2owc3JIYituTlpDU0NqSnhEUmw5YVFDNkJaRy9s?=
+ =?utf-8?B?MHVVZ2Z1U1hUdnFHNzBqUXY3TFYzdTh5SGR3anFKcE1CT2JjeXZTeEFqUDMr?=
+ =?utf-8?B?YTcxUEZjK2lwMG9wVHduZnNWdzNObzdRbWplMU5MZ1VyL1ptTXZUYWZJM1da?=
+ =?utf-8?B?Rk4rMXdoSlhkTUdRSFFRbHlCWkN0MDV2WjQ5TGtBSWplUHlqTU1uSHNsQlVC?=
+ =?utf-8?B?T0NJLzVLYmxkNDNHZ215dktjMlFhekE9PQ==?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UFdNVk9zNElhR3RLRlNhcFZpNk4zWWdvUG92ZC81V2kzS2JmbjVKMjVPeVlB?=
+ =?utf-8?B?YWFHTi9nOGVkdlRBS2QzR2VLZTc4MlJleHU1RHozZWxpWlE2MFBONENya2xn?=
+ =?utf-8?B?N1RCWmY0NG9yRitINVJXZzNoNVBUZm1Mc1Nkd29nM0J3MUoyRyt1Q0ZSV01V?=
+ =?utf-8?B?cFNMMUpQbkxXcTd2czVJcXZxSmFxdHdPVHRqRkdEV2NteVI0Sk9GNm5SRlpD?=
+ =?utf-8?B?WTFFNzJDZDRJV2JwcjFzUzVUM1Zqc3JLMUVqY3YrSGZhb0diNy9uZ0JhSUlv?=
+ =?utf-8?B?NjVUL3NBejR2eGZyNzNvWUxqVUZBTHpERWtjWW1HcG9UcVNVRUNGQ2g4amIw?=
+ =?utf-8?B?NGNYY0pldUcwQXlHM2lrcWVVcWVEWjZJNWszQTNLL3N3bEwxd25tZjdmeWdV?=
+ =?utf-8?B?WnNBUGNkemV0bEtway9GZXZpdlJiTlpUMzJYRkN4UnVoZmdtd0xIajBwclFF?=
+ =?utf-8?B?MVAxaWNVRWJvWHhHTS9LSG9MNkswTVVoaXU5WnZwRDEyQklTODhGRVhuRWpK?=
+ =?utf-8?B?TDc5QVlYa2FLRWk5TkJYQU5GQmtrU2ovRlNzdFJCOW9BclBacENpSFordXV1?=
+ =?utf-8?B?Wnk3VnNUaVIrVDJGaHNlV2FoREp5Z1Qzd25rUU14SjVDQTNZNGV3b1NPN3ha?=
+ =?utf-8?B?OWZLRWxFRVpsTDJWdHdEUU02RytYV0pyYjhvV0ZzMmJCK05KbmZjbjRSank1?=
+ =?utf-8?B?VjMraEMzSmZxbTJ3YmdSL3Z1N1JNNEh0dHB6N1hIb251b3BWV3BxdlBYbTRw?=
+ =?utf-8?B?S3hoQUk5bkQwQUFud005cHhiSGxVRU1lT2duZWR4WDhjM2hiOW1MZnhpRVNy?=
+ =?utf-8?B?ZGZocHlzRVF0Ujc4eG9DZUt6RWRnM1VsYXdqbGp3d2d2U21kbDBWR2FGZzl4?=
+ =?utf-8?B?RFV0eGRmb0VPdUt6eXRWL1p2UlBHNWNHcGdRUWZ2ejdRZHU5bXIyUk50d3Zx?=
+ =?utf-8?B?bXMvZERPU2RpL1dPdDJmNjRFdkJPSE5mYU43SDZOQzJNMTNXb09uKzFoZjBQ?=
+ =?utf-8?B?NXR4bDNHaENOYnlCWjZwcFdZZHNCUWRUQjNTcU5xRWl5YWhHQWRYaE5VbVVx?=
+ =?utf-8?B?cnN6bDVsWmd0UU5oQitqeW9reXVaRDBFa0grdnYxWDNQVjZlWUJZWWFNYldT?=
+ =?utf-8?B?WDBWTCs4aTMvYjBDU2x3VmM1Q0dFRWlXdlkydERERlBZelc1NWs0N2lnSjFq?=
+ =?utf-8?B?NlMwZy9QcENKWEZDVGdWbk9SNzRMQjZwWko5d0svMFNSVVZUajFaWmZ3SnA3?=
+ =?utf-8?B?dVBZZHZiUVAzNUx2ZmhNZ1hmemNFcTNHM3Y1cjFzaFZ1enlRWEhzV3hVSUZ0?=
+ =?utf-8?B?NUcwaDZaT0xMaUtORTd6anBNTFQ4Q3ZxZ3dQMGVVSnBWUkozME44QUZaYlhC?=
+ =?utf-8?B?dHM3d0JRdGQxaEttc0IvWU1DUVJueS8zQlFyd25kTUFhOEp5dEIwR2d1RVA2?=
+ =?utf-8?B?OWpXSXhnRWZBd1B4THFFRi81QzlXeS9MZFdYY1pwNVhicWp5ZUhCKyt2ay9S?=
+ =?utf-8?B?Nm1IaWg3dzFydk1rRkM2L1dOZGVxVjdFeFNScXpwRzY1TTlIdUdQdVNMRGcy?=
+ =?utf-8?B?a0lNWi9EeXJGcHV2MGttY2YzaHdMblpUanhXbEhNMGJqblIxWTBDSHVodTdr?=
+ =?utf-8?B?am1KYkZSSE90MXNZNTdYejc5dnNiZno5aW9jSFNiRU9TdEhSYVdHMGlldFRa?=
+ =?utf-8?B?bGo0ZlRRMFBPSldMTStNcVFrOVdFamY4UmE2dFg0VE4zSWU5ODMzcUZSc09v?=
+ =?utf-8?Q?Bw1xyk79DRDUDh+M0+CpCwKNh0Wxi/0zzcUoH6b?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 311e2fe1-9374-4498-1830-08ddb8fa5655
+X-MS-Exchange-CrossTenant-AuthSource: PNYPR01MB11171.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2025 23:52:28.9265
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MA0PR01MB6693
 
-On 01/07/2025 23:53, Val Packett wrote:
-> Add device trees for both SKUs of the X1E80100 Thena laptop:
-> - Dell Latitude 7455
-> - Dell Inspiron 14 Plus 7441
-> 
-> Works:
-> - Wi-Fi (WCN7850 hw2.0)
-> - Bluetooth
-> - USB Type-C x2 (with DP alt mode)
-> - USB Type-A
-> - USB Fingerprint reader
-> - eDP Display (with brightness)
-> - NVMe
-> - SDHC (microSD slot)
-> - Keyboard
-> - Touchpad
-> - Touchscreen
-> - Audio (4 Speakers, 2 DMICs, Combo Jack)
-> - Battery
-> 
-> Not included:
-> - Camera
-> 
-> Co-authored-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> Signed-off-by: Val Packett <val@packett.cool>
+
+On 2025/7/1 14:36, Krzysztof Kozlowski wrote:
+> Examples should be complete and should not have a 'status' property,
+> especially a disabled one because this disables the dt_binding_check of
+> the example against the schema.  Dropping 'status' property shows
+> missing other properties - phy-mode and phy-handle.
+>
+> Fixes: 114508a89ddc ("dt-bindings: net: Add support for Sophgo SG2044 dwmac")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Reviewed-by: Chen Wang <unicorn_wang@outlook.com>
+
+
 > ---
->   arch/arm64/boot/dts/qcom/Makefile             |    4 +
->   .../x1e80100-dell-inspiron-14-plus-7441.dts   |   51 +
->   .../dts/qcom/x1e80100-dell-latitude-7455.dts  |   52 +
->   .../boot/dts/qcom/x1e80100-dell-thena.dtsi    | 1658 +++++++++++++++++
->   4 files changed, 1765 insertions(+)
->   create mode 100644 arch/arm64/boot/dts/qcom/x1e80100-dell-inspiron-14-plus-7441.dts
->   create mode 100644 arch/arm64/boot/dts/qcom/x1e80100-dell-latitude-7455.dts
->   create mode 100644 arch/arm64/boot/dts/qcom/x1e80100-dell-thena.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> index 4bfa926b6a08..d2f932dfcc75 100644
-> --- a/arch/arm64/boot/dts/qcom/Makefile
-> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> @@ -315,6 +315,10 @@ x1e80100-asus-zenbook-a14-el2-dtbs	:= x1e80100-asus-zenbook-a14.dtb x1-el2.dtbo
->   dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-asus-zenbook-a14.dtb x1e80100-asus-zenbook-a14-el2.dtb
->   x1e80100-crd-el2-dtbs	:= x1e80100-crd.dtb x1-el2.dtbo
->   dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-crd.dtb x1e80100-crd-el2.dtb
-> +x1e80100-dell-inspiron-14-plus-7441-el2-dtbs	:= x1e80100-dell-inspiron-14-plus-7441.dtb x1-el2.dtbo
-> +dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-dell-inspiron-14-plus-7441.dtb x1e80100-dell-inspiron-14-plus-7441-el2.dtb
-> +x1e80100-dell-latitude-7455-el2-dtbs	:= x1e80100-dell-latitude-7455.dtb x1-el2.dtbo
-> +dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-dell-latitude-7455.dtb x1e80100-dell-latitude-7455-el2.dtb
->   x1e80100-dell-xps13-9345-el2-dtbs	:= x1e80100-dell-xps13-9345.dtb x1-el2.dtbo
->   dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-dell-xps13-9345.dtb x1e80100-dell-xps13-9345-el2.dtb
->   x1e80100-hp-elitebook-ultra-g1q-el2-dtbs := x1e80100-hp-elitebook-ultra-g1q.dtb x1-el2.dtbo
-> diff --git a/arch/arm64/boot/dts/qcom/x1e80100-dell-inspiron-14-plus-7441.dts b/arch/arm64/boot/dts/qcom/x1e80100-dell-inspiron-14-plus-7441.dts
-> new file mode 100644
-> index 000000000000..0ff98752a276
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/x1e80100-dell-inspiron-14-plus-7441.dts
-> @@ -0,0 +1,51 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * Copyright (c) 2025 Val Packett <val@packett.cool>
-> + */
-
-Why have you dropped my copyright from this file ?
-
-20250424-qcom-linux-arm64-for-6-16-dell-inspiron14p-v1-0-ace76b31d024@linaro.org
-
-https://git.codelinaro.org/bryan.odonoghue/kernel/-/blob/x1e80100-6.15-rc1-dell-inspiron14-camss-ov02c10-ov02e10-audio-iris-phy-v1/arch/arm64/boot/dts/qcom/x1e80100-dell-inspirion-14-plus-7441.dts?ref_type=heads
-
-> +/dts-v1/;
-> +
-> +#include "x1e80100-dell-thena.dtsi"
-Please retain my authorship and put yourself down as co-author.
-
-❯ diff ~/Downloads/x1e80100-dell-inspirion-14-plus-7441.dts 
-arch/arm64/boot/dts/qcom/x1e80100-dell-thena.dtsi
-5a6
- >  * Copyright (c) 2025 Val Packett <val@packett.cool>
-8,9d8
-< /dts-v1/;
-<
-20,21d18
-< 	model = "Dell Inspirion 14 Plus 7441";
-< 	compatible = "dell,inspiron-14-plus-7441", "qcom,x1e80100";
-40c37
-< 		qcom,mbhc-headphone-vthreshold-microvolt = <50000>;
----
- > 		qcom,mbhc-headphone-vthreshold-microvolt = <40000>;
-156d152
-< 		pinctrl-names = "default";
-157a154
- > 		pinctrl-names = "default";
-165a163
- > 			/* Reuse as a panic indicator until we get a "camera on" trigger */
-179c177
-< 	sound {
----
- > 	sound: sound {
-181d178
-< 		model = "X1E80100-DELL-Inspiron-14p";
-184c181
-< 				"WooferRight IN", "WSA2 WSA_SPK2 OUT",
----
- > 				"WooferRight IN", "WSA2 WSA_SPK1 OUT",
-432,437d428
-< 	/*
-< 	 * TODO: These two regulators are actually part of the removable M.2
-< 	 * card and not the CRD mainboard. Need to describe this differently.
-< 	 * Functionally it works correctly, because all we need to do is to
-< 	 * turn on the actual 3.3V supply above.
-< 	 */
-564,567c555,565
-<                         regulator-min-microvolt = <1800000>;
-<                         regulator-max-microvolt = <1800000>;
-<                         regulator-initial-mode = 
-<RPMH_REGULATOR_MODE_HPM>;
-<                 };
----
- > 			regulator-min-microvolt = <1800000>;
- > 			regulator-max-microvolt = <1800000>;
- > 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
- > 		};
- >
- > 		vreg_l6b_1p8: ldo6 {
- > 			regulator-name = "vreg_l6b_1p8";
- > 			regulator-min-microvolt = <1800000>;
- > 			regulator-max-microvolt = <2960000>;
- > 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
- > 		};
-582a581,587
- > 		vreg_l9b_2p9: ldo9 {
- > 			regulator-name = "vreg_l9b_2p9";
- > 			regulator-min-microvolt = <2960000>;
- > 			regulator-max-microvolt = <2960000>;
- > 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
- > 		};
- >
-777,778c782,783
-< 			regulator-min-microvolt = <1200000>;
-< 			regulator-max-microvolt = <1200000>;
----
- > 			regulator-min-microvolt = <1256000>;
- > 			regulator-max-microvolt = <1256000>;
-791,859d795
-< &gpu {
-< 	status = "okay";
-<
-< 	zap-shader {
-< 		firmware-name = 
-"qcom/x1e80100/Dell/inspiron-14-plus-7441/qcdxkmsuc8380.mbn";
-< 	};
-< };
-<
-< &camcc {
-< 	status = "okay";
-< };
-<
-< &camss {
-< 	vdd-csiphy4-0p8-supply = <&vreg_l2c_0p8>;
-< 	vdd-csiphy4-1p2-supply = <&vreg_l1c_1p2>;
-<
-< 	status = "okay";
-<
-< 	ports {
-< 		/*
-< 		 * port0 => csiphy0
-< 		 * port1 => csiphy1
-< 		 * port2 => csiphy2
-< 		 * port3 => csiphy4
-< 		 */
-< 		port@3 {
-< 			csiphy4_ep: endpoint@4 {
-< 				reg = <4>;
-< 				clock-lanes = <7>;
-< 				data-lanes = <0 1>;
-< 				remote-endpoint = <&ov02e10_ep>;
-< 			};
-< 		};
-< 	};
-< };
-<
-< &cci1 {
-< 	status = "okay";
-< };
-<
-< &cci1_i2c1 {
-< 	camera@10 {
-< 		compatible = "ovti,ov02e10";
-< 		reg = <0x10>;
-<
-< 		reset-gpios = <&tlmm 237 GPIO_ACTIVE_LOW>;
-< 		pinctrl-names = "default";
-< 		pinctrl-0 = <&cam_rgb_default>;
-<
-< 		clocks = <&camcc CAM_CC_MCLK4_CLK>;
-< 		assigned-clocks = <&camcc CAM_CC_MCLK4_CLK>;
-< 		assigned-clock-rates = <19200000>;
-<
-< 		orientation = <0>; /* front facing */
-<
-< 		avdd-supply = <&vreg_l7b_2p8>;
-< 		dvdd-supply = <&vreg_l7b_2p8>;
-< 		dovdd-supply = <&vreg_cam_1p8>;
-<
-< 		port {
-< 			ov02e10_ep: endpoint {
-< 				data-lanes = <1 2>;
-< 				link-frequencies = /bits/ 64 <360000000>;
-< 				remote-endpoint = <&csiphy4_ep>;
-< 			};
-< 		};
-< 	};
-< };
-<
-861a798
- >
-891,895d827
-< &i2c1 {
-< 	clock-frequency = <400000>;
-< 	status = "okay";
-< };
-<
-902c834
-< 		compatible = "parade,ps8830";
----
- > 		compatible = "parade,ps8833", "parade,ps8830";
-953,958d884
-< &i2c4 {
-< 	clock-frequency = <400000>;
-<
-< 	status = "okay";
-< };
-<
-964c890,892
-< 	/* Type A Port1 */
----
- > 	/* EC @0x3b */
- >
- > 	/* Type A Port */
-979c907
-< 	/* FRP eUSB */
----
- > 	/* Fingerprint scanner */
-1001c929
-< 		compatible = "parade,ps8830";
----
- > 		compatible = "parade,ps8833", "parade,ps8830";
-1048d975
-<
-1057,1067d983
-<
-< 	touchscreen@10 {
-< 		compatible = "hid-over-i2c";
-< 		reg = <0x10>;
-<
-< 		hid-descr-addr = <0x1>;
-< 		interrupts-extended = <&tlmm 51 IRQ_TYPE_LEVEL_LOW>;
-<
-< 		pinctrl-0 = <&ts0_default>;
-< 		pinctrl-names = "default";
-< 	};
-1071d986
-< 	/* GPIO_80, GPIO_81 */
-1077,1080d991
-< &iris {
-< 	firmware-name = "qcom/x1e80100/Dell/inspiron-14-plus-7441/qcvss8380.mbn";
-< };
-<
-1100c1011
-< 	pinctrl-0 = <&dmic01_default>, <&dmic23_default>;
----
- > 	pinctrl-0 = <&dmic01_default>;
-1110a1022,1039
- > &mdss_dp0 {
- > 	status = "okay";
- > };
- >
- > &mdss_dp0_out {
- > 	data-lanes = <0 1>;
- > 	link-frequencies = /bits/ 64 <1620000000 2700000000 5400000000 
-8100000000>;
- > };
- >
- > &mdss_dp1 {
- > 	status = "okay";
- > };
- >
- > &mdss_dp1_out {
- > 	data-lanes = <0 1>;
- > 	link-frequencies = /bits/ 64 <1620000000 2700000000 5400000000 
-8100000000>;
- > };
- >
-1112d1040
-< 	compatible = "qcom,x1e80100-dp";
-1262,1271c1190,1199
-< &remoteproc_adsp {
-< 	firmware-name = 
-"qcom/x1e80100/Dell/inspiron-14-plus-7441/qcadsp8380.mbn",
-< 			"qcom/x1e80100/Dell/inspiron-14-plus-7441/adsp_dtbs.elf";
-<
-< 	status = "okay";
-< };
-<
-< &remoteproc_cdsp {
-< 	firmware-name = 
-"qcom/x1e80100/Dell/inspiron-14-plus-7441/qccdsp8380.mbn",
-< 			"qcom/x1e80100/Dell/inspiron-14-plus-7441/cdsp_dtbs.elf";
----
- > &sdhc_2 {
- > 	cd-gpios = <&tlmm 71 GPIO_ACTIVE_LOW>;
- > 	pinctrl-0 = <&sdc2_default &sdc2_card_det_n>;
- > 	pinctrl-1 = <&sdc2_sleep &sdc2_card_det_n>;
- > 	pinctrl-names = "default", "sleep";
- > 	vmmc-supply = <&vreg_l9b_2p9>;
- > 	vqmmc-supply = <&vreg_l6b_1p8>;
- > 	bus-width = <4>;
- > 	no-sdio;
- > 	no-mmc;
-1385d1312
-< 			/* cam_aon_mclk4 */
-1516a1444,1450
- > 	sdc2_card_det_n: sdc2-card-det-state {
- > 		pins = "gpio71";
- > 		function = "gpio";
- > 		drive-strength = <2>;
- > 		bias-pull-up;
- > 	};
- >
-1588,1600c1522,1534
-<         wcn_sw_en: wcn-sw-en-state {
-<                 pins = "gpio214";
-<                 function = "gpio";
-<                 drive-strength = <2>;
-<                 bias-disable;
-<         };
-<
-<         wcn_wlan_bt_en: wcn-wlan-bt-en-state {
-<                 pins = "gpio116", "gpio117";
-<                 function = "gpio";
-<                 drive-strength = <2>;
-<                 bias-disable;
-<         };
----
- > 	wcn_sw_en: wcn-sw-en-state {
- > 		pins = "gpio214";
- > 		function = "gpio";
- > 		drive-strength = <2>;
- > 		bias-disable;
- > 	};
- >
- > 	wcn_wlan_bt_en: wcn-wlan-bt-en-state {
- > 		pins = "gpio116", "gpio117";
- > 		function = "gpio";
- > 		drive-strength = <2>;
- > 		bias-disable;
- > 	};
-1619a1554,1565
- > &usb_1_ss0 {
- > 	status = "okay";
- > };
- >
- > &usb_1_ss0_dwc3 {
- > 	dr_mode = "host";
- > };
- >
- > &usb_1_ss0_dwc3_hs {
- > 	remote-endpoint = <&pmic_glink_ss0_hs_in>;
- > };
- >
-1636,1637c1582,1583
-< &usb_1_ss0 {
-< 	status = "okay";
----
- > &usb_1_ss0_qmpphy_out {
- > 	remote-endpoint = <&retimer_ss0_ss_in>;
-1640,1641c1586,1587
-< &usb_1_ss0_dwc3 {
-< 	dr_mode = "host";
----
- > &usb_1_ss1 {
- > 	status = "okay";
-1644,1645c1590,1591
-< &usb_1_ss0_dwc3_hs {
-< 	remote-endpoint = <&pmic_glink_ss0_hs_in>;
----
- > &usb_1_ss1_dwc3 {
- > 	dr_mode = "host";
-1648,1649c1594,1595
-< &usb_1_ss0_qmpphy_out {
-< 	remote-endpoint = <&retimer_ss0_ss_in>;
----
- > &usb_1_ss1_dwc3_hs {
- > 	remote-endpoint = <&pmic_glink_ss1_hs_in>;
-1666,1677d1611
-< };
-<
-< &usb_1_ss1 {
-< 	status = "okay";
-< };
-<
-< &usb_1_ss1_dwc3 {
-< 	dr_mode = "host";
-< };
-<
-< &usb_1_ss1_dwc3_hs {
-< 	remote-endpoint = <&pmic_glink_ss1_hs_in>;
-
----
-bod
+>   Documentation/devicetree/bindings/net/sophgo,sg2044-dwmac.yaml | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/net/sophgo,sg2044-dwmac.yaml b/Documentation/devicetree/bindings/net/sophgo,sg2044-dwmac.yaml
+> index 4dd2dc9c678b..8afbd9ebd73f 100644
+> --- a/Documentation/devicetree/bindings/net/sophgo,sg2044-dwmac.yaml
+> +++ b/Documentation/devicetree/bindings/net/sophgo,sg2044-dwmac.yaml
+> @@ -80,6 +80,8 @@ examples:
+>         interrupt-parent = <&intc>;
+>         interrupts = <296 IRQ_TYPE_LEVEL_HIGH>;
+>         interrupt-names = "macirq";
+> +      phy-handle = <&phy0>;
+> +      phy-mode = "rgmii-id";
+>         resets = <&rst 30>;
+>         reset-names = "stmmaceth";
+>         snps,multicast-filter-bins = <0>;
+> @@ -91,7 +93,6 @@ examples:
+>         snps,mtl-rx-config = <&gmac0_mtl_rx_setup>;
+>         snps,mtl-tx-config = <&gmac0_mtl_tx_setup>;
+>         snps,axi-config = <&gmac0_stmmac_axi_setup>;
+> -      status = "disabled";
+>   
+>         gmac0_mtl_rx_setup: rx-queues-config {
+>           snps,rx-queues-to-use = <8>;
