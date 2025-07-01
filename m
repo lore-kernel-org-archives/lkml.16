@@ -1,134 +1,105 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B1CE4C97;
-	Tue,  1 Jul 2025 01:23:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 130094C97;
+	Tue,  1 Jul 2025 01:24:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751333017; cv=none; b=uheKuq6VdrmBLMBIp85suIxnjOfmlUU25qH3XRjVxvNLFMZNr+H+aLodJzfUxbmPLuoNVIY135G3jU41aC2aVEf0CSP/Sxbxod0yR5wvute4Zc1yb2p6SzsCZgmwPqFljfzuCwKRHdI8z95dOew4S5qWxps9tTVb+Am7vXstzro=
+	t=1751333094; cv=none; b=fwGLsCTn80SJjylxm+O5tR/QNHV50sdKZWZtR8wqoGYR//pFjCrlVBQSX393FZi1xM7DMJC8CHjtIOUORsy2udskZhZ3aKz1bKPVH57PCSQvE+W2RAhykmRxVdMv3XmYkwLTGomo2xd7Ofc54/rUioLFfPuLD4yIwkYWLaKrDik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751333017; c=relaxed/simple;
-	bh=nWsdPjkIHLStXytRDGELqLXh6E1K8A/hb4EUHkz3d2s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cr400GwGhkRN+Uc/eknnLvmEW1a741KY5CFJFXv/a9si1+n080iivBpCbQsYTqwVynNSzg/l1rolwnjrxcnhG2o7gfgP45J1xZZgS2zqmBuS7e2GvNuE0Nh4xT8o3zOL1U8CtpDkrfxPvHF91e+gf6tXgR/mlcsDjEoolVWm1hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fjTDVRga; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751333094; c=relaxed/simple;
+	bh=Mb1v2xak7UyBtCzZCdehsNqtQQX38Vfh8VcEH6S2pk4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fcuQxnPspGumJQm9WUYfQCcbJ7AyuIRu7nk/LalutfWLzmtbDXagMNyyVLHN+ZYD6uKM/n+n/x/HcQTm8nShlbwRDIJU5fI+HI4xBdkxgr/9u8aeebC/Drx2lMa+VFTtpjLKhlhHvUAkSAhjbHh1+DxxROtuCHW/+SwhDou4WHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jTu0RpTE; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fjTDVRga"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b34ab678931so4331302a12.0;
-        Mon, 30 Jun 2025 18:23:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751333014; x=1751937814; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=z6DtZA4TeVhHJ4LgQPcp62/OtINngczo0Qlp10jTpvs=;
-        b=fjTDVRga1RdzPLhuBmnlRpiR2yMry5yzR/788IA0nqxm/job94fNqyMW+IrrFUkEUk
-         VIigMaTZRMnBmE9oB1fqeEho6CkUQ3s5fUkLiZvOwRukeEN83ZeOEW9oXeS5X23w0Wss
-         hr4SsPMzio9J3+8SQrztE4lcaj98tKRa1hEPwAcxWljP8ZW5nRBRO/Xn20q1x5+Q4BDW
-         9k4O60Zad0CbQOTUvuP3ZYB2lDqO37fd9QgHtLqsT0aAZG/IWatkD2FWUWjYsLH9Vq4n
-         TOIKjYTwQ6KNu7+dN4p5DSlUOGJCO/w0weE8sTxyygNgM+M4sd9wxQ+HkftduF9a+m9x
-         co0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751333014; x=1751937814;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z6DtZA4TeVhHJ4LgQPcp62/OtINngczo0Qlp10jTpvs=;
-        b=mU/RppwYw4q4FXusc/fMzgdBMLok/vlg4slU2qtrFwhLUosuSNwZhf1GpPGHFlcR5x
-         W7RI2KRiOsA0jBBfeb6r2/uz/7veOYSshmzd4XmXtBpYYqOZxICjl8zfuqtphNZPXGZr
-         u/QSetjxQPjMV8ZJX9CTXYm7yvx6KxAEm42/D0hgIZMM9c9sJc3WeVx164E0ivpSJszW
-         ZnDrwETppVx632AYyxUJKM2bjUpR2NHyxE9uFzyEKmrS2WjIiCAmqmuMltG2bEZMjDzX
-         3vjwwnLAP5F8+yZxHIdTLfY1qTHL6x8PaV9VZ8kG4zC4ppf3aJNI9jECkJTo+MiIduef
-         zIDg==
-X-Forwarded-Encrypted: i=1; AJvYcCWZFPxEZKNwU6ECPuuueGAMgUE5gq8yKm8yS9d4MraYqx1e/HOInhhPYmNeAJXKRfTzNZJcKd1Z51jl@vger.kernel.org, AJvYcCWb9myZMAGkuv1E0vpC4L/40a/d5CyVf5tC0jfZ8D0I0tPkhseKIiBbjfO56s8Iei2dawLSXiok1Dioiv2B@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDfTIYnBYMgXTQilcecaKmO1mH0CyFrXSCGPBdDucbUQan+Q8z
-	AuxFWgbIoZFxJFDniA/jFe+08CiBHyfUECq5nkRo47LcQ97F/9OP2e8a
-X-Gm-Gg: ASbGncu46+QqN9wi6HG73qLQ6Wa4IFuwMLAv7CUsCq2pBC8a58OK1imWftcCW6/npdo
-	vQW3FW808s2ahBbnU7HVWUrVMvZLCp8ZU4bCCJ+htRyPIXToHACsbo7Xsi4hzQ/q8a49pCdsTsL
-	A5iPxmWBCkM15Hxm9LffnAF+f8RM/4YK3tF7b+PzAaCgB5tbdeqXLEhvjqY6vD0IRj6S3GVPiKt
-	G1ifKz5uoENsmhfP7750jkyCzJtvhKGt2jfFeXvuuXcEZR0ZGnl415BHNNCJfENkTvQb/gQtJE7
-	tP1KuarTliBoqHwk2TCZ0DKcK81TIYcGiKVoi9RFhpQ6kQPoIWnC83G25YuYWw==
-X-Google-Smtp-Source: AGHT+IHBfzg5Sx40TE02hAClbOF6eEZK4Q2Z0GmTczaAMMCBaM6R3MFw6f7sjjsS70ov9TvAF6LTsg==
-X-Received: by 2002:a17:903:1b28:b0:235:2403:779f with SMTP id d9443c01a7336-23ac4682496mr217436775ad.29.1751333014268;
-        Mon, 30 Jun 2025 18:23:34 -0700 (PDT)
-Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-23acb2e2423sm91648245ad.37.2025.06.30.18.23.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 18:23:34 -0700 (PDT)
-Date: Tue, 1 Jul 2025 09:23:16 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@gmail.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Richard Cochran <richardcochran@gmail.com>, Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
-	Yixun Lan <dlan@gentoo.org>, Thomas Bonnefille <thomas.bonnefille@bootlin.com>, 
-	Ze Huang <huangze@whut.edu.cn>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, 
-	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH net-next RFC v4 0/4] riscv: dts: sophgo: Add ethernet
- support for cv18xx
-Message-ID: <vxnvovuetfd6rzgaenwplpkhxm62fhw6t3vi4wkyigul7p4bkx@pwlprna4pyul>
-References: <20250701011730.136002-1-inochiama@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jTu0RpTE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751333092; x=1782869092;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Mb1v2xak7UyBtCzZCdehsNqtQQX38Vfh8VcEH6S2pk4=;
+  b=jTu0RpTEsD9xd0M4uiP5rtETRBetLJPSFjEItx+lnqs96+2ln03wwZ2Z
+   +mxg63fz2aL95NbIKJkXt9LAsJcLwG9ztX7drjOmsMVcuVKNXsVBb1Cw2
+   omrq2DuG7WceRU9exHV1o04qw0EXE6QhPjagd5fjx+iuTTZ6SehTrVi+l
+   NX+mS4nx3gX8dFObKqkRvRHXKFI3xF7K0RoxlZvgUsP2plX08KcqVdc49
+   J6dTN9/0BIjJF1QOGFgMZn6ZVgOpLn0GSgnMaquUk12w0OkWVfutkoWMD
+   qalX51YCPjexv1G6RtMtTcoyJoikyLclXzmtEn94BCo3KLbiTblUay/5M
+   w==;
+X-CSE-ConnectionGUID: xnS6VOfDT2+d6EQa0bQHHQ==
+X-CSE-MsgGUID: +faKAyFNQ724avNx4hd9Gg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="41203091"
+X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
+   d="scan'208";a="41203091"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 18:24:51 -0700
+X-CSE-ConnectionGUID: Xauj1Xu3TU6gU9z3sSOa1Q==
+X-CSE-MsgGUID: FI/2PDSsRm+aM6eLiJ+fBA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
+   d="scan'208";a="159130714"
+Received: from litbin-desktop.sh.intel.com ([10.239.156.93])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 18:24:49 -0700
+From: Binbin Wu <binbin.wu@linux.intel.com>
+To: pbonzini@redhat.com,
+	seanjc@google.com,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: sfr@canb.auug.org.au,
+	rick.p.edgecombe@intel.com,
+	kai.huang@intel.com,
+	adrian.hunter@intel.com,
+	reinette.chatre@intel.com,
+	xiaoyao.li@intel.com,
+	tony.lindgren@intel.com,
+	isaku.yamahata@intel.com,
+	yan.y.zhao@intel.com,
+	binbin.wu@linux.intel.com
+Subject: [PATCH next] Documentation: KVM: Fix unexpected unindent warning
+Date: Tue,  1 Jul 2025 09:25:36 +0800
+Message-ID: <20250701012536.1281367-1-binbin.wu@linux.intel.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250701011730.136002-1-inochiama@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 01, 2025 at 09:17:25AM +0800, Inochi Amaoto wrote:
-> Add device binding and dts for CV18XX series SoC, this dts change series
-> required the reset patch [1] for the dts, which is already taken.
-> 
-> [1] https://lore.kernel.org/all/20250617070144.1149926-1-inochiama@gmail.com
-> 
-> The patch is marked as RFC as it require reset dts.
-> 
-> Change from RFC v3:
-> - https://lore.kernel.org/all/20250626080056.325496-1-inochiama@gmail.com
-> 1. patch 3: change internal phy id from 0 to 1
-> 
-> Change from RFC v2:
-> - https://lore.kernel.org/all/20250623003049.574821-1-inochiama@gmail.com
-> 1. patch 1: fix wrong binding title
-> 2. patch 3: fix unmatched mdio bus number
-> 3. patch 4: remove setting phy-mode and phy-handle in board dts and move
-> 	    them into patch 3.
-> 
-> Change from RFC v1:
-> - https://lore.kernel.org/all/20250611080709.1182183-1-inochiama@gmail.com
-> 1. patch 3: switch to mdio-mux-mmioreg
-> 2. patch 4: add configuration for Huashan Pi
-> 
-> Inochi Amaoto (4):
->   dt-bindings: net: Add support for Sophgo CV1800 dwmac
->   riscv: dts: sophgo: Add ethernet device for cv18xx
->   riscv: dts: sophgo: Add mdio multiplexer device for cv18xx
->   riscv: dts: sophgo: Enable ethernet device for Huashan Pi
-> 
->  .../bindings/net/sophgo,cv1800b-dwmac.yaml    | 113 ++++++++++++++++++
->  arch/riscv/boot/dts/sophgo/cv180x.dtsi        |  73 +++++++++++
->  .../boot/dts/sophgo/cv1812h-huashan-pi.dts    |   8 ++
->  3 files changed, 194 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/sophgo,cv1800b-dwmac.yaml
-> 
-> --
-> 2.50.0
-> 
+Add proper indentations to bullet list item to resolve the warning:
+"Bullet list ends without a blank line; unexpected unindent."
 
-As this is mark as RFC due to the reset dependency, now it is OK
-to merge it as the reset patch is taken and this patch is a minor
-change . I hopeif anyone can take the binding patch so I can take
-the devicetree patches.
+Fixes: 4580dbef5ce0 ("KVM: TDX: Exit to userspace for SetupEventNotifyInterrupt")
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Closes:https://lore.kernel.org/kvm/20250623162110.6e2f4241@canb.auug.org.au
+Signed-off-by: Binbin Wu <binbin.wu@linux.intel.com>
+---
+Fix the remaining one on the next branch. The other two are handled by
+https://lore.kernel.org/kvm/20250625014829.82289-1-binbin.wu@linux.intel.com/
+---
+ Documentation/virt/kvm/api.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Regards,
-Inochi
+diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+index 43ed57e048a8..6ab242418c92 100644
+--- a/Documentation/virt/kvm/api.rst
++++ b/Documentation/virt/kvm/api.rst
+@@ -7230,8 +7230,8 @@ inputs and outputs of the TDVMCALL.  Currently the following values of
+    placed in fields from ``r11`` to ``r14`` of the ``get_tdvmcall_info``
+    field of the union.
+ 
+-* ``TDVMCALL_SETUP_EVENT_NOTIFY_INTERRUPT``: the guest has requested to
+-set up a notification interrupt for vector ``vector``.
++ * ``TDVMCALL_SETUP_EVENT_NOTIFY_INTERRUPT``: the guest has requested to
++   set up a notification interrupt for vector ``vector``.
+ 
+ KVM may add support for more values in the future that may cause a userspace
+ exit, even without calls to ``KVM_ENABLE_CAP`` or similar.  In this case,
+
+base-commit: 6c7ecd725e503bf2ca69ff52c6cc48bb650b1f11
+-- 
+2.46.0
+
