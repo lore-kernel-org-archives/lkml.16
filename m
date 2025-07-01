@@ -1,109 +1,252 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B640B27E052
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 21:11:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69229284672
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 21:12:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751404277; cv=none; b=fTx1672RjWeDms6KEW7Qmf0mDV3lhMGoh5MEG/rLCUHrBQFN3rreQRSXNY7xDI+ChQJweTnqLXSN/y7OxS9/Ldc6sw3XZkwpc/wN9p6oYbbFlqjuFGOtc4PDU7KUn9BPdxCHB0xDjLIvthiLsFwrlsFucidpu9IIvez1MKmzi/4=
+	t=1751404334; cv=none; b=Mqxo+oY+l8ITfeMJgv84jC+H0M0QFxPLW9zMmRDUXbaedUJ3EcGTSpPyFjTm+sC1EgczSj6v7R03UEproGnBwHqzJcbPcu1ZIpUn99b6oSjhy/ay2MRqbnVEaKAIJKzQWza5w424msGIkM9n0iWhoPtLU7VjWZYfABOV+bMysMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751404277; c=relaxed/simple;
-	bh=IhMLU0hgR5nMU1ETvuAbc6c2LFDAfdlY/2/Nu7/Quwg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NDrM52KxvDft3Lsdk+N7Oeo4YMuNVEBVv6qvgZoASEPGj5kMUGvq40qTxBHet8BH8mWBUi3D+9R/Di91ul5klJbUlnf7ZLTkd7s5+lolSo/S86+tMJKvtygZqP/GIv6GR/ZBmf42sDAQuabt/i/CqrGaeyWEirTNFfSzxNOgJKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aWq5zON4; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751404334; c=relaxed/simple;
+	bh=qBtZSmm2R4iCXjvzCaQg+eHFsA8g7clWudabrggPz4E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iqNcqUIjNEwg6LRR2aODGfRV1Bx6yAihY8hX7Rm8G+55tqwHr/Oe5IVKLJTqYsFtPCgqJ0AhyNPxuYnlnRgiwdV2AqCe8ggjNPjuOMHxOJZJZt0eREeAFlhEbnI2a92foLtsg2B6S0Jei29IgFUY0SsBF5FMe7Vp02c5dVGj46c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AcpR2GyF; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aWq5zON4"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-23636167afeso35769055ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 14:11:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AcpR2GyF"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6fd1b2a57a0so56105816d6.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 14:12:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751404275; x=1752009075; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=TFmhFMtJA0DDpLQmiOT+foafkxJNSmKvREFePJiDmoE=;
-        b=aWq5zON4mmSgUyMPbwtVXMGEus/kRJPeACbUS0BinjbRnh3Ej9ZyY+xG7BwciIhaTk
-         09+cvLKvVzpe59hTOJpn8yv2V/+zcQjfQrqF/8LG7EfuqoAKWNkhJzB8pESVDNLpKXkL
-         YGFi1g2q1AtXH1N5xF1hXYNwUUOxHC/kps2Wg0mPw3aXwo9y6eTspKdQQSpIVD8inD+W
-         xqaFF/DxoOGEuLOUQi21zDNaRPsm6nw/3RxxhPNbM5bFDiL/0al+4TxrwkOz56y5Sygw
-         liGmEkKdbLTkGgPjWe5ZOJqvU0qtsPVB/bwHI8K43u5EM3bx+9P9z9ht7YgFoRDbatUY
-         vxdw==
+        d=google.com; s=20230601; t=1751404331; x=1752009131; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fjs28VW5+FZErUTPed61OdD+0y2hdWgedPzyPoSbu9Q=;
+        b=AcpR2GyF4B1TfsNOcdqbdDzSpFuDSHgo254Y4BMYjwBaK0ZKYDyzAzyWxfvO9Ca+XC
+         v2yYMChhmz2HPUWeYtNKz+4DDbubfvQXy61jR5gU9OIbwWlVQSmuV5hiOeRnlnCP0uKU
+         ukX7XIhFEllCaGIkAs3FdJtSPgJWMtU6w+1Y9TvY/bch/YIPEcfYg9gzD55ie9Aa/Yp8
+         WkL526LRWILl01YCytX8lzTFYkP5Yq3D/A0jaK5wQ/tw4gtEsNP0HdDbtwadNeNQj8ou
+         WP+ERx5BciWFhZ5lKwIeVKm1TSRc3jOP37hW37I/DVGN+0nmVVhBmZlvUckBF585yP9t
+         I8pQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751404275; x=1752009075;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TFmhFMtJA0DDpLQmiOT+foafkxJNSmKvREFePJiDmoE=;
-        b=CDAXehi0aEnQ5259Dv98Wuoq4oZpdvhrr50syi+B8AsQ8dM8fauPa2v2fqsato5q2M
-         60WLrqdZwegsefjcAxyKEyQfFJB9ZgbakcKgCw0xywbhlk1nl3diNuOhMMvU6APvQ9mc
-         7bZTIqdoYqV3AWHzxXvKOVkg/QCnfk1lC68bMsG4NdZpVJ2HjMGCepfj/U4VtgBwBRqB
-         AxcnQ2vXyJC2NLnyDhqrTjpNRHpV4tpTzRrKDvFduDS+J2kaXRrNG6e8ZjoW1Fk7T2vF
-         V0IoX7XFHkCR5MxX5TndVlaPkSewgAN23YNuk+arbdlc5rTv0kY6rTeeFsVb30jn6Oke
-         mTOw==
-X-Forwarded-Encrypted: i=1; AJvYcCWpIOPxPBRHuWa9f+nB2KOF53l51RXnQcOIZMhApwnRhbjE/ZoOLmpaGSSX/4f7QrYsrGFYFyXsAsnMkVU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzyltbuf5trAc9ySd+2UCozqHvaeu9waCAcxK3+NkjNy2j8n4Hj
-	Ov0F4Ic65OIpOXtEbUCg0Ef7v5O8e/HfchobKJoxExTR6N7Wr0JEQM00UAawfw==
-X-Gm-Gg: ASbGncvKBZa664N9zr2b1UL4sumyWiB7Sfk+zpPhnVY4suZI44+EBTeVlaDIwRFA7pw
-	TKkV7jX40HtARZi6kYalVxSd9/5NQOEfgZecngBGBAN0DB0+4osBlGTPHhyvX5bJMZcpVT8wKOn
-	yZNuyYrJfh6g9vQU76PkEZ0TFxnnyOK20nDvcgaUsushBkhcAFm2Hp0WeVzzsRdkEBCDQB8JGGY
-	jO4QyeMHTqMKaowOxtoxysOh3B8z+yXzwRKt/TPOjfopJNUMxXYPvjhCqvehCveiTb4iTY+8nRG
-	ynvMkvJu/3mJms8qPqt6m/d42sySy465ERgufayDA0jW2xGnRpG1+WVJaXQeYO4=
-X-Google-Smtp-Source: AGHT+IHmVutxPWATA7uTd7j0oELIwzsuAjL0y+HAOKcr/WINJK5DWuRWpZqd+XMgkXzN0FParSSTYw==
-X-Received: by 2002:a17:903:3bc5:b0:234:c8ec:51b5 with SMTP id d9443c01a7336-23c6e5e4607mr2825775ad.53.1751404274924;
-        Tue, 01 Jul 2025 14:11:14 -0700 (PDT)
-Received: from p920.. ([2001:569:799a:1600:7bdc:b579:12a3:62f])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb39bd67sm114249185ad.136.2025.07.01.14.11.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 14:11:14 -0700 (PDT)
-From: Moon Hee Lee <moonhee.lee.ca@gmail.com>
-To: syzbot+ededba317ddeca8b3f08@syzkaller.appspotmail.com,
-	syzkaller-bugs@googlegroups.com,
-	linux-kernel@vger.kernel.org
-Cc: moonhee.lee.ca@gmail.com
-Subject: [PATCH] wifi: mac80211: reject opmode notification for unsupported channel widths
-Date: Tue,  1 Jul 2025 14:11:06 -0700
-Message-ID: <20250701211105.280128-2-moonhee.lee.ca@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1751404331; x=1752009131;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fjs28VW5+FZErUTPed61OdD+0y2hdWgedPzyPoSbu9Q=;
+        b=Q9ygoaw93XOOKDJggDfz6JKYzC1lCkUs5MG7mKJxrRKUnP0hDLaRFgF6AZDJB0vX0d
+         N+l42iBu87pzzaZe/uRin19G8aDtLufn3kQ7xCNoElWtoTKgDGvYE05dKZBMKAaaeIPZ
+         b2qiLTYxmTS23dIXNiWAe6Ea9/Ao/unHDyUAruwbRTUy3fjdnRn4TuBdqgql8fBI2Lba
+         4kiF/f3c3MXqkeT6gLosC99mVEeM0BOm28Ck5b15ikOU3M4RAUpT+8iyU3+1Bbk2auPV
+         /RLC8l0mbuxLKtAXJFHuAfu/UyhJehzbj1KzadRwntBTOdaKXs2aQ5nnCSuu5L3TdJG/
+         eBXg==
+X-Forwarded-Encrypted: i=1; AJvYcCXIJuOR7lsFk+uyaiHkzHEeo7eHRGTYOPsncVswd9xEtZWYbcxcIcFE9z3bjmrediA2fN4ZtUj1KHChc9A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzq7xR4nYV4Q9WpQIPP0Rj+8t2PFyuBCkcrffcRjvmSrPqhgtg3
+	A0AskltqfJakvandkwRsTOJtPedAxLVPZYbOAQAPDE6wlX5bVKPS78/OEdPWYq/IhxQYrCnSRuP
+	guea+pm0/LItoWnaeW1PnoDIcIPKxLEPG4w3LAVDJ
+X-Gm-Gg: ASbGncuggf3Ivo/zL3x8I41SoFT/pbEU2APzHItFGyypH0NiM4HmhWInRwPKaiakCfV
+	YvS0O7OqcB4W3MoT9JFiYsKkVcKQmxGICIiS5h+FXmgGLcL1NrUEKVBLQI3mJFtAK+xnXH0ED6d
+	+QXPLERfRQUbFWWvjn7Hb45JX6EP0qFNdIuYVeexB/3ha+LQcxoi4Wsjk6cUWVeUBwebv2hiVwY
+	w==
+X-Google-Smtp-Source: AGHT+IGTbnT2z3OUimiYbvvSRJZHyO7+NTUm+CPbvwarqnp3tnVnFXsJiBtY1W/8vqhPCZSa3CP2wtLxEfAWF5KoW3c=
+X-Received: by 2002:a05:6214:5f02:b0:6fd:7298:a36f with SMTP id
+ 6a1803df08f44-702b1b3c530mr1824386d6.21.1751404330971; Tue, 01 Jul 2025
+ 14:12:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250626-kunit-kselftests-v4-0-48760534fef5@linutronix.de> <20250626-kunit-kselftests-v4-8-48760534fef5@linutronix.de>
+In-Reply-To: <20250626-kunit-kselftests-v4-8-48760534fef5@linutronix.de>
+From: Rae Moar <rmoar@google.com>
+Date: Tue, 1 Jul 2025 17:11:59 -0400
+X-Gm-Features: Ac12FXz7A5rV9E83a27nT7mq-MXVyxBMZkeIzUekc3ETv1a6ZI2Tbu3oWaYgD3I
+Message-ID: <CA+GJov45CF67nKJ7AC=g0fPL68pLdJbvJBwG8ecn9OUZ7hCewA@mail.gmail.com>
+Subject: Re: [PATCH v4 08/15] kunit: tool: Don't overwrite test status based
+ on subtest counts
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Nicolas Schier <nicolas.schier@linux.dev>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-doc@vger.kernel.org, workflows@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless.git main
+On Thu, Jun 26, 2025 at 2:10=E2=80=AFAM Thomas Wei=C3=9Fschuh
+<thomas.weissschuh@linutronix.de> wrote:
+>
+> If a subtest itself reports success, but the outer testcase fails,
+> the whole testcase should be reported as a failure.
+> However the status is recalculated based on the test counts,
+> overwriting the outer test result.
+> Synthesize a failed test in this case to make sure the failure is not
+> swallowed.
 
----
- net/mac80211/cfg.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Hello!
 
-diff --git a/net/mac80211/cfg.c b/net/mac80211/cfg.c
-index d9d88f2f2831..f2e96eb07e8f 100644
---- a/net/mac80211/cfg.c
-+++ b/net/mac80211/cfg.c
-@@ -1959,6 +1959,21 @@ static int sta_link_apply_parameters(struct ieee80211_local *local,
- 	ieee80211_sta_init_nss(link_sta);
- 
- 	if (params->opmode_notif_used) {
-+		enum nl80211_chan_width width = link->conf->chanreq.oper.width;
-+
-+		switch (width) {
-+		case NL80211_CHAN_WIDTH_20_NOHT:
-+		case NL80211_CHAN_WIDTH_20:
-+		case NL80211_CHAN_WIDTH_40:
-+		case NL80211_CHAN_WIDTH_80:
-+		case NL80211_CHAN_WIDTH_160:
-+		case NL80211_CHAN_WIDTH_80P80:
-+		case NL80211_CHAN_WIDTH_320:
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+
- 		/* returned value is only needed for rc update, but the
- 		 * rc isn't initialized here yet, so ignore it
- 		 */
--- 
-2.43.0
+This is a very exciting patch series! However, I have a few concerns
+with this patch.
 
+When I parse the following KTAP with this change:
+
+KTAP version 1
+1..2
+    KTAP version 1
+    1..2
+        ok 1 test 1
+        not ok 2 test 2
+not ok 1 subtest 1
+    KTAP version 1
+    1..1
+        not ok 1 subsubtest 1
+not ok 2 subtest 2
+
+The output is:
+
+[20:54:12] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+[20:54:12] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D (2 subtests) =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+[20:54:12] [PASSED] test 1
+[20:54:12] [FAILED] test 2
+[20:54:12] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D [FA=
+ILED] subtest 1 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+[20:54:12] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D (1 subtest) =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
+[20:54:12] [FAILED] subsubtest 1
+[20:54:12] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D [FA=
+ILED] subtest 2 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+[20:54:12] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+[20:54:12] Testing complete. Ran 6 tests: passed: 1, failed: 5
+
+This reports a total of 6 tests, which is not equivalent to the three
+subtests plus the two suites. I believe this is because the change to
+bubble_up_test_results below double counts the failed test case.
+
+Historically, the KUnit parser only counts the results of test cases,
+not the suites. I would like to stay as close to this as possible so
+as to not inflate existing testing numbers. However, I believe the
+main concern here is the case where if there is a suite reporting
+failure but all subtests pass, it will not appear in the summary line.
+For example,
+
+KTAP version 1
+1..1
+    KTAP version 1
+    1..1
+        ok 1 test 1
+not ok 1 subtest 1
+
+Reporting: All passing: Tests run: 1, passed: 1
+
+This is absolutely an important edge case to cover. Therefore, we
+should add 1 failure count to the suite count if the bubbled up
+results indicate it should instead pass.
+
+Thanks!
+-Rae
+
+>
+> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+> Reviewed-by: David Gow <davidgow@google.com>
+> ---
+>  tools/testing/kunit/kunit_parser.py                                  | 5=
+ +++++
+>  tools/testing/kunit/kunit_tool_test.py                               | 3=
+ ++-
+>  tools/testing/kunit/test_data/test_is_test_passed-failure-nested.log | 3=
+ +++
+>  3 files changed, 10 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/testing/kunit/kunit_parser.py b/tools/testing/kunit/ku=
+nit_parser.py
+> index c176487356e6c94882046b19ea696d750905b8d5..2478beb28fc3db825855ad462=
+00340e884da7df1 100644
+> --- a/tools/testing/kunit/kunit_parser.py
+> +++ b/tools/testing/kunit/kunit_parser.py
+> @@ -686,6 +686,11 @@ def bubble_up_test_results(test: Test) -> None:
+>                 counts.add_status(status)
+>         elif test.counts.get_status() =3D=3D TestStatus.TEST_CRASHED:
+>                 test.status =3D TestStatus.TEST_CRASHED
+> +       if not test.ok_status():
+> +               for t in subtests:
+> +                       if not t.ok_status():
+> +                               counts.add_status(t.status)
+> +                               break
+
+Here instead I recommend checking if not test.ok_status() and
+test.counts.get_status() =3D=3D TestStatus.SUCCESS and if so
+counts.add_status(status)
+
+>
+>  def parse_test(lines: LineStream, expected_num: int, log: List[str], is_=
+subtest: bool, printer: Printer) -> Test:
+>         """
+> diff --git a/tools/testing/kunit/kunit_tool_test.py b/tools/testing/kunit=
+/kunit_tool_test.py
+> index b74dc05fc2fe5b3ff629172fc7aafeb5c3d29fb3..48a0dd0f9c87caf9f018aade1=
+61db90a613fc407 100755
+> --- a/tools/testing/kunit/kunit_tool_test.py
+> +++ b/tools/testing/kunit/kunit_tool_test.py
+> @@ -170,8 +170,9 @@ class KUnitParserTest(unittest.TestCase):
+>                 with open(nested_log) as file:
+>                         result =3D kunit_parser.parse_run_tests(file.read=
+lines(), stdout)
+>                 self.assertEqual(kunit_parser.TestStatus.FAILURE, result.=
+status)
+> -               self.assertEqual(result.counts.failed, 2)
+> +               self.assertEqual(result.counts.failed, 3)
+>                 self.assertEqual(kunit_parser.TestStatus.FAILURE, result.=
+subtests[0].status)
+> +               self.assertEqual(kunit_parser.TestStatus.SUCCESS, result.=
+subtests[0].subtests[0].status)
+>                 self.assertEqual(kunit_parser.TestStatus.FAILURE, result.=
+subtests[1].status)
+>                 self.assertEqual(kunit_parser.TestStatus.FAILURE, result.=
+subtests[1].subtests[0].status)
+>
+> diff --git a/tools/testing/kunit/test_data/test_is_test_passed-failure-ne=
+sted.log b/tools/testing/kunit/test_data/test_is_test_passed-failure-nested=
+.log
+> index 2e528da39ab5b2be0fca6cf9160c10929fba3c9e..5498dfd0b0db24663e1a1e9bf=
+78c587de6746522 100644
+> --- a/tools/testing/kunit/test_data/test_is_test_passed-failure-nested.lo=
+g
+> +++ b/tools/testing/kunit/test_data/test_is_test_passed-failure-nested.lo=
+g
+> @@ -1,5 +1,8 @@
+>  KTAP version 1
+>  1..2
+> +    KTAP version 1
+> +    1..1
+> +        ok 1 test 1
+>  not ok 1 subtest 1
+>      KTAP version 1
+>      1..1
+>
+> --
+> 2.50.0
+>
+> --
+> You received this message because you are subscribed to the Google Groups=
+ "KUnit Development" group.
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to kunit-dev+unsubscribe@googlegroups.com.
+> To view this discussion visit https://groups.google.com/d/msgid/kunit-dev=
+/20250626-kunit-kselftests-v4-8-48760534fef5%40linutronix.de.
