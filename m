@@ -1,184 +1,112 @@
-Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 466DE20B80B
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 10:34:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B6AB270552
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 10:34:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751366062; cv=none; b=q4ACXahVB5xQ09vj30I7gtgCN3UQvb+S5YE/nGynX5lxzC3Vcw3JDLOadl5yBsTL/WWNERqJ6UnJW5TYfagR0wMYb1QCPSklK3mPv75NB1tsOl7Neh3Jw9KDetLE9u2EekUOOgxt0n60VCNFi01Cd+UbVtxn+L3Z0RwZdciX3jk=
+	t=1751366066; cv=none; b=sR8q/OObNpFb4cQguNWVobgpr5KMqsFz+akYfy2y0ZlVbDV3Sj59lNycaUqfe+30VN0rnhrxLi0QkHygXKpwtHeyoGEYAUYplgDH1UhOeXwWVNw+vXFhsVn5fjfqlTCQHsS7HMMopjRfe0HcXmacqDOayuaqFpETHNkrymRPWaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751366062; c=relaxed/simple;
-	bh=I5mrvGlIhRbJlxQ8eVXQCIvLA2D3zDa5EyQuNgkm5ro=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=J1/tACrDOlfgpbLdYf/fqlQzkdHjfAP55yFNYmnLgigoNNDHWecF0/9D4o/ajsDn1oDibYgwSnRVH4N4XcgnwRjeNUdRsOmkX8Qv+6BYQ34DsTc7C5vKHlBoM9imWkA4POaxVqeusdvQMyZUUc+nHYAHM4fUKfAM84TLaaTUo98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=W7Ql/uHP; arc=none smtp.client-ip=209.85.221.74
+	s=arc-20240116; t=1751366066; c=relaxed/simple;
+	bh=mlpMmzdWBdqODn8nxplDCEWI1NG6aMwmsjqN3xDfy7s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B1fP9c30pt+iANqFn4HG7CX0lQjSKaP598qjMixuYkZsRSLpGjJHxX6KAo0N5GJdzl8+P+fKeH//e0hnz458W8whglum/BXnoM/FN2hPZYV8ab0Nspu2nX6fktyUv5va56tNjCfM+BfWVWUdrG6mwko2r+esBZwiIqmhjXnzpGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=25gycr33; arc=none smtp.client-ip=209.85.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W7Ql/uHP"
-Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-3a4eec544c6so2570245f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 03:34:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="25gycr33"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5f438523d6fso6619a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 03:34:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751366058; x=1751970858; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9eYpIWWOyUDfBdnF6w5EzWxG6nDSQGMmFCg+4mWFSaM=;
-        b=W7Ql/uHPu57+EntIi7rgmExXZ5vuBZnpDlIz+dpAQagiXcHzO5JxrxgkqgFJhFmryZ
-         9GtU5xB/dnQOTqam3b5u/AmMtZtTXfnvuvpLVWTroGSAPdTx32uSmzeQbSJeEGwyrS5R
-         WnSTLPJVks/o7THb2qTX31U+VLBsX9zOqEx/sTlVRYnXpV0bGBDZh3RzoYOlI2IgVVah
-         N2fuTgegu6A1A4KUUXGT9d8XtRejjFD2GwrlBaSkpuAuNjsd9y20J1N1OUGX8+RZpDQ9
-         HS1TZwOMBwcP8rXvUy/jbbfnYPdnyRM36k7g66US1asyo9JyHy0pyIK3Yt7WNv4PX33C
-         dgOw==
+        d=google.com; s=20230601; t=1751366063; x=1751970863; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qp4bVSGoIFyW3QSZPFAFfubzk2+mLro6i9/ObDTSNoc=;
+        b=25gycr33jzOPxfgfitWE2++05d9Yjm4ZG7O5Iws0y/AP0EG7wxVHDD98UPriKb1RiB
+         pnWlqtYMZb+VGTkqIp7EmLQulU6Hhn0S0WPcDHFi/yTOZv+ORpzcPbcHrwlDUvBsJw5h
+         XeBbQJ8iyNLx9jkhgzYPTCeegfla235zDdM4vzM1OM7W8DfL4Xyz7JU+SUfKj+9AiCbq
+         C8ooIVx6JXE+M0mvVjklq0jpC/jDbSuBhA1DUikKSZp4Sr44wB5jHEp8rooqHZf2yzW6
+         geV/6ofX8QnIz+lOm8SsGBEHSH+LhUo+0cBMpeMogUSjO0gExTHm/rcXIWwimHnK4mmN
+         p2ZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751366058; x=1751970858;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9eYpIWWOyUDfBdnF6w5EzWxG6nDSQGMmFCg+4mWFSaM=;
-        b=gfvJLidaXtz35zmG75hONg7qP/XDSDZq9RP+4fmZMUFr5rMcLQ3Ylxb2lElt69i6OY
-         Znusj4K7tBCSKpjRuOkzIZ0avJxWhe/lcw4HkPdtCcUX/Q464lEnGTwOdMY8ERXCuBMI
-         ByNh4nbU6IrD6EHUdry7SMFeTKU5+LaNJYijvzDKzxN+PLDNjvANV2R3lzvmEC5eNtDn
-         LLdXFLo3YESbmCtu5qAoxljrY2XB/rmIO49+t4I2qf+umksIqQ/38Fy4rAtTXPWb9aP9
-         ATXUS8mHZzjgMwZ2S7XnVplfoovXTJdsC27iIm5g1qDiN7bjLGoqYoLsLv841xoqSf5g
-         mC1A==
-X-Forwarded-Encrypted: i=1; AJvYcCW3au2MrW0FRE8e+Fb7V6ltNLIR/YMFjvNuFhzoYwH4j2ElrnwoOt2xqrLwqq/vsIQe+G5OoLdryNAJ5+Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzJekoL6LIZphbXhjCJvGDILX2et4vRFdPoWCrL6QoDfgO95S9
-	5VczluDmBQvFQ4bebsN4HkBO0DIXrUeWRpqkl/f2Cl9MICPmkAGXnlkpKJpYp5scTNIQ3novQ8c
-	IsfARaZdNGgwpJu/kwQ==
-X-Google-Smtp-Source: AGHT+IExCFB+P+olVhWi69uc4CgDaEnI8SE94UUo0CxDvKCx5CZn1RoH+3jT8lmx3jEG2VJ7mPnAhF7D8TcmUIk=
-X-Received: from wmbds13.prod.google.com ([2002:a05:600c:628d:b0:450:da87:cebb])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:646:b0:3a5:8600:7cff with SMTP id ffacd0b85a97d-3a8fdb2a82fmr15767911f8f.1.1751366058480;
- Tue, 01 Jul 2025 03:34:18 -0700 (PDT)
-Date: Tue, 1 Jul 2025 10:34:17 +0000
-In-Reply-To: <20250630221640.3325306-1-vitaly.wool@konsulko.se>
+        d=1e100.net; s=20230601; t=1751366063; x=1751970863;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qp4bVSGoIFyW3QSZPFAFfubzk2+mLro6i9/ObDTSNoc=;
+        b=kJD5Y3GnP/1cevO79fZvvSNrG10qP7kt31tk9N9wi0XzW5214dAEvOsGmbePQQhOmz
+         m3gI9RoL18+s9ZPluzneQZzVauyg136v2mgxBA3v7duX2ptEwe5aFGX70KQtfFE/z9ld
+         Uls2EkfJnd8BEYxb9kL2+s0UEsk7MvlxsqPeCZFrmo3ruu20l8O3a56bq3f2Yt5wWz5o
+         5brzy+kkXUcDQo7VSHrgErWCPdhxv/UbbCydOp0W6QvmbCRc7J5lFkW8Gx3K8FMh1ufX
+         y7MZCQjH76tgz9+MFXvjcVCBlNzSFEA8vSnwV+qJJyprrX6Pdvy8vJvYGbZ5De4j+CTA
+         F2Ug==
+X-Forwarded-Encrypted: i=1; AJvYcCWT+4y9xecEhFSGUej/LdSDKP5+zN884g06L/PNso2oqq2+Q3oWxZBrNC7DThuL+cGczWgbKZIa8hTotL8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/37uFuzZ7UaiEy/mEI6kCz9LvKDElhvAyGDh15Zw8knzYVhUP
+	DFzEWG5SWl4KNW1Bb81jLtW6u2G38kc7diXLJICgRwjxjjikUJ4KGQIWgNZa8kmAB1559+zUJAn
+	iHP2shlxVH6zYnZj/aiiE3ca3GjqP49osE6vMLUA4
+X-Gm-Gg: ASbGnctfWkHemCPMtkwOjPi9MyFxeTfiu6+y6Ei1GqC5pORN7a0mcuv1yrc4eAyx/Vs
+	YjHJkxSsMBazNjyh1CjhGckOtRPzEzyD2tXBL62+EYIJMEEGsGSdadplz03ut4+F2y2BBCiA3Yt
+	9Q1nEppRG8aTv72ZfTRfK/k223FeBy/qVzgMN/VF6ogKSAju5Tu6HBgXDa16m6QjBbZHSsYdg=
+X-Google-Smtp-Source: AGHT+IECcsWBgg3PF6i48r44nlp9IbtTj/EJFncm5u1sICXIyrAefpX9CpH2gIQ3ueQKjUmMICOM70+9nQx4/JJS8NA=
+X-Received: by 2002:aa7:db87:0:b0:60c:bf83:65fd with SMTP id
+ 4fb4d7f45d1cf-60e38aaa441mr50137a12.7.1751366062867; Tue, 01 Jul 2025
+ 03:34:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250630221511.3325123-1-vitaly.wool@konsulko.se> <20250630221640.3325306-1-vitaly.wool@konsulko.se>
-Message-ID: <aGO5qadROziFuO35@google.com>
-Subject: Re: [PATCH v9 3/4] rust: add support for NUMA ids in allocations
-From: Alice Ryhl <aliceryhl@google.com>
-To: Vitaly Wool <vitaly.wool@konsulko.se>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, 
-	linux-kernel@vger.kernel.org, Uladzislau Rezki <urezki@gmail.com>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <20250630-x86-2level-hugetlb-v1-1-077cd53d8255@google.com> <9179e1cd-d635-4e70-931e-4a85c2e6932b@intel.com>
+In-Reply-To: <9179e1cd-d635-4e70-931e-4a85c2e6932b@intel.com>
+From: Jann Horn <jannh@google.com>
+Date: Tue, 1 Jul 2025 12:33:46 +0200
+X-Gm-Features: Ac12FXxhb8kBzQck0JMDVfWECd6qOpwCqgTE5nperjslnwlAJZeksR8-H6YaZhA
+Message-ID: <CAG48ez3YcgPz+oQ4shMjaviPNeZjJYg8K3iDPJkLaOKbcgASNw@mail.gmail.com>
+Subject: Re: [PATCH] x86/mm: Disable hugetlb page table sharing on non-PAE 32-bit
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Muchun Song <muchun.song@linux.dev>, 
+	Oscar Salvador <osalvador@suse.de>, Vitaly Chikunov <vt@altlinux.org>, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 01, 2025 at 12:16:40AM +0200, Vitaly Wool wrote:
-> Add a new type to support specifying NUMA identifiers in Rust
-> allocators and extend the allocators to have NUMA id as a
-> parameter. Thus, modify ReallocFunc to use the new extended realloc
-> primitives from the C side of the kernel (i. e.
-> k[v]realloc_node_align/vrealloc_node_align) and add the new function
-> alloc_node to the Allocator trait while keeping the existing one
-> (alloc) for backward compatibility.
-> 
-> This will allow to specify node to use for allocation of e. g.
-> {KV}Box, as well as for future NUMA aware users of the API.
-> 
-> Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
+On Mon, Jun 30, 2025 at 10:39=E2=80=AFPM Dave Hansen <dave.hansen@intel.com=
+> wrote:
+> On 6/30/25 12:07, Jann Horn wrote:
+> > --- a/arch/x86/Kconfig
+> > +++ b/arch/x86/Kconfig
+> > @@ -147,7 +147,7 @@ config X86
+> >       select ARCH_WANTS_DYNAMIC_TASK_STRUCT
+> >       select ARCH_WANTS_NO_INSTR
+> >       select ARCH_WANT_GENERAL_HUGETLB
+> > -     select ARCH_WANT_HUGE_PMD_SHARE
+> > +     select ARCH_WANT_HUGE_PMD_SHARE         if PGTABLE_LEVELS > 2
+> >       select ARCH_WANT_LD_ORPHAN_WARN
+> >       select ARCH_WANT_OPTIMIZE_DAX_VMEMMAP   if X86_64
+> >       select ARCH_WANT_OPTIMIZE_HUGETLB_VMEMMAP       if X86_64
+>
+> Does pmd sharing really even work on 32-bit? Just practically, you only
+> ever have 3GB of address space and thus 3 possible PGDs that can be used
+> for sharing (with the 3:1 split configured). You presumably need *some*
+> address space for the binary to even execve(). The vdso and friends go
+> somewhere and we normally don't let anything get mapped at 0x0.
+>
+> I think that leaves _maybe_ one slot.
+>
+> Barring something some specific and compelling actual use case, this
+> should probably just be:
+>
+>         select ARCH_WANT_HUGE_PMD_SHARE if X86_64
 
-My main feedback is that we should consider introducing a new trait
-instead of modifying Allocator. What we could do is have a NodeAllocator
-trait that is a super-trait of Allocator and has additional methods with
-a node parameter.
+Yeah, makes sense. I was also thinking that it would be more
+reasonable to restrict this to 64-bit only, but figured it would be
+less risky to make this more specific change.
 
-A sketch:
-
-pub unsafe trait NodeAllocator: Allocator {
-    fn alloc_node(layout: Layout, flags: Flags, nid: NumaNode)
-                -> Result<NonNull<[u8]>, AllocError>;
-
-    unsafe fn realloc_node(
-        ptr: Option<NonNull<u8>>,
-        layout: Layout,
-        old_layout: Layout,
-        flags: Flags,
-        nid: NumaNode,
-    ) -> Result<NonNull<[u8]>, AllocError>;
-}
-
-By doing this, it's possible to have allocators that do not support
-specifying the numa node which only implement Allocator, and to have
-other allocators that implement both Allocator and NumaAllocator where
-you are able to specify the node.
-
-If all allocators in the kernel support numa nodes, then you can ignore
-this.
-> +/// Non Uniform Memory Access (NUMA) node identifier
-> +#[derive(Clone, Copy, PartialEq)]
-> +pub struct NumaNode(i32);
-> +
-> +impl NumaNode {
-> +    /// create a new NUMA node identifer (non-negative integer)
-> +    /// returns EINVAL if a negative id or an id exceeding MAX_NUMNODES is specified
-> +    pub fn new(node: i32) -> Result<Self> {
-> +        // SAFETY: MAX_NUMNODES never exceeds 2**10 because NODES_SHIFT is 0..10
-> +        if node < 0 || node >= bindings::MAX_NUMNODES as i32 {
-> +            return Err(EINVAL);
-> +        }
-> +        Ok(Self(node))
-> +    }
-> +}
-> +
-> +/// Specify necessary constant to pass the information to Allocator that the caller doesn't care
-> +/// about the NUMA node to allocate memory from.
-> +pub mod numa {
-> +    use super::NumaNode;
-> +
-> +    /// No preference for NUMA node
-> +    pub const NUMA_NO_NODE: NumaNode = NumaNode(bindings::NUMA_NO_NODE);
-> +}
-
-Instead of using a module, you can make it an associated constant of the
-struct.
-
-impl NumaNode {
-    pub const NO_NODE: NumaNode = NumaNode(bindings::NUMA_NO_NODE);
-}
-
-This way you can access the constant as NumaNode::NO_NODE.
-
->  /// The kernel's [`Allocator`] trait.
->  ///
->  /// An implementation of [`Allocator`] can allocate, re-allocate and free memory buffers described
-> @@ -148,7 +175,7 @@ pub unsafe trait Allocator {
->      ///
->      /// When the return value is `Ok(ptr)`, then `ptr` is
->      /// - valid for reads and writes for `layout.size()` bytes, until it is passed to
-> -    ///   [`Allocator::free`] or [`Allocator::realloc`],
-> +    ///   [`Allocator::free`], [`Allocator::realloc`] or [`Allocator::realloc_node`],
->      /// - aligned to `layout.align()`,
->      ///
->      /// Additionally, `Flags` are honored as documented in
-> @@ -159,7 +186,38 @@ fn alloc(layout: Layout, flags: Flags) -> Result<NonNull<[u8]>, AllocError> {
->          unsafe { Self::realloc(None, layout, Layout::new::<()>(), flags) }
->      }
->  
-> -    /// Re-allocate an existing memory allocation to satisfy the requested `layout`.
-> +    /// Allocate memory based on `layout`, `flags` and `nid`.
-> +    ///
-> +    /// On success, returns a buffer represented as `NonNull<[u8]>` that satisfies the layout
-> +    /// constraints (i.e. minimum size and alignment as specified by `layout`).
-> +    ///
-> +    /// This function is equivalent to `realloc_node` when called with `None`.
-> +    ///
-> +    /// # Guarantees
-> +    ///
-> +    /// When the return value is `Ok(ptr)`, then `ptr` is
-> +    /// - valid for reads and writes for `layout.size()` bytes, until it is passed to
-> +    ///   [`Allocator::free`], [`Allocator::realloc`] or [`Allocator::realloc_node`],
-> +    /// - aligned to `layout.align()`,
-> +    ///
-> +    /// Additionally, `Flags` are honored as documented in
-> +    /// <https://docs.kernel.org/core-api/mm-api.html#mm-api-gfp-flags>.
-> +    fn alloc_node(layout: Layout, flags: Flags, nid: NumaNode)
-> +                -> Result<NonNull<[u8]>, AllocError> {
-
-I don't think this is how rustfmt would format this. Can you run rustfmt
-on your patch?
-
-Alice
+But now that I think about it, it's not like stuff is actually going
+to break from this change, worst case the kernel memory usage goes up
+a bunch in a very unlikely configuration... so yeah, I guess I'll
+resend this later with "if X86-64".
