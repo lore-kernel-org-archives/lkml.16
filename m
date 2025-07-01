@@ -1,165 +1,113 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF6D25C6EE;
-	Tue,  1 Jul 2025 07:46:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F2931F428F;
+	Tue,  1 Jul 2025 07:46:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751355975; cv=none; b=c3ykwfwWF+WLrW5I6gIm3wthoxsHQqF4XFEsXzx5KU3GEqupsJPpegmHkXKKuaOiqOZvJlX1NfcRft4wV2jl+UQBljZ0a2r+hZvXx2McEmZO+8glbYpFS28xQulXh+Xm2UoyGya0rLkjwHipL5Fy71ECJq76QRl6tnlkIL74m/8=
+	t=1751356005; cv=none; b=kUwdb7UEnV+HON7khcL7GCYrUw5yF6VieQY/5nIP2KxtbldFqSjEHQWvGVifi5DUxCc+cphy5+kX1diezV7i2EMRM61oKye+zeFgR4irD34tpTYDFRQzSlu/bpOpCN4MyWFInPtvYIEMxmabnCMN5oEP/HvB7Ieawd9y+nERqHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751355975; c=relaxed/simple;
-	bh=pf6wp+3/O9diS1MSitXHJ+WG7hNgrQUUrCX4FKhGP20=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=U2jEA4OFEHFC/Iih2KDJtX4s/bAxOA90wZ8znz5cqTPO8eQa+c0KhTTW/g34fcfTl4cW4wf+CWh+rxpPcVXYXlgR0P/eDLULyaPASXPys09bn7NPMN6AYT3ba859k1bWbU/112rkNoUlAeIbCSSh959Qf0edL9TkuF0otOY7XgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=QC+nQjak; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1751356005; c=relaxed/simple;
+	bh=dyCX5o4Dg6QY3l8HSrTsQtDR0kFtbE32Z2wolTki55w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dhY0DHDP5AXQWZxjWtAmTs9zsLx161mRmopiljkDvZquuYn9F+6pc5mQ58xxHmsRPpR4SIIyGDyGIb8Ba7pSe2K3IMAEXsDWMiS7EeFVRiwCAlzGWHTkFu1ufXZa9RC7atevst0GbxNy0kGb2T/SqwpxPmu0KzBvYDMeDdXBWrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gaZL+nXz; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QC+nQjak"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1751355960;
-	bh=mSbYVdV1LyXWe8c8y9h9Kovvi9QxOa7y22v3xy0LDDQ=;
-	h=Date:From:To:Cc:Subject:From;
-	b=QC+nQjakQ43AoIl8Mp2kGiXLaghgb2gMfmEQUSCn0/NCpc/lsWjugf0M8qlbrjtxF
-	 DJqKMMASfb/Iy8UWvhP7Uxgv7iMcrb4jyuA04Re/an5VlSyXk/t/2URbWXYB8FHCMs
-	 iHPtfTxDY9gS7JU+DXIt0ql4GAy5igM2bqDvSrt6PRswlW6tcDsftlY4gk34wIddzo
-	 ynX4yMiCF1thr0RqJSY8EwRVYF8+wiqW0J0bxapF9bHhJqriX6MZLPqJRyKhbzHDtq
-	 3nPTYNxtiGL07ofe+44j4320y2g2qQqIV1k7yJOsLioG4CKI/hWONWp3ri9V9pGuVx
-	 MSvldteJUAh4g==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bWZpH699Nz4x0C;
-	Tue,  1 Jul 2025 17:45:59 +1000 (AEST)
-Date: Tue, 1 Jul 2025 17:46:06 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Miguel Ojeda <ojeda@kernel.org>, Greg KH <greg@kroah.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, Tamir Duberstein <tamird@gmail.com>, Viresh
- Kumar <viresh.kumar@linaro.org>
-Subject: linux-next: manual merge of the rust tree with the driver-core tree
-Message-ID: <20250701174606.7b07bbce@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gaZL+nXz"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-60c5b8ee2d9so11740375a12.2;
+        Tue, 01 Jul 2025 00:46:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751356002; x=1751960802; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dyCX5o4Dg6QY3l8HSrTsQtDR0kFtbE32Z2wolTki55w=;
+        b=gaZL+nXz9orByOpBzl761kI4sTjRWwSUQSx+x9u3VNMTB6Ek7nLFED3MwvoaN4f5+t
+         lONE7fyDv5iP0pof5+CFjPze5u+xSvizN8omhMTUDoy/GwNfZTuj8LacGEYg2+5LQYO6
+         QuCNagBcEKLM1iVRAjD6vf4jmqQubifOrz+ubG0DVP+6ZXm1eQBMrHQn1fnPvEKrRtZR
+         2N4N+nh/tFKJfWWHvw1FJaLwQGR5Ri2tzroDmBhN6GuIgkMYqgme4SOerGMeDxZ0LRJX
+         W0Ov3yS3KIPtX43HxHKXaZra7ToND8ufiw5zOcl5wVj4AUqnnLTWwInIB8Pw7Ll2YE78
+         KS1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751356002; x=1751960802;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dyCX5o4Dg6QY3l8HSrTsQtDR0kFtbE32Z2wolTki55w=;
+        b=PSDR6o0XAzCCLS3WytRZLbZogoykCLW4XGGxMSi8Pwu7Z+LZ168+Rv3FdPVpNKziDD
+         WuarND+ib39WVOmcaqQ0SCM3HQ+26WJ5x9+CX38U/I8BQ8pqzjZbNXymd2I1yDxtwbjM
+         i6aNHVMebzfVVge9+XwCDRf24KLjjNV+L08kDsr9J/1XJTkv8tNWQoKqVTCbAA3VO6Sg
+         8hJu30K6Ow3QARUthAXPKW8rUxqXrm6UQHDPrY8kzBr8LDZHzEvYVocMPGEhhsLbJi+P
+         1layEtBPvudkPZPwmMKo+9ARwPLEdC/guk3r/nNUQcKMsh4qRIO1oiNEG83jshPoLJn8
+         OvIA==
+X-Forwarded-Encrypted: i=1; AJvYcCU8kDOi78hzIKgSECLYp/yd3cexvUOoAQRmNOfLr3CRHlHbCBaSsd2xd/NbhG6L75eeHox/cMnBfrQ1VSEs@vger.kernel.org, AJvYcCUa78MfiN+sdhe5eJsORyXTm60+l73qVZGF0Fp9dSbW0yu3q3JlEd9zyM7SQjRVXzNLN5NaF281biKv@vger.kernel.org, AJvYcCV1CV2ii0QHI7884Jp5Zw5HMyECKWoEo+8rIhOttve+0uESpmr5zmgZYkDBPzPPquOY7vN5mH47Wh4c@vger.kernel.org, AJvYcCVRx+kigcWgO49tHCYauvhIa29rgPp7gDw3lu6CMvYnV8ZkSf0e3NNOaFM3nAqW3q7qK/7h14RE2o4a6ag=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+SL5ESFruaHgvfYWvEyFZcKbgaT3TI1IOdDpvVVXQjXJ9e0D+
+	ufeoZvY2hkjW62UoXEljecp4AyfF7i/knpEjRIXh2zl4dYEpcD3ySHIRS839zjDvnZIEP52Vxy4
+	VpIzUGn0ifKRKSR85fszPfLkTgNtpT2M=
+X-Gm-Gg: ASbGncvtbkCzEGs/VaRh4uq2aiz5zoh3BrSSdNzKOli+r0fmuLuWkJfkXF5OEvpNhDd
+	FSjhb0xn+Ad3AvixJRH/qwW9NmWelwnDpJF7fYyaiAbu90DFmP/dTpyOqKmrL29BcFujMArDAyY
+	45aaJsp/0osQwIYipuuMpR7ieK9gctozHQAYanNq+LSDQR
+X-Google-Smtp-Source: AGHT+IFdn8VEEQHDC8OasRXI0qgEnkqyj5lzRx6CSU9/4hWwZLvVN9kESBAm67CBFRdOqfMNoceln8a+BhI8D9pIt1o=
+X-Received: by 2002:a17:907:7ea2:b0:ade:198c:4b6f with SMTP id
+ a640c23a62f3a-ae34fd30a97mr1469575766b.1.1751356001813; Tue, 01 Jul 2025
+ 00:46:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Jfm5ubPoxdPVCYN4P6zj5am";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/Jfm5ubPoxdPVCYN4P6zj5am
-Content-Type: text/plain; charset=US-ASCII
+References: <20250630112120.588246-1-Henry_Wu@quantatw.com>
+ <20250630112120.588246-3-Henry_Wu@quantatw.com> <a2c8e8ea-4cd1-43ca-8973-ac7210f821c2@kernel.org>
+In-Reply-To: <a2c8e8ea-4cd1-43ca-8973-ac7210f821c2@kernel.org>
+From: Henry Wu <tzuhao.wtmh@gmail.com>
+Date: Tue, 1 Jul 2025 15:46:30 +0800
+X-Gm-Features: Ac12FXwsUlVyBrckRHAx_VI3BD8drXikFezbwgMsDj67FjJjWVGhfyaL4w7fzVs
+Message-ID: <CAL3H=v17_h5b-7bFbnubJwAPOpS1xz7k-c7Mx3Ss9YXa8U+0Xw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: trivial-devices: Add mp2869a/mp29612a
+ device entry
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>, 
+	Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>, 
+	Michal Simek <michal.simek@amd.com>, Fabio Estevam <festevam@gmail.com>, 
+	Naresh Solanki <naresh.solanki@9elements.com>, Henry Wu <Henry_Wu@quantatw.com>, 
+	Grant Peltier <grantpeltier93@gmail.com>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Cedric Encarnacion <cedricjustine.encarnacion@analog.com>, 
+	Mariel Tinaco <Mariel.Tinaco@analog.com>, Alex Vdovydchenko <xzeol@yahoo.com>, 
+	John Erasmus Mari Geronimo <johnerasmusmari.geronimo@analog.com>, Leo Yang <leo.yang.sy0@gmail.com>, 
+	Ninad Palsule <ninad@linux.ibm.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+	Kim Seer Paller <kimseer.paller@analog.com>, Nuno Sa <nuno.sa@analog.com>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, 
+	peteryin.openbmc@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
-
-Today's linux-next merge of the rust tree got a conflict in:
-
-  rust/kernel/devres.rs
-
-between commits:
-
-  0dab138d0f4c ("rust: devres: require T: Send for Devres")
-  ce7c22b2e1fb ("rust: revocable: support fallible PinInit types")
-  46ae8fd7386a ("rust: devres: replace Devres::new_foreign_owned()")
-  f5d3ef25d238 ("rust: devres: get rid of Devres' inner Arc")
-
-from the driver-core tree and commits:
-
-  fcad9bbf9e1a ("rust: enable `clippy::ptr_as_ptr` lint")
-  23773bd8da71 ("rust: enable `clippy::as_ptr_cast_mut` lint")
-  5e30550558b1 ("rust: enable `clippy::as_underscore` lint")
-  b6985083be1d ("rust: Use consistent "# Examples" heading style in rustdoc=
-")
-
-from the rust tree.
-
-Maybe not all the above commits are involved ...
-
-I used the former version (since it changed things so much) and then
-added the changes from the latter by hand where I could.  I ended up
-with the below diff compared to te HEAD before the merge.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
-index 7c5c5de8bcb6..f900433f5296 100644
---- a/rust/kernel/devres.rs
-+++ b/rust/kernel/devres.rs
-@@ -49,7 +49,7 @@ struct Inner<T: Send> {
- /// [`Devres`] users should make sure to simply free the corresponding bac=
-king resource in `T`'s
- /// [`Drop`] implementation.
- ///
--/// # Example
-+/// # Examples
- ///
- /// ```no_run
- /// # use kernel::{bindings, c_str, device::{Bound, Device}, devres::Devre=
-s, io::{Io, IoRaw}};
-@@ -66,19 +66,19 @@ struct Inner<T: Send> {
- ///     unsafe fn new(paddr: usize) -> Result<Self>{
- ///         // SAFETY: By the safety requirements of this function [`paddr=
-`, `paddr` + `SIZE`) is
- ///         // valid for `ioremap`.
--///         let addr =3D unsafe { bindings::ioremap(paddr as _, SIZE as _)=
- };
-+///         let addr =3D unsafe { bindings::ioremap(paddr as bindings::phy=
-s_addr_t, SIZE) };
- ///         if addr.is_null() {
- ///             return Err(ENOMEM);
- ///         }
- ///
--///         Ok(IoMem(IoRaw::new(addr as _, SIZE)?))
-+///         Ok(IoMem(IoRaw::new(addr as usize, SIZE)?))
- ///     }
- /// }
- ///
- /// impl<const SIZE: usize> Drop for IoMem<SIZE> {
- ///     fn drop(&mut self) {
- ///         // SAFETY: `self.0.addr()` is guaranteed to be properly mapped=
- by `Self::new`.
--///         unsafe { bindings::iounmap(self.0.addr() as _); };
-+///         unsafe { bindings::iounmap(self.0.addr() as *mut c_void); };
- ///     }
- /// }
- ///
-@@ -214,7 +214,7 @@ fn remove_action(&self) -> bool {
-     /// An error is returned if `dev` does not match the same [`Device`] t=
-his [`Devres`] instance
-     /// has been created with.
-     ///
--    /// # Example
-+    /// # Examples
-     ///
-     /// ```no_run
-     /// # #![cfg(CONFIG_PCI)]
-
---Sig_/Jfm5ubPoxdPVCYN4P6zj5am
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhjkj4ACgkQAVBC80lX
-0GzBpQgAoVjAbxQOWyOBs29BnCnC1ceqeCqRrrg8evmzrqJ7/dBHb/TixyjYJNZ2
-0iBLB74dm5pSSSTvNKzA4yOHDC9zYnNKyedXlB0Q60pnFP7wS9/zpGc/hkdaPxTa
-zZFMmy1mnLoWwUzS8qWAecYLGQVwGnuPS8jlR89qkLw2HBpL8eX8JWPZ780t4TGo
-c0zzVIamdAZCPi4a5N2uZrIIodKaH8E1Exz2+iwz/PGxYfyQ/TQBLcYYincppYbE
-GFQANBrtu0Q/AlsXmklqOQiiVrZyQn/XJohLJOCgV/Mnisd5LENwjNBuiZz8Lyq3
-HhIDXWi4jJb92x/8rqpgI8aY08AQPA==
-=06s0
------END PGP SIGNATURE-----
-
---Sig_/Jfm5ubPoxdPVCYN4P6zj5am--
+Krzysztof Kozlowski <krzk@kernel.org> =E6=96=BC 2025=E5=B9=B46=E6=9C=8830=
+=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=887:28=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+>
+> On 30/06/2025 13:20, tzuhao.wtmh@gmail.com wrote:
+> > From: Henry Wu <Henry_Wu@quantatw.com>
+> >
+> > Add trivial-devices binding for mp2869a/mp29612a to enable automatic ma=
+tching
+> > in device tree.
+>
+> Nothing improved. You did not respond to my comments and just sent the sa=
+me.
+>
+> No, implement and respond to comments.
+>
+I=E2=80=99m sorry, that was my mistake. I will update the description to:
+Add trivial-devices bindings for MP2869A/MP29612A voltage regulator control=
+lers.
+>
+>
+> Best regards,
+> Krzysztof
