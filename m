@@ -1,193 +1,155 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from rtg-sunil-navi33.amd.com (unknown [165.204.156.251])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26029242928
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 06:38:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40A3526AD9
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 06:39:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=165.204.156.251
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751351939; cv=none; b=WWM8EhbRCUsNHJYw8kfN2LS6EK1cobWtiXeB7eGeHT9f/upAkyx34VgALBNdcmLCpNfdMRf2cuBg02MYTyfTrL63uMJir4Osv7XETebnqWwDwgbQ78Ccf4T2lDCa0BePgxi+xxzNcUc/Zppi6LUSLtYpEAh3PUx+LCgPDkOpfZA=
+	t=1751351999; cv=none; b=r4R2X3rYgxDy0s+qHxYLc523DSlP4fJEf5IRB/m+5MSBmHB5rutR7XCT7I7F3HkqSKBo1ibyzSq8ynUJRytlVuwGWB2OlpDQ7BtZKej1pu4Yd5Scq+4a6Jws0BymPuQSz8dhIXie8o9RWqfTtAw5uF/su2cvr+5uGi06/gGfepo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751351939; c=relaxed/simple;
-	bh=vdn58W0P4SV8Ws3EOrRhV/EDGwj8q19SsrDH5hQ3C3g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HDkFoa3O7kwsWZ3H6LBYZ5ZMGOVrTEXjdq2wadqxBlGJ3Eddo1YWW067ldZYwN9Jj9x2VqeH4NQ/763z+snZVjRSVBg7W7mA1E5BaZaxEivFEZY0sPSYmyPUXFwQSarSCAB3J0EGdZV/o6dqpDKl+fnfRDqhxVovB9ng1/01Ng8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EsnrwMS0; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EsnrwMS0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751351937;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/N2L3Cw1UrT66uEmHGGmoTWSgiUKsnwQtuwgvg8Krxk=;
-	b=EsnrwMS00+2qlzINF50fSDq4pOay/TuxTGLMIP8Xx+SHaypS7fR0+2ttYkTHPJpUiCpTyy
-	lxel+2D2z/97ykiGTKLeMQvU6g5g6R1I8XsoOU2rkmtmr1o9sjYZlPI7/UcDhZjc8CGOYA
-	PQ0uRPv6hl1YdMq4T+v/bCxObcM2y30=
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
- [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-403-mj85MlKPNa-B7iMmJ2W8vA-1; Tue, 01 Jul 2025 02:38:55 -0400
-X-MC-Unique: mj85MlKPNa-B7iMmJ2W8vA-1
-X-Mimecast-MFC-AGG-ID: mj85MlKPNa-B7iMmJ2W8vA_1751351935
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-31202bbaafaso3079028a91.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 23:38:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751351935; x=1751956735;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/N2L3Cw1UrT66uEmHGGmoTWSgiUKsnwQtuwgvg8Krxk=;
-        b=MXyvO8qqopkNsvtC+M+hYUHBh7ojNkiOI2OFe0DMU9hDrSONeWEQPacyrPprt2HXXM
-         7ufWqMxan71MeWKrFe37NcLxoPwzic1aBGlUn0UHnQuQd8z4awfXSVeynDHdCDDmb9gp
-         GFM7iVeOeQpumTBPnTfA/1FZ7jebF3MvONeE8qqb4aLBicDf8awZImaLSe/qxGp/1yaS
-         i55OIi5Tk7EieH1Yr5N/h83aCSb+SWLdJHNFCBIZZOG/smmaKbDOJX57AEZXrARsHNcA
-         +KFNlVnmpFyAiKQPQQDAqPxB20dt3kDkmLCZPxRgvZvy+LOzkRopL+Y9IiHlLSRqCQ/u
-         Fvow==
-X-Forwarded-Encrypted: i=1; AJvYcCVZSLL80R1SAbYob9Ib6cjlXUwjpNXRTnCg7CPverynlz25XvddUzUT4q4liRwZT/AmYnS47BtlovA8Bnc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSKq6//n/W2u11iwvxOj3kx9YUqVVlM7DOWZYbdz7dprkORLax
-	VKPuvqcWuPS6pa+8ZLtHVYuQdIcPpn75vzni/SKjQbbDL/cQDoxbRpDuZeJsOdXulgQ3azFgvBQ
-	UfgJfJMK8aYTwYsBqxMHArOEI//UbTVy3e9CWTH9RsNZFqfJvhN7kL3if9F8+23TuyQ==
-X-Gm-Gg: ASbGncuSsR+BT138KiuwKTVXEx36RON7VnfRcQslblUe/0h9MrUJtSRWCRW6BDkfq+0
-	auZwF7qGttCrmzSkQPWw0gvjcxYhX7CUDerqkGZp7M6K/vDGhibXcVxfxRLqkDAnn78XuMELhyE
-	FWNcHqYYXcy0rV2zk6nogkCsdJca8NBRONSgTpqxx0LHdDKe2nGRd3i+UTZzBOb6vmPtn1ppGNp
-	2iAcAUFQPDvig0giW/xBgc4yv63kg5hyiNsOdOmzvcAvYnkSuMjiw81EUoTAsI9xzf6AoieETzJ
-	kZ9ldG1jApphJTEXyntL7Cw+OiomOKOnRY5O2+Iir4g3daLsXIPMFYATanBNPw==
-X-Received: by 2002:a17:90b:3c50:b0:312:f0d0:bc4 with SMTP id 98e67ed59e1d1-318c8ec5177mr22460866a91.5.1751351934651;
-        Mon, 30 Jun 2025 23:38:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFXGVdcl+epWZi9VPn55ApO38WReIopBQVp1X+PhM6QPcmIdOqHMzKdtlUHTKMJd/V5XIritA==
-X-Received: by 2002:a17:90b:3c50:b0:312:f0d0:bc4 with SMTP id 98e67ed59e1d1-318c8ec5177mr22460805a91.5.1751351934113;
-        Mon, 30 Jun 2025 23:38:54 -0700 (PDT)
-Received: from [192.168.68.51] (n175-34-62-5.mrk21.qld.optusnet.com.au. [175.34.62.5])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-318c1523351sm10913306a91.48.2025.06.30.23.38.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Jun 2025 23:38:53 -0700 (PDT)
-Message-ID: <e33e6268-a6a5-421d-97c1-b26044e3cfa5@redhat.com>
-Date: Tue, 1 Jul 2025 16:38:44 +1000
+	s=arc-20240116; t=1751351999; c=relaxed/simple;
+	bh=KYrvpls+KdqdYbOFV0t+YKA3ozzs1zB21+nmPpEooL4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ww+dxLT+JLFbd0PVQNCcqbzgt7aKkmRxys6m7q5XM3l9dvHamKiHl1IeRS44+ntcXuNsd1G7XsN7bTfpdX5Y88SlF+MgnvanM62tgNy5ChLTm8YfLYgYGq1d0iJsqpSk5/c6thnP4lrloIMuhvc4AhZiz8PCdMZKPRjBIi52MBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com; spf=none smtp.mailfrom=rtg-sunil-navi33.amd.com; arc=none smtp.client-ip=165.204.156.251
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=rtg-sunil-navi33.amd.com
+Received: from rtg-sunil-navi33.amd.com (localhost [127.0.0.1])
+	by rtg-sunil-navi33.amd.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 5616XAkh3210768;
+	Tue, 1 Jul 2025 12:03:10 +0530
+Received: (from sunil@localhost)
+	by rtg-sunil-navi33.amd.com (8.15.2/8.15.2/Submit) id 5616XAHa3210767;
+	Tue, 1 Jul 2025 12:03:10 +0530
+From: Sunil Khatri <sunil.khatri@amd.com>
+To: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        dri-devel@lists.freedesktop.org
+Cc: amd-gfx@lists.freedesktop.org, simona@ffwll.ch, tzimmermann@suse.de,
+        tursulin@ursulin.net, phasta@kernel.org, dakr@kernel.org,
+        linux-kernel@vger.kernel.org, Oded Gabbay <ogabbay@kernel.org>,
+        Sunil Khatri <sunil.khatri@amd.com>
+Subject: [PATCH v8 4/4] drm/amdgpu: add support of debugfs for mqd information
+Date: Tue,  1 Jul 2025 12:03:03 +0530
+Message-Id: <20250701063303.3210665-4-sunil.khatri@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250701063303.3210665-1-sunil.khatri@amd.com>
+References: <20250701063303.3210665-1-sunil.khatri@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 09/43] KVM: arm64: Allow passing machine type in KVM
- creation
-To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
- Alexandru Elisei <alexandru.elisei@arm.com>,
- Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
- linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
- <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
- Emi Kisanuki <fj0570is@fujitsu.com>
-References: <20250611104844.245235-1-steven.price@arm.com>
- <20250611104844.245235-10-steven.price@arm.com>
-Content-Language: en-US
-From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <20250611104844.245235-10-steven.price@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 6/11/25 8:48 PM, Steven Price wrote:
-> Previously machine type was used purely for specifying the physical
-> address size of the guest. Reserve the higher bits to specify an ARM
-> specific machine type and declare a new type 'KVM_VM_TYPE_ARM_REALM'
-> used to create a realm guest.
-> 
-> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Reviewed-by: Gavin Shan <gshan@redhat.com>
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
-> Changes since v7:
->   * Add some documentation explaining the new machine type.
-> Changes since v6:
->   * Make the check for kvm_rme_is_available more visible and report an
->     error code of -EPERM (instead of -EINVAL) to make it explicit that
->     the kernel supports RME, but the platform doesn't.
-> ---
->   Documentation/virt/kvm/api.rst | 16 ++++++++++++++--
->   arch/arm64/kvm/arm.c           | 15 +++++++++++++++
->   arch/arm64/kvm/mmu.c           |  3 ---
->   include/uapi/linux/kvm.h       | 19 +++++++++++++++----
->   4 files changed, 44 insertions(+), 9 deletions(-)
-> 
+Add debugfs support for mqd for each queue of the client.
 
-One nitpick below.
+The address exposed to debugfs could be used to dump
+the mqd.
 
-> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> index 65543289f75c..0049d67fe38f 100644
-> --- a/Documentation/virt/kvm/api.rst
-> +++ b/Documentation/virt/kvm/api.rst
-> @@ -181,8 +181,20 @@ flag KVM_VM_MIPS_VZ.
->   ARM64:
->   ^^^^^^
->   
-> -On arm64, the physical address size for a VM (IPA Size limit) is limited
-> -to 40bits by default. The limit can be configured if the host supports the
-> +On arm64, the machine type identifier is used to encode a type and the
-> +physical address size for the VM. The lower byte (bits[7-0]) encode the
-> +address size and the upper bits[11-8] encode a machine type. The machine
-> +types that might be available are:
-> +
-> + ======================   ============================================
-> + KVM_VM_TYPE_ARM_NORMAL   A standard VM
-> + KVM_VM_TYPE_ARM_REALM    A "Realm" VM using the Arm Confidential
-> +                          Compute extensions, the VM's memory is
-> +                          protected from the host.
-> + ======================   ============================================
-> +
-> +The physical address size for a VM (IPA Size limit) is limited to 40bits
-> +by default. The limit can be configured if the host supports the
->   extension KVM_CAP_ARM_VM_IPA_SIZE. When supported, use
->   KVM_VM_TYPE_ARM_IPA_SIZE(IPA_Bits) to set the size in the machine type
->   identifier, where IPA_Bits is the maximum width of any physical
-> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-> index 8080443d24af..b3e3323573c6 100644
-> --- a/arch/arm64/kvm/arm.c
-> +++ b/arch/arm64/kvm/arm.c
-> @@ -172,6 +172,21 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
->   	mutex_unlock(&kvm->lock);
->   #endif
->   
-> +	if (type & ~(KVM_VM_TYPE_ARM_MASK | KVM_VM_TYPE_ARM_IPA_SIZE_MASK))
-> +		return -EINVAL;
-> +
-> +	switch (type & KVM_VM_TYPE_ARM_MASK) {
-> +	case KVM_VM_TYPE_ARM_NORMAL:
-> +		break;
-> +	case KVM_VM_TYPE_ARM_REALM:
-> +		if (!static_branch_unlikely(&kvm_rme_is_available))
-> +			return -EPERM;
-> +		kvm->arch.is_realm = true;
-> +		break;
+Signed-off-by: Sunil Khatri <sunil.khatri@amd.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c | 52 +++++++++++++++++++++++
+ drivers/gpu/drm/amd/amdgpu/amdgpu_userq.h |  1 +
+ 2 files changed, 53 insertions(+)
 
-Here we need to explicitly set the realm's state to REALM_STATE_NONE even though
-it's equal to zero, and the struct vm should have been cleared on allocation.
-
-		WRITE_ONCE(kvm->arch.realm.state, REALM_STATE_NONE);
-		kvm->arch.is_realm = true;
-		break;
-
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
->   	kvm_init_nested(kvm);
->   
->   	ret = kvm_share_hyp(kvm, kvm + 1);
-
-[...]
-
-Thanks,
-Gavin
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c
+index 295e7186e156..115d53bc9a8d 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c
+@@ -318,6 +318,9 @@ amdgpu_userq_destroy(struct drm_file *filp, int queue_id)
+ 		amdgpu_bo_unreserve(queue->db_obj.obj);
+ 	}
+ 	amdgpu_bo_unref(&queue->db_obj.obj);
++
++	debugfs_remove_recursive(queue->debugfs_queue);
++
+ 	r = amdgpu_userq_unmap_helper(uq_mgr, queue);
+ 	amdgpu_userq_cleanup(uq_mgr, queue, queue_id);
+ 	mutex_unlock(&uq_mgr->userq_mutex);
+@@ -343,6 +346,46 @@ static int amdgpu_userq_priority_permit(struct drm_file *filp,
+ 	return -EACCES;
+ }
+ 
++#if defined(CONFIG_DEBUG_FS)
++static int amdgpu_mqd_info_read(struct seq_file *m, void *unused)
++{
++	struct amdgpu_usermode_queue *queue = m->private;
++	struct amdgpu_bo *bo;
++	int r;
++
++	if (!queue || !queue->mqd.obj)
++		return -EINVAL;
++
++	bo = amdgpu_bo_ref(queue->mqd.obj);
++	r = amdgpu_bo_reserve(bo, true);
++	if (r) {
++		amdgpu_bo_unref(&bo);
++		return -EINVAL;
++	}
++
++	seq_printf(m, "queue_type %d\n", queue->queue_type);
++	seq_printf(m, "mqd_gpu_address: 0x%llx\n", amdgpu_bo_gpu_offset(queue->mqd.obj));
++
++	amdgpu_bo_unreserve(bo);
++	amdgpu_bo_unref(&bo);
++
++	return 0;
++}
++
++static int amdgpu_mqd_info_open(struct inode *inode, struct file *file)
++{
++	return single_open(file, amdgpu_mqd_info_read, inode->i_private);
++}
++
++static const struct file_operations amdgpu_mqd_info_fops = {
++	.owner = THIS_MODULE,
++	.open = amdgpu_mqd_info_open,
++	.read = seq_read,
++	.llseek = seq_lseek,
++	.release = single_release,
++};
++#endif
++
+ static int
+ amdgpu_userq_create(struct drm_file *filp, union drm_amdgpu_userq *args)
+ {
+@@ -352,6 +395,7 @@ amdgpu_userq_create(struct drm_file *filp, union drm_amdgpu_userq *args)
+ 	const struct amdgpu_userq_funcs *uq_funcs;
+ 	struct amdgpu_usermode_queue *queue;
+ 	struct amdgpu_db_info db_info;
++	char *queue_name;
+ 	bool skip_map_queue;
+ 	uint64_t index;
+ 	int qid, r = 0;
+@@ -475,6 +519,14 @@ amdgpu_userq_create(struct drm_file *filp, union drm_amdgpu_userq *args)
+ 		}
+ 	}
+ 
++	queue_name = kasprintf(GFP_KERNEL, "queue-%d", qid);
++	if (!queue_name)
++		return -ENOMEM;
++
++	/* Queue dentry per client to hold MQD information   */
++	queue->debugfs_queue = debugfs_create_dir(queue_name, filp->debugfs_client);
++	debugfs_create_file("mqd_info", 0444, queue->debugfs_queue, queue, &amdgpu_mqd_info_fops);
++	kfree(queue_name);
+ 
+ 	args->out.queue_id = qid;
+ 
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_userq.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_userq.h
+index ec040c2fd6c9..b1ca91b7cda4 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_userq.h
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_userq.h
+@@ -65,6 +65,7 @@ struct amdgpu_usermode_queue {
+ 	struct dma_fence	*last_fence;
+ 	u32			xcp_id;
+ 	int			priority;
++	struct dentry		*debugfs_queue;
+ };
+ 
+ struct amdgpu_userq_funcs {
+-- 
+2.34.1
 
