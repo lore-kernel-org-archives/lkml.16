@@ -1,134 +1,416 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94773213E6D;
-	Tue,  1 Jul 2025 08:32:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BCA572602;
+	Tue,  1 Jul 2025 08:32:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751358726; cv=none; b=ZSzYHKKfqoKioP5TTWxo1M+PFFHbhYaGn+/VEV8UmmC2O6J4qicdNXAZK5wgrltCXYMSz05hWMn2lDRYWZybDKk1WGewbQqJxlD1fvChdMmaSl4pwdY/JSCzS1i+dWJXH8PrBNFf+WkCmYu6T4NLzX6stQ6nX/vHK6el8DPz9BA=
+	t=1751358739; cv=none; b=FkD2ZLHR1TmhT2FNhVLaHPp+XaDrdStaczgE9ewKTUeq7xvMFsoiFk2dKtycgVc58J/6yWcv8/tE4ZWK3wUmrk/yw9q1qOqV4A0RgnqVBbU0RskfRGy92HYDMw14hCijIgmgf2/TWVE7dLdl9rS7PtsKZ4HUTaROioDB9HyjHGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751358726; c=relaxed/simple;
-	bh=/7+pkp4WbYtUvgqARqha0maOzBZP7u7ePnf+Znr45xo=;
+	s=arc-20240116; t=1751358739; c=relaxed/simple;
+	bh=HRKh4yc4dh+enOBD//jx5vaaO25FLftCjZwUXnx5iGI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FrrsVoQ5xdK1dgk3ChqIf6glL5NrWHDyFDjtmLgrN/5n57KiWN2YzYUNqB5/zLOfwrc+J8lnbpQ0LK/AYFXYWm6FiUaoM33k5g/sBxVEKfXLDNxMJGy1uOpdP2HLaIE+dwwJtZD3WtfryE0FN4DqjMvdrKllkrRUvMT95uryhJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XP/o9bl2; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=so5l67QfcGOe9sXeSOWs+dHsxfZY9SoKFGblI8Gv2IWad9hvPEyXzrdNRC7ii/0JRnFC0TmsxPQYMzjyps/DLhuJdzgcNxt7yj1668eJbmIDvDMTtii/BgRJ/VObSoa6rzqDq5UABx+ztyWXt9UYbaF8bAyX/XcCFzznugMAgws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Y3uCNoRB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XP/o9bl2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 389E7C4CEEB;
-	Tue,  1 Jul 2025 08:32:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751358726;
-	bh=/7+pkp4WbYtUvgqARqha0maOzBZP7u7ePnf+Znr45xo=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Y3uCNoRB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACA99C4CEEB;
+	Tue,  1 Jul 2025 08:32:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751358738;
+	bh=HRKh4yc4dh+enOBD//jx5vaaO25FLftCjZwUXnx5iGI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XP/o9bl2BTuqwDnKkbs6Se3x+BnCsy6lOWBg7iCxi2ScoPZlEfavsLjm3Te2hQHnn
-	 mCjdtn5BU7dOUTtwpds5jCJZOyab3wXMNq7rBgfYlum4+gkuZGyYsJ0S3rCSCXExsG
-	 2q+Zz7dZ5PflbpACYr1x3s/3XeHHqKiv5Dw8KIVOyY2kvBb44QjfpENRHEozFjErj0
-	 PAnCS9WyHxjIvyA70oB3WDvwxJYwHYuiwQ/a4siEUuHbCdq7Ue1ws8BG7BYqRXe565
-	 ktVRHaga8jik3NrdcsvkPOqVrm8fx1XSUDcD5uTixqx7kT64BI8jDpjyeushHGpOLg
-	 m7+kaEorfYgBg==
-Date: Tue, 1 Jul 2025 10:31:58 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Song Liu <song@kernel.org>, Kernel Team <kernel-team@meta.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Eduard <eddyz87@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, KP Singh <kpsingh@kernel.org>, 
-	Matt Bobrowski <mattbobrowski@google.com>, Amir Goldstein <amir73il@gmail.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tejun Heo <tj@kernel.org>, 
-	Daan De Meyer <daan.j.demeyer@gmail.com>, bpf <bpf@vger.kernel.org>, 
-	Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	LSM List <linux-security-module@vger.kernel.org>
-Subject: Re: [PATCH v3 bpf-next 0/4] Introduce bpf_cgroup_read_xattr
-Message-ID: <20250701-angebahnt-fortan-6d4804227e87@brauner>
-References: <20250623063854.1896364-1-song@kernel.org>
- <20250623-rebel-verlust-8fcd4cdd9122@brauner>
- <CAADnVQ+iqMi2HEj_iH7hsx+XJAsqaMWqSDe4tzcGAnehFWA9Sw@mail.gmail.com>
+	b=Y3uCNoRBdzVLyV1qZdLiDTZncyTp7yzBk1nv+BNEmMC1KkeCqmjgeraa8yp/1ZOCq
+	 bZYUG+Od8ZfOpTwm6HXJWQV41dw0o6CWUXBOXbvzMNembUDDiQ1Np/KhRQz6dmq0cf
+	 SmSzxN2a1se0hDrFPZai4Ra4QAeksIvCfECo8gw0=
+Date: Tue, 1 Jul 2025 10:32:15 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Andrei Kuchynski <akuchynski@chromium.org>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+	Benson Leung <bleung@chromium.org>,
+	Jameson Thies <jthies@google.com>,
+	Tzung-Bi Shih <tzungbi@kernel.org>, linux-usb@vger.kernel.org,
+	chrome-platform@lists.linux.dev,
+	Guenter Roeck <groeck@chromium.org>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	"Christian A. Ehrhardt" <lk@c--e.de>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 04/10] usb: typec: Expose mode priorities via sysfs
+Message-ID: <2025070159-judgingly-baggage-042a@gregkh>
+References: <20250630141239.3174390-1-akuchynski@chromium.org>
+ <20250630141239.3174390-5-akuchynski@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAADnVQ+iqMi2HEj_iH7hsx+XJAsqaMWqSDe4tzcGAnehFWA9Sw@mail.gmail.com>
+In-Reply-To: <20250630141239.3174390-5-akuchynski@chromium.org>
 
-On Thu, Jun 26, 2025 at 07:14:20PM -0700, Alexei Starovoitov wrote:
-> On Mon, Jun 23, 2025 at 4:03 AM Christian Brauner <brauner@kernel.org> wrote:
-> >
-> > On Sun, 22 Jun 2025 23:38:50 -0700, Song Liu wrote:
-> > > Introduce a new kfunc bpf_cgroup_read_xattr, which can read xattr from
-> > > cgroupfs nodes. The primary users are LSMs, cgroup programs, and sched_ext.
-> > >
-> >
-> > Applied to the vfs-6.17.bpf branch of the vfs/vfs.git tree.
-> > Patches in the vfs-6.17.bpf branch should appear in linux-next soon.
+On Mon, Jun 30, 2025 at 02:12:33PM +0000, Andrei Kuchynski wrote:
+> This sysfs attribute specifies the preferred order for enabling
+> DisplayPort, Thunderbolt alternate modes, and USB4 mode.
 > 
-> Thanks.
-> Now merged into bpf-next/master as well.
+> Signed-off-by: Andrei Kuchynski <akuchynski@chromium.org>
+> ---
+>  Documentation/ABI/testing/sysfs-class-typec |  16 +++
+>  drivers/usb/typec/Makefile                  |   2 +-
+>  drivers/usb/typec/class.c                   |  28 ++++-
+>  drivers/usb/typec/class.h                   |   4 +
+>  drivers/usb/typec/mode_selection.c          | 116 ++++++++++++++++++++
+>  drivers/usb/typec/mode_selection.h          |  19 ++++
+>  include/linux/usb/typec_altmode.h           |   7 ++
+>  7 files changed, 190 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/usb/typec/mode_selection.c
+>  create mode 100644 drivers/usb/typec/mode_selection.h
 > 
-> > Please report any outstanding bugs that were missed during review in a
-> > new review to the original patch series allowing us to drop it.
-> 
-> bugs :(
-> 
-> > It's encouraged to provide Acked-bys and Reviewed-bys even though the
-> > patch has now been applied. If possible patch trailers will be updated.
-> 
-> Pls don't. Keep it as-is, otherwise there will be merge conflicts
-> during the merge window.
+> diff --git a/Documentation/ABI/testing/sysfs-class-typec b/Documentation/ABI/testing/sysfs-class-typec
+> index 38e101c17a00..ff3296ee8e1c 100644
+> --- a/Documentation/ABI/testing/sysfs-class-typec
+> +++ b/Documentation/ABI/testing/sysfs-class-typec
+> @@ -162,6 +162,22 @@ Description:	Lists the supported USB Modes. The default USB mode that is used
+>  		- usb3 (USB 3.2)
+>  		- usb4 (USB4)
+>  
+> +What:		/sys/class/typec/<port>/mode_priorities
+> +Date:		June 2025
+> +Contact:	Andrei Kuchynski <akuchynski@chromium.org>
+> +Description:	Lists the modes supported by the port, ordered by their
+> +		activation priority. It defines the preferred sequence for activating
+> +		modes such as Displayport alt-mode, Thunderbolt alt-mode and USB4 mode.
+> +		The default order can be modified by writing a new sequence to this
+> +		attribute. Any modes omitted from a user-provided list will be
+> +		automatically placed at the end of the list.
+> +
+> +		Example values:
+> +		- "USB4 TBT DP": default priority order
+> +		- "USB4 DP TBT": modified priority order after writing "USB4 DP TBT" or
+> +			"USB4 DP"
+> +		- "DP": the port only supports Displayport alt-mode
 
-This is just the common blurb. As soon as another part of the tree
-relies on something we stabilize the branch and only do fixes on top and
-never rebase. We usually recommend just pulling the branch which I think
-you did.
+Multiple value sysfs files are generally frowned apon.  sysfs files that
+also have to be manually parsed in the kernel are also frowned apon.
+Are you _SURE_ there is no other way that you could possibly do this?
 
-> 
-> > Note that commit hashes shown below are subject to change due to rebase,
-> > trailer updates or similar. If in doubt, please check the listed branch.
-> >
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-> > branch: vfs-6.17.bpf
-> >
-> > [1/4] kernfs: remove iattr_mutex
-> >       https://git.kernel.org/vfs/vfs/c/d1f4e9026007
-> > [2/4] bpf: Introduce bpf_cgroup_read_xattr to read xattr of cgroup's node
-> >       https://git.kernel.org/vfs/vfs/c/535b070f4a80
-> > [3/4] bpf: Mark cgroup_subsys_state->cgroup RCU safe
-> >       https://git.kernel.org/vfs/vfs/c/1504d8c7c702
-> > [4/4] selftests/bpf: Add tests for bpf_cgroup_read_xattr
-> >       https://git.kernel.org/vfs/vfs/c/f4fba2d6d282
-> 
-> Something wrong with this selftest.
-> Cleanup is not done correctly.
-> 
-> ./test_progs -t lsm_cgroup
-> Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
-> ./test_progs -t lsm_cgroup
-> Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
-> ./test_progs -t cgroup_xattr
-> Summary: 1/8 PASSED, 0 SKIPPED, 0 FAILED
-> ./test_progs -t lsm_cgroup
-> test_lsm_cgroup_functional:PASS:bind(ETH_P_ALL) 0 nsec
-> (network_helpers.c:121: errno: Cannot assign requested address) Failed
-> to bind socket
-> test_lsm_cgroup_functional:FAIL:start_server unexpected start_server:
-> actual -1 < expected 0
-> (network_helpers.c:360: errno: Bad file descriptor) getsockopt(SOL_PROTOCOL)
-> test_lsm_cgroup_functional:FAIL:connect_to_fd unexpected
-> connect_to_fd: actual -1 < expected 0
-> test_lsm_cgroup_functional:FAIL:accept unexpected accept: actual -1 < expected 0
-> test_lsm_cgroup_functional:FAIL:getsockopt unexpected getsockopt:
-> actual -1 < expected 0
-> test_lsm_cgroup_functional:FAIL:sk_priority unexpected sk_priority:
-> actual 0 != expected 234
-> ...
-> Summary: 0/1 PASSED, 0 SKIPPED, 1 FAILED
-> 
-> 
-> Song,
-> Please follow up with the fix for selftest.
-> It will be in bpf-next only.
+> +
+>  USB Type-C partner devices (eg. /sys/class/typec/port0-partner/)
+>  
+>  What:		/sys/class/typec/<port>-partner/accessory_mode
+> diff --git a/drivers/usb/typec/Makefile b/drivers/usb/typec/Makefile
+> index 7a368fea61bc..8a6a1c663eb6 100644
+> --- a/drivers/usb/typec/Makefile
+> +++ b/drivers/usb/typec/Makefile
+> @@ -1,6 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  obj-$(CONFIG_TYPEC)		+= typec.o
+> -typec-y				:= class.o mux.o bus.o pd.o retimer.o
+> +typec-y				:= class.o mux.o bus.o pd.o retimer.o mode_selection.o
+>  typec-$(CONFIG_ACPI)		+= port-mapper.o
+>  obj-$(CONFIG_TYPEC)		+= altmodes/
+>  obj-$(CONFIG_TYPEC_TCPM)	+= tcpm/
+> diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
+> index a72325ff099a..93eadbcdd4c0 100644
+> --- a/drivers/usb/typec/class.c
+> +++ b/drivers/usb/typec/class.c
+> @@ -19,6 +19,7 @@
+>  #include "bus.h"
+>  #include "class.h"
+>  #include "pd.h"
+> +#include "mode_selection.h"
+>  
+>  static DEFINE_IDA(typec_index_ida);
+>  
+> @@ -540,7 +541,7 @@ static void typec_altmode_release(struct device *dev)
+>  }
+>  
+>  const struct device_type typec_altmode_dev_type = {
+> -	.name = "typec_alternate_mode",
+> +	.name = ALTERNATE_MODE_DEVICE_TYPE_NAME,
+>  	.groups = typec_altmode_groups,
+>  	.release = typec_altmode_release,
+>  };
+> @@ -1942,6 +1943,25 @@ static ssize_t orientation_show(struct device *dev,
+>  }
+>  static DEVICE_ATTR_RO(orientation);
+>  
+> +static ssize_t mode_priorities_store(struct device *dev,
+> +			       struct device_attribute *attr,
+> +			       const char *buf, size_t size)
+> +{
+> +	struct typec_port *port = to_typec_port(dev);
+> +	int ret = typec_mode_priorities_set(port, buf);
 
-We should put that commit on the shared vfs-6.17.bpf branch.
+You don't pass in size here, what could go wrong...
+
+> +
+> +	return ret ? : size;
+
+Please do not use ? : unless you have to.  Spell it out, it makes code
+easier to maintain.  Remember, we write code for people first, compilers
+second.
+
+> +}
+> +
+> +static ssize_t mode_priorities_show(struct device *dev,
+> +			      struct device_attribute *attr, char *buf)
+> +{
+> +	struct typec_port *port = to_typec_port(dev);
+> +
+> +	return typec_mode_priorities_get(port, buf);
+> +}
+> +static DEVICE_ATTR_RW(mode_priorities);
+> +
+>  static struct attribute *typec_attrs[] = {
+>  	&dev_attr_data_role.attr,
+>  	&dev_attr_power_operation_mode.attr,
+> @@ -1954,6 +1974,7 @@ static struct attribute *typec_attrs[] = {
+>  	&dev_attr_port_type.attr,
+>  	&dev_attr_orientation.attr,
+>  	&dev_attr_usb_capability.attr,
+> +	&dev_attr_mode_priorities.attr,
+>  	NULL,
+>  };
+>  
+> @@ -1992,6 +2013,9 @@ static umode_t typec_attr_is_visible(struct kobject *kobj,
+>  			return 0;
+>  		if (!port->ops || !port->ops->default_usb_mode_set)
+>  			return 0444;
+> +	} else if (attr == &dev_attr_mode_priorities.attr) {
+> +		if (!port->alt_mode_override)
+> +			return 0;
+>  	}
+>  
+>  	return attr->mode;
+> @@ -2652,6 +2676,8 @@ struct typec_port *typec_register_port(struct device *parent,
+>  	else if (cap->usb_capability & USB_CAPABILITY_USB2)
+>  		port->usb_mode = USB_MODE_USB2;
+>  
+> +	typec_mode_priorities_set(port, "");
+> +
+>  	device_initialize(&port->dev);
+>  	port->dev.class = &typec_class;
+>  	port->dev.parent = parent;
+> diff --git a/drivers/usb/typec/class.h b/drivers/usb/typec/class.h
+> index f05d9201c233..28b3c19a0632 100644
+> --- a/drivers/usb/typec/class.h
+> +++ b/drivers/usb/typec/class.h
+> @@ -5,6 +5,7 @@
+>  
+>  #include <linux/device.h>
+>  #include <linux/usb/typec.h>
+> +#include <linux/usb/typec_altmode.h>
+>  
+>  struct typec_mux;
+>  struct typec_switch;
+> @@ -82,6 +83,7 @@ struct typec_port {
+>  	struct device			*usb3_dev;
+>  
+>  	bool				alt_mode_override;
+> +	int				mode_priority_list[TYPEC_MODE_MAX];
+>  };
+>  
+>  #define to_typec_port(_dev_) container_of(_dev_, struct typec_port, dev)
+> @@ -111,4 +113,6 @@ static inline int typec_link_ports(struct typec_port *connector) { return 0; }
+>  static inline void typec_unlink_ports(struct typec_port *connector) { }
+>  #endif
+>  
+> +#define ALTERNATE_MODE_DEVICE_TYPE_NAME "typec_alternate_mode"
+> +
+>  #endif /* __USB_TYPEC_CLASS__ */
+> diff --git a/drivers/usb/typec/mode_selection.c b/drivers/usb/typec/mode_selection.c
+> new file mode 100644
+> index 000000000000..cb7ddf679037
+> --- /dev/null
+> +++ b/drivers/usb/typec/mode_selection.c
+> @@ -0,0 +1,116 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright 2025 Google LLC.
+> + */
+> +
+> +#include <linux/usb/typec_altmode.h>
+> +#include <linux/vmalloc.h>
+> +#include "mode_selection.h"
+> +#include "class.h"
+> +
+> +static const char * const mode_names[] = {
+> +	[TYPEC_DP_ALTMODE] = "DP",
+> +	[TYPEC_TBT_ALTMODE] = "TBT",
+> +	[TYPEC_USB4_MODE] = "USB4",
+
+No TYPEC_MODE_MAX entry?  Why not?  This is going to get out of sync,
+see below for my comment about that.
+
+> +};
+> +static const char * const default_priorities = "USB4 TBT DP";
+
+A comment here about what this is for?
+
+> +
+> +/* -------------------------------------------------------------------------- */
+> +/* port 'mode_priorities' attribute */
+> +static int typec_mode_parse_priority_string(const char *str, int *list)
+> +{
+> +	const bool user_settings = list[0] == TYPEC_MODE_MAX;
+> +	char *buf, *ptr;
+> +	char *token;
+> +	int ret = 0;
+> +
+> +	buf = vmalloc(strlen(str) + 1);
+
+Why vmalloc for such a small chunk of memory?
+
+> +	if (!buf)
+> +		return -ENOMEM;
+> +	for (int i = 0; i <= strlen(str); i++)
+> +		buf[i] = (str[i] == '\n') ? '\0' : str[i];
+
+Please spell out if statements, especially ones that do assignements in
+them.  This is going to be a pain to maintain over time, right?  Make it
+obvious what is happening please.
+
+
+> +	ptr = buf;
+> +
+> +	while ((token = strsep(&ptr, " ")) && !ret) {
+> +		if (strlen(token)) {
+> +			int mode = 0;
+> +
+> +			while ((mode < TYPEC_MODE_MAX) &&
+> +				strcmp(token, mode_names[mode]))
+> +				mode++;
+> +			if (mode == TYPEC_MODE_MAX) {
+> +				ret = -EINVAL;
+> +				continue;
+> +			}
+> +
+> +			for (int i = 0; i < TYPEC_MODE_MAX; i++) {
+> +				if (list[i] == TYPEC_MODE_MAX) {
+> +					list[i] = mode;
+> +					break;
+> +				}
+> +				if (list[i] == mode) {
+> +					if (user_settings)
+> +						ret = -EINVAL;
+> +					break;
+> +				}
+> +			}
+> +		}
+> +	}
+> +	vfree(buf);
+
+Why not just use a free() type model and that way your error paths above
+are much simpler?
+
+
+> +
+> +	return ret;
+> +}
+> +
+> +int typec_mode_priorities_set(struct typec_port *port,
+> +		const char *user_priorities)
+> +{
+> +	int list[TYPEC_MODE_MAX];
+> +	int ret;
+> +
+> +	for (int i = 0; i < TYPEC_MODE_MAX; i++)
+> +		list[i] = TYPEC_MODE_MAX;
+> +
+> +	ret = typec_mode_parse_priority_string(user_priorities, list);
+> +	if (!ret)
+> +		ret = typec_mode_parse_priority_string(default_priorities, list);
+> +
+> +	if (!ret)
+> +		for (int i = 0; i < TYPEC_MODE_MAX; i++)
+> +			port->mode_priority_list[i] = list[i];
+> +
+> +	return ret;
+> +}
+> +
+> +static int port_altmode_supported(struct device *dev, void *data)
+> +{
+> +	if (!strcmp(dev->type->name, ALTERNATE_MODE_DEVICE_TYPE_NAME)) {
+> +		struct typec_altmode *alt = to_typec_altmode(dev);
+> +
+> +		if (*(int *)data == typec_svid_to_altmode(alt->svid))
+> +			return 1;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static bool port_mode_supported(struct typec_port *port, int mode)
+> +{
+> +	if (mode >= TYPEC_MODE_MAX)
+> +		return false;
+> +	if (mode == TYPEC_USB4_MODE)
+> +		return !!(port->cap->usb_capability & USB_CAPABILITY_USB4);
+> +	return device_for_each_child(&port->dev, &mode, port_altmode_supported);
+> +}
+> +
+> +int typec_mode_priorities_get(struct typec_port *port, char *buf)
+> +{
+> +	ssize_t count = 0;
+> +
+> +	for (int i = 0; i < TYPEC_MODE_MAX; i++) {
+> +		int mode = port->mode_priority_list[i];
+> +
+> +		if (port_mode_supported(port, mode))
+> +			count += sysfs_emit_at(buf, count, "%s ", mode_names[mode]);
+> +	}
+> +
+> +	return count + sysfs_emit_at(buf, count, "\n");
+> +}
+> diff --git a/drivers/usb/typec/mode_selection.h b/drivers/usb/typec/mode_selection.h
+> new file mode 100644
+> index 000000000000..c595c84e26a4
+> --- /dev/null
+> +++ b/drivers/usb/typec/mode_selection.h
+> @@ -0,0 +1,19 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +#include <linux/usb/typec_dp.h>
+> +#include <linux/usb/typec_tbt.h>
+> +
+> +static inline int typec_svid_to_altmode(const u16 svid)
+> +{
+> +	switch (svid) {
+> +	case USB_TYPEC_DP_SID:
+> +		return TYPEC_DP_ALTMODE;
+> +	case USB_TYPEC_TBT_SID:
+> +		return TYPEC_TBT_ALTMODE;
+> +	}
+> +	return TYPEC_MODE_MAX;
+> +}
+> +
+> +int typec_mode_priorities_set(struct typec_port *port,
+> +		const char *user_priorities);
+> +int typec_mode_priorities_get(struct typec_port *port, char *buf);
+> diff --git a/include/linux/usb/typec_altmode.h b/include/linux/usb/typec_altmode.h
+> index b3c0866ea70f..4f05c5f5c91d 100644
+> --- a/include/linux/usb/typec_altmode.h
+> +++ b/include/linux/usb/typec_altmode.h
+> @@ -145,6 +145,13 @@ enum {
+>  
+>  #define TYPEC_MODAL_STATE(_state_)	((_state_) + TYPEC_STATE_MODAL)
+>  
+> +enum {
+> +	TYPEC_DP_ALTMODE = 0,
+> +	TYPEC_TBT_ALTMODE,
+> +	TYPEC_USB4_MODE,
+> +	TYPEC_MODE_MAX,
+
+This list is going to get out of order and sync with your string list
+elsewhere in the other .c file.  What is going to ensure that this does
+not happen?
+
+Again, I'm really not happy with this api, it feels fragile and tricky
+and will get out of sync very easily over time.  We need loads of
+justification for why this really is the only possible way this can be
+done, and some type of proof that this actually has been tested (and
+maybe fuzzed?)
+
+thanks,
+
+greg k-h
