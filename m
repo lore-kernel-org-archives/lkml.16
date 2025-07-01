@@ -1,106 +1,114 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA1C51885B8
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 15:46:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A76A1946AA;
+	Tue,  1 Jul 2025 15:47:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751384791; cv=none; b=LwtaIG42rk5sx9HvxY0urPFdS/dnJ7fAKglpuDsK6Gd2oH9UFBwzBMm6bQj2OwZ3zd17upGRGMll9b4rqzYmONbUSnRqmHz2wnL5JSZ9Ld6aWwt3N/X2NGoIhJllsbc9gdAjM370jw2tpY0PP+nNgv/c4InHfAZlCxvcmrDL+jE=
+	t=1751384860; cv=none; b=dehFds+qZ3mWZBu+1+oxipo4PFqUOVVb1K5Q7hObooaOTLN4CDmdJUhko5CCIARCeYCScVm0YDzPgGheIf8+Aac+LffMnaTZ2lZ+JB258+38d1GN5dpuGUryN7fkmZCjiwdTZkrx64ODHKmOEI4JjXLkywXRj4D1WSkiSs41GOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751384791; c=relaxed/simple;
-	bh=pAglDTOhrF8Zvgb1AFD+OxJd1JCWicRRyJSMm11OT0s=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aMTu74EwjhjO8K26fspAK42ED4Y8Zwm/9kPQUzgunZD+YfsMjzMXwHQZwl57eHdmNkr1fjqUhJBUZphyXixJbMpAPzEUC2N2zDs+6J0LvPeZk+trTJIvQvVuGV9XTvMrqD1R9viV+qeC7wLAoSKOvYyH5+l/G6lFXOByQq/lw4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=H3deQlJL; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1751384860; c=relaxed/simple;
+	bh=cqyPGYLblfVYj6BPqlBZMS2JvqAo/vGxsJgem4AIE3w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DdLhQ5M0i+0LBJGP0tU/ywlnL2RItPJBO7UUi5hW4f4kRM3xe5bnFishbD51nMF4J0XYe31pCZCtsSUiuUHMqEf9sK9IratErF8V7iVAAG6snVfW+ewCyeqeGAJIJx7cFYk8eqzMsj9MZbDdrjYaaG1+c31pR4O7SjURyJFlbjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BsINdp0s; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="H3deQlJL"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a577ab8c34so797569f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 08:46:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BsINdp0s"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7d21cecc11fso966168285a.3;
+        Tue, 01 Jul 2025 08:47:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1751384788; x=1751989588; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aOFZz6F2G83zxV/3z8yTT2gDImG/Fh4Mhj3FLnYmKOQ=;
-        b=H3deQlJLRphrt4rWcA25M4YoONr5eYM9aw9yOf+DHWm3TuVRF8Bnr33zw+Zzs3/ko+
-         ObIOOB2spCDHhUgYlZ4pSuB5gdND+8lFQQvGO2HOUXkzMJ5H1kwJDos5CejiQPfVlluK
-         VKLrGHFaNJ/Py+tFwgywoCZGt1dy2K8RCwKxKPx8DqRwMsloskj0bf7Jch26xLPqdZKS
-         9n5I97w0mqKIRoO7cyJjg2y6ZVUPI7T/EUE7KDn7fWXRfaHqz5IL2LvIao+g/eBRxeg+
-         0lBFaW0NEEQRP+DhAtznrc7pu83p72ELNIK75mBqA6oqDZpXCMLtSjw4qTYHCGVpUu3V
-         7BLw==
+        d=gmail.com; s=20230601; t=1751384858; x=1751989658; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QOTjSR8K92o8+5zySVJbuCZzgEc68E05xLIa5iJk2bQ=;
+        b=BsINdp0slVMLU0dZEqcuNyhzOBOT2bpVhXc2tskvj06/7AwE73QK5BDofwgc3MZvux
+         52+U34xHvTbLb+jfgH53NzIlCuUK9dSSQGVxaoHPIvXPinV6Zkp+PA5YPsL1Xutq3S4u
+         W5YmhrUDJ0jT5HAtWO7yglp+qKTs/SOHYlFWrOsWXgAD4rGwS2+K4NQkNT7QJsXohMw1
+         fd4Y/x3Gxenn0IiAQpbMWy9ml4fKW+KgLFiKqechl/qm+TprjsLn5Oc6Kxg7WyebAiU0
+         HUTJaov9wxt8sM5X0GmSyCBUhn5RSrcAtxdiqD68wxAO7PUQVR2MYCAVIu/w4zIBPQCC
+         6pcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751384788; x=1751989588;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aOFZz6F2G83zxV/3z8yTT2gDImG/Fh4Mhj3FLnYmKOQ=;
-        b=eVkAGPBVYVdajWsRnVj0IpziRxk/8c09t38Xf8LOKWBprSUdGXVskIiCgEPdik9Yog
-         RAnhLqG9LBfndGmLTyZPprklFNPqS+j81STbSL2gaWspnkphzg8ImMmyDLxxeaWMIniV
-         u+5RMKADE6dB7XMrdfedsW6cLWUxD+8+sxz4tQymSY+Ki9T2bmtGnfvfATBSGDuZ9QNZ
-         Cn3dh84Sx5N9tegYtTlF70qIsGEDBGDj7spbUyqF7VAjj24237UktE1eS54LLE6IAOK7
-         UOxbvEF0CcwrVmAW4/uNi8767hcJLNaGUMBDqtD6wiqUJURAxg4iGfI9Kk6uhuxf1s0J
-         aR7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVam7CikpG6qwghZ/3GJ4H4KZXSf+aY3ReylSPLKCLandKoq4P575OUo+v3VsDje2wLyZo7VKWLDU5Fzxg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXOvOJwv0VWxcj2HrnXZwneR/NlKzb3qTYzkQNpJu7YaBkLNxQ
-	LvmpoFhWRunJRArmPvunmGP1ZC6Gg2D44TZfYuD5GbsjXidYImdCwTyBqal3SDd8l2c=
-X-Gm-Gg: ASbGnctm22UT1dgPTI9nWpQBEezynKBRg2SEOc5kEzW1x0IJsZl7pe0DbVw/JuWaFmb
-	Fx2oSW8MlvtquOgSTRpVdi+2zj9BvqSgwyw0VHbbgiKTTx9ZtyyJadzvZtmjkCjaSAS/8aezEop
-	6FuO/Gpf9UblbEnCbLvyk9LcfSndfqP39LFrVaWW04LKldo3dd34u+MicFksiH26i1ZGUMxmZYo
-	AL6jh5Jlr/UQSP/GjqAIX3WGoeyyjzhjjWG56Y34WqbSJ4J93hw2CFIz5vQ84ZZJTCwPl3mPikh
-	oKFs/8Ft9c+MYFL8t+cV00aGYdzqdrY9GziO0wMQJpOwKAnm835Pek0=
-X-Google-Smtp-Source: AGHT+IHoPM3nOnG6zXq1wPZop0nFfQhTrUhv7Mx3b1Sj2NYhuzTU7PMm4Jn+4jvjv+oZm9TEot6V1Q==
-X-Received: by 2002:a05:6000:1885:b0:3a4:dc42:a0c2 with SMTP id ffacd0b85a97d-3af485b1fb4mr1179705f8f.1.1751384787986;
-        Tue, 01 Jul 2025 08:46:27 -0700 (PDT)
-Received: from mordecai.tesarici.cz ([213.235.133.43])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a3a6716sm170405635e9.11.2025.07.01.08.46.25
+        d=1e100.net; s=20230601; t=1751384858; x=1751989658;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QOTjSR8K92o8+5zySVJbuCZzgEc68E05xLIa5iJk2bQ=;
+        b=LCbz8gZwBgKeFYBKlkZJ3tRYFpfRXnTegWTZrZTVuzFH0qC/+OdW66CI9kKlTjJPvZ
+         6MOCHBssbJTN65BucwaLSnOjPGQ2PCIseR8u46rQf6skSNfSZLBMfvICzjFgSq5gWVDz
+         lOkpJ+dj1k+scVmW7PguVSiGVOKvLoMbAM70iP1FLWxTvuIyUqIMp3pUm37weJbSR77l
+         +HIa4OrBDt6T28Xgb6HUP3r91COzZ+lsZ392qMPLabvK6ZYglCb3FJ0KrTiTMDR5qvhf
+         I7XcNulLeJqJ8il7VoF5xbk0lWfIIDmgRCPcLy1U5k68dKshiiIhJtTlGXo1SuXULMlI
+         DPcw==
+X-Forwarded-Encrypted: i=1; AJvYcCVyR3H9tc+B9zQbQmMjE7Y+Z7B4Mk70Af0P8HllMOMBu9RhBs46xBe9tj1hgz60AJNuLQ0qTWyn3zQ=@vger.kernel.org, AJvYcCXFAA9zJ8o07llEANf/PbZhz1Bs2oc79ag2ihdtJ9qlkYtk4ynipI9NhEVGS/AQfVHALleWaHwJrcDlm1/7@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4CDXL+UazIAyEMvYEKQU5cKULJUMJ038LIE7yu+77a80zyJvE
+	vC/d6C9flW2XEdSfEeto/CEXUeBG4tE22VvYOHPJyS9VClJGcp0TtDyE
+X-Gm-Gg: ASbGnctAeI1XfTA8/feM0iYGUjaLwvSFXnHMz9Tgkqe2GXX7LwU0DzkbvrJ6ujFMEav
+	auOpy1ZMHle4B8NuUbOTWfkDhsXt67bJ9sli/uisg+AgK6xcEFlRuZ3EOaoY1qw89lGJ+8NbvDx
+	I5QtVyUjy3UW1wCqqKfBURoCwgr6UOdS4fMR98RW2jrdIn0l/2K8uKcsj2d9VOWaLRo2IlNlChP
+	Wn08Kvjcni10xFyikzFJT6fSlYtaR94qSVehjXAQuS1VRlYiWgGU2lYL4/WT0FMDKf8JUxUNuwf
+	pdSlVYBG5qQMjW26rmNyUx4lOZ6JAv93wreBpoKIWYIzoH2AJUKMh6+hUvHhToYCgB4pv8gFJdG
+	Y3C491F3PhHjx3fOBIBA7UowLDC1R
+X-Google-Smtp-Source: AGHT+IFib9TmmWC/xoES4S07N3qB+mzz6Jxd+1uQL5NGHKBKtwtcEj24/dbm3XlySIoRpgk/Nc5XyQ==
+X-Received: by 2002:a05:620a:1917:b0:7d2:26e8:e91b with SMTP id af79cd13be357-7d4439a6503mr2190905785a.38.1751384857643;
+        Tue, 01 Jul 2025 08:47:37 -0700 (PDT)
+Received: from fyre-x-redhat96-client-2.fyre.ibm.com ([129.41.87.1])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd771bc01bsm85230876d6.40.2025.07.01.08.47.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 08:46:26 -0700 (PDT)
-Date: Tue, 1 Jul 2025 17:46:21 +0200
-From: Petr Tesarik <ptesarik@suse.com>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Randy Dunlap <rdunlap@infradead.org>, Robin Murphy
- <robin.murphy@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Andrew
- Morton <akpm@linux-foundation.org>, Keith Busch <kbusch@kernel.org>, Jens
- Axboe <axboe@kernel.dk>, Bagas Sanjaya <bagasdotme@gmail.com>, "open
- list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list
- <linux-kernel@vger.kernel.org>, "open list:MEMORY MANAGEMENT"
- <linux-mm@kvack.org>
-Subject: Re: [PATCH v2 4/8] docs: dma-api: add a kernel-doc comment for
- dma_pool_zalloc()
-Message-ID: <20250701174621.5e8812ce@mordecai.tesarici.cz>
-In-Reply-To: <875xgct6js.fsf@trenco.lwn.net>
-References: <20250627101015.1600042-1-ptesarik@suse.com>
-	<20250627101015.1600042-5-ptesarik@suse.com>
-	<5a997777-fd14-40e1-919b-2e61a6e8d570@infradead.org>
-	<20250701133833.4060f406@mordecai.tesarici.cz>
-	<875xgct6js.fsf@trenco.lwn.net>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.50; x86_64-suse-linux-gnu)
+        Tue, 01 Jul 2025 08:47:37 -0700 (PDT)
+From: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
+To: jean-baptiste.maneyrol@tdk.com,
+	jic23@kernel.org
+Cc: dlechner@baylibre.com,
+	nuno.sa@analog.com,
+	andy@kernel.org,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
+Subject: [PATCH v2] iio: imu: inv_mpu6050: Replace scnprintf with sysfs_emit
+Date: Tue,  1 Jul 2025 08:47:20 -0700
+Message-ID: <20250701154720.54276-1-chelsyratnawat2001@gmail.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Tue, 01 Jul 2025 06:54:47 -0600
-Jonathan Corbet <corbet@lwn.net> wrote:
+Documentation/filesystems/sysfs.rst mentions that show() should only
+use sysfs_emit() or sysfs_emit_at() when formating the value to be
+returned to user space. So replace scnprintf() with sysfs_emit().
 
-> Petr Tesarik <ptesarik@suse.com> writes:
-> 
-> > Do I have to submit a v3 then?  
-> 
-> What path were you planning for this to go upstream?  If it goes through
-> docs, I can apply that tweak on the way in.
+Signed-off-by: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
+---
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-There's a reason I put docs: in the Subject prefix. ;-)
+diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+index b8656c02354a..39eb516acc73 100644
+--- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
++++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+@@ -1382,7 +1382,7 @@ inv_fifo_rate_show(struct device *dev, struct device_attribute *attr,
+ 	fifo_rate = INV_MPU6050_DIVIDER_TO_FIFO_RATE(st->chip_config.divider);
+ 	mutex_unlock(&st->lock);
+ 
+-	return scnprintf(buf, PAGE_SIZE, "%u\n", fifo_rate);
++	return sysfs_emit(buf, "%u\n", fifo_rate);
+ }
+ 
+ /*
+@@ -1409,8 +1409,7 @@ static ssize_t inv_attr_show(struct device *dev, struct device_attribute *attr,
+ 	case ATTR_ACCL_MATRIX:
+ 		m = st->plat_data.orientation;
+ 
+-		return scnprintf(buf, PAGE_SIZE,
+-			"%d, %d, %d; %d, %d, %d; %d, %d, %d\n",
++		return sysfs_emit(buf, "%d, %d, %d; %d, %d, %d; %d, %d, %d\n",
+ 			m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7], m[8]);
+ 	default:
+ 		return -EINVAL;
+-- 
+2.47.1
 
-This specific patch touches an include file outside Documentation/, but
-since it merely adds a kernel-doc comment, I believe it's still good to
-go through docs.
-
-Thanks
-Petr T
