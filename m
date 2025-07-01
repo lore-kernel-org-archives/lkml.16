@@ -1,90 +1,244 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 005FB2741AF;
-	Tue,  1 Jul 2025 12:35:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42657270ED2
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 12:36:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751373326; cv=none; b=mEbMNnsF8P12yqNFtZnQgzACDGr70OcVFKmr1WFPbJ4ctFTDfqGT/FHy3iXsfZ6Ac+ma75JdT8hUSnd25mb2BzZV4J+BulRTcUFBxTGWO7t3eb/rqUq1H2THnvo0lPjLgi3563vOtxsBUj/CgVQhTVAH8hxN88zq5Y1vXKOi2XQ=
+	t=1751373386; cv=none; b=V9g4tvD3UeBJNtEi9ihHcDxqGr1aOvbguD8kIJCo1U78x2ue9ePX2gbdLZXGC1E1Un8K1Ma03p2Yco0Mr6e6ixEJD/r33GcNnTMmIlE86V2oXqALu8clH3JiaCogc50cwMSiUrStpm/6wgU6tQAf2/z5Uy9F1u4gE5c0HjnkD5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751373326; c=relaxed/simple;
-	bh=/BnoAq4OFr24v2k5HSgqEKfU5lDzbp8O/O33lrToOFQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rqCXaLd02WVMTQkyn5KqGWDNyjv/6KkqfCMG0819atkHAcpjKsDjj84qUed+LwKN4ymJ3gYA9uy/M1H45SqGqdMJYEsMMehQ1rFyPPr9bdpN+iIbKQjDzEuiCxGXeUqaT5o3tc2K6rU7eVhgR8lj/3eSRXeK9Rg8lHOsusKrtXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uD3COvfK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751373386; c=relaxed/simple;
+	bh=RSqTIjrct88sR7CZzH6GZUrUHcWswrjRQM40/qiNezA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OjsXmsJ0yawGsH8GzSh++MRzK9D5HvHiPus0nRfsMx4K8Is/kV8KaMLAx8vBAtguU5Gir+RMDM3Zd4gi7J1fcWOQ/o/Xs3pmRMeppdujvJ/63R8VX8gK4zHAA2MarmQDXRXREgF+VcRJqxnisLC4BC7XAaO6qmz9CP5+zL/mou8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eOsvUrpJ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uD3COvfK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4D14C4CEEB;
-	Tue,  1 Jul 2025 12:35:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751373325;
-	bh=/BnoAq4OFr24v2k5HSgqEKfU5lDzbp8O/O33lrToOFQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uD3COvfKOmIPcQ0R9OjskdC7B1kylfFemuU4kRRrI4oYPX9SI8Dkm/W0PZpzPotQ/
-	 QQRoxE75s/TWkB7hCS1q6A7/0ICbhMU6eRFgJ8npaJvZ6p/ztemyJEFlnD1QfLEveW
-	 1PVbEUv+AKu1KRcogOfi0F06Cjc/vX7+HHZ4uHg0sN0IHXg7Xwmv43mf3zKCIzAFc1
-	 T5JMoKZJp3Mqmi5X1MRY4CFva+Ca8lLs6hvn2VgqvqGjvRWKYB5DAEAU/PoiecwD1D
-	 MqevOdP+jtehjTOe6tzsUbskM66zV1CRrHLJQ4keQe2FNVnClx7oiA/zLvEPwBrK0D
-	 Qq5pVsxjLXdeg==
-Date: Tue, 1 Jul 2025 05:35:21 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Jannik =?iso-8859-1?Q?Gl=FCckert?= <jannik.glueckert@gmail.com>,
-	linux-hardening@vger.kernel.org,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH] kunit/fortify: Add back "volatile" for sizeof() constants
-Message-ID: <20250701123521.GA2835771@ax162>
-References: <20250628234034.work.800-kees@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eOsvUrpJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751373384;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=BWUS58/xuFehV84IBP/7jugiRMD3VIiL2+WOvgSmr/U=;
+	b=eOsvUrpJ0LOALtwLN0WKD0VCHfgjZuKZDMRrr3VNyIeZz9lNb9PT1kY6KBkExBHb9PlTsS
+	kxfvU9XEbT87u5GwdNoCuosF7MSLTuLeDFTfhfG6qDKBOKqghg5QasveGGUHEne5Ry6Tvo
+	cE5NwaBY1GJ5AMXNXYv5L5qsufDvEcU=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-94-tgjuE-AOPB-5LWC_h8lZng-1; Tue, 01 Jul 2025 08:36:23 -0400
+X-MC-Unique: tgjuE-AOPB-5LWC_h8lZng-1
+X-Mimecast-MFC-AGG-ID: tgjuE-AOPB-5LWC_h8lZng_1751373382
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-453a5d50b81so10460125e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 05:36:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751373382; x=1751978182;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=BWUS58/xuFehV84IBP/7jugiRMD3VIiL2+WOvgSmr/U=;
+        b=E54NASLfE0xJ0KRtc4PRDP+oATHB0Lre0NU54Ji+a3iftFt7e1n6b/oTnKsA7YyKql
+         BVrNvpi1H6KfgXUjEnhvUMvLPVw0rKbosSrzxDo41DPLHXzZDC+xpQzgTlc+jNOiL3YT
+         ilqLLd8UoKV7gbcDVd4zI73njDPWOmlrgLnBfIBHrFNi2RTe2O5LeBrij4FHeRYd/z4y
+         pdxN1yftOHlNuyzlcflbhvCtMIa4uTgb9/tgbYLsRxuzmVu4zwDb0Cqz4G1LhOKrZB9t
+         IbX46dVELHAnL2oW1NnnMbnJSjF1vD8opNQs6Csi44oVcjQrhFmbFXTQT4aSiaEYIVZW
+         MVJw==
+X-Gm-Message-State: AOJu0YynDCHlDGYCRbmgEgK2SPCe4LSqsfk69QQdY15T6+k8EF0z7n8B
+	IDoZVSrV8sUfn13bI93qHr4lDblmWYGBWw7wLUgxECk0++N935Qf1l5d8j6toCYnIpFTs2JP7gn
+	QhiZUrrD4GGE2CxzrDgNEsqascRqvpg5o20mD9AOKWR/pjNTMlU9Kw8d1WPJ4TS/vNg==
+X-Gm-Gg: ASbGncub00RF9FLjAbLNOtHTPV2Nol1KDViTX9cv7wtsOjn8Uk+rex3gBz4KtNBhqVz
+	i22qhHUCAhsrWlJXaxOr3lXqobsJZE+7BIcxBueaxHMHrdA4aA69NNoAcxgv/8RRlpOSrTgSVPu
+	hdIIWrc/ePu5wZGFD5UbmB/QJpzlD/sYycFqSSYnHry9l57kjyFqMxiJl+4jLKOodvoYnno0EY3
+	14/IBjgKBusXlqK/QD8ADa1tt7q2bNmnO9jRoBXc11n7XYwIgD7UjkHJkW6Mtlp41tVV1NmOWBn
+	HrKJN+Ar50TPrIj/t8ZyH6dSVelsywlZsjI++3EF8YyHO4OkfB/86PpJgp96JIZZbIZWLp+LLJb
+	39rySVmG9gV5S8e/noBGDRZRHmw2SiKbyx/3P0XRMaLCgEWgqjg==
+X-Received: by 2002:adf:a21a:0:b0:3a5:88cf:479e with SMTP id ffacd0b85a97d-3a8fe79c8e3mr10444947f8f.48.1751373381323;
+        Tue, 01 Jul 2025 05:36:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEqIR1BDJyK8ZRp8F0lL2pM8FI7W8fcFCGvncPeyeTD2kfxRgbkByPh+KE/B8iSSRVeA4M/aQ==
+X-Received: by 2002:adf:a21a:0:b0:3a5:88cf:479e with SMTP id ffacd0b85a97d-3a8fe79c8e3mr10444867f8f.48.1751373380689;
+        Tue, 01 Jul 2025 05:36:20 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f18:7500:202e:b0f1:76d6:f9af? (p200300d82f187500202eb0f176d6f9af.dip0.t-ipconnect.de. [2003:d8:2f18:7500:202e:b0f1:76d6:f9af])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a87e947431sm13174236f8f.0.2025.07.01.05.36.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Jul 2025 05:36:20 -0700 (PDT)
+Message-ID: <9af55241-8348-46a1-8f72-5ad7e61bcd84@redhat.com>
+Date: Tue, 1 Jul 2025 14:36:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250628234034.work.800-kees@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 18/29] mm: remove __folio_test_movable()
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ virtualization@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+ Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Jerrin Shaji George <jerrin.shaji-george@broadcom.com>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>,
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+ Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
+ Ying Huang <ying.huang@linux.alibaba.com>,
+ Alistair Popple <apopple@nvidia.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Minchan Kim <minchan@kernel.org>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>,
+ Chengming Zhou <chengming.zhou@linux.dev>, Miaohe Lin
+ <linmiaohe@huawei.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>,
+ Oscar Salvador <osalvador@suse.de>, Rik van Riel <riel@surriel.com>,
+ Harry Yoo <harry.yoo@oracle.com>, Qi Zheng <zhengqi.arch@bytedance.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>
+References: <20250630130011.330477-1-david@redhat.com>
+ <20250630130011.330477-19-david@redhat.com>
+ <6e067746-9d18-4d04-a60a-536d5fee6b87@lucifer.local>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <6e067746-9d18-4d04-a60a-536d5fee6b87@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, Jun 28, 2025 at 04:40:38PM -0700, Kees Cook wrote:
-> It seems the Clang can see through OPTIMIZER_HIDE_VAR when the constant
-> is coming from sizeof. Adding "volatile" back to these variables solves
-> this false positive without reintroducing the issues that originally led
-> to switching to OPTIMIZER_HIDE_VAR in the first place[1].
+>> ---
+>>   include/linux/page-flags.h |  6 ------
+>>   mm/migrate.c               | 43 ++++++++++++--------------------------
+>>   mm/vmscan.c                |  6 ++++--
+>>   3 files changed, 17 insertions(+), 38 deletions(-)
+>>
+>> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+>> index c67163b73c5ec..4c27ebb689e3c 100644
+>> --- a/include/linux/page-flags.h
+>> +++ b/include/linux/page-flags.h
+>> @@ -744,12 +744,6 @@ static __always_inline bool PageAnon(const struct page *page)
+>>   	return folio_test_anon(page_folio(page));
+>>   }
+>>
+>> -static __always_inline bool __folio_test_movable(const struct folio *folio)
+>> -{
+>> -	return ((unsigned long)folio->mapping & PAGE_MAPPING_FLAGS) ==
+>> -			PAGE_MAPPING_MOVABLE;
+>> -}
+>> -
 > 
-> Reported-by: Nathan Chancellor <nathan@kernel.org>
-> Closes: https://github.com/ClangBuiltLinux/linux/issues/2075 [1]
-> Cc: "Jannik Glückert" <jannik.glueckert@gmail.com>
-> Suggested-by: Nathan Chancellor <nathan@kernel.org>
-> Fixes: 6ee149f61bcc ("kunit/fortify: Replace "volatile" with OPTIMIZER_HIDE_VAR()")
-> Signed-off-by: Kees Cook <kees@kernel.org>
+> Woah, wait, does this mean we can remove PAGE_MAPPING_MOVABLE??
 
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+Jup :)
 
-> ---
-> Cc: <linux-hardening@vger.kernel.org>
-> ---
->  lib/tests/fortify_kunit.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/lib/tests/fortify_kunit.c b/lib/tests/fortify_kunit.c
-> index 29ffc62a71e3..fc9c76f026d6 100644
-> --- a/lib/tests/fortify_kunit.c
-> +++ b/lib/tests/fortify_kunit.c
-> @@ -1003,8 +1003,8 @@ static void fortify_test_memcmp(struct kunit *test)
->  {
->  	char one[] = "My mind is going ...";
->  	char two[] = "My mind is going ... I can feel it.";
-> -	size_t one_len = sizeof(one) - 1;
-> -	size_t two_len = sizeof(two) - 1;
-> +	volatile size_t one_len = sizeof(one) - 1;
-> +	volatile size_t two_len = sizeof(two) - 1;
->  
->  	OPTIMIZER_HIDE_VAR(one_len);
->  	OPTIMIZER_HIDE_VAR(two_len);
-> -- 
-> 2.34.1
+> Nice!
 > 
+>>   static __always_inline bool page_has_movable_ops(const struct page *page)
+>>   {
+>>   	return ((unsigned long)page->mapping & PAGE_MAPPING_FLAGS) ==
+>> diff --git a/mm/migrate.c b/mm/migrate.c
+>> index 587af35b7390d..15d3c1031530c 100644
+>> --- a/mm/migrate.c
+>> +++ b/mm/migrate.c
+>> @@ -219,12 +219,7 @@ void putback_movable_pages(struct list_head *l)
+>>   			continue;
+>>   		}
+>>   		list_del(&folio->lru);
+>> -		/*
+>> -		 * We isolated non-lru movable folio so here we can use
+>> -		 * __folio_test_movable because LRU folio's mapping cannot
+>> -		 * have PAGE_MAPPING_MOVABLE.
+>> -		 */
+> 
+> So hate these references to 'LRU' as in meaning 'pages that could be on the
+> LRU'.
+
+Yeah, it's a historical thing.
+
+But for anything we isolated, it had to be an LRU folio (PageLRU) 
+because that's how we were even able to isolate it ... from the LRU.
+
+[...]
+
+>> diff --git a/mm/vmscan.c b/mm/vmscan.c
+>> index 098bcc821fc74..103dfc729a823 100644
+>> --- a/mm/vmscan.c
+>> +++ b/mm/vmscan.c
+>> @@ -1658,9 +1658,11 @@ unsigned int reclaim_clean_pages_from_list(struct zone *zone,
+>>   	unsigned int noreclaim_flag;
+>>
+>>   	list_for_each_entry_safe(folio, next, folio_list, lru) {
+>> +		/* TODO: these pages should not even appear in this list. */
+>> +		if (page_has_movable_ops(&folio->page))
+> 
+> VM_WARN_ON_ONCE()?
+
+Well, no, it can currently still happen. But really, movable_ops pages 
+are not folios that could ever be reclaimed that way.
+
+So the TODO highlights that movable_ops pages should never even be put 
+in a list (page->lru will go away).
+
+-- 
+Cheers,
+
+David / dhildenb
+
