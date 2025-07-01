@@ -1,157 +1,154 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2042.outbound.protection.outlook.com [40.107.220.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9BBA248866
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 15:58:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751385524; cv=fail; b=oZk8081gRIXrTpELU0hSp3DHyK5So5gJers+yvy2EWD3hcDWfTnhk1J3o5CACy6GFmbmfUO9wQUs3VJNw0oj0OiL4z57vgXCg8TmVnotz2RNmOuxJ9dr/b27iFMVFdmY/vxMAUPx9XUasy6R3GIm/ev4ASjLQI5D1yw7qb/SBR8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751385524; c=relaxed/simple;
-	bh=u9RPd/dJlUSH4tQHtMpAGm5a28cq1ZtHk02w3uT+A54=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=roNjZY8IoJdxj/+Ecy0ln3CGe4Ys2kF9vDz8RtusnNohfGa4VrdbWQOlhvS7Mffv8pFCYdglR2i7NtMlrixKnyKE0XYi9afSCVsopSOz8OXrSPu8Z4KegLrPVxpbx6C57EnDvQDufYyITxXMscIh1UUnSLopOwDeiscAV4QOt8M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ELiyKiP0; arc=fail smtp.client-ip=40.107.220.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72E6E27B4EB
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 15:58:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751385531; cv=none; b=fj/a+B+dLlBlup/j6CVjBmvjn3HWCQjhYzq/sMaa58x1klhBzHi8GamL5RGhThKGIVMD4pTJ55pZz3MAVp73aAlB2nI9p+2xhWMHoUUPIXJSS0mczpkx9EFOKdGfqjPXjnQzTbEFDwguwiOL2YGpEzOZrp8y3CNdn6t3eaeEk/0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751385531; c=relaxed/simple;
+	bh=QSAY2cavr+hAtXa06F5WuFx/c09q1MQ9F8YFB1GGlxA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IiUQMDMOLhUCDg/yb2zUNGwBV3MLvHVJjSRH6YAjv+ZlSGlyyZLccLWrWZG1WXlS7/wF20uB5NXUA5kSiw05yq7bM5BLkwMgcO0spHhl6c6rldEO9PRCpMNz9aj7OEBvK/eOeuy4FcBKevB656l8imFOnzy+RpcIjfRrD8XGAbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=6wind.com; spf=pass smtp.mailfrom=6wind.com; dkim=pass (2048-bit key) header.d=6wind.com header.i=@6wind.com header.b=NyELBZvB; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=6wind.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=6wind.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ELiyKiP0"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZcbFFcuC6OzNbtJYuRibnTTYByWneS+geXap9HwT6+ZM7jSLdiAkFdxiebcnyPBQkpVMXa7fJ8PMRQdv1U1r2k8p7LuPU/ew7VCCMxBW1c7zXM7pJJj93o5sIr8Cu2xTsTEJ0VgxNsF2ExM1am2uKIDidwDzvvt394X0x73+XqYS+b6wpmbHM9KWAnD8BjD56cPVhcx59L4Lf8fcQ0MgMqSDiEUDbnE4aP+twDEw9CM48wLCcUqBG0ka9T3mibFh0X3ms8Fr3XT4i5sM3JcjAgAHTIvcQA2n/z1DZ/WdcPO0/p9nC8ajHavRtYpu/fhPFb0mUZX7xce+akHH+BMZmw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yBx+E7bmd+xXi/LhfBvDE+2XnYAIQEm91hUQviAxHf4=;
- b=Lz0C8VH+Ku52UlzFBGH+L2a0Tyo7hgq/l48C8/cJPnNN08+yyW2AbHDLbeTtxDPgN98IUUiC5yHB8imn+XG1E1aqOlEJalMp4DXARcPiZoYLGrks2217LJ6JHUykuyQHy6hFexHe2N/COUTEBJuaTp7YLj6+xK2e9FteR5osGTtXaAP07wKIJolfugpIKU3Z9k4h51VkRaXiSiAh+Rr4zSnaIu++VGP9OXqGdkdpPpLqmOmta3EOUocydhQbDx+zj8z270QUku37nWI9+L0jxc9xHGVa81+UOIFN/8I6npZzO3CRR9c2H9AppYk0o38qHEQuhE+zSL3GhWu6g2gs3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=lst.de smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yBx+E7bmd+xXi/LhfBvDE+2XnYAIQEm91hUQviAxHf4=;
- b=ELiyKiP0QBfeUO72HBCQoVH2pvvm41pZLjZ9CZHykbrhWxwYRYkdiNXwyz/pHGKsVJ+KLDVBXcSV+zs+lXvPyOJEissBNBOFyD9MHzWmG3E4ofrajQ+XB1rOyJP0Wl2sYwFDTlPyL0qLsEfEIXsVuPm12Odj+NxbNxLFXoMl1X96nh3P6DPGA76eDs/Y8W7pk4JSy97Z5C4a/VvGZqJO1ClRUa+S7pUy7bR0N5fz2xV7snLPTqgcrYzXUomlGS6MmuHIqmhRiUMhSiQfknPxKqmNtg3mFGdy9hkw2C0DMOPJR2k4Z1JIy3niE8eoMtfp8owEizbO5WRCU6x9K2JqRg==
-Received: from BYAPR04CA0036.namprd04.prod.outlook.com (2603:10b6:a03:40::49)
- by PH7PR12MB6468.namprd12.prod.outlook.com (2603:10b6:510:1f4::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.25; Tue, 1 Jul
- 2025 15:58:39 +0000
-Received: from SJ5PEPF000001D7.namprd05.prod.outlook.com
- (2603:10b6:a03:40:cafe::b3) by BYAPR04CA0036.outlook.office365.com
- (2603:10b6:a03:40::49) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.20 via Frontend Transport; Tue,
- 1 Jul 2025 15:58:38 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- SJ5PEPF000001D7.mail.protection.outlook.com (10.167.242.59) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8901.15 via Frontend Transport; Tue, 1 Jul 2025 15:58:37 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 1 Jul 2025
- 08:58:21 -0700
-Received: from localhost (10.126.230.35) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 1 Jul
- 2025 08:58:20 -0700
-Date: Tue, 1 Jul 2025 18:58:10 +0300
-From: Leon Romanovsky <leonro@nvidia.com>
-To: Christoph Hellwig <hch@lst.de>
-CC: Keith Busch <kbusch@kernel.org>, Ben Copeland <ben.copeland@linaro.org>,
-	<linux-kernel@vger.kernel.org>, <lkft-triage@lists.linaro.org>,
-	<regressions@lists.linux.dev>, <linux-nvme@lists.infradead.org>, "Dan
- Carpenter" <dan.carpenter@linaro.org>, <axboe@kernel.dk>, <sagi@grimberg.me>,
-	<iommu@lists.linux.dev>
-Subject: Re: next-20250627: IOMMU DMA warning during NVMe I/O completion
- after 06cae0e3f61c
-Message-ID: <20250701155810.GE6278@unreal>
-References: <CAL0q8a6pOBZbWYdwKzC1U-PuH4rgf2miv0jcF=fWVZt_dUZHmw@mail.gmail.com>
- <20250630133343.GA26040@lst.de>
- <aGLyswGYD6Zai_sI@kbusch-mbp>
- <20250701132936.GA18807@lst.de>
+	dkim=pass (2048-bit key) header.d=6wind.com header.i=@6wind.com header.b="NyELBZvB"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a4eed70f24so789661f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 08:58:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=6wind.com; s=google; t=1751385527; x=1751990327; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:content-language
+         :from:references:cc:to:subject:reply-to:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=YhrekkuV81u85I0nCYoyFYWO/iQISbDoWTniOveqI+w=;
+        b=NyELBZvBrHycyMWM1vTcTDddjbbJVdm+b9HYHFBktbGVHdgTePCtzZDjdWdV0Ah/vP
+         Q8fesE9oqpdkA7Ji74z/t90QaVhzuWwBGuSIlckEazZAcDawlnZ8nC0LZh/g9PClw9tp
+         RwQzM4D0qJc4X9jXzBDRTPdqjhcG/2u6YqrIDJjDTLqoUWRT3uyIMHZaVw+D1ZCdH698
+         loQPti7htEhOEY+VlDX23yS0LPjzApS110pi5jw/PYUkCcYoQLF4NDwaX8BI3jFQg0uq
+         u4n4rQ5XyXSJb+foXeXFBZEUNVQcIC6yLUlitTaQExoahg2msvRohSdiUkxrT59GeSMt
+         iMwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751385527; x=1751990327;
+        h=content-transfer-encoding:in-reply-to:organization:content-language
+         :from:references:cc:to:subject:reply-to:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YhrekkuV81u85I0nCYoyFYWO/iQISbDoWTniOveqI+w=;
+        b=abR2v2BZIy92M76f9AfQ+YTrIkYrXmfOJWUaFV0cMCcHtDw1GTaGdoW+E/8sbqkO37
+         OxKcnnJ0HerzvdINXgmVdndEJ3uZTeLbGziDr1EaqjXeD0Ln8ZgPHSZfwHFzHJZpMj7f
+         /3vDoz021BkMCvhfFrWFcvpprjA+cvXVVuFhvF8CAiT2A9qAxsS3a0wNDwynsB1KPU42
+         3IVUTa9YZ3hAFOy20EDplOMKDbmAqpXqdKp6ADQKSs0JG8jewFA/PX+ugANqcYNXVPKX
+         zeXEUy5qXNMZZgyQJdZl8fK/K1zJ064uzxF3/DwzhGtXh/oCswXQo5nukUAgcybpP9BC
+         XEUA==
+X-Forwarded-Encrypted: i=1; AJvYcCVZaHLMEVDXX2U5qtFmoBXgwTzWoE14cpVg2WAZMvN8leOoFXhDfx7H3FXzkgFrXOdTKEL3J+MlInmvwZE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywru2oahDP3RVGpAwmFH5L8Vi5kWtX0eypbBzoy19Tbe/dUNZwK
+	bAgUUIHBjjbA0ByNTm7HNF+AfhRrxGVKL7/mpM/hP082Fdt/5bK5jtbMLBWxXuSUDNc=
+X-Gm-Gg: ASbGncsWGwhMTlQhxptzh7bNstq1RGjDiazw/wUHgv8jCWuFkZ0QiI/GKBmDt5ROARM
+	qP26fvYj47qCGmbTCZfZ9Q4fVh1B+JQ86xH3pIUPAPeEjKWCEuf+RIGlBaojvz4z7q4g7+b81Mw
+	P2MYGmIwfQZGmH5bDaDp+fvfuckeBDfmkpttKQza6fG1tUb7SH9+MAM+esa2UcVDbN5pWVXe3Fn
+	IpczOCb1qQIG3Fp1ADnEIo2QCXS7D6rDMCV/m4XhAh0RE/bXkoChl0urK4orkHqOemTgo/nDA5K
+	vZS/zOk3fbJb4314LL8advYFp/ZIplV6qRQf1fa9jq4C1wOA3dvu89aZPjkMCYpMDnaBSJFyXrg
+	58Ng2QQmVRKz8Ei4IknpKpU4C7m/sD9HUK+OH
+X-Google-Smtp-Source: AGHT+IEgqW2tesitKhmnUcBygNXVUscrvykBlr5WbS8x1oTHDseSXjU/Z8mwQaDABjFVm8GOa4CGSA==
+X-Received: by 2002:a05:6000:18a9:b0:3a4:f912:86af with SMTP id ffacd0b85a97d-3af23ad08d1mr1306061f8f.2.1751385526598;
+        Tue, 01 Jul 2025 08:58:46 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:b41:c160:3c4c:7e68:5ff:ce49? ([2a01:e0a:b41:c160:3c4c:7e68:5ff:ce49])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538233c523sm198939125e9.6.2025.07.01.08.58.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Jul 2025 08:58:45 -0700 (PDT)
+Message-ID: <40dffba2-6dbd-442d-ba02-3803f305acb3@6wind.com>
+Date: Tue, 1 Jul 2025 17:58:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250701132936.GA18807@lst.de>
-X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D7:EE_|PH7PR12MB6468:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5c8dcf32-8b62-4c5a-415f-08ddb8b823d1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|7416014|376014|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?B+0w7qzYCFJBAJz6hmjTzbnxu6yEGtc3YeH48TloZJ0476Ytdd+gca69xJLs?=
- =?us-ascii?Q?TFNXpKoNb5cqXmmj5lRQmOYl9ARcelpPJmUUrx/YVJEfLiotGaW53M+OajK1?=
- =?us-ascii?Q?EmITYjh+zOmCpEb8NXdlU2W097AvNh10ePG/ezOm0EzkXeUpNUmoSenKuyKd?=
- =?us-ascii?Q?dtc+bPOT4UeiFz6YRhTu3L0lbeGrshpbeW9T3UR9v3wwAQeclEVJu5VBAvtM?=
- =?us-ascii?Q?hQ9WXUdXDPUEM6Mhp2RLxzNiQCi1BWZimULMxyoEDmhhAeHsby2k/hxOknby?=
- =?us-ascii?Q?SNjR8qRbdwvJnsVaGKXT5HemkjOgQEu7XyfaOcJNTg0+twBQOErIcPKOmpJE?=
- =?us-ascii?Q?TORyJHQr4zPtWiit3iO5iMiulaFjT7ausRsB/Jq0iJHvr4NurFrjieoapEF5?=
- =?us-ascii?Q?PbTPMjxVm7S9WjQ0/0K8jqW5ffGqw7/nYtDaUiAs4qDdussyQHWZzO1ja6c/?=
- =?us-ascii?Q?x39iHT/gJKGQdmJM59bA4vXfhGF+4F+2zcOdu8Adp9di8/zTG75hqzPOaKWe?=
- =?us-ascii?Q?lqomQ52F5wcYk8n+ewBwdwo3R0OLve9jZhby3tu5Q63E+IArYXvrtyalok3S?=
- =?us-ascii?Q?QByqvOK8LulJmfeLHquuCT+qLDDQW8C1UGuOpD0XGAXIxNVNbk8bC+Jr1alF?=
- =?us-ascii?Q?8K38cZp6qmIamwvlkgo0Tf0fI9EjJanY5SAO+O9FlnAJPWPFfJ+BCrFBPZVK?=
- =?us-ascii?Q?aPSGId9aWKV1Q4pi3INtdGahHWu7Ih9uyxxcQIhKZ6Aj/sST4jgl7kvmIdQY?=
- =?us-ascii?Q?WgX/iAIPwBR/4ZvmdGEmR4xbX4G1X19uc+LVwN7GmltRPe+PwxFUOtjkFqzS?=
- =?us-ascii?Q?/Hre/INQ+by/VtvCLMdpWCju6TkzuPRHwiYRipXtgouImR2oUlIMCeDLnzzB?=
- =?us-ascii?Q?ENmyr7F5mSanYE0a+DjqhUGh/yPBzWGypJRFlVaoe4aaTNWCwqdRXB4QdfLT?=
- =?us-ascii?Q?wUQjaliqUORIzO9avsj37xom94gZRnz5USTR6vA6JMgsQMLawHcsXWnr2OQ6?=
- =?us-ascii?Q?gDlRQ51hr/dRYk+xpcyiX6Licn+a7dOclCYkwGGOwLJn0L0aLeqqClGsZWrn?=
- =?us-ascii?Q?v5ltdw9RcDLLvSl7B7AS+vSpes0G90ShfJILqeFNKg0oQQXKPZx45OOy2dG4?=
- =?us-ascii?Q?NSFo33fxJRFfrtGNAXTyL98nmwHKuTC8dwpeZBgBzDHNvONEbpSSa91H832X?=
- =?us-ascii?Q?3RVsIj23IZhxCFHhznEScOn992lHhLfJvfYQ9DUT8TRK2JrfdRGCzr7fHeP4?=
- =?us-ascii?Q?Yx493BLtpc37APjqm1HDlGStBvEDrDFk9Z3nZhWIA1gusjaft/Shm0mWT4oI?=
- =?us-ascii?Q?oJbQvEF8dPKH6XAwB68aKzJt05nLap9F9/5TRMcFIqLIbx08NtqoEXPPClLO?=
- =?us-ascii?Q?ZFqzkKmTKahrhcO/819QnqrJ65Ce7FWteMGkUVftgMW25Da1D/AMebCgyVTF?=
- =?us-ascii?Q?zCXojeZeUvzouP0zWnjOB3pv9Jk/LjMBBdWurcG5vfeDfDezRbf1YPXPrWKP?=
- =?us-ascii?Q?Yc2VKAU+ilCETO33DcvEpq5joSLGEuljFcs0?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(7416014)(376014)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2025 15:58:37.0604
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5c8dcf32-8b62-4c5a-415f-08ddb8b823d1
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001D7.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6468
+User-Agent: Mozilla Thunderbird
+Reply-To: nicolas.dichtel@6wind.com
+Subject: Re: [PATCH v2] ipv6: add `force_forwarding` sysctl to enable
+ per-interface forwarding
+To: Gabriel Goller <g.goller@proxmox.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ David Ahern <dsahern@kernel.org>
+Cc: netdev@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250701140423.487411-1-g.goller@proxmox.com>
+From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Content-Language: en-US
+Organization: 6WIND
+In-Reply-To: <20250701140423.487411-1-g.goller@proxmox.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 01, 2025 at 03:29:36PM +0200, Christoph Hellwig wrote:
-> On Mon, Jun 30, 2025 at 02:25:23PM -0600, Keith Busch wrote:
-> > I think the PRP handling is broken. At the very least, handling the last
-> > element is wrong if it appears at the end of the list, so I think we
-> > need something like this:
+Le 01/07/2025 à 16:04, Gabriel Goller a écrit :
+> It is currently impossible to enable ipv6 forwarding on a per-interface
+> basis like in ipv4. To enable forwarding on an ipv6 interface we need to
+> enable it on all interfaces and disable it on the other interfaces using
+> a netfilter rule. This is especially cumbersome if you have lots of
+> interface and only want to enable forwarding on a few. According to the
+> sysctl docs [0] the `net.ipv6.conf.all.forwarding` enables forwarding
+> for all interfaces, while the interface-specific
+> `net.ipv6.conf.<interface>.forwarding` configures the interface
+> Host/Router configuration.
 > 
-> Yeah.
+> Introduce a new sysctl flag `force_forwarding`, which can be set on every
+> interface. The ip6_forwarding function will then check if the global
+> forwarding flag OR the force_forwarding flag is active and forward the
+> packet.
 > 
-> > But even that, the PRP setup doesn't match the teardown. We're calling
-> > dma_map_page() on each PRP even if consecutive PRP's came from the same
-> > dma mapping segment. So even if it had been coalesced, but if the device
-> > doesn't support SGLs, then it would use the prp unmap path.
+> To preserver backwards-compatibility reset the flag (global and on all
+> interfaces) to 0 if the net.ipv6.conf.all.forwarding flag is set to 0.
 > 
-> Yes, that's broken, and I remember fixing it before.  A little digging
-> shows that my fixes disappeared between the oct 30 version of Leon's
-> dma-split branch and the latest one somewhere.
+> [0]: https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt
+> 
+> Signed-off-by: Gabriel Goller <g.goller@proxmox.com>
+> ---
 
-Oct, 30 belongs to RFC/first version of patches.
+[snip]
 
-Thanks
+> @@ -896,6 +907,16 @@ static int addrconf_fixup_forwarding(const struct ctl_table *table, int *p, int
+>  						     NETCONFA_IFINDEX_DEFAULT,
+>  						     net->ipv6.devconf_dflt);
+>  
+> +		/*
+> +		 * With the introduction of force_forwarding, we need to be backwards
+> +		 * compatible, so that means we need to set the force_forwarding global
+> +		 * flag to 0 if the global forwarding flag is set to 0. Below in
+> +		 * addrconf_forward_change(), we also set the force_forwarding flag on every
+> +		 * interface to 0 if the global forwarding flag is set to 0.
+> +		 */
+> +		if (newf == 0)
+> +			WRITE_ONCE(net->ipv6.devconf_all->force_forwarding, newf);
+Hmm, is this true? Configuring the default value only impacts new interfaces.
+And before your patch, only the 'all' entry is took into account. In other
+words, configuring the default entry today doesn't change the current behavior,
+so I don't see the backward compat point.
+
+> +
+>  		addrconf_forward_change(net, newf);
+>  		if ((!newf) ^ (!old))
+>  			inet6_netconf_notify_devconf(net, RTM_NEWNETCONF,
+
+[snip]
+
+> +static int addrconf_sysctl_force_forwarding(const struct ctl_table *ctl, int write,
+> +					    void *buffer, size_t *lenp, loff_t *ppos)
+> +{
+> +	int *valp = ctl->data;
+> +	int ret;
+> +	int old, new;
+> +
+> +	old = *valp;
+> +	ret = proc_douintvec(ctl, write, buffer, lenp, ppos);
+> +	new = *valp;
+Maybe you can limit values to 0 and 1, like it was done in the v1.
+
+
+Regards,
+Nicolas
