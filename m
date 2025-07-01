@@ -1,154 +1,173 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C069426B2A3
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 13:58:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE10277C9B;
+	Tue,  1 Jul 2025 13:58:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751378321; cv=none; b=j0VzXNIBHN0nrZWsw0oCx8Z5H5MGuQje21wNfaF+pScnJiYeTew3tQveMHlDxwiiwq70sgkzt7wR6IucLNHDAefkLD5IODGwAhiw7nP3ReRObPYsQtFPCB+uMqnXYqDlA0nF4gVwCRGoXt8qOawVsHCLYInNTLq8bnUQwWRS4TU=
+	t=1751378328; cv=none; b=MmF1U7JRTh+2ZahY02wnS4rlo8YJpv9f67BLC2JqVDF9kGm1hRrSzC4fMvBaw0R3spbtjCD7beGMaQaN17G9m07j43GMDxlOKx/PDpVX/8uJ5st9Qd6C3gaFAd2kXOm8EMNdUcOoNIKdaEDdCaBruYnHejzKbHtEjmrp2xjsfFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751378321; c=relaxed/simple;
-	bh=LAJx6orkCDOYtySCgavN0b29eXKWDYf2ZDwlrOBZFWg=;
+	s=arc-20240116; t=1751378328; c=relaxed/simple;
+	bh=k5YuJ8lV1sMUG2HteB1C+MrsY6d0iVhp6dDuIDS8ZKo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OiJCG2bF11rk9Tmf5cXyZspQjZpGs2XnCV3GCrTVmw83uBuK9v1QCWei+5+hz891XIra9qoFmDWCHvy8st+mwM0WQzImb6omls5HRM+5hH206SHvR0QW2BTve50Gn6SaaRjf9ROeR56EiR4SkkbtC/fMMGhkM/Y5yDW4kJrA6z4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=HfD9ep41; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=SonV6zLZX+7ByEcbFX4wIWHGi99z4+lnKiPfkAwXcUfxWaE3UXywZlOWK6QFTjbRxUfExZAlnftgshvVW6QU4z+ztr1WSwoQsdVdya379N93X+1neFqCJ9kAbTAzw9VLLqwKVfR78+VHJOIcXMnp7EAiNpDFXky9BPS0166vpHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=JkU4Zoo1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="HfD9ep41"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ae0a0cd709bso1325720866b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 06:58:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751378318; x=1751983118; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LAJx6orkCDOYtySCgavN0b29eXKWDYf2ZDwlrOBZFWg=;
-        b=HfD9ep41EZ2K48tldagWmkSGYZYIGZE84ao+oDsMUHHqKv7lyHop2RhOfB4D6ZKV+y
-         sHN+z6sR8MMkYzZDc0GZybPWwniHXsCsSU/yMTHWPyfri4flsbsCojulCFGHpqSeOJZz
-         7f07XLEdts83gojGJNRl9YgNjQTt12qTL7bzQ2r32q1EY6JJLXCVeaHEt7yrssNEAhDU
-         1ybGv5TAv/PSpwVzMV9RkTrAMKS2u3HUSDZLWp8JngxGw6RjWrBKEkmPev0I2AIAmaLS
-         Mi30E+GrjtW3VCKEkT9vbAaqxTdVOCrvdfEtg09wlr006KPUp+w7KQjBYNf+25199HUI
-         HQJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751378318; x=1751983118;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LAJx6orkCDOYtySCgavN0b29eXKWDYf2ZDwlrOBZFWg=;
-        b=fJ6cIO8N4T+isDE6gz8KK5dEa5PMktoGGaoLgp5XUChXpLTHQxxZVMPdTBxemLqeAj
-         jduPhgicpr1j6zie+OIxdowI4LPUxTZKozjzblMdBKozQz12s98Q/IokvljFaktjJ6aQ
-         40og1CysVX3OtxSMAVx0gk5ddDQMYxOs/MW+Q/s1Juy83tUn4dkpP/9ZuShDk1wOETc9
-         HwRqxkSzZZq4Bs25vB2t86U6AjPUdAzMMuCgBN8/UbM/3pPMSESpzqq+aE9VdR+nSqwh
-         MyGO0m0pGHnMZd+9cHTPcWv2qWAxZU3FGn4i2yH7sdbGWkaxzZkW/m8DLlbKmVFkwfKq
-         +zjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUhZqej2B0YctxNaIaky/tGJJttPtFvyB/FyvYxAfJFiR9zGadcaseCSBUZ1zYD/k68wgwgGXMjdvUIwPQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJ88JjVm9KDQgnzalpTgKqRMDrWuYjbeNkhQ/xGXDmDwAclXYz
-	FDOooAwb76QY8ntT4dBBreMvIAnh2zc4TwhG3Nn5nDvoPHSvmIXhOiI7YomqCDAje2Y=
-X-Gm-Gg: ASbGnctAN50bC9Cs/xNpExFxOmCJWLb6hciC5R4SIhRkN865nN2W9NOCSEQxceF0sL5
-	ISdAEPsvwdX51oQqFWh2QZN3jQRLx6TLNPwbeqKAimQchKpJofTCkFyEOIOy9YzYZN+xwtAgI/u
-	7qFdtnYdG0CKtYSKOcjil1B3xkYk2dPdxlND2QApgD1IcmH+ZhXF+gxSlVuHuWByDksh8dfOteX
-	T2NrPkb89O6Rkz5OlWvB3grzMN5QLltlZ8Aa2/JyMfli5fIgNoyncQAEjlovRKBZfXdwnLbU0Xd
-	hanqnP+E1XD48FrH8gaIrQlFI4lmHhuC07zpmAD+EZFhYbWQU7tRQrl/2IuK7ilrMBrb3ryUXvv
-	5mF/M31e39GMqr4yaysxk7rMyAUT9
-X-Google-Smtp-Source: AGHT+IEErW/1m6kWJI/QUl1/GgPvWkXJOdlssf+ecP9RtQLtNt2Q/z8dOm0v3kXyntLM7RrDaEuzZQ==
-X-Received: by 2002:a17:907:6089:b0:ae0:c092:ee12 with SMTP id a640c23a62f3a-ae3b0b3b182mr228151766b.22.1751378317932;
-        Tue, 01 Jul 2025 06:58:37 -0700 (PDT)
-Received: from localhost (p200300f65f06ab0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f06:ab04::1b9])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ae353ca2159sm895363066b.178.2025.07.01.06.58.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 06:58:37 -0700 (PDT)
-Date: Tue, 1 Jul 2025 15:58:35 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Agustin Vega-Frias <agustinv@codeaurora.org>, 
-	Marc Zyngier <maz@kernel.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Markus Schneider-Pargmann <msp@baylibre.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH] irqchip/qcom-irq-combiner: Rename driver struct to end
- in _driver
-Message-ID: <53ugz6qg3rfgpcokrre6sqfr73tdjwiz67dvgvlnbiu6kkyc5u@bapjxdheqrzt>
-References: <20250630172333.73614-2-u.kleine-koenig@baylibre.com>
- <87ldp9m7la.ffs@tglx>
- <gbjim7wxszmwfvm523bgyfxf5mk5773pafdxnf2wf4mgaebsmz@qfeejv4ilwxv>
- <877c0smgip.ffs@tglx>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="JkU4Zoo1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8167C4CEEB;
+	Tue,  1 Jul 2025 13:58:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751378328;
+	bh=k5YuJ8lV1sMUG2HteB1C+MrsY6d0iVhp6dDuIDS8ZKo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JkU4Zoo1OQGadM9EygF5D+sXgZA2WXgL9tgo+xdMM91hXMebs9STMEK9g+trVhWUW
+	 KonbWPQEb1eoLevCIzhAxgM3LhRJUHNUZSl3nuuQn6s8knUlHMNta0BsLKwpi/8S6u
+	 vn6k8UufEpL9hB96lo8msLZvKArriTwy7XDzUfoc=
+Date: Tue, 1 Jul 2025 15:58:45 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Matthew Maurer <mmaurer@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Timur Tabi <ttabi@nvidia.com>, Benno Lossin <lossin@kernel.org>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	Dirk Behme <dirk.behme@de.bosch.com>
+Subject: Re: [PATCH v8 4/6] rust: debugfs: Support arbitrary owned backing
+ for File
+Message-ID: <2025070131-icon-quarters-0c16@gregkh>
+References: <20250627-debugfs-rust-v8-0-c6526e413d40@google.com>
+ <20250627-debugfs-rust-v8-4-c6526e413d40@google.com>
+ <5c3a2289-01c5-413e-9d7c-88a41c3f54e2@kernel.org>
+ <CAGSQo038u_so+_pMRYj0K546zNfO5-eqoXFivXsEF6ACK=Y5cw@mail.gmail.com>
+ <ce8f428b-fcb0-48dc-b13e-6717c9a851b4@kernel.org>
+ <CAGSQo02hyJncD1oTpUMgiSZeX5UYYY2p-WZTyroQJJ6fMnOrCQ@mail.gmail.com>
+ <aGLUl7ZtuQBPoCuv@pollux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ew7zmkwgcjmemgph"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <877c0smgip.ffs@tglx>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aGLUl7ZtuQBPoCuv@pollux>
 
+On Mon, Jun 30, 2025 at 08:16:55PM +0200, Danilo Krummrich wrote:
+> On Mon, Jun 30, 2025 at 10:49:51AM -0700, Matthew Maurer wrote:
+> > On Mon, Jun 30, 2025 at 10:39 AM Danilo Krummrich <dakr@kernel.org> wrote:
+> > >
+> > > On 6/30/25 7:34 PM, Matthew Maurer wrote:
+> > > > On Mon, Jun 30, 2025 at 10:30 AM Danilo Krummrich <dakr@kernel.org> wrote:
+> > > >>
+> > > >> On 6/28/25 1:18 AM, Matthew Maurer wrote:
+> > > >>> +    fn create_file<D: ForeignOwnable>(&self, _name: &CStr, data: D) -> File
+> > > >>> +    where
+> > > >>> +        for<'a> D::Borrowed<'a>: Display,
+> > > >>> +    {
+> > > >>> +        File {
+> > > >>> +            _foreign: ForeignHolder::new(data),
+> > > >>> +        }
+> > > >>>        }
+> > > >>
+> > > >> What's the motivation for the ForeignHolder abstraction? Why not just make it
+> > > >> File<D> and store data directly?
+> > > >
+> > > > 1. A `File<D>` can't be held in collection data structures as easily
+> > > > unless all your files contain the *same* backing type.
+> > >
+> > > That sounds reasonable.
+> > >
+> > > > 2. None of the APIs or potential APIs for `File` care about which type
+> > > > it's wrapping, nor are they supposed to. If nothing you can do with a
+> > > > `File` is different depending on the backing type, making it
+> > > > polymorphic is just needlessly confusing.
+> > >
+> > > What if I want to access file.data() and do something with the data? Then I'd
+> > > necessarily need to put my data in an Arc and reference count it to still be
+> > > able to access it.
+> > >
+> > > That doesn't seem like a reasonable requirement to be able to access data
+> > > exposed via debugfs.
+> > 
+> > `pub fn data(&self) -> D` would go against my understanding of Greg's
+> > request for DebugFS files to not really support anything other than
+> > delete. I was even considering making `D` not be retained in the
+> > disabled debugfs case, but left it in for now for so that the
+> > lifecycles wouldn't change.
+> 
+> Well, that's because the C side does not have anything else. But the C side has
+> no type system that deals with ownership:
+> 
+> In C you just stuff a pointer of your private data into debugfs_create_file()
+> without any implication of ownership. debugfs has a pointer, the driver has a
+> pointer. The question of the ownership semantics is not answered by the API, but
+> by the implementation of the driver.
+> 
+> The Rust API is different, and it's even implied by the name of the trait you
+> expect the data to implement: ForeignOwnable.
+> 
+> The File *owns* the data, either entirely or a reference count of the data.
+> 
+> If the *only* way to access the data the File now owns is by making it reference
+> counted, it:
+> 
+>   1) Is additional overhead imposed on users.
+> 
+>   2) It has implications on the ownership design of your driver. Once something
+>      is reference counted, you loose the guarantee the something can't out-live
+>      some event.
+> 
+> I don't want that people have to stuff their data structures into Arc (i.e.
+> reference count them), even though that's not necessary. It makes it easy to
+> make mistakes. Things like:
+> 
+> 	let foo = bar.clone();
+> 
+> can easily be missed in reviews, whereas some contributor falsely changing a
+> KBox to an Arc is much harder to miss.
+> 
+> > If you want a `.data()` function, I can add it in,
+> 
+> I think it could even be an implementation of Deref.
+> 
+> > but I don't think
+> > it'll improve flexibility in most cases. If you want to do something
+> > with the data and it's not in an `Arc` / behind a handle of some kind,
+> > you'll need something providing threadsafe interior mutability in the
+> > data structure. If that's a lock, then I have a hard time believing
+> > that `Arc<Mutex<T>>`(or if it's a global, a `&'static Mutex<T>`, which
+> > is why I added that in the stack) is so much more expensive than
+> > `Box<Mutex<T>>` that it's worth a more complex API. If it's an atomic,
+> > e.g. `Arc<AtomicU8>`, then I can see the benefit to having
+> > `Box<AtomicU8>` over that, but it still seems so slim that I think the
+> > simpler "`File` is just a handle to how long the file stays alive, it
+> > doesn't let you do anything else" API makes sense.
+> 
+> I don't really see what is complicated about File<T> -- it's a File and it owns
+> data of type T that is exposed via debugfs. Seems pretty straight forward to me.
+> 
+> Maybe the performance cost is not a huge argument here, but maintainability in
+> terms of clarity about ownership and lifetime of an object as explained above
+> clearly is.
 
---ew7zmkwgcjmemgph
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] irqchip/qcom-irq-combiner: Rename driver struct to end
- in _driver
-MIME-Version: 1.0
+I'm agreeing here.  As one of the primary users of this api is going to
+be a "soc info" module, like drivers/soc/qcom/socinfo.c, I tried to make
+an example driver to emulate that file with just a local structure, but
+the reference counting and access logic just didn't seem to work out
+properly.  Odds are I'm doing something stupid though...
 
-On Tue, Jul 01, 2025 at 11:01:18AM +0200, Thomas Gleixner wrote:
-> On Mon, Jun 30 2025 at 21:40, Uwe Kleine-K=F6nig wrote:
-> > On Mon, Jun 30, 2025 at 08:01:53PM +0200, Thomas Gleixner wrote:
-> >> On Mon, Jun 30 2025 at 19:23, Uwe Kleine-K=F6nig wrote:
-> >> > The modpost section mismatch checks are more lax for objects that ha=
-ve a
-> >> > name that ends in "_probe". This is not justified here though, so re=
-name
-> >>=20
-> >> That's a truly bad design or lack of such.
-> >>=20
-> >> Why can't this muck use foo_driver(name) foo_probe(name) annotations to
-> >> make it entirely clear what is tested for instead of oracling it out of
-> >> the name itself. That would make it too easy to understand and analyse.
-> >
-> > I don't understand what you're suggesting here. Either I got it wrong or
-> > it is insufficient because every object is checked, not only the driver
-> > structs. That would result in more exceptions/special cases than we have
-> > now.
-> >
-> > Anyhow, I agree that depending on the name is unfortunate, maybe we can
-> > come up with something more clever?
->=20
-> That's what I was referring to. Doing checks based on struct names is a
-> bad idea. Having distinct '...driver_probe(name)' and ...driver(name)'
-> macros to distinguish the functionality is the proper thing to do and
-> way simpler to analyse than names.
+So a file callback IS going to want to have access to the data of type T
+that is exposed somehow.
 
-A driver struct should have no reference to .init.text (i.e. no callback
-to a function marked with __init) no matter if it is registered using
-module_platform_driver_probe() or module_platform_driver(). But even if
-the requirements for those were different, how do you signal in the
-binary if the driver was registered using the normal (i.e
-platform_driver_register()) or the platform_driver_probe() way? Or do
-you want to check the source file?
+And debugfs is NOT for performance things, but really, how bad could it
+be?  :)
 
-And note that if you have that, you covered only platform drivers, with
-a bit of luck mostly all drivers (note that console drivers are special
-and are allowed to have an __init callback). modpost checks all objects,
-not only driver structs.
+thanks,
 
-Best regards
-Uwe
-
---ew7zmkwgcjmemgph
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhj6YgACgkQj4D7WH0S
-/k6Usgf/VQP7NM8MPg+CfR2etODmmBWc4JfKDQlAng0P/qelWDhiNY9LzE3y8ApZ
-Gxx6fIqmcBIU1xHF0+ti0JuOdYyn0baF6SWauNZ+ALSRAYA4HmCJHnnvXzAfWIe8
-OzeOfxSjgQLVmfuG2SWsRpjTwYZdQpVBIp6yZVNcf05vBHJfSq8Gywu7kYXCPAs4
-0wgGcYfav+7ZadCczVuDd5P5rW2cQzpoSoFaAyGm8Gw3rKu5xEBxUfIATfxWBjTc
-nlwkteyoUWXwp3xfWOK5UvKFgg4HA0YaoL5+X3bpn70tVLld/0lp1OWEGEnJvdn9
-Fseh/gg5shlM22YYWg5a/+OnxHZLag==
-=HqPr
------END PGP SIGNATURE-----
-
---ew7zmkwgcjmemgph--
+greg k-h
