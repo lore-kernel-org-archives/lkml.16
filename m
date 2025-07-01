@@ -1,105 +1,72 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23628274B50;
-	Tue,  1 Jul 2025 13:06:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 892DA14A60C;
+	Tue,  1 Jul 2025 13:06:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751375200; cv=none; b=kUPhE/liqmOsFD1IeGZCoRTD21wyD3u5UX1r1HDjN/S1hgIbCcEQ0whw/9YrjBQVu0bLCURNMa4bMOVkMyCkk8mlo6QuRzaK+1TW9kVXBrI6ltSZyoa/4DFGEiwJK3yuW6cOlD4SnLks++CBLsejcAikHG793xMDODYEfnwf2E4=
+	t=1751375215; cv=none; b=iU3HHLop3DtLst70IL9hvNm2sJRWtlUSgS//S0K7fRlviDuye/mrM2A2TMvWUkAK6qGJ7XzPmzPM1xqLPK9Z5KcSmOeo+tqwGrIn6jLF7KpW7X2fbdi7oQBXoQNHKE7u4stVIbhhEutJjZHT4ChZoMpgjTbTrps0TdywLg797Zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751375200; c=relaxed/simple;
-	bh=b/R85Pa8b8YKsnIA1JXyJ2vMh/TmQal1ZDw62B1Mef4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Wjj3MUTDC6gvqObNEid0UIphWRt9CGcHkkbpGzfTkdI/yn+YEzoTegJM6gw9t2+vVab9nvlOb4S3itnrNFSKjpMgv/Nti/TNwW3ZflRAcsuh5SskjWPLlW5XKg6dHj0ahVDAH+Yj3EW4Gxkw8NXhJsaLRWZZlTrgjLyu0ozRARw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=l5winQAD; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1751375215; c=relaxed/simple;
+	bh=fuT/LDLh5OxFNOcsCU4pYYDRvoCcLPF3BEgrFESR5YU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JtEbAUUKyA/VJQzHme6DV6UevfDWh9FIV6tYXkX6XyUc0EV8kHh9qRisFbKOFftrUd0MlnNDK2AQQQ3vOKfONnFEo4FqWuKNxeRft5IdlQToBkJRSCnbrY5ysBmo1wQjfj4HHoowNQ/aP/clqqpRsdAYedy43/His/7Mo6NZYro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=eZ07VeVY; arc=none smtp.client-ip=1.95.21.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="l5winQAD"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 35B0943A14;
-	Tue,  1 Jul 2025 13:06:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1751375195;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=99KCsRPASfdiAb1s/3gUtMX8boYUlanoI/1WCWeVSw4=;
-	b=l5winQADrXz8gIFWK5wKV2JNiNfKaposaPOmuhFtP3RWMLckru+ktlOBDYBYatPk7/pYph
-	2O0aK5Rio/Yr2gVKS2nqqqV/LYt8/UGWoroQdnE5LprHQ+SJzv0+eWON2NhLJhUuB64230
-	ihJ18E1orVcjGc7LocSS1+ZzCCAcH4SknDldVzVrKTow8mSdmM3Kp0kLILsFfIymZ1RQvX
-	/W6wVpMaVh9yVDea/5a84QTl5BP5gubO+PnkTZQ1DdToN6T1Mf7f7J1SIIWJv3oeZ1fXXK
-	+FdSklsyEpll2Xiv5BxRjU8EdRVyo8X29XvnpsAAk+mmMQPEFNQAaUpVCPcCEg==
-Date: Tue, 1 Jul 2025 15:06:31 +0200
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: Simon Horman <horms@kernel.org>
-Cc: davem@davemloft.net, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- thomas.petazzoni@bootlin.com, Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski
- <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
- linux-arm-kernel@lists.infradead.org, Christophe Leroy
- <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
- Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit
- <hkallweit1@gmail.com>, Vladimir Oltean <vladimir.oltean@nxp.com>,
- =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>, Marek
- =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>, Oleksij Rempel
- <o.rempel@pengutronix.de>, =?UTF-8?B?Tmljb2zDsg==?= Veronese
- <nicveronese@gmail.com>, mwojtas@chromium.org, Antoine Tenart
- <atenart@kernel.org>, devicetree@vger.kernel.org, Conor Dooley
- <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob
- Herring <robh@kernel.org>, Romain Gantois <romain.gantois@bootlin.com>,
- Daniel Golle <daniel@makrotopia.org>, Dimitri Fedrau
- <dimitri.fedrau@liebherr.com>
-Subject: Re: [PATCH net-next v7 04/15] net: phy: Introduce PHY ports
- representation
-Message-ID: <20250701150631.0256539b@fedora.home>
-In-Reply-To: <20250701130243.GA130037@horms.kernel.org>
-References: <20250630143315.250879-1-maxime.chevallier@bootlin.com>
-	<20250630143315.250879-5-maxime.chevallier@bootlin.com>
-	<20250701130243.GA130037@horms.kernel.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="eZ07VeVY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=sEnrDDcCW0+uNi7Li/7EBjKT/lB/N/YIH1Gam18Rgys=;
+	b=eZ07VeVYykK8lNUX1eBXrC/u3PXr/45h/URm8aa1PhSrcmLsoJDRgGWmGWoMHb
+	jXDL4U0F0EwXNHekUBnBFb0gg/1c8+rAeBpWQUO+z3bL3KJoZVKeJOUskb8xlFx/
+	Re94eKkN+NRJNicXXsWimzKC+EEcA+enODCIvQJ/y0tSM=
+Received: from dragon (unknown [])
+	by gzsmtp2 (Coremail) with SMTP id Ms8vCgDHVuQ43WNo87YbAA--.10731S3;
+	Tue, 01 Jul 2025 21:06:01 +0800 (CST)
+Date: Tue, 1 Jul 2025 21:05:59 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: Primoz Fiser <primoz.fiser@norik.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, upstream@lists.phytec.de
+Subject: Re: [PATCH] arm64: dts: freescale: imx93-phyboard-nash: Move ADC
+ vref to SoM
+Message-ID: <aGPdNy8Bn37XiOpy@dragon>
+References: <20250602125207.2265222-1-primoz.fiser@norik.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddugeeiudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegveeltddvveeuhefhvefhlefhkeevfedtgfeiudefffeiledttdfgfeeuhfeukeenucfkphepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeftddprhgtphhtthhopehhohhrmhhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrt
- ghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqmhhsmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhg
-X-GND-Sasl: maxime.chevallier@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250602125207.2265222-1-primoz.fiser@norik.com>
+X-CM-TRANSID:Ms8vCgDHVuQ43WNo87YbAA--.10731S3
+X-Coremail-Antispam: 1Uf129KBjvdXoW7Xr15WF17tw47WryruF4xCrg_yoWxKFc_ua
+	48WFWvyr1UJF4xua13GF12v3s3G3WUJrWxZr4fGrn3tr92yayxG3sYy345Jw47Xw4DArsI
+	vF1rAa1rur1Y9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUj7DGUUUUUU==
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiIBp43Whj3TqWqAAA3N
 
-On Tue, 1 Jul 2025 14:02:43 +0100
-Simon Horman <horms@kernel.org> wrote:
+On Mon, Jun 02, 2025 at 02:52:07PM +0200, Primoz Fiser wrote:
+> Move configuration for ADC voltage reference from board DTS to a SoM
+> include file. The SoC ADC reference voltage is connected to a "VDDA_1V8"
+> voltage node and supplied by the PMIC's BUCK5 regulator. The reference
+> voltage is thus defined by the SoM and cannot be changed by the carrier
+> board design and as such belongs into the SoM include file.
+> 
+> Moreover, with this in place, customers designing own carrier boards can
+> simply include imx93-phycore-som.dtsi and enable adc1 in their own DTS
+> without the need to define dummy ADC vref regulator themselves anymore.
+> 
+> Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
 
-> On Mon, Jun 30, 2025 at 04:33:03PM +0200, Maxime Chevallier wrote:
-> 
-> ...
-> 
-> > +/**
-> > + * phy_port_get_type() - get the PORT_* attribut for that port.
-> > + * @port: The port we want the information from
-> > + *
-> > + * Returns: A PORT_XXX value.
-> > + */
-> > +int phy_port_get_type(struct phy_port *port)
-> > +{
-> > +	if (port->mediums & ETHTOOL_LINK_MEDIUM_BASET)  
-> 
-> Hi Maxime,
-> 
-> Should this be:
-> 
-> 	if (port->mediums & BIT(ETHTOOL_LINK_MEDIUM_BASET))
-> 
-> Flagged by Smatch (because ETHTOOL_LINK_MEDIUM_BASET is 0,
-> so as-is the condition is always false).
+Applied, thanks!
 
-You're absolutely correct ! Thanks...
-
-Maxime
