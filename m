@@ -1,167 +1,115 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 319D8264F87
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 09:25:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4E77239E77;
+	Tue,  1 Jul 2025 09:25:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751361935; cv=none; b=JzBslMvejMHaxEerUkVEhC1f5gVCPiMUjZSzATgxZh0BO/YdJJicKQrg4GwRBb8RuXw18kT6pME3uCMqoE47nSknZ/cZWE+rO170m9ZtU9gRsM6dbFWvw9h4WGJOXBo4mcNy5SAzn3eVIKYsbdQg51MtWhPcXPtP/6Kui7xfQ0A=
+	t=1751361945; cv=none; b=cjGhVnNHu0fEc4ktoct7QM6IrMq2HfozMGYWtea4vhsy7mtGiTVopQpqH2nTlj8SoG9eT+wgtFIkhjYUObn9HXf/VtsE/M+5J8+/NHXioFfvXCDJrhTHyBObQuzYvIDxrGRVpDj20Cg6TDok91/26Ze6La5ec1usxL8rfOsmL9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751361935; c=relaxed/simple;
-	bh=ZeXz3hnou5gUJ75yQD8JJ/r5RYPaVcsjVrt5L/rQDqI=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bYOXLlDrnZyCqRdqqM4JrcDc7fnfSk5zRcc7AWGY9I+fyeAsLUELTfpELfE2HYZYElmbtyaVYoYUd3n84BRgXyMtBTTZrFTawQM2GqjahNOOCJ2pJlQGQBa4/2Y0txqwkvydFUmLCWmHViDsM86tPlprV2mxHRUSX0kJTIiBcKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=EAsP1jgj; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ONZulrbt; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=EAsP1jgj; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ONZulrbt; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1751361945; c=relaxed/simple;
+	bh=z+KKExR9QZEfhPKWlMVU+GWF8CnujGHmvd5zsO/4khk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cx0A5Qbgpw/R46/3K6plg/qVP+2lep81+hji2u7b5gMUstQJPUgjgE5AlWHQQSShYItRRewW4KIx/YlenFnNeSNaP+u/1zCE5SPDgoM21uN1tOo1dImxgOdfYVYjOlBArcAJwFi+1pprbPZbZEqYXwVHVzpjDD3kV1rYm0zAPnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Hn3kyDj7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="EAsP1jgj";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ONZulrbt";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="EAsP1jgj";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ONZulrbt"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 4C3B41F393;
-	Tue,  1 Jul 2025 09:25:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751361932; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QjzDvJSUaHjKvTEfS3xyRuL6ex44DjNlXSXQL7mpsZI=;
-	b=EAsP1jgjbANpw7/5E0jsGTVsLQXmBOhuloxwuQUgvxA4/9wGYIGBgKrV24938W2rOIX2Tl
-	94MofYRR/es43A36Rhxqtc99xMdwoCri+HKz2lSjrIuk5FenDCMHO6ZbutSxBnPpPu/eta
-	SnIYwyQYCf7wKibYXv82m8ysIn/h4+Q=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751361932;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QjzDvJSUaHjKvTEfS3xyRuL6ex44DjNlXSXQL7mpsZI=;
-	b=ONZulrbtKQmM2QSxcsnIrSzMLSOe++pNHpXJJdxqJTBTG7gAJGHhetM/Z8zhEu66ZFBqJu
-	YR4PQ4ylSFqc2NAg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751361932; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QjzDvJSUaHjKvTEfS3xyRuL6ex44DjNlXSXQL7mpsZI=;
-	b=EAsP1jgjbANpw7/5E0jsGTVsLQXmBOhuloxwuQUgvxA4/9wGYIGBgKrV24938W2rOIX2Tl
-	94MofYRR/es43A36Rhxqtc99xMdwoCri+HKz2lSjrIuk5FenDCMHO6ZbutSxBnPpPu/eta
-	SnIYwyQYCf7wKibYXv82m8ysIn/h4+Q=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751361932;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QjzDvJSUaHjKvTEfS3xyRuL6ex44DjNlXSXQL7mpsZI=;
-	b=ONZulrbtKQmM2QSxcsnIrSzMLSOe++pNHpXJJdxqJTBTG7gAJGHhetM/Z8zhEu66ZFBqJu
-	YR4PQ4ylSFqc2NAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 13B2C13890;
-	Tue,  1 Jul 2025 09:25:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 5x+PA4ypY2gKKgAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 01 Jul 2025 09:25:32 +0000
-Date: Tue, 01 Jul 2025 11:25:31 +0200
-Message-ID: <87wm8sclf8.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Jaroslav Kysela <perex@perex.cz>,	Takashi Iwai <tiwai@suse.com>,	Uwe
- =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,	Takashi
- Iwai <tiwai@suse.de>,	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: mips/hal2: Refactor and improve hal2_compute_rate()
-In-Reply-To: <20250630214554.182953-2-thorsten.blum@linux.dev>
-References: <20250630214554.182953-2-thorsten.blum@linux.dev>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Hn3kyDj7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF24EC4CEEB;
+	Tue,  1 Jul 2025 09:25:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751361944;
+	bh=z+KKExR9QZEfhPKWlMVU+GWF8CnujGHmvd5zsO/4khk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Hn3kyDj7CsezqKd1fMVEJDBwB1Dy0VOx4XEUakfIU6n7EDovnxCERFwBsFGOfNyZC
+	 yR3c2tdhsEC1F80m/+tGCcclD6cRE2WRkGy14X25E9OyNCfi1tZLqeXVO7USHWcKxN
+	 EhrGCePeDpb0RDe2kPM5pUm6sodKac+pAHNuDsQ0=
+Date: Tue, 1 Jul 2025 11:25:41 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: rafael@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com,
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com,
+	tmgross@umich.edu, david.m.ertman@intel.com, ira.weiny@intel.com,
+	leon@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH 0/8] Device: generic accessors for drvdata +
+ Driver::unbind()
+Message-ID: <2025070142-difficult-lucid-d949@gregkh>
+References: <20250621195118.124245-1-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Flag: NO
-X-Spam-Score: -3.30
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid]
-X-Spam-Level: 
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250621195118.124245-1-dakr@kernel.org>
 
-On Mon, 30 Jun 2025 23:45:52 +0200,
-Thorsten Blum wrote:
+On Sat, Jun 21, 2025 at 09:43:26PM +0200, Danilo Krummrich wrote:
+> This patch series consists of the following three parts.
 > 
-> Assign 'codec->inc' first and then use it instead of the hardcoded
-> value 4 repeatedly.
+>   1. Introduce the 'Internal' device context (semantically identical to the
+>      'Core' device context), but only accessible for bus abstractions.
 > 
-> Replace the if/else statement with a ternary operator and calculate
-> 'codec->mod' directly. Remove the unnecessary local variable 'mod'.
+>   2. Introduce generic accessors for a device's driver_data  pointer. Those are
+>      implemented for the 'Internal' device context only, in order to only enable
+>      bus abstractions to mess with the driver_data pointer of struct device.
 > 
-> Return the computed rate directly instead of updating the local variable
-> first.
+>   3. Implement the Driver::unbind() callback (details below).
 > 
-> No functional changes intended.
+> Driver::unbind()
+> ----------------
 > 
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> ---
->  sound/mips/hal2.c | 16 +++-------------
->  1 file changed, 3 insertions(+), 13 deletions(-)
+> Currently, there's really only one core callback for drivers, which is
+> probe().
 > 
-> diff --git a/sound/mips/hal2.c b/sound/mips/hal2.c
-> index 991793e6bda9..dd74bab531b4 100644
-> --- a/sound/mips/hal2.c
-> +++ b/sound/mips/hal2.c
-> @@ -313,21 +313,11 @@ static irqreturn_t hal2_interrupt(int irq, void *dev_id)
->  
->  static int hal2_compute_rate(struct hal2_codec *codec, unsigned int rate)
->  {
-> -	unsigned short mod;
-> -
-> -	if (44100 % rate < 48000 % rate) {
-> -		mod = 4 * 44100 / rate;
-> -		codec->master = 44100;
-> -	} else {
-> -		mod = 4 * 48000 / rate;
-> -		codec->master = 48000;
-> -	}
-> -
->  	codec->inc = 4;
-> -	codec->mod = mod;
-> -	rate = 4 * codec->master / mod;
-> +	codec->master = (44100 % rate < 48000 % rate) ? 44100 : 48000;
-> +	codec->mod = codec->inc * codec->master / rate;
->  
-> -	return rate;
-> +	return codec->inc * codec->master / codec->mod;
+> Now, this isn't entirely true, since there is also the drop() callback of
+> the driver type (serving as the driver's private data), which is returned
+> by probe() and is dropped in remove().
+> 
+> On the C side remove() mainly serves two purposes:
+> 
+>   (1) Tear down the device that is operated by the driver, e.g. call bus
+>       specific functions, write I/O memory to reset the device, etc.
+> 
+>   (2) Release the resources that have been allocated by a driver for a
+>       specific device.
+> 
+> The drop() callback mentioned above is intended to cover (2) as the Rust
+> idiomatic way.
+> 
+> However, it is partially insufficient and inefficient to cover (1)
+> properly, since drop() can't be called with additional arguments, such as
+> the reference to the corresponding device that has the correct device
+> context, i.e. the Core device context.
 
-IMHO, this doesn't look improving the code readability than the
-original code.  And the generated code doesn't seem significantly
-better, either.
+I'm missing something, why doesn't drop() have access to the device
+itself, which has the Core device context?  It's the same "object",
+right?
 
+> This makes it inefficient (but not impossible) to access device
+> resources, e.g. to write device registers, and impossible to call device
+> methods, which are only accessible under the Core device context.
+> 
+> In order to solve this, add an additional callback for (1), which we
+> call unbind().
+> 
+> The reason for calling it unbind() is that, unlike remove(), it is *only*
+> meant to be used to perform teardown operations on the device (1), but
+> *not* to release resources (2).
+
+Ick.  I get the idea, but unbind() is going to get confusing fast.
+Determining what is, and is not, a "resource" is going to be hard over
+time.  In fact, how would you define it?  :)
+
+Is "teardown" only allowed to write to resources, but not free them?  If
+so, why can't that happen in drop() as the resources are available there.
+
+I'm loath to have a 2-step destroy system here for rust only, and not
+for C, as maintaining this over time is going to be rough.
 
 thanks,
 
-Takashi
+greg k-h
