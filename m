@@ -1,76 +1,136 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773C7230BE4;
-	Tue,  1 Jul 2025 21:58:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF24419995E
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 22:01:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751407119; cv=none; b=rRJMOVGKM2Rod054dxbIt8SLwsfdo6O+DPTsy6JzhTRskc/IDEBMNYLas3E0v7InLCOcZd6VQnKkRdGuVnDezUwS/CsFn27sYJG2yq3J55eJ4E+hfqO/iCuezP+qcPGdVSctj1fODD2/ap50wg+dUaRRzjbitboY+SqZzax1O3E=
+	t=1751407278; cv=none; b=lJARmZRc1g8tHHzyrOFPW1Loeux0ijWm/Jby5DsX3jpJwad7VAuPrg0Jy0TPZBk8xFkpJZrpz8Mdqyw/hTB4kmKjZZIGDnLaDp9u4CfehTs+70eD5sSnPcXDF+4IVJvMaXl4HXhdmWmDYi++XHC5O0HK9/m9OBVIMdIaUdj3uu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751407119; c=relaxed/simple;
-	bh=Gd7h7V4tZUgx/tp/sk3Qd8v2RvWILzZB8Eff/zz4YZ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=V2ncaaNn8n0nMkPVVoph0EhhU9ckodnRE6cxm0+RqxdkHTR7MGsSXeGOoc4RTq03GfHCaYLhK4tcerjssaMfR2T+dO0Tr2QficiGtRdOnEFde0sGbqFMEpsCPi0HONSc6Gu1rDwdJCqQYqXmid1+VhAFcMURf7kJWcz8PIfOhR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 0A9AAC0636;
-	Tue,  1 Jul 2025 21:58:29 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 24A4C20030;
-	Tue,  1 Jul 2025 21:58:27 +0000 (UTC)
-Date: Tue, 1 Jul 2025 17:58:26 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Gabriele Paoloni <gpaoloni@redhat.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- acarmina@redhat.com, chuck.wolber@boeing.com
-Subject: Re: [RFC PATCH 1/2] tracing: fixes of ftrace_enable_fops
-Message-ID: <20250701175826.429a7b4b@batman.local.home>
-In-Reply-To: <CA+wEVJaQcHdpVc3Za8qy0+Z-CGNeaDTrXtjJg2j7J6qsW4uAkQ@mail.gmail.com>
-References: <20250612104349.5047-1-gpaoloni@redhat.com>
-	<20250612104349.5047-2-gpaoloni@redhat.com>
-	<20250613114527.7e27a9a0ecc2b59d98677b0c@kernel.org>
-	<CA+wEVJa0jL-JH_4=5sR+Mvb26n4mPPudmOL0LRBDV54nMZcw8g@mail.gmail.com>
-	<20250620183503.6c84eb22cca206cd10418c04@kernel.org>
-	<CA+wEVJaQcHdpVc3Za8qy0+Z-CGNeaDTrXtjJg2j7J6qsW4uAkQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1751407278; c=relaxed/simple;
+	bh=ym4G6ufKkIWzagLIfI+OhFmb/6iNAI1xtHVDilZhmaw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Z0q1OCJf5KLWbowutC1mZEHjySxcOrgl/4x8JOuj4J5Rt/xznvp4Mpd7+9RgtNuoCMNUHRf+uh8klYbZKU/6U8sk8HpKcqVbDIPtaet2pXik2pCeQu+WXDnkG6FGW5yO6sxbj3zNAtlA3xf+Gu+aJGzFZh+gJPOPTIFj/uvQfLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZHz+0HE4; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZHz+0HE4"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-74943a7cd9aso5803575b3a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 15:01:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751407276; x=1752012076; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=sZpSfMGCY39joD2VC5bXg87sm6OUeYjHe/LMyzT4YGA=;
+        b=ZHz+0HE42hZqtmU9rg2tJEY2N2iuOH72Kq0J9aUOgxRXbBufm+KN9q65AMUkjhpkNF
+         s4lRyv4/diVr61Waahi8gmZ5eYItKwm85Xdm+M3CvrS8dQZqlwepjKxy6i1fMphJlkJ8
+         bOxuDFc9jP6WSNNgVdqDM5nImMcebBKXs8MsIP1LZQrSfbHGWZH2CVLLPeiucXrSTmRF
+         Dr8RZEnbZz2B3RdaF7mtJxGN7L0J8hYkfgTG3R5RP3C3yZQ2Tn1UspkVVw7WTq6Zjhm4
+         m3fiASrRpGGAIGCqf28TZ1BaxD5eHUO9v0uismIfsbr8frJr+8iPn2cbErThb2p49n5E
+         7UwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751407276; x=1752012076;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sZpSfMGCY39joD2VC5bXg87sm6OUeYjHe/LMyzT4YGA=;
+        b=qkjLQsXlOFH+FWp6FoWIJMPtX3rBz5fb3eCT5B2Qb7BPNPDWvCvAVjcfbWHCM1y791
+         ff+YlwUDLv/Bat8g0/VG72AGKIbmqYxHdYczwTnP+uPnoiN12ibtoWspn0eUWNGvWBx0
+         4Z28wwi0YYgS6qcVLIZnSIy6/ahEGZTa7ua5InouGqCbxW/oGXeiwR6ad0odvgQGX6xR
+         JpGpR6sUWzyIhD8mKCyKTKwx14Ndi87ifCyagPgnWKJdBfsbA9O8UuWjfeiYFfdDaAn6
+         bn/SmmOqsbMQRruhgu5rigPuH8mMKtdVBdxym9zO08Xvy/+WE74Ej4ZT+JKfpVrF593y
+         00nw==
+X-Forwarded-Encrypted: i=1; AJvYcCWT2DZmGvCM8vDJckNnjAosD4p4UW1MvZuV1LPFL+jADF46xfbOvCeFDNFyazhuHD0pxTDSiAxMoNVn02c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRvdDNJZASwjQW+MIpIh7u68mv46mhe+aONHVfDnj0vw1F4PKQ
+	PRqDGOhMu2WVno7EbJ+GoobwQODNUWiQubSGiJIbjSWdyp2G/uay5E7b/+Kope8lJS3FhwgrRbk
+	ZTMEmqV0h9fhJwi5ikS+gHeHdHg==
+X-Google-Smtp-Source: AGHT+IEd9keGJPvtO1uRbJlDNElYmO2f0J3qSttebwAES17DT1AOdOkvIO1LIuYSPiK3tQDScGLMbN+3Qhbuix38Cw==
+X-Received: from pfbbk11.prod.google.com ([2002:aa7:830b:0:b0:748:f98a:d97b])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a21:618f:b0:216:1ea0:a51a with SMTP id adf61e73a8af0-222d7f25634mr1088275637.38.1751407276143;
+ Tue, 01 Jul 2025 15:01:16 -0700 (PDT)
+Date: Tue, 01 Jul 2025 15:01:14 -0700
+In-Reply-To: <aGNtA+E9FT0Q2OUZ@yzhao56-desk.sh.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: xsr3n6d733jgjkmmfciss1nb8euuoupd
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: 24A4C20030
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+l/RQALv1HGE4aDzquDMpry/1Cchsc5q0=
-X-HE-Tag: 1751407107-332310
-X-HE-Meta: U2FsdGVkX1+ODILg/f0VuTzk7kNGIH/z+A3/7X+kaAtzbsqbVhRIGSqpb8avD5REDBlmQ2wUkIf1CAXuOJxqC1fkg8BBgLE2hNvKhsUl2lC/9O5A2g9YDHyuiLb8fespd3oqCr04jD4E0udf5smTgoBdSEvFIZuCkEuZ7PQ2q5zcOS3vOPQsdYpFLoFlzE3LqzA1ECf9zoIt1/CI2abBolG5pYQSh4ic7eanoys73bn4MUaiMDBdd310qoBoEmBTodZLWy0SMZrR9wwWfZamEiU4QiXEwm5pY0IqPWCrK7Q26rDRHQjBkVFK941/O1cP+yDeoIqu1k4dfW0hQ+vLZccqk3O0v5dI
+Mime-Version: 1.0
+References: <diqz34bolnta.fsf@ackerleytng-ctop.c.googlers.com>
+ <a3cace55ee878fefc50c68bb2b1fa38851a67dd8.camel@intel.com>
+ <diqzms9vju5j.fsf@ackerleytng-ctop.c.googlers.com> <447bae3b7f5f2439b0cb4eb77976d9be843f689b.camel@intel.com>
+ <zlxgzuoqwrbuf54wfqycnuxzxz2yduqtsjinr5uq4ss7iuk2rt@qaaolzwsy6ki>
+ <4cbdfd3128a6dcc67df41b47336a4479a07bf1bd.camel@intel.com>
+ <diqz5xghjca4.fsf@ackerleytng-ctop.c.googlers.com> <aGJxU95VvQvQ3bj6@yzhao56-desk.sh.intel.com>
+ <a40d2c0105652dfcc01169775d6852bd4729c0a3.camel@intel.com>
+ <diqzms9pjaki.fsf@ackerleytng-ctop.c.googlers.com> <aGNtA+E9FT0Q2OUZ@yzhao56-desk.sh.intel.com>
+Message-ID: <diqzplej4llh.fsf@ackerleytng-ctop.c.googlers.com>
+Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge pages
+From: Ackerley Tng <ackerleytng@google.com>
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, 
+	"Shutemov, Kirill" <kirill.shutemov@intel.com>, "Li, Xiaoyao" <xiaoyao.li@intel.com>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "Hansen, Dave" <dave.hansen@intel.com>, 
+	"david@redhat.com" <david@redhat.com>, "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, 
+	"tabba@google.com" <tabba@google.com>, "vbabka@suse.cz" <vbabka@suse.cz>, 
+	"quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, "michael.roth@amd.com" <michael.roth@amd.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "seanjc@google.com" <seanjc@google.com>, 
+	"Peng, Chao P" <chao.p.peng@intel.com>, "Du, Fan" <fan.du@intel.com>, 
+	"Yamahata, Isaku" <isaku.yamahata@intel.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "Weiny, Ira" <ira.weiny@intel.com>, 
+	"Li, Zhiquan1" <zhiquan1.li@intel.com>, "Annapurve, Vishal" <vannapurve@google.com>, 
+	"jroedel@suse.de" <jroedel@suse.de>, "Miao, Jun" <jun.miao@intel.com>, 
+	"pgonda@google.com" <pgonda@google.com>, "x86@kernel.org" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 20 Jun 2025 15:26:27 +0200
-Gabriele Paoloni <gpaoloni@redhat.com> wrote:
+Yan Zhao <yan.y.zhao@intel.com> writes:
 
-> I think that from my side I do not have comprehensive answers to all your
-> questions (I need to read the code more in depth).
-> So to be pragmatic I can split this effort into two parts (documentation and
-> redesign); I will propose documentation first with the TIPs that you mentioned
-> above and later, if we find a better re-design solution, we can also amend
-> the documentation as needed.
+> On Mon, Jun 30, 2025 at 12:25:49PM -0700, Ackerley Tng wrote:
+>> "Edgecombe, Rick P" <rick.p.edgecombe@intel.com> writes:
+>> 
+>> > On Mon, 2025-06-30 at 19:13 +0800, Yan Zhao wrote:
+>> >> > > ok! Lets go f/g. Unless Yan objects.
+>> >> I'm ok with f/g. But I have two implementation specific questions:
+>> >> 
+>> >> 1. How to set the HWPoison bit in TDX?
+>> 
+>> I was thinking to set the HWpoison flag based on page type. If regular
+>> 4K page, set the flag. If THP page (not (yet) supported by guest_memfd),
+>> set the has_hwpoison flag, and if HugeTLB page, call
+>> folio_set_hugetlb_hwpoison().
+> Could you elaborate on how to call folio_set_hugetlb_hwpoison()?
+>
 
-Just to confirm, I agree with Masami. The enable file is quite special,
-and I don't see the use of user space playing tricks with it, which
-even includes lseek. Maybe to keep rewinding a read to get a new status
-change?
+Sorry I meant "in TDX" as in the part of the kernel that performs the
+unmap. I'm assuming something like
 
-But it usually contains a single character (sometimes two) and a new
-line. It's not something that's ever been reported as an issue. I
-rather not touch it if it hasn't been reported as broken because
-there's some hypothetical use case that can see it as broken.
+int ret = tdx_do_unmap(page)
+if (ret)
+	set_hwpoison_based_on_folio_type(page_folio(page))
 
-Documenting its current behavior is perfectly fine with me.
+And set_hwpoison_based_on_folio_type() would have to be written to know
+how to set the HWpoison flag based on type of the folio.
 
--- Steve
+I think I might have used the wrong terminology elsewhere. Sorry about
+that. I don't mean to call folio_set_hugetlb_hwpoison() from within the
+TDX module. I meant to set HWpoison in the kernel, based on return value
+to the kernel from the TDX module.
+
+>> But if we go with Rick's suggestion below, then we don't have to figure
+>> this out.
+>> 
+>> >> 2. Should we set this bit for non-guest-memfd pages (e.g. for S-EPT pages) ?
+>> >
+>> > Argh, I guess we can keep the existing ref count based approach for the other
+>> > types of TDX owned pages?
+>> >
+>> 
+>> Wait TDX can only use guest_memfd pages, right? Even if TDX can use
+>> non-guest_memfd pages, why not also set HWpoison for non-guest_memfd
+>> pages?
+> As in https://lore.kernel.org/all/aGJxU95VvQvQ3bj6@yzhao56-desk.sh.intel.com/,
+> I don't find a proper interface for TDX to set HWpoison bit on non-guset_memfd
+> pages.
+>
+> Neither memory_failure() nor memory_failure_queue() seem fit.
