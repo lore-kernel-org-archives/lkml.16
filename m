@@ -1,96 +1,173 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C1DE245029;
-	Tue,  1 Jul 2025 19:17:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7331245029;
+	Tue,  1 Jul 2025 19:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751397447; cv=none; b=YMAHh6jFPdzxDqnezffNG6EeYkDE58ywKO44ZcInhHSPD5NLvjCbl4W3H4OAbiXvaPUyIXPJVryx6AB79zidVJt4M567fBsC6vtAoOhUDPVUQFTTWnbzZa9R7BchI63+ttuknIRZrnjzwDvatAFcFCH9Tey/RWwiR1i7ZRuRoIk=
+	t=1751397470; cv=none; b=OzJql1cztdAOkLApNvuL3TmgUenJRaKQiknPuQMoXKB/xzdJBD8rlLntoJJUOTM1/UoEAzJ+z46a2+1fd/kxUFZcwaEjfdpgTXn8vFLoWSXPAKsdKeE29qQ5Cmz5iEhmY7phFfTioLMXS7FFwLzzaYsWL3HsEBhPnHIdBx5D60w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751397447; c=relaxed/simple;
-	bh=Hma+KxtpRKk/H7egh/thhO7nSPGV5JBWPc+D58RUl80=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dkiuWbjSEKBtDH3CGbQzgNbt68d5v4dN42vF9w39iygjD+1jyE2k9GVcnjayLJmvpgiia/UNXoZXiADhgwceXzBKcM08Sl1kdbO+kIeu3XD0HLXj5SulotXjBqGhhonIAWBUMvDCM9eezk7BruOdc9LH1xsNiTWJ4yO6HW627tc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 8F36F106D84;
-	Tue,  1 Jul 2025 19:17:22 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id 1F9DD2000D;
-	Tue,  1 Jul 2025 19:17:17 +0000 (UTC)
-Date: Tue, 1 Jul 2025 15:17:15 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, x86@kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu
- Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
- Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
- <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>, Florian Weimer
- <fweimer@redhat.com>, helpdesk@kernel.org
-Subject: Re: [PATCH v12 00/11] perf: Support the deferred unwinding
- infrastructure
-Message-ID: <20250701151715.5eb5f8b9@batman.local.home>
-In-Reply-To: <20250701180410.755491417@goodmis.org>
-References: <20250701180410.755491417@goodmis.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1751397470; c=relaxed/simple;
+	bh=zwjUMwmbU0XuNCcjMMGtYZ9p614+0YJV+3FSL46Cf/k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c0MkVnbCrKwXvSO7s/uv2U9lENsOb0KZvc0ShkNfrFew8qSUEWcMrvBHfdcDc0z6CcOmEZ94TozhGUMPddxFiQ4lof8kUHmmUY5ekzCBxjb9Nu8E/9t0DXBee0N+LyHrDh8nfw9qbSbB06M6QJBHy2f+rewwMYa5VILNbYWJWJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jCASdAs5; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jCASdAs5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF409C4CEEB;
+	Tue,  1 Jul 2025 19:17:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751397469;
+	bh=zwjUMwmbU0XuNCcjMMGtYZ9p614+0YJV+3FSL46Cf/k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jCASdAs5zbT8BAc4F3QlNKAGzdX00hGEDNLN88KkxNqL2OJwfzXx2FPaLWp1M8Nhb
+	 20aPKa5aCdxDXdG0yQp6qTBEtVMrU7i1NhJCRw4heO9hiZ2K5Ltq8eamSKrGrkBr+7
+	 OdrGd8VZBkW+U/UsAVrAy86ewyJwysEXA3IpqMipc4EmStraLdbqM37T/BI9bMGXgQ
+	 UqyDM1nvjaAHNe1kA7a2/9FzTYNGZ5F8E60c452ajGahWmLucpY625aB6tLdA6Be1l
+	 ZA5aU/FdTdrCgrXucehKKpKM8M3aNhe+oEg8v4x+KRNak1RcothtATe5gYJ/tTP+Nt
+	 B2GUnMhxONgJw==
+Received: by pali.im (Postfix)
+	id 00B145D6; Tue,  1 Jul 2025 21:17:46 +0200 (CEST)
+Date: Tue, 1 Jul 2025 21:17:46 +0200
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Andrey Albershteyn <aalbersh@redhat.com>,
+	Amir Goldstein <amir73il@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+	Casey Schaufler <casey@schaufler-ca.com>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Paul Moore <paul@paul-moore.com>, linux-api@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-xfs@vger.kernel.org, selinux@vger.kernel.org,
+	Andrey Albershteyn <aalbersh@kernel.org>
+Subject: Re: [PATCH v6 6/6] fs: introduce file_getattr and file_setattr
+ syscalls
+Message-ID: <20250701191746.cekhigo4e6xespjj@pali>
+References: <20250630-xattrat-syscall-v6-0-c4e3bc35227b@kernel.org>
+ <20250630-xattrat-syscall-v6-6-c4e3bc35227b@kernel.org>
+ <20250701184317.GQ10009@frogsfrogsfrogs>
+ <20250701185457.jvbwhiiihdauymrg@pali>
+ <20250701190857.GR10009@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: f9sr99csx4g4j46ztd99gtoqr6qz9n4g
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 1F9DD2000D
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+NzI4bU/Mrds9DY1SbXjrKzE82bFYHyOI=
-X-HE-Tag: 1751397437-805747
-X-HE-Meta: U2FsdGVkX18/xSeZ9LSnPh4AsPTxO3z2zNJrTLjTEVC4jiPUPYKMRlM2nqKAuRM8uWBM0zmlhH/g199odVKWpAHkGaS59w6tDjTi0aitoRbmWhKl+4Nqofr5HI446EBtd/QlcFsmlgRyb1qCJN1/I1zwJ/jWN9U94kzGrdqVTqtE6sS4IIGw26ZsK00wCL2EwX1JQfe7+9kVPuW56FyqA3E7yij7++s1UrIdegs6EOwqKggKZO9UlCbm4XBiqAiEFYId9QEl2Rq9qJNgmNnTrT8kMLkJ/ux500g0Raw9tLr2xzbycB5vO+f9gjBL5C/Wt3YEncIvYwF0CJWJgCc9AJab0T5HOEc3we5vc+P9ffR11lGpdB0HlA6tTD2dp5xChtKtsXCDw3FcHZ21B5453ADkY67eNcylJf7eT31bZNY=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250701190857.GR10009@frogsfrogsfrogs>
+User-Agent: NeoMutt/20180716
 
-On Tue, 01 Jul 2025 14:04:10 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> Josh Poimboeuf (5):
->       perf: Remove get_perf_callchain() init_nr argument
->       perf: Have get_perf_callchain() return NULL if crosstask and user are set
->       perf: Simplify get_perf_callchain() user logic
->       perf: Skip user unwind if the task is a kernel thread
->       perf: Support deferred user callchains
+On Tuesday 01 July 2025 12:08:57 Darrick J. Wong wrote:
+> On Tue, Jul 01, 2025 at 08:54:57PM +0200, Pali Rohár wrote:
+> > On Tuesday 01 July 2025 11:43:17 Darrick J. Wong wrote:
+> > > On Mon, Jun 30, 2025 at 06:20:16PM +0200, Andrey Albershteyn wrote:
+> > > > diff --git a/include/uapi/linux/fs.h b/include/uapi/linux/fs.h
+> > > > index 0098b0ce8ccb..0784f2033ba4 100644
+> > > > --- a/include/uapi/linux/fs.h
+> > > > +++ b/include/uapi/linux/fs.h
+> > > > @@ -148,6 +148,24 @@ struct fsxattr {
+> > > >  	unsigned char	fsx_pad[8];
+> > > >  };
+> > > >  
+> > > > +/*
+> > > > + * Variable size structure for file_[sg]et_attr().
+> > > > + *
+> > > > + * Note. This is alternative to the structure 'struct fileattr'/'struct fsxattr'.
+> > > > + * As this structure is passed to/from userspace with its size, this can
+> > > > + * be versioned based on the size.
+> > > > + */
+> > > > +struct fsx_fileattr {
+> > > > +	__u32	fsx_xflags;	/* xflags field value (get/set) */
+> > > 
+> > > Should this to be __u64 from the start?  Seeing as (a) this struct is
+> > > not already a multiple of 8 bytes and (b) it's likely that we'll have to
+> > > add a u64 field at some point.  That would also address brauner's
+> > > comment about padding.
+> > 
+> > Hello!
+> > 
+> > As I have already mentioned, after this syscall API/ABI is finished, I'm
+> > planning to prepare patches for changing just selected fields / flags by
+> > introducing a new mask field, and support for additional flags used by
+> > existing filesystems (like windows flags).
+> > 
+> > My idea is extending this structure for a new "u32 fsx_xflags_mask"
+> > and new "u32 fsx_xflags2" + "u32 fsx_xflags2_mask". (field names are
+> > just examples).
+> > 
+> > So in case you are extending the structure now, please consider if it
+> > makes sense to add all members, so we do not have to define 2 or 3
+> > structure versions in near feature.
+> > 
+> > Your idea of __u64 for fsx_xflags means that it will already cover the
+> > "u32 fsx_xflags2" field.
 > 
-> Namhyung Kim (4):
->       perf tools: Minimal CALLCHAIN_DEFERRED support
->       perf record: Enable defer_callchain for user callchains
->       perf script: Display PERF_RECORD_CALLCHAIN_DEFERRED
->       perf tools: Merge deferred user callchains
+> Ah, ok, so that work *is* still coming. :)
+
+Yes. I'm just waiting until this patch series is accepted.
+
+In past I have already sent RFC patches to the list which modifies the
+existing ioctl interface. So you can look at it if you want :-)
+
+> Are you still planning to add masks for xflags bits that are clearable
+> and settable?  i.e.
 > 
-> Steven Rostedt (2):
->       perf: Use current->flags & PF_KTHREAD|PF_USER_WORKER instead of current->mm == NULL
->       perf: Support deferred user callchains for per CPU events
+> 	__u64	fa_xflags;		/* state */
+> 	...
+> 	<end of V0 structure>
+> 
+> 	__u64	fa_xflags_mask;		/* bits for setattr to examine */
+> 	__u64	fa_xflags_clearable;	/* clearable bits */
+> 	__u64	fa_xflags_settable;	/* settable bits */
+> 
+> I think it's easier just to define u64 in the V0 structure and then add
+> the three new fields in V1.  What do you think?
 
-Hmm, patches 5-11 seemed to be dropped, and I sent out 12 patches of
-the latest sframe work that I can't find anywhere. I think my ISP is
-thinking I'm spamming so it dropped the emails. That's all I can figure.
+I wanted the interface which would allow to atomically change specified
+bit/flag without the need for get-modify-set. And I think that this
+would not work as the fa_xflags requires the state.
 
-I originally used kernel.org as my smtp server, but gmail starting
-putting my emails into spam because kernel.org can't validate
-goodmis.org with DKIM (my DNS has kernel.org set for SPF, but that's
-not enough these days :-p).
+My idea is following:
 
-So I went back to my ISP (hover.com) as my SMTP server, but now I think
-it doesn't like my scripts that sends out a series of patches to a lot
-of people. It likely thinks I'm a spam bot (although maybe I am!).
+  __u64 fa_xflags;
+  ...
+  <end of V0 structure>
+  __u64 fa_xflags_mask;
 
-I guess I'll change my scripts to use rostedt@kernel.org to send and go
-back to using kernel.org as the SMTP server for my scripts. :-/
+The fa_xflags_mask will specify which bits from the fa_xflags and from
+other fa_* fields in V0 struct are going to be changed.
 
-Expect a resend. Sorry for all the noise.
-
--- Steve
+> --D
+> 
+> > > --D
+> > > 
+> > > > +	__u32	fsx_extsize;	/* extsize field value (get/set)*/
+> > > > +	__u32	fsx_nextents;	/* nextents field value (get)   */
+> > > > +	__u32	fsx_projid;	/* project identifier (get/set) */
+> > > > +	__u32	fsx_cowextsize;	/* CoW extsize field value (get/set) */
+> > > > +};
+> > > > +
+> > > > +#define FSX_FILEATTR_SIZE_VER0 20
+> > > > +#define FSX_FILEATTR_SIZE_LATEST FSX_FILEATTR_SIZE_VER0
+> > > > +
+> > > >  /*
+> > > >   * Flags for the fsx_xflags field
+> > > >   */
+> > > > diff --git a/scripts/syscall.tbl b/scripts/syscall.tbl
+> > > > index 580b4e246aec..d1ae5e92c615 100644
+> > > > --- a/scripts/syscall.tbl
+> > > > +++ b/scripts/syscall.tbl
+> > > > @@ -408,3 +408,5 @@
+> > > >  465	common	listxattrat			sys_listxattrat
+> > > >  466	common	removexattrat			sys_removexattrat
+> > > >  467	common	open_tree_attr			sys_open_tree_attr
+> > > > +468	common	file_getattr			sys_file_getattr
+> > > > +469	common	file_setattr			sys_file_setattr
+> > > > 
+> > > > -- 
+> > > > 2.47.2
+> > > > 
+> > > > 
+> > 
