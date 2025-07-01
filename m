@@ -1,126 +1,153 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A8B71D5CC6
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 16:23:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CBD11AA1DB;
+	Tue,  1 Jul 2025 16:25:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751387032; cv=none; b=bZoFoUzjClpKilksm4RS0MxigNgsramy4OhAosXuc3dZ7XRrWgP5NgxncgzmqUg6qPU01C5Pr8FqoODlmWVCVpBXQKhYXCu3lQRiKlR1MDoi/vOofeqjgO+h2XIydeGs0lAUOZwLw8PwGV3up0y3FHXsMOiAUVi5aUPkzDAhn3Q=
+	t=1751387115; cv=none; b=Z2ECUAY328lvNSXMs8PHk56HEa69uIAYEjAAn5/cDZGed59BhOPai99Xn0pOdHB9xfZQnun1VrqCvQZXPSPOZHY6BSfNglunXsb3D4pETDKUrmdxZV5qVbAsijHWEsHUMb4SkfF8DW1OgdjEdwAozZk8Mp5XY5J3zwKMMRiOZu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751387032; c=relaxed/simple;
-	bh=TRyKPGlzqNiaAIc+Td0ze+LpUFf6sYZ4Ct+UtsDxJJ8=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=Ov4GqmlLprQ8/rVli5T7wRCTKmK94tJRtbSuF82Lk73NXb6gUvIp7sHI/aeoR9T7sivAJkpRUvpC6OKkWuDYVtPgSWavqr2JasfsYd8wncoTmIyBvcD2U1T9M6y4De95dexpkOUzCkxrILzJia+W0pVkdKZPC7m5wGG4Sknjb6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IFMHXUn2; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751387115; c=relaxed/simple;
+	bh=v/N4QvvT3ATX2IBwWwvEzAtudi8W1mMlQFC6impuzOQ=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CxjwSpdL7bNZZI6/N1IKkLD3MiWtuJcVL21SISi8CvZjJTttXaAqaeiZ3mMTrEXm+KpYPQnVz9hsQKDr/oYucj4KrveSXKFM2vXMEKe/H1uKr2bOQ01pRcOlS0ejySbYwc0qc0zQ62T4I+5nUlUSQa8Ogpf4Bm/BTlxNNmFhoik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ltPjtZ98; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IFMHXUn2"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-451d3f72391so36585255e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 09:23:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751387029; x=1751991829; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N84p1IfPOnU2LRyJ4jJI6ylTwqJRzAAmh1pUeFRFmtE=;
-        b=IFMHXUn26XoQxgu1PEOhUk+1DwDCC0gLL1fvGvxN6KXwHj83WYK7MaMemjuyu6Bj6C
-         s6kIMqsWWEeY8yBZuvpFt8JZmMrPDXLzxWb21dw+utltdf4Q9XhLNMkuhPzP6MKkXyvU
-         dBcze56B2AcofUbbLP3R0xmh/GJEWkmBoR6NoOIu4g7IW8Gr7tZgju0zBQiknwyUR2IK
-         ue+Vqe7Lp/z/zGd6Q9EBY7megXj46NTu3uPFLZZc78ubpCu7fSmApHW2EONsaOeOAMeK
-         x8JfK+lv1V7mTm2i5A0ZoE7eOfbWSgacnkUcWgy4hR21+6XBUe+RNurXqFZY993daOIe
-         AyUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751387029; x=1751991829;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=N84p1IfPOnU2LRyJ4jJI6ylTwqJRzAAmh1pUeFRFmtE=;
-        b=ueqYsOtvXDasBvOxYD4L1CJLElPLqkJrA1rnkujfpV8aqTn4Vk/VG2pZwqUguTYIy1
-         zHI3TL5WK2YqtFJqMCNthfVACfL0taNJZ0Ku5WnAelKS3be+310sLIXA8ZRTZT+D6bSK
-         LJE3B69noWhd/AtwnGVJOqXCldhCWzD9gnNmUWq9vDy3X1mZJIGIB7sNaCFsAz5FM0RH
-         GvoiTT/eE4lWM0ZFaZW3GUpQZi9/WWaK3dpL38gWBb9ofQpqA44X/hA0fDw6EjWKRaCP
-         Jz7FRPRIFSABAuL14XtauFCSrJhQInRAYsi3yFe418Qw/dMzS6wJdpqpF3hMUjBsa/Ab
-         Z/GA==
-X-Forwarded-Encrypted: i=1; AJvYcCVFGygWXIgl2PeX1hWXG0L7IGsPNWMmvFjVQEOh0FFqvOqImxuo8To4yomVddrr00dC1tK39Yp6a+JKGRQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy44F+fy8WZs5Tus2qJDPzgr5zsKpRRNlueXPSit8f4dArUANee
-	gllBHy8kmZT/D2H2Lq+tLLRqNCFOYihZSz1k5Ge2r0IdkPryXy84N/InK7OkOCYqz9WMIc+SJVC
-	PGJ6T6Pc=
-X-Gm-Gg: ASbGnctxDNE8ez4Nm/Spi0moqtEdoG5ayyZNKypZN9ueT17dxkrM5YDhSPMI7gBNOk4
-	fy3ytOpLfJaymPAzzhT3Z75wcYNC/okWKhtI+f4bBMX/wkTir1ctNvRzrGvTTEadZekokCqntsh
-	4qAndtmuZRctid7ovJ9/CzxXNjPiONnPnvjeQIpHsQpxUMVLKb+TfTOufguKtbIVbifJ5vdx0MY
-	UzzQfnUIcn8yaWexYIc0oZRegdxYrkvmPtjuLziXPqY4nrdhE2dYAumM2dJkhWj+ExsnkX84biH
-	9gb+v7QXCyF4iZd0EEaFSL0CNZo+y08eqfLje/PHB+anJsTMUND71awlKL+68vUp3270ug3VIpF
-	Ks58=
-X-Google-Smtp-Source: AGHT+IF76AvC+yZFLcI56pCMDzSJYwqFxY/61zrbScuKifRBlFHkGuW5GbezYGfN5iWuHq0HbK4jxA==
-X-Received: by 2002:a05:600d:7:b0:442:cd03:3e2 with SMTP id 5b1f17b1804b1-4538eedf21cmr160209575e9.2.1751387029430;
-        Tue, 01 Jul 2025 09:23:49 -0700 (PDT)
-Received: from localhost ([2a02:c7c:7213:c700:4dad:b69a:9c81:2e57])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e528a9sm13932521f8f.60.2025.07.01.09.23.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 09:23:49 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ltPjtZ98"
+Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 561GP4qi3678843;
+	Tue, 1 Jul 2025 11:25:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1751387104;
+	bh=F0aaeqii1FsfQz1PyoUyvITJVetiar7DEiLzMVrI2l8=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=ltPjtZ98RAhON84b4aXNpNH51/kttGd5AsEdJ0PEqFE8DzOe1sgs9ruAzwtSUZfB+
+	 OA9lXihCXvhCvJmfNlBzp8o1DmtOO82ULt24DbfT+V6Y9AWPqvpkBYVy5fuIJQOR7K
+	 KKcjtVquzA1fZx5Dg7Mm3c5NOYlP9HuKI6qIWXEY=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 561GP4VY2716776
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Tue, 1 Jul 2025 11:25:04 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Tue, 1
+ Jul 2025 11:25:04 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Tue, 1 Jul 2025 11:25:03 -0500
+Received: from localhost (bb.dhcp.ti.com [128.247.81.12])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 561GP43p1598131;
+	Tue, 1 Jul 2025 11:25:04 -0500
+Date: Tue, 1 Jul 2025 11:25:04 -0500
+From: Bryan Brattlof <bb@ti.com>
+To: Paresh Bhagat <p-bhagat@ti.com>
+CC: <nm@ti.com>, <vigneshr@ti.com>, <praneeth@ti.com>, <kristo@kernel.org>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <khasim@ti.com>, <v-singh1@ti.com>,
+        <afd@ti.com>, <devarsht@ti.com>, <s-vadapalli@ti.com>,
+        <andrew@lunn.ch>
+Subject: Re: [PATCH v5 4/4] arm64: dts: ti: Add support for AM62D2-EVM
+Message-ID: <20250701162504.dck3763ik6kpo7ec@bryanbrattlof.com>
+X-PGP-Fingerprint: D3D1 77E4 0A38 DF4D 1853 FEEF 41B9 0D5D 71D5 6CE0
+References: <20250627115753.2246881-1-p-bhagat@ti.com>
+ <20250627115753.2246881-5-p-bhagat@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 01 Jul 2025 17:23:48 +0100
-Message-Id: <DB0UVXK5ATOQ.3JOWJ0A1JNIAF@linaro.org>
-Cc: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, "Bartosz Golaszewski"
- <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 2/3] arm64: dts: qcom: qrb4210-rb2: fix GPIO lookup
- flags for i2c SDA and SCL
-From: "Alexey Klimov" <alexey.klimov@linaro.org>
-To: "Bartosz Golaszewski" <brgl@bgdev.pl>, "Bjorn Andersson"
- <andersson@kernel.org>, "Konrad Dybcio" <konradybcio@kernel.org>, "Rob
- Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Conor Dooley" <conor+dt@kernel.org>
-X-Mailer: aerc 0.20.0
-References: <20250701-qcom-gpio-lookup-open-drain-v1-0-9678c4352f11@linaro.org> <20250701-qcom-gpio-lookup-open-drain-v1-2-9678c4352f11@linaro.org>
-In-Reply-To: <20250701-qcom-gpio-lookup-open-drain-v1-2-9678c4352f11@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <20250627115753.2246881-5-p-bhagat@ti.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Tue Jul 1, 2025 at 10:01 AM BST, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> The I2C GPIO bus driver enforces the SDA and SCL pins as open-drain
-> outputs but the lookup flags in the DTS don't reflect that triggering
-> warnings from GPIO core. Add the appropriate flags.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
-Reported-by: Alexey Klimov <alexey.klimov@linaro.org>
-
+On June 27, 2025 thus sayeth Paresh Bhagat:
+> AM62D-EVM evaluation module (EVM) is a low-cost expandable platform board
+> designed for AM62D2 SoC from TI. It supports the following interfaces:
+> 
+> * 4 GB LPDDR4 RAM
+> * x2 Gigabit Ethernet expansion connectors
+> * x4 3.5mm TRS Audio Jack Line In
+> * x4 3.5mm TRS Audio Jack Line Out
+> * x2 Audio expansion connectors
+> * x1 Type-A USB 2.0, x1 Type-C dual-role device (DRD) USB 2.0
+> * x1 UHS-1 capable micro SD card slot
+> * 32 GB eMMC Flash
+> * 512 Mb OSPI NOR flash
+> * x4 UARTs via USB 2.0-B
+> * XDS110 for onboard JTAG debug using USB
+> * Temperature sensors, user push buttons and LEDs
+> 
+> Although AM62D2 and AM62A7 differ in peripheral capabilities example
+> multimedia, VPAC, and display subsystems, the core architecture remains
+> same. To reduce duplication, AM62D support reuses the AM62A dtsi and the
+> necessary overrides will be handled in SOC specific dtsi file and a
+> board specific dts.
+> 
+> Add basic support for AM62D2-EVM.
+> 
+> Schematics Link - https://www.ti.com/lit/zip/sprcal5
+> 
+> Signed-off-by: Paresh Bhagat <p-bhagat@ti.com>
+> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 > ---
->  arch/arm64/boot/dts/qcom/qrb4210-rb2.dts | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts b/arch/arm64/boot/d=
-ts/qcom/qrb4210-rb2.dts
-> index a37860175d2733214f1b257e84d5cb4821033242..bdf2d66e40c62596b8b024de8=
-33835a0750df35d 100644
-> --- a/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
-> +++ b/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
-> @@ -5,6 +5,7 @@
-> =20
->  /dts-v1/;
-> =20
-> +#include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/leds/common.h>
->  #include <dt-bindings/sound/qcom,q6afe.h>
->  #include <dt-bindings/sound/qcom,q6asm.h>
-> @@ -65,8 +66,8 @@ hdmi_con: endpoint {
->  	i2c2_gpio: i2c {
->  		compatible =3D "i2c-gpio";
-> =20
-> -		sda-gpios =3D <&tlmm 6 GPIO_ACTIVE_HIGH>;
-> -		scl-gpios =3D <&tlmm 7 GPIO_ACTIVE_HIGH>;
-> +		sda-gpios =3D <&tlmm 6 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-> +		scl-gpios =3D <&tlmm 7 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
->  		#address-cells =3D <1>;
->  		#size-cells =3D <0>;
-> =20
+>  arch/arm64/boot/dts/ti/Makefile          |   3 +
+>  arch/arm64/boot/dts/ti/k3-am62d2-evm.dts | 599 +++++++++++++++++++++++
+>  arch/arm64/boot/dts/ti/k3-am62d2.dtsi    |  25 +
+>  3 files changed, 627 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/ti/k3-am62d2-evm.dts
+>  create mode 100644 arch/arm64/boot/dts/ti/k3-am62d2.dtsi
+> 
 
+...
+
+> diff --git a/arch/arm64/boot/dts/ti/k3-am62d2.dtsi 
+> b/arch/arm64/boot/dts/ti/k3-am62d2.dtsi
+> new file mode 100644
+> index 000000000000..70aeb40872a9
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/ti/k3-am62d2.dtsi
+> @@ -0,0 +1,25 @@
+> +// SPDX-License-Identifier: GPL-2.0-only OR MIT
+> +/*
+> + * Device Tree Source for AM62D2 SoC family in Quad core configuration
+> + *
+> + * TRM: https://www.ti.com/lit/pdf/sprujd4
+> + *
+> + * Copyright (C) 2025 Texas Instruments Incorporated - https://www.ti.com/
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "k3-am62a7.dtsi"
+
+If we want to reuse the AM62A chassis I think we should probably reused 
+the AM62AX_IOPAD() macro instead of creating a new one.
+
+> +
+> +/ {
+> +	model = "Texas Instruments K3 AM62D SoC";
+> +	compatible = "ti,am62d2";
+> +};
+> +
+> +&vpu {
+> +	status = "disabled";
+> +};
+> +
+> +&e5010 {
+> +	status = "disabled";
+> +};
+
+So I could be a little out of date on the style guidelines here, but my 
+intuition is device trees, much like real trees, can only grow, so we 
+can't inherit the am62a.dtsi and remove things.
+
+My understanding is we have to create a full am62d.dtsi with its 
+features that the am62a.dtsi can extend with the vpu{} and e5010{} nodes
+
+~Bryan
