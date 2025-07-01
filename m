@@ -1,240 +1,295 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE0D2FD882
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 21:54:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6406B269CE5
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 21:56:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751406847; cv=none; b=HKDwLHi068bZvlqQU3RRY/1ClrJmw2ij5KIpMrDf1IhUeD9VKNrEnCX0ZslxFDeyXFcTsS5PQ1CU9QYL2lbcFH/zOciEROR8fnlJqbBOyfFkPsWRQPp0XCxdZHx1HSM13zNuhVxp7lFqkpxWGT0UQKNhmrO52iyIAF8nD4sUxQo=
+	t=1751406993; cv=none; b=SaaQQ/YlCX3C0Z1Ka0XBiFnJyP+c+3G+DSMQEL+yRLEX/b8Bw07/bKCRMV3j6K0Pnut2+wen/rZJWkaRNRsljvhEWTM/0UY3jfLljwpwoVC5uJfqjF3JcgkpX+rhvRaEkN4utoRlsRoFWSAizgcJR8ZffqeaDkMAL3ZCgNv6uEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751406847; c=relaxed/simple;
-	bh=JMomTEei7y0V0/UZWksu2X8Dnt9cCX7Lrm18/W01Xhc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Og2AEFmt8soRKzXfmo4eYVlNQ6i74GbhX5v6m7wUcLxyODe35nqLbYEq/gF3Tljm+dxlxo7f62DZQyVVhhGTSSa/bTDY704N+XH7BPAl8KoIDTR2PpXHako2ogmP6of9lh9zBixAgwf2xOILevfM8i5dkHrrRP46FoqjHa3B7HE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jAJ4fMGD; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1751406993; c=relaxed/simple;
+	bh=oY5LNb5fbr7IN9pcsIbI7/CiyZj7InMf++EYxhBZRnI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=JJlUY87mt1iUUimVVgAwW83ZHp6Hq8Sh4NKGdQMf2Hg2t9yTWIDWUvLzIQIXTFx+0EHbK0QNmja+pY17K0VrcnKbQIvDHdm+ZXZxTGDeY9joLPA1X6Fqg2/Don6pwZfWoNu34D0DbGC/3Ciu+mukOtjSyMJdcQUJ8Ui6JPaM8Cc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P67isBFo; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jAJ4fMGD"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-60b86fc4b47so16109a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 14:54:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751406843; x=1752011643; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ld7F4HBIlGiN9DWhZfqacu/pe2SF5kE57miwsPVjWkY=;
-        b=jAJ4fMGDLS408Z4htpMn4j1TNRvteH1MBcWp3weT6cQfGl3iOlk6wL/grJug9HDhdt
-         xe/YFyTuNm8a3cTsm92ZeN6AfP22ln9IohuNC3MT2hnH8EOfFo+YvA12xMuoWYKIDMdK
-         y/VuLigH6fHleLrQvJsNS9gImTWiItLpnNB/y4gZEqmjp5MqxHjhxUsUdSsermw9tgB+
-         nFQbvqRlGfdBbrh4zYr1kQy8kT8IWc8AKJFyXpljBeTr4Ma1/M+t69kKngRoQUjc8BbH
-         tdzk3KDIVPBBQJ6drqSGWqMLR2bH0l5Kb6xN3jIKj+bFhmh9MuLLAHW+OknCc1eg2YcT
-         jtDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751406843; x=1752011643;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ld7F4HBIlGiN9DWhZfqacu/pe2SF5kE57miwsPVjWkY=;
-        b=SYLdDXL3Uwvv7PjXby48tPmMJULvOZoGTr7CuHHJtUaMdIhCDgOCxcd5wbiAQ+3Z3f
-         buifZTET+Eg9MSKitsJMXcfI2BAzJCbFQhHtXpz6Ny5gBflVJtTp+XOEzXbA9WZ7v3TD
-         mTDLix1hTR6CfYVWwWfBkKnKj54CS1hS+CJQPd5HD6LLovU293otFm8YXoQTjzjWOYf0
-         CtB1Mzzwd7WjRWpPc6WRYZAGAcKlNALwzuAW+yqck+IvwdhAZWD/RBwBjSqa0dpUIhEL
-         /f+NpLZ3/689W7mNRenndjnozX+Qi7/e42JsJTtbNoplLYjqIvpqnQ6HAgPyMq7KPYLa
-         gG2A==
-X-Forwarded-Encrypted: i=1; AJvYcCXF47jWYhmegiqkIOoq4gVVkfcNq3intaVdvzVGc8LfoLfK9zjBeK8FIwVn5Fv0OTe1Wf5nxPXroU33e2M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxC5V/mvzZq4SaurAGoFDJtQVXhy+eRz4PbF7D4iWqCMgmcNDlA
-	LALuBka1d4LdKGQhJTdIvA3nPYT+Zmlj82Epdve8Ewn861wqmQUY76T5RyBlJnKwNVeoR5fHDsR
-	RwJ2KreProT1QbVg2XtyHI2gihVqRDqTgqkaksoGF
-X-Gm-Gg: ASbGncsyWkaf19dfDmgfGLhJS4Iw/NwZdQFi7yNVMIWqxRlPV7NXFddTu/INZG5vX9c
-	Qbf7wp/PaYQ1OidpbbcGs9bosTffFIgSGqnOuQic4jdttF1dKqWkavv1SOsqqxn5o4hJPSbIR8O
-	/BPhJTuUDvQcHb2WMhLKw4X/aHkrRbAXcNx1vBr/NRIijPIj2+kTe2O+jjlKo/JENcrs8DKVVC
-X-Google-Smtp-Source: AGHT+IEcCwkWt0puE4zG3pLRWxXga/B8flfyWb4xB/N4Qbq1OeY9qSRBWTJV/btdLG+9+8LK4mi6nrRvTTdojft+2J0=
-X-Received: by 2002:a05:6402:4558:b0:609:99a7:efdb with SMTP id
- 4fb4d7f45d1cf-60e388f2b76mr147545a12.2.1751406843249; Tue, 01 Jul 2025
- 14:54:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P67isBFo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751406991; x=1782942991;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=oY5LNb5fbr7IN9pcsIbI7/CiyZj7InMf++EYxhBZRnI=;
+  b=P67isBFoqW2LyzlD0wh+3lTsA1QgFIUa7tWDAre8m02aLOywvm2A0Mdc
+   /8pnzB6/46tHORqYw1fn7hDmhu8mxr4X342NNz1cc7GVE2O8u9deCOMCq
+   zedNCNq+yhp6/n0zOy1I31URwyKUvD8w4788isDaS24cKuXmGsyhgKhQP
+   8ZkjuVAcAzldDMoTYPUI4b4h2hsbMLGAE3d38lTtW+HgEjEudxMQ+f5D4
+   eVT19o3PncDdt3HQG/+t+lSLXqQJ+juYPQsJeC/gb8QH4be+3q73nRl6v
+   82lfoWlEDhHViORDckPzJSn6MyVOcjfCHOLlQqw5YkiehyEEEuxdIAFrk
+   A==;
+X-CSE-ConnectionGUID: W6EThYIeTZ6h5DZ2E/AOsA==
+X-CSE-MsgGUID: 4syxbSMwSqK0zQAVrZ3bEw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="52803247"
+X-IronPort-AV: E=Sophos;i="6.16,280,1744095600"; 
+   d="scan'208";a="52803247"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 14:56:30 -0700
+X-CSE-ConnectionGUID: WdunRTW0RKKf9wvtdSnDpQ==
+X-CSE-MsgGUID: 9L0X+n5xTOmZAOIzj/X5xw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,280,1744095600"; 
+   d="scan'208";a="177559879"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 01 Jul 2025 14:56:28 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uWixm-000ahY-2S;
+	Tue, 01 Jul 2025 21:56:26 +0000
+Date: Wed, 2 Jul 2025 05:56:06 +0800
+From: kernel test robot <lkp@intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	"Borislav Petkov (AMD)" <bp@alien8.de>
+Subject: [tip:master 19/19] include/linux/irq-entry-common.h:201:2: error:
+ unexpected token
+Message-ID: <202507020528.N0LtekXt-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2025070131-icon-quarters-0c16@gregkh> <aGPtCBB6nWTNJuwK@pollux>
- <2025070137-tartar-juncture-fcd2@gregkh> <aGP6d2-jJy5rtjMK@pollux>
- <CAGSQo00eG5oRdN_xORLUyUauLi_vzypU-gz6DSU_FzaAbHRLng@mail.gmail.com>
- <aGQ1VsnFaxBo9zaM@pollux> <DB0Z71SF488V.3QURUHHELOY84@kernel.org>
- <3c928a0e-ccd4-4ba0-9f42-9f2bb0203e75@kernel.org> <DB0ZJVL0682F.ZNNOXEIDL5NN@kernel.org>
- <DB0ZOHPFJR7T.1W3OF32GDL55O@kernel.org> <aGRCM1VRHI8EvZmd@pollux>
-In-Reply-To: <aGRCM1VRHI8EvZmd@pollux>
-From: Matthew Maurer <mmaurer@google.com>
-Date: Tue, 1 Jul 2025 14:53:52 -0700
-X-Gm-Features: Ac12FXwQ8trYMtg8ADu-pbYNZ4d3NZdUbsJXRWIWlbPMuwiMmCItQakKxyNtqsA
-Message-ID: <CAGSQo03nX2cMc0WZQ2YmUKkOLCH_iu9MeQuLSXfCHmNBbuDJ9g@mail.gmail.com>
-Subject: Re: [PATCH v8 4/6] rust: debugfs: Support arbitrary owned backing for File
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Benno Lossin <lossin@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Sami Tolvanen <samitolvanen@google.com>, Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, Dirk Behme <dirk.behme@de.bosch.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tue, Jul 1, 2025 at 1:16=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> w=
-rote:
->
-> On Tue, Jul 01, 2025 at 10:09:10PM +0200, Benno Lossin wrote:
-> > On Tue Jul 1, 2025 at 10:03 PM CEST, Benno Lossin wrote:
-> > > On Tue Jul 1, 2025 at 9:58 PM CEST, Danilo Krummrich wrote:
-> > >> On 7/1/25 9:46 PM, Benno Lossin wrote:
-> > >>> On Tue Jul 1, 2025 at 9:21 PM CEST, Danilo Krummrich wrote:
-> > >>>> On Tue, Jul 01, 2025 at 11:11:13AM -0700, Matthew Maurer wrote:
-> > >>>>> If we implement *only* pinned files, we run into an additional pr=
-oblem
-> > >>>>> - you can't easily extend a pinned vector. This means that you ca=
-nnot
-> > >>>>> have dynamically created devices unless you're willing to put eve=
-ry
-> > >>>>> new `File` into its own `Box`, because you aren't allowed to move=
- any
-> > >>>>> of the previously allocated `File`s for a resize.
-> > >>>>>
-> > >>>>> Where previously you would have had
-> > >>>>>
-> > >>>>> ```
-> > >>>>> debug_files: Vec<File>
-> > >>>>> ```
-> > >>>>>
-> > >>>>> you would now have
-> > >>>>>
-> > >>>>> ```
-> > >>>>> debug_files: Vec<PinBox<File<T>>>
-> > >>>>> ```
-> > >>>>
-> > >>>> Stuffing single File instances into a Vec seems like the wrong thi=
-ng to do.
-> > >>>>
-> > >>>> Instead you may have instances of some data structure that is crea=
-ted
-> > >>>> dynamically in your driver that you want to expose through debugfs=
-.
-> > >>>>
-> > >>>> Let's say you have (userspace) clients that can be registered arbi=
-trarily, then
-> > >>>> you want a Vec<Client>, which contains the client instances. In or=
-der to provide
-> > >>>> information about the Client in debugfs you then have the client e=
-mbed things as
-> > >>>> discussed above.
-> > >>>>
-> > >>>>  struct Client {
-> > >>>>     id: File<ClientId>,
-> > >>>>     data: File<ClientData>,
-> > >>>>     ...
-> > >>>>  }
-> > >>>>
-> > >>>> I think that makes much more sense than keeping a Vec<Arc<Client>>=
- *and* a
-> > >>>> Vec<File> separately. Also, note that with the above, your Client =
-instances
-> > >>>> don't need to be reference counted anymore.
-> > >>>>
-> > >>>> I think this addresses the concerns below.
-> > >>>
-> > >>> You still have the issue that `Client` now needs to be pinned and t=
-he
-> > >>> vector can't be resized. But if you know that it's bounded, then we
-> > >>> could just make `Pin<Vec<T>>` work as expected (not relocating the
-> > >>> underlying allocation by not exposing `push`, only
-> > >>> `push_within_capacity`).
-> > >>>
-> > >>> We also could have a `SegmentedVec<T>` that doesn't move elements.
-> > >>> Essentially it is
-> > >>>
-> > >>>      enum SegmentedVec<T> {
-> > >>>          Cons(Segment<T>, KBox<SegmentedVec<T>>)
-> > >>>          Nul,
-> > >>>      }
-> > >>>
-> > >>>      struct Segment<T> {
-> > >>>          elements: [T; 16]
-> > >>>      }
-> > >>>
-> > >>> or make the segments variable-sized and grow them accordingly.
-> > >>
-> > >> That sounds a lot like the perfect application for XArray. :)
-> > >
-> > > Haha I didn't know this already existed in the kernel :) Yeah then we
-> > > should make XArray work for this use-case.
-> >
-> > Ah wait, I meant for `SegmentedVec<T>` to store multiple `T` in the sam=
-e
-> > allocation, so it would only grow sometimes and amortize the allocation=
-s
-> > just like `Vec`. It seems to me that XArray only stores pointers, so yo=
-u
-> > have to box everything (which we're trying to avoid IIUC).
->
-> Yes, that sounds good. And if the potential number of Client instances ca=
-n get
-> pretty large Vec isn't a good choice anyways. If we really get a ton of c=
-lients,
-> they should be allocated with a kmem_cache and stored in an XArray, maple=
- tree,
-> etc.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
+head:   104f02a7798f7e8aba25545f9d485035532260b2
+commit: 104f02a7798f7e8aba25545f9d485035532260b2 [19/19] Merge core/entry into tip/master
+config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20250702/202507020528.N0LtekXt-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250702/202507020528.N0LtekXt-lkp@intel.com/reproduce)
 
-OK. I've outlined why I disagree, but it sounds like consensus here is that=
-:
-1. You want a `File<T>` that implements `Deref` to expose a `&T`.
-2. To enable `T` to take on values which are not `ForeignOwnable`, you
-want me to make `create_file` return a `PinInit<File<T>>` (We will
-also grow a `T: Sized` bound here.)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507020528.N0LtekXt-lkp@intel.com/
 
-You are aware that:
-1. A `File` can no longer be placed in a normal Rust collection, you
-will either need to box it or use a special collection kind.
-2. Adding or removing DebugFS support for some data in a driver may
-cause more noise (code edits non-local to the debug logic) than
-expected.
+All errors (new ones prefixed by >>):
 
-The one thing I still don't see a consensus on:
+   In file included from arch/s390/kernel/process.c:32:
+   include/linux/entry-common.h:161:7: error: unexpected token
+     161 |                 if (WARN(irqs_disabled(), "syscall %lu left IRQs disabled", nr))
+         |                     ^
+   include/asm-generic/bug.h:141:3: note: expanded from macro 'WARN'
+     141 |                 __WARN_printf(TAINT_WARN, format);                      \
+         |                 ^
+   include/asm-generic/bug.h:113:3: note: expanded from macro '__WARN_printf'
+     113 |                 __WARN_FLAGS("", BUGFLAG_NO_CUT_HERE | BUGFLAG_TAINT(taint));\
+         |                 ^
+   arch/s390/include/asm/bug.h:44:2: note: expanded from macro '__WARN_FLAGS'
+      44 |         __BUG_FLAGS(cond_str, BUGFLAG_WARNING|(flags));         \
+         |         ^
+   note: (skipping 1 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+   include/linux/stringify.h:10:27: note: expanded from macro '__stringify'
+      10 | #define __stringify(x...)       __stringify_1(x)
+         |                                 ^
+   include/linux/stringify.h:9:29: note: expanded from macro '__stringify_1'
+       9 | #define __stringify_1(x...)     #x
+         |                                 ^
+   <scratch space>:31:1: note: expanded from here
+      31 | ".pushsection __bug_table, \"aw\"; .align 4; 10000: .long 10001f - .; .pushsection .rodata.str, \"aMS\", @progbits, 1; 10002: .string \"\" \"include/linux/entry-common.h\"; .popsection; .long 10002b - .; .short 161; .short (1 << 0)|((1 << 3) | ((9) << 8)); .popsection; 10001: mc 0,0"
+         | ^
+   <inline asm>:1:134: note: instantiated into assembly here
+       1 |         .pushsection __bug_table, "aw"; .align 4; 10000: .long 10001f - .; .pushsection .rodata.str, "aMS", @progbits, 1; 10002: .string "" "include/linux/entry-common.h"; .popsection; .long 10002b - .; .short 161; .short (1 << 0)|((1 << 3) | ((9) << 8)); .popsection; 10001: mc 0,0
+         |                                                                                                                                             ^
+   In file included from arch/s390/kernel/process.c:32:
+   In file included from include/linux/entry-common.h:5:
+>> include/linux/irq-entry-common.h:201:2: error: unexpected token
+     201 |         lockdep_assert_irqs_disabled();
+         |         ^
+   include/linux/lockdep.h:582:2: note: expanded from macro 'lockdep_assert_irqs_disabled'
+     582 |         WARN_ON_ONCE(__lockdep_enabled && this_cpu_read(hardirqs_enabled)); \
+         |         ^
+   include/asm-generic/bug.h:119:3: note: expanded from macro 'WARN_ON_ONCE'
+     119 |                 __WARN_FLAGS("["#condition"] ",                 \
+         |                 ^
+   arch/s390/include/asm/bug.h:44:2: note: expanded from macro '__WARN_FLAGS'
+      44 |         __BUG_FLAGS(cond_str, BUGFLAG_WARNING|(flags));         \
+         |         ^
+   note: (skipping 1 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+   include/linux/stringify.h:10:27: note: expanded from macro '__stringify'
+      10 | #define __stringify(x...)       __stringify_1(x)
+         |                                 ^
+   include/linux/stringify.h:9:29: note: expanded from macro '__stringify_1'
+       9 | #define __stringify_1(x...)     #x
+         |                                 ^
+   <scratch space>:153:1: note: expanded from here
+     153 | ".pushsection __bug_table, \"aw\"; .align 4; 10000: .long 10001f - .; .pushsection .rodata.str, \"aMS\", @progbits, 1; 10002: .string \"[\"\"__lockdep_enabled && this_cpu_read(hardirqs_enabled)\"\"] \" \"include/linux/irq-entry-common.h\"; .popsection; .long 10002b - .; .short 201; .short (1 << 0)|((1 << 1) | ((9) << 8)); .popsection; 10001: mc 0,0"
+         | ^
+   <inline asm>:1:134: note: instantiated into assembly here
+       1 |         .pushsection __bug_table, "aw"; .align 4; 10000: .long 10001f - .; .pushsection .rodata.str, "aMS", @progbits, 1; 10002: .string "[""__lockdep_enabled && this_cpu_read(hardirqs_enabled)""] " "include/linux/irq-entry-common.h"; .popsection; .long 10002b - .; .short 201; .short (1 << 0)|((1 << 1) | ((9) << 8)); .popsection; 10001: mc 0,0
+         |                                                                                                                                             ^
+   In file included from arch/s390/kernel/process.c:32:
+   In file included from include/linux/entry-common.h:5:
+   include/linux/irq-entry-common.h:214:2: error: unexpected token
+     214 |         lockdep_assert_irqs_disabled();
+         |         ^
+   include/linux/lockdep.h:582:2: note: expanded from macro 'lockdep_assert_irqs_disabled'
+     582 |         WARN_ON_ONCE(__lockdep_enabled && this_cpu_read(hardirqs_enabled)); \
+         |         ^
+   include/asm-generic/bug.h:119:3: note: expanded from macro 'WARN_ON_ONCE'
+     119 |                 __WARN_FLAGS("["#condition"] ",                 \
+         |                 ^
+   arch/s390/include/asm/bug.h:44:2: note: expanded from macro '__WARN_FLAGS'
+      44 |         __BUG_FLAGS(cond_str, BUGFLAG_WARNING|(flags));         \
+         |         ^
+   note: (skipping 1 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+   include/linux/stringify.h:10:27: note: expanded from macro '__stringify'
+      10 | #define __stringify(x...)       __stringify_1(x)
+         |                                 ^
+   include/linux/stringify.h:9:29: note: expanded from macro '__stringify_1'
+       9 | #define __stringify_1(x...)     #x
+         |                                 ^
+   <scratch space>:2:1: note: expanded from here
+       2 | ".pushsection __bug_table, \"aw\"; .align 4; 10000: .long 10001f - .; .pushsection .rodata.str, \"aMS\", @progbits, 1; 10002: .string \"[\"\"__lockdep_enabled && this_cpu_read(hardirqs_enabled)\"\"] \" \"include/linux/irq-entry-common.h\"; .popsection; .long 10002b - .; .short 214; .short (1 << 0)|((1 << 1) | ((9) << 8)); .popsection; 10001: mc 0,0"
+         | ^
+   <inline asm>:1:134: note: instantiated into assembly here
+       1 |         .pushsection __bug_table, "aw"; .align 4; 10000: .long 10001f - .; .pushsection .rodata.str, "aMS", @progbits, 1; 10002: .string "[""__lockdep_enabled && this_cpu_read(hardirqs_enabled)""] " "include/linux/irq-entry-common.h"; .popsection; .long 10002b - .; .short 214; .short (1 << 0)|((1 << 1) | ((9) << 8)); .popsection; 10001: mc 0,0
+         |                                                                                                                                             ^
+   3 errors generated.
+--
+   In file included from arch/s390/kernel/syscall.c:35:
+   include/linux/entry-common.h:161:7: error: unexpected token
+     161 |                 if (WARN(irqs_disabled(), "syscall %lu left IRQs disabled", nr))
+         |                     ^
+   include/asm-generic/bug.h:141:3: note: expanded from macro 'WARN'
+     141 |                 __WARN_printf(TAINT_WARN, format);                      \
+         |                 ^
+   include/asm-generic/bug.h:113:3: note: expanded from macro '__WARN_printf'
+     113 |                 __WARN_FLAGS("", BUGFLAG_NO_CUT_HERE | BUGFLAG_TAINT(taint));\
+         |                 ^
+   arch/s390/include/asm/bug.h:44:2: note: expanded from macro '__WARN_FLAGS'
+      44 |         __BUG_FLAGS(cond_str, BUGFLAG_WARNING|(flags));         \
+         |         ^
+   note: (skipping 1 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+   include/linux/stringify.h:10:27: note: expanded from macro '__stringify'
+      10 | #define __stringify(x...)       __stringify_1(x)
+         |                                 ^
+   include/linux/stringify.h:9:29: note: expanded from macro '__stringify_1'
+       9 | #define __stringify_1(x...)     #x
+         |                                 ^
+   <scratch space>:137:1: note: expanded from here
+     137 | ".pushsection __bug_table, \"aw\"; .align 4; 10000: .long 10001f - .; .pushsection .rodata.str, \"aMS\", @progbits, 1; 10002: .string \"\" \"include/linux/entry-common.h\"; .popsection; .long 10002b - .; .short 161; .short (1 << 0)|((1 << 3) | ((9) << 8)); .popsection; 10001: mc 0,0"
+         | ^
+   <inline asm>:1:134: note: instantiated into assembly here
+       1 |         .pushsection __bug_table, "aw"; .align 4; 10000: .long 10001f - .; .pushsection .rodata.str, "aMS", @progbits, 1; 10002: .string "" "include/linux/entry-common.h"; .popsection; .long 10002b - .; .short 161; .short (1 << 0)|((1 << 3) | ((9) << 8)); .popsection; 10001: mc 0,0
+         |                                                                                                                                             ^
+   In file included from arch/s390/kernel/syscall.c:35:
+   In file included from include/linux/entry-common.h:5:
+>> include/linux/irq-entry-common.h:201:2: error: unexpected token
+     201 |         lockdep_assert_irqs_disabled();
+         |         ^
+   include/linux/lockdep.h:582:2: note: expanded from macro 'lockdep_assert_irqs_disabled'
+     582 |         WARN_ON_ONCE(__lockdep_enabled && this_cpu_read(hardirqs_enabled)); \
+         |         ^
+   include/asm-generic/bug.h:119:3: note: expanded from macro 'WARN_ON_ONCE'
+     119 |                 __WARN_FLAGS("["#condition"] ",                 \
+         |                 ^
+   arch/s390/include/asm/bug.h:44:2: note: expanded from macro '__WARN_FLAGS'
+      44 |         __BUG_FLAGS(cond_str, BUGFLAG_WARNING|(flags));         \
+         |         ^
+   note: (skipping 1 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+   include/linux/stringify.h:10:27: note: expanded from macro '__stringify'
+      10 | #define __stringify(x...)       __stringify_1(x)
+         |                                 ^
+   include/linux/stringify.h:9:29: note: expanded from macro '__stringify_1'
+       9 | #define __stringify_1(x...)     #x
+         |                                 ^
+   <scratch space>:59:1: note: expanded from here
+      59 | ".pushsection __bug_table, \"aw\"; .align 4; 10000: .long 10001f - .; .pushsection .rodata.str, \"aMS\", @progbits, 1; 10002: .string \"[\"\"__lockdep_enabled && this_cpu_read(hardirqs_enabled)\"\"] \" \"include/linux/irq-entry-common.h\"; .popsection; .long 10002b - .; .short 201; .short (1 << 0)|((1 << 1) | ((9) << 8)); .popsection; 10001: mc 0,0"
+         | ^
+   <inline asm>:1:134: note: instantiated into assembly here
+       1 |         .pushsection __bug_table, "aw"; .align 4; 10000: .long 10001f - .; .pushsection .rodata.str, "aMS", @progbits, 1; 10002: .string "[""__lockdep_enabled && this_cpu_read(hardirqs_enabled)""] " "include/linux/irq-entry-common.h"; .popsection; .long 10002b - .; .short 201; .short (1 << 0)|((1 << 1) | ((9) << 8)); .popsection; 10001: mc 0,0
+         |                                                                                                                                             ^
+   In file included from arch/s390/kernel/syscall.c:35:
+   In file included from include/linux/entry-common.h:5:
+   include/linux/irq-entry-common.h:214:2: error: unexpected token
+     214 |         lockdep_assert_irqs_disabled();
+         |         ^
+   include/linux/lockdep.h:582:2: note: expanded from macro 'lockdep_assert_irqs_disabled'
+     582 |         WARN_ON_ONCE(__lockdep_enabled && this_cpu_read(hardirqs_enabled)); \
+         |         ^
+   include/asm-generic/bug.h:119:3: note: expanded from macro 'WARN_ON_ONCE'
+     119 |                 __WARN_FLAGS("["#condition"] ",                 \
+         |                 ^
+   arch/s390/include/asm/bug.h:44:2: note: expanded from macro '__WARN_FLAGS'
+      44 |         __BUG_FLAGS(cond_str, BUGFLAG_WARNING|(flags));         \
+         |         ^
+   note: (skipping 1 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+   include/linux/stringify.h:10:27: note: expanded from macro '__stringify'
+      10 | #define __stringify(x...)       __stringify_1(x)
+         |                                 ^
+   include/linux/stringify.h:9:29: note: expanded from macro '__stringify_1'
+       9 | #define __stringify_1(x...)     #x
+         |                                 ^
+   <scratch space>:104:1: note: expanded from here
+     104 | ".pushsection __bug_table, \"aw\"; .align 4; 10000: .long 10001f - .; .pushsection .rodata.str, \"aMS\", @progbits, 1; 10002: .string \"[\"\"__lockdep_enabled && this_cpu_read(hardirqs_enabled)\"\"] \" \"include/linux/irq-entry-common.h\"; .popsection; .long 10002b - .; .short 214; .short (1 << 0)|((1 << 1) | ((9) << 8)); .popsection; 10001: mc 0,0"
+         | ^
+   <inline asm>:1:134: note: instantiated into assembly here
+       1 |         .pushsection __bug_table, "aw"; .align 4; 10000: .long 10001f - .; .pushsection .rodata.str, "aMS", @progbits, 1; 10002: .string "[""__lockdep_enabled && this_cpu_read(hardirqs_enabled)""] " "include/linux/irq-entry-common.h"; .popsection; .long 10002b - .; .short 214; .short (1 << 0)|((1 << 1) | ((9) << 8)); .popsection; 10001: mc 0,0
+         |                                                                                                                                             ^
+   3 errors generated.
 
-What do you want me to do about standard traits for `File`? If we're
-intending it to be heavily used throughout structs, we'll effectively
-break `#[derive]` if I don't add support. For example, if we had
-```
-#[derive(Debug, PartialEq)]
-struct FooAttrs {
-  name: String,
-  size: usize,
-}
-// In my current patch world someone adds `File`, it's by putting
-`FooAttrs` into an `Arc` and passing that into `create_file`, no
-modifications to the structure are made.
-```
-before, we have an obvious semantics for this. If someone adds `File`
-with the new API, we get
-```
-#[derive(Debug, PartialEq)]
-#[pin_data]
-struct FooAttrs {
-  #[pin]
-  name: File<String>,
-  #[pin]
-  size: File<usize>,
-}
-```
 
-This means that for the `#[derive]` to keep working, `File` needs to
-implement these traits. Do we want it to:
-A. Purely delegate, so making this sort of change keeps the same
-behavior of derived traits
-B. Do what makes sense for a `File`, so e.g. Debug might print 'File {
-data: "name_of_foo" }', and PartialEq might test for equality of the
-dentry if not an error
+vim +201 include/linux/irq-entry-common.h
 
-I'm guessing you want A, but I've been through so many API reworks at
-this point that I wanted to ask in case there's  disagreement here.
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  180  
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  181  /**
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  182   * exit_to_user_mode_loop - do any pending work before leaving to user space
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  183   */
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  184  unsigned long exit_to_user_mode_loop(struct pt_regs *regs,
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  185  				     unsigned long ti_work);
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  186  
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  187  /**
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  188   * exit_to_user_mode_prepare - call exit_to_user_mode_loop() if required
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  189   * @regs:	Pointer to pt_regs on entry stack
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  190   *
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  191   * 1) check that interrupts are disabled
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  192   * 2) call tick_nohz_user_enter_prepare()
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  193   * 3) call exit_to_user_mode_loop() if any flags from
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  194   *    EXIT_TO_USER_MODE_WORK are set
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  195   * 4) check that interrupts are still disabled
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  196   */
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  197  static __always_inline void exit_to_user_mode_prepare(struct pt_regs *regs)
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  198  {
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  199  	unsigned long ti_work;
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  200  
+a70e9f647f501e3 Jinjie Ruan 2025-06-24 @201  	lockdep_assert_irqs_disabled();
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  202  
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  203  	/* Flush pending rcuog wakeup before the last need_resched() check */
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  204  	tick_nohz_user_enter_prepare();
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  205  
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  206  	ti_work = read_thread_flags();
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  207  	if (unlikely(ti_work & EXIT_TO_USER_MODE_WORK))
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  208  		ti_work = exit_to_user_mode_loop(regs, ti_work);
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  209  
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  210  	arch_exit_to_user_mode_prepare(regs, ti_work);
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  211  
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  212  	/* Ensure that kernel state is sane for a return to userspace */
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  213  	kmap_assert_nomap();
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  214  	lockdep_assert_irqs_disabled();
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  215  	lockdep_sys_exit();
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  216  }
+a70e9f647f501e3 Jinjie Ruan 2025-06-24  217  
+
+:::::: The code at line 201 was first introduced by commit
+:::::: a70e9f647f501e36a6a092888b1ea7386b7c5664 entry: Split generic entry into generic exception and syscall entry
+
+:::::: TO: Jinjie Ruan <ruanjinjie@huawei.com>
+:::::: CC: Thomas Gleixner <tglx@linutronix.de>
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
