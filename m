@@ -1,146 +1,103 @@
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A3A1D5CDE
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 22:31:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC8FE1A0BE0;
+	Tue,  1 Jul 2025 22:33:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751409105; cv=none; b=cWb15Ppj7dLhnteqab6siX/peZoYeXdeuaiaFhao3x15D6PO06wUMUWE+KCKr9e1nboe3+pnOZ08vJdqdlqSJ706VTOIxo3+fsCjFqL3/gp5qUZZzShG13dtOKRF4cI8R/w8IPl1B9rL/f4O7IM3MeYA+yb106H8+4SYYBohyXU=
+	t=1751409230; cv=none; b=Cr+WaqZEHTZxGaEDqGb5W1hdLnBu9scZlbruBWypD7y1WngACjF0Qz7KbKMgUvcvzIFNZC+zpdPeumdzfrwLtNVxPEFVgsMBCJ+SxN11DOq+BuMZFZi96t/irqev1B9dfoui5+7YxEuXkS4cW5tB5TzAWZ+n9sqQVfcWr3wboms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751409105; c=relaxed/simple;
-	bh=Y38NyVKnZ82iZGpTSGed9LlVmfbMXnVz10ETj3CqMPk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=GmO7bdJ6GEiklIG3RpiMhwO4+R9NBy46AEDcKhVG+76x1EncRssZCVYokAYfxhT6mKSSq3bNoXrsgNlp3T3KVM2uedPcEB2TRFjvtnrj7xrsc/JzCyMXVelVGwzzqwatJN2dwjXlkFPkSpaZusEy/YDpty9UZKX9kE8GL7pJiZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kj1y5Plc; arc=none smtp.client-ip=209.85.160.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751409230; c=relaxed/simple;
+	bh=Ur6wdFFznd5ybB3HoNgkMigzcqlEJVhwelZY7J5qVGM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QaoZ79HhP0X2W2FQ3URLYa7ylTIAsGTCkzx1cIBLQg37ZbrVT6TpdpS2UafY065SDc2NWvu9TehuUMyzmZXguS8fmvXczBzLlH9zOvR/q5XTrc/qXOYVE6xSEvV70Wpg9xaLPbyks7oQiWd2TMtJ+ZRhBS/wdinCk2w69SyOrNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eRX/VJyq; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kj1y5Plc"
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-2ef493de975so2405935fac.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 15:31:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eRX/VJyq"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4a7a8c2b7b9so58728991cf.1;
+        Tue, 01 Jul 2025 15:33:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751409102; x=1752013902; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=g+APmr3mcxG70O2Gf3NLRFLfhkFazHT+YEHSsydc6Nw=;
-        b=kj1y5PlcxzfBzqjp9yr8loT+juWB7r8INMsofwd8QC6Y7b98u33Q3AxfAF4d2g6CSA
-         /CVBEU3/xeliL93K2KQyOQjVRay3xmTVRtFBA9mepks6vm5Wx+alMulLlwFd0XFhI003
-         Rz1zvGQaLX8x+EYp5B5F11brux4O3QSykY+I0TmKfP+2tdvr/VkFAS0BdsXQCObiXI/Y
-         irqr79atlNC6apnQiyLcmifgcAEVrUk1G6envMDiGPbUWn8SnYhwii6H/u1Hhf125ioP
-         HNVs0KIpTTOywVXXD6837FwBo8I/LTBSvIc707sUi2y0PzUsR5urXcV31YUMB3GBuNNo
-         oEXw==
+        d=gmail.com; s=20230601; t=1751409227; x=1752014027; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1kyOSdbD4Kz3s79/+GLCVgDXW+uzhkik8u0Q1mi1pVE=;
+        b=eRX/VJyqaqOWAAIGuGgp1hmptpCCzq4Wfy7X69jk8ZypXOvFTBlJIMMSTRz1KxtBBh
+         M5SxTmlDIt6cZEnGcss+Ourw/uB4QwMcoj3e4XpmmC/QRMqEztQzmgb+VYE2sLEhZZ1F
+         GtmSc8vn7JRjZb7GRpKobvEOG8sFjcI6pmQRL8yW164tiwKEPdgOsGIMNmHan9T0NY9B
+         X1tyv0ruC8tQQ1uWDvKfOJFupoHV7hRZLgPwGh8ubBtt6ev4u/+IZyKs6klF0weiNWMb
+         nrX/0WxtoxsxM+UN5qI1GvPoEz58i6AIKuQkEMStD8uSFsgQb2oO6KTeJ/GML+94eIeo
+         PqAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751409102; x=1752013902;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g+APmr3mcxG70O2Gf3NLRFLfhkFazHT+YEHSsydc6Nw=;
-        b=j/YTjnnZ3TCX/kQ2y8BRVJ7c057xw9TNS1JglJAy3wRFxkP8X4z4jPR3cXHvi08wfV
-         wOhRoBnrL2wRvZV4Qig/kv2AAkKqj+Gmn0EfX59GYpokwHtBsmCaSDXfA+9L6gdZAQel
-         DFzT8Y6KC0OM8M0oGzD0b2ZdbnNBYrAeTt0mYuoz7TrtcDkK9UtAcS9DxDipkcfy1nBD
-         m2av55vP6XNq2kV0W5bPr9jclcjwi6F0L0OTG2It1sypHzvkSv1qWQ8+uw+Iy8ly/5vq
-         BqlZF2q4FdPA30Ussv/oZpJpTacs5U1S3yLc5dd+VcCnsku2bWf8XU47BiuY09lezCrt
-         vEMA==
-X-Forwarded-Encrypted: i=1; AJvYcCUT/JYaEdWuyegrxVDvfK5ud6Rh3mFtMGjmlckfXkBYRf4hN7+YcuCUv3SHrTe4mE8dmfIz0974ACyJws8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxp03HsCYeq/cCTjquGe2uEy0DqmhioGykpSiG1deY1cMBYkfbg
-	YygOj1SdWv1Id1OdFYz5fem6YDZwAsXdYsZ2meYXx040s81G3EM/pehEz3CABrXPsyc=
-X-Gm-Gg: ASbGncvNM+TSifu5NZISXvCTP8O16J/9UAZGZvV9AbTXEzUZdFHWdt0lP6G3CfVU3L9
-	5dhs/TNyIF1CXCAEZlxWKpnMbpS3SXW46F3h5qRZxRMJ9aXljUDXKASiq3g1DUFseyGqeYnQ2S1
-	q3gPmkyB3Pnlx9eTbf+IDz1QWo3b66NSBhNjuDhDtg9q9R9fbMzMPHqXdGWY/LqM1B4Nyv7N6eF
-	6KmLKLcgZTiA2Be7BxwPLadn8j3m3Z/K69CHCuSu/jqHWpMj/0davOYdoUeQBegXMblDkU4utA2
-	shu0IyAdJgAH1QUBFNXHkYMMeKRvoS3OIUKs+vihd3nijSQMMXtp4c/PTWSigPUXD1PzWA==
-X-Google-Smtp-Source: AGHT+IEsUQPOhLWTesKKtP8Y6vrAjQiXU7OxciWMUsj0112kKHLpaSXzrVlr3Y2T3n6p/TQSmzEMbg==
-X-Received: by 2002:a05:687c:820:b0:2bc:716c:4622 with SMTP id 586e51a60fabf-2f5c7de279fmr396814fac.38.1751409101828;
-        Tue, 01 Jul 2025 15:31:41 -0700 (PDT)
-Received: from localhost ([2603:8080:b800:f700:d663:8de8:cafb:14e3])
-        by smtp.gmail.com with UTF8SMTPSA id 46e09a7af769-73afb10088esm2275056a34.50.2025.07.01.15.31.41
+        d=1e100.net; s=20230601; t=1751409227; x=1752014027;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1kyOSdbD4Kz3s79/+GLCVgDXW+uzhkik8u0Q1mi1pVE=;
+        b=uBPOMEKumL/hrltopTO8JczfMn0dvYGazvFbSLSVUYhR7nI4UvMeLJI2gmyqFexDO9
+         IWbvHSTlBiGgGHMWgzCmLVTRrMgTAE7TxI6zqkHDBUU/Yn996tfxW6iORU0gifRaDO0A
+         vZr0RUUP56vKRwVBvgF4R32G5mmw3QBI6TSB0uQtvWV44amL73P0KJ8lovzzjnHQtmvJ
+         4WDgzrrCtyYyQR/B6tg0VetWpgoqNei81/9ulDpIlsgGewRtgrRbylrRKtNRzeHgK+3x
+         nnMcH6VPkIg1CMpJRoLBNAytSLgaGUj93QOs6O0Iak7GhoRYs5BgC0qjYjWFx7RFquDz
+         AvWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVTSmNh6OgZcXEzuCcyNPrG2ueD+Fbo3Y0pSVt6ZEEcj4F4NIPOjgZHqld5BEPsQp5M7NEgqkHn31zq@vger.kernel.org, AJvYcCXH0zRC4uO1ocN6OVA1Sqp8aNJtfJeRJp6GtQhUY/mIFec01ZamT+4eCNAMSfDaJvc5gAjOS9apn4b8g8kY@vger.kernel.org, AJvYcCXu+CnfSP8jR5Pm2KZbCdDRuIl0XPbET6vlcR8RQLajg3PSuQ5erXVzVqeGRv7Ql6WSHN0kM3cQr0bd@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdQ20zco9a8owa3PGJ7H/kHJaHjr7OyjSYWNpTLuSd8XWnFDvQ
+	VgLvDT1HaziT3Ky1XuFlODQ1OFaa28I21Ia+pm0RxnVv/VxCK0vLbNon
+X-Gm-Gg: ASbGnctPQbvbeu4/GPve6odFgvyS0JQpF/xN9Bmi94Z1kId8n28z5fnbzQrdUSjCXdE
+	Qsnmz+I/T5B7rwAdzn5zLSITZDCQyUiT+8tNmxsss7zuBitGKyOpjpZxI9Km9a6yCCNJf1RK+nt
+	aAjBxLmnSmoOOCW9Q2ni7TmKR0/d83x6KvoEJ86nXqPJOmT6dj+jyJj/Bg0L1hddlUwt2N8QlMk
+	G83WV6k4t/wLnEji5v9qQWcTfeNx8vGMcNnlfNANbGfYj4xmzuaBNnUNFjAoEoCWpr2JDkfTs32
+	pJYCYOinJmzODFk/qGBgX7/bC0XLSMMwTrydXCpg/dlGkL3xhI8kXNTthHryPR3o77NoH//67+P
+	v4KH7mQfHPw2ACrRfUspz
+X-Google-Smtp-Source: AGHT+IEhD03hyOOVoL7g1f+KmGinRUs2uSWAf4HhY0BvOqWE0uArMxFWLux4/CDVgyejOy6hnHzlUw==
+X-Received: by 2002:a05:622a:188f:b0:4a6:f81a:4443 with SMTP id d75a77b69052e-4a9768a162amr14776931cf.5.1751409227401;
+        Tue, 01 Jul 2025 15:33:47 -0700 (PDT)
+Received: from localhost.localdomain ([2804:14d:4c64:81ec:632c:d5cb:2b3d:e72b])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7fc55cc6fsm80726231cf.39.2025.07.01.15.33.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 15:31:41 -0700 (PDT)
-Date: Tue, 1 Jul 2025 17:31:40 -0500
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] dmaengine: nbpfaxi: Fix memory corruption in probe()
-Message-ID: <b13c5225-7eff-448c-badc-a2c98e9bcaca@sabinyo.mountain>
+        Tue, 01 Jul 2025 15:33:47 -0700 (PDT)
+From: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: ~lkcamp/patches@lists.sr.ht,
+	linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: trivial-devices: Add Garmin lidar-lite-v3
+Date: Tue,  1 Jul 2025 19:30:41 -0300
+Message-ID: <20250701223341.36835-1-rodrigo.gobbi.7@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+Content-Transfer-Encoding: 8bit
 
-The nbpf->chan[] array is allocated earlier in the nbpf_probe() function
-and it has "num_channels" elements.  These three loops iterate one
-element farther than they should and corrupt memory.
+The compatible grmn,lidar-lite-v3 is managed by the same
+driver of pulsedlight,lidar-lite-v2, which is a trivial device.
 
-The changes to the second loop are more involved.  In this case, we're
-copying data from the irqbuf[] array into the nbpf->chan[] array.  If
-the data in irqbuf[i] is the error IRQ then we skip it, so the iterators
-are not in sync.  I added a check to ensure that we don't go beyond the
-end of the irqbuf[] array.  I'm pretty sure this can't happen, but it
-seemed harmless to add a check.
-
-On the other hand, after the loop has ended there is a check to ensure
-that the "chan" iterator is where we expect it to be.  In the original
-code we went one element beyond the end of the array so the iterator
-wasn't in the correct place and it would always return -EINVAL.  However,
-now it will always be in the correct place.  I deleted the check since
-we know the result.
-
-Cc: stable@vger.kernel.org
-Fixes: b45b262cefd5 ("dmaengine: add a driver for AMBA AXI NBPF DMAC IP cores")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+Signed-off-by: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+Fixes: b257c1a45e99 ("iio: pulsedlight-lidar-lite-v2: add lidar-lite-v3 property")
 ---
-From static analysis.  Not tested.
+ Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
- drivers/dma/nbpfaxi.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/dma/nbpfaxi.c b/drivers/dma/nbpfaxi.c
-index 0d6324c4e2be..7a2488a0d6a3 100644
---- a/drivers/dma/nbpfaxi.c
-+++ b/drivers/dma/nbpfaxi.c
-@@ -1351,7 +1351,7 @@ static int nbpf_probe(struct platform_device *pdev)
- 	if (irqs == 1) {
- 		eirq = irqbuf[0];
- 
--		for (i = 0; i <= num_channels; i++)
-+		for (i = 0; i < num_channels; i++)
- 			nbpf->chan[i].irq = irqbuf[0];
- 	} else {
- 		eirq = platform_get_irq_byname(pdev, "error");
-@@ -1361,16 +1361,15 @@ static int nbpf_probe(struct platform_device *pdev)
- 		if (irqs == num_channels + 1) {
- 			struct nbpf_channel *chan;
- 
--			for (i = 0, chan = nbpf->chan; i <= num_channels;
-+			for (i = 0, chan = nbpf->chan; i < num_channels;
- 			     i++, chan++) {
- 				/* Skip the error IRQ */
- 				if (irqbuf[i] == eirq)
- 					i++;
-+				if (i >= ARRAY_SIZE(irqbuf))
-+					return -EINVAL;
- 				chan->irq = irqbuf[i];
- 			}
--
--			if (chan != nbpf->chan + num_channels)
--				return -EINVAL;
- 		} else {
- 			/* 2 IRQs and more than one channel */
- 			if (irqbuf[0] == eirq)
-@@ -1378,7 +1377,7 @@ static int nbpf_probe(struct platform_device *pdev)
- 			else
- 				irq = irqbuf[0];
- 
--			for (i = 0; i <= num_channels; i++)
-+			for (i = 0; i < num_channels; i++)
- 				nbpf->chan[i].irq = irq;
- 		}
- 	}
+diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
+index 8da408107e55..cd9d7d5eec51 100644
+--- a/Documentation/devicetree/bindings/trivial-devices.yaml
++++ b/Documentation/devicetree/bindings/trivial-devices.yaml
+@@ -107,6 +107,8 @@ properties:
+           - fsl,mpl3115
+             # MPR121: Proximity Capacitive Touch Sensor Controller
+           - fsl,mpr121
++            # Optical Distance Measurement Sensor
++          - grmn,lidar-lite-v3
+             # Honeywell Humidicon HIH-6130 humidity/temperature sensor
+           - honeywell,hi6130
+             # IBM Common Form Factor Power Supply Versions (all versions)
 -- 
-2.47.2
+2.48.1
 
