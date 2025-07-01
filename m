@@ -1,116 +1,165 @@
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C83D3280337
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 19:38:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 113C313774D;
+	Tue,  1 Jul 2025 19:40:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751398731; cv=none; b=QykfmGRZowVqQfDv0/hGVSDlqD1iznsVlWl4XEkqTHjzKP/ycy6m5J8Q77axVNOXcMwfooXLTWXxlw+jVTLbuSAlXM6N2ffHguM1jlRNjedlU71WrvrQlhtXS1gWTrOwQdIirT+FS9kJCh5j6ffeJOb/tdJv5Sjn7vwpBkpnS+8=
+	t=1751398804; cv=none; b=oArsS/EXROll4EGdVjWo4Jn6L88k1Y+6hMyWgnNot1h+MlQxwG59zIjkmEbobHEA8f9KlMmdlxJd3N0jkhOb9UiHhqrxW3XOrxQ99OeMEAjhQrsovyxLltpPqbaCT/eLEVH57ocZfZxTxEh/C/Ih9Bxnjzpgh5vwnpWpgVP7xuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751398731; c=relaxed/simple;
-	bh=jdSJbsMqXjRs6rof0VNrFHkz8yb0xjXpNi8/6LiUtHU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X49XubuuWIYjElrwvziS6ua/BzJJ48c7Tt8WCDTcdjnzlKUxnyt8eriCxb8bwXMtQjDIjP+eNt5phlKTCKVK2tB7gM5PqwwLxUddmKFY0PdRIJfhIrn2hLygWa5oHEBm3HwFybtCr0QAg08w6GwNbr8nF26hb0xImVgffvljY+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=axmLaA6D; arc=none smtp.client-ip=209.85.166.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1751398804; c=relaxed/simple;
+	bh=P2caZe334Rdl+21mNw9S4lQ5Nz7oIHW5wOU0XL+c00o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h3xrO8jVoj11yzPIhTi2SgEeCto0JQH03v9S56ix1LZbL62e7s6I+2hxbWWcCqUSsNV/sUBnkcZgZMINTWcsiJt4zMp6/mLQUcnYRfdIsYyYOt8BXoL007b7ceIVM4lIEr+v4MZYorcJv/4sX3Ohi82UDpNDWKxDdONBwLU6nME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GB4etYzy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="axmLaA6D"
-Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-86a052d7897so525074839f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 12:38:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1751398727; x=1752003527; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JlI2LusSqBKQhKAwOVjtIPc9qQuOGQmC5znI8Uy39jg=;
-        b=axmLaA6DB3mTphLIx4PPP2+/qWYKOrOtKm8HHAbXn8gGF9iyGlVlH7JD1GcUFVdCrz
-         ratib+upR2bTw7chL2QN98nA7sqvNEWxxa0QnogZSMlCQ5qxjlpY9rpGTzDiCIVZzr/v
-         1Qpz2h/MUZKrPSYEPTs3bpduAru2xraEG5+W4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751398727; x=1752003527;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JlI2LusSqBKQhKAwOVjtIPc9qQuOGQmC5znI8Uy39jg=;
-        b=d2lFeNQDqZMbmJEfpY6ZSETf8I40J0kxx6IPyzFY2vnvTBmQNdU0UrBtwX+1P1/8BB
-         Hdpaiyy7DNcHXEv/bJGgAyEgGUQAbsxCxIuLfxRtZ3N+HQHCp90+pn7GI+4tUoHLaBdJ
-         p/bMH/1NAnZ/y8nQka4FehBNlns/jKYNA42D7m8WnDarQR458BKRbjMtYCDKZF3qa8ul
-         ECX7nDvZsnbufhaN1LdsrmTlJuf6InH4rpd/S9juB9B5+A5tkIbV5RuVGMI6Ri1av9wI
-         gi6ugnKKZLVI0ZRNlEw7uFBZkgoLoRg5Ys0+SY5KHbsTgwV3h96CnRwOqmiUmbx/RHKh
-         lHFw==
-X-Forwarded-Encrypted: i=1; AJvYcCVlZSn8PbRA7Bv9E3Niy833u2+AIbDiO1N+pq4prXSFZf7647EyL+dTrGRmNWpJGoytrYZQl97TsiDloKY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1ZEA1v7YBMMz1up85Ng1NLVIESZG3obdog+GgLDPHu8hQPLMG
-	rp6DHSiEtF8Weo+Sd8oS60bHsWBRV8mnpdnr/ka7IZ+u0W0RuzpkTQASHbOEJSeztsI=
-X-Gm-Gg: ASbGncsZwI2bwLZRLeowE2eSRQ8X/OrWtqv1vEi7L9/9W/cbNT6uK4yDS18NCoKX8gs
-	jChJTSYaKugdQsmoa3d0R9joYawB+vHuuW0a9ukqAgRVW6F4FCVVfOsGAo6sJLVcXcMVjHjndgX
-	PwbaLIuEdmyM6TPmuWneQRpIVPBXeRhevML+txhIIxw0FEUfaXr2Vps1juh9iCUA2hWayYo00uo
-	WrZ2+9aKmuhfKYd3F0/JdXegtdRu8mxz6sPSRypxQHq+OUkdeYolDn8icaD00STHqGev/hmpYkN
-	af/5ecxfp0oq9al0EVwTOEF42Hy2sXH4tcpHPmk1pPoWgBjfN5okaq4w0kkdgPWVq044p0yT+Q/
-	SV00OYELj
-X-Google-Smtp-Source: AGHT+IGvl85HXknFk5WCMqL3KGp3aOWaEvzVt6Rqv1FGK+Z9f2Q+2wtZthqKmGchchXpQiY+DMOzSw==
-X-Received: by 2002:a05:6e02:74a:b0:3dd:b5ef:4556 with SMTP id e9e14a558f8ab-3e054a307fbmr3075225ab.18.1751398727532;
-        Tue, 01 Jul 2025 12:38:47 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5020486ba41sm2570574173.28.2025.07.01.12.38.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 12:38:46 -0700 (PDT)
-Message-ID: <d040e32a-3519-434f-b6ce-1e63345b23c8@linuxfoundation.org>
-Date: Tue, 1 Jul 2025 13:38:46 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GB4etYzy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7734FC4CEEB;
+	Tue,  1 Jul 2025 19:40:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751398803;
+	bh=P2caZe334Rdl+21mNw9S4lQ5Nz7oIHW5wOU0XL+c00o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GB4etYzyzcqEhr4xdM+j6WcJRYpYEmZhlsUhRqN/glHIHGyAuykjgue/iNFjGYRLk
+	 8PnF8yVXDHnmM8qtk4qA+ApUQxZYXVHpAG786Td6E4oxi5PRoNzD5pUgJF/mIlNSJN
+	 0fz3OGyJyjT1FnkA/lB7UOBOYtPPF0ToiGs9o44kmTcf6mivw+vPI6maow9/O3FbpE
+	 hCvzgoc+h8P44+Bqvv8Cg5lFe7RQ4+RxDTkHO2PnvuPE5sgp2XzBc226YRfdJxx2sg
+	 lycQnYut6aVFTDdyfZqsUegmeEqkiccSXIGSIpTXsJlGtxYfAfxPgSsm7kS2qtnIF9
+	 HSZECfCWs8y4w==
+Date: Tue, 1 Jul 2025 12:40:02 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: Andrey Albershteyn <aalbersh@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+	Casey Schaufler <casey@schaufler-ca.com>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+	Paul Moore <paul@paul-moore.com>, linux-api@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-xfs@vger.kernel.org, selinux@vger.kernel.org,
+	Andrey Albershteyn <aalbersh@kernel.org>
+Subject: Re: [PATCH v6 5/6] fs: prepare for extending file_get/setattr()
+Message-ID: <20250701194002.GS10009@frogsfrogsfrogs>
+References: <20250630-xattrat-syscall-v6-0-c4e3bc35227b@kernel.org>
+ <20250630-xattrat-syscall-v6-5-c4e3bc35227b@kernel.org>
+ <20250701183105.GP10009@frogsfrogsfrogs>
+ <CAOQ4uxiCpGcZ7V8OqssP2xKsN0ZiAO7mQ_1Qt705BrcHeSPmBg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] drm/msm: Remove dead code in msm_ioctl_gem_submit()
-To: I Hsin Cheng <richard120310@gmail.com>, robin.clark@oss.qualcomm.com
-Cc: lumag@kernel.org, abhinav.kumar@linux.dev,
- jessica.zhang@oss.qualcomm.com, sean@poorly.run,
- marijn.suijten@somainline.org, airlied@gmail.com, simona@ffwll.ch,
- linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- shuah@kernel.org, linux-kernel-mentees@lists.linux.dev,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20250623184734.22947-1-richard120310@gmail.com>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250623184734.22947-1-richard120310@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOQ4uxiCpGcZ7V8OqssP2xKsN0ZiAO7mQ_1Qt705BrcHeSPmBg@mail.gmail.com>
 
-On 6/23/25 12:47, I Hsin Cheng wrote:
-> According to the report of Coverity Scan [1], "sync_file" is going to be
-> NULL when entering the "if" section after "out_post_unlock", so
-> "fput(sync_file->file)" is never going to be exected in this block.
+On Tue, Jul 01, 2025 at 09:27:38PM +0200, Amir Goldstein wrote:
+> On Tue, Jul 1, 2025 at 8:31 PM Darrick J. Wong <djwong@kernel.org> wrote:
+> >
+> > On Mon, Jun 30, 2025 at 06:20:15PM +0200, Andrey Albershteyn wrote:
+> > > From: Amir Goldstein <amir73il@gmail.com>
+> > >
+> > > We intend to add support for more xflags to selective filesystems and
+> > > We cannot rely on copy_struct_from_user() to detect this extension.
+> > >
+> > > In preparation of extending the API, do not allow setting xflags unknown
+> > > by this kernel version.
+> > >
+> > > Also do not pass the read-only flags and read-only field fsx_nextents to
+> > > filesystem.
+> > >
+> > > These changes should not affect existing chattr programs that use the
+> > > ioctl to get fsxattr before setting the new values.
+> > >
+> > > Link: https://lore.kernel.org/linux-fsdevel/20250216164029.20673-4-pali@kernel.org/
+> > > Cc: Pali Rohár <pali@kernel.org>
+> > > Cc: Andrey Albershteyn <aalbersh@redhat.com>
+> > > Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+> > > Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
+> > > ---
+> > >  fs/file_attr.c           |  8 +++++++-
+> > >  include/linux/fileattr.h | 20 ++++++++++++++++++++
+> > >  2 files changed, 27 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/fs/file_attr.c b/fs/file_attr.c
+> > > index 4e85fa00c092..62f08872d4ad 100644
+> > > --- a/fs/file_attr.c
+> > > +++ b/fs/file_attr.c
+> > > @@ -99,9 +99,10 @@ EXPORT_SYMBOL(vfs_fileattr_get);
+> > >  int copy_fsxattr_to_user(const struct fileattr *fa, struct fsxattr __user *ufa)
+> > >  {
+> > >       struct fsxattr xfa;
+> > > +     __u32 mask = FS_XFLAGS_MASK;
+> > >
+> > >       memset(&xfa, 0, sizeof(xfa));
+> > > -     xfa.fsx_xflags = fa->fsx_xflags;
+> > > +     xfa.fsx_xflags = fa->fsx_xflags & mask;
+> >
+> > I wonder, should it be an error if a filesystem sets an fsx_xflags bit
+> > outside of FS_XFLAGS_MASK?  I guess that's one way to prevent
+> > filesystems from overriding the VFS bits. ;)
 > 
-> [1]: https://scan5.scan.coverity.com/#/project-view/10074/10063?selectedIssue=1655089
-> Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
-> ---
->   drivers/gpu/drm/msm/msm_gem_submit.c | 2 --
->   1 file changed, 2 deletions(-)
+> I think Pali has a plan on how to ensure that later
+> when the mask is provided via the API.
 > 
-> diff --git a/drivers/gpu/drm/msm/msm_gem_submit.c b/drivers/gpu/drm/msm/msm_gem_submit.c
-> index d4f71bb54e84..cba1dc6fe6c6 100644
-> --- a/drivers/gpu/drm/msm/msm_gem_submit.c
-> +++ b/drivers/gpu/drm/msm/msm_gem_submit.c
-> @@ -904,8 +904,6 @@ int msm_ioctl_gem_submit(struct drm_device *dev, void *data,
->   out_post_unlock:
->   	if (ret && (out_fence_fd >= 0)) {
->   		put_unused_fd(out_fence_fd);
-> -		if (sync_file)
-> -			fput(sync_file->file);
+> >
+> > Though couldn't that be:
+> >
+> >         xfa.fsx_xflags = fa->fsx_xflags & FS_XFLAGS_MASK;
+> >
+> > instead?  And same below?
+> >
+> 
+> Indeed. There is a reason for the var, because the next series
+> by Pali will use a user provided mask, which defaults to FS_XFLAGS_MASK,
+> so I left it this way.
+> 
+> I don't see a problem with it keeping as is, but if it bothers you
+> I guess we can re-add the var later.
 
-Are you sure you want delete these two lines? It might not make
-sense to check sync_file inside if (ret && (out_fence_fd >= 0)),
-but it is ncecessary to fput.
+Nah, it doesn't bother me that much.
 
->   	}
->   
->   	if (!IS_ERR_OR_NULL(submit)) {
+> > >       xfa.fsx_extsize = fa->fsx_extsize;
+> > >       xfa.fsx_nextents = fa->fsx_nextents;
+> > >       xfa.fsx_projid = fa->fsx_projid;
+> > > @@ -118,11 +119,16 @@ static int copy_fsxattr_from_user(struct fileattr *fa,
+> > >                                 struct fsxattr __user *ufa)
+> > >  {
+> > >       struct fsxattr xfa;
+> > > +     __u32 mask = FS_XFLAGS_MASK;
+> > >
+> > >       if (copy_from_user(&xfa, ufa, sizeof(xfa)))
+> > >               return -EFAULT;
+> > >
+> > > +     if (xfa.fsx_xflags & ~mask)
+> > > +             return -EINVAL;
+> >
+> > I wonder if you want EOPNOTSUPP here?  We don't know how to support
+> > unknown xflags.  OTOH if you all have beaten this to death while I was
+> > out then don't start another round just for me. :P
+> 
+> We have beaten this API almost to death for sure ;)
+> I don't remember if we discussed this specific aspect,
+> but I am personally in favor of
+> EOPNOTSUPP := the fs does not support the set/get operation
+> EINVAL := some flags provided as value is invalid
+> 
+> For example, if the get API provides you with a mask of the
+> valid flags that you can set, if you try to set flags outside of
+> that mask you get EINVAL.
+> 
+> That's my interpretation, but I agree that EOPNOTSUPP can also
+> make sense in this situation.
 
-Check the error paths carefully to see if this is indeed the right fix.
+<nod> I think I'd rather EOPNOTSUPP for "bits are set that the kernel
+doesn't recognize" and EINVAL (or maybe something else like
+EPROTONOSUPPORT) for "fs driver will not let you change this bit".
+At least for the syscall interface; we probably have to flatten that to
+EOPNOTSUPP for both legacy ioctls.
 
-thanks,
--- Shuah
+--D
+
+> Thanks,
+> Amir.
+> 
