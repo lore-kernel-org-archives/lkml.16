@@ -1,99 +1,356 @@
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 407BD273D9F;
-	Tue,  1 Jul 2025 12:40:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FB33274665
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 12:41:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751373653; cv=none; b=OBS32hyuqSjW4BjQZvpm5HY9tmn86kISrNlh6Irg9pg5diiWcQ0iYLN5QHXD8pjOfwPGnd+iEZLY059ylb0nk/blLwD8ofKmXmHzCyqmtNY7JbrwRokhwPfgMCXesIayo1yudbwDJ/ndLdwCmRfX3L9liAKs5XLQJ6dGwHhFupk=
+	t=1751373673; cv=none; b=P60exaP4ctQ5XTd3I5DUu6kvyI0ffB2wDZXcK9Itip6Pq6i+q1lYT0tHMbPI44ABiXyGHJ0YgXwv4O/88128NTtwqwnUFsd/glkXS2+84N+oekMDmAl6RkC4BWHVv1EfAvQfMGIP/c9DCPI2eNViCkGPW+NCpCiZLZ0U2rH3xf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751373653; c=relaxed/simple;
-	bh=PUaUR5VhASDTSHhsAGTsCZjK/DENkgX8RBFVeiaQnpI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MW+ZxsPF7y4kqpjTObUKndbBSqIAhDNzftc433XMTkZla56y5MkYasck62YpK5rcKryyXqXRmUeFsnbPqbim2fUzp6nfOKoZH/2MBn2aoxDFFmgOA+kivKBJaPh29CxEkgRN93j31ZG8QQBObKCL6s1bE1GtC0JyEoGf8PxLH20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-87f36c458afso1858744241.1;
-        Tue, 01 Jul 2025 05:40:51 -0700 (PDT)
+	s=arc-20240116; t=1751373673; c=relaxed/simple;
+	bh=RWoHsMqJRYZy6NXt8PDpEqOoOqztHO28cg5z+Sojd2A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M99ZLz//2ghuRa5Z/Ze29V73RFX6pJ9T9H7+47rq5nV3ZMJMyIYQjeaVzZBf7r4zSVLBfIgbqDo5go2Bjm4EgMZghznYrNGqxF8OIyzMvPqH96xu1qbYi3teSUPUJxVTPTXGWKd04oIpkRo+fxfCcQDIDPJNjplhmmIy1x4uac4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=I6TpP3ER; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I6TpP3ER"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751373670;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Oze5knNhHgerWyspgYSAhDKX+wWribF6uN8V8VOABbQ=;
+	b=I6TpP3ERxkfp0Kbot12Lg0D2TzjGsVKsKpkLh9mpQYaduIYgnm/84y3wk5m2k2OgQ/e1Lb
+	mpuXByycQnLxMuvDWS52psae18zzvzpMkLkbFDVmIYCLFIRLvzc7Afjhue5L8t9BGsgKjA
+	rgwm6KCvURBBtKdgsNJu3UOpTgHA2J8=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-451-Wv2TQh_WMNG3H1Vd1ZNpcw-1; Tue, 01 Jul 2025 08:41:09 -0400
+X-MC-Unique: Wv2TQh_WMNG3H1Vd1ZNpcw-1
+X-Mimecast-MFC-AGG-ID: Wv2TQh_WMNG3H1Vd1ZNpcw_1751373668
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a523ce0bb2so1778108f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 05:41:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751373650; x=1751978450;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xToFNIqcKKBMs9b5WUvNuETxtnHIgtEdP5ltqHAQkD8=;
-        b=GW0jkcN2mDMtiarl4nYLreJ4h8XwUxsVDTKm1bV0MBKc9l/sTqi/I1dwAhFzgWpHK+
-         YYx+LbOBHY3TcPS7LDhD5FM8h/pchSiMYIcdx77aSRF0KWd/U+Tzt33W+4fyvGg96mEB
-         yInoLvlMaz5KCq4lS77QpGq+rV0jC2arKd6J7qKIK8okd9wGX1CN3u2HzvI0UgPn2RBJ
-         mNGy1St2gj8ksOW5t/KMeCXe4mzavuUcr202gTeOyfsdaMXtiT5Nq7ycmXCQdkR83Apo
-         bZh6YklJJLHKZzFPC6B0+0elbRMXSxtqfa6KspoIRxC+5fOEOECiEopWkzTl273L3uVA
-         4N4A==
-X-Forwarded-Encrypted: i=1; AJvYcCUoF/md5D3KwpJgBz8ZVpa/9jW+yDk2qRLDXy+U15LkFLxN5p3ltfRyQ4oseLu31ycRGa8maN9Nq27d@vger.kernel.org, AJvYcCUyKRbpLrW/zprU1lk53T+GZtDY0If2qwDHDFIfnUPx1MOV5LTEPLuQm6fgR7yyLBNsn3gOnMcWaIup3YrB522R+n4=@vger.kernel.org, AJvYcCWDIdkfNK76Vi/mIDxKERm84Fhv1YRRCWVXTlWY7JnUQeQVTWhjIODZK5SDgR/h3QnsMBrs7n3OQCjak0/X@vger.kernel.org, AJvYcCWL94nn1/LW5b+BZpRHpOMxgXKzfBNrpYVPzuxqskHpLzg+qQBXESy1y8Rt+yJhVb/yrkycqQ3fKWJq@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjB9SvtqazgVhX56qcGGVRZYn8rFJLanXI+oGGOOWH9dFxfmn6
-	yrAF6JvCuM9Gc8nTqXV6yL8uvLH/61ZLly3u5Jh35l8tcHZ7rQQJpOerdsa7pHI0
-X-Gm-Gg: ASbGncs5j7fR7tiP4L72b8RMoZQ+cfkpXV8HtbRPrOjF3CKV1Z0dzD4GXu6Nst8yl6A
-	LlsT/N0GJFQ2eBpuuU3Xr3v+N8zBTPeETJzxPyTS44IAJ1U0E71yPGbXPYD4YuUPOLvoVy+e2gL
-	5svu6xx0gITK7NBklXTsw6QVy1yzWmwTD3Cs+cuDukXZ5H2bEA+U6GE48mdirz1bPoTLNfCKlzN
-	oZtabdum4sNfWcQqAEZNde/teYRXuaVzVVBnHsJTdC7p4lHMbwujWoECDxj/5ukDkfmUI99+QD7
-	HmR/TC5WWf6w2VrZz1BKc9gcmTZBl4vJjMG8QNE9LKiIvxC/hWdtUBwZPzs41YKr7x6hUfrU/OE
-	GtF2Y80087hM8pI11l5KhPkYz5478vgPEQRk=
-X-Google-Smtp-Source: AGHT+IGVwHG0zEqXyxp4G33Wn0D8WzlIOazTNPCr09brMJQD1A909n0MRLK3vhky3M5ty4YqeOKdYg==
-X-Received: by 2002:a05:6102:c06:b0:4e7:bc41:a9ab with SMTP id ada2fe7eead31-4ee4fa0bfcfmr11804447137.23.1751373650230;
-        Tue, 01 Jul 2025 05:40:50 -0700 (PDT)
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4ee4c7f1db3sm1455841137.12.2025.07.01.05.40.49
+        d=1e100.net; s=20230601; t=1751373668; x=1751978468;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Oze5knNhHgerWyspgYSAhDKX+wWribF6uN8V8VOABbQ=;
+        b=WBTjeRZE19nSCslhQuF0gZ41x2HOWJ2Bp6FBAfNvovaa1Z5V1pIQilvqK+i4qq/Ygs
+         LOO1WjWD+zOwJL1tBbemEG8HeKz0Hu+a5o1V4Hchjhwr8reeC2KWPKOmCkLc/jofurCL
+         DCL7op4BzrhZaI5PGYWDxCkSQ/xcsDv/TDOe1d7UCDj0bOMNi89MmLZJ+2D+TPjOm/jx
+         5vRzCI4JVt4KNHzmChVndao9s94W+bmlU/6i/Cb5wkSXzo7Q/iPT3vt5pNui5K8O3Aqp
+         pLN9en+/0KRKbzB8IzRkvIgV2hJvt//add1TIdz+4I0gPJmpOnrQf5OnO1/rgERb4rMU
+         OEeQ==
+X-Gm-Message-State: AOJu0YwcsK1W7XErP2ZOzxBu+TP5qhhh7ozUqUb+bL5EGXzwWJfyDAmc
+	71aetahRMJgdsHl0aWCcXAjNHIQQx+xb8VLfxy5S91m6xU9Yy+8Q8PkIFmNGWvBUpvr3fD1MJ68
+	YgA3RNcDJJXJ+sQeOyqlL1IqGt6tGZUelyUgpCo1i8MsqrvigQsLE7IqaJSrahvoo6Q==
+X-Gm-Gg: ASbGncuuh6q5QxzcLOU2nryH7jtxfKQOUVxwgzluGl6rjZRbgLhwq1Z3d2Im8ZPAawz
+	2MlZANqNiyJ8fB9DdtBwAgOoVpgUJLPkfTFjzDSOhCrB6kITjGL/4UPgbVhghI+G/CVqgfa5ujJ
+	GDFJNhp+iwtZ9J4eSeCVWaRoEWyXzGjV7bdjQJiH2G2NnR+6jKIGWLGFp1roYgEPn7iv2XXyrFX
+	/uv/p73ziAlbW99zngLOPG/O/2wq93pBk9XTaYCZgO64eRHHOHHio44kUhrzKgIgOIIIkADLmGS
+	PFA9aSUIX7YHqoVLCzYShl7N3riboMzggDwCA7lVXtv+QMK5w1NndgjzkhviLSuMhUdO9bynivy
+	OkYnn9qIvvIJKHY/DMUxRrpLbPtdiUf36vjbfmPOsR7d2omjY7w==
+X-Received: by 2002:a05:6000:643:b0:3a6:c7f6:3c56 with SMTP id ffacd0b85a97d-3a8f435e45fmr11503410f8f.11.1751373667896;
+        Tue, 01 Jul 2025 05:41:07 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEoCHt09MvkW9qgMnvENnZnK57arLhcDT0RB6QnVv3xUTfSdMsPnxZEnoOc3CnsnDJ2z4ma6g==
+X-Received: by 2002:a05:6000:643:b0:3a6:c7f6:3c56 with SMTP id ffacd0b85a97d-3a8f435e45fmr11503351f8f.11.1751373667368;
+        Tue, 01 Jul 2025 05:41:07 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f18:7500:202e:b0f1:76d6:f9af? (p200300d82f187500202eb0f176d6f9af.dip0.t-ipconnect.de. [2003:d8:2f18:7500:202e:b0f1:76d6:f9af])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823b913esm191229535e9.33.2025.07.01.05.41.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 05:40:49 -0700 (PDT)
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-88131f0badcso1934148241.2;
-        Tue, 01 Jul 2025 05:40:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU1upFnpYuslEEmILiCyUU2iGh2mojdeUhP7OSRbriqhrK/2Kf4zNxNeJysvJzNGoGaPahf9O72xoBl@vger.kernel.org, AJvYcCX22acY9oF6xgcgR0AGUvsTUfeUUe6o63dSy+goDnd/SvTtS7cHSAkZAuNlA3o8fCXg/VeRmWu3orUXMeJrr28tK7w=@vger.kernel.org, AJvYcCXedUypgR8k1azVFADSG2LwDUT6IqXCQ6Jbh7P8oLjFg/4V5UD0zzshq1LaPTeizZZe9nwHXo01yE7n@vger.kernel.org, AJvYcCXhK+I79p1rhg8H+eowSSsuIfV60np0JCnYA+fMkfOevvqcoE/0z+0TQqmUCliCWx9HQMCZrTUEsH4KOne3@vger.kernel.org
-X-Received: by 2002:a05:6102:e0b:b0:4e9:c7c8:5e24 with SMTP id
- ada2fe7eead31-4ee4fa172fcmr10924302137.25.1751373649356; Tue, 01 Jul 2025
- 05:40:49 -0700 (PDT)
+        Tue, 01 Jul 2025 05:41:06 -0700 (PDT)
+Message-ID: <bdef3652-53b5-4b2c-a544-85b2de00b177@redhat.com>
+Date: Tue, 1 Jul 2025 14:41:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250627204237.214635-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250627204237.214635-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250627204237.214635-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 1 Jul 2025 14:40:37 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdU81rszWHZ+coxKVxVuTMdY25bdgzFysNX=65SGOefe_g@mail.gmail.com>
-X-Gm-Features: Ac12FXxjs3aVuElRRynwax_nXKbGzGHFoBCj2ZBCriMFMV9-D8p09N6OYehYvPI
-Message-ID: <CAMuHMdU81rszWHZ+coxKVxVuTMdY25bdgzFysNX=65SGOefe_g@mail.gmail.com>
-Subject: Re: [PATCH v2 6/6] clk: renesas: r9a09g057: Add XSPI clock/reset
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 19/29] mm: stop storing migration_ops in page->mapping
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ virtualization@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+ Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Jerrin Shaji George <jerrin.shaji-george@broadcom.com>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>,
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+ Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
+ Ying Huang <ying.huang@linux.alibaba.com>,
+ Alistair Popple <apopple@nvidia.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Minchan Kim <minchan@kernel.org>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>,
+ Chengming Zhou <chengming.zhou@linux.dev>, Miaohe Lin
+ <linmiaohe@huawei.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>,
+ Oscar Salvador <osalvador@suse.de>, Rik van Riel <riel@surriel.com>,
+ Harry Yoo <harry.yoo@oracle.com>, Qi Zheng <zhengqi.arch@bytedance.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>
+References: <20250630130011.330477-1-david@redhat.com>
+ <20250630130011.330477-20-david@redhat.com>
+ <cf92e5be-d9ef-4998-8cfe-023221bb9d5f@lucifer.local>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <cf92e5be-d9ef-4998-8cfe-023221bb9d5f@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, 27 Jun 2025 at 22:42, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Add clock and reset entries for the XSPI interface on the R9A09G057 SoC.
->
-> While at it, rename CLK_PLLCM33_DIV4_PLLCM33 to CLK_PLLCM33_GEAR to align
-> with the terminology used in the hardware manual.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On 01.07.25 14:12, Lorenzo Stoakes wrote:
+> On Mon, Jun 30, 2025 at 03:00:00PM +0200, David Hildenbrand wrote:
+>> ... instead, look them up statically based on the page type. Maybe in the
+>> future we want a registration interface? At least for now, it can be
+>> easily handled using the two page types that actually support page
+>> migration.
+>>
+>> The remaining usage of page->mapping is to flag such pages as actually
+>> being movable (having movable_ops), which we will change next.
+>>
+>> Reviewed-by: Zi Yan <ziy@nvidia.com>
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+> 
+> See comment below, this feels iffy in the long run but ok as an interim measure.
+> 
+> So:
+> 
+> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> 
+>> ---
+>>   include/linux/balloon_compaction.h |  2 +-
+>>   include/linux/migrate.h            | 14 ++------------
+>>   include/linux/zsmalloc.h           |  2 ++
+>>   mm/balloon_compaction.c            |  1 -
+>>   mm/compaction.c                    |  5 ++---
+>>   mm/migrate.c                       | 23 +++++++++++++++++++++++
+>>   mm/zpdesc.h                        |  5 ++---
+>>   mm/zsmalloc.c                      |  8 +++-----
+>>   8 files changed, 35 insertions(+), 25 deletions(-)
+>>
+>> diff --git a/include/linux/balloon_compaction.h b/include/linux/balloon_compaction.h
+>> index 9bce8e9f5018c..a8a1706cc56f3 100644
+>> --- a/include/linux/balloon_compaction.h
+>> +++ b/include/linux/balloon_compaction.h
+>> @@ -92,7 +92,7 @@ static inline void balloon_page_insert(struct balloon_dev_info *balloon,
+>>   				       struct page *page)
+>>   {
+>>   	__SetPageOffline(page);
+>> -	__SetPageMovable(page, &balloon_mops);
+>> +	__SetPageMovable(page);
+>>   	set_page_private(page, (unsigned long)balloon);
+>>   	list_add(&page->lru, &balloon->pages);
+>>   }
+>> diff --git a/include/linux/migrate.h b/include/linux/migrate.h
+>> index e04035f70e36f..6aece3f3c8be8 100644
+>> --- a/include/linux/migrate.h
+>> +++ b/include/linux/migrate.h
+>> @@ -104,23 +104,13 @@ static inline int migrate_huge_page_move_mapping(struct address_space *mapping,
+>>   #endif /* CONFIG_MIGRATION */
+>>
+>>   #ifdef CONFIG_COMPACTION
+>> -void __SetPageMovable(struct page *page, const struct movable_operations *ops);
+>> +void __SetPageMovable(struct page *page);
+>>   #else
+>> -static inline void __SetPageMovable(struct page *page,
+>> -		const struct movable_operations *ops)
+>> +static inline void __SetPageMovable(struct page *page)
+>>   {
+>>   }
+>>   #endif
+>>
+>> -static inline
+>> -const struct movable_operations *page_movable_ops(struct page *page)
+>> -{
+>> -	VM_WARN_ON_ONCE_PAGE(!page_has_movable_ops(page), page);
+>> -
+>> -	return (const struct movable_operations *)
+>> -		((unsigned long)page->mapping - PAGE_MAPPING_MOVABLE);
+>> -}
+>> -
+>>   #ifdef CONFIG_NUMA_BALANCING
+>>   int migrate_misplaced_folio_prepare(struct folio *folio,
+>>   		struct vm_area_struct *vma, int node);
+>> diff --git a/include/linux/zsmalloc.h b/include/linux/zsmalloc.h
+>> index 13e9cc5490f71..f3ccff2d966cd 100644
+>> --- a/include/linux/zsmalloc.h
+>> +++ b/include/linux/zsmalloc.h
+>> @@ -46,4 +46,6 @@ void zs_obj_read_end(struct zs_pool *pool, unsigned long handle,
+>>   void zs_obj_write(struct zs_pool *pool, unsigned long handle,
+>>   		  void *handle_mem, size_t mem_len);
+>>
+>> +extern const struct movable_operations zsmalloc_mops;
+>> +
+>>   #endif
+>> diff --git a/mm/balloon_compaction.c b/mm/balloon_compaction.c
+>> index e4f1a122d786b..2a4a649805c11 100644
+>> --- a/mm/balloon_compaction.c
+>> +++ b/mm/balloon_compaction.c
+>> @@ -253,6 +253,5 @@ const struct movable_operations balloon_mops = {
+>>   	.isolate_page = balloon_page_isolate,
+>>   	.putback_page = balloon_page_putback,
+>>   };
+>> -EXPORT_SYMBOL_GPL(balloon_mops);
+>>
+>>   #endif /* CONFIG_BALLOON_COMPACTION */
+>> diff --git a/mm/compaction.c b/mm/compaction.c
+>> index 41fd6a1fe9a33..348eb754cb227 100644
+>> --- a/mm/compaction.c
+>> +++ b/mm/compaction.c
+>> @@ -114,11 +114,10 @@ static unsigned long release_free_list(struct list_head *freepages)
+>>   }
+>>
+>>   #ifdef CONFIG_COMPACTION
+>> -void __SetPageMovable(struct page *page, const struct movable_operations *mops)
+>> +void __SetPageMovable(struct page *page)
+>>   {
+>>   	VM_BUG_ON_PAGE(!PageLocked(page), page);
+>> -	VM_BUG_ON_PAGE((unsigned long)mops & PAGE_MAPPING_MOVABLE, page);
+>> -	page->mapping = (void *)((unsigned long)mops | PAGE_MAPPING_MOVABLE);
+>> +	page->mapping = (void *)(PAGE_MAPPING_MOVABLE);
+>>   }
+>>   EXPORT_SYMBOL(__SetPageMovable);
+>>
+>> diff --git a/mm/migrate.c b/mm/migrate.c
+>> index 15d3c1031530c..c6c9998014ec8 100644
+>> --- a/mm/migrate.c
+>> +++ b/mm/migrate.c
+>> @@ -43,6 +43,8 @@
+>>   #include <linux/sched/sysctl.h>
+>>   #include <linux/memory-tiers.h>
+>>   #include <linux/pagewalk.h>
+>> +#include <linux/balloon_compaction.h>
+>> +#include <linux/zsmalloc.h>
+>>
+>>   #include <asm/tlbflush.h>
+>>
+>> @@ -51,6 +53,27 @@
+>>   #include "internal.h"
+>>   #include "swap.h"
+>>
+>> +static const struct movable_operations *page_movable_ops(struct page *page)
+>> +{
+>> +	VM_WARN_ON_ONCE_PAGE(!page_has_movable_ops(page), page);
+>> +
+>> +	/*
+>> +	 * If we enable page migration for a page of a certain type by marking
+>> +	 * it as movable, the page type must be sticky until the page gets freed
+>> +	 * back to the buddy.
+>> +	 */
+> 
+> Ah now this makes more sense...
+> 
+>> +#ifdef CONFIG_BALLOON_COMPACTION
+>> +	if (PageOffline(page))
+>> +		/* Only balloon compaction sets PageOffline pages movable. */
+>> +		return &balloon_mops;
+> 
+> So it's certain that if we try to invoke movable ops, and it's the balloon
+> compaction case, the page will be offline?
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-clk for v6.17.
+Yes. The page must be marked as having movable_ops by the user. The next 
+patch reworks that as well.
 
-Gr{oetje,eeting}s,
+A PageOffline page without movable_ops will never end up here 
+(page_has_movable_ops() == false).
 
-                        Geert
+> 
+>> +#endif /* CONFIG_BALLOON_COMPACTION */
+>> +#if defined(CONFIG_ZSMALLOC) && defined(CONFIG_COMPACTION)
+>> +	if (PageZsmalloc(page))
+> 
+> And same question only for ZS malloc.
+
+Same thing.
+
+> 
+>> +		return &zsmalloc_mops;
+>> +#endif /* defined(CONFIG_ZSMALLOC) && defined(CONFIG_COMPACTION) */
+>> +	return NULL;
+>> +}
+> 
+> This is kind of sketchy as it's baking in assumptions implicitly, so I hope we
+> can find an improved way of doing this later, even if it's about providing
+> e.g. is_ballon_movable_ops_page() and is_zsmalloc_movable_ops_page() predicates
+> that abstract this code + placing them in the relevant code so it's at least
+> obvious to people working on this stuff that this needs to be considered.
+> 
+> But ok as a means of getting away from having to have the hook object encoded.
+
+Yeah, not sure yet how to clean that up in the future. As I stated 
+somewhere, maybe we just want a registration interface to handle a 
+specific page type. But for handling the two known in-tree users, this 
+should get us going.
+
+Thanks!
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Cheers,
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+David / dhildenb
+
