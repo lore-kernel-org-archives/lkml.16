@@ -1,172 +1,320 @@
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FEEA26B772
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 08:34:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751358886; cv=none; b=CsbNBvmwquOGHKURhH1HgcNTsnOfaA17MgfHK8Gu6+DwUf41EZfahykBZ3fL+5JblqQSdXOaNxvglc3qOZqjxz4QCw7kyXNil81oSQPTwf19HJX+9CAjhBdrdeMrEBZDGcxortHxzTlYlVPn1x1tusWQbaGPLp6KvPfA+dVqs5g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751358886; c=relaxed/simple;
-	bh=tePumcfgYM4yfA1zn/OepsW4Fes5VB99oPMwomROmQQ=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=dFvteH5fIWk8p5xejgAeIMCN5aZv4ix/Q0/Cbj+TwD64ahfi2mAna41OTvj2ofqy+cs2IX+sgepV0rN1Zt4M9ImTCo01kxmbNfoviFqeJ+8F4tPA/tTowbQOOBKrQ4y05M+iAyIq6SxZl2/oqWC9f8sBDYvg8lwP/iTuXyVyOMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-86a5def8869so469646839f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 01:34:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751358884; x=1751963684;
-        h=cc:to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=P/RpZV1Tkb3Ci7/HwJluY5QW3M0f7S/ytspF8Tb+Pss=;
-        b=NtxSEyEKwUIoC4CrgXj4AlwTo5L3zcclH6BBVBaCTZBTq7ISAEx+br6dzDSVt5aXZT
-         A659cq0mGUM3//VOe8LVgWfd1BCD9/bu9lF5Tog0TyzGGUrkuYTFGOqSQw+o+qs/b2IK
-         NKDp+5aOs4K1W92CDQEXqhDFmS+82gdFSivF8+1iJ5xUoedAYUCwS9zeIsj55ICWBMbs
-         Ze0ogRQ7Hb1YP6p4siPD/1PKhV2JFPqlj1PsE89h69jnbP56NQLhnidRBXCchUgHuyiY
-         MiSW2+9koYBgdLmfUw96gIMA15w0jneMjWnmhiS6y7C6TqqfcD40bzeBEJwIkbSlqLLO
-         DRnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVFFME8+HAVjiU51KOBhdTPLWVkGKEfrkbhXCtbsmGRfJysBpW6i5qfMei4MDLj6PMlC3gDt8ZQVaT4PP0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyobd9H+DreFJOnfv3sq0Thh+LBapPCTdUXo8vZScSr/eJowckR
-	o1ahQuyKT52ys5fkwHYjV4vV0DzVFfd9KvpHi6Z71jzE9BykKegSNw6Y6T7TDmFh7p8TL6Rfx9U
-	8afaKpKVZW9ERG20MG3ReYrAfjBonDpzDn/8tlrVDh5xXk0gyLO+u9s8cD10=
-X-Google-Smtp-Source: AGHT+IHb+E+e0leBAbi1q+D8Aa3gv08f1YWG9uYDktjngdyqIf2V7FSezpr5bV7XhVEvAkeoPB6pVb11n/m3ecz01m0bjSke9USB
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1B3266F0D
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 08:35:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751358911; cv=fail; b=m1T5V/FQMmIYYHW8k2qoz12pvH9r5MuIXvuaYtSsItftZTYVpFgdSZbwRd5m2dnWWKK6LlgaiDUdCIR8Br2DXXuDGkfSwSrNzl2L2y0xV2sSDirn2gN2XTzTHcTMn1Dngk1PLyCCTyBbAnfmi3AcZehWGeyWAt/QZIg/SOWjfiM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751358911; c=relaxed/simple;
+	bh=YybYTVInCRpUKceI4+ZzpZZTwsIDdBr7QaBXiUZuDvo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=WLpYbANWu9M6ysj4SctpO5NNhZyVBqBH3sNYlx7V6eYzp3hWjgI8bNF+Qj/dKXppbomkF/5lHwegBfTqaQi85xHk3vFM0bsTOFWDNDafyVS+Mr8CZ1TRgGmxiXjBFeoSlIMrT8j8XaOueywP54KwTkbqdABTEh8ZleeNGbKll8g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=QoKmNEWK; dkim=fail (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=ZpXbJwSj reason="signature verification failed"; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QoKmNEWK";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="ZpXbJwSj"
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5611MtcY005431;
+	Tue, 1 Jul 2025 08:34:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=2fMPb/Oc6JYS+rt94UesW5LimrV/TC1d+eoWcMFVuHQ=; b=
+	QoKmNEWKciKuNoLCfIG4GloMYFS1W6sIC0RNG+EtCnLP4zfhjcElqvUbucq+c2pa
+	6EHS2YmE/Vve+KjLdEw3RpzaUR6xdYCAJrc0ULgS6jYsWQX4+LZRv8VCKWJGgP2E
+	tGwOPID0LTGhOUGVffN19SjeYQYu++vLRa1m07c0nztt50EjHeW/J5sooSnX8kQG
+	GUPQSHGhhB8Fr+zYik/if3KaRKsv8s5Hy1mo5fr59yU0jFJQantJZdgEHp3K9N9n
+	EtOdAYCtRw5mzg9BqhC63Qnt30XEKWZDYlsl5KpOOdeO79/3eczm22bmNu49CA5S
+	wGrmFR0RNt7KtEYBtDBA3w==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47j704c827-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 01 Jul 2025 08:34:39 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 56174nnQ005961;
+	Tue, 1 Jul 2025 08:34:37 GMT
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11on2086.outbound.protection.outlook.com [40.107.223.86])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 47j6ugpv19-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 01 Jul 2025 08:34:37 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=H033Jx0PSTRHYWIxCH0KzRp6NOifXOMfif8WPcasrIS3o/9Mq2YTbD0uklQMz+I0yJe4QOpsmmuMTXJLztGL/uPQeVO24kX/Oat3vD9ypfW3O/liGcldFr2kmJIJT0Q/P/ieDpq5Tl9HrBGMaky73jLRkbv+bXQV3t89vQ8jaso949QW8BZ6eSICFVTYIhYkBCo8wD7F1Q8qK/2ATf6R40JgCOfW0iO7MQibchj/DKFTmJM5H8RMRWncC5W364PCrQSmeAppDLNnwQ34nZAe82BGjaT3mh6OMLjW5XYt0fU4MiFkpu3La6vHyX6NDeYjZ6HU4BgsmzlzhAIRhjDE4Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SmOqK0/7Zgrc29Kl9ivWg5CUTMKDl48xG1I9heGtyp4=;
+ b=uB5LszFKGSwZWAaVJawAjw3BxV75UmuzdBd1SG1SbPoM6a4Xu8Nnsq1+P0avynji8Dsrpg8unxtbgVAmQ4Cif/NsDC9cndIKzwmA1XHqbT4DXYajLR0xPqRWsKgg6g5DXdojY+0jc8gzaaoxZZe1T8oyfg6yJjw+EXx7jQxFTpJjUsItqw11uAfJE+RvLwQ0lEhjojQesZHAie9+4/OzQ+KqpTRZZml1KTSfkSHIfOC89cUN+qxDmfZ2CsWZv4117DTQi/MqryDCcgGJZM9NDLN7VWd/dR2jjq0RAQss9V8gb6H0NMW8nPF+u1Sue1m6Qz2Emkeieja2lI+1V4roXg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SmOqK0/7Zgrc29Kl9ivWg5CUTMKDl48xG1I9heGtyp4=;
+ b=ZpXbJwSjHDvpsxP1UxUeu0zItrXHUIMdsP1VcrOfIZFHFuzmhJDcrWDd5wokZg/FSKJ4HJuXBWpbRJAy/PIx7yDadcePn6fiLnF9HXI8oKFJ/zNV9N4gpvH+yzCZXw11vS+iKt6Y1TTyAevJLkHjjOof8LzkrTUa8XiksCL5ADU=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by PH0PR10MB5871.namprd10.prod.outlook.com (2603:10b6:510:149::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.29; Tue, 1 Jul
+ 2025 08:34:34 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%6]) with mapi id 15.20.8880.027; Tue, 1 Jul 2025
+ 08:34:34 +0000
+Date: Tue, 1 Jul 2025 09:34:32 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org, david@redhat.com,
+        willy@infradead.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        catalin.marinas@arm.com, will@kernel.org, Liam.Howlett@oracle.com,
+        vbabka@suse.cz, jannh@google.com, anshuman.khandual@arm.com,
+        peterx@redhat.com, joey.gouly@arm.com, ioworker0@gmail.com,
+        baohua@kernel.org, kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
+        christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
+        linux-arm-kernel@lists.infradead.org, hughd@google.com,
+        yang@os.amperecomputing.com, ziy@nvidia.com
+Subject: Re: [PATCH v4 2/4] mm: Add batched versions of
+ ptep_modify_prot_start/commit
+Message-ID: <e54949b6-3635-4578-b98f-08c029d7796c@lucifer.local>
+References: <20250628113435.46678-1-dev.jain@arm.com>
+ <20250628113435.46678-3-dev.jain@arm.com>
+ <a305816d-7770-47ec-bb21-1572c7c7783b@lucifer.local>
+ <c12e2958-5a51-439d-aa86-e72d85699562@arm.com>
+ <23a213b8-280a-4544-a210-7c18a0caf8a9@arm.com>
+ <b214edda-4162-47fd-a9e0-c2a4cee3ac88@lucifer.local>
+ <3959a598-c7c0-4321-ae2f-f45e5ff144e4@arm.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3959a598-c7c0-4321-ae2f-f45e5ff144e4@arm.com>
+X-ClientProxiedBy: LO4P265CA0165.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:312::8) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:6d83:b0:861:d8ca:3587 with SMTP id
- ca18e2360f4ac-876882a82acmr2241987739f.4.1751358884145; Tue, 01 Jul 2025
- 01:34:44 -0700 (PDT)
-Date: Tue, 01 Jul 2025 01:34:44 -0700
-In-Reply-To: <a0abb368-1871-49e9-8f6b-ff78f543c808@kernel.org>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68639da4.a70a0220.3b7e22.189f.GAE@google.com>
-Subject: Re: [syzbot] [f2fs?] kernel BUG in do_write_page
-From: syzbot <syzbot+9201a61c060513d4be38@syzkaller.appspotmail.com>
-To: chao@kernel.org
-Cc: chao@kernel.org, jaegeuk@kernel.org, 
-	linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|PH0PR10MB5871:EE_
+X-MS-Office365-Filtering-Correlation-Id: a9478e0e-d183-4581-a4b8-08ddb87a1bb6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|7416014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?iso-8859-1?Q?bwdiuZJ++124e+TPEoP90yiQl4/9tBUDjb8O8BvULBqRmp956kqDpoipkF?=
+ =?iso-8859-1?Q?08nelR4/QsOGh3juwYnO0aqXRckV/Q9D8EZZ/ojjjrJvphTWsEFEgB3yGw?=
+ =?iso-8859-1?Q?Ziz7yILcqIMOC6PDlyxGjJ2k8POCYfUnyL9IU/8GSFN3CA8nLDrM/kRd0r?=
+ =?iso-8859-1?Q?mfBhAYheohmd2LK6+BX6j2kKK88KJ3ACB8wGkXQRxM5jcr/pq9wc18TNXq?=
+ =?iso-8859-1?Q?gbWEAasblSg6qU0rNAD666gA/ntIoHk5ylTA1mCH9GSDU9tfvGuPCGNNgO?=
+ =?iso-8859-1?Q?WBWx9E9FUFN0GAcgXVgU1EY/oeKlNqZMD72IJJhgZCUIzh/OwsKLFBzRL6?=
+ =?iso-8859-1?Q?WdNpIYefjK6m4D3AGtpOMBsZFVzBlJIrL2XerGYy0Myvhhx/Y8Ja+PifnN?=
+ =?iso-8859-1?Q?KK0K2Aarsu0R6p1voeBe3vOjPBrYUWcGLGgKi2sjwEuO7yOEU2bcIC4ZiB?=
+ =?iso-8859-1?Q?GW57n4vqhEay9Pb6COgVYLqp4Dsu8h5mUErcn7mhrEXhtcaf6reeIwcMJD?=
+ =?iso-8859-1?Q?mEPxlvLlzd3pyy1W4Lcc8nCd1aORc30cTShnfRFfbo6ukPdIq5wYJIfrxj?=
+ =?iso-8859-1?Q?TBUoXbxR/6+vO5xsuRi1kuv7nDT1DPdjMRwoqzH0asmtYdtUcSVC9VbSui?=
+ =?iso-8859-1?Q?6uR19UFvR0Akdc6mdMzHSFD5jscZ04noTgYrPvalI6utrOG7LxdzmD89U3?=
+ =?iso-8859-1?Q?Z8HAcRMg4rHrpFDRkzcHM6djMYMvgBV0BEWI+rv/u5QodbBcGN0Dn+rEx4?=
+ =?iso-8859-1?Q?4TSJBIgNt47OSvAJTTEQ3U/phIfFHG/M3nJ4ybmFdu12NklEjBeu3+GisS?=
+ =?iso-8859-1?Q?UXZjbKu9qFDg3nNIRwVbo7r+7sMcj6L7K2/rmHPTdb1qNXgxLcVjYDUqsa?=
+ =?iso-8859-1?Q?hDBD/ZKqJjl4Rv/p4WZlHUdzUQpW7xcDwViLfkbdZIEgg0ruqPPFRWMYqv?=
+ =?iso-8859-1?Q?/XyXiihHRNuXA0PZ6RKVg4N/lgEJY2OpZD/WRyQleZOLFDLQbXWtCJ1XQo?=
+ =?iso-8859-1?Q?nFM/QQVNtOWnPCs8QRXH0q5DXsQwIP6812IsmdEczm1nRmNiXFIQEYLgMq?=
+ =?iso-8859-1?Q?wHBCCl4Eqi/tG0c3WcyNLCj/trsG81b9ZDGQyikS8to0OTRsqw6SY+4LXB?=
+ =?iso-8859-1?Q?NNNai1JhIn5VuA2oZgO6hintws1Sz43dVYaSds9ptJ0j4N+c4X+zzhw9Ds?=
+ =?iso-8859-1?Q?4lRMQD3wdyQk660jzDeivd9d+DfMWxFhjtuU6j8tMXWcH5knhoFTOj1GAL?=
+ =?iso-8859-1?Q?jXShVLc5+TUEFHkQ9AUYce53kWdmLgn6Ws443OSnxrNhOMiBgPwV8YhkEw?=
+ =?iso-8859-1?Q?oeS/PpJie7ITSGEI9VbJp6CMgvyW7ym7AIjNO+75KJAc9x0jB7jWs8YnSV?=
+ =?iso-8859-1?Q?44LfHRd4WqQQFrZAiGwN2ftPoJmtoX7kDuiW1dahDb8LBPcpvL3Qor5u0E?=
+ =?iso-8859-1?Q?dYos7xXIr6A6TvucjCwbjtqnLdMH5e7t9f7qHg=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?iso-8859-1?Q?l5xTzSEx810aQ53DEJ/PM3uw7GH97olPM/Jtu+IInU5xE0QiRcm16OlARH?=
+ =?iso-8859-1?Q?wDoTm2euhfhke3fb+lK/+wE1XbvxYHju3p209FTBccp9fLjWgTO7vIewcg?=
+ =?iso-8859-1?Q?kYBhKchyz6YPvFybHwYwsXXdkC7SbBZWnm3XlNmyrFACsM31eA2Ie0xBGk?=
+ =?iso-8859-1?Q?Pv6fi4K1p4OyoP67lilItFmdMrL2YcxEUxGohSQhyfpa3cVelLZInYx+Za?=
+ =?iso-8859-1?Q?aUl5RKdd7FfzfDanWlz5IzjqtYEkc87h1+bAxSow1uC6TwBcf5Eydx1vf4?=
+ =?iso-8859-1?Q?iAYjboG+e0cy7PynNyrktvAp1NKy23y+TyGUBXdLhoGvIxPgZxWqUnkL64?=
+ =?iso-8859-1?Q?JnBT5eaI49qBLiUJzGvqrmp9WyUBE4k0aa4oJy4Pz/DXHnEx+II4P96IZH?=
+ =?iso-8859-1?Q?NhZnLt8A4M7eiGtVwY37HgPVyMbYSqVfdtMedc7w3c2YA2imiEFZyiJFbY?=
+ =?iso-8859-1?Q?QWbaxENQ56AYTXr/NBbH9FgxHErSywwAPc5JUmEF1XIXS+HTWT/+wFXcIM?=
+ =?iso-8859-1?Q?icdTUqq40dMCbe6mh3FpTG5D/F66Tupa9qerqDi9Q22STtWquzq5cdaWgy?=
+ =?iso-8859-1?Q?33KyNnVgkNKzmgpv+VY1466K+PzbI/vVS02tHgaymZ97Wz9EuWe4RihYnX?=
+ =?iso-8859-1?Q?StlWOB7hVO8nXQDt1W88NxQoSKcLOCD/2QBSJNZZeC070M3Hovm9q2Cw1M?=
+ =?iso-8859-1?Q?7umR+T5E0+201hFf/jXo8hhM7dhCoveUMP6AyvNx6DhakBK5EAi/VCbXbo?=
+ =?iso-8859-1?Q?yaRmcl1b9M6V7eaJM8/sZUAoX4CISwNlstKMfCQlYuALNSwhCm06H89ZwL?=
+ =?iso-8859-1?Q?5BAh26xV/D6sNuWaXY3GD6ss13abiKUfDhJlVOR8O2PrjnSWCol8PPMEsA?=
+ =?iso-8859-1?Q?iCvC1z6vqmAG0syXLe/cMwpWwRyPucPNpXnjIiUcpnyDyQ1s/HJZPK3OzR?=
+ =?iso-8859-1?Q?fnp0+NgCn/w4by66YqvYtfGD02e4yUTiz8FRTpUX2LbxAHO/rJ/i/UUsiS?=
+ =?iso-8859-1?Q?vSoQ7i9iTJIXX2rMHWqdgygfW2QdhonARBBToAEdb0S4WkEWOanAoJQR3K?=
+ =?iso-8859-1?Q?ZxnfCf+SmbG03s/+B8co4yhrrdWaZuRpuXyc9F73lLeFLdZNw+2KqlAs4h?=
+ =?iso-8859-1?Q?24ZIt/1AdJDAwl6JuPETBr+bBhy5M/upuYkS0MVWaP0FwTQ/cTCK1PqCEG?=
+ =?iso-8859-1?Q?UsVcWpDzWJMMR9eKn5mvr64NUHs4WSSj4q76urup60W7zLpe9uxT57+rkL?=
+ =?iso-8859-1?Q?ABpkYTHzjdj4olGonyZoGDyswg/6ZNSnKOMdnqKmcqGtCHT4j0SirfHMk+?=
+ =?iso-8859-1?Q?V5n8Zxmw5TWigenesZIZYfXuOvD4a3An1pNhRxl+W/tLPP4ojeWZmFwUOW?=
+ =?iso-8859-1?Q?xmCo3XcWHZbngrPenrQO9nVaFv5HPJydyT51v86NyBgpm+eqkd7dh+mX90?=
+ =?iso-8859-1?Q?95DKNgz9X+8u0Hdg8TaK6huyeFMXRN+shtfVUbLvk3u9l764HwsH4TwNOp?=
+ =?iso-8859-1?Q?e8rqf2hvsww+VbtyhzLdIJW157LBInMzrc/kQ8/+zEs664w8d0/bd4XMni?=
+ =?iso-8859-1?Q?fIEDDIENeUN9DKyenAkvvN8UrsdK8QH9MXXiOKqXeyCE0uD0lfw32dwJzJ?=
+ =?iso-8859-1?Q?ySYCStxsb9W6Su/s6ReOVAcuvOzQEkPFvfS498KXY8OJL2trWT3Ubm/Q?=
+ =?iso-8859-1?Q?=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	WDuW4hM9P4QXo+CfYEvsHSV6Yj1o55eXF58Hp6pKDYoL/8oymrdDk2mcdA6kNO0npVHTuOrMIDCl3Wvh5csQ265PvJnsNpgrgEdoICQumGIdFLYF2ajzIOGPuqepcK7TsFvFh5feYSXjpNq+cMXKjfjzmV+nH5DrTmpDNvfmsdiDS/G/9JLfiC7+Uj7R5ULKxf42QMAVQS6SJGx7pXqU+VmSvNYtIJIa7x0fPcIpsbwyPiI+cbAVk3Y05uujh2cX4uX7r/2Bjezco8scqZTQx0EJQ9fzj0H+CClGmIzGGa+WMIHnPAfJKmtqrFUqbe2+POlcZBkXxpQU2A4sG5u/XYdPZWuS+hx+8pgt5zlrFyvhA7kPuDjXNTIWW5pa7Z0KNdW34pJpcHhJ37Ot+6HJOhgvx0pR4JgTBcqpmrnCjCP8n7McaDxKBmDQ93uAqEmplBRZNY2i7aFHoWejdpR2+98S0XQV2NJxC43U2X49wKWnipbOKnsyJCClfvCeQ4VObfIY51M36YhofZjdLbN9rfSkeL6cjOQQ2cOzwaHXLO0jINrD+3/TcqNb+BTVFskRh1SlcaWSENAwYaJUKAFMO8kIPpK6igRA6rsynbNFkA0=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a9478e0e-d183-4581-a4b8-08ddb87a1bb6
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2025 08:34:34.7545
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rvtGbhFj5RpZbyILNOlabc519DePpfSEhTIRbrAysQf99mtK2l5ySZVjR7ZAQjFd13OHlK0FBPLfD2hW1nE7ZJDkmNVA505V1+QOsBlbUK0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB5871
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-01_01,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ bulkscore=0 malwarescore=0 spamscore=0 phishscore=0 suspectscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2505160000 definitions=main-2507010049
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAxMDA0OSBTYWx0ZWRfXwkbzWhkDN2Y1 LFM3a3ea1bUNsSFk9N87EDvep901TakAdRXOzgJjjZQ0sE91seImgT+cLB2wfNzW1OplB17mFSD weBiZMUd/uW/oZsvu0F5k/Cf0Nrv6ciaQp0kjvMp4qHbyKEaWL4CiCXGYJsXrbDKduL0/qqpgsf
+ P3laDFGYjPC38ZwlkwMtSOnWU22MG1vlWf5o3K3eKLv5SbNS5nzwrZ28ZveYP15Py4MVqf5iL1G d9Zx1RF2wOSJdtbMNH/LkQ1urXfbTgq+ekVJMz8oN1STK5uEAdMbFi6XMnE63ui4NxUFBPwh5Yj EJ8FHLfIsnP01NJjMgamkNyBPUuGt3DomiXgvUm2MBR9cdyuLUuEX4Zltj379AeRFKUowGmQoC6
+ pU2KAd54HX7aT34CEN5T8ZsYkiWECRBDlsCtpcCyKWbixp+diOSDIocWOeucgs3kADggTtqa
+X-Authority-Analysis: v=2.4 cv=LcU86ifi c=1 sm=1 tr=0 ts=68639d9f b=1 cx=c_pps a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=8nJEP1OIZ-IA:10 a=Wb1JkmetP80A:10 a=GoEa3M9JfhUA:10 a=tngGr7c-m90JZK_C6tkA:9 a=3ZKOabzyN94A:10 a=wPNLvfGTeEIA:10 cc=ntf awl=host:13215
+X-Proofpoint-GUID: 9hws4dcbAHH2ePB2xpLwWRnWnX5b6ULD
+X-Proofpoint-ORIG-GUID: 9hws4dcbAHH2ePB2xpLwWRnWnX5b6ULD
 
-> #syz test: https://git.kernel.org/pub/scm/linux/kernel/git/chao/linux.git bugfix/common
+On Tue, Jul 01, 2025 at 09:23:05AM +0100, Ryan Roberts wrote:
+> >>>>> +#ifndef modify_prot_commit_ptes
+> >>>>> +static inline void modify_prot_commit_ptes(struct vm_area_struct *vma,
+> >>>>> unsigned long addr,
+> >>>>> +        pte_t *ptep, pte_t old_pte, pte_t pte, unsigned int nr)
+> >>>>> +{
+> >>>>> +    int i;
+> >>>>> +
+> >>>>> +    for (i = 0; i < nr; ++i) {
+> >>>>> +        ptep_modify_prot_commit(vma, addr, ptep, old_pte, pte);
+> >>>>> +        ptep++;
+> >>>> Weird place to put this increment, maybe just stick it in the for loop.
+> >>>>
+> >>>>> +        addr += PAGE_SIZE;
+> >>>> Same comment here.
+> >>>
+> >>> Sure.
+> >>>
+> >>>>
+> >>>>> +        old_pte = pte_next_pfn(old_pte);
+> >>>> Could be:
+> >>>>
+> >>>>         old_pte = pte;
+> >>>>
+> >>>> No?
+> >>>
+> >>> We will need to update old_pte also since that
+> >>> is used by powerpc in radix__ptep_modify_prot_commit().
+> >>
+> >> I think perhaps Lorenzo has the model in his head where old_pte is the previous
+> >> pte in the batch. That's not the case. old_pte is the value of the pte in the
+> >> current position of the batch before any changes were made. pte is the new value
+> >> for the pte. So we need to expliticly advance the PFN in both old_pte and pte
+> >> each iteration round the loop.
+> >
+> > Yeah, you're right, apologies, I'd misinterpreted.
+> >
+> > I really, really, really hate how all this is implemented. This is obviously an
+> > mprotect() and legacy thing but it's almost designed for confusion. Not the
+> > fault of this series, and todo++ on improving mprotect as a whole (been on my
+> > list for a while...)
+>
+> Agreed. I struggled for a long time with some of the pgtable helper abstractions
+> to the arch and all the assumptions they make. But ultimately all Dev is trying
+> to do here is make some incremental improvements, following the established
+> patterns. Hopefully you agree that cleanups on a larger scale should be reserved
+> for a systematic, focussed series.
 
-This crash does not have a reproducer. I cannot test it.
+Totally agree, when I mention my distaste for existing logic, see those as
+asides, I'm not asking the series to be blocked until that's fixed :)
+
+I'm happy for us to take Dev's changes obviously once review issues are
+resolved.
+
+I think my suggestion below helps get us to a good compromise (modulo
+mm's beautifully overloaded/confusing use of terminology :>)
 
 >
-> On 7/1/25 15:58, syzbot wrote:
->> Hello,
->> 
->> syzbot found the following issue on:
->> 
->> HEAD commit:    2aeda9592360 Add linux-next specific files for 20250627
->> git tree:       linux-next
->> console output: https://syzkaller.appspot.com/x/log.txt?x=152363d4580000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=7f5c1d958b70bf47
->> dashboard link: https://syzkaller.appspot.com/bug?extid=9201a61c060513d4be38
->> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
->> 
->> Unfortunately, I don't have any reproducer for this issue yet.
->> 
->> Downloadable assets:
->> disk image: https://storage.googleapis.com/syzbot-assets/d532560074a3/disk-2aeda959.raw.xz
->> vmlinux: https://storage.googleapis.com/syzbot-assets/483001f76864/vmlinux-2aeda959.xz
->> kernel image: https://storage.googleapis.com/syzbot-assets/8f233cdc1c77/bzImage-2aeda959.xz
->> 
->> IMPORTANT: if you fix the issue, please add the following tag to the commit:
->> Reported-by: syzbot+9201a61c060513d4be38@syzkaller.appspotmail.com
->> 
->> F2FS-fs (loop9): inject invalid blkaddr in f2fs_is_valid_blkaddr of do_write_page+0x277/0xb10 fs/f2fs/segment.c:3956
->> ------------[ cut here ]------------
->> kernel BUG at fs/f2fs/segment.c:3957!
->> Oops: invalid opcode: 0000 [#1] SMP KASAN PTI
->> CPU: 0 UID: 0 PID: 10538 Comm: syz-executor Not tainted 6.16.0-rc3-next-20250627-syzkaller #0 PREEMPT(full) 
->> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
->> RIP: 0010:do_write_page+0xa44/0xb10 fs/f2fs/segment.c:3956
->> Code: 82 7f ad fd 49 89 ed 48 89 e8 48 25 ff 0f 00 00 74 1a e8 8f 7a ad fd e9 9f 00 00 00 e8 85 7a ad fd 90 0f 0b e8 7d 7a ad fd 90 <0f> 0b 4d 89 ee 4c 89 ef be 08 00 00 00 e8 7a 7c 11 fe 49 c1 ee 03
->> RSP: 0018:ffffc90004f2ec58 EFLAGS: 00010293
->> RAX: ffffffff841257e3 RBX: ffffc90004f2ef40 RCX: ffff88802f493c00
->> RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
->> RBP: ffffc90004f2ef5c R08: 0000000000000003 R09: 0000000000000004
->> R10: dffffc0000000000 R11: fffffbfff1bfa428 R12: ffff888042d28000
->> R13: 1ffff920009e5deb R14: dffffc0000000000 R15: ffffc90004f2ef5c
->> FS:  000055555f3a1500(0000) GS:ffff888125c1e000(0000) knlGS:0000000000000000
->> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> CR2: 00007f2ce7b71d60 CR3: 0000000031b0e000 CR4: 00000000003526f0
->> Call Trace:
->>  <TASK>
->>  f2fs_outplace_write_data+0x11a/0x220 fs/f2fs/segment.c:4017
->>  f2fs_do_write_data_page+0x12ea/0x1a40 fs/f2fs/data.c:2752
->>  f2fs_write_single_data_page+0xa68/0x1680 fs/f2fs/data.c:2851
->>  f2fs_write_cache_pages fs/f2fs/data.c:3133 [inline]
->>  __f2fs_write_data_pages fs/f2fs/data.c:3282 [inline]
->>  f2fs_write_data_pages+0x195b/0x3000 fs/f2fs/data.c:3309
->>  do_writepages+0x32b/0x550 mm/page-writeback.c:2636
->>  filemap_fdatawrite_wbc mm/filemap.c:386 [inline]
->>  __filemap_fdatawrite_range mm/filemap.c:419 [inline]
->>  __filemap_fdatawrite mm/filemap.c:425 [inline]
->>  filemap_fdatawrite+0x199/0x240 mm/filemap.c:430
->>  f2fs_sync_dirty_inodes+0x31f/0x830 fs/f2fs/checkpoint.c:1108
->>  block_operations fs/f2fs/checkpoint.c:1247 [inline]
->>  f2fs_write_checkpoint+0x95a/0x1df0 fs/f2fs/checkpoint.c:1638
->>  kill_f2fs_super+0x2c3/0x6c0 fs/f2fs/super.c:5081
->>  deactivate_locked_super+0xb9/0x130 fs/super.c:474
->>  cleanup_mnt+0x425/0x4c0 fs/namespace.c:1417
->>  task_work_run+0x1d4/0x260 kernel/task_work.c:227
->>  resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
->>  exit_to_user_mode_loop+0xec/0x110 kernel/entry/common.c:114
->>  exit_to_user_mode_prepare include/linux/entry-common.h:330 [inline]
->>  syscall_exit_to_user_mode_work include/linux/entry-common.h:414 [inline]
->>  syscall_exit_to_user_mode include/linux/entry-common.h:449 [inline]
->>  do_syscall_64+0x2bd/0x3b0 arch/x86/entry/syscall_64.c:100
->>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->> RIP: 0033:0x7f85f3d8fc57
->> Code: a8 ff ff ff f7 d8 64 89 01 48 83 c8 ff c3 0f 1f 44 00 00 31 f6 e9 09 00 00 00 66 0f 1f 84 00 00 00 00 00 b8 a6 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 01 c3 48 c7 c2 a8 ff ff ff f7 d8 64 89 02 b8
->> RSP: 002b:00007ffc395e64c8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
->> RAX: 0000000000000000 RBX: 00007f85f3e10925 RCX: 00007f85f3d8fc57
->> RDX: 0000000000000000 RSI: 0000000000000009 RDI: 00007ffc395e6580
->> RBP: 00007ffc395e6580 R08: 0000000000000000 R09: 0000000000000000
->> R10: 00000000ffffffff R11: 0000000000000246 R12: 00007ffc395e7610
->> R13: 00007f85f3e10925 R14: 00000000000c355a R15: 00007ffc395e7650
->>  </TASK>
->> Modules linked in:
->> ---[ end trace 0000000000000000 ]---
->> RIP: 0010:do_write_page+0xa44/0xb10 fs/f2fs/segment.c:3956
->> Code: 82 7f ad fd 49 89 ed 48 89 e8 48 25 ff 0f 00 00 74 1a e8 8f 7a ad fd e9 9f 00 00 00 e8 85 7a ad fd 90 0f 0b e8 7d 7a ad fd 90 <0f> 0b 4d 89 ee 4c 89 ef be 08 00 00 00 e8 7a 7c 11 fe 49 c1 ee 03
->> RSP: 0018:ffffc90004f2ec58 EFLAGS: 00010293
->> RAX: ffffffff841257e3 RBX: ffffc90004f2ef40 RCX: ffff88802f493c00
->> RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
->> RBP: ffffc90004f2ef5c R08: 0000000000000003 R09: 0000000000000004
->> R10: dffffc0000000000 R11: fffffbfff1bfa428 R12: ffff888042d28000
->> R13: 1ffff920009e5deb R14: dffffc0000000000 R15: ffffc90004f2ef5c
->> FS:  000055555f3a1500(0000) GS:ffff888125c1e000(0000) knlGS:0000000000000000
->> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> CR2: 00007ff1d4e5ef40 CR3: 0000000031b0e000 CR4: 00000000003526f0
->> 
->> 
->> ---
->> This report is generated by a bot. It may contain errors.
->> See https://goo.gl/tpsmEJ for more information about syzbot.
->> syzbot engineers can be reached at syzkaller@googlegroups.com.
->> 
->> syzbot will keep track of this issue. See:
->> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->> 
->> If the report is already addressed, let syzbot know by replying with:
->> #syz fix: exact-commit-title
->> 
->> If you want to overwrite report's subsystems, reply with:
->> #syz set subsystems: new-subsystem
->> (See the list of subsystem names on the web dashboard)
->> 
->> If the report is a duplicate of another one, reply with:
->> #syz dup: exact-subject-of-another-report
->> 
->> If you want to undo deduplication, reply with:
->> #syz undup
+> >
+> > So we're ultimately updating ptep (this thing that we update, of course, is
+> > buried in the middle of the function invocation) in:
+> >
+> > 	ptep_modify_prot_commit(vma, addr, ptep, old_pte, pte);
+> >
+> > We are setting *ptep++ = pte essentially (roughly speaking) right?
 >
+> Yeah, pretty much.
+>
+> The API was originally created for Xen IIRC. The problem is that the HW can
+> update the A/D bits asynchronously if the PTE is valid (from the HW perspective)
+> so the previous approach was to get_and_clear (atomic), modify, write. But that
+> required 2 Xen hypervisor calls per PTE. This start/commit approach allows Xen
+> to both avoid the get_and_clear() and batch the writes for all PTEs in a lazy
+> mmu batch. So hypervisor calls are reduced from 2 per PTE to 1 per lazy mmu
+> batch. TBH I'm no Xen expert; some of those details may be off, but big picture
+> is correct.
+
+Yeah, here we go again with some horror show stuff on Xen's behalf. I've played
+Half Life, so I already know to fear Xen ;)
+
+I believe David has _thoughts_ on this :)
+
+Again this is aside stuff.
+
+>
+> Anyway, arm64 doesn't care about any of that, but it does override
+> ptep_modify_prot_start() / ptep_modify_prot_commit() to implement an erratum
+> workaround. And it can benefit substantially from batching.
+
+Ack. And of course, the batching part is why we're all here!
+
+>
+> >
+> > And the arch needs to know about any bits that have changed I guess hence
+> > providing old_pte as well right?
+> >
+> > OK so yeah, I get it now, we're not actually advancing through ptes here, we're
+> > just advancing the PFN and applying the same 'template'.
+> >
+> > How about something like:
+> >
+> > static inline void modify_prot_commit_ptes(struct vm_area_struct *vma, unsigned long addr,
+> > 	       pte_t *ptep, pte_t old_pte, pte_t pte, unsigned int nr)
+> > {
+> > 	int i;
+> >
+> > 	for (i = 0; i < nr; i++, ptep++, addr += PAGE_SIZE) {
+> > 		ptep_modify_prot_commit(vma, addr, ptep, old_pte, pte);
+> >
+> > 		/* Advance PFN only, set same flags. */
+> > 		old_pte = pte_next_pfn(old_pte);
+> > 		pte = pte_next_pfn(pte);
+> > 	}
+> > }
+> >
+> > Neatens it up a bit and makes it clear that we're effectively propagating the
+> > flags here.
+>
+> Yes, except we don't usually refer to the non-pfn parts of a pte as "flags". We
+> normally call them pgprot or prot. God knows why...
+
+Ah of course we love to do this kind of thing to oursevles :>)
+
+Dev - suggestion above then but s/flags/prot/.
