@@ -1,123 +1,88 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E961275114
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 15:05:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE1DA2749FA;
+	Tue,  1 Jul 2025 15:05:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751382340; cv=none; b=WXep73+rgL2l3yPpEoPzrTdCLxdicAfT7F90/2+edYAdrcY1CO7zgN7521bN4nczL8QRpP/EIuIZ4ovM7b9p0Vv/7jHCqmjCFgBAZDORHjJq9f/itvAiYGU04anSqeczer4VnELQ2bQVVXm+vD99R/cIXqpYWOlOGVGJz8OoDOU=
+	t=1751382358; cv=none; b=QSNs6wjjw5Fl05/mnocshJ1ssj5eK9G7f77DbL7Z7AzgdD/kUe1pBrTZAWZZDamC4td7vb4OX+8XO8Df5Q/ez+3SzPDwvuWJNoc8wF78piZ6qiUTsf/UDZPEbXJBx7LtASJWIXMtsEtA04B/HV+hsls676SpFUqmobD8PuvBv9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751382340; c=relaxed/simple;
-	bh=cC81D9mBHYbYtcJMVF0VKar/7co57B2vWE8jFmfT+Us=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QtgVYSY26kjsR8w17SfjOFzjZsRNAbBfO1fLiwsRVgDTsChmCNPTYYUT3Ssx1xNHovBPH5ncNe+NyuSWzZoVrvQ6Aty9BYnOJxF2ly4WCIYGX9ZRgunjuwoEv6lvTZH/U1VU42Opdi6YtoU8Wzu5tjzo3zW/muR3iC1Z1uIvN7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g1TiYSWI; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g1TiYSWI"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3df2fa612c4so231735ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 08:05:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751382336; x=1751987136; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZAeW+QO7sIyTqGTIUZ5T6GJ2TGH6wrpJNIN7Yv/NoKg=;
-        b=g1TiYSWIZs3mVH7JLhZA854QEXqydIolRfCdM1Is4a/ZPERYkybkgUc/sAeXcPYdea
-         wGmJ+oyS34r7P6zqCAbWL672oFrXEa+d6miEzcz3UoDzxEM4NVv3Co5rxKnHTdSFBBfK
-         6Xd/bCybp4nBjk5wpc9pj+lwFGSgkMCKYZ/2A7OQa8X1ZjSp5oBDF98GgExA9Dw5sHYm
-         affVk2yvo14ldTxjxgwCPxqkk3sOGgC0agpkwz1Q2ttDufCDyGe9SyB7zhU0tUDAO3hn
-         LSJK7TVrkfcIBcAMiuMkrZPoCQyGtBP5hrMOA54Ez1o19FwUM8FtpNkLLR3cKMBRYx+M
-         ZWZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751382336; x=1751987136;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZAeW+QO7sIyTqGTIUZ5T6GJ2TGH6wrpJNIN7Yv/NoKg=;
-        b=gZr/AHbuAKT+BnBbuUcQGDzNFf5fFS0MOiOIrAug7WBmoRdcV+aWJG0g/gQCUUY65m
-         VHgxJunbjnjWwRm0G/vs2pVVKsYLrGiApFE9zNPLaEuztjJitVZp6R0SCVVBRSyjoGnZ
-         ND7pBZ7yo6/OGNRtWKKEy9GjYlB323vlLpv4oEuuHQ4V737mHEsZz77rIZ8s8/DlO7QM
-         txQWA14DAX7Z31nMx4yRWmuiZXtV5FkWw4nTZGyRYpEiMv81ySun90WXakuvRv+QXF0d
-         uf6nUXMihyPhC+84EP1jwC5I5I7gRmjTL3mufLvAcfiQBB8uMDQzmJeh2BKRKlDThefT
-         PTtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUGBMUTVgACIYAoSJPJzqnWk0n24FT+Ye7rMpZN6pyCtYI4PYymFZTtog4gwQLL2etmTJI2Bz+3BI7SFHo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmuKLR7c2G4RQGDqVFnxv5Kwm6Pm68WR/wJnIG6IGv+cLtCCNd
-	dZXCezAELWnm/o0pmoWkMf8p4oEBcwPKVOxeUouLClHuL5menZwAbiwtW0EwZy6po5kk87KLocN
-	AVBd+/gABlDae0fLmX71e8HhLjILlPrspGW1HOYEf
-X-Gm-Gg: ASbGncsc2jIjuOwEVK2qSp/qUlmoLjicxqj+p2zKs5xeERR/VfhS6yuyUCxL39qTjuT
-	S9DkLXu2lplNhA8WsjSHlPZImajgKiH3V5lC0kXvB7Emm8N1wcr9HB8Kpgx54PZhDHdBZ2fBUCh
-	CFfFjK6D7HrliJcI0Hz34GhMw/HYPxReGrWwPP6ZQaQ22C1iRmD5LgvMYk2g/rklTxhoHJ7Ihlv
-	w==
-X-Google-Smtp-Source: AGHT+IEcCC0GTWnthgBn4E5DR2h0slceTx2Oizv+khLKkJqEWL6UehzGXwpFPJ5xPOXnQV+0akv4aGjYDR9ESIMhqJI=
-X-Received: by 2002:a05:6e02:1b04:b0:3dc:7cc4:3cb0 with SMTP id
- e9e14a558f8ab-3e04a04a0fcmr3015485ab.18.1751382335868; Tue, 01 Jul 2025
- 08:05:35 -0700 (PDT)
+	s=arc-20240116; t=1751382358; c=relaxed/simple;
+	bh=LW+z9xv2OalS5dgdz5Jxpcqe37XTcNklzyxmht7NzKs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PVeMdeXb1xUsPXtfCtnW1bzZmigGiGWRZw4xG7Z5Nr7BLTsVhcuHY5beZOzX1vt28/KnZcGB/KKXcfY47Xqvhw9FrSdfOfeWf7f0lBEuhLnjcisa3kBezBXyMz+2URDV0IUY+i9xQrBG3vcko8VWOkC3qh1ZHAwvVVs7CwQoBf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf07.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 6F750106AF2;
+	Tue,  1 Jul 2025 15:05:54 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id A5AC12002C;
+	Tue,  1 Jul 2025 15:05:52 +0000 (UTC)
+Date: Tue, 1 Jul 2025 11:05:51 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Gabriele Monaco <gmonaco@redhat.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ john.ogness@linutronix.de
+Subject: Re: [PATCH v10 17/19] rv: Add rtapp_sleep monitor
+Message-ID: <20250701110551.5c2dc2ee@batman.local.home>
+In-Reply-To: <20250701110218.5e742850@batman.local.home>
+References: <cover.1749547399.git.namcao@linutronix.de>
+	<d3cf55d3bf42a0f70a58c394b5cf6d603ca8a9f7.1749547399.git.namcao@linutronix.de>
+	<20250630203401.1a11e58f@gandalf.local.home>
+	<20250701051757.mBjQVdoo@linutronix.de>
+	<20250701110218.5e742850@batman.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250604082449.2029156-1-guanyulin@google.com>
- <2025060407-geologic-excuse-9ca5@gregkh> <CAOuDEK1471toXVEiNySQtmrRTSPwzo840Q2d5pw9M4fCOfsgTg@mail.gmail.com>
- <2025061957-daylong-legal-fed1@gregkh>
-In-Reply-To: <2025061957-daylong-legal-fed1@gregkh>
-From: Guan-Yu Lin <guanyulin@google.com>
-Date: Tue, 1 Jul 2025 23:05:00 +0800
-X-Gm-Features: Ac12FXxBjFsDAoOgivLlVGoqGQmIP8GxWeWcWT2DlyAl6K8ndpCHuMUKdEOEMac
-Message-ID: <CAOuDEK1mY7++0NxRYR_+fhQB5+74KB-=MHhk4Dx3cpD6XrG93A@mail.gmail.com>
-Subject: Re: [PATCH v14 0/4] Support system sleep with offloaded usb transfers
-To: Greg KH <gregkh@linuxfoundation.org>, quic_wcheng@quicinc.com
-Cc: quic_zijuhu@quicinc.com, linux-usb@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 1c7g6n4opbtymoyhiqn8zyczc9habtjz
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: A5AC12002C
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18j7/4d+T9UOvy+gyeIhpK0ZW/OSzW6pUw=
+X-HE-Tag: 1751382352-318302
+X-HE-Meta: U2FsdGVkX1+ZcU4PWhBjEQbxB8RgjXv6c2LW7we9IjGqMwsPHZ3oa0drzquSMkgVKY5KDyHCAOOQpgG7rJAjrPyxbUg+Jv36zDnxL15pkeDv0lKFh7M3s4htXP1dluG9EYhw9pZ3gYaZOPCjh65YDEOVRovXMikAjAhEbzw8GtcG8wVUAH665Uthi4G2xTj/HLQuyM4YlVkgp/y7/ch6k/38dWPfa2lTTQPw54dxhxB41Zx4XOJmVpUXCnS4UO42dVtzhUtjBBiSXhOA3OWFCHgY3JSdbHTWiUgcFjK+mfALHwb5Lt5vxbkX0va3wJjhGPlLazxz/sKRXQOCynszePdLMiMBDc1g26eVCmxc1/nOMn171zVNX7kovcwpo2te
 
-On Thu, Jun 19, 2025 at 5:27=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org=
-> wrote:
->
-> On Wed, Jun 04, 2025 at 08:32:00PM +0800, Guan-Yu Lin wrote:
-> > On Wed, Jun 4, 2025 at 6:56=E2=80=AFPM Greg KH <gregkh@linuxfoundation.=
-org> wrote:
-> > >
-> > > On Wed, Jun 04, 2025 at 08:23:06AM +0000, Guan-Yu Lin wrote:
-> > >
-> > > Is there a reason you aren't cc:ing the developers from a "big androi=
-d
-> > > device company" that is currently testing and finding problems with t=
-his
-> > > patchset in their device testing?  I will require their signed-off-by=
- or
-> > > tested-by in order to even consider accepting this patch series based=
- on
-> > > the issues they seem to be finding with it in an
-> > > internal-company-bug-reporting-platform that I seem to be also copied
-> > > on.
-> > >
-> > > thanks,
-> > >
-> > > greg k-h
-> >
-> > I'm not sure if the company wants to reveal its testing right now
-> > since the company raised the problem with the internal system. Hence,
-> > we still use the internal system to communicate with them. We
-> > understand that "signed-off-by"/"tested-by" tags are required to merge
-> > the code, so we'll keep working closely with multiple companies to
-> > achieve this.
->
-> Great, please do so for the next version you post.
->
-> thanks,
->
-> greg k-h
+On Tue, 1 Jul 2025 11:02:18 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Hi Wesley,
+> On Tue, 1 Jul 2025 07:17:57 +0200
+> Nam Cao <namcao@linutronix.de> wrote:
+> 
+> > > > +	switch (state) {
+> > > > +	case S0:
+> > > > +		if (val3)
+> > > > +			__set_bit(S0, next);
+> > > > +		if (val11 && val13)
+> > > > +			__set_bit(S1, next);
+> > > > +		if (val11 && val14)
+> > > > +			__set_bit(S4, next);
+> > > > +		if (val5)
+> > > > +			__set_bit(S5, next);
+> > > > +		break;    
+> > > 
+> > > What's with all the magic numbers?
+> > > 
+> > > Can we turn these into enums so they have some meaning for us humans?    
+> > 
+> > I'm not sure what you mean, we can't use enums as variables.  
+> 
+> Bah, never mind. My eyes are getting bad and I need to increase my font
+> size, as all the S0, S1, S2 looked to me like 50, 51, 52, and I was
+> wondering what are all these numbers in the fifties??? :-p
 
-Right now the system sleep with offloaded usb transfers feature is
-pretty much settled. I was wondering if you could test the patch on
-your platform? Thanks!
+Even with my bad eyesight, these state transitions are generated from
+scripts? If so, can they inject comments that state why they generated
+this?
 
-Regards,
-Guan-Yu
+There's nothing in the code that even states that this was generated
+(if they were).
+
+-- Steve
