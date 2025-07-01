@@ -1,167 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E725B22094;
-	Tue,  1 Jul 2025 13:12:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 002E9223707;
+	Tue,  1 Jul 2025 13:13:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751375546; cv=none; b=NGM98DerLbhsGy0QJOJtsGCjisDpZG/flqcN8fqZEHCAByQoBBv86RfJr/frihEdDfaL5qwesCUjpBwwss79GZiX+qvB8/D/DxE9e/D/IQZWSHyOhMvhefq5nhb8XlG9Az51yrCM/w25NkLsbbtzeHQix8idquOtmzapaOqug/Y=
+	t=1751375588; cv=none; b=Sz2Mq8wrdl0a7AmgeFSoTqUfu9/5EjmrX4oFD1/ck03GEcM31S28uonj2qjPLStHLkK59q9CCpgR8Q6fg4CyfKerWN2VhICMbeiaTke/EvbyjCkubg66RL+1dLudk0nLz8LkMb2qy67mtqtOZpB3V+NZZrABAOfzfb8oUAcDjOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751375546; c=relaxed/simple;
-	bh=VqeOLlcaihFUrQrb2RD4VyHVweYthx0AYzfCJ3MqztU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l5rPWcPCaZmpoCgBHfoiovzJE+XtRBBUqIMfpevOMBKtUZOB12c8KHZqFp2Dzfjpd+lb5sJTP0+Zbuy5LFYaekhwqaV2ksGvaB8kb5OqtaarHKIF3ck/fP/AdZZreP2S3HsG4A/j3PMalEN7kbZqYKnMPe7PsMty28W3itwERfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NCY3ppOE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751375588; c=relaxed/simple;
+	bh=2nY97p2ezv4MKCk3SCoybkwWRea1b+L0nV7u/UCzP1M=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=ZJPyQbEtacF41kM9IjJffSBWqWHVm/kUQPA84ievOlpveK9ZYNkEduklBwwJ2+cm8Em/UbSWM8/luxMJAGjRIxiDegO8/P9te4A9BqIVyXvFPC0qrmo9H+2rDKGSXmXeJO9Aity76EW28UHC0XhwqTx/ckYTnACx5bzumbZR+Vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KSlb+b/n; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yaUBwECi; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NCY3ppOE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7C75C4CEEB;
-	Tue,  1 Jul 2025 13:12:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751375545;
-	bh=VqeOLlcaihFUrQrb2RD4VyHVweYthx0AYzfCJ3MqztU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NCY3ppOE66EphEt/LfyDewrDYSgx9co27DIVPTcIcDPPFLSJAnhYoCXp9VOly9gFx
-	 roW+3i11Si7D+RqKBP3nEK3UrwpYYC0L2ORza5BVYkaV75e26yIm3C3ku3cYD6lJmd
-	 qlaxD8Tzgf3caG1uicFHT9kjpblWU3CmIeDjrfDF06a0CpoPSvYvZ7/PrjkfSB2wQq
-	 icocx/skBkrO5/YAl7kzySqqQg2n3wGC87yQNA5PlmdiEEvMXRMa5D4/B+n0RttfaR
-	 U1iC2TAfpDUHb46NMgtENynSqWTd07Bogu7AEhs/NFKTl5FWwTPscoVF1H8mK9ntTn
-	 GD16ulnuJ7k5Q==
-Date: Tue, 1 Jul 2025 15:12:19 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: rafael@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com,
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com,
-	tmgross@umich.edu, david.m.ertman@intel.com, ira.weiny@intel.com,
-	leon@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH 2/8] rust: device: add drvdata accessors
-Message-ID: <aGPesxbxR-ob_Hqr@pollux>
-References: <20250621195118.124245-1-dakr@kernel.org>
- <20250621195118.124245-3-dakr@kernel.org>
- <2025070159-perkiness-bullion-da76@gregkh>
- <aGO_SS20fttVZM6D@pollux>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KSlb+b/n";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yaUBwECi"
+Date: Tue, 01 Jul 2025 13:13:03 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751375585;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SqjibRlqL4DqO6rw9/CRbzEzVjj53CxLkAdcv49MGL4=;
+	b=KSlb+b/no60PwW0HNU22ANiQxsW7jecGlxrBa9HImE4a1BQE+eXZV/fnryO4+JBWQBIwso
+	S0P7Q4314tKW8iGYErT7yd+xgwXrdRfvejynf65JuXpplN3kEdnlDKbdiQa5ADev5M8QoH
+	7EVFPV08Z1DQpzd2G+BHBoiN/xyqZhBY5ygF7mvRe49l2x7/WfXz3mg2cOAi/JZE/CeJpb
+	X9JMtD8p1rv129mDo4Nnu4QUyblPjf11Cs6CQOtTkHWn91ijPmm8qhjXyQXz0sByyxVUJ/
+	W3eXxychrJiN+2yNxx8lpxt7baphp07aGn/RZmWNOMcW1mB7T7Y+oaDe5NUxvA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751375585;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SqjibRlqL4DqO6rw9/CRbzEzVjj53CxLkAdcv49MGL4=;
+	b=yaUBwECi9uclK9g33lNu/hwjmHcptazb2c6/MlsAcoiYQNybAQDZhOaNUQZKMN9lE4S+sx
+	paaa7vmca2FVSPDQ==
+From: "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: locking/urgent] futex: Temporary disable FUTEX_PRIVATE_HASH
+Cc: Chris Mason <clm@meta.com>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250630145034.8JnINEaS@linutronix.de>
+References: <20250630145034.8JnINEaS@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aGO_SS20fttVZM6D@pollux>
+Message-ID: <175137558397.406.5841065111175109427.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jul 01, 2025 at 12:58:24PM +0200, Danilo Krummrich wrote:
-> On Tue, Jul 01, 2025 at 11:27:54AM +0200, Greg KH wrote:
-> > On Sat, Jun 21, 2025 at 09:43:28PM +0200, Danilo Krummrich wrote:
-> 
-> > > +impl Device<Internal> {
-> > > +    /// Store a pointer to the bound driver's private data.
-> > > +    pub fn set_drvdata(&self, data: impl ForeignOwnable) {
-> > > +        // SAFETY: By the type invariants, `self.as_raw()` is a valid pointer to a `struct device`.
-> > > +        unsafe { bindings::dev_set_drvdata(self.as_raw(), data.into_foreign().cast()) }
-> > > +    }
-> > 
-> > Ah, but a driver's private data in the device is NOT a bus-specific
-> > thing, it's a driver-specific thing, so your previous patch about
-> > Internal being there for busses feels odd.
-> 
-> It's because we only want to allow the bus abstraction to call
-> Device::set_drvdata().
-> 
-> The reason is the lifecycle of the driver's private data:
-> 
-> It starts when the driver returns the private data object in probe(). In the bus
-> abstraction's probe() function, we're calling set_drvdata().
-> 
-> At this point the ownership of the object technically goes to the device. And it
-> is our responsibility to extract the object from dev->driver_data at some point
-> again through drvdata_obtain(). With calling drvdata_obtain() we take back
-> ownership of the object.
-> 
-> Obviously, we do this in the bus abstraction's remove() callback, where we then
-> let the object go out of scope, such that it's destructor gets called.
-> 
-> In contrast, drvdata_borrow() does what its name implies, it only borrows the
-> object from dev->driver_data, such that we can provide it for the driver to use.
-> 
-> In the bus abstraction's remove() callback, drvdata_obtain() must be able to
-> proof that the object we extract from dev->driver_data is the exact object that
-> we set when calling set_drvdata() from probe().
-> 
-> If we'd allow the driver to call set_drvdata() itself (which is unnecessary
-> anyways), drivers could:
-> 
->   1) Call set_drvdata() multiple times, where every previous call would leak the
->      object, since the pointer would be overwritten.
-> 
->   2) We'd loose any guarantee about the type we extract from dev->driver_data
->      in the bus abstraction's remove() callback wioth drvdata_obtain().
-> 
-> > > +
-> > > +    /// Take ownership of the private data stored in this [`Device`].
-> > > +    ///
-> > > +    /// # Safety
-> > > +    ///
-> > > +    /// - Must only be called once after a preceding call to [`Device::set_drvdata`].
-> > > +    /// - The type `T` must match the type of the `ForeignOwnable` previously stored by
-> > > +    ///   [`Device::set_drvdata`].
-> > > +    pub unsafe fn drvdata_obtain<T: ForeignOwnable>(&self) -> T {
-> > > +        // SAFETY: By the type invariants, `self.as_raw()` is a valid pointer to a `struct device`.
-> > > +        let ptr = unsafe { bindings::dev_get_drvdata(self.as_raw()) };
-> > > +
-> > > +        // SAFETY: By the safety requirements of this function, `ptr` comes from a previous call to
-> > > +        // `into_foreign()`.
-> > > +        unsafe { T::from_foreign(ptr.cast()) }
-> > > +    }
-> > > +
-> > > +    /// Borrow the driver's private data bound to this [`Device`].
-> > > +    ///
-> > > +    /// # Safety
-> > > +    ///
-> > > +    /// - Must only be called after a preceding call to [`Device::set_drvdata`] and before
-> > > +    ///   [`Device::drvdata_obtain`].
-> > > +    /// - The type `T` must match the type of the `ForeignOwnable` previously stored by
-> > > +    ///   [`Device::set_drvdata`].
-> > > +    pub unsafe fn drvdata_borrow<T: ForeignOwnable>(&self) -> T::Borrowed<'_> {
-> > > +        // SAFETY: By the type invariants, `self.as_raw()` is a valid pointer to a `struct device`.
-> > > +        let ptr = unsafe { bindings::dev_get_drvdata(self.as_raw()) };
-> > > +
-> > > +        // SAFETY: By the safety requirements of this function, `ptr` comes from a previous call to
-> > > +        // `into_foreign()`.
-> > > +        unsafe { T::borrow(ptr.cast()) }
-> > > +    }
-> > > +}
-> > 
-> > Why can't this be part of Core?
-> 
-> Device::drvdata_borrow() itself can indeed be part of Core. It has to remain
-> unsafe though, because the type T has to match the type that the driver returned
-> from probe().
-> 
-> Instead, we should provide a reference of the driver's private data in every bus
-> callback, such that drivers don't need unsafe code.
-> 
-> In order to not tempt drivers to use the unsafe method drvdata_borrow()
-> directly, I went for hiding it behind the BusInternal device context.
+The following commit has been merged into the locking/urgent branch of tip:
 
-Also, I want to add that I already looked into implementing a safe drvdata()
-accessor for &Device<Bound>.
+Commit-ID:     9a57c3773152a3ff2c35cc8325e088d011c9f83b
+Gitweb:        https://git.kernel.org/tip/9a57c3773152a3ff2c35cc8325e088d011c9f83b
+Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+AuthorDate:    Mon, 30 Jun 2025 16:50:34 +02:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Tue, 01 Jul 2025 15:02:05 +02:00
 
-&Device<Bound> would be fine, since the private driver data is guaranteed to be
-valid as long as the device is bound to the driver.
+futex: Temporary disable FUTEX_PRIVATE_HASH
 
-(Note that we'd need to handle calling dev.drvdata() from probe() gracefully,
-since probe() creates and returns the driver's private data and hence
-dev->driver_data is only set subsequently in the bus abstraction's probe()
-callback.)
+Chris Mason reported a performance regression on big iron. Reports of
+this kind were usually reported as part of a micro benchmark but Chris'
+test did mimic his real workload. This makes it a real regression.
 
-The drvdata() accessor would also need to ensure that it returns the correct
-type of the driver's private data, which the device itself does not know, which
-requires additional complexity.
+The root cause is rcuref_get() which is invoked during each futex
+operation. If all threads of an application do this simultaneously then
+it leads to cache line bouncing and the performance drops.
 
-I have ideas for solving that, but I don't think we actually gonna need to
-access the private data stored in the device from anywhere else than bus device
-callbacks (I also don't think it is desirable), hence I'd really want to wait
-and see a good reason for making this accessible.
+Disable FUTEX_PRIVATE_HASH entirely for this cycle. The performance
+regression will be addressed in the following cycle enabling the option
+again.
+
+Closes: https://lore.kernel.org/all/3ad05298-351e-4d61-9972-ca45a0a50e33@meta.com/
+Reported-by: Chris Mason <clm@meta.com>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20250630145034.8JnINEaS@linutronix.de
+---
+ init/Kconfig | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/init/Kconfig b/init/Kconfig
+index af4c2f0..666783e 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1716,9 +1716,13 @@ config FUTEX_PI
+ 	depends on FUTEX && RT_MUTEXES
+ 	default y
+ 
++#
++# marked broken for performance reasons; gives us one more cycle to sort things out.
++#
+ config FUTEX_PRIVATE_HASH
+ 	bool
+ 	depends on FUTEX && !BASE_SMALL && MMU
++	depends on BROKEN
+ 	default y
+ 
+ config FUTEX_MPOL
