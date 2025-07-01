@@ -1,129 +1,88 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4061527FB03
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 14:54:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3197027876E;
+	Tue,  1 Jul 2025 14:54:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751381678; cv=none; b=FeemcYvOxxP4mBY5D9Sfwn2bbnznvXa+goU3VkPYDLUT382r5tOvS8ASpilSgMeZWBSC+JM3CsNKxT/bK03+KRD3Dnf397LlM2QhGU41hqDA6M1tyreBeQmUYIcGEcJyg8zyWgcu99U6UWR66qO0sDw+FDR1OU7/aMWiCpLy24o=
+	t=1751381678; cv=none; b=aUPnVDpiskESJqvnwlHoZ/6r6/6PnoUAQbrk96SbnjpMfoabXht7iJcURMjd9CFLbeERwlGOocVFCZVQohlTJlNk0fHpBgEzmIc1uKlJgYnS2wcbI1Hprpd9p6XsCbBU06KTGJ+gTSxelaINAvuzfkYXm3pn39XCe+cgP97Gsqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751381678; c=relaxed/simple;
-	bh=bnoqGLGLvkQZM71kWFaBE9XSAfVwfMZlT8ssFD7sZow=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Vhn43DU6xJbuofKVZ5KSXiYSxsaJKxWrtNZ2xdfI02mBIutACoJrzEtsj/GE0CQJizJmoZDBHgX19gcG8DDUKE7lgXUQC77uoTfCjOY2/lM9An0M+tji7nhjBvYp3xCWmnnaSNb0vzdrN7YV+y6gdtt5UTbydLA9ciL77nzeeGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81E4E2379;
-	Tue,  1 Jul 2025 07:54:21 -0700 (PDT)
-Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C79453F66E;
-	Tue,  1 Jul 2025 07:54:34 -0700 (PDT)
-From: Leo Yan <leo.yan@arm.com>
-Date: Tue, 01 Jul 2025 15:53:45 +0100
-Subject: [PATCH v2 20/28] coresight: cti: Properly handle modes in CPU PM
- notifiers
+	bh=aCxpkUcplD3ji4+uPWLO1qpdxvveygBxmNjoYKsar14=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HIIk4DmNhFMiaSJMDN+OhyYfc1MhQ4NT8cJmm3E1odqZZ69h0WnXiP0mhIiPGtY0/xudKcFCaOY6chVfC656rQ8WH38EwyieEaJVK3gDos4VzTq1yUs53Y9ndkXRChnDR+QKurL0P/3Xkl0N2NX+k694d626auiLGvQcL/LW/0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qwyJlJsD; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qwyJlJsD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 805B6C4CEEB;
+	Tue,  1 Jul 2025 14:54:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751381677;
+	bh=aCxpkUcplD3ji4+uPWLO1qpdxvveygBxmNjoYKsar14=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qwyJlJsDvT5JL76u6bjrvdPgYY7L2Q2ag5a4/MYID22L0KMfwTFs0qiKG1Dyr2D29
+	 AUbdyOWwm4zQe6is9WO1vxK7QP569EFIklIT2E4VsCdw0++RuGoCIBMAXfOUJbJrjJ
+	 fUBdmvYxMmq34IA14pWNekXJSP4DgdxDknktnle+D1FSCp7Ot4Of0wvEsrDlAYUgCd
+	 YFmoOk85ChX2IudcL8xPylkAtuB7O+dRAaApmW+W3XCYjOrn2zJzhJPbqqzPUHJwLj
+	 PChjhZLoY+Q9O/y7RX1X7isXk2ZoipwsH84i6d2duf3SH7dHMJvj4yZj4R4PIdyZ5m
+	 L0pda2KdUd+VQ==
+Date: Tue, 1 Jul 2025 10:54:36 -0400
+From: Sasha Levin <sashal@kernel.org>
+To: Jake Edge <jake@lwn.net>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-api@vger.kernel.org, workflows@vger.kernel.org,
+	tools@kernel.org
+Subject: Re: [RFC v2 00/22] Kernel API specification framework
+Message-ID: <aGP2rMDoJGd9fB4s@lappy>
+References: <20250624180742.5795-1-sashal@kernel.org>
+ <87qzz0aaw1.fsf@pelicano.edge2.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250701-arm_cs_pm_fix_v3-v2-20-23ebb864fcc1@arm.com>
-References: <20250701-arm_cs_pm_fix_v3-v2-0-23ebb864fcc1@arm.com>
-In-Reply-To: <20250701-arm_cs_pm_fix_v3-v2-0-23ebb864fcc1@arm.com>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
- Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>, 
- Levi Yun <yeoreum.yun@arm.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Yabin Cui <yabinc@google.com>, Keita Morisaki <keyz@google.com>, 
- Yuanfang Zhang <quic_yuanfang@quicinc.com>
-Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Leo Yan <leo.yan@arm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751381627; l=2826;
- i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=bnoqGLGLvkQZM71kWFaBE9XSAfVwfMZlT8ssFD7sZow=;
- b=80Tlb6gH6ObmrEHBgVOfdT7YeEX140AFqPYxSUE3gKFwvgSlzUEa/uQP08pPsuEaTGf5bqG+A
- tfqjQQn6r88AiBRNfj94GxraPPJRdmpTR0cUO1gBxagTwDmMlHltaUg
-X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
- pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <87qzz0aaw1.fsf@pelicano.edge2.net>
 
-This commit distinguishes CPU PM flows based on the mode.
+On Mon, Jun 30, 2025 at 07:43:42PM -0700, Jake Edge wrote:
+>
+>Hi Sasha,
+>
+>On Tue, Jun 24 2025 14:07 -0400, Sasha Levin <sashal@kernel.org> wrote:
+>
+>> Hey folks,
+>>
+>> This is a second attempt at a "Kernel API Specification" framework,
+>> addressing the feedback from the initial RFC and expanding the scope
+>> to include sysfs attribute specifications.
+>
+>In light of your talk at OSS last week [1] (for non-subscribers [2]), I
+>am wondering if any of this code has been written by coding LLMs.  It
+>seems like the kind of unpleasant boilerplate that they are said to be
+>good at generating, but also seems like an enormous blob of "code" to
+>review. What is the status of this specification in that regard?
 
-The CTI driver retains its existing behavior for the CS_MODE_DEBUG mode.
+Hey Jake!
 
-For modes other than DEBUG, a future change will be made to manage CTI
-devices by iterating through the CoreSight path in the core layer. To
-avoid conflicts, the CTI driver no longer controls CTI hardware in CPU
-PM notifiers for non DEBUG modes.
+The macro definitions were done mostly manually: it ended up being
+more of a copy/paste/replace exercise to get all the different macros in
+place (which, yes, ended up being a huge blob).
 
-However, the CTI driver continues to update the hw_powered flag for all
-modes to reflect the device's power state.
+For the syscall/ioctl/sysfs APIs I used to demonstrate the
+infrastructure, I started with defining the basic spec skeleton manually
+based on our existing docs and code review, but then had LLMs extend it
+based on it's review of the code.
 
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- drivers/hwtracing/coresight/coresight-cti-core.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+If we do proceed with something along the lines of this spec, I can see
+LLMs being useful at reviewing incoming code changes and alerting us of
+required updates/changes to the spec (or, alerting us that we're
+breaking the spec). Think of something like AUTOSEL but for
+classification of commits that affect the userspace API.
 
-diff --git a/drivers/hwtracing/coresight/coresight-cti-core.c b/drivers/hwtracing/coresight/coresight-cti-core.c
-index ba4635dfc2e30b4e9ae4972f91bdc6647975b719..c91d339d7ccbf71db71cb7156f9a6f2961ae2198 100644
---- a/drivers/hwtracing/coresight/coresight-cti-core.c
-+++ b/drivers/hwtracing/coresight/coresight-cti-core.c
-@@ -141,6 +141,9 @@ static void cti_cpuhp_enable_hw(struct cti_drvdata *drvdata)
- 	raw_spin_lock(&drvdata->spinlock);
- 	config->hw_powered = true;
- 
-+	if (coresight_get_mode(drvdata->csdev) != CS_MODE_DEBUG)
-+		goto cti_hp_not_enabled;
-+
- 	/* no need to do anything if no enable request */
- 	if (!drvdata->config.enable_req_count)
- 		goto cti_hp_not_enabled;
-@@ -697,21 +700,27 @@ static int cti_cpu_pm_notify(struct notifier_block *nb, unsigned long cmd,
- 	case CPU_PM_ENTER:
- 		/* CTI regs all static - we have a copy & nothing to save */
- 		drvdata->config.hw_powered = false;
--		if (drvdata->config.hw_enabled)
-+		if ((coresight_get_mode(drvdata->csdev) == CS_MODE_DEBUG) &&
-+		    drvdata->config.hw_enabled)
- 			coresight_disclaim_device(csdev);
- 		break;
- 
- 	case CPU_PM_ENTER_FAILED:
- 		drvdata->config.hw_powered = true;
--		if (drvdata->config.hw_enabled) {
-+		if ((coresight_get_mode(drvdata->csdev) == CS_MODE_DEBUG) &&
-+		    drvdata->config.hw_enabled) {
- 			if (coresight_claim_device(csdev))
- 				drvdata->config.hw_enabled = false;
- 		}
- 		break;
- 
- 	case CPU_PM_EXIT:
--		/* write hardware registers to re-enable. */
- 		drvdata->config.hw_powered = true;
-+
-+		if (coresight_get_mode(drvdata->csdev) != CS_MODE_DEBUG)
-+			break;
-+
-+		/* write hardware registers to re-enable. */
- 		drvdata->config.hw_enabled = false;
- 
- 		/* check enable reference count to enable HW */
-@@ -760,7 +769,8 @@ static int cti_dying_cpu(unsigned int cpu)
- 
- 	raw_spin_lock(&drvdata->spinlock);
- 	drvdata->config.hw_powered = false;
--	if (drvdata->config.hw_enabled)
-+	if ((coresight_get_mode(drvdata->csdev) == CS_MODE_DEBUG) &&
-+	    drvdata->config.hw_enabled)
- 		coresight_disclaim_device(drvdata->csdev);
- 	raw_spin_unlock(&drvdata->spinlock);
- 	return 0;
+The tools/kapi/ code is mostly mostly LLM generated.
 
 -- 
-2.34.1
-
+Thanks,
+Sasha
