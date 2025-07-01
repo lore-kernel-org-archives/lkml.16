@@ -1,70 +1,70 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B824244671;
-	Tue,  1 Jul 2025 19:24:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 731341D07BA;
+	Tue,  1 Jul 2025 19:24:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751397845; cv=none; b=I9nm1Di4PltAlxoMhE4x4I42nAhKFre1i55Lk0aXZqUOBZ6xC/Zhs5CISWcRWGdk9WpIrYhJq050IWotuFOzJcbdziEr6ptjNnPFcSqarBHatbEKCdlxg9o1xfYsB8PJKPkPMsrllZ55vE70zv4l7og5AA6ozZVVKNRibfvRrfo=
+	t=1751397861; cv=none; b=ALP4dV2yMsKINlTttT9gmBYgifJ0Q+qWaup80lW58/c2WCt2iTp+CQ1MzYTqoPVHWDxcZQNLiD1JOTnaApiEtfnEWpBTGTA3ZP67ZZLvAHVZqmp6mXnnN/UnPPvsc8zh3qIBiS503LEQpoKaC9LZqY8cqeiG/oCpf+YIVeq3qew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751397845; c=relaxed/simple;
-	bh=YhoiQtDB5/OLyWdP3xHtmJYqo/8+nJ8dsTf6c95tJsQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Phj5ghufL8aoyUdx9oevutHIBNklrYKtSjbTtVJF5A/vfZS1m4fJjdtT1N/VfqI5v30UEfDzNTpvrNuzgAk6bRLkHjnbRF7VWXN+/q6SGcu/q3ZEAASgjwLJL4GlGIEH4O/aJ8mnpj+jaEzB76Zw91SklZ3qcRaWBfTL82pY+jA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=l5lxRTvj; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="l5lxRTvj"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 6455E406FC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1751397843; bh=XvtKFs8u7tVRJzwFXZHcodvMTrSJIHhfbaDKETNlGIE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=l5lxRTvjitiOaW4aA6fd89voZTYQqWnB6aBlTcKLVp3Ok9ddKiRFtN/zoGZP9iBZ3
-	 bkeA7qSBMPltkfLxcxwCfF3tYodyLDWB3HjFz5QLhZ9Q0gOGdRbuG53Y042MgT4jah
-	 F6Vka3DjnWJveZsiKenSmTGMTdhAfvjObpnxGSU1zZB0UcnY0cOw8nLHyfbZxvd4IW
-	 XpUNPEBDmttfPEoVv9kO8q12vm3kUtW4H3b0xHfuQgQjOJjgcu6mSu14it2Lp/wjMt
-	 6KQeU26i/7yjqKho+VU+6w/GpwXayXFvWDAXfM2XRmr03Aol7Le1+lQ/SE9xPS3HEr
-	 qC9KMCb+MJdGw==
-Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 6455E406FC;
-	Tue,  1 Jul 2025 19:24:03 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Xose Vazquez Perez <xose.vazquez@gmail.com>
-Cc: Xose Vazquez Perez <xose.vazquez@gmail.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, DOC ML <linux-doc@vger.kernel.org>, KERNEL
- ML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] MAINTAINERS: replace git protocol for github
-In-Reply-To: <20250625150231.241687-1-xose.vazquez@gmail.com>
-References: <20250625150231.241687-1-xose.vazquez@gmail.com>
-Date: Tue, 01 Jul 2025 13:24:02 -0600
-Message-ID: <87plejr9yl.fsf@trenco.lwn.net>
+	s=arc-20240116; t=1751397861; c=relaxed/simple;
+	bh=bbsyQ/dzCNhDdQNt8tsoVa3EfNwDRY37udY0mb8ftvU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oKm56g1oIUWIkytUntJ5bV2iUiUzknGUI6rmBuRRGdBBHDkIdBw8lX3g0SDM0Ya+MczAXwoZvWcJbPhIDZFdlAPJ8FIxELMKr7mEQPL72OfsvIIDn+0hlqgAhLUPezHVcY/eDSkzVYjmCfCGsiX7pWGt2RjKbLhByiGAF9T62KQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 82B7059E61;
+	Tue,  1 Jul 2025 19:24:16 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 13F9120013;
+	Tue,  1 Jul 2025 19:24:11 +0000 (UTC)
+Date: Tue, 1 Jul 2025 15:24:49 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, x86@kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu
+ Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
+ Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>, Florian Weimer
+ <fweimer@redhat.com>, helpdesk@kernel.org
+Subject: Re: [PATCH v12 00/11] perf: Support the deferred unwinding
+ infrastructure
+Message-ID: <20250701152449.56c35b8b@gandalf.local.home>
+In-Reply-To: <20250701151715.5eb5f8b9@batman.local.home>
+References: <20250701180410.755491417@goodmis.org>
+	<20250701151715.5eb5f8b9@batman.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 13F9120013
+X-Rspamd-Server: rspamout02
+X-Stat-Signature: f16epqm7ayjc4nchsiamsnphki9thd7q
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18z9Wt4Xp5tX4kB0WUnKWDnmPRT5fe3b08=
+X-HE-Tag: 1751397851-344992
+X-HE-Meta: U2FsdGVkX1+NwsUdo3DnvQwvY56yivMEdkcFC19wS01JYX5B6+rBXkacYKW9WTD1whQRVQ2rZb6ZpO8e4ajNARyQNGio91RFmLEPhKx7g1yhMaryC03pFv1kCEWlo6tD00syhZewPQaBw5SEhRJ5x4uV3yIjgkSn/Do5+HG0SqDbgl4RL2EtYe14Ndd0ZSqDAUiVjEg15Rqx9C5HW1SHloHkw0Kfo3QqKU8ZJWSazhriFcO2q5/4wxekSOrh5reCFmG5MGAFh2ZLjeMuk7OLFx1IwvXrHp1aafK+noDohwfW6UpXuvjxYTDqRQhHY9hq06ywwBc8r06XbNtd/zlkiLdiMCCUuCEwHzS/5/JSCE8vm2GP8Sd/zIAuBGJyfMTx
 
-Xose Vazquez Perez <xose.vazquez@gmail.com> writes:
+On Tue, 1 Jul 2025 15:17:15 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> It was removed time ago:
-> https://github.blog/changelog/2022-03-15-removed-unencrypted-git-protocol-and-certain-ssh-keys/
->
-> Cc: Jonathan Corbet <corbet@lwn.net> (maintainer:DOCUMENTATION)
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: DOC ML <linux-doc@vger.kernel.org> (open list:DOCUMENTATION)
-> Cc: KERNEL ML <linux-kernel@vger.kernel.org> (open list)
-> Signed-off-by: Xose Vazquez Perez <xose.vazquez@gmail.com>
-> ---
->  MAINTAINERS | 24 ++++++++++++------------
->  1 file changed, 12 insertions(+), 12 deletions(-)
+> Hmm, patches 5-11 seemed to be dropped, and I sent out 12 patches of
+> the latest sframe work that I can't find anywhere. I think my ISP is
+> thinking I'm spamming so it dropped the emails. That's all I can figure.
 
-I have applied this one, thanks ... working URLs are better than broken
-ones...
+Hah! After I write this, my patches start showing up! :-p
 
-jon
+OK, no resend.
+
+-- Steve
