@@ -1,148 +1,186 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C1BD72602;
-	Tue,  1 Jul 2025 09:11:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C4311D07BA
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 09:11:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751361075; cv=none; b=md7p226jv0qo5dI7jpMaMO0rNxr9IjzyO+dCcb66r0MQIGAut5z3/PpEYeoeCvlQRhfFgJK29tC/94woi1jgjeodGZLBoWCJA0gSrevKH15M5z0GHP6xsnTxR9cMd6cPu17y9WBvnJG4q9OxNgGrWzayquwG39hldRpjyb4y8Hk=
+	t=1751361108; cv=none; b=p6M+BAfNVY3bARU5LUJCd6zq5Tqr2WdMcS9DXQohtjaqBZGi/iJMJQQ87XM4IMvhjRvBPbF537fqsTYSzpwEtIc9h/nfFrG9TfSNe3Gss5KxtpBNJC4oaFAXWivuUsyXsgGqwyW819mP2nokSNU0EIBEVnIHF241TneNRCeng8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751361075; c=relaxed/simple;
-	bh=rAIL7P5+qgQNxK6HoIqMiX8Nk+ttOzK/4HLG7PIlpec=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=L7dJfE6PAyNTo8iOR4ccEF5nHRDqmgyxC5s7OzJFqj15hsB2mzoAjhuHJSbtGYUJADEfCbOmcLPzV9QM4n+VR4R4GnCT61BxYVTeO6YRO/5ttocY81SzGV17X4VS0bOXTA/uALO56VAQ6R1hlFhNfZlp3VkGc9KrHNcYdAZa5eQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=XiY0mipX; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1751361108; c=relaxed/simple;
+	bh=qBn7O+oadgbDt/1DtKOEuIzBWBkB2LI6zoWM54Khkxo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Gogmw4jvGpdAIA13G5l4sl+XotYYZPB1+rhNBeqNkIjA2o+oMHeVYoU8pexA2qYJQyRocAZU10rA4qaznkX3a5ph4L6fvBgiDitjvvaQDZUS8GxxQK94d1K/PnxIPky9HyTGYL9n9SLRmXgrNg4CXb+QQYRLQRKE/Biid/aotiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=f6oy0p8R; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="XiY0mipX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1751361070;
-	bh=rAIL7P5+qgQNxK6HoIqMiX8Nk+ttOzK/4HLG7PIlpec=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=XiY0mipXyPR5TGdzWUzCkYtMFOFA9XsLStZoUjZL6EMse9DdrVrca8Mrd7cE0DmW8
-	 wmR0+Lb8y590XdxthIJQGP75zQY79S1hOMPK8tUOEmBEH2hnvgXBjDMZD14edIiTGP
-	 MixfqPrVmDwiu62qP91NCqC2GKBMj8gjtY38Ky1Rgb1x9zKnk592Cx3gbT+g2SKBs9
-	 iWx5Qiy9TfHTeP9t5sZU6TUn6f9s6/piHke1BNvMh5C4b6BmTSyHztDWtqU6wVvR1X
-	 9wMY6c4jgyuZ9k0Lv6K3X0kk6aF8564rKmR1kEX7ev11LcKdz924p51PF/JVuv8LsB
-	 kcYT9taBGpgVg==
-Received: from fedora (unknown [IPv6:2a01:e0a:2c:6930:16f1:973:959b:9b0c])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 7DAC417E0342;
-	Tue,  1 Jul 2025 11:11:09 +0200 (CEST)
-Date: Tue, 1 Jul 2025 11:11:03 +0200
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Daniel Almeida <daniel.almeida@collabora.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Miguel Ojeda <ojeda@kernel.org>, Alex
- Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo
- <gary@garyguo.net>, =?UTF-8?B?QmrDtnJu?= Roy Baron
- <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, Andreas
- Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor
- Gross <tmgross@umich.edu>, Daniel Stone <daniels@collabora.com>, Rob
- Herring <robh@kernel.org>, Alice Ryhl <alice.ryhl@google.com>, Beata
- Michalska <beata.michalska@arm.com>, Carsten Haitzler
- <carsten.haitzler@foss.arm.com>, Ashley Smith <ashley.smith@collabora.com>,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- rust-for-linux@vger.kernel.org, kernel@collabora.com
-Subject: Re: [PATCH] Introduce Tyr
-Message-ID: <20250701111103.728ef3d7@fedora>
-In-Reply-To: <e64c20ae-5aaf-44cf-a463-c7eb1134daee@kernel.org>
-References: <20250627-tyr-v1-1-cb5f4c6ced46@collabora.com>
-	<aF8lYpK_l2I-ts1k@pollux>
-	<20250630180631.5e8066cd@fedora>
-	<e64c20ae-5aaf-44cf-a463-c7eb1134daee@kernel.org>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="f6oy0p8R"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-234f17910d8so50933065ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 02:11:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1751361106; x=1751965906; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Uz6fO0/Nn0kDVM5mJ4z1SaT0UByDPCAgmjtmOz31sy4=;
+        b=f6oy0p8RIwn9sUruT9UoO4seTJc1rqt4F20gzhlvR99eF/1wGN6nv2NvAL1pw3Bmwj
+         6JIYSgaZEh65VUG+mfqWCblyqiW528TcCaBlasEI+Bg+jOE+LsZSfVWLBX/rZFsmIYNa
+         WRAgN+iZX1iQ/WlpVL3mWZXiS1L75Tc/hHxqY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751361106; x=1751965906;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Uz6fO0/Nn0kDVM5mJ4z1SaT0UByDPCAgmjtmOz31sy4=;
+        b=rh/pi9NJczT3xeLIpNsNRHU2LHAhwnC+z9YyubdWHW1AouvYC3b99EWSbK6j7WoWAw
+         GCgGk2vgIjZ0W/fy3vutpxRauLQCCEvG05gFkvKrNPlNiJtd50wWNmKQ7h3Ntsj70iHs
+         WFh6ygN6+WuLRBHe8cIefWa1rAp6a2vBsUWNKU2zzyYKpZzaw5LzlvcVkwRBM0Fblxhm
+         F2QsGXgUWklgBK5NPFz7wIekdiuiubf9ShaEB0k2AGCsW6B0eEYhrOymlmtYhVSuPKVE
+         nHnxOPEeOzVC0A89sxUS+B3SgyEDhSAVQXWYSe4vOt4FteQCtP7TwZieIqh/Ulncgw3R
+         6wPw==
+X-Forwarded-Encrypted: i=1; AJvYcCWz35jwcg61B26ptE3I3kTzd/GUs0leOwY7tGofi6jrXFSttK3BXTlxp0/v547jktz7en2dVast1NYJC7c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3QSRklFydqsbKiuBv0GQQPbCnB1IQgZ5Y6/3A+ay7TFDgSBE9
+	hoFrIdCLcHPoeCpIsnHlhUDks59fF6fZQc+Fh8Ftt/gJ9cyeJcoQ2PVasrYnyicPDA==
+X-Gm-Gg: ASbGncvzsuB/2nFg7T2klPKTcuI9u7xh3pL137emjGmUH/jzN9fbOTMggbDOmjGG20F
+	UdTMDG/ejYmc3ucqK+m0BK7WEiYzBch2TeubJ8kHV6wrbplY0REg7njQYmTzZAcNtJ1tPhhHhu9
+	cMevdIlDcpi3A7tA/G3aMLV6getZ4RhwgCadyRTIvsoFxSHFOqNRQ7aSqAUoTBU4gVS1a6IRXk3
+	SDgm4Y3grUyzfxeujWBYcvJMjmwG2z95LGtavnTIZlaqNWwcmDTjR95e1gV7G2raoi9E1BiFq8R
+	JThZTlbbaRGAzSKgVNaDowfTSuicY4E5B4fqlrf1/8vUo5cL8vBsg2uM98bW6yMa6OcSNIIhIpn
+	2qejX6LXveUbCkwzOigWEXGsM4MGY
+X-Google-Smtp-Source: AGHT+IGlEfsc3kdlXA6znsbIc1Wgfe0QgYv/xrPpW5Q033ESONRrc8Fk+iDwl2r+2FNtPlf8BGI5rg==
+X-Received: by 2002:a17:903:2407:b0:235:7c6:eba2 with SMTP id d9443c01a7336-23ac4880248mr256526095ad.37.1751361106221;
+        Tue, 01 Jul 2025 02:11:46 -0700 (PDT)
+Received: from localhost.localdomain ([192.19.203.250])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e30201c1sm8893603a12.22.2025.07.01.02.11.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 02:11:45 -0700 (PDT)
+From: Vikas Gupta <vikas.gupta@broadcom.com>
+To: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	andrew+netdev@lunn.ch,
+	horms@kernel.org
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	michael.chan@broadcom.com,
+	pavan.chebbi@broadcom.com,
+	vsrama-krishna.nemani@broadcom.com,
+	Vikas Gupta <vikas.gupta@broadcom.com>
+Subject: [net-next, v3 00/10] Introducing Broadcom BNGE Ethernet Driver
+Date: Tue,  1 Jul 2025 14:34:58 +0000
+Message-ID: <20250701143511.280702-1-vikas.gupta@broadcom.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, 30 Jun 2025 18:12:02 +0200
-Danilo Krummrich <dakr@kernel.org> wrote:
+Hi,
 
-> On 6/30/25 6:06 PM, Boris Brezillon wrote:
-> > On Sat, 28 Jun 2025 01:12:34 +0200
-> > Danilo Krummrich <dakr@kernel.org> wrote:
-> >   
-> >>> +    pub(crate) fn log(&self, pdev: &platform::Device) {
-> >>> +        let major = (self.gpu_id >> 16) & 0xff;
-> >>> +        let minor = (self.gpu_id >> 8) & 0xff;
-> >>> +        let status = self.gpu_id & 0xff;
-> >>> +
-> >>> +        let model_name = if let Some(model) = GPU_MODELS
-> >>> +            .iter()
-> >>> +            .find(|&f| f.major == major && f.minor == minor)
-> >>> +        {
-> >>> +            model.name
-> >>> +        } else {
-> >>> +            "unknown"
-> >>> +        };
-> >>> +
-> >>> +        dev_info!(
-> >>> +            pdev.as_ref(),
-> >>> +            "mali-{} id 0x{:x} major 0x{:x} minor 0x{:x} status 0x{:x}",
-> >>> +            model_name,
-> >>> +            self.gpu_id >> 16,
-> >>> +            major,
-> >>> +            minor,
-> >>> +            status
-> >>> +        );
-> >>> +
-> >>> +        dev_info!(
-> >>> +            pdev.as_ref(),
-> >>> +            "Features: L2:{:#x} Tiler:{:#x} Mem:{:#x} MMU:{:#x} AS:{:#x}",
-> >>> +            self.l2_features,
-> >>> +            self.tiler_features,
-> >>> +            self.mem_features,
-> >>> +            self.mmu_features,
-> >>> +            self.as_present
-> >>> +        );
-> >>> +
-> >>> +        dev_info!(
-> >>> +            pdev.as_ref(),
-> >>> +            "shader_present=0x{:016x} l2_present=0x{:016x} tiler_present=0x{:016x}",
-> >>> +            self.shader_present,
-> >>> +            self.l2_present,
-> >>> +            self.tiler_present
-> >>> +        );
-> >>> +
-> >>> +        dev_info!(
-> >>> +            pdev.as_ref(),
-> >>> +            "PA bits: {}, VA bits: {}",
-> >>> +            self.pa_bits(),
-> >>> +            self.va_bits()
-> >>> +        );
-> >>> +    }  
-> >>
-> >> This is called from probe() and seems way too verbose for dev_info!(), please
-> >> use dev_dbg!() instead.  
-> > 
-> > We do have the same level of verbosity in Panthor, and it's proven
-> > useful when people are filling bug reports. Asking them to reload
-> > the module with debug prints enabled is kinda annoying, and I don't
-> > think I've heard anyone complaining that this was too verbose or slowing
-> > down the boot, so I'd be tempted to keep it like that, and least for
-> > the information printed in this function.  
-> 
-> Yeah, I think for the GPU revision bits that's reasonable, but do you really
-> also need the other prints to be dev_info()? Don't you know this information
-> from the combination of the GPU revision bits and the kernel version?
+This patch series introduces the Ethernet driver for Broadcom’s
+BCM5770X chip family, which supports 50/100/200/400/800 Gbps
+link speeds. The driver is built as the bng_en.ko kernel module.
 
-Sure, we could have a tool extracting most of that from the driver info
-and DEV_QUERY ioctl(), but those info have been printed in Panfrost
-since the early days. I picked those traces up in Panthor because devs
-were used to it, and I honestly see no good reason to not print those as
-dev_info() in Tyr too. What's your concern here? Is this about boot
-time, not bloating the kernel logs or something else? I mean, we're
-talking about less than 10 lines printed at boot/module-load-time.
+To keep the series within a reviewable size (~5K lines of code), this initial
+submission focuses on the core infrastructure and initialization, including:
+1) PCIe support (device IDs, probe/remove)
+2) Devlink support
+3) Firmware communication mechanism
+4) Creation of network device
+5) PF Resource management (rings, IRQs, etc. for netdev & aux dev)
+
+Support for Tx/Rx datapaths, link management, ethtool/devlink operations and
+additional features will be introduced in the subsequent patch series.
+
+The bng_en driver shares the bnxt_hsi.h file with the bnxt_en driver, as the bng_en
+driver leverages the hardware communication protocol used by the bnxt_en driver.
+
+Changes from:
+=====================================================================
+v2->v3
+ Addressed following comments by Jakub Kicinski
+ Patch 04/10:
+  - Move devlink register at appropriate place.
+ Patch 10/10:
+  - Free skb in xmit call
+
+=====================================================================
+v1->v2
+
+Addressed warnings and errors in the following patches:
+-Patch 8/10
+-Patch 10/10
+
+Addressed the following major comments by Vadim Fedorenko on Patch 1/10:
+Patch 1/10:
+  - Use of the dma_set_mask_and_coherent() API.
+Patch 2/10:
+  - Added error logs via extack.
+Patch 3/10:
+  - Renamed functions to use the hwrm prefix. This change affects other
+patches in the series as well.
+=====================================================================
+
+
+Thanks,
+Vikas
+
+
+Vikas Gupta (10):
+  bng_en: Add PCI interface
+  bng_en: Add devlink interface
+  bng_en: Add firmware communication mechanism
+  bng_en: Add initial interaction with firmware
+  bng_en: Add ring memory allocation support
+  bng_en: Add backing store support
+  bng_en: Add resource management support
+  bng_en: Add irq allocation support
+  bng_en: Initialize default configuration
+  bng_en: Add a network device
+
+ MAINTAINERS                                   |   6 +
+ drivers/net/ethernet/broadcom/Kconfig         |   9 +
+ drivers/net/ethernet/broadcom/Makefile        |   1 +
+ drivers/net/ethernet/broadcom/bnge/Makefile   |  12 +
+ drivers/net/ethernet/broadcom/bnge/bnge.h     | 218 ++++++
+ .../net/ethernet/broadcom/bnge/bnge_core.c    | 388 ++++++++++
+ .../net/ethernet/broadcom/bnge/bnge_devlink.c | 306 ++++++++
+ .../net/ethernet/broadcom/bnge/bnge_devlink.h |  18 +
+ .../net/ethernet/broadcom/bnge/bnge_ethtool.c |  33 +
+ .../net/ethernet/broadcom/bnge/bnge_ethtool.h |   9 +
+ .../net/ethernet/broadcom/bnge/bnge_hwrm.c    | 508 +++++++++++++
+ .../net/ethernet/broadcom/bnge/bnge_hwrm.h    | 110 +++
+ .../ethernet/broadcom/bnge/bnge_hwrm_lib.c    | 703 ++++++++++++++++++
+ .../ethernet/broadcom/bnge/bnge_hwrm_lib.h    |  27 +
+ .../net/ethernet/broadcom/bnge/bnge_netdev.c  | 268 +++++++
+ .../net/ethernet/broadcom/bnge/bnge_netdev.h  | 206 +++++
+ .../net/ethernet/broadcom/bnge/bnge_resc.c    | 605 +++++++++++++++
+ .../net/ethernet/broadcom/bnge/bnge_resc.h    |  94 +++
+ .../net/ethernet/broadcom/bnge/bnge_rmem.c    | 438 +++++++++++
+ .../net/ethernet/broadcom/bnge/bnge_rmem.h    | 188 +++++
+ 20 files changed, 4147 insertions(+)
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/Makefile
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge.h
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_core.c
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_devlink.c
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_devlink.h
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_ethtool.c
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_ethtool.h
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_hwrm.c
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_hwrm.h
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_hwrm_lib.c
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_hwrm_lib.h
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_netdev.c
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_netdev.h
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_resc.c
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_resc.h
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_rmem.c
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_rmem.h
+
+-- 
+2.47.1
+
