@@ -1,86 +1,193 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D6C242AAF;
-	Tue,  1 Jul 2025 00:26:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C39A52F1FE6;
+	Tue,  1 Jul 2025 00:33:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751329614; cv=none; b=u7MCVUSwcSEH1Hk+Q6mineQ4OQsp57vMLCm2b12RLzkGWYXtXiqnYRf2ZUNidAdmAw+VNs9gusNo1ZimadzyEEmm3cNU05HBUb6zFOvYg0gD8KsBt0qA1m5VeSXS56GrwAdU5hXKhn4Gt3EIRUFllaclN0HlxQ/MFqWBGUVDtGU=
+	t=1751330011; cv=none; b=U90XzyOgImkfxcRnjFLdHAuntuDRKH6CJG+v/Ggx3kH94LmEyRSTwLhYThg6/nXsiANl9SREdZGao07rLsShEIma41qRi3sn3U7H91JEyK8CDb6ubhKQGJ9Xgyd2sv+HL03rMC/PZ0V3CpD1fGLzba7VXch/qRkFrJl9VWEI3jM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751329614; c=relaxed/simple;
-	bh=Fmumyu8a2ayYdfXQUUkpkpKLNK8JnwjK2FVutXPhFCM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y1PeGZj5G9X3dq5qAKEoC1kyIRxG7PSAx40qIhl7pp5WgR2Zm+Q83HPUsSUGZvs4XwmV0VxzEtIpj0z9b2g1WY/XREdgxjLGoLfU46p5scKQaqnovXfhGEQ2NiwfUYwyUkvff9d1RzrDGEOHTHEwT3IM2/WR6Fp6OJfUJ9lj11o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S2y/R0/v; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S2y/R0/v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6F18C4CEE3;
-	Tue,  1 Jul 2025 00:26:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751329614;
-	bh=Fmumyu8a2ayYdfXQUUkpkpKLNK8JnwjK2FVutXPhFCM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S2y/R0/v7OFXpObKUiHDb1PU7VKZwDDBO33VLJdMYUhme3nqJHE6ZvvMNtlCBck59
-	 y0AsvClr5A8LJTMmooSLYZXn8HUQBU63nSKksIVykZez33FjxpR5dl/nw88SjkYv2L
-	 xaURBkHe3f7O9k7YC8htrApA5lwjdfbE7fbQfpP34advhyW1HYulQ3A0w8bQpbgyie
-	 qDHkhJ6CChSO9f1fTL09k4/Eb0MuTV2DJjcIo7TdIDz671kJe0eTwHS7hsNYnhSMu/
-	 wqCVEM2Ik7KAZ2gBcpgDuNyF9kqcLTaNTMNZuGtrqw6JB4X66c7vLaYjvP6yvsFKJU
-	 lDM3CvYYOAbyg==
-Date: Tue, 1 Jul 2025 03:26:50 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: keyrings@vger.kernel.org, Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>,
-	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	David Howells <dhowells@redhat.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	"open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
-	"open list:SECURITY SUBSYSTEM" <linux-security-module@vger.kernel.org>
-Subject: Re: [PATCH v3] tpm: Repeal and replace tpm_buf_init*() and
- tpm_buf_destroy()
-Message-ID: <aGMrSqY9mojJrPja@kernel.org>
-References: <20250701001153.769030-1-jarkko@kernel.org>
+	s=arc-20240116; t=1751330011; c=relaxed/simple;
+	bh=/skP8Ljo8IEscW1zmu5gFSkR+/tvjcLxuPcDoAwB+6M=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mPlC6TFxCLGQJ8t6AmQlxCVuVxPzE3vJNUU9e3q/S2E3wwAECrRqNqpoEy6X4JSWRoRHgcLsCAE7ZrFGcRXWQO1qiBfbbAn+QxhbWIP2YleGH2lXyKgFAnN47paFcYhkNqP6QtmJSPL8s/MTh99VMz1zsdqD+LmeEY1ZQg0U0rI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 6EF4F121CE1;
+	Tue,  1 Jul 2025 00:33:27 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id B5A1E20029;
+	Tue,  1 Jul 2025 00:33:25 +0000 (UTC)
+Date: Mon, 30 Jun 2025 20:34:01 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Gabriele Monaco <gmonaco@redhat.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ john.ogness@linutronix.de
+Subject: Re: [PATCH v10 17/19] rv: Add rtapp_sleep monitor
+Message-ID: <20250630203401.1a11e58f@gandalf.local.home>
+In-Reply-To: <d3cf55d3bf42a0f70a58c394b5cf6d603ca8a9f7.1749547399.git.namcao@linutronix.de>
+References: <cover.1749547399.git.namcao@linutronix.de>
+	<d3cf55d3bf42a0f70a58c394b5cf6d603ca8a9f7.1749547399.git.namcao@linutronix.de>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250701001153.769030-1-jarkko@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: pjgbnxhko5ejey819w8n1j8n6cuyxz71
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: B5A1E20029
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+b2IhGEXg5GPmPtXjNLo1Qu7smsYZuQP0=
+X-HE-Tag: 1751330005-756817
+X-HE-Meta: U2FsdGVkX187jE53da+biyQct+qC0+tc43RGlHOpd9J+9/BJSRYAxs9npKwnthlQ38mbTcJE4YQl9gnvbpD0V98zAg0R2TyKlk9O9YMVTiBDnCLjrU+maXuCJCVXKW0e/4vR3wUTioZhbT86bWQegtpPZQ4dviNkkVDBVVHTjRFuBPN69+fVJCe4hD7HRBZgM4QyPbdCvQinoxDBpibzsWM3kxXCvc2hDzrsJlgLPEVXU20b9RVdn4K/w5qmtJGh/NHcapIcNB1eUZ37dNOAQG8mMPUf+j63W2FRZl0i5NKUM+NhPC7d/Vas5AtjVpTV
 
-On Tue, Jul 01, 2025 at 03:11:51AM +0300, Jarkko Sakkinen wrote:
-> From: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
-> 
-> Repeal and replace tpm_buf_init() and tpm_buf_init_sized() with
-> tpm_buf_alloc(), which returns PAGE_SIZE of memory with the struct tpm_buf
-> header in the beginning of the returned buffer. This leaves 4088 bytes of
-> free space for data.
+On Tue, 10 Jun 2025 11:43:42 +0200
+Nam Cao <namcao@linutronix.de> wrote:
 
-A minor error: it is now 4090 bytes:
+> +static void
+> +ltl_possible_next_states(struct ltl_monitor *mon, unsigned int state, unsigned long *next)
+> +{
+> +	bool task_is_migration = test_bit(LTL_TASK_IS_MIGRATION, mon->atoms);
+> +	bool task_is_rcu = test_bit(LTL_TASK_IS_RCU, mon->atoms);
+> +	bool val40 = task_is_rcu || task_is_migration;
+> +	bool futex_lock_pi = test_bit(LTL_FUTEX_LOCK_PI, mon->atoms);
+> +	bool val41 = futex_lock_pi || val40;
+> +	bool block_on_rt_mutex = test_bit(LTL_BLOCK_ON_RT_MUTEX, mon->atoms);
+> +	bool val5 = block_on_rt_mutex || val41;
+> +	bool kthread_should_stop = test_bit(LTL_KTHREAD_SHOULD_STOP, mon->atoms);
+> +	bool abort_sleep = test_bit(LTL_ABORT_SLEEP, mon->atoms);
+> +	bool val32 = abort_sleep || kthread_should_stop;
+> +	bool woken_by_nmi = test_bit(LTL_WOKEN_BY_NMI, mon->atoms);
+> +	bool val33 = woken_by_nmi || val32;
+> +	bool woken_by_hardirq = test_bit(LTL_WOKEN_BY_HARDIRQ, mon->atoms);
+> +	bool val34 = woken_by_hardirq || val33;
+> +	bool woken_by_equal_or_higher_prio = test_bit(LTL_WOKEN_BY_EQUAL_OR_HIGHER_PRIO,
+> +	     mon->atoms);
+> +	bool val14 = woken_by_equal_or_higher_prio || val34;
+> +	bool wake = test_bit(LTL_WAKE, mon->atoms);
+> +	bool val13 = !wake;
+> +	bool kernel_thread = test_bit(LTL_KERNEL_THREAD, mon->atoms);
+> +	bool nanosleep_clock_tai = test_bit(LTL_NANOSLEEP_CLOCK_TAI, mon->atoms);
+> +	bool nanosleep_clock_monotonic = test_bit(LTL_NANOSLEEP_CLOCK_MONOTONIC, mon->atoms);
+> +	bool val24 = nanosleep_clock_monotonic || nanosleep_clock_tai;
+> +	bool nanosleep_timer_abstime = test_bit(LTL_NANOSLEEP_TIMER_ABSTIME, mon->atoms);
+> +	bool val25 = nanosleep_timer_abstime && val24;
+> +	bool clock_nanosleep = test_bit(LTL_CLOCK_NANOSLEEP, mon->atoms);
+> +	bool val18 = clock_nanosleep && val25;
+> +	bool futex_wait = test_bit(LTL_FUTEX_WAIT, mon->atoms);
+> +	bool val9 = futex_wait || val18;
+> +	bool val11 = val9 || kernel_thread;
+> +	bool sleep = test_bit(LTL_SLEEP, mon->atoms);
+> +	bool val2 = !sleep;
+> +	bool rt = test_bit(LTL_RT, mon->atoms);
+> +	bool val1 = !rt;
+> +	bool val3 = val1 || val2;
+> +
+> +	switch (state) {
+> +	case S0:
+> +		if (val3)
+> +			__set_bit(S0, next);
+> +		if (val11 && val13)
+> +			__set_bit(S1, next);
+> +		if (val11 && val14)
+> +			__set_bit(S4, next);
+> +		if (val5)
+> +			__set_bit(S5, next);
+> +		break;
 
-struct tpm_buf {
-	u16 flags;
-	u16 length;
-	u16 handles;
-	u8 data[];
-};
+What's with all the magic numbers?
 
-I guess this should be changed into:
+Can we turn these into enums so they have some meaning for us humans?
 
-struct tpm_buf {
-	u8 flags;
-	u8 handles;
-	u16 length;
-	u8 data[];
-}
+-- Steve
 
-It's not strictly necessary given that we are already "above the
-hardware spec" but it neither makes much sense to keep `handles`
-or `flags` 16-bit words with MSB always empty in both of the
-words.
-
-BR, Jarkko
+> +	case S1:
+> +		if (val11 && val13)
+> +			__set_bit(S1, next);
+> +		if (val13 && val3)
+> +			__set_bit(S2, next);
+> +		if (val14 && val3)
+> +			__set_bit(S3, next);
+> +		if (val11 && val14)
+> +			__set_bit(S4, next);
+> +		if (val13 && val5)
+> +			__set_bit(S6, next);
+> +		if (val14 && val5)
+> +			__set_bit(S7, next);
+> +		break;
+> +	case S2:
+> +		if (val11 && val13)
+> +			__set_bit(S1, next);
+> +		if (val13 && val3)
+> +			__set_bit(S2, next);
+> +		if (val14 && val3)
+> +			__set_bit(S3, next);
+> +		if (val11 && val14)
+> +			__set_bit(S4, next);
+> +		if (val13 && val5)
+> +			__set_bit(S6, next);
+> +		if (val14 && val5)
+> +			__set_bit(S7, next);
+> +		break;
+> +	case S3:
+> +		if (val3)
+> +			__set_bit(S0, next);
+> +		if (val11 && val13)
+> +			__set_bit(S1, next);
+> +		if (val11 && val14)
+> +			__set_bit(S4, next);
+> +		if (val5)
+> +			__set_bit(S5, next);
+> +		break;
+> +	case S4:
+> +		if (val3)
+> +			__set_bit(S0, next);
+> +		if (val11 && val13)
+> +			__set_bit(S1, next);
+> +		if (val11 && val14)
+> +			__set_bit(S4, next);
+> +		if (val5)
+> +			__set_bit(S5, next);
+> +		break;
+> +	case S5:
+> +		if (val3)
+> +			__set_bit(S0, next);
+> +		if (val11 && val13)
+> +			__set_bit(S1, next);
+> +		if (val11 && val14)
+> +			__set_bit(S4, next);
+> +		if (val5)
+> +			__set_bit(S5, next);
+> +		break;
+> +	case S6:
+> +		if (val11 && val13)
+> +			__set_bit(S1, next);
+> +		if (val13 && val3)
+> +			__set_bit(S2, next);
+> +		if (val14 && val3)
+> +			__set_bit(S3, next);
+> +		if (val11 && val14)
+> +			__set_bit(S4, next);
+> +		if (val13 && val5)
+> +			__set_bit(S6, next);
+> +		if (val14 && val5)
+> +			__set_bit(S7, next);
+> +		break;
+> +	case S7:
+> +		if (val3)
+> +			__set_bit(S0, next);
+> +		if (val11 && val13)
+> +			__set_bit(S1, next);
+> +		if (val11 && val14)
+> +			__set_bit(S4, next);
+> +		if (val5)
+> +			__set_bit(S5, next);
+> +		break;
+> +	}
+> +}
