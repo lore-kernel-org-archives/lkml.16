@@ -1,95 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BE72101EE
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 05:49:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DABD101EE
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 05:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751348974; cv=none; b=gT4B4PHHf/wieo0VNI+kxY40FgleZAWBqeNvpkiPAf5rXoJiNcQFHpATR6M0FtQcyQ9vrumUrp+uUOw4v4QuV9fg/JmoWjyeaMo5auMgjIXKx+uIYeANpjNoy8RIq9KwdTjNeFgSZBuUD7hQXjKoCjH3xJWyz4+27XoSJI1NASc=
+	t=1751349033; cv=none; b=BHQhaaTdSf583AtRSGDS2vbd/cnKPV+u3mkhq7/qN5u5nk57hPVUInQ2Icg3whZJRHYRuF9o9Ny3lmEgWQF/uUzhMmLvO4q2NRViKshh/pOpok8GFJEpzZBpZO/ZY8aqrHbSs58yY2+9kmqqS2N+unkLdp8aXid1atq9A91ZFvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751348974; c=relaxed/simple;
-	bh=o1TAbQKDIzVtGAOdvZGxe79ymlyOZGcF+YuPbOBMkd0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dpE6/WAPVLdPXToBeHlC0lisc9imv9Bs1RsWi+DvWzj29xYEQHWlJjDYLdrfOcimH+HxblmyWFlKjnuzzAbppMUi7EXBWTd3WJ4Fn5/2oiskglxWLLqytroGMJLS7STOXyrEM2yYS4c9+gtPpjog2h9WU9G4eXD8vp5E9y3PcpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=2ucTxokT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751349033; c=relaxed/simple;
+	bh=iA0lknFuV9UHT703geLuFxo+3cXUko1QPEGyp39osoE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CtAkhrEirppAARJqUdwF76E3FOTAgwyIQnYQedTf2XZ+K/P4A9CWPPTuZFzcMyj2aP/jmaXKnRCa8DO6N+jwrsmZrjgJWTUKjtlO4qyrD7TVbBWNfJcE1JxpTmokYLhKvip/hCAX5673lieNts35TDPl8lI5ZpymfRpYwqQlQCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=q4YTB79/; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="2ucTxokT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E349C4CEEB;
-	Tue,  1 Jul 2025 05:49:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1751348974;
-	bh=o1TAbQKDIzVtGAOdvZGxe79ymlyOZGcF+YuPbOBMkd0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=2ucTxokTJpHuuViqv0FmRfcvgrepyVH9fMOEGXvccb0WNXHMDTMUuY6p//nBCS81l
-	 /paIHld743rhqxIzx3/vujbJedFXHCrc9mG4AhSPHwAfOSivkUflFtwLGYSJOl/oJJ
-	 tCr6pJHzENMP8BrhE1h1z68jTFI9gFqY+NfGQLrQ=
-Date: Tue, 1 Jul 2025 07:49:31 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Akshay Gupta <akshay.gupta@amd.com>
-Cc: linux-kernel@vger.kernel.org, arnd@arndb.de, shyam-sundar.s-k@amd.com,
-	gautham.shenoy@amd.com, mario.limonciello@amd.com,
-	naveenkrishna.chatradhi@amd.com, anand.umarji@amd.com,
-	Dan Carpenter <dan.carpenter@linaro.org>
-Subject: Re: [PATCH v3 2/2] misc: amd-sbi: Address copy_to/from_user()
- warning reported in smatch
-Message-ID: <2025070119-kitchen-drowsily-1f2d@gregkh>
-References: <20250701054041.373358-1-akshay.gupta@amd.com>
- <20250701054041.373358-2-akshay.gupta@amd.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="q4YTB79/"
+Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 5615o4f33538314;
+	Tue, 1 Jul 2025 00:50:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1751349004;
+	bh=3cPMkq4X1dcsq5SZpwGZYCzbnhDDSqUTCMHOl/O7qb4=;
+	h=From:To:CC:Subject:Date;
+	b=q4YTB79/6z+iHUjKXRZaiCetZgaR8nVIkU8D2Hp8L2otCT/l8HOBg44R2x5v6TW3/
+	 2BHIuNBh73Q3cP8oeq4TgZS+JnhqYU3fyq8z1oud/LdlCkDGo3a7B9LGbL1u+J7xHD
+	 J3MkvtvyRuTqegDFqCe0QR/aiRLEBOQwRpAQMRJU=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 5615o3pW3800199
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Tue, 1 Jul 2025 00:50:03 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Tue, 1
+ Jul 2025 00:50:03 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Tue, 1 Jul 2025 00:50:03 -0500
+Received: from localhost (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [172.24.227.167])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5615o2UV1007641;
+	Tue, 1 Jul 2025 00:50:03 -0500
+From: Jayesh Choudhary <j-choudhary@ti.com>
+To: <jyri.sarha@iki.fi>, <maarten.lankhorst@linux.intel.com>,
+        <mripard@kernel.org>, <tzimmermann@suse.de>,
+        <dri-devel@lists.freedesktop.org>, <devarsht@ti.com>,
+        <tomi.valkeinen@ideasonboard.com>
+CC: <airlied@gmail.com>, <simona@ffwll.ch>, <linux-kernel@vger.kernel.org>,
+        <j-choudhary@ti.com>
+Subject: [PATCH] drm/tidss: oldi: convert to devm_drm_bridge_alloc() API
+Date: Tue, 1 Jul 2025 11:20:02 +0530
+Message-ID: <20250701055002.52336-1-j-choudhary@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250701054041.373358-2-akshay.gupta@amd.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Tue, Jul 01, 2025 at 05:40:41AM +0000, Akshay Gupta wrote:
-> Smatch warnings are reported for below commit,
-> 
-> Commit bb13a84ed6b7 ("misc: amd-sbi: Add support for CPUID protocol")
-> from Apr 28, 2025 (linux-next), leads to the following Smatch static
-> checker warning:
-> 
-> drivers/misc/amd-sbi/rmi-core.c:376 apml_rmi_reg_xfer() warn: maybe return -EFAULT instead of the bytes remaining?
-> drivers/misc/amd-sbi/rmi-core.c:394 apml_mailbox_xfer() warn: maybe return -EFAULT instead of the bytes remaining?
-> drivers/misc/amd-sbi/rmi-core.c:411 apml_cpuid_xfer() warn: maybe return -EFAULT instead of the bytes remaining?
-> drivers/misc/amd-sbi/rmi-core.c:428 apml_mcamsr_xfer() warn: maybe return -EFAULT instead of the bytes remaining?
-> 
-> copy_to/from_user() returns number of bytes, not copied.
-> In case data not copied, return "-EFAULT".
-> Additionally, fixes the "-EPROTOTYPE" error return as intended.
-> 
-> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Closes: https://lore.kernel.org/all/aDVyO8ByVsceybk9@stanley.mountain/
-> Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
-> Signed-off-by: Akshay Gupta <akshay.gupta@amd.com>
-> ---
-> Changes from v2:
->  - Update commit message to add, "fix the -EPROTOTYPE error return".
-> 
-> Changes from v1:
->  - Split patch as per Greg's suggestion
-> 
->  drivers/misc/amd-sbi/rmi-core.c | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/misc/amd-sbi/rmi-core.c b/drivers/misc/amd-sbi/rmi-core.c
-> index 3570f3b269a9..9048517c088c 100644
-> --- a/drivers/misc/amd-sbi/rmi-core.c
-> +++ b/drivers/misc/amd-sbi/rmi-core.c
-> @@ -372,7 +372,8 @@ static int apml_rmi_reg_xfer(struct sbrmi_data *data,
->  	mutex_unlock(&data->lock);
->  
->  	if (msg.rflag && !ret)
-> -		return copy_to_user(arg, &msg, sizeof(struct apml_reg_xfer_msg));
-> +		if (copy_to_user(arg, &msg, sizeof(struct apml_reg_xfer_msg)))
-> +			return -EFAULT;
->  	return ret;
+DRM bridges now uses "devm_drm_bridge_alloc()" for allocation and
+initialization. "devm_kzalloc()" is not allowed anymore and it results
+in WARNING. So convert it.
 
-What commit id does this change fix?
+Fixes: 7246e0929945 ("drm/tidss: Add OLDI bridge support")
+Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+---
 
-thanks,
+Warning log:
+<https://gist.github.com/Jayesh2000/e42c235bb57cb0f0af06c8c3bf886ef2>
 
-greg k-h
+ drivers/gpu/drm/tidss/tidss_oldi.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/gpu/drm/tidss/tidss_oldi.c b/drivers/gpu/drm/tidss/tidss_oldi.c
+index 8223b8fec8ce..b0f99656e87e 100644
+--- a/drivers/gpu/drm/tidss/tidss_oldi.c
++++ b/drivers/gpu/drm/tidss/tidss_oldi.c
+@@ -534,11 +534,10 @@ int tidss_oldi_init(struct tidss_device *tidss)
+ 			continue;
+ 		}
+ 
+-		oldi = devm_kzalloc(tidss->dev, sizeof(*oldi), GFP_KERNEL);
+-		if (!oldi) {
+-			ret = -ENOMEM;
+-			goto err_put_node;
+-		}
++		oldi = devm_drm_bridge_alloc(tidss->dev, struct tidss_oldi, bridge,
++					     &tidss_oldi_bridge_funcs);
++		if (IS_ERR(oldi))
++			return PTR_ERR(oldi);
+ 
+ 		oldi->parent_vp = parent_vp;
+ 		oldi->oldi_instance = oldi_instance;
+@@ -577,7 +576,6 @@ int tidss_oldi_init(struct tidss_device *tidss)
+ 		/* Register the bridge. */
+ 		oldi->bridge.of_node = child;
+ 		oldi->bridge.driver_private = oldi;
+-		oldi->bridge.funcs = &tidss_oldi_bridge_funcs;
+ 		oldi->bridge.timings = &default_tidss_oldi_timings;
+ 
+ 		tidss->oldis[tidss->num_oldis++] = oldi;
+-- 
+2.34.1
+
