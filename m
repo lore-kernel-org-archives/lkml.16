@@ -1,107 +1,108 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58758265CC8;
-	Tue,  1 Jul 2025 09:20:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92EB225CC4B;
+	Tue,  1 Jul 2025 09:22:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751361659; cv=none; b=eEk9zUnPBo3mzAdRWznMBT0+YPWMPeyHTutB78Ss/dRMyNjSp7GtNFqr2MZjKz20rI4ox/qX9r+Wa8vAouvI6Kdm+F9dV/ozhxapmS/rn8n79FmY0jhKMBokTnZtNG81GIs43qjRf5J2/5rpx3N/OF2tVpimGp4kE2nxSffXgYM=
+	t=1751361748; cv=none; b=escEW2hgtwtcHiuvMdss5U40a0oWJacCdoLzK+eGW5HGsw8oQvMAuXHaeqyytpcg8rfUXf9T2OCPLTdvzRVxmt3q6ORNh6lmFSjA7EgX3RbBbP/U65xhe/XzrPLqFo3fds2lcJuhXIY3NIJkHfntMdBgcbwH0+BVAkF2N70LoH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751361659; c=relaxed/simple;
-	bh=P3XzVml8VOYHlwM4nPlymyPxhWlJy6Gon8cEG/DVKTk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=iRMpuYEuD9nTxrlmAb2ooSBZig4XzIZtcWplrQpzRHlyT4Np9PptTf687G/ClPYahz/DH5twZkLVcKw2W8PzMVc78VYfrFMs9yjXpOy3cio1Kz0ynrbjcd+C8FfSnynWgHS/mnhua1PW7TJFC/6LdFrpE/PBXF5qN6Ul6ZDXuK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4bWcpc59kdzWfv4;
-	Tue,  1 Jul 2025 17:16:24 +0800 (CST)
-Received: from dggemv706-chm.china.huawei.com (unknown [10.3.19.33])
-	by mail.maildlp.com (Postfix) with ESMTPS id E15A51402CF;
-	Tue,  1 Jul 2025 17:20:46 +0800 (CST)
-Received: from kwepemn200010.china.huawei.com (7.202.194.133) by
- dggemv706-chm.china.huawei.com (10.3.19.33) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 1 Jul 2025 17:20:46 +0800
-Received: from [10.174.178.56] (10.174.178.56) by
- kwepemn200010.china.huawei.com (7.202.194.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 1 Jul 2025 17:20:45 +0800
-Message-ID: <09e4d018-3db4-404e-a8f0-041cdee15a62@huawei.com>
-Date: Tue, 1 Jul 2025 17:20:45 +0800
+	s=arc-20240116; t=1751361748; c=relaxed/simple;
+	bh=kNU0Qh0UWY6C9Ff0TdpqpObVRU1t6f9dtCnDFQq8W4I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oOaA2CLUPeIMztoNoZ1hDmjpRqDkR4ihdcS/pSlVqLiCnpv1GpWapwBc+malGa3vSal725YyKy12tsKpdJQdEPxYelKJ1wP8ZF1/4ANFpSLM6vG5kNmCpWvQib9fKiJcuEjcWyXu6ZIM4Om7tqK2+sLdwWsDPEDRTV8Dvu8cLJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-87ecdf5f326so3474285241.1;
+        Tue, 01 Jul 2025 02:22:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751361745; x=1751966545;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dUm/+QERyPsocCD8Go+FS+WuySKzS5FIx0c+iuNFBk8=;
+        b=grEboFJX+Uzgpogo4FXDYZnmnQM4/wwni6cyK2ultU1f9xgQlio1/GHbLKzu4zzcET
+         OT1JLp0irzCTSYYAWTu4/vlWaiaSrDZGRMOF8fmGc3BJQYq/29YNUXX3tqrIoNx9U9Di
+         AM2ur+fu55n0jqg39Yg6D3dZ6eeLxDKpxGcQgJVMizmbVfw483OeeFuPEu9E9c6Vg34K
+         MXgI/CkAYLEvKFfVNm0EHG/qbaRtBYp52kRQ7lHGUdxySdUD2lVoCu2LYKozvH6wARvS
+         6C4ktKV9lHY8k8phg98vGz28sycpz80H9MQN7cOjtui+tTMuxYKQMZTPnyCDjWmqFSlK
+         HrKg==
+X-Forwarded-Encrypted: i=1; AJvYcCUIo737b+0eqzCfirNI7DKYAC4Qdk/CphbKwl+Dg6k0paVSNxd0ltQ65vU/dU/3MhLod49myiXqjHRRoxls@vger.kernel.org, AJvYcCVYpWM3WTcpZtFqoWY/Nrnsm5CvpnvUI4tRlVpPLPynS4GppCPn/CI+lQA7vPPlbbwL3zN6MNBKzyakmjq/@vger.kernel.org, AJvYcCVl4BnWVQtDXx1Ur5mP1PBIZEBDclGjdTWccVGAEEFyPbs21vjfA1BcU+Qro3oSZqHPGxPsGzwwpKMW1TNY7KasAUw=@vger.kernel.org, AJvYcCXAzgC/y2XP8AdIBCGL6bp8H8sMXlwDvewGGGkqo8BEgGDKqToHjkZOjp0c3mHHaQeBhkKjE69V+9SW@vger.kernel.org
+X-Gm-Message-State: AOJu0YwO1IA5y7dRHSPST7MZxp73e9XCrhv5UcD5FUHrcgd3L3HLWmo3
+	N9E/D5ntZGZFTu7h/lOB0llgaqTvV9AUTpLBO2RpLA9BQVQ4fHQLj/QaXhn1jY26
+X-Gm-Gg: ASbGncvvlnYIeep9NtAdPawFIBcNo0zgud8nmKWb24qM/2xZvAXkFWT/CLiq+I5wCiN
+	UnqAMhhbZ5XepXwnC3urICQlxzmgSbEx0cgZR2/DHggRd5azRHFwnwSSs8TzQ1Xt808yapzBbqW
+	GqzB8P6XCsuP0fz2J4QdvEBSbrl4+PPxG/r2DnA92FrtV0D9Ev7FNhNJBC63e83rws97mNDqzJt
+	545F8fNqexAaf+CPQPmamKzR6tdGWlXGscaxwGA8pZpBwrUsgOpNIKYhSXww1fFd7MDjbTrzKTM
+	jqbpdiGe6VHJiqC6kkmnkAbhKuAQMqYr1SRtvOMXuwo7d+B3Z0ZuCQqcr82oels0qHmjsOHeMTa
+	ao38HJwaOk/uUOhrYNwn3nwUUcXEL
+X-Google-Smtp-Source: AGHT+IGRSsYCs7VVC9AeL9uT+P5Wkryoxe5tKmaxs6LAMyzLQJU1lnEqSfIRfDpIIV5SIf7CWVuhjg==
+X-Received: by 2002:a05:6122:311c:b0:52d:cc6f:81a2 with SMTP id 71dfb90a1353d-534256115admr1637632e0c.6.1751361744753;
+        Tue, 01 Jul 2025 02:22:24 -0700 (PDT)
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com. [209.85.221.181])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-533091bea7esm1661363e0c.29.2025.07.01.02.22.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Jul 2025 02:22:24 -0700 (PDT)
+Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-53185535ed9so3925623e0c.0;
+        Tue, 01 Jul 2025 02:22:24 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUvAd3gdKYeDPvqPHltWz9iYlc+J3XF5w2nbjzaINRublfN0vn/rR8saNw84bpz6cCReBe2qOIhm37ZBzmg@vger.kernel.org, AJvYcCWEoF20M9UyOU8Gp0HFlqGGBkAbCewnSj1EHxhIfSdHHVe8M5e0NJDgg8b/ktY5tH99HR41c1ohwmiaUfly+xZVn8w=@vger.kernel.org, AJvYcCWlz9/KBwoQKv52cY6PW4D7EUJmHdp2BejWsP6l+H4bZ6QWFJ5uCnydUEMzMD8nZeQd2XmCEVaeiHULt/Lf@vger.kernel.org, AJvYcCX9a64roQFuTMvOhoT7lThJnbbawtYnMrgWK13hdp+Yj9i4PMu0cOpedxMA6/amL6j4AglcFgIbzggU@vger.kernel.org
+X-Received: by 2002:a05:6122:3089:b0:531:3a03:1122 with SMTP id
+ 71dfb90a1353d-53417f7937bmr1670875e0c.2.1751361744302; Tue, 01 Jul 2025
+ 02:22:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [QUESTION] problems report: rcu_read_unlock_special() called in
- irq_exit() causes dead loop
-To: Joel Fernandes <joelagnelf@nvidia.com>, <paulmck@kernel.org>, "Xiongfeng
- Wang" <wangxiongfeng2@huawei.com>
-CC: Joel Fernandes <joel@joelfernandes.org>, <ankur.a.arora@oracle.com>,
-	Frederic Weisbecker <frederic@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
-	<neeraj.upadhyay@kernel.org>, <urezki@gmail.com>, <rcu@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, "Wangshaobo (bobo)"
-	<bobo.shaobowang@huawei.com>, Xie XiuQi <xiexiuqi@huawei.com>
-References: <9acd5f9f-6732-7701-6880-4b51190aa070@huawei.com>
- <CAEXW_YRC=f6i3KOd_uhuH=xAOCG7mW7-LwtA4+_fc8FMjfRHeg@mail.gmail.com>
- <3ce6f3ce-5dfb-8c59-cb7b-4619b70f8d25@huawei.com>
- <20250603185939.GA1109523@joelnvbox>
- <066e8121-c6c5-48ac-b35a-e6430d986dff@nvidia.com>
- <a82784fd-d51e-4ea2-9d5c-43db971a3074@nvidia.com>
- <c448118b-9f7e-4c29-d6b3-a66e70f7163f@huawei.com>
- <a963b475-72cd-474d-96d4-9e651fc8f857@paulmck-laptop>
- <e7354668-2573-4564-834b-44d76d983222@nvidia.com>
-Content-Language: en-GB
-From: Qi Xi <xiqi2@huawei.com>
-In-Reply-To: <e7354668-2573-4564-834b-44d76d983222@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- kwepemn200010.china.huawei.com (7.202.194.133)
+References: <20250630202323.279809-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250630202323.279809-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250630202323.279809-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 1 Jul 2025 11:22:12 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUDtvKjHRAyvCPpBAf8uuK1EL4p5yo0e3QHeVqn=pC3OQ@mail.gmail.com>
+X-Gm-Features: Ac12FXxbh-YLa-x4qYu4MdRAklij9uSF8x54ewlANZ0ZK7sR0ovq73GRKlK5Jnc
+Message-ID: <CAMuHMdUDtvKjHRAyvCPpBAf8uuK1EL4p5yo0e3QHeVqn=pC3OQ@mail.gmail.com>
+Subject: Re: [PATCH v14 5/5] serial: sh-sci: Add support for RZ/T2H SCI
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	linux-serial@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hello everyone,
-
-Friendly ping about this problem :)
-
-Qi
-
-On 2025/6/6 2:56, Joel Fernandes wrote:
+On Mon, 30 Jun 2025 at 22:23, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
 >
-> On 6/4/2025 8:26 AM, Paul E. McKenney wrote:
->>>>>>>> Or just don't send subsequent self-IPIs if we just sent one for the
->>>>>>>> rdp. Chances are, if we did not get the scheduler's attention during
->>>>>>>> the first one, we may not in subsequent ones I think. Plus we do send
->>>>>>>> other IPIs already if the grace period was over extended (from the FQS
->>>>>>>> loop), maybe we can tweak that?
->>>>>>> Thanks a lot for your reply. I think it's hard for me to fix this issue as
->>>>>>> above without introducing new bugs. I barely understand the RCU code. But I'm
->>>>>>> very glad to help test if you have any code modifiction need to. I have
->>>>>>> the VM and the syskaller benchmark which can reproduce the problem.
->>>>>> Sure, I understand. This is already incredibly valuable so thank you again.
->>>>>> Will request for your testing help soon. I also have a test module now which
->>>>>> can sort-off reproduce this. Keep you posted!
->>>>> Oh sorry I meant to ask - could you provide the full kernel log and also is
->>>>> there a standalone reproducer syzcaller binary one can run to reproduce it in a VM?
->>> Sorry, I communicate with the teams who maintain the syzkaller tools. He said
->>> I can't send the syskaller binary out of the company. Sorry, but I can help to
->>> reproduce. It's not complicate and not time consuming.
->>>
->>> I found the origin log which use kernel v6.6. But it's not complete.
->>> Then I reprouce the problem using the latest kernel.
->>> Both logs are attached as attachments.
->>>
->> Looking at both the v6.6 version and Joel's fix, I am forced to conclude
->> that this bug has been there for a very long time.  Thank you for your
->> testing efforts and Joel for the fix!
-> Thanks. I am still working on polishing the fix Xiongfeng tested. I hope to have
-> it out next week for review. As we discussed I will split the context-tracking
-> API into a separate patch and will also add a separate documentation
-> comment-patch on why we need the irq_work.
+> Define a new RSCI port type, and the RSCI 32 bits registers set.
+> The RZ/T2H SCI has a a fifo, and a quite different set of registers
+> from the original SH SCI ones.
+> DMA is not supported yet.
 >
-> thanks,
->
->   - Joel
+> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v13->v14:
+> - Switched to using `EXPORT_SYMBOL_NS_GPL` for all exported
+>   symbols in the sh-sci driver to allow RSCI driver to use SH-SCI symbols.
+> - Added MODULE_IMPORT_NS for SH_SCI to allow RSCI driver to use SH-SCI
+>   symbols.
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
