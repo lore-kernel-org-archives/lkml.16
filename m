@@ -1,114 +1,126 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1368915AF6
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 18:04:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7CFB28032D;
+	Tue,  1 Jul 2025 18:04:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751393061; cv=none; b=niCC5DxQsfud+NUQWLAkTzvKC+BQ7Sz+9g9j4EqqSgR3mKiEJWN2LXgE+/Z5EYGeNTBLToTlwsgnswa092ZG2NMaY1CyfJxlcM/np+2V/O3BGrHJKLkCSxkZ2HnPU0XigPJwvD7RuxIKOXI4VV4nMU5t813G5bDFW3tRg4NIgUE=
+	t=1751393065; cv=none; b=twOtmv075yYMCB/kkFSbzlATeIJt9snAJY0E+Xof8SXvuNVYG7iNURnpLP2X6d9iIgC8LD3y+VvYobzTJq4k7wV/eALpDi1IGstbXPJZiLIsil/ubMajdN8PBVSAH1rhw0Lfg84GCn7HCNkFX9/bp/8Jq6MT8ydsK7OgjSUeSkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751393061; c=relaxed/simple;
-	bh=OZd53S9/hYXg0lSakaTI6z3l/FmVI9v+j6PYAZZJc5E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i1T05rR1bWm3e4o4g5O6SJib75GmLhwSyNr+lEcs6cY19qPJFbCWf3pl9MqQxy+044Ay6mABmAuEyLkOu4J6IEro1cCaaXOw3oVFbJGusYRkBIA8e9l8ryvqa0iNjTdPDNX2fAVGQNDSDjjGwRLgA6VxtrGtCh5B0JQ8TBELZ54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hifiphile.com; spf=none smtp.mailfrom=hifiphile.com; dkim=pass (2048-bit key) header.d=hifiphile-com.20230601.gappssmtp.com header.i=@hifiphile-com.20230601.gappssmtp.com header.b=Y7ur8Iws; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hifiphile.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=hifiphile.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hifiphile-com.20230601.gappssmtp.com header.i=@hifiphile-com.20230601.gappssmtp.com header.b="Y7ur8Iws"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-32cd0dfbdb8so32166481fa.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 11:04:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hifiphile-com.20230601.gappssmtp.com; s=20230601; t=1751393058; x=1751997858; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OZd53S9/hYXg0lSakaTI6z3l/FmVI9v+j6PYAZZJc5E=;
-        b=Y7ur8Iwsh9eowUbuIxPYK/8yWU5SpCGDbfKqclT33xn7tf4kEFf5vDBng7SeWTxHwd
-         t3xq4vfmnHkRbPZEFPkTGJayvIGgKtZG2FwlQz9rAH+qup7pV+GHnN1MF2bkiVqsDeOz
-         ja8R9xOVjqT7yjK4ykr05F1SqE1av//NHEtjym8UJTd6JON6w+vwFx1I7ikP/+sqjl9k
-         vM0+LCKtdZS7cTBxgHokyHMSVYH1MlQeeW2hE699qfMakTtCWoUYkW/9CWL5PUreriyF
-         4h2unPNZTGHSoSynIwbKGRs3DvJ000t384cfpXUgN9nHKGvB86IY6HqSuVej3xtxvXc9
-         UXCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751393058; x=1751997858;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OZd53S9/hYXg0lSakaTI6z3l/FmVI9v+j6PYAZZJc5E=;
-        b=XFmvniwD4KrwM7nsH95uRC4gZnNRTVA0V8LUZNQ1zDdu2CZyZk2FXjCu7uoEkU3i5B
-         1dZcrmqyWr7E3tCG8EF98VQ18RMjl0B04iUUl5eXP+wKIirdVXddKmQMKUns/K23BniG
-         /gRX2EGhqPGmZ1PnQbPuBgDE65GYucn1ofbcUKBetriUlvk065Gr8aIS/41H+6y/AevF
-         ls1JscnfBBc6JBBcuNWrNY6QQpSj6IAZJ4XHc7l+ARvtEfpWWGsuhyDyMtcUEuomusx/
-         5ux/2h6f+8K5MwezrHGvQ+yQOm1wvHM+lq2zU+U+HgXUWTv0M5fCYfqtgpL5dNv1W42q
-         Dc+A==
-X-Forwarded-Encrypted: i=1; AJvYcCVd0BLfiw9DfbJJjATB+9U2pylSW6zphAqK6FabiokNS95kGOxd3CaAYp23d0d5rgBMYDJBdgoL2yMerhM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOv6EF/acaKWqt8uMw1AKOxyFOcwRN4U/8FaYijSBzlULs2p0P
-	1hfddKXHFKRA5FGr+4WRdnxsGDpt3YAjtKizdvuH1goBdx7Pt5qyNs1Xz+g8cXaU6zpI1zTE1xy
-	xXaF5gaddpA1wlRUe0VMoxWcLOGlUx6Qr9h75MupxEQ==
-X-Gm-Gg: ASbGncuqpmWER+dvhbirr9+hIMoIAL3eWvljcqf8LBReBrUSFdMXYK74xsW7Ao9L8WE
-	s5ijf2ZA6hSgnjmwcEbnNdNrOgCceukjz4UdM+9EJiVqcaf7CSF70eZcP69Ovc4rr8D1uv20ysD
-	StmtQsQhI9lo3ldr8WS5UtVb1kRGgy9u6qK7xZtKa4Xon5Rr2oVti5c4euJThWIrArLIJBOExvm
-	5vj9w==
-X-Google-Smtp-Source: AGHT+IE6y9R8uLja1br0fCyfzE0jDMNUQXyj9K5jFieZgPvJ9HnnxDlqVbdU3xGPBSrKWNmGMVpDlPgjkWqfN3nYZzk=
-X-Received: by 2002:a05:651c:41d4:b0:32b:9e00:1237 with SMTP id
- 38308e7fff4ca-32e00075d6amr326841fa.32.1751393057890; Tue, 01 Jul 2025
- 11:04:17 -0700 (PDT)
+	s=arc-20240116; t=1751393065; c=relaxed/simple;
+	bh=INPL5mykLyHh9BAddpKD33kEw5Zh1QT3Mw8WI6pEDxg=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=XWAE+7AP6XyAryCF34cV7Ec+02m8cmEVdZELbmrmk6h+fUkac+/NFr0K4tAk2bGMGubXvFj4Lcj9jJy4sQ4eR7ROpK+PVbc+5uZH+oU/zcEjFOa2svDz/WIvV3r4o3IHdYrJzw0M4TZDDH9cQiOSnEt/OdNu3euNznee/vbnYBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 0CFDDBA5E0;
+	Tue,  1 Jul 2025 18:04:21 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 8B75F18;
+	Tue,  1 Jul 2025 18:04:17 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1uWfLk-00000007g0E-05dU;
+	Tue, 01 Jul 2025 14:04:56 -0400
+Message-ID: <20250701180455.872384844@goodmis.org>
+User-Agent: quilt/0.68
+Date: Tue, 01 Jul 2025 14:04:12 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org,
+ x86@kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Andrii Nakryiko <andrii@kernel.org>,
+ Indu Bhagat <indu.bhagat@oracle.com>,
+ "Jose E. Marchesi" <jemarch@gnu.org>,
+ Beau Belgrave <beaub@linux.microsoft.com>,
+ Jens Remus <jremus@linux.ibm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Jens Axboe <axboe@kernel.dk>,
+ Florian Weimer <fweimer@redhat.com>
+Subject: [PATCH v12 02/11] perf: Have get_perf_callchain() return NULL if crosstask and user are
+ set
+References: <20250701180410.755491417@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CA+GyqebQnWQ3fj4Lrb4-hvzRpphuqw+jh4B9En1j2NDTNFumvQ@mail.gmail.com>
- <599c677a-ace0-41fe-b264-51de0fa7badf@arm.com>
-In-Reply-To: <599c677a-ace0-41fe-b264-51de0fa7badf@arm.com>
-From: Zixun LI <admin@hifiphile.com>
-Date: Tue, 1 Jul 2025 20:04:06 +0200
-X-Gm-Features: Ac12FXzHRMRJLOOItsRIrxYGyHt7wf3A5-pMjsV73wxTRtwvTIExDU1XymzmqNg
-Message-ID: <CA+GyqebFpav_ixDyp84-XA2WcQdrm_t6nfaKckm98tt5MpM2EA@mail.gmail.com>
-Subject: Re: mtd: rawnand: atmel: ECC error after update to kernel 6.6
-To: Ada Couprie Diaz <ada.coupriediaz@arm.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, Vignesh Raghavendra <vigneshr@ti.com>, 
-	Tudor Ambarus <tudor.ambarus@linaro.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Richard Weinberger <richard@nod.at>, Miquel Raynal <miquel.raynal@bootlin.com>, 
-	linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	"SoC support'" <linux-arm-kernel@lists.infradead.org>, 
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+X-Stat-Signature: 9e7goc9a1kip16qfkakpdef5h3igtoty
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: 8B75F18
+X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+a27bIlBW3R5rVNigKqT3jicHlXSOqmsY=
+X-HE-Tag: 1751393057-410247
+X-HE-Meta: U2FsdGVkX1+ugqMjWqnch2DVuPFAL5NBDwQF7X4X166VlJL2rwFtiaYXtnk4y67y1o5/375pk8wvKf+5QmWCnu1BAh5EPneqkUgaLDWgjVZN1rWl4nyO7HKtlEL9hyiSpzBXuLWjJRO3nR46gHaE61Ln3cdrTGqATRWy0HPCE+DtJUJmj8+82fCwY9RpQkV6yDWvfAPCFO6Z+qzO2watUNcjSGQo5Q9uH9KrHJ1Z+uN29juPCF9+7rDhcnClP9ALV9tmYcONR4Ee9mB+rSoCCLnfi7mV7vBb4fuAX4QSO21oU0oZr11Spcv68IVblY98S/1gcvKybUsYrwXUFcy5rty62CS/lF/3CwEWtjI11rOsmK2YeKWa+ZKa2VjZdcfPnUbHBNRkneGkrei4X5pFT3IQnbOqD2XU5+IVRLyO1EA=
 
-On Tue, Jul 1, 2025 at 5:49=E2=80=AFPM Ada Couprie Diaz <ada.coupriediaz@ar=
-m.com> wrote:
->
-> Hi,
->
-> I've written a small patch below that I think should fix the issue, but a=
-gain
-> I don't know if that's upstreamable as-is.
->
-> > Best regards,
-> > Zixun LI
-> >
-> > [1] https://github.com/torvalds/linux/blob/19583ca584d6f574384e17fe7613=
-dfaeadcdc4a6/drivers/mtd/nand/atmel_nand.c#L1058
-> > [2] https://github.com/torvalds/linux/blob/ffc253263a1375a65fa6c9f62a89=
-3e9767fbebfa/drivers/mtd/nand/raw/atmel/pmecc.c#L772
-> >
-> Hopefully that can help !
-> Best regards,
-> Ada
->
+From: Josh Poimboeuf <jpoimboe@kernel.org>
 
-Hi Ada,
-Thank you for looking into this. Internally I've written the same patch as
-yours and it works fine.
+get_perf_callchain() doesn't support cross-task unwinding for user space
+stacks, have it return NULL if both the crosstask and user arguments are
+set.
 
-What's more interesting is the issue happens depending on chip individual
-difference or aging. Among 3 chips tested, two with date code of 1933 and
-one with 2223. The 1st one has many ECC errors as in the mail, 2nd one
-has less errors, while the 3rd one passed the nandtest without error.
-Maybe that's why this issue is overlooked.
+Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/events/callchain.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Best regards,
-Zixun LI
+diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
+index b0f5bd228cd8..cd0e3fc7ed05 100644
+--- a/kernel/events/callchain.c
++++ b/kernel/events/callchain.c
+@@ -224,6 +224,10 @@ get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+ 	struct perf_callchain_entry_ctx ctx;
+ 	int rctx, start_entry_idx;
+ 
++	/* crosstask is not supported for user stacks */
++	if (crosstask && user && !kernel)
++		return NULL;
++
+ 	entry = get_callchain_entry(&rctx);
+ 	if (!entry)
+ 		return NULL;
+@@ -240,7 +244,7 @@ get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+ 		perf_callchain_kernel(&ctx, regs);
+ 	}
+ 
+-	if (user) {
++	if (user && !crosstask) {
+ 		if (!user_mode(regs)) {
+ 			if  (current->mm)
+ 				regs = task_pt_regs(current);
+@@ -249,9 +253,6 @@ get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+ 		}
+ 
+ 		if (regs) {
+-			if (crosstask)
+-				goto exit_put;
+-
+ 			if (add_mark)
+ 				perf_callchain_store_context(&ctx, PERF_CONTEXT_USER);
+ 
+@@ -261,7 +262,6 @@ get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+ 		}
+ 	}
+ 
+-exit_put:
+ 	put_callchain_entry(rctx);
+ 
+ 	return entry;
+-- 
+2.47.2
+
+
