@@ -1,45 +1,45 @@
-Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011009.outbound.protection.outlook.com [52.101.70.9])
+Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010070.outbound.protection.outlook.com [52.101.84.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EEFE1C84C5;
-	Tue,  1 Jul 2025 21:25:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5EB126A1C4;
+	Tue,  1 Jul 2025 21:25:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.70
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751405114; cv=fail; b=N7RwtA8FriaueW57DBLFWwk5/9De57Mr3Q85acH2A3LcsVefBh+YgCmvF52IAhO6dJ1LUm4SDdUiNuUXV4311vaCyGflW9v+JpA2pVL4hrLPlzybL3n094geHvlKF/rz267AfzVWegxwdp3p63pGCk1NY0QWWpmMgKXMexXEZAY=
+	t=1751405139; cv=fail; b=LMMIVbvoILAH0dK0zuTT3ecT9XOSdgI1wN4GrFFW9TkWK0nH7YKB052mLT1ndAin1YqfMlx7uZVmG3Am4JXCgFlVb5G2aWAySkM6HI0xnaAeC4LOlTCdrnCaTTCJhjR9KtGZLcDMexXNxbcfLTMP9XuGE7VBLdRYiyqlDamPA2Q=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751405114; c=relaxed/simple;
-	bh=TOSeSHW0hV+ufxs4OsqsC6eIf70Umo534sGxOQn58cI=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=bDzQWwI8ecuJjk47R+Cz8F46UE7UMSXUs9CMwtcvrZV23Rzx2agLf9UR1lfChlTZlEx97UFUMBq8uHIgLRGAoicPUKN8waTPTjDcJr2rxcBbuNylM3KeInllYK/8yjxhEhLCpkr++Xy/K1vA8fEY65bqDf7QCMCrfSRqyxPji1w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Rr/zQNeC; arc=fail smtp.client-ip=52.101.70.9
+	s=arc-20240116; t=1751405139; c=relaxed/simple;
+	bh=/w9cS9G3HaT0Hd41TCLkfaThalGKugHnJJO/UEbO/cg=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=C26KZQZU1YaccGLLbaUd72qlSUhcvVRNSRpeKRfesUwu3d6kheWgZNLJ3Ic/kNT8nVFKU5gLF20E2J1VqXPQYhxS5LJNp1arCpNj+xFEBp15Ed2B2NK56l93vaZFHSTSaBQvkBkr1Zbf42gbhgSOApw7hOPdlguH0GUcPGnnpeI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Q+lXMZUv; arc=fail smtp.client-ip=52.101.84.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Rr/zQNeC"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Q+lXMZUv"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=u6hBrpVNJ+vR44J9BMgHzIBJG+/lEUkIDj5tvQfe22Un+KmVJSMDDnDYaeLqXU//OT9+i6jDuQjBmssjGnwV72E5QltjmQY8pL8j1/RBa4BmoRjoLzHIHG8VL7bGqcFQGzn0RQMzc8yE+i3A079mJkfthCddgFDc6Exi3lQlNunRlZqevt+NArZuaNbwqvMnn1daTBfh1ch+7R2AJXwx5t7MkA0MhyI+pnwnSgPfXki9+IDNY9cmKLeXa/Nn1MY2HT6tbYR20kyzj9+VpkKXUYaGmJHMOXugjE1hMIiTr5axDAKjDAcyN9WpxGJVRggTxk5618bjbnxBIeZs2C86gg==
+ b=H6PwMLBTSHoPguCfdTCQLUzod843ZYPVvDvzfsKkga1s0Lk4B5b5TzK64LM3gcf15tUmM7OgvVlJmoZyCOyqK0wV5iPjyMdzB4Czv0QQ1SfF7NuQzHX6HkFReQiaFW6xEp9kUs/IiEmJFe3rAie2hvRBTDSaRpgInec0/sJxgy/A3paJneFWi75InzQAG4QDuIxj4+IMXIMsJ3vMs42WNoxLAjK4BBLOQCIvkN+CYZQPgtnWO1eouREAL0MoSjYWHf2u/Ab6njHTdvaLVOIw0KRE6S0vnROX2+Nlm3Z86OgjRPg2ENK4Gxbk925DzUtGscblVCmQ/FIajog0sbEVEw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TLi5BFAHP1zLkagP+f0skAk5JLbzCqyNxSPOgyPy2jA=;
- b=BNG0RViuQkR1qGKBn2/7TlnKT619ussn+bS3GYa9gkD2xyAX0GkNM0dijyPHoA1IcHLgqVrSpm+pd+INJyHVct7WymZ1zHJm7W7UEzFDkBVFv+3j4TtAL5KtAPFETAanXoFqlLJDae9O0mN3tf6cRf5O7qdVTKccyDhR9ioCVzx+wA4Ak+lxFf5JI1sv/l6IbF31rizd+JiK8Vk1lIGxegaPJyT+Ub6/2ArN49DzCEaF9g+GdbjVnDr390KP8D1in14WXcWJzQb1OKiENo9qdPFEVeHx0NAjOGiJ6bwP0rqqpTUsVM8iJyVGwPrZSZXHot/aGq23etegMDfZbYKaFw==
+ bh=QBNSCyDdxP89LVPJuO46lXb4PuCkty6F+/SZqukX/fw=;
+ b=CTfgeU3yzz1uGS1wsA45V4Ab2rJ1RZbUjW/ps4DcCOBg9wohD1vELbNwlxRTVbG07gky9AL5TSBC8EofINc3+fqiXfFDzAcX6l7HCuo4DZMkVbCFEMFIlF5xLPdJ24eKoMdiE/MeL8awq6jG0jCP6p2XHMP/5M1QfuZgbI3SULELpzT1jWfkQB+aPyCXl2AAL6Bt8aNbhFNDYj32KwacH+Hd6sHIBM2mnBsr9pyHbwNH2DKsATPLaQsCUSb6/QcX35JV3qL8HdBSYGfBkek7UR3VfohoxrCNMrSzSmZYYi5NXjlte3keQ93nG8oJkUU8O9SaMTBxwA7HRa0cuK/eyA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TLi5BFAHP1zLkagP+f0skAk5JLbzCqyNxSPOgyPy2jA=;
- b=Rr/zQNeCWdfmph1MynDGr9fHYnaMIRFwwhHEwIHVzT3a3IYOXyqjnA3fcMWNGITSx798EKBRVb0X2wOCPRYUbLHVJKLXM+6UEoJ6lKxNmS+jR8UdBGPxK+ZsP4GoIw3E8zrwyDHqxqLxExLn8inZmq6GbK+QgCi2Of7XaUcRnGdk8nNWj3Vf237A1YtBhEW4JDrJ1nqKFCRL0uMnZuBJyED1ylc+6UGc6zm/JHo+Nd2F6pn30m8XoK5t6PPqsQImBAGzsGujcEA2dFFlhemkDeJEdeqxCJzXqbjdhZJfGuRqfzt/RRuVYHsZYrOOA54LOqXYOLnXIVGN0eLrUzg9BQ==
+ bh=QBNSCyDdxP89LVPJuO46lXb4PuCkty6F+/SZqukX/fw=;
+ b=Q+lXMZUv0xWBOlrrIprcV1tTwOlK3brXSn+09dJ1xLMa4TJ4v71bDK4oy2gbFJUnWMSEI6iN3RaF1opOp2yHXyOFFDdIYLVo4UVy8fvWHl/infv8CxhN2GdSi7oZXpXTKP0mznCHrGBKcML+h0bwgkWMEyOaUZMnxyH1cRzUC2ARhLCfs8eOLcEzXVhK2yCVPbmsj4K9sK+ltREpseTMOvOHH3Ya5CbyCQ6dwW/1HR/RV3O1pZen6yCLjJWTWcAWKPJ6zu+NYgCJviYWHTiL87LomgR+Jfs9irMMpD6Sc+cZ2S05XnnLBcinSdPvgDwuRMdPuKhapldYOG9DQgKLag==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
  by PAXPR04MB8895.eurprd04.prod.outlook.com (2603:10a6:102:20e::9) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.19; Tue, 1 Jul
- 2025 21:25:08 +0000
+ 2025 21:25:35 +0000
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::9126:a61e:341d:4b06%7]) with mapi id 15.20.8880.029; Tue, 1 Jul 2025
- 21:25:08 +0000
+ 21:25:35 +0000
 From: Frank Li <Frank.Li@nxp.com>
 To: Miquel Raynal <miquel.raynal@bootlin.com>,
 	Richard Weinberger <richard@nod.at>,
@@ -54,14 +54,14 @@ To: Miquel Raynal <miquel.raynal@bootlin.com>,
 	linux-arm-kernel@lists.infradead.org (moderated list:ARM/LPC32XX SOC SUPPORT),
 	linux-kernel@vger.kernel.org (open list)
 Cc: imx@lists.linux.dev
-Subject: [PATCH v2 1/1] dt-bindings: mtd: convert lpc32xx-slc.txt to yaml format
-Date: Tue,  1 Jul 2025 17:24:54 -0400
-Message-Id: <20250701212455.3106629-1-Frank.Li@nxp.com>
+Subject: [PATCH v2 1/1] dt-bindings: mtd: convert lpc32xx-mlc.txt to yaml format
+Date: Tue,  1 Jul 2025 17:25:24 -0400
+Message-Id: <20250701212525.3106709-1-Frank.Li@nxp.com>
 X-Mailer: git-send-email 2.34.1
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: AM0PR04CA0038.eurprd04.prod.outlook.com
- (2603:10a6:208:1::15) To PAXPR04MB9642.eurprd04.prod.outlook.com
+X-ClientProxiedBy: AS4P195CA0004.EURP195.PROD.OUTLOOK.COM
+ (2603:10a6:20b:5e2::19) To PAXPR04MB9642.eurprd04.prod.outlook.com
  (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -71,148 +71,151 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PAXPR04MB8895:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5d770821-bd24-4fdf-2e59-08ddb8e5c128
+X-MS-Office365-Filtering-Correlation-Id: e5bf6587-5a8f-433f-6d8c-08ddb8e5d13d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|1800799024|376014|7416014|52116014|366016|19092799006|921020|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?3e+YLbeqRalDEUXv7g0y2noM2phXkhPbaP3BSLsuDxSr/L1H6uRWIC2SjfXm?=
- =?us-ascii?Q?tF+BiciA+u7MdXn90Q6VD72JBtUV+Wb4KwnLI6MOkEGEvvQWXi0JpmfDw+M7?=
- =?us-ascii?Q?J36RMVWd5hrq5sy3yLi78bmGHmPyjM2kmaczuy5vtp9a6ZBV4n35E9oJDgGd?=
- =?us-ascii?Q?TWLAqZJW3ICiU91zvoGMCat6UJofvEOQJwIW74GQNMb+ssZovvT/mFgWoYc4?=
- =?us-ascii?Q?FHgaE0RH/vuzBNjuaSXEc/QDK4QFIV6c5zD5+DYsRNEKS2r7YZ/NM8qrO2Dk?=
- =?us-ascii?Q?+KSZae7R83EVSotw7NKQGWTJte9r5eYp9RnGg11d0J/XENe1FG1/A/l65RtL?=
- =?us-ascii?Q?xbYD2d9sCrNzNOGmzHzAAR4bEnILLWvSztLA/FQX/3KI11mmru9q/Q/1VqUV?=
- =?us-ascii?Q?L11xOyhc0Iat4fYswPojlxLtSJZMQkdzq4AY4guNkwxGqaALpLmCZMlm6o3E?=
- =?us-ascii?Q?F9aBoof1Z/eGTVlnNw9N7kRpDn8UKxDYnvE8wUXL6BSZnVKGn2EqinwcLwBO?=
- =?us-ascii?Q?XlNqz4VK8Z+XRdqXZ/81wJh1OAjDQVOnHmg92aICaYWdoVXPrODtvYPB1Tg3?=
- =?us-ascii?Q?l2WwuNclYYuMAi4LizxslyENHciUuh0XXTZJdG/ELB1R6sModTBVR2omWJA9?=
- =?us-ascii?Q?cSQQu5Nlt0aIqRucRAtWPVO5JltcNKPjVpTh63XbIQ1kVmvPZgNrikiVOOUc?=
- =?us-ascii?Q?gFuFNDrxJsMNUe/aKm+Al6XWCMvjMo0eJTStXNnsLXeGrsPnox1Rdtw1T7zs?=
- =?us-ascii?Q?oqxdbABal6dE0ptmVi6F67ZrSrLSk3xSeo0HeqlxiAc+kf7IDxlQpMeiIlsT?=
- =?us-ascii?Q?OLb0Kf+Cp/+lUTlc7Jr6Ny6yOeIAdoYAe9TlG0Ie56ProRZAZFPIAu4QQ5m4?=
- =?us-ascii?Q?ZBnEaYdo80ToJlFyjOrp51THFtFvKfsM4rykLE8QC8/795twNdjt3H9U5fj2?=
- =?us-ascii?Q?7/tnTi7MeP+8tkoZQpZZvSswxA5Puu8yTTBpFhSiZQQqLzpwH7puRQZq4ora?=
- =?us-ascii?Q?oKx4y2See2nb4LQDz/bpd+C3GPc6S6wnOJvl8X4rkc20n4UqQ3/9XslYZr42?=
- =?us-ascii?Q?Qa3qoWz7ebk9mY68pdpCRmj+vcb7YlptK5jd4dMCuBLk6Fzd2fFOemp5kCZb?=
- =?us-ascii?Q?FjoRGVgfwuR34c9Kqom+Nyk/Pqlpy/eAb3nbR8W2NnWEKu3EDzOHrYvOfkRG?=
- =?us-ascii?Q?BUOpfhUXJZIGLtIgKKjwF0SvV7L2+KDfYbSA9EoTGiR7v5kfAJ78oAJhTAez?=
- =?us-ascii?Q?jwt+OqYm/zYeCyRrqdjTNeQQMO4aqQztin5bQrngvoAp15ySvIWkIDPcIJtn?=
- =?us-ascii?Q?VjDXvSl71J1ArXInLaoBtzil/GOl8g5FmhqcvZoXJz8BT9PIli9HMxKUtN6F?=
- =?us-ascii?Q?TT1lAMrO94nSXAdpViI6YUOddSbz1Vow3qQEUkGiAuql71A9sUO5Kn6uAcGe?=
- =?us-ascii?Q?OjUaCCqV/BO4rAlF6yiYVA0IZWtCJ8Ch88brYuaCAkDMKLNZ4BcC4g=3D=3D?=
+	=?us-ascii?Q?fxVSqgRMRHC/LrYyxDHdWecdiEQ6PaSi4qGOaGhLMxWxiLXUTgZc+NpjyVYu?=
+ =?us-ascii?Q?+MGvHFbxEntE+20+sd4Eh2gxk8lTFBCnSPAqukokGSAoFMaE3pCXnIJbdulS?=
+ =?us-ascii?Q?6SDbw9lwppX6UZRe/tNU9TubE+qPZIyrvXhrlLL/ODwpy2wIChpHM1wz8m46?=
+ =?us-ascii?Q?epwT+u6CVPQ5uhbdlCSPTfuLQ7TJbEfQkn/Ddl/YeEnrfpMXrG+orqwxy7t3?=
+ =?us-ascii?Q?SBuf9gUKCL5qAimOwDO0lgDNjprKvYKVIei7COdVVSS/KOjo9DmJMNpb0Shc?=
+ =?us-ascii?Q?SPGQHYKD44h/D06GNq/lBGNGwzw+GRnV50UJhRIth9vEGHBBy5Re/OgHvzzC?=
+ =?us-ascii?Q?50+EKgJ8iAAI0IV9d00zp0CKwks4rUw//9w5wC55n0D43GQQHEP3pS5/lej4?=
+ =?us-ascii?Q?6SgJ1eM+yvNYDAez6E+16Xam+BIVxTUYTwTzm+RVRlPA6gWRMqVUjC9Tr780?=
+ =?us-ascii?Q?Ue30oJos2eCR2JcIG8rZ6hpFu90ZjxLFz5+0ixmWyhSKXImORc52N6e5aW6w?=
+ =?us-ascii?Q?Xu8fyLPRnjIJKBgdviIY72ab6O6lHa8eycoR+TeMM4iZ4Ds96oEcgRVUnPiE?=
+ =?us-ascii?Q?x0uTtvNwoccIn64xxcalxSxjsvzZLhpwBcEhU4qzh2XPAdFpb0sNlUD6Z/jN?=
+ =?us-ascii?Q?yfSuzPuA/LaSOQvzaayPKHKQ2k+mUXcwizFtwYj/xZzaeRzwwC2Y4pNpXTli?=
+ =?us-ascii?Q?EYmxL8rQvL46QIntNB4KozGgsCSxU52hS8C00+6I9OVU1ts+v7d0xM5dMbmw?=
+ =?us-ascii?Q?lorJ7+gA0WcLWdFxipjfb1HXdPLpNf6tMsRKnbTBu9ihLPjSSHq7WPK9iKZc?=
+ =?us-ascii?Q?fBBuk8JtBsuPOzuPU/CytLnFn5//HmVR8Su9bdoGhhjiHHiwjP5wokAbMjTq?=
+ =?us-ascii?Q?V2ASWO/zFUrSVAJRPOnqDIGoFMxwrOPJtfyR9w8qN3b20wPkSV3Rv7KWkc0e?=
+ =?us-ascii?Q?9PAxJCEglLpxvfxINiTep01QqZK2poO5Dg0k2R7NqeSEqZicekixamSVWNZ5?=
+ =?us-ascii?Q?tmXuBde/PKI3YB4Ua3tefHpDVhug9l/7HdXMYe7+7D1m21KOIHJkkx+ZLYbX?=
+ =?us-ascii?Q?fM6PZnLWJYpHTcUEQuvXQhQwY72OXEXIh2BuDgODFmQTYQmGsya9kH0kSHgl?=
+ =?us-ascii?Q?h/l/5ANmLc86v9RnsNSGkhrCRPaGW699+ysWojbL+CrI1zUc6CCplBh8fPTi?=
+ =?us-ascii?Q?hyE7wHgHfMnQR/c54fEFzOmkIfJjpYhvzvmuxW1Uuy/WvJ3nDnu8Gg2ChZ8C?=
+ =?us-ascii?Q?/Kn6nE+WB1B+cfZAbNXd5V7kEitsk9vWEOsBU9b1uXX7bGW+eQRnaTYsMQ8S?=
+ =?us-ascii?Q?psDLkM5c6uWZyL/NU5b1jwOb/sxyE436NprUcvUyM7ypa2t00uTchEjwYIIf?=
+ =?us-ascii?Q?b+Gkh4sGWKC1EzZPQqLFoawTGBOPljDrXkgR40l+5yig+onxpjm6lxhUnZGE?=
+ =?us-ascii?Q?P+MSIxxikHBT/PG2EWZbZnP5pahqgfBN?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(52116014)(366016)(19092799006)(921020)(38350700014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?X9Nh9Eifv0RyQCtWrOXkaEdG2ct/Sdsf4ZIXY5iL+u4HpwkD62N3L684m4BJ?=
- =?us-ascii?Q?hlCcOHQkS3HP5YojVmzlqHYy/2Mqk/drQT38GIU0e3QYtvZhmrufmjKvpCc6?=
- =?us-ascii?Q?WDvNDucDuV+ulmlephwwhdiia9LuceTZtf2yHE3f22ENG0bYhTtmOT3JsEsl?=
- =?us-ascii?Q?HPpINvZNn2H7J7q0Vd8kmHoa5AVxEAovqZqy8hVJQ5PuLi0d+P2aCDbwukfT?=
- =?us-ascii?Q?CDf8LHfYnnLdGLlSsGW1q5dvGwFM44TEdL6ERne0pJJiyL9u+wiNVfqeILvi?=
- =?us-ascii?Q?U3RF6SBDa1d9D2YWg9HSdVG7w2IBmknvir3lbvtxDGhGE5TjVLES6p62+guF?=
- =?us-ascii?Q?x/Z/ax1QH3zRC/9Yv+/DK549lnLQCIq6IJB14sJPcu77q8aL8nLkHFtfcO0H?=
- =?us-ascii?Q?cYnNQo/2kfE+/T+EeZeeaTnOfndcblhbbd2irS2Fg+hfqp0uSdHbbz4zUWJw?=
- =?us-ascii?Q?6afebyCzbqODDYHO7MGXUAcll2kqGlX2NNRsFKZmYE3GBRzS9RDPFPV8OPXN?=
- =?us-ascii?Q?8I/N2hy7Aba2eGMsc0miGcqABbaOQ2PA/u01HTmbwfbvgeuTy6wffgVoqYW9?=
- =?us-ascii?Q?z+YC0Iq76XMfzg2IFv2o+a5TjaTFDeo/vuuy37kT5+rydN5n8Q0TYVxku71r?=
- =?us-ascii?Q?8UR6hDQCLqGrMFaOEGT6HoBAoHplFzMDQEJabfOgjwfhGaG+5hy7cvUx9zPp?=
- =?us-ascii?Q?6f7JwCuEVc4v0bxpscX1ty0wPF2jXrjqg9Zxh2nzFdAyLh29nUA4A7vUnD2a?=
- =?us-ascii?Q?97KU9jQbbfWkNkwKMPQGna6Y0oHXXItVmqnMcktQZmXFRYqe1LY58+tRwBSz?=
- =?us-ascii?Q?74Uxa5fvlwlSQHoAYtuzJhN1gokKipJWwKecChLdmxAYC8h+P3oefrCdJfky?=
- =?us-ascii?Q?SPRWAEZcF7yE9qv9jYWdfi4J6YN44924ohjtvD2OzB22gWt8v41PP42/g3a4?=
- =?us-ascii?Q?ZteElBKXr0ePzvwNsTpZivOJXxPWl69cd8UIRsIjS8Dmt+iKechP9dt/ftHn?=
- =?us-ascii?Q?BPCzBiFnY7Zmi0qq4FXn2xkzcexM7fd5rvRolEn/NQDpOnBivKS0WgbwjAb8?=
- =?us-ascii?Q?9hqR+Pks3xA6plQPbcbiMwM88dsTMcIR3HfqsPuRUruQubve/UOgMosnu4gh?=
- =?us-ascii?Q?U9feerP4RdxFwb0vUjwS1KX0pVeW+RRWkwEVK9//dceeBONeRBsZw/l+08Cv?=
- =?us-ascii?Q?il86FcSGt85XFRnfbqzVwwR24EZ+KQyjn7JFAp5zZXG6Ac6bvanAB0Me4klN?=
- =?us-ascii?Q?6SVK7N6iIza/vvEbKPG0+4AWC31YQkCC7aVnvxP2Nc7ujfYIH0edf4iGPZUc?=
- =?us-ascii?Q?jnWdEwjAKlqwXOysB3dbZI5h/oQow/CMBfj5mVF3ji0PLDzUyEyQ3xxIQGuR?=
- =?us-ascii?Q?w4XSJhqHlMkls2ptVRqlNHe61UoWXT+gNadxR0le+adMHI0fv/cpjeZvNvFV?=
- =?us-ascii?Q?79//RR+pGtp/0CFGHBVaex/Ys7676fdNcBF5EXWE6SgoYmaC7S0pKjZvr/V3?=
- =?us-ascii?Q?mcFzqYOgMGMAPcEUkWJP+1JOllJdjXYtrULO2uTwEj88XkOJLcRfZOiBPQgn?=
- =?us-ascii?Q?FLuUfH5J0ZKaYHehwTp8/z1Lx44lk6GufXpYuEWD?=
+	=?us-ascii?Q?jjOe8AWUO2zQ+6ZloCxUX0TL+Mwc+RrvEo6ET7Lw4FaXWdfYqu6Q8iROOapu?=
+ =?us-ascii?Q?QQtDLDADb5SmC4Eza1Y/TZNd0HBH2YdVDVlDQTAUykQE86OiXeGRDwyR/R8W?=
+ =?us-ascii?Q?2M+kXEckM84+H5SwsrW6tOTUavRMalCYv3ynrqTtLqiTORBDCjzM5+D6yTdN?=
+ =?us-ascii?Q?N0K0v/NdaCpHABcFFOZHZxUTGY401DXHibZKkqjR/tRm2E8roPXRMRfnwPJv?=
+ =?us-ascii?Q?NWJERgesOfv8rTKPZwEy3eXOn101ig98Ll2eF00rYrSvixdsE5MQyHey73/i?=
+ =?us-ascii?Q?g6Y/nNeUltENzwx7+GGYc0j+efve1JE4oT+KEdG4mJ1hBy5Fz8PG2yfZevGw?=
+ =?us-ascii?Q?dAPVZ6O3wIfYiIPUVQl6J+0sbHk07aR0gD3BhwrB8xts6/27XDZemcscm6FK?=
+ =?us-ascii?Q?pRL1/YX+5Z5bOLMgT7F3f41UePVJsSxdMM4gyeouN9IrS88PSxC67BTXZ+7z?=
+ =?us-ascii?Q?UcRdyN2cfDQc6bqIi5CcB0UbngvlhMVQhYk3EeaO4oaNSqfv2fM/daoenaDj?=
+ =?us-ascii?Q?HjTImbp+jp5gkfkkbqIwPYdleIIxuwElbJ6iDV434Wzs0CjcJwFLdaHgW8w0?=
+ =?us-ascii?Q?xpMBYDQy1SHg+A/DYc4W0nVX6xw/0xti40Ys/KoYLjgzhUr3uYYP1xH95qWR?=
+ =?us-ascii?Q?AnbFFdzX5W6HqXDHNbyX582gf9YdfVPrklpMFKxrxgso2qJE4S4vKcf5griU?=
+ =?us-ascii?Q?tAN3xX72UzFcRcIXx9jBvFRtqjp31SfpBrnHZdRn/PR+ElA5shBkv2GlD8Gj?=
+ =?us-ascii?Q?/limwXqvkwbG2/GXCjL0+ptJ61MsqzlkKmq/Bp5ad2EgGxVkc+nfF95c25J/?=
+ =?us-ascii?Q?ZwRph4CXTfxQ6e8n86Xllvx5Ow0R5ixT2rT5uOOJyF7bBC0nMc4gwHi8rzJk?=
+ =?us-ascii?Q?aguRHBn0IsEBWHA5jMYeT4m+oNgOEsqdb10IicKVO22t2lwIukn5YAbsaxiE?=
+ =?us-ascii?Q?6EmbmqFYDrXAqKi+vK+dZ1PhPM5Obd8W5N9ZgeAqJdED1GRFCYpn5oqgxU0G?=
+ =?us-ascii?Q?YlY60FRzX44EsyO/gw1SsbPC5MIxIorohCyzpMStSx9OyAk4Blu893IIoqZS?=
+ =?us-ascii?Q?swqthvWsuDy9/85vKhcQGrfia7Xv/XM93AbIUaUKcXgOhWvuNQTco9RzV15J?=
+ =?us-ascii?Q?v1xw34h11hVRHupRcec4Q8ynX7qSbKDII9jd1yPOCnYj1ibrTt68pNxVNpRs?=
+ =?us-ascii?Q?VSt/Nnzhv1WSzWsWBHp+0pNrIFaH8npe7y4GRbjwxY0JgG5dSLR9tFaKTc42?=
+ =?us-ascii?Q?DbTP/uTLHjsmu47UuQ/mbyaxtrnxLafjZaKf6Xd9jXs1AfGNhSvkCm9suHTV?=
+ =?us-ascii?Q?g6xmiNwEyUEAx8zLaLylapqU6j+kwyB91u/3rdllCRZ9aZt96qIukCs6DWOz?=
+ =?us-ascii?Q?bceB6tslWRkGAOuIxo35wljdQGR/eh+WwwIFIRfQAyTcaLV8WjSzARA72qj+?=
+ =?us-ascii?Q?4yuSOt0Z3nO/aNu3deFXPQzx42WPqZag3y65xGqCZjsHrlCehDo1BiRSuLYR?=
+ =?us-ascii?Q?16Pnmmyfsz/5fJZWX05sgw/uE6IurfQtOmCXUD8tGyitvZeKBUNE0qO7bSRp?=
+ =?us-ascii?Q?6VCSJll9otOSqNoLyzf53qCwVzIwoR9El2AWdSLQ?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5d770821-bd24-4fdf-2e59-08ddb8e5c128
+X-MS-Exchange-CrossTenant-Network-Message-Id: e5bf6587-5a8f-433f-6d8c-08ddb8e5d13d
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2025 21:25:08.7090
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2025 21:25:35.6511
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lzKyOJo8fqpngc7bf2tRj9RzWzKBeNG+wwbsFcRKtxCmUanliQdnYuM4uImGSqD1oEehgSQ9jKqdFW6jpYE9zA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: hbjel5yRTfrudU2l/M6vCKxKDy4g5qjxiB+WPdDN3NodkjhuwR6Fxa1iQ8yXmR5+uTxlF8uKMotx4zfWIjv4cA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8895
 
-Convert lpc32xx-slc.txt to yaml format.
-- add clocks and partitions to match existed dts.
-- allow nand-on-flash-bbt.
+Convert lpc32xx-mlc.txt to yaml format.
+
+Additional changes:
+- replace _ with - in property names.
+- add missed clocks to align lpc32xx.dtsi.
+- allow partitions subnode.
 
 Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
 change in v2
-- fix miss 's' at partition.yaml
-- remove ref nand-controller.yaml because existed dts have not nand child
-nodes.
+- remove nand-controller.yaml.
+- add clocks
+- update examples to align lpc32xx.dtsi
+- add partitions although no mlc users under upstream tree. It should be
+similar with slc case.
 ---
- .../devicetree/bindings/mtd/lpc32xx-slc.txt   | 52 ----------
- .../bindings/mtd/nxp,lpc3220-slc.yaml         | 96 +++++++++++++++++++
- 2 files changed, 96 insertions(+), 52 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/mtd/lpc32xx-slc.txt
- create mode 100644 Documentation/devicetree/bindings/mtd/nxp,lpc3220-slc.yaml
+ .../devicetree/bindings/mtd/lpc32xx-mlc.txt   | 50 -----------
+ .../bindings/mtd/nxp,lpc3220-mlc.yaml         | 88 +++++++++++++++++++
+ 2 files changed, 88 insertions(+), 50 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mtd/lpc32xx-mlc.txt
+ create mode 100644 Documentation/devicetree/bindings/mtd/nxp,lpc3220-mlc.yaml
 
-diff --git a/Documentation/devicetree/bindings/mtd/lpc32xx-slc.txt b/Documentation/devicetree/bindings/mtd/lpc32xx-slc.txt
+diff --git a/Documentation/devicetree/bindings/mtd/lpc32xx-mlc.txt b/Documentation/devicetree/bindings/mtd/lpc32xx-mlc.txt
 deleted file mode 100644
-index 39f17630a3011..0000000000000
---- a/Documentation/devicetree/bindings/mtd/lpc32xx-slc.txt
+index 64c06aa05ac71..0000000000000
+--- a/Documentation/devicetree/bindings/mtd/lpc32xx-mlc.txt
 +++ /dev/null
-@@ -1,52 +0,0 @@
--NXP LPC32xx SoC NAND SLC controller
+@@ -1,50 +0,0 @@
+-NXP LPC32xx SoC NAND MLC controller
 -
 -Required properties:
--- compatible: "nxp,lpc3220-slc"
+-- compatible: "nxp,lpc3220-mlc"
 -- reg: Address and size of the controller
--- nand-on-flash-bbt: Use bad block table on flash
+-- interrupts: The NAND interrupt specification
 -- gpios: GPIO specification for NAND write protect
 -
 -The following required properties are very controller specific. See the LPC32xx
--User Manual:
--- nxp,wdr-clks: Delay before Ready signal is tested on write (W_RDY)
--- nxp,rdr-clks: Delay before Ready signal is tested on read (R_RDY)
--(The following values are specified in Hz, to make them independent of actual
--clock speed:)
--- nxp,wwidth: Write pulse width (W_WIDTH)
--- nxp,whold: Write hold time (W_HOLD)
--- nxp,wsetup: Write setup time (W_SETUP)
--- nxp,rwidth: Read pulse width (R_WIDTH)
--- nxp,rhold: Read hold time (R_HOLD)
--- nxp,rsetup: Read setup time (R_SETUP)
+-User Manual 7.5.14 MLC NAND Timing Register (the values here are specified in
+-Hz, to make them independent of actual clock speed and to provide for good
+-accuracy:)
+-- nxp,tcea_delay: TCEA_DELAY
+-- nxp,busy_delay: BUSY_DELAY
+-- nxp,nand_ta: NAND_TA
+-- nxp,rd_high: RD_HIGH
+-- nxp,rd_low: RD_LOW
+-- nxp,wr_high: WR_HIGH
+-- nxp,wr_low: WR_LOW
 -
 -Optional subnodes:
 -- Partitions, see Documentation/devicetree/bindings/mtd/mtd.yaml
 -
 -Example:
 -
--	slc: flash@20020000 {
--		compatible = "nxp,lpc3220-slc";
--		reg = <0x20020000 0x1000>;
+-	mlc: flash@200a8000 {
+-		compatible = "nxp,lpc3220-mlc";
+-		reg = <0x200A8000 0x11000>;
+-		interrupts = <11 0>;
 -		#address-cells = <1>;
 -		#size-cells = <1>;
 -
--		nxp,wdr-clks = <14>;
--		nxp,wwidth = <40000000>;
--		nxp,whold = <100000000>;
--		nxp,wsetup = <100000000>;
--		nxp,rdr-clks = <14>;
--		nxp,rwidth = <40000000>;
--		nxp,rhold = <66666666>;
--		nxp,rsetup = <100000000>;
--		nand-on-flash-bbt;
+-		nxp,tcea-delay = <333333333>;
+-		nxp,busy-delay = <10000000>;
+-		nxp,nand-ta = <18181818>;
+-		nxp,rd-high = <31250000>;
+-		nxp,rd-low = <45454545>;
+-		nxp,wr-high = <40000000>;
+-		nxp,wr-low = <83333333>;
 -		gpios = <&gpio 5 19 1>; /* GPO_P3 19, active low */
 -
 -		mtd0@00000000 {
--			label = "phy3250-boot";
+-			label = "boot";
 -			reg = <0x00000000 0x00064000>;
 -			read-only;
 -		};
@@ -220,26 +223,26 @@ index 39f17630a3011..0000000000000
 -		...
 -
 -	};
-diff --git a/Documentation/devicetree/bindings/mtd/nxp,lpc3220-slc.yaml b/Documentation/devicetree/bindings/mtd/nxp,lpc3220-slc.yaml
+diff --git a/Documentation/devicetree/bindings/mtd/nxp,lpc3220-mlc.yaml b/Documentation/devicetree/bindings/mtd/nxp,lpc3220-mlc.yaml
 new file mode 100644
-index 0000000000000..ff2110b58bedc
+index 0000000000000..a3ff32a4e94be
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/nxp,lpc3220-slc.yaml
-@@ -0,0 +1,96 @@
++++ b/Documentation/devicetree/bindings/mtd/nxp,lpc3220-mlc.yaml
+@@ -0,0 +1,88 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/mtd/nxp,lpc3220-slc.yaml#
++$id: http://devicetree.org/schemas/mtd/nxp,lpc3220-mlc.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: NXP LPC32xx SoC NAND SLC controller
++title: NXP LPC32xx SoC NAND MLC controller
 +
 +maintainers:
 +  - Frank Li <Frank.Li@nxp.com>
 +
 +properties:
 +  compatible:
-+    const: nxp,lpc3220-slc
++    const: nxp,lpc3220-mlc
 +
 +  reg:
 +    maxItems: 1
@@ -247,79 +250,71 @@ index 0000000000000..ff2110b58bedc
 +  clocks:
 +    maxItems: 1
 +
++  interrupts:
++    maxItems: 1
++
 +  gpios:
 +    maxItems: 1
-+    description:
-+      GPIO specification for NAND write protect
-+
-+  nand-on-flash-bbt: true
++    description: GPIO specification for NAND write protect
 +
 +  partitions:
 +    type: object
 +    $ref: partitions/partitions.yaml
 +    unevaluatedProperties: false
 +
-+  nxp,wdr-clks:
++  nxp,tcea-delay:
 +    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Delay before Ready signal is tested on write (W_RDY)
++    description: TCEA_DELAY in Hz
 +
-+  nxp,rdr-clks:
++  nxp,busy-delay:
 +    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Delay before Ready signal is tested on read (R_RDY)
++    description: BUSY_DELAY in Hz
 +
-+  nxp,wwidth:
++  nxp,nand-ta:
 +    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Write pulse width (W_WIDTH) in Hz
++    description: NAND_TA in Hz
 +
-+  nxp,whold:
++  nxp,rd-high:
 +    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Write hold time (W_HOLD) in Hz
++    description: RD_HIGH in Hz
 +
-+  nxp,wsetup:
++  nxp,rd-low:
 +    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Write setup time (W_SETUP) in Hz
++    description: RD_LOW in Hz
 +
-+  nxp,rwidth:
++  nxp,wr-high:
 +    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Read pulse width (R_WIDTH) in Hz
++    description: WR_HIGH in Hz
 +
-+  nxp,rhold:
++  nxp,wr-low:
 +    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Read hold time (R_HOLD) in Hz
-+
-+  nxp,rsetup:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Read setup time (R_SETUP) in Hz
++    description: WR_LOW in Hz
 +
 +required:
 +  - compatible
 +  - reg
++  - interrupts
 +  - gpios
 +
 +additionalProperties: false
 +
 +examples:
 +  - |
-+    nand-controller@20020000 {
-+        compatible = "nxp,lpc3220-slc";
-+        reg = <0x20020000 0x1000>;
-+        nxp,wdr-clks = <14>;
-+        nxp,wwidth = <40000000>;
-+        nxp,whold = <100000000>;
-+        nxp,wsetup = <100000000>;
-+        nxp,rdr-clks = <14>;
-+        nxp,rwidth = <40000000>;
-+        nxp,rhold = <66666666>;
-+        nxp,rsetup = <100000000>;
-+        nand-on-flash-bbt;
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/clock/lpc32xx-clock.h>
++
++    nand-controller@200a8000 {
++        compatible = "nxp,lpc3220-mlc";
++        reg = <0x200A8000 0x11000>;
++        interrupts = <11 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&clk LPC32XX_CLK_MLC>;
++        nxp,tcea-delay = <333333333>;
++        nxp,busy-delay = <10000000>;
++        nxp,nand-ta = <18181818>;
++        nxp,rd-high = <31250000>;
++        nxp,rd-low = <45454545>;
++        nxp,wr-high = <40000000>;
++        nxp,wr-low = <83333333>;
 +        gpios = <&gpio 5 19 1>; /* GPO_P3 19, active low */
 +    };
 -- 
