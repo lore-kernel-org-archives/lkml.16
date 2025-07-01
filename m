@@ -1,48 +1,65 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560641A0BE0;
-	Tue,  1 Jul 2025 22:34:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E041A0BE0
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 22:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751409285; cv=none; b=BfKSKpalZ4wTi3dcH2RljigdELDzIsq377eXCQKadEMw8iPDFbkvhLDnJc2yujHtlLFYD0nFlLAoss3Oj0cmeSlnrZ5z1J6QxVnkw9clgYp1GJ8jeA5ef6dy9G6a13oORbeSD84P/3RYeT/i5zW6Zu/FPhPCKjfmIlmFiqkadv4=
+	t=1751409323; cv=none; b=PglmGrmGuKEqTcqhm5isUUg5/vzt0F+lAxyB4zos/BNv5OWZJUvLUNfXJYjD3ThMfQ7FA7dddqFwjTR/TlZRU3Hk8GJAS4idWru7dLrWgEXf95LjrGo1yjSqPo1iRS8SbNgo+zBGf7fDVhUJ6SeEAESp7AkkLVwhDQJk6V8XJjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751409285; c=relaxed/simple;
-	bh=TVVP1jC7HYclxJ4Xp3i7dsoPGyAXo6p6cPeNiF/hUn4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=eYTV/zqDdGvbx3kOGHGx8wmUXh3Sboi194PHlIbF9TFjnl0MN6tONrH+K4n4mJuoU9nl95U7PFzL/KBJ6soyOjmR0O4Bv5X7KwyB1UgM3jtJFEKV2qXLQCbhTH8nYWtA5ffzYv99QAyqKkNeSL3WhOgdGioMVHOo/jfdm4dnOXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ICYQPpVd; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1751409323; c=relaxed/simple;
+	bh=kHBTVaTYl26qVaHyvvSh3GT1bicZ+Ubo8tTsKqPf+U4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sDBYfM80c7m1QbqYsZkbsN2TIuOTuMdEDYJFgoB2+iQsZCiFsB3DPC5H99yhTqPObf2Su7fasysA9HRecZLAPKcG+aqlQ3aaAjrFCnAck67IQxurt8YvjrFPVxDgj0DsGO2Mtt8f9R1Smdgd1Yns78mxfHyu3RhzdBHbQeX5T7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=QsFt1Cj/; arc=none smtp.client-ip=209.85.160.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ICYQPpVd"
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 561MYOes3751726;
-	Tue, 1 Jul 2025 17:34:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1751409264;
-	bh=Qbv/ZtN1eFo6mhf92agyySSZLmzADkxZD1QmubJ60lw=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=ICYQPpVdYw0OiiI7ITnZ19yIL7Mjd/OV4/w/i3+jaX5Sf/ezYPf3Ui6OZ30//rgRb
-	 ddOvpf8r7sNq6Q0FIa33TeouDtShyXmKJ+esAqlVqkHZBFusaNJz5HCIY++w12+VDL
-	 du+hpg+/d5oYDl49sXYrAMnTy5bUK7kQ4ffbRZJE=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 561MYOq93322304
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Tue, 1 Jul 2025 17:34:24 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Tue, 1
- Jul 2025 17:34:24 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Tue, 1 Jul 2025 17:34:24 -0500
-Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 561MYOHs2057928;
-	Tue, 1 Jul 2025 17:34:24 -0500
-Message-ID: <76622b57-1f37-417c-9d70-7064cc21d2cb@ti.com>
-Date: Tue, 1 Jul 2025 17:34:24 -0500
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="QsFt1Cj/"
+Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-2e999729ccbso2309134fac.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 15:35:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751409321; x=1752014121; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=miJuucrc+JOfDPn8zr/++YVg6+KrXVyM9185KeWVaHo=;
+        b=QsFt1Cj/ue1gTD6IjTYCKRIFJt/jCEWTBUvZQTgpElyWXio16SX6YoPC89S4pxMyYx
+         NwsMu5J6d92islDwpiXUdLIwmMedocvexHomPIJDJe8CUj0gABSlgxIxxuM+Ys9kJ49e
+         W2AZu1QRJED+9ykbVPdXxMuIPVb9xhP8GsbUF3k0qUFKfxb9W8Xp/R16uIh8qJg2HyxA
+         Sprxi0B3msL3KzpsNOJzcEv0I377+5G6JhHNsUeBSFjZtAwX19v3MY8bk9xtUei9tm4n
+         dLeAtsw6LC62YwGSteZgQHny+rc6tSd4Gbh2STBh9lF2yEEAUMLipDOoyM26INbDG3jt
+         3CfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751409321; x=1752014121;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=miJuucrc+JOfDPn8zr/++YVg6+KrXVyM9185KeWVaHo=;
+        b=tA+Odj5AiSjF2WlUWMZmuJEnQZRfr6K8nw9B/CH/8rheNVUWiHaOIuRhXLepDyuDVk
+         LIGQNwAemP2hZ/lXnMvSwI2bUQFMZh26/w+/RHpPq3u21J7UYUJvrCWCgi9SfuxxYnKu
+         QJW4kTaA3/MFzRYu5RYCDKx8m5fc7jo0LrW7ph2/MpW7bSacSmom1LNImmhuOytFBMbo
+         OCRml7ZYeHEYLgAU++Ys+Amk32YO65nKRj8l43h6KtxGlF86ryYFjbnebEIF/BdJlIby
+         cjrtVL0+ItryolAijKRCHf4R1Z0N4iZF3rBWmRrA5C8rHaaOJrLu5oNMJzbAGUOsas2Z
+         yBVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVDbhOLUbN2sLIj4rKP8RF/W0bQCU4JTP8vodW9XPGZ7+0nioBTPMmlw00wEgarZC5LQmzKF86Tk9cNbvY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPycqq4NiuXERgi1eN+XuKz6Rk5PVOfIYBXDTiN/pnOZyNRgj7
+	SY9WYQyruJBIJDJC7Cq6owQrlzVC89XbFixzs/hRsDqX8IeFjx4hq49h7hjibBPZQNA=
+X-Gm-Gg: ASbGncuDH35qvZ5mWFquAi8kGoJuuLB5rowGjwglJUpc7un07TJvS7gsCUv4bQRZiPS
+	KKBb7ss4ILP+NGhhAjlqrIIG85I5dOSES6sJq+pokElde0lNpMBvJR7G6wlI973b2Rehsj9KuSh
+	d0YajoqzXw3d0FPMSivADiWq4pymaqfa7Z+WgD8Ha+FMuKOrvrmtJg8b89zayeJGPytxFkshe0c
+	AkJt20mxiW9xGdh0tcGPACeWAB6L5LezVzG+hIkYekusTa36JuB/4TEQU+bSf+WqPLgvZhj6I9W
+	nZYROxttu722DQub3fGMEVBgsyWclZjkfQmXsR4Fc8PRw/wBPrj0GlGT4FtmsXtf2fHdyUqJfHP
+	YWmAXGFIMaisJiw3HX71YpL2642rwDT3WMvMBbyg=
+X-Google-Smtp-Source: AGHT+IH53MEMdEE6yq9bVDAZnjcNxPtMU7WUuM75MJbbFr+Tl2mQZQ4pCuMDdSK1Godm2CsMYb9fMQ==
+X-Received: by 2002:a05:6870:3313:b0:2d8:957a:5163 with SMTP id 586e51a60fabf-2f5a8b200a0mr472131fac.10.1751409320821;
+        Tue, 01 Jul 2025 15:35:20 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:70a7:ca49:a250:f1d5? ([2600:8803:e7e4:1d00:70a7:ca49:a250:f1d5])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2efd4eb261fsm3550672fac.8.2025.07.01.15.35.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Jul 2025 15:35:19 -0700 (PDT)
+Message-ID: <e748d82b-43c7-48e6-b441-cef464f189e6@baylibre.com>
+Date: Tue, 1 Jul 2025 17:35:18 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,155 +67,98 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] watchdog: rti_wdt: Add reaction control
-To: Andrew Davis <afd@ti.com>, Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
-        <linux-watchdog@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250625143338.2381726-1-jm@ti.com>
- <20250625143338.2381726-3-jm@ti.com>
- <8fbe03d0-ee45-4b1f-92ec-bebf6d7b9041@ti.com>
+Subject: Re: [PATCH v2] iio: adc: spear_adc: mask SPEAR_ADC_STATUS channel and
+ avg sample before setting register
+To: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>, jic23@kernel.org,
+ nuno.sa@analog.com, andy@kernel.org, conor@kernel.org
+Cc: ~lkcamp/patches@lists.sr.ht, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250701213728.32064-1-rodrigo.gobbi.7@gmail.com>
 Content-Language: en-US
-From: Judith Mendez <jm@ti.com>
-In-Reply-To: <8fbe03d0-ee45-4b1f-92ec-bebf6d7b9041@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20250701213728.32064-1-rodrigo.gobbi.7@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 6/27/25 1:31 PM, Andrew Davis wrote:
-> On 6/25/25 9:33 AM, Judith Mendez wrote:
->> This allows to configure reaction between NMI and reset for WWD.
->>
->> On K3 SoC's other than AM62L SoC [0], watchdog reset output is routed
->> to the ESM module which can subsequently route the signal to safety
->> master or SoC reset. On AM62L, the watchdog reset output is routed
->> to the SoC HW reset block. So, add a new compatible for AM62l to add
->> SoC data and configure reaction to reset instead of NMI.
+On 7/1/25 4:34 PM, Rodrigo Gobbi wrote:
+> avg sample info is a bit field coded inside the following
+> bits: 5,6,7 and 8 of a device status register.
 > 
-> Should this be something we configure, not selected based on device,
-> do we know if all user of AM62L want the device reset on WDT?
+> channel num info the same, but over bits: 1, 2 and 3.
+> 
+> mask both values in order to avoid touching other register bits,
+> since the first info (avg sample), came from dt.
+> 
+> Signed-off-by: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+> ---
+> Tks for the tip, @David, I didn`t know those macros.
+> Best regards!
 
-I will assume that end user will want watchdog to actually reset
-the system if watchdog is enabled.
-
-If they don't use watchdog, they wont care. I believe it should be per
-device/SoC.
+:-)
 
 > 
->>
->> [0] https://www.ti.com/product/AM62L
->> Signed-off-by: Judith Mendez <jm@ti.com>
->> ---
->> Changes since v1-resend:
->> - no change
->> ---
->>   drivers/watchdog/rti_wdt.c | 31 +++++++++++++++++++++++++++----
->>   1 file changed, 27 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/watchdog/rti_wdt.c b/drivers/watchdog/rti_wdt.c
->> index d1f9ce4100a8..d419884c86c4 100644
->> --- a/drivers/watchdog/rti_wdt.c
->> +++ b/drivers/watchdog/rti_wdt.c
->> @@ -35,7 +35,8 @@
->>   #define RTIWWDRXCTRL    0xa4
->>   #define RTIWWDSIZECTRL    0xa8
->> -#define RTIWWDRX_NMI    0xa
->> +#define RTIWWDRXN_RST    0x5
->> +#define RTIWWDRXN_NMI    0xa
->>   #define RTIWWDSIZE_50P        0x50
->>   #define RTIWWDSIZE_25P        0x500
->> @@ -63,22 +64,29 @@
->>   static int heartbeat;
->> +struct rti_wdt_data {
->> +    bool reset;
->> +};
->> +
->>   /*
->>    * struct to hold data for each WDT device
->>    * @base - base io address of WD device
->>    * @freq - source clock frequency of WDT
->>    * @wdd  - hold watchdog device as is in WDT core
->> + * @data - hold configuration data
->>    */
->>   struct rti_wdt_device {
->>       void __iomem        *base;
->>       unsigned long        freq;
->>       struct watchdog_device    wdd;
->> +    const struct rti_wdt_data *data;
->>   };
->>   static int rti_wdt_start(struct watchdog_device *wdd)
->>   {
->>       u32 timer_margin;
->>       struct rti_wdt_device *wdt = watchdog_get_drvdata(wdd);
->> +    u8 reaction;
->>       int ret;
->>       ret = pm_runtime_resume_and_get(wdd->parent);
->> @@ -101,8 +109,12 @@ static int rti_wdt_start(struct watchdog_device 
->> *wdd)
->>        */
->>       wdd->min_hw_heartbeat_ms = 520 * wdd->timeout + MAX_HW_ERROR;
->> -    /* Generate NMI when wdt expires */
->> -    writel_relaxed(RTIWWDRX_NMI, wdt->base + RTIWWDRXCTRL);
->> +    /* Generate reset or NMI when timer expires/serviced outside of 
->> window */
->> +    reaction = RTIWWDRXN_NMI;
->> +    if (wdt->data->reset)
->> +        reaction = RTIWWDRXN_RST;
->> +
+> Changelog:
+> v2: use proper bitfield macros + change at commit msg
+> v1: https://lore.kernel.org/linux-iio/20250621185301.9536-1-rodrigo.gobbi.7@gmail.com/#t
+> ---
+>  drivers/iio/adc/spear_adc.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
 > 
-> Suggest:
-> 
-> /* Reset device if wdt serviced outside of window or generate NMI if 
-> available */
-> if (wdt->data->reset)
->      reaction = RTIWWDRXN_RST;
-> else
->      reaction = RTIWWDRXN_NMI;
+> diff --git a/drivers/iio/adc/spear_adc.c b/drivers/iio/adc/spear_adc.c
+> index e3a865c79686..ff7fb13fe947 100644
+> --- a/drivers/iio/adc/spear_adc.c
+> +++ b/drivers/iio/adc/spear_adc.c
+> @@ -21,6 +21,8 @@
+>  #include <linux/iio/iio.h>
+>  #include <linux/iio/sysfs.h>
+>  
+> +#include <linux/bitfield.h>
 
-Sure, will fix for v3
+This should be moved up with the other non-iio includes.
 
-> 
->> +    writel_relaxed(reaction, wdt->base + RTIWWDRXCTRL);
->>       /* Open window size 50%; this is the largest window size 
->> available */
->>       writel_relaxed(RTIWWDSIZE_50P, wdt->base + RTIWWDSIZECTRL);
->> @@ -255,6 +267,8 @@ static int rti_wdt_probe(struct platform_device 
->> *pdev)
->>       wdd->timeout = DEFAULT_HEARTBEAT;
->>       wdd->parent = dev;
->> +    wdt->data = of_device_get_match_data(dev);
-> 
-> You can use device_get_match_data() here.
-> 
-Sure, will fix for v3
+For bonus points, a separate patch that cleans up and sorts the existing
+includes would be appreciated.
 
-> Andrew
-> 
->> +
->>       watchdog_set_drvdata(wdd, wdt);
->>       watchdog_set_nowayout(wdd, 1);
->>       watchdog_set_restart_priority(wdd, 128);
->> @@ -369,8 +383,17 @@ static void rti_wdt_remove(struct platform_device 
->> *pdev)
->>       pm_runtime_disable(&pdev->dev);
->>   }
->> +static struct rti_wdt_data j7_wdt = {
->> +    .reset = false,
->> +};
->> +
->> +static struct rti_wdt_data am62l_wdt = {
->> +    .reset = true,
->> +};
->> +
->>   static const struct of_device_id rti_wdt_of_match[] = {
->> -    { .compatible = "ti,j7-rti-wdt", },
->> +    { .compatible = "ti,j7-rti-wdt", .data = &j7_wdt },
->> +    { .compatible = "ti,am62l-rti-wdt", .data = &am62l_wdt },
->>       {},
->>   };
->>   MODULE_DEVICE_TABLE(of, rti_wdt_of_match);
+add:
+#include "linux/array_size.h"        // for ARRAY_SIZE
+#include "linux/compiler_types.h"    // for __iomem
+#include "linux/dev_printk.h"        // for dev_err_probe, dev_info
+#include "linux/math.h"              // for DIV_ROUND_UP
+#include "linux/mutex.h"             // for mutex_unlock, mutex_lock, mutex_...
+
+remove unused:
+#include <linux/device.h>
+#include <linux/iio/sysfs.h>
+#include <linux/kernel.h>
+#include <linux/slab.h>
+
+> +
+>  /* SPEAR registers definitions */
+>  #define SPEAR600_ADC_SCAN_RATE_LO(x)	((x) & 0xFFFF)
+>  #define SPEAR600_ADC_SCAN_RATE_HI(x)	(((x) >> 0x10) & 0xFFFF)
+> @@ -29,9 +31,9 @@
+>  
+>  /* Bit definitions for SPEAR_ADC_STATUS */
+>  #define SPEAR_ADC_STATUS_START_CONVERSION	BIT(0)
+> -#define SPEAR_ADC_STATUS_CHANNEL_NUM(x)		((x) << 1)
+> +#define SPEAR_ADC_STATUS_CHANNEL_NUM_MASK    GENMASK(3, 1)
+>  #define SPEAR_ADC_STATUS_ADC_ENABLE		BIT(4)
+> -#define SPEAR_ADC_STATUS_AVG_SAMPLE(x)		((x) << 5)
+> +#define SPEAR_ADC_STATUS_AVG_SAMPLE_MASK    GENMASK(8, 5)
+>  #define SPEAR_ADC_STATUS_VREF_INTERNAL		BIT(9)
+>  
+>  #define SPEAR_ADC_DATA_MASK		0x03ff
+> @@ -157,8 +159,8 @@ static int spear_adc_read_raw(struct iio_dev *indio_dev,
+>  	case IIO_CHAN_INFO_RAW:
+>  		mutex_lock(&st->lock);
+>  
+> -		status = SPEAR_ADC_STATUS_CHANNEL_NUM(chan->channel) |
+> -			SPEAR_ADC_STATUS_AVG_SAMPLE(st->avg_samples) |
+> +		status = FIELD_PREP(SPEAR_ADC_STATUS_CHANNEL_NUM_MASK, chan->channel) |
+> +			FIELD_PREP(SPEAR_ADC_STATUS_AVG_SAMPLE_MASK, st->avg_samples) |
+>  			SPEAR_ADC_STATUS_START_CONVERSION |
+>  			SPEAR_ADC_STATUS_ADC_ENABLE;
+>  		if (st->vref_external == 0)
+
+
 
