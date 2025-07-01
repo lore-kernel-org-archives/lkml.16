@@ -1,293 +1,210 @@
-Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2079.outbound.protection.outlook.com [40.107.212.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EFEC272E61
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 11:27:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751369261; cv=none; b=gMNwYQoUDQl2g+JFFmw+WAZ3JeiVp+cnsNh7ZAKkqGuHJp+CMzxoPL/Wyfp6fRGqebMbiuAxyj0SQ5xZ9c4HUsZeL0sgKA4J354XsduuZGvMEHpN4McsnBhdtr2vzeK1IRdkS7KluT4ONo/2NuRxiKsMHovZLF7lm02qBS5NN/E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751369261; c=relaxed/simple;
-	bh=m93l+bvGg2rjYHEHbGAtIPkr/UgsGqs5SDumytl6Cgg=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=q47+cj84R3TU84AAd/uGrTmx+mPAA4UXxgO9KTYTlauGH5Hp1rE7Vm20hEYYDHzX4hYOKn5z0FpohenoTXd9BsvRMScVrkiABFGExMECZj0Huz8a+ehq2vy3bkTIrmjVkLZr6NN0aPFH8LAtnPNBEXjwNIljo/mjA+7g0vBo/x4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-86cfe68a8bbso366464739f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 04:27:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751369257; x=1751974057;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IRzUcW8Yf8RHOZCGB5isk+xgXvs/iIQAaiR9udnAGRU=;
-        b=w1F+x2os7vG+tpry2Z9CGtAIE/JfuiCLcmrbg+Buf4JM2YPpTGAt6Fv1niUmOivP/p
-         V1pGYApD6Clkj8VNAZViA2epsfPYCWqBuU/1Qlp/0VgfHb528ZEkcIWqRmrgzLyjHqja
-         xEojGC1JLq99Qifa9pEBb2chJYqvznFpnu4eahnwbW5Df8fg1+FnABbG+K+UOPVLcxxV
-         q2YEoMJYk2Q+oGd7+AuUlSWoBZGYR3w11gTwB7lKZNPh2tM4ZXE63i3OHmtFNiYp/b5d
-         Tw5DOHbTuy4vhv7cFU0008/W3vF6UL5hOOOgTWL8FPq/nTpFV/V73o6epIzYQ15xCAhS
-         koCA==
-X-Forwarded-Encrypted: i=1; AJvYcCUXhtuvly62TPjO7CbR0ykcRTROw1lVfZNxmxi2Sk8I++lu85lwUTcU8AONJeUvtVIk11SnpGsxs4CweUk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzcdWGK7GirsCiYtlBjglWBO8R4TVznjzpAH84C7Ra2qRENAKi
-	8AdHO0cwFmhSfASijZTV77JHPlU2YcqyoUgvSNGY89n0TVq9e/8Gs4XPVXV4kgMJWnsgwti+yCz
-	nD21mriO8eUlaWpT3tviHncFypt67B2pv3Kg2byI7sM2KR2NNj17FqNabR64=
-X-Google-Smtp-Source: AGHT+IGGOrJcSPcBB2cddttZPIfQ3Ob85tvIKFOgx2kQQD7EqHNfPcAEK8I2TjPYwFeW1vwITjoSC1LSR/L/pXeN1UgGs9T8nt+H
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F92B1DC994
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 11:28:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.79
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751369320; cv=fail; b=BJpSY8J/PgYC1MogIHRLWc4auAk2r5RI9JnyEZvF2nVY6ltZmD/edGNA0N4P5U3xARyfTZffp5b/AuvxtuEv9+5ZTt60G/Gakn4d6PmDWOlnEUF8Vb+pWqvKzKIEtKJpj5vlUEw6nKYHQLMet4gjHhn32Kyz7zfuOQn7vjuCfWw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751369320; c=relaxed/simple;
+	bh=lxdzYxZi3RhjaZhzRawqbpgTxMqKTb+OjSp/tuZOWpE=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=pZv8zo5S7SopXS+XJa5/XX83xNR39EUOPJCe1CE2CcAdJtrCleNqBbqD41EEw5XTMhgH+H4nB7Ek7oqxFW0eUWk2Yh9TzDc+2pGoOP00GLKbYhktgkxUKYTSaTR0lxSBQHCPkAoIiJ8k6gkGWV3TzFCrfOLHg38HTgDRlMsRUR8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Ig/qW3c0; arc=fail smtp.client-ip=40.107.212.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Ig/qW3c0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=TK4DEphIXHKg1gYafs1UkJrotY6xCrDUH4ZswrjjOVxcJU3c4VXQ7c5/2+ODI71K1fHle9IdFbKsrlFvpW1cKGW0a4kEjjhDVzU3uUpAO6oX/l0BUo/GWbjXx3sjRG/bQnu2PajxyZ43S94TVWu2S73Q1lcQAsYgtm/Ob/R9DeTeWl7ASFG3aEyNbJHsZWAegxkBw6Twe+NdrpeTJVZISCWOjtyF/N0BU9z+IqW8aLGxrstC1uVxK/lK9omBBF7RfOyd73Nd9Fw5SH0WXYlV3nmpa532Lb7/7m9Rh7IoCcy5quMIhe9mkkN/m69D9qe644DxA9QEBWlaj8P9t4ludQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oL0mtVCINiSekfGPB6tqeCWDBw8YxlPzD4LQWIHvRFU=;
+ b=bRuhJmRsDQZQYP2tWsY5KCv7VMc9L5yQ8fVyAzu9M8f3T3AbxA+3iO2uRVYzOgOMQPdQ7n6Z5L4Zb+MxTLX2gCxryneLuiEL9hz65sS26ppECNQmaYC0VHg0hYcvzUR++62N3hhdu3IhvQpEQKpN8eGI+QlJtCHx0GiQxw+Jnd18ImZL6Y5Fb9G2TdHzhptbLrEE0KI3O9aompOybzzJ60SPxN3wvkiPi0Zi1Q5oIrV/bTzKaQBGEOe0ycnmgL22pMHSeCKZwx+H3CZNWKoeUsbFxWBg4TIzr93EE7LOjRfWd7JRCn/2db4x1Eko5MUHQRcu7ZKZL3VnpiTRxBSKhA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oL0mtVCINiSekfGPB6tqeCWDBw8YxlPzD4LQWIHvRFU=;
+ b=Ig/qW3c0CcEDefxhT9ec/rKt7c2i1FhaZqINz7F2Hn9ErcQzweZHtXimByUfYD0cinbUqHi+ucDdJeUfh8NUWMrR2xmkdYNNNueqpGUjowZeN/wedn4mymvyeOtEJyJ0lXwFqqelNB6BOB93I8sIuGkA1sQPiKKIXsWhTnTAc+o=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH3PR12MB8658.namprd12.prod.outlook.com (2603:10b6:610:175::8)
+ by MN0PR12MB5906.namprd12.prod.outlook.com (2603:10b6:208:37a::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.30; Tue, 1 Jul
+ 2025 11:28:33 +0000
+Received: from CH3PR12MB8658.namprd12.prod.outlook.com
+ ([fe80::d5cc:cc84:5e00:2f42]) by CH3PR12MB8658.namprd12.prod.outlook.com
+ ([fe80::d5cc:cc84:5e00:2f42%4]) with mapi id 15.20.8880.027; Tue, 1 Jul 2025
+ 11:28:33 +0000
+Message-ID: <1170c037-15c0-4f22-8e2d-456ad17396cf@amd.com>
+Date: Tue, 1 Jul 2025 16:58:26 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V6 1/7] Sched: Scheduler time slice extension
+To: Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>
+Cc: Prakash Sangappa <prakash.sangappa@oracle.com>,
+ linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+ mathieu.desnoyers@efficios.com, bigeasy@linutronix.de, vineethr@linux.ibm.com
+References: <20250701003749.50525-1-prakash.sangappa@oracle.com>
+ <20250701003749.50525-2-prakash.sangappa@oracle.com> <87cyakmhdv.ffs@tglx>
+ <20250701105653.GO1613376@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+In-Reply-To: <20250701105653.GO1613376@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN4P287CA0106.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:c01:276::6) To CH3PR12MB8658.namprd12.prod.outlook.com
+ (2603:10b6:610:175::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:1491:b0:861:6f49:626 with SMTP id
- ca18e2360f4ac-876882b2239mr2135960839f.6.1751369257606; Tue, 01 Jul 2025
- 04:27:37 -0700 (PDT)
-Date: Tue, 01 Jul 2025 04:27:37 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6863c629.a70a0220.3b7e22.19d9.GAE@google.com>
-Subject: [syzbot] [ext4?] possible deadlock in ext4_inline_data_truncate (4)
-From: syzbot <syzbot+32ed484f0f32dcc41c43@syzkaller.appspotmail.com>
-To: adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8658:EE_|MN0PR12MB5906:EE_
+X-MS-Office365-Filtering-Correlation-Id: 23cd9f6b-3caf-4c37-2cfc-08ddb8926978
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?U053K1hEd0VlT0thUFhFU3UvaitqeUp2eTFnSmltYTh0dHA3TmNxdVNUeW56?=
+ =?utf-8?B?V0M4QUdzdCtGY0NOdGFJYk5FWHo2eFBQU01uemhTV1h6SDdidmdiVGJydjlD?=
+ =?utf-8?B?NlViZFYrYm9VMXl2d0w0UTNxR25RaERvYUdvcW1FdXRxYkVibUp4c1JNMVVh?=
+ =?utf-8?B?QzFuNVUxNm93R0VycGw4RHgyNGsrRGc5Y20vU1RPeDFxVGp5Nm0rMm0veWU5?=
+ =?utf-8?B?Sys3S2dKbjdiTlFqY0VTa3RkblhCejAwK21Ta3NtbkwzMGljdGpmUVZYMFpw?=
+ =?utf-8?B?bWZFU1BWN1RLdHprRnA5MjRVMTJoZFBNaUk1VUkwUklrNHV6b0NqMFpRUnZi?=
+ =?utf-8?B?SEl5U2VyWjdqaE1iZ3BLN0VjWnUyd3J4WEpBc0RNMTZDcjl2YVZKSU1hWXJJ?=
+ =?utf-8?B?aENBMjV2TFNlUWtxdGxuS3NieXJhZVA0MGVFaVRBNlpKZUEweVRhN2hYUjlL?=
+ =?utf-8?B?RE5FSUdGTUFOZVlTV1pqSU52S2JOaWpwSmIyR3FEM0h0WTI1d3FoVk1zbTlM?=
+ =?utf-8?B?RDgvanpweXZaYWZ5Rk1DbjUxNkV5SU9yMmVtZVpYK1hJdUR1M09Xc1RmcFBs?=
+ =?utf-8?B?YVhWTlEvVHA4UkpJUmtqVmdINjBleFdCa2tCR1V4TDFyUkcxa3ErWi9HQ2Qr?=
+ =?utf-8?B?dDMzNURmWEg4YnZqb2dFcEJZYk5WVGxXQjdjRENlMHRtUU9wN1JuU21oeXlI?=
+ =?utf-8?B?bGJKM3BGZXA4djB3Vkw0TCtUc2Q4UG1pMjRwYzhITWhTc0JsNmhEMk04bzRJ?=
+ =?utf-8?B?Q1pTd1J2UlBrNjRNV1hEUHE5YVBidUVINkMvb2p3SXU3YkRkK2k2N1VaUWZZ?=
+ =?utf-8?B?cStkNlU5WnpiVVFnYlR0b0VsMVpDSHcxdzhQazZyRGxPZ2lDSEp4eWcwV2NB?=
+ =?utf-8?B?VlNlY1ZZMTRRUk1SVEh4Zlk0MHVQUkxTdmpnYUliZkVoVTNvOXU2UGNEWEJH?=
+ =?utf-8?B?anZxaW1OdDZaVXg0cnVOSHJ4eEV5aFhTajkxRG81QWdEdytIYU9vY3FvSENR?=
+ =?utf-8?B?VWM2ZTJnYVAycU5Ya2JDbFVOOWlMeE9NLy9BWE0rUER0Wit1ZmxtK3hXUFRE?=
+ =?utf-8?B?VVJsMVp6dzk3d3Z3QVRhWDh5bWNKbXN5VFNQS21MQVQvci83K0hrQzlpVXE4?=
+ =?utf-8?B?aHJwQytrTjhEdGM4VndQdjBCZWdlWkFqVGU3YkEyVllhbGowZWJwbXpicm1G?=
+ =?utf-8?B?bXR3WlJRMm5IaEgrL3BGaVBBOWxZM1dhRmM3VEc4T0U0aGd0YzRxSGVzbFgr?=
+ =?utf-8?B?a2xJbURMZUhmako3T05NMnloTldQd3crcEdzNVhhSVBzWVJTbSsrZDVmMmpz?=
+ =?utf-8?B?TDQ4RkJNREFSS0ZhczZqYnMrQ3hEYmxDYlBVZ0kzWDRSL3VaODIvZFpUemNP?=
+ =?utf-8?B?SjBBUjFWY3djSldydnBjOFliRGJUTVgzM1cyVGRFZ3NSWEQvOFdTTk5RdDN5?=
+ =?utf-8?B?UWhGNE5LNG9XRUlHQ3ZFdXpQdldZNENOeWJHR1VpTGJteFBmaEpYUGJ2ajRQ?=
+ =?utf-8?B?dERFTHBXNzhHdS9CTUdVaVN1UlZLejVuRVNYRy9laW1RdFRmVTVlaUcvaVlR?=
+ =?utf-8?B?enVzbWtjYTFZTm1WV05tK0lPRmxEOHdzZ3crbzZvTWFycGlBcEwxMmVVRTJl?=
+ =?utf-8?B?UmcydDdCWlEvUlJycWtkaSs5S1huaGhKNko0bmoxVUdQcGVTcTZmQnJOOU5T?=
+ =?utf-8?B?S2hDWUJubU5pSWo3QjBZc25KYVQ3MC8zMndQYXVZcGFaVDNDTjVwRlVJdDRp?=
+ =?utf-8?B?NWxPaWRmcmJlQjNLekRCd2pzamxhZFIzR1QyUmJENGJiSWFhS0FNazJna1V3?=
+ =?utf-8?B?WjJ5QlZnd3FtWFRpa3YzcnF1aXdBbGZFdnljaVhtSmltNWhBeGNFTFEwUFpV?=
+ =?utf-8?B?VngvcU5IWXJqZEdTTTRzeS9YdkM5MjlDUXFsUGFvMkg0YnhDRDJ5SDRabnZ4?=
+ =?utf-8?Q?mxVuMG60M1Q=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8658.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?QmxCTlExazJRSDlhL08zU1Nyd0N5T1I4NHpQRmJJRWtyZHJONCtzKzB3WVI0?=
+ =?utf-8?B?VjNwQ2NTOG81ckdBTElPUFJTWk1TWVJkWnd2L0lFby9IYjV6TFd4M3UxaUgy?=
+ =?utf-8?B?SU1uUEMwRXJQSHY0ZFc2dE9aZW1EaTc2UEQ1ZDhSb09KKy9BQW1NZnVxcTUz?=
+ =?utf-8?B?YnVmUjFRRENOZHJnenBRNmFIU2x5UVZJSjZyWWgrOGsxV1BDTVVYRHFuOHQ4?=
+ =?utf-8?B?REhTbitpQ2YvSnZmZkgycXNSUXhBeWEybHJIeVNmbTRBK1J6UjRKdUxmczNP?=
+ =?utf-8?B?TXcyWm53UndlOFZRUnBIU1YrOVZTbXBNUFRKeVJPMU9iblU0R3FIcm5DSkZv?=
+ =?utf-8?B?NnRqc2FqUnBQdE9EZmJNV2w0b3BKOW9iOURjMkFEOU5DRk8xR0xYQ0t5SnZR?=
+ =?utf-8?B?alRvbWlpUDRtemtqOS9RTm5CeUZxb25lcGkxMVBCUXdCTlIzcUZuV1BhQ2Rv?=
+ =?utf-8?B?cHhteXptc0p2ZXBER3RVWVVwN1lueDJabXh0VElxYmR5RWd1dmRkZkJZc1R2?=
+ =?utf-8?B?K0h6cWgrZUdMK2ozNnAycm84dUF0MkhwUzN4cEpOKytsamtjNlFjNW05dG1C?=
+ =?utf-8?B?eG1Nd056dURocmI0MFRwaUlUeWF6amRuTTV4RkZ2bTVGUXZXaVhPU3dhRUN3?=
+ =?utf-8?B?UHQvamxZbE9mdmcyeVEyWWVUZVFwcE8vaTdmU0tkdHFDYmJ1bHE1QzBuMDB3?=
+ =?utf-8?B?WnRWdmVzMjdmU2ZYZnB4UmRicUkzTzhOS2NLNzZ3Rm16ZHVHWWxySFpwSCtF?=
+ =?utf-8?B?SFdZdm5JeXZOenk2Um9ja3l3S294Z0dRbnJmU0ppRGI5bnF6cktqYTBndGFW?=
+ =?utf-8?B?OU5mRm13WXZYL1MrN3BteUREcTNKTllORXJ6eU9URERJRmt2QWMzd1VRMDJU?=
+ =?utf-8?B?TFZuV2JCWWpOSVQ4eEZpTzVzV2hZeGh3WFVpNzhwN3RLeDl0aFl4RVFOdzVn?=
+ =?utf-8?B?Z3lpRnV1VjJQT0RMMVA4NjZKcm1NcG51dHQ1djZ5MnhmWFR6eWtiZFBoNzRo?=
+ =?utf-8?B?djlFdURTbERFOVAxMWluWTRWZlBJWG9JbG85RVRPYjdOYU1DUlpEK3RITDN4?=
+ =?utf-8?B?eGduR1RVU0dUdEtURUFmeEQrYWJyc0gzMll4QkxtR1NNWkI0c2VBQUxiWG01?=
+ =?utf-8?B?LzFubk85MWhIN1pTMWpPWlQ5UjJZRkEvNENVM1EvZXFkaFFWR0FiT3ZId0k0?=
+ =?utf-8?B?UTdkam8rOW0xSnFzeEVSR2Z4ZlQ5ek9JeUJ2NktYRWRRYXY3TWsydFhvVmlI?=
+ =?utf-8?B?cXRrTy9WamcxeUJxdEZ4aEcvVlJMTTgwTjZuZWNkNHJpeWVRcWJ2dFlXNnJh?=
+ =?utf-8?B?aDVseTRPVW9QRFYvZFdYdzI2eGw1T0FKNGxnbTJPb0xiMnNyTkxQV2xsVita?=
+ =?utf-8?B?OXVSNUlqSi9VcDVaMU5weGx5YzZVT0dkdGtrSkVyUXhPYjRPZmhXbTZGQXA5?=
+ =?utf-8?B?MkFYUkN6U0tZRnFMbHZSSitSeHphSEJCamtJSGFVY2hLMDk1akErWUFGV3pC?=
+ =?utf-8?B?RFZrSXJ5YW1OUkxteDByY1gveVBsc2R6SStSK1JoSk9zV1Z2STJqaTAxVEw2?=
+ =?utf-8?B?OG4yeElDTlpqWGxyc1ZvRDl5ZFNBaDV5d05UbGx4dkpBSG9CRHhDWU1RWUhD?=
+ =?utf-8?B?MG1pTTVjVTJsTDZGSkR4d0NyZ1dvZmdQZjRKNStXN1krTVBTTEdJVjZUWFl3?=
+ =?utf-8?B?aDJ5cnZuOGkvMUFZeUYwTFRXTGJ3eWxGT2pOY21sVEwxU1YzKytYR2ZKTXZ4?=
+ =?utf-8?B?czZUNTBVemtzLzhMZktuSndEak9FV09rekd0LzF6M1pDRzcrRXNocHZ5RjZ4?=
+ =?utf-8?B?Q2dFQm4rd0NIczBCMTR6ZmRmNWVVMUhEVVhNWEk0NU14VjJOUlFzM0JYYjc0?=
+ =?utf-8?B?ZTBaaCtkRG1pY2NmUDJhV3M3dnJpM3FnUTd0QVd0TnVheVlaS2JHRlZMdGNl?=
+ =?utf-8?B?c3ZhZlhnMk02Y3VYOXFld1ZkT0EvendoWDZkcE5YYkxyOEpkcS9kaDhyc0pG?=
+ =?utf-8?B?SWRhb1VZK3ZieGtJOThsTVN4RDBxcC9xai81ZG40VUtqWG9QaDBFaWFEQmhY?=
+ =?utf-8?B?Y1FmYkpXMDdPNjVsZzE2YWw0UVEyY1VoY3NMaitzYnM4WHZzMjBFd0JURjYw?=
+ =?utf-8?Q?zzssGfrUGHoMRhxpdGCZD3HcM?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 23cd9f6b-3caf-4c37-2cfc-08ddb8926978
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8658.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2025 11:28:33.2400
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +kcS3QzTBJxg1O7jTzqLrZyZ8sdBRS7+uyFw/5j+o+gWW0MbUi3ouHDYrp6vdJlB2BYTFFBZ1H7hrDl3CCCa2Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5906
 
-Hello,
+Hello Peter,
 
-syzbot found the following issue on:
+On 7/1/2025 4:26 PM, Peter Zijlstra wrote:
+> On Tue, Jul 01, 2025 at 10:42:36AM +0200, Thomas Gleixner wrote:
+> 
+>> What's worse is that it breaks the LAZY semantics. I explained this to
+>> you before and this thing needs to be tied on the LAZY bit otherwise a
+>> SCHED_OTHER task can prevent a real-time task from running, which is
+>> fundamentally wrong.
+> 
+> So here we disagree, I don't want this tied to LAZY.
+> 
+> SCHED_OTHER can already inhibit a RT task from getting ran by doing a
+> syscall, this syscall will have non-preemptible sections and the RT task
+> will get delayed.
+> 
+> I very much want this thing to be limited to a time frame where a
+> userspace critical section (this thing) is smaller than such a kernel
+> critical section.
+> 
+> That is, there should be no observable difference between the effects of
+> this new thing and a syscall doing preempt_disable().
+> 
+> 
+> That said; the reason I don't want this tied to LAZY is that RT itself
+> is not subject to LAZY and this then means that RT threads cannot make
+> use of this new facility, whereas I think it makes perfect sense for
+> them to use this.
 
-HEAD commit:    2aeda9592360 Add linux-next specific files for 20250627
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=157b608c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7f5c1d958b70bf47
-dashboard link: https://syzkaller.appspot.com/bug?extid=32ed484f0f32dcc41c43
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+Thinking out loud: I know we are trying to keep the overhead to a
+minimum but is it acceptable to go through with schedule() and decide
+on extending the time slice in pick_next_task_fair() / pick_task_rt()?
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Then, a higher priority task can always preempt us when preemption is
+enabled and between the tasks of same class, it is just a redundant
+schedule() loop.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/d532560074a3/disk-2aeda959.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/483001f76864/vmlinux-2aeda959.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/8f233cdc1c77/bzImage-2aeda959.xz
+It'll require some additional care to start accounting for delay from
+the time when NEED_RESCHED was set and not when schedule() is actually
+called but would the overhead be that bad?
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+32ed484f0f32dcc41c43@syzkaller.appspotmail.com
+Or would we like to prevent preemption from RT tasks too on
+!PREMMPT_RT since whatever the task asking for the extended slice is
+doing is considered important enough?
 
-EXT4-fs: Ignoring removed orlov option
-EXT4-fs: Ignoring removed nomblk_io_submit option
-EXT4-fs (loop0): mounted filesystem 00000000-0000-0000-0000-000000000000 r/w without journal. Quota mode: none.
-======================================================
-WARNING: possible circular locking dependency detected
-6.16.0-rc3-next-20250627-syzkaller #0 Not tainted
-------------------------------------------------------
-syz.0.4438/18397 is trying to acquire lock:
-ffff8880565ef388 (&ei->xattr_sem){++++}-{4:4}, at: ext4_write_lock_xattr fs/ext4/xattr.h:157 [inline]
-ffff8880565ef388 (&ei->xattr_sem){++++}-{4:4}, at: ext4_inline_data_truncate+0x1a9/0xad0 fs/ext4/inline.c:1872
+-- 
+Thanks and Regards,
+Prateek
 
-but task is already holding lock:
-ffff888067462618 (sb_internal){++++}-{0:0}, at: percpu_down_read_freezable include/linux/percpu-rwsem.h:83 [inline]
-ffff888067462618 (sb_internal){++++}-{0:0}, at: __sb_start_write include/linux/fs.h:1798 [inline]
-ffff888067462618 (sb_internal){++++}-{0:0}, at: sb_start_intwrite include/linux/fs.h:1981 [inline]
-ffff888067462618 (sb_internal){++++}-{0:0}, at: ext4_evict_inode+0x2d6/0xee0 fs/ext4/inode.c:215
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #5 (sb_internal){++++}-{0:0}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
-       percpu_down_write+0x54/0x330 kernel/locking/percpu-rwsem.c:232
-       sb_wait_write fs/super.c:1900 [inline]
-       freeze_super+0x8b7/0x1130 fs/super.c:2183
-       fs_bdev_freeze+0x1a3/0x310 fs/super.c:1529
-       bdev_freeze+0xd8/0x220 block/bdev.c:298
-       ext4_force_shutdown+0x322/0x560 fs/ext4/ioctl.c:822
-       ext4_ioctl_shutdown fs/ext4/ioctl.c:857 [inline]
-       __ext4_ioctl fs/ext4/ioctl.c:1587 [inline]
-       ext4_ioctl+0x1d39/0x3510 fs/ext4/ioctl.c:1626
-       vfs_ioctl fs/ioctl.c:51 [inline]
-       __do_sys_ioctl fs/ioctl.c:907 [inline]
-       __se_sys_ioctl+0xfc/0x170 fs/ioctl.c:893
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #4 (sb_pagefaults){++++}-{0:0}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
-       percpu_down_read_internal+0x48/0x1c0 include/linux/percpu-rwsem.h:53
-       percpu_down_read_freezable include/linux/percpu-rwsem.h:83 [inline]
-       __sb_start_write include/linux/fs.h:1798 [inline]
-       sb_start_pagefault include/linux/fs.h:1963 [inline]
-       ext4_page_mkwrite+0x1e3/0x1110 fs/ext4/inode.c:6575
-       do_page_mkwrite+0x14a/0x310 mm/memory.c:3374
-       do_shared_fault mm/memory.c:5662 [inline]
-       do_fault mm/memory.c:5724 [inline]
-       do_pte_missing mm/memory.c:4247 [inline]
-       handle_pte_fault mm/memory.c:6065 [inline]
-       __handle_mm_fault+0x1916/0x5440 mm/memory.c:6208
-       handle_mm_fault+0x40a/0x8e0 mm/memory.c:6377
-       do_user_addr_fault+0x764/0x1390 arch/x86/mm/fault.c:1387
-       handle_page_fault arch/x86/mm/fault.c:1476 [inline]
-       exc_page_fault+0x76/0xf0 arch/x86/mm/fault.c:1532
-       asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-
--> #3 (&mm->mmap_lock){++++}-{4:4}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
-       __might_fault+0xcc/0x130 mm/memory.c:6967
-       _inline_copy_to_user include/linux/uaccess.h:192 [inline]
-       _copy_to_user+0x2c/0xb0 lib/usercopy.c:26
-       copy_to_user include/linux/uaccess.h:225 [inline]
-       fiemap_fill_next_extent+0x1c0/0x390 fs/ioctl.c:145
-       ocfs2_fiemap+0x888/0xc90 fs/ocfs2/extent_map.c:806
-       ioctl_fiemap fs/ioctl.c:220 [inline]
-       do_vfs_ioctl+0x16d0/0x1990 fs/ioctl.c:841
-       __do_sys_ioctl fs/ioctl.c:905 [inline]
-       __se_sys_ioctl+0x82/0x170 fs/ioctl.c:893
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #2 (&ocfs2_quota_ip_alloc_sem_key){++++}-{4:4}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
-       down_write+0x96/0x1f0 kernel/locking/rwsem.c:1577
-       ocfs2_create_local_dquot+0x19d/0x1a40 fs/ocfs2/quota_local.c:1227
-       ocfs2_acquire_dquot+0x80f/0xb30 fs/ocfs2/quota_global.c:883
-       dqget+0x7ae/0xf10 fs/quota/dquot.c:977
-       ocfs2_setattr+0xd72/0x1b40 fs/ocfs2/file.c:1233
-       notify_change+0xb36/0xe40 fs/attr.c:552
-       chown_common+0x40c/0x5c0 fs/open.c:790
-       do_fchownat+0x161/0x270 fs/open.c:821
-       __do_sys_lchown fs/open.c:846 [inline]
-       __se_sys_lchown fs/open.c:844 [inline]
-       __x64_sys_lchown+0x85/0xa0 fs/open.c:844
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #1 (&dquot->dq_lock){+.+.}-{4:4}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
-       __mutex_lock_common kernel/locking/mutex.c:602 [inline]
-       __mutex_lock+0x182/0xe80 kernel/locking/mutex.c:747
-       wait_on_dquot fs/quota/dquot.c:354 [inline]
-       dqget+0x72a/0xf10 fs/quota/dquot.c:972
-       dquot_transfer+0x2f8/0x6d0 fs/quota/dquot.c:2140
-       ext4_setattr+0x865/0x1bc0 fs/ext4/inode.c:5816
-       notify_change+0xb36/0xe40 fs/attr.c:552
-       chown_common+0x40c/0x5c0 fs/open.c:790
-       do_fchownat+0x161/0x270 fs/open.c:821
-       __do_sys_chown fs/open.c:841 [inline]
-       __se_sys_chown fs/open.c:839 [inline]
-       __x64_sys_chown+0x82/0xa0 fs/open.c:839
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #0 (&ei->xattr_sem){++++}-{4:4}:
-       check_prev_add kernel/locking/lockdep.c:3168 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3287 [inline]
-       validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3911
-       __lock_acquire+0xab9/0xd20 kernel/locking/lockdep.c:5240
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
-       down_write+0x96/0x1f0 kernel/locking/rwsem.c:1577
-       ext4_write_lock_xattr fs/ext4/xattr.h:157 [inline]
-       ext4_inline_data_truncate+0x1a9/0xad0 fs/ext4/inline.c:1872
-       ext4_truncate+0x3b5/0x1100 fs/ext4/inode.c:4527
-       ext4_evict_inode+0x8cf/0xee0 fs/ext4/inode.c:261
-       evict+0x501/0x9c0 fs/inode.c:810
-       __dentry_kill+0x209/0x660 fs/dcache.c:669
-       dput+0x19f/0x2b0 fs/dcache.c:911
-       do_renameat2+0x6de/0xa80 fs/namei.c:5280
-       __do_sys_rename fs/namei.c:5325 [inline]
-       __se_sys_rename fs/namei.c:5323 [inline]
-       __x64_sys_rename+0x82/0x90 fs/namei.c:5323
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-other info that might help us debug this:
-
-Chain exists of:
-  &ei->xattr_sem --> sb_pagefaults --> sb_internal
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  rlock(sb_internal);
-                               lock(sb_pagefaults);
-                               lock(sb_internal);
-  lock(&ei->xattr_sem);
-
- *** DEADLOCK ***
-
-5 locks held by syz.0.4438/18397:
- #0: ffff888067462428 (sb_writers#4){++++}-{0:0}, at: mnt_want_write+0x41/0x90 fs/namespace.c:557
- #1: ffff888067462738 (&type->s_vfs_rename_key#2){+.+.}-{4:4}, at: lock_rename fs/namei.c:3276 [inline]
- #1: ffff888067462738 (&type->s_vfs_rename_key#2){+.+.}-{4:4}, at: do_renameat2+0x364/0xa80 fs/namei.c:5224
- #2: ffff88803ed85060 (&type->i_mutex_dir_key#3/1){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:914 [inline]
- #2: ffff88803ed85060 (&type->i_mutex_dir_key#3/1){+.+.}-{4:4}, at: lock_two_directories+0x1a2/0x220 fs/namei.c:3252
- #3: ffff88803ed83d40 (&type->i_mutex_dir_key#3/5){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:914 [inline]
- #3: ffff88803ed83d40 (&type->i_mutex_dir_key#3/5){+.+.}-{4:4}, at: lock_two_directories+0x1cc/0x220 fs/namei.c:3253
- #4: ffff888067462618 (sb_internal){++++}-{0:0}, at: percpu_down_read_freezable include/linux/percpu-rwsem.h:83 [inline]
- #4: ffff888067462618 (sb_internal){++++}-{0:0}, at: __sb_start_write include/linux/fs.h:1798 [inline]
- #4: ffff888067462618 (sb_internal){++++}-{0:0}, at: sb_start_intwrite include/linux/fs.h:1981 [inline]
- #4: ffff888067462618 (sb_internal){++++}-{0:0}, at: ext4_evict_inode+0x2d6/0xee0 fs/ext4/inode.c:215
-
-stack backtrace:
-CPU: 0 UID: 0 PID: 18397 Comm: syz.0.4438 Not tainted 6.16.0-rc3-next-20250627-syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- print_circular_bug+0x2ee/0x310 kernel/locking/lockdep.c:2046
- check_noncircular+0x134/0x160 kernel/locking/lockdep.c:2178
- check_prev_add kernel/locking/lockdep.c:3168 [inline]
- check_prevs_add kernel/locking/lockdep.c:3287 [inline]
- validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3911
- __lock_acquire+0xab9/0xd20 kernel/locking/lockdep.c:5240
- lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
- down_write+0x96/0x1f0 kernel/locking/rwsem.c:1577
- ext4_write_lock_xattr fs/ext4/xattr.h:157 [inline]
- ext4_inline_data_truncate+0x1a9/0xad0 fs/ext4/inline.c:1872
- ext4_truncate+0x3b5/0x1100 fs/ext4/inode.c:4527
- ext4_evict_inode+0x8cf/0xee0 fs/ext4/inode.c:261
- evict+0x501/0x9c0 fs/inode.c:810
- __dentry_kill+0x209/0x660 fs/dcache.c:669
- dput+0x19f/0x2b0 fs/dcache.c:911
- do_renameat2+0x6de/0xa80 fs/namei.c:5280
- __do_sys_rename fs/namei.c:5325 [inline]
- __se_sys_rename fs/namei.c:5323 [inline]
- __x64_sys_rename+0x82/0x90 fs/namei.c:5323
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f452478e929
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f452556f038 EFLAGS: 00000246 ORIG_RAX: 0000000000000052
-RAX: ffffffffffffffda RBX: 00007f45249b5fa0 RCX: 00007f452478e929
-RDX: 0000000000000000 RSI: 00002000000000c0 RDI: 0000200000000080
-RBP: 00007f4524810b39 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f45249b5fa0 R15: 00007ffed20051f8
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
