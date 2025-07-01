@@ -1,74 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 997E82820AB;
-	Tue,  1 Jul 2025 17:55:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F27B81F4285
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 17:55:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751392516; cv=none; b=Jlob/Lvs6+XTO92YY6GOO/BZ5LIo9TL/ORNnTcj6kIwaKZgV5QGY+dxlMWlzMYBVsZ9LPMWVIz4wayfUTgtgmW04VtredFE9dmrhlHSkzMfJXHUbH7pJf13v/AG5MxUmYdc0ImQwfOFn0PR3b7Z6MHfD+4iREV0gw7CEUENC3lg=
+	t=1751392526; cv=none; b=Nn0cKmjZj+qwrth40W4J6fkfUxYTqD4+ZEPKQBqDplGj0wLYdnyYNIO7hptSHWpekECMsZwQsWEZvUTJRw4AhW0xolA+FbLogkfLEwdVEweFZSrQavqcS/nel6wfYMohn/2pc5hPHlrSZFSq07x6BxL41ziTSbCWsJr2zLVo5Ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751392516; c=relaxed/simple;
-	bh=fQxoPSYs73iTSyX9yn+4UWbbrTgtSljBNrWOhhOVBpI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=PN0KdNF30wq7gWwsQbNx2W/uYsDj7opsGTv3OGsxUni81Uc9budaIYaBuNwFenfyuHCdlGgtAxIGfkpzucdcwqLqzfMBTmAAeSJWMiUyJoaAgPKJo9FFVRVHf/zibHFc2+8sdnqxzFSCYKxgo4NjzWPgHpwgxRR9hPmpKfIo/jM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QbQyUlnI; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QbQyUlnI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7BF0C4CEF6;
-	Tue,  1 Jul 2025 17:55:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751392516;
-	bh=fQxoPSYs73iTSyX9yn+4UWbbrTgtSljBNrWOhhOVBpI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=QbQyUlnIrs4TspQWenfX0eXPB8e6JE9LImDio0/4of/4JLlQPCniWYrrFYex3vFmo
-	 axfL7l71oA0Ios6qhW8WsQZDUZ8r8ApM5/q67PK3TUnCCw/mXOeilXVqN1xTWVYsRu
-	 0jGWH4sud2fVRxbGpgNDlkLP+SMXA5O0p19J3ruZe9CMVnSIGWaHN640X9aqZ6VAHr
-	 HaEqWMyxLehzTP6e6zVSXX5DlgcObGAxxByMo4iuRRLqlm2rIcqCRvkBLy6lsbOJ+F
-	 2xlh4F7dkoVO/z2l2aatJmw9r+lGMnC2I+F6SqZezyuI3V5rRDvLyu0mVJPMfuE4C9
-	 y4ldlPlckGWRA==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- "Liang, Kan" <kan.liang@linux.intel.com>, 
- James Clark <james.clark@linaro.org>, 
- Charlie Jenkins <charlie@rivosinc.com>, 
- Ravi Bangoria <ravi.bangoria@amd.com>, 
- "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
- Collin Funk <collin.funk1@gmail.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <63491dbc8439edf2e949d80e264b9d22332fea61.1751082075.git.collin.funk1@gmail.com>
-References: <f8415e57c938482668717d918ab566ff5082f281.1750743784.git.collin.funk1@gmail.com>
- <63491dbc8439edf2e949d80e264b9d22332fea61.1751082075.git.collin.funk1@gmail.com>
-Subject: Re: [PATCH v4] perf build: Specify that shellcheck should use the
- bash dialect.
-Message-Id: <175139251571.738306.7065497308002625311.b4-ty@kernel.org>
-Date: Tue, 01 Jul 2025 10:55:15 -0700
+	s=arc-20240116; t=1751392526; c=relaxed/simple;
+	bh=OaJ1IZ+VxledJ85geGrj4X69S4C6L9IAWRbXpthlThw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fpXxKetS88fKkhW4qAhVYBrlZUPT2o3pcU60xczP07K3qjPFnhfFO2RRIxyDdPcZz41EYgjow88IO2d3nNUgQ09xYcIzjeIpsDs1YxynFFJjFg13XpxgPM2GWRuM8mXHB7I7sRuzV8e1byPv1QiQGJ60w3lYs99Rz1GvI+Jw9O8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=df7cb.de; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=df7cb.de
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4bWrKP0FPbz9t27;
+	Tue,  1 Jul 2025 19:55:21 +0200 (CEST)
+Date: Tue, 1 Jul 2025 19:55:17 +0200
+From: Christoph Berg <myon@debian.org>
+To: Zi Yan <ziy@nvidia.com>
+Cc: David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+	Byungchul Park <byungchul@sk.com>,
+	Gregory Price <gourry@gourry.net>,
+	Ying Huang <ying.huang@linux.alibaba.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	"open list:MEMORY MANAGEMENT - MEMORY POLICY AND MIGRATION" <linux-mm@kvack.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] mm/migrate: Fix do_pages_stat in 32-bit mode
+Message-ID: <aGQhBRM9DtTZ22Z_@msg.df7cb.de>
+References: <aGQTtCkgH4kQTNlp@msg.df7cb.de>
+ <25EB3C6C-4D6D-4946-BF0B-9B322E7DC16D@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c04d2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <25EB3C6C-4D6D-4946-BF0B-9B322E7DC16D@nvidia.com>
+X-Rspamd-Queue-Id: 4bWrKP0FPbz9t27
 
-On Fri, 27 Jun 2025 20:41:25 -0700, Collin Funk wrote:
-> When someone has a global shellcheckrc file, for example at
-> ~/.config/shellcheckrc, with the directive 'shell=sh', building perf
-> will fail with many shellcheck errors like:
+Re: Zi Yan
+> Fixes should be:
 > 
->     In tests/shell/base_probe/test_adding_kernel.sh line 294:
->     (( TEST_RESULT += $? ))
->     ^---------------------^ SC3006 (warning): In POSIX sh, standalone ((..)) is undefined.
+> Fixes: 5b1b561ba73c ("mm: simplify compat_sys_move_pages")
 > 
-> [...]
-Applied to perf-tools-next, thanks!
+> Closes could be a link to the bug report.
 
-Best regards,
-Namhyung
+Updated, thanks.
 
+> > This seems to work, but honestly I am wondering, if copy_from_user
+> > needs a special 32-bit case, doesn't copy_to_user need special casing
+> > as well?
+
+Scratch that, it works because an int[] is copied back, and that's
+always the same size.
+
+So I think the patch is good to go.
+
+Christoph
+
+
+From 426c93d558572248273cf386ca784626ae431413 Mon Sep 17 00:00:00 2001
+From: Christoph Berg <myon@debian.org>
+Date: Tue, 24 Jun 2025 16:44:27 +0200
+Subject: [PATCH v3] mm/migrate: Fix do_pages_stat in 32-bit mode
+
+For arrays with more than 16 entries, the old code would incorrectly
+advance the pages pointer by 16 words instead of 16 compat_uptr_t.
+Fix by doing the pointer arithmetic inside get_compat_pages_array where
+pages32 is already a correctly-typed pointer.
+
+Discovered while working on PostgreSQL 18's new NUMA introspection code.
+
+Signed-off-by: Christoph Berg <myon@debian.org>
+Suggested-by: David Hildenbrand <david@redhat.com>
+Fixes: 5b1b561ba73c ("mm: simplify compat_sys_move_pages")
+Reported-by: Bertrand Drouvot <bertranddrouvot.pg@gmail.com>
+Reported-by: Tomas Vondra <tomas@vondra.me>
+Closes: https://www.postgresql.org/message-id/flat/6342f601-77de-4ee0-8c2a-3deb50ceac5b%40vondra.me#86402e3d80c031788f5f55b42c459471
+---
+ mm/migrate.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/mm/migrate.c b/mm/migrate.c
+index 8cf0f9c9599d..2c88f3b33833 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -2399,6 +2399,7 @@ static void do_pages_stat_array(struct mm_struct *mm, unsigned long nr_pages,
+ 
+ static int get_compat_pages_array(const void __user *chunk_pages[],
+ 				  const void __user * __user *pages,
++				  unsigned long chunk_offset,
+ 				  unsigned long chunk_nr)
+ {
+ 	compat_uptr_t __user *pages32 = (compat_uptr_t __user *)pages;
+@@ -2406,7 +2407,7 @@ static int get_compat_pages_array(const void __user *chunk_pages[],
+ 	int i;
+ 
+ 	for (i = 0; i < chunk_nr; i++) {
+-		if (get_user(p, pages32 + i))
++		if (get_user(p, pages32 + chunk_offset + i))
+ 			return -EFAULT;
+ 		chunk_pages[i] = compat_ptr(p);
+ 	}
+@@ -2425,27 +2426,28 @@ static int do_pages_stat(struct mm_struct *mm, unsigned long nr_pages,
+ #define DO_PAGES_STAT_CHUNK_NR 16UL
+ 	const void __user *chunk_pages[DO_PAGES_STAT_CHUNK_NR];
+ 	int chunk_status[DO_PAGES_STAT_CHUNK_NR];
++	unsigned long chunk_offset = 0;
+ 
+ 	while (nr_pages) {
+ 		unsigned long chunk_nr = min(nr_pages, DO_PAGES_STAT_CHUNK_NR);
+ 
+ 		if (in_compat_syscall()) {
+ 			if (get_compat_pages_array(chunk_pages, pages,
+-						   chunk_nr))
++						   chunk_offset, chunk_nr))
+ 				break;
+ 		} else {
+-			if (copy_from_user(chunk_pages, pages,
++			if (copy_from_user(chunk_pages, pages + chunk_offset,
+ 				      chunk_nr * sizeof(*chunk_pages)))
+ 				break;
+ 		}
+ 
+ 		do_pages_stat_array(mm, chunk_nr, chunk_pages, chunk_status);
+ 
+-		if (copy_to_user(status, chunk_status, chunk_nr * sizeof(*status)))
++		if (copy_to_user(status + chunk_offset, chunk_status,
++				 chunk_nr * sizeof(*status)))
+ 			break;
+ 
+-		pages += chunk_nr;
+-		status += chunk_nr;
++		chunk_offset += chunk_nr;
+ 		nr_pages -= chunk_nr;
+ 	}
+ 	return nr_pages ? -EFAULT : 0;
+-- 
+2.47.2
 
