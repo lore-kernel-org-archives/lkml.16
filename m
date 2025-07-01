@@ -1,221 +1,99 @@
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D092571BA
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 21:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A02E6261591;
+	Tue,  1 Jul 2025 21:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751406804; cv=none; b=Y3VWntiVLvQnxyRRvKIybG0Lz1j7OdUO4ILkMmRuSX6lw7ECLeExz4575wAsoqXch7DrEHvHyivuJ1bfQ+f81sCpZiYicRni13fHgQn5CJBFkbYmL+3wSUW4Wsl8oK6BP9CCnkGjPXLFG8Q2xcpO+gl8aJBAlm2nQhtRfoSpvos=
+	t=1751406832; cv=none; b=YR41aLnEQZDp0YWXncCz958+6Gq3U1CJEwDLIRYU3T0TaFtf/5RzlMNLXKUbO/TsDgfm1B5zwxnIgBDs86AD9dtfMutB1hqwmFBi68VsWjLH3WIyX3UuGU6E1yJMMYmw0nxzdmZXyqX2+JV18/3eY2v5NnC8YLpIOTiX/gVNuo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751406804; c=relaxed/simple;
-	bh=76HcKGmFmNghBO+pMyD+y9llS/oRUsyq25HSfeg328g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EiwIKFGym1wyN2rkw0AqMffZ4J7N6ByuwrKOX4NA3lxdRP4PU9YNvLGZAo7cU7r2cQivX4aHvFo5IXSdFlYJkRo9rHWrgsirEpqetqVGv6OVh6nT0m5ruJZsWw0aG+IxzgxfD3fB9EyA8YMrxNe1/91X2BBB06zjZXn4m6+68wM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AsEZnSE6; arc=none smtp.client-ip=209.85.222.51
+	s=arc-20240116; t=1751406832; c=relaxed/simple;
+	bh=C8lLoCZLb9NOz2fXqycY7xy1dT01ZnrX/ae5CzPdLs8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iair5DVCGyVoFMG1LTjchXZ4+mQDVgkWfr0cC1Qnb6rHglxiZBs25uA/xNRvKvchUe3AizzIqSk92Z0XxPDn7cMt3aEKd5HwYSoItWRP2cxQw7yESnb+Q4aEUV4RYzIL1G6B/8O2xNTO6v9Ar2JVtyAYf2r3a0289j3dxyrDTEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mX9Lzm/7; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AsEZnSE6"
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-87f0ac304f0so1466659241.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 14:53:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mX9Lzm/7"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a536ecbf6fso3578055f8f.2;
+        Tue, 01 Jul 2025 14:53:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751406801; x=1752011601; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h9Tw5T21oTt8VFmq/0NfB5MMfCxNURL8ZSaWZPOqLE4=;
-        b=AsEZnSE6zMHME36FcBn+jkwRR6UgpbVAUySU1ntf+Hwz2jIJIpYIdrAkpyCVoudBUD
-         nsDLM7gfX/t7O/uwQcofhL4arRaNcTpTb4fcfy7WOVbLs/YS+8BdiSPEYkkY9ormRDdD
-         XP0ejjE2sj6jatctWzarjA4fggBzjFFjj6USxJLjrYouZ3i5wR3L4yxMSNMQ3INTD1fS
-         S5SDJsmtRO9BcUOp1m33HKdWzdG8lHsDSRmumBJ3d6CD0OXuwcxz8PmTQaXGFqX28WBn
-         t2Y9pa35VPJ3mSkzb4arFlZJzQ0OqXa6Ck3XCmb7xtnPLmrhHdkZRxE1U3TiXQD0hJ9J
-         TVLg==
+        d=gmail.com; s=20230601; t=1751406829; x=1752011629; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3IP9jbTrnB+dBCbXbGUHJtoAAOQr6sB5g1NEP/C6nMg=;
+        b=mX9Lzm/7iaiCest6/wlkJNDGXQRGav13OncBolGzGKPrxc8LyH1Pm7iu+wv50s+k6j
+         SihreoalQrwALKVjHYndeW3yXmGiUvVKfNHa94hvhjirqalp+PPWH07NgT59FgSWRji0
+         BktrFF03tzsO8rCL6AyErgZaYeaPbO0xEcB0KAkTsUA3QmGk6xqvKDDJbr9PhEPBvWox
+         UKc0lVP35OZu2D4TOscjuuF/AJERit+QjgGUIixzoN5+hWdvnFp7/r5C7AaYfJUcHUae
+         aKbB5U5epexZrrY/9/yarDOYx9tKS2N0VzEL6hr05g4NibpYa+nmrmgeTzscnw6ndaFL
+         T6Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751406801; x=1752011601;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h9Tw5T21oTt8VFmq/0NfB5MMfCxNURL8ZSaWZPOqLE4=;
-        b=MN28+qyB8TquxiAen3cpK/JkTr/OHv9HwhoSjU6Ly4EmLtpqLKz6xABIrjlVCI6O+t
-         HVJdEWs8rHFXe2/IG1RkiYwDt2J4iaBNwqLFAb2Wql9ZwlX7vibYfmcSuo5lfGdrmaLb
-         V3oRuAsy2zG0pcfy1B/PqLwwyVkMZjXzcG9l2iZjjTtGaw2Xzy/ZiYuoVHxJq+RNdxb+
-         Rz3bGoZf5s6rp/5UNxu7GwhwDvHReGtWF/uQXfPtbaI30aNeqHNjeTFSj975qka5rEfS
-         QnzxJsRNM73EPHBU+7PXkFkfYTIsBBSY8WyNND26iHgkHMhVJJsRLdjW43TfjOkr3pED
-         eEwg==
-X-Forwarded-Encrypted: i=1; AJvYcCVLUai4ZReNiAwdek7gIo49B/5LlbjzK6Nv49D6m3Y8l9mM42pdms4Uf/2QrU4RrVDt4i8+3Lt6dizimGc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUIpGo1PqENWvr+4Otjr+4AY9te4lGvXOozsxykwr738N119Hr
-	TDgQLgqgdEsLS4p6MOtI9iA+1rkSjf6P16eVO4NzKtaYbDWGkN2ndExeOhi686VOPm4PHnGnHHW
-	ZCoGe/JBO/vzj5+mI/924OHjiJx+t2A4=
-X-Gm-Gg: ASbGnct46Yc+UzRHjltNVclxUDaaGJh53X5Bv9xax/9nrLtSVL4tVXC0KWvH87lf3UC
-	+3dzmp13OxUKwBFjwnira3Mgiul08z6R3EM7By8y5uAvyI4RZuOtq/qpoFHyv4IQdooJt3pjHEV
-	Esy3M+Wx59X1jydTK40wE+9jTD7fn9tbgO2q/KJjEIK8wr2Extm6KaNVjJpmtp+zmpSLxkZL2Tl
-	o7K/Q==
-X-Google-Smtp-Source: AGHT+IHgW+audA3TQkHOsNiNO4Y5C7I1as+sT+lATM9JGrS7qA3IEYv2HU03AtfN1AT94Uq8BWvGQ4u89P5wuKzlRag=
-X-Received: by 2002:a05:6102:c4d:b0:4e6:67f6:e9af with SMTP id
- ada2fe7eead31-4f161114e02mr109275137.9.1751406801281; Tue, 01 Jul 2025
- 14:53:21 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751406829; x=1752011629;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3IP9jbTrnB+dBCbXbGUHJtoAAOQr6sB5g1NEP/C6nMg=;
+        b=IVTYw9RiKcGZi9FCN/jFCjYSXesWkLIQuY6YlstoY2oE/ElpXai3SElajh0hJaqnr8
+         g9SMvMjVjt3uU3MKu/c6RDKOovu+HyqKAc5OKoPxzedchSdCSfXoUX1vTwIeBeu5C4dC
+         2D8SG30UYd8JwlkDDpU/MnjZdsz330ZAhQXT3GDl892WGF/VQy65J7vunyhuR9OmPPLT
+         bfV7Ddt9zFpbDTC85S2G43MMIvPHzMei+t86F5Z5wTezkMSmTvjtrCMSZzl4Ireepfai
+         6PyDpnGrYBMItZUX4BxlDN0Toz+OmsHqwPR4L+q5sWmcO13lMdnlXubEbT/LO0BGxHT1
+         BodQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWI0dbdE2ZdiczFqoKil7yCblrrAD/TNy70YPz2ZNJmHE2carIjbSgJo518qUGhvLBbDbx00/zLFMp2cXI=@vger.kernel.org, AJvYcCXrHKRax0sHRgOWSYhXSngdRdpfxsu8nKiJMpaIXsnrwy55o8HIt+BtsL7tStNkDYpGU6kfPemwGvw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5SoMRy4SoOyPMAYtmitRHoC9diKH3PT27+v87kEAkwj1C54So
+	FxqqsurcMZ8CIBw5KM3yGB9jXNB3cSvKUKYEB9xr8LCf6REaMkVXV161
+X-Gm-Gg: ASbGnctdxuBCRLJShcnTM3WGptEei+BpgbAe+BhuYL0tD+FP6AST0+9VCBG0kSakG0H
+	2bV9HO/O5hMbEhMOjUCvubowCBvEvAvQofkydsve9Me2bvAd8IpQNT9weA8zwGxAGuDKgdKj3er
+	pDHC9RdS/lgvFvXcBA78COByAUGJ7bHVveJUmKnQYstJ/ikScnSTfZGrQRJB1C5dX31UeCgpVg+
+	ayKrKib5vrhoVaf2x08A0jcNKFVSyjG+dsMzZUBlt6H1oliVQ6vVhZ229lYd1xTNg7qtbmnGogm
+	npG2MSkLG+hpVxxwfvdiWS7aXCG0Z868Y+KqUTzhHRYEdeXw9RnrGLZG7SGtTLSIlOHWkSDSlcw
+	Nc/wmxjbB4o0DtvECQpXsyBa07BQ=
+X-Google-Smtp-Source: AGHT+IGaa4CCKl/1XiN17JtmgKYB26aWAIW3tZKoFmOwgdyrkKstnBo1P/invAcoAtLY+kSE1i0f9A==
+X-Received: by 2002:a05:6000:21ca:b0:3a4:fc52:f5d4 with SMTP id ffacd0b85a97d-3b2005840cdmr37175f8f.47.1751406828762;
+        Tue, 01 Jul 2025 14:53:48 -0700 (PDT)
+Received: from localhost.localdomain (89-139-4-59.bb.netvision.net.il. [89.139.4.59])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7e7814sm14076927f8f.8.2025.07.01.14.53.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 14:53:48 -0700 (PDT)
+From: Sivan Zohar-Kotzer <sivany32@gmail.com>
+To: Daniel Lezcano <daniel.lezcano@kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>
+Cc: elazarl@gmail.com,
+	linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH v1] Linux 6.16-rc2
+Date: Wed,  2 Jul 2025 00:52:45 +0300
+Message-ID: <20250701215245.95698-1-sivany32@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250629204215.1651573-1-abinashsinghlalotra@gmail.com> <5e67d651-830a-4d99-af37-26f2d0efd640@vates.tech>
-In-Reply-To: <5e67d651-830a-4d99-af37-26f2d0efd640@vates.tech>
-From: Abinash <abinashlalotra@gmail.com>
-Date: Wed, 2 Jul 2025 03:23:09 +0530
-X-Gm-Features: Ac12FXxWN99Do6-y4I8RTPnx1rDO_yZT307Qk4LLSGsNZ3LC714vlUwHM9tF1aQ
-Message-ID: <CAJZ91LC610AsBZ8X3u8ZxAUhc6QT0FHeffQT0ARmnMgsGrdZQQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] xen/gntdev: reduce stack usage by dynamically
- allocating gntdev_copy_batch
-To: Tu Dinh <ngoc-tu.dinh@vates.tech>
-Cc: jgross@suse.com, sstabellini@kernel.org, oleksandr_tyshchenko@epam.com, 
-	xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org, 
-	Abinash Singh <abinashsinghlalotra@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi ,
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-Thanks for pointing that out.
+---
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I haven=E2=80=99t measured the performance impact yet =E2=80=94 my main foc=
-us was on
-getting rid of the stack usage warning triggered by LLVM due to
-inlining. But you're right, gntdev_ioctl_grant_copy() is on a hot
-path, and calling kmalloc() there could definitely slow things down,
-especially under memory pressure.
+diff --git a/Makefile b/Makefile
+index 69c534982415..ba0827a1fccd 100644
+--- a/Makefile
++++ b/Makefile
+@@ -2,7 +2,7 @@
+ VERSION = 6
+ PATCHLEVEL = 16
+ SUBLEVEL = 0
+-EXTRAVERSION = -rc1
++EXTRAVERSION = -rc2
+ NAME = Baby Opossum Posse
+ 
+ # *DOCUMENTATION*
+-- 
+2.45.2
 
-I=E2=80=99ll run some benchmarks to compare the current approach with the
-dynamic allocation, and also look into alternatives =E2=80=94 maybe
-pre-allocating the struct or limiting inlining instead. If you have
-any ideas or suggestions on how best to approach this, I=E2=80=99d be happy=
- to
-hear them.
-
-Do you have any suggestions on how to test the performance?
-
-Best,
-Abinash
-
-
-On Mon, 30 Jun 2025 at 16:05, Tu Dinh <ngoc-tu.dinh@vates.tech> wrote:
->
-> Hi,
->
-> On 30/06/2025 06:54, Abinash Singh wrote:
-> > While building the kernel with LLVM, a warning was reported due to
-> > excessive stack usage in `gntdev_ioctl`:
-> >
-> >       drivers/xen/gntdev.c:991: warning: stack frame size (1160) exceed=
-s limit (1024) in function 'gntdev_ioctl'
-> >
-> > Further analysis revealed that the large stack frame was caused by
-> > `struct gntdev_copy_batch`, which was declared on the stack inside
-> > `gntdev_ioctl_grant_copy()`. Since this function was inlined into
-> > `gntdev_ioctl`, the stack usage was attributed to the latter.
-> >
-> > This patch fixes the issue by dynamically allocating `gntdev_copy_batch=
-`
-> > using `kmalloc()`, which significantly reduces the stack footprint and
-> > eliminates the warning.
-> >
-> > This approach is consistent with similar fixes upstream, such as:
-> >
-> > commit fa26198d30f3 ("iommu/io-pgtable-arm: dynamically allocate selfte=
-st device struct")
-> >
-> > Fixes: a4cdb556cae0 ("xen/gntdev: add ioctl for grant copy")
-> > Signed-off-by: Abinash Singh <abinashsinghlalotra@gmail.com>
-> > ---
-> > The stack usage was confirmed using the `-fstack-usage`  flag and mannu=
-al analysis, which showed:
-> >
-> >    drivers/xen/gntdev.c:953: gntdev_ioctl_grant_copy.isra   1048 bytes
-> >    drivers/xen/gntdev.c:826: gntdev_copy                     56 bytes
-> >
-> > Since `gntdev_ioctl` was calling the inlined `gntdev_ioctl_grant_copy`,=
- the total
-> > frame size exceeded 1024 bytes, triggering the warning.
-> >
-> > This patch addresses the warning and keeps stack usage within acceptabl=
-e limits.
-> > Is this patch fine or kmalloc may affect performance ?
-> > ---
->
-> Have you measured the performance impact? gntdev_ioctl_grant_copy is
-> called quite often especially by the backend. I'm afraid calling the
-> allocator here may cause even more slowdown than there already is,
-> especially when memory is tight.
->
-> >   drivers/xen/gntdev.c | 24 +++++++++++++++---------
-> >   1 file changed, 15 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/drivers/xen/gntdev.c b/drivers/xen/gntdev.c
-> > index 61faea1f0663..9811f3d7c87c 100644
-> > --- a/drivers/xen/gntdev.c
-> > +++ b/drivers/xen/gntdev.c
-> > @@ -953,15 +953,19 @@ static int gntdev_grant_copy_seg(struct gntdev_co=
-py_batch *batch,
-> >   static long gntdev_ioctl_grant_copy(struct gntdev_priv *priv, void __=
-user *u)
-> >   {
-> >       struct ioctl_gntdev_grant_copy copy;
-> > -     struct gntdev_copy_batch batch;
-> > +     struct gntdev_copy_batch *batch;
-> >       unsigned int i;
-> >       int ret =3D 0;
-> >
-> >       if (copy_from_user(&copy, u, sizeof(copy)))
-> >               return -EFAULT;
-> > -
-> > -     batch.nr_ops =3D 0;
-> > -     batch.nr_pages =3D 0;
-> > +
-> > +     batch =3D kmalloc(sizeof(*batch), GFP_KERNEL);
-> > +     if (!batch)
-> > +             return -ENOMEM;
-> > +
-> > +     batch->nr_ops =3D 0;
-> > +     batch->nr_pages =3D 0;
-> >
-> >       for (i =3D 0; i < copy.count; i++) {
-> >               struct gntdev_grant_copy_segment seg;
-> > @@ -971,18 +975,20 @@ static long gntdev_ioctl_grant_copy(struct gntdev=
-_priv *priv, void __user *u)
-> >                       goto out;
-> >               }
-> >
-> > -             ret =3D gntdev_grant_copy_seg(&batch, &seg, &copy.segment=
-s[i].status);
-> > +             ret =3D gntdev_grant_copy_seg(batch, &seg, &copy.segments=
-[i].status);
-> >               if (ret < 0)
-> >                       goto out;
-> >
-> >               cond_resched();
-> >       }
-> > -     if (batch.nr_ops)
-> > -             ret =3D gntdev_copy(&batch);
-> > -     return ret;
-> > +     if (batch->nr_ops)
-> > +             ret =3D gntdev_copy(batch);
-> > +     goto free_batch;
-> >
-> >     out:
-> > -     gntdev_put_pages(&batch);
-> > +     gntdev_put_pages(batch);
-> > +  free_batch:
-> > +     kfree(batch);
-> >       return ret;
-> >   }
-> >
->
->
->
-> Ngoc Tu Dinh | Vates XCP-ng Developer
->
-> XCP-ng & Xen Orchestra - Vates solutions
->
-> web: https://vates.tech
->
