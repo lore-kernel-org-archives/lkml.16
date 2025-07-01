@@ -1,32 +1,66 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CFB64A0C;
-	Tue,  1 Jul 2025 09:32:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E4FC130A73
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 09:34:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751362361; cv=none; b=d557v8CJsuA9MLCcurWJuQAad1fkFS0eu8w4lo4asho+luPoqSttzZQdXh/+omUXlMkD1JBMCmyGwiyPKicpd3i0eQouTN1MpdqMFha7fjMZ4b9E8M8yx4y2ecc1gdENTsMahn7tS2bFe9BAHMBdThsQoYu+6YG/b0+SmIsMB2g=
+	t=1751362506; cv=none; b=Meefh7DMbOMVYtSGJ97HnCXvgT24n7c/6MQKiOvbi19/iMFWm2ooN38jQwVDKL+0y1xaICo14ns1W7nFz+JplDue2GD9eUjSIDQ8gK1UQwbCM3mH6Nf+rYINOVSUb3zQRYB5PsfcXSq0ZgY/ZmgJyjYrCLUZ6VqNeR/FeDv0Jss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751362361; c=relaxed/simple;
-	bh=I11qWhbNN6U3C+Rd/QDSNHcVavQao4wKdPiAqL+l9x0=;
-	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=QqliQD5lznGWCgg3NApGOSOOS8rzx4AXO1FT7Ncpz5eKTsAwEobqMq2naQJiWE2FemS4b4nS3gmtre7HaNbVn/g4Rdy3LjLxc6/5wQDM5+2x5xuJLW02G904Fgo8+Tc5gdZDZs7A/H7fTyvKy8LkcEqkW4iRB1IbOHwH1THAWt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=V+yUEP0b; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="V+yUEP0b"
-Received: from ideasonboard.com (unknown [IPv6:2a00:6020:448c:6c00:7cdc:2548:b8ee:3b98])
-	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id 2CD5C6F3;
-	Tue,  1 Jul 2025 11:32:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1751362335;
-	bh=I11qWhbNN6U3C+Rd/QDSNHcVavQao4wKdPiAqL+l9x0=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=V+yUEP0bAH1keElCHZayO0cnWaM3hDlCDOArE6a6uGOLxtHNTX7ZxHt4gvIyLfDZJ
-	 2xZu5y8TcVZGYP51FZq0Je9wMu+9ZQGpaoLObGv8CU4R24SiluO9keRtI/+2St87E7
-	 uJhf97xrzvUXqspGXqAXeNYlIXqwbBO1DxlMTJKA=
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1751362506; c=relaxed/simple;
+	bh=Iz7TndBO+sTa5OfyTf6Cc5utFDcx+HTwube/qfPfbtQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kTKg1+8mQyKzJDzF0IZqlXSveJyoM8xm3I2rs1IiR60MpwLLXSG+hhGanDU+DfjegcFYCz2o3o0UnHZgHUfuwAQXSoNV6pnfi04ALCyi0gA68Q4gKjECbt+o2iEfCxkpYhIFJPoa1Zn/9DS7izyyf2H1W4+BBuW6V7iVsKKRPLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 8f78db2a565e11f0b29709d653e92f7d-20250701
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:bda8d99c-c8c0-4cf5-bf18-ce47b1485f9d,IP:0,U
+	RL:0,TC:0,Content:0,EDM:-30,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:-30
+X-CID-META: VersionHash:6493067,CLOUDID:5d3c4b2b9fd8c50812528642bfb70764,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:2,IP:nil,URL
+	:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SP
+	R:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 8f78db2a565e11f0b29709d653e92f7d-20250701
+Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
+	(envelope-from <zhangzihuan@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 273673689; Tue, 01 Jul 2025 17:34:18 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id 43B7EE008FA2;
+	Tue,  1 Jul 2025 17:34:17 +0800 (CST)
+X-ns-mid: postfix-6863AB98-679317848
+Received: from localhost.localdomain (unknown [172.25.120.24])
+	by mail.kylinos.cn (NSMail) with ESMTPA id E2086E008FA1;
+	Tue,  1 Jul 2025 17:34:11 +0800 (CST)
+From: Zihuan Zhang <zhangzihuan@kylinos.cn>
+To: xuewen.yan@unisoc.com,
+	vincent.guittot@linaro.org,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	juri.lelli@redhat.com
+Cc: rostedt@goodmis.org,
+	bsegall@google.com,
+	mgorman@suse.de,
+	vschneid@redhat.com,
+	hongyan.xia2@arm.com,
+	linux-kernel@vger.kernel.org,
+	ke.wang@unisoc.com,
+	di.shen@unisoc.com,
+	xuewen.yan94@gmail.com,
+	kprateek.nayak@amd.com,
+	kuyo.chang@mediatek.com,
+	juju.sung@mediatek.com,
+	qyousef@layalina.io,
+	Zihuan Zhang <zhangzihuan@kylinos.cn>
+Subject: [PATCH v1] sched/uclamp: Skip uclamp_rq_dec() for non-final dequeue of delayed tasks
+Date: Tue,  1 Jul 2025 17:34:07 +0800
+Message-Id: <20250701093407.211500-1-zhangzihuan@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,99 +68,75 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250701-pispbe-clamp-v1-1-31243db3439b@ideasonboard.com>
-References: <20250701-pispbe-clamp-v1-1-31243db3439b@ideasonboard.com>
-Subject: Re: [PATCH] media: pisp_be: Use clamp() and define max sizes
-From: Stefan Klug <stefan.klug@ideasonboard.com>
-Cc: linux-media@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-To: Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Florian Fainelli <florian.fainelli@broadcom.com>, Jacopo Mondi <jacopo.mondi@ideasonboard.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>
-Date: Tue, 01 Jul 2025 11:32:34 +0200
-Message-ID: <175136235475.2426344.4455960698221532956@localhost>
-User-Agent: alot/0.12.dev8+g2c003385c862.d20250602
 
-Hi Jacopo,
+Currently, uclamp_rq_inc() skips updating the clamp aggregation for
+delayed tasks unless ENQUEUE_DELAYED is set, to ensure we only track the
+real enqueue of a task that was previously marked as sched_delayed.
 
-Thank you for the patch.=20
+However, the corresponding uclamp_rq_dec() path only checks
+sched_delayed, and misses the DEQUEUE_DELAYED flag. As a result, we may
+skip dec for a delayed task that is now being truly dequeued, leading to
+uclamp aggregation mismatch.
 
-Quoting Jacopo Mondi (2025-07-01 10:55:05)
-> Use the clamp() from minmax.h and provide a define for the max size as
-> they will be used in sequent patches.
+This patch makes uclamp_rq_dec() consistent with uclamp_rq_inc() by
+checking both sched_delayed and DEQUEUE_DELAYED, ensuring correct
+accounting symmetry.
 
-nit-picking: I believe either "Use clamp() from" or "Use the clamp() functi=
-on
-from"
+Fixes: 90ca9410dab2 ("sched/uclamp: Align uclamp and util_est and call be=
+fore freq update")
+Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
+---
+ kernel/sched/core.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
->=20
-> Signed-off-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 8988d38d46a3..99f1542cff7d 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1781,7 +1781,7 @@ static inline void uclamp_rq_inc(struct rq *rq, str=
+uct task_struct *p, int flags
+ 		rq->uclamp_flags &=3D ~UCLAMP_FLAG_IDLE;
+ }
+=20
+-static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
++static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p, i=
+nt flags)
+ {
+ 	enum uclamp_id clamp_id;
+=20
+@@ -1797,7 +1797,8 @@ static inline void uclamp_rq_dec(struct rq *rq, str=
+uct task_struct *p)
+ 	if (unlikely(!p->sched_class->uclamp_enabled))
+ 		return;
+=20
+-	if (p->se.sched_delayed)
++	/* Skip dec if this is a delayed task not being truly dequeued */
++	if (p->se.sched_delayed && !(flags & DEQUEUE_DELAYED))
+ 		return;
+=20
+ 	for_each_clamp_id(clamp_id)
+@@ -2039,7 +2040,7 @@ static void __init init_uclamp(void)
+=20
+ #else /* !CONFIG_UCLAMP_TASK */
+ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p, i=
+nt flags) { }
+-static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p) {=
+ }
++static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p, i=
+nt flags) { }
+ static inline void uclamp_fork(struct task_struct *p) { }
+ static inline void uclamp_post_fork(struct task_struct *p) { }
+ static inline void init_uclamp(void) { }
+@@ -2112,7 +2113,7 @@ inline bool dequeue_task(struct rq *rq, struct task=
+_struct *p, int flags)
+ 	 * Must be before ->dequeue_task() because ->dequeue_task() can 'fail'
+ 	 * and mark the task ->sched_delayed.
+ 	 */
+-	uclamp_rq_dec(rq, p);
++	uclamp_rq_dec(rq, p, flags);
+ 	return p->sched_class->dequeue_task(rq, p, flags);
+ }
+=20
+--=20
+2.25.1
 
-Reviewed-by: Stefan Klug <stefan.klug@ideasonboard.com>=20
-
-> ---
->  drivers/media/platform/raspberrypi/pisp_be/pisp_be.c  | 11 +++++++----
->  include/uapi/linux/media/raspberrypi/pisp_be_config.h |  9 +++++----
->  2 files changed, 12 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c b/drive=
-rs/media/platform/raspberrypi/pisp_be/pisp_be.c
-> index 7596ae1f7de6671484d4d351015b234829f642d4..ac5840b4be478ccdd7da9d6d0=
-745649e0c1b2b6f 100644
-> --- a/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
-> +++ b/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
-> @@ -9,6 +9,7 @@
->  #include <linux/io.h>
->  #include <linux/kernel.h>
->  #include <linux/lockdep.h>
-> +#include <linux/minmax.h>
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm_runtime.h>
-> @@ -1114,10 +1115,12 @@ static void pispbe_try_format(struct v4l2_format =
-*f, struct pispbe_node *node)
->         f->fmt.pix_mp.pixelformat =3D fmt->fourcc;
->         f->fmt.pix_mp.num_planes =3D fmt->num_planes;
->         f->fmt.pix_mp.field =3D V4L2_FIELD_NONE;
-> -       f->fmt.pix_mp.width =3D max(min(f->fmt.pix_mp.width, 65536u),
-> -                                 PISP_BACK_END_MIN_TILE_WIDTH);
-> -       f->fmt.pix_mp.height =3D max(min(f->fmt.pix_mp.height, 65536u),
-> -                                  PISP_BACK_END_MIN_TILE_HEIGHT);
-> +       f->fmt.pix_mp.width =3D clamp(f->fmt.pix_mp.width,
-> +                                   PISP_BACK_END_MIN_TILE_WIDTH,
-> +                                   PISP_BACK_END_MAX_TILE_WIDTH);
-> +       f->fmt.pix_mp.height =3D clamp(f->fmt.pix_mp.height,
-> +                                    PISP_BACK_END_MIN_TILE_HEIGHT,
-> +                                    PISP_BACK_END_MAX_TILE_HEIGHT);
-> =20
->         /*
->          * Fill in the actual colour space when the requested one was
-> diff --git a/include/uapi/linux/media/raspberrypi/pisp_be_config.h b/incl=
-ude/uapi/linux/media/raspberrypi/pisp_be_config.h
-> index cbeb714f4d61ad53162c0450f2303431a5958040..2ad3b90684d7be80776af75b5=
-c5009f7b677f466 100644
-> --- a/include/uapi/linux/media/raspberrypi/pisp_be_config.h
-> +++ b/include/uapi/linux/media/raspberrypi/pisp_be_config.h
-> @@ -21,10 +21,11 @@
->  /* preferred byte alignment for outputs */
->  #define PISP_BACK_END_OUTPUT_MAX_ALIGN 64u
-> =20
-> -/* minimum allowed tile width anywhere in the pipeline */
-> -#define PISP_BACK_END_MIN_TILE_WIDTH 16u
-> -/* minimum allowed tile width anywhere in the pipeline */
-> -#define PISP_BACK_END_MIN_TILE_HEIGHT 16u
-> +/* minimum allowed tile sizes anywhere in the pipeline */
-> +#define PISP_BACK_END_MIN_TILE_WIDTH   16u
-> +#define PISP_BACK_END_MIN_TILE_HEIGHT  16u
-> +#define PISP_BACK_END_MAX_TILE_WIDTH   65536u
-> +#define PISP_BACK_END_MAX_TILE_HEIGHT  65536u
-> =20
->  #define PISP_BACK_END_NUM_OUTPUTS 2
->  #define PISP_BACK_END_HOG_OUTPUT 1
->=20
-> ---
-> base-commit: 35392e855abf7d02ad3b061cbc75c7c7c37f0577
-> change-id: 20250623-pispbe-clamp-4b33011d0e85
->=20
-> Best regards,
-> --=20
-> Jacopo Mondi <jacopo.mondi@ideasonboard.com>
->=20
->
