@@ -1,169 +1,96 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 659961F428F
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 16:17:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E36C1B0421;
+	Tue,  1 Jul 2025 16:17:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751386650; cv=none; b=DvCatzfN98w77TW8hsVQNZiu2n/AHhy3/vnpVm0EMHNRr4qohjKuvAOgO08GgpCir/nDIrlRULotfm/X5c93sidf02gZ0WBrUAs5qG4DFma5rjkw7UE+mMHuyZUmulvsSYOcjx8+kJL6ccxpvJxv/QEN3/D3RXgZk/h2fJ1pmfs=
+	t=1751386671; cv=none; b=WQSKwdSS4fGDKm7zhdoDwzKwR/za1l1JTsTOgOn85pGw9nOnmFJGdZvTRkk2lVpYDsAW8B/k7NggiLOowQixMi0vjUFNfk2aCTv3ukWYalpyfzAnojlFaexzVDtFPUrBdxNeiDvChTyB2Md16IrcmZlAFF3UcSqI3Za3U2p192o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751386650; c=relaxed/simple;
-	bh=9+CIJ2w7ePB4OHqJPZDj0NcK3KnAmM5lFfK+Mmn+oMQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ebfqFlKx0/54B82g/m7/x7aLxJLCNmVDXC2U4XFGoZaDMxhGcYyrSdHd5yRkdGrfixgec4iGKecPCsjvoFCNBo2eyqDA0ymXyLgospFToxXh8F6P8r4NticQiX00nJ532cEOpK27s0K3JzdEdLItwaQcjM4vY4aab1TjJ+yyKkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=giIn2jrW; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751386671; c=relaxed/simple;
+	bh=VgEUdu0q4EvG+1GBYiBLad2HJ/euMqfFmgh5Ah/cRY8=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=bI8tJ3hYjvDaotHdjmZAuyu89A/sLiUbcUYyfz5nwQcp6f//VvoIufIUaxQzNO7p+zE6g6R6zzQkiv6j6IScoKXqjPR05lP96qZLt3M6654B9c9c/1e4oLAkxuJl+330OEvcMFDUdj8+2nEizsgTLWcj8ohWkS6k9as+TvOKfWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S5/ETV29; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="giIn2jrW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751386646;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=lVB9kTjPjsCcDiQ3MDFZvRa2zhNJTySbnw345PI712g=;
-	b=giIn2jrWUJgZWy2P1HNTqozeUN1fpJv4iOn8u/WRaEx7r6p34I1JPQ76U1VLAfi1al+eJc
-	0sudPIGCwAuA0Pzon8sXq60TlVhXa6F5oXIZzrz8sg8UOlGLQgUOZ3tz4jw1Ta9gIzj6L1
-	mgkHP2ajdcXFi5zGooTLVhHzUNjCtI0=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-568--tJfF1fNO8epI9d9_vdlLA-1; Tue, 01 Jul 2025 12:17:25 -0400
-X-MC-Unique: -tJfF1fNO8epI9d9_vdlLA-1
-X-Mimecast-MFC-AGG-ID: -tJfF1fNO8epI9d9_vdlLA_1751386644
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4532514dee8so37438215e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 09:17:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751386644; x=1751991444;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=lVB9kTjPjsCcDiQ3MDFZvRa2zhNJTySbnw345PI712g=;
-        b=qF6+FFdK8bumfu9Svepoa2EPyrvf3aEWnq30pcjESjTs6/V+3Jmpe/YZjajOYi71/c
-         ZbJ2eCBjKv0W0Hw2P+JpgIrgxZ81eLWahKVlZX4vcsJHRgxb5xOy9SgqBvtjoXV+8pOi
-         ldWPwKNCXxs+zqp79awccAKX1uCkdbheJuqnIwCQV3b8QKF4WKRlYQa6MruROMZTA/Dl
-         J/nFH759AujIab0tSl0sQZENxE7cttKJh+XSKrqJJCfcK6rJGH/iTzzSpyO5kroEVksP
-         VeZcC7/OZN7tTN2I/27H7n3/WWEgfoO50/MC9h8Yhvp6gFUBWpYngjT+WWNzyPkmiFOF
-         0xTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXT2t+KJubF//ApgNcouiU9VFahDFjNlhOasb7yc/3rQSXjU35sSQpM8qQZCaS85ZC9a+G8tiuDm5dGHlI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsZ/3sNHSGg3NNIChnW1XBg9q4bUWMXVlX5Rf8niXCuSsx6qwo
-	IPhJMSiGe0Ca/mPAD+4BeHpzFH/R30wD5IjksQA0IiJrZmhU+/WTWm1Ac1XC4lZq++Qc6aBNWtY
-	7L3IK8vQLZz+v92t2rWJeEq4VuuUoi2dB4rS/np0eDlt1MglssgctvCUAINprTBxgJw==
-X-Gm-Gg: ASbGnctATieOZPmozIhUx17tUx9TJfN4pe7soWI/6sliFAFjA8ZuMZd+ei2ZKvuEXFO
-	gI9+kvbvqbhTMji8jWGfgA/lcRLaPUZsJ64IU+YJCNRngzDterkneEwip8wIUe7169QjnGs2GsJ
-	Rgxiuq9Z0DMmdkKlyYsEHN1NG3dK+04FptC7oP6y6/70b12qQNbEaKgzVzB3lm+YNTxRA381LXo
-	Zc8emNTSZBEsq1ZEOOfFtobHyN386doUB+qO7nXwaKMU+zcuHXMmuk2cf0n+kXbvBqfrBNtGukV
-	RIjvphlsBqMFQ7GtQ3pnJGskgRchNvPVS5e7sHxFZJyiAUQrQa+tEm8dTW83l/XrrJJ9/nbwCVZ
-	4OYNVvmiVrfMHE5uEQRDqGvVjHTmWMRaRRQI6obozzd79qFJcLw==
-X-Received: by 2002:a05:600c:a48:b0:453:58e8:a445 with SMTP id 5b1f17b1804b1-45396a94e32mr124259465e9.11.1751386643617;
-        Tue, 01 Jul 2025 09:17:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEvGN3FklTl4ux1tT9v67V+eF7W0w2RvDhr+maKyotoG8OCwBMycQHzwIksow9IVBXZa7R8rg==
-X-Received: by 2002:a05:600c:a48:b0:453:58e8:a445 with SMTP id 5b1f17b1804b1-45396a94e32mr124259065e9.11.1751386643178;
-        Tue, 01 Jul 2025 09:17:23 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f18:7500:202e:b0f1:76d6:f9af? (p200300d82f187500202eb0f176d6f9af.dip0.t-ipconnect.de. [2003:d8:2f18:7500:202e:b0f1:76d6:f9af])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e598d2sm13581910f8f.76.2025.07.01.09.17.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 09:17:22 -0700 (PDT)
-Message-ID: <05f3517a-754e-40e3-a0e1-bc654f6ed3c9@redhat.com>
-Date: Tue, 1 Jul 2025 18:17:21 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S5/ETV29"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC1D0C4CEEB;
+	Tue,  1 Jul 2025 16:17:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751386670;
+	bh=VgEUdu0q4EvG+1GBYiBLad2HJ/euMqfFmgh5Ah/cRY8=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=S5/ETV296TRoztdOgbrk4egzZkxadobWOKmlzSxgzYiw1jn1ilTfNGvzE3md26GhW
+	 f3nEOj5zMSOO+phCMxDYRT/Sg/0gtSUtPzGh9qpaCEtsHMAIB4DAFpwfbq/yeMp8A5
+	 mqrlrgroD/kCFr8Trf63daIIzwB2jqyzhUZBAZA+iOEMNJDkt8j4sMAwUGvostgS7X
+	 IcYCsnSXLr7LvGu8epTfbKDr7FTr4+Ibjewc+U5QsfumhrSvXKeidfyK3ghfonh/+s
+	 4YmXnlyRsPPzeaZPDN8lo1xC0pSIjEz/eX0Bbm5nUExwFS/ds3ay0wU1WGMEssxaL9
+	 PmolG3w8vUGcw==
+Date: Tue, 01 Jul 2025 11:17:49 -0500
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/4] mm: Support batched unmap for lazyfree large
- folios during reclamation
-To: Harry Yoo <harry.yoo@oracle.com>, Barry Song <21cnbao@gmail.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
- baolin.wang@linux.alibaba.com, chrisl@kernel.org, ioworker0@gmail.com,
- kasong@tencent.com, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
- lorenzo.stoakes@oracle.com, ryan.roberts@arm.com, v-songbaohua@oppo.com,
- x86@kernel.org, ying.huang@intel.com, zhengtangquan@oppo.com
-References: <20250214093015.51024-1-21cnbao@gmail.com>
- <20250214093015.51024-4-21cnbao@gmail.com> <aGOyhvR-GaUYgLwQ@hyeyoo>
- <aGPiQq4cIPDt-Ue-@hyeyoo>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <aGPiQq4cIPDt-Ue-@hyeyoo>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-media@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, conor+dt@kernel.org, krzk+dt@kernel.org, 
+ mchehab@kernel.org
+To: philippe baetens <philippebaetens@gmail.com>
+In-Reply-To: <aGP67H5_GxL4z2Nc@raspberrypi>
+References: <aGP67H5_GxL4z2Nc@raspberrypi>
+Message-Id: <175138666987.1857452.9901567554592051735.robh@kernel.org>
+Subject: Re: [PATCH v3 1/2] Add bindings for ams Mira220 cmos image sensor
 
 
->>> +			/* Nuke the page table entry. */
->>> +			pteval = get_and_clear_full_ptes(mm, address, pvmw.pte, nr_pages, 0);
->>> +			/*
->>> +			 * We clear the PTE but do not flush so potentially
->>> +			 * a remote CPU could still be writing to the folio.
->>> +			 * If the entry was previously clean then the
->>> +			 * architecture must guarantee that a clear->dirty
->>> +			 * transition on a cached TLB entry is written through
->>> +			 * and traps if the PTE is unmapped.
->>> +			 */
->>> +			if (should_defer_flush(mm, flags))
->>> +				set_tlb_ubc_flush_pending(mm, pteval, address, end_addr);
->>
->> When the first pte of a PTE-mapped THP has _PAGE_PROTNONE bit set
->> (by NUMA balancing), can set_tlb_ubc_flush_pending() mistakenly think that
->> it doesn't need to flush the whole range, although some ptes in the range
->> doesn't have _PAGE_PROTNONE bit set?
+On Tue, 01 Jul 2025 17:12:44 +0200, philippe baetens wrote:
+> Mira220 is a global shutter NIR-enhanced image sensor made by AMS.
+> Driver is submitted in the next patch of this series and verified on a raspberry pi.
 > 
-> No, then folio_pte_batch() should have returned nr < folio_nr_pages(folio).
+> Signed-off-by: philippe baetens <philippebaetens@gmail.com>
+> ---
+> Changes in v3:
+> 	 - Improve commit message
+> 	 - add mailing list for device tree.
+> 
+> Changes in v2:
+> 	 - add maintainers and Documentation.yaml
+> 
+> ---
+>  .../bindings/media/i2c/ams,mira220.yaml       | 125 ++++++++++++++++++
+>  MAINTAINERS                                   |   6 +
+>  2 files changed, 131 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ams,mira220.yaml
+> 
 
-Right, folio_pte_batch() does currently not batch across PTEs that 
-differ in pte_protnone().
+My bot found errors running 'make dt_binding_check' on your patch:
 
--- 
-Cheers,
+yamllint warnings/errors:
 
-David / dhildenb
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/media/i2c/ams,mira220.example.dts:24.39-42.15: Warning (i2c_bus_reg): /example-0/i2c/camera-sensor@1a: I2C bus unit address format error, expected "54"
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/i2c/ams,mira220.example.dtb: camera-sensor@1a (ams,mira220): 'vana-supply' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/media/i2c/ams,mira220.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/i2c/ams,mira220.example.dtb: camera-sensor@1a (ams,mira220): clock-names:0: 'inck' was expected
+	from schema $id: http://devicetree.org/schemas/media/i2c/ams,mira220.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/aGP67H5_GxL4z2Nc@raspberrypi
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
