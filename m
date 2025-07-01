@@ -1,174 +1,198 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD3DE277813;
-	Tue,  1 Jul 2025 20:43:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295E2283CBF
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 20:43:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751402621; cv=none; b=RFYGirXfZ2mgFfYWok8KoU8aYKu/neN9kGGSASIi19G221TeJjCdsqZo8WNcmbNT+DTFQ+VfFB8bOAB714NmgSEXZXQ9pkeiaSWWzeBdlxxjUqZs7btlY/leRWx5ImnrwNBrsH41mn5Uw7ljaw9HU7XMIDH59pr20V6sfTUH+p8=
+	t=1751402621; cv=none; b=YtOZYFRghMODCVAqcmEw2tt7EC+V1wPlwdb2NTpCngIYSLFvvhh74PzqUi6OMIOuTZzR14yjMhKmDBZmNyB14jYo41p2nv9so9KvoCFQwFivkqZsj80uSjjP0Z8SYZTy9weWban9SzsmAR1Cv0tXJ/M8CAKr36n7B+0QpNg1aU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751402621; c=relaxed/simple;
-	bh=DLlHCGnMibJz2mc302N4LVBVKgIvyVAIIJF+S4dQZPY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IS7WI2UOthIPUWNRHdYuLo++sVAa9bQjONG47T/29eAvvQt/cS2eRkA6+KBoibfi7tt4hO0VV3iX7xgEVFxFAWRk8UCTXdL/j5F7it/0ROyUl+KMfNLNmTjQDO/sEBHQ3s2ExjPz5R6cO6nliecC6aPaYNsRzIy2zGTQX8UW0G0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cvjXCBfb; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=t6w6HZ3d39NHLiwdzdaqKTFFJH+mBfnQBGoBzloEzXs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f9x9TGNEKh0P9PujAUIIjIcX0M7aEGZ4zMC8GWSnoqh7UAW+cDn4GmKmPMcW06hbcrNQC3UT/OfNWL7QGEAGt4qFi2yWSB+Y8KHYBgXMKF6riP0yQfjJamutt1IKagS9kDofhAG2e/iYklNF0tq1zWJ0w31gjqKvEENDBYj8zJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tDpRt3cO; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cvjXCBfb"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a4f379662cso3146389f8f.0;
-        Tue, 01 Jul 2025 13:43:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tDpRt3cO"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2357c61cda7so207475ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 13:43:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751402618; x=1752007418; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Njm303v+//5zYcR1gKXqMUD57x2FxaWtMa0B+6B9EqI=;
-        b=cvjXCBfbpWGUeyqGvSd24eT/d8S2NJWIXU1zBI9gYr7Pti92UXaVOioejXnIjJzShp
-         RqSiSnfpCJjRSF1PiX0olU6jYqRNLTsexyPAzDs9JDqspiIgE4exI4MVEs8/QxLL1g+f
-         xfIbuRMzSanFXD0nFvo1B1tN/r7qnsP/rjhEiIkkiySabKa2SqaOrz2Ofk7LnmxGUBlG
-         JgYbHVA2J8dNH8V20CGJTWuQlue8q2gqlcM+PfaKXr8kQoc1Z0vQ12aPrQCC6uPptlK9
-         6IqT8IR2pKzgw6L8T4DUoEjkMhTzQ6J4qjbLUing9rdb5xBVdCnFS3jpLxppR51BFQIG
-         zjQw==
+        d=google.com; s=20230601; t=1751402619; x=1752007419; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Gp4ARI8yx8eK5+ZYKJ4V0qAwq8T5VmfMZEWG24JsVtU=;
+        b=tDpRt3cOlJV+0eYx3cpvFlgyFkuAy70sDvbRT8UUSM/hdogqjjLUMhCc4DGgn8F/ly
+         g4XyQLBApGchqcqnUuyzf4YCQlXhYFIiM1zatFRfpc3rPYOVU1xoPEZcfilf/bvhUCYH
+         uTGT+CbAnxpwSRZvfUGXbb5TUFtu3+Vz7e1zhFf9jCE7cZVQte/+iI5czrdcS1mRrjQE
+         8JAM5RTOZDtWCzwYl6smx0oPKN48GhcM/jIcj0aq0MOH8/+QeWw7VL2j1uP9TSY6O03D
+         eiIrlm5hUd2mqDeRDrfsu1q9EMftSDckGVd5n1RPbXi3lGUAY1wY15z+mT1GeUuy+xos
+         MBGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751402618; x=1752007418;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Njm303v+//5zYcR1gKXqMUD57x2FxaWtMa0B+6B9EqI=;
-        b=t0RiYhXMdzv3if08viRGlb1ikeAeDYP39KGlBDBkAXMUd9StTcmfFCYFGaoX22XyLD
-         s8x/VMUfEghmQmlKOpVsq+GwbPVEKZes8PbF8HRuq4QQA/OvM8NuVSKYvGaIZmDhATxq
-         S7CGrWzXwL+9qi3GZrbGjGQow8hdZYEfmDkv6+ldfo3EMxCaQhoYXXLxjzaKPyOS8Aff
-         9728D6UcK7Lbftwlwx/gc6LHBBV+Uv7VeyyWVIUEQsqz2fuY9YW5RsOfXTqP5OzU68yN
-         uhG45eV4styGEvlvXmG2K4kBGv0EWTyvnx1cD/yms/VNjj+Fn4yCJlK+CmXk/OGqh6iV
-         IT8w==
-X-Forwarded-Encrypted: i=1; AJvYcCWDf/UevTkZhEDliVZEJrpWj/UKpnVcdrKFLRrwt3lTrI8QyrinepDGxvm457vVp7t7PHPfOnD4meK8H/or@vger.kernel.org, AJvYcCWtnKgydbJJCOIpojH3eUKyODg9zYmhVLSu0Keq4ydzBN6TdmbTrFG7kin4NpJoVjztYsXLcfvoMtKU@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJeCX9lQr73+4GqOuFize7BP5w+efHbZIiHBz2TU8gLN3vb5hD
-	14Lc9dXLnijwG1OpqlN2ORu4XRlDXuXZBJi7gZ/KTw019t1istDkkKBpQwczCZYIxw==
-X-Gm-Gg: ASbGnctjS272Evj0O7+1RuwRu84iBltgahLUZ54C4WkycFlYfo/QJ/F4tjkx+th0dEN
-	/1Vw/Di+nkGmkCubtz/WGwPn1v/DMdXufVqAEFNwxcDq2+36V2WZdCzosJzNbTxa+CVIEKuWLDT
-	ItZen8wP2lJ4r/+2gldF0HvA5zod11oue9HF4AxUgiJb7CU3Ou2/4gK4j/+CDJuxy59RmB/1duz
-	HOjWpiWpZHCs/AUWbTAmoiParIE/Nkh8CetJwLwLqKEXtviGSCV/CUkQWV/wKeIHPYvV+BdVDQD
-	38ztjBxTatBfiATE17hVp+hHm/rizqvBfQR5afav+Fz8AhsuxhClZ3Q5ZDBkXIR9Y9pwHprNhKG
-	44fkrhZ1i
-X-Google-Smtp-Source: AGHT+IFMCAnnyfHVVBcvcHqwfNz2s1ARKpKIFu+4SJJXbDspaDdpeFewlkkaPbbS6j6O+DJeIQKUJA==
-X-Received: by 2002:a05:6000:2112:b0:3a5:8a68:b823 with SMTP id ffacd0b85a97d-3a8f4deca81mr12978133f8f.23.1751402617645;
-        Tue, 01 Jul 2025 13:43:37 -0700 (PDT)
-Received: from [192.168.20.64] ([84.226.118.249])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3aba76e40c0sm10037771f8f.59.2025.07.01.13.43.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 13:43:37 -0700 (PDT)
-Message-ID: <86116ada-51e6-4eef-bff1-f8b10a5edacc@gmail.com>
-Date: Tue, 1 Jul 2025 22:43:36 +0200
+        d=1e100.net; s=20230601; t=1751402619; x=1752007419;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Gp4ARI8yx8eK5+ZYKJ4V0qAwq8T5VmfMZEWG24JsVtU=;
+        b=Cluwou76o13dwNxSQMzys88YoP8/9mfVlZS4S3Y5v1YelFgi4QiK0oYOLItXHFiWv9
+         08i7hU52wtfP7sk8c2fSvWC8BJW802AQ/B6KXL8rqpsxun74PDWsaPXMO2FgFfO9HHgN
+         AIs5YKAOrZkmyn2JlIuWHCOdWKrhGDsPOWieFYegtOgRhN8DI3TbS037TMM5/9thiQzB
+         F9NIVumLG2xHTOI8Bf05xOKc7ouD65M97Y0DVTzuwH385GAjgYEbpAZSfwiBSAwfSW+k
+         jK7h9hIw5ksf4iI2r3tVPI0t1d3ZY1rDNt6fx4bEagAj4sRy/G+VHnZ2rrLkeVBAsVa0
+         AXlg==
+X-Forwarded-Encrypted: i=1; AJvYcCWkqLOQqVFeKGncYQamzdZgG1kiU403V6S2n381oRZ/tzhtTUavQ9coUOwnJMI92fTalP2xyEumLsGyCjI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw69YXpJ4PmYs15w7SO1kKZ3nfu6cWBxjij0Oyk8AJ5EwWmyTIa
+	cvNw8y2v+oOkXGRm+qAj/XPbD47A1/zwtl1ctg+OexbFBRy7guWGt50R0rU8zNPjiQ==
+X-Gm-Gg: ASbGncvk7ed1tTscgzjozE6HHQl6xRf9EsAVE5LBlj2m4vCfoeLGFeBYQdD+TQonuQ3
+	yPcNR5fjiIH18SQdD1qxpK/E3kSGGS+PklO5pMAWQLfeLvHpKWGlmkRpDSmECCYS3B07Zjet9CQ
+	JR6pDd2Z+ibU7Ny9nFN6Qs6Ls291NWanRIDxSN0LZeUejEWFf2ZpX5ZeeVCA3NCRIrls2OlOXgH
+	SNDk9bYKEI+/Acwol+Ojuv4lr9EPTAkO9kV6OPsjTRrZAX7iu/jIlnc/7txm5tQPxfrgr0QMNhR
+	uOw3xSIujPUNO6zaS2HeLfg93SmNvts3a++R6Y9INMPxHDwFaGxf0ZyCZ7snBack8hbZpgSsRnK
+	lgagjQxq3sfAlFB1hn7yq
+X-Google-Smtp-Source: AGHT+IEgQNF03gTMPFMuZ5i4oqeFgT9l/mftJxCXd5iV8tzIDEl3pR9lFMVTJeBzdy2r/6gfVZ+O7w==
+X-Received: by 2002:a17:902:e54e:b0:231:d0ef:e8ff with SMTP id d9443c01a7336-23c5ff29f9dmr4133295ad.8.1751402619181;
+        Tue, 01 Jul 2025 13:43:39 -0700 (PDT)
+Received: from google.com (232.98.126.34.bc.googleusercontent.com. [34.126.98.232])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af541bdeasm12778586b3a.53.2025.07.01.13.43.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 13:43:38 -0700 (PDT)
+Date: Tue, 1 Jul 2025 20:43:30 +0000
+From: Pranjal Shrivastava <praan@google.com>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
+	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
+	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
+	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
+	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
+	zhangzekun11@huawei.com, iommu@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
+	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com,
+	dwmw2@infradead.org, baolu.lu@linux.intel.com
+Subject: Re: [PATCH v7 27/28] iommu/tegra241-cmdqv: Add user-space use support
+Message-ID: <aGRIctg4T6cQECx4@google.com>
+References: <cover.1750966133.git.nicolinc@nvidia.com>
+ <539ee2ec112162abdba511574e2205a77b425059.1750966133.git.nicolinc@nvidia.com>
+ <aGQGm1-i4M75b9Qp@google.com>
+ <aGQ6KCI9OZEwHdxS@Asurada-Nvidia>
+ <aGQ_F7Qx3scbbA-J@google.com>
+ <aGRDtYRXFLoT+PrI@Asurada-Nvidia>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] Add x1e Dell Inpsiron 14p
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Val Packett <val@packett.cool>
-References: <20250424-qcom-linux-arm64-for-6-16-dell-inspiron14p-v1-0-ace76b31d024@linaro.org>
-Content-Language: en-US
-From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-In-Reply-To: <20250424-qcom-linux-arm64-for-6-16-dell-inspiron14p-v1-0-ace76b31d024@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aGRDtYRXFLoT+PrI@Asurada-Nvidia>
 
+On Tue, Jul 01, 2025 at 01:23:17PM -0700, Nicolin Chen wrote:
+> On Tue, Jul 01, 2025 at 08:03:35PM +0000, Pranjal Shrivastava wrote:
+> > On Tue, Jul 01, 2025 at 12:42:32PM -0700, Nicolin Chen wrote:
+> > > On Tue, Jul 01, 2025 at 04:02:35PM +0000, Pranjal Shrivastava wrote:
+> > > > On Thu, Jun 26, 2025 at 12:34:58PM -0700, Nicolin Chen wrote:
+> > > > > +/**
+> > > > > + * struct tegra241_vintf_sid - Virtual Interface Stream ID Replacement
+> > > > > + * @core: Embedded iommufd_vdevice structure, holding virtual Stream ID
+> > > > > + * @vintf: Parent VINTF pointer
+> > > > > + * @sid: Physical Stream ID
+> > > > > + * @idx: Replacement index in the VINTF
+> > > > > + */
+> > > > > +struct tegra241_vintf_sid {
+> > > > > +	struct iommufd_vdevice core;
+> > > > > +	struct tegra241_vintf *vintf;
+> > > > > +	u32 sid;
+> > > > > +	u8 idx;
+> > > > >  };
+> > > > 
+> > > > AFAIU, This seems to be a handle for sid -> vintf mapping.. it yes, then
+> > > > I'm not sure if "Virtual Interface Stream ID Replacement" clarifies that?
+> > > 
+> > > No. It's for vSID to pSID mappings. I had it explained in commit log:
+> > > 
+> > 
+> > I get that, it's for vSID -> pSID mapping which also "happens to" point
+> > to the vintf.. all I wanted to say was that the description is unclear..
+> > We could've described it as "Vintf SID map" or something, but I guess
+> > it's fine the way it is too.. your call.
+> 
+> The "replace" word is borrowed from the "SID_REPLACE" HW register.
+> 
+> But I think it's okay to call it just "mapping", if that makes it
+> clearer.
+> 
 
-On 4/24/25 01:53, Bryan O'Donoghue wrote:
-> Add in a dtsi for the Dell Inspiron 14p.
->
-> I'm currently using this as a daily driver including sending this series
-> from. Its reasonably stable on 6.15-rcX.
->
-> The first two patches can be applied without dependency, the final patch
-> relies on patches staged for -next in the media tree to be applied,
-> presently.
->
-> https://gitlab.freedesktop.org/linux-media/media-committers/-/commit/2ab7f87a7f4bf392e3836a2600f115a1baa1415c
-> https://lore.kernel.org/linux-media/20250407-b4-media-comitters-next-25-03-13-ov02e10-v4-0-211e3e6fae90@linaro.org/
->
-> Working for me included in this series:
->
-> - USB
->    Both Type-C USB ports
->    Type-A port
->    Fingerprint reader
-> - WiFi
-> - Bluetooth
-> - RGB Camera
-> - Toucpad, keyboard
-> - Display
->
-> Working for me but not included:
-> - Audio jack
-> - Iris
->
-> Not working:
-> - Speaker output
->    Still WiP haven't touched this in a while
->
-> - Battery
->    Dell has its own Embedded Controller likely from the x86 platform reused
->    on Qcom which we need to reverse engineer or get some information on to
->    make faster progress on.
->
-> - cDSP
->    Haven't tried to bring this up.
->
-> - EVA
->    No driver haven't tried it.
->
-> - Bugs
->    Occasionally when resuming I get a fencing error with hyperlock and
->    freedreno, TBH it looks like something in the GPU or SMMU according to
->    Rob Clark: https://pastebin.com/AWjCyaap
->
->    Ath12k has been splatting for me up to 6.14 when removing a SSID.
->    I switched on ath12k debug when going to 6.15 and predictably couldn't
->    reproduce the bug, either because the timings have changed as a result
->    of Heisenbugging or because a fix has been slipped into ath12k.
->
->    Other than those two I'm pretty happy with this system.
->
->    The DTS is based on Aleksandrs Vinarskis XPS, Lenovo T14s and Qcom CRD.
->   
->
-> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Anything works. Maybe let it be as is.
 
-Hi,
+> > > > > +static struct iommufd_viommu_ops tegra241_cmdqv_viommu_ops = {
+> > > > > +	.destroy = tegra241_cmdqv_destroy_vintf_user,
+> > > > > +	.alloc_domain_nested = arm_vsmmu_alloc_domain_nested,
+> > > > > +	.cache_invalidate = arm_vsmmu_cache_invalidate,
+> > > > 
+> > > > I see that we currently use the main cmdq to issue these cache
+> > > > invalidations (there's a FIXME in arm_vsmmu_cache_invalidate). I was
+> > > > hoping for this series to change that but I'm assuming there's another
+> > > > series coming for that?
+> > > > 
+> > > > Meanwhile, I guess it'd be good to call that out for folks who have
+> > > > Grace and start trying out this feature.. I'm assuming they won't see
+> > > > as much perf improvement with this series alone since we're still using
+> > > > the main CMDQ in the upstream code?
+> > > 
+> > > VCMDQ only accelerates invalidation commands.
+> > > 
+> > 
+> > I get that.. but I see we're using `arm_vsmmu_cache_invalidate` here
+> > from arm-smmu-v3-iommufd.c which seems to issue all commands to
+> > smmu->cmdq as of now (the code has a FIXME as well), per the code:
+> > 
+> > 	/* FIXME always uses the main cmdq rather than trying to group by type */
+> >         ret = arm_smmu_cmdq_issue_cmdlist(smmu, &smmu->cmdq, last->cmd,
+> > 					  cur - last, true);
+> > 
+> > I was hoping this FIXME to be addressed in this series..
+> 
+> Oh, that's not related.
+> 
+> The main goal of this series is to route all invalidation commands
+> to the VCMDQ HW. And this is where Grace users can see perf gains
+> mentioned in the cover letter or commit log, from eliminating the
+> VM Exits at those most frequently used commands.
+> 
+> Any non-invalidation commands will just reuse what we have with the
+> standard SMMU nesting. And even if we did something to that FIXME,
+> there is no significant perf gain as it's going down the trapping
+> pathway, i.e. the VM Exits are always there.
+> 
+> > > That is for non-invalidation commands that VCMDQ doesn't support,
+> > > so they still have to go in the standard nesting pathway.
+> > > 
+> > > Let's add a line:
+> > > 	/* for non-invalidation commands use */
+> > 
+> > Umm.. I was talking about the cache_invalidate op? I think there's some
+> > misunderstanding here? What am I missing?
+> 
+> That line is exactly for cache_invalidate. All the non-invalidation
+> commands will be sent to he arm_vsmmu_cache_invalidate() by VMM, as
+> it means.
+> 
+> Or perhaps calling them "non-accelerated commands" would be nicer.
 
-Just noticed that the device name is misspelled in a few occasions, need 
-to s/inspirion/inspiron/. DT filename is wrong, model name in DT is 
-wrong, one of commit messages is wrong. Firmware paths and compatible in 
-DT are correct.
-Otherwise, is the plan to wait for CAMSS to land, and then land this 
-one, or perhaps the rest of it can go in already? There is also Latitude 
-that was recently submitted which is very similar, perhaps those should 
-be unified (CC: Val), probably easier to do if Inspiron lands first.
+Uhh okay, so there'll be a separate driver in the VM issuing invalidation
+commands directly to the CMDQV thus we don't see any of it's part here?
 
-Regards,
-Alex
+AND for non-invalidation commands, we trap out and the VMM ends up
+calling the `cache_invalidate` op of the viommu?
 
-> ---
-> Bryan O'Donoghue (3):
->        dt-bindings: arm: qcom: Add Dell Inspiron 14 Plus 7441
->        arm64: dts: qcom: Add support for X1E80100 Dell Inspirion 14 Plus 7441
->        arm64: dts: qcom: x1e80100-dell-inspiron14-7441: Switch on CAMSS RGB sensor
->
->   Documentation/devicetree/bindings/arm/qcom.yaml    |    1 +
->   arch/arm64/boot/dts/qcom/Makefile                  |    1 +
->   .../qcom/x1e80100-dell-inspirion-14-plus-7441.dts  | 1490 ++++++++++++++++++++
->   3 files changed, 1492 insertions(+)
-> ---
-> base-commit: f7570505263aff2b63142f0d68fa607cd60eb060
-> change-id: 20250417-qcom-linux-arm64-for-6-16-dell-inspiron14p-ed68cd65ebad
->
-> Best regards,
+Is that understanding correct?
+
+> 
+> Thanks
+> Nicolin
+
+Thanks
+Praan
