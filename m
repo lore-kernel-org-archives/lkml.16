@@ -1,155 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E70DF49;
-	Tue,  1 Jul 2025 14:23:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A7F21A0B0E
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 14:23:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751379785; cv=none; b=EDUniGrPUmX/f6u/CCX2Qa/VV2nT4W8G62+wDo8YXVGB7ekr4v8Ek3obfIpedb2Fw0dLzMB/FlmTaEeLCiRLAulem5Hy8oHN4BtRW6nmcEy/Yo/U3/3StpeUo/PBoN8sZd9sBv0GINjW6fX1YamS6MALXIyZSdlWDaxx6hUTx1Q=
+	t=1751379837; cv=none; b=C7AoZ+Re12Rw5iaLtVM0ebDjyGvQT67kphXIPuCchQYQmbfkFCFynL0d5DTQWYic25Ys2U84+LwOkui/TpNa5TRZ3lzZegFsedrMOOJTScFulK/xHYIadSH0e0dW91RMj2YddbkXB41/rg1RRmgxeycTug7giOVfpJnkaO+LH8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751379785; c=relaxed/simple;
-	bh=19HqR+S7DS9HWEs5GXmKKrr14rS+lQ2AvqDBzeElGvE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZTlBZX6fBmdsGAIpCY7yMfy72jSRoBLl3ez130dIAWscSbRTidWRSTG1Rfp99/ceXWKdbZugVKvFuGwwU0vJExTOBh4hPbI7Zt8NvwA1PbklVK8utawsfsBJlXin0oASpgFg7pbwdDGXk3w9aakxA0XYUY3SQIK3ddMupKSL4d0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cvrmez41; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751379837; c=relaxed/simple;
+	bh=+VE4TCzGJURgbHPgDIzyyLaVIBkWuI3nGjmFanUKRSY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gZACpMIcoma/yOS5tvIvyL9l1reDAhkgTtpx1zJbuvmsCUwOr8FwpuAbL2kr2etryVOYvrYJFJdufFH87Wt7BQalJv0eqd4vn8mYQeWWHbZMN9/1MY5c94e9MtrKTZ77e5LOHOolk+6H3Qn/fFz0lGy6WEdcF86zYKQIGMa0nBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ViIFP6P7; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cvrmez41"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33D87C4CEEB;
-	Tue,  1 Jul 2025 14:23:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751379785;
-	bh=19HqR+S7DS9HWEs5GXmKKrr14rS+lQ2AvqDBzeElGvE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Cvrmez41qnkAH4K2wnjByJW22VMfh7vqEHdljJD1cnJpJfew8eYrvMAgzrBGpSvpH
-	 cM9Ydck+E//ShuSKBu9pruEb9+H7QhUtBsB+dBl00FOjh8bbASF60fmybGfWR7FxBj
-	 HQYxQCSgCK6YaYZd6w1Vol4LS2EUfzHuwC4tSXYrc51/SFur1rKPW33Z4cHVNWEj7q
-	 e+jAKAZueqk9uhdMRJnwBD5kTHxPyl4mZMCWExP1F1zfKNTcrZTy7GGwZ/d2+FERwD
-	 yw8slrHclpblB1giCbUxLFGXiIGFxFV3gFAlraKiWIlPAsonBtEjIalBykzv7RYDo6
-	 uaN25wCemp11Q==
-Date: Tue, 1 Jul 2025 10:23:03 -0400
-From: Sasha Levin <sashal@kernel.org>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-api@vger.kernel.org,
-	workflows@vger.kernel.org, tools@kernel.org
-Subject: Re: [RFC v2 01/22] kernel/api: introduce kernel API specification
- framework
-Message-ID: <aGPvR-Mj6aR4Y8B5@lappy>
-References: <20250624180742.5795-1-sashal@kernel.org>
- <20250624180742.5795-2-sashal@kernel.org>
- <874ivxuht8.fsf@trenco.lwn.net>
- <20250701002058.1cae5a7e@foz.lan>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ViIFP6P7"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-450cfb79177so34300205e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 07:23:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751379834; x=1751984634; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=toLt0hf1fAXobiMf5wHPfZnxScTMui7YVm7oyxfvX3I=;
+        b=ViIFP6P7m88NBC0xuj1n6ahbaZBfcPHu9Zz5VL9GAmMcAxB3YIed8OqYu285/xG8hR
+         9iYYBQr6KRsTVkjHe6gTMb2wwoHTdSbVlc9HWycsfXYc62lhqYWUTxCOqkHm/sL6OnZu
+         jNNekPQ1Nwr3ZIqqxdV+Mkd7mlskBtW5KxfPmvscbJxeWwQ3UcWmtgoVb1Upj6yX09wO
+         a5nh7+B7sIfqsNWNTyFXMu5a5tarKY2SkXYGcbtTD5Ox3D4eELWzDKAHqYXBGnKoZY74
+         vC7OlgShbhskIbCun1Kz7/wDyJ/JI8k621IESa0Tb7qR3x/jqrU7XvLFrM6eDIdZ6gIP
+         +Aag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751379834; x=1751984634;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=toLt0hf1fAXobiMf5wHPfZnxScTMui7YVm7oyxfvX3I=;
+        b=BhpVan07DZyqhBLxEs9IAFojN0WE43decBMm172TZ596X1/ngYWm17rFh9g5Dw5SDW
+         08fyUjZeQwRwQujh6Y3gXtPL9IZGYyHcZQrWIu87kN2fW9TpAj0vAD+wmbt1iz7xpFvN
+         daVP//VHfKyQ9/ae0BGvSPieJlKwPBU7ggOKwcGDN8Qv2T9nCc5N78Y+YirU0NyFBz+P
+         M5Gjupcxgj0KyPCHwRQwj42k+62mvCjCLLQ0Lo3gwwpRSS2+ODhqPi3qyG3DqDyj80C4
+         PK1mzlsQXbeGclcKs2K4oMb23/aPSAPE5onhGjflSDVK2bqhEKSAxa9VFnxK4K1AMBYr
+         l+Mg==
+X-Forwarded-Encrypted: i=1; AJvYcCVB929vk6FZBl28gMZjNI9PRdcLG4dsLC66qYoALf/L+woNwy2aCypbFtewo4qGY8hnwMr7Leis7PsyCzM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFPl8CeqOeNRVj86o144i6vsqQESwkKJxVHGIPg4npWbR0/XI9
+	I+7i4f8fSJc0gQUvqDz95aeJOqw2JWx1F0Q51vc6iT/xUibGdy9RsP0Qlj7doTHu4vwjsE6/rtL
+	HWudA24c=
+X-Gm-Gg: ASbGncvEkuaUvO9i72418QdkIvPJ91zQShtTo6Kf354Xjl5/e/29VEIIC6lJZZZXx9n
+	Zk3ePVKgoG507E64wTxKnyQ61wQeyVy1/vXcbNC2aBOTAYsBKtUQX0bwFF8mgHXAP0oXWsHYFfo
+	zZrSYKevIdRSqueSIBwTQXi8QCBBS3SPL7gGjw+RL/UlK/4+KHh24Sc9PdEHjHMTWlfsMk0cfMD
+	TWwHbRdEmuWzpjUde2WABtkLVH7NLrlwEqlhmuKmomtXyy4PjjfJBBinEw556aWJEeGhnKC6pku
+	i1k3S82Yjzm/vRrILTULyaSMdKc3Wa6eh90qzikz4gtDiW9Pe6eA9aMENYnCc3Oo+/5YpD3Vibv
+	HBr//1aWfoXhvfmEMkmUKN7tg1Y/wtyo292xPC1yFCGuQW7FaStQ0pWuGyI+VC1Bc0B+ZDFvqbG
+	iHarGZZQ==
+X-Google-Smtp-Source: AGHT+IGTLLbODxjuif7KWW06klmOqjZTL5I9Y50BzMnkjWGM8tznX7/PwBgougIazzrFxhs0+pT6Dw==
+X-Received: by 2002:a05:600c:8505:b0:441:b3f0:e5f6 with SMTP id 5b1f17b1804b1-4538ee62345mr143258795e9.25.1751379833739;
+        Tue, 01 Jul 2025 07:23:53 -0700 (PDT)
+Received: from green.cable.virginm.net (nail-04-b2-v4wan-166353-cust693.vm26.cable.virginm.net. [82.35.130.182])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a3fe0efsm165504815e9.24.2025.07.01.07.23.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 07:23:53 -0700 (PDT)
+From: Terry Tritton <terry.tritton@linaro.org>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Shuah Khan <shuah@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
+Cc: ttritton@google.com,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Terry Tritton <terry.tritton@linaro.org>,
+	Wei Gao <wegao@suse.com>
+Subject: [PATCH v2] selftests/futex: Convert 32bit timespec struct to 64bit version for 32bit compatibility mode
+Date: Tue,  1 Jul 2025 15:23:13 +0100
+Message-Id: <20250701142313.9880-1-terry.tritton@linaro.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250701002058.1cae5a7e@foz.lan>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 01, 2025 at 12:20:58AM +0200, Mauro Carvalho Chehab wrote:
->Em Mon, 30 Jun 2025 13:53:55 -0600
->Jonathan Corbet <corbet@lwn.net> escreveu:
->
->> Sasha Levin <sashal@kernel.org> writes:
->>
->> > Add a comprehensive framework for formally documenting kernel APIs with
->> > inline specifications. This framework provides:
->> >
->> > - Structured API documentation with parameter specifications, return
->> >   values, error conditions, and execution context requirements
->> > - Runtime validation capabilities for debugging (CONFIG_KAPI_RUNTIME_CHECKS)
->> > - Export of specifications via debugfs for tooling integration
->> > - Support for both internal kernel APIs and system calls
->> >
->> > The framework stores specifications in a dedicated ELF section and
->> > provides infrastructure for:
->> > - Compile-time validation of specifications
->> > - Runtime querying of API documentation
->> > - Machine-readable export formats
->> > - Integration with existing SYSCALL_DEFINE macros
->> >
->> > This commit introduces the core infrastructure without modifying any
->> > existing APIs. Subsequent patches will add specifications to individual
->> > subsystems.
->> >
->> > Signed-off-by: Sasha Levin <sashal@kernel.org>
->> > ---
->> >  Documentation/admin-guide/kernel-api-spec.rst |  507 ++++++
->>
->> You need to add that file to index.rst in that directory or it won't be
->> pulled into the docs build.
->>
->> Wouldn't it be nice to integrate all this stuff with out existing
->> kerneldoc mechanism...? :)
->
->+1
->
->Having two different mechanisms (kapi and kerneldoc) makes a lot harder
->to maintain kAPI.
+Futex_waitv can not accept old_timespec32 struct, so userspace should
+convert it from 32bit to 64bit before syscall in 32bit compatible mode.
 
-I hated the idea of not reusing kerneldoc.
+This fix is based off [1]
 
-My concern with kerneldoc was that I can't manipulate the
-information it stores in the context of a kernel build. So for example,
-I wasn't sure how I can expose information stored within kerneldoc via
-debugfs on a running system (or how I can store it within the vmlinux
-for later extraction from the binary built kernel).
+Link: https://lore.kernel.org/all/20231203235117.29677-1-wegao@suse.com/ [1]
 
-I did some research based on your proposal, and I think I was incorrect
-with the assumption above. I suppose we could do something like the
-following:
+Signed-off-by: Wei Gao <wegao@suse.com>
+Signed-off-by: Terry Tritton <terry.tritton@linaro.org>
+---
+ .../testing/selftests/futex/include/futex2test.h  | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-1. Add new section patterns to doc_sect regex in to include API
-specification sections: api-type, api-version, param-type, param-flags,
-param-constraint, error-code, capability, signal, lock-req, since...
-  
-2. Create new output module (scripts/lib/kdoc/kdoc_apispec.py?) to
-generate C macro invocations from parsed data.
-
-Which will generate output like:
-
-    DEFINE_KERNEL_API_SPEC(function_name)
-        KAPI_DESCRIPTION("...") 
-        KAPI_PARAM(0, "name", "type", "desc")
-            KAPI_PARAM_TYPE(KAPI_TYPE_INT)
-            KAPI_PARAM_FLAGS(KAPI_PARAM_IN)
-        KAPI_PARAM_END
-    KAPI_END_SPEC 
-
-3. And then via makefile we can: 
-    - Generate API specs from kerneldoc comments
-    - Include generated specs conditionally based on CONFIG_KERNEL_API_SPEC
-
-Allowing us to just have these in the relevant source files:
-    #ifdef CONFIG_KERNEL_API_SPEC
-    #include "socket.apispec.h"
-    #endif
-
-
-In theory, all of that will let us have something like the following in
-kerneldoc:
-
-- @api-type: syscall
-- @api-version: 1
-- @context-flags: KAPI_CTX_PROCESS | KAPI_CTX_SLEEPABLE
-- @param-type: family, KAPI_TYPE_INT
-- @param-flags: family, KAPI_PARAM_IN
-- @param-range: family, 0, 45
-- @param-mask: type, SOCK_TYPE_MASK | SOCK_CLOEXEC | SOCK_NONBLOCK
-- @error-code: -EAFNOSUPPORT, "Address family not supported"
-- @error-condition: -EAFNOSUPPORT, "family < 0 || family >= NPROTO"
-- @capability: CAP_NET_RAW, KAPI_CAP_GRANT_PERMISSION
-- @capability-allows: CAP_NET_RAW, "Create SOCK_RAW sockets"
-- @since: 2.0
-- @return-type: KAPI_TYPE_FD
-- @return-check: KAPI_RETURN_ERROR_CHECK
-
-How does it sound? I'm pretty excited about the possiblity to align this
-with kerneldoc. Please poke holes in the plan :)
-
+diff --git a/tools/testing/selftests/futex/include/futex2test.h b/tools/testing/selftests/futex/include/futex2test.h
+index ea79662405bc..6780e51eb2d6 100644
+--- a/tools/testing/selftests/futex/include/futex2test.h
++++ b/tools/testing/selftests/futex/include/futex2test.h
+@@ -55,6 +55,13 @@ struct futex32_numa {
+ 	futex_t numa;
+ };
+ 
++#if !defined(__LP64__)
++struct timespec64 {
++	int64_t tv_sec;
++	int64_t tv_nsec;
++};
++#endif
++
+ /**
+  * futex_waitv - Wait at multiple futexes, wake on any
+  * @waiters:    Array of waiters
+@@ -65,7 +72,15 @@ struct futex32_numa {
+ static inline int futex_waitv(volatile struct futex_waitv *waiters, unsigned long nr_waiters,
+ 			      unsigned long flags, struct timespec *timo, clockid_t clockid)
+ {
++#if !defined(__LP64__)
++	struct timespec64 timo64 = {0};
++
++	timo64.tv_sec = timo->tv_sec;
++	timo64.tv_nsec = timo->tv_nsec;
++	return syscall(__NR_futex_waitv, waiters, nr_waiters, flags, &timo64, clockid);
++#else
+ 	return syscall(__NR_futex_waitv, waiters, nr_waiters, flags, timo, clockid);
++#endif
+ }
+ 
+ /*
 -- 
-Thanks,
-Sasha
+2.39.5
+
