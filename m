@@ -1,150 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B0C1DC994;
-	Tue,  1 Jul 2025 11:38:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F22F27147E
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 11:38:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751369902; cv=none; b=PkvgXZwntincMFrU0wMpuzAbex4sU5dHgdItr+THwPVnnoPi0mdMZtXd0lbomG1ObrKcxFVZnVmL75FcAdo6gQmMhEsGFIld2G/jsa0EuaukCV0ETh5+lTZtF1djUPGL5OfhhLDvDX+KvrrNiCahK42aeiOC1DAe7lE+dZlvEio=
+	t=1751369921; cv=none; b=JSLd23l+625wCjeh0foFHzDJjpaBWB14mA3mlAqGkF8nER1qeilFHN6GNTZnIu+GEjoQoxApoprwTelJ2j3LvWCcn3RP/J0o6IBxwzYd7JqaU0kBsi6BAF/Xxcp6yjHql1SInYZNYPEVhzM1GPzUOvNic3q1J93aAJU0sLNeFQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751369902; c=relaxed/simple;
-	bh=W2YdMpACO4BaBXSKODcbkQsYQod9zXLEzofKC/X1Img=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ogIlIaEZX8EJs0Bz+a4gh/fXQkxtcQ2hqBkDkZAkqJcLwyAKa3gG5A75kjxD6OR+3UIR5KFAyZ50uEStbTijqcpRT0YuIIoPGMeY+JNdpP0PFRn3cruucFL2c6h4ebNdhcuT/afz4ZfgqLyx1P7vFe8ZyoZ51XWlfhHMbrzWENc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UpEdGSX1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751369921; c=relaxed/simple;
+	bh=MRGed7xw7bDMGfGfErP80rD1qdpqu6iPV4GvAe87kSk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YntUV70X03e3+Rga5KT2UfqZZcQjrOMmLyv9ofwQ4YVsQYvMA2d5y+LWU5XaFrhnm2qFZ9pJtgTNvU7H4eLTn7wSAx2jdypolipOzvRwYxiwrMX01DiMcBtnt8EZ/zPedWWSCbu/QBneNRxhcKCCu7vJqoZAARnNR0yV/1rPGSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Z8CM+gFj; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UpEdGSX1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B84A6C4CEEB;
-	Tue,  1 Jul 2025 11:38:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751369902;
-	bh=W2YdMpACO4BaBXSKODcbkQsYQod9zXLEzofKC/X1Img=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UpEdGSX1HoYiHuTpcKRrIezUWnm9ranQC6z/ZWdt/3lYWCupKcFnPQoTqyRQr9n/p
-	 iRFDao1PB9O5zjxcdaOGm/6aftMGGPrHeT6A3JR5DgjKdd8L2gd9in4LwK9b9Yiyb7
-	 rQbDK7pRGprWcoiaErfNa4e9Z5moVliTB+DLcRm8fm9e2bY4bfEGGBy9B0IA/9vpxt
-	 Ra8fPm9jCV0cSAUzUbCN8rOxik4Ha+Rm9/DRV1NbX4deBXqZnET+ES931PDRS2TzNS
-	 0xNwkkVHsbpIAMGfS7Pvilp+IdXCo8yfknMshXRW9ds0JMFK+JJnOS8nmHx9OmMCJl
-	 0OkT+3YxFRCPA==
-Message-ID: <466b4352-91b9-4259-94b0-b8228d8282e9@kernel.org>
-Date: Tue, 1 Jul 2025 13:38:11 +0200
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Z8CM+gFj"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a52878d37aso722055f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 04:38:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1751369917; x=1751974717; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ymO1MfwHnBBBPyU7fd6QnoMDVNEmvub8Pdh59UQCgKc=;
+        b=Z8CM+gFj1ToZmBJpk+EE2nR5Nbl1Tlx+KXy1ipifHkxsZLgYVE0/PKIt6T0PYV5bs2
+         9yHpUuRxKhtw3h6WEH7jt2Y+FixPYK8oxRZMDw9kd6Cww2WnSsdxnUnJEx+asusyRMA5
+         taz8cyuughRS/dXBXoviOHSKPSE6TilRCCZloHdFWyvbuKYdYaEYTUR5JB8NN3rJ9muI
+         z0FnRZTpyVEaEF2OEsWlsi95Lpd3UqtsgVNFO/QmRX1Mz8jQJs+dFc/SiftHKa7Usv1g
+         7+NUBnWaAKfCvvXE6LMxzTytl6ILMadhRKhCb1pFtQiN7svH9me1SoXdy9/j17z24YER
+         7Z2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751369917; x=1751974717;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ymO1MfwHnBBBPyU7fd6QnoMDVNEmvub8Pdh59UQCgKc=;
+        b=K4Jt1T5SPc3NF3FCf5I9lVusFGAPneJr2n1aZqc5fORyy+pEeRsY9o+d2Dd0MHJGIr
+         5Z+42Zk91qsy+buG1WZWmY8PW1pUogn/qwe72TajArJU6BUqq0Cf1TH5l6bOZMgn4aTn
+         SoGJmCGxTrAdiZAhHAPimlq3CmT/f4rQNnoNZWpJOkZEUI7KO+mZ2XO5HETc1iIEy7Dc
+         bnwc7qG64N7FkHbxh4AEmGgCCX6XMLFVRLevlFLZqA1yFktBPZ7aD2kNU/NncDwKw3z+
+         ZMCpq5OUUcxmdQk6HYRcFKOiO/oNj1z66tJGQDVtaIoPgOjHvbjjQz095b8/tnRS+3iQ
+         Fulg==
+X-Forwarded-Encrypted: i=1; AJvYcCXAvjTdGtvsSHprynGA8LNBrPWe0eLzxpjv+QV8YBjrNVvsKcifHSW1E8UXq1CfNjuTUUWhzoH1CE5/weQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpPvCBm8+tGggHPoLFilkdSyGQTu0z+Fl37+D7cdcyPOGUivHp
+	PEpdvSsfZL7GVE3fxssPcRsj+OwBL7SzyYi/AbN88M2ni6Yeel6nxKLbQ4gtUshWiq4=
+X-Gm-Gg: ASbGnctrE24LFoxDXmMD5Y7hjD88Cc/HgjEfU1gGD5A0ug8d0h4tvApZx4gZV9B8yoa
+	/G8YC7vhBYQr4OdRRs8YAJXs9ASiFk7Nxq/mPiUAJoDK1b04ypvO98frZXEkQuGAjpAjENRsUV6
+	pT/Jjt2JEvpJnZSvCIA/ibjSlSHFTFcFRFgCXda/RHBuku3OTTXbi3+u6obgUPZzKnHBnyGCKIC
+	158bACWMPQNzGy+cT7YRspRzvUjpLfz4mFLoW+s6VxPQ2/vqbiU5dJcywZVKrgVaArjIxuLsbuN
+	DV0o0rgk4zo27d+DTWogyXN0fUBPAXe8vJDRPFjfFhTmdJ5x8trYTwkACuYP32bp1yljTA==
+X-Google-Smtp-Source: AGHT+IG9vsd/nXjpNbwtU/s2aJdhnIjVad8L+eqckZnv61f/xwU4i88827dTG+UKpEi8bSgHnVlcLw==
+X-Received: by 2002:a05:6000:230f:b0:3a4:dc42:a09e with SMTP id ffacd0b85a97d-3af240989edmr889233f8f.5.1751369917429;
+        Tue, 01 Jul 2025 04:38:37 -0700 (PDT)
+Received: from mordecai.tesarici.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7e78e8sm13346823f8f.19.2025.07.01.04.38.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 04:38:37 -0700 (PDT)
+Date: Tue, 1 Jul 2025 13:38:33 +0200
+From: Petr Tesarik <ptesarik@suse.com>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Robin Murphy <robin.murphy@arm.com>,
+ Marek Szyprowski <m.szyprowski@samsung.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Keith Busch <kbusch@kernel.org>, Jens Axboe
+ <axboe@kernel.dk>, Bagas Sanjaya <bagasdotme@gmail.com>, "open
+ list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list
+ <linux-kernel@vger.kernel.org>, "open list:MEMORY MANAGEMENT"
+ <linux-mm@kvack.org>
+Subject: Re: [PATCH v2 4/8] docs: dma-api: add a kernel-doc comment for
+ dma_pool_zalloc()
+Message-ID: <20250701133833.4060f406@mordecai.tesarici.cz>
+In-Reply-To: <5a997777-fd14-40e1-919b-2e61a6e8d570@infradead.org>
+References: <20250627101015.1600042-1-ptesarik@suse.com>
+	<20250627101015.1600042-5-ptesarik@suse.com>
+	<5a997777-fd14-40e1-919b-2e61a6e8d570@infradead.org>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.50; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/5] arm64: dts: imx943: Add LVDS/DISPLAY CSR nodes
-To: Peng Fan <peng.fan@nxp.com>, Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Abel Vesa <abelvesa@kernel.org>,
- Frank Li <frank.li@nxp.com>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>
-References: <20250701-imx95-blk-ctl-7-1-v1-0-00db23bd8876@nxp.com>
- <20250701-imx95-blk-ctl-7-1-v1-5-00db23bd8876@nxp.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250701-imx95-blk-ctl-7-1-v1-5-00db23bd8876@nxp.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 01/07/2025 09:04, Peng Fan wrote:
-> Add nodes for LVDS/DISPLAY CSR.
+On Sat, 28 Jun 2025 12:04:04 -0700
+Randy Dunlap <rdunlap@infradead.org> wrote:
+
+> On 6/27/25 3:10 AM, Petr Tesarik wrote:
+> > Document the dma_pool_zalloc() wrapper.
+> > 
+> > Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+> > ---
+> >  Documentation/core-api/mm-api.rst | 2 ++
+> >  include/linux/dmapool.h           | 8 ++++++++
+> >  2 files changed, 10 insertions(+)
+> > 
+> > diff --git a/Documentation/core-api/mm-api.rst b/Documentation/core-api/mm-api.rst
+> > index af8151db88b28..a61766328ac06 100644
+> > --- a/Documentation/core-api/mm-api.rst
+> > +++ b/Documentation/core-api/mm-api.rst
+> > @@ -97,6 +97,8 @@ DMA pools
+> >  .. kernel-doc:: mm/dmapool.c
+> >     :export:
+> >  
+> > +.. kernel-doc:: include/linux/dmapool.h
+> > +
+> >  More Memory Management Functions
+> >  ================================
+> >  
+> > diff --git a/include/linux/dmapool.h b/include/linux/dmapool.h
+> > index 06c4de602b2f3..c0c7717d3ae7b 100644
+> > --- a/include/linux/dmapool.h
+> > +++ b/include/linux/dmapool.h
+> > @@ -60,6 +60,14 @@ static inline struct dma_pool *dma_pool_create(const char *name,
+> >  				    NUMA_NO_NODE);
+> >  }
+> >  
+> > +/**
+> > + * dma_pool_zalloc - Get a zero-initialized block of DMA coherent memory.
+> > + * @pool: dma pool that will produce the block
+> > + * @mem_flags: GFP_* bitmask
+> > + * @handle: pointer to dma address of block
+> > + *
+> > + * Same as @dma_pool_alloc, but the returned memory is zeroed.  
 > 
-> Add ldb_pll_div7 node which is used for clock source of DISPLAY CSR.
+>     * Same as dma_pool_alloc(), but ...
 > 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/imx943.dtsi | 34 +++++++++++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
+> '@' is for function arguments.
+
+Oops. Somehow sneaked in...
+
+> With that change:
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/imx943.dtsi b/arch/arm64/boot/dts/freescale/imx943.dtsi
-> index 45b8da758e87771c0775eb799ce2da3aac37c060..cf67dba21e4f6f27fff7e5d29744086e4ec9c021 100644
-> --- a/arch/arm64/boot/dts/freescale/imx943.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx943.dtsi
-> @@ -3,6 +3,8 @@
->   * Copyright 2025 NXP
->   */
->  
-> +#include <dt-bindings/clock/nxp,imx94-clock.h>
-> +
->  #include "imx94.dtsi"
->  
->  / {
-> @@ -145,4 +147,36 @@ l3_cache: l3-cache {
->  			cache-unified;
->  		};
->  	};
-> +
-> +	ldb_pll_pixel: ldb_pll_div7 {
+> Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+> Tested-by: Randy Dunlap <rdunlap@infradead.org>
 
-Not a DTS coding style.
+Do I have to submit a v3 then?
 
-Please use name for all fixed clocks which matches current format
-recommendation: 'clock-<freq>' (see also the pattern in the binding for
-any other options).
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/clock/fixed-clock.yaml?h=v6.11-rc1
-
-> +		compatible = "fixed-factor-clock";
-> +		#clock-cells = <0>;
-> +		clocks = <&scmi_clk IMX94_CLK_LDBPLL>;
-> +		clock-div = <7>;
-> +		clock-mult = <1>;
-> +		clock-output-names = "ldb_pll_div7";
-> +	};
-
-
-
-Best regards,
-Krzysztof
+Petr T
