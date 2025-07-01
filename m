@@ -1,79 +1,100 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4727722A7E9
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 08:51:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 193BD1465A1;
+	Tue,  1 Jul 2025 08:52:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751359885; cv=none; b=WcUsWIlJpdyVgk820oKwOuel5JGey+Mnrwfk3q7rdIE31nJ2byexGtrxUgi0WgnsNbi21nQODEkh3vSSO7T7U78CUNbjWrdzI10rr6vxz+E2c37l83YqZRY0Xj/EIEJcPkG6Mzt7q4eK2n4phzoANTFYC39JCh8pqyP8KSogr8U=
+	t=1751359926; cv=none; b=DlhDJcpnTYzKcySIfgHNYtZSP8NnQwwEJZXDKFAenHe3UAL4TDsKk37eK3uPLruKO17d4CxGG814TUMqSAslW9YpdFIUXCu1HHPptD3SfzFrtssODBe4JirP62+ckslsa/YLRdqeiO2ZTI8jY3RfXMY53TTWDmxHQ7KFDdrLT34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751359885; c=relaxed/simple;
-	bh=a8dUA8AQN4IiNoUrmJw0vwsYuwyniVP6q+4ut/6dFT0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qLyY90UkGSg8Xkcl0++0xNvLrncSFzCpO1b5jF1W+eTalirjqBzx5pUJAiS6UMDM/PJOkS0EmN17G8+qZKkX77lJp7J2RlescEA1Jqib4QnLvBdgy9A1BVs80dv29e3jNm3Crd4QPw4A2hhCGGAdTq5AgMa7JAr7udFXLIXMIYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uWWhi-0006IB-Mc; Tue, 01 Jul 2025 10:51:02 +0200
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uWWhg-006F2S-27;
-	Tue, 01 Jul 2025 10:51:00 +0200
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uWWhb-0004aR-1k;
-	Tue, 01 Jul 2025 10:50:55 +0200
-Message-ID: <aafdb0e9dee2041ae64b2fe8677b4b3d45401bc8.camel@pengutronix.de>
-Subject: Re: [PATCH v2 0/4] drm/bridge: samsung-dsim: Stop controlling vsync
- display FIFO flush in panels
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Inki Dae <inki.dae@samsung.com>, Jagan Teki
- <jagan@amarulasolutions.com>,  Marek Szyprowski <m.szyprowski@samsung.com>,
- Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
- Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
- <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>,  Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>,  Simona Vetter <simona@ffwll.ch>, Artur Weber
- <aweber.kernel@gmail.com>, Jessica Zhang <quic_jesszhan@quicinc.com>,
- Jessica Zhang <jessica.zhang@oss.qualcomm.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	kernel@pengutronix.de
-Date: Tue, 01 Jul 2025 10:50:55 +0200
-In-Reply-To: <20250627-dsi-vsync-flush-v2-0-4066899a5608@pengutronix.de>
-References: <20250627-dsi-vsync-flush-v2-0-4066899a5608@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1751359926; c=relaxed/simple;
+	bh=NWPSylHlVL5xApfhc5FegYDDQBDT/NsQf3kdjmaUKHc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H1Ey3hb/TbmgIXiXdFFrkWqY6+csZPumEkcoIik4MJ7iwwLeYgh/HtyUHP182X/sN0mYiW8OuMytFkx+Dfoj6LhPHCx/GG1pdpiNX1qb6T1kgJM+Ts6V67IWJ2h+v4fkiOWVRcikaFZ6MMT/gkC7y189UjvgTl9rul6N3YTQxmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PmjZb62o; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PmjZb62o"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-747fc77bb2aso2823719b3a.3;
+        Tue, 01 Jul 2025 01:52:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751359924; x=1751964724; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=88KwzuOUdx+VhG7N8ukidarGnCXzhZ74KKnQWyukHXo=;
+        b=PmjZb62o4sc7OCyQtYJ7I3jT8fhtd1vHWjzcWtzndFN09ka/uJfZwUNWhV+fStqFmU
+         M4DdWxan2Gs8NAh1NjHR8YRuxWTFbSYaZUjbaAMNEYh3yqlCp9qjTX+aOiXY5JdE/9ag
+         /UFmqbTTBQV2rtRW9uvFa1B9MqslOD0QOavIkcj82y1yM/OgjmHMkTbJ/cyuHyo9x8C6
+         SwqHa8X6+il6TlHGnyVnTzRIRdi8B3PO9ci3GR7EXQq5Oceye70CUmOh4acL7EKZu4ek
+         KTlIfRBJDd8dGifpMWK/aakEVtCvucP0CswEc2MgFZJS9CCTFdKJbFTaL2e01j7yYTs1
+         tqgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751359924; x=1751964724;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=88KwzuOUdx+VhG7N8ukidarGnCXzhZ74KKnQWyukHXo=;
+        b=mmEx6Uc/B3K28lcXXB08rin6xGVBX8qgXMf0f+96bw9QtC2RtXbhMvSby5oUG0nVjr
+         /UpqsoD/M+3vlog0aa7AaAK52FphQvDnbqBPkrt/EMsgjdckHSNORMP+7Wfzn7W/lOVP
+         0Ib67IRgCMUq3jbolQ2qfLEOsvUC6pKhdtQJdJ5/Ra91FawJjCQ/7HWzsHVWZ+o6GGzp
+         cS+fxnGmPBXmBZ/3tBU3lfxXiZNWhES04HfsEJl2OfwT6d+HgYizxPfXL4OXvM1b5Wtd
+         98uxL2J5D8xSqKNDkF3ofNvnzyN3j+CM5bb1Gje+0H4/v5g1dqE/GwvNjXGCeCTgw1oT
+         QiNg==
+X-Forwarded-Encrypted: i=1; AJvYcCUf/mbopiqY+69h4yPyArVup59NT79FVxPxiRyGe5vuFDt/npm/HZXU0Zncn+VpfmNa0ntGNbLWYrUhxA==@vger.kernel.org, AJvYcCVpjnN6JW9ssp9da5mGNLo366cIuUqheqmvSQe0njXk+vb0EM0AtV6T0TLoShyV1EReF8W2fQdioUyw6xAF@vger.kernel.org
+X-Gm-Message-State: AOJu0YysSqvmD7CC5wXNlpPpm2MF3LCRJ+TgGpOYzntmwKxIlklIS4RL
+	q8mQNAzSm1JYV/SyBgT8jXuFrLg/OD4JMRCnRr2dpvXBBBO4QB0TtPyN
+X-Gm-Gg: ASbGnctwBfhKvz6MPnjRXpfxSkuDlCBTwy5ckVJFsiE+kJDFJ5WdpOJEfWPvp37x8T+
+	ns+iDJca9EOMebrtGkdAD3g77ta5U0QXy/RksFFrjz9+mq1c3FLosXkPH3W8T6FrA3P3pva295Q
+	vQiuE5M1enkBkpKEM9hilYSk1EdNIs5MGYDlc3WRWh3bTlEcu/OnwnqPqs36mmLbafOiffeQyoo
+	eNCMMDHP9CHosdVXYgcafcoFlKQ4NAvLBPspr8eFFz5Ez5BRdh3cJ44l0rmQFWAkBjHcPqKn+dN
+	NHtp8yLsDdh54RwNQGtBdIkwHYsrdrdNnUIMa5er9wlL6exwKq4gxZY=
+X-Google-Smtp-Source: AGHT+IHxISR9hyQ+YgkO2UyVgvCjizdx9FY+4l1HiTDD+Xq2hunYsnuQWOfVSy1cXwISnEW95/tslg==
+X-Received: by 2002:a05:6a20:9e47:b0:21f:568c:713a with SMTP id adf61e73a8af0-220a12e597emr22598713637.17.1751359924244;
+        Tue, 01 Jul 2025 01:52:04 -0700 (PDT)
+Received: from essd ([49.37.221.186])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e3200f13sm10050149a12.72.2025.07.01.01.51.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 01:52:03 -0700 (PDT)
+Date: Tue, 1 Jul 2025 14:21:55 +0530
+From: Abdun Nihaal <abdun.nihaal@gmail.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, andy@kernel.org, 
+	dan.carpenter@linaro.org, lorenzo.stoakes@oracle.com, tzimmermann@suse.de, 
+	riyandhiman14@gmail.com, willy@infradead.org, notro@tronnes.org, 
+	thomas.petazzoni@free-electrons.com, dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, 
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Andy Shevchenko <andriy.shevchenko@intel.com>
+Subject: Re: [PATCH v3 2/2] staging: fbtft: cleanup error handling in
+ fbtft_framebuffer_alloc()
+Message-ID: <cofo3z2thcwxaiec7ko74vqtczzavqtyxv6k67yxngv5647tpg@rsnzb3jhcb6f>
+References: <cover.1751207100.git.abdun.nihaal@gmail.com>
+ <4e062d040806dc29d6124ac0309e741c63f13ac0.1751207100.git.abdun.nihaal@gmail.com>
+ <2025063022-chump-pointless-6580@gregkh>
+ <ezkfonpaubsmw6gr4tutgnjmbhvsuwkhaiya7xozl2szfqi4f3@zmde3sfybyzi>
+ <2025070128-amplifier-hyphen-cb09@gregkh>
+ <CAHp75Vev8r7KZ79=CoUtt0wbx0x3O0ZckesWtQrxs-MBpiBz_Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75Vev8r7KZ79=CoUtt0wbx0x3O0ZckesWtQrxs-MBpiBz_Q@mail.gmail.com>
 
-On Fr, 2025-06-27 at 13:45 +0200, Philipp Zabel wrote:
-> This series enables the vsync flush feature in the samsung-dsim driver
-> unconditionally and removes the MIPI_DSI_MODE_VSYNC_FLUSH flag.
+On Tue, Jul 01, 2025 at 10:03:50AM +0300, Andy Shevchenko wrote:
+> On Tue, Jul 1, 2025 at 8:14 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > I can't "drop" patches as my tree can not be rebased.  Can you send a
+> > fix-up patch instead, OR a revert?
+> 
+> I think the cleaner solution will be revert and v3 patches together as
+> v4. Abdun, can you do that?
 
-Applied to drm-misc-next.
+Sure, I'll send a revert in v4.
 
-[1/4] drm/bridge: samsung-dsim: Always flush display FIFO on vsync pulse
-      commit: a36c533ad3e1b8c0326d665d2d02d2ef7aea8f92
-[2/4] drm/panel: samsung-s6d7aa0: Drop MIPI_DSI_MODE_VSYNC_FLUSH flag
-      commit: f488640e51312fbca02f9229d238a2aed7a8aac9
-[3/4] drm/panel: samsung-s6e8aa0: Drop MIPI_DSI_MODE_VSYNC_FLUSH flag
-      commit: 5c449ddbaba1c807c4674f92e5ebf6a887edb58c
-[4/4] drm/mipi-dsi: Drop MIPI_DSI_MODE_VSYNC_FLUSH flag
-      commit: 12853b279100adc7074b51db23bf62a41cb84cb8
+Regards,
+Nihaal
