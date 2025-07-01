@@ -1,72 +1,46 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323FF2749E6;
-	Tue,  1 Jul 2025 12:23:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7C15273D7E;
+	Tue,  1 Jul 2025 12:23:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751372584; cv=none; b=XrN+8G9ZsqckMwIiDEBUPZROUHaDPJVtSZJO+6yRL1+d6gYFt4tywudGgwBdVT0rsgCBKY19nRfd/NW4H1Y8ApFsauZWKWqTYP2+WO4ffamRgWqJoZL4SeXOxsTD3tlJ8W0tLwByHrtPJlyFvcYyq5m096UNW8Vf8kuqaBDzl6w=
+	t=1751372589; cv=none; b=gYBkPqKpHifEVz3Kku9vBlYbPQoBk2BIu1D4rySpQr+GoCuMm3SOtJyrUw0YFuDmuZH0CbfgX1T1XPFob56JI84vK48CS3U2mOB6MrcaRsh+duzGJ6Hm8DrWpbBeDTIH9EHeBBOTnIfMua2AMwePBBvcBTA1enm69QJlRtA25bM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751372584; c=relaxed/simple;
-	bh=xqnSqFWVDFEdXMupII25qfhOfaCrf8mtjfBCLWS3law=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WvlIIZyDkMShr4+t3n5KblRW/RvpSC2GgHtE0hIiIpg3BuzyIELwrfcnUqP3apNZnV8iv6ea7XpXDYifwY7chUOs1Z2TL7PEekKwWiE+JVjAQg1671MgCmQQVpkCKftRmk4CG9QkYuDx6ES78CL1xv3+/0f/RONP+k6uIsiIWZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U9RoPHoy; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751372589; c=relaxed/simple;
+	bh=I07NkhytVT3vjKtgU8JtRK5xwzfDuVb4MvGSttIHb8w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fWpVV8bUIY/9gZIT4f9bKNoXgWmlTfm7ltGDS+G6byKGexZclAhXUDLwM0e+KMYIgDZaKNNn73mi4FAoWIf5amjbirx7tz0xaikk2kyPaBw4Bzp4YqJuQzVVHDtIK0fdgo0+WUdALUNlwyXfahZamUnrIM0rS50ZSsI0FOUdcjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ck7JKnL2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U9RoPHoy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751372583; x=1782908583;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=xqnSqFWVDFEdXMupII25qfhOfaCrf8mtjfBCLWS3law=;
-  b=U9RoPHoyUtNDNQOpHm2Uyw7QpLHkJAxatN/gjuWRkrtwWk+DHIfb2Cn4
-   +BxFh3sMRxSUyC6N7wA1eYO8hTqSt7lAbtlBDNBd6VGIsKLXkMrBZfLGK
-   luZhGRDHdp7II1ylh1rSHh7awXktobdKYMWiN+F3helliKrVK+FilbSUl
-   JR7AJJ08XlNMNfuFEdvURqN9kuRgyNLo8fJR1UtCMGZit6mrUhjl0GldE
-   f86rx6kxxlYh1bslhjs9Oij8gDt+3xLNd8b8BW2Zngl1vpAxlKrx29qP8
-   LAA5ZjLfnSy0Z8nSLh4+vyf3eqjua1tJAWC9cRSmTAbldCItFqS6B7fTp
-   w==;
-X-CSE-ConnectionGUID: 2O87YIFcSEyrQcBEXJvA/A==
-X-CSE-MsgGUID: gEDx9NRZRdue323Z/FJ/Uw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="71196710"
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="71196710"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 05:23:03 -0700
-X-CSE-ConnectionGUID: ++ucMJKlRuq50S7eA+Hx+A==
-X-CSE-MsgGUID: T0PbFfzBRwSllAtX/se9AQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="153157409"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by orviesa010.jf.intel.com with ESMTP; 01 Jul 2025 05:22:58 -0700
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: Lucas De Marchi <lucas.demarchi@intel.com>,
-	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>
-Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Jan Dabros <jsd@semihalf.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Raag Jadav <raag.jadav@intel.com>,
-	"Tauro, Riana" <riana.tauro@intel.com>,
-	"Adatrao, Srinivasa" <srinivasa.adatrao@intel.com>,
-	"Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-	intel-xe@lists.freedesktop.org,
-	linux-i2c@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ck7JKnL2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA3BBC4CEEB;
+	Tue,  1 Jul 2025 12:23:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751372588;
+	bh=I07NkhytVT3vjKtgU8JtRK5xwzfDuVb4MvGSttIHb8w=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ck7JKnL2W2dDD80xo9Y9b4D26oDKRtcla4rp1cuJkKgNuXrBe5W365nDeLbZVRTsV
+	 bwfkKBBX5vMam2fuhLe588ELWxmqtPX0b3Bif35t+vWsyBGc4654DIXEHTtQS/Bi8q
+	 6aotE3+dHVCxa45cBexYmuJKDVhvr9Zd5oBYNqno=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v6 1/5] i2c: designware: Use polling by default when there is no irq resource
-Date: Tue,  1 Jul 2025 15:22:48 +0300
-Message-ID: <20250701122252.2590230-2-heikki.krogerus@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250701122252.2590230-1-heikki.krogerus@linux.intel.com>
-References: <20250701122252.2590230-1-heikki.krogerus@linux.intel.com>
+Cc: HarshaVardhana S A <harshavardhana.sa@broadcom.com>,
+	Bryan Tan <bryan-bt.tan@broadcom.com>,
+	Vishnu Dasa <vishnu.dasa@broadcom.com>,
+	Stefano Garzarella <sgarzare@redhat.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	virtualization@lists.linux.dev,
+	stable <stable@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH net] vsock/vmci: Clear the vmci transport packet properly when initializing it
+Date: Tue,  1 Jul 2025 14:22:54 +0200
+Message-ID: <20250701122254.2397440-1-gregkh@linuxfoundation.org>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,66 +49,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The irq resource itself can be used as a generic way to
-determine when polling is needed.
+From: HarshaVardhana S A <harshavardhana.sa@broadcom.com>
 
-This not only removes the need for special additional device
-properties that would soon be needed when the platform may
-or may not have the irq, but it also removes the need to
-check the platform in the first place in order to determine
-is polling needed or not.
+In vmci_transport_packet_init memset the vmci_transport_packet before
+populating the fields to avoid any uninitialised data being left in the
+structure.
 
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Bryan Tan <bryan-bt.tan@broadcom.com>
+Cc: Vishnu Dasa <vishnu.dasa@broadcom.com>
+Cc: Broadcom internal kernel review list
+Cc: Stefano Garzarella <sgarzare@redhat.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: Simon Horman <horms@kernel.org>
+Cc: virtualization@lists.linux.dev
+Cc: netdev@vger.kernel.org
+Cc: stable <stable@kernel.org>
+Signed-off-by: HarshaVardhana S A <harshavardhana.sa@broadcom.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
-Hi guys,
+Tweaked from original version by rewording the text and adding a blank
+line and correctly sending it to the proper people for inclusion in net.
 
-I found the thread with Jarkko's comments from my archives. He wanted
-the local flags variable to be added because he wants the order of the
-calls to remain as it is now - the device is allocated only after the
-irq is checked.
+ net/vmw_vsock/vmci_transport.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-thanks,
----
- drivers/i2c/busses/i2c-designware-platdrv.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-index 879719e91df2..3104f52e32be 100644
---- a/drivers/i2c/busses/i2c-designware-platdrv.c
-+++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-@@ -205,25 +205,28 @@ static void i2c_dw_remove_lock_support(struct dw_i2c_dev *dev)
- 
- static int dw_i2c_plat_probe(struct platform_device *pdev)
+diff --git a/net/vmw_vsock/vmci_transport.c b/net/vmw_vsock/vmci_transport.c
+index b370070194fa..7eccd6708d66 100644
+--- a/net/vmw_vsock/vmci_transport.c
++++ b/net/vmw_vsock/vmci_transport.c
+@@ -119,6 +119,8 @@ vmci_transport_packet_init(struct vmci_transport_packet *pkt,
+ 			   u16 proto,
+ 			   struct vmci_handle handle)
  {
-+	u32 flags = (uintptr_t)device_get_match_data(&pdev->dev);
- 	struct device *device = &pdev->dev;
- 	struct i2c_adapter *adap;
- 	struct dw_i2c_dev *dev;
- 	int irq, ret;
++	memset(pkt, 0, sizeof(*pkt));
++
+ 	/* We register the stream control handler as an any cid handle so we
+ 	 * must always send from a source address of VMADDR_CID_ANY
+ 	 */
+@@ -131,8 +133,6 @@ vmci_transport_packet_init(struct vmci_transport_packet *pkt,
+ 	pkt->type = type;
+ 	pkt->src_port = src->svm_port;
+ 	pkt->dst_port = dst->svm_port;
+-	memset(&pkt->proto, 0, sizeof(pkt->proto));
+-	memset(&pkt->_reserved2, 0, sizeof(pkt->_reserved2));
  
--	irq = platform_get_irq(pdev, 0);
--	if (irq < 0)
-+	irq = platform_get_irq_optional(pdev, 0);
-+	if (irq == -ENXIO)
-+		flags |= ACCESS_POLLING;
-+	else if (irq < 0)
- 		return irq;
- 
- 	dev = devm_kzalloc(device, sizeof(*dev), GFP_KERNEL);
- 	if (!dev)
- 		return -ENOMEM;
- 
--	dev->flags = (uintptr_t)device_get_match_data(device);
- 	if (device_property_present(device, "wx,i2c-snps-model"))
--		dev->flags = MODEL_WANGXUN_SP | ACCESS_POLLING;
-+		flags = MODEL_WANGXUN_SP | ACCESS_POLLING;
- 
- 	dev->dev = device;
- 	dev->irq = irq;
-+	dev->flags = flags;
- 	platform_set_drvdata(pdev, dev);
- 
- 	ret = dw_i2c_plat_request_regs(dev);
+ 	switch (pkt->type) {
+ 	case VMCI_TRANSPORT_PACKET_TYPE_INVALID:
 -- 
-2.47.2
+2.50.0
 
