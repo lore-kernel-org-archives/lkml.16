@@ -1,48 +1,54 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 113C313774D;
-	Tue,  1 Jul 2025 19:40:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A059227FB3F;
+	Tue,  1 Jul 2025 19:40:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751398804; cv=none; b=oArsS/EXROll4EGdVjWo4Jn6L88k1Y+6hMyWgnNot1h+MlQxwG59zIjkmEbobHEA8f9KlMmdlxJd3N0jkhOb9UiHhqrxW3XOrxQ99OeMEAjhQrsovyxLltpPqbaCT/eLEVH57ocZfZxTxEh/C/Ih9Bxnjzpgh5vwnpWpgVP7xuw=
+	t=1751398814; cv=none; b=mCU3w2qp0+xh3ZSqr1f8qFgFGF6KNf489H1DWQzD5ahihfvYkym8VlURI4jFPxI88IeLZJTSkg7OSR6KFWA+ZT4Hnsb/IOhrnThyeqO8n4tTMb8lyUAzDe1bewBgUrzIsl25MSmqwXQ2aRb0FdGot9YLSr85G1HhM/pqDxid/PA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751398804; c=relaxed/simple;
-	bh=P2caZe334Rdl+21mNw9S4lQ5Nz7oIHW5wOU0XL+c00o=;
+	s=arc-20240116; t=1751398814; c=relaxed/simple;
+	bh=qDqy+qgeIUi2C2gVwLTG95hTERQBglNcydwyUBdTspA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h3xrO8jVoj11yzPIhTi2SgEeCto0JQH03v9S56ix1LZbL62e7s6I+2hxbWWcCqUSsNV/sUBnkcZgZMINTWcsiJt4zMp6/mLQUcnYRfdIsYyYOt8BXoL007b7ceIVM4lIEr+v4MZYorcJv/4sX3Ohi82UDpNDWKxDdONBwLU6nME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GB4etYzy; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=GmnkV9WiK6LkKqZZwnbBelNLsZrU14rY646VU46CIwdoBFUP3UWMeqpB8myoAeduiHLpPYCx4jMmh5kfEHCsQ9BpOZnhjXEO4GM0OFXdF5GX/BsKegNd3SL4vQHdBntdLVMrHUQw9v2/Dp6EH5fgFsctyUZunS8h5PD1xxj65C0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nuNqCalA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GB4etYzy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7734FC4CEEB;
-	Tue,  1 Jul 2025 19:40:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nuNqCalA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C756BC4CEEB;
+	Tue,  1 Jul 2025 19:40:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751398803;
-	bh=P2caZe334Rdl+21mNw9S4lQ5Nz7oIHW5wOU0XL+c00o=;
+	s=k20201202; t=1751398814;
+	bh=qDqy+qgeIUi2C2gVwLTG95hTERQBglNcydwyUBdTspA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GB4etYzyzcqEhr4xdM+j6WcJRYpYEmZhlsUhRqN/glHIHGyAuykjgue/iNFjGYRLk
-	 8PnF8yVXDHnmM8qtk4qA+ApUQxZYXVHpAG786Td6E4oxi5PRoNzD5pUgJF/mIlNSJN
-	 0fz3OGyJyjT1FnkA/lB7UOBOYtPPF0ToiGs9o44kmTcf6mivw+vPI6maow9/O3FbpE
-	 hCvzgoc+h8P44+Bqvv8Cg5lFe7RQ4+RxDTkHO2PnvuPE5sgp2XzBc226YRfdJxx2sg
-	 lycQnYut6aVFTDdyfZqsUegmeEqkiccSXIGSIpTXsJlGtxYfAfxPgSsm7kS2qtnIF9
-	 HSZECfCWs8y4w==
-Date: Tue, 1 Jul 2025 12:40:02 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: Andrey Albershteyn <aalbersh@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-	Casey Schaufler <casey@schaufler-ca.com>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-	Paul Moore <paul@paul-moore.com>, linux-api@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-xfs@vger.kernel.org, selinux@vger.kernel.org,
-	Andrey Albershteyn <aalbersh@kernel.org>
-Subject: Re: [PATCH v6 5/6] fs: prepare for extending file_get/setattr()
-Message-ID: <20250701194002.GS10009@frogsfrogsfrogs>
-References: <20250630-xattrat-syscall-v6-0-c4e3bc35227b@kernel.org>
- <20250630-xattrat-syscall-v6-5-c4e3bc35227b@kernel.org>
- <20250701183105.GP10009@frogsfrogsfrogs>
- <CAOQ4uxiCpGcZ7V8OqssP2xKsN0ZiAO7mQ_1Qt705BrcHeSPmBg@mail.gmail.com>
+	b=nuNqCalAFLsuuyOkIeWDlE1BpYjyFWspjlAep2zXjoVl9xs749qRMN9IiDEJPO7FB
+	 00kAYfnIEZyVEK53qWKZytvJKIS0WeQlkvPvCLH/SUniqtDRPClIJTDjsNDp/lwb37
+	 dyikyS5J0ifpP/vMxi91qbX4pbbsy/F0zxiT7Y3efzls6igZHrXILCaRHtallyTWG/
+	 TYdE/pBj8hzjwC7jg+MPtv7wqsoeeOT7xR1d8UN6ajA1gbq2aANkLMpviwljS8IfZ8
+	 wANS+iLZdRxPCY3o6LC0ECMlbymUPV0PeGQ02GlrtbytBllWBP7pkIobtLJN7mYqWl
+	 wTC8TUfKYDqJw==
+Date: Tue, 1 Jul 2025 21:40:08 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Matthew Maurer <mmaurer@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Timur Tabi <ttabi@nvidia.com>, Benno Lossin <lossin@kernel.org>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	Dirk Behme <dirk.behme@de.bosch.com>
+Subject: Re: [PATCH v8 6/6] rust: samples: Add debugfs sample
+Message-ID: <aGQ5mO6WjQb9Wq8f@pollux>
+References: <20250627-debugfs-rust-v8-0-c6526e413d40@google.com>
+ <20250627-debugfs-rust-v8-6-c6526e413d40@google.com>
+ <2025070148-primer-stillness-0409@gregkh>
+ <CAGSQo00UiOUAgYODhXT9BWLW0bXoCxMzt9fV2F2aiTEOG1vwyA@mail.gmail.com>
+ <aGQcODIzMiB46gKF@pollux>
+ <CAGSQo02tdxoqTE1z5_M8g0PpXYEdWr4Yy31yaoPK8C_O2G_QoQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,114 +58,119 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOQ4uxiCpGcZ7V8OqssP2xKsN0ZiAO7mQ_1Qt705BrcHeSPmBg@mail.gmail.com>
+In-Reply-To: <CAGSQo02tdxoqTE1z5_M8g0PpXYEdWr4Yy31yaoPK8C_O2G_QoQ@mail.gmail.com>
 
-On Tue, Jul 01, 2025 at 09:27:38PM +0200, Amir Goldstein wrote:
-> On Tue, Jul 1, 2025 at 8:31 PM Darrick J. Wong <djwong@kernel.org> wrote:
+On Tue, Jul 01, 2025 at 11:32:42AM -0700, Matthew Maurer wrote:
+> On Tue, Jul 1, 2025 at 10:34 AM Danilo Krummrich <dakr@kernel.org> wrote:
 > >
-> > On Mon, Jun 30, 2025 at 06:20:15PM +0200, Andrey Albershteyn wrote:
-> > > From: Amir Goldstein <amir73il@gmail.com>
+> > On Tue, Jul 01, 2025 at 10:24:04AM -0700, Matthew Maurer wrote:
+> > > On Tue, Jul 1, 2025 at 7:03 AM Greg Kroah-Hartman
+> > > <gregkh@linuxfoundation.org> wrote:
+> > > >
+> > > > On Fri, Jun 27, 2025 at 11:18:29PM +0000, Matthew Maurer wrote:
+> > > > > +        // An `Arc<Mutex<usize>>` doesn't implement display, so let's give explicit instructions on
+> > > > > +        // how to print it
+> > > > > +        let file_2 = sub.fmt_file(c_str!("arc_backed"), my_arc.clone(), &|val, f| {
+> > > > > +            writeln!(f, "locked value: {:#010x}", *val.lock())
+> > > > > +        });
+> > > >
+> > > > While cute, is this really going to be the way to describe all "custom"
+> > > > debugfs function callbacks?  No other way to point to a function itself
+> > > > instead?  Look at "fun" debugfs functions like qh_lines() in
+> > > > drivers/usb/host/ehci-dbg.c that is dumping tons of data out.  Putting
+> > > > that inline here is going to be a bit ackward :)
 > > >
-> > > We intend to add support for more xflags to selective filesystems and
-> > > We cannot rely on copy_struct_from_user() to detect this extension.
+> > > Good news, function pointers are legal to pass in here as well
+> > > already, I can add that usage to make it clear.
 > > >
-> > > In preparation of extending the API, do not allow setting xflags unknown
-> > > by this kernel version.
+> > > >
+> > > > So can you show an example of a "traditional" debugfs file output with
+> > > > multiple lines that is dealing with a dynamically allocated device that
+> > > > is associated with the module (not the static example you showed here),
+> > > > as that's going to be the real way this is used, not with static
+> > > > variables.
 > > >
-> > > Also do not pass the read-only flags and read-only field fsx_nextents to
-> > > filesystem.
-> > >
-> > > These changes should not affect existing chattr programs that use the
-> > > ioctl to get fsxattr before setting the new values.
-> > >
-> > > Link: https://lore.kernel.org/linux-fsdevel/20250216164029.20673-4-pali@kernel.org/
-> > > Cc: Pali Rohár <pali@kernel.org>
-> > > Cc: Andrey Albershteyn <aalbersh@redhat.com>
-> > > Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-> > > Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
-> > > ---
-> > >  fs/file_attr.c           |  8 +++++++-
-> > >  include/linux/fileattr.h | 20 ++++++++++++++++++++
-> > >  2 files changed, 27 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/fs/file_attr.c b/fs/file_attr.c
-> > > index 4e85fa00c092..62f08872d4ad 100644
-> > > --- a/fs/file_attr.c
-> > > +++ b/fs/file_attr.c
-> > > @@ -99,9 +99,10 @@ EXPORT_SYMBOL(vfs_fileattr_get);
-> > >  int copy_fsxattr_to_user(const struct fileattr *fa, struct fsxattr __user *ufa)
-> > >  {
-> > >       struct fsxattr xfa;
-> > > +     __u32 mask = FS_XFLAGS_MASK;
-> > >
-> > >       memset(&xfa, 0, sizeof(xfa));
-> > > -     xfa.fsx_xflags = fa->fsx_xflags;
-> > > +     xfa.fsx_xflags = fa->fsx_xflags & mask;
+> > > Sure, do we want to:
+> > > * Finish creating the driver struct early in `init`, then call dynamic
+> > > `.create(&str)` or `.destroy(&str)` `.modify(&str)` type things on it
+> > > in `init` to show how it would work
+> > > * Actually wire up an input source to drive create/destroy/modify
+> > > dynamically (e.g. I could implement a miscdevice) - if you want this
+> > > one, do you have a preference on where I get my input signal from?
 > >
-> > I wonder, should it be an error if a filesystem sets an fsx_xflags bit
-> > outside of FS_XFLAGS_MASK?  I guess that's one way to prevent
-> > filesystems from overriding the VFS bits. ;)
+> > I think the idea was to show how it works in a real driver context, e.g. a
+> > platform driver, just like what samples/rust/rust_driver_platform.rs does. Not a
+> > miscdevice registered from a module, which is a rather rare use-case.
+> >
+> > If you rebase on the latest driver-core-next, you can write a platform driver
+> > with an ACPI ID table, which can easily probed by passing
+> > `-acpitable file=ssdt.aml` to qemu, i.e. no need to mess with OF.
 > 
-> I think Pali has a plan on how to ensure that later
-> when the mask is provided via the API.
-> 
-> >
-> > Though couldn't that be:
-> >
-> >         xfa.fsx_xflags = fa->fsx_xflags & FS_XFLAGS_MASK;
-> >
-> > instead?  And same below?
-> >
-> 
-> Indeed. There is a reason for the var, because the next series
-> by Pali will use a user provided mask, which defaults to FS_XFLAGS_MASK,
-> so I left it this way.
-> 
-> I don't see a problem with it keeping as is, but if it bothers you
-> I guess we can re-add the var later.
+> I'm confused as to how registering as a platform driver would result
+> in an input source that would let me trigger the creation/destruction
+> of DebugFS files. I need some kind of input stream to do that. Is
+> there some input stream that's available to a platform driver that I'm
+> missing, or are you suggesting that the input stream would effectively
+> be the probe's `id_info` field? If I did that, wouldn't I still have a
+> static arrangement of DebugFS files in my driver struct?
 
-Nah, it doesn't bother me that much.
+If it's about having some dynamic input stream, creating an example with a
+platform driver clearly doesn't help by itself.
 
-> > >       xfa.fsx_extsize = fa->fsx_extsize;
-> > >       xfa.fsx_nextents = fa->fsx_nextents;
-> > >       xfa.fsx_projid = fa->fsx_projid;
-> > > @@ -118,11 +119,16 @@ static int copy_fsxattr_from_user(struct fileattr *fa,
-> > >                                 struct fsxattr __user *ufa)
-> > >  {
-> > >       struct fsxattr xfa;
-> > > +     __u32 mask = FS_XFLAGS_MASK;
-> > >
-> > >       if (copy_from_user(&xfa, ufa, sizeof(xfa)))
-> > >               return -EFAULT;
-> > >
-> > > +     if (xfa.fsx_xflags & ~mask)
-> > > +             return -EINVAL;
-> >
-> > I wonder if you want EOPNOTSUPP here?  We don't know how to support
-> > unknown xflags.  OTOH if you all have beaten this to death while I was
-> > out then don't start another round just for me. :P
-> 
-> We have beaten this API almost to death for sure ;)
-> I don't remember if we discussed this specific aspect,
-> but I am personally in favor of
-> EOPNOTSUPP := the fs does not support the set/get operation
-> EINVAL := some flags provided as value is invalid
-> 
-> For example, if the get API provides you with a mask of the
-> valid flags that you can set, if you try to set flags outside of
-> that mask you get EINVAL.
-> 
-> That's my interpretation, but I agree that EOPNOTSUPP can also
-> make sense in this situation.
+But that wasn't my understanding. My understanding was that the request is to
+show it in a driver context, where you won't get away with statics. :)
 
-<nod> I think I'd rather EOPNOTSUPP for "bits are set that the kernel
-doesn't recognize" and EINVAL (or maybe something else like
-EPROTONOSUPPORT) for "fs driver will not let you change this bit".
-At least for the syscall interface; we probably have to flatten that to
-EOPNOTSUPP for both legacy ioctls.
+But that's maybe because *I* would like to focus more on this case, because it's
+the common one.
 
---D
+> I could have misunderstood, but I don't think that's what Greg is
+> asking for - I think he wants to see how at a data structure level, I
+> can handle creating and destroying DebugFS files that correspond to
+> some kind of object being created and destroyed, rather than just
+> having a static list of slots in my driver struct for keeping them
+> alive.
 
-> Thanks,
-> Amir.
-> 
+If that's the request, you could simply create a function that returns a
+Vec with some random entries and then you just iterate over it in
+Driver::probe() or Module::init()?
+
+I don't know if that case is too interesting, since conceptually it doesn't make
+a huge difference to the case where you have a single instance, i.e.
+
+Current
+-------
+
+	struct Bar {
+	   a: A,
+	   b: B,
+	}
+
+	// Single.
+	struct Foo {
+	   bar: Arc<Bar>,
+	   bar_file: File,
+	}
+
+	// Multiple.
+	struct Foo {
+	  bars: Vec<Arc<Bar>>
+	  bar_files: Vec<File>, // contains a File for each field for every Bar
+	}
+
+Proposed (pin-init)
+-------------------
+
+	struct Bar {
+	   a: File<A>,
+	   b: File<B>,
+	}
+
+	// Single.
+	struct Foo {
+	   bar: Bar,
+	}
+
+	// Multiple.
+	struct Foo {
+	   bar: Vec<Bar>
+	}
