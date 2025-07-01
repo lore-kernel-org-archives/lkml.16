@@ -1,115 +1,102 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA2571E3775;
-	Tue,  1 Jul 2025 03:13:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFD271917ED;
+	Tue,  1 Jul 2025 03:15:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751339595; cv=none; b=FfWDo5veUZx8oJJMszjix62NJI3G+KPxofK5y1yVagQ02t2NpxXj6kAQ0gmVaDevxAF/LqB0UFfHCLddjOh/nWUPPDvSFbvJczQ4AkAlJnMK0DdtmWQX2ei3t4/+yN92Uw4vswQ1ISwAKFkkSddJ3FS2FUVQ2byNwZt52/1C+co=
+	t=1751339708; cv=none; b=TeAJ4TYO00YWI78XZFkRBXKMUjz1GNg2KCixhfG8hLOhMPc0XhF71hA0rwDXSiUd1J80QaYcSyWR4LEKKEN4IppJarA6OJ19a5VnZoDoKoSqYpswotmCFTTczHJ3mbSLKMWOtvUIejmoEjFLiaBDHtkddvLPfGRp79Y3sN/LOTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751339595; c=relaxed/simple;
-	bh=tt4xPwThColuT0sWgTtJnspBQawlBFXF7CVILAZJ2Os=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QXg6xu1TWSH/R1qccIBqfwvqWBa+4nmx7KuaR384vJZtf/cRIfFg4YmSjXvP4OFYat7pzwMraaIC9jW8v0CNPnwyejtDDRIjZTf0++nEgIhGwbgBBkD3Wcz9n48aaMf3AD4hrXM82m3k97Qose5aldTMKYbTWcj4tDPk9DFovzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bpx/354K; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bpx/354K"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b2fd091f826so4503338a12.1;
-        Mon, 30 Jun 2025 20:13:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751339593; x=1751944393; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nyWb1ImwLrAx81v7mjCYlqpwND105yRaO7PKd9BUXDc=;
-        b=bpx/354Kv/hTvcz1wCKeYfmDuGb4jbXT2d8a+SC9L4ntdq7q3KiCQe++RJv2IjW7Ak
-         G5Be3Tf6h6m2eOIq6qd89/ahlGKFiQuCjxLRpQcyV/u5ibg8pHMsMxcoc7Q0D7NrkZWl
-         wxY1xCsZpI1SJq8+zXUQ0LZ/xemJnw6TkVEEe2gTpiKzltA30uVdjqz1eAbxyyg/I01i
-         8hlZq8RW+qjNzTI98p6NGAR6NJLNQVJWypD0UkWzdW0nMhyuB3Jg0yoBZyVE8KltTFnz
-         G0QxdmMiLnqG1O9aeuLbrsVlP5V4OGYiSciz5OH7EV+294DKcGo7yidRfe3qVASkaOP4
-         RdwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751339593; x=1751944393;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nyWb1ImwLrAx81v7mjCYlqpwND105yRaO7PKd9BUXDc=;
-        b=vB8DPh4cLyczmvfxqHodzwZnfhKGBStYodmA5CN5X276k23Ronu6VR+LVOwgiPvEjp
-         KOuQyYtgbiNCu1gtKVkXcNUoQIRCLMlxWJlN8taqD+UHOqnTkuOXjkztcQtpwKPgplMe
-         jMuaOOtXIMFtwAA+XxUiwg50etolpxInCc+uXabg0dD8y2YsAINwe3Tyumy3/meYxxtL
-         qH3RPncAJUFk+jnTLxwhUiO0QuOPSmz12uZE/hjChBFYw62U3hUlnJs/V2jQi1yfU1N9
-         BnqTe1kEHQJMNbAcKYc+sZQyzNjgKDOaEBSro2a+EgyUierhp0UMh/9vkCWdOe5qdrQp
-         1OFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUPYEfvotXp8TyTfVOOVluaQj0tdkpd44qQL15ycmghJtkDF9IMcO8f++gOvUKCXVBTK3fwyQs5YAo=@vger.kernel.org, AJvYcCUQjn3WVucGW4iXW3DVo3Y7iy+M93exuzvfUbRYD4RJ4OEx73iTJmV2hRa26n26WcH6nP5ItNJ+@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywbi88b3I2eY92jWOBabUf5gVMIjlLsp8Z6mpmDiRhq8vh6Djkn
-	jo8YeacAmcay87xtq6lfBZlHhfTTEEoH4AjmPVKa2OgVoCd32A1czvxh
-X-Gm-Gg: ASbGncvum+nTE3JD9GZghSUotUWjtlnYuIcj5RmkZyLc8qeLEJ7x7aJHsPPU3hvPx3A
-	cTD1Jz4aCMuNpwv89fkOCq1W/1HeuedemMhySljHFyOvGt/tLeuRqQbQxwh+A8V/Lsh/nCaEoNv
-	2eMIgQB1/THr4dmotLHfhwHUiPjyW4yh2SH5oIetDp3Rgqj2SXBVVsLlhSdvfP4jgWksl8HIlJK
-	b0KZ0mi6b7NJmbP25TJurd0OQs04wZRB7sCIsEqUj/Sdqf4drOOl3c8wk9AeQf7gFXWC6T/i00Q
-	qqxHZtpcH50VjcG01HZK5vPU41znNnCBrBU1Yj0BJiq9h6VBhoAcctiE8jI+PA==
-X-Google-Smtp-Source: AGHT+IEiudH6PlCzTDc0Wb1Pnkx08WHWvxpm/tc7SoxOcDxOliP4sy/UBldpzX8Ue5Iw9mAMstE6aw==
-X-Received: by 2002:a17:903:b4e:b0:234:595d:a58e with SMTP id d9443c01a7336-23b355b357dmr30496235ad.25.1751339593303;
-        Mon, 30 Jun 2025 20:13:13 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e31c39fbsm9385138a12.42.2025.06.30.20.13.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 20:13:11 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id EFCC4420A82B; Tue, 01 Jul 2025 10:13:03 +0700 (WIB)
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Documentation <linux-doc@vger.kernel.org>,
-	Linux Networking <netdev@vger.kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: [PATCH net-next 5/5] net: ip-sysctl: Add link to SCTP IPv4 scoping draft
-Date: Tue,  1 Jul 2025 10:13:00 +0700
-Message-ID: <20250701031300.19088-6-bagasdotme@gmail.com>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250701031300.19088-1-bagasdotme@gmail.com>
-References: <20250701031300.19088-1-bagasdotme@gmail.com>
+	s=arc-20240116; t=1751339708; c=relaxed/simple;
+	bh=2wxlRWPiHsTaVt5zYkgULH82AhTGfKsEBem5i4BH374=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=pFQl1zEyajJmtg9TCBnWXku1gGzE1FfaLhtlOkvqypAK4CQ3NYBkLf0yHvzi3+Ny8IVNhpFG6n3ckfSfxdcRGYGKQM1hkLM1PHOxd84+xP0KfnQ//9TSdy5tTVSUOEBEqvmz+T9PtsPrAs79e/Xr3ThJVT8A5m2Fb5uSivHSWLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8BxrnK5UmNoK1AgAQ--.5875S3;
+	Tue, 01 Jul 2025 11:15:05 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJCxocK4UmNo7GcEAA--.27349S2;
+	Tue, 01 Jul 2025 11:15:05 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xianglai Li <lixianglai@loongson.cn>
+Cc: kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v5 09/13] LoongArch: KVM: Replace eiointc_enable_irq() with eiointc_update_irq()
+Date: Tue,  1 Jul 2025 11:15:00 +0800
+Message-Id: <20250701031504.1233777-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20250701030842.1136519-1-maobibo@loongson.cn>
+References: <20250701030842.1136519-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=968; i=bagasdotme@gmail.com; h=from:subject; bh=tt4xPwThColuT0sWgTtJnspBQawlBFXF7CVILAZJ2Os=; b=owGbwMvMwCX2bWenZ2ig32LG02pJDBnJ/seEnfrT+NeurpAzm7cqZmdq6FOHO0sfS5U9KM9Yw vz++PxrHaUsDGJcDLJiiiyTEvmaTu8yErnQvtYRZg4rE8gQBi5OAZiI1iVGhh2ee3XeB3ZsT4hi uGsqHcW95NvaTNOalDD1nJaH5a9YCxj+Jx86Oe0F9x+dpPJPW8rKe1bJOm3RrKtwqLjIenGzbY8 AIwA=
-X-Developer-Key: i=bagasdotme@gmail.com; a=openpgp; fpr=701B806FDCA5D3A58FFB8F7D7C276C64A5E44A1D
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxocK4UmNo7GcEAA--.27349S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-addr_scope_policy description contains pointer to SCTP IPv4 scoping
-draft but not its IETF Datatracker link. Add it.
+Function eiointc_enable_irq() checks mask value with char type, and
+call eiointc_update_irq() eventually. Function eiointc_update_irq()
+will update one single irq status directly.
 
-Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
+Here it can check mask value with unsigned long type and call function
+eiointc_update_irq(), that is simple and direct.
+
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
- Documentation/networking/ip-sysctl.rst | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/loongarch/kvm/intc/eiointc.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/networking/ip-sysctl.rst b/Documentation/networking/ip-sysctl.rst
-index 12c8a236456e4e..2cad74e18f717d 100644
---- a/Documentation/networking/ip-sysctl.rst
-+++ b/Documentation/networking/ip-sysctl.rst
-@@ -3571,7 +3571,9 @@ sctp_wmem  - vector of 3 INTEGERs: min, default, max
- 	Default: 4K
- 
- addr_scope_policy - INTEGER
--	Control IPv4 address scoping - draft-stewart-tsvwg-sctp-ipv4-00
-+	Control IPv4 address scoping (see
-+	https://datatracker.ietf.org/doc/draft-stewart-tsvwg-sctp-ipv4/00/
-+	for details).
- 
- 	- 0   - Disable IPv4 address scoping
- 	- 1   - Enable IPv4 address scoping
+diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
+index 5b5b3a73a4fb..5f2c291049b1 100644
+--- a/arch/loongarch/kvm/intc/eiointc.c
++++ b/arch/loongarch/kvm/intc/eiointc.c
+@@ -471,7 +471,7 @@ static int loongarch_eiointc_writeq(struct kvm_vcpu *vcpu,
+ 				struct loongarch_eiointc *s,
+ 				gpa_t addr, const void *val)
+ {
+-	int i, index, irq, ret = 0;
++	int index, irq, ret = 0;
+ 	u8 cpu;
+ 	u64 data, old_data;
+ 	gpa_t offset;
+@@ -501,18 +501,21 @@ static int loongarch_eiointc_writeq(struct kvm_vcpu *vcpu,
+ 		 * update irq when isr is set.
+ 		 */
+ 		data = s->enable.reg_u64[index] & ~old_data & s->isr.reg_u64[index];
+-		for (i = 0; i < sizeof(data); i++) {
+-			u8 mask = (data >> (i * 8)) & 0xff;
+-			eiointc_enable_irq(vcpu, s, index * 8 + i, mask, 1);
++		while (data) {
++			irq = __ffs(data);
++			eiointc_update_irq(s, irq + index * 64, 1);
++			data &= ~BIT_ULL(irq);
+ 		}
++
+ 		/*
+ 		 * 0: disable irq.
+ 		 * update irq when isr is set.
+ 		 */
+ 		data = ~s->enable.reg_u64[index] & old_data & s->isr.reg_u64[index];
+-		for (i = 0; i < sizeof(data); i++) {
+-			u8 mask = (data >> (i * 8)) & 0xff;
+-			eiointc_enable_irq(vcpu, s, index * 8 + i, mask, 0);
++		while (data) {
++			irq = __ffs(data);
++			eiointc_update_irq(s, irq + index * 64, 0);
++			data &= ~BIT_ULL(irq);
+ 		}
+ 		break;
+ 	case EIOINTC_BOUNCE_START ... EIOINTC_BOUNCE_END:
 -- 
-An old man doll... just what I always wanted! - Clara
+2.39.3
 
