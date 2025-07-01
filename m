@@ -1,88 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B197C72601
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 21:32:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 175C02222A6;
+	Tue,  1 Jul 2025 21:37:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751405566; cv=none; b=FrG0GGgz9v/UmoG5e577qf4/PMRAcU0X0pzOw0yn+Nu+ZGLGmG28EqUbVLELs7KyXwTmuWknNqZZPlBIvB90o7dE2JdujO967AeQmZY5c89FBRqI5zPxz0/qJ/mN01yGiAH7otDTc7NQlr54LiRpaymr616I1rxEjRT2f5N6n1k=
+	t=1751405861; cv=none; b=q1u8kuoufCFFjIPVda5ca7ZT+UrrfYkrT6Qfy0Kz+5QTyYGAtgQevkNPxw/SK/wcDMoyCpsIxkeeHzYcQzn7AEjrWXbj9nDrsjwfkt21+q8P+3qMbqPUhs4KCeHF822xWgnK5y/7lPQ+m2N/kqvAN5szrj4IZkIdWB0YvbAq4DY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751405566; c=relaxed/simple;
-	bh=tHofUx9bTwpHmb+Zpkg0R90p/JL1R36qcc5bKk4Q3ww=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=oR3NCQUhXruBVxew2Qcq9oUG6yx3kYB/U0FL6o05+/AxBaGN+Tq2EJe1yR8DmQn5vlNQ44vIx0nfmYenuV4KZMuFephhZzdF+ub5WcYru9Dbxa6dN+LhS/iIE37qHaz2CMckCFVZB/4Z9RkLEaT5HLRhIqJ+FCmm150iKzPJDwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=CEIM4AnP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751405861; c=relaxed/simple;
+	bh=RBrBJDYsVF79vNES6HdjOQZFA80yLkTvQzskeuiR2SE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IxPnGCojAYA1Jz8jfsgbRcSdQYIeTz+HtFM8AjBzkLDVtGCRWI8EUgYT5WZ+sQAyBTPHqyye1lvZKbT++q1mPA6xSU0waI5Uordc+rkMYgujfAQSHUU7e9gOl6U4xk0jJysRU0EE2NVxDiFqIau1MXIDwrodsDj9yVehcYdRwGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TeRkm4pp; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="CEIM4AnP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21905C4CEEB;
-	Tue,  1 Jul 2025 21:32:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1751405566;
-	bh=tHofUx9bTwpHmb+Zpkg0R90p/JL1R36qcc5bKk4Q3ww=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=CEIM4AnP85zEAKs1pfZ7h5ofu6yEgYwzM1NPdaup3olCG8VKtygPuYtMPdhuOOgIH
-	 +dW7BypSA5BPAfL957Cfu3UDRbB2dl2alxgFb5lD3JSMDtqaxfX9ZG6RqVFAxk8LH2
-	 guaEqyygbJtGQzi2qTCl1NHcB1CiBNdK5iXDYxmk=
-Date: Tue, 1 Jul 2025 14:32:45 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Bhaskar Chowdhury <unixbhaskar@gmail.com>
-Cc: Christoph Berg <cb@df7cb.de>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tools: mm: Added modern version of shell quote and a
- stranza for required command check
-Message-Id: <20250701143245.771205665a349b02929e9290@linux-foundation.org>
-In-Reply-To: <aGPEPxNkvtK3xRgk@Gentoo>
-References: <20250701094603.23933-1-unixbhaskar@gmail.com>
-	<aGO_Ddv1ALTejqK2@msg.df7cb.de>
-	<aGPEPxNkvtK3xRgk@Gentoo>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TeRkm4pp"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-748f5a4a423so2390900b3a.1;
+        Tue, 01 Jul 2025 14:37:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751405859; x=1752010659; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mIwkG47eiVJtEDBigeiy1r3RJ+0ncwP3pzakx6X+Zhs=;
+        b=TeRkm4ppx+UuCR9+7HL+DiaWTqdGS0V/xBjbhOrN0X9pCPLtgsStrAP54Pb/kmdVNv
+         T1Di+U67zKmcMSCzPEUOOR+WrOI5U+FbigedHbwn/wU+Zp88B0e2grfX4d7eX4JzfHXI
+         bk70JZGUbu6jmDVhw+mFDy4Qlh2imm9pfBbvEBEVRHoKhun0OlKF5Q1BOQIVguD3jD0M
+         4CFrVuROmXh1HTk35xn9z4QMABr8GtYteZ5m7NimqcT9Sji1FwEbvaIvf100yOwPLb9F
+         ZJLty4Vqke+8Um4hTEa+MgSizdV2JfzE9Ik50/kUCmcK1e5EZ0GZBY/ucgFTgDhXQbQ8
+         PY2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751405859; x=1752010659;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mIwkG47eiVJtEDBigeiy1r3RJ+0ncwP3pzakx6X+Zhs=;
+        b=YzkdbRF/5RavB8RDGWHsp8/U5ofJYMYPbZWJ3OMNGD3zj1utmJCOgXJYdcmU+tUbxZ
+         InvFbQnjs07y1TBE4k/Qs/cDEDqvTz5VRpQnZ7YTarP32MQT8h4JbRYZLQQXPCq6eG3v
+         Ua+lrG/ivz2aiO36Ta3MogLDySvlS0vhEiwXK7elrjNEXBnZ3gyxyhj3tHKp+31/9wbh
+         yrhIBXld/FKwxdgAT+lG9OCLRuWsrps5uPHtquiLTqqaZd1CqEcTYPl00MM2Azqofl0f
+         yKvHNP/+gokzzu2C/WBtBo/G38412pXsKVOkkUBxgfdm+f621TGehsumEePAcCoBOM8C
+         E8jg==
+X-Forwarded-Encrypted: i=1; AJvYcCWFXA+AV9ddh7e6TNFg9UH6XBb+9EZGvIgUFZ9KXBsDSk5eJSqQkZadqogLBti/5DXO+8PIbEWRHv8=@vger.kernel.org, AJvYcCXu+wt3IpYo4818NBeucspmUUR+5IHioZvFKGosQLKUEX/vAcGQq6bCpsZAWM7KQzqLlTbuBMefk4QaupBt@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzr7Ui6YfVZXJ0IHSJT+xbQf0bfNd2EhdsevSW7ou4fE5nh2lbX
+	rwCmzQJP2dy6DY9wVN2GnT4CPInpHo9RsGQB1gHDE8JUIZaMUIavUs55Ol+yvGjaYq0=
+X-Gm-Gg: ASbGncvFD7W53QutPYqZ9bFxPD80Fo38pZ7e0QCMWzBErrkFzJ3ISuBNtrpT9A9m+h7
+	10hsn+Swp6fZTHgugfa4VplE4iddhkXRdQUdQrdx5p3DB7wT5SZytIYpKonIJThRtygzzDhxGIV
+	rnZV6BsjhJhAjHOLEtSLLEXG16bkTnS4WfdxzdTynK9R4OJnxzYHiNtkW1qrI+LY0J94I2fbZP6
+	+HBk2++zkO70c1ipxNsUP21nvGztUprHKamdbdsMSUTdfvUO9iOEjUfRzTSRo5lFQ3bXXgyJ8rF
+	r+aK6F2gb2oVf9N5yvzWO1w2ounw7rtNjyM3xWB0Z/4AevekgxPwCoXWxyGvnn7Kyq0MMZhMA5Q
+	Ryr5rh6gY/Q==
+X-Google-Smtp-Source: AGHT+IEmoGmvj6/jFiFEIH6q5tn3IKuIyGYTyKHwocESrbG6hPyhKHJ0KsJo3W1DKHQ1TFuzMd8Zjw==
+X-Received: by 2002:a05:6a00:2308:b0:742:a0cf:7753 with SMTP id d2e1a72fcca58-74b50ff23acmr523284b3a.3.1751405859269;
+        Tue, 01 Jul 2025 14:37:39 -0700 (PDT)
+Received: from localhost.localdomain ([2804:14d:4c64:81ec:632c:d5cb:2b3d:e72b])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af57efaecsm12824125b3a.161.2025.07.01.14.37.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 14:37:37 -0700 (PDT)
+From: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+To: jic23@kernel.org,
+	dlechner@baylibre.com,
+	nuno.sa@analog.com,
+	andy@kernel.org,
+	conor@kernel.org
+Cc: ~lkcamp/patches@lists.sr.ht,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] iio: adc: spear_adc: mask SPEAR_ADC_STATUS channel and avg sample before setting register
+Date: Tue,  1 Jul 2025 18:34:05 -0300
+Message-ID: <20250701213728.32064-1-rodrigo.gobbi.7@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, 1 Jul 2025 16:49:27 +0530 Bhaskar Chowdhury <unixbhaskar@gmail.com> wrote:
+avg sample info is a bit field coded inside the following
+bits: 5,6,7 and 8 of a device status register.
 
-> On 12:57 Tue 01 Jul 2025, Christoph Berg wrote:
-> >> -gnuplot -p << EOF
-> >> +$(command -v gnuplot) -p << EOF
-> >
-> >Why would you delegate PATH searching to `command -v` when you can
-> >just invoke the command directly?
-> >
-> 
-> Because, for the two reasons,
-> 
-> One posix compliant behavior of the command
-> 
-> Second, the binary could be reside other places than the PATH. And this damn
-> thing make sure, the binary in the path should execute only.
+channel num info the same, but over bits: 1, 2 and 3.
 
-I still don't think I understand that :(
+mask both values in order to avoid touching other register bits,
+since the first info (avg sample), came from dt.
 
-Can you please have another pass through the changelog, explain things
-more fully and resend?
+Signed-off-by: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+---
+Tks for the tip, @David, I didn`t know those macros.
+Best regards!
 
-Thanks.
+Changelog:
+v2: use proper bitfield macros + change at commit msg
+v1: https://lore.kernel.org/linux-iio/20250621185301.9536-1-rodrigo.gobbi.7@gmail.com/#t
+---
+ drivers/iio/adc/spear_adc.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-
-Also,
-
-> +missing_counter=0
->
-> ...
->
-> +if ((missing_counter > 0)); then
-
-I'd have used $missing_counter here, but what you have appears to work.
-I don't know why :(
-
-
-> +  printf "Minimum %d commands are missing in PATH, aborting\n" "$missing_counter" >&2
-> +  exit 1
-> +fi
+diff --git a/drivers/iio/adc/spear_adc.c b/drivers/iio/adc/spear_adc.c
+index e3a865c79686..ff7fb13fe947 100644
+--- a/drivers/iio/adc/spear_adc.c
++++ b/drivers/iio/adc/spear_adc.c
+@@ -21,6 +21,8 @@
+ #include <linux/iio/iio.h>
+ #include <linux/iio/sysfs.h>
  
++#include <linux/bitfield.h>
++
+ /* SPEAR registers definitions */
+ #define SPEAR600_ADC_SCAN_RATE_LO(x)	((x) & 0xFFFF)
+ #define SPEAR600_ADC_SCAN_RATE_HI(x)	(((x) >> 0x10) & 0xFFFF)
+@@ -29,9 +31,9 @@
+ 
+ /* Bit definitions for SPEAR_ADC_STATUS */
+ #define SPEAR_ADC_STATUS_START_CONVERSION	BIT(0)
+-#define SPEAR_ADC_STATUS_CHANNEL_NUM(x)		((x) << 1)
++#define SPEAR_ADC_STATUS_CHANNEL_NUM_MASK    GENMASK(3, 1)
+ #define SPEAR_ADC_STATUS_ADC_ENABLE		BIT(4)
+-#define SPEAR_ADC_STATUS_AVG_SAMPLE(x)		((x) << 5)
++#define SPEAR_ADC_STATUS_AVG_SAMPLE_MASK    GENMASK(8, 5)
+ #define SPEAR_ADC_STATUS_VREF_INTERNAL		BIT(9)
+ 
+ #define SPEAR_ADC_DATA_MASK		0x03ff
+@@ -157,8 +159,8 @@ static int spear_adc_read_raw(struct iio_dev *indio_dev,
+ 	case IIO_CHAN_INFO_RAW:
+ 		mutex_lock(&st->lock);
+ 
+-		status = SPEAR_ADC_STATUS_CHANNEL_NUM(chan->channel) |
+-			SPEAR_ADC_STATUS_AVG_SAMPLE(st->avg_samples) |
++		status = FIELD_PREP(SPEAR_ADC_STATUS_CHANNEL_NUM_MASK, chan->channel) |
++			FIELD_PREP(SPEAR_ADC_STATUS_AVG_SAMPLE_MASK, st->avg_samples) |
+ 			SPEAR_ADC_STATUS_START_CONVERSION |
+ 			SPEAR_ADC_STATUS_ADC_ENABLE;
+ 		if (st->vref_external == 0)
+-- 
+2.48.1
+
