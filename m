@@ -1,109 +1,71 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD6E51C84DE
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 19:04:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A963281368
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 19:04:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751396643; cv=none; b=AwiCRvJLUDZAZBvDMVWb1Lypazp6Zpn4qc6aDQRbC8UXt5jDYmIgPlRkzn7oxDWf8plOWd6jhZhM5ZGI6Y2+/ykOaeGmSbyIuJI0cW2Ej1nGhtWjdhApIn22tASpFdlQOq1YLZO7n2BpbRgphCtcyCuHHHDSSiCGJAQklAzofHU=
+	t=1751396646; cv=none; b=Z2ldAm4oKYqmUw0Wo6M5W6kJbGlqtBeiJJhhcytPHR9ZPufHhAMAcKKrbkXBf4+FjSzHSMYsqVP4bZD2s9EbdNo+Z2/4g5xccbzZerOQsLu/Alopzlr9Hgkk9Aa7iXmKPUH8Zx889PRhXdeZmj1rEwNQF+8MZFXXLu4fsdYWQRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751396643; c=relaxed/simple;
-	bh=cwAPXgdl+hKLrBAUN++bv9WfGRh0/jEqtxFs1hUDy+w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FKpJ2xU8bbEy5JLwDQ7KIzbNfhgbGULriZmwIawzfD2k5+No0IpKH2Nh9pNT2QXHOLWo2CkLzfz3wfMFdqseTOQyWZehFiRswPkv2/x7umR+ikqkb2cB/e2hbJ7T+4TzqK6CTLkfUlkJUTf+3RdV1s6RKTkicTjzblqbU/3O7ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=KrGHFDHq; arc=none smtp.client-ip=209.85.166.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="KrGHFDHq"
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3df2e7cdc69so16943515ab.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 12:04:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1751396640; x=1752001440; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=B1OO9XKq5rOhwEPdCxdc4lC2/SKoAK+PxaPLLCcb7dc=;
-        b=KrGHFDHqFa1Xh63PvlFyS6Wjnrd7ik4zMEAcs8o0uWHPAz8KILJWgOXpUlicUgexAb
-         CkqP9UihNXPT7+O9aRExZXsKbEZevyE9tN9Sm0sC10XE5V6BJMjblVzuUG9cfyk/O8P5
-         FJKQsXE1TBiPrxXSs4p9GCuXj5txC5KP54Md1P3UHdOozdQ63bqU3phyGCugyQAtLDdv
-         oiU3OZg2413JKlaIt0bzL2VkT95rfs4DEMhxnpPFgncE+RK5katI0rkhQUf1sIHAa37/
-         QuzHbCfVrKvKL4XsdBzkgKCMWX4oy/0HTJiF6lwwJx97ioKdtfZoe36vWlC6x/V6crk8
-         ZIiA==
+	s=arc-20240116; t=1751396646; c=relaxed/simple;
+	bh=rq0nFLEoksYFkbKxdMSNVS3LLzVb66WKcnzPiXikWG0=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=T+14jXY1lSDf2/s6HjBbN0mBTotNqBIa5iPkvzsfLIOxUhaQItaXkwcPlNaT3upPIuCGQKBhhSefxjvIgiIOQvp8DohlnFXlocOFEVjy9g9c+yakmSTSPZI7FYkFKBN4aa55sZ0lMw2QNt5AJfF87y7/Oq8ZL72omObTejSMwdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-86d0aa2dc99so316818839f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 12:04:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751396640; x=1752001440;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1751396643; x=1752001443;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B1OO9XKq5rOhwEPdCxdc4lC2/SKoAK+PxaPLLCcb7dc=;
-        b=qSzg49GUG01stYulcHcP5D1ju5hBijTq5/vWf3v7PKbvkjt1v4077rdI8yeA6/F5Wr
-         +W40zUZSuqrI1hJSDkKBQqBPB3UwxcoIKfJ8H7eoQxx2YO7dndg0CtuDDW5XWIiB7Gfa
-         ktV61hNGpXoljKIYB5TCduX4Zp2qMLdMsJ6vOuQnpOErXOadaEKiHJEPLAPTwrR1JomD
-         ghabL6f9FAJFU2Ge7DlVEQq3QlSaPY+Mj1HAuXA8fJomd9fDA5YZq6Sypl95EorGgGbZ
-         G2kIzjbXeuXF4gfRr/07tM7hdTZwD7QblqxeoafWFm4RDmClJpwrYRtDujUPEdF/+3uY
-         Z8zw==
-X-Forwarded-Encrypted: i=1; AJvYcCVNOUByFCrXXs/68arDe3Mjrh8QqE+lAQ4TZ92ywzyFR2xidRO5xsLCQb/R1H+v8eqn+lpJuZoucbhFdvM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZmvG1vbCDVtCzuA0FA6NXAvXvEI2F0DYgaWMDE3oC69z9G3sH
-	wU0KS103m7elU96fKFnRmOD2slkb0NXTxsW7I6JudyeSCwkAh/irZA/cpfavZ00iWic=
-X-Gm-Gg: ASbGnctJ3JcscqfHGYlh+wFZqh9O2mOS1JtBhCDjjF5np5eA7SWQXjmodJQ6vz85QVL
-	tQEhaS+sPe189Ro6YG7QZvw5Vf3Hkvkha+d/C4LVEzzHrK5kI+xjB6s8tgBM+e2MphPKVDqHAhq
-	ivGXhKjukbcvEHu/yqhG0SfFgTTeZ0iQdd1RFEcjVAoDF3+PkocBLd446X1bIaQs7gIWfwfJP9p
-	LTI6/zJMiQE2XpeUHpZHhIUgjgbr6fhLNFLnWVRa1UKyURbWUgzHKgjOCamOznda2/UkXsmTJOt
-	+vpSCjcFQX+35LjLMoHPBXDdUK1JUYaYa1ft9x5Wck5T4e/O61Wa+TeRnDqthWZRtk3V
-X-Google-Smtp-Source: AGHT+IG7i3qoJ1qUqfQDZSOEDLwZsJ/iz/Ni2hzM4Q/Bn5B1fjgADlo2DriX2xo8k7cBTXFyqEIbVw==
-X-Received: by 2002:a05:6e02:1d8b:b0:3df:3bc5:bac1 with SMTP id e9e14a558f8ab-3e05495ef63mr1597045ab.5.1751396639972;
-        Tue, 01 Jul 2025 12:03:59 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-50204ab618bsm2596889173.124.2025.07.01.12.03.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 12:03:59 -0700 (PDT)
-Message-ID: <76d3c110-821a-471a-ae95-3a4ab1bf3324@kernel.dk>
-Date: Tue, 1 Jul 2025 13:03:58 -0600
+        bh=V58wKqjwG04wvrAuA/3vleHNIlbmyRoEPp810m6Trxo=;
+        b=qxyFi4Rfx/qkhmgb6m9spBo+SY76+YcHTQUm0ETftKJGPxPZkzgN0Go8Obaa0Q4uTG
+         NFSIa2Rc3XLNqE8iMSLBsa8aIgfuwqZA4QO52HxUe0wP4Dk8iUc9huLrYEA7722ZK+sc
+         kxOlpyaBLPDxcEFJtORVLmHl/+c1p5m1CLQONiyx1KCaTlT7Gf+rGeRsrljalUWjVlfb
+         WCxfCHF9OV+iZ8iCoyYEz2x/HiDolOBnYaOE5seAQFTVCj24iGG8b2IvhGRI/5PbJRIw
+         yyIhDxLu4omUty8DoN2Q1IqkM8w76FP3A2UfdqoQMm/+uH6C2BGq1DGLlV3VI7jwMKcp
+         Atsg==
+X-Gm-Message-State: AOJu0YyCXf1Vf0hk8Ogy5sBmRvBIzxLzEyMobyk9aUMgTuEYZo6a32nn
+	nWSK5J4Gs4ZBqHxtBmVh/xDDk+1ksJ5uKR7/x+eg2kPAPWwt47xxbKxUK+7zhY/8ClHVlkF0+ee
+	sVhkBLf/bYdxO+9emYMmSZjeVMVxCMGCBjIsft2ekql85oZVhbBMvqVA7C1I=
+X-Google-Smtp-Source: AGHT+IGLJncz8x7YCjPHxKOeKYSKt9fsZw5Z2w2qKPGczYYgwfLqZ0pI/Mdu5xZ2BORIbb8MN/f/w9d9pe1Ha6chezx1uUBWCdJb
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] io_uring/cmd: introduce IORING_URING_CMD_REISSUE flag
-To: Caleb Sander Mateos <csander@purestorage.com>, Chris Mason <clm@fb.com>,
- Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>
-Cc: Mark Harmstone <maharmstone@fb.com>, linux-btrfs@vger.kernel.org,
- io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250619192748.3602122-1-csander@purestorage.com>
- <20250619192748.3602122-3-csander@purestorage.com>
-From: Jens Axboe <axboe@kernel.dk>
-Content-Language: en-US
-In-Reply-To: <20250619192748.3602122-3-csander@purestorage.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a6b:ee16:0:b0:86a:1fce:f1a6 with SMTP id
+ ca18e2360f4ac-876c6a24a1cmr31142739f.5.1751396643486; Tue, 01 Jul 2025
+ 12:04:03 -0700 (PDT)
+Date: Tue, 01 Jul 2025 12:04:03 -0700
+In-Reply-To: <CAF3JpA5AaoPXnQ81PYoEP89kGbKype5Fcew8JWSds4xbz40s+g@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68643123.a70a0220.3b7e22.1f43.GAE@google.com>
+Subject: Re: [syzbot] [wireless?] WARNING in _ieee80211_sta_cur_vht_bw
+From: syzbot <syzbot+ededba317ddeca8b3f08@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, moonhee.lee.ca@gmail.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 6/19/25 1:27 PM, Caleb Sander Mateos wrote:
-> diff --git a/io_uring/uring_cmd.c b/io_uring/uring_cmd.c
-> index 929cad6ee326..7cddc4c1c554 100644
-> --- a/io_uring/uring_cmd.c
-> +++ b/io_uring/uring_cmd.c
-> @@ -257,10 +257,12 @@ int io_uring_cmd(struct io_kiocb *req, unsigned int issue_flags)
->  			req->iopoll_start = ktime_get_ns();
->  		}
->  	}
->  
->  	ret = file->f_op->uring_cmd(ioucmd, issue_flags);
-> +	if (ret == -EAGAIN)
-> +		ioucmd->flags |= IORING_URING_CMD_REISSUE;
->  	if (ret == -EAGAIN || ret == -EIOCBQUEUED)
->  		return ret;
+Hello,
 
-Probably fold that under the next statement?
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-	if (ret == -EAGAIN || ret == -EIOCBQUEUED) {
-		if (ret == -EAGAIN) {
-			ioucmd->flags |= IORING_URING_CMD_REISSUE;
-		return ret;
-	}
+Reported-by: syzbot+ededba317ddeca8b3f08@syzkaller.appspotmail.com
+Tested-by: syzbot+ededba317ddeca8b3f08@syzkaller.appspotmail.com
 
-?
+Tested on:
 
--- 
-Jens Axboe
+commit:         3f804361 Add linux-next specific files for 20250701
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=178c388c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=46111759e155f4cc
+dashboard link: https://syzkaller.appspot.com/bug?extid=ededba317ddeca8b3f08
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=108af88c580000
+
+Note: testing is done by a robot and is best-effort only.
