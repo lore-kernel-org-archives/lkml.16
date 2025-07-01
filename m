@@ -1,101 +1,258 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7131F26E6E4;
-	Tue,  1 Jul 2025 09:30:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751362203; cv=none; b=Q8v7rkaesQ96qTu/KbD7MfnCzgtVDgY2pKc95kugpucGO3Fdlvj7nAhn/dR5U/dD/P6gDKnCL7zCi0h+pfVWlZ8g8Cr/EffprNcxM1X6ygA76uJmgUtbUfkuVMK3Q1v0fctwlRd5WJKsqssMz0rgvzzE+A+0TUTg92UzDhJQZlQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751362203; c=relaxed/simple;
-	bh=kZOKyNs4Db2MnERH7f8zaFtDju4I4ipaWRZu+43uIXo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=spA3dJXJ7BPjon1F+IHB2G6F6lqjIzFseAn69U5GnTfmNwofRYJ9wdOX0TDCnQgU/be7OEt9BJcplJ+HWYZIg4WHEJCuuGVVaeS2p24NlKjtX9tpf0ANcQqth65ZS0Wm1CfwUi+oWtwaMqWvWZsgfVq9qb3QUfEm2ONbI5uYtOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IebRQs2S; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IebRQs2S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CAB3C4CEEF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3F1026E71F;
 	Tue,  1 Jul 2025 09:30:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751362203;
-	bh=kZOKyNs4Db2MnERH7f8zaFtDju4I4ipaWRZu+43uIXo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IebRQs2S4Zck295c+TBqK/iU11rhK4zM9iH6It/WDDjTnkzRJDFRMga9rMofy3OYK
-	 W41pvCTEWF+AzUxh9eofQQnHdlHTwJg4iJA8ZKA0nN9/4jeP4TnRJIoMisw1r+ibuV
-	 p/RqM8cqTIwciKsQL54FaElEidEarmMz4MI9EmDr/qqOnhPZldCjGCO6AZrImtIAng
-	 e0tMkAozmrb6xpFrg9PHBXr+69xBZtAdSzlNLAWZD/41I9O+pEr0bO5e/LJ8QVkQmJ
-	 QBizlS8OEB4eVW6CgnbR1yjIk1x2mjXNtuE+18MWZoBMFlPOOaJhPX3QwfqTDNgjIw
-	 252/ta9q3QqvA==
-Date: Tue, 1 Jul 2025 11:30:00 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Vladimir Zapolskiy <vz@mleia.com>, Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>, 
-	"open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, 
-	"moderated list:ARM/LPC32XX SOC SUPPORT" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
-Subject: Re: [PATCH v2 1/1] dt-bindings: pwm: convert lpc32xx-pwm.txt to yaml
- format
-Message-ID: <3jtfwyrga5p6wucp6phzcizolnbgqexskelcolrapoepearqpd@3hws66swq2ya>
-References: <20250625161909.2541315-1-Frank.Li@nxp.com>
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.121
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751362204; cv=none; b=XNKihmJ8i1+dCwclXdv6PkijH+aS7jqpKRzmi/+ujpYONKkotukjbwKDQQHv5cu2UN1iBHjspvkXAClQ0RYhm8R6PVjdoCPCdVJrR335sM/ioCk33bvMJNb5u5JEXQYIwmGmVzsNR6RlDpG9XadTdVV2+zqEI4RX/n/aPS4Czzs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751362204; c=relaxed/simple;
+	bh=8u7h/nBJfYWdeS/UYb9vBlz9TbVUs+KIN+U+PxXPqys=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JLxoFm8HlKB+yH/FXbF4T6VASeYHZ1eV8gZhMva6HEWP76pDyKREBX3whG3jzcifvaSE5euOzWMvUUhH6sUC9OPLeJH4xL8ANMI4JDd4z79GDx+aBMxbnsYMS7+/pCH3zMfI7+E1YXzXns4U29gurfUn//CWQ7U1dfgmjewtXwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=aFjHhFEG; arc=none smtp.client-ip=185.125.188.121
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="aFjHhFEG"
+Received: from sec2-plucky-amd64.. (176-136-128-80.abo.bbox.fr [176.136.128.80])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 4B36E40840;
+	Tue,  1 Jul 2025 09:20:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1751361611;
+	bh=WPB0ezR4HrS5FYlJF4CPdmiG5nFAZx2ed00s/U6QN4Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type;
+	b=aFjHhFEGjI7M+DSBAp5ti6aR6cVGQk5kuLbRFZRhXM1B/4c549/8pGwfJlzEtA6dd
+	 xnpul2ZhEAjZVxv+qwdkujeJ3xLq0KONLs+FVIYhM2rVqTleQi9zEsskRlo86+iYPV
+	 xz2YZY1GYHKnCwsrJIdEWoRUHFrpRa3atvO3w2Aucc/qaEDUq9DzvHdo0HEhOL6f+4
+	 9KLsyvuD2RejiOobTQQxBxwLOzeY1xQcIeUv93BmtGgcpyJZ5Pj4HKH2cx97VDjBOV
+	 VxM84cSDHTk9PaD+m3BDF4nWkOzw46XhKHAGTebQQuA8YbS9qh3k3fckJqnVE+F8rE
+	 84x1VKn2GK3Bg==
+From: =?UTF-8?q?Maxime=20B=C3=A9lair?= <maxime.belair@canonical.com>
+To: linux-security-module@vger.kernel.org
+Cc: john.johansen@canonical.com,
+	paul@paul-moore.com,
+	jmorris@namei.org,
+	serge@hallyn.com,
+	mic@digikod.net,
+	kees@kernel.org,
+	stephen.smalley.work@gmail.com,
+	casey@schaufler-ca.com,
+	takedakn@nttdata.co.jp,
+	penguin-kernel@I-love.SAKURA.ne.jp,
+	song@kernel.org,
+	rdunlap@infradead.org,
+	linux-api@vger.kernel.org,
+	apparmor@lists.ubuntu.com,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Maxime=20B=C3=A9lair?= <maxime.belair@canonical.com>
+Subject: [PATCH v4 2/3] lsm: introduce security_lsm_config_*_policy hooks
+Date: Tue,  1 Jul 2025 11:17:40 +0200
+Message-ID: <20250701091904.395837-3-maxime.belair@canonical.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250701091904.395837-1-maxime.belair@canonical.com>
+References: <20250701091904.395837-1-maxime.belair@canonical.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ffz725mp2gxeplek"
-Content-Disposition: inline
-In-Reply-To: <20250625161909.2541315-1-Frank.Li@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+Define two new LSM hooks: security_lsm_config_self_policy and
+security_lsm_config_system_policy and wire them into the corresponding
+lsm_config_*_policy() syscalls so that LSMs can register a unified
+interface for policy management. This initial, minimal implementation
+only supports the LSM_POLICY_LOAD operation to limit changes.
 
---ffz725mp2gxeplek
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 1/1] dt-bindings: pwm: convert lpc32xx-pwm.txt to yaml
- format
-MIME-Version: 1.0
+Signed-off-by: Maxime Bélair <maxime.belair@canonical.com>
+---
+ include/linux/lsm_hook_defs.h |  4 +++
+ include/linux/security.h      | 20 +++++++++++
+ include/uapi/linux/lsm.h      |  8 +++++
+ security/lsm_syscalls.c       | 17 ++++++++--
+ security/security.c           | 63 +++++++++++++++++++++++++++++++++++
+ 5 files changed, 110 insertions(+), 2 deletions(-)
 
-Hello Frank,
+diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
+index bf3bbac4e02a..fca490444643 100644
+--- a/include/linux/lsm_hook_defs.h
++++ b/include/linux/lsm_hook_defs.h
+@@ -464,3 +464,7 @@ LSM_HOOK(int, 0, bdev_alloc_security, struct block_device *bdev)
+ LSM_HOOK(void, LSM_RET_VOID, bdev_free_security, struct block_device *bdev)
+ LSM_HOOK(int, 0, bdev_setintegrity, struct block_device *bdev,
+ 	 enum lsm_integrity_type type, const void *value, size_t size)
++LSM_HOOK(int, -EINVAL, lsm_config_self_policy, u32 lsm_id, u32 op,
++	 void __user *buf, size_t size, u32 flags)
++LSM_HOOK(int, -EINVAL, lsm_config_system_policy, u32 lsm_id, u32 op,
++	 void __user *buf, size_t size, u32 flags)
+diff --git a/include/linux/security.h b/include/linux/security.h
+index cc9b54d95d22..54acaee4a994 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -581,6 +581,11 @@ void security_bdev_free(struct block_device *bdev);
+ int security_bdev_setintegrity(struct block_device *bdev,
+ 			       enum lsm_integrity_type type, const void *value,
+ 			       size_t size);
++int security_lsm_config_self_policy(u32 lsm_id, u32 op, void __user *buf,
++				    size_t size, u32 flags);
++int security_lsm_config_system_policy(u32 lsm_id, u32 op, void __user *buf,
++				      size_t size, u32 flags);
++
+ #else /* CONFIG_SECURITY */
+ 
+ /**
+@@ -1603,6 +1608,21 @@ static inline int security_bdev_setintegrity(struct block_device *bdev,
+ 	return 0;
+ }
+ 
++static inline int security_lsm_config_self_policy(u32 lsm_id, u32 op,
++						  void __user *buf,
++						  size_t size, u32 flags)
++{
++
++	return -EOPNOTSUPP;
++}
++
++static inline int security_lsm_config_system_policy(u32 lsm_id, u32 op,
++						    void __user *buf,
++						    size_t size, u32 flags)
++{
++
++	return -EOPNOTSUPP;
++}
+ #endif	/* CONFIG_SECURITY */
+ 
+ #if defined(CONFIG_SECURITY) && defined(CONFIG_WATCH_QUEUE)
+diff --git a/include/uapi/linux/lsm.h b/include/uapi/linux/lsm.h
+index 938593dfd5da..2b9432a30cdc 100644
+--- a/include/uapi/linux/lsm.h
++++ b/include/uapi/linux/lsm.h
+@@ -90,4 +90,12 @@ struct lsm_ctx {
+  */
+ #define LSM_FLAG_SINGLE	0x0001
+ 
++/*
++ * LSM_POLICY_XXX definitions identify the different operations
++ * to configure LSM policies
++ */
++
++#define LSM_POLICY_UNDEF	0
++#define LSM_POLICY_LOAD		100
++
+ #endif /* _UAPI_LINUX_LSM_H */
+diff --git a/security/lsm_syscalls.c b/security/lsm_syscalls.c
+index a3cb6dab8102..dd016ba6976c 100644
+--- a/security/lsm_syscalls.c
++++ b/security/lsm_syscalls.c
+@@ -122,11 +122,24 @@ SYSCALL_DEFINE3(lsm_list_modules, u64 __user *, ids, u32 __user *, size,
+ SYSCALL_DEFINE5(lsm_config_self_policy, u32, lsm_id, u32, op, void __user *,
+ 		buf, u32 __user *, size, u32, flags)
+ {
+-	return 0;
++	size_t usize;
++
++	if (get_user(usize, size))
++		return -EFAULT;
++
++	return security_lsm_config_self_policy(lsm_id, op, buf, usize, flags);
+ }
+ 
+ SYSCALL_DEFINE5(lsm_config_system_policy, u32, lsm_id, u32, op, void __user *,
+ 		buf, u32 __user *, size, u32, flags)
+ {
+-	return 0;
++	size_t usize;
++
++	if (!capable(CAP_SYS_ADMIN))
++		return -EPERM;
++
++	if (get_user(usize, size))
++		return -EFAULT;
++
++	return security_lsm_config_system_policy(lsm_id, op, buf, usize, flags);
+ }
+diff --git a/security/security.c b/security/security.c
+index fb57e8fddd91..b2faf80da93b 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -5883,6 +5883,69 @@ int security_bdev_setintegrity(struct block_device *bdev,
+ }
+ EXPORT_SYMBOL(security_bdev_setintegrity);
+ 
++/**
++ * security_lsm_config_self_policy() - Configure caller's LSM policies
++ * @lsm_id: id of the LSM to target
++ * @op: Operation to perform (one of the LSM_POLICY_XXX values)
++ * @buf: userspace pointer to policy data
++ * @size: size of @buf
++ * @flags: lsm policy configuration flags
++ *
++ * Configure the policies of a LSM for the current domain/user. This notably
++ * allows to update them even when the lsmfs is unavailable or restricted.
++ * Currently, only LSM_POLICY_LOAD is supported.
++ *
++ * Return: Returns 0 on success, error on failure.
++ */
++int security_lsm_config_self_policy(u32 lsm_id, u32 op, void __user *buf,
++				 size_t size, u32 flags)
++{
++	int rc = LSM_RET_DEFAULT(lsm_config_self_policy);
++	struct lsm_static_call *scall;
++
++	lsm_for_each_hook(scall, lsm_config_self_policy) {
++		if ((scall->hl->lsmid->id) == lsm_id) {
++			rc = scall->hl->hook.lsm_config_self_policy(lsm_id, op, buf, size, flags);
++			break;
++		}
++	}
++
++	return rc;
++}
++EXPORT_SYMBOL(security_lsm_config_self_policy);
++
++/**
++ * security_lsm_config_system_policy() - Configure system LSM policies
++ * @lsm_id: id of the lsm to target
++ * @op: Operation to perform (one of the LSM_POLICY_XXX values)
++ * @buf: userspace pointer to policy data
++ * @size: size of @buf
++ * @flags: lsm policy configuration flags
++ *
++ * Configure the policies of a LSM for the whole system. This notably allows
++ * to update them even when the lsmfs is unavailable or restricted. Currently,
++ * only LSM_POLICY_LOAD is supported.
++ *
++ * Return: Returns 0 on success, error on failure.
++ */
++int security_lsm_config_system_policy(u32 lsm_id, u32 op, void __user *buf,
++				   size_t size, u32 flags)
++{
++	int rc = LSM_RET_DEFAULT(lsm_config_system_policy);
++	struct lsm_static_call *scall;
++
++	lsm_for_each_hook(scall, lsm_config_system_policy) {
++		if ((scall->hl->lsmid->id) == lsm_id) {
++			rc = scall->hl->hook.lsm_config_system_policy(lsm_id, op, buf, size, flags);
++			break;
++		}
++	}
++
++	return rc;
++}
++EXPORT_SYMBOL(security_lsm_config_system_policy);
++
++
+ #ifdef CONFIG_PERF_EVENTS
+ /**
+  * security_perf_event_open() - Check if a perf event open is allowed
+-- 
+2.48.1
 
-On Wed, Jun 25, 2025 at 12:19:08PM -0400, Frank Li wrote:
-> Convert pc32xx-pwm.txt to yaml format.
->=20
-> Additional changes:
-> - add ref to pwm.yaml
-> - add clocks
-> - restrict #pwm-cells to 3
->=20
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> change in v2
-> - allow clocks, there are not clocks for nxp,lpc3220-motor-pwm, so not put
-> into required.
-
-Applied to
-https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
-next
-with the R-b tags for Rob and Vladimir.
-
-Thanks
-Uwe
-
---ffz725mp2gxeplek
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhjqpUACgkQj4D7WH0S
-/k7cZwgAjSlcgslaZQCd4n6XMk369t4QHQX44Dpo46C4+913tMXa3IOAm2bpUVVW
-CXwEF8h0/i0Yyv6icPkv9SCdERBN/dz7xTHB7dhJvtUj2aWSUlS5lEcACWSuq8P1
-DO9U3tDD33LGOVYYV+crDYqpfbUi+6Z3jhLPhYNWY+Zfq2Q+i/XuRtGhx0f7708g
-loG8RYpKnT7Ux2rNhfD73lgNkzyFEbTT9E8HA7HEdXez4ENrVOxnPnAuvRxEnaRH
-ZEhA8RLY4N+lfL5eE+7TPrgg2qNbRR/iSR11AqoFyWy2WbiXk2eopw23IAcAJtKb
-rzZ8jbkiyf/7BqQ2G9DIUxT7pgkcmQ==
-=/nBM
------END PGP SIGNATURE-----
-
---ffz725mp2gxeplek--
