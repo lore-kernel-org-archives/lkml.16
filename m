@@ -1,187 +1,146 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E5A719F130
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 06:44:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C986670824
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 06:45:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751352300; cv=none; b=SqlFY1sdDH/F5N3KirgH2w9aqbjaP1qqiA59gbYBazQ6Em8oiLiQbShOKjNW6R1vmk4LeYRUs40xf2MrgzKiYi5t8NI5w0L36g3ryZX05BjyJemi89ZKHbrkvaMZ0pvUEqM3jC+DkqVYdh8uMyBhRi9Fwe7FGOoWdu6pFeFWO84=
+	t=1751352327; cv=none; b=nmXdZpZMBMAzW2QF2jrcGt/rkS2IiK63i4NNpizdIcdyhR5A+fjGy+MaXxUxvEEezHmGZL/WFX8g10L7CnPAOWF7z9BKwAT9xWL498mXRPputF1KfRHvRHkygfHQm00/5+edE9fA46osUtMaBfJ1tLn78I+Kq8YwneK0mEDSoD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751352300; c=relaxed/simple;
-	bh=2cq/p3Ujf/QZM6znvEBgDgRTAL2DLiphSQdkZ4i4r80=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FEh3DyLjmNzay98EJNADeyln6TexUFHNhsOJ9Aeh9G9gCJZkjoRG7SFSJu8QFTCHU9/yxvd9pbL98DLhqzsA0lueaNtriz2PXUt85LZWWBTdN2wkYZk04eLO39k0k4jXjtZj0+QyeiSz5SC2pUEsC9+Qsh8id6ISrPhqzPSRITA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EyBvBqBA; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751352327; c=relaxed/simple;
+	bh=tOJOXRdK/ryHyP8Dn27ldM3nIhR+TjE6xNNG4EiYLzA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=DWHl3tg0Z/U3L4kBLumUb57MjzhLi1IyLbiRq0LiTHxCsJdx3FtrrB4NPB47CDpbKkgARf+ZM0UOLFVXJaoLKEXlZNLoNd303pYvgt11lmbNW+fMfSnbblMyU/ph8vHNGUtZkfh3rF1FcGkDXWRLKMPJ8+Qa/LZ+ZB+3EWbJIC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=NOqvjnd2; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EyBvBqBA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751352298;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Biae0HaOibcJc+UiP0IzJsOLAa3a5dn69Z3XEzox1Hg=;
-	b=EyBvBqBAs923tajWyt0KNe88GW/ct6FPTGCN6jIGSFWuS9ygAfkqlZYZMFQVWriOHnCIGn
-	Vk0ecuutRLvJ3NMTYksi0dW9H+RJYjMsSopZtQjkIK/mWjDGIu6hzLqPwQlNMlapeuE5ls
-	jRtmwOlDp++sr/UEKeDgG+m4ccHiMAg=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-571-nzEL2oXHOwC0J_FmWCtybw-1; Tue, 01 Jul 2025 02:44:56 -0400
-X-MC-Unique: nzEL2oXHOwC0J_FmWCtybw-1
-X-Mimecast-MFC-AGG-ID: nzEL2oXHOwC0J_FmWCtybw_1751352296
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a6da94a532so1854177f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 23:44:56 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NOqvjnd2"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-553c31542b1so3337265e87.2
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 23:45:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1751352324; x=1751957124; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=InMRKcJ50unLTb5CVsAxGeAjYB3oV9wwcmedmgo5w5M=;
+        b=NOqvjnd2xKeqn0HHCBpAs2wg0gYUphcNZMNn4V7iOiKJvODTw/jhMe6Q0HEzA+AFS9
+         nrW1SIrlG7TwhvUef9rJpkHA4jo0yEX76nn3FVGGLQ8BFkxE1l29HMsWv4n8Q8zLmk0D
+         kL3BH/i4rAjoU6COikplRl/5rbW4JGxUILQ30=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751352295; x=1751957095;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Biae0HaOibcJc+UiP0IzJsOLAa3a5dn69Z3XEzox1Hg=;
-        b=usuZ1DCREMwHi8vxwR6baqT0o3ITRN+0AkYopPidBW2ZJEoe4amU9CSGoNNcaot1yA
-         h/Vm19myfNqwUHYbprwc4x8QZ/rQmO60vxDBLFUjhKRLvBIexuW+bFqsgLKqtnHD4IXX
-         ngam2LLw8MZ+i3jHdpamvY49frL7GKKuTR83WScY63l7dgbddFy7dw7Pb73e7evXfRHF
-         hTE2AxBZBkuYE8t3/YA+ECjXGgnTNC9O/iTcNl2GkVlTt3EHq1fzZmoDNlOL/puwY0xR
-         Q65sBVPkA8vEPDBDSt016UvpavGIH5zcybPzgAeKMGwBll+uLlnNWhAJx+l/FTPdkOZv
-         SGXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWpOIH5tfjeQqShMo9zTTr44/INcNBsNtLYrY9O8TMKU6nlNvcvvVsAwIcUjjUDBxUI8CdT29V7Cz/u+S0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnqNRwJZTf7cPTFzTIipqyAS8N2A//2DOMdAS7VmauGZlW/vMq
-	2NRvQOP9zc1lrpAvAjoRmMlYLNF9J2AyX89DP+wG+zW4r4csZRPkFNVMYmUhoJLMEQV5HDE/GfK
-	o/c9s3aRIog7UG4uwYi6+HGlhFTSLRlGIOuRDLpYoPFruL7ZiQ06jxDhwaGpN99a8RQ==
-X-Gm-Gg: ASbGncvQOBMxbqR4uZ9etT2PVB/IpChaxRyRFL6c0D68EduswviKz2T/qv5/++SQfnq
-	QPe2yqMr5BR/nv+U2NDoCVbiGkerbGXBaYAJQOX4v8KBChzwpXx1xYHkgOt6DIIsDh1KgfOMHn3
-	c3tBdxOSZzxHkqcktMtA+yP9iNRKGLq6bAifSiZQzjCD4G6mHLrYZT8To73A3k9YU6wCySFQjL1
-	K5N5ARl3+b2SUWynGhvtd3kJ4HAxZKFNmgQQKuOF8/uFF/RW1qNipXwz0+6zdsbbAKsS8hfXUbh
-	lv2BEt/HhNJZA564
-X-Received: by 2002:a5d:59c7:0:b0:3a4:fc3f:ed28 with SMTP id ffacd0b85a97d-3a8fee64fafmr16298906f8f.29.1751352295491;
-        Mon, 30 Jun 2025 23:44:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF5SZYUakeo17am0QQzCalgVq4U/8EgA20Q1A9i6qzirA4ICaPsq6bSj8ZyqMWcbiRUOp1koQ==
-X-Received: by 2002:a5d:59c7:0:b0:3a4:fc3f:ed28 with SMTP id ffacd0b85a97d-3a8fee64fafmr16298883f8f.29.1751352295096;
-        Mon, 30 Jun 2025 23:44:55 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:152e:1400:856d:9957:3ec3:1ddc])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823ad03asm187610015e9.23.2025.06.30.23.44.54
+        d=1e100.net; s=20230601; t=1751352324; x=1751957124;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=InMRKcJ50unLTb5CVsAxGeAjYB3oV9wwcmedmgo5w5M=;
+        b=dyDd+JKDGQlJ6qYmx6HOgUhMesY9nt2RcSMpQ+b506q0pCNd0hT1CPvrNK5whYwOF3
+         6cvb7S+WCXccyoiV5PinDIiLBAxInPWDLsaRMrYg9w0sCnutlgjhfMnal4XeKhI4GH1r
+         tNnhZwkjhCXs0j5Zw4+xoqKi4cOfBDWrfXbL6Av60wYwE+a3Bye4q5cefZ0jwPm10wOX
+         WeLNP8xVtZ2PozrXLqEypwdzulhAveHUEFUgwJHN3Arov6rnH3Ce+deL+IgZ/mvF1bjO
+         NrUzoF4O+1EcBkeGLfQU0et9LrCVaENk0N+lluh0Y83vKuNi4UJ1l+76jycK25g+a2vg
+         EYqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWgCjW9+H96KLFXRymi9AzQfFrJcoB/M9HYZueqkCsBOG2ySEi1sWpbnkQdLVoyEc4kFOQlyvJlkFAK1vU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOA+kudNLJcnFauW123aV4ikEaH805dOGDQ6GL+SYycKw0aiQd
+	CyTsKbOvQbIZEfWHsDv6+p6b3I+xUJ92XKVs/4nxEm6knWLEfnhHv9jPdfPBcvZBfA==
+X-Gm-Gg: ASbGnctTPF9YF9CY0mYlf+kGsU2QTXLd0XqG1A9ycHMCUl956VG5p9SfqlpUhNI04VG
+	poqH8VG0+wNxGUrIhZ3XQ4wD1J/0B6GOzpcfLodLGoN0OxWI+rVsadBZ6ZtqdbQDsLjKMHUbR+o
+	yGIzW+D7/mRbt7hQOhhILU8ZhTk6Ln0gs05b4G9T4w1gbhH0iBIFPHTa8yBUFfl5qLdwqHcrE7I
+	RU5056fdLJE0QMNwgmQLaoCl/7rHs7GlQLuHkLN9YccghC6s0D0HQDT6N+P1nZtMgEcYcgvKf8b
+	NRMvEUCl+TM+XeaHwMkz1cGkQZ/sTCtFCq9Fkygg1HUXtdgSo0OInjrXWF49ZQcPxdjLc3jB6jC
+	4vCrigBkmh6rPLg6L8FOW4OeJ6NvTNdLozmgZn01Hn8S1jZ8GHmvg
+X-Google-Smtp-Source: AGHT+IEwAUtBMHtxo7zLfmi7VRr95b7DWNnA3oYoEc2VN/wYz2whDToc5FnjOck0R8fPlmIA96OuAQ==
+X-Received: by 2002:a05:6512:3e2a:b0:540:2fd2:6c87 with SMTP id 2adb3069b0e04-5550b87ca2dmr5835228e87.16.1751352323861;
+        Mon, 30 Jun 2025 23:45:23 -0700 (PDT)
+Received: from ribalda.c.googlers.com (166.141.88.34.bc.googleusercontent.com. [34.88.141.166])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b2f162dsm1704836e87.248.2025.06.30.23.45.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 23:44:54 -0700 (PDT)
-Date: Tue, 1 Jul 2025 02:44:52 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Jason Wang <jasowang@redhat.com>
-Cc: xuanzhuo@linux.alibaba.com, eperezma@redhat.com,
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 17/19] virtio_ring: factor out split indirect
- detaching logic
-Message-ID: <20250701024441-mutt-send-email-mst@kernel.org>
-References: <20250616082518.10411-1-jasowang@redhat.com>
- <20250616082518.10411-18-jasowang@redhat.com>
+        Mon, 30 Jun 2025 23:45:23 -0700 (PDT)
+From: Ricardo Ribalda <ribalda@chromium.org>
+Subject: [PATCH v4 0/7] media: uvcvideo: Invert granular PM logic + PM fix
+Date: Tue, 01 Jul 2025 06:45:12 +0000
+Message-Id: <20250701-uvc-grannular-invert-v4-0-8003b9b89f68@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250616082518.10411-18-jasowang@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPiDY2gC/4XNTQrCMBCG4atI1kby02jiynuIi3SStgFNZdoGp
+ fTupt0oYnH5fjDPjKTzGHxHjpuRoE+hC23MUWw3BBoba0+Dy00EE4opoemQgNZoYxyuFmmIyWN
+ PubFOFqCMNJzk0zv6KjwW9nzJ3YSub/G5fEl8Xv+AiVNGHeNK88oACHWCBttbGG67Fmsym0m8n
+ T0TK47IDugDN7KwTmv2w5EfjmQrjsyOLZ2CUkGhysOXM03TC2MEnxxLAQAA
+X-Change-ID: 20250528-uvc-grannular-invert-19ad34c59391
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Hans Verkuil <hverkuil@xs4all.nl>, Hans de Goede <hansg@kernel.org>, 
+ Hans de Goede <hansg@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Ricardo Ribalda <ribalda@chromium.org>, Hans Verkuil <hans@jjverkuil.nl>, 
+ Hans Verkuil <hans@hverkuil.nl>
+X-Mailer: b4 0.14.2
 
-On Mon, Jun 16, 2025 at 04:25:15PM +0800, Jason Wang wrote:
-> Factor out the split indirect descriptor detaching logic in order to
-> make it be reused by the in order support.
+It makes more sense to have a list of the ioctls that need power than
+the other way around. This patchset takes care of this.
 
-allow it to be reused
+It also fixes one error in the PM logic introduced in a recent patchset.
 
-> 
-> Reviewed-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> ---
->  drivers/virtio/virtio_ring.c | 63 ++++++++++++++++++++----------------
->  1 file changed, 35 insertions(+), 28 deletions(-)
-> 
-> diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-> index e8e0d1204f52..259380797ec4 100644
-> --- a/drivers/virtio/virtio_ring.c
-> +++ b/drivers/virtio/virtio_ring.c
-> @@ -773,11 +773,42 @@ static bool virtqueue_kick_prepare_split(struct vring_virtqueue *vq)
->  	return needs_kick;
->  }
->  
-> +static void detach_indirect_split(struct vring_virtqueue *vq,
-> +				  unsigned int head)
-> +{
-> +	struct vring_desc_extra *extra = vq->split.desc_extra;
-> +	struct vring_desc *indir_desc =
-> +	       vq->split.desc_state[head].indir_desc;
-> +	unsigned int j;
-> +	u32 len, num;
-> +
-> +	/* Free the indirect table, if any, now that it's unmapped. */
-> +	if (!indir_desc)
-> +		return;
-> +	len = vq->split.desc_extra[head].len;
-> +
-> +	BUG_ON(!(vq->split.desc_extra[head].flags &
-> +			VRING_DESC_F_INDIRECT));
-> +	BUG_ON(len == 0 || len % sizeof(struct vring_desc));
-> +
-> +	num = len / sizeof(struct vring_desc);
-> +
-> +	extra = (struct vring_desc_extra *)&indir_desc[num];
-> +
-> +	if (vq->use_dma_api) {
-> +		for (j = 0; j < num; j++)
-> +			vring_unmap_one_split(vq, &extra[j]);
-> +	}
-> +
-> +	kfree(indir_desc);
-> +	vq->split.desc_state[head].indir_desc = NULL;
-> +}
-> +
->  static void detach_buf_split(struct vring_virtqueue *vq, unsigned int head,
->  			     void **ctx)
->  {
->  	struct vring_desc_extra *extra;
-> -	unsigned int i, j;
-> +	unsigned int i;
->  	__virtio16 nextflag = cpu_to_virtio16(vq->vq.vdev, VRING_DESC_F_NEXT);
->  
->  	/* Clear data ptr. */
-> @@ -801,34 +832,10 @@ static void detach_buf_split(struct vring_virtqueue *vq, unsigned int head,
->  	/* Plus final descriptor */
->  	vq->vq.num_free++;
->  
-> -	if (vq->indirect) {
-> -		struct vring_desc *indir_desc =
-> -				vq->split.desc_state[head].indir_desc;
-> -		u32 len, num;
-> -
-> -		/* Free the indirect table, if any, now that it's unmapped. */
-> -		if (!indir_desc)
-> -			return;
-> -		len = vq->split.desc_extra[head].len;
-> -
-> -		BUG_ON(!(vq->split.desc_extra[head].flags &
-> -				VRING_DESC_F_INDIRECT));
-> -		BUG_ON(len == 0 || len % sizeof(struct vring_desc));
-> -
-> -		num = len / sizeof(struct vring_desc);
-> -
-> -		extra = (struct vring_desc_extra *)&indir_desc[num];
-> -
-> -		if (vq->use_dma_api) {
-> -			for (j = 0; j < num; j++)
-> -				vring_unmap_one_split(vq, &extra[j]);
-> -		}
-> -
-> -		kfree(indir_desc);
-> -		vq->split.desc_state[head].indir_desc = NULL;
-> -	} else if (ctx) {
-> +	if (vq->indirect)
-> +		detach_indirect_split(vq, head);
-> +	else if (ctx)
->  		*ctx = vq->split.desc_state[head].indir_desc;
-> -	}
->  }
->  
->  static bool virtqueue_poll_split(const struct vring_virtqueue *vq,
-> -- 
-> 2.34.1
+To support CI I have included patches that are in uvc/for-next but not
+in media-committer:
+media: uvcvideo: Remove stream->is_streaming field
+media: uvcvideo: Split uvc_stop_streaming()
+media: uvcvideo: Handle locks in uvc_queue_return_buffers
+media: uvcvideo: Use vb2 ioctl and fop helpers
+Do not review them again.
+
+Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+---
+Changes in v4:
+- CTRL_MAP DO need the device powered. Thanks Laurent
+- CodeStyle
+- use EXPORT_SYMBOL_GPL
+- Link to v3: https://lore.kernel.org/r/20250630-uvc-grannular-invert-v3-0-abd5cb5c45b7@chromium.org
+
+Changes in v3:
+- Rebase
+- Merge Invert PM patch with add support for compat ioctls
+- Export different core function
+- Inline the pm_ioctl patch
+- Fix typo in comment
+- Link to v2: https://lore.kernel.org/r/20250602-uvc-grannular-invert-v2-0-c871934ad880@chromium.org
+
+Changes in v2. Thanks HdG:
+- Rebase fop
+- CodeStyle
+- Refactor SEND_INITIAL to avoid lis_del()
+- Squash "invert PM logic" and "unless is needed"
+- Link to v1: https://lore.kernel.org/r/20250528-uvc-grannular-invert-v1-0-d01581f9cc25@chromium.org
+
+---
+Hans Verkuil (1):
+      media: uvcvideo: Use vb2 ioctl and fop helpers
+
+Ricardo Ribalda (6):
+      media: uvcvideo: Handle locks in uvc_queue_return_buffers
+      media: uvcvideo: Split uvc_stop_streaming()
+      media: uvcvideo: Remove stream->is_streaming field
+      media: uvcvideo: Turn on the camera if V4L2_EVENT_SUB_FL_SEND_INITIAL
+      media: core: export v4l2_translate_cmd
+      media: uvcvideo: uvc_v4l2_unlocked_ioctl: Invert PM logic
+
+ drivers/media/usb/uvc/uvc_ctrl.c     |  10 +-
+ drivers/media/usb/uvc/uvc_driver.c   |  37 +---
+ drivers/media/usb/uvc/uvc_metadata.c |   8 +-
+ drivers/media/usb/uvc/uvc_queue.c    | 199 +++++---------------
+ drivers/media/usb/uvc/uvc_v4l2.c     | 345 +++++------------------------------
+ drivers/media/usb/uvc/uvcvideo.h     |  37 +---
+ drivers/media/v4l2-core/v4l2-ioctl.c |   5 +-
+ include/media/v4l2-ioctl.h           |   1 +
+ 8 files changed, 112 insertions(+), 530 deletions(-)
+---
+base-commit: 35392e855abf7d02ad3b061cbc75c7c7c37f0577
+change-id: 20250528-uvc-grannular-invert-19ad34c59391
+
+Best regards,
+-- 
+Ricardo Ribalda <ribalda@chromium.org>
 
