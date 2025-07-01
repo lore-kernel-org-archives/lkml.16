@@ -1,98 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 545E02737EE;
-	Tue,  1 Jul 2025 16:54:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B4FC1C3306;
+	Tue,  1 Jul 2025 16:56:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751388864; cv=none; b=BX+x4ffySt4bbArb3/lcOA2snvrusM1RGG6HbFrK3BuIXV9sptBmX5VS2iyiFVQfW1kWyfCeqbtav+NwCRuwmwEH0A4RF4viayc9WLPcVizHWJGxDxc24sRPJnvt6TD/Vyt3QWNP1HLkDHs0OfKxU1dp8qVvfFtYOXOpgl+wn8Q=
+	t=1751388991; cv=none; b=jL+yRdak60CFZ7vk1sQLQ0JzALXLgYJzcJ2MKOS8cv/tD/6yG6xDp8NWhQ3QCX79vKyj7kJjU6ju6W5lGTQblVAcmUgthpNwiHMVhIvgMEE2hL0BKnZS+X+my7ax7bsnWgXfFe2GDC9VVaNBHsCCAAj1MMTeJm68XEC1kxwGnus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751388864; c=relaxed/simple;
-	bh=1+3vg/zcoknj5CNtt2fI/fvugWzLylZAThTmozfd2T0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=Bfaa8peOH7ELrh+VUwjLRaD+OdvwXj6vWCH/toI1d+9c7X85tY+8I8Py2HcUX8VVmpmYScQhMsiFv6UMHzUCl0ku7jfDCbPd7BomquZtSHRE/ezamwkPGm6uqzWzlW1sSQUCjWQ3ceuYHzugUKCsul4eGg8JbnNaa8aObEWYuAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cjTP4Cjg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751388991; c=relaxed/simple;
+	bh=0pW3TP/nGu93gQFVw2O41yC0Ln3jmgnyWGFF53ZWbI4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FnfMjktozqjV3KF/cercXR9+K5L2t4gil96NLSmaHeYtJDNmFvNXpvR9ohtf0Qc08Y02yMxRzV69oeS1DWQOREmvEQmr8NTZuDmvuoY4iyi4W4kV7V8QLslOSwLQ0n85d+4ANTowc1ul8AcqzvqUtDLZF9Mccrflsbc5IvpmvCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eg5PunUY; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cjTP4Cjg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28305C4CEEB;
-	Tue,  1 Jul 2025 16:54:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751388863;
-	bh=1+3vg/zcoknj5CNtt2fI/fvugWzLylZAThTmozfd2T0=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=cjTP4CjglFq69TzZto2YkmcX6/C7ZNv28mnh9AgDEuhJOIUT927ObGGXqas1KFbtM
-	 f1C+fiZ3YupfXos9/wRxQJzsicUjKU7e6Ioh7MnV53rCAmRIaEYFEzSPHttRnjL4ZB
-	 XKSsF9I02+8CvW5KukJooRRAZVtBvwzhuxW0C9oJfCTV5DhT7eUGKMsTXRBScDzB7W
-	 etq9XgPFSr45JT32yhfr+03b8uG8bNsrveui1Cp6xt70R8w24RfW2wmPk5qBqINA+x
-	 euU+wag8GoK/GZumIDc7W+9pG4QEorfu4prSu72NlqD7tiWKwVruPAZKbz7EG/K3Vv
-	 xf07OWDySblvQ==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eg5PunUY"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-313fab41fd5so1290616a91.1;
+        Tue, 01 Jul 2025 09:56:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751388990; x=1751993790; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KdOA3lpTZpeFzYmOyWPv0Y1QoQj1TrHSWxUR8VixR+Y=;
+        b=eg5PunUYraAe77uAXRrnIG+MZT8AV1vQJYSn7tvUbpLyPhzF8YJqSFD/rI395IzCOU
+         R+XdRZHXsje9wojskYaJTNCnMfeCfBunCBlAlyNSFaZYB5PdLU7QzYArboJp3bTaVd/E
+         9IgW9/9X01mU0NnmDbVsa5KeOqeLMTYLEbak0aK1QNx+baUPnguo0CcxIALEdptPIl7g
+         xRX2b2GEoZ5FijQaNyEoiLKE/Y25geAp69QGJyus991zaP5Ko0DjlSbHdSApsLOCjFT/
+         euA6DdhACcYTEOJUK2cdFzT8z+WpG++GJFAYfDPAUKJNHIjv0H0GyiRx04xgwvAs9kDq
+         P70Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751388990; x=1751993790;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KdOA3lpTZpeFzYmOyWPv0Y1QoQj1TrHSWxUR8VixR+Y=;
+        b=h3pPYHyQwfKInamwgDghtnXOSD0D4z+NQbdfGnqW0NFqqvnd5dLic7P8j4DVo34yPZ
+         3V80icsCQv9gfKUPZKf9xTu8db+NKZPXsvKbGu+pNGZUwcrE30SpjJ8w3B6mCEGqIZ7c
+         YP9C/zn5bj1UwUe4EfdEImiT4RW29orhgiLYAwZwcqGjW81jTtVo+/skNiArvnDtA5mI
+         SNhdPtnGeqPrC7lxOla5uzsl+N++TnDKeL/k95p3V2wCdR6upZoGe3t3HNKOLnjvQKfZ
+         gq81WEuDe9a4NVXpCONjoPAeZFDacwRSyr643ehVug93tTJSNcySyz5jite4wlz7lZ/R
+         CswQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVAzH1vrcNI9AviNcCvsjJUwj6GIMQ3+4BsC32R76nN57oNCqkTfo+K0nYIr3vRwjd84iD//aUpUWsfU5uB@vger.kernel.org, AJvYcCWT6nFhiCfrMt+jYFbDclbDX/ZDvaLder90pk/hS14lTmushyDzf3sT+EJsp2mgesamKYyC0OLLwrddX6jb6Rs=@vger.kernel.org, AJvYcCXHKn0ZnLPx7qtS0pNAo8OG7t/LQJqjUzk9z/+OaI9iKEil8iJ7nf9h8/rFsNcneqvneAj6SbyokUiOoWhU@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEROc/f4iCYKuQp9X27Yh26ka/HSGZXXVkYt2cq87sa13EcLX8
+	mDNL1cqZyzWZQAdhqwxwmoQ/m47jDvwQUXfrSi50Dm/HzNwR1gqYZ8KpHK0+yKC4vRul3QW70JP
+	vqKyfGsVqx2QR/awCWF9JB3LdmF5yvheZ2FP94BFgCw==
+X-Gm-Gg: ASbGncvG/3nTsPfB5A6PWQIocaS35UGKmkb34Icbun0n5230LBJz6CgwwrlxlU43fpv
+	gvaFNXa0cBdq9eXKqKzxoC8jqPO9Sk8kA0/AsfvLm1UsNe3gHmvJuOS7YTSAQbxMZtYTbo329h7
+	xror05TMoNu0HGFNxB+RC10vQrL3r4mC2YzvKyURU1/0LaN9oeqGQZsg==
+X-Google-Smtp-Source: AGHT+IHbBSasC4FVI3lzENfix/hTaP0fBUH0mKDnnKo6XoONgyd/DDi5zgE6Flmur2I1ueeEbVilDJzopPJpcZD480A=
+X-Received: by 2002:a17:90b:2ecb:b0:311:c5d9:2c8b with SMTP id
+ 98e67ed59e1d1-31951a12a78mr2098121a91.5.1751388989619; Tue, 01 Jul 2025
+ 09:56:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20250701-xarray-insert-reserve-v1-0-25df2b0d706a@gmail.com> <20250701-xarray-insert-reserve-v1-3-25df2b0d706a@gmail.com>
+In-Reply-To: <20250701-xarray-insert-reserve-v1-3-25df2b0d706a@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 1 Jul 2025 18:56:17 +0200
+X-Gm-Features: Ac12FXzVE-UNW0TA4Ex_sS0i850xaRXXSEsIJ4SwFR7UgdwzUfddQlSdSNp4frE
+Message-ID: <CANiq72nf-h86GszE3=mLpWHi5Db+Tj0TRyUe9ANfjdNbesBEEg@mail.gmail.com>
+Subject: Re: [PATCH 3/3] rust: xarray: add `insert` and `reserve`
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Andreas Hindborg <a.hindborg@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Matthew Wilcox <willy@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	Daniel Almeida <daniel.almeida@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 01 Jul 2025 18:54:16 +0200
-Message-Id: <DB0VJ9HRT0VG.GT9HOT7J29EL@kernel.org>
-Cc: "Andreas Hindborg" <a.hindborg@kernel.org>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Alice Ryhl"
- <aliceryhl@google.com>, "Masahiro Yamada" <masahiroy@kernel.org>, "Nathan
- Chancellor" <nathan@kernel.org>, "Luis Chamberlain" <mcgrof@kernel.org>,
- "Danilo Krummrich" <dakr@kernel.org>, "Nicolas Schier"
- <nicolas.schier@linux.dev>, "Trevor Gross" <tmgross@umich.edu>, "Adam
- Bratschi-Kaye" <ark.email@gmail.com>, <rust-for-linux@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-kbuild@vger.kernel.org>, "Petr
- Pavlu" <petr.pavlu@suse.com>, "Sami Tolvanen" <samitolvanen@google.com>,
- "Daniel Gomez" <da.gomez@samsung.com>, "Simona Vetter"
- <simona.vetter@ffwll.ch>, "Greg KH" <gregkh@linuxfoundation.org>, "Fiona
- Behrens" <me@kloenk.dev>, "Daniel Almeida" <daniel.almeida@collabora.com>,
- <linux-modules@vger.kernel.org>
-Subject: Re: [PATCH v13 2/6] rust: introduce module_param module
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>
-X-Mailer: aerc 0.20.1
-References: <20250612-module-params-v3-v13-0-bc219cd1a3f8@kernel.org>
- <DARCZYNPIJVZ.3JJSZ6PSAEMEC@kernel.org> <877c126bce.fsf@kernel.org>
- <Mg1_h6lRpg9tdi0VjiyDfIEy2juzgDWxOhYX61qSUfyEpeMMksWW1e-blTka_G1dXUvpZVktdD-zL3X1a6T6Cg==@protonmail.internalid> <DATW0XWNN45X.1L2WMZ41JJ5O8@kernel.org> <87v7om4jhq.fsf@kernel.org> <RPPvXQKnjK77Kp9mKaiFxbNj1fTHKb_I7_nbY81fZop-Wz8n5TTi4_lpXP9U9AwjocvZKqJPI8PGKufJn9cIzQ==@protonmail.internalid> <DAU0J3T0IEVM.2K7ZRQOVOHF8H@kernel.org> <878qlh4aj1.fsf@kernel.org> <87plepzke5.fsf@kernel.org> <xFouVLxX1_t1mH69FDYwlIhBlI72M0IzQEKn0ntG_wT9z7V5DtbxiwVP_frH_yiS-Gf0q_AhqetbLmuvJ_yP5Q==@protonmail.internalid> <DAX65TRN0TGP.25VZ9DYV86XWY@kernel.org> <87wm8txysl.fsf@kernel.org> <9G3W1seaM7elcwWXaeoaa2nfpFYCf-AmBdvZhACGP13KGUtTPVMwGNYdTQsdtp8ru7GIP3-UYTzXscC1MRUKrg==@protonmail.internalid> <DAZV8OGL8BMH.11SLXBXQ17ZJ9@kernel.org> <87h5zxxtdw.fsf@kernel.org> <H78pT7YnQEhAXdxzl_hhnGVUiQuFpibB21_bjH658fMz_5JYbwsPLYYVh8u1gYnzK3N3ilTEAvqOpkuptVx3rg==@protonmail.internalid> <DB03MZI2FCOW.2JBFL3TY38FK@kernel.org> <87bjq4xpv7.fsf@kernel.org>
- <ffROWpeKczrWSBlKYov2atJG-QD5l5fUOb2dVCNkWlcT9h6DJpa4joGQpjqtYyLP7HX227fCAayyDQunZ464XQ==@protonmail.internalid> <DB0LKI8BO3HZ.3FF03JN4364RM@kernel.org> <87zfdovvz4.fsf@kernel.org> <DB0U12HAEVZ6.JKFPI2UQHDRY@kernel.org> <CANiq72kFUSFgBv7Es3Mhe4HUaSPZk0EVW=JaMdaAGHsQOxYN6w@mail.gmail.com>
-In-Reply-To: <CANiq72kFUSFgBv7Es3Mhe4HUaSPZk0EVW=JaMdaAGHsQOxYN6w@mail.gmail.com>
 
-On Tue Jul 1, 2025 at 6:27 PM CEST, Miguel Ojeda wrote:
-> On Tue, Jul 1, 2025 at 5:43=E2=80=AFPM Benno Lossin <lossin@kernel.org> w=
-rote:
->>
->> Ultimately this is something for Miguel to decide.
+On Tue, Jul 1, 2025 at 6:27=E2=80=AFPM Tamir Duberstein <tamird@gmail.com> =
+wrote:
 >
-> Only if you all cannot get to an agreement ;)
+> Add `Guard::{insert,reserve}` and `Guard::{insert,reserve}_limit`, which
+> are akin to `__xa_{alloc,insert}` in C.
 
-:)
+Who will be using this? i.e. we need to justify adding code, typically
+by mentioning the users.
 
-> If Andreas wants to have it already added, then I would say just mark
-> it `unsafe` as Benno recommends (possibly with an overbearing
-> precondition), given it has proven subtle/forgettable enough and that,
-> if I understand correctly, it would actually become unsafe if someone
-> "just" added "reasonably-looking code" elsewhere.
+By the way, it may help splitting the C parts into its own patch, so
+that Matthew can focus on that (but maybe you all already discussed
+this).
 
-Yeah, if we added code that ran at the same time as the parameter
-parsing (such as custom parameter parsing or a way to start a "thread"
-before the parsing is completed) it would be a problem.
+Also, unit tests are great, thanks for adding those. Can we add
+examples as well? Maybe on the module-level docs, given the rest are
+there.
 
-> That way we have an incentive to make it safe later on and, more
-> importantly, to think again about it when such a patch lands,
-> justifying it properly. And it could plausibly protect out-of-tree
-> users, too.
->
-> This is all assuming that we will not have many users of this added
-> right away (in a cycle or two), i.e. assuming it will be easy to
-> change callers later on (if only to remove the `unsafe {}`).
+> +    /// Wrapper around `__xa_alloc`.
 
-Yeah we would add internal synchronization and could keep the API the
-same (except removing unsafe of course).
+We try to mention what something does in the title at least, even if
+it is just copied from the C docs -- you can reference those docs too
+for more context, e.g. [`__xa_alloc`] to:
 
----
+    https://docs.kernel.org/core-api/xarray.html#c.__xa_alloc
+
 Cheers,
-Benno
+Miguel
