@@ -1,114 +1,173 @@
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03FFF26FD90;
-	Tue,  1 Jul 2025 10:24:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B777426F44D;
+	Tue,  1 Jul 2025 10:25:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751365493; cv=none; b=D37cBGuY9ezgn6nIynCd6MDxztO3IGvTuudjl9YNWSNaweteDDms3LicCbdc5qkul3rEUWS4rucGyr3Ud71g8tvdF5nIPRbq+6EhGuLXYpV0mf97AAaNRVv0/JeEwnfBLOOAcecBfyQIbu2XnfoewL/W4e1oY6z+/d5cyagN8co=
+	t=1751365520; cv=none; b=SDy00I/6v5BECxr7Qt2BOpaLLLgOvWwCGcbttnwRFrUrNkqPt0jt/xpNHFZ9tg/IwJ2pUsMdyFpfzXQpdst9MMLwypfBpbVVKt1J2RB6Df/U42yyIJjj1VgJaxIBleN3CZDqaA5YbUrkG8qXPG5a/wrS9TQn++nCHophr6exJ4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751365493; c=relaxed/simple;
-	bh=L9I/QwF14on9fp60DEuPscxVm5jBLrf+FI9XP/J1bmc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qaYvghr6jaHu1qtEM56ciDzK3olAF5DS0Bg4q3fetN6mlr0tsxMyPKoTgFj+CgiJaI5VnTgarHPth3RFE5p69jUbjlWA6YvbLmjUFTgU1MXNW1RhlxyVOXsCayCCqVBxzrJ7wkSXtAuvlgEEhBB0B1u8T/XyaTLyxOAIiFroRFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-4e7eb3fad4fso3087738137.0;
-        Tue, 01 Jul 2025 03:24:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751365490; x=1751970290;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=irNrZCPGj0s+GoagNMAYrylMTiLNtVpXzFPwd8Y8B7Y=;
-        b=igRbi2FpeU/na8e3Yq7e9WirDtMPrzK/MY9oqWa4ITK4dfwXIWL/eX2bJpxq9IsKKd
-         6UfruzNWStLr2JNF4ymu9PXosEAQEEZBiGuWzhBQgDzaxbtbH+J6CgpbCB137cD1OFZg
-         WVdPF1wATyni1gcsYwIshYeXsAjI4llRDrprs6PKY1sNTpmhJNLFHZ9iCb1P/5G2HGtx
-         c2nU4SCPyDLJM1FdqnhtJBShaAJ+fYaeWtVIALKoR3JeqZUIDU7rS3tN7vChSHElHjk5
-         8hwB0JxKzqORI1XAd+ToXZo1vyDimNXIDs7yahZV7L2B9j1L4U7OW7A2axwINBeiVudN
-         kyWA==
-X-Forwarded-Encrypted: i=1; AJvYcCUkNEDbMvlyHXf3/VKF/DNZT+xZnn5BgHqggibOhH7v4TN1N9cf8d+Kbw5jcz+v2aYKch04eEgVMaZF84VY@vger.kernel.org, AJvYcCVa5Dt58g1merhFgozUbYMdsdLsvxXthzXLkAIdCgRQcUIdwUKeit4WJXixAHecLHcEdSoNNZGzJKY=@vger.kernel.org, AJvYcCX2cFHi1jQkCfG0RmN8ZtfCET9ibgr+xypIeJ2mDw2rwA2Sp1+02dJuCMkfVs42bCWxW4aS7OHtNyAl1zuJ3XQikMU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+mzK5lPzbMtmdbkH2jesNXzTj4W2x0xKXIVjKx9gyudpLKvm8
-	CtoOiyhSKuAYkhqmn3TfWlNTUg586LyF8+X/Ws1/waXo3wflqUU3w5luhXsvdTEH
-X-Gm-Gg: ASbGncv6lzpMnEDcCH4qdcej4hY1Z486hVANjUCSxHr/HB3UYRHckcSfoqIEplKKd1v
-	f8z+v+b4PpBLVLF4vDsJOEzVeQJysfKbOGmGgBoP3x9zRHKYJpN6BykswTV/3FH6eK144USGT1K
-	E22folhXYq+gW3TXvbcTFAn3yrRoZx9p1oozPib5ZJFBI43aOwoYbnbwZA50e1sNSAJYqBHryFF
-	dAE7i+jsAeXG2+aEPPlGuFFY/F1z+uF3gZykF2wLk+JJWcDBYGtvJEgRopBbHB5un93tK0AhD08
-	b9hOoAYU9Tpp5ljPIO8Kn9LeDaiqDKvEHdb+tztPw5My/dszVcg2ttgQ06p+yP6IV/gkJPYBKOp
-	2iEylJ7aoDlC4SwAIpqySv4gi
-X-Google-Smtp-Source: AGHT+IEDvOTHlGi8AoXCERwoNFW8zMR0WsN3JQSGjwTOk5Tw7YTuiJPW/Iz0DEPVO46Anul3nQktrw==
-X-Received: by 2002:a05:6102:1608:b0:4e5:9c40:824d with SMTP id ada2fe7eead31-4ee4f6f7b83mr9497718137.16.1751365490512;
-        Tue, 01 Jul 2025 03:24:50 -0700 (PDT)
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com. [209.85.222.53])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-884d1d88000sm1864434241.19.2025.07.01.03.24.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 03:24:50 -0700 (PDT)
-Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-86fea8329cdso2791606241.1;
-        Tue, 01 Jul 2025 03:24:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUZ5wWfCGDbkGYgH68Lv0hGmoXvrCzUJAXq7V8eJMQQe4dPhe7owlekTL0j+BKUg8JAJL51VYKIOovTlWdj@vger.kernel.org, AJvYcCVeWvB8YUTwSGkeQ1x76q4dmp4mNOacJLUZA26b+k/AfCA5bBxqIK/sTM9IRGShNKrAiyHA9XZEEDd4gc5Epf5EDB8=@vger.kernel.org, AJvYcCVvooBWAbAw0mTnmsFnaVmBYkDfMmSvKRyxHq8zlxiD175PlJXHjgYOKkUOgJWfLY4Q40lK+xZrlkQ=@vger.kernel.org
-X-Received: by 2002:a05:6102:b14:b0:4e9:b60a:441 with SMTP id
- ada2fe7eead31-4ee4f6f8278mr10613853137.13.1751365490045; Tue, 01 Jul 2025
- 03:24:50 -0700 (PDT)
+	s=arc-20240116; t=1751365520; c=relaxed/simple;
+	bh=9RyQdyiAoOXQkmRKHGEM+UrK8rxs3ganX7Ohn3kLeeI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q26EmS1oswNCisJP33+D3cHjJtDFGjafm6vpobbJV7fqkwbUudqY6qBCoehCMYdVSsTKJ5RymMInbIl6c72fqbuDT0Liaw0dBCjgC+1tboPZUiIZqfclLFuCLDtQYdiOcx4gBhwZfCcY/D+Dlay30FAsU4eQn/1AAVIU0clmq10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=p3c02I6n; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="p3c02I6n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB2DEC4CEEB;
+	Tue,  1 Jul 2025 10:25:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751365519;
+	bh=9RyQdyiAoOXQkmRKHGEM+UrK8rxs3ganX7Ohn3kLeeI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=p3c02I6nM7k6XvfI/FAHAITk7ZG0eSvIsAd8bV7L9WWG3QZMpcQzHpZbcLTujugVL
+	 WaNJWHECeb8JrbgVpXhBOILO5r2vMjogCUjGMwqwN987rD4E2e8t6S6Rbc5WzCGb1o
+	 QUnWkvJ3lLydpiiV/k8FKbo0cgNSMtUHbLX5qAVw=
+Date: Tue, 1 Jul 2025 12:25:16 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+	Jeff Johnson <jjohnson@kernel.org>,
+	Jeff Hugo <jeff.hugo@oss.qualcomm.com>,
+	Youssef Samir <quic_yabdulra@quicinc.com>,
+	Matthew Leung <quic_mattleun@quicinc.com>,
+	Yan Zhen <yanzhen@vivo.com>,
+	Alexander Wilhelm <alexander.wilhelm@westermo.com>,
+	Alex Elder <elder@kernel.org>, Kunwu Chan <chentao@kylinos.cn>,
+	Siddartha Mohanadoss <smohanad@codeaurora.org>,
+	Sujeev Dias <sdias@codeaurora.org>,
+	Julia Lawall <julia.lawall@lip6.fr>,
+	John Crispin <john@phrozen.org>,
+	Muna Sinada <quic_msinada@quicinc.com>,
+	Venkateswara Naralasetty <quic_vnaralas@quicinc.com>,
+	Maharaja Kennadyrajan <quic_mkenna@quicinc.com>,
+	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+	ath11k@lists.infradead.org, kernel@collabora.com
+Subject: Re: [PATCH 1/3] bus: mhi: host: keep bhi buffer through suspend cycle
+Message-ID: <2025070143-hatchback-roundness-bec2@gregkh>
+References: <20250630074330.253867-1-usama.anjum@collabora.com>
+ <20250630074330.253867-2-usama.anjum@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624153049.462535-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250624153049.462535-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 1 Jul 2025 12:24:38 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdV46tME9zuC556XuxcxRt2FGLwuUmdudZvOKf9RLvQ1Lw@mail.gmail.com>
-X-Gm-Features: Ac12FXwUljg1lofKpmUbbv07c21dKNGD0chVy1ox_vcCbaotHiTKDZM6ZS_5KyU
-Message-ID: <CAMuHMdV46tME9zuC556XuxcxRt2FGLwuUmdudZvOKf9RLvQ1Lw@mail.gmail.com>
-Subject: Re: [PATCH] clk: renesas: rzv2h-cpg: Drop redundant base pointer from pll_clk
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250630074330.253867-2-usama.anjum@collabora.com>
 
-Hi Prabhakar,
+On Mon, Jun 30, 2025 at 12:43:28PM +0500, Muhammad Usama Anjum wrote:
+> When there is memory pressure, at resume time dma_alloc_coherent()
+> returns error which in turn fails the loading of firmware and hence
+> the driver crashes:
+> 
+> kernel: kworker/u33:5: page allocation failure: order:7,
+> mode:0xc04(GFP_NOIO|GFP_DMA32), nodemask=(null),cpuset=/,mems_allowed=0
+> kernel: CPU: 1 UID: 0 PID: 7693 Comm: kworker/u33:5 Not tainted
+> 6.11.11-valve17-1-neptune-611-g027868a0ac03 #1
+> 3843143b92e9da0fa2d3d5f21f51beaed15c7d59
 
-On Tue, 24 Jun 2025 at 17:30, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> The base address can be accessed via the priv pointer already present in
-> struct pll_clk, making the separate base field redundant. Remove the base
-> member and its assignment.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Please don't wrap kernel log lines.
 
-Thanks for your patch!
+> kernel: Hardware name: Valve Galileo/Galileo, BIOS F7G0112 08/01/2024
+> kernel: Workqueue: mhi_hiprio_wq mhi_pm_st_worker [mhi]
+> kernel: Call Trace:
+> kernel:  <TASK>
+> kernel:  dump_stack_lvl+0x4e/0x70
+> kernel:  warn_alloc+0x164/0x190
+> kernel:  ? srso_return_thunk+0x5/0x5f
+> kernel:  ? __alloc_pages_direct_compact+0xaf/0x360
+> kernel:  __alloc_pages_slowpath.constprop.0+0xc75/0xd70
+> kernel:  __alloc_pages_noprof+0x321/0x350
+> kernel:  __dma_direct_alloc_pages.isra.0+0x14a/0x290
+> kernel:  dma_direct_alloc+0x70/0x270
+> kernel:  mhi_fw_load_handler+0x126/0x340 [mhi
+> a96cb91daba500cc77f86bad60c1f332dc3babdf]
+> kernel:  mhi_pm_st_worker+0x5e8/0xac0 [mhi
+> a96cb91daba500cc77f86bad60c1f332dc3babdf]
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-clk for v6.17, with s/rzv2h-cpg/rzv2h/.
+Same here.
 
-> --- a/drivers/clk/renesas/rzv2h-cpg.c
-> +++ b/drivers/clk/renesas/rzv2h-cpg.c
+> kernel:  ? srso_return_thunk+0x5/0x5f
+> kernel:  process_one_work+0x17e/0x330
+> kernel:  worker_thread+0x2ce/0x3f0
+> kernel:  ? __pfx_worker_thread+0x10/0x10
+> kernel:  kthread+0xd2/0x100
+> kernel:  ? __pfx_kthread+0x10/0x10
+> kernel:  ret_from_fork+0x34/0x50
+> kernel:  ? __pfx_kthread+0x10/0x10
+> kernel:  ret_from_fork_asm+0x1a/0x30
+> kernel:  </TASK>
+> kernel: Mem-Info:
+> kernel: active_anon:513809 inactive_anon:152 isolated_anon:0
+>     active_file:359315 inactive_file:2487001 isolated_file:0
+>     unevictable:637 dirty:19 writeback:0
+>     slab_reclaimable:160391 slab_unreclaimable:39729
+>     mapped:175836 shmem:51039 pagetables:4415
+>     sec_pagetables:0 bounce:0
+>     kernel_misc_reclaimable:0
+>     free:125666 free_pcp:0 free_cma:0
+> 
+> In above example, if we sum all the consumed memory, it comes out
+> to be 15.5GB and free memory is ~ 500MB from a total of 16GB RAM.
+> Even though memory is present. But all of the dma memory has been
+> exhausted or fragmented.
+> 
+> Fix it by allocating it only once and then reuse the same allocated
+> memory. As we'll allocate this memory only once, this memory will stay
+> allocated.
+> 
+> Tested-on: WCN6855 WLAN.HSP.1.1-03926.13-QCAHSPSWPL_V2_SILICONZ_CE-2.52297.6
+> 
+> Fixes: cd457afb1667 ("bus: mhi: core: Add support for downloading firmware over BHIe")
 
-> @@ -230,7 +229,6 @@ rzv2h_cpg_pll_clk_register(const struct cpg_core_clk *core,
->                            struct rzv2h_cpg_priv *priv,
->                            const struct clk_ops *ops)
+No cc: stable?
+
+> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+> ---
+> Reported here:
+> https://lore.kernel.org/all/ead32f5b-730a-4b81-b38f-93d822f990c6@collabora.com
+> 
+> Still a lot of more fixes are required. Hence, I'm not adding closes tag.
+> ---
+>  drivers/bus/mhi/host/boot.c     | 19 ++++++++++---------
+>  drivers/bus/mhi/host/init.c     |  5 +++++
+>  drivers/bus/mhi/host/internal.h |  2 ++
+>  include/linux/mhi.h             |  1 +
+>  4 files changed, 18 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/bus/mhi/host/boot.c b/drivers/bus/mhi/host/boot.c
+> index b3a85aa3c4768..11bb8c12ac597 100644
+> --- a/drivers/bus/mhi/host/boot.c
+> +++ b/drivers/bus/mhi/host/boot.c
+> @@ -302,8 +302,8 @@ static int mhi_fw_load_bhi(struct mhi_controller *mhi_cntrl,
+>  	return -EIO;
+>  }
+>  
+> -static void mhi_free_bhi_buffer(struct mhi_controller *mhi_cntrl,
+> -				struct image_info *image_info)
+> +void mhi_free_bhi_buffer(struct mhi_controller *mhi_cntrl,
+> +			 struct image_info *image_info)
 >  {
-> -       void __iomem *base = priv->base;
->         struct device *dev = priv->dev;
->         struct clk_init_data init;
->         const struct clk *parent;
+>  	struct mhi_buf *mhi_buf = image_info->mhi_buf;
+>  
+> @@ -455,18 +455,19 @@ static enum mhi_fw_load_type mhi_fw_load_type_get(const struct mhi_controller *m
+>  
+>  static int mhi_load_image_bhi(struct mhi_controller *mhi_cntrl, const u8 *fw_data, size_t size)
+>  {
+> -	struct image_info *image;
+> +	struct image_info *image = mhi_cntrl->bhi_image;
+>  	int ret;
+>  
+> -	ret = mhi_alloc_bhi_buffer(mhi_cntrl, &image, size);
+> -	if (ret)
+> -		return ret;
+> +	if (!image) {
 
-Don't forget to update "clk: renesas: rzv2h-cpg: Add support for DSI clocks" ;-)
+What prevents image from going away right after you tested it?
 
-Gr{oetje,eeting}s,
+thanks,
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+greg k-h
