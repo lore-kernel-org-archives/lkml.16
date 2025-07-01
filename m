@@ -1,94 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD2A278E7C;
-	Tue,  1 Jul 2025 15:34:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0651927814F
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 15:35:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751384059; cv=none; b=cN0sz8FByAeYXy02//XzjJ3/jRNI0fIlvVutPinFvYyN33JblfRaTqg1TX68DeNqXMkixSxDFoJrSdzZ9peX/CL19AeN3b2JC74B98mpBnVcArY9sXpSwhuPuhdH+mQr2HB920Mj21xC9sQBpM9UEM5oZCS44cd0kwkjMDNxmFo=
+	t=1751384137; cv=none; b=IpkSkRZdYa9ZsgIj1UahJ0t5136VXxFtYIuekJew2EknmBfeq0fXjfaeSiAN7khQKgsIUqiSaxGpwopK6jcRWw/OXSDIW16HWGMWOnXg45f0RUV/H4Ga/u1FgEXFqj9MVWhmprBsZjRyC8IhB/ly9DBZaUPz6wZ6wNQX5jm2LXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751384059; c=relaxed/simple;
-	bh=AH9Z6C7wirZHRgTf7xtKygEtYqmcXb+8joqPI90O+Iw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SUnnr1TpxrBnChgcCRx3lHYXU60tA/QpoSKPf8kW/0CQFlywrrkBHUSCCPi/HdCEWekDqJ2bCi6Qu5O970vCU9CsCPtq/phIuyuhLq7kWWo3GPfzALODfQqgjEM9Mc5YjRVXPyl2LmGGXMN3lq41ZTjLcxe6mUC1lFkVGrrokPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zc2GDzlZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751384137; c=relaxed/simple;
+	bh=Dpe36OfClugyKwIMcaBC3dcK7aOGRu8qtIlgMAQ+2ro=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gKRLQQEHnPmJYpB5SVg3RwwIQ7DGJHCMVTw4ri1yoA5aVtfyxPwQZFZtdsxJPq4a/LaAL1AgPYiaCoeO47gvtm//R5C8zE5gM2Zqf7gBTWE8YelIcNKkYDbVuMtUmMR32gbpXlZ+zBQ1mUZZDunG7A889RNk3n28L3WkPFuqICQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HZW+nI2M; arc=none smtp.client-ip=91.218.175.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zc2GDzlZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 308EAC4CEEB;
-	Tue,  1 Jul 2025 15:34:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751384057;
-	bh=AH9Z6C7wirZHRgTf7xtKygEtYqmcXb+8joqPI90O+Iw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Zc2GDzlZtyxVJTRblAr5DbO/RV0UeFRC3yuCFXosRS9dc6fl1H0qyOZYGuqWi+44f
-	 TaSuL6WYmkSayQky9iEhTiCQOvZaFhoCEObTgtXoZ4A47G0mCFHObOzeZGuOVKe+gM
-	 x0VM7ULs9UzQGYzKfB3CODrWwVI5yWvm4tXqN+PABBv5Qkpr6M12FMD2uOAdK6RES3
-	 JRabFd7LyUmNPCXg6nFOimbtCPZ7+HjY99Q7Z6lldLQDJVCRYWFMegRSwASqO+U0I/
-	 htKEEZjKVGeAGqIhbPzrltvpgMb6pURyEqGQIub73pNxt8Y9NjErouezc8ER0dPO5Z
-	 PBv5tXqznRpHg==
-Date: Tue, 1 Jul 2025 16:34:11 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Boris Brezillon <boris.brezillon@collabora.com>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v6 0/2] Add a bare-minimum Regulator abstraction
-Message-ID: <25e9a9b6-4d81-4731-98fa-add40ccd4aab@sirena.org.uk>
-References: <20250627-topics-tyr-regulator-v6-0-1d015219b454@collabora.com>
- <CC8F34AD-811F-4504-B625-AFD845198549@collabora.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HZW+nI2M"
+Message-ID: <fd88c994-c4f0-4ba1-bc8a-908cfb3b5498@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751384121;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+INSP/GK6T+8bv6Vx93kwG7+YR+IlBFm0hRiAEEEXmI=;
+	b=HZW+nI2MTAledHyxlbBKwh7aSa9Lm5EiIUfLAfvH9NMJgPJieoRCcoNNRHtX3e+mw71sFd
+	4NOewdCxEfciPMKGTCz8e/Yg7H/3mHMEyWf20a0ZlW8cmuQ90oufqHW7gZk6d8Sw7M25gv
+	TQpuKFw/O3FnJLya2Tl1WY3AHBRcnbc=
+Date: Tue, 1 Jul 2025 11:35:10 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="z2FiScofoYLxfGN1"
-Content-Disposition: inline
-In-Reply-To: <CC8F34AD-811F-4504-B625-AFD845198549@collabora.com>
-X-Cookie: No shirt, no shoes, no service.
+Subject: Re: [PATCH net-next v2 05/18] net: macb: use BIT() macro for
+ capability definitions
+To: =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Samuel Holland <samuel.holland@sifive.com>,
+ Richard Cochran <richardcochran@gmail.com>,
+ Russell King <linux@armlinux.org.uk>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+ Gregory CLEMENT <gregory.clement@bootlin.com>,
+ Cyrille Pitchen <cyrille.pitchen@atmel.com>,
+ Harini Katakam <harini.katakam@xilinx.com>,
+ Rafal Ozieblo <rafalo@cadence.com>,
+ Haavard Skinnemoen <hskinnemoen@atmel.com>, Jeff Garzik <jeff@garzik.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-mips@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>, Andrew Lunn <andrew@lunn.ch>
+References: <20250627-macb-v2-0-ff8207d0bb77@bootlin.com>
+ <20250627-macb-v2-5-ff8207d0bb77@bootlin.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <20250627-macb-v2-5-ff8207d0bb77@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
+On 6/27/25 05:08, Théo Lebrun wrote:
+> Replace all capabilities values by calls to the BIT() macro.
+> 
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+> ---
+>  drivers/net/ethernet/cadence/macb.h | 40 ++++++++++++++++++-------------------
+>  1 file changed, 20 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
+> index c9a5c8beb2fa8166195d1d83f187d2d0c62668a8..3b43cb9468e3618754ff2bc6c5f360447bdeeed0 100644
+> --- a/drivers/net/ethernet/cadence/macb.h
+> +++ b/drivers/net/ethernet/cadence/macb.h
+> @@ -727,26 +727,26 @@
+>  #define MACB_MAN_C45_CODE			2
+>  
+>  /* Capability mask bits */
+> -#define MACB_CAPS_ISR_CLEAR_ON_WRITE		0x00000001
+> -#define MACB_CAPS_USRIO_HAS_CLKEN		0x00000002
+> -#define MACB_CAPS_USRIO_DEFAULT_IS_MII_GMII	0x00000004
+> -#define MACB_CAPS_NO_GIGABIT_HALF		0x00000008
+> -#define MACB_CAPS_USRIO_DISABLED		0x00000010
+> -#define MACB_CAPS_JUMBO				0x00000020
+> -#define MACB_CAPS_GEM_HAS_PTP			0x00000040
+> -#define MACB_CAPS_BD_RD_PREFETCH		0x00000080
+> -#define MACB_CAPS_NEEDS_RSTONUBR		0x00000100
+> -#define MACB_CAPS_MIIONRGMII			0x00000200
+> -#define MACB_CAPS_NEED_TSUCLK			0x00000400
+> -#define MACB_CAPS_QUEUE_DISABLE			0x00000800
+> -#define MACB_CAPS_PCS				0x01000000
+> -#define MACB_CAPS_HIGH_SPEED			0x02000000
+> -#define MACB_CAPS_CLK_HW_CHG			0x04000000
+> -#define MACB_CAPS_MACB_IS_EMAC			0x08000000
+> -#define MACB_CAPS_FIFO_MODE			0x10000000
+> -#define MACB_CAPS_GIGABIT_MODE_AVAILABLE	0x20000000
+> -#define MACB_CAPS_SG_DISABLED			0x40000000
+> -#define MACB_CAPS_MACB_IS_GEM			0x80000000
+> +#define MACB_CAPS_ISR_CLEAR_ON_WRITE		BIT(0)
+> +#define MACB_CAPS_USRIO_HAS_CLKEN		BIT(1)
+> +#define MACB_CAPS_USRIO_DEFAULT_IS_MII_GMII	BIT(2)
+> +#define MACB_CAPS_NO_GIGABIT_HALF		BIT(3)
+> +#define MACB_CAPS_USRIO_DISABLED		BIT(4)
+> +#define MACB_CAPS_JUMBO				BIT(5)
+> +#define MACB_CAPS_GEM_HAS_PTP			BIT(6)
+> +#define MACB_CAPS_BD_RD_PREFETCH		BIT(7)
+> +#define MACB_CAPS_NEEDS_RSTONUBR		BIT(8)
+> +#define MACB_CAPS_MIIONRGMII			BIT(9)
+> +#define MACB_CAPS_NEED_TSUCLK			BIT(10)
+> +#define MACB_CAPS_QUEUE_DISABLE			BIT(11)
+> +#define MACB_CAPS_PCS				BIT(24)
+> +#define MACB_CAPS_HIGH_SPEED			BIT(25)
+> +#define MACB_CAPS_CLK_HW_CHG			BIT(26)
+> +#define MACB_CAPS_MACB_IS_EMAC			BIT(27)
+> +#define MACB_CAPS_FIFO_MODE			BIT(28)
+> +#define MACB_CAPS_GIGABIT_MODE_AVAILABLE	BIT(29)
+> +#define MACB_CAPS_SG_DISABLED			BIT(30)
+> +#define MACB_CAPS_MACB_IS_GEM			BIT(31)
+>  
+>  /* LSO settings */
+>  #define MACB_LSO_UFO_ENABLE			0x01
+> 
 
---z2FiScofoYLxfGN1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Reviewed-by: Sean Anderson <sean.anderson@linux.dev>
 
-On Tue, Jul 01, 2025 at 12:28:37PM -0300, Daniel Almeida wrote:
-
-> Is it ok for the abstraction to only be built when CONFIG_REGULATOR=y? This
-> means that any Rust drivers using it have to depend on CONFIG_REGULATOR too.
-
-> I thought this was acceptable, but apparently that is not the case? See this
-> comment from Rob Herring [0].
-
-The regulator API stubs itself out when disabled, but given that this is
-just wrappers it's not clear what the tasteful thing would be here - it
-should do the right thing because it will itself be built in terms of
-the C stubs.  I don't know if Rust can sensibly stub things, or if
-there's much percentage in that for a thin wrapper which does basically
-nothing itself.
-
---z2FiScofoYLxfGN1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhj//IACgkQJNaLcl1U
-h9BJmQf+PQNmJVDyd1ku6OwqE/Iaa8pmaqpZRGQ/npwdLNaXRHPzw/ToJt/602db
-8HTsyrFqcu+MvpcJo9XDIdVgQ7JItxJW+C9ZcoRGZtF3IfEg6TiHnHvxvDl0i8+E
-f/ep3dYObBpR7rSyKfAqY4Op+KdSLTPmitMrkIzVQ42apkz3HGi4Z6Wt97ovfCon
-eiqB8BOu7Th6i86HsEmXrBwTyEFzYFE3BGoUvWxD5gp5g3hi+vsJoDx4pWBnrzMB
-4TQ0DZMbSuV1DEijI1vfu1BjT0so94iIBQoWXXRAAJyKl4T+xg9xYvw+pGGAHZZn
-raWvq/IWAv8UaOTp7Rx5B9WpqUQIqA==
-=fp0k
------END PGP SIGNATURE-----
-
---z2FiScofoYLxfGN1--
+But since these capabilities don't correspond to hardware registers, can
+you add a follow-up patch to remove the gap between QUEUE_DISABLE and
+PCS?
