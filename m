@@ -1,157 +1,136 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 923C827EFE6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D174C27EFEF
 	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 16:02:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751385732; cv=none; b=hGMQmJyVgcUJNycViFQrLHMZs2TViihgzidlqiWmXBVOwq4abhTwA7ns5Z08pC76dEFJpYQT7RkyS3zAc9AZBrX952oywOk+677T0UAyTFYEQEWSIn498Z2jc+3X+/cuG1eWE0rpaEOMuKyPIQVKC9R7INuqHlbd2QzcDn1EnUk=
+	t=1751385731; cv=none; b=BOdGQpxHob3dsu7/L2OP+rGsS5myhDh4krBzH13oxRwLPNk5QoBHut6a4MS8XPeLKCb+S0Ptlfv2Rz0AZkaFnxTlPUesUXPPXswACxw6qiJ4qegeHheRkxdBqZLaNVenrv/PSIi+F7mDoW/jW2fo9+7a2ENIt2oEgKRkdpGrijg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751385732; c=relaxed/simple;
-	bh=0WrrBHjAhDWR/T7RKbv5Tyx5Q6bSAJoF2Th/DmIjlPQ=;
-	h=From:Date:Subject:MIME-Version:Message-Id:In-Reply-To:To:Cc:
-	 Content-Type:References; b=Q0J+WD85AuuWTjAXTIV7ieu9vfg2vYyvEXNLj6L0tg5EApDv5MZNzjG1UCcpFMKJYe0gy02+ADB3L4NeQ/36Icx1fh68pFYxBrIaMft3cweIceOlh6Cadnu3af9u4PB/BKup//8NZZ2H79I7qbummobm7yN8o/VwSpOKbTLz9ls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=c6v28gxV; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1751385731; c=relaxed/simple;
+	bh=ZzzOGhRrHbafmgbWIr1+aT+e1/OEhZNOVAq9U/HcCko=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=AIr7HUW5i4cMQr0P0bPf4kNQlsJXX+/GysbiT7OD6mQcrHak4Y84lcsSTVDVNWSgmp2km5AJio3RTgf1bBNw3n8QQxLIIv1rAA8XQOjhp1TbqRhfLH8CQGtqwfVI4WROYmiNjqwNUzTv8fTF8jeiOabUwYgfajRBWZKacTXqTw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=Pkg1bxiJ; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="c6v28gxV"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250701160206euoutp0224170694b8b2ed7e00aa54b58cf800cc~OLAnrU4pS2669526695euoutp02a
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 16:02:06 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250701160206euoutp0224170694b8b2ed7e00aa54b58cf800cc~OLAnrU4pS2669526695euoutp02a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1751385726;
-	bh=468vL6f20bR8cbLJ5mItg8FGJ3SLduAhCDZLfy4Z39o=;
-	h=From:Date:Subject:In-Reply-To:To:Cc:References:From;
-	b=c6v28gxV0QyZZDj1WDIr6UhlKHos44C2y0dD2norXWqJaNCJypddCibzmuhaa9m+j
-	 TYO26HEch5dr9fgvFCoC7raEreYZvE4utYaD72Ax5V8xoatYlNzig71Of/fRKLNTzs
-	 3D54N8H3U5LH9U5AodXMj/SSeFIvmZm2BUd84MV8=
-Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250701160205eucas1p27a77e76ce28deede85e666f0544c6c7c~OLAnHBIk92408824088eucas1p2V;
-	Tue,  1 Jul 2025 16:02:05 +0000 (GMT)
-Received: from AMDC4942.eu.corp.samsungelectronics.net (unknown
-	[106.210.136.40]) by eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250701160204eusmtip189359772207621dd3a075bd7b5c7b2d1~OLAl4Kk8k2630026300eusmtip1T;
-	Tue,  1 Jul 2025 16:02:04 +0000 (GMT)
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-Date: Tue, 01 Jul 2025 18:01:43 +0200
-Subject: [PATCH v6 6/8] dt-bindings: pwm: thead: Add T-HEAD TH1520 PWM
- controller
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="Pkg1bxiJ"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-453066fad06so39881145e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 09:02:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.com; s=google; t=1751385726; x=1751990526; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=e9BTfUEfVu4iQsAWGFaKjgq6s8Puv8SU/d82R6XNX1w=;
+        b=Pkg1bxiJuS3aLUqwx1b1TlOfq4v73tiyKc6Uorq9cZ3U1RrE1NlVLG18M3N1LAsMJS
+         zHQdteD3Q9sc2lSK1r2d+x3JC1ZOMeFcAawgvHDMfWJ5GLUlw6qACExgR2xKwqfCi9Uy
+         gVoOMFQ5V/8yIKcxsuOaAyYtm7WNMxLih8yL/9OobYhSnOiKArr2xm2VrT9j00DBx4ii
+         MDO60wev+geFpHOZahP4k14FgrYAVWYZNxMXHO/Tdvk0s8xHbBcRwbgWtI9GYhd0R28p
+         GxFh/xle+rwjLASJ9lcikqNqO7RunyEYsAqAvI65jDlt55SKAhRv+e2Iw0/lNpDRx1DQ
+         48Tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751385726; x=1751990526;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=e9BTfUEfVu4iQsAWGFaKjgq6s8Puv8SU/d82R6XNX1w=;
+        b=wSO9bv3BDfT5cCZ3Boacuke/1WpvwiHhazZeA42jS0NuhuutYTR8JfaqGxB9TVItVR
+         jEn4HQH69wP4Z3Imckahlbm5rlt3GSICHw/RQ8PcnimAdsUffeLgUBNnUlIqnSdQRNmg
+         vzHU60glFGRmk2MP7WlnGjxpSoRDKtNqH8JAK4CVZeILt35e+pbFpM7/bbit4NdxqY+P
+         6HEVWBOzjkCGfEr/bKC5jIfHhZN2ioFn1YIaP/jUlD3Y6J3FjQuxpGTwxzScb69l6WwL
+         qmfsjRPtnEU5BRhyy6KHxC8mBW4XnuyDIJWyb5dx14d1XFc9/KsrT2jaXfpljz+X+Q4a
+         Ud8w==
+X-Forwarded-Encrypted: i=1; AJvYcCXBIA0JXS+WP2brqltqvBuVX8L3/2PIQ0TZ1zaA0B/oXDRQBJWumSOf9+lm6tt1hFNvuNg6otzBbHiVOpc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz32t79Pye4u+oKHNKAFwAyqZCA+Voh6+E5BaghUHCSUPW0f5SG
+	uuQpbjWKIRvWi32AYRy6NFqS0w6brH+kfdEvlcalfEW0zCtrxdMax6a200y9zIA2t6E=
+X-Gm-Gg: ASbGncuq5EDBjpP1EeYRzIz7LCIlSA0FKmzA8xuZOaWdnyPkJqt5fgHQhyrxSkgzssJ
+	x0mJAlQZGG9wB3q91bUmwlCNDRhuMMyfVvAiorq9gAv3BuC0CNvnwZNamcxu8rsCei/VU2Z8o76
+	6PF/KvN1+U3va9emxak6WF+h8D1jeCdT43s7QHS09woTI20QsPQd+XGrjivHRYl1MDbC0zgmRSQ
+	HelefrLANeBeqmfGFqtB+etOi/zFdOxDNUfxJRS/ggcNNFu8vR0ZcK0VL17PFnNKZHZR9oiIk4i
+	q7Be7z/WbS+qUR1JGwMovdLEPDsFLfRYfBCEiRSOc3BSN7EdDmodyg==
+X-Google-Smtp-Source: AGHT+IHNr5gKLLJ5dI/LXYzeaaajt8CK6iLWqWjb6+EEC5MHBgr73n33/C9RKxWuy86u708WLprggA==
+X-Received: by 2002:a05:600c:4fce:b0:442:f4a3:b5f2 with SMTP id 5b1f17b1804b1-45390259d15mr159248665e9.6.1751385726126;
+        Tue, 01 Jul 2025 09:02:06 -0700 (PDT)
+Received: from [127.0.1.1] ([2a00:1098:3142:e::8])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-45388888533sm182500995e9.21.2025.07.01.09.02.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 09:02:05 -0700 (PDT)
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date: Tue, 01 Jul 2025 17:01:40 +0100
+Subject: [PATCH v4 5/5] arm: dts: bcm2711-rpi: Add HEVC decoder node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250701-rust-next-pwm-working-fan-for-sending-v6-6-2710932f6f6b@samsung.com>
-In-Reply-To: <20250701-rust-next-pwm-working-fan-for-sending-v6-0-2710932f6f6b@samsung.com>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,  Miguel Ojeda
-	<ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,  Boqun Feng
-	<boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,  Andreas
-	Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,  Trevor
-	Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,  Michal
-	Wilczynski <m.wilczynski@samsung.com>, Guo Ren <guoren@kernel.org>,  Fu Wei
-	<wefu@redhat.com>, Rob Herring <robh@kernel.org>,  Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,  Conor Dooley <conor+dt@kernel.org>,  Paul Walmsley
-	<paul.walmsley@sifive.com>,  Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>,  Alexandre Ghiti <alex@ghiti.fr>,  Marek Szyprowski
-	<m.szyprowski@samsung.com>,  Benno Lossin <lossin@kernel.org>,  Michael
-	Turquette <mturquette@baylibre.com>,  Stephen Boyd <sboyd@kernel.org>, Benno
-	Lossin <lossin@kernel.org>,  Drew Fustini <fustini@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-clk@vger.kernel.org,  Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.15-dev
-X-CMS-MailID: 20250701160205eucas1p27a77e76ce28deede85e666f0544c6c7c
-X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250701160205eucas1p27a77e76ce28deede85e666f0544c6c7c
-X-EPHeader: CA
-X-CMS-RootMailID: 20250701160205eucas1p27a77e76ce28deede85e666f0544c6c7c
-References: <20250701-rust-next-pwm-working-fan-for-sending-v6-0-2710932f6f6b@samsung.com>
-	<CGME20250701160205eucas1p27a77e76ce28deede85e666f0544c6c7c@eucas1p2.samsung.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250701-media-rpi-hevc-dec-v4-5-057cfa541177@raspberrypi.com>
+References: <20250701-media-rpi-hevc-dec-v4-0-057cfa541177@raspberrypi.com>
+In-Reply-To: <20250701-media-rpi-hevc-dec-v4-0-057cfa541177@raspberrypi.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ John Cox <john.cox@raspberrypi.com>, Dom Cobley <dom@raspberrypi.com>, 
+ review list <kernel-list@raspberrypi.com>, 
+ Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Cc: John Cox <jc@kynesim.co.uk>, Stefan Wahren <wahrenst@gmx.net>, 
+ linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, 
+ Dave Stevenson <dave.stevenson@raspberrypi.com>
+X-Mailer: b4 0.14.1
 
-Add the Device Tree binding documentation for the T-HEAD
-TH1520 SoC PWM controller.
+Add the configuration information for the HEVC decoder.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
 ---
- .../devicetree/bindings/pwm/thead,th1520-pwm.yaml  | 48 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 2 files changed, 49 insertions(+)
+ arch/arm/boot/dts/broadcom/bcm2711-rpi.dtsi | 4 ++++
+ arch/arm/boot/dts/broadcom/bcm2711.dtsi     | 9 +++++++++
+ 2 files changed, 13 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pwm/thead,th1520-pwm.yaml b/Documentation/devicetree/bindings/pwm/thead,th1520-pwm.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..855aec59ac53c430adc849271235686e87b10e6c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/thead,th1520-pwm.yaml
-@@ -0,0 +1,48 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/thead,th1520-pwm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm/boot/dts/broadcom/bcm2711-rpi.dtsi b/arch/arm/boot/dts/broadcom/bcm2711-rpi.dtsi
+index c78ed064d166..7984caa861e6 100644
+--- a/arch/arm/boot/dts/broadcom/bcm2711-rpi.dtsi
++++ b/arch/arm/boot/dts/broadcom/bcm2711-rpi.dtsi
+@@ -68,6 +68,10 @@ &hdmi1 {
+ 	wifi-2.4ghz-coexistence;
+ };
+ 
++&hevc_dec {
++	clocks = <&firmware_clocks 11>;
++};
 +
-+title: T-HEAD TH1520 PWM controller
+ &hvs {
+ 	clocks = <&firmware_clocks 4>;
+ };
+diff --git a/arch/arm/boot/dts/broadcom/bcm2711.dtsi b/arch/arm/boot/dts/broadcom/bcm2711.dtsi
+index c06d9f5e53c8..35b673e9ab28 100644
+--- a/arch/arm/boot/dts/broadcom/bcm2711.dtsi
++++ b/arch/arm/boot/dts/broadcom/bcm2711.dtsi
+@@ -617,6 +617,15 @@ xhci: usb@7e9c0000 {
+ 			status = "disabled";
+ 		};
+ 
++		hevc_dec: codec@7eb00000 {
++			compatible = "brcm,bcm2711-hevc-dec";
++			reg = <0x0 0x7eb00000  0x10000>,
++			      <0x0 0x7eb10000  0x1000>;
++			reg-names = "hevc",
++				    "intc";
++			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
++		};
 +
-+maintainers:
-+  - Michal Wilczynski <m.wilczynski@samsung.com>
-+
-+allOf:
-+  - $ref: pwm.yaml#
-+
-+properties:
-+  compatible:
-+    const: thead,th1520-pwm
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: SoC PWM clock
-+
-+  "#pwm-cells":
-+    const: 3
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/thead,th1520-clk-ap.h>
-+    soc {
-+      #address-cells = <2>;
-+      #size-cells = <2>;
-+      pwm@ffec01c000 {
-+          compatible = "thead,th1520-pwm";
-+          reg = <0xff 0xec01c000 0x0 0x4000>;
-+          clocks = <&clk CLK_PWM>;
-+          #pwm-cells = <3>;
-+      };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ebbc24f3ef4752cae1b1028939f58f5587074371..6e862b3850462af12c02e88ac0048fdecccd4c83 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -21502,6 +21502,7 @@ F:	Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml
- F:	Documentation/devicetree/bindings/mailbox/thead,th1520-mbox.yaml
- F:	Documentation/devicetree/bindings/net/thead,th1520-gmac.yaml
- F:	Documentation/devicetree/bindings/pinctrl/thead,th1520-pinctrl.yaml
-+F:	Documentation/devicetree/bindings/pwm/thead,th1520-pwm.yaml
- F:	Documentation/devicetree/bindings/reset/thead,th1520-reset.yaml
- F:	arch/riscv/boot/dts/thead/
- F:	drivers/clk/thead/clk-th1520-ap.c
+ 		v3d: gpu@7ec00000 {
+ 			compatible = "brcm,2711-v3d";
+ 			reg = <0x0 0x7ec00000 0x4000>,
 
 -- 
 2.34.1
