@@ -1,110 +1,234 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C1C19C540;
-	Tue,  1 Jul 2025 05:15:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79619A47;
+	Tue,  1 Jul 2025 05:18:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751346912; cv=none; b=j2bFTYzogCpwh3/q3MApEeJJhaI6Jf9d5/nMwzfNlYY/jWhlmESsFf+C7eoxfbNRhzA2L2mW6qMWoNUDgQQCbDRmNOqmVYyCXvQoC2qCm1v3/F7+YSGWW926eNE2jejxzvLRSr6coWxVuoZKOp/fzPvJpOu8Q8YFez4QKXS/3l8=
+	t=1751347086; cv=none; b=PVIWzQbNfV3T+WUW2BJKR0OTkBnLR/ByCnUW5pk9P8StKInULF68l/9HzQqaM/M7dLh0mwrL7OAJ1DCwr/gD5C0ui46iMrE8YuDEQuPYjv34z6tRYVI/Yinuti/EZwEjfOPuhKPAkB70w3IfEORhUiTu6VryAXoQntd9bxeKhKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751346912; c=relaxed/simple;
-	bh=dPYeU3gWfacVLOnxyAio8wfmeyC5iym8ETd7fTIJXSE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HClJ+OqeHqs0ZgrpoJxGV8aAlv5NNtjr4j71zug7S1VVA2GqgGrHUlzd+6Q2nX1QeqzZNKLOzu4shnVolDVKQL97i61MOwa4TJ2mc/WogqG1AQjJB2SL2rJWUdqKtBAav+/eyZNETkum3yL4bQUqxFVWC+JKUmWd81TxNYocQkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EXk6ce2Z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751347086; c=relaxed/simple;
+	bh=y4JO51qeKPzgLWPuY1dRsGYWm0kjxKxZ+48rPaqGEug=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XOsPb68ciBefJ9fhoczWOZl0yGyIsOmJ5hHmEpSewAwrHZFBR+eiIJsnRgzPH60nzYeTE3PDq24WRJhJrzuG8vlDq4wTJMpm1wI3953DEDIhUahdjhUOKq9vL15o7g0jRos0nvQ38SVFPyVH+GvPSxbi7PoCerbKd49wS9DWJKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=u8KQOMME; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CObkwDOW; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EXk6ce2Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C256C4CEEB;
-	Tue,  1 Jul 2025 05:15:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751346911;
-	bh=dPYeU3gWfacVLOnxyAio8wfmeyC5iym8ETd7fTIJXSE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=EXk6ce2Z7pY4Zk1qrF3KwY98IF7643FreNdeQpppNOhjKsikY+XxGcKwyWa8Yhe0u
-	 UEhVqsXShJRT12D+z2f/AZaepB4nyhODwa5aVOgeCqSyzAmsaZkAqX06bPmehH2aj9
-	 JNgsKIe2oRtPufxSXwUrT9Mr4JskLekdiNuNddgXtcXfFgT5pXW+w8T/Q6ldOAuLGu
-	 yXNnDLcrDHyGaInBCuQaFUj8cdUfOGI79kc5CFyCTj9EcE6dZKP7ffffrIuNY9QDqT
-	 VQwgTuHGsx4lLdJDETY7/3GbeLKCCDZi9y4v2dC8qIWQk39ojfZEu+aUNULmzgGBvZ
-	 JTLLhPwMHelPw==
-Message-ID: <11c0c230-7a19-460c-99cb-18caf62aaedc@kernel.org>
-Date: Tue, 1 Jul 2025 07:15:08 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="u8KQOMME";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CObkwDOW"
+Date: Tue, 1 Jul 2025 07:17:57 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751347082;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bhV6h2R6dfFBjGoqd4wVRZso6RFFdyNdBteMMy5uNpI=;
+	b=u8KQOMMEAA0lqxRK0NGsMQVtBxCwORRrqxh95POuNAzvQ/J1ESpF/8KbeyN3I6pVhXPanM
+	y+X7cMQF/m06izMRNtlQCCnrgfoADJgyuTlAxVgRiTPz+y7Mr5fM76wecwAXIJ7N1EJBaq
+	cl4z1M/jF26/jnBSwI8teA0PyIvp5BhZNP1RZf0j44VvcYNsouHxOs+4sBUNp30YJaF6Gh
+	GbRzS3OfVA4baSEDXY+punh2WjUbQEWMlssI061hzsEeGHvKHsCJTpEbHf2enaygOfulV4
+	Yy0TltP/AQn17qR/17aR2syOFjuZc2optSCrsM9dsQtN3INAD0UOMO0TfXT0eQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751347082;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bhV6h2R6dfFBjGoqd4wVRZso6RFFdyNdBteMMy5uNpI=;
+	b=CObkwDOWH9HGrpcZc8EIkutEHAysVeqM4BkTKdROzQ1Zjs2Yxc5Ohfz2O88j4MVzkh8Rtl
+	QwbZVc2EusjKK3Dg==
+From: Nam Cao <namcao@linutronix.de>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Gabriele Monaco <gmonaco@redhat.com>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	john.ogness@linutronix.de
+Subject: Re: [PATCH v10 17/19] rv: Add rtapp_sleep monitor
+Message-ID: <20250701051757.mBjQVdoo@linutronix.de>
+References: <cover.1749547399.git.namcao@linutronix.de>
+ <d3cf55d3bf42a0f70a58c394b5cf6d603ca8a9f7.1749547399.git.namcao@linutronix.de>
+ <20250630203401.1a11e58f@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] pch_uart: Fix dma_sync_sg_for_device() nents value
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Thomas Fourier <fourier.thomas@gmail.com>,
- Tomoya MORINAGA <tomoya-linux@dsn.okisemi.com>,
- linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-References: <20250630121021.106643-2-fourier.thomas@gmail.com>
- <624ba0b2-afe0-4111-96b9-8b678b6472fe@kernel.org>
- <aGKNaKvndRhQhwwE@smile.fi.intel.com>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <aGKNaKvndRhQhwwE@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250630203401.1a11e58f@gandalf.local.home>
 
-On 30. 06. 25, 15:13, Andy Shevchenko wrote:
-> On Mon, Jun 30, 2025 at 03:01:01PM +0200, Jiri Slaby wrote:
->> On 30. 06. 25, 14:10, Thomas Fourier wrote:
->>> The dma_sync_sg_for_device() functions should be called with the same
->>> nents as the dma_map_sg(), not the value the map function returned.
->>
->> Care to explain why do you intend to sync more than mapped? "should be
->> called" is way to vague.
+On Mon, Jun 30, 2025 at 08:34:01PM -0400, Steven Rostedt wrote:
+> On Tue, 10 Jun 2025 11:43:42 +0200
+> Nam Cao <namcao@linutronix.de> wrote:
+> > +static void
+> > +ltl_possible_next_states(struct ltl_monitor *mon, unsigned int state, unsigned long *next)
+> > +{
+> > +	bool task_is_migration = test_bit(LTL_TASK_IS_MIGRATION, mon->atoms);
+> > +	bool task_is_rcu = test_bit(LTL_TASK_IS_RCU, mon->atoms);
+> > +	bool val40 = task_is_rcu || task_is_migration;
+> > +	bool futex_lock_pi = test_bit(LTL_FUTEX_LOCK_PI, mon->atoms);
+> > +	bool val41 = futex_lock_pi || val40;
+> > +	bool block_on_rt_mutex = test_bit(LTL_BLOCK_ON_RT_MUTEX, mon->atoms);
+> > +	bool val5 = block_on_rt_mutex || val41;
+> > +	bool kthread_should_stop = test_bit(LTL_KTHREAD_SHOULD_STOP, mon->atoms);
+> > +	bool abort_sleep = test_bit(LTL_ABORT_SLEEP, mon->atoms);
+> > +	bool val32 = abort_sleep || kthread_should_stop;
+> > +	bool woken_by_nmi = test_bit(LTL_WOKEN_BY_NMI, mon->atoms);
+> > +	bool val33 = woken_by_nmi || val32;
+> > +	bool woken_by_hardirq = test_bit(LTL_WOKEN_BY_HARDIRQ, mon->atoms);
+> > +	bool val34 = woken_by_hardirq || val33;
+> > +	bool woken_by_equal_or_higher_prio = test_bit(LTL_WOKEN_BY_EQUAL_OR_HIGHER_PRIO,
+> > +	     mon->atoms);
+> > +	bool val14 = woken_by_equal_or_higher_prio || val34;
+> > +	bool wake = test_bit(LTL_WAKE, mon->atoms);
+> > +	bool val13 = !wake;
+> > +	bool kernel_thread = test_bit(LTL_KERNEL_THREAD, mon->atoms);
+> > +	bool nanosleep_clock_tai = test_bit(LTL_NANOSLEEP_CLOCK_TAI, mon->atoms);
+> > +	bool nanosleep_clock_monotonic = test_bit(LTL_NANOSLEEP_CLOCK_MONOTONIC, mon->atoms);
+> > +	bool val24 = nanosleep_clock_monotonic || nanosleep_clock_tai;
+> > +	bool nanosleep_timer_abstime = test_bit(LTL_NANOSLEEP_TIMER_ABSTIME, mon->atoms);
+> > +	bool val25 = nanosleep_timer_abstime && val24;
+> > +	bool clock_nanosleep = test_bit(LTL_CLOCK_NANOSLEEP, mon->atoms);
+> > +	bool val18 = clock_nanosleep && val25;
+> > +	bool futex_wait = test_bit(LTL_FUTEX_WAIT, mon->atoms);
+> > +	bool val9 = futex_wait || val18;
+> > +	bool val11 = val9 || kernel_thread;
+> > +	bool sleep = test_bit(LTL_SLEEP, mon->atoms);
+> > +	bool val2 = !sleep;
+> > +	bool rt = test_bit(LTL_RT, mon->atoms);
+> > +	bool val1 = !rt;
+> > +	bool val3 = val1 || val2;
+> > +
+> > +	switch (state) {
+> > +	case S0:
+> > +		if (val3)
+> > +			__set_bit(S0, next);
+> > +		if (val11 && val13)
+> > +			__set_bit(S1, next);
+> > +		if (val11 && val14)
+> > +			__set_bit(S4, next);
+> > +		if (val5)
+> > +			__set_bit(S5, next);
+> > +		break;
 > 
-> It's documented as the correct use of the DMA streaming API.
-> Should we go deeper and understand why?
+> What's with all the magic numbers?
+> 
+> Can we turn these into enums so they have some meaning for us humans?
 
-That's IMO enough if he put/referenced this in the commit log...
+I'm not sure what you mean, we can't use enums as variables.
 
--- 
-js
-suse labs
+I haven't come up with a good way of (automatically) giving them meaningful
+names. They are just intermediate values (e.g. 'and' of other values).
+Maybe I should integrate AI in my scripts ;)
+
+There's another option: we could drop all these intermediate variables and
+use the atomic propositions directly. So I could hack my scripts:
+
+diff --git a/tools/verification/rvgen/rvgen/ltl2ba.py b/tools/verification/rvgen/rvgen/ltl2ba.py
+index d11840af7f5fd..1d1eeb82ae834 100644
+--- a/tools/verification/rvgen/rvgen/ltl2ba.py
++++ b/tools/verification/rvgen/rvgen/ltl2ba.py
+@@ -118,11 +118,7 @@ class ASTNode:
+         return self.op.expand(self, node, node_set)
+ 
+     def __str__(self):
+-        if isinstance(self.op, Literal):
+-            return str(self.op.value)
+-        if isinstance(self.op, Variable):
+-            return self.op.name.lower()
+-        return "val" + str(self.id)
++        return str(self.op).lower()
+ 
+     def normalize(self):
+         # Get rid of:
+@@ -147,6 +143,9 @@ class BinaryOp:
+         yield from self.left
+         yield from self.right
+ 
++    def __str__(self):
++        return "(%s %s %s)" % (self.left.op, self.op_str, self.right.op)
++
+     def normalize(self):
+         raise NotImplementedError
+ 
+@@ -358,6 +357,9 @@ class Variable:
+     def __iter__(self):
+         yield from ()
+ 
++    def __str__(self):
++        return self.name
++
+     def negate(self):
+         new = ASTNode(self)
+         return NotOp(new)
+diff --git a/tools/verification/rvgen/rvgen/ltl2k.py b/tools/verification/rvgen/rvgen/ltl2k.py
+index b8da9094fb4ff..dfa625d130233 100644
+--- a/tools/verification/rvgen/rvgen/ltl2k.py
++++ b/tools/verification/rvgen/rvgen/ltl2k.py
+@@ -109,17 +109,8 @@ class ltl2k(generator.Monitor):
+     def _fill_atom_values(self):
+         buf = []
+         for node in self.ltl:
+-            if node.op.is_temporal():
+-                continue
+-
+             if isinstance(node.op, ltl2ba.Variable):
+                 buf.append("\tbool %s = test_bit(LTL_%s, mon->atoms);" % (node, node.op.name))
+-            elif isinstance(node.op, ltl2ba.AndOp):
+-                buf.append("\tbool %s = %s && %s;" % (node, node.op.left, node.op.right))
+-            elif isinstance(node.op, ltl2ba.OrOp):
+-                buf.append("\tbool %s = %s || %s;" % (node, node.op.left, node.op.right))
+-            elif isinstance(node.op, ltl2ba.NotOp):
+-                buf.append("\tbool %s = !%s;" % (node, node.op.child))
+         buf.reverse()
+ 
+         buf2 = []
+
+
+And we would get:
+
+static void
+ltl_possible_next_states(struct ltl_monitor *mon, unsigned int state, unsigned long *next)
+{
+	bool task_is_migration = test_bit(LTL_TASK_IS_MIGRATION, mon->atoms);
+	bool task_is_rcu = test_bit(LTL_TASK_IS_RCU, mon->atoms);
+	bool futex_lock_pi = test_bit(LTL_FUTEX_LOCK_PI, mon->atoms);
+	bool block_on_rt_mutex = test_bit(LTL_BLOCK_ON_RT_MUTEX, mon->atoms);
+	bool kthread_should_stop = test_bit(LTL_KTHREAD_SHOULD_STOP, mon->atoms);
+	bool abort_sleep = test_bit(LTL_ABORT_SLEEP, mon->atoms);
+	bool woken_by_nmi = test_bit(LTL_WOKEN_BY_NMI, mon->atoms);
+	bool woken_by_hardirq = test_bit(LTL_WOKEN_BY_HARDIRQ, mon->atoms);
+	bool woken_by_equal_or_higher_prio = test_bit(LTL_WOKEN_BY_EQUAL_OR_HIGHER_PRIO,
+	     mon->atoms);
+	bool wake = test_bit(LTL_WAKE, mon->atoms);
+	bool kernel_thread = test_bit(LTL_KERNEL_THREAD, mon->atoms);
+	bool nanosleep_clock_tai = test_bit(LTL_NANOSLEEP_CLOCK_TAI, mon->atoms);
+	bool nanosleep_clock_monotonic = test_bit(LTL_NANOSLEEP_CLOCK_MONOTONIC, mon->atoms);
+	bool nanosleep_timer_abstime = test_bit(LTL_NANOSLEEP_TIMER_ABSTIME, mon->atoms);
+	bool clock_nanosleep = test_bit(LTL_CLOCK_NANOSLEEP, mon->atoms);
+	bool futex_wait = test_bit(LTL_FUTEX_WAIT, mon->atoms);
+	bool sleep = test_bit(LTL_SLEEP, mon->atoms);
+	bool rt = test_bit(LTL_RT, mon->atoms);
+
+	switch (state) {
+	case S0:
+		if ((!rt || !sleep))
+			__set_bit(S0, next);
+		if (!wake && ((futex_wait || (clock_nanosleep && (nanosleep_timer_abstime &&
+		   (nanosleep_clock_monotonic || nanosleep_clock_tai)))) || kernel_thread))
+			__set_bit(S1, next);
+		if (((futex_wait || (clock_nanosleep && (nanosleep_timer_abstime &&
+		   (nanosleep_clock_monotonic || nanosleep_clock_tai)))) || kernel_thread) &&
+		   (woken_by_equal_or_higher_prio || (woken_by_hardirq || (woken_by_nmi ||
+		   (abort_sleep || kthread_should_stop)))))
+			__set_bit(S5, next);
+		if ((block_on_rt_mutex || (futex_lock_pi || (task_is_rcu || task_is_migration))))
+			__set_bit(S6, next);
+		break;
+
+
+It is just a matter of taste. I will let you pick. Or do you hate this one
+as well?
+
+Best regards,
+Nam
