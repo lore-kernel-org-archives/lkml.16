@@ -1,204 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC70A2144C7
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 12:06:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59DD0272E48
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 12:06:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751371589; cv=none; b=MMNo4HmNl0Q21SFf8uMzh/VeXJwMeRTLePtzE0nxsnVEP4bzE9vbjCYcFF+zPwhQbL11aPlU+kMM37foa8gQ2F6k9ceVeSQIhn/VosgnUTeJuHB5oPu8xbGTGAqbWHuLpzrc1cssV9sHVWiYpbLvaSzejHJwkfyQLViBFvo3EI4=
+	t=1751371593; cv=none; b=eVixFxYH6Fh2OToulEPtLCphsoN3pnJ6BSEqCO1SqLP+OkEY3bxJC8E83k/3t7UbI6TFm35qnaf82EelpBTicc0RQL5mDWjFvBiB0FE5fkWFQpjjNdGLkf2FGnB6RK8FZa6Ao7sAtoQO61H+UPZnXxzI8+Bv2M1U1vHijQKVEo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751371589; c=relaxed/simple;
-	bh=vtwL355P7xg/kNnf+LDHrpJKPY3z9ZBrkpJ97FcFU4s=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Tf6Yu1ZwHYaISqj3tEABIbbM4fHpYGG069JAgk/mhGcqXaUfNBjX5sG6ZyD/QodMKcc7ug5B6+1vyMtiP6Ed736JIUmBPNzIGvDd6kt0NZqt1QuqBlFXduy+v6Ia1sik6ZUQLFCMmxGdPLFD9s97IepdTLWhF6JjWoxB9ROKTPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bGXAX/25; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751371593; c=relaxed/simple;
+	bh=fwZQhFulCtk6W9St9reCgVe3JkeISDZLWskJCaogHtY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gdwFi9eQLXtLKOkb1/sHxyKpihA86/2ybrvMLQhTR0Ziv7hQfmfrURbYQqNgfve6SwPNpgOIBuyizsGm8p+mQUQgt6kU1Ry0uS4y75gZ0wFkmF9S0wi0aByxMB8xTIeSEOA/neRIV7NjG9ffLEZ9Aoiv7p6ZLnXb+TaaFPC+B54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Egebe6Xk; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bGXAX/25"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751371588; x=1782907588;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=vtwL355P7xg/kNnf+LDHrpJKPY3z9ZBrkpJ97FcFU4s=;
-  b=bGXAX/259SLiQazbtfiJp3DHmVeAzlz6mSdls2lvVpelQXlpCN7QakVh
-   a3AL9sS/cW7tIxJ1dzmWs9CtIhaebhTEOoOqdYQ5+x/tUrK4EP/jo0oMK
-   dHCrrA6slW6eF+Zv1Aki4S55KpGMBrLGrxSoQCUvJHM2ckGZTQuVw+7ZT
-   NBVCU0N3gYb5lY0kB7Jxq5uQ9/iIlmhTiTNM9cFV0KMXq6Qbr2mIIUaCI
-   TUUmGOLKyzmTveeIKsrZ9cONWwgTBSdf8GDzYK4fh87k3yi3xmFDsxAws
-   DMQYgt8sTeBUlEowIjLbIaFcw7rXy3vt6PURhfvuzDNRudXrMyKqkBXnQ
-   g==;
-X-CSE-ConnectionGUID: r1PlMJrwRZeEDyxhdHbBEA==
-X-CSE-MsgGUID: BYexG+ytSDiof876ohYd8g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="52864163"
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="52864163"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 05:06:27 -0700
-X-CSE-ConnectionGUID: hfQVdkq5TWyEg6XHgFytPQ==
-X-CSE-MsgGUID: BjoM80rvQyW5/vJ1n1psAA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="158312161"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 01 Jul 2025 05:06:25 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uWZkk-000a7I-2n;
-	Tue, 01 Jul 2025 12:06:22 +0000
-Date: Tue, 1 Jul 2025 20:05:37 +0800
-From: kernel test robot <lkp@intel.com>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>
-Subject: fs/lockd/svcsubs.c:416:1: warning: stack frame size (1032) exceeds
- limit (1024) in 'nlmsvc_mark_resources'
-Message-ID: <202507011934.YZ0Qoq4s-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Egebe6Xk"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2357c61cda7so114235ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 05:06:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751371592; x=1751976392; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fwZQhFulCtk6W9St9reCgVe3JkeISDZLWskJCaogHtY=;
+        b=Egebe6XkkWWxrWmyUivjX5aWl4O1EcZh3DITP/UtDfB1mhO+muB5qow6N1ZSls2gV8
+         jPiPC0SxIzQpJEdcctPszgOWwCIp+qa+HSOh33xWTR//zOV3FbuneW51yMYEDIknGEN8
+         NzA55UM/nuwG25Kdc+J7PMt+fvJj2hO9nQmYSQM9Jb6ELKUo18gvFjVDDbyaDP1HXHRs
+         wpnvSLVjofERgNuAmibJDgFZ6vznKwN8ggjzGeWY8f8s48HgdjmnNfN88QNwpPoWMphc
+         KcWMCdVYLeof3RIGs5/550xMt09mJ/Af0ybTHbC5IJ/XRa9afEgw3aX8jpETkCiZcMGj
+         zoWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751371592; x=1751976392;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fwZQhFulCtk6W9St9reCgVe3JkeISDZLWskJCaogHtY=;
+        b=pTZak5GmJLqbltrXHJFGJJft3AJDKFfdJGrulgC5c28fIfMQwql0Fr70nnBvGhKPrf
+         xiuwrGyRl45ZJou486LXoOQPdr90m9ruxMXz5oVxp0N2R8lBiRnEp1argQFss50Mu7i8
+         TZR19YqNRpAsRrGk9g42SBbVvaV6bPu7HrwypJKzrlQFLVGnOM2lut3sNITXwmjG7UR8
+         3/MJXDY0M7g21YjmahQvzNH1KcycBR1V8eNMD/JlOMRoJS7z2Yv+42aLzmoxETLC1F/0
+         NIVHqW5SBMZMOjEWYWC7s8vugyqGhvg7DZ0eRtQL2KTrDRO5RMHn5llRQ+EMdwNnTu//
+         JSIw==
+X-Forwarded-Encrypted: i=1; AJvYcCUuGPlK7dnYHeoqp7FMXDSQbvP3tFlg97i9cAjf7ujWlsX8z6S2xJ94DmblJKuFqwzYuhdGuZ493XWgw/g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJ7gw4xTWnKNfFKNUV0MzF9nNT9d7zOYf07nkTsJpA9luuBPDq
+	QrB429XxfUPEXCTZVOhahJo+XUOH0qXo62mu/uQXJdG1m0srGKzjirT7MAVqaLrIYYoZ5d58Fri
+	l19625akKtXRA+gChgwKjA16w84PHdJIGCUDRMmz0
+X-Gm-Gg: ASbGnctNQy557z6ksBHoWU5TDRRZz4m7/K0z0g9uOt+GDwav0PcqIOsoiKmhB6qwlfH
+	GMdwusCdf2IW83nrZW0yNULvPnWT/Y1TY7la1EBWpoUVAhqn4CMeqB7RNH2HYz7Qe/gFTH2WYuR
+	J6Xh0lx8WELVprqdbk9ztURVe1vzNhrYMSWclzQWPvDQ==
+X-Google-Smtp-Source: AGHT+IGFAwjulo/i4stzSeDZyvangI+UZ0rJXA7wz0l2gf+G3c7FdoUDkNvfVQlKGJ7tNf7XQG97q/uJgkbiheh/1nA=
+X-Received: by 2002:a17:903:110d:b0:23c:5f63:b67 with SMTP id
+ d9443c01a7336-23c5fef26b2mr2103895ad.4.1751371591226; Tue, 01 Jul 2025
+ 05:06:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250612114210.2786075-1-mclapinski@google.com> <685c67525ba79_2c35442945@iweiny-mobl.notmuch>
+In-Reply-To: <685c67525ba79_2c35442945@iweiny-mobl.notmuch>
+From: =?UTF-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>
+Date: Tue, 1 Jul 2025 14:05:59 +0200
+X-Gm-Features: Ac12FXxGIEan-Q08VvikT9LVQKRxgvs42efMWiz53YaKommHJZr1vh6fiZw9HYE
+Message-ID: <CAAi7L5cq9OqRGdyZ07rHhsA8GRh2xVXYGh7n20UoTCRfQK03WA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] libnvdimm/e820: Add a new parameter to configure
+ many regions per e820 entry
+To: Ira Weiny <ira.weiny@intel.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Dan Williams <dan.j.williams@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, nvdimm@lists.linux.dev, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Thomas Huth <thuth@redhat.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	"Borislav Petkov (AMD)" <bp@alien8.de>, Ard Biesheuvel <ardb@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Mike Rapoport <rppt@kernel.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-cxl@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   66701750d5565c574af42bef0b789ce0203e3071
-commit: 3415b10a03945b0da4a635e146750dfe5ce0f448 kbuild: Fix '-S -c' in x86 stack protector scripts
-date:   11 months ago
-config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20250701/202507011934.YZ0Qoq4s-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250701/202507011934.YZ0Qoq4s-lkp@intel.com/reproduce)
+On Wed, Jun 25, 2025 at 11:16=E2=80=AFPM Ira Weiny <ira.weiny@intel.com> wr=
+ote:
+>
+> Michal Clapinski wrote:
+> > This includes:
+> > 1. Splitting one e820 entry into many regions.
+> > 2. Conversion to devdax during boot.
+> >
+> > This change is needed for the hypervisor live update. VMs' memory will
+> > be backed by those emulated pmem devices. To support various VM shapes
+> > I want to create devdax devices at 1GB granularity similar to hugetlb.
+> > Also detecting those devices as devdax during boot speeds up the whole
+> > process. Conversion in userspace would be much slower which is
+> > unacceptable while trying to minimize
+>
+> Did you explore the NFIT injection strategy which Dan suggested?[1]
+>
+> [1] https://lore.kernel.org/all/6807f0bfbe589_71fe2944d@dwillia2-xfh.jf.i=
+ntel.com.notmuch/
+>
+> If so why did it not work?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507011934.YZ0Qoq4s-lkp@intel.com/
+I'm new to all this so I might be off on some/all of the things.
 
-All warnings (new ones prefixed by >>):
+My issues with NFIT:
+1. I can either go with custom bios or acpi nfit injection. Custom
+bios sounds rather aggressive to me and I'd prefer to avoid this. The
+NFIT injection is done via initramfs, right? If a system doesn't use
+initramfs at the moment, that would introduce another step in the boot
+process. One of the requirements of the hypervisor live update project
+is that the boot process has to be blazing fast and I'm worried
+introducing initramfs would go against this requirement.
+2. If I were to create an NFIT, it would have to contain thousands of
+entries. That would have to be parsed on every boot. Again, I'm
+worried about the performance.
 
-   In file included from fs/lockd/svcsubs.c:16:
-   In file included from include/linux/sunrpc/svc.h:17:
-   In file included from include/linux/sunrpc/xdr.h:17:
-   In file included from include/linux/scatterlist.h:8:
-   In file included from include/linux/mm.h:2221:
-   include/linux/vmstat.h:500:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     500 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     501 |                            item];
-         |                            ~~~~
-   include/linux/vmstat.h:507:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     507 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     508 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:514:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     514 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
-   include/linux/vmstat.h:519:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     519 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     520 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:528:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     528 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     529 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
->> fs/lockd/svcsubs.c:416:1: warning: stack frame size (1032) exceeds limit (1024) in 'nlmsvc_mark_resources' [-Wframe-larger-than]
-     416 | nlmsvc_mark_resources(struct net *net)
-         | ^
-   6 warnings generated.
---
-   In file included from drivers/dma/dw-edma/dw-edma-pcie.c:11:
-   In file included from include/linux/pci.h:1648:
-   In file included from include/linux/dmapool.h:14:
-   In file included from include/linux/scatterlist.h:8:
-   In file included from include/linux/mm.h:2221:
-   include/linux/vmstat.h:500:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     500 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     501 |                            item];
-         |                            ~~~~
-   include/linux/vmstat.h:507:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     507 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     508 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:514:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     514 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
-   include/linux/vmstat.h:519:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     519 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     520 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:528:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     528 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     529 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
->> drivers/dma/dw-edma/dw-edma-pcie.c:159:12: warning: stack frame size (1032) exceeds limit (1024) in 'dw_edma_pcie_probe' [-Wframe-larger-than]
-     159 | static int dw_edma_pcie_probe(struct pci_dev *pdev,
-         |            ^
-   6 warnings generated.
---
-   In file included from drivers/video/fbdev/savage/savagefb_driver.c:49:
-   In file included from include/linux/mm.h:2221:
-   include/linux/vmstat.h:500:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     500 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     501 |                            item];
-         |                            ~~~~
-   include/linux/vmstat.h:507:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     507 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     508 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:514:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     514 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
-   include/linux/vmstat.h:519:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     519 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     520 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:528:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     528 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     529 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
->> drivers/video/fbdev/savage/savagefb_driver.c:1503:12: warning: stack frame size (1032) exceeds limit (1024) in 'savagefb_set_par' [-Wframe-larger-than]
-    1503 | static int savagefb_set_par(struct fb_info *info)
-         |            ^
-   6 warnings generated.
+Do you think an NFIT solution could be as fast as the simple command
+line solution?
 
-
-vim +/nlmsvc_mark_resources +416 fs/lockd/svcsubs.c
-
-f2af793db02d2c Olaf Kirch           2006-10-04  411  
-^1da177e4c3f41 Linus Torvalds       2005-04-16  412  /*
-^1da177e4c3f41 Linus Torvalds       2005-04-16  413   * Mark all hosts that still hold resources
-^1da177e4c3f41 Linus Torvalds       2005-04-16  414   */
-^1da177e4c3f41 Linus Torvalds       2005-04-16  415  void
-b26411f85d3763 Stanislav Kinsbursky 2012-07-25 @416  nlmsvc_mark_resources(struct net *net)
-^1da177e4c3f41 Linus Torvalds       2005-04-16  417  {
-b26411f85d3763 Stanislav Kinsbursky 2012-07-25  418  	struct nlm_host hint;
-b26411f85d3763 Stanislav Kinsbursky 2012-07-25  419  
-e919b0765287f3 Vasily Averin        2017-11-08  420  	dprintk("lockd: %s for net %x\n", __func__, net ? net->ns.inum : 0);
-b26411f85d3763 Stanislav Kinsbursky 2012-07-25  421  	hint.net = net;
-b26411f85d3763 Stanislav Kinsbursky 2012-07-25  422  	nlm_traverse_files(&hint, nlmsvc_mark_host, NULL);
-^1da177e4c3f41 Linus Torvalds       2005-04-16  423  }
-^1da177e4c3f41 Linus Torvalds       2005-04-16  424  
-
-:::::: The code at line 416 was first introduced by commit
-:::::: b26411f85d3763ec5fc553854d9c3c0966072090 LockD: mark host per network namespace on garbage collect
-
-:::::: TO: Stanislav Kinsbursky <skinsbursky@parallels.com>
-:::::: CC: J. Bruce Fields <bfields@redhat.com>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+[snip]
