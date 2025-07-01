@@ -1,386 +1,193 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4183B2797A5
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 14:16:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EAAE2798FB;
+	Tue,  1 Jul 2025 14:16:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751379382; cv=none; b=rHOh4PL/7CvmugKk6cpDilsZxu6XgEVgjFOoHiOeWd8fxbVx+dV+MJlcpUzg9KAhzP5TH8bXfBGMCXtazaBIK3ZjYgaLeXDmRVd59TOaYzKnEREN+pxLkeI92FRCVA4KVW5upiN+ui76Xn6UhqdEAo++rxLpuC5cqy+hY1NMR/A=
+	t=1751379390; cv=none; b=Zi7V4johC1l2FYiGDDaQIoZQ4XoMPjTw7tB1xj5rInXdGn0OTTasxob4YNCJKxsAnhh0Gkg2qI12ess4crtaMPT09WBsNaY1aqfN8x0CyUZDw8wKVout4QcuM0ii3+bW3SQ12Ch9hqpHBu2jpSXWpZuCF9HoOjkkczOV6hJNP+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751379382; c=relaxed/simple;
-	bh=arjDcOQPz+bLzO+2hqy2LFu/NPPj2XN5yiww8a1Sen0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XjSNcEMlPeCZ4+0oasbQqEie0H+OhZa4FvESW9joRu1f87I1N5wpI4nHB4KnsQNNI1YlWEEKujTeadgob59v2IWWrAcCl4llq/i9ZBaAiSHxiIV//eQze/9hyWef1+X2TwgAlO9wYGncAozHMo2h75eB1EHg6WOijxtGvpnvNfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BOwJeMUl; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751379390; c=relaxed/simple;
+	bh=opnetTzEqSI8nfAjX3dcvSAkF20HA784Ujkzgdxg09s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GcB6ZK/JzrpmdL9nHjBbrNk6nHQUbvxWdo52cywPUDPutewiYm0n6buL6JxzPrubsQoiGzQCyp/6/AdClISNTcAyIfO00Z48X4Acnl9pVDtIObuC7awyBny7qNuLiYpp51BHfwEuvkkqSkIHvDXIITTSGyrheJgCblib2Xe7lKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YixW7GGa; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BOwJeMUl"
-Date: Tue, 1 Jul 2025 22:16:07 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751379374;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RKB58BmoOcqdr4LM8jONymTwMS8ilusPwGSmvHxdSQo=;
-	b=BOwJeMUlh3rKN+71IouHQOsO2Vv5oZexwCtI4pCVAHVBeicJbvlWDIYpjSnUSdUMwYLxCr
-	RVagIyX8s2bLmnACaX3eiA4BSaGiYtMk73BJp6FXdomLxVbXKOTV7eCsS/SyistckHlTQp
-	fmws7Niidpq4C0HEUjO8t2j33Dx5Bw4=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Dawei Li <dawei.li@linux.dev>
-To: Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>
-Cc: andersson@kernel.org, mathieu.poirier@linaro.org,
-	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	set_pte_at@outlook.com, dawei.li@linux.dev
-Subject: Re: [PATCH v4 0/3] rpmsg: Introduce RPMSG_CREATE_EPT_FD_IOCTL uAPI
-Message-ID: <20250701141607.GA5219@wendao-VirtualBox>
-References: <20250609151531.22621-1-dawei.li@linux.dev>
- <f3b99a3d-5d20-4e82-ae5d-75c2c866e118@foss.st.com>
- <20250619144301.GA9575@wendao-VirtualBox>
- <db2d2296-3893-427d-85ec-f64e6c0e1d1d@foss.st.com>
- <20250622041200.GA3703@wendao-VirtualBox>
- <ce95f80b-4a36-457e-aedd-d59a325a711c@foss.st.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YixW7GGa"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ae223591067so577381666b.3;
+        Tue, 01 Jul 2025 07:16:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751379386; x=1751984186; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=8DiLWWWTAl87647oLhK7vXbCdzk2u4rSNDXemJ0QmuA=;
+        b=YixW7GGaSzWmqdn3FLG39rQp4Ud05GQr5+zpgqyqGz6E5HVT4YmJzKayW8boAREDYn
+         7UftjjTU02Doyi/rduJ3a11ipM8F0wgg9WqTsWcc6mzI58BnxsOprLJi/Vi6A19QeRVt
+         iff5rIzPEGYVwl9wkEYwT1LrFxrFBFfWOwKwe7vI6B2PkD5xbXCJpsm/8Mav66AZLQvC
+         CET0kU115Mszr0mTrNT788+BYQb9ahApqLEzQZ17vdHutc5geR4p0wzl/ztJwdJPLzqS
+         2f7UzbEyHz/7mhDQgvtrSZTClVTxe7Lthk2XfIGjeTKERkzuuA5DNF8Om4HAD2Zr+VxA
+         yT0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751379386; x=1751984186;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8DiLWWWTAl87647oLhK7vXbCdzk2u4rSNDXemJ0QmuA=;
+        b=nwkcgdIPOwRtHTO4ZIOEKBO+F2sCY6vBu4z7OiGChFjG55Dvj+DvF8SzPPYkcMgojP
+         OTUyqwiKN7SILAaUvioSDzx+DAPkOT64kxq6hR/7AU0si8i+zwOA99vUsQz5/tvq4na0
+         dboq6e8fZZ8P83kMJesWBHNCmjA43l3mK0/AtYr/gkzCzbdImtekUB3u90NF9StrInLW
+         RY5q8tGWluc70XopJ3K9G3xYMGg3EERl1CxdvMfa8haS3lzgOGhBr92BKty2BXV8wmry
+         FOg6dTpXjSY9EP66I1HQPAtmYPUQN/PIIN/pAC7JlW8Ako4DpCPkB7aVzXMVVPHXUCGJ
+         LMVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU8a0CySHRItOHxehB970zf4lkBkGicQqfq86zJdL3FRGAaM0ZGmiKSIA7VgQ/8LBS9kjINnDhOgY+G@vger.kernel.org, AJvYcCVVsxAjSFRYXXhZarFtseMbiAH88LreMbyDa5AEsEvl0ld2dJRKV7n2S280L517J1M/vt1cSeu5ZTo=@vger.kernel.org, AJvYcCVc5zk3L1s5HLQjSOJevpBS8N+K+ld5XJL2I9fvn/tSVuSYxdTgsUEUs7cOYnT9auPXWjjXrJ7F4uHf3HQH@vger.kernel.org, AJvYcCWClLQc7UGgddPKnA00BLPI1PuHaQ//gwTA6nWgEpHP+lF6oZHyF24eV3kh2O+ZHbj9oWxJRkvJNQ==@vger.kernel.org, AJvYcCXAyCUjIIQKTFJPVU9qB6jwPNtIm1De7+n91/DbHM8w2GwfvpdZAUxaq9AC0aT+OVAKUawwXNy3eZX3sax+gg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVUWO/Hq1tRbfHoB1aF/YZusxtIMFQwOBZT724nIcCP1ZrAbSC
+	mclp43VOisECu0Qy1DKR1KiyvOdVMZ4iWdeAojUHNgbSMmDV149t0y8sv0kN6gQFQPNqdPXXC5W
+	a+VKUUGo0+6r/i2/sJN/CbFThq8NlPos=
+X-Gm-Gg: ASbGncvILDHjLeLf8P6zpUuCe0BtE/LZp9Ni/TTpwFeK0P0wHOIuFx6hF3mYpvcFYsr
+	ipv68Y4IWl1EL7IlK4bxJMjbRY3TKaomiCvvUNNCe0cpGVeaWOWYgs3Q4I9yBNCRPvkMWc/shwt
+	xhXRTzvQvoUe6vRrnsVPWebQI1T3AB7wOGXFELP7hzvO/JW8H7x/mr2Q==
+X-Google-Smtp-Source: AGHT+IExL0USiABTSMqYLTui/Nj2BbMzBWIcX+hzwzcIv1r5t+NBbuTb2QESaxkCUab/7rZ19/dSWN/0JPksKaH3/Co=
+X-Received: by 2002:a17:907:7e8a:b0:ae3:b5c6:4d6c with SMTP id
+ a640c23a62f3a-ae3b5c65147mr201077966b.43.1751379385667; Tue, 01 Jul 2025
+ 07:16:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ce95f80b-4a36-457e-aedd-d59a325a711c@foss.st.com>
-X-Migadu-Flow: FLOW_OUT
+References: <20250630-xattrat-syscall-v6-0-c4e3bc35227b@kernel.org>
+ <20250630-xattrat-syscall-v6-4-c4e3bc35227b@kernel.org> <CAOQ4uxgbeMEqx7FtBc3KnrCjOHHRniSjBPLzk7_S9SjYKcY_ag@mail.gmail.com>
+ <ozxxm5fglq5kuoiteqr34wghaqhxgue4kshz2jnnk7oopmhxk6@a2lo6weivsyz>
+In-Reply-To: <ozxxm5fglq5kuoiteqr34wghaqhxgue4kshz2jnnk7oopmhxk6@a2lo6weivsyz>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Tue, 1 Jul 2025 16:16:13 +0200
+X-Gm-Features: Ac12FXwKBREmBs-fWZtiuT1yk0gj2b76cKsQsQgoRyzkaLrSaYJvhifpASRz3lQ
+Message-ID: <CAOQ4uxj22du-+8vmkSq3V8C22y7hEGhOHqryAck9yuB1V3spow@mail.gmail.com>
+Subject: Re: [PATCH v6 4/6] fs: make vfs_fileattr_[get|set] return -EOPNOSUPP
+To: Jan Kara <jack@suse.cz>
+Cc: Andrey Albershteyn <aalbersh@redhat.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Casey Schaufler <casey@schaufler-ca.com>, Christian Brauner <brauner@kernel.org>, 
+	=?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>, 
+	Paul Moore <paul@paul-moore.com>, linux-api@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-xfs@vger.kernel.org, selinux@vger.kernel.org, 
+	Andrey Albershteyn <aalbersh@kernel.org>
+Content-Type: multipart/mixed; boundary="000000000000269fb60638deca8a"
 
-Hi Arnaud,
+--000000000000269fb60638deca8a
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for the reply.
+On Tue, Jul 1, 2025 at 2:51=E2=80=AFPM Jan Kara <jack@suse.cz> wrote:
+>
+> On Tue 01-07-25 08:05:45, Amir Goldstein wrote:
+> > On Mon, Jun 30, 2025 at 6:20=E2=80=AFPM Andrey Albershteyn <aalbersh@re=
+dhat.com> wrote:
+> > >
+> > > Future patches will add new syscalls which use these functions. As
+> > > this interface won't be used for ioctls only, the EOPNOSUPP is more
+> > > appropriate return code.
+> > >
+> > > This patch converts return code from ENOIOCTLCMD to EOPNOSUPP for
+> > > vfs_fileattr_get and vfs_fileattr_set. To save old behavior translate
+> > > EOPNOSUPP back for current users - overlayfs, encryptfs and fs/ioctl.=
+c.
+> > >
+> > > Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
+> ...
+> > > --- a/fs/overlayfs/inode.c
+> > > +++ b/fs/overlayfs/inode.c
+> > > @@ -721,7 +721,7 @@ int ovl_real_fileattr_get(const struct path *real=
+path, struct fileattr *fa)
+> > >                 return err;
+> > >
+> > >         err =3D vfs_fileattr_get(realpath->dentry, fa);
+> > > -       if (err =3D=3D -ENOIOCTLCMD)
+> > > +       if (err =3D=3D -EOPNOTSUPP)
+> > >                 err =3D -ENOTTY;
+> > >         return err;
+> > >  }
+> >
+> > That's the wrong way, because it hides the desired -EOPNOTSUPP
+> > return code from ovl_fileattr_get().
+> >
+> > The conversion to -ENOTTY was done for
+> > 5b0a414d06c3 ("ovl: fix filattr copy-up failure"),
+> > so please do this instead:
+> >
+> > --- a/fs/overlayfs/inode.c
+> > +++ b/fs/overlayfs/inode.c
+> > @@ -722,7 +722,7 @@ int ovl_real_fileattr_get(const struct path
+> > *realpath, struct fileattr *fa)
+> >
+> >         err =3D vfs_fileattr_get(realpath->dentry, fa);
+> >         if (err =3D=3D -ENOIOCTLCMD)
+> > -               err =3D -ENOTTY;
+> > +               err =3D -EOPNOTSUPP;
+>
+> Is this really needed? AFAICS nobody returns ENOIOCTLCMD after this
+> patch...
 
-On Mon, Jun 30, 2025 at 09:54:40AM +0200, Arnaud POULIQUEN wrote:
-> Hello Dawei,
-> 
-> Sorry for the late answer.
-> 
-> On 6/22/25 06:12, Dawei Li wrote:
-> > Hi Arnaud,
-> > 
-> > Thanks for the reply.
-> > 
-> > On Fri, Jun 20, 2025 at 09:52:03AM +0200, Arnaud POULIQUEN wrote:
-> >>
-> >>
-> >> On 6/19/25 16:43, Dawei Li wrote:
-> >>> Hi Arnaud, 
-> >>> Thanks for review.
-> >>>
-> >>> On Wed, Jun 18, 2025 at 03:07:36PM +0200, Arnaud POULIQUEN wrote:
-> >>>> Hello Dawei,
-> >>>>
-> >>>>
-> >>>> Please find a few comments below. It is not clear to me which parts of your
-> >>>> implementation are mandatory and which are optional "nice-to-have" optimizations.
-> >>>
-> >>> It's more like an improvement.
-> >>>
-> >>>>
-> >>>> Based on (potentially erroneous) hypothesis, you will find a suggestion for an
-> >>>> alternative to the anonymous inode approach, which does not seem to be a common
-> >>>> interface.
-> >>>
-> >>> AFAIC, annoymous inode is a common interface and used extensivly in kernel development.
-> >>> Some examples below.
-> >>>
-> >>>>
-> >>>>
-> >>>> On 6/9/25 17:15, Dawei Li wrote:
-> >>>>> Hi,
-> >>>>>
-> >>>>> This is V4 of series which introduce new uAPI(RPMSG_CREATE_EPT_FD_IOCTL)
-> >>>>> for rpmsg subsystem.
-> >>>>>
-> >>>>> Current uAPI implementation for rpmsg ctrl & char device manipulation is
-> >>>>> abstracted in procedures below:
-> >>>>> - fd = open("/dev/rpmsg_ctrlX")
-> >>>>> - ioctl(fd, RPMSG_CREATE_EPT_IOCTL, &info); /dev/rpmsgY devnode is
-> >>>>>   generated.
-> >>>>> - fd_ep = open("/dev/rpmsgY", O_RDWR) 
-> >>>>> - operations on fd_ep(write, read, poll ioctl)
-> >>>>> - ioctl(fd_ep, RPMSG_DESTROY_EPT_IOCTL)
-> >>>>> - close(fd_ep)
-> >>>>> - close(fd)
-> >>>>>
-> >>>>> This /dev/rpmsgY abstraction is less favorable for:
-> >>>>> - Performance issue: It's time consuming for some operations are
-> >>>>> invovled:
-> >>>>>   - Device node creation.
-> >>>>>     Depends on specific config, especially CONFIG_DEVTMPFS, the overall
-> >>>>>     overhead is based on coordination between DEVTMPFS and userspace
-> >>>>>     tools such as udev and mdev.
-> >>>>>
-> >>>>>   - Extra kernel-space switch cost.
-> >>>>>
-> >>>>>   - Other major costs brought by heavy-weight logic like device_add().
-> >>>>
-> >>>> Is this a blocker of just optimization?
-> >>>
-> >>> Yep, performance is one of motivations of this change.
-> >>>
-> >>>>
-> >>>>>
-> >>>>> - /dev/rpmsgY node can be opened only once. It doesn't make much sense
-> >>>>>     that a dynamically created device node can be opened only once.
-> >>>>
-> >>>>
-> >>>> I assume this is blocker with the fact that you need to open the /dev/rpmsg<x>
-> >>>> to create the endpoint.
-> >>>
-> >>> Yes. You have to open /dev/rpmsgX which is generated by legacy ioctl to
-> >>> instantiate a new endpoint.
-> >>>
-> >>>>
-> >>>>
-> >>>>>
-> >>>>> - For some container application such as docker, a client can't access
-> >>>>>   host's dev unless specified explicitly. But in case of /dev/rpmsgY, which
-> >>>>>   is generated dynamically and whose existence is unknown for clients in
-> >>>>>   advance, this uAPI based on device node doesn't fit well.
-> >>>>
-> >>>> does this could be solve in userspace parsing /sys/class/rpmsg/ directory to
-> >>>> retreive the device?
-> >>>
-> >>> Hardly, because client still can't access /dev/rpmsgX which is generated
-> >>> by host _after_ client is launched.
-> >>
-> >>
-> >> This part is not clear to me; could you provide more details?
-> >> I cannot figure out why a client can access /dev/rpmsg_ctrlX but not /dev/rpmsgX.
-> > 
-> > Well, let's take docker as example:
-> 
-> > 
-> > For docker, when a client is launched and it wants to access host's
-> > device, it must make explicit request when it's launched:
-> > 
-> > docker run --device=/dev/xxx
-> > 
-> > Let's presume that xxx is /dev/rpmsgX generated dynamically by _host_.
-> > Docker command above knows nothing about these rpmsg nodes which are
-> > generated by host _after_ client is launched. And yes, parsing> /sys/class/rpmsg may acquire info about rpmsg devices, but client still
-> > can't access /dev/rpmsgX.
-> 
-> One extra question:Are you using RPMsg over virtio?
-> 
-> If yes, do you test the RPMsg name service (NS) announcement, that might also
-> address your needs.
-> 
-> The principle is that the remote processor sends a name service announcement to
-> Linux, which probes the rpmsg character device and creates the /dev/rpmsgX
-> device in a predefined order known by the remote processor.
-> In such a case, the /dev/rpmsgX usage would be determined by the remote
-> processor itself.
-> 
-> Another advantage is that the RPMsg channel creation is not driven by either the
-> host or the client. In such case host does no need to define/kwnow RPMSg
-> endpoint addresses.
-> 
-> You still need to call the open() file system operation, but this should be done
-> one time during Docker client initialization.
+you are right it is not needed
 
-NS is nice, but perhaps it's not the approach for some cases.
+Attaching the patch with missing bits of fuse and overlayfs to make this
+conversion complete.
 
-For offloading/accelerator scenarios, ACPU is responsible for making all
-the important decisions, including creations of endpoints. Because all
-the user-awared software stack is running on ACPU, and if you want to
-create a endpoint _dynamically_, it must be from user's command which is
-from ACPU.
-
-And this series is more about how rpmsg_char and rpmsg_ctrl coordinate
-themselves about creating dynamic rpmsg endpoints in a more simple
-and efficient way.
-
-And the whole point of series is "When you want to return a fd to
-userspace which represents an instance of data structure in kernel, you
-don't implement it as character device". Maybe some quotes from Christian[1]
-can describe it better[1]:
-
-"I'm not sure why people are so in love with character device based apis.
-It's terrible. It glues everything to devtmpfs which isn't namespacable
-in any way. It's terrible to delegate and extremely restrictive in terms
-of extensiblity if you need additional device entries (aka the loop
-driver folly)."
-
-[1] https://lkml.org/lkml/2025/6/24/639
+Christian, please squash my patch
+and afterward make sure there is no conversion remaining in
+ovl_real_fileattr_get() as well as in ecryptfs_fileattr_get()
+Both those helpers should return the value they
+got from vfs_fileattr_get() as is.
 
 Thanks,
+Amir.
 
-	Dawei
+--000000000000269fb60638deca8a
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="0001-fuse-return-EOPNOTSUPP-from-fileattr_-gs-et-instead-.patch"
+Content-Disposition: attachment; 
+	filename="0001-fuse-return-EOPNOTSUPP-from-fileattr_-gs-et-instead-.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_mcklwtsq0>
+X-Attachment-Id: f_mcklwtsq0
 
-> 
-> Regards
-> Arnaud
-> 
-> 
-> > 
-> >>
-> >>
-> >>>
-> >>>>
-> >>>> You could face same kind of random instantiation for serial peripherals ( UART;
-> >>>> USb, I2C,...) based on a device tree enumeration. I suppose that user space
-> >>>> use to solve this.
-> >>>>
-> >>>>>
-> >>>>> An anonymous inode based approach is introduced to address the issues above.
-> >>>>> Rather than generating device node and opening it, rpmsg code just creates
-> >>>>> an anonymous inode representing eptdev and return the fd to userspace.
-> >>>>
-> >>>> A drawback is that you need to share fb passed between processes.
-> >>>
-> >>> Fd is the abstraction of an unique endpoint device, it holds true for
-> >>> both legacy and new approach.
-> >>>
-> >>> So I guess what you mean is that /dev/rpmsgX is global to all so other process
-> >>> can access it?
-> >>>
-> >>> But /dev/rpmsgX is designed to be opened only once, it's implemented as
-> >>> singleton pattern.
-> >>>
-> >>> static int rpmsg_eptdev_open(struct inode *inode, struct file *filp)
-> >>> {
-> >>> ...
-> >>>         if (eptdev->ept) {
-> >>>                 mutex_unlock(&eptdev->ept_lock);
-> >>>                 return -EBUSY;
-> >>>         }
-> >>> ...
-> >>>         eptdev->ept = ept;
-> >>> ...
-> >>> }
-> >>>
-> >>> [...]
-> >>>  
-> >>>>> 	printf("loop[%d]\n", loop);
-> >>>>>
-> >>>>> 	gettimeofday(&start, NULL);
-> >>>>>
-> >>>>> 	while (loop--) {
-> >>>>
-> >>>> Do you need to create /close Endpoint sevral times in your real use case with
-> >>>> high timing
-> >>>> constraint?
-> >>>
-> >>> No, it's just a silly benchmark demo, large sample reduces noise statistically.
-> >>>
-> >>>>
-> >>>>> 		fd_info.fd = -1;
-> >>>>> 		fd_info.flags = O_RDWR | O_CLOEXEC | O_NONBLOCK;
-> >>>>> 		ret = ioctl(fd, RPMSG_CREATE_EPT_FD_IOCTL, &fd_info);
-> >>>>> 		if (ret < 0 || fd_info.fd < 0) {
-> >>>>> 			printf("ioctl[RPMSG_CREATE_EPT_FD_IOCTL] failed, ret[%d]\n", ret);
-> >>>>> 		}
-> >>>>>
-> >>>>
-> >>>>
-> >>>>> 		ret = ioctl(fd_info.fd, RPMSG_DESTROY_EPT_IOCTL, &info);
-> >>>>> 		if (ret < 0) {
-> >>>>> 			printf("new ioctl[RPMSG_DESTROY_EPT_IOCTL] failed, ret[%d]\n", ret);
-> >>>>> 		}
-> >>>>>
-> >>>>> 		close(fd_info.fd);
-> >>>>
-> >>>> It seems strange to me to use ioctl() for opening and close() for closing, from
-> >>>> a symmetry point of view.
-> >>>
-> >>> Sorry to hear that. But no, it's a pretty normal skill in kernel codebase
-> >>> , I had to copy some examples from reply to other reviewer[1].
-> >>
-> >> I missed this one, apologize for the duplication.
-> >>
-> >>>
-> >>> anon_inode_get_{fd,file} are used extensively in kernel for returning a new
-> >>> fd to userspace which is associated with an unique data structure in kernel
-> >>> space, in different ways:
-> >>>
-> >>> - via ioctl(), some examples are:
-> >>>
-> >>>  - KVM ioctl(s)
-> >>>    - KVM_CREATE_VCPU -> kvm_vm_ioctl_create_vcpu
-> >>>    - KVM_GET_STATS_FD -> kvm_vcpu_ioctl_get_stats_fd
-> >>>    - KVM_CREATE_DEVICE -> kvm_ioctl_create_device
-> >>>    - KVM_CREATE_VM -> kvm_dev_ioctl_create_vm
-> >>>
-> >>>  - DMA buf/fence/sync ioctls
-> >>>    - DMA_BUF_IOCTL_EXPORT_SYNC_FILE -> dma_buf_export_sync_file
-> >>>    - SW_SYNC_IOC_CREATE_FENCE -> sw_sync_ioctl_create_fence
-> >>>    - Couples of driver implement DMA buf by using anon file _implicitly_:
-> >>>      - UDMABUF_CREATE -> udmabuf_ioctl_create
-> >>>      - DMA_HEAP_IOCTL_ALLOC -> dma_heap_ioctl_allocate
-> >>>
-> >>>  - gpiolib ioctls:
-> >>>    - GPIO_GET_LINEHANDLE_IOCTL -> linehandle_create
-> >>>    - GPIO_V2_GET_LINE_IOCTL
-> >>>
-> >>>  -  IOMMUFD ioctls:
-> >>>
-> >>>  -  VFIO Ioctls:
-> >>>
-> >>>  - ....
-> >>>
-> >>>
-> >>> - via other specific syscalls:
-> >>>  - epoll_create1
-> >>>  - bpf
-> >>>  - perf_event_open
-> >>>  - inotify_init
-> >>>  - ...
-> >>
-> >> If we put the optimization aspect aside, what seems strange to me is that the
-> >> purpose of rpmsg_char was to expose a FS character device to user space. If we
-> >> need tobypass the use of /dev/rpmsgX, does it make sense to support an anonymous
-> >> inode in this driver?  I am clearly not legitimate to answer this question...
-> > 
-> > You have every right to do so, after all, it's purely a technical
-> > discussion :).
-> > 
-> > I admit it's bit confusing to add annoymous inode logic to a file named
-> > rpmsg_char.c which implies 'character' device. That's why I rename API
-> > following Mathieu's comment:
-> >   - __rpmsg_chrdev_eptdev_alloc ->  rpmsg_eptdev_alloc
-> >   - __rpmsg_chrdev_eptdev_add ->  rpmsg_eptdev_add
-> > 
-> > As to topic how these two uAPI(s) co-exist and affect each other. This
-> > change is based on rules:
-> > 
-> > 1. Never break existing uAPI.
-> > 2. Try best to reuse existing codebase.
-> > 3. Userspace can choose whatever approach they want to.
-> > 
-> > Thanks,
-> > 
-> > 	Dawei
-> >>
-> >>
-> >> Thanks,
-> >> Arnaud
-> >>
-> >>>
-> >>> [1] https://lore.kernel.org/all/20250530125008.GA5355@wendao-VirtualBox/
-> >>>
-> >>>>
-> >>>> Regarding your implementation, I wonder if we could keep the /dev/rpmsg<x>
-> >>>> device with specific open() and close() file operations associated with your new
-> >>>> ioctl.
-> >>>>
-> >>>> - The ioctl would create the endpoint.
-> >>>> - The open() and close() operations would simply manage the file descriptor and
-> >>>> increment/decrement a counter to prevent premature endpoint destruction.
-> >>>>
-> >>>>
-> >>>> Regards,
-> >>>> Arnaud
-> >>>>
-> >>>
-> >>> [...]
-> >>>
-> >>> Thanks,
-> >>>
-> >>> 	Dawei
+RnJvbSA4NWQwOTdmNjM5NTE4NjcwYzU3ODI3NTEzYjAyZjQ5Nzk1MDA3MWRlIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBBbWlyIEdvbGRzdGVpbiA8YW1pcjczaWxAZ21haWwuY29tPgpE
+YXRlOiBUdWUsIDEgSnVsIDIwMjUgMTY6MDY6NDQgKzAyMDAKU3ViamVjdDogW1BBVENIXSBmdXNl
+OiByZXR1cm4gLUVPUE5PVFNVUFAgZnJvbSAtPmZpbGVhdHRyX1tnc11ldCgpIGluc3RlYWQgb2YK
+IC1FTk9UVFkKCkFzIHBhcnQgb2YgY2hhbmdpbmcgY2FsbGluZyBjb252ZW5zdGlvbiBvZiAtPmZp
+bGVhdHRyX1tnc11ldCgpCnRvIHJldHVybiAtRU9QTk9UU1VQUCBhbmQgZml4IHJlbGF0ZWQgb3Zl
+cmxheWZzIGNvZGUuCgpTaWduZWQtb2ZmLWJ5OiBBbWlyIEdvbGRzdGVpbiA8YW1pcjczaWxAZ21h
+aWwuY29tPgotLS0KIGZzL2Z1c2UvaW9jdGwuYyAgICAgICAgfCA0ICsrKysKIGZzL292ZXJsYXlm
+cy9jb3B5X3VwLmMgfCAyICstCiBmcy9vdmVybGF5ZnMvaW5vZGUuYyAgIHwgMiArLQogMyBmaWxl
+cyBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEv
+ZnMvZnVzZS9pb2N0bC5jIGIvZnMvZnVzZS9pb2N0bC5jCmluZGV4IDJkOWFiZjQ4ODI4Zi4uZjI2
+OTJmN2Q1OTMyIDEwMDY0NAotLS0gYS9mcy9mdXNlL2lvY3RsLmMKKysrIGIvZnMvZnVzZS9pb2N0
+bC5jCkBAIC01MzYsNiArNTM2LDggQEAgaW50IGZ1c2VfZmlsZWF0dHJfZ2V0KHN0cnVjdCBkZW50
+cnkgKmRlbnRyeSwgc3RydWN0IGZpbGVhdHRyICpmYSkKIGNsZWFudXA6CiAJZnVzZV9wcml2X2lv
+Y3RsX2NsZWFudXAoaW5vZGUsIGZmKTsKIAorCWlmIChlcnIgPT0gLUVOT1RUWSkKKwkJZXJyID0g
+LUVPUE5PVFNVUFA7CiAJcmV0dXJuIGVycjsKIH0KIApAQCAtNTcyLDUgKzU3NCw3IEBAIGludCBm
+dXNlX2ZpbGVhdHRyX3NldChzdHJ1Y3QgbW50X2lkbWFwICppZG1hcCwKIGNsZWFudXA6CiAJZnVz
+ZV9wcml2X2lvY3RsX2NsZWFudXAoaW5vZGUsIGZmKTsKIAorCWlmIChlcnIgPT0gLUVOT1RUWSkK
+KwkJZXJyID0gLUVPUE5PVFNVUFA7CiAJcmV0dXJuIGVycjsKIH0KZGlmZiAtLWdpdCBhL2ZzL292
+ZXJsYXlmcy9jb3B5X3VwLmMgYi9mcy9vdmVybGF5ZnMvY29weV91cC5jCmluZGV4IGQ3MzEwZmNm
+Mzg4OC4uMmM2NDZiNzA3NmQwIDEwMDY0NAotLS0gYS9mcy9vdmVybGF5ZnMvY29weV91cC5jCisr
+KyBiL2ZzL292ZXJsYXlmcy9jb3B5X3VwLmMKQEAgLTE3OCw3ICsxNzgsNyBAQCBzdGF0aWMgaW50
+IG92bF9jb3B5X2ZpbGVhdHRyKHN0cnVjdCBpbm9kZSAqaW5vZGUsIGNvbnN0IHN0cnVjdCBwYXRo
+ICpvbGQsCiAJZXJyID0gb3ZsX3JlYWxfZmlsZWF0dHJfZ2V0KG9sZCwgJm9sZGZhKTsKIAlpZiAo
+ZXJyKSB7CiAJCS8qIE50ZnMtM2cgcmV0dXJucyAtRUlOVkFMIGZvciAibm8gZmlsZWF0dHIgc3Vw
+cG9ydCIgKi8KLQkJaWYgKGVyciA9PSAtRU5PVFRZIHx8IGVyciA9PSAtRUlOVkFMKQorCQlpZiAo
+ZXJyID09IC1FT1BOT1RTVVBQIHx8IGVyciA9PSAtRUlOVkFMKQogCQkJcmV0dXJuIDA7CiAJCXBy
+X3dhcm4oImZhaWxlZCB0byByZXRyaWV2ZSBsb3dlciBmaWxlYXR0ciAoJXBkMiwgZXJyPSVpKVxu
+IiwKIAkJCW9sZC0+ZGVudHJ5LCBlcnIpOwpkaWZmIC0tZ2l0IGEvZnMvb3ZlcmxheWZzL2lub2Rl
+LmMgYi9mcy9vdmVybGF5ZnMvaW5vZGUuYwppbmRleCA2ZjBlMTVmODZjMjEuLjkyNzU0NzQ5ZjMx
+NiAxMDA2NDQKLS0tIGEvZnMvb3ZlcmxheWZzL2lub2RlLmMKKysrIGIvZnMvb3ZlcmxheWZzL2lu
+b2RlLmMKQEAgLTcyMiw3ICs3MjIsNyBAQCBpbnQgb3ZsX3JlYWxfZmlsZWF0dHJfZ2V0KGNvbnN0
+IHN0cnVjdCBwYXRoICpyZWFscGF0aCwgc3RydWN0IGZpbGVhdHRyICpmYSkKIAogCWVyciA9IHZm
+c19maWxlYXR0cl9nZXQocmVhbHBhdGgtPmRlbnRyeSwgZmEpOwogCWlmIChlcnIgPT0gLUVOT0lP
+Q1RMQ01EKQotCQllcnIgPSAtRU5PVFRZOworCQllcnIgPSAtRU9QTk9UU1VQUDsKIAlyZXR1cm4g
+ZXJyOwogfQogCi0tIAoyLjQzLjAKCg==
+--000000000000269fb60638deca8a--
