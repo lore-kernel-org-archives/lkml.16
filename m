@@ -1,75 +1,95 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 158CB1B0435
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 06:46:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8289E21323C;
+	Tue,  1 Jul 2025 06:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751352384; cv=none; b=sWnndxMbwebw8xXckdUyaavtTIY9BTe9QcD/hCpMibvd0BRsNvvmeT7aBtBdBxIfyfN0NxO8Lw6IoIw1/+rIPFufkAdIm9/9Y1mUSnPjkZXwiFuUZkYRZM0N+V+GctKCZWqbACOKd75JKTkzL13MhgqmmrwTEnXMnx8yC2nuERk=
+	t=1751352465; cv=none; b=E3bjQBUqovBvPI/QPkmyhV660DHzEtRyHdmoOADJ/vZO/Fn2rLt0ct6YwhnAHF7Nxbm5gRFw7Fx5/RA6HlqS57nZ+zO8kVXS6EjBWxw7PHSCZXktMgKZTr2OscGg63dFQMysh4dXXf6pWiy8OgmmCwmRDF+RFk5QENmbX0UJkqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751352384; c=relaxed/simple;
-	bh=5Y7c6zYkKzF3xCBRV8XTIbt5q1FllIz2uRSBkOMN2pI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F/8Ps+jiz0+7h9EBFs3y8IYZNs6+jwV/n80ylVZi8le3xuYVK9nV4H2jjfQTi0gnmBYPydt78kgh+Pi0DjSBrVdLex9lwylnDP6r1fepQ5jWsnjMIAi8G5zwTxGtx7bSjzHoyAt2PaqgSEtSifBk6yaDyhUqvwv5QVLvilqO/H4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a6d1369d4eso2834586f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 23:46:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751352381; x=1751957181;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5Y7c6zYkKzF3xCBRV8XTIbt5q1FllIz2uRSBkOMN2pI=;
-        b=HneffRDumClCGKD3Y6boCXHNltn43kWR+ZxtoRUGcqflcopkn999hkPOn4m+sf6o6r
-         GmNoFYiGOr5HjzeJbVp2Ia0mswKRYGZeO+8lgyzjKK9n48j3g6BeMK+lhLlOFhuquDqv
-         MAy8xmSM4PQXhWNX3O8vaCsogBtLnO2vae904ENSFHp9xqZwuQsMVmCDZzlNoWvIT/2p
-         sP7Nh65+tG0ocwnHknE0+5vdMKtNg4DnD33+XqZ2qVzyHGS/EVL4WKyBY/raCFIFsCLL
-         hbASAUtmIm9yUJp/Ut9riP5Z5uRUULFiaqYGjGzURjY/zYzOO6VWPoGTUl+urjji8zcn
-         Lw9A==
-X-Gm-Message-State: AOJu0Yy5EXIp/VQJcLzyXZwkc+9Eprs8ztk9zT3IcQSodZ2d1WGz5QPu
-	72oPNYRhpb09NEJVHrdNcBnVI7xwfUfRYhoQ6uqIwPPW+cBSFG/10AfRenrApQ==
-X-Gm-Gg: ASbGncueXGPKqi0kY970IcGJARx1uQnkpHm1pYxw0skVpCnMUnMuZZYXX7f4HetTdaf
-	tnSDu7ToQvdvH9mOFW9kmLNA4HxrQb6aGlgwGv22MVt0MJN6CuRU8tPTMvkG6qSA2Tec5gBqnxz
-	Zd8PUmEVTHbghYS1Qi7uWnqoMKxhsmaUNsUqwJYZX2rqOUZ0QrPVSfnxP/TsDFdligc8NL8Kjst
-	ifZTtLYSAmZ0X2XRFYYG2YqstfktjB7ioQbQOJuzVMZSr6nr+/HepV1bv0iuh3YLViD9HME4DW8
-	WuxS4bG8N6oZzB6Q8NBibEx8EkjCRM8dUUK89wVagxI9KhV0mueI3Q6+Qu7nYTaZRFyMTu+DADy
-	Ja2JF7YMb7U5RF8h6xrNbSxKrOtEBjC0=
-X-Google-Smtp-Source: AGHT+IH81P1+bFEH6Zw1ZvScH7bK2A/izH2xyZPsDw9Idyk2cEeCBzoWdGS1K1KmarW+mBoXRV0C4w==
-X-Received: by 2002:a05:6000:2811:b0:3a6:d95e:f38c with SMTP id ffacd0b85a97d-3a8ffdbef33mr10531002f8f.33.1751352381001;
-        Mon, 30 Jun 2025 23:46:21 -0700 (PDT)
-Received: from nuc (p200300f6f72c4000fa633ffffe02074c.dip0.t-ipconnect.de. [2003:f6:f72c:4000:fa63:3fff:fe02:74c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7e7518sm12144193f8f.2.2025.06.30.23.46.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 23:46:20 -0700 (PDT)
-Date: Tue, 1 Jul 2025 08:46:18 +0200
-From: Johannes Thumshirn <jth@kernel.org>
-To: herculoxz <abhinav.ogl@gmail.com>
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Replace the use of scnprintf() with sysfs_emit_at() in
- several show functions to format the output into the sysfs buffer.
-Message-ID: <aGOEOu7-oh1Nb9mm@nuc>
-References: <20250629175330.5834-1-abhinav.ogl@gmail.com>
+	s=arc-20240116; t=1751352465; c=relaxed/simple;
+	bh=q8s+GpT4npG0EyYJoiXndD35PXvldamsaZRW/maQ/+c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OnDDWULRZtz6GlyOS6VEzqGv0dtco3I7A10cdrLVIon3j4rpC+83IQ08BzDWTM9PDG5Oq9iaL/sd4aLexOG9s8kX9h9dm8oXusm4QDySobqc526e6eWZ/TFKD8fquturxvmUP1m4R5tjTIChOhXXpcIZ/UP9EdHR6h+mXpTCEic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67754C4CEEB;
+	Tue,  1 Jul 2025 06:47:42 +0000 (UTC)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: bhelgaas@google.com
+Cc: lukas@wunner.de,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	stable@vger.kernel.org,
+	Jim Quinlan <james.quinlan@broadcom.com>
+Subject: [PATCH v2] PCI/pwrctrl: Skip creating pwrctrl device unless CONFIG_PCI_PWRCTRL is enabled
+Date: Tue,  1 Jul 2025 12:17:31 +0530
+Message-ID: <20250701064731.52901-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250629175330.5834-1-abhinav.ogl@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jun 29, 2025 at 11:23:30PM +0530, herculoxz wrote:
-> This change improves clarity and ensures proper bounds checking in
-> line with the preferred sysfs_emit() API usage for sysfs 'show'
-> functions. The PAGE_SIZE check is now handled internally by the helper.
+If devicetree describes power supplies related to a PCI device, we
+previously created a pwrctrl device even if CONFIG_PCI_PWRCTL was
+not enabled.
 
+When pci_pwrctrl_create_device() creates and returns a pwrctrl device,
+pci_scan_device() doesn't enumerate the PCI device. It assumes the pwrctrl
+core will rescan the bus after turning on the power. However, if
+CONFIG_PCI_PWRCTL is not enabled, the rescan never happens.
 
-Can you please a) add an 'mcb:' prefix to the subject and b) make it fit into
-~75 chars?
+This may break PCI enumeration on any system that describes power supplies
+in devicetree but does not use pwrctrl. Jim reported that some brcmstb
+platforms break this way.
 
-Code wise it looks ok:
+While the actual fix would be to convert all the platforms to use pwrctrl
+framework, we also need to skip creating the pwrctrl device if
+CONFIG_PCI_PWRCTL is not enabled and let the PCI core scan the device
+normally (assuming it is already powered on or by the controller driver).
 
-Reviewed-by: Johannes Thumshirn <jth@kernel.org>
+Cc: stable@vger.kernel.org # 6.15
+Fixes: 957f40d039a9 ("PCI/pwrctrl: Move creation of pwrctrl devices to pci_scan_device()")
+Reported-by: Jim Quinlan <james.quinlan@broadcom.com>
+Closes: https://lore.kernel.org/r/CA+-6iNwgaByXEYD3j=-+H_PKAxXRU78svPMRHDKKci8AGXAUPg@mail.gmail.com
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+
+Changes in v2:
+
+* Used the stub instead of returning NULL inside the function
+
+ drivers/pci/probe.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 4b8693ec9e4c..e6a34db77826 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2508,6 +2508,7 @@ bool pci_bus_read_dev_vendor_id(struct pci_bus *bus, int devfn, u32 *l,
+ }
+ EXPORT_SYMBOL(pci_bus_read_dev_vendor_id);
+ 
++#if IS_ENABLED(CONFIG_PCI_PWRCTRL)
+ static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
+ {
+ 	struct pci_host_bridge *host = pci_find_host_bridge(bus);
+@@ -2537,6 +2538,12 @@ static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, in
+ 
+ 	return pdev;
+ }
++#else
++static struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, int devfn)
++{
++	return NULL;
++}
++#endif
+ 
+ /*
+  * Read the config data for a PCI device, sanity-check it,
+-- 
+2.43.0
+
