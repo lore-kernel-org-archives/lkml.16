@@ -1,168 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA9626F44C;
-	Tue,  1 Jul 2025 15:30:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C7C5279795;
+	Tue,  1 Jul 2025 15:30:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751383841; cv=none; b=UXPThG2otth7OJbCLSeEZqMrVijCz/nYcb48ABfvcNu5bHeAsZWfNv1LV2ZMS1QPX1En46cJ3fXhgE0wFnM3MloE9KEZiBK1rxONnajJ363agyLAY5xd6RiZWpzDHa4oRaArXB9pTWn8xj6U1NCB7p/7qn8CKqoCMomie7xPBfc=
+	t=1751383859; cv=none; b=cOSUazs9W/0bLWOJvfIy7JJ/JerBWr4CHzvlBhfWxW019yRklaVWVd2vAIC85xiunHsNAtLZEu+OK0OEp1cl0n2nAQHHYPcD6U6qc0WTWVNhSQOE7rjm5fL3pOKrHCjcRGX/i37uDilRX5e33Ap48mwyH8lOMzuGvPZ0YXNvXko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751383841; c=relaxed/simple;
-	bh=esq6GOU0YhrPGSWvYux2e5iZTTVZJjFx3fEwhZQPgKE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AnBD+Xb3nG3KHaG3km2iGWS3n4S6RxC6DNLeB3YfHmUHnL8TBwUPoN420EgEotYDJEgfzHy6Hr5WmosoFGh2N8mpln6+NZP5EEq/ylXCvTGBwoyXiVLOmZxrcUSd1gUrmuvR7FXAMbnQ+IPttqOIWW6ycChei98rOeGX7FCPfFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZqKObUsA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751383859; c=relaxed/simple;
+	bh=iQj/zPT+jV/OpLNW2E0l3eLxBgFKFwdXuIzFbY8QHx8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CeHIpClnAjogiVaKDkXu/iWvlRu02z0WHQWXx2TXXRv3sHee7wVXBlPwzKk6TqF9uBqrKyxC/7pXO3EsIiZigzSAlveEfGUC2Zx2l14EQ8O2eV/mCQyM+KEJtE1B+om+B60TBgpMexqpqLSxbM+k/RzLpQCS4BB7rKcID1Te/BM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H3RweiDK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZqKObUsA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BAB0C4CEEF;
-	Tue,  1 Jul 2025 15:30:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H3RweiDK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A56A3C4CEEB;
+	Tue,  1 Jul 2025 15:30:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751383840;
-	bh=esq6GOU0YhrPGSWvYux2e5iZTTVZJjFx3fEwhZQPgKE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ZqKObUsA0XqJSdOTV38SUPg0qehNPYEJw21E8pe0ZtkEhIAN2gTubJDa34IPE44Zu
-	 DgCYMxp1EQWaoDr6GCINznEm5mUb8XKTPUmZ3umEARYYWDwHJf/wP2q1iPUxF5+P2E
-	 ZZyj0wi4AIugFmUoWzVWBJhvJjXSAojpt12nLvqAGeqRHae4yOWfbgSPvxdgdjfCOI
-	 A2xHOk3VuKafVFC+csJbujA1ZguLjcUL/ZQd/LMLlJf7lVVTm9qmPKN1nkVFoS5Fmb
-	 i6lz/uIS0yU1mdm/LzUr7flUnT/o2kmORh91MAitE4tmwZ84TPgNjBfKIlYb4UjL29
-	 dcl4pPn2dC+Ug==
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ad56cbc7b07so596580466b.0;
-        Tue, 01 Jul 2025 08:30:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU8ps7vwtvPMQ1MFERqgycbbasnxE+B41INc1ZDCGHX0m6gW2xgGAke9KELBUX3PUFNBs0A91gImfb9@vger.kernel.org, AJvYcCV4VVg2dHMT4Bm0nITjoEM9IW1d9gbpRLzL5OcBQ4sbQbERJE669y976ByCGQt7M1XMx+wftrzQnsWBWuTo@vger.kernel.org, AJvYcCXZ/H+Yh4Vmpzo4/Pvcpx4rBNlqTswr8/CFveGOAnNPc6flyGrEg7BWSLzaRAQnvQeUe5exQNYECErl/Xkt@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxh7v1ntb+ZST1QU2wMLJMQZkpeNW9nMJ4+WeQ5ys8W/SYYYThG
-	w+iI52gEB8U3jUjVfoUR6XXLeuJFZxEmQ96haIbNPPC6aDeue67H/UmFoSBmQLDbmpqCnianuAH
-	skT/Zdzc63oju9L4RKjFTj5eQblwNLQ==
-X-Google-Smtp-Source: AGHT+IGEOJ71QMmhygwwyoNyQvTUaSHGrectnbPhXO6fiW5U06Zpksqy5ktwiQlQijy6IeTYO+AYO14xuNYbA79IbCw=
-X-Received: by 2002:a17:907:d86a:b0:ae3:6390:6acc with SMTP id
- a640c23a62f3a-ae363906fc2mr1532109666b.27.1751383839032; Tue, 01 Jul 2025
- 08:30:39 -0700 (PDT)
+	s=k20201202; t=1751383858;
+	bh=iQj/zPT+jV/OpLNW2E0l3eLxBgFKFwdXuIzFbY8QHx8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=H3RweiDKCi26++6p3MRCraKm7blPX7uUFzX3z56uJwSb4OKTpfjRLgVMWJFMMpwcV
+	 kHmVgtUenaqrLED1VTkH96f+rR0F20AdcCq1kaPYz8DiyUpNokOCCyJ1dxioAzNbJ0
+	 1lrGTLhJvbHD47IKvkLCYuPIaItUSj4fTI5f+7lwQZnjJrRHriMzUPvIgV9OpVKi/H
+	 b5fbYi0CShJwMJaV+MV4BKTGy5WQQiTZtPpA8vz0gJq5VkQrO+WyP92D2bAyFlHBn4
+	 3xBERr4aSUeCEit6tr2jR1f8r5TZJpCZS2Igrk7ELcOk407fgCJ1uPb1ULSXe2rRGk
+	 O23fufwQMMaSw==
+Date: Tue, 1 Jul 2025 16:30:54 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc: James Clark <james.clark@linaro.org>,
+	Vladimir Oltean <olteanv@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+	Larisa Grigore <larisa.grigore@nxp.com>,
+	Frank Li <Frank.li@nxp.com>, Christoph Hellwig <hch@lst.de>,
+	linux-spi@vger.kernel.org, imx@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/6] spi: spi-fsl-dspi: Target mode improvements
+Message-ID: <578e01d9-20bc-48f1-aada-579276f6a9d1@sirena.org.uk>
+References: <20250627-james-nxp-spi-dma-v4-0-178dba20c120@linaro.org>
+ <20250630152612.npdobwbcezl5nlym@skbuf>
+ <c9bf945b-9fc6-4829-addf-2fb7a7d4eb36@linaro.org>
+ <20250701135747.mns6emamtmxwgpyu@skbuf>
+ <3c3c912c-1f33-4f63-9a37-fe4db5d23527@sirena.org.uk>
+ <20250701145312.zx56ji4vvaoxwzkc@skbuf>
+ <dd41f014-79e8-4567-9617-754b93e2c12d@sirena.org.uk>
+ <20250701152433.4m54y2rkjzfe4kag@skbuf>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250701-mt6572-v3-0-8937cfa33f95@proton.me> <175138000372.1627755.5505703571113478205.robh@kernel.org>
-In-Reply-To: <175138000372.1627755.5505703571113478205.robh@kernel.org>
-From: Rob Herring <robh@kernel.org>
-Date: Tue, 1 Jul 2025 10:30:27 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLSa+1MYR6f6NcApGFdjCL0dDXSzpntVHCPGmKgytVfdQ@mail.gmail.com>
-X-Gm-Features: Ac12FXzzE6a683eHMTyQ3BNDvQ78bAbSIDWu96D3LpnH4E2Ei9VCbyAZ1NSVMV0
-Message-ID: <CAL_JsqLSa+1MYR6f6NcApGFdjCL0dDXSzpntVHCPGmKgytVfdQ@mail.gmail.com>
-Subject: Re: [PATCH v3 00/11] ARM: Add support for MediaTek MT6572 SoC
-To: Max Shevchenko <wctrl@proton.me>
-Cc: linux-watchdog@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, Russell King <linux@armlinux.org.uk>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, devicetree@vger.kernel.org, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-mediatek@lists.infradead.org, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	Sean Wang <sean.wang@mediatek.com>, linux-arm-kernel@lists.infradead.org, 
-	Guenter Roeck <linux@roeck-us.net>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Wim Van Sebroeck <wim@linux-watchdog.org>, 
-	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2FxrJs+8WJHxk+HO"
+Content-Disposition: inline
+In-Reply-To: <20250701152433.4m54y2rkjzfe4kag@skbuf>
+X-Cookie: No shirt, no shoes, no service.
 
-On Tue, Jul 1, 2025 at 10:27=E2=80=AFAM Rob Herring (Arm) <robh@kernel.org>=
- wrote:
->
->
-> On Tue, 01 Jul 2025 09:06:54 +0300, Max Shevchenko wrote:
-> > This series of patches adds support for the MT6572 SoC and
-> > the JTY D101 tablet and Lenovo A369i smartphone based on it.
-> >
-> > Signed-off-by: Max Shevchenko <wctrl@proton.me>
-> > ---
-> > Changes in v3:
-> > - Remove the compatible property from the SoC devicetree
-> > - Link to v2: https://lore.kernel.org/r/20250626-mt6572-v2-0-f7f8421969=
-86@proton.me
-> >
-> > Changes in v2:
-> > - Drop the status property for the board devicetrees
-> > - Add an soc node for the MT6572 and reorder the nodes and properties
-> > - Change the commit title to a more descriptive one
-> > - Change the cover title to the correct one
-> > - Link to v1: https://lore.kernel.org/r/20250620-mt6572-v1-0-e2d47820f0=
-42@proton.me
-> >
-> > ---
-> > Max Shevchenko (11):
-> >       dt-bindings: serial: mediatek,uart: add MT6572
-> >       dt-bindings: interrupt-controller: mediatek,mt6577-sysirq: add MT=
-6572
-> >       dt-bindings: timer: mediatek: add MT6572
-> >       dt-bindings: watchdog: mediatek,mtk-wdt: add MT6572
-> >       dt-bindings: vendor-prefixes: add JTY
-> >       dt-bindings: arm: mediatek: add boards based on the MT6572 SoC
-> >       ARM: mediatek: add board_dt_compat entry for the MT6572 SoC
-> >       ARM: mediatek: add MT6572 smp bring up code
-> >       ARM: dts: mediatek: add basic support for MT6572 SoC
-> >       ARM: dts: mediatek: add basic support for JTY D101 board
-> >       ARM: dts: mediatek: add basic support for Lenovo A369i board
-> >
-> >  .../devicetree/bindings/arm/mediatek.yaml          |   5 +
-> >  .../mediatek,mt6577-sysirq.yaml                    |   1 +
-> >  .../devicetree/bindings/serial/mediatek,uart.yaml  |   1 +
-> >  .../devicetree/bindings/timer/mediatek,timer.yaml  |   1 +
-> >  .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
-> >  .../bindings/watchdog/mediatek,mtk-wdt.yaml        |   1 +
-> >  arch/arm/boot/dts/mediatek/Makefile                |   2 +
-> >  arch/arm/boot/dts/mediatek/mt6572-jty-d101.dts     |  61 ++++++++++++
-> >  arch/arm/boot/dts/mediatek/mt6572-lenovo-a369i.dts |  56 +++++++++++
-> >  arch/arm/boot/dts/mediatek/mt6572.dtsi             | 108 +++++++++++++=
-++++++++
-> >  arch/arm/mach-mediatek/Kconfig                     |   4 +
-> >  arch/arm/mach-mediatek/mediatek.c                  |   1 +
-> >  arch/arm/mach-mediatek/platsmp.c                   |   7 ++
-> >  13 files changed, 250 insertions(+)
-> > ---
-> > base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
-> > change-id: 20250619-mt6572-ef78a3d45168
-> >
-> > Best regards,
-> > --
-> > Max Shevchenko <wctrl@proton.me>
-> >
-> >
-> >
->
->
-> My bot found new DTB warnings on the .dts files added or changed in this
-> series.
->
-> Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-> are fixed by another series. Ultimately, it is up to the platform
-> maintainer whether these warnings are acceptable or not. No need to reply
-> unless the platform maintainer has comments.
->
-> If you already ran DT checks and didn't see these error(s), then
-> make sure dt-schema is up to date:
->
->   pip3 install dtschema --upgrade
->
->
-> This patch series was applied (using b4) to base:
->  Base: using specified base-commit 0ff41df1cb268fc69e703a08a57ee14ae967d0=
-ca
->
-> If this is not the correct base, please add 'base-commit' tag
-> (or use b4 which does this automatically)
->
-> New warnings running 'make CHECK_DTBS=3Dy for arch/arm/boot/dts/mediatek/=
-' for 20250701-mt6572-v3-0-8937cfa33f95@proton.me:
->
-> arch/arm/boot/dts/mediatek/mt6572-lenovo-a369i.dtb: / (lenovo,a369i): mem=
-ory: False schema does not allow {'device_type': ['memory'], 'reg': [[21474=
-83648, 536870912]]}
->         from schema $id: http://devicetree.org/schemas/root-node.yaml#
-> arch/arm/boot/dts/mediatek/mt6572-jty-d101.dtb: / (jty,d101): memory: Fal=
-se schema does not allow {'device_type': ['memory'], 'reg': [[2147483648, 1=
-073741824]]}
->         from schema $id: http://devicetree.org/schemas/root-node.yaml#
 
-'memory' node without a unit-address has long been deprecated. Please
-don't add more cases.
+--2FxrJs+8WJHxk+HO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Rob
+On Tue, Jul 01, 2025 at 06:24:33PM +0300, Vladimir Oltean wrote:
+> On Tue, Jul 01, 2025 at 04:16:50PM +0100, Mark Brown wrote:
+
+> > Switching between modes is incredibly common, usually between PIO (for
+> > very short transfers) and DMA, that's no problem.  Factoring in
+> > timestamping seems like a reasonable signal I guess, might trip someone
+> > who was trying to benchmark things up but probably not normal users.
+
+> Ah, ok, I vaguely remember something being discussed about can_dma()
+> on previous iterations of this patch, but in a different context.
+> Then that's an avenue to explore, I guess. Looking at that method's
+> prototype, I suppose dspi could simply return can_dma = false "if (xfer->ptp_sts)"
+> (timestamp requested), i.e. no core involvement in the decision process at all?
+
+Yes, exactly.  It can base the decision on whatever amuses it about the
+transfer.
+
+--2FxrJs+8WJHxk+HO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhj/y0ACgkQJNaLcl1U
+h9AA4wf1HpKIPW+LJH8rPfjIBT9odSSTNv12AYDc1i9DdflTO1rvB7Ye0vjzEb8X
+ASCf8RLUsYTE/3uGBFNZC0b0OpfkYGwVfTapks+RM3t/i9HdVzK23loy1UyodGA4
+JNYXSXVgPJLXl5+QBnUKkR8IOcaNqVC0Zz+jW+rBBQf4+EmDoJ4jAymS0ZSy0cMo
+bXo/9QeIgGUcwUEMlQg7ACyjuUgwEZWd8bhKaUQ2wl54zSGe7ngt6Wb+rwtZFNjB
+4WIc+DPcI8xMHs76pcn3rzi3dS8sKhGzdGHniTp4PF3xTNVgJFIIYS3XzxKF2m3S
+TjC8nGA/rgAJnUcZYdKcALl7msMK
+=ZbKC
+-----END PGP SIGNATURE-----
+
+--2FxrJs+8WJHxk+HO--
