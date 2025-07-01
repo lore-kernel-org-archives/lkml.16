@@ -1,227 +1,218 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7022A27A124
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 15:33:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B87B27932B;
+	Tue,  1 Jul 2025 15:34:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751383985; cv=none; b=hF8I3FszeQCcG0BZ3pf9H8l7dXWRW5TitWHuws+SxqqE+DUHPWTL961mKS2xOjVox5c5XMOPr2lvs1jSOzjvNi48lV+9Yef2fQMbzVtrzuPry4tTqTVdooOA2FI67+x2u/7dbbBoVweTHvDuKKYUhBGpCPYeRxKcZgQdwN8PV7o=
+	t=1751384042; cv=none; b=o7Cynic81TLqrsvWOfdo/GTowvVTLLSClsuxH9i9WBLwMS+wpDcmoYt6bAnDJKhy+PGrL4Lm+hFlxJFXg6zDF89BJh1xOTv1iCBeb85Z3RPTfSD0HTSMSP5WA3pTA0KQpyvjj4ecyjNHCYbBWIlJbq8g3wOAC507QFt47V1/z6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751383985; c=relaxed/simple;
-	bh=M/PRojLQRqIlDBhV5W9w+wqo0IQL6dvXbm4tDkWhbz0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lga8nlMr2/MrGciO6cXaupk/RaVenIyJIS/wl3VIl44joHp59WZUiRUaity+eHX0c8yCGAjtpD0KPl9edt+XF/Z4cJrSOnsuN3poCJxSaTasvLBokvT7Cgc8pdxYJWOPPPmiy/WTJq5uJ9HBNIPvoF5zrl5+wl0ER4LjtK4WL68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ouB8tePV; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751384042; c=relaxed/simple;
+	bh=qQ3EePd46gcHTXj8xnWA6RkVYwV+x8EZZ1MfpsCMXfM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GBJquipkms3BLCTVW8kMWL6n2dppIKdZFmpBZthQyUgX6lK+TKbFMCFN9xX/Rri8x4IiecIAdPT6IJw8Nk5NobbXDJEBZ9tzKdFb6zSo2Z6JC4j4HZZHRQC3rTODA/CvE0CamStSmpPazJoVbrpnpwWeQESO4po2GmmrRt9uW3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CqKAfjv6; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ouB8tePV"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-453066fad06so39635725e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 08:33:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CqKAfjv6"
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e81881bdd55so553768276.0;
+        Tue, 01 Jul 2025 08:34:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751383982; x=1751988782; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vyyFEki2WqLFGTJNxhVqg6BOlJH2bPcjpIbwwiG1+ts=;
-        b=ouB8tePVKF4OH1IqUKVdCCSxM337dFyySH66QsBaIwQ6tNS/4vpIEGDXT45zFBy/I6
-         f2w6uynFARbLQG3KjlD7MNEtSSGKvRKfk6Z/R7h1OP0kxYKRfoHCpGDYRLKcyJDyRZ0O
-         3V+WXAUbJMxqMdqDJd+8m/1+l1UBFfY74NbxxNEPaELvF2A1YmUkiZLPv/h077LH0M8a
-         mPVxbLFSKihUqYDH/qDMf6IA1QP1WROwuh/jTNWBgtONlQnWu/WJGqDSxS81mMo2SSiB
-         7s7kGpgIKGIRlWuT1ptqXsI4ka78PkLb5QbKLZhIS5OuO8VGM1dMttENY5oFEz8GNWoE
-         b6BA==
+        d=gmail.com; s=20230601; t=1751384039; x=1751988839; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4nN2brsZ8jWbfGT4ZLwpaNj0SJ51Kk3PP0m0nDTI1zI=;
+        b=CqKAfjv6/9bA0rYjd0/OrjvWLLVUWH38HXVIdgwuVYSpk0sn5hO2t14XZ/O/DLG4ms
+         8jbkoH+1JVp9Mn3lhSQ2TbaL/s8HIUL+33C+B5heO6/yTA9RLXkCcIL224g1AouZFM/9
+         PjfSLF05sWHDftsFnPTCdDN/iYk8WiFk99cYqEJzE5K8O4o7Ry7rDc7/UTLkLAUzbA/d
+         o745b91arZoToSjjd+qx5oeLZUkVQTPqIFod/+LfymsauWIuWZUUISvUecfh/k8Yb9lL
+         2JJ1/j1y71C5KTRLSpIexnY7mh4e4yenR3te0wq/PhSf8+M9xCQHnMxssTBEBHTrt+QM
+         5l/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751383982; x=1751988782;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1751384039; x=1751988839;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vyyFEki2WqLFGTJNxhVqg6BOlJH2bPcjpIbwwiG1+ts=;
-        b=ovk0I6YfA2giZtkSFkckga89QTaF1HByWEwJiJ+LEOfnJmpcIYMvP7SSkR1Bltvq8W
-         E6i0rbFWCcKg/vvwLPpMoJvi17GXb+gteLXEfueEbzGGrJ4hsNkwwJPs5LYDO6KZQ3VM
-         yTi2sfNRMf9y8uTlvmmfZ7VlNuljiuDBOgrK34xXlCVLwwNyNjFiXf9wEF0+7XhaL8wd
-         y3IsZo3HsQcNdLGbCSXQusNuJPdT4HDBrO5WYdndVVudS99tEq7+ScJOV0I1X5p9AUT6
-         msCZ7JOBLM3prbX5ILN8evTl518ACXjlmUffnlnT9bLVCXUmcGOP8dQ742wDiHMNFqkz
-         lJ2g==
-X-Forwarded-Encrypted: i=1; AJvYcCXOpSblTJ+Y1IeU2+E62HNFlsozEIOlXxldZuPvLB22mDwfjL58S25TesKER2k2YFdxC2o+JD4bgI28wlg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8xOOg22iNnKdkIvqN9kiuQM/rw9GBs47rjZOuHudOIvn5AXog
-	M9PmJkSVhGGHuxpCbNJVhmMDhH6JlohuNvc+IzJIUj7UiR4b336ZW2ksBiTmFSJzON8=
-X-Gm-Gg: ASbGncviEZikM36/RTvvAeZPV4hgTrzsrmYwF0Ws5hKcHIYQP+Y9RzJ46WaoV0VHSp2
-	cvIBNrHbHm44NJpO13zCd0fFL6fWxyu49RgsdgbBfZzd2erW7PnbKjs1WF668ZQ6wFPkb5FJVTG
-	gkeOQLyYwNW8P+vyiijwsPG679zPQqlpNFZex+nDCCR+q3tyuhZuO8YjSsEJCouseY6Dg3mfehD
-	PgVYL9LqfYmbr3hFJojCabLbbDeoRTf2VfN6vo0B81EtKSS24dKzojibiPz2Sf+eD0938+HRSJm
-	NmHCtc+FTVtAelg2TmKj/EBWX5+beBbcPsvSSoIW/8frCGdBACXNKpRj/OEVPezjHQRuS8M=
-X-Google-Smtp-Source: AGHT+IHRSBNBwwc+SffZeGA8Ju+5Y/kf7iR6/4sPiOrk5WPd20gCoDRBdDhmJvz8jb8uT7zF55j0eQ==
-X-Received: by 2002:a05:600c:198d:b0:453:b44:eb71 with SMTP id 5b1f17b1804b1-4538f2148b1mr164983525e9.19.1751383981587;
-        Tue, 01 Jul 2025 08:33:01 -0700 (PDT)
-Received: from ho-tower-lan.lan ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c80b5a3sm13435002f8f.40.2025.07.01.08.33.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 08:33:01 -0700 (PDT)
-From: James Clark <james.clark@linaro.org>
-Date: Tue, 01 Jul 2025 16:31:59 +0100
-Subject: [PATCH 3/3] perf: arm_spe: Add support for SPE VM interface
+        bh=4nN2brsZ8jWbfGT4ZLwpaNj0SJ51Kk3PP0m0nDTI1zI=;
+        b=fR0JhmOutwaU/WrbJFocAYiaMuD9D4EjZD33iahi7JW2mhzv/BcUjEDvCBGC/AhFJq
+         e6fKcboWX9TJf8aiTcixMJ8gc0jww1rPKVkyYBj19sFZ+MGB9YS+A9x+Zpn+DXCd7WTI
+         9mWRSdqtHSavBHxYLfeHzn/0Lw7Mt3iJCqOzs0WPWnEcrzbgnEEg8CS8QiDlqhiFb57z
+         6JNYnFGWtwvGNXLFEe2Io5DhmBx+opo92NeUpjxh97BMAN4z9nV8EP3h01bOC6ZmF4M3
+         jnx0gI9DknnVipC9F0WVe6pMSEFcCOySbUEpZGRQ/DWIzKj/OA4L6HwttG+UgR3PuGBz
+         niVw==
+X-Forwarded-Encrypted: i=1; AJvYcCULbe003vnIpExwBUAuG04lr7B57jTyx3dMsQdMDGvqX9vZm4A1Hym/KjOnmCH/fLbcEVj2ll2CwxqZpVI=@vger.kernel.org, AJvYcCVuzWZFvmxQpxg3NOkhmeG6g8uBX+KG3zpby2gGgrUIpdTBjBK5N1w80WrKdY86iOVQi6d8kf89U9xCPjo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwY7WnkfEw8MXvd24D/YXpbtQTR8xKnAZg0pZ9asBCtBSVMM884
+	ZZ+zZFZXrqXx/g4XUAxHqyFM/YlRTCwj6w5oNpst7OcmVpgVDqpocuZ8qoMPEuhfmlIGpwXcxRC
+	b1/4C0vD5hEr6HDfNgiD7aSNUNuLE/MBg9iyLfxc=
+X-Gm-Gg: ASbGncs0P2b3RSG5c+7iPAiPqcdDCD/TwuHJRuS1KMK9Cak2szJ3CBUEz9ESVCYEdQx
+	+mckkAPb95SNg1TGcrR2MQuV6oKvx9oVQsT6jzhXhDGHaVV6F87TBa2NpwRvyvb3jf7Mrwhq/El
+	vio/sbAGMA5ZB1262Sq9dRKt4MNdi6qi7t01GS6ItTmOnHwA==
+X-Google-Smtp-Source: AGHT+IFmuhdQA4chjO1UerExkei66B1tPjaaDTa4uwC17TYvzZDREfWVIA/zAABYinglwQIb14fRHynXMFvAPyO5BXI=
+X-Received: by 2002:a05:690c:fcc:b0:712:b566:bf7c with SMTP id
+ 00721157ae682-7163f6e9a9dmr24531877b3.1.1751384039129; Tue, 01 Jul 2025
+ 08:33:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250701-james-spe-vm-interface-v1-3-52a2cd223d00@linaro.org>
-References: <20250701-james-spe-vm-interface-v1-0-52a2cd223d00@linaro.org>
-In-Reply-To: <20250701-james-spe-vm-interface-v1-0-52a2cd223d00@linaro.org>
-To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Catalin Marinas <catalin.marinas@arm.com>, 
- Alexandru Elisei <Alexandru.Elisei@arm.com>, 
- Anshuman Khandual <Anshuman.Khandual@arm.com>, 
- Rob Herring <Rob.Herring@arm.com>, Suzuki Poulose <Suzuki.Poulose@arm.com>, 
- Robin Murphy <Robin.Murphy@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
- linux-kernel@vger.kernel.org, James Clark <james.clark@linaro.org>
-X-Mailer: b4 0.14.0
+References: <20250628052536.43737-1-abdelrahmanfekry375@gmail.com>
+ <CAHp75Vcy3dHRu8Wb2KZ=xK7adz=-P-iuRTeR8vOWzHzZL9uFeg@mail.gmail.com>
+ <CAGn2d8OMRaeozOMxj1Ry8i9T3sJ5J1QqA_Jpk7wYO8KiUbpKBA@mail.gmail.com> <aGPYZhK65LaD0wVO@smile.fi.intel.com>
+In-Reply-To: <aGPYZhK65LaD0wVO@smile.fi.intel.com>
+From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Date: Tue, 1 Jul 2025 18:33:47 +0300
+X-Gm-Features: Ac12FXxu143NJfeCyJzpFMkjr5UhMphuJFKw55RkiPP1VxDmU_e220rWksBxkXE
+Message-ID: <CAGn2d8ONZpOHXex8kjeUDgRPiMqKp8vZ=xhGbEDGphV1t7ZEFw@mail.gmail.com>
+Subject: Re: [PATCH] staging: media: atomisp: Fix premature setting of
+ HMM_BO_DEVICE_INITED flag
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, andy@kernel.org, hdegoede@redhat.com, 
+	mchehab@kernel.org, sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org, 
+	linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-media@vger.kernel.org, linux-staging@lists.linux.dev, 
+	skhan@linuxfoundation.com, dan.carpenter@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-DEN0154 describes the new SPE VM interface, which allows the hypervisor
-to define a max buffer size hint and to raise a new buffer management
-error for exceeding it.
+Hi andy ,
+On Tue, Jul 1, 2025 at 3:45=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@intel.com> wrote:
 
-Report the size as a capability to userspace, and prevent larger buffers
-from being allocated in the driver. Although it's a only a hint and
-smaller buffers may also be disallowed in some scenarios, a larger
-buffer is never expected to work so we can fail early. Failures after
-arm_spe_pmu_setup_aux() have to happen asynchronously through the buffer
-management event.
+> > > Nice. Can you make some fault injection (temporary by modifying the
+> > > code to always fail, for example) and actually prove this in practice=
+?
+> > > If so, the few (important) lines from the given Oops would be nice to
+> > > have here.
+>
+> > I have been trying to test it without having any intel atomisp
+> > hardware and failed continuously, do you have any tips or maybe some
+> > resources on how i can test this driver.
+>
+> So, the easiest way as I can see it is to ask people who possess the HW t=
+o
+> test, but you need to provide a testing patch (which can be applied on to=
+p
+> of this one, for example).
+>
 
-Signed-off-by: James Clark <james.clark@linaro.org>
----
- arch/arm64/include/asm/sysreg.h |  1 +
- arch/arm64/tools/sysreg         |  6 +++++-
- drivers/perf/arm_spe_pmu.c      | 26 ++++++++++++++++++++++++++
- 3 files changed, 32 insertions(+), 1 deletion(-)
+Well, after several hours of trial and error, I finally managed to
+find a workaround that allowed me to test the scenario. As expected,
+the system crashed exactly at the point we discussed. I was able to
+capture the kernel panic log, which is shown below.
 
-diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-index f1bb0d10c39a..9c48a7119aa7 100644
---- a/arch/arm64/include/asm/sysreg.h
-+++ b/arch/arm64/include/asm/sysreg.h
-@@ -367,6 +367,7 @@
- #define PMBSR_EL1_BUF_BSC_MASK		PMBSR_EL1_MSS_MASK
- 
- #define PMBSR_EL1_BUF_BSC_FULL		0x1UL
-+#define PMBSR_EL1_BUF_BSC_SIZE		0x4UL
- 
- /*** End of Statistical Profiling Extension ***/
- 
-diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
-index 8a8cf6874298..d6bb1736f554 100644
---- a/arch/arm64/tools/sysreg
-+++ b/arch/arm64/tools/sysreg
-@@ -2976,7 +2976,11 @@ Field	7:0	Attr
- EndSysreg
- 
- Sysreg	PMBIDR_EL1	3	0	9	10	7
--Res0	63:12
-+Res0	63:48
-+Field	47:46	MaxBuffSize_RES
-+Field	45:41	MaxBuffSize_E
-+Field	40:32	MaxBuffSize_M
-+Res0	31:12
- Enum	11:8	EA
- 	0b0000	NotDescribed
- 	0b0001	Ignored
-diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-index 5829947c8871..23f18dc2890c 100644
---- a/drivers/perf/arm_spe_pmu.c
-+++ b/drivers/perf/arm_spe_pmu.c
-@@ -92,6 +92,7 @@ struct arm_spe_pmu {
- 	u16					max_record_sz;
- 	u16					align;
- 	struct perf_output_handle __percpu	*handle;
-+	u64					max_buff_size;
- };
- 
- #define to_spe_pmu(p) (container_of(p, struct arm_spe_pmu, pmu))
-@@ -115,6 +116,7 @@ enum arm_spe_pmu_capabilities {
- 	SPE_PMU_CAP_FEAT_MAX,
- 	SPE_PMU_CAP_CNT_SZ = SPE_PMU_CAP_FEAT_MAX,
- 	SPE_PMU_CAP_MIN_IVAL,
-+	SPE_PMU_CAP_MAX_BUFF_SIZE,
- };
- 
- static int arm_spe_pmu_feat_caps[SPE_PMU_CAP_FEAT_MAX] = {
-@@ -132,6 +134,8 @@ static u32 arm_spe_pmu_cap_get(struct arm_spe_pmu *spe_pmu, int cap)
- 		return spe_pmu->counter_sz;
- 	case SPE_PMU_CAP_MIN_IVAL:
- 		return spe_pmu->min_period;
-+	case SPE_PMU_CAP_MAX_BUFF_SIZE:
-+		return spe_pmu->max_buff_size;
- 	default:
- 		WARN(1, "unknown cap %d\n", cap);
- 	}
-@@ -164,6 +168,7 @@ static struct attribute *arm_spe_pmu_cap_attr[] = {
- 	SPE_CAP_EXT_ATTR_ENTRY(ernd, SPE_PMU_CAP_ERND),
- 	SPE_CAP_EXT_ATTR_ENTRY(count_size, SPE_PMU_CAP_CNT_SZ),
- 	SPE_CAP_EXT_ATTR_ENTRY(min_interval, SPE_PMU_CAP_MIN_IVAL),
-+	SPE_CAP_EXT_ATTR_ENTRY(max_buff_size, SPE_PMU_CAP_MAX_BUFF_SIZE),
- 	NULL,
- };
- 
-@@ -631,6 +636,9 @@ arm_spe_pmu_buf_get_fault_act(struct perf_output_handle *handle)
- 	case PMBSR_EL1_BUF_BSC_FULL:
- 		ret = SPE_PMU_BUF_FAULT_ACT_OK;
- 		goto out_stop;
-+	case PMBSR_EL1_BUF_BSC_SIZE:
-+		err_str = "Buffer size too large";
-+		goto out_err;
- 	default:
- 		err_str = "Unknown buffer status code";
- 	}
-@@ -896,6 +904,7 @@ static void *arm_spe_pmu_setup_aux(struct perf_event *event, void **pages,
- 	int i, cpu = event->cpu;
- 	struct page **pglist;
- 	struct arm_spe_pmu_buf *buf;
-+	struct arm_spe_pmu *spe_pmu = to_spe_pmu(event->pmu);
- 
- 	/* We need at least two pages for this to work. */
- 	if (nr_pages < 2)
-@@ -910,6 +919,10 @@ static void *arm_spe_pmu_setup_aux(struct perf_event *event, void **pages,
- 	if (snapshot && (nr_pages & 1))
- 		return NULL;
- 
-+	if (spe_pmu->max_buff_size &&
-+	    nr_pages * PAGE_SIZE > spe_pmu->max_buff_size)
-+		return NULL;
-+
- 	if (cpu == -1)
- 		cpu = raw_smp_processor_id();
- 
-@@ -999,6 +1012,17 @@ static void arm_spe_pmu_perf_destroy(struct arm_spe_pmu *spe_pmu)
- 	perf_pmu_unregister(&spe_pmu->pmu);
- }
- 
-+static u64 arm_spe_decode_buf_size(u64 pmbidr)
-+{
-+	u64 mantissa = FIELD_GET(PMBIDR_EL1_MaxBuffSize_M, pmbidr);
-+	u8 exp = FIELD_GET(PMBIDR_EL1_MaxBuffSize_E, pmbidr);
-+
-+	if (exp == 0)
-+		return mantissa << 12;
-+
-+	return (mantissa | 0b1000000000) << (exp + 11);
-+}
-+
- static void __arm_spe_pmu_dev_probe(void *info)
- {
- 	int fld;
-@@ -1033,6 +1057,8 @@ static void __arm_spe_pmu_dev_probe(void *info)
- 		return;
- 	}
- 
-+	spe_pmu->max_buff_size = arm_spe_decode_buf_size(reg);
-+
- 	/* It's now safe to read PMSIDR and figure out what we've got */
- 	reg = read_sysreg_s(SYS_PMSIDR_EL1);
- 	if (FIELD_GET(PMSIDR_EL1_FE, reg))
+To simulate the issue, I injected a failure right after setting the
+HMM_BO_DEVICE_INITED flag, this mimics a failure in one of the
+subsequent initialization steps. Then, I wrote a test module that
+calls the hmm_init() function directly. As anticipated, the kernel
+panicked at the hmm_alloc(1) call inside hmm_init().
 
--- 
-2.34.1
+Here=E2=80=99s the relevant panic log:
+[  161.802542] atomisp: loading out-of-tree module taints kernel.
+[  161.823358] =3D=3D=3D=3D=3D HMM BO DEVICE TEST =3D=3D=3D=3D=3D
+[  161.823666] (NULL device *): Simulated failure for testing purposes.
+[  161.824064] (NULL device *): invalid L1PT: pte =3D 0x7fffffff
+[  161.824427] (NULL device *): hmm_bo_device_init failed.
+[  161.824818] BUG: kernel NULL pointer dereference, address: 0000000000000=
+020
+[  161.825309] #PF: supervisor read access in kernel mode
+[  161.825693] #PF: error_code(0x0000) - not-present page
+[  161.826100] PGD 0 P4D 0
+[  161.826237] Oops: Oops: 0000 [#1] SMP PTI
+[  161.826482] CPU: 2 UID: 0 PID: 3688 Comm: modprobe Kdump: loaded
+Tainted: G           O        6.16.0-rc4+ #2 PREEMPT(voluntary)
+[  161.827445] Tainted: [O]=3DOOT_MODULE
+[  161.827650] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS
+VirtualBox 12/01/2006
+[  161.828273] RIP:
+0010:__bo_search_and_remove_from_free_rbtree+0xf/0xd0 [atomisp]
+[  161.828977] Code: 2e 0f 1f 84 00 00 00 00 00 66 90 90 90 90 90 90
+90 90 90 90 90 90 90 90 90 90 90 0f 1f 44 00 00 55 48 89 e5 41 54 49
+89 fc 53 <8b> 47 20 39 f0 74 46 89 f3 76 07 48 83 7f 10 00 74 3b 39 d8
+73 1f
+[  161.830239] RSP: 0018:ffffb28104a2e970 EFLAGS: 00010246
+[  161.830588] RAX: 0000000000000000 RBX: ffffffffc0a868e0 RCX: ffff8d6141e=
+1ce88
+[  161.831071] RDX: ffff8d5f47601980 RSI: 0000000000000001 RDI: 00000000000=
+00000
+[  161.831524] RBP: ffffb28104a2e980 R08: 0000000000000003 R09: 00000000000=
+00001
+[  161.831977] R10: 6369766564204c4c R11: 6564204c4c554e28 R12: 00000000000=
+00000
+[  161.832422] R13: 0000000000000000 R14: ffffffffc0a87950 R15: 00000000000=
+00001
+[  161.833019] FS:  00007f04fce83740(0000) GS:ffff8d619f0c4000(0000)
+knlGS:0000000000000000
+[  161.833527] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  161.833868] CR2: 0000000000000020 CR3: 000000010625a003 CR4: 00000000000=
+706f0
+[  161.834307] Call Trace:
+[  161.834434]  <TASK>
+[  161.834545]  hmm_bo_alloc+0x5c/0x2c0 [atomisp]
+[  161.834959]  __hmm_alloc+0x48/0xf0 [atomisp]
+[  161.835267]  hmm_init+0x98/0xd0 [atomisp]
+[  161.835561]  ? __pfx_test_init+0x10/0x10 [atomisp]
+[  161.835863]  test_init+0x42/0xff0 [atomisp]
+[  161.836174]  do_one_initcall+0x4b/0x320
+[  161.836446]  do_init_module+0x6a/0x2b0
+[  161.836675]  load_module+0x24f7/0x25c0
+[  161.836905]  ? kernel_read_file+0x226/0x2d0
+[  161.837160]  init_module_from_file+0x9b/0xe0
+[  161.837413]  ? init_module_from_file+0x9b/0xe0
+[  161.837687]  idempotent_init_module+0x170/0x270
+[  161.837958]  __x64_sys_finit_module+0x6f/0xe0
+[  161.838225]  x64_sys_call+0x1b7a/0x2150
+[  161.838454]  do_syscall_64+0x74/0x1d0
+[  161.838701]  ? ksys_mmap_pgoff+0x1b7/0x240
+[  161.838950]  ? __x64_sys_mmap+0x37/0x50
+[  161.839176]  ? x64_sys_call+0x2008/0x2150
+[  161.839429]  ? do_syscall_64+0xa3/0x1d0
+[  161.839640]  ? __x64_sys_read+0x1e/0x30
+[  161.839863]  ? x64_sys_call+0x1b90/0x2150
+[  161.840098]  ? do_syscall_64+0xa3/0x1d0
+[  161.840315]  ? do_syscall_64+0x199/0x1d0
+[  161.840538]  ? x64_sys_call+0x1b90/0x2150
+[  161.840775]  ? do_syscall_64+0xa3/0x1d0
+[  161.841007]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[  161.841289] RIP: 0033:0x7f04fc92695d
+[  161.841490] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e
+fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24
+08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 03 35 0d 00 f7 d8 64 89
+01 48
+[  161.842992] RSP: 002b:00007ffd12ffbb88 EFLAGS: 00000246 ORIG_RAX:
+0000000000000139
+[  161.843500] RAX: ffffffffffffffda RBX: 0000557fdea491a0 RCX: 00007f04fc9=
+2695d
+[  161.843968] RDX: 0000000000000000 RSI: 0000557fd288c358 RDI: 00000000000=
+0000c
+[  161.844401] RBP: 0000000000040000 R08: 0000000000000000 R09: 00000000000=
+00000
+[  161.844857] R10: 000000000000000c R11: 0000000000000246 R12: 0000557fd28=
+8c358
+[  161.845285] R13: 0000000000000000 R14: 0000557fdea492b0 R15: 0000557fdea=
+491a0
+[  161.845740]  </TASK>
+[  161.845844] Modules linked in: atomisp(O+) ipu_bridge v4l2_fwnode
+videobuf2_vmalloc videobuf2_memops videobuf2_v4l2 videobuf2_common
+v4l2_async videodev mc isofs vboxsf vboxguest vboxvideo
+drm_vram_helper nls_iso8859_1 intel_rapl_msr intel_rapl_common
+intel_uncore_frequency_common ghash_clmulni_intel sha512_ssse3
+sha1_ssse3 aesni_intel snd_intel8x0 rapl snd_ac97_codec ac97_bus
+snd_pcm binfmt_misc joydev snd_seq_midi snd_seq_midi_event snd_rawmidi
+snd_seq vga16fb snd_seq_device vgastate input_leds sch_fq_codel
+snd_timer snd mac_hid soundcore serio_raw vmwgfx drm_ttm_helper ttm
+drm_client_lib drm_kms_helper drm msr parport_pc ppdev lp parport
+ramoops pstore_blk reed_solomon efi_pstore pstore_zone ip_tables
+x_tables autofs4 hid_generic usbhid hid e1000 video psmouse wmi ahci
+libahci i2c_piix4 pata_acpi i2c_smbus [last unloaded: vboxguest]
+[  161.851072] CR2: 0000000000000020
 
+
+> With Best Regards,
+> Andy Shevchenko
+
+Best Regards,
+Abelrahman Fekry
