@@ -1,252 +1,184 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B1C13AD26;
-	Tue,  1 Jul 2025 03:06:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC9EB1E871;
+	Tue,  1 Jul 2025 03:07:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751339180; cv=none; b=idry/PxndYPmR6MGXNZ9uxrQQyu1CDWSKLB/B951fdyAfHsbWdTgcaSqqSab+ACvcjV4gauiPUD551FiI5ecednFl/94c9e0MWe2OKWM7R0GJGDc2MTFwowK/ll0cm84UICHQfJt/Nb9KMvilW9CcXy9ewGARae78s0QzlMZbKw=
+	t=1751339227; cv=none; b=db/20uHOW6sV/jg4HDXTJxcK7NjJTmilbL9ICZETf05Fu/lX7AVtsDhbINsgF/6BHTMcSvXOdGREm4Pn6oNz2/KN7OwDh5Ea2i+l2yrznCtL/n5Dpixf7EVks8RQXAB39NFgDDIWHvLtCjj2ONe2MbA9bHssNa9GmB3H16qjuU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751339180; c=relaxed/simple;
-	bh=+HBR+jnxA9nNgWFa1PCjs1qWdyrmekDk5QwQfoG6iRw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ELj6/W6FVIXz/TQmjqRjc5VeqOEF9b92zbwW/Z2uZBWg8olH+3HiYBwuZV6dTcTKwkyXp/hUBDm+ULxNjjTMnXHWmWgm9CiuiCMjRqh2RHZ+rp/dxhzLKdtFHt4CgJTq9yzDRqBM7zBT/ffuefxk9aSDSSYeQmFgauqt3KsC0i0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gIklRhib; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751339227; c=relaxed/simple;
+	bh=FC1Iqoywm5e+iVpDgfreSlCfNeAERV1POiyhre+ItK8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=dBtyFoyZXqOuV7a0jXz3Mv+ab4CPggLJnJvLoHk9echmgs3DfVIiSgq3X5IfvXDPjJxJKzASAnMmzeRiclqJgQMTC7lShenFf4IxLmoRhLAkS8hEF2X8MUqeRMSj9hvwQIiqzIezsiRdNc3JdlQ01b1CdG6ZYrygt6E+HifsNUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=gimtROFg; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gIklRhib"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FD14C4CEE3;
-	Tue,  1 Jul 2025 03:06:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751339177;
-	bh=+HBR+jnxA9nNgWFa1PCjs1qWdyrmekDk5QwQfoG6iRw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gIklRhibGuYRMyTLTG5El9hliLy0gZEP35O+8eoTuZfh3YCIBgrnTew7/nFfTWUnZ
-	 0+dRMXaRoCIag1rmOayV3cSis7FsiY4AALejdPVmPyyaUXKkL8mOwFBaw4CQtcv5fL
-	 PQPn4VlaYded0K4EQtvV786jidzeIJ6PkeWhz72ZvMxCmYSostINyEdDJWNgMNEOEs
-	 8L0DnVIWjaASZVPZ7MLP/ylKA4Gqaa14IlT8PMbiAE+YYHzdkP1B5foEbaf7tW50lm
-	 SuoCikEl/hBVX3jJ+Rw5XL/F0x6CwU8rWc/uQAq3PDjl4CmO4pgPbuql+JrSeQDMu0
-	 3JiXlZThttgEw==
-From: SeongJae Park <sj@kernel.org>
-To: wang lian <lianux.mm@gmail.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	david@redhat.com,
-	linux-mm@kvack.org,
-	akpm@linux-foundation.org,
-	lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	brauner@kernel.org,
-	gkwang@linx-info.com,
-	jannh@google.com,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	p1ucky0923@gmail.com,
-	ryncsn@gmail.com,
-	shuah@kernel.org,
-	vbabka@suse.cz,
-	zijing.zhang@proton.me
-Subject: Re: [PATCH v2] selftests/mm: Add process_madvise() tests
-Date: Mon, 30 Jun 2025 20:06:14 -0700
-Message-Id: <20250701030614.68902-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250630140957.4000-1-lianux.mm@gmail.com>
-References: 
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gimtROFg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1751339223;
+	bh=cnRZycmV29wnxz+1tOWhqeDibAbM/eb88xyiQu5/VMk=;
+	h=Date:From:To:Cc:Subject:From;
+	b=gimtROFgLqBy5fxNe5aGfKebs2dojJNTFVwG4LJANpQ9F3C1ldjA8odO+en3N8le0
+	 vUQ1Spb+lbTmusbr1m+BkEPHMB2zuyppZNpA6K0ha8oraT1NmBha1TTvgswXBPOM3t
+	 udhjob3a9zDFUlez+DTq5SUEXv0Swww8/wSfrcDuo3x2X6u3v7B7YVv7tUrO5wC0cI
+	 pDq3wIsXmEyZXEGivtzwP0bg47DnVzrgW2kDDgCkqJy/xuy3DZRGbOuneI9oLJaa04
+	 4BWs+Yyz0BZbt7fucfVh2tVvw3V+vygrcwaZ3t2WZznhQLtslAXle/r9swiJ860BYT
+	 5qzk8Gggxh9Tg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bWScQ2mmnz4xSX;
+	Tue,  1 Jul 2025 13:07:02 +1000 (AEST)
+Date: Tue, 1 Jul 2025 13:07:02 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Simona Vetter <simona.vetter@ffwll.ch>, Dave Airlie <airlied@redhat.com>
+Cc: Intel Graphics <intel-gfx@lists.freedesktop.org>, DRI
+ <dri-devel@lists.freedesktop.org>, Alex Deucher
+ <alexander.deucher@amd.com>, =?UTF-8?B?QW5kcsOp?= Almeida
+ <andrealmeid@igalia.com>, Christian =?UTF-8?B?S8O2bmln?=
+ <christian.koenig@amd.com>, Christian =?UTF-8?B?S8O2bmln?=
+ <ckoenig.leichtzumerken@gmail.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: manual merge of the drm-misc tree with the drm tree
+Message-ID: <20250701130702.416ba635@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/3km7j/xIsIBB_inJew/ru1b";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Hi Wang,
+--Sig_/3km7j/xIsIBB_inJew/ru1b
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 30 Jun 2025 22:09:57 +0800 wang lian <lianux.mm@gmail.com> wrote:
+Hi all,
 
-> This patch adds tests for the process_madvise(), focusing on
-> verifying behavior under various conditions including valid
-> usage and error cases.
-> 
-> Signed-off-by: wang lian<lianux.mm@gmail.com>
-> Suggested-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Suggested-by: David Hildenbrand <david@redhat.com>
+Today's linux-next merge of the drm-misc tree got a conflict in:
 
-I left a few trivial comments below, but overall this looks useful to me.
-Thank you :)
+  drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
 
-Acked-by: SeongJae Park <sj@kernel.org>
+between commits:
 
-FYI, 'git am' of this patch on latest mm-new fails.  Maybe this is not based on
-the latest mm-new?  But, I also found Andrew added this to mm tree:
-https://lore.kernel.org/20250630230052.AB95CC4CEE3@smtp.kernel.org .  Maybe
-Andrew did rebase on his own?
+  183bccafa176 ("drm: Create a task info option for wedge events")
+  a72002cb181f ("drm/amdgpu: Make use of drm_wedge_task_info")
 
-[...]
-> --- /dev/null
-> +++ b/tools/testing/selftests/mm/process_madv.c
-[...]
-> +/* Try and read from a buffer, return true if no fatal signal. */
-> +static bool try_read_buf(char *ptr)
-> +{
-> +	return try_access_buf(ptr, false);
+from the drm tree and commits:
 
-Seems this is the only caller of try_access_buf().  How about removing 'write'
-argument of try_access_buf() and its handling?
+  821aacb2dcf0 ("drm/amdgpu: rework queue reset scheduler interaction")
+  43ca5eb94b38 ("drm/amdgpu: move guilty handling into ring resets")
+  38b20968f3d8 ("drm/amdgpu: move scheduler wqueue handling into callbacks")
 
-> +}
-> +
-> +TEST_F(process_madvise, basic)
-> +{
-> +	const unsigned long pagesize = (unsigned long)sysconf(_SC_PAGESIZE);
-> +	const int madvise_pages = 4;
-> +	char *map;
-> +	ssize_t ret;
-> +	struct iovec vec[madvise_pages];
-> +
-> +	/*
-> +	 * Create a single large mapping. We will pick pages from this
-> +	 * mapping to advise on. This ensures we test non-contiguous iovecs.
-> +	 */
-> +	map = mmap(NULL, pagesize * 10, PROT_READ | PROT_WRITE,
-> +		   MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-> +	ASSERT_NE(map, MAP_FAILED);
+from the drm-misc tree.
 
-So this will make this test marked as failed, for mmap() failure, which doesn't
-really mean something in process_madvise() is wrong.  What about using
-ksft_exit_skip() with failure check, instead?
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
-> +
-> +	/* Fill the entire region with a known pattern. */
-> +	memset(map, 'A', pagesize * 10);
-> +
-> +	/*
-> +	 * Setup the iovec to point to 4 non-contiguous pages
-> +	 * within the mapping.
-> +	 */
-> +	vec[0].iov_base = &map[0 * pagesize];
-> +	vec[0].iov_len = pagesize;
-> +	vec[1].iov_base = &map[3 * pagesize];
-> +	vec[1].iov_len = pagesize;
-> +	vec[2].iov_base = &map[5 * pagesize];
-> +	vec[2].iov_len = pagesize;
-> +	vec[3].iov_base = &map[8 * pagesize];
-> +	vec[3].iov_len = pagesize;
-> +
-> +	ret = sys_process_madvise(PIDFD_SELF, vec, madvise_pages, MADV_DONTNEED,
-> +				  0);
-> +	if (ret == -1 && errno == EPERM)
-> +		ksft_exit_skip(
-> +			"process_madvise() unsupported or permission denied, try running as root.\n");
-> +	else if (errno == EINVAL)
-> +		ksft_exit_skip(
-> +			"process_madvise() unsupported or parameter invalid, please check arguments.\n");
-> +
-> +	/* The call should succeed and report the total bytes processed. */
-> +	ASSERT_EQ(ret, madvise_pages * pagesize);
-> +
-> +	/* Check that advised pages are now zero. */
-> +	for (int i = 0; i < madvise_pages; i++) {
-> +		char *advised_page = (char *)vec[i].iov_base;
-> +
-> +		/* Access should be successful (kernel provides a new page). */
-> +		ASSERT_TRUE(try_read_buf(advised_page));
-> +		/* Content must be 0, not 'A'. */
-> +		ASSERT_EQ(*advised_page, 0);
-> +	}
-> +
-> +	/* Check that an un-advised page in between is still 'A'. */
-> +	char *unadvised_page = &map[1 * pagesize];
-> +
-> +	ASSERT_TRUE(try_read_buf(unadvised_page));
-> +	ASSERT_EQ(*unadvised_page, 'A');
+--=20
+Cheers,
+Stephen Rothwell
 
-What about using memcpy() and memcmp() for testing full bytes?  That could do
-more complete test, and reduce unnecessary volatile and helper functions?
+diff --cc drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
+index 6b4ffa9ceb7a,f0b7080dccb8..000000000000
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
+@@@ -89,11 -89,9 +89,10 @@@ static enum drm_gpu_sched_stat amdgpu_j
+  {
+  	struct amdgpu_ring *ring =3D to_amdgpu_ring(s_job->sched);
+  	struct amdgpu_job *job =3D to_amdgpu_job(s_job);
+ +	struct drm_wedge_task_info *info =3D NULL;
+  	struct amdgpu_task_info *ti;
+  	struct amdgpu_device *adev =3D ring->adev;
+- 	int idx;
+- 	int r;
++ 	int idx, r;
+ =20
+  	if (!drm_dev_enter(adev_to_drm(adev), &idx)) {
+  		dev_info(adev->dev, "%s - device unplugged skipping recovery on schedul=
+er:%s",
+@@@ -133,47 -133,22 +132,24 @@@
+  	if (unlikely(adev->debug_disable_gpu_ring_reset)) {
+  		dev_err(adev->dev, "Ring reset disabled by debug mask\n");
+  	} else if (amdgpu_gpu_recovery && ring->funcs->reset) {
+- 		bool is_guilty;
+-=20
+- 		dev_err(adev->dev, "Starting %s ring reset\n", s_job->sched->name);
+- 		/* stop the scheduler, but don't mess with the
+- 		 * bad job yet because if ring reset fails
+- 		 * we'll fall back to full GPU reset.
+- 		 */
+- 		drm_sched_wqueue_stop(&ring->sched);
+-=20
+- 		/* for engine resets, we need to reset the engine,
+- 		 * but individual queues may be unaffected.
+- 		 * check here to make sure the accounting is correct.
+- 		 */
+- 		if (ring->funcs->is_guilty)
+- 			is_guilty =3D ring->funcs->is_guilty(ring);
+- 		else
+- 			is_guilty =3D true;
+-=20
+- 		if (is_guilty)
+- 			dma_fence_set_error(&s_job->s_fence->finished, -ETIME);
+-=20
+- 		r =3D amdgpu_ring_reset(ring, job->vmid);
++ 		dev_err(adev->dev, "Starting %s ring reset\n",
++ 			s_job->sched->name);
++ 		r =3D amdgpu_ring_reset(ring, job->vmid, NULL);
+  		if (!r) {
+- 			if (amdgpu_ring_sched_ready(ring))
+- 				drm_sched_stop(&ring->sched, s_job);
+- 			if (is_guilty) {
+- 				atomic_inc(&ring->adev->gpu_reset_counter);
+- 				amdgpu_fence_driver_force_completion(ring);
+- 			}
+- 			if (amdgpu_ring_sched_ready(ring))
+- 				drm_sched_start(&ring->sched, 0);
+- 			dev_err(adev->dev, "Ring %s reset succeeded\n", ring->sched.name);
+- 			drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE, info);
++ 			atomic_inc(&ring->adev->gpu_reset_counter);
++ 			dev_err(adev->dev, "Ring %s reset succeeded\n",
++ 				ring->sched.name);
++ 			drm_dev_wedged_event(adev_to_drm(adev),
+ -					     DRM_WEDGE_RECOVERY_NONE);
+++					     DRM_WEDGE_RECOVERY_NONE, info);
+  			goto exit;
+  		}
+- 		dev_err(adev->dev, "Ring %s reset failure\n", ring->sched.name);
++ 		dev_err(adev->dev, "Ring %s reset failed\n", ring->sched.name);
+  	}
++=20
+  	dma_fence_set_error(&s_job->s_fence->finished, -ETIME);
+ =20
+ +	amdgpu_vm_put_task_info(ti);
+ +
+  	if (amdgpu_device_should_recover_gpu(ring->adev)) {
+  		struct amdgpu_reset_context reset_context;
+  		memset(&reset_context, 0, sizeof(reset_context));
 
-> +
-> +	/* Cleanup. */
-> +	ASSERT_EQ(munmap(map, pagesize * 10), 0);
+--Sig_/3km7j/xIsIBB_inJew/ru1b
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Again, I think ksft_exit_skip() might be a better approach.
+-----BEGIN PGP SIGNATURE-----
 
-> +}
-> +
-> +static long get_smaps_anon_huge_pages(pid_t pid, void *addr)
-> +{
-> +	char smaps_path[64];
-> +	char *line = NULL;
-> +	unsigned long start, end;
-> +	long anon_huge_kb;
-> +	size_t len;
-> +	FILE *f;
-> +	bool in_vma;
-> +
-> +	in_vma = false;
-> +	sprintf(smaps_path, "/proc/%d/smaps", pid);
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhjUNYACgkQAVBC80lX
+0GwYQQf+ONG+nBDAzZ2dO5RA1bLBgMGIXhiyUJNFQ2WhZ1X4tRLK6M7oFOQBy8oo
+MzKZZpzDo2y+bjavb9CbLZTZ6uG04G7wtZNrFGcxIqlJ/LCCbZ2oBSEXHcVmUKAh
+kuSdh8XDZj3ONKWeOvHXCZbre3GNCgQQpdR5kszrYtBY/KiGoiku8WUPWKI9HJcj
+eK0J+fTEPTvtAay+K7WwZ+ijf6enNj7vFHuyaTy04CDAK59CKi+ngv8E2NWTcyb7
+M3FSCs4CX8DdyqG3ToLZJlkUwUAsc3B8rg56B9l8qrUGKXd1roIMnkgvu8mxeQDv
+dsrwrWa5RHg1KsU6iXirLZlOkcUetA==
+=JnSB
+-----END PGP SIGNATURE-----
 
-I understand this is just a test code, but...  What about using the safer one,
-snprintf()?
-
-> +	f = fopen(smaps_path, "r");
-> +	if (!f)
-> +		return -1;
-> +
-> +	while (getline(&line, &len, f) != -1) {
-> +		/* Check if the line describes a VMA range */
-> +		if (sscanf(line, "%lx-%lx", &start, &end) == 2) {
-> +			if ((unsigned long)addr >= start &&
-> +			    (unsigned long)addr < end)
-> +				in_vma = true;
-> +			else
-> +				in_vma = false;
-> +			continue;
-> +		}
-> +
-> +		/* If we are in the correct VMA, look for the AnonHugePages field */
-> +		if (in_vma &&
-> +		    sscanf(line, "AnonHugePages: %ld kB", &anon_huge_kb) == 1)
-> +			break;
-> +	}
-> +
-> +	free(line);
-> +	fclose(f);
-> +
-> +	return (anon_huge_kb > 0) ? (anon_huge_kb * 1024) : 0;
-> +}
-[...]
-> +TEST_HARNESS_MAIN
-> \ No newline at end of file
-
-checkpatch.pl complaints having no newline at the end of the file.
-
-> diff --git a/tools/testing/selftests/mm/run_vmtests.sh b/tools/testing/selftests/mm/run_vmtests.sh
-> index f96d43153fc0..5c28ebcf1ea9 100755
-> --- a/tools/testing/selftests/mm/run_vmtests.sh
-> +++ b/tools/testing/selftests/mm/run_vmtests.sh
-> @@ -61,6 +61,8 @@ separated by spaces:
->  	ksm tests that require >=2 NUMA nodes
->  - pkey
->  	memory protection key tests
-> +- process_madvise
-
-Shouldn't this match with the real category name (process_madv) ?
-
-> +	test process_madvise
->  - soft_dirty
->  	test soft dirty page bit semantics
->  - pagemap
-> @@ -424,6 +426,9 @@ CATEGORY="hmm" run_test bash ./test_hmm.sh smoke
->  # MADV_GUARD_INSTALL and MADV_GUARD_REMOVE tests
->  CATEGORY="madv_guard" run_test ./guard-regions
->  
-> +# PROCESS_MADVISE TEST
-> +CATEGORY="process_madv" run_test ./process_madv
-> +
->  # MADV_DONTNEED and PROCESS_DONTNEED tests
->  CATEGORY="madv_dontneed" run_test ./madv_dontneed
->  
-> -- 
-> 2.43.0
-
-
-Thanks,
-SJ
+--Sig_/3km7j/xIsIBB_inJew/ru1b--
