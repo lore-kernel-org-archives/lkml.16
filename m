@@ -1,125 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DCD226FA52;
-	Tue,  1 Jul 2025 13:53:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10CE92749E2
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 13:53:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751377985; cv=none; b=DcN/ZVYgW6Ba9HMpYRZhP2b6Q1o+oy3AH3qYBGAOuAjdQCA4Z4MZzpYS6HMnFwLxekEtPh80ctP9z7Qyo/iXkkJoUxmXpvyPNIz/thu4lwpOLopPTe+fiRKrr47//A8rwFG0w639HY+sJKHE15rVtIRVEu79pngft2K1TutpfqU=
+	t=1751378009; cv=none; b=a+SKogxuE/1sop1LndGU18q6Zn7IRmo5jDzNZGbObkkpJQrF2CDMIJ5IQdTtxjdOb0fAm4KJMJi05GPdQyr5IHKdnO+kEh2gaZtkk3oY3xq9HXnZii5D2SPnoOllR/xe2fEfeINdD5Dpd04JYhhCRTHnrvd3LlprKbcRriXbT5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751377985; c=relaxed/simple;
-	bh=m7sesd7WZao4ANfBHtgTBNHJfjxLhDp8nQ60oP0kpq8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GYKyDNGnTfHteFQw35NTd9NifG2WMuxVgSVJs+pFB05Xs7kDWISMA3HbjKlsIVSWMcex25KAmCw9cqdpWi5z8w9EYbYoIR5tXfNkvK165x6aLV3cZ9NHGNVNHwRr9gXPxcckiA/pNxMz5Ktk7kTrvQQrxhpzRPNNM4TsB84a0Yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jOG8dPmW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751378009; c=relaxed/simple;
+	bh=V81NFUMfJ+mUE+a8e02h/KVMMTf6ar5ykGTXcYIsHTU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g2VK2FGRALIS7go8ZVvt8O/2OKDj8Qj8bvdwh/4lQBBGNhskEUL+KjLlv/a96HpjtU8jyVu0FKWzfx3J+evl/SkJ+mtMHdajG3f3uZaKv6JC++Cs0Mb1YzhUnSGfuN0WnBDK7Rd3mGNv9b+2ZVx6i4VzM72yGnB5eMngRoiSw24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=PBr2kME3; arc=none smtp.client-ip=209.85.160.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jOG8dPmW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F998C4CEEB;
-	Tue,  1 Jul 2025 13:53:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751377985;
-	bh=m7sesd7WZao4ANfBHtgTBNHJfjxLhDp8nQ60oP0kpq8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jOG8dPmWELlnis88AUsjh/9Qi7u/M2FxtzjhEivb5869aRtLzxsdNF4LQ7vIIjNBd
-	 rBKnJp0sBUF0ftRUHeOPtUvzx7q8ZX3LEWy3pCIfweUbuM84E9Ayl4IU7B5Fg4HliE
-	 IjEVNDOKbrhaSPYifsGvMWiwZdTxBCn1Tg/53BYbT6LwRovUzuGNjksh8zSuXXxhB5
-	 ANKeDach72GtI3WEYIJGfS4bzKL7Jc/TeTBD6vHNqd/OSu1VEr/+2F2dVwMT/qTyb5
-	 wMYasPDV+rZBZfPCo9g5ys9I6cLy2ilJJBfso181Xv9us7JPcsHhP56W4/M7zeoQnl
-	 lzdQfOmu4K1WQ==
-Date: Tue, 1 Jul 2025 14:52:59 +0100
-From: Will Deacon <will@kernel.org>
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Keir Fraser <keirf@google.com>,
-	Steven Moreland <smoreland@google.com>,
-	Frederick Mayle <fmayle@google.com>,
-	Stefan Hajnoczi <stefanha@redhat.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	netdev@vger.kernel.org, virtualization@lists.linux.dev
-Subject: Re: [PATCH 3/5] vhost/vsock: Allocate nonlinear SKBs for handling
- large receive buffers
-Message-ID: <aGPoO4G75ZGuxjlM@willie-the-truck>
-References: <20250625131543.5155-1-will@kernel.org>
- <20250625131543.5155-4-will@kernel.org>
- <orht2imwke5xhnmeewxrbey3xbn2ivjzujksqnrtfe3cjtgrg2@6ls6dyexnkvc>
- <aGKdSVJTjg_vi-12@willie-the-truck>
- <6shb4fowdw43df7pod5kstmtynhrqigd3wdcyrqnni4svgfor2@dgiqw3t2zhfx>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="PBr2kME3"
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-2f39532bd11so547560fac.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 06:53:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751378005; x=1751982805; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=sxytrCpc62k1MJCjbRCCIhFdchEXxF2W+J08NfrIMAI=;
+        b=PBr2kME3NMJsg8+kdTd29vHKOtATAxn8AVUBTpQxC6AxQxdXoOmycJqMtfn1TvwpGz
+         uekCSipvNeLmKodLwRP0x/2UFVAUPLAf6mt/QsvAxLJER1Wv1O1C0tOoRapWzczum3VF
+         kXNthUMK9fT/rrIHOHF9F8PVIcHTjWKCYYJNqfY0vRWFIP9a0KjKWdoj6o5jLzJX4QhE
+         CoVWX50DH9lrOSZVo95yvwEw2HBRROK7Da3AOM+gd/4szWgyVPmKLUUYb6bt5jT7W1rV
+         SKOD+8HXdlWwocaHn77Y8LHugJ+mDnLrTZ5StnsrZN3za/puUl6AzYNhh8PXJCin0Jv7
+         v7Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751378005; x=1751982805;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sxytrCpc62k1MJCjbRCCIhFdchEXxF2W+J08NfrIMAI=;
+        b=dxoAILr9Fm0vhgANoc8z38gOPZmhdIhGZnjCb3NttsoxtSxbvvRWSkXDcmod2BXiuF
+         I9NYbYJWnoo9vMcxIx0PHTqyG96Vzhrp9NlJnwERmYBXZ50xGfInxwAeJmf5mJjael2F
+         NlwCox2IOmJknVUSFV5XcgRVemYpDeTQ3Nv/PwXaSmCuyYYHobBCfIXh2IPhXk4/Gqea
+         l4YQUo2XS3pZOl4yr+ubW/pIvEHA3PPhgX1jY1NR7nZvuJMAWYYqge/U7z5iW9B0P9bn
+         oLY0EfYssyWy6nlqCyWnYw2am/i2g8rSN0o7Kx5k84MRCitKY9ss1AcHJzjyDuIxlj7+
+         bUng==
+X-Forwarded-Encrypted: i=1; AJvYcCXZl6NebABXP8IBwVGYlcab42eMzjMunyfRIrWmiCX73ILc7bv0PAT/aF6fddYvl0yydEdh36jalqvWKck=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCvgr6DablYL6nLRdsi1F1/dUTYJcNnt8hW+KEatGa1cvWfnaJ
+	SAPzKhOdrzQnc8LvzyYXPt4HL79F6iDrRzhPrOuWC93PpZnkjQ1jIptD5H/q4lPb9d8=
+X-Gm-Gg: ASbGncu116VjYrsblM7RgkEJBfEuMK0OeJRlDpUv0/w0qji638NClSh7e4utAB+GM+O
+	/rhUWuJPR45N5Xeke8bcBu1af+hDuaT/VvKv7pX3LH0CJwQLCRgVJWaMotzYvBjaI45oQ3hdHxj
+	MvCGEz+DnNzhvpTcds8ZRI4cBcZpTmuUoxgwVhWDT8irBacGAWImWIVFuIOmI/O+CyahGvQ+Sjq
+	A/tuZZWEMZLRKZ+YdhNYp47mPeud3vC8ExrfqSY0HtCfQx3+zcQWN0ZgpkvxAcu5LhJK6CvPnyn
+	znhC84lUPzbwiBNyZNYukQvOH1CjzBdzH7MPHDYfMnk3RMufu0vYaUxkiBUz1Gt2CdG1kCM2zx8
+	YVoWVztfCcRrJ3+ilVNB4ykXza2J0STvyLv+nqQU=
+X-Google-Smtp-Source: AGHT+IEeLp6iDhItR5Y2D19m+ylI47glnT/8a7E8Ytbkuo8eMEH+v17nazXRudRC6L4a35mzZvpHEQ==
+X-Received: by 2002:a05:6870:455:b0:2d6:2a40:fbe7 with SMTP id 586e51a60fabf-2efed4305a2mr12022011fac.6.1751378004996;
+        Tue, 01 Jul 2025 06:53:24 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:86fc:b3bf:2a91:5479? ([2600:8803:e7e4:1d00:86fc:b3bf:2a91:5479])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73afb00c48asm2120701a34.27.2025.07.01.06.53.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Jul 2025 06:53:24 -0700 (PDT)
+Message-ID: <ca2c719b-6798-4bb0-ab73-98d1fc5adcb1@baylibre.com>
+Date: Tue, 1 Jul 2025 08:53:23 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6shb4fowdw43df7pod5kstmtynhrqigd3wdcyrqnni4svgfor2@dgiqw3t2zhfx>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 3/8] iio: accel: adxl313: add buffered FIFO watermark
+ with interrupt handling
+To: Lothar Rubusch <l.rubusch@gmail.com>, Jonathan Cameron <jic23@kernel.org>
+Cc: nuno.sa@analog.com, andy@kernel.org, corbet@lwn.net,
+ lucas.p.stankus@gmail.com, lars@metafoo.de, Michael.Hennerich@analog.com,
+ bagasdotme@gmail.com, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250622122937.156930-1-l.rubusch@gmail.com>
+ <20250622122937.156930-4-l.rubusch@gmail.com>
+ <20250628181643.0ce0ed51@jic23-huawei>
+ <CAFXKEHYS2rRYtPShU-yyEetQQoo+EbCscjUUGcWdWJQA2UwiYA@mail.gmail.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <CAFXKEHYS2rRYtPShU-yyEetQQoo+EbCscjUUGcWdWJQA2UwiYA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 01, 2025 at 12:44:58PM +0200, Stefano Garzarella wrote:
-> On Mon, Jun 30, 2025 at 03:20:57PM +0100, Will Deacon wrote:
-> > On Fri, Jun 27, 2025 at 12:45:45PM +0200, Stefano Garzarella wrote:
-> > > On Wed, Jun 25, 2025 at 02:15:41PM +0100, Will Deacon wrote:
-> > > > diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-> > > > index 66a0f060770e..cfa4e1bcf367 100644
-> > > > --- a/drivers/vhost/vsock.c
-> > > > +++ b/drivers/vhost/vsock.c
-> > > > @@ -344,11 +344,16 @@ vhost_vsock_alloc_skb(struct vhost_virtqueue *vq,
-> > > >
-> > > > 	len = iov_length(vq->iov, out);
-> > > >
-> > > > -	if (len > VIRTIO_VSOCK_MAX_PKT_BUF_SIZE + VIRTIO_VSOCK_SKB_HEADROOM)
-> > > > +	if (len < VIRTIO_VSOCK_SKB_HEADROOM ||
-> > > 
-> > > Why moving this check here?
-> > 
-> > I moved it here because virtio_vsock_alloc_skb_with_frags() does:
-> > 
-> > +       size -= VIRTIO_VSOCK_SKB_HEADROOM;
-> > +       return __virtio_vsock_alloc_skb_with_frags(VIRTIO_VSOCK_SKB_HEADROOM,
-> > +                                                  size, mask);
-> > 
-> > and so having the check in __virtio_vsock_alloc_skb_with_frags() looks
-> > strange as, by then, it really only applies to the linear case. It also
-> > feels weird to me to have the upper-bound of the length checked by the
-> > caller but the lower-bound checked in the callee. I certainly find it
-> > easier to reason about if they're in the same place.
-> > 
-> > Additionally, the lower-bound check is only needed by the vhost receive
-> > code, as the transmit path uses virtio_vsock_alloc_skb(), which never
-> > passes a size smaller than VIRTIO_VSOCK_SKB_HEADROOM.
-> > 
-> > Given all that, moving it to the one place that needs it seemed like the
-> > best option. What do you think?
+On 7/1/25 2:23 AM, Lothar Rubusch wrote:
+> On Sat, Jun 28, 2025 at 7:16 PM Jonathan Cameron <jic23@kernel.org> wrote:
+>>
+>> On Sun, 22 Jun 2025 12:29:32 +0000
+>> Lothar Rubusch <l.rubusch@gmail.com> wrote:
+>>
+>>> Cover the following tasks:
+>>> - Add scan_mask and scan_index to the IIO channel configuration. The
+>>> scan_index sets up buffer usage. According to the datasheet, the ADXL313
+>>> uses a 13-bit wide data field in full-resolution mode. Set the
+>>> signedness, number of storage bits, and endianness accordingly.
+>>>
+>>> - Parse the devicetree for an optional interrupt line and configure the
+>>> interrupt mapping based on its presence. If no interrupt line is
+>>> specified, keep the FIFO in bypass mode as currently implemented.
+>>>
+>>> - Set up the interrupt handler. Add register access to detect and
+>>> evaluate interrupts. Implement functions to clear status registers and
+>>> reset the FIFO.
+>>>
+>>> - Implement FIFO watermark configuration and handling. Allow the
+>>> watermark level to be set, evaluate the corresponding interrupt, read
+>>> the FIFO contents, and push the data to the IIO channel.
+>>>
+>>> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+>> Hi Lothar,
+>>
 > 
-> Okay, I see now. Yep, it's fine, but please mention in the commit
-> description.
-
-Great, I'll do that.
-
-> > > > 	len = le32_to_cpu(virtio_vsock_hdr(skb)->len);
-> > > >
-> > > > -	if (len > 0)
-> > > 
-> > > Why removing this check?
-> > 
-> > I think it's redundant: len is a u32, so we're basically just checking
-> > to see if it's non-zero. All the callers have already checked for this
-> > but, even if they didn't, skb_put(skb, 0) is harmless afaict.
+> Hi Jonathan, there's still one thing about this patch [PATCH v6 3/8],
+> I wanted to address:
 > 
-> Yep, I see, but now I don't remember why we have it, could it be more
-> expensive to call `skb_put(skb, 0)`, instead of just having the if for
-> control packets with no payload?
+>         struct mutex    lock; /* lock to protect transf_buf */
+> +       u8 watermark;
+>         __le16          transf_buf __aligned(IIO_DMA_MINALIGN);
+> +       __le16          fifo_buf[ADXL313_NUM_AXIS * ADXL313_FIFO_SIZE + 1];
+>  };
+> 
+> Is this correct usage of the IIO_DMA_MINALIGN? My intention here is to
+> have transf_buf and fifo_buf[...] aligned with the IIO_DMA_MINALIGN.
+> 
+> Sorry, I should have asked this earlier. I saw the sensor operating,
+> but I'm unsure if perhaps DMA usage is setup correctly. Perhaps you
+> could drop me a line of feedback here?
+> 
+> Best,
+> L
 
-That sounds like a questionable optimisation, but I can preserve it in
-the only caller that doesn't already check for a non-zero size
-(virtio_transport_rx_work()). I mistakenly thought that it was already
-checking it, but on closer inspection it only checks the size of the
-virtqueue buffer and doesn't look at the packet header at all.
+Assuming that transf_bus and fifo_buf aren't used at the same time,
+which seems unlikely, this looks correct.
 
-In fact, that is itself a bug because nothing prevents an SKB overflow
-on the put path...
-
-I'll add an extra fix for that in v2 so that it can be backported
-independently.
-
-Will
+As an example of what could be problematic would be if the driver
+wrote to transf_buf while fifo_buf was being used for a SPI DMA
+read. Then, when the DMA operation was done, it could write over
+transf_buf with the old value from when the DMA operation started
+because it was in the same memory cache line as fifo_buf.
