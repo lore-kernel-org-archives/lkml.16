@@ -1,134 +1,69 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023073.outbound.protection.outlook.com [40.107.44.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42488A47;
-	Tue,  1 Jul 2025 05:27:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03D271F37C5;
+	Tue,  1 Jul 2025 05:27:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.73
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751347628; cv=fail; b=PqgDY8e/yxSjTdLQq3zRK6K9gnFZHphlLP2Enlk/fKvl7omZW2oGv+Kio2jBDvegwAUYL5pJAGHF0UDFbxqZrMZ9/NCvgMCaggvICRinMqolXjYRpXTMJU8M8IHdobz13fI1nf8EXORmKlk36rvksstJKuV7FM32tZ3frMcn3yc=
+	t=1751347666; cv=fail; b=SJHRuZaKVIBWkPKsy6bPqAJF/W0k27AAqq+YTqjcW8NIH5PF3VVjXrG6lFSosOO+pEdhtQbPG1WcgE5v2KIabv/vyavo+kyS6ftALFN2tr7fhbF26BJqmMPpe60BFrq2D51LkO4qh5RRGUHiiFPBmcCF6/fAJgYsJyPPc2BsyLc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751347628; c=relaxed/simple;
-	bh=hpeW0xwkegCennoyaKG/U2hz+UA+0ZgrkVFCMGF/RTE=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=lVkLuYlHxKwQr4+cUzubNeHiAuLeYOHUDRzbvn4c5QO4pfnwzQY82rGGskmdpi/lI3rO6qQmRt5ZvPpkqbZzBwUStEAf59cRWcK6x3h4TgQ9N8CN6aIdVoPbjHPkEX8+U5Oq4t5bxdwXCm4CCGenB8fr+uc0YHb3psqlPcYyORU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A7z4sANY; arc=fail smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751347666; c=relaxed/simple;
+	bh=BtBy59xOBF7aow2+9Ykmws5BzqZM+6UT+vroIb37hrg=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=h9olIrZP+2DZCMHYYC1ZPMezb9lbRbQZ8idNGARrP7G0UfsOYXHGI5M9IVCU7csSF4FnbxQYY73M7yC+ql01bp6R+9TNGabAXxZJeKrKDs7Hn9JPWwfadrKa17usvbbm0kp6LDwoKlYZSswhP41A3d+bKqxfQDfcCRQS9hdWwPU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=zx+Zi5kO; arc=fail smtp.client-ip=40.107.44.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A7z4sANY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751347627; x=1782883627;
-  h=date:from:to:cc:subject:message-id:reply-to:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=hpeW0xwkegCennoyaKG/U2hz+UA+0ZgrkVFCMGF/RTE=;
-  b=A7z4sANYw1FaInBt0XE7eTdJ7n2X3qP+uO32ERvKhL3TXYCckYGiByrD
-   9EoT6zAiuRU6HN0WcCgNf4FR2HVXXsMapnDj6gzQywAX9FVw5JUA/VjK0
-   f7fg4z/nc99+i2FDAs4mg+kLGN2Rzr8nGv1iYkrEn5y/KbDiGkZwqZs5O
-   5On7P5j+flWuBkTr+0hrqXIfBWg50yGDvhX7fQweFJ2rc+6DORbYjDHD0
-   xIw99go4UeyD6Td3hgL+fYv9PPLZV7ub1YS5xk2rL31ZeACPHlvOk3sHL
-   Zi4oMqyVUTdWa6Pm7TTe5NGPvZomZUuYVLKcBmOMDXwB+H5M8g26dF2ej
-   w==;
-X-CSE-ConnectionGUID: lfLYWbUzSFyxR/LHepNeHw==
-X-CSE-MsgGUID: XY35EQKyQRK/6COIy+Gm2A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="56215468"
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="56215468"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 22:26:58 -0700
-X-CSE-ConnectionGUID: kJXuaYYpRwKrjaFrWhVeaA==
-X-CSE-MsgGUID: Tm/o5SvcSB6/oJhVlyh09Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="184589502"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 22:26:55 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Mon, 30 Jun 2025 22:26:54 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Mon, 30 Jun 2025 22:26:54 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (40.107.223.69)
- by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Mon, 30 Jun 2025 22:26:52 -0700
+	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="zx+Zi5kO"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ppEE0Y6ubXcYrq2hz4HV6/riwZ8xUM8nX8PFXw01cYyCjdgbYZr/aXPDWOJqYBGebepLVI4zkl69Q/3oRoJ0CQvhj7gX9lkML9Lh3ON3mIg8+3hgQTzw/0wUaETiWKHCO4lxEGYWF+wZ6qxOQWgKOg4MEcznG53ppEBQ3nyxdDhXcvpuJVEHp5YrlukePJz+eeceVje6Rel9Iv2kEl7a708kxyWdXriCDmME1LclP47/owgYHPmqqiVnimaUOM7ZIqoDAM0Q8uRaeBQkfwnwqGr6DUA8QtGDW2AWNuw3UHWZatKbr5BZmh8FU+iLi9WjwBG1gpxrDjIjn22uNh9JWA==
+ b=eTV8hCS1vA9VF6wWXC2wCYz9URPeu65jj/GatcQ5yi3uU340gHYdKjkR89TodJjme2gHBHTcqsCUqzsiIoGK9I+Stwhm0KMHdKeBMIQOOcsh2pQAAekiovFxgW1m3merYKTgkMrMyzvBPpJt2H27+5tcObqVhLTkuZoRJLCUCH3dmAetqxf5NOAeSpQNJfBbGgzgnlY+IQuQlYPDftQ+m32deAZ463kI074Tcw5GDeFcGaZr10HOsQuV9WUAA8KNjsEf3kq8FdygVd+lKgK6Qrcgr3pikebZ6zuxxfIihB/uWTlkUS+Y1yi11yHddL1Y5liCekgu9DH9vuNbWgAvnw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1puZtl8F9l218O2+cltVWUbWyJ3YyAbyLJz08xE5WQc=;
- b=Ldf0MDOW4bCY5mbUvTaeCC4kn91lb4AVP9YNFXacxm1YcfdEfhK3ullAIlu3LKCwryZmYFjo/kMSyz1RuhC3zI08b4wDYrOP1GD7vH3R4TCpoOtqg7QcJ9gSmjNn4fYbRONv89JbClu3wa59BOpHCCdz1RAKomBuU9tQab4HLBUT4TA/zSKHnYciQyDRu+CL4lHC4GKQ41FoC3wTe45p6oTXsZjrzd0vaCjnXMCkQvzmuhtGbY8p0X8i8yGJJad7ixpMBHPBXV0WpUtcieAu/j6dYHfcmo3ZpeN7z4YljERVyVk+1m582OHbVJfqiuh4BRORdYhR0m6hQxC1FBb2nA==
+ bh=XJulEhWPTRAUXifsh5pYXb8CRVMaaDAYxuGCGfNKNe8=;
+ b=uXo82BXYRs6O1sAFLTOPAj0BB7Zs49Vu8/nsu76nRsBNutXySpCpI6bFjwcLLrn39+GGmUiq29J/9wtM3l7kqrSQL6tf72nC372K8hb1mGMhYr7YvjE/xKaMKklqEEKaSN9+mjZnlkCZPL38d2Ip0baLQ/J3Q5L31W4bNwVtKl45OM7mELF69rbJ5rfG2ky50wHAZtU6gyqC8dMfZyi+0TWwagw75xoMej10+4Qx12PSyVSHmg33BDIiXtAwkaSLHRH+O9ndbwfPyYoDLLYXE9hYQKZWQS0bEzCbQ8MHZEeYahrvMmtR3yEQvNPstGCvFtpAdanE5dYkrT11mxRRxA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
+ smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
+ dkim=pass header.d=amlogic.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XJulEhWPTRAUXifsh5pYXb8CRVMaaDAYxuGCGfNKNe8=;
+ b=zx+Zi5kOYcZpqK0vMOZQcdyNScIV0q6H9E2sPkqstXQrrnSnaJXmuFmGoG7GdKckLBIa855XT3TgjHJVw45KuSGUcSul4jVcCNARfWAow85l+gWq/1AF9YITyDizt8uVNx2NH4lal+TKmIga2GMPNCWLK6fZSW9Rj66LgjaoRnisqZ6kZfyZ3pB1ZaHNPAPn2PeZwuQK3498Rwa3hWxUl9yiQZoLGefkhrfwcqmNqqs6pcfkftJxE2b3TBS/WR8387CLFqIplpk4udhmuRgs28SlvxL432TEAqv274wgCHLpNlHJ3seMwdSWcBVHCHaMTRn9TCHG+IB9l4o22CUjtA==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from MN0PR11MB5964.namprd11.prod.outlook.com (2603:10b6:208:373::17)
- by PH8PR11MB6853.namprd11.prod.outlook.com (2603:10b6:510:22e::15) with
+ header.d=none;dmarc=none action=none header.from=amlogic.com;
+Received: from JH0PR03MB7468.apcprd03.prod.outlook.com (2603:1096:990:16::12)
+ by KL1PR03MB7389.apcprd03.prod.outlook.com (2603:1096:820:eb::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.26; Tue, 1 Jul
- 2025 05:26:46 +0000
-Received: from MN0PR11MB5964.namprd11.prod.outlook.com
- ([fe80::7a0e:21e8:dce9:dbee]) by MN0PR11MB5964.namprd11.prod.outlook.com
- ([fe80::7a0e:21e8:dce9:dbee%6]) with mapi id 15.20.8880.029; Tue, 1 Jul 2025
- 05:26:46 +0000
-Date: Tue, 1 Jul 2025 13:23:45 +0800
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: Vishal Annapurve <vannapurve@google.com>
-CC: Xiaoyao Li <xiaoyao.li@intel.com>, Ackerley Tng <ackerleytng@google.com>,
-	<kvm@vger.kernel.org>, <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-	<x86@kernel.org>, <linux-fsdevel@vger.kernel.org>, <aik@amd.com>,
-	<ajones@ventanamicro.com>, <akpm@linux-foundation.org>,
-	<amoorthy@google.com>, <anthony.yznaga@oracle.com>, <anup@brainfault.org>,
-	<aou@eecs.berkeley.edu>, <bfoster@redhat.com>, <binbin.wu@linux.intel.com>,
-	<brauner@kernel.org>, <catalin.marinas@arm.com>, <chao.p.peng@intel.com>,
-	<chenhuacai@kernel.org>, <dave.hansen@intel.com>, <david@redhat.com>,
-	<dmatlack@google.com>, <dwmw@amazon.co.uk>, <erdemaktas@google.com>,
-	<fan.du@intel.com>, <fvdl@google.com>, <graf@amazon.com>,
-	<haibo1.xu@intel.com>, <hch@infradead.org>, <hughd@google.com>,
-	<ira.weiny@intel.com>, <isaku.yamahata@intel.com>, <jack@suse.cz>,
-	<james.morse@arm.com>, <jarkko@kernel.org>, <jgg@ziepe.ca>,
-	<jgowans@amazon.com>, <jhubbard@nvidia.com>, <jroedel@suse.de>,
-	<jthoughton@google.com>, <jun.miao@intel.com>, <kai.huang@intel.com>,
-	<keirf@google.com>, <kent.overstreet@linux.dev>, <kirill.shutemov@intel.com>,
-	<liam.merwick@oracle.com>, <maciej.wieczor-retman@intel.com>,
-	<mail@maciej.szmigiero.name>, <maz@kernel.org>, <mic@digikod.net>,
-	<michael.roth@amd.com>, <mpe@ellerman.id.au>, <muchun.song@linux.dev>,
-	<nikunj@amd.com>, <nsaenz@amazon.es>, <oliver.upton@linux.dev>,
-	<palmer@dabbelt.com>, <pankaj.gupta@amd.com>, <paul.walmsley@sifive.com>,
-	<pbonzini@redhat.com>, <pdurrant@amazon.co.uk>, <peterx@redhat.com>,
-	<pgonda@google.com>, <pvorel@suse.cz>, <qperret@google.com>,
-	<quic_cvanscha@quicinc.com>, <quic_eberman@quicinc.com>,
-	<quic_mnalajal@quicinc.com>, <quic_pderrin@quicinc.com>,
-	<quic_pheragu@quicinc.com>, <quic_svaddagi@quicinc.com>,
-	<quic_tsoni@quicinc.com>, <richard.weiyang@gmail.com>,
-	<rick.p.edgecombe@intel.com>, <rientjes@google.com>, <roypat@amazon.co.uk>,
-	<rppt@kernel.org>, <seanjc@google.com>, <shuah@kernel.org>,
-	<steven.price@arm.com>, <steven.sistare@oracle.com>,
-	<suzuki.poulose@arm.com>, <tabba@google.com>, <thomas.lendacky@amd.com>,
-	<usama.arif@bytedance.com>, <vbabka@suse.cz>, <viro@zeniv.linux.org.uk>,
-	<vkuznets@redhat.com>, <wei.w.wang@intel.com>, <will@kernel.org>,
-	<willy@infradead.org>, <yilun.xu@intel.com>, <yuzenghui@huawei.com>,
-	<zhiquan1.li@intel.com>
-Subject: Re: [RFC PATCH v2 00/51] 1G page support for guest_memfd
-Message-ID: <aGNw4ZJwlClvqezR@yzhao56-desk.sh.intel.com>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <cover.1747264138.git.ackerleytng@google.com>
- <aFPGlAGEPzxlxM5g@yzhao56-desk.sh.intel.com>
- <d15bfdc8-e309-4041-b4c7-e8c3cdf78b26@intel.com>
- <CAGtprH-Kzn2kOGZ4JuNtUT53Hugw64M-_XMmhz_gCiDS6BAFtQ@mail.gmail.com>
- <aGIBGR8tLNYtbeWC@yzhao56-desk.sh.intel.com>
- <CAGtprH-83EOz8rrUjE+O8m7nUDjt=THyXx=kfft1xQry65mtQg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.29; Tue, 1 Jul
+ 2025 05:27:40 +0000
+Received: from JH0PR03MB7468.apcprd03.prod.outlook.com
+ ([fe80::4128:9446:1a0f:11fd]) by JH0PR03MB7468.apcprd03.prod.outlook.com
+ ([fe80::4128:9446:1a0f:11fd%7]) with mapi id 15.20.8880.021; Tue, 1 Jul 2025
+ 05:27:38 +0000
+Message-ID: <c7a52d2f-646f-4f71-8883-dea397d97d2b@amlogic.com>
+Date: Tue, 1 Jul 2025 13:27:09 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] Bluetooth: hci_event: Add support for handling LE BIG
+ Sync Lost event
+To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: Marcel Holtmann <marcel@holtmann.org>,
+ Johan Hedberg <johan.hedberg@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, linux-bluetooth@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250630-handle_big_sync_lost_event-v3-1-a4cf5bf6ec82@amlogic.com>
+ <CABBYNZ+eVbYr4+08-qCccV+2BpUibV7jA55jJti9+PFS_4L1yg@mail.gmail.com>
+Content-Language: en-US
+From: Yang Li <yang.li@amlogic.com>
+In-Reply-To: <CABBYNZ+eVbYr4+08-qCccV+2BpUibV7jA55jJti9+PFS_4L1yg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGtprH-83EOz8rrUjE+O8m7nUDjt=THyXx=kfft1xQry65mtQg@mail.gmail.com>
-X-ClientProxiedBy: SG2P153CA0005.APCP153.PROD.OUTLOOK.COM (2603:1096::15) To
- MN0PR11MB5964.namprd11.prod.outlook.com (2603:10b6:208:373::17)
+X-ClientProxiedBy: SI2PR04CA0008.apcprd04.prod.outlook.com
+ (2603:1096:4:197::20) To JH0PR03MB7468.apcprd03.prod.outlook.com
+ (2603:1096:990:16::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -136,200 +71,304 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR11MB5964:EE_|PH8PR11MB6853:EE_
-X-MS-Office365-Filtering-Correlation-Id: a44cb4c4-c0fb-490b-6cd0-08ddb85fdf1c
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-TrafficTypeDiagnostic: JH0PR03MB7468:EE_|KL1PR03MB7389:EE_
+X-MS-Office365-Filtering-Correlation-Id: 56b4d95f-d128-4c0e-1536-08ddb85ffd59
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?bnFxdkpPaHc1QnhVWmtkMHJuVXJ1aDJYbFVjNU1DeTlkUGh6ZFNlSm1XVjMw?=
- =?utf-8?B?QTNqb2JDMTZOUGVnVCtZNTdhSDNYdWVGOVZNT3J5eVhkYnE3cmx6NmZCZFFw?=
- =?utf-8?B?TWEyNjI2SHh5S0RFdjBVaUxZYTM1UXVOTko1YlVaMEkzSWFwL3lFSUJ5Nzh4?=
- =?utf-8?B?VDd4N2dqU2hCa2tZU1B2V1ZxaVBaVG90WjFNUEsxZ2JJNWt0cHdOWjdXMmdr?=
- =?utf-8?B?OVFISXYrclQyTHBSUCtnVE5LKzdncU1nVEViS0FLUjRBdlNsOVlRcStHd09i?=
- =?utf-8?B?MVdlNnFsKzloQ2VkMGlNTGpzM2tyeitPUzJtY3AxSVJFc3cxS1BSUnU0cXlB?=
- =?utf-8?B?VjIzcEFLMTYxWUhKMkphY2Nma3lKMDh6VWxmcmZ4Y0szRkxtVzB1YWp5MDJp?=
- =?utf-8?B?eHJQVm02Zm10L0VEcUQwQjJkMy9URkl2WmlWQmhEaWlmbEJ4amhHaitpa1hI?=
- =?utf-8?B?azN5MGlqeElvWHV1d1VhNUpyYUpLdGcvWE1nYU5lOGsxRzhxRlNHR0paV0ww?=
- =?utf-8?B?TFdrdlJxLzNCT0FURkhDMmczZFRSeWRaaFVFZ3gyYlhiT3ZxdnI3WFRlWm5i?=
- =?utf-8?B?ZFJsRlhueFZWblhNVFZkQ09wb05nUFltTDZscEFkVzF0U3BUa1ZYZW52M0Zw?=
- =?utf-8?B?RER5d016OTRnWTd4ZDFkWTFoMzJFSUlGNHBCaEFvbUdNQ0RnU3FiQmc3UHhT?=
- =?utf-8?B?eDUrK3dVS1FrejNHaGk1aUNRb2RaMUJUekJ0ZE95MXRqc09IWGk0TFNDc1k0?=
- =?utf-8?B?ckgwbU1RZCtaTTlxd1VEeDNUdHRJdlh5Y0ZJWmRPOUhIemJ3bE12TENFek1q?=
- =?utf-8?B?T2VoU21OeXQ1ekoxMExXTkZ3T3FTTkdSbzRJaWxsVGRqZHc1WDBUMER4Z2hX?=
- =?utf-8?B?cjdtTVdNN1gwVzhrL2tSNEFYTFlrYlQxbCs0NTZZNVZldHlOR0dhc3R0NWZI?=
- =?utf-8?B?TmVjeTVBM0VSV28xSWtna0NhL1ppbFBHTitZS3JUSGNZbUtwRUIvY2FTQ2Vx?=
- =?utf-8?B?cndRUllMQUpNOUFxTm8vSHlJVnVLcW9EcVlaREJXYlNtb0g2a3hlT2JwUFcw?=
- =?utf-8?B?dWhRVnRxMlh2Y3pYRG9NcC9wVkY4ZFNtKzJ5cGRSeXA5dTZTNkhhMjRTM0lG?=
- =?utf-8?B?ZkhCanMxMStFT0t3Uk82RmhGTTJSeDVzQktiZmdzUVpRVVhBbXQrUDlXdlNo?=
- =?utf-8?B?QklwanYxd215bFFvaktuWmlpL0ExcHMwQlp1RlNTTDhwSzk5cit4QnUyQ0NX?=
- =?utf-8?B?WWZzRUJPZlIzMjlBTUpyWEh3R28rcHpIU2VVUytGa3BSWWo0UHQrRldZRlVu?=
- =?utf-8?B?NlExV1gxa01ld3FPQ3RkUnJqTTVEL3hnams5YUV3SlRLNHUvM1ErKzJTTkxB?=
- =?utf-8?B?Vnh4Z2FaaVZwcFYrRDM1NzVLOEVUaXZVQUluUFh1UldpWDdxSENwcXRDdXVC?=
- =?utf-8?B?eUxKb0ovUFpON1hnbU4rYmRYcmtJRzMvWXJxM1RJRHVCaGFUM1IyaWl5Z2Mw?=
- =?utf-8?B?THNqZ3ZnVE9lcWdqNEIrc3ZwNm1yRkdzZVJqUjY0V24zVmxFYmRCYTdtSkw4?=
- =?utf-8?B?VktGcldtNWJIN0VTV0N4THRmUWJCc01rTGJyWVF5bWxORHNXVzA0VWxjTGU3?=
- =?utf-8?B?K1pkbmRBbEJKZjFVOGd5b05KZjRpS3M2ZVlqTWZIb1k0NjZpcDRpQ1E5MUtO?=
- =?utf-8?B?TVcwTS85U1VZRkxaMi9ZT1VoTjhpanNRZXE1S3VLRk5BVVd1b1VmT0FmZUZB?=
- =?utf-8?B?TlpiRlVZSU9hL2tyZjljb1k4ek0rWTBHNWV5YTFtNzN6cnlEN2diQ2VNdFFC?=
- =?utf-8?B?YkFHbDZCSXJrVHVFc2xkYW9jem5vWHo4cm5CRU5nZk5CYTVNVUlORmpTRFdy?=
- =?utf-8?B?dWJKSmd0a2ZLVkFPdmVxSWNlMDdMVmlTUlRIb3Z0c0p1Rktobkp1MFBRYVVN?=
- =?utf-8?Q?jLRMxJsFS1U=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB5964.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VUlHUWtPOVBKcmROYmJhN3BVNk9VdWtMOUNpQ1JBanIxTkU3Z20yMTIxY1pI?=
+ =?utf-8?B?RWFsa1k3eG5SWE4wUWFDaE5KVkxKWEtGdFBIUzRGNlZSYnFhd1lBQW5WbFdx?=
+ =?utf-8?B?VEZVRUQxTEJIcWZyRUZ5YkhxVlJ1Wng0NkErMHFhUWNMNkdmN0pWUUo1aXIw?=
+ =?utf-8?B?NDZWeUZSZzRWaTBSR2UySFhBV2xNNVFkcjBvQmtJQzJiUXN4a0FtaG1rd2dx?=
+ =?utf-8?B?enp1Z0JwM25OeXg0K3NNMUhQczZmM00vOGsxM0wxWHNoUXRUQkc5VWlTMURj?=
+ =?utf-8?B?SFBzaGtBTEJKU3pudnI1RTNDZ2cyWmRUYTc4MVVQOFAxZk1qYUc3NHhJNlJp?=
+ =?utf-8?B?VGNjRmhDUXRYRkJ6OXUvS2JlMmNPSnh0S0dvY2MycnVQRkdwNWcveCtGc3V3?=
+ =?utf-8?B?UWo4Y0E1QXJURUpidlNNQVFkV3pXN1F1T1V3YlptSG9sZXZVQjBvQU4zNmJ0?=
+ =?utf-8?B?alNMS3BvWEFSTWFZbTljL1RlSEdlY3BFYy90RFVBcHUxQW45SVNTRW1wWEsx?=
+ =?utf-8?B?NWc5aVJGanhCVkVYVjhQMVBFbkdqazlwTWdGVTZqbml4YjhFaXc5SkN5WUMz?=
+ =?utf-8?B?QVRSa2MvSGxyUDRSRXVTUCt0Yk9Hc2hPTlBLM0xUSGpldzhXaFJxNVVNQmt6?=
+ =?utf-8?B?UDQ0NDhHTFhxeGhDbXRIdHJNeFFlMzVhVkprM21xYWFzcDhvUFZWU1RRdGdU?=
+ =?utf-8?B?M0h1YUIvRGpxOGIvV3R2Z09WSHNTR0N0aEpreXpxZzZhTTBXSmxsb1hBbkxM?=
+ =?utf-8?B?MXh6aGtZYVJvRVd1azQ4WVNvcEtBQmxIYVFENXdiNUw1L0huZHorcVVHcGNq?=
+ =?utf-8?B?a0JJb1h5aU4vLzBKTC9JeTJuL2ZQOWVHeUZYc3ZyVTFObEFrNmV4eDVrY0JL?=
+ =?utf-8?B?TksxUjVWajZjZHE2VUwrRGtjMnBQMmJMSW03NzNvOEVVdE1ZejQwRDZsOVFj?=
+ =?utf-8?B?VVo3Qzlqak1JSVR0U0pXSjB0T2NaWnN0bzRoTHkrQW1uYk5XN1BZM3g1b1NJ?=
+ =?utf-8?B?RzJxVVdMTklNVlgySEUwR2VLU25zR1lxcGoveGQvYkZXUkdLK2xmT0JhSEZj?=
+ =?utf-8?B?Um5kS09td3VBWnlPT3R6SkRlWGRvOVVmL2xwc080bEFvREt1U25GeFk5Q3k4?=
+ =?utf-8?B?aEgzVmJrYkpmOHN4YUdSRDVxbW8rK3dUME1SVU1RZDY2WU5iNlR1VVFzV2RK?=
+ =?utf-8?B?S3NoV2F1YytaT25XZkxKZkY1QUVTSUdyeGozUG9RcTBUZnJ0aGUrb3I4Tnd5?=
+ =?utf-8?B?TkxkcENSNlpqUFUrZjRqd3EvYTUrSW5ab3Z6ZlkwWmtJOXpzeUMyWEpySFlx?=
+ =?utf-8?B?dHlNeWxIRzE1YUtEdXRtYlo5Tm5WdWI2SGFaZ0hoR2xJM0ZXaXQ4Nit5Z3VN?=
+ =?utf-8?B?T2FIMVdGM1dQZDJTdmQ4WjVQYTliNm0zR0NwOTYvbFNDUGFkazlMMXpNYzB2?=
+ =?utf-8?B?Y095WURrR1hJK2ZIcHpPaVpaVTFjcWdmbURtbmFDZUZGa096MGRPd3J2Wk9G?=
+ =?utf-8?B?Qm4yZENTZDZ4dDk4Q3I2Vm1Tb2pWVmVTSDZMNmNoVlFhNm1tT1VGd2JadCsr?=
+ =?utf-8?B?c3VjL3huM3FPN1ZQMmFwYmVKVUpjcWVOb3h2eHVxY3NBWnRzS0lhK1ZaRURU?=
+ =?utf-8?B?eFdsMElnRGxhR1MvVGZXTGNVazhUTUlnZDhYZzZDUnpnVjcyVGxWYXBkZDNs?=
+ =?utf-8?B?UmlNWFVFQzdDOXVzRHhXZ3pITmZ3QWJWVFN0Sm1qeVZVbUpRckgrc3ZRVHhF?=
+ =?utf-8?B?b2dFeTM2VEx2VHhKL2dPSGY4dmJCek5aWS9FL3cxcmpFdlpmZFZBVWM3Yyto?=
+ =?utf-8?B?TzJZWGNtTEY2czRKKzZCeXFPeXJScmswNlJXUWRqNkFBY3FNRHlXSE02WmJ3?=
+ =?utf-8?B?cDRGdHpZOU5uTVc2QjE5QW54SDB6aUN0N3BqRXBSSHA4dm90VEM2R2NhRE5a?=
+ =?utf-8?Q?awRitNuCRUc=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:JH0PR03MB7468.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RWY2akkvZUpLSVFjMGViWlFaYjZ2V1RGUW5IQ2VDckhvUWNSVHRNZFlBcEdq?=
- =?utf-8?B?WVAyamJrRmQwTDNDUFFST2pabUVNL3gxdW9FSEhFbXRIdmlINFZsNk00U3FG?=
- =?utf-8?B?SnlucjdOMldGMGR0Vmdzd1laY2p3RE5FcGZabnNQWnVQU1psTXVuUFRQZElB?=
- =?utf-8?B?a2FMc1AvenNqeHhRa0RicVVORzkvNitCRVBIS2lud1IvWUUvSTd3WE5IeHpW?=
- =?utf-8?B?NUROVmY1UzdPL3BxQ2J1ekozbi8yaWo2MEw1MDc2T0JpTENvNjEzSHB1RzVF?=
- =?utf-8?B?Wjg3RnFRTk9HcXA3dDkzZDErSVcvRjZRbHNGWGlUb1ErVTdrYW0vWkhPT3Nq?=
- =?utf-8?B?MkJTVXFVRkVvRm9KdU9Ja1YxclR2T0Q4Q1p0ams0WVJJNjBHZXlkTnE2R0lL?=
- =?utf-8?B?TzVJY1VFSDNBVkU2aUwvanRldmFOMk14Q2lOYUZNT09zSkYrYWZFVlQrVTlL?=
- =?utf-8?B?YjNwVmtSb0NDbVF4N0JLc053S2VxMzIrY1M2RHZwdDRFMlA5Q1pROFRtN1pt?=
- =?utf-8?B?RE5YWHZwbnlVUWY0YmtISFRIUWhuL0VpQzJXVXltMjAzZU8xSXdVaWR5aGZr?=
- =?utf-8?B?dFljWVZmQUIrb0NneERTSTUvbXV4NFM5YW9KdW8zQU9pUENPU2R3VVlvSE41?=
- =?utf-8?B?ckVQNzJhcmVJeEVXLzB6T1RqYjFFOXcvVllNTEI2MFMxMGQvdUpsdFY4Rmls?=
- =?utf-8?B?QkxHTHAwcDQwak9SVnR0eDVNaUh2eTBNblhOOFFma0s4VklEK2pEcGdqSlMv?=
- =?utf-8?B?czF2SkYxTkJ3aDh5MXlZUUNseTc4YWUrSTEvZ2UreDhNaXB0cWJzOHhyWW5s?=
- =?utf-8?B?a1luZzRCamhlalNwQ2tWYW8rTlhtM1REMVNBU2FKalZRaFJ6K2REZjF5VE95?=
- =?utf-8?B?cVphWDRXMFVYcDA3OVJ1KzZQbFZyb3I5VDlKb2NqVzdVcGsxVmlUVGVidnBL?=
- =?utf-8?B?WFhOd2Z3S2JTKzh2R002elBWSHVURVZNRFVKanQ0RjUxY0U5RFRUOG9LK3di?=
- =?utf-8?B?Y0NITlRUa1hGUWIvazNaMVhKWjNHZGszdjhIWXkwYTlGS2pBUFFzbWNwVTVM?=
- =?utf-8?B?WmZVcTI5ajl5MFhWdGhTMGQ2UVgzY0xuZnExalUxR0tvYjFybGFGR010SU5H?=
- =?utf-8?B?L1JKdnFaTFhUdzNwd0RBWG4wR0lHeTJVc0VJdmUxWGJFWlFjZEpzT0RRenAz?=
- =?utf-8?B?YU1Tdm5ubGRFVU42ODdBMlNKS21icUF5eVdUQWF0UXZKUWR2RG81ZGIxOWpY?=
- =?utf-8?B?aGdFWnNHM1R1bXRwYnB2RVNSdG1Bclc4cnFqUVVGVVlNWnJiQVpnWDB4UmRq?=
- =?utf-8?B?MmFwL2U5ZFliTlFEYStiZXJLREtqTzE4eGYxNGpJa2NxQitZTXlxZG1SeHBB?=
- =?utf-8?B?aEtobmJhU2VJWVFVU1hBeGpsekVuUW1GZlNqNXp5eUx4Y2l5Kzhnd2xhNHdD?=
- =?utf-8?B?MytxbFhKVEZ0NW1YMTFQckxBd3ExOWFUY01hcUt2c2hQcEcvUHZENXh3dGVW?=
- =?utf-8?B?STZKWEZTcEVtR2Zza01KUy9nek05VmNqaVQ0RE5PMzhyUWI0ZlYvd29OVjVF?=
- =?utf-8?B?Unh6ekFqcHZmdjVwT3ZvSW1TblpxaWFiaTFrTTgzV3Q3b1IwdTBzV2hYTWZE?=
- =?utf-8?B?NThoZGRCbmV4WGhwazZOcTcyOTZlbUtJdHpYZ092Ukh1UHZtSWswamRuaEM2?=
- =?utf-8?B?Szh6M3pmRlFpcTZXNDU5ODc3dWlVVjhWZ1pDdUNQT3pyUlVkL3hMLzl5cEdq?=
- =?utf-8?B?QWkzWks5R01ReDFtNDFIU2FjdmM1c2pocVpsYWI3ZDBydi8xYWRIV0tWa1dk?=
- =?utf-8?B?L2dzUXArNkZ5dXBET1FMQ1ROZzh0eFc0Vm15enBkRjlBS0pvcmpPVW9ueCtZ?=
- =?utf-8?B?QVQwSWxBbk9wWnFqYTBFN0lLV1FBR0c2T0hjcjF0Tlc0NXpWUkdzaFdrdmhl?=
- =?utf-8?B?YytPL3Rvc1hWWHg2NktkOUlFL2daMWFFOTdyemxsbEZIWVJod3ZZVlFuaGVK?=
- =?utf-8?B?ZTVUNENKb25zMEVUMi8xOUs0VVlQT01tSy9vM1dmSWVxTFN1VWtrb1hzbnpJ?=
- =?utf-8?B?UFNLUTM1aUI2TTg4OTVKekxvY1dqUkNtYlZXMHB4TW1NbmxabGdwb2VsSXA4?=
- =?utf-8?Q?ZA1Zxx13ZwFYMPqdakPHZsFNF?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: a44cb4c4-c0fb-490b-6cd0-08ddb85fdf1c
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB5964.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?T2I4M0pOT09ZSEZHZUxMWjJXbTR0UjBrWGhZUUczZUZwbUE4QzNKenBReVdI?=
+ =?utf-8?B?STl3Q2E3S0drU3NtNk9pQTR0dWdDTVAwZjEyUlQrbmYxaDBUR2srZmI2cEpE?=
+ =?utf-8?B?c0JVWEI1eC8xMWZjVDZRM2J6Zmd1a1FoQTF2dnQ1N2U5QTUzeW02UGFXSmJE?=
+ =?utf-8?B?WlVoeHJ3SStxRnpwZTJZL1VtNm8rU1NlSWZzTW5id2VEdSs3YWRyUEN6aDUr?=
+ =?utf-8?B?SGVJTHB2L1BRNHA3anpqWDZWeFNKZXJMWlFDN2lJNWF4QitEbnJSSHJONEpE?=
+ =?utf-8?B?enoxS2M3c2Z4dkVEbk9rRVRLWUtBV2NiNkd6NGxGRk9ibUNVeG1pY3JqSnpB?=
+ =?utf-8?B?WGVONXFXUEVNL3FVNTM2MG4vd1cyYTNkL1hCV2g4SUlCQis4L2NhYlc5Wmd1?=
+ =?utf-8?B?UEVqMjBMS0dFcVdCK3lIdHFoUzVta3JXang3ZWx0dXFxNWNXazEyU2NxbExR?=
+ =?utf-8?B?WmpiR0IzWHF2RHM0YXE0V2o3bDJ1WFo2aXpjWHV0UVd4Tld2c2YxQ2R6NmRF?=
+ =?utf-8?B?d2Jna2VPMkNWTGZHTnhka0xybU93RmRKeVVUVFpwcEJxUjA2VkpLT0ZUNnBU?=
+ =?utf-8?B?cTVhUm1PN0dRUXpPdjRrNDRxZ0hvVVJub2xsWXQvdW5tVGJHRWNhbDB1dTZp?=
+ =?utf-8?B?dzdpM0RXTks4RkViZ2UzMjJrUndDNXE3Q3laQnJRbUxJNUhJc2xIMDRhUG90?=
+ =?utf-8?B?WU9naHo0cnRMZ0MxQms3UnpCVjNKWlB0V1JUVk1CZ0xHdVBjQU92Q0o2clNq?=
+ =?utf-8?B?U09CSkY5aDNXUFUvdGh5bTV2MmJqMWpjZDJzYmJQR1d4bVhSWGNZZUllQlhE?=
+ =?utf-8?B?eHlOeVNkMDlBQW9qb1kvNHhiUFk0bnFlODllYlMxMTE5WVhMQzJ2b1dPZzI4?=
+ =?utf-8?B?VjFBQm96d1RReEpUR3BoaWhJMlhtU0RFbk9KQzZocGNsYnJYTkhIUWN2MnBC?=
+ =?utf-8?B?TjlqRlB1WXZYMkdKdVVCbUpPVjZFQU9MazZjcFpTNmpaeWdaY0s3YnN3WVR6?=
+ =?utf-8?B?cHVQM1pab2VSbS9XZHZwVy9qaEpqZCtyTzRMT3N6bGpsUTYrUTlpVUtVaDZ6?=
+ =?utf-8?B?ZnlIRUs1TVdaWmtFdEpEaDBDRlQyaWpZT2lMcEhsZjQ4WklFRWhQNUFPYnJk?=
+ =?utf-8?B?clRiWG1RZCtzQWFxNXh0TWdBdVZ2MkdrQnEwTTV1SDJDa1FDb3lhbmxSdEVW?=
+ =?utf-8?B?TkZ5VnhQMThLdURTNUhZZkpFTUQ0OGRVamV0SFNkK1ZqNG0vYjNWSytkWWdP?=
+ =?utf-8?B?eHY0ZElpaVhHVUJzRU5mSlRPTTd0anRIcERYTXBFRkU0c212TTdCeDNGVFh4?=
+ =?utf-8?B?UGxRY0UyTXF0UHdBVUMzUitOMnI2dnBsRWxjRG9UWXdKcEhVcU1LRFJOUWdx?=
+ =?utf-8?B?d01aUnk5cjdZdkN4b29PUkcxS0YyUFVRQVkyRzFXUG9DeE92RVlNTFZ6alJU?=
+ =?utf-8?B?Z2tuYjJ1MVRyeUJ2aWZQY3pQdnFNQnNKQjJBUE5aNnRNbEtPdUwzU3RTeW4z?=
+ =?utf-8?B?NkJtS0g3bmdvQlBxSzdCSFYzYUY4Smo1dXYxRjZLRTZSeDVXc083WVA5L1Br?=
+ =?utf-8?B?VEpUK2VzZm5zL091bXBOOG85Wk5ZT1NVVWJ5dzBRTlRjdWpmazc4Q2RvRGhE?=
+ =?utf-8?B?SmtCYnVXZkU0d1ltMzIvcm1lRWtJRU82enFKZXUxRlpsQjN1VU5SM1NqeHFk?=
+ =?utf-8?B?bHNlMkJVNWtaWXp5Nllpcld4Q2JweTN6azNLMFJJOTV5V2IxYVNmVVE0Vk1p?=
+ =?utf-8?B?eVBQUTRPa1pua0lIQ3RlMVZESWxrV1hwOVVIR3hoZmF2RHRXNlJ4SHR1ZVFE?=
+ =?utf-8?B?b3pEWXJKcHk3NXdoTWVFMCtOSFB3VXlhUlVuSXFKbmZ2SkJDbDVXd1RVVEZD?=
+ =?utf-8?B?T2t3YlRDMkY5eU5GU2pKV01DdEoyNUFFZnRNVlFkaHRzcHJuYUhBTHQ2ZUJW?=
+ =?utf-8?B?VTRjdnc5U1lPMVcxU0Rpdi9UcFpwUjQ4WHhNb3UwQWlWR2RJWjFnZ2xsUU42?=
+ =?utf-8?B?djFXdVRya2dhMWFWaWpzQ0lwYVpqS2RVRlJCeUoxMlZDTjdmdWVqS1M2SlZI?=
+ =?utf-8?B?TWp1Zk42LzcyYURNa0NCcEI1cHo3YmpTRmQwN0tITEpET0xTNnZuSVVrUmE2?=
+ =?utf-8?Q?N39QqTDHaHAPD9rzEdVS7AYba?=
+X-OriginatorOrg: amlogic.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 56b4d95f-d128-4c0e-1536-08ddb85ffd59
+X-MS-Exchange-CrossTenant-AuthSource: JH0PR03MB7468.apcprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2025 05:26:46.3248
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2025 05:27:38.2566
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: f0RI0ffcihV15CF7nfqL8hldlv6dMqV/sU4XOCvdlRFDu2wyZiqSqG8xuzyNJwZn2RDVyC6kDqR+v/Pomf/VfQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB6853
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-UserPrincipalName: bqjb2yHCppPmt73dLcWGhEQm5sNDnYotfKVk5BKocV0kf/kqC4vCMkJRbWod85I4DY4+V0gLFTjDRvOZndFxRQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR03MB7389
 
-On Mon, Jun 30, 2025 at 07:14:07AM -0700, Vishal Annapurve wrote:
-> On Sun, Jun 29, 2025 at 8:17 PM Yan Zhao <yan.y.zhao@intel.com> wrote:
-> >
-> > On Sun, Jun 29, 2025 at 11:28:22AM -0700, Vishal Annapurve wrote:
-> > > On Thu, Jun 19, 2025 at 1:59 AM Xiaoyao Li <xiaoyao.li@intel.com> wrote:
-> > > >
-> > > > On 6/19/2025 4:13 PM, Yan Zhao wrote:
-> > > > > On Wed, May 14, 2025 at 04:41:39PM -0700, Ackerley Tng wrote:
-> > > > >> Hello,
-> > > > >>
-> > > > >> This patchset builds upon discussion at LPC 2024 and many guest_memfd
-> > > > >> upstream calls to provide 1G page support for guest_memfd by taking
-> > > > >> pages from HugeTLB.
-> > > > >>
-> > > > >> This patchset is based on Linux v6.15-rc6, and requires the mmap support
-> > > > >> for guest_memfd patchset (Thanks Fuad!) [1].
-> > > > >>
-> > > > >> For ease of testing, this series is also available, stitched together,
-> > > > >> at https://github.com/googleprodkernel/linux-cc/tree/gmem-1g-page-support-rfc-v2
-> > > > >
-> > > > > Just to record a found issue -- not one that must be fixed.
-> > > > >
-> > > > > In TDX, the initial memory region is added as private memory during TD's build
-> > > > > time, with its initial content copied from source pages in shared memory.
-> > > > > The copy operation requires simultaneous access to both shared source memory
-> > > > > and private target memory.
-> > > > >
-> > > > > Therefore, userspace cannot store the initial content in shared memory at the
-> > > > > mmap-ed VA of a guest_memfd that performs in-place conversion between shared and
-> > > > > private memory. This is because the guest_memfd will first unmap a PFN in shared
-> > > > > page tables and then check for any extra refcount held for the shared PFN before
-> > > > > converting it to private.
-> > > >
-> > > > I have an idea.
-> > > >
-> > > > If I understand correctly, the KVM_GMEM_CONVERT_PRIVATE of in-place
-> > > > conversion unmap the PFN in shared page tables while keeping the content
-> > > > of the page unchanged, right?
-> > >
-> > > That's correct.
-> > >
-> > > >
-> > > > So KVM_GMEM_CONVERT_PRIVATE can be used to initialize the private memory
-> > > > actually for non-CoCo case actually, that userspace first mmap() it and
-> > > > ensure it's shared and writes the initial content to it, after it
-> > > > userspace convert it to private with KVM_GMEM_CONVERT_PRIVATE.
-> > >
-> > > I think you mean pKVM by non-coco VMs that care about private memory.
-> > > Yes, initial memory regions can start as shared which userspace can
-> > > populate and then convert the ranges to private.
-> > >
-> > > >
-> > > > For CoCo case, like TDX, it can hook to KVM_GMEM_CONVERT_PRIVATE if it
-> > > > wants the private memory to be initialized with initial content, and
-> > > > just do in-place TDH.PAGE.ADD in the hook.
-> > >
-> > > I think this scheme will be cleaner:
-> > > 1) Userspace marks the guest_memfd ranges corresponding to initial
-> > > payload as shared.
-> > > 2) Userspace mmaps and populates the ranges.
-> > > 3) Userspace converts those guest_memfd ranges to private.
-> > > 4) For both SNP and TDX, userspace continues to invoke corresponding
-> > > initial payload preparation operations via existing KVM ioctls e.g.
-> > > KVM_SEV_SNP_LAUNCH_UPDATE/KVM_TDX_INIT_MEM_REGION.
-> > >    - SNP/TDX KVM logic fetches the right pfns for the target gfns
-> > > using the normal paths supported by KVM and passes those pfns directly
-> > > to the right trusted module to initialize the "encrypted" memory
-> > > contents.
-> > >        - Avoiding any GUP or memcpy from source addresses.
-> > One caveat:
-> >
-> > when TDX populates the mirror root, kvm_gmem_get_pfn() is invoked.
-> > Then kvm_gmem_prepare_folio() is further invoked to zero the folio.
-> 
-> Given that confidential VMs have their own way of initializing private
-> memory, I think zeroing makes sense for only shared memory ranges.
-> i.e. something like below:
-> 1) Don't zero at allocation time.
-> 2) If faulting in a shared page and its not uptodate, then zero the
-> page and set the page as uptodate.
-> 3) Clear uptodate flag on private to shared conversion.
-> 4) For faults on private ranges, don't zero the memory.
-> 
-> There might be some other considerations here e.g. pKVM needs
-> non-destructive conversion operation, which might need a way to enable
-> zeroing at allocation time only.
-> 
-> On a TDX specific note, IIUC, KVM TDX logic doesn't need to clear
-> pages on future platforms [1].
-Yes, TDX does not need to clear pages on private page allocation.
-But current kvm_gmem_prepare_folio() clears private pages in the common path
-for both TDX and SEV-SNP.
-
-I just wanted to point out that it's a kind of obstacle that need to be removed
-to implement the proposed approach.
+Hi Luzi,
+> [ EXTERNAL EMAIL ]
+>
+> Hi,
+>
+> On Mon, Jun 30, 2025 at 2:45 AM Yang Li via B4 Relay
+> <devnull+yang.li.amlogic.com@kernel.org> wrote:
+>> From: Yang Li <yang.li@amlogic.com>
+>>
+>> When the BIS source stops, the controller sends an LE BIG Sync Lost
+>> event (subevent 0x1E). Currently, this event is not handled, causing
+>> the BIS stream to remain active in BlueZ and preventing recovery.
+>>
+>> Signed-off-by: Yang Li <yang.li@amlogic.com>
+>> ---
+>> Changes in v3:
+>> - Delete the PA sync connection separately.
+>> - Add state and role check when lookup BIS connections
+>> - Link to v2: https://lore.kernel.org/r/20250625-handle_big_sync_lost_event-v2-1-81f163057a21@amlogic.com
+>>
+>> Changes in v2:
+>> - Matching the BIG handle is required when looking up a BIG connection.
+>> - Use ev->reason to determine the cause of disconnection.
+>> - Call hci_conn_del after hci_disconnect_cfm to remove the connection entry
+>> - Delete the big connection
+>> - Link to v1: https://lore.kernel.org/r/20250624-handle_big_sync_lost_event-v1-1-c32ce37dd6a5@amlogic.com
+>> ---
+>>   include/net/bluetooth/hci.h      |  6 ++++++
+>>   include/net/bluetooth/hci_core.h | 16 ++++++++++++----
+>>   net/bluetooth/hci_conn.c         |  3 ++-
+>>   net/bluetooth/hci_event.c        | 39 ++++++++++++++++++++++++++++++++++++++-
+>>   4 files changed, 58 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
+>> index 82cbd54443ac..48389a64accb 100644
+>> --- a/include/net/bluetooth/hci.h
+>> +++ b/include/net/bluetooth/hci.h
+>> @@ -2849,6 +2849,12 @@ struct hci_evt_le_big_sync_estabilished {
+>>          __le16  bis[];
+>>   } __packed;
+>>
+>> +#define HCI_EVT_LE_BIG_SYNC_LOST 0x1e
+>> +struct hci_evt_le_big_sync_lost {
+>> +       __u8    handle;
+>> +       __u8    reason;
+>> +} __packed;
+>> +
+>>   #define HCI_EVT_LE_BIG_INFO_ADV_REPORT 0x22
+>>   struct hci_evt_le_big_info_adv_report {
+>>          __le16  sync_handle;
+>> diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
+>> index a760f05fa3fb..5ab19d4fef93 100644
+>> --- a/include/net/bluetooth/hci_core.h
+>> +++ b/include/net/bluetooth/hci_core.h
+>> @@ -1340,7 +1340,8 @@ hci_conn_hash_lookup_big_sync_pend(struct hci_dev *hdev,
+>>   }
+>>
+>>   static inline struct hci_conn *
+>> -hci_conn_hash_lookup_big_state(struct hci_dev *hdev, __u8 handle,  __u16 state)
+>> +hci_conn_hash_lookup_big_state(struct hci_dev *hdev, __u8 handle,
+>> +                              __u16 state, __u8 role)
+>>   {
+>>          struct hci_conn_hash *h = &hdev->conn_hash;
+>>          struct hci_conn  *c;
+>> @@ -1348,9 +1349,16 @@ hci_conn_hash_lookup_big_state(struct hci_dev *hdev, __u8 handle,  __u16 state)
+>>          rcu_read_lock();
+>>
+>>          list_for_each_entry_rcu(c, &h->list, list) {
+>> -               if (c->type != BIS_LINK || bacmp(&c->dst, BDADDR_ANY) ||
+>> -                   c->state != state)
+>> -                       continue;
+>> +               if (role == HCI_ROLE_MASTER) {
+>> +                       if (c->type != BIS_LINK || bacmp(&c->dst, BDADDR_ANY) ||
+>> +                               c->state != state || c->role != role)
+>> +                               continue;
+> We don't really need to compare the address anymore since we now have
+> dedicated types for CIS and BIS, Id probably fix that in a leading
+> patch since that should have been added as a Fixes to the commit that
+> introduced the separate types, I will send a fix for it just make sure
+> you rebase your tree on top of bluetooth-next.
+>
+>> +               } else {
+>> +                       if (c->type != BIS_LINK ||
+>> +                               c->state != state ||
+>> +                               c->role != role)
+>> +                               continue;
+>> +               }
+> Then all we need to do is add the role check.
 
 
-> [1] https://lore.kernel.org/lkml/6de76911-5007-4170-bf74-e1d045c68465@intel.com/
-> 
-> >
-> > > i.e. for TDX VMs, KVM_TDX_INIT_MEM_REGION still does the in-place TDH.PAGE.ADD.
-> > So, upon here, the pages should not contain the original content?
-> >
-> 
-> Pages should contain the original content. Michael is already
-> experimenting with similar logic [2] for SNP.
-> 
-> [2] https://lore.kernel.org/lkml/20250613005400.3694904-6-michael.roth@amd.com/
+Yes, I will do.
+
+>
+>>                  if (handle == c->iso_qos.bcast.big) {
+>>                          rcu_read_unlock();
+>> diff --git a/net/bluetooth/hci_conn.c b/net/bluetooth/hci_conn.c
+>> index 4f379184df5b..6bb1ab42db39 100644
+>> --- a/net/bluetooth/hci_conn.c
+>> +++ b/net/bluetooth/hci_conn.c
+>> @@ -2146,7 +2146,8 @@ struct hci_conn *hci_bind_bis(struct hci_dev *hdev, bdaddr_t *dst, __u8 sid,
+>>          struct hci_link *link;
+>>
+>>          /* Look for any BIS that is open for rebinding */
+>> -       conn = hci_conn_hash_lookup_big_state(hdev, qos->bcast.big, BT_OPEN);
+>> +       conn = hci_conn_hash_lookup_big_state(hdev, qos->bcast.big,
+>> +                                            BT_OPEN, HCI_ROLE_MASTER);
+>>          if (conn) {
+>>                  memcpy(qos, &conn->iso_qos, sizeof(*qos));
+>>                  conn->state = BT_CONNECTED;
+>> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+>> index 66052d6aaa1d..f3e3e4964677 100644
+>> --- a/net/bluetooth/hci_event.c
+>> +++ b/net/bluetooth/hci_event.c
+>> @@ -3903,6 +3903,8 @@ static u8 hci_cc_le_setup_iso_path(struct hci_dev *hdev, void *data,
+>>                  goto unlock;
+>>          }
+>>
+>> +       conn->state = BT_CONNECTED;
+>> +
+>>          switch (cp->direction) {
+>>          /* Input (Host to Controller) */
+>>          case 0x00:
+>> @@ -6913,7 +6915,7 @@ static void hci_le_create_big_complete_evt(struct hci_dev *hdev, void *data,
+>>
+>>          /* Connect all BISes that are bound to the BIG */
+>>          while ((conn = hci_conn_hash_lookup_big_state(hdev, ev->handle,
+>> -                                                     BT_BOUND))) {
+>> +                                       BT_BOUND, HCI_ROLE_MASTER))) {
+>>                  if (ev->status) {
+>>                          hci_connect_cfm(conn, ev->status);
+>>                          hci_conn_del(conn);
+>> @@ -6968,6 +6970,7 @@ static void hci_le_big_sync_established_evt(struct hci_dev *hdev, void *data,
+>>          }
+>>
+>>          clear_bit(HCI_CONN_CREATE_BIG_SYNC, &conn->flags);
+>> +       conn->state = BT_CONNECTED;
+> Wrong line, anyway I have fixed this upstream already so you need to rebase.
+Got it.
+>
+>>          conn->num_bis = 0;
+>>          memset(conn->bis, 0, sizeof(conn->num_bis));
+>> @@ -7026,6 +7029,35 @@ static void hci_le_big_sync_established_evt(struct hci_dev *hdev, void *data,
+>>          hci_dev_unlock(hdev);
+>>   }
+>>
+>> +static void hci_le_big_sync_lost_evt(struct hci_dev *hdev, void *data,
+>> +                                    struct sk_buff *skb)
+>> +{
+>> +       struct hci_evt_le_big_sync_lost *ev = data;
+>> +       struct hci_conn *bis, *conn;
+>> +
+>> +       bt_dev_dbg(hdev, "big handle 0x%2.2x", ev->handle);
+>> +
+>> +       hci_dev_lock(hdev);
+>> +
+>> +       /* Delete the pa sync connection */
+>> +       bis = hci_conn_hash_lookup_pa_sync_big_handle(hdev, ev->handle);
+>> +       if (bis) {
+>> +               conn = hci_conn_hash_lookup_pa_sync_handle(hdev, bis->sync_handle);
+>> +               if (conn)
+>> +                       hci_conn_del(conn);
+>> +       }
+>> +
+>> +       /* Delete each bis connection */
+>> +       while ((bis = hci_conn_hash_lookup_big_state(hdev, ev->handle,
+>> +                                               BT_CONNECTED, HCI_ROLE_SLAVE))) {
+>> +               clear_bit(HCI_CONN_BIG_SYNC, &bis->flags);
+>> +               hci_disconn_cfm(bis, ev->reason);
+>> +               hci_conn_del(bis);
+>> +       }
+>> +
+>> +       hci_dev_unlock(hdev);
+>> +}
+>> +
+>>   static void hci_le_big_info_adv_report_evt(struct hci_dev *hdev, void *data,
+>>                                             struct sk_buff *skb)
+>>   {
+>> @@ -7149,6 +7181,11 @@ static const struct hci_le_ev {
+>>                       hci_le_big_sync_established_evt,
+>>                       sizeof(struct hci_evt_le_big_sync_estabilished),
+>>                       HCI_MAX_EVENT_SIZE),
+>> +       /* [0x1e = HCI_EVT_LE_BIG_SYNC_LOST] */
+>> +       HCI_LE_EV_VL(HCI_EVT_LE_BIG_SYNC_LOST,
+>> +                    hci_le_big_sync_lost_evt,
+>> +                    sizeof(struct hci_evt_le_big_sync_lost),
+>> +                    HCI_MAX_EVENT_SIZE),
+> After you fix the comments I do expect some code to introduce support
+> into our emulator and then add some test to iso-tester that causes the
+> test to generate HCI_EVT_LE_BIG_SYNC_LOST so we can confirm this is
+> working as intended.
+
+
+Sure, I'll give it a try.
+
+>>          /* [0x22 = HCI_EVT_LE_BIG_INFO_ADV_REPORT] */
+>>          HCI_LE_EV_VL(HCI_EVT_LE_BIG_INFO_ADV_REPORT,
+>>                       hci_le_big_info_adv_report_evt,
+>>
+>> ---
+>> base-commit: bd35cd12d915bc410c721ba28afcada16f0ebd16
+>> change-id: 20250612-handle_big_sync_lost_event-4c7dc64390a2
+>>
+>> Best regards,
+>> --
+>> Yang Li <yang.li@amlogic.com>
+>>
+>>
+>
+> --
+> Luiz Augusto von Dentz
