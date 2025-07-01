@@ -1,113 +1,134 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777CE1FDD
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 08:31:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94773213E6D;
+	Tue,  1 Jul 2025 08:32:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751358706; cv=none; b=qMseY+MauQXe3e+nyYU1tEF3dHfnTLjHkcwYELBFb76Qjpjee7S5f5Tn2hct4bPW2shh85LIJrQ6Bn+sTCl/Pdu0byyz6RMCzYatzC3KM19x4jDLjwP8YbXTuNONeA8v7Z2cZXVwZVc0tPVeb56QsYGe+oqut+v1M3hHquX1eJ4=
+	t=1751358726; cv=none; b=ZSzYHKKfqoKioP5TTWxo1M+PFFHbhYaGn+/VEV8UmmC2O6J4qicdNXAZK5wgrltCXYMSz05hWMn2lDRYWZybDKk1WGewbQqJxlD1fvChdMmaSl4pwdY/JSCzS1i+dWJXH8PrBNFf+WkCmYu6T4NLzX6stQ6nX/vHK6el8DPz9BA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751358706; c=relaxed/simple;
-	bh=u8XA6AE7KTxwnr8Ewx80kHJpLEp02NYTFAdLlNNTw+A=;
+	s=arc-20240116; t=1751358726; c=relaxed/simple;
+	bh=/7+pkp4WbYtUvgqARqha0maOzBZP7u7ePnf+Znr45xo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jdLXN1RVJgyqyOjmv+OWcsjifcah6fHdm4+YvzBQmzPVmv+iU1+tVhV9UH0Z20RcGZmfFIhHum78Hw2imNTLFpW4QAUDGRni1VUhrf28sJhXwsaZV1DmgsCSd03t87VgfxiBXzXJIzwT81wib7jYGLoETGniZDwnz08tN+u/VMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Y1JTlhDJ; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=FrrsVoQ5xdK1dgk3ChqIf6glL5NrWHDyFDjtmLgrN/5n57KiWN2YzYUNqB5/zLOfwrc+J8lnbpQ0LK/AYFXYWm6FiUaoM33k5g/sBxVEKfXLDNxMJGy1uOpdP2HLaIE+dwwJtZD3WtfryE0FN4DqjMvdrKllkrRUvMT95uryhJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XP/o9bl2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Y1JTlhDJ"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2363497cc4dso44250345ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 01:31:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1751358703; x=1751963503; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sY42LzJonUKxLm9VW+tYbEyOinj15vZJhx0LrFV84OI=;
-        b=Y1JTlhDJ+APHRru+KiAqTOVb1rFOszCCteC7N2kBALPcaTlrfn2YOdSU7jx2h+5UHW
-         /XMwx4TxorBRKm2NXxJPhvES71SbWzNtjaBBfPTs6ViA8fkiGv1iL52dCXlTd871SXsy
-         e1IF9pm60Hn9aaFtNfWLVuHHSjN2t45ZhJ2dr5+fy+IPz0DmisgzOMkO0ibF+uuI8wvt
-         86imz5Cpa/dHRqnHMMmgWuXTjEy4aLgJ09SQ+f43MSN/RWP3hugBNk6gyPrDqh39hGQv
-         56HrFvCBTb7kHKW06gWSBT9Cbz+b4Qjqd0Ixj8kdzTs5bC5am6o9TbofcHPIynNzjyCN
-         e1Sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751358703; x=1751963503;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sY42LzJonUKxLm9VW+tYbEyOinj15vZJhx0LrFV84OI=;
-        b=Jj0NuX3TE6RZsXNlf0+HERkgHeJVHwV3f3s0a9+qLOzmPGxRITS9QQMFEANEL2gRDH
-         /yFHEhryXCLdvsF/DJWIBQNWpiWhwwI6ilfGcvwYfVpuOb0eCKTJM2d4QOPpZAXKa1WH
-         tE1HQHvBJlSyvs/Jh36GTYgjXeMG1XHtYz+4ZZUcd5GeDhqRXLrSXY9zIqzl/BbHHiy9
-         Zbi54f+Yj07SGjN1IPMJLN7HZ2/h+RUJXdbp4ldZ27/PasMwVAQOtkk9qFMKl+oxSjek
-         LYeqW4LSvUA07gPQiH5qHdQKLoSIfmUPG9z+CGOlhAU3lCrGQLh9Dwr79dJPkWvSXscR
-         +9UA==
-X-Gm-Message-State: AOJu0YxzgS4ma2bk5LIQukf6T9ej9LOI+ZN/jpFl1IJbNB8Z9NwL2MJY
-	7BSX1MrUyzvykeXJrwEH6FEOyCh/nraX3cPEXSXDD0AcQILZbFfYLJXwJJ4edRkhug==
-X-Gm-Gg: ASbGncvcFzKdUXlcfe4pprI1aT+a5lqNcsl1eJTBaK0pqrDuNL904clcnyW/cIVBqZV
-	ykACHJyZlQp6G6Qf6wq58iHlYpX85kYwJCYkkyS0zxmOlJmDmj0Mn9uQ+pcSEuH21KhimAa3hAZ
-	Ia06L/S5Qa3r0xmVSfBIYgaYBLbzNqko2rAgBmbJN03mtw6LPbeC51o5lPKxdmVUOB+xYsEvQJN
-	VFQ4/pW41/V2vJi53wSf09W468Ooo+x0PCM+yolFFvVPL8U5y25Od/t8T/jPjRO1FHZHcjv2FJf
-	GZQd9Z8DHg9bEGE3duOotRf54ffVjetAVWmdrAIcLa7mfgCSpWPLjZgFIVvjYA==
-X-Google-Smtp-Source: AGHT+IFKSTgGkOEc6KLoruV6y+vjwrM0NqSufM8br/G/lkFUrP8O4K44p5mLgn2lVgCCIa+ztBNHFg==
-X-Received: by 2002:a17:902:c946:b0:235:dd54:bce1 with SMTP id d9443c01a7336-23ac3afd183mr249288375ad.15.1751358703563;
-        Tue, 01 Jul 2025 01:31:43 -0700 (PDT)
-Received: from bytedance ([115.190.40.10])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3c4b23sm100019885ad.214.2025.07.01.01.31.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 01:31:42 -0700 (PDT)
-Date: Tue, 1 Jul 2025 16:31:23 +0800
-From: Aaron Lu <ziqianlu@bytedance.com>
-To: Valentin Schneider <vschneid@redhat.com>,
-	Ben Segall <bsegall@google.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Josh Don <joshdon@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Xi Wang <xii@google.com>
-Cc: linux-kernel@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
-	Chuyi Zhou <zhouchuyi@bytedance.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Florian Bezdeka <florian.bezdeka@siemens.com>
-Subject: Re: [PATCH v2 0/5] Defer throttle when task exits to user
-Message-ID: <20250701083123.GA2784928@bytedance>
-References: <20250618081940.621-1-ziqianlu@bytedance.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XP/o9bl2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 389E7C4CEEB;
+	Tue,  1 Jul 2025 08:32:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751358726;
+	bh=/7+pkp4WbYtUvgqARqha0maOzBZP7u7ePnf+Znr45xo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XP/o9bl2BTuqwDnKkbs6Se3x+BnCsy6lOWBg7iCxi2ScoPZlEfavsLjm3Te2hQHnn
+	 mCjdtn5BU7dOUTtwpds5jCJZOyab3wXMNq7rBgfYlum4+gkuZGyYsJ0S3rCSCXExsG
+	 2q+Zz7dZ5PflbpACYr1x3s/3XeHHqKiv5Dw8KIVOyY2kvBb44QjfpENRHEozFjErj0
+	 PAnCS9WyHxjIvyA70oB3WDvwxJYwHYuiwQ/a4siEUuHbCdq7Ue1ws8BG7BYqRXe565
+	 ktVRHaga8jik3NrdcsvkPOqVrm8fx1XSUDcD5uTixqx7kT64BI8jDpjyeushHGpOLg
+	 m7+kaEorfYgBg==
+Date: Tue, 1 Jul 2025 10:31:58 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Song Liu <song@kernel.org>, Kernel Team <kernel-team@meta.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Eduard <eddyz87@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, KP Singh <kpsingh@kernel.org>, 
+	Matt Bobrowski <mattbobrowski@google.com>, Amir Goldstein <amir73il@gmail.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tejun Heo <tj@kernel.org>, 
+	Daan De Meyer <daan.j.demeyer@gmail.com>, bpf <bpf@vger.kernel.org>, 
+	Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	LSM List <linux-security-module@vger.kernel.org>
+Subject: Re: [PATCH v3 bpf-next 0/4] Introduce bpf_cgroup_read_xattr
+Message-ID: <20250701-angebahnt-fortan-6d4804227e87@brauner>
+References: <20250623063854.1896364-1-song@kernel.org>
+ <20250623-rebel-verlust-8fcd4cdd9122@brauner>
+ <CAADnVQ+iqMi2HEj_iH7hsx+XJAsqaMWqSDe4tzcGAnehFWA9Sw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250618081940.621-1-ziqianlu@bytedance.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAADnVQ+iqMi2HEj_iH7hsx+XJAsqaMWqSDe4tzcGAnehFWA9Sw@mail.gmail.com>
 
-Hello,
-
-On Wed, Jun 18, 2025 at 04:19:35PM +0800, Aaron Lu wrote:
-> v2:
-> - Re-org the patchset to use a single patch to implement throttle
->   related changes, suggested by Chengming;
-> - Use check_cfs_rq_runtime()'s return value in pick_task_fair() to
->   decide if throttle task work is needed instead of checking
->   throttled_hierarchy(), suggested by Peter;
-> - Simplify throttle_count check in tg_throtthe_down() and
->   tg_unthrottle_up(), suggested by Peter;
-> - Add enqueue_throttled_task() to speed up enqueuing a throttled task to
->   a throttled cfs_rq, suggested by Peter;
-> - Address the missing of detach_task_cfs_rq() for throttled tasks that
->   get migrated to a new rq, pointed out by Chengming;
-> - Remove cond_resched_tasks_rcu_qs() in throttle_cfs_rq_work() as
->   cond_resched*() is going away, pointed out by Peter.
-> I hope I didn't miss any comments and suggestions for v1 and if I do,
-> please kindly let me know, thanks!
+On Thu, Jun 26, 2025 at 07:14:20PM -0700, Alexei Starovoitov wrote:
+> On Mon, Jun 23, 2025 at 4:03 AM Christian Brauner <brauner@kernel.org> wrote:
+> >
+> > On Sun, 22 Jun 2025 23:38:50 -0700, Song Liu wrote:
+> > > Introduce a new kfunc bpf_cgroup_read_xattr, which can read xattr from
+> > > cgroupfs nodes. The primary users are LSMs, cgroup programs, and sched_ext.
+> > >
+> >
+> > Applied to the vfs-6.17.bpf branch of the vfs/vfs.git tree.
+> > Patches in the vfs-6.17.bpf branch should appear in linux-next soon.
 > 
-> Base: tip/sched/core commit dabe1be4e84c("sched/smp: Use the SMP version
-> of double_rq_clock_clear_update()")
+> Thanks.
+> Now merged into bpf-next/master as well.
+> 
+> > Please report any outstanding bugs that were missed during review in a
+> > new review to the original patch series allowing us to drop it.
+> 
+> bugs :(
+> 
+> > It's encouraged to provide Acked-bys and Reviewed-bys even though the
+> > patch has now been applied. If possible patch trailers will be updated.
+> 
+> Pls don't. Keep it as-is, otherwise there will be merge conflicts
+> during the merge window.
 
-I wonder is there any more comments about this series?
-Is it going in the right direction?
+This is just the common blurb. As soon as another part of the tree
+relies on something we stabilize the branch and only do fixes on top and
+never rebase. We usually recommend just pulling the branch which I think
+you did.
 
-Thanks.
+> 
+> > Note that commit hashes shown below are subject to change due to rebase,
+> > trailer updates or similar. If in doubt, please check the listed branch.
+> >
+> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+> > branch: vfs-6.17.bpf
+> >
+> > [1/4] kernfs: remove iattr_mutex
+> >       https://git.kernel.org/vfs/vfs/c/d1f4e9026007
+> > [2/4] bpf: Introduce bpf_cgroup_read_xattr to read xattr of cgroup's node
+> >       https://git.kernel.org/vfs/vfs/c/535b070f4a80
+> > [3/4] bpf: Mark cgroup_subsys_state->cgroup RCU safe
+> >       https://git.kernel.org/vfs/vfs/c/1504d8c7c702
+> > [4/4] selftests/bpf: Add tests for bpf_cgroup_read_xattr
+> >       https://git.kernel.org/vfs/vfs/c/f4fba2d6d282
+> 
+> Something wrong with this selftest.
+> Cleanup is not done correctly.
+> 
+> ./test_progs -t lsm_cgroup
+> Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
+> ./test_progs -t lsm_cgroup
+> Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
+> ./test_progs -t cgroup_xattr
+> Summary: 1/8 PASSED, 0 SKIPPED, 0 FAILED
+> ./test_progs -t lsm_cgroup
+> test_lsm_cgroup_functional:PASS:bind(ETH_P_ALL) 0 nsec
+> (network_helpers.c:121: errno: Cannot assign requested address) Failed
+> to bind socket
+> test_lsm_cgroup_functional:FAIL:start_server unexpected start_server:
+> actual -1 < expected 0
+> (network_helpers.c:360: errno: Bad file descriptor) getsockopt(SOL_PROTOCOL)
+> test_lsm_cgroup_functional:FAIL:connect_to_fd unexpected
+> connect_to_fd: actual -1 < expected 0
+> test_lsm_cgroup_functional:FAIL:accept unexpected accept: actual -1 < expected 0
+> test_lsm_cgroup_functional:FAIL:getsockopt unexpected getsockopt:
+> actual -1 < expected 0
+> test_lsm_cgroup_functional:FAIL:sk_priority unexpected sk_priority:
+> actual 0 != expected 234
+> ...
+> Summary: 0/1 PASSED, 0 SKIPPED, 1 FAILED
+> 
+> 
+> Song,
+> Please follow up with the fix for selftest.
+> It will be in bpf-next only.
+
+We should put that commit on the shared vfs-6.17.bpf branch.
