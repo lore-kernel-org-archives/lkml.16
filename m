@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C34270EDD
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 12:21:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEAE81EE033
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 12:21:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751372521; cv=none; b=g0djaKp9SMuNwmG6muYPVgIKNPQNKZdJVxKfR8rqUVUejNdx037icvzZKRLBAg91yWjV6REdE08n0ab/3cJ5jYGN9qw/LrSdcKWTh0fO3pl0XZN7tKCKjtGeYcxEpYm6IXwLyVwcw6GdxGTl7N3hqkihoWDi7NTmW1Co8nRgysI=
+	t=1751372521; cv=none; b=nXqsM7qUqlbV17r5b7ai6UfmFwtRd4eoyAnqK2uZxaU73CNkfSr0iDbeKUNm1khkiLGQv1hdT7I6p50d2IY20ddqoVOW9EHw28goWmGcYtJTJZDraKXqClr9PQUTkLHh8homEYB+b7INwsSRGAK3X6L9zJp6vL0vR+5E2/Uy1B4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751372521; c=relaxed/simple;
-	bh=2ndnXT/jdRZiwHSO45PZ1vhtye3DENczMp0fuqzlwn0=;
+	bh=h5sT7K0qujjGAxa1ljOQ5qCQmP+3h2L0erhsAYhuP9A=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=u453NyklaSNv15BwR87Ls0G2tgburNMlxv6KnySZSOKEAQK+7rllXM3GOrzU/mB+7Q/DEoY9RGrVJovAFuRFElhbMXfY3A70MDrofWxlwtbpUBXp/yUWp3jSdfQE196ki71Qhu9D78Xu3Ilza6nGqGasP1hVKZPouSni7/V+ZPo=
+	 MIME-Version; b=JIkLjOFbkLz/QmDfhA7bV5W53hzYYTcYoi2C6BjHVBrwlR1QR3K4fXLHSpaNf3+izegHWqmf6qxZcoHxdKkj2DlIx3r9c29gKigcCJ4D+ADKu1wOi1cbXz7y22G2Ew+Qy0ghX/MRS5oVIQj6s4Ut2oA+SD51c6oTAX991zfr8Cc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,16 +18,16 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1uWZzh-0007K3-6Z; Tue, 01 Jul 2025 14:21:49 +0200
+	id 1uWZzh-0007K2-6Z; Tue, 01 Jul 2025 14:21:49 +0200
 Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1uWZzf-006GdG-2O;
+	id 1uWZzf-006GdF-2J;
 	Tue, 01 Jul 2025 14:21:47 +0200
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1uWZzf-0009Gm-28;
+	id 1uWZzf-0009Gc-24;
 	Tue, 01 Jul 2025 14:21:47 +0200
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: Andrew Lunn <andrew@lunn.ch>,
@@ -43,9 +43,9 @@ Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	Russell King <linux@armlinux.org.uk>,
 	netdev@vger.kernel.org,
 	Lukas Wunner <lukas@wunner.de>
-Subject: [PATCH net v1 3/4] net: phy: smsc: Fix link failure in forced mode with Auto-MDIX
-Date: Tue,  1 Jul 2025 14:21:45 +0200
-Message-Id: <20250701122146.35579-4-o.rempel@pengutronix.de>
+Subject: [PATCH net v1 2/4] net: phy: smsc: Force predictable MDI-X state on LAN87xx
+Date: Tue,  1 Jul 2025 14:21:44 +0200
+Message-Id: <20250701122146.35579-3-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250701122146.35579-1-o.rempel@pengutronix.de>
 References: <20250701122146.35579-1-o.rempel@pengutronix.de>
@@ -61,75 +61,71 @@ X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Force a fixed MDI-X mode when auto-negotiation is disabled to prevent
-link instability.
+Override the hardware strap configuration for MDI-X mode to ensure a
+predictable initial state for the driver. The initial mode of the LAN87xx
+PHY is determined by the AUTOMDIX_EN strap pin, but the driver has no
+documented way to read its latched status.
 
-When forcing the link speed and duplex on a LAN9500 PHY (e.g., with
-`ethtool -s eth0 autoneg off ...`) while leaving MDI-X control in auto
-mode, the PHY fails to establish a stable link. This occurs because the
-PHY's Auto-MDIX algorithm is not designed to operate when
-auto-negotiation is disabled. In this state, the PHY continuously
-toggles the TX/RX signal pairs, which prevents the link partner from
-synchronizing.
+This unpredictability means the driver cannot know if the PHY has
+initialized with Auto-MDIX enabled or disabled, preventing it from
+providing a reliable interface to the user.
 
-This patch resolves the issue by detecting when auto-negotiation is
-disabled. If the MDI-X control mode is set to 'auto', the driver now
-forces a specific, stable mode (ETH_TP_MDI) to prevent the pair
-toggling. This choice of a fixed MDI mode mirrors the behavior the
-hardware would exhibit if the AUTOMDIX_EN strap were configured for a
-fixed MDI connection.
+This patch introduces a `config_init` hook that forces the PHY into a
+known state by explicitly enabling Auto-MDIX.
 
 Fixes: 05b35e7eb9a1 ("smsc95xx: add phylib support")
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 Cc: Andre Edich <andre.edich@microchip.com>
 ---
- drivers/net/phy/smsc.c | 25 ++++++++++++++++++++++---
- 1 file changed, 22 insertions(+), 3 deletions(-)
+ drivers/net/phy/smsc.c | 29 ++++++++++++++++++++++++++++-
+ 1 file changed, 28 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/net/phy/smsc.c b/drivers/net/phy/smsc.c
-index ad9a3d91bb8a..b6489da5cfcd 100644
+index adf12d7108b5..ad9a3d91bb8a 100644
 --- a/drivers/net/phy/smsc.c
 +++ b/drivers/net/phy/smsc.c
-@@ -155,10 +155,29 @@ static int smsc_phy_reset(struct phy_device *phydev)
+@@ -262,6 +262,33 @@ int lan87xx_read_status(struct phy_device *phydev)
+ }
+ EXPORT_SYMBOL_GPL(lan87xx_read_status);
  
- static int lan87xx_config_aneg(struct phy_device *phydev)
- {
--	int rc;
-+	u8 mdix_ctrl;
- 	int val;
++static int lan87xx_phy_config_init(struct phy_device *phydev)
++{
 +	int rc;
 +
-+	/* When auto-negotiation is disabled (forced mode), the PHY's
-+	 * Auto-MDIX will continue toggling the TX/RX pairs.
++	/* The LAN87xx PHY's initial MDI-X mode is determined by the AUTOMDIX_EN
++	 * hardware strap, but the driver cannot read the strap's status. This
++	 * creates an unpredictable initial state.
 +	 *
-+	 * To establish a stable link, we must select a fixed MDI mode.
-+	 * If the user has not specified a fixed MDI mode (i.e., mdix_ctrl is
-+	 * 'auto'), we default to ETH_TP_MDI. This choice of a ETH_TP_MDI mode
-+	 * mirrors the behavior the hardware would exhibit if the AUTOMDIX_EN
-+	 * strap were configured for a fixed MDI connection.
++	 * To ensure consistent and reliable behavior across all boards,
++	 * override the strap configuration on initialization and force the PHY
++	 * into a known state with Auto-MDIX enabled, which is the expected
++	 * default for modern hardware.
 +	 */
-+	if (phydev->autoneg == AUTONEG_DISABLE) {
-+		if (phydev->mdix_ctrl == ETH_TP_MDI_AUTO)
-+			mdix_ctrl = ETH_TP_MDI;
-+		else
-+			mdix_ctrl = phydev->mdix_ctrl;
-+	} else {
-+		mdix_ctrl = phydev->mdix_ctrl;
-+	}
++	rc = phy_modify(phydev, SPECIAL_CTRL_STS,
++			SPECIAL_CTRL_STS_OVRRD_AMDIX_ |
++			SPECIAL_CTRL_STS_AMDIX_ENABLE_ |
++			SPECIAL_CTRL_STS_AMDIX_STATE_,
++			SPECIAL_CTRL_STS_OVRRD_AMDIX_ |
++			SPECIAL_CTRL_STS_AMDIX_ENABLE_);
++	if (rc < 0)
++		return rc;
++
++	phydev->mdix_ctrl = ETH_TP_MDI_AUTO;
++
++	return smsc_phy_config_init(phydev);
++}
++
+ static int lan874x_phy_config_init(struct phy_device *phydev)
+ {
+ 	u16 val;
+@@ -696,7 +723,7 @@ static struct phy_driver smsc_phy_driver[] = {
  
--	switch (phydev->mdix_ctrl) {
-+	switch (mdix_ctrl) {
- 	case ETH_TP_MDI:
- 		val = SPECIAL_CTRL_STS_OVRRD_AMDIX_;
- 		break;
-@@ -184,7 +203,7 @@ static int lan87xx_config_aneg(struct phy_device *phydev)
- 	rc |= val;
- 	phy_write(phydev, SPECIAL_CTRL_STS, rc);
- 
--	phydev->mdix = phydev->mdix_ctrl;
-+	phydev->mdix = mdix_ctrl;
- 	return genphy_config_aneg(phydev);
- }
+ 	/* basic functions */
+ 	.read_status	= lan87xx_read_status,
+-	.config_init	= smsc_phy_config_init,
++	.config_init	= lan87xx_phy_config_init,
+ 	.soft_reset	= smsc_phy_reset,
+ 	.config_aneg	= lan87xx_config_aneg,
  
 -- 
 2.39.5
