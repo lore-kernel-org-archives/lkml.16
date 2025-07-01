@@ -1,181 +1,221 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8D21442F4
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 21:48:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D092571BA
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 21:53:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751406539; cv=none; b=atDtmaqtUBZsdDFy6KmGR+st1N7ZgPGo4xm4rX+LgYpXiiJaYz7Azj8XA5Xgf/ycaCoiA5EgauOh4B/RhAxSwRi+M3sKN3LNge5cgRxLja9VIXyHdoJPCAfm8VDahTKVdPem0WwEmKuOo4onm+gdtXNctkqpJKtZfRxWfZDn2m8=
+	t=1751406804; cv=none; b=Y3VWntiVLvQnxyRRvKIybG0Lz1j7OdUO4ILkMmRuSX6lw7ECLeExz4575wAsoqXch7DrEHvHyivuJ1bfQ+f81sCpZiYicRni13fHgQn5CJBFkbYmL+3wSUW4Wsl8oK6BP9CCnkGjPXLFG8Q2xcpO+gl8aJBAlm2nQhtRfoSpvos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751406539; c=relaxed/simple;
-	bh=MhBzcmRs4IbfRWvXPt/N6EYZPgvX5eYGeFtXHWVxwhM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Q+/tulRM6MWwaapsp4NeFWDy9mq+r5Z0PyqCE1ZLuVzTD51Sjqobmoz8nbQC0KHhhFFBDKUr0CpfQBm0RPLbN7FU56xp2Pv4GpTgPfFLfwlgm9L/Hf1reJJso49iNy01gTTohHwK+1RsFbxs2smzBjjr3c1eOfqqFwBZ+lagagM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2RrCxWNN; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+	s=arc-20240116; t=1751406804; c=relaxed/simple;
+	bh=76HcKGmFmNghBO+pMyD+y9llS/oRUsyq25HSfeg328g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EiwIKFGym1wyN2rkw0AqMffZ4J7N6ByuwrKOX4NA3lxdRP4PU9YNvLGZAo7cU7r2cQivX4aHvFo5IXSdFlYJkRo9rHWrgsirEpqetqVGv6OVh6nT0m5ruJZsWw0aG+IxzgxfD3fB9EyA8YMrxNe1/91X2BBB06zjZXn4m6+68wM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AsEZnSE6; arc=none smtp.client-ip=209.85.222.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2RrCxWNN"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-748efefedb5so7545910b3a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 14:48:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AsEZnSE6"
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-87f0ac304f0so1466659241.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 14:53:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751406537; x=1752011337; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JVZ4nZhVYWad2CbXoDJ3BSKbLb9HI8Q+JMXYt3i56nA=;
-        b=2RrCxWNN5QSMXMPHnWSoqOdkh9ufz7M11PsiwyocYOQ4QHpNc440fdv0qcJicqD0kL
-         lXg5XdpyBM3aaTQeAbMDrP024yMtT7C6jz8ShY8CaO0fBwjNch2Gefgn0OXgL6IF07xd
-         Vbb5cwTH6iUyiOFHAcvunbMZK21Q1/ZhMDGlXWzdfXX2d5Jrr62lcqUcXW1/x9fKkJs1
-         A3imWjXv0oAGdpQPdeo0Ln0nSjtjykiVh3SIClor82XO9Ta/LxxIpG+rM2+IGusQtowT
-         KDMMtArV5EA5IizsTXkWjMvnKDkjBbC5wYAU7VTwKI0QlHwJdhGd7HM/tmxJsycN0JXk
-         lMeg==
+        d=gmail.com; s=20230601; t=1751406801; x=1752011601; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=h9Tw5T21oTt8VFmq/0NfB5MMfCxNURL8ZSaWZPOqLE4=;
+        b=AsEZnSE6zMHME36FcBn+jkwRR6UgpbVAUySU1ntf+Hwz2jIJIpYIdrAkpyCVoudBUD
+         nsDLM7gfX/t7O/uwQcofhL4arRaNcTpTb4fcfy7WOVbLs/YS+8BdiSPEYkkY9ormRDdD
+         XP0ejjE2sj6jatctWzarjA4fggBzjFFjj6USxJLjrYouZ3i5wR3L4yxMSNMQ3INTD1fS
+         S5SDJsmtRO9BcUOp1m33HKdWzdG8lHsDSRmumBJ3d6CD0OXuwcxz8PmTQaXGFqX28WBn
+         t2Y9pa35VPJ3mSkzb4arFlZJzQ0OqXa6Ck3XCmb7xtnPLmrhHdkZRxE1U3TiXQD0hJ9J
+         TVLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751406537; x=1752011337;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=JVZ4nZhVYWad2CbXoDJ3BSKbLb9HI8Q+JMXYt3i56nA=;
-        b=Y3XE33SbnkgUKDirJxzE4Zj0Ltz6d4A/PYb3uy25O62GtJdozRi6lSJhkPTnV4BDKy
-         JJZJqiB47BB6CImVSdvlCPOe+mpwGc1L7yLD5kwPWDaFSkhm/o+WRfIiTEzMDX53JBRk
-         vDwv4OHh+1UU22TVMKGnyZI6mfgHpgfJT4koGddPIRCRx50hZH5/d2rXeyvXo/JmqA4t
-         fw5KG64ihYnM1ziy032C8sn/mG6loV+wByvyZsgRIwZ6YTR27pxV3PiPuc905oZ0jEb0
-         FpAxhF81KdJTcHnBTMOAx/+/XD+i8+Sg0Ey1KMkqNsHasgMA0LmqrLIKJqIypsi/XYQF
-         YaOg==
-X-Forwarded-Encrypted: i=1; AJvYcCWhSJnU7MTzYC01ZeAp/5WQNr7UjB+AFlElt6KicQbgDKCU5AKF9Ne8Aa/OJNEYAdJ3s4Miws7PVmm+McU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvSIipKK+NI9qRRnKCxjnw+n6aTlmqHfz3RimxtKZXqa46ayk9
-	tJ4bJdbsM4be8EtO0z/VLFOhBxd/wfqyG9xewoA6VDoVTb4tgrF/ZUJsGW0I5Wqgw/6sDNXik4L
-	hTM0lhMgrf7nIV4w4Wy20EdHlKQ==
-X-Google-Smtp-Source: AGHT+IEqcUpBnNJRKMdnLvZ2ZSUMUS2quj2Z66sgnJlgrefu2emFNr4Z97aJIzGPcQ4MClhKH9r+grsT8hfglCP6lg==
-X-Received: from pfbbx9.prod.google.com ([2002:a05:6a00:4289:b0:747:a97f:513f])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:889:b0:742:a77b:8c3 with SMTP id d2e1a72fcca58-74b50e69a06mr725062b3a.4.1751406536971;
- Tue, 01 Jul 2025 14:48:56 -0700 (PDT)
-Date: Tue, 01 Jul 2025 14:48:54 -0700
-In-Reply-To: <cd806e9a190c6915cde16a6d411c32df133a265b.camel@intel.com>
+        d=1e100.net; s=20230601; t=1751406801; x=1752011601;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=h9Tw5T21oTt8VFmq/0NfB5MMfCxNURL8ZSaWZPOqLE4=;
+        b=MN28+qyB8TquxiAen3cpK/JkTr/OHv9HwhoSjU6Ly4EmLtpqLKz6xABIrjlVCI6O+t
+         HVJdEWs8rHFXe2/IG1RkiYwDt2J4iaBNwqLFAb2Wql9ZwlX7vibYfmcSuo5lfGdrmaLb
+         V3oRuAsy2zG0pcfy1B/PqLwwyVkMZjXzcG9l2iZjjTtGaw2Xzy/ZiYuoVHxJq+RNdxb+
+         Rz3bGoZf5s6rp/5UNxu7GwhwDvHReGtWF/uQXfPtbaI30aNeqHNjeTFSj975qka5rEfS
+         QnzxJsRNM73EPHBU+7PXkFkfYTIsBBSY8WyNND26iHgkHMhVJJsRLdjW43TfjOkr3pED
+         eEwg==
+X-Forwarded-Encrypted: i=1; AJvYcCVLUai4ZReNiAwdek7gIo49B/5LlbjzK6Nv49D6m3Y8l9mM42pdms4Uf/2QrU4RrVDt4i8+3Lt6dizimGc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUIpGo1PqENWvr+4Otjr+4AY9te4lGvXOozsxykwr738N119Hr
+	TDgQLgqgdEsLS4p6MOtI9iA+1rkSjf6P16eVO4NzKtaYbDWGkN2ndExeOhi686VOPm4PHnGnHHW
+	ZCoGe/JBO/vzj5+mI/924OHjiJx+t2A4=
+X-Gm-Gg: ASbGnct46Yc+UzRHjltNVclxUDaaGJh53X5Bv9xax/9nrLtSVL4tVXC0KWvH87lf3UC
+	+3dzmp13OxUKwBFjwnira3Mgiul08z6R3EM7By8y5uAvyI4RZuOtq/qpoFHyv4IQdooJt3pjHEV
+	Esy3M+Wx59X1jydTK40wE+9jTD7fn9tbgO2q/KJjEIK8wr2Extm6KaNVjJpmtp+zmpSLxkZL2Tl
+	o7K/Q==
+X-Google-Smtp-Source: AGHT+IHgW+audA3TQkHOsNiNO4Y5C7I1as+sT+lATM9JGrS7qA3IEYv2HU03AtfN1AT94Uq8BWvGQ4u89P5wuKzlRag=
+X-Received: by 2002:a05:6102:c4d:b0:4e6:67f6:e9af with SMTP id
+ ada2fe7eead31-4f161114e02mr109275137.9.1751406801281; Tue, 01 Jul 2025
+ 14:53:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <a3cace55ee878fefc50c68bb2b1fa38851a67dd8.camel@intel.com>
- <diqzms9vju5j.fsf@ackerleytng-ctop.c.googlers.com> <447bae3b7f5f2439b0cb4eb77976d9be843f689b.camel@intel.com>
- <zlxgzuoqwrbuf54wfqycnuxzxz2yduqtsjinr5uq4ss7iuk2rt@qaaolzwsy6ki>
- <4cbdfd3128a6dcc67df41b47336a4479a07bf1bd.camel@intel.com>
- <diqz5xghjca4.fsf@ackerleytng-ctop.c.googlers.com> <aGJxU95VvQvQ3bj6@yzhao56-desk.sh.intel.com>
- <a40d2c0105652dfcc01169775d6852bd4729c0a3.camel@intel.com>
- <diqzms9pjaki.fsf@ackerleytng-ctop.c.googlers.com> <fe6de7e7d72d0eed6c7a8df4ebff5f79259bd008.camel@intel.com>
- <aGNrlWw1K6nkWdmg@yzhao56-desk.sh.intel.com> <cd806e9a190c6915cde16a6d411c32df133a265b.camel@intel.com>
-Message-ID: <diqzy0t74m61.fsf@ackerleytng-ctop.c.googlers.com>
-Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge pages
-From: Ackerley Tng <ackerleytng@google.com>
-To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, "Zhao, Yan Y" <yan.y.zhao@intel.com>
-Cc: "quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, "Li, Xiaoyao" <xiaoyao.li@intel.com>, 
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "Hansen, Dave" <dave.hansen@intel.com>, 
-	"david@redhat.com" <david@redhat.com>, "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, 
-	"vbabka@suse.cz" <vbabka@suse.cz>, "tabba@google.com" <tabba@google.com>, 
-	"Shutemov, Kirill" <kirill.shutemov@intel.com>, "michael.roth@amd.com" <michael.roth@amd.com>, 
-	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "seanjc@google.com" <seanjc@google.com>, 
-	"Peng, Chao P" <chao.p.peng@intel.com>, "Du, Fan" <fan.du@intel.com>, 
-	"Yamahata, Isaku" <isaku.yamahata@intel.com>, "Weiny, Ira" <ira.weiny@intel.com>, 
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Annapurve, Vishal" <vannapurve@google.com>, 
-	"jroedel@suse.de" <jroedel@suse.de>, "Miao, Jun" <jun.miao@intel.com>, 
-	"Li, Zhiquan1" <zhiquan1.li@intel.com>, "pgonda@google.com" <pgonda@google.com>, 
-	"x86@kernel.org" <x86@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <20250629204215.1651573-1-abinashsinghlalotra@gmail.com> <5e67d651-830a-4d99-af37-26f2d0efd640@vates.tech>
+In-Reply-To: <5e67d651-830a-4d99-af37-26f2d0efd640@vates.tech>
+From: Abinash <abinashlalotra@gmail.com>
+Date: Wed, 2 Jul 2025 03:23:09 +0530
+X-Gm-Features: Ac12FXxWN99Do6-y4I8RTPnx1rDO_yZT307Qk4LLSGsNZ3LC714vlUwHM9tF1aQ
+Message-ID: <CAJZ91LC610AsBZ8X3u8ZxAUhc6QT0FHeffQT0ARmnMgsGrdZQQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] xen/gntdev: reduce stack usage by dynamically
+ allocating gntdev_copy_batch
+To: Tu Dinh <ngoc-tu.dinh@vates.tech>
+Cc: jgross@suse.com, sstabellini@kernel.org, oleksandr_tyshchenko@epam.com, 
+	xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org, 
+	Abinash Singh <abinashsinghlalotra@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-"Edgecombe, Rick P" <rick.p.edgecombe@intel.com> writes:
+Hi ,
 
-> On Tue, 2025-07-01 at 13:01 +0800, Yan Zhao wrote:
->> > Maybe Yan can clarify here. I thought the HWpoison scenario was about =
-TDX
->> > module
->> My thinking is to set HWPoison to private pages whenever KVM_BUG_ON() wa=
-s hit
->> in
->> TDX. i.e., when the page is still mapped in S-EPT but the TD is bugged o=
-n and
->> about to tear down.
->>=20
->> So, it could be due to KVM or TDX module bugs, which retries can't help.
+Thanks for pointing that out.
+
+I haven=E2=80=99t measured the performance impact yet =E2=80=94 my main foc=
+us was on
+getting rid of the stack usage warning triggered by LLVM due to
+inlining. But you're right, gntdev_ioctl_grant_copy() is on a hot
+path, and calling kmalloc() there could definitely slow things down,
+especially under memory pressure.
+
+I=E2=80=99ll run some benchmarks to compare the current approach with the
+dynamic allocation, and also look into alternatives =E2=80=94 maybe
+pre-allocating the struct or limiting inlining instead. If you have
+any ideas or suggestions on how best to approach this, I=E2=80=99d be happy=
+ to
+hear them.
+
+Do you have any suggestions on how to test the performance?
+
+Best,
+Abinash
+
+
+On Mon, 30 Jun 2025 at 16:05, Tu Dinh <ngoc-tu.dinh@vates.tech> wrote:
 >
-> We were going to call back into guestmemfd for this, right? Not set it in=
-side
-> KVM code.
+> Hi,
 >
-
-Perhaps we had different understandings of f/g :P
-
-I meant that TDX module should directly set the HWpoison flag on the
-folio (HugeTLB or 4K, guest_memfd or not), not call into guest_memfd.
-
-guest_memfd will then check this flag when necessary, specifically:
-
-* On faults, either into guest or host page tables=20
-* When freeing the page
-    * guest_memfd will not return HugeTLB pages that are poisoned to
-      HugeTLB and just leak it
-    * 4K pages will be freed normally, because free_pages_prepare() will
-      check for HWpoison and skip freeing, from __folio_put() ->
-      free_frozen_pages() -> __free_frozen_pages() ->
-      free_pages_prepare()
-* I believe guest_memfd doesn't need to check HWpoison on conversions [1]
-
-[1] https://lore.kernel.org/all/diqz5xghjca4.fsf@ackerleytng-ctop.c.googler=
-s.com/
-
-> What about a kvm_gmem_buggy_cleanup() instead of the system wide one. KVM=
- calls
-> it and then proceeds to bug the TD only from the KVM side. It's not as sa=
-fe for
-> the system, because who knows what a buggy TDX module could do. But TDX m=
-odule
-> could also be buggy without the kernel catching wind of it.
+> On 30/06/2025 06:54, Abinash Singh wrote:
+> > While building the kernel with LLVM, a warning was reported due to
+> > excessive stack usage in `gntdev_ioctl`:
+> >
+> >       drivers/xen/gntdev.c:991: warning: stack frame size (1160) exceed=
+s limit (1024) in function 'gntdev_ioctl'
+> >
+> > Further analysis revealed that the large stack frame was caused by
+> > `struct gntdev_copy_batch`, which was declared on the stack inside
+> > `gntdev_ioctl_grant_copy()`. Since this function was inlined into
+> > `gntdev_ioctl`, the stack usage was attributed to the latter.
+> >
+> > This patch fixes the issue by dynamically allocating `gntdev_copy_batch=
+`
+> > using `kmalloc()`, which significantly reduces the stack footprint and
+> > eliminates the warning.
+> >
+> > This approach is consistent with similar fixes upstream, such as:
+> >
+> > commit fa26198d30f3 ("iommu/io-pgtable-arm: dynamically allocate selfte=
+st device struct")
+> >
+> > Fixes: a4cdb556cae0 ("xen/gntdev: add ioctl for grant copy")
+> > Signed-off-by: Abinash Singh <abinashsinghlalotra@gmail.com>
+> > ---
+> > The stack usage was confirmed using the `-fstack-usage`  flag and mannu=
+al analysis, which showed:
+> >
+> >    drivers/xen/gntdev.c:953: gntdev_ioctl_grant_copy.isra   1048 bytes
+> >    drivers/xen/gntdev.c:826: gntdev_copy                     56 bytes
+> >
+> > Since `gntdev_ioctl` was calling the inlined `gntdev_ioctl_grant_copy`,=
+ the total
+> > frame size exceeded 1024 bytes, triggering the warning.
+> >
+> > This patch addresses the warning and keeps stack usage within acceptabl=
+e limits.
+> > Is this patch fine or kmalloc may affect performance ?
+> > ---
 >
-> Having a single callback to basically bug the fd would solve the atomic c=
-ontext
-> issue. Then guestmemfd could dump the entire fd into memory_failure() ins=
-tead of
-> returning the pages. And developers could respond by fixing the bug.
+> Have you measured the performance impact? gntdev_ioctl_grant_copy is
+> called quite often especially by the backend. I'm afraid calling the
+> allocator here may cause even more slowdown than there already is,
+> especially when memory is tight.
 >
-
-This could work too.
-
-I'm in favor of buying into the HWpoison system though, since we're
-quite sure this is fair use of HWpoison.
-
-Are you saying kvm_gmem_buggy_cleanup() will just set the HWpoison flag
-on the parts of the folios in trouble?
-
-> IMO maintainability needs to be balanced with efforts to minimize the fal=
-lout
-> from bugs. In the end a system that is too complex is going to have more =
-bugs
-> anyway.
+> >   drivers/xen/gntdev.c | 24 +++++++++++++++---------
+> >   1 file changed, 15 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/drivers/xen/gntdev.c b/drivers/xen/gntdev.c
+> > index 61faea1f0663..9811f3d7c87c 100644
+> > --- a/drivers/xen/gntdev.c
+> > +++ b/drivers/xen/gntdev.c
+> > @@ -953,15 +953,19 @@ static int gntdev_grant_copy_seg(struct gntdev_co=
+py_batch *batch,
+> >   static long gntdev_ioctl_grant_copy(struct gntdev_priv *priv, void __=
+user *u)
+> >   {
+> >       struct ioctl_gntdev_grant_copy copy;
+> > -     struct gntdev_copy_batch batch;
+> > +     struct gntdev_copy_batch *batch;
+> >       unsigned int i;
+> >       int ret =3D 0;
+> >
+> >       if (copy_from_user(&copy, u, sizeof(copy)))
+> >               return -EFAULT;
+> > -
+> > -     batch.nr_ops =3D 0;
+> > -     batch.nr_pages =3D 0;
+> > +
+> > +     batch =3D kmalloc(sizeof(*batch), GFP_KERNEL);
+> > +     if (!batch)
+> > +             return -ENOMEM;
+> > +
+> > +     batch->nr_ops =3D 0;
+> > +     batch->nr_pages =3D 0;
+> >
+> >       for (i =3D 0; i < copy.count; i++) {
+> >               struct gntdev_grant_copy_segment seg;
+> > @@ -971,18 +975,20 @@ static long gntdev_ioctl_grant_copy(struct gntdev=
+_priv *priv, void __user *u)
+> >                       goto out;
+> >               }
+> >
+> > -             ret =3D gntdev_grant_copy_seg(&batch, &seg, &copy.segment=
+s[i].status);
+> > +             ret =3D gntdev_grant_copy_seg(batch, &seg, &copy.segments=
+[i].status);
+> >               if (ret < 0)
+> >                       goto out;
+> >
+> >               cond_resched();
+> >       }
+> > -     if (batch.nr_ops)
+> > -             ret =3D gntdev_copy(&batch);
+> > -     return ret;
+> > +     if (batch->nr_ops)
+> > +             ret =3D gntdev_copy(batch);
+> > +     goto free_batch;
+> >
+> >     out:
+> > -     gntdev_put_pages(&batch);
+> > +     gntdev_put_pages(batch);
+> > +  free_batch:
+> > +     kfree(batch);
+> >       return ret;
+> >   }
+> >
 >
->>=20
->> > bugs. Not TDX busy errors, demote failures, etc. If there are "normal"
->> > failures,
->> > like the ones that can be fixed with retries, then I think HWPoison is=
- not a
->> > good option though.
->> >=20
->> > > =C2=A0 there is a way to make 100%
->> > > sure all memory becomes re-usable by the rest of the host, using
->> > > tdx_buggy_shutdown(), wbinvd, etc?
->>=20
->> Not sure about this approach. When TDX module is buggy and the page is s=
-till
->> accessible to guest as private pages, even with no-more SEAMCALLs flag, =
-is it
->> safe enough for guest_memfd/hugetlb to re-assign the page to allow
->> simultaneous
->> access in shared memory with potential private access from TD or TDX mod=
-ule?
 >
-> With the no more seamcall's approach it should be safe (for the system). =
-This is
-> essentially what we are doing for kexec.
+>
+> Ngoc Tu Dinh | Vates XCP-ng Developer
+>
+> XCP-ng & Xen Orchestra - Vates solutions
+>
+> web: https://vates.tech
+>
