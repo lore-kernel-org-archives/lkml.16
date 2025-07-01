@@ -1,242 +1,102 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65CA52749E9
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 11:49:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D71027A46A
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 11:49:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751370597; cv=none; b=b0MrdBLH7+IJ49bDqhb++QuDdr8zYbahSMVrsXrbhkmEEFAHurMxqHFax1+qY9oJXPtyCyzSfd66IqKMxu/9+ApeyCaWLIXs+/Ds1A+I4FUEv9Yslb09RD45cWcVYNLLnSO6iCZ9qzHz8PbJVTDJSgmiOM9bfJjXiAY96moBkIw=
+	t=1751370601; cv=none; b=mw2LnrSyfh2MHlPMVOnGuaSpBGhT8jSPd/uuY6518XpRT+MzNdsYLpgNP1UftOCbJplOspdROX7QUKw5qBkVNN00FxoTD+yN1VA35Rz2Bmq9pSAhSopErd7mOIkmi04sB24jpPgHCLabQMF/iIM/rd/+VUIp4tkbHO84k9GiApU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751370597; c=relaxed/simple;
-	bh=LSvGz4bhsBG69h9nh8mrPUSnRQpI+1agKF+cI4q1FRA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eP8ylqUTSw3ck/uIDcKOqU8eqH/6FZH3a7QDZh8fMT+wZ37Lu7/FjCmn/LOjaIcmAu+i2WoEG5ob/Z6R4mEUvuerlvQiIg6p5xzW9iKz3fTKVr2Qy140kLw4kGDpc6wm0foemBTImSEtb8uvoKN51G0/jInRM+VJ06AcGqGacxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=LUUzwLri; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1751370601; c=relaxed/simple;
+	bh=R+rwOhIowzKwTY9h4u5eqn86gDd48p2rdXWg3ykB4X0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lYCy0SnMmd/2pd8Ba0tyIIqoYNupnQ7+s9O+M5Vc2YoGPXSyWGNlTPns94tl3HAw956lMi4iEheR1ZM7jyr7o9QEtTDfoe1DckgC5ykNCkEEx/RpGVO0Bd+bfw6pmnFvxbkVxxjcxgRHiVl/taxrQt/hQTn0wycB0Ti384/Iy3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0JUONJrG; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="LUUzwLri"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-453426170b6so34833215e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 04:49:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0JUONJrG"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a548a73ff2so4931568f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 04:49:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751370594; x=1751975394; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=K18eD4fwuNNbiShs9650A8odEfXbIRgpXnl+v+odKRg=;
-        b=LUUzwLrizjpBQ2GsTqAW42xxbB4KjAlgoGXvluhDZCAwi1omvXCegti3Rh/oy+khVz
-         9/Qj9dd0tXwLy0M1+qIUbPbJ/LY4OsM8TwtlwJdJ7zNTtQRZ/isKqLx10dR/HK4gBmUY
-         1ARzmZIqtcEsYvLJRZt/wj4GiC+hO4bvWHM/6JmmYSBDJOucSYaQqrMhjNx2DrxBJNB/
-         d6Q8244Od45ml4Ikpa6BXTTzN54Oz3i86Cvb2tDOIx5OuhwYH75m4iDZ1/6pP7AGzJk4
-         kHb02TjG/cAYB/w1/6npEp+TpDm6Qk1dLyokOlW24vXzTdhsj8gltIHxyAEM2PfOqeqg
-         lNaw==
+        d=google.com; s=20230601; t=1751370598; x=1751975398; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0KGSBavzhT3TpQui0uI73A+Z+3UDA0xLLxmDbt54UW0=;
+        b=0JUONJrGzkaw1i/zUiw+03ML/aAkfY8AGX628MberDpxPEpBMbOcvlBo2B37+WvDjE
+         KdmyhJruSd1D+AMUAahBFaAcxNFpYddVLdNYsz9zqcbF5HQx8hzudHvVAwOrVZnn44Vr
+         1vmmX7WWsiTNf35fnB9i4tmZezAuKiC6Ryepj/79CeQk5HetymnC7+rHM3ZXAzfOW2jd
+         svPMSuF84qClbkXmj3fwCLAdmCa5zA9HRvWVCyjCMTTvGTosPu+83DpVXFcLCd8TsJpq
+         JAUr5u4dpiiKRfHT/r36SG1d7jrKtfVxzIm/SHQSc+NM8xsrHo/nrH7WXRZQI0k7Ml43
+         Fphg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751370594; x=1751975394;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1751370598; x=1751975398;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=K18eD4fwuNNbiShs9650A8odEfXbIRgpXnl+v+odKRg=;
-        b=Mb6sg/YdxquF+Wn1EfXVnk34Z97dAFfj0l4206NKyLGnkXiXta4oiSxvr88w+rtcoA
-         G2SIJJnG+jha+Oc1C7mK4Tvtf9rR7uNMeMksd+a2SmZMK9eWIvF3uFzd99z65UwW3ZCA
-         Kvuqm7DV4DpNGnmiGnPsJPfp6F+DkY8x2mmn7Q67zKprYP+WjDMdnzrdWnj46biX6gF8
-         A8KexdCZQ/ZtUcCxv3uABOGa5DWlzzmmi5qdIw5JwO63hLuJyyJ/BD23q9e9V40LlCk+
-         9vt+FPRpsqYs0rWXTqQ7773Qdcjc4Qr6TV1byasi3ReD2PJsu3TzSFn/DbbUAA6vS/qm
-         e79g==
-X-Forwarded-Encrypted: i=1; AJvYcCVzz4DxJQ8goftYBil8t5ww1lRLD0riozPhunpRX58os3CepuMMQ4BV46ojkuw8IVL8WbBy09qbhV3aOtQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUgfVMNhFEN0GeDAKwKnCvEEPFd8yTo8tpD3hZReFtxRBG4TIm
-	2pq0OiJw1uEsXF+G4JFxPxoEtirKdMTkqMcvbTga8yshFqnBZKfBsUVi2c4mYDtbZF0=
-X-Gm-Gg: ASbGncsurTAA7sP8fqgJvrjW+kxh8yRVOxWVVPLD8teS+vLdtvUmFZwEoj0m8o0ifrL
-	mx7JrdkF+hUhb4T5Y3WvsMnLzP6h4fmARDcqCnoW6YSeMER6a1TN/T+E4wH18mJKBov9abwwrtV
-	jQRTKb01yiaE+R8luBYDDu7jdYg3UfpsuI+/HR+2p/S0Sg2LVmaR651cYSiK2j23Yf+V205dKO4
-	NSR7xWjLTIOCASct1gSR5RxBqI2WC3/ObbROC23TCkSr855eVRGwSr69giT6fykgt9ao2lZFdaB
-	UolNPEfLvB7rRvGz+3S6aZIDKS3xnw6v+bzIW4IiLC/pFaSdGKvJGw==
-X-Google-Smtp-Source: AGHT+IF1V2h4z8e2b+q/5QYbiJ/3eFoAFYUWiFfRtaEit+V7F7YE8tn3jrKaiEhuVsy1QNVoKx5zRw==
-X-Received: by 2002:a05:600c:a11c:b0:450:c9e3:91fe with SMTP id 5b1f17b1804b1-4541b6db66dmr14175005e9.0.1751370593607;
-        Tue, 01 Jul 2025 04:49:53 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:a387:7a32:8457:f9b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538233c05csm193988925e9.5.2025.07.01.04.49.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 04:49:53 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 01 Jul 2025 13:49:40 +0200
-Subject: [PATCH RFT v2 6/6] gpio: mmio: remove struct bgpio_pdata
+        bh=0KGSBavzhT3TpQui0uI73A+Z+3UDA0xLLxmDbt54UW0=;
+        b=JrraC5/LrzLxVHh2prTatt9FUKufP+IuVWp3vFBQRoQN00xU+kXh/hn3EmXOnM/Mf2
+         g8E6mr0XUnumiqh80J+p/WtAC6KJ5DOlYX2KN8h6nv0CyT98SehTGoWp9bOs9wKETVvk
+         YO4StnXfhnglPnxc6B/KSSqm/iDDyFvn+6NbYk4sKDJ5RnnvoJPci/DNJjNwIcOa0c1C
+         FPQgPr8e5ssX+og4I49lx/2eWkz0sV3Af3/a/AbFVinYQJgQaGFfjOqibLMmYo7wCkkO
+         NcHM+mI0QcvCMYfGFKTbuA2b5u+5TBEi+YkSVu6D2sxJkp8bezfbLWsLWA3MKzoQ6bAl
+         LGvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVHHBehuU3zYdXNEaQ+ZcK6aa+gkr6xWIq4cvt2pwabsSpu7QmFkBiGwHSeqw23igz+GjpQ9hAE8C3ySkU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOry+jR6IWgZbMkeJ6taYftWxyJlba/dYb4gqN5ny9i++zTkcA
+	A/nGENytm14xwFNEYU2x2HN8So30belt/M+81cU8u0YfEITAn7bwqw2cX73InfSBCzegbRkTzXI
+	ggha3IbEZI2bnKXtsEG40b0azl0lsSnkCxa1Rzw56
+X-Gm-Gg: ASbGncsRw9ZF5fRrJcXNxFdl25FlKv3OaMcuAL+Xd/2l6kSStn4CZ7vmBrTahKpslAq
+	AIHkYE7OuznBR5TTuaNwrnhApFiA8lNGU9fHlW5Q9QjQg6qtM1sylQQ1JgbgpH2PN2FwikgHUAQ
+	qND4uXfrtDku2S9r67dBuwsjggRFlmDrJM4XTNF69dRqOG
+X-Google-Smtp-Source: AGHT+IGZXsC8mGRscscDusoREbjL9I6GGdeiYS8C2b53bnLNCJ1i8gfIkCUFcIsBDQNQAE78Y338ALuI+8cM8titd0w=
+X-Received: by 2002:adf:c084:0:b0:3a4:f9e7:2796 with SMTP id
+ ffacd0b85a97d-3a9176038c6mr11687442f8f.35.1751370597647; Tue, 01 Jul 2025
+ 04:49:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250701-gpio-mmio-pdata-v2-6-ebf34d273497@linaro.org>
-References: <20250701-gpio-mmio-pdata-v2-0-ebf34d273497@linaro.org>
-In-Reply-To: <20250701-gpio-mmio-pdata-v2-0-ebf34d273497@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Lee Jones <lee@kernel.org>, 
- Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- Aaro Koskinen <aaro.koskinen@iki.fi>, 
- Janusz Krzysztofik <jmkrzyszt@gmail.com>, Tony Lindgren <tony@atomide.com>, 
- Russell King <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk@kernel.org>, 
- Alim Akhtar <alim.akhtar@samsung.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 
- patches@opensource.cirrus.com, linux-samsung-soc@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3955;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=WO0jeIzGeDRWwlltYN6KLDzN1nDqq0wG0YjMIyZ69bE=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoY8tYQedunR7lNaIA7I2BJg5XNf3SaooHlaS6n
- viTggRWov2JAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaGPLWAAKCRARpy6gFHHX
- cl8zD/9sO5Jq5Wzq/bFjPjz0TkCxAfA5RvMtEcX04+91lEim8zAy2tLuujFKQ1EZ/j+kEzp/ga8
- CLi60fQsJF9gk8a9ecsDKXJrdDGTTemE0ws2iSqALUPjbzY4By3p7V2k0SOO83KHs0ctsOoD+9N
- j/yo2H5t5ysxHnYdeigLWyqXvu1K99c4tqkDsLtqK5lCwnh6E24Du9S0/AvwBUdG7C4cyqvQvty
- yrpq7ffBrIkIOQLuaygE/7AsMojI+8/2L/W/Kx8h/9rooyCSTLOloACnjKYQRehYvJ4CiIbit6H
- OWQWN8RKj4eWlATCcwyl93QshTZQvWA+YWiMnN8qcIcmPEaT+24/tsrUArlctzTBON0qdg97Jqg
- 8OJ3bhql9HaNoy29uJ58PsUuzo3+x6sOObqKhld8IvZ62gVzsZlV1CHja4VodJFPHAo1Olz4dJI
- kXEIuPj1pr0ybdNuFDKc2x7IjrwIIO/FQmlWDSFSApeeQaT/8BCnOXU4Pt6RV3FkYiBrGKWl65/
- v+k/Hh67+XZqW85RmvNdrYOp1MhRcMxhG8casJMj7bEiqbPOGhhzqyGlr0CmKFeIwbTBgS3u1lI
- S23NYaez7ty+9cARY3vV9jFOmbzvIBOvMqwwetL+ELUsC4uieXEgDQbHX1rDAIlSFzqmBJR90ZA
- IVgRnicRfV5w2IA==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+References: <20250626200054.243480-1-dakr@kernel.org> <20250626200054.243480-5-dakr@kernel.org>
+In-Reply-To: <20250626200054.243480-5-dakr@kernel.org>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Tue, 1 Jul 2025 13:49:45 +0200
+X-Gm-Features: Ac12FXwadsx85yoxejxv-zSg2WaTwJMeTKN6Q-FEKtOdJN3NxG-K0L-aW-nbazs
+Message-ID: <CAH5fLghrF84T2V_0yckusmpBEdPgS2YPRDLw9iww9rAY3_qqCg@mail.gmail.com>
+Subject: Re: [PATCH v4 4/5] rust: types: ForeignOwnable: Add type Target
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org, 
+	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, 
+	bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org, 
+	tmgross@umich.edu, david.m.ertman@intel.com, ira.weiny@intel.com, 
+	leon@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Thu, Jun 26, 2025 at 10:01=E2=80=AFPM Danilo Krummrich <dakr@kernel.org>=
+ wrote:
+>
+> ForeignOwnable::Target defines the payload data of a ForeignOwnable. For
+> Arc<T> for instance, ForeignOwnable::Target would just be T.
+>
+> This is useful for cases where a trait bound is required on the target
+> type of the ForeignOwnable. For instance:
+>
+>         fn example<P>(data: P)
+>            where
+>               P: ForeignOwnable,
+>               P::Target: MyTrait,
+>         {}
+>
+> Suggested-by: Benno Lossin <lossin@kernel.org>
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 
-With no more users, we can now remove struct bgpio_pdata. Move the
-relevant bits from bgpio_parse_fw() into bgpio_pdev_probe() while
-maintaining the logical ordering (get flags before calling
-bgpio_init()).
+I am skeptical about this patch. I think that most of the time, you
+should just place the trait bound on `P` instead of having a Target
+type like this.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpio-mmio.c    | 73 ++++++++++++---------------------------------
- include/linux/gpio/driver.h |  6 ----
- 2 files changed, 19 insertions(+), 60 deletions(-)
-
-diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
-index f66137caa245b14e6e8dbd043243224bc47c9609..cf878c2ea6bf1bb6dfbd1040d64787687335132a 100644
---- a/drivers/gpio/gpio-mmio.c
-+++ b/drivers/gpio/gpio-mmio.c
-@@ -734,43 +734,6 @@ static const struct of_device_id bgpio_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, bgpio_of_match);
- 
--static struct bgpio_pdata *bgpio_parse_fw(struct device *dev, unsigned long *flags)
--{
--	struct bgpio_pdata *pdata;
--	const char *label;
--	unsigned int base;
--	int ret;
--
--	if (!dev_fwnode(dev))
--		return NULL;
--
--	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
--	if (!pdata)
--		return ERR_PTR(-ENOMEM);
--
--	pdata->base = -1;
--
--	if (device_is_big_endian(dev))
--		*flags |= BGPIOF_BIG_ENDIAN_BYTE_ORDER;
--
--	if (device_property_read_bool(dev, "no-output"))
--		*flags |= BGPIOF_NO_OUTPUT;
--
--	ret = device_property_read_string(dev, "label", &label);
--	if (!ret)
--		pdata->label = label;
--
--	/*
--	 * This property *must not* be used in device-tree sources, it's only
--	 * meant to be passed to the driver from board files and MFD core.
--	 */
--	ret = device_property_read_u32(dev, "gpio-mmio,base", &base);
--	if (!ret && base <= INT_MAX)
--		pdata->base = base;
--
--	return pdata;
--}
--
- static int bgpio_pdev_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -782,18 +745,10 @@ static int bgpio_pdev_probe(struct platform_device *pdev)
- 	void __iomem *dirin;
- 	unsigned long sz;
- 	unsigned long flags = 0;
-+	unsigned int base;
- 	int err;
- 	struct gpio_chip *gc;
--	struct bgpio_pdata *pdata;
--
--	pdata = bgpio_parse_fw(dev, &flags);
--	if (IS_ERR(pdata))
--		return PTR_ERR(pdata);
--
--	if (!pdata) {
--		pdata = dev_get_platdata(dev);
--		flags = pdev->id_entry->driver_data;
--	}
-+	const char *label;
- 
- 	r = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dat");
- 	if (!r)
-@@ -825,17 +780,27 @@ static int bgpio_pdev_probe(struct platform_device *pdev)
- 	if (!gc)
- 		return -ENOMEM;
- 
-+	if (device_is_big_endian(dev))
-+		flags |= BGPIOF_BIG_ENDIAN_BYTE_ORDER;
-+
-+	if (device_property_read_bool(dev, "no-output"))
-+		flags |= BGPIOF_NO_OUTPUT;
-+
- 	err = bgpio_init(gc, dev, sz, dat, set, clr, dirout, dirin, flags);
- 	if (err)
- 		return err;
- 
--	if (pdata) {
--		if (pdata->label)
--			gc->label = pdata->label;
--		gc->base = pdata->base;
--		if (pdata->ngpio > 0)
--			gc->ngpio = pdata->ngpio;
--	}
-+	err = device_property_read_string(dev, "label", &label);
-+	if (!err)
-+		gc->label = label;
-+
-+	/*
-+	 * This property *must not* be used in device-tree sources, it's only
-+	 * meant to be passed to the driver from board files and MFD core.
-+	 */
-+	err = device_property_read_u32(dev, "gpio-mmio,base", &base);
-+	if (!err && base <= INT_MAX)
-+		gc->base = base;
- 
- 	platform_set_drvdata(pdev, gc);
- 
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index 97cc75623261917e9b3624e1e636d2432c0db205..4b984e8f8fcdbba5c008fc67ff0557bda11df40b 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -718,12 +718,6 @@ const unsigned long *gpiochip_query_valid_mask(const struct gpio_chip *gc);
- /* get driver data */
- void *gpiochip_get_data(struct gpio_chip *gc);
- 
--struct bgpio_pdata {
--	const char *label;
--	int base;
--	int ngpio;
--};
--
- #ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
- 
- int gpiochip_populate_parent_fwspec_twocell(struct gpio_chip *gc,
-
--- 
-2.48.1
-
+Alice
