@@ -1,208 +1,180 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FC541F30A4;
-	Tue,  1 Jul 2025 04:30:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CF222248BD;
+	Tue,  1 Jul 2025 04:30:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751344236; cv=none; b=aBCZ5CfqU9sqqJAbIp2AHWCW7E7j9TdKGMcYYtuJzV1Yn40cICnb4YeJ9e/uqp02YSXz8A/dDDSL1fAKETZkUOHZdDvh/TxayOo+7RfniM7n2goUQcQg0WA7Y4LKow/K4eubw9kf+FAcPIaXpU68/4MwClPDIdNu4SsbjsrD9qE=
+	t=1751344237; cv=none; b=bSZPskPqjGnUnrLUeF8apQg8jtFQnDLp9NiwSK5pIHeOiGOgiZ3givyf2wjgcWFkbzkj1wl6Su6/TCE6u1QeOcNvQqZ3sWD7R3t3aojnIQ8T8rGG/cxqvu0gY6t47x4Fau0C11hiDR/iELMqWSuQ4GVMe6XfNhzqmgEzFr7KarY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751344236; c=relaxed/simple;
-	bh=yUhVeNxdkmKD+O9VsLaYb0eZmmOxIaA8qvBCe1VT2GA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ifObpOO8hVmWILpA/c+Zw8PW9aycoeuexUOQtp785R7Z0uYxoK6ODfwwFE6PDqKNdYPkXpffLsEXqtU9zekaupSMZL/ruCGHk77a7DwerS85rJRH4Bie+TtJmwLFp1FKB98p8LKuUHSAUw0f7Sus8/TPy0bsILcIwTalOaF3dtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HEuaWSUe; arc=none smtp.client-ip=192.198.163.13
+	s=arc-20240116; t=1751344237; c=relaxed/simple;
+	bh=ESSpbAhyzHl+us763V2GUBX0A0mjMQTO+0IGNVgjxfM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g4OXQAl0BaRgzFyd61tjd1pSR285t5yTE2hTLvrNmm4rsUj/+USKVX10GEWuKdmkMu4Lah+PvVlpmMU1LOISrkmsHQhP1wHG6QPcksTJNo/1DQ2XAwVy8HuLDO26GTZBMGOuN5M9tyupnBfa0zv/CEswRba0gLBJZy+NZ88dh/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FpMJnW9G; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HEuaWSUe"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FpMJnW9G"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751344234; x=1782880234;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=yUhVeNxdkmKD+O9VsLaYb0eZmmOxIaA8qvBCe1VT2GA=;
-  b=HEuaWSUelAnnfkdmxbhB6DzzHtLpzj125th7proGw7RqPauhQxJKU613
-   VNjxlrIa95hSrzvMqtIJEdm7IUFidgLua5wX3tquUySaAN6pLnJSWAmPR
-   YoE21hsM+ghj1Fezchess8ByMSsNCR+2LiU5IhJ7lM8ebBKNfqbejRpkH
-   KNpigsQftH4Km3w5xNZqOEPqGENjsjFmU+jZI9NeHC7mQqn5yzVy6F4iD
-   O0zKL2t9Ac3SiHBnQHiQSP7Rwb337PmstLzmpbkrWO4gmRaf2ZeLHxaJZ
-   WyrJqKk/PGgKacOtGgItspzur61TPprjx3Sj6OqOcIn46N3dH4NDTUewI
-   g==;
-X-CSE-ConnectionGUID: WoHD9zB3TMykQDQ2Cxs24Q==
-X-CSE-MsgGUID: VXktZWvGT/yzd6Z6GT7mvg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="56210258"
+  t=1751344236; x=1782880236;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ESSpbAhyzHl+us763V2GUBX0A0mjMQTO+0IGNVgjxfM=;
+  b=FpMJnW9G/uB7RWOZE/0gNJgryCdGcVCEjlrV2yefw/QAToq+9xU9XqLh
+   YSJqQXFcXk8OQPDWt9cQ5vPFtbZAosY5L0MFWMbz7/T+o2BWzDk38CjoZ
+   DgsqrWoUePdN3QRtkYYkXv9KmTbNY1mWGRMf60AX+tZKxFHLJni/maXoM
+   deor+/hf4EFf/buMUCu80KL0ReU4iLSm2OEzdWdgLyn43egVgJ9+8z1y/
+   asR0ywOTljni1Wk+yKhhor90eiOv2IovbCNIZ+O4g+Pgk8L/X68ZWSFnS
+   jYg2/w+OaIMwMnVbtyVyOdvAqig/zMg4yJ7pR6odXKNsy4ER2FAYZVC26
+   Q==;
+X-CSE-ConnectionGUID: gx8Zit1yRfaougBW7xa28g==
+X-CSE-MsgGUID: nYvUhEFPQu+VKahXRX8JfQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="53713226"
 X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="56210258"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 21:30:33 -0700
-X-CSE-ConnectionGUID: 1GVvgBZ+Q46TnzFyc3frmQ==
-X-CSE-MsgGUID: 5XpjMaIaSZGPuyI+9+LpCQ==
+   d="scan'208";a="53713226"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 21:30:35 -0700
+X-CSE-ConnectionGUID: km7WhSfYTM2b/SWYFPbUsw==
+X-CSE-MsgGUID: RCcT1HKfR+eqqyC3FEZfdA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="177309029"
-Received: from p12ill20yoongsia.png.intel.com ([10.88.227.38])
-  by fmviesa002.fm.intel.com with ESMTP; 30 Jun 2025 21:30:28 -0700
-From: Song Yoong Siang <yoong.siang.song@intel.com>
-To: "David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH bpf-next 2/2] selftests/bpf: Enhance XDP Rx Metadata Handling
-Date: Tue,  1 Jul 2025 12:29:40 +0800
-Message-Id: <20250701042940.3272325-3-yoong.siang.song@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250701042940.3272325-1-yoong.siang.song@intel.com>
-References: <20250701042940.3272325-1-yoong.siang.song@intel.com>
+   d="scan'208";a="153042577"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 30 Jun 2025 21:30:33 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uWSda-000ZiQ-0T;
+	Tue, 01 Jul 2025 04:30:30 +0000
+Date: Tue, 1 Jul 2025 12:30:10 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ryan Chung <seokwoo.chung130@gmail.com>, hao.wu@intel.com,
+	trix@redhat.com, mdf@kernel.org, yilun.xu@intel.com
+Cc: oe-kbuild-all@lists.linux.dev, linux-fpga@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Ryan Chung <seokwoo.chung130@gmail.com>
+Subject: Re: [PATCH] fpga: dfl: Replace scnprintf() with sysfs_emit()
+Message-ID: <202507011152.ULf4bZsW-lkp@intel.com>
+References: <20250630125018.48417-1-seokwoo.chung130@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250630125018.48417-1-seokwoo.chung130@gmail.com>
 
-Introduce the XDP_METADATA_SIZE macro to ensure that user applications can
-consistently retrieve the correct location of struct xdp_meta.
+Hi Ryan,
 
-Prior to this commit, the XDP program adjusted the data_meta backward by
-the size of struct xdp_meta, while the user application retrieved the data
-by calculating backward from the data pointer. This approach only worked if
-xdp_buff->data_meta was equal to xdp_buff->data before calling
-bpf_xdp_adjust_meta.
+kernel test robot noticed the following build warnings:
 
-With the introduction of XDP_METADATA_SIZE, both the XDP program and user
-application now calculate and identify the location of struct xdp_meta from
-the data pointer. This ensures the implementation remains functional even
-when there is device-reserved metadata, making the tests more portable
-across different NICs.
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.16-rc4 next-20250630]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Signed-off-by: Song Yoong Siang <yoong.siang.song@intel.com>
----
- tools/testing/selftests/bpf/prog_tests/xdp_metadata.c |  2 +-
- tools/testing/selftests/bpf/progs/xdp_hw_metadata.c   | 10 +++++++++-
- tools/testing/selftests/bpf/progs/xdp_metadata.c      |  8 +++++++-
- tools/testing/selftests/bpf/xdp_hw_metadata.c         |  2 +-
- tools/testing/selftests/bpf/xdp_metadata.h            |  7 +++++++
- 5 files changed, 25 insertions(+), 4 deletions(-)
+url:    https://github.com/intel-lab-lkp/linux/commits/Ryan-Chung/fpga-dfl-Replace-scnprintf-with-sysfs_emit/20250630-205221
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250630125018.48417-1-seokwoo.chung130%40gmail.com
+patch subject: [PATCH] fpga: dfl: Replace scnprintf() with sysfs_emit()
+config: x86_64-randconfig-001-20250701 (https://download.01.org/0day-ci/archive/20250701/202507011152.ULf4bZsW-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250701/202507011152.ULf4bZsW-lkp@intel.com/reproduce)
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/xdp_metadata.c b/tools/testing/selftests/bpf/prog_tests/xdp_metadata.c
-index 19f92affc2da..8d6c2633698b 100644
---- a/tools/testing/selftests/bpf/prog_tests/xdp_metadata.c
-+++ b/tools/testing/selftests/bpf/prog_tests/xdp_metadata.c
-@@ -302,7 +302,7 @@ static int verify_xsk_metadata(struct xsk *xsk, bool sent_from_af_xdp)
- 
- 	/* custom metadata */
- 
--	meta = data - sizeof(struct xdp_meta);
-+	meta = data - XDP_METADATA_SIZE;
- 
- 	if (!ASSERT_NEQ(meta->rx_timestamp, 0, "rx_timestamp"))
- 		return -1;
-diff --git a/tools/testing/selftests/bpf/progs/xdp_hw_metadata.c b/tools/testing/selftests/bpf/progs/xdp_hw_metadata.c
-index 330ece2eabdb..72242ac1cdcd 100644
---- a/tools/testing/selftests/bpf/progs/xdp_hw_metadata.c
-+++ b/tools/testing/selftests/bpf/progs/xdp_hw_metadata.c
-@@ -27,6 +27,7 @@ extern int bpf_xdp_metadata_rx_vlan_tag(const struct xdp_md *ctx,
- SEC("xdp.frags")
- int rx(struct xdp_md *ctx)
- {
-+	int metalen_used, metalen_to_adjust;
- 	void *data, *data_meta, *data_end;
- 	struct ipv6hdr *ip6h = NULL;
- 	struct udphdr *udp = NULL;
-@@ -72,7 +73,14 @@ int rx(struct xdp_md *ctx)
- 		return XDP_PASS;
- 	}
- 
--	err = bpf_xdp_adjust_meta(ctx, -(int)sizeof(struct xdp_meta));
-+	metalen_used = ctx->data - ctx->data_meta;
-+	metalen_to_adjust = XDP_METADATA_SIZE - metalen_used;
-+	if (metalen_to_adjust < (int)sizeof(struct xdp_meta)) {
-+		__sync_add_and_fetch(&pkts_skip, 1);
-+		return XDP_PASS;
-+	}
-+
-+	err = bpf_xdp_adjust_meta(ctx, -metalen_to_adjust);
- 	if (err) {
- 		__sync_add_and_fetch(&pkts_fail, 1);
- 		return XDP_PASS;
-diff --git a/tools/testing/selftests/bpf/progs/xdp_metadata.c b/tools/testing/selftests/bpf/progs/xdp_metadata.c
-index 09bb8a038d52..a0ba4ef4bbd8 100644
---- a/tools/testing/selftests/bpf/progs/xdp_metadata.c
-+++ b/tools/testing/selftests/bpf/progs/xdp_metadata.c
-@@ -37,6 +37,7 @@ extern int bpf_xdp_metadata_rx_vlan_tag(const struct xdp_md *ctx,
- SEC("xdp")
- int rx(struct xdp_md *ctx)
- {
-+	int metalen_used, metalen_to_adjust;
- 	void *data, *data_meta, *data_end;
- 	struct ipv6hdr *ip6h = NULL;
- 	struct ethhdr *eth = NULL;
-@@ -73,7 +74,12 @@ int rx(struct xdp_md *ctx)
- 
- 	/* Reserve enough for all custom metadata. */
- 
--	ret = bpf_xdp_adjust_meta(ctx, -(int)sizeof(struct xdp_meta));
-+	metalen_used = ctx->data - ctx->data_meta;
-+	metalen_to_adjust = XDP_METADATA_SIZE - metalen_used;
-+	if (metalen_to_adjust < (int)sizeof(struct xdp_meta))
-+		return XDP_DROP;
-+
-+	ret = bpf_xdp_adjust_meta(ctx, -metalen_to_adjust);
- 	if (ret != 0)
- 		return XDP_DROP;
- 
-diff --git a/tools/testing/selftests/bpf/xdp_hw_metadata.c b/tools/testing/selftests/bpf/xdp_hw_metadata.c
-index 3d8de0d4c96a..a529d55d4ff4 100644
---- a/tools/testing/selftests/bpf/xdp_hw_metadata.c
-+++ b/tools/testing/selftests/bpf/xdp_hw_metadata.c
-@@ -223,7 +223,7 @@ static void verify_xdp_metadata(void *data, clockid_t clock_id)
- {
- 	struct xdp_meta *meta;
- 
--	meta = data - sizeof(*meta);
-+	meta = data - XDP_METADATA_SIZE;
- 
- 	if (meta->hint_valid & XDP_META_FIELD_RSS)
- 		printf("rx_hash: 0x%X with RSS type:0x%X\n",
-diff --git a/tools/testing/selftests/bpf/xdp_metadata.h b/tools/testing/selftests/bpf/xdp_metadata.h
-index 87318ad1117a..2dfd3bf5e7bb 100644
---- a/tools/testing/selftests/bpf/xdp_metadata.h
-+++ b/tools/testing/selftests/bpf/xdp_metadata.h
-@@ -50,3 +50,10 @@ struct xdp_meta {
- 	};
- 	enum xdp_meta_field hint_valid;
- };
-+
-+/* XDP_METADATA_SIZE must be at least the size of struct xdp_meta. An additional
-+ * 32 bytes of padding is included as a conservative measure to accommodate any
-+ * metadata areas reserved by Ethernet devices. If the device-reserved metadata
-+ * exceeds 32 bytes, this value will need adjustment.
-+ */
-+#define XDP_METADATA_SIZE	(sizeof(struct xdp_meta) + 32)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507011152.ULf4bZsW-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from arch/x86/include/asm/page_types.h:9,
+                    from arch/x86/include/asm/ptrace.h:6,
+                    from arch/x86/include/asm/math_emu.h:5,
+                    from arch/x86/include/asm/processor.h:13,
+                    from arch/x86/include/asm/timex.h:5,
+                    from include/linux/timex.h:67,
+                    from include/linux/time32.h:13,
+                    from include/linux/time.h:60,
+                    from include/linux/stat.h:19,
+                    from include/linux/module.h:13,
+                    from drivers/fpga/dfl-afu-main.c:18:
+   drivers/fpga/dfl-afu-main.c: In function 'id_show':
+>> include/vdso/page.h:15:25: warning: passing argument 2 of 'sysfs_emit' makes pointer from integer without a cast [-Wint-conversion]
+      15 | #define PAGE_SIZE       (_AC(1,UL) << CONFIG_PAGE_SHIFT)
+         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         |                         |
+         |                         long unsigned int
+   drivers/fpga/dfl-afu-main.c:159:32: note: in expansion of macro 'PAGE_SIZE'
+     159 |         return sysfs_emit(buf, PAGE_SIZE, "%d\n", id);
+         |                                ^~~~~~~~~
+   In file included from include/linux/kobject.h:20,
+                    from include/linux/module.h:21:
+   include/linux/sysfs.h:492:39: note: expected 'const char *' but argument is of type 'long unsigned int'
+     492 | int sysfs_emit(char *buf, const char *fmt, ...);
+         |                           ~~~~~~~~~~~~^~~
+   drivers/fpga/dfl-afu-main.c: In function 'afu_id_show':
+>> include/vdso/page.h:15:25: warning: passing argument 2 of 'sysfs_emit' makes pointer from integer without a cast [-Wint-conversion]
+      15 | #define PAGE_SIZE       (_AC(1,UL) << CONFIG_PAGE_SHIFT)
+         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         |                         |
+         |                         long unsigned int
+   drivers/fpga/dfl-afu-main.c:478:32: note: in expansion of macro 'PAGE_SIZE'
+     478 |         return sysfs_emit(buf, PAGE_SIZE, "%016llx%016llx\n", guidh, guidl);
+         |                                ^~~~~~~~~
+   include/linux/sysfs.h:492:39: note: expected 'const char *' but argument is of type 'long unsigned int'
+     492 | int sysfs_emit(char *buf, const char *fmt, ...);
+         |                           ~~~~~~~~~~~~^~~
+--
+   In file included from arch/x86/include/asm/page_types.h:9,
+                    from arch/x86/include/asm/ptrace.h:6,
+                    from arch/x86/include/asm/math_emu.h:5,
+                    from arch/x86/include/asm/processor.h:13,
+                    from arch/x86/include/asm/timex.h:5,
+                    from include/linux/timex.h:67,
+                    from include/linux/time32.h:13,
+                    from include/linux/time.h:60,
+                    from include/linux/stat.h:19,
+                    from include/linux/module.h:13,
+                    from dfl-afu-main.c:18:
+   dfl-afu-main.c: In function 'id_show':
+>> include/vdso/page.h:15:25: warning: passing argument 2 of 'sysfs_emit' makes pointer from integer without a cast [-Wint-conversion]
+      15 | #define PAGE_SIZE       (_AC(1,UL) << CONFIG_PAGE_SHIFT)
+         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         |                         |
+         |                         long unsigned int
+   dfl-afu-main.c:159:32: note: in expansion of macro 'PAGE_SIZE'
+     159 |         return sysfs_emit(buf, PAGE_SIZE, "%d\n", id);
+         |                                ^~~~~~~~~
+   In file included from include/linux/kobject.h:20,
+                    from include/linux/module.h:21:
+   include/linux/sysfs.h:492:39: note: expected 'const char *' but argument is of type 'long unsigned int'
+     492 | int sysfs_emit(char *buf, const char *fmt, ...);
+         |                           ~~~~~~~~~~~~^~~
+   dfl-afu-main.c: In function 'afu_id_show':
+>> include/vdso/page.h:15:25: warning: passing argument 2 of 'sysfs_emit' makes pointer from integer without a cast [-Wint-conversion]
+      15 | #define PAGE_SIZE       (_AC(1,UL) << CONFIG_PAGE_SHIFT)
+         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         |                         |
+         |                         long unsigned int
+   dfl-afu-main.c:478:32: note: in expansion of macro 'PAGE_SIZE'
+     478 |         return sysfs_emit(buf, PAGE_SIZE, "%016llx%016llx\n", guidh, guidl);
+         |                                ^~~~~~~~~
+   include/linux/sysfs.h:492:39: note: expected 'const char *' but argument is of type 'long unsigned int'
+     492 | int sysfs_emit(char *buf, const char *fmt, ...);
+         |                           ~~~~~~~~~~~~^~~
+
+
+vim +/sysfs_emit +15 include/vdso/page.h
+
+efe8419ae78d65e Vincenzo Frascino 2024-10-14  14  
+efe8419ae78d65e Vincenzo Frascino 2024-10-14 @15  #define PAGE_SIZE	(_AC(1,UL) << CONFIG_PAGE_SHIFT)
+efe8419ae78d65e Vincenzo Frascino 2024-10-14  16  
+
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
