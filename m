@@ -1,108 +1,107 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B4FC1C3306;
-	Tue,  1 Jul 2025 16:56:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77E762798FA;
+	Tue,  1 Jul 2025 16:57:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751388991; cv=none; b=jL+yRdak60CFZ7vk1sQLQ0JzALXLgYJzcJ2MKOS8cv/tD/6yG6xDp8NWhQ3QCX79vKyj7kJjU6ju6W5lGTQblVAcmUgthpNwiHMVhIvgMEE2hL0BKnZS+X+my7ax7bsnWgXfFe2GDC9VVaNBHsCCAAj1MMTeJm68XEC1kxwGnus=
+	t=1751389056; cv=none; b=WnQfVeUNhyKxa+pg8tMa+DLt/o/7mQM/GjQrVZb0zeNthwqhAeK27xESBeO+6gEYBxwYJTIAvbo3bLwSM2dmlJXh6TTGoMUDtja8ltI1prWA8p2OWS7IYvICVqIPzmAlJXA6JLYJDCylLXb5D1GTOKqZOcAZgvnbWSpR/cSrlxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751388991; c=relaxed/simple;
-	bh=0pW3TP/nGu93gQFVw2O41yC0Ln3jmgnyWGFF53ZWbI4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FnfMjktozqjV3KF/cercXR9+K5L2t4gil96NLSmaHeYtJDNmFvNXpvR9ohtf0Qc08Y02yMxRzV69oeS1DWQOREmvEQmr8NTZuDmvuoY4iyi4W4kV7V8QLslOSwLQ0n85d+4ANTowc1ul8AcqzvqUtDLZF9Mccrflsbc5IvpmvCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eg5PunUY; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751389056; c=relaxed/simple;
+	bh=yt/kc/jTaSiC0j9rC9eyESiUppBPRZhs+YZzLBzzs2Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=uGORp0qhAiRfn661sM9dgmnobVe6ppZ48we8mU5kbfkn5eoVPhGumAXhmdiCdx79imOPAddOyXYJrsG7fDCu7KSN5IJ5QyYQFn8eXrJlb/jbYx7mjsFjmVvYGm19wBf51cX3Bsuq61qcuc4gWR2j6f7oy5UaW12hog2DAdOtzJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k3cAUR1c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eg5PunUY"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-313fab41fd5so1290616a91.1;
-        Tue, 01 Jul 2025 09:56:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751388990; x=1751993790; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KdOA3lpTZpeFzYmOyWPv0Y1QoQj1TrHSWxUR8VixR+Y=;
-        b=eg5PunUYraAe77uAXRrnIG+MZT8AV1vQJYSn7tvUbpLyPhzF8YJqSFD/rI395IzCOU
-         R+XdRZHXsje9wojskYaJTNCnMfeCfBunCBlAlyNSFaZYB5PdLU7QzYArboJp3bTaVd/E
-         9IgW9/9X01mU0NnmDbVsa5KeOqeLMTYLEbak0aK1QNx+baUPnguo0CcxIALEdptPIl7g
-         xRX2b2GEoZ5FijQaNyEoiLKE/Y25geAp69QGJyus991zaP5Ko0DjlSbHdSApsLOCjFT/
-         euA6DdhACcYTEOJUK2cdFzT8z+WpG++GJFAYfDPAUKJNHIjv0H0GyiRx04xgwvAs9kDq
-         P70Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751388990; x=1751993790;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KdOA3lpTZpeFzYmOyWPv0Y1QoQj1TrHSWxUR8VixR+Y=;
-        b=h3pPYHyQwfKInamwgDghtnXOSD0D4z+NQbdfGnqW0NFqqvnd5dLic7P8j4DVo34yPZ
-         3V80icsCQv9gfKUPZKf9xTu8db+NKZPXsvKbGu+pNGZUwcrE30SpjJ8w3B6mCEGqIZ7c
-         YP9C/zn5bj1UwUe4EfdEImiT4RW29orhgiLYAwZwcqGjW81jTtVo+/skNiArvnDtA5mI
-         SNhdPtnGeqPrC7lxOla5uzsl+N++TnDKeL/k95p3V2wCdR6upZoGe3t3HNKOLnjvQKfZ
-         gq81WEuDe9a4NVXpCONjoPAeZFDacwRSyr643ehVug93tTJSNcySyz5jite4wlz7lZ/R
-         CswQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVAzH1vrcNI9AviNcCvsjJUwj6GIMQ3+4BsC32R76nN57oNCqkTfo+K0nYIr3vRwjd84iD//aUpUWsfU5uB@vger.kernel.org, AJvYcCWT6nFhiCfrMt+jYFbDclbDX/ZDvaLder90pk/hS14lTmushyDzf3sT+EJsp2mgesamKYyC0OLLwrddX6jb6Rs=@vger.kernel.org, AJvYcCXHKn0ZnLPx7qtS0pNAo8OG7t/LQJqjUzk9z/+OaI9iKEil8iJ7nf9h8/rFsNcneqvneAj6SbyokUiOoWhU@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEROc/f4iCYKuQp9X27Yh26ka/HSGZXXVkYt2cq87sa13EcLX8
-	mDNL1cqZyzWZQAdhqwxwmoQ/m47jDvwQUXfrSi50Dm/HzNwR1gqYZ8KpHK0+yKC4vRul3QW70JP
-	vqKyfGsVqx2QR/awCWF9JB3LdmF5yvheZ2FP94BFgCw==
-X-Gm-Gg: ASbGncvG/3nTsPfB5A6PWQIocaS35UGKmkb34Icbun0n5230LBJz6CgwwrlxlU43fpv
-	gvaFNXa0cBdq9eXKqKzxoC8jqPO9Sk8kA0/AsfvLm1UsNe3gHmvJuOS7YTSAQbxMZtYTbo329h7
-	xror05TMoNu0HGFNxB+RC10vQrL3r4mC2YzvKyURU1/0LaN9oeqGQZsg==
-X-Google-Smtp-Source: AGHT+IHbBSasC4FVI3lzENfix/hTaP0fBUH0mKDnnKo6XoONgyd/DDi5zgE6Flmur2I1ueeEbVilDJzopPJpcZD480A=
-X-Received: by 2002:a17:90b:2ecb:b0:311:c5d9:2c8b with SMTP id
- 98e67ed59e1d1-31951a12a78mr2098121a91.5.1751388989619; Tue, 01 Jul 2025
- 09:56:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k3cAUR1c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3601C4CEEB;
+	Tue,  1 Jul 2025 16:57:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751389056;
+	bh=yt/kc/jTaSiC0j9rC9eyESiUppBPRZhs+YZzLBzzs2Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=k3cAUR1cwKTtg4sD128wLSlwJY88qu3T8AwGwte1udkUcUr3rKs7T6494qFObHT3B
+	 JTrodUx32RfXmXcNfG9GLlbH7Hv0sRG4CaLCPx0sd/i9FgvVUS06xnNt78wV/DcoOW
+	 YZD84F4eISrgrOurB154lqR8dX8fNxi3VqtMT67f+pxlua1FKRWSDMH5Zi5BQELAKU
+	 jRdwCi+sEZLy4Ds/xihdLxowlVRqTOkn6NUD+ZIuAz1phRiYvAx5s724BmTAiRVJeP
+	 QUQt/PRY4OOWRarBMjZsbQ/3HCYM0A0EbeQBGSiU75BNmWLRI8XMP2GnoUsfYoNV3c
+	 N7xUf38+SJ8iQ==
+Date: Tue, 1 Jul 2025 11:57:34 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Shradha Todi <shradha.t@samsung.com>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-phy@lists.infradead.org, linux-fsd@tesla.com, mani@kernel.org,
+	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, jingoohan1@gmail.com, krzk+dt@kernel.org,
+	conor+dt@kernel.org, alim.akhtar@samsung.com, vkoul@kernel.org,
+	kishon@kernel.org, arnd@arndb.de, m.szyprowski@samsung.com,
+	jh80.chung@samsung.com, pankaj.dubey@samsung.com
+Subject: Re: [PATCH v2 09/10] PCI: exynos: Add support for Tesla FSD SoC
+Message-ID: <20250701165734.GA1839534@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250701-xarray-insert-reserve-v1-0-25df2b0d706a@gmail.com> <20250701-xarray-insert-reserve-v1-3-25df2b0d706a@gmail.com>
-In-Reply-To: <20250701-xarray-insert-reserve-v1-3-25df2b0d706a@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 1 Jul 2025 18:56:17 +0200
-X-Gm-Features: Ac12FXzVE-UNW0TA4Ex_sS0i850xaRXXSEsIJ4SwFR7UgdwzUfddQlSdSNp4frE
-Message-ID: <CANiq72nf-h86GszE3=mLpWHi5Db+Tj0TRyUe9ANfjdNbesBEEg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] rust: xarray: add `insert` and `reserve`
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Andreas Hindborg <a.hindborg@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Matthew Wilcox <willy@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	Daniel Almeida <daniel.almeida@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <02b101dbea79$d7e086c0$87a19440$@samsung.com>
 
-On Tue, Jul 1, 2025 at 6:27=E2=80=AFPM Tamir Duberstein <tamird@gmail.com> =
-wrote:
->
-> Add `Guard::{insert,reserve}` and `Guard::{insert,reserve}_limit`, which
-> are akin to `__xa_{alloc,insert}` in C.
+On Tue, Jul 01, 2025 at 04:48:13PM +0530, Shradha Todi wrote:
+> > -----Original Message-----
+> > From: Bjorn Helgaas <helgaas@kernel.org>
+> > Sent: 28 June 2025 01:01
+> > To: Shradha Todi <shradha.t@samsung.com>
+> > Cc: linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> linux-
+> > samsung-soc@vger.kernel.org; linux-kernel@vger.kernel.org; linux-phy@lists.infradead.org; linux-
+> > fsd@tesla.com; manivannan.sadhasivam@linaro.org; lpieralisi@kernel.org; kw@linux.com;
+> > robh@kernel.org; bhelgaas@google.com; jingoohan1@gmail.com; krzk+dt@kernel.org;
+> > conor+dt@kernel.org; alim.akhtar@samsung.com; vkoul@kernel.org; kishon@kernel.org;
+> > arnd@arndb.de; m.szyprowski@samsung.com; jh80.chung@samsung.com; pankaj.dubey@samsung.com
+> > Subject: Re: [PATCH v2 09/10] PCI: exynos: Add support for Tesla FSD SoC
 
-Who will be using this? i.e. we need to justify adding code, typically
-by mentioning the users.
+Would be good if your mailer could support the usual quote mechanism,
+e.g. the "On Wed, Jun 25, 2025 at 10:22:28PM +0530, Shradha Todi
+wrote:" line below.  No need for all the header duplication above.
 
-By the way, it may help splitting the C parts into its own patch, so
-that Matthew can focus on that (but maybe you all already discussed
-this).
+> > On Wed, Jun 25, 2025 at 10:22:28PM +0530, Shradha Todi wrote:
+> > > Add host and endpoint controller driver support for FSD SoC.
 
-Also, unit tests are great, thanks for adding those. Can we add
-examples as well? Maybe on the module-level docs, given the rest are
-there.
+> > This would be a little nicer if you added soc_variant and device_mode
+> > and the code that sets and tests them for exynos_5433 first in a
+> > separate patch.  Then it would be more obvious that the new FSD parts
+> > don't affect exynos_5433 since this patch would only be *adding*
+> > FSD-specific things.
+> 
+> Sure,  I have no issues in splitting the patches further. Though
+> unfortunately, I or anyone I know does not possess a board which has
+> Exynos 5433 chipset.  Therefore, I'm unable to verify these changes
+> for Exynos chipset. I took care to not disturb the exynos flow
+> functionally but would be great if someone could test this and
+> confirm that it works well on Exynos 5433 after the changes.
 
-> +    /// Wrapper around `__xa_alloc`.
+Yeah, that's a common situation, and there's no problem with adding
+this functionality.  But in the unlikely event there's a mistake that
+relates to Exynos 5433, it will be easier for someone with that board
+to analyze the problem if the changes that affect exynos_5433 are
+split out into a patch that doesn't include any FSD-related changes.
 
-We try to mention what something does in the title at least, even if
-it is just copied from the C docs -- you can reference those docs too
-for more context, e.g. [`__xa_alloc`] to:
-
-    https://docs.kernel.org/core-api/xarray.html#c.__xa_alloc
-
-Cheers,
-Miguel
+> > >  static const struct samsung_pcie_pdata exynos_5433_pcie_rc_pdata = {
+> > >  	.dwc_ops		= &exynos_dw_pcie_ops,
+> > >  	.pci_ops		= &exynos_pci_ops,
+> > >  	.host_ops		= &exynos_pcie_host_ops,
+> > >  	.res_ops		= &exynos_res_ops_data,
+> > > +	.soc_variant		= EXYNOS_5433,
+> > > +	.device_mode		= DW_PCIE_RC_TYPE,
+> > >  };
+> > 
+> > >  static const struct of_device_id exynos_pcie_of_match[] = {
+> > > @@ -449,6 +756,14 @@ static const struct of_device_id exynos_pcie_of_match[] = {
+> > >  		.compatible = "samsung,exynos5433-pcie",
+> > >  		.data = (void *) &exynos_5433_pcie_rc_pdata,
+> > >  	},
+> 
