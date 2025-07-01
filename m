@@ -1,354 +1,162 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C29A1264A9D
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 07:58:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996CB26463B
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 07:58:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751356701; cv=none; b=JOBQ3vkoP6bdxz1qmEzhODP9GnmcQEhhRu3QtuI0PiAN+D8auGf1264C41tJH2xIfo4sJNZ6ddkcn4i027SroxvZyLMeBvJ+Zx2rXQ7gpkh7usl1qY5G7qMwvsJW1Xsp6fXQss9dOUZhNBNSNZzSJlyIEXipw7MjqSpDwhl8f8E=
+	t=1751356707; cv=none; b=gE+EmpO+JnpaYtPiO88tl6O7iHrDDEHc7QCTqNdMe9mPRFOR50kYuMa6c8B8EWJxyyweVbXfq5aGNVUuW8QhJXAGdQeOFF6gnhvHciE/hYRBDD0YD2nMCeKlPMzuC/xB7LJHKkeXLfaAJGSEC3McxjRoPKslxLsPs2YdU8evjEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751356701; c=relaxed/simple;
-	bh=EkxLnWK+KNQPvO+XPa/qISs0wqev8VlQsQoVXc69XRA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i4FdOJ2W8D/ojau4vxLJb+pz1dxx88XSxZryDKSeghr90Nfk/eXQZgx8dSv8XUfEThsfGMQOOmjWFXAQKpYsMZpFVU+t+fppCzUl4+NpfWxCKyaOn5b1/PFOGrGwvODJ+FCOzFIsMke2xbVEIFZGxeGvndyOB37gLN+2JVjsrMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Tvp18pRn; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tvp18pRn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751356695;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=/Feq4JYZa9imSCNgZMBn1vPhrRu0fqByvVFyCsbFbfo=;
-	b=Tvp18pRnrfrSiRzNfZY2JgzOhWD4f4I9MS20zJ0FzVOOPWoXG1aDk7mkWfgg2qiDJ5KZkv
-	yaSHQQCvo5Nx7z7z9t8Cc28R++wH974c7XRTXd8/g3NyOwp8GrkSScA2nTKD7h/YhIGnER
-	12kccKaHYw1oFGhJYghMXwfltuRymAw=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-628-X4u8pSiPNvSBbtXGhJ5hBg-1; Tue, 01 Jul 2025 03:58:14 -0400
-X-MC-Unique: X4u8pSiPNvSBbtXGhJ5hBg-1
-X-Mimecast-MFC-AGG-ID: X4u8pSiPNvSBbtXGhJ5hBg_1751356693
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a523ce0bb2so1624528f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 00:58:14 -0700 (PDT)
+	s=arc-20240116; t=1751356707; c=relaxed/simple;
+	bh=4SsDlEVv4NoG1n9s/poSP1xARWhi2AB4r0FKgcDoBAo=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=jLKVCFlX144hgJoiTygHTqc4aiX0rD4Q3pJrjPFaa5S6T07Terr7y9WYqOENx5jPAtLgYxS5AmCEd0ywDpcoSamZ9E7G7HHoThc/LB3RO+qdYXzluUw3/PTJOPDVwCEd+ewURgOB/6o5+zN4cI+aMvkggS5Ki2qOJMo109rjzqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3df3b71b987so26001165ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 00:58:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751356693; x=1751961493;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=/Feq4JYZa9imSCNgZMBn1vPhrRu0fqByvVFyCsbFbfo=;
-        b=oxIn1V6GOasi9aWMbEpgfvoOqwuA0KfkW22wgZIfoWD6FKaW3vp7jQpVKqT5tRorFS
-         11ws0P/wIqO32gUqwNJDyiA0Dd4WECvTzALX2rjINjJKV0xMP5FeX2fZSqn2d9875FeZ
-         sDJpdftgq7xh1xp0VFWkhceXQxMDVGJtJ/c0sErlQhLTmoGJWFtr5R5adQqod4GofJWL
-         Mreru8mzWyFSZHJStMEfd36//hOWYdf7IXcj/XTol6wKmS4VZpy7/6oguNnAdMVeS7bo
-         CFbh3iczvAHATAaC1NO7RJQ3072yS47prrn7TVvkTW2rK+xtBSYzibfL0vpze9dvuIgA
-         d+fQ==
-X-Gm-Message-State: AOJu0YwqYmd9f+1dXWyh4JoFca9iXHsFt9hIQZofaRL6WDQT8P7ca7PR
-	UwrYOqmNV8OqCuyoYbTQixg6lQvQbD5QCJx0FHgh1z+2fmB3U2nuK0YfLdrQGBJ9EygKulqRsyM
-	y6faTOzaA6TbWlLEtIplS4Ra9Fpvk/kbl9H0ZZQ5rOQKo/i+eTGKXL2GfJcer++34dg==
-X-Gm-Gg: ASbGncuxnNN6vadreNNY/aVQJd73tyYUyUZDLCLV5IXcrI4DlwvDJq7AoChQRhxop/o
-	WeSOuIzDT+usuXLkYI3/mrkc/Rhyw2y862DejvNdvex0zAZESlETyl7a7jTeY83BfR703NjJ6bV
-	XNj+RLkK7fGLYmHR50MAQv2Ptmq3GKkTCwzoLEDPxofQkSaX+LYlD5uBa7/cGUykx/lHOOAxdfb
-	ChSw8dj6y5oSkrit5kbjThClzqvPy06Nc4g+lYkE8myHTVBdheljhnULNxZ8GIXTs9FBkpadOpG
-	WWxFsvFZDqB4Sa/K8cUrY9TYtyLHrfZJkLObNuJA7X+dV229tX1++AIp/gcZdFXTBYq7jwNCD5e
-	2+3mRK2rllJRhtnrrtDb9DJaA9VTOz+9PPlNpTKW45p4MRwK0Zg==
-X-Received: by 2002:a05:6000:64b:b0:3a6:d5fd:4687 with SMTP id ffacd0b85a97d-3a8f482bd31mr13154716f8f.18.1751356693295;
-        Tue, 01 Jul 2025 00:58:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGjMbemhkIZeoSup+OwONMSvz50yZg2K0dN6tNDQHYUqndeAp7nP+ltTQxgNLFcEg/amFhAAA==
-X-Received: by 2002:a05:6000:64b:b0:3a6:d5fd:4687 with SMTP id ffacd0b85a97d-3a8f482bd31mr13154650f8f.18.1751356692689;
-        Tue, 01 Jul 2025 00:58:12 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f18:7500:202e:b0f1:76d6:f9af? (p200300d82f187500202eb0f176d6f9af.dip0.t-ipconnect.de. [2003:d8:2f18:7500:202e:b0f1:76d6:f9af])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7e72c1sm12366971f8f.1.2025.07.01.00.58.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 00:58:11 -0700 (PDT)
-Message-ID: <277e094d-b159-411f-940d-13b62493f6c5@redhat.com>
-Date: Tue, 1 Jul 2025 09:58:09 +0200
+        d=1e100.net; s=20230601; t=1751356705; x=1751961505;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+CLVQD3LnpmiHjpHVQmScdzZclDfnwrqpmpY5qBYtNM=;
+        b=OWDtKEJlQFesTnqjqf+E1B0g7wRAiBuYpPt3tmYQb+JjU19cpRQjoO3NvpEhj8LP6U
+         2URAf96s3GPFJ+uogdUIkE8tiCqiTE0xa7/l3UXaeBhDoUGhClQemjpFbsGPOSUFiWc+
+         FqDxBM+9tTAaEAjngm7w/TBbbbWF8atiEF6vcirj/wmvLBOnFdUfulsAxxrX8dlWFnAT
+         vy3JZrGw6iQ686Q3+7+vhzzIcuec9VCEOcS0WjBDAI5+ky4frlPT/FAVUZvH+SrHuYeU
+         dh7lDNP3GianQID13/9z8sv8EO9MI+XYTV9H3GnkHM1KebtqRSX0w6dlx4O1szylehgz
+         KHTg==
+X-Forwarded-Encrypted: i=1; AJvYcCVAJoVWxi3NVmOXBBo94aqnLAYHzIfgNki4TKBjYOAkaNqR129OmgAdzpTjmCkmRrP3srXm3r6Av227irI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy273nYuU8HhWtQwtcyuJvJxA4onp0qiM/ovCd424Bgx8X9vgsq
+	wuQ16vM1LGosSEr+TxD8Xp2hJ6Kn6loxCu7BWBCy0Yz9t5GLdAC3yPopKYfNhTLBJdp6MsYfccL
+	NeNp4hSlA2aIpFps0WluMzHoFnQw0uCqTscEdiFSPYfNSbY261QoKIsMoSeg=
+X-Google-Smtp-Source: AGHT+IEcB8LepVGB5wtxw5BKfJ9I8GpscC9V+PYsDaWVWZuuA+linCaw8tr9p2nd4DKfx/Z4dw65m45nHOomThcm1O32dzyoUkEu
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 02/29] mm/balloon_compaction: convert
- balloon_page_delete() to balloon_page_finalize()
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- virtualization@lists.linux.dev, linux-fsdevel@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Jerrin Shaji George <jerrin.shaji-george@broadcom.com>,
- Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
- Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
- Ying Huang <ying.huang@linux.alibaba.com>,
- Alistair Popple <apopple@nvidia.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Minchan Kim <minchan@kernel.org>,
- Sergey Senozhatsky <senozhatsky@chromium.org>,
- Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
- Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
- Peter Xu <peterx@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>,
- Chengming Zhou <chengming.zhou@linux.dev>, Miaohe Lin
- <linmiaohe@huawei.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>,
- Oscar Salvador <osalvador@suse.de>, Rik van Riel <riel@surriel.com>,
- Harry Yoo <harry.yoo@oracle.com>, Qi Zheng <zhengqi.arch@bytedance.com>,
- Shakeel Butt <shakeel.butt@linux.dev>
-References: <20250630130011.330477-1-david@redhat.com>
- <20250630130011.330477-3-david@redhat.com>
- <f9cb1865-aa9d-409f-bce5-7051480c1a71@lucifer.local>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <f9cb1865-aa9d-409f-bce5-7051480c1a71@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:1847:b0:3dd:c946:a273 with SMTP id
+ e9e14a558f8ab-3df4ab865f0mr180191355ab.9.1751356704669; Tue, 01 Jul 2025
+ 00:58:24 -0700 (PDT)
+Date: Tue, 01 Jul 2025 00:58:24 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68639520.a70a0220.3b7e22.17e6.GAE@google.com>
+Subject: [syzbot] [f2fs?] kernel BUG in do_write_page
+From: syzbot <syzbot+9201a61c060513d4be38@syzkaller.appspotmail.com>
+To: chao@kernel.org, jaegeuk@kernel.org, 
+	linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 30.06.25 17:15, Lorenzo Stoakes wrote:
-> On Mon, Jun 30, 2025 at 02:59:43PM +0200, David Hildenbrand wrote:
->> Let's move the removal of the page from the balloon list into the single
->> caller, to remove the dependency on the PG_isolated flag and clarify
->> locking requirements.
->>
->> We'll shuffle the operations a bit such that they logically make more sense
->> (e.g., remove from the list before clearing flags).
->>
->> In balloon migration functions we can now move the balloon_page_finalize()
->> out of the balloon lock and perform the finalization just before dropping
->> the balloon reference.
->>
->> Document that the page lock is currently required when modifying the
->> movability aspects of a page; hopefully we can soon decouple this from the
->> page lock.
->>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
->> ---
->>   arch/powerpc/platforms/pseries/cmm.c |  2 +-
->>   drivers/misc/vmw_balloon.c           |  3 +-
->>   drivers/virtio/virtio_balloon.c      |  4 +--
->>   include/linux/balloon_compaction.h   | 43 +++++++++++-----------------
->>   mm/balloon_compaction.c              |  3 +-
->>   5 files changed, 21 insertions(+), 34 deletions(-)
->>
->> diff --git a/arch/powerpc/platforms/pseries/cmm.c b/arch/powerpc/platforms/pseries/cmm.c
->> index 5f4037c1d7fe8..5e0a718d1be7b 100644
->> --- a/arch/powerpc/platforms/pseries/cmm.c
->> +++ b/arch/powerpc/platforms/pseries/cmm.c
->> @@ -532,7 +532,6 @@ static int cmm_migratepage(struct balloon_dev_info *b_dev_info,
->>
->>   	spin_lock_irqsave(&b_dev_info->pages_lock, flags);
->>   	balloon_page_insert(b_dev_info, newpage);
->> -	balloon_page_delete(page);
-> 
+Hello,
 
-Hi Lorenzo,
+syzbot found the following issue on:
 
-as always, thanks for the detailed review!
+HEAD commit:    2aeda9592360 Add linux-next specific files for 20250627
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=152363d4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7f5c1d958b70bf47
+dashboard link: https://syzkaller.appspot.com/bug?extid=9201a61c060513d4be38
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
 
-> We seem to just be removing this and not replacing with finalize, is this right?
+Unfortunately, I don't have any reproducer for this issue yet.
 
-See below.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/d532560074a3/disk-2aeda959.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/483001f76864/vmlinux-2aeda959.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/8f233cdc1c77/bzImage-2aeda959.xz
 
-> 
->>   	b_dev_info->isolated_pages--;
->>   	spin_unlock_irqrestore(&b_dev_info->pages_lock, flags);
->>
->> @@ -542,6 +541,7 @@ static int cmm_migratepage(struct balloon_dev_info *b_dev_info,
->>   	 */
->>   	plpar_page_set_active(page);
->>
->> +	balloon_page_finalize(page);
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+9201a61c060513d4be38@syzkaller.appspotmail.com
 
-^ here it is, next to the put_page() just like for the other cases.
-
-Or did you mean something else?
-
->>   	/* balloon page list reference */
->>   	put_page(page);
->>
->> diff --git a/drivers/misc/vmw_balloon.c b/drivers/misc/vmw_balloon.c
->> index c817d8c216413..6653fc53c951c 100644
->> --- a/drivers/misc/vmw_balloon.c
->> +++ b/drivers/misc/vmw_balloon.c
->> @@ -1778,8 +1778,7 @@ static int vmballoon_migratepage(struct balloon_dev_info *b_dev_info,
->>   	 * @pages_lock . We keep holding @comm_lock since we will need it in a
->>   	 * second.
->>   	 */
->> -	balloon_page_delete(page);
->> -
->> +	balloon_page_finalize(page);
->>   	put_page(page);
->>
+F2FS-fs (loop9): inject invalid blkaddr in f2fs_is_valid_blkaddr of do_write_page+0x277/0xb10 fs/f2fs/segment.c:3956
+------------[ cut here ]------------
+kernel BUG at fs/f2fs/segment.c:3957!
+Oops: invalid opcode: 0000 [#1] SMP KASAN PTI
+CPU: 0 UID: 0 PID: 10538 Comm: syz-executor Not tainted 6.16.0-rc3-next-20250627-syzkaller #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+RIP: 0010:do_write_page+0xa44/0xb10 fs/f2fs/segment.c:3956
+Code: 82 7f ad fd 49 89 ed 48 89 e8 48 25 ff 0f 00 00 74 1a e8 8f 7a ad fd e9 9f 00 00 00 e8 85 7a ad fd 90 0f 0b e8 7d 7a ad fd 90 <0f> 0b 4d 89 ee 4c 89 ef be 08 00 00 00 e8 7a 7c 11 fe 49 c1 ee 03
+RSP: 0018:ffffc90004f2ec58 EFLAGS: 00010293
+RAX: ffffffff841257e3 RBX: ffffc90004f2ef40 RCX: ffff88802f493c00
+RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
+RBP: ffffc90004f2ef5c R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffffbfff1bfa428 R12: ffff888042d28000
+R13: 1ffff920009e5deb R14: dffffc0000000000 R15: ffffc90004f2ef5c
+FS:  000055555f3a1500(0000) GS:ffff888125c1e000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f2ce7b71d60 CR3: 0000000031b0e000 CR4: 00000000003526f0
+Call Trace:
+ <TASK>
+ f2fs_outplace_write_data+0x11a/0x220 fs/f2fs/segment.c:4017
+ f2fs_do_write_data_page+0x12ea/0x1a40 fs/f2fs/data.c:2752
+ f2fs_write_single_data_page+0xa68/0x1680 fs/f2fs/data.c:2851
+ f2fs_write_cache_pages fs/f2fs/data.c:3133 [inline]
+ __f2fs_write_data_pages fs/f2fs/data.c:3282 [inline]
+ f2fs_write_data_pages+0x195b/0x3000 fs/f2fs/data.c:3309
+ do_writepages+0x32b/0x550 mm/page-writeback.c:2636
+ filemap_fdatawrite_wbc mm/filemap.c:386 [inline]
+ __filemap_fdatawrite_range mm/filemap.c:419 [inline]
+ __filemap_fdatawrite mm/filemap.c:425 [inline]
+ filemap_fdatawrite+0x199/0x240 mm/filemap.c:430
+ f2fs_sync_dirty_inodes+0x31f/0x830 fs/f2fs/checkpoint.c:1108
+ block_operations fs/f2fs/checkpoint.c:1247 [inline]
+ f2fs_write_checkpoint+0x95a/0x1df0 fs/f2fs/checkpoint.c:1638
+ kill_f2fs_super+0x2c3/0x6c0 fs/f2fs/super.c:5081
+ deactivate_locked_super+0xb9/0x130 fs/super.c:474
+ cleanup_mnt+0x425/0x4c0 fs/namespace.c:1417
+ task_work_run+0x1d4/0x260 kernel/task_work.c:227
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ exit_to_user_mode_loop+0xec/0x110 kernel/entry/common.c:114
+ exit_to_user_mode_prepare include/linux/entry-common.h:330 [inline]
+ syscall_exit_to_user_mode_work include/linux/entry-common.h:414 [inline]
+ syscall_exit_to_user_mode include/linux/entry-common.h:449 [inline]
+ do_syscall_64+0x2bd/0x3b0 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f85f3d8fc57
+Code: a8 ff ff ff f7 d8 64 89 01 48 83 c8 ff c3 0f 1f 44 00 00 31 f6 e9 09 00 00 00 66 0f 1f 84 00 00 00 00 00 b8 a6 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 01 c3 48 c7 c2 a8 ff ff ff f7 d8 64 89 02 b8
+RSP: 002b:00007ffc395e64c8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
+RAX: 0000000000000000 RBX: 00007f85f3e10925 RCX: 00007f85f3d8fc57
+RDX: 0000000000000000 RSI: 0000000000000009 RDI: 00007ffc395e6580
+RBP: 00007ffc395e6580 R08: 0000000000000000 R09: 0000000000000000
+R10: 00000000ffffffff R11: 0000000000000246 R12: 00007ffc395e7610
+R13: 00007f85f3e10925 R14: 00000000000c355a R15: 00007ffc395e7650
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:do_write_page+0xa44/0xb10 fs/f2fs/segment.c:3956
+Code: 82 7f ad fd 49 89 ed 48 89 e8 48 25 ff 0f 00 00 74 1a e8 8f 7a ad fd e9 9f 00 00 00 e8 85 7a ad fd 90 0f 0b e8 7d 7a ad fd 90 <0f> 0b 4d 89 ee 4c 89 ef be 08 00 00 00 e8 7a 7c 11 fe 49 c1 ee 03
+RSP: 0018:ffffc90004f2ec58 EFLAGS: 00010293
+RAX: ffffffff841257e3 RBX: ffffc90004f2ef40 RCX: ffff88802f493c00
+RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
+RBP: ffffc90004f2ef5c R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffffbfff1bfa428 R12: ffff888042d28000
+R13: 1ffff920009e5deb R14: dffffc0000000000 R15: ffffc90004f2ef5c
+FS:  000055555f3a1500(0000) GS:ffff888125c1e000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ff1d4e5ef40 CR3: 0000000031b0e000 CR4: 00000000003526f0
 
 
-[...]
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
->> -/*
->> - * balloon_page_delete - delete a page from balloon's page list and clear
->> - *			 the page->private assignement accordingly.
->> - * @page    : page to be released from balloon's page list
->> - *
->> - * Caller must ensure the page is locked and the spin_lock protecting balloon
->> - * pages list is held before deleting a page from the balloon device.
->> - */
->> -static inline void balloon_page_delete(struct page *page)
->> -{
->> -	__ClearPageOffline(page);
->> -	__ClearPageMovable(page);
->> -	set_page_private(page, 0);
->> -	/*
->> -	 * No touch page.lru field once @page has been isolated
->> -	 * because VM is using the field.
->> -	 */
->> -	if (!PageIsolated(page))
->> -		list_del(&page->lru);
-> 
-> I don't see this check elsewhere, is it because, as per the 1/xx of this series,
-> because by the time we do the finalize
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-balloon_page_delete() was used on two paths
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-1) Removing a page from the balloon for deflation through 
-balloon_page_list_dequeue()
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-2) Removing an isolated page from the balloon for migration in the 
-per-driver migration handlers. Isolated pages were already removed from 
-the balloon list during ... isolation.
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-With this change, 1) does the list_del(&page->lru) manually and 2) only 
-calls balloon_page_finalize().
-
-During 1) the same reasoning as in 1/xx applies: isolated pages cannot 
-be in the balloon list.
-
-> 
->> -}
->> -
->>   /*
->>    * balloon_page_device - get the b_dev_info descriptor for the balloon device
->>    *			 that enqueues the given page.
->> @@ -141,12 +120,6 @@ static inline void balloon_page_insert(struct balloon_dev_info *balloon,
->>   	list_add(&page->lru, &balloon->pages);
->>   }
->>
->> -static inline void balloon_page_delete(struct page *page)
->> -{
->> -	__ClearPageOffline(page);
->> -	list_del(&page->lru);
->> -}
->> -
->>   static inline gfp_t balloon_mapping_gfp_mask(void)
->>   {
->>   	return GFP_HIGHUSER;
->> @@ -154,6 +127,22 @@ static inline gfp_t balloon_mapping_gfp_mask(void)
->>
->>   #endif /* CONFIG_BALLOON_COMPACTION */
->>
->> +/*
->> + * balloon_page_finalize - prepare a balloon page that was removed from the
->> + *			   balloon list for release to the page allocator
->> + * @page: page to be released to the page allocator
->> + *
->> + * Caller must ensure that the page is locked.
-> 
-> Can we assert this?
-
-We could, but I'm planning on removing the page lock next (see patch 
-description), so not too keen to create more code around that.
-
-Maybe mention that the balloon lock should not be held?
-
-Not a limitation. It could be called with it, just not a requirement today.
-
-I suspect that once we remove the page lock, that we might use the 
-balloon lock and rework balloon_page_migrate() to take the lock. TBD.
-
- > >> + */
->> +static inline void balloon_page_finalize(struct page *page)
->> +{
->> +	if (IS_ENABLED(CONFIG_BALLOON_COMPACTION)) {
->> +		__ClearPageMovable(page);
->> +		set_page_private(page, 0);
->> +	}
-> 
-> Why do we check this? Is this function called from anywhere where that config won't be set?
-
-Sure. balloon_page_list_dequeue() is called from balloon_page_dequeue(), 
-which resides outside the CONFIG_BALLOON_COMPACTION ifdef in 
-mm/balloon_compaction.c.
-
-At some point (not in this series) we should probably rename
-
-balloon_compaction.c -> balloon.c
-
-To match CONFIG_MEMORY_BALLOON.
-
-Because the compaction part is just one extra bit in there. (an 
-important one, but still, you can use the balloon infrastructure without 
-compaction/page migration)
-
--- 
-Cheers,
-
-David / dhildenb
-
+If you want to undo deduplication, reply with:
+#syz undup
