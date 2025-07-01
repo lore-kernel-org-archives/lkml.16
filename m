@@ -1,153 +1,98 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ACEA1386B4
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 18:32:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECBB225CC70;
+	Tue,  1 Jul 2025 18:35:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751394777; cv=none; b=ZouToyZii1QMGJDfQBfPmz+GMFPr98JB1eXjF0F2xgeEXysRZNeW1biINBgyAgG1i6QL/FI8kwtvvtcHsKr6NtUNawvnOj19LD5NqXq46Dkdcau43bsMnP7h9aV8ssvx+IeSDU3jUZBNbLydx92S76SgkXtkx6EcF34aTQeLH04=
+	t=1751394918; cv=none; b=se3J8yH+5rGq0rI+BKj+aALP18k4cyrIbW0leSczudxLAnRORuP3rrJdiKESugSkdXoUpdMgXulvAb3M39PZA19jqd6m5PCTKhKFz6Z9pzacoJf244G9ZLCK4OnewosuKDwNAuPL+RELJd46iGhMkbJhD2xhwKwUnjsso9r1WOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751394777; c=relaxed/simple;
-	bh=d9wnrHFnmPDUmXQX+GwkpxvTJXuZ/r6tQtF+p2zmkQA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ay7tjdE9uFMFHGBGrEgOY6iMg6FmDuOsHP1U803Wnxxh2fPy31B2g3XRcN/hwck8XHuKkCJho3UUBtxrereIn3KtKK/ePXMzJ/WS3yzcuY1+7cC3LlRkvf7mRGKnRIrC3wtpWMV0hnxEj+8yL3nfNgFLhDLuSP2tpGP8iFvUpcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NCWuiaQe; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1751394918; c=relaxed/simple;
+	bh=z1+Uc9srPvD1/R3lIeqlBunoBkXDL5bkXA03CQVpf50=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KBwwFFpqCRPMeyTlSsizT0U/1cR0koUk84j2cpxTJSFvlEf4xjlvJDqwLAClyLyWxO6gcQ/p6DI4YReg43K7ocxqH4LpIkde3ACyh+uKDZ4TvLz59zjs0acvcy6oU8hgiPpypVbV/xtyygYugSLkrFc1aMmeBZHH2Ibw5Qp9QnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y6GSAIVi; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NCWuiaQe"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-609b169834cso16427a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 11:32:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y6GSAIVi"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7490702fc7cso4385165b3a.1;
+        Tue, 01 Jul 2025 11:35:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751394774; x=1751999574; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YQXvVz9WRAegKYfmIxpfPI85E7REg9LgrNVKoNzlSWo=;
-        b=NCWuiaQeW5oHtwRXtV7hfuExcDe0KwkLxqzyzAitJ8D96JPMsybDbwHmLFsmxHfN7E
-         vPnwukbYXOPlaIBNivpRTAWim7GhiZuDvkIG2eTqrToKHJIfiQBVFh1Hk3eYhG4Z5FRY
-         n507apuDcGW1V7RvNN3zqDfw5qz47jO2MFJyYpr3jcEtru7BDDL/zQPees2KFWXjYKwI
-         C0aaP/uUROqLIvdh9pm8rKwBGMx2T8kNUejv2Ffnfz49ohZ+7PSpGnFKX6VbrPc/QvRq
-         iGm5x1q7FupjNmt9a6O+Cwrv+kWg/UKtdGUtK45jSo7LONvlUVmX4pGf8LOqvB80ZT6f
-         pCoA==
+        d=gmail.com; s=20230601; t=1751394916; x=1751999716; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Da9hPRD/ytYbduZJlqkXBHQRUjaFlL1rFU3+1oIjeEY=;
+        b=Y6GSAIVistF8UJ63Cbv0rU0NyiyimmMMg0F+DKp4Wtaqk4qfrIyBIYVK1V5f68+ZO+
+         TxqktcaNZvaNgVw8Y6iXBweY9oglJUJOw0Y1bWn8nkHx+hpIZH1CtbMjY2J/r8gbvNuQ
+         NcbMtqy5AIur6uu2eGrQH4cmfeMmFYiceR1hB21ZWZRD8vQHqaQmjUa1lxAj6o0o0Cft
+         Nq5rd65BdbDgfEdUm9uZaEWHkVlqCncxEO1jZLoCah/mvWnVw5NUlg1FUPgfCHhsUL6Y
+         cqwVQsEQYVTeUq13DK5aarn83Sw320jTLNsPUeAvBBGwAqbb6WEO+e1Lwkdl9S3CgFHz
+         HQgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751394774; x=1751999574;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YQXvVz9WRAegKYfmIxpfPI85E7REg9LgrNVKoNzlSWo=;
-        b=uS4eEl+M6nmY0l2VialoffSRijkUkcAVR1oBa8NN+2zhLxFH8VhUzlNWaOJjzHwbvn
-         NvBqC2vWgi9fLWNMlM5vU+f47s+H7EF6me9aEU+R8kkiXtpj+CZOtHUdGdTt1x3eFnO6
-         1rDcVYtxpSYLtYX5ullD07gqAPRuy72MDeB+T8OnQVsqxKMCshFBMkuzzR2qSbcJYfAF
-         AMEhfNCKtESIny/lL9X+s02P5xel7mMaXnGGIKokyN5ShvMs1EXRh1MnRxGFEXify/HC
-         u+HttbEDv6BA55vVtNT2HF1lOCT3xP8obiump+KHVTog77OTO4o8NbiMZXUg01loM0Ed
-         rbEg==
-X-Forwarded-Encrypted: i=1; AJvYcCXL0WL2u20asiLKcnvTjDxem43M7h4sXt3RH2m0cmd5yQ+avN8lXbGgZAl+ocrD8IT4CXl70MdOyWjLTWw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3JyBbKHIdSWbKr/xNd3bnb9HUjkmweyHWLl7fLp/Tv9BOAVMR
-	9Oo/GEbw6ubNqAY2q/nxfcQ95SsOYstQCcHw7vWV/9mdKQwmTYtou8etvtqpjm1GN2kWmlkfEfX
-	d4HnpsvF5tUKxuZMkoG36ohgAk+pw2QkN3GtC9mBV
-X-Gm-Gg: ASbGncuq9aTyHfDoVLTDCpe6IxabKorao9NVI9asYbMMl/BolC4NethGdbjCjjplOnc
-	TeuWAr1VfD0i3yNFkLaFkH97Dd5540MIJ87xGr1pcori/+Vv+07FdNkt08056SBzr1JV2bdaCQw
-	R4bAS8+wWGiOfoh9nn84blXuz95yyep7DdVbHVBoPwrOGqm+69xkBE9GbSFtj0/AdCtnJn0BnG
-X-Google-Smtp-Source: AGHT+IGv7/Tr+sUazGCtuAmUl3War4uVSjVimZL9/8SAcTJFtKZPXxA57SH/Rd6iX4Z7K7emCqya4lKJ0k0S7eXOusg=
-X-Received: by 2002:aa7:c342:0:b0:608:fb55:bf12 with SMTP id
- 4fb4d7f45d1cf-60e38a44816mr103298a12.4.1751394773651; Tue, 01 Jul 2025
- 11:32:53 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751394916; x=1751999716;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Da9hPRD/ytYbduZJlqkXBHQRUjaFlL1rFU3+1oIjeEY=;
+        b=sqIrp8m0NrbUcxog+vQUhjEC2WS2WTIOgH6RSfvi8kZWmLe/egt+RKhGgcNmDIrI2K
+         gMbq65BaPHETrrCioriTCb23ImUh9qxtV+KEgdaJfNDc2Xd6gPiOUgCYsykx/4cqF/3M
+         oi0JR6e4P8+b1By3xmEsW6bZtyEe50E5FBI9SquzZtAIoCqiVXQ0B+L56rBQyXpR7YQi
+         KamA8tWUBy4n+CTX9ND0Py3YuZmAEvJ6lNV97/32kEAnCbDc0tRIXUTZi04ys9uYwe7x
+         vKtetm0kWw1uaDvwcQjgNFB9aK49EX3PxCJfoYoxCI9fLLIhFowVChkRJpxFTv1BHeCa
+         NpKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWvgDych4fSxYO6xjI4QZcdXGg0PqPWB/BPCicZ0rPZfiQ9WbbYE9jFOFkmGXXu9G1BGWn7j4HrAJCLc9UL@vger.kernel.org, AJvYcCX6IPPasgPw1ngdLd6bZDpepTg9R9hDqyQooYUUApFqM3uxIB5TrDK1S1qtxLblcI2sjzZpv0kEU5k1ZA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7nGhOHDj1vtXQ0b0jXeBUUUuYGbkGiRnMBY7yImMmSH/8mngn
+	dnwn86h/sEwaER7YIilHnqpvbEbJ8ijSHUbp/OlLigFA+7WUeKSFUFcU
+X-Gm-Gg: ASbGncv0oqWoieuExxUin+3jjs/UF8GrIofeEoia4pczfqqPIxsH8YWuoebLkxAvWl+
+	h6skyyF5+ID3Xa1kZ89Eat2Vxk6JA5h/7crQaBut2dlNzB9rHvFT4ij5cr06MJDEc1uVGxXA3zc
+	KHH2xMfGICUeFGoKXCbL9iOkVQwQH2P05CuguG9G1GvZb05LEZfSP+riJHKEwgvhupppHbW7gnj
+	Ur7u8vjHyrFRxdKnzRxr+23uePUY4IexeK9nb2N9UENoF7jh6E9VNYZXYaDAlzx5CB27ZhYwTzn
+	z4aTH54V8gcApN4oqj9+5ZLMooOtCUiGbA2VokeYKReKY7XuU/nuT7/tOPw9pPY=
+X-Google-Smtp-Source: AGHT+IEZpLnOqvqrhYyHtVT4XdqwOH/huTE5huFXU9wBMlO5za2DQi9dmFfn8rUkcfYVTx3d+XTmww==
+X-Received: by 2002:a05:6a00:4fc7:b0:748:e38d:fecc with SMTP id d2e1a72fcca58-74af6fcd5e6mr24493660b3a.22.1751394916165;
+        Tue, 01 Jul 2025 11:35:16 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:7bb0:b5bc:35bb:1cb4])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af55c8437sm11909074b3a.115.2025.07.01.11.35.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 11:35:15 -0700 (PDT)
+Date: Tue, 1 Jul 2025 11:35:12 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Chen Ni <nichen@iscas.ac.cn>
+Cc: jogletre@opensource.cirrus.com, fred.treven@cirrus.com, 
+	ben.bright@cirrus.com, patches@opensource.cirrus.com, linux-input@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Input: cs40l50 - Remove redundant 'flush_workqueue()'
+ calls
+Message-ID: <zgj74w3pui3mybsa3vovspotsuz6hj732hy5g6ezosaxfpoard@ijq6h4kkw3md>
+References: <20250312072940.1429931-1-nichen@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250627-debugfs-rust-v8-0-c6526e413d40@google.com>
- <20250627-debugfs-rust-v8-6-c6526e413d40@google.com> <2025070148-primer-stillness-0409@gregkh>
- <CAGSQo00UiOUAgYODhXT9BWLW0bXoCxMzt9fV2F2aiTEOG1vwyA@mail.gmail.com> <aGQcODIzMiB46gKF@pollux>
-In-Reply-To: <aGQcODIzMiB46gKF@pollux>
-From: Matthew Maurer <mmaurer@google.com>
-Date: Tue, 1 Jul 2025 11:32:42 -0700
-X-Gm-Features: Ac12FXwdB0dtf1DsDpcngkMBzE-ux_LwOBiMCEQhM-Doq7UBSaODLP7eEK6fGyk
-Message-ID: <CAGSQo02tdxoqTE1z5_M8g0PpXYEdWr4Yy31yaoPK8C_O2G_QoQ@mail.gmail.com>
-Subject: Re: [PATCH v8 6/6] rust: samples: Add debugfs sample
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Sami Tolvanen <samitolvanen@google.com>, Timur Tabi <ttabi@nvidia.com>, 
-	Benno Lossin <lossin@kernel.org>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, Dirk Behme <dirk.behme@de.bosch.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250312072940.1429931-1-nichen@iscas.ac.cn>
 
-On Tue, Jul 1, 2025 at 10:34=E2=80=AFAM Danilo Krummrich <dakr@kernel.org> =
-wrote:
->
-> On Tue, Jul 01, 2025 at 10:24:04AM -0700, Matthew Maurer wrote:
-> > On Tue, Jul 1, 2025 at 7:03=E2=80=AFAM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > On Fri, Jun 27, 2025 at 11:18:29PM +0000, Matthew Maurer wrote:
-> > > > +        // An `Arc<Mutex<usize>>` doesn't implement display, so le=
-t's give explicit instructions on
-> > > > +        // how to print it
-> > > > +        let file_2 =3D sub.fmt_file(c_str!("arc_backed"), my_arc.c=
-lone(), &|val, f| {
-> > > > +            writeln!(f, "locked value: {:#010x}", *val.lock())
-> > > > +        });
-> > >
-> > > While cute, is this really going to be the way to describe all "custo=
-m"
-> > > debugfs function callbacks?  No other way to point to a function itse=
-lf
-> > > instead?  Look at "fun" debugfs functions like qh_lines() in
-> > > drivers/usb/host/ehci-dbg.c that is dumping tons of data out.  Puttin=
-g
-> > > that inline here is going to be a bit ackward :)
-> >
-> > Good news, function pointers are legal to pass in here as well
-> > already, I can add that usage to make it clear.
-> >
-> > >
-> > > So can you show an example of a "traditional" debugfs file output wit=
-h
-> > > multiple lines that is dealing with a dynamically allocated device th=
-at
-> > > is associated with the module (not the static example you showed here=
-),
-> > > as that's going to be the real way this is used, not with static
-> > > variables.
-> >
-> > Sure, do we want to:
-> > * Finish creating the driver struct early in `init`, then call dynamic
-> > `.create(&str)` or `.destroy(&str)` `.modify(&str)` type things on it
-> > in `init` to show how it would work
-> > * Actually wire up an input source to drive create/destroy/modify
-> > dynamically (e.g. I could implement a miscdevice) - if you want this
-> > one, do you have a preference on where I get my input signal from?
->
-> I think the idea was to show how it works in a real driver context, e.g. =
-a
-> platform driver, just like what samples/rust/rust_driver_platform.rs does=
-. Not a
-> miscdevice registered from a module, which is a rather rare use-case.
->
-> If you rebase on the latest driver-core-next, you can write a platform dr=
-iver
-> with an ACPI ID table, which can easily probed by passing
-> `-acpitable file=3Dssdt.aml` to qemu, i.e. no need to mess with OF.
+On Wed, Mar 12, 2025 at 03:29:40PM +0800, Chen Ni wrote:
+> 'destroy_workqueue()' already drains the queue before destroying it, so
+> there is no need to flush it explicitly.
+> 
+> Remove the redundant 'flush_workqueue()' calls.
+> 
+> This was generated with coccinelle:
+> 
+> @@
+> expression E;
+> @@
+> - flush_workqueue(E);
+>   destroy_workqueue(E);
+> 
+> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
 
-I'm confused as to how registering as a platform driver would result
-in an input source that would let me trigger the creation/destruction
-of DebugFS files. I need some kind of input stream to do that. Is
-there some input stream that's available to a platform driver that I'm
-missing, or are you suggesting that the input stream would effectively
-be the probe's `id_info` field? If I did that, wouldn't I still have a
-static arrangement of DebugFS files in my driver struct?
+Applied, thank you.
 
-I could have misunderstood, but I don't think that's what Greg is
-asking for - I think he wants to see how at a data structure level, I
-can handle creating and destroying DebugFS files that correspond to
-some kind of object being created and destroyed, rather than just
-having a static list of slots in my driver struct for keeping them
-alive.
+-- 
+Dmitry
