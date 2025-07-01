@@ -1,331 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f73.google.com (mail-ed1-f73.google.com [209.85.208.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A53626F477;
-	Tue,  1 Jul 2025 10:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA9826FD90
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 10:24:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751365456; cv=none; b=K3XP8Xjrx4m34zL0C2e9bV4pTnC/gE0v2f3F9uBheB6OP6MZCf8qcn24fNa7dBQxyoxGstT38FOj0QdNb5PpsoS5N5mptwSVh/2HzcsH9QL2TwATkrKYbfpha/4kObORHMfT/Vh4KVHKsUOfv4pnVPeWQrRWzPCORP6qgQM1jp8=
+	t=1751365477; cv=none; b=rom04n5dU8Bmpmw7psd9ZZZs9s+YQWKrFRnHcjsp5BRzVlIBIfNnZfylOwKm5Qm0wIAwhBd7ZACJHA38biN0TtHz2JjgekrK+4Vok9jYgcxTGn/LXAwYb7vwiP7HLPp1PEvqBBOQoZOi150PuD/jBCMoMW5VqQoagK1jS76Ochk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751365456; c=relaxed/simple;
-	bh=Ap6a6/7zWEFfGBEq3+BTor3vbcQo4WoX9hvuGKvl4a0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YQgsVEuCu3H5j1IS/zWi6gQPQBVYTlimOdOnwty9fZ4xzxh1BDmJivhNRt+UhmJAl0xNX3M7A2Bsex6ALR6mXm5C5PTGaINm+Va3cIc4nkT8nBlAKtzmQUweedjgefKaRFfMU0eGuNWoSt906IQIOOW4oDOSMYHKO7giOQq/nxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NQdpYFeM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751365477; c=relaxed/simple;
+	bh=ZFXU2/Ibp4ecCRuQYjkbKYOpoIIpT4Zpp7sdJw8JlfE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=K6ObVenHqKkGDcO5MoIopwROHF9QTmKKtJUhRaZBEUBg90Z1pIKViAuWosTOLKnTJuPMoRcoi9X75OZptNVkW8wj3GEemczoVIQgc/H8r0sbYh4a7m7ThzysycV3HgRpo/fIE5PsduyPi68rJ/KH/dzuqXno5541d3YUpjo8Hiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eC7kedE1; arc=none smtp.client-ip=209.85.208.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NQdpYFeM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BEAFC4CEEB;
-	Tue,  1 Jul 2025 10:24:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751365454;
-	bh=Ap6a6/7zWEFfGBEq3+BTor3vbcQo4WoX9hvuGKvl4a0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NQdpYFeMlE7Bvb0e5MK0NruLB8i8jbzC6TIe1pnsgvKaSzy4EGs81zdh921v12kJf
-	 fnEWuEJSf/alOJC7Ty+Zd3q8jf9bumf/qGyVYCwk8/zA8EEfZsRLMK4sA2VbVdZNS1
-	 3lxRSHB4P5i6uHaWTTF9/siyJfhHw3C/oTbPw69MuRMbeIUt8waYh7c1NAyYXMmTXh
-	 kztlCzsyK8peHsTcgOtfLEQjr95dM4FFsHkuv2ksVB0xyGcWck5JEoiTJh3qvJV4KN
-	 vT//YY6rN35RQcIx9475MfeyxgGwzEil7bZgHBmcIxeNVj4SP3gPVsA91PV+gc4Qt3
-	 3jbaWIGczQl8A==
-Date: Tue, 1 Jul 2025 13:24:09 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Abhijit Gangurde <abhijit.gangurde@amd.com>
-Cc: shannon.nelson@amd.com, brett.creeley@amd.com, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	corbet@lwn.net, jgg@ziepe.ca, andrew+netdev@lunn.ch,
-	allen.hubbe@amd.com, nikhil.agarwal@amd.com,
-	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Andrew Boyer <andrew.boyer@amd.com>
-Subject: Re: [PATCH v3 09/14] RDMA/ionic: Create device queues to support
- admin operations
-Message-ID: <20250701102409.GA118736@unreal>
-References: <20250624121315.739049-1-abhijit.gangurde@amd.com>
- <20250624121315.739049-10-abhijit.gangurde@amd.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eC7kedE1"
+Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-60c9d8a1701so2187164a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 03:24:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751365474; x=1751970274; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GUhtn5RG9Qyt3qmH9EZcO8PZo3a4nOb2nOYzpePWtbY=;
+        b=eC7kedE1+HlcSQnWD7pGFepZd3WGhFxlZz3FvLs/k1eIfHYp5c5daETiJNhGdqbd0P
+         /dZH8fWN6IC89/+wbB4H8esq2G+EZ0Z8Cy/JxWmiBlx8zKe5EaC0oSMJSIVHH9HajixL
+         GRIbV1CmCz/NfXXgwO6ck0r1nVdUltPghXePaY0ig8opygrnPQYLQgzf9QMnkTU+27Mt
+         sprCGjAKgFZZpetNiTS36A6G6D9/iyg2gt34QtyefCaWrbQkzWHNNiNhydZJZUtUPmKo
+         e3f1IUTxRTeTXssE2na5+KKo+Ql30ixDqPRsyqdJIsajvACoMGhAdGf6qy8edZECx0IT
+         XN9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751365474; x=1751970274;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GUhtn5RG9Qyt3qmH9EZcO8PZo3a4nOb2nOYzpePWtbY=;
+        b=fzXa4hiOL5RFxpWRKpd1ivKtNpOsTBxkZ4TCMTlZW9+oORWH0FM2/T0rzFWmNKZ5BC
+         PFan9PHtEicwVZ54f4WkiPBQQXF5a8RwlUujcXX0m8TS7BRPB3vpwTUegeH7CpuaON/y
+         r0yKsyIP7Qt0iprx58WepIdEFpE4Ps3+mfXzGKZxZ3u9RnjIAd6/93XzVBoFP+cgn/Cr
+         48G61YZGuKNbsGCIPyXOq3OwaIqFNFfxIurGJRhi16tqypnTZOkkwQOKExYSJFkgJfDF
+         DKEr5zfKaHEv6Iwypv0VTPr9KZRxhDah5sPV/6jLcnB2sERgFxRmPzsfRPr82jIq123G
+         UbDA==
+X-Forwarded-Encrypted: i=1; AJvYcCWaifNrrSX3xSH77yJ57GI3tp25ycihYlZkh9YJBuLi++nNVamEqDI1+WKKOxNIQjpGg442jS0M0RuLmlg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrhFQUiXCepRzsPKWKJtihXWscQXBcIdD5zhpD6pWgmsc6/aIQ
+	cYe6lkYZkpwCLVPTJ2CQVEMe2S4eEXpxzDheUScmb1rROl6tf/FthKG2vXa3F9Xs+XjQX4Gom6t
+	T+pkoKtrqQBq0hDPfUg==
+X-Google-Smtp-Source: AGHT+IFeLVmEdincwRIecInghJ8Lwip41MVfmuoZTlfQBus5dMVBnFrpiXqzg//PJ+GcGjLhtKgP2XEhLbDGfdk=
+X-Received: from edau21.prod.google.com ([2002:a50:9515:0:b0:609:5b37:161])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6402:5209:b0:60c:3ecd:5163 with SMTP id 4fb4d7f45d1cf-60c88e9b3femr15675912a12.26.1751365474174;
+ Tue, 01 Jul 2025 03:24:34 -0700 (PDT)
+Date: Tue, 1 Jul 2025 10:24:33 +0000
+In-Reply-To: <20250628165120.90149-1-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250624121315.739049-10-abhijit.gangurde@amd.com>
+Mime-Version: 1.0
+References: <20250628165120.90149-1-dakr@kernel.org>
+Message-ID: <aGO3QgrGSgN5X2hz@google.com>
+Subject: Re: [PATCH] rust: dma: require mutable reference for as_slice_mut()
+ and write()
+From: Alice Ryhl <aliceryhl@google.com>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: abdiel.janulgue@gmail.com, daniel.almeida@collabora.com, 
+	robin.murphy@arm.com, a.hindborg@kernel.org, ojeda@kernel.org, 
+	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, 
+	bjorn3_gh@protonmail.com, lossin@kernel.org, tmgross@umich.edu, 
+	acourbot@nvidia.com, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On Tue, Jun 24, 2025 at 05:43:10PM +0530, Abhijit Gangurde wrote:
-> Setup RDMA admin queues using device command exposed over
-> auxiliary device and manage these queues using ida.
+On Sat, Jun 28, 2025 at 06:49:54PM +0200, Danilo Krummrich wrote:
+> Given the safety requirements of as_slice_mut() and write() taking an
+> immutable reference is technically not incorrect.
 > 
-> Co-developed-by: Andrew Boyer <andrew.boyer@amd.com>
-> Signed-off-by: Andrew Boyer <andrew.boyer@amd.com>
-> Co-developed-by: Allen Hubbe <allen.hubbe@amd.com>
-> Signed-off-by: Allen Hubbe <allen.hubbe@amd.com>
-> Signed-off-by: Abhijit Gangurde <abhijit.gangurde@amd.com>
-> ---
-> v2->v3
->   - Fixed lockdep warning
->   - Used IDA for resource id allocation
->   - Removed rw locks around xarrays
+> However, let's leverage the compiler's capabilities and require a
+> mutable reference to ensure exclusive access.
 > 
->  drivers/infiniband/hw/ionic/ionic_admin.c     | 1169 +++++++++++++++++
->  .../infiniband/hw/ionic/ionic_controlpath.c   |  184 +++
->  drivers/infiniband/hw/ionic/ionic_fw.h        |  164 +++
->  drivers/infiniband/hw/ionic/ionic_ibdev.c     |   56 +
->  drivers/infiniband/hw/ionic/ionic_ibdev.h     |  225 ++++
->  drivers/infiniband/hw/ionic/ionic_pgtbl.c     |  113 ++
->  drivers/infiniband/hw/ionic/ionic_queue.c     |   52 +
->  drivers/infiniband/hw/ionic/ionic_queue.h     |  234 ++++
->  drivers/infiniband/hw/ionic/ionic_res.h       |  154 +++
->  9 files changed, 2351 insertions(+)
->  create mode 100644 drivers/infiniband/hw/ionic/ionic_admin.c
->  create mode 100644 drivers/infiniband/hw/ionic/ionic_controlpath.c
->  create mode 100644 drivers/infiniband/hw/ionic/ionic_fw.h
->  create mode 100644 drivers/infiniband/hw/ionic/ionic_pgtbl.c
->  create mode 100644 drivers/infiniband/hw/ionic/ionic_queue.c
->  create mode 100644 drivers/infiniband/hw/ionic/ionic_queue.h
->  create mode 100644 drivers/infiniband/hw/ionic/ionic_res.h
+> This also fixes a clippy warning introduced with 1.88:
+> 
+>   warning: mutable borrow from immutable input(s)
+>      --> rust/kernel/dma.rs:297:78
+>       |
+>   297 |     pub unsafe fn as_slice_mut(&self, offset: usize, count: usize) -> Result<&mut [T]> {
+>       |                                                                              ^^^^^^^^
+> 
+> Fixes: d37a39f607c4 ("rust: dma: add as_slice/write functions for CoherentAllocation")
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 
-<...>
+I'm not sure if `as_slice_mut()` is exactly the right API we want
+long-term, but this is a step in the right direction.
 
-> +static void ionic_admin_timedout(struct ionic_aq *aq)
-> +{
-> +	struct ionic_cq *cq = &aq->vcq->cq[0];
-> +	struct ionic_ibdev *dev = aq->dev;
-> +	unsigned long irqflags;
-> +	u16 pos;
-> +
-> +	spin_lock_irqsave(&aq->lock, irqflags);
-> +	if (ionic_queue_empty(&aq->q))
-> +		goto out;
-> +
-> +	/* Reset ALL adminq if any one times out */
-> +	if (aq->admin_state < IONIC_ADMIN_KILLED)
-> +		queue_work(ionic_evt_workq, &dev->reset_work);
-> +
-> +	ibdev_err(&dev->ibdev, "admin command timed out, aq %d\n", aq->aqid);
-> +
-> +	ibdev_warn(&dev->ibdev, "admin timeout was set for %ums\n",
-> +		   (u32)jiffies_to_msecs(IONIC_ADMIN_TIMEOUT));
-> +	ibdev_warn(&dev->ibdev, "admin inactivity for %ums\n",
-> +		   (u32)jiffies_to_msecs(jiffies - aq->stamp));
-> +
-> +	ibdev_warn(&dev->ibdev, "admin commands outstanding %u\n",
-> +		   ionic_queue_length(&aq->q));
-> +	ibdev_warn(&dev->ibdev, "%s more commands pending\n",
-> +		   list_empty(&aq->wr_post) ? "no" : "some");
-> +
-> +	pos = cq->q.prod;
-> +
-> +	ibdev_warn(&dev->ibdev, "admin cq pos %u (next to complete)\n", pos);
-> +	print_hex_dump(KERN_WARNING, "cqe ", DUMP_PREFIX_OFFSET, 16, 1,
-> +		       ionic_queue_at(&cq->q, pos),
-> +		       BIT(cq->q.stride_log2), true);
-> +
-> +	pos = (pos - 1) & cq->q.mask;
-> +
-> +	ibdev_warn(&dev->ibdev, "admin cq pos %u (last completed)\n", pos);
-> +	print_hex_dump(KERN_WARNING, "cqe ", DUMP_PREFIX_OFFSET, 16, 1,
-> +		       ionic_queue_at(&cq->q, pos),
-> +		       BIT(cq->q.stride_log2), true);
-> +
-> +	pos = aq->q.cons;
-> +
-> +	ibdev_warn(&dev->ibdev, "admin pos %u (next to complete)\n", pos);
-> +	print_hex_dump(KERN_WARNING, "cmd ", DUMP_PREFIX_OFFSET, 16, 1,
-> +		       ionic_queue_at(&aq->q, pos),
-> +		       BIT(aq->q.stride_log2), true);
-> +
-> +	pos = (aq->q.prod - 1) & aq->q.mask;
-> +	if (pos == aq->q.cons)
-> +		goto out;
-> +
-> +	ibdev_warn(&dev->ibdev, "admin pos %u (last posted)\n", pos);
-> +	print_hex_dump(KERN_WARNING, "cmd ", DUMP_PREFIX_OFFSET, 16, 1,
-> +		       ionic_queue_at(&aq->q, pos),
-> +		       BIT(aq->q.stride_log2), true);
-> +
-> +out:
-> +	spin_unlock_irqrestore(&aq->lock, irqflags);
-> +}
-
-Please reduce number of debug prints. You are supposed to send driver
-that works and not for the debug session.
-
-> +
-> +static void ionic_admin_reset_dwork(struct ionic_ibdev *dev)
-> +{
-> +	if (atomic_read(&dev->admin_state) >= IONIC_ADMIN_KILLED)
-> +		return;
-
-<...>
-
-> +	if (aq->admin_state >= IONIC_ADMIN_KILLED)
-> +		return;
-
-<...>
-
-> +	ibdev_dbg(&dev->ibdev, "poll admin cq %u prod %u\n",
-> +		  cq->cqid, cq->q.prod);
-> +	print_hex_dump_debug("cqe ", DUMP_PREFIX_OFFSET, 16, 1,
-> +			     qcqe, BIT(cq->q.stride_log2), true);
-
-We have restrack to print CQE and other objects, please use it.
-
-> +	*cqe = qcqe;
-> +
-> +	return true;
-> +}
-> +
-> +static void ionic_admin_poll_locked(struct ionic_aq *aq)
-> +{
-> +	struct ionic_cq *cq = &aq->vcq->cq[0];
-> +	struct ionic_admin_wr *wr, *wr_next;
-> +	struct ionic_ibdev *dev = aq->dev;
-> +	u32 wr_strides, avlbl_strides;
-> +	struct ionic_v1_cqe *cqe;
-> +	u32 qtf, qid;
-> +	u16 old_prod;
-> +	u8 type;
-> +
-> +	lockdep_assert_held(&aq->lock);
-> +
-> +	if (aq->admin_state >= IONIC_ADMIN_KILLED) {
-
-IONIC_ADMIN_KILLED is the last, there is no ">" option.
-
-> +		list_for_each_entry_safe(wr, wr_next, &aq->wr_prod, aq_ent) {
-> +			INIT_LIST_HEAD(&wr->aq_ent);
-> +			aq->q_wr[wr->status].wr = NULL;
-> +			wr->status = aq->admin_state;
-> +			complete_all(&wr->work);
-> +		}
-> +		INIT_LIST_HEAD(&aq->wr_prod);
-
-<...>
-
-> +	if (do_reset)
-> +		/* Reset device on a timeout */
-> +		ionic_admin_timedout(bad_aq);
-
-I wonder why RDMA driver resets device and not the one who owns PCI.
-
-> +	else if (do_reschedule)
-> +		/* Try to poll again later */
-> +		ionic_admin_reset_dwork(dev);
-> +}
-
-<...>
-
-> +	vcq = kzalloc(sizeof(*vcq), GFP_KERNEL);
-> +	if (!vcq) {
-> +		rc = -ENOMEM;
-> +		goto err_alloc;
-> +	}
-> +
-> +	vcq->ibcq.device = &dev->ibdev;
-> +	vcq->ibcq.uobject = NULL;
-
-1. There is no need in explicit NULL here, vcq was allocated with kzalloc()
-2. Maybe rdma_zalloc_drv_obj() should be used here.
-
-> +	vcq->ibcq.comp_handler = ionic_rdma_admincq_comp;
-> +	vcq->ibcq.event_handler = ionic_rdma_admincq_event;
-> +	vcq->ibcq.cq_context = NULL;
-> +	atomic_set(&vcq->ibcq.usecnt, 0);
-
-<...>
-
-> +	aq->admin_state = IONIC_ADMIN_KILLED;
-
-<...>
-
-> +	old_state = atomic_cmpxchg(&dev->admin_state, IONIC_ADMIN_ACTIVE,
-> +				   IONIC_ADMIN_PAUSED);
-> +	if (old_state != IONIC_ADMIN_ACTIVE)
-
-In all these places you are mixing enum_admin_state and atomic_t for
-same values, but different variable. Please chose or atomic_t or enum.
-
-> +		return;
-> +
-> +	/* Pause all the AQs */
-> +	local_irq_save(irqflags);
-> +	for (i = 0; i < dev->lif_cfg.aq_count; i++) {
-> +		struct ionic_aq *aq = dev->aq_vec[i];
-> +
-> +		spin_lock(&aq->lock);
-> +		/* pause rdma admin queues to reset device */
-> +		if (aq->admin_state == IONIC_ADMIN_ACTIVE)
-> +			aq->admin_state = IONIC_ADMIN_PAUSED;
-> +		spin_unlock(&aq->lock);
-> +	}
-> +	local_irq_restore(irqflags);
-> +
-> +	rc = ionic_rdma_reset_devcmd(dev);
-> +	if (unlikely(rc)) {
-> +		ibdev_err(&dev->ibdev, "failed to reset rdma %d\n", rc);
-> +		ionic_request_rdma_reset(dev->lif_cfg.lif);
-> +	}
-> +
-> +	ionic_kill_ibdev(dev, fatal_path);
-> +}
-
-<...>
-
-> +static void ionic_cq_event(struct ionic_ibdev *dev, u32 cqid, u8 code)
-> +{
-> +	struct ib_event ibev;
-> +	struct ionic_cq *cq;
-> +
-> +	rcu_read_lock();
-> +	cq = xa_load(&dev->cq_tbl, cqid);
-> +	if (cq)
-> +		kref_get(&cq->cq_kref);
-> +	rcu_read_unlock();
-
-What and how does this RCU protect?
-
-> +
-> +	if (!cq) {
-
-Is it possible?
-
-> +		ibdev_dbg(&dev->ibdev,
-> +			  "missing cqid %#x code %u\n", cqid, code);
-> +		return;
-> +	}
-
-<...>
-
->  module_init(ionic_mod_init);
-> diff --git a/drivers/infiniband/hw/ionic/ionic_ibdev.h b/drivers/infiniband/hw/ionic/ionic_ibdev.h
-> index e13adff390d7..e7563c0429fc 100644
-> --- a/drivers/infiniband/hw/ionic/ionic_ibdev.h
-> +++ b/drivers/infiniband/hw/ionic/ionic_ibdev.h
-> @@ -4,18 +4,243 @@
->  #ifndef _IONIC_IBDEV_H_
->  #define _IONIC_IBDEV_H_
->  
-> +#include <rdma/ib_umem.h>
->  #include <rdma/ib_verbs.h>
-> +
->  #include <ionic_api.h>
-> +#include <ionic_regs.h>
-> +
-> +#include "ionic_fw.h"
-> +#include "ionic_queue.h"
-> +#include "ionic_res.h"
->  
->  #include "ionic_lif_cfg.h"
->  
-> +#define DRIVER_NAME		"ionic_rdma"
-
-It is KBUILD_MODNAME, please use it.
-
-> +#define DRIVER_SHORTNAME	"ionr"
-> +
->  #define IONIC_MIN_RDMA_VERSION	0
->  #define IONIC_MAX_RDMA_VERSION	2
-
-Nothing from the above is applicable to upstream code.
-
-Thanks
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
