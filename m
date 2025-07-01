@@ -1,63 +1,63 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C348277CA2
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 11:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8FE276041
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 11:48:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751370494; cv=none; b=EhD6gAZPM2ryH7euDGiKsdNgDNBrg9VnlPvgSipIy2gkfmNwXZempjpAa/I9ECorYvng66nGwx1jsvQfHhv7H+p/lHQns3SmW/TgSS/NrtVD1e2Vpej89TFrwXgNylco5cAhnyUUGRuuS+yQqfZCHgMRgMkh8YurQrMYwXjjJX0=
+	t=1751370495; cv=none; b=VTyEY2jS4mnaceHH0aZHp2mh1eOkjg4haofboT53tOUkc5hMmrlAixGa7VDDucPmQD4jIbgde0MM7TIYVx2Ku1cGdieMdOICGkppHW21x4xSeXfdjGG3Lqq6+xU5b+c2XNHzJzBZPNfCxsoAdT4IL7I0+0rBM0P3BudEy/Dr8lk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751370494; c=relaxed/simple;
-	bh=KFtySHIiBM9Wkxn85JBFJA+dMnaKsCR/GrT1EW+Df2s=;
+	s=arc-20240116; t=1751370495; c=relaxed/simple;
+	bh=ZKxP/uIFZrB7DC/unY2AqJMe11Q/d2KHwpw9Mkep4WY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ESSjyG8F9/6fV4ZXH1ObNlKjvkPxZKtbwj6lb7xhCl6d4h5htG8rHp4dU0Fvy8sLsLwg78iI1CN7Xj3/DZyKY7BH52N0ADw8mYv7Yn55rGLFbJfgkgmiahE6Bt3QqDS68iiQ7h87QOTbD2sm8v3tfKhSK7nTA7kkazHslgBrJ2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Fp3DvpX8; arc=none smtp.client-ip=209.85.167.45
+	 MIME-Version; b=rByIyHYUvigzCm+BM8YW7mER6HuKnfUQyqIB/OPr/5nbZg4HB6QyQHWkYC/g3Z4OcDCWp0fvtmz6wuRDhvq1qT57lmeJOJa2YdWSaQ5AdnpCLLn2/ddbjiM9l3iSpFGb2NO8iM1OldjGxKzwSb2ZSOswz8I4h+pHCxCvAhxdR20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vL6E56xy; arc=none smtp.client-ip=209.85.167.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fp3DvpX8"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5561c20e2d5so1770313e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 04:48:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vL6E56xy"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-553b3316160so3592895e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 04:48:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751370490; x=1751975290; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1751370492; x=1751975292; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=43h2scNQ+uitZ0AV9xVg9Lwr/uWGDBBW7WgZih3doCY=;
-        b=Fp3DvpX8QXTzc5OBeAOA8ZpAvYrUao66hL9kmdLQf1it3czwD2IGCa4hOgug7r6nM/
-         odAKkmZZXofOb/WstX4XqrZ+TeiaL185t210nP0yX7v1E7LYrWD3ZTU/+ObcCkiDX5mR
-         guFWQ9D4RdX+uT9qQV2fPMu6iOI5Kcx7+tK+UB1JMUrMS3iTdFchvtt7ORWu+t35nPch
-         +OwzeOM3+m/08a/a+2yVXT6YdVVXHXeiW9wcjoyg6IhTjhOWQBZG4095Y/BCQzYNSYLf
-         2tfJkqkWOe6KKSpr6RGa53BhRVHyzn7hWY5XwTMO0mKGIdD97bsHCzCOiqD1PmzfzISi
-         pdqQ==
+        bh=WLehfsqvOq2rldbx14TVd1s2tM/WPFuPqjQ5HJp7toc=;
+        b=vL6E56xyGGnimmeds6TrOzbOQMxLsd9jZQxyC0V6es/aF2de9a2sddNdEbOHBfX/Xq
+         LDEeW8qS9UYVKgu7eA1NjGDlcg04S7yG39/4MB4GU9m3Hb6ir9uj08y+XZXlFxeHd8GT
+         cu+TNa4E7+1JTjRPBCWIo7jWYMF/18Xfa9yltUbH7MizAbd9mQra+89xuFsuaf+WvEac
+         REqe7R7u9g5Rn7EmVB0MD3+3vGufBhWxLoHP+qsPwTCT0mFel3HN6Cl8D5ALy3qVAUgc
+         C2l98kisFvP2zEg4/39vKjpvnTiTEE2YOwBNgYmaTkvgN2XOwVKKJez20ltJLjvQ5FOC
+         D3BQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751370490; x=1751975290;
+        d=1e100.net; s=20230601; t=1751370492; x=1751975292;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=43h2scNQ+uitZ0AV9xVg9Lwr/uWGDBBW7WgZih3doCY=;
-        b=PzZMpOkNV9xy5TEe/d8letrtolBfpQdD1/K3tHz+S2AMvy/Kn/duyRaiEWi745wb1S
-         aTkbKsImoVmKeGF3VoKUQqjy/qhxOggbM31rgVI93VUC/68pFtNj7CPRy3HKf63oc6yq
-         cDfO2hJZ/DgaTaJjDbLaL5QNwQFSLt1UtNff1bAMYiMKXhTZglDMnIdDFLE17BlKwJW9
-         Qagrk88GN9UNAhR4gWj92B68LK7bl+cRFFuyw149oVtSuzQpeDpkOXwM4w+66toeNc2n
-         UBunhoySZVQ9rk9mkmsoQ4MZi8yKg0ODVOFVqX/8xq4Lr5c32JFQISStl8ICzrUNHLdE
-         f1Tg==
-X-Forwarded-Encrypted: i=1; AJvYcCVyhlXdXukmovDSzeLauuZGYjfKy0jirDlk+BDYTXZ9ik3MyNPHi937Y9UgM9Yu10B6xElFx1AHpVbF0gg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyU/u6rspgleNHXYBH2UYufRU8Ptd3zs7Yfju2BKD6pYGzZfGKH
-	Xa8hJ7HhDxAHlJ6cv95LYr3stX1ZTOpmGCqw3Ngrpbf71AQ11xPyoD9LUmOm4lN7mcE=
-X-Gm-Gg: ASbGncsyluFbDuOEIuwUcb04yJnBtVFCQCJnaeIbw0ZQ5MQoWqSyyzxUDL4l6twKTRz
-	CKXywY/+btC4X4/VgPWdU4NCuRXbLRyCulhNCoTyQD99jyOSmtJA7SzjICWe4nyZWq94mg21lb8
-	kaMufMQSw5/8yfBqRi4kZK/Vm+v7qrb/QXyuCiOjjAdDHx9iJJt6T0F8SS83kFiedU69cWZdjK1
-	hnMRmWFRqFVPN75eAu3Qy/uoMnhiizslhg+lPiXya8JT3BD/pjjD+VgtXeTRVJ8xABE94Ys6ILR
-	WSjxmvbCCreSH+Y90oCwgiU9qu3+REuJvJ03rMFrkfrLiT6ALck0oQz6vNaWzzCF61uV/wcXDgg
-	SPaUxbOEjSdZG7GVDIs7QDbeTkHbZdxANOA83eHAaN82CejY=
-X-Google-Smtp-Source: AGHT+IGXZRw5n2EKVnLe+2fkx4wCE8kfUrNq7rzEqUs6wo71t2rUuFE+PmpyvT/+t2Fo2UVrlV2cCA==
-X-Received: by 2002:a05:6512:3c92:b0:553:3770:c91d with SMTP id 2adb3069b0e04-5550b7ea103mr6576048e87.4.1751370490330;
-        Tue, 01 Jul 2025 04:48:10 -0700 (PDT)
+        bh=WLehfsqvOq2rldbx14TVd1s2tM/WPFuPqjQ5HJp7toc=;
+        b=Cwq8hwlCawhL8NsqB59Z2oBfz5yJT2ZA3vkO5D7jIw/O1BcMl8f2wGxFj/7bU13R1e
+         teZOuqR0xk9EglfwbgSZs27XStoP4SjJ9Ka9+a6FkNCw0w5ph2wvODVIyxQh0y7J/OLY
+         QToQHUZ64zWjPTWFGThpxQqTcwwrhwwrDKSMTWom76mJMoqWRbkHsmbhJ8pTJr630csp
+         m1YZoGLO5yEKBJUqUbd7o7yPh5P7wrIgsctbNZnjfP8fXKsPZ50uHnPozA2kg1OBXx6F
+         paGlHl7m4xZ4nsULvGWeevK1fYnu+otOrIsaao5E/j2BWFCC6KHYkLQ/otHlxfpL0YCs
+         B9NA==
+X-Forwarded-Encrypted: i=1; AJvYcCV38RWjASapCASTRM/Epz2GCxXJy/T+JIudjDcc08dVTecCXnZ2pUuFie7eTlc6+h346wha5gdEmIGlTWo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1GoK4bUzR2WA0f0aqNEy7QGIvEQbSvEvoB7fhBS3Xrpluo9RZ
+	yXTrtv6AHP+YI32JezIxeZCiStVf9J4BeH9+C0Ct7CPunCfqoJsjmPbkqZ1WJqTt8Ew=
+X-Gm-Gg: ASbGncu5msHD75fyUGnzhylXfEJeDnOnA42Exvy+CbJ9Gdl8KTkLQkOtJP+c6aqTjTe
+	xWc4R9Zr7eqyc5iE8cHlStGNNEHZTpKQJ7DeW9JEgl53Bo+vWrdIBZLyWoM8Hiac8Xly4u7hcTG
+	20VxzA/3tX97HYL6xmOSn6sReXauZRIcLatwfL0fDXeanNB0ZoK4qEh6lDLEVIy+2AygyEttcP5
+	h4S0bnQBxEagwjVrjgo0vODuVbGG4CET+G2RlGaujG59MZrII2t2eFtCddezYXx/IyAJCMQscYk
+	bdaY4nutG6qHqXbNF+4QI4PWmxhvJAS5u8UVyvhhXgOmaEMZgRXPJ2Y4y6VIDXJSMVvQ3nJPL59
+	uqTjk+peOGzjdiatVcgYSsgRW1CIv08gIh2eo
+X-Google-Smtp-Source: AGHT+IEFrJBlVC7VlfyoWKCWgUF1BoulcpmDcaoQJgnAjb01VTeoCZDNnR+9q8S12QM4kbT+CovL2g==
+X-Received: by 2002:a05:6512:3b9d:b0:553:aadf:b0c4 with SMTP id 2adb3069b0e04-5550b811339mr5665246e87.11.1751370491736;
+        Tue, 01 Jul 2025 04:48:11 -0700 (PDT)
 Received: from uffe-tuxpro14.. (h-178-174-189-39.A498.priv.bahnhof.se. [178.174.189.39])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b2f162dsm1800592e87.248.2025.07.01.04.48.09
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b2f162dsm1800592e87.248.2025.07.01.04.48.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 04:48:09 -0700 (PDT)
+        Tue, 01 Jul 2025 04:48:11 -0700 (PDT)
 From: Ulf Hansson <ulf.hansson@linaro.org>
 To: Saravana Kannan <saravanak@google.com>,
 	Stephen Boyd <sboyd@kernel.org>,
@@ -80,9 +80,9 @@ Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
 	Ulf Hansson <ulf.hansson@linaro.org>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 19/24] driver core: Add dev_set_drv_sync_state()
-Date: Tue,  1 Jul 2025 13:47:21 +0200
-Message-ID: <20250701114733.636510-20-ulf.hansson@linaro.org>
+Subject: [PATCH v3 20/24] pmdomain: core: Default to use of_genpd_sync_state() for genpd providers
+Date: Tue,  1 Jul 2025 13:47:22 +0200
+Message-ID: <20250701114733.636510-21-ulf.hansson@linaro.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250701114733.636510-1-ulf.hansson@linaro.org>
 References: <20250701114733.636510-1-ulf.hansson@linaro.org>
@@ -94,44 +94,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Saravana Kannan <saravanak@google.com>
+Unless the typical platform driver that act as genpd provider, has its own
+->sync_state() callback implemented let's default to use
+of_genpd_sync_state().
 
-This can be used by frameworks to set the sync_state() helper functions
-for drivers that don't already have them set.
+More precisely, while adding a genpd OF provider let's assign the
+->sync_state() callback, in case the fwnode has a device and its driver
+doesn't have the ->sync_state() set already. In this way the typical
+platform driver doesn't need to assign ->sync_state(), unless it has some
+additional things to manage beyond genpds.
 
-Signed-off-by: Saravana Kannan <saravanak@google.com>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
+Suggested-by: Saravana Kannan <saravanak@google.com>
 Tested-by: Hiago De Franco <hiago.franco@toradex.com> # Colibri iMX8X
 Tested-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com> # TI AM62A,Xilinx ZynqMP ZCU106
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
- include/linux/device.h | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/pmdomain/core.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 315b00171335..686f2a578fbd 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -917,6 +917,18 @@ static inline bool dev_has_sync_state(struct device *dev)
- 	return false;
+diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
+index ca47f91b9e91..5cef6de60c72 100644
+--- a/drivers/pmdomain/core.c
++++ b/drivers/pmdomain/core.c
+@@ -2600,6 +2600,11 @@ static bool genpd_present(const struct generic_pm_domain *genpd)
+ 	return ret;
  }
  
-+static inline int dev_set_drv_sync_state(struct device *dev,
-+					 void (*fn)(struct device *dev))
++static void genpd_sync_state(struct device *dev)
 +{
-+	if (!dev || !dev->driver)
-+		return 0;
-+	if (dev->driver->sync_state && dev->driver->sync_state != fn)
-+		return -EBUSY;
-+	if (!dev->driver->sync_state)
-+		dev->driver->sync_state = fn;
-+	return 0;
++	return of_genpd_sync_state(dev->of_node);
 +}
 +
- static inline void dev_set_removable(struct device *dev,
- 				     enum device_removable removable)
- {
+ /**
+  * of_genpd_add_provider_simple() - Register a simple PM domain provider
+  * @np: Device node pointer associated with the PM domain provider.
+@@ -2628,6 +2633,8 @@ int of_genpd_add_provider_simple(struct device_node *np,
+ 	if (!dev && !genpd_is_no_sync_state(genpd)) {
+ 		genpd->sync_state = GENPD_SYNC_STATE_SIMPLE;
+ 		device_set_node(&genpd->dev, fwnode);
++	} else {
++		dev_set_drv_sync_state(dev, genpd_sync_state);
+ 	}
+ 
+ 	put_device(dev);
+@@ -2700,6 +2707,8 @@ int of_genpd_add_provider_onecell(struct device_node *np,
+ 	dev = get_dev_from_fwnode(fwnode);
+ 	if (!dev)
+ 		sync_state = true;
++	else
++		dev_set_drv_sync_state(dev, genpd_sync_state);
+ 
+ 	put_device(dev);
+ 
 -- 
 2.43.0
 
