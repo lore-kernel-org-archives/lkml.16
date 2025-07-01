@@ -1,104 +1,63 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF0D273D89
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 12:22:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C233273D90;
+	Tue,  1 Jul 2025 12:22:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751372522; cv=none; b=rYQWauPxlnXjK6bmtcnk+JO5u+J8YkEcFNQfwRMusplfsh6PsqNhR+glghgUpCRk3Md34+aAxCy5WLEYZlbSqPhYWK3WrSJUyns7MdNn6MdEQhz38EmRgXlAK3jpzDmSKAnU6LMFNI1UH0leLsH1tLJK9n2t/IpY5K3haCz5EoY=
+	t=1751372549; cv=none; b=tLN6PTwFUWujQh626fMr2TK+7w+U/yiC4/IWhf7o9Br4be7+g7oXCY39arbJGt8/JSIZapCM/6P41duXvPtdeADnawoGz2YsmQq2bOTBRTHTsfkVfxkHBYWmgn5KktQz+zUSG1tpk/0JGDzVThV3HnyZac8CjEmno6bWTFkrsDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751372522; c=relaxed/simple;
-	bh=T1eznURLjuD0Abxq1edZummHu16xKukTlKv1spW65/Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=m4arQcbLqFj4fnig5AKOqnmDWxkNtf3E6tKyZQud7cyZfuqPDLYoCJFgIDCJRvWHobJkaeuKbHyRDcG9xdD/IsIg/dXodXPyL6JPbuzQ6oCtEFTJscgTq4ZRywNSou2rblj+xxBKduqI8uNjtPQ3qYTTh3+yqzmbvMVonPvhqjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uWZzh-0007K1-6Z; Tue, 01 Jul 2025 14:21:49 +0200
-Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uWZzf-006GdE-2D;
-	Tue, 01 Jul 2025 14:21:47 +0200
-Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uWZzf-0009GS-1y;
-	Tue, 01 Jul 2025 14:21:47 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
-	Andre Edich <andre.edich@microchip.com>,
-	kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org,
-	Russell King <linux@armlinux.org.uk>,
-	netdev@vger.kernel.org,
-	Lukas Wunner <lukas@wunner.de>
-Subject: [PATCH net v1 1/4] net: phy: smsc: Fix Auto-MDIX configuration when disabled by strap
-Date: Tue,  1 Jul 2025 14:21:43 +0200
-Message-Id: <20250701122146.35579-2-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250701122146.35579-1-o.rempel@pengutronix.de>
-References: <20250701122146.35579-1-o.rempel@pengutronix.de>
+	s=arc-20240116; t=1751372549; c=relaxed/simple;
+	bh=254CU+o/PFeNIU/JlYJ59aAPA3HHr7d1xC1p/E4fWdw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vCCRJYhDbRY2jJHBA8AyxM63ep04Qb0nT9ubQ0nWIlZc0Q8+LGkX4jMD/iNqJVfIyP0z31yYgWkG/j5tCC9ItAHxXgh5PvMakkv+qz8QYdoM7s+JW4gFDInv5CoqHlVNZAmhak3r0u2sVVwa5S7nJGJl2t48lq9y0KQUnAsYi0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a4dXZdIy; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a4dXZdIy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27FD7C4CEEB;
+	Tue,  1 Jul 2025 12:22:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751372549;
+	bh=254CU+o/PFeNIU/JlYJ59aAPA3HHr7d1xC1p/E4fWdw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=a4dXZdIy+PDoHmH7xISBVLfVN7Niu0wnXTvRhm9OkdXE6Bzjka39HFr9A44aLDQak
+	 CvOxWmKKuMVfubdN9s01yeutvUSIcMoGBQawoXIPGcNfs0it0MMVKwmPgvo7OwKvyO
+	 U+sy8sKa4ku/p83x/UNgg7/dQZmMxsDmQGckxsuOs5ql38weERKQ9tIWUzzgL60HVI
+	 NN8r3QW0uRuJR/+xn9KPtCnZxGgc8o1rBt1/CXb5pVc3euiU6ihI2ba1Pe4Ddac+oB
+	 G/lpeyr1xYZ+ysu/Q7gEZxh8dn8KnAqMZDeXy2GN/Xz3S3NDt2iItey6DvTAyjYCFn
+	 K94d5TDgoR6oA==
+Date: Tue, 1 Jul 2025 05:22:24 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH] loongarch: Use '.ascii' instead of '.string' in
+ __BUGVERBOSE_LOCATION
+Message-ID: <20250701122224.GA1879931@ax162>
+References: <20250616-loongarch-fix-warn-cond-llvm-ias-v1-1-6c6d90bb4466@kernel.org>
+ <CAAhV-H5BEe2FtKwh+SMNAKeKadhf4ALHb0nTFa5e_BBY1TOWCg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <CAAhV-H5BEe2FtKwh+SMNAKeKadhf4ALHb0nTFa5e_BBY1TOWCg@mail.gmail.com>
 
-Correct the Auto-MDIX configuration to ensure userspace settings are
-respected when the feature is disabled by the AUTOMDIX_EN hardware strap.
+On Sun, Jun 29, 2025 at 11:59:57AM +0800, Huacai Chen wrote:
+> On Tue, Jun 17, 2025 at 7:23 AM Nathan Chancellor <nathan@kernel.org> wrote:
+> > Fixes: 5d476f66e6ad ("bugs/LoongArch: Concatenate 'cond_str' with '__FILE__' in __BUG_ENTRY(), to extend WARN_ON/BUG_ON output")
+> 
+> 5d476f66e6ad is not in upstream, so I prefer squash this patch to 5d476f66e6ad.
 
-The LAN9500 PHY allows its default MDI-X mode to be configured via a
-hardware strap. If this strap sets the default to "MDI-X off", the
-driver was previously unable to enable Auto-MDIX from userspace.
+Sure, that's fine with me, assuming Ingo is fine with rebasing that
+branch. I just want my builds back to green :)
 
-When handling the ETH_TP_MDI_AUTO case, the driver would set the
-SPECIAL_CTRL_STS_AMDIX_ENABLE_ bit but neglected to set the required
-SPECIAL_CTRL_STS_OVRRD_AMDIX_ bit. Without the override flag, the PHY
-falls back to its hardware strap default, ignoring the software request.
-
-This patch corrects the behavior by also setting the override bit when
-enabling Auto-MDIX. This ensures that the userspace configuration takes
-precedence over the hardware strap, allowing Auto-MDIX to be enabled
-correctly in all scenarios.
-
-Fixes: 05b35e7eb9a1 ("smsc95xx: add phylib support")
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Andre Edich <andre.edich@microchip.com>
----
- drivers/net/phy/smsc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/phy/smsc.c b/drivers/net/phy/smsc.c
-index 31463b9e5697..adf12d7108b5 100644
---- a/drivers/net/phy/smsc.c
-+++ b/drivers/net/phy/smsc.c
-@@ -167,7 +167,8 @@ static int lan87xx_config_aneg(struct phy_device *phydev)
- 			SPECIAL_CTRL_STS_AMDIX_STATE_;
- 		break;
- 	case ETH_TP_MDI_AUTO:
--		val = SPECIAL_CTRL_STS_AMDIX_ENABLE_;
-+		val = SPECIAL_CTRL_STS_OVRRD_AMDIX_ |
-+			SPECIAL_CTRL_STS_AMDIX_ENABLE_;
- 		break;
- 	default:
- 		return genphy_config_aneg(phydev);
--- 
-2.39.5
-
+Cheers,
+Nathan
