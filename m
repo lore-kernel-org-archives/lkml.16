@@ -1,341 +1,180 @@
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013019.outbound.protection.outlook.com [40.107.162.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723CE13D539
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 04:40:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.19
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751344814; cv=fail; b=IyDgdbNZwdi4+QWyuJzzV7ldsNzWf5vS/yDYYHv/NYCGYl1wm6eB26Cm6xpxwu8cL6IOO8GNSunWsTByXEeXe4qOydRyxtmUaTBAM0lPGWB1YhOfnz3oEiKI/aKt6F/u3CzcIX3EDUtr0SmvH8Kb5FhDgjy1lumAmEzeM+RzzAs=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751344814; c=relaxed/simple;
-	bh=AboEgynkvxA5kljXKKshLwpwe3uh3pDQcf69xuZOsdg=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=HmCA/+91TzMAtilX9PlrALGS1eWSOhhnalrq3CMYdZSCTyvnjXaIDuEqPrfzTkht+bLulrGSFxIJ1ixzGgyb0vqip1K84JjqXuNLFJk7DCsNN0/gi/hHCE7TVEVxRjqjfMo4gs3HUVTI2jyW1ZcuMLzYInv+87WCBBLZkZ0XT78=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=k/qrVC/s; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=k/qrVC/s; arc=fail smtp.client-ip=40.107.162.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 052D513D539
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 04:40:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751344823; cv=none; b=svY83VfbsvdVON44kfxJsh7yN+fta5SSo5ci2wVjGUJH1dQQ8WgUC2ggzDVkPOzh5OKrskTpQJ5g7Daz1/BsyqM2WOIanFHxPhrcxjVFogwbQMk+OSzmFg6IuWodGkuTOSqq7wZMk7cC32IceZxUPcrG7aQDhmC2fmpS/xaDSlw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751344823; c=relaxed/simple;
+	bh=CYmy2H6dallMLWHK/Xm8cQj0mMftS1YKv0q1HOUJcE4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P9/QHvUFJAWxM3wyzs4tlbKZ9uSJnmYFFgY4UL/SteyFYFcdLIswMnGO/XtmosQx8XDDC5Ocyanl43uC8Br9JDCG5PenhNWwhwaHnb81uH0HKhesvxIboea9QsJwrZ6GRpb+vtext0uhPzBr6VaoI69T+T03LIMv3uUwl4E5b90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=DDbEIsbN; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="k/qrVC/s";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="k/qrVC/s"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=C3QTydRn+chudAVOTIclQYMzmD2f4Ss+5S3K3h1xJsxf3Y69Pscn8MT9vh7hiCpUO885mCguG05e6gy9GQG7ZDWgr0BfBBLcrbMLXJT03ORdFFIO5Ifq37+x4otmgstBXR+CBS/0V+wi0BhgdolkGvO5iuWaxagNlm88ud1K87Y8lC1Nkw8vC3mR8yWAGw/EczSKqVQvXnsgj26I95MSyQ9J+bftn67WlVwqP+Caig2f3Qc1CLNytLUgQ+aC8rlx3D8qblaNBjmLRShRz4nMbWO94QirFmZqGqxN9JdsXB6hkQ7H3jsVxnJwimw1FGC0ZiWl04jQkp1xbjaEh5n5yQ==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dymocVtWnFCVrXeQHpswYTqcOtzU8qx7/0rtJ/LnGys=;
- b=p9ulQKga9Nm4iGKV4Oa91HGZaHf7QITBrbmheUmNCzLGbV5m++GXOvsXrEUL3sj/81v1rBp1Xj4Er9JAqCu+yM/OLUw4Uo4fwfU/c+r6NNwt5E5vbPAknEwPo7kRt0ISmPTbpcXVJuK6lcmHMLGZ/qt9HbzyuU2V458+gFftiaYqRTHUIjpz206jhmxI5UgdBN5IlDz+F4iIFmwgPqZXVWma5fTEK9BcD2RLxCpb3buSAS4qxGjy4rFIrQNLj6Jp1W1J5riu5z0K9XWomW9DQ/4KtaoZFiBV651ykueZBv23hLCI1gF6CX3IMuy9DKIQT/qwJba4GobvhJQwPUp/nA==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 4.158.2.129) smtp.rcpttodomain=oracle.com smtp.mailfrom=arm.com; dmarc=pass
- (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
- (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dymocVtWnFCVrXeQHpswYTqcOtzU8qx7/0rtJ/LnGys=;
- b=k/qrVC/sBXPcUIiAzzfga3eyx5TlhWMuX0shLA7cnw6tRvlap314LS3FNFkpLM3ORVnUHJMxhm/MmOHY3ecYY3TGjH3/nqKHgAHITxAvbte3Sj9auCB4GHi4P21J4NyyPO0UBunHtW4eT9x+PBjeyDAa8oP7xuHy4QNm1kOUGug=
-Received: from DUZPR01CA0301.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:4b7::18) by PA4PR08MB6304.eurprd08.prod.outlook.com
- (2603:10a6:102:e1::24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.31; Tue, 1 Jul
- 2025 04:40:06 +0000
-Received: from DB1PEPF000509EA.eurprd03.prod.outlook.com
- (2603:10a6:10:4b7:cafe::f) by DUZPR01CA0301.outlook.office365.com
- (2603:10a6:10:4b7::18) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.19 via Frontend Transport; Tue,
- 1 Jul 2025 04:40:07 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
- client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
-Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
- DB1PEPF000509EA.mail.protection.outlook.com (10.167.242.68) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.15
- via Frontend Transport; Tue, 1 Jul 2025 04:40:05 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JuqECtAZ/t/1B7SLbfPuR53kxQfKl50Z2XXuJYg5n74gg5I1Dm8r2a3+qmVFBy3Qf3rz9x4hazV3jBGkDkaxfsyzzezcramjEG0oXLRXfEhGX+RCDwXokn7orwvsxJgRIeMntO/wHM6rYkznhko699LRM8WejeM79gxdrDSa5Vbsa/vodUPuq1+p9TVCj9ZHTxuxVtiOI4fiJdBcuIl7qFrnvi/EoQE/qLFrDkbpQLN1vUxlamz3lQON0UOL3Rmj4BkNGW6M4s15lPbkjzCR8lri1kRdm7oSjJZ1hCvS4DiTvfevVsoK90stAneW7V24w3fJpi9qDVzKHMa1G+H9Gw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dymocVtWnFCVrXeQHpswYTqcOtzU8qx7/0rtJ/LnGys=;
- b=pH7/tyxN40WsOYuxuQRyu1OPgxqPcJaFZaIvyOSiu7vJLLl6xCwEO8Effv0sKL+wwc3jFJcP4cO1ZErUTYtt3L3kIW+E0s2K7DCuULGwlzxgddACpwj8w1GrauAxURC+6fbnTTtQRGWJX6SQjqifD29/k6lGw4DrBcJ/Bs8NT0GmTFu/xS+ql0vOuGGMT9WQtLGgNIPaEcPvQtZoMdeeBY5042MeIJlAnbbWRJybC9YY/Vmxv723gx3pG2XXUeNUDrHApZTr1gMh4lkSSV0HUt7Fi9U5DTHAZbuVkUj8JuaRYusjsHAaXPHgawYEQNfunR8IWfwJsGDMXGwu04+8tQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dymocVtWnFCVrXeQHpswYTqcOtzU8qx7/0rtJ/LnGys=;
- b=k/qrVC/sBXPcUIiAzzfga3eyx5TlhWMuX0shLA7cnw6tRvlap314LS3FNFkpLM3ORVnUHJMxhm/MmOHY3ecYY3TGjH3/nqKHgAHITxAvbte3Sj9auCB4GHi4P21J4NyyPO0UBunHtW4eT9x+PBjeyDAa8oP7xuHy4QNm1kOUGug=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from AM9PR08MB7120.eurprd08.prod.outlook.com (2603:10a6:20b:3dc::22)
- by GVXPR08MB7701.eurprd08.prod.outlook.com (2603:10a6:150:6d::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.18; Tue, 1 Jul
- 2025 04:39:33 +0000
-Received: from AM9PR08MB7120.eurprd08.prod.outlook.com
- ([fe80::2933:29aa:2693:d12e]) by AM9PR08MB7120.eurprd08.prod.outlook.com
- ([fe80::2933:29aa:2693:d12e%3]) with mapi id 15.20.8880.027; Tue, 1 Jul 2025
- 04:39:32 +0000
-Message-ID: <50bfa46d-5fa4-4b52-a3e5-c0da419db776@arm.com>
-Date: Tue, 1 Jul 2025 10:09:27 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] khugepaged: Reduce race probability between migration and
- khugepaged
-To: Anshuman Khandual <anshuman.khandual@arm.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: akpm@linux-foundation.org, david@redhat.com, ziy@nvidia.com,
- baolin.wang@linux.alibaba.com, Liam.Howlett@oracle.com, npache@redhat.com,
- ryan.roberts@arm.com, baohua@kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20250630044837.4675-1-dev.jain@arm.com>
- <e05103e1-3cdc-4271-b78f-84299d1a4efe@lucifer.local>
- <4e2ea3d3-d519-43cb-8026-d448e1d8df98@arm.com>
- <3e4576fb-d25c-4415-9df8-8133039af7cd@arm.com>
-Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <3e4576fb-d25c-4415-9df8-8133039af7cd@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MA1PR01CA0181.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:d::19) To AM9PR08MB7120.eurprd08.prod.outlook.com
- (2603:10a6:20b:3dc::22)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DDbEIsbN"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-553be4d2fbfso3124910e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 21:40:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1751344820; x=1751949620; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=2ttKaGOM1HLHnoSRZq1EsamPtO7ym6WKYXwUSXbl5tM=;
+        b=DDbEIsbNmO2zh+/dXij8l9OLF3FjuWdzMHDmv9V2waTcPl2GbwojiKPfmMq9v7DJNS
+         zlnq63y61kw4ru8o5xT+zpnq21hghTWedRaOEEbFP9B2+Y57Ujf7QoNmJPOTxaOmiPU6
+         eRrLRlJlGgxL/PvggfUTpGo4d4TNB+yVG7FtY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751344820; x=1751949620;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2ttKaGOM1HLHnoSRZq1EsamPtO7ym6WKYXwUSXbl5tM=;
+        b=C9i20umpeXvA3vkJgKFj2T8eFSPf8/zLd42RVeGmYPu097XW0um61WGhi2kJFuqPAv
+         3Al25YxE1YEnD68WMNmzLTfWssG3yJcRi1KWtSczIk6eiu2qdOQ3JBwz6wd8k0hsnN3B
+         SOOGQrPRD3Hgjbwlicx6DHF3DzLDETotv+YKgQf1nOeLmOWz+EN+xCXMhg34/N7Jh4iU
+         ySxl42jg8TJJbvEQ+pKlK7AjK1VdXC5qTSj4JEXy7HhaLTZGvJxJxMwouljaozU3W7+J
+         hJ/p608mJYk++VZLT2VgxQB/AR1uiIv0PDLtZRki9WrMySxbQbKrfkrcuV5q8a4RNS9E
+         6s7g==
+X-Forwarded-Encrypted: i=1; AJvYcCVD4Lj4UIQLO4J87uu5sr8LuGDtqHkpzR75Jjcuk33UQC5cZXeOsN+0/xZlJv888b+Fq3zn/kisFFciPTk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhMtdHQCodi/Ba4wHRcJcWODb7mDiA+ukXBFnpB3TEqmP2gwHT
+	6i525jyPEqTtGv4/uBZz4TnudHwC3Sm0r8WGVRZc8yINkxKoNsYFEibhHOI0KK3MY0PF1qtJSPr
+	2rtarEg==
+X-Gm-Gg: ASbGnct3GHIgUIJ3qWiFYwVTmvWtuXI4P9626tBdQCdmu/TEvbDJSxGeJuT9HgEq2I4
+	GRnJsfARGN5qEBiP0avBYFbL3/sMm3hOJAB22CV/k/b5hFj7IM1Icna1KKc6Ah9Q6nlqTK/KnJl
+	WF/s6aIaxfo6Eh8L+lnRSBaEHHoimKTXyLoEAowqK3hq3o2VIhlhLcRjfRdqwV7vYyihV9xIRps
+	oNxFjERd/Ya5z6QRMnEwk5wZPUlu0mPU7oMtLYig6xs3vGo/wUotK6qkQJd+l0L6tcXPVHdu2XM
+	6/KnLXZh/7dK9UuYyEPr6DYm+iN18a+kDrr8limBOfVwVaYkqjhhX0RYbbm+TwILRm7PZcaGlQH
+	bOAJGUYWr7UQYNSZN4Kv48SBi
+X-Google-Smtp-Source: AGHT+IEG4fXPqzSe/dbzKpy9xFuVdFDchCzbDgEIHbA/vLAKQoAj/9lAE/X74tocfFVulyZYkGb8Jg==
+X-Received: by 2002:a05:6512:318f:b0:553:2868:6362 with SMTP id 2adb3069b0e04-5550b8b0f0emr4540081e87.26.1751344819771;
+        Mon, 30 Jun 2025 21:40:19 -0700 (PDT)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b2d9e35sm1655854e87.216.2025.06.30.21.40.19
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Jun 2025 21:40:19 -0700 (PDT)
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-553be4d2fbfso3124903e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 21:40:19 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV0eDdOg/EdQg9JDOkct508SKUVn2DnR8umO68dYRBp4sYuzI9e5cr91lIXX8yOsT0iOSgAHog3m1MBOlU=@vger.kernel.org
+X-Received: by 2002:a05:6512:6d0:b0:553:2def:1ae8 with SMTP id
+ 2adb3069b0e04-5550b8b0b26mr4937295e87.30.1751344818626; Mon, 30 Jun 2025
+ 21:40:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	AM9PR08MB7120:EE_|GVXPR08MB7701:EE_|DB1PEPF000509EA:EE_|PA4PR08MB6304:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7cf8cf23-4328-4299-53dc-08ddb8595a29
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted:
- BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info-Original:
- =?utf-8?B?TGJhbi8zUVQ0Z256aWtBdlpQV0gvdmhudEtFaml5ZFRjOEIwNFBwVGpqZ1Zq?=
- =?utf-8?B?RVlWYXBEYTVWVnJiVnJrSE5kTklON05FTDh0c1RmVzFaNU9ia1BMZ29XR1VQ?=
- =?utf-8?B?NVp5ZEFPNnFsaEdBYnU4aXFOaWUwRENQdGJqd09yaFRiZkthcXBtUnZINXhv?=
- =?utf-8?B?bTlxM0xLdWhGRVAyYTZndW82eWdRVFNvZVVkM1hjOGNKL3RmZ0FTSnhSQTlX?=
- =?utf-8?B?WHFSRzVhNlU5R0lzZUt1R1JjMnZvbUVSQll0WWZtK21qWXdKaFBtMHVFT01v?=
- =?utf-8?B?eVFmSHhzSjRPcjRlek1BaHB4cXdCOVZtRDBtL24xamhKWS9JaEVKSUdYbjRW?=
- =?utf-8?B?Z2FkQnRWQVhtQXpJSENlTGJOOXVUa2F2T2FsQUxZS3A0SjRzc1EzVlI5NVFp?=
- =?utf-8?B?Y0JiaDRZd2dNT2pEcEhjdlF3amEvK2JYc2JRQk1zKytLWklYcmpmek1EYmZ5?=
- =?utf-8?B?Qk1IWnorMXVZZGtJVjRDVFl1eEI2c3dQcUhkTHBoZ2ptZGg1TlFYWFdYQ0VP?=
- =?utf-8?B?cVFZc2hEOFp2NjBoSmFNQ0E0b0VkQ1h6U3BSSTVjb1dtTVhyNmk0QW56b2hU?=
- =?utf-8?B?MWZDVkw3QVJOMEJ4OUg5K3UyYjFSV2wvdXdnYlUrcW9yMm9YOFJrbzhOKzc5?=
- =?utf-8?B?VHhFZjY5OHdvRE9tL3cwSnpnU1ZUamxkY2J1MzNtcSswOC84eGFrVWU3N29z?=
- =?utf-8?B?QndmZFBWdmkvNEJGV1FOU0V3cDRTLzF4WXJrUjB1MlVzaG5MMU5Bb3NyMDhz?=
- =?utf-8?B?Q1h1dzZhN045L3hCaUJiVm9wZ0NIRG51NWhPOHE4UFBnU0Rsck1pZEJnT0RT?=
- =?utf-8?B?Q3Qza3g3QU45d1JpSGxLT2lSc2RDVFJTakdZMTFST09LMy9lQ2t0WlJYVEZ6?=
- =?utf-8?B?b0tUN3dyZmtTVnlNNDFXNkU5SHFCRlJZRnE5Nk9IR0ZlNUtZRWFhdlEzWjR5?=
- =?utf-8?B?OGI3Z2tMTE5EZmFwbFRFdGhDc3MwS2tldzdWQStkWk1SdmsvMkpQOExZTU5H?=
- =?utf-8?B?S2FJelJoV2ZaMlRaZjR6TXpnajB5cVR5K1Vza0s1U0ZHTkRtZXlveGswSE85?=
- =?utf-8?B?VVREUE5zV2VPN0Z4Q01FaUxHR1B4TXBnY2E0QTRaMkU4ZTZUR3BydHh4S1VG?=
- =?utf-8?B?UlAxQVRVV1FJd1lwUm9TS1cvM01RN0gzMldJMm9obGc4VHMxMHNyTzlqeTNU?=
- =?utf-8?B?NkozOTlGTEh2WTZ6M2paSmNrdGprMmp0UTRCS1R2SDZQQlBwZG9ZemwzMVJo?=
- =?utf-8?B?Mm56VWhtMUthaDNralFjbWJzWklXeVVrYnFIa0Y0M09jSUJ4dUhlYXYyaTZT?=
- =?utf-8?B?RW9rUjFlcmlSWnRiYVNqcFMwZVdyeEU3cFE0VFJCa1RPS0YwRitOVTM5dlNH?=
- =?utf-8?B?UW1pb09PaUNxd1pPZnNQVDUrK2k2Y1FrTElHYnU1ZGhqQlRKNWxKTFRML25G?=
- =?utf-8?B?czh5OGVDdXg3dXFYdWlDZTZBWEVucnpLWURTUzVEbWo0eWlNQkFLZ1ppczVq?=
- =?utf-8?B?alJxRHJmdll0MG03SWNrdngvaHFBT0lnTHQ0djZuS2laVzgyQVJ6cmIxRlNR?=
- =?utf-8?B?WHhHVTZVQTZOSWZaSkdjYy9FM2JvOEdlckdEdDIzeGdMSWJYcnRnVTRGK01r?=
- =?utf-8?B?eHl4VzRkTnJiT3Exa3ZIeVBRaGovMFVWd05RRktOYU1DdEtPVzc1Qk10Vk9V?=
- =?utf-8?B?SFpLaTIrVHROZDlGenI4T1BvK0FnbFRaMkhUaG9JcXE1R0hTc3lHVWFMRzlW?=
- =?utf-8?B?R2FPUmxDMVZoU0hweDB1eXlCOEwzUFZYY21Pb0xsYTdsMGNXUGEreFdBWXFD?=
- =?utf-8?B?ZEQ0bHBhMzhRSzJCV3hGbG5vRHBhMlJPSWJmUXRYTzU4ME1rYkFvTWZnOWoy?=
- =?utf-8?B?c3M4U0lBK2ljNHQyekVxVFM3M2lVUXVrWEFMNG9sL0E3Nld1RWQ1VERnZ3Va?=
- =?utf-8?Q?xY55T/xcIYU=3D?=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR08MB7120.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR08MB7701
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- DB1PEPF000509EA.eurprd03.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	70eead52-4bf2-4e81-ae43-08ddb8594616
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|14060799003|30052699003|35042699022|82310400026|376014|7416014|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?a2FrbGY5dlQyNi9MbFpDWHEyY0lOSGpjMzBUMHhEWjBUTmxCd2ZrbkJHeGJG?=
- =?utf-8?B?Q2dDTFJQbkxROS94UWtTZk1wTUZyVkZNcFhlRkZBei9ZMUtYSDVuU2F5b3M1?=
- =?utf-8?B?TmdUWnZyd2ZtaHJ3aEFRblhvUjl6ajJ0QnpCMEZGRzI1NnQ1aFNWUkJJc004?=
- =?utf-8?B?eDc4OU5zMGtYUG1sZ2d4M3pHQVdzMHNlNjhyZjNJRkkrdW1TNnJSU1ZpLzEy?=
- =?utf-8?B?Slh3OS9MVGdDaHZNRmdLa1dNMjlnTE41ZkorWlFsTXA2SDFSUmtVT2Nhajhj?=
- =?utf-8?B?aUMxWXlpa3B1eUVUTWpFZ24rbndQditvQWZFRTlzN0VUeFZaaklIOElOZ1Zh?=
- =?utf-8?B?bm1XZWlUWGg0cXpiSXNMd1ZvaEUxUTBYU2tDb2czSUNyczJXYWNGeGpUY3RF?=
- =?utf-8?B?OXNJSGFNZ3k3YXZzNUwyV3AwV2g0dmpoYlduNi9oQzRrbmU4QU43ZW1RU0Zw?=
- =?utf-8?B?cFNqMzMzY0w0cXloYmoyR29rQWZ3THhHVnZOTFZZUDFKSDJPNDhEOEtGVktV?=
- =?utf-8?B?N004eUxqa2FnQmt6MGNXQzZUU1FwRmYvOVdSYlQ5QVRLK0hWTmVmNG9CUlJT?=
- =?utf-8?B?ZnBzeGVOUmkrUGJ1b0tYMWo2MVMrdHRSUW9vU1FOR09VbFRDZ3IyOEhEampX?=
- =?utf-8?B?ZkZBRTYxKzRFcHpJMzZBNHpBL1B1akwwQ1B4VW5uUVcwNFJET1lqUHZleTRZ?=
- =?utf-8?B?S3JiRitwOTI0ejlPbndiWUVZQTgwR3pQWSthNGs1aTdYMVJUSU1YTGxwVjRY?=
- =?utf-8?B?LzF4Vm55ZkJoZGVvS1dRUTN3KzVEWHNMeXJOZTlITGp5ZlBFcjVXekhjOElX?=
- =?utf-8?B?UkRDUFlEVkNGSmdQRFgrMW1tT1g0WXFGcEpxUDA1RlZPbzNYY0I4akVpOURr?=
- =?utf-8?B?WjVzeUxveXZhOGc1VW0vUmpnWUR1R2JlWkhreERzWWJqWFRSeGcrS2Y4Z0sy?=
- =?utf-8?B?eTB3dUlIanhKNjBLZnZyYmJqSEZrQloySnpVYXFod0pGZWJmVHVUalljaUQ1?=
- =?utf-8?B?VHV6YmRoMWVnZkFEV2lQTmhZaTYvRnFGSTQwd2lJV2c5SXlZQVhFZGlVZG1H?=
- =?utf-8?B?R2dPOEYyVVVFNTBDV0UvUHIvcTdwcW8yTWhQMUNYdWtZMGNnTUFxSGJuVkwy?=
- =?utf-8?B?YUsrb2tPOVI3UThIcDJCUFBweUYrOGRsTVZTNkhoV2VGTlR6Lyt5S0Q1Ni8v?=
- =?utf-8?B?UGl5bmhIcGp0aWxBSi84Rm9LWm04SEdIamFlZ3ZtQnZMV0V6S0kreTdDT295?=
- =?utf-8?B?ZnRlL2wwUEhVa0kreEtnTjJndXIyNlVCcnBFVkFPdGFjdEV0TWJaVHpwSy9Y?=
- =?utf-8?B?MW1NNDM5K0MyRm5jVmNHbzE5Z25Qb2ErZ1YzK0VMckl3WjRHY0E5R3dOaVJy?=
- =?utf-8?B?aXNRT0dKTm9ibjdRTndMaU5yUnY0bkVlbzhEaG9iMWNyTzgrMEp3YWlJaUFZ?=
- =?utf-8?B?UTdkOW9zbWdqb1ExSk1UVzhXblJiaEVKd3BYMUJJQTY3SzNla2NhM1MvVFF2?=
- =?utf-8?B?dDY1dDhESFlIaGFtZ3R4Slc3N0hxakJvSWVjTktXMkU0RldRU2MxNjE1NzNG?=
- =?utf-8?B?aEFxc28xSDhLZ1ZTMWRkZ2NuL3NtZVlrSzhPUDNQRGZRSDQvSHdmU2Q4Q3pj?=
- =?utf-8?B?eUUvNE5DUGhiSnQrM2F4MEZqeDUzZTFVZi9sZHRKWHFlb1BIaEdoRVZiMzBs?=
- =?utf-8?B?aUxHZWxNRmRxR1BqWjFXVCtZTTBzSjlHaCtjK3cvTU9COFZ1L25tVnFsKzc5?=
- =?utf-8?B?THZjMmpzbzFQM25XbzdyaWkzanlWSTF4ZFZQTzRXczFZcjg0Y240bEREZ0Js?=
- =?utf-8?B?QVJ0RXBoRFdYNGhFRVhPcE91dWZ5S3c2UmpwckhvTWhUZnZPQzhZNDZ1Zlpk?=
- =?utf-8?B?Mm02TzdHSHRROUgvK1VBaWozTzhqako5bWpvQ2VsTG5KL2tid3doaHZacU9P?=
- =?utf-8?B?a1o3RGEyZGdjUnUyM2tNLzNHQ3VrdUU0ZDhsM3hNRlRkWFZIdWtnYXhXblFW?=
- =?utf-8?B?U3JXaE43NGFVRkdHbjdvODBNUU5xQTByUWRDaGhMUTVKS1dVdUI0dWVPblhs?=
- =?utf-8?B?MzhuYUVYK3RxMElzZkMySFBSYytwTjlvd0ZCZz09?=
-X-Forefront-Antispam-Report:
-	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(14060799003)(30052699003)(35042699022)(82310400026)(376014)(7416014)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2025 04:40:05.9622
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7cf8cf23-4328-4299-53dc-08ddb8595a29
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB1PEPF000509EA.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR08MB6304
+References: <20250630-uvc-grannular-invert-v3-0-abd5cb5c45b7@chromium.org>
+ <20250630-uvc-grannular-invert-v3-6-abd5cb5c45b7@chromium.org> <20250630221439.GB15184@pendragon.ideasonboard.com>
+In-Reply-To: <20250630221439.GB15184@pendragon.ideasonboard.com>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Tue, 1 Jul 2025 06:40:05 +0200
+X-Gmail-Original-Message-ID: <CANiDSCvhqp-m6=Tijrk77KpHAQJV3XA5WpbYmprwhQaTsikwdg@mail.gmail.com>
+X-Gm-Features: Ac12FXwBINTRyFxGvfZfPUmWTCRuWET0Fgjjg3b8Tw-xFADZ51wdeV9Hi008xwg
+Message-ID: <CANiDSCvhqp-m6=Tijrk77KpHAQJV3XA5WpbYmprwhQaTsikwdg@mail.gmail.com>
+Subject: Re: [PATCH v3 6/8] media: uvcvideo: Do not enable camera during UVCIOC_CTRL_MAP*
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, 
+	Hans de Goede <hansg@kernel.org>, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Hi
 
-On 01/07/25 10:00 am, Anshuman Khandual wrote:
+On Tue, 1 Jul 2025 at 00:15, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
 >
-> On 30/06/25 8:00 PM, Dev Jain wrote:
->> On 30/06/25 6:57 pm, Lorenzo Stoakes wrote:
->>> On Mon, Jun 30, 2025 at 10:18:37AM +0530, Dev Jain wrote:
->>>> Suppose a folio is under migration, and khugepaged is also trying to
->>>> collapse it. collapse_pte_mapped_thp() will retrieve the folio from the
->>>> page cache via filemap_lock_folio(), thus taking a reference on the folio
->>>> and sleeping on the folio lock, since the lock is held by the migration
->>>> path. Migration will then fail in
->>>> __folio_migrate_mapping -> folio_ref_freeze. Reduce the probability of
->>>> such a race happening (leading to migration failure) by bailing out
->>>> if we detect a PMD is marked with a migration entry.
->>> This is a nice find!
->>>
->>>> This fixes the migration-shared-anon-thp testcase failure on Apple M3.
->>>>
->>>> Note that, this is not a "fix" since it only reduces the chance of
->>>> interference of khugepaged with migration, wherein both the kernel
->>>> functionalities are deemed "best-effort".
->>> Thanks for separating this out, appreciated!
->>>
->>>> Signed-off-by: Dev Jain <dev.jain@arm.com>
->>>> ---
->>>>
->>>> This patch was part of
->>>> https://lore.kernel.org/all/20250625055806.82645-1-dev.jain@arm.com/
->>>> but I have sent it separately on suggestion of Lorenzo, and also because
->>>> I plan to send the first two patches after David Hildenbrand's
->>>> folio_pte_batch series gets merged.
->>>>
->>>>    mm/khugepaged.c | 12 ++++++++++--
->>>>    1 file changed, 10 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
->>>> index 1aa7ca67c756..99977bb9bf6a 100644
->>>> --- a/mm/khugepaged.c
->>>> +++ b/mm/khugepaged.c
->>>> @@ -31,6 +31,7 @@ enum scan_result {
->>>>        SCAN_FAIL,
->>>>        SCAN_SUCCEED,
->>>>        SCAN_PMD_NULL,
->>>> +    SCAN_PMD_MIGRATION,
->>>>        SCAN_PMD_NONE,
->>>>        SCAN_PMD_MAPPED,
->>>>        SCAN_EXCEED_NONE_PTE,
->>>> @@ -941,6 +942,8 @@ static inline int check_pmd_state(pmd_t *pmd)
->>>>
->>>>        if (pmd_none(pmde))
->>>>            return SCAN_PMD_NONE;
->>>> +    if (is_pmd_migration_entry(pmde))
->>>> +        return SCAN_PMD_MIGRATION;
->>> With David's suggestions I guess this boils down to simply adding this line.
->> I think it should be
->>
->> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
->> index 1aa7ca67c756..8a6ba5c8ba4d 100644
->> --- a/mm/khugepaged.c
->> +++ b/mm/khugepaged.c
->> @@ -941,10 +941,10 @@ static inline int check_pmd_state(pmd_t *pmd)
->>   
->>       if (pmd_none(pmde))
->>           return SCAN_PMD_NONE;
->> +    if (is_pmd_migration_entry(pmde) || pmd_trans_huge(pmde))
->> +        return SCAN_PMD_MAPPED;
->>       if (!pmd_present(pmde))
->>           return SCAN_PMD_NULL;
->> -    if (pmd_trans_huge(pmde))
->> -        return SCAN_PMD_MAPPED;
->>       if (pmd_bad(pmde))
->>           return SCAN_PMD_NULL;
->>       return SCAN_SUCCEED;
->>
->> Moving this line above since we don't want to exit prematurely
->> due to !pmd_present(pmde).
-> Might be cleaner to just add the migration test separately before
-> the pmd_present() and without modifying existing pmd_trans_huge().
+> Hi Ricardo,
 >
-> 	if (is_pmd_migration_entry(pmde))
-> 		return SCAN_PMD_MAPPED;
+> Thank you for the patch.
+>
+> On Mon, Jun 30, 2025 at 02:20:31PM +0000, Ricardo Ribalda wrote:
+> > The device does not need to be enabled to do this, it is merely an
+> > internal data operation.
+>
+> How about the following code path ?
 
-Sounds good.
+Ups, thanks for catching this.
 
->>
->>> Could we add a quick comment to explain why here?
->> Sure.
->>
->>> Thanks!
->>>
->>>>        if (!pmd_present(pmde))
->>>>            return SCAN_PMD_NULL;
->>>>        if (pmd_trans_huge(pmde))
->>>> @@ -1502,9 +1505,12 @@ int collapse_pte_mapped_thp(struct mm_struct *mm, unsigned long addr,
->>>>            !range_in_vma(vma, haddr, haddr + HPAGE_PMD_SIZE))
->>>>            return SCAN_VMA_CHECK;
->>>>
->>>> -    /* Fast check before locking page if already PMD-mapped */
->>>> +    /*
->>>> +     * Fast check before locking folio if already PMD-mapped, or if the
->>>> +     * folio is under migration
->>>> +     */
->>>>        result = find_pmd_or_thp_or_none(mm, haddr, &pmd);
->>>> -    if (result == SCAN_PMD_MAPPED)
->>>> +    if (result == SCAN_PMD_MAPPED || result == SCAN_PMD_MIGRATION)
->>>>            return result;
->>>>
->>>>        /*
->>>> @@ -2716,6 +2722,7 @@ static int madvise_collapse_errno(enum scan_result r)
->>>>        case SCAN_PAGE_LRU:
->>>>        case SCAN_DEL_PAGE_LRU:
->>>>        case SCAN_PAGE_FILLED:
->>>> +    case SCAN_PMD_MIGRATION:
->>>>            return -EAGAIN;
->>>>        /*
->>>>         * Other: Trying again likely not to succeed / error intrinsic to
->>>> @@ -2802,6 +2809,7 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
->>>>                goto handle_result;
->>>>            /* Whitelisted set of results where continuing OK */
->>>>            case SCAN_PMD_NULL:
->>>> +        case SCAN_PMD_MIGRATION:
->>>>            case SCAN_PTE_NON_PRESENT:
->>>>            case SCAN_PTE_UFFD_WP:
->>>>            case SCAN_PAGE_RO:
->>>> -- 
->>>> 2.30.2
->>>>
+I will probably rename uvc_ctrl_add_mapping() to
+uvc_ctrl_add_xu_mapping() in a future set.
+
+Regards!
+
+>
+> uvc_ioctl_xu_ctrl_map()
+>   uvc_ctrl_add_mapping()
+>     uvc_ctrl_init_xu_ctrl()
+>       uvc_ctrl_fill_xu_info()
+>         uvc_query_ctrl()
+>
+> ?
+>
+> > Reviewed-by: Hans de Goede <hansg@kernel.org>
+> > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> > ---
+> >  drivers/media/usb/uvc/uvc_v4l2.c | 13 +++++++------
+> >  1 file changed, 7 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+> > index 7ab1bdcfb493fe9f47dbdc86da23cba98d7d10ff..350cd2cc88f872d2e8bd19e2b8fb067894916364 100644
+> > --- a/drivers/media/usb/uvc/uvc_v4l2.c
+> > +++ b/drivers/media/usb/uvc/uvc_v4l2.c
+> > @@ -1178,10 +1178,6 @@ static long uvc_v4l2_compat_ioctl32(struct file *file,
+> >       void __user *up = compat_ptr(arg);
+> >       long ret;
+> >
+> > -     ret = uvc_pm_get(handle->stream->dev);
+> > -     if (ret)
+> > -             return ret;
+> > -
+> >       switch (cmd) {
+> >       case UVCIOC_CTRL_MAP32:
+> >               ret = uvc_v4l2_get_xu_mapping(&karg.xmap, up);
+> > @@ -1197,9 +1193,15 @@ static long uvc_v4l2_compat_ioctl32(struct file *file,
+> >
+> >       case UVCIOC_CTRL_QUERY32:
+> >               ret = uvc_v4l2_get_xu_query(&karg.xqry, up);
+> > +             if (ret)
+> > +                     break;
+> > +
+> > +             ret = uvc_pm_get(handle->stream->dev);
+> >               if (ret)
+> >                       break;
+> >               ret = uvc_xu_ctrl_query(handle->chain, &karg.xqry);
+> > +             uvc_pm_put(handle->stream->dev);
+> > +
+> >               if (ret)
+> >                       break;
+> >               ret = uvc_v4l2_put_xu_query(&karg.xqry, up);
+> > @@ -1212,8 +1214,6 @@ static long uvc_v4l2_compat_ioctl32(struct file *file,
+> >               break;
+> >       }
+> >
+> > -     uvc_pm_put(handle->stream->dev);
+> > -
+> >       return ret;
+> >  }
+> >  #endif
+> > @@ -1226,6 +1226,7 @@ static long uvc_v4l2_unlocked_ioctl(struct file *file,
+> >
+> >       /* The following IOCTLs do not need to turn on the camera. */
+> >       switch (cmd) {
+> > +     case UVCIOC_CTRL_MAP:
+> >       case VIDIOC_CREATE_BUFS:
+> >       case VIDIOC_DQBUF:
+> >       case VIDIOC_ENUM_FMT:
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+
+
+
+-- 
+Ricardo Ribalda
