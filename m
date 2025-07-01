@@ -1,189 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2ED2701B3
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 10:49:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B966425A33A;
+	Tue,  1 Jul 2025 10:50:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751366994; cv=none; b=hrwcDNEDd/mc30jacXXde/MAGIKZp68RWqz+DZSSBLzchwwdnWECtnD3uQi/NCBpli/Le72ZhbIMOvsFpHDEaihpBnsFjweo2FmO2rvqCC+4fDQzwYe549SJD9S9DGHglIxwfG5SPUYK3Q/QuLAaziR84jy03eVtnTF6SGiuKfU=
+	t=1751367026; cv=none; b=R8Rf3jMLqj/PCkivslikMHUAZ9MNqb3AofID8ZZ5fI06HXG1Qab247diyVWhvIH9jVFKhZkSbT6hHpWTnYa7e1sNS9RCFS7Hhat156OTTyGR+8U4hkkfEihnHP+61zj7pLne7hZMgLp071wcyIpOLfA2Er5oR556NTb0bfLfEdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751366994; c=relaxed/simple;
-	bh=rfmh8mLv26aS8gI+IYRKA9NzVJaudp50BtCKlSVDjfs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jFSEo3R8KJXzGcUx7sNuiZOTo7ixac7QWHOgcrtUumpqK5NSfqarugKGEDqFPlDWVacHHRIuIzdUnGKOiYyFtNZvkn8urizsNSE09cYrxFTYPZcEVsyr0jAAOnX+f4Q0JWi9MFUmHw+PhTibZCnD15KiDC5cbPvFYgyz14g+G/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=p8o6kBRj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751367026; c=relaxed/simple;
+	bh=vB2ciRLGq2buT1g4Abr9vSFpfnkL7pCjDw8BJb6OhgI=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lHflLeJBm26LRrJV1kiYzLAdb35SjhF57BDgqdLLISub/VgMOZNQJZp8lkqaW53WDsje9e2NbiuvWpZeIFb6fw1tLLB31bdrqym6gRdaSESrXmpuwSGmNS/3Yikdeas5WSeyyBqNNC0ULo/fLOTAhfBkFfPgjOGnKI5qA2bPaAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TfgZEFId; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="p8o6kBRj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B5D9C4CEEE;
-	Tue,  1 Jul 2025 10:49:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1751366993;
-	bh=rfmh8mLv26aS8gI+IYRKA9NzVJaudp50BtCKlSVDjfs=;
-	h=From:To:Cc:Subject:Date:From;
-	b=p8o6kBRjvT/CsthagHt2+YonQbhuyV62p/Vtd00HQRTefy1F8pXr8k2y5QDUHacfH
-	 Pyqioei8ykiaTwZ+C6/qCg52AG+X7i7rLI+hsOxEWm4o/bpmLQUp4EYzZRjycLsYTw
-	 jFeMxbz+83SNoUiW84zoZOSJGsrqoOdccliTexTg=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Louis Chauvet <louis.chauvet@bootlin.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Haneen Mohammed <hamohammed.sa@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Melissa Wen <melissa.srw@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	David Airlie <airlied@gmail.com>,
-	dri-devel@lists.freedesktop.org,
-	Lyude Paul <lyude@redhat.com>
-Subject: [PATCH v5] drm/vkms: convert to use faux_device
-Date: Tue,  1 Jul 2025 12:49:48 +0200
-Message-ID: <2025070147-antics-pleat-edd2@gregkh>
-X-Mailer: git-send-email 2.50.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TfgZEFId"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-553d771435fso4655559e87.3;
+        Tue, 01 Jul 2025 03:50:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751367023; x=1751971823; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6nCukVMyBo3RqFnHOfcz0HJrttovy5ZOtQsinnvZ25E=;
+        b=TfgZEFIdkuWKKefjLCe7//mH2nIyLc5rEnwlNyRK4HqS/6YadGTQH94MUdLNUTam3s
+         vNnclzbalTFRrVNpwFRotjXmAfkK+8Do7o5OlKY7adoYwQCVb11kLQHj4n0Lq7YjYS7C
+         dpcqrRWUCf4Ea5bkB5HHDgmqSp5XIkc9oGNAaXbP08tY49ApWo6jpCyhVxaCRZKNKmI+
+         UirP0TJvXx6hQuiGGayxflP81NGa+JzPWwB+d+8Da2TBd6IjZRpuF79nWStsYmXCwoDX
+         e1/0YBkVCv+BIje7LZwjT5tbCh0jMd5lMlkLm884OiYnXrnbSwexhCB5UI6DwN1bg6JZ
+         dRKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751367023; x=1751971823;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6nCukVMyBo3RqFnHOfcz0HJrttovy5ZOtQsinnvZ25E=;
+        b=AtMihS+IZVeP64/fsLCzjB3R0s8xsxbjAasjqmr0pQq9DUEZAn5Q/b4wM+jVeu0g6m
+         aUXAZzVa4PHNjRMA4IEHk6p75sBFlE/9bQq/7J27gvYTiSxDtCyGw7MSFdsssw8w4D1U
+         A8vczCTfVzX1mrJCZMt4bVuSaCR9ZP8gGQiq1PgxiTCxp9r/4bKtzFFIsu7jgq/4IQhT
+         X3z25MTJ+rXAkf5Ln+UzzTmjl3EE8+NkHvp5GK4s4IF7RNaAxInH+JBM16OnxbsWNaPw
+         dNh9HmqP66MrI/RHFQ+7rm8Pr/VALKAVbgYT+P0I6bCc3zWCivB2zeIskp+WpgEIvgA0
+         bLJw==
+X-Forwarded-Encrypted: i=1; AJvYcCU+D1MjLBVhIdiHi+utlm+zJFODhxRhUCUS5xU2MLymWjvcU52caBKzLVn0f3Zm69DZe2+8qH/DDvngeCw=@vger.kernel.org, AJvYcCUWtA3/S7YeGeRSs24P589xQigZaRy196aeTT/+NFpqLP9L2oAK4j/A/rVpciqR6RQPtMROeVZr/eeaEcCIYTA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOAj5wIOVj6cFY6EP51ZPPJD7T4BbOrPTctRnm031taVKfcD8n
+	VT9ke5UAd2tN3Kkuv92ZctyMNkcJqZGh/eNIWLeHe2qOE2FwSfkYUKfkhLiNpw==
+X-Gm-Gg: ASbGncslGZwakzp3W9oFA0lkcdKtED/lZ9qzmF5FWHEv8LInQHrIeSdeHDAt2OhCKRa
+	BZKnhVs4OYAv9ySeTlc/gHZTBwpHp81pen0ylvMACz1R5+4bqBq8fBUtmI1UEH8psEF+GT/tF9T
+	Mh+2HxDIbvjECOW0R+tWZldzk6bfP1zIGhzwXLTPKUF5GbcozifpLtb8Zulyx6bsFEnKyMzx/sl
+	a/YrrB4Ui+5glTJZ824nIMN0q85ROYtacgMGC3goMsmPEtHArj6RAEPuLPVGnC7o7aO3FZcWgL5
+	Whp5bWlj6y8VznoJhNzd/PvKDvPRiIkTSp/e6r80y8XM3Tx+/ZmhvMB5RVkJl72uzAGAtfD/SxH
+	F2MpRuqY8LgU=
+X-Google-Smtp-Source: AGHT+IElki988gDWr2y8ghmyNq4FVP1tCS8rW7LXaS5acajXsEXL5t8ekDHYSztkNjljjTDBGKI6rw==
+X-Received: by 2002:a05:6512:ac5:b0:553:2c92:fdcb with SMTP id 2adb3069b0e04-5550b8699f2mr6857763e87.3.1751367022393;
+        Tue, 01 Jul 2025 03:50:22 -0700 (PDT)
+Received: from pc636 (host-95-203-1-180.mobileonline.telia.com. [95.203.1.180])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b2d9e35sm1767155e87.216.2025.07.01.03.50.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 03:50:21 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Tue, 1 Jul 2025 12:50:19 +0200
+To: Vitaly Wool <vitaly.wool@konsulko.se>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org, Uladzislau Rezki <urezki@gmail.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v9 1/4] mm/vmalloc: allow to set node and align in
+ vrealloc
+Message-ID: <aGO9a06HutqljjNS@pc636>
+References: <20250630221511.3325123-1-vitaly.wool@konsulko.se>
+ <20250630221615.3325221-1-vitaly.wool@konsulko.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4473; i=gregkh@linuxfoundation.org; h=from:subject:message-id; bh=rfmh8mLv26aS8gI+IYRKA9NzVJaudp50BtCKlSVDjfs=; b=owGbwMvMwCRo6H6F97bub03G02pJDBnJe71P2ip++1VzRr+PQc1gxZ5pNw4//bJ+S2cdn6dlU /6m8Bb5jlgWBkEmBlkxRZYv23iO7q84pOhlaHsaZg4rE8gQBi5OAZiIxESGBWsthGSSLVamF4bq pV/KXNJ7RXHfMoZZzE+nXp/pOiXKIFpg2qI1yzQOGAS/AQA=
-X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250630221615.3325221-1-vitaly.wool@konsulko.se>
 
-The vkms driver does not need to create a platform device, as there is
-no real platform resources associated it,  it only did so because it was
-simple to do that in order to get a device to use for resource
-management of drm resources.  Change the driver to use the faux device
-instead as this is NOT a real platform device.
+On Tue, Jul 01, 2025 at 12:16:15AM +0200, Vitaly Wool wrote:
+> Reimplement vrealloc() to be able to set node and alignment should
+> a user need to do so. Rename the function to vrealloc_node_align()
+> to better match what it actually does now and introduce macros for
+> vrealloc() and friends for backward compatibility.
+> 
+> With that change we also provide the ability for the Rust part of
+> the kernel to set node and aligmnent in its allocations.
+> 
+> Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
+> ---
+>  include/linux/vmalloc.h | 12 +++++++++---
+>  mm/vmalloc.c            | 19 +++++++++++++++----
+>  2 files changed, 24 insertions(+), 7 deletions(-)
+> 
+> diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+> index fdc9aeb74a44..68791f7cb3ba 100644
+> --- a/include/linux/vmalloc.h
+> +++ b/include/linux/vmalloc.h
+> @@ -197,9 +197,15 @@ extern void *__vcalloc_noprof(size_t n, size_t size, gfp_t flags) __alloc_size(1
+>  extern void *vcalloc_noprof(size_t n, size_t size) __alloc_size(1, 2);
+>  #define vcalloc(...)		alloc_hooks(vcalloc_noprof(__VA_ARGS__))
+>  
+> -void * __must_check vrealloc_noprof(const void *p, size_t size, gfp_t flags)
+> -		__realloc_size(2);
+> -#define vrealloc(...)		alloc_hooks(vrealloc_noprof(__VA_ARGS__))
+> +void *__must_check vrealloc_node_align_noprof(const void *p, size_t size,
+> +		unsigned long align, gfp_t flags, int nid) __realloc_size(2);
+> +#define vrealloc_node_noprof(_p, _s, _f, _nid)	\
+> +	vrealloc_node_align_noprof(_p, _s, 1, _f, _nid)
+> +#define vrealloc_noprof(_p, _s, _f)		\
+> +	vrealloc_node_align_noprof(_p, _s, 1, _f, NUMA_NO_NODE)
+> +#define vrealloc_node_align(...)		alloc_hooks(vrealloc_node_align_noprof(__VA_ARGS__))
+> +#define vrealloc_node(...)			alloc_hooks(vrealloc_node_noprof(__VA_ARGS__))
+> +#define vrealloc(...)				alloc_hooks(vrealloc_noprof(__VA_ARGS__))
+>  
+>  extern void vfree(const void *addr);
+>  extern void vfree_atomic(const void *addr);
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index 6dbcdceecae1..776c68f84ce2 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -4089,12 +4089,15 @@ void *vzalloc_node_noprof(unsigned long size, int node)
+>  EXPORT_SYMBOL(vzalloc_node_noprof);
+>  
+>  /**
+> - * vrealloc - reallocate virtually contiguous memory; contents remain unchanged
+> + * vrealloc_node_align_noprof - reallocate virtually contiguous memory; contents
+> + * remain unchanged
+>   * @p: object to reallocate memory for
+>   * @size: the size to reallocate
+> + * @align: requested alignment
+>   * @flags: the flags for the page level allocator
+> + * @nid: node id
+>   *
+> - * If @p is %NULL, vrealloc() behaves exactly like vmalloc(). If @size is 0 and
+> + * If @p is %NULL, vrealloc_XXX() behaves exactly like vmalloc(). If @size is 0 and
+>   * @p is not a %NULL pointer, the object pointed to is freed.
+>   *
+>   * If __GFP_ZERO logic is requested, callers must ensure that, starting with the
+> @@ -4111,7 +4114,8 @@ EXPORT_SYMBOL(vzalloc_node_noprof);
+>   * Return: pointer to the allocated memory; %NULL if @size is zero or in case of
+>   *         failure
+>   */
+> -void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
+> +void *vrealloc_node_align_noprof(const void *p, size_t size, unsigned long align,
+> +				 gfp_t flags, int nid)
+>  {
+>  	struct vm_struct *vm = NULL;
+>  	size_t alloced_size = 0;
+> @@ -4135,6 +4139,11 @@ void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
+>  		if (WARN(alloced_size < old_size,
+>  			 "vrealloc() has mismatched area vs requested sizes (%p)\n", p))
+>  			return NULL;
+> +		if (WARN(!IS_ALIGNED((unsigned long)p, align),
+> +			 "will not reallocate with a bigger alignment (0x%lx)\n", align))
+> +			return NULL;
+> +		if (nid != NUMA_NO_NODE && nid != page_to_nid(vmalloc_to_page(p)))
+> +			goto need_realloc;
+>
+By this goto change, you bypass the two important checks below. For
+example if you shrink the allocated size, you do not need to perform
+any allocations. Instead the patch goes and allocates a new area.
 
-Tested-by: Louis Chauvet <louis.chauvet@bootlin.com>
-Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
-Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Haneen Mohammed <hamohammed.sa@gmail.com>
-Cc: Simona Vetter <simona@ffwll.ch>
-Cc: Melissa Wen <melissa.srw@gmail.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: David Airlie <airlied@gmail.com>
-Cc: dri-devel@lists.freedesktop.org
-Reviewed-by: Lyude Paul <lyude@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
-v5: - rebased against 6.16-rc4
-    - added reviewed-by and tested-by lines
-    - was somehow dropped from drm trees, resending to make sure it
-      isn't lost
+You just need to remove:
 
-v4: - first version of the patch, was part of a larger patch series that
-      has been mostly all applied to the tree.
+-		if (nid != NUMA_NO_NODE && nid != page_to_nid(vmalloc_to_page(p)))
+-			goto need_realloc;
 
- drivers/gpu/drm/vkms/vkms_drv.c | 28 ++++++++++++++--------------
- drivers/gpu/drm/vkms/vkms_drv.h |  4 ++--
- 2 files changed, 16 insertions(+), 16 deletions(-)
+to make it working.
 
-diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
-index a24d1655f7b8..e8472d9b6e3b 100644
---- a/drivers/gpu/drm/vkms/vkms_drv.c
-+++ b/drivers/gpu/drm/vkms/vkms_drv.c
-@@ -10,7 +10,7 @@
-  */
- 
- #include <linux/module.h>
--#include <linux/platform_device.h>
-+#include <linux/device/faux.h>
- #include <linux/dma-mapping.h>
- 
- #include <drm/clients/drm_client_setup.h>
-@@ -149,27 +149,27 @@ static int vkms_modeset_init(struct vkms_device *vkmsdev)
- static int vkms_create(struct vkms_config *config)
- {
- 	int ret;
--	struct platform_device *pdev;
-+	struct faux_device *fdev;
- 	struct vkms_device *vkms_device;
- 	const char *dev_name;
- 
- 	dev_name = vkms_config_get_device_name(config);
--	pdev = platform_device_register_simple(dev_name, -1, NULL, 0);
--	if (IS_ERR(pdev))
--		return PTR_ERR(pdev);
-+	fdev = faux_device_create(dev_name, NULL, NULL);
-+	if (!fdev)
-+		return -ENODEV;
- 
--	if (!devres_open_group(&pdev->dev, NULL, GFP_KERNEL)) {
-+	if (!devres_open_group(&fdev->dev, NULL, GFP_KERNEL)) {
- 		ret = -ENOMEM;
- 		goto out_unregister;
- 	}
- 
--	vkms_device = devm_drm_dev_alloc(&pdev->dev, &vkms_driver,
-+	vkms_device = devm_drm_dev_alloc(&fdev->dev, &vkms_driver,
- 					 struct vkms_device, drm);
- 	if (IS_ERR(vkms_device)) {
- 		ret = PTR_ERR(vkms_device);
- 		goto out_devres;
- 	}
--	vkms_device->platform = pdev;
-+	vkms_device->faux_dev = fdev;
- 	vkms_device->config = config;
- 	config->dev = vkms_device;
- 
-@@ -203,9 +203,9 @@ static int vkms_create(struct vkms_config *config)
- 	return 0;
- 
- out_devres:
--	devres_release_group(&pdev->dev, NULL);
-+	devres_release_group(&fdev->dev, NULL);
- out_unregister:
--	platform_device_unregister(pdev);
-+	faux_device_destroy(fdev);
- 	return ret;
- }
- 
-@@ -231,19 +231,19 @@ static int __init vkms_init(void)
- 
- static void vkms_destroy(struct vkms_config *config)
- {
--	struct platform_device *pdev;
-+	struct faux_device *fdev;
- 
- 	if (!config->dev) {
- 		DRM_INFO("vkms_device is NULL.\n");
- 		return;
- 	}
- 
--	pdev = config->dev->platform;
-+	fdev = config->dev->faux_dev;
- 
- 	drm_dev_unregister(&config->dev->drm);
- 	drm_atomic_helper_shutdown(&config->dev->drm);
--	devres_release_group(&pdev->dev, NULL);
--	platform_device_unregister(pdev);
-+	devres_release_group(&fdev->dev, NULL);
-+	faux_device_destroy(fdev);
- 
- 	config->dev = NULL;
- }
-diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
-index a74a7fc3a056..5a46016e1890 100644
---- a/drivers/gpu/drm/vkms/vkms_drv.h
-+++ b/drivers/gpu/drm/vkms/vkms_drv.h
-@@ -197,13 +197,13 @@ struct vkms_config;
-  * struct vkms_device - Description of a VKMS device
-  *
-  * @drm - Base device in DRM
-- * @platform - Associated platform device
-+ * @faux_dev - Associated faux device
-  * @output - Configuration and sub-components of the VKMS device
-  * @config: Configuration used in this VKMS device
-  */
- struct vkms_device {
- 	struct drm_device drm;
--	struct platform_device *platform;
-+	struct faux_device *faux_dev;
- 	const struct vkms_config *config;
- };
- 
--- 
-2.50.0
-
+--
+Uladzislau Rezki
