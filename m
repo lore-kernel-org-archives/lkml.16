@@ -1,113 +1,102 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C00D7280A5A
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 17:29:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32B3925A2BC;
+	Tue,  1 Jul 2025 17:34:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751390943; cv=none; b=WN8S1EuDVjxEbg/ScM4il4KGgqDAHkJ1P2jwhz5GZsm90o21HY1oTP2/+sgWyNxpufiStmsI8Ouj/SBDqhc66vmpv3OZQVifYwQkB5nLtXmxca7FKM+WQoEtFIHUERy6mL9vtKrC4vmxr4N8htVS/adI4p7XeXJfFefyr6rTLKU=
+	t=1751391295; cv=none; b=if/q4Xnrx5Q016cFgQ5LNFLSMzI2VD3wXnLEbFeIkAIVODi2DtFaxoneYNbHe/vRHmYG1Vetn1lIB6hULQfJdwEREW7iQnjwJnFDww0EOAUXMYzdKpPPZZVqNdYD5rFMJJ3vuoWiKK6c1gci7lTpHXaUUXbrq+5Fax3NdGkfSO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751390943; c=relaxed/simple;
-	bh=uTC4kzf1I6Jz+bT8kOF3LyapejFqA2G+/FXP/SQ4Ej8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bSgxEj1A6XxZXlHpyH/GeGPLNINMOAj0qBg5EQ+hj4sN9mEB1SKS/ipO1vRHpbPdEuDrj3CoNLSF1UaLqy6kEeKifv6pEScZ0gyhPdWqczhBtc91oWwB7gScK4z1aRx4/+J335uvSfhcI570ZfxmnupP+JA8Sq62eZNOX+GndD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=trNl/sC6; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751391295; c=relaxed/simple;
+	bh=Se7Gtkkk90SXCT9cJj7ZvM8q7WY/FjCqqXgfwGctlbM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L/+tJVDr9sz2AwPHcypTrMWvGFcqD4BRR961lVjMuXj/7l9ldowJjAl0kpTnvK9ICF3U4FdMGNLtkviZQhBrTIVRoaYTOz9my5fR8IT00pGQZZTV25/l1MPSuRtjJOZkdzOiIAoCpYQ7vJCUsP6uScQCe8mz0KpMYdYUO51q3yI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bmtdmBku; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="trNl/sC6"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4538bc1cffdso34246675e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 10:29:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751390939; x=1751995739; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4PQE74E3+f+H3yVXqbUucK8HKDi4aSq8B7tA2u++UxY=;
-        b=trNl/sC6PXa2bpFq8u5PC5IhChKNlwHTmFtLeWExI1a4Vj+IzWoOtYlKZTwgVWEh3E
-         cK3W2msfgkhRI3FtQvrMT6/OgIvejZT7mj1VW3eidlcIJr3ugOIaO146jHmb6SnnrcY8
-         4wwyQ91GwlPZuAsuJ+gO2wCFwgoQdOJAWy9LRd2UcuUrMbX2Whevbef/qInFiZaty50q
-         /UzyYoMptzH9THMXqlKs785+H6IMYlV1KiVB0LRA6iGIWrv7LXI2Y9qTh9g9FTqbd0pm
-         8CJUm/jbW8OMuqxduQyIlGhOY8QOleP8h6rGuSrxrhugEifSuCIO5hFIBZ9NJecV3cFg
-         1NVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751390939; x=1751995739;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4PQE74E3+f+H3yVXqbUucK8HKDi4aSq8B7tA2u++UxY=;
-        b=AbTsD6j6UDoISBgmuH97Jek/lZ1lGP11/mrnY8zRzH7UzVvsm1/2D7/ESSFlfIjLNQ
-         ppH8ETTOYSB5XMnIqhHnhIAyFYTV99LWKSmZhb7mDFgiTQwGV0tc50/3cxm1q+/o0FXl
-         mBrOLRJIGRnLZ61PM3bDMtllzvazlI1AoRa/H8/NlRWD/Ki9ajB7Po6e7YaGfbPrRFqu
-         hinUJ7TuvP8Olr3ky91JGcD/+BtzBg+tAZZaooPD/M0iv6gaX7OrlxuPWEAlg411+5XV
-         CLy50Fo64qZDcYBdIuepFVCHmO/yjAci1PDyYXXtB5xt6zVJFMjzy7i1hUQuI6+sMPrT
-         /JuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVGesC8dvDI2SzUBAchOMdHrjh6pYw0IJIHWxWq55mxq4r6v27JrbnGH+EC9NcljtrxK4ACp9A3wFtqltk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYCT5bDMlx1395eAqpYdEkPIp1Oc1XXEVe0qzhvP6Nu+l+6YcE
-	dAw/JtFG1K+tjtq8FrJR4y9Ggw3w8i8+nkd4RzVC7AV7c8Pl50M+YNj4Z4LveEGSIbo=
-X-Gm-Gg: ASbGncu/5nNGXkdTd/NNoSVnDX31/ogaxu8ZiafL4l9Kh3LwPSM+fkuF14M0xYskxAC
-	vsVXvUBBWa9ublfwDBd7363mn4iLQFAeZIkZ3nA57p2u3kx38ZbIsxIVdEKQB4f6j/5TcSRjG2z
-	ZOJfA7j0kFUpf5OG4MyzdumWufnTqZ9qFtXzzc2hZfvSMivweXZ7vCL5yf6HuzQJx1bW1xdS/oA
-	YXbiciahVQAB2edPpQrrXBm86NgVF0JKx/Vss2aDGV2/jQ/91TVK3bROvqkaYmms3OwhBtxWv8I
-	z/iE/Pbo5vY/tLRfE/V5ldZYCgmLFEpWke6XqdfBAtIU99cJG5vb/nMgmFAc8OeihwRfJ9iZTRS
-	11w==
-X-Google-Smtp-Source: AGHT+IGZP4VK3OGEwU0CEzKIJC5X6rK51GL6b45SeBsta0YIlXh3TGxScJL99EYRJd42enR5wJE46Q==
-X-Received: by 2002:a05:600c:3b9a:b0:450:cea0:1781 with SMTP id 5b1f17b1804b1-45395338d3bmr182966045e9.16.1751390939051;
-        Tue, 01 Jul 2025 10:28:59 -0700 (PDT)
-Received: from [127.0.0.2] ([2a02:2454:ff21:ef41:1425:eda1:87ab:f850])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538234b1b9sm198716175e9.11.2025.07.01.10.28.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 10:28:58 -0700 (PDT)
-From: Stephan Gerhold <stephan.gerhold@linaro.org>
-Date: Tue, 01 Jul 2025 19:28:37 +0200
-Subject: [PATCH 5/6] clk: qcom: gcc-x1e80100: Add missing video resets
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bmtdmBku"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EF06C4CEEF;
+	Tue,  1 Jul 2025 17:34:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751391294;
+	bh=Se7Gtkkk90SXCT9cJj7ZvM8q7WY/FjCqqXgfwGctlbM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bmtdmBku9oDv7zQel+ctz6e9hWIDRMYUvkHTvqbeVTlWr57WF6spUw5ZW0Vai+lYw
+	 5Pz5KVh21iv6gTVOyYxJWcTr98giKgJu4ofwk8PTtJVKPzbMXtE2vdUGp7znyNmZ+2
+	 HXCJkVf5nVupjM2TkzBrQTjAvPieBYkKzzum7hLOKWBFrOnXAJa80JQzFOdiv4hePD
+	 +d8nXKv7j/LOyeBhtQj4LsgrBAbqRO43pRo0niaTqux5Sl4jAIxGKlQZikHrGKmvfA
+	 vsMOUwdMwsq9n2T+tzYbYPu01qF2NsBCl7OXoicxoZx/zvzGfNlwaXNiQLlbDfmQK2
+	 psrAyISjWEdEg==
+Date: Tue, 1 Jul 2025 19:34:48 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Matthew Maurer <mmaurer@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Timur Tabi <ttabi@nvidia.com>, Benno Lossin <lossin@kernel.org>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	Dirk Behme <dirk.behme@de.bosch.com>
+Subject: Re: [PATCH v8 6/6] rust: samples: Add debugfs sample
+Message-ID: <aGQcODIzMiB46gKF@pollux>
+References: <20250627-debugfs-rust-v8-0-c6526e413d40@google.com>
+ <20250627-debugfs-rust-v8-6-c6526e413d40@google.com>
+ <2025070148-primer-stillness-0409@gregkh>
+ <CAGSQo00UiOUAgYODhXT9BWLW0bXoCxMzt9fV2F2aiTEOG1vwyA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250701-x1e-videocc-v1-5-785d393be502@linaro.org>
-References: <20250701-x1e-videocc-v1-0-785d393be502@linaro.org>
-In-Reply-To: <20250701-x1e-videocc-v1-0-785d393be502@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Taniya Das <quic_tdas@quicinc.com>, 
- Jagadeesh Kona <quic_jkona@quicinc.com>, 
- Konrad Dybcio <konradybcio@kernel.org>, Abel Vesa <abel.vesa@linaro.org>, 
- Johan Hovold <johan@kernel.org>, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
- Stefan Schmidt <stefan.schmidt@linaro.org>, linux-arm-msm@vger.kernel.org, 
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGSQo00UiOUAgYODhXT9BWLW0bXoCxMzt9fV2F2aiTEOG1vwyA@mail.gmail.com>
 
-Add the missing video resets that are needed for the iris video codec.
-Adapted from gcc-sm8550.c (with adjusted addresses).
+On Tue, Jul 01, 2025 at 10:24:04AM -0700, Matthew Maurer wrote:
+> On Tue, Jul 1, 2025 at 7:03 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Fri, Jun 27, 2025 at 11:18:29PM +0000, Matthew Maurer wrote:
+> > > +        // An `Arc<Mutex<usize>>` doesn't implement display, so let's give explicit instructions on
+> > > +        // how to print it
+> > > +        let file_2 = sub.fmt_file(c_str!("arc_backed"), my_arc.clone(), &|val, f| {
+> > > +            writeln!(f, "locked value: {:#010x}", *val.lock())
+> > > +        });
+> >
+> > While cute, is this really going to be the way to describe all "custom"
+> > debugfs function callbacks?  No other way to point to a function itself
+> > instead?  Look at "fun" debugfs functions like qh_lines() in
+> > drivers/usb/host/ehci-dbg.c that is dumping tons of data out.  Putting
+> > that inline here is going to be a bit ackward :)
+> 
+> Good news, function pointers are legal to pass in here as well
+> already, I can add that usage to make it clear.
+> 
+> >
+> > So can you show an example of a "traditional" debugfs file output with
+> > multiple lines that is dealing with a dynamically allocated device that
+> > is associated with the module (not the static example you showed here),
+> > as that's going to be the real way this is used, not with static
+> > variables.
+> 
+> Sure, do we want to:
+> * Finish creating the driver struct early in `init`, then call dynamic
+> `.create(&str)` or `.destroy(&str)` `.modify(&str)` type things on it
+> in `init` to show how it would work
+> * Actually wire up an input source to drive create/destroy/modify
+> dynamically (e.g. I could implement a miscdevice) - if you want this
+> one, do you have a preference on where I get my input signal from?
 
-Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
----
- drivers/clk/qcom/gcc-x1e80100.c | 2 ++
- 1 file changed, 2 insertions(+)
+I think the idea was to show how it works in a real driver context, e.g. a
+platform driver, just like what samples/rust/rust_driver_platform.rs does. Not a
+miscdevice registered from a module, which is a rather rare use-case.
 
-diff --git a/drivers/clk/qcom/gcc-x1e80100.c b/drivers/clk/qcom/gcc-x1e80100.c
-index 3e44757e25d3245e455918e9474c978c8dacaa5e..301fc9fc32d8e6e1ddf59c1d3350d84f6c06e4b6 100644
---- a/drivers/clk/qcom/gcc-x1e80100.c
-+++ b/drivers/clk/qcom/gcc-x1e80100.c
-@@ -6674,6 +6674,8 @@ static const struct qcom_reset_map gcc_x1e80100_resets[] = {
- 	[GCC_USB_1_PHY_BCR] = { 0x2a020 },
- 	[GCC_USB_2_PHY_BCR] = { 0xa3020 },
- 	[GCC_VIDEO_BCR] = { 0x32000 },
-+	[GCC_VIDEO_AXI0_CLK_ARES] = { .reg = 0x32018, .bit = 2, .udelay = 1000 },
-+	[GCC_VIDEO_AXI1_CLK_ARES] = { .reg = 0x32024, .bit = 2, .udelay = 1000 },
- };
- 
- static const struct clk_rcg_dfs_data gcc_dfs_clocks[] = {
-
--- 
-2.49.0
-
+If you rebase on the latest driver-core-next, you can write a platform driver
+with an ACPI ID table, which can easily probed by passing
+`-acpitable file=ssdt.aml` to qemu, i.e. no need to mess with OF.
