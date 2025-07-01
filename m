@@ -1,134 +1,210 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailrelay-egress12.pub.mailoutpod2-cph3.one.com (mailrelay-egress12.pub.mailoutpod2-cph3.one.com [46.30.211.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D84892737EA;
-	Tue,  1 Jul 2025 11:20:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFE8826A1DE
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 11:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751368860; cv=none; b=Weo5ScuyXf97Tt4PCnidfQuj32DZpbIce6mbY6tSe7YmACICD7YAypqPr49awe2GGYr+2K3V9RGVsAkuzkayxhExxFb1eXxSWniv1TMLrouMXG8t4xpacrKRf1HSZg6pXeINQBDW+Z81ZrrrHGCath3+PNZHRzwLu+c2aYKoXKg=
+	t=1751368927; cv=none; b=UHyfNk6IOHSemrn9VbvQlU7iz6vk2vwoKsGNwDAC4SjHOxK1lUFpdVO18DrOf9U/OPUeiyE9Q3UqAmVy4VGJ6xG5NZpnh6MZA6u0KvgfQQoM5IVdVAiCZ5d3i9ohZcnZ8FrJe+p0dvR5iKusk2LUKfRASHefswz0UaKdt0tWchQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751368860; c=relaxed/simple;
-	bh=ohwdXRbQELGb/I5v2pJqnN/PwyN+M+y+nmTL+H9M26s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YhfyCZrXLZ8rsSAOPPZV95kbOfEVzO4kwrszNFoC0WMh+okbTfqlFXIm0EKL6qBMkHwQkkN6KytzJVMxd0SJ269LGTawsooIaDK9CEhZUcM1/1oloLCcDLGpPr7WmvD0OFFLtUxGTFWunXNsje9Wa+ay2PY9cOCcQsX4LQZTl5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lEpASPvN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751368927; c=relaxed/simple;
+	bh=t7zkl/qlRj4bl42LCaW7PP/E22dbIn6npeQKVgaEFxQ=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=s9QXY8VbWRSGKq5conK0cjBIgfZD4kT2ptPYnmsaMbzYHdA7m9QK63IN2OZc8I3Vtvy7gPNthqJIPfhFh5zePjZrFXlLjadPjOYoDaK1L1KmF7EiP7S7+G490AByhcHSbTpYg/nz8+YjXb3GXs/r60RTs0zxtDlg6idzboXLMc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se; spf=none smtp.mailfrom=konsulko.se; dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=GHxdOp1T; dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=73Ubm0CM; arc=none smtp.client-ip=46.30.211.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=konsulko.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lEpASPvN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F9F9C4CEEB;
-	Tue,  1 Jul 2025 11:20:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751368859;
-	bh=ohwdXRbQELGb/I5v2pJqnN/PwyN+M+y+nmTL+H9M26s=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lEpASPvNtGiveO3krzAW2dmR7TTX/X5ny9+J5+w08lvY4TxTTRC2mtQpVkncHB5CG
-	 swrOfG6KDZLxrGVRBg0hqgwwIIJoV82t3RHVLTtuGLUmc470gRu/0SuejMZL2eQuAi
-	 IY9d57xiGHY6UtYBYeMauJAlFOtMratc1bLzPJcbbGVpoyLSZIS2YyviTeWllUQnKp
-	 QMfqSKNVTEwkYswHfYG9YKhvTJ8V4c+gKxMsTbZsd1w25saSOvXCmitLxcZvmeQeUX
-	 6pzjbS+T8JcX1i8y6EPi3Wnq174HMOoGsWfogpqyX18kzjdsuJqvoxDXy9IxhRy4LO
-	 aHWKcnRPc7Hcw==
-Message-ID: <b13d7998-6a32-4e48-9964-b7162e288cf4@kernel.org>
-Date: Tue, 1 Jul 2025 13:20:49 +0200
+	dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="GHxdOp1T";
+	dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="73Ubm0CM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1751368924; x=1751973724;
+	d=konsulko.se; s=rsa1;
+	h=to:references:message-id:content-transfer-encoding:cc:date:in-reply-to:from:
+	 subject:mime-version:content-type:from;
+	bh=ype0RXWkZlnpbFqpY1x56iV2OcirmQognCCOHtgnUhY=;
+	b=GHxdOp1TQlnXScmmzp9jCJc+kUqZv8KWDtOOa8f44GFfzle2p3QZEHUju9yxNev7hnVG9JPA8vYbQ
+	 T70J26mZRkaJy+wV2Yqe5BJG3vZbVXpRdvHpKHee/p1KS2DZj+qZoLmG4H4a+Hz0s3rs/TYMU5sUEI
+	 mqhC/EmtTUz0FvXE9YCpLbqUOxi3FGUV4soren1gozCLplXkGVzv6NQJNgeSjqn+P4/JpvcNxK5H6/
+	 NgM+2UzDHIGHhvjhSUMyVRwn/zukSjgItKo5dhkKVcAASklzQvgCkER2eORkdaLPSviLO1GEnzLxOK
+	 x8XJcOFMWUjl1trcsECQCNpwiZSod+g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1751368924; x=1751973724;
+	d=konsulko.se; s=ed1;
+	h=to:references:message-id:content-transfer-encoding:cc:date:in-reply-to:from:
+	 subject:mime-version:content-type:from;
+	bh=ype0RXWkZlnpbFqpY1x56iV2OcirmQognCCOHtgnUhY=;
+	b=73Ubm0CMpwm1Mu67KoqKjyrZpyKh+6Sb1jL5TC9Dhm9KAGTWm5AFOQkUqy/8/Y2IVApvr5GPsPb4e
+	 ipLNslWCw==
+X-HalOne-ID: 9ceca3db-566d-11f0-b5ef-f78b1f841584
+Received: from smtpclient.apple (c188-150-224-8.bredband.tele2.se [188.150.224.8])
+	by mailrelay1.pub.mailoutpod2-cph3.one.com (Halon) with ESMTPSA
+	id 9ceca3db-566d-11f0-b5ef-f78b1f841584;
+	Tue, 01 Jul 2025 11:22:03 +0000 (UTC)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 06/10] dt-bindings: PCI: Add bindings support for Tesla
- FSD SoC
-To: Shradha Todi <shradha.t@samsung.com>, 'Rob Herring' <robh@kernel.org>
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-fsd@tesla.com, mani@kernel.org, lpieralisi@kernel.org, kw@linux.com,
- bhelgaas@google.com, jingoohan1@gmail.com, krzk+dt@kernel.org,
- conor+dt@kernel.org, alim.akhtar@samsung.com, vkoul@kernel.org,
- kishon@kernel.org, arnd@arndb.de, m.szyprowski@samsung.com,
- jh80.chung@samsung.com, pankaj.dubey@samsung.com
-References: <20250625165229.3458-1-shradha.t@samsung.com>
- <CGME20250625165315epcas5p19f081c8a0e2e7dc87698577cc2d460ca@epcas5p1.samsung.com>
- <20250625165229.3458-7-shradha.t@samsung.com>
- <20250627211236.GA147018-robh@kernel.org>
- <02b001dbea78$d991d5b0$8cb58110$@samsung.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <02b001dbea78$d991d5b0$8cb58110$@samsung.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-On 01/07/2025 13:11, Shradha Todi wrote:
-> 
-> 
->> -----Original Message-----
->> From: Rob Herring <robh@kernel.org>
->> Sent: 28 June 2025 02:43
->> To: Shradha Todi <shradha.t@samsung.com>
->> Cc: linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> linux-
->> samsung-soc@vger.kernel.org; linux-kernel@vger.kernel.org; linux-phy@lists.infradead.org; linux-
->> fsd@tesla.com; manivannan.sadhasivam@linaro.org; lpieralisi@kernel.org; kw@linux.com;
->> bhelgaas@google.com; jingoohan1@gmail.com; krzk+dt@kernel.org; conor+dt@kernel.org;
->> alim.akhtar@samsung.com; vkoul@kernel.org; kishon@kernel.org; arnd@arndb.de;
->> m.szyprowski@samsung.com; jh80.chung@samsung.com; pankaj.dubey@samsung.com
->> Subject: Re: [PATCH v2 06/10] dt-bindings: PCI: Add bindings support for Tesla FSD SoC
->>
->> On Wed, Jun 25, 2025 at 10:22:25PM +0530, Shradha Todi wrote:
->>> Document the PCIe controller device tree bindings for Tesla FSD
->>> SoC for both RC and EP.
->>
->> Drop 'bindings support for ' in the subject.
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.200.121\))
+Subject: Re: [PATCH v9 1/4] mm/vmalloc: allow to set node and align in
+ vrealloc
+From: Vitaly Wool <vitaly.wool@konsulko.se>
+In-Reply-To: <aGPDcUc5ixYF8cQL@pc636>
+Date: Tue, 1 Jul 2025 13:21:53 +0200
+Cc: linux-mm@kvack.org,
+ akpm@linux-foundation.org,
+ linux-kernel@vger.kernel.org,
+ Danilo Krummrich <dakr@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ rust-for-linux@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <190A8A7B-A46B-4073-8EFC-14A0EB6EF3DC@konsulko.se>
+References: <20250630221511.3325123-1-vitaly.wool@konsulko.se>
+ <20250630221615.3325221-1-vitaly.wool@konsulko.se> <aGO9a06HutqljjNS@pc636>
+ <31E257E1-AB52-4115-A264-56F545AB84A9@konsulko.se> <aGPDcUc5ixYF8cQL@pc636>
+To: Uladzislau Rezki <urezki@gmail.com>
+X-Mailer: Apple Mail (2.3826.200.121)
 
 
 
-Please kindly trim the replies from unnecessary context. It makes it
-much easier to find new content.
+> On Jul 1, 2025, at 1:16=E2=80=AFPM, Uladzislau Rezki =
+<urezki@gmail.com> wrote:
+>=20
+> On Tue, Jul 01, 2025 at 12:54:36PM +0200, Vitaly Wool wrote:
+>>=20
+>>=20
+>>> On Jul 1, 2025, at 12:50=E2=80=AFPM, Uladzislau Rezki =
+<urezki@gmail.com> wrote:
+>>>=20
+>>> On Tue, Jul 01, 2025 at 12:16:15AM +0200, Vitaly Wool wrote:
+>>>> Reimplement vrealloc() to be able to set node and alignment should
+>>>> a user need to do so. Rename the function to vrealloc_node_align()
+>>>> to better match what it actually does now and introduce macros for
+>>>> vrealloc() and friends for backward compatibility.
+>>>>=20
+>>>> With that change we also provide the ability for the Rust part of
+>>>> the kernel to set node and aligmnent in its allocations.
+>>>>=20
+>>>> Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
+>>>> ---
+>>>> include/linux/vmalloc.h | 12 +++++++++---
+>>>> mm/vmalloc.c            | 19 +++++++++++++++----
+>>>> 2 files changed, 24 insertions(+), 7 deletions(-)
+>>>>=20
+>>>> diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+>>>> index fdc9aeb74a44..68791f7cb3ba 100644
+>>>> --- a/include/linux/vmalloc.h
+>>>> +++ b/include/linux/vmalloc.h
+>>>> @@ -197,9 +197,15 @@ extern void *__vcalloc_noprof(size_t n, size_t =
+size, gfp_t flags) __alloc_size(1
+>>>> extern void *vcalloc_noprof(size_t n, size_t size) __alloc_size(1, =
+2);
+>>>> #define vcalloc(...) alloc_hooks(vcalloc_noprof(__VA_ARGS__))
+>>>>=20
+>>>> -void * __must_check vrealloc_noprof(const void *p, size_t size, =
+gfp_t flags)
+>>>> - __realloc_size(2);
+>>>> -#define vrealloc(...) alloc_hooks(vrealloc_noprof(__VA_ARGS__))
+>>>> +void *__must_check vrealloc_node_align_noprof(const void *p, =
+size_t size,
+>>>> + unsigned long align, gfp_t flags, int nid) __realloc_size(2);
+>>>> +#define vrealloc_node_noprof(_p, _s, _f, _nid) \
+>>>> + vrealloc_node_align_noprof(_p, _s, 1, _f, _nid)
+>>>> +#define vrealloc_noprof(_p, _s, _f) \
+>>>> + vrealloc_node_align_noprof(_p, _s, 1, _f, NUMA_NO_NODE)
+>>>> +#define vrealloc_node_align(...) =
+alloc_hooks(vrealloc_node_align_noprof(__VA_ARGS__))
+>>>> +#define vrealloc_node(...) =
+alloc_hooks(vrealloc_node_noprof(__VA_ARGS__))
+>>>> +#define vrealloc(...) alloc_hooks(vrealloc_noprof(__VA_ARGS__))
+>>>>=20
+>>>> extern void vfree(const void *addr);
+>>>> extern void vfree_atomic(const void *addr);
+>>>> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+>>>> index 6dbcdceecae1..776c68f84ce2 100644
+>>>> --- a/mm/vmalloc.c
+>>>> +++ b/mm/vmalloc.c
+>>>> @@ -4089,12 +4089,15 @@ void *vzalloc_node_noprof(unsigned long =
+size, int node)
+>>>> EXPORT_SYMBOL(vzalloc_node_noprof);
+>>>>=20
+>>>> /**
+>>>> - * vrealloc - reallocate virtually contiguous memory; contents =
+remain unchanged
+>>>> + * vrealloc_node_align_noprof - reallocate virtually contiguous =
+memory; contents
+>>>> + * remain unchanged
+>>>> * @p: object to reallocate memory for
+>>>> * @size: the size to reallocate
+>>>> + * @align: requested alignment
+>>>> * @flags: the flags for the page level allocator
+>>>> + * @nid: node id
+>>>> *
+>>>> - * If @p is %NULL, vrealloc() behaves exactly like vmalloc(). If =
+@size is 0 and
+>>>> + * If @p is %NULL, vrealloc_XXX() behaves exactly like vmalloc(). =
+If @size is 0 and
+>>>> * @p is not a %NULL pointer, the object pointed to is freed.
+>>>> *
+>>>> * If __GFP_ZERO logic is requested, callers must ensure that, =
+starting with the
+>>>> @@ -4111,7 +4114,8 @@ EXPORT_SYMBOL(vzalloc_node_noprof);
+>>>> * Return: pointer to the allocated memory; %NULL if @size is zero =
+or in case of
+>>>> *         failure
+>>>> */
+>>>> -void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
+>>>> +void *vrealloc_node_align_noprof(const void *p, size_t size, =
+unsigned long align,
+>>>> + gfp_t flags, int nid)
+>>>> {
+>>>> struct vm_struct *vm =3D NULL;
+>>>> size_t alloced_size =3D 0;
+>>>> @@ -4135,6 +4139,11 @@ void *vrealloc_noprof(const void *p, size_t =
+size, gfp_t flags)
+>>>> if (WARN(alloced_size < old_size,
+>>>> "vrealloc() has mismatched area vs requested sizes (%p)\n", p))
+>>>> return NULL;
+>>>> + if (WARN(!IS_ALIGNED((unsigned long)p, align),
+>>>> + "will not reallocate with a bigger alignment (0x%lx)\n", align))
+>>>> + return NULL;
+>>>> + if (nid !=3D NUMA_NO_NODE && nid !=3D =
+page_to_nid(vmalloc_to_page(p)))
+>>>> + goto need_realloc;
+>>>>=20
+>>> By this goto change, you bypass the two important checks below. For
+>>> example if you shrink the allocated size, you do not need to perform
+>>> any allocations. Instead the patch goes and allocates a new area.
+>>>=20
+>>> You just need to remove:
+>>>=20
+>>> - if (nid !=3D NUMA_NO_NODE && nid !=3D =
+page_to_nid(vmalloc_to_page(p)))
+>>> - goto need_realloc;
+>>>=20
+>>> to make it working.
+>>>=20
+>>=20
+>> I am not sure I=E2=80=99m following. If we get a request to =
+reallocate for a different node then we should either reject it or do =
+the new allocation for this new node and copy the data to the new place. =
+Shrinking the allocation on the old node doesn=E2=80=99t seem to be =
+right. Or am I missing something?
+>>=20
+> If your process migrates to a new NODE, which is fine, it does not =
+mean
+> that you have to perform all this bouncing movement(reallocate on a =
+new node).
+> Next time it can be migrated back. Process are allowed to migrate and =
+access
+> to a remote memory.
+>=20
 
-Where is your reply? I even scrolled till the end of email and I only
-see quotes.
+Indeed, but in that case the caller is expected to specify NUMA_NO_NODE =
+in vrealloc_node_align(). If the caller did specify an exact node we =
+can=E2=80=99t just silently disregard that, we should either respect =
+that or fail.
 
-Best regards,
-Krzysztof
+~Vitaly
+
