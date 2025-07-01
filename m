@@ -1,134 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6232D51022;
-	Tue,  1 Jul 2025 07:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B71651022;
+	Tue,  1 Jul 2025 07:38:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751355446; cv=none; b=aoBuJb7S2oJ8mt1TWNOqEh786S2GYzWTTwftkbjcCUOrY1rR/1uPxKFRo5ul5WBi+3Z/hZGt4Sw5PFhaLhVbBXAy55chp5sARwjtWQp+nku2eYmvShXufIS8F9sFWyN6wEt0I5I/lz0xkZN+OsznYUBuTWWj5WaTidhF4toxwEU=
+	t=1751355505; cv=none; b=BFzQj6pYDdopx33QhvFMHZ0QBsQ2FTY9lsfUaQAO/nphbP9jy1lF0od0LY0x8b3xRNpnPpENtlIHBxXviXNsYXcy5LN3uNuL4+2BwORE16Uo2z/JmxbGY1jDmChWAnFnDGA+pXHhx9pRJLpF47UZNAGjnTkJLwnTSYaUlA3cWZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751355446; c=relaxed/simple;
-	bh=tz9T+HYGlllDN1MZ/abac2KVF7+1D3682xOF+HsLY5c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M72xHMxU8sh7hoc8MBXz4mlJgJABif0XT2BQflfMdsfSp3WC2wdwPbvt48nGTGAzQXjvzJda+QGUxbU45NBdXeUr1e2AZlGkjOg0GuE/N9Xnp+PEmtXP+PXTfpsTCbLtyLCdM3OPeTXOn03T5ASfi1UDhV5jTxlT3JWst5Ediqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t30PodeJ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t30PodeJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A23E6C4CEEB;
-	Tue,  1 Jul 2025 07:37:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751355445;
-	bh=tz9T+HYGlllDN1MZ/abac2KVF7+1D3682xOF+HsLY5c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=t30PodeJ3I6msIWp7IWV431di3gpRjTmkfmEMSwWjQGMdqwdd7ipv46rKvf4ptqee
-	 ZLeWbSjMlzbDZcTXIImM0ErJpTjelcfi6T0KwYSLidLqLyXrye4nbbF6OKID6cGDku
-	 qHKkEzNluWuUmKhL95mNI46oj7S/z6HconCiy/AwUySzRLbiIuigky+ZXSiajqsh7k
-	 sJ+I+CmNRGPBXrWrKt1SuOSQKjWrMyEGCLnBBX5fBWCEW6x/swF0WYGw2vA5TmZenp
-	 pyKEVN3w8Zh6jcrfW2tH6lQKKa4srM7NSRDkFA0rZanVf6yuDpmiEmfF6pFZErElEj
-	 zx2HsR+Kw3nOQ==
-Message-ID: <a329e8a9-d581-4af1-ac0f-9f104a810bc9@kernel.org>
-Date: Tue, 1 Jul 2025 09:37:19 +0200
+	s=arc-20240116; t=1751355505; c=relaxed/simple;
+	bh=JdOTXYS+BUexHnc+lfsemNDsXepxNpHiL79rR4j8KX4=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=KfPKrQymPWSt6auxTrtY+9Of6IVcqcgxHlVqhd+I5rhN5rQRK7Ne0GwCS0aZ521yVLDhkEdxWmn3Ms0yvBRq4P29iP+luIWg/jE/vVBugfFDRfEKmBGtPGNA/u2aT61PJM37gYE03tzS0vTjm620uDP62gU58v43zS8eZM79zTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bWZdR5tnjzYQvYY;
+	Tue,  1 Jul 2025 15:38:19 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id AA1BF1A0D25;
+	Tue,  1 Jul 2025 15:38:18 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgBH_b1okGNo6PEvAQ--.29710S3;
+	Tue, 01 Jul 2025 15:38:18 +0800 (CST)
+Subject: Re: [PATCH v2] brd: fix sleeping function called from invalid context
+ in brd_insert_page()
+To: Jens Axboe <axboe@kernel.dk>, Yu Kuai <yukuai1@huaweicloud.com>,
+ hch@lst.de
+Cc: penguin-kernel@I-love.SAKURA.ne.jp, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
+ johnny.chenyi@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
+References: <20250630112828.421219-1-yukuai1@huaweicloud.com>
+ <eb41cab3-5946-4fe3-a1be-843dd6fca159@kernel.dk>
+ <a2dc2566-44e1-4460-bbff-bb813f4655d9@kernel.dk>
+ <773a49cf-3908-85d2-5693-5cbd6530a933@huaweicloud.com>
+ <c28dd90a-3777-49fa-a662-32c61da22860@kernel.dk>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <c76c61ac-9335-b116-31dd-5ecfb32dd7dd@huaweicloud.com>
+Date: Tue, 1 Jul 2025 15:38:16 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/8] riscv: dts: spacemit: Add PDMA0 node for K1 SoC
-To: Guodong Xu <guodong@riscstar.com>, Vinod Koul <vkoul@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>,
- =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>
-Cc: Alex Elder <elder@riscstar.com>, Vivian Wang <wangruikang@iscas.ac.cn>,
- dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
- spacemit@lists.linux.dev
-References: <20250701-working_dma_0701_v2-v2-0-ab6ee9171d26@riscstar.com>
- <20250701-working_dma_0701_v2-v2-6-ab6ee9171d26@riscstar.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
- QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
- +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
- ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
- 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
- hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
- tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
- 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
- naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
- hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
- whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
- qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
- RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
- Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
- H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
- dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
- AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
- jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
- zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
- XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250701-working_dma_0701_v2-v2-6-ab6ee9171d26@riscstar.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <c28dd90a-3777-49fa-a662-32c61da22860@kernel.dk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgBH_b1okGNo6PEvAQ--.29710S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZFy7uryfZF4UJFyfKr18AFb_yoW8CFWxpF
+	WxKa45KF4DZrnFyw42kw1DtFWrK39Fqr4Uury3KF47uFZ0gryxXry7A3yY9r9aqrn2qw1j
+	qF4UA34fZFZxA3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBF14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On 01/07/2025 07:37, Guodong Xu wrote:
-> Add PDMA0 dma-controller node under dma_bus for SpacemiT K1 SoC.
+Hi,
+
+在 2025/07/01 11:00, Jens Axboe 写道:
+> On 6/30/25 7:28 PM, Yu Kuai wrote:
+>> Hi,
+>>
+>> ? 2025/06/30 23:28, Jens Axboe ??:
+>>> On 6/30/25 9:24 AM, Jens Axboe wrote:
+>>>> On 6/30/25 5:28 AM, Yu Kuai wrote:
+>>>>> From: Yu Kuai <yukuai3@huawei.com>
+>>>>>
+>>>>> __xa_cmpxchg() is called with rcu_read_lock(), and it will allocate
+>>>>> memory if necessary.
+>>>>>
+>>>>> Fix the problem by moving rcu_read_lock() after __xa_cmpxchg(), meanwhile,
+>>>>> it still should be held before xa_unlock(), prevent returned page to be
+>>>>> freed by concurrent discard.
+>>>>
+>>>> The rcu locking in there is a bit of a mess, imho. What _exactly_ is the
+>>>> rcu read side locking protecting? Is it only needed around the lookup
+>>>> and insert? We even hold it over the kmap and copy, which seems very
+>>>> heavy handed.
+>>>
+>>> Gah it's holding the page alive too. Can't we just grab a ref to the
+>>> page when inserting it, and drop that at free time? It would be a lot
+>>> better to have only the lookup be RCU protected, having the full
+>>> copies under it seems kind of crazy.
+>>
+>> In this case, we must grab a ref to the page for each read/write as
+>> well, I choose RCU because I think it has less performance overhead than
+>> page ref, which is atomic. BTW, I thought copy at most one page is
+>> lightweight, if this is not true, I agree page ref is better.
 > 
-> The PDMA0 node is marked as disabled by default, allowing board-specific
-> device trees to enable it as needed.
+> Right, you'd need to grab a ref. I do think that is (by far) the better
+> solution. Yes if you microbenchmark I'm sure the current approach will
+> look fine, but it's a heavy section inside an rcu read lock and will
+> hold off the grace period.
 > 
-> Signed-off-by: Guodong Xu <guodong@riscstar.com>
-> ---
-> v2:
-> - Updated the compatible string.
-> - Rebased. Part of the changes in v1 is now in this patchset:
->    - "riscv: dts: spacemit: Add DMA translation buses for K1"
->    - Link: https://lore.kernel.org/all/20250623-k1-dma-buses-rfc-wip-v1-0-c0144082061f@iscas.ac.cn/
-> ---
->  arch/riscv/boot/dts/spacemit/k1.dtsi | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+> So yeah, I do think it'd be a lot better to do proper page references on
+> lookup+free, and have just the lookup be behind rcu.
 > 
-> diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-> index 8f44c1458123be9e74a80878517b2b785d743bef..69e0b1edf3276df26c07c15d81607f83de0e5d57 100644
-> --- a/arch/riscv/boot/dts/spacemit/k1.dtsi
-> +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
-> @@ -591,6 +591,17 @@ uart9: serial@d4017800 {
->  				status = "disabled";
->  			};
->  
-> +			pdma0: dma-controller@d4000000 {
 
+Ok, and just to be sure, since the rcu is introduced before the fixed
+tag, do you think it's better to do cleanups after this patch, I prefer
+this way, or fix this problem directly by page ref?
 
-Oddly placed. Is spacemit not following standard DTS coding style ordering?
+Thanks,
+Kuai
 
-
-Best regards,
-Krzysztof
