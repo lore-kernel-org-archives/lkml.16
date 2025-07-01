@@ -1,70 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3074427147E;
-	Tue,  1 Jul 2025 11:40:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60802272E72
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 11:40:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751370013; cv=none; b=JNRbBE74kvFd0/z4ciGjYiF6qLCpbETFuuP0vokjpUUQfdqfZTwmX0XJC+s3JwIci2leCNzkxqFe5blLu/Ml+4GCN5YiiOiFOPd0dmcE8Jd880hMMDmtVyPHUw9ctTCtCzVUW5TmcP4wXpPvEAM7AYr/ioL26HL+VjAD7g1+uL8=
+	t=1751370021; cv=none; b=Rw+J9rbkDwgKRMRbxAyuZR1IFOOljKqfbG+WS9/kRxVieKCHhDeLMK5nWEXBNqHQFCRXrcQ3rc/LEKGYCwDVeEpUnW+c1ztMcpJ+vJmn39cycp3ZG/IoiuiIIMJrieyPowdfT4qGizepIT++jv/UGJICZXXJ9ZlVTsQkSI3dul0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751370013; c=relaxed/simple;
-	bh=u8zZNCS4lvpD1VplOy6onJI7j2IZhMgAIkB1xz0hPjI=;
+	s=arc-20240116; t=1751370021; c=relaxed/simple;
+	bh=HQPwv+SP31wl6xpFSXy3aqogQXVMr+08f8HTHj811aA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lbmgfmu7IGAhzJ7qRMb9C1a8oKjwp6fEqS3JtmqICZxRgSeO6VTlKo5cTw/Lb/SHK2Xm5wPJ7b94MDYeQQZHMxqVuw28RnTtN3+wcg2h5+wifapjzEGdiDwBBrBBcE3DmFyyZle6m6BhLVB3RpIGsdCIGr7cMp8/DeKq9aInI0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PShz8UON; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=p6kYRbm4X4AbsMghFUfac/6a04sGm1bvNT9eTs/SBLW7rMH3w0AgquZob2hDYcQ0Uzm/8Ix4hSg570gdmuigtJhWKu1TG7z3S3OwQ7zGanC3fIFMfQSP87Db5pz9WSxefHiBjItzKqUXv6IoeXdsewME9K6zpZ+5WnuNHlLvFCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=drMkqzHa; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PShz8UON"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFB92C4CEEB;
-	Tue,  1 Jul 2025 11:40:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751370012;
-	bh=u8zZNCS4lvpD1VplOy6onJI7j2IZhMgAIkB1xz0hPjI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PShz8UONIBJ7VTbSCVd9ONPARVYPA4QnMiTuO/LwiBb4ejnn+D2aRCpyzipuIA54x
-	 xZGEyaVfFFXNRp0kG5tLgswG/lrL958MQghZHD3PJmX6rRBLr/M0NRm2x9tbxeIEeL
-	 wieRiLuHupQ7J0HVAkCQSirNTGtVlRrvJUD8oM9KDGamDNI0FOd79YcSk1a35i07qI
-	 lVpTXPQ08ImfNvJFacsKj8aVC9wVLBqAjf3kSulXFv9K+ybc5L0UuvWc1zR16Qz5EV
-	 FwcztaJ9CfyRMM+nLKZ/J/u8hrRN6FZ5ZUBKFhqr9CRFT+q4rkQMnC4+wUygWBvD4I
-	 OYihIxf+i7NQw==
-Date: Tue, 1 Jul 2025 13:40:07 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Marcelo Moreira <marcelomoreira1905@gmail.com>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	lossin@kernel.org, ojeda@kernel.org, skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linuxfoundation.org,
-	~lkcamp/patches@lists.sr.ht
-Subject: Re: [PATCH v5 0/2] rust: revocable: documentation and refactorings
-Message-ID: <aGPJFw_Ouj8MNbuq@pollux>
-References: <20250626165927.66498-1-marcelomoreira1905@gmail.com>
- <CAH5fLgiTTXVMs3tzrHAU1rwQDCs_VPuPgEVcEkjbu+rNT=35vA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="drMkqzHa"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=N5pMuijdxQ5pavWYy4u6FlQuP1SvJsDKv6i9SCb7BX8=; b=drMkqzHaEU/qSkQ3v9EVpJmEWL
+	dExZMJ+Qvjwb777P8MBcuOvEZRXu+mXLx/aqPvtWGJ6LspqpkYX2yRBmKqqs26HtQeO3yOYN1ojbt
+	w1n5tx34rNdj9Ijht98hvzj5v7uloGYGyk2x0yPFDov6y1qJT41FA6CGBGetvOhWE1/fNmanxlGeU
+	exp9HoCFxkB/03Z8P5PPL5mxNhTGsTSg3MwShXovX/1ooqyTSXvmOqM8KISJykCktYfctIcDN1JSb
+	nfWU1r15z0u8oIFBSQv5p53TPR55TSfq/KfYMZ62TJCxm0FriETDSOdGmzYvkKS1BThygXvfSe+pt
+	glA9126g==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uWZLP-000000074pu-3Ry3;
+	Tue, 01 Jul 2025 11:40:12 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id ED23B30012D; Tue, 01 Jul 2025 13:40:10 +0200 (CEST)
+Date: Tue, 1 Jul 2025 13:40:10 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Prakash Sangappa <prakash.sangappa@oracle.com>,
+	linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+	mathieu.desnoyers@efficios.com, bigeasy@linutronix.de,
+	vineethr@linux.ibm.com
+Subject: Re: [PATCH V6 1/7] Sched: Scheduler time slice extension
+Message-ID: <20250701114010.GP1613376@noisy.programming.kicks-ass.net>
+References: <20250701003749.50525-1-prakash.sangappa@oracle.com>
+ <20250701003749.50525-2-prakash.sangappa@oracle.com>
+ <87cyakmhdv.ffs@tglx>
+ <20250701105653.GO1613376@noisy.programming.kicks-ass.net>
+ <1170c037-15c0-4f22-8e2d-456ad17396cf@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAH5fLgiTTXVMs3tzrHAU1rwQDCs_VPuPgEVcEkjbu+rNT=35vA@mail.gmail.com>
+In-Reply-To: <1170c037-15c0-4f22-8e2d-456ad17396cf@amd.com>
 
-On Tue, Jul 01, 2025 at 01:27:17PM +0200, Alice Ryhl wrote:
-> On Thu, Jun 26, 2025 at 6:59 PM Marcelo Moreira
-> <marcelomoreira1905@gmail.com> wrote:
-> >
-> > This patch series brings documentation and refactorings to the `Revocable` type.
-> >
-> > Changes include:
-> > - Clarifying the write invariant and updating associated safety comments for `Revocable<T>`.
-> > - Splitting the internal `revoke_internal` function into two distinct, explicit functions: `revoke()` (safe, synchronizing with RCU) and `revoke_nosync()` (unsafe, without RCU synchronization), now returning `bool` to indicate revocation status.
-> >
-> > Marcelo Moreira (2):
-> >   rust: revocable: Refactor revocation mechanism to remove generic
-> >     revoke_internal
-> >   rust: revocable: Clarify write invariant and update safety comments
+On Tue, Jul 01, 2025 at 04:58:26PM +0530, K Prateek Nayak wrote:
+> Hello Peter,
 > 
-> Danilo, did you have Revocable / Devres changes that conflict with this?
+> On 7/1/2025 4:26 PM, Peter Zijlstra wrote:
+> > On Tue, Jul 01, 2025 at 10:42:36AM +0200, Thomas Gleixner wrote:
+> > 
+> > > What's worse is that it breaks the LAZY semantics. I explained this to
+> > > you before and this thing needs to be tied on the LAZY bit otherwise a
+> > > SCHED_OTHER task can prevent a real-time task from running, which is
+> > > fundamentally wrong.
+> > 
+> > So here we disagree, I don't want this tied to LAZY.
+> > 
+> > SCHED_OTHER can already inhibit a RT task from getting ran by doing a
+> > syscall, this syscall will have non-preemptible sections and the RT task
+> > will get delayed.
+> > 
+> > I very much want this thing to be limited to a time frame where a
+> > userspace critical section (this thing) is smaller than such a kernel
+> > critical section.
+> > 
+> > That is, there should be no observable difference between the effects of
+> > this new thing and a syscall doing preempt_disable().
+> > 
+> > 
+> > That said; the reason I don't want this tied to LAZY is that RT itself
+> > is not subject to LAZY and this then means that RT threads cannot make
+> > use of this new facility, whereas I think it makes perfect sense for
+> > them to use this.
+> 
+> Thinking out loud: I know we are trying to keep the overhead to a
+> minimum but is it acceptable to go through with schedule() and decide
+> on extending the time slice in pick_next_task_fair() / pick_task_rt()?
+> 
+> Then, a higher priority task can always preempt us when preemption is
+> enabled and between the tasks of same class, it is just a redundant
+> schedule() loop.
+> 
+> It'll require some additional care to start accounting for delay from
+> the time when NEED_RESCHED was set and not when schedule() is actually
+> called but would the overhead be that bad?
 
-Yes, but I sent them to Linus for -rc3 already. Given that rust-next is based on
--rc3, we should be good. There shouldn't be any further conflicts.
+Probably not -- if care was taken to make sure all callers have an
+up-to-date rq->clock (many will have today, some might need updating).
+Then its just a matter of saving a copy.
+
+Basically stick assert_clock_updated() in __resched_curr() and make all
+the splats go away.
+
+> Or would we like to prevent preemption from RT tasks too on
+> !PREMMPT_RT since whatever the task asking for the extended slice is
+> doing is considered important enough?
+
+I'm not sure I see the need for this complication -- under the premise
+that the duration is strictly limited to less than what syscalls can
+already inflict upon us, there should be no observable difference in
+worst case timing.
+
+But yes, if this makes some people feel better, then I suppose can look
+at this.
