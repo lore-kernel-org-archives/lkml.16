@@ -1,96 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30A4436B;
-	Tue,  1 Jul 2025 07:45:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E530525A2D2;
+	Tue,  1 Jul 2025 07:46:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751355946; cv=none; b=G2/2Ph9Eq264oGKR+zlgKFylhzZx43K7ZnsaD+8l05OgjlOXcFPgNTsCwZIEMecKFdhCz0pLOFAdUX+x7Y2Y3q4KDDn0zrIiigx0RshbnVFe+ul6/Pq9rJ1DxhMDvC+YdBrvXLv4qngrQtBXZeqGay/jJrmtPCRr6ZI2R+SgWzc=
+	t=1751355963; cv=none; b=dLGgiu4F6aKyXSBzzGd94EnATkotRjeRhqIEydC81VeIZwJOjEazGE6yDVStgztdIXnwZOGlIqL/2T84HQJE85sT7UT/g4x4VrOH/RhkEE32Rx1yikgaZR2O7WvrUnlj4hXPNVGKURz/HSLHrL1ZrF352eM9a2DT5qXrNjEtA38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751355946; c=relaxed/simple;
-	bh=WaOTPXDOyXamFIF5gpJvhYL4L6gdolAygZ+SPRNtOgc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sSq9EChEWb/ON3J9fzPJp4Ufw5v71tXdV6giJpE+gfYpO8OBd/Ky2/coU23PLmz5opLzcZAeYIR73wxrAM5N3cyLJJTYXNgn3IgL8zf6Bw2SpFdTptlmykHZob4hatTK/JrdNszdUKji8/M/FgYrGBC2gJf2Zu+QyCnHLO1klwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DRxzGbs2; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DRxzGbs2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751355945; x=1782891945;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WaOTPXDOyXamFIF5gpJvhYL4L6gdolAygZ+SPRNtOgc=;
-  b=DRxzGbs2qbhNeltcqmpaMi7H3kOdFvXxXVYVqixZBMDAflG+JvW4hWAi
-   Ev/rva4ey+7KNJ7iOaaggqHJpCsN4kby1GHKsz6yDzTQXqT1R5rJqI1MG
-   x+fGoneDeKE+t3LOjKQvBwYyDem8iRRgL9ah/ohB4M0gmoNrSOguXtx9n
-   Obs0uKM123K4qq/CC3zYaiT9ScyKZPOw7xHhl+RfLsscRWb/uU83Qnzan
-   E9jJ/I0ijqEiH4YqmrI0CYaCGT2fPe2PaHfaYWhG+ZpVQ/Fd852lwBDBD
-   8oZB/YONN6gnb7XAuyCOvEY9dTWNDjUzDIZAzFmlRtuJ59+F6pRLkyLbn
-   Q==;
-X-CSE-ConnectionGUID: FVBcygGkQJK0PnclmVZtyA==
-X-CSE-MsgGUID: l3vuwHwcT/WZtSLXYkcZBA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="53469623"
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="53469623"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 00:45:43 -0700
-X-CSE-ConnectionGUID: Zpkqcd5iTdm04AVh9hqdyg==
-X-CSE-MsgGUID: 8cqIeScNSdiGEsZ+NLaUjA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="153083489"
-Received: from kuha.fi.intel.com ([10.237.72.152])
-  by orviesa010.jf.intel.com with SMTP; 01 Jul 2025 00:45:38 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 01 Jul 2025 10:45:36 +0300
-Date: Tue, 1 Jul 2025 10:45:36 +0300
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: Lucas De Marchi <lucas.demarchi@intel.com>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Jan Dabros <jsd@semihalf.com>, Raag Jadav <raag.jadav@intel.com>,
-	"Tauro, Riana" <riana.tauro@intel.com>,
-	"Adatrao, Srinivasa" <srinivasa.adatrao@intel.com>,
-	"Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-	intel-xe@lists.freedesktop.org, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/4] i2c: designware: Add quirk for Intel Xe
-Message-ID: <aGOSIB_H70IAWH3g@kuha.fi.intel.com>
-References: <20250627135314.873972-1-heikki.krogerus@linux.intel.com>
- <20250627135314.873972-2-heikki.krogerus@linux.intel.com>
- <gljpd4foldjwairaca7ip2qqpdl7ipto77wsqwhbfamv6kdd3v@2doqwso7ccx3>
+	s=arc-20240116; t=1751355963; c=relaxed/simple;
+	bh=KYCIopdcYOqITgSHrx5R2OAh+KSRtv99A2CuSNv+DUY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Mle9CuAUblr1s1bdEqpYuMnH0dJeP+g0TuR2WzFG6roBjQhhjcWglHY+K79EG8ci8gk8uT0fsDQFzWMDVWSe3hyYEH2fG/ZYiITTkyIhbWbyoqfUUqsxmw7hH5bH+R/nDO4aMo/I+gb+bVSyUwSP/mOvGbdTfBsRgIzp1tvIB9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-4e80d19c7ebso3284844137.3;
+        Tue, 01 Jul 2025 00:46:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751355959; x=1751960759;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TCqKuQsKUMvVOd8fh20zK2WhSobsJMoICT4U7xI4uWs=;
+        b=UeN3Kes6R5BuV+s7VXDIbh7f5jSeT1AvAAO0jsWOt9eITGUL9hOHJ4vugj3bezAVKW
+         JlAriYJDQHMshYMbptJc6Wl0A+5Q5+CeUBOkRJ3s1lPwRp6+EyRd2W78A60EzxEtQiOw
+         gsLnfw+RrT/Q/wSdbq/AVcajS4ljsjo+atug2Csf6sIRzSkqiB5EjpI8p0J2ch+OysK3
+         p9JBZAA5TX25ul9FXmxDYvXpPZzhNxOtVKrhDbPXWQRwX4GR+B1HNF0dE7ZRFzpxtPhC
+         5uPKVdJGbZY2ipaY4Br80hcim4gPg6NdMakKJM3chtpqCvr50ix05SbhrJsWP/hIwEgp
+         Jvqg==
+X-Forwarded-Encrypted: i=1; AJvYcCUdE0PWKbG5P3MZ9t8+qMsxA+E4quagmDVSP9Tu6Iueuq/BSnAY9VmHnz0d/p6STTNPZCjxqz4Rg23d@vger.kernel.org, AJvYcCW3FfBTkke+wi3tiJIJWsE2PExpTPvj+V+BWycRiyyzpmRqWPB1QW7enkh9/Y0MmTJSNp8fT397vtE/DY8=@vger.kernel.org, AJvYcCWt8DlF+IZXvQdOHPwl8omWplsxe9gA3anI3a3ob/7/2J3auBSDwWn4YmObbJLy/Utopx5ZpmN7wEj9DNeGR2+o@vger.kernel.org
+X-Gm-Message-State: AOJu0YxedoiyKR8nwdForGp1NWaakBx6G/mFCNP9lD4cK4vYb5Z+eN+g
+	GtX8o1lRI3qm4gTQ574A9gge9FuWULJQCRSvxoplV7YvKX8HawsFa3jskkfNwgjX
+X-Gm-Gg: ASbGncteRnxd5F5FIoJtu1kJb7ZSChEBCCnXZy/m9Qr1F0HpLxJq1SHn79LaWYnGnqP
+	yVOS8vWPUo0IUTzJlluAKrMftyiulrGlFY8SYsG5U+//4US5aN5UXCUkNHNSE74pKm2lyYB/vqI
+	JNTT616c8wMRv48OW5PbPsdctNtIpxQHDr4+u4e8YAxD90QBOlVRVq/R27d7/OQri5ivROCExqF
+	hlxCPYmywHj5AJ0stv/Pn6vZJQpri3Jw6raDgnvsgqiK9TSJpwy0VKAzm+jsBII3prpe3UmTQ6P
+	QCCqOReg3GBBfZ9wZUmuJzT+QMIBjbdR8pJrbgciXFEjMyG2kzMcEVqjV8y+70AnkKEFuvTmRYK
+	/MxTGNY+CN+3f8L4Mc53ATeVF
+X-Google-Smtp-Source: AGHT+IFg699sb/+HbMpCJb8GeCilEaSMOJASSrDAdaYqyFI+aCqPg52MWr0l9OODohnGrJSXwC4WMg==
+X-Received: by 2002:a05:6102:418a:b0:4e5:fe5e:2be4 with SMTP id ada2fe7eead31-4ee4f797facmr10896780137.22.1751355958885;
+        Tue, 01 Jul 2025 00:45:58 -0700 (PDT)
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com. [209.85.217.47])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-884d1db717esm1983189241.31.2025.07.01.00.45.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Jul 2025 00:45:58 -0700 (PDT)
+Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-4e9a7bfb3c8so3241541137.1;
+        Tue, 01 Jul 2025 00:45:58 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVJyiZtLQx7+DpLzT3clBEd7M84Qp2cpbb2ITulMbee/Jj0wo++MLSoOPxR7hk63MA4iM/gc9gHXP/K@vger.kernel.org, AJvYcCWZaIqajG4/iKVBgtp6WpdinY7Rdf1Wnc8Hs3fBPfjRpBfVBKEtSV8YFmwhyi1NU+7yMQMrF4Uf0olWiLuAAJfY@vger.kernel.org, AJvYcCWdgPbHFNvmj4GEqFnmxA3h9q3uEuFE1G/fTjRRvH2F8P16sn7+56z6NYm/wOmhN3N6mU0VNUQoA/W03EA=@vger.kernel.org
+X-Received: by 2002:a05:6102:4496:b0:4e9:d951:1433 with SMTP id
+ ada2fe7eead31-4ee4f6f56b5mr10527393137.12.1751355957915; Tue, 01 Jul 2025
+ 00:45:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <gljpd4foldjwairaca7ip2qqpdl7ipto77wsqwhbfamv6kdd3v@2doqwso7ccx3>
+References: <df1a73d4a14426ae0d3e8809aed40c686b67dd3e.1751268290.git.geert@linux-m68k.org>
+ <20250630135427faa6c326@mail.local>
+In-Reply-To: <20250630135427faa6c326@mail.local>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 1 Jul 2025 09:45:45 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVPDVXXYH5OJyZ0dfbU0YLfc4sUGR=o=vu1PmWGne3dZw@mail.gmail.com>
+X-Gm-Features: Ac12FXwzaZ2nSq3Yc2pDrxcBOc4U-ud6Sw62tPOF4ay8rPLS8aOCdzlcQBP69Bs
+Message-ID: <CAMuHMdVPDVXXYH5OJyZ0dfbU0YLfc4sUGR=o=vu1PmWGne3dZw@mail.gmail.com>
+Subject: Re: [PATCH resend] rtc: Rename lib_test to rtc_lib_test
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Rae Moar <rmoar@google.com>, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jun 30, 2025 at 08:28:12PM +0200, Andi Shyti wrote:
-> Hi Heikki,
-> 
-> On Fri, Jun 27, 2025 at 04:53:11PM +0300, Heikki Krogerus wrote:
-> > The regmap is coming from the parent also in case of Xe
-> > GPUs. Reusing the Wangxun quirk for that.
-> 
-> What I don't like, though, is that there is no mention of the
-> change in the probe in the commit log.
-> 
-> Besides, are these changes related? Can we have them split in two
-> different patches? I guess this would also make Andy's point
-> about the extra churn.
+Hi Alex.
 
-I think you are right about splitting the patch. I'll do just that.
-Thanks for the review Andi.
+On Mon, 30 Jun 2025 at 15:54, Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+> On 30/06/2025 09:47:54+0200, Geert Uytterhoeven wrote:
+> > When compiling the RTC library functions test as a module, the module
+> > has the non-descriptive name "lib_test.ko".  Fix this by adding the
+> > subsystem's name as a prefix.
+> >
+> > Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> > ---
+> >  drivers/rtc/Makefile                       | 2 +-
+> >  drivers/rtc/{lib_test.c => rtc_lib_test.c} | 0
+> >  2 files changed, 1 insertion(+), 1 deletion(-)
+> >  rename drivers/rtc/{lib_test.c => rtc_lib_test.c} (100%)
+> >
+> > diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
+> > index 4619aa2ac4697591..aa08d1c8a32ec23d 100644
+> > --- a/drivers/rtc/Makefile
+> > +++ b/drivers/rtc/Makefile
+> > @@ -15,7 +15,7 @@ rtc-core-$(CONFIG_RTC_INTF_DEV)             += dev.o
+> >  rtc-core-$(CONFIG_RTC_INTF_PROC)     += proc.o
+> >  rtc-core-$(CONFIG_RTC_INTF_SYSFS)    += sysfs.o
+> >
+> > -obj-$(CONFIG_RTC_LIB_KUNIT_TEST)     += lib_test.o
+> > +obj-$(CONFIG_RTC_LIB_KUNIT_TEST)     += rtc_lib_test.o
+>
+> I'd rather have test_rtc_lib as only the drivers are currently prefixed with
+> rtc.
+
+Your wish is my command; v2 sent.
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-heikki
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
