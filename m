@@ -1,145 +1,157 @@
-Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E92631DA60D
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 12:30:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6C8485C5E
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 12:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751373030; cv=none; b=gvprSx5byKnm/m7O6OVX5uvngqmUMRP8wKqT0j06loRnBexu8utIwF0Y2wb/E8hz3ngdlP0PZY9JK6pLxi3DOmPnnaV6US8n48keAsRpwuenng2ZRPEHHdYP85SMJ0HEF+ID8/wLlevJBwbHozQbu0mlypOgsuD/HLu9MJGWGRY=
+	t=1751373054; cv=none; b=kfLPj7jvhBspLHTXoj2ldF1uLyGRxWKDlISvnHaCKmu1rALk8W/t1xrFAALEGvrpwAlHs/EKSZ+mgYScyPxgsvnuRiUltdOU82459hhRA173ZvLFhymgi8KjvapX8Ej4KUKjifTF+heBgFNMyGhYwRZ5GVXclO429sTdgSyHlRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751373030; c=relaxed/simple;
-	bh=kpA2ciu3Ka93Ok86leflif+v4PM3jren9a+lmBCYc3o=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Mx4BP3Wc+2LdpxQJsFRh6IlvuteEtLkenot6nNLEIl4UWJ753IEysNZigYt76EGpeV+8B71WaCEbIggRCn1PtrL+j6BbyJZTYrWJXKVuseAV+PO48XVgUtF7ekzcZYVM4XMo2vFVbgkamVIbDK8PqbSNTnbrI2yOMMU3iPSymCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-86d01ff56ebso598878039f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 05:30:28 -0700 (PDT)
+	s=arc-20240116; t=1751373054; c=relaxed/simple;
+	bh=oNWtBTfARcQCwaHYGLs5aIj0PBvFVGGFyKJg1UjJTYM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KOAYgDIY0gFopnQXTLboc9lt+vg/PBH05ysrcBeepBD9G473x92/fR+oE76m1ykLQy+03OEhIHcwrWgikZhJUYcjuPC8QjHo6v8Fb2UHzRLzbKcw0oPc8KunV/p63YTyvyGH+ITiIgnf2GqUNJHRSm+JIgmT3HMe4FAjjX0ixKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WKbn0Nnm; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WKbn0Nnm"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-237f270513bso137305ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 05:30:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751373052; x=1751977852; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5G5J3LAQCME/FJ/aVZc/0ZWGlfQeuCDS4lOhsOKRFGs=;
+        b=WKbn0NnmgkzxUsdcaqhQqraPMyrURXHKnri5ElSn1Vkd6BoqcdJ+BpbWZHRjOlYZzm
+         NbP4xOICMR07Egga4/fajji1H5YeNz8LkRGRQVi97jr8gxwK03VAeI/v76ao5vcEth2/
+         I7qCPu1lO+z90lkSnZD9P1Bq2LYvwRcu+Jt8/iNmhfKNQf4oQTo7RZ3Ppc0QvlX3n31u
+         zd5zLWVizh5Ixst6JzcJxBp8j0nExn9Cnhgd9KuYQIpBsfjHvJF50X+gLlRo7wpe4x+B
+         iuwMl6EycXVvvzBFEXVjcmCHNaGj/of7MPz3Bvvxz7M7DeNs0ch+lolEIsPjbZaLjtJl
+         YtUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751373028; x=1751977828;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cN9KWDOuzT7EKHnK6OkzJ66VwAcB0QwTMr9rV89pQOM=;
-        b=uOB9QKj3k3Rg0yf9GIYaTrv/6t1Dh8XFKtm5lnPTLv1LVRS4Hs6IIPqM3SFwVb4B4x
-         nDx1VXnXWiHwmmmVJ5cNf6ICRS/o31jxncZCaFW/e+E2UGqdyFUebtAK5EqYi6GhFFZw
-         0DYldeRfzabmCBZ3U6z8ZGLku5zSGR1yysIH+5GnO73j7I/C20aP77vZjjwMTGjM8IZm
-         b4tOyESFnrDKeBWPxwT/wkO5MKMFJZNnsnkawHmrGuawSxJ3sP9OBIbSACbcBqUXTdTE
-         iFC2q5QRNhlfPrPTBAdE1C7t7LRFgXliXq8pL/9DxM8zXnNexEchQ7WtTFjFchsujkpf
-         VnQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXxn4YTlbY1XKfq+mft9g63HbI0zak+BDgcFDJ+b5kpjFhfBAjcCznT5l5TVyuklzc9ffV0sGaPZ9KowzE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzX/BXg/su0hN3WewfZEJiFFt0f9WlNuaO6E7BRvB0tuNxcWmcx
-	KHUrw5JW71ZvsDyB5fuFka1H3Yz0mmxvJRKpbKomuXSSM417MjqXygX/vOjWswghsPoxOQrLBhd
-	rqSaHKEjBHV/0TqEvhS173WPUm012DJY4iK243glG/lLnDtMqX0dVclTEa8Q=
-X-Google-Smtp-Source: AGHT+IERN3pxkDYMRbEkhigbfvZBzWzDLued9o0vB/EMrAVwvaA2COhWMpFzCQ4yoitiyN1h5iAIwdwDzJKrLz2UkyxfxkRnGA9t
+        d=1e100.net; s=20230601; t=1751373052; x=1751977852;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5G5J3LAQCME/FJ/aVZc/0ZWGlfQeuCDS4lOhsOKRFGs=;
+        b=a1b9dNfHWgIW48YjCb8W0BUfCEj/gBi93Fr95XuygMz2jI3k3nPqYqYhUn6yArMrL3
+         gB3tmRA9gjHPinyyze984IKwATdJ8AQ+za8KMrpTmhl6mTG9e++4Qya1y52mvCvO02Rk
+         hXUegWnj8iNuRSFr/byDtUJNPczBmXy/65izL8z4ZSm66lWoxxe/TModODUxya5Tsyv9
+         Hb5WL0cbDAG/l9zm3xYjYH6j7N5/mHQScIJTjegBSHQ9fvI6KatuZLgvyezYaY7vXYzJ
+         7eCODa2k6jjYW11FBXx7KShJEIVT1l9Mw3DLTYnakIWpCC+/5jP1fypmjSlixIyQSoob
+         /zvA==
+X-Forwarded-Encrypted: i=1; AJvYcCWDVQw8IM+tDXzFhI/yDOC+nNZO0b1AcfDQHynOXjqz4eMVeC59TdYBbjGQjaGJH7H3YGofu2oYMexkFQs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKRDCdUK1T7o6gZHfELEQatIrHJAw6bT8FZi9cxhKlAE+9jeF8
+	O0GhChqbqEBO/d2Ob8+lVwMU2rpq6utMOnA2psaCUSVPaECxUBxUCAAvOCgNB1rN2g==
+X-Gm-Gg: ASbGncthd/YOu8F+0jfySv/51MNNisGM3yG+cJybX8sa6a6KWhrgrvcyZLoUMhIXtQ+
+	/TawemKFQodQa51Cc2uKHsKeeU+9Tw9aR7+ZiT98EhWYTk+355O5ib7WTSELxXK4ZsH9KpKWmq9
+	FLEzFPzzi9Xu5WBpaya4fX/jnjVQvdFKhhoDjWKTe3UnVEXOpADey4vdwcguo9gOQDhYkV8GfwM
+	7e6j4OsNELYkCB7SFXkb9HeFZjWNS8WikjgqXd/RzuyI0XTgvoiSk7DwexvpdbBl/jcez8Xhl8n
+	KeMxDNWGL6siyGLD15kk4xNu9JKO28TZ9CyrB78zo46Ri4dv4mQk+2z0XgxTozaoTb4yAHLRNBy
+	lx2hec/l1/JjtAV1hJQWz
+X-Google-Smtp-Source: AGHT+IGYS+ky70yGGbfgecWTu3WMn+4HvkqtKADO91HI0LqScQKuEGTHZn38lZjYqivfuwsxMW7HzQ==
+X-Received: by 2002:a17:902:ce89:b0:235:f10a:ad0 with SMTP id d9443c01a7336-23c601a7645mr2227915ad.28.1751373051941;
+        Tue, 01 Jul 2025 05:30:51 -0700 (PDT)
+Received: from google.com (232.98.126.34.bc.googleusercontent.com. [34.126.98.232])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e31da818sm9319671a12.61.2025.07.01.05.30.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 05:30:51 -0700 (PDT)
+Date: Tue, 1 Jul 2025 12:30:42 +0000
+From: Pranjal Shrivastava <praan@google.com>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
+	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
+	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
+	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
+	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
+	zhangzekun11@huawei.com, iommu@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
+	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com,
+	dwmw2@infradead.org, baolu.lu@linux.intel.com
+Subject: Re: [PATCH v7 02/28] iommufd/viommu: Explicitly define vdev->virt_id
+Message-ID: <aGPU8qgfsa816eQ1@google.com>
+References: <cover.1750966133.git.nicolinc@nvidia.com>
+ <cc7a558bfcdce5c2ea0d53b0c9c382f944df33ce.1750966133.git.nicolinc@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:2c08:b0:86d:1218:de96 with SMTP id
- ca18e2360f4ac-8768839ebd9mr1945168839f.12.1751373027931; Tue, 01 Jul 2025
- 05:30:27 -0700 (PDT)
-Date: Tue, 01 Jul 2025 05:30:27 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6863d4e3.a70a0220.3b7e22.1b12.GAE@google.com>
-Subject: [syzbot] [fs?] linux-next test error: WARNING: suspicious RCU usage
- in proc_sys_compare
-From: syzbot <syzbot+37d54f0f58ba8519cdbe@syzkaller.appspotmail.com>
-To: joel.granados@kernel.org, kees@kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-next@vger.kernel.org, 
-	sfr@canb.auug.org.au, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cc7a558bfcdce5c2ea0d53b0c9c382f944df33ce.1750966133.git.nicolinc@nvidia.com>
 
-Hello,
+On Thu, Jun 26, 2025 at 12:34:33PM -0700, Nicolin Chen wrote:
+> The "id" is too genernal to get its meaning easily. Rename it explicitly to
+> "virt_id" and update the kdocs for readability. No functional changes.
+> 
+> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+> ---
+>  drivers/iommu/iommufd/iommufd_private.h | 7 ++++++-
+>  drivers/iommu/iommufd/driver.c          | 2 +-
+>  drivers/iommu/iommufd/viommu.c          | 4 ++--
+>  3 files changed, 9 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/iommu/iommufd/iommufd_private.h b/drivers/iommu/iommufd/iommufd_private.h
+> index 4f5e8cd99c96..09f895638f68 100644
+> --- a/drivers/iommu/iommufd/iommufd_private.h
+> +++ b/drivers/iommu/iommufd/iommufd_private.h
+> @@ -634,7 +634,12 @@ struct iommufd_vdevice {
+>  	struct iommufd_object obj;
+>  	struct iommufd_viommu *viommu;
+>  	struct device *dev;
+> -	u64 id; /* per-vIOMMU virtual ID */
+> +
+> +	/*
+> +	 * Virtual device ID per vIOMMU, e.g. vSID of ARM SMMUv3, vDeviceID of
+> +	 * AMD IOMMU, and vRID of a nested Intel VT-d to a Context Table
+> +	 */
+> +	u64 virt_id;
+>  };
+>  
+>  #ifdef CONFIG_IOMMUFD_TEST
+> diff --git a/drivers/iommu/iommufd/driver.c b/drivers/iommu/iommufd/driver.c
+> index 2fee399a148e..887719016804 100644
+> --- a/drivers/iommu/iommufd/driver.c
+> +++ b/drivers/iommu/iommufd/driver.c
+> @@ -30,7 +30,7 @@ int iommufd_viommu_get_vdev_id(struct iommufd_viommu *viommu,
+>  	xa_lock(&viommu->vdevs);
+>  	xa_for_each(&viommu->vdevs, index, vdev) {
+>  		if (vdev->dev == dev) {
+> -			*vdev_id = vdev->id;
+> +			*vdev_id = vdev->virt_id;
+>  			rc = 0;
+>  			break;
+>  		}
+> diff --git a/drivers/iommu/iommufd/viommu.c b/drivers/iommu/iommufd/viommu.c
+> index 25ac08fbb52a..bc8796e6684e 100644
+> --- a/drivers/iommu/iommufd/viommu.c
+> +++ b/drivers/iommu/iommufd/viommu.c
+> @@ -111,7 +111,7 @@ void iommufd_vdevice_destroy(struct iommufd_object *obj)
+>  	struct iommufd_viommu *viommu = vdev->viommu;
+>  
+>  	/* xa_cmpxchg is okay to fail if alloc failed xa_cmpxchg previously */
+> -	xa_cmpxchg(&viommu->vdevs, vdev->id, vdev, NULL, GFP_KERNEL);
+> +	xa_cmpxchg(&viommu->vdevs, vdev->virt_id, vdev, NULL, GFP_KERNEL);
+>  	refcount_dec(&viommu->obj.users);
+>  	put_device(vdev->dev);
+>  }
+> @@ -150,7 +150,7 @@ int iommufd_vdevice_alloc_ioctl(struct iommufd_ucmd *ucmd)
+>  		goto out_put_idev;
+>  	}
+>  
+> -	vdev->id = virt_id;
+> +	vdev->virt_id = virt_id;
+>  	vdev->dev = idev->dev;
+>  	get_device(idev->dev);
+>  	vdev->viommu = viommu;
 
-syzbot found the following issue on:
+Reviewed-by: Pranjal Shrivastava <praan@google.com>
 
-HEAD commit:    3f804361f3b9 Add linux-next specific files for 20250701
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=14e11770580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=46111759e155f4cc
-dashboard link: https://syzkaller.appspot.com/bug?extid=37d54f0f58ba8519cdbe
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/c371987646a7/disk-3f804361.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/94a8f81e003e/vmlinux-3f804361.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/a126fddf774b/bzImage-3f804361.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+37d54f0f58ba8519cdbe@syzkaller.appspotmail.com
-
-=============================
-WARNING: suspicious RCU usage
-6.16.0-rc4-next-20250701-syzkaller #0 Not tainted
------------------------------
-fs/proc/proc_sysctl.c:934 suspicious rcu_dereference_check() usage!
-
-other info that might help us debug this:
-
-
-rcu_scheduler_active = 2, debug_locks = 1
-3 locks held by syz-executor/5832:
- #0: ffff888030574428 (sb_writers#3){.+.+}-{0:0}, at: mnt_want_write+0x41/0x90 fs/namespace.c:557
- #1: ffff8880230d8190 (&sb->s_type->i_mutex_key#10){++++}-{4:4}, at: inode_lock_shared include/linux/fs.h:884 [inline]
- #1: ffff8880230d8190 (&sb->s_type->i_mutex_key#10){++++}-{4:4}, at: open_last_lookups fs/namei.c:3806 [inline]
- #1: ffff8880230d8190 (&sb->s_type->i_mutex_key#10){++++}-{4:4}, at: path_openat+0x8cb/0x3830 fs/namei.c:4043
- #2: ffff88807e2779c8 (&lockref->lock){+.+.}-{3:3}, at: spin_lock include/linux/spinlock.h:351 [inline]
- #2: ffff88807e2779c8 (&lockref->lock){+.+.}-{3:3}, at: d_wait_lookup fs/dcache.c:2537 [inline]
- #2: ffff88807e2779c8 (&lockref->lock){+.+.}-{3:3}, at: d_alloc_parallel+0xbe4/0x15e0 fs/dcache.c:2624
-
-stack backtrace:
-CPU: 0 UID: 0 PID: 5832 Comm: syz-executor Not tainted 6.16.0-rc4-next-20250701-syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- lockdep_rcu_suspicious+0x140/0x1d0 kernel/locking/lockdep.c:6871
- proc_sys_compare+0x27d/0x2c0 fs/proc/proc_sysctl.c:934
- d_same_name fs/dcache.c:2179 [inline]
- d_alloc_parallel+0x105d/0x15e0 fs/dcache.c:2637
- lookup_open fs/namei.c:3630 [inline]
- open_last_lookups fs/namei.c:3807 [inline]
- path_openat+0xa3b/0x3830 fs/namei.c:4043
- do_filp_open+0x1fa/0x410 fs/namei.c:4073
- do_sys_openat2+0x121/0x1c0 fs/open.c:1434
- do_sys_open fs/open.c:1449 [inline]
- __do_sys_openat fs/open.c:1465 [inline]
- __se_sys_openat fs/open.c:1460 [inline]
- __x64_sys_openat+0x138/0x170 fs/open.c:1460
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fa66218d211
-Code: 75 57 89 f0 25 00 00 41 00 3d 00 00 41 00 74 49 80 3d 3a 83 1f 00 00 74 6d 89 da 48 89 ee bf 9c ff ff ff b8 01 01 00 00 0f 05 <48> 3d 00 f0 ff ff 0f 87 93 00 00 00 48 8b 54 24 28 64 48 2b 14 25
-RSP: 002b:00007ffe575748d0 EFLAGS: 00000202 ORIG_RAX: 0000000000000101
-RAX: ffffffffffffffda RBX: 0000000000080001 RCX: 00007fa66218d211
-RDX: 0000000000080001 RSI: 00007fa66222ae2b RDI: 00000000ffffff9c
-RBP: 00007fa66222ae2b R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000009
-R13: 00007ffe57574970 R14: 0000000000000009 R15: 0000000000000000
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+> -- 
+> 2.43.0
+> 
