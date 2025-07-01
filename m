@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38917306DB7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE035306DA2;
 	Tue,  1 Jul 2025 22:06:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751407608; cv=none; b=H/x+6DjIvPPvt7y035SeVNGITTJ4mnJzx0CbK+wr2J/PTBXy6KprT5yB3FkdktBgVy9OYMnb5nL/PtwurkoFfiM9nHQZw4wcEfaFdFlGjAyPYNzpcNm1osYwMQv1dhd+2KpNHHFna9KgzfLgVmzRTocc/0dnK81va6rUu1J6q5w=
+	t=1751407607; cv=none; b=bqATU7dDgGwtpPD5iQZPQ0kctL3K0G+sKNfx4QBMEGn6d+fhQDYB72FIVZQJD61trQi9KaUc0IsPJoFxKIn1/MZdvXjTQgj2xRTKkQCsFHTLodHXAQGc/lHwH3CV+ggAEqXQ7QxM6EJCRugCRkE4Ym+X3iJGVs02oTuwhPACA7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751407608; c=relaxed/simple;
-	bh=CERXC+GluGq6gtdcghOIPnpwBCg94n3hc0LrBMl8mcw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=X0Y92/u7oJgS6QrRw5xQme+2X1ZGqxqat9e1JvnUZIz9hJlJlun+bUCfvtlLtCss1BcwgpnNMozdfbt8B4xKvo0tw06bO8lxNrnJg2LdULSztUxC0DjIpodD/7ES3nrMNS9vdUB3Kb1/UOQzU0Qi2OZLTx+riF1SwqvsikD6zvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mS12TZGz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751407607; c=relaxed/simple;
+	bh=43NY+bSRhhxrEVankUIT3L/lBrk/enLMCS3BGcN1ccs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=lzJ3U6n2NFcpfWa46kwtYnEDwH/3mcqZVG3bV4OOHWTtMColnFbL30DbxJViHqyUrBzggygtU/w6XrrauQsVUsOj91onuUZipt8cCFv6KRs6e3qZ94SMhaaNBzviPgtjDopoG9h4NDXPgxcgQNffaTq2odvVwhODe3tTQOlshCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JbH3fMvJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mS12TZGz"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9E260C4CEFC;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JbH3fMvJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 57F6BC4CEEB;
 	Tue,  1 Jul 2025 22:06:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1751407607;
-	bh=CERXC+GluGq6gtdcghOIPnpwBCg94n3hc0LrBMl8mcw=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=mS12TZGzxpBysun1h0QARInTRMYTmwdl5X3lLoc1pu8gmASkMsBHPPFxl1vxUUpGk
-	 RgpoW5G4HYF7iq/YA5E4+SWQl24cdivDna8Qj0FB2engzVI04QKkoYwtKrVe2S+xji
-	 a2cADh1Qx+klTiOSVhGBCtjD4tvu0zzEaV6xHJ4daRtET14OHguDl9hiW/4Rd0+VzX
-	 wWoRA6ImsGWIJLkMafmwAiFUNrZXcgP2o6VoxPzsLYRSrwsIzdAe9oUbquJCBlakrg
-	 jpapwATl03D2VORuh4TIEaltm4ll15yy9bwOOTL1pfbHH3ur9OqFNYvmEKhTrXqAza
-	 MPg8SV/jSC99w==
+	bh=43NY+bSRhhxrEVankUIT3L/lBrk/enLMCS3BGcN1ccs=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=JbH3fMvJzqXep0BUBXCHEUrODtBIrRsLKawPnOUp0LCNqC1EUSdjVLqKjnqjemcXe
+	 RZBMxvyQyQ1hrskJ8ZvVSUgah94/SslreYO7CrYgDyBYhlJgto8aCc0sfi3qRHQz62
+	 fZl+bTunt497HewR1aQVPoFBJmVCUKnOe+MLT9g/owgLZvBvht4TEK6Zmqc7YC/ul8
+	 k9erj/1uhs9b1DlUDlomw5Z9dtYFKX/CMZHFAVhqVo93i3c/r2yJhqmJgumg8Quikw
+	 R/v3I0vDNi5gK31XbAy7AvUwt0D+1QSRobTFd7nbWXYad749rxggkeN5Y6a8kvbBK/
+	 uHLHyL0XYh13A==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9239DC83F03;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F3DC8303A;
 	Tue,  1 Jul 2025 22:06:47 +0000 (UTC)
 From: Per Larsen via B4 Relay <devnull+perlarsen.google.com@kernel.org>
-Date: Tue, 01 Jul 2025 22:06:38 +0000
-Subject: [PATCH v7 5/5] KVM: arm64: Support FFA_MSG_SEND_DIRECT_REQ2 in
- host handler
+Subject: [PATCH v7 0/5] KVM: arm64: Support FF-A 1.2 and SEND_DIRECT2 ABI
+Date: Tue, 01 Jul 2025 22:06:33 +0000
+Message-Id: <20250701-virtio-msg-ffa-v7-0-995afc3d385e@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,9 +40,12 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250701-virtio-msg-ffa-v7-5-995afc3d385e@google.com>
-References: <20250701-virtio-msg-ffa-v7-0-995afc3d385e@google.com>
-In-Reply-To: <20250701-virtio-msg-ffa-v7-0-995afc3d385e@google.com>
+X-B4-Tracking: v=1; b=H4sIAOlbZGgC/2XQTW7DIBCG4atErEsEw6+zyj2qLigeHKTYRNhFr
+ SLfvdhSVbcsZ/G8+jRPMmOOOJPL6UkyljjHNNXDvJyIv7lpQBr7ehNgoJhimpaYl5joOA80BEc
+ BXDDgO+CKkYoeGUP83IOvb/UOOY10uWV0xwywCpg9CwApJKecPjDfr3EcPyY3LWefxi12i/OS8
+ tc+rsCW/AnY/zsKUEaxtzJYpkSn1XVIabjjntqGFHHwXDReVN9r7Y0Ogb+Db7w8+uYPRVavLEM
+ 0DOs+3nj16zXvGq+ql7x+0iplLTON1wcPpvG6eusZhL6T2Lu/+9d1/Qbf1se+6gEAAA==
+X-Change-ID: 20250506-virtio-msg-ffa-22af72c92150
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
  Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
  Zenghui Yu <yuzenghui@huawei.com>, 
@@ -55,11 +57,11 @@ Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
  sebastianene@google.com, qwandor@google.com, 
  Per Larsen <perlarsen@google.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751407606; l=3137;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751407606; l=4826;
  i=perlarsen@google.com; s=20250508; h=from:subject:message-id;
- bh=GEqKX+GAadj0SfI9NfXASrGnNrJoxc4Z5cAFtJ2/kCw=;
- b=OPfG6n4vrx37ckpdyrTzIO1OA/BbDYa0ENcgj7Q/JIDX4NTK1LSJuwKRpLHEGoe2PF2eywnPs
- Ka1PeLLCVFjCZJ4KeUoKU+SJpH+D/KUIG6tH9oYRbLjo/hvbaxURu1I
+ bh=43NY+bSRhhxrEVankUIT3L/lBrk/enLMCS3BGcN1ccs=;
+ b=Qgpxzv+DgnfrsxQCvMNmnx3G57BbKoi+b3bENsB7/bxqi1aBzL7rU949iVXZFfjZTezXJiBCW
+ wFGOpbgzwZbC+oskhHyOXp/R4tnZxEiaI5hZeM7v6DODM5H7rLfKT7S
 X-Developer-Key: i=perlarsen@google.com; a=ed25519;
  pk=jjc/Ta4VmrLRmMoahP6d1mBcKzvWU+nsmdtYe2oS2kQ=
 X-Endpoint-Received: by B4 Relay for perlarsen@google.com/20250508 with
@@ -67,89 +69,109 @@ X-Endpoint-Received: by B4 Relay for perlarsen@google.com/20250508 with
 X-Original-From: Per Larsen <perlarsen@google.com>
 Reply-To: perlarsen@google.com
 
-From: Per Larsen <perlarsen@google.com>
+Hi,
 
-FF-A 1.2 adds the DIRECT_REQ2 messaging interface which is similar to
-the existing FFA_MSG_SEND_DIRECT_{REQ,RESP} functions except that it
-uses the SMC calling convention v1.2 which allows calls to use x4-x17 as
-argument and return registers. Add support for FFA_MSG_SEND_DIRECT_REQ2
-in the host ffa handler.
+The FF-A 1.2 specification introduces a new SEND_DIRECT2 ABI which
+allows registers x4-x17 to be used for the message payload. This patch
+set prevents the host from using a lower FF-A version than what has
+already been negotiated with the hypervisor. This is necessary because
+the hypervisor does not have the necessary compatibility paths to
+translate from the hypervisor FF-A version to a previous version.
 
-Signed-off-by: Per Larsen <perlarsen@google.com>
+Support for FF-A 1.2 in the hypervisor is added as a precursor to the
+addition of the FFA_MSG_SEND_DIRECT_REQ2 messaging interface. Notably,
+this patch updates all smc calls to use SMCCC 1.2 as it makes it simpler
+to support interfaces that need to accept more than 8 arguments and/or
+return more than 4 values. The list of optional/unsupported interfaces
+was updated to reflect additions in FF-A 1.2.
+
+Tested by booting Android under QEMU and loading Trusty as the guest
+VM and observing the SEND_DIRECT2 ABI being used successfully during
+guest boot.
+
+Changes in v7:
+- 0/6:        Revised cover letter slightly
+- 4/6:        ffa_call_supported: Clarify optional interfaces
+              hyp_ffa_post_init: Sanitize MBZ bits in x2 and x3
+              address nit: use GENMASK
+- Link to v6: https://lore.kernel.org/r/20250627-virtio-msg-ffa-v6-0-8c02fd94edac@google.com 
+
+Changes since v5:
+- 3/6 -> 2/5: Merged with parent patch as they were closely related
+              Don't rename variables from "res" to "regs" to avoid churn
+              Update and clarify reasoning for condition added to ffa_set_retval
+              Adopt style suggested by Marc when passing regs to arm_smccc_1_2_smc
+              Fix inadvertent duplicate statements in ffa_{map,unmap}_hyp_buffers
+- Link to v5: https://lore.kernel.org/r/20250619-virtio-msg-ffa-v5-0-412c98558807@google.com
+
+Changes since v4:
+- 1/5 -> 1/6: Added Acked-by: Will Deacon <will@kernel.org>
+              Reworded patch subject and description
+- 2/5:        Dropped patch: zero x4-x7 in ffa_set_retval
+-        2/6: New: use SMCCC 1.2 during hyp init
+-        3/6: New: use SMCCC 1.2 in host FF-A handler
+- 3/5 -> 4/6: No change; can revisit denylist design in later patchset
+              Added Acked-by: Will Deacon <will@kernel.org>
+- 4/5 -> 5/6: No change
+- 5/5 -> 6/6: No change
+- Link to v4: https://lore.kernel.org/r/20250516-virtio-msg-ffa-v4-0-580ee70e5081@google.com
+
+Changes since v3:
+- all:        Remove Signed-off-by: Per Larsen <perl@immunant.com>
+- 2/5:        Split out from 2/3, zero x4-x7 in set_ffa_retval
+- 3/5:        Split out from 2/3, Mark FFA_NOTIFICATION_* calls as
+              unsupported
+- 2/3 -> 4/5: Drop ffa_get_hypervisor_version, access hyp_ffa_version
+              directly when version negotiation is complete.
+- 3/3 -> 5/5: Call ffa_to_smccc_1_2_error directly in
+              do_do_ffa_direct_msg2
+              Push call to ffa_call_needs_smccc_1_2 lower down by adding
+              ffa_get_func_id and ffa_set_retval_smccc_1_x.
+              Drop ffa_to_smccc_1_2_regs and ffa_to_smccc_1_2_regs_prop
+              as they are no longer used.
+- Link to v3: https://lore.kernel.org/r/20250513-virtio-msg-ffa-v3-0-d66c76ff1b2c@google.com 
+
+Changes since v2:
+- 2/3: Removed files added by mistake.
+       Add and use ffa_get_hypervisor_version to access hyp_ffa_version
+- 3/3: Use ffa_get_hypervisor_version to access hyp_ffa_version safely
+- Link to v2: https://lore.kernel.org/r/20250508-virtio-msg-ffa-v2-0-ed84f8053965@google.com
+
+Changes since v1:
+- 1/3: Simplify commit message; drop long comment in do_ffa_version
+- 2/3: Correct use of Co-developed-by: footer
+       s/arm_smccc_1_2_smc_fallback/arm_smccc_1_x_smc/
+       Always access hyp_ffa_version w/lock held
+       Remove superfluous comments in ffa_call_supported
+       Add and use FFA_FEAT_RXTX_MIN_SZ_MASK instead of constant
+       Add FFA_PARTITION_INFO_GET_REGS to calls that require SMCCC 1.2
+- 3/3: Always access hyp_ffa_version w/lock held
+       Correct formatting
+
+Thanks,
+Per Larsen
+
+--
+2.49.0
+
 ---
- arch/arm64/kvm/hyp/nvhe/ffa.c | 24 +++++++++++++++++++++++-
- include/linux/arm_ffa.h       |  2 ++
- 2 files changed, 25 insertions(+), 1 deletion(-)
+Per Larsen (5):
+      KVM: arm64: Correct return value on host version downgrade attempt
+      KVM: arm64: Use SMCCC 1.2 for FF-A initialization and in host handler
+      KVM: arm64: Mark FFA_NOTIFICATION_* calls as unsupported
+      KVM: arm64: Bump the supported version of FF-A to 1.2
+      KVM: arm64: Support FFA_MSG_SEND_DIRECT_REQ2 in host handler
 
-diff --git a/arch/arm64/kvm/hyp/nvhe/ffa.c b/arch/arm64/kvm/hyp/nvhe/ffa.c
-index 79d834120a3f3d26e17e9170c60012b60c6f5a5e..21225988a9365219ccfd69e8e599d7403b5cdf05 100644
---- a/arch/arm64/kvm/hyp/nvhe/ffa.c
-+++ b/arch/arm64/kvm/hyp/nvhe/ffa.c
-@@ -679,7 +679,6 @@ static bool ffa_call_supported(u64 func_id)
- 	case FFA_NOTIFICATION_GET:
- 	case FFA_NOTIFICATION_INFO_GET:
- 	/* Optional interfaces added in FF-A 1.2 */
--	case FFA_MSG_SEND_DIRECT_REQ2:		/* Optional per 7.5.1 */
- 	case FFA_MSG_SEND_DIRECT_RESP2:		/* Optional per 7.5.1 */
- 	case FFA_CONSOLE_LOG:			/* Optional per 13.1: not in Table 13.1 */
- 	case FFA_PARTITION_INFO_GET_REGS:	/* Optional for virtual instances per 13.1 */
-@@ -862,6 +861,22 @@ static void do_ffa_part_get(struct arm_smccc_1_2_regs *res,
- 	hyp_spin_unlock(&host_buffers.lock);
- }
- 
-+static void do_ffa_direct_msg2(struct arm_smccc_1_2_regs *regs,
-+			       struct kvm_cpu_context *ctxt,
-+			       u64 vm_handle)
-+{
-+	DECLARE_REG(u32, endp, ctxt, 1);
-+
-+	struct arm_smccc_1_2_regs *args = (void *)&ctxt->regs.regs[0];
-+
-+	if (FIELD_GET(FFA_SRC_ENDPOINT_MASK, endp) != vm_handle) {
-+		ffa_to_smccc_error(regs, FFA_RET_INVALID_PARAMETERS);
-+		return;
-+	}
-+
-+	arm_smccc_1_2_smc(args, regs);
-+}
-+
- bool kvm_host_ffa_handler(struct kvm_cpu_context *host_ctxt, u32 func_id)
- {
- 	struct arm_smccc_1_2_regs res;
-@@ -920,11 +935,18 @@ bool kvm_host_ffa_handler(struct kvm_cpu_context *host_ctxt, u32 func_id)
- 	case FFA_PARTITION_INFO_GET:
- 		do_ffa_part_get(&res, host_ctxt);
- 		goto out_handled;
-+	case FFA_MSG_SEND_DIRECT_REQ2:
-+		if (hyp_ffa_version >= FFA_VERSION_1_2) {
-+			do_ffa_direct_msg2(&res, host_ctxt, HOST_FFA_ID);
-+			goto out_handled;
-+		}
-+		goto out_not_supported;
- 	}
- 
- 	if (ffa_call_supported(func_id))
- 		return false; /* Pass through */
- 
-+out_not_supported:
- 	ffa_to_smccc_error(&res, FFA_RET_NOT_SUPPORTED);
- out_handled:
- 	ffa_set_retval(host_ctxt, &res);
-diff --git a/include/linux/arm_ffa.h b/include/linux/arm_ffa.h
-index 2b760bede9c0a4bcb58bf697681c32e77c08a5d9..db63a96190545c9f65943909de2d73cf8e7b9615 100644
---- a/include/linux/arm_ffa.h
-+++ b/include/linux/arm_ffa.h
-@@ -269,6 +269,8 @@ bool ffa_partition_check_property(struct ffa_device *dev, u32 property)
- 	(ffa_partition_check_property(dev, FFA_PARTITION_DIRECT_REQ2_RECV) && \
- 	 !dev->mode_32bit)
- 
-+#define FFA_SRC_ENDPOINT_MASK	GENMASK(31, 16)
-+
- /* For use with FFA_MSG_SEND_DIRECT_{REQ,RESP} which pass data via registers */
- struct ffa_send_direct_data {
- 	unsigned long data0; /* w3/x3 */
+ arch/arm64/kvm/hyp/nvhe/Makefile |   1 +
+ arch/arm64/kvm/hyp/nvhe/ffa.c    | 244 +++++++++++++++++++++++++++------------
+ include/linux/arm_ffa.h          |   3 +
+ 3 files changed, 175 insertions(+), 73 deletions(-)
+---
+base-commit: 66701750d5565c574af42bef0b789ce0203e3071
+change-id: 20250506-virtio-msg-ffa-22af72c92150
 
+Best regards,
 -- 
-2.50.0.727.gbf7dc18ff4-goog
+Per Larsen <perlarsen@google.com>
 
 
