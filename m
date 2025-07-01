@@ -1,185 +1,242 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1766B199385;
-	Tue,  1 Jul 2025 06:05:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5712423C4E0;
+	Tue,  1 Jul 2025 06:05:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751349944; cv=none; b=HFOOzuZNLdfdZtGURE01gaLs0gORqoVWxZ0YOpbD7LXZveUUH674oxZkPXAvEDireaPA3o2jetMqAHR95ycpoCBmykGNR33t2nqQWneWcUQplOhC55cufabQSXVKCWijpCZmEEqyn1gO6szzV9e0fF6fU6gc/f4jlIsX/V7AqJY=
+	t=1751349961; cv=none; b=E93E/ApcYNym6v/WNWfgEkezJcBR/imDBFb0vjtL6opDg5chUuW6vtIWOCDM20AchFbCjo5p2OCdXZkkoS75bw6d+5v3A1G7C1yU0DOR1evRPz1lUNOj83+Ey+9m387NNXDeJpSfSLb4LL2LZMGL8awosi+TDA0647d7LRz+vmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751349944; c=relaxed/simple;
-	bh=5wxaXCZgzcsOdU2YdEfVEPx37l7c81hL3jRM5rarvbM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OP2nAKL7WfhT2tULmy0Pw9wfUOqXUiJt/sqmy2uE8jfXKYNByYLP72/iyRVWHSsTOEainMNw2vsl0ZPdGi6jfGByZiIYjWFDynQnNVLDOd9JMgn+d2Whi9FO21JVu4z6sMH2Sdh0Vu+tQU+mpyKx8AdfMGVfyrbCh+UtA3gXQUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Icn2+5KX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751349961; c=relaxed/simple;
+	bh=SeIXvbsKD/6wDDdSTrLiwRGd6Sf5ThDoHRlhISLn+Xs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nfqbSM88jJ+ViVscZipIsyvFo5NXKOm+uGKkR9rgWtSokymFzJTrzEtdw9WmsR9NaHZk5HBz6J1UCzSZsrnE+H9syiG1IT3KMD4HbLA0z/WNYo8SM6vwlPoyn3dHvUAKQmvJnXvlYVpbyyF3m5pZtWWpR6kuKr3VHGFCN1RPvmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E+7l9i9k; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Icn2+5KX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE12CC4CEEB;
-	Tue,  1 Jul 2025 06:05:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751349943;
-	bh=5wxaXCZgzcsOdU2YdEfVEPx37l7c81hL3jRM5rarvbM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Icn2+5KX57HRZwT5+1VGTOQCeQNj7UvRQ1GCzOQXSWdK6KsMrm2Fja5AZMUgspLAS
-	 JmTY4hIHuEUR+Ay7H39x6XFH1ZxTMKvEkZ3Xb7uB4Cd7xoF96Iy0uizi6ENT6gyQpU
-	 IZ8ACk5hRfSAZ2PHpWdm7NUTuz1oND+KF8ZndKkiZhtnTDVsg6DcZKtdpYCJ6+zcyI
-	 +hVc1FNKtGtv2gh4eHfU7IHY1CHQJvkEy8OB+KWu5Gr3ZvmqMLcqd/na8D+x9rhORE
-	 Q/EHI+Wfz70CGui1wd2uWR5lFuKVFAjBTtU7JqAwukkwxQDhzgc+YiBzIPsxYjYfsJ
-	 or68BrKQcPnkA==
-Date: Mon, 30 Jun 2025 23:05:40 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>,
-	Graham Woodward <graham.woodward@arm.com>,
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	Zhongqiu Han <quic_zhonhan@quicinc.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Athira Rajeev <atrajeev@linux.ibm.com>,
-	Kajol Jain <kjain@linux.ibm.com>, Li Huafei <lihuafei1@huawei.com>,
-	"Steinar H. Gunderson" <sesse@google.com>,
-	Stephen Brennan <stephen.s.brennan@oracle.com>,
-	Chun-Tse Shao <ctshao@google.com>, Yujie Liu <yujie.liu@intel.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Levi Yun <yeoreum.yun@arm.com>, Howard Chu <howardchu95@gmail.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Matt Fleming <matt@readmodwrite.com>,
-	Veronika Molnarova <vmolnaro@redhat.com>,
-	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
-	Zixian Cai <fzczx123@gmail.com>,
-	Steve Clevenger <scclevenger@os.amperecomputing.com>,
-	Ben Gainey <ben.gainey@arm.com>,
-	Chaitanya S Prakash <chaitanyas.prakash@arm.com>,
-	Martin Liska <martin.liska@hey.com>,
-	Martin =?utf-8?B?TGnFoWth?= <m.liska@foxlink.cz>,
-	Song Liu <song@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 16/23] perf bench synthesize: Avoid use of global
- perf_env
-Message-ID: <aGN6tPDP50RrNTnq@google.com>
-References: <20250628045017.1361563-1-irogers@google.com>
- <20250628045017.1361563-17-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E+7l9i9k"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ae361e8ec32so673412466b.3;
+        Mon, 30 Jun 2025 23:05:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751349957; x=1751954757; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KuEXV07Z9sdbVmePGAe0RiLvhvhMH/ORTr8Xg5rdgBA=;
+        b=E+7l9i9kLtEE34rjEnLqXnObXKxQG8uarocPhssHFhRLMtiYQJ51/JzvaC0hHDRWgP
+         Lg1i+BQsM4PsjssKs1wCY1kDZksLO6le/3qm/MR4S3Dqcmxqcv5kzekJYEFXR3WLIVe7
+         67uoT9e18BhrolXeD17nMqz/n1uaYxAl58tLnkXS2oxge9y/R1Pf1+jmroV0NTyPPnJa
+         DQnn0Qb93OPO2HpWYTWDs9cBQiBH5wz5hjMt19GPjQjxsQRImsV25hXogPb+wXi1EpFt
+         PHjppMRV9rifLt9BXbvxeIzPX6iaKLzj4GdJ+unD86opUTjEX45wMSgzobUwIf7MG8gq
+         s0ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751349957; x=1751954757;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KuEXV07Z9sdbVmePGAe0RiLvhvhMH/ORTr8Xg5rdgBA=;
+        b=n5ulsoLnbikljCGnezbvwfcO0wE/LxXAjkAK05CkWV+Yl/N2PU6chsICCcAwoSMYNQ
+         SO41BPkp5agov6o4foO253xGKgQraEwDYYuO5kL5c9PdOMTuUfcQKOAmXB7lHQFnfAmU
+         JvKBFFNZuGI/4wBmY8P0RQ4ZClHXIIH8v5RpwSncnNhV+JMQK8Moo9hayNT7d6ekyVzM
+         TdR0zDK3TFjCKMwiTzD6HrtG2cC9sGljh35rtkZXhTfYezu0RC3v2LenC5+74APQDKah
+         IPO4BHaEqRc0/a4zMgwKwE/mxFp8lFqVNGJe6n4r9VBS2TN4qjy/m8s43bQh900D5I/O
+         MjPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUmSB1KUDgjiGXUjkQrAsa7zQZnntcf9QrUryBKMzjH19ObiCs8+Ut++eFAP+vx5BStztJOYG+NVGk=@vger.kernel.org, AJvYcCVcWpg6Qgob1Jf1Y4EpmoetTYDJHGcAFwJnPtVkUMf3H+219YJ3GAHvjcsjqJ/n651y3iTYu3prfSMdjux1@vger.kernel.org, AJvYcCVwu0GoisU0ro3/YRFc08E8OO2CtjMelZuoSdAO0QfCekGO6Wesuv6+ZxbYvw/5xM1FUuRfMJduTS4G@vger.kernel.org, AJvYcCWI80asZIAWQjrfWFu0+SDCuUHom/i7W9WY/egtDOb3DT9+RwD+JIfm7X8bCbAHU0swdhKWZrb34A==@vger.kernel.org, AJvYcCWM3leqCJ2p8y14KcFDRUGF6/C0Am40R/2caqBK000qPACA0ooSaCiXqiL8oRwu8AXs/mUXq4LxVuzGO1udQg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJuxxuLLJOLHhtP8Gfi1hKyQu4+EzvxNOpK8dnCqmq/NpRW0Iv
+	EkLVAZ8259z/iXXelas+OdwqzhTxTyDxJXOafqTIgmRluj63xxKYKIlb8nXoqIOqV7SE3BbRd64
+	nOLt1TvFMiKNdxm86ii2WiE3PiocX2Bo=
+X-Gm-Gg: ASbGncsFbZApAC6agFGx/x3p3Hcvi2B0MqiXAl2oWOKeMaDY3BT4r3K9cjkcNGOLJfu
+	X88dnQ5iXIaa0qOrMug2olPTaz3wq9nurAHsWodhBbwvvCbfInkndAZAGni+5Pz/mvCFx2baVZq
+	aBP13KzfOziQ4JqMXDy/jKVuzsj2fkjLhw+5gDaTbwTYc=
+X-Google-Smtp-Source: AGHT+IE8ltAVUHmG0o8AJsNM6aS+AMGdPwBTV6jSAOtvjhmVYfBdldq1gqGOmPM/QRe73Xswe0K6G48qYHzvM8ukRGI=
+X-Received: by 2002:a17:906:4fd5:b0:ae3:5ebc:7a3c with SMTP id
+ a640c23a62f3a-ae35ebc87a5mr1309732366b.11.1751349956866; Mon, 30 Jun 2025
+ 23:05:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250628045017.1361563-17-irogers@google.com>
+References: <20250630-xattrat-syscall-v6-0-c4e3bc35227b@kernel.org> <20250630-xattrat-syscall-v6-4-c4e3bc35227b@kernel.org>
+In-Reply-To: <20250630-xattrat-syscall-v6-4-c4e3bc35227b@kernel.org>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Tue, 1 Jul 2025 08:05:45 +0200
+X-Gm-Features: Ac12FXxgSnJQgGdAHWGW1XZ5QTb4sHxkxo40tOuCn_ldUpIgeYyBQujjKbItCiM
+Message-ID: <CAOQ4uxgbeMEqx7FtBc3KnrCjOHHRniSjBPLzk7_S9SjYKcY_ag@mail.gmail.com>
+Subject: Re: [PATCH v6 4/6] fs: make vfs_fileattr_[get|set] return -EOPNOSUPP
+To: Andrey Albershteyn <aalbersh@redhat.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Casey Schaufler <casey@schaufler-ca.com>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>, 
+	Paul Moore <paul@paul-moore.com>, linux-api@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-xfs@vger.kernel.org, selinux@vger.kernel.org, 
+	Andrey Albershteyn <aalbersh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 27, 2025 at 09:50:10PM -0700, Ian Rogers wrote:
-> The benchmark doesn't use a data file and so the header perf_env isn't
-> used. Stack allocate a host perf_env for use to avoid the use of the
-> global perf_env.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
+On Mon, Jun 30, 2025 at 6:20=E2=80=AFPM Andrey Albershteyn <aalbersh@redhat=
+.com> wrote:
+>
+> Future patches will add new syscalls which use these functions. As
+> this interface won't be used for ioctls only, the EOPNOSUPP is more
+> appropriate return code.
+>
+> This patch converts return code from ENOIOCTLCMD to EOPNOSUPP for
+> vfs_fileattr_get and vfs_fileattr_set. To save old behavior translate
+> EOPNOSUPP back for current users - overlayfs, encryptfs and fs/ioctl.c.
+>
+> Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
 > ---
->  tools/perf/bench/synthesize.c | 30 +++++++++++++++++++-----------
->  1 file changed, 19 insertions(+), 11 deletions(-)
-> 
-> diff --git a/tools/perf/bench/synthesize.c b/tools/perf/bench/synthesize.c
-> index 9b333276cbdb..79d99ba50284 100644
-> --- a/tools/perf/bench/synthesize.c
-> +++ b/tools/perf/bench/synthesize.c
-> @@ -114,10 +114,13 @@ static int run_single_threaded(void)
->  		.pid = "self",
->  	};
->  	struct perf_thread_map *threads;
-> +	struct perf_env host_env;
->  	int err;
->  
->  	perf_set_singlethreaded();
-> -	session = perf_session__new(NULL, NULL);
-> +	perf_env__init(&host_env);
-> +	session = __perf_session__new(/*data=*/NULL, /*tool=*/NULL,
-> +				      /*trace_event_repipe=*/false, &host_env);
->  	if (IS_ERR(session)) {
->  		pr_err("Session creation failed.\n");
->  		return PTR_ERR(session);
-
-Missing perf_env__exit() ?
-
-
-> @@ -144,6 +147,7 @@ static int run_single_threaded(void)
->  		perf_thread_map__put(threads);
->  
->  	perf_session__delete(session);
-> +	perf_env__exit(&host_env);
->  	return err;
+>  fs/ecryptfs/inode.c  |  8 +++++++-
+>  fs/file_attr.c       | 12 ++++++++++--
+>  fs/overlayfs/inode.c |  2 +-
+>  3 files changed, 18 insertions(+), 4 deletions(-)
+>
+> diff --git a/fs/ecryptfs/inode.c b/fs/ecryptfs/inode.c
+> index 493d7f194956..a55c1375127f 100644
+> --- a/fs/ecryptfs/inode.c
+> +++ b/fs/ecryptfs/inode.c
+> @@ -1126,7 +1126,13 @@ static int ecryptfs_removexattr(struct dentry *den=
+try, struct inode *inode,
+>
+>  static int ecryptfs_fileattr_get(struct dentry *dentry, struct fileattr =
+*fa)
+>  {
+> -       return vfs_fileattr_get(ecryptfs_dentry_to_lower(dentry), fa);
+> +       int rc;
+> +
+> +       rc =3D vfs_fileattr_get(ecryptfs_dentry_to_lower(dentry), fa);
+> +       if (rc =3D=3D -EOPNOTSUPP)
+> +               rc =3D -ENOIOCTLCMD;
+> +
+> +       return rc;
 >  }
->  
-> @@ -154,17 +158,21 @@ static int do_run_multi_threaded(struct target *target,
->  	u64 runtime_us;
->  	unsigned int i;
->  	double time_average, time_stddev, event_average, event_stddev;
-> -	int err;
-> +	int err = 0;
->  	struct stats time_stats, event_stats;
->  	struct perf_session *session;
-> +	struct perf_env host_env;
->  
-> +	perf_env__init(&host_env);
->  	init_stats(&time_stats);
->  	init_stats(&event_stats);
->  	for (i = 0; i < multi_iterations; i++) {
-> -		session = perf_session__new(NULL, NULL);
-> -		if (IS_ERR(session))
-> -			return PTR_ERR(session);
-> -
-> +		session = __perf_session__new(/*data=*/NULL, /*tool=*/NULL,
-> +					      /*trace_event_repipe=*/false, &host_env);
-> +		if (IS_ERR(session)) {
-> +			err = PTR_ERR(session);
-> +			goto err_out;
-> +		}
->  		atomic_set(&event_count, 0);
->  		gettimeofday(&start, NULL);
->  		err = __machine__synthesize_threads(&session->machines.host,
-> @@ -173,10 +181,8 @@ static int do_run_multi_threaded(struct target *target,
->  						process_synthesized_event,
->  						true, false,
->  						nr_threads_synthesize);
-> -		if (err) {
-> -			perf_session__delete(session);
-> -			return err;
-> -		}
-> +		if (err)
-> +			goto err_out;
+>
 
-Missing perf_session__delete() ?
+I think the semantics should be
+"This patch converts return code of vfs_fileattr_[gs]et and ->fileattr_[gs]=
+et()
+from ENOIOCTLCMD to EOPNOSUPP"
 
+ENOIOCTLCMD belongs only in the ioctl frontend, so above conversion
+is not needed.
 
->  
->  		gettimeofday(&end, NULL);
->  		timersub(&end, &start, &diff);
-> @@ -198,7 +204,9 @@ static int do_run_multi_threaded(struct target *target,
->  
->  	printf("    Average time per event %.3f usec\n",
->  		time_average / event_average);
-> -	return 0;
-> +err_out:
-> +	perf_env__exit(&host_env);
-> +	return err;
+>  static int ecryptfs_fileattr_set(struct mnt_idmap *idmap,
+> diff --git a/fs/file_attr.c b/fs/file_attr.c
+> index be62d97cc444..4e85fa00c092 100644
+> --- a/fs/file_attr.c
+> +++ b/fs/file_attr.c
+> @@ -79,7 +79,7 @@ int vfs_fileattr_get(struct dentry *dentry, struct file=
+attr *fa)
+>         int error;
+>
+>         if (!inode->i_op->fileattr_get)
+> -               return -ENOIOCTLCMD;
+> +               return -EOPNOTSUPP;
+>
+>         error =3D security_inode_file_getattr(dentry, fa);
+>         if (error)
+> @@ -229,7 +229,7 @@ int vfs_fileattr_set(struct mnt_idmap *idmap, struct =
+dentry *dentry,
+>         int err;
+>
+>         if (!inode->i_op->fileattr_set)
+> -               return -ENOIOCTLCMD;
+> +               return -EOPNOTSUPP;
+>
+>         if (!inode_owner_or_capable(idmap, inode))
+>                 return -EPERM;
+> @@ -271,6 +271,8 @@ int ioctl_getflags(struct file *file, unsigned int __=
+user *argp)
+>         int err;
+>
+>         err =3D vfs_fileattr_get(file->f_path.dentry, &fa);
+> +       if (err =3D=3D -EOPNOTSUPP)
+> +               err =3D -ENOIOCTLCMD;
+>         if (!err)
+>                 err =3D put_user(fa.flags, argp);
+>         return err;
+> @@ -292,6 +294,8 @@ int ioctl_setflags(struct file *file, unsigned int __=
+user *argp)
+>                         fileattr_fill_flags(&fa, flags);
+>                         err =3D vfs_fileattr_set(idmap, dentry, &fa);
+>                         mnt_drop_write_file(file);
+> +                       if (err =3D=3D -EOPNOTSUPP)
+> +                               err =3D -ENOIOCTLCMD;
+>                 }
+>         }
+>         return err;
+> @@ -304,6 +308,8 @@ int ioctl_fsgetxattr(struct file *file, void __user *=
+argp)
+>         int err;
+>
+>         err =3D vfs_fileattr_get(file->f_path.dentry, &fa);
+> +       if (err =3D=3D -EOPNOTSUPP)
+> +               err =3D -ENOIOCTLCMD;
+>         if (!err)
+>                 err =3D copy_fsxattr_to_user(&fa, argp);
+>
+> @@ -324,6 +330,8 @@ int ioctl_fssetxattr(struct file *file, void __user *=
+argp)
+>                 if (!err) {
+>                         err =3D vfs_fileattr_set(idmap, dentry, &fa);
+>                         mnt_drop_write_file(file);
+> +                       if (err =3D=3D -EOPNOTSUPP)
+> +                               err =3D -ENOIOCTLCMD;
+>                 }
+>         }
+>         return err;
+> diff --git a/fs/overlayfs/inode.c b/fs/overlayfs/inode.c
+> index 6f0e15f86c21..096d44712bb1 100644
+> --- a/fs/overlayfs/inode.c
+> +++ b/fs/overlayfs/inode.c
+> @@ -721,7 +721,7 @@ int ovl_real_fileattr_get(const struct path *realpath=
+, struct fileattr *fa)
+>                 return err;
+>
+>         err =3D vfs_fileattr_get(realpath->dentry, fa);
+> -       if (err =3D=3D -ENOIOCTLCMD)
+> +       if (err =3D=3D -EOPNOTSUPP)
+>                 err =3D -ENOTTY;
+>         return err;
 >  }
->  
->  static int run_multi_threaded(void)
-> -- 
-> 2.50.0.727.gbf7dc18ff4-goog
-> 
+
+That's the wrong way, because it hides the desired -EOPNOTSUPP
+return code from ovl_fileattr_get().
+
+The conversion to -ENOTTY was done for
+5b0a414d06c3 ("ovl: fix filattr copy-up failure"),
+so please do this instead:
+
+--- a/fs/overlayfs/inode.c
++++ b/fs/overlayfs/inode.c
+@@ -722,7 +722,7 @@ int ovl_real_fileattr_get(const struct path
+*realpath, struct fileattr *fa)
+
+        err =3D vfs_fileattr_get(realpath->dentry, fa);
+        if (err =3D=3D -ENOIOCTLCMD)
+-               err =3D -ENOTTY;
++               err =3D -EOPNOTSUPP;
+        return err;
+ }
+
+--- a/fs/overlayfs/copy_up.c
++++ b/fs/overlayfs/copy_up.c
+@@ -178,7 +178,7 @@ static int ovl_copy_fileattr(struct inode *inode,
+const struct path *old,
+        err =3D ovl_real_fileattr_get(old, &oldfa);
+        if (err) {
+                /* Ntfs-3g returns -EINVAL for "no fileattr support" */
+-               if (err =3D=3D -ENOTTY || err =3D=3D -EINVAL)
++               if (err =3D=3D -ENOTTY || err =3D=3D -EINVAL || err =3D=3D =
+-EOPNOTSUPP)
+                        return 0;
+                pr_warn("failed to retrieve lower fileattr (%pd2, err=3D%i)=
+\n",
+                        old->dentry, err);
+
+
+Thanks,
+Amir.
