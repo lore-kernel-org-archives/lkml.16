@@ -1,198 +1,230 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295E2283CBF
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 20:43:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF11E246781;
+	Tue,  1 Jul 2025 20:46:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751402621; cv=none; b=YtOZYFRghMODCVAqcmEw2tt7EC+V1wPlwdb2NTpCngIYSLFvvhh74PzqUi6OMIOuTZzR14yjMhKmDBZmNyB14jYo41p2nv9so9KvoCFQwFivkqZsj80uSjjP0Z8SYZTy9weWban9SzsmAR1Cv0tXJ/M8CAKr36n7B+0QpNg1aU0=
+	t=1751402767; cv=none; b=dH+XxC6KNubdyufXYdw5jvjMet3oN4NpNFax0E/dfJ/ShHwU6EytFhDdDzQJIHOvwfeSJTsoa8Zek4RnmevdGeEEN9i5y2VJLhJC38GqvA3quAKTT7k79G9/JcEjKQEbioIh26Hd012JMG2wjv0AgP9UCuuOI/Igs+tea+tOois=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751402621; c=relaxed/simple;
-	bh=t6w6HZ3d39NHLiwdzdaqKTFFJH+mBfnQBGoBzloEzXs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f9x9TGNEKh0P9PujAUIIjIcX0M7aEGZ4zMC8GWSnoqh7UAW+cDn4GmKmPMcW06hbcrNQC3UT/OfNWL7QGEAGt4qFi2yWSB+Y8KHYBgXMKF6riP0yQfjJamutt1IKagS9kDofhAG2e/iYklNF0tq1zWJ0w31gjqKvEENDBYj8zJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tDpRt3cO; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1751402767; c=relaxed/simple;
+	bh=cgf2UXP07i29I0Sz7Ucz+VMLeoyIB1XYNHnEU1OdDfM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QQR4wiDjE/0cBORpz2Vkpp/VlRKcf9mxgCo46MbxNP+NPCVhjOABb3+vSM7gxSg4vmg/51yyuWhKd4w+CHXIU9HkYv+BUPAm95Q+4Pe22Xq/Sex2uzV7CNx8g+OvBSGN4wXpgNFc6YiFfs8EoDjrRwfk1ram1FZ84WmHP3HyLAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ildLjMwu; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tDpRt3cO"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2357c61cda7so207475ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 13:43:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ildLjMwu"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b3226307787so2846444a12.1;
+        Tue, 01 Jul 2025 13:46:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751402619; x=1752007419; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Gp4ARI8yx8eK5+ZYKJ4V0qAwq8T5VmfMZEWG24JsVtU=;
-        b=tDpRt3cOlJV+0eYx3cpvFlgyFkuAy70sDvbRT8UUSM/hdogqjjLUMhCc4DGgn8F/ly
-         g4XyQLBApGchqcqnUuyzf4YCQlXhYFIiM1zatFRfpc3rPYOVU1xoPEZcfilf/bvhUCYH
-         uTGT+CbAnxpwSRZvfUGXbb5TUFtu3+Vz7e1zhFf9jCE7cZVQte/+iI5czrdcS1mRrjQE
-         8JAM5RTOZDtWCzwYl6smx0oPKN48GhcM/jIcj0aq0MOH8/+QeWw7VL2j1uP9TSY6O03D
-         eiIrlm5hUd2mqDeRDrfsu1q9EMftSDckGVd5n1RPbXi3lGUAY1wY15z+mT1GeUuy+xos
-         MBGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751402619; x=1752007419;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1751402765; x=1752007565; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Gp4ARI8yx8eK5+ZYKJ4V0qAwq8T5VmfMZEWG24JsVtU=;
-        b=Cluwou76o13dwNxSQMzys88YoP8/9mfVlZS4S3Y5v1YelFgi4QiK0oYOLItXHFiWv9
-         08i7hU52wtfP7sk8c2fSvWC8BJW802AQ/B6KXL8rqpsxun74PDWsaPXMO2FgFfO9HHgN
-         AIs5YKAOrZkmyn2JlIuWHCOdWKrhGDsPOWieFYegtOgRhN8DI3TbS037TMM5/9thiQzB
-         F9NIVumLG2xHTOI8Bf05xOKc7ouD65M97Y0DVTzuwH385GAjgYEbpAZSfwiBSAwfSW+k
-         jK7h9hIw5ksf4iI2r3tVPI0t1d3ZY1rDNt6fx4bEagAj4sRy/G+VHnZ2rrLkeVBAsVa0
-         AXlg==
-X-Forwarded-Encrypted: i=1; AJvYcCWkqLOQqVFeKGncYQamzdZgG1kiU403V6S2n381oRZ/tzhtTUavQ9coUOwnJMI92fTalP2xyEumLsGyCjI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw69YXpJ4PmYs15w7SO1kKZ3nfu6cWBxjij0Oyk8AJ5EwWmyTIa
-	cvNw8y2v+oOkXGRm+qAj/XPbD47A1/zwtl1ctg+OexbFBRy7guWGt50R0rU8zNPjiQ==
-X-Gm-Gg: ASbGncvk7ed1tTscgzjozE6HHQl6xRf9EsAVE5LBlj2m4vCfoeLGFeBYQdD+TQonuQ3
-	yPcNR5fjiIH18SQdD1qxpK/E3kSGGS+PklO5pMAWQLfeLvHpKWGlmkRpDSmECCYS3B07Zjet9CQ
-	JR6pDd2Z+ibU7Ny9nFN6Qs6Ls291NWanRIDxSN0LZeUejEWFf2ZpX5ZeeVCA3NCRIrls2OlOXgH
-	SNDk9bYKEI+/Acwol+Ojuv4lr9EPTAkO9kV6OPsjTRrZAX7iu/jIlnc/7txm5tQPxfrgr0QMNhR
-	uOw3xSIujPUNO6zaS2HeLfg93SmNvts3a++R6Y9INMPxHDwFaGxf0ZyCZ7snBack8hbZpgSsRnK
-	lgagjQxq3sfAlFB1hn7yq
-X-Google-Smtp-Source: AGHT+IEgQNF03gTMPFMuZ5i4oqeFgT9l/mftJxCXd5iV8tzIDEl3pR9lFMVTJeBzdy2r/6gfVZ+O7w==
-X-Received: by 2002:a17:902:e54e:b0:231:d0ef:e8ff with SMTP id d9443c01a7336-23c5ff29f9dmr4133295ad.8.1751402619181;
-        Tue, 01 Jul 2025 13:43:39 -0700 (PDT)
-Received: from google.com (232.98.126.34.bc.googleusercontent.com. [34.126.98.232])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af541bdeasm12778586b3a.53.2025.07.01.13.43.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 13:43:38 -0700 (PDT)
-Date: Tue, 1 Jul 2025 20:43:30 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
-	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
-	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
-	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
-	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
-	zhangzekun11@huawei.com, iommu@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
-	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com,
-	dwmw2@infradead.org, baolu.lu@linux.intel.com
-Subject: Re: [PATCH v7 27/28] iommu/tegra241-cmdqv: Add user-space use support
-Message-ID: <aGRIctg4T6cQECx4@google.com>
-References: <cover.1750966133.git.nicolinc@nvidia.com>
- <539ee2ec112162abdba511574e2205a77b425059.1750966133.git.nicolinc@nvidia.com>
- <aGQGm1-i4M75b9Qp@google.com>
- <aGQ6KCI9OZEwHdxS@Asurada-Nvidia>
- <aGQ_F7Qx3scbbA-J@google.com>
- <aGRDtYRXFLoT+PrI@Asurada-Nvidia>
+        bh=hCgrlLfo9Mns92U/5iXO12KGKM9lhSDCM+Q2c4kfSmE=;
+        b=ildLjMwu8XfJILGEu8lDB/KokcoMaCVPu8ab7XnvASRTMjtYt5uhd0nitARask9NBK
+         edjtW3FcD3iBmLflyj0qkBF9+HAu47lQsgfdXhy8niOIksuurSsp5hmhA++koRVc5I4j
+         +ot6VPnt+k0BAzU+ajgUFzq4mc/nCArsn4J1Bjnd68ugorwNKs4DWUiInpf8rTDaSvO3
+         w5nc9EbgIh5QgoMLlFL/WQ+cqWnAWzeyeojvi785yiYsJQV9vy4fCc0ac2tsasP+WXXz
+         JK8BOc470k9cPee6ihxmnLmoCL50Dz5L6obKzPkbaFSm+A5LbnGcFA+uA1YMQUj1N0dD
+         /TKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751402765; x=1752007565;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hCgrlLfo9Mns92U/5iXO12KGKM9lhSDCM+Q2c4kfSmE=;
+        b=dFb0rpgY34MJSz1AxJFeoFMvBpYLnRvvUmQ2y9gZSvoyqr8fVIw2u0S5Zq9OOoI7e5
+         J1fBqZsCk0Fn+p8Ib/dCFIx7+57hyWK8PaZYPn+9w5f6Pfx+Y3FKk4NR33TQq+EPmYW6
+         6l643QA95r2c1GiSnuzlPOtaojY4MYo6QNklY3Vy04VSvHFY4EAyQaWq+IP/bYVkVtD6
+         ulpEartgA1oYsu6Z3IEQmE+rY34047fDEDkYtpaiyaskbj/jT5Bo0T9XMyj6ttmDZKnc
+         ZKVJwXuwRq4rRCcCFPH0P5/aEXUVL2tAq3TkXuLOSx2y/Ogt4VuhENFZtCQSYj9Tj4pl
+         iRsg==
+X-Forwarded-Encrypted: i=1; AJvYcCVJSgltE6JBfKmKESnypbOuT+VeMOAfHvioSV73Nffjs2x8LxqVFJyqq2J8/wJd5lvDFtE=@vger.kernel.org, AJvYcCVlUMi3FXt5l5sKJMUPWJi1a7AXtLv5QMGzdzZThHi5wxOkLnPsE+NlN/ELrIXWJaicDXRfD7wsrj1sHIXS@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZrJT1D7BWNjbJS2MGXcVYzlMdTvjCse8d9W6tJQ1tyyC9cYdZ
+	ZUA/NUbrVY2/mQsm9Paphb8HFcfFyusE8vFBX7FhwITOKBH9Hyb+Kl7U6FTDJrWo0RUIbgeXwqH
+	QhjGGfompTWqXPoq8lAWNj09b3yTT8iM=
+X-Gm-Gg: ASbGncv93eHdFyIQ247+3BDCX28RkKpFiu9NsWQ/IIV0M0/wdFVhyY6ag2YhQWFVn5C
+	enoyqAKwYlkPYlaO+IuzfW/AvAyV4zgQZwXWgwd4mwZRX9pmK61hqf4hosk/iuoUkswDyKwMSXu
+	cuxXPZHY9IFyWXTfw6gbKDud/pR0MFn3f3UlwaeqwU66dgfTcW2alUxrkkFa4=
+X-Google-Smtp-Source: AGHT+IE0GrZOy0np0jvotiCpIi/pC4GYr+OPKKBtDYVBM8itFJuYyOIpiylRF1p1h/76mb4orDWecoU4sJTxm4EJHfg=
+X-Received: by 2002:a17:90b:2c8d:b0:311:c1ec:7cfb with SMTP id
+ 98e67ed59e1d1-31a90bd47aemr511891a91.21.1751402765101; Tue, 01 Jul 2025
+ 13:46:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aGRDtYRXFLoT+PrI@Asurada-Nvidia>
+References: <20250620113846.3950478-1-arnd@kernel.org> <CAADnVQKAT3UPzcpzkJ6_-powz4YTiDAku4-a+++hrhYdJUnLiw@mail.gmail.com>
+ <361eb614-e145-49dc-aa32-12f313f61b96@linux.dev>
+In-Reply-To: <361eb614-e145-49dc-aa32-12f313f61b96@linux.dev>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 1 Jul 2025 13:45:50 -0700
+X-Gm-Features: Ac12FXyI7Qso7jRBjHBJtEsaXWo4_BsHAlGq7GXcFjjswLG4pAt_g_gsBh58Zpg
+Message-ID: <CAEf4BzahSLGiW_F4LtG1tMAb0O1b6D-kO0AcrU2O+nLKVbkvZA@mail.gmail.com>
+Subject: Re: [PATCH] bpf: turn off sanitizer in do_misc_fixups for old clang
+To: Yonghong Song <yonghong.song@linux.dev>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Arnd Bergmann <arnd@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	John Fastabend <john.fastabend@gmail.com>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Kumar Kartikeya Dwivedi <memxor@gmail.com>, 
+	Luis Gerhorst <luis.gerhorst@fau.de>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, clang-built-linux <llvm@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 01, 2025 at 01:23:17PM -0700, Nicolin Chen wrote:
-> On Tue, Jul 01, 2025 at 08:03:35PM +0000, Pranjal Shrivastava wrote:
-> > On Tue, Jul 01, 2025 at 12:42:32PM -0700, Nicolin Chen wrote:
-> > > On Tue, Jul 01, 2025 at 04:02:35PM +0000, Pranjal Shrivastava wrote:
-> > > > On Thu, Jun 26, 2025 at 12:34:58PM -0700, Nicolin Chen wrote:
-> > > > > +/**
-> > > > > + * struct tegra241_vintf_sid - Virtual Interface Stream ID Replacement
-> > > > > + * @core: Embedded iommufd_vdevice structure, holding virtual Stream ID
-> > > > > + * @vintf: Parent VINTF pointer
-> > > > > + * @sid: Physical Stream ID
-> > > > > + * @idx: Replacement index in the VINTF
-> > > > > + */
-> > > > > +struct tegra241_vintf_sid {
-> > > > > +	struct iommufd_vdevice core;
-> > > > > +	struct tegra241_vintf *vintf;
-> > > > > +	u32 sid;
-> > > > > +	u8 idx;
-> > > > >  };
-> > > > 
-> > > > AFAIU, This seems to be a handle for sid -> vintf mapping.. it yes, then
-> > > > I'm not sure if "Virtual Interface Stream ID Replacement" clarifies that?
-> > > 
-> > > No. It's for vSID to pSID mappings. I had it explained in commit log:
-> > > 
-> > 
-> > I get that, it's for vSID -> pSID mapping which also "happens to" point
-> > to the vintf.. all I wanted to say was that the description is unclear..
-> > We could've described it as "Vintf SID map" or something, but I guess
-> > it's fine the way it is too.. your call.
-> 
-> The "replace" word is borrowed from the "SID_REPLACE" HW register.
-> 
-> But I think it's okay to call it just "mapping", if that makes it
-> clearer.
-> 
+On Tue, Jul 1, 2025 at 1:03=E2=80=AFPM Yonghong Song <yonghong.song@linux.d=
+ev> wrote:
+>
+>
+>
+> On 6/23/25 2:32 PM, Alexei Starovoitov wrote:
+> > On Fri, Jun 20, 2025 at 4:38=E2=80=AFAM Arnd Bergmann <arnd@kernel.org>=
+ wrote:
+> >> From: Arnd Bergmann <arnd@arndb.de>
+> >>
+> >> clang versions before version 18 manage to badly optimize the bpf
+> >> verifier, with lots of variable spills leading to excessive stack
+> >> usage in addition to likely rather slow code:
+> >>
+> >> kernel/bpf/verifier.c:23936:5: error: stack frame size (2096) exceeds =
+limit (1280) in 'bpf_check' [-Werror,-Wframe-larger-than]
+> >> kernel/bpf/verifier.c:21563:12: error: stack frame size (1984) exceeds=
+ limit (1280) in 'do_misc_fixups' [-Werror,-Wframe-larger-than]
+> >>
+> >> Turn off the sanitizer in the two functions that suffer the most from
+> >> this when using one of the affected clang version.
+> >>
+> >> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> >> ---
+> >>   kernel/bpf/verifier.c | 11 +++++++++--
+> >>   1 file changed, 9 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+> >> index 2fa797a6d6a2..7724c7a56d79 100644
+> >> --- a/kernel/bpf/verifier.c
+> >> +++ b/kernel/bpf/verifier.c
+> >> @@ -19810,7 +19810,14 @@ static int do_check_insn(struct bpf_verifier_=
+env *env, bool *do_print_state)
+> >>          return 0;
+> >>   }
+> >>
+> >> -static int do_check(struct bpf_verifier_env *env)
+> >> +#if defined(CONFIG_CC_IS_CLANG) && CONFIG_CLANG_VERSION < 180100
+> >> +/* old clang versions cause excessive stack usage here */
+> >> +#define __workaround_kasan  __disable_sanitizer_instrumentation
+> >> +#else
+> >> +#define __workaround_kasan
+> >> +#endif
+> >> +
+> >> +static __workaround_kasan int do_check(struct bpf_verifier_env *env)
+> > This looks too hacky for a workaround.
+> > Let's figure out what's causing such excessive stack usage and fix it.
+> > We did some of this work in
+> > commit 6f606ffd6dd7 ("bpf: Move insn_buf[16] to bpf_verifier_env")
+> > and similar.
+> > Looks like it wasn't enough or more stack usage crept in since then.
+> >
+> > Also make sure you're using the latest bpf-next.
+> > A bunch of code was moved out of do_check().
+> > So I bet the current bpf-next/master doesn't have a problem
+> > with this particular function.
+> > In my kasan build do_check() is now fully inlined.
+> > do_check_common() is not and it's using 512 bytes of stack.
+> >
+> >>   {
+> >>          bool pop_log =3D !(env->log.level & BPF_LOG_LEVEL2);
+> >>          struct bpf_verifier_state *state =3D env->cur_state;
+> >> @@ -21817,7 +21824,7 @@ static int add_hidden_subprog(struct bpf_verif=
+ier_env *env, struct bpf_insn *pat
+> >>   /* Do various post-verification rewrites in a single program pass.
+> >>    * These rewrites simplify JIT and interpreter implementations.
+> >>    */
+> >> -static int do_misc_fixups(struct bpf_verifier_env *env)
+> >> +static __workaround_kasan int do_misc_fixups(struct bpf_verifier_env =
+*env)
+> > This one is using 832 byte of stack with kasan.
+> > Which is indeed high.
+> > Big chunk seems to be coming from chk_and_sdiv[] and chk_and_smod[].
+> >
+> > Yonghong,
+> > looks like you contributed that piece of code.
+> > Pls see how to reduce stack size here.
+> > Daniel used this pattern in earlier commits. Looks like
+> > we took it too far.
+>
+> With llvm17, I got the following error:
+>
+> /home/yhs/work/bpf-next/kernel/bpf/verifier.c:24491:5: error: stack frame=
+ size (2552) exceeds limit (1280) in 'bpf_check' [-
+> Werror,-Wframe-larger-than]
+>   24491 | int bpf_check(struct bpf_prog **prog, union bpf_attr *attr, bpf=
+ptr_t uattr, __u32 uattr_size)
+>         |     ^
+> /home/yhs/work/bpf-next/kernel/bpf/verifier.c:19921:12: error: stack fram=
+e size (1368) exceeds limit (1280) in 'do_check' [-
+> Werror,-Wframe-larger-than]
+>   19921 | static int do_check(struct bpf_verifier_env *env)
+>         |            ^
+> 2 errors generated.
+>
+> I checked IR and found the following memory allocations which may contrib=
+ute
+> excessive stack usage:
+>
+> attr.coerce1, i32 noundef %uattr_size) local_unnamed_addr #0 align 16 !db=
+g !19800 {
+> entry:
+>    %zext_patch.i =3D alloca [2 x %struct.bpf_insn], align 16, !DIAssignID=
+ !19854
+>    %rnd_hi32_patch.i =3D alloca [4 x %struct.bpf_insn], align 16, !DIAssi=
+gnID !19855
+>    %cnt.i =3D alloca i32, align 4, !DIAssignID !19856
+>    %patch.i766 =3D alloca [3 x %struct.bpf_insn], align 16, !DIAssignID !=
+19857
+>    %chk_and_sdiv.i =3D alloca [1 x %struct.bpf_insn], align 4, !DIAssignI=
+D !19858
+>    %chk_and_smod.i =3D alloca [1 x %struct.bpf_insn], align 4, !DIAssignI=
+D !19859
+>    %chk_and_div.i =3D alloca [4 x %struct.bpf_insn], align 16, !DIAssignI=
+D !19860
+>    %chk_and_mod.i =3D alloca [4 x %struct.bpf_insn], align 16, !DIAssignI=
+D !19861
+>    %chk_and_sdiv343.i =3D alloca [8 x %struct.bpf_insn], align 16, !DIAss=
+ignID !19862
+>    %chk_and_smod472.i =3D alloca [9 x %struct.bpf_insn], align 16, !DIAss=
+ignID !19863
+>    %desc.i =3D alloca %struct.bpf_jit_poke_descriptor, align 8, !DIAssign=
+ID !19864
+>    %target_size.i =3D alloca i32, align 4, !DIAssignID !19865
+>    %patch.i =3D alloca [2 x %struct.bpf_insn], align 16, !DIAssignID !198=
+66
+>    %patch355.i =3D alloca [2 x %struct.bpf_insn], align 16, !DIAssignID !=
+19867
+>    %ja.i =3D alloca %struct.bpf_insn, align 8, !DIAssignID !19868
+>    %ret_insn.i.i =3D alloca [8 x i32], align 16, !DIAssignID !19869
+>    %ret_prog.i.i =3D alloca [8 x i32], align 16, !DIAssignID !19870
+>    %fd.i =3D alloca i32, align 4, !DIAssignID !19871
+>    %log_true_size =3D alloca i32, align 4, !DIAssignID !19872
+> ...
+>
+> So yes, chk_and_{div,mod,sdiv,smod} consumes quite some stack and
+> can be coverted to runtime allocation but that is not enough for 1280
+> stack limit, we need to do more conversion from stack to memory
+> allocation. Will try to have uniform way to convert
+> 'alloca [<num> x %struct.bpf_insn]' to runtime allocation.
+>
 
-Anything works. Maybe let it be as is.
-
-> > > > > +static struct iommufd_viommu_ops tegra241_cmdqv_viommu_ops = {
-> > > > > +	.destroy = tegra241_cmdqv_destroy_vintf_user,
-> > > > > +	.alloc_domain_nested = arm_vsmmu_alloc_domain_nested,
-> > > > > +	.cache_invalidate = arm_vsmmu_cache_invalidate,
-> > > > 
-> > > > I see that we currently use the main cmdq to issue these cache
-> > > > invalidations (there's a FIXME in arm_vsmmu_cache_invalidate). I was
-> > > > hoping for this series to change that but I'm assuming there's another
-> > > > series coming for that?
-> > > > 
-> > > > Meanwhile, I guess it'd be good to call that out for folks who have
-> > > > Grace and start trying out this feature.. I'm assuming they won't see
-> > > > as much perf improvement with this series alone since we're still using
-> > > > the main CMDQ in the upstream code?
-> > > 
-> > > VCMDQ only accelerates invalidation commands.
-> > > 
-> > 
-> > I get that.. but I see we're using `arm_vsmmu_cache_invalidate` here
-> > from arm-smmu-v3-iommufd.c which seems to issue all commands to
-> > smmu->cmdq as of now (the code has a FIXME as well), per the code:
-> > 
-> > 	/* FIXME always uses the main cmdq rather than trying to group by type */
-> >         ret = arm_smmu_cmdq_issue_cmdlist(smmu, &smmu->cmdq, last->cmd,
-> > 					  cur - last, true);
-> > 
-> > I was hoping this FIXME to be addressed in this series..
-> 
-> Oh, that's not related.
-> 
-> The main goal of this series is to route all invalidation commands
-> to the VCMDQ HW. And this is where Grace users can see perf gains
-> mentioned in the cover letter or commit log, from eliminating the
-> VM Exits at those most frequently used commands.
-> 
-> Any non-invalidation commands will just reuse what we have with the
-> standard SMMU nesting. And even if we did something to that FIXME,
-> there is no significant perf gain as it's going down the trapping
-> pathway, i.e. the VM Exits are always there.
-> 
-> > > That is for non-invalidation commands that VCMDQ doesn't support,
-> > > so they still have to go in the standard nesting pathway.
-> > > 
-> > > Let's add a line:
-> > > 	/* for non-invalidation commands use */
-> > 
-> > Umm.. I was talking about the cache_invalidate op? I think there's some
-> > misunderstanding here? What am I missing?
-> 
-> That line is exactly for cache_invalidate. All the non-invalidation
-> commands will be sent to he arm_vsmmu_cache_invalidate() by VMM, as
-> it means.
-> 
-> Or perhaps calling them "non-accelerated commands" would be nicer.
-
-Uhh okay, so there'll be a separate driver in the VM issuing invalidation
-commands directly to the CMDQV thus we don't see any of it's part here?
-
-AND for non-invalidation commands, we trap out and the VMM ends up
-calling the `cache_invalidate` op of the viommu?
-
-Is that understanding correct?
-
-> 
-> Thanks
-> Nicolin
-
-Thanks
-Praan
+Do we need to go all the way to dynamic allocation? See env->insns_buf
+(which some parts of this function are already using for constructing
+instruction patch), let's just converge on that? It pre-allocates
+space for 32 instructions, should be sufficient for all the use cases,
+no?
