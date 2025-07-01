@@ -1,131 +1,148 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B9F155A4D
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 08:37:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D36209F2E;
+	Tue,  1 Jul 2025 08:37:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751359056; cv=none; b=KEDN+lQB+s8pahUT/8l9rkGlS+rBeRbNnKJKVXVW1jlM9qMb/+Ki/Dc9bI6r3/dzr0IWWLcbAHB/gq05CWikLb5ACD60wPIflxF1dIeJeIWU2aVjH5cM3BGwLhyyU4xQFsTe/ZBcqyuavKXACK2wa6ISBPBG9xoWQ8LIzl8fD6Y=
+	t=1751359079; cv=none; b=LaD1HsXUEmIz2cOfrk+tm5OxTwDosITW9sw/kSyCII255PZ59p60PpXCm4tzeOvwpqBoZlL6ZqJyJLbhf6VY2B82sV4pQUJH1sdq8sJysqX7tRAGEMIU6c4K81GM6xrL9zv9AtFj4OM7+siwcpsOK/RHumoKUd5x7asTOd4bMK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751359056; c=relaxed/simple;
-	bh=0FAQK4GPNLp7W/8Va2XXXtiOSv4J9N3di4b6rvDBSl0=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pDjEBv+bDXih1hsQO+q9e2eCTKDrvUDoeydLq/SLcBLdUiT9uqcDwie2jpoPX8taIZ1WwQlHc+4Q44OormmWyi0F4NScXo0VelbuqJKFPylEy+BrT/NgtJ5dWgeJ+0BP8nS3bHbcSZgZwlepHKw2v4DIc6ZOUIA+NxVeDAuLJ6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=bBdZVLUa; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1751359079; c=relaxed/simple;
+	bh=iW0aN7sE4xJ2Ts75g7iYkcOhxe7psu62/6fM23I0iQg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=JzOIsZBPEQwiS7IWKPs3bf6YpWZ9rIXR0KXLbryziSvvSPE6/3VmQMLZo3YdNBOL6OPzedOyQ7I/mUWyz0ZI8zidf8XdUMpYo7BaqZpS/jZsvNi9p4vt/953kbOhUrLb7HCnUetD5I2b9NAfl1+CHL07nz3l6VFuCjZirjH7gXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Gi73WiyA; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="bBdZVLUa"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-55502821bd2so3428548e87.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 01:37:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751359052; x=1751963852; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=07KmsBxLr70WlDJaoogJ4I1ZjRZHxPbMAX4KMX+Pp+U=;
-        b=bBdZVLUaMyiK72MMAovrpuvyI3JjrD7thKbdSQ5uWd7JlyHo0jcI6bRc+uWAQZZBgf
-         4vBnkap2JZX2tyvN9Bz1TcuLNL9SVqbrFQcy1bgf6vKifAgaXSed/0Gwd5dA2IKI9Yjm
-         1UCrOfl+sXMkO1huUPM6kEadEejhDjdzO7uEG2lIFWLUBCloYU6JJMYaE24gUD+SNAcP
-         3xDA3ZGxJe0plDCk6qzKA6MV69eeii1ZXwSxBLN9gJ3XnYuCZdF6dc66u/cBIa6UUVq2
-         7Np4sEh6f9fQF+5LYpp2VjP/Lqmk7Asys6+NQs9NRlyDf87DKMai3P5BcWmpmg+X6Z0h
-         AR5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751359052; x=1751963852;
-        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=07KmsBxLr70WlDJaoogJ4I1ZjRZHxPbMAX4KMX+Pp+U=;
-        b=pdCU68Fr66D7FrTMkiQHHwN9iE5tSLObhv4R8E38sU5IXundRpq4kYNzUI9XJ9448o
-         e6A0LDAwzpKx8aBz4aaEp0czaEJ3eaC+lIutEa4SYj8dEFNXqZCmmfXqc/3o5KQ6I0aL
-         P7Zk36+6/nxBRAUZ9ynR6rJBwyReYX5k4PU7Tl8p16qaC0TiV4GGVK1VGBlbQtD59/3Y
-         WViUksKsI0q1aBQE4Cr7oxlt79EmuNFBY4FN7iCzHKLXVxSSk9qFKnBtnDvV81/TdbOL
-         s36AXTXEFyCToojbfcLe/ZzSH+Egv0wt1O4hchX0pNEwWVamt8otszbgFEIk8MB1B0uH
-         nwfA==
-X-Forwarded-Encrypted: i=1; AJvYcCUDc85jNn4SwbeiWDtaJ7vDBGuT/Zg8UibjfDwNsQ5PjO0skmb1cBUzal1e/SQwLlLiNpaTmI6ZY+S/VtA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqPw7nWOI3jCO84opGvgQtYvuYv84YGXpik0fbBD0zElxG1xej
-	P8nbZOjfGw53hBN3Lu3qy6smsfLaJBxsdcgSPamkRF4my4t6EnW2wT84ha7QwaPboJxf+79eCx0
-	iZVP6a/kkEWXoOeKgpZiVcCk0DZN/nGkfqjTu05UgFQ==
-X-Gm-Gg: ASbGnctyfIfRsOgpeFIphadhAy8r7Jp0GHkyaDyV2vi7T9qYhBvSerj7Wu+fO6gEBW7
-	BEy1hcxGE8vumvKgo/Jn1YWjXXbNRupR+9SUxeD/x9RCyt7YCnfljPIGy75Rw4y6Je6H0vuVaoh
-	ng06bhsTd0WT5gpeKrQnCyvbhWMAUArgwJPad90uQ0xODhkYwG7qSkASH/IZuw6gQv3tJCLSShU
-	A==
-X-Google-Smtp-Source: AGHT+IHI+BlPWVIVeSUferI+4juudgIPFbsu7Mq/0L1LWp/ijJzb065XhAcQqVoKO66kJN+8+P9SqNPQhANAveA/LTM=
-X-Received: by 2002:a05:6512:3b9c:b0:554:f79d:ce48 with SMTP id
- 2adb3069b0e04-5550b8c304dmr5148800e87.47.1751359052201; Tue, 01 Jul 2025
- 01:37:32 -0700 (PDT)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 1 Jul 2025 01:37:30 -0700
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-In-Reply-To: <CALHNRZ9=u9hrXZ79N3VzMwdFuJO75TomOzRzgDxzmcTEeatzAQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Gi73WiyA"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5613kXsC008527;
+	Tue, 1 Jul 2025 08:37:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	tKJLwrBzTPNTZjWdONka2EiO9tmLnQUpgxxCdhD7uD4=; b=Gi73WiyAe0q71Fq4
+	b+oGNOsMoN2BlyPk8xNxsKo2fG8RP6xj29Dz8KpIIQ4fZ4ULX/251E+PY6JRbgKw
+	a0W+lksMCCt43zkVmUTD+xXx8NXJPmhb5NIaQz3c8zRtKvy9bH0Huk2ZCbvMqIYV
+	2ey0JgSQ7LrMIZzi0QH53HzQXl6EcWnYDbdm2frldbm7j49N3NB+2GYIbfNYNtPx
+	4bpPwrd+PHSW/ChLM6/hwVb9yP3QfdDiHuBMppcrt4oZfo1WLT3mwxPhcbYSH2lx
+	TM1LchUiLvTB7nLNrp6RG0dlWVXdoqyOEeT+mMih1lQrslYok3ge51yyLI2gclTw
+	zt6/DA==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47kkfmvj2n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 01 Jul 2025 08:37:54 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5618brnY003143
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 1 Jul 2025 08:37:53 GMT
+Received: from [10.217.217.109] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Tue, 1 Jul
+ 2025 01:37:49 -0700
+Message-ID: <5b74eca8-db7f-4ace-be9c-468e0a260e1a@quicinc.com>
+Date: Tue, 1 Jul 2025 14:07:43 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250522-gpio-palmas-gpio-v2-1-89f209d4a949@gmail.com>
- <CAMRc=Mdwa=DuubA6P+EnjUAQE8XupYsbo=3LuH-jYEBttREGqg@mail.gmail.com> <CALHNRZ9=u9hrXZ79N3VzMwdFuJO75TomOzRzgDxzmcTEeatzAQ@mail.gmail.com>
-Date: Tue, 1 Jul 2025 01:37:30 -0700
-X-Gm-Features: Ac12FXylvYFEitG_7hQXaffk-th4yp6esDahQWSImhvWXKWNauTlEjyR2VMePZI
-Message-ID: <CAMRc=MdefqMEaiE9NAACzBp+UDgoLe7B=JGe8KQe5tCnHYzWLw@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: palmas: Allow building as a module
-To: Aaron Kling <webgeek1234@gmail.com>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <brgl@bgdev.pl>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] arm64: dts: qcom: qcs615: Add CPU scaling clock
+ node
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@oss.qualcomm.com>
+CC: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Ajit Pandey
+	<quic_ajipan@quicinc.com>,
+        Imran Shaik <quic_imrashai@quicinc.com>,
+        "Jagadeesh Kona" <quic_jkona@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250625-qcs615-mm-cpu-dt-v4-v4-0-9ca880c53560@quicinc.com>
+ <20250625-qcs615-mm-cpu-dt-v4-v4-2-9ca880c53560@quicinc.com>
+ <xkvn3r7yphlccurdqzncz5qegs7xc254xc2ou2dzuilatk5f5j@eq5ynce4aepg>
+ <2b29ae78-e4a0-4d25-a694-abb10883086d@quicinc.com>
+ <263139f2-f149-4615-82ff-584fe44ead2f@oss.qualcomm.com>
+Content-Language: en-US
+From: Taniya Das <quic_tdas@quicinc.com>
+In-Reply-To: <263139f2-f149-4615-82ff-584fe44ead2f@oss.qualcomm.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: BsXpz6FkDgppC8ufUqARpjqvkyTHOD62
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAxMDA0OSBTYWx0ZWRfX0GG2+hKNb39J
+ AjQtYwynFZ0IVq5c+dQjRGu6xQTBzr8zTzJRdiIeY2hWR5dS4qt7XbqTzoWpL/IHTiyYu1NKN52
+ oJBoY+RjEYw3OKLsbIc9DVojN1MBGRQOoFDddtXg1QDj8uax7wyHkLo/JfNMTdi/jdWxjPof2Qi
+ Cw7/RYUqRai8K8j90WQM3lgzHHsZhY0mu/65Xvs0mAdH4Qar4VBpiUDSxGm0AF9YNkBC+vn5RRA
+ jIMh5qKsc/DG7z6BAj4cF5NTfNLdXV1Il1usle313xjXu6mafwZYkctXF+YrHrvxEa5GSxWdtd+
+ Zq1dstaHsMc68Ce/FHbArG8G1q5IVLgUKD28j0zC/cNLznNAtnP9crXzZLJhDfV9tGZht/Znvzn
+ jGLL0n5Zyb0Bx+gYkdMLbYrw9bayFfZRvYiJFbeod5RVC1cKPaP9yR+dqQSsll1pJ7vl75Pj
+X-Authority-Analysis: v=2.4 cv=L9sdQ/T8 c=1 sm=1 tr=0 ts=68639e62 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8
+ a=y7rqz7zThRCYt2QJ9_IA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: BsXpz6FkDgppC8ufUqARpjqvkyTHOD62
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-01_01,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 spamscore=0 phishscore=0 impostorscore=0 priorityscore=1501
+ malwarescore=0 lowpriorityscore=0 adultscore=0 suspectscore=0 mlxlogscore=795
+ bulkscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507010049
 
-On Mon, 30 Jun 2025 21:33:07 +0200, Aaron Kling <webgeek1234@gmail.com> said:
+
+
+On 6/27/2025 5:37 PM, Konrad Dybcio wrote:
+> On 6/27/25 5:52 AM, Taniya Das wrote:
 >>
->> This being put into an earlier initcall than device_initcall() makes
->> me think, someone had a reason for it and this change can break this.
->> I'm Cc'ing the original author who seems to still be active in the
->> kernel.
 >>
->> Laxman: can you verify that this can be safely moved to module_initcall()?
->>
->
-> Reminder about this patch/question. It's well into the 6.16 cycle now.
-> If Laxman doesn't respond, is this mergeable? I didn't see any issues
-> in my basic boot tests on a tegra124 device using a tps65913. But I
-> didn't do anything close to full functionality tests.
->
+>> On 6/25/2025 5:06 PM, Dmitry Baryshkov wrote:
+>>> On Wed, Jun 25, 2025 at 04:44:01PM +0530, Taniya Das wrote:
+>>>> Add cpufreq-hw node to support CPU frequency scaling.
+>>>>
+>>>> Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
+>>>> ---
+>>>>  arch/arm64/boot/dts/qcom/qcs615.dtsi | 29 +++++++++++++++++++++++++++++
+>>>>  1 file changed, 29 insertions(+)
+>>>>
+>>>> @@ -3891,6 +3907,19 @@ glink_edge: glink-edge {
+>>>>  				qcom,remote-pid = <2>;
+>>>>  			};
+>>>>  		};
+>>>> +
+>>>> +		cpufreq_hw: cpufreq@18323000 {
+>>>> +			compatible = "qcom,sc7180-cpufreq-hw", "qcom,cpufreq-hw";
+>>>
+>>> Why? Other platforms use a true SoC as the first entry.
+>>>
+>> Dmitry, from cpufreq-hw perspective SC7180 is a exact match for QCS615
+>> and that was the reason to use the same.
+> 
+> The only compatible consumed by the driver is the last one in this case,
+> meaning sc7180 is only there so that if we discover quirks very specific
+> to sc7180 down the line, we can add some exceptions in code
+> 
+> Reusing sc7180 would remove the ability to address any quirks that would
+> concern qcs615 specifically, which can happen due to hw design, fw
+> quirks etc.
+> 
 
-Why not do the following?
+There are no quirks for QCS615 as the block is a re-use in design. I
+will add the new update to use the "qcom,qcs615-cpufreq-hw".
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 44f922e10db2..dcea3c1bb31c 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1501,7 +1501,7 @@ config GPIO_MAX77759
-          called gpio-max77759.
+> Konrad
 
- config GPIO_PALMAS
--       bool "TI PALMAS series PMICs GPIO"
-+       tristate "TI PALMAS series PMICs GPIO"
-        depends on MFD_PALMAS
-        help
-          Select this option to enable GPIO driver for the TI PALMAS
-diff --git a/drivers/gpio/gpio-palmas.c b/drivers/gpio/gpio-palmas.c
-index a076daee0065..ec503b008d0d 100644
---- a/drivers/gpio/gpio-palmas.c
-+++ b/drivers/gpio/gpio-palmas.c
-@@ -139,6 +139,7 @@ static const struct of_device_id of_palmas_gpio_match[] = {
-        { .compatible = "ti,tps80036-gpio", .data = &tps80036_dev_data,},
-        { },
- };
-+MODULE_DEVICE_TABLE(of, of_palmas_gpio_match);
-
- static int palmas_gpio_probe(struct platform_device *pdev)
- {
-@@ -196,3 +197,7 @@ static int __init palmas_gpio_init(void)
-        return platform_driver_register(&palmas_gpio_driver);
- }
- subsys_initcall(palmas_gpio_init);
-+
-+MODULE_DESCRIPTION("TI PALMAS series GPIO driver");
-+MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
-+MODULE_LICENSE("GPL");
-
-This would keep the initcall level when the module is built-in.
-
-Bartosz
