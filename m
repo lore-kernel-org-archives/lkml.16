@@ -1,57 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048BE265CC8;
-	Tue,  1 Jul 2025 22:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A6828313F
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 22:51:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751410164; cv=none; b=acMI4S1OnOfclM5AI0cM6JVReEwuqVRIHqzbBCKY2neErVbbd1zuSyDF8S7wiyyoMXnmp8tAX5ocLQ1uoOYtFLz3Mm7zvCyJ6wKejSLXLib62Z6eOW6E2pJoS7w1ESPP94o6469XYGE0IrBHKh84W7c6RMfp0fxbwh6QM5VLz2g=
+	t=1751410291; cv=none; b=V5Hiylik3pUKysRPn7wB8F2WdrSDutMiipzp692vOQphL3/BIkyQ3L608pqONmxlMrs2RgerKYcSb1u+F2+U/On1ujK62J1m+RdLZ3rTvr8MKdNRGr7X+PbYGOyfI1DMkuMpeMErYiu9wbPHz6Aw9UcTPpUbsEZcHSSyBDnOT3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751410164; c=relaxed/simple;
-	bh=yyNQz6Ao1JLzZXSuzYM28IyyWEtJcCrYhLFLzGGHcF0=;
+	s=arc-20240116; t=1751410291; c=relaxed/simple;
+	bh=THyaiSK3XZpGPf2jkEiRMRg3uUKNoJcmWhjWuRS1+Mw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uAX9Slg4ShmLyDs225mQVH0g9pF7EXo9+sgTUpEvY0FOVqGN8l4OtBxyEJbyeoRx/WJdUO8Nvu59u/RK+CO5a/fuVdqYfpPheptDKu0ld3XeS9eO7nfg/d8n8ncIiIe0udW1q/TeyhItq0eVhwfI412O2BGs4feT4aAekkHxudM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nQ24SAVX; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ih4vNyDa9zHm3Cw9vi6SVA+wLggI20QaVz+QkA2mVuvemzpMQC9oMYhO5tIYqgmoYcBN/jqI6JD6iqyW8mVhtVEG6PZPjm7UD7KavGYAbx2DQjj1mtd0UHkM0TwQSMq1WGfBEGCkDxdnBosMlmAgW4lza70huE6G0Jgi9d1arTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I1G6t++y; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nQ24SAVX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 721A2C4CEEB;
-	Tue,  1 Jul 2025 22:49:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751410163;
-	bh=yyNQz6Ao1JLzZXSuzYM28IyyWEtJcCrYhLFLzGGHcF0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nQ24SAVXTTD+kWT+I6Bga/CXbcm8CUvXq9UEhRI1Czx1KAfXSU24E2AiZubg9i75K
-	 OmDZlrx5LTNbHEWb6Vk+yPtUjDp6wLpO1FiMq+Dx+s6Du6mdjGQ01N0zps50Eoe2Aa
-	 zDciXesua9KZ+cgnELFNmlaMPkVar8yKJK40ucWahFsBTGIcQcrDN3Qg+UuONaMCk6
-	 kaXbgyEiRkXeL1EvPMTqNjQwUzcasnaw1LCIjLo4+HRw0BqbUhO+xzYT2V81xDkh2K
-	 C8mMYG8oBSSvTrDQLQ5egF847IDuOU/ULq9W9p3WoKbCOOCbkJDfQDTIwHyntMt9VR
-	 vIgf4/mWxSqWA==
-Date: Tue, 1 Jul 2025 15:49:23 -0700
-From: Kees Cook <kees@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, x86@kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	"Jose E. Marchesi" <jemarch@gnu.org>,
-	Beau Belgrave <beaub@linux.microsoft.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>
-Subject: Re: [PATCH v12 00/14] unwind_user: x86: Deferred unwinding
- infrastructure
-Message-ID: <202507011547.D291476BE1@keescook>
-References: <20250701005321.942306427@goodmis.org>
- <CAHk-=wijwK_idn0TFvu2NL0vUaQF93xK01_Rru78EMqUHj=b1w@mail.gmail.com>
- <20250630224539.3ccf38b0@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I1G6t++y"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2357c61cda7so223345ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 15:51:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751410290; x=1752015090; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=31m5VALjhSZCUtaamU81Tt7LVwzdmFjl/OH4isUf0T4=;
+        b=I1G6t++yD9V4C6VFrwS/Ox3IwKdstO81pMUTd+x+5nJN1PCohB5UF8K5lpeitFxLR5
+         78bYzSEPQOIHj2grpze+b7urzmXMIa0Sg/gZNhxDnd8TdUnpbrvkpJ8Mp6qURIDsbWiu
+         Qwkcst6EuiFEshPMUKSpIPPL3HcDSsVYHUp/BF2WkbngKJfySeT0/tYTp1jPIJtVlcGY
+         nQ0TiB+lXGmAJsdNMBfS0G2Qz6ZNYu0/QdaNvLH1uACIXW7ld9z+ZreTwwIIastZdfNW
+         KWPgHgZwM978OS4d7LTJQDBSXEzo1+mPuLK2svIXBbhUBdJgtM16dcfj7GudHniQ4Jbw
+         Mzyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751410290; x=1752015090;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=31m5VALjhSZCUtaamU81Tt7LVwzdmFjl/OH4isUf0T4=;
+        b=kh6W3HYlUIS8AuOle+U3/TgKUdiooap7AgnThWgM4wjoMg8QCPxwyO/jMpxiNS++UP
+         P779KFhHSdRA/MV9XzwEt8ALM1S5YDw4B70EXwo67b7vcGH5v0BIpfYN0YDrRHi6SZlj
+         DlLfam7epY9M2t5PLt00EYd+Q50GzyXIGdl7ygY7r4sFcqkthfGw/JItIn19CuUsm2xh
+         MFa2f/dB5fZN30RTiO5FreeQa62RReK+wF1wwyXwQHD5MmmEX30LfC7VWYB3dC3Pu8gn
+         SAlcbqOm1goPC2RT0TAvLTdZSJsWaOVAlUvNFVCYIqRl2OYWucVsV/5OBewSdFJT4jIU
+         Gsqw==
+X-Forwarded-Encrypted: i=1; AJvYcCUSIffzi03PUbS3+T3sKGdU0TmVa/JEqmMnbHzGcWGb5BnkOlu6P63fzDOyV21E/OoU3Koznbr+5t84QZE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxtq0k4MLJllQ2pWs8vvtRrV98MgPF4WwoKSfPQWQqOOIv2sAMe
+	X/gD1mfKyn4m4DrXDZSg8A9czbQJW/W6U3trKubDunL9KV4CPbj5z6iGP97nif0s3Q==
+X-Gm-Gg: ASbGncupZvPOoHrTbZuSgAFr2/YdRwXm3QsaQMkGbZXQ7HY6reSPMpJwenxqQSlDDOa
+	rpS5S/MstEkBcdgfhL/Z8YkmRFthZ03CrXDcYTnceOhw1R100zRsoPPOjpmzdHU5P+bOG6e1d0/
+	1+C7HTTzi50yL8D1Ti9Fx1ustlExuXbUMC/cDEKCmdH89wlPgghdW9z2zw/9uUbVHW1M1svr257
+	7z4lkk3cdKQBYXlQVIAaRoXXAw8XVRzEcYUwYA4RecwjepdVxaRRTBpvGDITvy8yAdjhTmBUL/N
+	VBkI0zoX9k8pHKOV2H1JSs+ExttGtqh+PMMcrUVglpuFtAVdBpEdlM2tXd108Z/HSX47yH0GMdJ
+	6rfB7E5L+Ntd1IJoeQHBz
+X-Google-Smtp-Source: AGHT+IE2A3LONQdf5/UDXdamM9j2FEbJtnYf58bee8GseWxQ7r/tyyPKLeWd6GVOe4rd8pReDprYsg==
+X-Received: by 2002:a17:903:40c6:b0:235:e1d6:5339 with SMTP id d9443c01a7336-23c601c954dmr3764925ad.26.1751410289353;
+        Tue, 01 Jul 2025 15:51:29 -0700 (PDT)
+Received: from google.com (232.98.126.34.bc.googleusercontent.com. [34.126.98.232])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f5384107sm17193429a91.5.2025.07.01.15.51.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 15:51:28 -0700 (PDT)
+Date: Tue, 1 Jul 2025 22:51:20 +0000
+From: Pranjal Shrivastava <praan@google.com>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
+	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
+	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
+	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
+	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
+	zhangzekun11@huawei.com, iommu@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
+	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com,
+	dwmw2@infradead.org, baolu.lu@linux.intel.com
+Subject: Re: [PATCH v7 27/28] iommu/tegra241-cmdqv: Add user-space use support
+Message-ID: <aGRmaOORg-YDfncY@google.com>
+References: <cover.1750966133.git.nicolinc@nvidia.com>
+ <539ee2ec112162abdba511574e2205a77b425059.1750966133.git.nicolinc@nvidia.com>
+ <aGQGm1-i4M75b9Qp@google.com>
+ <aGQ6KCI9OZEwHdxS@Asurada-Nvidia>
+ <aGQ_F7Qx3scbbA-J@google.com>
+ <aGRDtYRXFLoT+PrI@Asurada-Nvidia>
+ <aGRIctg4T6cQECx4@google.com>
+ <aGRcPSwaJkTeUrMx@Asurada-Nvidia>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,26 +89,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250630224539.3ccf38b0@gandalf.local.home>
+In-Reply-To: <aGRcPSwaJkTeUrMx@Asurada-Nvidia>
 
-On Mon, Jun 30, 2025 at 10:45:39PM -0400, Steven Rostedt wrote:
-> On Mon, 30 Jun 2025 19:06:12 -0700
-> Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> 
-> > On Mon, 30 Jun 2025 at 17:54, Steven Rostedt <rostedt@goodmis.org> wrote:
-> > >
-> > > This is the first patch series of a set that will make it possible to be able
-> > > to use SFrames[1] in the Linux kernel. A quick recap of the motivation for
-> > > doing this.  
+On Tue, Jul 01, 2025 at 03:07:57PM -0700, Nicolin Chen wrote:
+> On Tue, Jul 01, 2025 at 08:43:30PM +0000, Pranjal Shrivastava wrote:
+> > On Tue, Jul 01, 2025 at 01:23:17PM -0700, Nicolin Chen wrote:
+> > > Or perhaps calling them "non-accelerated commands" would be nicer.
 > > 
-> > You have a '[1]' to indicate there's a link to what SFrames are.
-> [...]
->   [1] https://sourceware.org/binutils/wiki/sframe
+> > Uhh okay, so there'll be a separate driver in the VM issuing invalidation
+> > commands directly to the CMDQV thus we don't see any of it's part here?
+> 
+> That's how it works. VM must run a guest-level VCMDQ driver that
+> separates accelerated and non-accelerated commands as it already
+> does:
+> 
+>     accelerated commands => VCMDQ (HW)
+> non-accelerated commands => SMMU CMDQ (SW) =iommufd=> SMMU CMDQ (HW)
+> 
 
-Okay, I've read the cover letter and this wiki page, but I am dense: why
-does the _kernel_ want to do this? Shouldn't it only be userspace that
-cares about userspace unwinding? I don't use perf, ftrace, and ebpf
-enough to make this obvious to me, I guess. ;)
+Right exactly what got me confused. I was assuming the same CMDQV driver
+would run in the Guest kernel but seems like there's another driver for
+the Guest that's not in tree yet or maybe is a purely user-space thing?
 
--- 
-Kees Cook
+And the weird part was that "invalidation" commands are accelerated but
+we use the .cache_invalidate viommu op for `non-invalidation` commands.
+But I guess what you meant there could be non-accelerated invalidation 
+commands (maybe something stage 2 TLBIs?) which would go through the 
+.cache_invalidate op, right?
+
+> Nicolin
+
+Praan
