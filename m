@@ -1,242 +1,348 @@
-Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011046.outbound.protection.outlook.com [52.101.65.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 398DB182D0
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 06:10:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751350234; cv=fail; b=uAQEiUMj0dk+yldf5c0CXjpp221GaN3W2SuzWMLpHOXPQ1/EOGu5MYsDOnxXHTjr01BZ0QlK7wTZLmxTI18LXkh1K/kVWeM0TSfXpNxf4TFb//PS4V1s4u0K8jAP+2aKndHjKNrh6YGviyn07fZ1d2Mz4yACCo95WZ7kYEQNe0g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751350234; c=relaxed/simple;
-	bh=LZ3R7nSum9R4BwlQUjLkZL2+2kKoiM5hOGCCGUlBYBk=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=adhMPwmCzR8zrfJoozT6CL7M5Jd/+NDzJQIvEwEKrDeR9GR4CeU406D7vYQuUejT4RMiU1TSsWOeNLxZY3+ti5PTRN+edTMi/KP7cGMjfdJwmrH53B9rTJNliDGQtx+xZQUP1X/L0s1l+VicJPE28mB5lwEQADGq8Qm6ipJdDzA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nokia.com; spf=fail smtp.mailfrom=nokia.com; dkim=pass (2048-bit key) header.d=nokia.com header.i=@nokia.com header.b=QW3swefn; arc=fail smtp.client-ip=52.101.65.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nokia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nokia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0B618DB27;
+	Tue,  1 Jul 2025 06:11:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751350308; cv=none; b=ArDv4Eu9K7i4iH4WUIidFyH17iQ1jGgfx9zyNll37hhHdEOOghIVxkVD7+aMaYuCo68qw4oiOf0710zMdPMAqcNCikdmh8yNXVaHJDvuJjs5pKpnt12cFpSW5vepNQN6fQLuvt7p9aiCKatqL5XnOpapd1YT2/09X7+TdQVlAcE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751350308; c=relaxed/simple;
+	bh=n2dl/8a7llNIU/OodNwWqanLy/3qmsHLyKdFTD18JgI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lMLBjsWjgOhxy/X1a/nhXD7nKgNYhrMHSwX5CeJv2zzpPwK2GJGzavnq6q62h102RNqLp28zoKzJ2oWmRzw8zfAqfLtWIl/qgPv9ubH78BmM0gofUDQzlKk8k9PHnvf4seLsnKrSyHvmHkdNrY5tCPAgMdlcv95By6eVmogB4p0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Iapz9K7K; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nokia.com header.i=@nokia.com header.b="QW3swefn"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=eqAmGEbCe7j3yRCaLo6KRZ4hUcvZhJlPkVymvNrGAT0u5ae9hFYbZcKFOybuZSHupIMkhkhgkqxNqrCF4erVw7I1h6SqLtTeZJsXFd0R0+Q8mlksS2H/byzAo6L124bOKKB+2/WzPhF5/02Ko5sLKz/JAN257gFSJw2JqUvhA6tby7IacuZDcBYWPVt4Kq9uLgGZ4mHmIqcWGrbiCiAcD7pTXtwx/SPr7wzj9aafKQrF7SyWWjutJeguV6ZPtqxMK3PKwu3Io/ER/M6BOUrMyb8St4JoxYMflDhNX5dDxmW+Xw/DEiH80r6Nwr8xRO1g3lkZXjKo+0DcL2+8E05tDQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0vLV7fb6K3QeQ/3TeRDy6vwdl8/npRZPklqs2b9imB8=;
- b=JtEzUSkHwwrPBev76D29RqyhC2m9HIQRTVoJs5U/nNcfw218j7/Zzx9JKjS+zwNSWpfN1n8Idl0VKO0lkmRTbUXyGJtkiMjp9i1CcykwdW43i0fIA04v+aKjyuZWAHlzztLtaF8pUuiEQZbo4HYewAXkEFyOlR2SvT0HC3zCY4XZ3c8flCE4rUpfEvSXdfGMCLMoQZL0Yrt9BfDXo6c+hnSiMqlFy4wArSQ0MLxhzjQejAgzkcEI1UwOj5ExvGYVO7ICFiUkSxYkfZg+YTcNnoxY25sr3SZeUnjZL0xSmUaJ/uKEGIY3IkhWUXyTbzl2j7pv6HVku0/rayj9X7VhqA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
- dkim=pass header.d=nokia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0vLV7fb6K3QeQ/3TeRDy6vwdl8/npRZPklqs2b9imB8=;
- b=QW3swefnymwrcy3+xL9iVSWWRZE7RVFVByM1UxdpSO1KMozkTOKnNNzJ/+fYX+wfU/Li0HOl28X5Uc6e1jBmAr+uKeC1t2S7ClmsoHaZw9xQtGDIGMICIB/F54cWsJHhMTYx41Xp+ronL/q8q8pkAlg+mIku50LTiUXlkb7cxJ1AvYrwU4QCOF6eX7wf6hF7V9ZM494Dku/E8sQSeZ+NT1yTKIuCGL903SUxuAo67c83XMBIbDBUdAaYryk7i/vqvMh1eoLIP02NuRzivdiIvGQtR0jE+1SNMDq75Sb+MEH2jb9XFSAheTlimDusuMGiffTrvAHX1jOhLJodmiCGpQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nokia.com;
-Received: from PAXPR07MB8771.eurprd07.prod.outlook.com (2603:10a6:102:246::20)
- by BESPR07MB10746.eurprd07.prod.outlook.com (2603:10a6:b10:ec::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.31; Tue, 1 Jul
- 2025 06:10:29 +0000
-Received: from PAXPR07MB8771.eurprd07.prod.outlook.com
- ([fe80::e125:c4ef:b872:5c60]) by PAXPR07MB8771.eurprd07.prod.outlook.com
- ([fe80::e125:c4ef:b872:5c60%3]) with mapi id 15.20.8880.027; Tue, 1 Jul 2025
- 06:10:29 +0000
-Message-ID: <9dcfe1fb-0361-4d13-a4d5-fbc274f68db7@nokia.com>
-Date: Tue, 1 Jul 2025 08:10:26 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] irq: add support for warning on long-running IRQ handlers
-To: Thomas Gleixner <tglx@linutronix.de>, anna-maria@linutronix.de,
- frederic@kernel.org, mingo@kernel.org
-Cc: akpm@linux-foundation.org, bigeasy@linutronix.de, peterz@infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250630124721.18232-1-wladislav.wiebe@nokia.com>
- <875xgdnsmr.ffs@tglx>
-From: Wladislav Wiebe <wladislav.wiebe@nokia.com>
-In-Reply-To: <875xgdnsmr.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FRYP281CA0016.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10::26)
- To PAXPR07MB8771.eurprd07.prod.outlook.com (2603:10a6:102:246::20)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iapz9K7K"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ae361e8ec32so674117866b.3;
+        Mon, 30 Jun 2025 23:11:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751350305; x=1751955105; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/S7xKhKUEdY/AyCleM182IPYw8qNSHgtzf/4Oaf5ZUo=;
+        b=Iapz9K7KcnFVEzr8IkbPaqLm3dnoNvo1fmZv01CznYOXbnSoeqdKWpiADFOY130lAG
+         RYDNH92PWzs4lEuHkQu557eZDyOQ2DOQGlriOcHnBRDRvg3c8t7MG3r++T9/5LOGSgOV
+         aqOaJdkZtT+1CNTiUuWulC6zatu4WRGATmJqalcVE3gLjBMCshXY0X++O1StI7kjVWmW
+         LYJogvr944HgVOn3DtCQFpIkV8/gudvQNWCYFvVbdQlDdpdQq3NQbxKjzWXxCvOMc0fM
+         8lB3RRo9/U5se1K00974XxU7TPylnYhyj9IAxv0YKKmQx8ffc+hpIO9A3Vx/TsevgrPA
+         2Giw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751350305; x=1751955105;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/S7xKhKUEdY/AyCleM182IPYw8qNSHgtzf/4Oaf5ZUo=;
+        b=d+1G0e7OI40N1QBl8ZLQxp8VY01DCCorC6L6trRHf6C6AEVWYVETMQCqeLasLecD4H
+         +h5LwXmHb5bZ237TUHX6p9Sl+X03i8SkbltsSt9FIBM4orSq5pRPitQxUdirkthBg7+h
+         hdkiaEWG6FIdw12vhHjH+EUpr37uj735TMiq1J4zkLl0DSuPzyDyNnZRTsHX8LlIm3Vm
+         n5m0lQHi+WyD0jmx7xeudpu8rEiYKPkxvheJOcgwNU9qt2O7WInFZsesJTWpGMGw98ul
+         0oGQO1YF08QuU0rfvtao4WqNolSlN8Tl57Lr8kzUWx3MbxzwMrbHWp+U+tbEHJgYPOGR
+         HPvg==
+X-Forwarded-Encrypted: i=1; AJvYcCVf+JraJah0QDu9YBk7fUzUXeYV9kv9kn7Cg29M7begsKTqv+LV306UdPSV+4tdZ3IA2n1GY28pNoFR@vger.kernel.org, AJvYcCWa5ltKWrZsJPEG6NsV/uRO4MLiUk+19S74FV19bpY6W7FlB09e1i9AkChoDi/qOWsMYpbWzjUbx04=@vger.kernel.org, AJvYcCWlrqy658vgX/mJIhhQHHb2lbPw73DsW52/bdIifQeIFzPLTu4FNbWZpl++GszuYCxIMmlZW0+YHoTghBOv9w==@vger.kernel.org, AJvYcCWqg63N8WJ98lafKhYRz+oJOQbAM70b+0gKUGeR+OYpmcgHeXDU+iEQ3UUzBzp3arQqI+J9DyhEcunDUTER@vger.kernel.org, AJvYcCX1cMD/Uo7A8sVq9YKIF/xc3B9p0aDSxWy4HKQIVNROMN68VZTwjtVGbC0OFQMYgm3GmFmI0hUJMg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDXu/s9VbM3GxSbnekL79zOwXt21hbiMIFXkQAHtIQE2yXG7rg
+	AeRf9Pb2RULt2bI3YWaRFc1lEJOS08Anxq+wejYMDk2vEZrjwUWSzJcuKRmM+VvR9rUhq646bUb
+	4SFc/FISFWK7ukQKImK4nj5Bmut651PQ=
+X-Gm-Gg: ASbGncvLUyfpppyb8Ss9ia4q/ily/Om0ViLyjLgPzCkZpsHaytL8Fnba5veHETuBTXC
+	gRm8rcmO2i9IUcBenaC2I68G7KO2xmE14lJcTGephAO2/yWUXc+p1AZgubzF2TfNCm09tUGO43Y
+	MO9yo0Vv6GFKBGVfWLhnLIx4YE0nyCefkIROdU9FaSZAI=
+X-Google-Smtp-Source: AGHT+IGy0jqNDqIw+R0AspukOFhh0zQZqG8vgG9Cye+LYJ84zh+3r3d6fSa8S3xkKlvRzSPIM/XgMRb4dD/PnbOmYK4=
+X-Received: by 2002:a17:907:728e:b0:add:ede0:b9d4 with SMTP id
+ a640c23a62f3a-ae34fb41ad9mr1497620366b.0.1751350304536; Mon, 30 Jun 2025
+ 23:11:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR07MB8771:EE_|BESPR07MB10746:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6860cf6d-43df-498d-f579-08ddb865fab0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?N0Z0a0VZZWtUcmZLY1JZNlRoN3NRSTcwczI3ZjZQZjlWNUppRGdQVnFNeXc5?=
- =?utf-8?B?ZGovZFJTdHdxQUV0YU9ISlJnUHQ2UW1yS3lsQTVFNm1Ic3hxc0l0TEhIckpQ?=
- =?utf-8?B?eDJ0SjE0cjBuSWh5dWdBVWFxbm55aXNmak5pWlNIWEZKT2dTYWozVkNBeDk4?=
- =?utf-8?B?ZnZDcTFHS1p6MnhrYnM5M3NMYmxLcmVWTDg4M2FwdDB4Z1FJVUZyUU5LaXpR?=
- =?utf-8?B?YTg1S0Ntb01tSWZmNmtUbWJ5WVlqbVJWN2tXakVxQTA2VnljS3Z2ZGluRzda?=
- =?utf-8?B?NE9sUE9BZzFRb0F0UXB5T3Y5VkN0K3k0Nk5JdzU2bzZndkNrTFJqUmJtOTFx?=
- =?utf-8?B?MXFwRi9lOG55YWhhYUJDQkJOaFZSdHgrbVF5N1RJYUFhLytvYkNFU1EyUnpi?=
- =?utf-8?B?VGRCeTdjUnNHdEtndDhxRnhrbzJXTSt2R0N0a01pcStDRXRqSWpCQjJCMTAr?=
- =?utf-8?B?Q01uc1o0NTJBRmQwTWcrek9hUFFvVlBmTlgvdGJpVElXTWppL2I2YVNuTGNy?=
- =?utf-8?B?YlpEMUdZbDRDMVIxazRWMDkvU2NyVmtKaXJIWFhMZTF5ZThXUmVEMEZGeTYw?=
- =?utf-8?B?YzFoNmJKbTRFaXpOYWorQXBNaEhmUW43cUhUcW5RSkRnY2tSc0VWT1ZyRkVw?=
- =?utf-8?B?R2RON3pleFJnNS9iMXJXTHlVejVzUVhaMjJqczlwNTNQN2thQ2EvN3NEWmNZ?=
- =?utf-8?B?UTk4dmYybXdTYlpFQXhUWW0zTFdDSkpTbnhrQlNXZ1o2bC8rbE1zb2VHbVVE?=
- =?utf-8?B?T2psd3cwV2NtM01pN2oxK3ljbVdxRGJKRUgwWTBWNjF0bnBWTEFsTmQrMXUv?=
- =?utf-8?B?REVhMThSRFBrTmZpOTdGY0tDUFpaSDBMb1ljUzlVdG9OMlNKSm5GNnZxV3Yz?=
- =?utf-8?B?cXZxd2JhVEdKblNnQkhPU1d2ajQ5SDhGbG5DRmZYTlpUZ3F6WU1MZitxVDdB?=
- =?utf-8?B?NHp3K0czcno4bGdzcUpERWlJTER6VDR2R2lpaXd2SGV4TUlYOHdyWEttSndl?=
- =?utf-8?B?MEhEWTQyZHJCamttUFNHSGVNR1JUeXJ0RU5tWHVZWDZWOG1VbVVkZE4yMDR3?=
- =?utf-8?B?bUF5Vjg2Rm1VWkVQQnJNYkxrSzduZlFwT2x4QjVEQ0NIOEwrQzJXa2RwcDBS?=
- =?utf-8?B?TVhuVGQ5bzkvTUVCRXB1TjNBa2FsTmFyVENxNkpnY2kxT1lNbktRZGRMUVVJ?=
- =?utf-8?B?VGszSFRWUFczSU1yU2lMcTJVT2tNMTZOUVVCcHpqZDdEZ2p6WmU5OFYwVEFX?=
- =?utf-8?B?L2NucDRubmlueTJBdFZFZEQxMTFOVWplK3pwUEU1UWRrbUFsSSs2YlZBWmVW?=
- =?utf-8?B?Y3BkdUMvVjNYaFRhZ0ZqY2FGYWFHRlQ0VW4vK0ljOE83ZnlXK1cxak5yU010?=
- =?utf-8?B?UlROaFVlOFErN2sxaWRZNHUvUkl0OGVLaEUrTTU0TThsUE9uNSswT0sycksw?=
- =?utf-8?B?K3lGRjdnWnYraWhmOGFpdDJQYnFFUHl3VUNjenlLVXNmWUsvQTk2ZzRjTjFH?=
- =?utf-8?B?VG0vT0NrVG1UdTBFOTZhOHdtdHZhVDQvemFPQ1R6K2t1bzQ2Q0xFcGxBdXRM?=
- =?utf-8?B?QUd1dFpGY3BnWXRQclhWNUIxczNoV2NQVUdHVk1kNzVjMCtLR1FYanF1eTlB?=
- =?utf-8?B?VHZtcmluRmpKeEV0MXJtY2p0bWRac2JZUXYvVENSM2RPb3FSSFZ2UExDWGkw?=
- =?utf-8?B?ZDB5K0RrbGNubCtYMlJNYlZkTDQzL05GYVBWRzRVT1NzdUZ3aGpDaG5yZmIr?=
- =?utf-8?B?QmwwMXR6N0paMXVsNGZTRG1VS2tCZlhGWHlNSm9hY0JMeUNYZTFwRkRzVVA0?=
- =?utf-8?B?RWt0WGRySUFZS3lCb1dCb0hUMWJ4TS91c2VzTU40Z2JpOHE3N0lMWWUxZVdH?=
- =?utf-8?B?ZSs0VlcwVEpEdkhhSGF5VXdRZmY1OUllWi9qcWNVVi9KYU04WHJqY2hhRzRY?=
- =?utf-8?Q?c5jykVCDmo8=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR07MB8771.eurprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RkJTcTk5bDNudnIyc3pobkhJeXZrZVg2c3owNFBOZFJCVzN2LzcyTGY4b29u?=
- =?utf-8?B?djBHeVpkVk03NC9ORkVWSEFkMkF6ajBNVkZNMTM4N2J2SzM3NEF0ek1oUWZl?=
- =?utf-8?B?YlB1bklPeFZIWWZueUJFZUVuZ0JiazA4U09rbDZqN3c0ZTlYRCtOS1NFZVRj?=
- =?utf-8?B?SVNPZjg2TXNaeGk3d2l4MWU2Y3ZybURZR2ZhdEFkRWJLS0lNcGkyY0dzWVBM?=
- =?utf-8?B?anlLL2FTSXZLQmVnWmJqVW9JN0gvNUJZcklXTHlGVlYwNVY1UXdrMzR3cGRl?=
- =?utf-8?B?dGdyWkZRQkd5OC9CeHBnOGR2TVZpVmtnVDVBNEg4cllFbE1zZlhCdERqT3pv?=
- =?utf-8?B?VVYvSWxidUVJOHZDREtPZWZZaVJ2VjgrQWFYeTNJTWhTTlNIZDJJMXhzeXpr?=
- =?utf-8?B?bEZLRmpUWnBIa1VjWjBtN0VqdUFpdEFaTnNJWEFQK1VkbFhNSFFHcGNQQUli?=
- =?utf-8?B?akxJVDZWalJTVEJPdnUyZlZtUkRsNjB4M0h3aDFYaTU5dHFkcmFuclZTTU9h?=
- =?utf-8?B?RWJ0bVF1NlFGeWZ0a3Irbm5FVnVLa0FLcmlYOXJJaGlPeGdkSGNuenlQeitZ?=
- =?utf-8?B?RjV4R2hIVVBYR05oRzEvZUdVbDlWRWloQlJaQk0wQVV5LzNDeGJaZXVRTEVZ?=
- =?utf-8?B?U0U5UDdoeG1EZVlmN0NZLzNySnRUeWxwd3hrM0FoZVAzZGh0VWgrOTZYSFBH?=
- =?utf-8?B?MDhsSXI1REdsNU81S2U2NHpGNzZyeEE0U3JOYXN3OUw1Z2xGajV2WVBSdlR2?=
- =?utf-8?B?aTZlQzlIcXoyRXR6cmNZcXY1Q2p6SmFtNEcwSmlGeGhGcnFkbDk3Skc2eFRi?=
- =?utf-8?B?Z1lyQVV6N2FidXA1eFo0aTFMMkpwaFAxZFAyb0pZaTRXZWpNVVE1bFNvdkhj?=
- =?utf-8?B?azRiRDlKazV2UHFVUkZuWWlyVzNzdEs4MGtvUjc2bjVYN3ltK2o1U1lPa3pz?=
- =?utf-8?B?amtCTGppOHJJWjJqakw4bTErWUV3R2IxZElZbnN0S3lJRmFORXF1TVQ0cTQr?=
- =?utf-8?B?UW1QKzBvOHRoaExGK2tFVG9kZHdMTlE1aFRHOFZNeDFLVGxGU0VkUjFUZzRM?=
- =?utf-8?B?WmtJM0luYlh0QitBQk9kMlJ5VW84Y01tZFNJdkNSTGJNMVRlU09aWnh5VUtj?=
- =?utf-8?B?RHlkZG9uZUttT0ZYakpUQXRMS0hDbDRuTW5XTkJmempLSjc2Qm9JcEZ0aGFM?=
- =?utf-8?B?KzlJbEtWUzVzRmNEU0VNZG1HaVJpR05hUm9EVzhKOHZlRDZaZEViSk9sck9L?=
- =?utf-8?B?QWd3TUVIZmpEVVBmZGVQMHBHY2NTU3hjclFCMWlSaFdmQXFDR1BVMmlrMVAv?=
- =?utf-8?B?TEZ4bDJab2RkZEtNTUcwOW54VVdKNXVzZnFqaHpJamYzZUZWWFVOazZPQ2Jt?=
- =?utf-8?B?bVl0MG9wWUZJRXNIaUdQVU1JL0xubzNSREhneUVIdlZNVjQ0L1MyY1NSMUlp?=
- =?utf-8?B?WUJhN3Q1azI5SnJFWE8zRnZ1VjRRNDA1aFFDbzYzVkRneko1ZVNzTTJDalJ3?=
- =?utf-8?B?QmdYVGx5aTRZTFJVdDlkNjdybkZYMlBNVVQ1cENsUHpDbmxVVUg2bC85TXh2?=
- =?utf-8?B?YzdURFpoQVQzY2YyLzlneW5XSUYrMXNhTmFvdFRyelRLQlI5NllMWnhmUUlK?=
- =?utf-8?B?T0JydWxyU1gvOUZnR28yaFpyRkdjV1JvcVJXTTlNYVZSck11dnJKN0JmR1pY?=
- =?utf-8?B?RzZGbVpZUEk1RHRaQlBWR1hueE5IdER5cFhlQTBmSHJ4MkxGZElFOUFvUG8v?=
- =?utf-8?B?M01yNU9ZbUdSd1g2NjZNanNOdVBVNktjTEtnUnNLVFV2UlE5RDBuUDJqOVpo?=
- =?utf-8?B?VXpwVjV1NjVjWG5tL1hwSHhvR2hVam1nTndMV0lOLzZWL2FVdVBsTjV1Ujgv?=
- =?utf-8?B?SnNPY1MybXREWTJ4ZGQwMll0dmNZZHJVZlhhdEplK1FoZ2gvSlVGRkhCRGRw?=
- =?utf-8?B?VFhCL2dTRFBvTUMxR0gxYjNmMmp4TVA5cU9lVlFMOGJhZ241bmdzQ2FSQS91?=
- =?utf-8?B?dytSTUZQMHVjdjhRS3hSUDZUSVgwaUE5TFhiUWpZWU1xYnZ2ZjRiNlpvNVJq?=
- =?utf-8?B?OW9vWisrYVQyVElhU1RtV1RKM0p1bVFJWm9iSUt3dFhLVUZ4YmxsTC9PNTFO?=
- =?utf-8?B?UHpnOUJIWjJhRDAyemU1eTZrVXl1V0tQaFF0Q2c2Z09Sckk4ZXh3enBrNktk?=
- =?utf-8?B?MlE9PQ==?=
-X-OriginatorOrg: nokia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6860cf6d-43df-498d-f579-08ddb865fab0
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR07MB8771.eurprd07.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2025 06:10:29.4746
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5d471751-9675-428d-917b-70f44f9630b0
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kqlrOTBeLExyJSKnwN84lo+f4lInizrWqZcUf9GEWQgG3XuWKxLdgOHcQODUR9y5VyHV1gv2Rngkp5ohX/cvCBwMf1ddVUYveo4hawDhoUI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BESPR07MB10746
+References: <20250630-xattrat-syscall-v6-0-c4e3bc35227b@kernel.org>
+In-Reply-To: <20250630-xattrat-syscall-v6-0-c4e3bc35227b@kernel.org>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Tue, 1 Jul 2025 08:11:33 +0200
+X-Gm-Features: Ac12FXxCo_XqKi1DpO_nF_8Ztxb-HD2hD0sbrXROo0RZf5-pz3YZZ2U-IPVQT7g
+Message-ID: <CAOQ4uxgEK7zQFBTmg1cK=LWfBmZk7FhceHjJROP0RWP00--Tvg@mail.gmail.com>
+Subject: Re: [PATCH v6 0/6] fs: introduce file_getattr and file_setattr syscalls
+To: Andrey Albershteyn <aalbersh@redhat.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Casey Schaufler <casey@schaufler-ca.com>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>, 
+	Paul Moore <paul@paul-moore.com>, linux-api@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-xfs@vger.kernel.org, selinux@vger.kernel.org, 
+	Andrey Albershteyn <aalbersh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Jun 30, 2025 at 6:20=E2=80=AFPM Andrey Albershteyn <aalbersh@redhat=
+.com> wrote:
+>
+> This patchset introduced two new syscalls file_getattr() and
+> file_setattr(). These syscalls are similar to FS_IOC_FSSETXATTR ioctl()
+> except they use *at() semantics. Therefore, there's no need to open the
+> file to get a fd.
+>
+> These syscalls allow userspace to set filesystem inode attributes on
+> special files. One of the usage examples is XFS quota projects.
+>
+> XFS has project quotas which could be attached to a directory. All
+> new inodes in these directories inherit project ID set on parent
+> directory.
+>
+> The project is created from userspace by opening and calling
+> FS_IOC_FSSETXATTR on each inode. This is not possible for special
+> files such as FIFO, SOCK, BLK etc. Therefore, some inodes are left
+> with empty project ID. Those inodes then are not shown in the quota
+> accounting but still exist in the directory. This is not critical but in
+> the case when special files are created in the directory with already
+> existing project quota, these new inodes inherit extended attributes.
+> This creates a mix of special files with and without attributes.
+> Moreover, special files with attributes don't have a possibility to
+> become clear or change the attributes. This, in turn, prevents userspace
+> from re-creating quota project on these existing files.
+>
+> An xfstests test generic/766 with basic coverage is at:
+> https://github.com/alberand/xfstests/commits/b4/file-attr/
+>
+> NAME
+>
+>         file_getattr/file_setattr - get/set filesystem inode attributes
+>
+> SYNOPSIS
+>
+>         #include <sys/syscall.h>    /* Definition of SYS_* constants */
+>         #include <unistd.h>
+>
+>         long syscall(SYS_file_getattr, int dirfd, const char *pathname,
+>                 struct fsx_fileattr *fsx, size_t size,
+>                 unsigned int at_flags);
+>         long syscall(SYS_file_setattr, int dirfd, const char *pathname,
+>                 struct fsx_fileattr *fsx, size_t size,
+>                 unsigned int at_flags);
+>
+>         Note: glibc doesn't provide for file_getattr()/file_setattr(),
+>         use syscall(2) instead.
+>
+> DESCRIPTION
+>
+>         The file_getattr()/file_setattr() are used to set extended file
+>         attributes. These syscalls take dirfd in conjunction with the
+>         pathname argument. The syscall then operates on inode opened
+>         according to openat(2) semantics.
+>
+>         This is an alternative to FS_IOC_FSGETXATTR/FS_IOC_FSSETXATTR
+>         ioctl with a difference that file don't need to be open as file
+>         can be referenced with a path instead of fd. By having this one
+>         can manipulated filesystem inode attributes not only on regular
+>         files but also on special ones. This is not possible with
+>         FS_IOC_FSSETXATTR ioctl as ioctl() can not be called on special
+>         files directly for the filesystem inode.
+>
+>         at_flags can be set to AT_SYMLINK_NOFOLLOW or AT_EMPTY_PATH.
+>
+> RETURN VALUE
+>
+>         On success, 0 is returned.  On error, -1 is returned, and errno
+>         is set to indicate the error.
+>
+> ERRORS
+>
+>         EINVAL          Invalid at_flag specified (only
+>                         AT_SYMLINK_NOFOLLOW and AT_EMPTY_PATH is
+>                         supported).
+>
+>         EINVAL          Size was smaller than any known version of
+>                         struct fsx_fileattr.
+>
+>         EINVAL          Invalid combination of parameters provided in
+>                         fsx_fileattr for this type of file.
+>
+>         E2BIG           Size of input argument struct fsx_fileattr
+>                         is too big.
+>
+>         EBADF           Invalid file descriptor was provided.
+>
+>         EPERM           No permission to change this file.
+>
+>         EOPNOTSUPP      Filesystem does not support setting attributes
+>                         on this type of inode
+>
+> HISTORY
+>
+>         Added in Linux 6.16.
+>
+> EXAMPLE
+>
+> Create directory and file "mkdir ./dir && touch ./dir/foo" and then
+> execute the following program:
+>
+>         #include <fcntl.h>
+>         #include <errno.h>
+>         #include <string.h>
+>         #include <linux/fs.h>
+>         #include <stdio.h>
+>         #include <sys/syscall.h>
+>         #include <unistd.h>
+>
+>         #if !defined(SYS_file_getattr) && defined(__x86_64__)
+>         #define SYS_file_getattr 468
+>         #define SYS_file_setattr 469
+>
+>         struct fsx_fileattr {
+>                __u32           fsx_xflags;
+>                __u32           fsx_extsize;
+>                __u32           fsx_nextents;
+>                __u32           fsx_projid;
+>                __u32           fsx_cowextsize;
+>         };
+>         #endif
+>
+>         int
+>         main(int argc, char **argv) {
+>                 int dfd;
+>                 int error;
+>                 struct fsx_fileattr fsx;
+>
+>                 dfd =3D open("./dir", O_RDONLY);
+>                 if (dfd =3D=3D -1) {
+>                         printf("can not open ./dir");
+>                         return dfd;
+>                 }
+>
+>                 error =3D syscall(SYS_file_getattr, dfd, "./foo", &fsx,
+>                                 sizeof(struct fsx_fileattr), 0);
+>                 if (error) {
+>                         printf("can not call SYS_file_getattr: %s",
+>                                 strerror(errno));
+>                         return error;
+>                 }
+>
+>                 printf("./dir/foo flags: %d\n", fsx.fsx_xflags);
+>
+>                 fsx.fsx_xflags |=3D FS_XFLAG_NODUMP;
+>                 error =3D syscall(SYS_file_setattr, dfd, "./foo", &fsx,
+>                                 sizeof(struct fsx_fileattr), 0);
+>                 if (error) {
+>                         printf("can not call SYS_file_setattr: %s",
+>                                 strerror(errno));
+>                         return error;
+>                 }
+>
+>                 printf("./dir/foo flags: %d\n", fsx.fsx_xflags);
+>
+>                 return error;
+>         }
+>
+> SEE ALSO
+>
+>         ioctl(2), ioctl_iflags(2), ioctl_xfs_fsgetxattr(2), openat(2)
+>
+> ---
+> Changes in v6:
+> - Update cover letter example and docs
+> - Applied __free() attribute for syscall stack objects
+> - Introduced struct fsx_fileattr
+> - Replace 'struct fsxattr' with 'struct fsx_fileattr'
+> - Add helper to fill in fsx_fileattr from fileattr
+> - Dropped copy_fsx_to_user() header declaration
+> - Link to v5: https://lore.kernel.org/r/20250513-xattrat-syscall-v5-0-22b=
+b9c6c767f@kernel.org
+>
 
-On 30/06/2025 17:42, Thomas Gleixner wrote:
-> On Mon, Jun 30 2025 at 14:46, Wladislav Wiebe wrote:
->
-> The subsystem prefix is 'genirq:' See
->
-> https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#patch-subject
->
->> Introduce a new option CONFIG_IRQ_LATENCY_WARN that enables warnings when
->> IRQ handlers take an unusually long time to execute.
->>
->> When triggered, the warning includes the CPU, IRQ number, handler address,
->> name, and execution duration, for example:
->>
->>   [CPU0] latency on IRQ[787:bad_irq_handler+0x1/0x34 [bad_irq]], took: 5 jiffies (~50 ms)
->>
->> To keep runtime overhead minimal, this implementation uses a jiffies-based
->> timing mechanism. While coarse, it is sufficient to detect problematic IRQs.
-> Define sufficient. That really depends on your use case. For a real-time
-> system a hard interrupt handler running longer than a few microseconds
-> can be problematic.
->
-> So instead of adding some single purpose mechanism, can we please add
-> something flexible which can be used for a wide range of scenarios.
+Series looks good.
+For mine and Pali's minor comments on patch 4 no need to resend.
+I think they could be fixed on commit.
 
-the initial goal was to cover regular non-RT cores, as on isolated/tickless cores
-we should not have device interrupts.
-However, I agree we could make this more flexible for a wider range of use cases.
+Thanks,
+Amir.
 
+> Changes in v5:
+> - Remove setting of LOOKUP_EMPTY flags which does not have any effect
+> - Return -ENOSUPP from vfs_fileattr_set()
+> - Add fsxattr masking (by Amir)
+> - Fix UAF issue dentry
+> - Fix getname_maybe_null() issue with NULL path
+> - Implement file_getattr/file_setattr hooks
+> - Return LSM return code from file_setattr
+> - Rename from getfsxattrat/setfsxattrat to file_getattr/file_setattr
+> - Link to v4: https://lore.kernel.org/r/20250321-xattrat-syscall-v4-0-3e8=
+2e6fb3264@kernel.org
 >
->> +#ifdef CONFIG_IRQ_LATENCY_WARN
->> +static inline void warn_on_irq_latency(struct irqaction *action, unsigned int irq,
->> +                                    unsigned long jiffies_start)
-> latency is the wrong term here. This is about the runtime, duration of
-> the handler.
+> Changes in v4:
+> - Use getname_maybe_null() for correct handling of dfd + path semantic
+> - Remove restriction for special files on which flags are allowed
+> - Utilize copy_struct_from_user() for better future compatibility
+> - Add draft man page to cover letter
+> - Convert -ENOIOCTLCMD to -EOPNOSUPP as more appropriate for syscall
+> - Add missing __user to header declaration of syscalls
+> - Link to v3: https://lore.kernel.org/r/20250211-xattrat-syscall-v3-1-a07=
+d15f898b2@kernel.org
 >
->> +{
->> +     unsigned long delta = jiffies - jiffies_start;
->> +
->> +     /*
->> +      * Warn about long IRQ handler latency only if jiffies are reliable.
-> What means jiffies are reliable?
-
-there shall be a another CPU online with active ticks enabled
-which updates the jiffies. Means, on single or tickless cores, this approach will not work.
-
+> Changes in v3:
+> - Remove unnecessary "dfd is dir" check as it checked in user_path_at()
+> - Remove unnecessary "same filesystem" check
+> - Use CLASS() instead of directly calling fdget/fdput
+> - Link to v2: https://lore.kernel.org/r/20250122-xattrat-syscall-v2-1-5b3=
+60d4fbcb2@kernel.org
 >
->> +      * The reporting condition hits only when there are at least two CPUs
->> +      * with active ticks.
->> +      * Jiffies updates are stalled on this CPU until MAX_STALLED_JIFFIES
->> +      * reaches and a force update happens on another CPU with active ticks.
->> +      */
->> +     if (unlikely(delta >= (MAX_STALLED_JIFFIES + CONFIG_IRQ_LATENCY_WARN_THRESHOLD))) {
->> +             pr_warn_ratelimited("[CPU%d] latency on IRQ[%u:%pS], took: %lu jiffies (~%u ms)\n",
->> +                                 smp_processor_id(), irq, action->handler,
->> +                                 delta, jiffies_to_msecs(delta));
->> +     }
->> +}
->> +#else
->> +static inline void warn_on_irq_latency(struct irqaction *action, unsigned int irq,
->> +                                    unsigned long jiffies_start) { }
->> +#endif
-> I'm absolutely not fond of this #ifdeffery and yet more Kconfig
-> knobs. Something like this should just work:
+> v1:
+> https://lore.kernel.org/linuxppc-dev/20250109174540.893098-1-aalbersh@ker=
+nel.org/
 >
-> DEFINE_STATIC_KEY_FALSE(handler_duration_check);
+> Previous discussion:
+> https://lore.kernel.org/linux-xfs/20240520164624.665269-2-aalbersh@redhat=
+.com/
 >
->         if (static_branch_unlikely(&handler_duration_check))
->                 ts_start = local_clock();
->         res = action->handler(irq, action->dev_id);
->         if (static_branch_unlikely(&handler_duration_check))
->                 check_handler_duration(ts_start);
+> ---
+> Amir Goldstein (1):
+>       fs: prepare for extending file_get/setattr()
 >
-> Then have a command-line option which allows the user to set a warning
-> threshold > 0 in microseconds. When the option is evaluated the
-> threshold is stored in a __ro_after_init variable and the static branch
-> is enabled.
-
-all right - that makes perfectly sense as well. I will refactor it and provide v2.
-Thank you for the comments.
-
-- W.W
-
+> Andrey Albershteyn (5):
+>       fs: split fileattr related helpers into separate file
+>       lsm: introduce new hooks for setting/getting inode fsxattr
+>       selinux: implement inode_file_[g|s]etattr hooks
+>       fs: make vfs_fileattr_[get|set] return -EOPNOSUPP
+>       fs: introduce file_getattr and file_setattr syscalls
+>
+>  arch/alpha/kernel/syscalls/syscall.tbl      |   2 +
+>  arch/arm/tools/syscall.tbl                  |   2 +
+>  arch/arm64/tools/syscall_32.tbl             |   2 +
+>  arch/m68k/kernel/syscalls/syscall.tbl       |   2 +
+>  arch/microblaze/kernel/syscalls/syscall.tbl |   2 +
+>  arch/mips/kernel/syscalls/syscall_n32.tbl   |   2 +
+>  arch/mips/kernel/syscalls/syscall_n64.tbl   |   2 +
+>  arch/mips/kernel/syscalls/syscall_o32.tbl   |   2 +
+>  arch/parisc/kernel/syscalls/syscall.tbl     |   2 +
+>  arch/powerpc/kernel/syscalls/syscall.tbl    |   2 +
+>  arch/s390/kernel/syscalls/syscall.tbl       |   2 +
+>  arch/sh/kernel/syscalls/syscall.tbl         |   2 +
+>  arch/sparc/kernel/syscalls/syscall.tbl      |   2 +
+>  arch/x86/entry/syscalls/syscall_32.tbl      |   2 +
+>  arch/x86/entry/syscalls/syscall_64.tbl      |   2 +
+>  arch/xtensa/kernel/syscalls/syscall.tbl     |   2 +
+>  fs/Makefile                                 |   3 +-
+>  fs/ecryptfs/inode.c                         |   8 +-
+>  fs/file_attr.c                              | 493 ++++++++++++++++++++++=
+++++++
+>  fs/ioctl.c                                  | 309 -----------------
+>  fs/overlayfs/inode.c                        |   2 +-
+>  include/linux/fileattr.h                    |  24 ++
+>  include/linux/lsm_hook_defs.h               |   2 +
+>  include/linux/security.h                    |  16 +
+>  include/linux/syscalls.h                    |   6 +
+>  include/uapi/asm-generic/unistd.h           |   8 +-
+>  include/uapi/linux/fs.h                     |  18 +
+>  scripts/syscall.tbl                         |   2 +
+>  security/security.c                         |  30 ++
+>  security/selinux/hooks.c                    |  14 +
+>  30 files changed, 654 insertions(+), 313 deletions(-)
+> ---
+> base-commit: d0b3b7b22dfa1f4b515fd3a295b3fd958f9e81af
+> change-id: 20250114-xattrat-syscall-6a1136d2db59
+>
+> Best regards,
+> --
+> Andrey Albershteyn <aalbersh@kernel.org>
+>
