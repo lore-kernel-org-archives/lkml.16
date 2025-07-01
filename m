@@ -1,146 +1,155 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57D6326FA52
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 09:28:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5759D26B96E;
+	Tue,  1 Jul 2025 09:28:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751362105; cv=none; b=d9x+RrZaufm1zE1+gYqH2tQTeqHy0NKXHTujIazAp54KMNBEk6x7NX4fejvYk/B6aLqFk0i1Kjur5xl9ABUijzQb5YQhR4hNpqZW9NA5C9io2UUe725LkEUgTDX2NNyQ1YGPxfN0pbLZZ1jpwBBq2lckVj3xz7PU/QW9cDo33sM=
+	t=1751362138; cv=none; b=ERigD6BWjdpY+C4ymzidC/W+Xr5vqNUun4KZNMpCKh8VAewNfpv2qffIHVIIOIlTu0wKYS1rip4ziOeGWsYC/5wOlC+sWB9D9eETNfhVMeMOs6T1/SwoaA3IccjxkFoM2goDPdVfFUZmcglKhhe5gHMihs/DCPk0rJxw8+hyKIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751362105; c=relaxed/simple;
-	bh=xU+kDdU0gwzb9LPPDqkZf5rUekFrGYUlG52+CjTps7A=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pNFSgsRfKTqPAJnBfD400CXAoyM46Z+Fr1t5/wV+5hUmU2Fme8EXfm5Dysv6KI8LxaLqR84jtmICNNc7LGh6mMuJtplAoLb3VcKzUe9NHG9loJMOFJs0RCLaPtFWSzprs0urR20sxloE7TT8HizFXpIDjhpNdewy1qFsjA1SG7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Z8s/K30a; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1751362138; c=relaxed/simple;
+	bh=baD1oT/1E3kXY6Gn5bOXEfsAApfUUQ8npZKA9Kja8lI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jzZTvi7voP00hxJMSW6qU9c0aJBsp3Y/uzLyxSU9uZDLqLpi4quUPvj9s3yHpFBsQnk2FRegNbE+0CpS+fCa8M6PFbh9c2WVqPoVMVzPjmE++Pv04AzwzAy6KcNcf/IfRZDPLCFqqkdm2mjcBuI+uXclUoEkP7AKzuzxcnFhjKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=MQmjxL0Q; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=GEm6n63V reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Z8s/K30a"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-acb5ec407b1so544611566b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 02:28:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="MQmjxL0Q";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="GEm6n63V"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1751362101; x=1751966901; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vW8tXWZC+/EOEMWh/X8OhS7IFKfYxgh/KBq6rDgPsK4=;
-        b=Z8s/K30aun/xPgKGqAjd0fMnXCDU3mgK0OgZbHXARIBxjPzOL3aQ60RPO7OmD0ETKn
-         Rfe4sLdiiP8HTDHybRwu2slNwtUM204NfDhAeCqMl8q6DME2aEFWaIr5Btak2+Odytpm
-         M1U25VIpmqsW43umLqsTK5jVNv9x4iXFCiJkA0assksKUv/WB90O2JqNfRx6zkXRIbJb
-         pCijUpnNDCc9pVw36K7nrSkXGkZsYwnrVTGTNvJ++/x943jGME9P/7zqcVO3dOeYKQLm
-         DBfa1royiNE+C6c9QTGYw4dZrHriapjZRAGwdbw/rs5MOV0RpEkn/lekzvfK5MNyDgEp
-         vF6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751362101; x=1751966901;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vW8tXWZC+/EOEMWh/X8OhS7IFKfYxgh/KBq6rDgPsK4=;
-        b=xI0o2nB4Y7khQZfJmNcs5sLmC1/6s9FWo45cgWstbEgJxEh0IsVOhzMud6xpFU7hnN
-         Q1noimF7e6H3tp2yL+WAUMCjk8BpocmUSbxJ6cAM5FQZC9e1/sVceSS282L63BFU5O7/
-         ihnxW5J8RxAVa7d4425mrg4Rb/DdmN0+C800z7YGhSY21WZVYxTq9Oz+gnfEMX9yVEQb
-         3ck7sCRT//1vd9Azg0FkDfZ9t+xnUXKPhB7Ud/9tG9/Gkrnr93bWRmsfHYBJNZ/Ckmm/
-         gM+mAYEJY7TNn0u8Uw/b2ul04ikuaSHCWMbKHFAO7dx01WkGuWCBNFvZCp4YJx/PI3oz
-         vWPA==
-X-Forwarded-Encrypted: i=1; AJvYcCUDMDJDj1njdZG9zDzQZZcjJ6Kcitvk2gAQLJehbTsfYV37PBWTEYb6+5Rdb2aya5JPwrtm+4gNRNUrJYE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmcMROmwIAfviLNtwxwxdX6fRSitctTUPkFRWYHMrAcXlMCP7A
-	JivP3iknI/zUJtYqDHa/jOcsgf6BgiKOASCVxLN45u7mx+BFM5Rpo0dY2RvFNU6mRT0=
-X-Gm-Gg: ASbGncuzfs/vvThrW8WHcC8b98j9VvfXJSwM6JoobEho6SlhT+hhquxap4h8ZKnGPnM
-	BQMsW5IoLgTnQIfO9BD51LHBvFdmKjCsWeQ6eXw5+OJFQfKWG6rtdGUrVDFRvn80a4Gs0I8YU4+
-	sWY2k6SJBb+X8iRvOVgZ8EsllX5iBk0C96672IRbzmuzqyvBtvUc7EEt+PNPjS8uUyxOlf3ERbe
-	HNBgocBQslxw+Iew6iYm8z0h495GsFIHhF7UOjk6pJnbaqxeQehAbbTfXpZH/MWs6honyykwlPc
-	BMiRdKn2jMWWhWuPxClm8uP6Y86TukrFWPxcQ7qiW+9JAsD0GrgKnFEg5fZcqkjjiDtNr1IjlAl
-	071PJ3+QNyugnh766Y4UCpXj7QcH5V1SR
-X-Google-Smtp-Source: AGHT+IHbFo4CW/gWO5mfmqvdr8G+K+m/vpRfFZfo55Xt83CarSb1cUQYS0Vzv+Vrkh5sEZMITIneQQ==
-X-Received: by 2002:a17:907:a4e:b0:ae0:635c:a400 with SMTP id a640c23a62f3a-ae35016b435mr1478913866b.51.1751362101509;
-        Tue, 01 Jul 2025 02:28:21 -0700 (PDT)
-Received: from localhost (host-79-23-237-223.retail.telecomitalia.it. [79.23.237.223])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60e2a743d53sm1292386a12.28.2025.07.01.02.28.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 02:28:21 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Tue, 1 Jul 2025 11:30:01 +0200
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: rp1: silence uninitialized variable warning
-Message-ID: <aGOqmd5cvCeBjWMI@apocalypse>
-References: <748d256a-dc9d-4f85-aaa4-d480b7c4fd22@sabinyo.mountain>
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1751362136; x=1782898136;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=jDGoSBlFCIpch8D5WWesNDVa8fVNgGYShrsmZtG4Y84=;
+  b=MQmjxL0QLGRPpcwpKPUmqSx9BXxisDLLDXzv/9d+58MKfmdwHaqGdoyc
+   4wA3yCUHpd4j/Nkkwr5jYVhXRmqXmN8bSvoo32MymMm6Z4U87GpQMMlzX
+   uQqkQvx5HJOhS4emPD0hhsMcBOLWMwXz7WJ7PhwYB+w2zOQYfAI1umQcd
+   vc2P9CjPVoPYjFmMDuYXhoKWzb8v8k6zSDLEOUizfj5J4aPBX1jEOc9B+
+   wUPS53j09FEJ3jfzjyinczr6LUPlPmXU+iIA+ZQbi6aHM5azP8TM3JD1/
+   VDkWV25kGhd9MMHoZm2KvUjLY05Dwq5turY6zrLcZD1iVSI/l7J7ZdbaN
+   g==;
+X-CSE-ConnectionGUID: WiRnyJtIQlKd8eYAiIkgkw==
+X-CSE-MsgGUID: KEvumEGjQeW5ktFmMDa8TQ==
+X-IronPort-AV: E=Sophos;i="6.16,279,1744063200"; 
+   d="scan'208";a="44950481"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 01 Jul 2025 11:28:52 +0200
+X-CheckPoint: {6863AA54-44-468F1319-EAD2FB43}
+X-MAIL-CPID: F252A9CB289518CC4256D487AD399445_0
+X-Control-Analysis: str=0001.0A006398.6863AA84.000E,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 27EA316ADA1;
+	Tue,  1 Jul 2025 11:28:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1751362128;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jDGoSBlFCIpch8D5WWesNDVa8fVNgGYShrsmZtG4Y84=;
+	b=GEm6n63V9oVKKMGrYiNQ87+e3gq75QL7U9Dsu4EUkBLe7AziTzswNqWWP5drp8WY+i6Has
+	osFbvp5LRsU0hRAoxnU5T6U5QNHfGw0wIzBpoBlT2lXrMqrnK3i8zF+kyneY2zEMVn0BOZ
+	I6zLKNdNtnKZrGR603x3cT94pRxYNdCTzQp2HkAztHJzDnkWabZZV9U2Hy04vXVRqHeoSt
+	AvZhuC5NX9X4dJdSt2Pa1QYjxOITrN2OyBTUgMfVfrFjyLd3sh2Ui7SODaWgGgTXUzqW3x
+	oKh3eyePHjmL96j3KQV77xBsEGAntjQtDeDiN8evayfNedMny+/TS9pZmMGcNA==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Abel Vesa <abelvesa@kernel.org>,
+ Frank Li <frank.li@nxp.com>, Peng Fan <peng.fan@nxp.com>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>,
+ Peng Fan <peng.fan@nxp.com>
+Subject:
+ Re: [PATCH 1/5] dt-bindings: clock: Add support for i.MX94 LVDS/DISPLAY CSR
+Date: Tue, 01 Jul 2025 11:28:47 +0200
+Message-ID: <6173943.lOV4Wx5bFT@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <20250701-imx95-blk-ctl-7-1-v1-1-00db23bd8876@nxp.com>
+References:
+ <20250701-imx95-blk-ctl-7-1-v1-0-00db23bd8876@nxp.com>
+ <20250701-imx95-blk-ctl-7-1-v1-1-00db23bd8876@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <748d256a-dc9d-4f85-aaa4-d480b7c4fd22@sabinyo.mountain>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Last-TLS-Session-Version: TLSv1.3
 
-Hi Dan,
+Hi,
 
-On 14:35 Mon 30 Jun     , Dan Carpenter wrote:
-> This default path could probably can't be reached but Smatch can't
-> verify it so it complains that "arg" isn't initialized on this path.
-> 
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+thanks for the patch.
 
-Thanks for your patch!
-
+Am Dienstag, 1. Juli 2025, 09:04:37 CEST schrieb Peng Fan:
+> Add i.MX94 LVDS/DISPLAY CSR compatible string.
+>=20
+> Add clock index for the two CSRs.
+>=20
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 > ---
-> I didn't add a Fixes tag because this likely isn't a real bug.  Plus this
-> code is very new so it doesn't need to be backported anyway.
-> 
-> Also checkpatch complains:
-> 
-> 	WARNING: ENOTSUPP is not a SUSV4 error code, prefer EOPNOTSUPP
-> 
-> But I left it that way so it's consistent with the other return in
-> the function.  Maybe we should change both?
+>  .../devicetree/bindings/clock/nxp,imx95-blk-ctl.yaml        |  2 ++
+>  include/dt-bindings/clock/nxp,imx94-clock.h                 | 13 +++++++=
+++++++
+>  2 files changed, 15 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/clock/nxp,imx95-blk-ctl.ya=
+ml b/Documentation/devicetree/bindings/clock/nxp,imx95-blk-ctl.yaml
+> index d0291bfff23a27cb55683880fe3a1f8b3e2ada5a..4e20e8c8663b3b6665ff91ae6=
+3e1539aa8e9cc9b 100644
+> --- a/Documentation/devicetree/bindings/clock/nxp,imx95-blk-ctl.yaml
+> +++ b/Documentation/devicetree/bindings/clock/nxp,imx95-blk-ctl.yaml
+> @@ -19,6 +19,8 @@ properties:
+>            - nxp,imx95-lvds-csr
+>            - nxp,imx95-netcmix-blk-ctrl
+>            - nxp,imx95-vpu-csr
+> +          - nxp,imx94-display-csr
+> +          - nxp,imx94-lvds-csr
 
-We really can't get rid of that warning by replacing ENOTSUPP with
-EOPNOTSUPP because the core pinctrl code still rely on the 'wrong'
-define, like this excerpt from drivers/pinctrl/pinconf-generic.c:
+Please sort them properly
 
-...
-	if (gname)
-		ret = pin_config_group_get(dev_name(pctldev->dev),
-					   gname, &config);
-	else
-		ret = pin_config_get_for_pin(pctldev, pin, &config);
-	/* These are legal errors */
-	if (ret == -EINVAL || ret == -ENOTSUPP)
-		continue;
-...
+Best regards,
+Alexander
 
-Also, many drivers still rely on ENOTSUPP. Maybe a patch that will
-fix all of them at once (drivers and core code) is in order, I have
-it in my todo list, indeed.
-Besides that,
+>        - const: syscon
+> =20
+>    reg:
+> diff --git a/include/dt-bindings/clock/nxp,imx94-clock.h b/include/dt-bin=
+dings/clock/nxp,imx94-clock.h
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..b47f74f00f119ff1c1e6dad88=
+5b5b1e3b1f248a1
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/nxp,imx94-clock.h
+> @@ -0,0 +1,13 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only OR MIT */
+> +/*
+> + * Copyright 2025 NXP
+> + */
+> +
+> +#ifndef __DT_BINDINGS_CLOCK_IMX94_H
+> +#define __DT_BINDINGS_CLOCK_IMX94_H
+> +
+> +#define IMX94_CLK_DISPMIX_CLK_SEL	0
+> +
+> +#define IMX94_CLK_DISPMIX_LVDS_CLK_GATE	0
+> +
+> +#endif /* __DT_BINDINGS_CLOCK_IMX94_H */
+>=20
+>=20
 
-Reviewed-by: Andrea della Porta <andrea.porta@suse.com>
 
-Many thanks,
-Andrea
+=2D-=20
+TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht M=FCnchen, HRB 105018
+Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
+http://www.tq-group.com/
 
-> 
->  drivers/pinctrl/pinctrl-rp1.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-rp1.c b/drivers/pinctrl/pinctrl-rp1.c
-> index d300f28c52cd..f9cc6b28994c 100644
-> --- a/drivers/pinctrl/pinctrl-rp1.c
-> +++ b/drivers/pinctrl/pinctrl-rp1.c
-> @@ -1524,6 +1524,8 @@ static int rp1_pinconf_get(struct pinctrl_dev *pctldev, unsigned int offset,
->  		case RP1_PAD_DRIVE_12MA:
->  			arg = 12;
->  			break;
-> +		default:
-> +			return -ENOTSUPP;
->  		}
->  		break;
->  	case PIN_CONFIG_BIAS_DISABLE:
-> -- 
-> 2.47.2
-> 
+
