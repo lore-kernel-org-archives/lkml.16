@@ -1,130 +1,218 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E5292701A3;
-	Tue,  1 Jul 2025 10:48:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43A66270EC3;
+	Tue,  1 Jul 2025 10:48:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751366928; cv=none; b=aYBU+hs3ZpUTrzouqeMOZQbRSaJvP3+UyZOO/FDD4kc25oK65tQ1XZuTUhytbqvwqFvl9GPNDsQ3V5MDmIgl2hClL0g8Kf4zjk0NRdwIETIrD3Uk6CUUb3Q1Aliz2+JpfkeOLvOdDksuf78DKb88WUmAbfyFiGxCwF/eL5XMd1M=
+	t=1751366931; cv=none; b=jhzDlMX1M7NQL9fLElgDZMRT8TJhehD1pPmSZkeZYVYzT0rBFB95RAzKZvtIXby7qRqTwHTvy7gFyoP+Qa1inR4g3FEolYvLz8IrAYIzPfOVox3ZxXsWMVw5ovg0XcoOwbActeC2cjiWRGt6oQnH+1Drsie4lR6VdoN7nLcnbrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751366928; c=relaxed/simple;
-	bh=wWnhQlgqRFcsI0tUGKX5OnHqDSBfhTR+33mzJ5nYftg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YlAMzNsr0xeCmzKviUpmWm07oBnyVJ9H6+yKReOa32nYRGo9tmm8/bERzLbf/fYm+86IvqtRX7Tr9uucs3CQLAmeDxxH7t0KSDX7a00Im4oqmfy6ZSb3qUQDR9TUEn/8/V5CS+479baqofmgJgR5Ic/fwq/c2eR9mwqo9Aw+q2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dx1wFUlc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751366931; c=relaxed/simple;
+	bh=xMRqV198FRBCLCeJk89yMS6Zfr6mkLw4sENEFReDij8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AO1zr6iWnM6uWgK+4Bb8RsZZV3zriBCRYYAz9lADgUbj/Kkb0NnhEVLH57ef6tkY6TBUxlrz2XTvx8cnQPo/ijB3yBoMFJ6BY/FkVR+8ImD0Hqx0I04d15Zq8yJ2gsz5d0QLhsmrFFQSP1wZUENsyGrPXtKSIp3N8pTLdPpLV8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=DVzJ/88P; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dx1wFUlc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE3C8C4CEEE;
-	Tue,  1 Jul 2025 10:48:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751366927;
-	bh=wWnhQlgqRFcsI0tUGKX5OnHqDSBfhTR+33mzJ5nYftg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Dx1wFUlcTjJWf4FP2Ou2wYJxA8S76uOKBF1jt1AsAZBPrGET7x31WzXwxFwoOBcIM
-	 gXT1w5mYBcP6EZxbvqDqL7Bd+BrtRXgCEUsZs9xjxjUiM4IT9exa5uPj/NEk1ELY2e
-	 XJzmtoB6rBujheGlJBN40TNeJMv8SuEw2SkvlQzhh56nVrp0Oe2xa8tYhco4k15ZUs
-	 Txq5bjfW1X0GknRhEAQ+mnsoq7EVhSGg801XU/xDV+IfWovIVJXrs5cWJBZ7lslqJ+
-	 cisMRgtkHWYCWja8EGyGz93KrrNdQ3cijt1U2mSsHINZRt9MT8D0669SZY10HLWOV8
-	 IFDLSTKg5Qigw==
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ade5a0442dfso1052437766b.1;
-        Tue, 01 Jul 2025 03:48:47 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVzNkida2W9p8+c/Jlu5496gR5fAAXIKU2oURTROnibPEp3buu9nFVIK6t1BNPNa6KDRU4=@vger.kernel.org, AJvYcCW2QUhwkKPpDaEpKKXL/fLNHwdPysLB1pSEf3GDmv2C6HX3F5OvW/opw4nhJG15H9vyFWQN87FWQeR9S7Km@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKyK2baVDNNebA+TsTtJv9RP0akHi0VWW5C9FVLSr7PsqbVNRk
-	wUBfp7/fu672mlryr+EYnONHGd8NR+HjVIHrPUbfOoBp7RTvz7H2vhfo9wzOo3KeHnJkicXyMPC
-	qTsD58CivvYwPoSsjnEqMqCot3/YTvM0=
-X-Google-Smtp-Source: AGHT+IGqvzLgOVq+bSq8v3Ag9CnbkMRooSZl3rhSTQn7AarVuHFnGXtfWWpqlu2upcK8/sObIC8F7yz1RluBs0yBhAM=
-X-Received: by 2002:a17:907:e2e0:b0:ae0:cf28:6ec2 with SMTP id
- a640c23a62f3a-ae350220e87mr1484731566b.61.1751366926309; Tue, 01 Jul 2025
- 03:48:46 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="DVzJ/88P"
+Received: from namjain-Virtual-Machine.mshome.net (unknown [4.213.232.43])
+	by linux.microsoft.com (Postfix) with ESMTPSA id F1E2D206787D;
+	Tue,  1 Jul 2025 03:48:46 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com F1E2D206787D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1751366929;
+	bh=1mZwCYjK5KwlkUcBLP6Sb3wXHC217d46BhcC97NsTXs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=DVzJ/88P/VW6hE+NTmuM8z2kHscNZ+/l9LHR4gkTzHa+E5A+QITUHII1wy/ZIayoV
+	 ZNquvoN+t/0RedP53J0EBxHnxy1IaDsqqVZCu+t234pxAn+aKOTiGQcI2YK8+Z6RLZ
+	 p+Iskj/7d1Z574Ql4Ei/vtmaNBdgjA8K92sEY6d8=
+From: Naman Jain <namjain@linux.microsoft.com>
+To: "K . Y . Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>,
+	Michael Kelley <mhklinux@outlook.com>
+Cc: linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Olaf Hering <olaf@aepfle.de>,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Naman Jain <namjain@linux.microsoft.com>
+Subject: [PATCH v2] tools/hv: fcopy: Fix irregularities with size of ring buffer
+Date: Tue,  1 Jul 2025 16:18:37 +0530
+Message-Id: <20250701104837.3006-1-namjain@linux.microsoft.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250701030842.1136519-1-maobibo@loongson.cn>
-In-Reply-To: <20250701030842.1136519-1-maobibo@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 1 Jul 2025 18:48:34 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6pt74LDg0idJ=71RG9MDh2KkMxE-Fao-qCFexyd8fz4A@mail.gmail.com>
-X-Gm-Features: Ac12FXwGe-7mJS1-ZNuGmocQDey2sv7QUJ9UE-dTxWIsbFOiEKHfnUk7exY7_io
-Message-ID: <CAAhV-H6pt74LDg0idJ=71RG9MDh2KkMxE-Fao-qCFexyd8fz4A@mail.gmail.com>
-Subject: Re: [PATCH v5 00/13] LoongArch: KVM: Enhancement with eiointc emulation
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi, Bibo,
+Size of ring buffer, as defined in uio_hv_generic driver, is no longer
+fixed to 16 KB. This creates a problem in fcopy, since this size was
+hardcoded. With the change in place to make ring sysfs node actually
+reflect the size of underlying ring buffer, it is safe to get the size
+of ring sysfs file and use it for ring buffer size in fcopy daemon.
+Fix the issue of disparity in ring buffer size, by making it dynamic
+in fcopy uio daemon.
 
-On Tue, Jul 1, 2025 at 11:08=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrot=
-e:
->
-> This series add generic eiointc 8 bytes access interface, so that 1/2/4/8
-> bytes access can use the generic 8 bytes access interface. It reduce
-> about 300 lines redundant code and make eiointc emulation driver simple
-> than ever.
->
-> ---
-> v4 ... v5
->   1. Rebase patch on latest kernel where bugfix of eiointc has been
->      merged.
->   2. Add generic eiointc 8 bytes access interface, 1/2/4/8 bytes access
->      uses generic 8 bytes access interface.
->
-> v3 ... v4:
->   1. Remove patch about enhancement and only keep bugfix relative
->      patches.
->   2. Remove INTC indication in the patch title.
->   3. With access size, keep default case unchanged besides 1/2/4/8 since
->      here all patches are bugfix
->   4. Firstly check return value of copy_from_user() with error path,
->      keep the same order with old patch in patch 4.
->
-> v2 ... v3:
->   1. Add prefix INTC: in title of every patch.
->   2. Fix array index overflow when emulate register EIOINTC_ENABLE
->      writing operation.
->   3. Add address alignment check with eiointc register access operation.
->
-> v1 ... v2:
->   1. Add extra fix in patch 3 and patch 4, add num_cpu validation check
->   2. Name of stat information keeps unchanged, only move it from VM stat
->      to vCPU stat.
-> ---
-> Bibo Mao (13):
->   LoongArch: KVM: Use standard bitops API with eiointc
->   LoongArch: KVM: Remove unused parameter len
->   LoongArch: KVM: Add stat information with kernel irqchip
->   LoongArch: KVM: Remove never called default case statement
->   LoongArch: KVM: Rename loongarch_eiointc_readq with
->     loongarch_eiointc_read
->   LoongArch: KVM: Use generic read function loongarch_eiointc_read
->   LoongArch: KVM: Remove some unnecessary local variables
->   LoongArch: KVM: Use concise api __ffs()
->   LoongArch: KVM: Replace eiointc_enable_irq() with eiointc_update_irq()
->   LoongArch: KVM: Remove local variable offset
->   LoongArch: KVM: Rename old_data with old
->   LoongArch: KVM: Add generic function loongarch_eiointc_write()
->   LoongArch: KVM: Use generic interface loongarch_eiointc_write()
-Patch5 and Patch6 can be squashed, Patch7 and Patch10 can be squashed,
-Patch8 and Patch9 can be squshed, Patch12 and Patch13 can be squashed,
-Patch11 is useless so can be removed.
+Cc: stable@vger.kernel.org
+Fixes: 0315fef2aff9 ("uio_hv_generic: Align ring size to system page")
+Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+---
+Changes since v1:
+https://lore.kernel.org/all/20250620070618.3097-1-namjain@linux.microsoft.com/
 
+* Removed unnecessary type casting in malloc for desc variable (Olaf)
+* Added retry mechanisms to avoid potential race conditions (Michael)
+* Moved the logic to fetch ring size to a later part in main (Michael)
 
-Huacai
+So Michael, you suggested me to move the above logic after the
+/dev/uio<N> entry is successfully opened. But there is some issue
+with uio_hv_generic changing interrupt mask, resulting in fcopy daemon
+to get stuck in pread forever. Since fcopy is broken as of now, I
+thought it is better to take it separately, and let this change go.
+Please let me know if you are fine with that.
+---
+ tools/hv/hv_fcopy_uio_daemon.c | 82 +++++++++++++++++++++++++++++++---
+ 1 file changed, 75 insertions(+), 7 deletions(-)
 
->
->  arch/loongarch/include/asm/kvm_host.h |  12 +-
->  arch/loongarch/kvm/intc/eiointc.c     | 557 ++++----------------------
->  arch/loongarch/kvm/intc/ipi.c         |  28 +-
->  arch/loongarch/kvm/intc/pch_pic.c     |   4 +-
->  arch/loongarch/kvm/vcpu.c             |   8 +-
->  5 files changed, 102 insertions(+), 507 deletions(-)
->
->
-> base-commit: d0b3b7b22dfa1f4b515fd3a295b3fd958f9e81af
-> --
-> 2.39.3
->
+diff --git a/tools/hv/hv_fcopy_uio_daemon.c b/tools/hv/hv_fcopy_uio_daemon.c
+index 0198321d14a2..f2e4976ebf28 100644
+--- a/tools/hv/hv_fcopy_uio_daemon.c
++++ b/tools/hv/hv_fcopy_uio_daemon.c
+@@ -36,6 +36,7 @@
+ #define WIN8_SRV_VERSION	(WIN8_SRV_MAJOR << 16 | WIN8_SRV_MINOR)
+ 
+ #define FCOPY_UIO		"/sys/bus/vmbus/devices/eb765408-105f-49b6-b4aa-c123b64d17d4/uio"
++#define FCOPY_CHANNELS_PATH	"/sys/bus/vmbus/devices/eb765408-105f-49b6-b4aa-c123b64d17d4/channels"
+ 
+ #define FCOPY_VER_COUNT		1
+ static const int fcopy_versions[] = {
+@@ -47,9 +48,67 @@ static const int fw_versions[] = {
+ 	UTIL_FW_VERSION
+ };
+ 
+-#define HV_RING_SIZE		0x4000 /* 16KB ring buffer size */
++#define HV_RING_SIZE_DEFAULT	0x4000 /* 16KB ring buffer size default */
+ 
+-static unsigned char desc[HV_RING_SIZE];
++static uint32_t get_ring_buffer_size(void)
++{
++	char ring_path[PATH_MAX];
++	DIR *dir;
++	struct dirent *entry;
++	struct stat st;
++	uint32_t ring_size = 0;
++	int retry_count = 0;
++
++	/* Find the channel directory */
++	dir = opendir(FCOPY_CHANNELS_PATH);
++	if (!dir) {
++		usleep(100 * 1000); /* Avoid race with kernel, wait 100ms and retry once */
++		dir = opendir(FCOPY_CHANNELS_PATH);
++		if (!dir) {
++			syslog(LOG_ERR, "Failed to open channels directory: %s", strerror(errno));
++			return HV_RING_SIZE_DEFAULT;
++		}
++	}
++
++retry_once:
++	while ((entry = readdir(dir)) != NULL) {
++		if (entry->d_type == DT_DIR && strcmp(entry->d_name, ".") != 0 &&
++		    strcmp(entry->d_name, "..") != 0) {
++			snprintf(ring_path, sizeof(ring_path), "%s/%s/ring",
++				 FCOPY_CHANNELS_PATH, entry->d_name);
++
++			if (stat(ring_path, &st) == 0) {
++				/*
++				 * stat returns size of Tx, Rx rings combined,
++				 * so take half of it for individual ring size.
++				 */
++				ring_size = (uint32_t)st.st_size / 2;
++				syslog(LOG_INFO, "Ring buffer size from %s: %u bytes",
++				       ring_path, ring_size);
++				break;
++			}
++		}
++	}
++
++	if (!ring_size && retry_count == 0) {
++		retry_count = 1;
++		rewinddir(dir);
++		usleep(100 * 1000); /* Wait 100ms and retry once */
++		goto retry_once;
++	}
++
++	closedir(dir);
++
++	if (!ring_size) {
++		ring_size = HV_RING_SIZE_DEFAULT;
++		syslog(LOG_ERR, "Could not determine ring size, using default: %u bytes",
++		       HV_RING_SIZE_DEFAULT);
++	}
++
++	return ring_size;
++}
++
++static unsigned char *desc;
+ 
+ static int target_fd;
+ static char target_fname[PATH_MAX];
+@@ -406,7 +465,7 @@ int main(int argc, char *argv[])
+ 	int daemonize = 1, long_index = 0, opt, ret = -EINVAL;
+ 	struct vmbus_br txbr, rxbr;
+ 	void *ring;
+-	uint32_t len = HV_RING_SIZE;
++	uint32_t ring_size, len;
+ 	char uio_name[NAME_MAX] = {0};
+ 	char uio_dev_path[PATH_MAX] = {0};
+ 
+@@ -437,6 +496,15 @@ int main(int argc, char *argv[])
+ 	openlog("HV_UIO_FCOPY", 0, LOG_USER);
+ 	syslog(LOG_INFO, "starting; pid is:%d", getpid());
+ 
++	ring_size = get_ring_buffer_size();
++	len = ring_size;
++	desc = malloc(ring_size * sizeof(unsigned char));
++	if (!desc) {
++		syslog(LOG_ERR, "malloc failed for desc buffer");
++		ret = -ENOMEM;
++		goto exit;
++	}
++
+ 	fcopy_get_first_folder(FCOPY_UIO, uio_name);
+ 	snprintf(uio_dev_path, sizeof(uio_dev_path), "/dev/%s", uio_name);
+ 	fcopy_fd = open(uio_dev_path, O_RDWR);
+@@ -448,14 +516,14 @@ int main(int argc, char *argv[])
+ 		goto exit;
+ 	}
+ 
+-	ring = vmbus_uio_map(&fcopy_fd, HV_RING_SIZE);
++	ring = vmbus_uio_map(&fcopy_fd, ring_size);
+ 	if (!ring) {
+ 		ret = errno;
+ 		syslog(LOG_ERR, "mmap ringbuffer failed; error: %d %s", ret, strerror(ret));
+ 		goto close;
+ 	}
+-	vmbus_br_setup(&txbr, ring, HV_RING_SIZE);
+-	vmbus_br_setup(&rxbr, (char *)ring + HV_RING_SIZE, HV_RING_SIZE);
++	vmbus_br_setup(&txbr, ring, ring_size);
++	vmbus_br_setup(&rxbr, (char *)ring + ring_size, ring_size);
+ 
+ 	rxbr.vbr->imask = 0;
+ 
+@@ -472,7 +540,7 @@ int main(int argc, char *argv[])
+ 			goto close;
+ 		}
+ 
+-		len = HV_RING_SIZE;
++		len = ring_size;
+ 		ret = rte_vmbus_chan_recv_raw(&rxbr, desc, &len);
+ 		if (unlikely(ret <= 0)) {
+ 			/* This indicates a failure to communicate (or worse) */
+
+base-commit: 1343433ed38923a21425c602e92120a1f1db5f7a
+-- 
+2.34.1
+
