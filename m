@@ -1,262 +1,202 @@
-Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1653827CCE7
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 16:33:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978C01AA1DB;
+	Tue,  1 Jul 2025 16:35:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751387585; cv=none; b=EftNxmCjdRUYAewSRnVzPzh2Cp2l+FVgHSliNF95lOWUYZlL+TLEwGJMy50Q2uivltkF1uMeONhXmusj1/394hyxgV1LA/iMHfwifp6BEoOxf97my1DVBHdMrPKu7WbBFR/4xHSKHM8T9yrDdwX4j95O4HM5QfnfeWFNwnUNsBI=
+	t=1751387722; cv=none; b=DJzN6k+LI95djQQ4F3N2rAu2Bt5IEnR2TE5CyYnABVAswPynN6SKZl+CBdeRci//C3Lo8DFV8NDLd5xxjxkieH2j0JR6ONiA93HapyYRdHQCYKKeBfwWpfCDehokaldZu18czYbL5/HzG3+8rBm10yWlIs2SGLeZncNvv2I2Lvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751387585; c=relaxed/simple;
-	bh=cYcTvErTdUiGz4HGSo3g3lV+5DJH+CuVIJXqNpULwPg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CxeZfY4M9UncEllDMPqNV+TKC5/9XeT39PF0j3BhlJ1YZsF557DFmkxUieOQbi75V2ug6SOxyXhskc/XvdHVunviRc3aSsRl5JoQ+O7IhSP0SW182e+WeIkDtEmH7p5ZMBA8L/F4v4+OB55e19THpvBDZhEuzPLDjU4nPmBym6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Ju+xTz/G; arc=none smtp.client-ip=95.215.58.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751387722; c=relaxed/simple;
+	bh=4hsshI57Z9C4/sYvwAkYfdFuTtX1WltnX6JifWIWylc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ANiwWN2OUZrNkO7Nk+IpSG9C8qwVcG1tat3tj2Sk3wVf3DzUZOk8AXWZ/NmPNg5ErMmuWhCnUfRMMpZuFr8TlebN6zEhux3snde8SlixjHBui8lZu0fB/sAsNjJUHcZXDrwrvGs1Lq22ly2b/HiZv8a/SI6r/63x4ERRxDWcfoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RqU07gre; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ju+xTz/G"
-Message-ID: <7752e805-0a06-46ed-b4ac-a51081a73f78@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751387579;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j04zcoZXlPQ2qOZxAyDtyKIp/7+XM+QSiGk1gGR0QUc=;
-	b=Ju+xTz/G5fb+wlJYkXEWRGHEdx3g5TOUDlmIH2PwBRPG4cQMJTl6eX/sqDpUGXVxFEkgBC
-	Bla3HiZYfX21Sl+v4RhprTORRrTEgRIOJeeN9eDj8TlE8KEfZY5IpB5Vur9C7ZVPT6PXw8
-	ToHrkIH3HW+qSrP4qbfirHzI3OBhGSE=
-Date: Tue, 1 Jul 2025 12:32:51 -0400
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RqU07gre"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6fb0eb0f0fbso62985086d6.1;
+        Tue, 01 Jul 2025 09:35:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751387719; x=1751992519; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z5+0hrUrWdaTQSD5NTP041Iw08AxAQ4FPS5CuAQJAhY=;
+        b=RqU07greEN/iJULK0HB9fLamt3RmNd/uttNr2cBIL3PeCAyMWhbw2JS9mGlDatOFwN
+         VdMvuIBwdb3VzBVhqRI3i75zO+HjHQsKpXAmB8l2lvXIuZwnqRsQIsTdF2TGEzFZFO4p
+         bhfnDVQLhbebJw0SxqwTqJEN8FX9m43mAQytg4ctr+hXOYmnk8p0XZNz747PxDYUuoMm
+         KjkaNm/m3zPQyj12jifLjyLx0u1e37KCT5qCxsMJx0/9AT7F96xQk/kBlkUrQz54KE4t
+         ZoYOvEaXuUjOwR9yzMmnsDlix25OWwriTYWwmMd7Ze12RTeahMAvdQ1S0sV2hYAjJA8b
+         nPIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751387719; x=1751992519;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Z5+0hrUrWdaTQSD5NTP041Iw08AxAQ4FPS5CuAQJAhY=;
+        b=arnper7/u0rkDZEAYY9gHoKqA78HsiWTwyadIusCnn9Qr31L5UQDntlUiSu4h3eHzT
+         LK/ePsDYz8O2WQ8ikI2Lf80sWq0dqOaYmhMiBanqOQA95UFKwuTcuPinLgw+IdoXY1QR
+         tGZdF1PWqoEkRN3Pc/7HFisNWSRXrZRk1E8o/+lIZ0z5mjjQeiENo03Zt8VQIt9xieGL
+         PlZSH/DcPe309hH/UpAMHBWLxNubl9X/+//vRPFYPB1/gVsKB4ZkuUztLEiJJPFvhQRL
+         kkheX9OBoASbxqRr+KJdOGJk1fE1q4cYj/NpVGwSUaZndQUQtW60Ruq8oudww15DHaAw
+         tkow==
+X-Forwarded-Encrypted: i=1; AJvYcCU7qMHiTRRKUthiSiuf1Uoute2bYi4o/OSliNUa7pmQ0Jb6dXu7ThPegAoXIWf+WqyJCrMXD5E4066bim+sZsc=@vger.kernel.org, AJvYcCVZahPpQtCmPuYu5vmchX3PEJFvcS/6XnWAlkMq6aCi8npclTBDYT+AL7tLfjhY+fktquW9UM9tTp49+ym2@vger.kernel.org, AJvYcCXtLYE7usbVXETv9RNu+HBQ0wHM4iHn3MXS0CV4Z8TJp2wegcOnlE8xFq0bRe/WoNAY3dhiVm4fL3wjBm37@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjqWShLfzVZSAmz5pA3nNiPyJi33JCg+qJJ3y+OAZPT/2b4Kdg
+	ZCcwJ018whtyrl4CiP4A+mi+O5KtDXzRySGJzSTXuxYoZ+fMQDsF+TnG
+X-Gm-Gg: ASbGnctKXhbJue5fdvWgs6cJWqD6ioiRpsIFDJCKE4FFu9T+/la7YSM/NERfCHDVBMl
+	fn78pgdfTPcnK/3sb7Sx2OgR6mbWSQYCBRouFZHX0afYd7DnnV/v5/xFnHUI1S8DfYgh9w5cVrQ
+	eeSuNdulSHsUnOf8GF6pdZNIxMzFGUhmwYjZwB6ZUewq2KPswMUmSU+dKgXxPLOtfSRpMMd+YXw
+	TGHMrCe5Tnds9VwE/j0uNYQ8RSkTnCrz8S325JcLA/UYrkqUZX5xRodQnbYmg3O9pdq5RVQEzVa
+	GTeTwgsPOzqZK+Ai543VMphf16aTlnxMzmn/vhuZp2/OoDZ+VjYPUKbU14cYEBMadGHOUKAogB9
+	I4VmzFXoD7Udgayjw/MhAGeNYERMRSyVP35c9mS2RZ/UjxR0XbTXbE5+JTbL4GoA=
+X-Google-Smtp-Source: AGHT+IHPuVm5X6/V6Y6ozrMdjj8rGAidZSiuaMJIbUTy0MxSjjYB4uoxLPCKT2h7nQTZaSV7v4ivTg==
+X-Received: by 2002:a05:6214:4003:b0:6fa:a5f6:ffce with SMTP id 6a1803df08f44-7010a9c4834mr67949186d6.19.1751387719283;
+        Tue, 01 Jul 2025 09:35:19 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd773151dbsm86553886d6.115.2025.07.01.09.35.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 09:35:18 -0700 (PDT)
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 33D02F40066;
+	Tue,  1 Jul 2025 12:35:18 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-05.internal (MEProxy); Tue, 01 Jul 2025 12:35:18 -0400
+X-ME-Sender: <xms:Rg5kaO2_yW7MpV1A9zjpBZO7mmcU7Mrllmke9WfuNPLKrVVmRWU7DQ>
+    <xme:Rg5kaBHCxyrMeFS1JShTQ5RAIdT3-v35kv7sfFr3fCTZbWYszA6y8N5EFmIgkknNd
+    Uc_6QbCGzMeWlberw>
+X-ME-Received: <xmr:Rg5kaG4_dUyxJsBa50ercYT3IYMIgLtiwQWR1bw91EWohV85DDkjxVfuQQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduhedtvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhnucfh
+    vghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvg
+    hrnhephedugfduffffteeutddvheeuveelvdfhleelieevtdeguefhgeeuveeiudffiedv
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqh
+    hunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddu
+    jeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvg
+    drnhgrmhgvpdhnsggprhgtphhtthhopedukedpmhhouggvpehsmhhtphhouhhtpdhrtghp
+    thhtohepthgrmhhirhgusehgmhgrihhlrdgtohhmpdhrtghpthhtoheprgdrhhhinhgusg
+    horhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehojhgvuggrsehkvghrnhgvlhdr
+    ohhrghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhmpdhrtg
+    hpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthhtohepsghjohhrnhef
+    pghghhesphhrohhtohhnmhgrihhlrdgtohhmpdhrtghpthhtoheplhhoshhsihhnsehkvg
+    hrnhgvlhdrohhrghdprhgtphhtthhopegrlhhitggvrhihhhhlsehgohhoghhlvgdrtgho
+    mhdprhgtphhtthhopehtmhhgrhhoshhssehumhhitghhrdgvughu
+X-ME-Proxy: <xmx:Rg5kaP1BNAfvhS696e5mAtZ9SW-AsKrQhObKKjqW0odq5Dphb3bxYQ>
+    <xmx:Rg5kaBErCXx0yLCro1mqntOmPXgZXOTafBAonT3NYnu6jW3U3agelA>
+    <xmx:Rg5kaI84K_9F2c3aba6s1VsFFCYR5xQ7FiSXmh_ij8GB3HRJldPfPg>
+    <xmx:Rg5kaGkgqRLeHYWrLbiNYVaOggUO_YYKWE7CdwCIeUImlkROHCcT1A>
+    <xmx:Rg5kaJHvndzRnF7fcqkxs3_AMbjQGlAGHKTegbbuDi1Qd-6rYRV29vBh>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 1 Jul 2025 12:35:17 -0400 (EDT)
+Date: Tue, 1 Jul 2025 09:35:16 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Andreas Hindborg <a.hindborg@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	Daniel Almeida <daniel.almeida@collabora.com>
+Subject: Re: [PATCH 1/3] rust: xarray: use the prelude
+Message-ID: <aGQORK02N8jMOhy6@Mac.home>
+References: <20250701-xarray-insert-reserve-v1-0-25df2b0d706a@gmail.com>
+ <20250701-xarray-insert-reserve-v1-1-25df2b0d706a@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH net-next v2 11/18] net: macb: single dma_alloc_coherent()
- for DMA descriptors
-To: =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Samuel Holland <samuel.holland@sifive.com>,
- Richard Cochran <richardcochran@gmail.com>,
- Russell King <linux@armlinux.org.uk>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
- Gregory CLEMENT <gregory.clement@bootlin.com>,
- Cyrille Pitchen <cyrille.pitchen@atmel.com>,
- Harini Katakam <harini.katakam@xilinx.com>,
- Rafal Ozieblo <rafalo@cadence.com>,
- Haavard Skinnemoen <hskinnemoen@atmel.com>, Jeff Garzik <jeff@garzik.org>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-mips@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- Tawfik Bayouk <tawfik.bayouk@mobileye.com>
-References: <20250627-macb-v2-0-ff8207d0bb77@bootlin.com>
- <20250627-macb-v2-11-ff8207d0bb77@bootlin.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <20250627-macb-v2-11-ff8207d0bb77@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250701-xarray-insert-reserve-v1-1-25df2b0d706a@gmail.com>
 
-On 6/27/25 05:08, Théo Lebrun wrote:
-> Move from two (Tx/Rx) dma_alloc_coherent() for DMA descriptor rings *per
-> queue* to two dma_alloc_coherent() overall.
+On Tue, Jul 01, 2025 at 12:27:17PM -0400, Tamir Duberstein wrote:
+> Using the prelude is customary in the kernel crate.
 > 
-> Issue is with how all queues share the same register for configuring the
-> upper 32-bits of Tx/Rx descriptor rings. For example, with Tx, notice
-> how TBQPH does *not* depend on the queue index:
-> 
-> 	#define GEM_TBQP(hw_q)		(0x0440 + ((hw_q) << 2))
-> 	#define GEM_TBQPH(hw_q)		(0x04C8)
-> 
-> 	queue_writel(queue, TBQP, lower_32_bits(queue->tx_ring_dma));
-> 	#ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
-> 	if (bp->hw_dma_cap & HW_DMA_CAP_64B)
-> 		queue_writel(queue, TBQPH, upper_32_bits(queue->tx_ring_dma));
-> 	#endif
-> 
-> To maxime our chances of getting valid DMA addresses, we do a single
-
-maximize
-
-> dma_alloc_coherent() across queues.
-
-Is there really any chance involved (other than avoiding ENOMEM)?
-
-> This improves the odds because
-> alloc_pages() guarantees natural alignment. It cannot ensure valid DMA
-> addresses because of IOMMU or codepaths that don't go through
-> alloc_pages().
-> 
-> We error out if all rings don't have the same upper 32 bits, which is
-> better than the current (theoretical, not reproduced) silent corruption
-> caused by hardware that accesses invalid addresses.
-
-I think this is addressed by the previous patch.
-
-> Two considerations:
->  - dma_alloc_coherent() gives us page alignment. Here we remove this
->    containst meaning each queue's ring won't be page-aligned anymore.
-
-constraint
-
->  - This can save some memory. Less allocations means less overhead
-
-fewer
-
->    (constant cost per alloc) and less wasted bytes due to alignment
->    constraints.
-
-I think it's probably a bit of a wash with reasonably-sized rings.
-Although the prefetch probably interacts poorly with the default "round"
-power-of-two ring sizes.
-
-> Fixes: 02c958dd3446 ("net/macb: add TX multiqueue support for gem")
-> Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 > ---
->  drivers/net/ethernet/cadence/macb_main.c | 83 ++++++++++++++++++--------------
->  1 file changed, 46 insertions(+), 37 deletions(-)
+>  rust/kernel/xarray.rs | 34 ++++++++++++++++++++--------------
+>  1 file changed, 20 insertions(+), 14 deletions(-)
 > 
-> diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-> index d3b3635998cad095246edf8a75faebbcf7115355..48b75d95861317b9925b366446c7572c7e186628 100644
-> --- a/drivers/net/ethernet/cadence/macb_main.c
-> +++ b/drivers/net/ethernet/cadence/macb_main.c
-> @@ -2445,33 +2445,32 @@ static void macb_free_rx_buffers(struct macb *bp)
+> diff --git a/rust/kernel/xarray.rs b/rust/kernel/xarray.rs
+> index 75719e7bb491..436faad99c89 100644
+> --- a/rust/kernel/xarray.rs
+> +++ b/rust/kernel/xarray.rs
+> @@ -5,16 +5,15 @@
+>  //! C header: [`include/linux/xarray.h`](srctree/include/linux/xarray.h)
 >  
->  static void macb_free_consistent(struct macb *bp)
->  {
-> -	struct macb_queue *queue;
-> +	size_t size, tx_size_per_queue, rx_size_per_queue;
-> +	struct macb_queue *queue, *queue0 = bp->queues;
-> +	struct device *dev = &bp->pdev->dev;
->  	unsigned int q;
-> -	int size;
+>  use crate::{
+> -    alloc, bindings, build_assert,
+> -    error::{Error, Result},
+> +    alloc,
+> +    prelude::*,
+>      types::{ForeignOwnable, NotThreadSafe, Opaque},
+>  };
+> -use core::{iter, marker::PhantomData, mem, pin::Pin, ptr::NonNull};
+> -use pin_init::{pin_data, pin_init, pinned_drop, PinInit};
+> +use core::{iter, marker::PhantomData, mem, ptr::NonNull};
 >  
->  	if (bp->rx_ring_tieoff) {
-> -		dma_free_coherent(&bp->pdev->dev, macb_dma_desc_get_size(bp),
-> +		dma_free_coherent(dev, macb_dma_desc_get_size(bp),
->  				  bp->rx_ring_tieoff, bp->rx_ring_tieoff_dma);
->  		bp->rx_ring_tieoff = NULL;
->  	}
+>  /// An array which efficiently maps sparse integer indices to owned objects.
+>  ///
+> -/// This is similar to a [`crate::alloc::kvec::Vec<Option<T>>`], but more efficient when there are
+> +/// This is similar to a [`Vec<Option<T>>`], but more efficient when there are
+>  /// holes in the index space, and can be efficiently grown.
+>  ///
+>  /// # Invariants
+> @@ -104,16 +103,23 @@ pub fn new(kind: AllocKind) -> impl PinInit<Self> {
+>      fn iter(&self) -> impl Iterator<Item = NonNull<T::PointedTo>> + '_ {
+>          let mut index = 0;
 >  
->  	bp->macbgem_ops.mog_free_rx_buffers(bp);
->  
-> +	tx_size_per_queue = TX_RING_BYTES(bp) + bp->tx_bd_rd_prefetch;
-> +	size = bp->num_queues * tx_size_per_queue;
+> -        // SAFETY: `self.xa` is always valid by the type invariant.
+> -        iter::once(unsafe {
+> -            bindings::xa_find(self.xa.get(), &mut index, usize::MAX, bindings::XA_PRESENT)
+> -        })
+> -        .chain(iter::from_fn(move || {
+> +        core::iter::Iterator::chain(
 
-Can you refactor the size calculation into a helper function?
+Does this part come from using the prelude? If not, either we need to
+split the patch or we need to mention it in the changelog at least.
 
-> +	dma_free_coherent(dev, size, queue0->tx_ring, queue0->tx_ring_dma);
-> +
-> +	rx_size_per_queue = RX_RING_BYTES(bp) + bp->rx_bd_rd_prefetch;
-> +	size = bp->num_queues * rx_size_per_queue;
-> +	dma_free_coherent(dev, size, queue0->rx_ring, queue0->rx_ring_dma);
-> +
->  	for (q = 0, queue = bp->queues; q < bp->num_queues; ++q, ++queue) {
->  		kfree(queue->tx_skb);
->  		queue->tx_skb = NULL;
-> -		if (queue->tx_ring) {
-> -			size = TX_RING_BYTES(bp) + bp->tx_bd_rd_prefetch;
-> -			dma_free_coherent(&bp->pdev->dev, size,
-> -					  queue->tx_ring, queue->tx_ring_dma);
-> -			queue->tx_ring = NULL;
-> -		}
-> -		if (queue->rx_ring) {
-> -			size = RX_RING_BYTES(bp) + bp->rx_bd_rd_prefetch;
-> -			dma_free_coherent(&bp->pdev->dev, size,
-> -					  queue->rx_ring, queue->rx_ring_dma);
-> -			queue->rx_ring = NULL;
-> -		}
-> +		queue->tx_ring = NULL; /* Single buffer owned by queue0 */
-> +		queue->rx_ring = NULL; /* Single buffer owned by queue0 */
+Also since we `use core::iter` above, we can avoid the `core::` here.
 
-OK, but queue0 doesn't own the ring either at this point (it's free'd).
+Regards,
+Boqun
 
->  	}
->  }
+>              // SAFETY: `self.xa` is always valid by the type invariant.
+> -            Some(unsafe {
+> -                bindings::xa_find_after(self.xa.get(), &mut index, usize::MAX, bindings::XA_PRESENT)
+> -            })
+> -        }))
+> +            iter::once(unsafe {
+> +                bindings::xa_find(self.xa.get(), &mut index, usize::MAX, bindings::XA_PRESENT)
+> +            }),
+> +            iter::from_fn(move || {
+> +                // SAFETY: `self.xa` is always valid by the type invariant.
+> +                Some(unsafe {
+> +                    bindings::xa_find_after(
+> +                        self.xa.get(),
+> +                        &mut index,
+> +                        usize::MAX,
+> +                        bindings::XA_PRESENT,
+> +                    )
+> +                })
+> +            }),
+> +        )
+>          .map_while(|ptr| NonNull::new(ptr.cast()))
+>      }
 >  
-> @@ -2513,37 +2512,47 @@ static int macb_alloc_rx_buffers(struct macb *bp)
->  
->  static int macb_alloc_consistent(struct macb *bp)
->  {
-> +	size_t size, tx_size_per_queue, rx_size_per_queue;
-> +	dma_addr_t tx_dma, rx_dma;
-> +	struct device *dev = &bp->pdev->dev;
->  	struct macb_queue *queue;
->  	unsigned int q;
-> -	int size;
-> +	void *tx, *rx;
-> +
-> +	/*
-> +	 * Upper 32-bits of Tx/Rx DMA descriptor for each queues much match!
-> +	 * We cannot enforce this guarantee, the best we can do is do a single
-> +	 * allocation and hope it will land into alloc_pages() that guarantees
-> +	 * natural alignment of physical addresses.
-> +	 */
-> +
-> +	tx_size_per_queue = TX_RING_BYTES(bp) + bp->tx_bd_rd_prefetch;
-> +	size = bp->num_queues * tx_size_per_queue;
-> +	tx = dma_alloc_coherent(dev, size, &tx_dma, GFP_KERNEL);
-> +	if (!tx || upper_32_bits(tx_dma) != upper_32_bits(tx_dma + size - 1))
-> +		goto out_err;
-> +	netdev_dbg(bp->dev, "Allocated %zu bytes for %u TX rings at %08lx (mapped %p)\n",
-> +		   size, bp->num_queues, (unsigned long)tx_dma, tx);
-> +
-> +	rx_size_per_queue = RX_RING_BYTES(bp) + bp->rx_bd_rd_prefetch;
-> +	size = bp->num_queues * rx_size_per_queue;
-> +	rx = dma_alloc_coherent(dev, size, &rx_dma, GFP_KERNEL);
-> +	if (!rx || upper_32_bits(rx_dma) != upper_32_bits(rx_dma + size - 1))
-> +		goto out_err;
-> +	netdev_dbg(bp->dev, "Allocated %zu bytes for %u RX rings at %08lx (mapped %p)\n",
-> +		   size, bp->num_queues, (unsigned long)rx_dma, rx);
->  
->  	for (q = 0, queue = bp->queues; q < bp->num_queues; ++q, ++queue) {
-> -		size = TX_RING_BYTES(bp) + bp->tx_bd_rd_prefetch;
-> -		queue->tx_ring = dma_alloc_coherent(&bp->pdev->dev, size,
-> -						    &queue->tx_ring_dma,
-> -						    GFP_KERNEL);
-> -		if (!queue->tx_ring ||
-> -		    upper_32_bits(queue->tx_ring_dma) != upper_32_bits(bp->queues->tx_ring_dma))
-> -			goto out_err;
-> -		netdev_dbg(bp->dev,
-> -			   "Allocated TX ring for queue %u of %d bytes at %08lx (mapped %p)\n",
-> -			   q, size, (unsigned long)queue->tx_ring_dma,
-> -			   queue->tx_ring);
-> +		queue->tx_ring = tx + tx_size_per_queue * q;
-> +		queue->tx_ring_dma = tx_dma + tx_size_per_queue * q;
-> +
-> +		queue->rx_ring = rx + rx_size_per_queue * q;
-> +		queue->rx_ring_dma = rx_dma + rx_size_per_queue * q;
->  
->  		size = bp->tx_ring_size * sizeof(struct macb_tx_skb);
->  		queue->tx_skb = kmalloc(size, GFP_KERNEL);
->  		if (!queue->tx_skb)
->  			goto out_err;
-> -
-> -		size = RX_RING_BYTES(bp) + bp->rx_bd_rd_prefetch;
-> -		queue->rx_ring = dma_alloc_coherent(&bp->pdev->dev, size,
-> -						 &queue->rx_ring_dma, GFP_KERNEL);
-> -		if (!queue->rx_ring ||
-> -		    upper_32_bits(queue->rx_ring_dma) != upper_32_bits(bp->queues->rx_ring_dma))
-> -			goto out_err;
-> -		netdev_dbg(bp->dev,
-> -			   "Allocated RX ring of %d bytes at %08lx (mapped %p)\n",
-> -			   size, (unsigned long)queue->rx_ring_dma, queue->rx_ring);
->  	}
->  	if (bp->macbgem_ops.mog_alloc_rx_buffers(bp))
->  		goto out_err;
 > 
-
-Reviewed-by: Sean Anderson <sean.anderson@linux.dev>
+> -- 
+> 2.50.0
+> 
