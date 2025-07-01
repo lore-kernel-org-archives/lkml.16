@@ -1,93 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 800D9270EA4
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 12:36:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42FA72741A1;
+	Tue,  1 Jul 2025 12:38:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751373413; cv=none; b=FPiR3l7iWdE24O0FK1o53CTua9xonUUoVeL3Awc+IjhS+bb2h6Gmn+jLidfM4bZVZ811ypgsgUG+dOXsWmHLI2I3xtgzW2YC2aj//08eJJU2EZAsKwO+gBkAmhe7iHhO3L7Ri/OKEZtAb+3BAwc8QsPosbeixmg+fQo9fvGQeVs=
+	t=1751373510; cv=none; b=pxCGCQqpfU9yx711srfobBamWULBYOLCG4e4XG2VjBs69hsjQu9/AZG2x2+qB9vXoap3+UhjsflkYcxP35kaqi+m0aUBvBlc5l0wV/eRCqKAXhC23j66mTAa5u/vH9udaNr5HPXlPE6TirQcCA6SbbQCxg2rCDor/8qdCEpOxrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751373413; c=relaxed/simple;
-	bh=Yumc9AHeSxWJ3coM6Cuqca/8lTYWSOzPlXbAdw+pVFU=;
+	s=arc-20240116; t=1751373510; c=relaxed/simple;
+	bh=/jvyLpcGhPB03tF3eqbvEXwDgmNMzvglQGW69LsdiFM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eOJA3/xI7W9b1ZekfM9hqVcggziiQ6iewp0TeECQWGfntGgO3ilsghJ1T1v+Tdu4VRNJSEfKStW9nKmYUSkfhKmIHd5UjzyET1Vj59Rfj1ERl3eebwKDcpDsu5qMTjetTD0rn9+zxvi9u5Hcd40JyOwVeYp6R61YlEEOAhEzDVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RrPWcxei; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=FrwH296e149cuzHpDMHdanVT6YHo0Wy56pKn7mxwLvB3Q4V2HATa2lsAIeWVqpPtFtaZGMMgRdW7k1SyZuxvgmwaGMBcRdc1R5RFShFOPYe+cir0TJ7usALPZp69NkY+pIms6OPt3hUvXEPHXN8GtQYFlLT6k+muhpUxDDG8JJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=AqABSae2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RrPWcxei"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBA0FC4CEEB;
-	Tue,  1 Jul 2025 12:36:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751373412;
-	bh=Yumc9AHeSxWJ3coM6Cuqca/8lTYWSOzPlXbAdw+pVFU=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="AqABSae2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FAEFC4CEEF;
+	Tue,  1 Jul 2025 12:38:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751373509;
+	bh=/jvyLpcGhPB03tF3eqbvEXwDgmNMzvglQGW69LsdiFM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RrPWcxeixCM3W7sim7nZSuobUqXJHrON0fkntXopA5Io0TA/CMJSG13FGTOH2PMX3
-	 aAVgwErG0tcoub1fBtUV+J+5SrdFOVRua3w2gs165x3aHnl06aPizxoZNABwRJH3QN
-	 39oxikGCdAVhqHKaikTqlaP+lAMCIveu4dwlA2J9DpXiEPeqsDyI2/fS/vVfr4Wh/S
-	 x/WISXyRKhrSJibJiXp7MucQhqP7KXak4829yd1SgkZWfL/2j2ytIXwEPlDe3YIlcm
-	 zj3agkGp4sbWpgeZqgsP+1LfAKrmFSj1N1ySaivUlH5bIv/r8JUehXJ9HQrGs9LxJC
-	 DobUS98w2Cl+w==
-Date: Tue, 1 Jul 2025 14:36:49 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Hillf Danton <hdanton@sina.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-	Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-	Marcelo Tosatti <mtosatti@redhat.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 0/6 v3] sched/mm: LRU drain flush on nohz_full
-Message-ID: <aGPWYWKKWhr2rxMG@localhost.localdomain>
-References: <20250410152327.24504-1-frederic@kernel.org>
- <20250412025831.4010-1-hdanton@sina.com>
+	b=AqABSae2j6kV3XBiOGE7BUFoXMiXHrzLB88Vfl72cP6n4eHS9TgfyNlcdl6U6iZj6
+	 fFhi9DjUm/N8RuIMT/fNtETgCZ9w2aKzxryGTDbkM/cXciq8bwNmiFWYDuXUuRPojf
+	 YjtR+4YQg/lXsjU/ymEwvRfNRMEu/a4Ai6BJnX5k=
+Date: Tue, 1 Jul 2025 14:38:27 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org
+Subject: Re: [PATCH v5] wifi: cfg80211: move away from using a fake platform
+ device
+Message-ID: <2025070125-spent-glowworm-7405@gregkh>
+References: <2025070116-growing-skeptic-494c@gregkh>
+ <0004f9e5eb62f9ccad3dec52ebc935bfec42c949.camel@sipsolutions.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250412025831.4010-1-hdanton@sina.com>
+In-Reply-To: <0004f9e5eb62f9ccad3dec52ebc935bfec42c949.camel@sipsolutions.net>
 
-Le Sat, Apr 12, 2025 at 10:58:22AM +0800, Hillf Danton a écrit :
-> On Thu, 10 Apr 2025 17:23:21 +0200 Frederic Weisbecker wrote
-> > Hi,
+On Tue, Jul 01, 2025 at 01:06:46PM +0200, Johannes Berg wrote:
+> On Tue, 2025-07-01 at 12:56 +0200, Greg Kroah-Hartman wrote:
+> > Downloading regulatory "firmware" needs a device to hang off of, and so
+> > a platform device seemed like the simplest way to do this.  Now that we
+> > have a faux device interface, use that instead as this "regulatory
+> > device" is not anything resembling a platform device at all.
 > > 
-> > When LRUs are pending, the drain can be triggered remotely, whether the
-> > remote CPU is running in userspace in nohz_full mode or not. This kind
-> > of noise is expected to be caused by preparatory work before a task
-> > runs isolated in userspace. This patchset is a proposal to flush that
-> > before the task starts its critical work in userspace.
-> > 
-> Alternatively add a syscall for workloads on isolated CPUs to flush
-> this xxx and prepare that yyy before entering the critical work, instead
-> of adding random (nice) patches today and next month. Even prctl can
-> do lru_add_and_bh_lrus_drain(), and prctl looks more preferable over
-> adding a syscall.
+> > Cc: Johannes Berg <johannes@sipsolutions.net>
+> > Cc: <linux-wireless@vger.kernel.org>
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > ---
+> > v5: - rebase against 6.16-rc4 and actually cc: the relevant maintainers
+> >       and mailing lists this time, doh!
+> 
+> I did wonder for a second why it's v5 and I never saw it ;-)
+> 
+> >  int __init regulatory_init(void)
+> >  {
+> > -	reg_pdev = platform_device_register_simple("regulatory", 0, NULL, 0);
+> > -	if (IS_ERR(reg_pdev))
+> > -		return PTR_ERR(reg_pdev);
+> > +	reg_fdev = faux_device_create("regulatory", NULL, NULL);
+> > +	if (!reg_fdev)
+> > +		return -ENODEV;
+> 
+> Is that really -ENODEV rather than say -ENOMEM? Having a hard time
+> imagining how a faux device creation would end up failing in any other
+> case, there's no underlying device to bind to, after all? :)
 
-In an ideal world, this is indeed what we should do now. And I still wish we
-can do this in the future.
+There are some low-level functions that could fail, but the error that
+I thought should be told to init would be "no device" as the device was
+not created which is what really matters :)
 
-The problem is that this has been tried by the past and the work was never
-finished because that syscall eventually didn't meet the need for the people
-working on it.
+> Anyway, that's not really all that relevant. I assume you want me to
+> merge it through wireless-next, since we have faux.h in the tree now?
 
-I would volunteer to start a simple prctl to do such a flush, something that
-can be extended in the future, should the need arise, but such a new ABI must
-be thought through along with the CPU isolation community.
+Please do, thanks!
 
-Unfortunately there is no such stable CPU isolation community. Many developers
-in this area contribute changes and then switch to other things. As for the CPU
-isolation users, they are usually very quiet.
-
-I can't assume all the possible usecases myself and therefore I would easily do
-it wrong.
-
-In the meantime, the patchset here is a proposal that hopefully should work for
-many usecases.
-
-Thanks.
-
--- 
-Frederic Weisbecker
-SUSE Labs
+greg k-h
