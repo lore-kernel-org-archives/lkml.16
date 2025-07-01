@@ -1,95 +1,79 @@
-Received: from smtp-42ac.mail.infomaniak.ch (smtp-42ac.mail.infomaniak.ch [84.16.66.172])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 910E222CBE9
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 08:51:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4727722A7E9
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 08:51:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751359872; cv=none; b=Pj2kEa3OFWdG/dDDHE11wZY07cBUsxy7BDnt1P6hIsNR9Nl76/J0mmzMzkboS/yAx25VjXpP/dzXX1UAWV3zBS1iVd/Qw/jTYMbQK66sdZMTL+HvWJbrT+euRw/vFZjxdbh5KkvxhOfeRqR5znkoft1GuXRGxQADZx6V0hCRR8I=
+	t=1751359885; cv=none; b=WcUsWIlJpdyVgk820oKwOuel5JGey+Mnrwfk3q7rdIE31nJ2byexGtrxUgi0WgnsNbi21nQODEkh3vSSO7T7U78CUNbjWrdzI10rr6vxz+E2c37l83YqZRY0Xj/EIEJcPkG6Mzt7q4eK2n4phzoANTFYC39JCh8pqyP8KSogr8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751359872; c=relaxed/simple;
-	bh=Zv7zHWX9QCUUIhmqfhqpUipXar2S9Vx7xA7E2cUbsTk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V04ZcvF11hWMNF9znIBWdMBAKl6h2YvGE5jTbARBTTFSbwN98SVqcuyHDTf+4f+5S60AUnK4o46RdDXVGsJAWKcsFdCQVThl3S3qOTy5Un/HiIYXbZNoYMwsf9fPVKp6sXZ/nFObcNBvbdnra83uzZomRMjyj/Vce6u5Gz0d/LY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=0b9j4gEu; arc=none smtp.client-ip=84.16.66.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="0b9j4gEu"
-Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4bWcFF0v51zSvj;
-	Tue,  1 Jul 2025 10:50:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1751359856;
-	bh=HNK3BM/12gf6KA3brcQfZRNCWeetfJXuSqh/QgcxXnY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=0b9j4gEusgxlm20dQkf7tX9M2yP0tJ8Ju2mnOpsdSPiGeIF29zElnAUgpUImX9wfO
-	 txYqVd7z0NNbibL4U/2VtL+CR4cUa6EAMqEpffwKv7gafxQvpwcbDH1DL3vo/B9AOI
-	 SuFn4wUxcn1IkY7CeEyWnRkrhugW6xLLgFzM3gdM=
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4bWcFD47vbz90g;
-	Tue,  1 Jul 2025 10:50:56 +0200 (CEST)
-Date: Tue, 1 Jul 2025 10:50:55 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Brahmajit Das <listout@listout.xyz>
-Cc: linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	gnoack@google.com, jamorris@linux.microsoft.com
-Subject: Re: [RFC PATCH] samples/landlock: Fix building on musl libc
-Message-ID: <20250701.Ahj9ohkee3wu@digikod.net>
-References: <20250630203248.16273-1-listout@listout.xyz>
+	s=arc-20240116; t=1751359885; c=relaxed/simple;
+	bh=a8dUA8AQN4IiNoUrmJw0vwsYuwyniVP6q+4ut/6dFT0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qLyY90UkGSg8Xkcl0++0xNvLrncSFzCpO1b5jF1W+eTalirjqBzx5pUJAiS6UMDM/PJOkS0EmN17G8+qZKkX77lJp7J2RlescEA1Jqib4QnLvBdgy9A1BVs80dv29e3jNm3Crd4QPw4A2hhCGGAdTq5AgMa7JAr7udFXLIXMIYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1uWWhi-0006IB-Mc; Tue, 01 Jul 2025 10:51:02 +0200
+Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1uWWhg-006F2S-27;
+	Tue, 01 Jul 2025 10:51:00 +0200
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1uWWhb-0004aR-1k;
+	Tue, 01 Jul 2025 10:50:55 +0200
+Message-ID: <aafdb0e9dee2041ae64b2fe8677b4b3d45401bc8.camel@pengutronix.de>
+Subject: Re: [PATCH v2 0/4] drm/bridge: samsung-dsim: Stop controlling vsync
+ display FIFO flush in panels
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Inki Dae <inki.dae@samsung.com>, Jagan Teki
+ <jagan@amarulasolutions.com>,  Marek Szyprowski <m.szyprowski@samsung.com>,
+ Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
+ Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
+ <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>,  Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>,  Simona Vetter <simona@ffwll.ch>, Artur Weber
+ <aweber.kernel@gmail.com>, Jessica Zhang <quic_jesszhan@quicinc.com>,
+ Jessica Zhang <jessica.zhang@oss.qualcomm.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	kernel@pengutronix.de
+Date: Tue, 01 Jul 2025 10:50:55 +0200
+In-Reply-To: <20250627-dsi-vsync-flush-v2-0-4066899a5608@pengutronix.de>
+References: <20250627-dsi-vsync-flush-v2-0-4066899a5608@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250630203248.16273-1-listout@listout.xyz>
-X-Infomaniak-Routing: alpha
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Tue, Jul 01, 2025 at 02:02:48AM +0530, Brahmajit Das wrote:
-> Building with make allyesconfig on musl results in the following
-> 
-> In file included from samples/landlock/sandboxer.c:22:
-> /usr/include/sys/prctl.h:88:8: error: redefinition of 'struct prctl_mm_map'
->    88 | struct prctl_mm_map {
->       |        ^~~~~~~~~~~~
-> In file included from samples/landlock/sandboxer.c:16:
-> usr/include/linux/prctl.h:134:8: note: originally defined here
->   134 | struct prctl_mm_map {
->       |        ^~~~~~~~~~~~
-> 
-> This is mainly due to differnece in the sys/prctl.h between glibC and
-> musl. The struct prctl_mm_map is defined in sys/prctl.h in musl.
-> 
-> Signed-off-by: Brahmajit Das <listout@listout.xyz>
+On Fr, 2025-06-27 at 13:45 +0200, Philipp Zabel wrote:
+> This series enables the vsync flush feature in the samsung-dsim driver
+> unconditionally and removes the MIPI_DSI_MODE_VSYNC_FLUSH flag.
 
-Thanks, applied to my -next tree. I just moved down the if/include/endif
-block.
+Applied to drm-misc-next.
 
-I tested it with check-linux.sh from
-https://github.com/landlock-lsm/landlock-test-tools
-  ARCH=x86_64 CC=musl-gcc check-linux.sh build
-
-> ---
->  samples/landlock/sandboxer.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/samples/landlock/sandboxer.c b/samples/landlock/sandboxer.c
-> index 4e2854c6f9a3..3cc990618f5b 100644
-> --- a/samples/landlock/sandboxer.c
-> +++ b/samples/landlock/sandboxer.c
-> @@ -13,7 +13,9 @@
->  #include <errno.h>
->  #include <fcntl.h>
->  #include <linux/landlock.h>
-> +#if defined(__GLIBC__)
->  #include <linux/prctl.h>
-> +#endif
->  #include <linux/socket.h>
->  #include <stddef.h>
->  #include <stdio.h>
-> -- 
-> 2.50.0
-> 
-> 
+[1/4] drm/bridge: samsung-dsim: Always flush display FIFO on vsync pulse
+      commit: a36c533ad3e1b8c0326d665d2d02d2ef7aea8f92
+[2/4] drm/panel: samsung-s6d7aa0: Drop MIPI_DSI_MODE_VSYNC_FLUSH flag
+      commit: f488640e51312fbca02f9229d238a2aed7a8aac9
+[3/4] drm/panel: samsung-s6e8aa0: Drop MIPI_DSI_MODE_VSYNC_FLUSH flag
+      commit: 5c449ddbaba1c807c4674f92e5ebf6a887edb58c
+[4/4] drm/mipi-dsi: Drop MIPI_DSI_MODE_VSYNC_FLUSH flag
+      commit: 12853b279100adc7074b51db23bf62a41cb84cb8
