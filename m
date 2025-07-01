@@ -1,77 +1,128 @@
-Received: from proxy41133.mail.163.com (proxy25213.mail.163.com [103.129.252.13])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36FE9278750;
-	Tue,  1 Jul 2025 13:59:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.129.252.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208E527935C;
+	Tue,  1 Jul 2025 13:59:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751378354; cv=none; b=M2vEoEEOKcRpacEbU3UKzKoLQrHjP4N1a+F140lhax1lI9vsenGFo23RZRmOD0o3GO8/iqoNI4Fwk4yKP/aVnz/bm1OEPGlaoRpZpPkkNOormD036f0/rXSETne8ZspCkx+foL6zjadaS9mbcVUkNQi1AwLSM8Pqtj/MyfORs4k=
+	t=1751378358; cv=none; b=Q8l46to+3pasGT40rwHSnzWd/kmvYw6yeZ702YhnCe1qVFmoqVmf/D9ARlcxvsak5g90GAptkAQ3aW1RpCxdD76tKF+QIh2v9UNgTolf25swwoMv5ixzavq4WupYpt17r0DgOwxC6cQ9z+EqS6Hv8e8/5beZaeEJ1CNYdwiSkwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751378354; c=relaxed/simple;
-	bh=Hn9XQxoi9xC5gjKbLwAvdgsOFA+fY9zgUdj+ZK/20pg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZZTSxld2TUxg6nfhHHPdwSfryskAj9vy+gdr240Llx63dK1EMZfJGbfS/V2B9UGH7/a7r+xbEoFBXSy9WNDdKn5xwTFPWA1jha0FUNHXBidsRRMoV/GSEc0M0tZ/VXXUqy1yMNlSXn1IhlKtVnjs8AzGxrqB2IxA89fOfBs6jRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=PorNfJM/; arc=none smtp.client-ip=103.129.252.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1751378358; c=relaxed/simple;
+	bh=hMOqvR/Yc65WBvmajTl/+Rd8ycl+uMG027OZLfPxOmE=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=cJwi/C1CjldvMhONAnqwWGeZiJqhbvwURvj2XPDabKKEEAiskp5T5JFo4YHsU1180GPdNcuUMvkSz/jKOlcUSHnFBKenrPY5hGMenblHF2nTc45Drzzshko3PIHpdM6JZmzd5eiyN0AXFnOCpVXgp/mZvisUPMuCczJw0WRLm4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YsfgCQWS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=o1jxJpdu; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="PorNfJM/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=beNsCZKtnDZ/kCW2/aDDl5S4J3i4rAjENZyUI1MLHbE=;
-	b=PorNfJM/z8Oohl/eipl/U2KBmvOtCwwdC+ghH6peaAI1r7Wj/qX4co4UQC5Gr0
-	s+UHkcaitA4IrawjNkgPUH7Wxj1QAUZcSvEK1V8N9kWHnckdfPGTpOQvpK7/gk11
-	MFBqku7U8r0RxHwZBvpO533jAH2hzHV0d2kTQia6/iaWo=
-Received: from dragon (unknown [])
-	by gzsmtp3 (Coremail) with SMTP id M88vCgD3V+YQ52NoT3cBAA--.3737S3;
-	Tue, 01 Jul 2025 21:48:01 +0800 (CST)
-Date: Tue, 1 Jul 2025 21:47:59 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Tim Harvey <tharvey@gateworks.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, stable@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] arm64: dts: imx8mp-venice-gw71xx: fix TPM SPI
- frequency
-Message-ID: <aGPnD7J43tjoHYkM@dragon>
-References: <20250604225630.1430502-1-tharvey@gateworks.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YsfgCQWS";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="o1jxJpdu"
+Date: Tue, 01 Jul 2025 13:59:14 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751378355;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LFZ1wNVNadzQBNchdLo7SzYRU3dwfBraIy+yDsNLVXo=;
+	b=YsfgCQWSpEhGaZmCwRQiJDmKh9po++6ZaT7rSScJ2qqGhdUUImW0UfKYfNVW2GTcy7pNsW
+	wWSoyXPQkR1IyJGVsfX9uESP7Pb4zbJ6kVuXmTGatlEG617KF863yodrCZKlBcxBKDDheD
+	/IwBsWgDYm+wLni/IzkL2tJrgKjWltSVapzU/AjAC3PkHsBaYzCTpTyjNoFx3okZxMb5gC
+	nL35fOqk7r3B3WgCh7g1fgtY+dpzfp1k98co3i7+Am3WsVajbxwkjZ2gIhsAqBsg2zJmDb
+	GzSFBukzvnUG+lBOAmE6dQqDJQKqGoy/ItJSQOR+YoPUZ8ML6bv8PuN/tWnywA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751378355;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LFZ1wNVNadzQBNchdLo7SzYRU3dwfBraIy+yDsNLVXo=;
+	b=o1jxJpduenqpisH4Ofms0xG51FR1sU/8ewVm8utS6rfnxR8Pipi1t9a/vNqhG9oE0fnAag
+	O6uy0MOoZ3jqwLAQ==
+From:
+ tip-bot2 for Thomas =?utf-8?q?Wei=C3=9Fschuh?= <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/vdso] selftests: vDSO: vdso_test_getrandom: Always print
+ TAP header
+Cc: thomas.weissschuh@linutronix.de, Thomas Gleixner <tglx@linutronix.de>,
+ Muhammad Usama Anjum <usama.anjum@collabora.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250611-selftests-vdso-fixes-v3-8-e62e37a6bcf5@linutronix.de>
+References: <20250611-selftests-vdso-fixes-v3-8-e62e37a6bcf5@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250604225630.1430502-1-tharvey@gateworks.com>
-X-CM-TRANSID:M88vCgD3V+YQ52NoT3cBAA--.3737S3
-X-Coremail-Antispam: 1Uf129KBjvdXoWrtF18Xw4DAFWfZr4UZry7Jrb_yoW3JrX_Ca
-	y7K34xJw45X3yUta95trs3XF97K34xuFyIgrWUtFW3Jr9a939avrn5X3s3Aa1a9a1UXrnI
-	grZ5X3y5Krya9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU1iID7UUUUU==
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiIBLwVmhj5xK8AwAA3V
+Message-ID: <175137835415.406.17786155179703712391.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 04, 2025 at 03:56:27PM -0700, Tim Harvey wrote:
-> The IMX8MPDS Table 37 [1] shows that the max SPI master read frequency
-> depends on the pins the interface is muxed behind with ECSPI2
-> muxed behind ECSPI2 supporting up to 25MHz.
-> 
-> Adjust the spi-max-frequency based on these findings.
-> 
-> [1] https://www.nxp.com/webapp/Download?colCode=IMX8MPIEC
-> 
-> Fixes: 1a8f6ff6a291 ("arm64: dts: imx8mp-venice-gw71xx: add TPM device")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+The following commit has been merged into the timers/vdso branch of tip:
 
-Just to be clear, "b4 shazam" was smart enough to pick this v2 instead.
-Still it would be helpful to leave a comment on the old version saying
-there is a newer version superseding the old. 
+Commit-ID:     1158220b24674edaf885433153deb4f0e5c7d331
+Gitweb:        https://git.kernel.org/tip/1158220b24674edaf885433153deb4f0e5c=
+7d331
+Author:        Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+AuthorDate:    Wed, 11 Jun 2025 12:33:58 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Tue, 01 Jul 2025 15:50:42 +02:00
 
-Shawn
+selftests: vDSO: vdso_test_getrandom: Always print TAP header
 
+The TAP specification requires that the output begins with a header line.
+If vgetrandom_init() fails and skips the test, that header line is missing.
+
+Call vgetrandom_init() after ksft_print_header().
+
+Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Link: https://lore.kernel.org/all/20250611-selftests-vdso-fixes-v3-8-e62e37a6=
+bcf5@linutronix.de
+
+---
+ tools/testing/selftests/vDSO/vdso_test_getrandom.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/tools/testing/selftests/vDSO/vdso_test_getrandom.c b/tools/testi=
+ng/selftests/vDSO/vdso_test_getrandom.c
+index 389ead4..dd11325 100644
+--- a/tools/testing/selftests/vDSO/vdso_test_getrandom.c
++++ b/tools/testing/selftests/vDSO/vdso_test_getrandom.c
+@@ -242,6 +242,7 @@ static void kselftest(void)
+ 	pid_t child;
+=20
+ 	ksft_print_header();
++	vgetrandom_init();
+ 	ksft_set_plan(2);
+=20
+ 	for (size_t i =3D 0; i < 1000; ++i) {
+@@ -295,8 +296,6 @@ static void usage(const char *argv0)
+=20
+ int main(int argc, char *argv[])
+ {
+-	vgetrandom_init();
+-
+ 	if (argc =3D=3D 1) {
+ 		kselftest();
+ 		return 0;
+@@ -306,6 +305,9 @@ int main(int argc, char *argv[])
+ 		usage(argv[0]);
+ 		return 1;
+ 	}
++
++	vgetrandom_init();
++
+ 	if (!strcmp(argv[1], "bench-single"))
+ 		bench_single();
+ 	else if (!strcmp(argv[1], "bench-multi"))
