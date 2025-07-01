@@ -1,121 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1DCA277C81;
-	Tue,  1 Jul 2025 15:11:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2700D274FFC;
+	Tue,  1 Jul 2025 15:11:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751382671; cv=none; b=mqPoTZC3pYLcKl97nO702JI2iwTTkJElIoPmQj43ium9dNEqdvjzOBg1ByuehATDyVX3fDV/mhuhHAlblfZJH52RafqMQMGrOaxjKcZpjSYaMkq6qOQM7laO+plcO88QhNnPdpnpIEE8q7R+ar4+KfwMshtwwyxD++62GF0eJW0=
+	t=1751382682; cv=none; b=cZe73AqvMbWN+NcxZIIOuQBM3mxdS+C61w78/njgfvaODsghRVQUugrp4aw55rwGzPaSyHtkJth09MFmaZ8RFHHvB3YUIu1LiHD4N0HegH0WIlxhOqUAmb6Pi70fMXOOt5FHWvjgfYq824ZBs6Xl5sJkYRHE5p9UlAvkXWvY0sY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751382671; c=relaxed/simple;
-	bh=qo6W6L+xqznsayY93zstYecbD3mdmU3COg1H4iztxHU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PTMZYysF8lrPjhHpdhUDhiNi21oAYPMCGmTbBuRinixhbGNuoudI3hTdw2k9YFQ3jTDr+QLm0745bTwfYEEnOJLGQe3gudceQ7diRHnv+i5L7bgZ/JV64posgOs15mPB/b7epbUoT+OvyO0uVKeRvFUHaZ1OiQ1Mmiky+L/ZvBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k9CVjHey; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751382682; c=relaxed/simple;
+	bh=KvHzbQBF3t9IIa1Dm96UqwW36rTTPbMjfkHV0obqDPI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gNZhL3RF0eIlOhzO7rUQIUoT3C7p1Qu9FmIUfbn+D451mUsayfH/5DDA6b+inUxJ/BH7p3qP03aHdBtJOHkfv2KsLA+JvWBlRpX1Iz3sPsJhuk1J/OBEliMos4lLsBR76q7rf7qyOuIg0Yqo475dABvVq4NBF3BkM4/Q2IJ0kZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PFNf1yhk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PfEXy7IG; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k9CVjHey"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751382670; x=1782918670;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=qo6W6L+xqznsayY93zstYecbD3mdmU3COg1H4iztxHU=;
-  b=k9CVjHeyvuOirTorwtzPn98fEQRMhuKO3xAcFg8yYMlLsK05yfoVMdUQ
-   Mx+UHhI8Iu8dj8PHzLdf7hKocQBauPgArAapq966m/vCPuZL0Nbpgn2tD
-   Yfoo3cYkripOQZI4jMcwvoEWEXkl3Vekj4Pn2AowGgYcOPuB0QYRlEU4G
-   8xNqJ4TwAqlpnaVJB8HxsYjqrD/ulcK/RGXmovwYWN7/i5HPw2My9WE6e
-   k4M+M2uE5x6Fv0jxS5RAREqmf/ImRNQYnnV/PFpiOxnoZTIBMNhiwmKLl
-   DL+GSh8ZrKQmSf0VCcOh9e1mq9+4uWWWGtnN54TmHAmffJLjsKrI1AFMY
-   A==;
-X-CSE-ConnectionGUID: SCJeWfwBR1m69hK0+0eJRw==
-X-CSE-MsgGUID: kh1qpx/lTzeuFSUCvl9xDA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="52886384"
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="52886384"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 08:11:09 -0700
-X-CSE-ConnectionGUID: X4enlwGcThu5PCoyzbQF+w==
-X-CSE-MsgGUID: zOPsIRhOSFGcLXnsr2OPJw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="154114745"
-Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.109.179]) ([10.125.109.179])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 08:11:08 -0700
-Message-ID: <e665d583-cfd1-41f2-85e1-3490ac4b4720@intel.com>
-Date: Tue, 1 Jul 2025 08:11:07 -0700
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PFNf1yhk";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PfEXy7IG"
+Date: Tue, 1 Jul 2025 17:11:14 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751382678;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mkUl5eomB04clLZcTBjBu9b5U/FIO02anfxFQvMAsDk=;
+	b=PFNf1yhkVqIBQZIQgTxjcFrlubE9zSw+f/VSBQWpa/8NryfmX0x7I+FoedFqNOnfVU7hXE
+	SFsaH7wBqPULuRJyx2pznZGOt/Svy7IZxldDcpqIop++8jitChdkjCX0HARyxHsVICcoz8
+	Z81FowSsmp91Ro5Sw3h0J5a7aemgcYiUXyL0LK1aPlMMa+y3hcTJuzNwb9Ojglfx2oBhza
+	pfURcvMxVHHZjBaxaTX9A20qBLwSaFKOj6zdbv9xgtX+LsbeJhLaZEObgEp0VQCQFeGRVy
+	Rzd+JznMDpsL0xLlw1BOjtTE1iLXnRha2jy+FhOrfN1gN/OUDx/fIiBtjcs66w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751382678;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mkUl5eomB04clLZcTBjBu9b5U/FIO02anfxFQvMAsDk=;
+	b=PfEXy7IG+leY0Mbon/CGRgebiyCjW3gGVboL8/0GdapwzwXZ2j5T/IkdWTFZ9pmRTI6gq+
+	FFWcPD+KIlMUWgDw==
+From: Nam Cao <namcao@linutronix.de>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Gabriele Monaco <gmonaco@redhat.com>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	john.ogness@linutronix.de
+Subject: Re: [PATCH v10 17/19] rv: Add rtapp_sleep monitor
+Message-ID: <20250701151114.OJQTlRCY@linutronix.de>
+References: <cover.1749547399.git.namcao@linutronix.de>
+ <d3cf55d3bf42a0f70a58c394b5cf6d603ca8a9f7.1749547399.git.namcao@linutronix.de>
+ <20250630203401.1a11e58f@gandalf.local.home>
+ <20250701051757.mBjQVdoo@linutronix.de>
+ <20250701110218.5e742850@batman.local.home>
+ <20250701110551.5c2dc2ee@batman.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] cxl: make cxl_bus_type constant
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-kernel@vger.kernel.org
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-References: <2025070138-vigorous-negative-eae7@gregkh>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <2025070138-vigorous-negative-eae7@gregkh>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250701110551.5c2dc2ee@batman.local.home>
 
-
-
-On 7/1/25 5:07 AM, Greg Kroah-Hartman wrote:
-> Now that the driver core can properly handle constant struct bus_type,
-> move the cxl_bus_type variable to be a constant structure as well,
-> placing it into read-only memory which can not be modified at runtime.
+On Tue, Jul 01, 2025 at 11:05:51AM -0400, Steven Rostedt wrote:
+> On Tue, 1 Jul 2025 11:02:18 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
-> Cc: Davidlohr Bueso <dave@stgolabs.net>
-> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Alison Schofield <alison.schofield@intel.com>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: linux-cxl@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > On Tue, 1 Jul 2025 07:17:57 +0200
+> > Nam Cao <namcao@linutronix.de> wrote:
+> > 
+> > > > > +	switch (state) {
+> > > > > +	case S0:
+> > > > > +		if (val3)
+> > > > > +			__set_bit(S0, next);
+> > > > > +		if (val11 && val13)
+> > > > > +			__set_bit(S1, next);
+> > > > > +		if (val11 && val14)
+> > > > > +			__set_bit(S4, next);
+> > > > > +		if (val5)
+> > > > > +			__set_bit(S5, next);
+> > > > > +		break;    
+> > > > 
+> > > > What's with all the magic numbers?
+> > > > 
+> > > > Can we turn these into enums so they have some meaning for us humans?    
+> > > 
+> > > I'm not sure what you mean, we can't use enums as variables.  
+> > 
+> > Bah, never mind. My eyes are getting bad and I need to increase my font
+> > size, as all the S0, S1, S2 looked to me like 50, 51, 52, and I was
+> > wondering what are all these numbers in the fifties??? :-p
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
-> v2: fix up the subject line to be correct
-> 
->  drivers/cxl/core/port.c | 2 +-
->  drivers/cxl/cxl.h       | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index eb46c6764d20..0696f7fcef56 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -2293,7 +2293,7 @@ static const struct attribute_group *cxl_bus_attribute_groups[] = {
->  	NULL,
->  };
->  
-> -struct bus_type cxl_bus_type = {
-> +const struct bus_type cxl_bus_type = {
->  	.name = "cxl",
->  	.uevent = cxl_bus_uevent,
->  	.match = cxl_bus_match,
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 3f1695c96abc..e7b66ca1d423 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -815,7 +815,7 @@ int cxl_dvsec_rr_decode(struct cxl_dev_state *cxlds,
->  
->  bool is_cxl_region(struct device *dev);
->  
-> -extern struct bus_type cxl_bus_type;
-> +extern const struct bus_type cxl_bus_type;
->  
->  struct cxl_driver {
->  	const char *name;
+Oh..
 
+> Even with my bad eyesight, these state transitions are generated from
+> scripts? If so, can they inject comments that state why they generated
+> this?
+> 
+> There's nothing in the code that even states that this was generated
+> (if they were).
+
+Yeah this entire file is generated from the LTL specification. I will add a
+comment.
+
+Nam
