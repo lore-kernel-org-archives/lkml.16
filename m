@@ -1,74 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDD2B275AEB;
-	Tue,  1 Jul 2025 13:31:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF51D274676;
+	Tue,  1 Jul 2025 13:32:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751376712; cv=none; b=RNV4jTiT453DCZWPkGH149bhgdq4NYVkJxOKq9M31sVhQ/LWj9ofPUdWaFhMrgwE5R4197nhVNCsNwcDSpiN1U4m15MSIHAdmWzrF56b6ho57gwQ9kh2yQ8vOxf/p/j0W7OPAxeY2dvwqhcxE7+FYTQlu+4UtIDks0t+kplzKIE=
+	t=1751376749; cv=none; b=RKxR9dja6zkteidGn5ZirhyP9n9szmhTyrattF5W/Hlonz6/h6/Z3o9OzWiZDTwG1WxSAKBx89BYR1ZuoOOkupPJgkPtLZ4TU7ZfPUWzy+KfNkAA5pTiyis8z6MxLK7/TY5kcMtqwFfDX8DeDtKwvfhiGg7pwIz4JQbBkXsHrRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751376712; c=relaxed/simple;
-	bh=U8b4f/6CxtIpRrDULIVKBBNQZ2cn1XoO/0xEOtCVxSM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qhqfAuFPTMYNvsiNZUeh6uTRU0BZTqgRqyNjTfNTYC3zf5VQpOPptUPorMWE2vpEf10vjUiasvELc95k2Bq37Fcm14foiCEgNqwRzUT2gNtF09ASDnp2OPQQKeWG4C+sUErotP6PAAFydltdw/rsRVHf71jEeV+EUwcZVqAemq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KWbPdVO5; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KWbPdVO5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8959DC4CEED;
-	Tue,  1 Jul 2025 13:31:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751376712;
-	bh=U8b4f/6CxtIpRrDULIVKBBNQZ2cn1XoO/0xEOtCVxSM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KWbPdVO5CB0Bxz4zhUJa4RHr6q09FPWOOd5B96g9AWfDlGDzJ/gv9ZPZ2k2qe61tU
-	 iHY1VT2mfkaUgvSx5S6GkRy94znlXKZDNnMnVkPQkM6ikoCJSoazA0iXNb/Kfl8/VQ
-	 S/8KKWFNUm/r0U+W/T/iy+seU1Oa8yVztfkx27eRFAnCey5iVOdYkIUDB42QRh0aGa
-	 Z3LuHYpjjP3un5XWg9kP6xn8hrq1MQ6DY2uLPiWRVVoLbEYgchtX9unD0cGXOYQU5o
-	 qGBbuLm90tb0qRyOtDS1WXFWKOKnSvbbLOYBhm9VRlnhl8Y6RShPKGdw49TLD8Q49q
-	 czRd4j/MVWoZQ==
-Date: Tue, 1 Jul 2025 14:31:47 +0100
-From: Lee Jones <lee@kernel.org>
-To: Aaro Koskinen <aaro.koskinen@iki.fi>,
-	Andreas Kemnade <andreas@kemnade.info>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Roger Quadros <rogerq@kernel.org>, Tony Lindgren <tony@atomide.com>,
-	Geliang Tang <geliang@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: (subset) [RESEND PATCH mfd-next v2] mfd: Drop unused variables
- 'node'
-Message-ID: <20250701133147.GM10134@google.com>
-References: <a2cc3ac9466633ea44a656a855ed80289ae917e0.1750905716.git.tanggeliang@kylinos.cn>
- <175137657148.2321363.112208113279845572.b4-ty@kernel.org>
+	s=arc-20240116; t=1751376749; c=relaxed/simple;
+	bh=5es+Q21GGEAhFLN7zXBc+xdr2k/RbOI1/T+a50es0X4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jVCBq8gojfRBaZPtd4rcApypXaQXzJ/CuJauhnl9gbUQiLxOeGESDNgpKav/7xwOx9HyBfZouh0apHpfusdW9zeMxGryY7aPEucrzO/uLKxk6+qVDVzaLecUqJ/VljRGRP7igEg6MEBZ7mPj58CC1iJS78SolxJ9KxHJvKhx7+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4a58c2430edso59609561cf.1;
+        Tue, 01 Jul 2025 06:32:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751376745; x=1751981545;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7eYKtektCOaGQToLGqZH+f97CUTW0Kn8fzCe/qtBPXI=;
+        b=WGkNEpr0mdZ38IFbXZbH72YFXRjntCGiSVB9uI3e5Msso8ad1RrRmXq1kwT+jWhUpT
+         yAXx1gL2FYoxRrYRYIzRrFC6+dpM31r2jvkG5Qx0gdl9bbsYAJhNNhZirzIGyfDlLLKk
+         cA7Fkp/HwXMe+i9Py1aC21HGdX5P1pNjl5vvQEZ5U8MlJSEOXItyz9uHRMTvUs/0Z1dK
+         XM6lE4+kZdyL7ceIpZ937rt8Oh7dcmymPBpBUxAPj7eLoC1U1k6CizN5pl0xwdlt8GT2
+         mgQtDWufUgaXlaq5V6hs8CUvdGrL5KIN2lQ1jIfEMlhT0p6H5PW3fJ9f/pSL0tZ0OoH/
+         OTRw==
+X-Forwarded-Encrypted: i=1; AJvYcCVUjrb//gxKaqgSOFvoXg3XBft0veRoff1X7WrephFGTp0oFby/A7fmhLmQP8sa4wJhLXoESu643blI0p6j@vger.kernel.org, AJvYcCVtdDSYFzioXNdFROhZQV8BJ+0eCpEaaV/Y89GVLzTZSZjbQe9WqFaxeUoRz8ai6y1UMChOHkr4OCu9@vger.kernel.org, AJvYcCWPmvYzfH3cHSAuDM6OLQwOa36y+puKVm5EZFrpFR6ByJDxTHzwMA/47bafLgQYnoFpoKNahOtfqXk//XVJ6Z3rdsQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJknI33TRpf3b6antWMPKrqw9rHCFSJRSeQs+tJ1JIB/PtUaDa
+	u4ESO18YHkr+CbAerD4LIoyKDq87+n09dIwDnruOx6m3c/xR4sMpmo2wlJ3eiAAY
+X-Gm-Gg: ASbGncu48in4dVFZ2OHdSqaPqjk7TNUWHYb0JtB3MP64Don26tikkjweIRnffGMYQq4
+	MtiUfP+UTeE0NB+LK/izEfb2tVEQrWs/J8J5RWXF76XKNTYr1AR7vzubL+dlkKYnKXpa0jkfXm8
+	GBa7QDCrPnj217Y7Ny0BiZ7LRlK1K+NOP4aZac7ZM+t4vigy9eBEtR7MUfrX1wSruWLIBlcWt+3
+	F72ZRM1W+0e2ffI2IpY8ptW3QmBxVBucKtuamUUCnX+DcY/vwv47vcQ9MWdNU17XvAbjwAGkjzC
+	Oairysnz35/K+QWZdClDRvHmYB2+r6SNNOREJRbDsHjhjxrrGpixh8EJMPNbJHRNMGSNf80/AZD
+	YjF0gSAGQVK8fpFOYQwwZ3f9463cG
+X-Google-Smtp-Source: AGHT+IHhPFkHPBbgKIv5DUEdTN4YaAJbgIeBI87gW5xRYpPn0pKH/p33HNy+fjjcAutIN0hL4jSang==
+X-Received: by 2002:a05:622a:347:b0:4a8:18ec:8ce4 with SMTP id d75a77b69052e-4a846d1d1a5mr41483201cf.21.1751376745286;
+        Tue, 01 Jul 2025 06:32:25 -0700 (PDT)
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com. [209.85.222.174])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7fc13a34esm76105121cf.24.2025.07.01.06.32.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Jul 2025 06:32:25 -0700 (PDT)
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7d098f7bd77so628860985a.0;
+        Tue, 01 Jul 2025 06:32:25 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUAgcq99DQq7KYqQ0Dgej4lpHzZRDc9f3QG6ilPc6lKjz44ufzEMLtgy43/hkMXQ92x+cKegrGtI9X8V3D9YHWyFQE=@vger.kernel.org, AJvYcCVWofIhkz+4arHkpQw/oLIOE+MdFfVfjiMr+RdRJV0fN5nJlssFtwtLEWtBKv7Lx5oZc1Bpab9WrSLH@vger.kernel.org, AJvYcCWzL0pIg74dOteEb1f93hHBP6Rb9o75fyuT8MPuVKgF2lJ7JSfLdXzvyDvw+pAP87OgJP9K9Vh1JJBecYCA@vger.kernel.org
+X-Received: by 2002:a05:620a:4413:b0:7ce:fc0b:d39d with SMTP id
+ af79cd13be357-7d466d0c890mr475498985a.6.1751376744763; Tue, 01 Jul 2025
+ 06:32:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <175137657148.2321363.112208113279845572.b4-ty@kernel.org>
+References: <20250624192304.338979-1-fabrizio.castro.jz@renesas.com> <20250624192304.338979-7-fabrizio.castro.jz@renesas.com>
+In-Reply-To: <20250624192304.338979-7-fabrizio.castro.jz@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 1 Jul 2025 15:32:13 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVS-o-qYuEiWc7=8x+LFyYuiPWiL3APzYVxjgX6GbsROQ@mail.gmail.com>
+X-Gm-Features: Ac12FXxLNsiZQut0NHC_hcHtjIAAiZfSCe46zjqrYTUTXHYuStv5cvc5V2NA3Bo
+Message-ID: <CAMuHMdVS-o-qYuEiWc7=8x+LFyYuiPWiL3APzYVxjgX6GbsROQ@mail.gmail.com>
+Subject: Re: [PATCH 6/6] arm64: dts: renesas: r9a09g057: Add RSPI nodes
+To: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 01 Jul 2025, Lee Jones wrote:
+On Tue, 24 Jun 2025 at 21:23, Fabrizio Castro
+<fabrizio.castro.jz@renesas.com> wrote:
+> Add nodes for the RSPI IPs found in the Renesas RZ/V2H(P) SoC.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
 
-> On Thu, 26 Jun 2025 10:48:07 +0800, Geliang Tang wrote:
-> > This patch drops the unused variables 'node' to fix the following build
-> > warnings:
-> > 
-> > drivers/mfd/88pm860x-core.c: In function 'device_irq_init':
-> > drivers/mfd/88pm860x-core.c:576:29: warning: unused variable 'node' [-Wunused-variable]
-> >   576 |         struct device_node *node = i2c->dev.of_node;
-> >       |                             ^~~~
-> > 
-> > [...]
-> 
-> Applied, thanks!
-> 
-> [1/1] mfd: Drop unused variables 'node'
->       commit: 0e76098aa66eb82189f5a0681717862271bfb805
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v6.17, pending acceptance of
+the bindings.
 
-Ah, change of plan.  Arnd already fixed this.
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Lee Jones [李琼斯]
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
