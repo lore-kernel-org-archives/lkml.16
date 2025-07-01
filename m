@@ -1,176 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1AD9258CD0;
-	Tue,  1 Jul 2025 07:12:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B5E61E1DF2
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 07:13:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751353938; cv=none; b=b4M47tkzCiVVl82mptWNqkYX1tMKImK8cfYQ8CVQh/diIn0CCvwqZJ6ASfwY1NAwnj3WIfy7DaI9ngQ6QSOUB/oqRF4BfHFL4YxB4VQDHmhuae/o1J5mH1ww7zehecBJbAR8KNIYWBjk8pqQXfRGnTpuF96Nn1erA6stBwPWRBI=
+	t=1751354021; cv=none; b=A3DyvmwYRnwVmOyFT1LGkgZ5oLEF17NhtZIm6bUwXP76DXklhg6YlbLmMJckO7J15u6takjNi/+I9n/mmN8qg/GGOjUpiA43h6BMahJGY83VHtE7EW6WjNIwgJu5x7btCx3Vbmz7vK050B0Uyh2jQLYOmLg230hZLHbnKpr2CB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751353938; c=relaxed/simple;
-	bh=oDlHROwnSUQAjiRI45qrW1tco2YeBy9XuAhSB10GC4I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=by5q+peidXxgkHFTvXY+ipWVCcSNeK9gKGo3b43FD0qoDXkqDtqGgnoKYAzsYIJcYJMmRZIUJqW4KB1AECTjohfTu34rAkDutmOigBNR8KizMy6+njWfxJ54yvBWZYlIg3F2jCLxp3MKcfChlcfL6ijV6EXQDKqh/CnzJOA+8vo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pdxa7Ygw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751354021; c=relaxed/simple;
+	bh=fvdNtZFG98bTz38ZaID/Nl35em193wk9jbzh9oNekbQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AKIm5gUXhImWUzXX72A7dG1yQTh7HmT1OdtT6JozLoKF9r2n+X1vAOFL33+HxgbTAmOLwLWWBh9RCNBQ0CK3jmc+5LJAbwy8dA8Vt2nbVgKkxz5n2WKBb/KDqAtlUCKGGnSszIFm+pl3VrBIVqyCOdTZ1SjFrLKyqhZYV+ny9EI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RqAxwo5i; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pdxa7Ygw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00C02C4CEEB;
-	Tue,  1 Jul 2025 07:12:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751353938;
-	bh=oDlHROwnSUQAjiRI45qrW1tco2YeBy9XuAhSB10GC4I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pdxa7Ygw0iJhae1lmE6peOvCQtLgifNJK5c0mRyb3+SFBZLhdLNY0bFDrJ3SUGD0u
-	 ImPPVaUPmNG7KQQaVsPfr4SRenJxTXESTN4Ho9vHaxONsdrzWLQGCGwdCuEOqijCa+
-	 7HbfMqyIZpHZUVguVWh5fFgx5gO5TkmWUi3qRLa0ekyGhNYefhRy95kMYljud5+wJG
-	 ANUfwQM2wzzKsOEKdRtS1jAW2TnjM2NHPixM5R4Eo1bAS4rmOXFqVhhKnEOMxZmD7A
-	 FKJCOfBX8oXEB5oxIxcWTxmrPuAMlK7KPn3trYtQf7YgPZjI8XD/xDVu+FStj5kvkp
-	 5OufS2d464zQw==
-Date: Tue, 1 Jul 2025 09:12:15 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Saravana Kannan <saravanak@google.com>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
-	Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, 
-	"T.J. Mercier" <tjmercier@google.com>, Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>, 
-	Jared Kangas <jkangas@redhat.com>, Mattijs Korpershoek <mkorpershoek@kernel.org>, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
-Subject: Re: [PATCH v5 1/2] dt-bindings: reserved-memory: Introduce
- carved-out memory region binding
-Message-ID: <20250701-frisky-resolute-hamster-3dfedc@houat>
-References: <20250617-dma-buf-ecc-heap-v5-0-0abdc5863a4f@kernel.org>
- <20250617-dma-buf-ecc-heap-v5-1-0abdc5863a4f@kernel.org>
- <20250627193132.GB4032621-robh@kernel.org>
- <20250630-attentive-fortunate-turaco-2e36d2@houat>
- <20250630220819.GA3454648-robh@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RqAxwo5i"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-235e389599fso152465ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 00:13:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751354019; x=1751958819; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RxL3VNZ4Zrs6oBZrgQg54Wx4zFWI9GcyhIpiUNXFiPo=;
+        b=RqAxwo5i+jcJymCqsuxOiF5nmXrFWflOGLATFMFU2fzM5QSQIF5fUXTsjA6RmzK+Vx
+         Acca1wojI5UzVkoD8cAyWonK4KMmSDUrN+oX7GznlZmc7LlmhmOVSAB5CtZ5Aklur4gH
+         xWok9CsP7dE2Ij7NXbTiGsRZ+M3haq3ZG4Pcifgwh2b0kVq7tueb2xy/nuqrX1bFJq0V
+         OuK1WbN26ydqfrw1rVhoJx9dz/mApuKc12oRLGgXaBa6SABxelJHNDYGmMX9kH5+NR6D
+         Kohz9pIDIffi9aVNrLcKc/vsF0W3oeuMMvmpXPGYd5wycfv1LrT2RSpSAHgKSKWSBuQL
+         9QOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751354019; x=1751958819;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RxL3VNZ4Zrs6oBZrgQg54Wx4zFWI9GcyhIpiUNXFiPo=;
+        b=l2Ip5XVmrOOpuNwXHICCBR7VmiPn4QmPDHR0lAFl2JdgSzeboxl1laON4O3pHuL/Ll
+         EGKrOy3zNoTRQTGDFpYy19p/8hyGjoprCRyA3JTbOqy256qP9ScIQGNm4n1pZ6LsKz2y
+         66W/1a+SrQIL1RVYa0AYo4elasK98/96Cd9QPEt/M9jKTkWs+px89KhZxiQPhlo96uPP
+         F5Vu/UE/jhIpTM4Od5GxewLXDeNYy092JcRINvUWJdA7yWD2DPUP60/6V3DjCNptAhF/
+         mnRbIcdrCtr5TlvehgGPQjf6gq2x0EKxSb4NpQW6R6KsiXFhdA4leg9EbETot3FR3wbd
+         FRfg==
+X-Forwarded-Encrypted: i=1; AJvYcCUGSHT5oy9/TkFdgNU2Go8Tp5fv++gNNkabDL7g8t/6ysq1BAM7qScEBMwoKzTe6inUHiiTz0rzH9h/1ks=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIeuOItf6QWI36e60DBwlOKtPD4pH1+su7WaVAr7qn3rR734V1
+	J47OQ/LSKZFBoyAMCGMjHuZiIvGUDNnqTEtJ+RlJRsfBa1EIC4vhZbNWzwgSR3Lh5uXgXyHw9s9
+	MDZdmvkF1RHVGLAM6j71K6jeXtuvAJsX9DOxcfUm1
+X-Gm-Gg: ASbGnctlC0AfW3qDRzZCo2P1bnY569R9AIkxUgE6c+SMaPX2xfle8voI7igRlVU7TFP
+	hN0GHeVHVySMxFBlzYLSFjSIYCipQwPkzOGFvFjz85qhFBiGity2kge2P56hmDnRj6af6MfOC+/
+	WfJn43WuplyRlvTgVb5AfeV/mkEGHAVFpp1nIsz1iKYhyciZ8QeznnxnieXN8rSwhrmtFt3h1BS
+	UUm
+X-Google-Smtp-Source: AGHT+IECig08eHKTTvf45dHSJaJUQDbe4/XeGRIpH9pZV9TKF+yYFATBI2QtHbYGZhiRR5ayYC8ekg+hNsS90nakNG8=
+X-Received: by 2002:a17:902:d506:b0:234:9f02:e937 with SMTP id
+ d9443c01a7336-23c601b0ca0mr1180985ad.25.1751354019225; Tue, 01 Jul 2025
+ 00:13:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="rehsid5ue72jvztb"
-Content-Disposition: inline
-In-Reply-To: <20250630220819.GA3454648-robh@kernel.org>
-
-
---rehsid5ue72jvztb
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
+References: <447bae3b7f5f2439b0cb4eb77976d9be843f689b.camel@intel.com>
+ <zlxgzuoqwrbuf54wfqycnuxzxz2yduqtsjinr5uq4ss7iuk2rt@qaaolzwsy6ki>
+ <4cbdfd3128a6dcc67df41b47336a4479a07bf1bd.camel@intel.com>
+ <diqz5xghjca4.fsf@ackerleytng-ctop.c.googlers.com> <aGJxU95VvQvQ3bj6@yzhao56-desk.sh.intel.com>
+ <a40d2c0105652dfcc01169775d6852bd4729c0a3.camel@intel.com>
+ <diqzms9pjaki.fsf@ackerleytng-ctop.c.googlers.com> <fe6de7e7d72d0eed6c7a8df4ebff5f79259bd008.camel@intel.com>
+ <aGNrlWw1K6nkWdmg@yzhao56-desk.sh.intel.com> <CAGtprH-csoPxG0hCexCUg_n4hQpsss83inRUMPRqJSFdBN0yTQ@mail.gmail.com>
+ <aGN6GIFxh57ElHPA@yzhao56-desk.sh.intel.com>
+In-Reply-To: <aGN6GIFxh57ElHPA@yzhao56-desk.sh.intel.com>
+From: Vishal Annapurve <vannapurve@google.com>
+Date: Tue, 1 Jul 2025 00:13:26 -0700
+X-Gm-Features: Ac12FXz5n0nRXiv5tX1uPxgTYg1ZNQypYDgTfnT8A352KSP8Co9WwSmcusOKr6w
+Message-ID: <CAGtprH_GoFMCMWYgOBtmu_ZBbBJeUXXanjYhYg9ZwDPeDXOYXg@mail.gmail.com>
+Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge pages
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, 
+	"ackerleytng@google.com" <ackerleytng@google.com>, 
+	"quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, "Li, Xiaoyao" <xiaoyao.li@intel.com>, 
+	"Shutemov, Kirill" <kirill.shutemov@intel.com>, "Hansen, Dave" <dave.hansen@intel.com>, 
+	"david@redhat.com" <david@redhat.com>, "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, 
+	"vbabka@suse.cz" <vbabka@suse.cz>, "tabba@google.com" <tabba@google.com>, "Du, Fan" <fan.du@intel.com>, 
+	"michael.roth@amd.com" <michael.roth@amd.com>, "seanjc@google.com" <seanjc@google.com>, 
+	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "Peng, Chao P" <chao.p.peng@intel.com>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "Yamahata, Isaku" <isaku.yamahata@intel.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Weiny, Ira" <ira.weiny@intel.com>, 
+	"pbonzini@redhat.com" <pbonzini@redhat.com>, "Li, Zhiquan1" <zhiquan1.li@intel.com>, 
+	"jroedel@suse.de" <jroedel@suse.de>, "Miao, Jun" <jun.miao@intel.com>, 
+	"pgonda@google.com" <pgonda@google.com>, "x86@kernel.org" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v5 1/2] dt-bindings: reserved-memory: Introduce
- carved-out memory region binding
-MIME-Version: 1.0
 
-On Mon, Jun 30, 2025 at 05:08:19PM -0500, Rob Herring wrote:
-> On Mon, Jun 30, 2025 at 06:41:38PM +0200, Maxime Ripard wrote:
-> > Hi Rob,
-> >=20
-> > On Fri, Jun 27, 2025 at 02:31:32PM -0500, Rob Herring wrote:
-> > > On Tue, Jun 17, 2025 at 02:25:40PM +0200, Maxime Ripard wrote:
-> > > > Some parts of the memory can be dedicated to specific purposes and
-> > > > exposed as a dedicated memory allocator.
-> > > >=20
-> > > > This is especially useful if that particular region has a particular
-> > > > properties the rest of the memory doesn't have. For example, some
-> > > > platforms have their entire RAM covered by ECC but for a small area
-> > > > meant to be used by applications that don't need ECC, and its assoc=
-iated
-> > > > overhead.
-> > > >=20
-> > > > Let's introduce a binding to describe such a region and allow the O=
-S to
-> > > > create a dedicated memory allocator for it.
-> > > >=20
-> > > > Signed-off-by: Maxime Ripard <mripard@kernel.org>
-> > > > ---
-> > > >  .../bindings/reserved-memory/carved-out.yaml       | 49 ++++++++++=
-++++++++++++
-> > > >  1 file changed, 49 insertions(+)
-> > > >=20
-> > > > diff --git a/Documentation/devicetree/bindings/reserved-memory/carv=
-ed-out.yaml b/Documentation/devicetree/bindings/reserved-memory/carved-out.=
-yaml
-> > > > new file mode 100644
-> > > > index 0000000000000000000000000000000000000000..9ab5d1ebd9ebd9111b7=
-c064fabe1c45e752da83b
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/reserved-memory/carved-out.=
-yaml
-> > > > @@ -0,0 +1,49 @@
-> > > > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: http://devicetree.org/schemas/reserved-memory/carved-out.yaml#
-> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > +
-> > > > +title: Carved-out Memory Region
-> > > > +
-> > > > +description: |
-> > >=20
-> > > Don't need '|'.
-> > >=20
-> > > > +  Specifies that the reserved memory region has been carved out of=
- the
-> > > > +  main memory allocator, and is intended to be used by the OS as a
-> > > > +  dedicated memory allocator.
-> > >=20
-> > > Other than the commit msg, it is completely lost that this is for=20
-> > > ECC-less memory.
-> >=20
-> > Because it's not. One of the first feedback I got was that the way to
-> > identify what a heap provides was the heap name.
-> >=20
-> > So, as far as the binding go, a heap just exposes a chunk of memory the
-> > memory allocator wouldn't use. The actual semantics of that chunk of
-> > memory don't matter.
->=20
-> But they do because you use one carve out for one thing and another=20
-> carve out for another purpose and they probably aren't interchangeable.
+On Mon, Jun 30, 2025 at 11:06=E2=80=AFPM Yan Zhao <yan.y.zhao@intel.com> wr=
+ote:
+>
+> On Mon, Jun 30, 2025 at 10:22:26PM -0700, Vishal Annapurve wrote:
+> > On Mon, Jun 30, 2025 at 10:04=E2=80=AFPM Yan Zhao <yan.y.zhao@intel.com=
+> wrote:
+> > >
+> > > On Tue, Jul 01, 2025 at 05:45:54AM +0800, Edgecombe, Rick P wrote:
+> > > > On Mon, 2025-06-30 at 12:25 -0700, Ackerley Tng wrote:
+> > > > > > So for this we can do something similar. Have the arch/x86 side=
+ of TDX grow
+> > > > > > a
+> > > > > > new tdx_buggy_shutdown(). Have it do an all-cpu IPI to kick CPU=
+s out of
+> > > > > > SEAMMODE, wbivnd, and set a "no more seamcalls" bool. Then any =
+SEAMCALLs
+> > > > > > after
+> > > > > > that will return a TDX_BUGGY_SHUTDOWN error, or similar. All TD=
+s in the
+> > > > > > system
+> > > > > > die. Zap/cleanup paths return success in the buggy shutdown cas=
+e.
+> > > > > >
+> > > > >
+> > > > > Do you mean that on unmap/split failure:
+> > > >
+> > > > Maybe Yan can clarify here. I thought the HWpoison scenario was abo=
+ut TDX module
+> > > My thinking is to set HWPoison to private pages whenever KVM_BUG_ON()=
+ was hit in
+> > > TDX. i.e., when the page is still mapped in S-EPT but the TD is bugge=
+d on and
+> > > about to tear down.
+> > >
+> > > So, it could be due to KVM or TDX module bugs, which retries can't he=
+lp.
+> > >
+> > > > bugs. Not TDX busy errors, demote failures, etc. If there are "norm=
+al" failures,
+> > > > like the ones that can be fixed with retries, then I think HWPoison=
+ is not a
+> > > > good option though.
+> > > >
+> > > > >  there is a way to make 100%
+> > > > > sure all memory becomes re-usable by the rest of the host, using
+> > > > > tdx_buggy_shutdown(), wbinvd, etc?
+> > >
+> > > Not sure about this approach. When TDX module is buggy and the page i=
+s still
+> > > accessible to guest as private pages, even with no-more SEAMCALLs fla=
+g, is it
+> > > safe enough for guest_memfd/hugetlb to re-assign the page to allow si=
+multaneous
+> > > access in shared memory with potential private access from TD or TDX =
+module?
+> >
+> > If no more seamcalls are allowed and all cpus are made to exit SEAM
+> > mode then how can there be potential private access from TD or TDX
+> > module?
+> Not sure. As Kirill said "TDX module has creative ways to corrupt it"
+> https://lore.kernel.org/all/zlxgzuoqwrbuf54wfqycnuxzxz2yduqtsjinr5uq4ss7i=
+uk2rt@qaaolzwsy6ki/.
 
-That was also my initial thought, but it was then discussed that the
-name of the region is enough of a discriminant. And it makes sense too,
-it's a sufficient discriminant for the device tree to uniquely identify
-a given memory region on a given platform already, so we don't really
-need anything else.
-
-> For the most part, everything in /reserved-memory is a carve out from=20
-> regular memory though we failed to enforce that.
->=20
-> > > This description applies to CMA area as well. So what's the differenc=
-e?
-> >=20
-> > Yeah, I kind of agree, which is why I initially started with a property,
-> > and you then asked for a compatible.
->=20
-> My issues with properties is we have to support N factorial cases for=20
-> combinations of N properties. It's already fragile. Whereas a compatible=
-=20
-> is (hopefully) well defined as to what's needed and is only 1 more case=
-=20
-> to support.
-
-I think that's also what John especially wanted to avoid. If we have a
-generic compatible, but the attributes/properties/whatever of the
-buffers allocated from that region differ (like ecc vs non-ecc,
-protected vs non-protected, etc.) we will need properties in the device
-tree to describe them too.
-
-Maxime
-
---rehsid5ue72jvztb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaGOKSgAKCRAnX84Zoj2+
-drdWAX9sIEhbIgQPAplf8S31a/8A+5wsrLKgnLMLcjff1DMeHSs96RQVVeLyGvXL
-12TzaegBf1HuvPhapoA7UkipLJ02FrPK1L91laUNIvV3mjRVccezFspf68+ATWbr
-/C5budOfXA==
-=akIL
------END PGP SIGNATURE-----
-
---rehsid5ue72jvztb--
+I would assume that would be true only if TDX module logic is allowed
+to execute. Otherwise it would be useful to understand these
+"creative" ways better.
