@@ -1,156 +1,173 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E44C226FA70;
-	Tue,  1 Jul 2025 17:05:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B91CF1C3306;
+	Tue,  1 Jul 2025 17:05:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751389505; cv=none; b=pQ/U7HLX3Shj+d/XNfBaG0y0q0VJZJ0Lzd6VPAgQzZ7DxCun7mK41aWifIj3CfRrpfZkoRjZOc1FamNT68jbWqSFzXtF8kFEwCwuZZuj+3C2SofDeLpBN7E2sIvu+fvGgYezjGw/UU6WwX1mCtQVa50tBImb+RzXNEF1+LuxUVY=
+	t=1751389540; cv=none; b=tQOMGsFQwgvY3rRn4Ci+R0DsFuDa9oEpe5kkGSoXk+bw/Q7aBrK5MGgCg9byd1fo3fgvY1NrcbK08aKkDFjmsjuFbK4JJpmyUgY2FMdhBKAdltLpUlwlo0zAk0OaVm8w+YkxptXGZi8gaYeboDw3WA4BnJKQ2+fN/Dv3ozGLUbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751389505; c=relaxed/simple;
-	bh=8AtDB9ZOK1mJSfdffS72JMAaKzwesnXF2qFcjp0ossQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eo0S0VGB5m9gsK2zgyAuzHZGXhj6dLHCtWw+g3a1hwJ8mG+t74AXusU4o45yeryXovWzGwep/JIoeev7mNWRU/fiSV/d+ikT9qQrI/rj54bwXofGVdUep7+J1Y1aLJiymEB9kX+SoqPk9kZKRb9l8npQjvh2kMn6DCuClekheGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=diheASn7; arc=none smtp.client-ip=209.85.208.172
+	s=arc-20240116; t=1751389540; c=relaxed/simple;
+	bh=3PeqLL7MmBnITYF6ZpWMf/sxV6skJBv/Mia19Fd0wbM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DySC2Jeug1MYdsadMzjuWujQu2fjSoZqMej2Bwsd6QD8JOInJelPCxZLJWcsN+2+WMPMwfFGu/Ow6Tu93FtZpKBV1rMm4bpqrSBt3GTqRKqy9bqVlqJ/GQDEXDHjUvx05NyVhibHZ9EtLFsd7IeiPSWxYCyDHYYcTV1reqElgik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lamIdTOr; arc=none smtp.client-ip=209.85.216.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="diheASn7"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-32cd499007aso42602901fa.0;
-        Tue, 01 Jul 2025 10:05:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lamIdTOr"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-313910f392dso2663830a91.2;
+        Tue, 01 Jul 2025 10:05:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751389500; x=1751994300; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C+K6ZF3dYWrim9dWHEWNEC7aeyZabJ9Egpf5a6k6P7g=;
-        b=diheASn7C3q2BA8iH1KJ9Qgo8YK4aZanK4sXO3LgBXA+agoyTVyYhQh5xh1A9M9PEJ
-         kPk2ik+k+NJVjvj99aZk7Vb2qinWNZB+7YigxzWvZtA7Rc3tygTvvfzB1NlAlObA2iXt
-         3L4JVf/HYOCBDFBnR/BEvUkpvFWK1mizTEqiN3L/Xk+QrubTr7WDe4fCl9w3cnnIS/Jp
-         oUFwMaL21ePPbuwYZyqwz1nFp9r/5LTagVxHKoUSlBfEDnLHaGVTukIwB6b7UZwa6SK/
-         52BQX5uSCyP47Q3Q1MYzQGiD+6MdA8G4LapbPrC4pSALI+4qsmYDgBw2YTJYSK5Qca7P
-         rRYw==
+        d=gmail.com; s=20230601; t=1751389538; x=1751994338; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=14AtEWASDbQcMrRLN/AjV1PxalbKqaf9kxW8P+HdVyM=;
+        b=lamIdTOrB3QYln4xt+Ur7mcQ23nKG9sZu22HnNYanUAsB5iB7QUTMVgHflyaOVzv39
+         kAZJSgTfDmudIRDP/EbS7O8WOXENJUCmzLMntKzBFKJ0vsvnrc91LMy5Q6iSJ+flRKnK
+         rXgyYQiH5kTCVSVeUdTNPxSm5ucsoM1Y1hy/YoKG5vlv458zfmRuFwufK9Js7QsuJcS+
+         rEUvrqd+n6kBwRdy8XCBLvk2pgtCmMaGkiDDe70fTQKzrpIZI+8691X6c42IQoysl+gU
+         F+ZblP/t5HCH/fQL6FkHPffeX9cGwfj7QiknCjt623lRsjOnjDeHLE+9sSI9l5zX6ZC4
+         bgsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751389500; x=1751994300;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=C+K6ZF3dYWrim9dWHEWNEC7aeyZabJ9Egpf5a6k6P7g=;
-        b=wuGNRbR5xrMWZY5G8xGHI//pKy36nOKmRizzFzpu04TtHgyP2ZxnpPf32vLx2OQMOm
-         aNjqJXXUvNTPoAFrRpLc6dHFrPt/1tpYWTM0Edeg5X3F2p9ksmTXKZipPq2fpYIbhtcz
-         AcEWJa6Ua9GuA3aZtNFZFv/UTLlDF5YPD7I6q+pK9kITzmGCKj5clcY2DyJYkuPFVnY0
-         U7+TYPgUfRgOMkmNZ5wMQUNI6O1v25w+6EeqGhTN8Y178eutc7nRdll3oOQKLxQTESQE
-         CkyGiGBdXtNPo28ZELDLkDMICvY9q8+PWRyAyduAd0XfKDvw3hTZdvqsgJhw+a2fp7q+
-         jn6g==
-X-Forwarded-Encrypted: i=1; AJvYcCVwf6Z9OBwLKcnc38TKurTp9YiGHCYm/rvFBCkKUD1oUUyqzuqfK/W9bCo4+rNBR1DXX0x2h3WiGV3HYOjo4YY=@vger.kernel.org, AJvYcCVzHzWHX6NwoA9K22l1t6pNdw7jGo4D/nbNeQMYZeI1vcrCJ6AWuYrbZi0aaX6mQGzCaPlYgEEgmvPSKYE7@vger.kernel.org, AJvYcCWppHx7m3eOZbTSBR6IrTEoDcRh1Y9MMifNtMKL3nUWAoFItGKpYZCyHfJ64zhvuUmgiDm7vbNgsvyN4Bc3@vger.kernel.org
-X-Gm-Message-State: AOJu0YwF/L53v6eRZ91bHJJz4UdivsiobMFewyubY1G50xH1XFsWr5b7
-	guCIxnhPhyyWmQnC2XsLdQj9Pha22MAlpSOPqdc0dOr5Q/BWfx32NgRMISfCO9TsvtY/tRhoGap
-	V7ZakDilZzl4LTymZp0UqPO/jkDuCBQE=
-X-Gm-Gg: ASbGncsNg9GLYqHjX672TGK3bS0P2blvfHIilVsnkQjLsMCxXZINS8YlTnR/dCrqUWj
-	amabnCz8tHkMbh8HSvwpL8Gv7n5lskXz5855aKvxJAL+2CE5eDd6Bgnr/7Bb03zXVjLOA/mC5Z+
-	0FVBRekd3iRk8VOHcjhzcd8XHGQZEaSgvEH649MH/ByXwI5ikbieZ+VA9ouE3a3pUGcNfrxS1s5
-	wUw1ptAztn1J456
-X-Google-Smtp-Source: AGHT+IGqYOo2c8/8oI+jyXB0x4gWaxsVOe9Tp1zXFwmtuWqACbNl3YCeogJ+en7TpTeTnciAtjdBji+bnjdfRKFy2FM=
-X-Received: by 2002:a2e:22c5:0:b0:32a:dcc7:f99e with SMTP id
- 38308e7fff4ca-32cdc4ef298mr64711841fa.22.1751389499666; Tue, 01 Jul 2025
- 10:04:59 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751389538; x=1751994338;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=14AtEWASDbQcMrRLN/AjV1PxalbKqaf9kxW8P+HdVyM=;
+        b=ir9GX0m2RYBobIzrxyTvoDWpkfq9aPcxcSrCnyZ+booBKHV5z2+0ZFMfmJwT720vHl
+         6+KUcR0mcAm/9Y4HTyHBFTEbJHKFDbruUm6cQGkNFW94z1ig2lihYFy0XP8Gff8VtMkb
+         3D2pRCi8tpzILSapGBB9n2pWaYmdaCq8aZbqjnyXL/avYUAaH/eMy/nrzvEEoN/G15x+
+         mp8hqdpNKi1aQitoHkF9gpQM5sVXd5FNH8MYeRULVyR/+LJu8r++BuyC1LmEECXOn+D7
+         tVF99yb4qwDUaKiQ8YULlueB1sL8SmCZlkfWZkYytoUqZTlClQWjP7Zm8h+ZFkXU6kl7
+         wj7g==
+X-Forwarded-Encrypted: i=1; AJvYcCVZbS0fGVt6NvsDDf0kVxRGmzR0B2MGaXfaswef/fhG8tqivotxBEKJYlznR1tBMPNmZoi2CpWP8NTQzcA=@vger.kernel.org, AJvYcCVh99sNIlGsyzl7ckFN2TDCD+AIJaEl7Ch7SG/4rh4TsnWHPRXQY3F4Izd1FdC7JCIPtKFJtEde@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsDb/yAch025soXMOwFAj0DxKfeATynwcDFM0zW5AvNpzVm3zi
+	zPjmbbfHl0hGxTNUpB76GSbo+EbblZcaKTRZaxBVxifSgPdAZNBmlx8J
+X-Gm-Gg: ASbGncs/D6Q1tqHxpVnsuWVvNrQ9GgRYmBCloKXvEGbecthI7nM2KZ5gtx6OevhIXxy
+	RAFw5yx3f0G2V2QbF6u4KQrKUwFcaC7SEfNFTeAMsYtPqBKIX+IQ8MO3VA9tdsBbICV1rWjau37
+	zJqik9cQlTmlpeztO3uCjy0Nzp2kL82fWTcisC2tF5Ifc0ggLJFgBT3UT88rMJrd81pgsZvnH/r
+	CE8+5Q5SlBR3trVPUNKGkWkmoqsEdKkA0fcx+KOoB21OrXvUtyZv0gL+Owk8VBWa9f2Fhvun0mx
+	yZnJujs1CbjCKgiR0sqMFDH4MhvjVYnOyXCKBAy7SzENKjeIZ8UxggZyGSTSi1JZKGjbTIJXKwg
+	p
+X-Google-Smtp-Source: AGHT+IGpbx3xICIFTBJaWCKXAXPyszPU3kpAkEkC3Kx9MGxKXpGrE50T2HK7GgJeTdO7iTngBjisdQ==
+X-Received: by 2002:a17:90b:3b47:b0:311:d670:a10d with SMTP id 98e67ed59e1d1-318c92ee549mr22850865a91.26.1751389537753;
+        Tue, 01 Jul 2025 10:05:37 -0700 (PDT)
+Received: from localhost.localdomain ([121.185.186.233])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f5437a0bsm16039494a91.35.2025.07.01.10.05.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 10:05:37 -0700 (PDT)
+From: Jeongjun Park <aha310510@gmail.com>
+To: richardcochran@gmail.com
+Cc: andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jeongjun Park <aha310510@gmail.com>
+Subject: [PATCH net-next] ptp: remove unnecessary mutex lock in ptp_clock_unregister()
+Date: Wed,  2 Jul 2025 02:03:53 +0900
+Message-ID: <20250701170353.7255-1-aha310510@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250701-xarray-insert-reserve-v1-0-25df2b0d706a@gmail.com>
- <20250701-xarray-insert-reserve-v1-1-25df2b0d706a@gmail.com>
- <aGQORK02N8jMOhy6@Mac.home> <CAJ-ks9nqWHSJjjeg=QReVh3pq87LSLE-+NDOD5scp1axYV7k7Q@mail.gmail.com>
- <aGQUuuCpaBFrWrSe@Mac.home>
-In-Reply-To: <aGQUuuCpaBFrWrSe@Mac.home>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Tue, 1 Jul 2025 13:04:22 -0400
-X-Gm-Features: Ac12FXzUo3uf1OgsqLAqpL1VF9vNiKALMZv_azy7ZRgjbxDzg8RiT9byf5Y14Vc
-Message-ID: <CAJ-ks9=Nfv+U8i-h7bb0fK5PMy5w78yiN+P14Hkx8Ckbw3xQ0Q@mail.gmail.com>
-Subject: Re: [PATCH 1/3] rust: xarray: use the prelude
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Andreas Hindborg <a.hindborg@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Matthew Wilcox <willy@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	Daniel Almeida <daniel.almeida@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 1, 2025 at 1:02=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> wr=
-ote:
->
-> On Tue, Jul 01, 2025 at 12:36:20PM -0400, Tamir Duberstein wrote:
-> > On Tue, Jul 1, 2025 at 12:35=E2=80=AFPM Boqun Feng <boqun.feng@gmail.co=
-m> wrote:
-> > >
-> > > On Tue, Jul 01, 2025 at 12:27:17PM -0400, Tamir Duberstein wrote:
-> > > > Using the prelude is customary in the kernel crate.
-> > > >
-> > > > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> > > > ---
-> > > >  rust/kernel/xarray.rs | 34 ++++++++++++++++++++--------------
-> > > >  1 file changed, 20 insertions(+), 14 deletions(-)
-> > > >
-> > > > diff --git a/rust/kernel/xarray.rs b/rust/kernel/xarray.rs
-> > > > index 75719e7bb491..436faad99c89 100644
-> > > > --- a/rust/kernel/xarray.rs
-> > > > +++ b/rust/kernel/xarray.rs
-> > > > @@ -5,16 +5,15 @@
-> > > >  //! C header: [`include/linux/xarray.h`](srctree/include/linux/xar=
-ray.h)
-> > > >
-> > > >  use crate::{
-> > > > -    alloc, bindings, build_assert,
-> > > > -    error::{Error, Result},
-> > > > +    alloc,
-> > > > +    prelude::*,
-> > > >      types::{ForeignOwnable, NotThreadSafe, Opaque},
-> > > >  };
-> > > > -use core::{iter, marker::PhantomData, mem, pin::Pin, ptr::NonNull}=
-;
-> > > > -use pin_init::{pin_data, pin_init, pinned_drop, PinInit};
-> > > > +use core::{iter, marker::PhantomData, mem, ptr::NonNull};
-> > > >
-> > > >  /// An array which efficiently maps sparse integer indices to owne=
-d objects.
-> > > >  ///
-> > > > -/// This is similar to a [`crate::alloc::kvec::Vec<Option<T>>`], b=
-ut more efficient when there are
-> > > > +/// This is similar to a [`Vec<Option<T>>`], but more efficient wh=
-en there are
-> > > >  /// holes in the index space, and can be efficiently grown.
-> > > >  ///
-> > > >  /// # Invariants
-> > > > @@ -104,16 +103,23 @@ pub fn new(kind: AllocKind) -> impl PinInit<S=
-elf> {
-> > > >      fn iter(&self) -> impl Iterator<Item =3D NonNull<T::PointedTo>=
-> + '_ {
-> > > >          let mut index =3D 0;
-> > > >
-> > > > -        // SAFETY: `self.xa` is always valid by the type invariant=
-.
-> > > > -        iter::once(unsafe {
-> > > > -            bindings::xa_find(self.xa.get(), &mut index, usize::MA=
-X, bindings::XA_PRESENT)
-> > > > -        })
-> > > > -        .chain(iter::from_fn(move || {
-> > > > +        core::iter::Iterator::chain(
-> > >
-> > > Does this part come from using the prelude? If not, either we need to
-> > > split the patch or we need to mention it in the changelog at least.
-> >
-> > Yes, it's from using the prelude - PinInit also has a chain method
-> > that causes ambiguity here.
->
-> Maybe you can mention this in the change log as well. Like "Calling
-> iter::chain() with the associated function style to disambiguate with
-> PinInit::chain()". Make it easier to review (and remember) why.
+ptp_clock_unregister() is called by ptp core and several drivers that
+require ptp clock feature. And in this function, ptp_vclock_in_use()
+is called to check if ptp virtual clock is in use, and
+ptp->is_virtual_clock, ptp->n_vclocks are checked.
 
-Yep, done for the next spin.
+It is true that you should always check ptp->is_virtual_clock to see if
+you are using ptp virtual clock, but you do not necessarily need to
+check ptp->n_vclocks.
+
+ptp->n_vclocks is a feature need by ptp sysfs or some ptp cores, so in
+most cases, except for these callers, it is not necessary to check.
+
+The problem is that ptp_clock_unregister() checks ptp->n_vclocks even
+when called by a driver other than the ptp core, and acquires
+ptp->n_vclocks_mux to avoid concurrency issues when checking.
+
+I think this logic is inefficient, so I think it would be appropriate to
+modify the caller function that must check ptp->n_vclocks to check
+ptp->n_vclocks in advance before calling ptp_clock_unregister().
+
+Signed-off-by: Jeongjun Park <aha310510@gmail.com>
+---
+ drivers/ptp/ptp_clock.c   |  2 +-
+ drivers/ptp/ptp_private.h | 34 +++++++++-------------------------
+ 2 files changed, 10 insertions(+), 26 deletions(-)
+
+diff --git a/drivers/ptp/ptp_clock.c b/drivers/ptp/ptp_clock.c
+index 36f57d7b4a66..db6e03072fba 100644
+--- a/drivers/ptp/ptp_clock.c
++++ b/drivers/ptp/ptp_clock.c
+@@ -413,7 +413,7 @@ static int unregister_vclock(struct device *dev, void *data)
+ 
+ int ptp_clock_unregister(struct ptp_clock *ptp)
+ {
+-	if (ptp_vclock_in_use(ptp)) {
++	if (!ptp->is_virtual_clock) {
+ 		device_for_each_child(&ptp->dev, NULL, unregister_vclock);
+ 	}
+ 
+diff --git a/drivers/ptp/ptp_private.h b/drivers/ptp/ptp_private.h
+index a6aad743c282..9b308461fcc8 100644
+--- a/drivers/ptp/ptp_private.h
++++ b/drivers/ptp/ptp_private.h
+@@ -95,39 +95,23 @@ static inline int queue_cnt(const struct timestamp_event_queue *q)
+ 	return cnt < 0 ? PTP_MAX_TIMESTAMPS + cnt : cnt;
+ }
+ 
+-/* Check if ptp virtual clock is in use */
+-static inline bool ptp_vclock_in_use(struct ptp_clock *ptp)
++/* Check if ptp clock shall be free running */
++static inline bool ptp_clock_freerun(struct ptp_clock *ptp)
+ {
+-	bool in_use = false;
+-
+-	/* Virtual clocks can't be stacked on top of virtual clocks.
+-	 * Avoid acquiring the n_vclocks_mux on virtual clocks, to allow this
+-	 * function to be called from code paths where the n_vclocks_mux of the
+-	 * parent physical clock is already held. Functionally that's not an
+-	 * issue, but lockdep would complain, because they have the same lock
+-	 * class.
+-	 */
+-	if (ptp->is_virtual_clock)
+-		return false;
++	bool ret = false;
++
++	if (ptp->has_cycles)
++		return ret;
+ 
+ 	if (mutex_lock_interruptible(&ptp->n_vclocks_mux))
+ 		return true;
+ 
+-	if (ptp->n_vclocks)
+-		in_use = true;
++	if (!ptp->is_virtual_clock && ptp->n_vclocks)
++		ret = true;
+ 
+ 	mutex_unlock(&ptp->n_vclocks_mux);
+ 
+-	return in_use;
+-}
+-
+-/* Check if ptp clock shall be free running */
+-static inline bool ptp_clock_freerun(struct ptp_clock *ptp)
+-{
+-	if (ptp->has_cycles)
+-		return false;
+-
+-	return ptp_vclock_in_use(ptp);
++	return ret;
+ }
+ 
+ extern const struct class ptp_class;
+--
