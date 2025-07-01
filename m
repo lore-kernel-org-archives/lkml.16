@@ -1,160 +1,131 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15518223707;
-	Tue,  1 Jul 2025 13:05:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F6C7273D93
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 13:05:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751375110; cv=none; b=gVcY94qGK3ypOMhna2TkOaYuRLNo9cds1GCoGSPpjSgJSpDbP/9g0198qEwXpVBHgQnNDFpJwDOOnWX8DL6UbAP3Z0QC2ngIhJIXGNCGPT1651nRGqQb6GNFg0uda+c6K8SfrkqfD7jNJaiHqoZ5OGf0Iea8QmXrx8zgtXI+qAQ=
+	t=1751375122; cv=none; b=th0svjKcDu4mlpbtFMo5pPf/myLEsNeg9DU7edlkSxe3o0EUX7CvJljX+zA4ArMfa4xRNDJTfaN7Q9lLrjAsz13IbjJUYNZc5Hbw7TRmPC8SIP5Hwa5gekOP9KejyS6bwlEztswAfEH55OFVRAq3YELf3mLtYmJot7wq+Q689ZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751375110; c=relaxed/simple;
-	bh=hKeiZFqaAZmfcsCW85Fv7xa/9DAFVCrUvTyCASY0EEU=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=faAv2nR1V6ktetq1kuKHbzojyZ9yZJyHtWjKN9votSdvoEcguehS5uU00RqUqya7Pm24jKkARSryvsNBvAhBzDJWhVl5QTVid0D0btffczBCrL1C9iYrzB6cJwb/nPx6q6CuDD+tMCeZ7yH0TCHSZ4XRkVup9fznggvRnJEzif8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bWjt25brXz6L5Y7;
-	Tue,  1 Jul 2025 21:04:42 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7EEF31402F8;
-	Tue,  1 Jul 2025 21:05:05 +0800 (CST)
-Received: from localhost (10.122.19.247) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 1 Jul
- 2025 15:05:04 +0200
-Date: Tue, 1 Jul 2025 14:05:03 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-CC: <linux-cxl@vger.kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>,
-	"Len Brown" <lenb@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>, Dave
- Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan
- Williams <dan.j.williams@intel.com>, Mahesh J Salgaonkar
-	<mahesh@linux.ibm.com>, Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas
-	<bhelgaas@google.com>, Tony Luck <tony.luck@intel.com>, Borislav Petkov
-	<bp@alien8.de>, <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linuxppc-dev@lists.ozlabs.org>, <linux-pci@vger.kernel.org>,
-	<linux-edac@vger.kernel.org>, Kuppuswamy Sathyanarayanan
-	<sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [PATCH 3/3 v4] ACPI: extlog: Trace CPER CXL Protocol Error
- Section
-Message-ID: <20250701140503.00006a48@huawei.com>
-In-Reply-To: <20250623145453.1046660-4-fabio.m.de.francesco@linux.intel.com>
-References: <20250623145453.1046660-1-fabio.m.de.francesco@linux.intel.com>
-	<20250623145453.1046660-4-fabio.m.de.francesco@linux.intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1751375122; c=relaxed/simple;
+	bh=jFvD1ZrKqKPn4xo4zK1Zi3MX9OLA3KyQqmOz21pWQTk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cZ0BssAPuWrlWM793EMsz/hlBMys9WShtpHmJ3TRL3064Q19tLul9skN80655rwwWPo6lnX7oJD+EIDniol4U0zQ5StTP5kxsABS+ZP7SIyL5tNXNcEWNO/9tUxSjMm0ute20MfKQWRbczplzgfP6AmaKlm9L3K+NNB+/GoV0xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PmeHa8dx; arc=none smtp.client-ip=209.85.160.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PmeHa8dx"
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2c6ed7efb1dso2415289fac.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 06:05:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751375119; x=1751979919; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=1TWX8rTsCZMwR7J7QVpBk+kp2Qgls/iNpOzUF5Kdzek=;
+        b=PmeHa8dx9QxTIB8157wvVlAFB+n3gyQwq61dHzacWyo8czqdvviUGXGqGVOCBjiIis
+         lECQPB5MUL+PdZ+ArTpkqYtylFp/qMgtDo65Lsnh9CG+4MziVenXsQW2kIQ1Dtmc4QWC
+         vQ/MJPuKhjXb4JUm5oqFa5IxIZ+z6I1H2RAPvbAtJCew/RjLI2aBA6+YKpmT/DfmjC1d
+         UKqM+Q5k7XcbQ3FeyDVy3N/+DCp6WyYVl7UaFdsUnZQKvFt/tXk24nqRO41ApGRuNt1I
+         etg+j0B5hf1DywAjShxEoK/u1LDpca7/gAj4rsSul4+ZekeHNJAEIUkOwSV0u5oFJgt2
+         YlUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751375119; x=1751979919;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1TWX8rTsCZMwR7J7QVpBk+kp2Qgls/iNpOzUF5Kdzek=;
+        b=b6Wq+xcIeiFyihTFgmWQ9cUqnRuBNYZF1XwQpFhZQ3bvR4iXPFC033O+IpJhCVdkzq
+         1iKDHtsM4IwlzfoeMu8HLOU3yzYHvJ/t3FSIfWXYn8Q8DY1DPLfnm+eOmJAVxlxGNafp
+         7//GzZk9OYgqYdhpDrugdCeT0OGH6YJa6x8tz16MxbBDOb9j9ijzbHzSLc9N6SCZssiL
+         uCRSTS+i2KuDqFe/HzsQryw3aIJd/s1ExeURyHqJwTCGinIgIGPht2q/ZaPLzAeV3fqe
+         7p/+XJBD1khSmgHI4ZWo/PbzpiGOc0kkkfPRhgCJGJbjDvWGAiGabIQ93HzdWhklXrlk
+         +0Yw==
+X-Forwarded-Encrypted: i=1; AJvYcCU9Vrfd0Xb/Gj0wdgHdPL+pQHCPujEDgSXZVOdHGgR59H4K87PIPcZme/MoZ9jvsD1jlRGbyYwCyd6AAwA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx13EWR55KoEp7+QeCApELg/LOFJm/aLcQo0oWIrw+uaR5BfpMZ
+	m10+zrS9qu8XF1IzWlex2KYyM08iySfx9ivMpWxGMKtxPKajIaPL6GvDI2M4b0CCg6qVVgGTLje
+	tqRItrpm2XAanxLoqPTdQcspU2+dyECyN5d+7Avcy
+X-Gm-Gg: ASbGncuOmMGQR3Cn5+2xYYqAMIwosY4a2BMSl6y0R7Xp8wjA8ZMgDNd50mI7QLVynch
+	V7qdyGlmpqE4R/bEd82UEo2DWe1lQyN3XN8jU9u0GOfTXviPA0vqCNW3n1PBKMSw6eCOgPosACW
+	YwJI8f5GNOssiZx5A8YRGzYeo5HnWbJMEiGDLd1uM8
+X-Google-Smtp-Source: AGHT+IGFPwC9D7ECA270DEQ7V6Lz7pqeKr+PsMPIMsAOBbe6/HXkq3nYn8ORiGwcf/0z2ZOafHpxuFP09EI+CVKrlh8=
+X-Received: by 2002:a05:6871:6c07:b0:2c2:174b:c829 with SMTP id
+ 586e51a60fabf-2efed4ff09cmr12077120fac.15.1751375117445; Tue, 01 Jul 2025
+ 06:05:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- frapeml500008.china.huawei.com (7.182.85.71)
+References: <CAL0q8a6pOBZbWYdwKzC1U-PuH4rgf2miv0jcF=fWVZt_dUZHmw@mail.gmail.com>
+ <20250630133343.GA26040@lst.de> <aGLyswGYD6Zai_sI@kbusch-mbp>
+In-Reply-To: <aGLyswGYD6Zai_sI@kbusch-mbp>
+From: Ben Copeland <ben.copeland@linaro.org>
+Date: Tue, 1 Jul 2025 14:05:04 +0100
+X-Gm-Features: Ac12FXxPwbXsIZXwCl1ZRik9WUZfYk8dZINVCxusvm1y0dN6VUD7U0a8B3GvEuQ
+Message-ID: <CAL0q8a7acv-9N1XUmJ9LAojdhm947eiira6Kx0tew-VVVCY6kg@mail.gmail.com>
+Subject: Re: next-20250627: IOMMU DMA warning during NVMe I/O completion after 06cae0e3f61c
+To: Keith Busch <kbusch@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org, lkft-triage@lists.linaro.org, 
+	regressions@lists.linux.dev, linux-nvme@lists.infradead.org, 
+	Dan Carpenter <dan.carpenter@linaro.org>, axboe@kernel.dk, sagi@grimberg.me, 
+	iommu@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 23 Jun 2025 16:54:20 +0200
-"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com> wrote:
-
-> When Firmware First is enabled, BIOS handles errors first and then it makes
-> them available to the kernel via the Common Platform Error Record (CPER)
-> sections (UEFI 2.10 Appendix N). Linux parses the CPER sections via one of
-> two similar paths, either ELOG or GHES. The errors managed by ELOG are
-> signaled to the BIOS by the I/O Machine Check Architecture (I/O MCA).
-> 
-> Currently, ELOG and GHES show some inconsistencies in how they report to
-> userspace via trace events.
-> 
-> Therefore, make the two mentioned paths act similarly by tracing the CPER
-> CXL Protocol Error Section (UEFI v2.10, Appendix N.2.13).
-> 
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
+On Mon, 30 Jun 2025 at 21:25, Keith Busch <kbusch@kernel.org> wrote:
+>
+> On Mon, Jun 30, 2025 at 03:33:43PM +0200, Christoph Hellwig wrote:
+> > Hi Ben,
+> >
+> > > [   32.857521] iommu_dma_unmap_page+0xc4/0xe8 (P)
+> >
+> > Can you resolve this to a source location for me. i.e.
+> >
+> > gdb vmlinux
+> >
+> > l *(iommu_dma_unmap_page+0xc4)
+> >
+> > Also what IOMMU driver is this device using?  It looks like it
+> > might not support a 4k IOMMU page size.
+>
+> I think the PRP handling is broken. At the very least, handling the last
+> element is wrong if it appears at the end of the list, so I think we
+> need something like this:
+>
 > ---
->  drivers/acpi/acpi_extlog.c | 62 ++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/core/ras.c     |  6 ++++
->  include/cxl/event.h        |  2 ++
->  3 files changed, 70 insertions(+)
-> 
-> diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
-> index cefe8d2d8affc..9a37b08aacfea 100644
-> --- a/drivers/acpi/acpi_extlog.c
-> +++ b/drivers/acpi/acpi_extlog.c
-> @@ -12,6 +12,7 @@
->  #include <linux/ratelimit.h>
->  #include <linux/edac.h>
->  #include <linux/ras.h>
-> +#include <cxl/event.h>
->  #include <acpi/ghes.h>
->  #include <asm/cpu.h>
->  #include <asm/mce.h>
-> @@ -160,6 +161,60 @@ static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
->  	pci_dev_put(pdev);
->  }
->  
-> +static void
-> +extlog_cxl_cper_handle_prot_err(struct cxl_cper_sec_prot_err *prot_err,
-> +				int severity)
-> +{
-> +	struct cxl_cper_prot_err_work_data wd;
-> +	u8 *dvsec_start, *cap_start;
+> --- a/drivers/nvme/host/pci.c
+> +++ b/drivers/nvme/host/pci.c
+> @@ -701,7 +701,7 @@ static void nvme_free_prps(struct request *req)
+>         prp_list = iod->descriptors[desc];
+>         do {
+>                 dma_unmap_page(dma_dev, dma_addr, dma_len, dir);
+> -               if (i == NVME_CTRL_PAGE_SIZE >> 3) {
+> +               if (i == NVME_CTRL_PAGE_SIZE >> 3 && length > NVME_CTRL_PAGE_SIZE) {
+>                         prp_list = iod->descriptors[++desc];
+>                         i = 0;
+>                 }
+> --
+>
+> But even that, the PRP setup doesn't match the teardown. We're calling
+> dma_map_page() on each PRP even if consecutive PRP's came from the same
+> dma mapping segment. So even if it had been coalesced, but if the device
+> doesn't support SGLs, then it would use the prp unmap path.
+
+Even though SGLs are not supported, I gave you the patch a spin and
+saw the same stack traces.
+
+>
+> Ben, can you check if your device supports sgl?
+>
+>   # nvme id-ctrl /dev/nvme0 | grep sgl
+
+sgl is not supported by the drive.. Here was my output:
+
+---
+sgls      : 0
 
 
-A bunch of this is identical to cxl_cper_post_prot_err()
-Can we factor that stuff out for common use?
 
-> +
-> +	if (!(prot_err->valid_bits & PROT_ERR_VALID_AGENT_ADDRESS)) {
-> +		pr_warn_ratelimited("CXL CPER invalid agent type\n");
-> +		return;
-> +	}
-> +
-> +	if (!(prot_err->valid_bits & PROT_ERR_VALID_ERROR_LOG)) {
-> +		pr_warn_ratelimited("CXL CPER invalid protocol error log\n");
-> +		return;
-> +	}
-> +
-> +	if (prot_err->err_len != sizeof(struct cxl_ras_capability_regs)) {
-> +		pr_warn_ratelimited("CXL CPER invalid RAS Cap size (%u)\n",
-> +				    prot_err->err_len);
-> +		return;
-> +	}
-> +
-> +	if ((prot_err->agent_type == RCD || prot_err->agent_type == DEVICE ||
-> +	     prot_err->agent_type == LD || prot_err->agent_type == FMLD) &&
-> +	    !(prot_err->valid_bits & PROT_ERR_VALID_SERIAL_NUMBER))
-> +		pr_warn_ratelimited(FW_WARN
-> +				    "CXL CPER no device serial number\n");
 
-Whilst some of this check isn't present in cxl_cper_post_prot_err(), it should
-be harmless.
-
-> +
-> +	switch (prot_err->agent_type) {
-> +	case RCD:
-> +	case DEVICE:
-> +	case LD:
-> +	case FMLD:
-> +	case RP:
-> +	case DSP:
-> +	case USP:
-> +		memcpy(&wd.prot_err, prot_err, sizeof(wd.prot_err));
-> +
-> +		dvsec_start = (u8 *)(prot_err + 1);
-> +		cap_start = dvsec_start + prot_err->dvsec_len;
-> +
-> +		memcpy(&wd.ras_cap, cap_start, sizeof(wd.ras_cap));
-> +		wd.severity = cper_severity_to_aer(severity);
-> +		break;
-> +	default:
-> +		pr_err_ratelimited("CXL CPER reserved agent type: %d\n",
-> +				   prot_err->agent_type);
-> +		return;
-> +	}
-> +
-> +	cxl_cper_ras_handle_prot_err(&wd);
-> +}
+Ben
