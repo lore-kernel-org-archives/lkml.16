@@ -1,79 +1,88 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DADBC1E522;
-	Tue,  1 Jul 2025 02:43:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01AD229D0D;
+	Tue,  1 Jul 2025 02:45:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751337827; cv=none; b=p8vM/mnMqFcQh8GxBxni7tu44nHGQ2dONC/8FHnOEwONF2l5GFJI3sWXwV+goE4lmvDFVFJib0yNw1Pq3YtygGzT8CPEalfI1niq7HhAetvOS9ryNW0mC4O/+KPE6SxWtWHSKbwHGXHRBFEggYjt67nCCVg3Tc1KmPg4zAMFkXE=
+	t=1751337912; cv=none; b=hO88ypUFd3zojRCyOgZ34S/u7laNKDRXuxwXqkV/mmNdjjvTB0a4uJAehnWU65DSwDZwsj/0074UmuL4cyTtOOUoUiifebJLtg28tcdkvcl0U7OxZdS3SysPk+WxsQq9XNJptE+c8yknfNcmlHOMQPTNDiFgvOubNlFQRibtkT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751337827; c=relaxed/simple;
-	bh=65U5dEGmfX2mApXDVeyXjr8YGGs/V15/sn4CLFT0eDg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=eIkzDpDINv3gNMnGkAxhOtqbnZXY96YSzu/zcxXvAwqd+++bBzvrIsvAW7w46dZvV4ITu5NqTcCPJVIZd3v2TfTdzv5bHIDK9dIhqkcwvy11HKKX/V62qqOLEo0FfnobVjDGY616C0JiizrWup1dkGoxShE1rbQhuQwyO005dZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=Aht7CT7O; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="Aht7CT7O"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net D2791406FA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1751337823; bh=xeHNwLOewM8sWl5+rQguP1bjnm0CgxWiz2pC1ZhoPU4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Aht7CT7OmmeMhBFEQHG/E8gKFVpjWz02sC6135CoC0Mvd+7hA4RXwUF4usNYGwXL8
-	 70Qt8b7oDql4PGHR5xNtCn4zpQwMpdGDz73ka/VfFi6ObZFqO2qzaJUSizLoW655Sr
-	 7wwaShFwSvvsxV69aDxaiT/ljIQQMb8aG3166lpcT1QnHzbNasTtAnzs5mwrF1Bcn8
-	 SmGHztDOoFq1LO/TVFAc+/eX7Bi/edT0THfLSvW9D8lKoRgAAdpb0Anwl0ujSOBQ3p
-	 eTavpXVrFx5/H+oIW4ahoBqnlkMgbTk3pZJ7Rq3xo83IKaGQYuChqn1XMI2855iW3h
-	 PWg7qBSh90nVA==
-Received: from pelicano.lwn.net (unknown [IPv6:2605:59c8:3258:6a10:f9:f236:69ec:d90e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id D2791406FA;
-	Tue,  1 Jul 2025 02:43:42 +0000 (UTC)
-From: Jake Edge <jake@lwn.net>
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org,  linux-doc@vger.kernel.org,
-  linux-api@vger.kernel.org,  workflows@vger.kernel.org,  tools@kernel.org
-Subject: Re: [RFC v2 00/22] Kernel API specification framework
-In-Reply-To: <20250624180742.5795-1-sashal@kernel.org> (Sasha Levin's message
-	of "Tue, 24 Jun 2025 14:07:20 -0400")
-References: <20250624180742.5795-1-sashal@kernel.org>
-Date: Mon, 30 Jun 2025 19:43:42 -0700
-Message-ID: <87qzz0aaw1.fsf@pelicano.edge2.net>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1751337912; c=relaxed/simple;
+	bh=NuyoxN+wb4pOukzmbIFxFgL8wau2xfrRWDw8vNoyG/8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZkN62OdgMOF5wtwvH/10TPhSgQt6de7Ru05BBdfnuybtNQ8cJy70PNs/8AptTwjwdhzV7BrDY5x3kmuR1aJhKDnn6aWmHe9DsBkvB5qX9Eq03PYf55DVZ99xPCa8plwOfEucrYW7kd0Aco7f/Qmpb9Z4ivNMnYRNrwxyoglS2IU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf11.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 1AC13104D2D;
+	Tue,  1 Jul 2025 02:45:07 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id F35D62002A;
+	Tue,  1 Jul 2025 02:45:02 +0000 (UTC)
+Date: Mon, 30 Jun 2025 22:45:39 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa
+ <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner
+ <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu Bhagat
+ <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
+ Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>,
+ Florian Weimer <fweimer@redhat.com>
+Subject: Re: [PATCH v12 00/14] unwind_user: x86: Deferred unwinding
+ infrastructure
+Message-ID: <20250630224539.3ccf38b0@gandalf.local.home>
+In-Reply-To: <CAHk-=wijwK_idn0TFvu2NL0vUaQF93xK01_Rru78EMqUHj=b1w@mail.gmail.com>
+References: <20250701005321.942306427@goodmis.org>
+	<CAHk-=wijwK_idn0TFvu2NL0vUaQF93xK01_Rru78EMqUHj=b1w@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: xsnj6my7totg6gyn5kswzzsm51nasdc3
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: F35D62002A
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19SiACo16cJN248UoQpQZEr31BhlqXpqsA=
+X-HE-Tag: 1751337902-996933
+X-HE-Meta: U2FsdGVkX18Jye2GUfiNcy0SvWe50i6P5lr63s6hbfUZFtXJFMGCqIp4oHCjzy+AKcEJsLaWtJWREfX2V8y0BYad2Cy6A9eejIUH3Fno1Nwq0rkI+9RadkgJ/VDXiYwgYSiV5ECaN9e7NrVM+aLNTjzgcQM0VBgHZaiEK5AW+ZLoVFBWoFjdkSa0alAz6mxTF6RB8JbjNcIjdoFwwxV5wfBja+Y7joL4IJe8DJDUAYHN2hom0mN3IvcXmYT/7DCNr+AbAHGhzDOUe5VleNW+OwXiDW+aabWSCtmdZkFXZrML9O3x/2JkYej33L1gAjytLCNaO0JsK8ZKtrYwGpSv2eO7OnhrVBtS1g0uuXDDs7cdsNxWHQ6sFZdJyswpFP6egj+jcwspkci/EyZYETcPV4YM97rsD004AfOkoG+83fxo0PxsaesL8CgqBgfbeid0TFs8rhiTnLswpIEDm7WdQv1SiZWSzm6MfaHND3REckAeu/BQcLpA+xnP92A6yURK1oFMpkG/8gI=
+
+On Mon, 30 Jun 2025 19:06:12 -0700
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
+
+> On Mon, 30 Jun 2025 at 17:54, Steven Rostedt <rostedt@goodmis.org> wrote:
+> >
+> > This is the first patch series of a set that will make it possible to be able
+> > to use SFrames[1] in the Linux kernel. A quick recap of the motivation for
+> > doing this.  
+> 
+> You have a '[1]' to indicate there's a link to what SFrames are.
+> 
+> But no such link actually exists in this email. Hmm?
+> 
+
+Oops. I cut and pasted from v11:
+
+  https://lore.kernel.org/linux-trace-kernel/20250625225600.555017347@goodmis.org/
+
+But ended the cut too early. I stopped at my sig:
+
+---
+  Thanks!
+
+  -- Steve
 
 
-Hi Sasha,
+  [1] https://sourceware.org/binutils/wiki/sframe
 
-On Tue, Jun 24 2025 14:07 -0400, Sasha Levin <sashal@kernel.org> wrote:
 
-> Hey folks,
->
-> This is a second attempt at a "Kernel API Specification" framework,
-> addressing the feedback from the initial RFC and expanding the scope
-> to include sysfs attribute specifications.
-
-In light of your talk at OSS last week [1] (for non-subscribers [2]), I
-am wondering if any of this code has been written by coding LLMs.  It
-seems like the kind of unpleasant boilerplate that they are said to be
-good at generating, but also seems like an enormous blob of "code" to
-review. What is the status of this specification in that regard?
-
-thanks!
-
-jake
-
-[1] https://lwn.net/Articles/1026558/
-[2] https://lwn.net/SubscriberLink/1026558/914fa4ec5964b0c5/
-
--- 
-Jake Edge - LWN - jake@lwn.net - https://lwn.net
+-- Steve
