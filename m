@@ -1,171 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD45220F23;
-	Tue,  1 Jul 2025 20:03:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C85B25F79A
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 20:03:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751400194; cv=none; b=mrPepE+EOO8CjFXLBeWsJ+QM0wzaHFbTIYRyjovcpCRY1VoHcNDikJCupehoaRe0gko/AJ+sQYv3PxeEN82GQWlZmI3o1Yn8+X53hSjmt1hA5nVKYl2WMEb0kvMIkvpD5ewojCO/InprGvfNbV3/MsYuwPPMutsxwoY/U3CraAE=
+	t=1751400205; cv=none; b=EdYwBkqh6YqGS8coDygYHuDGemJDJ++V53aFsGM59jerjZYHn/ljhwwgrA0kcpaKObMjKgTmu8t4HYezWA+XhovMYluZNEk9DfrK2HAd+sascPekUVWlWKEUA8cQS8YF05hhERmslbRUMO/2deFLwoirfJNqAMJWLpsBn5u7RI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751400194; c=relaxed/simple;
-	bh=zLG8hsviQknEuvu3ax9pjjgXHOaZgAcLL9QurUfylIs=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=KJ5zn3GrLrh349nlNCUqcNRnoksL48be3d0ODvgqsPMQtuFmb5NgsKUUhyLrtX+3C5vk4twiL0brQetLEAdwmeX7wSQvBQZ5MKbxym2BvPEZ/fAo9xWl6X02TTIIhryn5U364YTTgM5Sah+j8p/RzAoAqEYANhyAoftTZXcEtIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fwkHiNjQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751400205; c=relaxed/simple;
+	bh=eJDesN7BXsMnEhiQ/UJNFd2HLD1QXKP4h1RtXJ+27Mw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=chsqCIO6OJSNz2RRouVxFb+FI8Xpyvnw1y90LBVL1wc5gvJxB914lLJ1MDURiq5mqZwzPk1etQeYyVpvZzKnnI60pXww5qdaqds8C+zcCbc58lRzsWb4wILQzqvNnLEIa5USy54K2+U/xORqhgru4B+TBa63gsKa8S5ZWEkdLOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hWyHBqNx; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fwkHiNjQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 063AAC4CEEB;
-	Tue,  1 Jul 2025 20:03:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751400194;
-	bh=zLG8hsviQknEuvu3ax9pjjgXHOaZgAcLL9QurUfylIs=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=fwkHiNjQaNu1n7D7py4s8pl2Y0/X/lIQidjR5+/5DiCD2dZuSrr5UbBn0yx35v9Lg
-	 WjoWLbjgwoPwQnx1cCv5+AQrYIjvfXNDDKW23uoWwFfgorE82U5uUVIIVSCErSjUoC
-	 FaZwuT7RY4UOHzS9wDI3yT/lP6ygmtpyHGgvdoBYCRrOmEN5rg0S3w2kp++ttGl3GE
-	 PHdYiqw3yW9Wp0uPoBsktuXwREXLdt96eEcMdgVJS+Mw4YrGHFR20JzeY8cWAcWqOt
-	 f+eKoAVfn5HSmh99uR51hQ0MTTVQhD6mmsWaKS/V7XJ+ptwzs34nfiTc/VrP1w8O3m
-	 7NlCKzNpAM/+g==
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hWyHBqNx"
+Message-ID: <361eb614-e145-49dc-aa32-12f313f61b96@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751400199;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/vR/YEbexwRjW/glmIK3Kpb+5RALRLDf27NEgC4WPeU=;
+	b=hWyHBqNxvk0vFYvd8RU0pwMiJmz/30E7EgsyBnufC4rElScT1PtSpQGYwEeFDma9WtXbye
+	exp0oqtzTrfEa2n/l5B21eGO9OpWSITDFeJ09Q+gMIlnf2FY2cN7/xw7i6c0y6cceY4daM
+	2UAhvfVY4DJjYzgXSgwsNsPLDGn4S2Y=
+Date: Tue, 1 Jul 2025 13:03:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 01 Jul 2025 22:03:09 +0200
-Message-Id: <DB0ZJVL0682F.ZNNOXEIDL5NN@kernel.org>
-Subject: Re: [PATCH v8 4/6] rust: debugfs: Support arbitrary owned backing
- for File
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Danilo Krummrich" <dakr@kernel.org>
-Cc: "Matthew Maurer" <mmaurer@google.com>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex
- Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary
- Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Rafael J. Wysocki" <rafael@kernel.org>, "Sami Tolvanen"
- <samitolvanen@google.com>, "Timur Tabi" <ttabi@nvidia.com>,
- <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>, "Dirk
- Behme" <dirk.behme@de.bosch.com>
-X-Mailer: aerc 0.20.1
-References: <5c3a2289-01c5-413e-9d7c-88a41c3f54e2@kernel.org>
- <CAGSQo038u_so+_pMRYj0K546zNfO5-eqoXFivXsEF6ACK=Y5cw@mail.gmail.com>
- <ce8f428b-fcb0-48dc-b13e-6717c9a851b4@kernel.org>
- <CAGSQo02hyJncD1oTpUMgiSZeX5UYYY2p-WZTyroQJJ6fMnOrCQ@mail.gmail.com>
- <aGLUl7ZtuQBPoCuv@pollux> <2025070131-icon-quarters-0c16@gregkh>
- <aGPtCBB6nWTNJuwK@pollux> <2025070137-tartar-juncture-fcd2@gregkh>
- <aGP6d2-jJy5rtjMK@pollux>
- <CAGSQo00eG5oRdN_xORLUyUauLi_vzypU-gz6DSU_FzaAbHRLng@mail.gmail.com>
- <aGQ1VsnFaxBo9zaM@pollux> <DB0Z71SF488V.3QURUHHELOY84@kernel.org>
- <3c928a0e-ccd4-4ba0-9f42-9f2bb0203e75@kernel.org>
-In-Reply-To: <3c928a0e-ccd4-4ba0-9f42-9f2bb0203e75@kernel.org>
+MIME-Version: 1.0
+Subject: Re: [PATCH] bpf: turn off sanitizer in do_misc_fixups for old clang
+Content-Language: en-GB
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ Arnd Bergmann <arnd@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+ Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+ Luis Gerhorst <luis.gerhorst@fau.de>, bpf <bpf@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, clang-built-linux <llvm@lists.linux.dev>
+References: <20250620113846.3950478-1-arnd@kernel.org>
+ <CAADnVQKAT3UPzcpzkJ6_-powz4YTiDAku4-a+++hrhYdJUnLiw@mail.gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yonghong Song <yonghong.song@linux.dev>
+In-Reply-To: <CAADnVQKAT3UPzcpzkJ6_-powz4YTiDAku4-a+++hrhYdJUnLiw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue Jul 1, 2025 at 9:58 PM CEST, Danilo Krummrich wrote:
-> On 7/1/25 9:46 PM, Benno Lossin wrote:
->> On Tue Jul 1, 2025 at 9:21 PM CEST, Danilo Krummrich wrote:
->>> On Tue, Jul 01, 2025 at 11:11:13AM -0700, Matthew Maurer wrote:
->>>> On Tue, Jul 1, 2025 at 8:10=E2=80=AFAM Danilo Krummrich <dakr@kernel.o=
-rg> wrote:
->>>>>          impl Firmware {
->>>>>             pub fn new(&dir: debugfs::Dir, buffer: [u8]) -> impl PinI=
-nit<Self> {
->>>>>                pin_init!(Self {
->>>>>                   minor <- dir.create_file("minor", 1),
->>>>>                   major <- dir.create_file("major", 2),
->>>>>                   buffer <- dir.create_file("buffer", buffer),
->>>>>                })
->>>>>             }
->>>>>          }
->>>>>
->>>>>          // This is the only allocation we need.
->>>>>          let fw =3D KBox::pin_init(Firmware::new(...), GFP_KERNEL)?;
->>>>>
->>>>> With this everything is now in a single allocation and since we're us=
-ing
->>>>> pin-init, Dir::create_file() can safely store pointers of the corresp=
-onding data
->>>>> in debugfs_create_file(), since this structure is guaranteed to be pi=
-nned in
->>>>> memory.
->>>>>
->>>>> Actually, we can also implement *only this*, since with this my previ=
-ous example
->>>>> would just become this:
->>>>
->>>> If we implement *only* pinned files, we run into an additional problem
->>>> - you can't easily extend a pinned vector. This means that you cannot
->>>> have dynamically created devices unless you're willing to put every
->>>> new `File` into its own `Box`, because you aren't allowed to move any
->>>> of the previously allocated `File`s for a resize.
->>>>
->>>> Where previously you would have had
->>>>
->>>> ```
->>>> debug_files: Vec<File>
->>>> ```
->>>>
->>>> you would now have
->>>>
->>>> ```
->>>> debug_files: Vec<PinBox<File<T>>>
->>>> ```
->>>
->>> Stuffing single File instances into a Vec seems like the wrong thing to=
- do.
->>>
->>> Instead you may have instances of some data structure that is created
->>> dynamically in your driver that you want to expose through debugfs.
->>>
->>> Let's say you have (userspace) clients that can be registered arbitrari=
-ly, then
->>> you want a Vec<Client>, which contains the client instances. In order t=
-o provide
->>> information about the Client in debugfs you then have the client embed =
-things as
->>> discussed above.
->>>
->>> 	struct Client {
->>> 	   id: File<ClientId>,
->>> 	   data: File<ClientData>,
->>> 	   ...
->>> 	}
->>>
->>> I think that makes much more sense than keeping a Vec<Arc<Client>> *and=
-* a
->>> Vec<File> separately. Also, note that with the above, your Client insta=
-nces
->>> don't need to be reference counted anymore.
->>>
->>> I think this addresses the concerns below.
->>=20
->> You still have the issue that `Client` now needs to be pinned and the
->> vector can't be resized. But if you know that it's bounded, then we
->> could just make `Pin<Vec<T>>` work as expected (not relocating the
->> underlying allocation by not exposing `push`, only
->> `push_within_capacity`).
->>=20
->> We also could have a `SegmentedVec<T>` that doesn't move elements.
->> Essentially it is
->>     =20
->>      enum SegmentedVec<T> {
->>          Cons(Segment<T>, KBox<SegmentedVec<T>>)
->>          Nul,
->>      }
->>=20
->>      struct Segment<T> {
->>          elements: [T; 16]
->>      }
->>=20
->> or make the segments variable-sized and grow them accordingly.
+
+
+On 6/23/25 2:32 PM, Alexei Starovoitov wrote:
+> On Fri, Jun 20, 2025 at 4:38 AM Arnd Bergmann <arnd@kernel.org> wrote:
+>> From: Arnd Bergmann <arnd@arndb.de>
+>>
+>> clang versions before version 18 manage to badly optimize the bpf
+>> verifier, with lots of variable spills leading to excessive stack
+>> usage in addition to likely rather slow code:
+>>
+>> kernel/bpf/verifier.c:23936:5: error: stack frame size (2096) exceeds limit (1280) in 'bpf_check' [-Werror,-Wframe-larger-than]
+>> kernel/bpf/verifier.c:21563:12: error: stack frame size (1984) exceeds limit (1280) in 'do_misc_fixups' [-Werror,-Wframe-larger-than]
+>>
+>> Turn off the sanitizer in the two functions that suffer the most from
+>> this when using one of the affected clang version.
+>>
+>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>> ---
+>>   kernel/bpf/verifier.c | 11 +++++++++--
+>>   1 file changed, 9 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+>> index 2fa797a6d6a2..7724c7a56d79 100644
+>> --- a/kernel/bpf/verifier.c
+>> +++ b/kernel/bpf/verifier.c
+>> @@ -19810,7 +19810,14 @@ static int do_check_insn(struct bpf_verifier_env *env, bool *do_print_state)
+>>          return 0;
+>>   }
+>>
+>> -static int do_check(struct bpf_verifier_env *env)
+>> +#if defined(CONFIG_CC_IS_CLANG) && CONFIG_CLANG_VERSION < 180100
+>> +/* old clang versions cause excessive stack usage here */
+>> +#define __workaround_kasan  __disable_sanitizer_instrumentation
+>> +#else
+>> +#define __workaround_kasan
+>> +#endif
+>> +
+>> +static __workaround_kasan int do_check(struct bpf_verifier_env *env)
+> This looks too hacky for a workaround.
+> Let's figure out what's causing such excessive stack usage and fix it.
+> We did some of this work in
+> commit 6f606ffd6dd7 ("bpf: Move insn_buf[16] to bpf_verifier_env")
+> and similar.
+> Looks like it wasn't enough or more stack usage crept in since then.
 >
-> That sounds a lot like the perfect application for XArray. :)
+> Also make sure you're using the latest bpf-next.
+> A bunch of code was moved out of do_check().
+> So I bet the current bpf-next/master doesn't have a problem
+> with this particular function.
+> In my kasan build do_check() is now fully inlined.
+> do_check_common() is not and it's using 512 bytes of stack.
+>
+>>   {
+>>          bool pop_log = !(env->log.level & BPF_LOG_LEVEL2);
+>>          struct bpf_verifier_state *state = env->cur_state;
+>> @@ -21817,7 +21824,7 @@ static int add_hidden_subprog(struct bpf_verifier_env *env, struct bpf_insn *pat
+>>   /* Do various post-verification rewrites in a single program pass.
+>>    * These rewrites simplify JIT and interpreter implementations.
+>>    */
+>> -static int do_misc_fixups(struct bpf_verifier_env *env)
+>> +static __workaround_kasan int do_misc_fixups(struct bpf_verifier_env *env)
+> This one is using 832 byte of stack with kasan.
+> Which is indeed high.
+> Big chunk seems to be coming from chk_and_sdiv[] and chk_and_smod[].
+>
+> Yonghong,
+> looks like you contributed that piece of code.
+> Pls see how to reduce stack size here.
+> Daniel used this pattern in earlier commits. Looks like
+> we took it too far.
 
-Haha I didn't know this already existed in the kernel :) Yeah then we
-should make XArray work for this use-case.
+With llvm17, I got the following error:
 
----
-Cheers,
-Benno
+/home/yhs/work/bpf-next/kernel/bpf/verifier.c:24491:5: error: stack frame size (2552) exceeds limit (1280) in 'bpf_check' [-
+Werror,-Wframe-larger-than]
+  24491 | int bpf_check(struct bpf_prog **prog, union bpf_attr *attr, bpfptr_t uattr, __u32 uattr_size)
+        |     ^
+/home/yhs/work/bpf-next/kernel/bpf/verifier.c:19921:12: error: stack frame size (1368) exceeds limit (1280) in 'do_check' [-
+Werror,-Wframe-larger-than]
+  19921 | static int do_check(struct bpf_verifier_env *env)
+        |            ^
+2 errors generated.
+
+I checked IR and found the following memory allocations which may contribute
+excessive stack usage:
+
+attr.coerce1, i32 noundef %uattr_size) local_unnamed_addr #0 align 16 !dbg !19800 {
+entry:
+   %zext_patch.i = alloca [2 x %struct.bpf_insn], align 16, !DIAssignID !19854
+   %rnd_hi32_patch.i = alloca [4 x %struct.bpf_insn], align 16, !DIAssignID !19855
+   %cnt.i = alloca i32, align 4, !DIAssignID !19856
+   %patch.i766 = alloca [3 x %struct.bpf_insn], align 16, !DIAssignID !19857
+   %chk_and_sdiv.i = alloca [1 x %struct.bpf_insn], align 4, !DIAssignID !19858
+   %chk_and_smod.i = alloca [1 x %struct.bpf_insn], align 4, !DIAssignID !19859
+   %chk_and_div.i = alloca [4 x %struct.bpf_insn], align 16, !DIAssignID !19860
+   %chk_and_mod.i = alloca [4 x %struct.bpf_insn], align 16, !DIAssignID !19861
+   %chk_and_sdiv343.i = alloca [8 x %struct.bpf_insn], align 16, !DIAssignID !19862
+   %chk_and_smod472.i = alloca [9 x %struct.bpf_insn], align 16, !DIAssignID !19863
+   %desc.i = alloca %struct.bpf_jit_poke_descriptor, align 8, !DIAssignID !19864
+   %target_size.i = alloca i32, align 4, !DIAssignID !19865
+   %patch.i = alloca [2 x %struct.bpf_insn], align 16, !DIAssignID !19866
+   %patch355.i = alloca [2 x %struct.bpf_insn], align 16, !DIAssignID !19867
+   %ja.i = alloca %struct.bpf_insn, align 8, !DIAssignID !19868
+   %ret_insn.i.i = alloca [8 x i32], align 16, !DIAssignID !19869
+   %ret_prog.i.i = alloca [8 x i32], align 16, !DIAssignID !19870
+   %fd.i = alloca i32, align 4, !DIAssignID !19871
+   %log_true_size = alloca i32, align 4, !DIAssignID !19872
+...
+
+So yes, chk_and_{div,mod,sdiv,smod} consumes quite some stack and
+can be coverted to runtime allocation but that is not enough for 1280
+stack limit, we need to do more conversion from stack to memory
+allocation. Will try to have uniform way to convert
+'alloca [<num> x %struct.bpf_insn]' to runtime allocation.
+
