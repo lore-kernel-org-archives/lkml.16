@@ -1,238 +1,265 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE0C21E570D;
-	Tue,  1 Jul 2025 09:51:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CAD6239E82
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 09:52:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751363498; cv=none; b=krkS5nGaAY/CFaZKo9A37F82f6GKdV5fCAPye9aRwia8kIfkGJ/dP6ct0dlK69XpzHwgy1ZhF/n1oG61PhHneJFh2VNIMuOIATXwqjbdfAZyh02AbG7Fswhd6j1urkUDKByZO/tW637PfP6087ikkJWAE0gAncI77nC18NXYGO4=
+	t=1751363542; cv=none; b=PIfB1TN2C2JYt5SP3LJruWDexvcTRJhWjm7UUGqE5LIvArMIoXoNuWo26WctbMZabP5sINrcDeLmIqORCaVbImIZI7cRHyO5aqOcXNckNCR9Tu9UWX2KDgUqsSwvAciNDriaTix0jAP1mD70gdaYHCqPCt6z+4t1lh4A/GCtzg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751363498; c=relaxed/simple;
-	bh=G0wgPOHRx3LlMlIx4NAFoKBKanEvhm1EAVKcVObjvNU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N05BZGdWbOs+Ef3lIvLJQiE7VolntT28UyKdyXLsGsxANRL1wM+r5BV2YjLfZ20WVIJV8d3MzWgg9TSu8O7fVUJu0HjZqKYpyGE50ZR8GVZUsvDC37urR8zPNmdUDb79dpw3z7jFHjy4jkmOg40k/IfmPBG6EPF7ecFw6ZaYG3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lYRYrPhJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751363542; c=relaxed/simple;
+	bh=Od6JdPcnkvsl/bR/hf7XDyqJsEJSHXYwNg4QbKnbiNM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PudhTkGO0JTAUZ/8BakhTGmP4R51ur9ln0NoBswUaWo/JhesFmoF96buaOq3/ReF9xxIcykzfxgFcw/xVrWuXTO8tV9lYwvT2lVPLcA8jH6nlAFuM25fKTK97HE8bEgy1oVg0GWpJT71rcCNSlx1M1IkFNdr1aGaRUGMW+BfvAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=PGJo+ngT; arc=none smtp.client-ip=209.85.219.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lYRYrPhJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AFE8C4CEEB;
-	Tue,  1 Jul 2025 09:51:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751363498;
-	bh=G0wgPOHRx3LlMlIx4NAFoKBKanEvhm1EAVKcVObjvNU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lYRYrPhJWHZ9fUEWlHZO9NimOFkJK6Z2iulYKr43EQEQidzjt3xWuzmi6vbtdyUMy
-	 TkW+MGKi8bQ16eBjg5su4O6GjZs7f3dOIMt1zel/j5DuQbmzR1yOY+GhTyJ2UGLzvl
-	 np8qLCWSoXPQShq8CX8JcmxNT/Y7nflGtgxlkm8JtL37zx0bpnWpTPsWXWQbpucmxT
-	 wC45jyGDX884jM9UHmp2GpdyDmdjq04Pg6rqArVZphLuo4tT7awgfBGNcHvUO26TTS
-	 q/1jArAqGTfFNh7vB2l/WKLwLymwhKnOhZmxbOwqMZnrkjcxwURU8NwFV4PqAbJSIi
-	 txoIi0hWHxllw==
-Date: Tue, 1 Jul 2025 11:51:33 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Mateusz Guzik <mjguzik@gmail.com>, Sasha Levin <sashal@kernel.org>
-Cc: viro@zeniv.linux.org.uk, jack@suse.cz, akpm@linux-foundation.org, 
-	dada1@cosmosbay.com, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
-Subject: Re: [PATCH] fs: Prevent file descriptor table allocations exceeding
- INT_MAX
-Message-ID: <20250701-laufkundschaft-beackern-60094bf6570c@brauner>
-References: <20250629074021.1038845-1-sashal@kernel.org>
- <i3l4wxfnnnqfg76yg22zfjwzluog2buvc7rtpp67nnxtbslsb3@sggjxvhv7j2h>
- <aGIA18cgkzv-05A2@lappy>
- <CAGudoHHuBBX_FWKp96TZV7vs2xvxkFNkukt4wysx7K3OZDsLDw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="PGJo+ngT"
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e81ec95d944so5651014276.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 02:52:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1751363538; x=1751968338; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IKA6FwPF97E3KxijHqFbWyBNdWNWu66wkqfXYan6V+A=;
+        b=PGJo+ngT3mA+Bk6kTf1DWDLGCk5eKaa9IG+FF/3ikN2V9SE/WxpLLFQRmp3o8sRV0v
+         efmDIaEtIw7xCfZkCg84kVlLsKkQQywfz/du1cQm2M9pZQtKYNb5vKaw0ZkYjaKjVtZ5
+         HxA+O3ruYU2K4Oi3IdreSNeIEHjBvGowZoRmQbjDBRIrr/NAy4KkF5YbTd3Nw5C4E5DX
+         ibd7cmEOwn45zf96Hg0dF/akk7UZBj3PW+hH5/9/Pfm9ka6dkyI/0gyJALZ2+gKpoyBb
+         kf1HLEI1TVcmk9fjHc4jdeVcIwDcxOGHZRcPP13yyCGx8fT49uNjIIgKqp/jBz7I4bZS
+         TUYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751363538; x=1751968338;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IKA6FwPF97E3KxijHqFbWyBNdWNWu66wkqfXYan6V+A=;
+        b=rQaBs+GDNwM2XC42dZEjAqvduXHEz7kbIVEGkPCy4GblNEkLIyavKdSRNsR4MsZKUi
+         VjV89fTwfkyb0A1erZXjGkOUSJd4baSaaCqvEwfbTZWPIBpCGEMN7Q/Y6GKtsI1l3v5X
+         M8af6cr/4IxfY0QwjvuXMzDrGCElDubyIRy7pkS2aH9VRPYrfoeguHlUKIQqzicGqOvA
+         7VBOVH7Y/F11WzTNmtgp/f0Gy+tjPWv4jbC7V7hDGrEajGDbIA8mDtUUnqufIgRYOSPh
+         77PQNW6GDckAcRh5q0sVm7xKhP6DoPuIh86vaWvXMBnk89BKCxypTUKAEkLb5067a5ve
+         JUjw==
+X-Forwarded-Encrypted: i=1; AJvYcCWkcf4d9lxBLTD8/tvmyj0UC730GHaV2lLVv2SzEHRppXU9Qx7x/X0nObIFQ2Aa17EG8Vb8BBN2ayhhWHo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmPPgF8oB6qwko+i8NVxUIITMudNbKCG/11LvkIum3JFLBpSjL
+	rUoXhoCWAdYymfK2ZxisuTho70tj9HaM4jotK8LBllLu19Y58cYq/xpo8Xu3rYL/5mHCCaFCXPh
+	S1GdMMXW8PTimliM63cedpswRIRRZ5c7nICqfYDvpKA==
+X-Gm-Gg: ASbGncsUVSuIB14oSwlBj2rzNgB0K1j3PGuZAV4Z0aEz4TR2rV2I6O+P3v6tnJcWR08
+	n4TBm+Ucyk+DYFspWHqXdpiYdX4+Q9DBNb6+UvLfnzLE0Wzr9t5CgaKX2im/bXb4XnPecIaoJzh
+	VgD0Es33OrkmODOM2ClRbfJvLWw44a4tcRTiD3655ZcdwkgcFxHwh19vvZAfE=
+X-Google-Smtp-Source: AGHT+IGzHyECCHeiUYQOgvHa6UJ9WkRPSzDk6WELLYNag9ls2mHas7vRAKuqf10+XgRIe5X8BpYEYpQLbmrpRpbXWcM=
+X-Received: by 2002:a05:690c:6102:b0:711:6ea1:8d12 with SMTP id
+ 00721157ae682-7163ee4d03dmr40769417b3.1.1751363538182; Tue, 01 Jul 2025
+ 02:52:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGudoHHuBBX_FWKp96TZV7vs2xvxkFNkukt4wysx7K3OZDsLDw@mail.gmail.com>
+References: <20250701-working_dma_0701_v2-v2-0-ab6ee9171d26@riscstar.com>
+ <20250701-working_dma_0701_v2-v2-1-ab6ee9171d26@riscstar.com> <de965773-bab1-4c50-b111-19896465e53e@kernel.org>
+In-Reply-To: <de965773-bab1-4c50-b111-19896465e53e@kernel.org>
+From: Guodong Xu <guodong@riscstar.com>
+Date: Tue, 1 Jul 2025 17:52:07 +0800
+X-Gm-Features: Ac12FXxrwUxphoCfQfkTD7volCQBmLx90I-g-CSXGPV4ZQwkJtWnCbMfwgC8RlU
+Message-ID: <CAH1PCMbKGeXL9Te6M28ZdX8VBvaToKcK7f+JmN6JsCfttG_Mtg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/8] dt-bindings: dma: marvell,mmp-dma: Add SpacemiT K1
+ PDMA support
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>, 
+	=?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Alex Elder <elder@riscstar.com>, 
+	Vivian Wang <wangruikang@iscas.ac.cn>, dmaengine@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 30, 2025 at 01:35:08PM +0200, Mateusz Guzik wrote:
-> On Mon, Jun 30, 2025 at 5:13 AM Sasha Levin <sashal@kernel.org> wrote:
+Hi, Krzysztof
+
+On Tue, Jul 1, 2025 at 3:35=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.org=
+> wrote:
+>
+> On 01/07/2025 07:36, Guodong Xu wrote:
+> > Add "spacemit,k1-pdma" compatible string to support SpacemiT K1 PDMA
+> > controller. This variant requires:
+>
+> Why is this marvell? This should be explained here, it's really unexpecte=
+d.
+>
+
+SpacemiT K1 SoC uses the same DMA controller as Marvell MMP. They share mos=
+t
+of the registers (and address offsets) and only enhanced in addressing spac=
+e
+capability (from 32bit to 64bit).
+
+Also, spacemit,k1-pdma and marvell,pdma-1.0 use the same driver (mmp_pdma.c=
+),
+that's the reason why I chose keeping them in the same binding file.
+
+
+> > - clocks: Clock controller for the DMA
+> > - resets: Reset controller for the DMA
 > >
-> > On Sun, Jun 29, 2025 at 09:58:12PM +0200, Mateusz Guzik wrote:
-> > >On Sun, Jun 29, 2025 at 03:40:21AM -0400, Sasha Levin wrote:
-> > >> When sysctl_nr_open is set to a very high value (for example, 1073741816
-> > >> as set by systemd), processes attempting to use file descriptors near
-
-Note that systemd caps all services/processes it starts to 500k fds by
-default. So someone would have to hand-massage the per process limit
-like in your example.
-
-And fwiw, allocating file descriptors above INT_MAX is inherently unsafe
-because we have stuff like:
-
-#define AT_FDWCD -100
-
-If we allow file descriptor allocation above INT_MAX it's easy to
-allocate a file descriptor at 4294967196 which is AT_FDCWD. If you pass
-that to fchmodat() or something similar you have a problem because
-instead of changing whatever the file descriptor points to you're
-changing your current working directory.
-
-Since we have a bunch of system calls that return file descriptors such
-as pidfd_open() returning above INT_MAX would mean we'd return errnos as
-valid fds, e.g., ENETDOWN for an AT_FDCWD range allocation.
-
-But what's annoying is that we are communicating very confusing things
-to userspace by being inconsistent in our system call interface.
-
-We have system calls that accept int as the file descriptor type
-(fallocate() faccessat() fchmodat() etc) and then we have system calls
-that accept unsigned int as the file descriptor type (close()
-ftruncate() fchdir() fchmod() etc).
-
-What makes it all worse is that glibc enforces that all fd-based system
-calls take int as an argument:
-
-close(2)                              System Calls Manual                              close(2)
-
-NAME
-       close - close a file descriptor
-
-LIBRARY
-       Standard C library (libc, -lc)
-
-SYNOPSIS
-       #include <unistd.h>
-
-       int close(int fd);
-
-So we now also have a userspace-kernel disconnect.
-
-> > >> the limit can trigger massive memory allocation attempts that exceed
-> > >> INT_MAX, resulting in a WARNING in mm/slub.c:
-> > >>
-> > >>   WARNING: CPU: 0 PID: 44 at mm/slub.c:5027 __kvmalloc_node_noprof+0x21a/0x288
-> > >>
-> > >> This happens because kvmalloc_array() and kvmalloc() check if the
-> > >> requested size exceeds INT_MAX and emit a warning when the allocation is
-> > >> not flagged with __GFP_NOWARN.
-> > >>
-> > >> Specifically, when nr_open is set to 1073741816 (0x3ffffff8) and a
-> > >> process calls dup2(oldfd, 1073741880), the kernel attempts to allocate:
-> > >> - File descriptor array: 1073741880 * 8 bytes = 8,589,935,040 bytes
-> > >> - Multiple bitmaps: ~400MB
-> > >> - Total allocation size: > 8GB (exceeding INT_MAX = 2,147,483,647)
-> > >>
-> > >> Reproducer:
-> > >> 1. Set /proc/sys/fs/nr_open to 1073741816:
-> > >>    # echo 1073741816 > /proc/sys/fs/nr_open
-> > >>
-> > >> 2. Run a program that uses a high file descriptor:
-> > >>    #include <unistd.h>
-> > >>    #include <sys/resource.h>
-> > >>
-> > >>    int main() {
-> > >>        struct rlimit rlim = {1073741824, 1073741824};
-> > >>        setrlimit(RLIMIT_NOFILE, &rlim);
-> > >>        dup2(2, 1073741880);  // Triggers the warning
-> > >>        return 0;
-> > >>    }
-> > >>
-> > >> 3. Observe WARNING in dmesg at mm/slub.c:5027
-> > >>
-> > >> systemd commit a8b627a introduced automatic bumping of fs.nr_open to the
-> > >> maximum possible value. The rationale was that systems with memory
-> > >> control groups (memcg) no longer need separate file descriptor limits
-> > >> since memory is properly accounted. However, this change overlooked
-> > >> that:
-> > >>
-> > >> 1. The kernel's allocation functions still enforce INT_MAX as a maximum
-> > >>    size regardless of memcg accounting
-> > >> 2. Programs and tests that legitimately test file descriptor limits can
-> > >>    inadvertently trigger massive allocations
-> > >> 3. The resulting allocations (>8GB) are impractical and will always fail
-> > >>
-> > >
-> > >alloc_fdtable() seems like the wrong place to do it.
-> > >
-> > >If there is an explicit de facto limit, the machinery which alters
-> > >fs.nr_open should validate against it.
-> > >
-> > >I understand this might result in systemd setting a new value which
-> > >significantly lower than what it uses now which technically is a change
-> > >in behavior, but I don't think it's a big deal.
-> > >
-> > >I'm assuming the kernel can't just set the value to something very high
-> > >by default.
-> > >
-> > >But in that case perhaps it could expose the max settable value? Then
-> > >systemd would not have to guess.
+> > Also add explicit #dma-cells property definition with proper constraint=
+s:
+> > - 2 cells for marvell,pdma-1.0 and spacemit,k1-pdma
+> >     - (request number + unused)
+> > - 1 cell for other variants
+> >     - (request number only)
 > >
-> > The patch is in alloc_fdtable() because it's addressing a memory
-> > allocator limitation, not a fundamental file descriptor limitation.
+> > This fixes "make dtbs_check W=3D3" warnings about unevaluated propertie=
+s.
+>
+> How can I reproduce these warnings? Looks like this is not relevant
+> here. Each patch is applied one after another and commit msg must be
+> correct at this point.
+>
+
+You're absolutely right about the commit message needing to be accurate
+at this point. The dtbs_check warnings only occur when compiling board DTS
+files that contain nodes with marvell,pdma-1.0 or spacemit,k1-pdma
+compatible strings - specifically when PATCH 7 of this series.
+
+I'll revise the commit message to better reflect that this patch enhances
+things, rather than claiming it "fixes" warnings at this stage.
+
+>
 > >
-> > The INT_MAX restriction comes from kvmalloc(), not from any inherent
-> > constraint on how many FDs a process can have. If we implemented sparse
-> > FD tables or if kvmalloc() later supports larger allocations, the same
-> > nr_open value could become usable without any changes to FD handling
-> > code.
+> > Signed-off-by: Guodong Xu <guodong@riscstar.com>
+> > ---
+> > v2:
+> > - Used more specific compatible string "spacemit,k1-pdma"
+> > - Enhanced DT bindings with conditional constraints:
+> >   - clocks/resets properties only required for SpacemiT K1
+> >   - #dma-cells set to 2 for marvell,pdma-1.0 and spacemit,k1-pdma
+> >   - #dma-cells set to 1 for other variants, ie.
+> >       marvell,adma-1.0 and  marvell,pxa910-squ
+> > ---
+> >  .../devicetree/bindings/dma/marvell,mmp-dma.yaml   | 49 ++++++++++++++=
+++++++++
+> >  1 file changed, 49 insertions(+)
 > >
-> > Putting the check at the sysctl layer would codify a temporary
-> > implementation detail of the memory allocator as if it were a
-> > fundamental FD limit. By keeping it at the allocation point, the check
-
-Yeah, I tend to agree.
-
-> > reflects what it actually is - a current limitation of how large a
-> > contiguous allocation we can make.
+> > diff --git a/Documentation/devicetree/bindings/dma/marvell,mmp-dma.yaml=
+ b/Documentation/devicetree/bindings/dma/marvell,mmp-dma.yaml
+> > index d447d5207be0436bc7fb648dffe31f8b780b491d..7b5f7ccfc9dbb69bfef2501=
+46cba5434548f3702 100644
+> > --- a/Documentation/devicetree/bindings/dma/marvell,mmp-dma.yaml
+> > +++ b/Documentation/devicetree/bindings/dma/marvell,mmp-dma.yaml
+> > @@ -18,6 +18,7 @@ properties:
+> >        - marvell,pdma-1.0
+> >        - marvell,adma-1.0
+> >        - marvell,pxa910-squ
+> > +      - spacemit,k1-pdma
 > >
-> > This placement also means the limit naturally adjusts if the underlying
-> > implementation changes, rather than requiring coordinated updates
-> > between the sysctl validation and the allocator capabilities.
+> >    reg:
+> >      maxItems: 1
+> > @@ -32,6 +33,19 @@ properties:
+> >        A phandle to the SRAM pool
+> >      $ref: /schemas/types.yaml#/definitions/phandle
 > >
-> > I don't have a strong opinion either way...
+> > +  clocks:
+> > +    description: Clock for the controller
+> > +    maxItems: 1
+> > +
+> > +  resets:
+> > +    description: Reset controller for the DMA controller
+> > +    maxItems: 1
+> > +
+> > +  '#dma-cells':
+> > +    description:
+> > +      DMA specifier, consisting of a phandle to DMA controller plus th=
+e
+> > +      following integer cells
+>
+> Why do you need it here? Isn't this coming from dma common schemas?
 
-I think Mateusz' idea of exposing the maximum supported value in procfs
-as a read-only file is probably pretty sensible. Userspace like systemd
-has to do stuff like if you want to allow large number of fds by
-default:
+Thanks for pointing out this. It should be removed.
+I will fix it.
 
-#if BUMP_PROC_SYS_FS_NR_OPEN
-        int v = INT_MAX;
+> > +
+> >    '#dma-channels':
+> >      deprecated: true
+> >
+> > @@ -52,12 +66,47 @@ allOf:
+> >            contains:
+> >              enum:
+> >                - marvell,pdma-1.0
+> > +              - spacemit,k1-pdma
+> >      then:
+> >        properties:
+> >          asram: false
+> >      else:
+> >        required:
+> >          - asram
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            const: spacemit,k1-pdma
+> > +    then:
+> > +      required:
+> > +        - clocks
+> > +        - resets
+> > +    else:
+> > +      properties:
+> > +        clocks: false
+> > +        resets: false
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            enum:
+> > +              - marvell,pdma-1.0
+> > +              - spacemit,k1-pdma
+> > +    then:
+> > +      properties:
+> > +        '#dma-cells':
+> > +          const: 2
+> > +          description:
+> > +            The first cell contains the DMA request number for the per=
+ipheral
+> > +            device. The second cell is currently unused but must be pr=
+esent for
+> > +            backward compatibility.
+> > +    else:
+> > +      properties:
+> > +        '#dma-cells':
+> > +          const: 1
+> > +          description:
+> > +            The cell contains the DMA request number for the periphera=
+l device.
+>
+>
+> It's getting complicated. I suggest to make your own schema. Then you
+> would also switch to preferred 'sram' property instead of that legacy
+> 'asram'.
+>
+> Really, ancient schemas should not be grown for new, completely
 
-        /* Argh! The kernel enforces maximum and minimum values on the fs.nr_open, but we don't really know
-         * what they are. The expression by which the maximum is determined is dependent on the architecture,
-         * and is something we don't really want to copy to userspace, as it is dependent on implementation
-         * details of the kernel. Since the kernel doesn't expose the maximum value to us, we can only try
-         * and hope. Hence, let's start with INT_MAX, and then keep halving the value until we find one that
-         * works. Ugly? Yes, absolutely, but kernel APIs are kernel APIs, so what do can we do... 🤯 */
+The reason that they share the same device driver may not be strong enough
+compared to what you said here.
 
-        for (;;) {
-                int k;
+> different platforms.
+>
 
-                v &= ~(__SIZEOF_POINTER__ - 1); /* Round down to next multiple of the pointer size */
-                if (v < 1024) {
-                        log_warning("Can't bump fs.nr_open, value too small.");
-                        break;
-                }
+Complexity wise, I agree with you. I should admit that I haven't dug into
+the history enough. Anyway, unless other people have strong opinion, I will
+create a new schema namely spacemit,k1-pdma.yaml
 
-                k = read_nr_open();
-                if (k < 0) {
-                        log_error_errno(k, "Failed to read fs.nr_open: %m");
-                        break;
-                }
-                if (k >= v) { /* Already larger */
-                        log_debug("Skipping bump, value is already larger.");
-                        break;
-                }
+Thanks Krzysztof.
 
-                r = sysctl_writef("fs/nr_open", "%i", v);
-                if (r == -EINVAL) {
-                        log_debug("Couldn't write fs.nr_open as %i, halving it.", v);
-                        v /= 2;
-                        continue;
-                }
-                if (r < 0) {
-                        log_full_errno(IN_SET(r, -EROFS, -EPERM, -EACCES) ? LOG_DEBUG : LOG_WARNING, r, "Failed to bump fs.nr_open, ignoring: %m");
-                        break;
-                }
+BR,
+Guodong
 
-                log_debug("Successfully bumped fs.nr_open to %i", v);
-                break;
-        }
-#endif
+
+>
+> Best regards,
+> Krzysztof
