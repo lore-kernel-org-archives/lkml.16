@@ -1,163 +1,174 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2049.outbound.protection.outlook.com [40.107.92.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68697283FD4;
-	Tue,  1 Jul 2025 22:08:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751407695; cv=fail; b=f97Q1fztEll2sntxYH2cL0w2v0Z25ph/JeMV5dkWAO920Y6id2YamY7wdcYhJ0Qnv44CPoJmQdYzaeg1UypjQ855mc3I9Zs5hu8200njxg0FnWN3lUniEO7nrKDPTgKrl48xnNYSYqaLSGYUcRQ9x4Rv/zv16razS+lLzKpdi3E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751407695; c=relaxed/simple;
-	bh=HsEsqmBhzKJ/aVBWUw1d7VhY0dIDEu1kA3Dsnp9Tjk0=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P9STrsd7Y9bvxnHPklfhA75XSNRKHidPZmV1jYBHl20kU9Vn+W8PHpYf0ZvKXwlJkbV2r/2cwt07R2ox/6F12kGv1NQ+ECELu1tFg/6DsDTKt3qzEAPe9HYJOIAMIVheapNWgGOon1g29qdLAwAvUxm0wYiwNYIZbRbk+98VYO0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=CRg9lAyx; arc=fail smtp.client-ip=40.107.92.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D286246BC5
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 22:09:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751407745; cv=none; b=B357f/HzYXjC8H0KxGYYv/Gzd5WanWQWLr3AKWbLbr+p7I3QxG4/qQe6Q9V2di6WEuGXmDsmdf76isiqfF+tRVSlB4qUNVnXLsyoajqkMb9ZjS7t/WkbfEtyJ1/WzSRJADxyJgCpKRqhCzvKql/Ag7rxTuvBSt344h9l0LK16lA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751407745; c=relaxed/simple;
+	bh=6EqsWkpkeYfydp6o8pmzcX4O+MzJ5OGrnXS/xdaYoGU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=fVQtwgPXDcKTo5M/28tT8fzrlcIfWIf7IWFSsDiij74J+8iyQ23YBjRLfyraEsnbZaucol2Pp/6Y3WojLXf84bQR3FIc89YZUu0T81kEOuALH5KvMxlwIRwe+LjZcaiw1amYBFiXtNGy7b8DaDp9nicxFNg+L1HOGo0+Bfv7Mg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vDMwRX4G; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="CRg9lAyx"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jXg1NtooA3KL/l1kTGtL1ZqRD5ugNCKMz6foya6bQQG2xomlJpZFjzYVnUe+dC0PdAhQRpc070F7rdj5/1gIu8kaoiQyGtCcg9wos1geQrs2zg8NdKMg6Lz/noOeYCTUn47ExlQh76vlDMCCVD8NTfega0So9f5YErMUxDqDdxuDuYA4Y4xgxvyYTDDrYKCQkrg8w9jLmacCewGX6Cr8NCIr3VA+EusCS8sIyn+isVh/jdieGBqDkJQg4yIu+KGktZdR7dE0O3LbAry6AfGUcRg9Weo4i1O9uc8mvzYFGJeGsCuhjC83q8FsRgSxBnZrU5WKIeUiT0bppLF/YcC43A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ImdEhMqAVASqHzX+cCrdWNx7bD4yHRFRL4FUliyuIY0=;
- b=H/Hrjms6REV4y9QMzbvkp3wegE22qeJByrFPE3LrQp32PzcNbRXbJnO+eNWpQdH37LSLX6TR67W2qbnaUuyB1JG0UzRkAV9YnVTlIfAJzlzmqgz8e4l6Z2rtedZCNveOXtoPESxb1boA3wtFcVpsWd/eiAz1/mLjT6iR89dECfuDfA3Ik7qsvjr9LmDStrzg7ylEXjuB3249Mz1saeii/NsnnKkvZDtdQFt1A9i5Y+BDf6lj4OX/QtFD7rLSRG9uzPH4PB1sKyNkOBJrpn0Uz3YnhY+Cnsu848/G5GyDPuJ6zlRS/jeYiDgHAYIt/tPqo+Nmlx48PyNYfD7DKM4gJQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.232) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ImdEhMqAVASqHzX+cCrdWNx7bD4yHRFRL4FUliyuIY0=;
- b=CRg9lAyxnpUwOpJY3IbyXRQslQtMCbH8+0MYnmq5REC6sBpvXac6YWBlYNR92ekWPluQrmqFQulb0q2GsuYTEw++GqifKODFgzGnTOdB0JbaO8+/NfjQ1tEqMtBWwdbfW+iZJI97NSf/JQmD0GVmZFI33RuIDj+a1HoI6LPK2twAj6s1suzuPUqc6VnxxrksTyQaWxJrr1hjNJh/8IhYVDQ6NGM37voY7J0BUxbvKKuOm9UGlfwVvCVMC2r/u4aONst7K38Tm5MYjWR92Kfzn3MfVJScfaRFC+nkyDofrBrOAwFrKY1Dnz5RasMbb5OEhXqzqevZtp4XMfpTustbDg==
-Received: from CH5PR03CA0007.namprd03.prod.outlook.com (2603:10b6:610:1f1::25)
- by LV3PR12MB9409.namprd12.prod.outlook.com (2603:10b6:408:21d::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.25; Tue, 1 Jul
- 2025 22:08:08 +0000
-Received: from CH2PEPF00000142.namprd02.prod.outlook.com
- (2603:10b6:610:1f1:cafe::76) by CH5PR03CA0007.outlook.office365.com
- (2603:10b6:610:1f1::25) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.19 via Frontend Transport; Tue,
- 1 Jul 2025 22:08:07 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.232) by
- CH2PEPF00000142.mail.protection.outlook.com (10.167.244.75) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8901.15 via Frontend Transport; Tue, 1 Jul 2025 22:08:07 +0000
-Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
- (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 1 Jul 2025
- 15:07:59 -0700
-Received: from drhqmail202.nvidia.com (10.126.190.181) by
- drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Tue, 1 Jul 2025 15:07:59 -0700
-Received: from Asurada-Nvidia (10.127.8.12) by mail.nvidia.com
- (10.126.190.181) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Tue, 1 Jul 2025 15:07:58 -0700
-Date: Tue, 1 Jul 2025 15:07:57 -0700
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: Pranjal Shrivastava <praan@google.com>
-CC: <jgg@nvidia.com>, <kevin.tian@intel.com>, <corbet@lwn.net>,
-	<will@kernel.org>, <bagasdotme@gmail.com>, <robin.murphy@arm.com>,
-	<joro@8bytes.org>, <thierry.reding@gmail.com>, <vdumpa@nvidia.com>,
-	<jonathanh@nvidia.com>, <shuah@kernel.org>, <jsnitsel@redhat.com>,
-	<nathan@kernel.org>, <peterz@infradead.org>, <yi.l.liu@intel.com>,
-	<mshavit@google.com>, <zhangzekun11@huawei.com>, <iommu@lists.linux.dev>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-tegra@vger.kernel.org>,
-	<linux-kselftest@vger.kernel.org>, <patches@lists.linux.dev>,
-	<mochs@nvidia.com>, <alok.a.tiwari@oracle.com>, <vasant.hegde@amd.com>,
-	<dwmw2@infradead.org>, <baolu.lu@linux.intel.com>
-Subject: Re: [PATCH v7 27/28] iommu/tegra241-cmdqv: Add user-space use support
-Message-ID: <aGRcPSwaJkTeUrMx@Asurada-Nvidia>
-References: <cover.1750966133.git.nicolinc@nvidia.com>
- <539ee2ec112162abdba511574e2205a77b425059.1750966133.git.nicolinc@nvidia.com>
- <aGQGm1-i4M75b9Qp@google.com>
- <aGQ6KCI9OZEwHdxS@Asurada-Nvidia>
- <aGQ_F7Qx3scbbA-J@google.com>
- <aGRDtYRXFLoT+PrI@Asurada-Nvidia>
- <aGRIctg4T6cQECx4@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vDMwRX4G"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-74858256d38so3632030b3a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 15:09:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751407743; x=1752012543; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yrLKmv2Vy7uxFt0iwPk+GWdFZVpcjh098B891Lvn1Lc=;
+        b=vDMwRX4G2p4tR7V1F/DQO/GL9SEcwB3IbAPIsA4G3I/0cWb+Srtkv8dqscUon075lm
+         SKGbI8FYGk85zdW3oymPLn8BOjJpLMHmKtDwqkc0jdkSUFVi84GO3yBdDpkDLJbTRUcK
+         hfQV+uLh8aniyU615Dd5D9HmqbcvWEEULFbr3pbgOpfquVjtnTmRKN5S8xfUv3TF9YYp
+         s5OdScC1VdFENX9tltb++g7dnD5QfNgdacLYR8w50n/GfHxbQxdMdVGTBp7OtmDjsI3i
+         QNoG8Qd/cwajvhbMYrqXFimPS71jqfo2FA2YbTGjYU2hzowwWqc3lH1OFPLulDyy1pI5
+         gywQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751407743; x=1752012543;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=yrLKmv2Vy7uxFt0iwPk+GWdFZVpcjh098B891Lvn1Lc=;
+        b=XsdS7Nn1Cn0izGEOgT9L9/6mMCD4JqIOU+L65Z0AQKI5R2rc16wXa0kNiP9kd4QTOP
+         v+hMXR6sNnWHilrSQoCFrdyFr8ZzlXnNECe00j2DzIJicxvRcYkRtOqDj6fVG5bTldLT
+         p0hoBBMNB+Meggf+5flIE+2bosYh5Gua1UXeKmnF0HzJKRghZGKr6QQVN4jPNBrs9ZIb
+         4T8LZNUOmiolcxxx6s/WBc1CoK6D+fk/1Dsj+USuiwuphC0Hb7PGur03ts80Nyi5VMPX
+         Q7bASJiAo+1C0dc6gTtG8bO2dAcFaJdxzlR1gDVE76mW5qAlA1l7EQbfOMsr7Lx7Gep8
+         Fl3A==
+X-Forwarded-Encrypted: i=1; AJvYcCVVMG29WDuScz6H0nFKaVW6F0YaqhvnbUDL1v3qVRs86IZOmR4T7e0YDeJnoRPEnexxrIHC8nrZDFCO3fk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzjXkI2SX5c3LVLuUNR06EK05d5BFNQ1B1dKo90wg/fpuqv+QP
+	79y7KXa7XQbwKblhKpweMLy+GlshP/yDXeKTpw4ypjS7aAMA2esmx5VfCtVf4D/08cB/etEACMO
+	PBKSObJxKzwtMcHeEaAkaDINMdw==
+X-Google-Smtp-Source: AGHT+IEe+r8Ltcv+81mNHFMOPEijls9stGq5miDhJ0WBatB0rMdu1zOeKhl/PXPmMqvALg7A2CkCRNJxJK/Vn6Jeag==
+X-Received: from pfbbw26.prod.google.com ([2002:a05:6a00:409a:b0:748:2476:b25f])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a00:23c3:b0:742:a91d:b2f6 with SMTP id d2e1a72fcca58-74b50f2a035mr633828b3a.13.1751407742749;
+ Tue, 01 Jul 2025 15:09:02 -0700 (PDT)
+Date: Tue, 01 Jul 2025 15:09:01 -0700
+In-Reply-To: <aGN6GIFxh57ElHPA@yzhao56-desk.sh.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <aGRIctg4T6cQECx4@google.com>
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PEPF00000142:EE_|LV3PR12MB9409:EE_
-X-MS-Office365-Filtering-Correlation-Id: 712baad7-1c79-4388-a217-08ddb8ebc2ab
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?6ocs7rckttIK6PmTEfsnhxwdOQoNdKm9HIV7g2ip2vaKdGt9JQCj1OghE2qN?=
- =?us-ascii?Q?wS0k1goXWDCXKMz59UJpSddV4DJNMDSeQ+rrCilCJyZhFs9pSmsfy01LadYM?=
- =?us-ascii?Q?ZMGx76Wja/x3RGU/a1hArZbK9qvvA5S2LZMuqWPRj4Ma0Q3fw84SszvMzb9O?=
- =?us-ascii?Q?GAkn0CXQHuXBjgz8IGzN36Y8vMscmY3bRDgH7v1aD5uN/GEsI/Gt4PFX8pHV?=
- =?us-ascii?Q?+/ejFxJtm6/Aj3pK3kLlodex5NgoM8Qw/l8e3oEggqFjS7fyQZ0p9lFj3ku4?=
- =?us-ascii?Q?nR3UdkUblgYd0IN8poZ2HQzMYhLDbq8soEgsr8ef94cLfhVYYkR1eePx1n+3?=
- =?us-ascii?Q?NYI7ieQmhI4Z1JN5xmryysOrl5UI/xm5SqsUoAWJZ32sStK5l1+J1m8HqTlS?=
- =?us-ascii?Q?VvP7Qua+p364gcUT7SSX+MkpXuzcfnH/YXQarl1NieimoJo/vL2KmuuErhZ9?=
- =?us-ascii?Q?YHndcHceb5/LFUlQUOhXv+3G8UASnrYR3N7pKfk0t3HNtrrOx8n1ah9XSdKE?=
- =?us-ascii?Q?3QtHYu0Z8clc/r3HONpp0V8Md/YZtU48jyEM9StCgvH2RTpkk/O6eu8vrkaj?=
- =?us-ascii?Q?jpRRBRIKZsZ8vPoLEGjjJ/bzuhniKhxbzSy/U9BR3h1/brsn8mlqoVF0E9+M?=
- =?us-ascii?Q?Ctpa1d0LU3D+AZSY/tk1sWJqHRCC/PFvs1BMK0hn3sY60/j81xDKRps6dsTl?=
- =?us-ascii?Q?c9GkyfSc8wlJ0L3fxzH3HQeUgcDcSFogoqhBJzlda/oJpGmhKx0YbBRCI5AS?=
- =?us-ascii?Q?X+SsgltSFcQzlorBYxWLd6C33dJNvvWmdGFO/EBjYzdPvKVvS5zXE4ehU9GY?=
- =?us-ascii?Q?GCVA3VlpxJhUCwvlLWzIhYiNp5hqxAJJ/ysWdPKa18d3JvMAueeTPs3Xdi36?=
- =?us-ascii?Q?VhAOY5JWgH6Wndpt0Fxup2YuaBMsGO/iqIKNZ0ibA2nabU85UsTSrOW+1a6E?=
- =?us-ascii?Q?E0aAt+yoTblnranHZlSOp6R/+qiRhRSZoA5ODqBoYSG4AMPpBpXXvnaH+dj1?=
- =?us-ascii?Q?ZjXmqEnZV/mzUI0tnvgUu2mLeeWA3bc0lfQR2x16CH/HGSAv4SjDsOZ8PXYn?=
- =?us-ascii?Q?dZVOkATZiuJ8IGFYgvfOmJbdMzoul7ahgqt9CUHm8c/wEwXpPPgQmk1z3ADP?=
- =?us-ascii?Q?rfAZ721o3WGzzWph1JA+JpGHWPyeOosBifjvpH/Qna6LEgyWLhTH688y3iPC?=
- =?us-ascii?Q?U4hbCiyEac+qNhK36/QOOoBjjrGWQNzuyuCdVUfLa9oriqSLiYYeksgDddl2?=
- =?us-ascii?Q?cERTMlRdvUVY5rLwmcxakj8gEcJWTtoDE0hdq7n0pgoZmgFinff8hNZz0y/P?=
- =?us-ascii?Q?uSQM3rYajytiaezvn7cuR6jhixDTu2xm9eYUfop6DXkorczzs4cjGl4MJvKR?=
- =?us-ascii?Q?q1l6wAec6VAtpkZOX9XA5ZQZ4d6xCmaa3tDgoR4O3Bna3PdZIBKaVbhivd5N?=
- =?us-ascii?Q?xMKfJinzW/F771TJbT7P2Tkygen6LoxBBwU+Oqc8YDNP6MvyvpYBl7WkMkh7?=
- =?us-ascii?Q?Bep1PqreX4SHN3Wibo1HLBNxOzo4LuJiqO32?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2025 22:08:07.8188
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 712baad7-1c79-4388-a217-08ddb8ebc2ab
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH2PEPF00000142.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9409
+Mime-Version: 1.0
+References: <447bae3b7f5f2439b0cb4eb77976d9be843f689b.camel@intel.com>
+ <zlxgzuoqwrbuf54wfqycnuxzxz2yduqtsjinr5uq4ss7iuk2rt@qaaolzwsy6ki>
+ <4cbdfd3128a6dcc67df41b47336a4479a07bf1bd.camel@intel.com>
+ <diqz5xghjca4.fsf@ackerleytng-ctop.c.googlers.com> <aGJxU95VvQvQ3bj6@yzhao56-desk.sh.intel.com>
+ <a40d2c0105652dfcc01169775d6852bd4729c0a3.camel@intel.com>
+ <diqzms9pjaki.fsf@ackerleytng-ctop.c.googlers.com> <fe6de7e7d72d0eed6c7a8df4ebff5f79259bd008.camel@intel.com>
+ <aGNrlWw1K6nkWdmg@yzhao56-desk.sh.intel.com> <CAGtprH-csoPxG0hCexCUg_n4hQpsss83inRUMPRqJSFdBN0yTQ@mail.gmail.com>
+ <aGN6GIFxh57ElHPA@yzhao56-desk.sh.intel.com>
+Message-ID: <diqzms9n4l8i.fsf@ackerleytng-ctop.c.googlers.com>
+Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge pages
+From: Ackerley Tng <ackerleytng@google.com>
+To: Yan Zhao <yan.y.zhao@intel.com>, Vishal Annapurve <vannapurve@google.com>
+Cc: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, 
+	"quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, "Li, Xiaoyao" <xiaoyao.li@intel.com>, 
+	"Shutemov, Kirill" <kirill.shutemov@intel.com>, "Hansen, Dave" <dave.hansen@intel.com>, 
+	"david@redhat.com" <david@redhat.com>, "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, 
+	"vbabka@suse.cz" <vbabka@suse.cz>, "tabba@google.com" <tabba@google.com>, "Du, Fan" <fan.du@intel.com>, 
+	"michael.roth@amd.com" <michael.roth@amd.com>, "seanjc@google.com" <seanjc@google.com>, 
+	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "Peng, Chao P" <chao.p.peng@intel.com>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "Yamahata, Isaku" <isaku.yamahata@intel.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Weiny, Ira" <ira.weiny@intel.com>, 
+	"pbonzini@redhat.com" <pbonzini@redhat.com>, "Li, Zhiquan1" <zhiquan1.li@intel.com>, 
+	"jroedel@suse.de" <jroedel@suse.de>, "Miao, Jun" <jun.miao@intel.com>, 
+	"pgonda@google.com" <pgonda@google.com>, "x86@kernel.org" <x86@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 01, 2025 at 08:43:30PM +0000, Pranjal Shrivastava wrote:
-> On Tue, Jul 01, 2025 at 01:23:17PM -0700, Nicolin Chen wrote:
-> > Or perhaps calling them "non-accelerated commands" would be nicer.
-> 
-> Uhh okay, so there'll be a separate driver in the VM issuing invalidation
-> commands directly to the CMDQV thus we don't see any of it's part here?
+Yan Zhao <yan.y.zhao@intel.com> writes:
 
-That's how it works. VM must run a guest-level VCMDQ driver that
-separates accelerated and non-accelerated commands as it already
-does:
+> On Mon, Jun 30, 2025 at 10:22:26PM -0700, Vishal Annapurve wrote:
+>> On Mon, Jun 30, 2025 at 10:04=E2=80=AFPM Yan Zhao <yan.y.zhao@intel.com>=
+ wrote:
+>> >
+>> > On Tue, Jul 01, 2025 at 05:45:54AM +0800, Edgecombe, Rick P wrote:
+>> > > On Mon, 2025-06-30 at 12:25 -0700, Ackerley Tng wrote:
+>> > > > > So for this we can do something similar. Have the arch/x86 side =
+of TDX grow
+>> > > > > a
+>> > > > > new tdx_buggy_shutdown(). Have it do an all-cpu IPI to kick CPUs=
+ out of
+>> > > > > SEAMMODE, wbivnd, and set a "no more seamcalls" bool. Then any S=
+EAMCALLs
+>> > > > > after
+>> > > > > that will return a TDX_BUGGY_SHUTDOWN error, or similar. All TDs=
+ in the
+>> > > > > system
+>> > > > > die. Zap/cleanup paths return success in the buggy shutdown case=
+.
+>> > > > >
+>> > > >
+>> > > > Do you mean that on unmap/split failure:
+>> > >
+>> > > Maybe Yan can clarify here. I thought the HWpoison scenario was abou=
+t TDX module
+>> > My thinking is to set HWPoison to private pages whenever KVM_BUG_ON() =
+was hit in
+>> > TDX. i.e., when the page is still mapped in S-EPT but the TD is bugged=
+ on and
+>> > about to tear down.
+>> >
+>> > So, it could be due to KVM or TDX module bugs, which retries can't hel=
+p.
+>> >
+>> > > bugs. Not TDX busy errors, demote failures, etc. If there are "norma=
+l" failures,
+>> > > like the ones that can be fixed with retries, then I think HWPoison =
+is not a
+>> > > good option though.
+>> > >
+>> > > >  there is a way to make 100%
+>> > > > sure all memory becomes re-usable by the rest of the host, using
+>> > > > tdx_buggy_shutdown(), wbinvd, etc?
+>> >
+>> > Not sure about this approach. When TDX module is buggy and the page is=
+ still
+>> > accessible to guest as private pages, even with no-more SEAMCALLs flag=
+, is it
+>> > safe enough for guest_memfd/hugetlb to re-assign the page to allow sim=
+ultaneous
+>> > access in shared memory with potential private access from TD or TDX m=
+odule?
+>>=20
+>> If no more seamcalls are allowed and all cpus are made to exit SEAM
+>> mode then how can there be potential private access from TD or TDX
+>> module?
+> Not sure. As Kirill said "TDX module has creative ways to corrupt it"
+> https://lore.kernel.org/all/zlxgzuoqwrbuf54wfqycnuxzxz2yduqtsjinr5uq4ss7i=
+uk2rt@qaaolzwsy6ki/.
+>
+> Or, could TDX just set a page flag, like what for XEN
+>
+>         /* XEN */
+>         /* Pinned in Xen as a read-only pagetable page. */
+>         PG_pinned =3D PG_owner_priv_1,
+>
+> e.g.
+> 	PG_tdx_firmware_access =3D PG_owner_priv_1,
+>
+> Then, guest_memfd checks this flag on every zap and replace it with PG_hw=
+poison
+> on behalf of TDX?
 
-    accelerated commands => VCMDQ (HW)
-non-accelerated commands => SMMU CMDQ (SW) =iommufd=> SMMU CMDQ (HW)
+I think this question probably arose because of a misunderstanding I
+might have caused. I meant to set the HWpoison flag from the kernel, not
+from within the TDX module. Please see [1].
 
-Nicolin
+In addition, if the TDX module (now referring specifically to the TDX
+module and not the kernel) sets page flags, that won't work with
+vmemmap-optimized folios. Setting a page flag on a vmemmap-optimized
+folio will be setting the flag on a few pages.
+
+[1] https://lore.kernel.org/all/diqzplej4llh.fsf@ackerleytng-ctop.c.googler=
+s.com/
