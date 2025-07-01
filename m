@@ -1,63 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689C71E51EB;
-	Tue,  1 Jul 2025 21:17:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCAFC1CA81;
+	Tue,  1 Jul 2025 21:17:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751404627; cv=none; b=TOv2YST7/HSOuyZxERkeEZ7eIa8ZWqFCotmUWId3TbZjSjeOX5zcE0OkxrXbyI4tBwDGWjAzC4BIJ3p1FHRinYwGZ2OB1+kybYkH57otZswLesfmlSQaBs9zetXGaqSW0zKTQrMNLR5cRJi6gkADKUuMspd5i6HxlnVFYOmXuEA=
+	t=1751404643; cv=none; b=guBoP7zLwo2WrsiPihsmeHIN0HIch1NCETPDu7uvBLCFTKEaW5mf1t9dp47j8ZSGPzQCWk1TndXxIODYwKOGMWrAtYjGXZKELMakUOWmkzbg4HOEDSJpTPlzTEnYytf0EOgdqcU7RrmpmpirY620YXUcJKnbA1Pw7GjdYLxC00c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751404627; c=relaxed/simple;
-	bh=7eGyOEV7x7wAt+ZhaYCGZplsavyBFsM2rS6N9UhFUQ8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=STXoBqCj1X8+9UoANPQj+EsyRYJU52kk2RLWfAFuQNdV6qoPIr0uwgXxeSKBj2MRdoVt5+0QUjZaYvJyxF8GtyU3Sx/qOqO6q7I8uk9w6JUR3dhVA0jpkfEAgZrHEnwePUYr7An8xxVsOzShMaDeJgRkUpXLbkipiBMg1f0CfV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=12uUgrBK; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="12uUgrBK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A5CBC4CEEB;
-	Tue,  1 Jul 2025 21:17:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1751404626;
-	bh=7eGyOEV7x7wAt+ZhaYCGZplsavyBFsM2rS6N9UhFUQ8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=12uUgrBKhm5i1StiXqgwObMK+FWuQQrAJLnv40gfKzaoYNpfhtSzahhZDh6i2wdSx
-	 Kt4EAgzr1RioihUsPzPA7+YOjbKfXJdx+YdDCXABOh5F/4v4Je8BZEIqdB0f/jwGPx
-	 Qpf5uc2iRbb2/S/DxNqVppj6dWpS1S1SKJi4omsE=
-Date: Tue, 1 Jul 2025 14:17:05 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Lance Yang <ioworker0@gmail.com>
-Cc: david@redhat.com, 21cnbao@gmail.com, baolin.wang@linux.alibaba.com,
- chrisl@kernel.org, kasong@tencent.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-riscv@lists.infradead.org,
- lorenzo.stoakes@oracle.com, ryan.roberts@arm.com, v-songbaohua@oppo.com,
- x86@kernel.org, huang.ying.caritas@gmail.com, zhengtangquan@oppo.com,
- riel@surriel.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
- harry.yoo@oracle.com, mingzhe.yang@ly.com, stable@vger.kernel.org, Barry
- Song <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>
-Subject: Re: [PATCH v4 1/1] mm/rmap: fix potential out-of-bounds page table
- access during batched unmap
-Message-Id: <20250701141705.ff1a446e6a25d7970b209c3e@linux-foundation.org>
-In-Reply-To: <20250701143100.6970-1-lance.yang@linux.dev>
-References: <20250701143100.6970-1-lance.yang@linux.dev>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1751404643; c=relaxed/simple;
+	bh=/cV6d1pkH2bVeRauPTOQ+IrbBObh9kcPyt+2bvoTv8U=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=c2QcGeZXWaD1HDbByJeVUN98x5dGc6PafBbFHxRW6Mr8RIjTyM998xAhqITzsWLZJkC59CiNuE9jwDuFnf7N9OXti7Ga9zGGUfByqNQjBWBtlgk1ZBffEDDU2dPjcbykfXg0UkQMkIknt5xDmT+qudLBPlL2qOzdxTsOpqk46z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf17.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id 74F7016066C;
+	Tue,  1 Jul 2025 21:17:18 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id AB1E01B;
+	Tue,  1 Jul 2025 21:17:16 +0000 (UTC)
+Date: Tue, 1 Jul 2025 17:17:15 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Gabriele Monaco <gmonaco@redhat.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ john.ogness@linutronix.de
+Subject: Re: [PATCH v10 17/19] rv: Add rtapp_sleep monitor
+Message-ID: <20250701171715.5a1a99a0@batman.local.home>
+In-Reply-To: <20250701210338.BooVbo54@linutronix.de>
+References: <cover.1749547399.git.namcao@linutronix.de>
+	<d3cf55d3bf42a0f70a58c394b5cf6d603ca8a9f7.1749547399.git.namcao@linutronix.de>
+	<20250630203401.1a11e58f@gandalf.local.home>
+	<20250701051757.mBjQVdoo@linutronix.de>
+	<20250701110218.5e742850@batman.local.home>
+	<20250701110551.5c2dc2ee@batman.local.home>
+	<20250701151114.OJQTlRCY@linutronix.de>
+	<20250701111704.00456667@batman.local.home>
+	<20250701210338.BooVbo54@linutronix.de>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: AB1E01B
+X-Rspamd-Server: rspamout02
+X-Stat-Signature: k1t1f6axigc9joo1kyg33sgiubod17fz
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19Ok8LG1r6ryiL8bKaDIIsgZlORN5GmR1w=
+X-HE-Tag: 1751404636-345848
+X-HE-Meta: U2FsdGVkX1/64e4LZmiVpmpJXNn76gLDZ+XGrCIibaOiBdbiV5il0QIPUo0+WAKmrFyWTeCBwcAtoaSzjS7xlOL5fz2n2HeFx6syQ7HFJOixYpaSFCO/aT+wl5/HBU09h3leOZst51ChlUA+QHSCdLqM4TcvZJf+ym90w93zVr7fVivjksu7iQZ3+cQInLWP0o7NQ7n3a3Eou+XY0nFye1UPhJvIVfiw11fgaGAi7rqcdzGOjtF6ifUp3j8Bi87rtCyzACez8K3NkYEG1VFHIwVZ1kgKsUhAci4BGvrPrrVOhW2nC3B2fRZAvbJ+Vxrt
 
-On Tue,  1 Jul 2025 22:31:00 +0800 Lance Yang <ioworker0@gmail.com> wrote:
+On Tue, 1 Jul 2025 23:03:38 +0200
+Nam Cao <namcao@linutronix.de> wrote:
+> 
+> > Bonus points if it shows how it was generated so that people will know
+> > how to regenerate it.  
+> 
+> If it's okay, not in this series. It requires changes to the RV core
+> script, and I prefer not touching things which are not LTL-specific for
+> now, unless necessary. The DA monitors and the containers do not have it as
+> well.
 
->  - Add Reported-by + Closes tags (per David)
->  - Pick RB from Lorenzo - thanks!
->  - Pick AB from David - thanks!
+Yeah, just update this set to state that this code was generated.
 
-It generally isn't necessary to resend a patch to add these
-things - I update the changelog in place as they come in.
+> 
+> Let me stash it into my TODO list of RV cleanups. I will add this for LTL,
+> deterministic automaton and container in one go.
 
-In this case I'll grab that Reported-by: and Closes:, thanks.
+Thanks,
 
+-- Steve
