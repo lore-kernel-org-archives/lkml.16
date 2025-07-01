@@ -1,91 +1,177 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2FC827FB0E;
-	Tue,  1 Jul 2025 18:13:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF69B27FD6D;
+	Tue,  1 Jul 2025 18:13:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751393595; cv=none; b=pr6wjZ+QyxuUJiNuWypdiLOQVVDAW7eh2/OYBAPteph0pFoh5lAUxx1HCuBA6b0eLCtjPrHEx8+s1PXbDS08E8PA7KPy0IvlDOTfelj4YtZHRL08IKN72DIuOAHJ34S7NEz3I617JUqAlWcpUYu38rWEYJ6Bwhrti/IzI+lZjhU=
+	t=1751393630; cv=none; b=pggOhy1/mQr5ejyQUU1dufdo5Q8bPDNFpCSfwpQhwBOsW+hE0r+sU5CNj5JNQGNEC5L0zvQCtF7cgeX9Y56lCmo3YN3eUL9Hbq5aRs3jhjC+PCYDJImJ9Jnx0JK89x5+/cIby9gg0lDVWqK2EMgm+8eP0h+RH/df1tabo4bZ+Z8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751393595; c=relaxed/simple;
-	bh=eAu0MRSHV6xH4249WU3u1VjZk+3a4KJwctP9GEQDFLI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UdehC54EwMk0qctLfqcT7C2chDgfaRX+zz8YCcHc6HHHgek62mZDb5Gc05lBhOqeAI07yFEU9IRPTTCdqxf1zEBHEF/4GAd3aht/ttToBzZVL3EVz2YlzxkY2L+iW32hl7rrV9+lieAlIgzlKmF/9u9qmbkLvieod/sh2UQnDUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XuO7ikj0; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751393630; c=relaxed/simple;
+	bh=yNB84JbWq3w18P6XUSeSuM3LsGvmrzGS4ra6BiFoz7o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ojOJgvnGL/qxiT90KGkWQwNS5bt1efIo79EG358a7op4jil3INmCuxZXhk+jWKWALxJoIRLDjGKVr06ayVffEDLpLkwLp0/K3kFTE2VzD2Rf43HdTBL7zOnuRv0fj8eSChttb57X7MvQZ/shQfvQY8bvZ+/GpEIYX/A564lgP4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MaDyx/td; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XuO7ikj0"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2363497cc4dso50664355ad.1;
-        Tue, 01 Jul 2025 11:13:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751393593; x=1751998393; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nepb3zOB889c16aJ25u0uXLI1bBeotorI3Pi5r9+cUo=;
-        b=XuO7ikj0itsxaV+PXkEeNna2tAsfd05B/k18j6eRdgg+duxD4pZXQNOWyOSRx8QEds
-         DpocrsyC3itdCwP3p4dETc8eGD7wl8K5gD3GdCVA7BObcLFbo782kq18NGfrm5w+SC0S
-         SyI7RBOK6A1YHuyi3+JOJZgnJ/yhEE2EoFrwutPGZYydE1BbpFL5TXt+MVyC3YY/g9tT
-         N0w3isZVHZQqP4+cvlqtTKr26y6J/DkkmwjT1ttSdB4OGTWI1jcNUH31GnnhYUZ0iuEV
-         fbVwZ/VP948SAYT3ceomLiT4Z23WJQEG25EhOvDIYZeDiHmaKR+dKFalAMLxSKmiGXIx
-         X9Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751393593; x=1751998393;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nepb3zOB889c16aJ25u0uXLI1bBeotorI3Pi5r9+cUo=;
-        b=UecGSzwD/ifZfc6UBkv0ZsCVk3/ww9aGpeDgpOn5a7EJDSY706aSYpg+7fg7DyqVvd
-         VBgLdX84z+TlqjJghMwDslOsVeriTKK83p3krlCYD/IuWMO+2uTxXQXwqW4p3cBwx3Eh
-         oiXjVd7lbpCxTe4+agQD1ZHKd5jp5zCRtJMqJpzapXUpiqQHeH7NHGxU9jYXQ9I0GMfy
-         kkMAPl1H7BrDdYF6hcsTNReZxUpiUbfpMBPWgD7CNzYIGJCXibVC9lScKnK54jQhhMji
-         0y424lkW4B8gEfIv1Qt0TD/ttt8WC4WRYon3uWKcxS7g+IJdXK6DmThAcfOAJYtbNuCX
-         Uh9g==
-X-Forwarded-Encrypted: i=1; AJvYcCWrZpcF8zCIQpPuW7O/S2FS0g0Szk3VsYHdAYpYFIx7416i22SghBd9C9F+fab++T0wPg/Dpcl16f3cV0TY@vger.kernel.org, AJvYcCWx7YpgUtq/V8rrRd6zdECYIlKwzp5Ev423FpSRwfjC4gGSNhzd6K8NCnn21+ZsgyWrLh0NVSMmjaQr@vger.kernel.org, AJvYcCXyNgyZspOks3hvfqsInXoh0TjjpWbj0IUozQNCkGUk9Wbwr3lePSsyMbdxsSlaLPuT8rNZR6Irr855eCQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/8RSdf2iN4aq/qL1x5AKesuK7MAjquiAzgcpjyHrGyAzX9llS
-	U9HwDocgZn7yPv1e7Klng16tolypxYtb8Tvwi21r9Q9/SLZ/bnKgNdwJ
-X-Gm-Gg: ASbGncuhtBC6nF/KjHB4Z1T/VBp1Lc++LA9AG2I+Phl5X5a8Ssqt2VhFdQj+owt4Q5m
-	8q0n2rD782uI4sadwuGm9F4sRsSwUXuSGp/fPtYM6ahEjhhfY+1DWXQgUXh2FpEH7R6LUBmitAk
-	L8CYPodCruJ1ND8WvmzcQdP893oy69t7vFiVnPxyJL4zKLNa0W6RkqfHBMdDnkTKOSPk2BYu3zZ
-	rNHq5utKSF4C0pAtedbuTunTyvN2rrYJf5veBAd6KkOYp2lC4/oF+Tkyfidn3Gu7KkaLImtgaOz
-	8OQk92sfvXv1i/Mtq6mGaEgvDkc6YRB2dphT5A14RfwdHELMQ5li34JOEjN1hA0=
-X-Google-Smtp-Source: AGHT+IGAdFjKL0rEV/0i5/agWfz3gy3C3R3l4wEiE5tiTp8xVYfcABnycX6766pzilb4G+WLEWj9pA==
-X-Received: by 2002:a17:903:244c:b0:224:910:23f6 with SMTP id d9443c01a7336-23ac463e8d8mr287205225ad.45.1751393592975;
-        Tue, 01 Jul 2025 11:13:12 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:7bb0:b5bc:35bb:1cb4])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3b85efsm109583475ad.185.2025.07.01.11.13.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 11:13:12 -0700 (PDT)
-Date: Tue, 1 Jul 2025 11:13:09 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
-Subject: Re: [PATCH 1/1] dt-bindings: input: touchscreen: convert tsc2007.txt
- to yaml format
-Message-ID: <ooyp7e6gubzqxavo7aadie7xgo4qi37uarw72hkhbbbolno6ht@y6fve3n3rcru>
-References: <20250529193241.793678-1-Frank.Li@nxp.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MaDyx/td"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 561H4FRI002240;
+	Tue, 1 Jul 2025 18:13:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	LMmXeWJLOsQ1VNY8cW9v50pEpisDdJ7oVLjDPbnYtSc=; b=MaDyx/tdkZdcf+AF
+	spKtwfF0F+oVnPrMjj4EKRe41OYzNi6cHRvYxZNdh7AvGxSgKmyggkaAuoubAEtE
+	/7EqtBD2/KjdqfrGcs2wRSq8/tUxWzY3IeeuL5EmrjtCM+/ph59C5132ch8jMtv/
+	HuQNuSpoJJqwstjSUgIES5eN+Z5SSKp+WjFbQucTVcsvX8IcdOPreWNR6MFMgL49
+	wjFQOys0vPku+xRr68XSDGGHNKzBGXQBnkKN5a5zFjIK1U+Pniv0BadwiW5AS7Sb
+	yUsvOVR6Ee46rE+ZmQCTgGkD4SPl6HVtp5TlY/nMlbztrlNt0Y0G2Lf9fFHuIvvY
+	7ogtxA==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j9pcssd5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 01 Jul 2025 18:13:45 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 561IDiJC026012
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 1 Jul 2025 18:13:44 GMT
+Received: from [10.110.47.15] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 1 Jul 2025
+ 11:13:40 -0700
+Message-ID: <0c0e3732-54e3-4a4c-ac44-3175180298fd@quicinc.com>
+Date: Tue, 1 Jul 2025 11:13:28 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250529193241.793678-1-Frank.Li@nxp.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: qcom: sc7280: Add support for two additional
+ DDR frequencies
+To: Pushpendra Singh <quic_pussin@quicinc.com>,
+        <cros-qcom-dts-watchers@chromium.org>, <andersson@kernel.org>,
+        <konradybcio@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <kernel@quicinc.com>
+References: <20250701074334.1782967-1-quic_pussin@quicinc.com>
+Content-Language: en-US
+From: Trilok Soni <quic_tsoni@quicinc.com>
+In-Reply-To: <20250701074334.1782967-1-quic_pussin@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: yOk5qIZYBt9g6HCkT57F9g9n6cDL8mtD
+X-Proofpoint-ORIG-GUID: yOk5qIZYBt9g6HCkT57F9g9n6cDL8mtD
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAxMDEyNSBTYWx0ZWRfX7RecqPZvOGm1
+ rDIBDsL3ZisQoAR4Dce5ARRcojlXLdYKQyroCl56F2iBPpEHwW2+ebO5LBPykJUGYMdfMV10hN2
+ ozH97mrhqI+BETppj5cKV0tTORxRZ7GLlwbsJL75C6GY2ps6efofF0GH17JyU0Ydis3Uszi2Nlk
+ yIiqkLwc1mMXaQ8bqLhbbuGU7cD2oPx8wWqnbxa9boD2jxAY+YGxHEvO6MngtXJOhKhAsJxH2de
+ hzb8HbAG+DQ+T4ebq/CItfAsBGjdrHtrh5/+avFdDOjyRgZgkUp0aLeDkuU78fXL7/5vCj3C4L9
+ d2en7FDNBcKruQqUS/fHZ5qPerXmXRvAuofoakCSP2pXTZPyIZDDcKVjYurzZ10uzelw4IMC+8W
+ QKRXes0rOEJrQptQ1ebZDsIjNab9369otC15byVXQBjILXZJvcfS2EpVUACoaE/fw8Xo8aVI
+X-Authority-Analysis: v=2.4 cv=QMFoRhLL c=1 sm=1 tr=0 ts=68642559 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8
+ a=EUspDBNiAAAA:8 a=J310i9rcTv6EiX6W7m0A:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-01_02,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 priorityscore=1501 bulkscore=0 spamscore=0 adultscore=0
+ mlxlogscore=946 mlxscore=0 lowpriorityscore=0 suspectscore=0 impostorscore=0
+ clxscore=1015 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507010125
 
-On Thu, May 29, 2025 at 03:32:35PM -0400, Frank Li wrote:
-> Convert tsc2007.txt to yaml format.
+On 7/1/2025 12:43 AM, Pushpendra Singh wrote:
+> Cc: kernel@quicinc.com, kernel@oss.qualcomm.com
 > 
-> Additional changes:
-> - add pendown-gpio property to match existed dts.
+> The SC7280 SoC now supports two additional frequencies. This patch
+> add those frequencies to the BWMON OPP table and updates the frequency
+> mapping table accordingly.
 > 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> These changes do not impact existing platforms, as the updated mapping
+> only affects the highest OPP. On any given platform, this will continue
+> to vote for the maximum available OPP.
+> 
+> Change-Id: Id3a91e065c49848d9af18e5c3edee0836cb693e5
 
-Applied, thank you.
+Why Change-Id? 
+
+> Signed-off-by: Pushpendra Singh <quic_pussin@quicinc.com>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7280.dtsi | 18 ++++++++++++------
+>  1 file changed, 12 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> index 64a2abd30100..cb945abf0475 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> @@ -620,12 +620,12 @@ cpu4_opp_2208mhz: opp-2208000000 {
+>  
+>  		cpu4_opp_2400mhz: opp-2400000000 {
+>  			opp-hz = /bits/ 64 <2400000000>;
+> -			opp-peak-kBps = <8532000 48537600>;
+> +			opp-peak-kBps = <12787200 48537600>;
+>  		};
+>  
+>  		cpu4_opp_2611mhz: opp-2611200000 {
+>  			opp-hz = /bits/ 64 <2611200000>;
+> -			opp-peak-kBps = <8532000 48537600>;
+> +			opp-peak-kBps = <12787200 48537600>;
+>  		};
+>  	};
+>  
+> @@ -685,22 +685,22 @@ cpu7_opp_2381mhz: opp-2380800000 {
+>  
+>  		cpu7_opp_2400mhz: opp-2400000000 {
+>  			opp-hz = /bits/ 64 <2400000000>;
+> -			opp-peak-kBps = <8532000 48537600>;
+> +			opp-peak-kBps = <12787200 48537600>;
+>  		};
+>  
+>  		cpu7_opp_2515mhz: opp-2515200000 {
+>  			opp-hz = /bits/ 64 <2515200000>;
+> -			opp-peak-kBps = <8532000 48537600>;
+> +			opp-peak-kBps = <12787200 48537600>;
+>  		};
+>  
+>  		cpu7_opp_2707mhz: opp-2707200000 {
+>  			opp-hz = /bits/ 64 <2707200000>;
+> -			opp-peak-kBps = <8532000 48537600>;
+> +			opp-peak-kBps = <12787200 48537600>;
+>  		};
+>  
+>  		cpu7_opp_3014mhz: opp-3014400000 {
+>  			opp-hz = /bits/ 64 <3014400000>;
+> -			opp-peak-kBps = <8532000 48537600>;
+> +			opp-peak-kBps = <12787200 48537600>;
+>  		};
+>  	};
+>  
+> @@ -4013,6 +4013,12 @@ opp-6 {
+>  				opp-7 {
+>  					opp-peak-kBps = <8532000>;
+>  				};
+> +				opp-8 {
+> +					opp-peak-kBps = <10944000>;
+> +				};
+> +				opp-9 {
+> +					opp-peak-kBps = <12787200>;
+> +				};
+>  			};
+>  		};
+>  
+
 
 -- 
-Dmitry
+---Trilok Soni
