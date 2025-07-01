@@ -1,96 +1,168 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51329A47;
-	Tue,  1 Jul 2025 05:21:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4C9A47
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 05:22:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751347277; cv=none; b=CTl2n9DecBoFcCG1O+C66GBUKlMhj1I5Xz02uJE+KWdYWxrE+PG6j4Kqun62tJAR5QTNPgDHZM/5sJw7udMhRa75uyK8BvLEc/hvi2uSWodKAXy8Rb6d5WusQiqjyxjuNUqmTQtcjpW0H1WtBYWPzjia2XvrbtIsZZurgy0UObk=
+	t=1751347362; cv=none; b=H1LZdppHT9NLOvs1bpCnkh7hh8WTdtv7wgsH47+bvjpb4E+8Qi1cw9mDjZeWr7B2B2RksixNUJayj7VtZzRMVgy1wrCK1UXqNFR0gQ5KMIZGho+n/NszW4EHUMnGMeInoawAI5pPUH/eyCq8RX/V1FZWg1uRV/MwLDeFLazdDdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751347277; c=relaxed/simple;
-	bh=yQUoBZ2SMNI4V9Ij37O9fIStbSz+2/2OjfqIEVgGZ9Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jVgfuoWpoZUJqzK+cZqcLN6WnmG/d2KCM+riIIbuAffuncRGYDgvuQ+A8IUfvPlv2vkg6lA7xm0L3P6siJy8YdfnkGON3U6OR1HWV7wTaEpe8paRZFNfxSoNa8HgXGIRaYYR6FEL3MAWBdEcXRqF5WqlnUQ5HITjavWNajaFaUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lXKkCyxI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZedNDfLk; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751347362; c=relaxed/simple;
+	bh=VYqlj+Y3w6GrxsL/42ioSVNT3PVbnq2E31Nz6I6CgQg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=o5HazrevTRuqYGVXQ0020Xa/OqrK73h8DYNS84mDjBRklYBYmpjlZnZ4V3ugm2v0o6dXETbGkBFjWp2ir5EOCm+Bv6ACd+1UGer6AOs1qEj0pOYuYBn5qFxZVUwA/uMi/YwFqhZwmw/KSsVAhsMUnSophGng8AeLs/HjsigSLVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=e3s5Xq0r; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lXKkCyxI";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZedNDfLk"
-Date: Tue, 1 Jul 2025 07:21:13 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751347274;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=X03KVDX7Q7xCqvrk2MtgunqeHF2/HoDA6sxx6spzF5w=;
-	b=lXKkCyxIaWXSW7ZqYX/Bfr4xKROgJo9pl+JyfkSlaEUdx0dZxK4tH8PguLgrMBUcRSXCxN
-	ASEihq8UG+EY8WFmKmNFgwucAC+eEJE0RAJiQjLIzhDuUNH/OebsLlZOd5FI1dYK9XPs9h
-	mZ01DnwjhG/L54XmrS6ACGKIvaG8shTO3v+W/FdrNBKSrJza0R40/5+Ur8HghQNb7X5+8L
-	7MgoF/8xXYpDCS7XgfHADGBy3a9I4cbSSslzNnZEMHn8JL3hH6V8sE/Fbm1/gZ14lgyo3C
-	vSG3CSLiQ5XpkzuUb6luQd54c7GV4JddgVoM6YJ0EJ7CcYbqPGBgexK7VxNu9g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751347274;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=X03KVDX7Q7xCqvrk2MtgunqeHF2/HoDA6sxx6spzF5w=;
-	b=ZedNDfLkHlbXRoWzxgGihNkRKxnpzREhuqDwHExF1vD8abfOzWLxWN4QkQadRvpZlWS1PP
-	dHQsqo2lmsI30GAA==
-From: Nam Cao <namcao@linutronix.de>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	john.ogness@linutronix.de
-Subject: Re: [PATCH v10 14/19] rv: Add rtapp container monitor
-Message-ID: <20250701052113.HSInwOOF@linutronix.de>
-References: <cover.1749547399.git.namcao@linutronix.de>
- <96c2766a74a730fe54a9339feb5b93128ee65331.1749547399.git.namcao@linutronix.de>
- <20250630160430.20dc6dc0@batman.local.home>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e3s5Xq0r"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-235e389599fso134895ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 22:22:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751347360; x=1751952160; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ug5SHg66aGnCTuPO5TyvNH1aNiq24HsB7hp/dDRBT7k=;
+        b=e3s5Xq0rbvkD+CxKqUc8VB0dID14p47RfNwXUF1BTUYJsMVPmHZGqRRg2DRswmHwVQ
+         Tq7wfLik4ZUErGf12agWIH1PWeAFIDEbM9umNBcp87Nk2AzUWHb0EIUir4Rr6aeTdVnq
+         3ULjW20N2q692pRNeFxXb7jVZafz98+6utaa464XhUg0gCeYjDHYYcHW2znD3ezoR1A8
+         ugwebOJTNq1MsHxIqX+BkOzl3evIXZfO3+cr+xOUliT0LvQhx+ulHmCx7CFNNODslEdT
+         oycdqcRcKgcWc4su9HSjdTiBlhcycrICT0WXovHx4gYE7F/4DHyxIKtOhovBj5DJ9/1c
+         qLWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751347360; x=1751952160;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ug5SHg66aGnCTuPO5TyvNH1aNiq24HsB7hp/dDRBT7k=;
+        b=lnNU9s810cxRiOdIEeKQR+dkiVsOsbnR2zodsNQiViUm2JCecVp0mFFZK09223BTst
+         2DbpIds8T+V8OwQ+4iIKxXK0fFKd2DVu45lHFXh6gorwu2DypFnPUtxjDFria6jM4QDQ
+         jyW1nitxE7+JgQPftEFNLMGA+mTx2YmaNdCM7lc3Phs1ON/me47uwSRlfWFIS30OSUx/
+         VtvFBFiLQdat7PUfP6sCC6e389n7sjnTjS9OByDACTHz2R0wwAeAMbMaNu3GmP20tuRk
+         E3890Zo0BRRHnPN7Og8TXrJiFXeGLekyxops0gsuaXGVJ5XsFe0Z5s7KDc3+lGzvNWy5
+         2sbg==
+X-Forwarded-Encrypted: i=1; AJvYcCXN2gSnSc8OKr2NZB0/ljK8P/eEUQgVgpsOHJ+SiB6RBaV8IHQqLkov3JHkxLzVYNJSuetJgL5EH6biVAI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5cF+xEJazSvyMGy1IAtPz4ZJGNQx/X2LU2HJd/yEYL75YhfGi
+	zhM6aLRNOZ/ZG89yo9oPW+ddkfDUh2sH1iES2OWhJKScilyG4P2/K6S/9nA05lpD7Ded3A3FmSQ
+	9qERe3CpkTxKKFJSw0gmWoj4MOYILZmxBZh5dzBhN
+X-Gm-Gg: ASbGnctKqp8z5w7WCecKVHmmp6C3oWfyjt1rRVe3sWj8KqXnIHapd+mKAWr6e5kDw1g
+	nuRhn0D9CMkmnjE31EisIMIltFV7n812XhwDgkfTp7YaIIhHKY9NjjbHMOInOoJNHfdPMrapQr6
+	dW7WNvpDKQdZJElmQ/CbEjf48wDX/7tWkx98tqoPqmYccrHgADA2nKfJdHBk08jVhjRfXsbOusC
+	nC0
+X-Google-Smtp-Source: AGHT+IGQ1LJkpXjCB3M6JsBjwHbg7F16Ktug72Dgl4yuUaJr657M2qrWBr6Ub2+QfnlBJIK3KOceKatIxx+yhG4pXjI=
+X-Received: by 2002:a17:902:ecc1:b0:215:7152:36e4 with SMTP id
+ d9443c01a7336-23c601d19bcmr1027895ad.27.1751347359848; Mon, 30 Jun 2025
+ 22:22:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250630160430.20dc6dc0@batman.local.home>
+References: <a3cace55ee878fefc50c68bb2b1fa38851a67dd8.camel@intel.com>
+ <diqzms9vju5j.fsf@ackerleytng-ctop.c.googlers.com> <447bae3b7f5f2439b0cb4eb77976d9be843f689b.camel@intel.com>
+ <zlxgzuoqwrbuf54wfqycnuxzxz2yduqtsjinr5uq4ss7iuk2rt@qaaolzwsy6ki>
+ <4cbdfd3128a6dcc67df41b47336a4479a07bf1bd.camel@intel.com>
+ <diqz5xghjca4.fsf@ackerleytng-ctop.c.googlers.com> <aGJxU95VvQvQ3bj6@yzhao56-desk.sh.intel.com>
+ <a40d2c0105652dfcc01169775d6852bd4729c0a3.camel@intel.com>
+ <diqzms9pjaki.fsf@ackerleytng-ctop.c.googlers.com> <fe6de7e7d72d0eed6c7a8df4ebff5f79259bd008.camel@intel.com>
+ <aGNrlWw1K6nkWdmg@yzhao56-desk.sh.intel.com>
+In-Reply-To: <aGNrlWw1K6nkWdmg@yzhao56-desk.sh.intel.com>
+From: Vishal Annapurve <vannapurve@google.com>
+Date: Mon, 30 Jun 2025 22:22:26 -0700
+X-Gm-Features: Ac12FXyA-w-dfqDos41dPoFYviJkwnTyUL8ABtay1z3xRmiT2sgcPlBoMON2FnU
+Message-ID: <CAGtprH-csoPxG0hCexCUg_n4hQpsss83inRUMPRqJSFdBN0yTQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge pages
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, 
+	"ackerleytng@google.com" <ackerleytng@google.com>, 
+	"quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, "Li, Xiaoyao" <xiaoyao.li@intel.com>, 
+	"Shutemov, Kirill" <kirill.shutemov@intel.com>, "Hansen, Dave" <dave.hansen@intel.com>, 
+	"david@redhat.com" <david@redhat.com>, "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, 
+	"vbabka@suse.cz" <vbabka@suse.cz>, "tabba@google.com" <tabba@google.com>, "Du, Fan" <fan.du@intel.com>, 
+	"michael.roth@amd.com" <michael.roth@amd.com>, "seanjc@google.com" <seanjc@google.com>, 
+	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "Peng, Chao P" <chao.p.peng@intel.com>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "Yamahata, Isaku" <isaku.yamahata@intel.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Weiny, Ira" <ira.weiny@intel.com>, 
+	"pbonzini@redhat.com" <pbonzini@redhat.com>, "Li, Zhiquan1" <zhiquan1.li@intel.com>, 
+	"jroedel@suse.de" <jroedel@suse.de>, "Miao, Jun" <jun.miao@intel.com>, 
+	"pgonda@google.com" <pgonda@google.com>, "x86@kernel.org" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 30, 2025 at 04:04:30PM -0400, Steven Rostedt wrote:
-> On Tue, 10 Jun 2025 11:43:39 +0200
-> Nam Cao <namcao@linutronix.de> wrote:
-> > diff --git a/kernel/trace/rv/monitors/rtapp/Kconfig b/kernel/trace/rv/monitors/rtapp/Kconfig
-> > new file mode 100644
-> > index 0000000000000..658bb78e733a0
-> > --- /dev/null
-> > +++ b/kernel/trace/rv/monitors/rtapp/Kconfig
-> > @@ -0,0 +1,14 @@
-> > +config RV_MON_RTAPP
-> > +	depends on RV
-> > +	bool "rtapp monitor"
-> > +	help
-> > +	  Collection of monitors to check for common problems with real-time
-> > +	  application that may cause unexpected latency.
-> > +
-> > +	  If you are developing a real-time system and not entirely sure whether
-> > +	  the applications are designed correctly for real-time, you want to say
-> > +	  Y here.
-> > +
-> > +	  Beware that enabling this may have impact on performance, even if the
-> > +	  monitors are not running. Therefore you probably should say N for
-> > +	  production kernel.
-> 
-> I'm trying to figure out from the patch how exactly does this cause
-> performance issues?
-> 
-> Can you elaborate?
+On Mon, Jun 30, 2025 at 10:04=E2=80=AFPM Yan Zhao <yan.y.zhao@intel.com> wr=
+ote:
+>
+> On Tue, Jul 01, 2025 at 05:45:54AM +0800, Edgecombe, Rick P wrote:
+> > On Mon, 2025-06-30 at 12:25 -0700, Ackerley Tng wrote:
+> > > > So for this we can do something similar. Have the arch/x86 side of =
+TDX grow
+> > > > a
+> > > > new tdx_buggy_shutdown(). Have it do an all-cpu IPI to kick CPUs ou=
+t of
+> > > > SEAMMODE, wbivnd, and set a "no more seamcalls" bool. Then any SEAM=
+CALLs
+> > > > after
+> > > > that will return a TDX_BUGGY_SHUTDOWN error, or similar. All TDs in=
+ the
+> > > > system
+> > > > die. Zap/cleanup paths return success in the buggy shutdown case.
+> > > >
+> > >
+> > > Do you mean that on unmap/split failure:
+> >
+> > Maybe Yan can clarify here. I thought the HWpoison scenario was about T=
+DX module
+> My thinking is to set HWPoison to private pages whenever KVM_BUG_ON() was=
+ hit in
+> TDX. i.e., when the page is still mapped in S-EPT but the TD is bugged on=
+ and
+> about to tear down.
+>
+> So, it could be due to KVM or TDX module bugs, which retries can't help.
+>
+> > bugs. Not TDX busy errors, demote failures, etc. If there are "normal" =
+failures,
+> > like the ones that can be fixed with retries, then I think HWPoison is =
+not a
+> > good option though.
+> >
+> > >  there is a way to make 100%
+> > > sure all memory becomes re-usable by the rest of the host, using
+> > > tdx_buggy_shutdown(), wbinvd, etc?
+>
+> Not sure about this approach. When TDX module is buggy and the page is st=
+ill
+> accessible to guest as private pages, even with no-more SEAMCALLs flag, i=
+s it
+> safe enough for guest_memfd/hugetlb to re-assign the page to allow simult=
+aneous
+> access in shared memory with potential private access from TD or TDX modu=
+le?
 
-Sorry for the confusion, this patch alone doesn't affect performance.
+If no more seamcalls are allowed and all cpus are made to exit SEAM
+mode then how can there be potential private access from TD or TDX
+module?
 
-It is its child monitor which turns on CONFIG_TRACE_IRQFLAGS, which is
-added in a later patch.
-
-Let me move this paragraph to that patch instead.
-
-Nam
+>
+> > I think so. If we think the error conditions are rare enough that the c=
+ost of
+> > killing all TDs is acceptable, then we should do a proper POC and give =
+it some
+> > scrutiny.
+> >
+> > >
+> > > If yes, then I'm onboard with this, and if we are 100% sure all memor=
+y
+> > > becomes re-usable by the host after all the extensive cleanup, then w=
+e
+> > > don't need to HWpoison anything.
+> >
+> > For eventual upstream acceptance, we need to stop and think every time =
+TDX
+> > requires special handling in generic code. This is why I wanted to clar=
+ify if
+> > you guys think the scenario could be in any way considered a generic on=
+e.
+> > (IOMMU, etc).
