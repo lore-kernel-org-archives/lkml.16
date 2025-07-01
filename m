@@ -1,32 +1,32 @@
 Received: from mx.denx.de (mx.denx.de [89.58.32.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01D2E27EFEB;
-	Tue,  1 Jul 2025 11:50:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DB6A27602F;
+	Tue,  1 Jul 2025 11:50:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751370641; cv=none; b=mduuSrgtrSwHo83ABn749BUukoaeslx345Wv6vjMSrLAc9KtrkKsmOm0wZrUphgo1S+PkqFkkFEAqKQGgjicXZgpR8qDz6WSV/M9QwoPr25Xh0fF8ywyazRp9iGIwHYacvWoFbv1wwrShp8SFbPhSy25btU4pfwGRmj77BOcv1w=
+	t=1751370645; cv=none; b=POHcRTwHImgF5YXjZkITCvg4qUeFZb8L8wXJbmRcTY5xKmklie9QkV39yjKqLBQwoMhf258zqFzz5nmzEF4Ez/wPP/aLF2D1NpdrxwU2/z1iBOlYR3pnoTVOC6Y10vWXl9gPmxwswT8G5SUQliIrLhqglVMeS32V2NX7gIq7sOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751370641; c=relaxed/simple;
-	bh=y3LAsEbA4WPD/y/3yEK4GEKf4txq/Ti5E23ueWHGtZk=;
+	s=arc-20240116; t=1751370645; c=relaxed/simple;
+	bh=JV4ms4rWrhnsqVdfTUNlLVNzp8I09gV135pwLFHyBHU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rqfpUi6WRyaDjUz7FBROR67g2xG/IgRAGITXGI1KRRwAjQGFOYBuhsnuBXRn48d1fNFEHd0XWPxwZT+IZx/ZkchENEnwiG1CMFdin8+Om7GWhSqWoe380F+dQjREW2D5CukHvfcfapDxMXcYH211ZbeAWLz7nmeee8eZAnLtgj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=OkmHm8a5; arc=none smtp.client-ip=89.58.32.78
+	 MIME-Version; b=mD1a4YbVPo1KAB3H9OShIu3ShuG2klSBePXyzyyg0T0da6DEtFIitke1Pl2Heb9zjr9eXlkZ8chC1kC3JeqdTjP+dsUCMM85mrQVZBPG333UO4sIR7BnFTuCAVR0gVZ1es0csaf8S3LoVszaPX6kN5hGc7iKqGRr8IJb3PLABBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=bUGJU1Kh; arc=none smtp.client-ip=89.58.32.78
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="OkmHm8a5"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 36FE1103972A7;
-	Tue,  1 Jul 2025 13:50:35 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="bUGJU1Kh"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 2058A103972AC;
+	Tue,  1 Jul 2025 13:50:39 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1751370636; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1751370641; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=8eHtHoAOjcKtINbZIhw1S/AVOd+6dgtJykIKicP8rEA=;
-	b=OkmHm8a5/lM2JF9FewDhnMMXSQWW4oRff3dsdr0f3eH5nK8KSIUc9e/fNv1ic+PPZTnh7l
-	/F/Nsp1fLV+0H5LkoTtoWo37+pOdBqqoBF7AvRIO0PiU2UbrRp8VG3h202KxKvgjepIcqI
-	uZaVrWBTBpMPsmDd9LvwNdCQyv/+P+lXgsSs33I466dBfHgy3wZQVuxGxnfxliNjZg0PoR
-	rJwhuPU7vEL0jeWMTEvMtX+fhVEqUPwmykIhGUhzXdPceG/pWgy4gDXwBXto60omagzuf8
-	EBWZAivG3kYKpfZasONys4qKaOLvBbI2F9I819wtDig3NEHQhyq3ATJu64qqyA==
+	bh=ecxV1Vl+UKHk1HlQWlj8FTHJAuW2SqoXya4JG08YYHc=;
+	b=bUGJU1Kh6w6DYAfoob2cCsCQjKD+YtO0NUl8vzsi/fomZGlJYZVCGWc3qYLlB4x4zdYfnl
+	SJ2uvUjpAvnAq5/uVkv1vNI1bVh4h92fihVBwZo2wKSBR9pzbqs8Ls7OhK61oc7k6ilbmg
+	LvOOFoQLX8Lkc3C5KGpx9NpFNqXbGRcrtcIthHdj47bGaXP6+SqNaPCrHZarlw1KdoKNRu
+	76l7qjvQ/JxZxC0Ltk2f5hQkBtuLsoaloRh7GG/b1VkIEQdfF9RDgsEJcBrJGetge6/OuF
+	8Zo5Unrou4D07cfxLeksjm164gWyxVfuGwPkv1FQ/wE1o5LeWxX1NLkLXiT/HA==
 From: Lukasz Majewski <lukma@denx.de>
 To: Andrew Lunn <andrew+netdev@lunn.ch>,
 	davem@davemloft.net,
@@ -49,9 +49,9 @@ Cc: Sascha Hauer <s.hauer@pengutronix.de>,
 	Stefan Wahren <wahrenst@gmx.net>,
 	Simon Horman <horms@kernel.org>,
 	Lukasz Majewski <lukma@denx.de>
-Subject: [net-next v14 07/12] net: mtip: Add mtip_switch_{rx|tx} functions to the L2 switch driver
-Date: Tue,  1 Jul 2025 13:49:52 +0200
-Message-Id: <20250701114957.2492486-8-lukma@denx.de>
+Subject: [net-next v14 09/12] net: mtip: Extend the L2 switch driver for imx287 with bridge operations
+Date: Tue,  1 Jul 2025 13:49:54 +0200
+Message-Id: <20250701114957.2492486-10-lukma@denx.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250701114957.2492486-1-lukma@denx.de>
 References: <20250701114957.2492486-1-lukma@denx.de>
@@ -64,288 +64,206 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Last-TLS-Session-Version: TLSv1.3
 
-This patch provides mtip_switch_tx and mtip_switch_rx functions
-code for MTIP L2 switch.
+After this change the MTIP L2 switch can be configured as offloading
+device for packet switching when bridge on their interfaces is created.
 
 Signed-off-by: Lukasz Majewski <lukma@denx.de>
 ---
+
 Changes for v13:
 - New patch - created by excluding some code from large (i.e. v12 and
   earlier) MTIP driver
 
 Changes for v14:
-- Rewrite RX error handling code
-- Remove } else { from if (unlikely(!skb)) { condition in mtip_switch_rx()
-- Remove locking from RX patch (done under NAPI API and similar to fec_main.c
-  driver)
-- Use net_prefetch() instead of prefetch()
+- None
 ---
- .../net/ethernet/freescale/mtipsw/mtipl2sw.c  | 241 +++++++++++++++++-
- 1 file changed, 240 insertions(+), 1 deletion(-)
+ .../net/ethernet/freescale/mtipsw/Makefile    |   2 +-
+ .../net/ethernet/freescale/mtipsw/mtipl2sw.c  |   6 +
+ .../net/ethernet/freescale/mtipsw/mtipl2sw.h  |   2 +
+ .../ethernet/freescale/mtipsw/mtipl2sw_br.c   | 120 ++++++++++++++++++
+ 4 files changed, 129 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/net/ethernet/freescale/mtipsw/mtipl2sw_br.c
 
+diff --git a/drivers/net/ethernet/freescale/mtipsw/Makefile b/drivers/net/ethernet/freescale/mtipsw/Makefile
+index a99aaf6ddfb2..81e2b0e03e6c 100644
+--- a/drivers/net/ethernet/freescale/mtipsw/Makefile
++++ b/drivers/net/ethernet/freescale/mtipsw/Makefile
+@@ -1,4 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+ obj-$(CONFIG_FEC_MTIP_L2SW) += nxp-mtipl2sw.o
+-nxp-mtipl2sw-objs := mtipl2sw.o mtipl2sw_mgnt.o
++nxp-mtipl2sw-objs := mtipl2sw.o mtipl2sw_mgnt.o mtipl2sw_br.o
 diff --git a/drivers/net/ethernet/freescale/mtipsw/mtipl2sw.c b/drivers/net/ethernet/freescale/mtipsw/mtipl2sw.c
-index 63afdf2beea6..b5a82748b39b 100644
+index 20a3c00a971c..56a7c4a75903 100644
 --- a/drivers/net/ethernet/freescale/mtipsw/mtipl2sw.c
 +++ b/drivers/net/ethernet/freescale/mtipsw/mtipl2sw.c
-@@ -228,6 +228,39 @@ struct mtip_port_info *mtip_portinfofifo_read(struct switch_enet_private *fep)
- 	return info;
- }
+@@ -1888,6 +1888,10 @@ static int mtip_sw_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return dev_err_probe(&pdev->dev, ret, "Could not alloc IRQ\n");
  
-+static void mtip_atable_get_entry_port_number(struct switch_enet_private *fep,
-+					      unsigned char *mac_addr, u8 *port)
++	ret = mtip_register_notifiers(fep);
++	if (ret)
++		return ret;
++
+ 	ret = mtip_ndev_init(fep, pdev);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "%s: Failed to create virtual ndev (%d)\n",
+@@ -1919,6 +1923,7 @@ static int mtip_sw_probe(struct platform_device *pdev)
+  dma_init_err:
+ 	mtip_ndev_cleanup(fep);
+  ndev_init_err:
++	mtip_unregister_notifiers(fep);
+ 
+ 	return ret;
+ }
+@@ -1927,6 +1932,7 @@ static void mtip_sw_remove(struct platform_device *pdev)
+ {
+ 	struct switch_enet_private *fep = platform_get_drvdata(pdev);
+ 
++	mtip_unregister_notifiers(fep);
+ 	mtip_ndev_cleanup(fep);
+ 
+ 	mtip_mii_remove(fep);
+diff --git a/drivers/net/ethernet/freescale/mtipsw/mtipl2sw.h b/drivers/net/ethernet/freescale/mtipsw/mtipl2sw.h
+index 37971c456899..494167e2d98d 100644
+--- a/drivers/net/ethernet/freescale/mtipsw/mtipl2sw.h
++++ b/drivers/net/ethernet/freescale/mtipsw/mtipl2sw.h
+@@ -646,6 +646,8 @@ int mtip_port_learning_config(struct switch_enet_private *fep, int port,
+ int mtip_port_blocking_config(struct switch_enet_private *fep, int port,
+ 			      bool enable);
+ bool mtip_is_switch_netdev_port(const struct net_device *ndev);
++int mtip_register_notifiers(struct switch_enet_private *fep);
++void mtip_unregister_notifiers(struct switch_enet_private *fep);
+ int mtip_port_enable_config(struct switch_enet_private *fep, int port,
+ 			    bool tx_en, bool rx_en);
+ void mtip_clear_atable(struct switch_enet_private *fep);
+diff --git a/drivers/net/ethernet/freescale/mtipsw/mtipl2sw_br.c b/drivers/net/ethernet/freescale/mtipsw/mtipl2sw_br.c
+new file mode 100644
+index 000000000000..edfd95a7790d
+--- /dev/null
++++ b/drivers/net/ethernet/freescale/mtipsw/mtipl2sw_br.c
+@@ -0,0 +1,120 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ *  L2 switch Controller driver for MTIP block - bridge network interface
++ *
++ *  Copyright (C) 2025 DENX Software Engineering GmbH
++ *  Lukasz Majewski <lukma@denx.de>
++ */
++
++#include <linux/etherdevice.h>
++#include <linux/netdevice.h>
++#include <linux/platform_device.h>
++
++#include "mtipl2sw.h"
++
++static int mtip_ndev_port_link(struct net_device *ndev,
++			       struct net_device *br_ndev,
++			       struct netlink_ext_ack *extack)
 +{
-+	int block_index, block_index_end, entry;
-+	u32 mac_addr_lo, mac_addr_hi;
-+	u32 read_lo, read_hi;
++	struct mtip_ndev_priv *priv = netdev_priv(ndev), *other_priv;
++	struct switch_enet_private *fep = priv->fep;
++	struct net_device *other_ndev;
 +
-+	mac_addr_lo = (u32)((mac_addr[3] << 24) | (mac_addr[2] << 16) |
-+			    (mac_addr[1] << 8) | mac_addr[0]);
-+	mac_addr_hi = (u32)((mac_addr[5] << 8) | (mac_addr[4]));
-+
-+	block_index = GET_BLOCK_PTR(crc8_calc(mac_addr));
-+	block_index_end = block_index + ATABLE_ENTRY_PER_SLOT;
-+
-+	/* now search all the entries in the selected block */
-+	for (entry = block_index; entry < block_index_end; entry++) {
-+		mtip_read_atable(fep, entry, &read_lo, &read_hi);
-+		*port = MTIP_PORT_FORWARDING_INIT;
-+
-+		if (read_lo == mac_addr_lo &&
-+		    ((read_hi & 0x0000FFFF) ==
-+		     (mac_addr_hi & 0x0000FFFF))) {
-+			/* found the correct address */
-+			if ((read_hi & (1 << 16)) && (!(read_hi & (1 << 17))))
-+				*port = FIELD_GET(AT_PORT_MASK, read_hi);
-+			break;
++	/* Check if one port of MTIP switch is already bridged */
++	if (fep->br_members && !fep->br_offload) {
++		/* Get the second bridge ndev */
++		other_ndev = fep->ndev[fep->br_members - 1];
++		other_priv = netdev_priv(other_ndev);
++		if (other_priv->master_dev != br_ndev) {
++			NL_SET_ERR_MSG_MOD(extack,
++					   "L2 offloading only possible for the same bridge!");
++			return notifier_from_errno(-EOPNOTSUPP);
 +		}
++
++		fep->br_offload = 1;
++		mtip_switch_dis_port_separation(fep);
++		mtip_clear_atable(fep);
 +	}
 +
-+	dev_dbg(&fep->pdev->dev, "%s: MAC: %pM PORT: 0x%x\n", __func__,
-+		mac_addr, *port);
++	if (!priv->master_dev)
++		priv->master_dev = br_ndev;
++
++	fep->br_members |= BIT(priv->portnum - 1);
++
++	dev_dbg(&ndev->dev,
++		"%s: ndev: %s br: %s fep: %p members: 0x%x offload: %d\n",
++		__func__, ndev->name,  br_ndev->name, fep, fep->br_members,
++		fep->br_offload);
++
++	return NOTIFY_DONE;
 +}
 +
- /* Clear complete MAC Look Up Table */
- void mtip_clear_atable(struct switch_enet_private *fep)
- {
-@@ -825,11 +858,217 @@ static irqreturn_t mtip_interrupt(int irq, void *ptr_fep)
- 
- static void mtip_switch_tx(struct net_device *dev)
- {
-+	struct mtip_ndev_priv *priv = netdev_priv(dev);
++static void mtip_netdevice_port_unlink(struct net_device *ndev)
++{
++	struct mtip_ndev_priv *priv = netdev_priv(ndev);
 +	struct switch_enet_private *fep = priv->fep;
-+	unsigned short status;
-+	struct sk_buff *skb;
-+	struct cbd_t *bdp;
 +
-+	spin_lock(&fep->hw_lock);
-+	bdp = fep->dirty_tx;
++	dev_dbg(&ndev->dev, "%s: ndev: %s members: 0x%x\n", __func__,
++		ndev->name, fep->br_members);
 +
-+	while (((status = bdp->cbd_sc) & BD_ENET_TX_READY) == 0) {
-+		if (bdp == fep->cur_tx && fep->tx_full == 0)
-+			break;
++	fep->br_members &= ~BIT(priv->portnum - 1);
++	priv->master_dev = NULL;
 +
-+		dma_unmap_single(&fep->pdev->dev, bdp->cbd_bufaddr,
-+				 MTIP_SWITCH_TX_FRSIZE, DMA_TO_DEVICE);
-+		bdp->cbd_bufaddr = 0;
-+		skb = fep->tx_skbuff[fep->skb_dirty];
-+		/* Check for errors */
-+		if (status & (BD_ENET_TX_HB | BD_ENET_TX_LC |
-+				   BD_ENET_TX_RL | BD_ENET_TX_UN |
-+				   BD_ENET_TX_CSL)) {
-+			dev->stats.tx_errors++;
-+			if (status & BD_ENET_TX_HB)  /* No heartbeat */
-+				dev->stats.tx_heartbeat_errors++;
-+			if (status & BD_ENET_TX_LC)  /* Late collision */
-+				dev->stats.tx_window_errors++;
-+			if (status & BD_ENET_TX_RL)  /* Retrans limit */
-+				dev->stats.tx_aborted_errors++;
-+			if (status & BD_ENET_TX_UN)  /* Underrun */
-+				dev->stats.tx_fifo_errors++;
-+			if (status & BD_ENET_TX_CSL) /* Carrier lost */
-+				dev->stats.tx_carrier_errors++;
-+		} else {
-+			dev->stats.tx_packets++;
-+		}
-+
-+		if (status & BD_ENET_TX_READY)
-+			dev_err(&fep->pdev->dev,
-+				"Enet xmit interrupt and TX_READY.\n");
-+
-+		/* Deferred means some collisions occurred during transmit,
-+		 * but we eventually sent the packet OK.
-+		 */
-+		if (status & BD_ENET_TX_DEF)
-+			dev->stats.collisions++;
-+
-+		/* Free the sk buffer associated with this last transmit */
-+		dev_consume_skb_irq(skb);
-+		fep->tx_skbuff[fep->skb_dirty] = NULL;
-+		fep->skb_dirty = (fep->skb_dirty + 1) & TX_RING_MOD_MASK;
-+
-+		/* Update pointer to next buffer descriptor to be transmitted */
-+		if (status & BD_ENET_TX_WRAP)
-+			bdp = fep->tx_bd_base;
-+		else
-+			bdp++;
-+
-+		/* Since we have freed up a buffer, the ring is no longer
-+		 * full.
-+		 */
-+		if (fep->tx_full) {
-+			fep->tx_full = 0;
-+			if (netif_queue_stopped(dev))
-+				netif_wake_queue(dev);
-+		}
++	if (fep->br_members && fep->br_offload) {
++		fep->br_offload = 0;
++		mtip_switch_en_port_separation(fep);
++		mtip_clear_atable(fep);
 +	}
-+	fep->dirty_tx = bdp;
-+	spin_unlock(&fep->hw_lock);
- }
- 
-+/* During a receive, the cur_rx points to the current incoming buffer.
-+ * When we update through the ring, if the next incoming buffer has
-+ * not been given to the system, we just set the empty indicator,
-+ * effectively tossing the packet.
-+ */
- static int mtip_switch_rx(struct net_device *dev, int budget, int *port)
- {
--	return -ENOMEM;
-+	struct mtip_ndev_priv *priv = netdev_priv(dev);
-+	u8 *data, rx_port = MTIP_PORT_FORWARDING_INIT;
-+	struct switch_enet_private *fep = priv->fep;
-+	unsigned short status, pkt_len;
-+	struct net_device *pndev;
-+	struct ethhdr *eth_hdr;
-+	int pkt_received = 0;
-+	struct sk_buff *skb;
-+	struct cbd_t *bdp;
-+	struct page *page;
++}
 +
-+	/* First, grab all of the stats for the incoming packet.
-+	 * These get messed up if we get called due to a busy condition.
-+	 */
-+	bdp = fep->cur_rx;
++/* netdev notifier */
++static int mtip_netdevice_event(struct notifier_block *unused,
++				unsigned long event, void *ptr)
++{
++	struct net_device *ndev = netdev_notifier_info_to_dev(ptr);
++	struct netdev_notifier_changeupper_info *info = ptr;
++	struct netlink_ext_ack *extack;
++	int ret = NOTIFY_DONE;
 +
-+	while (!((status = bdp->cbd_sc) & BD_ENET_RX_EMPTY)) {
-+		if (pkt_received >= budget)
++	if (!mtip_is_switch_netdev_port(ndev))
++		return NOTIFY_DONE;
++
++	extack = netdev_notifier_info_to_extack(&info->info);
++
++	switch (event) {
++	case NETDEV_CHANGEUPPER:
++		if (!netif_is_bridge_master(info->upper_dev))
 +			break;
 +
-+		pkt_received++;
-+
-+		if (!fep->usage_count)
-+			goto rx_processing_done;
-+
-+		status ^= BD_ENET_RX_LAST;
-+		/* Check for errors. */
-+		if (status & (BD_ENET_RX_LG | BD_ENET_RX_SH | BD_ENET_RX_NO |
-+			      BD_ENET_RX_CR | BD_ENET_RX_OV | BD_ENET_RX_LAST |
-+			      BD_ENET_RX_CL)) {
-+			dev->stats.rx_errors++;
-+			if (status & BD_ENET_RX_OV) {
-+				/* FIFO overrun */
-+				dev->stats.rx_fifo_errors++;
-+				goto rx_processing_done;
-+			}
-+			if (status & (BD_ENET_RX_LG | BD_ENET_RX_SH
-+				      | BD_ENET_RX_LAST)) {
-+				/* Frame too long or too short. */
-+				dev->stats.rx_length_errors++;
-+				if (status & BD_ENET_RX_LAST)
-+					netdev_err(dev, "rcv is not +last\n");
-+			}
-+			if (status & BD_ENET_RX_CR)	/* CRC Error */
-+				dev->stats.rx_crc_errors++;
-+
-+			/* Report late collisions as a frame error. */
-+			if (status & (BD_ENET_RX_NO | BD_ENET_RX_CL))
-+				dev->stats.rx_frame_errors++;
-+			goto rx_processing_done;
-+		}
-+
-+		/* Get correct RX page */
-+		page = fep->page[bdp - fep->rx_bd_base];
-+		/* Process the incoming frame */
-+		pkt_len = bdp->cbd_datlen;
-+		data = (__u8 *)__va(bdp->cbd_bufaddr);
-+
-+		dma_sync_single_for_cpu(&fep->pdev->dev, bdp->cbd_bufaddr,
-+					pkt_len, DMA_FROM_DEVICE);
-+		net_prefetch(page_address(page));
-+
-+		if (fep->quirks & FEC_QUIRK_SWAP_FRAME)
-+			swap_buffer(data, pkt_len);
-+
-+		if (data) {
-+			eth_hdr = (struct ethhdr *)data;
-+			mtip_atable_get_entry_port_number(fep,
-+							  eth_hdr->h_source,
-+							  &rx_port);
-+			if (rx_port == MTIP_PORT_FORWARDING_INIT)
-+				mtip_atable_dynamicms_learn_migration(fep,
-+								      mtip_get_time(),
-+								      eth_hdr->h_source,
-+								      &rx_port);
-+		}
-+
-+		if ((rx_port == 1 || rx_port == 2) && fep->ndev[rx_port - 1])
-+			pndev = fep->ndev[rx_port - 1];
++		if (info->linking)
++			ret = mtip_ndev_port_link(ndev, info->upper_dev,
++						  extack);
 +		else
-+			pndev = dev;
++			mtip_netdevice_port_unlink(ndev);
 +
-+		*port = rx_port;
++		break;
++	default:
++		return NOTIFY_DONE;
++	}
 +
-+		/* This does 16 byte alignment, exactly what we need.
-+		 * The packet length includes FCS, but we don't want to
-+		 * include that when passing upstream as it messes up
-+		 * bridging applications.
-+		 */
-+		skb = netdev_alloc_skb(pndev, pkt_len + NET_IP_ALIGN);
-+		if (unlikely(!skb)) {
-+			dev_dbg(&fep->pdev->dev,
-+				"%s: Memory squeeze, dropping packet.\n",
-+				pndev->name);
-+			page_pool_recycle_direct(fep->page_pool, page);
-+			pndev->stats.rx_dropped++;
-+			return -ENOMEM;
-+		}
++	return notifier_from_errno(ret);
++}
 +
-+		skb_reserve(skb, NET_IP_ALIGN);
-+		skb_put(skb, pkt_len);      /* Make room */
-+		skb_copy_to_linear_data(skb, data, pkt_len);
-+		skb->protocol = eth_type_trans(skb, pndev);
-+		napi_gro_receive(&fep->napi, skb);
++static struct notifier_block mtip_netdevice_nb __read_mostly = {
++	.notifier_call = mtip_netdevice_event,
++};
 +
-+		pndev->stats.rx_packets++;
-+		pndev->stats.rx_bytes += pkt_len;
++int mtip_register_notifiers(struct switch_enet_private *fep)
++{
++	int ret = register_netdevice_notifier(&mtip_netdevice_nb);
 +
-+ rx_processing_done:
-+		/* Clear the status flags for this buffer */
-+		status &= ~BD_ENET_RX_STATS;
++	if (ret)
++		dev_err(&fep->pdev->dev, "can't register netdevice notifier\n");
 +
-+		/* Mark the buffer empty */
-+		status |= BD_ENET_RX_EMPTY;
-+		/* Make sure that updates to the descriptor are performed */
-+		wmb();
-+		bdp->cbd_sc = status;
++	return ret;
++}
 +
-+		/* Update BD pointer to next entry */
-+		if (status & BD_ENET_RX_WRAP)
-+			bdp = fep->rx_bd_base;
-+		else
-+			bdp++;
-+
-+		/* Doing this here will keep the FEC running while we process
-+		 * incoming frames.  On a heavily loaded network, we should be
-+		 * able to keep up at the expense of system resources.
-+		 */
-+		writel(MCF_ESW_RDAR_R_DES_ACTIVE, fep->hwp + ESW_RDAR);
-+	} /* while (!((status = bdp->cbd_sc) & BD_ENET_RX_EMPTY)) */
-+
-+	fep->cur_rx = bdp;
-+
-+	return pkt_received;
- }
- 
- static void mtip_adjust_link(struct net_device *dev)
++void mtip_unregister_notifiers(struct switch_enet_private *fep)
++{
++	unregister_netdevice_notifier(&mtip_netdevice_nb);
++}
 -- 
 2.39.5
 
