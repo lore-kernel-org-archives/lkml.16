@@ -1,183 +1,155 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F99382;
-	Tue,  1 Jul 2025 19:27:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4946A382;
+	Tue,  1 Jul 2025 19:29:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751398074; cv=none; b=vFsRv/+pgU0/RD1rbpCl5LuwiHBwu2c5lPgPofrLSULuIZfZPAGGWP01P1gCpT/iJ7DUxzcom8Px6j6Q0LlWVf0AuaDWQfg2HMgoJDJtPuNJ2UQSyBUBlVMAvHN4HULTsjDkDhihm85lhAFjFXXVOf6qDzL/z8beWrJzQbb3CjY=
+	t=1751398197; cv=none; b=VAiuE5CH+IBt/8pPgOW8oX4aiGebxmH3qF0HajyxOVhIyev+9627M+Sf+MnzrZG5uWVAnQUtLrfGvVJe3CAkf8ns61Lg4Uhyb9+Za1Yb8t8kNUAk3l2ZcFsE1++sG2Oz4h6L0IDvPtj6zv6udHsx9POK6kc3G+GtNywU//eFz8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751398074; c=relaxed/simple;
-	bh=rmP4QkIQr7280GzspZY1+OxQJ0TEo2ixRUXugBM3ums=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PQj6pVSeftQ3nCIpOwo1WTDBD9v0tvz7MQvSZbGLiSPv2FtXUrRq83MJ/vO5Ttcv0kK3VzHQvehBHHUPvUl9IkUczV8xZhbEHTdxlHCk+J2I26GYctBHLBwteLiJaH5We7/NCn3mxjGxFeBoHjc1Rjv5bk+XVH25dRo97uEfdac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XekQ0CZe; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751398197; c=relaxed/simple;
+	bh=UeQXokiUpfIRKzCV4siHL91mgA1HxJxuNduWOJ0cc/A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ct5CiTOe//1QSOgPtbGkw3qcWjltLphjnLRvZ7c/zjMvIkfCtrDjMvxJjHz86vY+43q5HCF0XKW6MtlRXj7syb8Z1BK3airmpr+2VylytZXlX8PqcAvypCKu1LhjNOLBQZ7lXOSVs3n8gqYgmtWsYLEcL1cp/fhvtLIMnDH3QWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=LQ9IBkJ9; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XekQ0CZe"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ae0de0c03e9so899701166b.2;
-        Tue, 01 Jul 2025 12:27:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751398071; x=1752002871; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PCnKmwN8fD9OHrDs0F2yjhsuMLHRmagugfKXbARIJLs=;
-        b=XekQ0CZe0Bucb7KtFDuv8y88nGlALvOrTsXEXvlcL4I+C42+eXwkPRsUPDxzSBG4VE
-         6CrL3ZzkQn8ibH5n8QTB2q/krF43rVX6HqPbaADGlj8exHg3LDHs8WMexRwljZ/MWrHl
-         7bNt9M1G1Q0E4aBU5nrGm53q5io77HtkVuvD592IaPXu+4AXtKpHLKlLaaPjvqxxKvoM
-         Dd0SelqtcUJ/ODDuZatTubd2jaK3wZrRxIlKWfaEXMtIjZE/NJTz12zXdHp47TQVX6P4
-         7ier8xvkpacEkkTKv/6QlcIMXzrtWdz3RzyIxEQGJeWZFZzRtm634xaBtRU5Nt3XLG3b
-         Ap/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751398071; x=1752002871;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PCnKmwN8fD9OHrDs0F2yjhsuMLHRmagugfKXbARIJLs=;
-        b=Z2XOGAAArTZfyR5GWkrXoNRMVmvvqadjPCGVn+o9JsarVwpVvp3m/NCdXLMq1VvuRA
-         Y8y0xyqfoCiss4wHL/tqa82HALky09vOMaJpgjlKMZTOpBBNtg6cbVpM/mLqW7wZ+Cfs
-         2iXzdfeCqHNmVmWd71dV5aCTN7Nx1bXFYdauhAGQvXEYOXABWzt4zkzegbZcl3Mjm0fP
-         rz52z2PR6hPcDEq+ZVSZF71cPbYePt93kXnaoFmWBl3bRIL4TMVwsl0OdzdtUECVJ8q0
-         WKx3z4459TfEGnqzQywes4ah2enmrH6fCmVd5lZ0C1XnY2ixqrpagQj6Z5Bzl8web1Fw
-         S8ag==
-X-Forwarded-Encrypted: i=1; AJvYcCUtvxWtxX9Lg5Mb9EuYN/XRfYW3f6o9xwU1Y7aRTJaQtb2plvMxdeHutkkMzQ5tQ9UyPaYhzGeoYvZZYno48A==@vger.kernel.org, AJvYcCV8PohwxLZc7xnPrvyTCnTHzlAQ2TJNJLSsVvOsx7/w1HbZwVtUJSQKIokX9ckg+eJCdr1IKIdP08M=@vger.kernel.org, AJvYcCWte2coNtSzTE63RRfPLeaIkLtbFoMw/hFBjDSIaEmRp28Yp9x36fYPEEJakcJWkMcI4WO/Nb8F/Mllhwb9@vger.kernel.org, AJvYcCXpME5TuJSUxB0Ic98wk7VRKjayiaFKpZM0DawgMY63I6x5sXCmhmxy1LANdaQMQqEeHdZhmRFan4DT@vger.kernel.org, AJvYcCXyWk787F+PZDv7fOQUGsmaIGRmGYiN6gSLq8NiaCGk1SJV0bnWlLIIP51NpW/orhT94sH9ClRxzA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy492uQ07B7/WBPpwZrDcbJqfSyzPYHShrQq3fEU9TaIcylYdli
-	a20UCvYDYAp/Zh1mrD8P77PSmn9wq5MNFkcVLbAu9GtiHKRlpMm9BbXbZc5ZR7qvng7jsX9Q1Og
-	Iy8cw/BIueSAgDdTnvQN3dKGovcp2QwI=
-X-Gm-Gg: ASbGnctYVFJxr+plKaOOArXQ3ZAYu3ABcSUHr3PZoow11mR/VJL1gAMruQIU+pwKPvw
-	/akZOQRaIg5EfLM65deScQcv3pdsETDqgXCd+2kbk6YcZzLOG1xyOYA2rvzQxmJ8bwvjCFdWoLj
-	QLRGx59RtSn7hPXnLPrshO+gIkHbZyRBBgCypIxCROgDU=
-X-Google-Smtp-Source: AGHT+IHxvrY3RQsSAM5bJ9mJ8xZdyqsVPXyP6tmLuS3bMlTr2irY5BCc98n4KdHOZxcfuFGKmbqbQ4OZ5A0E/BgJwP4=
-X-Received: by 2002:a17:907:86a6:b0:ae0:dcd5:ea75 with SMTP id
- a640c23a62f3a-ae3c2b12b85mr3782466b.5.1751398070870; Tue, 01 Jul 2025
- 12:27:50 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="LQ9IBkJ9"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id D5B04778;
+	Tue,  1 Jul 2025 21:29:31 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1751398172;
+	bh=UeQXokiUpfIRKzCV4siHL91mgA1HxJxuNduWOJ0cc/A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LQ9IBkJ9E0I0v8VB4ePqnqGQXO8B6MacZ/vgwdwg/GXmzybL/r52BD0gYWBXAS4er
+	 cKvwJsS5e3KuHLR6Znb/VAKxSi+UeCOruuiBrFm5zClONa+rSKsXTG9UYJAtF5zIXQ
+	 Wcd87Cr5Qn5C5mKsXIvPOjN9OPBs2jKUXym2txSc=
+Date: Tue, 1 Jul 2025 22:29:28 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Ricardo Ribalda <ribalda@chromium.org>
+Cc: Desnes Nunes <desnesn@redhat.com>, hansg@kernel.org,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media: uvcvideo: avoid variable shadowing in
+ uvc_ctrl_cleanup_fh
+Message-ID: <20250701192928.GB16835@pendragon.ideasonboard.com>
+References: <20250701145240.105959-1-desnesn@redhat.com>
+ <CANiDSCs_Pz-wgnYNVA7Zt4RhtgN256i32aCw0mE4XFv3b49ygw@mail.gmail.com>
+ <CACaw+ex_T5xS9rw1651TV_z1myXxPGmtpeEB4HWA7S0xU+C9GQ@mail.gmail.com>
+ <20250701184134.GC1936@pendragon.ideasonboard.com>
+ <CANiDSCt5OZ8dAvZ7G_fic6eCaCsGvmnprjmG9p_9kLbv9cX76A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250630-xattrat-syscall-v6-0-c4e3bc35227b@kernel.org>
- <20250630-xattrat-syscall-v6-5-c4e3bc35227b@kernel.org> <20250701183105.GP10009@frogsfrogsfrogs>
-In-Reply-To: <20250701183105.GP10009@frogsfrogsfrogs>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Tue, 1 Jul 2025 21:27:38 +0200
-X-Gm-Features: Ac12FXzze4b0bCyNN9Vfor-GxtAJktILQtSrwwxzdpICpJH_koiKfEAo3VjlDJg
-Message-ID: <CAOQ4uxiCpGcZ7V8OqssP2xKsN0ZiAO7mQ_1Qt705BrcHeSPmBg@mail.gmail.com>
-Subject: Re: [PATCH v6 5/6] fs: prepare for extending file_get/setattr()
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Andrey Albershteyn <aalbersh@redhat.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Casey Schaufler <casey@schaufler-ca.com>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	=?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>, 
-	Paul Moore <paul@paul-moore.com>, linux-api@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, selinux@vger.kernel.org, 
-	Andrey Albershteyn <aalbersh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANiDSCt5OZ8dAvZ7G_fic6eCaCsGvmnprjmG9p_9kLbv9cX76A@mail.gmail.com>
 
-On Tue, Jul 1, 2025 at 8:31=E2=80=AFPM Darrick J. Wong <djwong@kernel.org> =
-wrote:
->
-> On Mon, Jun 30, 2025 at 06:20:15PM +0200, Andrey Albershteyn wrote:
-> > From: Amir Goldstein <amir73il@gmail.com>
+On Tue, Jul 01, 2025 at 09:25:59PM +0200, Ricardo Ribalda wrote:
+> On Tue, 1 Jul 2025 at 20:42, Laurent Pinchart
+> <laurent.pinchart@ideasonboard.com> wrote:
 > >
-> > We intend to add support for more xflags to selective filesystems and
-> > We cannot rely on copy_struct_from_user() to detect this extension.
+> > On Tue, Jul 01, 2025 at 02:20:53PM -0300, Desnes Nunes wrote:
+> > > On Tue, Jul 1, 2025 at 1:48 PM Ricardo Ribalda <ribalda@chromium.org> wrote:
+> > > > On Tue, 1 Jul 2025 at 16:59, Desnes Nunes <desnesn@redhat.com> wrote:
+> > > > >
+> > > > > This avoids a variable loop shadowing occurring between the local loop
+> > > > > iterating through the uvc_entity's controls and the global one going
+> > > > > through the pending async controls of the file handle
+> > > > >
+> > > > > Fixes: 10acb9101355 ("media: uvcvideo: Increase/decrease the PM counter per IOCTL")
+> > > > If you add a fixes you need to add
+> > > > Cc: stable@kernel.org
+> > >
+> > > Thanks for letting me know
+> > >
+> > > > Reviewed-by: Ricardo Ribalda <ribalda@chromium.org>
+> > > > > Signed-off-by: Desnes Nunes <desnesn@redhat.com>
+> > > > > ---
+> > > > >  drivers/media/usb/uvc/uvc_ctrl.c | 3 +--
+> > > > >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
+> > > > > index 44b6513c5264..91cc874da798 100644
+> > > > > --- a/drivers/media/usb/uvc/uvc_ctrl.c
+> > > > > +++ b/drivers/media/usb/uvc/uvc_ctrl.c
+> > > > > @@ -3260,7 +3260,6 @@ int uvc_ctrl_init_device(struct uvc_device *dev)
+> > > > >  void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
+> > > > >  {
+> > > > >         struct uvc_entity *entity;
+> > > > > -       int i;
+> > > > >
+> > > > >         guard(mutex)(&handle->chain->ctrl_mutex);
+> > > > >
+> > > > > @@ -3278,7 +3277,7 @@ void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
+> > > > >         if (!WARN_ON(handle->pending_async_ctrls))
+> > > > >                 return;
+> > > > >
+> > > > > -       for (i = 0; i < handle->pending_async_ctrls; i++)
+> > > >
+> > > > nitpick: I would have called the variable i, not j.  For me j usually
+> > > > means nested loop. But up to you
+> > >
+> > > Noted - I used a different variable name because I wanted to
+> > > differentiate the loops.
 > >
-> > In preparation of extending the API, do not allow setting xflags unknow=
-n
-> > by this kernel version.
+> > Variable declaration in the loop statement is relatively new in the
+> > kernel, so there's no consensus yet (to my knowledge) on clear coding
+> > styles, but I would have simply used the same variable name in both
+> > loops, with two separate declarations:
 > >
-> > Also do not pass the read-only flags and read-only field fsx_nextents t=
-o
-> > filesystem.
-> >
-> > These changes should not affect existing chattr programs that use the
-> > ioctl to get fsxattr before setting the new values.
-> >
-> > Link: https://lore.kernel.org/linux-fsdevel/20250216164029.20673-4-pali=
-@kernel.org/
-> > Cc: Pali Roh=C3=A1r <pali@kernel.org>
-> > Cc: Andrey Albershteyn <aalbersh@redhat.com>
-> > Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-> > Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
-> > ---
-> >  fs/file_attr.c           |  8 +++++++-
-> >  include/linux/fileattr.h | 20 ++++++++++++++++++++
-> >  2 files changed, 27 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/fs/file_attr.c b/fs/file_attr.c
-> > index 4e85fa00c092..62f08872d4ad 100644
-> > --- a/fs/file_attr.c
-> > +++ b/fs/file_attr.c
-> > @@ -99,9 +99,10 @@ EXPORT_SYMBOL(vfs_fileattr_get);
-> >  int copy_fsxattr_to_user(const struct fileattr *fa, struct fsxattr __u=
-ser *ufa)
+> > diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
+> > index 303b7509ec47..6b9486749c3f 100644
+> > --- a/drivers/media/usb/uvc/uvc_ctrl.c
+> > +++ b/drivers/media/usb/uvc/uvc_ctrl.c
+> > @@ -3299,7 +3299,6 @@ int uvc_ctrl_init_device(struct uvc_device *dev)
+> >  void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
 > >  {
-> >       struct fsxattr xfa;
-> > +     __u32 mask =3D FS_XFLAGS_MASK;
+> >         struct uvc_entity *entity;
+> > -       int i;
 > >
-> >       memset(&xfa, 0, sizeof(xfa));
-> > -     xfa.fsx_xflags =3D fa->fsx_xflags;
-> > +     xfa.fsx_xflags =3D fa->fsx_xflags & mask;
->
-> I wonder, should it be an error if a filesystem sets an fsx_xflags bit
-> outside of FS_XFLAGS_MASK?  I guess that's one way to prevent
-> filesystems from overriding the VFS bits. ;)
-
-I think Pali has a plan on how to ensure that later
-when the mask is provided via the API.
-
->
-> Though couldn't that be:
->
->         xfa.fsx_xflags =3D fa->fsx_xflags & FS_XFLAGS_MASK;
->
-> instead?  And same below?
->
-
-Indeed. There is a reason for the var, because the next series
-by Pali will use a user provided mask, which defaults to FS_XFLAGS_MASK,
-so I left it this way.
-
-I don't see a problem with it keeping as is, but if it bothers you
-I guess we can re-add the var later.
-
-> >       xfa.fsx_extsize =3D fa->fsx_extsize;
-> >       xfa.fsx_nextents =3D fa->fsx_nextents;
-> >       xfa.fsx_projid =3D fa->fsx_projid;
-> > @@ -118,11 +119,16 @@ static int copy_fsxattr_from_user(struct fileattr=
- *fa,
-> >                                 struct fsxattr __user *ufa)
-> >  {
-> >       struct fsxattr xfa;
-> > +     __u32 mask =3D FS_XFLAGS_MASK;
+> >         guard(mutex)(&handle->chain->ctrl_mutex);
 > >
-> >       if (copy_from_user(&xfa, ufa, sizeof(xfa)))
-> >               return -EFAULT;
+> > @@ -3317,7 +3316,7 @@ void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
+> >         if (!WARN_ON(handle->pending_async_ctrls))
+> >                 return;
 > >
-> > +     if (xfa.fsx_xflags & ~mask)
-> > +             return -EINVAL;
->
-> I wonder if you want EOPNOTSUPP here?  We don't know how to support
-> unknown xflags.  OTOH if you all have beaten this to death while I was
-> out then don't start another round just for me. :P
+> > -       for (i = 0; i < handle->pending_async_ctrls; i++)
+> > +       for (unsigned int i = 0; i < handle->pending_async_ctrls; i++)
+> >                 uvc_pm_put(handle->stream->dev);
+> >  }
+> >
+> > Is there a downside to this ?
+> 
+> The toolchain that they are using does not seem to like it,
 
-We have beaten this API almost to death for sure ;)
-I don't remember if we discussed this specific aspect,
-but I am personally in favor of
-EOPNOTSUPP :=3D the fs does not support the set/get operation
-EINVAL :=3D some flags provided as value is invalid
+Well, this is mainline :-)
 
-For example, if the get API provides you with a mask of the
-valid flags that you can set, if you try to set flags outside of
-that mask you get EINVAL.
+> and there
+> is no benefit for having two initialization vs one.
+> 
+> (also makes the lines shorter... but that is just a matter of taste).
+> 
+> I don't really have a preference.
 
-That's my interpretation, but I agree that EOPNOTSUPP can also
-make sense in this situation.
+Declaring the variable in the loop statement removes the possibility of
+using it outside of the loop. I think that's an improvement in general,
+it makes reading the code simpler, and avoids accidental misuse.
 
-Thanks,
-Amir.
+> > > > I am also not against your first version with a different commit message.
+> > >
+> > > Third time's a charm then!
+> > >
+> > > Will send a v2 with the first version having this commit message.
+> > >
+> > > Thanks for the review Ricardo,
+
+-- 
+Regards,
+
+Laurent Pinchart
