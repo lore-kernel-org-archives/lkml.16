@@ -1,344 +1,159 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D77181E1DF2
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 07:09:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2599F1E51FB
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 07:11:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751353791; cv=none; b=ArbsFF11k7Zs6X5ld4nIh53pzDlr+vdfamnFIkorXRG4UOmg2e/45m2W/Cy9QsmwCL5BGo61+X6qrFci99NlgVIr+asCOcYeSQZUSyLn2aFhRWvsg5ebSoXdKxdGA+kRGnExqTlIpDIjI1j/bEkqF2e9xRdc2EXSpLlSEwz2lyw=
+	t=1751353873; cv=none; b=mtS/x8R/zL2gpIIoL/illU6vS8G1ryub+rCxzEj9h5RLzQCuCsxxrDeKR/CWDxOp0TDvuQTGvM0XXtQssshTE4L+42y2IV6jNecJBlKPKfH82LOsA+4z8uA5V7n+iKX/+FbiHozuPL2Af1yuDX+TJimlmlB35Myu7JAADDIA/NI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751353791; c=relaxed/simple;
-	bh=2hq4JCcN4z4xEGvmEokksJaUXiF4LRMyhndIHCk4ulA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LlA5toCnP8k1PZNJ9perSCekqN8rnKz0xhRkVSE8JgndV8wNfGc6hXZJnOGOXF05Yn7g9qzu6lh+wGt8UDqkBpwH6v84n7pgdxMfRalUYKc8DC4ACyrOJRCDD07UwiH4zTdgyjflEXmUtu0a2mr1rOR5qiaDeKda8T46DppSEzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sigma-star.at; spf=pass smtp.mailfrom=sigma-star.at; dkim=pass (2048-bit key) header.d=sigma-star.at header.i=@sigma-star.at header.b=oOzdKgyc; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sigma-star.at
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sigma-star.at
+	s=arc-20240116; t=1751353873; c=relaxed/simple;
+	bh=h5MWEqtHUKj2PF+IqplizVOIR/vVHfO8mEwzCVce22s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mzsGb5EiwPOOnw9zI3emht6rQevI63cXhYkJDIgIeygrGNyGH7L3FxwcRWhoLK9QHOagIwisKxKnRZGObTiCzPX5xqlAYkyik2UAtUuJlpyvhA+IO9zHiEJegwoChp2tBKBB1Un31uSNlFSTRIBc6siIYWpPjyKdZyH0otGPWSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=WD2BpIAA; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sigma-star.at header.i=@sigma-star.at header.b="oOzdKgyc"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ae0dd7ac1f5so907785566b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 00:09:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sigma-star.at; s=google; t=1751353786; x=1751958586; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=y38AAXsAJd3bGos1ifagMLdar2TgEuC+xmcby9+v3Zs=;
-        b=oOzdKgyc6QIWna0fY1lbftOPSCeLb6xJfm7w7YHyWpFOHrBg0L5bRCbKCdJuN6kKF7
-         Igi6KP81lLw2g7TAdR5VF+4Y6pV2Zq7gyDg60lCqaJneITz1aec75el7YajLr4+CNynH
-         k8UDghd5YmFQas0tLyB+fGB6JH5CexLgL3brC4+c7KmdNlKGosa5Ruon/CYkeAvTdRi4
-         aiF15Ep2EGlhtV7Ihhs1lkKlTznq+GgiSUH8h4Lhc5q+goOuJk/GsUXZ2/uf3D2mY3Un
-         ihlFOVMV2fDGvRGTfCLVUz7U8UTEdOO83+/tb6185cIuowM/WQlpZz5V51RU7+OE4Spn
-         PWjg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="WD2BpIAA"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5613Drk8028455
+	for <linux-kernel@vger.kernel.org>; Tue, 1 Jul 2025 07:11:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=LluoSfVDge3smiKNxCH02yv2
+	NZgVKQU42eCr1T2l6ec=; b=WD2BpIAAcnu2V73mSqIsgARnO4H4lhPgo+lUBDxK
+	u8dCJ4qUO8F81QE031ip6Mntgfmw/bS+LInklNCJjd/bS3t9SmXcgXqDPJkduPok
+	MBxCEmzCmq9z4M1UXgtE6UnG/OFOMLYEwmKfL4gjGFBvzL6pj4xI1iSXzU768fRl
+	1qiUBCtasHR+1sgU3QSqZtldhn1U47CpHPc9YX+wPO/Kk3tuI4OaNT9pE3WlP/dS
+	FN/P5mXI+ew+/dmoMLW/zZ9Pm8gNCHXLR1Ec9kOq7zeccVkuqjBx70KTewkCw77V
+	r6u/830cDodawzZJzqw6BVhwxrk3A1vU5tQxmFpK7kkOUQ==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j7bvqgb9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 07:11:11 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d446ce0548so560504785a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 00:11:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751353786; x=1751958586;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=y38AAXsAJd3bGos1ifagMLdar2TgEuC+xmcby9+v3Zs=;
-        b=iFshKNXrTIFAOknVcTT3FTfujxUJ44eV6IcOtxga0yNT68O/LcAFpDVhPaYdyv/sJh
-         ygXsHCeOXx9fNsOJ9w46SRqgQni/GppqEH3DSy2fyLGKnLT4FB+dPbrVmWvRZ08CEI4s
-         fD9QnZ+BYTIoSyn+ya6pZHxyYL8HTPgTaJmODVpbYAbXTvsE+dCXUSESBZ30GHX+HIcA
-         25rctk7++aXvqNnIEA4/qCJ4XC6p4wNHlIfwdPrX/4w5CA7/zn3yELYIViebm82ZuRzd
-         RbOpZWHnbh+Ae4r9P2iU9Bift735zRFs940O6IlW4eU35J++GheTJB8FpTCURPJemV4D
-         vnGg==
-X-Gm-Message-State: AOJu0Yz70Y9NIXenk3cEqBo3w44Z6Ptdea0Hef+MqwQqf9T2gRw6/0sL
-	6GAwMFiiz/RcXbKZjTUlwkXW6ku1GexlM7qS1aG+went/lmJfqq1W8PisyA4dO3BPXw=
-X-Gm-Gg: ASbGncu7BK4+QkGiClIXej1vi7zhrjuRh3cY6k6yWaQpXqOq6007O+XMAdIegGDlYKH
-	0y5eP4jr8m78OO6PXQfXBEGCH5NrnG283RFt/dxRYb65LxNGWQjmNzN6C7GJCDamH3DRxwarJ1T
-	Xxrd3vENA+ZNxxOZfCXeYIowHITC1pn6gMF1gbOUFwnqap5Y2Q6eB1C/UMaa8M03cUHTcqft+rL
-	XhSF6FogSvDBMo9sPqnbGb4zI2e532S3e/8e31Ie3HYowSI8/3VAbZEktK4HD1tHJ/76GXsCOob
-	bgZXnrz/Te3g3cFTouRCVbr6qCFqopJN2PkMfDg3YCVdiWzKpxX6kHpliiKWyaWkEElb7mx9gEe
-	rktV+TOyTOhy+FSlIiHKPxBx3omY=
-X-Google-Smtp-Source: AGHT+IG3RuoJ2BkEOIOPAMGl8XCV5kKpcDgg7D6y87yVO6s/fbOlmcqvDqhSos21KN8h1lSUZcnyJw==
-X-Received: by 2002:a17:907:3d92:b0:ae0:c215:5be2 with SMTP id a640c23a62f3a-ae35010fd55mr1552179266b.30.1751353785354;
-        Tue, 01 Jul 2025 00:09:45 -0700 (PDT)
-Received: from somecomputer (85-127-104-84.dsl.dynamic.surfer.at. [85.127.104.84])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae35363b347sm817941266b.35.2025.07.01.00.09.43
+        d=1e100.net; s=20230601; t=1751353870; x=1751958670;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LluoSfVDge3smiKNxCH02yv2NZgVKQU42eCr1T2l6ec=;
+        b=jWTPFHHsRVQTkOHDRVSXIZkT6mcEp88L29w/zKtD6iFMsSZSfl3YQjSYZEAJpeUdHQ
+         ChH4KXOUZhQTztNvoN27BTNLe+3Pq2qF2L9DAV439jveTaJFbJDQPnE5anOJBij+i200
+         JqWJFX945VQK31gyy6Wv1AJ3yeCSYVLC9dwPgFUUm3Gor+FceKvBgzEo7InuTsqitIB7
+         oJ3Gc0pyQ4FSybd18PPmbKxbHLR3E86mZRo2DbaxD+JKoR/6CJEFwFIh2j/7K/rIixN1
+         k27bOYpWR+xJm6vRmBFmpmrMW8uXxrsFJSs/ch3HQvUvrQ8qNnvIijmmCLnFJ34XgZ01
+         8OIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXUrUWo8X5ylVcMRjSS7UQ98fcCU6C1BLq7v6FtIFD9F3fGn5vrfpDlz0USb3g6RhFx7+71V37Z4aEIXWA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwiV1KI+nY60zMhHOO9Q0AySEstq45FcIgbZDFeTrcc5fzT9Jq6
+	sHOTdRbAYtMTwNYTCe/Khfo9i2P8TJXJ3QfohvBeaexXTwJoBWkRnPW2VvrLs+liojtojtN5C1v
+	wIRI6DnMzZJ4vl6AZaSPzxT7AZ1NPLzkg051oT+TcAMYw8/bbOyyf30TdcB73OKO0CvE=
+X-Gm-Gg: ASbGnctT3kkoPkgREAfS7NEJPwZX/n5a75pOmx9LF6YzBE5M5nEPfJLfQVGBOZkZlZz
+	5pgBkL+V/0y2OngEwJYAKxlNzR5KGGkC+8pOkFThB3e1J/UKT1jXR1k7tSfYfhb+EGyLYJrQxpH
+	Uv1T4eLaPVL64mg0QYuAn+am92nHff2SEqB2gnozZ5B7I+qNH9Uaif7i/JwmiNISvDbtSohtv+K
+	bHjhWn0XQWkuJy2J+iBnN06720qReu1MQbszba6Q2JIi/wM7CJS7pJsfTz2c+bDpjKn6kR+COjI
+	N/Nqovm5s9EGcEaij/kmc6gOGker6mZRQE90NB07PnFGyXiuCisZeCTs8nt/33muCHw3yeZmIZW
+	vZxBuX1pQONWdoJ286QELr6CsMcVHRWaEQnM=
+X-Received: by 2002:a05:620a:408e:b0:7d4:3c27:9ec9 with SMTP id af79cd13be357-7d443934b1cmr2312816385a.1.1751353869846;
+        Tue, 01 Jul 2025 00:11:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFw2dLM0BgM14ZMVCoDmuy6rRO1Nps/VxplRanP7r9TWEDykcnmdIRzDbOLZq8cLuRIqvmbhA==
+X-Received: by 2002:a05:620a:408e:b0:7d4:3c27:9ec9 with SMTP id af79cd13be357-7d443934b1cmr2312811285a.1.1751353869367;
+        Tue, 01 Jul 2025 00:11:09 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32cd2dea844sm15447781fa.17.2025.07.01.00.11.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 00:09:43 -0700 (PDT)
-From: Richard Weinberger <richard@sigma-star.at>
-To: Richard Weinberger <richard@nod.at>, linux-nvme@lists.infradead.org,
- upstream@sigma-star.at
-Cc: linux-kernel@vger.kernel.org, kch@nvidia.com, sagi@grimberg.me,
- hch@lst.de, upstream+nvme@sigma-star.at, Damien Le Moal <dlemoal@kernel.org>
-Subject: Re: [PATCH v2] nvmet: Make blksize_shift configurable
-Date: Tue, 01 Jul 2025 09:09:42 +0200
-Message-ID: <2920993.eCsiYhmirv@nailgun>
-In-Reply-To: <132c1bdf-e100-4e3a-883f-27f9e9b78020@kernel.org>
-References:
- <20250630191341.1263000-1-richard@nod.at>
- <132c1bdf-e100-4e3a-883f-27f9e9b78020@kernel.org>
+        Tue, 01 Jul 2025 00:11:08 -0700 (PDT)
+Date: Tue, 1 Jul 2025 10:11:06 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        chaitanya chundru <quic_krichai@quicinc.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org, Jingoo Han <jingoohan1@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicnic.com,
+        amitk@kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, jorge.ramirez@oss.qualcomm.com,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v5 0/9] PCI: Enable Power and configure the TC9563 PCIe
+ switch
+Message-ID: <ps5ck23ubpo2vdxzko6yixujlf7mqppdssqrc5bz3vbupmn6cu@yc2ld2tb3r2b>
+References: <20250412-qps615_v4_1-v5-0-5b6a06132fec@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250412-qps615_v4_1-v5-0-5b6a06132fec@oss.qualcomm.com>
+X-Proofpoint-GUID: sDSTOMyWYkOBUdjtpm4xlm5PsAxmqEgt
+X-Authority-Analysis: v=2.4 cv=RJCzH5i+ c=1 sm=1 tr=0 ts=68638a0f cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=bjzph2yk5JCsPWVWffQA:9
+ a=CjuIK1q_8ugA:10 a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-ORIG-GUID: sDSTOMyWYkOBUdjtpm4xlm5PsAxmqEgt
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAxMDAzOSBTYWx0ZWRfX7XZIUUwcBVv7
+ 6JZRY5PDjqCPbciuifLIFeWAxcR9X3JMwVqgSqWBDwv93Da5WWOIEIxjA+W1tSmfBcCeaPo2tCx
+ iaVCmbVGFw2/42LluwKN5ZLikCu/eI+N0RR5I+8YQZ64cZVgBkN5h42U0OVTlu4ptN3sfL3+aib
+ XEOIX3Pn2xmOUllXcjb/pxhWoeHGJL+3XkDRfz8ezrBetpxpG1LEXV5yOawYklmfX6r3NLAR2KP
+ +kN2G/rYYsXh7Xozfro/lIgt2a+HHTFHaOcKDegZyqsJ3sC3orTyYDCKZIaDTcqgEEJ5iAlbc9d
+ CWBbi6XvjlArHX2wpUQMRm5qG35vyMNgsbj3/nCtG8CfKL81oI3gR1dciuSQzpSrx3N4FUphFYA
+ ENXu32Y54FSLXXfAskQA423Fxa+1Dt/+cH8vIjuyAYHcu9MF8SIpZvJMjd+GnHnyRh2qa/q7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-01_01,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 impostorscore=0 priorityscore=1501 mlxlogscore=937 adultscore=0
+ malwarescore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 phishscore=0
+ bulkscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507010039
 
-On Dienstag, 1. Juli 2025 02:34 'Damien Le Moal' via upstream wrote:
-> On 7/1/25 4:13 AM, Richard Weinberger wrote:
-> > Currently, the block size is automatically configured, and for
-> > file-backed namespaces it is likely to be 4K.
-> > While this is a reasonable default for modern storage, it can
-> > cause confusion if someone wants to export a pre-created disk image
-> > that uses a 512-byte block size.
-> > As a result, partition parsing will fail.
-> >=20
-> > So, just like we already do for the loop block device, let the user
-> > configure the block size if they know better.
->=20
-> Hmm... That fine with me but this explanation does not match what the pat=
-ch
-> does: you allow configuring the block size bit shift, not the size. That =
-is not
-> super user friendly :)
->=20
-> Even if internally you use the block size bit shift, I think it would be =
-better
-> if the user facing interface is the block size as that is much easier to
-> manipulate without having to remember the exponent for powers of 2 values=
- :)
+On Sat, Apr 12, 2025 at 07:19:49AM +0530, Krishna Chaitanya Chundru wrote:
+> TC9563 is the PCIe switch which has one upstream and three downstream
+> ports. To one of the downstream ports ethernet MAC is connected as endpoint
+> device. Other two downstream ports are supposed to connect to external
+> device. One Host can connect to TC956x by upstream port.
+> 
+> TC9563 switch power is controlled by the GPIO's. After powering on
+> the switch will immediately participate in the link training. if the
+> host is also ready by that time PCIe link will established. 
+> 
+> The TC9563 needs to configured certain parameters like de-emphasis,
+> disable unused port etc before link is established.
+> 
+> As the controller starts link training before the probe of pwrctl driver,
+> the PCIe link may come up as soon as we power on the switch. Due to this
+> configuring the switch itself through i2c will not have any effect as
+> this configuration needs to done before link training. To avoid this
+> introduce two functions in pci_ops to start_link() & stop_link() which
+> will disable the link training if the PCIe link is not up yet.
+> 
+> This series depends on the https://lore.kernel.org/all/20250124101038.3871768-3-krishna.chundru@oss.qualcomm.com/
+> 
+> Note: The QPS615 PCIe switch is rebranded version of Toshiba switch TC9563 series.
+> There is no difference between both the switches, both has two open downstream ports
+> and one embedded downstream port to which Ethernet MAC is connected. As QPS615 is the
+> rebranded version of Toshiba switch rename qps615 with tc956x so that this driver
+> can be leveraged by all who are using Toshiba switch.
+> 
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 
-The initial intention of this patch was exposing the blksize_shift property.
-If we want to expose this as more user friendly, I'm fine with it.
-Maybe "minimum_io_size"?
+Krishna, the series no longer applies to linux-next. There were comments
+which required another respin. When can we expect a next revision?
 
->=20
-> >=20
-> > Signed-off-by: Richard Weinberger <richard@nod.at>
-> > ---
-> > Changes since v1 (RFC)[0]:
-> >=20
-> > - Make sure blksize_shift is in general within reason
-> > - In the bdev case and when using direct IO, blksize_shift has to be
-> >   smaller than the logical block it the device
-> > - In the file case and when using direct IO try to use STATX_DIOALIGN,
-> >   just like the loop device does
-> >=20
-> > [0] https://lore.kernel.org/linux-nvme/20250418090834.2755289-1-richard=
-@nod.at/
-> >=20
-> > Thanks,
-> > //richard
-> > ---
-> >  drivers/nvme/target/configfs.c    | 37 +++++++++++++++++++++++++++++++
-> >  drivers/nvme/target/io-cmd-bdev.c | 13 ++++++++++-
-> >  drivers/nvme/target/io-cmd-file.c | 28 ++++++++++++++++++-----
-> >  3 files changed, 71 insertions(+), 7 deletions(-)
-> >=20
-> > diff --git a/drivers/nvme/target/configfs.c b/drivers/nvme/target/confi=
-gfs.c
-> > index e44ef69dffc24..26175c37374ab 100644
-> > --- a/drivers/nvme/target/configfs.c
-> > +++ b/drivers/nvme/target/configfs.c
-> > @@ -797,6 +797,42 @@ static ssize_t nvmet_ns_resv_enable_store(struct c=
-onfig_item *item,
-> >  }
-> >  CONFIGFS_ATTR(nvmet_ns_, resv_enable);
-> > =20
-> > +static ssize_t nvmet_ns_blksize_shift_show(struct config_item *item, c=
-har *page)
->=20
-> As mentioned above, I think this should be nvmet_ns_blksize_show().
->=20
-> > +{
-> > +	return sysfs_emit(page, "%u\n", to_nvmet_ns(item)->blksize_shift);
->=20
-> And you can do:
->=20
-> 	return sysfs_emit(page, "%u\n",
-> 			  1U << to_nvmet_ns(item)->blksize_shift);
->=20
-> > +}
-> > +
-> > +static ssize_t nvmet_ns_blksize_shift_store(struct config_item *item,
-> > +		const char *page, size_t count)
->=20
-> Similar here: nvmet_ns_blksize_store()
->=20
-> > +{
-> > +	struct nvmet_ns *ns =3D to_nvmet_ns(item);
-> > +	u32 shift;
-> > +	int ret;
-> > +
-> > +	ret =3D kstrtou32(page, 0, &shift);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	/*
-> > +	 * Make sure block size is within reason, something between 512 and
-> > +	 * BLK_MAX_BLOCK_SIZE.
-> > +	 */
-> > +	if (shift < 9 || shift > 16)
-> > +		return -EINVAL;
->=20
-> And this would be simpler:
->=20
-> 	if (blksz < SECTOR_SIZE || blksz > BLK_MAX_BLOCK_SIZE ||
-> 	    !is_power_of_2(blksz))
-> 		return -EINVAL;
->=20
-> > +
-> > +	mutex_lock(&ns->subsys->lock);
-> > +	if (ns->enabled) {
-> > +		pr_err("the ns:%d is already enabled.\n", ns->nsid);
-> > +		mutex_unlock(&ns->subsys->lock);
-> > +		return -EINVAL;
-> > +	}
-> > +	ns->blksize_shift =3D shift;
->=20
-> and here:
->=20
-> 	ns->blksize_shift =3D ilog2(blksz);
->=20
-> > +	mutex_unlock(&ns->subsys->lock);
-> > +
-> > +	return count;
-> > +}
-> > +CONFIGFS_ATTR(nvmet_ns_, blksize_shift);
-> > +
-> >  static struct configfs_attribute *nvmet_ns_attrs[] =3D {
-> >  	&nvmet_ns_attr_device_path,
-> >  	&nvmet_ns_attr_device_nguid,
-> > @@ -806,6 +842,7 @@ static struct configfs_attribute *nvmet_ns_attrs[] =
-=3D {
-> >  	&nvmet_ns_attr_buffered_io,
-> >  	&nvmet_ns_attr_revalidate_size,
-> >  	&nvmet_ns_attr_resv_enable,
-> > +	&nvmet_ns_attr_blksize_shift,
-> >  #ifdef CONFIG_PCI_P2PDMA
-> >  	&nvmet_ns_attr_p2pmem,
-> >  #endif
-> > diff --git a/drivers/nvme/target/io-cmd-bdev.c b/drivers/nvme/target/io=
-=2Dcmd-bdev.c
-> > index eba42df2f8215..be39837d4d792 100644
-> > --- a/drivers/nvme/target/io-cmd-bdev.c
-> > +++ b/drivers/nvme/target/io-cmd-bdev.c
-> > @@ -77,6 +77,7 @@ static void nvmet_bdev_ns_enable_integrity(struct nvm=
-et_ns *ns)
-> > =20
-> >  int nvmet_bdev_ns_enable(struct nvmet_ns *ns)
-> >  {
-> > +	int bdev_blksize_shift;
-> >  	int ret;
-> > =20
-> >  	/*
-> > @@ -100,7 +101,17 @@ int nvmet_bdev_ns_enable(struct nvmet_ns *ns)
-> >  	}
-> >  	ns->bdev =3D file_bdev(ns->bdev_file);
-> >  	ns->size =3D bdev_nr_bytes(ns->bdev);
-> > -	ns->blksize_shift =3D blksize_bits(bdev_logical_block_size(ns->bdev));
-> > +	bdev_blksize_shift =3D blksize_bits(bdev_logical_block_size(ns->bdev)=
-);
-> > +
-> > +	if (ns->blksize_shift) {
-> > +		if (ns->blksize_shift < bdev_blksize_shift) {
-> > +			pr_err("Configured blksize_shift needs to be at least %d for device=
- %s\n",
-> > +				bdev_blksize_shift, ns->device_path);
-> > +			return -EINVAL;
-> > +		}
-> > +	} else {
-> > +		ns->blksize_shift =3D bdev_blksize_shift;
-> > +	}
->=20
-> Nit: to avoid the indented if, may be write this like this: ?
->=20
-> 	if (!ns->blksize_shift)
-> 		ns->blksize_shift =3D bdev_blksize_shift;
->=20
-> 	if (ns->blksize_shift < bdev_blksize_shift) {
-> 		pr_err("Configured blksize needs to be at least %u for device %s\n",
-> 			bdev_logical_block_size(ns->bdev),
-> 			ns->device_path);
-> 		return -EINVAL;
-> 	}
-
-It's a matter of taste, but yes...
-
-> Also, if the backend is an HDD, do we want to allow the user to configure=
- a
-> block size that is less than the *physical* block size ? Performance will
-> suffer on regular HDDs and writes may fail with SMR HDDs.
-
-I'm not sure whether it's worth putting more smartness into this logic.
-=20
-> > =20
-> >  	ns->pi_type =3D 0;
-> >  	ns->metadata_size =3D 0;
-> > diff --git a/drivers/nvme/target/io-cmd-file.c b/drivers/nvme/target/io=
-=2Dcmd-file.c
-> > index 2d068439b129c..a4066b5a1dc97 100644
-> > --- a/drivers/nvme/target/io-cmd-file.c
-> > +++ b/drivers/nvme/target/io-cmd-file.c
-> > @@ -49,12 +49,28 @@ int nvmet_file_ns_enable(struct nvmet_ns *ns)
-> > =20
-> >  	nvmet_file_ns_revalidate(ns);
-> > =20
-> > -	/*
-> > -	 * i_blkbits can be greater than the universally accepted upper bound,
-> > -	 * so make sure we export a sane namespace lba_shift.
-> > -	 */
-> > -	ns->blksize_shift =3D min_t(u8,
-> > -			file_inode(ns->file)->i_blkbits, 12);
-> > +	if (ns->blksize_shift) {
-> > +		if (!ns->buffered_io) {
-> > +			struct block_device *sb_bdev =3D ns->file->f_mapping->host->i_sb->s=
-_bdev;
-> > +			struct kstat st;
-> > +
-> > +			if (!vfs_getattr(&ns->file->f_path, &st, STATX_DIOALIGN, 0) &&
-> > +			    (st.result_mask & STATX_DIOALIGN) &&
-> > +			    (1 << ns->blksize_shift) < st.dio_offset_align)
-> > +				return -EINVAL;
-> > +
-> > +			if (sb_bdev && (1 << ns->blksize_shift < bdev_logical_block_size(sb=
-_bdev)))
-> > +				return -EINVAL;
->=20
-> I am confused... This is going to check both... But if you got STATX_DIOA=
-LIGN
-> and it is OK, you do not need (and probably should not) do the second if,=
- no ?
-
-I was not sure about that.
-Is it guaranteed that STATX_DIOALIGN returns something sane?
-
->=20
-> Also, the second condition of the second if is essentially the same check=
- as
-> for the block dev case. So maybe reuse that by creating a small helper fu=
-nction ?
-
-Ok.
-=20
-> > +		}
-> > +	} else {
-> > +		/*
-> > +		 * i_blkbits can be greater than the universally accepted
-> > +		 * upper bound, so make sure we export a sane namespace
-> > +		 * lba_shift.
-> > +		 */
-> > +		ns->blksize_shift =3D min_t(u8,
-> > +				file_inode(ns->file)->i_blkbits, 12);
-> > +	}
->=20
-> It feels like this entire hunk should be a helper function as that would =
-allow
-> making it a lot more readable with early returns. This code here whould be
-> something like:
-
-Ok.
-
-Thanks,
-//richard
-
-=2D-=20
-=E2=80=8B=E2=80=8B=E2=80=8B=E2=80=8B=E2=80=8Bsigma star gmbh | Eduard-Bodem=
-=2DGasse 6, 6020 Innsbruck, AUT UID/VAT Nr:
-ATU 66964118 | FN: 374287y
-
-
+-- 
+With best wishes
+Dmitry
