@@ -1,115 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.nixnet.email (mx.nixnet.email [5.161.67.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5BD1A29A;
-	Tue,  1 Jul 2025 11:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF88259C83;
+	Tue,  1 Jul 2025 11:45:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.161.67.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751370255; cv=none; b=aIRg1/NafgxPqBB8l7JvYG7VtWo+hkRtuUNKDWkkMkzvsRHYCF6f+dNl78Pp8Acyx+byNQLUzWX3E9BpzmKQ/0XLcf3Gt6QYlD4YFmZipwh9YCNAjtYxj8b3jIUPvGuMBaewtkWiOrwtkqBvnYMupzMeb/IaO9H8IN3ojpEEdjo=
+	t=1751370317; cv=none; b=XFLjgGn1nKvODFkyOcmQn5PGtha2eqYhBTGNDlFeutL9quH05S+/zCHEBGLcAuFHyzH0QVPy+T7KAr2vlEMPGvBGR82jNCaVasjp/+eh18wu75nOOAE0scodA1e0E6HXz91yI5oqzibPYMXe1cesWxFtV6k+Xc9YDbrFo7as0PI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751370255; c=relaxed/simple;
-	bh=3W3vz6KPse/FZf4/O+7bTK70CyiE8f9Poxe2UbwtLRM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bjPMWVJek5pcEl1yPC0YEd/uXuYeAZAZfiMDV38YhTETSwMoJWp0I5YrKPb5DyRvSP9Bd5+Ojyd7dyqJj0CFvhSsRF+p5xM7Vr6sV5OGiDyrDN+KRaqgYK/y80d2yjkA5/7/X3SB2pwYJ8ev6PF5jmDSWFg6APeD6gIQgPee6+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UAoNNpUO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751370317; c=relaxed/simple;
+	bh=sVovuMTF5tAHPiCPKHLjhZPgKA8N730V48hVE+q9Zs8=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=fwiHX5mpr/y1uUH8lH/swgbhLfuFifN/WKCIl48twq782pHUYKcKFTSDMOyT3WCoUQBmVu+o1DKVDfAEoFdjbInvzPKlmtJdRAKulBN9IIwCoxECsqEK6p3nc+AwqpY+q/ckXaArssAaqSuv0zr/hBzJ4OK3VcxfHsuXlPEgs4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=pwned.life; spf=pass smtp.mailfrom=pwned.life; dkim=pass (1024-bit key) header.d=pwned.life header.i=@pwned.life header.b=p5jRpfyY; arc=none smtp.client-ip=5.161.67.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=pwned.life
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pwned.life
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UAoNNpUO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEBA1C4CEEB;
-	Tue,  1 Jul 2025 11:44:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751370254;
-	bh=3W3vz6KPse/FZf4/O+7bTK70CyiE8f9Poxe2UbwtLRM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UAoNNpUOWmcTYsGKU6I7lRTt3C569aeV0uxR50NAAOTSLhbFWEHoyQxc6ZjlKomu1
-	 /+3nbOn+yzUDV7+WFeFm4mUlH9IGBLC3GGOou6TtxoftasUQNGhDK5FQOtA6PI9aWF
-	 /yFSwbwb6EaWOkgU8WAoQFdDOAy0flmnR8v3GcU3/uivUflZ6bFmBqFSqJ0d+taXGg
-	 a7ye7SSqWAb1sppD+1Po+GMUsX+uWD3Zg1yo0Cak5ew7PwaTy3mVkFdlW/Opnd2vo1
-	 P8OWQhRRHF/a1hch5IOkTNWx3av5Y/ew0eQCWINNGevwTIv79tOZVsunDz2GMGka2l
-	 qBjG8EFsVAW5Q==
-Message-ID: <587072c7-6614-4b4e-96f5-c3defe56c73b@kernel.org>
-Date: Tue, 1 Jul 2025 13:44:05 +0200
+	dkim=pass (1024-bit key) header.d=pwned.life header.i=@pwned.life header.b="p5jRpfyY"
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	by mx.nixnet.email (Postfix) with ESMTPSA id 43C547D3B8;
+	Tue,  1 Jul 2025 13:37:40 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pwned.life; s=202002021149;
+	t=1751369861;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QVgDAEpVfCK2rfSTwfo8zjZAUpXMr5uBg9i9X14EHcs=;
+	b=p5jRpfyY83dkXaHxaCJPcaV4zjMzuqIdqo5Xi1qvNeRy+2poIk1vHlYxIPRYO5+A0GpbnR
+	9A94O3kpaBmg9kOMld4bQiLBiY1rLu+6kV/3pTOn9p3nyRShzXeLmr+Bpj9PKFaGHejkQT
+	m4tYZD4+qySJM1eJoIl/UE0RfDg/iL8=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: clock: qcom,videocc: Add sc8180x
- compatible
-To: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>
-Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
- Imran Shaik <quic_imrashai@quicinc.com>, Taniya Das <quic_tdas@quicinc.com>,
- Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-clk@vger.kernel.org
-References: <20250701-sc8180x-videocc-dt-v2-0-b05db66cc1f6@quicinc.com>
- <20250701-sc8180x-videocc-dt-v2-1-b05db66cc1f6@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250701-sc8180x-videocc-dt-v2-1-b05db66cc1f6@quicinc.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Date: Tue, 01 Jul 2025 13:37:37 +0200
+Message-Id: <DB0OSTC6N4TL.2NK75K2CWE9JV@pwned.life>
+Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Linus Torvalds"
+ <torvalds@linux-foundation.org>, "Shuah Khan" <skhan@linuxfoundation.org>,
+ <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <stable@vger.kernel.org>, "Achill Gilgenast" <fossdd@pwned.life>
+Subject: Re: [RESEND PATCH v2] kallsyms: fix build without execinfo
+From: "Achill Gilgenast" <fossdd@pwned.life>
+To: "Andrew Morton" <akpm@linux-foundation.org>
+X-Greeting: Hi mom! Look, I'm in somebodys mail client!
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
+References: <20250622014608.448718-1-fossdd@pwned.life>
+ <20250622113602.48092b368afc5f1729b45cb6@linux-foundation.org>
+ <DATW4DAU81FO.388H7H1WSUKAB@pwned.life>
+In-Reply-To: <DATW4DAU81FO.388H7H1WSUKAB@pwned.life>
 
-On 01/07/2025 13:40, Satya Priya Kakitapalli wrote:
-> The sc8180x video clock controller block is identical to that
-> of sm8150. Add a new compatible string for sc8180x videocc and
-> use sm8150 as fallback.
-> 
-> Signed-off-by: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
-> ---
->  .../devicetree/bindings/clock/qcom,videocc.yaml       | 19 ++++++++++++-------
->  1 file changed, 12 insertions(+), 7 deletions(-)
+On Mon Jun 23, 2025 at 1:53 PM CEST, Achill Gilgenast wrote:
+> On Sun Jun 22, 2025 at 8:36 PM CEST, Andrew Morton wrote:
+>> On Sun, 22 Jun 2025 03:45:49 +0200 Achill Gilgenast <fossdd@pwned.life> =
+wrote:
+>>
+>>> Some libc's like musl libc don't provide execinfo.h since it's not part
+>>> of POSIX. In order to fix compilation on musl, only include execinfo.h
+>>> if available (HAVE_BACKTRACE_SUPPORT)
+>>>=20
+>>> This was discovered with c104c16073b7 ("Kunit to check the longest symb=
+ol length")
+>>> which starts to include linux/kallsyms.h with Alpine Linux' configs.
+>>>=20
+>>> ...
+>>>
+>>> --- a/tools/include/linux/kallsyms.h
+>>> +++ b/tools/include/linux/kallsyms.h
+>>> @@ -18,6 +18,7 @@ static inline const char *kallsyms_lookup(unsigned lo=
+ng addr,
+>>>  	return NULL;
+>>>  }
+>>> =20
+>>> +#ifdef HAVE_BACKTRACE_SUPPORT
+>>>  #include <execinfo.h>
+>>>  #include <stdlib.h>
+>>>  static inline void print_ip_sym(const char *loglvl, unsigned long ip)
+>>
+>> I'm not seeing anything in there which needs execinfo.h.  Can we simply
+>> remove the inclusion?
+>
+> No, since backtrace_symbols is provided by execinfo.h.
 
-Never tested. Please don't send untested patches.
+Is there some status on it? I saw you picked it in mm-hotfixes-unstable,
+but it got dropped out again.
 
-Best regards,
-Krzysztof
+Is there something I can do to push it?
+
+Thanks!
