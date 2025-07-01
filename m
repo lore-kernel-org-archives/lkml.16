@@ -1,113 +1,91 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from leonov.paulk.fr (leonov.paulk.fr [185.233.101.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 661D625D53C;
-	Tue,  1 Jul 2025 20:17:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25A32266EFB;
+	Tue,  1 Jul 2025 20:18:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.101.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751401025; cv=none; b=OwVGv3oBpqw9GpPQSzo73DbLhcAfAYqMtPDmlqUezmk8+uebfq9AJGee0zECRjzOalK2ItspA08SbHo+aTfwo3GQncUSIEHuLIynjIpACR1JgVwXZ4dBYUaCOvlNSDcIUPDN+5rip1pxJnkVMvXFPZLVlXs4L4PfYwmD1xM2ufI=
+	t=1751401089; cv=none; b=scJDBT+UrwauG9tLZKPjx2uSZL7GTF8L5iuAuqKQc9x+WeBeg02qRPFIWqAXAwfZ0Gn9WPXlCOFuVsgXHD2axuqorisqklZPsB7uCHdPq9CLBDSigS8JR8jxi1hzHEVSE2rV7fQ/pwBvYxoNSz8ofZ4AocI0S+DN8PTaZBdE6GQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751401025; c=relaxed/simple;
-	bh=8IPawSjEI+IQRM3V7xIkdJ2/YD0+dJq78sMHXUzZ3co=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=PlvZcPQuNOdBufYsOyLBSTV4hEKE+Pxv2zWgz2ycI5vYw3g5qrKeiFVsrsxpDD99qfN+OCvI765vmehXW7ifloXdGQkSFkxPiQh38CS1dciFskQrNn8Zs1OeTK/Z4WjkBwOv/ZovgJ1a2l6i04CJ0MXz8uQxb9T28trYE7pGZVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YpnSlRYN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sBxcp+lt; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YpnSlRYN";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sBxcp+lt"
-Date: Tue, 01 Jul 2025 20:16:59 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751401020;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4HLAiTVB1cg3fAKh7mfOYKDCDvHVAis4174dvm6CiW8=;
-	b=YpnSlRYN+2QmmoyVXhuVZpOwOWHLAH3/zyNhtIHi4Q/eRkVKBs1j9awmPZ2SY74WSY1Wbi
-	leapKuxQg84NQdzcFc6R/CppoWOvx+yC/c/8C/AkTA2EgGuEDEWUgxonaqnKM8xf7ZG3Fe
-	B67oHYaOfZlWprL5BwCAsTSHW15FS8kKzEuF9yB1Yr9CfEEeZpYnxBzp/0v8ltgaoMA1ht
-	09l3U7hrF0VBcaNbweD5zIrVraEUPL1JCSVCx92fCxrIl3fkGAwy6cI2D01K2NXzaqMVpD
-	/quWzaYfTz5upfW2RUvX4UZ7y256f3HVfO5EDvd43ahpCAJEz+d4UCWZ3tv/jw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751401020;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4HLAiTVB1cg3fAKh7mfOYKDCDvHVAis4174dvm6CiW8=;
-	b=sBxcp+ltoVjcrjJ+OEcOMqGjOkTzgLR/5Ftn7zjTT5laPiFo4L8pKuCbWceNdpYw4qvedA
-	PY8SHDKp7J85+mDQ==
-From: "tip-bot2 for Biju Das" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/drivers] irqchip/renesas-rzv2h: Enable SKIP_SET_WAKE and
- MASK_ON_SUSPEND
-Cc: Biju Das <biju.das.jz@bp.renesas.com>,
- Thomas Gleixner <tglx@linutronix.de>,
- Geert Uytterhoeven <geert+renesas@glider.be>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250701105923.52151-1-biju.das.jz@bp.renesas.com>
-References: <20250701105923.52151-1-biju.das.jz@bp.renesas.com>
+	s=arc-20240116; t=1751401089; c=relaxed/simple;
+	bh=fzXJc+2YW17H2qljaXn3odf+JD2oegdVXlnSHbTP/7s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JGy8ujSubB2D8XxSG0yItkWPQKfe4IglW9Q3Vdiw2exUzFPIwic7Hcizou6D/RZncYFq27nnFViryqMAUZowl5SnmHYX+ztFmTAKIR/Ol/PBGtkM61+LvcLgmgiHyYz6yGukCMhe0vS63BcLDfJH6cm0QH5D3DEsw9zKt9yfPC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io; spf=pass smtp.mailfrom=sys-base.io; arc=none smtp.client-ip=185.233.101.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sys-base.io
+Received: from laika.paulk.fr (12.234.24.109.rev.sfr.net [109.24.234.12])
+	by leonov.paulk.fr (Postfix) with ESMTPS id 54EEE1F0003D;
+	Tue,  1 Jul 2025 20:18:06 +0000 (UTC)
+Received: by laika.paulk.fr (Postfix, from userid 65534)
+	id B80C6AC9687; Tue,  1 Jul 2025 20:18:05 +0000 (UTC)
+X-Spam-Level: *
+Received: from localhost.localdomain (unknown [192.168.1.64])
+	by laika.paulk.fr (Postfix) with ESMTP id 4E39AAC9687;
+	Tue,  1 Jul 2025 20:11:34 +0000 (UTC)
+From: Paul Kocialkowski <paulk@sys-base.io>
+To: linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-gpio@vger.kernel.org
+Cc: Yong Deng <yong.deng@magewell.com>,
+	Paul Kocialkowski <paulk@sys-base.io>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Maxime Ripard <mripard@kernel.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Icenowy Zheng <icenowy@aosc.xyz>,
+	Andre Przywara <andre.przywara@arm.com>
+Subject: [PATCH 4/5] clk: sunxi-ng: v3s: Fix TCON clock parents
+Date: Tue,  1 Jul 2025 22:11:23 +0200
+Message-ID: <20250701201124.812882-5-paulk@sys-base.io>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250701201124.812882-1-paulk@sys-base.io>
+References: <20250701201124.812882-1-paulk@sys-base.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <175140101942.406.18213547229156452587.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the irq/drivers branch of tip:
+The TCON clock can be parented to both the video PLL and the periph0 PLL.
+Add the latter, which was missing from the list.
 
-Commit-ID:     de2942828e7670526289f098df7e50b112e8ff1e
-Gitweb:        https://git.kernel.org/tip/de2942828e7670526289f098df7e50b112e8ff1e
-Author:        Biju Das <biju.das.jz@bp.renesas.com>
-AuthorDate:    Tue, 01 Jul 2025 11:59:21 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 01 Jul 2025 22:13:32 +02:00
-
-irqchip/renesas-rzv2h: Enable SKIP_SET_WAKE and MASK_ON_SUSPEND
-
-The interrupt controller found on RZ/G3E doesn't provide any facility to
-configure the wakeup sources. That's the reason why the driver lacks the
-irq_set_wake() callback for the interrupt chip.
-
-But this prevent to properly enter power management states like "suspend to
-idle".
-
-Enable the flags IRQCHIP_SKIP_SET_WAKE and IRQCHIP_MASK_ON_SUSPEND so the
-interrupt suspend logic can handle the chip correctly.
-
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/all/20250701105923.52151-1-biju.das.jz@bp.renesas.com
+Fixes: d0f11d14b0bc ("clk: sunxi-ng: add support for V3s CCU")
+Signed-off-by: Paul Kocialkowski <paulk@sys-base.io>
 ---
- drivers/irqchip/irq-renesas-rzv2h.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/clk/sunxi-ng/ccu-sun8i-v3s.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-renesas-rzv2h.c b/drivers/irqchip/irq-renesas-rzv2h.c
-index 57c5a3c..3daa5de 100644
---- a/drivers/irqchip/irq-renesas-rzv2h.c
-+++ b/drivers/irqchip/irq-renesas-rzv2h.c
-@@ -427,7 +427,9 @@ static const struct irq_chip rzv2h_icu_chip = {
- 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
- 	.irq_set_type		= rzv2h_icu_set_type,
- 	.irq_set_affinity	= irq_chip_set_affinity_parent,
--	.flags			= IRQCHIP_SET_TYPE_MASKED,
-+	.flags			= IRQCHIP_MASK_ON_SUSPEND |
-+				  IRQCHIP_SET_TYPE_MASKED |
-+				  IRQCHIP_SKIP_SET_WAKE,
- };
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
+index 86d933d1ac72..52e4369664c5 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
+@@ -350,7 +350,7 @@ static SUNXI_CCU_M_WITH_MUX_GATE(de_clk, "de", de_parents,
+ 				 0x104, 0, 4, 24, 2, BIT(31),
+ 				 CLK_SET_RATE_PARENT);
  
- static int rzv2h_icu_alloc(struct irq_domain *domain, unsigned int virq, unsigned int nr_irqs,
+-static const char * const tcon_parents[] = { "pll-video" };
++static const char * const tcon_parents[] = { "pll-video", "pll-periph0" };
+ static SUNXI_CCU_M_WITH_MUX_GATE(tcon_clk, "tcon", tcon_parents,
+ 				 0x118, 0, 4, 24, 3, BIT(31), 0);
+ 
+-- 
+2.49.0
+
