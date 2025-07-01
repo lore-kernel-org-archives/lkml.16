@@ -1,149 +1,113 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811F1277C86;
-	Tue,  1 Jul 2025 14:43:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD75F1DE89A;
+	Tue,  1 Jul 2025 14:47:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751381012; cv=none; b=KMBeEalvDMRTLAyFVyXdmuOKDESM81WpufQ1f6VDo6Fe7m9qKcUSNqD6ylsHHJrLlMjI328lpraZ0j8e1gnSWiq5t4A1m7CsZu1d2ZsHRaOkwPw2TxW0VGOCk4jTFjdHrJtNjLsVfvDuRpHigp6DWvLhQPQF6ituFRf975zzUtg=
+	t=1751381227; cv=none; b=CXBkzxaxLLg/BxGV18rSrDpGqNeSPbvkl70RRN0Uc0opiDphNJuQM3IbgqH3Krl4W0KuLi9mLYtTOrbj7zxH6RqdK7hxEvoJckIN+HSopwOQxEmylGFpr6uEi/hO9AI9nIOjdYmQt/YOsKjouzx92Lo6sIioY27jyLie+6S33ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751381012; c=relaxed/simple;
-	bh=pHL/Qk22Rw/qWZR+v/CC9PbQbrDdfVYiZ3CevAfJu1E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FYO4pojCa60dsHlJ8TyaefP3PdiliYxkZRkCN6yIJ8dMXDVwq71hGd9HWpmZE/7yVt4yZuHPSgq+O9AbVNkl/+yCkVsOioF/neXu0Dc9wXXcsero2qQZ2RekL9pHN2ngpZXhtzQxdPXQQNRxJy/3T+Ihmw39ye15Fw6ph0Z91DA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=df2HB1NL; arc=none smtp.client-ip=209.85.222.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="df2HB1NL"
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7d3f5796755so530201985a.1;
-        Tue, 01 Jul 2025 07:43:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751381007; x=1751985807; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=xcWIGIvdCiX2uQmJI1Lhl0kixwPO/7xNgHt4UXZ8/Jw=;
-        b=df2HB1NLdLUVl9CKgKD2NyUnc7cEEQyRfeK9edASlfOg6BPzkxBo6wpOA2+YvpKJyw
-         za1y3Xs/xyke5i2ulziRmqtL5O86WF2eUX5uQCnyuh7SYNDnBYhA47Wuf50FULdUaZYQ
-         Pb5Ulq6MQq9nozy9R9PKFbz8URHs5CPvb/PB8e8Mi/SQ59kjzOL+K+hjeMmg7whM6iqi
-         Eys7uOVcWRTtOdfyLQ9zn/mvfhtb9Gy8bdM7W3WgeDLZWOFqXfpwgTU4cXuHfNR4ogTo
-         StRMPVpZUY4HKwKjhJ/cgWI4uq7Xrcy+Ms0YtVrSIpAmrSzCbU7WRwI231/bdX8zous9
-         dnhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751381007; x=1751985807;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xcWIGIvdCiX2uQmJI1Lhl0kixwPO/7xNgHt4UXZ8/Jw=;
-        b=DE0Iu5Tidjb+QZjGBcNGYXFyZRM3q4+VkYxo4vj2AVRub6TCKSZTsQF0bkaZ0+5qA5
-         ErGolDVAbSaW6mD3ubKkA8N05CkhcyyYhT9f6bwBz5VOqtiLsgNSs0VWU5A4NTJrNbBP
-         z33q3S+a483KAUWoKe/3GizfckQ/+OyPmcYsXez0/yo4FuemSIih3F6oOoHjZPgCkcRw
-         O6FpLiIpiiceeaEQloTpv7BSchApLBNfp89aNCYSqiFa7kGb4Vyefm1ilTX4+DDbsbVm
-         xdeb/2xzBZEk0VUtFPX+pxQm9tNJyl4YTp3vt0o+ctfCWLnbCtw7oFVXQ+SW52KVcxe9
-         5eFw==
-X-Gm-Message-State: AOJu0YwIgZ44PoicoKdcCcLd5sqkAHz3J0V/UFBUV89p5+3fvMhFbiaw
-	B9CkEU0rwMJFA0RXFTzwFI+k4lfsZMrr/kQqTfUEBFcCJBPtyifAOy4DYtP2ag==
-X-Gm-Gg: ASbGncsluGGdg3HBmBfyvqD/zZCimFLgDWVbJsiSKKhQJmg1fkukRDESuD/Tjwcf8kd
-	VD4Q4gXuM9XKkZWzAcxK/GVcl8w+9pQIigAywiYTHFGcrMfQGlBYSA+tq7X3pchor8hniROD8ZO
-	7Q0tJy7BllIck8WA4ZgXStaOaiocv/ESVwHkDi8DC8+7EGVkpuneL/QozBlYjPKRYDjQ3Ue3WZD
-	/VqMU8+5iHjF+r3VI0iSZ62zwqB5RbMbbJInzJyzavtOTYZwWxeyaf6F/g+gm0lg1aRxP5o/wTx
-	3e4sjlM1ywdMi18OHkTmr/zFm78LsfUTTg/zDPSKfIQLm9LuA4YlDyCsH+NhbxXu
-X-Google-Smtp-Source: AGHT+IGunkHC4NtsY2M0lv/LhYLeUdoVJlKWE1bVLj9BVbU0aKhxKNLbEFfSUIj8l50fqJZaizfJTg==
-X-Received: by 2002:a05:620a:27c6:b0:7c5:3c0a:ab7e with SMTP id af79cd13be357-7d443909f4amr2528147385a.5.1751381007486;
-        Tue, 01 Jul 2025 07:43:27 -0700 (PDT)
-Received: from fionn.redhat.com ([76.71.123.242])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d45ac68268sm384041785a.68.2025.07.01.07.43.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 07:43:26 -0700 (PDT)
-Sender: John Kacur <jkacur@gmail.com>
-From: John Kacur <jkacur@redhat.com>
-To: RT <linux-rt-users@vger.kernel.org>
-Cc: lkml <linux-kernel@vger.kernel.org>,
-	Clark Williams <williams@redhat.com>,
-	Tyonnchie Berry <tyberry@redhat.com>,
-	John Kacur <jkacur@redhat.com>
-Subject: [ANNOUNCE] rt-tests-2.9
-Date: Tue,  1 Jul 2025 10:43:06 -0400
-Message-ID: <20250701144306.32234-1-jkacur@redhat.com>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1751381227; c=relaxed/simple;
+	bh=OfFbLijbpxyN4dyHU3EIzh9SsoOjBXoGBr1nfJrccmE=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=o7GvDF9BmPuC97de0VQoHdrq3NOS6cnd/XlkqB/zWo+iUwWxrGSASl2gqomHwBo7H6f5jI/W+pDD0CC9zcm3dfWPaV/8clmIpsFTC9IUBvwFb8xQdU3B0JlQtqKpRP6JDPhxaounrzu3qEBB1RbKAtFqxzvwSGehxW7yed2OYd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bWm7f4XBdz6L5Gm;
+	Tue,  1 Jul 2025 22:46:38 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7D09D1402EA;
+	Tue,  1 Jul 2025 22:47:01 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 1 Jul
+ 2025 16:47:00 +0200
+Date: Tue, 1 Jul 2025 15:46:59 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Dongsheng Yang <dongsheng.yang@linux.dev>
+CC: <mpatocka@redhat.com>, <agk@redhat.com>, <snitzer@kernel.org>,
+	<axboe@kernel.dk>, <hch@lst.de>, <dan.j.williams@intel.com>,
+	<linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+	<dm-devel@lists.linux.dev>
+Subject: Re: [PATCH v1 04/11] dm-pcache: add segment layer
+Message-ID: <20250701154659.000067f9@huawei.com>
+In-Reply-To: <20250624073359.2041340-5-dongsheng.yang@linux.dev>
+References: <20250624073359.2041340-1-dongsheng.yang@linux.dev>
+	<20250624073359.2041340-5-dongsheng.yang@linux.dev>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-We are pleased to announce rt-tests-2.9
+On Tue, 24 Jun 2025 07:33:51 +0000
+Dongsheng Yang <dongsheng.yang@linux.dev> wrote:
 
-To fetch:
+> Introduce segment.{c,h}, an internal abstraction that encapsulates
+> everything related to a single pcache *segment* (the fixed-size
+> allocation unit stored on the cache-device).
+>=20
+> * On-disk metadata (`struct pcache_segment_info`)
+>   - Embedded `struct pcache_meta_header` for CRC/sequence handling.
+>   - `flags` field encodes a =E2=80=9Chas-next=E2=80=9D bit and a 4-bit *t=
+ype* class
+>     (`CACHE_DATA` added as the first type).
+>=20
+> * Initialisation
+>   - `pcache_segment_init()` populates the in-memory
+>     `struct pcache_segment` from a given segment id, data offset and
+>     metadata pointer, computing the usable `data_size` and virtual
+>     address within the DAX mapping.
+>=20
+> * IO helpers
+>   - `segment_copy_to_bio()` / `segment_copy_from_bio()` move data
+>     between pmem and a bio, using `_copy_mc_to_iter()` and
+>     `_copy_from_iter_flushcache()` to tolerate hw memory errors and
+>     ensure durability.
+>   - `segment_pos_advance()` advances an internal offset while staying
+>     inside the segment=E2=80=99s data area.
+>=20
+> These helpers allow upper layers (cache key management, write-back
+> logic, GC, etc.) to treat a segment as a contiguous byte array without
+> knowing about DAX mappings or persistence details.
+>=20
+> Signed-off-by: Dongsheng Yang <dongsheng.yang@linux.dev>
+Hi
 
-Clone one of the following
-git://git.kernel.org/pub/scm/utils/rt-tests/rt-tests.git
-https://git.kernel.org/pub/scm/utils/rt-tests/rt-tests.git
-https://kernel.googlesource.com/pub/scm/utils/rt-tests/rt-tests.git
+Just one trivial comment.
 
-Branch: main
-Tag: v2.9
+> diff --git a/drivers/md/dm-pcache/segment.h b/drivers/md/dm-pcache/segmen=
+t.h
+> new file mode 100644
+> index 000000000000..9675951ffaf8
+> --- /dev/null
+> +++ b/drivers/md/dm-pcache/segment.h
+> @@ -0,0 +1,73 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +#ifndef _PCACHE_SEGMENT_H
+> +#define _PCACHE_SEGMENT_H
+> +
+> +#include <linux/bio.h>
+> +
+> +#include "pcache_internal.h"
+> +
+> +struct pcache_segment_info {
+> +	struct pcache_meta_header	header;	/* Metadata header for the segment */
 
-Tarballs are available here:
-https://kernel.org/pub/linux/utils/rt-tests
+The comment is fairly obvious given the type of the field. I'd drop the com=
+ment.
 
-Older version tarballs are available here:
-https://kernel.org/pub/linux/utils/rt-tests/older
+> +	__u32			flags;
+> +	__u32			next_seg;
+> +};
 
-Thanks to everyone who contributed
-patches, bug-reports are always welcome
-
-Cheng-Yang Chou (1):
-  Makefile: Use -Wno-error=unused-result
-
-Costa Shulyupin (1):
-  rt-tests: hwlatdetect: Add a grouping separator to tracing_cpumask
-
-Crystal Wood (3):
-  rt-tests: Turn off -Wunused-parameter
-  rt-tests: Enable -Werror
-  rt-tests: Remove unused parameter annotations
-
-John Kacur (4):
-  rt-tests: cyclicdeadline: Fix usage for duration
-  Revert "Fix rt-tests build with glibc-2.41"
-  rteval: pi_stress: Change PRIu64 to llu to match upstream sched_attr
-  Makefile: Use -Wno-error=format-truncation=
-
-Khem Raj (1):
-  sched_attr: Do not define for glibc >= 2.41
-
-Shizhao Chen (1):
-  rt-tests: pip_stress: Add option --usleep
-
-Tomas Glozar (2):
-  rt-tests: Put variables in test-feature in quotes
-  rt-tests: Handle -lcpupower flag outside LDFLAGS
-
-Yaakov Selkowitz (1):
-  Fix rt-tests build with glibc-2.41
-
- Makefile                              |  6 +++---
- feature/test-feature.mak              |  2 +-
- src/cyclictest/cyclictest.c           | 11 +++++------
- src/hwlatdetect/hwlatdetect.py        |  7 ++++++-
- src/include/rt-sched.h                | 10 +++++++---
- src/oslat/oslat.c                     |  4 ++--
- src/pi_tests/pi_stress.c              |  6 +++---
- src/pi_tests/pip_stress.8             |  6 +++++-
- src/pi_tests/pip_stress.c             | 10 ++++++++--
- src/pmqtest/pmqtest.c                 |  7 +++----
- src/ptsematest/ptsematest.c           |  7 +++----
- src/queuelat/queuelat.c               |  2 +-
- src/rt-migrate-test/rt-migrate-test.c |  4 ++--
- src/sched_deadline/cyclicdeadline.c   |  4 ++--
- src/signaltest/signaltest.c           |  2 +-
- src/sigwaittest/sigwaittest.c         |  4 ++--
- src/ssdd/ssdd.c                       |  2 +-
- src/svsematest/svsematest.c           |  5 +++--
- 18 files changed, 58 insertions(+), 41 deletions(-)
-
--- 
-2.49.0
 
