@@ -1,126 +1,181 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833532749FE
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 14:52:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B73C191493;
+	Tue,  1 Jul 2025 14:52:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751381529; cv=none; b=h+tWej2AVFj97IuDAbLjKjCdbV7QRNNvac1A8jenrAR3cA/EEdqRdNAF4/JRtBFHBjaNnMP0Nxv17szSj2TuRH7/LtqlcpkCiCFhxmdRrOg2wjtrUC9/7lYHqt3HHz6bo5Yx0OqDAud0TOylUAZaSuG+0pakLMxU2axNxbuM1GY=
+	t=1751381529; cv=none; b=SCp2pSfFHpOQyG0NxN2SLwhi/7C8y6UgtAOEYBCVW3mG3DhfsXjY4WKYSSOK1VBknekQ5lamQiPMFb39Xm5Sp83XDdbElmWlBrIPZKLsoIB01quxEvJ7CUZs6UdVKTGDNEeE2OeKGxAlQLgBo/qAxXiN1WcElCMj2uxqsFWMzDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751381529; c=relaxed/simple;
-	bh=PG27HA4CdVtGaZFt68ZtRQqcdoSo3KFYNbdjHdu9hzY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OIFZtImqiTk2hO8wVSDk6MDAHHNf7w4uskwcugvRCAjsLsmU5FIeliObpqXLj9Is2JOfptW1bh99w++XpZ2uUcw+F9HlOCd80Uw1v5TMCsZuBlQsdQftLgsgHKSfXBPx2eaZ9Z+hUGUvO0rbpACogh2Jl7Qon2fmrrTJXvgi5Zs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dlc9BDdz; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	bh=FBz6CHJBicR2pGluF6ujCI+8Krednj6xthZsed1pmVk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rqteeNkucS+7zCMdom5cXPLUYKGp6hLhT+t94pdhH4p5bU7OjBlUCeN+4ygd2GuNimYmDC9o8hpYmwpLRF+JghW/0WhMyaotBzNODysigW4ReeSYG+JhCawtkRTz2ojhtlZ1gpcImioFLAlaANN0WlXaH4Xb+TeQlPUJEEX6SeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UHkl0ymo; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dlc9BDdz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751381527; x=1782917527;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=PG27HA4CdVtGaZFt68ZtRQqcdoSo3KFYNbdjHdu9hzY=;
-  b=dlc9BDdz7ZoqF+fu7eIFMm6eEl1fcjV3MrznSCYhW4Qr9/G+LX8GUEP8
-   8nTz+0Qja9sxLfQ7Utj81mS3D6KzZLJEwNJWOsxuHaUAyZuGVzzR5SfQZ
-   NawP9OazD8OSwnog3XstDbqbctUwY3F2ZIEms6jG6UEjbOrdBTHWm8zdm
-   D8UhlSh9Mg/bihnLiUynuI8TegkhbKQtph2mGxSaosmXZ5ZJlvAwK7xEz
-   /oe3LlpfGH9KnhLa4YKSfzp9/N8xkb7865UnY29p0LyF0HQCT53lXn2XB
-   IFvt/9AlHOpJPXIvObCYAamPTSefa3x1MEhPiTc7MyeNSBTKM6GHbmeTp
-   A==;
-X-CSE-ConnectionGUID: cyMNcQJuSrmWtujOYPL7+g==
-X-CSE-MsgGUID: AuvfhOOsRiCfqpXBvsZQ2g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="53739817"
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="53739817"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 07:52:07 -0700
-X-CSE-ConnectionGUID: hoxMVtyTSrytJEUByLiOLQ==
-X-CSE-MsgGUID: Vi40ygA8RMaAsuCkpDD1gA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="153204157"
-Received: from irvmail002.ir.intel.com ([10.43.11.120])
-  by orviesa010.jf.intel.com with ESMTP; 01 Jul 2025 07:52:05 -0700
-Received: from [10.245.96.176] (mwajdecz-MOBL.ger.corp.intel.com [10.245.96.176])
-	by irvmail002.ir.intel.com (Postfix) with ESMTP id 159B4357A;
-	Tue,  1 Jul 2025 15:52:02 +0100 (IST)
-Message-ID: <bb783b7b-80d8-4779-a8a4-ad495dd9948c@intel.com>
-Date: Tue, 1 Jul 2025 16:52:02 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UHkl0ymo"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a6d77b43c9so3119950f8f.3;
+        Tue, 01 Jul 2025 07:52:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751381526; x=1751986326; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7Ek4SqQniFJZ7MXXJ++v2O8Gv2vKTdHUNE8dqL5pR18=;
+        b=UHkl0ymokbvm+Yov4Um+fKQe/80YVnXWj9G4q5hMUZBcct/0LIHqGugW165FWoZ5sj
+         xmEF30XZjtD09gv/4NzJ1a0kffKpc4Ezkz2aVYfOsap0eM09jldL8P49v4u3m5Bvo4gb
+         Nv3Ulwhlddy5hJZw0Qn4vQMRkvFU9mBFp+iDs/nshT85uk7FaJiDbbFpuqoZYhgkXA7k
+         dPd2aA0d7Cul7jwqHLT8jf10zixC4ibd/woTCCsd6dfV43qumJKXxGNlJj1PjzHQlAL2
+         eahk7AAgaYnq5Df5LX4qzI+8zSOXUv+V2cE7LiaZU0FfjWQHDgfY6oDXFxJJ5xK6Mjnv
+         OGug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751381526; x=1751986326;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7Ek4SqQniFJZ7MXXJ++v2O8Gv2vKTdHUNE8dqL5pR18=;
+        b=SYe+ZgrKq9szNnf7c2tp9DN3F6ib4pnw97LbZI0kNnh3+KluKD37LMDhzLdwdLavC7
+         T4HHbx76JVQ/PYhwsPq6ytXbs/QtvIE9h8cDzoWOuDvd3ayJahsQYseOHS6K5WVWtOfl
+         +y2PgoKij3zMstjuUlCyJkcJHKr6vVGqgOChTAMRVFySlRW+xg+OC02i8HhdZDqOMwfO
+         yOUKphogSBCYUJXffbSeHyTUkGQbifPtSycJuFo77XrJzHKmJ3zJcjMdRcB/twuCpudB
+         LvqlPr1wp669WklzsWhehp4npzIlwfjjd88AnttnMlYMxQ3XSmzaJkwLW6QbRr7jAgoi
+         +ssQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU0f8fIhThrB0d8L/jcv1lPg8bXRWdJJ7yBMYNbueSeUgs0BMoOosxIFtDYc6eMnWBOrRtZMe1HqW1Qn95c@vger.kernel.org, AJvYcCU4ANCrqFnLivRZIDE1ESmyDIuaSh8pT9bnuCNXoxGxBxgf3gftTIUr8artfzNEtSDN2ODRR2X3tJUcvmGWkB3fE8EAI9B3@vger.kernel.org, AJvYcCVTzygdgeaFlq7Hsi3+VAxjTA1GYzhncXyhodI262QnRc2AqvKPMagriL04dOJpcRkScvg=@vger.kernel.org, AJvYcCVrS4NjTMoaX4tifmObbQyz+ucREhqjveVb8zCzGr4XNA70sqaoVTOHiWvDX+UY1TddgEm86d5vtCwbbxEGOg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YysPczdEhFx16L1c67pVBq9jYe11fyhlFkFRtn4XQMw/Zrl6wTz
+	FYPCHQuvUG9mv8oyQMyUDJ6C7R4zTwcNYJamhLN0a3bVztAOPGq5lv6wnR+TjZg/sRqFBj2gf2u
+	teIvWCBK9Xf88ZpTRVTX5CIaYcI+XVgo=
+X-Gm-Gg: ASbGncvMaooTPo5q51c+e0jP3+yIlV/TPGbsOw0W8rVJFu/cYrybEWBIy91xQVoCQqp
+	m1Zzc3eHAl774eiB7FDU7HYoHtpSOPXDN6vpaoU4sPxWbc7gd75joITD2Qf7/wy6FacdWuCkvUG
+	RdRoKDHBOmKconskG/iCR7MHFsSJDWwjDbWkvsLfxdSHbi98MSY5AFqx///tH0rmIjEEDkuw==
+X-Google-Smtp-Source: AGHT+IGKzLq2rMPPcse4lnU6v+U9DyGWe222t8mFLJDMSnqWvg0sGJMLifb2mqoSJN33I385OhKGsLxrNhsv3Moj48A=
+X-Received: by 2002:a05:6000:440f:b0:3a4:efbb:6df3 with SMTP id
+ ffacd0b85a97d-3a8f454904fmr11877755f8f.10.1751381526043; Tue, 01 Jul 2025
+ 07:52:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Intel Xe SR-IOV support status
-To: Marcello Sylvester Bauer <marcello.bauer@9elements.com>,
- intel-xe@lists.freedesktop.org
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- Lucas De Marchi <lucas.demarchi@intel.com>,
- =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Badal Nilawar <badal.nilawar@intel.com>
-References: <72fd3ae7-46da-4203-b583-3fb857e73542@9elements.com>
-Content-Language: en-US
-From: Michal Wajdeczko <michal.wajdeczko@intel.com>
-In-Reply-To: <72fd3ae7-46da-4203-b583-3fb857e73542@9elements.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250623063854.1896364-1-song@kernel.org> <20250623-rebel-verlust-8fcd4cdd9122@brauner>
+ <CAADnVQ+iqMi2HEj_iH7hsx+XJAsqaMWqSDe4tzcGAnehFWA9Sw@mail.gmail.com> <20250701-angebahnt-fortan-6d4804227e87@brauner>
+In-Reply-To: <20250701-angebahnt-fortan-6d4804227e87@brauner>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 1 Jul 2025 07:51:55 -0700
+X-Gm-Features: Ac12FXykWeB_Z6ktVqcnHu80evDF073sYgsQQr4QCL9_BlH1hTpHek0SHMgslxM
+Message-ID: <CAADnVQ+pPt7Zt8gS0aW75WGrwjmcUcn3s37Ahd9bnLyzOfB=3g@mail.gmail.com>
+Subject: Re: [PATCH v3 bpf-next 0/4] Introduce bpf_cgroup_read_xattr
+To: Christian Brauner <brauner@kernel.org>
+Cc: Song Liu <song@kernel.org>, Kernel Team <kernel-team@meta.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Eduard <eddyz87@gmail.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	KP Singh <kpsingh@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>, 
+	Amir Goldstein <amir73il@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Tejun Heo <tj@kernel.org>, Daan De Meyer <daan.j.demeyer@gmail.com>, bpf <bpf@vger.kernel.org>, 
+	Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	LSM List <linux-security-module@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Marcello,
+On Tue, Jul 1, 2025 at 1:32=E2=80=AFAM Christian Brauner <brauner@kernel.or=
+g> wrote:
+>
+> On Thu, Jun 26, 2025 at 07:14:20PM -0700, Alexei Starovoitov wrote:
+> > On Mon, Jun 23, 2025 at 4:03=E2=80=AFAM Christian Brauner <brauner@kern=
+el.org> wrote:
+> > >
+> > > On Sun, 22 Jun 2025 23:38:50 -0700, Song Liu wrote:
+> > > > Introduce a new kfunc bpf_cgroup_read_xattr, which can read xattr f=
+rom
+> > > > cgroupfs nodes. The primary users are LSMs, cgroup programs, and sc=
+hed_ext.
+> > > >
+> > >
+> > > Applied to the vfs-6.17.bpf branch of the vfs/vfs.git tree.
+> > > Patches in the vfs-6.17.bpf branch should appear in linux-next soon.
+> >
+> > Thanks.
+> > Now merged into bpf-next/master as well.
+> >
+> > > Please report any outstanding bugs that were missed during review in =
+a
+> > > new review to the original patch series allowing us to drop it.
+> >
+> > bugs :(
+> >
+> > > It's encouraged to provide Acked-bys and Reviewed-bys even though the
+> > > patch has now been applied. If possible patch trailers will be update=
+d.
+> >
+> > Pls don't. Keep it as-is, otherwise there will be merge conflicts
+> > during the merge window.
+>
+> This is just the common blurb. As soon as another part of the tree
+> relies on something we stabilize the branch and only do fixes on top and
+> never rebase. We usually recommend just pulling the branch which I think
+> you did.
+>
+> >
+> > > Note that commit hashes shown below are subject to change due to reba=
+se,
+> > > trailer updates or similar. If in doubt, please check the listed bran=
+ch.
+> > >
+> > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+> > > branch: vfs-6.17.bpf
+> > >
+> > > [1/4] kernfs: remove iattr_mutex
+> > >       https://git.kernel.org/vfs/vfs/c/d1f4e9026007
+> > > [2/4] bpf: Introduce bpf_cgroup_read_xattr to read xattr of cgroup's =
+node
+> > >       https://git.kernel.org/vfs/vfs/c/535b070f4a80
+> > > [3/4] bpf: Mark cgroup_subsys_state->cgroup RCU safe
+> > >       https://git.kernel.org/vfs/vfs/c/1504d8c7c702
+> > > [4/4] selftests/bpf: Add tests for bpf_cgroup_read_xattr
+> > >       https://git.kernel.org/vfs/vfs/c/f4fba2d6d282
+> >
+> > Something wrong with this selftest.
+> > Cleanup is not done correctly.
+> >
+> > ./test_progs -t lsm_cgroup
+> > Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
+> > ./test_progs -t lsm_cgroup
+> > Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
+> > ./test_progs -t cgroup_xattr
+> > Summary: 1/8 PASSED, 0 SKIPPED, 0 FAILED
+> > ./test_progs -t lsm_cgroup
+> > test_lsm_cgroup_functional:PASS:bind(ETH_P_ALL) 0 nsec
+> > (network_helpers.c:121: errno: Cannot assign requested address) Failed
+> > to bind socket
+> > test_lsm_cgroup_functional:FAIL:start_server unexpected start_server:
+> > actual -1 < expected 0
+> > (network_helpers.c:360: errno: Bad file descriptor) getsockopt(SOL_PROT=
+OCOL)
+> > test_lsm_cgroup_functional:FAIL:connect_to_fd unexpected
+> > connect_to_fd: actual -1 < expected 0
+> > test_lsm_cgroup_functional:FAIL:accept unexpected accept: actual -1 < e=
+xpected 0
+> > test_lsm_cgroup_functional:FAIL:getsockopt unexpected getsockopt:
+> > actual -1 < expected 0
+> > test_lsm_cgroup_functional:FAIL:sk_priority unexpected sk_priority:
+> > actual 0 !=3D expected 234
+> > ...
+> > Summary: 0/1 PASSED, 0 SKIPPED, 1 FAILED
+> >
+> >
+> > Song,
+> > Please follow up with the fix for selftest.
+> > It will be in bpf-next only.
+>
+> We should put that commit on the shared vfs-6.17.bpf branch.
 
-On 30.06.2025 13:47, Marcello Sylvester Bauer wrote:
-> Hi,
-> 
-> Starting with Tiger Lake, support for GVT-g was discontinued in favor of
-> SR-IOV for graphics virtualization[1]. Currently, the upstream Xe
-> drivers only support SR-IOV on Panther Lake. The table below summarizes
-> the current state based on the .has_sriov flag.
-> 
-> | Intel Gen | drm-xe-next[2] | xe-for-CI[2] | intel lts i915[3] |
-> | --------- | -------------- | ------------ | ----------------- |
-> | TGL       |             no | no           | v5.15             |
-> | ADL/RPL   |             no | yes (debug)  | v5.15             |
-> | MTL       |             no | no           | v6.1              |
-> | ARL       |             no | no           | no                |
-> | PTL       |        v6.13.1 | yes          | no                |
-
-Note that we also have
-
-  | ATSM      |             no | yes (debug)  |
-
-> 
-> Interestingly, the xe/topic/xe-for-CI testing branch only covers SR-IOV
-> testing on the ADL platform and not the MTL or ARL platforms.
-> 
-> Is there a reason why SR-IOV has not yet been enabled on the other
-> platforms? 
-
-Since platforms before LNL are not officially supported by the Xe
-driver, we have only enabled SR-IOV on those SDV platforms which are
-actively used and tested by our public CI.
-
-
-> Are there any plans or timeline for adding support for them?
-
-AFAIK it’s unlikely. While in case of TGL the enabling is just a
-one-liner patch with new .has_sriov flag, however for robust MTL it
-would require much more SR-IOV specific code to be added, but there is
-no point to add anything until those platforms itself will be fully
-tested in the native mode (non-virtualized).
-
-Michal
-
-> 
-> Kind regards,
-> Marcello
-> ---
-> [1] https://www.intel.com/content/www/us/en/support/articles/000058558/
-> graphics.html
-> [2] https://gitlab.freedesktop.org/drm/xe
-> [3] https://github.com/intel/linux-intel-lts
-> [4] https://patchwork.freedesktop.org/patch/603316/
-
+The branch had a conflict with bpf-next which was resolved
+in the merge commit. Then _two_ fixes were applied on top.
+And one fix is right where conflict was.
+So it's not possible to apply both fixes to vfs-6.17.bpf.
+imo this shared branch experience wasn't good.
+We should have applied the series to bpf-next only.
+It was more bpf material than vfs. I wouldn't do this again.
