@@ -1,144 +1,102 @@
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E53D26B2AA
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 13:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69B52149C4A;
+	Tue,  1 Jul 2025 13:38:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751377089; cv=none; b=bD2h/Vx2SPNWe5eg1wYCkVXwsgWWWgA/Cem+Z2lBveWrtLJYJB7E1oC/BTGPK+3uRlaEUFi15b/8Yu6idA1SjNP/yE2bgcT8iFP/PazYCds5stofcniQVK8oqhd6BhnTRR4ZIV/1zw3ibBVSDOIt/Iz7QkWkeMMdMJ5kutOKbqM=
+	t=1751377115; cv=none; b=Gpy3YjnadEnhjBqvRgyLqE2qujXcCgQ5BkFZRaiJ79/MiSjIGFGU7gN1sJTAuX+yrMlOWTXYtGECkpd8zO2IubzkYrZzMixz02bym9IfUjbcGQTlR6x9E82FGh044T4W+X/BAoLMdnKcrB1L595a3C6d/ZnSHWB85VQOaWMjeDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751377089; c=relaxed/simple;
-	bh=9NAeOVpHEVGsz5ByZGwQ4Wt24BCLMkjun6lBaE5vbSU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=aflkip8oNthJpcYP7K5e2O0+8Ki3War005gMhXQhOrMqMNKdpycYip8cYB3DqbLwm/w7Tan5bisf+eYBVk76nT8TH22cfglN0iX7VLfywOvpnRad4dfCo0T8qikOx+HNQsVfJylmwdE/NOHeZNKlk80oG8bbBgiJvb8OyzA1R0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=D3AZFk3D; arc=none smtp.client-ip=80.241.56.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1751377115; c=relaxed/simple;
+	bh=ky8QQKUkLUeo9kQ2DpMPnzJve9+QP9MZpm3w/wowHOE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z4BtazOB92VoPUzW4NJbWw0OwUNFLVjkkJ0VLdCmJADNOYfF11SnaWaWzbrYmFGeudqxd9NmVJA7UO5GNBMHSVRvhUoD3fv4tLPC19O0a1J2ZxW1+SHxyOw4EhufkazLvbxw7B+YIdCaZ1IEhxgq0uJgPJYXf5QbDH/a+O8FCrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iqKuCiIq; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="D3AZFk3D"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4bWkcW3HwMz9sdP;
-	Tue,  1 Jul 2025 15:38:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1751377083; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fG49IWnqi5Qsh1rud8FkyB6EdwDzoRE72QFqV2fypms=;
-	b=D3AZFk3DVTfhK+H1H2QGWIOeLwgkwC9uMyQOlY/FuZjuHgmyZ21Qfl1aaFq78zji03a0kj
-	EN4R2CDw5UETHXl2O+UZhuZDHHaugwhF93+rFeMZisSmwE7MBRLeszahZ/+StspN88PfFD
-	D9kIbpuGie/c807dDjyd4c+XCuj9JSV2AnKlnk3Sdsz6jjTy/551ie9HuTH7g/QTEc1GeC
-	ic2zVfo7hqzsbX49rZuT+RFXj7AsYRQH5dLuYqZhc0V4bcMyQ5L1EyfkNsY/ChapOZcfwq
-	YK8wpj2t/VXLaUdavwXeHANGp6xdU3h4kXnK22OaLWBZTbIfYvOK0dPkiAzYag==
-Message-ID: <4d41dfaf0b48166c41a476f128d59785ddaeeb5f.camel@mailbox.org>
-Subject: Re: [PATCH] drm/sched/tests: Make timedout_job callback a better
- role model
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: Philipp Stanner <phasta@kernel.org>, Matthew Brost
- <matthew.brost@intel.com>,  Danilo Krummrich <dakr@kernel.org>, Christian
- =?ISO-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>,  Thomas Zimmermann <tzimmermann@suse.de>, David
- Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Tvrtko Ursulin
- <tvrtko.ursulin@igalia.com>, Pierre-Eric Pelloux-Prayer
- <pierre-eric.pelloux-prayer@amd.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Date: Tue, 01 Jul 2025 15:37:56 +0200
-In-Reply-To: <20250605134154.191764-2-phasta@kernel.org>
-References: <20250605134154.191764-2-phasta@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iqKuCiIq"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-453608ed113so33731395e9.0;
+        Tue, 01 Jul 2025 06:38:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751377112; x=1751981912; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=f9FP0m4sJ7CU9BSLCQyAkJvmbq4Wt41GfyUXSn+7VCA=;
+        b=iqKuCiIqSNIYxiq0o02s5b6FOL/vVUsCNyCU27AKbL9b6nLvhGOcjFC2FfW9JGTXpF
+         clqAW2ORkcMfuLQls0jZdtemK2lldCutPswZB02EUDKoHJbosrtQ3YX8swkIfRhz5ykc
+         71+hO66W1Aw9A2phYJ4cYu8MwIsyjUe8Kwmo+UrP0NK62abaNq+TGrEeTduNJljNLjHM
+         NVyHLEbMZkNYToKj4bx9NZo0+B1IcfrUdWjeYUS4ZhJjLVIT5IMnfZ5lbMKDfs22dRIB
+         Z4Fy5ncxhe/AX6jzhPBP3N7Cbaszipws2ikKx9RNldzDrOGXn8myFpOxUI0zPltGgmTW
+         DsWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751377112; x=1751981912;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=f9FP0m4sJ7CU9BSLCQyAkJvmbq4Wt41GfyUXSn+7VCA=;
+        b=CDXHSi/DmnsglohcT1bM6hklYT2c9Ua7pAD3Z5NsrpXTGdXH5U9VyBH0+lBD51Dx+d
+         bIpNONdkSVI/idCGDq1Qx0bs4MHcg4c9yamM8AvhoanTFCig4Fd5trWC2MT/nDOnx/HF
+         CQgfy813vkJNVbPXT9ti7K0SUDNnhSw7u66k4RGJKcWK5TLBVgKtM7PUP9X8LyZQvmaS
+         TGs1BQbZIJYcwMkH0PIxXsggC2W8c7Wy4i0vBQnoLCqhvx5a/GLn1j5W6B8pfIqgA2vt
+         Vug8rDLz0RQfPbRClju19KwW1Bw+K08RSZUdhQHkk7W7GUyjhN5rdn+x5bJ4qrLp4jJo
+         4Xtg==
+X-Forwarded-Encrypted: i=1; AJvYcCU30BmfxjBbIiGy21sIy3PTcdhtS2FYh6Rb+2dDBNp23ftFObdMNyL1F9fFypaqFSJFntaiVVV6@vger.kernel.org, AJvYcCVHwHWZTGiEUy9yYzI5vt5DgZhLr6HooGKWxZR1dsZTvwY3Qtmzk9SFd4ARSzbHsrqqgh10e8MO8DDS3Z8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOU61toZhZNT+EaHg3CJk0uvfZ8cGzIYP4BCYUe9kPtCN3AIoY
+	Z8581gYmYEXzI1wxaAe3XidVN8WOwhmdp2ufAYPNzkKgTHOFbdnBrrwz
+X-Gm-Gg: ASbGncvXIDTOF7UU0qQAfjV0EI70v3HJ6YhBPHZrGJ+tXbY6PcuHR7hHafjaqCXMnvu
+	IEUUOIu6lFA5sw7m3Zyo9adgZt98CUWrrPeuSL5T/PaCRdhp2Vro/O3ZApAqfYKfUZY00guzrwF
+	J5ja7GHU67HQas7K+LcqcQ5dOR+ZkrH6gDqwUwdr7/+0l5QfRD0cn/sB0BaiVO07CCbtojZjnoM
+	JoZ0Oqz6pwuHQ7XY1Rnwx7tqHTmx+yQ8HnlfDgYJHD+rRkCAmSrRicryQdel1MCTnfbla/eqeiY
+	kV8hIMRhit7FaJJv5rQ84EK1Q5D7bdmJfvtdEJWuAbcL6npvCsqsgWUve7pKofgPr9CDqnP2qJF
+	os7do6zLi2pLQOVzMmuejMLMVd/dnlFMhwYsvo6WjlpMJqAFHYw==
+X-Google-Smtp-Source: AGHT+IHaFf0Kw7NnYflYgrVPZhks6XoL/+RtlTxnQ9ccF2rkKiyPzeCKe7KHzLRHAEAQpbzFnNfzOw==
+X-Received: by 2002:a05:600c:1c94:b0:43d:1b74:e89a with SMTP id 5b1f17b1804b1-453a9171809mr33540925e9.9.1751377111387;
+        Tue, 01 Jul 2025 06:38:31 -0700 (PDT)
+Received: from [192.168.1.122] (cpc159313-cmbg20-2-0-cust161.5-4.cable.virginm.net. [82.0.78.162])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823ad01csm197629375e9.22.2025.07.01.06.38.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Jul 2025 06:38:31 -0700 (PDT)
+Message-ID: <cc3dd44a-b94a-4537-b68b-49a800acc935@gmail.com>
+Date: Tue, 1 Jul 2025 14:38:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MBO-RS-ID: d448f7998a01351db5f
-X-MBO-RS-META: 89rnnf8ig8imhwy68phfjgr1x37xts95
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v2] sfc: siena: eliminate xdp_rxq_info_valid
+ using XDP base API
+To: Larysa Zaremba <larysa.zaremba@intel.com>,
+ Fushuai Wang <wangfushuai@baidu.com>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+ linux-net-drivers@amd.com, linux-kernel@vger.kernel.org
+References: <20250628051033.51133-1-wangfushuai@baidu.com>
+ <aGPiqlNRMBsQQCgt@soc-5CG4396X81.clients.intel.com>
+Content-Language: en-GB
+From: Edward Cree <ecree.xilinx@gmail.com>
+In-Reply-To: <aGPiqlNRMBsQQCgt@soc-5CG4396X81.clients.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 2025-06-05 at 15:41 +0200, Philipp Stanner wrote:
-> Since the drm_mock_scheduler does not have real users in userspace,
-> nor
-> does it have real hardware or firmware rings, it's not necessary to
-> signal timedout fences nor free jobs - from a functional standpoint.
->=20
-> The unit tests, however, serve as a reference implementation and a
-> first
-> example for new scheduler users. Therefore, they should approximate
-> the
-> canonical usage as much as possible.
->=20
-> Make sure timed out hardware fences get signaled with the appropriate
-> error code.
->=20
-> Signed-off-by: Philipp Stanner <phasta@kernel.org>
+On 01/07/2025 14:29, Larysa Zaremba wrote:
+> On Sat, Jun 28, 2025 at 01:10:33PM +0800, Fushuai Wang wrote:
+>> Commit d48523cb88e0 ("sfc: Copy shared files needed for Siena (part 2)")
+>> use xdp_rxq_info_valid to track failures of xdp_rxq_info_reg().
+>> However, this driver-maintained state becomes redundant since the XDP
+>> framework already provides xdp_rxq_info_is_reg() for checking registration
+>> status.
+>>
+>> Signed-off-by: Fushuai Wang <wangfushuai@baidu.com>
+> 
+> You could have sent those patches in a single patchset, but the patches 
+> themselves are fine.
 
-Pushed that one to drm-misc-next
+I asked him to split it, for a few reasons (different blamed commits,
+ clearer Subject: lines, Siena is EOL).
+So if you don't like it, blame me ;-)
 
-P.
-
-> ---
-> =C2=A0.../gpu/drm/scheduler/tests/mock_scheduler.c=C2=A0 | 26
-> ++++++++++++++++++-
-> =C2=A01 file changed, 25 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
-> b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
-> index 7f947ab9d322..49d067fecd67 100644
-> --- a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
-> +++ b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
-> @@ -200,12 +200,36 @@ static struct dma_fence
-> *mock_sched_run_job(struct drm_sched_job *sched_job)
-> =C2=A0	return &job->hw_fence;
-> =C2=A0}
-> =C2=A0
-> +/*
-> + * Normally, drivers would take appropriate measures in this
-> callback, such as
-> + * killing the entity the faulty job is associated with, resetting
-> the hardware
-> + * and / or resubmitting non-faulty jobs.
-> + *
-> + * For the mock scheduler, there are no hardware rings to be
-> resetted nor jobs
-> + * to be resubmitted. Thus, this function merely ensures that
-> + *=C2=A0=C2=A0 a) timedout fences get signaled properly and removed from=
- the
-> pending list
-> + *=C2=A0=C2=A0 b) the mock scheduler framework gets informed about the t=
-imeout
-> via a flag
-> + *=C2=A0=C2=A0 c) The drm_sched_job, not longer needed, gets freed
-> + */
-> =C2=A0static enum drm_gpu_sched_stat
-> =C2=A0mock_sched_timedout_job(struct drm_sched_job *sched_job)
-> =C2=A0{
-> +	struct drm_mock_scheduler *sched =3D
-> drm_sched_to_mock_sched(sched_job->sched);
-> =C2=A0	struct drm_mock_sched_job *job =3D
-> drm_sched_job_to_mock_job(sched_job);
-> +	unsigned long flags;
-> =C2=A0
-> -	job->flags |=3D DRM_MOCK_SCHED_JOB_TIMEDOUT;
-> +	spin_lock_irqsave(&sched->lock, flags);
-> +	if (!dma_fence_is_signaled_locked(&job->hw_fence)) {
-> +		list_del(&job->link);
-> +		job->flags |=3D DRM_MOCK_SCHED_JOB_TIMEDOUT;
-> +		dma_fence_set_error(&job->hw_fence, -ETIMEDOUT);
-> +		dma_fence_signal_locked(&job->hw_fence);
-> +	}
-> +	spin_unlock_irqrestore(&sched->lock, flags);
-> +
-> +	dma_fence_put(&job->hw_fence);
-> +	drm_sched_job_cleanup(sched_job);
-> +	/* Mock job itself is freed by the kunit framework. */
-> =C2=A0
-> =C2=A0	return DRM_GPU_SCHED_STAT_NOMINAL;
-> =C2=A0}
-
+> Reviewed-by: Larysa Zaremba <larysa.zaremba@intel.com>
