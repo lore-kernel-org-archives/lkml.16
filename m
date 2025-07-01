@@ -1,124 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C928325B301;
-	Tue,  1 Jul 2025 12:51:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD3021D5BC
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 12:51:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751374299; cv=none; b=b9bluacM5EPk69Y6Pnf2kMb7nR7JMjksmLbvkpOwNmojDrVeKo8xzIIPqQuU3q3FHeCXyQAD0rFmOFyEhxhyQDBIBerf5N/7+ENuK705UBRem+GBXhc7NnvbNGadUkOb+mteBUSqb/qft+XV8op+AVLOVNL6SakoNXULbASNLdI=
+	t=1751374303; cv=none; b=jm5Ap1cxcQLQg7UjMKK7VP8cMt0WzKflTpHS1DnJr7SymEm2ybkEnqFBKnNp/evC+WdXjoxCP2N7rzcjak+4h4F6zcWzi4d29kjzPScFXUhbjSMT04l4DRzhWro1YLI9TwbXsi+jWYTyE2WVYMM/yJ/s55IvfIjhNVVgESD0kCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751374299; c=relaxed/simple;
-	bh=hcZz3rU5GXHb1XwGjVGR0cCvs4ggRLDrLsKOp0GI6yg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YnKiJsXuMSbYKNyMsrcZI76YZxDWHPM7ZphQ/iYIGkV630DyL7g2Y7GdkLrarMr/X/TvItQ+vxdR+5CwzelzyXpDO7xKs6rZUz8O4VkSp6+D/Xxfez4iAsCChbb5FHmk4yo7f0hqegnuA1t3csPDEN8nKxxdrW0xy7kQ24wt3II=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OCT9E9CL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751374303; c=relaxed/simple;
+	bh=c+4c+g5QJfhyC+UXQix6d3ko58wc2ZtIIOw1DxZ0qcM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=lELwg5RJkfZcZ2PaOGfHlsDS15CBRyIPausHsew2tl2tba+x/YQOrXM0tfShyJwFZKKdTgJ+C6QX4pwHFtzEY5CwLgG2QPDvlviZf90zAqE2lw/kw6GpU8PqzKkN5dyJTlUJiEUSxFKSunp0X1zR9beC1XN10898PR5rxbDDQew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=cwbNa/ul; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OCT9E9CL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF4D2C4CEEB;
-	Tue,  1 Jul 2025 12:51:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751374299;
-	bh=hcZz3rU5GXHb1XwGjVGR0cCvs4ggRLDrLsKOp0GI6yg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OCT9E9CLG+oV0efdzT66es8TgBeQDw2n0sCcdC9KxaF1ZLQzoYQ6GnJvF6RMqQS0K
-	 7R+00L0purFY8aNvakdp5I99wV3JQDUTdjkzerSV3+1EPEjcO9hF8c6cwu8twaJiTe
-	 m4L1MjY28l4vQOP9Ar039RGk1iOO/fsOdMJ1a0QkN/HiY9Bv9iJ6rmSmGi0b39kAGU
-	 84YZjvF9TeD2lgpnLgaK/+93PNTYwMPNJZMxsL0TkJS4XAroV7hcQug1Kj695cizYC
-	 Uqi0ChRgr8gx5BrC8Q5LpmSSoBpuwe8Wz7BfeL5zyH2FWcnJeF3J5Am/gbAhPAYBiE
-	 hQYb5J+AIgeew==
-Date: Tue, 1 Jul 2025 13:51:33 +0100
-From: Simon Horman <horms@kernel.org>
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: Felix Fietkau <nbd@nbd.name>,
-	Frank Wunderlich <frank-w@public-files.de>,
-	Eric Woudstra <ericwouds@gmail.com>, Elad Yifee <eladwf@gmail.com>,
-	Bo-Cun Chen <bc-bocun.chen@mediatek.com>,
-	Sky Huang <skylake.huang@mediatek.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH net-next v2 3/3] net: ethernet: mtk_eth_soc: use genpool
- allocator for SRAM
-Message-ID: <20250701125133.GQ41770@horms.kernel.org>
-References: <cover.1751229149.git.daniel@makrotopia.org>
- <61897c7a3dcc0b2976ec2118226c06c220b00a80.1751229149.git.daniel@makrotopia.org>
- <20250630162959.GA57523@horms.kernel.org>
- <aGLVPo9M-RhTowmw@makrotopia.org>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="cwbNa/ul"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id F2F154424C;
+	Tue,  1 Jul 2025 12:51:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1751374293;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c+4c+g5QJfhyC+UXQix6d3ko58wc2ZtIIOw1DxZ0qcM=;
+	b=cwbNa/ulZeyBqE/Afx6KxKecnKJXH6g0zoZYET/B6cuUD+qx84sK+owpBM6wUTtCB8kxWL
+	7xFDF7Tow7WgtB6WD6lJaibV98kgtmzh6hBp7t+w9VSUiqISPaNGKOcW48eKThTfEUrViP
+	ME79fVcszUk2/wJ8oASxs1xSrsop9FX1it1/+D9aKBmwbtSFbxKT9Vh/avEnx66zA7cpYf
+	M+bDikFmx4P/K6qiYempyctg2+SGVGwV9r7QRkCLZUl7M0MHR3U5iV0yaoR6fZz04j5kmB
+	U5enoet4yQe41GfIFtTt54LKZuZEWw7zesYyesxZlvdLLvSZNjw2GYyj7agUEg==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Thomas Fourier <fourier.thomas@gmail.com>
+Cc: Richard Weinberger <richard@nod.at>,  Vignesh Raghavendra
+ <vigneshr@ti.com>,  Nicolas Ferre <nicolas.ferre@microchip.com>,
+  Alexandre Belloni <alexandre.belloni@bootlin.com>,  Claudiu Beznea
+ <claudiu.beznea@tuxon.dev>,  Uwe =?utf-8?Q?Kleine-K=C3=B6nig?=
+ <u.kleine-koenig@baylibre.com>,  Alexander Dahl <ada@thorsis.com>,  Boris
+ Brezillon <bbrezillon@kernel.org>,  linux-mtd@lists.infradead.org,
+  linux-arm-kernel@lists.infradead.org,  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mtd: nand: Fix dma_mapping_error() address
+In-Reply-To: <20250701114427.24910-2-fourier.thomas@gmail.com> (Thomas
+	Fourier's message of "Tue, 1 Jul 2025 13:44:23 +0200")
+References: <20250701114427.24910-2-fourier.thomas@gmail.com>
+User-Agent: mu4e 1.12.7; emacs 30.1
+Date: Tue, 01 Jul 2025 14:51:31 +0200
+Message-ID: <878ql8qdkc.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aGLVPo9M-RhTowmw@makrotopia.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddugeehkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefujghffgffkfggtgfgsehtqhertddtreejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepffeghfejtdefieeguddukedujeektdeihfelleeuieeuveehkedvleduheeivdefnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddvpdhrtghpthhtohepfhhouhhrihgvrhdrthhhohhmrghssehgmhgrihhlrdgtohhmpdhrtghpthhtoheprhhitghhrghrugesnhhougdrrghtpdhrtghpthhtohepvhhighhnvghshhhrsehtihdrtghomhdprhgtphhtthhopehnihgtohhlrghsrdhfvghrrhgvsehmihgtrhhotghhihhprdgtohhmpdhrtghpthhtoheprghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomhdpr
+ hgtphhtthhopegtlhgruhguihhurdgsvgiinhgvrgesthhugihonhdruggvvhdprhgtphhtthhopehurdhklhgvihhnvgdqkhhovghnihhgsegsrgihlhhisghrvgdrtghomhdprhgtphhtthhopegruggrsehthhhorhhsihhsrdgtohhm
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Mon, Jun 30, 2025 at 07:19:42PM +0100, Daniel Golle wrote:
-> On Mon, Jun 30, 2025 at 05:29:59PM +0100, Simon Horman wrote:
-> > On Sun, Jun 29, 2025 at 11:22:44PM +0100, Daniel Golle wrote:
-> > > Use a dedicated "mmio-sram" and the genpool allocator instead of
-> > > open-coding SRAM allocation for DMA rings.
-> > > Keep support for legacy device trees but notify the user via a
-> > > warning to update.
-> > > 
-> > > Co-developed-by: Frank Wunderlich <frank-w@public-files.de>
-> > > Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> > > Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-> > > ---
-> > > v2: fix return type of mtk_dma_ring_alloc() in case of error
-> > > 
-> > >  drivers/net/ethernet/mediatek/mtk_eth_soc.c | 120 +++++++++++++-------
-> > >  drivers/net/ethernet/mediatek/mtk_eth_soc.h |   4 +-
-> > >  2 files changed, 84 insertions(+), 40 deletions(-)
-> > > 
-> > > diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-> > 
-> > ...
-> > 
-> > > @@ -5117,16 +5148,27 @@ static int mtk_probe(struct platform_device *pdev)
-> > >  			err = -EINVAL;
-> > >  			goto err_destroy_sgmii;
-> > >  		}
-> > > +
-> > >  		if (MTK_HAS_CAPS(eth->soc->caps, MTK_SRAM)) {
-> > > -			if (mtk_is_netsys_v3_or_greater(eth)) {
-> > > -				res_sram = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> > > -				if (!res_sram) {
-> > > -					err = -EINVAL;
-> > > -					goto err_destroy_sgmii;
-> > > +			eth->sram_pool = of_gen_pool_get(pdev->dev.of_node, "sram", 0);
-> > > +			if (!eth->sram_pool) {
-> > > +				if (!mtk_is_netsys_v3_or_greater(eth)) {
-> > > +					/*
-> > > +					 * Legacy support for missing 'sram' node in DT.
-> > > +					 * SRAM is actual memory and supports transparent access
-> > > +					 * just like DRAM. Hence we don't require __iomem being
-> > > +					 * set and don't need to use accessor functions to read from
-> > > +					 * or write to SRAM.
-> > > +					 */
-> > > +					eth->sram_base = (void __force *)eth->base +
-> > > +							 MTK_ETH_SRAM_OFFSET;
-> > > +					eth->phy_scratch_ring = res->start + MTK_ETH_SRAM_OFFSET;
-> > > +					dev_warn(&pdev->dev,
-> > > +						 "legacy DT: using hard-coded SRAM offset.\n");
-> > > +				} else {
-> > > +					dev_err(&pdev->dev, "Could not get SRAM pool\n");
-> > > +					return -ENODEV;
-> > 
-> > Hi Daniel,
-> > 
-> > Rather than returning, should this
-> > jump to err_destroy_sgmii to avoid leaking resources?
-> 
-> Yes, you are right. I'll fix that in v3.
+Hi Thomas,
 
-Thanks.
+Thanks for the patch!
+
+On 01/07/2025 at 13:44:23 +02, Thomas Fourier <fourier.thomas@gmail.com> wr=
+ote:
+
+The subject prefix should be 'mtd: rawnand: atmel:'
+
+> It seems like what was intended is to test if the dma_map of the
+> previous line failed but the wrong dma address was passed.
+>
+> Fixes: f88fc122cc34 ("mtd: nand: Cleanup/rework the atmel_nand
+> driver")
+
+Missing:
+
+Cc: stable@vger.kernel.org
+
+> Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
+> ---
+
+Otherwise looks good to me!
+
+Thanks,
+Miqu=C3=A8l
