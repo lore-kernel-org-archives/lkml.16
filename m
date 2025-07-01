@@ -1,77 +1,56 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C830C1E51FB
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 06:45:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 158CB1B0435
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 06:46:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751352355; cv=none; b=UtTKQFKWAs59yC9vwfmK/w0/oSutfET58hMREycvZ8OGoy7K2hycBOuDC86IjT/8UZARb43DxNFG+wc+qfHiuMGyK0J0XYM1hxRwBwkTwfJDTpaKzsUZMJ3fMU2lNYKc0BnzQzp8hGvvW1B4clDyHL1rfXKR4sbo7ifCsLY+9aA=
+	t=1751352384; cv=none; b=sWnndxMbwebw8xXckdUyaavtTIY9BTe9QcD/hCpMibvd0BRsNvvmeT7aBtBdBxIfyfN0NxO8Lw6IoIw1/+rIPFufkAdIm9/9Y1mUSnPjkZXwiFuUZkYRZM0N+V+GctKCZWqbACOKd75JKTkzL13MhgqmmrwTEnXMnx8yC2nuERk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751352355; c=relaxed/simple;
-	bh=gLhUqpMgS9yLqJKaBfIOhojwMZScqGvBOte8jL4p3oc=;
+	s=arc-20240116; t=1751352384; c=relaxed/simple;
+	bh=5Y7c6zYkKzF3xCBRV8XTIbt5q1FllIz2uRSBkOMN2pI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=odrN65k81zyYRpUUGTtSOxGzp94MdIDIBkKibPT9tLVqVEwbrhUGCrMAoN03wkI++23EVWsyCxHVqYMVast0CSbfrqAMRlGIrwLhKMQs2wFMy6LfjzFXKfV+s1dE4joDeG8q1VmNTNrJvWcRX4ms8gSQRuR7ERRGw93p6B7Cy5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NPfo+yPl; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NPfo+yPl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751352352;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/FB/rr13rxhfU8eE4uQBrYdSojlxrnS1P6/7C5rZKVs=;
-	b=NPfo+yPlTGByTIJra44vCbexSLY4MJ7F2yX+l3HLPnIdOFdLGp1UKOtz2SjV3feFgVivKZ
-	FhBt/qwK7htnRu+kuA5sU37RJdgDQrr8DL3FVoZn62hxd6iP4CLIDSiqtSl4C5bWms9BDr
-	KkOH4aSYVpLjRXLVc8qA4WzKY5fSaZ8=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-668-MJcRVM5QMAOJJ1veJnMumA-1; Tue, 01 Jul 2025 02:45:51 -0400
-X-MC-Unique: MJcRVM5QMAOJJ1veJnMumA-1
-X-Mimecast-MFC-AGG-ID: MJcRVM5QMAOJJ1veJnMumA_1751352350
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-451d3f03b74so26692415e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 23:45:51 -0700 (PDT)
+	 Content-Type:Content-Disposition:In-Reply-To; b=F/8Ps+jiz0+7h9EBFs3y8IYZNs6+jwV/n80ylVZi8le3xuYVK9nV4H2jjfQTi0gnmBYPydt78kgh+Pi0DjSBrVdLex9lwylnDP6r1fepQ5jWsnjMIAi8G5zwTxGtx7bSjzHoyAt2PaqgSEtSifBk6yaDyhUqvwv5QVLvilqO/H4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a6d1369d4eso2834586f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 23:46:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751352350; x=1751957150;
+        d=1e100.net; s=20230601; t=1751352381; x=1751957181;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/FB/rr13rxhfU8eE4uQBrYdSojlxrnS1P6/7C5rZKVs=;
-        b=B+Jsw2pccInDUnzQmMQlmEXm4/3qaQzK28d5t8W/odlnqaP+/h9sncv3Z56+Lp0msz
-         7TMCx3PRO958qNfU/XxtJnndcXmvAJoqThVeCCxd9Jz71ByxrzTPqq4o2koNPBOa0QZO
-         47tRhNo6KjlJGF5VPggAV2A2+GZ1I8I1xHskyr4UujijyLu+LHI4YQRcyNqT25K+FzLe
-         PtsVZQAz6S0kzUWmrBwMgqgf+vuhgHLC5aJnOz5iEKlNjCSXSrlyZVWou3i6oiYbc9GJ
-         +8iA5OH8Tjr3gx/kLNE1LjG6BFrTOdNlOkkVJiKuUo8ITLUBrGkSav/NX41M0clGOoE7
-         ClFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWJAcDCXOD7WSvMGsKhtlB4lYuiEOyDhkSj8aTUlJYnmmLvzjw7l+gTCdvtUoGYVfACIpY9+iPOvVbf27k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCS1ZfFr/wSRL7+7/otdENDh+3y+jtiluRsu95ZZjRg2DKvjsI
-	GDFi0vgaxKBAJnVeBUmW9wRMwVy8OydwTA33UQIbMf53y7MAOoaxG10XHGMDb8AAu/mE8z9oDS6
-	BRKF7UyLDW+sCzNQ3vk2a5mKar2DZ5j10BgdISthGRL4V2m2pX3j7jr35mVd1TlSZPg==
-X-Gm-Gg: ASbGncvVnSTcjeBiIXZwNEjRh4DAz1eoGjAmgZHm/EEiW0qlfkYRPoU6P5rsG/fcIxP
-	3Nr2BrXiCCNv5BjSPbB6BUPg8KBVJxv/YG9xOYwYZhu1wcU5SLfHNTw+naDkfhjSxTB38/DQIm2
-	jlp1+ebhMUNNpp2gCZmxRP/fzJicqlP7mHQkN2frbcc4r7gxJUfgDNir5XzsNvsw8QpdqfegPVR
-	QSlS8emb+JACAzTzBMmeoAAMDNz6ql8hc0eMYZewuKGBMzvEWQ5XryUgneAcpdpAgVRwRVznrzO
-	LyjB63FzxJ94CVzr
-X-Received: by 2002:a05:600c:8518:b0:442:f482:c421 with SMTP id 5b1f17b1804b1-4538ee7df51mr140275745e9.22.1751352350383;
-        Mon, 30 Jun 2025 23:45:50 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGNqYmg2q01DPQRmv8jE+6E8iA13iSfpZEeDhKnGAq6nzxNu9hatrBH/eHkSndzvZVUAhPbfw==
-X-Received: by 2002:a05:600c:8518:b0:442:f482:c421 with SMTP id 5b1f17b1804b1-4538ee7df51mr140275485e9.22.1751352349874;
-        Mon, 30 Jun 2025 23:45:49 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:152e:1400:856d:9957:3ec3:1ddc])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823ad03asm187631545e9.23.2025.06.30.23.45.48
+        bh=5Y7c6zYkKzF3xCBRV8XTIbt5q1FllIz2uRSBkOMN2pI=;
+        b=HneffRDumClCGKD3Y6boCXHNltn43kWR+ZxtoRUGcqflcopkn999hkPOn4m+sf6o6r
+         GmNoFYiGOr5HjzeJbVp2Ia0mswKRYGZeO+8lgyzjKK9n48j3g6BeMK+lhLlOFhuquDqv
+         MAy8xmSM4PQXhWNX3O8vaCsogBtLnO2vae904ENSFHp9xqZwuQsMVmCDZzlNoWvIT/2p
+         sP7Nh65+tG0ocwnHknE0+5vdMKtNg4DnD33+XqZ2qVzyHGS/EVL4WKyBY/raCFIFsCLL
+         hbASAUtmIm9yUJp/Ut9riP5Z5uRUULFiaqYGjGzURjY/zYzOO6VWPoGTUl+urjji8zcn
+         Lw9A==
+X-Gm-Message-State: AOJu0Yy5EXIp/VQJcLzyXZwkc+9Eprs8ztk9zT3IcQSodZ2d1WGz5QPu
+	72oPNYRhpb09NEJVHrdNcBnVI7xwfUfRYhoQ6uqIwPPW+cBSFG/10AfRenrApQ==
+X-Gm-Gg: ASbGncueXGPKqi0kY970IcGJARx1uQnkpHm1pYxw0skVpCnMUnMuZZYXX7f4HetTdaf
+	tnSDu7ToQvdvH9mOFW9kmLNA4HxrQb6aGlgwGv22MVt0MJN6CuRU8tPTMvkG6qSA2Tec5gBqnxz
+	Zd8PUmEVTHbghYS1Qi7uWnqoMKxhsmaUNsUqwJYZX2rqOUZ0QrPVSfnxP/TsDFdligc8NL8Kjst
+	ifZTtLYSAmZ0X2XRFYYG2YqstfktjB7ioQbQOJuzVMZSr6nr+/HepV1bv0iuh3YLViD9HME4DW8
+	WuxS4bG8N6oZzB6Q8NBibEx8EkjCRM8dUUK89wVagxI9KhV0mueI3Q6+Qu7nYTaZRFyMTu+DADy
+	Ja2JF7YMb7U5RF8h6xrNbSxKrOtEBjC0=
+X-Google-Smtp-Source: AGHT+IH81P1+bFEH6Zw1ZvScH7bK2A/izH2xyZPsDw9Idyk2cEeCBzoWdGS1K1KmarW+mBoXRV0C4w==
+X-Received: by 2002:a05:6000:2811:b0:3a6:d95e:f38c with SMTP id ffacd0b85a97d-3a8ffdbef33mr10531002f8f.33.1751352381001;
+        Mon, 30 Jun 2025 23:46:21 -0700 (PDT)
+Received: from nuc (p200300f6f72c4000fa633ffffe02074c.dip0.t-ipconnect.de. [2003:f6:f72c:4000:fa63:3fff:fe02:74c])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7e7518sm12144193f8f.2.2025.06.30.23.46.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 23:45:49 -0700 (PDT)
-Date: Tue, 1 Jul 2025 02:45:47 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Jason Wang <jasowang@redhat.com>
-Cc: xuanzhuo@linux.alibaba.com, eperezma@redhat.com,
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 18/19] virtio_ring: factor out split detaching logic
-Message-ID: <20250701024506-mutt-send-email-mst@kernel.org>
-References: <20250616082518.10411-1-jasowang@redhat.com>
- <20250616082518.10411-19-jasowang@redhat.com>
+        Mon, 30 Jun 2025 23:46:20 -0700 (PDT)
+Date: Tue, 1 Jul 2025 08:46:18 +0200
+From: Johannes Thumshirn <jth@kernel.org>
+To: herculoxz <abhinav.ogl@gmail.com>
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Replace the use of scnprintf() with sysfs_emit_at() in
+ several show functions to format the output into the sysfs buffer.
+Message-ID: <aGOEOu7-oh1Nb9mm@nuc>
+References: <20250629175330.5834-1-abhinav.ogl@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,68 +59,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250616082518.10411-19-jasowang@redhat.com>
+In-Reply-To: <20250629175330.5834-1-abhinav.ogl@gmail.com>
 
-On Mon, Jun 16, 2025 at 04:25:16PM +0800, Jason Wang wrote:
-> This patch factors out the split core detaching logic that could be
-> reused by in order feature into a dedicated function.
-
-you mean 
-
-Factor out the split core detaching logic  into a dedicated function
-so it cn be reused by the in order feature
+On Sun, Jun 29, 2025 at 11:23:30PM +0530, herculoxz wrote:
+> This change improves clarity and ensures proper bounds checking in
+> line with the preferred sysfs_emit() API usage for sysfs 'show'
+> functions. The PAGE_SIZE check is now handled internally by the helper.
 
 
-> 
-> Reviewed-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> ---
->  drivers/virtio/virtio_ring.c | 18 ++++++++++++++----
->  1 file changed, 14 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-> index 259380797ec4..27a9459a0555 100644
-> --- a/drivers/virtio/virtio_ring.c
-> +++ b/drivers/virtio/virtio_ring.c
-> @@ -804,8 +804,9 @@ static void detach_indirect_split(struct vring_virtqueue *vq,
->  	vq->split.desc_state[head].indir_desc = NULL;
->  }
->  
-> -static void detach_buf_split(struct vring_virtqueue *vq, unsigned int head,
-> -			     void **ctx)
-> +static unsigned detach_buf_split_in_order(struct vring_virtqueue *vq,
-> +					  unsigned int head,
-> +					  void **ctx)
->  {
->  	struct vring_desc_extra *extra;
->  	unsigned int i;
-> @@ -826,8 +827,6 @@ static void detach_buf_split(struct vring_virtqueue *vq, unsigned int head,
->  	}
->  
->  	vring_unmap_one_split(vq, &extra[i]);
-> -	vq->split.desc_extra[i].next = vq->free_head;
-> -	vq->free_head = head;
->  
->  	/* Plus final descriptor */
->  	vq->vq.num_free++;
-> @@ -836,6 +835,17 @@ static void detach_buf_split(struct vring_virtqueue *vq, unsigned int head,
->  		detach_indirect_split(vq, head);
->  	else if (ctx)
->  		*ctx = vq->split.desc_state[head].indir_desc;
-> +
-> +	return i;
-> +}
-> +
-> +static void detach_buf_split(struct vring_virtqueue *vq, unsigned int head,
-> +			     void **ctx)
-> +{
-> +	unsigned int i = detach_buf_split_in_order(vq, head, ctx);
-> +
-> +	vq->split.desc_extra[i].next = vq->free_head;
-> +	vq->free_head = head;
->  }
->  
->  static bool virtqueue_poll_split(const struct vring_virtqueue *vq,
-> -- 
-> 2.34.1
+Can you please a) add an 'mcb:' prefix to the subject and b) make it fit into
+~75 chars?
 
+Code wise it looks ok:
+
+Reviewed-by: Johannes Thumshirn <jth@kernel.org>
