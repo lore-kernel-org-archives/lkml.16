@@ -1,175 +1,219 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B966425A33A;
-	Tue,  1 Jul 2025 10:50:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04B0D25A33A;
+	Tue,  1 Jul 2025 10:50:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751367026; cv=none; b=R8Rf3jMLqj/PCkivslikMHUAZ9MNqb3AofID8ZZ5fI06HXG1Qab247diyVWhvIH9jVFKhZkSbT6hHpWTnYa7e1sNS9RCFS7Hhat156OTTyGR+8U4hkkfEihnHP+61zj7pLne7hZMgLp071wcyIpOLfA2Er5oR556NTb0bfLfEdc=
+	t=1751367036; cv=none; b=CPBe5/uVt8zRCK4SYVCuzGj487Zri8fkCggW6lmm3X6g2t/3qfblywPpt1smg2/KQbBWyvjJabLYtQru3p9mqCsskpT4zGqKcB9Gf3d13qfISWwh4cWnUQL5ZDlrwgc8iryCuxIGvpQ8HiIoUy6znOfexJrKwqPP0nvthnS+zeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751367026; c=relaxed/simple;
-	bh=vB2ciRLGq2buT1g4Abr9vSFpfnkL7pCjDw8BJb6OhgI=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lHflLeJBm26LRrJV1kiYzLAdb35SjhF57BDgqdLLISub/VgMOZNQJZp8lkqaW53WDsje9e2NbiuvWpZeIFb6fw1tLLB31bdrqym6gRdaSESrXmpuwSGmNS/3Yikdeas5WSeyyBqNNC0ULo/fLOTAhfBkFfPgjOGnKI5qA2bPaAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TfgZEFId; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TfgZEFId"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-553d771435fso4655559e87.3;
-        Tue, 01 Jul 2025 03:50:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751367023; x=1751971823; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6nCukVMyBo3RqFnHOfcz0HJrttovy5ZOtQsinnvZ25E=;
-        b=TfgZEFIdkuWKKefjLCe7//mH2nIyLc5rEnwlNyRK4HqS/6YadGTQH94MUdLNUTam3s
-         vNnclzbalTFRrVNpwFRotjXmAfkK+8Do7o5OlKY7adoYwQCVb11kLQHj4n0Lq7YjYS7C
-         dpcqrRWUCf4Ea5bkB5HHDgmqSp5XIkc9oGNAaXbP08tY49ApWo6jpCyhVxaCRZKNKmI+
-         UirP0TJvXx6hQuiGGayxflP81NGa+JzPWwB+d+8Da2TBd6IjZRpuF79nWStsYmXCwoDX
-         e1/0YBkVCv+BIje7LZwjT5tbCh0jMd5lMlkLm884OiYnXrnbSwexhCB5UI6DwN1bg6JZ
-         dRKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751367023; x=1751971823;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6nCukVMyBo3RqFnHOfcz0HJrttovy5ZOtQsinnvZ25E=;
-        b=AtMihS+IZVeP64/fsLCzjB3R0s8xsxbjAasjqmr0pQq9DUEZAn5Q/b4wM+jVeu0g6m
-         aUXAZzVa4PHNjRMA4IEHk6p75sBFlE/9bQq/7J27gvYTiSxDtCyGw7MSFdsssw8w4D1U
-         A8vczCTfVzX1mrJCZMt4bVuSaCR9ZP8gGQiq1PgxiTCxp9r/4bKtzFFIsu7jgq/4IQhT
-         X3z25MTJ+rXAkf5Ln+UzzTmjl3EE8+NkHvp5GK4s4IF7RNaAxInH+JBM16OnxbsWNaPw
-         dNh9HmqP66MrI/RHFQ+7rm8Pr/VALKAVbgYT+P0I6bCc3zWCivB2zeIskp+WpgEIvgA0
-         bLJw==
-X-Forwarded-Encrypted: i=1; AJvYcCU+D1MjLBVhIdiHi+utlm+zJFODhxRhUCUS5xU2MLymWjvcU52caBKzLVn0f3Zm69DZe2+8qH/DDvngeCw=@vger.kernel.org, AJvYcCUWtA3/S7YeGeRSs24P589xQigZaRy196aeTT/+NFpqLP9L2oAK4j/A/rVpciqR6RQPtMROeVZr/eeaEcCIYTA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOAj5wIOVj6cFY6EP51ZPPJD7T4BbOrPTctRnm031taVKfcD8n
-	VT9ke5UAd2tN3Kkuv92ZctyMNkcJqZGh/eNIWLeHe2qOE2FwSfkYUKfkhLiNpw==
-X-Gm-Gg: ASbGncslGZwakzp3W9oFA0lkcdKtED/lZ9qzmF5FWHEv8LInQHrIeSdeHDAt2OhCKRa
-	BZKnhVs4OYAv9ySeTlc/gHZTBwpHp81pen0ylvMACz1R5+4bqBq8fBUtmI1UEH8psEF+GT/tF9T
-	Mh+2HxDIbvjECOW0R+tWZldzk6bfP1zIGhzwXLTPKUF5GbcozifpLtb8Zulyx6bsFEnKyMzx/sl
-	a/YrrB4Ui+5glTJZ824nIMN0q85ROYtacgMGC3goMsmPEtHArj6RAEPuLPVGnC7o7aO3FZcWgL5
-	Whp5bWlj6y8VznoJhNzd/PvKDvPRiIkTSp/e6r80y8XM3Tx+/ZmhvMB5RVkJl72uzAGAtfD/SxH
-	F2MpRuqY8LgU=
-X-Google-Smtp-Source: AGHT+IElki988gDWr2y8ghmyNq4FVP1tCS8rW7LXaS5acajXsEXL5t8ekDHYSztkNjljjTDBGKI6rw==
-X-Received: by 2002:a05:6512:ac5:b0:553:2c92:fdcb with SMTP id 2adb3069b0e04-5550b8699f2mr6857763e87.3.1751367022393;
-        Tue, 01 Jul 2025 03:50:22 -0700 (PDT)
-Received: from pc636 (host-95-203-1-180.mobileonline.telia.com. [95.203.1.180])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b2d9e35sm1767155e87.216.2025.07.01.03.50.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 03:50:21 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Tue, 1 Jul 2025 12:50:19 +0200
-To: Vitaly Wool <vitaly.wool@konsulko.se>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org, Uladzislau Rezki <urezki@gmail.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v9 1/4] mm/vmalloc: allow to set node and align in
- vrealloc
-Message-ID: <aGO9a06HutqljjNS@pc636>
-References: <20250630221511.3325123-1-vitaly.wool@konsulko.se>
- <20250630221615.3325221-1-vitaly.wool@konsulko.se>
+	s=arc-20240116; t=1751367036; c=relaxed/simple;
+	bh=dC03Wr2epn0tjtzSfWllZBSz+buautvqb5O84U1mUYs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MZE4ariFBM4nQnEDOuXZtkLTop1Xdf6ats9ScbdsOuoQUFMqKCEHpHfCxgOsQyd8F7WXeyl9cK9sad+78JjNNVE8tPFRRj6RJQ+kF8KeoJpb2t0ltyAOwIQxJ6sTBapMVuJH0C1SPFGcFcWFHvmq+OzgsqLYc2otbi5PNFeGNaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4bWfLR38KFz9v2F;
+	Tue,  1 Jul 2025 12:25:35 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id z68QA4lT7SRl; Tue,  1 Jul 2025 12:25:35 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4bWfLR2Dvnz9sVS;
+	Tue,  1 Jul 2025 12:25:35 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 45D468B765;
+	Tue,  1 Jul 2025 12:25:35 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id CqjVOU_qZS7L; Tue,  1 Jul 2025 12:25:35 +0200 (CEST)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id C5E958B763;
+	Tue,  1 Jul 2025 12:25:32 +0200 (CEST)
+Message-ID: <0400f0be-6b63-4bc7-846e-8852e1d01485@csgroup.eu>
+Date: Tue, 1 Jul 2025 12:25:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250630221615.3325221-1-vitaly.wool@konsulko.se>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/11] kasan: unify kasan_arch_is_ready with
+ kasan_enabled
+To: Heiko Carstens <hca@linux.ibm.com>,
+ Andrey Konovalov <andreyknvl@gmail.com>
+Cc: Sabyrzhan Tasbolatov <snovitoll@gmail.com>, ryabinin.a.a@gmail.com,
+ glider@google.com, dvyukov@google.com, vincenzo.frascino@arm.com,
+ linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
+ chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com,
+ mpe@ellerman.id.au, npiggin@gmail.com, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, gor@linux.ibm.com,
+ agordeev@linux.ibm.com, borntraeger@linux.ibm.com, svens@linux.ibm.com,
+ richard@nod.at, anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
+ dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+ hpa@zytor.com, chris@zankel.net, jcmvbkbc@gmail.com,
+ akpm@linux-foundation.org, nathan@kernel.org,
+ nick.desaulniers+lkml@gmail.com, morbo@google.com, justinstitt@google.com,
+ arnd@arndb.de, rppt@kernel.org, geert@linux-m68k.org, mcgrof@kernel.org,
+ guoweikang.kernel@gmail.com, tiwei.btw@antgroup.com, kevin.brodsky@arm.com,
+ benjamin.berg@intel.com, kasan-dev@googlegroups.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-um@lists.infradead.org, linux-mm@kvack.org, llvm@lists.linux.dev
+References: <20250626153147.145312-1-snovitoll@gmail.com>
+ <CA+fCnZfAtKWx=+to=XQBREhou=Snb0Yms4D8GNGaxE+BQUYm4A@mail.gmail.com>
+ <CACzwLxgsVkn98VDPpmm7pKcbvu87UBwPgYJmLfKixu4-x+yjSA@mail.gmail.com>
+ <CA+fCnZcGyTECP15VMSPh+duLmxNe=ApHfOnbAY3NqtFHZvceZw@mail.gmail.com>
+ <20250701101537.10162Aa0-hca@linux.ibm.com>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20250701101537.10162Aa0-hca@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 01, 2025 at 12:16:15AM +0200, Vitaly Wool wrote:
-> Reimplement vrealloc() to be able to set node and alignment should
-> a user need to do so. Rename the function to vrealloc_node_align()
-> to better match what it actually does now and introduce macros for
-> vrealloc() and friends for backward compatibility.
+
+
+Le 01/07/2025 à 12:15, Heiko Carstens a écrit :
+>>>> Another thing that needs careful consideration is whether it's
+>>>> possible to combine kasan_arch_is_ready() and kasan_enabled() into the
+>>>> same check logically at all. There's one issue mentioned in [1]:
+>>>
+>>> Hello,
+>>> I've removed kasan_arch_is_ready() at all in this series:
+>>> [PATCH v2 11/11] kasan: replace kasan_arch_is_ready with kasan_enabled
+>>>
+>>> Is it not what's expected by unification?
+>>
+>> I guess the issue description diverged a bit from what needs to be
+>> done, sorry about that.
+>>
+>> The core 2 things I wanted to address with the unification are:
+>>
+>> 1. Avoid spraying kasan_arch_is_ready() throughout the KASAN
+>> implementation and move these checks into include/linux/kasan.h (and
+>> add __wrappers when required).
+>>
+>> 2. Avoid architectures redefining the same kasan_enabled global
+>> variable/static key.
+>>
+>> Initially, I thought that s/kasan_arch_is_ready/kasan_enabled + simply
+>> moving the calls into affected include/linux/kasan.h functions would
+>> be enough. But then, based on [1], turns out it's not that simple.
+>>
+>> So now, I think we likely still need two separate checks/flags:
+>> kasan_enabled() that controls whether KASAN is enabled at all and
+>> kasan_arch_is_ready() that gets turned on by kasan_init() when shadow
+>> is initialized (should we rename it to kasan_shadow_initialized()?).
+>> But then we can still move kasan_arch_is_ready() into
+>> include/linux/kasan.h and use the proper combination of checks for
+>> each affected function before calling __wrappers. And we can still
+>> remove the duplicated flags/keys code from the arch code.
 > 
-> With that change we also provide the ability for the Rust part of
-> the kernel to set node and aligmnent in its allocations.
+> FWIW, as Alexander Gordeev already mentioned: this series breaks s390,
+> since the static_branch_enable() call in kasan_init_generic() is now
+> called way too early, and it isn't necessary at all. Which, as far as
+> I understand, may be the case for other architectures as well. s390
+> sets up the required KASAN mappings in the decompressor and can start
+> with KASAN enabled nearly from the beginning.
 > 
-> Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
-> ---
->  include/linux/vmalloc.h | 12 +++++++++---
->  mm/vmalloc.c            | 19 +++++++++++++++----
->  2 files changed, 24 insertions(+), 7 deletions(-)
+> So something like below on top of this series would address
+> that. Given that this series is about to be reworked this is just for
+> illustration :)
+
+I had the same kind of comment on powerpc/32. Allthough this series work 
+on powerpc32 as is, it is overkill because it adds code and data for 
+static branches for no real benefit.
+
+Your patch below is simpler than what I proposed, but it keeps the 
+static branches so the overhead remains.
+
+I also proposed a change, it goes further by removing the static branch 
+for architectures that don't need it, see 
+https://patchwork.ozlabs.org/project/linuxppc-dev/cover/20250626153147.145312-1-snovitoll@gmail.com/#3537388 
+. Feedback welcome.
+
+Christophe
+
 > 
-> diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
-> index fdc9aeb74a44..68791f7cb3ba 100644
-> --- a/include/linux/vmalloc.h
-> +++ b/include/linux/vmalloc.h
-> @@ -197,9 +197,15 @@ extern void *__vcalloc_noprof(size_t n, size_t size, gfp_t flags) __alloc_size(1
->  extern void *vcalloc_noprof(size_t n, size_t size) __alloc_size(1, 2);
->  #define vcalloc(...)		alloc_hooks(vcalloc_noprof(__VA_ARGS__))
->  
-> -void * __must_check vrealloc_noprof(const void *p, size_t size, gfp_t flags)
-> -		__realloc_size(2);
-> -#define vrealloc(...)		alloc_hooks(vrealloc_noprof(__VA_ARGS__))
-> +void *__must_check vrealloc_node_align_noprof(const void *p, size_t size,
-> +		unsigned long align, gfp_t flags, int nid) __realloc_size(2);
-> +#define vrealloc_node_noprof(_p, _s, _f, _nid)	\
-> +	vrealloc_node_align_noprof(_p, _s, 1, _f, _nid)
-> +#define vrealloc_noprof(_p, _s, _f)		\
-> +	vrealloc_node_align_noprof(_p, _s, 1, _f, NUMA_NO_NODE)
-> +#define vrealloc_node_align(...)		alloc_hooks(vrealloc_node_align_noprof(__VA_ARGS__))
-> +#define vrealloc_node(...)			alloc_hooks(vrealloc_node_noprof(__VA_ARGS__))
-> +#define vrealloc(...)				alloc_hooks(vrealloc_noprof(__VA_ARGS__))
->  
->  extern void vfree(const void *addr);
->  extern void vfree_atomic(const void *addr);
-> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> index 6dbcdceecae1..776c68f84ce2 100644
-> --- a/mm/vmalloc.c
-> +++ b/mm/vmalloc.c
-> @@ -4089,12 +4089,15 @@ void *vzalloc_node_noprof(unsigned long size, int node)
->  EXPORT_SYMBOL(vzalloc_node_noprof);
->  
->  /**
-> - * vrealloc - reallocate virtually contiguous memory; contents remain unchanged
-> + * vrealloc_node_align_noprof - reallocate virtually contiguous memory; contents
-> + * remain unchanged
->   * @p: object to reallocate memory for
->   * @size: the size to reallocate
-> + * @align: requested alignment
->   * @flags: the flags for the page level allocator
-> + * @nid: node id
->   *
-> - * If @p is %NULL, vrealloc() behaves exactly like vmalloc(). If @size is 0 and
-> + * If @p is %NULL, vrealloc_XXX() behaves exactly like vmalloc(). If @size is 0 and
->   * @p is not a %NULL pointer, the object pointed to is freed.
->   *
->   * If __GFP_ZERO logic is requested, callers must ensure that, starting with the
-> @@ -4111,7 +4114,8 @@ EXPORT_SYMBOL(vzalloc_node_noprof);
->   * Return: pointer to the allocated memory; %NULL if @size is zero or in case of
->   *         failure
->   */
-> -void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
-> +void *vrealloc_node_align_noprof(const void *p, size_t size, unsigned long align,
-> +				 gfp_t flags, int nid)
->  {
->  	struct vm_struct *vm = NULL;
->  	size_t alloced_size = 0;
-> @@ -4135,6 +4139,11 @@ void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
->  		if (WARN(alloced_size < old_size,
->  			 "vrealloc() has mismatched area vs requested sizes (%p)\n", p))
->  			return NULL;
-> +		if (WARN(!IS_ALIGNED((unsigned long)p, align),
-> +			 "will not reallocate with a bigger alignment (0x%lx)\n", align))
-> +			return NULL;
-> +		if (nid != NUMA_NO_NODE && nid != page_to_nid(vmalloc_to_page(p)))
-> +			goto need_realloc;
->
-By this goto change, you bypass the two important checks below. For
-example if you shrink the allocated size, you do not need to perform
-any allocations. Instead the patch goes and allocates a new area.
+> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+> index 0c16dc443e2f..c2f51ac39a91 100644
+> --- a/arch/s390/Kconfig
+> +++ b/arch/s390/Kconfig
+> @@ -172,6 +172,7 @@ config S390
+>   	select HAVE_ARCH_JUMP_LABEL
+>   	select HAVE_ARCH_JUMP_LABEL_RELATIVE
+>   	select HAVE_ARCH_KASAN
+> +	select HAVE_ARCH_KASAN_EARLY
+>   	select HAVE_ARCH_KASAN_VMALLOC
+>   	select HAVE_ARCH_KCSAN
+>   	select HAVE_ARCH_KMSAN
+> diff --git a/include/linux/kasan-enabled.h b/include/linux/kasan-enabled.h
+> index 2436eb45cfee..049270a2269f 100644
+> --- a/include/linux/kasan-enabled.h
+> +++ b/include/linux/kasan-enabled.h
+> @@ -10,7 +10,11 @@
+>    * Global runtime flag. Starts ‘false’; switched to ‘true’ by
+>    * the appropriate kasan_init_*() once KASAN is fully initialized.
+>    */
+> +#ifdef CONFIG_HAVE_ARCH_KASAN_EARLY
+> +DECLARE_STATIC_KEY_TRUE(kasan_flag_enabled);
+> +#else
+>   DECLARE_STATIC_KEY_FALSE(kasan_flag_enabled);
+> +#endif
+>   
+>   static __always_inline bool kasan_enabled(void)
+>   {
+> diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
+> index f82889a830fa..1407374e83b9 100644
+> --- a/lib/Kconfig.kasan
+> +++ b/lib/Kconfig.kasan
+> @@ -4,6 +4,13 @@
+>   config HAVE_ARCH_KASAN
+>   	bool
+>   
+> +config HAVE_ARCH_KASAN_EARLY
+> +	bool
+> +	help
+> +	  Architectures should select this if KASAN mappings are setup in
+> +	  the decompressor and when the kernel can run very early with
+> +	  KASAN enabled.
+> +
+>   config HAVE_ARCH_KASAN_SW_TAGS
+>   	bool
+>   
+> diff --git a/mm/kasan/common.c b/mm/kasan/common.c
+> index 0f3648335a6b..2aae0ce659b4 100644
+> --- a/mm/kasan/common.c
+> +++ b/mm/kasan/common.c
+> @@ -36,7 +36,11 @@
+>    * Definition of the unified static key declared in kasan-enabled.h.
+>    * This provides consistent runtime enable/disable across all KASAN modes.
+>    */
+> +#ifdef CONFIG_HAVE_ARCH_KASAN_EARLY
+> +DEFINE_STATIC_KEY_TRUE(kasan_flag_enabled);
+> +#else
+>   DEFINE_STATIC_KEY_FALSE(kasan_flag_enabled);
+> +#endif
+>   EXPORT_SYMBOL(kasan_flag_enabled);
+>   
+>   struct slab *kasan_addr_to_slab(const void *addr)
+> diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
+> index a3b112868be7..455376d5f1c3 100644
+> --- a/mm/kasan/generic.c
+> +++ b/mm/kasan/generic.c
+> @@ -42,7 +42,8 @@
+>    */
+>   void __init kasan_init_generic(void)
+>   {
+> -	static_branch_enable(&kasan_flag_enabled);
+> +	if (!IS_ENABLED(CONFIG_HAVE_ARCH_KASAN_EARLY))
+> +		static_branch_enable(&kasan_flag_enabled);
+>   
+>   	pr_info("KernelAddressSanitizer initialized (generic)\n");
+>   }
 
-You just need to remove:
-
--		if (nid != NUMA_NO_NODE && nid != page_to_nid(vmalloc_to_page(p)))
--			goto need_realloc;
-
-to make it working.
-
---
-Uladzislau Rezki
