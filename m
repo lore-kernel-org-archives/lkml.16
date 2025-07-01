@@ -1,194 +1,156 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07299279DB1;
-	Tue,  1 Jul 2025 14:14:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B498274B2D;
+	Tue,  1 Jul 2025 14:15:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751379280; cv=none; b=bQW4BVg9tUp0tKlpe3pqT4khcRKxqJIEnO0ggRd3+tmPjdwoVBxoCZmWEc8zBur+A+iSGYbF9CLw1m//KmMPwFUmMtfpBZDrcM4eUjUI/KEICkIX07FBkrtNfaJ0IjJGr6aQ2edIGKQTtzLJSbqN7vvP6bQhlF68FN2qEksgNyo=
+	t=1751379306; cv=none; b=nNxdeoN/oRqwUpgKP0AMnblAkthz01Q8DU1ARLsla6JU3wzdn5lnJCnknOtV8Ja/uXcI9dqRhV1F+v5DAwKK6PWOKpkmW6eO6+7CQIXckYgZhrAoaJKPdKvualeQtuOm09f0PnY4C8xBBslCzkxQLruk7DyTKNeG1yby3wc78hY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751379280; c=relaxed/simple;
-	bh=wY3pJ9nFlqmEeyPfW98+n/Y28S8S70pNb3omes9fzIQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UMUBjdHcdlS7uw7IoneCn8X00LvDbNEKrzrCH2SgYBMJzdwGbSXvji3pIHA4kXoI3rSOWUqRlmMjmAC+BvIMPZc2vOBtCVRsIfRKLJeIMchwJHqaP0XXaBI1/91kL0oY8NEAVd2y7gsjQNDXYgldCbhXe7zwQmgOKMblHL+qmjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lbX99E/m; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751379306; c=relaxed/simple;
+	bh=d3jbnlo0yloagQLxKasfaTIoGVOeJedPwxIAjOz5ETo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=rJO6J8r4V+ixTTNYRWEKI/r8USlydvY2J0ZgOAEqw4wueuAd4Q1v0cz1hsO6/CQ/DNnMoos+o10bNmzPDN3dYzm4XF8GyQUzfx3CC/CuYevGeF+HfyGVde4Mr0is+U506eHfhcBeDwc9R83I1mcW31tT4y2+JNocJyYVyq0c01Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tvz7jciY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lbX99E/m"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-235ea292956so29694695ad.1;
-        Tue, 01 Jul 2025 07:14:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751379278; x=1751984078; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MhF5CcEqPzfan8Qj+FWBWIOdIwHq+OpoPrnKrGKGhts=;
-        b=lbX99E/mEnl40ISUYBTgKXRRs+lpjk4qZwn13KtDSSrMCiwybyZIX/YV4PtbQMPgSF
-         2S8OhC2X2aE3HIVWrosltix0ytK9M1tciSccZbQzLm0pUp2Ne+8z/C2kdp5azOk4CLDN
-         kMjGvPILacPhZK8OAY+NRLG3xMDhL43DLR26IMR2nSCZDrmWA4tO+LbcrKyN9PvXCHhI
-         Ke+LG8uKMyomx5tuwslbFP3wiY61zHDvzL1ibxOUXAXuVD8TycBnS0b/RES7ZIeN5MzK
-         MFe54PjDuGZ4Wfbwz4FsvX2oe1c/grUmnJEouEEdTBeo2a9P6Kadp1rmaIkgPZvLu+FK
-         FVBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751379278; x=1751984078;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MhF5CcEqPzfan8Qj+FWBWIOdIwHq+OpoPrnKrGKGhts=;
-        b=CNIfwQdcrrteFtS7Pt9XvH+zU0UVB1WZHCxuDa9ktZrIeB4P3tqkILWVK6W+OxgHz9
-         eTPiyTYo2VawW6vB1gQERrADxSDQJ4SdoJFypKxf4CtVNBn6GurQkNrKmr36EOtvySBG
-         nAPPQjxrgrHCXtogsTHYKCGSRnP7nfi6+BOQ7WulQe+VgLjihu8xLPOPBZiE4Jm7tQzB
-         VmU5nJLCuMuCihP9NQoFN+Gu++of8qXg0WYmsJPSoP6Azlzvy6GBiTMfgbOxuLbgelKH
-         hZwJaL63MX/MJijCff39XpGHFneQk3g10igHL2lIGFeaYwhi/eyJcfNzZdeXhQpF+boe
-         EjKw==
-X-Forwarded-Encrypted: i=1; AJvYcCVH9JDFVYszkVwUpSZOffGTDP+NeBth1Or0oLKjUZYVpwCnoGWlowfSWgk+w4pnKhkJxlmbpm+sDE6M@vger.kernel.org, AJvYcCVJPx26M3QQT0J/Xw4qTe9mDdr3M1gStOjaU8UaeO48Q7hL5qpipPzemSzG+yfvw+V4s6nJ5sUon9QS@vger.kernel.org, AJvYcCWMosOxbzdcYrTXpFvfj8d6+R58oh7Hcg3yYGXg4RGhB7xrFu4Mnja0wFwehbCrxPKdyoVTMd6L@vger.kernel.org, AJvYcCXDzES5nBq/Huy4p8zGbE5CSUXLICTB81UaxbPd91BJBrNxddlBKLgMLiyN2nAt9ndDO/qgxsbfL8ONEZYRJiU=@vger.kernel.org, AJvYcCXUOXPMdbLF6BPIDP1rmmjmRSzjtWmUovoMYuX+/GPDMMd+NAFImn3ZtsoygU/JqUoYxTMxy5p66UVqmGy+@vger.kernel.org
-X-Gm-Message-State: AOJu0YzR0I+zcibeStVyZb3zKev0/8Ln1ZbErVIiyB/dM13XgE/tI6YA
-	jmNtHvodyq/ktf9ZbdQKz3dz5zYofShrGMBSfK5s1dEob0a6cIAaraQj
-X-Gm-Gg: ASbGnctXAdy8F01zTFbDTAuPf9TIOougqXAbA3r88OHWogJq1+pJ0RaK5uNWgDpJG4i
-	fIaVge48tgf7V7W8LySwrFmQSsqmStY0DYE/kJN5Ld3K/+n4gkxPa+VeqOYdlcI2OiLntk7cIw+
-	d8qQuaCnhwX2LjnvMcOEPVlTYFJItGzDobcJAO2KNnuXo+jWsyRuY9nGCENNtCulwgSNF/1IPF+
-	78/ChA12wrXhWJWjbABfpQdfLUfFY+CbOIbF9PvBh0dnXy7TNNpjPYIXKIxB0tXwzk8Z3+r+yO9
-	xvhrHZwldVHmy1Crb9NRQFo89miUFvsUBjsV36AXwzuSXMsd8y75UncDQyDOvcbHO4J0AEcpTE5
-	m/FASrSRUh2wj3y0UDjXi2D9p3XdQTWKikvo=
-X-Google-Smtp-Source: AGHT+IHs/sgaXxj0cg5nqN7WtEqfWV4a21o8vt1rWTuNUjMzgURiIciaiuN3uj8jT0zhbiEB8voasA==
-X-Received: by 2002:a17:902:e5cb:b0:235:779:edfd with SMTP id d9443c01a7336-23ac465ff41mr242885165ad.39.1751379278049;
-        Tue, 01 Jul 2025 07:14:38 -0700 (PDT)
-Received: from bee.. (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3b8324sm107240885ad.178.2025.07.01.07.14.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 07:14:37 -0700 (PDT)
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-To: alex.gaynor@gmail.com,
-	dakr@kernel.org,
-	gregkh@linuxfoundation.org,
-	ojeda@kernel.org,
-	rafael@kernel.org,
-	robh@kernel.org,
-	saravanak@google.com
-Cc: a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	bhelgaas@google.com,
-	bjorn3_gh@protonmail.com,
-	boqun.feng@gmail.com,
-	david.m.ertman@intel.com,
-	devicetree@vger.kernel.org,
-	gary@garyguo.net,
-	ira.weiny@intel.com,
-	kwilczynski@kernel.org,
-	leon@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	lossin@kernel.org,
-	netdev@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	tmgross@umich.edu
-Subject: [PATCH v2 3/3] rust: net::phy Change module_phy_driver macro to use module_device_table macro
-Date: Tue,  1 Jul 2025 23:12:52 +0900
-Message-ID: <20250701141252.600113-4-fujita.tomonori@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250701141252.600113-1-fujita.tomonori@gmail.com>
-References: <20250701141252.600113-1-fujita.tomonori@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tvz7jciY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67CFBC4CEEB;
+	Tue,  1 Jul 2025 14:15:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751379306;
+	bh=d3jbnlo0yloagQLxKasfaTIoGVOeJedPwxIAjOz5ETo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=tvz7jciYq7khZaH8OSLQc9tcx4gOsIr7mTHkNRuVVM5/o/JSdziFciDB9OshdCA63
+	 4fYz3Mat6l7P86IuypHKtnQJi1G/pIjKy6xpafQBN8X7f4bW3NxIudOpDw6im9hILP
+	 c3Egrvoje0aDf2pNV2fUM4an31rDWNXpOWi/OkP28kSt3zEREJ+jBoFw4rb/Ur1Ah2
+	 tqBmbPYXh1dLU4VC7vUB/jdRYxVP4pxP2b622/4pAIo3lzCPFP4U6+48GgYywS3ROG
+	 JGPHZS6rIFy+LHlRRNdD7nTeLtyEvYo98m0WQyBLSygrs40N4fwoSYd/9YDxhzT7sq
+	 hX7t6KWBKN4DQ==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Benno Lossin" <lossin@kernel.org>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
+ <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Alice
+ Ryhl" <aliceryhl@google.com>,  "Masahiro Yamada" <masahiroy@kernel.org>,
+  "Nathan Chancellor" <nathan@kernel.org>,  "Luis Chamberlain"
+ <mcgrof@kernel.org>,  "Danilo Krummrich" <dakr@kernel.org>,  "Nicolas
+ Schier" <nicolas.schier@linux.dev>,  "Trevor Gross" <tmgross@umich.edu>,
+  "Adam Bratschi-Kaye" <ark.email@gmail.com>,
+  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
+  <linux-kbuild@vger.kernel.org>,  "Petr Pavlu" <petr.pavlu@suse.com>,
+  "Sami Tolvanen" <samitolvanen@google.com>,  "Daniel Gomez"
+ <da.gomez@samsung.com>,  "Simona Vetter" <simona.vetter@ffwll.ch>,  "Greg
+ KH" <gregkh@linuxfoundation.org>,  "Fiona Behrens" <me@kloenk.dev>,
+  "Daniel Almeida" <daniel.almeida@collabora.com>,
+  <linux-modules@vger.kernel.org>
+Subject: Re: [PATCH v13 2/6] rust: introduce module_param module
+In-Reply-To: <DB0LKI8BO3HZ.3FF03JN4364RM@kernel.org> (Benno Lossin's message
+	of "Tue, 01 Jul 2025 11:05:43 +0200")
+References: <20250612-module-params-v3-v13-0-bc219cd1a3f8@kernel.org>
+	<DARCZYNPIJVZ.3JJSZ6PSAEMEC@kernel.org> <877c126bce.fsf@kernel.org>
+	<Mg1_h6lRpg9tdi0VjiyDfIEy2juzgDWxOhYX61qSUfyEpeMMksWW1e-blTka_G1dXUvpZVktdD-zL3X1a6T6Cg==@protonmail.internalid>
+	<DATW0XWNN45X.1L2WMZ41JJ5O8@kernel.org> <87v7om4jhq.fsf@kernel.org>
+	<RPPvXQKnjK77Kp9mKaiFxbNj1fTHKb_I7_nbY81fZop-Wz8n5TTi4_lpXP9U9AwjocvZKqJPI8PGKufJn9cIzQ==@protonmail.internalid>
+	<DAU0J3T0IEVM.2K7ZRQOVOHF8H@kernel.org> <878qlh4aj1.fsf@kernel.org>
+	<87plepzke5.fsf@kernel.org>
+	<xFouVLxX1_t1mH69FDYwlIhBlI72M0IzQEKn0ntG_wT9z7V5DtbxiwVP_frH_yiS-Gf0q_AhqetbLmuvJ_yP5Q==@protonmail.internalid>
+	<DAX65TRN0TGP.25VZ9DYV86XWY@kernel.org> <87wm8txysl.fsf@kernel.org>
+	<9G3W1seaM7elcwWXaeoaa2nfpFYCf-AmBdvZhACGP13KGUtTPVMwGNYdTQsdtp8ru7GIP3-UYTzXscC1MRUKrg==@protonmail.internalid>
+	<DAZV8OGL8BMH.11SLXBXQ17ZJ9@kernel.org> <87h5zxxtdw.fsf@kernel.org>
+	<H78pT7YnQEhAXdxzl_hhnGVUiQuFpibB21_bjH658fMz_5JYbwsPLYYVh8u1gYnzK3N3ilTEAvqOpkuptVx3rg==@protonmail.internalid>
+	<DB03MZI2FCOW.2JBFL3TY38FK@kernel.org> <87bjq4xpv7.fsf@kernel.org>
+	<ffROWpeKczrWSBlKYov2atJG-QD5l5fUOb2dVCNkWlcT9h6DJpa4joGQpjqtYyLP7HX227fCAayyDQunZ464XQ==@protonmail.internalid>
+	<DB0LKI8BO3HZ.3FF03JN4364RM@kernel.org>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Tue, 01 Jul 2025 16:14:55 +0200
+Message-ID: <87zfdovvz4.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Change module_phy_driver macro to build device tables which are
-exported to userspace by using module_device_table macro.
+"Benno Lossin" <lossin@kernel.org> writes:
 
-Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
----
- rust/kernel/net/phy.rs | 51 ++++++++++++++++++++----------------------
- 1 file changed, 24 insertions(+), 27 deletions(-)
+> On Tue Jul 1, 2025 at 10:43 AM CEST, Andreas Hindborg wrote:
+>> "Benno Lossin" <lossin@kernel.org> writes:
+>>> On Mon Jun 30, 2025 at 3:15 PM CEST, Andreas Hindborg wrote:
+>>>> "Benno Lossin" <lossin@kernel.org> writes:
+>>>>> On Mon Jun 30, 2025 at 1:18 PM CEST, Andreas Hindborg wrote:
+>>>>>> "Benno Lossin" <lossin@kernel.org> writes:
+>>>>>>> (no idea if the orderings are correct, I always have to think way to
+>>>>>>> much about that... especially since our atomics seem to only take one
+>>>>>>> ordering in compare_exchange?)
+>>>>>>>
+>>>>>>>> As far as I can tell, atomics may not land in v6.17, so this series
+>>>>>>>> will probably not be ready for merge until v6.18 at the earliest.
+>>>>>>>
+>>>>>>> Yeah, sorry about that :(
+>>>>>>
+>>>>>> Actually, perhaps we could aim at merging this code without this
+>>>>>> synchronization?
+>>>>>
+>>>>> I won't remember this issue in a few weeks and I fear that it will just
+>>>>> get buried. In fact, I already had to re-read now what the actual issue
+>>>>> was...
+>>>>>
+>>>>>> The lack of synchronization is only a problem if we
+>>>>>> support custom parsing. This patch set does not allow custom parsing
+>>>>>> code, so it does not suffer this issue.
+>>>>>
+>>>>> ... In doing that, I saw my original example of UB:
+>>>>>
+>>>>>     module! {
+>>>>>         // ...
+>>>>>         params: {
+>>>>>             my_param: i64 {
+>>>>>                 default: 0,
+>>>>>                 description: "",
+>>>>>             },
+>>>>>         },
+>>>>>     }
+>>>>>
+>>>>>     static BAD: &'static i64 = module_parameters::my_param.get();
+>>>>>
+>>>>> That can happen without custom parsing, so it's still a problem...
+>>>>
+>>>> Ah, got it. Thanks.
+>>>
+>>> On second thought, we *could* just make the accessor function `unsafe`.
+>>> Of course with a pinky promise to make the implementation safe once
+>>> atomics land. But I think if it helps you get your driver faster along,
+>>> then we should do it.
+>>
+>> No, I am OK for now with configfs.
+>>
+>> But, progress is still great. How about if we add a copy accessor
+>> instead for now, I think you proposed that a few million emails ago:
+>>
+>>     pub fn get(&self) -> T;
+>>
+>> or maybe rename:
+>>
+>>     pub fn copy(&self) -> T;
+>>
+>> Then we are fine safety wise for now, right? It is even sensible for
+>> these `T: Copy` types.
+>
+> That is better than getting a reference, but still someone could read at
+> the same time that a write is happening (though we need some new
+> abstractions AFAIK?). But I fear that we forget about this issue,
+> because it'll be some time until we land parameters that are `!Copy` (if
+> at all...)
 
-diff --git a/rust/kernel/net/phy.rs b/rust/kernel/net/phy.rs
-index 940972ffadae..8bb362aefe27 100644
---- a/rust/kernel/net/phy.rs
-+++ b/rust/kernel/net/phy.rs
-@@ -6,7 +6,7 @@
- //!
- //! C headers: [`include/linux/phy.h`](srctree/include/linux/phy.h).
- 
--use crate::{error::*, prelude::*, types::Opaque};
-+use crate::{device_id::RawDeviceId, error::*, prelude::*, types::Opaque};
- use core::{marker::PhantomData, ptr::addr_of_mut};
- 
- pub mod reg;
-@@ -750,6 +750,12 @@ pub const fn mdio_device_id(&self) -> bindings::mdio_device_id {
-     }
- }
- 
-+// SAFETY: [`DeviceId`] is a `#[repr(transparent)` wrapper of `struct mdio_device_id`
-+// and does not add additional invariants, so it's safe to transmute to `RawType`.
-+unsafe impl RawDeviceId for DeviceId {
-+    type RawType = bindings::mdio_device_id;
-+}
-+
- enum DeviceMask {
-     Exact,
-     Model,
-@@ -850,19 +856,18 @@ const fn as_int(&self) -> u32 {
- ///     }
- /// };
- ///
--/// const _DEVICE_TABLE: [::kernel::bindings::mdio_device_id; 2] = [
--///     ::kernel::bindings::mdio_device_id {
--///         phy_id: 0x00000001,
--///         phy_id_mask: 0xffffffff,
--///     },
--///     ::kernel::bindings::mdio_device_id {
--///         phy_id: 0,
--///         phy_id_mask: 0,
--///     },
--/// ];
--/// #[cfg(MODULE)]
--/// #[no_mangle]
--/// static __mod_device_table__mdio__phydev: [::kernel::bindings::mdio_device_id; 2] = _DEVICE_TABLE;
-+/// const N: usize = 1;
-+///
-+/// const TABLE: ::kernel::device_id::IdArray<::kernel::net::phy::DeviceId, (), N> =
-+///     ::kernel::device_id::IdArray::new_without_index([
-+///         ::kernel::net::phy::DeviceId(
-+///             ::kernel::bindings::mdio_device_id {
-+///                 phy_id: 0x00000001,
-+///                 phy_id_mask: 0xffffffff,
-+///             }),
-+///     ]);
-+///
-+/// ::kernel::module_device_table!("mdio", phydev, TABLE);
- /// ```
- #[macro_export]
- macro_rules! module_phy_driver {
-@@ -873,20 +878,12 @@ macro_rules! module_phy_driver {
-     };
- 
-     (@device_table [$($dev:expr),+]) => {
--        // SAFETY: C will not read off the end of this constant since the last element is zero.
--        const _DEVICE_TABLE: [$crate::bindings::mdio_device_id;
--            $crate::module_phy_driver!(@count_devices $($dev),+) + 1] = [
--            $($dev.mdio_device_id()),+,
--            $crate::bindings::mdio_device_id {
--                phy_id: 0,
--                phy_id_mask: 0
--            }
--        ];
-+        const N: usize = $crate::module_phy_driver!(@count_devices $($dev),+);
-+
-+        const TABLE: $crate::device_id::IdArray<$crate::net::phy::DeviceId, (), N> =
-+            $crate::device_id::IdArray::new_without_index([ $(($dev,())),+, ]);
- 
--        #[cfg(MODULE)]
--        #[no_mangle]
--        static __mod_device_table__mdio__phydev: [$crate::bindings::mdio_device_id;
--            $crate::module_phy_driver!(@count_devices $($dev),+) + 1] = _DEVICE_TABLE;
-+        $crate::module_device_table!("mdio", phydev, TABLE);
-     };
- 
-     (drivers: [$($driver:ident),+ $(,)?], device_table: [$($dev:expr),+ $(,)?], $($f:tt)*) => {
--- 
-2.43.0
+No, that could not happen when we are not allowing custom parsing or
+sysfs access. Regarding forgetting, I already added a `NOTE` on `!Copy`,
+and I would add one on this issue as well.
+
+
+Best regards,
+Andreas Hindborg
+
+
 
