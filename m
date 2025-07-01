@@ -1,98 +1,98 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D4D6270EDF
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 10:01:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B786273812;
+	Tue,  1 Jul 2025 10:01:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751364092; cv=none; b=Ocfu6clodczvUfJq2C0mNI8Sv+Vlahpkf3w5WmlcSXZJ0wxySWaB97S3ys0YnXsu3/1qxZf4evdG0aMoVfzCVvzU4dp6BP9US6Ly+9wN/EYECG3KrPKNoqtSckmEecn+vhVUJFg4Cah5HiaIuacv5ZF6lGI2VlepH7ksRuUFN7U=
+	t=1751364096; cv=none; b=J1NpxzDuA4+4f0DsbgfpyiPsZvqETZYgqDplmSHdolrADUqrByQzt88hVWK5UZWNLffUNB5yW6o5Yey0jj/P+v4gZnUSNeVWVj1pGOgirQbQXG+F75P5n9i1M87l1y9MTZIj8Mk4eXR0WZyEyLrzNWoSXAzOfDr6vZNiH6JFbjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751364092; c=relaxed/simple;
-	bh=P5Rt189e8qUG+MHvROZmWhZjXpiZa0oSmFfwPWBZtUg=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=bz30Nu94lfTe6z5UiQyHZI5lWf6Gwoy2UFgwbuy9itm+4TXFDkMib31dhRwrr4a9w3GuyefHOQYEgg2wtHEQF4/SGK8Vb9P5PLQWXoaDmOs2Gp/xZj6HudefSC2oTHq+FY77rWO/0kMja4HpA5YGmxEEJbBKe9Q8OTCpUPkl2B8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-873fd6e896bso491874139f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 03:01:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751364089; x=1751968889;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JBnYfLShZRP+QHc7hp6xE5I2iMcE/JPwNu1jf/ePmmo=;
-        b=Ur/Y+SiXgikPE/H5n/mPzsA8ZBTBVnYmeXLJ1rZ4jo40YGdrCpufFZDqQLE+l4c2hO
-         Uw0J90ib1VYD7+wCrxqaSHJ+4KYKr9sTNjFrngGAKvyT1FYs9V8op4GECUQI4Cndqrs0
-         4Pz55HR0oIEQhI1SQaXsrPhwL44Rv3fa2LXiljtq3E9h2pgC2NKSPwZ6z/VGIoEtG5ZG
-         eDmQg5HW5ifnrs15j+g1MwfWsYjDVMj5/jEFIesH4jgWEkIZLadj5j1NK8bHT0jF9J76
-         ZH36gbngmfInNEAMnlrR+tMeD6ObLB8AaQbDSw+FAVtaIV65FVHLmBZAkq1301svEe2w
-         QY/A==
-X-Forwarded-Encrypted: i=1; AJvYcCV1silQvTktdGIGxA3UPEM+C/EursZO2kXWh0snudjULvMjqsf1B92JZZO+kv30n3/pm5azUN2nlf8WY+c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJQ7su3+ZAaGdDios+yZNM2SnTABfgmylYLLy1CttktM0ym7pH
-	IFiPC46NDSf8VigkUq4AC54nAFeQcBqVgz0QEyeb/9EoxCrllTbmqLCfbOxGCIKfl6b8OWptqtw
-	L7xtrx0iab8rS05t76vNu9f6c+28JF7msmK6tYekR8Bp+cQU+/kCTobhxFKI=
-X-Google-Smtp-Source: AGHT+IHgtx7SqShvK0/sNakTaVtzibjONzpxOzeKpEIP0Jy8y46gQyIV2NTDXUQD4Cc414qVDKPq5z23SppLkt2Y/BoTCvaEWEau
+	s=arc-20240116; t=1751364096; c=relaxed/simple;
+	bh=TMAXeG9Ax4zwoWvP0WGuB15LrX5qREtY31rJ/K8imd8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=qVW06mizVulqSN9GSr9JKT4DbTuIW//LVTSbPU6CQ2JksbT5JfBs/qosEvZjz9+LWkvtLuCs9OTjUUYPn/0nZCyZri7ZEeiXQm5gDom0NfLXOVPRzNoVviwUGCcHNMwhIeXSY4hTZgFdcIGmgD+THa3aCcGGczK5AqmuyL43mUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=cdyhgIpp; arc=none smtp.client-ip=220.197.32.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="cdyhgIpp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=rQ
+	DgbozZs0wCnVTQUwk8rjb8iJ2wpvBzg/YdEDreAPA=; b=cdyhgIppjytp2U79bK
+	btCeDDPRrMkkM61+7IuJSFAYN8TL9rmTbA/EdeIiUtiQCu91rqs6atcSGmGJS2gM
+	jz7vGkp+iuzWHCNJN8Iu2tLqfb/91QIUQR/4GEfPCAJA06f94KNpmRAeInVMzEuT
+	VcRuczSVfyNH229Tl3mGFwxhM=
+Received: from mps-HP-EliteBook-840-G3.monolithicpower.com (unknown [])
+	by gzsmtp3 (Coremail) with SMTP id M88vCgDX_zqLsWNoZKLkAQ--.58034S2;
+	Tue, 01 Jul 2025 17:59:40 +0800 (CST)
+From: wenswang@yeah.net
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	jdelvare@suse.com,
+	linux@roeck-us.net,
+	corbet@lwn.net
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Wensheng Wang <wenswang@yeah.net>
+Subject: [PATCH v2 1/4] dt-bindings: hwmon: Add MPS mp2869 series
+Date: Tue,  1 Jul 2025 17:59:27 +0800
+Message-Id: <20250701095930.1050234-1-wenswang@yeah.net>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250701095625.1049917-1-wenswang@yeah.net>
+References: <20250701095625.1049917-1-wenswang@yeah.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:1691:b0:876:1c5e:8c50 with SMTP id
- ca18e2360f4ac-876885d256amr1917863439f.7.1751364089410; Tue, 01 Jul 2025
- 03:01:29 -0700 (PDT)
-Date: Tue, 01 Jul 2025 03:01:29 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6863b1f9.a70a0220.3b7e22.1936.GAE@google.com>
-Subject: [syzbot] Monthly ocfs2 report (Jul 2025)
-From: syzbot <syzbot+listcb86ed7f103eeb1415ee@syzkaller.appspotmail.com>
-To: jlbec@evilplan.org, joseph.qi@linux.alibaba.com, 
-	linux-kernel@vger.kernel.org, mark@fasheh.com, ocfs2-devel@lists.linux.dev, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:M88vCgDX_zqLsWNoZKLkAQ--.58034S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7uF4kXry7GrW5Kr4kCr1Utrb_yoW8Gw4fpF
+	WkCF4IyF4FgF17Ca12gF1kGF45WrWDAw4kJayqyrnrKr1a9rZ7Ww4a9wn5Xan8Crs3JF4U
+	JrnFy34F9Fyjv3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j8jjkUUUUU=
+X-CM-SenderInfo: 5zhq24xdqjq5hhdkh0dhw/1tbiIQyCJ2hjsYwevAAA3c
 
-Hello ocfs2 maintainers/developers,
+From: Wensheng Wang <wenswang@yeah.net>
 
-This is a 31-day syzbot report for the ocfs2 subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/ocfs2
+Add support for MPS mp2869 series controller
 
-During the period, 4 new issues were detected and 0 were fixed.
-In total, 69 issues are still open and 17 have already been fixed.
-
-Some of the still happening issues:
-
-Ref  Crashes Repro Title
-<1>  65257   Yes   possible deadlock in dqget
-                   https://syzkaller.appspot.com/bug?extid=6e493c165d26d6fcbf72
-<2>  47058   Yes   possible deadlock in ocfs2_acquire_dquot
-                   https://syzkaller.appspot.com/bug?extid=51244a05705883616c95
-<3>  22465   Yes   possible deadlock in ocfs2_reserve_suballoc_bits
-                   https://syzkaller.appspot.com/bug?extid=5d516fba7bc3c966c9a9
-<4>  14511   Yes   possible deadlock in ocfs2_init_acl
-                   https://syzkaller.appspot.com/bug?extid=4007ab5229e732466d9f
-<5>  14041   Yes   possible deadlock in ocfs2_reserve_local_alloc_bits
-                   https://syzkaller.appspot.com/bug?extid=843fa26882088a9ee7e3
-<6>  8235    Yes   possible deadlock in ocfs2_setattr
-                   https://syzkaller.appspot.com/bug?extid=d78497256d53041ee229
-<7>  3182    No    possible deadlock in ocfs2_xattr_set
-                   https://syzkaller.appspot.com/bug?extid=ba9a789bd1f4d21fcefe
-<8>  2603    No    possible deadlock in ocfs2_lock_global_qf
-                   https://syzkaller.appspot.com/bug?extid=b53d753ae8fb473e2397
-<9>  2163    Yes   possible deadlock in __ocfs2_flush_truncate_log
-                   https://syzkaller.appspot.com/bug?extid=6bf948e47f9bac7aacfa
-<10> 1551    Yes   possible deadlock in ocfs2_del_inode_from_orphan
-                   https://syzkaller.appspot.com/bug?extid=78359d5fbb04318c35e9
-
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Signed-off-by: Wensheng Wang <wenswang@yeah.net>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+V1 -> V2:
+    add Rob's Acked-by
 
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
+ Documentation/devicetree/bindings/trivial-devices.yaml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
+diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
+index 27930708ccd5..493e7232f09f 100644
+--- a/Documentation/devicetree/bindings/trivial-devices.yaml
++++ b/Documentation/devicetree/bindings/trivial-devices.yaml
+@@ -285,10 +285,18 @@ properties:
+           - mps,mp2856
+             # Monolithic Power Systems Inc. multi-phase controller mp2857
+           - mps,mp2857
++            # Monolithic Power Systems Inc. multi-phase controller mp2869
++          - mps,mp2869
+             # Monolithic Power Systems Inc. multi-phase controller mp2888
+           - mps,mp2888
+             # Monolithic Power Systems Inc. multi-phase controller mp2891
+           - mps,mp2891
++            # Monolithic Power Systems Inc. multi-phase controller mp29608
++          - mps,mp29608
++            # Monolithic Power Systems Inc. multi-phase controller mp29612
++          - mps,mp29612
++            # Monolithic Power Systems Inc. multi-phase controller mp29816
++          - mps,mp29816
+             # Monolithic Power Systems Inc. multi-phase controller mp2993
+           - mps,mp2993
+             # Monolithic Power Systems Inc. multi-phase hot-swap controller mp5920
+-- 
+2.25.1
 
-You may send multiple commands in a single email message.
