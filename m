@@ -1,211 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from outbound.pv.icloud.com (p-west1-cluster1-host10-snip4-10.eps.apple.com [57.103.64.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E1DA2777FC;
-	Tue,  1 Jul 2025 15:25:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48AA278E62
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 15:25:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.64.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751383534; cv=none; b=FGG5QXkjoR0W2tn3LmNcLnz9j3CgqXAnO6oNIIL8vgAMKfAtv3qus545OUGgoBpIW7ybPOZFj5uP6bTrHE6qP/rkdej+EHPCpaF08+c/lAjaAMWptHHSqIO7L+PUFpxxq1EHIhA4lixBi61V03OE7LxdcQ1SlK8PUKDDJ2bjgGU=
+	t=1751383539; cv=none; b=Vu+b+InD9koCMoUEVespuwWbjVj8boCoih8vyQcAO32h6IEyhZrxi6YDjIKnFYAHZvuQvcocEE6DQWK4tlxliQ/McKoe8on8QqDJKo6BJMQ2HRwCqkbBf2jEivYsizbuahBfpCqahQk1CQwNmzoX4DzMQuCEdppODit1KVsUtjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751383534; c=relaxed/simple;
-	bh=DIA69QI1E2BrYc+r2/ZtTjhWU3b//5pH+ynl6jTsDVY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N98JsZiEnW+s3m80cm8tnzcChU2EZAa7iabkZRGgwbJ0T82AfY7eEa+xlJm1MEqMB40spaZ/Cz3czQajjrssWkQ01SqAiOmETGx0rOl6VjipT2BJY5vK1Y2QenjoD1zyFEYDK5HxZsSRRfDOQ4FEeKl9Bbt7oVwA3MB0oJg+1R0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aK8Qo6eA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751383539; c=relaxed/simple;
+	bh=/xiHoEfuz6/cTN5j+brnwCFPrNkucrnRkZA7gLvrw18=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=K+gaOkTpfoz+aqLBD6zB+leQ7sOQyUOfYIRyS7t/YZHSoZMqXxJSNzQyxoTn1E+truKm+7fvqn/cUKqMDd11k4g1U6MEC7Yudpdl7EujFyD5QUi2wpZoK1Zpmrm6n9GUD0y4szhhO/5jhjQggODIxl+KX/TvKevcJi9zS7DzMgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=e0VpmjOK; arc=none smtp.client-ip=57.103.64.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aK8Qo6eA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23963C4CEEB;
-	Tue,  1 Jul 2025 15:25:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751383533;
-	bh=DIA69QI1E2BrYc+r2/ZtTjhWU3b//5pH+ynl6jTsDVY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=aK8Qo6eAJR/z7niGBhdup+2w8j7tc9w4vStYDQKRZbfm5lY2tw8IEJ5Vbzn5Pxa/Z
-	 IP9Bgy8jA0RvDhH0nxjirtELANGofmKOJiMUZJXZ208uh1DH+u9PXhVEUbQ+ulku/W
-	 7MAUlUpxSoUyWmClDX94IoGQ3pKISWMFA5qjk1DD+6qoOvX4n3ZYOSQYoiSHQ11J0H
-	 l1N8iSAmIDwB+0inds9d9kfL4OQhoUDq0InomACOTZG9e/pS+aYJ+lPdCRaf5KXIZy
-	 1mp/wZoN4j6NTwB30RCGMSMIVJzg8quVwgKpG2SWweijScQTQpSB0qUajmighDMjEh
-	 lk/OPqPC9G6Lg==
-Date: Tue, 1 Jul 2025 17:25:27 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Sasha Levin <sashal@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-api@vger.kernel.org,
- workflows@vger.kernel.org, tools@kernel.org
-Subject: Re: [RFC v2 01/22] kernel/api: introduce kernel API specification
- framework
-Message-ID: <20250701172527.5adde449@sal.lan>
-In-Reply-To: <aGPvR-Mj6aR4Y8B5@lappy>
-References: <20250624180742.5795-1-sashal@kernel.org>
-	<20250624180742.5795-2-sashal@kernel.org>
-	<874ivxuht8.fsf@trenco.lwn.net>
-	<20250701002058.1cae5a7e@foz.lan>
-	<aGPvR-Mj6aR4Y8B5@lappy>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="e0VpmjOK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=3+n81dwkBafL//lMPlx4ETy4nA09EkZFH9IrMca4OF8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:x-icloud-hme;
+	b=e0VpmjOKWR/TtEwXMHglg+hPYtMAtkte96QbOmQI7JhVo0wEHenyk1SpZjEg5Vvs0
+	 VVdyrjCvjvLFDHaQdsHdUrsDYJEBH/Yp8uFUVK/fhZL0z8srsTnfkbXpReP3EsPDK+
+	 WQKSAdntCSlUBP90IUPpJi4NMEf5A8h17DiVmj4t3NnEzBwogHAH8J2itNh5y8EzTY
+	 9GLQYJJpgchEVmliGVkbA9SMaJgBbVOB9tBpvaJLGfydhe63kPXAbCQzISWDi2pA1k
+	 T2q8w/jM0SQVsx0gOVvW0ZijwSOdd6eXUb0SYxQMc5q5UPjmvO7/K7QSm5NIwd9mue
+	 wYiW1zGjIuCJg==
+Received: from outbound.pv.icloud.com (unknown [127.0.0.2])
+	by outbound.pv.icloud.com (Postfix) with ESMTPS id B4A001800310;
+	Tue,  1 Jul 2025 15:25:32 +0000 (UTC)
+Received: from [192.168.1.26] (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
+	by outbound.pv.icloud.com (Postfix) with ESMTPSA id E3D9D180017B;
+	Tue,  1 Jul 2025 15:25:17 +0000 (UTC)
+From: Zijun Hu <zijun_hu@icloud.com>
+Subject: [PATCH v2 0/9] char: misc: Various cleanup for miscdevice
+Date: Tue, 01 Jul 2025 23:24:38 +0800
+Message-Id: <20250701-rfc_miscdev-v2-0-3eb22bf533be@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALf9Y2gC/1XMQQrCMBCF4auUWZsySYgFV95DRMLMxAZMo4kGo
+ fTuBjfi5sG3eP8KVUqUCodhhSIt1piXDrMbgGa/XEVF7gaDxuGEWpVAlxQrsTRlHbO1GmkihP6
+ 4Fwnx/a2dzt2h5KSecxH/a+wN/jWaVloF9saxQ+PtdMy1jo+Xv1FOaewD2/YBPLFDtacAAAA=
+X-Change-ID: 20250701-rfc_miscdev-35dd3310c7c0
+To: Arnd Bergmann <arnd@arndb.de>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
+ Rudolf Marek <r.marek@assembler.cz>, 
+ Wim Van Sebroeck <wim@linux-watchdog.org>, 
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
+ Helge Deller <deller@gmx.de>, "David S. Miller" <davem@davemloft.net>, 
+ Andreas Larsson <andreas@gaisler.com>
+Cc: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>, 
+ Zijun Hu <zijun_hu@icloud.com>, linux-kernel@vger.kernel.org, 
+ linux-hwmon@vger.kernel.org, linux-watchdog@vger.kernel.org, 
+ linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org, 
+ Zijun Hu <zijun.hu@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAxMDEwMyBTYWx0ZWRfXw3vmlR/rz6EC
+ J7f+eSwcTCRJ3b44G6xnwHtcacUqVQgzWrLye/CE8vICli6tMq7httcE9yAVb2kmevlk56H2WOu
+ p3MrzrhJFQmQSSgBqutCO+8DMSPF9+WpWOP4FJgbtJwuDAzxcVKiiAibP5GUOF+B0L0fm2kJzlr
+ mnLOX1p1hPNYIIXUpiv1PbdH9p/KC+YROHpwiEhR5aIP3YcExOV9y54etMetqguF7DaYGGxsbcp
+ Ii3eIEuONZX+NaOIvaLood8HIbPUH8dEhlTL3ScS4XPhd3PIE3keDc+NjpmjgMY6Z9Q0QHLxI=
+X-Proofpoint-GUID: TAZS-eDz8OnWu2xISqFutSn1uKq1H9Li
+X-Proofpoint-ORIG-GUID: TAZS-eDz8OnWu2xISqFutSn1uKq1H9Li
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-01_02,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0
+ spamscore=0 suspectscore=0 malwarescore=0 bulkscore=0 adultscore=0
+ phishscore=0 clxscore=1011 mlxlogscore=973 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2506060001 definitions=main-2507010103
 
-Em Tue, 1 Jul 2025 10:23:03 -0400
-Sasha Levin <sashal@kernel.org> escreveu:
+This patch series is to do cleanup for:
 
-> On Tue, Jul 01, 2025 at 12:20:58AM +0200, Mauro Carvalho Chehab wrote:
-> >Em Mon, 30 Jun 2025 13:53:55 -0600
-> >Jonathan Corbet <corbet@lwn.net> escreveu:
-> > =20
-> >> Sasha Levin <sashal@kernel.org> writes:
-> >> =20
-> >> > Add a comprehensive framework for formally documenting kernel APIs w=
-ith
-> >> > inline specifications. This framework provides:
-> >> >
-> >> > - Structured API documentation with parameter specifications, return
-> >> >   values, error conditions, and execution context requirements
-> >> > - Runtime validation capabilities for debugging (CONFIG_KAPI_RUNTIME=
-_CHECKS)
-> >> > - Export of specifications via debugfs for tooling integration
-> >> > - Support for both internal kernel APIs and system calls
-> >> >
-> >> > The framework stores specifications in a dedicated ELF section and
-> >> > provides infrastructure for:
-> >> > - Compile-time validation of specifications
-> >> > - Runtime querying of API documentation
-> >> > - Machine-readable export formats
-> >> > - Integration with existing SYSCALL_DEFINE macros
-> >> >
-> >> > This commit introduces the core infrastructure without modifying any
-> >> > existing APIs. Subsequent patches will add specifications to individ=
-ual
-> >> > subsystems.
-> >> >
-> >> > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> >> > ---
-> >> >  Documentation/admin-guide/kernel-api-spec.rst |  507 ++++++ =20
-> >>
-> >> You need to add that file to index.rst in that directory or it won't be
-> >> pulled into the docs build.
-> >>
-> >> Wouldn't it be nice to integrate all this stuff with out existing
-> >> kerneldoc mechanism...? :) =20
-> >
-> >+1
-> >
-> >Having two different mechanisms (kapi and kerneldoc) makes a lot harder
-> >to maintain kAPI. =20
->=20
-> I hated the idea of not reusing kerneldoc.
->=20
-> My concern with kerneldoc was that I can't manipulate the
-> information it stores in the context of a kernel build. So for example,
-> I wasn't sure how I can expose information stored within kerneldoc via
-> debugfs on a running system (or how I can store it within the vmlinux
-> for later extraction from the binary built kernel).
->=20
-> I did some research based on your proposal, and I think I was incorrect
-> with the assumption above. I suppose we could do something like the
-> following:
->=20
-> 1. Add new section patterns to doc_sect regex in to include API
-> specification sections: api-type, api-version, param-type, param-flags,
-> param-constraint, error-code, capability, signal, lock-req, since...
->  =20
-> 2. Create new output module (scripts/lib/kdoc/kdoc_apispec.py?) to
-> generate C macro invocations from parsed data.
->=20
-> Which will generate output like:
->=20
->     DEFINE_KERNEL_API_SPEC(function_name)
->         KAPI_DESCRIPTION("...")=20
->         KAPI_PARAM(0, "name", "type", "desc")
->             KAPI_PARAM_TYPE(KAPI_TYPE_INT)
->             KAPI_PARAM_FLAGS(KAPI_PARAM_IN)
->         KAPI_PARAM_END
->     KAPI_END_SPEC=20
+- Miscdevice APIs
+- Miscdevice kunit test cases
+- Drivers which use miscdevice APIs
 
-> 3. And then via makefile we can:=20
->     - Generate API specs from kerneldoc comments
->     - Include generated specs conditionally based on CONFIG_KERNEL_API_SP=
-EC
->=20
-> Allowing us to just have these in the relevant source files:
->     #ifdef CONFIG_KERNEL_API_SPEC
->     #include "socket.apispec.h"
->     #endif
->=20
->=20
-> In theory, all of that will let us have something like the following in
-> kerneldoc:
->=20
-> - @api-type: syscall
-> - @api-version: 1
-> - @context-flags: KAPI_CTX_PROCESS | KAPI_CTX_SLEEPABLE
-> - @param-type: family, KAPI_TYPE_INT
-> - @param-flags: family, KAPI_PARAM_IN
-> - @param-range: family, 0, 45
-> - @param-mask: type, SOCK_TYPE_MASK | SOCK_CLOEXEC | SOCK_NONBLOCK
-> - @error-code: -EAFNOSUPPORT, "Address family not supported"
-> - @error-condition: -EAFNOSUPPORT, "family < 0 || family >=3D NPROTO"
-> - @capability: CAP_NET_RAW, KAPI_CAP_GRANT_PERMISSION
-> - @capability-allows: CAP_NET_RAW, "Create SOCK_RAW sockets"
-> - @since: 2.0
-> - @return-type: KAPI_TYPE_FD
-> - @return-check: KAPI_RETURN_ERROR_CHECK
->=20
-> How does it sound? I'm pretty excited about the possiblity to align this
-> with kerneldoc. Please poke holes in the plan :)
+Signed-off-by: Zijun Hu <zijun.hu@oss.qualcomm.com>
+---
+Previous discussion link:
+https://lore.kernel.org/all/20250620-rfc_miscdev-v1-1-fda25d502a37@oss.qualcomm.com
 
-Sounds like a plan!
+---
+Zijun Hu (9):
+      char: misc: Move drivers/misc/misc_minor_kunit.c to drivers/char/
+      char: misc: Adapt and add test cases for simple minor space division
+      char: misc: Disallow registering miscdevice whose minor > MISC_DYNAMIC_MINOR
+      char: misc: Add a reentry test case for dynamic minor request
+      char: misc: Make registering dynamic device reentry
+      char: misc: Does not request module for miscdevice with dynamic minor
+      char: misc: Allocate 4 more fixed minors for watchdog
+      char: misc: Define fixed minor EISA_EEPROM_MINOR in linux/miscdevice.h
+      sparc: kernel: apc: Remove macro APC_MINOR defination
 
-We did something somewhat similar on IGT.=20
+ arch/sparc/kernel/apc.c                   |  3 +-
+ drivers/char/Makefile                     |  1 +
+ drivers/char/misc.c                       | 16 +++++-
+ drivers/{misc => char}/misc_minor_kunit.c | 95 +++++++++++++++++++++----------
+ drivers/hwmon/fschmd.c                    |  3 +-
+ drivers/hwmon/w83793.c                    |  3 +-
+ drivers/misc/Makefile                     |  1 -
+ drivers/parisc/eisa_eeprom.c              |  2 -
+ drivers/watchdog/cpwd.c                   |  6 +-
+ include/linux/miscdevice.h                | 13 +++++
+ 10 files changed, 100 insertions(+), 43 deletions(-)
+---
+base-commit: 626e89412dfb88766d90d842af4d9ec432d8526f
+change-id: 20250701-rfc_miscdev-35dd3310c7c0
 
-The python classes there were written with the goal to document
-tests, so its examples are related to test docs, but I wrote it
-to be generic.
+Best regards,
+-- 
+Zijun Hu <zijun.hu@oss.qualcomm.com>
 
-There, all fields comes form a JSON file like this:
-
-	https://gitlab.freedesktop.org/drm/igt-gpu-tools/-/blob/master/tests/intel=
-/xe_test_config.json?ref_type=3Dheads
-
-which describes what fields will be used. It also lists file
-patterns that will use it. The fields allow hierarchical
-grouping, with could be interesting for some types of fields.
-
-=46rom the json example (I dropped the optional field description
-from the example, to make it cleaner):
-
-	"Category": {
-	    "Mega feature": {
-            	"Sub-category": {},
-	    }
-	...
- 	"Test category": {},
-	"Issue": {},
-	...
-
-The hierarchical part is useful to properly order kapi content
-without the need to add multiple Sphinx markups to manually reorder
-the output inside the .rst files.
-
-(*) I would avoid hardcoding the fields/structures, as eventually
-    we may need more flexibility to add fields and/or having some
-    fields that are specific, for instance, to debugfs or sysfs.
-
-The python class it uses is at:
-	https://gitlab.freedesktop.org/drm/igt-gpu-tools/-/blob/master/scripts/tes=
-t_list.py?ref_type=3Dheads
-
-and caller is at:
-	https://gitlab.freedesktop.org/drm/igt-gpu-tools/-/blob/master/scripts/igt=
-_doc.py?ref_type=3Dheads
-
-Eventually you may find something useful there. If so, feel free to
-pick from it.
-
-Regards,
-Mauro
