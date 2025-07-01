@@ -1,255 +1,493 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A8A274B59
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D43274FD0
 	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 13:08:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751375306; cv=none; b=PHrqkZdUrheb4wYNrdKAflSrM5VUJI7VOik+y6RXBa1ywOAqxUZh4kxJyiPDXhHLju02CToh3u97kjn5TvPdokOIYjKGlV8eugOmhC7MPBOju2SQN0u4CNpPeaywfOmlDKYDn1fszD+rDmdoc642e9VWqRMn7L274XzIqx1shWk=
+	t=1751375306; cv=none; b=Q4NO003FQ/AELIWlRFA2tBjRkpoEpxZD/CexIo/wbm8wriISnLCOYyDoy+HFYcUaPIIuYyLEGA2kYC9tN6q0wYCM74F5lsq9UWZwTrnQHhSJ8jlgtgfuzjLGlb0yaFsI0LlcUnFv6G0905QzjJibg58Guq5uP9OQen83X6MxSl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751375306; c=relaxed/simple;
-	bh=Aamnsn29zpHoXMa67/2pQ9ZN3DmtuVYS3RLZQZH8OAs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P0mLPObWAVxv6H6P/sJ8MKZq94E6tU0qZHMVle+dEeimyh0ukdPoX1IOBF7aaDL81SccpEHYi6XIhZ4V0Ip494RROt94Zn/bcF8eiXUhEu1zSkfgKryaF+spNAuvC++5sGr5Bt5YWg0GcCJs4+dCw1zPQKyh5FRZuJT7AyX/zCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gCa4pAIt; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	bh=GsIDiGM4SIKLy61S3XbEaiNxOnRQgy88hSTIDk7bJas=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
+	 Content-Type:References; b=c8nYXFL7saGgQZamOX315DaBQemd4czzJQIdnvXaqiGdGWQRWLIMpMsZvaR0vLy1eQSyDkHFyOr4L5akeSCx5Ew1LWYNcEkMPS/Thc+c7rIsTvQlkLvV8WnRUJHe58k+t+9VeRzg6wjUplyvbB2w+hlhSYtIraTIm+D2ck3XmmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=BOTAPZNn; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gCa4pAIt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751375303;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Qtr2oWngmrKIpZ1oZl4Jp/NvxG5BHYAOmKf1rL8B43o=;
-	b=gCa4pAItJ2Da5o7MgOaiaeihB5x2dOvH2QaCBwJcYruYfPf5/M69b5jM1pV4qdmvI6H23o
-	RegiLXR6fj4ZInmOx17v/KK5yynEFQQJxvz/KzbMlapBTwJY4gQgcr6lLfxnAOORY+Qy1G
-	VkR9JCFEBpjW+5DBYTeR7F5M0XIe9io=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-625-Y0Stw0HSP8q2aJ261TM6OA-1; Tue, 01 Jul 2025 09:08:17 -0400
-X-MC-Unique: Y0Stw0HSP8q2aJ261TM6OA-1
-X-Mimecast-MFC-AGG-ID: Y0Stw0HSP8q2aJ261TM6OA_1751375296
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-451ecc3be97so25429265e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 06:08:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751375296; x=1751980096;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Qtr2oWngmrKIpZ1oZl4Jp/NvxG5BHYAOmKf1rL8B43o=;
-        b=RZpmqrHvza/nLEfA/UGJWlU4qi4EE1FFuu71Wva7Yoay/aOzCSA5qU3nXeqjcks9ZS
-         muRerRkufeG7vY0SHZZKwqO9YHZiPTSMZ7JtGlppaVPhvHSuZhWJAozrvPhDY7g925Zq
-         xU3KkqqCNeyMT6W+02dr9fX5FHXmFvkeN5Y1NHKrZ7wCXlztffiXZSAGJRgGefKkODeT
-         m25VtZv1fWkz8IflSbD9WeiCYEegLTlZgV5z8nHcwYXSMThTiNGUviZi7j0vjaVVvFCj
-         WlN06EJTbujG/p2NsnXeqO3dGQjsC3QiFRkZX8Ajka90g2C7FpH94KigoTjtzdbuRvCo
-         zcBg==
-X-Forwarded-Encrypted: i=1; AJvYcCU289bF5yYxmrqSz7R4AyxQ+q+yiFRX+kBH4QtY/0nbEuwWfgUqNwT6W31C8wYcmLtjvNHwe7xJDn1bmME=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwB6PplpJa5UhSdknvYOFouy7zW8CIYO0KVtQVuTdUD1WMbt+u/
-	1x3CJPAFxvAT4du7amYtD9/RatnYh28ZNwng3Bg90a0DWia1ycnemfFLLy+QgIF2iBxJth4d51f
-	rM3qO6EwfO/YjB7dhbUxUYokkxVtQFHx3UpdQ+L/8oVodQC1EQxaddj2D0iZaHMLoeA==
-X-Gm-Gg: ASbGnctC764CCIr/t/QS3SeIQxCS2pVdgBv3QPbd39yDG2pRpCMzyRoAB3HvBWgfdbl
-	qdpKA0qMUM8IjGELFxyDhbAMwhePagkYtsTvv7jSEWQ3THS1x/7j+CVuWxlqQ+7dLSQUtNduNQU
-	bKrSf/3cIAIUnzI62Nzt4Vf3I/1gK4GVtfOwG5NHOrpKbo3jJQXVF1/aSVC2uu9lA7Qb18jjLOX
-	zwMcWxIQ37w2eGFOJPKpETUSndH63KeduWcWLMKEmCSLQIKPAiWEbsjYg3sAXvwf6tZ6yAW64SF
-	8yHsscwbO8MX3ISEV9J2uIFL5+y55S5WcquH0UpuZqHmSU6xF41FWzWzG/xonuAALA4YWYO/C0A
-	Y/vgUWhJyIZOuKmXjmzqIwLsfDK4GakwAsjcA/ptn04fN8efDlQ==
-X-Received: by 2002:a05:600c:4ec6:b0:453:84a:8cf1 with SMTP id 5b1f17b1804b1-4538eeb52c6mr151654765e9.33.1751375295709;
-        Tue, 01 Jul 2025 06:08:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFGEU96WWGLC9Mi4aEpW/chhh9eOgQOKvq5527882yY0ssLJdb9rtP+Bo/Op6OsdjHVDmtOSw==
-X-Received: by 2002:a05:600c:4ec6:b0:453:84a:8cf1 with SMTP id 5b1f17b1804b1-4538eeb52c6mr151653715e9.33.1751375294660;
-        Tue, 01 Jul 2025 06:08:14 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f18:7500:202e:b0f1:76d6:f9af? (p200300d82f187500202eb0f176d6f9af.dip0.t-ipconnect.de. [2003:d8:2f18:7500:202e:b0f1:76d6:f9af])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e5f923sm12917949f8f.89.2025.07.01.06.08.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 06:08:14 -0700 (PDT)
-Message-ID: <b8258f91-ad92-419e-a0a1-a8db706c814c@redhat.com>
-Date: Tue, 1 Jul 2025 15:08:12 +0200
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BOTAPZNn"
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250701130822epoutp01a5d4710b5afee0bb336aa06f146712d3~OIo8TqqU11119711197epoutp010
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 13:08:22 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250701130822epoutp01a5d4710b5afee0bb336aa06f146712d3~OIo8TqqU11119711197epoutp010
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1751375303;
+	bh=jJ167illKN1TO8G0fjABg4r+eK06fCfby4plELWDkek=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=BOTAPZNn5LylCo+g0S/V2Sz21ViRc9Bw0sq6CZSTPAjWQSzx2OhKguFIF7nrPMlkI
+	 Tpo/9y3VXibQz9Si40ZCx4+W00s9zgR/LyaOtsmKur1EIpbm5JXhrwakNlAxnUBo+4
+	 KTtHj9sNpu25vu6m+FjWOQhKPj1SjZfMj+aeJkRo=
+Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
+	20250701130822epcas5p30fdd35c885c18e2142f3b6e3e8c81add~OIo7yr9vY0162201622epcas5p3n;
+	Tue,  1 Jul 2025 13:08:22 +0000 (GMT)
+Received: from epcas5p1.samsung.com (unknown [182.195.38.180]) by
+	epsnrtp03.localdomain (Postfix) with ESMTP id 4bWjyD4nc9z3hhT7; Tue,  1 Jul
+	2025 13:08:20 +0000 (GMT)
+Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20250701120012epcas5p4def7f4d718241407b598ad961d32c1f8~OHtaxgs2v2655426554epcas5p4F;
+	Tue,  1 Jul 2025 12:00:12 +0000 (GMT)
+Received: from bose.samsungds.net (unknown [107.108.83.9]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250701120009epsmtip1f9012c673877687574ad3fd991ebdd62~OHtX5xkLN1547115471epsmtip1o;
+	Tue,  1 Jul 2025 12:00:09 +0000 (GMT)
+From: Pritam Manohar Sutar <pritam.sutar@samsung.com>
+To: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, alim.akhtar@samsung.com,
+	andre.draszik@linaro.org, peter.griffin@linaro.org,
+	neil.armstrong@linaro.org, kauschluss@disroot.org,
+	ivo.ivanov.ivanov1@gmail.com, m.szyprowski@samsung.com,
+	s.nawrocki@samsung.com, pritam.sutar@samsung.com
+Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org, rosa.pila@samsung.com,
+	dev.tailor@samsung.com, faraz.ata@samsung.com, muhammed.ali@samsung.com,
+	selvarasu.g@samsung.com
+Subject: [PATCH v4 6/6] phy: exynos5-usbdrd: support SS combo phy for
+ ExynosAutov920
+Date: Tue,  1 Jul 2025 17:37:06 +0530
+Message-Id: <20250701120706.2219355-7-pritam.sutar@samsung.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250701120706.2219355-1-pritam.sutar@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm: support large mapping building for tmpfs
-To: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
- hughd@google.com
-Cc: ziy@nvidia.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
- npache@redhat.com, ryan.roberts@arm.com, dev.jain@arm.com,
- baohua@kernel.org, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
- mhocko@suse.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <d4cb6e578bca8c430174d5972550cbeb530ec3fe.1751359073.git.baolin.wang@linux.alibaba.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <d4cb6e578bca8c430174d5972550cbeb530ec3fe.1751359073.git.baolin.wang@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20250701120012epcas5p4def7f4d718241407b598ad961d32c1f8
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-542,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250701120012epcas5p4def7f4d718241407b598ad961d32c1f8
+References: <20250701120706.2219355-1-pritam.sutar@samsung.com>
+	<CGME20250701120012epcas5p4def7f4d718241407b598ad961d32c1f8@epcas5p4.samsung.com>
 
-On 01.07.25 10:40, Baolin Wang wrote:
+This SoC has a DWC3 compatible link controller and single USB 3.1 DRD
+combo phy that supports both UTMI+ (HS) and PIPE3 (SS) and three USB2.0
+DRD HS phy controllers those only support the UTMI+ (HS) interface.
 
-Nit: talking about "large mappings" is confusing. Did you actually mean:
+Combo phy is combination of two phys. Among these phys, one supports
+USB3.1 SSP+(10Gbps) protocol and is backwards compatible to the
+USB3.0 SS(5Gbps). 'Add-on USB2.0' phy is required to support
+USB2.0 HS(480Mbps), FS(12Mbps) and LS(1.5Mbps) data rates.
 
-"mm: fault in complete folios instead of individual pages for tmpfs"
+Add required change in phy driver to support combo SS phy for this SoC.
 
-I suggest not talking about "large mappings" anywhere in this patch 
-description, and instead talking about mapping multiple consecutive 
-pages of a tmpfs folios at once instead.
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+Signed-off-by: Pritam Manohar Sutar <pritam.sutar@samsung.com>
+---
+ drivers/phy/samsung/phy-exynos5-usbdrd.c    | 327 +++++++++++++++++++-
+ include/linux/soc/samsung/exynos-regs-pmu.h |   1 +
+ 2 files changed, 324 insertions(+), 4 deletions(-)
 
-> After commit acd7ccb284b8 ("mm: shmem: add large folio support for tmpfs"),
-> tmpfs can also support large folio allocation (not just PMD-sized large
-> folios).
-> 
-> However, when accessing tmpfs via mmap(), although tmpfs supports large folios,
-> we still establish mappings at the base page granularity, which is unreasonable.
- > > We can establish large mappings according to the size of the large 
-folio. On one
-> hand, this can reduce the overhead of page faults; on the other hand, it can
-> leverage hardware architecture optimizations to reduce TLB misses, such as
-> contiguous PTEs on the ARM architecture.
-
-The latter would still apply if faulting in each individual page I 
-guess. cont-pte will try to auto-optimize IIRC.
-
-> 
-> Moreover, since the user has already added the 'huge=' option when mounting tmpfs
-> to allow for large folio allocation, establishing large folios' mapping is expected
-> and will not surprise users by inflating the RSS of the process.
-
-Hm, are we sure about that? Also, how does fault_around_bytes interact here?
-
-> 
-> In order to support large mappings for tmpfs, besides checking VMA limits and
-> PMD pagetable limits, it is also necessary to check if the linear page offset
-> of the VMA is order-aligned within the file.
-
-Why?
-
-This only applies to PMD mappings. See below.
-
-> 
-> Performance test:
-> I created a 1G tmpfs file, populated with 64K large folios, and accessed it
-> sequentially via mmap(). I observed a significant performance improvement:
-> 
-> Before the patch:
-> real	0m0.214s
-> user	0m0.012s
-> sys	0m0.203s
-> 
-> After the patch:
-> real	0m0.025s
-> user	0m0.000s
-> sys	0m0.024s
-> 
-> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> ---
->   mm/memory.c | 13 +++++++++----
->   1 file changed, 9 insertions(+), 4 deletions(-)
-> 
-> diff --git a/mm/memory.c b/mm/memory.c
-> index 0f9b32a20e5b..6385a9385a9b 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -5383,10 +5383,10 @@ vm_fault_t finish_fault(struct vm_fault *vmf)
->   
->   	/*
->   	 * Using per-page fault to maintain the uffd semantics, and same
-> -	 * approach also applies to non-anonymous-shmem faults to avoid
-> +	 * approach also applies to non shmem/tmpfs faults to avoid
->   	 * inflating the RSS of the process.
->   	 */
-> -	if (!vma_is_anon_shmem(vma) || unlikely(userfaultfd_armed(vma)) ||
-> +	if (!vma_is_shmem(vma) || unlikely(userfaultfd_armed(vma)) ||
->   	    unlikely(needs_fallback)) {
->   		nr_pages = 1;
->   	} else if (nr_pages > 1) {
-> @@ -5395,15 +5395,20 @@ vm_fault_t finish_fault(struct vm_fault *vmf)
->   		pgoff_t vma_off = vmf->pgoff - vmf->vma->vm_pgoff;
->   		/* The index of the entry in the pagetable for fault page. */
->   		pgoff_t pte_off = pte_index(vmf->address);
-> +		unsigned long hpage_size = PAGE_SIZE << folio_order(folio);
->   
->   		/*
->   		 * Fallback to per-page fault in case the folio size in page
-> -		 * cache beyond the VMA limits and PMD pagetable limits.
-> +		 * cache beyond the VMA limits or PMD pagetable limits. And
-> +		 * also check if the linear page offset of vma is order-aligned
-> +		 * within the file for tmpfs.
->   		 */
->   		if (unlikely(vma_off < idx ||
->   			    vma_off + (nr_pages - idx) > vma_pages(vma) ||
->   			    pte_off < idx ||
-> -			    pte_off + (nr_pages - idx)  > PTRS_PER_PTE)) {
-> +			    pte_off + (nr_pages - idx)  > PTRS_PER_PTE) ||
-> +			    !IS_ALIGNED((vma->vm_start >> PAGE_SHIFT) - vma->vm_pgoff,
-> +					hpage_size >> PAGE_SHIFT)) {
-
-Again, why? Shouldn't set_pte_range() just do the right thing? 
-set_ptes() doesn't have any such restriction.
-
-Also see the arm64 variant where we call
-
-	contpte_set_ptes(mm, addr, ptep, pte, nr);
-
-There, I think we perform checks whether whether we can set the cont-pte 
-bit IIUC.
-
-	if (((addr | next | (pfn << PAGE_SHIFT)) & ~CONT_PTE_MASK) == 0)
-		pte = pte_mkcont(pte);
-	else
-		pte = pte_mknoncont(pte);
-
+diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+index 8a1cd63b29ce..9e70bc815937 100644
+--- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
++++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+@@ -273,6 +273,36 @@
+ #define EXYNOSAUTOV920_DRD_HSPPLLTUNE		0x110
+ #define HSPPLLTUNE_FSEL				GENMASK(18, 16)
+ 
++/* ExynosAutov920 phy usb31drd port reg */
++#define EXYNOSAUTOV920_USB31DRD_PHY_RST_CTRL	0x000
++#define PHY_RST_CTRL_PIPE_LANE0_RESET_N_OVRD_EN	BIT(5)
++#define PHY_RST_CTRL_PIPE_LANE0_RESET_N		BIT(4)
++#define PHY_RST_CTRL_PHY_RESET_OVRD_EN		BIT(1)
++#define PHY_RST_CTRL_PHY_RESET			BIT(0)
++
++#define EXYNOSAUTOV920_USB31DRD_PHY_CR_PARA_CON0	0x0004
++#define PHY_CR_PARA_CON0_PHY0_CR_PARA_ADDR		GENMASK(31, 16)
++#define PHY_CR_PARA_CON0_PHY0_CR_PARA_CLK		BIT(8)
++#define PHY_CR_PARA_CON0_PHY0_CR_PARA_ACK		BIT(4)
++#define PHY_CR_PARA_CON0_PHY0_CR_PARA_SEL		BIT(0)
++
++#define EXYNOSAUTOV920_USB31DRD_PHY_CR_PARA_CON1	0x0008
++
++#define EXYNOSAUTOV920_USB31DRD_PHY_CR_PARA_CON2	0x000c
++#define PHY_CR_PARA_CON2_PHY0_CR_PARA_WR_EN		BIT(0)
++#define PHY_CR_PARA_CON2_PHY0_CR_PARA_WR_DATA		GENMASK(31, 16)
++
++#define EXYNOSAUTOV920_USB31DRD_PHY_CONFIG0	0x100
++#define PHY_CONFIG0_PHY0_PMA_PWR_STABLE		BIT(14)
++#define PHY_CONFIG0_PHY0_PCS_PWR_STABLE		BIT(13)
++#define PHY_CONFIG0_PHY0_ANA_PWR_EN		BIT(1)
++
++#define EXYNOSAUTOV920_USB31DRD_PHY_CONFIG7	0x11c
++#define PHY_CONFIG7_PHY_TEST_POWERDOWN		BIT(24)
++
++#define EXYNOSAUTOV920_USB31DRD_PHY_CONFIG4	0x110
++#define PHY_CONFIG4_PIPE_RX0_SRIS_MODE_EN	BIT(2)
++
+ /* Exynos9 - GS101 */
+ #define EXYNOS850_DRD_SECPMACTL			0x48
+ #define SECPMACTL_PMA_ROPLL_REF_CLK_SEL		GENMASK(13, 12)
+@@ -2079,6 +2109,253 @@ static const struct exynos5_usbdrd_phy_drvdata exynos990_usbdrd_phy = {
+ 	.n_regulators		= ARRAY_SIZE(exynos5_regulator_names),
+ };
+ 
++static void
++exynosautov920_usb31drd_cr_clk(struct exynos5_usbdrd_phy *phy_drd, bool high)
++{
++	void __iomem *reg_phy = phy_drd->reg_phy;
++	u32 reg = 0;
++
++	reg = readl(reg_phy + EXYNOSAUTOV920_USB31DRD_PHY_CR_PARA_CON0);
++	if (high)
++		reg |= PHY_CR_PARA_CON0_PHY0_CR_PARA_CLK;
++	else
++		reg &= ~PHY_CR_PARA_CON0_PHY0_CR_PARA_CLK;
++
++	writel(reg, reg_phy + EXYNOSAUTOV920_USB31DRD_PHY_CR_PARA_CON0);
++	fsleep(1);
++}
++
++static void
++exynosautov920_usb31drd_port_phy_ready(struct exynos5_usbdrd_phy *phy_drd)
++{
++	struct device *dev = phy_drd->dev;
++	void __iomem *reg_phy = phy_drd->reg_phy;
++	static const unsigned int timeout_us = 20000;
++	static const unsigned int sleep_us = 40;
++	u32 reg = 0;
++	int err;
++
++	/* Clear cr_para_con */
++	reg &= ~(PHY_CR_PARA_CON0_PHY0_CR_PARA_CLK |
++			PHY_CR_PARA_CON0_PHY0_CR_PARA_ADDR);
++	reg |= PHY_CR_PARA_CON0_PHY0_CR_PARA_SEL;
++	writel(reg, reg_phy + EXYNOSAUTOV920_USB31DRD_PHY_CR_PARA_CON0);
++	writel(0x0, reg_phy + EXYNOSAUTOV920_USB31DRD_PHY_CR_PARA_CON1);
++	writel(0x0, reg_phy + EXYNOSAUTOV920_USB31DRD_PHY_CR_PARA_CON2);
++
++	exynosautov920_usb31drd_cr_clk(phy_drd, true);
++	exynosautov920_usb31drd_cr_clk(phy_drd, false);
++
++	/*
++	 * The maximum time from phy reset de-assertion to de-assertion of
++	 * tx/rx_ack can be as high as 5ms in fast simulation mode.
++	 * Time to phy ready is < 20ms
++	 */
++	err = readl_poll_timeout(reg_phy +
++				EXYNOSAUTOV920_USB31DRD_PHY_CR_PARA_CON0,
++			reg, !(reg & PHY_CR_PARA_CON0_PHY0_CR_PARA_ACK),
++			sleep_us, timeout_us);
++	if (err)
++		dev_err(dev, "timed out waiting for rx/tx_ack: %#.8x\n", reg);
++
++	reg &= ~PHY_CR_PARA_CON0_PHY0_CR_PARA_CLK;
++	writel(reg, reg_phy + EXYNOSAUTOV920_USB31DRD_PHY_CR_PARA_CON0);
++}
++
++static void
++exynosautov920_usb31drd_cr_write(struct exynos5_usbdrd_phy *phy_drd,
++				 u16 addr, u16 data)
++{
++	struct device *dev = phy_drd->dev;
++	void __iomem *reg_phy = phy_drd->reg_phy;
++	u32 cnt = 0;
++	u32 reg = 0;
++
++	/* Pre Clocking */
++	reg = readl(reg_phy + EXYNOSAUTOV920_USB31DRD_PHY_CR_PARA_CON0);
++	reg |= PHY_CR_PARA_CON0_PHY0_CR_PARA_SEL;
++	writel(reg, reg_phy + EXYNOSAUTOV920_USB31DRD_PHY_CR_PARA_CON0);
++
++	/*
++	 * tx clks must be available prior to assertion of tx req.
++	 * tx pstate p2 to p0 transition directly is not permitted.
++	 * tx clk ready must be asserted synchronously on tx clk prior
++	 * to internal transmit clk alignment sequence in the phy
++	 * when entering from p2 to p1 to p0.
++	 */
++	do {
++		exynosautov920_usb31drd_cr_clk(phy_drd, true);
++		exynosautov920_usb31drd_cr_clk(phy_drd, false);
++		cnt++;
++	} while (cnt < 15);
++
++	reg &= ~PHY_CR_PARA_CON0_PHY0_CR_PARA_SEL;
++	writel(reg, reg_phy + EXYNOSAUTOV920_USB31DRD_PHY_CR_PARA_CON0);
++
++	/*
++	 * tx data path is active when tx lane is in p0 state
++	 * and tx data en asserted. enable cr_para_wr_en.
++	 */
++	reg = readl(reg_phy + EXYNOSAUTOV920_USB31DRD_PHY_CR_PARA_CON2);
++	reg &= ~PHY_CR_PARA_CON2_PHY0_CR_PARA_WR_DATA;
++	reg |= FIELD_PREP(PHY_CR_PARA_CON2_PHY0_CR_PARA_WR_DATA, data) |
++		PHY_CR_PARA_CON2_PHY0_CR_PARA_WR_EN;
++	writel(reg, reg_phy + EXYNOSAUTOV920_USB31DRD_PHY_CR_PARA_CON2);
++
++	/* write addr */
++	reg = readl(reg_phy + EXYNOSAUTOV920_USB31DRD_PHY_CR_PARA_CON0);
++	reg &= ~PHY_CR_PARA_CON0_PHY0_CR_PARA_ADDR;
++	reg |= FIELD_PREP(PHY_CR_PARA_CON0_PHY0_CR_PARA_ADDR, addr) |
++		PHY_CR_PARA_CON0_PHY0_CR_PARA_CLK |
++		PHY_CR_PARA_CON0_PHY0_CR_PARA_SEL;
++	writel(reg, reg_phy + EXYNOSAUTOV920_USB31DRD_PHY_CR_PARA_CON0);
++
++	/* check cr_para_ack*/
++	cnt = 0;
++	do {
++		/*
++		 * data symbols are captured by phy on rising edge of the
++		 * tx_clk when tx data enabled.
++		 * completion of the write cycle is acknowledged by assertion
++		 * of the cr_para_ack.
++		 */
++		exynosautov920_usb31drd_cr_clk(phy_drd, true);
++		reg = readl(reg_phy + EXYNOSAUTOV920_USB31DRD_PHY_CR_PARA_CON0);
++		if ((reg & PHY_CR_PARA_CON0_PHY0_CR_PARA_ACK))
++			break;
++
++		exynosautov920_usb31drd_cr_clk(phy_drd, false);
++
++		/*
++		 * wait for minimum of 10 cr_para_clk cycles after phy reset
++		 * is negated, before accessing control regs to allow for
++		 * internal resets.
++		 */
++		cnt++;
++	} while (cnt < 10);
++
++	if (cnt == 10)
++		dev_dbg(dev, "CR write failed to 0x%04x\n", addr);
++	else
++		exynosautov920_usb31drd_cr_clk(phy_drd, false);
++}
++
++static void
++exynosautov920_usb31drd_phy_reset(struct exynos5_usbdrd_phy *phy_drd, int val)
++{
++	void __iomem *reg_phy = phy_drd->reg_phy;
++	u32 reg;
++
++	reg = readl(reg_phy + EXYNOSAUTOV920_USB31DRD_PHY_RST_CTRL);
++	reg &= ~PHY_RST_CTRL_PHY_RESET_OVRD_EN;
++	writel(reg, reg_phy + EXYNOSAUTOV920_USB31DRD_PHY_RST_CTRL);
++
++	reg = readl(reg_phy + EXYNOSAUTOV920_USB31DRD_PHY_RST_CTRL);
++	if (val)
++		reg |= PHY_RST_CTRL_PHY_RESET;
++	else
++		reg &= ~PHY_RST_CTRL_PHY_RESET;
++
++	reg |= PHY_RST_CTRL_PHY_RESET_OVRD_EN;
++	writel(reg, reg_phy + EXYNOSAUTOV920_USB31DRD_PHY_RST_CTRL);
++}
++
++static void
++exynosautov920_usb31drd_lane0_reset(struct exynos5_usbdrd_phy *phy_drd, int val)
++{
++	void __iomem *reg_phy = phy_drd->reg_phy;
++	u32 reg;
++
++	reg = readl(reg_phy + EXYNOSAUTOV920_USB31DRD_PHY_RST_CTRL);
++	reg |= PHY_RST_CTRL_PIPE_LANE0_RESET_N_OVRD_EN;
++	writel(reg, reg_phy + EXYNOSAUTOV920_USB31DRD_PHY_RST_CTRL);
++
++	reg = readl(reg_phy + EXYNOSAUTOV920_USB31DRD_PHY_RST_CTRL);
++	if (val)
++		reg &= ~PHY_RST_CTRL_PIPE_LANE0_RESET_N;
++	else
++		reg |= PHY_RST_CTRL_PIPE_LANE0_RESET_N;
++
++	reg &= ~PHY_RST_CTRL_PIPE_LANE0_RESET_N_OVRD_EN;
++	writel(reg, reg_phy + EXYNOSAUTOV920_USB31DRD_PHY_RST_CTRL);
++}
++
++static void
++exynosautov920_usb31drd_pipe3_init(struct exynos5_usbdrd_phy *phy_drd)
++{
++	void __iomem *reg_phy = phy_drd->reg_phy;
++	u32 reg;
++
++	/*
++	 * Phy and Pipe Lane reset assert.
++	 * assert reset (phy_reset = 1).
++	 * The lane-ack outputs are asserted during reset (tx_ack = rx_ack = 1)
++	 */
++	exynosautov920_usb31drd_phy_reset(phy_drd, 1);
++	exynosautov920_usb31drd_lane0_reset(phy_drd, 1);
++
++	/*
++	 * ANA Power En, PCS & PMA PWR Stable Set
++	 * ramp-up power suppiles
++	 */
++	reg = readl(reg_phy + EXYNOSAUTOV920_USB31DRD_PHY_CONFIG0);
++	reg |= PHY_CONFIG0_PHY0_ANA_PWR_EN | PHY_CONFIG0_PHY0_PCS_PWR_STABLE |
++		PHY_CONFIG0_PHY0_PMA_PWR_STABLE;
++	writel(reg, reg_phy + EXYNOSAUTOV920_USB31DRD_PHY_CONFIG0);
++
++	fsleep(10);
++
++	/*
++	 * phy is not functional in test_powerdown mode, test_powerdown to be
++	 * de-asserted for normal operation
++	 */
++	reg = readl(reg_phy + EXYNOSAUTOV920_USB31DRD_PHY_CONFIG7);
++	reg &= ~PHY_CONFIG7_PHY_TEST_POWERDOWN;
++	writel(reg, reg_phy + EXYNOSAUTOV920_USB31DRD_PHY_CONFIG7);
++
++	/*
++	 * phy reset signal be asserted for minimum 10us after power
++	 * supplies are ramped-up
++	 */
++	fsleep(10);
++
++	/*
++	 * Phy and Pipe Lane reset assert de-assert
++	 */
++	exynosautov920_usb31drd_phy_reset(phy_drd, 0);
++	exynosautov920_usb31drd_lane0_reset(phy_drd, 0);
++
++	/* Pipe_rx0_sris_mode_en  = 1 */
++	reg = readl(reg_phy + EXYNOSAUTOV920_USB31DRD_PHY_CONFIG4);
++	reg |= PHY_CONFIG4_PIPE_RX0_SRIS_MODE_EN;
++	writel(reg, reg_phy + EXYNOSAUTOV920_USB31DRD_PHY_CONFIG4);
++
++	/*
++	 * wait for lane ack outputs to de-assert (tx_ack = rx_ack = 0)
++	 * Exit from the reset state is indicated by de-assertion of *_ack
++	 */
++	exynosautov920_usb31drd_port_phy_ready(phy_drd);
++
++	/* override values for level settings */
++	exynosautov920_usb31drd_cr_write(phy_drd, 0x22, 0x00F5);
++}
++
++static void
++exynosautov920_usb31drd_ssphy_disable(struct exynos5_usbdrd_phy *phy_drd)
++{
++	void __iomem *reg_phy = phy_drd->reg_phy;
++	u32 reg;
++
++	/* 1. Assert reset (phy_reset = 1) */
++	exynosautov920_usb31drd_lane0_reset(phy_drd, 1);
++	exynosautov920_usb31drd_phy_reset(phy_drd, 1);
++
++	/* phy test power down */
++	reg = readl(reg_phy + EXYNOSAUTOV920_USB31DRD_PHY_CONFIG7);
++	reg |= PHY_CONFIG7_PHY_TEST_POWERDOWN;
++	writel(reg, reg_phy + EXYNOSAUTOV920_USB31DRD_PHY_CONFIG7);
++}
++
+ static void
+ exynosautov920_usbdrd_utmi_init(struct exynos5_usbdrd_phy *phy_drd)
+ {
+@@ -2173,12 +2450,15 @@ exynosautov920_usbdrd_utmi_init(struct exynos5_usbdrd_phy *phy_drd)
+ 	/* after POR low and delay 75us, PHYCLOCK is guaranteed. */
+ 	fsleep(75);
+ 
+-	/* force pipe3 signal for link */
++	/* Disable forcing pipe interface */
+ 	reg = readl(reg_phy + EXYNOS850_DRD_LINKCTRL);
+-	reg |= LINKCTRL_FORCE_PIPE_EN;
+-	reg &= ~LINKCTRL_FORCE_PHYSTATUS;
+-	reg |= LINKCTRL_FORCE_RXELECIDLE;
++	reg &= ~LINKCTRL_FORCE_PIPE_EN;
+ 	writel(reg, reg_phy + EXYNOS850_DRD_LINKCTRL);
++
++	/* Pclk to pipe_clk */
++	reg = readl(reg_phy + EXYNOS2200_DRD_CLKRST);
++	reg |= EXYNOS2200_CLKRST_LINK_PCLK_SEL;
++	writel(reg, reg_phy + EXYNOS2200_DRD_CLKRST);
+ }
+ 
+ static void
+@@ -2226,6 +2506,8 @@ static int exynosautov920_usbdrd_phy_init(struct phy *phy)
+ 		/* Bypass PHY isol when first USB is powered on */
+ 		if ((atomic_inc_return(&usage_count) == 1))
+ 			inst->phy_cfg->phy_isol(inst, false);
++	} else if (inst->phy_cfg->id == EXYNOS5_DRDPHY_PIPE3) {
++		inst->phy_cfg->phy_isol(inst, false);
+ 	}
+ 
+ 	/* UTMI or PIPE3 specific init */
+@@ -2275,6 +2557,10 @@ static int exynosautov920_usbdrd_combo_phy_exit(struct phy *phy)
+ 		/* enable PHY isol when all USBs are powered off */
+ 		if (atomic_dec_and_test(&usage_count))
+ 			inst->phy_cfg->phy_isol(inst, true);
++	} else if (inst->phy_cfg->id == EXYNOS5_DRDPHY_PIPE3) {
++		exynosautov920_usb31drd_ssphy_disable(phy_drd);
++
++		inst->phy_cfg->phy_isol(inst, true);
+ 	}
+ 
+ 	clk_bulk_disable_unprepare(phy_drd->drv_data->n_clks, phy_drd->clks);
+@@ -2333,6 +2619,36 @@ static const char * const exynosautov920_regulator_names[] = {
+ 	"avdd075_usb", "avdd18_usb20", "avdd33_usb20",
+ };
+ 
++static const struct
++exynos5_usbdrd_phy_config usb31drd_phy_cfg_exynosautov920[] = {
++	{
++		.id		= EXYNOS5_DRDPHY_PIPE3,
++		.phy_isol	= exynos5_usbdrd_phy_isol,
++		.phy_init	= exynosautov920_usb31drd_pipe3_init,
++	},
++};
++
++static const struct phy_ops exynosautov920_usb31drd_combo_ssphy_ops = {
++	.init		= exynosautov920_usbdrd_phy_init,
++	.exit		= exynosautov920_usbdrd_combo_phy_exit,
++	.power_on	= exynosautov920_usbdrd_phy_power_on,
++	.power_off	= exynosautov920_usbdrd_phy_power_off,
++	.owner		= THIS_MODULE,
++};
++
++static const
++struct exynos5_usbdrd_phy_drvdata exynosautov920_usb31drd_combo_ssphy = {
++	.phy_cfg		= usb31drd_phy_cfg_exynosautov920,
++	.phy_ops		= &exynosautov920_usb31drd_combo_ssphy_ops,
++	.pmu_offset_usbdrd0_phy	= EXYNOSAUTOV920_PHY_CTRL_USB31,
++	.clk_names		= exynos5_clk_names,
++	.n_clks			= ARRAY_SIZE(exynos5_clk_names),
++	.core_clk_names		= exynos5_core_clk_names,
++	.n_core_clks		= ARRAY_SIZE(exynos5_core_clk_names),
++	.regulator_names	= exynosautov920_regulator_names,
++	.n_regulators		= ARRAY_SIZE(exynosautov920_regulator_names),
++};
++
+ static const struct phy_ops exynosautov920_usbdrd_combo_hsphy_ops = {
+ 	.init		= exynosautov920_usbdrd_phy_init,
+ 	.exit		= exynosautov920_usbdrd_combo_phy_exit,
+@@ -2597,6 +2913,9 @@ static const struct of_device_id exynos5_usbdrd_phy_of_match[] = {
+ 	}, {
+ 		.compatible = "samsung,exynos990-usbdrd-phy",
+ 		.data = &exynos990_usbdrd_phy
++	}, {
++		.compatible = "samsung,exynosautov920-usb31drd-combo-ssphy",
++		.data = &exynosautov920_usb31drd_combo_ssphy
+ 	}, {
+ 		.compatible = "samsung,exynosautov920-usbdrd-combo-hsphy",
+ 		.data = &exynosautov920_usbdrd_combo_hsphy
+diff --git a/include/linux/soc/samsung/exynos-regs-pmu.h b/include/linux/soc/samsung/exynos-regs-pmu.h
+index 4923f9be3d1f..f96c773b85c9 100644
+--- a/include/linux/soc/samsung/exynos-regs-pmu.h
++++ b/include/linux/soc/samsung/exynos-regs-pmu.h
+@@ -690,4 +690,5 @@
+ 
+ /* exynosautov920 */
+ #define EXYNOSAUTOV920_PHY_CTRL_USB20				(0x0710)
++#define EXYNOSAUTOV920_PHY_CTRL_USB31				(0x0714)
+ #endif /* __LINUX_SOC_EXYNOS_REGS_PMU_H */
 -- 
-Cheers,
-
-David / dhildenb
+2.34.1
 
