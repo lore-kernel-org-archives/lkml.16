@@ -1,115 +1,249 @@
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6EB872605
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 16:30:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D66072605
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 16:31:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751387460; cv=none; b=YqosN/rllr8oBZOkjk11k+Cm6yAhOP+y7eUBhiik+0tF6fwcIE9QPu62rnhBM+/Uf7JwXMVsOlE6X3cBaiCu9OYXgqkqgpAm7x6BFUkdseRM4mMfbait9chAHvQ31kc5Hpysc/ibidpDKnmhhVagOGj3LF1OzQf/Z3xbDh7Urd8=
+	t=1751387470; cv=none; b=SXS4hhMww32ihrqUaEggVpzeBvEmljc2kSVeUXOy4BRUmPvB6Ja7Dgm5uAbOCLAWcrn56TWHf2366HeU4NPRo3WnOvH+TK+5eBIJrw1fHnXP2bVRpk9i1KaHI+vVP0lkHIuOjjXvh7EZmNMNeGaFr+nGOM+ZlnXKONLtw8OJXgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751387460; c=relaxed/simple;
-	bh=ccu6doF606i3anOKp0WzDRUWJMLOrwaZM1RVrtVnpd8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=KtPZSik0wWhmUFVy2YwrzQNjT3s3dH3TzQ8lssEHtrS4Zbs1IlG6w+ZUtQ/qYvgqIgb2pza/nIML9r0L0ULyjVrHQYec7K+n51N+okfYqDIXxJbskjtWK1k+/WUgl89ZbEKArEYerO/dhHbxz0b696GSF0qXVKUblePbqJ1o418=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=Zlcos8GL; arc=none smtp.client-ip=209.85.160.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1751387470; c=relaxed/simple;
+	bh=MeoEMfOmcdkXYLCQWxw+tTZR5HMiaiUUOfDp78nk0MM=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=T5/WXl1CdrnHNwNY2DirJ7B7ziesrKfN3q64AbK44/+1ykG1X3JqH5iTcv0fE1plUQLRZQlLA6alUEw02YrMVHaIAYDLE2H3UOJvjUHGDnYVMh9Tn71ZScRv8U6hBo+z2T16EvOgyamtvA0P6mfgYD4PvdPrTYXW/1v8jeeCdoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=oQ6JxyiS; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="Zlcos8GL"
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2e9071e3706so2257283fac.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 09:30:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1751387458; x=1751992258; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=M+2FNWnu3aI1hBbZInqVaj9v9ytsHBTZW74r6v2b6BM=;
-        b=Zlcos8GLVNTnx4j4NTQGjLQCCy25FLNv3qZ51Blkgf2mcPXDOqVEdCy+wk0iuv0jg4
-         3+JyRIy9MicuitQ/0fJ9m0/i7K4yj4NHsEc2E5qWUMYBwF2DwV/Nm5SxDNVZQVPia/sU
-         jtPOw6Qb37ugE5lNjCiHt+FsDTVuyYkjLFcePoB/Ycg8EwVFjIsqCZDdRncoDVLzw1M8
-         osOM62dZYxtGKeDDX1Y7R9+sG54+3QT/GVGshP6IlR33e0payMLWIdahzFM3dxajGBYz
-         0R95u7LH11hvTW/L2Jh254AUWABDKbim+yEX8zkskzO2MsjsJoXMWYvnyv2Qmyr8Q0HM
-         KdUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751387458; x=1751992258;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=M+2FNWnu3aI1hBbZInqVaj9v9ytsHBTZW74r6v2b6BM=;
-        b=KCsR25a+WBrBbpj6Mfe82jYP7bwpML4YWJJouIU4kX5PrHC00SmsomoYzjTPzGELG1
-         4tTlm0FaLp95GMhZaNXxeFJOn1znAJhd83CFCSKtTCnRsF5iDW02cJd0qc2F5ENPdgya
-         zomy+60tTENhdM8PSUYsxkJkawpJwcAhu0TR3xbemUKOW/xO0Scux/cm0J8vNOZeTiFx
-         X1P7ZOjYPDMqeO9wt//sdWB3Rqqo7BsdZ3VLxdqqB5Sjy4yDLTWi0HTCWnsbLKuYdPvx
-         9quCYWdsOF9zajhWKc8Mn0Il9vh5v0GuAsbe0tlIWVXPsu/7yFgiMVS9h0BbdyXRWcR+
-         ZHsw==
-X-Forwarded-Encrypted: i=1; AJvYcCXo7sCPNB/dF7NnFrApoOik9fAVDBgwqV5CV22HGQUs+DCzcrp5UMO35vbrkLJnpvTLQPxCdit799JBHa4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0p0iMTbKG2Lq70KV5pb9z0Zjjy1Ga9MV+/OX/LP1kIJgQe8EP
-	3uGkkys9tpfUP1iO188wcmFNRsKouy7vJSXlU8tdT50xkzweMr7kgR7n7LS2sApz1wg=
-X-Gm-Gg: ASbGncuWAJct31UWXLa/YzuRVm6aqVHQ607bAX7QWIpB2zQQ20SxDMxwUAl4LFHhgxZ
-	YBlZ/iBfWzdplFgdrj2kUFPtrB4AZ/aK/SChCMye4I+QjUPRNpyLC1hzx7nka20H0jizOFSl0/G
-	HCfRt60+tQS8FxPQLSo0I4IVtzRi2pSjGpybcUZCpZwrvvBrD4JdXt6Jg0TL/eVTrmJQWaNLId4
-	Dla7bOtIfHnvP70sd1YjvE9V0k9ja+z4gMPN5AL5+WUAoKo+3FSNQr8t/VAL+M/J5LVwdh/0YjS
-	+pt04TYl67ltyykcp//MV2XhBiqi30z7RaO3K27PbR04+12SfLMvBBDtyA==
-X-Google-Smtp-Source: AGHT+IGpJPyYM9iqExtSNLl1uBdGovogEv7fqGqaODKiiDJ0yDkdIcICzEP0BIRa0y/5LYk6VTWJoA==
-X-Received: by 2002:a05:6870:3116:b0:2c2:3ae9:5b9c with SMTP id 586e51a60fabf-2efed453acamr14111876fac.2.1751387457693;
-        Tue, 01 Jul 2025 09:30:57 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-50204a8b6aasm2515673173.92.2025.07.01.09.30.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 09:30:56 -0700 (PDT)
-Message-ID: <20f07b3b-194a-4dfe-936e-0f159bf44485@kernel.dk>
-Date: Tue, 1 Jul 2025 10:30:56 -0600
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="oQ6JxyiS"
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250701163105epoutp021ab250a02d4cc39f77b95c9146c6e876~OLZ7pVQ3Y0647006470epoutp02P
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 16:31:05 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250701163105epoutp021ab250a02d4cc39f77b95c9146c6e876~OLZ7pVQ3Y0647006470epoutp02P
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1751387465;
+	bh=NV08uxmKxQiLzKQgdc7Udco8g49OXPRD/TVseEZ79Sg=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=oQ6JxyiSsRb8OkrahQBSHBaP4SgZZP429A35wA+5j7trNIQjUSumf681zPY38ExXE
+	 DtAXWVAFrep5Qyi6a4WS7QGBjopcen1fvWduJ1uYz2zPM/3nOWhLMWxmRXHtAk8DnY
+	 zHHVzSruJiYtEna+RuSmMWF/ut4IyxrOnuM6kDBk=
+Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
+	20250701163104epcas5p1a96bded3717d037acd2cf0fd71346d8f~OLZ6XQIha2226522265epcas5p1u;
+	Tue,  1 Jul 2025 16:31:04 +0000 (GMT)
+Received: from epcas5p1.samsung.com (unknown [182.195.38.176]) by
+	epsnrtp01.localdomain (Postfix) with ESMTP id 4bWpS62zKGz6B9m6; Tue,  1 Jul
+	2025 16:31:02 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20250701133519epcas5p487e7452860a95fd78fe65dea6781a0f4~OJAdeuWxM0466004660epcas5p4i;
+	Tue,  1 Jul 2025 13:35:19 +0000 (GMT)
+Received: from FDSFTE462 (unknown [107.122.81.248]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250701133516epsmtip2097055360b4361ec0ac62f1bab9d901a~OJAap0Ruh1523815238epsmtip2J;
+	Tue,  1 Jul 2025 13:35:16 +0000 (GMT)
+From: "Shradha Todi" <shradha.t@samsung.com>
+To: "'Krzysztof Kozlowski'" <krzk@kernel.org>, "'Rob Herring'"
+	<robh@kernel.org>
+Cc: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-samsung-soc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+	<linux-fsd@tesla.com>, <mani@kernel.org>, <lpieralisi@kernel.org>,
+	<kw@linux.com>, <bhelgaas@google.com>, <jingoohan1@gmail.com>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <alim.akhtar@samsung.com>,
+	<vkoul@kernel.org>, <kishon@kernel.org>, <arnd@arndb.de>,
+	<m.szyprowski@samsung.com>, <jh80.chung@samsung.com>,
+	<pankaj.dubey@samsung.com>
+In-Reply-To: <f877b3d7-d770-4424-9813-da748775f456@kernel.org>
+Subject: RE: [PATCH v2 07/10] dt-bindings: phy: Add PHY bindings support for
+ FSD SoC
+Date: Tue, 1 Jul 2025 19:05:15 +0530
+Message-ID: <02bf01dbea8c$fc835cb0$f58a1610$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Weird delay introduced in v6.16-rc only, possible regression
-To: Qu Wenruo <quwenruo.btrfs@gmx.com>,
- "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>
-References: <e597d8c6-ed77-47ae-b030-1016727d6abe@gmx.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <e597d8c6-ed77-47ae-b030-1016727d6abe@gmx.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQFUClgbainc6hQuKSBO0V8ttZVgkwGg1JXJAfs/ltABn1f9rAD4JQ8bAeFf3fS07FvF0A==
+Content-Language: en-in
+X-CMS-MailID: 20250701133519epcas5p487e7452860a95fd78fe65dea6781a0f4
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-541,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250625165319epcas5p3721c19f6e6b482438c62dd1ef784de03
+References: <20250625165229.3458-1-shradha.t@samsung.com>
+	<CGME20250625165319epcas5p3721c19f6e6b482438c62dd1ef784de03@epcas5p3.samsung.com>
+	<20250625165229.3458-8-shradha.t@samsung.com>
+	<20250627211721.GA153863-robh@kernel.org>
+	<02af01dbea78$24f01310$6ed03930$@samsung.com>
+	<f877b3d7-d770-4424-9813-da748775f456@kernel.org>
 
-On 6/29/25 3:45 PM, Qu Wenruo wrote:
-> Hi,
-> 
-> Recently I'm hitting a very weird delay when doing development inside a x86_64 VM.
-> 
-> The dmesg shows the delay (10+ sec) between virtio blk and device-mapper:
-> 
-> [    3.651377] virtio_blk virtio4: 10/0/0 default/read/poll queues
-> [    3.653075] virtio_scsi virtio2: 10/0/0 default/read/poll queues
-> [    3.670269] virtio_blk virtio4: [vda] 83886080 512-byte logical blocks (42.9 GB/40.0 GiB)
-> [    3.672096] scsi host6: Virtio SCSI HBA
-> [    3.708452]  vda: vda1 vda2
-> [    3.711073] virtio_blk virtio5: 10/0/0 default/read/poll queues
-> [    3.729879] virtio_blk virtio5: [vdb] 167772160 512-byte logical blocks (85.9 GB/80.0 GiB)
-> [    3.737535] virtio_blk virtio8: 10/0/0 default/read/poll queues
-> [    3.747045] virtio_blk virtio8: [vdc] 83886080 512-byte logical blocks (42.9 GB/40.0 GiB)
-> [   17.453833] device-mapper: uevent: version 1.0.3
-> [   17.455689] device-mapper: ioctl: 4.50.0-ioctl (2025-04-28) initialised: dm-devel@lists.linux.dev
-> :: performing fsck on '/dev/os/root'
-> /dev/mapper/os-root: clean, 240299/1048576 files, 3372218/4194304 blocks
-> :: mounting '/dev/os/root' on real root
-> [   17.871671] EXT4-fs (dm-0): mounted filesystem 00a85626-d289-4817-8183-ee828e221f76 r/w with ordered data mode. Quota mode: none.
-> 
-> The VM is running kernel based on upstream commit 78f4e737a53e ("Merge tag 'for-6.16/dm-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm"), with a lot of extra btrfs patches.
-> 
-> 
-> The v6.15 kernel from Archlinux is totally fine without any delay.
-> 
-> The v6.16-rc kernel may have some different configs, but the config is used for a long long time, way before v6.15, so it looks like it's something in the v6.16 cycle causing problems.
-> 
-> I can definitely do a bisection, but any clue would be appreciated.
 
-Probably a good idea to go ahead with a bisect to help pin it down.
 
--- 
-Jens Axboe
+> -----Original Message-----
+> From: Krzysztof Kozlowski <krzk=40kernel.org>
+> Sent: 01 July 2025 16:55
+> To: Shradha Todi <shradha.t=40samsung.com>; 'Rob Herring' <robh=40kernel.=
+org>
+> Cc: linux-pci=40vger.kernel.org; devicetree=40vger.kernel.org; linux-arm-=
+kernel=40lists.infradead.org; linux-
+> samsung-soc=40vger.kernel.org; linux-kernel=40vger.kernel.org; linux-phy=
+=40lists.infradead.org; linux-
+> fsd=40tesla.com; mani=40kernel.org; lpieralisi=40kernel.org; kw=40linux.c=
+om; bhelgaas=40google.com;
+> jingoohan1=40gmail.com; krzk+dt=40kernel.org; conor+dt=40kernel.org; alim=
+.akhtar=40samsung.com;
+> vkoul=40kernel.org; kishon=40kernel.org; arnd=40arndb.de; m.szyprowski=40=
+samsung.com;
+> jh80.chung=40samsung.com; pankaj.dubey=40samsung.com
+> Subject: Re: =5BPATCH v2 07/10=5D dt-bindings: phy: Add PHY bindings supp=
+ort for FSD SoC
+>=20
+> On 01/07/2025 13:06, Shradha Todi wrote:
+> >
+> >
+> >> -----Original Message-----
+> >> From: Rob Herring <robh=40kernel.org>
+> >> Sent: 28 June 2025 02:47
+> >> To: Shradha Todi <shradha.t=40samsung.com>
+> >> Cc: linux-pci=40vger.kernel.org; devicetree=40vger.kernel.org; linux-a=
+rm-kernel=40lists.infradead.org;
+> > linux-
+> >> samsung-soc=40vger.kernel.org; linux-kernel=40vger.kernel.org; linux-p=
+hy=40lists.infradead.org; linux-
+> >> fsd=40tesla.com; manivannan.sadhasivam=40linaro.org; lpieralisi=40kern=
+el.org; kw=40linux.com;
+> >> bhelgaas=40google.com; jingoohan1=40gmail.com; krzk+dt=40kernel.org; c=
+onor+dt=40kernel.org;
+> >> alim.akhtar=40samsung.com; vkoul=40kernel.org; kishon=40kernel.org; ar=
+nd=40arndb.de;
+> >> m.szyprowski=40samsung.com; jh80.chung=40samsung.com; pankaj.dubey=40s=
+amsung.com
+> >> Subject: Re: =5BPATCH v2 07/10=5D dt-bindings: phy: Add PHY bindings s=
+upport for FSD SoC
+> >>
+> >> On Wed, Jun 25, 2025 at 10:22:26PM +0530, Shradha Todi wrote:
+> >>> Document PHY device tree bindings for Tesla FSD SoCs.
+> >>>
+> >>> Signed-off-by: Shradha Todi <shradha.t=40samsung.com>
+> >>> ---
+> >>>  .../bindings/phy/samsung,exynos-pcie-phy.yaml =7C 25 +++++++++++++++=
+++--
+> >>>  1 file changed, 23 insertions(+), 2 deletions(-)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/phy/samsung,exynos-pci=
+e-phy.yaml
+> >> b/Documentation/devicetree/bindings/phy/samsung,exynos-pcie-phy.yaml
+> >>> index 41df8bb08ff7..4dc20156cdde 100644
+> >>> --- a/Documentation/devicetree/bindings/phy/samsung,exynos-pcie-phy.y=
+aml
+> >>> +++ b/Documentation/devicetree/bindings/phy/samsung,exynos-pcie-phy.y=
+aml
+> >>> =40=40 -15,10 +15,13 =40=40 properties:
+> >>>      const: 0
+> >>>
+> >>>    compatible:
+> >>> -    const: samsung,exynos5433-pcie-phy
+> >>> +    enum:
+> >>> +      - samsung,exynos5433-pcie-phy
+> >>> +      - tesla,fsd-pcie-phy
+> >>>
+> >>>    reg:
+> >>> -    maxItems: 1
+> >>> +    minItems: 1
+> >>> +    maxItems: 2
+> >>>
+> >>>    samsung,pmu-syscon:
+> >>>      =24ref: /schemas/types.yaml=23/definitions/phandle
+> >>> =40=40 -30,6 +33,24 =40=40 properties:
+> >>>      description: phandle for FSYS sysreg interface, used to control
+> >>>                   sysreg registers bits for PCIe PHY
+> >>>
+> >>> +allOf:
+> >>> +  - if:
+> >>> +      properties:
+> >>> +        compatible:
+> >>> +          contains:
+> >>> +            enum:
+> >>> +              - tesla,fsd-pcie-phy
+> >>> +    then:
+> >>> +      description:
+> >>> +        The PHY controller nodes are represented in the aliases node
+> >>> +        using the following format 'pciephy=7Bn=7D'. Depending on wh=
+ether
+> >>> +        n is 0 or 1, the phy init sequence is chosen.
+> >>
+> >> What? Don't make up your own aliases.
+> >>
+> >> If the PHY instances are different, then maybe you need a different
+> >> compatible. If this is just selecting the PHY mode, you can do that in
+> >> PHY cells as the mode depends on the consumer.
+> >>
+> >
+> > FSD PCIe has 2 instances of PHY. Both are the same HW Samsung
+> > PHYs (Therefore share the same register offsets). But the PHY used here
+>=20
+> So same?
+>=20
+> > does not support auto adaptation so we need to tune the PHYs
+> > according to the use case (considering channel loss, etc). This is why =
+we
+>=20
+> So not same? Decide. Either it is same or not, cannot be both.
+>=20
+> If you mean that some wiring is different on the board, then how does it
+> differ in soc thus how it is per-soc property? If these are use-cases,
+> then how is even suitable for DT?
+>=20
+> I use your Tesla FSD differently and then I exchange DTSI and compatibles=
+?
+>=20
+> You are no describing real problem and both binding and your
+> explanations are vague and imprecise. Binding tells nothing about it, so
+> it is example of skipping important decisions.
+>=20
+> > have 2 different SW PHY initialization sequence depending on the instan=
+ce
+> > number. Do you think having different compatible (something like
+> > tesla,fsd-pcie-phy0 and tesla,fsd-pcie-phy1) and having phy ID as platf=
+orm data
+> > is okay in this case? I actually took reference from files like:
+>=20
+> And in different use case on same soc you are going to reverse
+> compatibles or instance IDs?
+>
+
+Even though both the PHYs are exactly identical in terms of hardware,
+they need to be programmed/initialized/configured differently.
+
+Sorry for my misuse of the word =22use-case=22. To clarify, these configura=
+tions
+will always remain the same for FSD SoC even if you use it differently.
+
+I will use different compatibles for them as I understand that it is the be=
+st
+option.
+=20
+> > drivers/usb/phy/phy-am335x-control.c
+>=20
+> So you took 15 years old hardware, code and binding as an example.
+>=20
+> No, don't do that ever.
+>=20
+> Anyway, poor choices even in newer code should not drive your design.
+> Design it properly, describe the hardware.
+>=20
+> > drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c
+> > who use alias to differentiate between register offsets for instances.
+>=20
+>=20
+>=20
+> Best regards,
+> Krzysztof
+
