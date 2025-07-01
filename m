@@ -1,143 +1,71 @@
-Received: from mta-65-227.siemens.flowmailer.net (mta-65-227.siemens.flowmailer.net [185.136.65.227])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE362868BE
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 20:33:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.65.227
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC9429550F
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 20:34:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751401995; cv=none; b=J9CFJGCC5jNB5FVGAgS43W463bl89ZLJXCVNDm6OzvcvJlywwxkbjPafYuE3WyeqYBa3gHh0mJ+o+lEQONdvODrlUmA0cF9uEjXo6A9lOOcTJvhae5XnJv7zs4faZmi/24hBYYaLQZC2KVBUlXz3C1RZkv7FM65ChoYG0dJg8oY=
+	t=1751402045; cv=none; b=R4GtetSif1EhArMzcJ6LUJjmlx6xViKMhKb0WpgEM3YHPo9lVvyni2HSkNRuIo+//7JBgcDVgq3h/AVL0QFQag56g3V4YU35gXmuDu6hgYsIx9y6eQU4EYnGvZ1NIbs1nlfyg1hXZJ8jOtoowLi8awgpbS2IwznDnJW/DuSO/go=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751401995; c=relaxed/simple;
-	bh=911JYjHmj6gjJY5DPIg00EEUOKP+CfWg2wJM8NLTVE0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FihU3ef/LMcdOD5GIILfNchRKeQMQJ8H7oIrpyePHzX1rqxSok0k9kvvhV1y1mw2S628ZC1FNR3hpjOemGqs+jSzq3v5Nuq35+w1bnyJ8BSjLMfLvXIuk538wWy7YY60iLMUT+SSNUVAS6XkjHeobcPDfr9dqpN7EBGeCCkAlWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=florian.bezdeka@siemens.com header.b=Y6kN1y46; arc=none smtp.client-ip=185.136.65.227
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=siemens.com header.i=florian.bezdeka@siemens.com header.b="Y6kN1y46"
-Received: by mta-65-227.siemens.flowmailer.net with ESMTPSA id 20250701203308d90f4c435bf0ec4ce5
-        for <linux-kernel@vger.kernel.org>;
-        Tue, 01 Jul 2025 22:33:08 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm1;
- d=siemens.com; i=florian.bezdeka@siemens.com;
- h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
- bh=Md1ee6YGuXICMCHtrMUM5ihwD3M3vo1BsbApFOWCUKM=;
- b=Y6kN1y46aoIqKlsuyz3ipyhxjA8T3yrHi7FTv7uqzZV1VRWR6FV6ZS62sR939Z65UEDhhv
- FVvuTkMXVlc2RpyqYHzxBdA0HkyAUz3YtuSxqGXAvM32fAyGSrC7sFzHb0wk69k0JdmoWXoL
- c0q52117v+p8JSyYJn7RvdK7eqnS2A6ZmBON75zJUDPLRFh3F90izn/b8ERM4R+ZKqtmIo3T
- xY6HtvN2aHeaNwwZdGy+wGE4fXBr5vNVVupLrBM8Ph59F2wRWDxE3qaSkekpSxm6r+4261VN
- HQ5Q/RMJHuIQw8kxHrm+8gZlhDOpsdVXkvx0EI2VaYjdPhexVs5Vd1SA==;
-Message-ID: <7d49c9b5b533ee2b4b1883faf4c87ac8ebf60eb4.camel@siemens.com>
-Subject: Re: [PATCH v3] eventpoll: Fix priority inversion problem
-From: Florian Bezdeka <florian.bezdeka@siemens.com>
-To: K Prateek Nayak <kprateek.nayak@amd.com>, Nam Cao
- <namcao@linutronix.de>,  Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,  Sebastian
- Andrzej Siewior	 <bigeasy@linutronix.de>, John Ogness
- <john.ogness@linutronix.de>, Clark Williams <clrkwllms@kernel.org>, Steven
- Rostedt <rostedt@goodmis.org>, 	linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, 	linux-rt-devel@lists.linux.dev,
- linux-rt-users@vger.kernel.org, Joe Damato	 <jdamato@fastly.com>, Martin
- Karsten <mkarsten@uwaterloo.ca>, Jens Axboe	 <axboe@kernel.dk>
-Cc: Frederic Weisbecker <frederic@kernel.org>, Valentin Schneider
-	 <vschneid@redhat.com>
-Date: Tue, 01 Jul 2025 22:33:05 +0200
-In-Reply-To: <773266ac-aa33-497f-b889-6d9f784e850b@amd.com>
-References: <20250527090836.1290532-1-namcao@linutronix.de>
-	 <773266ac-aa33-497f-b889-6d9f784e850b@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1751402045; c=relaxed/simple;
+	bh=MAul/3RVS2yUgg0AOCRFms4q7VmZh1VNNpFuVZMfV9c=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Br3LfRKjk6LW/VazN/hHHP+fIm6udQnHKyCFavYwE3koCZCvaTZFN6xIOu2yzC+jpIScWDWr6e9AO1+bqDlxuvoJ2qZOYIaIaWZgHxAxIw1UaJpOOAGfhbXCeC2BwQ9gqMnQho5/J5bxQhA83pZ0HC7HP4lUO7Qby5ETiLe0r2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3de0dc57859so44988055ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 13:34:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751402042; x=1752006842;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2Ukn8Pm62dNob2zcuI43FOAo3SUxOVTN/sSt30MSOTQ=;
+        b=PrGe88Uu4pt3qEEv2iEzi/5hWwgNVEoM3PnSIyex7CDjrB+owMrHSb7vU6FBW+tdvc
+         9PCY/Ha4GVvIRUhywFM7tRYECqX9dfB+F2ZcO+fYqMoj3ivQlCd2SG7ThnCXRyIEk5E+
+         B6GbpRScUXUidagzeJe615oYtOk/t3gF/Y/xJaB30oityrkydzGhmzzCH7OWm0GhYLRa
+         XjGkqjDhqnVLJrpfR0vSjifCzi+2z/E0VXjUJ/Quhu9ybAboHrwLUQ3kDzbbdZcdGsdh
+         Mqtb3XnvXS2NsDC6r/8d0ZjkuUt4/3ANUrIVwEMDANGj8vtDVynZJcPxVuwGzfkSRFni
+         +gGA==
+X-Gm-Message-State: AOJu0YxcA8SEJPZ5QDv6bg28HHMieoI/jLAkhUE6vRaIZ3S0WbIyyYHO
+	7syUXfywCZhlEwjvq/B0Y9ElpuBgWI4N0q6Uq4Ov/Fosf87qWYzpM47oT/bK44h/Pqe0eKiU79R
+	fPPa0gQrK/mm9YFDj97iq7kjU2+A57Zr6oJqj4PJ0yHnieOEZEpCV2SrJLNA=
+X-Google-Smtp-Source: AGHT+IE8B95bOQmtqMg9EFUtnFipOe2WRFCsEOYpXVvIYnhE6d2LeAMJcZWASP3e1aqm9gsmoJ4qVZ+8TQ3NNqzOB3IwW1zCKPd+
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Flowmailer-Platform: Siemens
-Feedback-ID: 519:519-68982:519-21489:flowmailer
+X-Received: by 2002:a05:6e02:1c08:b0:3e0:546c:bdc3 with SMTP id
+ e9e14a558f8ab-3e054ac7ddcmr3663335ab.11.1751402042584; Tue, 01 Jul 2025
+ 13:34:02 -0700 (PDT)
+Date: Tue, 01 Jul 2025 13:34:02 -0700
+In-Reply-To: <CAF3JpA56EJV76dTfBxYoacgBUXOptfmN4FhQcsMq_m8LDrnv5Q@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6864463a.a70a0220.3b7e22.1f8d.GAE@google.com>
+Subject: Re: [syzbot] [wireless?] WARNING in _ieee80211_sta_cur_vht_bw
+From: syzbot <syzbot+ededba317ddeca8b3f08@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, moonhee.lee.ca@gmail.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 2025-06-30 at 20:38 +0530, K Prateek Nayak wrote:
-> Hello Nam,
->=20
-> On 5/27/2025 2:38 PM, Nam Cao wrote:
-> > The ready event list of an epoll object is protected by read-write
-> > semaphore:
-> >=20
-> >    - The consumer (waiter) acquires the write lock and takes items.
-> >    - the producer (waker) takes the read lock and adds items.
-> >=20
-> > The point of this design is enabling epoll to scale well with large num=
-ber
-> > of producers, as multiple producers can hold the read lock at the same
-> > time.
-> >=20
-> > Unfortunately, this implementation may cause scheduling priority invers=
-ion
-> > problem. Suppose the consumer has higher scheduling priority than the
-> > producer. The consumer needs to acquire the write lock, but may be bloc=
-ked
-> > by the producer holding the read lock. Since read-write semaphore does =
-not
-> > support priority-boosting for the readers (even with CONFIG_PREEMPT_RT=
-=3Dy),
-> > we have a case of priority inversion: a higher priority consumer is blo=
-cked
-> > by a lower priority producer. This problem was reported in [1].
-> >=20
-> > Furthermore, this could also cause stall problem, as described in [2].
-> >=20
-> > To fix this problem, make the event list half-lockless:
-> >=20
-> >    - The consumer acquires a mutex (ep->mtx) and takes items.
-> >    - The producer locklessly adds items to the list.
-> >=20
-> > Performance is not the main goal of this patch, but as the producer now=
- can
-> > add items without waiting for consumer to release the lock, performance
-> > improvement is observed using the stress test from
-> > https://github.com/rouming/test-tools/blob/master/stress-epoll.c. This =
-is
-> > the same test that justified using read-write semaphore in the past.
-> >=20
-> > Testing using 12 x86_64 CPUs:
-> >=20
-> >            Before     After        Diff
-> > threads  events/ms  events/ms
-> >        8       6932      19753    +185%
-> >       16       7820      27923    +257%
-> >       32       7648      35164    +360%
-> >       64       9677      37780    +290%
-> >      128      11166      38174    +242%
-> >=20
-> > Testing using 1 riscv64 CPU (averaged over 10 runs, as the numbers are
-> > noisy):
-> >=20
-> >            Before     After        Diff
-> > threads  events/ms  events/ms
-> >        1         73        129     +77%
-> >        2        151        216     +43%
-> >        4        216        364     +69%
-> >        8        234        382     +63%
-> >       16        251        392     +56%
-> >=20
->=20
-> I gave this patch a spin on top of tip:sched/core (PREEMPT_RT) with
-> Jan's reproducer from
-> https://lore.kernel.org/all/7483d3ae-5846-4067-b9f7-390a614ba408@siemens.=
-com/.
->=20
-> On tip:sched/core, I see a hang few seconds into the run and rcu-stall
-> a minute after when I pin the epoll-stall and epoll-stall-writer on the
-> same CPU as the Bandwidth timer on a 2vCPU VM. (I'm using a printk to
-> log the CPU where the timer was started in pinned mode)
->=20
-> With this series, I haven't seen any stalls yet over multiple short
-> runs (~10min) and even a longer run (~3Hrs).
+Hello,
 
-Many thanks for running those tests and posting the results as comments
-to this series. Highly appreciated!
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Florian
+Reported-by: syzbot+ededba317ddeca8b3f08@syzkaller.appspotmail.com
+Tested-by: syzbot+ededba317ddeca8b3f08@syzkaller.appspotmail.com
 
+Tested on:
 
+commit:         3f804361 Add linux-next specific files for 20250701
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=11df648c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=46111759e155f4cc
+dashboard link: https://syzkaller.appspot.com/bug?extid=ededba317ddeca8b3f08
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=14fb3982580000
+
+Note: testing is done by a robot and is best-effort only.
