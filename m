@@ -1,187 +1,166 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29C532749CB
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 12:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F6F273818
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 12:42:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751373749; cv=none; b=X+P97XDxW8VfUf+c5Fm+N+aS2xSQL/8EcxqlOk82X1T45HlHZFw4DeHRReL6+G4kCpgLSltYcb0SurNXRt7X2tuDZaLOITZLXA7YbDhCdim6V+ES79utwNJl1NlRaahhHSA2LUCor9MzcDYeIGSCP1Kd7BbqLWsrT0TJZUwHVBk=
+	t=1751373772; cv=none; b=qhIVIzl3Hl4E8ltHrTFVFLTuC4aufiu9bBzEBvFyNwvi4EZgjBGNkHwYInyLysThP9CVaTrDbYrqAr1sFNn0K0Rbstejh5KFlt72IxMIu1UqdZwJLOg7tl4xxyI1+lDEi0oKzRQeJqLsblnLfp8iEGdnTHpRj+IWPgUnLryGbC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751373749; c=relaxed/simple;
-	bh=aibM3CEN4GlDaN5Q5oUKGzqAOrx2WCfZHlJS67dPa24=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CUoXvNMKYhjYKdv5JU+jeTlVNPOR0oAh/iu13sZjb2+9N4AtzOb3m/P6Xt2ttU6FZ56tpBPJSfYKozT5hh08mGK5jUttosASF1QhJLdcgHQZtz/3kEt0yqhkApj50DNx18+A5bMBf1RVkFXmrKI4/TZ4GadDYiu8dd8mQQSoUpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Vrz6LLMw; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751373772; c=relaxed/simple;
+	bh=2USRWzkHY9LDDjXfilZDHGMHlXswQOI+HCwfX1yZ/fE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j1InEB4KaF/VC+d2C8SH/BOlwRn3iV/BehM8TAQ2eMWLPwSgwsBIEi8k2+Jsno5kCsjmT76rEp1jaLxsrKX8TzV2ijVIUxjqVFi9DwKxYdMasw3AzHbGpBGeO06+6g8igYukfYrzp3X1fAIDd16nupzzcYiQADjFuH56R5A+a3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NYDyCiv9; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vrz6LLMw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751373747;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5eb0wjmxKgoQIQfwLxvEHu9pE8U4ib0H+OzhXzeaAk0=;
-	b=Vrz6LLMwxxZVpejXJeqzrmByf+OcSD6kWvAeKAvQKrisyamiGsL1zwHe2dI3Yd4h3Gj28T
-	21EBIDUwH0po4QfFvJqxrOo55r2uoGSxL4QdL9/41h7AtNoMnc/yjBragbORTYYDaJTfMm
-	BR4TgL8p7MVEu8wjgR7RRKX+od+lnDc=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-610-tuO4ZvQFPgGgv8ERnu2pTQ-1; Tue, 01 Jul 2025 08:42:24 -0400
-X-MC-Unique: tuO4ZvQFPgGgv8ERnu2pTQ-1
-X-Mimecast-MFC-AGG-ID: tuO4ZvQFPgGgv8ERnu2pTQ_1751373743
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d40f335529so1022081785a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 05:42:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NYDyCiv9"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-453749af004so30455825e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 05:42:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751373768; x=1751978568; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tsVCbz5zR4RqV+iuMQyZvIjkyF6mk+aRWwFqzLZi86I=;
+        b=NYDyCiv926Zb84kMYRq3uZbh463JS8dlmsszVdO0HJn9tp/AEP5v8F/g/8DKLN/4Cw
+         VyPb8qPp1fMjYWPoOZWYQXyAGU4zZGu7mHDM2fg92+LXF5OWF67ibrV0tBbqbBplHAhw
+         VdytyFQIlL5X50n/dX7hXGhTcoDpVTRc2+DhphvFdkkULZ97vH7xZY0O4rt+zsow4XBU
+         +rDwTxHngLpHSDJbQmfgKuLQ47AhbMTvq/mv4JzePdSnGXxM6ypulGss3/HuarIFhRZc
+         S2ux9W4UhGHY+cYqTHacrZ8VlTe+qZ0USK3flaWS26paJyoSYbowGOC98M4TdE/KwDzB
+         7biw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751373743; x=1751978543;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5eb0wjmxKgoQIQfwLxvEHu9pE8U4ib0H+OzhXzeaAk0=;
-        b=bPcKk1XClHyvXuxbs83NQNj2qQrwQpokeEgagqDRtdFY3v+kYPhBORpMv4KzR4iIKm
-         E6QVJmbLCxoKgL7k3BeURhzRQ5UXylYXYH73010GE8+VNvF4MmkYThMWUb3th1QlOXtC
-         SlvkkjIW+0rh4SH0U5wOo4QRhwX/tJxoT3u9FGw5S5UuFJ7qYI2x7DOnBnGXKvrXel6b
-         QpLA2iBKKCxbDYyjRhiHiG8Jii9HoeZuC/w2SDbmALRc99RVwX7lln59j385cwt6m9HP
-         fFMc3b2HT58lVjXDY7DsxIMvtqtYsV+6sl8/NwQJmsPCevlihRubU+ARmdmOhljGjKDi
-         sv9A==
-X-Forwarded-Encrypted: i=1; AJvYcCV6ryor55KVXE28fF3aYO2r2MiZe7yV7YV1g6dJYe8KYX7Tq/xCmtj4JiHrdxVOTri1nksFnQMAdE/FZ/g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzqi4kHZE5gRbiyB9lttk5OuA+ONwpbyZUsQ2wUaG1tmKRVW9jJ
-	5KyUjxXF9cEzEt6lFyuhKDyDP3Jgzw0yPxqdHzaN2LFgMyBqBHuZ9LbXgxEevfDRz88c7W2wRqo
-	utNw8jrMN73jw7VsHU5DEONTOT6lrG4BszxoGXybNbjbmrEHDujNKN3VqydCuZHP1Rw==
-X-Gm-Gg: ASbGncvjXh5YlOKd8gdz8cI/Ei61ZTC2R3HzayCO3OmYrgjdhzsBkRA2Sa2UimsgHEs
-	Wyd+yF9UsmT5dy9+cWXQobZjNlnMcVGiIA2E5PmjWSKAzJrGun6bZl9WkOXuZF0JjaVrtLxRT7Z
-	4S7OK1FxcaMLSnZWpzDqNAIk/zqdk5/bhLBh0a0A3OD4QRyW79ZW1SDf7w8Wa0Pyjo8T3KH1G7D
-	2Ztmr0HJlb2iO0WeHX72rZkpWJni4O9r6qkwHzWjVUBZV4Fs2TSivT94+nbJ2Q3yWeXqn2kuoIt
-	CFHR7tRj3JV1uqY6ieuN3BDFu8nV
-X-Received: by 2002:a05:620a:2b8a:b0:7d4:61a4:dea with SMTP id af79cd13be357-7d466d304bfmr486922685a.7.1751373743361;
-        Tue, 01 Jul 2025 05:42:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGvA9cqKiGyYmMspm7UQcXD+JNKsXtSkygKVN8QiyRw0x71aIOnzq9VTSOJAu5f4SJwOywqbA==
-X-Received: by 2002:a05:620a:2b8a:b0:7d4:61a4:dea with SMTP id af79cd13be357-7d466d304bfmr486915985a.7.1751373742656;
-        Tue, 01 Jul 2025 05:42:22 -0700 (PDT)
-Received: from sgarzare-redhat ([193.207.144.202])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d44313689fsm766012285a.16.2025.07.01.05.42.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 05:42:22 -0700 (PDT)
-Date: Tue, 1 Jul 2025 14:42:10 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	HarshaVardhana S A <harshavardhana.sa@broadcom.com>, Bryan Tan <bryan-bt.tan@broadcom.com>, 
-	Vishnu Dasa <vishnu.dasa@broadcom.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, virtualization@lists.linux.dev, 
-	stable <stable@kernel.org>
-Subject: Re: [PATCH net] vsock/vmci: Clear the vmci transport packet properly
- when initializing it
-Message-ID: <37t6cnaqt2g7dyl6lauf7tccm5yzpv3dvxbngv7f7omiah35rr@nl35itdnhuda>
-References: <20250701122254.2397440-1-gregkh@linuxfoundation.org>
+        d=1e100.net; s=20230601; t=1751373768; x=1751978568;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tsVCbz5zR4RqV+iuMQyZvIjkyF6mk+aRWwFqzLZi86I=;
+        b=MCQbDCxUtvH2y8323d5sSFr8tIc/2kVxNQLz5oGu8qCKsEaiCMKeOMSYrDN4hL95kU
+         CLYa5xqzNJhyaMx3K5bB9Auepn7EgOZym/UtgawN1KfPIZY2mxn6s8aoOfQANC5GwD4T
+         RyTJkYKJE8qZwOkPE9VQ0DRTAyAN516uPfttrf8aerSq7CdChd8QiWjprzg35edY3B+b
+         QhWkExQrdOSNPtub47UTZevC+FeSP2JFcm3xC2tfcjK/JSv5hwhAcschd177xcnv/ZlL
+         yPj6rDL3FLX537/h2NOgW0LfBYTeiHV3I2MXbWhClG4/PGEz7EUNMnU1rjViCEE2d3Ur
+         +CQg==
+X-Forwarded-Encrypted: i=1; AJvYcCUV6rXVDx4PDia83az5lmNQMpE06NiFK0ZSjVDVwCRLzYuXbFbQGX/j1ew3Nt7lSrE60XpnjDTRBC63Y7c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGmXu6BANP0KQYhZL5GNejwMgSmVR0NT/bq8rmEPUPlB1PWvUz
+	9R+Z8fuCkCIjBXraj3Qnz2HbNSS18ENctT3ZSoyQG/XTMzFmqwDS3y7o0aOs+jiE+68=
+X-Gm-Gg: ASbGncvaTPuR4sEtzt2YkDlKjKveGdCA37rIQYMJNfeZ5uhOIcIqkMcKLOuZZci32hf
+	HkE4FLH5YZsqKuW7zrgTcUYWW2m8fSgIa1anQ7UVqNdEMExEohDcAJgCVBNCFBeHDA64ro5bFgV
+	x4eGIIZO33U7xo+Uj+nYdDYW9/kKD4bgQElLUgUD8KBrcOCQ+IDIWC//Q0PKc8cGGhh7b3ahUFN
+	r5Q0pnZdWa2JjmIRP15d9e5q0Tso8S/XrFY5SQNFu/5X8LaLSCKE+VO7GXEPaG8lvp63YDRJqRM
+	Lntw6oKROh2/gGm+EJNAYzsM3mzC29k1Be2bL0m9yVo5PVmM65XtGV+iSkiHwkV6nm4=
+X-Google-Smtp-Source: AGHT+IGzGtmISDr4u15qcknVybwuXswS0vgnEq/kCyZSCSHrqvkYh2GXlp+x4RvRaQKJVW3fIdsSmQ==
+X-Received: by 2002:a05:600c:6986:b0:43c:fa24:873e with SMTP id 5b1f17b1804b1-4538ee278d6mr164093505e9.13.1751373767557;
+        Tue, 01 Jul 2025 05:42:47 -0700 (PDT)
+Received: from [192.168.1.3] ([37.18.136.128])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453966eb3e0sm104937695e9.28.2025.07.01.05.42.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Jul 2025 05:42:47 -0700 (PDT)
+Message-ID: <c9bf945b-9fc6-4829-addf-2fb7a7d4eb36@linaro.org>
+Date: Tue, 1 Jul 2025 13:42:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250701122254.2397440-1-gregkh@linuxfoundation.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/6] spi: spi-fsl-dspi: Target mode improvements
+To: Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc: Vladimir Oltean <olteanv@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, Larisa Grigore <larisa.grigore@nxp.com>,
+ Frank Li <Frank.li@nxp.com>, Christoph Hellwig <hch@lst.de>,
+ linux-spi@vger.kernel.org, imx@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250627-james-nxp-spi-dma-v4-0-178dba20c120@linaro.org>
+ <20250630152612.npdobwbcezl5nlym@skbuf>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250630152612.npdobwbcezl5nlym@skbuf>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jul 01, 2025 at 02:22:54PM +0200, Greg Kroah-Hartman wrote:
->From: HarshaVardhana S A <harshavardhana.sa@broadcom.com>
->
->In vmci_transport_packet_init memset the vmci_transport_packet before
->populating the fields to avoid any uninitialised data being left in the
->structure.
 
-Usually I would suggest inserting a Fixes tag, but if you didn't put it, 
-there's probably a reason :-)
 
-If we are going to add it, I think it should be:
+On 30/06/2025 4:26 pm, Vladimir Oltean wrote:
+> On Fri, Jun 27, 2025 at 11:21:36AM +0100, James Clark wrote:
+>> Improve usability of target mode by reporting FIFO errors and increasing
+>> the buffer size when DMA is used. While we're touching DMA stuff also
+>> switch to non-coherent memory, although this is unrelated to target
+>> mode.
+>>
+>> The first commit is marked as a fix because it can fix intermittent
+>> issues with existing transfers, rather than the later fixes which
+>> improve larger than FIFO target mode transfers which would have never
+>> worked.
+>>
+>> With the combination of the commit to increase the DMA buffer size and
+>> the commit to use non-coherent memory, the host mode performance figures
+>> are as follows on S32G3:
+>>
+>>    # spidev_test --device /dev/spidev1.0 --bpw 8 --size <test_size> --cpha --iter 10000000 --speed 10000000
+>>
+>>    Coherent (4096 byte transfers): 6534 kbps
+>>    Non-coherent:                   7347 kbps
+>>
+>>    Coherent (16 byte transfers):    447 kbps
+>>    Non-coherent:                    448 kbps
+>>
+>> Just for comparison running the same test in XSPI mode:
+>>
+>>    4096 byte transfers:            2143 kbps
+>>    16 byte transfers:               637 kbps
+>>
+>> These tests required hacking S32G3 to use DMA in host mode, although
+>> the figures should be representative of target mode too where DMA is
+>> used. And the other devices that use DMA in host mode should see similar
+>> improvements.
+>>
+>> Signed-off-by: James Clark <james.clark@linaro.org>
+>> ---
+> 
+> My test numbers on LS1028A:
+> 
+> Baseline XSPI (unmodified driver):
+> $ ./spidev_test --device /dev/spidev2.1 --bpw 8 --size 8 --cpha --iter 10000000 --speed 10000000
+> rate: tx 2710.6kbps, rx 2710.6kbps
+> $ ./spidev_test --device /dev/spidev2.1 --bpw 8 --size 16 --cpha --iter 10000000 --speed 10000000
+> rate: tx 3217.5kbps, rx 3217.5kbps
+> $ ./spidev_test --device /dev/spidev2.1 --bpw 8 --size 4096 --cpha --iter 10000000 --speed 10000000
+> rate: tx 5118.4kbps, rx 5118.4kbps
+> 
+> Baseline DMA (modified just DSPI_XSPI_MODE -> DSPI_DMA_MODE):
+> $ ./spidev_test --device /dev/spidev2.1 --bpw 8 --size 8 --cpha --iter 10000000 --speed 10000000
+> rate: tx 1359.5kbps, rx 1359.5kbps
+> $ ./spidev_test --device /dev/spidev2.1 --bpw 8 --size 16 --cpha --iter 10000000 --speed 10000000
+> rate: tx 1461.1kbps, rx 1461.1kbps
+> $ ./spidev_test --device /dev/spidev2.1 --bpw 8 --size 4096 --cpha --iter 10000000 --speed 10000000
+> rate: tx 1664.6kbps, rx 1664.6kbps
+> 
+> Intermediary LS1028A DMA mode (using non-coherent buffers but still
+> small DMA buffers, i.e. holding just 1 FIFO size worth of data):
+> $ ./spidev_test --device /dev/spidev2.1 --bpw 8 --size 8 --cpha --iter 10000000 --speed 10000000
+> rate: tx 1345.1kbps, rx 1345.1kbps
+> $ ./spidev_test --device /dev/spidev2.1 --bpw 8 --size 16 --cpha --iter 10000000 --speed 10000000
+> rate: tx 1522.5kbps, rx 1522.5kbps
+> $ ./spidev_test --device /dev/spidev2.1 --bpw 8 --size 4096 --cpha --iter 10000000 --speed 10000000
+> rate: tx 1690.8kbps, rx 1690.8kbps
+> 
+> Final LS1028A DMA mode (with the patch to send large messages as a
+> single DMA buffer applied):
+> $ ./spidev_test --device /dev/spidev2.1 --bpw 8 --size 8 --cpha --iter 10000000 --speed 10000000
+> rate: tx 2247.0kbps, rx 2247.0kbps
+> $ ./spidev_test --device /dev/spidev2.1 --bpw 8 --size 16 --cpha --iter 10000000 --speed 10000000
+> rate: tx 3477.4kbps, rx 3477.4kbps
+> $ ./spidev_test --device /dev/spidev2.1 --bpw 8 --size 4096 --cpha --iter 10000000 --speed 10000000
+> rate: tx 8978.4kbps, rx 8978.4kbps
+> 
+> So after your patch set, DMA mode on LS1028A becomes more performant and
+> should replace XSPI. This is an outstanding result. That can be done as
+> follow-up work.
 
-Fixes: d021c344051a ("VSOCK: Introduce VM Sockets")
-
->
->Cc: Bryan Tan <bryan-bt.tan@broadcom.com>
->Cc: Vishnu Dasa <vishnu.dasa@broadcom.com>
->Cc: Broadcom internal kernel review list
->Cc: Stefano Garzarella <sgarzare@redhat.com>
->Cc: "David S. Miller" <davem@davemloft.net>
->Cc: Eric Dumazet <edumazet@google.com>
->Cc: Jakub Kicinski <kuba@kernel.org>
->Cc: Paolo Abeni <pabeni@redhat.com>
->Cc: Simon Horman <horms@kernel.org>
->Cc: virtualization@lists.linux.dev
->Cc: netdev@vger.kernel.org
->Cc: stable <stable@kernel.org>
->Signed-off-by: HarshaVardhana S A <harshavardhana.sa@broadcom.com>
->Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->---
->Tweaked from original version by rewording the text and adding a blank
->line and correctly sending it to the proper people for inclusion in net.
->
-> net/vmw_vsock/vmci_transport.c | 4 ++--
-> 1 file changed, 2 insertions(+), 2 deletions(-)
->
->diff --git a/net/vmw_vsock/vmci_transport.c b/net/vmw_vsock/vmci_transport.c
->index b370070194fa..7eccd6708d66 100644
->--- a/net/vmw_vsock/vmci_transport.c
->+++ b/net/vmw_vsock/vmci_transport.c
->@@ -119,6 +119,8 @@ vmci_transport_packet_init(struct vmci_transport_packet *pkt,
-> 			   u16 proto,
-> 			   struct vmci_handle handle)
-> {
->+	memset(pkt, 0, sizeof(*pkt));
->+
-> 	/* We register the stream control handler as an any cid handle so we
-> 	 * must always send from a source address of VMADDR_CID_ANY
-> 	 */
->@@ -131,8 +133,6 @@ vmci_transport_packet_init(struct vmci_transport_packet *pkt,
-> 	pkt->type = type;
-> 	pkt->src_port = src->svm_port;
-> 	pkt->dst_port = dst->svm_port;
->-	memset(&pkt->proto, 0, sizeof(pkt->proto));
->-	memset(&pkt->_reserved2, 0, sizeof(pkt->_reserved2));
-
-Should we also remove some `case`s in the following switch?
-I mean something like this:
-
-diff --git a/net/vmw_vsock/vmci_transport.c 
-b/net/vmw_vsock/vmci_transport.c
-index b370070194fa..d821ddcc62d8 100644
---- a/net/vmw_vsock/vmci_transport.c
-+++ b/net/vmw_vsock/vmci_transport.c
-@@ -135,10 +135,6 @@ vmci_transport_packet_init(struct vmci_transport_packet *pkt,
-         memset(&pkt->_reserved2, 0, sizeof(pkt->_reserved2));
-
-         switch (pkt->type) {
--       case VMCI_TRANSPORT_PACKET_TYPE_INVALID:
--               pkt->u.size = 0;
--               break;
--
-         case VMCI_TRANSPORT_PACKET_TYPE_REQUEST:
-         case VMCI_TRANSPORT_PACKET_TYPE_NEGOTIATE:
-                 pkt->u.size = size;
-@@ -149,12 +145,6 @@ vmci_transport_packet_init(struct vmci_transport_packet *pkt,
-                 pkt->u.handle = handle;
-                 break;
-
--       case VMCI_TRANSPORT_PACKET_TYPE_WROTE:
--       case VMCI_TRANSPORT_PACKET_TYPE_READ:
--       case VMCI_TRANSPORT_PACKET_TYPE_RST:
--               pkt->u.size = 0;
--               break;
--
-         case VMCI_TRANSPORT_PACKET_TYPE_SHUTDOWN:
-                 pkt->u.mode = mode;
-                 break;
-
-Thanks,
-Stefano
-
->
-> 	switch (pkt->type) {
-> 	case VMCI_TRANSPORT_PACKET_TYPE_INVALID:
->-- 
->2.50.0
->
+I wonder if latency could be higher despite increased throughput? It 
+probably wouldn't be a big enough increase that anyone would care. And 
+based on the structure of the driver if throughput is higher the latency 
+might even be lower.
 
