@@ -1,144 +1,150 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78F05273D8D;
-	Tue,  1 Jul 2025 12:24:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA4DC274670
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 12:24:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751372659; cv=none; b=ci1H7fj2MQqMIHFV48fsXy9jLQ5MkAvsGCBId+h5qbXRUpB+cBDojjsZXv1FJEVVP3Q8Dv2kQnI6ADtu1e1Z/r0zHtC0kbVhyo1y2zA+z3tEw1pkvRMUr8Y6ZYoMcQONR/3dGSRj5+ydJ7kWg1BpEq/d1BfZTZcXwT6gLPyoOQc=
+	t=1751372665; cv=none; b=nup1Kpj2P87AWbzaKgxbIJI2QMesIVvC4nP7aYTtUN1ifdNsbKoSbMqNbGUS83c0+gSUrq9JMyPCaLXyabqtZlZJrQklPZyWX7sxIMzeYdh7UAFfx2TJ39FBe/AcEEtEXBPRJDxF/wxNcKQKJLagPCxylR1Ski1Pfj+v4nr17ck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751372659; c=relaxed/simple;
-	bh=INulgcH/nzHPzEw+6nx7yLO32379I/EfVJ0SS1QNbJs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dAn4UXAMc5dEytmjjNCzld0u6XRXOqHdLCwkyNK984R9HDuwirXacb4ey3qlM+aMdUjAZ8F8tX2Fdcrp3li7ypBSwNcbZv0g9Uu8XWwP9jAPN0lWC21KvBXNKaVjHGDIx/Mq0KiGKy9BqCOLOTUanAJ6JnKz6tO3RfQFBHV25lo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T4NnV64h; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751372665; c=relaxed/simple;
+	bh=n8ZZkcIMTZ4oqwXL8cuzmbKEBEW4c7SvXxR443L664I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H+XCWoEuYqmu54hDbYMQ47k7JkzOyMmeOhwtS+B4115RZrzRQsaUWku0siSJOJe4mQvUpPbsOneLO40hmAMNx6CzuuwUcCwwFbchuk4j4GPjP/I9FbBAGJSBNOaGV44UNBDHWwLUFcfzR+qgndgll9/FWdQafu/jra4H/mHthxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S3MMrcT5; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T4NnV64h"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a50fc819f2so4038321f8f.2;
-        Tue, 01 Jul 2025 05:24:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S3MMrcT5"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-235e389599fso205295ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 05:24:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751372656; x=1751977456; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=J3Wtg2aGHhRy0M6H8IQ6x3ipYCPJsyzm0Bs4otQB+Po=;
-        b=T4NnV64hbTHJUSPimdGt6vMDp5+63nczOttfPLL9qNP+OyHoZYgRJlzUBqdyvOwNCi
-         SJZofkkUOP7n2vIIQm9DmYAIg4k/u/S+qd/XoXNagKiqpRwyeVv/88yZUozGUfD5oEDk
-         zYHVR0exRNCrrREbVpYd5ocL6VAGiod2IVKn/tpsmhS/n1OQKZf+93A2tyXffeZKVJ50
-         N6rnjfUuSLTY+V1/gtlNKLrYiIDeDUL7qENFrYklauq0mnqrssttqUCSW8WjB8f11Y7Q
-         Y4OIScHqTvVBSFEXqUlUt6endcv/kmrQPJgQMlSbPN1B1XAqDHP2wnpKTx2Rj0EMEb3n
-         znsA==
+        d=google.com; s=20230601; t=1751372663; x=1751977463; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=K7vYU5IpUGkedTKGsOw7fqDjAvdD4uWcycZwbigztzQ=;
+        b=S3MMrcT5ZWO9uq4/Bajo9gsztQdWuZcpeR+2K87z4qLctuYNjN6NGdoWUJyLolBUdr
+         7+WA5f/R1/UHwjdqr073f1fGge50hVU2PKZB88lfHu3iSgTre/FcFxjj7i5pKA/Wklc5
+         ZL0km8NpTkRaI0ugS7ih3veW4sxzVvLuo7mXPRRtyD6dZeD5GivODa0Y6z+5Rlem9bjn
+         uUxz8HltjWSy4PB8avVqsa9bw3K8z1DnjbBFn9dXOjmt246oeb+jh0qFdbfwRGUzC7Bb
+         K+/SIUFWqg0UhLfWvxX3JJSRPFMnsx7SV9gM+4oKyem5X2g8y4lrCu9+8eJ2dqWU2nIu
+         I3WQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751372656; x=1751977456;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=J3Wtg2aGHhRy0M6H8IQ6x3ipYCPJsyzm0Bs4otQB+Po=;
-        b=dG+cLtb2BOR5usfcrk2xEAX+YNEu5vIsrMdh1QNV7Zcq1PbA+w/zWUHmu4hgtcauSE
-         xC/w+oBvvS33D38Aa2cMzohcurHg/LETPFpet480nPhZrOQfNTBSSFkbdVuEXQWXL44K
-         qjdWfRPlGyF5SuVbr9EfkvUwxsUl5kMsgFaNZEpCZxNyeFG0f/yLauEyCTUcSB8dEVNK
-         OXAbw22eCR/hYGobpIxI6qX+4F5gn4eu8uN5zao0gcEwefODgAfsQx+Z58f9Z+5XdNKL
-         Tj1+YwMrO3qJ8OoE7TJ3x7RdWFojQ1Zn4PobPmH/Wi3ECZru9MZktLw/g2wE7kD8Uj2K
-         KQaA==
-X-Forwarded-Encrypted: i=1; AJvYcCXSIzhFHSIOuip0GPFvNYY84ttvND6Y6iDu8U9+hAvJbULW1ULIga1kRx3zvqhC54l50XAYRn7VQ5/8x0k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDOtfdxibH1kKsRfDHO8OIs2v6mhL8/yi7zaP5bQ6cyY1opQ/w
-	lIy3pe6Nt5ufA3wZXp5KmBjl2kLqA/PVLTodtFETrBXCBL0l5tp37OcZ
-X-Gm-Gg: ASbGncvqu6X4nZPNM9dE6jCZnh0YX0Ou1OSMFBjMaZhKU93MmcIQif6WXYlxIonI1Z9
-	Qwta1HKOp7mou+m0mccEGLWcK0FxadrvdgkcEljV1crDLjBrMv8a3M/akq0yk9C9mO4nfjBcpZc
-	tEECcesCXAs409cjkly1XnpZraD06xoSOZEJPUMjWbZ+2Q5wfJ4hvofSta9AcXlSNjYJo7ntsMI
-	39VVvq1sbktdI5klZysc15Z0pB2lrgtcdI3KKQ/Ab/U5Kve4zqZn2bE7YxDkNSEm/7aihDmRHwV
-	oG0x9DaScVJsHaHx43Mf0y97ZWFiibcjCNSC1Ush1zk3O2pGGabISnJe6/GTldpsuadoIqm1HBF
-	mC683qVgR0jcYcmUp8YxPcYAC4uMyNGh09ABhlxB1dz2uAt0ndg==
-X-Google-Smtp-Source: AGHT+IFVht3relObZqzWGT0XDyqUreLeTVUjvPsi4ZEg5WYRJLxoFHN8VFWY3YEcwMK3EIrI4A8Ghw==
-X-Received: by 2002:a05:6000:3c1:b0:3a4:d722:5278 with SMTP id ffacd0b85a97d-3a917bc77dfmr15264267f8f.39.1751372655503;
-        Tue, 01 Jul 2025 05:24:15 -0700 (PDT)
-Received: from [192.168.1.122] (cpc159313-cmbg20-2-0-cust161.5-4.cable.virginm.net. [82.0.78.162])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7fab7asm13077348f8f.24.2025.07.01.05.24.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 05:24:14 -0700 (PDT)
-Message-ID: <d152a6ae-4303-4889-b68b-25e29ea8eddb@gmail.com>
-Date: Tue, 1 Jul 2025 13:24:13 +0100
+        d=1e100.net; s=20230601; t=1751372663; x=1751977463;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K7vYU5IpUGkedTKGsOw7fqDjAvdD4uWcycZwbigztzQ=;
+        b=GOEN/LcFK++jX36h8qV7lzgGXwIUnlzt+2Um4SF9Ogs4WUB/UFwkyEab/4uZwafPFU
+         4GNRYv4XZcQz6+qSNEMwAsBYGw0dgxiYJjlSqmiym/pbkqq1PXqmUCAMFWQyMIobnqKA
+         4Qnl6UbI4O50BjGxsvagY9ee0cNGeg++QZvkgxhY1GN3Fa9NgDozDwhO6zy63Yw+iVGl
+         x7d4roKROI1S1fR+kmhVPxHEYU3wCZp8wFeNyUGaWtlaCB6ddPgZmc4Frlp98huvah4M
+         WR8qaDuRXm5O1Sa1ZYeyktnTF2M1sCo8uQ6O8RfnYiXkTFmjJIBSslyI7gpa8PRTw9/+
+         qwwA==
+X-Forwarded-Encrypted: i=1; AJvYcCXXkJgoBsrEM8y5u+oJKc7j/O5nM9vTqiZ3yw8CR+poNLXevHriPzXi8iHUoo7VVx67dMLZ6KCOWiZc4Ng=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCBqZkUmDr/Sf/BdQUNt9EQinD6ABDHG47xzZr/rKD9aebN23s
+	FPgU7dVxWQtm9j6fvtwvM6+FcZMm+mUg1tsAL3NcuOLntHj3W3Y+keR10FIHlOu42Q==
+X-Gm-Gg: ASbGncvje06rPBymNSLm58LuEbECs3XrWf16olEskBfHzp7YtLBp6deP7A7BrxU1c0O
+	tGhiYgs778zHYAtGWUFgvTGqOMuMTVfsTTyrwvcdo0Ol86x/bKEF2kFU4pu7H2hqwxsTPzb3TG2
+	8lLgKl74PQPBU1dymttOW/4sFMTAk9SF4F7IT4+OJR+oT+1lrBFmb5Qya3oMo1q/aJKfSOGYlt3
+	SOXKgfgJ/Z28tqpmkPZa4LMEAJz0+95ZniJXg0cYDFJeNDpk2PiiSenzBVhb7tCkbbpabezkhkk
+	6hRYcrmlWs6IBXrV2muMUuu6wYe4yAxScRTQpYcw6zaLtBWi4/gvDh1sHxbSRfAgD3SABzmGIYA
+	cYjDt1ajqkUy8uSUrticS
+X-Google-Smtp-Source: AGHT+IH4JQ2MdaL4TQHuSEKzEVU+2Jy2z1P1pCYvzTGLNdSVTsldrYDv/hBtBO4QCMRhsGfAvLyPYg==
+X-Received: by 2002:a17:902:e54e:b0:235:e1e4:efc4 with SMTP id d9443c01a7336-23c60105131mr2451315ad.14.1751372662789;
+        Tue, 01 Jul 2025 05:24:22 -0700 (PDT)
+Received: from google.com (232.98.126.34.bc.googleusercontent.com. [34.126.98.232])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f5437b40sm15776317a91.37.2025.07.01.05.24.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 05:24:21 -0700 (PDT)
+Date: Tue, 1 Jul 2025 12:24:07 +0000
+From: Pranjal Shrivastava <praan@google.com>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
+	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
+	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
+	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
+	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
+	zhangzekun11@huawei.com, iommu@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
+	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com,
+	dwmw2@infradead.org, baolu.lu@linux.intel.com
+Subject: Re: [PATCH v7 23/28] iommu/arm-smmu-v3-iommufd: Add hw_info to
+ impl_ops
+Message-ID: <aGPTZ3uHRIIRMF4c@google.com>
+References: <cover.1750966133.git.nicolinc@nvidia.com>
+ <205f234c05d6b09de52124a72a6978b74d832cfb.1750966133.git.nicolinc@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next] sfc: eliminate xdp_rxq_info_valid using XDP base
- API
-To: Fushuai Wang <wangfushuai@baidu.com>, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com
-Cc: netdev@vger.kernel.org, linux-net-drivers@amd.com,
- linux-kernel@vger.kernel.org
-References: <20250628051016.51022-1-wangfushuai@baidu.com>
-Content-Language: en-GB
-From: Edward Cree <ecree.xilinx@gmail.com>
-In-Reply-To: <20250628051016.51022-1-wangfushuai@baidu.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <205f234c05d6b09de52124a72a6978b74d832cfb.1750966133.git.nicolinc@nvidia.com>
 
-On 28/06/2025 06:10, Fushuai Wang wrote:
-> Commit eb9a36be7f3e ("sfc: perform XDP processing on received packets")
-> use xdp_rxq_info_valid to track failures of xdp_rxq_info_reg().
-> However, this driver-maintained state becomes redundant since the XDP
-> framework already provides xdp_rxq_info_is_reg() for checking registration
-> status.
+On Thu, Jun 26, 2025 at 12:34:54PM -0700, Nicolin Chen wrote:
+> This will be used by Tegra241 CMDQV implementation to report a non-default
+> HW info data.
 > 
-> Signed-off-by: Fushuai Wang <wangfushuai@baidu.com>
-
-Acked-by: Edward Cree <ecree.xilinx@gmail.com>
-
+> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
 > ---
->  drivers/net/ethernet/sfc/net_driver.h | 2 --
->  drivers/net/ethernet/sfc/rx_common.c  | 6 +-----
->  2 files changed, 1 insertion(+), 7 deletions(-)
+>  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h         | 7 +++++++
+>  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c | 8 ++++++--
+>  2 files changed, 13 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/net/ethernet/sfc/net_driver.h b/drivers/net/ethernet/sfc/net_driver.h
-> index 5c0f306fb019..b98c259f672d 100644
-> --- a/drivers/net/ethernet/sfc/net_driver.h
-> +++ b/drivers/net/ethernet/sfc/net_driver.h
-> @@ -404,7 +404,6 @@ struct efx_rx_page_state {
->   * @old_rx_packets: Value of @rx_packets as of last efx_init_rx_queue()
->   * @old_rx_bytes: Value of @rx_bytes as of last efx_init_rx_queue()
->   * @xdp_rxq_info: XDP specific RX queue information.
-> - * @xdp_rxq_info_valid: Is xdp_rxq_info valid data?.
->   */
->  struct efx_rx_queue {
->  	struct efx_nic *efx;
-> @@ -443,7 +442,6 @@ struct efx_rx_queue {
->  	unsigned long old_rx_packets;
->  	unsigned long old_rx_bytes;
->  	struct xdp_rxq_info xdp_rxq_info;
-> -	bool xdp_rxq_info_valid;
->  };
->  
->  enum efx_sync_events_state {
-> diff --git a/drivers/net/ethernet/sfc/rx_common.c b/drivers/net/ethernet/sfc/rx_common.c
-> index f4f75299dfa9..5306f4c44be4 100644
-> --- a/drivers/net/ethernet/sfc/rx_common.c
-> +++ b/drivers/net/ethernet/sfc/rx_common.c
-> @@ -269,8 +269,6 @@ void efx_init_rx_queue(struct efx_rx_queue *rx_queue)
->  			  "Failure to initialise XDP queue information rc=%d\n",
->  			  rc);
->  		efx->xdp_rxq_info_failed = true;
-> -	} else {
-> -		rx_queue->xdp_rxq_info_valid = true;
->  	}
->  
->  	/* Set up RX descriptor ring */
-> @@ -302,10 +300,8 @@ void efx_fini_rx_queue(struct efx_rx_queue *rx_queue)
->  
->  	efx_fini_rx_recycle_ring(rx_queue);
->  
-> -	if (rx_queue->xdp_rxq_info_valid)
-> +	if (xdp_rxq_info_is_reg(&rx_queue->xdp_rxq_info))
->  		xdp_rxq_info_unreg(&rx_queue->xdp_rxq_info);
-> -
-> -	rx_queue->xdp_rxq_info_valid = false;
->  }
->  
->  void efx_remove_rx_queue(struct efx_rx_queue *rx_queue)
+> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> index 07589350b2a1..836d5556008e 100644
+> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> @@ -721,6 +721,13 @@ struct arm_smmu_impl_ops {
+>  	int (*init_structures)(struct arm_smmu_device *smmu);
+>  	struct arm_smmu_cmdq *(*get_secondary_cmdq)(
+>  		struct arm_smmu_device *smmu, struct arm_smmu_cmdq_ent *ent);
+> +	/*
+> +	 * An implementation should define its own type other than the default
+> +	 * IOMMU_HW_INFO_TYPE_ARM_SMMUV3. And it must validate the input @type
+> +	 * to return its own structure.
+> +	 */
+> +	void *(*hw_info)(struct arm_smmu_device *smmu, u32 *length,
+> +			 enum iommu_hw_info_type *type);
 
+Thanks for adding the comment, this looks good.
+
+>  	const size_t vsmmu_size;
+>  	const enum iommu_viommu_type vsmmu_type;
+>  	int (*vsmmu_init)(struct arm_vsmmu *vsmmu,
+> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
+> index 2ab1c6cf4aac..1cf9646e776f 100644
+> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
+> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
+> @@ -11,13 +11,17 @@ void *arm_smmu_hw_info(struct device *dev, u32 *length,
+>  		       enum iommu_hw_info_type *type)
+>  {
+>  	struct arm_smmu_master *master = dev_iommu_priv_get(dev);
+> +	const struct arm_smmu_impl_ops *impl_ops = master->smmu->impl_ops;
+>  	struct iommu_hw_info_arm_smmuv3 *info;
+>  	u32 __iomem *base_idr;
+>  	unsigned int i;
+>  
+>  	if (*type != IOMMU_HW_INFO_TYPE_DEFAULT &&
+> -	    *type != IOMMU_HW_INFO_TYPE_ARM_SMMUV3)
+> -		return ERR_PTR(-EOPNOTSUPP);
+> +	    *type != IOMMU_HW_INFO_TYPE_ARM_SMMUV3) {
+> +		if (!impl_ops || !impl_ops->hw_info)
+> +			return ERR_PTR(-EOPNOTSUPP);
+> +		return impl_ops->hw_info(master->smmu, length, type);
+> +	}
+>  
+>  	info = kzalloc(sizeof(*info), GFP_KERNEL);
+>  	if (!info)
+
+Reviewed-by: Pranjal Shrivastava <praan@google.com>
+
+> -- 
+> 2.43.0
+> 
