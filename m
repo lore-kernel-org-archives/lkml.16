@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A568287511;
-	Tue,  1 Jul 2025 19:19:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01F532882B7;
+	Tue,  1 Jul 2025 19:19:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751397546; cv=none; b=OFglBQ3LwgbiTqDFdDOwDd5Np0BoFFYPloVtRVP8+YqeE2f2jfCyg/JP/YF7FsV74H1M9vtRNc4g50h9i2k7muPLFmwsrkw6200A6e1hhP2sAUHi6fmwNrpaFXGU7HplOcE9DPNf1Uo9wnVV4V3JbUy7hHz//69lttGIR3pBDac=
+	t=1751397548; cv=none; b=QsHA8jOYyFG8Flsv2nbPN9Dh9tQeJWUFr1L7XXyQXiMgyf/4VI3SujPX0uqlrSZeZEutn8/yQGX+9LT1z5pelsi9vJ+UcJJ6RlvWyykYmdLjR2rt4pm12bRNtRzgHJWDhzDbTjpP098ZJgYrWuOz/VQNff64Xq2HH/srUgKER4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751397546; c=relaxed/simple;
-	bh=IEeF1XmOFvet0cAU5DreYcr/1OJVi6UMuV3x6isQ67c=;
+	s=arc-20240116; t=1751397548; c=relaxed/simple;
+	bh=vrk74lb0dbKscq8FL04HpWM1hSFFbh97X1kJjRZQ/GY=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=Dj6pj+J850tfS94xg/k/szIOcPZbKps3wMCmEWEckwvtJZ0M+QIE/1rN1Z7tmLAC5A8zsOROI+YgwhvsWCP1orAhGRaKJUP/UkbgsEw2eVwRFDCWLd2DG6XKfNrCaUWlYWmgCICZTmTWTwVKUXCCppgwG4Dsx8XsqIyek5nGJso=
+	 Content-Type; b=KGfdD/NpAZ9yYPrDyRLgm7a7TSfApuNG40c8Z8EwCzdh4bN6n8oqyXj4qI4qXreT/l8rCW8NhRHdgKRh9YwyizouT3jNx8Y3jDQlbdEVMnhUAOOJzUIx7i1fkmH0/ifGNs76phdhirCSTQ3pDUZYtPbPVakwJR7k2kNU4hgJ4Dw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3AE2C4CEEB;
-	Tue,  1 Jul 2025 19:19:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2E49C4CEEB;
+	Tue,  1 Jul 2025 19:19:07 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uWg3s-00000007gq8-3rUR;
+	id 1uWg3s-00000007gni-0IY2;
 	Tue, 01 Jul 2025 14:50:32 -0400
-Message-ID: <20250701185032.769810977@goodmis.org>
+Message-ID: <20250701185031.921690551@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 01 Jul 2025 14:49:46 -0400
+Date: Tue, 01 Jul 2025 14:49:41 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -42,8 +42,9 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Linus Torvalds <torvalds@linux-foundation.org>,
  Andrew Morton <akpm@linux-foundation.org>,
  Jens Axboe <axboe@kernel.dk>,
- Florian Weimer <fweimer@redhat.com>
-Subject: [PATCH v7 07/12] unwind_user/sframe/x86: Enable sframe unwinding on x86
+ Florian Weimer <fweimer@redhat.com>,
+ linux-mm@kvack.org
+Subject: [PATCH v7 02/12] unwind_user/sframe: Store sframe section data in per-mm maple tree
 References: <20250701184939.026626626@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -55,28 +56,219 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 
-The x86 sframe 2.0 implementation works fairly well, starting with
-binutils 2.41 (though some bugs are getting fixed in later versions).
-Enable it.
+Associate an sframe section with its mm by adding it to a per-mm maple
+tree which is indexed by the corresponding text address range.  A single
+sframe section can be associated with multiple text ranges.
 
+Cc: linux-mm@kvack.org
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- arch/x86/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/include/asm/mmu.h |  2 +-
+ include/linux/mm_types.h   |  3 +++
+ include/linux/sframe.h     | 13 +++++++++
+ kernel/fork.c              | 10 +++++++
+ kernel/unwind/sframe.c     | 55 +++++++++++++++++++++++++++++++++++---
+ mm/init-mm.c               |  2 ++
+ 6 files changed, 81 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 17d4094c821b..8a382a6b9be3 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -304,6 +304,7 @@ config X86
- 	select HAVE_UNSTABLE_SCHED_CLOCK
- 	select HAVE_UNWIND_USER_COMPAT_FP	if IA32_EMULATION
- 	select HAVE_UNWIND_USER_FP		if X86_64
-+	select HAVE_UNWIND_USER_SFRAME		if X86_64
- 	select HAVE_USER_RETURN_NOTIFIER
- 	select HAVE_GENERIC_VDSO
- 	select VDSO_GETRANDOM			if X86_64
+diff --git a/arch/x86/include/asm/mmu.h b/arch/x86/include/asm/mmu.h
+index 0fe9c569d171..227a32899a59 100644
+--- a/arch/x86/include/asm/mmu.h
++++ b/arch/x86/include/asm/mmu.h
+@@ -87,7 +87,7 @@ typedef struct {
+ 	.context = {							\
+ 		.ctx_id = 1,						\
+ 		.lock = __MUTEX_INITIALIZER(mm.context.lock),		\
+-	}
++	},
+ 
+ void leave_mm(void);
+ #define leave_mm leave_mm
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index d6b91e8a66d6..4296cabf4afa 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -1206,6 +1206,9 @@ struct mm_struct {
+ #ifdef CONFIG_MM_ID
+ 		mm_id_t mm_id;
+ #endif /* CONFIG_MM_ID */
++#ifdef CONFIG_HAVE_UNWIND_USER_SFRAME
++		struct maple_tree sframe_mt;
++#endif
+ 	} __randomize_layout;
+ 
+ 	/*
+diff --git a/include/linux/sframe.h b/include/linux/sframe.h
+index 0584f661f698..73bf6f0b30c2 100644
+--- a/include/linux/sframe.h
++++ b/include/linux/sframe.h
+@@ -22,18 +22,31 @@ struct sframe_section {
+ 	signed char	fp_off;
+ };
+ 
++#define INIT_MM_SFRAME .sframe_mt = MTREE_INIT(sframe_mt, 0),
++extern void sframe_free_mm(struct mm_struct *mm);
++
+ extern int sframe_add_section(unsigned long sframe_start, unsigned long sframe_end,
+ 			      unsigned long text_start, unsigned long text_end);
+ extern int sframe_remove_section(unsigned long sframe_addr);
+ 
++static inline bool current_has_sframe(void)
++{
++	struct mm_struct *mm = current->mm;
++
++	return mm && !mtree_empty(&mm->sframe_mt);
++}
++
+ #else /* !CONFIG_HAVE_UNWIND_USER_SFRAME */
+ 
++#define INIT_MM_SFRAME
++static inline void sframe_free_mm(struct mm_struct *mm) {}
+ static inline int sframe_add_section(unsigned long sframe_start, unsigned long sframe_end,
+ 				     unsigned long text_start, unsigned long text_end)
+ {
+ 	return -ENOSYS;
+ }
+ static inline int sframe_remove_section(unsigned long sframe_addr) { return -ENOSYS; }
++static inline bool current_has_sframe(void) { return false; }
+ 
+ #endif /* CONFIG_HAVE_UNWIND_USER_SFRAME */
+ 
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 3341d50c61f2..e56daf4e546f 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -106,6 +106,7 @@
+ #include <linux/pidfs.h>
+ #include <linux/tick.h>
+ #include <linux/unwind_deferred.h>
++#include <linux/sframe.h>
+ 
+ #include <asm/pgalloc.h>
+ #include <linux/uaccess.h>
+@@ -687,6 +688,7 @@ void __mmdrop(struct mm_struct *mm)
+ 	mm_pasid_drop(mm);
+ 	mm_destroy_cid(mm);
+ 	percpu_counter_destroy_many(mm->rss_stat, NR_MM_COUNTERS);
++	sframe_free_mm(mm);
+ 
+ 	free_mm(mm);
+ }
+@@ -1024,6 +1026,13 @@ static void mmap_init_lock(struct mm_struct *mm)
+ #endif
+ }
+ 
++static void mm_init_sframe(struct mm_struct *mm)
++{
++#ifdef CONFIG_HAVE_UNWIND_USER_SFRAME
++	mt_init(&mm->sframe_mt);
++#endif
++}
++
+ static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p,
+ 	struct user_namespace *user_ns)
+ {
+@@ -1053,6 +1062,7 @@ static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p,
+ 	mm->pmd_huge_pte = NULL;
+ #endif
+ 	mm_init_uprobes_state(mm);
++	mm_init_sframe(mm);
+ 	hugetlb_count_init(mm);
+ 
+ 	if (current->mm) {
+diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
+index 20287f795b36..fa7d87ffd00a 100644
+--- a/kernel/unwind/sframe.c
++++ b/kernel/unwind/sframe.c
+@@ -122,15 +122,64 @@ int sframe_add_section(unsigned long sframe_start, unsigned long sframe_end,
+ 	if (ret)
+ 		goto err_free;
+ 
+-	/* TODO nowhere to store it yet - just free it and return an error */
+-	ret = -ENOSYS;
++	ret = mtree_insert_range(sframe_mt, sec->text_start, sec->text_end, sec, GFP_KERNEL);
++	if (ret) {
++		dbg("mtree_insert_range failed: text=%lx-%lx\n",
++		    sec->text_start, sec->text_end);
++		goto err_free;
++	}
++
++	return 0;
+ 
+ err_free:
+ 	free_section(sec);
+ 	return ret;
+ }
+ 
++static int __sframe_remove_section(struct mm_struct *mm,
++				   struct sframe_section *sec)
++{
++	if (!mtree_erase(&mm->sframe_mt, sec->text_start)) {
++		dbg("mtree_erase failed: text=%lx\n", sec->text_start);
++		return -EINVAL;
++	}
++
++	free_section(sec);
++
++	return 0;
++}
++
+ int sframe_remove_section(unsigned long sframe_start)
+ {
+-	return -ENOSYS;
++	struct mm_struct *mm = current->mm;
++	struct sframe_section *sec;
++	unsigned long index = 0;
++	bool found = false;
++	int ret = 0;
++
++	mt_for_each(&mm->sframe_mt, sec, index, ULONG_MAX) {
++		if (sec->sframe_start == sframe_start) {
++			found = true;
++			ret |= __sframe_remove_section(mm, sec);
++		}
++	}
++
++	if (!found || ret)
++		return -EINVAL;
++
++	return 0;
++}
++
++void sframe_free_mm(struct mm_struct *mm)
++{
++	struct sframe_section *sec;
++	unsigned long index = 0;
++
++	if (!mm)
++		return;
++
++	mt_for_each(&mm->sframe_mt, sec, index, ULONG_MAX)
++		free_section(sec);
++
++	mtree_destroy(&mm->sframe_mt);
+ }
+diff --git a/mm/init-mm.c b/mm/init-mm.c
+index 4600e7605cab..b32fcf167cc2 100644
+--- a/mm/init-mm.c
++++ b/mm/init-mm.c
+@@ -11,6 +11,7 @@
+ #include <linux/atomic.h>
+ #include <linux/user_namespace.h>
+ #include <linux/iommu.h>
++#include <linux/sframe.h>
+ #include <asm/mmu.h>
+ 
+ #ifndef INIT_MM_CONTEXT
+@@ -46,6 +47,7 @@ struct mm_struct init_mm = {
+ 	.user_ns	= &init_user_ns,
+ 	.cpu_bitmap	= CPU_BITS_NONE,
+ 	INIT_MM_CONTEXT(init_mm)
++	INIT_MM_SFRAME
+ };
+ 
+ void setup_initial_init_mm(void *start_code, void *end_code,
 -- 
 2.47.2
 
