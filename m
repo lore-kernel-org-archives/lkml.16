@@ -1,110 +1,69 @@
-Received: from mta-64-228.siemens.flowmailer.net (mta-64-228.siemens.flowmailer.net [185.136.64.228])
+Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE732749F6
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 13:33:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6D0B2749CB;
+	Tue,  1 Jul 2025 13:33:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751376829; cv=none; b=MHsPpKWKpprQTAXYlvSB9fh6UKfsxJin3HicG9szuGxywkqBNVuy3IqLDNHyRWlSoJ6S9GHy3HKO8OR1J/LHSFGLTOxvFY3Bu3c6HCvglPxebt/OiqiKeijoxwora4P5XkF8JV73Rl9f+6b1+BwKY1F7rtvIatxVVzbMCk+0Pwk=
+	t=1751376833; cv=none; b=tSoAxrR5oMVGjtWqN1JS3QTlVT35ld1kBNHi6hl81ZpUv83n8WAhODDSvQXXa1rHz9D6kgS/s88LfuQjHvtPQUcdI2RlbPkmaMIcVnfJjMxQ2c2mLBqZyzIjeJ8gePGMw/qwvgoqGd6xYR9r3y4+cql7NzptG7/uwyRocbOSK/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751376829; c=relaxed/simple;
-	bh=axIwVupvXGcOX7KDMuxqYaiGemEvjrs+9BecGDGb8nk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=U60W51VjiM5Cg4We6zBnxxfjOAeMAxXHwjglbLh8mbJq9Mr6yP3N+6vydwX9SgZu9Ptvq8rRfIj8A7jz+p7KSahJ3g/M1+Ry1WmaKeT9hSVOVK8JAAb7hORcwfqKoA8se3JhLRYWF51msweosuPdMqr6vtlGtzykCg0hO6zPa1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=alexander.sverdlin@siemens.com header.b=NT0/xHW6; arc=none smtp.client-ip=185.136.64.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
+	s=arc-20240116; t=1751376833; c=relaxed/simple;
+	bh=tmckpZ+LeV4gRKeqYD0pXo1Otiha2TbVF8apliPBVwI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W0gVujA7cOhulCOHws8oVL6GxBZzu7qjAxhb1GMivH0wvnuS/OrmsbALbmUxklt7T0X2xcem+C4zSBzUvuRh8fZ5LmEQHZWcDp1XwMIpk4wU/PLnBJN/ZUBY+uHVYqrT2YVRaH9UaDKDz6ctiZrXx28+QapzyM0JFwZBA+o2rkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=oxGR1fJR; arc=none smtp.client-ip=1.95.21.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=siemens.com header.i=alexander.sverdlin@siemens.com header.b="NT0/xHW6"
-Received: by mta-64-228.siemens.flowmailer.net with ESMTPSA id 20250701133337a2e56ca67b5358737d
-        for <linux-kernel@vger.kernel.org>;
-        Tue, 01 Jul 2025 15:33:37 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm1;
- d=siemens.com; i=alexander.sverdlin@siemens.com;
- h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc;
- bh=YhxdcWDoChMeKmCKFHUBRgx8Fy37YPqEiFc2G1XZk/I=;
- b=NT0/xHW6kCxGPbT2r9IA2uCj2BwYytVU4zBooT76wG4djkO052AKLKBGKI6R7ptSMfv1eJ
- LxneKxMSRmfdxcs2wHR1BP4Mq9ijo/x8elVuh7E54tc2P5RicaWiB6V110bABX7oL4/33xx8
- PIujI8DMQQbMI23ckyP9MIoAU+DEaohpJKGHT1Fq9Tgnwh30kFXM52z5tdtap/794luuoOK4
- QR2vUhhP4n9ZV5GX2xAVvgBsT2BiaeA/jdjh6wGf6/ogS1Q2ezEzMNB0yzBw87T7lCql6/4I
- 4HmpD7R2/wwjtodREGMGGv0iPNc9D00KYxZnpWiRt38FsTxBfjdvYqug==;
-From: "A. Sverdlin" <alexander.sverdlin@siemens.com>
-To: Boris Brezillon <bbrezillon@kernel.org>,
-	linux-mtd@lists.infradead.org
-Cc: Alexander Sverdlin <alexander.sverdlin@siemens.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	linux-arm-kernel@lists.infradead.org,
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="oxGR1fJR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=YlOXn2QdKGfBXkKhkm4yPrNrC5aKO1sGXt2KBKxXjcA=;
+	b=oxGR1fJRqwlIx3lhqKThp4PryCDSK8yu7lv8JhvaNJNTBJRiAJ7/xkRHDjC0IG
+	IYyfPMSrYflApQ/dDtdwxBle02eLGsIHDF54Mi4VnLupRF9dvpctYaXjM2Lakcnu
+	Et/XuQVxpBWuU9/PhV+8ocAGfR8deKrTy2mbRGt/QP5co=
+Received: from dragon (unknown [])
+	by gzsmtp3 (Coremail) with SMTP id M88vCgD3l9qO42NoKVABAA--.3311S3;
+	Tue, 01 Jul 2025 21:33:04 +0800 (CST)
+Date: Tue, 1 Jul 2025 21:33:02 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Markus Niebel <Markus.Niebel@ew.tq-group.com>,
+	linux@ew.tq-group.com, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] mtd: nand: raw: atmel: Respect tAR, tCLR in read setup timing
-Date: Tue,  1 Jul 2025 15:33:28 +0200
-Message-ID: <20250701133333.3871085-1-alexander.sverdlin@siemens.com>
+Subject: Re: [PATCH 1/1] arm64: dts: freescale: imx93-tqma9352: add memory
+ node
+Message-ID: <aGPjjrT4AAwGh//b@dragon>
+References: <20250604093122.203929-1-alexander.stein@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Flowmailer-Platform: Siemens
-Feedback-ID: 519:519-456497:519-21489:flowmailer
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250604093122.203929-1-alexander.stein@ew.tq-group.com>
+X-CM-TRANSID:M88vCgD3l9qO42NoKVABAA--.3311S3
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUOPfHUUUUU
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiIRAQdWhj45APxwAA3k
 
-From: Alexander Sverdlin <alexander.sverdlin@siemens.com>
+On Wed, Jun 04, 2025 at 11:31:21AM +0200, Alexander Stein wrote:
+> From: Markus Niebel <Markus.Niebel@ew.tq-group.com>
+> 
+> Although the bootloader should fixup with real memory size,
+> add memory node here with smallest assembled size for
+> readability.
+> 
+> Signed-off-by: Markus Niebel <Markus.Niebel@ew.tq-group.com>
+> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
 
-Having setup time 0 violates tAR, tCLR of some chips, for instance
-TOSHIBA TC58NVG2S3ETAI0 cannot be detected successfully (first ID byte
-being read duplicated, i.e. 98 98 dc 90 15 76 14 03 instead of
-98 dc 90 15 76 ...).
-
-Atmel Application Notes postulated 1 cycle NRD_SETUP without explanation
-[1], but it looks more appropriate to just calculate setup time properly.
-
-Without the fix we've measured -2ns tAR delay (REn asserted before ALE
-deassert!); with the fix -- 60ns (subject to module clock).
-
-[1] Link: https://ww1.microchip.com/downloads/aemDocuments/documents/MPU32/ApplicationNotes/ApplicationNotes/doc6255.pdf
-Fixes: f9ce2eddf176 ("mtd: nand: atmel: Add ->setup_data_interface() hooks")
-Signed-off-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
----
- drivers/mtd/nand/raw/atmel/nand-controller.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/mtd/nand/raw/atmel/nand-controller.c b/drivers/mtd/nand/raw/atmel/nand-controller.c
-index dedcca87defc7..844df72f45063 100644
---- a/drivers/mtd/nand/raw/atmel/nand-controller.c
-+++ b/drivers/mtd/nand/raw/atmel/nand-controller.c
-@@ -1377,14 +1377,25 @@ static int atmel_smc_nand_prepare_smcconf(struct atmel_nand *nand,
- 	if (ret)
- 		return ret;
- 
-+	/*
-+	 * Read setup timing depends on the operation done on the NAND:
-+	 *
-+	 * NRD_SETUP = max(tAR, tCLR)
-+	 */
-+	timeps = max(conf->timings.sdr.tAR_min, conf->timings.sdr.tCLR_min);
-+	ncycles = DIV_ROUND_UP(timeps, mckperiodps);
-+	totalcycles += ncycles;
-+	ret = atmel_smc_cs_conf_set_setup(smcconf, ATMEL_SMC_NRD_SHIFT,
-+					  ncycles);
-+	if (ret)
-+		return ret;
-+
- 	/*
- 	 * The read cycle timing is directly matching tRC, but is also
- 	 * dependent on the setup and hold timings we calculated earlier,
- 	 * which gives:
- 	 *
--	 * NRD_CYCLE = max(tRC, NRD_PULSE + NRD_HOLD)
--	 *
--	 * NRD_SETUP is always 0.
-+	 * NRD_CYCLE = max(tRC, NRD_SETUP + NRD_PULSE + NRD_HOLD)
- 	 */
- 	ncycles = DIV_ROUND_UP(conf->timings.sdr.tRC_min, mckperiodps);
- 	ncycles = max(totalcycles, ncycles);
--- 
-2.50.0
+Applied, thanks!
 
