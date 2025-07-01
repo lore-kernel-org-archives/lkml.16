@@ -1,25 +1,24 @@
 Received: from rtg-sunil-navi33.amd.com (unknown [165.204.156.251])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F34CC25C838
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 06:40:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E96A25DAFF
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 06:40:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=165.204.156.251
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751352004; cv=none; b=sAYvsRP4XcMtugEwgfjzSClq/IJOB/bx0n/G3CXKxxrn9ZtAB59sYFruq5/NZs+Vymysuqe/NNUsPMc2i7WWrrnby2bSdmx1T/ZAEaaWulTaLRmx8QOWVLfizKJ7mi5z+/MGOk7HUi1ss45xc8SFLCUxnWEKRghik+MBguw4XMA=
+	t=1751352008; cv=none; b=k7Y4JjLkZcrC31LReoU9s06slSasTTb32F4aTV6fTqy5p9nZWSw6MMLq0Ierjd29ORgdwzKqgi4qN0frhrHMjwpUmP8B9mV0q3GS9Ohd7RbE9hIESpijI66AVSpmcxf1satwEzjfBjlx3UhiFsdSWiI6z4WIJaqNhxA2dTwxMvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751352004; c=relaxed/simple;
-	bh=B5hkSd0EsUueC6Y1fGp5WWTTuf7yRNXHu/xaBjo9QRM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RMkl/bCD7KhAkltApRBsf7DOzr6ynRaJyeOUEEXxu6vVTW+mEhGjbAoMXldoQhWLlMm51UyRQsn0GC6PYCfFi8Z3vJBlG1tz/S/i5k/pN8lEZtB31c0KVsmcdvbMAu0wxYWf1RuCNrAWfryDqnAO+DPy+yJ37EOEnX/mq0tEKeo=
+	s=arc-20240116; t=1751352008; c=relaxed/simple;
+	bh=rSEF8HSN8CgFP1N8JPHzQ2rHHEIB+0IdMrs9C+K7g0o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=tBtH7M9cMbvpwjf6Zxc+my21tlYqG5Eh9j6dJyEIBgRfRr4pRQG5692ddmUMmS5PGb24Yqlie0GGfMWRdsdGYnHOcYuX6EidrPKHSI8fzqnYDjaohRm6ytI5PICjuqMFfrLyZWw/KUaH6kwlGzV69bOjDmjVwYhECfvOdZoFVvU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com; spf=none smtp.mailfrom=rtg-sunil-navi33.amd.com; arc=none smtp.client-ip=165.204.156.251
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=rtg-sunil-navi33.amd.com
 Received: from rtg-sunil-navi33.amd.com (localhost [127.0.0.1])
-	by rtg-sunil-navi33.amd.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 5616X96U3210757;
+	by rtg-sunil-navi33.amd.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 5616X9GW3210752;
 	Tue, 1 Jul 2025 12:03:09 +0530
 Received: (from sunil@localhost)
-	by rtg-sunil-navi33.amd.com (8.15.2/8.15.2/Submit) id 5616X9Va3210756;
-	Tue, 1 Jul 2025 12:03:09 +0530
+	by rtg-sunil-navi33.amd.com (8.15.2/8.15.2/Submit) id 5616X8i03210727;
+	Tue, 1 Jul 2025 12:03:08 +0530
 From: Sunil Khatri <sunil.khatri@amd.com>
 To: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
         dri-devel@lists.freedesktop.org
@@ -27,12 +26,10 @@ Cc: amd-gfx@lists.freedesktop.org, simona@ffwll.ch, tzimmermann@suse.de,
         tursulin@ursulin.net, phasta@kernel.org, dakr@kernel.org,
         linux-kernel@vger.kernel.org, Oded Gabbay <ogabbay@kernel.org>,
         Sunil Khatri <sunil.khatri@amd.com>
-Subject: [PATCH v8 2/4] drm: add debugfs support on per client-id basis
-Date: Tue,  1 Jul 2025 12:03:01 +0530
-Message-Id: <20250701063303.3210665-2-sunil.khatri@amd.com>
+Subject: [PATCH v8 1/4] drm: move drm based debugfs funcs to drm_debugfs.c
+Date: Tue,  1 Jul 2025 12:03:00 +0530
+Message-Id: <20250701063303.3210665-1-sunil.khatri@amd.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250701063303.3210665-1-sunil.khatri@amd.com>
-References: <20250701063303.3210665-1-sunil.khatri@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,205 +39,273 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-add support to add a directory for each client-id
-with root at the dri level. Since the clients are
-unique and not just related to one single drm device,
-so it makes more sense to add all the client based
-nodes with root as dri.
+Requirement is to create per client-id based directories to
+hold key debugging information and for that access to
+root debugfs dentry is need which is not in one place
+and that information cannot be stored in drm_device.
 
-Also create a debugfs file which show the process
-information for the client and create a symlink back
-to the parent drm device from each client.
+Move the debugfs functionality from drm_drv.c and drm_accel.c
+to drm_debugfs.c This enables debugfs root node reference
+directly drm_debugfs.c and hence enable to create per client-id
+directory.
 
+v8: Create drm_accel dentry only if it's config is enabled (Jeff, Hugo)
+v8: Merge drm_drv and drm_accel debugfs patches (Koenig, Christian)
+
+Suggested-by: Christian König <christian.koenig@amd.com>
 Signed-off-by: Sunil Khatri <sunil.khatri@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
 ---
- drivers/gpu/drm/drm_debugfs.c | 81 +++++++++++++++++++++++++++++++++++
- drivers/gpu/drm/drm_file.c    |  9 ++++
- include/drm/drm_debugfs.h     | 11 +++++
- include/drm/drm_file.h        |  7 +++
- 4 files changed, 108 insertions(+)
+ drivers/accel/drm_accel.c      | 16 ----------------
+ drivers/gpu/drm/drm_debugfs.c  | 32 ++++++++++++++++++++++++++------
+ drivers/gpu/drm/drm_drv.c      | 14 ++++----------
+ drivers/gpu/drm/drm_internal.h |  6 ++----
+ include/drm/drm_accel.h        |  5 -----
+ include/drm/drm_drv.h          | 14 ++++++++++++--
+ 6 files changed, 44 insertions(+), 43 deletions(-)
 
+diff --git a/drivers/accel/drm_accel.c b/drivers/accel/drm_accel.c
+index aa826033b0ce..ca3357acd127 100644
+--- a/drivers/accel/drm_accel.c
++++ b/drivers/accel/drm_accel.c
+@@ -20,8 +20,6 @@
+ 
+ DEFINE_XARRAY_ALLOC(accel_minors_xa);
+ 
+-static struct dentry *accel_debugfs_root;
+-
+ static const struct device_type accel_sysfs_device_minor = {
+ 	.name = "accel_minor"
+ };
+@@ -73,17 +71,6 @@ static const struct drm_info_list accel_debugfs_list[] = {
+ };
+ #define ACCEL_DEBUGFS_ENTRIES ARRAY_SIZE(accel_debugfs_list)
+ 
+-/**
+- * accel_debugfs_init() - Initialize debugfs for device
+- * @dev: Pointer to the device instance.
+- *
+- * This function creates a root directory for the device in debugfs.
+- */
+-void accel_debugfs_init(struct drm_device *dev)
+-{
+-	drm_debugfs_dev_init(dev, accel_debugfs_root);
+-}
+-
+ /**
+  * accel_debugfs_register() - Register debugfs for device
+  * @dev: Pointer to the device instance.
+@@ -194,7 +181,6 @@ static const struct file_operations accel_stub_fops = {
+ void accel_core_exit(void)
+ {
+ 	unregister_chrdev(ACCEL_MAJOR, "accel");
+-	debugfs_remove(accel_debugfs_root);
+ 	accel_sysfs_destroy();
+ 	WARN_ON(!xa_empty(&accel_minors_xa));
+ }
+@@ -209,8 +195,6 @@ int __init accel_core_init(void)
+ 		goto error;
+ 	}
+ 
+-	accel_debugfs_root = debugfs_create_dir("accel", NULL);
+-
+ 	ret = register_chrdev(ACCEL_MAJOR, "accel", &accel_stub_fops);
+ 	if (ret < 0)
+ 		DRM_ERROR("Cannot register ACCEL major: %d\n", ret);
 diff --git a/drivers/gpu/drm/drm_debugfs.c b/drivers/gpu/drm/drm_debugfs.c
-index 04da7c27ff7c..6d1f1ca7ad9e 100644
+index 2d43bda82887..04da7c27ff7c 100644
 --- a/drivers/gpu/drm/drm_debugfs.c
 +++ b/drivers/gpu/drm/drm_debugfs.c
-@@ -305,6 +305,87 @@ void drm_debugfs_remove_root(void)
- 	debugfs_remove(drm_debugfs_root);
- }
+@@ -44,6 +44,9 @@
+ #include "drm_crtc_internal.h"
+ #include "drm_internal.h"
  
-+static int drm_debugfs_proc_info_show(struct seq_file *m, void *unused)
++static struct dentry *accel_debugfs_root;
++static struct dentry *drm_debugfs_root;
++
+ /***************************************************
+  * Initialization, etc.
+  **************************************************/
+@@ -286,16 +289,34 @@ int drm_debugfs_remove_files(const struct drm_info_list *files, int count,
+ }
+ EXPORT_SYMBOL(drm_debugfs_remove_files);
+ 
++void drm_debugfs_init_root(void)
 +{
-+	struct pid *pid;
-+	struct task_struct *task;
-+	struct drm_file *file = m->private;
-+
-+	if (!file)
-+		return -EINVAL;
-+
-+	rcu_read_lock();
-+	pid = rcu_dereference(file->pid);
-+	task = pid_task(pid, PIDTYPE_TGID);
-+
-+	seq_printf(m, "pid: %d\n", task ? task->pid : 0);
-+	seq_printf(m, "comm: %s\n", task ? task->comm : "Unset");
-+	rcu_read_unlock();
-+	return 0;
++	drm_debugfs_root = debugfs_create_dir("dri", NULL);
++#if IS_ENABLED(CONFIG_DRM_ACCEL)
++	accel_debugfs_root = debugfs_create_dir("accel", NULL);
++#endif
 +}
 +
-+static int drm_debufs_proc_info_open(struct inode *inode, struct file *file)
++void drm_debugfs_remove_root(void)
 +{
-+	return single_open(file, drm_debugfs_proc_info_show, inode->i_private);
-+}
-+
-+static const struct file_operations drm_debugfs_proc_info_fops = {
-+	.owner = THIS_MODULE,
-+	.open = drm_debufs_proc_info_open,
-+	.read = seq_read,
-+	.llseek = seq_lseek,
-+	.release = single_release,
-+};
-+
-+/**
-+ * drm_debugfs_clients_add - Add a per client debugfs directory
-+ * @file: drm_file for a client
-+ *
-+ * Create the debugfs directory for each client. This will be used to populate
-+ * driver specific data for each client.
-+ *
-+ * Also add the process information debugfs file for each client to tag
-+ * which client belongs to which process.
-+ */
-+void drm_debugfs_clients_add(struct drm_file *file)
-+{
-+	char *client;
-+
-+	client = kasprintf(GFP_KERNEL, "client-%llu", file->client_id);
-+	if (!client)
-+		return;
-+
-+	/* Create a debugfs directory for the client in root on drm debugfs */
-+	file->debugfs_client = debugfs_create_dir(client, drm_debugfs_root);
-+	kfree(client);
-+
-+	debugfs_create_file("proc_info", 0444, file->debugfs_client, file,
-+			    &drm_debugfs_proc_info_fops);
-+
-+	client = kasprintf(GFP_KERNEL, "../%s", file->minor->dev->unique);
-+	if (!client)
-+		return;
-+
-+	/* Create a link from client_id to the drm device this client id belongs to */
-+	debugfs_create_symlink("device", file->debugfs_client, client);
-+	kfree(client);
-+}
-+
-+/**
-+ * drm_debugfs_clients_remove - removes all debugfs directories and files
-+ * @file: drm_file for a client
-+ *
-+ * Removes the debugfs directories recursively from the client directory.
-+ *
-+ * There is also a possibility that debugfs files are open while the drm_file
-+ * is released.
-+ */
-+void drm_debugfs_clients_remove(struct drm_file *file)
-+{
-+	debugfs_remove_recursive(file->debugfs_client);
-+	file->debugfs_client = NULL;
++#if IS_ENABLED(CONFIG_DRM_ACCEL)
++	debugfs_remove(accel_debugfs_root);
++#endif
++	debugfs_remove(drm_debugfs_root);
 +}
 +
  /**
   * drm_debugfs_dev_init - create debugfs directory for the device
   * @dev: the device which we want to create the directory for
-diff --git a/drivers/gpu/drm/drm_file.c b/drivers/gpu/drm/drm_file.c
-index 06ba6dcbf5ae..3f4c52d00540 100644
---- a/drivers/gpu/drm/drm_file.c
-+++ b/drivers/gpu/drm/drm_file.c
-@@ -45,6 +45,7 @@
- #include <drm/drm_file.h>
- #include <drm/drm_gem.h>
- #include <drm/drm_print.h>
-+#include <drm/drm_debugfs.h>
+- * @root: the parent directory depending on the device type
+  *
+  * Creates the debugfs directory for the device under the given root directory.
+  */
+-void drm_debugfs_dev_init(struct drm_device *dev, struct dentry *root)
++void drm_debugfs_dev_init(struct drm_device *dev)
+ {
+-	dev->debugfs_root = debugfs_create_dir(dev->unique, root);
++	if (drm_core_check_feature(dev, DRIVER_COMPUTE_ACCEL))
++		dev->debugfs_root = debugfs_create_dir(dev->unique, accel_debugfs_root);
++	else
++		dev->debugfs_root = debugfs_create_dir(dev->unique, drm_debugfs_root);
+ }
  
- #include "drm_crtc_internal.h"
- #include "drm_internal.h"
-@@ -167,6 +168,9 @@ struct drm_file *drm_file_alloc(struct drm_minor *minor)
+ /**
+@@ -322,14 +343,13 @@ void drm_debugfs_dev_register(struct drm_device *dev)
+ 		drm_atomic_debugfs_init(dev);
+ }
  
- 	drm_prime_init_file_private(&file->prime);
+-int drm_debugfs_register(struct drm_minor *minor, int minor_id,
+-			 struct dentry *root)
++int drm_debugfs_register(struct drm_minor *minor, int minor_id)
+ {
+ 	struct drm_device *dev = minor->dev;
+ 	char name[64];
  
-+	if (!drm_core_check_feature(dev, DRIVER_COMPUTE_ACCEL))
-+		drm_debugfs_clients_add(file);
-+
- 	if (dev->driver->open) {
- 		ret = dev->driver->open(dev, file);
- 		if (ret < 0)
-@@ -181,6 +185,8 @@ struct drm_file *drm_file_alloc(struct drm_minor *minor)
- 		drm_syncobj_release(file);
- 	if (drm_core_check_feature(dev, DRIVER_GEM))
- 		drm_gem_release(dev, file);
-+
-+	drm_debugfs_clients_remove(file);
- 	put_pid(rcu_access_pointer(file->pid));
- 	kfree(file);
+ 	sprintf(name, "%d", minor_id);
+-	minor->debugfs_symlink = debugfs_create_symlink(name, root,
++	minor->debugfs_symlink = debugfs_create_symlink(name, drm_debugfs_root,
+ 							dev->unique);
  
-@@ -235,6 +241,9 @@ void drm_file_free(struct drm_file *file)
- 		     (long)old_encode_dev(file->minor->kdev->devt),
- 		     atomic_read(&dev->open_count));
+ 	/* TODO: Only for compatibility with drivers */
+diff --git a/drivers/gpu/drm/drm_drv.c b/drivers/gpu/drm/drm_drv.c
+index 17fc5dc708f4..b9b5c9f953af 100644
+--- a/drivers/gpu/drm/drm_drv.c
++++ b/drivers/gpu/drm/drm_drv.c
+@@ -69,8 +69,6 @@ DEFINE_XARRAY_ALLOC(drm_minors_xa);
+  */
+ static bool drm_core_init_complete;
  
-+	if (!drm_core_check_feature(dev, DRIVER_COMPUTE_ACCEL))
-+		drm_debugfs_clients_remove(file);
-+
- 	drm_events_release(file);
+-static struct dentry *drm_debugfs_root;
+-
+ DEFINE_STATIC_SRCU(drm_unplug_srcu);
  
- 	if (drm_core_check_feature(dev, DRIVER_MODESET)) {
-diff --git a/include/drm/drm_debugfs.h b/include/drm/drm_debugfs.h
-index cf06cee4343f..ea8cba94208a 100644
---- a/include/drm/drm_debugfs.h
-+++ b/include/drm/drm_debugfs.h
-@@ -153,6 +153,9 @@ void drm_debugfs_add_files(struct drm_device *dev,
+ /*
+@@ -183,8 +181,7 @@ static int drm_minor_register(struct drm_device *dev, enum drm_minor_type type)
+ 		return 0;
  
- int drm_debugfs_gpuva_info(struct seq_file *m,
- 			   struct drm_gpuvm *gpuvm);
-+
-+void drm_debugfs_clients_add(struct drm_file *file);
-+void drm_debugfs_clients_remove(struct drm_file *file);
- #else
- static inline void drm_debugfs_create_files(const struct drm_info_list *files,
- 					    int count, struct dentry *root,
-@@ -181,6 +184,14 @@ static inline int drm_debugfs_gpuva_info(struct seq_file *m,
+ 	if (minor->type != DRM_MINOR_ACCEL) {
+-		ret = drm_debugfs_register(minor, minor->index,
+-					   drm_debugfs_root);
++		ret = drm_debugfs_register(minor, minor->index);
+ 		if (ret) {
+ 			DRM_ERROR("DRM: Failed to initialize /sys/kernel/debug/dri.\n");
+ 			goto err_debugfs;
+@@ -751,10 +748,7 @@ static int drm_dev_init(struct drm_device *dev,
+ 		goto err;
+ 	}
+ 
+-	if (drm_core_check_feature(dev, DRIVER_COMPUTE_ACCEL))
+-		accel_debugfs_init(dev);
+-	else
+-		drm_debugfs_dev_init(dev, drm_debugfs_root);
++	drm_debugfs_dev_init(dev);
+ 
+ 	return 0;
+ 
+@@ -1168,7 +1162,7 @@ static void drm_core_exit(void)
+ 	drm_panic_exit();
+ 	accel_core_exit();
+ 	unregister_chrdev(DRM_MAJOR, "drm");
+-	debugfs_remove(drm_debugfs_root);
++	drm_debugfs_remove_root();
+ 	drm_sysfs_destroy();
+ 	WARN_ON(!xa_empty(&drm_minors_xa));
+ 	drm_connector_ida_destroy();
+@@ -1187,7 +1181,7 @@ static int __init drm_core_init(void)
+ 		goto error;
+ 	}
+ 
+-	drm_debugfs_root = debugfs_create_dir("dri", NULL);
++	drm_debugfs_init_root();
+ 
+ 	ret = register_chrdev(DRM_MAJOR, "drm", &drm_stub_fops);
+ 	if (ret < 0)
+diff --git a/drivers/gpu/drm/drm_internal.h b/drivers/gpu/drm/drm_internal.h
+index b2b6a8e49dda..d2d8e72f32d9 100644
+--- a/drivers/gpu/drm/drm_internal.h
++++ b/drivers/gpu/drm/drm_internal.h
+@@ -186,8 +186,7 @@ void drm_gem_vunmap(struct drm_gem_object *obj, struct iosys_map *map);
+ #if defined(CONFIG_DEBUG_FS)
+ void drm_debugfs_dev_fini(struct drm_device *dev);
+ void drm_debugfs_dev_register(struct drm_device *dev);
+-int drm_debugfs_register(struct drm_minor *minor, int minor_id,
+-			 struct dentry *root);
++int drm_debugfs_register(struct drm_minor *minor, int minor_id);
+ void drm_debugfs_unregister(struct drm_minor *minor);
+ void drm_debugfs_connector_add(struct drm_connector *connector);
+ void drm_debugfs_connector_remove(struct drm_connector *connector);
+@@ -205,8 +204,7 @@ static inline void drm_debugfs_dev_register(struct drm_device *dev)
+ {
+ }
+ 
+-static inline int drm_debugfs_register(struct drm_minor *minor, int minor_id,
+-				       struct dentry *root)
++static inline int drm_debugfs_register(struct drm_minor *minor, int minor_id)
  {
  	return 0;
  }
-+
-+static inline void drm_debugfs_clients_add(struct drm_file *file)
+diff --git a/include/drm/drm_accel.h b/include/drm/drm_accel.h
+index 038ccb02f9a3..20a665ec6f16 100644
+--- a/include/drm/drm_accel.h
++++ b/include/drm/drm_accel.h
+@@ -58,7 +58,6 @@ void accel_core_exit(void);
+ int accel_core_init(void);
+ void accel_set_device_instance_params(struct device *kdev, int index);
+ int accel_open(struct inode *inode, struct file *filp);
+-void accel_debugfs_init(struct drm_device *dev);
+ void accel_debugfs_register(struct drm_device *dev);
+ 
+ #else
+@@ -77,10 +76,6 @@ static inline void accel_set_device_instance_params(struct device *kdev, int ind
+ {
+ }
+ 
+-static inline void accel_debugfs_init(struct drm_device *dev)
+-{
+-}
+-
+ static inline void accel_debugfs_register(struct drm_device *dev)
+ {
+ }
+diff --git a/include/drm/drm_drv.h b/include/drm/drm_drv.h
+index a43d707b5f36..392baeaaa4a1 100644
+--- a/include/drm/drm_drv.h
++++ b/include/drm/drm_drv.h
+@@ -566,9 +566,19 @@ static inline bool drm_firmware_drivers_only(void)
+ }
+ 
+ #if defined(CONFIG_DEBUG_FS)
+-void drm_debugfs_dev_init(struct drm_device *dev, struct dentry *root);
++void drm_debugfs_dev_init(struct drm_device *dev);
++void drm_debugfs_init_root(void);
++void drm_debugfs_remove_root(void);
+ #else
+-static inline void drm_debugfs_dev_init(struct drm_device *dev, struct dentry *root)
++static inline void drm_debugfs_dev_init(struct drm_device *dev)
 +{
 +}
 +
-+static inline void drm_debugfs_clients_remove(struct drm_file *file)
++static inline void drm_debugfs_init_root(void)
 +{
 +}
++
++static inline void drm_debugfs_remove_root(void)
+ {
+ }
  #endif
- 
- #endif /* _DRM_DEBUGFS_H_ */
-diff --git a/include/drm/drm_file.h b/include/drm/drm_file.h
-index 5c3b2aa3e69d..eab7546aad79 100644
---- a/include/drm/drm_file.h
-+++ b/include/drm/drm_file.h
-@@ -400,6 +400,13 @@ struct drm_file {
- 	 * @client_name_lock: Protects @client_name.
- 	 */
- 	struct mutex client_name_lock;
-+
-+	/**
-+	 * @debugfs_client:
-+	 *
-+	 * debugfs directory for each client under a drm node.
-+	 */
-+	struct dentry *debugfs_client;
- };
- 
- /**
 -- 
 2.34.1
 
