@@ -1,71 +1,110 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A963281368
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 19:04:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDE7022A7E2
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 19:04:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751396646; cv=none; b=Z2ldAm4oKYqmUw0Wo6M5W6kJbGlqtBeiJJhhcytPHR9ZPufHhAMAcKKrbkXBf4+FjSzHSMYsqVP4bZD2s9EbdNo+Z2/4g5xccbzZerOQsLu/Alopzlr9Hgkk9Aa7iXmKPUH8Zx889PRhXdeZmj1rEwNQF+8MZFXXLu4fsdYWQRU=
+	t=1751396656; cv=none; b=miazngeh7cJO8FZUE7kJ7PZhdLK2yX8XH0jIEiRyMCyccCJddUdnBT7fKbze7eHyYxaLIZT/HRrrXz3diqPyHmFBVsC9Uc73ul1VplN1eiabq1Nb08aQ0WSJnY/zcjUgk3L7GVE8G1dSkEJ2SMFYevyhp1ubIiWNM8xSu2g20gM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751396646; c=relaxed/simple;
-	bh=rq0nFLEoksYFkbKxdMSNVS3LLzVb66WKcnzPiXikWG0=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=T+14jXY1lSDf2/s6HjBbN0mBTotNqBIa5iPkvzsfLIOxUhaQItaXkwcPlNaT3upPIuCGQKBhhSefxjvIgiIOQvp8DohlnFXlocOFEVjy9g9c+yakmSTSPZI7FYkFKBN4aa55sZ0lMw2QNt5AJfF87y7/Oq8ZL72omObTejSMwdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-86d0aa2dc99so316818839f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 12:04:04 -0700 (PDT)
+	s=arc-20240116; t=1751396656; c=relaxed/simple;
+	bh=tdMUAe5SXwK2+HqDWwEF+ff83QQq+x5NhkU7fbGpGLM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kBtKLL6rn0iAXEhF+ahDMUDn7YGt2+rnOCaCE0R6I+mNCJo/tMkVpKNa7N1L1wu2Kd1dE5xAmPPx9sBI27ay/bGyRP27Fj4fLGxZc7d+bxEYCSCQ5dHzuNsPQOZCjbdpJqOw3/Osjjq6JcP6aN71St/fZkfb/pGnPe6SfpoFR9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Wi4IbO0e; arc=none smtp.client-ip=209.85.160.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Wi4IbO0e"
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-2ebb468cbb4so3197636fac.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 12:04:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751396653; x=1752001453; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KEK3EncUVMtlip1R7eb2kLN0bNbNbxBTXXQymbbA6E8=;
+        b=Wi4IbO0eVmzFTdq6qgZqyLfx9Ac4KETYqVo7987Vy11SmbdhcJX675R9C+3to902gm
+         cdMJncn1FV1alw8ei9DWLUDlq5mdmThUhgcs7k5ufn24FjYuvjijDsNfw04jHW3/TQ9j
+         hTG+McyFBZs5S7EVGhRKR6CrI4Al0xdd+2aENXjnfIsANYF+LaJpJQW4IgG3bGAXDx8c
+         smjbOtNj9VfiqyVbXyJyaXq47yamzLMPjyVc9Yh9ZgQKPNTQf52eWjdLssR/BuQ2Wkx4
+         dHAKX9HONsow38l0z379caXDINRDfyutp6DxiMNBCMrXKQ56RLvgIs0bysBImNEPNt07
+         +VCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751396643; x=1752001443;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=V58wKqjwG04wvrAuA/3vleHNIlbmyRoEPp810m6Trxo=;
-        b=qxyFi4Rfx/qkhmgb6m9spBo+SY76+YcHTQUm0ETftKJGPxPZkzgN0Go8Obaa0Q4uTG
-         NFSIa2Rc3XLNqE8iMSLBsa8aIgfuwqZA4QO52HxUe0wP4Dk8iUc9huLrYEA7722ZK+sc
-         kxOlpyaBLPDxcEFJtORVLmHl/+c1p5m1CLQONiyx1KCaTlT7Gf+rGeRsrljalUWjVlfb
-         WCxfCHF9OV+iZ8iCoyYEz2x/HiDolOBnYaOE5seAQFTVCj24iGG8b2IvhGRI/5PbJRIw
-         yyIhDxLu4omUty8DoN2Q1IqkM8w76FP3A2UfdqoQMm/+uH6C2BGq1DGLlV3VI7jwMKcp
-         Atsg==
-X-Gm-Message-State: AOJu0YyCXf1Vf0hk8Ogy5sBmRvBIzxLzEyMobyk9aUMgTuEYZo6a32nn
-	nWSK5J4Gs4ZBqHxtBmVh/xDDk+1ksJ5uKR7/x+eg2kPAPWwt47xxbKxUK+7zhY/8ClHVlkF0+ee
-	sVhkBLf/bYdxO+9emYMmSZjeVMVxCMGCBjIsft2ekql85oZVhbBMvqVA7C1I=
-X-Google-Smtp-Source: AGHT+IGLJncz8x7YCjPHxKOeKYSKt9fsZw5Z2w2qKPGczYYgwfLqZ0pI/Mdu5xZ2BORIbb8MN/f/w9d9pe1Ha6chezx1uUBWCdJb
+        d=1e100.net; s=20230601; t=1751396653; x=1752001453;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KEK3EncUVMtlip1R7eb2kLN0bNbNbxBTXXQymbbA6E8=;
+        b=gweSjaGG6wI/R2+pN0O99/mriq1ANT/0gEIS1gjdQFQG9yhoehGM2Oa0MkmJA6nrjo
+         ubtk/bIG5/yn9+NqeTBknHE6iq64fEnoSHHFb082cmO/cu54fQ4NDi/JozeYS/drQGC7
+         WR4BRH8wp58d/sKZbjy0Xx1rmswr4HOLBdfIxvepbi9FqZ2NGIZICW2v1h1+3IIjYdPD
+         NHwpqF66KJkMb/zYDdxR3uyY+Bkyqqev50D284GhUMaB3OapzoZpdTwV1IKcxlPYBDgr
+         d8ewfKZ+SQBYCS0eQraT61d3X4oXGNuVVtaFRGVEYZvgT1QF5j1xZFFfv5ytu01j4olh
+         XHHA==
+X-Forwarded-Encrypted: i=1; AJvYcCWgJhaH9c4cp/fsUgiMPgMdNrSOQ7dEMHV0To2FvS1SRHtLFSpymX47A6I5EUqhFrbtUmgd6FMRMvtJ8PI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxe3n408NGvkJzwdXWoxeONyvdHcq8NtPRFLECOFRbgrT+3yZQe
+	+amKl7JeyszeEQCUvbnFBS3llrUBdbWNinB3i28K/G7s0zJoHfcmouYJhl/QpPzxuxc=
+X-Gm-Gg: ASbGncv9fMcxcF+MjwqhwV2cS9CHKruQq6ocMay4TLu9K2OQZx4xKTGErQoQlXk5G/D
+	HJlYpbyB/82kfVBDmmMKSdB6YO4ME/CCC0PiSFU0S+UEMXbHjvS62df+uopLhD9bkozOL6KG2M1
+	ZEBdlkFxko4HUva4fmaydf2y0IFsQmuFpIlxM+yP6T1amUmF0fSKzbpHkOmNZ3DPnFbs4qSCgJ5
+	khFxJrGbmGMSeQ01Im7CJHRnCGFTWYtlkBIO5kw5VSTov0w3VMrXU/+hmFnIQLIeKeyFxRnkGEJ
+	bYc2PMSD8jzShQSkKXIaHPHpNgakVI46WsZY3j5tqrXoegfzFvr+m5rTLJ4Gd+4PfDIeew==
+X-Google-Smtp-Source: AGHT+IHDxUr1xC3O4B3KUwXveX27ECu3+OaL0Y+zUBHu9uWrNi0sz8Q+GhGn5hs1DTYqhbsigADOQg==
+X-Received: by 2002:a05:6870:8614:b0:2e9:e2e6:4a20 with SMTP id 586e51a60fabf-2efed4b8854mr12938843fac.16.1751396652741;
+        Tue, 01 Jul 2025 12:04:12 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:8ebc:82eb:65f7:565e])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2efd4ea5a35sm3456703fac.2.2025.07.01.12.04.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 12:04:12 -0700 (PDT)
+Date: Tue, 1 Jul 2025 22:04:10 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: rp1: silence uninitialized variable warning
+Message-ID: <496f817d-802a-4889-a7dd-155d51895d16@suswa.mountain>
+References: <748d256a-dc9d-4f85-aaa4-d480b7c4fd22@sabinyo.mountain>
+ <aGOqmd5cvCeBjWMI@apocalypse>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:ee16:0:b0:86a:1fce:f1a6 with SMTP id
- ca18e2360f4ac-876c6a24a1cmr31142739f.5.1751396643486; Tue, 01 Jul 2025
- 12:04:03 -0700 (PDT)
-Date: Tue, 01 Jul 2025 12:04:03 -0700
-In-Reply-To: <CAF3JpA5AaoPXnQ81PYoEP89kGbKype5Fcew8JWSds4xbz40s+g@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68643123.a70a0220.3b7e22.1f43.GAE@google.com>
-Subject: Re: [syzbot] [wireless?] WARNING in _ieee80211_sta_cur_vht_bw
-From: syzbot <syzbot+ededba317ddeca8b3f08@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, moonhee.lee.ca@gmail.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aGOqmd5cvCeBjWMI@apocalypse>
 
-Hello,
+On Tue, Jul 01, 2025 at 11:30:01AM +0200, Andrea della Porta wrote:
+> We really can't get rid of that warning by replacing ENOTSUPP with
+> EOPNOTSUPP because the core pinctrl code still rely on the 'wrong'
+> define
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+Ah good.  Thanks for the explanation.  I'm glad I didn't try "fix" it
+then.  :)
 
-Reported-by: syzbot+ededba317ddeca8b3f08@syzkaller.appspotmail.com
-Tested-by: syzbot+ededba317ddeca8b3f08@syzkaller.appspotmail.com
+> like this excerpt from drivers/pinctrl/pinconf-generic.c:
+> 
+> ...
+> 	if (gname)
+> 		ret = pin_config_group_get(dev_name(pctldev->dev),
+> 					   gname, &config);
+> 	else
+> 		ret = pin_config_get_for_pin(pctldev, pin, &config);
+> 	/* These are legal errors */
+> 	if (ret == -EINVAL || ret == -ENOTSUPP)
+> 		continue;
+> ...
+> 
+> Also, many drivers still rely on ENOTSUPP. Maybe a patch that will
+> fix all of them at once (drivers and core code) is in order, I have
+> it in my todo list, indeed.
+> Besides that,
+> 
+> Reviewed-by: Andrea della Porta <andrea.porta@suse.com>
 
-Tested on:
+Thanks!
 
-commit:         3f804361 Add linux-next specific files for 20250701
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=178c388c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=46111759e155f4cc
-dashboard link: https://syzkaller.appspot.com/bug?extid=ededba317ddeca8b3f08
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=108af88c580000
+regards,
+dan carpenter
 
-Note: testing is done by a robot and is best-effort only.
