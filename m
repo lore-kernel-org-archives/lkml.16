@@ -1,230 +1,250 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF11E246781;
-	Tue,  1 Jul 2025 20:46:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F54C2ED171;
+	Tue,  1 Jul 2025 20:52:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751402767; cv=none; b=dH+XxC6KNubdyufXYdw5jvjMet3oN4NpNFax0E/dfJ/ShHwU6EytFhDdDzQJIHOvwfeSJTsoa8Zek4RnmevdGeEEN9i5y2VJLhJC38GqvA3quAKTT7k79G9/JcEjKQEbioIh26Hd012JMG2wjv0AgP9UCuuOI/Igs+tea+tOois=
+	t=1751403170; cv=none; b=StS7VP0paDlA7OsYRGIkIc3zstk4LcQquVb1/Bq8C19l8xM/jY6ebKeKexHdBeCa8GNH14XBASO/V055c10+2/qb5KN+KORSpIkw994ccET4sVZECyadm9DFCp0WDh4mGsUuZpFGZdh6v1qxwnp3QpWiZVgaVjDD8F766CTchnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751402767; c=relaxed/simple;
-	bh=cgf2UXP07i29I0Sz7Ucz+VMLeoyIB1XYNHnEU1OdDfM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QQR4wiDjE/0cBORpz2Vkpp/VlRKcf9mxgCo46MbxNP+NPCVhjOABb3+vSM7gxSg4vmg/51yyuWhKd4w+CHXIU9HkYv+BUPAm95Q+4Pe22Xq/Sex2uzV7CNx8g+OvBSGN4wXpgNFc6YiFfs8EoDjrRwfk1ram1FZ84WmHP3HyLAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ildLjMwu; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751403170; c=relaxed/simple;
+	bh=geP5H2Z4+YHkevGRctptTgYh4x8d/AoO+xeKisC/63s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hX0kU04QKa357HVnY6sbUH9vclmj/XFUnChMXM+cFpcBn8W33nr11SxsD7R8vVAtjkiXrugX4pvYWlvJ2F/gbPdk9cgLCn67chlA4JWbAr04y0pEh1VlSNWZ8mucC/ePUyeziqyB8slP1hN7Wn0PHuSC2adH4cTVkHwlolSj5gQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=pjLntyfO; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ildLjMwu"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b3226307787so2846444a12.1;
-        Tue, 01 Jul 2025 13:46:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751402765; x=1752007565; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hCgrlLfo9Mns92U/5iXO12KGKM9lhSDCM+Q2c4kfSmE=;
-        b=ildLjMwu8XfJILGEu8lDB/KokcoMaCVPu8ab7XnvASRTMjtYt5uhd0nitARask9NBK
-         edjtW3FcD3iBmLflyj0qkBF9+HAu47lQsgfdXhy8niOIksuurSsp5hmhA++koRVc5I4j
-         +ot6VPnt+k0BAzU+ajgUFzq4mc/nCArsn4J1Bjnd68ugorwNKs4DWUiInpf8rTDaSvO3
-         w5nc9EbgIh5QgoMLlFL/WQ+cqWnAWzeyeojvi785yiYsJQV9vy4fCc0ac2tsasP+WXXz
-         JK8BOc470k9cPee6ihxmnLmoCL50Dz5L6obKzPkbaFSm+A5LbnGcFA+uA1YMQUj1N0dD
-         /TKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751402765; x=1752007565;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hCgrlLfo9Mns92U/5iXO12KGKM9lhSDCM+Q2c4kfSmE=;
-        b=dFb0rpgY34MJSz1AxJFeoFMvBpYLnRvvUmQ2y9gZSvoyqr8fVIw2u0S5Zq9OOoI7e5
-         J1fBqZsCk0Fn+p8Ib/dCFIx7+57hyWK8PaZYPn+9w5f6Pfx+Y3FKk4NR33TQq+EPmYW6
-         6l643QA95r2c1GiSnuzlPOtaojY4MYo6QNklY3Vy04VSvHFY4EAyQaWq+IP/bYVkVtD6
-         ulpEartgA1oYsu6Z3IEQmE+rY34047fDEDkYtpaiyaskbj/jT5Bo0T9XMyj6ttmDZKnc
-         ZKVJwXuwRq4rRCcCFPH0P5/aEXUVL2tAq3TkXuLOSx2y/Ogt4VuhENFZtCQSYj9Tj4pl
-         iRsg==
-X-Forwarded-Encrypted: i=1; AJvYcCVJSgltE6JBfKmKESnypbOuT+VeMOAfHvioSV73Nffjs2x8LxqVFJyqq2J8/wJd5lvDFtE=@vger.kernel.org, AJvYcCVlUMi3FXt5l5sKJMUPWJi1a7AXtLv5QMGzdzZThHi5wxOkLnPsE+NlN/ELrIXWJaicDXRfD7wsrj1sHIXS@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZrJT1D7BWNjbJS2MGXcVYzlMdTvjCse8d9W6tJQ1tyyC9cYdZ
-	ZUA/NUbrVY2/mQsm9Paphb8HFcfFyusE8vFBX7FhwITOKBH9Hyb+Kl7U6FTDJrWo0RUIbgeXwqH
-	QhjGGfompTWqXPoq8lAWNj09b3yTT8iM=
-X-Gm-Gg: ASbGncv93eHdFyIQ247+3BDCX28RkKpFiu9NsWQ/IIV0M0/wdFVhyY6ag2YhQWFVn5C
-	enoyqAKwYlkPYlaO+IuzfW/AvAyV4zgQZwXWgwd4mwZRX9pmK61hqf4hosk/iuoUkswDyKwMSXu
-	cuxXPZHY9IFyWXTfw6gbKDud/pR0MFn3f3UlwaeqwU66dgfTcW2alUxrkkFa4=
-X-Google-Smtp-Source: AGHT+IE0GrZOy0np0jvotiCpIi/pC4GYr+OPKKBtDYVBM8itFJuYyOIpiylRF1p1h/76mb4orDWecoU4sJTxm4EJHfg=
-X-Received: by 2002:a17:90b:2c8d:b0:311:c1ec:7cfb with SMTP id
- 98e67ed59e1d1-31a90bd47aemr511891a91.21.1751402765101; Tue, 01 Jul 2025
- 13:46:05 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="pjLntyfO"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id C355B78C;
+	Tue,  1 Jul 2025 22:52:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1751403144;
+	bh=geP5H2Z4+YHkevGRctptTgYh4x8d/AoO+xeKisC/63s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pjLntyfOaN+smpQYy1xcEjS5lmF3hEALIiz9WvHu/F1CHs8SCbpi+9prdG4X9HIty
+	 Sn1EM7SSfpp5M4ajzhnvPkrSP0Sn6igqrBtZtr7WrlWJM9+4+o25FCUijyKPRlOZTA
+	 iF/XFX037TDmKq3NI44CifqHilzmXkTiSWLFM2fg=
+Date: Tue, 1 Jul 2025 23:52:20 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Rui Miguel Silva <rmfrfs@gmail.com>,
+	Martin Kepplinger <martink@posteo.de>,
+	Purism Kernel Team <kernel@puri.sm>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>, linux-media@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 5/5] arm64: dts: imx8qxp-mek: add parallel ov5640 camera
+ support
+Message-ID: <20250701205220.GE16835@pendragon.ideasonboard.com>
+References: <20250630-imx8qxp_pcam-v1-0-eccd38d99201@nxp.com>
+ <20250630-imx8qxp_pcam-v1-5-eccd38d99201@nxp.com>
+ <20250630230651.GG15184@pendragon.ideasonboard.com>
+ <aGP56BUXrNnBCQu/@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620113846.3950478-1-arnd@kernel.org> <CAADnVQKAT3UPzcpzkJ6_-powz4YTiDAku4-a+++hrhYdJUnLiw@mail.gmail.com>
- <361eb614-e145-49dc-aa32-12f313f61b96@linux.dev>
-In-Reply-To: <361eb614-e145-49dc-aa32-12f313f61b96@linux.dev>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 1 Jul 2025 13:45:50 -0700
-X-Gm-Features: Ac12FXyI7Qso7jRBjHBJtEsaXWo4_BsHAlGq7GXcFjjswLG4pAt_g_gsBh58Zpg
-Message-ID: <CAEf4BzahSLGiW_F4LtG1tMAb0O1b6D-kO0AcrU2O+nLKVbkvZA@mail.gmail.com>
-Subject: Re: [PATCH] bpf: turn off sanitizer in do_misc_fixups for old clang
-To: Yonghong Song <yonghong.song@linux.dev>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Arnd Bergmann <arnd@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	John Fastabend <john.fastabend@gmail.com>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Kumar Kartikeya Dwivedi <memxor@gmail.com>, 
-	Luis Gerhorst <luis.gerhorst@fau.de>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, clang-built-linux <llvm@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aGP56BUXrNnBCQu/@lizhi-Precision-Tower-5810>
 
-On Tue, Jul 1, 2025 at 1:03=E2=80=AFPM Yonghong Song <yonghong.song@linux.d=
-ev> wrote:
->
->
->
-> On 6/23/25 2:32 PM, Alexei Starovoitov wrote:
-> > On Fri, Jun 20, 2025 at 4:38=E2=80=AFAM Arnd Bergmann <arnd@kernel.org>=
- wrote:
-> >> From: Arnd Bergmann <arnd@arndb.de>
-> >>
-> >> clang versions before version 18 manage to badly optimize the bpf
-> >> verifier, with lots of variable spills leading to excessive stack
-> >> usage in addition to likely rather slow code:
-> >>
-> >> kernel/bpf/verifier.c:23936:5: error: stack frame size (2096) exceeds =
-limit (1280) in 'bpf_check' [-Werror,-Wframe-larger-than]
-> >> kernel/bpf/verifier.c:21563:12: error: stack frame size (1984) exceeds=
- limit (1280) in 'do_misc_fixups' [-Werror,-Wframe-larger-than]
-> >>
-> >> Turn off the sanitizer in the two functions that suffer the most from
-> >> this when using one of the affected clang version.
-> >>
-> >> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> >> ---
-> >>   kernel/bpf/verifier.c | 11 +++++++++--
-> >>   1 file changed, 9 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-> >> index 2fa797a6d6a2..7724c7a56d79 100644
-> >> --- a/kernel/bpf/verifier.c
-> >> +++ b/kernel/bpf/verifier.c
-> >> @@ -19810,7 +19810,14 @@ static int do_check_insn(struct bpf_verifier_=
-env *env, bool *do_print_state)
-> >>          return 0;
-> >>   }
-> >>
-> >> -static int do_check(struct bpf_verifier_env *env)
-> >> +#if defined(CONFIG_CC_IS_CLANG) && CONFIG_CLANG_VERSION < 180100
-> >> +/* old clang versions cause excessive stack usage here */
-> >> +#define __workaround_kasan  __disable_sanitizer_instrumentation
-> >> +#else
-> >> +#define __workaround_kasan
-> >> +#endif
-> >> +
-> >> +static __workaround_kasan int do_check(struct bpf_verifier_env *env)
-> > This looks too hacky for a workaround.
-> > Let's figure out what's causing such excessive stack usage and fix it.
-> > We did some of this work in
-> > commit 6f606ffd6dd7 ("bpf: Move insn_buf[16] to bpf_verifier_env")
-> > and similar.
-> > Looks like it wasn't enough or more stack usage crept in since then.
-> >
-> > Also make sure you're using the latest bpf-next.
-> > A bunch of code was moved out of do_check().
-> > So I bet the current bpf-next/master doesn't have a problem
-> > with this particular function.
-> > In my kasan build do_check() is now fully inlined.
-> > do_check_common() is not and it's using 512 bytes of stack.
-> >
-> >>   {
-> >>          bool pop_log =3D !(env->log.level & BPF_LOG_LEVEL2);
-> >>          struct bpf_verifier_state *state =3D env->cur_state;
-> >> @@ -21817,7 +21824,7 @@ static int add_hidden_subprog(struct bpf_verif=
-ier_env *env, struct bpf_insn *pat
-> >>   /* Do various post-verification rewrites in a single program pass.
-> >>    * These rewrites simplify JIT and interpreter implementations.
-> >>    */
-> >> -static int do_misc_fixups(struct bpf_verifier_env *env)
-> >> +static __workaround_kasan int do_misc_fixups(struct bpf_verifier_env =
-*env)
-> > This one is using 832 byte of stack with kasan.
-> > Which is indeed high.
-> > Big chunk seems to be coming from chk_and_sdiv[] and chk_and_smod[].
-> >
-> > Yonghong,
-> > looks like you contributed that piece of code.
-> > Pls see how to reduce stack size here.
-> > Daniel used this pattern in earlier commits. Looks like
-> > we took it too far.
->
-> With llvm17, I got the following error:
->
-> /home/yhs/work/bpf-next/kernel/bpf/verifier.c:24491:5: error: stack frame=
- size (2552) exceeds limit (1280) in 'bpf_check' [-
-> Werror,-Wframe-larger-than]
->   24491 | int bpf_check(struct bpf_prog **prog, union bpf_attr *attr, bpf=
-ptr_t uattr, __u32 uattr_size)
->         |     ^
-> /home/yhs/work/bpf-next/kernel/bpf/verifier.c:19921:12: error: stack fram=
-e size (1368) exceeds limit (1280) in 'do_check' [-
-> Werror,-Wframe-larger-than]
->   19921 | static int do_check(struct bpf_verifier_env *env)
->         |            ^
-> 2 errors generated.
->
-> I checked IR and found the following memory allocations which may contrib=
-ute
-> excessive stack usage:
->
-> attr.coerce1, i32 noundef %uattr_size) local_unnamed_addr #0 align 16 !db=
-g !19800 {
-> entry:
->    %zext_patch.i =3D alloca [2 x %struct.bpf_insn], align 16, !DIAssignID=
- !19854
->    %rnd_hi32_patch.i =3D alloca [4 x %struct.bpf_insn], align 16, !DIAssi=
-gnID !19855
->    %cnt.i =3D alloca i32, align 4, !DIAssignID !19856
->    %patch.i766 =3D alloca [3 x %struct.bpf_insn], align 16, !DIAssignID !=
-19857
->    %chk_and_sdiv.i =3D alloca [1 x %struct.bpf_insn], align 4, !DIAssignI=
-D !19858
->    %chk_and_smod.i =3D alloca [1 x %struct.bpf_insn], align 4, !DIAssignI=
-D !19859
->    %chk_and_div.i =3D alloca [4 x %struct.bpf_insn], align 16, !DIAssignI=
-D !19860
->    %chk_and_mod.i =3D alloca [4 x %struct.bpf_insn], align 16, !DIAssignI=
-D !19861
->    %chk_and_sdiv343.i =3D alloca [8 x %struct.bpf_insn], align 16, !DIAss=
-ignID !19862
->    %chk_and_smod472.i =3D alloca [9 x %struct.bpf_insn], align 16, !DIAss=
-ignID !19863
->    %desc.i =3D alloca %struct.bpf_jit_poke_descriptor, align 8, !DIAssign=
-ID !19864
->    %target_size.i =3D alloca i32, align 4, !DIAssignID !19865
->    %patch.i =3D alloca [2 x %struct.bpf_insn], align 16, !DIAssignID !198=
-66
->    %patch355.i =3D alloca [2 x %struct.bpf_insn], align 16, !DIAssignID !=
-19867
->    %ja.i =3D alloca %struct.bpf_insn, align 8, !DIAssignID !19868
->    %ret_insn.i.i =3D alloca [8 x i32], align 16, !DIAssignID !19869
->    %ret_prog.i.i =3D alloca [8 x i32], align 16, !DIAssignID !19870
->    %fd.i =3D alloca i32, align 4, !DIAssignID !19871
->    %log_true_size =3D alloca i32, align 4, !DIAssignID !19872
-> ...
->
-> So yes, chk_and_{div,mod,sdiv,smod} consumes quite some stack and
-> can be coverted to runtime allocation but that is not enough for 1280
-> stack limit, we need to do more conversion from stack to memory
-> allocation. Will try to have uniform way to convert
-> 'alloca [<num> x %struct.bpf_insn]' to runtime allocation.
->
+Hi Frank,
 
-Do we need to go all the way to dynamic allocation? See env->insns_buf
-(which some parts of this function are already using for constructing
-instruction patch), let's just converge on that? It pre-allocates
-space for 32 instructions, should be sufficient for all the use cases,
-no?
+On Tue, Jul 01, 2025 at 11:08:24AM -0400, Frank Li wrote:
+> On Tue, Jul 01, 2025 at 02:06:51AM +0300, Laurent Pinchart wrote:
+> > On Mon, Jun 30, 2025 at 06:28:21PM -0400, Frank Li wrote:
+> > > Add parallel ov5640 nodes in imx8qxp-mek and create overlay file to enable
+> > > it because it can work at two mode: MIPI and parallel mode.
+> > >
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > ---
+> > >  arch/arm64/boot/dts/freescale/Makefile             |  3 ++
+> > >  arch/arm64/boot/dts/freescale/imx8qxp-mek.dts      | 37 +++++++++++++++++++
+> > >  .../dts/freescale/imx8x-mek-ov5640-parallel.dtso   | 43 ++++++++++++++++++++++
+> > >  3 files changed, 83 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+> > > index 02ef35578dbc7..a9fb11ccd3dea 100644
+> > > --- a/arch/arm64/boot/dts/freescale/Makefile
+> > > +++ b/arch/arm64/boot/dts/freescale/Makefile
+> > > @@ -330,6 +330,9 @@ dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek-pcie-ep.dtb
+> > >  imx8qxp-mek-ov5640-csi-dtbs := imx8qxp-mek.dtb imx8qxp-mek-ov5640-csi.dtbo
+> > >  dtb-${CONFIG_ARCH_MXC} += imx8qxp-mek-ov5640-csi.dtb
+> > >
+> > > +imx8qxp-mek-ov5640-parallel-dtbs := imx8qxp-mek.dtb imx8x-mek-ov5640-parallel.dtbo
+> > > +dtb-${CONFIG_ARCH_MXC} += imx8qxp-mek-ov5640-parallel.dtb
+> > > +
+> > >  dtb-$(CONFIG_ARCH_MXC) += imx8qxp-tqma8xqp-mba8xx.dtb
+> > >  dtb-$(CONFIG_ARCH_MXC) += imx8qxp-tqma8xqps-mb-smarc-2.dtb
+> > >  dtb-$(CONFIG_ARCH_MXC) += imx8ulp-evk.dtb
+> > > diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
+> > > index c95cb8acc360a..09eb85a9759e2 100644
+> > > --- a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
+> > > +++ b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
+> > > @@ -487,6 +487,23 @@ pca6416: gpio@20 {
+> > >  		#gpio-cells = <2>;
+> > >  	};
+> > >
+> > > +	ov5640_pi: camera@3c {
+> > > +		compatible = "ovti,ov5640";
+> > > +		reg = <0x3c>;
+> > > +		pinctrl-names = "default";
+> > > +		pinctrl-0 = <&pinctrl_parallel_csi>;
+> > > +		clocks = <&pi0_misc_lpcg IMX_LPCG_CLK_0>;
+> > > +		assigned-clocks = <&pi0_misc_lpcg IMX_LPCG_CLK_0>;
+> > > +		assigned-clock-rates = <24000000>;
+> > > +		clock-names = "xclk";
+> > > +		powerdown-gpios = <&lsio_gpio3 2 GPIO_ACTIVE_HIGH>;
+> > > +		reset-gpios = <&lsio_gpio3 3 GPIO_ACTIVE_LOW>;
+> > > +		AVDD-supply = <&reg_2v8>;
+> > > +		DVDD-supply = <&reg_1v5>;
+> > > +		DOVDD-supply = <&reg_1v8>;
+> > > +		status = "disabled"; /* Overlay enable it */
+> > > +	};
+> > > +
+> >
+> > As far as I can tell, the sensor isn't soldered on the board, but is an
+> > external module connected through a cable. This DT node should therefore
+> > be moved to the overlay.
+> 
+> It is fine for i.MX8QXP. I put here try to reuse overlay file as much as
+> possible.
+> 
+> For example, imx93 have, 9x9, 11x11, 14x14 boards ...
+> 
+> Each board's reset-gpios have slice difference. If move whole to overlay
+> files, we have to create difference overlay for each boards.
+> 
+> If keep here and set "status = okay" and update graphic links in overlay,
+> we can reuse this overlay file for different boards.
+> 
+> for example: imx93-pcam.dtso, which simialr with imx8x-mek-ov5640-parallel.dtso.
+> 
+> So we simple use
+> imx93-9x9-qsb.dtb + imx93-pcam.dtbo.
+> imx93-11x11-evk.dtb + imx93-pcam.dtbo.
+> imx93-14x14-evk.dtb + imx93-pcam.dtbo.
+> 
+> even for imx91 boards in future.
+
+First of all, I want to say I feel your pain. I maintain many camera
+sensor modules DT overlays out-of-tree, for different boards, and code
+duplication is definitely annoying. Unfortunately, DT doesn't provide a
+solution to this problem today. There was an attempt years ago to design
+a "DT connector" that defined how connector signals were routed on a
+board. This would allow a single overlay compatible with the connected
+to be used with different base boards. Unfortunately, development
+stalled.
+
+Until this problem gets solved, I'm afraid you'll have to duplicate
+overlays for different base boards. The OV5640 is not part of the
+imx8qxp-mek, so it should not be declared in the imx8qxp-mek.dts.
+
+> > >  	cs42888: audio-codec@48 {
+> > >  		compatible = "cirrus,cs42888";
+> > >  		reg = <0x48>;
+> > > @@ -865,6 +882,26 @@ IMX8QXP_MIPI_CSI0_MCLK_OUT_MIPI_CSI0_ACM_MCLK_OUT	0xC0000041
+> > >  		>;
+> > >  	};
+> > >
+> > > +	pinctrl_parallel_csi: parallelcsigrp {
+> > > +		fsl,pins = <
+> > > +			IMX8QXP_CSI_D00_CI_PI_D02				0xc0000041
+> > > +			IMX8QXP_CSI_D01_CI_PI_D03				0xc0000041
+> > > +			IMX8QXP_CSI_D02_CI_PI_D04				0xc0000041
+> > > +			IMX8QXP_CSI_D03_CI_PI_D05				0xc0000041
+> > > +			IMX8QXP_CSI_D04_CI_PI_D06				0xc0000041
+> > > +			IMX8QXP_CSI_D05_CI_PI_D07				0xc0000041
+> > > +			IMX8QXP_CSI_D06_CI_PI_D08				0xc0000041
+> > > +			IMX8QXP_CSI_D07_CI_PI_D09				0xc0000041
+> > > +
+> > > +			IMX8QXP_CSI_MCLK_CI_PI_MCLK				0xc0000041
+> > > +			IMX8QXP_CSI_PCLK_CI_PI_PCLK				0xc0000041
+> > > +			IMX8QXP_CSI_HSYNC_CI_PI_HSYNC				0xc0000041
+> > > +			IMX8QXP_CSI_VSYNC_CI_PI_VSYNC				0xc0000041
+> > > +			IMX8QXP_CSI_EN_LSIO_GPIO3_IO02				0xc0000041
+> > > +			IMX8QXP_CSI_RESET_LSIO_GPIO3_IO03			0xc0000041
+> > > +		>;
+> > > +	};
+> >
+> > Same for this one.
+> >
+> > > +
+> > >  	pinctrl_pcieb: pcieagrp {
+> > >  		fsl,pins = <
+> > >  			IMX8QXP_PCIE_CTRL0_PERST_B_LSIO_GPIO4_IO00		0x06000021
+> > > diff --git a/arch/arm64/boot/dts/freescale/imx8x-mek-ov5640-parallel.dtso b/arch/arm64/boot/dts/freescale/imx8x-mek-ov5640-parallel.dtso
+> > > new file mode 100644
+> > > index 0000000000000..927d6640662f3
+> > > --- /dev/null
+> > > +++ b/arch/arm64/boot/dts/freescale/imx8x-mek-ov5640-parallel.dtso
+> > > @@ -0,0 +1,43 @@
+> > > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > > +/*
+> > > + * Copyright 2025 NXP
+> > > + */
+> > > +
+> > > +/dts-v1/;
+> > > +/plugin/;
+> > > +
+> > > +#include <dt-bindings/gpio/gpio.h>
+> > > +#include <dt-bindings/media/video-interfaces.h>
+> > > +
+> > > +&ov5640_pi {
+> > > +	status = "okay";
+> > > +
+> > > +	port {
+> > > +		ov5640_pi_ep: endpoint {
+> > > +			remote-endpoint = <&parallel_csi_in>;
+> > > +			data-lanes = <1 2>;
+> >
+> > data-lanes is not allowed for parallel buses.
+> 
+> Do you know there are method in dt_binding to restrict this?
+> 
+> Frank
+
+We can use if-then-else blocks to restrict the allowed properties based
+on the bus-type.
+
+> > > +			bus-type = <MEDIA_BUS_TYPE_PARALLEL>;
+> > > +			bus-width = <8>;
+> > > +			vsync-active = <0>;
+> > > +			hsync-active = <1>;
+> > > +			pclk-sample = <1>;
+> > > +		};
+> > > +	};
+> > > +};
+> > > +
+> > > +&parallel_csi {
+> > > +	status = "okay";
+> > > +
+> > > +	ports {
+> > > +		port@0 {
+> > > +			parallel_csi_in: endpoint {
+> > > +				remote-endpoint = <&ov5640_pi_ep>;
+> > > +			};
+> > > +		};
+> > > +
+> > > +	};
+> > > +};
+> > > +
+> > > +&isi {
+> > > +	status = "okay";
+> > > +};
+
+-- 
+Regards,
+
+Laurent Pinchart
