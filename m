@@ -1,144 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E1031D7989;
-	Tue,  1 Jul 2025 08:44:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57D22265CD8
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 08:44:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751359448; cv=none; b=lJ4oMhOUIrdjTOIK4tiyzU/s+zPUbWdbcgSSva4oYKYzvxJjEuk5dRZPwp0dNILoZj9Tsx4jFJOq8CARI+U8vwrFAFVpOIJYq6G5A2mIt2VBVmI5EM4EzIk9RmLNGPCUIbq64i8Z36M1XXV7f/dlIBKmCXPbpCegWllEaSHkMdc=
+	t=1751359465; cv=none; b=iYQdiSkC4gH8XmnR/8u2hFdpvCTFag0CK22+E+ftJfSJBpFE3d3kQBQo0vcAHBlJVMVfpZYKY0z65emoVzVv3uHpv6GIC4Mjmui3ZBULwSBKkwmgThoMujZS3gq3Pbil5XQjqotcbJqoWmKZAkx9qUiP8he2mhxBt3L2P/k8Mdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751359448; c=relaxed/simple;
-	bh=JQnJ50WwtWPmuUmhqUal++GEN46ier5irpKnyb6pzhk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=AIt+ApAqQKorU/heenE2hWNmo7aa1sOElvDgiS2sYL5gMNUXW2NdH+7LmNssW3RvTLsOp8dmhjb1z7WeFtuUpiattq3jES8s1K0Ks1bcrdP1xxta6lDIZW+EEPQ4WQ10l11eJ8PRQB+gF4zvagTgscsR9N4Az4zXBlPG/Rj+1Bo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W5FB23ln; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751359465; c=relaxed/simple;
+	bh=ETahjvfhObWfhp3wH4KH1j1xcBmeV7kvedrPys7wXik=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t4esaMEzUQtu+/fwB6uZVPTZ5PLHkUhptLCtBZkDBEah7LSLBApfl22P8kknQDloh2p072W0FIspLw3FPL+0F+A7eRK0K/twzZ9+aQqiGHVQOPPdw/n8vJ8nwyMb3++4CXJgcWeLTllmHTfTtELkO4sEey2ExnJ1c6+rUnkEEn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=LTmc355r; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W5FB23ln"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DF3AC4CEEB;
-	Tue,  1 Jul 2025 08:44:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751359447;
-	bh=JQnJ50WwtWPmuUmhqUal++GEN46ier5irpKnyb6pzhk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=W5FB23lnRmqMblxQRYfHg3U8Cb96WoRZP9N91S7HABOR21skwzV5IaYGRpc3SMCED
-	 0jmWPuRHRM9Of1mZsV142+GoRxobrpP+f2JUis8pCQX8jsHc2hToAqMlDSA4cEQc6W
-	 7zmUtc+x8mJc0qKbiE5E/u17/kIbXirUJOaHd88F33v/Qv43qtn6ngBW8W5yiZw2qc
-	 +zBd1BXmKL1Fr/5+eieLu+o+5OhUZ8nVt1L6qP3xR+StIRlCaLYZ75R6+sguURrD8a
-	 VJpWu8tLOa/LXp4BPDOKn97dd/kfB7eDKmTmFb5/nEKuMmcejKsXNuueOLc3ZdR+GD
-	 KAXHLMCtD9EHw==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Benno Lossin" <lossin@kernel.org>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
- <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
- <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Alice
- Ryhl" <aliceryhl@google.com>,  "Masahiro Yamada" <masahiroy@kernel.org>,
-  "Nathan Chancellor" <nathan@kernel.org>,  "Luis Chamberlain"
- <mcgrof@kernel.org>,  "Danilo Krummrich" <dakr@kernel.org>,  "Nicolas
- Schier" <nicolas.schier@linux.dev>,  "Trevor Gross" <tmgross@umich.edu>,
-  "Adam Bratschi-Kaye" <ark.email@gmail.com>,
-  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
-  <linux-kbuild@vger.kernel.org>,  "Petr Pavlu" <petr.pavlu@suse.com>,
-  "Sami Tolvanen" <samitolvanen@google.com>,  "Daniel Gomez"
- <da.gomez@samsung.com>,  "Simona Vetter" <simona.vetter@ffwll.ch>,  "Greg
- KH" <gregkh@linuxfoundation.org>,  "Fiona Behrens" <me@kloenk.dev>,
-  "Daniel Almeida" <daniel.almeida@collabora.com>,
-  <linux-modules@vger.kernel.org>
-Subject: Re: [PATCH v13 2/6] rust: introduce module_param module
-In-Reply-To: <DB03MZI2FCOW.2JBFL3TY38FK@kernel.org> (Benno Lossin's message of
-	"Mon, 30 Jun 2025 21:02:37 +0200")
-References: <20250612-module-params-v3-v13-0-bc219cd1a3f8@kernel.org>
-	<DAQJCUE1C2JE.204A8IS7LBIVZ@kernel.org> <87ikkq648o.fsf@kernel.org>
-	<smOfUo2mEmQu-lykKKMiNOUWq2ze6p_CoEEpgGE0dtAnoJDGEpvQMkP1q-n13MiUxLK1xAiM-4QLsivPrG57sg==@protonmail.internalid>
-	<DARCZYNPIJVZ.3JJSZ6PSAEMEC@kernel.org> <877c126bce.fsf@kernel.org>
-	<Mg1_h6lRpg9tdi0VjiyDfIEy2juzgDWxOhYX61qSUfyEpeMMksWW1e-blTka_G1dXUvpZVktdD-zL3X1a6T6Cg==@protonmail.internalid>
-	<DATW0XWNN45X.1L2WMZ41JJ5O8@kernel.org> <87v7om4jhq.fsf@kernel.org>
-	<RPPvXQKnjK77Kp9mKaiFxbNj1fTHKb_I7_nbY81fZop-Wz8n5TTi4_lpXP9U9AwjocvZKqJPI8PGKufJn9cIzQ==@protonmail.internalid>
-	<DAU0J3T0IEVM.2K7ZRQOVOHF8H@kernel.org> <878qlh4aj1.fsf@kernel.org>
-	<87plepzke5.fsf@kernel.org>
-	<xFouVLxX1_t1mH69FDYwlIhBlI72M0IzQEKn0ntG_wT9z7V5DtbxiwVP_frH_yiS-Gf0q_AhqetbLmuvJ_yP5Q==@protonmail.internalid>
-	<DAX65TRN0TGP.25VZ9DYV86XWY@kernel.org> <87wm8txysl.fsf@kernel.org>
-	<9G3W1seaM7elcwWXaeoaa2nfpFYCf-AmBdvZhACGP13KGUtTPVMwGNYdTQsdtp8ru7GIP3-UYTzXscC1MRUKrg==@protonmail.internalid>
-	<DAZV8OGL8BMH.11SLXBXQ17ZJ9@kernel.org> <87h5zxxtdw.fsf@kernel.org>
-	<H78pT7YnQEhAXdxzl_hhnGVUiQuFpibB21_bjH658fMz_5JYbwsPLYYVh8u1gYnzK3N3ilTEAvqOpkuptVx3rg==@protonmail.internalid>
-	<DB03MZI2FCOW.2JBFL3TY38FK@kernel.org>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Tue, 01 Jul 2025 10:43:56 +0200
-Message-ID: <87bjq4xpv7.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="LTmc355r"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5613gAsb008172
+	for <linux-kernel@vger.kernel.org>; Tue, 1 Jul 2025 08:44:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	yf8OXMx4FGnWdIQA3MUAkQiLT+ux14ax47Cw7Z9XIeQ=; b=LTmc355rIX1vCd4V
+	QbKXgSVG2hnzEhL4Ak+j0xi2wCu0JbWCm/5pLIIYILdPLgozQFThyEIW5eblLMM5
+	L9Lf36yFB7Od6FdA+S29o2nLp6hv5+7sJ0PKmBqujBxy1rqHP00Lp14ZUgNp3+D1
+	cFQ/Xsh9ZpUviWrYhSBOocEraKWvZGxc1sIiHXClNJ0rzX12DM5vOc8xUb25Diyx
+	3e1dgAaRk4rWMOgbJry92RksReabhtN/hz1aw4ODmsNDP+TAIXq8ZkQC4IJ631zr
+	D4wZ6ecxNW0z2IVmCj/7ZCFQ8r8Sw/s5CIITLXi4My0GnMcpxG9sBW2qqLCJhDsL
+	aRa03w==
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47kkfmvjr4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 08:44:23 +0000 (GMT)
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4a5ae436badso7867241cf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 01:44:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751359462; x=1751964262;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yf8OXMx4FGnWdIQA3MUAkQiLT+ux14ax47Cw7Z9XIeQ=;
+        b=wqUwwgQ82ZhCvT3AY480UBUtKQk7JgkRZRFckEo+K2XKnlWgAxfXv26+u3TAH5WvSy
+         PqKifxkohnn2BXjdnlyOgzgyZl6xdqhQIaaUmdhoqDLz6peXR5XL4CvL/e7rFCMnPo8T
+         c0BcNoElZXkQ1rXbnIc93gmRgi/aVymQ/hFsKZO3akxJXuo3N+Xp70dswWboWaCAZmhu
+         CX1xaaVk1qeSky8llgvSB2HcgjtumQwZ4rjuCAPPnqU+ak0OeU5R80YeMTSfHRL+amd4
+         ethlkoCVCl2loK8+aYmZxmhp/GhXoUBbsmzFQM9KWA1PjeHWfm4lCj/SNUlgI3U03JE7
+         3i8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU1IeeMnF27fvqgv6/ChQWOptJvQohVwyKDVPqzINwbKIqWHXfNORcDSmV9e2OAW2GOCMupQL5MpAiBpQU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGOHiyNVffOTeomufTiBjx8THXym6n66jOz23kFMHPfAKbiWbE
+	P0Mqx/OGTCsy7fmrQME73ByXfoeMGKp57q2nGnO9go7iMZLxpXggcc4HFZlJfupKAKAmv72xOqR
+	yLYREsYSbGbsGYLEYPiQLlTF85bKG/xTWP2mdZE+QKw2ga9RT1s/W8IOcPFy0sLQN6ZM=
+X-Gm-Gg: ASbGnctq/JqdMuKiuC3Jf4IRk9unyoqhvC9vA1iG9yCn5f/UvavYjxABWdKCJ/7Zoke
+	HaHBTf5bGMApWE6os77vRku9r2QhiEAvzUSmqZ6Ji5TLjxHkGQxEaMWp02HVGJ5DPklWByDHUgX
+	oLzQ0xPd1XweotR1U4UVOndtOskFJbOBd2/1iZK3vNVVXuXAPydqiTvpHl1e0sobv56vHo1xmVU
+	wLJRKHFxMBsgoK039szyx++for9bHaTDq/idOvCpFw4tjkkUHltJJ8iDbhmdy8rtaoLmcd3Ph7B
+	HpaHDUCsXwdxjjXhILHWDoHJ44NFxgbponYB5UcfF2X0PRLBCU4w7E0gCKzYY19zIOwU+g6IxTb
+	erpYn/Qbv
+X-Received: by 2002:ac8:5a81:0:b0:471:f437:2973 with SMTP id d75a77b69052e-4a833959521mr9863471cf.14.1751359462362;
+        Tue, 01 Jul 2025 01:44:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE/sA0oirRY7BnsvlJ60EVwuLrYw1JMcOwklbuCHYYyVTAZbHQKxT6zpexqZo4Yazepm+DXNA==
+X-Received: by 2002:ac8:5a81:0:b0:471:f437:2973 with SMTP id d75a77b69052e-4a833959521mr9863291cf.14.1751359461842;
+        Tue, 01 Jul 2025 01:44:21 -0700 (PDT)
+Received: from [192.168.1.114] (83.9.29.190.neoplus.adsl.tpnet.pl. [83.9.29.190])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c8319aef5sm7312708a12.48.2025.07.01.01.44.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Jul 2025 01:44:21 -0700 (PDT)
+Message-ID: <850260dc-7e67-4ae4-82a5-5b8f5197633d@oss.qualcomm.com>
+Date: Tue, 1 Jul 2025 10:44:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-
-"Benno Lossin" <lossin@kernel.org> writes:
-
-> On Mon Jun 30, 2025 at 3:15 PM CEST, Andreas Hindborg wrote:
->> "Benno Lossin" <lossin@kernel.org> writes:
->>> On Mon Jun 30, 2025 at 1:18 PM CEST, Andreas Hindborg wrote:
->>>> "Benno Lossin" <lossin@kernel.org> writes:
->>>>> (no idea if the orderings are correct, I always have to think way to
->>>>> much about that... especially since our atomics seem to only take one
->>>>> ordering in compare_exchange?)
->>>>>
->>>>>> As far as I can tell, atomics may not land in v6.17, so this series
->>>>>> will probably not be ready for merge until v6.18 at the earliest.
->>>>>
->>>>> Yeah, sorry about that :(
->>>>
->>>> Actually, perhaps we could aim at merging this code without this
->>>> synchronization?
->>>
->>> I won't remember this issue in a few weeks and I fear that it will just
->>> get buried. In fact, I already had to re-read now what the actual issue
->>> was...
->>>
->>>> The lack of synchronization is only a problem if we
->>>> support custom parsing. This patch set does not allow custom parsing
->>>> code, so it does not suffer this issue.
->>>
->>> ... In doing that, I saw my original example of UB:
->>>
->>>     module! {
->>>         // ...
->>>         params: {
->>>             my_param: i64 {
->>>                 default: 0,
->>>                 description: "",
->>>             },
->>>         },
->>>     }
->>>
->>>     static BAD: &'static i64 = module_parameters::my_param.get();
->>>
->>> That can happen without custom parsing, so it's still a problem...
->>
->> Ah, got it. Thanks.
->
-> On second thought, we *could* just make the accessor function `unsafe`.
-> Of course with a pinky promise to make the implementation safe once
-> atomics land. But I think if it helps you get your driver faster along,
-> then we should do it.
-
-No, I am OK for now with configfs.
-
-But, progress is still great. How about if we add a copy accessor
-instead for now, I think you proposed that a few million emails ago:
-
-    pub fn get(&self) -> T;
-
-or maybe rename:
-
-    pub fn copy(&self) -> T;
-
-Then we are fine safety wise for now, right? It is even sensible for
-these `T: Copy` types.
-
-
-Best regards,
-Andreas Hindborg
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: clock: Convert qcom,krait-cc to DT schema
+To: "Rob Herring (Arm)" <robh@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd
+ <sboyd@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250630232617.3699954-1-robh@kernel.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250630232617.3699954-1-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: eXPa5WGQRkr0H0lCw7B_axY4Pm0Mlytv
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAxMDA1MCBTYWx0ZWRfX/8aR/+yUrzEu
+ 6iZKK6xPoNQ89xYoo0t8BYT09QmuWhEpUni0j7JdRSV9WntojVR2iZ2hT9g9rwQk/zjJlKr/wfR
+ TGYMUpneBupdlC7sh4gPMkfU12qoPTpCbqepR1H6ZYHMu+GGj5CmKrAA2wBfERsAfb15HFMKWfp
+ 54NhpE1Kmn81s1iW6kjEZYMsABfIgXBvmk+kOQiBmEkjsxmdjKD1sMsBDxmoWj7L7Y3lXs2k03i
+ ADkkyBQTmJ9xd1HjrZRQD68YvzUM+5gmjJwqf2U2+vbmRxdjbDVbdwQ35tj50VDiVmA05sQnPf0
+ S/1IzGTy9WgUN8xeSYrCJaRT5B7zP4B5gRBH1vfgM8tWKES75toLPLiedbkhliMGg2DqEMTDNGd
+ bTus6RWLZtNcVL2OWmspleADGVRUgd3HAotNTqgpstcbiL3+IlDP28FBQE/oSDsU7Nc1Nu2Y
+X-Authority-Analysis: v=2.4 cv=L9sdQ/T8 c=1 sm=1 tr=0 ts=68639fe7 cx=c_pps
+ a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=fKQzr7EGRj+VoE0XNsDNvQ==:17
+ a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=LpQP-O61AAAA:8
+ a=i-1VaULvG7sLBx-uF14A:9 a=QEXdDO2ut3YA:10 a=a_PwQJl-kcHnX1M80qC6:22
+ a=pioyyrs4ZptJ924tMmac:22
+X-Proofpoint-GUID: eXPa5WGQRkr0H0lCw7B_axY4Pm0Mlytv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-01_01,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 spamscore=0 phishscore=0 impostorscore=0 priorityscore=1501
+ malwarescore=0 lowpriorityscore=0 adultscore=0 suspectscore=0 mlxlogscore=999
+ bulkscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507010050
 
 
 
+On 01-Jul-25 01:26, Rob Herring (Arm) wrote:
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+>  .../bindings/clock/qcom,krait-cc.txt          | 34 ---------------
+>  .../bindings/clock/qcom,krait-cc.yaml         | 43 +++++++++++++++++++
+>  2 files changed, 43 insertions(+), 34 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/clock/qcom,krait-cc.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,krait-cc.yaml
+
+[...]
+
+> +title: Krait Clock Controller
+> +
+> +maintainers:
+> +  - Stephen Boyd <sboyd@codeaurora.org>
+
+FYI codeaurora has been dead for years
+
+Konrad
