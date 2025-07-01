@@ -1,322 +1,296 @@
-Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11022129.outbound.protection.outlook.com [52.101.71.129])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE8326A0FC;
-	Tue,  1 Jul 2025 10:44:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.129
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751366700; cv=fail; b=Z89WdNShP3nt1p3qP1mNkWloNiki59cpIkBku1KlHg4TzimaS5TflolbxOVF30mCXOmU3uTl4m/1Yn0+1qK1SVO8BsECByjyNQkXH0Qa4IXf2SXG6e+7OoMFOcQm4vnFPUVFjhJQrVTRIbgYQuSRa+C2X4CFB0ndJFPhBRPtyRQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751366700; c=relaxed/simple;
-	bh=0oCafaiZRC9zEDrZwGRt5g46P+ujTKt9r5vAmFu+9s0=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=MjF4Fd9tRjZnTEDdfU/MmkqulxCK1WiuirYFXio3JqruhcyRmueJnwgBFdcjbYsAQGERDRJLRK65RcoozoR8Yw2ng3xnAfBcIJnmSQVXvw+jbJ5BKievLZe4LdFRC7w8/YoDlysJnw9DHjz7ujouMHqi7XJON/FZjgXRk4VlW/U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kontron.de; spf=pass smtp.mailfrom=kontron.de; dkim=pass (1024-bit key) header.d=mysnt.onmicrosoft.com header.i=@mysnt.onmicrosoft.com header.b=Yf9Iyz0T; arc=fail smtp.client-ip=52.101.71.129
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kontron.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kontron.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 313571E5B9A
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 10:45:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751366717; cv=none; b=CJFlO9boCNODoRrLUm1EgFgCPBAlhC98jRaUjt3mbmC7++o75T8c33so1eyL0/s4mhHLTnFfkyEFHYKkWJKuOlvLg+eXXu8EvLPoktFOaL4LhCeKCR3EhbqGWzXRj8ia6QM+fl5KcBJUS+I3hkhOH6VmfwQVTf00WcsI7gKqmqI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751366717; c=relaxed/simple;
+	bh=yRYgHbSrAkuxw8GaLfZBFA+ZmVUCpG/7oEaKEc3z3Xk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zp5EDlwTcZsclPcIzK6BKOAElJIqVrVZ1RmeArkmhMDHKtDGAWRgY/A0iSruFd0JRzVjGrd0x6JCTow34VC21p/ycFc/5d5rQcg7e6bIEyB3PU66vIbD7Ei5Fllhio/tpqyBmTXXKIsFtwO8jQE+d3ZWk/j9FrUPrXCXUwnKpVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SIInkhvd; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mysnt.onmicrosoft.com header.i=@mysnt.onmicrosoft.com header.b="Yf9Iyz0T"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lElLxL6CB0LE1DILjWjm7BzalPjUuyPTVAPF6/y2DVAaP46AC1v5h9ylxbZJW5zTFJNSaop1yGSyAlcv7IGi9IebEmksJmzm9hHOB2Wq43OSlnVARxrZAcYTrYKb2/7Oy5vfPIpjsDsKl/0FwP8rNtL4K9yIK8Oqu42nipprknqE2xppj6gNOpAsCsBitByQIPCTYHjQLX6NaXs9Q4TqRfxasVmHkbOPw5emTBIH+YARTlST7S+get5dQZmfW9V+vnROAWAuI67r4wWaxmfQP4ngx/HcJiT/RXanPJnilXvDaluzS7EadDdQhn+lfj1j+5wAFN0k3MyPHDzZCDEsgA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zULYfYbB+bq+u74ZxxzSDcQyy8ZPQ037DVLvjCflkVY=;
- b=LtHez5LlA8s0udgA2DN713dIhz7r+y1oqzgHig467WefMn06RLFR7MyPq6PBCMSeKtoxfB9xZQKGiTHt+cJ/rJ3Rl1YtibfuRt/c5omSdS899bemX6GU8fASAvAKZ/lnQJkhVYcQqP2Zj8HdHxnInX4bmEMW2jY13Te44vXWFaAv1fini46YmPHqwsZ78SKKsUx6O1tE8jq2wz68akRAXDdI6ceiFWTZE9ai8JgIS9oFLZTZr0gN4n3PUCF6P59eq0HEwe2PCF0XGv47e2pFYzlJkI+fXNwWXolGMCyf7NPIGsDti27l8MIkYF7BXj9VGMcmFXXmgXH4vKc2d5pPjQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=kontron.de; dmarc=pass action=none header.from=kontron.de;
- dkim=pass header.d=kontron.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mysnt.onmicrosoft.com;
- s=selector2-mysnt-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zULYfYbB+bq+u74ZxxzSDcQyy8ZPQ037DVLvjCflkVY=;
- b=Yf9Iyz0TJre7D1cXGG3kmCti4/HzIpRrTZNTrinc9C1AKgtHiKM0d1+TsARito5NRJZ3fLARk6KAxt6OuBKMyIYLxjBxBRG0zEoQT43HUrfzqFWQFW9Tn33s7tHAQPP3VHmXBce8Z9qp7Z1mHD13nRT0b16EDiKGEq0iQ+dVp+Y=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=kontron.de;
-Received: from PA4PR10MB5681.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:263::10)
- by AS8PR10MB6433.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:56c::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.23; Tue, 1 Jul
- 2025 10:44:53 +0000
-Received: from PA4PR10MB5681.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::b854:7611:1533:2a19]) by PA4PR10MB5681.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::b854:7611:1533:2a19%7]) with mapi id 15.20.8880.027; Tue, 1 Jul 2025
- 10:44:53 +0000
-Message-ID: <087b8689-7443-4720-a94c-160edd31a5da@kontron.de>
-Date: Tue, 1 Jul 2025 12:44:52 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [EXT] Re: [PATCH v18 3/7] firmware: imx: add driver for NXP
- EdgeLock Enclave
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: Pankaj Gupta <pankaj.gupta@nxp.com>, Jonathan Corbet <corbet@lwn.net>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "imx@lists.linux.dev" <imx@lists.linux.dev>,
- "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
- Frank Li <frank.li@nxp.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-References: <20250619-imx-se-if-v18-0-c98391ba446d@nxp.com>
- <20250619-imx-se-if-v18-3-c98391ba446d@nxp.com>
- <20250625105546.pxuatcnfpe7mssgs@pengutronix.de>
- <AM9PR04MB8604611B8D91B5526C9704E69545A@AM9PR04MB8604.eurprd04.prod.outlook.com>
- <20250627084653.6vgwnm3llf3zknlp@pengutronix.de>
- <b02055bb-0995-4fd8-99f3-4ca5146eedd4@kontron.de>
- <20250630121722.wviidlggt7hguyt7@pengutronix.de>
-Content-Language: en-US, de-DE
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
-In-Reply-To: <20250630121722.wviidlggt7hguyt7@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR2P281CA0159.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:99::8) To PA4PR10MB5681.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:102:263::10)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SIInkhvd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751366714;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bvtILH89149LI+zD04GPMfILWdmEwPt3/05vd+118lg=;
+	b=SIInkhvd8XCgmYe3QlZ3mWk5L8IEfvPWSdKGUMuNdTWlNFmqu7Mouq8guMNkW+JNjZ/LWw
+	Vf9IOYsOgBPC4/VVBcCxv2v40g+XEzeHfiE0O9GWy7631mbfz3QtezBwfCmc7tY+Khj58M
+	2StYhPcCKW4cYsKReDTby7jI9WKOHiM=
+Received: from mail-oi1-f197.google.com (mail-oi1-f197.google.com
+ [209.85.167.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-101-lEza32_hOP6Lsg55Ivf4cA-1; Tue, 01 Jul 2025 06:45:12 -0400
+X-MC-Unique: lEza32_hOP6Lsg55Ivf4cA-1
+X-Mimecast-MFC-AGG-ID: lEza32_hOP6Lsg55Ivf4cA_1751366712
+Received: by mail-oi1-f197.google.com with SMTP id 5614622812f47-40b595320afso2177475b6e.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 03:45:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751366712; x=1751971512;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bvtILH89149LI+zD04GPMfILWdmEwPt3/05vd+118lg=;
+        b=ZHoGLYbCnFCvdreqNbZzuXYOAAIYfSyOmWlmj0HdRuJXv6uWLxzUfO19ZleReT9R8J
+         zK/qmR2CoJmSh/PsKVbYLlCERLnHh5m/qfw5OAj2SF7yfvxIly4viMr9TmyFwDx218/U
+         /b4xtt7njQo5AnU0G0LD2DYci/sT9MCI30iBnwoIPx/r8U+saHP9UJTKwYzNGFWM8zK2
+         a194u3XAIQzQ1U5jIKBz1/Y7eGnIlzu1kjXxSbVJSogF5QGPd552aCTKy8iaNNM7h9Pg
+         LUr4ZVgCA8iRYLOgoRu/8XJ6A0rnhAMyBocxSj4Ez9TAhrip0H1eLuS+JEzJAIG6EnoU
+         WSCg==
+X-Gm-Message-State: AOJu0YzJyCc6yup5L+VdauSls+FKG7Q1r0P2DgR+PT7DF50BkwfEi4bX
+	CV2jCAx8zIrHFYsI5y9e4Rf96cABrc3BNkWX+wrTcL+CmtpH4Atqj4Zy6SFOY+k9QBBlc0ZOkul
+	KMvg01tkCBEt8mmy45c9eE0KqzVUSo3rwNMGLsUKFLD+dlMaT5oGNB6weRL6MPDkhMA==
+X-Gm-Gg: ASbGnctNLSaKVq+OztF9zKWYvJjzHhTeKExF6nHTXKl4rkvNM00Tc+AO7/jbyjWW375
+	NNuyKeSRrzA3/MOj7X2RZYttfKoEpGod15FAUby3dJ5lxruH9i/ugLU9EhDwI/k7Jup/e0//PWV
+	vG1b/3a4E8OkpAn2rtH9W9hjw4IC0AkXebPSPpwOt9yDiohVnaRdo2H8X0Rd48iE1HsyKpeyPke
+	x613tOib17QpmkMVe3KtJwSOzkPEGTiJUIIsyxHMW1mRS61JqDaS4KRzYFRaSZY9oYi9NASe6OG
+	PfXeoKuu3pVz0bqfkZKXKiO3V7HQ
+X-Received: by 2002:a05:6808:2202:b0:3fe:aecb:5c49 with SMTP id 5614622812f47-40b33e324abmr14762134b6e.21.1751366711683;
+        Tue, 01 Jul 2025 03:45:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGZqLNSFn4u/OltyPDVZCfPxB24s1GVT0ZUzyLOd0CNhrAGYaI9Si2fr1rfeL4ixA2goyWYoA==
+X-Received: by 2002:a05:6808:2202:b0:3fe:aecb:5c49 with SMTP id 5614622812f47-40b33e324abmr14762107b6e.21.1751366711199;
+        Tue, 01 Jul 2025 03:45:11 -0700 (PDT)
+Received: from sgarzare-redhat ([193.207.144.202])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40b322b1d89sm2072981b6e.19.2025.07.01.03.45.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 03:45:10 -0700 (PDT)
+Date: Tue, 1 Jul 2025 12:44:58 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Will Deacon <will@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Keir Fraser <keirf@google.com>, 
+	Steven Moreland <smoreland@google.com>, Frederick Mayle <fmayle@google.com>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jason Wang <jasowang@redhat.com>, Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, 
+	netdev@vger.kernel.org, virtualization@lists.linux.dev
+Subject: Re: [PATCH 3/5] vhost/vsock: Allocate nonlinear SKBs for handling
+ large receive buffers
+Message-ID: <6shb4fowdw43df7pod5kstmtynhrqigd3wdcyrqnni4svgfor2@dgiqw3t2zhfx>
+References: <20250625131543.5155-1-will@kernel.org>
+ <20250625131543.5155-4-will@kernel.org>
+ <orht2imwke5xhnmeewxrbey3xbn2ivjzujksqnrtfe3cjtgrg2@6ls6dyexnkvc>
+ <aGKdSVJTjg_vi-12@willie-the-truck>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PA4PR10MB5681:EE_|AS8PR10MB6433:EE_
-X-MS-Office365-Filtering-Correlation-Id: 86f3da64-080a-4ee3-4bfc-08ddb88c4fd1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Q0NtYkIweXdULzBGL1BMZllZYkVpS3ZmbE5MNS93QXhkZCtKM01zY2tVVjZp?=
- =?utf-8?B?ejEvNEFjdHlrYVhqREVoN1liaGRWdDBoNUM5RjR6NTE5c3l1ZHVFT050bFZ6?=
- =?utf-8?B?TlR4b0w0T3BLOEE3T0FFYVdFYVB2a1crd0txd3UzK0tZcVl4ZU5JRE5jZlZt?=
- =?utf-8?B?d1ZGTVNNdnJBRzc0cFV1RDlZVndPWVlhYW13ekF3ZWRVYWlSelFOMVFJS2Fn?=
- =?utf-8?B?cUZCcVlGUkFoTnBNRzU5S0tWUi82Y0FNVnU5c1hmOTNickRBVk1pUnpScEpK?=
- =?utf-8?B?ckI5MkJEcFZ4akZhTkFFa1ZaRlhIbWUrUlBQdHg0dXlIQWZkK0dhOUR2WWcy?=
- =?utf-8?B?eFBVeGtWWDBTby9TeDNlKy8wZkRGUHdsUE4vWG1qTjlreFEvOUMxZExwcjVS?=
- =?utf-8?B?eTJ3QlhMcXFXNzlwWVF2TlVJSk1pWDhFYmU1TjZKbmwvTHZhbksrdjJoelI2?=
- =?utf-8?B?RUV6bWd4VUdiNDN6WkNEbVptcFN3dkVHeUsySG53VlQ3SUwyRlhnemc3eGQ2?=
- =?utf-8?B?TGRYSkhKSEJoQzJuczlOcHlDTFQxNCtCTHRINW5JR1RuYlZtak9WY2J3ekpH?=
- =?utf-8?B?TS9BNU5CalJPVVVneFFJQmk5dDVucHhITnI2eDVQdzhxYjNLcVpScS8vMHJx?=
- =?utf-8?B?ZjczOU1BRG5hcktQN1pIMlkvVm1heER6cnVjN2toSXBVdlV4ZjZqbFlROEdK?=
- =?utf-8?B?Q0h2dDBCNWpLdzBBdTB0dUJhckJhLzFNd1ZuTG4vUDd4OVMvV1dRdHhjTURS?=
- =?utf-8?B?Q1BHaXZWNFp6cUtLQ1luNkpVQ3k4MHpnTkZ3aGpQUWhFOGUzam5DYUxtQk1B?=
- =?utf-8?B?aFhKUkdYcmwwcXZ5L2JzTFZxOGNsNUYwaEwwdHM5V0MrZU9ISEtKTWN2QnBs?=
- =?utf-8?B?YS9LNkFtRmZ1UnhpcnMxYTVRYmF1Y0lDTzFSeDRFdFdOQ1ArYk5aUXpBNEpm?=
- =?utf-8?B?Uk0wSlRTZTZVZVR3eE1QWE5jNHlBSCtraXpETEs5RlRtVFFGWFJOTGdibXhE?=
- =?utf-8?B?T1JSRkxOOWdDY00rbm8wYXg1UVJKbDM0L0Y5enAzVTdGdS9PeFIzL0s0Nmlx?=
- =?utf-8?B?b2RLemdaNDAzOHk4VGhOZHZLOWtZSlo1VFYya2JOZ0tMTHJCc3hxSmF6VHVX?=
- =?utf-8?B?UVpjVmMyVk9tTHNuWnZSYnI3TkwweXF4TTdQMWpnTDNtNVlweDJJdEVTZXZr?=
- =?utf-8?B?VmthaFVlS0RVeTFxRWpEVlZkanRYL0c2SzJvTFZSK2VwbjFBdDBEdjdPS1NX?=
- =?utf-8?B?UlE0N3pVUm1HeHA2SjAzWEZvbEkveVBDTHowUWZiaCtTOUJ2NFp0Y0tPc21u?=
- =?utf-8?B?enRLMHZQS2dLcXBaOFZtdTN6MlZxZ0lxQ0diM3gxM040TlJqS1MwWkcrUVl4?=
- =?utf-8?B?MDhTQnNvVlhCVmQ4Nis4R3ppZnZPamVORnVpVWwraE8yTVVkUHV3QmpJck80?=
- =?utf-8?B?dy8vSWNuWWJqZlMyNyt3MkgraDU1VW00ektLMlpIS05aLzZ1TEpPU0VUcUVY?=
- =?utf-8?B?R21yR0tYUjYxdllOaWhiaTNqeGIxQzRhOHF6QUJ6Nm10aFhrem4wWDlka2hZ?=
- =?utf-8?B?L2ZLZU85LzBUSHJmSSt4bzdaSDMweGNHTmpnSjJ2MUNEMzFHOTNmQzEzOVlP?=
- =?utf-8?B?ZHlTWEdMQ3U4OTJEbCttaXpaZzVjdWpIREY1bFBzRjQ1b0M5K1M4TmowS2J0?=
- =?utf-8?B?UzBJcmxsY20wbmNDUlFWeWhGZkE1b3RHNTJWVFdoa1ROL0s4VE5lZ1RMMTQz?=
- =?utf-8?B?ZTQ5cmpidThYdDBLRTBSOXNSdlI3VHNadDlVVUFBVWVsblFyaFhMVFBKbldQ?=
- =?utf-8?B?bHNGdXFTeXRyK2VTM1ZrbnNRZ2Rqc0YzZmc1ZlV5cWNmcHZXdG00dkxLc1Fr?=
- =?utf-8?B?ZFhNOTVpc2xZU3MxQlFkUHFDeklRRE5sVlVEdzFDcTNTSWRMRlVEc0dMdExm?=
- =?utf-8?Q?oilG3AHun0M=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR10MB5681.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RllVRjAxd3FmUWxSUkhFeUlXRDRDNXN3ank1azZLRmJ6cGJYWVFKSVlUdm9N?=
- =?utf-8?B?bmhBQzBHbEM2WmZHUDNtN1RRTHRoN2NGSmFOdWZMbE9HMkFROFMzSEdOT1Zq?=
- =?utf-8?B?ZGI3T0hSNm4vQldPdmRQcFRheEttcVMreHUrL3c1TXNRUytoRmxkVFZrOVNQ?=
- =?utf-8?B?MTBQcmd3WjV0UmF1TDdYazZ4ZXZnSy8rNUUwZVUrajVlQWI0MENHRlJ3eW5r?=
- =?utf-8?B?UXlwV1llOUdyYUNPMnEvTnpxK2Zaa1BFM0wwb2djRGtvYTIvS2tyRjFLQXlV?=
- =?utf-8?B?bkF4MjgvVDcrQzRkRG1nZVd2VDcySU9rWlB2S3gwNFdaRjAxWjFYREZ3MTJJ?=
- =?utf-8?B?ZDlJRTI4OWQ3RWp5dWxEb1ZmenlZczY2OWNDeHVMR2JPQldEYURQUnZnK3lK?=
- =?utf-8?B?bjF2ZUZid2tWeWt0WTFtZldaeXRkZk8vaUlIWExIKzEycCtvWUw5ZXVDRzBn?=
- =?utf-8?B?L0VTcDlDcjd0SHpZb3BmQkZHZlZkbUtYS3FyQlNRNkRDcEhzL1ZFelIraHIy?=
- =?utf-8?B?SXptTlNoQVZuNDl3ZmdIb0ppbFduazhKM3ROcWFuMHFmd1dYaElrS0ZMaERm?=
- =?utf-8?B?TU5FRkdENkNzcjNHUVBsZmg3amkwbVhwQWlMWVlzZlR4dkJRWEk5UXZhOU9K?=
- =?utf-8?B?QWVWWStEWXNrbnRrUHhkU09qSXhWbXdydlEra2hNdzdZQ3gwQnVFQ1lVek41?=
- =?utf-8?B?bzNCNXFBUXdCZDVoOHY4cXM4aHBrcm5JYi9uTkpLdnc0VnpJMVRnV2tZTGVR?=
- =?utf-8?B?MmFKclE5bk9MSkxCdXRjN2N0d2szYTJaSE5iQmhWSnAwSThwYkJ3ZzcrSE5r?=
- =?utf-8?B?RXNXd09zdnA0OStscnRpSitsUkJ5ekZpOWlVbnBaaW00RitqandKQjBLb29s?=
- =?utf-8?B?VGJWY2VjSUs3QWlHZ2x2L1FleCtNa055aGRNYWZpMmwrbnc2M05yVTlsS0VS?=
- =?utf-8?B?Q254TEE1dTVWRllFVlpHOE5XTkYvcWFHb3FqV28ySEpoWGg0bk9rSS9LRHRI?=
- =?utf-8?B?QWUxZWRRSUc3aG5SWWJDNUg1K09hck5QK1FUcWNFcWpzdDFGdVJ0WWNMSUhm?=
- =?utf-8?B?cUwvb2kyNlZHV3QwYlZMTVgrVkhXOEtFWjZPeSs3cDJINFVCM1AwZkdIYXRu?=
- =?utf-8?B?WHZUckMyaDd1SENrUFAzSnhmaUNjNS9lY2V3QmoxcnJLRUJReGpyNXhYejhp?=
- =?utf-8?B?NEZ1anIxY09maDBKdlg5bFI5NEl1ay9Gc0JJNzNvc0dvdUl4c2JVdGNnNUxY?=
- =?utf-8?B?bjhWa1pWaXV2RENFK2NIdUc1VVdJVmpyb0VQN21zNkM0WnhERTd5blp3SWRu?=
- =?utf-8?B?T0s1dWNvQU92Vk91bVVPVXFiWWNyWEpyVG80RzVDOHZoZE5WejdOcnd6cWpi?=
- =?utf-8?B?QzJvaEdrZjVSZ0xQeUo3NWswT0krd1VDekZsQlh4L3laWTdKVjBBMUlpL1cy?=
- =?utf-8?B?R1l6QStPdWFUT0ZKdkR1UDBzeksvU0MrS2RWdUR4dFdIVGxITUZ6cEZRcHEz?=
- =?utf-8?B?a3lTTlZJMVNLOUlZbDdnVlBZUlYrZUprMWdJSENjVVdyaU5UM2FLTEgrMFVs?=
- =?utf-8?B?R0x6WmFQYk5Fb091aEJMdHpVWmZrcHNVMUZYZzRRNlA3TG00dThIZ2xQWkM5?=
- =?utf-8?B?clFYWExWVStjM3Vzd3NINElKR2p2cGVzZFlaTHNVWE44aUZZaXo3cDByV3VG?=
- =?utf-8?B?bEtYY1FjN0YrbmsxMVF5RnhETEhxWEVTd2wvUEJtYXNzbk52cHRDVDZIQmtI?=
- =?utf-8?B?Y2ZZKzdXN2RwQnB4NnhGNVhKMGZINzB1SlVUY0FLSkVIeHVMdG5DUVl0U2p5?=
- =?utf-8?B?OVZnaUlDRUU3SS9mQmdsZldhUmN1aTlVeU5icTE4dXZ4VmFvcER6NFhCOWo5?=
- =?utf-8?B?ZVE5TVhLcDMycEJmdVpid2k2M0xQSUZ0ekJ2NEVveXI4V3U3NU5ZWlJXblgw?=
- =?utf-8?B?OHVsYyt6dkFueDlxT0pZSmsrcHp0blU0R3lrVk1QOFh2cGw1NGxpOVNQb1BU?=
- =?utf-8?B?bFhJYW00V2VSRHNFN1ZZMlhWdjVIcUc4MGRLY3pOd0pxN29sa0dpVFBKZnZ6?=
- =?utf-8?B?UmF3dzdqWGpHdy9iOVlkOFo3Z0lqT0c5NWhHNTN0SnZ3cDFOckVNcEpRNEkx?=
- =?utf-8?B?YnNIZDgrM2NyRmdmRFRmQldHbkNjWXZwWUZGUmU0aVliUlNkdlcveXZhbE1q?=
- =?utf-8?B?WEE9PQ==?=
-X-OriginatorOrg: kontron.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: 86f3da64-080a-4ee3-4bfc-08ddb88c4fd1
-X-MS-Exchange-CrossTenant-AuthSource: PA4PR10MB5681.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2025 10:44:53.2308
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8c9d3c97-3fd9-41c8-a2b1-646f3942daf1
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: STzLnt7ZtFnnMR16/2pw0JLe6DhOofSUoq0T+oOhQUFBK93L8vodBNqIp0RF4K9rfLQQngFaj6irB8ISami4Ljdka5e7c6v4Cc5+oxtnfGA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR10MB6433
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <aGKdSVJTjg_vi-12@willie-the-truck>
 
-Am 30.06.25 um 14:17 schrieb Marco Felsch:
-> Hi Frieder,
-> 
-> On 25-06-30, Frieder Schrempf wrote:
->> Hi Marco,
+On Mon, Jun 30, 2025 at 03:20:57PM +0100, Will Deacon wrote:
+>On Fri, Jun 27, 2025 at 12:45:45PM +0200, Stefano Garzarella wrote:
+>> On Wed, Jun 25, 2025 at 02:15:41PM +0100, Will Deacon wrote:
+>> > When receiving a packet from a guest, vhost_vsock_handle_tx_kick()
+>> > calls vhost_vsock_alloc_skb() to allocate and fill an SKB with the
+>> > receive data. Unfortunately, these are always linear allocations and can
+>> > therefore result in significant pressure on kmalloc() considering that
+>> > the maximum packet size (VIRTIO_VSOCK_MAX_PKT_BUF_SIZE +
+>> > VIRTIO_VSOCK_SKB_HEADROOM) is a little over 64KiB, resulting in a 128KiB
+>> > allocation for each packet.
+>> >
+>> > Rework the vsock SKB allocation so that, for sizes with page order
+>> > greater than PAGE_ALLOC_COSTLY_ORDER, a nonlinear SKB is allocated
+>> > instead with the packet header in the SKB and the receive data in the
+>> > fragments.
+>> >
+>> > Signed-off-by: Will Deacon <will@kernel.org>
+>> > ---
+>> > drivers/vhost/vsock.c        | 15 +++++++++------
+>> > include/linux/virtio_vsock.h | 31 +++++++++++++++++++++++++------
+>> > 2 files changed, 34 insertions(+), 12 deletions(-)
+>> >
+>> > diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
+>> > index 66a0f060770e..cfa4e1bcf367 100644
+>> > --- a/drivers/vhost/vsock.c
+>> > +++ b/drivers/vhost/vsock.c
+>> > @@ -344,11 +344,16 @@ vhost_vsock_alloc_skb(struct vhost_virtqueue *vq,
+>> >
+>> > 	len = iov_length(vq->iov, out);
+>> >
+>> > -	if (len > VIRTIO_VSOCK_MAX_PKT_BUF_SIZE + VIRTIO_VSOCK_SKB_HEADROOM)
+>> > +	if (len < VIRTIO_VSOCK_SKB_HEADROOM ||
 >>
->> Am 27.06.25 um 10:46 schrieb Marco Felsch:
->>> Hi,
->>>
->>> your e-mail configuration mixed my e-mail with your answer, which makes
->>> it hard to read. Can you please check the quoting next time :)
->>>
->>> On 25-06-27, Pankaj Gupta wrote:
->>>>>> Add driver for enabling MU based communication interface to
->>>> secure-enclave.
->>>>>>
->>>>>> NXP hardware IP(s) for secure-enclaves like Edgelock Enclave(ELE), are 
->>>>>> embedded in the SoC to support the features like HSM, SHE & V2X, using 
->>>>>> message based communication interface.
->>>>>>
->>>>>> The secure enclave FW communicates with Linux over single or multiple 
->>>>>> dedicated messaging unit(MU) based interface(s).
->>>>>> Exists on i.MX SoC(s) like i.MX8ULP, i.MX93, i.MX95 etc.
->>>>
->>>>> You write single or multiple MUs are possible. I'm aware that the i.MX93
->>>>> has two MUs one for the secure and one for the non-secure world. But I'm
->>>>> really concerned about the fact that both MUs can't be used at the same time
->>>>> from both world:
->>>>
->>>> Yes, you are correct.
->>>>
->>>> Fix is still work in progress.
->>>
->>> So after ~6 months no fix is available :(
->>>
->>>>> Also how is the secure and non-secure world talking to the ELE if there is
->>>>> only one MU as you have written?
->>>>
->>>> Till the fix is WIP, either Linux or OPTEE can use the ELE, at one point in
->>>> time.
->>>
->>> That has nothing to do with the fix. The fix is for platforms/SoCs which
->>> do have 2-MUs, but you also have written that there are platforms with
->>> only 1-MU.
->>>
->>> This MU can't be shared between secure and non-secure world.
->>>
->>>>> IMHO it makes much more sense to put the complete ELE communication into
->>>>> (OP-)TEE and let the secure OS taking care of it. All non-secure world
->>>>> requests are passed via (OP-)TEE to the ELE. This involves:
->>>>> - eFuse access (done via OP-TEE i.MX specific PTA)
->>>>> - ELE 23h59m ping (kernel SMC WDG driver, requires OP-TEE watchdog driver)
->>>>> - HW-RNG (kernel OP-TEE HWRNG driver + OP-TEE HWRNG PTA)
->>>>
->>>> There is a dedicated MU "trusted-MU" for OPTEE-OS. The idea to converge to a
->>>
->>> Yes for systems with 2-MUs there is a "trusted-MU" and a
->>> "non-trusted-MU". As of now, there is no fix available for using both
->>> MUs at the same time. Furhtermore there are platforms/SoCs with only
->>> 1-MU, as you have written in your commit message. This 1-MU system can
->>> have the MU either trusted or non-trusted.
->>>
->>>> single path via OPTEE-OS, is good. But it will impact the performance of the
->>>> features at Linux side.
->>>
->>> Performance? We are talking about a ping every 23h59m (I still don't
->>> know if this is a feature or bug), eFuse write/read, and the HW-RNG
->>> which can seed the Linux PRNG.
->>>
->>>> Since the fix is still WIP. Let's wait till then.
->>>
->>> The fix is for the 2-MUs SoCs but not the 1-MU case.
->>>
->>> I would like to have a system design which doesn't differ too much
->>> between SoCs which are equipped with the ELE engine.
+>> Why moving this check here?
+>
+>I moved it here because virtio_vsock_alloc_skb_with_frags() does:
+>
+>+       size -= VIRTIO_VSOCK_SKB_HEADROOM;
+>+       return __virtio_vsock_alloc_skb_with_frags(VIRTIO_VSOCK_SKB_HEADROOM,
+>+                                                  size, mask);
+>
+>and so having the check in __virtio_vsock_alloc_skb_with_frags() looks
+>strange as, by then, it really only applies to the linear case. It also
+>feels weird to me to have the upper-bound of the length checked by the
+>caller but the lower-bound checked in the callee. I certainly find it
+>easier to reason about if they're in the same place.
+>
+>Additionally, the lower-bound check is only needed by the vhost receive
+>code, as the transmit path uses virtio_vsock_alloc_skb(), which never
+>passes a size smaller than VIRTIO_VSOCK_SKB_HEADROOM.
+>
+>Given all that, moving it to the one place that needs it seemed like the
+>best option. What do you think?
+
+Okay, I see now. Yep, it's fine, but please mention in the commit 
+description.
+
+>
+>> > +	    len > VIRTIO_VSOCK_MAX_PKT_BUF_SIZE + VIRTIO_VSOCK_SKB_HEADROOM)
+>> > 		return NULL;
+>> >
+>> > 	/* len contains both payload and hdr */
+>> > -	skb = virtio_vsock_alloc_skb(len, GFP_KERNEL);
+>> > +	if (len > SKB_WITH_OVERHEAD(PAGE_SIZE << PAGE_ALLOC_COSTLY_ORDER))
+>> > +		skb = virtio_vsock_alloc_skb_with_frags(len, GFP_KERNEL);
+>> > +	else
+>> > +		skb = virtio_vsock_alloc_skb(len, GFP_KERNEL);
 >>
->> Do we really want to depend on OP-TEE to be available for having things
->> like OTP fuse access and HWRNG? Personally I'd like to be able to build
->> systems with OTP access and HWRNG but without OP-TEE. Requiring OP-TEE
->> only to make the ELE available to the kernel in cases where the secure
->> world isn't used for anything else seems to be unnecessarily complex.
-> 
-> I understand your point. I don't like pulling in more FW neither but we
-> need to the face the following facts:
-> 
->  - OTP eFuse R/W access after doing the LOCK_DOWN fuse is no longer
->    possible without OP-TEE. This involves general purpose (GP) eFuses
->    too. We faced this limitation in a current project.
+>> Can we do this directly in virtio_vsock_alloc_skb() so we don't need
+>> to duplicate code on virtio/vhost code?
+>
+>We can, but then I think we should do something different for the
+>rx_fill() path -- it feels fragile to rely on that using small-enough
+>buffers to guarantee linear allocations. How about I:
+>
+> 1. Add virtio_vsock_alloc_linear_skb(), which always performs a linear
+>    allocation.
+>
+> 2. Change virtio_vsock_alloc_skb() to use nonlinear SKBs for sizes
+>    greater than SKB_WITH_OVERHEAD(PAGE_SIZE << PAGE_ALLOC_COSTLY_ORDER)
+>
+> 3. Use virtio_vsock_alloc_linear_skb() to fill the guest RX buffers
+>
+> 4. Use virtio_vsock_alloc_skb() for everything else
+>
+>If you like the idea, I'll rework the series along those lines.
+>Diff below... (see end of mail)
 
-Ok, interesting. Where do find information about the LOCK_DOWN fuse? I
-don't see it mentioned in the (Security) Reference Manual of the i.MX93.
+I really like it :-) let's go in that direction!
 
-> 
->  - With new regulations like the EU CRA I think we need some sort of
->    secure-enclave anyway.
+>
+>> > diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
+>> > index 67ffb64325ef..8f9fa1cab32a 100644
+>> > --- a/include/linux/virtio_vsock.h
+>> > +++ b/include/linux/virtio_vsock.h
+>> > @@ -51,27 +51,46 @@ static inline void virtio_vsock_skb_rx_put(struct sk_buff *skb)
+>> > {
+>> > 	u32 len;
+>> >
+>> > +	DEBUG_NET_WARN_ON_ONCE(skb->len);
+>>
+>> Should we mention in the commit message?
+>
+>Sure, I'll add something. The non-linear handling doesn't accumulate len,
+>so it's a debug check to ensure that len hasn't been messed with between
+>allocation and here.
+>
+>> > 	len = le32_to_cpu(virtio_vsock_hdr(skb)->len);
+>> >
+>> > -	if (len > 0)
+>>
+>> Why removing this check?
+>
+>I think it's redundant: len is a u32, so we're basically just checking
+>to see if it's non-zero. All the callers have already checked for this
+>but, even if they didn't, skb_put(skb, 0) is harmless afaict.
 
-Probably some sort of, yes. But not necessarily in the form of TEE or
-TrustZone, I guess.
+Yep, I see, but now I don't remember why we have it, could it be more
+expensive to call `skb_put(skb, 0)`, instead of just having the if for
+control packets with no payload?
 
-> 
->  - Making it optional cause more paths of potential errors e.g. by not
->    including the correct "secure.dtsi". Multiple paths also require more
->    maintain- and testing effort. IMHO I do think that one of the paths
->    get unmaintened at some point but we would need to keep it for
->    backward compatibility.
-> 
->    Having one implementation eliminates this since.
-> 
->  - All above points assume that the ELE-FW and -HW is capable of talking
->    to both world, which is not the case. As we learned NXP doesn't have
->    a fix for the 2-MUs ELE yet and even more important there are 1-MU
->    ELE-IPs.
-> 
-> I do see the (minimal) drawback of having +1 FW but I think this is more
-> an integration problem.
-> Speaking of FW files, for the new i.MX9* you already have plenty fo
-> them: bootloader, TF-A, ele-fw, scu-fw (i.MX95). So your integation
-> needs to handle multiple firmware files already.
+Thanks,
+Stefano
 
-Sure, but I really like to keep the complexity and therefore the number
-of FW files as low as possible. I'm not sure what has more weight in
-terms of security: shipping an additional firmware and therefore
-increasing the attack surface or maintaining an additional code-path.
-
-> 
->> Anyway, I see your point of having a single implementation for the ELE
->> API in the "right" place. But as far as I know other platforms like
->> STM32MP1 also implement both ways for the HWRNG, secure access via OPTEE
->> and non-secure access via kernel directly.
-> 
-> I'm not a STM32MP1 expert but here you have this setup with the
-> *-scmi.dtsi. So you have two code paths which needs to be maintained and
-> tested. Also if one customer of yours want to use OP-TEE you need the
-> integration anyway, so you (Kontron) needs to maintain multiple
-> configuration as well. I don't see the added value.
-> 
-> I think for STM32MP1 the *-scmi.dtsi support was added later because it
-> required a lot effort to support it. This is not the case for the i.MX9*
-> series.
-
-Anyway, thanks for elaborating. Your points are all valid and basically
-I agree. I'm fine with either way. But I'm afraid that implementing the
-ELE API in OP-TEE only will cause another tremendous delay for having
-ELE access in the kernel, especially seeing how slow NXP seems to be
-working on these topics right now.
+>
+>Will
+>
+>--->8
+>
+>diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
+>index 3799c0aeeec5..a6cd72a32f63 100644
+>--- a/drivers/vhost/vsock.c
+>+++ b/drivers/vhost/vsock.c
+>@@ -349,11 +349,7 @@ vhost_vsock_alloc_skb(struct vhost_virtqueue *vq,
+> 		return NULL;
+>
+> 	/* len contains both payload and hdr */
+>-	if (len > SKB_WITH_OVERHEAD(PAGE_SIZE << PAGE_ALLOC_COSTLY_ORDER))
+>-		skb = virtio_vsock_alloc_skb_with_frags(len, GFP_KERNEL);
+>-	else
+>-		skb = virtio_vsock_alloc_skb(len, GFP_KERNEL);
+>-
+>+	skb = virtio_vsock_alloc_skb(len, GFP_KERNEL);
+> 	if (!skb)
+> 		return NULL;
+>
+>diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
+>index 0e265921be03..ed5eab46e3dc 100644
+>--- a/include/linux/virtio_vsock.h
+>+++ b/include/linux/virtio_vsock.h
+>@@ -79,16 +79,19 @@ __virtio_vsock_alloc_skb_with_frags(unsigned int header_len,
+> }
+>
+> static inline struct sk_buff *
+>-virtio_vsock_alloc_skb_with_frags(unsigned int size, gfp_t mask)
+>+virtio_vsock_alloc_linear_skb(unsigned int size, gfp_t mask)
+> {
+>-	size -= VIRTIO_VSOCK_SKB_HEADROOM;
+>-	return __virtio_vsock_alloc_skb_with_frags(VIRTIO_VSOCK_SKB_HEADROOM,
+>-						   size, mask);
+>+	return __virtio_vsock_alloc_skb_with_frags(size, 0, mask);
+> }
+>
+> static inline struct sk_buff *virtio_vsock_alloc_skb(unsigned int size, gfp_t mask)
+> {
+>-	return __virtio_vsock_alloc_skb_with_frags(size, 0, mask);
+>+	if (size <= SKB_WITH_OVERHEAD(PAGE_SIZE << PAGE_ALLOC_COSTLY_ORDER))
+>+		return virtio_vsock_alloc_linear_skb(size, mask);
+>+
+>+	size -= VIRTIO_VSOCK_SKB_HEADROOM;
+>+	return __virtio_vsock_alloc_skb_with_frags(VIRTIO_VSOCK_SKB_HEADROOM,
+>+						   size, mask);
+> }
+>
+> static inline void
+>diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
+>index 4ae714397ca3..8c9ca0cb0d4e 100644
+>--- a/net/vmw_vsock/virtio_transport.c
+>+++ b/net/vmw_vsock/virtio_transport.c
+>@@ -321,7 +321,7 @@ static void virtio_vsock_rx_fill(struct virtio_vsock *vsock)
+> 	vq = vsock->vqs[VSOCK_VQ_RX];
+>
+> 	do {
+>-		skb = virtio_vsock_alloc_skb(total_len, GFP_KERNEL);
+>+		skb = virtio_vsock_alloc_linear_skb(total_len, GFP_KERNEL);
+> 		if (!skb)
+> 			break;
+>
+>diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+>index 424eb69e84f9..f74677c3511e 100644
+>--- a/net/vmw_vsock/virtio_transport_common.c
+>+++ b/net/vmw_vsock/virtio_transport_common.c
+>@@ -262,11 +262,7 @@ static struct sk_buff *virtio_transport_alloc_skb(struct virtio_vsock_pkt_info *
+> 	if (!zcopy)
+> 		skb_len += payload_len;
+>
+>-	if (skb_len > SKB_WITH_OVERHEAD(PAGE_SIZE << PAGE_ALLOC_COSTLY_ORDER))
+>-		skb = virtio_vsock_alloc_skb_with_frags(skb_len, GFP_KERNEL);
+>-	else
+>-		skb = virtio_vsock_alloc_skb(skb_len, GFP_KERNEL);
+>-
+>+	skb = virtio_vsock_alloc_skb(skb_len, GFP_KERNEL);
+> 	if (!skb)
+> 		return NULL;
+>
+>
 
