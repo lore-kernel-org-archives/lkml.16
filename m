@@ -1,25 +1,33 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05C641946AA
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 15:49:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B5A1946AA;
+	Tue,  1 Jul 2025 15:49:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751384945; cv=none; b=HpkNgeaRb4PxtVwcGLyTLvU+BPbIYszHJl6Yph6g3pCGPUyLkjjZtVxaeW9Df0qU2JngANBasDSIz04Vu0Q8v4qpLACLlz022KjGtv11zNIDxdP0ArFHK6TsJWYzBOxwrEyCk629zseaBRrm+ANjV/XHEvReEZh4JDZYepLJ7dE=
+	t=1751384961; cv=none; b=IBEXlXcMsUUT3xnfORH6VrbBd1CRmDBRuKok2wJ0LZBAU2Ph3ecy3wEVqWtScZ9AHmyuaAQnYW3PEPDX5oCB73Je9Mi5bhoNGKF/atAjy2CMxnkS1hOgR4tp6qEwQdg/nWBIN69M4uzkJs5ShzospB8GnMsu6AatkMTne050au8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751384945; c=relaxed/simple;
-	bh=yfxBUhmxm461rC9xXB26tOVK7O/g0vIMPXA+7y8WubM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=npzckHg9mgrnmPHlr5nJceRO5E8jqxi/r/5lIva/j/rxiSOIa5TZFB5PVMCihjAuSK1o68X6okRbznMcYeq3yokFBOSLh1W4TyTqNWezF+0XihFZUFzEuSI+FU1YQ3eIIxYngkkGMse/6etFJj9TcqwU1dTyTvC1nCv8a1hgsZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9475B1595;
-	Tue,  1 Jul 2025 08:48:46 -0700 (PDT)
-Received: from [10.1.30.206] (e137867.arm.com [10.1.30.206])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8C85D3F66E;
-	Tue,  1 Jul 2025 08:48:59 -0700 (PDT)
-Message-ID: <599c677a-ace0-41fe-b264-51de0fa7badf@arm.com>
-Date: Tue, 1 Jul 2025 16:48:52 +0100
+	s=arc-20240116; t=1751384961; c=relaxed/simple;
+	bh=G3D82sMsG5UoCCrWfqBE3G+QkuojXnHxAxlbRr9EbmI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KUiFHRHFDrE9pj64unjQBuJFGjazDPIFhzZisSOkgqXBSWjYPKstgrDnzQnxnp+IXvpI7zFRvMh9h8veKMeyAstwCDGauLlJaURN1XHac/szQDx9CoLJ8llWkIdPyoDPGgEnQLNy55Y5VhLMBo269noLyI8DfyP2CzlFZhORud4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ckeuEBs3; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ckeuEBs3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AD41C4CEEB;
+	Tue,  1 Jul 2025 15:49:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751384960;
+	bh=G3D82sMsG5UoCCrWfqBE3G+QkuojXnHxAxlbRr9EbmI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ckeuEBs3+JdC+t5srxUqZzkwQz4CZhUihLkd8Bx1+Q/KGPkep3wFy++GDTFssJAOP
+	 8oSuBMfGWi22WgYKGEaZrtTuAO7E3RSzbuAeD6bWwgLf/OLKmR3pBwebXSB29I5u+H
+	 Tvj2pY5Vph+bBx6dcJMKnOq7vp2fD2Z2NXNkcyJBVcq0/8uCgiIW/NZMcmWhEeXnDf
+	 luVc0RcbqZiJRSb4sedSykEvB2sK6Llo7GU1iMUJUnJfLl9qoGd5Jr522Gp3aEz0Kg
+	 WvkuI6aVK87SIAKJ//c4et86V7kGze8e9h3nxI+734nVyeqYiQiJYBeLxyEQeBnsJc
+	 OMeL8e3YP/yIQ==
+Message-ID: <3bd1e6ef-cf3d-4ace-85e8-7f98cf92cc1f@kernel.org>
+Date: Tue, 1 Jul 2025 17:49:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,135 +35,85 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: mtd: rawnand: atmel: ECC error after update to kernel 6.6
-To: Zixun LI <admin@hifiphile.com>
-References: <CA+GyqebQnWQ3fj4Lrb4-hvzRpphuqw+jh4B9En1j2NDTNFumvQ@mail.gmail.com>
-From: Ada Couprie Diaz <ada.coupriediaz@arm.com>
-Cc: Ada Couprie Diaz <ada.coupriediaz@arm.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Vignesh Raghavendra <vigneshr@ti.com>,
- Tudor Ambarus <tudor.ambarus@linaro.org>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Richard Weinberger <richard@nod.at>,
- Miquel Raynal <miquel.raynal@bootlin.com>, linux-mtd@lists.infradead.org,
- linux-kernel@vger.kernel.org,
- SoC support' <linux-arm-kernel@lists.infradead.org>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Subject: Re: [PATCH net-next v1 2/2] selftests: pp-bench: remove
+ page_pool_put_page wrapper
+To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Shuah Khan <shuah@kernel.org>, =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?=
+ <toke@redhat.com>, Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ kernel test robot <lkp@intel.com>
+References: <20250627200501.1712389-1-almasrymina@google.com>
+ <20250627200501.1712389-2-almasrymina@google.com>
 Content-Language: en-US
-Organization: Arm Ltd.
-In-Reply-To: <CA+GyqebQnWQ3fj4Lrb4-hvzRpphuqw+jh4B9En1j2NDTNFumvQ@mail.gmail.com>
+From: Jesper Dangaard Brouer <hawk@kernel.org>
+In-Reply-To: <20250627200501.1712389-2-almasrymina@google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi,
-
-I'm not really involved in this part of the kernel or drivers,
-but I took some time to look into it. Hopefully I'm not completely
-missing something !
-
-On 30/06/2025 15:38, Zixun LI wrote:
-> Hi,
->
-> After updating our SAM9G25 device from kernel 3.16 to 6.6, we have
-> encountered UBIFS failures with ECC errors
->
-> [...]
->
-> After some diagnostics, I used devmem2 to compare SMC and PMECC
-> registers between the two kernels. All values match except for the
-> PMECC_CLK register, which is 2 in kernel 3.16 [1] and 0 in kernel 6.6
-> [2]. It appears the clock setting is missing since the kernel 4.14
-> refactor.
->
-> According to the SAM9G25 datasheet this field must be programmed with 2.
->
-> Manually setting PMECC_CLK to 2 (devmem2 0xffffe010 w 2) resolves the
-> nandtest issue.
->
-> Is the clock setting moved to elsewhere after the refactor ?
-
-As far as I can tell, the setting of the *PMECC_CLK* was lost in
-f88fc122cc34 (mtd: nand: Cleanup/rework the atmel_nand driver),
-which was merged for 4.12.
-
-The register offset and values are  part of the defines it introduces
-but are unused, so they might have been forgotten.
-I couldn't find another place where this was done, and I think it would
-make sense for it to be done here still.
-
-The tricky part is that now the driver handles other PMECCs that do not have
-this register at all in their datasheets :
-  - SAMA5D2 series[3], page 713, 36.20 Register summary :
-      0x80 (0x10 offset) is marked reserved,
-  - SAMA5D4 series[4], page 512, Table 30-20 :
-      0x080 (0x10 offset) is marked reserved,
-
-So I think it's best not to add this write back for all cases.
-
-I also checked, as some other SoCs' PMECCs are marked compatible with
-the one used in your SAM9G25 (`atmel,at91sam9g45-pmecc`) :
-  - SAM9x60 series[5], page 256, 21.6 Register Summary :
-      0x10 offset has PMECC_CLK present, recommends setting to 2 at 133MHz,
-  - SAM9x7 series[6], page 263, 21.6 Register Summary :
-      0x10 offset has PMECC_CLK present, reccomends setting to 2 at 133MHz.
-
-So it should be safe to write 2 to this register for all those matching
-this /compatible/ string.
-
-The datasheet itself is not clear as to what to do for other MCK frequencies,
-though as 133MHz is the highest supported frequency and it worked before,
-hopefully it just means a cycle or two of useless delay at worse,
-but at least it keeps it simple.
-
-I've written a small patch below that I think should fix the issue, but again
-I don't know if that's upstreamable as-is.
-
-> Best regards,
-> Zixun LI
->
-> [1] https://github.com/torvalds/linux/blob/19583ca584d6f574384e17fe7613dfaeadcdc4a6/drivers/mtd/nand/atmel_nand.c#L1058
-> [2] https://github.com/torvalds/linux/blob/ffc253263a1375a65fa6c9f62a893e9767fbebfa/drivers/mtd/nand/raw/atmel/pmecc.c#L772
->
-Hopefully that can help !
-Best regards,
-Ada
 
 
-[3]: https://ww1.microchip.com/downloads/en/DeviceDoc/SAMA5D2-Series-Data-Sheet-DS60001476C.pdf
-[4]: https://ww1.microchip.com/downloads/aemDocuments/documents/MPU32/ProductDocuments/DataSheets/SAMA5D4-Series-Data-Sheet-DS60001525.pdf
-[5]: https://ww1.microchip.com/downloads/aemDocuments/documents/MPU32/ProductDocuments/DataSheets/SAM9X60-Data-Sheet-DS60001579.pdf
-[6]: https://ww1.microchip.com/downloads/aemDocuments/documents/MPU32/ProductDocuments/DataSheets/SAM9X7-Series-Data-Sheet-DS60001813.pdf
+On 27/06/2025 22.04, Mina Almasry wrote:
+> Minor cleanup: remove the pointless looking _ wrapper around
+> page_pool_put_page, and just do the call directly.
+> 
+> Signed-off-by: Mina Almasry <almasrymina@google.com>
+> ---
+>   .../net/bench/page_pool/bench_page_pool_simple.c     | 12 +++---------
+>   1 file changed, 3 insertions(+), 9 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/net/bench/page_pool/bench_page_pool_simple.c b/tools/testing/selftests/net/bench/page_pool/bench_page_pool_simple.c
+> index 1cd3157fb6a9..cb6468adbda4 100644
+> --- a/tools/testing/selftests/net/bench/page_pool/bench_page_pool_simple.c
+> +++ b/tools/testing/selftests/net/bench/page_pool/bench_page_pool_simple.c
+> @@ -16,12 +16,6 @@
+>   static int verbose = 1;
+>   #define MY_POOL_SIZE 1024
+>   
+> -static void _page_pool_put_page(struct page_pool *pool, struct page *page,
+> -				bool allow_direct)
+> -{
+> -	page_pool_put_page(pool, page, -1, allow_direct);
+> -}
+> -
+>   /* Makes tests selectable. Useful for perf-record to analyze a single test.
+>    * Hint: Bash shells support writing binary number like: $((2#101010)
+>    *
+> @@ -121,7 +115,7 @@ static void pp_fill_ptr_ring(struct page_pool *pp, int elems)
+>   	for (i = 0; i < elems; i++)
+>   		array[i] = page_pool_alloc_pages(pp, gfp_mask);
+>   	for (i = 0; i < elems; i++)
+> -		_page_pool_put_page(pp, array[i], false);
+> +		page_pool_put_page(pp, array[i], -1, false);
+>   
+>   	kfree(array);
+>   }
+> @@ -180,14 +174,14 @@ static int time_bench_page_pool(struct time_bench_record *rec, void *data,
+>   
+>   		} else if (type == type_ptr_ring) {
+>   			/* Normal return path */
+> -			_page_pool_put_page(pp, page, false);
+> +			page_pool_put_page(pp, page, -1, false);
+>   
+>   		} else if (type == type_page_allocator) {
+>   			/* Test if not pages are recycled, but instead
+>   			 * returned back into systems page allocator
+>   			 */
+>   			get_page(page); /* cause no-recycling */
+> -			_page_pool_put_page(pp, page, false);
+> +			page_pool_put_page(pp, page, -1, false);
+>   			put_page(page);
 
------------------------- >8 ------------------------
+The get_page() + put_page() trick is a fairly ugly workaround that I
+added when Jakub removed page_pool_release_page() in commit 535b9c61bdef
+("net: page_pool: hide page_pool_release_page()").
 
-diff --git a/drivers/mtd/nand/raw/atmel/pmecc.c b/drivers/mtd/nand/raw/atmel/pmecc.c
-index 3c7dee1be21d..cd96b44f3f30 100644
---- a/drivers/mtd/nand/raw/atmel/pmecc.c
-+++ b/drivers/mtd/nand/raw/atmel/pmecc.c
-@@ -143,6 +143,7 @@ struct atmel_pmecc_caps {
-  	int nstrengths;
-  	int el_offset;
-  	bool correct_erased_chunks;
-+	bool need_clk_config;
-  };
-  
-  struct atmel_pmecc {
-@@ -787,6 +788,9 @@ int atmel_pmecc_enable(struct atmel_pmecc_user *user, int op)
-  	writel(PMECC_CTRL_ENABLE, pmecc->regs.base + ATMEL_PMECC_CTRL);
-  	writel(PMECC_CTRL_DATA, pmecc->regs.base + ATMEL_PMECC_CTRL);
-  
-+	if (pmecc->caps->need_clk_config)
-+		writel(PMECC_CLK_133MHZ, pmecc->regs.base + ATMEL_PMECC_CLK);
-+
-  	return 0;
-  }
-  EXPORT_SYMBOL_GPL(atmel_pmecc_enable);
-@@ -896,6 +900,7 @@ static struct atmel_pmecc_caps at91sam9g45_caps = {
-  	.strengths = atmel_pmecc_strengths,
-  	.nstrengths = 5,
-  	.el_offset = 0x8c,
-+	.need_clk_config = true,
-  };
-  
-  static struct atmel_pmecc_caps sama5d4_caps = {
+These extra refcnt increments will make the test slower, but if we are
+just aware of this, then we can still compare incremental changes.
 
+Acked-by: Jesper Dangaard Brouer <hawk@kernel.org>
+
+>   		} else {
+>   			BUILD_BUG();
