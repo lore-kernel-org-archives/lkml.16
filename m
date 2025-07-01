@@ -1,108 +1,101 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E7427935F;
-	Tue,  1 Jul 2025 15:23:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751383430; cv=pass; b=kdnnVwyWt0KNRk4WzmzvsVn2XiCCdqEsq1IozCWIor3eFChbiVSBYZcbECpGQn2QKptHoCq4Ni2brSkPNmkbT+DENoOKK0zuw7526lT3e2P4oZl0NTy8T/U+yMyL0bWXA8946H+hkrPc/tvicVxtz5MGg1r6OhonZtYy8UUedTw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751383430; c=relaxed/simple;
-	bh=u5H7Ki3Uc472xoh1prN9UsQjiNEbTVL8UfwlIfP67qE=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=o52IF/4l00TjRID5sszpn3ppd9BVNFtMbfx9Giq5SKShUC27UVSBlk92aHq3T+/cDBa8II4b/sSVJ/NBEULOzCn/NlH2y26Ct3kesSL4A4R2tzKVX0EKRQLWHqETKxt0i8NWAUNQeMcFU77ONCkjKYNueGr6MX+z1LCGQqIcX3w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=GBVwu3uk; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33F3D277C9F;
+	Tue,  1 Jul 2025 15:24:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751383441; cv=none; b=gwbSIHqOkWM3/raxKny8x0kESCzlB4soM5XN39MHfxNzzgHSLF6iJjhs7F9RRABs1wqF2Fx8eOTpP05ta12Mk0VyFJwxgHu7PWyWeASlzMiIkH8q9/AaRoYv/RiBd3305tjqyRoudA63x5Qvw82660g6eJThme9lKC/NHt0MpZk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751383441; c=relaxed/simple;
+	bh=avG9QVTiB19t8sqVOmhJl0sjhGbCmDbse4lCvvoUBsM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Puzt+vyCC83nAww4X2pbtH6wB/pYA6oQo3mCnuuzXL+2Oy1ApOQm+1Frgih8FECFQkfU7t2Sz5HIlrmn6H+wnY0hnw7Ygw4Cwmttpfe0sZbuA+7OWAnhSKOeSfnbSmiMQzQOLlIGe2HZQ3NshfyInIMQgXWuoPHnDBYZEJ0z4BY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IjmXd+HI; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="GBVwu3uk"
-ARC-Seal: i=1; a=rsa-sha256; t=1751383387; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=dh43jjD67eEL8rhJp1dIKSd4AixeF5/p3902K4h9pKcojEGnSeQUjMVjcBdvRSqsDK6v03R+q1gLWJwjDU4SD0JBnsvNxHaQsNnV8kj4ezuw/ZTVOKMEDOlP8CL/HgBc3EoZADExn8OHSfI1fpLJrKHLiQCPsDygkCPPOx4zPy4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751383387; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=oMnN5862CUhYGYQHo2feKEf+ebQKDIQoTAibORo62JI=; 
-	b=W03P+eSfdfcLI1L1AZfnVqSm14+25iQhjqha2N9ag6ZmRL03WX7aZxKlCvw5Jzt3FmDdkyhhGL7ToPPOtvN5qEniW7bo/PswKVRwcvzsBI/6suA2xce25qKfWk1qoJLemBvImrvjaiLo8laZMGvqwUkUzClW6dEm66F0tzz3xWM=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751383387;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=oMnN5862CUhYGYQHo2feKEf+ebQKDIQoTAibORo62JI=;
-	b=GBVwu3ukZ+qeVJUuuoKoib95nWm9eSPWKByLlFYErvrUFgsO1Z4Q2bYnwiftsFlv
-	FHy2CPxu7JhBeO2cIfNPRraK5vEOklysKBPdRQzwVwle4swS2BfcsAr22KCBFfGc/73
-	Y3MKhVlvuW+iBSJ8KkE4zfqCUWkZvmbR5WjM/+Zk=
-Received: by mx.zohomail.com with SMTPS id 1751383384665179.9428978034714;
-	Tue, 1 Jul 2025 08:23:04 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IjmXd+HI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751383440; x=1782919440;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=avG9QVTiB19t8sqVOmhJl0sjhGbCmDbse4lCvvoUBsM=;
+  b=IjmXd+HIDxYk6TPFKPJmDER7Ti09SvfgRwyEdCDI1TBzcExX9ky0wz8h
+   YzEqwtll61bmvCS/gyFqet7f4+cifTiQ/rwU53vhPXtf0ihXWMuPiN96x
+   42nOycQbxcTpFM5eyufuBKR4RIwyV/B5i3GPqTYa3YcodAYoNwDBw/61Y
+   hUI1+Ryy65DO3Yl85/dMaMlmOTcExRrolWJfKV0gxIbfKw6tBE8LQ7Ltn
+   H4ktdPkU70z52cdyG8mtzTF7DBS4NCAxCYAgItGVS//bLTI+9sN9swB/7
+   8iuWUvTrbrj7d3L5dcarOOM1KVCwiGNDGzDslSC3skYL3EDoLpefCEyXn
+   Q==;
+X-CSE-ConnectionGUID: ot1Lo+pUQFOhZBWrXNKc/w==
+X-CSE-MsgGUID: QMuJ6/3xTDqoTOvIq6lW3A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="53745116"
+X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
+   d="scan'208";a="53745116"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 08:24:00 -0700
+X-CSE-ConnectionGUID: sRSJ18lpTMa0Ez+mYznlJQ==
+X-CSE-MsgGUID: FUiUsIDUSlqts1S8bb9p7w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
+   d="scan'208";a="153884442"
+Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.109.179]) ([10.125.109.179])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 08:23:58 -0700
+Message-ID: <c32cede0-643c-47bb-bfde-93adbcf16155@intel.com>
+Date: Tue, 1 Jul 2025 08:23:57 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [PATCH v5 4/6] rust: irq: add support for threaded IRQs and
- handlers
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <aF7xlhJeb-t_blHf@pollux>
-Date: Tue, 1 Jul 2025 12:22:45 -0300
-Cc: Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Benno Lossin <lossin@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- =?utf-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org,
- linux-pci@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <3767EFC5-6BBD-4EC5-8E20-5A9A12A56531@collabora.com>
-References: <20250627-topics-tyr-request_irq-v5-0-0545ee4dadf6@collabora.com>
- <20250627-topics-tyr-request_irq-v5-4-0545ee4dadf6@collabora.com>
- <aF7xlhJeb-t_blHf@pollux>
-To: Danilo Krummrich <dakr@kernel.org>
-X-Mailer: Apple Mail (2.3826.600.51.1.1)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] cxl: docs/driver-api/conventions resolve conflicts btw
+ CFMWS, LMH, ED
+To: Gregory Price <gourry@gourry.net>,
+ "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Cc: linux-cxl@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, Jonathan Corbet <corbet@lwn.net>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250623152923.1048525-1-fabio.m.de.francesco@linux.intel.com>
+ <aFmo18OEZGMA2HU8@gourry-fedora-PF4VCD3F>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <aFmo18OEZGMA2HU8@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Danilo,
 
->=20
->> +    fn handle(&self) -> ThreadedIrqReturn;
->> +
->> +    /// The threaded handler function. This function is called from =
-the irq
->> +    /// handler thread, which is automatically created by the =
-system.
->=20
-> /// The threaded IRQ handler.
-> ///
-> /// This is executed in process context. The kernel creates a =
-dedicated
-> /// kthread for this purpose.
->=20
->> +    fn handle_on_thread(&self) -> IrqReturn;
->=20
-> Personally, I'd prefer `handle_threaded()`.
->=20
 
-Don't you think that handle_on_thread is more expressive? You can derive =
-the
-semantics from the name itself, i.e.: "handle an interrupt on a separate
-thread". Although handle_threaded should be understandable by all kernel
-developers, I think it's slightly more obscure.
+On 6/23/25 12:19 PM, Gregory Price wrote:
+> On Mon, Jun 23, 2025 at 05:29:02PM +0200, Fabio M. De Francesco wrote:
+>> Add documentation on how to resolve conflicts between CXL Fixed Memory
+>> Windows, Platform Memory Holes, and Endpoint Decoders.
+>>
+>> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
+> 
+> I won't block a doc update on a suggestion so
+> 
+> Reviewed-by: Gregory Price <gourry@gourry.net>
+> 
+>> +Platform Firmware (BIOS) might reserve part of physical addresses below
+>> +4 GB (e.g., the Low Memory Hole that describes PCIe memory space for MMIO
+>> +or a requirement for the greater than 8 way interleave CXL regions starting
+>> +at address 0). In that case the Window Size value cannot be anymore
+>> +constrained to the NIW * 256 MB above-mentioned rule.
+> 
+> It might be nice to have a diagram that explains this visually, as it's
+> difficult for me to understand the implications through words alone...
 
-In any case, if you still prefer handle_threaded then that's fine with =
-me.
++1 on request for diagram to explain. We should try to document this issue as clearly as possible. Thank you.
 
-=E2=80=94 Daniel=
+> 
+> which is likely why the conflict exists in the first place :]
+> 
+> ~Gregory
+
