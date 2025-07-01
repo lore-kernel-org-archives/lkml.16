@@ -1,242 +1,266 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5712423C4E0;
-	Tue,  1 Jul 2025 06:05:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751349961; cv=none; b=E93E/ApcYNym6v/WNWfgEkezJcBR/imDBFb0vjtL6opDg5chUuW6vtIWOCDM20AchFbCjo5p2OCdXZkkoS75bw6d+5v3A1G7C1yU0DOR1evRPz1lUNOj83+Ey+9m387NNXDeJpSfSLb4LL2LZMGL8awosi+TDA0647d7LRz+vmE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751349961; c=relaxed/simple;
-	bh=SeIXvbsKD/6wDDdSTrLiwRGd6Sf5ThDoHRlhISLn+Xs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nfqbSM88jJ+ViVscZipIsyvFo5NXKOm+uGKkR9rgWtSokymFzJTrzEtdw9WmsR9NaHZk5HBz6J1UCzSZsrnE+H9syiG1IT3KMD4HbLA0z/WNYo8SM6vwlPoyn3dHvUAKQmvJnXvlYVpbyyF3m5pZtWWpR6kuKr3VHGFCN1RPvmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E+7l9i9k; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 101522459FD;
+	Tue,  1 Jul 2025 06:06:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751349967; cv=fail; b=bkMyYaHpxt8rmUvhAcmZNiL+YzCZEJLDQf/q7u/0/cVMSmVOUgcqRZdUQp+pRdhAX2WU+pd5zWokbiGX8gZYhK0sm126xEAOxlKZgkZFi4JR2cnxj+eZml9qRxSOegzy7RNIMimid4h+VM2zaLRq8oGZW5Njn/mqANwzT/1kTPw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751349967; c=relaxed/simple;
+	bh=wR2ny0I/ixWxtM96+7j313IvaWw6IlJzu+58pAqNgfM=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=m3kDWK+hOJpzWgJlHPvmrD7T8gQbOQ2WYafKUjSeexcGNyGvMr23wpOD0zHIQrPnNQipz+kvReQsa2/qE29Ia5LnDBIa7qPqK8wvSGWzTZ+pOdkQnjrbLvK1OkRITM4IsQLVNe9OAxYHvg3HmiEWDRMDbWfCxRzhAyoc6dTMRhw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bGvGJ0HQ; arc=fail smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E+7l9i9k"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ae361e8ec32so673412466b.3;
-        Mon, 30 Jun 2025 23:05:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751349957; x=1751954757; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KuEXV07Z9sdbVmePGAe0RiLvhvhMH/ORTr8Xg5rdgBA=;
-        b=E+7l9i9kLtEE34rjEnLqXnObXKxQG8uarocPhssHFhRLMtiYQJ51/JzvaC0hHDRWgP
-         Lg1i+BQsM4PsjssKs1wCY1kDZksLO6le/3qm/MR4S3Dqcmxqcv5kzekJYEFXR3WLIVe7
-         67uoT9e18BhrolXeD17nMqz/n1uaYxAl58tLnkXS2oxge9y/R1Pf1+jmroV0NTyPPnJa
-         DQnn0Qb93OPO2HpWYTWDs9cBQiBH5wz5hjMt19GPjQjxsQRImsV25hXogPb+wXi1EpFt
-         PHjppMRV9rifLt9BXbvxeIzPX6iaKLzj4GdJ+unD86opUTjEX45wMSgzobUwIf7MG8gq
-         s0ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751349957; x=1751954757;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KuEXV07Z9sdbVmePGAe0RiLvhvhMH/ORTr8Xg5rdgBA=;
-        b=n5ulsoLnbikljCGnezbvwfcO0wE/LxXAjkAK05CkWV+Yl/N2PU6chsICCcAwoSMYNQ
-         SO41BPkp5agov6o4foO253xGKgQraEwDYYuO5kL5c9PdOMTuUfcQKOAmXB7lHQFnfAmU
-         JvKBFFNZuGI/4wBmY8P0RQ4ZClHXIIH8v5RpwSncnNhV+JMQK8Moo9hayNT7d6ekyVzM
-         TdR0zDK3TFjCKMwiTzD6HrtG2cC9sGljh35rtkZXhTfYezu0RC3v2LenC5+74APQDKah
-         IPO4BHaEqRc0/a4zMgwKwE/mxFp8lFqVNGJe6n4r9VBS2TN4qjy/m8s43bQh900D5I/O
-         MjPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUmSB1KUDgjiGXUjkQrAsa7zQZnntcf9QrUryBKMzjH19ObiCs8+Ut++eFAP+vx5BStztJOYG+NVGk=@vger.kernel.org, AJvYcCVcWpg6Qgob1Jf1Y4EpmoetTYDJHGcAFwJnPtVkUMf3H+219YJ3GAHvjcsjqJ/n651y3iTYu3prfSMdjux1@vger.kernel.org, AJvYcCVwu0GoisU0ro3/YRFc08E8OO2CtjMelZuoSdAO0QfCekGO6Wesuv6+ZxbYvw/5xM1FUuRfMJduTS4G@vger.kernel.org, AJvYcCWI80asZIAWQjrfWFu0+SDCuUHom/i7W9WY/egtDOb3DT9+RwD+JIfm7X8bCbAHU0swdhKWZrb34A==@vger.kernel.org, AJvYcCWM3leqCJ2p8y14KcFDRUGF6/C0Am40R/2caqBK000qPACA0ooSaCiXqiL8oRwu8AXs/mUXq4LxVuzGO1udQg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJuxxuLLJOLHhtP8Gfi1hKyQu4+EzvxNOpK8dnCqmq/NpRW0Iv
-	EkLVAZ8259z/iXXelas+OdwqzhTxTyDxJXOafqTIgmRluj63xxKYKIlb8nXoqIOqV7SE3BbRd64
-	nOLt1TvFMiKNdxm86ii2WiE3PiocX2Bo=
-X-Gm-Gg: ASbGncsFbZApAC6agFGx/x3p3Hcvi2B0MqiXAl2oWOKeMaDY3BT4r3K9cjkcNGOLJfu
-	X88dnQ5iXIaa0qOrMug2olPTaz3wq9nurAHsWodhBbwvvCbfInkndAZAGni+5Pz/mvCFx2baVZq
-	aBP13KzfOziQ4JqMXDy/jKVuzsj2fkjLhw+5gDaTbwTYc=
-X-Google-Smtp-Source: AGHT+IE8ltAVUHmG0o8AJsNM6aS+AMGdPwBTV6jSAOtvjhmVYfBdldq1gqGOmPM/QRe73Xswe0K6G48qYHzvM8ukRGI=
-X-Received: by 2002:a17:906:4fd5:b0:ae3:5ebc:7a3c with SMTP id
- a640c23a62f3a-ae35ebc87a5mr1309732366b.11.1751349956866; Mon, 30 Jun 2025
- 23:05:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bGvGJ0HQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751349964; x=1782885964;
+  h=date:from:to:cc:subject:message-id:reply-to:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=wR2ny0I/ixWxtM96+7j313IvaWw6IlJzu+58pAqNgfM=;
+  b=bGvGJ0HQ/3OxQGEhbekMIh/Dk8V1sg8xta+W+A2UoLDJNuGoSNN4ekD6
+   xodvzRwdRAvUp6Anft5+Ce2oeGtATy/PpN09OyKYIpy2T+V+sHlRL0U1Q
+   OCuGknNJSB3/kjVyfaZnCeNXcLArnWfme/PIpBtTC/2zfv8GV3+924Kh5
+   yKvce7ScXsAL5K8hnsy6M65LKhtczKYFy0gL5dGJfswTGSo6sqQGUMbxA
+   4K6QLuAMQbFykihqjq+FdWAXLRni8gbFhDqtds8R513p9tux5WAqhAHjV
+   J4/kyobFQL53HNEMAwCFXmsoy+jd6QXG9Bb22Ygn1kexQklGn4ZaPaUqk
+   w==;
+X-CSE-ConnectionGUID: YoO09M19S4yM7Org2P879w==
+X-CSE-MsgGUID: vPPfunOyR06qOmcwSh4YRg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="71022322"
+X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
+   d="scan'208";a="71022322"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 23:06:03 -0700
+X-CSE-ConnectionGUID: BVgoqj1uSouHtZJwR/CwgA==
+X-CSE-MsgGUID: G2H+3Tl+R3m5jBIwFUXB0A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
+   d="scan'208";a="154383502"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 23:06:03 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Mon, 30 Jun 2025 23:06:02 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Mon, 30 Jun 2025 23:06:02 -0700
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (40.107.95.54) by
+ edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Mon, 30 Jun 2025 23:06:01 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=rhk8NYKLJJu0YOPWO8HFZUK+MXeiSq1Od79KcE5NYbvfJnDyeRf8o2Eo2x2Y3GOXBIPLy9M4O+vynzZGy0Qco9o6p0CIhEECPP4kQzu+BCbACtMMJZwSn21zHt4YGfckXOTQ6n4J2Imk21mbRMQ7HdAH9IjGjX7wRnvvLBm849Fj8KQF+pyIVIwQUc+9c50Zf2eJprMl768UtiUketbasjIf4B7P+Of8jsB4eryyWcF6qvOUrKiiHLf2VsQJg1bSld1Q6G1V+fQsdVEnsxZOrbgUynwwieZok/DzgLc7Y0wNvjhg8cc3T/AQXId/3e7sMwu+b3VdWm9eXIXa6Z8t3w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rgTtbjKU3qGm4ACKsGhLARyYx8be4Jv/TW7MBqIGlAY=;
+ b=joHYmjt9rCtAwVe010g0dUED0AfVNtMdMUDqm26S68CAmASiPU0ButBS8rVz++8fE3wdSknP7ZZUaSX3873uDgAg+AZk4qfLkIz8TB3ktpcH4pZAM0zxmgjZodfC3IM6ZSJyR1GCjh+eJLfTBHCthlwlTrhAlsl4Dx8PdZ14mcpQlNZEp6qb7xBh5yE4Xzh2jxF2i7ZR/9fdu0mpZHOzEOMjBE+2zQ+HxTIRiuK1DSfkdeSpBhNUdykQL34byfoe1NpWuJNcvi7rUcgKevX126sElgQhbpQND1MwBHhdSI18qK9imX//4UTRSkfVJkMLogy4fm+cEUU3e/QkNQIjaw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com (2603:10b6:8:71::6) by
+ DS4PPF7CCC4B437.namprd11.prod.outlook.com (2603:10b6:f:fc02::34) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.29; Tue, 1 Jul
+ 2025 06:05:43 +0000
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::e971:d8f4:66c4:12ca]) by DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::e971:d8f4:66c4:12ca%5]) with mapi id 15.20.8901.018; Tue, 1 Jul 2025
+ 06:05:43 +0000
+Date: Tue, 1 Jul 2025 14:03:04 +0800
+From: Yan Zhao <yan.y.zhao@intel.com>
+To: Vishal Annapurve <vannapurve@google.com>
+CC: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, "ackerleytng@google.com"
+	<ackerleytng@google.com>, "quic_eberman@quicinc.com"
+	<quic_eberman@quicinc.com>, "Li, Xiaoyao" <xiaoyao.li@intel.com>, "Shutemov,
+ Kirill" <kirill.shutemov@intel.com>, "Hansen, Dave" <dave.hansen@intel.com>,
+	"david@redhat.com" <david@redhat.com>, "thomas.lendacky@amd.com"
+	<thomas.lendacky@amd.com>, "vbabka@suse.cz" <vbabka@suse.cz>,
+	"tabba@google.com" <tabba@google.com>, "Du, Fan" <fan.du@intel.com>,
+	"michael.roth@amd.com" <michael.roth@amd.com>, "seanjc@google.com"
+	<seanjc@google.com>, "binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>,
+	"Peng, Chao P" <chao.p.peng@intel.com>, "kvm@vger.kernel.org"
+	<kvm@vger.kernel.org>, "Yamahata, Isaku" <isaku.yamahata@intel.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Weiny, Ira"
+	<ira.weiny@intel.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>, "Li,
+ Zhiquan1" <zhiquan1.li@intel.com>, "jroedel@suse.de" <jroedel@suse.de>,
+	"Miao, Jun" <jun.miao@intel.com>, "pgonda@google.com" <pgonda@google.com>,
+	"x86@kernel.org" <x86@kernel.org>
+Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge
+ pages
+Message-ID: <aGN6GIFxh57ElHPA@yzhao56-desk.sh.intel.com>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <447bae3b7f5f2439b0cb4eb77976d9be843f689b.camel@intel.com>
+ <zlxgzuoqwrbuf54wfqycnuxzxz2yduqtsjinr5uq4ss7iuk2rt@qaaolzwsy6ki>
+ <4cbdfd3128a6dcc67df41b47336a4479a07bf1bd.camel@intel.com>
+ <diqz5xghjca4.fsf@ackerleytng-ctop.c.googlers.com>
+ <aGJxU95VvQvQ3bj6@yzhao56-desk.sh.intel.com>
+ <a40d2c0105652dfcc01169775d6852bd4729c0a3.camel@intel.com>
+ <diqzms9pjaki.fsf@ackerleytng-ctop.c.googlers.com>
+ <fe6de7e7d72d0eed6c7a8df4ebff5f79259bd008.camel@intel.com>
+ <aGNrlWw1K6nkWdmg@yzhao56-desk.sh.intel.com>
+ <CAGtprH-csoPxG0hCexCUg_n4hQpsss83inRUMPRqJSFdBN0yTQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGtprH-csoPxG0hCexCUg_n4hQpsss83inRUMPRqJSFdBN0yTQ@mail.gmail.com>
+X-ClientProxiedBy: SG2P153CA0031.APCP153.PROD.OUTLOOK.COM (2603:1096:4:c7::18)
+ To DS7PR11MB5966.namprd11.prod.outlook.com (2603:10b6:8:71::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250630-xattrat-syscall-v6-0-c4e3bc35227b@kernel.org> <20250630-xattrat-syscall-v6-4-c4e3bc35227b@kernel.org>
-In-Reply-To: <20250630-xattrat-syscall-v6-4-c4e3bc35227b@kernel.org>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Tue, 1 Jul 2025 08:05:45 +0200
-X-Gm-Features: Ac12FXxgSnJQgGdAHWGW1XZ5QTb4sHxkxo40tOuCn_ldUpIgeYyBQujjKbItCiM
-Message-ID: <CAOQ4uxgbeMEqx7FtBc3KnrCjOHHRniSjBPLzk7_S9SjYKcY_ag@mail.gmail.com>
-Subject: Re: [PATCH v6 4/6] fs: make vfs_fileattr_[get|set] return -EOPNOSUPP
-To: Andrey Albershteyn <aalbersh@redhat.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Casey Schaufler <casey@schaufler-ca.com>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>, 
-	Paul Moore <paul@paul-moore.com>, linux-api@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, selinux@vger.kernel.org, 
-	Andrey Albershteyn <aalbersh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR11MB5966:EE_|DS4PPF7CCC4B437:EE_
+X-MS-Office365-Filtering-Correlation-Id: 854a32b7-0f44-4260-31f6-08ddb865501a
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?azZoZUJBVXoyQ1lYMEtDQ3lwb2lTQk5EMDJpK2ZMTjhiSWhjZXdHa1pnbjAz?=
+ =?utf-8?B?RmZta1NhTElFMU5Wb2xsUUVHTFd3WlV6Si9LbEhJYTk3WnJrUnZrRkNYOUF4?=
+ =?utf-8?B?VEoxSHZwdFdaTzQxZ0NHd0pVQ2pablVDMytLZEptNDlpckZyRWF4Zk4xUUxY?=
+ =?utf-8?B?Qncvc0RtZXNNSVg3NTFwUmVXMnM3MHIrR3pnZGVoTzB4NUpRYVE2UG5TMUJU?=
+ =?utf-8?B?VmxuLzJNWE1FN0RHeGZZbEZJQzZCcDZzLzVuaUVjSXNkc051eHAySlk0Tlk1?=
+ =?utf-8?B?TGFVZWphanpjLzgzZWRpcE5scXRueC9BUzJJODU3M0o0bVVGd3BwUDJPNm1x?=
+ =?utf-8?B?clRRMmRRTUpKVHcrT3ZhZzAwQ1FVWmhReERHb3laa0lSRm9UcjZ1SjE3UklY?=
+ =?utf-8?B?YU9laHFxYk5GYUY3MmMrZHZLVXZTNmJBZUdKWklEZEJyMVNsU2RLTnNGaHoz?=
+ =?utf-8?B?UlBtOUwxZVZhYkg1VHBjdmJsR01lVExVSjV4R0wxd0dUaTZYM0tHemU5bEE4?=
+ =?utf-8?B?ZXZ6MW12ZHZBU2N0Q3VFVDhQUEdxYk85QmtLL3dER3VFVVhXVlVYYUZnVHJN?=
+ =?utf-8?B?a2xIUXJKenhIZkkyVHMzODVtaE1wUzM3ZTZibU9LcDFUakt2WXBwL3MxT1pW?=
+ =?utf-8?B?UDNaTXpnM2gwb2YwYXNKeGl3NW1GKzVEWGtBSWU5dHE1ZVduMUVVSGhqdDY5?=
+ =?utf-8?B?Z0lCckhkTXZqWit6MGw2aEZSeVR3ZmZySmVNYnVQdGJHYXJXZ1JZTmIwUUcw?=
+ =?utf-8?B?NmswRlJXaUJTL3dzaGVsWWhyZVFib1dnK0dCNTVzNjZ6S2lFbUJVL1J2Rlk2?=
+ =?utf-8?B?dTJPU2YvVFRwVnA0L281cWUyYTFSTXJqRExWMllTMVozM3pZcTkxcjkvNndF?=
+ =?utf-8?B?aXhzYkxmejhRNm55YjBlYjlhRlZiS2d1VUVqYW04MjhXSGZvRnhPaG00SmV3?=
+ =?utf-8?B?eVI3ZWp1WSs2YUZPQnFvclEzS3dFazFwNmVEdkZDQ3d4Qko1MWo2RUFvcGZ4?=
+ =?utf-8?B?NmxmNGVDMHJWVDFBL201SUtIblB6ZTdqOVpsZm9FcU5uTUZiQkF2S2ZlaVFq?=
+ =?utf-8?B?YVAvTm1hTGRxampCN2dwVEhaT3c0MklTeVZCdXNyTXdXWlo0SFkvYjlRZWZW?=
+ =?utf-8?B?VHlBVFZ3ajZVbURPRVJGWmxJdUxxd3creFV0c1p4UXBWN3lFUGVHRHpYa095?=
+ =?utf-8?B?MmFQTFpmRXRDYTRFa3FndlVuNWszbUExNDFGRzRaVkVoMTdUV0xGcTZpelJN?=
+ =?utf-8?B?ZTVpd0p2Y3c2QVFNenpQMENSV2hOcG9xdXA1bWoweGRsSWl1Q3Q5eC9ZOWl6?=
+ =?utf-8?B?WTRnUXVkeThmRHFyeXNNR1psMGZJWWtZd3RlY1ZGUjh6SWJySklaWVNLc0h3?=
+ =?utf-8?B?WS9KMkxNc3VNalh5UDlkVGZiYW9XajQrK2lSMXV1ZFJNZ2pDc01MaW5uczZw?=
+ =?utf-8?B?UDJ1ODVJL3VDVFRTOEZUaEJnS2NHUjQrTHo2Qy9zZUJBaDJBR290aW5GQlBI?=
+ =?utf-8?B?Nml0bGY1d09UZlhEVlRNOTUwSzRVMlRpZzB6Vmh6bXVuQjJUNWJsZGVVK2FP?=
+ =?utf-8?B?bERLZnJnRExnS2xOYk9IUnNadUtIWUNWT2JUODlGVEVuSG44NWFCbnUzbWlM?=
+ =?utf-8?B?eDV1U2xhUWRHVmJMS0c0TUF1N050WW5ac3NidTBiVlhubmYzUEFCMmFCMHlM?=
+ =?utf-8?B?enAyK0N4aFp2SWhJeE11eTNza2h6SDhxVHViZXExdU1VeWhVRGFRZUNXQjR6?=
+ =?utf-8?B?VlBmQVFEbjFHTE1Td0pZWHpteG9TQUg5RnN0TDdyRTgvU1BIR2Z2eHVSUHhV?=
+ =?utf-8?B?MyszeUQ2OFI5NlhNelNQV3FoVlEvZlV4cTM3M014dWJjL3FKUDVkK1lqZm9h?=
+ =?utf-8?Q?8P0SdK+Suioo1?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB5966.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bUtNU01LSEFlSXdxZGNZZE04VzY1S0l5TWloc2FsRHRjM1c0Rm5KTlhLZldx?=
+ =?utf-8?B?bndYd1BHZFdFclpDRkdmZDdIMUZFekNFS0Y1Wm5kaUk0Q1NOQ0pkc1IwVk1Z?=
+ =?utf-8?B?WTZyeFRlSTR3SXJLZnpIZVJQN01vU3QydFNFUHZDV3Y5b0tWbzFha01ub01l?=
+ =?utf-8?B?dUdaMVZiK2l1ME0wWVY5MGV2SURBUUtlcEZlcURBeTlVM1RTcFZzV3ZZZm5X?=
+ =?utf-8?B?dzYxNVIzRWZMa3VvaG41eDhOUTV4MGFTUlhtWFRNTkZ3YUtpWXh2Mm9STS9o?=
+ =?utf-8?B?M241aUFSc3RTTlRNOFFPN2dyNGV2R3ZYZVBIUE5KUDUwcWdtOFVBMjNJNFJs?=
+ =?utf-8?B?QjVXdEhHM05mVTM3QTk0QlNLemVPQVdoWXV3MDFDaGVOZjBJMWZXYndzbHBQ?=
+ =?utf-8?B?Y0VhMDd3Y2p6UlgrU3BBNDJBd00wVEdRNWtZUkRRUDQzdGFRR2YrSk5OclFF?=
+ =?utf-8?B?ZE9pV1cvTmpPNVZFRFFzZTlkWUdVWTEwMXlIOS9KOVJQUHZXelkwdWZlNFQw?=
+ =?utf-8?B?R1pXRUZzVlpxWmhjZS8yY2VsRUovRWllcEx1OHdLUkYrdEdSRXluMTNvamRO?=
+ =?utf-8?B?eGxFRXFFQ1h2SkY0R01EUGxiUHBib1ZuRjJ3UnRFczRrUlFPWFNiWHFUS0U0?=
+ =?utf-8?B?Vklna3hqSHVXRE1yck05M3pqUytUTGtCejMwTUdxRVFwM3JDa05WTW1nN094?=
+ =?utf-8?B?aFM4eE5ENy9WQjBKRTFxODVadCtvdjBkUzV4OTIwOHZtdzJ0M2N5dlpmMlZE?=
+ =?utf-8?B?RGRLQmZtTXcxcEF6TTRXbUhtTjlrLzZ5dmdyQnFjUFozU0pIcDlBUkRzVU5q?=
+ =?utf-8?B?aVQzdm9INFJzWWJ0OHJmWVlWZkFYNktmdDdXRVNzb0grbG9XU0oxRmRIdWE5?=
+ =?utf-8?B?VFFsNS8yWTVXTzNrbXJTcE82Nk5MbWhKNTlxUDJ6RmFJb3hMdXg3WjhXVzBJ?=
+ =?utf-8?B?Ym56SUVvMklXZmNpWmJKZlA3VUFsbjU3Y0JmMGwxOXVtWHUwN2pURGhvYUk2?=
+ =?utf-8?B?MmsrWWZkWU93SnRHTmVZRW8xWk5WNDg2UGpqU2tYQkV5MGhWRGZtWU1WQ1VW?=
+ =?utf-8?B?NjN5eWM3RTIveXN6dXozUk82Vk11Zjc1aWhWekoxOUcwRE9qRWRuaDRMbUZN?=
+ =?utf-8?B?cFN0cGNYTG5BVjI4bWxXRjJLY2NNVlpGYklpdU1SYk0vT1I0SldmVnQwSDh1?=
+ =?utf-8?B?UkU5bnp0Mm5CNDg1c3VRNHFYN0pDa245NStpRjVLSmIxKzEra243L3BoTUNG?=
+ =?utf-8?B?UVZmeUtaL2daWEoyZHFSelZNR012eDFnR2NMbkIrc00vVXk2dXBGMjZwaGNp?=
+ =?utf-8?B?V2JxbTBvRlIxYTF2MXZJMmZvMnlhQy9STm9BN0NPc3VWaXJvNkR1TFZreFFD?=
+ =?utf-8?B?YUg4YTh4dVNBaEd0SlhNSjRXNGcxMVk0OUNtVFBTbUlZL2txN3dheCtTZmxB?=
+ =?utf-8?B?WTZtNEtGdUs0QytiUjJIeFg4MVZQK2Y1S0xiMkxlaTU3ZHFVekxWNU82QXJ1?=
+ =?utf-8?B?cWpMdGdIUkdHYWVOZHRLN2N1NWxpWHRtaWlwZGFNQXdnL2lmTDZJK29vNk9D?=
+ =?utf-8?B?TlErTjFKdjkxMG1PU3VKNUtDdlFpa2JNY083SHk2ZXR5WVdUL3I5VFFBNFYx?=
+ =?utf-8?B?UkVnV09HV1dJRnh3ZHcvWnppS29CNmROWW9IcVI1UFZPYkwxUlFDZE1iVjRD?=
+ =?utf-8?B?WVFidnFLY085c3ROckJldGl1cFhpYVg4OU1icFVPZHhBTktyZy9SM1VTS2Rw?=
+ =?utf-8?B?dVo1V3lQTnZjK1FRblBqMFYwcFZXNTlKOTYzZHUxRFZDN1ZaWVl3ZEVCTnVX?=
+ =?utf-8?B?ZVZhWmNlLzNXcDhDS2pIc3J6c25HbHBKaVpFVG1Lc1ZJVmVtcGFxcnFramMw?=
+ =?utf-8?B?SW9jQzRJWG9vNy9jdFUzUzJIcFBOQ05DczdrcWtlTDVISHcwaVRsb3gxT2w5?=
+ =?utf-8?B?eEV3QVptSHJxWWVNWTFrb3VuR1B0TjRuSWF4NjVnVk80enp0c3NEc2tGZUov?=
+ =?utf-8?B?cW9YT0RScTlWU0cyZEhSaTM3NGdZbm9hT2pqbXp5ZEZURGFWWDNxU3F5anFa?=
+ =?utf-8?B?UlB1VHh1dXZTVFM3em1JR0hzdEpVNjQ0QmJZaS9aK3NJRytRL1VoeURjdTQr?=
+ =?utf-8?Q?IYpj4wohVem7mYkse3MLBAaLI?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 854a32b7-0f44-4260-31f6-08ddb865501a
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB5966.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2025 06:05:43.3338
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xvC6urgKEVRLXtl8cUavZziKwKr/xKCPq3GtpzS2jH0mvJIkgMpNQ6er3gyT5cLfPkhFFqpF3fOcGOvE9DMKLA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS4PPF7CCC4B437
+X-OriginatorOrg: intel.com
 
-On Mon, Jun 30, 2025 at 6:20=E2=80=AFPM Andrey Albershteyn <aalbersh@redhat=
-.com> wrote:
->
-> Future patches will add new syscalls which use these functions. As
-> this interface won't be used for ioctls only, the EOPNOSUPP is more
-> appropriate return code.
->
-> This patch converts return code from ENOIOCTLCMD to EOPNOSUPP for
-> vfs_fileattr_get and vfs_fileattr_set. To save old behavior translate
-> EOPNOSUPP back for current users - overlayfs, encryptfs and fs/ioctl.c.
->
-> Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
-> ---
->  fs/ecryptfs/inode.c  |  8 +++++++-
->  fs/file_attr.c       | 12 ++++++++++--
->  fs/overlayfs/inode.c |  2 +-
->  3 files changed, 18 insertions(+), 4 deletions(-)
->
-> diff --git a/fs/ecryptfs/inode.c b/fs/ecryptfs/inode.c
-> index 493d7f194956..a55c1375127f 100644
-> --- a/fs/ecryptfs/inode.c
-> +++ b/fs/ecryptfs/inode.c
-> @@ -1126,7 +1126,13 @@ static int ecryptfs_removexattr(struct dentry *den=
-try, struct inode *inode,
->
->  static int ecryptfs_fileattr_get(struct dentry *dentry, struct fileattr =
-*fa)
->  {
-> -       return vfs_fileattr_get(ecryptfs_dentry_to_lower(dentry), fa);
-> +       int rc;
-> +
-> +       rc =3D vfs_fileattr_get(ecryptfs_dentry_to_lower(dentry), fa);
-> +       if (rc =3D=3D -EOPNOTSUPP)
-> +               rc =3D -ENOIOCTLCMD;
-> +
-> +       return rc;
->  }
->
+On Mon, Jun 30, 2025 at 10:22:26PM -0700, Vishal Annapurve wrote:
+> On Mon, Jun 30, 2025 at 10:04 PM Yan Zhao <yan.y.zhao@intel.com> wrote:
+> >
+> > On Tue, Jul 01, 2025 at 05:45:54AM +0800, Edgecombe, Rick P wrote:
+> > > On Mon, 2025-06-30 at 12:25 -0700, Ackerley Tng wrote:
+> > > > > So for this we can do something similar. Have the arch/x86 side of TDX grow
+> > > > > a
+> > > > > new tdx_buggy_shutdown(). Have it do an all-cpu IPI to kick CPUs out of
+> > > > > SEAMMODE, wbivnd, and set a "no more seamcalls" bool. Then any SEAMCALLs
+> > > > > after
+> > > > > that will return a TDX_BUGGY_SHUTDOWN error, or similar. All TDs in the
+> > > > > system
+> > > > > die. Zap/cleanup paths return success in the buggy shutdown case.
+> > > > >
+> > > >
+> > > > Do you mean that on unmap/split failure:
+> > >
+> > > Maybe Yan can clarify here. I thought the HWpoison scenario was about TDX module
+> > My thinking is to set HWPoison to private pages whenever KVM_BUG_ON() was hit in
+> > TDX. i.e., when the page is still mapped in S-EPT but the TD is bugged on and
+> > about to tear down.
+> >
+> > So, it could be due to KVM or TDX module bugs, which retries can't help.
+> >
+> > > bugs. Not TDX busy errors, demote failures, etc. If there are "normal" failures,
+> > > like the ones that can be fixed with retries, then I think HWPoison is not a
+> > > good option though.
+> > >
+> > > >  there is a way to make 100%
+> > > > sure all memory becomes re-usable by the rest of the host, using
+> > > > tdx_buggy_shutdown(), wbinvd, etc?
+> >
+> > Not sure about this approach. When TDX module is buggy and the page is still
+> > accessible to guest as private pages, even with no-more SEAMCALLs flag, is it
+> > safe enough for guest_memfd/hugetlb to re-assign the page to allow simultaneous
+> > access in shared memory with potential private access from TD or TDX module?
+> 
+> If no more seamcalls are allowed and all cpus are made to exit SEAM
+> mode then how can there be potential private access from TD or TDX
+> module?
+Not sure. As Kirill said "TDX module has creative ways to corrupt it"
+https://lore.kernel.org/all/zlxgzuoqwrbuf54wfqycnuxzxz2yduqtsjinr5uq4ss7iuk2rt@qaaolzwsy6ki/.
 
-I think the semantics should be
-"This patch converts return code of vfs_fileattr_[gs]et and ->fileattr_[gs]=
-et()
-from ENOIOCTLCMD to EOPNOSUPP"
+Or, could TDX just set a page flag, like what for XEN
 
-ENOIOCTLCMD belongs only in the ioctl frontend, so above conversion
-is not needed.
+        /* XEN */
+        /* Pinned in Xen as a read-only pagetable page. */
+        PG_pinned = PG_owner_priv_1,
 
->  static int ecryptfs_fileattr_set(struct mnt_idmap *idmap,
-> diff --git a/fs/file_attr.c b/fs/file_attr.c
-> index be62d97cc444..4e85fa00c092 100644
-> --- a/fs/file_attr.c
-> +++ b/fs/file_attr.c
-> @@ -79,7 +79,7 @@ int vfs_fileattr_get(struct dentry *dentry, struct file=
-attr *fa)
->         int error;
->
->         if (!inode->i_op->fileattr_get)
-> -               return -ENOIOCTLCMD;
-> +               return -EOPNOTSUPP;
->
->         error =3D security_inode_file_getattr(dentry, fa);
->         if (error)
-> @@ -229,7 +229,7 @@ int vfs_fileattr_set(struct mnt_idmap *idmap, struct =
-dentry *dentry,
->         int err;
->
->         if (!inode->i_op->fileattr_set)
-> -               return -ENOIOCTLCMD;
-> +               return -EOPNOTSUPP;
->
->         if (!inode_owner_or_capable(idmap, inode))
->                 return -EPERM;
-> @@ -271,6 +271,8 @@ int ioctl_getflags(struct file *file, unsigned int __=
-user *argp)
->         int err;
->
->         err =3D vfs_fileattr_get(file->f_path.dentry, &fa);
-> +       if (err =3D=3D -EOPNOTSUPP)
-> +               err =3D -ENOIOCTLCMD;
->         if (!err)
->                 err =3D put_user(fa.flags, argp);
->         return err;
-> @@ -292,6 +294,8 @@ int ioctl_setflags(struct file *file, unsigned int __=
-user *argp)
->                         fileattr_fill_flags(&fa, flags);
->                         err =3D vfs_fileattr_set(idmap, dentry, &fa);
->                         mnt_drop_write_file(file);
-> +                       if (err =3D=3D -EOPNOTSUPP)
-> +                               err =3D -ENOIOCTLCMD;
->                 }
->         }
->         return err;
-> @@ -304,6 +308,8 @@ int ioctl_fsgetxattr(struct file *file, void __user *=
-argp)
->         int err;
->
->         err =3D vfs_fileattr_get(file->f_path.dentry, &fa);
-> +       if (err =3D=3D -EOPNOTSUPP)
-> +               err =3D -ENOIOCTLCMD;
->         if (!err)
->                 err =3D copy_fsxattr_to_user(&fa, argp);
->
-> @@ -324,6 +330,8 @@ int ioctl_fssetxattr(struct file *file, void __user *=
-argp)
->                 if (!err) {
->                         err =3D vfs_fileattr_set(idmap, dentry, &fa);
->                         mnt_drop_write_file(file);
-> +                       if (err =3D=3D -EOPNOTSUPP)
-> +                               err =3D -ENOIOCTLCMD;
->                 }
->         }
->         return err;
-> diff --git a/fs/overlayfs/inode.c b/fs/overlayfs/inode.c
-> index 6f0e15f86c21..096d44712bb1 100644
-> --- a/fs/overlayfs/inode.c
-> +++ b/fs/overlayfs/inode.c
-> @@ -721,7 +721,7 @@ int ovl_real_fileattr_get(const struct path *realpath=
-, struct fileattr *fa)
->                 return err;
->
->         err =3D vfs_fileattr_get(realpath->dentry, fa);
-> -       if (err =3D=3D -ENOIOCTLCMD)
-> +       if (err =3D=3D -EOPNOTSUPP)
->                 err =3D -ENOTTY;
->         return err;
->  }
+e.g.
+	PG_tdx_firmware_access = PG_owner_priv_1,
 
-That's the wrong way, because it hides the desired -EOPNOTSUPP
-return code from ovl_fileattr_get().
-
-The conversion to -ENOTTY was done for
-5b0a414d06c3 ("ovl: fix filattr copy-up failure"),
-so please do this instead:
-
---- a/fs/overlayfs/inode.c
-+++ b/fs/overlayfs/inode.c
-@@ -722,7 +722,7 @@ int ovl_real_fileattr_get(const struct path
-*realpath, struct fileattr *fa)
-
-        err =3D vfs_fileattr_get(realpath->dentry, fa);
-        if (err =3D=3D -ENOIOCTLCMD)
--               err =3D -ENOTTY;
-+               err =3D -EOPNOTSUPP;
-        return err;
- }
-
---- a/fs/overlayfs/copy_up.c
-+++ b/fs/overlayfs/copy_up.c
-@@ -178,7 +178,7 @@ static int ovl_copy_fileattr(struct inode *inode,
-const struct path *old,
-        err =3D ovl_real_fileattr_get(old, &oldfa);
-        if (err) {
-                /* Ntfs-3g returns -EINVAL for "no fileattr support" */
--               if (err =3D=3D -ENOTTY || err =3D=3D -EINVAL)
-+               if (err =3D=3D -ENOTTY || err =3D=3D -EINVAL || err =3D=3D =
--EOPNOTSUPP)
-                        return 0;
-                pr_warn("failed to retrieve lower fileattr (%pd2, err=3D%i)=
-\n",
-                        old->dentry, err);
-
-
-Thanks,
-Amir.
+Then, guest_memfd checks this flag on every zap and replace it with PG_hwpoison
+on behalf of TDX?
