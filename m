@@ -1,92 +1,285 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBE42274B2D;
-	Tue,  1 Jul 2025 13:18:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B3A3270EA3
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 13:18:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751375889; cv=none; b=bBsfsTlJQdix2Fc4Y1IG+dxUbKMGgbTSRSJ3JeZFFblcic8hvLCpiDbzg431iejyX7zAVcUp7oDLFtcZmYAjBljfeR66b+hpptdJRvvUWWdUm0js2jjYXXHcNI8TnlJ2OqEZU8Frf4DuLazVwXusunutkWs/W411b5U0ZjX1S7E=
+	t=1751375921; cv=none; b=NuGvLWjlzM+JZOQpsAfFmqzpT2YxEhodPtayPjvcJiNum7Kr3HAMvhp8EK+GDJY9ylpG6OyJryZ0Wy9uIhOTM7momxs/DP3vRqTuhAulEcRvjpBB82KWL8+nt5NRWYFQ1AlpO1JqyAC8vP17FLInrJPtEz+vtuMphxpPaZuCECM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751375889; c=relaxed/simple;
-	bh=ZKJmDxhwcCDftDqFYOYOD4sObA2fTSRqSgyPSrqa2mY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T57vqUJle8mzvLzcTrlUx4B3IcP+9LjWzRvI5dxh0bPdEaWjj5O0DQ9GPz30zyNOR0LcrYMWsleItN4C54B9HQmXP0X685xIjClden9gwcKK7QkGnCWI8L2kTFnetXfZGsq9vPbLlx1sR+FUPfTHX7SLoYMtfGbyxBch24oVV/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6facf4d8ea8so32457886d6.0;
-        Tue, 01 Jul 2025 06:18:07 -0700 (PDT)
+	s=arc-20240116; t=1751375921; c=relaxed/simple;
+	bh=uCzRcBNaIf1ptDo8QyF7J4sO3VPLK+N9zJ4rjyKfzCI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t7lQ97cC5rgvo6RUkxVhfzwq2C9Rs1V2iLG6ORnAK/NJd6j1WEzKQP1r7MxZ/pkh/7Mq2dArgkaSi2YoI4eoZP3uHGuH026G44JMvEAT+VOzBphNTMlf/IRY7TA3+mTXzb6Khdndv7/OdQf7S+SNVN7/g/uUn7aNFMRcyJQnutw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Bk4uYSuS; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bk4uYSuS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751375918;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=BlkDEnXs3gwtKFtbej8eyp0snNnm4feYg7i77xZtujI=;
+	b=Bk4uYSuSxRQG4VvJGJaFmx7ZkGSWi69bq0xsuOP4FTit7W3Bl4eGpYeJdPjnQXnYzqcQa1
+	KVeDNfQJodm3q40HkxXjVacANv7Ak6UWr4JLqJJrstaHgxK5HOZH3lje7R8RCXBPOh2E/b
+	IqdqcQ9pdquhW7akq7m0PuVOQlyiK2U=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-164-S_WyemlLNtShSY4pbhCTHQ-1; Tue, 01 Jul 2025 09:18:36 -0400
+X-MC-Unique: S_WyemlLNtShSY4pbhCTHQ-1
+X-Mimecast-MFC-AGG-ID: S_WyemlLNtShSY4pbhCTHQ_1751375915
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3af3c860ed7so478994f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 06:18:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751375886; x=1751980686;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=th9/0jwZYMrw057NN5f2uI8dWtTi2No3OuROf/qziKc=;
-        b=BmnsRhaE6UWlAy1Sxt0mtxi5EsdOB5hsTkE04syC55TZ3kmW99bQ31a6/J0HA4M161
-         gIcyX0qdI6dsyjsf8Hm0jW0pDXRDN6cz2qZU/akVT1PybzRyLZI0hR+at0m+draQXKkg
-         EsPvjMyiEzOPlUKSR40ZfGwr4qXYGhUaKE5/HLR4igDIkKeQtI494vOxST0RgsZ4mm4r
-         r5hdRS4Qu0RwYG3nGIPlNuNcECaVPDti8S1tyOysHtD+YpZoyXxyVDErhSFwfYB3pzFW
-         1ZZhuI9UNw11wedxMQlQBlrt80VLQeXjoRVYBicSG/D1mERuBaFs0FCv3X4bkgy4rFFv
-         yNVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUkBpTwTJQ9OGcnin/rD42J0Pk7z/+rqsH4QzdNf0KwzHTRm1oN86kkbDfu9M6yPGxM0QsTuyWIPwE=@vger.kernel.org, AJvYcCVjefYivd63rIq3zkYgkH4wvSWvaX3qsVEeEgSc52cAjNdTpYj7ToYwkPKJuolo4BXr6NE9UP0EZA2dN6H/EjxMbdg=@vger.kernel.org, AJvYcCWKR1y4ZvlFxrsXPSVfJvjZXrTdZaDVrnWH4Ibdw3ZBILbD/QC/crUWmTM8WxDJqR5MpwqGnR8Ws/Wht4Y+@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXNW7fULnA1FL4CAnrPpItRiXTXDWLwPuOoKQng+QmRBQXhahr
-	ndaG7zqZLULzFIHJg40ATnSN67ehyyywilZ/RZOS555cf9hSsKiQVXoV2bQqAesy
-X-Gm-Gg: ASbGncu75YxXO9a5DSlbgmjw7BRjk4KDveRi0DaOGDsoFgfxW5yPHG+1T3xBoexPqMt
-	liKKXjLKFqbP3imSMG+ChjC3rb+9CmzkDr5LfXnw+tzibSJylu3KTdiclw9XkRiFdxy2r0VCpXM
-	DTSB/0WUSgb18GSzZtMNx6LiNUsRko2t4HQKRit/3IaozXTOdBuJTtngJ6NsTJX9ho2hPgRaEHW
-	8x02sJyrwF03LWXpZ6M07/hSXvd7ue+sZXnyqornpfp0HHMXKoFfJmbsf0KgCLnhRFWZPaNXnIC
-	a6fgsBuJDN8weL3Lv1JGBaF+wumwA17bhgBNPUpVZXC2dYIuVspgsgJnpMyIPLnc+/pfh7NMlaH
-	WphkA+J03TMofSIDwGeh99hEAkmFw
-X-Google-Smtp-Source: AGHT+IFwN1zowSLe6/NBTO/VResHsgfpxzF7LEiO1ftrH1FyboINETbW/zIhTu0OyFcaqDddkulyaw==
-X-Received: by 2002:a05:6214:1c47:b0:6e8:fe16:4d44 with SMTP id 6a1803df08f44-700134a81d5mr327323726d6.31.1751375885791;
-        Tue, 01 Jul 2025 06:18:05 -0700 (PDT)
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com. [209.85.222.174])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd772e3f38sm83965296d6.61.2025.07.01.06.18.05
+        d=1e100.net; s=20230601; t=1751375915; x=1751980715;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=BlkDEnXs3gwtKFtbej8eyp0snNnm4feYg7i77xZtujI=;
+        b=IE+GbRpCusxScRBeF097TkqiNF5gBFlelaSL3yU7VvG7RodjK6vMiC3ZgtQHeW937V
+         emmoOvO488YGpVAVrY0R9az1PB3cAiJifmBzHmXfh/pmmnnVxOFzJV/P3acZBDmLJygO
+         CurIkjkBnd7xiXTQuzaO2sO/RySyWI/CEP2RWIt09VnQl+pgnCpjiW1CFli84AkY9hnM
+         kHihXV4xoYe7HKo1QfKpq3fqggAfVdhyYjKfiseyG79t3l/YDUI0eCfzuNhnJ7ZsIs9D
+         5i4aMmGzAmL6VDegsR7VjBY4hk2N/ktedNhvN9ouVcpoSYADyQmHVt/1eApH08IFDf/P
+         sBnA==
+X-Forwarded-Encrypted: i=1; AJvYcCUh/ehCRrgz8wR2R6JZEf/9uTr3SiMnuuWZTxinlhbA+6+3zcJOfiaTN8TcwSNFiokcfQZL8OdkLbZ0PQU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwH9uVsL9crK5K3lCFTidS918QStJqhEtvAyfkoZDpdhMSdOgF
+	9lKA1zj/CSq/byKMC7bAFPX2M5P84luPc3vN+qp+s6e6G8H7m8OkZHHphRPScTywn/mSGZCHSbp
+	2YFPcb0HW721FrNnK0f3i6jCKEfV/GL+Tkfa93Y2YYOddCu1xIEcwU31DLuLOehQq6w==
+X-Gm-Gg: ASbGncvJPqtRNAmIjavbPEK4jUlhyovtLWxMSgIdcPJ+spn9NvHL41v3ofHHQXVw91e
+	pq+iEZ2qhFjjVbKOmqYAX1zU6HkV30NVBTK9Sp1tfYYwRClseqwhGS6VN7Sfl0QrOJSF/la9n+4
+	GTnyx/J1JUi8lEU6AHEiY0hPb9H0IuhK6ffCdORbZzXFdO0bgfiscvAiQHzoQLmoJBPje5ZGRWU
+	0VGcx1Vr6obC5MEt6ZG1I7CxdWDOJtVxbZXpOuQFx1BKQbRvDdc6+w6hQNA6ETbUy0LM9HTB33b
+	osW84iiBHWgh+p8+gtCesk9zsqqifvjpXm742ac9GuASeEAGaUuqc973n4JPNchdA+llSFEg0MC
+	ayMi349e0o27cjzDCGlsBkjtX4ithM5sSAMN7qy6zVBUNAOrHeA==
+X-Received: by 2002:a05:6000:652:b0:3a4:d0fe:42b2 with SMTP id ffacd0b85a97d-3a8fdb2a48amr12165692f8f.19.1751375914867;
+        Tue, 01 Jul 2025 06:18:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGZ8tYTLOZ3vNvHB+6DJkrSdk7Wjj/zPzJNrnZJtssmPjKuQlHDrC4yMLBxRm+p274FM16AXg==
+X-Received: by 2002:a05:6000:652:b0:3a4:d0fe:42b2 with SMTP id ffacd0b85a97d-3a8fdb2a48amr12165645f8f.19.1751375914336;
+        Tue, 01 Jul 2025 06:18:34 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f18:7500:202e:b0f1:76d6:f9af? (p200300d82f187500202eb0f176d6f9af.dip0.t-ipconnect.de. [2003:d8:2f18:7500:202e:b0f1:76d6:f9af])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538234b382sm197370235e9.9.2025.07.01.06.18.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 06:18:05 -0700 (PDT)
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7d20f799fe9so620906985a.2;
-        Tue, 01 Jul 2025 06:18:05 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUGNPtTWRcdwNb/PyTy1lsIxLbW2zbLdCCloyOE4IUoAH2XIKptYiHFnDkuiF2z/vkmF1wXCZI9Dl/A5lL9@vger.kernel.org, AJvYcCV7WkdUpQTM85Pn6DdPFHM8L86UkkxI5BgLasyduMFFzmirONkL0cM9wDMj2a6424AhXeWzXWCjOEd1XqP9evU0Za0=@vger.kernel.org, AJvYcCWTRZIZpqOgQTJr/AvyFhilXU0FqyoPVmVqRLtoDNX6mymAafQsgIaIl8VZEab/Py4lDKefU86qg2A=@vger.kernel.org
-X-Received: by 2002:a05:620a:1981:b0:7ce:c600:b5e1 with SMTP id
- af79cd13be357-7d44390835bmr2182726785a.11.1751375885315; Tue, 01 Jul 2025
- 06:18:05 -0700 (PDT)
+        Tue, 01 Jul 2025 06:18:33 -0700 (PDT)
+Message-ID: <1d67a048-00c0-4d2b-96ec-5e8d6d672dbd@redhat.com>
+Date: Tue, 1 Jul 2025 15:18:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624192304.338979-1-fabrizio.castro.jz@renesas.com> <20250624192304.338979-2-fabrizio.castro.jz@renesas.com>
-In-Reply-To: <20250624192304.338979-2-fabrizio.castro.jz@renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 1 Jul 2025 15:17:53 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXBF7vk-fD_i08zK=dOpLYtjksfrJSb=O5f6L8n7AW3ig@mail.gmail.com>
-X-Gm-Features: Ac12FXxXZbwd-rbzXSNPcKUzpn-mJWIeXqG7Bi1dq_cTjKDX6ZGMp3WIieEnOXY
-Message-ID: <CAMuHMdXBF7vk-fD_i08zK=dOpLYtjksfrJSb=O5f6L8n7AW3ig@mail.gmail.com>
-Subject: Re: [PATCH 1/6] clk: renesas: r9a09g057: Add entries for the RSPIs
-To: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] selftests/mm: Add process_madvise() tests
+To: wang lian <lianux.mm@gmail.com>, linux-mm@kvack.org,
+ akpm@linux-foundation.org, lorenzo.stoakes@oracle.com
+Cc: Liam.Howlett@oracle.com, brauner@kernel.org, gkwang@linx-info.com,
+ jannh@google.com, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, p1ucky0923@gmail.com, ryncsn@gmail.com,
+ shuah@kernel.org, sj@kernel.org, vbabka@suse.cz, zijing.zhang@proton.me
+References: <20250630140957.4000-1-lianux.mm@gmail.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250630140957.4000-1-lianux.mm@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, 24 Jun 2025 at 21:23, Fabrizio Castro
-<fabrizio.castro.jz@renesas.com> wrote:
-> Add clock and reset entries for the Renesas RZ/V2H(P) RSPI IPs.
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+On 30.06.25 16:09, wang lian wrote:
+> This patch adds tests for the process_madvise(), focusing on
+> verifying behavior under various conditions including valid
+> usage and error cases.
+> 
+> Signed-off-by: wang lian<lianux.mm@gmail.com>
+> Suggested-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> Suggested-by: David Hildenbrand <david@redhat.com>
+> ---
+> 
+> Changelog v2:
+> - Drop MADV_DONTNEED tests based on feedback
+> - Focus solely on process_madvise() syscall
+> - Improve error handling and structure
+> - Add future-proof flag test
+> - Style and comment cleanups
+> 
+>   tools/testing/selftests/mm/.gitignore     |   1 +
+>   tools/testing/selftests/mm/Makefile       |   1 +
+>   tools/testing/selftests/mm/process_madv.c | 414 ++++++++++++++++++++++
+>   tools/testing/selftests/mm/run_vmtests.sh |   5 +
+>   4 files changed, 421 insertions(+)
+>   create mode 100644 tools/testing/selftests/mm/process_madv.c
+> 
+> diff --git a/tools/testing/selftests/mm/.gitignore b/tools/testing/selftests/mm/.gitignore
+> index 911f39d634be..a8c3be02188c 100644
+> --- a/tools/testing/selftests/mm/.gitignore
+> +++ b/tools/testing/selftests/mm/.gitignore
+> @@ -42,6 +42,7 @@ memfd_secret
+>   hugetlb_dio
+>   pkey_sighandler_tests_32
+>   pkey_sighandler_tests_64
+> +process_madv
+>   soft-dirty
+>   split_huge_page_test
+>   ksm_tests
+> diff --git a/tools/testing/selftests/mm/Makefile b/tools/testing/selftests/mm/Makefile
+> index 2352252f3914..725612e09582 100644
+> --- a/tools/testing/selftests/mm/Makefile
+> +++ b/tools/testing/selftests/mm/Makefile
+> @@ -86,6 +86,7 @@ TEST_GEN_FILES += mseal_test
+>   TEST_GEN_FILES += on-fault-limit
+>   TEST_GEN_FILES += pagemap_ioctl
+>   TEST_GEN_FILES += pfnmap
+> +TEST_GEN_FILES += process_madv
+>   TEST_GEN_FILES += thuge-gen
+>   TEST_GEN_FILES += transhuge-stress
+>   TEST_GEN_FILES += uffd-stress
+> diff --git a/tools/testing/selftests/mm/process_madv.c b/tools/testing/selftests/mm/process_madv.c
+> new file mode 100644
+> index 000000000000..73999c8e3570
+> --- /dev/null
+> +++ b/tools/testing/selftests/mm/process_madv.c
+> @@ -0,0 +1,414 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +
+> +#define _GNU_SOURCE
+> +#include "../kselftest_harness.h"
+> +#include <errno.h>
+> +#include <setjmp.h>
+> +#include <signal.h>
+> +#include <stdbool.h>
+> +#include <stdio.h>
+> +#include <stdlib.h>
+> +#include <string.h>
+> +#include <sys/mman.h>
+> +#include <sys/syscall.h>
+> +#include <unistd.h>
+> +#include <sched.h>
+> +#include <sys/pidfd.h>
+> +#include "vm_util.h"
+> +
+> +#include "../pidfd/pidfd.h"
+> +
+> +/*
+> + * Ignore the checkpatch warning, as per the C99 standard, section 7.14.1.1:
+> + *
+> + * "If the signal occurs other than as the result of calling the abort or raise
+> + *  function, the behavior is undefined if the signal handler refers to any
+> + *  object with static storage duration other than by assigning a value to an
+> + *  object declared as volatile sig_atomic_t"
+> + */
+> +static volatile sig_atomic_t signal_jump_set;
+> +static sigjmp_buf signal_jmp_buf;
+> +
+> +/*
+> + * Ignore the checkpatch warning, we must read from x but don't want to do
+> + * anything with it in order to trigger a read page fault. We therefore must use
+> + * volatile to stop the compiler from optimising this away.
+> + */
+> +#define FORCE_READ(x) (*(volatile typeof(x) *)x)
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-clk for v6.17.
+Instead of copying that, it should probably be moved to vm_util.h.
 
-Gr{oetje,eeting}s,
+Essentially, also the comments for signal_jump_set are copy-pasted from 
+guard-regions.c. Is there a way to avoid that?
 
-                        Geert
+For example, we could place stuff like signal_jump_set in vm_util.c instead.
+
+> +
+> +static void handle_fatal(int c)
+> +{
+> +	if (!signal_jump_set)
+> +		return;
+> +
+> +	siglongjmp(signal_jmp_buf, c);
+> +}
+
+Also copy-pasted.
+
+> +
+> +FIXTURE(process_madvise)
+> +{
+> +	int pidfd;
+> +	int flag;
+> +};
+> +
+> +static void setup_sighandler(void)
+> +{
+> +	struct sigaction act = {
+> +		.sa_handler = &handle_fatal,
+> +		.sa_flags = SA_NODEFER,
+> +	};
+> +
+> +	sigemptyset(&act.sa_mask);
+> +	if (sigaction(SIGSEGV, &act, NULL))
+> +		ksft_exit_fail_perror("sigaction");
+> +}
+> +
+> +static void teardown_sighandler(void)
+> +{
+> +	struct sigaction act = {
+> +		.sa_handler = SIG_DFL,
+> +		.sa_flags = SA_NODEFER,
+> +	};
+> +
+> +	sigemptyset(&act.sa_mask);
+> +	sigaction(SIGSEGV, &act, NULL);
+> +}
+
+These two as well.
+
+Let's avoid that much copy-pasting.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Cheers,
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+David / dhildenb
+
