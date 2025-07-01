@@ -1,94 +1,164 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF51D274676;
-	Tue,  1 Jul 2025 13:32:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B7FFEEBA
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 13:32:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751376749; cv=none; b=RKxR9dja6zkteidGn5ZirhyP9n9szmhTyrattF5W/Hlonz6/h6/Z3o9OzWiZDTwG1WxSAKBx89BYR1ZuoOOkupPJgkPtLZ4TU7ZfPUWzy+KfNkAA5pTiyis8z6MxLK7/TY5kcMtqwFfDX8DeDtKwvfhiGg7pwIz4JQbBkXsHrRM=
+	t=1751376773; cv=none; b=KvNE2NmgLGHGXIpXrvnu3Dr6RD5/R3BzXAWlXfuf42/TTcSqB9nNrfp0v3C2kNffWARKHSYCRRVgaszrTLOxh9abObGErfo5tkC6MCh4KANJeWhyOdW0hl72xiCp4Lw7Mf8KNN7xJOgZm4vLkHTRVlWqOiVONfIA85iFL3EeWfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751376749; c=relaxed/simple;
-	bh=5es+Q21GGEAhFLN7zXBc+xdr2k/RbOI1/T+a50es0X4=;
+	s=arc-20240116; t=1751376773; c=relaxed/simple;
+	bh=ynymbXXmqQCfqites0P4IUA7UVoWDJGePQgacU+m3a8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jVCBq8gojfRBaZPtd4rcApypXaQXzJ/CuJauhnl9gbUQiLxOeGESDNgpKav/7xwOx9HyBfZouh0apHpfusdW9zeMxGryY7aPEucrzO/uLKxk6+qVDVzaLecUqJ/VljRGRP7igEg6MEBZ7mPj58CC1iJS78SolxJ9KxHJvKhx7+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4a58c2430edso59609561cf.1;
-        Tue, 01 Jul 2025 06:32:26 -0700 (PDT)
+	 To:Cc:Content-Type; b=kbV5fdGfe7D64MjU1iqYMUFJEnEIgg/YwAVUG0ZkgTpKCyyGuuuh5F50LCVleZYj+JQE6noYsVGXaP3PA745DO1VpV4CgsMAhj4SttuzZXAo+p8CnO/1RAxILrOjA3zkFLxLRGCWkOLHfudBfMVFe0j9NiNpnfaT7w+n81hYtTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Zb0eajEm; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zb0eajEm"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-235e389599fso220185ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 06:32:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751376771; x=1751981571; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ynymbXXmqQCfqites0P4IUA7UVoWDJGePQgacU+m3a8=;
+        b=Zb0eajEmnnNRGKDKAHOaJBuJLdtTEkWiOZvJEa7qwjd5z/NPzqBHehYBzB6dttrtyX
+         EBPK5CxxJwjIe7QY3tigyHZTpzLrHB0HSfNyNeJoauepJHdUv3AHjOw7X23PPS3UI51D
+         03XEgQJlvvq2BUMAkc/vlBFUwryFQMaPlNFACDjePrAGVqTatfFArSKMNuPlAzNLwE67
+         zggdGkUTGNW7Dd0Qf7CnMiilShfC/E71PAZ8rLMeWFuiSaiOvsmHoya4TWJEPRJNmyhu
+         8M3vNEaHlzQ197qlS+knyd1WEzVliB45Y5VPwIL+KFqM3GgI9pegAOlA/fD7aAjKoQ3R
+         ZyEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751376745; x=1751981545;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7eYKtektCOaGQToLGqZH+f97CUTW0Kn8fzCe/qtBPXI=;
-        b=WGkNEpr0mdZ38IFbXZbH72YFXRjntCGiSVB9uI3e5Msso8ad1RrRmXq1kwT+jWhUpT
-         yAXx1gL2FYoxRrYRYIzRrFC6+dpM31r2jvkG5Qx0gdl9bbsYAJhNNhZirzIGyfDlLLKk
-         cA7Fkp/HwXMe+i9Py1aC21HGdX5P1pNjl5vvQEZ5U8MlJSEOXItyz9uHRMTvUs/0Z1dK
-         XM6lE4+kZdyL7ceIpZ937rt8Oh7dcmymPBpBUxAPj7eLoC1U1k6CizN5pl0xwdlt8GT2
-         mgQtDWufUgaXlaq5V6hs8CUvdGrL5KIN2lQ1jIfEMlhT0p6H5PW3fJ9f/pSL0tZ0OoH/
-         OTRw==
-X-Forwarded-Encrypted: i=1; AJvYcCVUjrb//gxKaqgSOFvoXg3XBft0veRoff1X7WrephFGTp0oFby/A7fmhLmQP8sa4wJhLXoESu643blI0p6j@vger.kernel.org, AJvYcCVtdDSYFzioXNdFROhZQV8BJ+0eCpEaaV/Y89GVLzTZSZjbQe9WqFaxeUoRz8ai6y1UMChOHkr4OCu9@vger.kernel.org, AJvYcCWPmvYzfH3cHSAuDM6OLQwOa36y+puKVm5EZFrpFR6ByJDxTHzwMA/47bafLgQYnoFpoKNahOtfqXk//XVJ6Z3rdsQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJknI33TRpf3b6antWMPKrqw9rHCFSJRSeQs+tJ1JIB/PtUaDa
-	u4ESO18YHkr+CbAerD4LIoyKDq87+n09dIwDnruOx6m3c/xR4sMpmo2wlJ3eiAAY
-X-Gm-Gg: ASbGncu48in4dVFZ2OHdSqaPqjk7TNUWHYb0JtB3MP64Don26tikkjweIRnffGMYQq4
-	MtiUfP+UTeE0NB+LK/izEfb2tVEQrWs/J8J5RWXF76XKNTYr1AR7vzubL+dlkKYnKXpa0jkfXm8
-	GBa7QDCrPnj217Y7Ny0BiZ7LRlK1K+NOP4aZac7ZM+t4vigy9eBEtR7MUfrX1wSruWLIBlcWt+3
-	F72ZRM1W+0e2ffI2IpY8ptW3QmBxVBucKtuamUUCnX+DcY/vwv47vcQ9MWdNU17XvAbjwAGkjzC
-	Oairysnz35/K+QWZdClDRvHmYB2+r6SNNOREJRbDsHjhjxrrGpixh8EJMPNbJHRNMGSNf80/AZD
-	YjF0gSAGQVK8fpFOYQwwZ3f9463cG
-X-Google-Smtp-Source: AGHT+IHhPFkHPBbgKIv5DUEdTN4YaAJbgIeBI87gW5xRYpPn0pKH/p33HNy+fjjcAutIN0hL4jSang==
-X-Received: by 2002:a05:622a:347:b0:4a8:18ec:8ce4 with SMTP id d75a77b69052e-4a846d1d1a5mr41483201cf.21.1751376745286;
-        Tue, 01 Jul 2025 06:32:25 -0700 (PDT)
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com. [209.85.222.174])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7fc13a34esm76105121cf.24.2025.07.01.06.32.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 06:32:25 -0700 (PDT)
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7d098f7bd77so628860985a.0;
-        Tue, 01 Jul 2025 06:32:25 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUAgcq99DQq7KYqQ0Dgej4lpHzZRDc9f3QG6ilPc6lKjz44ufzEMLtgy43/hkMXQ92x+cKegrGtI9X8V3D9YHWyFQE=@vger.kernel.org, AJvYcCVWofIhkz+4arHkpQw/oLIOE+MdFfVfjiMr+RdRJV0fN5nJlssFtwtLEWtBKv7Lx5oZc1Bpab9WrSLH@vger.kernel.org, AJvYcCWzL0pIg74dOteEb1f93hHBP6Rb9o75fyuT8MPuVKgF2lJ7JSfLdXzvyDvw+pAP87OgJP9K9Vh1JJBecYCA@vger.kernel.org
-X-Received: by 2002:a05:620a:4413:b0:7ce:fc0b:d39d with SMTP id
- af79cd13be357-7d466d0c890mr475498985a.6.1751376744763; Tue, 01 Jul 2025
- 06:32:24 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751376771; x=1751981571;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ynymbXXmqQCfqites0P4IUA7UVoWDJGePQgacU+m3a8=;
+        b=OQmsk2+OrGbJ01jvNiFWUHUcuXHhLeUo5MXzkk8HLwEfZkmOnfa+i0NnJN5oFGqDg7
+         wzd5XOMy1DkxMxFfxhIqwFrWILyuEFggW7yfg2SRBWOWqpWzJttyW2hgHvFMc1zoGXUn
+         orCOa4/Gbr7vun6hnKqz2w/6hEpQ7z1Jcqo/eEgNaYlxrJACPOUjpSZwLr579Ej+iemI
+         +PIZMUGepNwFJvktdvC6tnNXk5Cj6Yxwj3Up34AnOKeGJqXHQpPLq73rp7diFSWrgrvB
+         1ASZflrlvzv/O7697lzyuGjtooeQ4tbdE4n7nhzKVs8awrR/MvCccQ7TiWp2tN20J0As
+         nsww==
+X-Forwarded-Encrypted: i=1; AJvYcCUd/ilRu30hhO7fxACmcbCSAEk/SmybKugN1sHinIfkS647Qqi3SvHvrHeyASHcCG76Y7NIFL89E1aWzn8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxkqa1z8Y3l3h8mIEnpizmn0K6hsvzPkitYy3mcc3eFetKkoCbN
+	lLc3R7ysVkezI8GfExH/9seYKTs7HyF6W5fto2fcsm6gUAKoV04/ac8MhN6HDwPL2OEkQAaouBX
+	pQw/+z2jAZ5nb4fSDfwY6I7ijMjXiP2FVG+NbFYHo
+X-Gm-Gg: ASbGncuCV/rXRCs1QOPc7VhFI7iq8l1k+M/Cp474hP5txaL0z5MBiu9MQ4c7WAb4aro
+	2GSvpkmq1DEClucJigb4Hl3caE4oakSlbLoDP7xZLIAZzQUwC9gEZqegfq2ffFZbxIhoJ0lnYkq
+	lGuzGQsNJcuTW81HOVODcZ/R9H/XF4cErtedU3rJrsmCUQzAixLWqkekltCosfzijWzQxWZcgJG
+	AFAmYseyMotGQQ=
+X-Google-Smtp-Source: AGHT+IEagAKqOyClH7SOAfBHMg3NoeEcgu+JB1EzrpoRe0zsCoMAbrQJFAr0ZOE+dMR9X3WzUkkDx4WrYIwLroz2FgU=
+X-Received: by 2002:a17:903:b07:b0:234:bfa1:da3e with SMTP id
+ d9443c01a7336-23c5ff04d7cmr1978595ad.5.1751376771126; Tue, 01 Jul 2025
+ 06:32:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624192304.338979-1-fabrizio.castro.jz@renesas.com> <20250624192304.338979-7-fabrizio.castro.jz@renesas.com>
-In-Reply-To: <20250624192304.338979-7-fabrizio.castro.jz@renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 1 Jul 2025 15:32:13 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVS-o-qYuEiWc7=8x+LFyYuiPWiL3APzYVxjgX6GbsROQ@mail.gmail.com>
-X-Gm-Features: Ac12FXxLNsiZQut0NHC_hcHtjIAAiZfSCe46zjqrYTUTXHYuStv5cvc5V2NA3Bo
-Message-ID: <CAMuHMdVS-o-qYuEiWc7=8x+LFyYuiPWiL3APzYVxjgX6GbsROQ@mail.gmail.com>
-Subject: Re: [PATCH 6/6] arm64: dts: renesas: r9a09g057: Add RSPI nodes
-To: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <c69ed125c25cd3b7f7400ed3ef9206cd56ebe3c9.camel@intel.com>
+ <diqz34bolnta.fsf@ackerleytng-ctop.c.googlers.com> <a3cace55ee878fefc50c68bb2b1fa38851a67dd8.camel@intel.com>
+ <diqzms9vju5j.fsf@ackerleytng-ctop.c.googlers.com> <447bae3b7f5f2439b0cb4eb77976d9be843f689b.camel@intel.com>
+ <zlxgzuoqwrbuf54wfqycnuxzxz2yduqtsjinr5uq4ss7iuk2rt@qaaolzwsy6ki>
+ <4cbdfd3128a6dcc67df41b47336a4479a07bf1bd.camel@intel.com>
+ <diqz5xghjca4.fsf@ackerleytng-ctop.c.googlers.com> <aGJxU95VvQvQ3bj6@yzhao56-desk.sh.intel.com>
+ <a40d2c0105652dfcc01169775d6852bd4729c0a3.camel@intel.com> <aGOr90RZDLEJhieE@yzhao56-desk.sh.intel.com>
+In-Reply-To: <aGOr90RZDLEJhieE@yzhao56-desk.sh.intel.com>
+From: Vishal Annapurve <vannapurve@google.com>
+Date: Tue, 1 Jul 2025 06:32:38 -0700
+X-Gm-Features: Ac12FXznEEaVgTq1KoEMvIM8DzuAoBbETAFwoD_TfWy7Ms2Xt9Fv1vPaChxyp8s
+Message-ID: <CAGtprH86-HkfnTMmwdPsKgXxjTomvMWWAeCuZKSieb5o6MvRPQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge pages
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, 
+	"ackerleytng@google.com" <ackerleytng@google.com>, "Shutemov, Kirill" <kirill.shutemov@intel.com>, 
+	"Li, Xiaoyao" <xiaoyao.li@intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"Hansen, Dave" <dave.hansen@intel.com>, "david@redhat.com" <david@redhat.com>, 
+	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, "tabba@google.com" <tabba@google.com>, 
+	"vbabka@suse.cz" <vbabka@suse.cz>, "quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, 
+	"michael.roth@amd.com" <michael.roth@amd.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "seanjc@google.com" <seanjc@google.com>, 
+	"Peng, Chao P" <chao.p.peng@intel.com>, "Du, Fan" <fan.du@intel.com>, 
+	"Yamahata, Isaku" <isaku.yamahata@intel.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "Weiny, Ira" <ira.weiny@intel.com>, 
+	"Li, Zhiquan1" <zhiquan1.li@intel.com>, "jroedel@suse.de" <jroedel@suse.de>, 
+	"Miao, Jun" <jun.miao@intel.com>, "pgonda@google.com" <pgonda@google.com>, 
+	"x86@kernel.org" <x86@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 24 Jun 2025 at 21:23, Fabrizio Castro
-<fabrizio.castro.jz@renesas.com> wrote:
-> Add nodes for the RSPI IPs found in the Renesas RZ/V2H(P) SoC.
+On Tue, Jul 1, 2025 at 2:38=E2=80=AFAM Yan Zhao <yan.y.zhao@intel.com> wrot=
+e:
 >
-> Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> On Tue, Jul 01, 2025 at 01:55:43AM +0800, Edgecombe, Rick P wrote:
+> > So for this we can do something similar. Have the arch/x86 side of TDX =
+grow a
+> > new tdx_buggy_shutdown(). Have it do an all-cpu IPI to kick CPUs out of
+> > SEAMMODE, wbivnd, and set a "no more seamcalls" bool. Then any SEAMCALL=
+s after
+> > that will return a TDX_BUGGY_SHUTDOWN error, or similar. All TDs in the=
+ system
+> > die. Zap/cleanup paths return success in the buggy shutdown case.
+> All TDs in the system die could be too severe for unmap errors due to KVM=
+ bugs.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v6.17, pending acceptance of
-the bindings.
+At this point, I don't see a way to quantify how bad a KVM bug can get
+unless you have explicit ideas about the severity. We should work on
+minimizing KVM side bugs too and assuming it would be a rare
+occurrence I think it's ok to take this intrusive measure.
 
-Gr{oetje,eeting}s,
+>
+> > Does it fit? Or, can you guys argue that the failures here are actually=
+ non-
+> > special cases that are worth more complex recovery? I remember we talke=
+d about
+> > IOMMU patterns that are similar, but it seems like the remaining cases =
+under
+> > discussion are about TDX bugs.
+> I didn't mention TDX connect previously to avoid introducing unnecessary
+> complexity.
+>
+> For TDX connect, S-EPT is used for private mappings in IOMMU. Unmap could
+> therefore fail due to pages being pinned for DMA.
 
-                        Geert
+We are discussing this scenario already[1], where the host will not
+pin the pages used by secure DMA for the same reasons why we can't
+have KVM pin the guest_memfd pages mapped in SEPT. Is there some other
+kind of pinning you are referring to?
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+If there is an ordering in which pages should be unmapped e.g. first
+in secure IOMMU and then KVM SEPT, then we can ensure the right
+ordering between invalidation callbacks from guest_memfd.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+[1] https://lore.kernel.org/lkml/CAGtprH_qh8sEY3s-JucW3n1Wvoq7jdVZDDokvG5Hz=
+Pf0HV2=3Dpg@mail.gmail.com/#t
+
+>
+> So, my thinking was that if that happens, KVM could set a special flag to=
+ folios
+> pinned for private DMA.
+>
+> Then guest_memfd could check the special flag before allowing private-to-=
+shared
+> conversion, or punch hole.
+> guest_memfd could check this special flag and choose to poison or leak th=
+e
+> folio.
+>
+> Otherwise, if we choose tdx_buggy_shutdown() to "do an all-cpu IPI to kic=
+k CPUs
+> out of SEAMMODE, wbivnd, and set a "no more seamcalls" bool", DMAs may st=
+ill
+> have access to the private pages mapped in S-EPT.
+
+guest_memfd will have to ensure that pages are unmapped from secure
+IOMMU pagetables before allowing them to be used by the host.
+
+If secure IOMMU pagetables unmapping fails, I would assume it fails in
+the similar category of rare "KVM/TDX module/IOMMUFD" bug and I think
+it makes sense to do the same tdx_buggy_shutdown() with such failures
+as well.
