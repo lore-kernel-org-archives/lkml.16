@@ -1,103 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 046EA2749C9;
-	Tue,  1 Jul 2025 13:54:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 881B826FA59;
+	Tue,  1 Jul 2025 13:54:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751378062; cv=none; b=r25W0TphJmXjU4ave5X4C33+pTjujXf/4LglDn7J0c5bQkzvT+f9mS49O/SQA3t1zaQYl6qNHiHhL1WPvRG+FxIqH8VwpX6ypBVuOtK5gNoCcFHO0ofcLc0JkCOf2FWkSTkHC7DembXuIxgj81va09/p3bRobFKc3DO2oydBOnU=
+	t=1751378089; cv=none; b=AbKgh54cfIO2FigyF6S41ZNk0YgkcQAn6xlK9KnonolOazPWixg87BHuVZEhcc/cmAroqjNeaLSh0TgZdtoIohqJDHi6xA/ma9erI9eous/UVxR1f4PSq+3702rxTIz9N+v4TYzVebI96KPdEC+fmXkDIvr+lXX6ZfppBN5MWZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751378062; c=relaxed/simple;
-	bh=Jng3wkmeznNgaZJCbfupk58RsqV3AADGX9KcfOwgqY0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J3Gzjtrwm6a8DKJw9Yn1x+eU8jfWlLivp4E4ANGQs9WTwOTs909z24ZcwgGhri2fIPI2wnNgQt3e4V2Fp64jFAUg9PjQZXees92k41BOqOgBkGHpt6w2R09+EHHa3Ll0YSPPVNBjCVWXVYwHnlEdgRzsQad6U7XPiTRdxiRC4IU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uUKq4jIP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751378089; c=relaxed/simple;
+	bh=ZL/u65dIbxosbqEkEvyApJed1MUepl7ko0Ds7XvleG0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rjntNQU9euv0NrL28dKZfdT2veA0jtOMUPV1aHn3h+lziv//ckk+ZG5903Tnd6qukqKBOPlny7Tgikt4IjW89G/CWo33TrAxXoH9cVsXH3Qb48TLGNxspS7VBcr17GcEqPH2l1AszUi2ROGC4fufemA9tkWxcyeLMtSS8sfXn94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nsz8DVWj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uUKq4jIP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EA55C4CEF3;
-	Tue,  1 Jul 2025 13:54:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nsz8DVWj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C603BC4CEEB;
+	Tue,  1 Jul 2025 13:54:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751378061;
-	bh=Jng3wkmeznNgaZJCbfupk58RsqV3AADGX9KcfOwgqY0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=uUKq4jIPUxYByK6SlEFyvyt/h0fGGotsrjQ6Q3Xe4WxxwEeNQTBhOVmVeHIXwomb4
-	 Cf/wkVx1zZ6E2MbtfuDxJI9dZK2dzucNRIwix+R17zFavhXsQWYLprFY+/xy1ic/UA
-	 ditp3Bqh2xRhYEJNmEfoZ9jdd7Z1ysUwnpw9RDYkuXkAYveQeJVw+hXO4T297IfE9m
-	 7qlezuIDgzHIHF0zOy1bbu2nmQUzWLWltV+XT5ERreJPYYFObopx6XTZTsldEE+K00
-	 37w0xaDyD0p99AVc8uCWl/+pJ7ia/8ggqYNJ3CcHHgmek+DCJ1723zrRyN7Bqrw8hi
-	 vZn16wYO9hlMw==
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-6116d9bb6ecso1852018eaf.3;
-        Tue, 01 Jul 2025 06:54:21 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU9rwdMQQo/8e5RYcuIj2Pu/qcS5W8vlt6at0bEpGDf5spu/NxXY8O07O7ohviem7hFZbO4eYskQJdb@vger.kernel.org, AJvYcCXzTQBfvbmbEkrVr3GhRUfKKxFnQMGFX51bT3o8tCQKeqQa24iEZ5CN0CfPVi6KfDk/JUCiptEj0TQB5Rmx@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQklBWdd/EVtTTQ+6waF4wlt/oQ4B/bkR6s6MG6GA7nO/Qa1uf
-	MqT78TwO5hxu4anYUOfxQNWCEPWKSo2I7ez1nM/Pj27gRr6xqI8fooclLUxg8YbKXKXgRihN735
-	WQzii0zZrvoGvHQcKtJDOw+oSJ/QObko=
-X-Google-Smtp-Source: AGHT+IF8seE+Id7xG8WQlhFiBqridThxc49oWjknLWJxi/lTNTz9icUtsuqR9A2rhC3Lo+dq/lpP/fUkCq2qp3nRons=
-X-Received: by 2002:a05:6820:994:b0:611:b561:258e with SMTP id
- 006d021491bc7-611b90965aemr11674984eaf.3.1751378060915; Tue, 01 Jul 2025
- 06:54:20 -0700 (PDT)
+	s=k20201202; t=1751378089;
+	bh=ZL/u65dIbxosbqEkEvyApJed1MUepl7ko0Ds7XvleG0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Nsz8DVWjSFKbqjow7W6o1m10uyyNr8ckimVR/Zp/X3duRAgeYnFGLj+WfAClnWxFm
+	 bivyyT/qnOjyP4sfFsEEegvR7vcg7k8VOHxXiXYV3ssXDXte+YtRAqwP3tD6IfK8MS
+	 Mrt1JLhH2zajYEsV3n9jQ/4LmmD47quFngMft/WipvTT8ZUitgvwd0bnVB0lTeK4h4
+	 P+txvfbJ2FmzsVDKS5hQTsRovvNqYRALDXS+kMQwGM3ejlPp5Y20KuJY7WHjuJpoUj
+	 r+V33xOBw6QSqwDWvcl7BFjSM7qftWk/NxdXJmp6z+60potRDTENv2VeDHqeNBKNsY
+	 HXHg6odR75Mgg==
+Message-ID: <836dc6b6-2821-47fc-8f24-0838f979af76@kernel.org>
+Date: Tue, 1 Jul 2025 15:54:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620131309.126555-1-me@linux.beauty> <20250620131309.126555-2-me@linux.beauty>
- <aGPMM9Nw2-99sWRL@arm.com>
-In-Reply-To: <aGPMM9Nw2-99sWRL@arm.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 1 Jul 2025 15:54:09 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0h06-uQq57So7GzBMJ48dr42z3hY0EBFHSUmsjsVaUgjw@mail.gmail.com>
-X-Gm-Features: Ac12FXz4Xi7TozQTSvDj_v42bWdO4aRE3ZuU9eQvEt5OUBffGU8gt-jQaTTOshI
-Message-ID: <CAJZ5v0h06-uQq57So7GzBMJ48dr42z3hY0EBFHSUmsjsVaUgjw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] ACPI: Return -ENODEV from acpi_parse_spcr() when
- SPCR support is disabled
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Li Chen <me@linux.beauty>, "Rafael J . Wysocki" <rafael@kernel.org>, 
-	Hanjun Guo <guohanjun@huawei.com>, Will Deacon <will@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Liu Wei <liuwei09@cestc.cn>, Ryan Roberts <ryan.roberts@arm.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] staging: media: atomisp: Fix premature setting of
+ HMM_BO_DEVICE_INITED flag
+To: Andy Shevchenko <andriy.shevchenko@intel.com>,
+ Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, andy@kernel.org,
+ hdegoede@redhat.com, mchehab@kernel.org, sakari.ailus@linux.intel.com,
+ gregkh@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-staging@lists.linux.dev, skhan@linuxfoundation.com,
+ dan.carpenter@linaro.org
+References: <20250628052536.43737-1-abdelrahmanfekry375@gmail.com>
+ <CAHp75Vcy3dHRu8Wb2KZ=xK7adz=-P-iuRTeR8vOWzHzZL9uFeg@mail.gmail.com>
+ <CAGn2d8OMRaeozOMxj1Ry8i9T3sJ5J1QqA_Jpk7wYO8KiUbpKBA@mail.gmail.com>
+ <aGPYZhK65LaD0wVO@smile.fi.intel.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hansg@kernel.org>
+In-Reply-To: <aGPYZhK65LaD0wVO@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 1, 2025 at 1:53=E2=80=AFPM Catalin Marinas <catalin.marinas@arm=
-.com> wrote:
->
-> On Fri, Jun 20, 2025 at 09:13:07PM +0800, Li Chen wrote:
-> > From: Li Chen <chenl311@chinatelecom.cn>
-> >
-> > If CONFIG_ACPI_SPCR_TABLE is disabled, acpi_parse_spcr()
-> > currently returns 0, which may incorrectly suggest that
-> > SPCR parsing was successful. This patch changes the behavior
-> > to return -ENODEV to clearly indicate that SPCR support
-> > is not available.
-> >
-> > This prepares the codebase for future changes that depend
-> > on acpi_parse_spcr() failure detection, such as suppressing
-> > misleading console messages.
-> >
-> > Signed-off-by: Li Chen <chenl311@chinatelecom.cn>
-> > ---
-> >  include/linux/acpi.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> > index f102c0fe34318..71e692f952905 100644
-> > --- a/include/linux/acpi.h
-> > +++ b/include/linux/acpi.h
-> > @@ -1503,7 +1503,7 @@ int acpi_parse_spcr(bool enable_earlycon, bool en=
-able_console);
-> >  #else
-> >  static inline int acpi_parse_spcr(bool enable_earlycon, bool enable_co=
-nsole)
-> >  {
-> > -     return 0;
-> > +     return -ENODEV;
-> >  }
-> >  #endif
->
-> Rafael, are you ok with this patch going via the arm64 tree?
+Hi,
 
-Yes, I am, thanks!
+On 1-Jul-25 2:45 PM, Andy Shevchenko wrote:
+> On Tue, Jul 01, 2025 at 02:58:43PM +0300, Abdelrahman Fekry wrote:
+>> Hello Andy,
+>> On Sat, Jun 28, 2025 at 10:52 PM Andy Shevchenko
+>> <andy.shevchenko@gmail.com> wrote:
+>>> On Sat, Jun 28, 2025 at 8:26 AM Abdelrahman Fekry
+>>> <abdelrahmanfekry375@gmail.com> wrote:
+> 
+>>>> The HMM_BO_DEVICE_INITED flag was being set in hmm_bo_device_init()
+>>>> before key initialization steps like kmem_cache_create(),
+>>>> kmem_cache_alloc(), and __bo_init().
+>>>>
+>>>> This means that if any of these steps fail, the flag remains set,
+>>>> misleading other parts of the driver (e.g. hmm_bo_alloc())
+>>>> into thinking the device is initialized. This could lead
+>>>> to undefined behavior or invalid memory use.
+>>>
+>>> Nice. Can you make some fault injection (temporary by modifying the
+>>> code to always fail, for example) and actually prove this in practice?
+>>> If so, the few (important) lines from the given Oops would be nice to
+>>> have here.
+> 
+>> I have been trying to test it without having any intel atomisp
+>> hardware and failed continuously, do you have any tips or maybe some
+>> resources on how i can test this driver.
+> 
+> So, the easiest way as I can see it is to ask people who possess the HW to
+> test, but you need to provide a testing patch (which can be applied on top
+> of this one, for example).
+
+I don't think it is worth testing the error path here,
+the old code is obviously wrong.
+
+What is interesting here is to see if the extra call to hmm_init()
+in __hmm_alloc() is necessary at all.
+
+And obviously hmm_init() needs to propagate the error return
+from hmm_bo_init() right away instead of continuing if nothing
+was wrong and then only returning the error at the end.
+
+So it seems that there plenty of cleanup to do around this
+without needing error injection to test all paths.
+
+Actually I'm pretty sure that there will be quite a few
+error-handling paths with bugs in the atomisp code given
+its overall quality. But lets clean things up first, that
+should make addressing any such cases easier.
+
+Regards,
+
+Hans
+
