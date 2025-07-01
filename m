@@ -1,166 +1,97 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33183275AFF
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 17:01:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCCC127E058;
+	Tue,  1 Jul 2025 17:02:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751389262; cv=none; b=MBZMbvyUFCFnqpWDzwVPyCg1iH3YqL5K3w2dqgjIefDeiZudBJtnN8kncYs6ly5yMkLEa2k4ViYQn6+T1icDTTa4eme+YQMP0BhZ6gNV0XEstT4EnkuG4vNkFyHfsCJhkDVKpT6iVnc/YZ71z6jxu1AgpVNIlnqMlcGW1rW9Af0=
+	t=1751389358; cv=none; b=aeF/ywyDVkUXxG24YE85RjFUA1BA+uQ7NV739L7FKgxyn02iLWZu6bPLB7tV88V2Ghg6rtzLajMTsL5ySPF5YyCFXLVx0UkA8a9JTmFiKf2mEEd/GbirvDd1VLlObZu7vReuYNT+ow0b10jk+furD/BO45/2O4G/J+LdmjkYmyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751389262; c=relaxed/simple;
-	bh=bkXhikRamz3TYR+syj/QXhLIxFxYsmkj2lhNT1/lT2g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VuYOhTl6bDXgBO9JwVp9VIMXryh2d9TTlD1YPVYpYx25QIEsVIuji8MWH1hcR/RxzRPZWESXQS7+bh8erVp0gZb5I6RvFj/iS5NloP4fkzW0/xiVG3CZROBO3ApLBfuIv+9xapkf8LXw7davU1vW43ijj8TiH27uxxgQ8JwNXaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1mZZ1iJc; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1751389358; c=relaxed/simple;
+	bh=7J6wVBbwJYCDrqwFDOobTUHM1JmxFG+rhiy57fv8764=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=CY0NygXwGY53jGAZCym75BGQiztwc+S2Oe8VB8CZswNgGb5M5hzctMMjoNcfpLSJrc7UkQdhMt677Vw667xiB/kCtQ7ZVrIf9HSXVRZbl6AH+Qk8pEJFR0PQ2tjqv6Kbacug7v/MVVBwjCGZmEiSSwbObc+xa0BHbSQTnZgWgSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F6Pqp4X1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1mZZ1iJc"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3de210e6076so144785ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 10:01:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751389260; x=1751994060; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/UgRjLg1bANNvxWkIL2D0B4OzAbnbrdTRnXpfNQyHPk=;
-        b=1mZZ1iJcuXiwxxu2KJIZe6jQgJLWF45SuEuVtMpx1tXkdNBHoMpyZXGMGupfZOMSi1
-         W15EbV7C+878rCvYlpGSsFQ7KLWtNNtIHB6p+KQwnqsR8lxboSWXu/YCH3+lrFwL73sG
-         IIPIyfrarzsBzGaWua3ZNOpUiajqySbmXlqIMrsU862Uy34/d37T5HCLR3Pws6h8tREa
-         X/nRZ+yivLwDZxx2c2fMTbJsvhiGCRcGUEHUGBIhV5MfURMATmD/e81OFlNcrlldFFvE
-         PCjXoudkdr5XUlprWnh7ehREKnnkavMr1NkiDiUUUqrcPbeFFwHx1FouS5P+4KxTcftE
-         nRng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751389260; x=1751994060;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/UgRjLg1bANNvxWkIL2D0B4OzAbnbrdTRnXpfNQyHPk=;
-        b=gTbceb8AERa0jvjIAajz5lIGKu2LJa4+PK/NGNOB6qVlMK2x687Ili+vktbcmr5k+h
-         DhCxMcwPkMXEBVAmRVdKF1aN+N/0jVSQhcvbY7ptzrsYviPyYHSjEJxua5QWZMd1pSkz
-         AYke51PlW+sFRzaw7xik3vLXxNPLVG8aaT4tWun++V6igGBxDE59ACiaPTvX2VmBgdij
-         eYBGwAXxT3++iyxb/t9OWJ4Lz+aELfRZi/LOQKOG+3m9HDeE4LlkIeDpKGZc1ZbtfQFy
-         ZoxLqDzUKonCrSaU7jM0neilTCzdBOhDcXu5Qumb/NM+eKM7EnOvFCTn8vVJg6yuni7n
-         /VlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXKKenGyonNRbOsraP7tmGoleCU9h6mM6a1LtcwK4aRr0nxYi7Uij+/ZFpm7j7MgnJzlD48wdzpxBm2Gqo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwN0qzvnALRCsv0DDCr99fkPDhryR9nb0gIu+B7oQWf33WRv5pA
-	mv7SzJ2lPv4mpP5ZKpLW+9c9ofce0zTCnd/je7KbQA2Znd6lz2RNqZM+Jkc79ruBEM9ftyNvY6b
-	we66VfFnU4EjggsqI+76F4vCfd8S3ZZRKqWhExaql
-X-Gm-Gg: ASbGncu5xFG0pK7kKxARc3vsKnWS1K8eAaFTlzqkEVaw1XfyZfMYmpK5B5MHCnH7Tj+
-	X7Zq4fyUlwVK6zJLjv69ruDFnhq3bo5cV5mGfbkSnRNZOLyM47BUzEzOOJBjHxiAT5JvEuOZ9WZ
-	sU2vOhyr7dc7nCXvjiKLgFVDH3DS5QFiMfFILWhB5lThuxmcGpQir/BZnKcs+H5GqUPXJDkuQ=
-X-Google-Smtp-Source: AGHT+IEAhz64e+5NmGN5DM9cSM9FAys6CW3b3NwAestgSJtBnITuejAnC/VvbJqmG/3u6aIr/6ecA3b9nT+k3h8kfT8=
-X-Received: by 2002:a05:6e02:4610:b0:3e0:51fc:6e8 with SMTP id
- e9e14a558f8ab-3e051fc0c97mr1053115ab.15.1751389259861; Tue, 01 Jul 2025
- 10:00:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F6Pqp4X1"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 52886C4CEEF;
+	Tue,  1 Jul 2025 17:02:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751389358;
+	bh=7J6wVBbwJYCDrqwFDOobTUHM1JmxFG+rhiy57fv8764=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=F6Pqp4X1rIcvLxygvmpxPiq2I/vOWAUpBILrxa16hUKxXJt0zz91jHmKCzTxCylUN
+	 GoccERVzD/RzQYse93YYqGqO0nu+dfNdxrJpkO4Ryi+zhN+sg2XChm519RVCTP8ZYD
+	 wW+9UXqYGCphZkqH+7z/l9QceQdO2w5BeUK0w3EBGDVyz7vEQIiPIKwgBai7Y29lHd
+	 VvHsBW/c7FHSsX2wx7MByroxBNguNTznqyNoRK6MCWcTdyv2D++gVuYAIoORAHE7Ei
+	 zoWzeO/4qKzbjE6ennS+WBSRGHm7BFCjekIdLpOt8Rc5WMmAz1wmC8DeECqt1X2P4n
+	 ama5WrrW/m/wA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1FAC7EE30;
+	Tue,  1 Jul 2025 17:02:38 +0000 (UTC)
+From: Jens Glathe via B4 Relay <devnull+jens.glathe.oldschoolsolutions.biz@kernel.org>
+Date: Tue, 01 Jul 2025 19:02:35 +0200
+Subject: [PATCH v9 1/4] dt-bindings: arm: qcom: Add Lenovo TB16 support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250628045017.1361563-1-irogers@google.com> <20250628045017.1361563-11-irogers@google.com>
- <aGN_wBXVt6YN4Itb@google.com>
-In-Reply-To: <aGN_wBXVt6YN4Itb@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 1 Jul 2025 10:00:48 -0700
-X-Gm-Features: Ac12FXz_X_5IipKr8vd50gwfTiNlhqt4RWPZaW22n1cB2CNPPqiGwCwVNqiqJs4
-Message-ID: <CAP-5=fXVxykN_pyydC_8LtNO0wAOz2yZPhwYsThQhgR0QeSP+A@mail.gmail.com>
-Subject: Re: [PATCH v5 10/23] perf session: Add an env pointer for the current perf_env
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
-	Leo Yan <leo.yan@linux.dev>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, Charlie Jenkins <charlie@rivosinc.com>, 
-	Colin Ian King <colin.i.king@gmail.com>, Andi Kleen <ak@linux.intel.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Graham Woodward <graham.woodward@arm.com>, 
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
-	Yicong Yang <yangyicong@hisilicon.com>, Athira Rajeev <atrajeev@linux.ibm.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, Li Huafei <lihuafei1@huawei.com>, 
-	"Steinar H. Gunderson" <sesse@google.com>, Stephen Brennan <stephen.s.brennan@oracle.com>, 
-	Chun-Tse Shao <ctshao@google.com>, Yujie Liu <yujie.liu@intel.com>, 
-	"Dr. David Alan Gilbert" <linux@treblig.org>, Levi Yun <yeoreum.yun@arm.com>, 
-	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>, Matt Fleming <matt@readmodwrite.com>, 
-	Veronika Molnarova <vmolnaro@redhat.com>, 
-	=?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>, 
-	Zixian Cai <fzczx123@gmail.com>, Steve Clevenger <scclevenger@os.amperecomputing.com>, 
-	Ben Gainey <ben.gainey@arm.com>, Chaitanya S Prakash <chaitanyas.prakash@arm.com>, 
-	Martin Liska <martin.liska@hey.com>, =?UTF-8?Q?Martin_Li=C5=A1ka?= <m.liska@foxlink.cz>, 
-	Song Liu <song@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250701-tb16-dt-v9-1-7d9e280837b5@oldschoolsolutions.biz>
+References: <20250701-tb16-dt-v9-0-7d9e280837b5@oldschoolsolutions.biz>
+In-Reply-To: <20250701-tb16-dt-v9-0-7d9e280837b5@oldschoolsolutions.biz>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Matthias Kaehlcke <mka@chromium.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>, 
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+ Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751389356; l=952;
+ i=jens.glathe@oldschoolsolutions.biz; s=20240919;
+ h=from:subject:message-id;
+ bh=pTpFlr2JNOBM1+TcC8lKJt5CSizsc8tw4WUtA7IPpGs=;
+ b=42K1Zm1SbUSKYvK5KbuPtzc+HAtK8Wb3HT2pu6D24+0ULHPF7MHzwvODMJbiqjJma0VrbYVxk
+ 1EUUcBQCqGoDdijzWINu2KHEJRwNAmn+pOMp3hL0t0AZkD+byAXpgpD
+X-Developer-Key: i=jens.glathe@oldschoolsolutions.biz; a=ed25519;
+ pk=JcRJqJc/y8LsxOlPakALD3juGfOKmFBWtO+GfELMJVg=
+X-Endpoint-Received: by B4 Relay for
+ jens.glathe@oldschoolsolutions.biz/20240919 with auth_id=216
+X-Original-From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+Reply-To: jens.glathe@oldschoolsolutions.biz
 
-On Mon, Jun 30, 2025 at 11:27=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
- wrote:
->
-> On Fri, Jun 27, 2025 at 09:50:04PM -0700, Ian Rogers wrote:
-> > Initialize to `&header.env`. This will later allow the env value to be
-> > changed.
->
-> I'm curious when it is changed.
+From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 
-Thanks for the reviews! I'll dig into them for v6. Looking at this one
-I don't see a current use of the changed perf_session__env so I
-suspect we can drop the change. I need to think about the lifetime of
-header.env, use cases where have >1 env like perf inject (in vs out),
-perf diff and what's going on with TUI in patch:
-https://lore.kernel.org/lkml/20250628045017.1361563-12-irogers@google.com/
+Document the x1p-42-100/x1-26-100 variants of the Thinkbook 16 G7 QOY.
 
-Thanks,
-Ian
+[1]: https://psref.lenovo.com/syspool/Sys/PDF/ThinkBook/ThinkBook_16_G7_QOY/ThinkBook_16_G7_QOY_Spec.pdf
 
-> Thanks,
-> Namhyung
->
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/session.c | 3 ++-
-> >  tools/perf/util/session.h | 2 ++
-> >  2 files changed, 4 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> > index b09d157f7d04..e39a1df7c044 100644
-> > --- a/tools/perf/util/session.c
-> > +++ b/tools/perf/util/session.c
-> > @@ -156,6 +156,7 @@ struct perf_session *__perf_session__new(struct per=
-f_data *data,
-> >                            ordered_events__deliver_event, NULL);
-> >
-> >       perf_env__init(&session->header.env);
-> > +     session->env =3D &session->header.env;
-> >       if (data) {
-> >               ret =3D perf_data__open(data);
-> >               if (ret < 0)
-> > @@ -2750,5 +2751,5 @@ int perf_session__dsos_hit_all(struct perf_sessio=
-n *session)
-> >
-> >  struct perf_env *perf_session__env(struct perf_session *session)
-> >  {
-> > -     return &session->header.env;
-> > +     return session->env;
-> >  }
-> > diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
-> > index e7f7464b838f..088868f1004a 100644
-> > --- a/tools/perf/util/session.h
-> > +++ b/tools/perf/util/session.h
-> > @@ -45,6 +45,8 @@ struct perf_session {
-> >       struct perf_header      header;
-> >       /** @machines: Machines within the session a host and 0 or more g=
-uests. */
-> >       struct machines         machines;
-> > +     /** @env: The perf_env being worked with, either from a data file=
- or the host's. */
-> > +     struct perf_env         *env;
-> >       /** @evlist: List of evsels/events of the session. */
-> >       struct evlist   *evlist;
-> >       /** @auxtrace: callbacks to allow AUX area data decoding. */
-> > --
-> > 2.50.0.727.gbf7dc18ff4-goog
-> >
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Signed-off-by: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+---
+ Documentation/devicetree/bindings/arm/qcom.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+index ae43b35565808ed27cd8354b9a342545c4a98ed6..98f8ae80feccf23b79ba7e7b04d4f6a291e37a44 100644
+--- a/Documentation/devicetree/bindings/arm/qcom.yaml
++++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+@@ -1159,6 +1159,7 @@ properties:
+       - items:
+           - enum:
+               - asus,zenbook-a14-ux3407qa
++              - lenovo,thinkbook-16
+               - qcom,x1p42100-crd
+           - const: qcom,x1p42100
+ 
+
+-- 
+2.48.1
+
+
