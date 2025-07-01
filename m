@@ -1,194 +1,183 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D0823ABA7;
-	Tue,  1 Jul 2025 11:16:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F9B32236E1
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 11:16:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751368568; cv=none; b=MmCH5J323g8fdwQwQwe0p8wW3dSqBo5xyBPwMN8Aln9W/z8xVcC9HwVGbQwZShA4zAgaeDTrh2WSeAD9K2szqUpawvjkM3q1uvzc/W8X4CnwN54u7QQ31rwR8+LUS5KaoGhEXnVDrQzN6ojrS8SdVE6rPKiPqJCJiT46D8k7Vj4=
+	t=1751368620; cv=none; b=qIdWIN3W7Bl7dwZWDtP0itNvNrOlDS12ZLzY/gYTT3youU1NzrSvkh1UczDrdzKTjfDvMzt7znPsbwgruFSaIFxTDSS/PtTDkhPFI3o7yab6VK0/pyVbglyMH1HSLZwEWgj7uI7P9/ZA9TofvtXxvTo5mWJvC1RE3Y8kB7ODHL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751368568; c=relaxed/simple;
-	bh=CAkSiWKP+sJy98dilyg86EM6CTAapR520tBC2bY2n6w=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=anXW5G7bTPalQEIaC31NJZwNP2dkXfRFR0ysgczN0teCHatCMH1Unj3ZX5gj7ilMxLtUohqnq75w0zxo938kl2aaRuuTGH6ktBezjUk+E2f+zgiPg3Yx47rpLoLrU/ccCgr0Rka7hfIFf+CGyECsYzghQIoUpReozO/KygZpFGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AnfruKrP; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751368620; c=relaxed/simple;
+	bh=P+AniTQtNOyYYO929SsdBmccebThUXBNEGP0tTQX+Xg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ow71Ydg4l2xDGwS8idqZJGWGtOZyb/VaJxvcY8pmZQzyp3zmUOEltD7O3v1U8EsGylDq8HNYiOGM02HphgXoYbNf2h3e3EBcklfdX9sajLkBi7a23rOGf7AfnnoU91pZ39aCpIkgecvNH5gPhThkhcQuCfKHy6gWpCQiSw8olMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=G7PDeVf0; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AnfruKrP"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-55516abe02cso2717972e87.0;
-        Tue, 01 Jul 2025 04:16:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751368565; x=1751973365; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=RW+hX+cQCyvacj8gxDCQmCJ1cgJrO4Ch8WdKLpegjyg=;
-        b=AnfruKrPA1sHX5kTP2JAChPdG4LeYevPeHOKAjWhRfTBf77wh8LAf7RZ2h3k7eMr+v
-         a9Le7DU9u1sJUBS0HfZ8Wqll9fGRSNE4CB14Gojv6W43VX9WTNwTSDD69HzqPn6NZ91F
-         E1qgd+1L/tWoeBXSVw31rn8XX8cvdx9xuIFFjFe0vTpfGcwJKRftFqA+aStWGgwfQx+d
-         Dbgv0UOhnw1NYXOzIqN2qSplgbO3fcQsJ3y5TqiPq7maEaKIvZY8wRt2pgK1EsPpveVi
-         9bOKjwd1yVQ/z3WCcAntq++KYasDh55nHY0O76Uc9TXheV9dGBt+dwN/tzirEPEe9sdB
-         g38Q==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="G7PDeVf0"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5619LP1o002189
+	for <linux-kernel@vger.kernel.org>; Tue, 1 Jul 2025 11:16:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=A/DsPTsBsBDmT1yFH6Ie1eyY
+	DtQOwvGO1EI9mJaE2Y0=; b=G7PDeVf0vg+kdCXuIrrqktt00oLfENIIZzDDghVl
+	5mZXfMXZI/cDcT7xbYlaYlxK0pmGbFagyxYsJz4dlGTxJmCO88X+5UKQ0fbXZQEC
+	9EiF6/EYmZHAbJtX6LUAwkxBEjXut5t7kwZ25fuGLnWSRuNrnmU1Eq9HqdcF0FwU
+	3gklU5U2xLVkjPGP5IHFTElefB9zKYEttE9O8uzrXm/6btQ8QQJeUCTxvcvKAEVZ
+	Ze2XpYEU43JmoI2qEvSH8Xac8KWNE/7dBgr87I7mhFvchmts9Ox28KzhuoyLbjd6
+	GeDYQ6mjAOrGrYTZPzbV5Dkd0wND7WvEaj5CJM0RP53pXA==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j9pcrgtk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 11:16:57 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c955be751aso846497785a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 04:16:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751368565; x=1751973365;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RW+hX+cQCyvacj8gxDCQmCJ1cgJrO4Ch8WdKLpegjyg=;
-        b=R4q+JaW4+3jFkrNattdcA3GlO2jXKo1IWE8vxWTXJP4145MVMQr+gRPkidDaOszVgv
-         uqHIzWvpGVhwJ4uVqW6UsA1SKp8C9sA9wtkvIb3TdDS7JcqA/53RX2cBurrh3NzQIkfC
-         FRDry/jAq+Mh3hAiJRhrsjCH6YeA5yOkPHy9L5XW+BYfGuoaqvFnZHhD2vcEaPrUcHDK
-         I/wDx2wRDa9iJAbUOd7LM+oNZqZUde9POCjKn/mMwXhTKkCglE8iUzWrZrSzSZSLpg1R
-         V503iAkQfigEAJ68l+ScpTjNSqa2bsZKR6b9Fd0QIS9uQQF767DuiEnNWvKY6c1oHhG1
-         GJSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUimc8Mk/gKQA4vBuUxT50j3lMg24cG7VLuNJwNxtqQupDPpJSz6CqdqcMz7SOdkMEeBFxVLqFtbM3AH74=@vger.kernel.org, AJvYcCXIuopPVrByfnZjHGJIEvwU21rJ7FUm+nFFmT3f9AkkW2zR5Bug3lxEMCvMjI9ERiN29Igp5UoNzrxtCGIPv3o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSgUvii8aoQR652U69CPN81UzIVCxw2IysBRlOrYzsV8I4Sb5H
-	AffsFENJKvFLPTFjPCa+F8WzUbE+JR0JrbVQ/iF0JdD1PTg+Koi8LQYt
-X-Gm-Gg: ASbGncsR7qCQUpsQSLLNft1ey7iSR+xeSJsKTFkKiMGUJ2sflUSRZNozCYibSW0Fh37
-	+CGJQjO2uqUtmQbLSpnitYkOxWi1K9tEgONJAW6gil/+n3YmDm6bsbNcme4GNeez7jQM/KOhjNI
-	TRcnPGAzB78u5RQuygYfnB00JwaJ9BDWB56KLvPM28Es5NuKe5tAksoyLzK9cLexuesNmYHQF/8
-	n3Oif9a2j5c8BwhhLGdG29kHRrMIY4ZRNcCNP9sMCG/ucp+LGbfWlTW4Yp1O3HqZyer+bDdl/OD
-	fZ1x7jGZk7Hybn6IKkkHKZ14zNaWf7Y6aAnouVhQoF8Ffwb9/eSpNkltzmoWINZivOMyBSoCEFe
-	9pKI4lwmH6fw=
-X-Google-Smtp-Source: AGHT+IH7beHmzryKHMnEptA76HGQNtp9dSvozMXm0SLIjavGHfqq5azRcWWkcV18tUriffM+X03KIQ==
-X-Received: by 2002:a05:6512:33ca:b0:553:a294:3f8 with SMTP id 2adb3069b0e04-5561f8983e2mr965176e87.14.1751368564504;
-        Tue, 01 Jul 2025 04:16:04 -0700 (PDT)
-Received: from pc636 (host-95-203-1-180.mobileonline.telia.com. [95.203.1.180])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b2b95b7sm1774918e87.108.2025.07.01.04.16.03
+        d=1e100.net; s=20230601; t=1751368616; x=1751973416;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A/DsPTsBsBDmT1yFH6Ie1eyYDtQOwvGO1EI9mJaE2Y0=;
+        b=ZCzqTezoZeJ/gm8W8dpFa1WnMe6UvZU6UvSkowqVIxWIYXil2YFpm1xGUFNO5C2cSD
+         iTIVTT8dO1pIJjMvSxbjD+2/iJGNXsLMhArr5lv3Nd26VQ1FlC4pbXL7qHzhkQXF2lCi
+         LJPJCjTmdWrfCUILiTHo9s35YlESYEJ4FHIx7kmYOEZueClk5CjVp0JsRQQBREowHNPZ
+         1C+vTVh+TMRpjCzMTE6USchl0DJUUjFYhPrn3C3fa2396gcZy/MxaEyp4xvQLj/Udb9A
+         3JpCem+yYQwUT0BM6hr31ekSbuOP8sxupS8aGBEAjlH9RE2QNhiPu21jXKj5DNEv7upP
+         yiBA==
+X-Forwarded-Encrypted: i=1; AJvYcCWgWhsyDN33p27g+FdlREgTnbglkoqif+dhT91Hzv9BjW4mUPkl0tcj/jb/bnvZ4+sRTH3fxg6alAczgdQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGcLqBc5eiPaJRwz/03V67xtYEtaa2h2o6Z/Kontz6uQq36vWQ
+	557egomrxnT/P3NSSuxuDuIn9Dpn8nhhX/MoIH0TvJDWTKKA5mbqedL3/oJgDXa6/ZkAuxNoAvf
+	SiRWA+O6/u08ErnQ2xZ+0yncGXLzgAYH1TZ/HYKF+Hd50gyI6LWVGyQbli+XowE8pKmE=
+X-Gm-Gg: ASbGncuKm82Km08iLL87LoGAlLybD+7HsaCbxb0laK+1TWGrHHQfJp3SdHxW8ZKMxSG
+	WwXwFWAMxkK2ofwzbulU8GbNFOTzBe7p9nVTLz/SZzGFQfLd+UL9N9zBgXFssxcUIRpIKjrDA1X
+	30ixd2qN0fpMEUlOCWNpku5HlU9f0yHN5zGot0iPZDGXYQDbl/Sk3jtNEQ9gdY99mGxrYLtJK69
+	nohhMHkTwt1Ug3sHk/0Qrl2E8J802XqARx6V1/eFTths2yBuhf11fztKdl3/uwn3XCzZnrUI8Qw
+	DYecwXhrs4KhhgCAEd/KcUk7cyhXSz0LA0es3w7ea/QLujx3H6ybgUfJpOF2Jx5T7zy9TnUuZ4z
+	9GLvc5EnEuLwjkDKAtDoFsRG7SKhyS4CTI10=
+X-Received: by 2002:a05:620a:2703:b0:7ce:e010:88bb with SMTP id af79cd13be357-7d44392577bmr2261952185a.22.1751368615984;
+        Tue, 01 Jul 2025 04:16:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGZAnQsK8oP+yGp6Y9qLuzqAu6F5wPwMy0Ri51LK9L6uuIylK+nYr9DS+MORAP0pvUs/HHlqg==
+X-Received: by 2002:a05:620a:2703:b0:7ce:e010:88bb with SMTP id af79cd13be357-7d44392577bmr2261947085a.22.1751368615341;
+        Tue, 01 Jul 2025 04:16:55 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32cd2dead99sm15783941fa.22.2025.07.01.04.16.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 04:16:03 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Tue, 1 Jul 2025 13:16:01 +0200
-To: Vitaly Wool <vitaly.wool@konsulko.se>
-Cc: Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org,
-	akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v9 1/4] mm/vmalloc: allow to set node and align in
- vrealloc
-Message-ID: <aGPDcUc5ixYF8cQL@pc636>
-References: <20250630221511.3325123-1-vitaly.wool@konsulko.se>
- <20250630221615.3325221-1-vitaly.wool@konsulko.se>
- <aGO9a06HutqljjNS@pc636>
- <31E257E1-AB52-4115-A264-56F545AB84A9@konsulko.se>
+        Tue, 01 Jul 2025 04:16:54 -0700 (PDT)
+Date: Tue, 1 Jul 2025 14:16:52 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Luca Weiss <luca.weiss@fairphone.com>
+Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/10] Add clock drivers for SM7635
+Message-ID: <w4eujq72uqflqpsqshc7zhu6lkc7owufep2g2rjacvzgj44vmf@auonp4ugbgow>
+References: <20250625-sm7635-clocks-v1-0-ca3120e3a80e@fairphone.com>
+ <68056b4a-b1c3-401f-8720-8e0c3cda6249@oss.qualcomm.com>
+ <DAXEWQ93VELV.3HJXPNWASYBT7@fairphone.com>
+ <DAZPKV5DQ1EK.2D4TQE5MIH4K9@fairphone.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <31E257E1-AB52-4115-A264-56F545AB84A9@konsulko.se>
+In-Reply-To: <DAZPKV5DQ1EK.2D4TQE5MIH4K9@fairphone.com>
+X-Proofpoint-GUID: 5eDojnjr48H2_fIDqZtuh8z1xF5tqJYX
+X-Proofpoint-ORIG-GUID: 5eDojnjr48H2_fIDqZtuh8z1xF5tqJYX
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAxMDA2OSBTYWx0ZWRfXwdrB4hzRUins
+ LRRKf20KG5u1jCbDrYaXVDIFSql6qT7kZ/HHk4oxI9YJp5x0kY3JnV64gbDzjYZzKGZdYXpS5Jc
+ jvXThyYDtzu/feAcFRrTbvkAjtKbQ1gK3fxzLXrOVS+Zs/Sla+R/hN1629QGeHgeeaCJsVJA5UY
+ IKLebuXVTiPtDjeE4aWGnywCygFSlmP5RbmPhKBrW9MV+r5vEkrDc81jH43T9i5qzhzS4tp+R56
+ B1pxmT8ABW51NJ87plLNH4porA3cu+dkZZ95Wzv723jXMUOeLThLd/1IbT6iwozluH7SwWa61+M
+ SDbdGGoFUpvgoal5lINwo/Wz9vUYh6Gapn5s+4Aw8IezQOn0BnGiKe6iMbjd2xjeiOLmpkK/Nnr
+ NN9QZCrzgsHTpvWTAOZXthSpMcGdhRvTJN08+IgBwDARHvF/qFEZESWx9XmwyPi8m7+ayAEx
+X-Authority-Analysis: v=2.4 cv=QMFoRhLL c=1 sm=1 tr=0 ts=6863c3a9 cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=6H0WHjuAAAAA:8 a=2CDl1CmQ9Cb19c7lbDQA:9
+ a=CjuIK1q_8ugA:10 a=PEH46H7Ffwr30OY-TuGO:22 a=Soq9LBFxuPC4vsCAQt-j:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-01_02,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 priorityscore=1501 bulkscore=0 spamscore=0 adultscore=0
+ mlxlogscore=894 mlxscore=0 lowpriorityscore=0 suspectscore=0 impostorscore=0
+ clxscore=1015 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507010069
 
-On Tue, Jul 01, 2025 at 12:54:36PM +0200, Vitaly Wool wrote:
+On Mon, Jun 30, 2025 at 10:01:35AM +0200, Luca Weiss wrote:
+> Hi Konrad,
 > 
+> On Fri Jun 27, 2025 at 5:14 PM CEST, Luca Weiss wrote:
+> > On Fri Jun 27, 2025 at 5:10 PM CEST, Konrad Dybcio wrote:
+> >> On 6/25/25 11:12 AM, Luca Weiss wrote:
+> >>> Document and add the clock drivers for GCC, CAMCC, DISPCC, GPUCC and
+> >>> VIDEOCC on the SM7635 SoC.
+> >>> 
+> >>> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> >>> ---
+> >>> Luca Weiss (10):
+> >>>       dt-bindings: clock: qcom: document the SM7635 Global Clock Controller
+> >>>       clk: qcom: Add Global Clock controller (GCC) driver for SM7635
+> >>>       dt-bindings: clock: qcom: document the SM7635 Camera Clock Controller
+> >>>       clk: qcom: Add Camera Clock controller (CAMCC) driver for SM7635
+> >>>       dt-bindings: clock: qcom: document the SM7635 Display Clock Controller
+> >>>       clk: qcom: Add Display Clock controller (DISPCC) driver for SM7635
+> >>>       dt-bindings: clock: qcom: document the SM7635 GPU Clock Controller
+> >>>       clk: qcom: Add Graphics Clock controller (GPUCC) driver for SM7635
+> >>>       dt-bindings: clock: qcom: document the SM7635 Video Clock Controller
+> >>>       clk: qcom: Add Video Clock controller (VIDEOCC) driver for SM7635
+> >>
+> >> We had a massive yak shaving patchset go in this season, please move
+> >> the magic settings in .probe to qcom_cc_driver_data {}
+> >
+> > Okay cool, I found them
+> > https://lore.kernel.org/linux-arm-msm/174970084192.547582.612305407582982706.b4-ty@kernel.org/
 > 
-> > On Jul 1, 2025, at 12:50 PM, Uladzislau Rezki <urezki@gmail.com> wrote:
-> > 
-> > On Tue, Jul 01, 2025 at 12:16:15AM +0200, Vitaly Wool wrote:
-> >> Reimplement vrealloc() to be able to set node and alignment should
-> >> a user need to do so. Rename the function to vrealloc_node_align()
-> >> to better match what it actually does now and introduce macros for
-> >> vrealloc() and friends for backward compatibility.
-> >> 
-> >> With that change we also provide the ability for the Rust part of
-> >> the kernel to set node and aligmnent in its allocations.
-> >> 
-> >> Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
-> >> ---
-> >> include/linux/vmalloc.h | 12 +++++++++---
-> >> mm/vmalloc.c            | 19 +++++++++++++++----
-> >> 2 files changed, 24 insertions(+), 7 deletions(-)
-> >> 
-> >> diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
-> >> index fdc9aeb74a44..68791f7cb3ba 100644
-> >> --- a/include/linux/vmalloc.h
-> >> +++ b/include/linux/vmalloc.h
-> >> @@ -197,9 +197,15 @@ extern void *__vcalloc_noprof(size_t n, size_t size, gfp_t flags) __alloc_size(1
-> >> extern void *vcalloc_noprof(size_t n, size_t size) __alloc_size(1, 2);
-> >> #define vcalloc(...) alloc_hooks(vcalloc_noprof(__VA_ARGS__))
-> >> 
-> >> -void * __must_check vrealloc_noprof(const void *p, size_t size, gfp_t flags)
-> >> - __realloc_size(2);
-> >> -#define vrealloc(...) alloc_hooks(vrealloc_noprof(__VA_ARGS__))
-> >> +void *__must_check vrealloc_node_align_noprof(const void *p, size_t size,
-> >> + unsigned long align, gfp_t flags, int nid) __realloc_size(2);
-> >> +#define vrealloc_node_noprof(_p, _s, _f, _nid) \
-> >> + vrealloc_node_align_noprof(_p, _s, 1, _f, _nid)
-> >> +#define vrealloc_noprof(_p, _s, _f) \
-> >> + vrealloc_node_align_noprof(_p, _s, 1, _f, NUMA_NO_NODE)
-> >> +#define vrealloc_node_align(...) alloc_hooks(vrealloc_node_align_noprof(__VA_ARGS__))
-> >> +#define vrealloc_node(...) alloc_hooks(vrealloc_node_noprof(__VA_ARGS__))
-> >> +#define vrealloc(...) alloc_hooks(vrealloc_noprof(__VA_ARGS__))
-> >> 
-> >> extern void vfree(const void *addr);
-> >> extern void vfree_atomic(const void *addr);
-> >> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> >> index 6dbcdceecae1..776c68f84ce2 100644
-> >> --- a/mm/vmalloc.c
-> >> +++ b/mm/vmalloc.c
-> >> @@ -4089,12 +4089,15 @@ void *vzalloc_node_noprof(unsigned long size, int node)
-> >> EXPORT_SYMBOL(vzalloc_node_noprof);
-> >> 
-> >> /**
-> >> - * vrealloc - reallocate virtually contiguous memory; contents remain unchanged
-> >> + * vrealloc_node_align_noprof - reallocate virtually contiguous memory; contents
-> >> + * remain unchanged
-> >>  * @p: object to reallocate memory for
-> >>  * @size: the size to reallocate
-> >> + * @align: requested alignment
-> >>  * @flags: the flags for the page level allocator
-> >> + * @nid: node id
-> >>  *
-> >> - * If @p is %NULL, vrealloc() behaves exactly like vmalloc(). If @size is 0 and
-> >> + * If @p is %NULL, vrealloc_XXX() behaves exactly like vmalloc(). If @size is 0 and
-> >>  * @p is not a %NULL pointer, the object pointed to is freed.
-> >>  *
-> >>  * If __GFP_ZERO logic is requested, callers must ensure that, starting with the
-> >> @@ -4111,7 +4114,8 @@ EXPORT_SYMBOL(vzalloc_node_noprof);
-> >>  * Return: pointer to the allocated memory; %NULL if @size is zero or in case of
-> >>  *         failure
-> >>  */
-> >> -void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
-> >> +void *vrealloc_node_align_noprof(const void *p, size_t size, unsigned long align,
-> >> + gfp_t flags, int nid)
-> >> {
-> >> struct vm_struct *vm = NULL;
-> >> size_t alloced_size = 0;
-> >> @@ -4135,6 +4139,11 @@ void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
-> >> if (WARN(alloced_size < old_size,
-> >> "vrealloc() has mismatched area vs requested sizes (%p)\n", p))
-> >> return NULL;
-> >> + if (WARN(!IS_ALIGNED((unsigned long)p, align),
-> >> + "will not reallocate with a bigger alignment (0x%lx)\n", align))
-> >> + return NULL;
-> >> + if (nid != NUMA_NO_NODE && nid != page_to_nid(vmalloc_to_page(p)))
-> >> + goto need_realloc;
-> >> 
-> > By this goto change, you bypass the two important checks below. For
-> > example if you shrink the allocated size, you do not need to perform
-> > any allocations. Instead the patch goes and allocates a new area.
-> > 
-> > You just need to remove:
-> > 
-> > - if (nid != NUMA_NO_NODE && nid != page_to_nid(vmalloc_to_page(p)))
-> > - goto need_realloc;
-> > 
-> > to make it working.
-> > 
+> For camcc, gpucc and videocc it seems quite simple to follow these
+> changes.
 > 
-> I am not sure I’m following. If we get a request to reallocate for a different node then we should either reject it or do the new allocation for this new node and copy the data to the new place. Shrinking the allocation on the old node doesn’t seem to be right. Or am I missing something?
+> For dispcc I don't know what to do with this line.
 > 
-If your process migrates to a new NODE, which is fine, it does not mean
-that you have to perform all this bouncing movement(reallocate on a new node).
-Next time it can be migrated back. Process are allowed to migrate and access
-to a remote memory.
+> 	/* Enable clock gating for MDP clocks */
+> 	regmap_update_bits(regmap, DISP_CC_MISC_CMD, 0x10, 0x10);
 
-Let's keep it simple.
+Use clk_regs_configure() callback to set this bit.
 
---
-Uladzislau Rezki
+> 
+> Do I just keep the regmap references in this probe function and just
+> move the clk_lucid_ole_pll_configure & qcom_branch_set_clk_en to the
+> config struct?
+> 
+> And similar for gcc, I can move the qcom_branch_set_clk_en calls there
+> but the qcom_cc_register_rcg_dfs needs to be kept.
+
+Would you mind extnding struct qcom_cc_desc with args to call
+qcom_cc_register_rcg_dfs() and call it from qcom_cc_really_probe()?
+
+> 
+> Does that sound okay, or what exactly is the desired outcome of the
+> requested changes?
+> 
+> Regards
+> Luca
+> 
+> >
+> >>
+> >> Konrad
+> 
+
+-- 
+With best wishes
+Dmitry
