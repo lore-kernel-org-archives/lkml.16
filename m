@@ -1,50 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B501F428F;
-	Tue,  1 Jul 2025 16:45:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2275F23506D;
+	Tue,  1 Jul 2025 16:46:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751388337; cv=none; b=k/jN6hw/BSQHNKX6SzfQ64/HlwpRYQVQNGCi2s1Vq3dDxOITewe3LF8kekG24nQhe9IZJGXbKRCzdyM0E1O+vYS1cjugrRlArM3jQ0scJfsvxt7SagQY+uTNNwur67XDvOYFkY5DVqkgsPHwZR78WsnIWxb9GJVpyboHo9fN6Sg=
+	t=1751388374; cv=none; b=BZy9p+GqR1yg9CabaXeTbLPSR5P+x9C5OrO8PvwJyf9JT8iX3DolkH5Nj4q13CNZmp1736IxIpf3UwngiMSAIdhMvjAifXA55PQ/Ibx/XA19HtJP27U1opbe47AirZY9tLIYvvqR7b+viZvCG0xwMFlRqbgbV5rXAaRUAHiP4BM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751388337; c=relaxed/simple;
-	bh=rxWh8Ki7CjYyO7eLldQromF2K92SNjwMD3JOw4J+aS8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=raL2s83e0URX9cx5aoVzIahOrHjMuKbIvqKpqEHrvGZRIgy/f7EItclu4MMmeMEj1adMUWQ6K7VkBeMxFyGpveEGt+QKHUnNzCYimP+rlG/HKzqEAPb5NOQ5HrDXSjTb8pdhzL6HdHnYBUF84dlbPBenqfqfistUCaYnNat1Tzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eR9QmGzH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751388374; c=relaxed/simple;
+	bh=76wvwIqknZHK203y8r9Dza148N2nvEhXSSczeKFN11c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tk56JaWts9FN4uSPLpaQuba0ROcVdat96SOU959cRK1CSCsSZJe/LS90lb8ZWxmxGH0Jm2ZpU9Zm6Gq1/w5zNRZ8Gt9aPVFP6Lhteilsns2GiyhhvZDVc7Yzpf05YEXT/yCAaRrkact/3hi+azAYEjCdnsSn55bPTrafc0z8sYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fnfqYEzw; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eR9QmGzH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E886CC4CEEB;
-	Tue,  1 Jul 2025 16:45:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751388337;
-	bh=rxWh8Ki7CjYyO7eLldQromF2K92SNjwMD3JOw4J+aS8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eR9QmGzHQTPJOUXHscZaXBiFkTMBbyTzR7G/sBld7Ic9V60jXRqf0m5M5vMZ7wnKU
-	 cGnWMNe+NAuvcs/Xk4dPNlNxSMBH3BBY6cXSO+ztptHOI/AsT9DSr4gJoHjC3wMhir
-	 2uaEB2a2bLz6mV6zgTIDZ3pw2vIIv6qKD5oQynQ3S10ZaACE8f92q/ulo0Sd06tT9k
-	 SXMkoKdYpgENjdYG+qf2++gTzhJDr5lvHbFli5S/CY4yOZvuRF5Ri2kb8EhxdW2aYu
-	 Zc+a9cnrZl0qcGQ5/FXC4PTEFttpitUVXiV/QT5tVh/P2frGhVHvT65AWOfKc3sFG2
-	 qOifKOFuNz3ng==
-From: Will Deacon <will@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Will Deacon <will@kernel.org>,
-	Keir Fraser <keirf@google.com>,
-	Steven Moreland <smoreland@google.com>,
-	Frederick Mayle <fmayle@google.com>,
-	Stefan Hajnoczi <stefanha@redhat.com>,
-	Stefano Garzarella <sgarzare@redhat.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
-	netdev@vger.kernel.org,
-	virtualization@lists.linux.dev
-Subject: [PATCH v2 8/8] vsock/virtio: Allocate nonlinear SKBs for handling large transmit buffers
-Date: Tue,  1 Jul 2025 17:45:07 +0100
-Message-Id: <20250701164507.14883-9-will@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250701164507.14883-1-will@kernel.org>
-References: <20250701164507.14883-1-will@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fnfqYEzw"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-235d6de331fso43956405ad.3;
+        Tue, 01 Jul 2025 09:46:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751388372; x=1751993172; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=88Hysw7tfEWlpEWhG5IHKz75tKeJyeimvESHZHy/1Ic=;
+        b=fnfqYEzwpjf3X27ldjmCB+e2Bk4t+Z16sfAuxGuKdYAZMo0UlE4H+8uhDE6SPSW2Sd
+         6poP0j/dpK+uoNT35zgLOk4RBkfvtPZsebrxlYrwQbOPwnDiXfD2lDe2MP+2yjKzYiVD
+         bPFz0n+urAuydNfsH1KE+P37XCu7qDzOSl0zxAVKsWSiq0fxxPUNAhihV7GozOkOEbfb
+         uuKb2wk+vGmTJdfO58yKLi0eOWeBA4qQMu0BItgHDrEK7GsXVo9f+foiB+eAKV/P5yGZ
+         IQrOwmhISMaAuVjxJp2UuLmKk6gXFKpjngoK1BBDQQ9Io3WqeWnjfpTCLqMEEHDH6NPa
+         IkHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751388372; x=1751993172;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=88Hysw7tfEWlpEWhG5IHKz75tKeJyeimvESHZHy/1Ic=;
+        b=T5f5/n/+C8zYLfB8GbTt6s5bpBZeeTiYqExte89+Bm8tHZ9s9MjtMJCnoQ7GHg6WZ5
+         iLA3a6O9WCv8TzPPdqchIKDjXbzsREELwkh3tMaiquihxlZya2LfRH3AKtbywrky0RB+
+         AeoQNrEa3E1I6vSXHmjARjhrz09XF1zQ7GcLA0OEXwkEE7U1HXMkbyahWdIeyC+PEXjK
+         4l4K20PIv6sawvC3IIJCl7cz2pI91K+TBSQPCCNCnMJjTL1jLrnHpEH1W7/lLekdzz4f
+         Yax9JhTsgVM0xjoRWn6r5yNvyZEI9QJnS58XOs2I6fH1RshqoWMtdaTqmoH/RrxFK2qW
+         LpYw==
+X-Forwarded-Encrypted: i=1; AJvYcCUsIlwYjIKm3Jc7eEp1FHukEsa3CMVT8CCmAApsvvcJdqpTRTTZkyK14hvlCHpP5/oAOgNSrvkyQUoycTF7@vger.kernel.org, AJvYcCWgEqys699ScZXgzFhEh8sMG2osStPMZWDRBGu2dcgSybO95rnHfTYl1SDJyZlyrbM3kuXJinuzCUiulA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YydZpdd73Ilk8Aerr/JINU4Ew9T/C0f+Lck2u91Aw455qnBJMzz
+	OHFZHWrsIV2DnETiWexWhoQZYorF0pG1HGjjM8IMCt5f6W9uKrV6pkwk
+X-Gm-Gg: ASbGncs8zzEOIH/9SZ7teYXJYjfNzDLYkaxaG8Pz3LquYNQKC+3AH4Sum4h/iCFFa9/
+	PL1pgAaYIzQvza4k8WjVezd2GWmVkYgJgBiYFYgvqQxnZSAV6tg0JjZ7DfIF1WpI4glEHpKDHYk
+	bBnWkysCla17daniL7HO6d7vmbGteFRMwifqN+w7OfR9HuP7frJG/0EoySDx2Bp1hQ7eDD2bB7T
+	6dUb9hSsBtkPKVBoiW7JcMVPxQ/Is93M4iUh61ulNeQ4nCHxGRMh7BjzaTe1DueLu4yNX68EWIX
+	uEWNCoWoXSODjtJeNDuXMbToKqIEZvFcJd7uNv1w5Bb82dVtLsW8C3ylNC0RAi5UhNHailgjgip
+	5gg==
+X-Google-Smtp-Source: AGHT+IHZt0VfzJMOgeHLYEftDnYkqQIleGj42Y9oD2BZX1/zzbgD2ktrtUJsRLvt9haEWURtwL3Kfg==
+X-Received: by 2002:a17:902:e849:b0:235:a9b:21e0 with SMTP id d9443c01a7336-23ac19a8a29mr306652055ad.0.1751388372372;
+        Tue, 01 Jul 2025 09:46:12 -0700 (PDT)
+Received: from localhost.localdomain ([49.37.221.186])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-23acb3d11b4sm111050085ad.254.2025.07.01.09.46.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 09:46:11 -0700 (PDT)
+From: Abdun Nihaal <abdun.nihaal@gmail.com>
+To: andy@kernel.org
+Cc: Abdun Nihaal <abdun.nihaal@gmail.com>,
+	dan.carpenter@linaro.org,
+	gregkh@linuxfoundation.org,
+	lorenzo.stoakes@oracle.com,
+	tzimmermann@suse.de,
+	riyandhiman14@gmail.com,
+	willy@infradead.org,
+	notro@tronnes.org,
+	thomas.petazzoni@free-electrons.com,
+	dri-devel@lists.freedesktop.org,
+	linux-fbdev@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Andy Shevchenko <andriy.shevchenko@intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v5] staging: fbtft: cleanup error handling in fbtft_framebuffer_alloc()
+Date: Tue,  1 Jul 2025 22:15:36 +0530
+Message-ID: <20250701164537.243282-1-abdun.nihaal@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,47 +85,132 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When transmitting a vsock packet, virtio_transport_send_pkt_info() calls
-virtio_transport_alloc_linear_skb() to allocate and fill SKBs with the
-transmit data. Unfortunately, these are always linear allocations and
-can therefore result in significant pressure on kmalloc() considering
-that the maximum packet size (VIRTIO_VSOCK_MAX_PKT_BUF_SIZE +
-VIRTIO_VSOCK_SKB_HEADROOM) is a little over 64KiB, resulting in a 128KiB
-allocation for each packet.
+The error handling in fbtft_framebuffer_alloc() mixes managed allocation
+and plain allocation, and performs error handling in an order different
+from the order in fbtft_framebuffer_release().
 
-Rework the vsock SKB allocation so that, for sizes with page order
-greater than PAGE_ALLOC_COSTLY_ORDER, a nonlinear SKB is allocated
-instead with the packet header in the SKB and the transmit data in the
-fragments. No that this affects both the vhost and virtio transports.
+Fix them by moving vmem allocation closer to where it is used, and using
+plain kzalloc() for txbuf allocation. Also remove the duplicate call to
+fb_deferred_io_cleanup().
 
-Signed-off-by: Will Deacon <will@kernel.org>
+Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+Suggested-by: Dan Carpenter <dan.carpenter@linaro.org>
+Signed-off-by: Abdun Nihaal <abdun.nihaal@gmail.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
- net/vmw_vsock/virtio_transport_common.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+v4->v5:
+- Rebased on staging-testing, removing the duplicate call to
+  fb_deferred_io_cleanup() and updating commit message.
 
-diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
-index c9eb7f7ac00d..f74677c3511e 100644
---- a/net/vmw_vsock/virtio_transport_common.c
-+++ b/net/vmw_vsock/virtio_transport_common.c
-@@ -109,7 +109,8 @@ static int virtio_transport_fill_skb(struct sk_buff *skb,
- 		return __zerocopy_sg_from_iter(info->msg, NULL, skb,
- 					       &info->msg->msg_iter, len, NULL);
+I'm not sure if this needs a Fixes tag. If yes, please add this line
+Fixes: 505bffe21233 ("staging: fbtft: fix potential memory leak in fbtft_framebuffer_alloc()")
+Because after that commit, there are two calls to
+fb_deferred_io_cleanup() on error path causing a potential double free.
+
+
+v3->v4:
+- Added Reviewed-by tags
+
+v2->v3: 
+- Remove the if check before kfree of txbuf.buf, because it is zero
+  initialized on allocation, and kfree is NULL aware.
+
+Newly added in v2
+
+
+ drivers/staging/fbtft/fbtft-core.c | 32 +++++++++++++++---------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/staging/fbtft/fbtft-core.c b/drivers/staging/fbtft/fbtft-core.c
+index d920164e7710..9e7b84071174 100644
+--- a/drivers/staging/fbtft/fbtft-core.c
++++ b/drivers/staging/fbtft/fbtft-core.c
+@@ -568,18 +568,13 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
+ 		height = display->height;
+ 	}
  
--	return memcpy_from_msg(skb_put(skb, len), info->msg, len);
-+	virtio_vsock_skb_put(skb);
-+	return skb_copy_datagram_from_iter(skb, 0, &info->msg->msg_iter, len);
+-	vmem_size = display->width * display->height * bpp / 8;
+-	vmem = vzalloc(vmem_size);
+-	if (!vmem)
+-		goto alloc_fail;
+-
+ 	fbdefio = devm_kzalloc(dev, sizeof(struct fb_deferred_io), GFP_KERNEL);
+ 	if (!fbdefio)
+-		goto alloc_fail;
++		return NULL;
+ 
+ 	buf = devm_kzalloc(dev, 128, GFP_KERNEL);
+ 	if (!buf)
+-		goto alloc_fail;
++		return NULL;
+ 
+ 	if (display->gamma_num && display->gamma_len) {
+ 		gamma_curves = devm_kcalloc(dev,
+@@ -588,12 +583,17 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
+ 					    sizeof(gamma_curves[0]),
+ 					    GFP_KERNEL);
+ 		if (!gamma_curves)
+-			goto alloc_fail;
++			return NULL;
+ 	}
+ 
+ 	info = framebuffer_alloc(sizeof(struct fbtft_par), dev);
+ 	if (!info)
+-		goto alloc_fail;
++		return NULL;
++
++	vmem_size = display->width * display->height * bpp / 8;
++	vmem = vzalloc(vmem_size);
++	if (!vmem)
++		goto release_framebuf;
+ 
+ 	info->screen_buffer = vmem;
+ 	info->fbops = &fbtft_ops;
+@@ -613,7 +613,7 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
+ 	info->fix.accel =          FB_ACCEL_NONE;
+ 	info->fix.smem_len =       vmem_size;
+ 	if (fb_deferred_io_init(info))
+-		goto release_framebuf;
++		goto release_screen_buffer;
+ 
+ 	info->var.rotate =         pdata->rotate;
+ 	info->var.xres =           width;
+@@ -668,7 +668,7 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
+ #endif
+ 
+ 	if (txbuflen > 0) {
+-		txbuf = devm_kzalloc(par->info->device, txbuflen, GFP_KERNEL);
++		txbuf = kzalloc(txbuflen, GFP_KERNEL);
+ 		if (!txbuf)
+ 			goto cleanup_deferred;
+ 		par->txbuf.buf = txbuf;
+@@ -694,13 +694,10 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
+ 
+ cleanup_deferred:
+ 	fb_deferred_io_cleanup(info);
++release_screen_buffer:
++	vfree(info->screen_buffer);
+ release_framebuf:
+-	fb_deferred_io_cleanup(info);
+ 	framebuffer_release(info);
+-
+-alloc_fail:
+-	vfree(vmem);
+-
+ 	return NULL;
  }
- 
- static void virtio_transport_init_hdr(struct sk_buff *skb,
-@@ -261,7 +262,7 @@ static struct sk_buff *virtio_transport_alloc_skb(struct virtio_vsock_pkt_info *
- 	if (!zcopy)
- 		skb_len += payload_len;
- 
--	skb = virtio_vsock_alloc_linear_skb(skb_len, GFP_KERNEL);
-+	skb = virtio_vsock_alloc_skb(skb_len, GFP_KERNEL);
- 	if (!skb)
- 		return NULL;
- 
+ EXPORT_SYMBOL(fbtft_framebuffer_alloc);
+@@ -713,6 +710,9 @@ EXPORT_SYMBOL(fbtft_framebuffer_alloc);
+  */
+ void fbtft_framebuffer_release(struct fb_info *info)
+ {
++	struct fbtft_par *par = info->par;
++
++	kfree(par->txbuf.buf);
+ 	fb_deferred_io_cleanup(info);
+ 	vfree(info->screen_buffer);
+ 	framebuffer_release(info);
 -- 
-2.50.0.727.gbf7dc18ff4-goog
+2.43.0
 
