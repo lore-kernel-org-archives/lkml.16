@@ -1,177 +1,278 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C85B25F79A
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 20:03:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1900220F23
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 20:03:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751400205; cv=none; b=EdYwBkqh6YqGS8coDygYHuDGemJDJ++V53aFsGM59jerjZYHn/ljhwwgrA0kcpaKObMjKgTmu8t4HYezWA+XhovMYluZNEk9DfrK2HAd+sascPekUVWlWKEUA8cQS8YF05hhERmslbRUMO/2deFLwoirfJNqAMJWLpsBn5u7RI8=
+	t=1751400229; cv=none; b=ZTU/iAu6wUKUo6OOyvPY7rYcxrDcSBOXOweMVuYzCLnoJsKP+YTHL9Y897zwWAn7gaVUlZ2MBMKfzpTyxtYmV8klW1KGLC2AyzLAe31zpf3bCjhOiSL5uPyokTGi0o9mjXDhCe2H2+0QzsqdS2OzIrA7sEeXTxUhcE+KEg9yZZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751400205; c=relaxed/simple;
-	bh=eJDesN7BXsMnEhiQ/UJNFd2HLD1QXKP4h1RtXJ+27Mw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=chsqCIO6OJSNz2RRouVxFb+FI8Xpyvnw1y90LBVL1wc5gvJxB914lLJ1MDURiq5mqZwzPk1etQeYyVpvZzKnnI60pXww5qdaqds8C+zcCbc58lRzsWb4wILQzqvNnLEIa5USy54K2+U/xORqhgru4B+TBa63gsKa8S5ZWEkdLOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hWyHBqNx; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751400229; c=relaxed/simple;
+	bh=58rJfG6CwvkRx2KRC7Bb3Gpy0xeB+CUY4kcxFJRCUYo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GRWXKJ6kSSZnwh5KlH+SXiFTwcqwIE22hb7j0WZ5vpgrr1LuMbWh+4zkOZgtYIO+UabFwyQAdIEN5HGx0PqQYblPO6rk3SetGfILAI6lBTC6yYp/Ywyn0b8z0v1aLYWIC87xfKcw6TGaRGksycNDolRjlRgrNZVdtEOJVmqZO3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VWxZZ2sm; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hWyHBqNx"
-Message-ID: <361eb614-e145-49dc-aa32-12f313f61b96@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751400199;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/vR/YEbexwRjW/glmIK3Kpb+5RALRLDf27NEgC4WPeU=;
-	b=hWyHBqNxvk0vFYvd8RU0pwMiJmz/30E7EgsyBnufC4rElScT1PtSpQGYwEeFDma9WtXbye
-	exp0oqtzTrfEa2n/l5B21eGO9OpWSITDFeJ09Q+gMIlnf2FY2cN7/xw7i6c0y6cceY4daM
-	2UAhvfVY4DJjYzgXSgwsNsPLDGn4S2Y=
-Date: Tue, 1 Jul 2025 13:03:11 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VWxZZ2sm"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-235e389599fso317255ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 13:03:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751400226; x=1752005026; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bktMfbMPWDOoqz4tBJCnWTjUNN8jSJQyh7h6qa9T1Cs=;
+        b=VWxZZ2smbJup4TKCuT5YnV8iiDV24Ni3CKAxCo87z4Dp2oJy9Vx1NL1MHZs1xgcvrF
+         XLoahWiVdlwepNu3eNOcwu0Chia0pPuVqXpLQknqewO/3AIBtFU6lWe7DXDPwBW/GN3j
+         W9622Eid9kn9kztEQcX+mS1Ake3GUa06i3gqjeGTGcZnoJsC4Kzpj+SZI0czHSC9BjWa
+         g7kafS2tZIKS/4oFNuBmpOsABl8LJxD7snb+1YnrZm1o87qvGMfgfvLPZSxx00DGJfht
+         qVCEQ0mdPvMQBZRSRHDxbwOVXaGA4pj3/lC2Bgu4poYKjApXlSjPYK85uZgB3WBq23F/
+         m7Dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751400226; x=1752005026;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bktMfbMPWDOoqz4tBJCnWTjUNN8jSJQyh7h6qa9T1Cs=;
+        b=NVBJLmhQwu+dXUNhv/86ifq4hpmi/HZFM+KGg+1EnQna1MZX9UQBVau+K73+kGKyjO
+         TDPQfsoOEzSw+qhvgzS4luPs0xLKpBsmQYv7bGmMZXmeaLihO7+gBEPmuzwBp3WpXfT+
+         +w6HsQw+9XevqxEt7IlhkBdxHm4/rumDSDiHuYhjKVRBCsHLXWJVg5kzQuJFrhoJK3t1
+         5WHa4p2pSrYKoB3Wgg52p6YGPspVyHLNNrV5mY/qQUEbBV8P37G8yfUGq3UGf9ulkgbu
+         zJKn1qAUAXnXsN02lTyHJyubtLzfG03+j2valRI+6ztXOJsxZPsKRQRbzaGwSjTcbSfc
+         D4LQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUhi+mBZ5SlK6+vM5Q6ZlFhOhFkio9gNJ5mnkE3j0Fo4gR6oc4hBarv5AwLb0v7BqapHEXXpjWVaTH+wfo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDmoRV294LllWbN9zrrHmtIq86fRVFvzDWWdOySmNR56rhuZ35
+	CCl4WXtoTmWogejBlJuRTylv/JMucx8Lhcwu8A/r+B2acFk9sJGZQeJG5XpZ1j/mhQ==
+X-Gm-Gg: ASbGnctw7M3KwW21h6lA66op2xiO2L0uEMq9DrxmQeZ81MhoeEL+LwBB+WL2FHdHtRh
+	AvBVUIaWiXNWTV6PCDWTqkj30YQIXLFNHWkib6cX53tMNXdpXeyS/0BdBFtKwkSrbXXpCrdXtki
+	/q/3BKEnoiK1p0NRQLMwRba0AVAGfbOJc0tPRcTnWtgPuG4L5jLcRLph3qifLWQYO49TuVJVTsP
+	Y4fd1zGsiDQAbHUgpjYN8xPBnH/dd6qxGPpRpP6Qt1VbQR9W2X6IfT7MVZ1d5An4NnDL1hyPWJV
+	CCvEdzgpwf9dnr7qTH3o3A0fiFd2UXKOz9e4DH/oVE5/wOXB1TTY6eWLAfrIAc03CUALYnVpdNJ
+	uj8BYbwpahigj2RanJhmQ
+X-Google-Smtp-Source: AGHT+IH8wLGT2ZcmFXbUpUVEBUVQ8i42Tf/vT9/rYGPbC+3uemlbkYYLsI4PH85g9JH5U3HDbnRtDg==
+X-Received: by 2002:a17:903:46cf:b0:234:afcf:d9e2 with SMTP id d9443c01a7336-23c6010bde4mr3665345ad.17.1751400225511;
+        Tue, 01 Jul 2025 13:03:45 -0700 (PDT)
+Received: from google.com (232.98.126.34.bc.googleusercontent.com. [34.126.98.232])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb39bb7dsm112415425ad.90.2025.07.01.13.03.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 13:03:44 -0700 (PDT)
+Date: Tue, 1 Jul 2025 20:03:35 +0000
+From: Pranjal Shrivastava <praan@google.com>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
+	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
+	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
+	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
+	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
+	zhangzekun11@huawei.com, iommu@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
+	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com,
+	dwmw2@infradead.org, baolu.lu@linux.intel.com
+Subject: Re: [PATCH v7 27/28] iommu/tegra241-cmdqv: Add user-space use support
+Message-ID: <aGQ_F7Qx3scbbA-J@google.com>
+References: <cover.1750966133.git.nicolinc@nvidia.com>
+ <539ee2ec112162abdba511574e2205a77b425059.1750966133.git.nicolinc@nvidia.com>
+ <aGQGm1-i4M75b9Qp@google.com>
+ <aGQ6KCI9OZEwHdxS@Asurada-Nvidia>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] bpf: turn off sanitizer in do_misc_fixups for old clang
-Content-Language: en-GB
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
- Arnd Bergmann <arnd@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- John Fastabend <john.fastabend@gmail.com>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
- Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Kumar Kartikeya Dwivedi <memxor@gmail.com>,
- Luis Gerhorst <luis.gerhorst@fau.de>, bpf <bpf@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, clang-built-linux <llvm@lists.linux.dev>
-References: <20250620113846.3950478-1-arnd@kernel.org>
- <CAADnVQKAT3UPzcpzkJ6_-powz4YTiDAku4-a+++hrhYdJUnLiw@mail.gmail.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yonghong Song <yonghong.song@linux.dev>
-In-Reply-To: <CAADnVQKAT3UPzcpzkJ6_-powz4YTiDAku4-a+++hrhYdJUnLiw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aGQ6KCI9OZEwHdxS@Asurada-Nvidia>
 
+On Tue, Jul 01, 2025 at 12:42:32PM -0700, Nicolin Chen wrote:
+> On Tue, Jul 01, 2025 at 04:02:35PM +0000, Pranjal Shrivastava wrote:
+> > On Thu, Jun 26, 2025 at 12:34:58PM -0700, Nicolin Chen wrote:
+> > >  /**
+> > >   * enum iommu_hw_info_type - IOMMU Hardware Info Types
+> > >   * @IOMMU_HW_INFO_TYPE_NONE: Output by the drivers that do not report hardware
+> > > @@ -598,12 +619,15 @@ struct iommu_hw_info_arm_smmuv3 {
+> > >   * @IOMMU_HW_INFO_TYPE_DEFAULT: Input to request for a default type
+> > >   * @IOMMU_HW_INFO_TYPE_INTEL_VTD: Intel VT-d iommu info type
+> > >   * @IOMMU_HW_INFO_TYPE_ARM_SMMUV3: ARM SMMUv3 iommu info type
+> > > + * @IOMMU_HW_INFO_TYPE_TEGRA241_CMDQV: NVIDIA Tegra241 CMDQV (extension for ARM
+> > > + *                                     SMMUv3) info type
+> > 
+> > I know that the goal here is to mention that Tegra241 CMDQV is an
+> > extension for Arm SMMUv3, but this comment could be misunderstood as the
+> > "type" being an extension to IOMMU_HW_INFO_TYPE_ARM_SMMUV3. How about we
+> 
+> IOMMU_HW_INFO_TYPE_TEGRA241_CMDQV only reports CMDQV structure.
+> VMM still needs to poll the IOMMU_HW_INFO_TYPE_ARM_SMMUV3. It's
+> basically working as "type being an extension".
+> 
 
+Ohh okay, I see.. I thought we were describing the HW.
 
-On 6/23/25 2:32 PM, Alexei Starovoitov wrote:
-> On Fri, Jun 20, 2025 at 4:38 AM Arnd Bergmann <arnd@kernel.org> wrote:
->> From: Arnd Bergmann <arnd@arndb.de>
->>
->> clang versions before version 18 manage to badly optimize the bpf
->> verifier, with lots of variable spills leading to excessive stack
->> usage in addition to likely rather slow code:
->>
->> kernel/bpf/verifier.c:23936:5: error: stack frame size (2096) exceeds limit (1280) in 'bpf_check' [-Werror,-Wframe-larger-than]
->> kernel/bpf/verifier.c:21563:12: error: stack frame size (1984) exceeds limit (1280) in 'do_misc_fixups' [-Werror,-Wframe-larger-than]
->>
->> Turn off the sanitizer in the two functions that suffer the most from
->> this when using one of the affected clang version.
->>
->> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->> ---
->>   kernel/bpf/verifier.c | 11 +++++++++--
->>   1 file changed, 9 insertions(+), 2 deletions(-)
->>
->> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
->> index 2fa797a6d6a2..7724c7a56d79 100644
->> --- a/kernel/bpf/verifier.c
->> +++ b/kernel/bpf/verifier.c
->> @@ -19810,7 +19810,14 @@ static int do_check_insn(struct bpf_verifier_env *env, bool *do_print_state)
->>          return 0;
->>   }
->>
->> -static int do_check(struct bpf_verifier_env *env)
->> +#if defined(CONFIG_CC_IS_CLANG) && CONFIG_CLANG_VERSION < 180100
->> +/* old clang versions cause excessive stack usage here */
->> +#define __workaround_kasan  __disable_sanitizer_instrumentation
->> +#else
->> +#define __workaround_kasan
->> +#endif
->> +
->> +static __workaround_kasan int do_check(struct bpf_verifier_env *env)
-> This looks too hacky for a workaround.
-> Let's figure out what's causing such excessive stack usage and fix it.
-> We did some of this work in
-> commit 6f606ffd6dd7 ("bpf: Move insn_buf[16] to bpf_verifier_env")
-> and similar.
-> Looks like it wasn't enough or more stack usage crept in since then.
->
-> Also make sure you're using the latest bpf-next.
-> A bunch of code was moved out of do_check().
-> So I bet the current bpf-next/master doesn't have a problem
-> with this particular function.
-> In my kasan build do_check() is now fully inlined.
-> do_check_common() is not and it's using 512 bytes of stack.
->
->>   {
->>          bool pop_log = !(env->log.level & BPF_LOG_LEVEL2);
->>          struct bpf_verifier_state *state = env->cur_state;
->> @@ -21817,7 +21824,7 @@ static int add_hidden_subprog(struct bpf_verifier_env *env, struct bpf_insn *pat
->>   /* Do various post-verification rewrites in a single program pass.
->>    * These rewrites simplify JIT and interpreter implementations.
->>    */
->> -static int do_misc_fixups(struct bpf_verifier_env *env)
->> +static __workaround_kasan int do_misc_fixups(struct bpf_verifier_env *env)
-> This one is using 832 byte of stack with kasan.
-> Which is indeed high.
-> Big chunk seems to be coming from chk_and_sdiv[] and chk_and_smod[].
->
-> Yonghong,
-> looks like you contributed that piece of code.
-> Pls see how to reduce stack size here.
-> Daniel used this pattern in earlier commits. Looks like
-> we took it too far.
+> > Sorry to be nit-picky here, I know that the code is clear, but I've seen
+> > people don't care to read more than the uapi descriptions. Maybe we
+> > could re-write this comment, here and everywhere else?
+> 
+> I can change this thought:
+> 
+> + * @IOMMU_VIOMMU_TYPE_TEGRA241_CMDQV: NVIDIA Tegra241 CMDQV (extension for ARM
+> + *                                    SMMUv3) enabled ARM SMMUv3 type
+> 
 
-With llvm17, I got the following error:
+Yes, that helps, thanks!
 
-/home/yhs/work/bpf-next/kernel/bpf/verifier.c:24491:5: error: stack frame size (2552) exceeds limit (1280) in 'bpf_check' [-
-Werror,-Wframe-larger-than]
-  24491 | int bpf_check(struct bpf_prog **prog, union bpf_attr *attr, bpfptr_t uattr, __u32 uattr_size)
-        |     ^
-/home/yhs/work/bpf-next/kernel/bpf/verifier.c:19921:12: error: stack frame size (1368) exceeds limit (1280) in 'do_check' [-
-Werror,-Wframe-larger-than]
-  19921 | static int do_check(struct bpf_verifier_env *env)
-        |            ^
-2 errors generated.
+> > > +/**
+> > > + * struct tegra241_vintf_sid - Virtual Interface Stream ID Replacement
+> > > + * @core: Embedded iommufd_vdevice structure, holding virtual Stream ID
+> > > + * @vintf: Parent VINTF pointer
+> > > + * @sid: Physical Stream ID
+> > > + * @idx: Replacement index in the VINTF
+> > > + */
+> > > +struct tegra241_vintf_sid {
+> > > +	struct iommufd_vdevice core;
+> > > +	struct tegra241_vintf *vintf;
+> > > +	u32 sid;
+> > > +	u8 idx;
+> > >  };
+> > 
+> > AFAIU, This seems to be a handle for sid -> vintf mapping.. it yes, then
+> > I'm not sure if "Virtual Interface Stream ID Replacement" clarifies that?
+> 
+> No. It's for vSID to pSID mappings. I had it explained in commit log:
+> 
 
-I checked IR and found the following memory allocations which may contribute
-excessive stack usage:
+I get that, it's for vSID -> pSID mapping which also "happens to" point
+to the vintf.. all I wanted to say was that the description is unclear..
+We could've described it as "Vintf SID map" or something, but I guess
+it's fine the way it is too.. your call.
 
-attr.coerce1, i32 noundef %uattr_size) local_unnamed_addr #0 align 16 !dbg !19800 {
-entry:
-   %zext_patch.i = alloca [2 x %struct.bpf_insn], align 16, !DIAssignID !19854
-   %rnd_hi32_patch.i = alloca [4 x %struct.bpf_insn], align 16, !DIAssignID !19855
-   %cnt.i = alloca i32, align 4, !DIAssignID !19856
-   %patch.i766 = alloca [3 x %struct.bpf_insn], align 16, !DIAssignID !19857
-   %chk_and_sdiv.i = alloca [1 x %struct.bpf_insn], align 4, !DIAssignID !19858
-   %chk_and_smod.i = alloca [1 x %struct.bpf_insn], align 4, !DIAssignID !19859
-   %chk_and_div.i = alloca [4 x %struct.bpf_insn], align 16, !DIAssignID !19860
-   %chk_and_mod.i = alloca [4 x %struct.bpf_insn], align 16, !DIAssignID !19861
-   %chk_and_sdiv343.i = alloca [8 x %struct.bpf_insn], align 16, !DIAssignID !19862
-   %chk_and_smod472.i = alloca [9 x %struct.bpf_insn], align 16, !DIAssignID !19863
-   %desc.i = alloca %struct.bpf_jit_poke_descriptor, align 8, !DIAssignID !19864
-   %target_size.i = alloca i32, align 4, !DIAssignID !19865
-   %patch.i = alloca [2 x %struct.bpf_insn], align 16, !DIAssignID !19866
-   %patch355.i = alloca [2 x %struct.bpf_insn], align 16, !DIAssignID !19867
-   %ja.i = alloca %struct.bpf_insn, align 8, !DIAssignID !19868
-   %ret_insn.i.i = alloca [8 x i32], align 16, !DIAssignID !19869
-   %ret_prog.i.i = alloca [8 x i32], align 16, !DIAssignID !19870
-   %fd.i = alloca i32, align 4, !DIAssignID !19871
-   %log_true_size = alloca i32, align 4, !DIAssignID !19872
-...
+> For ATC invalidation commands that hold an SID, it requires all devices to
+> register their virtual SIDs to the SID_MATCH registers and their physical
+> SIDs to the pairing SID_REPLACE registers, so that HW can use those as a
+> lookup table to replace those virtual SIDs with the correct physical SIDs.
+> Thus, implement the driver-allocated vDEVICE op with a tegra241_vintf_sid
+> structure to allocate SID_REPLACE and to program the SIDs accordingly.
+> 
+> > > @@ -351,6 +394,29 @@ tegra241_cmdqv_get_cmdq(struct arm_smmu_device *smmu,
+> > >  
+> > >  /* HW Reset Functions */
+> > >  
+> > > +/*
+> > > + * When a guest-owned VCMDQ is disabled, if the guest did not enqueue a CMD_SYNC
+> > > + * following an ATC_INV command at the end of the guest queue while this ATC_INV
+> > > + * is timed out, the TIMEOUT will not be reported until this VCMDQ gets assigned
+> > > + * to the next VM, which will be a false alarm potentially causing some unwanted
+> > > + * behavior in the new VM. Thus, a guest-owned VCMDQ must flush the TIMEOUT when
+> > > + * it gets disabled. This can be done by just issuing a CMD_SYNC to SMMU CMDQ.
+> > > + */
+> > > +static void tegra241_vcmdq_hw_flush_timeout(struct tegra241_vcmdq *vcmdq)
+> > > +{
+> > > +	struct arm_smmu_device *smmu = &vcmdq->cmdqv->smmu;
+> > > +	u64 cmd_sync[CMDQ_ENT_DWORDS] = {};
+> > > +
+> > > +	cmd_sync[0] = FIELD_PREP(CMDQ_0_OP, CMDQ_OP_CMD_SYNC) |
+> > > +		      FIELD_PREP(CMDQ_SYNC_0_CS, CMDQ_SYNC_0_CS_NONE);
+> > > +
+> > > +	/*
+> > > +	 * It does not hurt to insert another CMD_SYNC, taking advantage of the
+> > > +	 * arm_smmu_cmdq_issue_cmdlist() that waits for the CMD_SYNC completion.
+> > > +	 */
+> > > +	arm_smmu_cmdq_issue_cmdlist(smmu, &smmu->cmdq, cmd_sync, 1, true);
+> > > +}
+> > 
+> > If I'm getting this right, it issues a CMD_SYNC to the Host's CMDQ i.e.
+> > the non-CMDQV CMDQ, the main CMDQ of the SMMUv3? (i.e. the CMDQ present
+> > without the Tegra241 CMDQV extension?)
+> >
+> > so.. basically on every VM switch, there would be an additional CMD_SYNC
+> > issued to the non-CMDQV CMDQ to flush the TIMEOUT and we'll poll for
+> > it's completion?
+> 
+> The main CMDQ exists regardless whether CMDQV extension is there or
+> not. The CMD_SYNC can be issued to any (v)CMDQ. The smmu->cmdq is
+> just the easiest one to use here.
+> 
 
-So yes, chk_and_{div,mod,sdiv,smod} consumes quite some stack and
-can be coverted to runtime allocation but that is not enough for 1280
-stack limit, we need to do more conversion from stack to memory
-allocation. Will try to have uniform way to convert
-'alloca [<num> x %struct.bpf_insn]' to runtime allocation.
+I see. Thanks!
 
+> > > @@ -380,6 +448,12 @@ static void tegra241_vcmdq_hw_deinit(struct tegra241_vcmdq *vcmdq)
+> > >  	dev_dbg(vcmdq->cmdqv->dev, "%sdeinited\n", h);
+> > >  }
+> > >  
+> > > +/* This function is for LVCMDQ, so @vcmdq must be mapped prior */
+> > > +static void _tegra241_vcmdq_hw_init(struct tegra241_vcmdq *vcmdq)
+> > > +{
+> > > +	writeq_relaxed(vcmdq->cmdq.q.q_base, REG_VCMDQ_PAGE1(vcmdq, BASE));
+> > > +}
+> > > +
+> > 
+> > Not sure why we broke this off to a function, will there be more stuff
+> > here or is this just to use it in tegra241_vcmdq_hw_init_user as well?
+> 
+> I can take it off.
+> 
+
+Nah, that's okay, I was just curious.
+
+> > > @@ -429,6 +504,10 @@ static void tegra241_vintf_hw_deinit(struct tegra241_vintf *vintf)
+> > >  		}
+> > >  	}
+> > >  	vintf_write_config(vintf, 0);
+> > > +	for (sidx = 0; sidx < vintf->cmdqv->num_sids_per_vintf; sidx++) {
+> > > +		writel(0, REG_VINTF(vintf, SID_MATCH(sidx)));
+> > > +		writel(0, REG_VINTF(vintf, SID_REPLACE(sidx)));
+> > > +	}
+> > >  }
+> > 
+> > I'm assuming we call the de-init while switching VMs and hence we need
+> > to clear these to avoid spurious SID replacements in the new VM? Or do
+> > they not reset to 0 when the HW is reset?
+> 
+> The driver does not reset HW when tearing down a VM, but only sets
+> VINTF's enable bit to 0. So, it should just set other configuration
+> bits to 0 as well.
+> 
+> > > +static struct iommufd_viommu_ops tegra241_cmdqv_viommu_ops = {
+> > > +	.destroy = tegra241_cmdqv_destroy_vintf_user,
+> > > +	.alloc_domain_nested = arm_vsmmu_alloc_domain_nested,
+> > > +	.cache_invalidate = arm_vsmmu_cache_invalidate,
+> > 
+> > I see that we currently use the main cmdq to issue these cache
+> > invalidations (there's a FIXME in arm_vsmmu_cache_invalidate). I was
+> > hoping for this series to change that but I'm assuming there's another
+> > series coming for that?
+> > 
+> > Meanwhile, I guess it'd be good to call that out for folks who have
+> > Grace and start trying out this feature.. I'm assuming they won't see
+> > as much perf improvement with this series alone since we're still using
+> > the main CMDQ in the upstream code?
+> 
+> VCMDQ only accelerates invalidation commands.
+> 
+
+I get that.. but I see we're using `arm_vsmmu_cache_invalidate` here
+from arm-smmu-v3-iommufd.c which seems to issue all commands to
+smmu->cmdq as of now (the code has a FIXME as well), per the code:
+
+	/* FIXME always uses the main cmdq rather than trying to group by type */
+        ret = arm_smmu_cmdq_issue_cmdlist(smmu, &smmu->cmdq, last->cmd,
+					  cur - last, true);
+
+I was hoping this FIXME to be addressed in this series..
+
+> That is for non-invalidation commands that VCMDQ doesn't support,
+> so they still have to go in the standard nesting pathway.
+> 
+> Let's add a line:
+> 	/* for non-invalidation commands use */
+
+Umm.. I was talking about the cache_invalidate op? I think there's some
+misunderstanding here? What am I missing?
+
+> 
+> Nicolin
+
+Thanks
+Praan
