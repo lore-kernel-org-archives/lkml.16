@@ -1,142 +1,151 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FCB126E701
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 10:04:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74DEF27145E;
+	Tue,  1 Jul 2025 10:04:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751364278; cv=none; b=in8pk+R4Ezi8Eq4Pt5l/VEVGC4DNVDeFPoILDoyXLwPlcF0C94zuF42d+qaIYgetuFBWBk3VDR4O98P69cqsg7q8lcZh++croiJIx2rCJ9pXAlf0I3+jM9lQSXuwKfC+20+/6jrxs7dYpDN3THMCczeAUYCdjQeh/1qgO3VadHk=
+	t=1751364287; cv=none; b=J1Idenfz3Xu2Lb5+0gxTumghIu+sA0/5AhDgvFLvDY//4z1DjOyNEA2UYhvDv0lh8MoQQ62u7ehZ8uSKtK2vsXCj0Zcg6r5wIitsdt+13bxvpnE2vlDCOTlFsFRoCt7BYdG5KwT299pwofxfMPmiGC0qoY1DzJue4Qtod4bn1OU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751364278; c=relaxed/simple;
-	bh=+R01mkuuQZpDljT5vbAlalpVcYu+V4XYhk80TEYXfd0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iOpINCvg2iMPFBah9nvZQsXzLENiz+5Ub4YF0Vaj3ib+M5j4281ZPpL8bO1g+SvX98xCHQ/vQtpeEB0xGActC+xWwcizTNFZCqfcI8CZshYqOnVoKckvokqjTsJJJBURiruaf7+2QiWWGffOPtJl6N9lNLsI4Y25iKr87CPZKes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=sRAmk7AO; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+	s=arc-20240116; t=1751364287; c=relaxed/simple;
+	bh=gdgJ0pLM0UcV8oL609CbKelSnZQmL/t6Ju0O6BeBF1g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WiqCmWpl4EzVWb5D9n8D7oGEfHXH3Qls++U6wsRIIgjqyk6jXtgoC4ywNkWRLSSW3e4Bg+PInpYPPuoaX+C3CdTLLc4LlvIPGX3BBr255tTIFF0nIkBB7cj3+9YCtYYpYVe7M1DDINx83z1hdfYjuCVHjMTbg1I0jEZPk07WUmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lrJ46z+L; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="sRAmk7AO"
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-710e344bbf9so30689947b3.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 03:04:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lrJ46z+L"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-748e81d37a7so3869396b3a.1;
+        Tue, 01 Jul 2025 03:04:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1751364275; x=1751969075; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tI2TEX0v6p76uLE+ptZngTvOHJFtlrTXX6bq47hMyoo=;
-        b=sRAmk7AOR+Xp3FbwVhZewB+jhZZAo1UQ0AiAy4BiWeOvoBw9rEoFxPAEGmTnsZOKwr
-         5/HO2xxidGBgCy7j3Q9x8PPgmlg9pWpkHTHShTqm76fIlLDeNUbuyE3KxjT+uUojf/v3
-         iDQFXZ4TXhidFnKF6qn035I/la0IVzSo83mYZX09jcMIEPRiBIMkY0z5ARQvl4QuXdC9
-         sBd2f8vrI8jcRqaDYPmEkp4dQ+3AlPvywe+5+hgR5kQ6TQaSs4KFkPMRUqiP9PZyPl9Q
-         oG1luJSepn3ovJpgDEzTxaBUMCWhLeJ+/lWOpM8mG8EcTqIQhNVP9zXtwCbxcAMOS9SZ
-         t8yQ==
+        d=gmail.com; s=20230601; t=1751364284; x=1751969084; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=71QusJ5AouGsm2mgHkr3YzuD0h0jCWeTyt1AC4+RDvs=;
+        b=lrJ46z+L1LCB+HgMyGUVLG3F1NWzhIoxl/E0uDfkdOAQXBxVP6jMm02tQ5PzbC7NfY
+         hOQGEXwV2KqWFJTB70OEpwdfp+WwEkjlYSoe1WnhsPifZHYvAy966MiOEqfDSz5JnEbC
+         8xZVmUpDal9q2z2wBWlhpJrmisFv4gl/AFPeoOSOTQ9/nz3a/jEpUlZCa8eAWUcu5nGH
+         6hITI1zTNe2BR/w8H1jDjO5O48/pQsHH45AQk94igei/5bXnggjrnbgZYuPvJHnEmR8L
+         y4FohKgOM8iG+2Ce75IVmJulPZ2TeW7yInSoRjTkfbxD8NKPAOvvUpBOTmGn0PGtgH5o
+         Swqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751364275; x=1751969075;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tI2TEX0v6p76uLE+ptZngTvOHJFtlrTXX6bq47hMyoo=;
-        b=pd5iIWAKVHKTCtIa1WZGzhM47l0QgVd8FVtpCPZenc5Tm7DE7pmq9hNAdu/fTZolxL
-         5qGtuhSYeWykZ+aoSpthYvpYSnhm4r/I0cV010vNRIkKZjBdPQ+nkp0K51NHdsA+qCXC
-         V4CxEkbezA0FpkU8Prt+TPOl0aqUx7+ie6PVXMxAdCAIU4CpQTU5Jjp6XGM9DjaHRQK5
-         ACygtLZ4MJkcnw8RGHeRFXgePYjJa/gx/5o9Eh7j6MHNGmjNVRg9ZzzRWR/eELRlUr4t
-         4vgdgcozWft3keQljOu72JsW9KKc6zmGkyZdalZT61MEe3pZkuZm1c0HfdWlmIvN3oOn
-         AWQA==
-X-Forwarded-Encrypted: i=1; AJvYcCXUs7joTyIm9/BoplWviu9uSKBT2p88VxMkJGP6GkxsRGmTGdNXrfMKEWkXzHgzifZn3rj+35y8t2/f9B8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0k2krcS43J5j+Ug3Df6Fk63fT6/B0gE1Qnw/jMNc/BmYDb40P
-	YqWNp8rAC/p/SVur/kl7RR2bkeULrshEh02hWsnO9cvSlKyTVjGYtlwi85HZC836as8EsHp/Kra
-	Hl4X4pZ7+WnrSZu0z9FZLx3k/xgt/zJtqcLOFqfuqsQ==
-X-Gm-Gg: ASbGncuiS0/Aoa2FHnOtpxtPZbTT1TqCI8RUw9JDK6/o40zuNF+Pne6SV/oE5D9RHtp
-	AcTSOFXjNXmz8nxEVsHwHAOXmK44AicA3ebC4FO0QGrtg3GCNDygmGzByL7yJg4oBtnw7Cs7pPh
-	iwgz9e8tyEao05aP3LWgRMrmuEBBB6Z4R7R6DTTeYRqkV222VrT9zLFke5Rx0=
-X-Google-Smtp-Source: AGHT+IFFvhwLw/jJrBvk5mcq4A9/NKoJsPfn9jlPFZrZKY33NEca9HgiwrZDw7XbN2a2/VI+7HKKIkBzK0LvZEqayRQ=
-X-Received: by 2002:a05:690c:38b:b0:709:1529:c24f with SMTP id
- 00721157ae682-7151713cdcemr231087327b3.4.1751364275152; Tue, 01 Jul 2025
- 03:04:35 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751364284; x=1751969084;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=71QusJ5AouGsm2mgHkr3YzuD0h0jCWeTyt1AC4+RDvs=;
+        b=bVju8q1KHsRql9iGB08S19laqm1HI3sQiGfYTD2kxqxQHSl4kbU762cziyjo6DjkrB
+         81Yc6bBSzE4kahFlOjMzRmt2Qd4Mv8TvwfcK+lkBiEiKOoPFnlyHai56T9x+mOgsoumY
+         mhlHXrY01b+WFTH8pl7YB+xCw+dnnlFVA8nrIe+kx0zauTEkG0Y9X/rJkV39vcMDO6tJ
+         w5Tkg6Y/sjzmoSdDVwEYfk/oaEla5THFMVx9WOgcyOtDTtkLGYcwYa37gx2m+x8p1LHZ
+         icfMOrBrVLZeyyu5qn/9wBBi0SIHhpqGStCb0/fxcL+rIQcSNZDR+57p6LW6smlz4Hho
+         3/LQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVHNH+f7/YDNtGwO9npsTpLBXA7ag5Blcp2wFjbZGxG/x6NHzm9kyMXg4mca4iGKez7OeZNxlrkNgGR@vger.kernel.org, AJvYcCVllnvQ/nVJeJV/iTyt3P0HgRF2EiwlM841RoxnCDr9goXlRPlg3/xCZpxm9YLElVYiL0KJCGKj/dzbz3OB@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQBTykaDzPOmKgL7L9rgtDntQOeRR0/ADSQCtod8WmelS9lpGY
+	RVmwORZ/xTkwMhdhSEoWDjQ8lV0Nb9yczZ+E9TKJknP3fQOsxWNmew86
+X-Gm-Gg: ASbGncvSp7DIWgEgAWSCDcsEIYavDlNM0E9V3pl4Z9jFluaQGcHMsQ8r/SG5maBUkBM
+	Faol9gX9DDXhUOe/FZsEkRUHwxvv9YH7Y+BW3aHeNNMu/7bRcWlltsWbCFN/y1/fB1ytuJ1FmM1
+	6TurQ4jCjjJk8noXICCc5v9lanxnaS3jS7DhXtLVi7Y7/SU1E2P5YRkYrX+C0+OmRvVcSW3GE7t
+	dmooiydGRaAr7A2YLz9XYNropUjWiDPX7abuBAUvnlWH3MosrlrxLXshx6DOM6AfCa12qDK0NfT
+	Xiz53Y1aJw0+MSYqe/VnfLrP7HVv98gSpNGsrQvXdqLqHXAmeKA/V5p+Bt+Vzw==
+X-Google-Smtp-Source: AGHT+IHie6mqvlaJorzA6xUxii2gAFC0YaJ/JvpPEZQX9X8fCXiwrRfXuXkWDPVsvQUlpXtMG94W6A==
+X-Received: by 2002:a05:6a00:2195:b0:748:f80c:b398 with SMTP id d2e1a72fcca58-74af6f08c99mr21158524b3a.15.1751364283601;
+        Tue, 01 Jul 2025 03:04:43 -0700 (PDT)
+Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-74af57f467bsm11309945b3a.170.2025.07.01.03.04.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 03:04:43 -0700 (PDT)
+Date: Tue, 1 Jul 2025 18:04:24 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>, 
+	Inochi Amaoto <inochiama@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen Wang <unicorn_wang@outlook.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Richard Cochran <richardcochran@gmail.com>, 
+	Alexander Sverdlin <alexander.sverdlin@gmail.com>, Yixun Lan <dlan@gentoo.org>, 
+	Thomas Bonnefille <thomas.bonnefille@bootlin.com>, Ze Huang <huangze@whut.edu.cn>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	Longbin Li <looong.bin@gmail.com>
+Subject: Re: [PATCH net-next RFC v4 0/4] riscv: dts: sophgo: Add ethernet
+ support for cv18xx
+Message-ID: <gkyq4gakaji6ddx5btmd6fzehfu5mzfhdy5pch32idoio3jf7g@7zlwkf2bvhac>
+References: <20250701011730.136002-1-inochiama@gmail.com>
+ <vxnvovuetfd6rzgaenwplpkhxm62fhw6t3vi4wkyigul7p4bkx@pwlprna4pyul>
+ <a5107266-853e-4658-ba90-d6a08882d2a8@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250701-working_dma_0701_v2-v2-0-ab6ee9171d26@riscstar.com>
- <20250701-working_dma_0701_v2-v2-7-ab6ee9171d26@riscstar.com>
- <ebc16dbe-2405-4956-91a0-bcce9f199326@kernel.org> <CAH1PCMa2dB1fefzGgo-kKfgAdou_KaDSvTDsvYPjsGKODHETCA@mail.gmail.com>
- <d3d73135-15d8-487d-a55a-44f1f98db930@kernel.org>
-In-Reply-To: <d3d73135-15d8-487d-a55a-44f1f98db930@kernel.org>
-From: Guodong Xu <guodong@riscstar.com>
-Date: Tue, 1 Jul 2025 18:04:24 +0800
-X-Gm-Features: Ac12FXwHr2IIx2UMlAjmgrdgoDgmw39WTy6GMM6om5RG4oXPV4Hi_Mb50OUfJEU
-Message-ID: <CAH1PCMa35n4dnJ94-EHGrJyU3kztQYO8_v2CkD=rid466zv3+A@mail.gmail.com>
-Subject: Re: [PATCH v2 7/8] riscv: dts: spacemit: Enable PDMA0 on Banana Pi F3
- and Milkv Jupiter
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>, 
-	=?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Alex Elder <elder@riscstar.com>, 
-	Vivian Wang <wangruikang@iscas.ac.cn>, dmaengine@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a5107266-853e-4658-ba90-d6a08882d2a8@kernel.org>
 
-On Tue, Jul 1, 2025 at 5:02=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.org=
-> wrote:
->
-> On 01/07/2025 10:48, Guodong Xu wrote:
-> > On Tue, Jul 1, 2025 at 3:36=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel=
-.org> wrote:
+On Tue, Jul 01, 2025 at 08:26:31AM +0200, Krzysztof Kozlowski wrote:
+> On 01/07/2025 03:23, Inochi Amaoto wrote:
+> > On Tue, Jul 01, 2025 at 09:17:25AM +0800, Inochi Amaoto wrote:
+> >> Add device binding and dts for CV18XX series SoC, this dts change series
+> >> required the reset patch [1] for the dts, which is already taken.
 > >>
-> >> On 01/07/2025 07:37, Guodong Xu wrote:
-> >>> Enable the PDMA0 on the SpacemiT K1-based Banana Pi F3 and Milkv Jupi=
-ter
-> >>> boards by setting its status to "okay".
-> >>>
-> >>> Signed-off-by: Guodong Xu <guodong@riscstar.com>
-> >>> ---
-> >>> v2: added pdma0 enablement on Milkv Jupiter
-> >>> ---
-> >>>  arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts   | 4 ++++
-> >>>  arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts | 4 ++++
-> >>>  2 files changed, 8 insertions(+)
-> >>>
-> >>> diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/r=
-iscv/boot/dts/spacemit/k1-bananapi-f3.dts
-> >>> index fe22c747c5012fe56d42ac8a7efdbbdb694f31b6..39133450e07f2cb9cb224=
-7dc0284851f8c55031b 100644
-> >>> --- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-> >>> +++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-> >>> @@ -45,3 +45,7 @@ &uart0 {
-> >>>       pinctrl-0 =3D <&uart0_2_cfg>;
-> >>>       status =3D "okay";
-> >>>  };
-> >>> +
-> >>> +&pdma0 {
+> >> [1] https://lore.kernel.org/all/20250617070144.1149926-1-inochiama@gmail.com
 > >>
+> >> The patch is marked as RFC as it require reset dts.
 > >>
-> >> Does not look like placed according to DTS coding style. What sort of
-> >> ordering Spacemit follows?
+> >> Change from RFC v3:
+> >> - https://lore.kernel.org/all/20250626080056.325496-1-inochiama@gmail.com
+> >> 1. patch 3: change internal phy id from 0 to 1
 > >>
-> >
-> > Agreed. We should establish a consistent ordering rule for SpacemiT boa=
-rd
->
->
-> Isn't there a style already? Or what is the style for Risc-v arch?
->
+> >> Change from RFC v2:
+> >> - https://lore.kernel.org/all/20250623003049.574821-1-inochiama@gmail.com
+> >> 1. patch 1: fix wrong binding title
+> >> 2. patch 3: fix unmatched mdio bus number
+> >> 3. patch 4: remove setting phy-mode and phy-handle in board dts and move
+> >> 	    them into patch 3.
+> >>
+> >> Change from RFC v1:
+> >> - https://lore.kernel.org/all/20250611080709.1182183-1-inochiama@gmail.com
+> >> 1. patch 3: switch to mdio-mux-mmioreg
+> >> 2. patch 4: add configuration for Huashan Pi
+> >>
+> >> Inochi Amaoto (4):
+> >>   dt-bindings: net: Add support for Sophgo CV1800 dwmac
+> >>   riscv: dts: sophgo: Add ethernet device for cv18xx
+> >>   riscv: dts: sophgo: Add mdio multiplexer device for cv18xx
+> >>   riscv: dts: sophgo: Enable ethernet device for Huashan Pi
+> >>
+> >>  .../bindings/net/sophgo,cv1800b-dwmac.yaml    | 113 ++++++++++++++++++
+> >>  arch/riscv/boot/dts/sophgo/cv180x.dtsi        |  73 +++++++++++
+> >>  .../boot/dts/sophgo/cv1812h-huashan-pi.dts    |   8 ++
+> >>  3 files changed, 194 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/net/sophgo,cv1800b-dwmac.yaml
+> >>
+> >> --
+> >> 2.50.0
+> >>
+> > 
+> > As this is mark as RFC due to the reset dependency, now it is OK
+> > to merge it as the reset patch is taken and this patch is a minor
+> > change . I hopeif anyone can take the binding patch so I can take
+> > the devicetree patches.
+> 
+> I don't understand why you target net-next with your DTS patches.
 
-Per my checking, it's not consistent for arch/riscv.
+I just want to make them all get reviewed, as the dts patch is
+related to the binding.
+ 
+> The subject prefix is here not correct and probably this should be
+> split. Anyway, bindings have issues, so no, it cannot be merged.
+> 
 
-SiFive boards (hifive-unleashed-a00.dts and
-hifive-unmatched-a00.dts) are not alphabetical.
+Thanks, I will separate the binding patch and fix the issue.
 
-Most other RISC-V vendors (StarFive, Microchip, Sophgo Milk-V Duo, etc.)
-use alphabetical ordering. That's the majority. Right?
+Regards,
+Inochi
 
--Guodong
 
-> Best regards,
-> Krzysztof
