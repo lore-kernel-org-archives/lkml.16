@@ -1,216 +1,137 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2275F23506D;
-	Tue,  1 Jul 2025 16:46:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64F0D2798FA;
+	Tue,  1 Jul 2025 16:47:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751388374; cv=none; b=BZy9p+GqR1yg9CabaXeTbLPSR5P+x9C5OrO8PvwJyf9JT8iX3DolkH5Nj4q13CNZmp1736IxIpf3UwngiMSAIdhMvjAifXA55PQ/Ibx/XA19HtJP27U1opbe47AirZY9tLIYvvqR7b+viZvCG0xwMFlRqbgbV5rXAaRUAHiP4BM=
+	t=1751388438; cv=none; b=fpYzDT7R+Ymw6OrGv05jqTohCIePFrepWX02h6uadsNyIRmgBHcO6ncIJU6MESHQNpln5GHo2WdeIMF24r7WEQp7Q6cGX6ebraDD3NwatLc3Wei8H/ZIhLMs3Sx5P135sFwYUsc2SbwEL+40F2Lqf6IjsQsIe4CbAHDhaaB5z4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751388374; c=relaxed/simple;
-	bh=76wvwIqknZHK203y8r9Dza148N2nvEhXSSczeKFN11c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tk56JaWts9FN4uSPLpaQuba0ROcVdat96SOU959cRK1CSCsSZJe/LS90lb8ZWxmxGH0Jm2ZpU9Zm6Gq1/w5zNRZ8Gt9aPVFP6Lhteilsns2GiyhhvZDVc7Yzpf05YEXT/yCAaRrkact/3hi+azAYEjCdnsSn55bPTrafc0z8sYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fnfqYEzw; arc=none smtp.client-ip=209.85.214.171
+	s=arc-20240116; t=1751388438; c=relaxed/simple;
+	bh=ymyz98G6WAIWhgot7OyS3l+nPaHFTvJsU8EnPPnV3hw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jmYlgSW7XfGHmNWqBy6Tl0YPHjO6d4MlhSz9MDHSRtTmq2tZZ6YMhiqHIxYNIlOt80Tv6T02gBxmNxwgSDGhlFePvajGANFpaxPmJpLDbgfVAk3EcJPRIrxkEGYcpB/JhfwHTIwxm8+eYwG96hkhYsMcwZFM0FecioILuuMZBxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RZFC/jGu; arc=none smtp.client-ip=209.85.208.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fnfqYEzw"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-235d6de331fso43956405ad.3;
-        Tue, 01 Jul 2025 09:46:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RZFC/jGu"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-32cdc9544ceso30043591fa.0;
+        Tue, 01 Jul 2025 09:47:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751388372; x=1751993172; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=88Hysw7tfEWlpEWhG5IHKz75tKeJyeimvESHZHy/1Ic=;
-        b=fnfqYEzwpjf3X27ldjmCB+e2Bk4t+Z16sfAuxGuKdYAZMo0UlE4H+8uhDE6SPSW2Sd
-         6poP0j/dpK+uoNT35zgLOk4RBkfvtPZsebrxlYrwQbOPwnDiXfD2lDe2MP+2yjKzYiVD
-         bPFz0n+urAuydNfsH1KE+P37XCu7qDzOSl0zxAVKsWSiq0fxxPUNAhihV7GozOkOEbfb
-         uuKb2wk+vGmTJdfO58yKLi0eOWeBA4qQMu0BItgHDrEK7GsXVo9f+foiB+eAKV/P5yGZ
-         IQrOwmhISMaAuVjxJp2UuLmKk6gXFKpjngoK1BBDQQ9Io3WqeWnjfpTCLqMEEHDH6NPa
-         IkHw==
+        d=gmail.com; s=20230601; t=1751388434; x=1751993234; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ymyz98G6WAIWhgot7OyS3l+nPaHFTvJsU8EnPPnV3hw=;
+        b=RZFC/jGuvOhElYbJdSKVKR+vOQ4+ZCR5TVwAlqWpR2svkdoOXBQ9obkYcTh6Drma3q
+         qLSzWR+QgCL6X4MWR1DN9tEqLnHXcxUTYcilIKS/atsW/RvgLB+upBteOGFIl9fTbF1l
+         4xE41/q1EtjI88Xt+knbYXFoZQvkX0TfO5HWKJbTbO/tsj0HSJFFddPM0xDtEMvmHftH
+         ReNeMxfA9FV0sNqcwUY1qjSEvKibnZn7G/3SNk+bUp160VwTk10+1Zk7WRplNsYWrxm0
+         KGpjqcsiMGd7kkJ2RBrAAWPPqrZTxwD080I+AfFINLots+G9BGUVVu9JQzuXwAapYdFW
+         uzlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751388372; x=1751993172;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=88Hysw7tfEWlpEWhG5IHKz75tKeJyeimvESHZHy/1Ic=;
-        b=T5f5/n/+C8zYLfB8GbTt6s5bpBZeeTiYqExte89+Bm8tHZ9s9MjtMJCnoQ7GHg6WZ5
-         iLA3a6O9WCv8TzPPdqchIKDjXbzsREELwkh3tMaiquihxlZya2LfRH3AKtbywrky0RB+
-         AeoQNrEa3E1I6vSXHmjARjhrz09XF1zQ7GcLA0OEXwkEE7U1HXMkbyahWdIeyC+PEXjK
-         4l4K20PIv6sawvC3IIJCl7cz2pI91K+TBSQPCCNCnMJjTL1jLrnHpEH1W7/lLekdzz4f
-         Yax9JhTsgVM0xjoRWn6r5yNvyZEI9QJnS58XOs2I6fH1RshqoWMtdaTqmoH/RrxFK2qW
-         LpYw==
-X-Forwarded-Encrypted: i=1; AJvYcCUsIlwYjIKm3Jc7eEp1FHukEsa3CMVT8CCmAApsvvcJdqpTRTTZkyK14hvlCHpP5/oAOgNSrvkyQUoycTF7@vger.kernel.org, AJvYcCWgEqys699ScZXgzFhEh8sMG2osStPMZWDRBGu2dcgSybO95rnHfTYl1SDJyZlyrbM3kuXJinuzCUiulA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YydZpdd73Ilk8Aerr/JINU4Ew9T/C0f+Lck2u91Aw455qnBJMzz
-	OHFZHWrsIV2DnETiWexWhoQZYorF0pG1HGjjM8IMCt5f6W9uKrV6pkwk
-X-Gm-Gg: ASbGncs8zzEOIH/9SZ7teYXJYjfNzDLYkaxaG8Pz3LquYNQKC+3AH4Sum4h/iCFFa9/
-	PL1pgAaYIzQvza4k8WjVezd2GWmVkYgJgBiYFYgvqQxnZSAV6tg0JjZ7DfIF1WpI4glEHpKDHYk
-	bBnWkysCla17daniL7HO6d7vmbGteFRMwifqN+w7OfR9HuP7frJG/0EoySDx2Bp1hQ7eDD2bB7T
-	6dUb9hSsBtkPKVBoiW7JcMVPxQ/Is93M4iUh61ulNeQ4nCHxGRMh7BjzaTe1DueLu4yNX68EWIX
-	uEWNCoWoXSODjtJeNDuXMbToKqIEZvFcJd7uNv1w5Bb82dVtLsW8C3ylNC0RAi5UhNHailgjgip
-	5gg==
-X-Google-Smtp-Source: AGHT+IHZt0VfzJMOgeHLYEftDnYkqQIleGj42Y9oD2BZX1/zzbgD2ktrtUJsRLvt9haEWURtwL3Kfg==
-X-Received: by 2002:a17:902:e849:b0:235:a9b:21e0 with SMTP id d9443c01a7336-23ac19a8a29mr306652055ad.0.1751388372372;
-        Tue, 01 Jul 2025 09:46:12 -0700 (PDT)
-Received: from localhost.localdomain ([49.37.221.186])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-23acb3d11b4sm111050085ad.254.2025.07.01.09.46.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 09:46:11 -0700 (PDT)
-From: Abdun Nihaal <abdun.nihaal@gmail.com>
-To: andy@kernel.org
-Cc: Abdun Nihaal <abdun.nihaal@gmail.com>,
-	dan.carpenter@linaro.org,
-	gregkh@linuxfoundation.org,
-	lorenzo.stoakes@oracle.com,
-	tzimmermann@suse.de,
-	riyandhiman14@gmail.com,
-	willy@infradead.org,
-	notro@tronnes.org,
-	thomas.petazzoni@free-electrons.com,
-	dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andriy.shevchenko@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v5] staging: fbtft: cleanup error handling in fbtft_framebuffer_alloc()
-Date: Tue,  1 Jul 2025 22:15:36 +0530
-Message-ID: <20250701164537.243282-1-abdun.nihaal@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1751388434; x=1751993234;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ymyz98G6WAIWhgot7OyS3l+nPaHFTvJsU8EnPPnV3hw=;
+        b=UL5BwIdbe57vfJQs9UWHMO1QN/CxnfkmdxDXtLijDyBsFi2K9eWXEmM9PS65Y1mmlr
+         an+yC6PGZ5xKy3ulYXRv4x7uYwQe46tw1G8UBTgm9bdB2WdN6qnDipmJMkBSM+b+Xp7f
+         7cNrA/0d220r0dC/Kt8rqnubn78ayw6CdqzFt7YSHgTbbHmNt0sIhmOcxrxwp2dueWLw
+         Imlr4puauuiwmlGfvvSJhTl0ZW1Tt83AWfQJWmZ4XExb1/Zjlicc5bOuTGJWxb1y4s00
+         r9qlq7aeJ0LKbRM7AKZchFyjQC/ngRTZmEQFV9lMuIt+fPxGJsLNT6FTIFlPZ+H4bXiZ
+         7FyA==
+X-Forwarded-Encrypted: i=1; AJvYcCUCOQd8i4kOBLmqHPjJ7RU9Xt7JcxESpHk2lH73uHcfRsh3aQzMrCTqB8rDkCiidHcKxbCLwSqUP65qKBD6xVk=@vger.kernel.org, AJvYcCUaCbzxPxuDts8/ImtrFbDERuCI+i3tuGeCIVG05mUba4eNYZuKGmS3U8MGPs67eCCfMw7TCB4lirM=@vger.kernel.org, AJvYcCUwcQi0sai9VUZeb3fDcwuxtPuj2Tnk8L5rdHz+TI84/qQcMEIndGEq5aR+5EUTvvwNIiPfdLaBpHTrYF1XBAk8@vger.kernel.org, AJvYcCW9EaHS62g1Hp0LNcXCoJgABJKv99UbzF1FM9DKFTy6EDjWNJw1dHEd9+/BlNcz+6AKs3DejxIbCtT1@vger.kernel.org, AJvYcCWZilvt5uJ0QLlxhaZqtU75xC85cG5kQULsrJ1JwBA9DXIGEnR/sBTTnq34vUlQnJBfRkuH7zS2@vger.kernel.org, AJvYcCWk/npMOtG8kAP4cMk/j2zje4SoYmXE9n+f3VsCFVa+Yq+RSx260W8YdLx+kf4n/XZXGpSu79mTBerPvpM=@vger.kernel.org, AJvYcCXVWhtUytKw40WInDMflfrQNGrugDPSDo08xE0uCjY/5eXSsWmuvnTLA8PfYtzvRpxkraUCuPD3Ap2GtN2U@vger.kernel.org, AJvYcCXZ1FkRVTHPbHwRvUt1GSQkOGOy51TsZaVZEtGpR/7xn/kzXxi+RipI7GbV8TUNc2sl53VfhURzM2UX@vger.kernel.org, AJvYcCXegcSZlhgS2mPJoagurMt9GAlI+I7x37E1NDSxFSJy78Dp/DFiq2c2q6AabknG5QDfubkySY0uT2An@vger.kernel.org
+X-Gm-Message-State: AOJu0YwP+mYa/dIb+AvWsYjOwL4xbmeQ/6zqedOf3Th66C1KGDCWjonT
+	uiqwwOt/OJsDmT99Nkk/gp9mbSxxyukREEeEIA0qKtFPe4QrP+h27ogMBQP7uPCAyK3aPda6MEm
+	CX2yLE5sLGK/Xe3t1F9ZWl1Ipbs8/Hd0=
+X-Gm-Gg: ASbGncvIdJreVaPaH7bakggtW/bhmClPzk720Z47WTO5BhHBaqdQjD2wUYCIURKr/5f
+	VFY4OFPTjy7fCVC/qTMTp5L/4MS9MzeDK2leoId1Y2xmkCmtzqwRkjo9ujlBMNx1a6VCpBSx+Py
+	T2z0H6CYwj5yp5huePfRMX1dv8uZyTlofJ3Kj9HSMF1bvtR4uTTLr038I1epeayeKDSF+zJwVnz
+	Fu21g==
+X-Google-Smtp-Source: AGHT+IFASHXyh6nKAuBWNflJbwzC1dxAvHKvYXKVWM4leUPhMKpN6FRK5U0/hoCDkOtFemkDVZIaXGSG2DOrBLCq8Rk=
+X-Received: by 2002:a2e:7c08:0:b0:32c:a907:491f with SMTP id
+ 38308e7fff4ca-32cdc464463mr36198291fa.15.1751388434129; Tue, 01 Jul 2025
+ 09:47:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250619-cstr-core-v12-0-80c9c7b45900@gmail.com> <aGO7-SQUUgg6kSVU@google.com>
+In-Reply-To: <aGO7-SQUUgg6kSVU@google.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Tue, 1 Jul 2025 12:46:37 -0400
+X-Gm-Features: Ac12FXw8AGP83JXgR8yzKwPiapZfBBkrNyDazktnve1kCOVkl79eviuMomA9o84
+Message-ID: <CAJ-ks9kbsTRrRN4yP7GmphozPyZHgbaAGJmLXR42NVgJ1ie_SQ@mail.gmail.com>
+Subject: Re: [PATCH v12 0/5] rust: replace kernel::str::CStr w/ core::ffi::CStr
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Michal Rostecki <vadorovsky@protonmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Rae Moar <rmoar@google.com>, Danilo Krummrich <dakr@kernel.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>, Benno Lossin <lossin@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+	Leon Romanovsky <leon@kernel.org>, Breno Leitao <leitao@debian.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, dri-devel@lists.freedesktop.org, 
+	netdev@vger.kernel.org, devicetree@vger.kernel.org, llvm@lists.linux.dev, 
+	linux-pci@vger.kernel.org, nouveau@lists.freedesktop.org, 
+	linux-block@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The error handling in fbtft_framebuffer_alloc() mixes managed allocation
-and plain allocation, and performs error handling in an order different
-from the order in fbtft_framebuffer_release().
+On Tue, Jul 1, 2025 at 6:44=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> wr=
+ote:
+>
+> On Thu, Jun 19, 2025 at 11:06:24AM -0400, Tamir Duberstein wrote:
+> > This picks up from Michal Rostecki's work[0]. Per Michal's guidance I
+> > have omitted Co-authored tags, as the end result is quite different.
+> >
+> > Link: https://lore.kernel.org/rust-for-linux/20240819153656.28807-2-vad=
+orovsky@protonmail.com/t/#u [0]
+> > Closes: https://github.com/Rust-for-Linux/linux/issues/1075
+> >
+> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+>
+> Overall LGTM. Only question is whether we should re-export
+> core::ffi::CStr from kernel::ffi. Reason being that right now we are
+> telling people to never use core::ffi as the integer types are wrong,
+> and I think it would be nice if we can continue to tell people "never
+> use core::ffi".
 
-Fix them by moving vmem allocation closer to where it is used, and using
-plain kzalloc() for txbuf allocation. Also remove the duplicate call to
-fb_deferred_io_cleanup().
+I agree that'd be nice. There are existing references to items in
+`core::ffi` scattered around (e.g. in rust/kernel/drm/file.rs); it
+would be good to clean all those up together with CStr provided we
+have some ability to lint against new occurrences.
 
-Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-Suggested-by: Dan Carpenter <dan.carpenter@linaro.org>
-Signed-off-by: Abdun Nihaal <abdun.nihaal@gmail.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
----
-v4->v5:
-- Rebased on staging-testing, removing the duplicate call to
-  fb_deferred_io_cleanup() and updating commit message.
+I'll leave this as-is for now since this series has already churned
+quite a lot, and the cleanup can be a reasonable first task for
+someone.
 
-I'm not sure if this needs a Fixes tag. If yes, please add this line
-Fixes: 505bffe21233 ("staging: fbtft: fix potential memory leak in fbtft_framebuffer_alloc()")
-Because after that commit, there are two calls to
-fb_deferred_io_cleanup() on error path causing a potential double free.
+>
+> Either way, for the whole series:
+> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
 
-
-v3->v4:
-- Added Reviewed-by tags
-
-v2->v3: 
-- Remove the if check before kfree of txbuf.buf, because it is zero
-  initialized on allocation, and kfree is NULL aware.
-
-Newly added in v2
-
-
- drivers/staging/fbtft/fbtft-core.c | 32 +++++++++++++++---------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/staging/fbtft/fbtft-core.c b/drivers/staging/fbtft/fbtft-core.c
-index d920164e7710..9e7b84071174 100644
---- a/drivers/staging/fbtft/fbtft-core.c
-+++ b/drivers/staging/fbtft/fbtft-core.c
-@@ -568,18 +568,13 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
- 		height = display->height;
- 	}
- 
--	vmem_size = display->width * display->height * bpp / 8;
--	vmem = vzalloc(vmem_size);
--	if (!vmem)
--		goto alloc_fail;
--
- 	fbdefio = devm_kzalloc(dev, sizeof(struct fb_deferred_io), GFP_KERNEL);
- 	if (!fbdefio)
--		goto alloc_fail;
-+		return NULL;
- 
- 	buf = devm_kzalloc(dev, 128, GFP_KERNEL);
- 	if (!buf)
--		goto alloc_fail;
-+		return NULL;
- 
- 	if (display->gamma_num && display->gamma_len) {
- 		gamma_curves = devm_kcalloc(dev,
-@@ -588,12 +583,17 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
- 					    sizeof(gamma_curves[0]),
- 					    GFP_KERNEL);
- 		if (!gamma_curves)
--			goto alloc_fail;
-+			return NULL;
- 	}
- 
- 	info = framebuffer_alloc(sizeof(struct fbtft_par), dev);
- 	if (!info)
--		goto alloc_fail;
-+		return NULL;
-+
-+	vmem_size = display->width * display->height * bpp / 8;
-+	vmem = vzalloc(vmem_size);
-+	if (!vmem)
-+		goto release_framebuf;
- 
- 	info->screen_buffer = vmem;
- 	info->fbops = &fbtft_ops;
-@@ -613,7 +613,7 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
- 	info->fix.accel =          FB_ACCEL_NONE;
- 	info->fix.smem_len =       vmem_size;
- 	if (fb_deferred_io_init(info))
--		goto release_framebuf;
-+		goto release_screen_buffer;
- 
- 	info->var.rotate =         pdata->rotate;
- 	info->var.xres =           width;
-@@ -668,7 +668,7 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
- #endif
- 
- 	if (txbuflen > 0) {
--		txbuf = devm_kzalloc(par->info->device, txbuflen, GFP_KERNEL);
-+		txbuf = kzalloc(txbuflen, GFP_KERNEL);
- 		if (!txbuf)
- 			goto cleanup_deferred;
- 		par->txbuf.buf = txbuf;
-@@ -694,13 +694,10 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
- 
- cleanup_deferred:
- 	fb_deferred_io_cleanup(info);
-+release_screen_buffer:
-+	vfree(info->screen_buffer);
- release_framebuf:
--	fb_deferred_io_cleanup(info);
- 	framebuffer_release(info);
--
--alloc_fail:
--	vfree(vmem);
--
- 	return NULL;
- }
- EXPORT_SYMBOL(fbtft_framebuffer_alloc);
-@@ -713,6 +710,9 @@ EXPORT_SYMBOL(fbtft_framebuffer_alloc);
-  */
- void fbtft_framebuffer_release(struct fb_info *info)
- {
-+	struct fbtft_par *par = info->par;
-+
-+	kfree(par->txbuf.buf);
- 	fb_deferred_io_cleanup(info);
- 	vfree(info->screen_buffer);
- 	framebuffer_release(info);
--- 
-2.43.0
-
+Thanks! I'll send the rebase on rc3 momentarily.
+Tamir
