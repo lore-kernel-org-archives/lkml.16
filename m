@@ -1,165 +1,183 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 489881D5CDE
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 10:49:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A22762701D0
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 10:49:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751366964; cv=none; b=X5eTlmKZyEDA9frOeKij7ggE5IqBRoEDpGsKrpR/7m0m5cgsoTHiZegb9T9ubJ8gU+7nBS/+EZSim/NeF3nMznTqEjkjwRLSwfXMlorXMvDG5Jv5a0EcWOi3hl1mL+zs5cEgmdc8R7sMlUacdyOwhVHCLZraWXv3W91dLfblXgs=
+	t=1751366966; cv=none; b=TaRscq4HYVEdPVF8ssS3++9Sxps1O7xguGNqt1UZcwT20yHARRDAQkY0nhRkp5lWNq0EDSH1d6c3OLE+L/pKbvd0XJIkRO7l9x7R1xI2n1Hz7ILTcvLdfIu7AYux7NuX+Md+pIu2oxpHfppRtq1b3+sdhRQvDEF3ilKLjYwKWPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751366964; c=relaxed/simple;
-	bh=128SMXN5CtEDmhSraGiHwE/vBLEnoSjifOYtYbXlHK0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mBJSAW6h6cvsrNxb6mOCDeGDuaISglysbTRii0AAiY0hEHnGwhqQGaZKJ14l2gUvw2IzTk/IBINaSFS9InB6W+JmsDhhpUy0pJlo6AqS53ZRdZGlGWsNgYDInsZkimW60l3W0xC5W44iPsQ2DWOMvh8W4LxIArELqyPuoJYJZTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ip+sCQQ2; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751366966; c=relaxed/simple;
+	bh=Tb3cYvwu3jOtOSrHTY7zaAmDMPwUN6iuvDljCE3cZBE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kGyojE2TaE9R7VnfDQc+n+lifnIRdzk+eRWJgF2VMrG8+2M5nPQ6VQyM2I4YklnBgpdUVVWjrM+yIlShk6B3au9zPJAFiQTnQx98dg0MSaaXvGKD+a9Q+5xA1SY1xVDxeCLlAAHvorp2o6/kX+C+aBfp3psMe18mmLeHqb9cMIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZbyP7B67; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ip+sCQQ2"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4a818ed5b51so14467741cf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 03:49:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751366957; x=1751971757; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fMIiAPXyUxjqN3xmL81K7D4idlrLRN8OrQpg/yRJNV4=;
-        b=Ip+sCQQ2yD18lHgwjqX8LJNo79T4ubZghGSJv+xNVChDiuF/FZ9p7czKQgUFAIMYr/
-         9b3KHTWKDtCLOeNkgcBnqpp2nKvSBtQlw0uOd4U32z/nVi4k3OYq8WxBZVCgyKMUNWAf
-         m67wMktAHZxglxcSfcRiajoc/3rxxOexOkFteX4bqBDVseznMGx2JOHAkylyr5syBjn7
-         rFCQtOcf4CJDBxCMa1/5Vtfr7ZeN1C8l9bi/H3+8jg5FRgvjMoMRhb5/R6OhKXRAb2ZY
-         m6cloT7/jzzJhe9ug45TPim1SmFVCspUcd1rTg/StI2BHh0qcEJd/VVTsTIdlgfhIRQJ
-         QPbg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZbyP7B67"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751366963;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ddBFBPzbnf0YkGeiYFfOnISLgT7HwdwnXCPaNqmBGeE=;
+	b=ZbyP7B67kIg2VxWy8A8jm1/ruLc3gUFy2r5huj/157foWRHmxJYaGNxmDIQY2/zPedqtV7
+	0wmSjEI1STS/uIPyBgLN1lcxxpFqkOGPgr59RsPqy0Cs5z9IAxwGT937DWbgooNjQYOCGW
+	lYAglPDkzL0zIYz+0P7me1iaeeSBqog=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-477-KTTgGyNoOVCyndHTI-qvOg-1; Tue, 01 Jul 2025 06:49:22 -0400
+X-MC-Unique: KTTgGyNoOVCyndHTI-qvOg-1
+X-Mimecast-MFC-AGG-ID: KTTgGyNoOVCyndHTI-qvOg_1751366962
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7d09ed509aaso822061585a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 03:49:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751366957; x=1751971757;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fMIiAPXyUxjqN3xmL81K7D4idlrLRN8OrQpg/yRJNV4=;
-        b=GUO9qpgpv+UbA+sYmFg9vbDs+CBrFpFkzagkQU0+r2ihy4P+2YJ3dzyjukOKpb70nG
-         s8J9vvMD19VqsOifW6vahF/Jn069GD4HkoeyuMaYZTyfsGOwL/AxWJY+9W1WCtdWqp7p
-         0b5QP+vSrDg4s6xuP7rOAPCqV8Sn7ulFESy0GnUNg6WHu5uZIYgqCUDJb4rIUMP6YDLu
-         rBIb0GTNPsUWeAtZVxE1SwLxq4M7Q4y00wv+ChoJBmIF49QpGHPCbfjK5KF0UI2GnloQ
-         dewQ5+ttAuBob7zEa6FaMrKZongBRS9i6Zkfe6T+7ka5ql6//4v7s3Be/+6+MFE+MVUI
-         5drA==
-X-Forwarded-Encrypted: i=1; AJvYcCXvfuIrNaCmuZjoOXSTBvXwGmZQQt6o6GHw2Y0o0HFMgkGAWt4mQi9Uhn6Qwbbm+Xhz5tts7cW/gi81z3s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2CyTiy7NfBSchIDji1ZtrfZbrbrIYb+WpxbsklnE+L/NYwO/2
-	8fwdJlraPxsEG6fC9Qf6rv/Hnv/DSQuZ/1euyzT6AQyUR3T1ksEeW/q8KH0ww7vadWDB56jFPcB
-	NWVVQcBBWE3ecNJ/nG9lgzhv++ywELLGiVAmu
-X-Gm-Gg: ASbGncujhwfRnnY5CmX77Tw/pIQtSC6+21zt+LpYFbSnISzhC0IeRR6H8VzoJWLqvlo
-	UNkKlxhYS1b88Ost1jCpEzREgiLY2k7rjDVjjxlyHn8wxFb4eUPqbvAQF9r0Hyu5NJxFeJ5nvxB
-	N2dA6UP+kTozRquTHqKFr0MbWKHwF4VkE0ZMY1xAtU4Gek
-X-Google-Smtp-Source: AGHT+IEbwvVyOiKhuFz5fUkFWt3wPM2fGnwiFbHfCtOK/0qgLBEh2GxgIoS4or+YKd5ZUx3BehLXGYk4x9pYLJyB9bs=
-X-Received: by 2002:ac8:5fcc:0:b0:4a7:f492:d0a2 with SMTP id
- d75a77b69052e-4a7fcbe18a7mr260375891cf.45.1751366957115; Tue, 01 Jul 2025
- 03:49:17 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751366962; x=1751971762;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ddBFBPzbnf0YkGeiYFfOnISLgT7HwdwnXCPaNqmBGeE=;
+        b=PvBIU6X0QmdUsBmhLa6cTu0zqltPcNLkzkrJkzUpNTUknzWeAbsoLqJlUXBxPmwuJ/
+         9wSDnc0XWnrSdBsBRpCwj/1Etvn4mNAk8s3BzN9dZo5xo3RvhQC+oZbKhrKWUZfvDFBH
+         Fps3ddQZIDzVNKu04AQiwMbO4N3Wj+qyt8fez5GITWaXKbPHP92ai6i5hfZlV87YESNl
+         LnzgAZKYvX3mVVbdnEOUOgSrrNOUQ/HXeElQw0mNUfEn6VEW4Dh+fhRo96VeqkQ4nZrP
+         SCq3fSCz+rRQYxms+t6B+MSI/qn6TiQJtPdH1Ay06YK9aI48foB5hTSq+/O5mbCj0TTZ
+         +dkA==
+X-Forwarded-Encrypted: i=1; AJvYcCUgamHQLdWvsvbu8yS7QYthOQ00Jm/IIW8ccWlKQx6jfY2MIL9xorvVfYRpsoXQPBuZLjHeCZS3BPSVgoU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6rUc2yVaLw/U25FTTlhAr6dsvByi0MPMayNJJLGShrCukbeRG
+	Z0rF9qHNMaC4cD4brpI60ehnvt8OgXIt4kYYQl+pVap1/O4UdfyZU5RcPtIdJDb1fZwh/mZI6lk
+	YCHmELFwz72u5y5FZcQ5W301Lk05ICtQitfFQlTsrakKYqZBEwwVIHc3DWZLrtjC6fQ==
+X-Gm-Gg: ASbGncunOefWDCcBUnSIJnqZT1g6d+UILq7Juic7aaOatf1GOirP/bMBEiTBZuDih0n
+	QWTjq98R4tmp5uILD8CeVnTlQrwlbFkuOSYCiLC3lv6hOcgdItj+qPrnGo1KYwHRxgH0aYmSswk
+	nXFZirQI7NYo9fH6+EeSrYrM/W+xp3vP3/+UpVXosa5crXzjSqhwzXxcYVIuxDbUKcnDOJdPahn
+	VvNJIQSaZ8LHSjtRrhwqznlBGt8qoY8wkqwW9OYxonEemHsihjoxYUBD2GKnwOJDMBGYTxKdidq
+	+G1rKagcBmdZCQ7MJf67Ip1MlybjUIGC0K7JLuNe6ZSz+fOJzSK8sgTk9k6utgOMd6zB4oEqX1G
+	2oWZcog==
+X-Received: by 2002:a05:620a:3946:b0:7d3:a66d:4f3c with SMTP id af79cd13be357-7d443920b10mr2626489785a.7.1751366962093;
+        Tue, 01 Jul 2025 03:49:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFnx1+CJslWQPujj9MUyy/pZg3IhJl9cLZ/bmEw7NJQYC0MyetSF73gR/8qFtva/Zgbza2a/g==
+X-Received: by 2002:a05:620a:3946:b0:7d3:a66d:4f3c with SMTP id af79cd13be357-7d443920b10mr2626484485a.7.1751366961461;
+        Tue, 01 Jul 2025 03:49:21 -0700 (PDT)
+Received: from jlelli-thinkpadt14gen4.remote.csb (host-2-102-80-182.as13285.net. [2.102.80.182])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d443167d48sm748686385a.32.2025.07.01.03.49.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 03:49:20 -0700 (PDT)
+Date: Tue, 1 Jul 2025 11:49:15 +0100
+From: Juri Lelli <juri.lelli@redhat.com>
+To: John Stultz <jstultz@google.com>
+Cc: Kuyo Chang <kuyo.chang@mediatek.com>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH V4 1/1] sched/deadline: Fix dl_server runtime calculation
+ formula
+Message-ID: <aGO9KyiJNAm7DLb0@jlelli-thinkpadt14gen4.remote.csb>
+References: <20250627022837.3331827-1-kuyo.chang@mediatek.com>
+ <CANDhNCorm58L9CqHyNORgfk=++HkCttmyCkM23Pn8rXV7cF41Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250701093407.211500-1-zhangzihuan@kylinos.cn>
-In-Reply-To: <20250701093407.211500-1-zhangzihuan@kylinos.cn>
-From: Xuewen Yan <xuewen.yan94@gmail.com>
-Date: Tue, 1 Jul 2025 18:49:05 +0800
-X-Gm-Features: Ac12FXwWno0rofMQaL5jSVcPu97UPpKDAzd2pBXCvMXO9DLkbxgu-RqotR4eazk
-Message-ID: <CAB8ipk-6=jZt5LZ9q9ehCE2PhhrBz4xV7BSLiqUda7=arm2rDQ@mail.gmail.com>
-Subject: Re: [PATCH v1] sched/uclamp: Skip uclamp_rq_dec() for non-final
- dequeue of delayed tasks
-To: Zihuan Zhang <zhangzihuan@kylinos.cn>
-Cc: xuewen.yan@unisoc.com, vincent.guittot@linaro.org, mingo@redhat.com, 
-	peterz@infradead.org, juri.lelli@redhat.com, rostedt@goodmis.org, 
-	bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, 
-	hongyan.xia2@arm.com, linux-kernel@vger.kernel.org, ke.wang@unisoc.com, 
-	di.shen@unisoc.com, kprateek.nayak@amd.com, kuyo.chang@mediatek.com, 
-	juju.sung@mediatek.com, qyousef@layalina.io
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANDhNCorm58L9CqHyNORgfk=++HkCttmyCkM23Pn8rXV7cF41Q@mail.gmail.com>
 
-Hi zihuan,
+On 26/06/25 19:48, John Stultz wrote:
+> On Thu, Jun 26, 2025 at 7:28 PM Kuyo Chang <kuyo.chang@mediatek.com> wrote:
+> > In our testing with 6.12 based kernel on a big.LITTLE system, we were
+> > seeing instances of RT tasks being blocked from running on the LITTLE
+> > cpus for multiple seconds of time, apparently by the dl_server. This
+> > far exceeds the default configured 50ms per second runtime.
+> >
+> > This is due to the fair dl_server runtime calculation being scaled
+> > for frequency & capacity of the cpu.
+> >
+> > Consider the following case under a Big.LITTLE architecture:
+> > Assume the runtime is: 50,000,000 ns, and Frequency/capacity
+> > scale-invariance defined as below:
+> > Frequency scale-invariance: 100
+> > Capacity scale-invariance: 50
+> > First by Frequency scale-invariance,
+> > the runtime is scaled to 50,000,000 * 100 >> 10 = 4,882,812
+> > Then by capacity scale-invariance,
+> > it is further scaled to 4,882,812 * 50 >> 10 = 238,418.
+> > So it will scaled to 238,418 ns.
+> >
+> > This smaller "accounted runtime" value is what ends up being
+> > subtracted against the fair-server's runtime for the current period.
+> > Thus after 50ms of real time, we've only accounted ~238us against the
+> > fair servers runtime. This 209:1 ratio in this example means that on
+> > the smaller cpu the fair server is allowed to continue running,
+> > blocking RT tasks, for over 10 seconds before it exhausts its supposed
+> > 50ms of runtime.  And on other hardware configurations it can be even
+> > worse.
+> >
+> > For the fair deadline_server, to prevent realtime tasks from being
+> > unexpectedly delayed, we really do want to use fixed time, and not
+> > scaled time for smaller capacity/frequency cpus. So remove the scaling
+> > from the fair server's accounting to fix this.
+> >
+> 
+> Thanks again for revising the commit message, this version is easier
+> (for me at least) to follow.
+> 
+> 
+> > diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+> > index ad45a8fea245..96a21f38fcc3 100644
+> > --- a/kernel/sched/deadline.c
+> > +++ b/kernel/sched/deadline.c
+> > @@ -1624,7 +1626,9 @@ void dl_server_update_idle_time(struct rq *rq, struct task_struct *p)
+> >         if (delta_exec < 0)
+> >                 return;
+> >
+> > -       scaled_delta_exec = dl_scaled_delta_exec(rq, &rq->fair_server, delta_exec);
+> > +       scaled_delta_exec = delta_exec;
+> > +       if (!rq->fair_server.dl_server)
+> > +               scaled_delta_exec = dl_scaled_delta_exec(rq, &rq->fair_server, delta_exec);
+> >
+> >         rq->fair_server.runtime -= scaled_delta_exec;
+> 
+> As I mentioned earlier, I still don't see this conditional as making a
+> lot of sense, as I don't believe there is time when this function
+> would be called and (!rq->fair_server.dl_server) would be true.
+> And even if there were, I'm not sure it makes sense to scale the time
+> interval based on the fair_server.dl_server flag.
+> 
+> From a separate discussion, you highlighted that it might be useful
+> once we have multiple dl_server types, which may want scaled
+> accounting, but I think in that case we should use an explicit flag
+> instead of the dl_server bit to denote if the accounting should be
+> scaled or not.
+> 
+> So, since your patch is a fix for a pretty bad bug, I think it should
+> be focused on fixing the issue in the simplest and clearest way for
+> the existing code, and not be too worried about integrating with
+> future changes that haven't landed.
+> 
+> Then, as those future changes land, we can see how best to generalize
+> the decision to scale or not scale the accounting on a dl_server.
+> 
+> That said, the conditional is a bit of a moot point, since I don't
+> think we'll actually hit it, and I'm motivated to get the bug you are
+> fixing resolved, so I wouldn't object if this went in as-is, but it
+> seems like it would be much cleaner to just drop that conditional as
+> you did in the original version of this patch.
 
-On Tue, Jul 1, 2025 at 5:34=E2=80=AFPM Zihuan Zhang <zhangzihuan@kylinos.cn=
-> wrote:
->
-> Currently, uclamp_rq_inc() skips updating the clamp aggregation for
-> delayed tasks unless ENQUEUE_DELAYED is set, to ensure we only track the
-> real enqueue of a task that was previously marked as sched_delayed.
->
-> However, the corresponding uclamp_rq_dec() path only checks
-> sched_delayed, and misses the DEQUEUE_DELAYED flag. As a result, we may
-> skip dec for a delayed task that is now being truly dequeued, leading to
-> uclamp aggregation mismatch.
->
-> This patch makes uclamp_rq_dec() consistent with uclamp_rq_inc() by
-> checking both sched_delayed and DEQUEUE_DELAYED, ensuring correct
-> accounting symmetry.
->
-> Fixes: 90ca9410dab2 ("sched/uclamp: Align uclamp and util_est and call be=
-fore freq update")
-> Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
-> ---
->  kernel/sched/core.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
->
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 8988d38d46a3..99f1542cff7d 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -1781,7 +1781,7 @@ static inline void uclamp_rq_inc(struct rq *rq, str=
-uct task_struct *p, int flags
->                 rq->uclamp_flags &=3D ~UCLAMP_FLAG_IDLE;
->  }
->
-> -static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
-> +static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p, i=
-nt flags)
->  {
->         enum uclamp_id clamp_id;
->
-> @@ -1797,7 +1797,8 @@ static inline void uclamp_rq_dec(struct rq *rq, str=
-uct task_struct *p)
->         if (unlikely(!p->sched_class->uclamp_enabled))
->                 return;
->
-> -       if (p->se.sched_delayed)
-> +       /* Skip dec if this is a delayed task not being truly dequeued */
-> +       if (p->se.sched_delayed && !(flags & DEQUEUE_DELAYED))
->                 return;
+I agree. It would be better to drop the conditional.
 
-Consider the __sched_setscheduler()=EF=BC=8Cwhen changing the delayed-task'=
-s
-sched-class=EF=BC=8Cyour patch would dec the uclamp twice.
+Thanks!
+Juri
 
-BR
----
-xuewen
-
->
->         for_each_clamp_id(clamp_id)
-> @@ -2039,7 +2040,7 @@ static void __init init_uclamp(void)
->
->  #else /* !CONFIG_UCLAMP_TASK */
->  static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p, i=
-nt flags) { }
-> -static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p) {=
- }
-> +static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p, i=
-nt flags) { }
->  static inline void uclamp_fork(struct task_struct *p) { }
->  static inline void uclamp_post_fork(struct task_struct *p) { }
->  static inline void init_uclamp(void) { }
-> @@ -2112,7 +2113,7 @@ inline bool dequeue_task(struct rq *rq, struct task=
-_struct *p, int flags)
->          * Must be before ->dequeue_task() because ->dequeue_task() can '=
-fail'
->          * and mark the task ->sched_delayed.
->          */
-> -       uclamp_rq_dec(rq, p);
-> +       uclamp_rq_dec(rq, p, flags);
->         return p->sched_class->dequeue_task(rq, p, flags);
->  }
->
-> --
-> 2.25.1
->
