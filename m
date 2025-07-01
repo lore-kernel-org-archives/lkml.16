@@ -1,324 +1,209 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDC6E72601
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 07:39:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C47672601;
+	Tue,  1 Jul 2025 07:40:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751355579; cv=none; b=iFXtwBM1dbGeDWFbSbs7E2Q1kaPD0JaNvQ/Av4s+i7FKz8juDp54LyaIw1tr2Y/m9N6gk7OnUc2wWPceyQWn7Wlzk2444Z67+G3S10PDa8yt7nab/CH2z6csy9a4B5I8xYVgYwCRIAIYENTlgzoAJNR+OSu2tGENpqwv5XqJHCo=
+	t=1751355606; cv=none; b=L++eOH8AAQbfNwIPOxWMsq8E2C7xOkgJ4pM5aQLlAdjfAxeOVzAGanjRt6OAjrfLe7+xBP7zxJ3somVBxeeDc2uq7kqnSvMty4YjZkonnuG77aVwPWx2MXBJeM5jkvGySfMpdiA4zLxcsdUy9NmRxXaqW4SGtmi5q2nqF8DAhiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751355579; c=relaxed/simple;
-	bh=PXdKcZtLMDN9xXidxntXAsHmtfX01XRKCoiU+TiIsDo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YXsGJN+ZAGpyPjETux4qgJXNbPlwu7hQPnoRj8IXCue49QhxcCsYjJOZZ3ILzYX8SSDTJlmsuJKwDl9Q/c/uJibf0kGscrfd+f9WcNeQbNWfON5sAv9jO7N9DQQmFxcy7IQQmqGuATcNMZ2Emc15DFveMtOLNpI/vIHOeNKmY9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C220C1595;
-	Tue,  1 Jul 2025 00:39:20 -0700 (PDT)
-Received: from [10.57.84.129] (unknown [10.57.84.129])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C8EE13F6A8;
-	Tue,  1 Jul 2025 00:39:31 -0700 (PDT)
-Message-ID: <9ec857c0-4da8-4f24-810d-7fe538d5cdd4@arm.com>
-Date: Tue, 1 Jul 2025 08:39:29 +0100
+	s=arc-20240116; t=1751355606; c=relaxed/simple;
+	bh=j2M3rRPgKt2mVHQc7st/PFk7KUKAIRMshMe8932r2Dc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iMVsRtm/bhGbroF8KdFpmjxdnjsWh/k/VF9eVRyzZDRKIVTLDbTtfQMC9Ko6ouYZ56A09XxyyeQseLH0eFDVLgfE/wV4d1aqTkX2k/wMi/oiiSJKP2TRYHhDIh4Y95ZbmTCe7gm+8YIsZ/Ex5H9jIf55G3kMFMiwEo2ZMZfDdbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qbnFL73/; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qbnFL73/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A9C5C4CEEF;
+	Tue,  1 Jul 2025 07:40:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751355606;
+	bh=j2M3rRPgKt2mVHQc7st/PFk7KUKAIRMshMe8932r2Dc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qbnFL73/9NVaxOUiDe+V0dPOG+ciFkOBgNHSk5q/9Np1OHbT6j7laIyCp+MretVmx
+	 L/lqNQxhwoz7S3xEegBwePeEAwgHHcby7YlvSMtdPHyaxJ69hV1KH0V4U0A6fc+7xL
+	 xvAKJV/tV08+90E29xtgh6Wo76SbR2os9bLAbRAog/Dxl6aKhjOzmq6LP3nVWRr4hU
+	 zUTvIOfYOuUNZ7P6E87Ci7O4hShsr/RL0aIgH7MVv7y+iiPUo5WhHNolRex5Jv4PV2
+	 08GlpcY+TuV6eY3tCM0HsUNnEY2Y/rkCDywY3od87RgVb+mQyEqN0Je9Rv53L2kauH
+	 MLHHfbkcZ64Ow==
+Date: Tue, 1 Jul 2025 09:40:03 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Benjamin Larsson <benjamin.larsson@genexis.eu>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: Re: [PATCH v19] pwm: airoha: Add support for EN7581 SoC
+Message-ID: <bwtk2nac2eo2jgf2lousguw7o34tzhz7mesdo3jfaf4gc3pri6@tff3h4f4274u>
+References: <20250630114504.8308-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/4] mm: Optimize mprotect() by PTE-batching
-Content-Language: en-GB
-To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
-Cc: david@redhat.com, willy@infradead.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org,
- Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
- jannh@google.com, anshuman.khandual@arm.com, peterx@redhat.com,
- joey.gouly@arm.com, ioworker0@gmail.com, baohua@kernel.org,
- kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
- christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
- linux-arm-kernel@lists.infradead.org, hughd@google.com,
- yang@os.amperecomputing.com, ziy@nvidia.com
-References: <20250628113435.46678-1-dev.jain@arm.com>
- <20250628113435.46678-4-dev.jain@arm.com>
- <41386e41-c1c4-4898-8958-2f4daa92dc7c@arm.com>
- <7b39def0-f7cb-4748-9c20-3655ae30a836@arm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <7b39def0-f7cb-4748-9c20-3655ae30a836@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-On 01/07/2025 06:47, Dev Jain wrote:
-> 
-> On 30/06/25 4:01 pm, Ryan Roberts wrote:
->> On 28/06/2025 12:34, Dev Jain wrote:
->>> Use folio_pte_batch to batch process a large folio. Reuse the folio from
->>> prot_numa case if possible.
->>>
->>> For all cases other than the PageAnonExclusive case, if the case holds true
->>> for one pte in the batch, one can confirm that that case will hold true for
->>> other ptes in the batch too; for pte_needs_soft_dirty_wp(), we do not pass
->>> FPB_IGNORE_SOFT_DIRTY. modify_prot_start_ptes() collects the dirty
->>> and access bits across the batch, therefore batching across
->>> pte_dirty(): this is correct since the dirty bit on the PTE really is
->>> just an indication that the folio got written to, so even if the PTE is
->>> not actually dirty (but one of the PTEs in the batch is), the wp-fault
->>> optimization can be made.
->>>
->>> The crux now is how to batch around the PageAnonExclusive case; we must
->>> check the corresponding condition for every single page. Therefore, from
->>> the large folio batch, we process sub batches of ptes mapping pages with
->>> the same PageAnonExclusive condition, and process that sub batch, then
->>> determine and process the next sub batch, and so on. Note that this does
->>> not cause any extra overhead; if suppose the size of the folio batch
->>> is 512, then the sub batch processing in total will take 512 iterations,
->>> which is the same as what we would have done before.
->>>
->>> Signed-off-by: Dev Jain <dev.jain@arm.com>
->>> ---
->>>   mm/mprotect.c | 143 +++++++++++++++++++++++++++++++++++++++++---------
->>>   1 file changed, 117 insertions(+), 26 deletions(-)
->>>
->>> diff --git a/mm/mprotect.c b/mm/mprotect.c
->>> index 627b0d67cc4a..28c7ce7728ff 100644
->>> --- a/mm/mprotect.c
->>> +++ b/mm/mprotect.c
->>> @@ -40,35 +40,47 @@
->>>     #include "internal.h"
->>>   -bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
->>> -                 pte_t pte)
->>> -{
->>> -    struct page *page;
->>> +enum tristate {
->>> +    TRI_FALSE = 0,
->>> +    TRI_TRUE = 1,
->>> +    TRI_MAYBE = -1,
->>> +};
->>>   +/*
->>> + * Returns enum tristate indicating whether the pte can be changed to writable.
->>> + * If TRI_MAYBE is returned, then the folio is anonymous and the user must
->>> + * additionally check PageAnonExclusive() for every page in the desired range.
->>> + */
->>> +static int maybe_change_pte_writable(struct vm_area_struct *vma,
->>> +                     unsigned long addr, pte_t pte,
->>> +                     struct folio *folio)
->>> +{
->>>       if (WARN_ON_ONCE(!(vma->vm_flags & VM_WRITE)))
->>> -        return false;
->>> +        return TRI_FALSE;
->>>         /* Don't touch entries that are not even readable. */
->>>       if (pte_protnone(pte))
->>> -        return false;
->>> +        return TRI_FALSE;
->>>         /* Do we need write faults for softdirty tracking? */
->>>       if (pte_needs_soft_dirty_wp(vma, pte))
->>> -        return false;
->>> +        return TRI_FALSE;
->>>         /* Do we need write faults for uffd-wp tracking? */
->>>       if (userfaultfd_pte_wp(vma, pte))
->>> -        return false;
->>> +        return TRI_FALSE;
->>>         if (!(vma->vm_flags & VM_SHARED)) {
->>>           /*
->>>            * Writable MAP_PRIVATE mapping: We can only special-case on
->>>            * exclusive anonymous pages, because we know that our
->>>            * write-fault handler similarly would map them writable without
->>> -         * any additional checks while holding the PT lock.
->>> +         * any additional checks while holding the PT lock. So if the
->>> +         * folio is not anonymous, we know we cannot change pte to
->>> +         * writable. If it is anonymous then the caller must further
->>> +         * check that the page is AnonExclusive().
->>>            */
->>> -        page = vm_normal_page(vma, addr, pte);
->>> -        return page && PageAnon(page) && PageAnonExclusive(page);
->>> +        return (!folio || folio_test_anon(folio)) ? TRI_MAYBE : TRI_FALSE;
->>>       }
->>>         VM_WARN_ON_ONCE(is_zero_pfn(pte_pfn(pte)) && pte_dirty(pte));
->>> @@ -80,15 +92,61 @@ bool can_change_pte_writable(struct vm_area_struct *vma,
->>> unsigned long addr,
->>>        * FS was already notified and we can simply mark the PTE writable
->>>        * just like the write-fault handler would do.
->>>        */
->>> -    return pte_dirty(pte);
->>> +    return pte_dirty(pte) ? TRI_TRUE : TRI_FALSE;
->>> +}
->>> +
->>> +/*
->>> + * Returns the number of pages within the folio, starting from the page
->>> + * indicated by pgidx and up to pgidx + max_nr, that have the same value of
->>> + * PageAnonExclusive(). Must only be called for anonymous folios. Value of
->>> + * PageAnonExclusive() is returned in *exclusive.
->>> + */
->>> +static int anon_exclusive_batch(struct folio *folio, int pgidx, int max_nr,
->>> +                bool *exclusive)
->>> +{
->>> +    struct page *page;
->>> +    int nr = 1;
->>> +
->>> +    if (!folio) {
->>> +        *exclusive = false;
->>> +        return nr;
->>> +    }
->>> +
->>> +    page = folio_page(folio, pgidx++);
->>> +    *exclusive = PageAnonExclusive(page);
->>> +    while (nr < max_nr) {
->>> +        page = folio_page(folio, pgidx++);
->>> +        if ((*exclusive) != PageAnonExclusive(page))
->> nit: brackets not required around *exclusive.
->>
->>> +            break;
->>> +        nr++;
->>> +    }
->>> +
->>> +    return nr;
->>> +}
->>> +
->>> +bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
->>> +                 pte_t pte)
->>> +{
->>> +    struct page *page;
->>> +    int ret;
->>> +
->>> +    ret = maybe_change_pte_writable(vma, addr, pte, NULL);
->>> +    if (ret == TRI_MAYBE) {
->>> +        page = vm_normal_page(vma, addr, pte);
->>> +        ret = page && PageAnon(page) && PageAnonExclusive(page);
->>> +    }
->>> +
->>> +    return ret;
->>>   }
->>>     static int mprotect_folio_pte_batch(struct folio *folio, unsigned long addr,
->>> -        pte_t *ptep, pte_t pte, int max_nr_ptes)
->>> +        pte_t *ptep, pte_t pte, int max_nr_ptes, fpb_t switch_off_flags)
->>>   {
->>> -    const fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
->>> +    fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
->>> +
->>> +    flags &= ~switch_off_flags;
->> This is mega confusing when reading the caller. Because the caller passes
->> FPB_IGNORE_SOFT_DIRTY and that actually means DON'T ignore soft dirty.
->>
->> Can't we just pass in the flags we want?
->>
->>>   -    if (!folio || !folio_test_large(folio) || (max_nr_ptes == 1))
->>> +    if (!folio || !folio_test_large(folio))
->> What's the rational for dropping the max_nr_ptes == 1 condition? If you don't
->> need it, why did you add it in the earler patch?
->>
->>>           return 1;
->>>         return folio_pte_batch(folio, addr, ptep, pte, max_nr_ptes, flags,
->>> @@ -154,7 +212,8 @@ static int prot_numa_skip_ptes(struct folio **foliop,
->>> struct vm_area_struct *vma
->>>       }
->>>     skip_batch:
->>> -    nr_ptes = mprotect_folio_pte_batch(folio, addr, pte, oldpte, max_nr_ptes);
->>> +    nr_ptes = mprotect_folio_pte_batch(folio, addr, pte, oldpte,
->>> +                       max_nr_ptes, 0);
->>>   out:
->>>       *foliop = folio;
->>>       return nr_ptes;
->>> @@ -191,7 +250,10 @@ static long change_pte_range(struct mmu_gather *tlb,
->>>           if (pte_present(oldpte)) {
->>>               int max_nr_ptes = (end - addr) >> PAGE_SHIFT;
->>>               struct folio *folio = NULL;
->>> -            pte_t ptent;
->>> +            int sub_nr_ptes, pgidx = 0;
->>> +            pte_t ptent, newpte;
->>> +            bool sub_set_write;
->>> +            int set_write;
->>>                 /*
->>>                * Avoid trapping faults against the zero or KSM
->>> @@ -206,6 +268,11 @@ static long change_pte_range(struct mmu_gather *tlb,
->>>                       continue;
->>>               }
->>>   +            if (!folio)
->>> +                folio = vm_normal_folio(vma, addr, oldpte);
->>> +
->>> +            nr_ptes = mprotect_folio_pte_batch(folio, addr, pte, oldpte,
->>> +                               max_nr_ptes, FPB_IGNORE_SOFT_DIRTY);
->>  From the other thread, my memory is jogged that this function ignores write
->> permission bit. So I think that's opening up a bug when applied here? If the
->> first pte is writable but the rest are not (COW), doesn't this now make them all
->> writable? I don't *think* that's a problem for the prot_numa use, but I could be
->> wrong.
-> 
-> Can this be fixed by introducing FPB_HONOR_WRITE?
-
-Yes I think so. Suddenly David's change looks very appealing because it's going
-to say there are a set of bits that are ignored by default (young, dirty,
-soft-dirty, write) and use FPB_HONOR_ flags to stop ignoring those bits. So we
-can follow that pattern for write, I guess? And this avoids mixing FPB_IGNORE_
-an FPB_HONOR_ flags.
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="eisa4lv7ycou67jv"
+Content-Disposition: inline
+In-Reply-To: <20250630114504.8308-1-ansuelsmth@gmail.com>
 
 
-> 
->>
->>>               oldpte = modify_prot_start_ptes(vma, addr, pte, nr_ptes);
->> Even if I'm wrong about ignoring write bit being a bug, I don't think the docs
->> for this function permit write bit to be different across the batch?
->>
->>>               ptent = pte_modify(oldpte, newprot);
->>>   @@ -227,15 +294,39 @@ static long change_pte_range(struct mmu_gather *tlb,
->>>                * example, if a PTE is already dirty and no other
->>>                * COW or special handling is required.
->>>                */
->>> -            if ((cp_flags & MM_CP_TRY_CHANGE_WRITABLE) &&
->>> -                !pte_write(ptent) &&
->>> -                can_change_pte_writable(vma, addr, ptent))
->>> -                ptent = pte_mkwrite(ptent, vma);
->>> -
->>> -            modify_prot_commit_ptes(vma, addr, pte, oldpte, ptent, nr_ptes);
->>> -            if (pte_needs_flush(oldpte, ptent))
->>> -                tlb_flush_pte_range(tlb, addr, PAGE_SIZE);
->>> -            pages++;
->>> +            set_write = (cp_flags & MM_CP_TRY_CHANGE_WRITABLE) &&
->>> +                    !pte_write(ptent);
->>> +            if (set_write)
->>> +                set_write = maybe_change_pte_writable(vma, addr, ptent, folio);
->> Why not just:
->>             set_write = (cp_flags & MM_CP_TRY_CHANGE_WRITABLE) &&
->>                     !pte_write(ptent) &&
->>                     maybe_change_pte_writable(...);
->>
->> ?
->>
->>> +
->>> +            while (nr_ptes) {
->>> +                if (set_write == TRI_MAYBE) {
->>> +                    sub_nr_ptes = anon_exclusive_batch(folio,
->>> +                        pgidx, nr_ptes, &sub_set_write);
->>> +                } else {
->>> +                    sub_nr_ptes = nr_ptes;
->>> +                    sub_set_write = (set_write == TRI_TRUE);
->>> +                }
->>> +
->>> +                if (sub_set_write)
->>> +                    newpte = pte_mkwrite(ptent, vma);
->>> +                else
->>> +                    newpte = ptent;
->>> +
->>> +                modify_prot_commit_ptes(vma, addr, pte, oldpte,
->>> +                            newpte, sub_nr_ptes);
->>> +                if (pte_needs_flush(oldpte, newpte))
->> What did we conclude with pte_needs_flush()? I thought there was an arch where
->> it looked dodgy calling this for just the pte at the head of the batch?
->>
->> Thanks,
->> Ryan
->>
->>> +                    tlb_flush_pte_range(tlb, addr,
->>> +                        sub_nr_ptes * PAGE_SIZE);
->>> +
->>> +                addr += sub_nr_ptes * PAGE_SIZE;
->>> +                pte += sub_nr_ptes;
->>> +                oldpte = pte_advance_pfn(oldpte, sub_nr_ptes);
->>> +                ptent = pte_advance_pfn(ptent, sub_nr_ptes);
->>> +                nr_ptes -= sub_nr_ptes;
->>> +                pages += sub_nr_ptes;
->>> +                pgidx += sub_nr_ptes;
->>> +            }
->>>           } else if (is_swap_pte(oldpte)) {
->>>               swp_entry_t entry = pte_to_swp_entry(oldpte);
->>>               pte_t newpte;
+--eisa4lv7ycou67jv
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH v19] pwm: airoha: Add support for EN7581 SoC
+MIME-Version: 1.0
 
+Hello Christian,
+
+On Mon, Jun 30, 2025 at 01:44:39PM +0200, Christian Marangi wrote:
+> +struct airoha_pwm_bucket {
+> +	int used;
+> +	u32 period_ticks;
+> +	u32 duty_ticks;
+> +};
+> +
+> +struct airoha_pwm {
+> +	struct regmap *regmap;
+> +	/* Global mutex to protect bucket used counter */
+> +	struct mutex mutex;
+
+I think you don't need that mutex. There is a chip lock already used by
+the core and that is held during .get_state() and .apply() serializing
+these calls (and more).
+
+> +	DECLARE_BITMAP(initialized, AIROHA_PWM_MAX_CHANNELS);
+> +
+> +	struct airoha_pwm_bucket buckets[AIROHA_PWM_NUM_BUCKETS];
+> +
+> +	/* Cache bucket used by each pwm channel */
+> +	u8 channel_bucket[AIROHA_PWM_MAX_CHANNELS];
+> +};
+> [...]
+> +static int airoha_pwm_apply_bucket_config(struct airoha_pwm *pc, int bucket,
+> +					  u32 duty_ticks, u32 period_ticks)
+> +{
+> +	u32 mask, shift, val;
+> +	u64 offset;
+> +	int ret;
+> +
+> +	offset = bucket;
+> +	shift = do_div(offset, AIROHA_PWM_BUCKET_PER_CYCLE_CFG);
+
+Do you really need offset as a 64 bit variable? At least on 32 bit archs
+
+	offset = bucket / AIROHA_PWM_BUCKET_PER_CYCLE_CFG;
+	shift = AIROHA_PWM_REG_CYCLE_CFG_SHIFT(bucket % AIROHA_PWM_BUCKET_PER_CYCLE_CFG);
+
+should be cheaper. Also can bucket better be an unsigned value (to make
+it obvious that no strange things happen with the division)?
+
+> +	shift = AIROHA_PWM_REG_CYCLE_CFG_SHIFT(shift);
+> +
+> +	/* Configure frequency divisor */
+> +	mask = AIROHA_PWM_WAVE_GEN_CYCLE << shift;
+> +	val = FIELD_PREP(AIROHA_PWM_WAVE_GEN_CYCLE, period_ticks) << shift;
+> +	ret = regmap_update_bits(pc->regmap, AIROHA_PWM_REG_CYCLE_CFG_VALUE(offset),
+> +				 mask, val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	offset = bucket;
+> +	shift = do_div(offset, AIROHA_PWM_BUCKET_PER_FLASH_PROD);
+> +	shift = AIROHA_PWM_REG_GPIO_FLASH_PRD_SHIFT(shift);
+> +
+> +	/* Configure duty cycle */
+> +	mask = AIROHA_PWM_GPIO_FLASH_PRD_HIGH << shift;
+> +	val = FIELD_PREP(AIROHA_PWM_GPIO_FLASH_PRD_HIGH, duty_ticks) << shift;
+> +	ret = regmap_update_bits(pc->regmap, AIROHA_PWM_REG_GPIO_FLASH_PRD_SET(offset),
+> +				 mask, val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	mask = AIROHA_PWM_GPIO_FLASH_PRD_LOW << shift;
+> +	val = FIELD_PREP(AIROHA_PWM_GPIO_FLASH_PRD_LOW,
+> +			 AIROHA_PWM_DUTY_FULL - duty_ticks) << shift;
+> +	return regmap_update_bits(pc->regmap, AIROHA_PWM_REG_GPIO_FLASH_PRD_SET(offset),
+> +				  mask, val);
+
+Strange hardware, why do you have to configure both the high and the low
+relative duty? What happens if AIROHA_PWM_GPIO_FLASH_PRD_LOW +
+AIROHA_PWM_GPIO_FLASH_PRD_HIGH != AIROHA_PWM_DUTY_FULL?
+
+> +}
+> +
+> [...]
+> +static int airoha_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			    const struct pwm_state *state)
+> +{
+> +	struct airoha_pwm *pc = pwmchip_get_drvdata(chip);
+> +	u32 period_ticks, duty_ticks;
+> +	u32 period_ns, duty_ns;
+> +
+> +	if (!state->enabled) {
+> +		airoha_pwm_disable(pc, pwm);
+> +		return 0;
+> +	}
+> +
+> +	/* Only normal polarity is supported */
+> +	if (state->polarity == PWM_POLARITY_INVERSED)
+> +		return -EINVAL;
+> +
+> +	/* Exit early if period is less than minimum supported */
+> +	if (state->period < AIROHA_PWM_PERIOD_TICK_NS)
+> +		return -EINVAL;
+> +
+> +	/* Clamp period to MAX supported value */
+> +	if (state->period > AIROHA_PWM_PERIOD_MAX_NS)
+> +		period_ns = AIROHA_PWM_PERIOD_MAX_NS;
+> +	else
+> +		period_ns = state->period;
+> +
+> +	/* Validate duty to configured period */
+> +	if (state->duty_cycle > period_ns)
+> +		duty_ns = period_ns;
+> +	else
+> +		duty_ns = state->duty_cycle;
+> +
+> +	/*
+> +	 * Period goes at 4ns step, normalize it to check if we can
+> +	 * share a generator.
+> +	 */
+> +	period_ns = rounddown(period_ns, AIROHA_PWM_PERIOD_TICK_NS);
+> +
+> +	/*
+> +	 * Duty is divided in 255 segment, normalize it to check if we
+> +	 * can share a generator.
+> +	 */
+> +	duty_ns = DIV_U64_ROUND_UP(duty_ns * AIROHA_PWM_DUTY_FULL,
+> +				   AIROHA_PWM_DUTY_FULL);
+
+This looks bogus. This is just duty_ns = duty_ns, or what do I miss?
+Also duty_ns is an u32 and AIROHA_PWM_DUTY_FULL an int, so there is no
+need for a 64 bit division.
+
+> +	/* Convert ns to ticks */
+> +	period_ticks = airoha_pwm_get_period_ticks_from_ns(period_ns);
+> +	duty_ticks = airoha_pwm_get_duty_ticks_from_ns(period_ns, duty_ns);
+> +
+> +	return airoha_pwm_config(pc, pwm, period_ticks, duty_ticks);
+> +}
+
+Best regards
+Uwe
+
+--eisa4lv7ycou67jv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhjkNAACgkQj4D7WH0S
+/k5iLQgAqu27McWqaKG3y8e7xRVwFmB00zYU0girWh+QkAsSbk3epaad/f3ECZX9
+vOy+XIOYIpducren0cDcdFXgN9pO3z5UV+g8sAA+AoBT6jrFHVJ/eTJ80Kk8X1EU
+bCsfff8Zt4FVFBrYAG64ol3XORQ0YA8OhAX7ukly7BHiGFaNZNPrysZTMm3M7keN
+jgi2hx64dKq0NktHVV4iIpi3T/V6sqGAIGOtl9YzMpeyRpa2AG7902CTog67sMxs
+l+SQYaxuqdFxuIaQnwqzAuTzP+mmSDCdLynju3kB6/dG9vzVMXPP22vAIyj98vKt
+SniGYRgdpRLs/UA/trf9fK9CA99kCw==
+=sf8c
+-----END PGP SIGNATURE-----
+
+--eisa4lv7ycou67jv--
