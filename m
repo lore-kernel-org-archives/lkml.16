@@ -1,115 +1,165 @@
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E530525A2D2;
-	Tue,  1 Jul 2025 07:46:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF6D25C6EE;
+	Tue,  1 Jul 2025 07:46:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751355963; cv=none; b=dLGgiu4F6aKyXSBzzGd94EnATkotRjeRhqIEydC81VeIZwJOjEazGE6yDVStgztdIXnwZOGlIqL/2T84HQJE85sT7UT/g4x4VrOH/RhkEE32Rx1yikgaZR2O7WvrUnlj4hXPNVGKURz/HSLHrL1ZrF352eM9a2DT5qXrNjEtA38=
+	t=1751355975; cv=none; b=c3ykwfwWF+WLrW5I6gIm3wthoxsHQqF4XFEsXzx5KU3GEqupsJPpegmHkXKKuaOiqOZvJlX1NfcRft4wV2jl+UQBljZ0a2r+hZvXx2McEmZO+8glbYpFS28xQulXh+Xm2UoyGya0rLkjwHipL5Fy71ECJq76QRl6tnlkIL74m/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751355963; c=relaxed/simple;
-	bh=KYCIopdcYOqITgSHrx5R2OAh+KSRtv99A2CuSNv+DUY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Mle9CuAUblr1s1bdEqpYuMnH0dJeP+g0TuR2WzFG6roBjQhhjcWglHY+K79EG8ci8gk8uT0fsDQFzWMDVWSe3hyYEH2fG/ZYiITTkyIhbWbyoqfUUqsxmw7hH5bH+R/nDO4aMo/I+gb+bVSyUwSP/mOvGbdTfBsRgIzp1tvIB9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-4e80d19c7ebso3284844137.3;
-        Tue, 01 Jul 2025 00:46:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751355959; x=1751960759;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TCqKuQsKUMvVOd8fh20zK2WhSobsJMoICT4U7xI4uWs=;
-        b=UeN3Kes6R5BuV+s7VXDIbh7f5jSeT1AvAAO0jsWOt9eITGUL9hOHJ4vugj3bezAVKW
-         JlAriYJDQHMshYMbptJc6Wl0A+5Q5+CeUBOkRJ3s1lPwRp6+EyRd2W78A60EzxEtQiOw
-         gsLnfw+RrT/Q/wSdbq/AVcajS4ljsjo+atug2Csf6sIRzSkqiB5EjpI8p0J2ch+OysK3
-         p9JBZAA5TX25ul9FXmxDYvXpPZzhNxOtVKrhDbPXWQRwX4GR+B1HNF0dE7ZRFzpxtPhC
-         5uPKVdJGbZY2ipaY4Br80hcim4gPg6NdMakKJM3chtpqCvr50ix05SbhrJsWP/hIwEgp
-         Jvqg==
-X-Forwarded-Encrypted: i=1; AJvYcCUdE0PWKbG5P3MZ9t8+qMsxA+E4quagmDVSP9Tu6Iueuq/BSnAY9VmHnz0d/p6STTNPZCjxqz4Rg23d@vger.kernel.org, AJvYcCW3FfBTkke+wi3tiJIJWsE2PExpTPvj+V+BWycRiyyzpmRqWPB1QW7enkh9/Y0MmTJSNp8fT397vtE/DY8=@vger.kernel.org, AJvYcCWt8DlF+IZXvQdOHPwl8omWplsxe9gA3anI3a3ob/7/2J3auBSDwWn4YmObbJLy/Utopx5ZpmN7wEj9DNeGR2+o@vger.kernel.org
-X-Gm-Message-State: AOJu0YxedoiyKR8nwdForGp1NWaakBx6G/mFCNP9lD4cK4vYb5Z+eN+g
-	GtX8o1lRI3qm4gTQ574A9gge9FuWULJQCRSvxoplV7YvKX8HawsFa3jskkfNwgjX
-X-Gm-Gg: ASbGncteRnxd5F5FIoJtu1kJb7ZSChEBCCnXZy/m9Qr1F0HpLxJq1SHn79LaWYnGnqP
-	yVOS8vWPUo0IUTzJlluAKrMftyiulrGlFY8SYsG5U+//4US5aN5UXCUkNHNSE74pKm2lyYB/vqI
-	JNTT616c8wMRv48OW5PbPsdctNtIpxQHDr4+u4e8YAxD90QBOlVRVq/R27d7/OQri5ivROCExqF
-	hlxCPYmywHj5AJ0stv/Pn6vZJQpri3Jw6raDgnvsgqiK9TSJpwy0VKAzm+jsBII3prpe3UmTQ6P
-	QCCqOReg3GBBfZ9wZUmuJzT+QMIBjbdR8pJrbgciXFEjMyG2kzMcEVqjV8y+70AnkKEFuvTmRYK
-	/MxTGNY+CN+3f8L4Mc53ATeVF
-X-Google-Smtp-Source: AGHT+IFg699sb/+HbMpCJb8GeCilEaSMOJASSrDAdaYqyFI+aCqPg52MWr0l9OODohnGrJSXwC4WMg==
-X-Received: by 2002:a05:6102:418a:b0:4e5:fe5e:2be4 with SMTP id ada2fe7eead31-4ee4f797facmr10896780137.22.1751355958885;
-        Tue, 01 Jul 2025 00:45:58 -0700 (PDT)
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com. [209.85.217.47])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-884d1db717esm1983189241.31.2025.07.01.00.45.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 00:45:58 -0700 (PDT)
-Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-4e9a7bfb3c8so3241541137.1;
-        Tue, 01 Jul 2025 00:45:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVJyiZtLQx7+DpLzT3clBEd7M84Qp2cpbb2ITulMbee/Jj0wo++MLSoOPxR7hk63MA4iM/gc9gHXP/K@vger.kernel.org, AJvYcCWZaIqajG4/iKVBgtp6WpdinY7Rdf1Wnc8Hs3fBPfjRpBfVBKEtSV8YFmwhyi1NU+7yMQMrF4Uf0olWiLuAAJfY@vger.kernel.org, AJvYcCWdgPbHFNvmj4GEqFnmxA3h9q3uEuFE1G/fTjRRvH2F8P16sn7+56z6NYm/wOmhN3N6mU0VNUQoA/W03EA=@vger.kernel.org
-X-Received: by 2002:a05:6102:4496:b0:4e9:d951:1433 with SMTP id
- ada2fe7eead31-4ee4f6f56b5mr10527393137.12.1751355957915; Tue, 01 Jul 2025
- 00:45:57 -0700 (PDT)
+	s=arc-20240116; t=1751355975; c=relaxed/simple;
+	bh=pf6wp+3/O9diS1MSitXHJ+WG7hNgrQUUrCX4FKhGP20=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=U2jEA4OFEHFC/Iih2KDJtX4s/bAxOA90wZ8znz5cqTPO8eQa+c0KhTTW/g34fcfTl4cW4wf+CWh+rxpPcVXYXlgR0P/eDLULyaPASXPys09bn7NPMN6AYT3ba859k1bWbU/112rkNoUlAeIbCSSh959Qf0edL9TkuF0otOY7XgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=QC+nQjak; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QC+nQjak"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1751355960;
+	bh=mSbYVdV1LyXWe8c8y9h9Kovvi9QxOa7y22v3xy0LDDQ=;
+	h=Date:From:To:Cc:Subject:From;
+	b=QC+nQjakQ43AoIl8Mp2kGiXLaghgb2gMfmEQUSCn0/NCpc/lsWjugf0M8qlbrjtxF
+	 DJqKMMASfb/Iy8UWvhP7Uxgv7iMcrb4jyuA04Re/an5VlSyXk/t/2URbWXYB8FHCMs
+	 iHPtfTxDY9gS7JU+DXIt0ql4GAy5igM2bqDvSrt6PRswlW6tcDsftlY4gk34wIddzo
+	 ynX4yMiCF1thr0RqJSY8EwRVYF8+wiqW0J0bxapF9bHhJqriX6MZLPqJRyKhbzHDtq
+	 3nPTYNxtiGL07ofe+44j4320y2g2qQqIV1k7yJOsLioG4CKI/hWONWp3ri9V9pGuVx
+	 MSvldteJUAh4g==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bWZpH699Nz4x0C;
+	Tue,  1 Jul 2025 17:45:59 +1000 (AEST)
+Date: Tue, 1 Jul 2025 17:46:06 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Miguel Ojeda <ojeda@kernel.org>, Greg KH <greg@kroah.com>
+Cc: Danilo Krummrich <dakr@kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Tamir Duberstein <tamird@gmail.com>, Viresh
+ Kumar <viresh.kumar@linaro.org>
+Subject: linux-next: manual merge of the rust tree with the driver-core tree
+Message-ID: <20250701174606.7b07bbce@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <df1a73d4a14426ae0d3e8809aed40c686b67dd3e.1751268290.git.geert@linux-m68k.org>
- <20250630135427faa6c326@mail.local>
-In-Reply-To: <20250630135427faa6c326@mail.local>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 1 Jul 2025 09:45:45 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVPDVXXYH5OJyZ0dfbU0YLfc4sUGR=o=vu1PmWGne3dZw@mail.gmail.com>
-X-Gm-Features: Ac12FXwzaZ2nSq3Yc2pDrxcBOc4U-ud6Sw62tPOF4ay8rPLS8aOCdzlcQBP69Bs
-Message-ID: <CAMuHMdVPDVXXYH5OJyZ0dfbU0YLfc4sUGR=o=vu1PmWGne3dZw@mail.gmail.com>
-Subject: Re: [PATCH resend] rtc: Rename lib_test to rtc_lib_test
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/Jfm5ubPoxdPVCYN4P6zj5am";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Hi Alex.
+--Sig_/Jfm5ubPoxdPVCYN4P6zj5am
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 30 Jun 2025 at 15:54, Alexandre Belloni
-<alexandre.belloni@bootlin.com> wrote:
-> On 30/06/2025 09:47:54+0200, Geert Uytterhoeven wrote:
-> > When compiling the RTC library functions test as a module, the module
-> > has the non-descriptive name "lib_test.ko".  Fix this by adding the
-> > subsystem's name as a prefix.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> > ---
-> >  drivers/rtc/Makefile                       | 2 +-
-> >  drivers/rtc/{lib_test.c => rtc_lib_test.c} | 0
-> >  2 files changed, 1 insertion(+), 1 deletion(-)
-> >  rename drivers/rtc/{lib_test.c => rtc_lib_test.c} (100%)
-> >
-> > diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-> > index 4619aa2ac4697591..aa08d1c8a32ec23d 100644
-> > --- a/drivers/rtc/Makefile
-> > +++ b/drivers/rtc/Makefile
-> > @@ -15,7 +15,7 @@ rtc-core-$(CONFIG_RTC_INTF_DEV)             += dev.o
-> >  rtc-core-$(CONFIG_RTC_INTF_PROC)     += proc.o
-> >  rtc-core-$(CONFIG_RTC_INTF_SYSFS)    += sysfs.o
-> >
-> > -obj-$(CONFIG_RTC_LIB_KUNIT_TEST)     += lib_test.o
-> > +obj-$(CONFIG_RTC_LIB_KUNIT_TEST)     += rtc_lib_test.o
->
-> I'd rather have test_rtc_lib as only the drivers are currently prefixed with
-> rtc.
+Hi all,
 
-Your wish is my command; v2 sent.
+Today's linux-next merge of the rust tree got a conflict in:
 
-Gr{oetje,eeting}s,
+  rust/kernel/devres.rs
 
-                        Geert
+between commits:
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+  0dab138d0f4c ("rust: devres: require T: Send for Devres")
+  ce7c22b2e1fb ("rust: revocable: support fallible PinInit types")
+  46ae8fd7386a ("rust: devres: replace Devres::new_foreign_owned()")
+  f5d3ef25d238 ("rust: devres: get rid of Devres' inner Arc")
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+from the driver-core tree and commits:
+
+  fcad9bbf9e1a ("rust: enable `clippy::ptr_as_ptr` lint")
+  23773bd8da71 ("rust: enable `clippy::as_ptr_cast_mut` lint")
+  5e30550558b1 ("rust: enable `clippy::as_underscore` lint")
+  b6985083be1d ("rust: Use consistent "# Examples" heading style in rustdoc=
+")
+
+from the rust tree.
+
+Maybe not all the above commits are involved ...
+
+I used the former version (since it changed things so much) and then
+added the changes from the latter by hand where I could.  I ended up
+with the below diff compared to te HEAD before the merge.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
+index 7c5c5de8bcb6..f900433f5296 100644
+--- a/rust/kernel/devres.rs
++++ b/rust/kernel/devres.rs
+@@ -49,7 +49,7 @@ struct Inner<T: Send> {
+ /// [`Devres`] users should make sure to simply free the corresponding bac=
+king resource in `T`'s
+ /// [`Drop`] implementation.
+ ///
+-/// # Example
++/// # Examples
+ ///
+ /// ```no_run
+ /// # use kernel::{bindings, c_str, device::{Bound, Device}, devres::Devre=
+s, io::{Io, IoRaw}};
+@@ -66,19 +66,19 @@ struct Inner<T: Send> {
+ ///     unsafe fn new(paddr: usize) -> Result<Self>{
+ ///         // SAFETY: By the safety requirements of this function [`paddr=
+`, `paddr` + `SIZE`) is
+ ///         // valid for `ioremap`.
+-///         let addr =3D unsafe { bindings::ioremap(paddr as _, SIZE as _)=
+ };
++///         let addr =3D unsafe { bindings::ioremap(paddr as bindings::phy=
+s_addr_t, SIZE) };
+ ///         if addr.is_null() {
+ ///             return Err(ENOMEM);
+ ///         }
+ ///
+-///         Ok(IoMem(IoRaw::new(addr as _, SIZE)?))
++///         Ok(IoMem(IoRaw::new(addr as usize, SIZE)?))
+ ///     }
+ /// }
+ ///
+ /// impl<const SIZE: usize> Drop for IoMem<SIZE> {
+ ///     fn drop(&mut self) {
+ ///         // SAFETY: `self.0.addr()` is guaranteed to be properly mapped=
+ by `Self::new`.
+-///         unsafe { bindings::iounmap(self.0.addr() as _); };
++///         unsafe { bindings::iounmap(self.0.addr() as *mut c_void); };
+ ///     }
+ /// }
+ ///
+@@ -214,7 +214,7 @@ fn remove_action(&self) -> bool {
+     /// An error is returned if `dev` does not match the same [`Device`] t=
+his [`Devres`] instance
+     /// has been created with.
+     ///
+-    /// # Example
++    /// # Examples
+     ///
+     /// ```no_run
+     /// # #![cfg(CONFIG_PCI)]
+
+--Sig_/Jfm5ubPoxdPVCYN4P6zj5am
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhjkj4ACgkQAVBC80lX
+0GzBpQgAoVjAbxQOWyOBs29BnCnC1ceqeCqRrrg8evmzrqJ7/dBHb/TixyjYJNZ2
+0iBLB74dm5pSSSTvNKzA4yOHDC9zYnNKyedXlB0Q60pnFP7wS9/zpGc/hkdaPxTa
+zZFMmy1mnLoWwUzS8qWAecYLGQVwGnuPS8jlR89qkLw2HBpL8eX8JWPZ780t4TGo
+c0zzVIamdAZCPi4a5N2uZrIIodKaH8E1Exz2+iwz/PGxYfyQ/TQBLcYYincppYbE
+GFQANBrtu0Q/AlsXmklqOQiiVrZyQn/XJohLJOCgV/Mnisd5LENwjNBuiZz8Lyq3
+HhIDXWi4jJb92x/8rqpgI8aY08AQPA==
+=06s0
+-----END PGP SIGNATURE-----
+
+--Sig_/Jfm5ubPoxdPVCYN4P6zj5am--
