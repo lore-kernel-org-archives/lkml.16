@@ -1,52 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD13279785;
-	Tue,  1 Jul 2025 19:54:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A41200112;
+	Tue,  1 Jul 2025 19:56:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751399647; cv=none; b=Ca81HKuwI/LKByimTV47rwnEzJs3BJyyZYAIgDdYxIuUAQDHSbye6uycS5IVSP5iI3ERtpe0q3S3I7zjmFxKhv2AZPvSeJ3hlCgOZXPAzAgRBDlPNx2rfF1kyW6qEEvyXSXXIbMjq/O6VP7c6gRxINsO6TE2vhmHAAC5U72S/FU=
+	t=1751399766; cv=none; b=Dh7YqUjEnaEUCydBkI1Z1sAnjS3N2gthjcgWznuHd+Dj3RgJLKA1Ar7L19VERhysJuoh5FvMpFDJxX3X+5IqCr8k7B452JXoGq9ICOp417pHXFKgU4+BUuE15uHejlczgmNwErrUkuYvlIKHSN+FmWVcdwFkD3E36xuH+I+UsHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751399647; c=relaxed/simple;
-	bh=Yd/r5g9u2NZIWZkYoik90fsPSnjEUF3dw7edlX++I9M=;
+	s=arc-20240116; t=1751399766; c=relaxed/simple;
+	bh=x4iptEmMme+uveTp2Ge6W/lFFG16Y0P08zYHR+MNrhQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dE54+FqtmqLoxq+Cmq1K02gpDMvcwamSelzYmrFGwXxcacWWUJJEmpaMuwbX/MTR5C44FlzUCP7xdH6JZT+F8AZKuw91VxEd1sOImfU3FQRyJZ3AGf+2GONV5htfw2n6O+P1Q3TobTOzxfxtgh8MWwzaoKXFyFjO3lYN9gHFOuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fo/YxcRz; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xj2g4yZnumiWiCQKh4+lyJM2Zjh2O0U2MCuf3jmgA81ZM+g8ozVeg1ye4WDEx2HjvpTfeXPkB24RzqVJ7i4miPOOBIG3Al12zTk9A0vRz2NRf8xLW62UTuUhzEFgwM1m2DHrsa7+Y7eWEE3lP1f6S4wGTP1Hv+yUwQ/h/LIbnio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ik9yxMCp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fo/YxcRz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3D23C4CEEE;
-	Tue,  1 Jul 2025 19:54:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ik9yxMCp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA118C4CEEB;
+	Tue,  1 Jul 2025 19:56:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751399647;
-	bh=Yd/r5g9u2NZIWZkYoik90fsPSnjEUF3dw7edlX++I9M=;
+	s=k20201202; t=1751399766;
+	bh=x4iptEmMme+uveTp2Ge6W/lFFG16Y0P08zYHR+MNrhQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fo/YxcRzlenSelFr/HeCpGRrtCh4Zt6Lfd7LXrBJ22cPEXJfPzuxG7ag0WmRhXySO
-	 uhiZkXZMKOvat1Rql6K5NuO11XbWbNrlHvm/F7mzL9ai0j8dcLvD86WCDDtlQFbB4+
-	 wQiSu3ov2gQMfgZEHW54DAQFxqfMyPwI8en1GTFXGk2rraSoRheueiF4OnndjL4C8r
-	 bgr5SLw8ZTQL/LlkXSINOes6L+kdz3uPuZWwYss3tePpBy+RBdGdeIqjo/mOyvTYI8
-	 /sFJiG/X8nwyqHNhKeindoBxO4STpx1k+jroNUfAN3PmCzfA1kQqPV+PE6ZfnktV5Q
-	 hYqDcA+hRpA5Q==
-Received: by pali.im (Postfix)
-	id 631775D6; Tue,  1 Jul 2025 21:54:05 +0200 (CEST)
-Date: Tue, 1 Jul 2025 21:54:05 +0200
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Amir Goldstein <amir73il@gmail.com>,
-	Andrey Albershteyn <aalbersh@redhat.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Casey Schaufler <casey@schaufler-ca.com>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Paul Moore <paul@paul-moore.com>, linux-api@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-xfs@vger.kernel.org, selinux@vger.kernel.org,
-	Andrey Albershteyn <aalbersh@kernel.org>
-Subject: Re: [PATCH v6 5/6] fs: prepare for extending file_get/setattr()
-Message-ID: <20250701195405.xf27mjknu5bnunue@pali>
-References: <20250630-xattrat-syscall-v6-0-c4e3bc35227b@kernel.org>
- <20250630-xattrat-syscall-v6-5-c4e3bc35227b@kernel.org>
- <20250701183105.GP10009@frogsfrogsfrogs>
- <CAOQ4uxiCpGcZ7V8OqssP2xKsN0ZiAO7mQ_1Qt705BrcHeSPmBg@mail.gmail.com>
- <20250701194002.GS10009@frogsfrogsfrogs>
+	b=ik9yxMCpbPhII9zcFm0oUsTwaNhhmGz6VsAiECvl+1XudKhfQfiUez4vj0mxI+IEo
+	 vuJx3ArPMG94TaXhvr4JRqcK3Wb1+S1A4z7JX5tygziMdRsF7uNvDwz7uOPn/cqF1H
+	 7XNkFk31keQ0ATqrPqRKgWxUBtjYu4nX7vYrWJA73xGUxUk0BgSLDbFrf3iXfn9O5H
+	 mAQ0jRsRg7UtzWYXAnkmwBHgexnobYNFYcrbLpzc65CkvnVQh+FjQ6eltRavnI3/p4
+	 I0AJFkruit6VvJclPfK/i/pk/vmbGCXdP1aLwqMWE6GT8B7WwcAED80HiFwYUDOZly
+	 xku1IarvK6DrA==
+Date: Tue, 1 Jul 2025 12:56:04 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 2/3] perf test: Add libsubcmd help tests
+Message-ID: <aGQ9VC_x3xSJLcEI@google.com>
+References: <20250630233246.1063977-1-namhyung@kernel.org>
+ <20250630233246.1063977-2-namhyung@kernel.org>
+ <CAP-5=fVBrysrjdhabfbGO3P6wsQL_mfECzCC_MmJLBMKK8SrOw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,134 +49,196 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250701194002.GS10009@frogsfrogsfrogs>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAP-5=fVBrysrjdhabfbGO3P6wsQL_mfECzCC_MmJLBMKK8SrOw@mail.gmail.com>
 
-On Tuesday 01 July 2025 12:40:02 Darrick J. Wong wrote:
-> On Tue, Jul 01, 2025 at 09:27:38PM +0200, Amir Goldstein wrote:
-> > On Tue, Jul 1, 2025 at 8:31 PM Darrick J. Wong <djwong@kernel.org> wrote:
-> > >
-> > > On Mon, Jun 30, 2025 at 06:20:15PM +0200, Andrey Albershteyn wrote:
-> > > > From: Amir Goldstein <amir73il@gmail.com>
-> > > >
-> > > > We intend to add support for more xflags to selective filesystems and
-> > > > We cannot rely on copy_struct_from_user() to detect this extension.
-> > > >
-> > > > In preparation of extending the API, do not allow setting xflags unknown
-> > > > by this kernel version.
-> > > >
-> > > > Also do not pass the read-only flags and read-only field fsx_nextents to
-> > > > filesystem.
-> > > >
-> > > > These changes should not affect existing chattr programs that use the
-> > > > ioctl to get fsxattr before setting the new values.
-> > > >
-> > > > Link: https://lore.kernel.org/linux-fsdevel/20250216164029.20673-4-pali@kernel.org/
-> > > > Cc: Pali Rohár <pali@kernel.org>
-> > > > Cc: Andrey Albershteyn <aalbersh@redhat.com>
-> > > > Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-> > > > Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
-> > > > ---
-> > > >  fs/file_attr.c           |  8 +++++++-
-> > > >  include/linux/fileattr.h | 20 ++++++++++++++++++++
-> > > >  2 files changed, 27 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/fs/file_attr.c b/fs/file_attr.c
-> > > > index 4e85fa00c092..62f08872d4ad 100644
-> > > > --- a/fs/file_attr.c
-> > > > +++ b/fs/file_attr.c
-> > > > @@ -99,9 +99,10 @@ EXPORT_SYMBOL(vfs_fileattr_get);
-> > > >  int copy_fsxattr_to_user(const struct fileattr *fa, struct fsxattr __user *ufa)
-> > > >  {
-> > > >       struct fsxattr xfa;
-> > > > +     __u32 mask = FS_XFLAGS_MASK;
-> > > >
-> > > >       memset(&xfa, 0, sizeof(xfa));
-> > > > -     xfa.fsx_xflags = fa->fsx_xflags;
-> > > > +     xfa.fsx_xflags = fa->fsx_xflags & mask;
-> > >
-> > > I wonder, should it be an error if a filesystem sets an fsx_xflags bit
-> > > outside of FS_XFLAGS_MASK?  I guess that's one way to prevent
-> > > filesystems from overriding the VFS bits. ;)
-> > 
-> > I think Pali has a plan on how to ensure that later
-> > when the mask is provided via the API.
-> > 
-> > >
-> > > Though couldn't that be:
-> > >
-> > >         xfa.fsx_xflags = fa->fsx_xflags & FS_XFLAGS_MASK;
-> > >
-> > > instead?  And same below?
-> > >
-> > 
-> > Indeed. There is a reason for the var, because the next series
-> > by Pali will use a user provided mask, which defaults to FS_XFLAGS_MASK,
-> > so I left it this way.
-> > 
-> > I don't see a problem with it keeping as is, but if it bothers you
-> > I guess we can re-add the var later.
+On Tue, Jul 01, 2025 at 08:54:25AM -0700, Ian Rogers wrote:
+> On Mon, Jun 30, 2025 at 4:32 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Add a set of tests for subcmd routines.  Currently it fails the last one
+> > since there's a bug.  It'll be fixed by the next commit.
+> >
+> >   $ perf test subcmd
+> >    69: libsubcmd help tests                                            :
+> >    69.1: Load subcmd names                                             : Ok
+> >    69.2: Uniquify subcmd names                                         : Ok
+> >    69.3: Exclude duplicate subcmd names                                : FAILED!
+> >
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > 
-> Nah, it doesn't bother me that much.
+> Reviewed-by: Ian Rogers <irogers@google.com>
+
+Thanks for your review!
+
 > 
-> > > >       xfa.fsx_extsize = fa->fsx_extsize;
-> > > >       xfa.fsx_nextents = fa->fsx_nextents;
-> > > >       xfa.fsx_projid = fa->fsx_projid;
-> > > > @@ -118,11 +119,16 @@ static int copy_fsxattr_from_user(struct fileattr *fa,
-> > > >                                 struct fsxattr __user *ufa)
-> > > >  {
-> > > >       struct fsxattr xfa;
-> > > > +     __u32 mask = FS_XFLAGS_MASK;
-> > > >
-> > > >       if (copy_from_user(&xfa, ufa, sizeof(xfa)))
-> > > >               return -EFAULT;
-> > > >
-> > > > +     if (xfa.fsx_xflags & ~mask)
-> > > > +             return -EINVAL;
-> > >
-> > > I wonder if you want EOPNOTSUPP here?  We don't know how to support
-> > > unknown xflags.  OTOH if you all have beaten this to death while I was
-> > > out then don't start another round just for me. :P
-> > 
-> > We have beaten this API almost to death for sure ;)
-> > I don't remember if we discussed this specific aspect,
-> > but I am personally in favor of
-> > EOPNOTSUPP := the fs does not support the set/get operation
-> > EINVAL := some flags provided as value is invalid
-> > 
-> > For example, if the get API provides you with a mask of the
-> > valid flags that you can set, if you try to set flags outside of
-> > that mask you get EINVAL.
-> > 
-> > That's my interpretation, but I agree that EOPNOTSUPP can also
-> > make sense in this situation.
+> > ---
+> >  tools/perf/tests/Build          |   1 +
+> >  tools/perf/tests/builtin-test.c |   1 +
+> >  tools/perf/tests/subcmd-help.c  | 109 ++++++++++++++++++++++++++++++++
+> >  tools/perf/tests/tests.h        |   1 +
+> >  4 files changed, 112 insertions(+)
+> >  create mode 100644 tools/perf/tests/subcmd-help.c
+> >
+> > diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
+> > index 2181f5a92148b0b9..13a81154ec1e4cd2 100644
+> > --- a/tools/perf/tests/Build
+> > +++ b/tools/perf/tests/Build
+> > @@ -69,6 +69,7 @@ perf-test-y += symbols.o
+> >  perf-test-y += util.o
+> >  perf-test-y += hwmon_pmu.o
+> >  perf-test-y += tool_pmu.o
+> > +perf-test-y += subcmd-help.o
+> >
+> >  ifeq ($(SRCARCH),$(filter $(SRCARCH),x86 arm arm64 powerpc))
+> >  perf-test-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
+> > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+> > index dfaff4185eb05a1a..2da9b69864da53c2 100644
+> > --- a/tools/perf/tests/builtin-test.c
+> > +++ b/tools/perf/tests/builtin-test.c
+> > @@ -139,6 +139,7 @@ static struct test_suite *generic_tests[] = {
+> >         &suite__event_groups,
+> >         &suite__symbols,
+> >         &suite__util,
+> > +       &suite__subcmd_help,
+> >         NULL,
+> >  };
+> >
+> > diff --git a/tools/perf/tests/subcmd-help.c b/tools/perf/tests/subcmd-help.c
+> > new file mode 100644
+> > index 0000000000000000..d31259340ae302af
+> > --- /dev/null
+> > +++ b/tools/perf/tests/subcmd-help.c
+> > @@ -0,0 +1,109 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +#include "tests.h"
+> > +#include <stdio.h>
+> > +#include <subcmd/help.h>
+> > +#include "debug.h"
 > 
-> <nod> I think I'd rather EOPNOTSUPP for "bits are set that the kernel
-> doesn't recognize" and EINVAL (or maybe something else like
-> EPROTONOSUPPORT) for "fs driver will not let you change this bit".
-> At least for the syscall interface; we probably have to flatten that to
-> EOPNOTSUPP for both legacy ioctls.
+> nit: I don't think stdio.h and debug.h are used here.
 
-... and this starting to be complicated if the "fs driver" is network
-based (as fs driver can support, but remote server not). See also:
-https://lore.kernel.org/linux-fsdevel/20241224160535.pi6nazpugqkhvfns@pali/t/#u
+Yeah, will remove.  I think I added it for debugging and removed the
+debug code later.
 
-For backup/restore application it would be very useful to distinguish between:
-- "kernel does not support flag X"
-- "target filesystem does not support flag X"
-- "wrong structure was passed / syscall incorrectly called"
+Thanks,
+Namhyung
 
-third option is bug in application - fatal error. second option is just
-a warning for user (sorry, we cannot set NEW FEATURE on FAT32, but if
-you would do restore to other fs, it is supported). and first option
-happens when you run new application on older kernel version, it is an
-recoverable error (or warning to user, but with more important level
-then second option as switching to different FS would not help).
-
-Could we return different errnos for these 3 situations?
-
-> --D
 > 
-> > Thanks,
-> > Amir.
-> > 
+> > +
+> > +static int test__load_cmdnames(struct test_suite *test __maybe_unused,
+> > +                              int subtest __maybe_unused)
+> > +{
+> > +       struct cmdnames cmds = {};
+> > +
+> > +       add_cmdname(&cmds, "aaa", 3);
+> > +       add_cmdname(&cmds, "foo", 3);
+> > +       add_cmdname(&cmds, "xyz", 3);
+> > +
+> > +       TEST_ASSERT_VAL("cannot find cmd", is_in_cmdlist(&cmds, "aaa") == 1);
+> > +       TEST_ASSERT_VAL("wrong cmd", is_in_cmdlist(&cmds, "bar") == 0);
+> > +       TEST_ASSERT_VAL("case sensitive", is_in_cmdlist(&cmds, "XYZ") == 0);
+> > +
+> > +       clean_cmdnames(&cmds);
+> > +       return TEST_OK;
+> > +}
+> > +
+> > +static int test__uniq_cmdnames(struct test_suite *test __maybe_unused,
+> > +                              int subtest __maybe_unused)
+> > +{
+> > +       struct cmdnames cmds = {};
+> > +
+> > +       /* uniq() assumes it's sorted */
+> > +       add_cmdname(&cmds, "aaa", 3);
+> > +       add_cmdname(&cmds, "aaa", 3);
+> > +       add_cmdname(&cmds, "bbb", 3);
+> > +
+> > +       TEST_ASSERT_VAL("invalid original size", cmds.cnt == 3);
+> > +       /* uniquify command names (to remove second 'aaa') */
+> > +       uniq(&cmds);
+> > +       TEST_ASSERT_VAL("invalid final size", cmds.cnt == 2);
+> > +
+> > +       TEST_ASSERT_VAL("cannot find cmd", is_in_cmdlist(&cmds, "aaa") == 1);
+> > +       TEST_ASSERT_VAL("cannot find cmd", is_in_cmdlist(&cmds, "bbb") == 1);
+> > +       TEST_ASSERT_VAL("wrong cmd", is_in_cmdlist(&cmds, "ccc") == 0);
+> > +
+> > +       clean_cmdnames(&cmds);
+> > +       return TEST_OK;
+> > +}
+> > +
+> > +static int test__exclude_cmdnames(struct test_suite *test __maybe_unused,
+> > +                                 int subtest __maybe_unused)
+> > +{
+> > +       struct cmdnames cmds1 = {};
+> > +       struct cmdnames cmds2 = {};
+> > +
+> > +       add_cmdname(&cmds1, "aaa", 3);
+> > +       add_cmdname(&cmds1, "bbb", 3);
+> > +       add_cmdname(&cmds1, "ccc", 3);
+> > +       add_cmdname(&cmds1, "ddd", 3);
+> > +       add_cmdname(&cmds1, "eee", 3);
+> > +       add_cmdname(&cmds1, "fff", 3);
+> > +       add_cmdname(&cmds1, "ggg", 3);
+> > +       add_cmdname(&cmds1, "hhh", 3);
+> > +       add_cmdname(&cmds1, "iii", 3);
+> > +       add_cmdname(&cmds1, "jjj", 3);
+> > +
+> > +       add_cmdname(&cmds2, "bbb", 3);
+> > +       add_cmdname(&cmds2, "eee", 3);
+> > +       add_cmdname(&cmds2, "jjj", 3);
+> > +
+> > +       TEST_ASSERT_VAL("invalid original size", cmds1.cnt == 10);
+> > +       TEST_ASSERT_VAL("invalid original size", cmds2.cnt == 3);
+> > +
+> > +       /* remove duplicate command names in cmds1 */
+> > +       exclude_cmds(&cmds1, &cmds2);
+> > +
+> > +       TEST_ASSERT_VAL("invalid excluded size", cmds1.cnt == 7);
+> > +       TEST_ASSERT_VAL("invalid excluded size", cmds2.cnt == 3);
+> > +
+> > +       /* excluded commands should not belong to cmds1 */
+> > +       TEST_ASSERT_VAL("cannot find cmd", is_in_cmdlist(&cmds1, "aaa") == 1);
+> > +       TEST_ASSERT_VAL("wrong cmd", is_in_cmdlist(&cmds1, "bbb") == 0);
+> > +       TEST_ASSERT_VAL("cannot find cmd", is_in_cmdlist(&cmds1, "ccc") == 1);
+> > +       TEST_ASSERT_VAL("cannot find cmd", is_in_cmdlist(&cmds1, "ddd") == 1);
+> > +       TEST_ASSERT_VAL("wrong cmd", is_in_cmdlist(&cmds1, "eee") == 0);
+> > +       TEST_ASSERT_VAL("cannot find cmd", is_in_cmdlist(&cmds1, "fff") == 1);
+> > +       TEST_ASSERT_VAL("cannot find cmd", is_in_cmdlist(&cmds1, "ggg") == 1);
+> > +       TEST_ASSERT_VAL("cannot find cmd", is_in_cmdlist(&cmds1, "hhh") == 1);
+> > +       TEST_ASSERT_VAL("cannot find cmd", is_in_cmdlist(&cmds1, "iii") == 1);
+> > +       TEST_ASSERT_VAL("wrong cmd", is_in_cmdlist(&cmds1, "jjj") == 0);
+> > +
+> > +       /* they should be only in cmds2 */
+> > +       TEST_ASSERT_VAL("cannot find cmd", is_in_cmdlist(&cmds2, "bbb") == 1);
+> > +       TEST_ASSERT_VAL("cannot find cmd", is_in_cmdlist(&cmds2, "eee") == 1);
+> > +       TEST_ASSERT_VAL("cannot find cmd", is_in_cmdlist(&cmds2, "jjj") == 1);
+> > +
+> > +       clean_cmdnames(&cmds1);
+> > +       clean_cmdnames(&cmds2);
+> > +       return TEST_OK;
+> > +}
+> > +
+> > +static struct test_case tests__subcmd_help[] = {
+> > +       TEST_CASE("Load subcmd names", load_cmdnames),
+> > +       TEST_CASE("Uniquify subcmd names", uniq_cmdnames),
+> > +       TEST_CASE("Exclude duplicate subcmd names", exclude_cmdnames),
+> > +       {       .name = NULL, }
+> > +};
+> > +
+> > +struct test_suite suite__subcmd_help = {
+> > +       .desc = "libsubcmd help tests",
+> > +       .test_cases = tests__subcmd_help,
+> > +};
+> > diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+> > index 4c128a9594413b32..13cabf85185ed2d3 100644
+> > --- a/tools/perf/tests/tests.h
+> > +++ b/tools/perf/tests/tests.h
+> > @@ -177,6 +177,7 @@ DECLARE_SUITE(sigtrap);
+> >  DECLARE_SUITE(event_groups);
+> >  DECLARE_SUITE(symbols);
+> >  DECLARE_SUITE(util);
+> > +DECLARE_SUITE(subcmd_help);
+> >
+> >  /*
+> >   * PowerPC and S390 do not support creation of instruction breakpoints using the
+> > --
+> > 2.50.0.727.gbf7dc18ff4-goog
+> >
