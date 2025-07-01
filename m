@@ -1,183 +1,105 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35AD51E1E1E
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 13:06:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23628274B50;
+	Tue,  1 Jul 2025 13:06:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751375194; cv=none; b=LcegiRaIc84qVIhKjIC5YhKZEvBAPI4B2ZD+lUDeLYYW8EmgFUdnBE0Ild9vwG+4F2X3xxnisQk0s+h0fXcGT5oybPloFqkZBPOsvC0DIeFa39l+HbsB0+RwxA+XpYBetLMOcDFPmaZesHoKMIL81wQl3AZZ5ZLnUb98X416Avc=
+	t=1751375200; cv=none; b=kUPhE/liqmOsFD1IeGZCoRTD21wyD3u5UX1r1HDjN/S1hgIbCcEQ0whw/9YrjBQVu0bLCURNMa4bMOVkMyCkk8mlo6QuRzaK+1TW9kVXBrI6ltSZyoa/4DFGEiwJK3yuW6cOlD4SnLks++CBLsejcAikHG793xMDODYEfnwf2E4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751375194; c=relaxed/simple;
-	bh=W7rUKWuRShXYZWdR3lbH69HaoFiUBNiFvvaqP4xwyDo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ImpUppFQCnQg8CohEucM5ISiYo17lQDGx1hA4HV7TlF8AH0xR8SaTHWXuc1X3xnoYFAbbcETyVh1ZKc7AQeGLrpPe+mBxH4FASCURfY8D7LB0/wyiVBcUN9FHktNAcRrxvBYWUz9JxY6HA8ClqfkxfSpTiW9JFvllO2l1Euv4d0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=EdGMfebH; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=3x0vMWhi; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=geOJrmOA; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=s+W8pYUV; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1751375200; c=relaxed/simple;
+	bh=b/R85Pa8b8YKsnIA1JXyJ2vMh/TmQal1ZDw62B1Mef4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Wjj3MUTDC6gvqObNEid0UIphWRt9CGcHkkbpGzfTkdI/yn+YEzoTegJM6gw9t2+vVab9nvlOb4S3itnrNFSKjpMgv/Nti/TNwW3ZflRAcsuh5SskjWPLlW5XKg6dHj0ahVDAH+Yj3EW4Gxkw8NXhJsaLRWZZlTrgjLyu0ozRARw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=l5winQAD; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="EdGMfebH";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="3x0vMWhi";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="geOJrmOA";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="s+W8pYUV"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id BEBD921170;
-	Tue,  1 Jul 2025 13:06:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751375191; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="l5winQAD"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 35B0943A14;
+	Tue,  1 Jul 2025 13:06:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1751375195;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=STYBJ6/y5eb9NB4ntQPCGfmPLPuwaWN8f9mtVL8NvMg=;
-	b=EdGMfebH3HfaMC+wTG450iQ0AqNqkQK2x3LTfqHIyaxGakrWaElBk4jiFb97QC9greGvMb
-	1Q2xk36efRgz/+u2VPFudK5v7WktCIB9TXWbVU365dA5CFyyKqqsG+TyhF/PK4noIgvbFU
-	gIIzt/wLiRG3tHbJ1PPlyZ5aIaaVLxQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751375191;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=STYBJ6/y5eb9NB4ntQPCGfmPLPuwaWN8f9mtVL8NvMg=;
-	b=3x0vMWhikqcewo3C3hWxU5aK+XA0gmHYzYUMtbcyo3XMMzkUPN7HqeYjuDVGotgUH/7nT9
-	WYjfVnf+l+7+BJCg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=geOJrmOA;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=s+W8pYUV
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751375190; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=STYBJ6/y5eb9NB4ntQPCGfmPLPuwaWN8f9mtVL8NvMg=;
-	b=geOJrmOArR76ltL85cdfmNDlnZRQboQgEh3JdADE3BE/XoMASiodgc85nEO2poaahBsTbR
-	6TsOO8XPpj6vjLQHTWNcFVeCs7b5FZ0tkAqM1GvV9KdlGUymKy0OSwq8t3ZtuhJb81ixdw
-	zZiMmjTn702bFgTQhDHKwvYearwVEeI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751375190;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=STYBJ6/y5eb9NB4ntQPCGfmPLPuwaWN8f9mtVL8NvMg=;
-	b=s+W8pYUVnV1//Tnb9TCUTjf1HZWDSft6YUh3W+enyBIkfmUOKmDP+dAP18U6L/rk9PkBuq
-	wyFZaxtYgN+DunCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AE9E613890;
-	Tue,  1 Jul 2025 13:06:30 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 66CeKlbdY2j4dAAAD6G6ig
-	(envelope-from <jack@suse.cz>); Tue, 01 Jul 2025 13:06:30 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id C3A14A0A23; Tue,  1 Jul 2025 15:06:25 +0200 (CEST)
-Date: Tue, 1 Jul 2025 15:06:25 +0200
-From: Jan Kara <jack@suse.cz>
-To: Andrey Albershteyn <aalbersh@redhat.com>
-Cc: Amir Goldstein <amir73il@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Casey Schaufler <casey@schaufler-ca.com>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>, Paul Moore <paul@paul-moore.com>, linux-api@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
-	selinux@vger.kernel.org, Andrey Albershteyn <aalbersh@kernel.org>
-Subject: Re: [PATCH v6 5/6] fs: prepare for extending file_get/setattr()
-Message-ID: <kxl5mwdql2f7i6mlvgitmquhci6oab5dluihc22x5w7y3cko4h@fig54f3dyidj>
-References: <20250630-xattrat-syscall-v6-0-c4e3bc35227b@kernel.org>
- <20250630-xattrat-syscall-v6-5-c4e3bc35227b@kernel.org>
+	bh=99KCsRPASfdiAb1s/3gUtMX8boYUlanoI/1WCWeVSw4=;
+	b=l5winQADrXz8gIFWK5wKV2JNiNfKaposaPOmuhFtP3RWMLckru+ktlOBDYBYatPk7/pYph
+	2O0aK5Rio/Yr2gVKS2nqqqV/LYt8/UGWoroQdnE5LprHQ+SJzv0+eWON2NhLJhUuB64230
+	ihJ18E1orVcjGc7LocSS1+ZzCCAcH4SknDldVzVrKTow8mSdmM3Kp0kLILsFfIymZ1RQvX
+	/W6wVpMaVh9yVDea/5a84QTl5BP5gubO+PnkTZQ1DdToN6T1Mf7f7J1SIIWJv3oeZ1fXXK
+	+FdSklsyEpll2Xiv5BxRjU8EdRVyo8X29XvnpsAAk+mmMQPEFNQAaUpVCPcCEg==
+Date: Tue, 1 Jul 2025 15:06:31 +0200
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Simon Horman <horms@kernel.org>
+Cc: davem@davemloft.net, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ thomas.petazzoni@bootlin.com, Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski
+ <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
+ linux-arm-kernel@lists.infradead.org, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
+ Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit
+ <hkallweit1@gmail.com>, Vladimir Oltean <vladimir.oltean@nxp.com>,
+ =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>, Marek
+ =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>, Oleksij Rempel
+ <o.rempel@pengutronix.de>, =?UTF-8?B?Tmljb2zDsg==?= Veronese
+ <nicveronese@gmail.com>, mwojtas@chromium.org, Antoine Tenart
+ <atenart@kernel.org>, devicetree@vger.kernel.org, Conor Dooley
+ <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob
+ Herring <robh@kernel.org>, Romain Gantois <romain.gantois@bootlin.com>,
+ Daniel Golle <daniel@makrotopia.org>, Dimitri Fedrau
+ <dimitri.fedrau@liebherr.com>
+Subject: Re: [PATCH net-next v7 04/15] net: phy: Introduce PHY ports
+ representation
+Message-ID: <20250701150631.0256539b@fedora.home>
+In-Reply-To: <20250701130243.GA130037@horms.kernel.org>
+References: <20250630143315.250879-1-maxime.chevallier@bootlin.com>
+	<20250630143315.250879-5-maxime.chevallier@bootlin.com>
+	<20250701130243.GA130037@horms.kernel.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250630-xattrat-syscall-v6-5-c4e3bc35227b@kernel.org>
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: BEBD921170
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,arndb.de,schaufler-ca.com,kernel.org,suse.cz,paul-moore.com,vger.kernel.org];
-	RCVD_COUNT_THREE(0.00)[3];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:dkim,suse.cz:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Spam-Score: -4.01
-X-Spam-Level: 
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddugeeiudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegveeltddvveeuhefhvefhlefhkeevfedtgfeiudefffeiledttdfgfeeuhfeukeenucfkphepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeftddprhgtphhtthhopehhohhrmhhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrt
+ ghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqmhhsmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-On Mon 30-06-25 18:20:15, Andrey Albershteyn wrote:
-> From: Amir Goldstein <amir73il@gmail.com>
+On Tue, 1 Jul 2025 14:02:43 +0100
+Simon Horman <horms@kernel.org> wrote:
+
+> On Mon, Jun 30, 2025 at 04:33:03PM +0200, Maxime Chevallier wrote:
 > 
-> We intend to add support for more xflags to selective filesystems and
-> We cannot rely on copy_struct_from_user() to detect this extension.
+> ...
 > 
-> In preparation of extending the API, do not allow setting xflags unknown
-> by this kernel version.
+> > +/**
+> > + * phy_port_get_type() - get the PORT_* attribut for that port.
+> > + * @port: The port we want the information from
+> > + *
+> > + * Returns: A PORT_XXX value.
+> > + */
+> > +int phy_port_get_type(struct phy_port *port)
+> > +{
+> > +	if (port->mediums & ETHTOOL_LINK_MEDIUM_BASET)  
 > 
-> Also do not pass the read-only flags and read-only field fsx_nextents to
-> filesystem.
+> Hi Maxime,
 > 
-> These changes should not affect existing chattr programs that use the
-> ioctl to get fsxattr before setting the new values.
+> Should this be:
 > 
-> Link: https://lore.kernel.org/linux-fsdevel/20250216164029.20673-4-pali@kernel.org/
-> Cc: Pali Rohár <pali@kernel.org>
-> Cc: Andrey Albershteyn <aalbersh@redhat.com>
-> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-> Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
+> 	if (port->mediums & BIT(ETHTOOL_LINK_MEDIUM_BASET))
+> 
+> Flagged by Smatch (because ETHTOOL_LINK_MEDIUM_BASET is 0,
+> so as-is the condition is always false).
 
-Looks good. Feel free to add:
+You're absolutely correct ! Thanks...
 
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-I'd just note that:
-
-> @@ -118,11 +119,16 @@ static int copy_fsxattr_from_user(struct fileattr *fa,
->  				  struct fsxattr __user *ufa)
->  {
->  	struct fsxattr xfa;
-> +	__u32 mask = FS_XFLAGS_MASK;
->  
->  	if (copy_from_user(&xfa, ufa, sizeof(xfa)))
->  		return -EFAULT;
->  
-> +	if (xfa.fsx_xflags & ~mask)
-> +		return -EINVAL;
-> +
->  	fileattr_fill_xflags(fa, xfa.fsx_xflags);
-> +	fa->fsx_xflags &= ~FS_XFLAG_RDONLY_MASK;
-
-This means that the two flags in FS_XFLAG_RDONLY_MASK cannot easily become
-writeable in the future due to this. I think it is a sensible compromise
-but I wanted to mention it.
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Maxime
