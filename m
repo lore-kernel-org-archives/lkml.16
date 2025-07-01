@@ -1,192 +1,166 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C571C1F3B98
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 16:58:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33183275AFF
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 17:01:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751389123; cv=none; b=pNUmjxTtWZM3M7Ws3EU2CKurJsTQFFnm5RXnJUE5R8QhDNIn3EAWFFdx9E6ciOUHmDVdTtPWq06+7rB5laoHvOUIdc0fjYLAJlTSzE4x0GPYgYWp50+0Rp7g5twBWTlhXvNCbT1cTd9e1O/fUhumFiK7wiQ52pKY4tCiDlcxXCU=
+	t=1751389262; cv=none; b=MBZMbvyUFCFnqpWDzwVPyCg1iH3YqL5K3w2dqgjIefDeiZudBJtnN8kncYs6ly5yMkLEa2k4ViYQn6+T1icDTTa4eme+YQMP0BhZ6gNV0XEstT4EnkuG4vNkFyHfsCJhkDVKpT6iVnc/YZ71z6jxu1AgpVNIlnqMlcGW1rW9Af0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751389123; c=relaxed/simple;
-	bh=siBLe9gz6RUe359Fx/TSWWC2MOEWurtX3C+0q9hk098=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=rVYtnREx+6qusEqj4SqgJhVuGPQW9P9YEWxPNySNCJI7wsRb+lFompaflfhSLWA3oqsl1L5C8SVzSzwyWCcJSlofR1RQdAFA+OiCS5mslJni8QEZtzQ5T1wxiNM4qNTwh0tzwVwT531pK5c2TivG95pvzOaJu3w6MdL/aDwxwJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=df7cb.de; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=df7cb.de
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4bWq3r1njDz9sqc;
-	Tue,  1 Jul 2025 18:58:32 +0200 (CEST)
-Date: Tue, 1 Jul 2025 18:58:28 +0200
-From: Christoph Berg <myon@debian.org>
-To: David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
-	Byungchul Park <byungchul@sk.com>,
-	Gregory Price <gourry@gourry.net>,
-	Ying Huang <ying.huang@linux.alibaba.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	"open list:MEMORY MANAGEMENT - MEMORY POLICY AND MIGRATION" <linux-mm@kvack.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] mm/migrate: Fix do_pages_stat in 32-bit mode
-Message-ID: <aGQTtCkgH4kQTNlp@msg.df7cb.de>
+	s=arc-20240116; t=1751389262; c=relaxed/simple;
+	bh=bkXhikRamz3TYR+syj/QXhLIxFxYsmkj2lhNT1/lT2g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VuYOhTl6bDXgBO9JwVp9VIMXryh2d9TTlD1YPVYpYx25QIEsVIuji8MWH1hcR/RxzRPZWESXQS7+bh8erVp0gZb5I6RvFj/iS5NloP4fkzW0/xiVG3CZROBO3ApLBfuIv+9xapkf8LXw7davU1vW43ijj8TiH27uxxgQ8JwNXaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1mZZ1iJc; arc=none smtp.client-ip=209.85.166.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1mZZ1iJc"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3de210e6076so144785ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 10:01:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751389260; x=1751994060; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/UgRjLg1bANNvxWkIL2D0B4OzAbnbrdTRnXpfNQyHPk=;
+        b=1mZZ1iJcuXiwxxu2KJIZe6jQgJLWF45SuEuVtMpx1tXkdNBHoMpyZXGMGupfZOMSi1
+         W15EbV7C+878rCvYlpGSsFQ7KLWtNNtIHB6p+KQwnqsR8lxboSWXu/YCH3+lrFwL73sG
+         IIPIyfrarzsBzGaWua3ZNOpUiajqySbmXlqIMrsU862Uy34/d37T5HCLR3Pws6h8tREa
+         X/nRZ+yivLwDZxx2c2fMTbJsvhiGCRcGUEHUGBIhV5MfURMATmD/e81OFlNcrlldFFvE
+         PCjXoudkdr5XUlprWnh7ehREKnnkavMr1NkiDiUUUqrcPbeFFwHx1FouS5P+4KxTcftE
+         nRng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751389260; x=1751994060;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/UgRjLg1bANNvxWkIL2D0B4OzAbnbrdTRnXpfNQyHPk=;
+        b=gTbceb8AERa0jvjIAajz5lIGKu2LJa4+PK/NGNOB6qVlMK2x687Ili+vktbcmr5k+h
+         DhCxMcwPkMXEBVAmRVdKF1aN+N/0jVSQhcvbY7ptzrsYviPyYHSjEJxua5QWZMd1pSkz
+         AYke51PlW+sFRzaw7xik3vLXxNPLVG8aaT4tWun++V6igGBxDE59ACiaPTvX2VmBgdij
+         eYBGwAXxT3++iyxb/t9OWJ4Lz+aELfRZi/LOQKOG+3m9HDeE4LlkIeDpKGZc1ZbtfQFy
+         ZoxLqDzUKonCrSaU7jM0neilTCzdBOhDcXu5Qumb/NM+eKM7EnOvFCTn8vVJg6yuni7n
+         /VlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXKKenGyonNRbOsraP7tmGoleCU9h6mM6a1LtcwK4aRr0nxYi7Uij+/ZFpm7j7MgnJzlD48wdzpxBm2Gqo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwN0qzvnALRCsv0DDCr99fkPDhryR9nb0gIu+B7oQWf33WRv5pA
+	mv7SzJ2lPv4mpP5ZKpLW+9c9ofce0zTCnd/je7KbQA2Znd6lz2RNqZM+Jkc79ruBEM9ftyNvY6b
+	we66VfFnU4EjggsqI+76F4vCfd8S3ZZRKqWhExaql
+X-Gm-Gg: ASbGncu5xFG0pK7kKxARc3vsKnWS1K8eAaFTlzqkEVaw1XfyZfMYmpK5B5MHCnH7Tj+
+	X7Zq4fyUlwVK6zJLjv69ruDFnhq3bo5cV5mGfbkSnRNZOLyM47BUzEzOOJBjHxiAT5JvEuOZ9WZ
+	sU2vOhyr7dc7nCXvjiKLgFVDH3DS5QFiMfFILWhB5lThuxmcGpQir/BZnKcs+H5GqUPXJDkuQ=
+X-Google-Smtp-Source: AGHT+IEAhz64e+5NmGN5DM9cSM9FAys6CW3b3NwAestgSJtBnITuejAnC/VvbJqmG/3u6aIr/6ecA3b9nT+k3h8kfT8=
+X-Received: by 2002:a05:6e02:4610:b0:3e0:51fc:6e8 with SMTP id
+ e9e14a558f8ab-3e051fc0c97mr1053115ab.15.1751389259861; Tue, 01 Jul 2025
+ 10:00:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250625133909.1a054c24d933cd97afd0027d@linux-foundation.org>
- <bff12005-4957-417a-a54f-2a5a327720f2@redhat.com>
-X-Rspamd-Queue-Id: 4bWq3r1njDz9sqc
+References: <20250628045017.1361563-1-irogers@google.com> <20250628045017.1361563-11-irogers@google.com>
+ <aGN_wBXVt6YN4Itb@google.com>
+In-Reply-To: <aGN_wBXVt6YN4Itb@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 1 Jul 2025 10:00:48 -0700
+X-Gm-Features: Ac12FXz_X_5IipKr8vd50gwfTiNlhqt4RWPZaW22n1cB2CNPPqiGwCwVNqiqJs4
+Message-ID: <CAP-5=fXVxykN_pyydC_8LtNO0wAOz2yZPhwYsThQhgR0QeSP+A@mail.gmail.com>
+Subject: Re: [PATCH v5 10/23] perf session: Add an env pointer for the current perf_env
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
+	Leo Yan <leo.yan@linux.dev>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Colin Ian King <colin.i.king@gmail.com>, Andi Kleen <ak@linux.intel.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Graham Woodward <graham.woodward@arm.com>, 
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, Athira Rajeev <atrajeev@linux.ibm.com>, 
+	Kajol Jain <kjain@linux.ibm.com>, Li Huafei <lihuafei1@huawei.com>, 
+	"Steinar H. Gunderson" <sesse@google.com>, Stephen Brennan <stephen.s.brennan@oracle.com>, 
+	Chun-Tse Shao <ctshao@google.com>, Yujie Liu <yujie.liu@intel.com>, 
+	"Dr. David Alan Gilbert" <linux@treblig.org>, Levi Yun <yeoreum.yun@arm.com>, 
+	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>, Matt Fleming <matt@readmodwrite.com>, 
+	Veronika Molnarova <vmolnaro@redhat.com>, 
+	=?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>, 
+	Zixian Cai <fzczx123@gmail.com>, Steve Clevenger <scclevenger@os.amperecomputing.com>, 
+	Ben Gainey <ben.gainey@arm.com>, Chaitanya S Prakash <chaitanyas.prakash@arm.com>, 
+	Martin Liska <martin.liska@hey.com>, =?UTF-8?Q?Martin_Li=C5=A1ka?= <m.liska@foxlink.cz>, 
+	Song Liu <song@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Re: David Hildenbrand
-> Subject should start with "mm/migrate:"
-> Likely we want a
-> Fixes:
-> and then this is probably "Reported-by:" paired with a "Closes:" link
-> to any such report.
+On Mon, Jun 30, 2025 at 11:27=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+>
+> On Fri, Jun 27, 2025 at 09:50:04PM -0700, Ian Rogers wrote:
+> > Initialize to `&header.env`. This will later allow the env value to be
+> > changed.
+>
+> I'm curious when it is changed.
 
-I included these now, except for "Closes:" which I have to idea what
-to put in.
+Thanks for the reviews! I'll dig into them for v6. Looking at this one
+I don't see a current use of the changed perf_session__env so I
+suspect we can drop the change. I need to think about the lifetime of
+header.env, use cases where have >1 env like perf inject (in vs out),
+perf diff and what's going on with TUI in patch:
+https://lore.kernel.org/lkml/20250628045017.1361563-12-irogers@google.com/
 
-> But I'm wondering how long this has already been like that. :)
+Thanks,
+Ian
 
-The now-offending "pages += chunk_nr" line is from 2010, but I think
-the bug is rather from 5b1b561ba73c8ab9c98e5dfd14dc7ee47efb6530 (2021)
-which reshuffled the array-vs-32-bit handling.
-
-> Something a bit more elegant might be:
-
-Thanks, I used your patch draft with some minor changes.
-
->  static int get_compat_pages_array(const void __user *chunk_pages[],
->                                   const void __user * __user *pages,
-> +                                 unsigned long chunk_offs,
-
-I replaced chunk_offs with "chunk_offset" since "offs" looked too much
-like plural (list of offsets) to me.
-
->                 if (in_compat_syscall()) {
->                         if (get_compat_pages_array(chunk_pages, pages,
-> -                                                  chunk_nr))
-> +                                                  chunk_offs, chunk_nr))
->                                 break;
->                 } else {
->                         if (copy_from_user(chunk_pages, pages,
-
-The else branch here needs tweaking as well:
-
-                } else {
--                       if (copy_from_user(chunk_pages, pages,
-+                       if (copy_from_user(chunk_pages, pages + chunk_offset,
-                                      chunk_nr * sizeof(*chunk_pages)))
-
-
-> @@ -2440,11 +2442,11 @@ static int do_pages_stat(struct mm_struct *mm, unsigned long nr_pages,
->                 do_pages_stat_array(mm, chunk_nr, chunk_pages, chunk_status);
-> -               if (copy_to_user(status, chunk_status, chunk_nr * sizeof(*status)))
-> +               if (copy_to_user(status + chunk_offs, chunk_status,
-> +                                chunk_nr * sizeof(*status)))
-
-This seems to work, but honestly I am wondering, if copy_from_user
-needs a special 32-bit case, doesn't copy_to_user need special casing
-as well?
-
-> (untested, of course)
-
-The attached patch makes PG18's new numa test pass on amd64 kernels
-both in amd64 and i386 userlands.
-
-(In the meantime, PG git head got a workaround that limits the chunk
-size to the same 16 as used in do_pages_stat; I tested with the
-version before that.)
-
-Christoph
-
-
-From fdbcbc88825bc2e857dfeeebc91d62864e0774dd Mon Sep 17 00:00:00 2001
-From: Christoph Berg <myon@debian.org>
-Date: Tue, 24 Jun 2025 16:44:27 +0200
-Subject: [PATCH v2] mm/migrate: Fix do_pages_stat in 32-bit mode
-
-For arrays with more than 16 entries, the old code would incorrectly
-advance the pages pointer by 16 words instead of 16 compat_uptr_t.
-Fix by doing the pointer arithmetic inside get_compat_pages_array where
-pages32 is already a correctly-typed pointer.
-
-Discovered while working on PostgreSQL 18's new NUMA introspection code.
-
-Signed-off-by: Christoph Berg <myon@debian.org>
-Reported-by: Bertrand Drouvot <bertranddrouvot.pg@gmail.com>
-Reported-by: Tomas Vondra <tomas@vondra.me>
-Suggested-by: David Hildenbrand <david@redhat.com>
-Fixes: 5b1b561ba73c8ab9c98e5dfd14dc7ee47efb6530
----
- mm/migrate.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
-
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 8cf0f9c9599d..2c88f3b33833 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -2399,6 +2399,7 @@ static void do_pages_stat_array(struct mm_struct *mm, unsigned long nr_pages,
- 
- static int get_compat_pages_array(const void __user *chunk_pages[],
- 				  const void __user * __user *pages,
-+				  unsigned long chunk_offset,
- 				  unsigned long chunk_nr)
- {
- 	compat_uptr_t __user *pages32 = (compat_uptr_t __user *)pages;
-@@ -2406,7 +2407,7 @@ static int get_compat_pages_array(const void __user *chunk_pages[],
- 	int i;
- 
- 	for (i = 0; i < chunk_nr; i++) {
--		if (get_user(p, pages32 + i))
-+		if (get_user(p, pages32 + chunk_offset + i))
- 			return -EFAULT;
- 		chunk_pages[i] = compat_ptr(p);
- 	}
-@@ -2425,27 +2426,28 @@ static int do_pages_stat(struct mm_struct *mm, unsigned long nr_pages,
- #define DO_PAGES_STAT_CHUNK_NR 16UL
- 	const void __user *chunk_pages[DO_PAGES_STAT_CHUNK_NR];
- 	int chunk_status[DO_PAGES_STAT_CHUNK_NR];
-+	unsigned long chunk_offset = 0;
- 
- 	while (nr_pages) {
- 		unsigned long chunk_nr = min(nr_pages, DO_PAGES_STAT_CHUNK_NR);
- 
- 		if (in_compat_syscall()) {
- 			if (get_compat_pages_array(chunk_pages, pages,
--						   chunk_nr))
-+						   chunk_offset, chunk_nr))
- 				break;
- 		} else {
--			if (copy_from_user(chunk_pages, pages,
-+			if (copy_from_user(chunk_pages, pages + chunk_offset,
- 				      chunk_nr * sizeof(*chunk_pages)))
- 				break;
- 		}
- 
- 		do_pages_stat_array(mm, chunk_nr, chunk_pages, chunk_status);
- 
--		if (copy_to_user(status, chunk_status, chunk_nr * sizeof(*status)))
-+		if (copy_to_user(status + chunk_offset, chunk_status,
-+				 chunk_nr * sizeof(*status)))
- 			break;
- 
--		pages += chunk_nr;
--		status += chunk_nr;
-+		chunk_offset += chunk_nr;
- 		nr_pages -= chunk_nr;
- 	}
- 	return nr_pages ? -EFAULT : 0;
--- 
-2.47.2
-
+> Thanks,
+> Namhyung
+>
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/session.c | 3 ++-
+> >  tools/perf/util/session.h | 2 ++
+> >  2 files changed, 4 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> > index b09d157f7d04..e39a1df7c044 100644
+> > --- a/tools/perf/util/session.c
+> > +++ b/tools/perf/util/session.c
+> > @@ -156,6 +156,7 @@ struct perf_session *__perf_session__new(struct per=
+f_data *data,
+> >                            ordered_events__deliver_event, NULL);
+> >
+> >       perf_env__init(&session->header.env);
+> > +     session->env =3D &session->header.env;
+> >       if (data) {
+> >               ret =3D perf_data__open(data);
+> >               if (ret < 0)
+> > @@ -2750,5 +2751,5 @@ int perf_session__dsos_hit_all(struct perf_sessio=
+n *session)
+> >
+> >  struct perf_env *perf_session__env(struct perf_session *session)
+> >  {
+> > -     return &session->header.env;
+> > +     return session->env;
+> >  }
+> > diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+> > index e7f7464b838f..088868f1004a 100644
+> > --- a/tools/perf/util/session.h
+> > +++ b/tools/perf/util/session.h
+> > @@ -45,6 +45,8 @@ struct perf_session {
+> >       struct perf_header      header;
+> >       /** @machines: Machines within the session a host and 0 or more g=
+uests. */
+> >       struct machines         machines;
+> > +     /** @env: The perf_env being worked with, either from a data file=
+ or the host's. */
+> > +     struct perf_env         *env;
+> >       /** @evlist: List of evsels/events of the session. */
+> >       struct evlist   *evlist;
+> >       /** @auxtrace: callbacks to allow AUX area data decoding. */
+> > --
+> > 2.50.0.727.gbf7dc18ff4-goog
+> >
