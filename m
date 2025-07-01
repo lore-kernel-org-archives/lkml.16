@@ -1,167 +1,146 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2895326B948;
-	Tue,  1 Jul 2025 09:28:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57D6326FA52
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 09:28:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751362099; cv=none; b=f8C/+ejfGKQK5BJ6YYz/V9AtcAqQygOBBwQclM9/jc1SjKe1AWAtHeaDIGgB9MaylP8YecB0oTl4dJqf02Mq56ULn8B0aRRnGP31nP5uXPn5zR7x7IKHDrBW74pLrgg93aqyrq+PwyRyo60CsXkMh7H3MPd5B50OSorQC1F4/nI=
+	t=1751362105; cv=none; b=d9x+RrZaufm1zE1+gYqH2tQTeqHy0NKXHTujIazAp54KMNBEk6x7NX4fejvYk/B6aLqFk0i1Kjur5xl9ABUijzQb5YQhR4hNpqZW9NA5C9io2UUe725LkEUgTDX2NNyQ1YGPxfN0pbLZZ1jpwBBq2lckVj3xz7PU/QW9cDo33sM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751362099; c=relaxed/simple;
-	bh=7HMOHxoNy1+keb7VAvKnbVMcQgX7X0MpHiY3sQvB2BM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tOzyD1bmPonTY/+L82wKEu2nO2nCLwvkXtxR+WI248Fh/Am9yapKv7kmRIvdnuJx3G/CwCLUi2oQa4k5k4orJ0TDd2vIffExonTeZ1WhMT2sGSh8KJwCMJLJNrftE3T+8V+edd/sjd4HKCb2yFqAW7yKdgvrnnMuP99dRFXIMBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=lOo6IJ1V; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=SVDMR+lO reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1751362105; c=relaxed/simple;
+	bh=xU+kDdU0gwzb9LPPDqkZf5rUekFrGYUlG52+CjTps7A=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pNFSgsRfKTqPAJnBfD400CXAoyM46Z+Fr1t5/wV+5hUmU2Fme8EXfm5Dysv6KI8LxaLqR84jtmICNNc7LGh6mMuJtplAoLb3VcKzUe9NHG9loJMOFJs0RCLaPtFWSzprs0urR20sxloE7TT8HizFXpIDjhpNdewy1qFsjA1SG7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Z8s/K30a; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="lOo6IJ1V";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="SVDMR+lO"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Z8s/K30a"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-acb5ec407b1so544611566b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 02:28:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1751362096; x=1782898096;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=El0njB9QkMGVFRshxMbajamTSfz0oZTddg/R/RGwV9k=;
-  b=lOo6IJ1VorD1GGzdDiNOZDqmxFuzGGV2TTHQ3Jsf+nVRRVPoA5VDYaZu
-   RC1OLXttWi+lMD/+TrVdKvoiczQyWCbnW1LtBesI00mQvhA4aXBcUROL7
-   fd3H03in/P9smvHzjt74VD83fL/0TkhiZWFbWmG9G0bNsegqJULoXSB2C
-   idwijPVrOBxMoMVN4ASXOftSrQmBPRuTy9HSBBw9gHKKpNxDguSRK9r02
-   5Gy5tmuBzcxU9od/AoyeylfdDQVpdErB82+wxSXX0L1mwjavRc0lYDEQT
-   JH/6fH4Z84zQ/DYJAQNh4tIcOwbasaAk1lxrUAToTMhQWAx18WNn0/JSr
-   A==;
-X-CSE-ConnectionGUID: 5Zf31/qcQgK5fwixQENzjg==
-X-CSE-MsgGUID: nsiA9ZZdRnWjzj7r6P5fPg==
-X-IronPort-AV: E=Sophos;i="6.16,279,1744063200"; 
-   d="scan'208";a="44950455"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 01 Jul 2025 11:28:13 +0200
-X-CheckPoint: {6863AA2D-7-ABFC28F4-D6731B76}
-X-MAIL-CPID: 1F1760676F1FD6B864D31B9984EE8645_5
-X-Control-Analysis: str=0001.0A006370.6863AA54.0046,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id CB77916AFA8;
-	Tue,  1 Jul 2025 11:28:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1751362088;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=El0njB9QkMGVFRshxMbajamTSfz0oZTddg/R/RGwV9k=;
-	b=SVDMR+lOaUcf3oyASPFD1CmRQwfXLjQ5VrKgrNYJRRQW0kqIaT4ZvvRwBCVvciNuFiF0yp
-	5jJFO7JmRmhP+eRD/4kdJGqOUe0Ss8t47mjttec9DibDXU7BCty+xwDDWfrYsmfyp4DQ6V
-	D4kp42bB8bZwQPUeNx4gZAHUulfbXk1y5MrgkAk20Vkvwsb9JjS/CeVScYJKO86SGOhkDw
-	SdpTLKIOv3hr8Xzs+0nk+E43KXeZy610y3Yz+Dtz3fzyfqVqHDUXdvFAgy5pC5PVN0F5FE
-	waAUnxYR2IsB0HMHHqSH5VM8YbwAdS+QOeeON/bXntcKgROBmcASAEoGTZuaTA==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Abel Vesa <abelvesa@kernel.org>,
- Frank Li <frank.li@nxp.com>, Peng Fan <peng.fan@nxp.com>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>,
- Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH 5/5] arm64: dts: imx943: Add LVDS/DISPLAY CSR nodes
-Date: Tue, 01 Jul 2025 11:28:07 +0200
-Message-ID: <2791534.mvXUDI8C0e@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <20250701-imx95-blk-ctl-7-1-v1-5-00db23bd8876@nxp.com>
-References:
- <20250701-imx95-blk-ctl-7-1-v1-0-00db23bd8876@nxp.com>
- <20250701-imx95-blk-ctl-7-1-v1-5-00db23bd8876@nxp.com>
+        d=suse.com; s=google; t=1751362101; x=1751966901; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vW8tXWZC+/EOEMWh/X8OhS7IFKfYxgh/KBq6rDgPsK4=;
+        b=Z8s/K30aun/xPgKGqAjd0fMnXCDU3mgK0OgZbHXARIBxjPzOL3aQ60RPO7OmD0ETKn
+         Rfe4sLdiiP8HTDHybRwu2slNwtUM204NfDhAeCqMl8q6DME2aEFWaIr5Btak2+Odytpm
+         M1U25VIpmqsW43umLqsTK5jVNv9x4iXFCiJkA0assksKUv/WB90O2JqNfRx6zkXRIbJb
+         pCijUpnNDCc9pVw36K7nrSkXGkZsYwnrVTGTNvJ++/x943jGME9P/7zqcVO3dOeYKQLm
+         DBfa1royiNE+C6c9QTGYw4dZrHriapjZRAGwdbw/rs5MOV0RpEkn/lekzvfK5MNyDgEp
+         vF6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751362101; x=1751966901;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vW8tXWZC+/EOEMWh/X8OhS7IFKfYxgh/KBq6rDgPsK4=;
+        b=xI0o2nB4Y7khQZfJmNcs5sLmC1/6s9FWo45cgWstbEgJxEh0IsVOhzMud6xpFU7hnN
+         Q1noimF7e6H3tp2yL+WAUMCjk8BpocmUSbxJ6cAM5FQZC9e1/sVceSS282L63BFU5O7/
+         ihnxW5J8RxAVa7d4425mrg4Rb/DdmN0+C800z7YGhSY21WZVYxTq9Oz+gnfEMX9yVEQb
+         3ck7sCRT//1vd9Azg0FkDfZ9t+xnUXKPhB7Ud/9tG9/Gkrnr93bWRmsfHYBJNZ/Ckmm/
+         gM+mAYEJY7TNn0u8Uw/b2ul04ikuaSHCWMbKHFAO7dx01WkGuWCBNFvZCp4YJx/PI3oz
+         vWPA==
+X-Forwarded-Encrypted: i=1; AJvYcCUDMDJDj1njdZG9zDzQZZcjJ6Kcitvk2gAQLJehbTsfYV37PBWTEYb6+5Rdb2aya5JPwrtm+4gNRNUrJYE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmcMROmwIAfviLNtwxwxdX6fRSitctTUPkFRWYHMrAcXlMCP7A
+	JivP3iknI/zUJtYqDHa/jOcsgf6BgiKOASCVxLN45u7mx+BFM5Rpo0dY2RvFNU6mRT0=
+X-Gm-Gg: ASbGncuzfs/vvThrW8WHcC8b98j9VvfXJSwM6JoobEho6SlhT+hhquxap4h8ZKnGPnM
+	BQMsW5IoLgTnQIfO9BD51LHBvFdmKjCsWeQ6eXw5+OJFQfKWG6rtdGUrVDFRvn80a4Gs0I8YU4+
+	sWY2k6SJBb+X8iRvOVgZ8EsllX5iBk0C96672IRbzmuzqyvBtvUc7EEt+PNPjS8uUyxOlf3ERbe
+	HNBgocBQslxw+Iew6iYm8z0h495GsFIHhF7UOjk6pJnbaqxeQehAbbTfXpZH/MWs6honyykwlPc
+	BMiRdKn2jMWWhWuPxClm8uP6Y86TukrFWPxcQ7qiW+9JAsD0GrgKnFEg5fZcqkjjiDtNr1IjlAl
+	071PJ3+QNyugnh766Y4UCpXj7QcH5V1SR
+X-Google-Smtp-Source: AGHT+IHbFo4CW/gWO5mfmqvdr8G+K+m/vpRfFZfo55Xt83CarSb1cUQYS0Vzv+Vrkh5sEZMITIneQQ==
+X-Received: by 2002:a17:907:a4e:b0:ae0:635c:a400 with SMTP id a640c23a62f3a-ae35016b435mr1478913866b.51.1751362101509;
+        Tue, 01 Jul 2025 02:28:21 -0700 (PDT)
+Received: from localhost (host-79-23-237-223.retail.telecomitalia.it. [79.23.237.223])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60e2a743d53sm1292386a12.28.2025.07.01.02.28.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 02:28:21 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Tue, 1 Jul 2025 11:30:01 +0200
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: rp1: silence uninitialized variable warning
+Message-ID: <aGOqmd5cvCeBjWMI@apocalypse>
+References: <748d256a-dc9d-4f85-aaa4-d480b7c4fd22@sabinyo.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <748d256a-dc9d-4f85-aaa4-d480b7c4fd22@sabinyo.mountain>
 
-Hi,
+Hi Dan,
 
-Am Dienstag, 1. Juli 2025, 09:04:41 CEST schrieb Peng Fan:
-> Add nodes for LVDS/DISPLAY CSR.
->=20
-> Add ldb_pll_div7 node which is used for clock source of DISPLAY CSR.
->=20
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+On 14:35 Mon 30 Jun     , Dan Carpenter wrote:
+> This default path could probably can't be reached but Smatch can't
+> verify it so it complains that "arg" isn't initialized on this path.
+> 
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+
+Thanks for your patch!
+
 > ---
->  arch/arm64/boot/dts/freescale/imx943.dtsi | 34 +++++++++++++++++++++++++=
-++++++
->  1 file changed, 34 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/freescale/imx943.dtsi b/arch/arm64/boot/=
-dts/freescale/imx943.dtsi
-> index 45b8da758e87771c0775eb799ce2da3aac37c060..cf67dba21e4f6f27fff7e5d29=
-744086e4ec9c021 100644
-> --- a/arch/arm64/boot/dts/freescale/imx943.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx943.dtsi
+> I didn't add a Fixes tag because this likely isn't a real bug.  Plus this
+> code is very new so it doesn't need to be backported anyway.
+> 
+> Also checkpatch complains:
+> 
+> 	WARNING: ENOTSUPP is not a SUSV4 error code, prefer EOPNOTSUPP
+> 
+> But I left it that way so it's consistent with the other return in
+> the function.  Maybe we should change both?
 
-Why is this specific to imx943 but not imx94? What is the difference anyway?
+We really can't get rid of that warning by replacing ENOTSUPP with
+EOPNOTSUPP because the core pinctrl code still rely on the 'wrong'
+define, like this excerpt from drivers/pinctrl/pinconf-generic.c:
 
-Best regards
-Alexander
+...
+	if (gname)
+		ret = pin_config_group_get(dev_name(pctldev->dev),
+					   gname, &config);
+	else
+		ret = pin_config_get_for_pin(pctldev, pin, &config);
+	/* These are legal errors */
+	if (ret == -EINVAL || ret == -ENOTSUPP)
+		continue;
+...
 
-> @@ -3,6 +3,8 @@
->   * Copyright 2025 NXP
->   */
-> =20
-> +#include <dt-bindings/clock/nxp,imx94-clock.h>
-> +
->  #include "imx94.dtsi"
-> =20
->  / {
-> @@ -145,4 +147,36 @@ l3_cache: l3-cache {
->  			cache-unified;
->  		};
->  	};
-> +
-> +	ldb_pll_pixel: ldb_pll_div7 {
-> +		compatible =3D "fixed-factor-clock";
-> +		#clock-cells =3D <0>;
-> +		clocks =3D <&scmi_clk IMX94_CLK_LDBPLL>;
-> +		clock-div =3D <7>;
-> +		clock-mult =3D <1>;
-> +		clock-output-names =3D "ldb_pll_div7";
-> +	};
-> +
-> +	soc {
-> +		dispmix_csr: syscon@4b010000 {
-> +			compatible =3D "nxp,imx94-display-csr", "syscon";
-> +			reg =3D <0x0 0x4b010000 0x0 0x10000>;
-> +			clocks =3D <&scmi_clk IMX94_CLK_DISPAPB>;
-> +			#clock-cells =3D <1>;
-> +			power-domains =3D <&scmi_devpd IMX94_PD_DISPLAY>;
-> +			assigned-clocks =3D <&scmi_clk IMX94_CLK_DISPAXI>,
-> +					  <&scmi_clk IMX94_CLK_DISPAPB>;
-> +			assigned-clock-parents =3D <&scmi_clk IMX94_CLK_SYSPLL1_PFD1>,
-> +						 <&scmi_clk IMX94_CLK_SYSPLL1_PFD1_DIV2>;
-> +			assigned-clock-rates =3D <400000000>,  <133333333>;
-> +		};
-> +
-> +		lvds_csr: syscon@4b0c0000 {
-> +			compatible =3D "nxp,imx94-lvds-csr", "syscon";
-> +			reg =3D <0x0 0x4b0c0000 0x0 0x10000>;
-> +			clocks =3D <&scmi_clk IMX94_CLK_DISPAPB>;
-> +			#clock-cells =3D <1>;
-> +			power-domains =3D <&scmi_devpd IMX94_PD_DISPLAY>;
-> +		};
-> +	};
->  };
->=20
->=20
+Also, many drivers still rely on ENOTSUPP. Maybe a patch that will
+fix all of them at once (drivers and core code) is in order, I have
+it in my todo list, indeed.
+Besides that,
 
+Reviewed-by: Andrea della Porta <andrea.porta@suse.com>
 
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
+Many thanks,
+Andrea
 
-
+> 
+>  drivers/pinctrl/pinctrl-rp1.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/pinctrl/pinctrl-rp1.c b/drivers/pinctrl/pinctrl-rp1.c
+> index d300f28c52cd..f9cc6b28994c 100644
+> --- a/drivers/pinctrl/pinctrl-rp1.c
+> +++ b/drivers/pinctrl/pinctrl-rp1.c
+> @@ -1524,6 +1524,8 @@ static int rp1_pinconf_get(struct pinctrl_dev *pctldev, unsigned int offset,
+>  		case RP1_PAD_DRIVE_12MA:
+>  			arg = 12;
+>  			break;
+> +		default:
+> +			return -ENOTSUPP;
+>  		}
+>  		break;
+>  	case PIN_CONFIG_BIAS_DISABLE:
+> -- 
+> 2.47.2
+> 
