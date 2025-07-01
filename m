@@ -1,385 +1,136 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A040027990D;
-	Tue,  1 Jul 2025 14:59:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1457127A454
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 15:00:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751381976; cv=none; b=svBwMqGa4e8ZKWzwvhzKNR71D1KFBEgzKT8fFSxvPSwk3RQ3zJzj9AQu139I0ezh0NSsGefsx23eHHr6mLfmS3j+CIHbcizCM6Uj+5SF+KuUR5S/SNtFzNVRpGuFILoxnQhY07a8gQUfOIczuzuyL2Lj9RMuE7O4DQP01Hg4Hq8=
+	t=1751382014; cv=none; b=Uc532swcG+MwmYl5No8z6IrNGRky8fzlVkkCxnqQD2YfRyRjWal9MlyVt1gFr5ueztbri6VViSClWRlW0ZYwWgbof5T46JLLsp7pSiR0oJ+z80K1k0Aun1neu9kBkqG02hItxWq6DT7CPpfTOvwbspwmtC8ycjEaLBFjSi0b+rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751381976; c=relaxed/simple;
-	bh=q7W5eCoZyGNKhRbQGrx9TjWx1gnAK95QWJ3Qko4ZTjE=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pKc4AUSTF27/jU4aT7TQ4Yr4loTN6skD9mJFrG1Re4OHfEWDPmGPjzCHPVtkT9cDgFpTSpoRGbuJqurjCLFwG3czBCPpFrqNtoZZ2rHrFzD6yh+WlVXsPkot6t8GV0aFD5cZCr67dGALsL9xhvFawSHQdyPiip19YYxyGkPJIb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bWmQ361mkz6L5GG;
-	Tue,  1 Jul 2025 22:59:07 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id C86FC14011A;
-	Tue,  1 Jul 2025 22:59:30 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 1 Jul
- 2025 16:59:30 +0200
-Date: Tue, 1 Jul 2025 15:59:28 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Dongsheng Yang <dongsheng.yang@linux.dev>
-CC: <mpatocka@redhat.com>, <agk@redhat.com>, <snitzer@kernel.org>,
-	<axboe@kernel.dk>, <hch@lst.de>, <dan.j.williams@intel.com>,
-	<linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-	<dm-devel@lists.linux.dev>
-Subject: Re: [PATCH v1 05/11] dm-pcache: add cache_segment
-Message-ID: <20250701155928.0000160a@huawei.com>
-In-Reply-To: <20250624073359.2041340-6-dongsheng.yang@linux.dev>
-References: <20250624073359.2041340-1-dongsheng.yang@linux.dev>
-	<20250624073359.2041340-6-dongsheng.yang@linux.dev>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1751382014; c=relaxed/simple;
+	bh=Dv8SFnw4QHK9Vp9igw/V0WvSsJQ688rKknXP7/SQp5k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ijf9DIbBB2e2Ybw1lg+p8GT0X48QdR0rBj2qee5U8FybxFp70NenInqnPkSSA3zE4cQZVFBXnxfX/uHQe+yNwaQLsku9i70Yq82ub1/0EEw1klmbGB+iPI2ZHZ95FvaQ+j9Cq5hfnVUh2U9E0hhhh+UrwLCZKlrPXtiSK+XZ8ew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sigma-star.at; spf=pass smtp.mailfrom=sigma-star.at; dkim=pass (2048-bit key) header.d=sigma-star.at header.i=@sigma-star.at header.b=fe7/8dQ0; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sigma-star.at
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sigma-star.at
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sigma-star.at header.i=@sigma-star.at header.b="fe7/8dQ0"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ae0dd7ac1f5so1000247666b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 08:00:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sigma-star.at; s=google; t=1751382008; x=1751986808; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Dv8SFnw4QHK9Vp9igw/V0WvSsJQ688rKknXP7/SQp5k=;
+        b=fe7/8dQ09R5YoRIODKMgtqvdgEPNi8JYRIogAhncN7w1xprjXSetH4oDco37CSn7nQ
+         +dtyA9ciPda5Dgnu/akgsL8ErbhnUGayKcoeyhCASaXhSx8GcVl5MnBwKJPq9trUBwfP
+         oCr6eoF0IfVDpKTXSBMAlr74sLkQRQGjWt7ovGZ8oj0bvT1u6Xs986KR6BdmApBqvtod
+         isUySaOAF/J6p+eKehFnwEWowLPIPCjuAyhiQkE3oPXQQd/2cmIB62EimtjMoX0YJ04I
+         uh1RYfZl9IZZ+AV3sXB1Yq2oNvUpvw51vTuHg2LKWqZn31tluSmeZNM4P5HfZaRvAel9
+         wiDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751382008; x=1751986808;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Dv8SFnw4QHK9Vp9igw/V0WvSsJQ688rKknXP7/SQp5k=;
+        b=f9ZCaxhlw/BjJpb+SE5ArIld8P6oQoyMzm7iuNsGth1868jCbdjKudChSV80T+71HB
+         PUoRNmzAYCpbODEx4SOlOEaSc1Y8SdZbKZkRHps35edg+HT2bF/r+mi1IyrlMswMpJbl
+         HEHDCXRtI2Iz1wLH6lnkclV0u2qRtXQxIf5Bo5XfHHpnQ2orDLhFvH4YAonitWIxndoy
+         aXZsmhp9PP1DVa0tSZTvjHFL0eZo8HoBlnEJCb9KV5nZF78GofVHHWI+vXZVERC0+ELy
+         JCFYKb8CKahGtlbLFLXkPICuVZsL9KfK9VpER46mIcmHPXW6DCapkkMigOTgqwZ4Vvvy
+         g8Dw==
+X-Gm-Message-State: AOJu0YyWwTzMPG9A9ZZN7/CxF0aBj2eHHCc3LBeEH3WoHhmmNcN2TkhM
+	ZR6darTsRE4dtb0MbaAnTIiqtZqTpSgaHPJUk3yqtuWNrIz5w2ALLbBENKflvJSZcUS3By5Gb+K
+	LHSeC
+X-Gm-Gg: ASbGncvLhNCxT5BOmEwNnw7ppX/nmqj+8W+BXP3uA8D1NTPQQjOisJ4XpzLBeMRwySd
+	pUbkpBGTg+ZEQ6EPt604vrSgg19+9WH/ZFocNuUEw4g0erdui7v1SQ89KjTXd5RDuX33sVmR7Ow
+	w9L+LVUsp+DcU2eMlZrEzL6ETm+KaL1/2BL9aZcS5NgnRcVVo5DvGAsGJ/j8L52OJgCURXaB/kY
+	bKVbFR9Iuu3CtlU8U63OW9OyltVlR3VOIZ1BVgjSE5Asku4pKtMyoo3enMQiPzLCSRL2xAZsPFF
+	5SnNchLqHiSyaKuGUDlzVfVl4Jsi3uPlLeal0oXrVMga6vGmRi6ftSi3aTaAvEGjhqtO8robedJ
+	rldphS9AqPyrMkIv+UjGLcqgiCOk=
+X-Google-Smtp-Source: AGHT+IGLFOb6fzmYCObV2ho5rVZPNSLZ/sa1I8TTloyJ53XBAnONtInDSsIdE/gqk3mJlbCtA06oVQ==
+X-Received: by 2002:a17:907:9d17:b0:ae3:5784:2b44 with SMTP id a640c23a62f3a-ae357842c32mr1267444766b.33.1751382008065;
+        Tue, 01 Jul 2025 08:00:08 -0700 (PDT)
+Received: from somecomputer (85-127-104-84.dsl.dynamic.surfer.at. [85.127.104.84])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae35363b244sm883840266b.30.2025.07.01.08.00.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 08:00:07 -0700 (PDT)
+From: Richard Weinberger <richard@sigma-star.at>
+To: Richard Weinberger <richard@nod.at>, linux-nvme@lists.infradead.org,
+ upstream@sigma-star.at, Damien Le Moal <dlemoal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, kch@nvidia.com, sagi@grimberg.me,
+ hch@lst.de, upstream+nvme@sigma-star.at
+Subject: Re: [PATCH v2] nvmet: Make blksize_shift configurable
+Date: Tue, 01 Jul 2025 17:00:06 +0200
+Message-ID: <3078386.UTt5R2Mg1o@nailgun>
+In-Reply-To: <7c5b852d-4f29-41c7-a171-c0069771a5e0@kernel.org>
+References:
+ <20250630191341.1263000-1-richard@nod.at> <2920993.eCsiYhmirv@nailgun>
+ <7c5b852d-4f29-41c7-a171-c0069771a5e0@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset="utf-8"
 
-On Tue, 24 Jun 2025 07:33:52 +0000
-Dongsheng Yang <dongsheng.yang@linux.dev> wrote:
-
-> Introduce *cache_segment.c*, the in-memory/on-disk glue that lets a
-> `struct pcache_cache` manage its array of data segments.
+On Dienstag, 1. Juli 2025 09:32 Damien Le Moal wrote:
+> > The initial intention of this patch was exposing the blksize_shift prop=
+erty.
+> > If we want to expose this as more user friendly, I'm fine with it.
+> > Maybe "minimum_io_size"?
 >=20
-> * Metadata handling
->   - Loads the most-recent replica of both the segment-info block
->     (`struct pcache_segment_info`) and per-segment generation counter
->     (`struct pcache_cache_seg_gen`) using `pcache_meta_find_latest()`.
->   - Updates those structures atomically with CRC + sequence rollover,
->     writing alternately to the two metadata slots inside each segment.
+> That likely will be confusing with the existing device limit io_min. I th=
+ink
+> block_size is clear.
+
+Ok!
+
+> >=20
+> >> Also, if the backend is an HDD, do we want to allow the user to config=
+ure a
+> >> block size that is less than the *physical* block size ? Performance w=
+ill
+> >> suffer on regular HDDs and writes may fail with SMR HDDs.
+> >=20
+> > I'm not sure whether it's worth putting more smartness into this logic.
 >=20
-> * Segment initialisation (`cache_seg_init`)
->   - Builds a `struct pcache_segment` pointing to the segment=E2=80=99s da=
-ta
->     area, sets up locks, generation counters, and, when formatting a new
->     cache, zeroes the on-segment kset header.
+> This may be nice to avoid users shooting themselves in the foot with a bad
+> setup and us having to deal with bad performance complaints...
+> If we do not do anything special, we will be stuck with it as a more
+> restrictive setup later may break some (bad) user setups. That is why I r=
+aised
+> the point :)
+
+Detecting whether the backend is an HDD should work via bdev_nonrot().
+So, we could issue a warning if bdev_nonrot() is true and the configured
+block size is less than bdev_physical_block_size()?
+
+> >> I am confused... This is going to check both... But if you got STATX_D=
+IOALIGN
+> >> and it is OK, you do not need (and probably should not) do the second =
+if, no ?
+> >=20
+> > I was not sure about that.
+> > Is it guaranteed that STATX_DIOALIGN returns something sane?
 >=20
-> * Linked-list of segments
->   - `cache_seg_set_next_seg()` stores the *next* segment id in
->     `seg_info->next_seg` and sets the HAS_NEXT flag, allowing a cache to
->     span multiple segments. This is important to allow other type of
->     segment added in future.
->=20
-> * Runtime life-cycle
->   - Reference counting (`cache_seg_get/put`) with invalidate-on-last-put
->     that clears the bitmap slot and schedules cleanup work.
->   - Generation bump (`cache_seg_gen_increase`) persists a new generation
->     record whenever the segment is modified.
->=20
-> * Allocator
->   - `get_cache_segment()` uses a bitmap and per-cache hint to pick the
->     next free segment, retrying with micro-delays when none are
->     immediately available.
->=20
-> Signed-off-by: Dongsheng Yang <dongsheng.yang@linux.dev>
-Minor stuff inline.
+> If it is defined by the FS, yes. But it may not be defined, so in that ca=
+se,
+> you have to use the fallback of the bdev block size.
 
-> ---
->  drivers/md/dm-pcache/cache_segment.c | 293 +++++++++++++++++++++++++++
->  1 file changed, 293 insertions(+)
->  create mode 100644 drivers/md/dm-pcache/cache_segment.c
->=20
-> diff --git a/drivers/md/dm-pcache/cache_segment.c b/drivers/md/dm-pcache/=
-cache_segment.c
-> new file mode 100644
-> index 000000000000..298f881874d1
-> --- /dev/null
-> +++ b/drivers/md/dm-pcache/cache_segment.c
-> @@ -0,0 +1,293 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +
-> +#include "cache_dev.h"
-> +#include "cache.h"
-> +#include "backing_dev.h"
-> +#include "dm_pcache.h"
-> +
-> +static inline struct pcache_segment_info *get_seg_info_addr(struct pcach=
-e_cache_segment *cache_seg)
-> +{
-> +	struct pcache_segment_info *seg_info_addr;
-> +	u32 seg_id =3D cache_seg->segment.seg_id;
-> +	void *seg_addr;
-> +
-> +	seg_addr =3D CACHE_DEV_SEGMENT(cache_seg->cache->cache_dev, seg_id);
-> +	seg_info_addr =3D seg_addr + PCACHE_SEG_INFO_SIZE * cache_seg->info_ind=
-ex;
-> +
-> +	return seg_info_addr;
+Ok!
 
-Little point in this local variable.
+LG,
+//richard
 
-	return seg_addr + PCACHE_SEG_INFO_SIZE * cache_seg->info_index;
-
-> +}
-> +
-> +static void cache_seg_info_write(struct pcache_cache_segment *cache_seg)
-> +{
-> +	struct pcache_segment_info *seg_info_addr;
-> +	struct pcache_segment_info *seg_info =3D &cache_seg->cache_seg_info;
-> +
-> +	mutex_lock(&cache_seg->info_lock);
-
-guard() here to avoid need to release below.
-
-> +	seg_info->header.seq++;
-> +	seg_info->header.crc =3D pcache_meta_crc(&seg_info->header, sizeof(stru=
-ct pcache_segment_info));
-> +
-> +	seg_info_addr =3D get_seg_info_addr(cache_seg);
-> +	memcpy_flushcache(seg_info_addr, seg_info, sizeof(struct pcache_segment=
-_info));
-> +	pmem_wmb();
-> +
-> +	cache_seg->info_index =3D (cache_seg->info_index + 1) % PCACHE_META_IND=
-EX_MAX;
-> +	mutex_unlock(&cache_seg->info_lock);
-> +}
-> +
-> +static int cache_seg_info_load(struct pcache_cache_segment *cache_seg)
-> +{
-> +	struct pcache_segment_info *cache_seg_info_addr_base, *cache_seg_info_a=
-ddr;
-> +	struct pcache_cache_dev *cache_dev =3D cache_seg->cache->cache_dev;
-> +	struct dm_pcache *pcache =3D CACHE_DEV_TO_PCACHE(cache_dev);
-> +	u32 seg_id =3D cache_seg->segment.seg_id;
-> +	int ret =3D 0;
-> +
-> +	cache_seg_info_addr_base =3D CACHE_DEV_SEGMENT(cache_dev, seg_id);
-> +
-> +	mutex_lock(&cache_seg->info_lock);
-
-As below guard() will improve this code though you will need to change how =
-the error
-message is printed.
-
-> +	cache_seg_info_addr =3D pcache_meta_find_latest(&cache_seg_info_addr_ba=
-se->header,
-> +						sizeof(struct pcache_segment_info),
-> +						PCACHE_SEG_INFO_SIZE,
-> +						&cache_seg->cache_seg_info);
-> +	if (IS_ERR(cache_seg_info_addr)) {
-> +		ret =3D PTR_ERR(cache_seg_info_addr);
-> +		goto out;
-> +	} else if (!cache_seg_info_addr) {
-> +		ret =3D -EIO;
-> +		goto out;
-> +	}
-> +	cache_seg->info_index =3D cache_seg_info_addr - cache_seg_info_addr_bas=
-e;
-> +out:
-> +	mutex_unlock(&cache_seg->info_lock);
-> +
-> +	if (ret)
-> +		pcache_dev_err(pcache, "can't read segment info of segment: %u, ret: %=
-d\n",
-> +			      cache_seg->segment.seg_id, ret);
-> +	return ret;
-> +}
-> +
-> +static int cache_seg_ctrl_load(struct pcache_cache_segment *cache_seg)
-> +{
-> +	struct pcache_cache_seg_ctrl *cache_seg_ctrl =3D cache_seg->cache_seg_c=
-trl;
-> +	struct pcache_cache_seg_gen cache_seg_gen, *cache_seg_gen_addr;
-
-Don't mix pointer and none pointer in one line of declaration. Just
-a tiny bit tricky to read.
+=2D-=20
+=E2=80=8B=E2=80=8B=E2=80=8B=E2=80=8B=E2=80=8Bsigma star gmbh | Eduard-Bodem=
+=2DGasse 6, 6020 Innsbruck, AUT UID/VAT Nr:
+ATU 66964118 | FN: 374287y
 
 
-> +	int ret =3D 0;
-> +
-> +	mutex_lock(&cache_seg->ctrl_lock);
-
-guard() to allow returns on error paths without worrying about the lock
-being released as leaving the scope will do it for you.
-
-
-> +	cache_seg_gen_addr =3D pcache_meta_find_latest(&cache_seg_ctrl->gen->he=
-ader,
-> +					     sizeof(struct pcache_cache_seg_gen),
-sizeof(cache_seg_gen) perhaps?
-> +					     sizeof(struct pcache_cache_seg_gen),
-> +					     &cache_seg_gen);
-> +	if (IS_ERR(cache_seg_gen_addr)) {
-> +		ret =3D PTR_ERR(cache_seg_gen_addr);
-> +		goto out;
-> +	}
-> +
-> +	if (!cache_seg_gen_addr) {
-> +		cache_seg->gen =3D 0;
-> +		cache_seg->gen_seq =3D 0;
-> +		cache_seg->gen_index =3D 0;
-> +		goto out;
-> +	}
-> +
-> +	cache_seg->gen =3D cache_seg_gen.gen;
-> +	cache_seg->gen_seq =3D cache_seg_gen.header.seq;
-> +	cache_seg->gen_index =3D (cache_seg_gen_addr - cache_seg_ctrl->gen);
-> +out:
-> +	mutex_unlock(&cache_seg->ctrl_lock);
-> +
-> +	return ret;
-> +}
-
-> +
-> +static void cache_seg_ctrl_write(struct pcache_cache_segment *cache_seg)
-> +{
-> +	struct pcache_cache_seg_gen cache_seg_gen;
-> +
-> +	mutex_lock(&cache_seg->ctrl_lock);
-
-Consider guard(mutex)()
-
-> +	cache_seg_gen.gen =3D cache_seg->gen;
-> +	cache_seg_gen.header.seq =3D ++cache_seg->gen_seq;
-> +	cache_seg_gen.header.crc =3D pcache_meta_crc(&cache_seg_gen.header,
-> +						 sizeof(struct pcache_cache_seg_gen));
-> +
-> +	memcpy_flushcache(get_cache_seg_gen_addr(cache_seg), &cache_seg_gen, si=
-zeof(struct pcache_cache_seg_gen));
-> +	pmem_wmb();
-> +
-> +	cache_seg->gen_index =3D (cache_seg->gen_index + 1) % PCACHE_META_INDEX=
-_MAX;
-> +	mutex_unlock(&cache_seg->ctrl_lock);
-> +}
-
-> +
-> +static int cache_seg_meta_load(struct pcache_cache_segment *cache_seg)
-> +{
-> +	int ret;
-> +
-> +	ret =3D cache_seg_info_load(cache_seg);
-> +	if (ret)
-> +		goto err;
-
-		return ret;
-
-in these paths simpler to follow.  If DM always does this pattern fair enou=
-gh
-to follow local style.
-
-> +
-> +	ret =3D cache_seg_ctrl_load(cache_seg);
-> +	if (ret)
-> +		goto err;
-> +
-> +	return 0;
-> +err:
-> +	return ret;
-> +}
-
-> +int cache_seg_init(struct pcache_cache *cache, u32 seg_id, u32 cache_seg=
-_id,
-> +		   bool new_cache)
-> +{
-> +	struct pcache_cache_dev *cache_dev =3D cache->cache_dev;
-> +	struct pcache_cache_segment *cache_seg =3D &cache->segments[cache_seg_i=
-d];
-> +	struct pcache_segment_init_options seg_options =3D { 0 };
-> +	struct pcache_segment *segment =3D &cache_seg->segment;
-> +	int ret;
-> +
-> +	cache_seg->cache =3D cache;
-> +	cache_seg->cache_seg_id =3D cache_seg_id;
-> +	spin_lock_init(&cache_seg->gen_lock);
-> +	atomic_set(&cache_seg->refs, 0);
-> +	mutex_init(&cache_seg->info_lock);
-> +	mutex_init(&cache_seg->ctrl_lock);
-> +
-> +	/* init pcache_segment */
-> +	seg_options.type =3D PCACHE_SEGMENT_TYPE_CACHE_DATA;
-> +	seg_options.data_off =3D PCACHE_CACHE_SEG_CTRL_OFF + PCACHE_CACHE_SEG_C=
-TRL_SIZE;
-> +	seg_options.seg_id =3D seg_id;
-> +	seg_options.seg_info =3D &cache_seg->cache_seg_info;
-> +	pcache_segment_init(cache_dev, segment, &seg_options);
-> +
-> +	cache_seg->cache_seg_ctrl =3D CACHE_DEV_SEGMENT(cache_dev, seg_id) + PC=
-ACHE_CACHE_SEG_CTRL_OFF;
-> +
-> +	if (new_cache) {
-I'd flip logic so
-	if (!new_cache)
-		return cache_seg_meta_load(cache_seg);
-
-	cache_dev_zero_range()
-etc.
-
-Sometimes it's better to exist quickly in the simple case and have
-the straight line code deal with the more complex stuff (indented a little =
-less)
-
-> +		cache_dev_zero_range(cache_dev, CACHE_DEV_SEGMENT(cache_dev, seg_id),
-> +				     PCACHE_SEG_INFO_SIZE * PCACHE_META_INDEX_MAX +
-> +				     PCACHE_CACHE_SEG_CTRL_SIZE);
-> +
-> +		cache_seg_ctrl_init(cache_seg);
-> +
-> +		cache_seg->info_index =3D 0;
-> +		cache_seg_info_write(cache_seg);
-> +
-> +		/* clear outdated kset in segment */
-> +		memcpy_flushcache(segment->data, &pcache_empty_kset, sizeof(struct pca=
-che_cache_kset_onmedia));
-> +		pmem_wmb();
-> +	} else {
-> +		ret =3D cache_seg_meta_load(cache_seg);
-> +		if (ret)
-> +			goto err;
-
-In this case we return immediately whether good or bad, so
-
-		return cache_seg_meta_load(cache_seg);
-
-> +	}
-> +
-> +	return 0;
-> +err:
-> +	return ret;
-As in earlier patch reviews, don't have a label that is just return.  Retur=
-n instead
-of the gotos.
-
-> +}
-
-
-> +static void cache_seg_invalidate(struct pcache_cache_segment *cache_seg)
-> +{
-> +	struct pcache_cache *cache;
-
-Might as well do the more compact
-	struct pcache_cache *cache =3D cache_seg->cache;
-
-> +
-> +	cache =3D cache_seg->cache;
-> +	cache_seg_gen_increase(cache_seg);
-> +
-> +	spin_lock(&cache->seg_map_lock);
-> +	if (cache->cache_full)
-> +		cache->cache_full =3D false;
-
-Perhaps just write cache->cache_full =3D false unconditionally?
-If there is a reason to not do the write, then add a comment here.
-
-> +	clear_bit(cache_seg->cache_seg_id, cache->seg_map);
-> +	spin_unlock(&cache->seg_map_lock);
-> +
-> +	pcache_defer_reqs_kick(CACHE_TO_PCACHE(cache));
-> +	/* clean_work will clean the bad key in key_tree*/
-> +	queue_work(cache_get_wq(cache), &cache->clean_work);
-> +}
