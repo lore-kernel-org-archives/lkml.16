@@ -1,136 +1,164 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1457127A454
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 15:00:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5BAC2749ED
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 15:01:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751382014; cv=none; b=Uc532swcG+MwmYl5No8z6IrNGRky8fzlVkkCxnqQD2YfRyRjWal9MlyVt1gFr5ueztbri6VViSClWRlW0ZYwWgbof5T46JLLsp7pSiR0oJ+z80K1k0Aun1neu9kBkqG02hItxWq6DT7CPpfTOvwbspwmtC8ycjEaLBFjSi0b+rs=
+	t=1751382071; cv=none; b=k2A410FGsQJtC+2V8+L4WEwu5CA7U1xS6vhPhBpN3BSRCqgymWTQFDcENQCypokxWeDRlU6H9TUFipxnlv2Suo7QmixIRkp2j7A58+bnMXiRVP0C9uGjHHLhy3BR0wI0rjFMblE9tSUzyHr8XjdeGtz37iKt1hNz3mDtMw2Lhv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751382014; c=relaxed/simple;
-	bh=Dv8SFnw4QHK9Vp9igw/V0WvSsJQ688rKknXP7/SQp5k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ijf9DIbBB2e2Ybw1lg+p8GT0X48QdR0rBj2qee5U8FybxFp70NenInqnPkSSA3zE4cQZVFBXnxfX/uHQe+yNwaQLsku9i70Yq82ub1/0EEw1klmbGB+iPI2ZHZ95FvaQ+j9Cq5hfnVUh2U9E0hhhh+UrwLCZKlrPXtiSK+XZ8ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sigma-star.at; spf=pass smtp.mailfrom=sigma-star.at; dkim=pass (2048-bit key) header.d=sigma-star.at header.i=@sigma-star.at header.b=fe7/8dQ0; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sigma-star.at
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sigma-star.at
+	s=arc-20240116; t=1751382071; c=relaxed/simple;
+	bh=XanmgT4emsW2NMQRZpvM+8C/v1OSXlMO1Cx19rYH6Ks=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tc+qlIV0BttHMArL0TVIIrS7FEeuwXZLP5quuaYvUaPyRRmKY6+rrsQq4ieV59M+J+VxN4QxWekCe7yMsFw9K7k2/Hn5CJQ/l30J/UULcwL0mcCYkmWqOyqpwS89p/qj50XXvyunFH7uULRv/9ZKRMj3cBvFP4x1BtxohXjS6n8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=T1bcbpPg; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=yNpNY4nh; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=qeuZhVoQ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=elSxLAnn; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sigma-star.at header.i=@sigma-star.at header.b="fe7/8dQ0"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ae0dd7ac1f5so1000247666b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 08:00:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sigma-star.at; s=google; t=1751382008; x=1751986808; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Dv8SFnw4QHK9Vp9igw/V0WvSsJQ688rKknXP7/SQp5k=;
-        b=fe7/8dQ09R5YoRIODKMgtqvdgEPNi8JYRIogAhncN7w1xprjXSetH4oDco37CSn7nQ
-         +dtyA9ciPda5Dgnu/akgsL8ErbhnUGayKcoeyhCASaXhSx8GcVl5MnBwKJPq9trUBwfP
-         oCr6eoF0IfVDpKTXSBMAlr74sLkQRQGjWt7ovGZ8oj0bvT1u6Xs986KR6BdmApBqvtod
-         isUySaOAF/J6p+eKehFnwEWowLPIPCjuAyhiQkE3oPXQQd/2cmIB62EimtjMoX0YJ04I
-         uh1RYfZl9IZZ+AV3sXB1Yq2oNvUpvw51vTuHg2LKWqZn31tluSmeZNM4P5HfZaRvAel9
-         wiDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751382008; x=1751986808;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Dv8SFnw4QHK9Vp9igw/V0WvSsJQ688rKknXP7/SQp5k=;
-        b=f9ZCaxhlw/BjJpb+SE5ArIld8P6oQoyMzm7iuNsGth1868jCbdjKudChSV80T+71HB
-         PUoRNmzAYCpbODEx4SOlOEaSc1Y8SdZbKZkRHps35edg+HT2bF/r+mi1IyrlMswMpJbl
-         HEHDCXRtI2Iz1wLH6lnkclV0u2qRtXQxIf5Bo5XfHHpnQ2orDLhFvH4YAonitWIxndoy
-         aXZsmhp9PP1DVa0tSZTvjHFL0eZo8HoBlnEJCb9KV5nZF78GofVHHWI+vXZVERC0+ELy
-         JCFYKb8CKahGtlbLFLXkPICuVZsL9KfK9VpER46mIcmHPXW6DCapkkMigOTgqwZ4Vvvy
-         g8Dw==
-X-Gm-Message-State: AOJu0YyWwTzMPG9A9ZZN7/CxF0aBj2eHHCc3LBeEH3WoHhmmNcN2TkhM
-	ZR6darTsRE4dtb0MbaAnTIiqtZqTpSgaHPJUk3yqtuWNrIz5w2ALLbBENKflvJSZcUS3By5Gb+K
-	LHSeC
-X-Gm-Gg: ASbGncvLhNCxT5BOmEwNnw7ppX/nmqj+8W+BXP3uA8D1NTPQQjOisJ4XpzLBeMRwySd
-	pUbkpBGTg+ZEQ6EPt604vrSgg19+9WH/ZFocNuUEw4g0erdui7v1SQ89KjTXd5RDuX33sVmR7Ow
-	w9L+LVUsp+DcU2eMlZrEzL6ETm+KaL1/2BL9aZcS5NgnRcVVo5DvGAsGJ/j8L52OJgCURXaB/kY
-	bKVbFR9Iuu3CtlU8U63OW9OyltVlR3VOIZ1BVgjSE5Asku4pKtMyoo3enMQiPzLCSRL2xAZsPFF
-	5SnNchLqHiSyaKuGUDlzVfVl4Jsi3uPlLeal0oXrVMga6vGmRi6ftSi3aTaAvEGjhqtO8robedJ
-	rldphS9AqPyrMkIv+UjGLcqgiCOk=
-X-Google-Smtp-Source: AGHT+IGLFOb6fzmYCObV2ho5rVZPNSLZ/sa1I8TTloyJ53XBAnONtInDSsIdE/gqk3mJlbCtA06oVQ==
-X-Received: by 2002:a17:907:9d17:b0:ae3:5784:2b44 with SMTP id a640c23a62f3a-ae357842c32mr1267444766b.33.1751382008065;
-        Tue, 01 Jul 2025 08:00:08 -0700 (PDT)
-Received: from somecomputer (85-127-104-84.dsl.dynamic.surfer.at. [85.127.104.84])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae35363b244sm883840266b.30.2025.07.01.08.00.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 08:00:07 -0700 (PDT)
-From: Richard Weinberger <richard@sigma-star.at>
-To: Richard Weinberger <richard@nod.at>, linux-nvme@lists.infradead.org,
- upstream@sigma-star.at, Damien Le Moal <dlemoal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, kch@nvidia.com, sagi@grimberg.me,
- hch@lst.de, upstream+nvme@sigma-star.at
-Subject: Re: [PATCH v2] nvmet: Make blksize_shift configurable
-Date: Tue, 01 Jul 2025 17:00:06 +0200
-Message-ID: <3078386.UTt5R2Mg1o@nailgun>
-In-Reply-To: <7c5b852d-4f29-41c7-a171-c0069771a5e0@kernel.org>
-References:
- <20250630191341.1263000-1-richard@nod.at> <2920993.eCsiYhmirv@nailgun>
- <7c5b852d-4f29-41c7-a171-c0069771a5e0@kernel.org>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="T1bcbpPg";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="yNpNY4nh";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="qeuZhVoQ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="elSxLAnn"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id B78CB1F393;
+	Tue,  1 Jul 2025 15:01:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751382068;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PrlBdP+Tjw8if4zoCMtG99E5Zyd2qYrN4g60rXZUKKA=;
+	b=T1bcbpPgK1KnNsa8RMNe7aHibKuZIkzbHDPW7PJVbY5000ijHstdwd0zu5rcB4SsRDhJ3o
+	iRnuRUZMGI6Y4/SLVCL3TEcejc2TrNNb46Y0GDroxkqCAWmtdPKWtyZzG5gfs9IN/VmoEa
+	iKZ0gWCNCzgZXHLS6JBOXgE1pX1J47c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751382068;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PrlBdP+Tjw8if4zoCMtG99E5Zyd2qYrN4g60rXZUKKA=;
+	b=yNpNY4nh+6AscpZS9gXkPwkOzjEVJ9kKpV35mXfd+3qSH5zaD85VcZYnUQDaIFPD4QLdUF
+	zO4Lpz2S0ypAyNBQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=qeuZhVoQ;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=elSxLAnn
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751382066;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PrlBdP+Tjw8if4zoCMtG99E5Zyd2qYrN4g60rXZUKKA=;
+	b=qeuZhVoQu8lhHRnSxmWPwmVHP6xSwCYovqY4vZRV8/0rE7WJLl3Z2womW+ETdreWZeas8L
+	RwUzA6xY3ZdR1rctP49iKVhNGPt7W3NcwAT8doJlDa5p6tfozJHsQiL8P6JQERwMqXkeAD
+	gImyLc/H5uKDedRELd/8/Czy2WjkIQA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751382066;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PrlBdP+Tjw8if4zoCMtG99E5Zyd2qYrN4g60rXZUKKA=;
+	b=elSxLAnnse1u9S0s2fgM5czRSZrh3C623hFwU+5C+gtMbNnyct4KXWuXWGYCF9yMyCStk4
+	1SYtXo2cZLGfnsDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 51F4113890;
+	Tue,  1 Jul 2025 15:01:06 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id VvuiEjL4Y2glGwAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Tue, 01 Jul 2025 15:01:06 +0000
+Date: Tue, 1 Jul 2025 17:01:05 +0200
+From: David Sterba <dsterba@suse.cz>
+To: David Sterba <dsterba@suse.cz>
+Cc: Caleb Sander Mateos <csander@purestorage.com>, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+	Jens Axboe <axboe@kernel.dk>, Mark Harmstone <maharmstone@fb.com>,
+	linux-btrfs@vger.kernel.org, io-uring@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] io_uring/btrfs: remove struct io_uring_cmd_data
+Message-ID: <20250701150104.GT31241@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <20250619192748.3602122-1-csander@purestorage.com>
+ <20250620154743.GY4037@twin.jikos.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620154743.GY4037@twin.jikos.cz>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [0.79 / 50.00];
+	REPLYTO_EQ_TO_ADDR(5.00)[];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[twin.jikos.cz:mid,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.cz:dkim,suse.cz:replyto]
+X-Spamd-Bar: /
+X-Rspamd-Queue-Id: B78CB1F393
+X-Spam-Score: 0.79
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Dienstag, 1. Juli 2025 09:32 Damien Le Moal wrote:
-> > The initial intention of this patch was exposing the blksize_shift prop=
-erty.
-> > If we want to expose this as more user friendly, I'm fine with it.
-> > Maybe "minimum_io_size"?
->=20
-> That likely will be confusing with the existing device limit io_min. I th=
-ink
-> block_size is clear.
+On Fri, Jun 20, 2025 at 05:47:43PM +0200, David Sterba wrote:
+> On Thu, Jun 19, 2025 at 01:27:44PM -0600, Caleb Sander Mateos wrote:
+> > btrfs's ->uring_cmd() implementations are the only ones using io_uring_cmd_data
+> > to store data that lasts for the lifetime of the uring_cmd. But all uring_cmds
+> > have to pay the memory and CPU cost of initializing this field and freeing the
+> > pointer if necessary when the uring_cmd ends. There is already a pdu field in
+> > struct io_uring_cmd that ->uring_cmd() implementations can use for storage. The
+> > only benefit of op_data seems to be that io_uring initializes it, so
+> > ->uring_cmd() can read it to tell if there was a previous call to ->uring_cmd().
+> > 
+> > Introduce a flag IORING_URING_CMD_REISSUE that ->uring_cmd() implementations can
+> > use to tell if this is the first call to ->uring_cmd() or a reissue of the
+> > uring_cmd. Switch btrfs to use the pdu storage for its btrfs_uring_encoded_data.
+> > If IORING_URING_CMD_REISSUE is unset, allocate a new btrfs_uring_encoded_data.
+> > If it's set, use the existing one in op_data. Free the btrfs_uring_encoded_data
+> > in the btrfs layer instead of relying on io_uring to free op_data. Finally,
+> > remove io_uring_cmd_data since it's now unused.
+> > 
+> > Caleb Sander Mateos (4):
+> >   btrfs/ioctl: don't skip accounting in early ENOTTY return
+> >   io_uring/cmd: introduce IORING_URING_CMD_REISSUE flag
+> >   btrfs/ioctl: store btrfs_uring_encoded_data in io_btrfs_cmd
+> >   io_uring/cmd: remove struct io_uring_cmd_data
+> 
+> The first patch is a fix so it can be put to a -rc queue.
 
-Ok!
+I've picked the first patch to for-next.
 
-> >=20
-> >> Also, if the backend is an HDD, do we want to allow the user to config=
-ure a
-> >> block size that is less than the *physical* block size ? Performance w=
-ill
-> >> suffer on regular HDDs and writes may fail with SMR HDDs.
-> >=20
-> > I'm not sure whether it's worth putting more smartness into this logic.
->=20
-> This may be nice to avoid users shooting themselves in the foot with a bad
-> setup and us having to deal with bad performance complaints...
-> If we do not do anything special, we will be stuck with it as a more
-> restrictive setup later may break some (bad) user setups. That is why I r=
-aised
-> the point :)
+> The rest change the io_uring logic, so it's not up to me, but regarding
+> how to merge them either via btrfs or io_uring tree work for me.
 
-Detecting whether the backend is an HDD should work via bdev_nonrot().
-So, we could issue a warning if bdev_nonrot() is true and the configured
-block size is less than bdev_physical_block_size()?
-
-> >> I am confused... This is going to check both... But if you got STATX_D=
-IOALIGN
-> >> and it is OK, you do not need (and probably should not) do the second =
-if, no ?
-> >=20
-> > I was not sure about that.
-> > Is it guaranteed that STATX_DIOALIGN returns something sane?
->=20
-> If it is defined by the FS, yes. But it may not be defined, so in that ca=
-se,
-> you have to use the fallback of the bdev block size.
-
-Ok!
-
-LG,
-//richard
-
-=2D-=20
-=E2=80=8B=E2=80=8B=E2=80=8B=E2=80=8B=E2=80=8Bsigma star gmbh | Eduard-Bodem=
-=2DGasse 6, 6020 Innsbruck, AUT UID/VAT Nr:
-ATU 66964118 | FN: 374287y
-
-
+This is still pending. I can take it but need an ack.
