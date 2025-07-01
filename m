@@ -1,157 +1,355 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7037275110;
-	Tue,  1 Jul 2025 14:26:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 985E926F45F
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 14:27:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751380011; cv=none; b=TfJvyewQXbnfGQjeuHxyO8KGwoJa9BUl2n6LugSbMkx7JGje4G/rZEtDwKNDMzMnrvTnbPT6mADJkLf5tuMXZzoc31OBwXHAiVJlRdupgUMCN8rG8CUBZCKizw25K9WvaSaZnRIdyd/IuOsBeXHm2Zc+IUY4s3l21/b74RNDexc=
+	t=1751380035; cv=none; b=F8zACVk+kevaGezaOuxxKbJNRuu/FSnZwFAntzOnF0ZHt+4JL4RsVE6Un2Wsp3jHr4R7LfyAKGd2ol+evpG3diDcZQx5gH4VQsRfcAEjZzxowbz6vmakJS5FxZyOfydD7qoa90n/S4Vh6psuui8iN6P7dp5Vw85Y5AmJYO68KiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751380011; c=relaxed/simple;
-	bh=VKqbpDnp5YJWvYSLSzCjGnGFYy7lHAIC4MNQGUWCoOg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tp+HKBzxhF4dVcOOC5Cgwkd2QkYUfpzBv4xB2XtbD24L9TIOeYmKZ3PDOwMH74aa9/9mAZ0bV2g1Sca9Rrla9lCCvvJNbBlbeTQmsVnHvWV0750qXO55UQd1j7YgeqiyaozsBn+yYn++RtzsDVqUX+TYo2mf4SU2JZ0MakRyG00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hD+BtCUd; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751380035; c=relaxed/simple;
+	bh=9XcgClbbwQjBFqj9Pb6TKTEF7hl9jxfi0SkLdentSys=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QkzOYbb2p1dIlQQr03W8UAWhnyPfdEIbou1dq22Duocw9U8l4oy7BnsVBpSQgkvOL1SXW+jK664cO+ReM4xcyT+JCvLHL6kopfs/SA0GYzC2mvin2uJMrOoAkhkBQ7giTJUrT4h79nT+OWxOpjVAdglR1xDSWBEH+I+O1P+1gkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qvj7kjYz; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hD+BtCUd"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-451e2f0d9c2so40540635e9.1;
-        Tue, 01 Jul 2025 07:26:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qvj7kjYz"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-749068b9b63so4211425b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 07:27:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751380008; x=1751984808; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=G5C6WmevjDKaDna/31sfLEs3MsnwkVO9XcEaPYksnvI=;
-        b=hD+BtCUdi872p7AjaKgK02q1IaWKDNpumXa7GWBWNdQS29z95qTeNzIGIkcIfB5JzJ
-         Czwiw9bGmMlqZCkkY1E047zNe1gIq8xtluZREyDO38JXRXevgUf9QfklgKupRjU8geDa
-         HT+5U3jJgJ3WckhtqR1GXQbqlg9rKxul10NgqVgd+krL+yw/CiTsfDc7Yr+m4b/uQv8X
-         +INzL+t2Y357azOUGDxgQ9JcJ7KrYMIElMLC7AKRxOPTJWMEqbDqYXoR0t05+yoK6WqQ
-         1c/dVtgzH0k2ddF+NOmgeK+A8UJLlxaRLpIQE7IHrneKCty9SqCSOtXTCRoBk4ComRG5
-         r6Cw==
+        d=linaro.org; s=google; t=1751380033; x=1751984833; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=D/LzDFUd08uVqn1UnqBLix0fV11YVLJxk07IbCif910=;
+        b=qvj7kjYziKr3bm4UaVXxHTwoXwEC/Lw6sBbzmjEywp8iXF2bUwP40Ol26fO13ftPAV
+         ltAOei6RoNYKd5N1r5wdRw6X4+IZc9X6IjNlEpKUaXz4Nz5eYkL/p+hsUJn9kvMFkyNI
+         l+o5CMbA4QCjrpwBQWpcSlWZ6JdvS/wBkxhkPV3gdQm0nKoIXxRKRxurC9hpEZVibQip
+         NWDiHKJFxmS/dXhQq4U3Pj5A3gM+CkXiVZB2WuCwJA0SYO8XbiJv5jQOHKzowpYuvVTH
+         TwyTE5/e9EBV6qTztvJYITQPzP5fJ/4XjTHi8AguDLPEdMs2gqVidpIwGVT/TQYg+xx2
+         qJQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751380008; x=1751984808;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=G5C6WmevjDKaDna/31sfLEs3MsnwkVO9XcEaPYksnvI=;
-        b=U+h0Pfx1fuk54ZTACng3LYHkiDQItGUAkDj7aGo3QWxXypWbKphykYZ1x9hMm8fd6N
-         Vk3AyWglQ9iRUMZSsJhbuf4Rt48Z3e8DrlwLKHicMNtKQS0rEXkXtiatpADwc0Ie2Dhx
-         UbXEUKJ/CJwTHWc5jLhEdzwsECOUGHDgbG0sfIGw6okmmVWMZJOcu+2M+OewKTWmORjP
-         2gnxZoIDle+C4md1aRuqCtUixcoFGOnswdU9HLS50sxjv7gARdAn23fEBXcp+dT6pMMh
-         q+KQF9BJdMm3GsqCwORS6fHCujsxlUrSodUVX7SBRNpmzOoe30E9nllw/kJfSOwA1r5i
-         5FWA==
-X-Forwarded-Encrypted: i=1; AJvYcCUpm3nRIFBoPycTqtQ75SW3Oec72HSyFsp8RZK3/z3ImSjlK0+H/hN2jTElkMB+zD1ri4WWys3O@vger.kernel.org, AJvYcCWyuy2M8wdVTn9K5lXZgD6ZdU3CRt+OGJt7owqsf9muJJOUUDs+v4EpteVkOyk7IKyaSleb9FHGXRyP2ZY=@vger.kernel.org, AJvYcCXFR6H24WEYma5Mf4utoTStDB3+FRG1tuwQ/P9340dlREV4ooU2G6BvzhrwUH5mHTYAHFvbpNK95UtH7SM/q74=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTM0zkQgBnq4TBxiVMDk0b0IIc9xZKj9pxBvYwNUPzMxJnO7pV
-	2hWWG4jKLgHx+T8oDMF9O097QB7okue+QL/ZtQIysw1e5oWmE4GXPSF6+szaGA==
-X-Gm-Gg: ASbGncvUjttwAZyMZ1uEpb29XTn1j8o/ldKL4PLteW7z3hDTi7EgxilVxVdSF6zB8pp
-	TRuZQfyYZnKxFg4Fu+oDcOfAauIugEs70pIlSyhgtoDVprqhZKF7pGf7GX/4H1IgZCUh0o2mSQt
-	iEgJO07/N9Z07zdiSzTuA++4uP7DwNSOICT8FilMWPcsmYGCk8K+eiN/IvpiGc5SrGCsAmR7bzQ
-	/scGvocGaeJSdP6TKkWZh9wReAxaBRf0mf37nNprgWxsv+nTdRgB+i+gOd7rIGbGwtNhzR+z+Fk
-	b3knPB0+3Co+axCWPVl3wXm5sYsyZl4uMBW8toOMNnXfuJibzlKGdEJ+uiVP43zLV3awkWfgZjE
-	guz2oyFAGtPuGCg==
-X-Google-Smtp-Source: AGHT+IHLYhRpmrOeQjexDpy6zXKzSJNFPKeQh79s40oGD2wiJVnkYFi5mmgQTeBcRR+8+ZYfSwIpNg==
-X-Received: by 2002:a05:600c:45d0:b0:439:4b23:9e8e with SMTP id 5b1f17b1804b1-45422f306b3mr29199855e9.3.1751380007710;
-        Tue, 01 Jul 2025 07:26:47 -0700 (PDT)
-Received: from vitor-nb.. (bl21-87-120.dsl.telepac.pt. [2.82.87.120])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823ad20bsm197980195e9.20.2025.07.01.07.26.46
+        d=1e100.net; s=20230601; t=1751380033; x=1751984833;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=D/LzDFUd08uVqn1UnqBLix0fV11YVLJxk07IbCif910=;
+        b=EqEcWG6CxbIKB1lG0t0zVF/Hutr+r6cu2regzrxf8GBxnekeQ32Yf3wOhpsUF5m7TY
+         2fa4STSUTbQVT8AubCNHYblDmrl5FIMrBMr2fzuKDzhH4eTL5RqkrVr/JpnJC0lB+3i0
+         HXx2pCKUavyHEJJHFxF4i0Q41qjTcG9tgZ1rNBEyOFyAJ004d7ZnVUXGBl8dIfmz13GO
+         YspnIPQO+ueZBwKmxhDi0UvTYao2TAOiXft5uCEvU5GWBpuyJkp+p+VX4M7dypgpWzfm
+         KNjCdEoiIvXLhfC5IN0oTnr1sxDJb1ktQxadPjg+iRfSVrAS1YmZi+C9M8jQaXkjm3sO
+         yLoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXwnty0nwNneN194MkfEBMtqytcAlthZ5At31mARjFw2NJmjc3HJd2dv3vTJVBlD0B4HDzNSXBUNSgF704=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUoAbcYX7q6nkP613bUHmFTD/WMk1omxBEMVvF+1J6iaz2qaZZ
+	pk3kPq6Uo0aGBKVtz7Ymspka41ULb9hYKeHW7ebkkItwAOrzKjxtOk6s9Eke0z4+h+E=
+X-Gm-Gg: ASbGnctbfDnjpRoAqo/MZg1PFEZ4cNiqrKRWrLsjneuz3uFwH+jOommnwRsX0ALDWlU
+	2TFGVT/KzRM6f5mws8+9iIi35cOu4dojsve00CZo4Q76ihhAcNbpJg6pArYkpUIvmhBUiCOg8Wi
+	dW5Py8w8PdsqerzW0YS2dBhnju/mm+saT4hGhnOhvIczQy0ROVxPH6kMJ4+ngla4H8nVu1XTwE9
+	dsqRoiKVkpHEtQgfSLhLsVwo2VbAhziOu843CkH5pj75vH3NiIsN731BH569zjheHTqe1QMHZ83
+	jRsDalgXJJ2lj4mSdALZCwCf9SOUx5hoheiw4y+pC4HxXC63D9kFN0x5hDIjslBssInJB1l9PaX
+	w
+X-Google-Smtp-Source: AGHT+IHWDplP+mSvwBbgNyXECwNqolDcVKxeCipzxq0AEnaLJRzr3NaK42vQj7ZRYIVHVNCBCyQvdA==
+X-Received: by 2002:a05:6a00:3a0f:b0:748:f3b0:4db6 with SMTP id d2e1a72fcca58-74af6f4a507mr24062703b3a.11.1751380032554;
+        Tue, 01 Jul 2025 07:27:12 -0700 (PDT)
+Received: from p14s ([2604:3d09:148c:c800:94b9:2bc2:7ead:7a72])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af5580fb6sm11294397b3a.89.2025.07.01.07.27.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 07:26:47 -0700 (PDT)
-From: Vitor Soares <ivitro@gmail.com>
-To: Brian Norris <briannorris@chromium.org>,
-	Francesco Dolcini <francesco@dolcini.it>
-Cc: Vitor Soares <vitor.soares@toradex.com>,
-	linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	David Lin <yu-hao.lin@nxp.com>,
-	ivitro@gmail.com,
-	stable@vger.kernel.org
-Subject: [PATCH wireless v1] wifi: mwifiex: discard erroneous disassoc frames on STA interface
-Date: Tue,  1 Jul 2025 15:26:43 +0100
-Message-Id: <20250701142643.658990-1-ivitro@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        Tue, 01 Jul 2025 07:27:12 -0700 (PDT)
+Date: Tue, 1 Jul 2025 08:27:09 -0600
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+To: Shengjiu Wang <shengjiu.wang@gmail.com>
+Cc: Shengjiu Wang <shengjiu.wang@nxp.com>, andersson@kernel.org,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+	festevam@gmail.com, linux-remoteproc@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] remoteproc: imx_dsp_rproc: Add support of recovery
+ process
+Message-ID: <aGPwPW_f1qAZGmzd@p14s>
+References: <20250618062644.3895785-1-shengjiu.wang@nxp.com>
+ <20250618062644.3895785-2-shengjiu.wang@nxp.com>
+ <aFltBpXuEXVZ5gKn@p14s>
+ <CAA+D8AP47xyftzPZki8MXEeWEfbocug6e134uaJgFH+tx7mH2Q@mail.gmail.com>
+ <CANLsYkz2JMMMhBAXjt9YSzU4n-0Ld6EvJHC=7Ospsefoxc6BGA@mail.gmail.com>
+ <CAA+D8AM47P7xw2Ppgcr9d=DB2eSkQg6uQ_F22Te_=HFuMCNXxw@mail.gmail.com>
+ <aGLAEvhyjrCbZoIf@p14s>
+ <CAA+D8ANLOxnfj9cWhbTUWHuFGt5Qb-upTmKfCyNxEb1ChJKjbg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAA+D8ANLOxnfj9cWhbTUWHuFGt5Qb-upTmKfCyNxEb1ChJKjbg@mail.gmail.com>
 
-From: Vitor Soares <vitor.soares@toradex.com>
+On Tue, Jul 01, 2025 at 10:16:21AM +0800, Shengjiu Wang wrote:
+> On Tue, Jul 1, 2025 at 12:49 AM Mathieu Poirier
+> <mathieu.poirier@linaro.org> wrote:
+> >
+> > On Thu, Jun 26, 2025 at 09:32:06AM +0800, Shengjiu Wang wrote:
+> > > On Wed, Jun 25, 2025 at 10:39 PM Mathieu Poirier
+> > > <mathieu.poirier@linaro.org> wrote:
+> > > >
+> > > > On Tue, 24 Jun 2025 at 21:25, Shengjiu Wang <shengjiu.wang@gmail.com> wrote:
+> > > > >
+> > > > > On Mon, Jun 23, 2025 at 11:11 PM Mathieu Poirier
+> > > > > <mathieu.poirier@linaro.org> wrote:
+> > > > > >
+> > > > > > Good day,
+> > > > > >
+> > > > > > On Wed, Jun 18, 2025 at 02:26:43PM +0800, Shengjiu Wang wrote:
+> > > > > > > when recovery is triggered, rproc_stop() is called first then
+> > > > > > > rproc_start(), but there is no rproc_unprepare_device() and
+> > > > > > > rproc_prepare_device() in the flow.
+> > > > > > >
+> > > > > > > So power enablement needs to be moved from prepare callback to start
+> > > > > > > callback, power disablement needs to be moved from unprepare callback
+> > > > > > > to stop callback, loading elf function also needs to be moved to start
+> > > > > > > callback, the load callback only store the firmware handler.
+> > > > > > >
+> > > > > > > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> > > > > > > ---
+> > > > > > >  drivers/remoteproc/imx_dsp_rproc.c | 58 ++++++++++++++++++------------
+> > > > > > >  1 file changed, 36 insertions(+), 22 deletions(-)
+> > > > > > >
+> > > > > > > diff --git a/drivers/remoteproc/imx_dsp_rproc.c b/drivers/remoteproc/imx_dsp_rproc.c
+> > > > > > > index 5ee622bf5352..9b9cddb224b0 100644
+> > > > > > > --- a/drivers/remoteproc/imx_dsp_rproc.c
+> > > > > > > +++ b/drivers/remoteproc/imx_dsp_rproc.c
+> > > > > > > @@ -122,6 +122,7 @@ enum imx_dsp_rp_mbox_messages {
+> > > > > > >   * @ipc_handle: System Control Unit ipc handle
+> > > > > > >   * @rproc_work: work for processing virtio interrupts
+> > > > > > >   * @pm_comp: completion primitive to sync for suspend response
+> > > > > > > + * @firmware: firmware handler
+> > > > > > >   * @flags: control flags
+> > > > > > >   */
+> > > > > > >  struct imx_dsp_rproc {
+> > > > > > > @@ -139,6 +140,7 @@ struct imx_dsp_rproc {
+> > > > > > >       struct imx_sc_ipc                       *ipc_handle;
+> > > > > > >       struct work_struct                      rproc_work;
+> > > > > > >       struct completion                       pm_comp;
+> > > > > > > +     const struct firmware                   *firmware;
+> > > > > > >       u32                                     flags;
+> > > > > > >  };
+> > > > > > >
+> > > > > > > @@ -211,6 +213,7 @@ static const struct imx_rproc_att imx_dsp_rproc_att_imx8ulp[] = {
+> > > > > > >
+> > > > > > >  /* Initialize the mailboxes between cores, if exists */
+> > > > > > >  static int (*imx_dsp_rproc_mbox_init)(struct imx_dsp_rproc *priv);
+> > > > > > > +static int imx_dsp_rproc_elf_load_segments(struct rproc *rproc, const struct firmware *fw);
+> > > > > > >
+> > > > > > >  /* Reset function for DSP on i.MX8MP */
+> > > > > > >  static int imx8mp_dsp_reset(struct imx_dsp_rproc *priv)
+> > > > > > > @@ -402,8 +405,24 @@ static int imx_dsp_rproc_start(struct rproc *rproc)
+> > > > > > >       const struct imx_dsp_rproc_dcfg *dsp_dcfg = priv->dsp_dcfg;
+> > > > > > >       const struct imx_rproc_dcfg *dcfg = dsp_dcfg->dcfg;
+> > > > > > >       struct device *dev = rproc->dev.parent;
+> > > > > > > +     struct rproc_mem_entry *carveout;
+> > > > > > >       int ret;
+> > > > > > >
+> > > > > > > +     pm_runtime_get_sync(dev);
+> > > > > > > +
+> > > > > > > +     /*
+> > > > > > > +      * Clear buffers after pm rumtime for internal ocram is not
+> > > > > > > +      * accessible if power and clock are not enabled.
+> > > > > > > +      */
+> > > > > > > +     list_for_each_entry(carveout, &rproc->carveouts, node) {
+> > > > > > > +             if (carveout->va)
+> > > > > > > +                     memset(carveout->va, 0, carveout->len);
+> > > > > > > +     }
+> > > > > > > +
+> > > > > > > +     ret = imx_dsp_rproc_elf_load_segments(rproc, priv->firmware);
+> > > > > > > +     if (ret)
+> > > > > > > +             return ret;
+> > > > > > > +
+> > > > > > >       switch (dcfg->method) {
+> > > > > > >       case IMX_RPROC_MMIO:
+> > > > > > >               ret = regmap_update_bits(priv->regmap,
+> > > > > > > @@ -446,6 +465,7 @@ static int imx_dsp_rproc_stop(struct rproc *rproc)
+> > > > > > >
+> > > > > > >       if (rproc->state == RPROC_CRASHED) {
+> > > > > > >               priv->flags &= ~REMOTE_IS_READY;
+> > > > > > > +             pm_runtime_put_sync(dev);
+> > > > > >
+> > > > > > From this patch I understand that for a recovery to be successful, the
+> > > > > > remote processor _has_ to go through a hard reset.  But here the PM runtime API
+> > > > > > is used, meaning the remote processor won't be switched off if another device in
+> > > > > > the same power domain still neeeds power.  If that is the case, the solution in
+> > > > > > tihs patch won't work.
+> > > > >
+> > > > > Thanks for reviewing.
+> > > > > With the case you mentioned, there is software reset to make the
+> > > > > recovery process work.
+> > > >
+> > > >
+> > > > Are you talking about a manual software reset of some other mechanism?
+> > > >
+> > > > If manual software reset, the recovery may or may not work and we
+> > > > simply don't know when that might be.  If it's another mechanism, then
+> > > > that mechanism should be used in all cases.  Either way, I don't see
+> > > > how we can move forward with this patch.
+> > >
+> > > Not manual software reset,  in this driver we registered .reset() function.
+> > > it has been called at imx_dsp_runtime_resume(),  I paste the function below.
+> > >
+> > > And I have tested the case you mentioned, the recovery works.
+> > >
+> > > /* pm runtime functions */
+> > > static int imx_dsp_runtime_resume(struct device *dev)
+> > > {
+> > >         struct rproc *rproc = dev_get_drvdata(dev);
+> > >         struct imx_dsp_rproc *priv = rproc->priv;
+> > >         const struct imx_dsp_rproc_dcfg *dsp_dcfg = priv->dsp_dcfg;
+> > >         int ret;
+> > >
+> > >         /*
+> > >          * There is power domain attached with mailbox, if setup mailbox
+> > >          * in probe(), then the power of mailbox is always enabled,
+> > >          * the power can't be saved.
+> > >          * So move setup of mailbox to runtime resume.
+> > >          */
+> > >         ret = imx_dsp_rproc_mbox_init(priv);
+> > >         if (ret) {
+> > >                 dev_err(dev, "failed on imx_dsp_rproc_mbox_init\n");
+> > >                 return ret;
+> > >         }
+> > >
+> > >         ret = clk_bulk_prepare_enable(DSP_RPROC_CLK_MAX, priv->clks);
+> > >         if (ret) {
+> > >                 dev_err(dev, "failed on clk_bulk_prepare_enable\n");
+> > >                 return ret;
+> > >         }
+> > >
+> > >         /* Reset DSP if needed */
+> > >         if (dsp_dcfg->reset)
+> > >                 dsp_dcfg->reset(priv);
+> > >
+> > >         return 0;
+> > > }
+> > >
+> >
+> > Thanks for the clarification.  I would have been nice to have that kind of
+> > explanation (not the copy paste of the imx_dsp_runtime_resume() function) in the
+> > changelog.
+> 
+> Ok, will add it.
+> 
+> >
+> > That said, that is just one aspect of the things I find bizarre with this
+> > patchset - see below.
+> >
+> > > >
+> > > > >
+> > > > >
+> > > > > best regards
+> > > > > Shengjiu Wang
+> > > > >
+> > > > > >
+> > > > > > Thanks,
+> > > > > > Mathieu
+> > > > > >
+> > > > > > >               return 0;
+> > > > > > >       }
+> > > > > > >
+> > > > > > > @@ -472,6 +492,8 @@ static int imx_dsp_rproc_stop(struct rproc *rproc)
+> > > > > > >       else
+> > > > > > >               priv->flags &= ~REMOTE_IS_READY;
+> > > > > > >
+> > > > > > > +     pm_runtime_put_sync(dev);
+> > > > > > > +
+> > > > > > >       return ret;
+> > > > > > >  }
+> > > > > > >
+> > > > > > > @@ -774,7 +796,6 @@ static int imx_dsp_rproc_prepare(struct rproc *rproc)
+> > > > > > >  {
+> > > > > > >       struct imx_dsp_rproc *priv = rproc->priv;
+> > > > > > >       struct device *dev = rproc->dev.parent;
+> > > > > > > -     struct rproc_mem_entry *carveout;
+> > > > > > >       int ret;
+> > > > > > >
+> > > > > > >       ret = imx_dsp_rproc_add_carveout(priv);
+> > > > > > > @@ -783,25 +804,6 @@ static int imx_dsp_rproc_prepare(struct rproc *rproc)
+> > > > > > >               return ret;
+> > > > > > >       }
+> > > > > > >
+> > > > > > > -     pm_runtime_get_sync(dev);
+> > > > > > > -
+> > > > > > > -     /*
+> > > > > > > -      * Clear buffers after pm rumtime for internal ocram is not
+> > > > > > > -      * accessible if power and clock are not enabled.
+> > > > > > > -      */
+> > > > > > > -     list_for_each_entry(carveout, &rproc->carveouts, node) {
+> > > > > > > -             if (carveout->va)
+> > > > > > > -                     memset(carveout->va, 0, carveout->len);
+> > > > > > > -     }
+> > > > > > > -
+> > > > > > > -     return  0;
+> > > > > > > -}
+> > > > > > > -
+> > > > > > > -/* Unprepare function for rproc_ops */
+> > > > > > > -static int imx_dsp_rproc_unprepare(struct rproc *rproc)
+> > > > > > > -{
+> > > > > > > -     pm_runtime_put_sync(rproc->dev.parent);
+> > > > > > > -
+> > > > > > >       return  0;
+> > > > > > >  }
+> > > > > > >
+> > > > > > > @@ -1022,13 +1024,25 @@ static int imx_dsp_rproc_parse_fw(struct rproc *rproc, const struct firmware *fw
+> > > > > > >       return 0;
+> > > > > > >  }
+> > > > > > >
+> > > > > > > +static int imx_dsp_rproc_load(struct rproc *rproc, const struct firmware *fw)
+> > > > > > > +{
+> > > > > > > +     struct imx_dsp_rproc *priv = rproc->priv;
+> > > > > > > +
+> > > > > > > +     /*
+> > > > > > > +      * Just save the fw handler, the firmware loading will be after
+> > > > > > > +      * power enabled
+> > > > > > > +      */
+> > > > > > > +     priv->firmware = fw;
+> > > > > > > +
+> >
+> > Why is a new firwmare variable needed?  Why can't you just use rproc->firmware?
+> 
+>  The "firmware" in "rproc->firmware" is "const char *firmware;"
+> * @firmware: name of firmware file to be loaded
+> 
+> But "const struct firmware *fw" is the result after request_firmware()
+> ret = request_firmware(&firmware_p, rproc->firmware, dev);
+> "firmware_p" is the "fw".
 
-When operating in concurrent STA/AP mode with host MLME enabled,
-the firmware incorrectly sends disassociation frames to the STA
-interface when clients disconnect from the AP interface.
-This causes kernel warnings as the STA interface processes
-disconnect events that don't apply to it:
+Ah yes, of course.
 
-[ 1303.240540] WARNING: CPU: 0 PID: 513 at net/wireless/mlme.c:141 cfg80211_process_disassoc+0x78/0xec [cfg80211]
-[ 1303.250861] Modules linked in: 8021q garp stp mrp llc rfcomm bnep btnxpuart nls_iso8859_1 nls_cp437 onboard_us
-[ 1303.327651] CPU: 0 UID: 0 PID: 513 Comm: kworker/u9:2 Not tainted 6.16.0-rc1+ #3 PREEMPT
-[ 1303.335937] Hardware name: Toradex Verdin AM62 WB on Verdin Development Board (DT)
-[ 1303.343588] Workqueue: MWIFIEX_RX_WORK_QUEUE mwifiex_rx_work_queue [mwifiex]
-[ 1303.350856] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[ 1303.357904] pc : cfg80211_process_disassoc+0x78/0xec [cfg80211]
-[ 1303.364065] lr : cfg80211_process_disassoc+0x70/0xec [cfg80211]
-[ 1303.370221] sp : ffff800083053be0
-[ 1303.373590] x29: ffff800083053be0 x28: 0000000000000000 x27: 0000000000000000
-[ 1303.380855] x26: 0000000000000000 x25: 00000000ffffffff x24: ffff000002c5b8ae
-[ 1303.388120] x23: ffff000002c5b884 x22: 0000000000000001 x21: 0000000000000008
-[ 1303.395382] x20: ffff000002c5b8ae x19: ffff0000064dd408 x18: 0000000000000006
-[ 1303.402646] x17: 3a36333a61623a30 x16: 32206d6f72662063 x15: ffff800080bfe048
-[ 1303.409910] x14: ffff000003625300 x13: 0000000000000001 x12: 0000000000000000
-[ 1303.417173] x11: 0000000000000002 x10: ffff000003958600 x9 : ffff000003625300
-[ 1303.424434] x8 : ffff00003fd9ef40 x7 : ffff0000039fc280 x6 : 0000000000000002
-[ 1303.431695] x5 : ffff0000038976d4 x4 : 0000000000000000 x3 : 0000000000003186
-[ 1303.438956] x2 : 000000004836ba20 x1 : 0000000000006986 x0 : 00000000d00479de
-[ 1303.446221] Call trace:
-[ 1303.448722]  cfg80211_process_disassoc+0x78/0xec [cfg80211] (P)
-[ 1303.454894]  cfg80211_rx_mlme_mgmt+0x64/0xf8 [cfg80211]
-[ 1303.460362]  mwifiex_process_mgmt_packet+0x1ec/0x460 [mwifiex]
-[ 1303.466380]  mwifiex_process_sta_rx_packet+0x1bc/0x2a0 [mwifiex]
-[ 1303.472573]  mwifiex_handle_rx_packet+0xb4/0x13c [mwifiex]
-[ 1303.478243]  mwifiex_rx_work_queue+0x158/0x198 [mwifiex]
-[ 1303.483734]  process_one_work+0x14c/0x28c
-[ 1303.487845]  worker_thread+0x2cc/0x3d4
-[ 1303.491680]  kthread+0x12c/0x208
-[ 1303.495014]  ret_from_fork+0x10/0x20
-
-Add validation in the STA receive path to verify that disassoc/deauth
-frames originate from the connected AP. Frames that fail this check
-are discarded early, preventing them from reaching the MLME layer and
-triggering WARN_ON().
-
-This filtering logic is similar with that used in the
-ieee80211_rx_mgmt_disassoc() function in mac80211, which drops
-disassoc frames that don't match the current BSSID
-(!ether_addr_equal(mgmt->bssid, sdata->vif.cfg.ap_addr)), ensuring
-only relevant frames are processed.
-
-Tested on:
-- 8997 with FW 16.68.1.p197
-
-Fixes: 36995892c271 ("wifi: mwifiex: add host mlme for client mode")
-Cc: stable@vger.kernel.org
-Signed-off-by: Vitor Soares <vitor.soares@toradex.com>
----
- drivers/net/wireless/marvell/mwifiex/util.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/marvell/mwifiex/util.c b/drivers/net/wireless/marvell/mwifiex/util.c
-index 4c5b1de0e936..6882e90e90b2 100644
---- a/drivers/net/wireless/marvell/mwifiex/util.c
-+++ b/drivers/net/wireless/marvell/mwifiex/util.c
-@@ -459,7 +459,9 @@ mwifiex_process_mgmt_packet(struct mwifiex_private *priv,
- 				    "auth: receive authentication from %pM\n",
- 				    ieee_hdr->addr3);
- 		} else {
--			if (!priv->wdev.connected)
-+			if (!priv->wdev.connected ||
-+			    !ether_addr_equal(ieee_hdr->addr3,
-+					      priv->curr_bss_params.bss_descriptor.mac_address))
- 				return 0;
- 
- 			if (ieee80211_is_deauth(ieee_hdr->frame_control)) {
--- 
-2.34.1
-
+> 
+> As the remoteproc_core.c has called request_firmware(), so we don't need to call
+> the request_firmware() again.  so use the new "const struct firmware
+> *firmware;" for
+> saving the "fw".
+> 
+> Best regards
+> Shengjiu Wang
+> >
+> > > > > > > +     return 0;
+> > > > > > > +}
+> > > > > > > +
+> > > > > > >  static const struct rproc_ops imx_dsp_rproc_ops = {
+> > > > > > >       .prepare        = imx_dsp_rproc_prepare,
+> > > > > > > -     .unprepare      = imx_dsp_rproc_unprepare,
+> > > > > > >       .start          = imx_dsp_rproc_start,
+> > > > > > >       .stop           = imx_dsp_rproc_stop,
+> > > > > > >       .kick           = imx_dsp_rproc_kick,
+> > > > > > > -     .load           = imx_dsp_rproc_elf_load_segments,
+> > > > > > > +     .load           = imx_dsp_rproc_load,
+> > > > > > >       .parse_fw       = imx_dsp_rproc_parse_fw,
+> > > > > > >       .handle_rsc     = imx_dsp_rproc_handle_rsc,
+> > > > > > >       .find_loaded_rsc_table = rproc_elf_find_loaded_rsc_table,
+> > > > > > > --
+> > > > > > > 2.34.1
+> > > > > > >
+> > > > > >
