@@ -1,143 +1,202 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011051.outbound.protection.outlook.com [40.107.130.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E8715A858;
-	Wed,  2 Jul 2025 03:54:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751428497; cv=none; b=m3LMd25YBCRLpJKhHAyD7yWyfvOVoupsOKd/J1oxu99N00zTG2t8y+qPHbDz5R3xEMk6d7HX8HzEkobLhqsySCiqGFVSZmGJ9eO9UnI4/DDmumPVUwI+TI/JSLy+spEZmS5p4yuz+o6htSF1ZeWTP4NP/viLE+bwOF/Q/dXIBik=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751428497; c=relaxed/simple;
-	bh=7H4BV7ZIVTytOwiwWbSrEbGoMGiTPL28bTiVllN5tZ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lz+DYL/0C2LECuvV14ghVJcr7uXh6scDSbzu+WhiOSVY3H21MxR77AqVPZC2r2C2jsIj61QV0pZEBPD/TrqwTzDas221RyNgnJzVCsDzAE5Q5H8/nuFniOj2xqU5D6+ndPnONp9v1S6jv6PNg1+w4SlP1jFq6Y6jTIppWajRQh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pjh0jrCz; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C69D1C6B4;
+	Wed,  2 Jul 2025 03:55:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751428540; cv=fail; b=TLYY33H3W357SDTy1en1uNhAwR7xXnnZfu/Q9smwIXvTs2WNe6HCGSbHZGlVR8AZNcHfmc3aUu2QabwGf0JtCvNu3LM/8C8cT/ABSczNGKXsd1rRhqAqCRVcdNdwMOH8DxdWDkfOqGRbjij9yviCQZjT1m5q9UjZkojIS9i94cw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751428540; c=relaxed/simple;
+	bh=X0MGcppM5VrnldDCRhg3BSbJtharLJDUmcLgn+zBAoI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=DKJfYfmkOOKpcwwcgwc08kgatPOT1L+LJG1eDS8nGkTB0kGcmJTNipbGecR6aEoNblGmWp6iSFsuagCHDDnPDHcJ2hNP7oqoHtiSmZYVZdHotmBmVeaV6/cjQwK5sw1nKBpfKUXcbfIgllKDuLf9rcsh23bLdwp3uvKt9ELMzcY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=CQ5ljBmy; arc=fail smtp.client-ip=40.107.130.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pjh0jrCz"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22c33677183so54543845ad.2;
-        Tue, 01 Jul 2025 20:54:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751428493; x=1752033293; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SeVVML8rF/Yg7PwP3kkWgdCem6ZWbPVvKczMSjjevlc=;
-        b=Pjh0jrCzPUwJLOR2CnzBBHO0cfFouuF3gUg9veURMEFOgu53ym64jDBfriGU+FxGhs
-         Y8uX+LUv2u/9J9/iP6Fn0e/1Aw3OOlyKskJY3Aemud6/ejLw5lEzyeF1wKcwz5b8ZPuX
-         Kr8YMDJQKgjydDgeNRdFGfE8o6StOw0olz6VtJ+txVCkRdaeWw3Mv2vAtB6+P5CFZEIx
-         1quIKXdifsVdP9cEA/r9I5LqxludGo0zxTCuMMZur1PZoYwGBYPqOZuHBVsMv2ytuV12
-         ssav6rFY2Plscv0wEVSiw7xa1VDgq8s43PkNFni2cJql4RFQknwD4Lu1eaEG3Xay0E7W
-         fPPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751428493; x=1752033293;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SeVVML8rF/Yg7PwP3kkWgdCem6ZWbPVvKczMSjjevlc=;
-        b=MrVQk3A6YV75aBmaFvjm7GpT4cfN6ZAlmKJ+P4B8w2ddfZcnjDh5Wqr7j4tUfyDWk7
-         DzY4wPtdfegxnhZTCKNXdbVlucEi5c+l10Z0uRHaJe8E0wuoMyjf+yR5oHS9JkxckRBL
-         RefqRBNRrkoNaK+hSn1AZ+fqb40x+wmEY1Q/qO72ZtaZgSeQPnVju13VsDBJkJtOkWKp
-         wO8m8GVApvRQJeb8T7rGtWWdC2meXgvDuKorm6iEGwXYpK274VeMwdlbr3pT6UfVU5Hd
-         iqNgVWdaETigpKKDjWcH+zA8MeQfenMb0RwrQqx0fCFzueeispuWMYSmOeCsq9n9ZEgU
-         vT/w==
-X-Forwarded-Encrypted: i=1; AJvYcCV7w8FA7tkf9vJJNWIcnV2/7z6KAa2tUEcV7Zu/P9HscVaS77mNN/wsxDK3S9OOdTmpreywctlSIYDK@vger.kernel.org, AJvYcCVMC1gxk+DvYipQAjYMxqU+eoptQbv08XB2leUtmhqWj1vaKhaz7YSXyHKBGMLGpWjep3STTSd9RyQgIyj4@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9EB2VU1X1qa2RX09gfF2iQqqOGPM6scYI6aFDMVwc26pvnKud
-	UhYDrgD4Nw7DHLwlU561L2dtPrtKuUalQKdDtIq/IUB1p345y7Lv+QnPK2GpEw==
-X-Gm-Gg: ASbGncsRPbJavvLq59bpZ9NerkxODuRb4sElmJvuAOFxgFjJS0bNwBVRpio/vknzdFt
-	I4C4Gll1UIaTPqX2asswy0fEV3fHvDKDeDdwpZ11w2ZQ65DAd83du7aN9+SYD6ygrF4kmJvMf1g
-	qFUZRCBeApUnzDnBbLPA8o1/7q20zhBV8SzxzvcaClyu4ZrWwr9KCUayVCJoV8ApVcbB83N+abp
-	J/wxPyDH1i1fGyS9iM8go4YMGNlVzIZL/7pErkgPhFmQvi68prxFvHk5B+Pa0Ez4OScR1yAYvJu
-	I+We053Uyv3tapFxgRIE6v6cw4ccLWY5RVIoicQGhnMevGVCUkjRba8oQDQo7CE4W42iMwz+ILr
-	I3Xk=
-X-Google-Smtp-Source: AGHT+IE4TblemtH1kKq4GH3b2FhyKV7tenYanLvI77N+gxp0fw1TUBg/JQQBduObx5PhTYrPi8Vt3A==
-X-Received: by 2002:a17:902:ce12:b0:234:8ec1:4af1 with SMTP id d9443c01a7336-23c6e403e4amr20093145ad.0.1751428492835;
-        Tue, 01 Jul 2025 20:54:52 -0700 (PDT)
-Received: from rigel (61-68-193-107.tpgi.com.au. [61.68.193.107])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb2f17f5sm124260415ad.62.2025.07.01.20.54.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 20:54:52 -0700 (PDT)
-Date: Wed, 2 Jul 2025 11:54:39 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Ahmad Fatoum <a.fatoum@pengutronix.de>,
-	Jan =?iso-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>,
-	Marek Vasut <marex@denx.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v3 00/10] gpio: sysfs: add a per-chip export/unexport
- attribute pair
-Message-ID: <20250702035439.GA20273@rigel>
-References: <20250630-gpio-sysfs-chip-export-v3-0-b997be9b7137@linaro.org>
- <aGPrFnDxG4W7S9Ym@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="CQ5ljBmy"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Q6n4aMsIj/tBUTI6sYErgyXm+vz4ADDdksEfdzCr9+NWq/1yGN344xerBYHivp2JOWM1C/a9WpPvIrIgXxpbFepPUl+PpJKeLSAhNgCEyOzl4kKB6u4JB+vPSIiD1PHi6Si4AE6smjxQ486QCZpvXj9WEkYPNb0zBXS2MFMoE6kNsDumothd95ElZwD5aTqhFkcVk3lRQ/f6hlpcX0ztpgrOJGpnr3SN3CiuoktNjy8jIv4s14hHcDKgp2l4H/YiOCHND8bN4z+c410nBtYJItrs1C75eF7WTv6Of0P4OZzROC612BP2ekCDrfN0HWSTbG5IqfDm38ZAuKo4UzBCEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=23lEs/xZgR5+eNg1+3cmn8nYgxfdpgizVMnMwssRPhk=;
+ b=h64JSdQf0o+fAxAPlVIWWFNH1hmQF+vD7hnHLQoogCHAqiX/3DVwOuSPpJ1hG9mZLl2eu8HwPDJUCU/S2h7kLiFMV6MG94AJV9nL3eRsEUoQduXE6LB8zATCkE1umRcLpy0eYjm3BVdDWTKJHvWT+yIQX4sq2gebyrrBhIykt+dU8e69vUJa88RJP8uJpU3Q3bY73aRbwjf3gcOwoV5dcdgOP5waNPf1KKFb2XqtHVGVMSBXqk3uJ7wRP0YzjuIuGAGbXOpW7YhkjIGGIVwjyHHmooYn49FGSxQZEsLdJpeVP5Rwdw2gUHN+3D1m7bxVASpvkDGx6OL+wvPPn8Ok/A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=23lEs/xZgR5+eNg1+3cmn8nYgxfdpgizVMnMwssRPhk=;
+ b=CQ5ljBmyNGKFnjYQInEFgXuRpE4KNsXgsaRoYHJxTDEMJyUPmCXLyUABYc296q9lDdNOb1aqN6VMI1yl3PWMRUlQorHFc7FJ9ND7o7mRntN0RTzrpRCZCkFbZLv6y9Ws61ZfRMe/1mfERPtLUvjkCIvROTOUopP7CxRxGii/DKohRea+k+gK3uN+ew8TpwuMsG9Hvkk+MLhUQhbsSntGFO0Xbqg9dwmK41XlmINKNTYH+RxLP3FkTzHcv2lnSVJMsO9MRw83usm1XYybs8m4XY3/U3ZKOPBXCz6V6CMIDJM1miX40SQ611QLMZucQ7TP6XY4rAaplsJ1dcG4udUO/A==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from DB7PR04MB5497.eurprd04.prod.outlook.com (2603:10a6:10:8a::17)
+ by PR3PR04MB7404.eurprd04.prod.outlook.com (2603:10a6:102:8f::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.32; Wed, 2 Jul
+ 2025 03:55:34 +0000
+Received: from DB7PR04MB5497.eurprd04.prod.outlook.com
+ ([fe80::a12e:514d:8f94:e391]) by DB7PR04MB5497.eurprd04.prod.outlook.com
+ ([fe80::a12e:514d:8f94:e391%4]) with mapi id 15.20.8901.018; Wed, 2 Jul 2025
+ 03:55:33 +0000
+Date: Wed, 2 Jul 2025 11:52:00 +0800
+From: Jeff Chen <jeff.chen_1@nxp.com>
+To: Vitor Soares <ivitro@gmail.com>
+Cc: Brian Norris <briannorris@chromium.org>,
+	Francesco Dolcini <francesco@dolcini.it>,
+	Vitor Soares <vitor.soares@toradex.com>,
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	David Lin <yu-hao.lin@nxp.com>, stable@vger.kernel.org
+Subject: Re: [PATCH wireless v1] wifi: mwifiex: discard erroneous disassoc
+ frames on STA interface
+Message-ID: <aGSs4H1EqH3WngWx@nxpwireless-Inspiron-14-Plus-7440>
+References: <20250701142643.658990-1-ivitro@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250701142643.658990-1-ivitro@gmail.com>
+X-ClientProxiedBy: FR2P281CA0160.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:99::9) To DB7PR04MB5497.eurprd04.prod.outlook.com
+ (2603:10a6:10:8a::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aGPrFnDxG4W7S9Ym@smile.fi.intel.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB7PR04MB5497:EE_|PR3PR04MB7404:EE_
+X-MS-Office365-Filtering-Correlation-Id: e7becd65-cd69-40f8-2b24-08ddb91c4b4b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|376014|1800799024|366016|19092799006|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?gnxyb+bLMrTeGvc+YxXhpRc0HOrlTrOPybe3bKKM083r0xODyGsKUgBlX7rM?=
+ =?us-ascii?Q?4q044Md7xlGhkhEsB5mADfj9FPlHJxuk3BD8lqkib497TSgTAPpVq+f2EWeU?=
+ =?us-ascii?Q?+R6c7F3Cdx6MZweyZhxq3GvYol9ylIX4qMHDBm3J1oPu7gzx2zvbIbzfIF28?=
+ =?us-ascii?Q?cdYksoRnoRJVQop0+C2nGv38ph3oSRuRvtxWypjF2IrdC7PVlmpQTUJrjqrG?=
+ =?us-ascii?Q?o/eWWDHK0T08nMuUvq9Fyd0/OoMD72MDbc3mU9CiEcQsMZnkD1uC1VdmreMc?=
+ =?us-ascii?Q?eSbzwSa6ZRPMlqRUPJfI/lfyGV6d4/jRG3o0tQdNl2LtYekzJcOwSJkUP2HY?=
+ =?us-ascii?Q?XOqaTRGLNQdkAS+1rEfXmigx7Ehkzfh9qbQUKETUMcypmRgpPz59FC1okdzp?=
+ =?us-ascii?Q?/F85JFbvuTtdlNHwO/+7eKcEuncMSgEHx5hUx1g2SUJcksLCm3/MvTT6g/Pb?=
+ =?us-ascii?Q?qvqhhIneT8Fp/EksMG7ZORmTqEHvVW3Bvz5fHPEycQYITrI/a11hWpFR0gjz?=
+ =?us-ascii?Q?FmAWgUjhY+pFMlva3bIeohDRGxuIOFXTBbIasCjNh1bQYWIPvxCeCvXSPvRO?=
+ =?us-ascii?Q?Y+3gZEwHMUlekRqXe3HXtcm69m98usvO07X8Ut9zYrznPR+kqfnpef2Pmk5l?=
+ =?us-ascii?Q?mBQjTaa0ixNbpvF4XH8jy8bxurE/RMHtWZ51JPKgA5HogHhumCdzoZNt3zQ9?=
+ =?us-ascii?Q?mPBXvfuXZzPICoNjkKkghTaD+pm1Hysz+qJrCwrpGYlU+kpQ/o+iBrEvrW5v?=
+ =?us-ascii?Q?Xp8azxY/519XRnlU2DDOrb7O0Syv90hHvqzZVhj1munIepALNIG9QjKji1mu?=
+ =?us-ascii?Q?xZ6d91Sg9hjvzLGzLE4AThOXdyBGPOBptljbCrg2o+ejeMBoY9V1YCO4tgyb?=
+ =?us-ascii?Q?VC954rz0efIdxA+DFwEilQyVHFf711suwU5N3WJzKSYCNMeM9ITzoGeCYYHi?=
+ =?us-ascii?Q?T1rumExy5VKor6hsToZ2VSp77IwOBVBgsjuVRzB91O/61Yd7rk68t2IzUvjb?=
+ =?us-ascii?Q?+Cb38Tm8lJwmdlf4U8AIA4xefK/w/IOVbIQFQdsZ0s9FqRFelt9/sYGc2gD2?=
+ =?us-ascii?Q?w3Oj83h//LgPvpWFWR5+g0Ckp1NdBOA5v8S2k7+Gb7jfGnrxvExqgd6wbHri?=
+ =?us-ascii?Q?qEWRLGXiKGfwE1EZFXptP2eSBAbxt9gh7qk46VjmdYTEduQ6gAOQ5vh2WHJp?=
+ =?us-ascii?Q?M3CtASZXz26/6Qvt5MflJ1pQtATWxY22r9ll7CJyrA31fehPsYiD/xzO7ihC?=
+ =?us-ascii?Q?5gCE1aNNh1w8xmBWlznxIxPQsKqjAohmz4hbhKkekKdDV5CN6sr9chcw5JwZ?=
+ =?us-ascii?Q?PUzMWXwxB6aSMzn90wMMJW934ym3oE4AtAnhFLJlho6JGuaOgE26XWYLVQPQ?=
+ =?us-ascii?Q?HQ9GFzrZu1rnLcV4HLSAiGiKC/LAn6zAYUOa47Sr06qvTXoWcpW7GGEHf285?=
+ =?us-ascii?Q?soOdh6FDeYzzU2oRiZPUc/xZGUAMKgRk7l41O8GTuqU7PyeAv+lUWw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR04MB5497.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(1800799024)(366016)(19092799006)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?qRXvN2iVoU9/Bu4DHbO5Uef5k3KOB+0yiFxgnJljfVvWLhaDms+OB8NuOQ65?=
+ =?us-ascii?Q?P88o2eGyWAsPum35vFgZPw7RTspjDtReuM6eTQaHpK/J3Zqis/9dSPw8QO6K?=
+ =?us-ascii?Q?liTjLx7aVsIJ1I1B5iHBYIDNFwj7hJN/p9V7nK76pR4rEk6T2VVFcmlc3z20?=
+ =?us-ascii?Q?BD3nQk+wpkfZM7tPTR4jx/Mk0h2LFBH0mcErWBZ6Hp2GyuHx447jkcIK2vci?=
+ =?us-ascii?Q?3fhO+s5h9O604J8Cc+BV2lB9NGjraaP5H8QUIeSLoY0/0eI4UvDsOXU/h0SN?=
+ =?us-ascii?Q?TVTVNdd13L0dE5yNf5UcAD8kbR9pVCOifqqlML9lbzjvsnItuZqPNrr2G5oC?=
+ =?us-ascii?Q?ON7yWt2NbopZ7uIupea63UC777QpRGAACjfoX1YYOzvTj7sB0EL4wtk/Ysbm?=
+ =?us-ascii?Q?D128Zc5jW4dv4BQf5O0Rb2BtqHxH3NFlZ7nYoGcOBHQ9nZfA/LssLVpwMpHy?=
+ =?us-ascii?Q?M3u+56tDiu904SrYgMff/VgISo/30KFGUanF57IfThYuZqbOweYNlk3l/byh?=
+ =?us-ascii?Q?5faicg54mxzKUPaiRbk8cNR2w2olBpySfGAC0pWucDVuwVGq7C8no4gYQOjB?=
+ =?us-ascii?Q?5X68INByKzJoSxG8ydsNI2LLnhmVyArJIVbyuCBRk1MUHwqyVio5Z9X98NSC?=
+ =?us-ascii?Q?RtWI8ePdBFTGYKX/w+a4VA3Cm7gUUu6AGIUDYY9pHAfsbWC5PgVXk1RdoO4s?=
+ =?us-ascii?Q?TIG6ELzplqyy6xLx3dSXugKMUpvGN89I4MdsHhRFKvzxkXDHqMxAvMFrm6lL?=
+ =?us-ascii?Q?F4Pjt0mD95zgo8TPNQtEV1waH0BJOr56BKLwj/NQ06ZdRaCSGVTo4vYrXWJh?=
+ =?us-ascii?Q?8eu7OrbQd8WN6kLlEgGtsNjvu02ujWz6/gJxwhH+n1QT8vWYT4XjVPcIaKyq?=
+ =?us-ascii?Q?z7dIVCnCBkoTZ0k+/61omH9iE+je0QGX+vAdgm8qeRc9KQaiLRNWIJzb5eoy?=
+ =?us-ascii?Q?jVWmFVzimfj2hmUsmqKOG5pdkQJUI0M3cbruDlQnfjLvoWzgIjkiZfMNN+n3?=
+ =?us-ascii?Q?95vIWdmWqhMg8EdVqmQMEFmCvUzan6q0NvYZ0wekydjVhYM95qR09j7E9auP?=
+ =?us-ascii?Q?0pHiWTWsw/d32emW6kme3v2HxPIdLgdiGKZSFWOgTY6J/jGl/7JciJKiwSjt?=
+ =?us-ascii?Q?Wl8Be1UYbCvVGoNujm1bUYbTpduEG1wiSGNTuFk2u6TIm1/jX6jmC5OfkeZo?=
+ =?us-ascii?Q?F+ETQYlUvuAvnyxLJdNUFudO6dxl+W9D8+FznhTUH7L5yG70OzQD+OrhFvl7?=
+ =?us-ascii?Q?+O4P6TOM+TYhQYeigGYR1OC7mtjHLwp4eY6X/Pcjm0+jgp7Ub8iuK6x9E2UP?=
+ =?us-ascii?Q?Y+SdCp9uFrji4VJFGG1smM65f/8XxPM/YUVPf8M9ipzL0wU+dSr0GU5EtzcI?=
+ =?us-ascii?Q?EhbIpQiq03adbFmuKs6ELgexyVTFUh0W+D3nnNjTXfHuDFJixDECIp1vLhGK?=
+ =?us-ascii?Q?60SV8OsUuUurgH1ZsOWPYKEVcS8zpj4mYBwrXpKnZQJXziLSMb8hYfGGEWXW?=
+ =?us-ascii?Q?9YurJjCeiTKv1JaXYwz8+/oYXFXCPuOsvLm0RzA24raf35Ly5X+t66JZxL+0?=
+ =?us-ascii?Q?jLSqd5p7RH37K/qAqFJPrgv7Haw8tl0SOh5cn86a?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e7becd65-cd69-40f8-2b24-08ddb91c4b4b
+X-MS-Exchange-CrossTenant-AuthSource: DB7PR04MB5497.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 03:55:33.4910
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: hTU/sljqMInM7LH6chI+vEziV9IBEhdTk6MSdjbhtaYYONHV0bENsHWVXjiSdc1f9PyBUaVb8J/E5NGrfsUo4A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR04MB7404
 
-On Tue, Jul 01, 2025 at 05:05:10PM +0300, Andy Shevchenko wrote:
-> On Mon, Jun 30, 2025 at 02:37:07PM +0200, Bartosz Golaszewski wrote:
-> > Following our discussion[1], here's a proposal for extending the sysfs
-> > interface with attributes not referring to GPIO lines by their global
-> > numbers in a backward compatible way.
-> >
-> > Long story short: there is now a new class device for each GPIO chip.
-> > It's called chipX where X is the ID of the device as per the driver
-> > model and it lives next to the old gpiochipABC where ABC is the GPIO
-> > base. Each new chip class device has a pair of export/unexport
-> > attributes which work similarly to the global ones under /sys/class/gpio
-> > but take hardware offsets within the chip as input, instead of the
-> > global numbers. Finally, each exported line appears at the same time as
-> > the global /sys/class/gpio/gpioABC as well as per-chip
-> > /sys/class/gpio/chipX/gpioY sysfs group.
-> >
-> > The series contains the implementation of a parallel GPIO chip entry not
-> > containing the base GPIO number in the name and the corresponding sysfs
-> > attribute group for each exported line that lives under the new chip
-> > class device as well as a way to allow to compile out the legacy parts
-> > leaving only the new elements of the sysfs ABI.
-> >
-> > This series passes the compatibility tests I wrote while working on the
-> > user-space compatibility layer for sysfs[2].
->
-> It seems I never expressed my overall opinion about this. I think the poking
-> sysfs and making it working with a new schema won't solve the issues that
-> character device was developed to target. If so, doing this just brings yet
-> another broken interface. I would be happy to be mistaken!
->
-> If I am mistaken, I would like to see a summary here that explains that clearly
-> that the new sysfs approach does not inherit design flaws of the original
-> implementation.
->
+On Tue, Jul 01, 2025 at 03:26:43 PM +0100, Vitor Soares wrote:
+> From: Vitor Soares <vitor.soares@toradex.com>
+> 
+> When operating in concurrent STA/AP mode with host MLME enabled,
+> the firmware incorrectly sends disassociation frames to the STA
+> interface when clients disconnect from the AP interface.
+> This causes kernel warnings as the STA interface processes
+> disconnect events that don't apply to it:
+> 
+> [ 1303.240540] WARNING: CPU: 0 PID: 513 at net/wireless/mlme.c:141 cfg80211_process_disassoc+0x78/0xec [cfg80211]
+> [ 1303.250861] Modules linked in: 8021q garp stp mrp llc rfcomm bnep btnxpuart nls_iso8859_1 nls_cp437 onboard_us
+> [ 1303.327651] CPU: 0 UID: 0 PID: 513 Comm: kworker/u9:2 Not tainted 6.16.0-rc1+ #3 PREEMPT
+> [ 1303.335937] Hardware name: Toradex Verdin AM62 WB on Verdin Development Board (DT)
+> [ 1303.343588] Workqueue: MWIFIEX_RX_WORK_QUEUE mwifiex_rx_work_queue [mwifiex]
+> [ 1303.350856] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> [ 1303.357904] pc : cfg80211_process_disassoc+0x78/0xec [cfg80211]
+> [ 1303.364065] lr : cfg80211_process_disassoc+0x70/0xec [cfg80211]
+> [ 1303.370221] sp : ffff800083053be0
+> [ 1303.373590] x29: ffff800083053be0 x28: 0000000000000000 x27: 0000000000000000
+> [ 1303.380855] x26: 0000000000000000 x25: 00000000ffffffff x24: ffff000002c5b8ae
+> [ 1303.388120] x23: ffff000002c5b884 x22: 0000000000000001 x21: 0000000000000008
+> [ 1303.395382] x20: ffff000002c5b8ae x19: ffff0000064dd408 x18: 0000000000000006
+> [ 1303.402646] x17: 3a36333a61623a30 x16: 32206d6f72662063 x15: ffff800080bfe048
+> [ 1303.409910] x14: ffff000003625300 x13: 0000000000000001 x12: 0000000000000000
+> [ 1303.417173] x11: 0000000000000002 x10: ffff000003958600 x9 : ffff000003625300
+> [ 1303.424434] x8 : ffff00003fd9ef40 x7 : ffff0000039fc280 x6 : 0000000000000002
+> [ 1303.431695] x5 : ffff0000038976d4 x4 : 0000000000000000 x3 : 0000000000003186
+> [ 1303.438956] x2 : 000000004836ba20 x1 : 0000000000006986 x0 : 00000000d00479de
+> [ 1303.446221] Call trace:
+> [ 1303.448722]  cfg80211_process_disassoc+0x78/0xec [cfg80211] (P)
+> [ 1303.454894]  cfg80211_rx_mlme_mgmt+0x64/0xf8 [cfg80211]
+> [ 1303.460362]  mwifiex_process_mgmt_packet+0x1ec/0x460 [mwifiex]
+> [ 1303.466380]  mwifiex_process_sta_rx_packet+0x1bc/0x2a0 [mwifiex]
+> [ 1303.472573]  mwifiex_handle_rx_packet+0xb4/0x13c [mwifiex]
+> [ 1303.478243]  mwifiex_rx_work_queue+0x158/0x198 [mwifiex]
+> [ 1303.483734]  process_one_work+0x14c/0x28c
+> [ 1303.487845]  worker_thread+0x2cc/0x3d4
+> [ 1303.491680]  kthread+0x12c/0x208
+> [ 1303.495014]  ret_from_fork+0x10/0x20
+> 
+> Add validation in the STA receive path to verify that disassoc/deauth
+> frames originate from the connected AP. Frames that fail this check
+> are discarded early, preventing them from reaching the MLME layer and
+> triggering WARN_ON().
+> 
+> This filtering logic is similar with that used in the
+> ieee80211_rx_mgmt_disassoc() function in mac80211, which drops
+> disassoc frames that don't match the current BSSID
+> (!ether_addr_equal(mgmt->bssid, sdata->vif.cfg.ap_addr)), ensuring
+> only relevant frames are processed.
+> 
+> Tested on:
+> - 8997 with FW 16.68.1.p197
+> 
+> Fixes: 36995892c271 ("wifi: mwifiex: add host mlme for client mode")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Vitor Soares <vitor.soares@toradex.com>
 
-Indeed.  I've already expressed my reservations about supporting the whole
-of the existing sysfs capabilties, but I've otherwise tried to remain out
-of the discussion.
-
-To reiterate my position:
-While I am all for maintaining sysfs in some form to cater for those
-rare cases where cdev is too heavyweight, IMHO it is a mistake to
-support the existing sysfs capabilities in toto.  Take the opportunity to
-remove the parts of the sysfs interface that don't work well.
-The new sysfs should only provide the features required by those rare use
-cases, which IIUC would be basic sets and gets, and exclude those features
-not required, particularly warts like edges.
-
-If you need more advanced features then use cdev.
-If all you need is basic sets and gets then sysfs is probably fine.
-
-If that isn't the case then there should be some explanation as to why those
-sysfs features are being maintained.  Treat this as a new interface.
-
-Cheers,
-Kent.
-
-
+Reviewed-by: Jeff Chen <jeff.chen_1@nxp.con>
