@@ -1,44 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73851E9B3D;
-	Wed,  2 Jul 2025 21:14:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 012722DE700;
+	Wed,  2 Jul 2025 21:19:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751490879; cv=none; b=cKsHiVN+ccavdc+X/wxS39JfdrH2lbmcxP2oX9R2T8141CucRDg4KFY8eiJiWQt1B5uhpoJHgiwfDjJ2sZJDxF/MVzeZULqjW2pXHZKylaiZ0KtXu+ER/fWni6DxSgYMohybHEW8fGARg1HTpIVoODjY1ZiiBTvzat1J9z17nGU=
+	t=1751491198; cv=none; b=vGhtIDhVu3MdJP8GeUMAlt0KyNfRcRglpNhfcvVbILtB40mccsd+8RLav/K2S9687Um+XeIxAAU3I9TVkNRWAH0FSMHFgGPLRExvVazu0g0Bh881NzTwjl0ZNQfkoawJPtsmx/awHq90hQ5HGPuHrO9hz2dakViwGFDh5HHi9fI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751490879; c=relaxed/simple;
-	bh=IRreGz5DKr52FblTxRK/rFgWXfFqeBVNLQ73T/BEENc=;
+	s=arc-20240116; t=1751491198; c=relaxed/simple;
+	bh=BIpRaOcU0sXftdnL3c/j+CqOlYrtkvdB7rfmx8h0pm8=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=adLk5RP0pSWJh7XdQUXyAMImzrPQZdU18tkBBiQMkSYdeNBQkchA1UxsXHMDOMQHRGhY1oQ/Nlg6zyRHBDIzvsut6OaVEKSVq0XFKjM0vPLUU/2s27CHT2vUiKU0JpTCWMu1Okb7RshY2BHOtFI6YTNpc8bbG5fIUidQdu5qHjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BWXCyB/d; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=sccac8VWbTgZKYP5wJUF+gmwRfI1gs44KA2YyTddRgy40ozz4tgeoRLa6osCbXm6+kD50p7CkL3hFmAksR2wG0CtAKiubQUEMojhzS4ogFEbH5LRRfXvKgdQe+MRKM9L4RCmuh6SxckFss801+ReokURiqOnUWrDMZCQ2S83pg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sYZSx/l5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BWXCyB/d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1042C4CEE7;
-	Wed,  2 Jul 2025 21:14:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sYZSx/l5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57BC9C4CEE7;
+	Wed,  2 Jul 2025 21:19:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751490879;
-	bh=IRreGz5DKr52FblTxRK/rFgWXfFqeBVNLQ73T/BEENc=;
+	s=k20201202; t=1751491197;
+	bh=BIpRaOcU0sXftdnL3c/j+CqOlYrtkvdB7rfmx8h0pm8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=BWXCyB/dH4bnI6cFLqHIapEJ6FxIaN/X75SdNdNLbl4umCK+ViQH8MbQt9YPFDy8+
-	 eAsu5lUy6Pvyg8On0qJgNJdKWnFFzBd04DaPhxRbxg3zWr2jZTyXjlobglpNRPTj6Q
-	 Zm4xolPOkOAlR6svjVp8jgT+alkkoImMdKS7rh561cQP5s7PfiknYnSygIkuOOfGP/
-	 nrHtCEVlw8xPOtKOwsv9eJomOgqY16d5eJ7GAuQoppG/nbzKwNJABEgou8Q/Arg2G8
-	 dTQSmlpSAWRQp5sIL6wpXNPTnyh+ZoITkk8SJVvjRhdHI6VyIU8PVMKdw58xh0YsTY
-	 o2P7IM8tYDQow==
-Date: Wed, 2 Jul 2025 14:14:37 -0700
+	b=sYZSx/l5GAljQyxRKhba6MYUIrBa9Lo3ocNzEe+kLaUzbPL1HCfYWOsz3V1RKOEnd
+	 nWtzBBRAcb8aNLT2/bmSWyala/BNnfKdgTv2iWfC72lPaDIMqFrmctGrtuZc8bCAYW
+	 E3lKBUaY3LQQ+LSA67v4yZagHPv9RgdZmynjKoLNQDzRJjVdZBLmHZyV+pmDhH2lu/
+	 POBZPuRJrCatYiJitLl4MQdpU2Pb4th1fJbfHB3RgV5IFTpgorvd9V7WWJJZBr5zSp
+	 ovlvj52ZM2KNuywbC4tlvDVDnjH6cC3LKGnrGLPX3iTLsW4r0pv3aTmD1R1DsEQXsW
+	 J/Vg6O+Aa3s/g==
+Date: Wed, 2 Jul 2025 14:19:56 -0700
 From: Jakub Kicinski <kuba@kernel.org>
-To: zhangjianrong <zhangjianrong5@huawei.com>
-Cc: <michael.jamet@intel.com>, <mika.westerberg@linux.intel.com>,
- <YehezkelShB@gmail.com>, <andrew+netdev@lunn.ch>, <davem@davemloft.net>,
- <edumazet@google.com>, <pabeni@redhat.com>, <netdev@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <guhengsheng@hisilicon.com>,
- <caiyadong@huawei.com>, <xuetao09@huawei.com>, <lixinghang1@huawei.com>
-Subject: Re: [PATCH v2] net: thunderbolt: Fix the parameter passing of
- tb_xdomain_enable_paths()/tb_xdomain_disable_paths()
-Message-ID: <20250702141437.5d4cb9bd@kernel.org>
-In-Reply-To: <20250628094920.656658-1-zhangjianrong5@huawei.com>
-References: <20250628094920.656658-1-zhangjianrong5@huawei.com>
+To: Faisal Bukhari <faisalbukhari523@gmail.com>
+Cc: davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+ horms@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Fix typo in af_netlink.c
+Message-ID: <20250702141956.52a36266@kernel.org>
+In-Reply-To: <20250628105542.269192-1-faisalbukhari523@gmail.com>
+References: <20250628105542.269192-1-faisalbukhari523@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,13 +44,13 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sat, 28 Jun 2025 17:49:20 +0800 zhangjianrong wrote:
-> According to the description of tb_xdomain_enable_paths(), the third
-> parameter represents the transmit ring and the fifth parameter represents
-> the receive ring. tb_xdomain_disable_paths() is the same case.
-> 
-> Fixes: ff7cd07f3064 ("net: thunderbolt: Enable DMA paths only after rings are enabled")
-> Signed-off-by: zhangjianrong <zhangjianrong5@huawei.com>
+On Sat, 28 Jun 2025 16:25:42 +0530 Faisal Bukhari wrote:
+> Subject: [PATCH] Fix typo in af_netlink.c
 
-I'll add Mika's review tag manually, in the future please add the tags
-you received before reposting.
+Subject should be something like:
+
+netlink: spelling: fix appened -> appended in a comment
+
+please fix and repost
+-- 
+pw-bot: cr
