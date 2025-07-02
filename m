@@ -1,218 +1,273 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08E0A25A33A
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 10:55:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E57D025392B;
+	Wed,  2 Jul 2025 10:55:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751453710; cv=none; b=dAb29QxvRBT1Cf0jedsPIuMM1lAY57ymsRT0pFKuvpIGF5a3hLS8Nzu33mS04MeM+vRcnUDtU28yQQWFibJ8laVjZr6Jo5zcRY8ExCqF13UM+IoJ5KaIYqbWJERK/ynFx5v03IFpy3j3YzU3x4mFTHoVL/cTQjyEggY1C2ZxnYU=
+	t=1751453752; cv=none; b=NlZ+2LCUsvwKFyCRlsVEkKlckPINWNTRwJ7Rk8FnA6MVs4r4ROSFGWLt/3YYK5ffJuCg/joMFKQmzU0HXWpW/NzczVRfJoaFOMiuD8edmj8IXRiM439VrqNCTjr8iLJnqDlcPWQfqXrhAbzcCCVYIJDDUsiDnnpdwnCZk5PL7VE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751453710; c=relaxed/simple;
-	bh=DzR5+bRB5psLtK2E0dNTjdVUmZbUhzSCXQ7Rq5dh0oU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pjMkT/ARCY0lC+ti/m/Ov4+SBiDksM/0RRPHt+doyOk/Pit+9qhLuQ/JhwYrqUwVGniMdseqSwEk7OmPqTg+PueLnQr86E+HljTLzTSSkVijk4U8ptA9CC02jIdrC0wHzwti8dorITC0xtEP5rdqmIk40o8+nraiXNISvF6ZSS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VAw/gNsS; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751453752; c=relaxed/simple;
+	bh=tYOrOUBve0dkupx5/2QoUwtD9tGcSmwLo30M/94Loes=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Ez9KpF5WdnRdGewm1eT3am0X9tsBc/fNfO6ZfnaaK193FgC4ItSVHaduUD+ub7z9D5QUDlDQTBUFJDiCTyn2IoMhOH4tHRzankN5rcvS0jsczd2x56CHlhk7bu+iaXGy9vCm5z224ZPfSWZK7ZeUvZhfXUlrLWOWV8v8h2Re50o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ry1Lv4XM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VAw/gNsS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751453708;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=3jS+uD1Oc4zGOBUHZNuowE6e3b/KrfwZtLCHN7KeS3E=;
-	b=VAw/gNsSgbnu/x9zgtUxgaMbXg78LeT9hseDdw9wnsxkKGFB7FI9ogwN1SXqBsCDn9jcWT
-	yi5kgkjE/7DohA5pGrhiM0ZU6KIGSpVEfEK5UBnYw0kyZB1K5uUAL/gwIbHwUCbLUI4ajh
-	oLwcCEvy/TJSNyoExDOpvBS2b4a0ddw=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-114-b9xxxqLDPS2RDYKFJHXoPQ-1; Wed, 02 Jul 2025 06:55:06 -0400
-X-MC-Unique: b9xxxqLDPS2RDYKFJHXoPQ-1
-X-Mimecast-MFC-AGG-ID: b9xxxqLDPS2RDYKFJHXoPQ_1751453706
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a503f28b09so3450274f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 03:55:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751453705; x=1752058505;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=3jS+uD1Oc4zGOBUHZNuowE6e3b/KrfwZtLCHN7KeS3E=;
-        b=pbj99+nnw934r5AMa6xglNOy91iBCMeIFjNNvNpdUBDlwcz0XibltwirADKo+GkMKD
-         eQ+gTS/MlP/6jVkZ57YtvBcMK6btFkO2Th60dSFlCeGhMCgPGbejew9bJJEBbDBH0oOt
-         32bycKTxrBkvMp1ZJl0nxcT4pz7l4riB/tdE3vWqj0aa480lNeb8WhYFN6yNjjOf1gDW
-         rXVinYJd8TebRx18A3015KTb0ML4Gcf/VYsyEVwXA1mA1IhskZaqIi3ZqBf8xmPgnPhg
-         FsiRpXLnernI6v79lHh+c99XtrjVDvPeOprYDbLzoCtOBAxNdmDnnFHlPMIRGBnx1Ttr
-         9Q/Q==
-X-Gm-Message-State: AOJu0YzxN18Y1cfE7Fm5xAhADFdhGhdiP1SSRVE/z1EZZyFHV6zs5VHw
-	fXHYzngoSoC2X142/tBMRFuXm4ytTWWJZfBNN6odZqDQ7pHkDyYJ7DoRAazFvwp+ffciv1vm18J
-	tVpbbAz8WvM7n9/gRr7hw08dpxiMEq5Pk4z9YzqTJjQa99YeYBle92zk8jIVXI9j6n/d1lHHk8K
-	tX
-X-Gm-Gg: ASbGncuLn2uhcljYvTcQ5RBzPCQMZEPWJ3D7ZBxxBrSGoxYwFAYl7UKZWjamR4of/Fb
-	3FNSOQudgJpwvSGV/S1OiiZeNEjOgCP9G9GJqRXPskuUJPNWrXwJuldDmo4n+i+D3Eo4zk8NUKY
-	Z+ezZm1KGieGL7q99/1jxvWYEtKLLbWxlgg2AwC7I9rO0C8DYKs+voaGuWKvgT+z9Cfj9x+V5EF
-	BonJHPFd44khkjjC16A+CZFktxdfp2ko6+6vgLiZ4yjF3ZElqY7TPcc6ULA1GBsSkQ/S67g8aj+
-	GfhxUe4LOXRIQ13XIYmXoT6hhVzEcd0e+2Mn2cfwj2gA7wl9eq4lxdA=
-X-Received: by 2002:a05:6000:25f0:b0:3a4:eb7a:2ccb with SMTP id ffacd0b85a97d-3b1f7ae6ef8mr1644468f8f.16.1751453705451;
-        Wed, 02 Jul 2025 03:55:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGq26TSMyBQAlDrNyJ4gRIcosC2SckUR8wvmxMD9/SEPekoJbfcXvmF8Q5kjpg2FJd2gcKeiQ==
-X-Received: by 2002:a05:6000:25f0:b0:3a4:eb7a:2ccb with SMTP id ffacd0b85a97d-3b1f7ae6ef8mr1644442f8f.16.1751453704899;
-        Wed, 02 Jul 2025 03:55:04 -0700 (PDT)
-Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c80b74csm15710562f8f.45.2025.07.02.03.55.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jul 2025 03:55:04 -0700 (PDT)
-Message-ID: <11de6ae0-d4ec-43d5-a82e-146d82f17fff@redhat.com>
-Date: Wed, 2 Jul 2025 12:55:02 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ry1Lv4XM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74C63C4CEED;
+	Wed,  2 Jul 2025 10:55:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751453751;
+	bh=tYOrOUBve0dkupx5/2QoUwtD9tGcSmwLo30M/94Loes=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Ry1Lv4XMBjmPcX1SL0rTxNXvWsyXE19hZXTGH0FKq4wDeJm0/is1vrHiJEV64QmMU
+	 70jGXCLdzbqbwyvPSoHQ1yFNqcQvNpZ2ZK5H35id2NJGXhKAn44lARCFD4y3fLI01g
+	 cuA8fSHBIa678uAfysH4T8Wv62TMTeNXfgAAxJD4dA8z/edLQWTpLPPqzo5gC3Aax+
+	 wr1C9YWG+w99NFaaJMfb8k4t0y8TYQJXr1+aY7N8ZQVDUMZoazyvV6Lp3e60WbdvLd
+	 g0vghRVkSNjXkGQ4O07hIFGLLjfL2GvLd7XTB4qdDmT7zyjTIqfMYnINQnuSgyt1XT
+	 ah8EpH0s18qBw==
+From: Mark Brown <broonie@kernel.org>
+Subject: [PATCH v18 0/8] fork: Support shadow stacks in clone3()
+Date: Wed, 02 Jul 2025 11:39:05 +0100
+Message-Id: <20250702-clone3-shadow-stack-v18-0-7965d2b694db@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 12/29] mm/zsmalloc: stop using __ClearPageMovable()
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- virtualization@lists.linux.dev, linux-fsdevel@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Jerrin Shaji George <jerrin.shaji-george@broadcom.com>,
- Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
- Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
- Ying Huang <ying.huang@linux.alibaba.com>,
- Alistair Popple <apopple@nvidia.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Minchan Kim <minchan@kernel.org>, Brendan Jackman <jackmanb@google.com>,
- Johannes Weiner <hannes@cmpxchg.org>, Jason Gunthorpe <jgg@ziepe.ca>,
- John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
- Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>,
- Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi
- <nao.horiguchi@gmail.com>, Oscar Salvador <osalvador@suse.de>,
- Rik van Riel <riel@surriel.com>, Harry Yoo <harry.yoo@oracle.com>,
- Qi Zheng <zhengqi.arch@bytedance.com>, Shakeel Butt <shakeel.butt@linux.dev>
-References: <20250630130011.330477-1-david@redhat.com>
- <20250630130011.330477-13-david@redhat.com>
- <zmsay3nrpmjec5n7v44svfa7iwl6vklqan4dgjn4wpvsr5hqt7@cqfwdvhncgrg>
- <757cf6b9-730b-4b12-9a3d-27699e20e3ac@redhat.com>
- <ugm7j66msq2w2hd3jg3thsxd2mv7vudozal3nblnfemclvut64@yp7d6vgesath>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <ugm7j66msq2w2hd3jg3thsxd2mv7vudozal3nblnfemclvut64@yp7d6vgesath>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEkMZWgC/3XTzW7cIBDA8VeJfK4rZoBh6KnvUfXAx5C1Eq0rO
+ 9q2ivbdi1dt7ApzNJJ/huHv92GVZZJ1+PL0Pixym9ZpvtYH4E9PQ7qE67OMU64LAyrUoMCP6XW
+ +ih7XS8jzz3F9C+llBJuNyhiL1TTUN38sUqZfD/bb9/p8mda3efn9+MoNttW/HupT7wajGjOTy
+ ypWOquvL7Jc5fXzvDwPG3jDHQEw5whWJBLowsQA1jaIPiCozhFdkeAiS9aCIaUGMUeEzxFTEY7
+ IpYgp5KhB7D/EKFSdmdiKaMRE3noWExuEdoR6g6WKeBHnWEco0TeI2xGn4Rxx20y81SgSS4TcI
+ LwjrDoz4YqokIp2KRQw7WD9Ael0d/PbcQizM8V7Q6ZBQB0U7JwH1LYXEnbeRW9MWwp8RGtAKdt
+ htmoxUMCYKZOFlsED05subN06YC2Rowi4ltE7080FtnK9juwDQ7DS3hJ8pGtrddRhHu0qG60Ox
+ emTYsDujOndNjzqLQGNTSQ6SsvQgYHebrZ+sZTkU9AeXPsTgNsZUp1sYCuY2SjJ3pVC5T/mfr/
+ /AQ7PpOgYBQAA
+X-Change-ID: 20231019-clone3-shadow-stack-15d40d2bf536
+To: "Rick P. Edgecombe" <rick.p.edgecombe@intel.com>, 
+ Deepak Gupta <debug@rivosinc.com>, Szabolcs Nagy <Szabolcs.Nagy@arm.com>, 
+ "H.J. Lu" <hjl.tools@gmail.com>, Florian Weimer <fweimer@redhat.com>, 
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+ Vincent Guittot <vincent.guittot@linaro.org>, 
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, 
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, 
+ Christian Brauner <brauner@kernel.org>, Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, jannh@google.com, bsegall@google.com, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Yury Khrustalev <yury.khrustalev@arm.com>, 
+ Wilco Dijkstra <wilco.dijkstra@arm.com>, linux-kselftest@vger.kernel.org, 
+ linux-api@vger.kernel.org, Mark Brown <broonie@kernel.org>, 
+ Kees Cook <kees@kernel.org>, Kees Cook <kees@kernel.org>, 
+ Shuah Khan <skhan@linuxfoundation.org>
+X-Mailer: b4 0.15-dev-cff91
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9148; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=tYOrOUBve0dkupx5/2QoUwtD9tGcSmwLo30M/94Loes=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBoZRAq0mvzWTlYyJVeTJ+At2JRw1pmtPmHkLS+o
+ zIDc8vyMFOJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCaGUQKgAKCRAk1otyXVSH
+ 0LP5B/kB9ABLOAX5srwYoNy+DZHp7JmajRUTbzL0/Ew/CmeR0M5IElpGu5V8JHJx8TBb2GR04s/
+ vic+XO3Z0pK0MuxhjfVvLgFzG2JDJYQ+jqE267s4/WLPrVBcPvDsQ3z1mvY2F3Ufj2+GujlUN2r
+ eIa1wEM5GV1yJAsTHvMXUMPpn8shadgFLtbktIxULyALtTmw9TNiCdNB7Mk34KQ80wchpcUVFtY
+ ikT6IU05eD85o4QjYdiqfeO9qVJ2tR73gaboUNknD4/ZiGECGsfcnQ6WHnITVjJESC50T822CF5
+ i+mmj9z557GVijzxWrtkftu/Hc+whipLaoBwZ6cxGLFbkbw7
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-On 02.07.25 12:10, Sergey Senozhatsky wrote:
-> On (25/07/02 10:25), David Hildenbrand wrote:
->> On 02.07.25 10:11, Sergey Senozhatsky wrote:
->>> On (25/06/30 14:59), David Hildenbrand wrote:
->>> [..]
->>>>    static int zs_page_migrate(struct page *newpage, struct page *page,
->>>> @@ -1736,6 +1736,13 @@ static int zs_page_migrate(struct page *newpage, struct page *page,
->>>>    	unsigned long old_obj, new_obj;
->>>>    	unsigned int obj_idx;
->>>> +	/*
->>>> +	 * TODO: nothing prevents a zspage from getting destroyed while
->>>> +	 * isolated: we should disallow that and defer it.
->>>> +	 */
->>>
->>> Can you elaborate?
->>
->> We can only free a zspage in free_zspage() while the page is locked.
->>
->> After we isolated a zspage page for migration (under page lock!), we drop
->                        ^^ a physical page? (IOW zspage chain page?)
-> 
->> the lock again, to retake the lock when trying to migrate it.
->>
->> That means, there is a window where a zspage can be freed although the page
->> is isolated for migration.
-> 
-> I see, thanks.  Looks somewhat fragile.  Is this a new thing?
+The kernel has recently added support for shadow stacks, currently
+x86 only using their CET feature but both arm64 and RISC-V have
+equivalent features (GCS and Zicfiss respectively), I am actively
+working on GCS[1].  With shadow stacks the hardware maintains an
+additional stack containing only the return addresses for branch
+instructions which is not generally writeable by userspace and ensures
+that any returns are to the recorded addresses.  This provides some
+protection against ROP attacks and making it easier to collect call
+stacks.  These shadow stacks are allocated in the address space of the
+userspace process.
 
-No, it's been like that forever. And I was surprised that only zsmalloc 
-behaves that way -- balloon implements isolation as one would expect it 
-(disallow freeing while isolated).
+Our API for shadow stacks does not currently offer userspace any
+flexiblity for managing the allocation of shadow stacks for newly
+created threads, instead the kernel allocates a new shadow stack with
+the same size as the normal stack whenever a thread is created with the
+feature enabled.  The stacks allocated in this way are freed by the
+kernel when the thread exits or shadow stacks are disabled for the
+thread.  This lack of flexibility and control isn't ideal, in the vast
+majority of cases the shadow stack will be over allocated and the
+implicit allocation and deallocation is not consistent with other
+interfaces.  As far as I can tell the interface is done in this manner
+mainly because the shadow stack patches were in development since before
+clone3() was implemented.
 
-> 
->> While we currently keep that working (as far as I can see), in the future we
->> want to remove that support from the core.
-> 
-> Maybe comment can more explicitly distinguish zspage isolation and
-> physical page (zspage chain) isolation?  zspages can get isolated
-> for compaction (defragmentation), for instance, which is a different
-> form of isolation.
+Since clone3() is readily extensible let's add support for specifying a
+shadow stack when creating a new thread or process, keeping the current
+implicit allocation behaviour if one is not specified either with
+clone3() or through the use of clone().  The user must provide a shadow
+stack pointer, this must point to memory mapped for use as a shadow
+stackby map_shadow_stack() with an architecture specified shadow stack
+token at the top of the stack.
 
-Well, it's confusing, as we have MM compaction (-> migration) and 
-apparently zs_compact.
+Yuri Khrustalev has raised questions from the libc side regarding
+discoverability of extended clone3() structure sizes[2], this seems like
+a general issue with clone3().  There was a suggestion to add a hwcap on
+arm64 which isn't ideal but is doable there, though architecture
+specific mechanisms would also be needed for x86 (and RISC-V if it's
+support gets merged before this does).  The idea has, however, had
+strong pushback from the architecture maintainers and it is possible to
+detect support for this in clone3() by attempting a call with a
+misaligned shadow stack pointer specified so no hwcap has been added.
 
-I'll try to clarify that we are talking about isolation for page 
-migration purposes.
+[1] https://lore.kernel.org/linux-arm-kernel/20241001-arm64-gcs-v13-0-222b78d87eee@kernel.org/T/#mc58f97f27461749ccf400ebabf6f9f937116a86b
+[2] https://lore.kernel.org/r/aCs65ccRQtJBnZ_5@arm.com
 
--- 
-Cheers,
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+Changes in v18:
+- Rebase onto v6.16-rc3.
+- Thanks to pointers from Yuri Khrustalev this version has been tested
+  on x86 so I have removed the RFT tag.
+- Clarify clone3_shadow_stack_valid() comment about the Kconfig check.
+- Remove redundant GCSB DSYNCs in arm64 code.
+- Fix token validation on x86.
+- Link to v17: https://lore.kernel.org/r/20250609-clone3-shadow-stack-v17-0-8840ed97ff6f@kernel.org
 
-David / dhildenb
+Changes in v17:
+- Rebase onto v6.16-rc1.
+- Link to v16: https://lore.kernel.org/r/20250416-clone3-shadow-stack-v16-0-2ffc9ca3917b@kernel.org
+
+Changes in v16:
+- Rebase onto v6.15-rc2.
+- Roll in fixes from x86 testing from Rick Edgecombe.
+- Rework so that the argument is shadow_stack_token.
+- Link to v15: https://lore.kernel.org/r/20250408-clone3-shadow-stack-v15-0-3fa245c6e3be@kernel.org
+
+Changes in v15:
+- Rebase onto v6.15-rc1.
+- Link to v14: https://lore.kernel.org/r/20250206-clone3-shadow-stack-v14-0-805b53af73b9@kernel.org
+
+Changes in v14:
+- Rebase onto v6.14-rc1.
+- Link to v13: https://lore.kernel.org/r/20241203-clone3-shadow-stack-v13-0-93b89a81a5ed@kernel.org
+
+Changes in v13:
+- Rebase onto v6.13-rc1.
+- Link to v12: https://lore.kernel.org/r/20241031-clone3-shadow-stack-v12-0-7183eb8bee17@kernel.org
+
+Changes in v12:
+- Add the regular prctl() to the userspace API document since arm64
+  support is queued in -next.
+- Link to v11: https://lore.kernel.org/r/20241005-clone3-shadow-stack-v11-0-2a6a2bd6d651@kernel.org
+
+Changes in v11:
+- Rebase onto arm64 for-next/gcs, which is based on v6.12-rc1, and
+  integrate arm64 support.
+- Rework the interface to specify a shadow stack pointer rather than a
+  base and size like we do for the regular stack.
+- Link to v10: https://lore.kernel.org/r/20240821-clone3-shadow-stack-v10-0-06e8797b9445@kernel.org
+
+Changes in v10:
+- Integrate fixes & improvements for the x86 implementation from Rick
+  Edgecombe.
+- Require that the shadow stack be VM_WRITE.
+- Require that the shadow stack base and size be sizeof(void *) aligned.
+- Clean up trailing newline.
+- Link to v9: https://lore.kernel.org/r/20240819-clone3-shadow-stack-v9-0-962d74f99464@kernel.org
+
+Changes in v9:
+- Pull token validation earlier and report problems with an error return
+  to parent rather than signal delivery to the child.
+- Verify that the top of the supplied shadow stack is VM_SHADOW_STACK.
+- Rework token validation to only do the page mapping once.
+- Drop no longer needed support for testing for signals in selftest.
+- Fix typo in comments.
+- Link to v8: https://lore.kernel.org/r/20240808-clone3-shadow-stack-v8-0-0acf37caf14c@kernel.org
+
+Changes in v8:
+- Fix token verification with user specified shadow stack.
+- Don't track user managed shadow stacks for child processes.
+- Link to v7: https://lore.kernel.org/r/20240731-clone3-shadow-stack-v7-0-a9532eebfb1d@kernel.org
+
+Changes in v7:
+- Rebase onto v6.11-rc1.
+- Typo fixes.
+- Link to v6: https://lore.kernel.org/r/20240623-clone3-shadow-stack-v6-0-9ee7783b1fb9@kernel.org
+
+Changes in v6:
+- Rebase onto v6.10-rc3.
+- Ensure we don't try to free the parent shadow stack in error paths of
+  x86 arch code.
+- Spelling fixes in userspace API document.
+- Additional cleanups and improvements to the clone3() tests to support
+  the shadow stack tests.
+- Link to v5: https://lore.kernel.org/r/20240203-clone3-shadow-stack-v5-0-322c69598e4b@kernel.org
+
+Changes in v5:
+- Rebase onto v6.8-rc2.
+- Rework ABI to have the user allocate the shadow stack memory with
+  map_shadow_stack() and a token.
+- Force inlining of the x86 shadow stack enablement.
+- Move shadow stack enablement out into a shared header for reuse by
+  other tests.
+- Link to v4: https://lore.kernel.org/r/20231128-clone3-shadow-stack-v4-0-8b28ffe4f676@kernel.org
+
+Changes in v4:
+- Formatting changes.
+- Use a define for minimum shadow stack size and move some basic
+  validation to fork.c.
+- Link to v3: https://lore.kernel.org/r/20231120-clone3-shadow-stack-v3-0-a7b8ed3e2acc@kernel.org
+
+Changes in v3:
+- Rebase onto v6.7-rc2.
+- Remove stale shadow_stack in internal kargs.
+- If a shadow stack is specified unconditionally use it regardless of
+  CLONE_ parameters.
+- Force enable shadow stacks in the selftest.
+- Update changelogs for RISC-V feature rename.
+- Link to v2: https://lore.kernel.org/r/20231114-clone3-shadow-stack-v2-0-b613f8681155@kernel.org
+
+Changes in v2:
+- Rebase onto v6.7-rc1.
+- Remove ability to provide preallocated shadow stack, just specify the
+  desired size.
+- Link to v1: https://lore.kernel.org/r/20231023-clone3-shadow-stack-v1-0-d867d0b5d4d0@kernel.org
+
+---
+Mark Brown (8):
+      arm64/gcs: Return a success value from gcs_alloc_thread_stack()
+      Documentation: userspace-api: Add shadow stack API documentation
+      selftests: Provide helper header for shadow stack testing
+      fork: Add shadow stack support to clone3()
+      selftests/clone3: Remove redundant flushes of output streams
+      selftests/clone3: Factor more of main loop into test_clone3()
+      selftests/clone3: Allow tests to flag if -E2BIG is a valid error code
+      selftests/clone3: Test shadow stack support
+
+ Documentation/userspace-api/index.rst             |   1 +
+ Documentation/userspace-api/shadow_stack.rst      |  44 +++++
+ arch/arm64/include/asm/gcs.h                      |   8 +-
+ arch/arm64/kernel/process.c                       |   8 +-
+ arch/arm64/mm/gcs.c                               |  55 +++++-
+ arch/x86/include/asm/shstk.h                      |  11 +-
+ arch/x86/kernel/process.c                         |   2 +-
+ arch/x86/kernel/shstk.c                           |  53 ++++-
+ include/asm-generic/cacheflush.h                  |  11 ++
+ include/linux/sched/task.h                        |  17 ++
+ include/uapi/linux/sched.h                        |   9 +-
+ kernel/fork.c                                     |  93 +++++++--
+ tools/testing/selftests/clone3/clone3.c           | 226 ++++++++++++++++++----
+ tools/testing/selftests/clone3/clone3_selftests.h |  65 ++++++-
+ tools/testing/selftests/ksft_shstk.h              |  98 ++++++++++
+ 15 files changed, 620 insertions(+), 81 deletions(-)
+---
+base-commit: 86731a2a651e58953fc949573895f2fa6d456841
+change-id: 20231019-clone3-shadow-stack-15d40d2bf536
+
+Best regards,
+--  
+Mark Brown <broonie@kernel.org>
 
