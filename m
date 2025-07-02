@@ -1,258 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E9D72F0C75
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 15:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B198B2F49E6
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 15:57:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751471859; cv=none; b=iY5pCkmK11zH79hcEYoI2TmLZA7+SjfAsmVp5fh3OZNYeiR/OX49k3QQkwQ/iFKC4G2MuliJClZUJDneqNrIff19U+Tm9WWfP3CmKVtaxDwKy/3CmljoQBlohJGwQtCvi+c9JKJcX/zEKGFZU6Syx3os7dgisH0NJKeGTTF+7c0=
+	t=1751471861; cv=none; b=bmlCecgUNOEmtL4ssCU1pdSY7oLEhJMc3iTDXJqpYAM29wnubbmisR+DZ9sy8P9bulw0WuKscjGAIMCXlNrLfbmgbkg4HTvK8NLnBRr7WZgKjQCeL6b7rIGIMPG4q/J9Uc5NCyoSV8+EiIQ7fReRfm7C8yBDs5eegyheBJbrxbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751471859; c=relaxed/simple;
-	bh=icUCd4XoO+ixIyAWZBgZUyMnIuHBPaRzMS9ZyPOV1Ik=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LP6a+RYxgDPqqYa6NI5JcRt8rLul2/mlDsqXKIa77j/QTpx7gk0PY5aNPFGnh1ml7cxMRfQNXi6mNrf6AN68XhNnjgRQv/4I7kp7lA4wUUOlTIbGkNDTbVaKCwBHJX5WbL7p+W6GGK43DO17zfqtSXfWbTGXw9ODFWHk/M6h/gQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XpPh8MjB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751471861; c=relaxed/simple;
+	bh=UBW9AmBKxoaiwqYygxaAtj2TxtrVFxLGmLOlmZwydlE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BAn5fbvDw2PayzCsj5OpY+YdE5WZE0bmaaJpyVjL1rvyHcBdcPfQeyDufBS/nNRm+JPB90X6jLx67yv+B+/boeJnmd0xhdVxQNQfoyrci8kVlYTvL3N716PATEVVEpf311ESRzlbAmE82Qnl+n1jWc2mpoupuQB42Wv1FhUecaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=AxAQjm39; arc=none smtp.client-ip=209.85.166.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XpPh8MjB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9129C4CEF3
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 15:57:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751471858;
-	bh=icUCd4XoO+ixIyAWZBgZUyMnIuHBPaRzMS9ZyPOV1Ik=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=XpPh8MjByIOPP4AiSLtG/PQsg+bn5DEXyqO4qjqcz7EEGNexSnCgwPb1zQWy3S2iB
-	 ca8Yrpuh9FyQUyxqkkMI07iE3BiMpkUgiKaqm9o8zwImTb/AFzlnJdgqGWRLH29V5+
-	 ZBR0mIO6Vx354DwCtg0eNziCYm237csec5kQyKz4hS17q4S+VuIN/ST24V5L3sYjCw
-	 XJMTYIsLm2kO5R0kYxXpnP0pfZoGrISc1XukcZmkOXZzNyDSfwbRF9FlSvmyjkZvTd
-	 psODv6AfbFzsNWqiaVWpm/gj3ffJFGWNK8pGG7VxN1WVlg/42j7N2EvsS+F5olu+gh
-	 y/rl5Ajydwe8A==
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-453663b7bf1so185725e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 08:57:38 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWXuGt57Ph7baOPiCLVgR64m0TSAfIARmgaoL4mEvqWIwfJH0Uyvf/CCRsYqW3m051zC1aM4KKybaw6glY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJuDSiAmwRPfr6ikM4jzFWuUcIdrv3IDP131ohNBzABUyacikS
-	byk/bnQJ7c1zR6XO7nnfz//JZiyFC0gOuJ3yRW3Zdc/VCPbJQ1xvlozQUsWU0C1RwFVuwcwiFO4
-	e2aBPiP92ef/8Zw88MUJs+FtnTTbsw+q5TggQJ0tq
-X-Google-Smtp-Source: AGHT+IEVuhRP9qv7REEXVzOStfhDxCO6n42Vb8ZcYZ95zGQslwOSozI88HAej5o0C3XLsF6LQ9oecrhVYjWWJOz/KE4=
-X-Received: by 2002:a05:600c:a301:b0:453:5ffb:e007 with SMTP id
- 5b1f17b1804b1-453e03a982cmr2956115e9.4.1751471857355; Wed, 02 Jul 2025
- 08:57:37 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="AxAQjm39"
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3de18fde9cfso25575205ab.3
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 08:57:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1751471859; x=1752076659; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qaOezCvCj2SfYR6XkwjTmit8j2uV7y/Y9zEGmjTXRkg=;
+        b=AxAQjm39joQBHZft9a5oDr1wlcrJ/ZrcHOkrPfm61kL49Y8VgGoN+dGsknE18nMt+h
+         e01e/IaRaGlh6lvzUA7TLDqD9eNhlkEtmPOpjZzPHw3+P8XSD6G8JkjfmakrHrGcgjqY
+         izbmLB0z7VD9XwczXX580gFBQPJiK5/jYpzPY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751471859; x=1752076659;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qaOezCvCj2SfYR6XkwjTmit8j2uV7y/Y9zEGmjTXRkg=;
+        b=tRrfHxX0V4KqZ3OD2ZatgvJc7klnOKB+o5M8U2KBlP+Kn68cYUdJUj54g5y1Sr/en4
+         Ga9zHa+4gR4iXDptCkZyGkFOdkzwxCkUUt7l5hRl2qWMzy6TsVCfVEGtX+bGDsdPnI+L
+         GOfIgMFEbxazCApY14z16T06KHBO5wlvsFFnQrng652fuNoMfXzvmAGWb5FYnDOVccYt
+         cZzMctXLL0ui6A/dK24nch+xQENR/Vple6c/h+hSy+pc0xHHVmr4JhZqVtO0Rt7GMDHY
+         GhsDvWYaHjEGjHncYvpHImu02Zoyc8PWJe0K5M/QH3K09XTLHFyZHPBfVRoHajb3hViX
+         ch5Q==
+X-Gm-Message-State: AOJu0YxIX9ZCfkdB9YxQqJpz1IH37xF0nsMEl0C7diP0yH2mIWZ0yCpd
+	fpVWtHORQcYeVjFYy3PCn6rgwz7+B6IwM885bzsiH4LDJVn/pWVaMO0k8zB5swTtJC8=
+X-Gm-Gg: ASbGncu7PYWFcBooIwzvDyEdRtKxyH6fDkKg4ykob4VQaMVa9WdAJnT1PLCVsawJk6w
+	/iVe5aHA8biJ+pyPLOI4Mda294bfrxKjoSuvowK3U0sY74h29WBzrty/9VFaWpLbwC7Znzu590K
+	h/+Y4m6W0aihlAHSijMqAiRQddBntm0FE7wiEy6VhYlKPlw2KOMNNvaBjmTlsCcWMoLdRBkJhp6
+	RC/PxQU882TVCPz47lA/+YZut5IWr6FnpKQjf4kXh3hNL+xT6hxGQ3+dBSaeLomlM2Ty9jQJ2zO
+	bhBh2TH5pBldSRJdF4Byd/162PkDiNyVPrwdxZHVt6dZklOFKRGkLujP2TYUKCWDTPT05cl2JQ=
+	=
+X-Google-Smtp-Source: AGHT+IEffZHObu858zlikGrgCt/g9OhlW9cNLvPa1LkclqEt06Pa7ejia2NnHEl3ekATO4Eo0uH8bQ==
+X-Received: by 2002:a05:6602:741a:b0:875:bc7c:5cf3 with SMTP id ca18e2360f4ac-876c693db2amr435512639f.0.1751471858695;
+        Wed, 02 Jul 2025 08:57:38 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-50204ab7b31sm3014206173.127.2025.07.02.08.57.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Jul 2025 08:57:38 -0700 (PDT)
+Message-ID: <1181af84-d66d-4ee1-810d-4bd697912b80@linuxfoundation.org>
+Date: Wed, 2 Jul 2025 09:57:37 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610214140.2775339-1-mclapinski@google.com>
- <CAMj1kXErKwmiM5AiGOCE5D39U+3o_MXz5vqJmE5pkjQV308d9w@mail.gmail.com> <CAAi7L5dmAYJoB0BfKvoT0iKOeWuc5hLqFPBPQr99TkdEB1dtHg@mail.gmail.com>
-In-Reply-To: <CAAi7L5dmAYJoB0BfKvoT0iKOeWuc5hLqFPBPQr99TkdEB1dtHg@mail.gmail.com>
-From: Chris Li <chrisl@kernel.org>
-Date: Wed, 2 Jul 2025 08:57:26 -0700
-X-Gmail-Original-Message-ID: <CAF8kJuMvX31n8yNWn11bo1wCgXXOwOAp8HbYpSEBy94LR6phDA@mail.gmail.com>
-X-Gm-Features: Ac12FXwgDT4Etg9QMws7VA7RvdyydRx1ZyLTsK5ww-DProVDGcjSMhRV950grDY
-Message-ID: <CAF8kJuMvX31n8yNWn11bo1wCgXXOwOAp8HbYpSEBy94LR6phDA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] x86/boot/compressed: Fix avoiding memmap in physical KASLR
-To: =?UTF-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Dan Williams <dan.j.williams@intel.com>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: duplicate patch in the kselftest tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>, Shuah Khan <shuah@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20250702163622.12bd45dc@canb.auug.org.au>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20250702163622.12bd45dc@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Michal,
+On 7/2/25 00:36, Stephen Rothwell wrote:
+> Hi all,
+> 
+> The following commit is also in the mm-nonmm-unstable tree as a different
+> commit (but the same patch):
+> 
+>    fd4fadf0da98 ("selftests: ptrace: add set_syscall_info to .gitignore")
+> 
+> This is commit
+> 
+>    1d8c98f3b408 ("selftests: ptrace: add set_syscall_info to .gitignore")
+> 
+> in the mm-nonmm-unstable tree.
+> 
 
-That change looks correct to me, thanks for the explanation of the
-execution behavior.
+Thanks - I will go drop it.
 
-Acked-by: <chrisl@kernel.org>
-
-We can add some test input cases to help better explain the issue. I
-quote from your offline message:
--------------- quote -----------
- The old code worked for inputs like this:
-"memmap=3Dsomething,something,something,something,something"
-but didn't work for inputs like this:
-"memmap=3Dsomething memmap=3Dsomething memmap=3Dsomething memmap=3Dsomethin=
-g
-memmap=3Dsomething".
------------- quote -----------
-
-Such kind of example test input in the commit message would help
-understand the patch.
-
-On Sat, Jun 21, 2025 at 2:51=E2=80=AFAM Micha=C5=82 C=C5=82api=C5=84ski <mc=
-lapinski@google.com> wrote:
->
-> Hi Ard,
->
-> On Sat, Jun 21, 2025 at 10:19=E2=80=AFAM Ard Biesheuvel <ardb@kernel.org>=
- wrote:
-> >
-> > Hi Michal,
-> >
-> > On Tue, 10 Jun 2025 at 23:42, Michal Clapinski <mclapinski@google.com> =
-wrote:
-> > >
-> > > The intent of the code was to cancel KASLR if there are more than 4
-> > > memmap args. Unfortunately, it was only doing that if the memmap args
-> > > were comma delimited, not if they were entirely separate.
-> > > This change fixes it.
-> > >
-> > > Signed-off-by: Michal Clapinski <mclapinski@google.com>
-> > > ---
-> > > I would like KASLR to support more than 4 memmap args. Do you think
-> > > I can just increase the MAX_MEMMAP_REGIONS or should I implement
-> > > support for the general case?
-> > >
-> > >  arch/x86/boot/compressed/kaslr.c | 3 ---
-> > >  1 file changed, 3 deletions(-)
-> > >
-> > > diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compres=
-sed/kaslr.c
-> > > index f03d59ea6e40..4aa9c9781ca7 100644
-> > > --- a/arch/x86/boot/compressed/kaslr.c
-> > > +++ b/arch/x86/boot/compressed/kaslr.c
-> > > @@ -162,9 +162,6 @@ static void mem_avoid_memmap(char *str)
-> > >  {
-> > >         static int i;
-> > >
-> > > -       if (i >=3D MAX_MEMMAP_REGIONS)
-> > > -               return;
-> > > -
-> >
-> > It isn't obvious at all why simply dropping this condition is fine.
-> > Could you elaborate?
-
-Right, this code is very tricky due to the static variable. One of my
-nitpicks is that the code structure does not reflect well the
-execution flow. That is a pre-existing condition before this patch.
-
-> Of course. Let's look at the whole function without my change:
->
-> static void mem_avoid_memmap(char *str)
-> {
->         static int i;
->
->         if (i >=3D MAX_MEMMAP_REGIONS)
->                 return;
->
->         while (str && (i < MAX_MEMMAP_REGIONS)) {
->                 int rc;
->                 u64 start, size;
->                 char *k =3D strchr(str, ',');
->
->                 if (k)
->                         *k++ =3D 0;
->
->                 rc =3D parse_memmap(str, &start, &size);
->                 if (rc < 0)
->                         break;
->                 str =3D k;
-Just want to point out that "str" gets reassigned a new value,
-possibly NULL here.
-I was wondering why it needs to repeat testing str in the later part
-of if statements.
-
->
->                 if (start =3D=3D 0) {
->                         /* Store the specified memory limit if size > 0 *=
-/
->                         if (size > 0 && size < mem_limit)
->                                 mem_limit =3D size;
->
->                         continue;
->                 }
->
->                 mem_avoid[MEM_AVOID_MEMMAP_BEGIN + i].start =3D start;
->                 mem_avoid[MEM_AVOID_MEMMAP_BEGIN + i].size =3D size;
->                 i++;
->         }
->
->         /* More than 4 memmaps, fail kaslr */
->         if ((i >=3D MAX_MEMMAP_REGIONS) && str)
-
-Just want to note that we test "i" vs MAX_MEMMAP_REGIONS here.
-
->                 memmap_too_large =3D true;
-> }
->
-> This function is called for every memmap=3D param. Let's say we supply
-> only separate memmap=3D params (instead of comma delimited). Then on the
-> 4th param, `i` will be equal to MAX_MEMMAP_REGIONS but the last `if`
-> won't execute since `str` will be null. Then on the 5th param the
-> first `if` (the one I want to remove) will execute and
-> `memmap_too_large` will never be set.
-
-The test input for the above explanation is "memmap=3Dsomething
-memmap=3Dsomething memmap=3Dsomething memmap=3Dsomething memmap=3Dsomething=
-".
-
->
-> With my change, while parsing the 5th param, the `while` loop will be
-> skipped since `i` is not smaller than MAX_MEMMAP_REGIONS and the last
-> `if` will execute setting `memmap_too_large`. Basically, my change is
-> safe because the `if` I want to remove is already baked into the
-> `while` loop condition.
->
->
-> >
-> > >         while (str && (i < MAX_MEMMAP_REGIONS)) {
-
-And we test "i" vs MAX_MEMMAP_REGIONS again.
-
-I did attempt to reduce the repeat test condition and make the flow
-more straight forward.
-The bloat-o-meter said it is a tiny little bit better, mostly due to
-avoiding repeat testing "i" again MAX_MEMMAP_REGIONS.
-
-$ ./scripts/bloat-o-meter arch/x86/boot/compressed/kaslr.o /tmp/kasl-new.o
-add/remove: 0/0 grow/shrink: 0/1 up/down: 0/-8 (-8)
-Function                                     old     new   delta
-mem_avoid_memmap                             403     395      -8
-Total: Before=3D7992, After=3D7984, chg -0.10%
-
-The flow is slightly better there, but that is much a bigger patch to revie=
-w.
-
-Chris
-
-diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/ka=
-slr.c
-index 948da3b01cac..f25704f1e1a6 100644
---- a/arch/x86/boot/compressed/kaslr.c
-+++ b/arch/x86/boot/compressed/kaslr.c
-@@ -189,14 +189,16 @@ static void mem_avoid_memmap(enum parse_mode
-mode, char *str)
- {
-  static int i;
-
-- if (i >=3D MAX_MEMMAP_REGIONS)
-- return;
-
-- while (str && (i < MAX_MEMMAP_REGIONS)) {
-+ while (str) {
-  int rc;
-  u64 start, size;
-- char *k =3D strchr(str, ',');
-+ char *k;
-+
-+ if (i >=3D MAX_MEMMAP_REGIONS)
-+ goto max_memmap;
-
-+ k =3D strchr(str, ',');
-  if (k)
-  *k++ =3D 0;
-
-@@ -217,9 +219,11 @@ static void mem_avoid_memmap(enum parse_mode
-mode, char *str)
-  mem_avoid[MEM_AVOID_MEMMAP_BEGIN + i].size =3D size;
-  i++;
-  }
-+ return;
-
-+max_memmap:
-  /* More than 4 memmaps, fail kaslr */
-- if ((i >=3D MAX_MEMMAP_REGIONS) && str)
-+ if (str)
-  memmap_too_large =3D true;
- }
+thanks,
+-- Shuah
