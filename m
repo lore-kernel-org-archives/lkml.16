@@ -1,139 +1,282 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BAB123D2B8
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 10:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B955D78F5D;
+	Wed,  2 Jul 2025 10:11:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751451049; cv=none; b=gvJaCf2LnJm4UfApoXjAdZ1taLwBcHPY3nyDDk32lzGNn2OU1okPg9DG/3VfazL5IdZMo4pSUEFDekYD+pS+uGAeXoo5SUWaOaZGF2APholvUj3JKkLecDK8dy+JHd8dtPk0oYdSNrhfG8+PJ8pBOPaGuDLLJaOqtZ8n/uHUxd8=
+	t=1751451110; cv=none; b=ea/BWe/Gk8fZbBMNenUIvACSmT0+sDxs1I+OeXyh1DW9pcDIVNgY/JdKz6BOyb/nsjUumCeDHHI058L9PyIaa5Cv6dsSPB/F6znWmV3h5OSJJTpfu+maEYxAH7mSV6Pq70wTULgruAHYnyggw7pqYOyNvOQ0X7V36eu5UwzGrC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751451049; c=relaxed/simple;
-	bh=X/8cCALWl6B46verGcMgk1pVS/SO1QUX5EH6YbyQquQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OiPx6vTghmqwnbnuSprQX3zLDGaf61gYM3mpE3pWW41hyFZ4wSFm4SRjw0RISKpP4jinmMsq+RdleVcyGql1SkbkxyoeL0AXxD+donopp/UpbtHO1BSqNHgU69fCm4YbrQEkdJYD6Eufc/CkactwZdPT8A48XFqT/P+yF8DKyVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=RchncG7I; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1751451110; c=relaxed/simple;
+	bh=hA4/iZufk20OeTrgRBxstEQK9yPV2RJw3w8p1R0j53w=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Y/NgeCF/IaDYmk5k7p/piBMQEZvKH894FUdV/AS7eCwVIUuGjjVByDUzF7yvog5TV8qZ5LRFqGuUG8Q7BxJG64WahvBqZ7Mr+BqBMkukgzYDJ0eSo9pE/pbfdXWYygd94IW3agI8pXdhSCQAZN6+ZK9z7ACOJ0/IDY/cE857E4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TswbjYw0; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RchncG7I"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-234b9dfb842so38924265ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 03:10:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TswbjYw0"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a536ecbf6fso3832318f8f.2;
+        Wed, 02 Jul 2025 03:11:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1751451047; x=1752055847; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ld1XwWyA21yaiRgsO+RmuHJahSek4BWAE0bK6K3RNA8=;
-        b=RchncG7IPeq1A1lS1fUZ8SZUGpOUPDZkFaiIL67nEZdW697fpG3n+FDT4QuI3L+rz/
-         xqSHHBBnSOvChhZdxNvzWuVve1mwl5anE5VQ0n9ypya+t3pxtAWsqRY9EUXmduTWhyP8
-         uYMgUyThWVvwssYfj/o3If9vw0xlqX3W4Nf9U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751451047; x=1752055847;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1751451107; x=1752055907; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ld1XwWyA21yaiRgsO+RmuHJahSek4BWAE0bK6K3RNA8=;
-        b=KlMVYa6K2OQz2MGcqT/8l6cUb3M9lHkh9kxQpmNB9iKbtw0QA6wYF1pxPPgjIKXqx9
-         W74LYaSzHGhC9a1OuvUIws+nLcICzcBh5O7Dj/duJzvMn+RoL2Tv9Cc2MHaWQlwuWGDS
-         6WGeUFf4FPeXAtlnBouCw3KMQRwD4pxUinOp9jpqYoaKVCGmB1g8XeXmEsKPGvCijdPT
-         xAyflENayvZ9pspNEfSH+MaTwQG7xUZD6yvZErL/Axlka6K5GaKiZ0Ve2Kbkr2ag9Q35
-         gfdWIjgKDyJtDeUoyyxdfUms4jdPzx8egWScjUsCdcs6IjZcdkSDbBCbMzIUmasrqIRq
-         Mx1g==
-X-Forwarded-Encrypted: i=1; AJvYcCUcxLwLFWziqNIC2H71udgoaUFtEku51I/vWkkdLPoE4/buvCoWPhnKQXEjbIrHH3GuKYLh1dVAvaMwLG4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxS5rsVoDgOo1lvocqkj6GcXwkRVX2OXIGGA0rkT9gVuRg/+AiY
-	FdNN3vGcykeKQMP2xiCji62HCy9t4EKYIbTeegKdWO5n1FKTtaJ+2and74VR58OE8g==
-X-Gm-Gg: ASbGncv9I0ODMem70pXMQg89H5h8I+GQEavLIF1Q8dAXQz32Hpk1pgkC9t9gkxgEU5z
-	Ridl+HHalwVrq1G9yLY/JncVt1Dj/+tbrn1UqacQG/LEUehvW3z7kY8FNJQ4RqnOCWhCnfRTmtn
-	anXj4leCJufKCehiZAe46HjktgiusBx2sm48R5WpYr3w6cERagqfGedvBVloz4zND/b/HehPFuL
-	v4ux8tLsQakGTddMcECJ8FTcG6V8fnyQ3joBW1W/Z087pDUg4ASCUY8oidwrqM/BhNFW8+uVfFm
-	VO2Vniiqw7pFIHMioB/TARTYx3+xPqELSmSgm08bBLDnm3C8J0MSfISioqf2mfOSo3m77PHhNL7
-	k
-X-Google-Smtp-Source: AGHT+IFD0I3P0mnZDdceuRH9XAJvvYKmYNHVDtVURKEkoHBc3BGVYVJeT3uh933j6Dzbu2Zpclzgcw==
-X-Received: by 2002:a17:90a:d64e:b0:312:18e:d930 with SMTP id 98e67ed59e1d1-31a90bd4c31mr3078996a91.19.1751451046749;
-        Wed, 02 Jul 2025 03:10:46 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:8825:8cdb:cb6b:8e71])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f5383eb6sm19125723a91.10.2025.07.02.03.10.36
+        bh=2EXIKYt3Y003wfDpZ6+F8d2uM2XWqrreiBlGE5vL5FA=;
+        b=TswbjYw0qBcwVcA3BX8xa/KrAR8GlG8ltvKqGiO6hzGcdRoqVsDzUbp1pQR2BQG4NQ
+         0s7ekJYVU8Gpt+Qea421aICSwKLfY7Fd+jqq+HCMtfK669VqxclY8HEVKv6K/4WlcJeY
+         DSn4wT90Mwju+XL7kjqs4A/UzzzbElqzJ2WPOr0jDDiRUfMinSBDhIF0cyMOawC/6j22
+         9K0898wnlsWR8FDPyAY1xji2CMDsE2VKi4xgRK9q0ZFxPyYsrvN0GR5Bi3X36upfziMK
+         CJARzUZuZC99ChKXUX0wx99ZQ3YaX7mADgTYRCh1AnIWij2pyk/TAonvEuQoDOZU6bEa
+         9j3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751451107; x=1752055907;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2EXIKYt3Y003wfDpZ6+F8d2uM2XWqrreiBlGE5vL5FA=;
+        b=oyDiK7C44Y2hGC7VmAl05kPgACD3wGYHuKAU0wyXm/gUC6TSl+dnp20rujvawYv1f4
+         BduIK6PY8YQDCbELnplALdeM7CnHDvjxvnWFAC0BiPO41VRD0IZlgacuArS59hGHPqxf
+         FQpnj/AQiOBhDNicBx5XWuZm/XVIkdJpi+w4Ezut2OdmRjDq4XBd19DYilTgR21tVaUU
+         3kJ9/sHzPJHxxdo4XTrU/FOJyFT26xKLK+RW90YGUz4CraJ+UschC/wGxbMMxLqJjlz5
+         PfPk9iQ4oC+039Jbefx1+2R0/KXFsm+zdwImfmSIpFkNkzycO8btrgBPX2IrS9tFsdFO
+         9mbA==
+X-Forwarded-Encrypted: i=1; AJvYcCVbLAROCSHVssv+SmvQqzs9QsgMSbeQHs0tMEJiNiCmGsYOhKzhZckPqr0jgpPBiVjCuUy1+SMkj5nXfM62@vger.kernel.org, AJvYcCWFfFbD+k7mbEsX6tsPeGIrWjl8YLzxKfkzhzPXJN2pZXrxKPyasyeOhiv1kOVQ5Nsm69jlAQ7QZRsT@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYMWoVTTFA9H2eRfxa2522N8NwUX1rwcGY0Lc4xooYy1q/zY21
+	UvZeSBYHzeOsUiFOuoJIj7BWVsp5r30xTEYRt/Yk210Vqy8GXCZyMHI2
+X-Gm-Gg: ASbGncueCf029PRKTIRN77q5ygrwPzuBfULx/quP5KUZwy4tl3Ieo1UmsHHfYVrhUa5
+	cS3cBR+hQ5ivWeGnpCdzpeCgY/1xF2ueTtiVeauC9lE7ixIdBtQeVgysYADtvJTjz8kq79U5bpY
+	lJmGt6TAZiyiuwSH65IW5kTo3T69MO6tOBJb27aBLjeBjmaS0iGZVUUFeTpsVNXRreQW1UuEI60
+	omDi7kNuh4gygwa71rsfDMeFfPhFzu/rbp/IEL7pSij6Mmo5+1v8fWlTDYSPQk4IUoihoswE+B4
+	dnv0CbR7CSK1z/89QniRFsSIIhdsAd2uksb0estP4rYP7tnEOIAvszovAHC1+OEuSrBfDieAmQK
+	uO8AUzKMPsWFBwcI9qQ==
+X-Google-Smtp-Source: AGHT+IE5o/lCRhHaBkNRDZxdR5z+1LVjickMfAb9sK5WBxxBVNG0nGn1OFJE4sJnm4XT7L9Mxa4FVw==
+X-Received: by 2002:a05:6000:41dc:b0:3a4:e387:c0bb with SMTP id ffacd0b85a97d-3b2012f7f91mr1677072f8f.59.1751451106691;
+        Wed, 02 Jul 2025 03:11:46 -0700 (PDT)
+Received: from pumpkin (host-92-21-58-28.as13285.net. [92.21.58.28])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a407743sm192874035e9.33.2025.07.02.03.11.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 03:10:46 -0700 (PDT)
-Date: Wed, 2 Jul 2025 19:10:34 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-doc@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, virtualization@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Jerrin Shaji George <jerrin.shaji-george@broadcom.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Michael S. Tsirkin" <mst@redhat.com>, 
-	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
-	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Zi Yan <ziy@nvidia.com>, 
-	Matthew Brost <matthew.brost@intel.com>, Joshua Hahn <joshua.hahnjy@gmail.com>, 
-	Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
-	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
-	Alistair Popple <apopple@nvidia.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Minchan Kim <minchan@kernel.org>, Brendan Jackman <jackmanb@google.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Naoya Horiguchi <nao.horiguchi@gmail.com>, Oscar Salvador <osalvador@suse.de>, 
-	Rik van Riel <riel@surriel.com>, Harry Yoo <harry.yoo@oracle.com>, 
-	Qi Zheng <zhengqi.arch@bytedance.com>, Shakeel Butt <shakeel.butt@linux.dev>
-Subject: Re: [PATCH v1 12/29] mm/zsmalloc: stop using __ClearPageMovable()
-Message-ID: <ugm7j66msq2w2hd3jg3thsxd2mv7vudozal3nblnfemclvut64@yp7d6vgesath>
-References: <20250630130011.330477-1-david@redhat.com>
- <20250630130011.330477-13-david@redhat.com>
- <zmsay3nrpmjec5n7v44svfa7iwl6vklqan4dgjn4wpvsr5hqt7@cqfwdvhncgrg>
- <757cf6b9-730b-4b12-9a3d-27699e20e3ac@redhat.com>
+        Wed, 02 Jul 2025 03:11:46 -0700 (PDT)
+Date: Wed, 2 Jul 2025 11:11:35 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Yury Norov <yury.norov@gmail.com>
+Cc: cp0613@linux.alibaba.com, alex@ghiti.fr, aou@eecs.berkeley.edu,
+ arnd@arndb.de, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux@rasmusvillemoes.dk,
+ palmer@dabbelt.com, paul.walmsley@sifive.com
+Subject: Re: [PATCH 2/2] bitops: rotate: Add riscv implementation using Zbb
+ extension
+Message-ID: <20250702111135.37854d1b@pumpkin>
+In-Reply-To: <aGQprv3HTplw9r-q@yury>
+References: <aGLA78usaJOnpols@yury>
+	<20250701124737.687-1-cp0613@linux.alibaba.com>
+	<aGQprv3HTplw9r-q@yury>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <757cf6b9-730b-4b12-9a3d-27699e20e3ac@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On (25/07/02 10:25), David Hildenbrand wrote:
-> On 02.07.25 10:11, Sergey Senozhatsky wrote:
-> > On (25/06/30 14:59), David Hildenbrand wrote:
-> > [..]
-> > >   static int zs_page_migrate(struct page *newpage, struct page *page,
-> > > @@ -1736,6 +1736,13 @@ static int zs_page_migrate(struct page *newpage, struct page *page,
-> > >   	unsigned long old_obj, new_obj;
-> > >   	unsigned int obj_idx;
-> > > +	/*
-> > > +	 * TODO: nothing prevents a zspage from getting destroyed while
-> > > +	 * isolated: we should disallow that and defer it.
-> > > +	 */
-> > 
-> > Can you elaborate?
-> 
-> We can only free a zspage in free_zspage() while the page is locked.
-> 
-> After we isolated a zspage page for migration (under page lock!), we drop
-                      ^^ a physical page? (IOW zspage chain page?)
+On Tue, 1 Jul 2025 14:32:14 -0400
+Yury Norov <yury.norov@gmail.com> wrote:
 
-> the lock again, to retake the lock when trying to migrate it.
-> 
-> That means, there is a window where a zspage can be freed although the page
-> is isolated for migration.
+> On Tue, Jul 01, 2025 at 08:47:01PM +0800, cp0613@linux.alibaba.com wrote:
+> > On Mon, 30 Jun 2025 12:53:03 -0400, yury.norov@gmail.com wrote:
+> >  =20
+> > > > > 1. The most trivial compile-case is actually evaluated at compile=
+ time; and
+> > > > > 2. Any arch-specific code is well explained; and
+> > > > > 3. legacy case optimized just as well as non-legacy. =20
+> > > >=20
+> > > > 1. As in the above reply, use the generic implementation when compi=
+le-time evaluation
+> > > >    is possible=E3=80=82
+> > > > 2. I will improve the comments later. =20
+> > >=20
+> > > I'm particularly interested in ror8/rol8 case:
+> > >=20
+> > >         u32 word32 =3D ((u32)word << 24) | ((u32)word << 16) | ((u32)=
+word << 8) | word;
+> > >=20
+> > > When you expand it to 32-bit word, and want to rotate, you obviously
+> > > need to copy lower quarterword to the higher one:
+> > >=20
+> > >         0xab >> 0xab0000ab
+> > >=20
+> > > That way generic (u8)ror32(0xab, shift) would work. But I don't under=
+stand
+> > > why you copy the lower 8 bits to inner quarterwords. Is that a hardwa=
+re
+> > > requirement? Can you point to any arch documentation=20
+> > >  =20
+> > > > 3. As mentioned before, only 8-bit rotation should have no optimiza=
+tion effect, and
+> > > >    16-bit and above will have significant optimization. =20
+> > >=20
+> > > I asked you about the asm goto ("legacy") thing: you calculate that
+> > > complex word32 _before_ evaluating the goto. So this word32 may get
+> > > unused, and you waste cycles. I want to make sure this isn't the case=
+. =20
+> >=20
+> > Thank you for your suggestion and reminder. This is not a hardware requ=
+irement, but it =20
+>=20
+> Sure. Please add
+>=20
+> Suggested-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
+>=20
+> > is somewhat related because the zbb instruction only supports word-size=
+d rotate [1].
+> > Considering the case where the shift is greater than 8, if the modulus =
+of the shift is
+> > not taken, it is required to continuously concatenate 8-bit data into 3=
+2 bits.
 
-I see, thanks.  Looks somewhat fragile.  Is this a new thing?
+I'd not worry about rotates of 8 bits or more (for ror8).
+They can be treated as 'undefined behaviour' under the assumption they don'=
+t happen.
+The 'generic' version needs them to get gcc to generate a 'rorb' on x86.
+The negated shift needs masking so that clang doesn't throw the code away w=
+hen
+the value is constant.
 
-> While we currently keep that working (as far as I can see), in the future we
-> want to remove that support from the core.
+> >=20
+> > So, I considered the case of taking the remainder of shift and found th=
+at this
+> > implementation would have one less instruction, so the final implementa=
+tion is as follows:
+> > ```
+> > static inline u8 variable_rol8(u8 word, unsigned int shift) =20
+>=20
+> Now that it has assembler inlines, would it help to add the __pure
+> qualifier?
+>=20
+> > {
+> > 	u32 word32;
+> >=20
+> > 	asm goto(ALTERNATIVE("j %l[legacy]", "nop", 0,
+> > 				      RISCV_ISA_EXT_ZBB, 1)
+> > 			  : : : : legacy);
+> >=20
+> > 	word32 =3D ((u32)word << 24) | word;
+> > 	shift =3D shift % 8; =20
+>=20
+>         shift %=3D 8;
+>=20
+> >=20
+> > 	asm volatile(
+> > 		".option push\n"
+> > 		".option arch,+zbb\n"
+> > 		"rolw %0, %1, %2\n"
+> > 		".option pop\n"
+> > 		: "=3Dr" (word32) : "r" (word32), "r" (shift) :);
+> >=20
+> > 	return (u8)word32;
+> >=20
+> > legacy:
+> > 	return generic_rol8(word, shift);
+> > }
+> >=20
+> > static inline u8 variable_ror8(u8 word, unsigned int shift)
+> > {
+> > 	u32 word32;
+> >=20
+> > 	asm goto(ALTERNATIVE("j %l[legacy]", "nop", 0,
+> > 				      RISCV_ISA_EXT_ZBB, 1)
+> > 			  : : : : legacy);
+> >=20
+> > 	word32 =3D ((u32)word << 8) | word;
+> > 	shift =3D shift % 8;
+> >=20
+> > 	asm volatile(
+> > 		".option push\n"
+> > 		".option arch,+zbb\n"
+> > 		"rorw %0, %1, %2\n"
+> > 		".option pop\n"
+> > 		: "=3Dr" (word32) : "r" (word32), "r" (shift) :);
+> >=20
+> > 	return (u8)word32;
+> >=20
+> > legacy:
+> > 	return generic_ror8(word, shift);
+> > }
+> > ``` =20
+>=20
+> OK, this looks better.
+>=20
+> > I compared the performance of ror8 (zbb optimized) and generic_ror8 on =
+the XUANTIE C908
+> > by looping them. ror8 is better, and the advantage of ror8 becomes more=
+ obvious as the
+> > number of iterations increases. The test code is as follows:
+> > ```
+> > 	u8 word =3D 0x5a;
+> > 	u32 shift =3D 9;
+> > 	u32 i, loop =3D 100;
+> > 	u8 ret1, ret2;
+> >=20
+> > 	u64 t1 =3D ktime_get_ns();
+> > 	for (i =3D 0; i < loop; i++) {
+> > 		ret2 =3D generic_ror8(word, shift);
+> > 	}
+> > 	u64 t2 =3D ktime_get_ns();
+> > 	for (i =3D 0; i < loop; i++) {
+> > 		ret1 =3D ror8(word, shift);
+> > 	}
+> > 	u64 t3 =3D ktime_get_ns();
+> >=20
+> > 	pr_info("t2-t1=3D%lld t3-t2=3D%lld\n", t2 - t1, t3 - t2);
+> > ``` =20
+>=20
+> Please do the following:
+>=20
+> 1. Drop the generic_ror8() and keep only ror/l8()
+> 2. Add ror/l16, 34 and 64 tests.
+> 3. Adjust the 'loop' so that each subtest will take 1-10 ms on your hw.
 
-Maybe comment can more explicitly distinguish zspage isolation and
-physical page (zspage chain) isolation?  zspages can get isolated
-for compaction (defragmentation), for instance, which is a different
-form of isolation.
+That is far too many iterations.
+You'll get interrupts dominating the tests.
+The best thing is to do 'just enough' iterations to get a meaningful result,
+and then repeat a few times and report the fastest (or average excluding
+any large outliers).
 
-> So what probably needs to be done is, checking in free_zspage(), whether the
-> page is isolated. If isolated, defer freeing to the putback/migration call.
+You also need to ensure the compiler doesn't (or isn't allowed to) pull
+the contents of the inlined function outside the loop - and then throw
+the loop away,
 
-Perhaps.
+The other question is whether any of it is worth the effort.
+How many ror8() and ror16() calls are there?
+I suspect not many.
+
+Improving the generic ones might be worth while.
+Perhaps moving the current versions to x86 only.
+(I suspect the only other cpu with byte/short rotates is m68k)
+
+	David
+
+
+
+> 4. Name the function like test_rorl(), and put it next to the test_fns()
+>    in lib/test_bitops.c. Refer the 0a2c6664e56f0 for implementation.
+> 5. Prepend the series with the benchmark patch, just as with const-eval
+>    one, and report before/after for your series.=20
+>=20
+> > > Please find attached a test for compile-time ror/rol evaluation.
+> > > Please consider prepending your series with it. =20
+> >=20
+> > Okay, I'll bring it to the next series. =20
+>=20
+> Still waiting for bloat-o-meter results.
+>=20
+> Thanks,
+> Yury
+>=20
+> >=20
+> > [1] https://github.com/riscv/riscv-bitmanip =20
+>=20
+
