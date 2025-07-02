@@ -1,212 +1,200 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2070.outbound.protection.outlook.com [40.107.92.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EDE52BDC09;
-	Wed,  2 Jul 2025 14:14:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751465693; cv=none; b=J/1VpdpxTnpyZS9st9Q3RRzQUOIukqiSQ+gnmDuJsJJ+ZwlLOKzi/z6bYdUMDITcl8nHT2FwcarC2Zyocfh5wSYhNpZuzmTZAxNmh/b6KVDVffNhxDFz7MmDkaB2Z4Q7dfBHHaZxSXTpWhd5DARgsbdHGpdfoVQn139rysnRlkM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751465693; c=relaxed/simple;
-	bh=cprrfdfnU9GFDLUmsyw/iJaU4waUiVKSI0/qOUtlZWQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MFY//nACPORmjBtLr8tgkhUM8gUufmXMlL3iwMfAsYF2lIDm4Gp4SNZw8COaibf32Nsye0arcX2hKOwZaQX9F3Ftq/dP8bCY9dHKDZlmXFBeEbnREL4F0iqlnKQPtfqGzv9pItky0XMRgGg0nU8a0Qu4PtpOKjkmA4GObCQdqI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CU8U4zrg; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A7A42BDC09;
+	Wed,  2 Jul 2025 14:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.70
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751465701; cv=fail; b=uo9zxnBM9zOlMOCvlfvIjqagTHmKL2jJaWjPzzNs8ggPYLlt9lNnfSYzreMmQJH9+l8dffuqGicoBKbk1gNB1jLhvTugE0zmaZxjVUyxuH12mXwlcbSRwEhqd7BKofx4nn9h5R46ofaGke6wR8v2IhMTG8g/BMjgeIh9yBUXcuM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751465701; c=relaxed/simple;
+	bh=CUJcf/awwZIRUrU7GBWO1Xrh50LGEIhoX2qkewulIdE=;
+	h=Date:From:To:Cc:Subject:Message-ID:Content-Type:
+	 Content-Disposition:MIME-Version; b=QC2/KOEySIYUGokR2scEm8zpTRGsvDSS7sWqpoOLeMLptO3jWBY81XziyboY3XeMkQtDhSI40kDkpsvyePJjcWNVHEOBsFCodrnxHmnQ0YvPbpO2NWzIdN2j0iXA3AZNT8oUczOT2xX6JtcssMpgbbT6rwoIAp69wqmlTipaqdQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=LAIUfVus; arc=fail smtp.client-ip=40.107.92.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CU8U4zrg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7D1EC4CEED;
-	Wed,  2 Jul 2025 14:14:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751465692;
-	bh=cprrfdfnU9GFDLUmsyw/iJaU4waUiVKSI0/qOUtlZWQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=CU8U4zrgdeOOrMqsBqjl8oN28O7OcNV/P6D01cs7aHG6F7ElIR2/cSzbuEEyOVhU2
-	 +reIKaSU69qgR0WZl/X/ANpmKRT+okQj2Ly6Q3TsZf3gce4X1qjPYImKzqkrnd2HC/
-	 YxsGOzHVeY0S5Q+W5zXaX/2ShboY3qvtgseNqEN8ATsOcecLSjPPQ5cEjoj1T1xYhc
-	 VC3XmAIXIcQeGibL8OCprYAwmrIQOGehD/aNXyj6rebrX2TRws+YmXvSuGoQHBNruy
-	 LDn1n7W5YVVmVkJxvZhCzhiz+BaVB6o/qXC2VIO6I90r0cSRGSIw+W/dAbnUM0Q0/Y
-	 ZOgbGQZUB+ONA==
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-6118b000506so1655420eaf.0;
-        Wed, 02 Jul 2025 07:14:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUxu/QJ2AukRvYTJ1zOzJtL/ZvH1iWDrFAG52Oq75ZAAOjutXtBRLTI7+2J3HfY4qg/AK4w3mDPawhF6bHA@vger.kernel.org, AJvYcCV3lRs+IGlViacqBr6sDsiGSdI+AAEE48cW4a1fgeAy+Lv9prqMgz3/bP0sZfaqMSroLI2fuKhLbAM=@vger.kernel.org, AJvYcCVNSGl+dAiLB1kBYPWCTByUwdvmOFmNm2sNcG26sIPvdqYCl+cLkJAYjtq1sOh7rElsLhA6Z8PTKzUZ@vger.kernel.org, AJvYcCVhrHqIL9O6XPHFXGBTb0ZP0rN93rj7aBmKg3Cg7fpYsjqHeRhWfnEcsJx5tiredb5YEVajljxtfDZm@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVau6FaZEFz0cSeVM8QWPMZo4Vcu1qF5QPhmvERCZ33nDhfF2E
-	BIGKvVN7zH6AI7nmhmbOs/J3FMffmvDRC3K26Sc9Lf8QeKrhJkOnU7USr51RaWK8elRbDUH4km+
-	all0ix2lt7bLAzsjxR75Y7eIq0eQK2EM=
-X-Google-Smtp-Source: AGHT+IEQO+KXDVZLq6/myG09rxbBy9SiNjHPGLbzpRLxLdOAI4nqsRB01fCB2AilRBxPlGh/izIPC0xuI9X8tQrQ0l4=
-X-Received: by 2002:a05:6820:8c5:b0:611:e30a:f9c7 with SMTP id
- 006d021491bc7-612010ace40mr2343538eaf.7.1751465691971; Wed, 02 Jul 2025
- 07:14:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="LAIUfVus"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=S8M5PHI9PnPn6r/k1oALnWNWxvineIhHFhUVG8/I6oDp89V2hsYoehifOs2BHTMrZIlfLCyK4A5+ndTrzds+hjhkrcMvGVFx/gkLb3s6cxtJv1bFr8bx6sm+xOLP29vbXZoSOKxLpw65EEstpWtgezn+zdQXMx+bwPK+v7QdZlFDNfyM48u032a/8YrKz1SFJ83Y5FJJRuh+LDRM3aZxdbmGmcb9cO8pAb0LxuewlKIcbkt6MBMesnlV/QGlu/yOFcT+779Je0YMQqSIFtKHB/XHncxThpgbCxAIPPCazEpu8gp8NLFCCdkjTAeIt72vpj+HydnbmRbZ72pAnF1Kfw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kdaOufJjSx1XcCUaKkaSdCC0BlFbhHCQe6G9g05jPS4=;
+ b=M5wk88vqRg8YE1llNkf4684LGanc++JuyMx0yKebGv04LlDh+aIfRb4xTY95wG6OPptYr88sDC2MbxhkklXH/Mo/0QxjoHsgS60VAeweVozzjwypcrvD7ki+XW1roEB7cgjc8pQmoTv0mQVCAKcPmxEf6BPRdNjySdsP+fEhMg61UtvYjHWr9v6Fb19N7egCrbjC2vu3RMNd2tWWfE4NqP5A9q/MpXVwC4R/fL6a/KOWi3mNNU3aZGDf5xpzCiqR4Ehh/+FTnR7iVuRdVIQLdUg2UhFt6nZ2BHXOmU03JF3V8h0/fSte83UQiyKf/TSoNLwS/MnXpQ5UBwUEYYCFGA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kdaOufJjSx1XcCUaKkaSdCC0BlFbhHCQe6G9g05jPS4=;
+ b=LAIUfVusYfo1DfvUSnfV+e9qkqXWVzIyUcrhPWemD/U2NEs7IV6Bq8sWISHfKnjRzPJw54dxXnjDANwM8T3V9lY2rlapejb/SvOFcbhWRFHuAwt7ZiaD3FsuL8NvuAWD01kgQ6MAvduRLWmroIfq2eP2fZTsdqHro7XRf0D3RU4M+duVTRTDaj2Cw1YuYdeEOA0i8mQLP+CPVSnzNq0+GD47hWtXMpb7s1b5y6nEeUvb5qlaraBJyUR4t6E8ZScU3V64Fxjy6ZFhDkFVyRAa09Fberl+Y1QdnWDwtQvRQxD+irFBTYzc1+fOlOhIo+jAHR99Z4cHGcFpAvvYtWI8pw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by DM4PR12MB6207.namprd12.prod.outlook.com (2603:10b6:8:a6::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.21; Wed, 2 Jul
+ 2025 14:14:55 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%7]) with mapi id 15.20.8880.030; Wed, 2 Jul 2025
+ 14:14:55 +0000
+Date: Wed, 2 Jul 2025 11:14:53 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: iommu@lists.linux.dev, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Kevin Tian <kevin.tian@intel.com>
+Subject: [GIT PULL] Please pull IOMMUFD subsystem changes
+Message-ID: <20250702141453.GA1129243@nvidia.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="1XIgBtimj0PC800I"
+Content-Disposition: inline
+X-ClientProxiedBy: BLAPR03CA0088.namprd03.prod.outlook.com
+ (2603:10b6:208:329::33) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <5018768.GXAFRqVoOG@rjwysocki.net> <CAPDyKFp35SjpQmEQ02u7ZbsaFftaett_rBBf-7hbsBpGWH08hw@mail.gmail.com>
-In-Reply-To: <CAPDyKFp35SjpQmEQ02u7ZbsaFftaett_rBBf-7hbsBpGWH08hw@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 2 Jul 2025 16:14:40 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iDGb5KgE0pWKME5sL6wGE-nVOswqcs6K1uTTXB6zZBng@mail.gmail.com>
-X-Gm-Features: Ac12FXzx7QK9Gzgzo2obLKRzjthdFPV8AyJTMHoK965542I2TdIqjRdZ2IHt05U
-Message-ID: <CAJZ5v0iDGb5KgE0pWKME5sL6wGE-nVOswqcs6K1uTTXB6zZBng@mail.gmail.com>
-Subject: Re: [PATCH v3 0/9] PM: Reconcile different driver options for runtime
- PM integration with system sleep
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, 
-	Linux PCI <linux-pci@vger.kernel.org>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|DM4PR12MB6207:EE_
+X-MS-Office365-Filtering-Correlation-Id: 31d9fb8c-6a3f-4364-6e03-08ddb972d194
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?We5OoetCjv+SOIAQAvLKW28+RCf4tBrSrAtWZfogmjssidepH51GnLZl7a2i?=
+ =?us-ascii?Q?0epdHgF7i2odjNPKU9zeDWvAnbdXPWl9rCoDmYkyTI9Yp+qxx3tckwVBRpv3?=
+ =?us-ascii?Q?2BKRPOM6Z9rPJT3C538VE1JdxQfEUv4k3m0wIqeiAXgCiF0vcGlVEgRacnIb?=
+ =?us-ascii?Q?9xGqqNEBd5dYToClzK0JcjoX6jRtTkKMYkZPM6qF4rJN+yR902fbK+EUUAk2?=
+ =?us-ascii?Q?Zxp5s7LCNLSJduQeKiqWZW3XK9U01r4/sf++C2txjuiv7lUFpGBDui30vUjX?=
+ =?us-ascii?Q?8GAMvWEbHiS407091YyqSq7Dn5EV7qAcO8iCeCUzI/RIfW6UFIL6t37Y8k1w?=
+ =?us-ascii?Q?EEkEf9cpuIMuoJ2yk68jWPeVBdSsaL4IqK3mrHNrp3I1fvRko+jMzJg6IeQJ?=
+ =?us-ascii?Q?aKMsUBvGil74dZ16WdIbssf6CNZyDe0mExvOPc+LQW+lIg4Y3wPtKf3hkeKV?=
+ =?us-ascii?Q?nsbQVHk+IEp2/4lgaWpcqtE5L3EIJgLeNMqrmHfMQWlHjKYDxz4iWvX2zdgU?=
+ =?us-ascii?Q?2ywD6KiUFLr1ELN1w/9HLr18zA3VKym7RpQH8APcAl7husEYOfZEYCwUtVZO?=
+ =?us-ascii?Q?RcZXYtl78/lfqvmf5r0Wybcaf1wh9rKeYm0IyqHJN4+K1TiGDCk2swaan1Wr?=
+ =?us-ascii?Q?o397Dl3QftB7itux/388UVDrIC6Z5+hej+bfpTFdyEzoMhBu34Wk8KTnKg7o?=
+ =?us-ascii?Q?3uRqbrrDmVz05IDuLhaAWzDzy6SovEIcpZrwBvieQNoFlYrDJtzrM2W8sXoq?=
+ =?us-ascii?Q?Y9VJlQfgJdJFBJBaEHB4Yja9ECzZdbN/hfB6wE0FkUq5i3gdpAvr6F4b+jOk?=
+ =?us-ascii?Q?AvALbWPdv05CR5E4uUBGkuo/Slmr8j6bD/NzBAYryYjYAdvH6ea3Ak32Z/eQ?=
+ =?us-ascii?Q?YHNF/7Rbae2cQ1QDz6uSQJbugEe7Zwp+Tjo3EZZuszSSfb6d69TSnE97XPjc?=
+ =?us-ascii?Q?MZtjqjJGtL0zoD2jum0aDiNkVRUFqyixuxgR2CFBGqbTCwLsJBgiAnLnwlxm?=
+ =?us-ascii?Q?RyEy48SYY5Xrp23iuPPoCf4SANl2AM+hPWXnxXM2Glpc5gwEBbBWcSFkQaHi?=
+ =?us-ascii?Q?DpEJK/opoCgRE9sos6Hyi3RrMuOnyh0zm8gYwtv+2FZh7Q1XH39Fnm1owO9H?=
+ =?us-ascii?Q?2d6rOHBmbT3OEEunOmZ1CteWtNizQ96mbLWNf8JHtsIOzdDrHoeV5cmXpP5P?=
+ =?us-ascii?Q?xtEuEEWp2C8Z8SysIHSAyRbXaVUxrh73EyW/cnuBByiiTXXbgZx8UbiW29c0?=
+ =?us-ascii?Q?3l77+v2c4Jy2x/i09bB8tAJyvpuEC0XJqWTva64eKz9f3yxEW9unrz64ybZA?=
+ =?us-ascii?Q?PLGqerjqb1CZ/aa2GZOCQ0thXYKnrCfh7mqgrfeiapiDjfHCONy66S0dmin3?=
+ =?us-ascii?Q?sC3+OwH4o0HgoJ8dcxClmB00/7w56QqDFLFJcm0feQr45yXaaWgPf2thcZIG?=
+ =?us-ascii?Q?pKD40jbsctM=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?JBKlYaBa+pQJ9nihwgDAIumWgXHSF/Qs2r1o7WYgFSoC7L/BQVK2oA8LNq2W?=
+ =?us-ascii?Q?35wCLnJ73e7XuSd4OoTyN7MLGZhtyKS5gnWu0e5JrcGRIF8WJOvuL15s+IHz?=
+ =?us-ascii?Q?2TTCz0mjRCRbxTgLPT8GC0uEw6ou2D6QpT8WQIOD0Zk1x/gqeq13ukyFJOX0?=
+ =?us-ascii?Q?Mdy5Y9UoBMHH3Qm/zPJyCo+demWlLVAyz5HeWtpmH909woSkWLv/C7dRptxW?=
+ =?us-ascii?Q?LLLPZl1uaGCE0VpHBToZrEgUMi7jT/ik7LobbT/sGCK9RkOoScBrkP1Uy2zJ?=
+ =?us-ascii?Q?qMscyRydjGXxEBlr2jP5JXZo21kqh5udVPaOk23ZPv3/PsW5Mre/JxhXGu1c?=
+ =?us-ascii?Q?uGHypFoJjp1r15YRUOM4OSPBMx0YF90ZSXALd/CzvomkqdpVy3JA/JrSJR7p?=
+ =?us-ascii?Q?CaheReE254FgRIX83u1zRjoMeKropPT/xMpgkV8PBYPDo1wLHrLUJOvfIZES?=
+ =?us-ascii?Q?0FsNmbG+IQ9wWuvtRfb6tcSlDUiAjg+TrSkWpCWh1Sc64W5ICDkffNYoOMu2?=
+ =?us-ascii?Q?3qX8MLtEgVyeDSqrz+3PMUn4otJMYyPsAuf2Rc5CSFFLnEe9ruS2c2/bHlGF?=
+ =?us-ascii?Q?Ur4hIE9jQkjRi2Qod8swhfWRsqFGIC/Onwef/f3zeztfzOrDaM9HVjc1d0KD?=
+ =?us-ascii?Q?0P6j28WNXl5D5n+FJE12qXlOOlLmg/ORhWTvq4P0ymi5RAvEekt3xShlmb08?=
+ =?us-ascii?Q?p8ZyNKEIBooTEAzLxiW72b+Y0lYF5riMnW7pbvGLiKLyqHuc/xIe5Ku4T5WN?=
+ =?us-ascii?Q?Ih1jSrA1SJaQczFNPDdBQPMvJKqEiEqZLBGYAHh+fzLCSk2/rA/pHwk5iSoQ?=
+ =?us-ascii?Q?Tf1gAGLmoZJeIfVciwXLfsMhqN61lBd0DP/8AibAkWDJu1D/QRkWIMU3mx1r?=
+ =?us-ascii?Q?iuuKTZFE37JNUqmY/e6LMebiano/sKy6JfMylGbcfx5RJGId9byQmxAqh4m7?=
+ =?us-ascii?Q?mnyEBcoMd4U2CuhY8FKhc5iN/TxFmFeuZGPwzd8095dVBsC9MnpBk5WIEaxt?=
+ =?us-ascii?Q?BbkR9NpAOeKLe8Esn1ZJrNZPAnJLFq77GrZtzYsqBivQ2nA3o6qr7XzMYshv?=
+ =?us-ascii?Q?q1SjS2pI6DRWb3iXspyx9ygEe52IB1hSfOiVP4wXdVtKy0o1MI7QyJM+ozEJ?=
+ =?us-ascii?Q?m24jUVbn/7k1rE6x8xdgl8RQ/sak/t3Y/Bk59C0Fb0ekCJ70fIYbFfz3cRza?=
+ =?us-ascii?Q?S8tjJPDQbj9qQfthJSxlI1gy4OatVWznrQgV0z+PWY0sXbsIlR+DpU9UFC/F?=
+ =?us-ascii?Q?Q8iRymkZnjbW/SOck5EJph/I1qaC+0GKSQxKjNCdhkvbejCZjnFLwJRbhgrt?=
+ =?us-ascii?Q?IP8WPToVlz7FRD/ONBTftnASEaw9mh6/c15mxNa7NpGJt2Mx7f0rKmFzlYSf?=
+ =?us-ascii?Q?FVWWHlzulNNWQgpXQpwm36rm/52KUZqv5poh9Y8yXCT5QI3TMMEC0JlNyI7l?=
+ =?us-ascii?Q?MBVi4+Q6bPy01wkUKAQmG7ggkxBqqaIw/hxHS8v5UzWeVm5rPs62ZrfNyB6d?=
+ =?us-ascii?Q?4utSVxnjKj3sjOhPylAxVNzSc89i10/xsXCmF3dTG7JYbawVTI6FqcYiqjbE?=
+ =?us-ascii?Q?cQG6H5bo2v+H24wF12Q=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 31d9fb8c-6a3f-4364-6e03-08ddb972d194
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 14:14:55.4152
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kBrJt3VGOye4XgGOSkmOhuX37WGEY2MiFNXGew785Mbmqghs/+MNpHfONiR5es3A
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6207
 
-On Wed, Jul 2, 2025 at 4:12=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro.org>=
- wrote:
->
-> On Fri, 27 Jun 2025 at 21:29, Rafael J. Wysocki <rjw@rjwysocki.net> wrote=
-:
-> >
-> > Hi Everyone,
-> >
-> > This is an update of the series the v2 of which was posted yesterday:
-> >
-> > https://lore.kernel.org/linux-pm/5015172.GXAFRqVoOG@rjwysocki.net/
-> >
-> > and the v1 is here:
-> >
-> > https://lore.kernel.org/linux-pm/22759968.EfDdHjke4D@rjwysocki.net/
-> >
-> > This update reorders the patches (again), updates the changelogs of som=
-e of
-> > them and changes the subject of one patch slightly.  It also adds a ker=
-neldoc
-> > comment to a new function in patch [5/9].
-> >
-> > This part of the cover letter still applies:
-> >
-> > "This series addresses a couple of issues related to the integration of=
- runtime
-> > PM with system sleep I was talking about at the OSMP-summit 2025:
-> >
-> > https://lwn.net/Articles/1021332/
-> >
-> > Most importantly, DPM_FLAG_SMART_SUSPEND cannot be used along with
-> > pm_runtime_force_suspend/resume() due to some conflicting expectations
-> > about the handling of device runtime PM status between these functions
-> > and the PM core.
-> >
-> > Also pm_runtime_force_suspend/resume() currently cannot be used in PCI
-> > drivers and in drivers that collaborate with the general ACPI PM domain
-> > because they both don't expect their mid-layer runtime PM callbacks to
-> > be invoked during system-wide suspend and resume.
-> >
-> > Patch [1/9] is a preparatory cleanup changing the code to use 'true' an=
-d
-> > 'false' as needs_force_resume flag values for consistency."
-> >
-> > Patch [2/9] (which was [3/9] in v2) puts pm_runtime_force_resume() and =
-one
-> > other function that is only used during system sleep transitions under
-> > CONFIG_PM_SLEEP.
-> >
-> > Patch [3/9] (which was [5/9] in v2) causes the smart_suspend flag to be=
- taken
-> > into account by pm_runtime_force_resume() which allows it to resume dev=
-ices
-> > with smart_suspend set whose runtime PM status has been changed to RPM_=
-ACTIVE
-> > by the PM core at the beginning of system resume.  After this patch, dr=
-ivers
-> > that use pm_runtime_force_suspend/resume() can also set DPM_FLAG_SMART_=
-SUSPEND
-> > which may be useful, for example, if devices handled by them are involv=
-ed in
-> > dependency chains with other devices setting DPM_FLAG_SMART_SUSPEND.
-> >
-> > Since patches [1,3/9] have been reviewed already and patch [2/9] should=
- not
-> > be particularly controversial, I think that patches [1-3/9] are good to=
- go.
-> >
-> > Patch [4/9] (which was [2/9] in v2), makes pm_runtime_reinit() clear
-> > needs_force_resume in case it was set during driver remove.
-> >
-> > Patch [5/9] (which was [4/9] in v2) makes pm_runtime_force_suspend() ch=
-eck
-> > needs_force_resume along with the device's runtime PM status upfront, a=
-nd bail
-> > out if it is set, which allows runtime PM status updates to be eliminat=
-ed from
-> > both that function and pm_runtime_force_resume().  I recalled too late =
-that
-> > it was actually necessary for the PCI PM and ACPI PM to work with
-> > pm_runtime_force_suspend() correctly after the subsequent changes and t=
-hat
-> > patch [3/9] did not depend on it.  I have also realized that patch [5/9=
-]
-> > potentially unbreaks drivers that call pm_runtime_force_suspend() from =
-their
-> > "remove" callbacks (see the patch changelog for a bit of an explanation=
-).
-> >
-> > Patch [6/9] (which has not been changed since v2) makes the code for ge=
-tting a
-> > runtime PM callback for a device a bit more straightforward, in prepara=
-tion for
-> > the subsequent changes.
-> >
-> > Patch [7/9] introduces a new device PM flag called strict_midlayer that
-> > can be set by middle layer code which doesn't want its runtime PM
-> > callbacks to be used during system-wide PM transitions, like the PCI bu=
-s
-> > type and the ACPI PM domain, and updates pm_runtime_force_suspend/resum=
-e()
-> > to take that flag into account.  Its changelog has been updated since v=
-2 and
-> > there is a new kerneldoc comment for dev_pm_set_strict_midlayer().
-> >
-> > Patch [8/9] modifies the ACPI PM "prepare" and "complete" callback func=
-tions,
-> > used by the general ACPI PM domain and by the ACPI LPSS PM domain, to s=
-et and
-> > clear strict_midlayer, respectively, which allows drivers collaborating=
- with it
-> > to use pm_runtime_force_suspend/resume().  The changelog of this patch =
-has been
-> > made a bit more precise since v2.
-> >
-> > That may be useful if such a driver wants to be able to work with diffe=
-rent
-> > PM domains on different systems.  It may want to work with the general =
-ACPI PM
-> > domain on systems using ACPI, or with another PM domain (or even multip=
-le PM
-> > domains at the same time) on systems without ACPI, and it may want to u=
-se
-> > pm_runtime_force_suspend/resume() as its system-wide PM callbacks.
-> >
-> > Patch [9/9] updates the PCI bus type to set and clear, respectively, st=
-rict_midlayer
-> > for all PCI devices in its "prepare" and "complete" PM callbacks, in ca=
-se some
-> > PCI drivers want to use pm_runtime_force_suspend/resume() in the future=
-.  They
-> > will still need to set DPM_FLAG_SMART_SUSPEND to avoid resuming their d=
-evices during
-> > system suspend, but now they may also use pm_runtime_force_suspend/resu=
-me() as
-> > suspend callbacks for the "regular suspend" phase of device suspend (or=
- invoke
-> > these functions from their suspend callbacks).  The changelog of this p=
-atch has
-> > been made a bit more precise since v2, like the changelog of patch [8/9=
-].
-> >
-> > As usual, please refer to individual patch changelogs for more details.
-> >
-> > Thanks!
-> >
->
-> For the v3 series, please add:
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+--1XIgBtimj0PC800I
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thank you!
+Hi Linus,
+
+Some small iommufd selftest changes to make it work again in 6.16-rc.
+
+Thanks,
+Jason
+
+The following changes since commit 86731a2a651e58953fc949573895f2fa6d456841:
+
+  Linux 6.16-rc3 (2025-06-22 13:30:08 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/jgg/iommufd.git tags/for-linus-iommufd
+
+for you to fetch changes up to 9a96876e3c6578031fa5dc5dde7759d383b2fb75:
+
+  iommufd/selftest: Fix build warnings due to uninitialized mfd (2025-06-24 15:45:13 -0300)
+
+----------------------------------------------------------------
+iommufd 6.16 first rc pull
+
+Some changes to the userspace selftest framework cause the iommufd tests
+to start failing. This turned out to be bugs in the iommufd side that were
+just getting uncovered.
+
+- Deal with MAP_HUGETLB mmaping more than requested even when in MAP_FIXED
+  mode
+
+- Fixup missing error flow cleanup in the test
+
+- Check that the memory allocations suceeded
+
+- Suppress some bogus gcc 'may be used uninitialized' warnings
+
+----------------------------------------------------------------
+Nicolin Chen (4):
+      iommufd/selftest: Fix iommufd_dirty_tracking with large hugepage sizes
+      iommufd/selftest: Add missing close(mfd) in memfd_mmap()
+      iommufd/selftest: Add asserts testing global mfd
+      iommufd/selftest: Fix build warnings due to uninitialized mfd
+
+ tools/testing/selftests/iommu/iommufd.c       | 40 +++++++++++++++++++--------
+ tools/testing/selftests/iommu/iommufd_utils.h |  9 ++++--
+ 2 files changed, 36 insertions(+), 13 deletions(-)
+
+--1XIgBtimj0PC800I
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRRRCHOFoQz/8F5bUaFwuHvBreFYQUCaGU+2AAKCRCFwuHvBreF
+YRIqAP9Y8lOHEBBJiqP3S3OpCP1dqgszhAh0iqJhfXVyJaPwCQD8DgtXZXbhNqYU
+vnn1pXxw/8kgg2FdW0N5aSEwrfPvMwg=
+=Qi1Z
+-----END PGP SIGNATURE-----
+
+--1XIgBtimj0PC800I--
