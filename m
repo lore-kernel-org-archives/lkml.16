@@ -1,234 +1,256 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDCC244678;
-	Wed,  2 Jul 2025 09:00:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C90334C7F
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 09:00:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751446809; cv=none; b=PRtaTWPDQiV2ks07Bji4PTZnPXU1o4/RXW3guesN13YPT35jPfkvGk82RIYa6sKkRJKrnfBX8ovVekR1Q0xGRyQGhfXpGwgax+1rBwQVtWQ6MP/csjam/u5rrQvmUfrfTs5lr1QVa5JeYRIPd37yfe9bMxSwmDApcO9kMZkT3ik=
+	t=1751446830; cv=none; b=S3R3uadhOmgdCC1bx0fcpd8Q0cAAyPysYvcfUWtFRpglrK/iKNXPDXFP6RCGCQvUiH6jZu9yunbm1zWtXEZV0YLyWLGzzZ76FTWnM1aRynL5b+t9dCHSNieirOuKsK0hlOU1NNoTLYX1xRz57FC3tQzh8njQ8m8ZK8/RgwOaNYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751446809; c=relaxed/simple;
-	bh=ozh9/+qetdy1B44Hk1ck9qSNB6VPcxBClhcVl6wJg/8=;
-	h=Content-Type:Message-ID:Date:MIME-Version:Subject:From:To:
-	 References:In-Reply-To; b=uuU7US6HB1fYyQuh6GK0fUJtZZx6ZasiEPQ8rvMBsiVpTkwge0diTvod1a9Q2kPKxehLd/Pjks7lu3l/UGRhERQ/evYM2ab+v+3O6QwAVDF13mrpTGIzr5rMYtkeRA5Y05IGOnprLVEhLSHkNOaVte6bnDotz8GrjP0/qvFOFIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NibrHSar; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751446830; c=relaxed/simple;
+	bh=o2XzYIeWxYTyoVE5bSvKyj9GQtoL+DJtjUQ/a4maLwc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jl8+XPnEW2w9DfcVBCkp/qSIE9bNL1mHvZwsa+oRNEONT7fqZYl8+M6Lcdq0e4QR2+7m1h67qWXbTrWC/9POSdj0L5HLAA+zc3oFd2YUvOcozOQzBiECWFJ40Y/Y1C9oMWodBc9QdMQhDSVXbp82sxKJhu/pNhZPGwfw/YAappo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lCr9emOy; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NibrHSar"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751446807; x=1782982807;
-  h=message-id:date:mime-version:subject:from:to:references:
-   in-reply-to;
-  bh=ozh9/+qetdy1B44Hk1ck9qSNB6VPcxBClhcVl6wJg/8=;
-  b=NibrHSarcbASkUMY6PsYzDfDSSIelJvkne6Et1OXD7zvqID7Iz4F+w2s
-   3RrhAzZlXbdaDGkGAl9D1G9IwHuEtFzfG3xERdoYPEQfgO9J8BLbNI9hE
-   22SzEmpb1zwr/UbNKGk4b6xu+faaMb7l2hXdTnrs+N5BdkeNc2ciJx7N2
-   LDzngQaoyIHsPH0dkhrkhxDUMTkdK7hypbvZ/qxaLLqymHF1aAf/DjL5e
-   gwiGQ8wHv3Y9/HwPUn4k7PPuRJg9M2+Hw7E42be7ilZuucJbl2UA+Tfqh
-   rb4vHFYWFKT/pXTlUg+lX8iQo/24+56vIoJSLwKxkvZbHsqb9rnzVvxNi
-   w==;
-X-CSE-ConnectionGUID: 4UBIrfQ+QSSmHCDpa9gB5g==
-X-CSE-MsgGUID: uhFdxgAHQpi6DZs6mMl4jw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="63979299"
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208,223";a="63979299"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 02:00:06 -0700
-X-CSE-ConnectionGUID: RifH1KUrRtuZRm+aVX2CrQ==
-X-CSE-MsgGUID: ZQGBJ625SRK6jkZ5y9Bn8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208,223";a="154342502"
-Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.124.243.252]) ([10.124.243.252])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 02:00:03 -0700
-Content-Type: multipart/mixed; boundary="------------3m0g6PfBR00YwHw0BbrfPgi0"
-Message-ID: <96d68cb2-9240-4179-bca0-8ad2d70ab281@linux.intel.com>
-Date: Wed, 2 Jul 2025 17:00:00 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lCr9emOy"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-60c60f7eeaaso10949538a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 02:00:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751446827; x=1752051627; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rucETxapXKXGBN7PtyHY+EQo5NyBaPuYKngjv1dJ15E=;
+        b=lCr9emOyS5927vqLrReTBlibZ3opdfVQBcsNT0vaZQE6OEbfVgGno/vhFSGQ3V0wBZ
+         pWaaad2+T4xqsWgL2Ay5BnJ4Qms90Nq+gBJuVtiRKeOJY2E3uX3qd2pEY298ABEo2aVm
+         +N8z40gEQrA8nLfDgz/B3AlJ432ySx4OAfyqgQhQdBruwDMor37g+L9cBGbyUDwIfr5B
+         t6WKzP1JLDNR6tca1IOhlp9rx9zBsq8XFqkPqfR+tdA5fPPPUDlKpSsGJBxmHT2Osk0i
+         OFZ6u5LZhbdWhtnYDNqPi3R2I0buNM1vJ4H8/mCI32l7/qvJ5S2/gDiJyfcMcVo9S/vy
+         yqaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751446827; x=1752051627;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rucETxapXKXGBN7PtyHY+EQo5NyBaPuYKngjv1dJ15E=;
+        b=YWoK34BlS59sbyQ4q9x7m3gRPCcO23YTc9inWSGf1FyZsVtYr4AwOQt3r9g0C/UMd6
+         Y44l6v5v0J1isZ6Oe7LejXud8PTRJam/WKN9MWmfFlqgHEhQGXAadEEwMjmWnpxP5nEU
+         1NYv5ZCZijXqT7H+lWJI4GyHQ22o4IPkkcjoDj1gIPa9uHIQ5kDpoJo/hqWwPECmbeWf
+         IW/XefBN8x8kBz0aaQrnCQf4rFyejbcwS2d7Ab608ciiGm4oRHTqSxQYSKPtjzzlx8pe
+         7fkadmP4JW7hWGzYeRz631OBF0P0cC3z+P+J1v+oWr7fDWXr0reczi+Kbmvm617j78F4
+         cHuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX3Tw5dESOtOkc92fwGmh92CIn2gvQ5IiCR6WkhduwSBGStFlLlQFBZUGEE0zPFvwK5iVuid8TiJWD1llM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyYzuQ14U7qT52Fplvc4NXhwuohoq5R5oZXcmzLaOSaM/xq1vL
+	V9xzJPRvfuhKyerdrQswLqn8oq0cSLdfvaGz7p9A1mi5aDZB/cPs7FGOpEpGPPw/2JWE3inZHut
+	KRHGgsVsXCf3vAUTlpcSELoGqxRoB1/8=
+X-Gm-Gg: ASbGncu7ao52L0HWCa9pOBzau2mY405N3lPHktiETwAPkeVbvAoaQ4curLfeRyDCScN
+	CjCl3WyVSNWxwyBYN+dGAEr9ggPqLvGeFR7CXORuxq7u/ZdocNkZoguT90NuzzKXMAnKZiOlHQp
+	3LENkcZRWtIDwnzLQ4hpWP/UBLDcrWnINVEIIgeJhle1I=
+X-Google-Smtp-Source: AGHT+IEdvImO4hnAYVqt+jmktPUdIKdat3t90Sg7JU0s+cTJ/+BkwrzVe7PRmsWiA+2BUv1OZ2j0hvm0CoGRXeNnOMo=
+X-Received: by 2002:a17:907:daa:b0:ae0:14e0:1d62 with SMTP id
+ a640c23a62f3a-ae3c2da9576mr208513766b.55.1751446826630; Wed, 02 Jul 2025
+ 02:00:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION][BISECTED] Performance Regression in IOMMU/VT-d Since
- Kernel 6.10
-From: Baolu Lu <baolu.lu@linux.intel.com>
-To: Ioanna Alifieraki <ioanna-maria.alifieraki@canonical.com>,
- kevin.tian@intel.com, jroedel@suse.de, robin.murphy@arm.com,
- will@kernel.org, joro@8bytes.org, dwmw2@infradead.org,
- iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, stable@vger.kernel.org
-References: <20250701171154.52435-1-ioanna-maria.alifieraki@canonical.com>
- <7d2214f3-3b54-4b74-a18b-aca1fdf4fdb4@linux.intel.com>
-Content-Language: en-US
-In-Reply-To: <7d2214f3-3b54-4b74-a18b-aca1fdf4fdb4@linux.intel.com>
+References: <20250624152549.2647828-1-xavier.qyxia@gmail.com> <aGPpohrc8APQad-v@arm.com>
+In-Reply-To: <aGPpohrc8APQad-v@arm.com>
+From: Xavier Xia <xavier.qyxia@gmail.com>
+Date: Wed, 2 Jul 2025 17:00:14 +0800
+X-Gm-Features: Ac12FXwk-GXgGl7lpWXoZ7Ko4kCXGQR4cPY2sOiuMeJ3c4KkhJBtDKSH3jCiC6o
+Message-ID: <CAEmg6AVrJ0A9QsnDZApdnq4gu=x0_1soqrhNv9oBMQKNGtsKqw@mail.gmail.com>
+Subject: Re: [PATCH v7] arm64/mm: Optimize loop to reduce redundant operations
+ of contpte_ptep_get
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: ryan.roberts@arm.com, will@kernel.org, 21cnbao@gmail.com, 
+	ioworker0@gmail.com, dev.jain@arm.com, akpm@linux-foundation.org, 
+	david@redhat.com, gshan@redhat.com, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, willy@infradead.org, 
+	xavier_qy@163.com, ziy@nvidia.com, Barry Song <baohua@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This is a multi-part message in MIME format.
---------------3m0g6PfBR00YwHw0BbrfPgi0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Hi Catalin,
 
-On 7/2/2025 1:14 PM, Baolu Lu wrote:
-> On 7/2/25 01:11, Ioanna Alifieraki wrote:
->> #regzbot introduced: 129dab6e1286
->>
->> Hello everyone,
->>
->> We've identified a performance regression that starts with linux
->> kernel 6.10 and persists through 6.16(tested at commit e540341508ce).
->> Bisection pointed to commit:
->> 129dab6e1286 ("iommu/vt-d: Use cache_tag_flush_range_np() in 
->> iotlb_sync_map").
->>
->> The issue occurs when running fio against two NVMe devices located
->> under the same PCIe bridge (dual-port NVMe configuration). Performance
->> drops compared to configurations where the devices are on different
->> bridges.
->>
->> Observed Performance:
->> - Before the commit: ~6150 MiB/s, regardless of NVMe device placement.
->> - After the commit:
->>    -- Same PCIe bridge: ~4985 MiB/s
->>    -- Different PCIe bridges: ~6150 MiB/s
->>
->>
->> Currently we can only reproduce the issue on a Z3 metal instance on
->> gcp. I suspect the issue can be reproducible if you have a dual port
->> nvme on any machine.
->> At [1] there's a more detailed description of the issue and details
->> on the reproducer.
-> 
-> This test was running on bare metal hardware instead of any
-> virtualization guest, right? If that's the case,
-> cache_tag_flush_range_np() is almost a no-op.
-> 
-> Can you please show me the capability register of the IOMMU by:
-> 
-> #cat /sys/bus/pci/devices/[pci_dev_name]/iommu/intel-iommu/cap
 
-Also, can you please try whether the below changes make any difference?
-I've also attached a patch file to this email so you can apply the
-change more easily.
+On Tue, Jul 1, 2025 at 9:59=E2=80=AFPM Catalin Marinas <catalin.marinas@arm=
+.com> wrote:
+>
+> On Tue, Jun 24, 2025 at 11:25:49PM +0800, Xavier Xia wrote:
+> > This commit optimizes the contpte_ptep_get and contpte_ptep_get_lockles=
+s
+> > function by adding early termination logic. It checks if the dirty and
+> > young bits of orig_pte are already set and skips redundant bit-setting
+> > operations during the loop. This reduces unnecessary iterations and
+> > improves performance.
+> >
+> > In order to verify the optimization performance, a test function has be=
+en
+> > designed. The function's execution time and instruction statistics have
+> > been traced using perf, and the following are the operation results on =
+a
+> > certain Qualcomm mobile phone chip:
+> >
+> > Test Code:
+> >       #include <stdlib.h>
+> >       #include <sys/mman.h>
+> >       #include <stdio.h>
+> >
+> >       #define PAGE_SIZE 4096
+> >       #define CONT_PTES 16
+> >       #define TEST_SIZE (4096* CONT_PTES * PAGE_SIZE)
+> >       #define YOUNG_BIT 8
+> >       void rwdata(char *buf)
+> >       {
+> >               for (size_t i =3D 0; i < TEST_SIZE; i +=3D PAGE_SIZE) {
+> >                       buf[i] =3D 'a';
+> >                       volatile char c =3D buf[i];
+> >               }
+> >       }
+> >       void clear_young_dirty(char *buf)
+> >       {
+> >               if (madvise(buf, TEST_SIZE, MADV_FREE) =3D=3D -1) {
+> >                       perror("madvise free failed");
+> >                       free(buf);
+> >                       exit(EXIT_FAILURE);
+> >               }
+> >               if (madvise(buf, TEST_SIZE, MADV_COLD) =3D=3D -1) {
+> >                       perror("madvise free failed");
+> >                       free(buf);
+> >                       exit(EXIT_FAILURE);
+> >               }
+> >       }
+> >       void set_one_young(char *buf)
+> >       {
+> >               for (size_t i =3D 0; i < TEST_SIZE; i +=3D CONT_PTES * PA=
+GE_SIZE) {
+> >                       volatile char c =3D buf[i + YOUNG_BIT * PAGE_SIZE=
+];
+> >               }
+> >       }
+> >
+> >       void test_contpte_perf() {
+> >               char *buf;
+> >               int ret =3D posix_memalign((void **)&buf, CONT_PTES * PAG=
+E_SIZE,
+> >                               TEST_SIZE);
+> >               if ((ret !=3D 0) || ((unsigned long)buf % CONT_PTES * PAG=
+E_SIZE)) {
+> >                       perror("posix_memalign failed");
+> >                       exit(EXIT_FAILURE);
+> >               }
+> >
+> >               rwdata(buf);
+> >       #if TEST_CASE2 || TEST_CASE3
+> >               clear_young_dirty(buf);
+> >       #endif
+> >       #if TEST_CASE2
+> >               set_one_young(buf);
+> >       #endif
+> >
+> >               for (int j =3D 0; j < 500; j++) {
+> >                       mlock(buf, TEST_SIZE);
+> >
+> >                       munlock(buf, TEST_SIZE);
+> >               }
+> >               free(buf);
+> >       }
+> >
+> >       int main(void)
+> >       {
+> >               test_contpte_perf();
+> >               return 0;
+> >       }
+> >
+> >       Descriptions of three test scenarios
+> >
+> > Scenario 1
+> >       The data of all 16 PTEs are both dirty and young.
+> >       #define TEST_CASE2 0
+> >       #define TEST_CASE3 0
+> >
+> > Scenario 2
+> >       Among the 16 PTEs, only the 8th one is young, and there are no di=
+rty ones.
+> >       #define TEST_CASE2 1
+> >       #define TEST_CASE3 0
+> >
+> > Scenario 3
+> >       Among the 16 PTEs, there are neither young nor dirty ones.
+> >       #define TEST_CASE2 0
+> >       #define TEST_CASE3 1
+> >
+> > Test results
+> >
+> > |Scenario 1         |       Original|       Optimized|
+> > |-------------------|---------------|----------------|
+> > |instructions       |    37912436160|     18731580031|
+> > |test time          |         4.2797|          2.2949|
+> > |overhead of        |               |                |
+> > |contpte_ptep_get() |         21.31%|           4.80%|
+> >
+> > |Scenario 2         |       Original|       Optimized|
+> > |-------------------|---------------|----------------|
+> > |instructions       |    36701270862|     36115790086|
+> > |test time          |         3.2335|          3.0874|
+> > |Overhead of        |               |                |
+> > |contpte_ptep_get() |         32.26%|          33.57%|
+> >
+> > |Scenario 3         |       Original|       Optimized|
+> > |-------------------|---------------|----------------|
+> > |instructions       |    36706279735|     36750881878|
+> > |test time          |         3.2008|          3.1249|
+> > |Overhead of        |               |                |
+> > |contpte_ptep_get() |         31.94%|          34.59%|
+> >
+> > For Scenario 1, optimized code can achieve an instruction benefit of 50=
+.59%
+> > and a time benefit of 46.38%.
+> > For Scenario 2, optimized code can achieve an instruction count benefit=
+ of
+> > 1.6% and a time benefit of 4.5%.
+> > For Scenario 3, since all the PTEs have neither the young nor the dirty
+> > flag, the branches taken by optimized code should be the same as those =
+of
+> > the original code. In fact, the test results of optimized code seem to =
+be
+> > closer to those of the original code.
+> >
+> > Ryan re-ran these tests on Apple M2 with 4K base pages + 64K mTHP.
+> >
+> > Scenario 1: reduced to 56% of baseline execution time
+> > Scenario 2: reduced to 89% of baseline execution time
+> > Scenario 3: reduced to 91% of baseline execution time
+>
+> Still not keen on microbenchmarks to justify such change but at least
+> the code is more readable than the macro approach in some earlier
+> version.
+>
+> Do you have any numbers to see how it compares with your v1:
+>
+> https://lore.kernel.org/all/20250407092243.2207837-1-xavier_qy@163.com/
+>
+> That patch was a lot simpler.
+>
 
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index 7aa3932251b2..f60201ee4be0 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -1796,6 +1796,18 @@ static int domain_setup_first_level(struct 
-intel_iommu *iommu,
-  					  (pgd_t *)pgd, flags, old);
-  }
+You can check the comparison data via:
 
-+static bool domain_need_iotlb_sync_map(struct dmar_domain *domain,
-+				       struct intel_iommu *iommu)
-+{
-+	if (cap_caching_mode(iommu->cap) && !domain->use_first_level)
-+		return true;
-+
-+	if (rwbf_quirk || cap_rwbf(iommu->cap))
-+		return true;
-+
-+	return false;
-+}
-+
-  static int dmar_domain_attach_device(struct dmar_domain *domain,
-  				     struct device *dev)
-  {
-@@ -1833,6 +1845,8 @@ static int dmar_domain_attach_device(struct 
-dmar_domain *domain,
-  	if (ret)
-  		goto out_block_translation;
+https://lore.kernel.org/all/3d338f91.8c71.1965cd8b1b8.Coremail.xavier_qy@16=
+3.com/
 
-+	domain->iotlb_sync_map |= domain_need_iotlb_sync_map(domain, iommu);
-+
-  	return 0;
+The v1 only optimizes Scenario 1 case (where all PTEs are both young and di=
+rty),
+but it degrades performance in other scenarios. Although the current
+version increases
+code complexity, its optimization results are notably significant.
 
-  out_block_translation:
-@@ -3945,7 +3959,10 @@ static bool risky_device(struct pci_dev *pdev)
-  static int intel_iommu_iotlb_sync_map(struct iommu_domain *domain,
-  				      unsigned long iova, size_t size)
-  {
--	cache_tag_flush_range_np(to_dmar_domain(domain), iova, iova + size - 1);
-+	struct dmar_domain *dmar_domain = to_dmar_domain(domain);
-+
-+	if (dmar_domain->iotlb_sync_map)
-+		cache_tag_flush_range_np(dmar_domain, iova, iova + size - 1);
-
-  	return 0;
-  }
-diff --git a/drivers/iommu/intel/iommu.h b/drivers/iommu/intel/iommu.h
-index 3ddbcc603de2..7ab2c34a5ecc 100644
---- a/drivers/iommu/intel/iommu.h
-+++ b/drivers/iommu/intel/iommu.h
-@@ -614,6 +614,9 @@ struct dmar_domain {
-  	u8 has_mappings:1;		/* Has mappings configured through
-  					 * iommu_map() interface.
-  					 */
-+	u8 iotlb_sync_map:1;		/* Need to flush IOTLB cache or write
-+					 * buffer when creating mappings.
-+					 */
-
-  	spinlock_t lock;		/* Protect device tracking lists */
-  	struct list_head devices;	/* all devices' list */
--- 
-2.43.0
+--
 
 Thanks,
-baolu
---------------3m0g6PfBR00YwHw0BbrfPgi0
-Content-Type: text/plain; charset=UTF-8;
- name="0001-iommu-vt-d-Avoid-unnecessary-cache_tag_flush_range_n.patch"
-Content-Disposition: attachment;
- filename*0="0001-iommu-vt-d-Avoid-unnecessary-cache_tag_flush_range_n.pa";
- filename*1="tch"
-Content-Transfer-Encoding: base64
-
-RnJvbSBkZGM0MjEwYTMzNjUxNDdkZjk3OGJkMGJmNDVkODI0YjljODY5ODc3IE1vbiBTZXAg
-MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBMdSBCYW9sdSA8YmFvbHUubHVAbGludXguaW50ZWwu
-Y29tPgpEYXRlOiBXZWQsIDIgSnVsIDIwMjUgMTY6NTE6NDggKzA4MDAKU3ViamVjdDogW1BB
-VENIIDEvMV0gaW9tbXUvdnQtZDogQXZvaWQgdW5uZWNlc3NhcnkgY2FjaGVfdGFnX2ZsdXNo
-X3JhbmdlX25wKCkKCkZvciB0ZXN0IHB1cnBvc2Ugb25seSEKClNpZ25lZC1vZmYtYnk6IEx1
-IEJhb2x1IDxiYW9sdS5sdUBsaW51eC5pbnRlbC5jb20+Ci0tLQogZHJpdmVycy9pb21tdS9p
-bnRlbC9pb21tdS5jIHwgMTkgKysrKysrKysrKysrKysrKysrLQogZHJpdmVycy9pb21tdS9p
-bnRlbC9pb21tdS5oIHwgIDMgKysrCiAyIGZpbGVzIGNoYW5nZWQsIDIxIGluc2VydGlvbnMo
-KyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2lvbW11L2ludGVsL2lv
-bW11LmMgYi9kcml2ZXJzL2lvbW11L2ludGVsL2lvbW11LmMKaW5kZXggN2FhMzkzMjI1MWIy
-Li5mNjAyMDFlZTRiZTAgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvaW9tbXUvaW50ZWwvaW9tbXUu
-YworKysgYi9kcml2ZXJzL2lvbW11L2ludGVsL2lvbW11LmMKQEAgLTE3OTYsNiArMTc5Niwx
-OCBAQCBzdGF0aWMgaW50IGRvbWFpbl9zZXR1cF9maXJzdF9sZXZlbChzdHJ1Y3QgaW50ZWxf
-aW9tbXUgKmlvbW11LAogCQkJCQkgIChwZ2RfdCAqKXBnZCwgZmxhZ3MsIG9sZCk7CiB9CiAK
-K3N0YXRpYyBib29sIGRvbWFpbl9uZWVkX2lvdGxiX3N5bmNfbWFwKHN0cnVjdCBkbWFyX2Rv
-bWFpbiAqZG9tYWluLAorCQkJCSAgICAgICBzdHJ1Y3QgaW50ZWxfaW9tbXUgKmlvbW11KQor
-eworCWlmIChjYXBfY2FjaGluZ19tb2RlKGlvbW11LT5jYXApICYmICFkb21haW4tPnVzZV9m
-aXJzdF9sZXZlbCkKKwkJcmV0dXJuIHRydWU7CisKKwlpZiAocndiZl9xdWlyayB8fCBjYXBf
-cndiZihpb21tdS0+Y2FwKSkKKwkJcmV0dXJuIHRydWU7CisKKwlyZXR1cm4gZmFsc2U7Cit9
-CisKIHN0YXRpYyBpbnQgZG1hcl9kb21haW5fYXR0YWNoX2RldmljZShzdHJ1Y3QgZG1hcl9k
-b21haW4gKmRvbWFpbiwKIAkJCQkgICAgIHN0cnVjdCBkZXZpY2UgKmRldikKIHsKQEAgLTE4
-MzMsNiArMTg0NSw4IEBAIHN0YXRpYyBpbnQgZG1hcl9kb21haW5fYXR0YWNoX2RldmljZShz
-dHJ1Y3QgZG1hcl9kb21haW4gKmRvbWFpbiwKIAlpZiAocmV0KQogCQlnb3RvIG91dF9ibG9j
-a190cmFuc2xhdGlvbjsKIAorCWRvbWFpbi0+aW90bGJfc3luY19tYXAgfD0gZG9tYWluX25l
-ZWRfaW90bGJfc3luY19tYXAoZG9tYWluLCBpb21tdSk7CisKIAlyZXR1cm4gMDsKIAogb3V0
-X2Jsb2NrX3RyYW5zbGF0aW9uOgpAQCAtMzk0NSw3ICszOTU5LDEwIEBAIHN0YXRpYyBib29s
-IHJpc2t5X2RldmljZShzdHJ1Y3QgcGNpX2RldiAqcGRldikKIHN0YXRpYyBpbnQgaW50ZWxf
-aW9tbXVfaW90bGJfc3luY19tYXAoc3RydWN0IGlvbW11X2RvbWFpbiAqZG9tYWluLAogCQkJ
-CSAgICAgIHVuc2lnbmVkIGxvbmcgaW92YSwgc2l6ZV90IHNpemUpCiB7Ci0JY2FjaGVfdGFn
-X2ZsdXNoX3JhbmdlX25wKHRvX2RtYXJfZG9tYWluKGRvbWFpbiksIGlvdmEsIGlvdmEgKyBz
-aXplIC0gMSk7CisJc3RydWN0IGRtYXJfZG9tYWluICpkbWFyX2RvbWFpbiA9IHRvX2RtYXJf
-ZG9tYWluKGRvbWFpbik7CisKKwlpZiAoZG1hcl9kb21haW4tPmlvdGxiX3N5bmNfbWFwKQor
-CQljYWNoZV90YWdfZmx1c2hfcmFuZ2VfbnAoZG1hcl9kb21haW4sIGlvdmEsIGlvdmEgKyBz
-aXplIC0gMSk7CiAKIAlyZXR1cm4gMDsKIH0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvaW9tbXUv
-aW50ZWwvaW9tbXUuaCBiL2RyaXZlcnMvaW9tbXUvaW50ZWwvaW9tbXUuaAppbmRleCAzZGRi
-Y2M2MDNkZTIuLjdhYjJjMzRhNWVjYyAxMDA2NDQKLS0tIGEvZHJpdmVycy9pb21tdS9pbnRl
-bC9pb21tdS5oCisrKyBiL2RyaXZlcnMvaW9tbXUvaW50ZWwvaW9tbXUuaApAQCAtNjE0LDYg
-KzYxNCw5IEBAIHN0cnVjdCBkbWFyX2RvbWFpbiB7CiAJdTggaGFzX21hcHBpbmdzOjE7CQkv
-KiBIYXMgbWFwcGluZ3MgY29uZmlndXJlZCB0aHJvdWdoCiAJCQkJCSAqIGlvbW11X21hcCgp
-IGludGVyZmFjZS4KIAkJCQkJICovCisJdTggaW90bGJfc3luY19tYXA6MTsJCS8qIE5lZWQg
-dG8gZmx1c2ggSU9UTEIgY2FjaGUgb3Igd3JpdGUKKwkJCQkJICogYnVmZmVyIHdoZW4gY3Jl
-YXRpbmcgbWFwcGluZ3MuCisJCQkJCSAqLwogCiAJc3BpbmxvY2tfdCBsb2NrOwkJLyogUHJv
-dGVjdCBkZXZpY2UgdHJhY2tpbmcgbGlzdHMgKi8KIAlzdHJ1Y3QgbGlzdF9oZWFkIGRldmlj
-ZXM7CS8qIGFsbCBkZXZpY2VzJyBsaXN0ICovCi0tIAoyLjQzLjAKCg==
-
---------------3m0g6PfBR00YwHw0BbrfPgi0--
+Xavier
