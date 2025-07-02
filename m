@@ -1,54 +1,33 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 366401F5619;
-	Wed,  2 Jul 2025 07:50:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 266AA230BD4;
+	Wed,  2 Jul 2025 07:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751442658; cv=none; b=CDl3UhwAErcwEA72ayuzriUXqW6F919guNsloS2W47FVqGvChgkcPwP8TBiBuVdJUyNjRrCotfN4LaWsnymyO5cadl6EGf2uK4iBfDmK+EF0Mj6M/OKAKh6qOLxN0bccnQm6TNGik5NS7ro4kIxtTp2i70eYVZK0ZmachzUDWr0=
+	t=1751442662; cv=none; b=jUPM6H7Uke7/nuXimU1FWRxwwu7uSsU43dvnGmJ2yyBwthBGBpDP0USwfhFMryxRi4dACyvofImLhrm11Ks0YsC6RCaYJE1aJB2wIwEtyP+p9ligUcILr0A7MBIunpx2+2gC3SRhSfnBh0TIjuSBOBdqZl8uju/eOPSTQlnKfwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751442658; c=relaxed/simple;
-	bh=MhH3YYVBH9VOdNh4VoGi/5ItbJtV9wj2TFwiXuVDgnk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=egyvjXzT+C7pJm6sxm/bw+4k0SLkh6dl0AY28ILTQez2t22ehvvgRfxHYT9eZIXCUI/VrcmzFUFVMB4j6pfplv7+bqyGyc+9Wi+xaH624TZVjvMS/qvpi2m/9LVIdSeczaSwPvpKZXyLTvNwX84ZZA8lFf/CgifxrH4gJh5OQ28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=JTaAQ5tq; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1751442662; c=relaxed/simple;
+	bh=k8J6bw7qUijMDcnUBmDdYgC0NRQa9b09ibKM5hAyvCA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=b/EkIqSCjmiU9InJESpPynflOgKZgD8qF83YOjazguNSpzbseJR7NC8F1xdSQyIQpNqYM3Gv8DugUHbjB7QiMUeJGdQ1n8CE8Ls468lPuz7jupQVeCCVXF7swT0UtbRlMxNb7CHCbwG+uANi8esWjOmp7gvZCpmPMtA3iejN/qI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F5HOWbF9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="JTaAQ5tq"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5627dfum032247;
-	Wed, 2 Jul 2025 09:50:16 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	I/ZCqBGkaOyVgMTdMl1PUQIOWsZD4M/QSf93rQq0ccA=; b=JTaAQ5tqKtPgkQw3
-	dIPKZHMuooSL4bZYq7/7KyQD9oWOyI/UE+CTuKRHuplhITIGsmb8zWnqQh52YZxi
-	hURiVUp1Kp/KHmwPgd3wrZTU88JR9zCL1KJR2rjWKAIP2c+8PMW0NTeS7wkY/9+V
-	xP1DzeGeVthnPldZ7T6CDYxFOnYo6fWXZIfgNJpy49d81IQgcBLATVJwQumEGhQP
-	il+OI/OgO6FRoVHqnHRryOTQwBDm2mmF2YAqFYXe0A6sO9QWj1+HJXtnv1sLNg4X
-	lbDRuN4H0R1qHoh6BWb8N1ssdjix0lnysEkl5yK93XmbFnVc5cjsHxhvE4+wFbcW
-	qpe+ag==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47jsy4xj7q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Jul 2025 09:50:16 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 247014002D;
-	Wed,  2 Jul 2025 09:49:27 +0200 (CEST)
-Received: from Webmail-eu.st.com (eqndag1node5.st.com [10.75.129.134])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DE71BB94E56;
-	Wed,  2 Jul 2025 09:49:00 +0200 (CEST)
-Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE5.st.com
- (10.75.129.134) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 2 Jul
- 2025 09:49:00 +0200
-Received: from [10.48.86.121] (10.48.86.121) by SAFDAG1NODE1.st.com
- (10.75.90.17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 2 Jul
- 2025 09:49:00 +0200
-Message-ID: <685641cb-d5e0-4f28-87a1-98d2fd84e920@foss.st.com>
-Date: Wed, 2 Jul 2025 09:48:59 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F5HOWbF9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE849C4CEED;
+	Wed,  2 Jul 2025 07:50:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751442661;
+	bh=k8J6bw7qUijMDcnUBmDdYgC0NRQa9b09ibKM5hAyvCA=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=F5HOWbF9MWloGOKPKXRrqEoPJyMWJXV72nyEenQJKuSrlSyOjCBrjUybzuehfGCAh
+	 aQ2SHrtvwHiwilmFu5UrhhzSKEfEbISzf0qf8y1WwYFBsLCxk0EWkCkJrIODG3+5Wl
+	 3oBadofTN4yJFUiVfnfi631lgeC71gzoowDejZHKJlMVaWySnVk6TqbBJLJQzGJ9Rq
+	 dSBJmi4Y3uxEwNcBjXmpEzTgPgIGYo5Yw/fIhtaegFFVpsYm68Mt03y1+v3Xfad21x
+	 29t/QryCe7uUPWSCa/mrkuSNnZUqJVMgvxq06YB/L8g3KrLWyRKyXoj96Dep5m2g1E
+	 Yb9IVj4PlQznA==
+Message-ID: <34b0f5e2-0341-41cb-8915-8f1606e14827@kernel.org>
+Date: Wed, 2 Jul 2025 09:50:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,377 +35,98 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/3] rpmsg: Introduce RPMSG_CREATE_EPT_FD_IOCTL uAPI
-To: Dawei Li <dawei.li@linux.dev>
-CC: <andersson@kernel.org>, <mathieu.poirier@linaro.org>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <set_pte_at@outlook.com>
-References: <20250609151531.22621-1-dawei.li@linux.dev>
- <f3b99a3d-5d20-4e82-ae5d-75c2c866e118@foss.st.com>
- <20250619144301.GA9575@wendao-VirtualBox>
- <db2d2296-3893-427d-85ec-f64e6c0e1d1d@foss.st.com>
- <20250622041200.GA3703@wendao-VirtualBox>
- <ce95f80b-4a36-457e-aedd-d59a325a711c@foss.st.com>
- <20250701141607.GA5219@wendao-VirtualBox>
+Subject: Re: [PATCH 5/5] ARM: dts: aspeed: Add Facebook Darwin (AST2600) BMC
+To: rentao.bupt@gmail.com, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
+ Andrew Jeffery <andrew@codeconstruct.com.au>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org, Tao Ren <taoren@meta.com>
+References: <20250702050421.13729-1-rentao.bupt@gmail.com>
+ <20250702050421.13729-6-rentao.bupt@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>
-Organization: STMicroelectronics
-In-Reply-To: <20250701141607.GA5219@wendao-VirtualBox>
-Content-Type: text/plain; charset="UTF-8"
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250702050421.13729-6-rentao.bupt@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SAFDAG1NODE1.st.com
- (10.75.90.17)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-01_02,2025-06-27_01,2025-03-28_01
 
-hello Dawei
+On 02/07/2025 07:04, rentao.bupt@gmail.com wrote:
+> diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-darwin.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-darwin.dts
+> new file mode 100644
+> index 000000000000..f902230dada3
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-darwin.dts
+> @@ -0,0 +1,92 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +// Copyright (c) 2021 Facebook Inc.
+> +
+> +/dts-v1/;
+> +
+> +#include "ast2600-facebook-netbmc-common.dtsi"
+> +
+> +/ {
+> +	model = "Facebook Darwin BMC";
+> +	compatible = "facebook,darwin-bmc", "aspeed,ast2600";
 
-On 7/1/25 16:16, Dawei Li wrote:
-> Hi Arnaud,
-> 
-> Thanks for the reply.
-> 
-> On Mon, Jun 30, 2025 at 09:54:40AM +0200, Arnaud POULIQUEN wrote:
->> Hello Dawei,
->>
->> Sorry for the late answer.
->>
->> On 6/22/25 06:12, Dawei Li wrote:
->>> Hi Arnaud,
->>>
->>> Thanks for the reply.
->>>
->>> On Fri, Jun 20, 2025 at 09:52:03AM +0200, Arnaud POULIQUEN wrote:
->>>>
->>>>
->>>> On 6/19/25 16:43, Dawei Li wrote:
->>>>> Hi Arnaud, 
->>>>> Thanks for review.
->>>>>
->>>>> On Wed, Jun 18, 2025 at 03:07:36PM +0200, Arnaud POULIQUEN wrote:
->>>>>> Hello Dawei,
->>>>>>
->>>>>>
->>>>>> Please find a few comments below. It is not clear to me which parts of your
->>>>>> implementation are mandatory and which are optional "nice-to-have" optimizations.
->>>>>
->>>>> It's more like an improvement.
->>>>>
->>>>>>
->>>>>> Based on (potentially erroneous) hypothesis, you will find a suggestion for an
->>>>>> alternative to the anonymous inode approach, which does not seem to be a common
->>>>>> interface.
->>>>>
->>>>> AFAIC, annoymous inode is a common interface and used extensivly in kernel development.
->>>>> Some examples below.
->>>>>
->>>>>>
->>>>>>
->>>>>> On 6/9/25 17:15, Dawei Li wrote:
->>>>>>> Hi,
->>>>>>>
->>>>>>> This is V4 of series which introduce new uAPI(RPMSG_CREATE_EPT_FD_IOCTL)
->>>>>>> for rpmsg subsystem.
->>>>>>>
->>>>>>> Current uAPI implementation for rpmsg ctrl & char device manipulation is
->>>>>>> abstracted in procedures below:
->>>>>>> - fd = open("/dev/rpmsg_ctrlX")
->>>>>>> - ioctl(fd, RPMSG_CREATE_EPT_IOCTL, &info); /dev/rpmsgY devnode is
->>>>>>>   generated.
->>>>>>> - fd_ep = open("/dev/rpmsgY", O_RDWR) 
->>>>>>> - operations on fd_ep(write, read, poll ioctl)
->>>>>>> - ioctl(fd_ep, RPMSG_DESTROY_EPT_IOCTL)
->>>>>>> - close(fd_ep)
->>>>>>> - close(fd)
->>>>>>>
->>>>>>> This /dev/rpmsgY abstraction is less favorable for:
->>>>>>> - Performance issue: It's time consuming for some operations are
->>>>>>> invovled:
->>>>>>>   - Device node creation.
->>>>>>>     Depends on specific config, especially CONFIG_DEVTMPFS, the overall
->>>>>>>     overhead is based on coordination between DEVTMPFS and userspace
->>>>>>>     tools such as udev and mdev.
->>>>>>>
->>>>>>>   - Extra kernel-space switch cost.
->>>>>>>
->>>>>>>   - Other major costs brought by heavy-weight logic like device_add().
->>>>>>
->>>>>> Is this a blocker of just optimization?
->>>>>
->>>>> Yep, performance is one of motivations of this change.
->>>>>
->>>>>>
->>>>>>>
->>>>>>> - /dev/rpmsgY node can be opened only once. It doesn't make much sense
->>>>>>>     that a dynamically created device node can be opened only once.
->>>>>>
->>>>>>
->>>>>> I assume this is blocker with the fact that you need to open the /dev/rpmsg<x>
->>>>>> to create the endpoint.
->>>>>
->>>>> Yes. You have to open /dev/rpmsgX which is generated by legacy ioctl to
->>>>> instantiate a new endpoint.
->>>>>
->>>>>>
->>>>>>
->>>>>>>
->>>>>>> - For some container application such as docker, a client can't access
->>>>>>>   host's dev unless specified explicitly. But in case of /dev/rpmsgY, which
->>>>>>>   is generated dynamically and whose existence is unknown for clients in
->>>>>>>   advance, this uAPI based on device node doesn't fit well.
->>>>>>
->>>>>> does this could be solve in userspace parsing /sys/class/rpmsg/ directory to
->>>>>> retreive the device?
->>>>>
->>>>> Hardly, because client still can't access /dev/rpmsgX which is generated
->>>>> by host _after_ client is launched.
->>>>
->>>>
->>>> This part is not clear to me; could you provide more details?
->>>> I cannot figure out why a client can access /dev/rpmsg_ctrlX but not /dev/rpmsgX.
->>>
->>> Well, let's take docker as example:
->>
->>>
->>> For docker, when a client is launched and it wants to access host's
->>> device, it must make explicit request when it's launched:
->>>
->>> docker run --device=/dev/xxx
->>>
->>> Let's presume that xxx is /dev/rpmsgX generated dynamically by _host_.
->>> Docker command above knows nothing about these rpmsg nodes which are
->>> generated by host _after_ client is launched. And yes, parsing> /sys/class/rpmsg may acquire info about rpmsg devices, but client still
->>> can't access /dev/rpmsgX.
->>
->> One extra question:Are you using RPMsg over virtio?
->>
->> If yes, do you test the RPMsg name service (NS) announcement, that might also
->> address your needs.
->>
->> The principle is that the remote processor sends a name service announcement to
->> Linux, which probes the rpmsg character device and creates the /dev/rpmsgX
->> device in a predefined order known by the remote processor.
->> In such a case, the /dev/rpmsgX usage would be determined by the remote
->> processor itself.
->>
->> Another advantage is that the RPMsg channel creation is not driven by either the
->> host or the client. In such case host does no need to define/kwnow RPMSg
->> endpoint addresses.
->>
->> You still need to call the open() file system operation, but this should be done
->> one time during Docker client initialization.
-> 
-> NS is nice, but perhaps it's not the approach for some cases.
-> 
-> For offloading/accelerator scenarios, ACPU is responsible for making all
-> the important decisions, including creations of endpoints. Because all
-> the user-awared software stack is running on ACPU, and if you want to
-> create a endpoint _dynamically_, it must be from user's command which is
-> from ACPU.
-> 
-> And this series is more about how rpmsg_char and rpmsg_ctrl coordinate
-> themselves about creating dynamic rpmsg endpoints in a more simple
-> and efficient way.
-> 
-> And the whole point of series is "When you want to return a fd to
-> userspace which represents an instance of data structure in kernel, you
-> don't implement it as character device". Maybe some quotes from Christian[1]
-> can describe it better[1]:
-> 
-> "I'm not sure why people are so in love with character device based apis.
-> It's terrible. It glues everything to devtmpfs which isn't namespacable
-> in any way. It's terrible to delegate and extremely restrictive in terms
-> of extensiblity if you need additional device entries (aka the loop
-> driver folly)."
-> 
-> [1] https://lkml.org/lkml/2025/6/24/639
+Please run scripts/checkpatch.pl on the patches and fix reported
+warnings. After that, run also 'scripts/checkpatch.pl --strict' on the
+patches and (probably) fix more warnings. Some warnings can be ignored,
+especially from --strict run, but the code here looks like it needs a
+fix. Feel free to get in touch if the warning is not clear.
 
-Thank you for all your explanations! It is always very interesting to understand
-the different ways to use RPMsg.
-
-In the end, I don't see any problem with your series. The possibility of using
-an anonymous inode seems valid to me.
-
-I am just wondering whether this should be implemented in the rpmsg_char driver
-or in a new driver, addressing this question to Mathieu and Bjorn.
+It does not look like you tested the DTS against bindings. Please run
+`make dtbs_check W=1` (see
+Documentation/devicetree/bindings/writing-schema.rst or
+https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
+for instructions).
+Maybe you need to update your dtschema and yamllint. Don't rely on
+distro packages for dtschema and be sure you are using the latest
+released dtschema.
 
 
-Regards,
-Arnaud
 
-> 
-> Thanks,
-> 
-> 	Dawei
-> 
->>
->> Regards
->> Arnaud
->>
->>
->>>
->>>>
->>>>
->>>>>
->>>>>>
->>>>>> You could face same kind of random instantiation for serial peripherals ( UART;
->>>>>> USb, I2C,...) based on a device tree enumeration. I suppose that user space
->>>>>> use to solve this.
->>>>>>
->>>>>>>
->>>>>>> An anonymous inode based approach is introduced to address the issues above.
->>>>>>> Rather than generating device node and opening it, rpmsg code just creates
->>>>>>> an anonymous inode representing eptdev and return the fd to userspace.
->>>>>>
->>>>>> A drawback is that you need to share fb passed between processes.
->>>>>
->>>>> Fd is the abstraction of an unique endpoint device, it holds true for
->>>>> both legacy and new approach.
->>>>>
->>>>> So I guess what you mean is that /dev/rpmsgX is global to all so other process
->>>>> can access it?
->>>>>
->>>>> But /dev/rpmsgX is designed to be opened only once, it's implemented as
->>>>> singleton pattern.
->>>>>
->>>>> static int rpmsg_eptdev_open(struct inode *inode, struct file *filp)
->>>>> {
->>>>> ...
->>>>>         if (eptdev->ept) {
->>>>>                 mutex_unlock(&eptdev->ept_lock);
->>>>>                 return -EBUSY;
->>>>>         }
->>>>> ...
->>>>>         eptdev->ept = ept;
->>>>> ...
->>>>> }
->>>>>
->>>>> [...]
->>>>>  
->>>>>>> 	printf("loop[%d]\n", loop);
->>>>>>>
->>>>>>> 	gettimeofday(&start, NULL);
->>>>>>>
->>>>>>> 	while (loop--) {
->>>>>>
->>>>>> Do you need to create /close Endpoint sevral times in your real use case with
->>>>>> high timing
->>>>>> constraint?
->>>>>
->>>>> No, it's just a silly benchmark demo, large sample reduces noise statistically.
->>>>>
->>>>>>
->>>>>>> 		fd_info.fd = -1;
->>>>>>> 		fd_info.flags = O_RDWR | O_CLOEXEC | O_NONBLOCK;
->>>>>>> 		ret = ioctl(fd, RPMSG_CREATE_EPT_FD_IOCTL, &fd_info);
->>>>>>> 		if (ret < 0 || fd_info.fd < 0) {
->>>>>>> 			printf("ioctl[RPMSG_CREATE_EPT_FD_IOCTL] failed, ret[%d]\n", ret);
->>>>>>> 		}
->>>>>>>
->>>>>>
->>>>>>
->>>>>>> 		ret = ioctl(fd_info.fd, RPMSG_DESTROY_EPT_IOCTL, &info);
->>>>>>> 		if (ret < 0) {
->>>>>>> 			printf("new ioctl[RPMSG_DESTROY_EPT_IOCTL] failed, ret[%d]\n", ret);
->>>>>>> 		}
->>>>>>>
->>>>>>> 		close(fd_info.fd);
->>>>>>
->>>>>> It seems strange to me to use ioctl() for opening and close() for closing, from
->>>>>> a symmetry point of view.
->>>>>
->>>>> Sorry to hear that. But no, it's a pretty normal skill in kernel codebase
->>>>> , I had to copy some examples from reply to other reviewer[1].
->>>>
->>>> I missed this one, apologize for the duplication.
->>>>
->>>>>
->>>>> anon_inode_get_{fd,file} are used extensively in kernel for returning a new
->>>>> fd to userspace which is associated with an unique data structure in kernel
->>>>> space, in different ways:
->>>>>
->>>>> - via ioctl(), some examples are:
->>>>>
->>>>>  - KVM ioctl(s)
->>>>>    - KVM_CREATE_VCPU -> kvm_vm_ioctl_create_vcpu
->>>>>    - KVM_GET_STATS_FD -> kvm_vcpu_ioctl_get_stats_fd
->>>>>    - KVM_CREATE_DEVICE -> kvm_ioctl_create_device
->>>>>    - KVM_CREATE_VM -> kvm_dev_ioctl_create_vm
->>>>>
->>>>>  - DMA buf/fence/sync ioctls
->>>>>    - DMA_BUF_IOCTL_EXPORT_SYNC_FILE -> dma_buf_export_sync_file
->>>>>    - SW_SYNC_IOC_CREATE_FENCE -> sw_sync_ioctl_create_fence
->>>>>    - Couples of driver implement DMA buf by using anon file _implicitly_:
->>>>>      - UDMABUF_CREATE -> udmabuf_ioctl_create
->>>>>      - DMA_HEAP_IOCTL_ALLOC -> dma_heap_ioctl_allocate
->>>>>
->>>>>  - gpiolib ioctls:
->>>>>    - GPIO_GET_LINEHANDLE_IOCTL -> linehandle_create
->>>>>    - GPIO_V2_GET_LINE_IOCTL
->>>>>
->>>>>  -  IOMMUFD ioctls:
->>>>>
->>>>>  -  VFIO Ioctls:
->>>>>
->>>>>  - ....
->>>>>
->>>>>
->>>>> - via other specific syscalls:
->>>>>  - epoll_create1
->>>>>  - bpf
->>>>>  - perf_event_open
->>>>>  - inotify_init
->>>>>  - ...
->>>>
->>>> If we put the optimization aspect aside, what seems strange to me is that the
->>>> purpose of rpmsg_char was to expose a FS character device to user space. If we
->>>> need tobypass the use of /dev/rpmsgX, does it make sense to support an anonymous
->>>> inode in this driver?  I am clearly not legitimate to answer this question...
->>>
->>> You have every right to do so, after all, it's purely a technical
->>> discussion :).
->>>
->>> I admit it's bit confusing to add annoymous inode logic to a file named
->>> rpmsg_char.c which implies 'character' device. That's why I rename API
->>> following Mathieu's comment:
->>>   - __rpmsg_chrdev_eptdev_alloc ->  rpmsg_eptdev_alloc
->>>   - __rpmsg_chrdev_eptdev_add ->  rpmsg_eptdev_add
->>>
->>> As to topic how these two uAPI(s) co-exist and affect each other. This
->>> change is based on rules:
->>>
->>> 1. Never break existing uAPI.
->>> 2. Try best to reuse existing codebase.
->>> 3. Userspace can choose whatever approach they want to.
->>>
->>> Thanks,
->>>
->>> 	Dawei
->>>>
->>>>
->>>> Thanks,
->>>> Arnaud
->>>>
->>>>>
->>>>> [1] https://lore.kernel.org/all/20250530125008.GA5355@wendao-VirtualBox/
->>>>>
->>>>>>
->>>>>> Regarding your implementation, I wonder if we could keep the /dev/rpmsg<x>
->>>>>> device with specific open() and close() file operations associated with your new
->>>>>> ioctl.
->>>>>>
->>>>>> - The ioctl would create the endpoint.
->>>>>> - The open() and close() operations would simply manage the file descriptor and
->>>>>> increment/decrement a counter to prevent premature endpoint destruction.
->>>>>>
->>>>>>
->>>>>> Regards,
->>>>>> Arnaud
->>>>>>
->>>>>
->>>>> [...]
->>>>>
->>>>> Thanks,
->>>>>
->>>>> 	Dawei
+Best regards,
+Krzysztof
