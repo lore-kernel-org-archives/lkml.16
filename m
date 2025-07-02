@@ -1,63 +1,63 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B401F4295;
-	Wed,  2 Jul 2025 05:04:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFEB11F8751;
+	Wed,  2 Jul 2025 05:04:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751432672; cv=none; b=VJeu0LJU5OITEwtkr6oTjeVfpUyrvJuwyOB5yO7DIsxrAZLtmIsiifwPjVhxL8jHKZHmMf9tj3b92nWiTHFfjhQ5/zJCNEXKM9FGhx3npL9QxYMfFlQoEPy3EyZx/yc8q3h/xjpPeqFxCMPe/3bIr8AJdD5lqcU4aHFDOfZfYx8=
+	t=1751432674; cv=none; b=QR8TuAHfzNLVitI0CzlcPcWhsu093g6tOlYPQm+wDmrvbfX05YlPxVnp0CgDRf9xLkOyeMQmYnWeLLI7aKMnNvI1crmOsOaHrp8IclE/QWG7C0vhuXi/18N3B4KVA5Pykzve1WoAO1MAkcUhkt6eXhW2UpWnrIUsB31BZOv3Vmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751432672; c=relaxed/simple;
-	bh=tYDGH+tKQbiuHyQ9E2lc4ed0L20yYIFPhEfISMxXCQM=;
+	s=arc-20240116; t=1751432674; c=relaxed/simple;
+	bh=6jrh8FvFCCpVpziXCKvBd0fiZPusXArM/5ZrGnFWymk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IsYrpiz0KKovPET6mckFoYt8Z8qKj7C3T7F6fFBma9NsITl2U2WHlifiydHmUGC+eH7R3uqKxZBTvbKFtakPGfiFMHt+0wdlAtD4al487iXaVQ+DhoskBXhP5In2WMlVSr5m9zZhrtkSJdZDMa93Y7y/G86XksJx1nW7HIlYyTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M3akCcCd; arc=none smtp.client-ip=209.85.215.170
+	 MIME-Version; b=qa0lBMxZrBPxRXuBM5Nh0CjHowyGX/gwzgISjr97dGD45qnzcqw3Pvb6w76Q/k4QVMLmydU/hfwnjtGcjSDQxTyVfOFMMZFQGdSnoJWxm0EdKfX/dtlYqRfUYdxMgdXYtrnkMwOtXkSrfiB7/UuRn77Ob1Tnyb38nfzoPn2/aeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mb4GUVJK; arc=none smtp.client-ip=209.85.216.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M3akCcCd"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-b34a71d9208so3075060a12.3;
-        Tue, 01 Jul 2025 22:04:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mb4GUVJK"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-3122368d7cfso4085859a91.1;
+        Tue, 01 Jul 2025 22:04:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751432670; x=1752037470; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1751432672; x=1752037472; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zQrj9G+pYLe79Y4PNdw8/vBJhfuXZd5KMGob89u/rGQ=;
-        b=M3akCcCdLh5gh5IxEnTJ/WKvylAIVnRzgABwFEOay9kur336ztrVzdwFTd0b6npVji
-         dagRXdYAU+MG1CLVXn0ezGwLZeXGnGrdpgYGShTBJOiuiOq1ORrBlH7K/qDFTgKmCcE+
-         feAlzAe3OtCUDsWPdSKi4WyUuIvrU6q4tV43EbXV6c5Hskv2VmUv9/24gIsoUqrdZ0vs
-         uOpF6FUdiwoj1uNiOxre26mBszEUIw+eHCPCTw220Su08MIiUL4gqruH3WE5bEk9Ry6y
-         PACL5j0FivZw4Hdbf12aLmEiZlxQb1G/P4jOKzBt8Y4z2zRHA8tusG3vsFcrfI2r5SIl
-         Nepg==
+        bh=LIMFKP9o9HCYgCUtge56j7nt4ExnHtWvQ7QUrOurhM8=;
+        b=mb4GUVJKzZLxnrPlg6XIysnd62Z4gRCJKSvL4LCbJRwUYK2J9N9klN+Z+0PvifM4ig
+         41KXknZIHrBWSZ21SoCHhTHpphvVXcgfyKCgBA3EshPwtGt30NU82wUJyJ12HxDbwfbu
+         I/KTtOAZVed0yAnq86b9AIo8ouJVaKzs25n07nHcVooROABuILSg02FSqEklqu/EiW5+
+         FwomZKDHIjT2cgyyzutAJHeKTZjDV9VyOTQrCfZsKhcXR77qTp1gca2JX3BREAIRH6QA
+         ZMUQmFk2Nwb/QZ5Ejfta85n6uA27ZX93kDrpgL95Dcgz/OB1VYWNP0W6R3BBrgahUrN0
+         7dSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751432670; x=1752037470;
+        d=1e100.net; s=20230601; t=1751432672; x=1752037472;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zQrj9G+pYLe79Y4PNdw8/vBJhfuXZd5KMGob89u/rGQ=;
-        b=d3pNWcJ9j/PV9E1Q36eyU9bL4gAOsf1drkZBKKHXqS82VkaBu+4u7HqkQFNgBsA/fU
-         x9pQq6J0d6inF9Pse8MGj5LD73jfq2CM6L5lrgMXo8bzbkm8Eqo2BpzCp818YuLO8qkw
-         WSG+m68bhTrs3u6/nWayzBRrZO9YTuC7ZfZX7YMrgxLLessIzGhXxsvr1nj2dRY6VzQT
-         lKwL7R8h7tEj6qo1TDOakJkAf2VuO8pX6+VrT7Lwx43VOUjwwBkZ+8VQKzW2HDh8LbIC
-         z0BbVzhkUlBOvNqae5901a4BMSQ85eHZ+ZgeNO9li9q3cAG/I2RWZg0XnALcu8RTQbpT
-         ZfKA==
-X-Forwarded-Encrypted: i=1; AJvYcCUZGRSrJ3BdJvJDf5J17tKtcW67cbcmZ+Pz8ihd6OyO9a+9WL6apsiq/N6KZXAheWOe8BJsCsYZdTAD@vger.kernel.org, AJvYcCWDHjNPOE4UxJTNgD8j4Zswdyu13Luex18BXNanaJ/HmRwoO3m3hzU8wyOjWD11hqucDVVcqUzdba8EqQE3@vger.kernel.org
-X-Gm-Message-State: AOJu0Yypn82DxMmvtu91M9lIO5qmqDh8t8HB/tiYGDzA3V0KIFcUiBnF
-	0bOwH9Y2IH3x26gVBvQch6v2mRkp6gxRg/bl7f81F1cHIplOd/He5D/0
-X-Gm-Gg: ASbGnctvpF5QqnHvvTcegeu8pSynFaFiDi9Ce9IQUftKopGIfzC8M1Rj5Xb6jaZELpR
-	nf0icRQF3titkOcFcQP+4nHIMec4giuhN1tTYeYqlHtC8B3xkqpPx5tvAvFjqpkU4gbo6Y9VYng
-	aIw7gfjVJJO5O9dhJGvRJVuz15/hDOoEK9yYbgvdVSP71GGPypNrieM4+SDqrukgAEMXW+DmkLs
-	cIMkjgpadRJpp5jQ+e4hXdA3z4opOzxvpW31WHkIbHC0Ec4Htljzqu/WVFFRgiIeCeRG4pXS00H
-	fZU3HTKvHFJiWQ98ugHaDAgdKUSidx48DqC1SbpYajuHAYk6dtf/KRejl9xCPUXWydUnRA80yCq
-	9weiySuJ6efQ2zama7hS1URJPO2cDDi13ODoQoo8CQ3x8xvOeuA==
-X-Google-Smtp-Source: AGHT+IG/tQYmoUziIZcUILlZBz8yZIswDYIZla/dao7Lol524L9vULDjUhgzMHUYch+zfG8/Vy8Ryw==
-X-Received: by 2002:a17:90a:d64e:b0:312:18e:d930 with SMTP id 98e67ed59e1d1-31a90bd4c31mr2059561a91.19.1751432670269;
-        Tue, 01 Jul 2025 22:04:30 -0700 (PDT)
+        bh=LIMFKP9o9HCYgCUtge56j7nt4ExnHtWvQ7QUrOurhM8=;
+        b=gp6Zg4u4UCFAC/tTd4R074n0UKuPh2K9LTtRkGYkFfZ0IBSxhEgIeA/6XAYjiUCR2j
+         lPAl6o90rysP8zyW/l3bxLltZwqSmG9o0L82hV2gzOY/cBX8upvHSOZkrtO023+sE2PP
+         6XsRy7jD8IF7p+Dr3BJClht9FCR82UQj6PRRYn7bS7eZpfwPW7d20QWEibPqmuByVwTD
+         drVPuCD59nP8pLALy42ppcUJiu73fgCuS0oys5+VCrW8vTzkbkShupYEFCaHVEPnQl1L
+         VlF7wYjjsh32IZM41cACyqglFzdQ3BOjt3NIrSyPq0tpZx21g8MvEOtp03qJUpMRcfXt
+         AZUg==
+X-Forwarded-Encrypted: i=1; AJvYcCVj0r5KWIG2F1QnO9gF5F4+JWTT9WYaBHZ2LsnR8AOeX3+gxDxZYkH5CVIw3aUD366/zHYxSQVx967t@vger.kernel.org, AJvYcCXqFq3/a3sNyg0eJlOjvoa6+CSMVgLbwx0twzuFgfMFjB9tgCCmEKax03mpjU/PYK3nL/9YkHQscHDTQWkX@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9/Tzha20hT+WU2a1w3HV+UJ+IaDJUF73s6hoEdMIS1Mt92Im9
+	ZySedCBoSk9xkodlbml0yBxrZal5c+xTCoCKK9VSb0wji5OzclixBwOu
+X-Gm-Gg: ASbGncsiTQErimNCnLfaC6B3rHRI2XtYWWzIlwwA+73jioZFTeyF6gvKP0pT90OCAB9
+	KbgIMAvS781PNBBeeUZ6d8/za1YSV9e7jTas79qJhfNqdRgboQcWJLCqOXZDh6agVQawHSPGQ4h
+	OrJS4GhvSzpshH5Cf2S748UG1IkWGWMG3XBAH+BmkIIJLeM9fzAmQ1Vs2AOkUZdQPCCkwYTSM1O
+	gUsIvABvMfHe8IjX1E187OCETOJUMsL3c7O94gE7SB0KT/ScNXfou+WwAUz69snacPlMrCkYtTM
+	SNtT1ZUiHee7f7ueYTRKMO4XKsdgEIh1NWDuMTIdFqjFhrnjVfBpLyn5YXljhN7GzDYT+xy0GNS
+	hbQEroDgndh/7s14Du3A8kSrgfLHG3ThbMW1a4fU=
+X-Google-Smtp-Source: AGHT+IEQ3S87fa9ZqPvK0q7rgVUNEWS84VK96kAXRXHNuFvPbQyf8Vjt0suBBc0zAlqL2fFCZPSi+w==
+X-Received: by 2002:a17:90b:4c0a:b0:311:e8cc:425e with SMTP id 98e67ed59e1d1-31a90c0e00fmr2518373a91.31.1751432671900;
+        Tue, 01 Jul 2025 22:04:31 -0700 (PDT)
 Received: from localhost.localdomain (c-76-133-73-115.hsd1.ca.comcast.net. [76.133.73.115])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f54270a5sm18168323a91.25.2025.07.01.22.04.28
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f54270a5sm18168323a91.25.2025.07.01.22.04.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 22:04:29 -0700 (PDT)
+        Tue, 01 Jul 2025 22:04:31 -0700 (PDT)
 From: rentao.bupt@gmail.com
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -70,9 +70,9 @@ To: Rob Herring <robh@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	Tao Ren <taoren@meta.com>
 Cc: Tao Ren <rentao.bupt@gmail.com>
-Subject: [PATCH 3/5] ARM: dts: aspeed: elbert: Enable eMMC device
-Date: Tue,  1 Jul 2025 22:04:14 -0700
-Message-ID: <20250702050421.13729-4-rentao.bupt@gmail.com>
+Subject: [PATCH 4/5] ARM: dts: aspeed: fuji: Enable eMMC device
+Date: Tue,  1 Jul 2025 22:04:15 -0700
+Message-ID: <20250702050421.13729-5-rentao.bupt@gmail.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250702050421.13729-1-rentao.bupt@gmail.com>
 References: <20250702050421.13729-1-rentao.bupt@gmail.com>
@@ -86,21 +86,21 @@ Content-Transfer-Encoding: 8bit
 
 From: Tao Ren <rentao.bupt@gmail.com>
 
-Enable eMMC device in Elbert dts because the eMMC entries were removed
+Enable eMMC device in Fuji dts because the eMMC entries were removed
 from ast2600-facebook-netbmc-common.dtsi.
 
 Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
 ---
- .../boot/dts/aspeed/aspeed-bmc-facebook-elbert.dts   | 12 ++++++++++++
+ .../arm/boot/dts/aspeed/aspeed-bmc-facebook-fuji.dts | 12 ++++++++++++
  1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-elbert.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-elbert.dts
-index 74f3c67e0eff..ff1009ea1c49 100644
---- a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-elbert.dts
-+++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-elbert.dts
-@@ -201,3 +201,15 @@ fixed-link {
- 		full-duplex;
- 	};
+diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-fuji.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-fuji.dts
+index f23c26a3441d..8602ede3ec7e 100644
+--- a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-fuji.dts
++++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-fuji.dts
+@@ -1249,3 +1249,15 @@ &mac3 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_rgmii4_default>;
  };
 +
 +&emmc_controller {
