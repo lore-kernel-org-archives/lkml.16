@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F5BA2367DA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36FEB239E90;
 	Wed,  2 Jul 2025 21:22:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751491356; cv=none; b=PnlecfasFcaFYs472he4b0dj6NmBc1thvzszhHOFlAQe8G6quRYqnhv2cTv6hdi1s9wG4T/ArJGRB2i+g/SqyDkjXQ+uX/hCDnHm3iegwsJmihLt5IeopP11Ivotsco+WxkiOXxPHaLvWXtxUKa54vAZAYHp+OT5/0S0feArVr8=
+	t=1751491356; cv=none; b=bA1xLUryvytYOuky2Ou6bRYd91tCLzXuQ+Uiy/po+JFkp48luu3xYAH6iXfPEM6zKkBtfQVMG25MzFsPN+CKlmCHuziW8/iRodHjPa3/+iCKTUjchzUqGvJ1YY0GGmNhFKDAVbh8n87qZYJE/fNjOXB65qv7XHQyXXyhF27q+Rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751491356; c=relaxed/simple;
-	bh=kj8Gg0AYv1enYAMQtc1VtjA66fJWq2pJJvt6NBWJetw=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=bs7dSUsIDA+1KGPfFEj7aUwjEJTtwwilvYxlewagmvtYcdwG9QcDN7IwIOly1pynn4nFBBuxDTAf/9wuFyLx57Ob50jqW4WZ2A6ackTaJzCyEGaMs/DZRmaOBenJFxqjHXQIUKsnaO8lYd/GRjOTPk1viIDR4xxUszoUiu6Vqn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KrxjdOhH; arc=none smtp.client-ip=10.30.226.201
+	bh=z4aLPu/zNq1fnDqdiC+gGWNp5AJcIMI9ZkSXHkR5g+A=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ZHRpZvopIUIRYlhv7+s1XFDE/hupoTmrVuxfO/uWIHKMq67F3kzbWZ+lAm+XdQfL9hkFauGI22wskwczp3fCH1XqqZ8cdPIMFPemuOIHyhaAihlRBVFv0zzr+Z/WbPXbtXPhza2AjWy+6TncJvVcC9I/oSW+8pFmlshE97HeFoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C6ahz/y7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KrxjdOhH"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 90B62C4CEE7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C6ahz/y7"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BF770C4AF0B;
 	Wed,  2 Jul 2025 21:22:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1751491355;
-	bh=kj8Gg0AYv1enYAMQtc1VtjA66fJWq2pJJvt6NBWJetw=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=KrxjdOhHeNyRoMRycUrVTa6ipwBK8DDsL1SdSo63AKjo25HTAQ4d6LvTCNZEr1w6m
-	 y7y4XJjnRhNBBtWoIoV37Dpqpktjqtxl3IF8a1DZL3lc8wm+ZB3zmKWEvN4lC4Rt3c
-	 xnK3JjyXBJXj77VmhxE2PzdyfMaBFI/Hv3jsKD3rDTj1aiSpfHrIaKE3sKe9CRJk5w
-	 B664comzDS7G+wB5mEcp6ZhKJrSBZXQ//tVrml65fL7T38ZNR2XTqgFQtHKaD7y4tZ
-	 b+ezVutnSCPpc/jbliyrPh4Ahb9DagOS5GT6nhdJqhpYPyLm0X3m0/wcsRlJjle6Qx
-	 Ld71aRJwHtpQA==
+	bh=z4aLPu/zNq1fnDqdiC+gGWNp5AJcIMI9ZkSXHkR5g+A=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=C6ahz/y7d8op3lPqv1Jr9sNb99DG/VO44oMOVOKjmf/Czvr45Rp4RYjvAGvrY/5t4
+	 LHv3dKSxuapzt9BvwssPux7PnCz2LhYd5+DAbKyXMB4qmkPOvlm3QzWq+zuO9Y/Q7c
+	 lYi7pebRP9QWEE465RW8PbGlzBkT2BovBsVunjrfN0beTtGde9YToVi2qvy2BK3vgE
+	 Lis2H6pZwLuQa4BB1Jxvyrhw1zF93KMEQI13r8SZF5qr4+MAuy9XZQu3GV5FFgVEQe
+	 n1JEY3LfqduNpACadpBrGFBKrV2qlpu1Z9AIp53ZErdtSNGap7pMGW0PV1VxD2E/vN
+	 y9gwwdlBVFccg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77DC4C8303C;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE7DBC83F03;
 	Wed,  2 Jul 2025 21:22:35 +0000 (UTC)
 From: Jens Glathe via B4 Relay <devnull+jens.glathe.oldschoolsolutions.biz@kernel.org>
-Subject: [PATCH v2 0/3] arm64: dts: qcom: x1-hp-x14: Add support for
+Date: Wed, 02 Jul 2025 23:22:35 +0200
+Subject: [PATCH v2 3/3] arm64: dts: qcom: x1-hp-x14: Add support for
  X1P42100 HP Omnibook X14
-Date: Wed, 02 Jul 2025 23:22:32 +0200
-Message-Id: <20250702-hp-x14-x1p-v2-0-af5b588d1979@oldschoolsolutions.biz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,11 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIABijZWgC/22OwQ6CMBBEf4Xs2Zp2gSKe/A/DQWCxmxDadJGgh
- H+3cvYwhzfJvMwGQpFJ4JptEGlhYT8lwFMGnXtMT1LcJwbUWOpKo3JBraZICYraHIfC1ravLaR
- BiDTwesjuTWLHMvv4PtyL+bV/NYtRWqGp89LSJUdd3fzYS+e8H8WPrzk9knPLH2j2ff8CRDcSj
- rEAAAA=
-X-Change-ID: 20250702-hp-x14-x1p-eb32f4696d96
+Message-Id: <20250702-hp-x14-x1p-v2-3-af5b588d1979@oldschoolsolutions.biz>
+References: <20250702-hp-x14-x1p-v2-0-af5b588d1979@oldschoolsolutions.biz>
+In-Reply-To: <20250702-hp-x14-x1p-v2-0-af5b588d1979@oldschoolsolutions.biz>
 To: Bjorn Andersson <andersson@kernel.org>, 
  Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -54,12 +52,12 @@ Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, 
  Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751491354; l=1939;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751491354; l=2967;
  i=jens.glathe@oldschoolsolutions.biz; s=20240919;
  h=from:subject:message-id;
- bh=kj8Gg0AYv1enYAMQtc1VtjA66fJWq2pJJvt6NBWJetw=;
- b=UnlBq+pRnFNJFLkVrmu3lnnjVmlaV74mBYVTdfg+1nhXv6hjHdHSFQON/Scs1w+w+IcR+9pE9
- Bh2pnTdmku5DzGoRtp1TP9V+E6mMVmYXG/remFxAep19aWFTP2U7s6A
+ bh=9ZthgVGhEJbafJD5mTNmfnnlMO4dAvYooqbC1ezI11A=;
+ b=CeYuUilPkNqmgxYya6tF9ldqs+48bVbcSZpnrZg77miDRsTk7zdDvW7u2dCYnzq+/ZgouDskG
+ rg1BDdkq2PqCRD1sB7iwYdfpQzFWth3g/sxrA2fTHGY2YGf1z+iHBmZ
 X-Developer-Key: i=jens.glathe@oldschoolsolutions.biz; a=ed25519;
  pk=JcRJqJc/y8LsxOlPakALD3juGfOKmFBWtO+GfELMJVg=
 X-Endpoint-Received: by B4 Relay for
@@ -67,13 +65,10 @@ X-Endpoint-Received: by B4 Relay for
 X-Original-From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 Reply-To: jens.glathe@oldschoolsolutions.biz
 
-This patch series adds support for the HP Omnibook X Laptop 14-fe1xxx. [1]
+From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 
-Since this is actually the same model as the 14-fe0xxx, but with an
-X1P-42-100 SoC (Purwa), it needs a slightly different device tree.
-To have as minimal duplicate definition as possible, the hp X14 gets 
-commonalized into a dtsi (and it stays compatible to the derived 
-device trees, like the Ultrabook G1q). 
+These laptops are the same as the already known 14-fe0xxx models, but
+with a Purwa SoC, SKU number 14-fe1xxx. [1]
 
 The supported features are the same as for the original Omnibook X14:
 
@@ -91,32 +86,74 @@ The supported features are the same as for the original Omnibook X14:
 - GPIO Keys (Lid switch)
 - Audio definition (works via USB and with internal speakers)
 
-[1]: https://www.hp.com/us-en/shop/pdp/hp-omnibook-x-laptop-next-gen-ai-pc-14-fe100-14-a4nd1av-1#techSpecs
+https://www.hp.com/us-en/shop/pdp/hp-omnibook-x-laptop-next-gen-ai-pc-14-fe100-14-a4nd1av-1#techSpecs
 
 Signed-off-by: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 ---
-Changes in v2:
-- remove pm8010 handling
-- Link to v1: https://lore.kernel.org/r/20250702-hp-x14-x1p-v1-0-219356e83207@oldschoolsolutions.biz
+ arch/arm64/boot/dts/qcom/Makefile                  |  2 ++
+ .../boot/dts/qcom/x1p42100-hp-omnibook-x14.dts     | 42 ++++++++++++++++++++++
+ 2 files changed, 44 insertions(+)
 
----
-Jens Glathe (3):
-      dt-bindings: arm: qcom: Split HP Omnibook X14 AI in SoC variants
-      arm64: dts: qcom: x1-hp-x14: Commonalize HP Omnibook X14 device tree
-      arm64: dts: qcom: x1-hp-x14: Add support for X1P42100 HP Omnibook X14
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index 4bfa926b6a0850c3c459bcba28129c559d50a7cf..63bf3ccc11124a70efb09782b57970b274d80d49 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -333,3 +333,5 @@ x1p42100-asus-zenbook-a14-el2-dtbs	:= x1p42100-asus-zenbook-a14.dtb x1-el2.dtbo
+ dtb-$(CONFIG_ARCH_QCOM)	+= x1p42100-asus-zenbook-a14.dtb x1p42100-asus-zenbook-a14-el2.dtb
+ x1p42100-crd-el2-dtbs	:= x1p42100-crd.dtb x1-el2.dtbo
+ dtb-$(CONFIG_ARCH_QCOM)	+= x1p42100-crd.dtb x1p42100-crd-el2.dtb
++x1p42100-hp-omnibook-x14-el2-dtbs := x1p42100-hp-omnibook-x14.dtb x1-el2.dtbo
++dtb-$(CONFIG_ARCH_QCOM)	+= x1p42100-hp-omnibook-x14.dtb x1p42100-hp-omnibook-x14-el2.dtb
+diff --git a/arch/arm64/boot/dts/qcom/x1p42100-hp-omnibook-x14.dts b/arch/arm64/boot/dts/qcom/x1p42100-hp-omnibook-x14.dts
+new file mode 100644
+index 0000000000000000000000000000000000000000..0eeb360489e2a916e1aa24df677700f539786841
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/x1p42100-hp-omnibook-x14.dts
+@@ -0,0 +1,42 @@
++// SPDX-License-Identifier: BSD-3-Clause
++/*
++ * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
++ * Copyright (c) 2024, Xilin Wu <wuxilin123@gmail.com>
++ * Copyright (c) 2025 Jens Glathe
++ */
++
++/dts-v1/;
++
++#include "x1p42100.dtsi"
++#include "x1e80100-pmics.dtsi"
++#include "x1-hp-omnibook-x14.dtsi"
++/delete-node/ &pmc8380_6;
++/delete-node/ &pmc8380_6_thermal;
++
++/ {
++	model = "HP Omnibook X 14-fe1";
++	compatible = "hp,omnibook-x14-fe1", "qcom,x1p42100";
++	chassis-type = "laptop";
++};
++
++&gpu {
++	status = "okay";
++
++	zap-shader {
++		firmware-name = "qcom/x1p42100/hp/omnibook-x14/qcdxkmsucpurwa.mbn";
++	};
++};
++
++&remoteproc_adsp {
++	firmware-name = "qcom/x1p42100/hp/omnibook-x14/qcadsp8380.mbn",
++			"qcom/x1p42100/hp/omnibook-x14/adsp_dtbs.elf";
++
++	status = "okay";
++};
++
++&remoteproc_cdsp {
++	firmware-name = "qcom/x1p42100/hp/omnibook-x14/qccdsp8380.mbn",
++			"qcom/x1p42100/hp/omnibook-x14/cdsp_dtbs.elf";
++
++	status = "okay";
++};
 
- Documentation/devicetree/bindings/arm/qcom.yaml    |    3 +-
- arch/arm64/boot/dts/qcom/Makefile                  |    2 +
- arch/arm64/boot/dts/qcom/x1-hp-omnibook-x14.dtsi   | 1550 ++++++++++++++++++++
- .../boot/dts/qcom/x1e80100-hp-omnibook-x14.dts     | 1544 +------------------
- .../boot/dts/qcom/x1p42100-hp-omnibook-x14.dts     |   42 +
- 5 files changed, 1600 insertions(+), 1541 deletions(-)
----
-base-commit: 3f804361f3b9af33e00b90ec9cb5afcc96831e60
-change-id: 20250702-hp-x14-x1p-eb32f4696d96
-
-Best regards,
 -- 
-Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+2.48.1
 
 
