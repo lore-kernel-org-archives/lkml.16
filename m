@@ -1,153 +1,143 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94EC578F4F;
-	Wed,  2 Jul 2025 06:17:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 157B51CFBC;
+	Wed,  2 Jul 2025 06:18:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751437058; cv=none; b=d8Snl21lvDR2QOIvyoolmwjhY0R1ArMdePR62kgQX6C/cDMGWRGuZKOrzAxk9xJGS23F/Iq+k+Qx/HJyZRQyhYBOThB2oG9dH8pD5xWhESVY+b5XqhkSmBINptvv1NJdnkJoycnyl7xNx7xUDrMgZkKmty0oTV1U3Ocbj3Ume8A=
+	t=1751437130; cv=none; b=N3ewVyT6jUcYIb8J8pffPmfgzFDMqGHLlQIaTK3eWG2iw9hrCcomwBiV3TJHcLPkK0Pg9hX5F04AlY3oIC2Moom/KmYILh8yu2My1+MYdRCvDCVhz2umqHnnnnXPSkZllcIbiiw9gFdIwvf0W/ZFn1dohoI5qRHJqVmqwFugYYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751437058; c=relaxed/simple;
-	bh=wkSag4op++cUlt6HIXv9iZfn0kjA54lgKctVP4tDiqU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=grN/1LLSMgH5lfFgoxWjvTgCIKc4tO5u7GvIrgvH8x/KSo7Z7384WT2y/7RauLleFIkabgU5Pn3Eh8CpyCm85WiipTKKfVLC3sWf82TZlBcnMM3CDL1posY/NEfBxqIEWKYz3P8m3d89YZlj/jfqyfePZP4hucEW9I1zqQiA9hA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from localhost (unknown [116.232.48.207])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 86AE7341F5E;
-	Wed, 02 Jul 2025 06:17:35 +0000 (UTC)
-Date: Wed, 2 Jul 2025 06:17:17 +0000
-From: Yixun Lan <dlan@gentoo.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Alex Elder <elder@riscstar.com>, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-	alex@ghiti.fr, heylenay@4d2.org, inochiama@outlook.com,
-	guodong@riscstar.com, devicetree@vger.kernel.org,
-	linux-clk@vger.kernel.org, spacemit@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 0/6] reset: spacemit: add K1 reset support
-Message-ID: <20250702061717-GYA304216@gentoo>
-References: <20250613011139.1201702-1-elder@riscstar.com>
- <20250618111737-GYA157089@gentoo>
+	s=arc-20240116; t=1751437130; c=relaxed/simple;
+	bh=7Dap5Kr9JrVWd5RcwGXtfLjL+/ToP513+Z/kw+YoSIo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BFkLqHBWRAWEeQ/pQfrKxsidkmhT1l9Jv0ArYMmgICqO8gq9eO8WYEI21S46DJyl1+W+5sN2CnF27fiGN7Nv7OhTUTxBNOKxwZMNfrfW80fDjK8J0dhibinqcvYSFtpiU8UAwd2AyerjQEei8u22ezjx7bcVke7Vm9njk+Sqj5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i5Y6uk0N; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i5Y6uk0N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 785A5C4CEEE;
+	Wed,  2 Jul 2025 06:18:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751437129;
+	bh=7Dap5Kr9JrVWd5RcwGXtfLjL+/ToP513+Z/kw+YoSIo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=i5Y6uk0NIEQlDGTNdzumCvd4l04wWXsYs6izEJoOy+J1AbzEC+0S02WaRChyBhkbX
+	 HdxuMDV/RmLkKVsjkiLm1flkjX1BBf7INHtKtLHETsd7IPmHHAkoXk/L1rxL3jbMSR
+	 iR2J1HJspvuqerbvnb+C6iLpD0MJAeWPlH/eW0n/nzTuTo8WJqTMwcZXdo/7ECrfYG
+	 bVRJ0BOosRYKbyRcYhRSM5kGoz4VFai72iSODP3RCgDO4VHxiHAQO6AIg/o06ODB6B
+	 qng7AU1Kzf9ICJDhz6pbl/ZaiUW/L0ngpxOnwEsC8EfR44v5rDXBQ6W0wDlsilyP7g
+	 ORFztZZhUOsrQ==
+Message-ID: <b741e3fc-1376-4498-92e7-4e366f28f8ec@kernel.org>
+Date: Wed, 2 Jul 2025 08:18:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250618111737-GYA157089@gentoo>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 04/10] dt-bindings: gpio: cdns: add Axiado AX3000 GPIO
+ variant
+To: Harshit Shah <hshah@axiado.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Arnd Bergmann <arnd@arndb.de>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Jan Kotas <jank@cadence.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>,
+ Michal Simek <michal.simek@amd.com>, =?UTF-8?Q?Przemys=C5=82aw_Gaj?=
+ <pgaj@cadence.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Frank Li <Frank.Li@nxp.com>, Boris Brezillon <bbrezillon@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+ soc@lists.linux.dev, linux-serial@vger.kernel.org,
+ linux-i3c@lists.infradead.org
+References: <20250701-axiado-ax3000-soc-and-evaluation-board-support-v4-0-11ba6f62bf86@axiado.com>
+ <20250701-axiado-ax3000-soc-and-evaluation-board-support-v4-4-11ba6f62bf86@axiado.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250701-axiado-ax3000-soc-and-evaluation-board-support-v4-4-11ba6f62bf86@axiado.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Philipp,
-
-On 11:17 Wed 18 Jun     , Yixun Lan wrote:
-> Hi ALL,
->   As the reset driver going through several review cycles,
-> it becomes quite calm down now, I'd like to request to merge
-> it into v6.17, because various drivers (pwm, emac..) will depend
-> on it, even in the worst case if there is problem, I believe Alex
-> will help to address..
+On 01/07/2025 22:27, Harshit Shah wrote:
+> Add binding for Axiado AX3000 GPIO controller. So far, no changes
+> are known, so it can fallback to default compatible.
 > 
-> Hi Philipp,
->   I'd like to query if you willing to take the reset driver -
-> patch [5/6] through the reset tree? It sounds more intuitive,
-> which also will avoid potential conflicts with Kconfig/Makefile..
->   I've created a prerequisite immutable tag which could be
-> shared between clock and reset subsytem. It's tag -
-> spacemit-reset-deps-for-6.17 at SpacemiT's SoC tree [1], which 
-> effectively are patches [1-4] of this series.
-> But, to make your life easy, I've also applied patch [5/6] at tag
-> spacemit-reset-drv-for-6.17 [2] which has a small macro adjustment
-> requested by Alex at [3]
->   Let me know what you think of this, thanks
+> Signed-off-by: Harshit Shah <hshah@axiado.com>
+> ---
+>  Documentation/devicetree/bindings/gpio/cdns,gpio.yaml | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
 > 
-Just want to ping this, what do you want from my side to proceed?
+> diff --git a/Documentation/devicetree/bindings/gpio/cdns,gpio.yaml b/Documentation/devicetree/bindings/gpio/cdns,gpio.yaml
+> index f1a64c17366500cb0e02a0ca90da691fd992fe7d..16c311a252921ba65d2f9f1b34a07a4a940432f3 100644
+> --- a/Documentation/devicetree/bindings/gpio/cdns,gpio.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/cdns,gpio.yaml
+> @@ -11,7 +11,13 @@ maintainers:
+>  
+>  properties:
+>    compatible:
+> -    const: cdns,gpio-r1p02
+> +    oneOf:
+> +      - description: Cadence GPIO controller
+> +        const: cdns,gpio-r1p02
+> +      - description: Axiado AX3000 GPIO controller
 
-or do you want me to send a more formal Pull-Request for [1],
-then you can apply patch [5/6] (still need to fix the macro of [3])
+Drop both descriptions, obvious.
 
+> +        items:
+> +          - const: axiado,ax3000-gpio
 
+This should be enum, it will grow.
+
+> +          - const: cdns,gpio-r1p02
+>  
+>    reg:
+>      maxItems: 1
 > 
-> Link: https://github.com/spacemit-com/linux/releases/tag/spacemit-reset-deps-for-6.17 [1]
-> Link: https://github.com/spacemit-com/linux/releases/tag/spacemit-reset-drv-for-6.17 [2]
-> Link: https://lore.kernel.org/all/528522d9-0467-428c-820a-9e9c8a6166e7@riscstar.com/ [3]
-> 
-> On 20:11 Thu 12 Jun     , Alex Elder wrote:
-> > This series adds reset controller support for the SpacemiT K1 SoC.
-> > A SpacemiT reset controller is implemented as an auxiliary device
-> > associated with a clock controller (CCU).  A new header file
-> > holds definitions used by both the clock and reset drivers.
-> > 
-> > In this version several "multi-bit" resets have been redefined as
-> > individual ones.  For example, RESET_AUDIO had a mask that included
-> > 3 bits.  Now there are 3 separate resets (one for each bit):
-> > RESET_AUDIO_SYS; RESET_AUDIO_MCU_CORE; and RESET_AUDIO_APMU.
-> > 
-> > The reset symbols affected (their previous names) are:
-> >     RESET_USB3_0 ->
-> >       RESET_USB30_AHB,  RESET_USB30_VCC, RESET_USB30_PHY 
-> >     RESET_AUDIO ->
-> >       RESET_AUDIO_SYS, RESET_AUDIO_MCU, RESET_AUDIO_APMU
-> >     RESET_PCIE0 ->
-> >       RESET_PCI0_DBI, RESET_PCI0_SLV, RESET_PCI0_MSTR, RESET_PCI0_GLB
-> >     RESET_PCIE1 ->
-> >       RESET_PCI1_DBI, RESET_PCI1_SLV, RESET_PCI1_MSTR, RESET_PCI1_GLB
-> >     RESET_PCIE2 ->
-> >       RESET_PCI2_DBI, RESET_PCI2_SLV, RESET_PCI2_MSTR, RESET_PCI2_GLB
-> > 
-> > No other code has changed since v10.
-> > 
-> > All of these patches are available here:
-> >   https://github.com/riscstar/linux/tree/outgoing/reset-v11
-> > 
-> > 					-Alex
-> > 
-> > Between version 10 and version 11:
-> >   - Rebased onto Linux v6.16-rc1
-> >   - Redefined several "multi-bit" resets as individual ones.
-> > 
-> > Here is version 10 of this series.
-> >   https://lore.kernel.org/lkml/20250513215345.3631593-1-elder@riscstar.com/
-> > 
-> > All other history is available via that link, so I won't reproduce
-> > it again here.
-> > 
-> > Alex Elder (6):
-> >   dt-bindings: soc: spacemit: define spacemit,k1-ccu resets
-> >   soc: spacemit: create a header for clock/reset registers
-> >   clk: spacemit: set up reset auxiliary devices
-> >   clk: spacemit: define three reset-only CCUs
-> >   reset: spacemit: add support for SpacemiT CCU resets
-> >   riscv: dts: spacemit: add reset support for the K1 SoC
-> > 
-> >  .../soc/spacemit/spacemit,k1-syscon.yaml      |  29 +-
-> >  arch/riscv/boot/dts/spacemit/k1.dtsi          |  18 ++
-> >  drivers/clk/spacemit/Kconfig                  |   1 +
-> >  drivers/clk/spacemit/ccu-k1.c                 | 239 +++++++-------
-> >  drivers/reset/Kconfig                         |   9 +
-> >  drivers/reset/Makefile                        |   1 +
-> >  drivers/reset/reset-spacemit.c                | 304 ++++++++++++++++++
-> >  .../dt-bindings/clock/spacemit,k1-syscon.h    | 141 ++++++++
-> >  include/soc/spacemit/k1-syscon.h              | 160 +++++++++
-> >  9 files changed, 775 insertions(+), 127 deletions(-)
-> >  create mode 100644 drivers/reset/reset-spacemit.c
-> >  create mode 100644 include/soc/spacemit/k1-syscon.h
-> > 
-> > 
-> > base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-> > -- 
-> > 2.45.2
-> > 
-> 
-> -- 
-> Yixun Lan (dlan)
 
--- 
-Yixun Lan (dlan)
+
+Best regards,
+Krzysztof
