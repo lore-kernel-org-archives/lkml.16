@@ -1,160 +1,146 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7488D30114B;
-	Wed,  2 Jul 2025 20:14:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D30D53093CA;
+	Wed,  2 Jul 2025 20:14:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751487279; cv=none; b=hZQU5tdJbkl/sL10gE5EvJXfgIZBxX1CoQVc3vgovrPrXJa1eFC4BQja3nnZw9QQvyTazI7BiAr2WLDGiVqtGyCdkoCppxWYOjcPrCaKoLkUyajCpcId7poj3vG1iSPvAYutmcxB0oY2dtH2Iir8miTMxpsxYgJBOf0o4XJS4+0=
+	t=1751487282; cv=none; b=WN+7AETj8D/LfgSgWZOAd6170ziWZYwR3FIDE2c/Mkr0XKid8FcK0Y2gQjOZt6moxgm4vMLfuiGReq4qkXo6SN2qZZEXpUto8dsEQqjKMBIsX50Ss2lyzh9ljYCS7eln7j15uJaSvLwomanS4p93btVVDGEn+ptIb9h4Enn/0a0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751487279; c=relaxed/simple;
-	bh=7ntNinQfVlf+pugu/WTlvuD/GFP+GYiXqJRcWk0ejH4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=si3fyzTXh236Hyg9d4Zrao9vdivufNNR+4Tsk/AqNMJ5ppSxI9dsqfAcb47r4TXacjA5HF83YAJRPSqtX8g0bQxsB0ogi0ShgImnLL0EJluB2AkSyMo07vBk5y6FjH3UoK0dEBbDnZRHZSFxzWvdYprg1a1LoHtaziBtHIK+rXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RUc6lWKn; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751487282; c=relaxed/simple;
+	bh=6eSaApPhk3wJVbii9cEkGt0eTlySUhDBHN3P7aS4uUM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CBeK9nV2VNn5k+Et0hG0uaAQxcg2NZH3DBKCK3oOZrK0vpGnxECq/YFL+gvUR3VUnpQsEgmCcOEv7dnbsj2Kscb7yjN6feRyGd3qEIUnPqMRy/b8H6CDR+9IcrnpWMUBpAw23CEbpU1qiEBiPzfIIhgsZq3abLCoBrh2Xw7KZ5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hoRIaife; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RUc6lWKn"
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e898fb745beso151891276.1;
-        Wed, 02 Jul 2025 13:14:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751487276; x=1752092076; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ws2fCY+40qz7qYM2UXMSStun9zyhHrsexuHO2VyV7ZQ=;
-        b=RUc6lWKn0fkF+1RhTc7oTkYGODDZt+ZREs0COufJevs/jWkvLCabJIb9ZOLqXxGIry
-         7DP5WqquMnHOfRDdJSmFAB7Kx5pCENsYb0CMtyEgXMhzHjqMGMICMZkjR5YLwlWikO3G
-         kjdUvnvZl2A/gGeBhr/81EHfZJUXMlbKmYKW4SbOp0yz4TppP3gr9027vyPNA+ECVqJJ
-         LDwxFNPaKw4KNilU6r4rtMpijCF02iWafiWY5sv4V5ADD9/+1dlXEBGklwNsHQt9QUyW
-         2tMSh7VtsWqwQtMlkOh1ZWmRXJDc1DUOcWfryYkkG3gJRAdJj+7qwJ+AuWHwtNfRMH/P
-         Ds0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751487276; x=1752092076;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ws2fCY+40qz7qYM2UXMSStun9zyhHrsexuHO2VyV7ZQ=;
-        b=Wx/DEN63433RE3wpPqDALls7DE9wgFk5IIUnjyRMKTA8SPBMfQLnMFlLe3nhJKukA7
-         nG6JH36X7dQzH+MfPPGOeHKwriSNxffwZrS4IaPMSk1tKsFFB3zBtWVjur8+vK923VRd
-         EkJDEfgih70+ENmQUmNx8u9XGDis3/nrFdYu79zdVghnRf7yV038OQSwMWiY5GwGff8Q
-         TBpMDnzAsSa7ZRH4wfFuB+OlramozGGBxR7DoDTxWPwe94O9J8BX8PTZOOVJuGJWIZnd
-         5BjIMcyyTDFUUG1WnnFeW+5uK16sw7u3nGtON10QWzV7McQb08QJTqVGxrCIY2bQHVeW
-         T8qA==
-X-Forwarded-Encrypted: i=1; AJvYcCU/oq/ZYXXnKdkrx9wGkdqm4ltoz+MozDwERLivCTKoxj+SYQPIwWQiYUPzX31APk1LgDX79FRdt9M=@vger.kernel.org, AJvYcCXy+PAu3u3RB3mADStGAWyNt9j6fYuy4a2sxd/YqJlE/2/K1c4SMYbRF9nmIyffdOoz/54YmNIHQFYaLqsl@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxi4/cDRJUESPmp0cVhJYHZgDZe3ueUr30uXB1qGTI8uFbb6XAG
-	YNsAqCk2XlmICraKZxCZ2rqTAoq0JLgKyo84C0TSk41UEGGj0GrmO0bJ
-X-Gm-Gg: ASbGnct3ZyV3lK203OLQ7ureGImuQNLfiNPqHmZmS3KzM2jWOeGo7YtqF7628uqxGkA
-	MfnW6bnKKrdf3D7/q21KC4AB2ZxSB59rZEoNWfN8/Gb+UHsfbu+iOg+l/6Nu/pet2raOQSM42Jm
-	cc0Uon3+S6ukLvHbKsmAfWEgsHJKfFJDm5t6VOUTjXnEWj3e8YFbSE8pAhSyse9ZLqH90m+zlen
-	ch3FS6B/cMF6AQpHm45nn4Gr7Vlocia+4Qlazb/O9Gf1B/sCxzKaEPcKptk/X9pSbLVa/HjKjT4
-	YyxpBwI9ZsbV1Mz4o5C0/TJifrxRSTJcciGln/fHGdA9MUP8RqhysRpLL+cRnMmXHPqd8ZIIW2k
-	mwSVFWYM=
-X-Google-Smtp-Source: AGHT+IFMh0Zpmv4j5OzZGutnmhihaCWP4mrmEUdEh5Fn5yyRhW1DwP6dI+488wgyAG0GH6wDYQKuKQ==
-X-Received: by 2002:a05:690c:8686:10b0:70e:4d8:5cab with SMTP id 00721157ae682-716590c7964mr10179957b3.2.1751487276493;
-        Wed, 02 Jul 2025 13:14:36 -0700 (PDT)
-Received: from bijan-laptop.attlocal.net ([2600:1700:680e:c000:873e:8f35:7cd8:3fe3])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-71515cb4347sm26124157b3.83.2025.07.02.13.14.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 13:14:36 -0700 (PDT)
-From: Bijan Tabatabai <bijan311@gmail.com>
-To: damon@lists.linux.dev,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Cc: sj@kernel.org,
-	akpm@linux-foundation.org,
-	corbet@lwn.net,
-	joshua.hahnjy@gmail.com,
-	bijantabatab@micron.com,
-	venkataravis@micron.com,
-	emirakhur@micron.com,
-	ajayjoshi@micron.com,
-	vtavarespetr@micron.com
-Subject: [RFC PATCH v3 07/13] mm/damon/core: Commit damos->target_nid/migrate_dests
-Date: Wed,  2 Jul 2025 15:13:30 -0500
-Message-ID: <20250702201337.5780-8-bijan311@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250702201337.5780-1-bijan311@gmail.com>
-References: <20250702201337.5780-1-bijan311@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hoRIaife"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2B21C4CEE7;
+	Wed,  2 Jul 2025 20:14:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751487281;
+	bh=6eSaApPhk3wJVbii9cEkGt0eTlySUhDBHN3P7aS4uUM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=hoRIaifeAR9VN04Rc7+qMCtEan1HTEfv2e41o0Nvp9ZBIHJ5xrlodBpv2v8Mtwq/6
+	 v4fUbXTlYgGFWl5Bh0K8/6ntwPtQoKIveaPQPPncb6FMwXuQI8fNp4Nc65EpTaz02S
+	 fWFVaudbUTxo2h+LJ9my80uFO/qD+OshbnTtrBPLWOuCg6JiopHyUM9YgbnhhqiZEK
+	 +ok7oKsPE8FJqfeUVM01lug5kXjpaOnJmoKHLVto321ibSKd6GvPTkQu4qWbrEBM3S
+	 HVmubt+Gq5WFZYqlQ9fVKVwzdPFxZ9I6Ug6/uVOM3OpbiF6PedXEQVpbLcCAI1f0us
+	 UNiGKx9uTqWeQ==
+Message-ID: <5d4dfcb2-cdf5-41d6-a94f-5a116837ee25@kernel.org>
+Date: Wed, 2 Jul 2025 22:14:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/8] dt-bindings: vendor-prefixes: Add Winrise
+ Technology
+To: Christian Hewitt <christianshewitt@gmail.com>
+Cc: =?UTF-8?Q?Jean-Fran=C3=A7ois_Lessard?= <jefflessard3@gmail.com>,
+ Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>,
+ devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
+ linux-kernel@vger.kernel.org, =?UTF-8?Q?Andreas_F=C3=A4rber?=
+ <afaerber@suse.de>, Boris Gjenero <boris.gjenero@gmail.com>,
+ Heiner Kallweit <hkallweit1@gmail.com>,
+ Paolo Sabatino <paolo.sabatino@gmail.com>
+References: <20250629130002.49842-1-jefflessard3@gmail.com>
+ <20250629130002.49842-6-jefflessard3@gmail.com>
+ <c6d0d856-0c49-4ad7-bc6f-1a228dcb2d9d@kernel.org>
+ <0182CF05-6011-479C-A4A2-18A0C60F7710@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <0182CF05-6011-479C-A4A2-18A0C60F7710@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Bijan Tabatabai <bijantabatab@micron.com>
+On 30/06/2025 15:51, Christian Hewitt wrote:
+>> On 30 Jun 2025, at 4:25 pm, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>
+>> On 29/06/2025 14:59, Jean-François Lessard wrote:
+>>> Assign vendor prefix "winrise", matching their domain name.
+>>>
+>>> Signed-off-by: Jean-François Lessard <jefflessard3@gmail.com>
+>>> ---
+>>> Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>>> 1 file changed, 2 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+>>> index f03ab02afe..a3bf93e5dc 100644
+>>> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+>>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+>>> @@ -1711,6 +1711,8 @@ patternProperties:
+>>>     description: Wingtech Technology Co., Ltd.
+>>>   "^winlink,.*":
+>>>     description: WinLink Co., Ltd
+>>> +  "^winrise,.*":
+>>> +    description: Shenzhen Winrise Technology Co., Ltd.
+>> Hm? https://winrise.com/ redirects to https://amdaluminum.com/ for
+>> fences and other alu products.
+> 
+> According to multiple Chinese chip-buying/trade websites [0],[1] and
+> the internet archive [2] their domain is winrise.cn (not .com). There
+> is currently no active website despite whois entries showing that the
+> domain registration is still active/alive.
+> 
+> [0] http://www.84878.tradebig.com/
+> [1] https://www.tradeeasy.com/supplier/714703/products
+> [2] https://web.archive.org/web/20160312143416/http://winrise.cn/
+> 
+> If you’d prefer “Assign vendor prefix based on their name” as the
+> patch description? we can change that for the next iteration.
+If commit msg says "domain name" as an argument and it turns out it is
+not matching domain name, then that other domain name least needs to be
+in commit msg. The rule of domain name comes from US tickers, so only
+.com should be considered. If there is no conflict and no .com
+manufacturer it is fine to use whatever other name, but the commit msg
+is not then correct.
 
-When committing new scheme parameters from the sysfs, copy the
-target_nid and migrate_dests of the source schemes into the destination
-schemes.
-
-Signed-off-by: Bijan Tabatabai <bijantabatab@micron.com>
----
- mm/damon/core.c | 40 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
-
-diff --git a/mm/damon/core.c b/mm/damon/core.c
-index a4c3cfe531df..0565aae8d1fa 100644
---- a/mm/damon/core.c
-+++ b/mm/damon/core.c
-@@ -943,6 +943,41 @@ static void damos_set_filters_default_reject(struct damos *s)
- 		damos_filters_default_reject(&s->ops_filters);
- }
- 
-+static int damos_commit_dests(struct damos *dst, struct damos *src)
-+{
-+	struct damos_migrate_dests *dst_dests, *src_dests;
-+
-+	dst_dests = &dst->migrate_dests;
-+	src_dests = &src->migrate_dests;
-+
-+	if (dst_dests->nr_dests != src_dests->nr_dests) {
-+		kfree(dst_dests->node_id_arr);
-+		kfree(dst_dests->weight_arr);
-+
-+		dst_dests->node_id_arr = kmalloc_array(src_dests->nr_dests,
-+			sizeof(*dst_dests->node_id_arr), GFP_KERNEL);
-+		if (!dst_dests->node_id_arr) {
-+			dst_dests->weight_arr = NULL;
-+			return -ENOMEM;
-+		}
-+
-+		dst_dests->weight_arr = kmalloc_array(src_dests->nr_dests,
-+			sizeof(*dst_dests->weight_arr), GFP_KERNEL);
-+		if (!dst_dests->weight_arr) {
-+			/* ->node_id_arr will be freed by scheme destruction */
-+			return -ENOMEM;
-+		}
-+	}
-+
-+	dst_dests->nr_dests = src_dests->nr_dests;
-+	for (int i = 0; i < src_dests->nr_dests; i++) {
-+		dst_dests->node_id_arr[i] = src_dests->node_id_arr[i];
-+		dst_dests->weight_arr[i] = src_dests->weight_arr[i];
-+	}
-+
-+	return 0;
-+}
-+
- static int damos_commit_filters(struct damos *dst, struct damos *src)
- {
- 	int err;
-@@ -983,6 +1018,11 @@ static int damos_commit(struct damos *dst, struct damos *src)
- 
- 	dst->wmarks = src->wmarks;
- 
-+	dst->target_nid = src->target_nid;
-+	err = damos_commit_dests(dst, src);
-+	if (err)
-+		return err;
-+
- 	err = damos_commit_filters(dst, src);
- 	return err;
- }
--- 
-2.43.5
-
+Best regards,
+Krzysztof
