@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E721F20D4F9
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 06:02:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C25162063FD
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 06:02:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751436132; cv=none; b=aCyivvOrmJKBlmQk1yRBUithW4XB705WShJgmV8QlmiOV+hxC50ist4j9jKsnPXyxWujYMuSqtAzQIxCtwPX9EBAv1PcotTMKuRblkvwecNYTu5hXJJsreD91C5WNlEoW6luXbtNXQTb5Ady4GfBcWcEFg5j+rK4Fb8Ip8v4yp0=
+	t=1751436140; cv=none; b=nlUV5yJWvS1IxkR1mXHoXjPn9AmzK3YUuYyNJSbHUTAEycwrkQcp0KLFz4KthtrkDOdkSiPGTAEQB3TPE2s6r4VSJLYcwJAOlC51BPoXDYDjasNqd16EIfr4UB9ncUKs7gwrF9copo5GlozZyz0faRswvkPF+3dIuwIwjZwCIec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751436132; c=relaxed/simple;
-	bh=rgKFchSpRtVlMbrB4t3oG0+Oi78O7UqzVOpvAdmiE7w=;
+	s=arc-20240116; t=1751436140; c=relaxed/simple;
+	bh=NgyC3gSpfP77l+z7bbDGL6zgPF14iYn9gkyrkHGERe0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LsLiOEss256MAaB/e4QTlvJoJNeloMDPgG1CYtpIiHh4oJMpEz+GyHX35n11ELFKEfF1tRI0iwxUDQmB9gMIm8C2phvEsv9RhtGJLDK0+HugvR0nQhju2mF00iP9ny2vI5aVzguZquNDmAvJJBbzmkBQmnBJkqBe3tcqTkDFY1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HtbxzGOu; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=ONUazsW0fUd/oTs7Kjz/RDhUTHNk4DHoK+V0CTNYIausbIYFyXQlzSv7UKq8n0vGTjpZJtpqBWoX7Iy60ri20L+/X59YEEMPjpPI27ecoC8MQI+7LH9krfeNRdGq5YMsqELUI1Q79l6pvY4ymdXSBua5n/V9SNlYmJwqxvQqHRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jQkv3951; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HtbxzGOu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jQkv3951"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751436130;
+	s=mimecast20190719; t=1751436136;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6UTvDkzjNaf34OHog+LnlSzW82URMLMlLfB/a8vX8sM=;
-	b=HtbxzGOuQU+ddS2iw3zRKw4x02iZ54VCsts0D5/EFSG5OzJPriRswrL/47yCTuK6mV5FQb
-	2Q1LmNmQwLazXIWdDKzsA/8VoALm/DqrVklyokT5+gCwZddXH9TSIvDBzvaMwlugTwTKll
-	idr87qn+Hdbx77fuM/E3s9wg2cODmP4=
+	bh=KrLYUyOSHv6ti8mLUpiK2UpRJKu3qFGfunZUfG2C6A4=;
+	b=jQkv3951/8mQmAyeJYecMBcq0SXXYQQpoD+3hWPFYR6ejr0mW4JbU95uGfhv1V3tCO8qGc
+	eB8/CB0KY3FMu7TveB/43HuvDwtFityCFFsK6K9tLi6rAdicVQ/O4aigbHzDuqEWbeeSQq
+	pUS8N3uQ2olqLE9luAJnHmUqFE0P6Jg=
 Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-678-7jOVUjo2OjGxB1sN0MVdhw-1; Wed,
- 02 Jul 2025 01:59:33 -0400
-X-MC-Unique: 7jOVUjo2OjGxB1sN0MVdhw-1
-X-Mimecast-MFC-AGG-ID: 7jOVUjo2OjGxB1sN0MVdhw_1751435969
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-140-xQprs1ByMli6vDlVE0PNBw-1; Wed,
+ 02 Jul 2025 02:02:09 -0400
+X-MC-Unique: xQprs1ByMli6vDlVE0PNBw-1
+X-Mimecast-MFC-AGG-ID: xQprs1ByMli6vDlVE0PNBw_1751436125
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C1BDA1956096;
-	Wed,  2 Jul 2025 05:59:28 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 78E0F195608C;
+	Wed,  2 Jul 2025 06:02:05 +0000 (UTC)
 Received: from h1.redhat.com (unknown [10.22.88.112])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A06AB180045B;
-	Wed,  2 Jul 2025 05:59:13 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9DFEC1800285;
+	Wed,  2 Jul 2025 06:01:50 +0000 (UTC)
 From: Nico Pache <npache@redhat.com>
 To: linux-mm@kvack.org,
 	linux-doc@vger.kernel.org,
@@ -85,9 +85,9 @@ Cc: david@redhat.com,
 	rientjes@google.com,
 	mhocko@suse.com,
 	rdunlap@infradead.org
-Subject: [PATCH v8 04/15] khugepaged: generalize alloc_charge_folio()
-Date: Tue,  1 Jul 2025 23:57:31 -0600
-Message-ID: <20250702055742.102808-5-npache@redhat.com>
+Subject: [PATCH v8 14/15] khugepaged: add per-order mTHP khugepaged stats
+Date: Tue,  1 Jul 2025 23:57:41 -0600
+Message-ID: <20250702055742.102808-15-npache@redhat.com>
 In-Reply-To: <20250702055742.102808-1-npache@redhat.com>
 References: <20250702055742.102808-1-npache@redhat.com>
 Precedence: bulk
@@ -99,108 +99,88 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-From: Dev Jain <dev.jain@arm.com>
+With mTHP support inplace, let add the per-order mTHP stats for
+exceeding NONE, SWAP, and SHARED.
 
-Pass order to alloc_charge_folio() and update mTHP statistics.
-
-Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-Co-developed-by: Nico Pache <npache@redhat.com>
 Signed-off-by: Nico Pache <npache@redhat.com>
-Signed-off-by: Dev Jain <dev.jain@arm.com>
 ---
- include/linux/huge_mm.h |  2 ++
- mm/huge_memory.c        |  4 ++++
- mm/khugepaged.c         | 17 +++++++++++------
- 3 files changed, 17 insertions(+), 6 deletions(-)
+ include/linux/huge_mm.h |  3 +++
+ mm/huge_memory.c        |  7 +++++++
+ mm/khugepaged.c         | 15 ++++++++++++---
+ 3 files changed, 22 insertions(+), 3 deletions(-)
 
 diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-index 4d5bb67dc4ec..a6ea89fdaee6 100644
+index a6ea89fdaee6..6034b4c9dae5 100644
 --- a/include/linux/huge_mm.h
 +++ b/include/linux/huge_mm.h
-@@ -125,6 +125,8 @@ enum mthp_stat_item {
- 	MTHP_STAT_ANON_FAULT_ALLOC,
- 	MTHP_STAT_ANON_FAULT_FALLBACK,
- 	MTHP_STAT_ANON_FAULT_FALLBACK_CHARGE,
-+	MTHP_STAT_COLLAPSE_ALLOC,
-+	MTHP_STAT_COLLAPSE_ALLOC_FAILED,
- 	MTHP_STAT_ZSWPOUT,
- 	MTHP_STAT_SWPIN,
- 	MTHP_STAT_SWPIN_FALLBACK,
+@@ -141,6 +141,9 @@ enum mthp_stat_item {
+ 	MTHP_STAT_SPLIT_DEFERRED,
+ 	MTHP_STAT_NR_ANON,
+ 	MTHP_STAT_NR_ANON_PARTIALLY_MAPPED,
++	MTHP_STAT_COLLAPSE_EXCEED_SWAP,
++	MTHP_STAT_COLLAPSE_EXCEED_NONE,
++	MTHP_STAT_COLLAPSE_EXCEED_SHARED,
+ 	__MTHP_STAT_COUNT
+ };
+ 
 diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index ce130225a8e5..69777a35e722 100644
+index 69777a35e722..3eb1c34be601 100644
 --- a/mm/huge_memory.c
 +++ b/mm/huge_memory.c
-@@ -614,6 +614,8 @@ static struct kobj_attribute _name##_attr = __ATTR_RO(_name)
- DEFINE_MTHP_STAT_ATTR(anon_fault_alloc, MTHP_STAT_ANON_FAULT_ALLOC);
- DEFINE_MTHP_STAT_ATTR(anon_fault_fallback, MTHP_STAT_ANON_FAULT_FALLBACK);
- DEFINE_MTHP_STAT_ATTR(anon_fault_fallback_charge, MTHP_STAT_ANON_FAULT_FALLBACK_CHARGE);
-+DEFINE_MTHP_STAT_ATTR(collapse_alloc, MTHP_STAT_COLLAPSE_ALLOC);
-+DEFINE_MTHP_STAT_ATTR(collapse_alloc_failed, MTHP_STAT_COLLAPSE_ALLOC_FAILED);
- DEFINE_MTHP_STAT_ATTR(zswpout, MTHP_STAT_ZSWPOUT);
- DEFINE_MTHP_STAT_ATTR(swpin, MTHP_STAT_SWPIN);
- DEFINE_MTHP_STAT_ATTR(swpin_fallback, MTHP_STAT_SWPIN_FALLBACK);
-@@ -679,6 +681,8 @@ static struct attribute *any_stats_attrs[] = {
- #endif
- 	&split_attr.attr,
- 	&split_failed_attr.attr,
-+	&collapse_alloc_attr.attr,
-+	&collapse_alloc_failed_attr.attr,
+@@ -632,6 +632,10 @@ DEFINE_MTHP_STAT_ATTR(split_failed, MTHP_STAT_SPLIT_FAILED);
+ DEFINE_MTHP_STAT_ATTR(split_deferred, MTHP_STAT_SPLIT_DEFERRED);
+ DEFINE_MTHP_STAT_ATTR(nr_anon, MTHP_STAT_NR_ANON);
+ DEFINE_MTHP_STAT_ATTR(nr_anon_partially_mapped, MTHP_STAT_NR_ANON_PARTIALLY_MAPPED);
++DEFINE_MTHP_STAT_ATTR(collapse_exceed_swap_pte, MTHP_STAT_COLLAPSE_EXCEED_SWAP);
++DEFINE_MTHP_STAT_ATTR(collapse_exceed_none_pte, MTHP_STAT_COLLAPSE_EXCEED_NONE);
++DEFINE_MTHP_STAT_ATTR(collapse_exceed_shared_pte, MTHP_STAT_COLLAPSE_EXCEED_SHARED);
++
+ 
+ static struct attribute *anon_stats_attrs[] = {
+ 	&anon_fault_alloc_attr.attr,
+@@ -648,6 +652,9 @@ static struct attribute *anon_stats_attrs[] = {
+ 	&split_deferred_attr.attr,
+ 	&nr_anon_attr.attr,
+ 	&nr_anon_partially_mapped_attr.attr,
++	&collapse_exceed_swap_pte_attr.attr,
++	&collapse_exceed_none_pte_attr.attr,
++	&collapse_exceed_shared_pte_attr.attr,
  	NULL,
  };
  
 diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 7bcd4d280c71..5ff4a5bdf5f6 100644
+index 2c0962637c34..636b84bf1ca1 100644
 --- a/mm/khugepaged.c
 +++ b/mm/khugepaged.c
-@@ -1060,21 +1060,26 @@ static int __collapse_huge_page_swapin(struct mm_struct *mm,
- }
- 
- static int alloc_charge_folio(struct folio **foliop, struct mm_struct *mm,
--			      struct collapse_control *cc)
-+			      struct collapse_control *cc, u8 order)
- {
- 	gfp_t gfp = (cc->is_khugepaged ? alloc_hugepage_khugepaged_gfpmask() :
- 		     GFP_TRANSHUGE);
- 	int node = khugepaged_find_target_node(cc);
- 	struct folio *folio;
- 
--	folio = __folio_alloc(gfp, HPAGE_PMD_ORDER, node, &cc->alloc_nmask);
-+	folio = __folio_alloc(gfp, order, node, &cc->alloc_nmask);
- 	if (!folio) {
- 		*foliop = NULL;
--		count_vm_event(THP_COLLAPSE_ALLOC_FAILED);
-+		if (order == HPAGE_PMD_ORDER)
-+			count_vm_event(THP_COLLAPSE_ALLOC_FAILED);
-+		count_mthp_stat(order, MTHP_STAT_COLLAPSE_ALLOC_FAILED);
- 		return SCAN_ALLOC_HUGE_PAGE_FAIL;
- 	}
- 
--	count_vm_event(THP_COLLAPSE_ALLOC);
-+	if (order == HPAGE_PMD_ORDER)
-+		count_vm_event(THP_COLLAPSE_ALLOC);
-+	count_mthp_stat(order, MTHP_STAT_COLLAPSE_ALLOC);
+@@ -594,7 +594,10 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+ 				continue;
+ 			} else {
+ 				result = SCAN_EXCEED_NONE_PTE;
+-				count_vm_event(THP_SCAN_EXCEED_NONE_PTE);
++				if (order == HPAGE_PMD_ORDER)
++					count_vm_event(THP_SCAN_EXCEED_NONE_PTE);
++				else
++					count_mthp_stat(order, MTHP_STAT_COLLAPSE_EXCEED_NONE);
+ 				goto out;
+ 			}
+ 		}
+@@ -623,8 +626,14 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+ 		/* See khugepaged_scan_pmd(). */
+ 		if (folio_maybe_mapped_shared(folio)) {
+ 			++shared;
+-			if (order != HPAGE_PMD_ORDER || (cc->is_khugepaged &&
+-			    shared > khugepaged_max_ptes_shared)) {
++			if (order != HPAGE_PMD_ORDER) {
++				result = SCAN_EXCEED_SHARED_PTE;
++				count_mthp_stat(order, MTHP_STAT_COLLAPSE_EXCEED_SHARED);
++				goto out;
++			}
 +
- 	if (unlikely(mem_cgroup_charge(folio, mm, gfp))) {
- 		folio_put(folio);
- 		*foliop = NULL;
-@@ -1111,7 +1116,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
- 	 */
- 	mmap_read_unlock(mm);
- 
--	result = alloc_charge_folio(&folio, mm, cc);
-+	result = alloc_charge_folio(&folio, mm, cc, HPAGE_PMD_ORDER);
- 	if (result != SCAN_SUCCEED)
- 		goto out_nolock;
- 
-@@ -1835,7 +1840,7 @@ static int collapse_file(struct mm_struct *mm, unsigned long addr,
- 	VM_BUG_ON(!IS_ENABLED(CONFIG_READ_ONLY_THP_FOR_FS) && !is_shmem);
- 	VM_BUG_ON(start & (HPAGE_PMD_NR - 1));
- 
--	result = alloc_charge_folio(&new_folio, mm, cc);
-+	result = alloc_charge_folio(&new_folio, mm, cc, HPAGE_PMD_ORDER);
- 	if (result != SCAN_SUCCEED)
- 		goto out;
- 
++			if (cc->is_khugepaged &&
++				shared > khugepaged_max_ptes_shared) {
+ 				result = SCAN_EXCEED_SHARED_PTE;
+ 				count_vm_event(THP_SCAN_EXCEED_SHARED_PTE);
+ 				goto out;
 -- 
 2.49.0
 
