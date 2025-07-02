@@ -1,139 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB6A26A090;
-	Wed,  2 Jul 2025 11:58:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10A9267713;
+	Wed,  2 Jul 2025 11:58:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751457509; cv=none; b=XIW3FfQ3bcdDxEdaujD6TdP2m4Siq76PpxjyQm7iOQUu8eRKFHZ+DA6G+QnVzdtZBYKar1yfaRdyabdvvXGZBug+l8PhtQbJvVorNi8/j/tk5uOfenCNv75Qq2BPbopsbfz5QMi9WqwzsZgwEeb0W31deQ0c55iCdXj/AhOVQhk=
+	t=1751457525; cv=none; b=cMSqCNxUorsK2f8LVsGodY0pmPdQwfjoBJIEvzVexCsKVf4M8b9y1hohhFOoZZGiSdjOdgYa5iSIvqAvT/pJI1BtOnQ1bTfRCmR6GgK1Yo7BsWqBLlOmpkF/iyFKniRbaVVmhv63dqv30xCmrBXPjZqkbEHXD+O1CsS9XH2rqZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751457509; c=relaxed/simple;
-	bh=1pkCj9Izz4w3b8RuCk4em9DVJ/1wDzo+FF9sKZbZNNc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qMjawGAmVZVaDuO8PLgSfmLMQSvmGJ/jcemFA/T6vKClwTUeAXuAWgWw1tcURE1ULuLLxRClQH/bOv3GW5C3ChcRQmjvuuUI9NPQMUzr0qqTb8F8/EuBhpyuMhg6xen5U3WbY+A0/r24Ip3Ypa3DTfYwKAYcNIxvBmcRdJTczKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nHpHWYYK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751457525; c=relaxed/simple;
+	bh=j4zaQk3443uwBFzN3RZeEtxMq4iWxUJyfn0v7hoCR7Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z6ELi/JM05pl8etXcWcnPEzT+CHMMZaxk2e0yGa3EcosWRrvZfnnh7bvBuE31ekoNiqavhWFgY2Ep/fd5V4BUF7UfWDdzxkktprkAnx9a7/VF6ZK+Pd0wOIFyyADRwqtBGx5TgZg7ZWZZARSCYKmMvb6Dh53zWsd5sQU2fI0xfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S6V1V95K; arc=none smtp.client-ip=209.85.219.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nHpHWYYK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69818C4CEED;
-	Wed,  2 Jul 2025 11:58:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751457508;
-	bh=1pkCj9Izz4w3b8RuCk4em9DVJ/1wDzo+FF9sKZbZNNc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nHpHWYYKFpD/chsGStpwAaI5QpBBqwyfsS2cmTpfrpO2QeCDFvv18g5T2e0O+7L2W
-	 F8uu9vVIQztPhtYj6RjdOAbb7Sp7YMmXfERUcWzlgW4miEhauyhdelTSuGoThxBpV2
-	 DhF4Ix1ILhF0jCAcRzSlUq9j8ZdlWwjs5xQbXPf28r67F1msQtojLlmoTTgpK3r5nS
-	 pFVAJNXFoDy0O57RwZCaVxE1ZQ5Dn9E3KkgF2wdXWUidUqwIiiWLnsYCNDoBdzr3nX
-	 e6HDnYYsKFTrswlq8vM7xPmLUWLpDzye+9LXejLxiMCmrzTRaBzH8HBKKTlOXztm7o
-	 I/BnqfdPFJTBw==
-Message-ID: <45fdf98c-32f7-4b5f-889c-6d2f1fa5fbd6@kernel.org>
-Date: Wed, 2 Jul 2025 13:58:23 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S6V1V95K"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6f8aa9e6ffdso75306006d6.3;
+        Wed, 02 Jul 2025 04:58:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751457523; x=1752062323; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=AHdUSz6zdOBXdzjVDNzo7fcMdTxOR8Umz2c1aHrjcZM=;
+        b=S6V1V95KSpxBoT11m3dXCJWoc/ikc2fGEE+OQwKmRchFCnjwzFqC7J/ukzlkVwf5X6
+         bKztY/adz+RtTGU18DUTFBpSZwPGkA1b9yAmuR03TwX2noIv078U3JYE/RVGdXtEri52
+         xxJQR0tEqPKfeZYNjE4OBwGfZFzyt//AQ7M7DwL9XiFzYZqCPNTHxzKZMG+4NYKMddFD
+         fNWh+XLXfjT4yDnOKUG2dwnnU/8NDRpwuzRjhqVHUEi6Fh2kpScKeOHohYKxr7iy6QSz
+         yU3Pt52lThaQ0vp4BrR8o8/BEnw4wLkM9v763St49R/LZrZuYIyjBG8BlkJvhV9Z9dul
+         nfsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751457523; x=1752062323;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AHdUSz6zdOBXdzjVDNzo7fcMdTxOR8Umz2c1aHrjcZM=;
+        b=dhcJswMZOrni8oB6e3Q6a/vrEVOLTJWlpAMJiH913CVsozsRkkfeFA4CzZ0bbVCdyM
+         rDHFTZlRctpx2Nwn4VaZZsmyJL2sUfqZTPkWkgrrYw/CkqRK83gEbw/Q4GC3a+j6kYFx
+         DDlLZz+erAfxPlMJpBURr05DFi38j0Q+oFj/0wOA2PzzsHiKg17/no5tMfkTn1dEjTJp
+         XKWWYYDKaFyftVgG0yzeyFVEEUbCRIJxttO59aG4W1Jty7GEvAiBEynhRpEkmr4nnJNc
+         egLTgzkoMFH/DU/HBElCpGO/lpb8q5K3WdljdPIjzSi6vKfSDYmtMEMwz2gOu+eUHz11
+         ooQw==
+X-Forwarded-Encrypted: i=1; AJvYcCVaSqwyY+o99abdteEKkfKWuxgSQ+q5MjZmvASqciBKAloLx/hy9owPUHwpvCKXfYniqHJ0GQouqBEZbQ==@vger.kernel.org, AJvYcCWRfn8dXV8EbATrI4HoOKOq6CJV8EvvyKPGBdDFUCzj/Mp/OdmdFWig9DYvbgrjNxbYULTqDd0QFYXP@vger.kernel.org, AJvYcCX4BJ4pdmWR611CsJjdyPWZkJM+e5CkO/clXNUlib/Fq2BiMQ4HmTnt1Jj8qkoG2/Ff8JoZJhAnLibI4YAX@vger.kernel.org, AJvYcCXNaj3tveLLg3cfWhIX38d8fQMCbygX2frlYOrVAT1zeUIP5wHKc6kCyJH9hP2nGbpUjMhsG1nu2EjH@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHr3fsb2TCV2OQzJwdKYtDed3jtvog52//3SZk/LbNxlM/CleL
+	3cRCzJYQ72yL1gLVmJ6RvC8m0lYHbs8syUT15UZgD6rBDfqhra1t28eO
+X-Gm-Gg: ASbGncuC2c6hk9zGazZwJW0OIlSGeM4vPMEHLJutRTTB4flR/cruXZ+AwLGJTG21c5N
+	6iX66ysQsLScc/C9MU0kBMOPWoDCs0QukpYtJiDsnGjngl4EYWw6dCKCRv94pGeeInyKPmISD4T
+	bP4CTH6oxEgvViP2Szj2s/BsPSz/4b9eKqwNlukxJzS/77M68F5T+QgxYI11zfuxAInT4pBN5DB
+	PTvh35hzGGSrbGKZqgOQtK1j3V442NkjhopoW+XHEcv6pzi5jk3Y9K0BvBFa7CtElvoEbfMlbtc
+	co1FYuOyHjrmI2RJsI411sdOrnKyM0AUZcVp1EL5Nu8RJV96zq+51zPPYEfN8y9yi6MU1w==
+X-Google-Smtp-Source: AGHT+IEf0/M+lgmZ5heO4bWoN5HQq4mwLRCA+lYJli7e01rqSm4ANHsGq8i+pZuPVqMEdYxF2RE6Tg==
+X-Received: by 2002:ad4:5dc2:0:b0:6fa:a0af:7644 with SMTP id 6a1803df08f44-702b1be899amr39658716d6.27.1751457522760;
+        Wed, 02 Jul 2025 04:58:42 -0700 (PDT)
+Received: from localhost ([2804:30c:b15:b200:425a:de22:1d7f:2d4b])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6fd7730b726sm98600096d6.114.2025.07.02.04.58.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 04:58:42 -0700 (PDT)
+Date: Wed, 2 Jul 2025 09:00:42 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, jic23@kernel.org, lars@metafoo.de,
+	Michael.Hennerich@analog.com, dlechner@baylibre.com,
+	nuno.sa@analog.com, andy@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
+	brgl@bgdev.pl, broonie@kernel.org, lgirdwood@gmail.com
+Subject: Re: [PATCH v7 00/12] iio: adc: Add support for AD4170 series of ADCs
+Message-ID: <aGUfapky2uh2tsFt@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1751289747.git.marcelo.schmitt@analog.com>
+ <aGTpNNaW7cXC18Jt@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/5] media: dt-bindings: add non-pixel property in iris
- schema
-To: Vikash Garodia <quic_vgarodia@quicinc.com>,
- Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Abhinav Kumar <abhinav.kumar@linux.dev>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250627-video_cb-v3-0-51e18c0ffbce@quicinc.com>
- <20250627-video_cb-v3-1-51e18c0ffbce@quicinc.com>
- <6fd3fa34-69e1-484f-ad6f-8caa852f1a6c@kernel.org>
- <dc6e82a1-82be-b8b8-31c3-8b85447d4e43@quicinc.com>
- <8b88cea4-b9f2-4365-829c-2a255aed6c69@kernel.org>
- <ae23ebae-3101-4a73-2bbd-0dabb4efaba1@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <ae23ebae-3101-4a73-2bbd-0dabb4efaba1@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aGTpNNaW7cXC18Jt@smile.fi.intel.com>
 
-On 02/07/2025 13:55, Vikash Garodia wrote:
+On 07/02, Andy Shevchenko wrote:
+> On Mon, Jun 30, 2025 at 10:57:32AM -0300, Marcelo Schmitt wrote:
+> > Hello,
+> > 
+> > AD4170 support v7 comes after testing the driver with even more variations of
+> > channel setups. Signal offset and amplification can be tricky to grasp at times.
+> > 
+> > Thank you to all reviewers of previous versions. This intends to comply with all
+> > comments and suggestions to v6.
+> > 
+> > Same amount of patches than v6.
 > 
+> ...
 > 
-> On 7/2/2025 5:17 PM, Krzysztof Kozlowski wrote:
->> On 02/07/2025 13:45, Vikash Garodia wrote:
->>>
->>> On 7/2/2025 4:53 PM, Krzysztof Kozlowski wrote:
->>>> On 27/06/2025 17:48, Vikash Garodia wrote:
->>>>> +
->>>>>      video-codec@aa00000 {
->>>>>          compatible = "qcom,sm8550-iris";
->>>>>          reg = <0x0aa00000 0xf0000>;
->>>>> @@ -144,12 +176,16 @@ examples:
->>>>>          resets = <&gcc GCC_VIDEO_AXI0_CLK_ARES>;
->>>>>          reset-names = "bus";
->>>>>  
->>>>> -        iommus = <&apps_smmu 0x1940 0x0000>,
->>>>> -                 <&apps_smmu 0x1947 0x0000>;
->>>>> +        iommus = <&apps_smmu 0x1947 0x0000>;
->>>>
->>>> I missed, that's technically ABI break and nothing in commit msg
->>>> explains that. You need to clearly explain the reasons and impact.
->>> No, it is not. Interface works well with old or new approach.
->>
->>
->> You changed the order of IOMMUs, so yes it is. Which interface works
->> well - FreeBSD? Or other? You are changing ABI for every user.
-> Why do i need to change, when without changing would work as well ?
-? I don't understand. I made a statement, not a question. You are doing
-this - you are changing the ABI.
+> >  6 files changed, 3601 insertions(+)
+> 
+> This is weird. At least patches 11 & 12 have '-' lines...
+> 
+Yeah, sorry about that. These ADCs are fancy such that the base driver is about
+1500 LoCs due to channel setup handling and support for multiple combinations of
+voltage references and channel setups.
 
-Which item was the first IOMMU before and which was second?
+About the '-' lines, I will rework ad4170_parse_channel_node() on earlier
+patches to avoid 3 line removals in patch 11. Patch 12 is only makes sense
+after patch 7 and I think it would lead to '-' lines if coming before patch 10
+since both increment the number of IIO channels. Anyway, I'll see how to further
+reduce the number of lines being removed.
 
-Which item is the first IOMMU now?
 
 Best regards,
-Krzysztof
+Marcelo
+
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
