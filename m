@@ -1,128 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 206392D375B;
-	Wed,  2 Jul 2025 15:13:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC35D2D3758
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 15:14:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751469240; cv=none; b=rIhMDM0zcgn7GVNPLDU3h/ttieMUjSy/c7CgFZgNuL42dBhqGYMZJb7NpYiRCteTS9gQOI9R561egczzmv5W1bmiOYzcWjqRBhxVtk2YJT7kDwyyc7lboNffaR4FnKvtK+o6zXYfPbIG3ffiXf/iePSwC23C1+lZ+aj1iUXhCts=
+	t=1751469287; cv=none; b=S+2kb7E1i0tnAp99N/YtOVujdXU64rwT6riQBb4GS8RMbKSB98TfoMjYJT+DTVKOtexsr4uBc66qIgfrp1L3WcJcymmehqpCl8yAdQvq/SleDo6eNlbQvcbF/ljDMbHPZRjZ5BTwFVlgKYbdo+Lcaow/+5k+bZ4PKhoAeh5gtOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751469240; c=relaxed/simple;
-	bh=guHe0RW+30eTbT9ZyWS13Xj4pqieJiawrLva9Vt/itg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VKb78d5hexWkqCRy1Iy7HQjQTnrYjlWy3c9USIZjCBjTM3gjqbieEuISQfLnkfMTj6Cqn+Oj/bGo9MoVw0AT6WWcxjWLWFKA0an7Hb01B/G9+QkSdoMEXlVuOHT/EJMmzNjb1WpUr584tY2RyZ/qWnYo+q0LhDtfeEooMBA9/wM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MKJ0Uq8o; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751469287; c=relaxed/simple;
+	bh=yaVBx55pkpJNbZV76DxOYDdkdg83DTB4UJfRN30uAUU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FE5xQc1aejsIMs0KL89poq3sSxlfz2vcAmk28mgycwLN+yYvAQvbVopYhqOESxfBVtouDeBscs0TidS3RBSSapVKOlY7uTVmlyq/5Qwl4JdoveX1UsmcK9L/5zO6/9dfTSa/6aSneI27i/dxEq2MV/hgmnbX0k7abkcphGv1biw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=6wind.com; spf=pass smtp.mailfrom=6wind.com; dkim=pass (2048-bit key) header.d=6wind.com header.i=@6wind.com header.b=hgj7CF5X; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=6wind.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=6wind.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MKJ0Uq8o"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751469239; x=1783005239;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=guHe0RW+30eTbT9ZyWS13Xj4pqieJiawrLva9Vt/itg=;
-  b=MKJ0Uq8opXih44hY9AcMHE6QYhBNYib0k7RZc+JfovYA82Sa+OLnKas3
-   RU7kU9px2XFi46WMQ6ppzX7z4738YMljPV1GFypPKb+KixAVeywF92OLH
-   04DnAylW1CLm29Srd0rmbujs2V+WphuxwP92OIipTvOO9qTlDjlMIP+u7
-   iNIdJJBWO18f1BweRE4WDCWN5SPjwGsmffwDFpv3ZazurgHq197QMuns1
-   i0jagI9+Qm7tAe6Y2av/QpMADFgSwi6BQSW3RgLTlkEQEvsyKBTre4iB+
-   sV3KwcHa/T4BKNeI3M1p5vtxPRqLsMdvq1NUyj+cwjx3uhKIa0yQEjIDU
-   A==;
-X-CSE-ConnectionGUID: ChjxAKsnRmeO6d4YC0EA3w==
-X-CSE-MsgGUID: vJZohpVDSH2k7gPHuzWHRw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="79213895"
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="79213895"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 08:13:58 -0700
-X-CSE-ConnectionGUID: /rAX40xCTwGhqu9E32/a5w==
-X-CSE-MsgGUID: +l+UKF1IQbCCEx1E2iU3jg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="153558840"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 08:13:55 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uWz9j-0000000Bx3p-3Mf8;
-	Wed, 02 Jul 2025 18:13:51 +0300
-Date: Wed, 2 Jul 2025 18:13:51 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Akhil R <akhilrajeev@nvidia.com>
-Cc: andi.shyti@kernel.org, digetx@gmail.com, jonathanh@nvidia.com,
-	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-tegra@vger.kernel.org, p.zabel@pengutronix.de,
-	thierry.reding@gmail.com, conor+dt@kernel.org,
-	devicetree@vger.kernel.org, krzk+dt@kernel.org,
-	ldewangan@nvidia.com, robh@kernel.org
-Subject: Re: [PATCH v5 1/3] i2c: tegra: Fix reset error handling with ACPI
-Message-ID: <aGVMr87HLrYGEw98@smile.fi.intel.com>
-References: <20250702133450.64257-1-akhilrajeev@nvidia.com>
- <aGVKjIwRjMOMlZRF@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=6wind.com header.i=@6wind.com header.b="hgj7CF5X"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-453486940fdso2938555e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 08:14:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=6wind.com; s=google; t=1751469284; x=1752074084; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:content-language
+         :from:references:cc:to:subject:reply-to:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=UEoVGeWwa967fvIBUVo89T5bXVjlB0iBy8jqhf/tJrs=;
+        b=hgj7CF5XM/KkjRz2zeqbsKGjecfDV6rgAUAqvMUjJnQQ+Ik20mq+aMIMnhmeF9ynPv
+         hqk76fVLs8p8tzlUIz0j0x0V9jpFxxjtNAgs7mxVfhlJfHZWmh2q39ZX7DjZlB1QtvfQ
+         UJSioHVgOc9HvQngqscbJPXWrX0YH/nDJ176Xo67USXuuh9HStoiusVBrd5b8UoJwHku
+         8Vvw0xXYvUVgO+xPQYxPfqB2TeeqxVS74IVo/CnQpliuTsRvGQ/QrMNaWNampRPB7jhQ
+         dVU6kP9eegKJF+iGo91AyWJ4nV5Y3IoyIzHZ46K5WHkpGiib3+HmVx/TzPjSPQVizJ6D
+         iYaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751469284; x=1752074084;
+        h=content-transfer-encoding:in-reply-to:organization:content-language
+         :from:references:cc:to:subject:reply-to:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UEoVGeWwa967fvIBUVo89T5bXVjlB0iBy8jqhf/tJrs=;
+        b=M0aLT9Zy7eVgnl4wj7x/9tBjdqAOH68W8/amOOfia9KCK45wOl4M4kfEBjLdb4onD3
+         m/uTnAJKsxH3jZH7HZP6pSnWScw5DQFG8ZVXklwnY+b1yS8n3iW46yr5+C+16zQTbgbD
+         BwjfI+TRgzPm4uT2YD7BR/u/fJ/w/kZXLyR3QKMANb2ze9xXnMdDz+cSOtu4UdMbylHe
+         6AMsbl7icfBygv5QFdes6rpE0PriPC3JFWoA+iGPLfgmp3/L1RVLyYzZtfXVuUPXHOuI
+         dudyXk4sSk6jiTpZvSiOzm8yh/5OjC9pxAHyl2FFFUifBZqdNi4FKXdn+1LY/OCskHCr
+         GiAg==
+X-Forwarded-Encrypted: i=1; AJvYcCXcAaYsGPpRd55m2Wi/uvBgSSCdU7Ix9kUgX/v+jMsukBpNIsaxdUheJu0SiqzEILbe6WGckm1X0gh90PU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTV1NWRCgxItSdAMieJo6UfXv92+IqLPpKcmAfOgCdvR2GwEb8
+	iFgNG6VeFCNvsKLuQ1dteB/9QQCIgumyoDMjyJS67smTQ0lgkDvmg5E6f1vqW1XYDZ8=
+X-Gm-Gg: ASbGncvobbsbkmsmviLtsBWVvGrxIKtc+yeXiCQCe4Rw64Zinf84qKKFzY51gD4diWj
+	iy9lcLISz1K5OJ0G38tAVGB9Ttc4ujNGHsLCCgnV2ZR5tVMwuZnMteaX+T4aV+VuRlymJJzaci5
+	sVl075r5pg73j1tPd1H8xnMXniRDvChLPFcazA+TO0IMTHbnrx6vKhJ8YLusNUD4IpEn3Zlr3lC
+	pvnnsu1Ig89CDVC0mrQ+JpktzQikSmN7M3iIHhCnJe+3SLrW2l7GiMJBzE4zNq3+ajY4m3yK6sF
+	9E0w3275fEzcid4RDeBUXjjQOGsO5W4OrBRqhxzLRFoEA0o2s9MMQvqcdyzxCdSsx15skMAkmL3
+	wa6izVddg3zQnDTlpDZL2wp5YrEyN2pGQxI+6t+8yOUOlHnU4Aw==
+X-Google-Smtp-Source: AGHT+IFuleqdyS0khXY7Uz8FGznztsWK0eHC3JXALUeyVBqdO7v0cvafSoEuAYV4iYOGyHxNKvOhVQ==
+X-Received: by 2002:a05:600c:8685:b0:442:fff5:5185 with SMTP id 5b1f17b1804b1-454a4ebf6e5mr7212645e9.6.1751469284075;
+        Wed, 02 Jul 2025 08:14:44 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:b41:c160:5568:c43d:79bc:c2ec? ([2a01:e0a:b41:c160:5568:c43d:79bc:c2ec])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7e78e8sm16736852f8f.19.2025.07.02.08.14.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Jul 2025 08:14:43 -0700 (PDT)
+Message-ID: <7c47cfb6-c1f1-42a1-8137-37f8f03fa970@6wind.com>
+Date: Wed, 2 Jul 2025 17:14:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aGVKjIwRjMOMlZRF@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Mozilla Thunderbird
+Reply-To: nicolas.dichtel@6wind.com
+Subject: Re: [PATCH v3] ipv6: add `force_forwarding` sysctl to enable
+ per-interface forwarding
+To: Jakub Kicinski <kuba@kernel.org>, Gabriel Goller <g.goller@proxmox.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ David Ahern <dsahern@kernel.org>, netdev@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250702074619.139031-1-g.goller@proxmox.com>
+ <20250702073458.3294b431@kernel.org>
+From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Content-Language: en-US
+Organization: 6WIND
+In-Reply-To: <20250702073458.3294b431@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 02, 2025 at 06:04:44PM +0300, Andy Shevchenko wrote:
-> On Wed, Jul 02, 2025 at 07:04:47PM +0530, Akhil R wrote:
-
-...
-
-> > +static int tegra_i2c_reset(struct tegra_i2c_dev *i2c_dev)
-> > +{
-> > +	acpi_handle handle = ACPI_HANDLE(i2c_dev->dev);
-> > +	int err;
-> > +
-> > +	if (handle) {
-> > +		err = acpi_evaluate_object(handle, "_RST", NULL, NULL);
-> > +		if (ACPI_FAILURE(err))
-> > +			return -EIO;
-> > +
-> > +		return 0;
-> > +	}
-> > +
-> > +	return reset_control_reset(i2c_dev->rst);
+Le 02/07/2025 à 16:34, Jakub Kicinski a écrit :
+> On Wed,  2 Jul 2025 09:46:18 +0200 Gabriel Goller wrote:
+>> It is currently impossible to enable ipv6 forwarding on a per-interface
+>> basis like in ipv4. To enable forwarding on an ipv6 interface we need to
+>> enable it on all interfaces and disable it on the other interfaces using
+>> a netfilter rule. This is especially cumbersome if you have lots of
+>> interface and only want to enable forwarding on a few. According to the
+>> sysctl docs [0] the `net.ipv6.conf.all.forwarding` enables forwarding
+>> for all interfaces, while the interface-specific
+>> `net.ipv6.conf.<interface>.forwarding` configures the interface
+>> Host/Router configuration.
+>>
+>> Introduce a new sysctl flag `force_forwarding`, which can be set on every
+>> interface. The ip6_forwarding function will then check if the global
+>> forwarding flag OR the force_forwarding flag is active and forward the
+>> packet.
 > 
-> It's better to be written other way around:
-> 
-> 	acpi_handle handle;
-> 	int err;
-> 
-> 	handle = ACPI_HANDLE(i2c_dev->dev);
-> 	if (!handle)
-> 		return reset_control_reset(i2c_dev->rst);
-> 
-> 	err = acpi_evaluate_object(handle, "_RST", NULL, NULL);
-> 	if (ACPI_FAILURE(err))
-> 		return -EIO;
-> 
-> 	return 0;
-> 
-> > +}
-> 
-> Other than that, LGTM,
-> 
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Should we invert the polarity? It appears that the condition below only
+> let's this setting _disable_ forwarding. IMO calling it "force" suggests
+> to the user that it will force it to be enabled.
+Not sure to follow you. When force_forwarding is set to 1 the forwarding is
+always enabled.
 
-Actually I have to withdraw the tag. The above function is repetition of
-the device_reset() / device_reset_optional(). Please use that instead.
+sysctl | all.forwarding | iface.force_forwarding | packet processing from iface
+       |      0         |           0            |        no forward
+       |      0         |           1            |         forward
+       |      1         |           0            |         forward
+       |      1         |           1            |         forward
 
-Also in the next version provide a cover letter. I use my own script [1]
-that makes me sure I won't skip it.
-
-[1]: https://github.com/andy-shev/home-bin-tools/blob/master/ge2maintainer.sh
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> 
+> Nicolas, how do you feel about asking for a selftest here? 
+> The functionality is fairly trivial from datapath PoV, but feels odd 
+> to merge uAPI these days without a selftest..
+No problem, let's do it right.
