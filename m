@@ -1,227 +1,259 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69D9E27A10A;
-	Wed,  2 Jul 2025 13:54:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3812625CC40;
+	Wed,  2 Jul 2025 13:54:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751464469; cv=none; b=QWRAUC7OVEU8+eCJAhSvNZTygxMWvgNsgFtcVJi7hCxCPKmcKgE9k+9KPrZjk7pCzT3bvohOkUxtE3I5qFloLjmwBQSBNLVU5oguRbL04XzrJFywecVS6NdCsn2eqG3FpDtOB+P83l4pheNL2OhgM5e/x5m5tI9xzjzpfdr5W0Q=
+	t=1751464495; cv=none; b=WLGvYGXKAS3TT+YGOZXlj81jNEl/voM3k6wZ2ZT2NKplGlSp2O3X+Ig3a5hhFdclvCs4OGqYx4VW4aJK9BMGO+Y2N1kqH5HFV2hwQKcS/QNsVzOvS5Rr299fHYWZ7bh71fgSiw4YLjhveruabAUpYO1iZUSraOxSWzkPAmqnjcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751464469; c=relaxed/simple;
-	bh=kBgzh2+fqwzDciyqJNrK1fk8cDdbFE2K5Dy495Oc5g4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=YDmmZdjtxa8Y3L50X5GsnM6B7cYQvg51vSRQqSWcV1ilRE6E2gibssGJFBh/LKD5BEzVIy/5j2ukbBG8seLgxzY3TfE1EYquSEYgyjmgrB3BsysTOgrRvsuQELmFLGYiYbYNqYPA5lu963bLb3KNnYbealuW+blaw4zvbMYYxks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ju7IdGKH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751464495; c=relaxed/simple;
+	bh=3zvdBVFljoLJVgwcrueuE3wpbqS6pt/N2C0eXTnOCj4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qpOM2GaldHOs2IBDSZLdPK/9wlIbNVVcdDrDXUXbBvzsQ4iKBLYrMP6ch0HHn8v+Ph2cmKUyHShTwtANDmuv7JGYuB0rhrzNgq1OMK4vUy4t8Cs7Yp+JCsK+rjSF5fULUwjO+OI07H9J/ha5uGNJXS6/6AtEmCGF7jurs+qIF3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JBZ3QUvR; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ju7IdGKH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B5A4C4CEF3;
-	Wed,  2 Jul 2025 13:54:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751464468;
-	bh=kBgzh2+fqwzDciyqJNrK1fk8cDdbFE2K5Dy495Oc5g4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Ju7IdGKH1LQ5POT+7RjJKtenTKMGXPv09aLY+GX+gO0vkcEvbzP+HDtiPhIcV6blv
-	 VvVdajUBDVFfC3XFchODN4Fj0D4hPcsICasmMZKt4iQ+a9G9Jr1O0faG2OGJzGEUi1
-	 GL+SeaR1JeNio8puuOxI+3XuTF/wyawGutRnuYcaxVE+Fs+L6pVl4KoMqNuSD8lEFV
-	 IDdH5zrrK7Zgb1mUen3P8WWEdCAwVeAYcOlLQVgeEDIJSjkbgMMLy3FgG1SviQzUX5
-	 XDjijTgVOh32JCnyNOalSQQuGDtrCCyuq8FbGS3vENA6YZaZ09AQGyakjKKs67CREr
-	 3Ll1n0cACUz6w==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Alice Ryhl" <aliceryhl@google.com>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
- <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
- <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,
-  "Masahiro Yamada" <masahiroy@kernel.org>,  "Nathan Chancellor"
- <nathan@kernel.org>,  "Luis Chamberlain" <mcgrof@kernel.org>,  "Danilo
- Krummrich" <dakr@kernel.org>,  "Benno Lossin" <lossin@kernel.org>,
-  "Nicolas Schier" <nicolas.schier@linux.dev>,  "Trevor Gross"
- <tmgross@umich.edu>,  "Adam Bratschi-Kaye" <ark.email@gmail.com>,
-  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
-  <linux-kbuild@vger.kernel.org>,  "Petr Pavlu" <petr.pavlu@suse.com>,
-  "Sami Tolvanen" <samitolvanen@google.com>,  "Daniel Gomez"
- <da.gomez@samsung.com>,  "Simona Vetter" <simona.vetter@ffwll.ch>,  "Greg
- KH" <gregkh@linuxfoundation.org>,  "Fiona Behrens" <me@kloenk.dev>,
-  "Daniel Almeida" <daniel.almeida@collabora.com>,
-  <linux-modules@vger.kernel.org>
-Subject: Re: [PATCH v14 1/7] rust: sync: add `OnceLock`
-In-Reply-To: <CAH5fLghw5TDrzmFZB=tORR5Lxx4WoG4wer6y5NuFdod2_tb6zg@mail.gmail.com>
- (Alice
-	Ryhl's message of "Wed, 02 Jul 2025 15:32:05 +0200")
-References: <20250702-module-params-v3-v14-0-5b1cc32311af@kernel.org>
-	<20250702-module-params-v3-v14-1-5b1cc32311af@kernel.org>
-	<QU7IDrQqnXyNZDFF_jgZ4qTsRLPmUeeWedU_T1i11uOyc1E83Zo4tETj_oPxSfJySNZZ4-XEVBlkZJ-MZech4g==@protonmail.internalid>
-	<CAH5fLghw5TDrzmFZB=tORR5Lxx4WoG4wer6y5NuFdod2_tb6zg@mail.gmail.com>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Wed, 02 Jul 2025 15:54:11 +0200
-Message-ID: <87ms9mvgu4.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JBZ3QUvR"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-313862d48e7so820254a91.1;
+        Wed, 02 Jul 2025 06:54:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751464493; x=1752069293; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=guEO+X2TlstsCPyD5rnbkNBVqzNfH7Sc2OBJNfyq+ZM=;
+        b=JBZ3QUvR831gRYUkSr8puPn+p90QHa+5N5SwLfJ5zbDe4bp1OZYKvq7l31zgrv+gJX
+         GVm8v7TIWN0LCQh6R9C4HDy91haaI/zSY9F0VP28EemCsc+NcE/BKV/CuLbInWns8+e+
+         SxEfXICPXGCrnnQkoFGbBwW/XZcSuIco97NF0Ms7UoSWkxoZXtg8cljg2RkzYbswDOTF
+         RPaUh1NqCwNUf+SPOfZjFYUQH+CEsi1moL1+TOslNMCiQRa2lBkqVRsn0iCc9Vpq74Hp
+         FK2iK/NFjJ+G1D3xBhhh/JIGmlYZ0qgSTSaV/vqSivTE4Tl2spmKnfvLvTn8B0rCVBWY
+         b2sQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751464493; x=1752069293;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=guEO+X2TlstsCPyD5rnbkNBVqzNfH7Sc2OBJNfyq+ZM=;
+        b=PukY1uSRWghBj8GzfsD5+I0KLrxvJzD4rSr7ZplxNcRcl6BYjcrjVn98kTNidU7lNd
+         iv4avIsBjC7aYI1er/T1vXEHs7OQlrDHZiJVJg3B5H9/CNqMAVvVBPbxhEydHEAZ8sIi
+         U+MtLR72kA8yb9zv3TwFH70wWlPhQV22cyvYM1F4b+/ApcgKV22mpOlkhl/3/EWGLr7z
+         Rsk0pSNNSbWSGihxO48TgI8slrIbeI4IrZhJ6+pZZjvnlX1J1NHOTnG/ssSafjN1iswW
+         3B9bybVcEeqNpzZ/yo/Q/Ikr2QlBt1UrCEOIuzqtnG7JYwQtPMp5Ul4SCc04VL3DH/EG
+         kTjA==
+X-Forwarded-Encrypted: i=1; AJvYcCVlBMWVnArbNeB8RN8pNluNNZd8yKxoG6b212hpetpDNV5RpK4irq9ccY+MqvJXACTv5K2S6qiZBG0=@vger.kernel.org, AJvYcCW7jHjsr9q0ZkzsXoVclK7mx4cePTCHZwwbHJlgSblO/xfbKtYI5l0sX6eQn8wulwV/NqMnTdtg6WdGJ6g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUUeYTSRDP5ecDRVUOz64ehTrooJjqZSqYnE0Yq7rXusTUxjMm
+	V7DboI4ckhnrqvBywGFCDUjeAb5xW84ah7NY2ipHhHuaWj+9QJgvdLKzXwo/4O4tKWIHD0adGB6
+	dSXUVeuJu7gd30rxWSLi2pRqMGmFy4GOsIg==
+X-Gm-Gg: ASbGncsAdv2zCHzncTCaUgH3AcHFLumXX9plxGGPuNgpi/3zpgiNRioyo//MFINAS8B
+	RAUdbJ9yNnuJ5Uxxxn1PZ3WsWXCZbjiLVQ0hyjkyC+V7TceyFvclE1lFpQVDD4KmU4uiv3efVC8
+	eV0l5kw21uzNZkErZZyZQdDqF9XLI6zZ4Y4zvYhVA7cO/Q
+X-Google-Smtp-Source: AGHT+IGz9xeZKYvy5a2NukWtiE7Le0rFEBMYvJw3zExK04u12YuSeV52WPllxSnaAX6EzjHaGyjLIxgzJ53817LFsk4=
+X-Received: by 2002:a17:90b:35c5:b0:314:2d38:3e4d with SMTP id
+ 98e67ed59e1d1-31a90bdc410mr1767000a91.3.1751464493199; Wed, 02 Jul 2025
+ 06:54:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20250630104116.3050306-1-guoqing.zhang@amd.com>
+ <20250630104116.3050306-4-guoqing.zhang@amd.com> <8806781b-90d1-4b99-a798-dd1d29d4c8c0@amd.com>
+ <8eb1700d-4d60-4a1e-9d09-718f65baaf1e@amd.com> <019a15d5-142f-4761-9408-58c103d3922b@amd.com>
+ <CADnq5_PHfNTbLL7Xmb9HFgtZemDVaLSqbrONWWEf9hjwk1rF1Q@mail.gmail.com> <1e82f0af-daf6-4dd6-bc43-2969ac970589@amd.com>
+In-Reply-To: <1e82f0af-daf6-4dd6-bc43-2969ac970589@amd.com>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Wed, 2 Jul 2025 09:54:39 -0400
+X-Gm-Features: Ac12FXyRsLYdypBJymECkaaNjTssfLfSQkcuc1lxngJzDfTT75YxJid0fH1rcK4
+Message-ID: <CADnq5_M_NWSbqJUrBcDy_bARrPcQDDhSvHCKCqEoTWijBWHxGg@mail.gmail.com>
+Subject: Re: [PATCH 3/3] drm/amdgpu: skip kfd resume_process for dev_pm_ops.thaw()
+To: Sam <guoqzhan@amd.com>
+Cc: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	"Zhang, GuoQing (Sam)" <GuoQing.Zhang@amd.com>, "rafael@kernel.org" <rafael@kernel.org>, 
+	"len.brown@intel.com" <len.brown@intel.com>, "pavel@kernel.org" <pavel@kernel.org>, 
+	"Deucher, Alexander" <Alexander.Deucher@amd.com>, 
+	"Limonciello, Mario" <Mario.Limonciello@amd.com>, "Lazar, Lijo" <Lijo.Lazar@amd.com>, 
+	"Zhao, Victor" <Victor.Zhao@amd.com>, "Chang, HaiJun" <HaiJun.Chang@amd.com>, 
+	"Ma, Qing (Mark)" <Qing.Ma@amd.com>, 
+	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>, 
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
+	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-"Alice Ryhl" <aliceryhl@google.com> writes:
-
-> On Wed, Jul 2, 2025 at 3:19=E2=80=AFPM Andreas Hindborg <a.hindborg@kerne=
-l.org> wrote:
->>
->> Introduce the `OnceLock` type, a container that can only be written once.
->> The container uses an internal atomic to synchronize writes to the inter=
-nal
->> value.
->>
->> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+On Wed, Jul 2, 2025 at 3:24=E2=80=AFAM Sam <guoqzhan@amd.com> wrote:
 >
-> This type provides no way to wait for initialization to finish if it's
-> ongoing. Do you not need that?
-
-I don't, and in my use case it would cause a deadlock to wait. Anyway,
-it might be useful to others. Would you add it now, or wait for a user?
-
 >
->> ---
->>  rust/kernel/sync.rs           |   1 +
->>  rust/kernel/sync/once_lock.rs | 104 +++++++++++++++++++++++++++++++++++=
-+++++++
->>  2 files changed, 105 insertions(+)
->>
->> diff --git a/rust/kernel/sync.rs b/rust/kernel/sync.rs
->> index c7c0e552bafe..f2ee07315091 100644
->> --- a/rust/kernel/sync.rs
->> +++ b/rust/kernel/sync.rs
->> @@ -15,6 +15,7 @@
->>  mod condvar;
->>  pub mod lock;
->>  mod locked_by;
->> +pub mod once_lock;
+> On 2025/7/2 00:07, Alex Deucher wrote:
+> > On Tue, Jul 1, 2025 at 4:32=E2=80=AFAM Christian K=C3=B6nig <christian.=
+koenig@amd.com> wrote:
+> >> On 01.07.25 10:03, Zhang, GuoQing (Sam) wrote:
+> >>> thaw() is called before writing the hiberation image to swap disk. Se=
+e
+> >>> the doc here.
+> >>> https://github.com/torvalds/linux/blob/v6.14/Documentation/driver-api=
+/pm/devices.rst?plain=3D1#L552 <https://github.com/torvalds/linux/blob/v6.1=
+4/Documentation/driver-api/pm/devices.rst?plain=3D1#L552>
+> >>>
+> >>> And amdgpu implemented thaw() callback by calling amdgpu_device_resum=
+e().
+> >>> https://github.com/torvalds/linux/blob/v6.14/drivers/gpu/drm/amd/amdg=
+pu/amdgpu_drv.c#L2572 <https://github.com/torvalds/linux/blob/v6.14/drivers=
+/gpu/drm/amd/amdgpu/amdgpu_drv.c#L2572>
+> >>>
+> >>> This patch is skip amdgpu_amdkfd_resume_process() call in thaw() duri=
+ng
+> >>> hibernation. it is not skipped in restore() during resume from
+> >>> hibernation when system boot again.
+> >>>
+> >>>
+> >>> I just found the following kernel doc. Thaw() is intended to resume t=
+he
+> >>> storage device for saving the hibernation image.
+> >> Ah, that makes much more sense.
+> >>
+> >>> Our GPU is not involved
+> >>> in it, it is not necessary to resume our GPU in thaw().
+> >>> https://github.com/torvalds/linux/blob/v6.14/Documentation/power/pci.=
+rst?plain=3D1#L588 <https://github.com/torvalds/linux/blob/v6.14/Documentat=
+ion/power/pci.rst?plain=3D1#L588>
+> >>>
+> >>> So another implementation is to remove the amdgpu_device_resume() cal=
+l
+> >>> in amdgpu_pmops_thaw(), and skip amdgpu_device_ip_suspend() call in
+> >>> amdgpu_pci_shutdown()for hibernation.
+> >>> Initial tests show it's working fine for hibernation successful case.
+> >>> Should I switch to this implementation?
+> >> No idea. Alex and the KFD guys need to take a look at that.
+> >>
+> >>> But thaw() is also called to restore the GPU when hibernation is abor=
+ted
+> >>> due to some error in hibernation image creation stage. In this case,
+> >>> amdgpu_device_resume() is needed in thaw().
+> >>>
+> >>> So I need a method to check if hibernation is aborted or not to
+> >>> conditionally skip amdgpu_device_resume() in thaw(). Currently I don'=
+t
+> >>> know how to do this.
+> >> Yeah that approach here looks fishy to me, but I don't know how to pro=
+perly fix it either.
+> >>
+> >> @Alex any idea?
+> > Yeah, I'm not sure how to handle that.  I don't see a way to avoid
+> > having all of the callbacks.  We could ideally skip some of the steps.
+> > Maybe we could optimize the freeze and thaw routines if we had some
+> > hint from the pm core about why we were getting called.  E.g., thaw
+> > after a failed hibernation restore.
+> >
+> > Alex
 >
-> I would add a re-export so that users can import this as kernel::sync::On=
-ceLock.
-
-OK.
-
 >
->>  pub mod poll;
->>  pub mod rcu;
->>
->> diff --git a/rust/kernel/sync/once_lock.rs b/rust/kernel/sync/once_lock.=
-rs
->> new file mode 100644
->> index 000000000000..cd311bea3919
->> --- /dev/null
->> +++ b/rust/kernel/sync/once_lock.rs
->> @@ -0,0 +1,104 @@
->> +//! A container that can be initialized at most once.
->> +
->> +use super::atomic::ordering::Acquire;
->> +use super::atomic::ordering::Release;
->> +use super::atomic::Atomic;
->> +use kernel::types::Opaque;
->> +
->> +/// A container that can be populated at most once. Thread safe.
->> +///
->> +/// Once the a [`OnceLock`] is populated, it remains populated by the s=
-ame object for the
->> +/// lifetime `Self`.
->> +///
->> +/// # Invariants
->> +///
->> +/// `init` tracks the state of the container:
->> +///
->> +/// - If the container is empty, `init` is `0`.
->> +/// - If the container is mutably accessed, `init` is `1`.
+> I just found pm_transition variable can be used to check if hibernation
+> is cancelled (PM_EVENT_RECOVER) or not(PM_EVENT_THAW) in thaw(). I just
+> need to export this variable in kernel.
+> https://github.com/torvalds/linux/blob/master/drivers/base/power/main.c#L=
+64
 >
-> I would phrase this as "being initialized" instead of "mutably
-> accessed". I initially thought this was talking about someone calling
-> a &mut self method.
+> Provided pm_transition is available, should we skip
+> amdgpu_amdkfd_resume_process() only, or skip amdgpu_device_resume()
+> completely?
 
-Makes sense, I will change that.
+Hmmm.  Still not sure how best to handle this.  For entering
+hibernation, all we really need is freeze().  Once we are done with
+that we don't need thaw() or poweroff() for hibernation as we've
+already suspended in freeze() so there is nothing else to do.  For
+exiting hibernation, we need freeze() to suspend and then either
+thaw() (if the hibernation image is bad) or restore() (if the
+hibernation image is good) to resume.
 
->
->> +/// - If the container is populated and ready for shared access, `init`=
- is `2`.
->> +///
->> +/// # Example
->> +///
->> +/// ```
->> +/// # use kernel::sync::once_lock::OnceLock;
->> +/// let value =3D OnceLock::new();
->> +/// assert_eq!(None, value.as_ref());
->> +///
->> +/// let status =3D value.populate(42u8);
->> +/// assert_eq!(true, status);
->> +/// assert_eq!(Some(&42u8), value.as_ref());
->> +/// assert_eq!(Some(42u8), value.copy());
->> +///
->> +/// let status =3D value.populate(101u8);
->> +/// assert_eq!(false, status);
->> +/// assert_eq!(Some(&42u8), value.as_ref());
->> +/// assert_eq!(Some(42u8), value.copy());
->> +/// ```
->> +pub struct OnceLock<T> {
->> +    init: Atomic<u32>,
->> +    value: Opaque<T>,
->
-> Opaque does not destroy the inner value. You are missing a destructor.
-
-Oops.
+Alex
 
 >
->> +}
->> +
->> +impl<T> Default for OnceLock<T> {
->> +    fn default() -> Self {
->> +        Self::new()
->> +    }
->> +}
->> +
->> +impl<T> OnceLock<T> {
->> +    /// Create a new [`OnceLock`].
->> +    ///
->> +    /// The returned instance will be empty.
->> +    pub const fn new() -> Self {
->> +        // INVARIANT: The container is empty and we set `init` to `0`.
->> +        Self {
->> +            value: Opaque::uninit(),
->> +            init: Atomic::new(0),
->> +        }
->> +    }
->> +
->> +    /// Get a reference to the contained object.
->> +    ///
->> +    /// Returns [`None`] if this [`OnceLock`] is empty.
->> +    pub fn as_ref(&self) -> Option<&T> {
->> +        if self.init.load(Acquire) =3D=3D 2 {
->> +            // SAFETY: As determined by the load above, the object is r=
-eady for shared access.
->> +            Some(unsafe { &*self.value.get() })
->> +        } else {
->> +            None
->> +        }
->> +    }
->> +
->> +    /// Populate the [`OnceLock`].
->> +    ///
->> +    /// Returns `true` if the [`OnceLock`] was successfully populated.
->> +    pub fn populate(&self, value: T) -> bool {
->> +        // INVARIANT: We obtain exclusive access to the contained alloc=
-ation and write 1 to
->> +        // `init`.
->> +        if let Ok(0) =3D self.init.cmpxchg(0, 1, Acquire) {
+> Regards
+> Sam
 >
-> This acquire can be Relaxed. All other accesses to self.value
-> synchronize with the release store below, so you do not need acquire
-> here to obtain exclusive access.
-
-Right, thanks.
-
-
-Best regards,
-Andreas Hindborg
-
-
-
+>
+> >
+> >> Regards,
+> >> Christian.
+> >>
+> >>>
+> >>> Regards
+> >>> Sam
+> >>>
+> >>>
+> >>> On 2025/6/30 19:58, Christian K=C3=B6nig wrote:
+> >>>> On 30.06.25 12:41, Samuel Zhang wrote:
+> >>>>> The hibernation successful workflow:
+> >>>>> - prepare: evict VRAM and swapout GTT BOs
+> >>>>> - freeze
+> >>>>> - create the hibernation image in system memory
+> >>>>> - thaw: swapin and restore BOs
+> >>>> Why should a thaw happen here in between?
+> >>>>
+> >>>>> - complete
+> >>>>> - write hibernation image to disk
+> >>>>> - amdgpu_pci_shutdown
+> >>>>> - goto S5, turn off the system.
+> >>>>>
+> >>>>> During prepare stage of hibernation, VRAM and GTT BOs will be swapo=
+ut to
+> >>>>> shmem. Then in thaw stage, all BOs will be swapin and restored.
+> >>>> That's not correct. This is done by the application starting again a=
+nd not during thaw.
+> >>>>
+> >>>>> On server with 192GB VRAM * 8 dGPUs and 1.7TB system memory,
+> >>>>> the swapin and restore BOs takes too long (50 minutes) and it is no=
+t
+> >>>>> necessary since the follow-up stages does not use GPU.
+> >>>>>
+> >>>>> This patch is to skip BOs restore during thaw to reduce the hiberna=
+tion
+> >>>>> time.
+> >>>> As far as I can see that doesn't make sense. The KFD processes need =
+to be resumed here and that can't be skipped.
+> >>>>
+> >>>> Regards,
+> >>>> Christian.
+> >>>>
+> >>>>> Signed-off-by: Samuel Zhang <guoqing.zhang@amd.com>
+> >>>>> ---
+> >>>>>    drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 2 +-
+> >>>>>    drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c    | 2 ++
+> >>>>>    2 files changed, 3 insertions(+), 1 deletion(-)
+> >>>>>
+> >>>>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/g=
+pu/drm/amd/amdgpu/amdgpu_device.c
+> >>>>> index a8f4697deb1b..b550d07190a2 100644
+> >>>>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+> >>>>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+> >>>>> @@ -5328,7 +5328,7 @@ int amdgpu_device_resume(struct drm_device *d=
+ev, bool notify_clients)
+> >>>>>                amdgpu_virt_init_data_exchange(adev);
+> >>>>>                amdgpu_virt_release_full_gpu(adev, true);
+> >>>>>
+> >>>>> -            if (!adev->in_s0ix && !r && !adev->in_runpm)
+> >>>>> +            if (!adev->in_s0ix && !r && !adev->in_runpm && !adev->=
+in_s4)
+> >>>>>                        r =3D amdgpu_amdkfd_resume_process(adev);
+> >>>>>        }
+> >>>>>
+> >>>>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/=
+drm/amd/amdgpu/amdgpu_drv.c
+> >>>>> index 571b70da4562..23b76e8ac2fd 100644
+> >>>>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+> >>>>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+> >>>>> @@ -2734,7 +2734,9 @@ static int amdgpu_pmops_poweroff(struct devic=
+e *dev)
+> >>>>>    static int amdgpu_pmops_restore(struct device *dev)
+> >>>>>    {
+> >>>>>        struct drm_device *drm_dev =3D dev_get_drvdata(dev);
+> >>>>> +    struct amdgpu_device *adev =3D drm_to_adev(drm_dev);
+> >>>>>
+> >>>>> +    adev->in_s4 =3D false;
+> >>>>>        return amdgpu_device_resume(drm_dev, true);
+> >>>>>    }
+> >>>>>
