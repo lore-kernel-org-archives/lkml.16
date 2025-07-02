@@ -1,84 +1,82 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D4C51DF27E
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 11:49:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A3891DF27E;
+	Wed,  2 Jul 2025 11:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751456961; cv=none; b=gQAMAx22udXCZbxcRUo+m06EFOQ7XqXNpuzEknn9DV3Dv+XFDAD5SFpcnB7atVWRauavJxaefwIJq7GVOaam5FkVmEo84vEJ0yDY1PBeBmva/1gTu+GCRVEKzbCYoCu0C5hMjs8323kflDoWTFGlbBu43VdG7emCe6Tmz0Exh3Q=
+	t=1751456970; cv=none; b=gKV4CLOyd8LHRJjT+xGHkxWaRz2DNU889/QQnqb6hwFPg+C6A+hCeGH+UECz3L7KzNsxQSK6Fug2YGFAUOkB1QF71tmoiX/zxaT9ohfQYZ7GMJzPdFsOJU2Y5x5SBEaNevnWukGYF5VXwR3Cwk9y4jXiyId9f20XulnEUfAeaCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751456961; c=relaxed/simple;
-	bh=qWnyvQcndsVB1NxTjPXew1S5g/yDqRUWdFVcFyfOcvc=;
+	s=arc-20240116; t=1751456970; c=relaxed/simple;
+	bh=rlOjbblrPFoFywhtJZYqVrS/QMtPxyquSajdBFeXgUE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lYfe4fNDPzA1C8Za/TdDd83fxgiYujFllktHr+osjRbSbGwbxMu/Q13NcQow+TUu/UtciiJZ2POaM3yU50JSl+Fbv629ZN/iBArcFg1ut3+bSbKgxajafFzfYoYzMj7Z98BAOqOzMjRNgV7Blzkb03CzCWyJq9OqjNajVIIfFT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tU/WrFHR; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=MIwXesIo; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tU/WrFHR; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=MIwXesIo; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=dV+ZHUnq4XYk5NETvkpu798/zg5I+pwLy7P+6Tmmy8frKl5/oYLYK4+sUq4r0jn6gTcayrArJxJD+KUM5+ry7e5GAW3BqT88XAXwUTy0MZ/h5uAJkYLZzSEzrWkzDXqT8tlAlzvTqF40Ddw4RQDLgRB6wL5F6VWuFQ1Lvm4iGRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CVS+UIpB; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tU/WrFHR";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="MIwXesIo";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tU/WrFHR";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="MIwXesIo"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 7AC182116F;
-	Wed,  2 Jul 2025 11:49:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751456957; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AnPBExCtsDj4n5vi94luf18NZFEykytoQmIPPeFAX2A=;
-	b=tU/WrFHR3dRum2miR5UWAkM4WdQn91FfDDvJRwBUXqS+8lnQBGGWjtKvfsa7e62L06du2m
-	/f6EasQoS6o9nlBk1Rou9QkPfszWLJT+tKXt2918kImQgU8vll2c2Z2EsLUMjjErP8UmNv
-	OR38Bnnn78OFRNvm6BpY447YzZ5pp+4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751456957;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AnPBExCtsDj4n5vi94luf18NZFEykytoQmIPPeFAX2A=;
-	b=MIwXesIoyaxSx9h9oTbaqaLitdYPbAVmowe5rhU7YVKSA6Fso7HmtMhsa79sOvshLUmDjk
-	li8mxlscBN8dVRDA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751456957; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AnPBExCtsDj4n5vi94luf18NZFEykytoQmIPPeFAX2A=;
-	b=tU/WrFHR3dRum2miR5UWAkM4WdQn91FfDDvJRwBUXqS+8lnQBGGWjtKvfsa7e62L06du2m
-	/f6EasQoS6o9nlBk1Rou9QkPfszWLJT+tKXt2918kImQgU8vll2c2Z2EsLUMjjErP8UmNv
-	OR38Bnnn78OFRNvm6BpY447YzZ5pp+4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751456957;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AnPBExCtsDj4n5vi94luf18NZFEykytoQmIPPeFAX2A=;
-	b=MIwXesIoyaxSx9h9oTbaqaLitdYPbAVmowe5rhU7YVKSA6Fso7HmtMhsa79sOvshLUmDjk
-	li8mxlscBN8dVRDA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CD5AB13A24;
-	Wed,  2 Jul 2025 11:49:16 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 6lvGLrwcZWgKDgAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Wed, 02 Jul 2025 11:49:16 +0000
-Date: Wed, 2 Jul 2025 12:49:10 +0100
-From: Pedro Falcato <pfalcato@suse.de>
-To: Shardul Bankar <shardulsb08@gmail.com>
-Cc: linux-kernel@vger.kernel.org, pmladek@suse.com, rostedt@goodmis.org, 
-	john.ogness@linutronix.de, senozhatsky@chromium.org, viro@zeniv.linux.org.uk, 
-	brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org
-Subject: Re: [BUG] KASAN: slab-out-of-bounds in vsnprintf triggered by large
- stack frame
-Message-ID: <i5f3iec7iprrqecr7r7wqhu5xl5cjujizwctsy3tphq2xzxck2@ieszua2sryec>
-References: <9052e70eb1cf8571c1b37bb0cee19aaada7dfe3d.camel@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CVS+UIpB"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7d21526eff6so60035585a.1;
+        Wed, 02 Jul 2025 04:49:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751456968; x=1752061768; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p83byrHCO1lXCBi5YMU0ZTOGiOMnB2majfT2wo9dL9k=;
+        b=CVS+UIpBp2iG4DIjsEJD3+o28lfDGQvGqQ8f5lgzH+eoPG9zmr20lYfZ3Q1r4o53qc
+         6u+vKuUQ0NYM6XAwRrMxlgBEziMdh7BByaIP3hN3rkqZ44LVBkfuW6geoxT37PJRmH/m
+         GfGrjYc0sq6JFimIFpL076BQMa6PvHTr/f2tMjMznDK2Ve9ceRRNtK5dpsVpoYkPsgqk
+         GiYSQMDdB0JQ3QJerqspPgl/+lDbrU1Lp65zGkMdRAU+2cLT1Z2JX9Fxpz2pJN5H8Uij
+         p5nHwG8IXKb5a9kN/a0oft6CgWXdZUBv/nlRAzgK+etMmY+7G6/VlbUc99YC/XUXcspi
+         cPew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751456968; x=1752061768;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=p83byrHCO1lXCBi5YMU0ZTOGiOMnB2majfT2wo9dL9k=;
+        b=kONwg7gKLN5aRhnwKOdZTjE7cmBC5aNKZbuArTmv0rfy3L6WrS29z2GSq9mLRU4mfR
+         RmMRfEvysPBWDE6Qn/Qh/cPDhEuzMvsln+KrEpknkI4m2qv7Hfv+gW85dU1ATqxv99VU
+         9IIps/UIBF/8fAurkck3uDAFeVj/WzyAQxqcBwmwqWpLqI43Jrh7wB7lZMLQkMWkUGkW
+         oyjw3Sal7SeW1EhycNtkavDkd2WI2VZFM+C/hnDrND6hrKhac0CPu80Oop25me0NThWH
+         q4ms5NFXZgZo8k2abm7B0EmHBz1Y2rblSNeLokRfTZiZGRWYd0dQYRSzTLHohvUn/ugO
+         HVPA==
+X-Forwarded-Encrypted: i=1; AJvYcCUDELQTlmKXoQzWcgzpUpHjNxf5XzBpWEn9gMklcKFMCBHU3XCpbDgY2rDS8BOg02OYItgCf8ILGASe@vger.kernel.org, AJvYcCVKJPSJSD3ffb9PhRKJxhRhxpSLCha15304EOjapgVbRruaCOQLBB0tFjGFGB14DJvjirF0TJOI5PFZCg==@vger.kernel.org, AJvYcCXKOJFcUeIYgFDDOj7vKRELga1fjKiy+7E+HUSB4wtGCWhipnJgafg94ugNAW5r8O7OEC15gHbBOqoxw9aN@vger.kernel.org, AJvYcCXNNxaw4xy9ZDXpgltTiZ61zh3PkvtgKhOd/0L06l1a06IIwxlFgRrGJgP+8hisXtOq/rDq1c3H/cMj@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGyNnsLnLGVBeJYSu0+1IYiwfRgMARhbSkQ38+ZBBkfuLOB/h1
+	9XB/GsQFLuJBybd3ZENks0I40/rQjbIbretk3WhfhCc1MBa7/GiEzhd5AEL/do/O
+X-Gm-Gg: ASbGncuW9jd6Y0iyN5gJntKfo2BZ18sN7sCECf+elibGmvOFuYD36KfqR5ZjdR4cT/S
+	u5CevtBl+cHsImAumDAyj6KsukxLXsTm0ZoSRygdA+XueNKsv8/5/Tb9UC4Yzc/po2GX24lrGag
+	nQndntP34bmnq4xH72h9e18iedk8e9RwQju4OEOstT5zR6MuXa+JoiiuIG5IClK5nelB5tzdszn
+	LhkkuBTFi36tCy3o4IuYqFdTivu8yuhO0LtUoE5VzjJsE58gnrzzYRfOL1egGLY0396XjU4V8w/
+	NqTy+NwziIWc6GyK85jtRZWoImVxZquUTjxi+oTcPr32g3lexbtroG7qXR0yKOEjgIof5y1ZpsO
+	UCvlyhPg=
+X-Google-Smtp-Source: AGHT+IEyZEMO6FefEf25MKiWBY3EZtRzSSK97igDWBQi5lsEl4woWicT9TuLBBe8ObJwSeH8wIEzJQ==
+X-Received: by 2002:a05:620a:27d3:b0:7d4:4a59:6e8f with SMTP id af79cd13be357-7d5c47c0546mr121316285a.15.1751456968009;
+        Wed, 02 Jul 2025 04:49:28 -0700 (PDT)
+Received: from JSANTO12-L01.ad.analog.com ([189.121.203.94])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d44e13d800sm734399185a.71.2025.07.02.04.49.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 04:49:27 -0700 (PDT)
+Date: Wed, 2 Jul 2025 08:49:21 -0300
+From: Jonathan Santos <jonath4nns@gmail.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Jonathan Santos <Jonathan.Santos@analog.com>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	andy@kernel.org, nuno.sa@analog.com, Michael.Hennerich@analog.com,
+	marcelo.schmitt@analog.com, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
+	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
+	broonie@kernel.org, dlechner@baylibre.com
+Subject: Re: [PATCH v11 00/11] iio: adc: ad7768-1: Add features,
+ improvements, and fixes
+Message-ID: <aGUcwQpYwojtZB3Y@JSANTO12-L01.ad.analog.com>
+Reply-To: 20250614123807.3ded6764@jic23-huawei
+References: <cover.1749569957.git.Jonathan.Santos@analog.com>
+ <aEweNqhLsL_Hg_gl@smile.fi.intel.com>
+ <20250614123807.3ded6764@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,97 +85,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9052e70eb1cf8571c1b37bb0cee19aaada7dfe3d.camel@gmail.com>
-X-Spam-Flag: NO
-X-Spam-Score: -3.80
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-0.991];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	FREEMAIL_TO(0.00)[gmail.com];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
+In-Reply-To: <20250614123807.3ded6764@jic23-huawei>
 
-On Tue, Jul 01, 2025 at 10:11:55PM +0530, Shardul Bankar wrote:
-> Hello,
+On 06/14, Jonathan Cameron wrote:
+> On Fri, 13 Jun 2025 15:48:54 +0300
+> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 > 
-> I would like to report a slab-out-of-bounds bug that can be reliably
-> reproduced with a purpose-built kernel module. This report was
-> initially sent to security@kernel.org, and I was advised to move it to
-> the public lists.
+> > On Wed, Jun 11, 2025 at 08:49:34AM -0300, Jonathan Santos wrote:
+> > > 
+> > > This patch series introduces some new features, improvements,
+> > > and fixes for the AD7768-1 ADC driver.
+> > > 
+> > > The goal is to support all key functionalities listed in the device
+> > > datasheet, including filter mode selection, common mode voltage output
+> > > configuration and GPIO support. Additionally, this includes fixes
+> > > for SPI communication and for IIO interface, and also code improvements
+> > > to enhance maintainability and readability.  
+> > 
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > (for all except DT patches)
+> > 
+> > The nit-picks can be addressed either in next version (if needed) or whilst
+> > applying. Up to maintainers and you.
+> > 
 > 
-> I have confirmed this issue still exists on the latest mainline kernel
-> (v6.16.0-rc4).
+> Applied patches 1-10 (with 10 tweaked as suggested).
 > 
-> Bug Summary:
+> For 11 I'll wait on answers to questions.
 > 
-> The bug is a KASAN-reported slab-out-of-bounds write within vsnprintf.
-> It appears to be caused by a latent memory corruption issue, likely
-> related to the names_cache slab.
+> Thanks,
 > 
-> The vulnerability can be triggered by loading a kernel module that
-> allocates an unusually large stack frame. When compiling the PoC
-> module, GCC explicitly warns about this: warning: the frame size of
-> 29760 bytes is larger than 2048 bytes. This "stack grooming" positions
-> the task's stack to overlap with a stale pointer from a freed
-> names_cache object. A subsequent call to pr_info() then uses this
-> corrupted value, leading to the out-of-bounds write.
-> 
-> Reproducer:
-> 
-> The following minimal kernel module reliably reproduces the crash on my
-> x86-64 test system.
-> 
-> #include <linux/init.h>
-> #include <linux/module.h>
-> #include <linux/printk.h>
-> 
-> #define STACK_FOOTPRINT (3677 * sizeof(void *))
-> 
-> static int __init final_poc_init(void)
-> {
->     volatile char stack_eater[STACK_FOOTPRINT];
->     stack_eater[0] = 'A'; // Prevent optimization
-> 
->     pr_info("Final PoC: Triggering bug with controlled stack
-> layout.\n");
-> 
->     return -EAGAIN;
-> }
-> 
-> static void __exit final_poc_exit(void) {}
-> 
-> module_init(final_poc_init);
-> module_exit(final_poc_exit);
-> MODULE_LICENSE("GPLv2");
-> MODULE_DESCRIPTION("A PoC to trigger a kernel bug by creating a large
-> stack frame.");
-> 
->
+> Jonathan
 
-There's no issue here. You're using an extremely buggy module with a huge local
-variable that far exceeds the stack size, and proving it crashes. Like yeah, of
-course it crashes, you gave it a broken module.
+Hi Jonathan, could you pick the patch 11? I have some follow-up patches
+to send.
+I can carry this patch to the new set, if needed.
 
-Kernel stacks do not expand. You're overwriting other memory in the direct map
-with this. CONFIG_VMAP_STACK=y helps remedy this, but still only adds a single
-page for the stack guard.
+Thanks,
+Jonathan S.
 
--- 
-Pedro
