@@ -1,146 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF6B670805;
-	Wed,  2 Jul 2025 22:26:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E28E51EC014;
+	Wed,  2 Jul 2025 22:26:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751495182; cv=none; b=Z80yotSjq5PRq+tyIRSPfvxiWPmmoir5gAAia5KREtScxsoALqLqivLMFYXWxb3bAArAdI21D9HGS7aPusJ+vlkP1MMWmaSP7IwAsET4zjTMaM5GZq1y7xynpRjDnHEagwUhmY4JiBvDmyKgfSUJMscGgjLjDnHfDqPfToRHlHU=
+	t=1751495198; cv=none; b=NXmeSBjqlCg/bBSM6wn26Erxd/unKRFbE6yg84GPUmLYERBmZNxbDKZYq+OoODVDpYjXIAOXzdyDyH5zzIuwt/FHzx/h2KgSX1GqFxuzgrAtGCkZkJvlcgUa5luoac3b/eOx87znwufpw5GJFKtDUNmvxsOy9he7awaMeZleyf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751495182; c=relaxed/simple;
-	bh=fSCI8CmVMhipQyZ9gUu71NyTMXRDajaGD5rwkmpXu/U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s/Xc6RMp/PpJK6RKEbm1bquMwaW/fOlEHj3gAHN7w8twwdJ0OLCSY5b2AxMp/6s+Sq2uXqCVCTH1SRPNKxUYp/RsyEu26CEs0mb0YWa17Km1K0yISy3w/Pka8vVbxK2f+vSFYFYmyr4+Pv2OhY1vlNZZg47F2mp4yRDw2cL+1b4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q1seghUA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751495198; c=relaxed/simple;
+	bh=iEvqm8LEvOCppfJrHBWs4+zrkKzc5Z3mo3B9Tg6QiUc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rvPXPzXJcTubQ9lb/pmvzkmyelcV0gXNMzIHvqA/axGu5jSjedBIWOVA1NVRNQhnqa9a9AngsGkbPZNp9uDh7JYprkNDFzCA2saqURhcdd3W/1AfauPO2hAbqs4yCqIaCw/MFSVInmODZeD2YmpsZaQTfNA14UqhlYGQtXUbnpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lhZVTHxm; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q1seghUA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68341C4CEE7;
-	Wed,  2 Jul 2025 22:26:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751495181;
-	bh=fSCI8CmVMhipQyZ9gUu71NyTMXRDajaGD5rwkmpXu/U=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Q1seghUAxo2zOZJF500mviQmK5ujL+a/MGf7UlBHv06cmBli3SlCPebUNtCmI3w21
-	 N2bvzma3pd2TUfJUUhh5lzzPjYY+drfbbGuHawwYpLDZrfPUdas7RW0xWrEzwPI22s
-	 5k9jfw056blo1UIMtfM5fi08W2jsh6njR9oqdd34OCiYBcYFQAFWYZ5qpiJN71uFi9
-	 wyyvt2sM0Kq3cIPVc86udx9yzbwqugFyyvVbDyBTyzwN5XopO6l3lq9qRn6gHu8G1C
-	 nveEFzdoRy2chG80b9To3CTPdwv1TIGlpTNpp/DWV059vIahfHB4lOAimu9mRRcB3R
-	 GcuLRbE2W0tew==
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Vinod Koul <vkoul@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Ray Jui <rjui@broadcom.com>,
-	Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
-Cc: dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: dma: Convert brcm,iproc-sba to DT schema
-Date: Wed,  2 Jul 2025 17:26:15 -0500
-Message-ID: <20250702222616.2760974-1-robh@kernel.org>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lhZVTHxm"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=pZYnQS6oVZM60NmqDWbhfi/8XUrw9dxSRfxYkTiS2dM=; b=lhZVTHxmoM5qQqnKr6jA8q6pR9
+	lD9/f9R1LPlFjyCwVqFaswdrJAIYPoGOqQmoiBm0cCOjGijNE6r5f6gb6PoaNdAqkAIP8S6hSfcoW
+	031uORY+ncpR13FdyCKdV6RKqYEWFQNhVPB1wQ8vElXFQ0Kag2bvyW554JcBG5tc/L+5uH7xOm70P
+	ErHv31QuybfbBvlszA+wwbNWhdPrBP173b/bvXxtqMLairsgAzFTspM1vowTETrWp/uCEZLIJjpcf
+	mhWHZkgocCZnVi3wtMaUnrbYVFkaC5GNqnkqJhAVeHA+Nx5Vw0Id3cCk4pXdkGcXUdsjLnkMQVzTX
+	HjRPxtMQ==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uX5uI-00000007a1D-2iyp;
+	Wed, 02 Jul 2025 22:26:23 +0000
+Message-ID: <53d8eaa7-6684-4596-ae98-69688068b84c@infradead.org>
+Date: Wed, 2 Jul 2025 15:26:14 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] ipv6: add `force_forwarding` sysctl to enable
+ per-interface forwarding
+To: nicolas.dichtel@6wind.com, Gabriel Goller <g.goller@proxmox.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ David Ahern <dsahern@kernel.org>
+Cc: netdev@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250702074619.139031-1-g.goller@proxmox.com>
+ <c39c99a7-73c2-4fc6-a1f2-bc18c0b6301f@6wind.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <c39c99a7-73c2-4fc6-a1f2-bc18c0b6301f@6wind.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Convert the Broadcom SBA RAID engine binding to schema. It is a straight
-forward conversion.
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
----
- .../bindings/dma/brcm,iproc-sba.txt           | 29 -------------
- .../bindings/dma/brcm,iproc-sba.yaml          | 41 +++++++++++++++++++
- 2 files changed, 41 insertions(+), 29 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/dma/brcm,iproc-sba.txt
- create mode 100644 Documentation/devicetree/bindings/dma/brcm,iproc-sba.yaml
 
-diff --git a/Documentation/devicetree/bindings/dma/brcm,iproc-sba.txt b/Documentation/devicetree/bindings/dma/brcm,iproc-sba.txt
-deleted file mode 100644
-index 092913a28457..000000000000
---- a/Documentation/devicetree/bindings/dma/brcm,iproc-sba.txt
-+++ /dev/null
-@@ -1,29 +0,0 @@
--* Broadcom SBA RAID engine
--
--Required properties:
--- compatible: Should be one of the following
--	      "brcm,iproc-sba"
--	      "brcm,iproc-sba-v2"
--  The "brcm,iproc-sba" has support for only 6 PQ coefficients
--  The "brcm,iproc-sba-v2" has support for only 30 PQ coefficients
--- mboxes: List of phandle and mailbox channel specifiers
--
--Example:
--
--raid_mbox: mbox@67400000 {
--	...
--	#mbox-cells = <3>;
--	...
--};
--
--raid0 {
--	compatible = "brcm,iproc-sba-v2";
--	mboxes = <&raid_mbox 0 0x1 0xffff>,
--		 <&raid_mbox 1 0x1 0xffff>,
--		 <&raid_mbox 2 0x1 0xffff>,
--		 <&raid_mbox 3 0x1 0xffff>,
--		 <&raid_mbox 4 0x1 0xffff>,
--		 <&raid_mbox 5 0x1 0xffff>,
--		 <&raid_mbox 6 0x1 0xffff>,
--		 <&raid_mbox 7 0x1 0xffff>;
--};
-diff --git a/Documentation/devicetree/bindings/dma/brcm,iproc-sba.yaml b/Documentation/devicetree/bindings/dma/brcm,iproc-sba.yaml
-new file mode 100644
-index 000000000000..f3fed576cacf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/brcm,iproc-sba.yaml
-@@ -0,0 +1,41 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/brcm,iproc-sba.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Broadcom SBA RAID engine
-+
-+maintainers:
-+  - Ray Jui <rjui@broadcom.com>
-+  - Scott Branden <sbranden@broadcom.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - brcm,iproc-sba
-+      - brcm,iproc-sba-v2
-+
-+  mboxes:
-+    minItems: 1
-+    maxItems: 8
-+
-+required:
-+  - compatible
-+  - mboxes
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    raid0 {
-+      compatible = "brcm,iproc-sba-v2";
-+      mboxes = <&raid_mbox 0 0x1 0xffff>,
-+               <&raid_mbox 1 0x1 0xffff>,
-+               <&raid_mbox 2 0x1 0xffff>,
-+               <&raid_mbox 3 0x1 0xffff>,
-+               <&raid_mbox 4 0x1 0xffff>,
-+               <&raid_mbox 5 0x1 0xffff>,
-+               <&raid_mbox 6 0x1 0xffff>,
-+               <&raid_mbox 7 0x1 0xffff>;
-+    };
+On 7/2/25 3:05 AM, Nicolas Dichtel wrote:
+> Le 02/07/2025 à 09:46, Gabriel Goller a écrit :
+>> It is currently impossible to enable ipv6 forwarding on a per-interface
+>> basis like in ipv4. To enable forwarding on an ipv6 interface we need to
+>> enable it on all interfaces and disable it on the other interfaces using
+>> a netfilter rule. This is especially cumbersome if you have lots of
+>> interface and only want to enable forwarding on a few. According to the
+>> sysctl docs [0] the `net.ipv6.conf.all.forwarding` enables forwarding
+>> for all interfaces, while the interface-specific
+>> `net.ipv6.conf.<interface>.forwarding` configures the interface
+>> Host/Router configuration.
+>>
+>> Introduce a new sysctl flag `force_forwarding`, which can be set on every
+>> interface. The ip6_forwarding function will then check if the global
+>> forwarding flag OR the force_forwarding flag is active and forward the
+>> packet.
+>>
+>> To preserver backwards-compatibility reset the flag (on all interfaces)
+>> to 0 if the net.ipv6.conf.all.forwarding flag is set to 0.
+>>
+>> [0]: https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt
+>>
+>> Signed-off-by: Gabriel Goller <g.goller@proxmox.com>
+>> ---
+
+
+[snip]
+
+>> +static int addrconf_sysctl_force_forwarding(const struct ctl_table *ctl, int write,
+>> +					    void *buffer, size_t *lenp, loff_t *ppos)
+>> +{
+>> +	int *valp = ctl->data;
+>> +	int ret;
+>> +	int old, new;
+>> +
+>> +	// get extra params from table
+> /* */ for comment
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/coding-style.rst#n598
+
+Hm, lots there from the BK to git transfer in 2005, with a few updates by Mauro, Jakub, and myself.
+
+
+More recently (2016!), Linus said this:
+  https://lore.kernel.org/lkml/CA+55aFyQYJerovMsSoSKS7PessZBr4vNp-3QUUwhqk4A4_jcbg@mail.gmail.com/
+
+which seems to allow for "//" style commenting. But yeah, it hasn't been added to
+coding-style.rst.
+
+>> +	struct inet6_dev *idev = ctl->extra1;
+>> +	struct net *net = ctl->extra2;
+> Reverse x-mas tree for the variables declaration
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/maintainer-netdev.rst#n368
+
+Shouldn't maintainer-netdev.rst contain something about netdev-style comment blocks?
+(not that I'm offering since I think it's ugly)
+
 -- 
-2.47.2
+~Randy
 
