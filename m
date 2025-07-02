@@ -1,63 +1,63 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B58772F5C5C;
-	Wed,  2 Jul 2025 20:14:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B75662F5C5C;
+	Wed,  2 Jul 2025 20:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751487296; cv=none; b=NExkj0Kz1ol6R6/y8ETf57EFc37H/wa3WaaJjJlymBTOIWbQBllIyKMT727zd0zyFXpi4pSfGNy3mnjjfrypBccJJqwsTOqACNj5+UyXj4pBDsEF2skWDhjLmszP2vm8NARX8se2KenRWRu9Jf05twpdBJtOSo+ZD/aKyvz8XVM=
+	t=1751487301; cv=none; b=eFtfiA1CIyXl2OKPGBy+mGLTpADPE0tt1BelOtHbRTIcJHEwCuPBYlP7WukLdC9bzHZSwNHmJNlGyKhpczJMNqtXBBwim5/+vvWF1p9PwV5M7hdMZuCEHnXYFrjqOksh41OIhfHNSCeclvYDo+FyhZNy4HFT1rEnzxCPYrBRkm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751487296; c=relaxed/simple;
-	bh=0sgoYcwWoSAXxh3ePsTxskwFPgTsDHkWH4z1QYpP3pI=;
+	s=arc-20240116; t=1751487301; c=relaxed/simple;
+	bh=B4LAEboPZeHhWRFgO3AFh7AK7EfZpX1npJEWMOLqfyk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=L3cVH14D8HaQxpEjSuam6An9KPdOAOw9l3pfG5kph8UZVv//SITxNAKIu5R7nCKIBmyrkWMJ8K92cxNtRZkdmfGwmmhIrwItJ8+0ncn5D7gCiXq14tU0GTQ7QCa8XSxWflLNHcN81MzopJk0/1z6lQCZ/B1XlAFNTq45cmOxxPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vb8Yj0hq; arc=none smtp.client-ip=209.85.128.176
+	 MIME-Version; b=PJhvHi6T8JU6V/Bm4zs1t7GmF+h+Zbhqvq3aMl2irvwJs3yTodOTMOpvmOmHedQDftY8kdlUbBUg6T06XRJXHELa/pre+Di29NCCQuxX8sz5cngSJ3WyyPt/D0+NHVwSxx2z1YaCBByePPYxMb+/htcWch5D1HKGx8zjR7v4u5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N84nI9mM; arc=none smtp.client-ip=209.85.128.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vb8Yj0hq"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-70e3980757bso2851837b3.1;
-        Wed, 02 Jul 2025 13:14:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N84nI9mM"
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-70e3980757bso2852467b3.1;
+        Wed, 02 Jul 2025 13:14:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751487294; x=1752092094; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1751487299; x=1752092099; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FkS0DrkPKM+xK6PaTOaoNpfP8nOE8wUiT1pJQUSyCG0=;
-        b=Vb8Yj0hqr2vY+vwh1bpfu04KCUp4E+7XmGT7NXQR6tRkAt+Fk8siQQDr6XQYSStv0L
-         0Ldv0oLeOI6seiIMDQF1K4fZMqIVm2WzPAORApdkJoOGzMCvzREuyLLEoFSez+5+LbS6
-         5tzYlO/7dGOuLo27NrwJ849IJ+VozTirYlyamecjL4nVpF/x2wTaLRCj2UyIP1rDO1cx
-         ONkuNRkoC0WFtVD4ayM/xDOGueA5BlZX5g1vTcNEcvB9rTSow9gzEjdJi3LF4ZdpGCek
-         YSguqzH0Ovf21GUzE1CK/OYBIMpYXtKwa5SAQQ6HwUDo6+H6VvHh4nCWdIZ7DbT6k3hI
-         Y0+g==
+        bh=bVqvDTgUdbQeaLQbOWegVEyiOQ5l1FCYExImfHBr7Tc=;
+        b=N84nI9mMESVaKrvIDK8ylWVt6Ktz/Ul66cCIX59F9fxb13oIpT2SbofWRWS8a6oolU
+         ffisFW8qdcEq0jrmduyte684wI+ezs78Y2HgjDUSnqO07uyu3DZz/HeICdoffk8CusXU
+         /Lv7BVWnXiZ1U9/uEqFIh+XYeWMJwpJzLUW9dUgK9n1n8mxo3TN/relwZ4AktTtzx8G3
+         frQrEhgXc7h1GtN7wadL3nqQU1sX6arpLYBDlaDLEuHzBS/7Q+F/J1nTpxY9fG4yAJzi
+         uw8Ljzhc5wSXnMWVQQP1Ejl12U9nUsn1PupHRYTovwdXQLWNH1llIJyXGQZp52CTRqnq
+         cIyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751487294; x=1752092094;
+        d=1e100.net; s=20230601; t=1751487299; x=1752092099;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FkS0DrkPKM+xK6PaTOaoNpfP8nOE8wUiT1pJQUSyCG0=;
-        b=cl48yyQoMAns8rfKQEmSbnVC486bn7xri4Hll8UwkZ1AmXYOl/fG9DhloZwLeOf+CD
-         9VfilBHijVjtVtul6T7+KoTAj9OZwgvj4h9FuxklmtnFYyMGwSm9yA8TrtUse6afafqn
-         JSgLZriteh9HLAYSTYOaJzLkU52Qk4OR3CB8xNKx3++N+3oFBcYRFaZ6Afo0q8DsTY8D
-         QTlYwZUuqMj5dZjNkgjyw3udO3xTv8RjViauL6FJEVQsmy7R3aPKtTaNf62ZRFDx0Pjy
-         EWObYAhvHNlMFDc6tL97p4Y2/yfz0y3xQxToRfBKK0DJOkioYUCHzOHEqqBgyRpOZqXD
-         KoFg==
-X-Forwarded-Encrypted: i=1; AJvYcCWlXSIIbjPNS1wgidMzAu8F5N5Ay+kIE7UNFoLftPiXE8IK9mY8X9YzNq0P2mmZP50KoYME+G7jLtg=@vger.kernel.org, AJvYcCXEmP68HlDJjq8ZYAgCceqzXSg/UAfwPA9bK6PmoYN9/p43aBCprBu6bTydEHzorYU1fwqNsaLo2r3G29xQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNgTNZ8NKD2iZQgncPO3W5b8GbGfc4OjxXMCN4f2HqK41zNf4u
-	tGO50QhpSxbkf+ZeGTusFfo2Y4qPaAbFXwHW/ZKZo1CV7hsNOa3GIryC
-X-Gm-Gg: ASbGncuzlC/9KXyHimfZWVp3aX6t95fiU5/EF2uLgf5i+h7RsdaKhCYeCLTXf6tAJPB
-	9tZWVqfYWYrlx9nDgYzl3+xQPaLpSOey+HAyDWbyygk2p0XmMrPdUNf9sx7l6ZrcXlGyCNgBoI5
-	WCJ8bqe/N9JYlRst0CM6YySXunlbsU6vHSR+3kl0jQpSgLE1k4qhKqZL+VvIkQG4pa5d5xseKEU
-	8v8Ge/b2Gqvy/M7fEAYzVgtj1eBW6/mDM8DfhRxee0Hevl++YGNn+wRm5cv9cvtBVbgRlTh+hPZ
-	9UEhH5OyeeufF2edTH6ehs4lifMrQ/IAday/LTMdsT2LgtVrdGFhv4NS/0GNmvJTmghjM0Wfgwi
-	rXIeoaBaBGL/nS/A3gQ==
-X-Google-Smtp-Source: AGHT+IGm04Vh1HkDnYwneNGvCSl8gsp/I7ZSqzh9/jiYbz/sPZZP1V/Sh0Zp3PhXvLjIcWdu4qs4jA==
-X-Received: by 2002:a05:690c:3606:b0:712:d7dd:e25a with SMTP id 00721157ae682-716590f7acfmr13770907b3.6.1751487293726;
-        Wed, 02 Jul 2025 13:14:53 -0700 (PDT)
+        bh=bVqvDTgUdbQeaLQbOWegVEyiOQ5l1FCYExImfHBr7Tc=;
+        b=hd4xFtcx0uQ8histyIxpXXUJH5sbqy+yjUYMmFbf4SqLznru+5KH0+lJZVZgxtscm4
+         Oc1av390YgKzDuvNKpc95lE4EoqWAA36Wk8qJpwlaHRsmOWn6E8/nL8WCk/rUP3rQXV4
+         7c7oD2EUjcn3T3KUvAZ0m2FwSGosFulbrcbaAvDjNoAYNjlnt+Tgw2s5jdYsAXkh+y+Q
+         TcKr1UohpTE+HXHXTFFYXrl+x/uMIL5j6cJuKcaUB0dytlsEfeZnyEAk+JMNgJp2HbbR
+         01lFSDrDTniduIF+ghtDJBRME4tS67atY8oBexkBPc+RC4nEHG5vu5ahO7V5+gxa1e1q
+         YJXw==
+X-Forwarded-Encrypted: i=1; AJvYcCUgW6qXFnVL1jvEaF0ppRFdOzDkP1vxMSlptH6iKMcewsQif86+Ts1dyMJibJomTQY4xg1f6OEjCMUXJ+Zj@vger.kernel.org, AJvYcCXD9PMTgr1T43exI0Rv5BAO0iVVqR3Y+K+mGpC8HbJUn1twldAePCxWTTZOt7lzEZv4ExiWnqQCfXc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLuWaYpnBBUvW/Bb2iWX5bTI2CwhC4H51Z41D3MzgkcB7Rxeyw
+	+U3XLjNMUQDzZXC8dYnPyjKSENKZrwyjN/1h+40WyI6R3g5Dbpv25A2i
+X-Gm-Gg: ASbGncs+oemMUsWSW7HsmI385KlGyNB/hZ/tF18XRL4Hui2IKfBJCkGBM7vMBL4gpi1
+	sjPdM1PGJgD/uyKRv/iMioDGhT4TwYzsrshCAYGmN5UTFzzQfqKTr92WMmM1OMqJ+3tDiO78XWl
+	puCp4OXSN0VSOigWxqESSOES9r7A3Qf82LjNkmTQTtNKwc1gLg1ByMkvv+ie939QUIBf9Ded0f6
+	CW4dm2TikY0bgArXSF1Vw88mU8pg5B3WqniWbwhbR9DflEMM7XtHK4SOFc5CsEgXaY0BeVAsgoc
+	LsTSuGfOEkERF/BZ3tWOV8IL6r1jLZ5C/1OyKLZfjfzGvDtdfjpTQSyT3p0qolZl4UxMzPP0REe
+	mc4Gsl25bD8urNPH9yA==
+X-Google-Smtp-Source: AGHT+IHCCc83L/Ed/tXXORICBO5ubDFIQHrqXVUSwSXIp5c0xPoL3pJjjGIyHzRoVNsFfggSP3dVNw==
+X-Received: by 2002:a05:690c:b17:b0:70e:7158:6fda with SMTP id 00721157ae682-716590c8c4amr15208317b3.9.1751487298340;
+        Wed, 02 Jul 2025 13:14:58 -0700 (PDT)
 Received: from bijan-laptop.attlocal.net ([2600:1700:680e:c000:873e:8f35:7cd8:3fe3])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-71515cb4347sm26124157b3.83.2025.07.02.13.14.49
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-71515cb4347sm26124157b3.83.2025.07.02.13.14.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 13:14:53 -0700 (PDT)
+        Wed, 02 Jul 2025 13:14:57 -0700 (PDT)
 From: Bijan Tabatabai <bijan311@gmail.com>
 To: damon@lists.linux.dev,
 	linux-mm@kvack.org,
@@ -73,9 +73,9 @@ Cc: sj@kernel.org,
 	ajayjoshi@micron.com,
 	vtavarespetr@micron.com,
 	Ravi Shankar Jonnalagadda <ravis.opensrc@micron.com>
-Subject: [RFC PATCH v3 10/13] Docs/mm/damon/design: Document vaddr support for migrate_{hot,cold}
-Date: Wed,  2 Jul 2025 15:13:33 -0500
-Message-ID: <20250702201337.5780-11-bijan311@gmail.com>
+Subject: [RFC PATCH v3 11/13] mm/damon/vaddr: Use damos->migrate_dests in migrate_{hot,cold}
+Date: Wed,  2 Jul 2025 15:13:34 -0500
+Message-ID: <20250702201337.5780-12-bijan311@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250702201337.5780-1-bijan311@gmail.com>
 References: <20250702201337.5780-1-bijan311@gmail.com>
@@ -89,31 +89,205 @@ Content-Transfer-Encoding: 8bit
 
 From: Bijan Tabatabai <bijantabatab@micron.com>
 
-Document that the migrate_{hot,cold} schemes can be used by the vaddr
-operations set.
+damos->migrate_dests provides a list of nodes the migrate_{hot,cold}
+actions should migrate to, as well as the weights which specify the
+ratio pages should be migrated to each destination node.
+
+This patch interleaves pages in the migrate_{hot,cold} actions according
+to the information provided in damos->migrate_dests if it is used. The
+interleaving algorithm used is similar to the one used in
+weighted_interleave_nid(). If damos->migration_dests is not provided, the
+actions migrate pages to the node specified in damos->target_nid as
+before.
 
 Co-developed-by: Ravi Shankar Jonnalagadda <ravis.opensrc@micron.com>
 Signed-off-by: Ravi Shankar Jonnalagadda <ravis.opensrc@micron.com>
 Signed-off-by: Bijan Tabatabai <bijantabatab@micron.com>
 ---
- Documentation/mm/damon/design.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ mm/damon/vaddr.c | 114 ++++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 97 insertions(+), 17 deletions(-)
 
-diff --git a/Documentation/mm/damon/design.rst b/Documentation/mm/damon/design.rst
-index ddc50db3afa4..03f8137256f5 100644
---- a/Documentation/mm/damon/design.rst
-+++ b/Documentation/mm/damon/design.rst
-@@ -452,9 +452,9 @@ that supports each action are as below.
-  - ``lru_deprio``: Deprioritize the region on its LRU lists.
-    Supported by ``paddr`` operations set.
-  - ``migrate_hot``: Migrate the regions prioritizing warmer regions.
--   Supported by ``paddr`` operations set.
-+   Supported by ``vaddr``, ``fvaddr`` and ``paddr`` operations set.
-  - ``migrate_cold``: Migrate the regions prioritizing colder regions.
--   Supported by ``paddr`` operations set.
-+   Supported by ``vaddr``, ``fvaddr`` and ``paddr`` operations set.
-  - ``stat``: Do nothing but count the statistics.
-    Supported by all operations sets.
+diff --git a/mm/damon/vaddr.c b/mm/damon/vaddr.c
+index 5cdfdc47c5ff..5f230a427fdc 100644
+--- a/mm/damon/vaddr.c
++++ b/mm/damon/vaddr.c
+@@ -611,11 +611,76 @@ static unsigned int damon_va_check_accesses(struct damon_ctx *ctx)
+ 	return max_nr_accesses;
+ }
+ 
++struct damos_va_migrate_private {
++	struct list_head *migration_lists;
++	struct damos *scheme;
++};
++
++/*
++ * Place the given folio in the migration_list corresponding to where the folio
++ * should be migrated.
++ *
++ * The algorithm used here is similar to weighted_interleave_nid()
++ */
++static void damos_va_migrate_folio(struct folio *folio,
++		struct vm_area_struct *vma, unsigned long addr,
++		struct damos_migrate_dests *dests,
++		struct list_head *migration_lists)
++{
++	pgoff_t ilx;
++	int order;
++	unsigned int target;
++	unsigned int weight_total = 0;
++	int i;
++
++	/*
++	 * If dests is empty, there is only one migration list corresponding
++	 * to s->target_nid.
++	 */
++	if (!dests->nr_dests) {
++		i = 0;
++		goto isolate;
++	}
++
++	order = folio_order(folio);
++	ilx = vma->vm_pgoff >> order;
++	ilx += (addr - vma->vm_start) >> (PAGE_SHIFT + order);
++
++	for (i = 0; i < dests->nr_dests; i++)
++		weight_total += dests->weight_arr[i];
++
++	/* If the total weights are somehow 0, don't migrate at all */
++	if (!weight_total)
++		return;
++
++	target = ilx % weight_total;
++	for (i = 0; i < dests->nr_dests; i++) {
++		if (target < dests->weight_arr[i])
++			break;
++		target -= dests->weight_arr[i];
++	}
++
++	/* No index being chosen indicates a mistake in the algorithm */
++	if (i == dests->nr_dests) {
++		WARN_ONCE(1, "Error determining target interleave node");
++		return;
++	}
++
++isolate:
++	if (!folio_isolate_lru(folio))
++		return;
++
++	list_add(&folio->lru, &migration_lists[i]);
++}
++
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+ static int damos_va_migrate_pmd_entry(pmd_t *pmd, unsigned long addr,
+ 		unsigned long next, struct mm_walk *walk)
+ {
+-	struct list_head *migration_list = walk->private;
++	struct damos_va_migrate_private *priv = walk->private;
++	struct damos *s = priv->scheme;
++	struct list_head *migration_lists = priv->migration_lists;
++	struct damos_migrate_dests *dests = &s->migrate_dests;
+ 	struct folio *folio;
+ 	spinlock_t *ptl;
+ 	pmd_t pmde;
+@@ -630,12 +695,8 @@ static int damos_va_migrate_pmd_entry(pmd_t *pmd, unsigned long addr,
+ 	if (!folio)
+ 		goto unlock;
+ 
+-	if (!folio_isolate_lru(folio))
+-		goto put_folio;
+-
+-	list_add(&folio->lru, migration_list);
++	damos_va_migrate_folio(folio, walk->vma, addr, dests, migration_lists);
+ 
+-put_folio:
+ 	folio_put(folio);
+ unlock:
+ 	spin_unlock(ptl);
+@@ -648,7 +709,10 @@ static int damos_va_migrate_pmd_entry(pmd_t *pmd, unsigned long addr,
+ static int damos_va_migrate_pte_entry(pte_t *pte, unsigned long addr,
+ 		unsigned long enxt, struct mm_walk *walk)
+ {
+-	struct list_head *migration_list = walk->private;
++	struct damos_va_migrate_private *priv = walk->private;
++	struct damos *s = priv->scheme;
++	struct list_head *migration_lists = priv->migration_lists;
++	struct damos_migrate_dests *dests = &s->migrate_dests;
+ 	struct folio *folio;
+ 	pte_t ptent;
+ 
+@@ -660,12 +724,8 @@ static int damos_va_migrate_pte_entry(pte_t *pte, unsigned long addr,
+ 	if (!folio)
+ 		return 0;
+ 
+-	if (!folio_isolate_lru(folio))
+-		goto out;
+-
+-	list_add(&folio->lru, migration_list);
++	damos_va_migrate_folio(folio, walk->vma, addr, dests, migration_lists);
+ 
+-out:
+ 	folio_put(folio);
+ 	return 0;
+ }
+@@ -717,34 +777,54 @@ static unsigned long damos_va_migrate(struct damon_target *target,
+ 		struct damon_region *r, struct damos *s,
+ 		unsigned long *sz_filter_passed)
+ {
+-	LIST_HEAD(folio_list);
++	struct damos_va_migrate_private priv;
+ 	struct task_struct *task;
+ 	struct mm_struct *mm;
++	int nr_dests;
++	int nid;
++	bool use_target_nid;
+ 	unsigned long applied = 0;
++	struct damos_migrate_dests *dests = &s->migrate_dests;
+ 	struct mm_walk_ops walk_ops = {
+ 		.pmd_entry = damos_va_migrate_pmd_entry,
+ 		.pte_entry = damos_va_migrate_pte_entry,
+ 		.walk_lock = PGWALK_RDLOCK,
+ 	};
+ 
++	use_target_nid = dests->nr_dests == 0;
++	nr_dests = use_target_nid ? 1 : dests->nr_dests;
++	priv.scheme = s;
++	priv.migration_lists = kmalloc_array(nr_dests,
++		sizeof(struct list_head), GFP_KERNEL);
++	if (!priv.migration_lists)
++		return 0;
++
++	for (int i = 0; i < nr_dests; i++)
++		INIT_LIST_HEAD(&priv.migration_lists[i]);
++
+ 	task = damon_get_task_struct(target);
+ 	if (!task)
+-		return 0;
++		goto free_lists;
+ 
+ 	mm = damon_get_mm(target);
+ 	if (!mm)
+ 		goto put_task;
+ 
+ 	mmap_read_lock(mm);
+-	walk_page_range(mm, r->ar.start, r->ar.end, &walk_ops, &folio_list);
++	walk_page_range(mm, r->ar.start, r->ar.end, &walk_ops, &priv);
+ 	mmap_read_unlock(mm);
+ 	mmput(mm);
+ 
+-	applied = damon_migrate_pages(&folio_list, s->target_nid);
+-	cond_resched();
++	for (int i = 0; i < nr_dests; i++) {
++		nid = use_target_nid ? s->target_nid : dests->node_id_arr[i];
++		applied += damon_migrate_pages(&priv.migration_lists[i], nid);
++		cond_resched();
++	}
+ 
+ put_task:
+ 	put_task_struct(task);
++free_lists:
++	kfree(priv.migration_lists);
+ 	return applied * PAGE_SIZE;
+ }
  
 -- 
 2.43.5
