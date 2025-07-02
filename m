@@ -1,270 +1,184 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACBCD1DAC92
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 20:36:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B35225A47;
+	Wed,  2 Jul 2025 20:38:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751488602; cv=none; b=pG2qq9Ob2Tc5GQ5Osr/2N4eoHXzynouLy4uOxNgUc+prDegjFMQE03nrXlTive4deHo4RSQMXfYMYUipPbhRtb8Xsk6gheIHKcLbfO9nWTxtdKwHVtCjTtB0b7amxFFKZHOb83maqEi6R5dblKuxrHKxuABwLwnETfeLErArfW8=
+	t=1751488687; cv=none; b=NFVX2mMPz7HrSJmB0abMG5fbE+7FTLPDeLJVjugSxSYFWSV1ZbeK9cm2EumyeB3xMMdkoHiQDvdrCUkXnW654to19WCX20PjyCLSlLdtLej2lCyEeGodipq39gUZS5ZQdXPBFQ3hIq0rwjwitGUI3ovLbmm3NY1k++1va+yz1ug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751488602; c=relaxed/simple;
-	bh=544fp6BGMTIrtpo4DWW1OenPCrEYoQ5atJd83Wf63Qk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SUCW8IZGNRHnJNggjpSNBgb97PNw5kmZ/fYiNXpfkrrOsqQUPK8YcUHQuU9hD2pEcz9hhrvbdky1K8TszmEfN5hpPVT7n10vJqQbNMsFs+PVxfdG6ImOPb/vso12ilSW/t7he86J+Yq/0+IsxcEv5Jk3huT7s1bbwm60U7xIvpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BUFyQ1Ku; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751488687; c=relaxed/simple;
+	bh=dDCS6QVJ7nXRWlnC2SiSC9vvqcF5+4EB5/e+hxz2kYg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UI8685KqAWZu7vct0Pzs+IgSVyJfyFeMVkaebg3XJ4xmXdAy0XFriTHzWimyf2ATLcfYaJr785djJ4bJFMOYYFaWKjGXgUq2xyYjig6hgzD4mHtXJnGR6O7Zka8OaG4hcBXzObJSAeQcrAvW3sg5MKZ+Nu3p1fNKHN9uTTrstmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vPRpVWdn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BUFyQ1Ku"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751488598;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OL23Q7Q9NrlgNMFncEiNJFIUCrL+UMC2Lcyay4XewBc=;
-	b=BUFyQ1KuXnSRtAb5cbJcXP5Xprdt/ZE/Dq4oRR4qoGWFG2AMc2edrvPNRd239DnGPLz0uV
-	jjfiQASUSHf2aDwqXHy+QG/ZhixA4UrtFg0xcQKoyhLPu8XHLtrkZ0ltgOgjQceBiutVou
-	RnAOdVOW6Qh+OzzgnBFVKvy81xIBz7M=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-338-FyfA5WgtNrSf16a4q_Ch7w-1; Wed, 02 Jul 2025 16:36:37 -0400
-X-MC-Unique: FyfA5WgtNrSf16a4q_Ch7w-1
-X-Mimecast-MFC-AGG-ID: FyfA5WgtNrSf16a4q_Ch7w_1751488597
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7d09bc05b77so135061985a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 13:36:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751488596; x=1752093396;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OL23Q7Q9NrlgNMFncEiNJFIUCrL+UMC2Lcyay4XewBc=;
-        b=w/o5hoDzc8fC6sT7hDUXW5HxN3JF+xNAQNQ/irOQClq1zku/xzBJDTSWm3ydWJkGl4
-         Zki+8bfC+GR7Q1PB5OeeVyW904++X17zpBHrvtN62A9HlPeEFbnQAjB0YA7sz7edycGp
-         4Tz4fioevnCh51LPz5J4Rz5D7H2dCRw0bIbS8Tc5CvhKcL2r87TR9s7+Xl21rswUi/an
-         6qnTZ69dFtn8TBqhVBFUrlrKIto8U95kU95K4r+NWahrBZMDSyhecZPRwbcaDj9rvq/t
-         9ITU8GL7Nxd612A3KZNAs3QksO5658hRnBTjBqG2oGxTzh95LI22ExFTSa6j+nSB3tOp
-         KCog==
-X-Forwarded-Encrypted: i=1; AJvYcCW7p/61Y5rp248QH0tEL34XNWjbxAdkjJj5qoCNIsYH/ontxXo4QCzxlkp0/s6Jd3KWJXjTh4vJ5oUXPB0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYI9KNnf/1oT8V7JOyYNfUYoRyzn5ZeYjOr20uJa+eEfb/RPWl
-	ogrV0mOJN4qU50h7MnePPKUl52wHyL7VMyFCEtRialjA90+W6orMOq7/WKVHr68c3qjyA/5XPkg
-	J0/FDvlzqPOxmPxAAUQTr2OjfGUQS497teB3m9BdWJMnTd/jh9z38xO6+WXhqm+PnGaKWwN013A
-	==
-X-Gm-Gg: ASbGncufFFctxTf+ko+idgpI/9KR9vL1MPdIbcRXfe45bO7Tp86CFXqC+FLEgZ+ZzJo
-	sduqzw84OoenwoQ9qZb2fJOEVwsO5ftXV6OXnrBuGnIsKrXnhE2i6BQ/SXmRhT4CuDeDcYyN1Vl
-	nrd+x/EUTelTZn+/bNpB95ukigDYxih2L+5a5vZDq5U5XwKaA6p3ReD/KrwFJjFHg/i3vdfy0/A
-	kwNZOMaH3sndUGQcDyhoZqQubREDoYcecw9qgylYoeAy8qaqbfSVHbxAWIoUO/cCgh9DW3OMYBf
-	JzuYHlZdwxc/lw==
-X-Received: by 2002:a05:620a:1a8d:b0:7cd:565b:dbc9 with SMTP id af79cd13be357-7d5c477edacmr470446185a.26.1751488596369;
-        Wed, 02 Jul 2025 13:36:36 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGr+VZI7xQQFXix0YoKKczgSHvm4AIwXNE11tqJYsMDPOV7HPgC1heTFWU6De0i3wyYJjUw7A==
-X-Received: by 2002:a05:620a:1a8d:b0:7cd:565b:dbc9 with SMTP id af79cd13be357-7d5c477edacmr470442085a.26.1751488595851;
-        Wed, 02 Jul 2025 13:36:35 -0700 (PDT)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d443134f32sm998799385a.12.2025.07.02.13.36.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 13:36:35 -0700 (PDT)
-Date: Wed, 2 Jul 2025 16:36:31 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Mike Rapoport <rppt@kernel.org>, Hugh Dickins <hughd@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	James Houghton <jthoughton@google.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Nikita Kalyazin <kalyazin@amazon.com>,
-	Michal Hocko <mhocko@suse.com>,
-	David Hildenbrand <david@redhat.com>,
-	Andrea Arcangeli <aarcange@redhat.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Ujwal Kundur <ujwal.kundur@gmail.com>
-Subject: Re: [PATCH v2 0/4] mm/userfaultfd: modulize memory types
-Message-ID: <aGWYT4vFk2pyVwtv@x1.local>
-References: <20250627154655.2085903-1-peterx@redhat.com>
- <92265a41-7e32-430c-8ab2-4e7680609624@lucifer.local>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vPRpVWdn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF21EC4CEE7;
+	Wed,  2 Jul 2025 20:38:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751488687;
+	bh=dDCS6QVJ7nXRWlnC2SiSC9vvqcF5+4EB5/e+hxz2kYg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=vPRpVWdnh+OJAAA7arYY7PnTcK2jpNELhtnvDh4laCUI4hYVphhNSPs460L2IVWTr
+	 1jpr5XgjEgv88LJM91FV1cNYfzB7YLuH9t4SdJC4DNuy9RqwgcjL+99vF3iuJ1SctZ
+	 ARHOTjY1hY8ZUrKMa/jH/4mi5bmpe0EB6KOC/Y7QKXXjfTaQTMI7TcjZlR4uOWwzpO
+	 npAM2tFfXbRoGuWi1e2mt8hxCh3uiDlhHKU8fHBgR5DetbenJmcGQl54fPFsVTQ3Oh
+	 ieCiVM47209l1++MMj/p6W+sbLAwaZixwCFKlfFnwbk9kM15X/w6gTj592919C4Z9u
+	 PBAsrRUs6476w==
+Message-ID: <43f19fbc-838b-431e-9d02-ecacf5f43731@kernel.org>
+Date: Wed, 2 Jul 2025 22:38:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <92265a41-7e32-430c-8ab2-4e7680609624@lucifer.local>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/8] dt-bindings: dma: marvell,mmp-dma: Add SpacemiT K1
+ PDMA support
+To: Guodong Xu <guodong@riscstar.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>,
+ =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Alex Elder <elder@riscstar.com>,
+ Vivian Wang <wangruikang@iscas.ac.cn>, dmaengine@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
+References: <20250701-working_dma_0701_v2-v2-0-ab6ee9171d26@riscstar.com>
+ <20250701-working_dma_0701_v2-v2-1-ab6ee9171d26@riscstar.com>
+ <de965773-bab1-4c50-b111-19896465e53e@kernel.org>
+ <CAH1PCMbKGeXL9Te6M28ZdX8VBvaToKcK7f+JmN6JsCfttG_Mtg@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
+ QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
+ +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
+ ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
+ 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
+ hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
+ tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
+ 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
+ naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
+ hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
+ whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
+ qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
+ RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
+ Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
+ H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
+ dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
+ AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
+ jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
+ zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
+ XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
+In-Reply-To: <CAH1PCMbKGeXL9Te6M28ZdX8VBvaToKcK7f+JmN6JsCfttG_Mtg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 30, 2025 at 11:29:30AM +0100, Lorenzo Stoakes wrote:
-> On Fri, Jun 27, 2025 at 11:46:51AM -0400, Peter Xu wrote:
-> > [based on latest akpm/mm-new of June 27th, commit 9be7387ae43f]
-> >
-> > v2 changelog:
-> > - Patch 1
-> >   - update English in commit log [David]
-> >   - move vm_uffd_ops definition to userfaultfd_k.h [Mike]
-> > - Patch 4
-> >   - fix sparse warning on bitwise type conversions [syzbot]
-> >   - Commit message updates on explanation of vma_can_userfault check [James]
-> >
-> > v1: https://lore.kernel.org/r/20250620190342.1780170-1-peterx@redhat.com
-> >
-> > This series is an alternative proposal of what Nikita proposed here on the
-> > initial three patches:
-> >
-> >   https://lore.kernel.org/r/20250404154352.23078-1-kalyazin@amazon.com
-> >
-> > This is not yet relevant to any guest-memfd support, but paving way for it.
-> > Here, the major goal is to make kernel modules be able to opt-in with any
-> > form of userfaultfd supports, like guest-memfd.  This alternative option
-> > should hopefully be cleaner, and avoid leaking userfault details into
-> > vm_ops.fault().
-> >
-> > It also means this series does not depend on anything.  It's a pure
-> > refactoring of userfaultfd internals to provide a generic API, so that
-> > other types of files, especially RAM based, can support userfaultfd without
-> > touching mm/ at all.
+On 01/07/2025 11:52, Guodong Xu wrote:
+> Hi, Krzysztof
 > 
-> I'm very concerned that this change will simply move core mm functionality out
-> of mm and into drivers where it can bitrot and cause subtle bugs?
+> On Tue, Jul 1, 2025 at 3:35 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>
+>> On 01/07/2025 07:36, Guodong Xu wrote:
+>>> Add "spacemit,k1-pdma" compatible string to support SpacemiT K1 PDMA
+>>> controller. This variant requires:
+>>
+>> Why is this marvell? This should be explained here, it's really unexpected.
+>>
 > 
-> You're proposing providing stuff like page table state and asking for a folio
-> back from a driver etc.
-> 
-> I absolutely am not in favour of us providing core mm internals like this to
-> drivers, and I don't want to see us having to EXPORT() mm internals just to make
-> module-ised uffd code work (I mean I just will flat out refuse to do that).
-> 
-> I think we need to think _very_ carefully about how we do this.
-> 
-> I also feel like this series is at a really basic level and you've not fully
-> determined what API calls you need.
+> SpacemiT K1 SoC uses the same DMA controller as Marvell MMP. They share most
+> of the registers (and address offsets) and only enhanced in addressing space
+> capability (from 32bit to 64bit).
 
-See:
-
-https://lore.kernel.org/all/aGWVIjmmsmskA4bp@x1.local/#t
+I hope you got the last comment...
 
 > 
-> I agree that it's sensible to be incremental, but I feel like you sort of need
-> to somewhat prove the case that you can jump from 'incremental version where we
-> only support code in mm/' to supporting arbitrary file system code that might be
-> modules.
-> 
-> Because otherwise you're basically _guessing_ that you can do this, possibly, in
-> the future and maybe it's just not the right approach but that's not clear yet?
+> Also, spacemit,k1-pdma and marvell,pdma-1.0 use the same driver (mmp_pdma.c),
+> that's the reason why I chose keeping them in the same binding file.
 
-Did you follow up with the discussions in v1?  I copied you too.
+That's moderate reason. I explained here further - don't grow old
+bindings with completely new devices, because you keep growing old,
+poorer patterns. You have a new device, you can make it right.
 
-https://lore.kernel.org/r/114133f5-0282-463d-9d65-3143aa658806@amazon.com
 
-Would Nikita's work help here?  Could you explain what are you asking for
-to prove that this works for us?
+...
 
+>>> +      properties:
+>>> +        compatible:
+>>> +          contains:
+>>> +            const: spacemit,k1-pdma
+>>> +    then:
+>>> +      required:
+>>> +        - clocks
+>>> +        - resets
+>>> +    else:
+>>> +      properties:
+>>> +        clocks: false
+>>> +        resets: false
+>>> +  - if:
+>>> +      properties:
+>>> +        compatible:
+>>> +          contains:
+>>> +            enum:
+>>> +              - marvell,pdma-1.0
+>>> +              - spacemit,k1-pdma
+>>> +    then:
+>>> +      properties:
+>>> +        '#dma-cells':
+>>> +          const: 2
+>>> +          description:
+>>> +            The first cell contains the DMA request number for the peripheral
+>>> +            device. The second cell is currently unused but must be present for
+>>> +            backward compatibility.
+>>> +    else:
+>>> +      properties:
+>>> +        '#dma-cells':
+>>> +          const: 1
+>>> +          description:
+>>> +            The cell contains the DMA request number for the peripheral device.
+>>
+>>
+>> It's getting complicated. I suggest to make your own schema. Then you
+>> would also switch to preferred 'sram' property instead of that legacy
+>> 'asram'.
+>>
+>> Really, ancient schemas should not be grown for new, completely
 > 
-> >
-> > To achieve it, this series introduced a file operation called vm_uffd_ops.
-> > The ops needs to be provided when a file type supports any of userfaultfd.
-> >
-> > With that, I moved both hugetlbfs and shmem over.
-> 
-> Well as you say below hugetlbfs is sort of a stub implementation, I wonder
-> whether we'd need quite a bit more to make that work.
-> 
-> One thing I'd _really_ like to avoid is us having to add a bunch of hook points
-> into core mm code just for uffd that then call out to some driver.
-> 
-> We've encountered such a total nightmare with .mmap() for instance in the past
-> (including stuff that resulted in security issues) because we - simply cannot
-> assume anything - about what the hook implementor might do with the passed
-> parameters.
-> 
-> This is really really problematic.
-> 
-> I also absolutely hate the:
-> 
-> if (uffd)
-> 	do_something_weird();
-> 
-> Pattern, so hopefully this won't proliferate that.
-> 
-> >
-> > Hugetlbfs is still very special that it will only use partial of the
-> > vm_uffd_ops API, due to similar reason why hugetlb_vm_op_fault() has a
-> > BUG() and so far hard-coded into core mm.  But this should still be better,
-> > because at least hugetlbfs is still always involved in feature probing
-> > (e.g. where it used to not support ZEROPAGE and we have a hard-coded line
-> > to fail that, and some more).  Meanwhile after this series, shmem will be
-> > completely converted to the new vm_uffd_ops API; the final vm_uffd_ops for
-> > shmem looks like this:
-> >
-> > static const vm_uffd_ops shmem_uffd_ops = {
-> > 	.uffd_features	= 	__VM_UFFD_FLAGS,
-> > 	.uffd_ioctls	= 	BIT(_UFFDIO_COPY) |
-> > 				BIT(_UFFDIO_ZEROPAGE) |
-> > 				BIT(_UFFDIO_WRITEPROTECT) |
-> > 				BIT(_UFFDIO_CONTINUE) |
-> > 				BIT(_UFFDIO_POISON),
-> > 	.uffd_get_folio	=	shmem_uffd_get_folio,
-> > 	.uffd_copy	=	shmem_mfill_atomic_pte,
-> > };
-> >
-> > As I mentioned in one of my reply to Nikita, I don't like the current
-> > interface of uffd_copy(), but this will be the minimum change version of
-> > such API to support complete extrenal-module-ready userfaultfd.  Here, very
-> > minimal change will be needed from shmem side to support that.
-> 
-> Right, maybe a better version of this interface might address some of my
-> concerns... :)
-> 
-> >
-> > Meanwhile, the vm_uffd_ops is also not the only place one will need to
-> > provide to support userfaultfd.  Normally vm_ops.fault() will also need to
-> > be updated, but that's a generic function and it'll play together with the
-> > new vm_uffd_ops to make everything fly.
-> >
-> > No functional change expected at all after the whole series applied.  There
-> > might be some slightly stricter check on uffd ops here and there in the
-> > last patch, but that really shouldn't stand out anywhere to anyone.
-> >
-> > For testing: besides the cross-compilation tests, I did also try with
-> > uffd-stress in a VM to measure any perf difference before/after the change;
-> > The static call becomes a pointer now.  I really cannot measure anything
-> > different, which is more or less expected.
-> >
-> > Comments welcomed, thanks.
-> >
-> > Peter Xu (4):
-> >   mm: Introduce vm_uffd_ops API
-> >   mm/shmem: Support vm_uffd_ops API
-> >   mm/hugetlb: Support vm_uffd_ops API
-> >   mm: Apply vm_uffd_ops API to core mm
-> >
-> >  include/linux/mm.h            |   9 +++
-> >  include/linux/shmem_fs.h      |  14 -----
-> >  include/linux/userfaultfd_k.h |  98 +++++++++++++++++++----------
-> >  mm/hugetlb.c                  |  19 ++++++
-> >  mm/shmem.c                    |  28 ++++++++-
-> >  mm/userfaultfd.c              | 115 +++++++++++++++++++++++++---------
-> >  6 files changed, 207 insertions(+), 76 deletions(-)
-> >
-> > --
-> > 2.49.0
-> >
-> 
-> Sorry to be critical, I just want to make sure we're not setting ourselves up
-> for trouble here.
-> 
-> I _very much_ support efforts to make uffd more generalised, and ideally to find
-> a way to separate out shmem and hugetlbfs implementation bits, so I support the
-> intent _fully_.
-> 
-> I just want to make sure we do it in a safe way :)
+> The reason that they share the same device driver may not be strong enough
+> compared to what you said here.
 
-Any explicit suggestions (besides objections)?
+If DMA maintainer(s) reject complexity in driver, then it is fine. But
+till that happens, you should rather come with a clean new binding and
+don't grow legacy.
 
-Thanks,
 
--- 
-Peter Xu
-
+Best regards,
+Krzysztof
