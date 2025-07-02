@@ -1,72 +1,57 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-gw02.astralinux.ru (mail-gw02.astralinux.ru [93.188.205.243])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B7EC279DDE;
-	Wed,  2 Jul 2025 13:33:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC03E27603A;
+	Wed,  2 Jul 2025 13:34:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.188.205.243
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751463199; cv=none; b=doo2gdLeC6+g1Rd+bYxk43x5XTafUqrzDph4o5GS/RSJFgD4YbP5gduzR8Zc9vU2HydsHengkoSzCZitSMZGJB85yN+qQIehqCJEpjnWe/MCQ4YPrwFEiTnfmNNIFdOCS8TygBeOk3DptBfAGBjyxjyt5BlEJ3E8QLFg5uK8grA=
+	t=1751463266; cv=none; b=alJUbcZ/YC348qIGYicLV+HpFjDwjt3Yx/AOlNK2n7Lef6Y3X+yMvTCqSDhaLk9S07/atEEj7PW2iVVuL8U0frtIUDOqhUaQUMRm6TBhlvUoLNgtnaXtrJrDgRMMOl9+eRLTrEHpzxRbIfGfBLblRrLzi5mNqxSRNTEjXK6Mq20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751463199; c=relaxed/simple;
-	bh=m73SrJe9xK4ND8q0YawG5Yh5XCh7jqbD7zPC22rjn1g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=j8643mZ/QPICrA/gA5PGb7VIuvgK3ppgKZA6vAGvQQ6DM+rekr1vJ4FdeVBSHEnHI3EyMb04efaZLZT5Cfjka4tDEYojT0N95OFFgKUCkVH7VBlFHancwAu92tP/8uqdJuSTwvcT7+9PJhhQEb54T/n//NTW5RbC1Ex2MEsgjoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MTtEH+AI; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751463266; c=relaxed/simple;
+	bh=JNr5JhnmpSELPd3exj25rIHy7u/NEDaXATV0e2m0pTM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=A1lBF5U9sSyRyg5sDOtFueNgdfeupeyThjEV2+r5SJPnO1/D38Ur7PrBLSWdnGBJwrd8BNLStArPRaBnB0KRb8ZtIw9bDCaGGSm7b2qh+4ikpmPVlhP8v2l2MoXIrjz8cCAw1IukAQf140xwfXNxdP/wrsETuP58boqhDpCbJ6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; dkim=pass (2048-bit key) header.d=astralinux.ru header.i=@astralinux.ru header.b=cV01KRSp; arc=none smtp.client-ip=93.188.205.243
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MTtEH+AI"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-553d2eb03a0so8607574e87.1;
-        Wed, 02 Jul 2025 06:33:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751463196; x=1752067996; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rMtgRnDiBAM4XVarNEG1UtN9Q6JeflagLHeOXHOrlZE=;
-        b=MTtEH+AIpOnyKncJM4mwdwhneood1XJ9o7VlJXXg3+NlsKn2Gkvm6lZiM9l2C0+FyR
-         wvA9JWwBnTf/pku7T4KJmq4JPi/SWH/KYlwLkh+nqZv5Tt9AnEPlb3Y0jWGR464l8gHF
-         I732qgXBEvp5eAPgmLsDVzHedO4gf6ByvImh0dbr738QzS15HbNoV8nqFwoM8+gow96A
-         Ba0Ke3ST6pT0oEMusQyrSQ0RvPsqkIXGAVS1YbBZhc8tHbFRnmI45xon4zjS6IPuiaPw
-         PZvbhqD6DWrF5JEm1ukl4ElYPBP2NGVsoV3pRjGlGGIiYsZy4LDw5DVjPjyWKzFAnkI4
-         GvJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751463196; x=1752067996;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rMtgRnDiBAM4XVarNEG1UtN9Q6JeflagLHeOXHOrlZE=;
-        b=tQOOxniFlDq8YkHtAniFNL0yGtutwVbbFbBPMdL7yGHchBY5cV7qHW89X4qoGiiLqC
-         vh3EtuYwgXslfaCi55qFIdzj9EsDxf9/7bpXc2LAgU0a3Gq3jY0zTbtrUVPEb2GuKlI5
-         m5TpprVEgci7jzNbo7Yd8ZaAufSgZydihBpB7Tyw53O1ZYCW8FlR10QlFjue7rPw8FhY
-         vvWS4qFPCmWYADcq8Gmh5tvFteuWthNTTzZOs+1R1r5FZP/pDXbEjGX38cJATfbOOHW7
-         7++SBVSdI+3Udpo7KfNH8Kr2rTJ2TEwiL1pjCG7kBS2tVWfN2lVzTcSe+7bR4HS9Ifbp
-         cK8w==
-X-Forwarded-Encrypted: i=1; AJvYcCXvu2UCKCCeX9PRZPZaNzegidMt7jW/OVugrXaym3XfHcBl4fs+ZgCzegKfacta76uPT/JS86nc42TTNKE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhdsomW7mTPCJ+/2tX8zEopQ0oe5QjzwU3KoV2Nbqf7NyNYPta
-	BaqSX9ogEWxcA2T52KojspKepZ+9ijVT1S1ixZ0XmcAmj5X+t5fAJxXA
-X-Gm-Gg: ASbGncsotR9mNttgJYdwABkH1a/yPLGmj5zIyfIM85FiMsrZp2ymDb0DPgkMOWdeSft
-	/ORUhnavatTkUQta1x/HTYelYMn8HZh/LAKgyormhTEdWJbetTLl2Y6VKOMFAr1ha29ioNJRMsq
-	VMbrrE9bfZAG258pevznykPjyAJ3FXUdTB/wpaDCmjmCyU4rUdJ9bHxTcVgeohhGozBeDCReoZS
-	Q4EHT5Elkw72ON0MsfdJompn5DGigTXAh+HHWNPlvrZ0A3uvSH36sm7FWWIDbk7W2/WlzgndTQO
-	HTsd+nMW9Q/qJ/2FPjaJGFPvTDh4YfMZ8YVacHciTSiBIbtlzYBbAYDG7Xnbfkn1uJj220E61RH
-	6lz5jUsC0NNHA1w==
-X-Google-Smtp-Source: AGHT+IH6PzjiqqGXg3RonE8QCL7askIRZwW0UMnw53TSZ2jCDf0Z/9L8ruPAnI1nkkIVpcqHhmg8oQ==
-X-Received: by 2002:ac2:4f13:0:b0:553:2159:8716 with SMTP id 2adb3069b0e04-55628f1c34bmr1082796e87.26.1751463195923;
-        Wed, 02 Jul 2025 06:33:15 -0700 (PDT)
-Received: from SC-WS-02452.corp.sbercloud.ru ([85.174.201.64])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b24e431sm2153712e87.72.2025.07.02.06.33.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 06:33:15 -0700 (PDT)
-From: Sergey Bashirov <sergeybashirov@gmail.com>
-To: Christoph Hellwig <hch@infradead.org>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=astralinux.ru header.i=@astralinux.ru header.b="cV01KRSp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=astralinux.ru;
+	s=mail; t=1751462785;
+	bh=JNr5JhnmpSELPd3exj25rIHy7u/NEDaXATV0e2m0pTM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=cV01KRSpnCED0ratvOKTGc7rUUJQGMIX26Iv/7CxtTd208y0UL2rPlMtgYwwuPLN+
+	 6FR+GEYYa9dZBkxLs3UYbyBj/epVq9QOEMgbEN3r54568KH26p07//kM8JuxyRiQ/O
+	 SMLlN4boXKI6K5SNm+3h2+mW/AqyqJKyG/fLTcELSOd2zrP/x83OZRV4CPz37HJcFX
+	 ISscKlf/mzB+GN4FhAA3PjgI2ECokqQQ4EaUjb28q94KIibRtXyxc8TG+JtTf3Z+rq
+	 td3OfxBaO/K02Y5qpp4mwcLVO90pQAoyBOxrkCmDXR+tkX7lp7A5QTxUnPocyE9nct
+	 8DovlkdLiwuCg==
+Received: from gca-msk-a-srv-ksmg01.astralinux.ru (localhost [127.0.0.1])
+	by mail-gw02.astralinux.ru (Postfix) with ESMTP id 47C621F97E;
+	Wed,  2 Jul 2025 16:26:25 +0300 (MSK)
+Received: from new-mail.astralinux.ru (unknown [10.177.185.198])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail-gw02.astralinux.ru (Postfix) with ESMTPS;
+	Wed,  2 Jul 2025 16:26:24 +0300 (MSK)
+Received: from localhost.localdomain (unknown [10.198.18.126])
+	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4bXLJZ5sYPz16Hnt;
+	Wed,  2 Jul 2025 16:26:22 +0300 (MSK)
+From: Anastasia Belova <abelova@astralinux.ru>
+To: stable@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Anastasia Belova <abelova@astralinux.ru>,
+	James Smart <james.smart@broadcom.com>,
+	Dick Kennedy <dick.kennedy@broadcom.com>,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-scsi@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Konstantin Evtushenko <koevtushenko@yandex.com>,
-	Sergey Bashirov <sergeybashirov@gmail.com>
-Subject: [PATCH] pNFS: Fix disk addr range check in block/scsi layout
-Date: Wed,  2 Jul 2025 16:32:21 +0300
-Message-ID: <20250702133226.212537-1-sergeybashirov@gmail.com>
+	lvc-project@linuxtesting.org,
+	Justin Tee <justin.tee@broadcom.com>
+Subject: [PATCH 5.10] scsi: lpfc: Move NPIV's transport unregistration to after resource clean up
+Date: Wed,  2 Jul 2025 16:24:46 +0300
+Message-ID: <20250702132448.93012-1-abelova@astralinux.ru>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -75,32 +60,74 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-KSMG-AntiPhishing: NotDetected, bases: 2025/07/02 12:42:00
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Envelope-From: abelova@astralinux.ru
+X-KSMG-AntiSpam-Info: LuaCore: 63 0.3.63 9cc2b4b18bf16653fda093d2c494e542ac094a39, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, astralinux.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;new-mail.astralinux.ru:7.1.1;lore.kernel.org:7.1.1;127.0.0.199:7.1.2, FromAlignment: s
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiSpam-Lua-Profiles: 194491 [Jul 02 2025]
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Version: 6.1.1.11
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.0.7854, bases: 2025/07/02 12:40:00 #27611971
+X-KSMG-AntiVirus-Status: NotDetected, skipped
+X-KSMG-LinksScanning: NotDetected, bases: 2025/07/02 12:41:00
+X-KSMG-Message-Action: skipped
+X-KSMG-Rule-ID: 1
 
-At the end of the isect translation, disc_addr represents the physical
-disk offset. Thus, end calculated from disk_addr is also a physical disk
-offset. Therefore, range checking should be done using map->disk_offset,
-not map->start.
+From: Justin Tee <justin.tee@broadcom.com>
 
-Signed-off-by: Sergey Bashirov <sergeybashirov@gmail.com>
+commit 4ddf01f2f1504fa08b766e8cfeec558e9f8eef6c upstream.
+
+There are cases after NPIV deletion where the fabric switch still believes
+the NPIV is logged into the fabric.  This occurs when a vport is
+unregistered before the Remove All DA_ID CT and LOGO ELS are sent to the
+fabric.
+
+Currently fc_remove_host(), which calls dev_loss_tmo for all D_IDs including
+the fabric D_ID, removes the last ndlp reference and frees the ndlp rport
+object.  This sometimes causes the race condition where the final DA_ID and
+LOGO are skipped from being sent to the fabric switch.
+
+Fix by moving the fc_remove_host() and scsi_remove_host() calls after DA_ID
+and LOGO are sent.
+
+Signed-off-by: Justin Tee <justin.tee@broadcom.com>
+Link: https://lore.kernel.org/r/20240305200503.57317-3-justintee8345@gmail.com
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Anastasia Belova <abelova@astralinux.ru>
 ---
- fs/nfs/blocklayout/blocklayout.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Backport fix for CVE-2024-36952
+ drivers/scsi/lpfc/lpfc_vport.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/nfs/blocklayout/blocklayout.c b/fs/nfs/blocklayout/blocklayout.c
-index 47189476b553..5d6edafbed20 100644
---- a/fs/nfs/blocklayout/blocklayout.c
-+++ b/fs/nfs/blocklayout/blocklayout.c
-@@ -149,8 +149,8 @@ do_add_page_to_bio(struct bio *bio, int npg, enum req_op op, sector_t isect,
+diff --git a/drivers/scsi/lpfc/lpfc_vport.c b/drivers/scsi/lpfc/lpfc_vport.c
+index aa4e451d5dc1..921630f71ee9 100644
+--- a/drivers/scsi/lpfc/lpfc_vport.c
++++ b/drivers/scsi/lpfc/lpfc_vport.c
+@@ -668,10 +668,6 @@ lpfc_vport_delete(struct fc_vport *fc_vport)
+ 		ns_ndlp_referenced = true;
+ 	}
  
- 	/* limit length to what the device mapping allows */
- 	end = disk_addr + *len;
--	if (end >= map->start + map->len)
--		*len = map->start + map->len - disk_addr;
-+	if (end >= map->disk_offset + map->len)
-+		*len = map->disk_offset + map->len - disk_addr;
+-	/* Remove FC host and then SCSI host with the vport */
+-	fc_remove_host(shost);
+-	scsi_remove_host(shost);
+-
+ 	ndlp = lpfc_findnode_did(phba->pport, Fabric_DID);
  
- retry:
- 	if (!bio) {
+ 	/* In case of driver unload, we shall not perform fabric logo as the
+@@ -783,6 +779,10 @@ lpfc_vport_delete(struct fc_vport *fc_vport)
+ 		lpfc_nlp_put(ndlp);
+ 	}
+ 
++	/* Remove FC host to break driver binding. */
++	fc_remove_host(shost);
++	scsi_remove_host(shost);
++
+ 	lpfc_cleanup(vport);
+ 	lpfc_sli_host_down(vport);
+ 
 -- 
 2.43.0
 
