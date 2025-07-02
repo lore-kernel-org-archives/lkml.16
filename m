@@ -1,141 +1,82 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D56772DE6F5;
-	Wed,  2 Jul 2025 20:51:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 985C32DE6E2;
+	Wed,  2 Jul 2025 20:53:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751489491; cv=none; b=ZvFlk/2l0LrbuRN0gGH5DTPmmWcdjY5E9o/M/quaYTWqvyzgkpSxhBexOXetKwjJWF8tIiC7+GA4wTeP2N36Aqs+yk9/vSYkxdg23HTMRL/DaG61L/KFozw/ysFkly3rX94mbg/w05b5P+OY2qqpaO2NZowoXjC0zLgzwP+DM1c=
+	t=1751489611; cv=none; b=D3Gd1RQQmcBYvg482xOQ/dnmCU/oxyegPHkN+nblbZzlMjcTuOLRBPVpkuwpjEraYumk67A3aqBDQFO8XFdHnATDd3ig/GoF5jxA4H+8chdrxG7yxypCTElNxFJKrZqNQBBfq9XUCeOBn3yrbfw7p4e35jfh2IEuqVqV4GFos3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751489491; c=relaxed/simple;
-	bh=pZB+eUOlfplhCyuQZJ/swT3euXRYIJ+QbX5ELCNIlrs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uWIOsTfiFX6DDzyn49EWaeNJvgnIFblEfrb1DsdeX/l9pOWNVrCDPK19aijsGY7kzsrCpPIsUOZYj6k8/KJd8WRSl050Dr2N/5am9IleeDwpV3lfcDVBLl3X2EhC1K3wgKUXwKtiaOwyKIGTs1gFgYWA4SCUpkHVlOMp0MP7RYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=aGrPMuFQ; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1751489611; c=relaxed/simple;
+	bh=rl3zKx7F20QaIupDu9ZefM9xSY3d7yuEuQmie46w34A=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KbcPJsqKIkKuHmkF1KdDt0ruXbXXYNLoKbDYIwttHId5v6//cf8UtiPkI65trpa0PfOYUN6SCerCn+ptu5oq1VUzucFLkaMQv2S5PtkFz0850QbJPB2LDHmaDS0AgDDVehiZPHeVyszFhBdVtUigI+di8nnTGs08pOWtB9rU1JQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eL2hXc4A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="aGrPMuFQ"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id 98DA01D4C;
-	Wed,  2 Jul 2025 22:51:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1751489464;
-	bh=pZB+eUOlfplhCyuQZJ/swT3euXRYIJ+QbX5ELCNIlrs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aGrPMuFQnkBG+JG1SNXfuOOWKqAofLnAQ3WyxyRbjJ/aq5xS21/wYv23Wtg4jaZM9
-	 RwBFhDx527q5XZHibGrTpaQlvWEyYwqx8UbfOJrP4viYw++oD99CLZdeCJMkwaCyRp
-	 BWAk8LxKHE19SZAVwsaV84LEDGv3fiSHYAxqomcU=
-Date: Wed, 2 Jul 2025 23:51:00 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-Cc: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-Subject: Re: [PATCH v3 01/15] media: rcar-csi2: Use the pad version of
- v4l2_get_link_freq()
-Message-ID: <20250702205100.GM17819@pendragon.ideasonboard.com>
-References: <20250530-rcar-streams-v3-0-026655df7138@ideasonboard.com>
- <20250530-rcar-streams-v3-1-026655df7138@ideasonboard.com>
- <20250602094321.GD3645@pendragon.ideasonboard.com>
- <20250702150711.GE3830050@ragnatech.se>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eL2hXc4A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82EAEC4CEE7;
+	Wed,  2 Jul 2025 20:53:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751489611;
+	bh=rl3zKx7F20QaIupDu9ZefM9xSY3d7yuEuQmie46w34A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=eL2hXc4AxGmCBEN04ff4QAxFRxgEKV3jAXyQrSrUqVLZIDVVc5Nky3xnzpu2fmDf+
+	 82H0gW5DioNaITyeZcZWlcIsM3o9ls5EQ4dGA1aJhWuZzc6q5y7sJhlOZaAYMaiGKn
+	 2i3bLVm+iZCo+s2pfT/KTqH2RRfJ1lBIrIYZcwsPJ3ceIgmGB8FkG5Q2F5CxFoThHB
+	 jW1084vx9OyDJ0ihZBhNYNHrp/wFlWomwy8bo62hpU8LHgJYTsiFklAnBr8srl3fVw
+	 h5Ht05579CM6sAPsfyYxP8jeXro1gM9EUvWMOSsHuyLrDbgFJVXi4/29I/P7P+pLvt
+	 dHQO7tqMrDZvw==
+Date: Wed, 2 Jul 2025 13:53:29 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Dragos Tatulea <dtatulea@nvidia.com>
+Cc: almasrymina@google.com, asml.silence@gmail.com, Andrew Lunn
+ <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon
+ Horman <horms@kernel.org>, Saeed Mahameed <saeedm@nvidia.com>,
+ tariqt@nvidia.com, cratiu@nvidia.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [RFC net-next 1/4] net: Allow non parent devices to be used for
+ ZC DMA
+Message-ID: <20250702135329.76dbd878@kernel.org>
+In-Reply-To: <c5pxc7ppuizhvgasy57llo2domksote5uvo54q65shch3sqmkm@bgcnojnxt4hh>
+References: <20250702172433.1738947-1-dtatulea@nvidia.com>
+	<20250702172433.1738947-2-dtatulea@nvidia.com>
+	<20250702113208.5adafe79@kernel.org>
+	<c5pxc7ppuizhvgasy57llo2domksote5uvo54q65shch3sqmkm@bgcnojnxt4hh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250702150711.GE3830050@ragnatech.se>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 02, 2025 at 05:07:11PM +0200, Niklas Söderlund wrote:
-> On 2025-06-02 12:43:21 +0300, Laurent Pinchart wrote:
-> > On Fri, May 30, 2025 at 04:50:30PM +0300, Tomi Valkeinen wrote:
-> > > Use the new version of v4l2_get_link_freq() which supports media_pad as
-> > > a parameter.
+On Wed, 2 Jul 2025 20:01:48 +0000 Dragos Tatulea wrote:
+> On Wed, Jul 02, 2025 at 11:32:08AM -0700, Jakub Kicinski wrote:
+> > On Wed, 2 Jul 2025 20:24:23 +0300 Dragos Tatulea wrote:  
+> > > For zerocopy (io_uring, devmem), there is an assumption that the
+> > > parent device can do DMA. However that is not always the case:
+> > > for example mlx5 SF devices have an auxiliary device as a parent.  
 > > 
-> > The commit message should explain why. With that fixed,
+> > Noob question -- I thought that the point of SFs was that you can pass
+> > them thru to a VM. How do they not have DMA support? Is it added on
+> > demand by the mediated driver or some such?  
+> They do have DMA support. Maybe didn't state it properly in the commit
+> message. It is just that the the parent device
+> (sf_netdev->dev.parent.device) is not a DMA device. The grandparent
+> device is a DMA device though (PCI dev of parent PFs). But I wanted to
+> keep it generic. Maybe it doesn't need to be so generic?
 > 
-> How about this,
-> 
-> The pad aware version of v4l2_get_link_freq() tries to retrieve the link 
+> Regarding SFs and VM passtrhough: my understanding is that SFs are more
+> for passing them to a container.
 
-s/pad aware/pad-aware/
-
-> frequency from the media bus configuration using the get_mbus_config 
-> operation, and only if the subdevice do not implement this operation 
-
-s/do not/does not/
-
-> fall-back to the old method of getting it using the V4L2_CID_LINK_FREQ 
-
-s/fall-back/falls back/
-
-> or V4L2_CID_PIXEL_RATE control.
-> 
-> Update the VIN driver to use the pad aware version to be able to support 
-
-s/pad aware/pad-aware/
-
-> subdevices that only provides the link frequency in the media bus 
-> configuration. As the implementation falls-back to the old method if the 
-
-s/falls-back/falls back/
-
-> subdevice don't support get_mbus_config, or don't provide a link 
-
-s/don't/doesn't/g
-
-> frequency in the v4l2_mbus_config struct, this is fully backward 
-> compatible.
-
-Looks good to me.
-
-As discussed privately, this patch is needed to avoid breakages with the
-latest GMSL2/3 drivers posted in [1] on Gen4 platforms. As the patch
-makes sense on its own without the rest of the series, I'll take it in
-my tree.
-
-[1] lore.kernel.org/linux-media/20250702132104.1537926-1-demonsingur@gmail.com
-
-> > Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> > 
-> > > Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-> > > ---
-> > >  drivers/media/platform/renesas/rcar-csi2.c | 4 +++-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/media/platform/renesas/rcar-csi2.c b/drivers/media/platform/renesas/rcar-csi2.c
-> > > index 9979de4f6ef1..ddbdde23c122 100644
-> > > --- a/drivers/media/platform/renesas/rcar-csi2.c
-> > > +++ b/drivers/media/platform/renesas/rcar-csi2.c
-> > > @@ -954,6 +954,7 @@ static int rcsi2_set_phypll(struct rcar_csi2 *priv, unsigned int mbps)
-> > >  static int rcsi2_calc_mbps(struct rcar_csi2 *priv, unsigned int bpp,
-> > >  			   unsigned int lanes)
-> > >  {
-> > > +	struct media_pad *remote_pad;
-> > >  	struct v4l2_subdev *source;
-> > >  	s64 freq;
-> > >  	u64 mbps;
-> > > @@ -962,8 +963,9 @@ static int rcsi2_calc_mbps(struct rcar_csi2 *priv, unsigned int bpp,
-> > >  		return -ENODEV;
-> > >  
-> > >  	source = priv->remote;
-> > > +	remote_pad = &source->entity.pads[priv->remote_pad];
-> > >  
-> > > -	freq = v4l2_get_link_freq(source->ctrl_handler, bpp, 2 * lanes);
-> > > +	freq = v4l2_get_link_freq(remote_pad, bpp, 2 * lanes);
-> > >  	if (freq < 0) {
-> > >  		int ret = (int)freq;
-> > >  
-
--- 
-Regards,
-
-Laurent Pinchart
+Mm. We had macvlan offload for over a decade, there's no need for
+a fake struct device, auxbus and all them layers to delegate a
+"subdevice" to a container in netdev world.
+In my head subfunctions are a way of configuring a PCIe PASID ergo
+they _only_ make sense in context of DMA.
+Maybe someone with closer understanding can chime in. If the kind
+of subfunctions you describe are expected, and there's a generic 
+way of recognizing them -- automatically going to parent of parent
+would indeed be cleaner and less error prone, as you suggest.
