@@ -1,92 +1,159 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0494223D2A3;
-	Wed,  2 Jul 2025 12:11:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B70D23D2A3;
+	Wed,  2 Jul 2025 12:11:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751458295; cv=none; b=dioTpZlbdmUMF9JjqUek+uAc4SnYRDWZG98Xeglb2i+bn0hNW18plzJqmg0A3Wwq7JDAFWjCvKEbb7tzzsDu57zEfJHE9J2XeLqe6Om1Ar9rRjL20R4T1M0Wrzs/cTT0KwOkPfP+p3F1/XZhu66vr+5s7erF1roI5NC6aNhZwfE=
+	t=1751458300; cv=none; b=GYL8e7FWyecC6yVZj3eusrT5ct3UR0e3R3V5ACji+Up+mIs3wqVkx4X7cuAgLmje1Dp9DCB66cuvjs3kmX+XCFVGkSMqptce+xHEY4L97az0EbqLN5Q3LknGjmyCQeitQiCMD3j6phNXWRca63+zJq54R7Rv98W31MYNlvlDJJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751458295; c=relaxed/simple;
-	bh=Hw1kfrKKQBZrTYZcVSCZH9M8hggHGGEGpy1lOmtRGN0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F/0jUAmJ8lcxsK7cnD7upaB6gqmej2gIROjyKk5lFiX2O8DUEwkbnX7SgCLyYmBg0YWDc+JQa8Q97OWUcLaSU34ahy0Gt/VeDnHXKP5S1nyod3IKN0zkkbG8b/zrfBvcukdhi4zNWMmnsTEkQsJN+mG1Sq0fsJnrJ8bt1EsVVIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e67EGott; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751458300; c=relaxed/simple;
+	bh=C6TFBmrfVjExnWTXpHpcNDBsptXWGqMJMSNbdjB9Dsc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GRRnSQvOk0TbakKzreDPrXjdPfNhzFsgUIY9xUQQsq8tBImBrlfH3DRCNwaAyf83eCvtoMeydisdAAccsV3T71tC2BhBSK6RWweMfYO6nk5RY24st4QlKRhapakzWv7NLcJSsZYMoAbQuktXyrqCB2gERxDBU79ArIiRrnN2Dl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sRi+xsZ9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e67EGott"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751458293; x=1782994293;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Hw1kfrKKQBZrTYZcVSCZH9M8hggHGGEGpy1lOmtRGN0=;
-  b=e67EGott7ezTc8Xf8jbfwNlbExqfaPMBO4kIsDCASrrGdxxfjfId/hns
-   2xAS2aRY1fM9pZEAQjD7A4v0KfV52YN94cUlNU3o3mLbPAOlGrvG62bQO
-   tXpeDEF8psyxSqL8pS4G06JTNXEP9jvTAYTj/eOIHzigm4bfywkr86YS5
-   GXvzTE7DQtn4jUrTyfkKHukz+0aH8tQafCM6KwJJoGxlFuY3BGOLR/fXz
-   JCnkTMK6uTCTwWbW4W7PJlM8DsZQpxFkRNYQJAg+1R6EVV+V9Lfsm6shs
-   CGkeRdO3wjgO7A52j4CRVZaLYVZdLI3QZNRaHawQITRUsKecB7MtP1Ojp
-   A==;
-X-CSE-ConnectionGUID: xtz1WZbCT060Zmbjk1GDkg==
-X-CSE-MsgGUID: Zfq1/UvfSXaiyVOgHrLHTA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="64795504"
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="64795504"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 05:11:32 -0700
-X-CSE-ConnectionGUID: QZEn8GA8SZKGqLdHF2IE2w==
-X-CSE-MsgGUID: QVsgG8v+Rim98MLKHiu+fg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="154607439"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 05:11:29 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uWwJC-0000000BueR-2VGc;
-	Wed, 02 Jul 2025 15:11:26 +0300
-Date: Wed, 2 Jul 2025 15:11:26 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: "Colin King (gmail)" <colin.i.king@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>, nuno.sa@analog.com,
-	Andy Shevchenko <andy@kernel.org>,
-	Gustavo Bastos <gustavobastos@usp.br>,
-	Andrew Ijano <andrew.ijano@gmail.com>,
-	Julien Stephan <jstephan@baylibre.com>, linux-iio@vger.kernel.org,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: iio: accel: sca3000: dead code issue
-Message-ID: <aGUh7uXenHc7NYB2@smile.fi.intel.com>
-References: <1c1e39cb-5fe0-46b3-898e-c65bbb3beb30@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sRi+xsZ9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EEB1C4CEED;
+	Wed,  2 Jul 2025 12:11:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751458299;
+	bh=C6TFBmrfVjExnWTXpHpcNDBsptXWGqMJMSNbdjB9Dsc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=sRi+xsZ9QbF3yUiq3dqKYF/zZrk8tOZF45+9yTlxFrJoS5sBraE58BkNmSIofx3Yq
+	 HGCgTyMkOyDjGMSU7hI1YJENxKCTG5XF/+1JdLPu155hvc94K8lFNmTbFdsYvWuac2
+	 FwZh9B7T+GllpGaw2JdtHo8FDQgXureyBOMnE4BX99e3eSpimPHIUIHeEJi54CkPFQ
+	 gziXP66tWp6o29He2NAqbx+kL6n9JhK7BZuxrSWTJULHRu6iRVWrTvlNC68ommt+Lq
+	 BwQcCzavA2Kjb5Z6l6GXdh6DCjFIPsj2aeBM7RrMbLrhbrfTF4Dz0GymJ3P3mfVhdY
+	 eqBAH/vWgG7Yw==
+Message-ID: <1cc6f462-dfd2-46ed-8534-a44812ef1cbd@kernel.org>
+Date: Wed, 2 Jul 2025 14:11:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1c1e39cb-5fe0-46b3-898e-c65bbb3beb30@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/5] media: dt-bindings: add non-pixel property in iris
+ schema
+To: Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Abhinav Kumar <abhinav.kumar@linux.dev>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250627-video_cb-v3-0-51e18c0ffbce@quicinc.com>
+ <20250627-video_cb-v3-1-51e18c0ffbce@quicinc.com>
+ <6fd3fa34-69e1-484f-ad6f-8caa852f1a6c@kernel.org>
+ <dc6e82a1-82be-b8b8-31c3-8b85447d4e43@quicinc.com>
+ <8b88cea4-b9f2-4365-829c-2a255aed6c69@kernel.org>
+ <ae23ebae-3101-4a73-2bbd-0dabb4efaba1@quicinc.com>
+ <45fdf98c-32f7-4b5f-889c-6d2f1fa5fbd6@kernel.org>
+ <87d0795e-82d5-3274-4909-dd795d082295@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <87d0795e-82d5-3274-4909-dd795d082295@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 02, 2025 at 10:00:55AM +0100, Colin King (gmail) wrote:
-
->                 ret = spi_w8r8(st->us,
-> SCA3000_READ_REG(SCA3000_REG_BUF_COUNT_ADDR));
+On 02/07/2025 14:08, Vikash Garodia wrote:
 > 
-> >>>  the call to spi_w8r8 returns 0 on success or -ve on an error
+> On 7/2/2025 5:28 PM, Krzysztof Kozlowski wrote:
+>> On 02/07/2025 13:55, Vikash Garodia wrote:
+>>>
+>>>
+>>> On 7/2/2025 5:17 PM, Krzysztof Kozlowski wrote:
+>>>> On 02/07/2025 13:45, Vikash Garodia wrote:
+>>>>>
+>>>>> On 7/2/2025 4:53 PM, Krzysztof Kozlowski wrote:
+>>>>>> On 27/06/2025 17:48, Vikash Garodia wrote:
+>>>>>>> +
+>>>>>>>      video-codec@aa00000 {
+>>>>>>>          compatible = "qcom,sm8550-iris";
+>>>>>>>          reg = <0x0aa00000 0xf0000>;
+>>>>>>> @@ -144,12 +176,16 @@ examples:
+>>>>>>>          resets = <&gcc GCC_VIDEO_AXI0_CLK_ARES>;
+>>>>>>>          reset-names = "bus";
+>>>>>>>  
+>>>>>>> -        iommus = <&apps_smmu 0x1940 0x0000>,
+>>>>>>> -                 <&apps_smmu 0x1947 0x0000>;
+>>>>>>> +        iommus = <&apps_smmu 0x1947 0x0000>;
+>>>>>>
+>>>>>> I missed, that's technically ABI break and nothing in commit msg
+>>>>>> explains that. You need to clearly explain the reasons and impact.
+>>>>> No, it is not. Interface works well with old or new approach.
+>>>>
+>>>>
+>>>> You changed the order of IOMMUs, so yes it is. Which interface works
+>>>> well - FreeBSD? Or other? You are changing ABI for every user.
+>>> Why do i need to change, when without changing would work as well ?
+>> ? I don't understand. I made a statement, not a question. You are doing
+>> this - you are changing the ABI.
+>>
+>> Which item was the first IOMMU before and which was second?
+>>
+>> Which item is the first IOMMU now?
+> Old approach - max 2 iommus interface - <SID-A, SID-B>
+> New approach - min 1/max 2, iommu interface - <SID-B>, child - <SID-A>
 
-Where did you get this from, please?  Any link to elixir or Git repo?
+So you changed first IOMMU entry, first IOMMU master and that is
+technically ABI break.
 
 > 
->                 if (ret)
->                         goto error_ret;
+> If both works, how is interchanging impacting any existing hardware OR breaking
+> ABI ?
 
--- 
-With Best Regards,
-Andy Shevchenko
+Because you change the entries. The ordering of lists - not iommus which
+do not matter for Linux here - was discussed many times, so just refer
+to that discussions.
 
 
+
+Best regards,
+Krzysztof
