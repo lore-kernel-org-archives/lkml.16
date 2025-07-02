@@ -1,191 +1,404 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED2BD15747D
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:06:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E0D283FD6;
+	Wed,  2 Jul 2025 14:06:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751465191; cv=none; b=mgljQkXUDla40TEZrfVqW6zf1S1UZjOrmqteh8R7cweWYoFMTC91qmpQ16WQeigqqCbb/f+QfSUhM8SSjnH47hZxDZnGIu42xrUVFgPKxzb62nDiRqw0Nc2Aa782rFn42QHiOdw/VpbRdI6J5Ab8/6SCi6l961d91/yS6tD8/p4=
+	t=1751465192; cv=none; b=ed8XdHsjphd3+yX72KlpjTAOPlFgbLDg2/5exCQcWOHg7U77BK60pKang/GA48sztCvMk8EDj0K100wORNjSrcIpgNACxNab4Lh+Lp04U8adwHSu2FISd+A4TUvNhvQyndCeF/uCiZyY5U6TbcJd4ldCbZn89zXY9DbgEl7Y5BI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751465191; c=relaxed/simple;
-	bh=EFSNNOQndvGvCcYvKgWAYJ17t/S6vVQEGqmPrK/aRss=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=K9ipBCBHt4wGdEhQHRyqNBt5rDvHCRDay/O3Ci3AQdcmWZwUiDfmdPKWpO1/QNiguhKxG8tKNkUITO/GsZFp0Cf0lYgFYtmWpAnovKDKnndvtEDGh5e5QlSCIj88Ew/ZJJM4UU4yEcTMnWrbP1/4/L3/dc381WT295WPUP63X7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nuvy+jWH; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nuvy+jWH"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a4e62619afso799105f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 07:06:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751465186; x=1752069986; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=rCiA90hTUctDSUZs3tArhKn0CSZuzbxFnHheUaEfGU0=;
-        b=nuvy+jWHW65/45shkiOLpxVmpaX+Ye+bXU3qxoDP/brdV5KEKED11bmldjDxtgFp3s
-         JGE5QoQOeEJzegibPDT7TE45gXA/4YysQ6rG2pW8iy20OD/xS0oY7NMYRFIaQIxlXy7m
-         U8FjUIUqISyKl2G3fS0OVoLtv4v5mhsJUTSH3VaLCSicVWFdh1oFQjwo3zYRD2WEHyvE
-         nzaMdcHYzo9T7DXvZTMtvanAmcZpNyzhCuOWYftQrT4GkQ5oAunPuKZsP5onO9el4uJX
-         u84EXG3k+HHGUTC/iYXQQYJ0xS2nT/CtZ36BTyx06HQ/a6Pty/uestLsXELECviG6OJx
-         gd+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751465186; x=1752069986;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rCiA90hTUctDSUZs3tArhKn0CSZuzbxFnHheUaEfGU0=;
-        b=FezfH2gs9P5DAOmdHehGIpULuK8kSt6SaPZXhZX0AYp1onh72xw6f9JS6X5RgkaDSX
-         bHk3YHsGr+UXs3LItiuXRYjjAqP7Ef2OT+BfcOa9UG8d5UYdsFYMqf062XKHE7Nn3YeM
-         OGJfQ4D4TpHGUFvVATc6r5its4+kH889tNXeYOxkCkkXdJHwIw0ptS16cNCHY1NsGcTs
-         hUO36FB1Ekxixl4cIfMWE6S+6T9ckonKe8KdrngZf7KWANJbNFB/Q6Uw59H92IukmG7B
-         SYTJf6Ii3j1O9aA0A8RwqfwdaUlQcFQCpqY1JyooNis38U/FpThqQIUP+2FfrChbUyfE
-         /zIw==
-X-Forwarded-Encrypted: i=1; AJvYcCV0lGUFAhxdSTlloCJrBwK3xHze6np+4BEx92KPYFUkTOWADMd3pyONH+uIHwugKEb+RYPKVrq+ZK0CMFc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTdhRY8+4M7dtjEtp6dPG+t4GU+BzKXJi+ZqG5+IvGryBfzPh9
-	7XQzNmfE6Du0rRT5ZIFscBWSCmR27nFQwCjIH/f7xABCJJPPyJ8M/kum8mbt1ZMLvzE=
-X-Gm-Gg: ASbGncs/aJ7+UGxDAZCsjLBBjlS6rteXelOr13J8PY4Un4xej0G6SvLyVk+pxI65U8A
-	FHgyPjhzNILW/pD0Q3i2gn4KHJW8DsI2rLKltxmssQywJhugt72J51J94iFuOcSxKkz+pG7GG2G
-	1pqY7BYpTqtPN6WWdzBLOpHWaQgkLC+YYKeiZ+Lldoe9jype8vE8rtZ22rDJS9k1zwlCkAfCpUP
-	fGeDqsEIJmHJSwxH+D6nt/BPceRWqBjnjEZ9NhPGZtVrf6OwutOPjcR13NNu46zy7Bm/k6BfRMr
-	Xxz9/5vuEk2t2NxWnZzUgA86uN1+6dv8SiM38/tyM/1taGqxyiipoyihFyNABdqNNcgaGQUONdb
-	DMbnw5A==
-X-Google-Smtp-Source: AGHT+IGxl6POoWUHGZRhEOjgzGDI7etKdUi/7xVqrIdH8pMKVPY188NE/odw4IuUPPWo5M//XpSEpg==
-X-Received: by 2002:a05:6000:2086:b0:3a4:d6ed:8e28 with SMTP id ffacd0b85a97d-3b1fe6b71cdmr916283f8f.8.1751465186130;
-        Wed, 02 Jul 2025 07:06:26 -0700 (PDT)
-Received: from [192.168.1.110] ([178.197.222.89])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823ba553sm224912215e9.31.2025.07.02.07.06.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jul 2025 07:06:25 -0700 (PDT)
-Message-ID: <9d834444-8dab-4e3f-987b-e1d6d615f61d@linaro.org>
-Date: Wed, 2 Jul 2025 16:06:24 +0200
+	s=arc-20240116; t=1751465192; c=relaxed/simple;
+	bh=rXyo8ORdVakXK3X9Qi3/z2DRpIcRtRQbRD9iDzu8h4o=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=o7D/OVimjLVYEr/wlRDUPDzZEeTQEp12jQz5ki/NckLMpDQPTs32XCWwy3uewgKxvOIlZkLCfXAUg28bCwZ6seDMeb0PgmhTth7yIZ//GiZ6fhEImTxWhkprNZTZdjUD5gU8JCDKKpxftNnzgL1e4WhNrA0scnv3AE+FJqKvtCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bXMBK1glKz6L5vy;
+	Wed,  2 Jul 2025 22:06:01 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 42615140446;
+	Wed,  2 Jul 2025 22:06:27 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 2 Jul
+ 2025 16:06:26 +0200
+Date: Wed, 2 Jul 2025 15:06:24 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+CC: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "Rob
+ Herring" <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
+ Dooley" <conor+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "Sascha
+ Bischoff" <sascha.bischoff@arm.com>, Timothy Hayes <timothy.hayes@arm.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, "Liam R. Howlett"
+	<Liam.Howlett@oracle.com>, Peter Maydell <peter.maydell@linaro.org>, "Mark
+ Rutland" <mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v6 28/31] irqchip/gic-v5: Add GICv5 ITS support
+Message-ID: <20250702150624.00007ceb@huawei.com>
+In-Reply-To: <20250626-gicv5-host-v6-28-48e046af4642@kernel.org>
+References: <20250626-gicv5-host-v6-0-48e046af4642@kernel.org>
+	<20250626-gicv5-host-v6-28-48e046af4642@kernel.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] media: iris: Be explicit in naming of VPU2 power off
- handlers
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Vikash Garodia <quic_vgarodia@quicinc.com>,
- Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Abhinav Kumar <abhinav.kumar@linux.dev>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250702134227.211104-2-krzysztof.kozlowski@linaro.org>
- <803adfad-a601-4d65-b877-e8ec10969698@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- 2+47PN9NZAOyb771QoVr8A==
-In-Reply-To: <803adfad-a601-4d65-b877-e8ec10969698@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On 02/07/2025 16:02, Konrad Dybcio wrote:
-> On 7/2/25 3:42 PM, Krzysztof Kozlowski wrote:
->> Driver implements different callbacks for power off hardware
->> (.power_off_hw) and power off controller (.power_off_controller):
->>
->>  - iris_vpu_power_off_hw + iris_vpu_power_off_controller,
->>  - iris_vpu3_power_off_hardware,
->>  - iris_vpu33_power_off_hardware + iris_vpu33_power_off_controller,
->>
->> The first group (iris_vpu_power_off_hw() and
->> iris_vpu_power_off_controller()) is used on older VPU2 designs but also
->> called from newer ones: iris_vpu3_power_off_hardware() calls
->> iris_vpu_power_off_controller().
->>
->> In the same time there is wrapper iris_vpu_power_off() which calls
->> respective callbacks (the VPU2, VPU3 etc).
->>
->> Let's make it more obvious which function is a generic wrapper over
->> specific VPU/platform callbacks (iris_vpu_power_off()) and which one is
->> the callback by adding "2" to callbacks used on VPU2.  No functional
->> changes.
->>
->> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->> ---
+On Thu, 26 Jun 2025 12:26:19 +0200
+Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+
+> The GICv5 architecture implements Interrupt Translation Service
+> (ITS) components in order to translate events coming from peripherals
+> into interrupt events delivered to the connected IRSes.
 > 
-> [...]
+> Events (ie MSI memory writes to ITS translate frame), are translated
+> by the ITS using tables kept in memory.
 > 
->> diff --git a/drivers/media/platform/qcom/iris/iris_vpu3x.c b/drivers/media/platform/qcom/iris/iris_vpu3x.c
->> index 9b7c9a1495ee..a2c8a1650153 100644
->> --- a/drivers/media/platform/qcom/iris/iris_vpu3x.c
->> +++ b/drivers/media/platform/qcom/iris/iris_vpu3x.c
->> @@ -104,7 +104,7 @@ static void iris_vpu3_power_off_hardware(struct iris_core *core)
->>  	writel(0x0, core->reg_base + CPU_CS_AHB_BRIDGE_SYNC_RESET);
->>  
->>  disable_power:
->> -	iris_vpu_power_off_hw(core);
->> +	iris_vpu2_power_off_hw(core);
->>  }
->>  
->>  static void iris_vpu33_power_off_hardware(struct iris_core *core)
->> @@ -142,7 +142,7 @@ static void iris_vpu33_power_off_hardware(struct iris_core *core)
->>  	writel(0x0, core->reg_base + CPU_CS_AHB_BRIDGE_SYNC_RESET);
->>  
->>  disable_power:
->> -	iris_vpu_power_off_hw(core);
->> +	iris_vpu2_power_off_hw(core);
->>  }
+> ITS translation tables for peripherals is kept in memory storage
+> (device table [DT] and Interrupt Translation Table [ITT]) that
+> is allocated by the driver on boot.
 > 
-> I don't really like how v3 calls v2 ops internally.. and there's
-> nothing really vpu2-specific about what the function does.
-> Maybe something along the lines of "iris_disable_resources"?
+> Both tables can be 1- or 2-level; the structure is chosen by the
+> driver after probing the ITS HW parameters and checking the
+> allowed table splits and supported {device/event}_IDbits.
+> 
+> DT table entries are allocated on demand (ie when a device is
+> probed); the DT table is sized using the number of supported
+> deviceID bits in that that's a system design decision (ie the
+> number of deviceID bits implemented should reflect the number
+> of devices expected in a system) therefore it makes sense to
+> allocate a DT table that can cater for the maximum number of
+> devices.
+> 
+> DT and ITT tables are allocated using the kmalloc interface;
+> the allocation size may be smaller than a page or larger,
+> and must provide contiguous memory pages.
+> 
+> LPIs INTIDs backing the device events are allocated one-by-one
+> and only upon Linux IRQ allocation; this to avoid preallocating
+> a large number of LPIs to cover the HW device MSI vector
+> size whereas few MSI entries are actually enabled by a device.
+> 
+> ITS cacheability/shareability attributes are programmed
+> according to the provided firmware ITS description.
+> 
+> The GICv5 partially reuses the GICv3 ITS MSI parent infrastructure
+> and adds functions required to retrieve the ITS translate frame
+> addresses out of msi-map and msi-parent properties to implement
+> the GICv5 ITS MSI parent callbacks.
+> 
+> Co-developed-by: Sascha Bischoff <sascha.bischoff@arm.com>
+> Signed-off-by: Sascha Bischoff <sascha.bischoff@arm.com>
+> Co-developed-by: Timothy Hayes <timothy.hayes@arm.com>
+> Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
+> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Marc Zyngier <maz@kernel.org>
 
-Context: sm8750 comes with more resources, so it will come with vpu35
-doing this differently.
+Hi Lorenzo,
 
-That's why any generic name (non platform specific) is misleading IMO.
-This is really disabling/power off for the VPU2, 3 and 3.3. Not newer,
-at least after initial look at SM8750.
+It almost certainly doesn't matter, but there are a couple of release
+paths in here where things don't happen in the same order as the
+equivalent error tear down paths (i.e. not reverse of setup).
 
-Best regards,
-Krzysztof
+There may well be a good reason for that but I couldn't immediately
+spot what it was.  Also a follow up similar to earlier comment about
+the table sizing code not matching the comments above it. Same thing
+going on here.
+
+Jonathan
+
+
+git a/drivers/irqchip/irq-gic-v5-its.c b/drivers/irqchip/irq-gic-v5-its.c
+> new file mode 100644
+> index 000000000000..cba632eb0273
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-gic-v5-its.c
+
+> +/*
+> + * Function to check whether the device table or ITT table support
+> + * a two-level table and if so depending on the number of id_bits
+> + * requested, determine whether a two-level table is required.
+> + *
+> + * Return the 2-level size value if a two level table is deemed
+> + * necessary.
+> + */
+> +static bool gicv5_its_l2sz_two_level(bool devtab, u32 its_idr1, u8 id_bits, u8 *sz)
+> +{
+> +	unsigned int l2_bits, l2_sz;
+> +
+> +	if (devtab && !FIELD_GET(GICV5_ITS_IDR1_DT_LEVELS, its_idr1))
+> +		return false;
+> +
+> +	if (!devtab && !FIELD_GET(GICV5_ITS_IDR1_ITT_LEVELS, its_idr1))
+> +		return false;
+> +
+> +	/*
+> +	 * Pick an L2 size that matches the pagesize; if a match
+> +	 * is not found, go for the smallest supported l2 size granule.
+
+Similar to before, this description is confusing.  If Page size is 64K
+and 16 + 4 are supported we choose 16 which is not he smallest
+supported (4 is).  The condition the comment refers to only applies
+if only larger than pagesized things are supported.
+
+> +	 *
+> +	 * This ensures that we will always be able to allocate
+> +	 * contiguous memory at L2.
+> +	 */
+> +	switch (PAGE_SIZE) {
+> +	case SZ_64K:
+> +		if (GICV5_ITS_IDR1_L2SZ_SUPPORT_64KB(its_idr1)) {
+> +			l2_sz = GICV5_ITS_DT_ITT_CFGR_L2SZ_64k;
+> +			break;
+> +		}
+> +		fallthrough;
+> +	case SZ_16K:
+> +		if (GICV5_ITS_IDR1_L2SZ_SUPPORT_16KB(its_idr1)) {
+> +			l2_sz = GICV5_ITS_DT_ITT_CFGR_L2SZ_16k;
+> +			break;
+> +		}
+> +		fallthrough;
+> +	case SZ_4K:
+> +		if (GICV5_ITS_IDR1_L2SZ_SUPPORT_4KB(its_idr1)) {
+> +			l2_sz = GICV5_ITS_DT_ITT_CFGR_L2SZ_4k;
+> +			break;
+> +		}
+> +		if (GICV5_ITS_IDR1_L2SZ_SUPPORT_16KB(its_idr1)) {
+> +			l2_sz = GICV5_ITS_DT_ITT_CFGR_L2SZ_16k;
+> +			break;
+> +		}
+> +		if (GICV5_ITS_IDR1_L2SZ_SUPPORT_64KB(its_idr1)) {
+> +			l2_sz = GICV5_ITS_DT_ITT_CFGR_L2SZ_64k;
+> +			break;
+> +		}
+> +
+> +		l2_sz = GICV5_ITS_DT_ITT_CFGR_L2SZ_4k;
+> +		break;
+> +	}
+> +
+> +	l2_bits = gicv5_its_l2sz_to_l2_bits(l2_sz);
+> +
+> +	if (l2_bits > id_bits)
+> +		return false;
+> +
+> +	*sz = l2_sz;
+> +
+> +	return true;
+> +}
+
+
+
+> +/*
+> + * Register a new device in the device table. Allocate an ITT and
+> + * program the L2DTE entry according to the ITT structure that
+> + * was chosen.
+> + */
+> +static int gicv5_its_device_register(struct gicv5_its_chip_data *its,
+> +				     struct gicv5_its_dev *its_dev)
+> +{
+> +	u8 event_id_bits, device_id_bits, itt_struct, itt_l2sz;
+> +	phys_addr_t itt_phys_base;
+> +	bool two_level_itt;
+> +	u32 idr1, idr2;
+> +	__le64 *dte;
+> +	u64 val;
+> +	int ret;
+> +
+> +	device_id_bits = devtab_cfgr_field(its, DEVICEID_BITS);
+> +
+> +	if (its_dev->device_id >= BIT(device_id_bits)) {
+> +		pr_err("Supplied DeviceID (%u) outside of Device Table range (%u)!",
+> +		       its_dev->device_id, (u32)GENMASK(device_id_bits - 1, 0));
+> +		return -EINVAL;
+> +	}
+> +
+> +	dte = gicv5_its_devtab_get_dte_ref(its, its_dev->device_id, true);
+> +	if (!dte)
+> +		return -ENOMEM;
+> +
+> +	if (FIELD_GET(GICV5_DTL2E_VALID, le64_to_cpu(*dte)))
+> +		return -EBUSY;
+> +
+> +	/*
+> +	 * Determine how many bits we need, validate those against the max.
+> +	 * Based on these, determine if we should go for a 1- or 2-level ITT.
+> +	 */
+> +	event_id_bits = order_base_2(its_dev->num_events);
+> +
+> +	idr2 = its_readl_relaxed(its, GICV5_ITS_IDR2);
+> +
+> +	if (event_id_bits > FIELD_GET(GICV5_ITS_IDR2_EVENTID_BITS, idr2)) {
+> +		pr_err("Required EventID bits (%u) larger than supported bits (%u)!",
+> +		       event_id_bits,
+> +		       (u8)FIELD_GET(GICV5_ITS_IDR2_EVENTID_BITS, idr2));
+> +		return -EINVAL;
+> +	}
+> +
+> +	idr1 = its_readl_relaxed(its, GICV5_ITS_IDR1);
+> +
+> +	/*
+> +	 * L2 ITT size is programmed into the L2DTE regardless of
+> +	 * whether a two-level or linear ITT is built, init it.
+> +	 */
+> +	itt_l2sz = 0;
+> +
+> +	two_level_itt = gicv5_its_l2sz_two_level(false, idr1, event_id_bits,
+> +						  &itt_l2sz);
+> +	if (two_level_itt)
+> +		ret = gicv5_its_create_itt_two_level(its, its_dev, event_id_bits,
+> +						     itt_l2sz,
+> +						     its_dev->num_events);
+> +	else
+> +		ret = gicv5_its_create_itt_linear(its, its_dev, event_id_bits);
+> +	if (ret)
+> +		return ret;
+> +
+> +	itt_phys_base = two_level_itt ? virt_to_phys(its_dev->itt_cfg.l2.l1itt) :
+> +					virt_to_phys(its_dev->itt_cfg.linear.itt);
+> +
+> +	itt_struct = two_level_itt ? GICV5_ITS_DT_ITT_CFGR_STRUCTURE_TWO_LEVEL :
+> +				     GICV5_ITS_DT_ITT_CFGR_STRUCTURE_LINEAR;
+> +
+> +	val = FIELD_PREP(GICV5_DTL2E_EVENT_ID_BITS, event_id_bits)	|
+> +	      FIELD_PREP(GICV5_DTL2E_ITT_STRUCTURE, itt_struct)		|
+> +	      (itt_phys_base & GICV5_DTL2E_ITT_ADDR_MASK)		|
+> +	      FIELD_PREP(GICV5_DTL2E_ITT_L2SZ, itt_l2sz)		|
+> +	      FIELD_PREP(GICV5_DTL2E_VALID, 0x1);
+> +
+> +	its_write_table_entry(its, dte, val);
+> +
+> +	ret = gicv5_its_device_cache_inv(its, its_dev);
+> +	if (ret) {
+> +		gicv5_its_free_itt(its_dev);
+> +		its_write_table_entry(its, dte, 0);
+
+If it makes no difference, unwind in reverse order of setup so swap the
+two lines above.
+
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+
+> +static struct gicv5_its_dev *gicv5_its_alloc_device(struct gicv5_its_chip_data *its, int nvec,
+> +						    u32 dev_id)
+> +{
+> +	struct gicv5_its_dev *its_dev;
+> +	void *entry;
+> +	int ret;
+> +
+> +	its_dev = gicv5_its_find_device(its, dev_id);
+> +	if (!IS_ERR(its_dev)) {
+> +		pr_err("A device with this DeviceID (0x%x) has already been registered.\n",
+> +		       dev_id);
+> +
+> +		return ERR_PTR(-EBUSY);
+> +	}
+> +
+> +	its_dev = kzalloc(sizeof(*its_dev), GFP_KERNEL);
+> +	if (!its_dev)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	its_dev->device_id = dev_id;
+> +	its_dev->num_events = nvec;
+> +
+> +	ret = gicv5_its_device_register(its, its_dev);
+> +	if (ret) {
+> +		pr_err("Failed to register the device\n");
+> +		goto out_dev_free;
+> +	}
+> +
+> +	gicv5_its_device_cache_inv(its, its_dev);
+> +
+> +	its_dev->its_node = its;
+> +
+> +	its_dev->event_map = (unsigned long *)bitmap_zalloc(its_dev->num_events, GFP_KERNEL);
+> +	if (!its_dev->event_map) {
+> +		ret = -ENOMEM;
+> +		goto out_unregister;
+> +	}
+> +
+> +	entry = xa_store(&its->its_devices, dev_id, its_dev, GFP_KERNEL);
+> +	if (xa_is_err(entry)) {
+> +		ret = xa_err(entry);
+> +		goto out_bitmap_free;
+> +	}
+> +
+> +	return its_dev;
+> +
+> +out_bitmap_free:
+> +	bitmap_free(its_dev->event_map);
+> +out_unregister:
+> +	gicv5_its_device_unregister(its, its_dev);
+> +out_dev_free:
+> +	kfree(its_dev);
+> +	return ERR_PTR(ret);
+> +}
+> +
+> +static int gicv5_its_msi_prepare(struct irq_domain *domain, struct device *dev,
+> +				 int nvec, msi_alloc_info_t *info)
+> +{
+> +	u32 dev_id = info->scratchpad[0].ul;
+> +	struct msi_domain_info *msi_info;
+> +	struct gicv5_its_chip_data *its;
+> +	struct gicv5_its_dev *its_dev;
+> +
+> +	msi_info = msi_get_domain_info(domain);
+> +	its = msi_info->data;
+> +
+> +	guard(mutex)(&its->dev_alloc_lock);
+> +
+> +	its_dev = gicv5_its_alloc_device(its, nvec, dev_id);
+> +	if (IS_ERR(its_dev))
+> +		return PTR_ERR(its_dev);
+> +
+> +	its_dev->its_trans_phys_base = info->scratchpad[1].ul;
+> +	info->scratchpad[0].ptr = its_dev;
+> +
+> +	return 0;
+> +}
+> +
+> +static void gicv5_its_msi_teardown(struct irq_domain *domain, msi_alloc_info_t *info)
+> +{
+> +	struct gicv5_its_dev *its_dev = info->scratchpad[0].ptr;
+> +	struct msi_domain_info *msi_info;
+> +	struct gicv5_its_chip_data *its;
+> +
+> +	msi_info = msi_get_domain_info(domain);
+> +	its = msi_info->data;
+> +
+> +	guard(mutex)(&its->dev_alloc_lock);
+> +
+> +	if (WARN_ON_ONCE(!bitmap_empty(its_dev->event_map, its_dev->num_events)))
+> +		return;
+> +
+> +	gicv5_its_device_unregister(its, its_dev);
+> +	bitmap_free(its_dev->event_map);
+> +	xa_erase(&its->its_devices, its_dev->device_id);
+
+I was expecting this to be in reverse order of what happens in *msi_prepare (and *msi_alloc under
+that). That would give the order
+
+	xa_erase();
+	bitmap_free();
+	gicv5_its_device_unregister();
+	kfree(its_dev);
+
+If there is a reason for this ordering it might be good to add a comment calling it out.
+
+ 
+> +	kfree(its_dev);
+> +}
+
