@@ -1,134 +1,281 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C1230AADC
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:58:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA0430E82B;
+	Wed,  2 Jul 2025 14:59:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751468319; cv=none; b=CJ6AX58tm5zkAu0ZfkMmFqsOOxATZP0oYNdE9XaGBngaV0U5uT5ECXWa5jX6zAVElTohaZ5TNSiPGrZBtxYCM9XTw78M+zK+ITpOo9QhQHOOtGgwOqUfiEofZs1MGY/8QQN+VYMUOdOes2ne4Iam54BKKuWmQCmN82y8lRIKdlU=
+	t=1751468348; cv=none; b=CaqkqBvLLeAq9VIiimvRd/JP0JRSjiELNEdA3vmLr7JVAEiksoRf81xj5ZhrmhA2gTa6qcwOsrhF7sdHSm/rV76RR3wnpy/IYmjmq8nu7wQwDPFaDrjyivxTar98hHRoA62cJGS0z3oQ4c5tL/z64n/EOeuy4m0KsAoqByEUvyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751468319; c=relaxed/simple;
-	bh=jmdo0wtlEM9OGtqiUmj8GSs9s2w3JeA5xOWYKMd/baE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SqYQqO2JfnHRIpG8/P13FHwAFbyINqqjAdl/de6E4u9EbRTDz8oJX3mXNwU8CuJHu8MqsfiwCWakqmq/+miE6hoiWrfZ+zU1XC6xwb/I310DmfrJg86grxULnVYsHt3y76dL29RgJWRXQwG/QjAKqhNATq566zzLokc2xTHsB0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iIjCKHzV; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751468348; c=relaxed/simple;
+	bh=7U1RIaJFYuXTcTnJPh2nsOAauQAM414gMJSuOXL4gkg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YnJo+PTqahpLiop5vTlo7kWfMzsyTI8VOtWhHwdOSwEX6ue2Ab6Q0zqK0hVfS9R9DwLC2olzZxWkOXDq0MvKoPwoOn3yEDHmEnpswb/5XiQEFfdCO+diSjbj+ax9qGl1qRNOefYIjnC4ZkNVpkPsQI4ENgwATbb9Og5V4ODrC+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a/dCBG63; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iIjCKHzV"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-450cfb79177so42045085e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 07:58:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751468314; x=1752073114; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JO+LYkjBSv6Ibw6vZ1z2UPxJ2+RcrEARZpMlMoEjCbw=;
-        b=iIjCKHzVmgD9ddqjWVzRYA66hWINjAVkj+uAh5e+xoNYufqoojFWsAolb4Hh88lmOC
-         6pVKTFkGAGwfPBrz2CNnmUoy4+FdK7pbrwdcqPqSgakMPgnljxc1t6XAcaHuNxfLVIiP
-         WNszDQbv+Cr6HuqdtqxtX65GUBiEA/+1AV/sa37fntaTI7UznF8Deu1MLQfdGwEKw8P8
-         VWea/7OVxY97m+HPrWqMxOzjxpcdufhTElopGmDQBAYKh89NKzZ8Va6tGw/GlzwIq6hr
-         jpVAG0D7E6vbWN+Pguxiu/Qxkupnmk+zQjdz7lKnqxHKs5jD12Wu9cEa3rStz0RbcvwE
-         9OJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751468314; x=1752073114;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JO+LYkjBSv6Ibw6vZ1z2UPxJ2+RcrEARZpMlMoEjCbw=;
-        b=WsC0rVc/a9CyFXe/+UAWE36Ah9nLS8dv4VXvcNFGdSFDg9EJn0m+gtFiAWrdiEN9Tj
-         t1eQpyShxUomMqw0ncHYhjBi4qiPuwL7mJM+a2fgD3dj8ibsDVZM1Zusqn2jRftr+PCs
-         VKrL8fNvT6lQ3WXqmWpjzy9asVwDEBkLigaUG/UrPZelzvFsMtmSFT+QgOGuYWGR+okE
-         /8IOCj74YCZub8X+5eyCboge4baTDr+lsQxTUXyt7xaGwfhddgATI3mf7NU1gHqHlHJI
-         HzZFN/m/wQPDefiEhIoVrWDHnJr7tlAM75xglhGuUMKb+bFENd4s5eNGgs157uHnLcVK
-         MMTw==
-X-Forwarded-Encrypted: i=1; AJvYcCX5uxFzg3F2hUd8PVDnDwJJQFoNCq/6lFUtGTj4hMEJYRyVlTvK2qHhxyP5ZfxvbN9282EmSygN+cksWpA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5F1XY7SvRwSD+WJ7oVWHVY0R8FXZQmUXAxPFF9f0arfXvmR0n
-	Vvv75jWcPJKref2UZB7r5jbi7f/B56RBlAw6y6JGEwEoKfkRYM5IErsBAJEJ14ojqLc=
-X-Gm-Gg: ASbGncuN41s+kpslCb29MWNJ8KzYNlA3MnzwUgwkcNzqhiTLPnk+mMP1b3nWy4vUk/b
-	XkJ3VxfuaEFwlq25lRVoNHD6Bb0un9yIflpge4W7I//xjMBpWzaomFBQIeRRtjpXjumkesqDpGT
-	V22im+vMf4gKmGFNxS5E+iRG5kaDvrd6T44uuP3OWL1lLhGLwSAFeiYunXMZSmOBoCt5ij3rH2p
-	idfHHu92ymHk6fH28Q960IXAbjHY83yYRlbgJij7ObAC64hOWS/1a59lcdPFbHxev9C/PE+y49Y
-	StStob5vIAUuspOmgDRLflWdGvKtJGc0/JZ+FBEYptmoEYLkNr34gif0Mh0itG+z5r1M1K9YJBv
-	qnF7AGgmMSd1O9fG8ChgXkgVR/Kmx+qf1HOOcORw=
-X-Google-Smtp-Source: AGHT+IG8IhnVjdqSTayA9JUM4Fr5GDQ3JacEz/LaBYGYa1zzNjcnf1n3rb9PZrhs50FB927OOVq7Hw==
-X-Received: by 2002:a05:600c:6389:b0:450:d019:263 with SMTP id 5b1f17b1804b1-454a370c053mr34926805e9.18.1751468314016;
-        Wed, 02 Jul 2025 07:58:34 -0700 (PDT)
-Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a99668c5sm582525e9.5.2025.07.02.07.58.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jul 2025 07:58:33 -0700 (PDT)
-Message-ID: <8e7e0b5b-28a0-49db-9acc-f3a4c7d90559@linaro.org>
-Date: Wed, 2 Jul 2025 15:58:32 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a/dCBG63"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D82D1C4CEED;
+	Wed,  2 Jul 2025 14:59:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751468347;
+	bh=7U1RIaJFYuXTcTnJPh2nsOAauQAM414gMJSuOXL4gkg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=a/dCBG63u9V3vqZHxS2BfmOlb7HvqThyXavXbFg4U9Y/vPyLDJcy5lWR+DBAO8rcF
+	 VHvi2iuG1ujcCNaO3aWCwRAeOpyeb/VNtMqOYn8trzTsVPyH9Mnq8jPedWT9C/A3aG
+	 fcGwLEOyQvgybl+bfFGMXIyHiGfe0pqJcxwrmKAv4bl63lh4PFvSGB2OJV8LyonP8W
+	 ElokT3XaYGBgLk8pE2Nxo+QZLBrWBUP33EbnGvpirmPoDWXRseCcDwJ2MZwY0Touyn
+	 xSiulqoF1KO4yHbOnhVcwzhWdCTv/IuBUgbGFtiTd987QQppoN7PxVyjSkCu/NnNA0
+	 IHvdu9ivVZUWw==
+Date: Wed, 2 Jul 2025 16:59:00 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Marc Zyngier <maz@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Will Deacon <will@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Peter Maydell <peter.maydell@linaro.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v6 20/31] irqchip/gic-v5: Add GICv5 PPI support
+Message-ID: <aGVJNHiD44DH1sLn@lpieralisi>
+References: <20250626-gicv5-host-v6-0-48e046af4642@kernel.org>
+ <20250626-gicv5-host-v6-20-48e046af4642@kernel.org>
+ <20250702124019.00006b01@huawei.com>
+ <aGUqEkascwGFD9x+@lpieralisi>
+ <20250702140022.00001c65@huawei.com>
+ <aGUycEuLadcG+IfV@lpieralisi>
+ <20250702150907.000060d8@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] media: iris: Call correct power off callback in cleanup
- path
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Vikash Garodia <quic_vgarodia@quicinc.com>,
- Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Abhinav Kumar <abhinav.kumar@linux.dev>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Neil Armstrong <neil.armstrong@linaro.org>, Hans Verkuil
- <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org
-References: <20250702134158.210966-2-krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20250702134158.210966-2-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250702150907.000060d8@huawei.com>
 
-On 02/07/2025 14:41, Krzysztof Kozlowski wrote:
-> Driver implements different callbacks for the power off controller
-> (.power_off_controller):
+On Wed, Jul 02, 2025 at 03:09:07PM +0100, Jonathan Cameron wrote:
+> On Wed, 2 Jul 2025 15:21:52 +0200
+> Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+> 
+> > On Wed, Jul 02, 2025 at 02:00:22PM +0100, Jonathan Cameron wrote:
+> > > On Wed, 2 Jul 2025 14:46:10 +0200
+> > > Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+> > >   
+> > > > On Wed, Jul 02, 2025 at 12:40:19PM +0100, Jonathan Cameron wrote:  
+> > > > > On Thu, 26 Jun 2025 12:26:11 +0200
+> > > > > Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+> > > > >     
+> > > > > > The GICv5 CPU interface implements support for PE-Private Peripheral
+> > > > > > Interrupts (PPI), that are handled (enabled/prioritized/delivered)
+> > > > > > entirely within the CPU interface hardware.    
+> > > > > 
+> > > > > I can't remember where I got to last time so if I repeat stuff that
+> > > > > you already responded to, feel free to just ignore me this time ;)
+> > > > > 
+> > > > > All superficial stuff. Feel free to completely ignore if you like.    
+> > > > 
+> > > > We are at v6.16-rc4, series has been on the lists for 3 months, it has
+> > > > been reviewed and we would like to get it into v6.17 if possible and
+> > > > deemed reasonable, I am asking you folks please, what should I do ?
+> > > > 
+> > > > I can send a v7 with the changes requested below (no bug fixes there)
+> > > > - it is fine by me - but I need to know please asap if we have a
+> > > > plan to get this upstream this cycle.  
+> > > 
+> > > I'm absolutely fine with leaving these be.  The mask stuff I would like
+> > > to clean up as it applies quite widely in the series but that
+> > > can be a follow up as no bugs (so far!).   
+> > 
+> > I am certain that at a given state in the development I used the
+> > FIELD_PREP() on the hwirq_id and then was asked to remove it because
+> > it does not serve any purpose - this, for the records.
+> 
+> Fair enough.  Though on that front the code is inconsistent as
+> there are places where it is masked.  Anyhow, no problem either
+> way. The bit of feedback I gave on patch 22 might be more useful
+> to address (comments not matching code).
 
-The driver
+Yes it is. It is not strictly speaking a bug but the logic should
+be changed for SZ_64K PAGE_SIZE (try first 4K, then fallback to 16K).
+
+Well spotted, apologies but again, it is not even a bug, I missed
+it.
+
+I think I can do a v7 tomorrow morning for that and include the
+other comments as well - definitely not something that should stop
+this series from being considered for v6.17 please.
+
+Lorenzo
 
 > 
->   - iris_vpu_power_off_controller,
->   - iris_vpu33_power_off_controller,
 > 
-> The generic wrapper for handling power off - iris_vpu_power_off() -
-> calls them via 'iris_platform_data->vpu_ops', so shall the cleanup code
-> in iris_vpu_power_on().
+> Jonathan
 > 
-> This makes also sense if looking at caller of iris_vpu_power_on(), which
-> unwinds also with the wrapper calling respective platfortm code (unwinds
-> with iris_vpu_power_off()).
-
-platfortm/s//platform
-
-> Otherwise power off sequence on the newer VPU3.3 in error path is not
-> complete.
+> > 
+> > Thanks,
+> > Lorenzo
+> > 
+> > > As Marc said, these are in a good state.
+> > > 
+> > > Jonathan
+> > >   
+> > > > 
+> > > > Thanks,
+> > > > Lorenzo
+> > > >   
+> > > > > > diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
+> > > > > > new file mode 100644
+> > > > > > index 000000000000..a08daa562d21
+> > > > > > --- /dev/null
+> > > > > > +++ b/drivers/irqchip/irq-gic-v5.c
+> > > > > > @@ -0,0 +1,461 @@
+> > > > > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > > > > +/*
+> > > > > > + * Copyright (C) 2024-2025 ARM Limited, All Rights Reserved.
+> > > > > > + */
+> > > > > > +
+> > > > > > +#define pr_fmt(fmt)	"GICv5: " fmt
+> > > > > > +
+> > > > > > +#include <linux/irqdomain.h>
+> > > > > > +#include <linux/wordpart.h>
+> > > > > > +
+> > > > > > +#include <linux/irqchip.h>
+> > > > > > +#include <linux/irqchip/arm-gic-v5.h>
+> > > > > > +
+> > > > > > +#include <asm/cpufeature.h>
+> > > > > > +#include <asm/exception.h>
+> > > > > > +
+> > > > > > +static u8 pri_bits __ro_after_init = 5;
+> > > > > > +
+> > > > > > +#define GICV5_IRQ_PRI_MASK	0x1f
+> > > > > > +#define GICV5_IRQ_PRI_MI	(GICV5_IRQ_PRI_MASK & GENMASK(4, 5 - pri_bits))
+> > > > > > +
+> > > > > > +#define PPI_NR	128
+> > > > > > +
+> > > > > > +static bool gicv5_cpuif_has_gcie(void)
+> > > > > > +{
+> > > > > > +	return this_cpu_has_cap(ARM64_HAS_GICV5_CPUIF);
+> > > > > > +}
+> > > > > > +
+> > > > > > +struct gicv5_chip_data {
+> > > > > > +	struct fwnode_handle	*fwnode;
+> > > > > > +	struct irq_domain	*ppi_domain;
+> > > > > > +};
+> > > > > > +
+> > > > > > +static struct gicv5_chip_data gicv5_global_data __read_mostly;    
+> > > > >     
+> > > > > > +static void gicv5_hwirq_eoi(u32 hwirq_id, u8 hwirq_type)
+> > > > > > +{
+> > > > > > +	u64 cddi = hwirq_id | FIELD_PREP(GICV5_GIC_CDDI_TYPE_MASK, hwirq_type);    
+> > > > > 
+> > > > > Slight preference for not needing to care where hwirq_id goes in CDDI or how big
+> > > > > it is (other than when I checked the header defines).
+> > > > >  
+> > > > > 	u64 cddi = FIELD_PREP(GICV5_GIC_CDDI_ID_MASK, hwirq_id) |
+> > > > >         	   FIELD_PREP(GICV5_GIC_CDDI_TYPE_MASK, hwirq_type);
+> > > > > 
+> > > > >     
+> > > > > > +
+> > > > > > +	gic_insn(cddi, CDDI);
+> > > > > > +
+> > > > > > +	gic_insn(0, CDEOI);
+> > > > > > +}    
+> > > > >     
+> > > > > > +static int gicv5_ppi_irq_get_irqchip_state(struct irq_data *d,
+> > > > > > +					   enum irqchip_irq_state which,
+> > > > > > +					   bool *state)
+> > > > > > +{
+> > > > > > +	u64 hwirq_id_bit = BIT_ULL(d->hwirq % 64);
+> > > > > > +
+> > > > > > +	switch (which) {
+> > > > > > +	case IRQCHIP_STATE_PENDING:
+> > > > > > +		*state = !!(read_ppi_sysreg_s(d->hwirq, PPI_PENDING) & hwirq_id_bit);    
+> > > > > 
+> > > > > Technically don't need the !! but if you really like it I don't mind that much.
+> > > > >     
+> > > > > > +		return 0;
+> > > > > > +	case IRQCHIP_STATE_ACTIVE:
+> > > > > > +		*state = !!(read_ppi_sysreg_s(d->hwirq, PPI_ACTIVE) & hwirq_id_bit);
+> > > > > > +		return 0;
+> > > > > > +	default:
+> > > > > > +		pr_debug("Unexpected PPI irqchip state\n");
+> > > > > > +		return -EINVAL;
+> > > > > > +	}
+> > > > > > +}    
+> > > > > 
+> > > > >     
+> > > > > > +static int gicv5_irq_ppi_domain_translate(struct irq_domain *d,
+> > > > > > +					  struct irq_fwspec *fwspec,
+> > > > > > +					  irq_hw_number_t *hwirq,
+> > > > > > +					  unsigned int *type)
+> > > > > > +{
+> > > > > > +	if (!is_of_node(fwspec->fwnode))
+> > > > > > +		return -EINVAL;
+> > > > > > +
+> > > > > > +	if (fwspec->param_count < 3)    
+> > > > > 
+> > > > > I don't care that much, but could relax this seeing as fwspec->param[2]
+> > > > > isn't used anyway? Maybe a tiny comment on why it matters?
+> > > > >     
+> > > > > > +		return -EINVAL;
+> > > > > > +
+> > > > > > +	if (fwspec->param[0] != GICV5_HWIRQ_TYPE_PPI)
+> > > > > > +		return -EINVAL;
+> > > > > > +
+> > > > > > +	*hwirq = fwspec->param[1];
+> > > > > > +
+> > > > > > +	/*
+> > > > > > +	 * Handling mode is hardcoded for PPIs, set the type using
+> > > > > > +	 * HW reported value.
+> > > > > > +	 */
+> > > > > > +	*type = gicv5_ppi_irq_is_level(*hwirq) ? IRQ_TYPE_LEVEL_LOW : IRQ_TYPE_EDGE_RISING;
+> > > > > > +
+> > > > > > +	return 0;    
+> > > > > 
+> > > > >     
+> > > > > > +static int __init gicv5_of_init(struct device_node *node, struct device_node *parent)
+> > > > > > +{
+> > > > > > +	int ret = gicv5_init_domains(of_fwnode_handle(node));
+> > > > > > +	if (ret)
+> > > > > > +		return ret;
+> > > > > > +
+> > > > > > +	gicv5_set_cpuif_pribits();
+> > > > > > +
+> > > > > > +	ret = gicv5_starting_cpu(smp_processor_id());
+> > > > > > +	if (ret)
+> > > > > > +		goto out_dom;
+> > > > > > +
+> > > > > > +	ret = set_handle_irq(gicv5_handle_irq);
+> > > > > > +	if (ret)
+> > > > > > +		goto out_int;
+> > > > > > +
+> > > > > > +	return 0;
+> > > > > > +
+> > > > > > +out_int:
+> > > > > > +	gicv5_cpu_disable_interrupts();
+> > > > > > +out_dom:
+> > > > > > +	gicv5_free_domains();    
+> > > > > 
+> > > > > Naming is always tricky but I'd not really expect gicv5_free_domains() as the
+> > > > > pair of gicv5_init_domains() (which is doing creation rather than just initializing).
+> > > > > 
+> > > > > Ah well, names are never prefect and I don't really mind.
+> > > > >     
+> > > > > > +
+> > > > > > +	return ret;
+> > > > > > +}
+> > > > > > +IRQCHIP_DECLARE(gic_v5, "arm,gic-v5", gicv5_of_init);    
+> > > > >     
+> > > >   
+> > >   
 > 
-> Fixes: c69df5de4ac3 ("media: platform: qcom/iris: add power_off_controller to vpu_ops")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->   drivers/media/platform/qcom/iris/iris_vpu_common.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/platform/qcom/iris/iris_vpu_common.c b/drivers/media/platform/qcom/iris/iris_vpu_common.c
-> index 268e45acaa7c..42a7c53ce48e 100644
-> --- a/drivers/media/platform/qcom/iris/iris_vpu_common.c
-> +++ b/drivers/media/platform/qcom/iris/iris_vpu_common.c
-> @@ -359,7 +359,7 @@ int iris_vpu_power_on(struct iris_core *core)
->   	return 0;
->   
->   err_power_off_ctrl:
-> -	iris_vpu_power_off_controller(core);
-> +	core->iris_platform_data->vpu_ops->power_off_controller(core);
-
-Correct.
-
->   err_unvote_icc:
->   	iris_unset_icc_bw(core);
->   err:
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
