@@ -1,66 +1,77 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D16C11E32DB;
-	Wed,  2 Jul 2025 16:15:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 695E7277CBE;
+	Wed,  2 Jul 2025 16:15:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751472913; cv=none; b=VaCkN785wCbf31aS4ie7v5wsGihFVBxga5Ub5jZmnxceWHl6uEo8ZMQfUtMemYvpkABuJgasF6F3vC1YU+PcQrkP92xCDhgzTQ7lyVyqUgsyN5zMj42ELJsRf7ZqhihFQr+bhXvDqI6nM5f8DQY4A2I6bA9N3yZogrNgNaB13Ss=
+	t=1751472921; cv=none; b=IqC37vJ+90fQIImmHeUPotgDwQAS+11sEyUgVyioSoVb//hLHgoze0/FTINyakQCanPddMNiAmzOsUeWmALkjh5Ht4JsByrnMShV81CcQUiGnkwzK8qh6Fp+cDld1PW8pw/mTbyaYOxs4itgWvMZKaV1oonpIIdN3lYFeO9zkL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751472913; c=relaxed/simple;
-	bh=9QwY94Nv75Nm4h6LBd0G6Al6Dr6/ZyB/b2D87EfuVjk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=g/fnCs7cuv4u+4jWGrUeFehtfwfH7+RyAyREf9JTOUJvh3s7wM7cIYm2ML8O5h57aBWMpXXoH8Qgv4mV3f5dof/gT1n/zyhbfCkesZjjmacxfzikIIysRHucLDQLREbX59lu7zwvVC+9EXwWJGIHuprz4Qflcff+ZQhZbwGvn0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id C1A7D58571;
-	Wed,  2 Jul 2025 16:15:07 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id 63C2532;
-	Wed,  2 Jul 2025 16:15:03 +0000 (UTC)
-Date: Wed, 2 Jul 2025 12:15:02 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Sam James <sam@gentoo.org>
-Cc: fweimer@redhat.com, akpm@linux-foundation.org, andrii@kernel.org,
- axboe@kernel.dk, beaub@linux.microsoft.com, bpf@vger.kernel.org,
- indu.bhagat@oracle.com, jemarch@gnu.org, jolsa@kernel.org,
- jpoimboe@kernel.org, jremus@linux.ibm.com, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
- mhiramat@kernel.org, mingo@kernel.org, namhyung@kernel.org,
- peterz@infradead.org, tglx@linutronix.de, torvalds@linux-foundation.org,
- x86@kernel.org
-Subject: Re: [PATCH v11 00/14] unwind_user: x86: Deferred unwinding
- infrastructure
-Message-ID: <20250702121502.6e9d6102@batman.local.home>
-In-Reply-To: <87wm8qlsuk.fsf@gentoo.org>
-References: <878ql9mlzn.fsf@oldenburg.str.redhat.com>
-	<87wm8qlsuk.fsf@gentoo.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1751472921; c=relaxed/simple;
+	bh=Dljx2pfv9tt3uWe2/+5aVkyMUH3mjviIfFBiB+ou/sw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YLQ6WLW5me1SjyexrRHq6V4aDy+Z9wAhAIUPApoTb5bkC0ZKP4jbf56uxVsMsraqdHtfp0a5eRtzyKzoHBlUQ/p7/AiPCcvlIeIEV2TLeO+d0SjxGUS1j4EZziFa3YumYh6AdwZMp/nRrpnEzjEjDIDtZr9oV0lKh6xL+yCHkAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mVcxABRO; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mVcxABRO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84B96C4CEE7;
+	Wed,  2 Jul 2025 16:15:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751472921;
+	bh=Dljx2pfv9tt3uWe2/+5aVkyMUH3mjviIfFBiB+ou/sw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mVcxABROauwkgiYFUK0hdy9hZPLhJElp0zPaIeWC/pycblt4/HAe/R7bCshYRi/tX
+	 Ko1bKhstV4slOuSRrCq+mZFygsUjSpy+HOTgPqy6A1NxBr1mPBTyucBadkTX1meNh1
+	 CF2uJAr2Na0WvKxdOKQeOIwnKEfVrom45NDWTOdrfVaZvrkM6d4XNSaNSMbAF5YhJM
+	 P8GyhluFKfuIuhpX5LlzgsEVGFXiT7srQiQER+0i6L9Tpdq6vTz43fffS1HIS8pvtS
+	 ZGf36NeRKjHSgYVC47jy7wZdJJQnS1bq/xPkg3nECNGLTuWnt9ylSZ6+sf+QXF0P+p
+	 Nl8Vrzvv4AW8w==
+Date: Wed, 2 Jul 2025 17:15:13 +0100
+From: Lee Jones <lee@kernel.org>
+To: a0282524688@gmail.com
+Cc: tmyu0@nuvoton.com, linus.walleij@linaro.org, brgl@bgdev.pl,
+	andi.shyti@kernel.org, mkl@pengutronix.de,
+	mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net,
+	jdelvare@suse.com, alexandre.belloni@bootlin.com,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org,
+	netdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
+	linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org,
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH v13 1/7] mfd: Add core driver for Nuvoton NCT6694
+Message-ID: <20250702161513.GX10134@google.com>
+References: <20250627102730.71222-1-a0282524688@gmail.com>
+ <20250627102730.71222-2-a0282524688@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: gtmkfcqme8xtbdquwcbssapubo4m7iui
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 63C2532
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19AG6LzkwtqmHxp3WX42sKswWNayK2TlxY=
-X-HE-Tag: 1751472903-636092
-X-HE-Meta: U2FsdGVkX19rHZ7pkDz5ytjd8bzC0tbDj2Fxh/8QdylkXNTe6q3K9OrGoldkLBNdwZI82WxA8421au8VXXA7x931WjngEufJhhWrGddMi6rha3TJ8zSovi1eeYyO08LtgHzcpIl2BRMsdSzSiXwD4Yg7quUfFl9wIrvbEqPl8+sF1knxB99FfJX3ztyb5WgZqvWkMj3MIW5MuHEuhvf6qFNzg4aZ+Oeny3DYVeii7Yv4HYtM16sy1M5MIjUHHiZGMCfukDvmF2eiEg8h6BQ+bxH0RKc4y8ax/21PKJfgVoaKP9Yi7m5cKA+fyIb4JaHWpJQcSNU7V9M4rSmfyWNzsRoCu1KbJUOLxJ2no0Lviz55uH8x4ggBSLa+iXKc+36VvcgwF0m4HhixOPB7k3wncA==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250627102730.71222-2-a0282524688@gmail.com>
 
-On Wed, 02 Jul 2025 12:44:51 +0100
-Sam James <sam@gentoo.org> wrote:
+On Fri, 27 Jun 2025, a0282524688@gmail.com wrote:
 
-> In one of the commit messages in the perf series, Steven also gave
-> `perf record -g -vv true` which was convenient for making sure it's
-> correctly discovered deferred unwinding support.
+> From: Ming Yu <a0282524688@gmail.com>
+> 
+> The Nuvoton NCT6694 provides an USB interface to the host to
+> access its features.
+> 
+> Sub-devices can use the USB functions nct6694_read_msg() and
+> nct6694_write_msg() to issue a command. They can also request
+> interrupt that will be called when the USB device receives its
+> interrupt pipe.
+> 
+> Signed-off-by: Ming Yu <a0282524688@gmail.com>
 
-Although I posted the patch, the command "perf record -g -vv true" was
-Namhyung's idea. Just wanted to give credit where credit was due.
+This looks okay now.
 
--- Steve
+Do you have all of the other Acks?  If not, please let me know when you do?
+
+-- 
+Lee Jones [李琼斯]
