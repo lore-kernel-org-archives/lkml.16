@@ -1,73 +1,41 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A98811A08A3
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 03:51:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B6D53A7;
+	Wed,  2 Jul 2025 03:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751428262; cv=none; b=AdikkbEll4oiCm0S/OQT44QL6fcgL8qiYPYKrReC5SZxU7aooVozOcqz5Ha4NPD3mZPKI9m+Vy+OQdoSoXWcsLL3zwjYutYLyccIS0yOMzP/7KYtt/fxtlXmZiSomWIKpd7WPxKakH3H07eYwieqIGGldqz8pK+VZYKhRh4copQ=
+	t=1751428387; cv=none; b=CnxSoAcLcrZz9czi2Qr3qXiSK0wCZZmHVTrRxRjSiE1HjABLAUKCvtOliKyelfejyQJ+rFXQNL5ODg780IsU+V/nkGDxMevcxa8qB7FhxjM7ZZT8XiUVBsvteHD8UCbt4u1X7V+F3WcQ2pQwYZfi+eUpd5Tgode0HOQrGOZ/eNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751428262; c=relaxed/simple;
-	bh=Gbuc3GQ5YJqvpK3fI88NEhS8do1N5azsksWGgrAjPfE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fR1TVSeYcv7c4KT7xMaLRq/f+/QaH1NHuVKkp62R11sPYVqlV15ike2/NOM4i3rOWbTsx4tXVPmXrkhNKWBpof6bVhv1f8r3MY3+hyEQjVGoLFjqf1FPmmHY/iJCfzHRd6tIKH0IM+lhkN191HDrhLCE78MlrU2UVabGjzUHObQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=FEi30UPU; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1751428387; c=relaxed/simple;
+	bh=duTa0unexyP40dwW0FOLLZP8BP3cm7B57q1vv6y6/so=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=aAOFbEboKsjF5k84kXXbEVh2V9jEOL2Cz0fNUxFBIy8fDQ5hKYk+a3lgFoao7fBJcnpPZ/RcBBKvcvWpxoN8/sL9HNUMfCteJ9dpG2zCYkNuiWHkWd5kiu8vLzGiweh+/zi/TwA1SEd+eXZP4EZnDCaVb75ZPlYQTgtqPznAlsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b=YvUrbnoV; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="FEi30UPU"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5623hFQ2013864
-	for <linux-kernel@vger.kernel.org>; Wed, 2 Jul 2025 03:51:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	B32luW0Sw1ltGtcSblfZe+j06KEyJ9zkhx3k4IlmlpI=; b=FEi30UPUuoSGSfRf
-	M9U5f/XhyVi/oUJ6zB5wflNxRDXDrApWQx1lDehRQjn8KmSxvQflv+4Cpoz8mZgT
-	PPAU++VyU+CMsAlbqwV/FtWKlCfGdm3R7QWpNRGD2XZDp7AZbHFuKubOJFkdYafn
-	qu/CzqXA7gCXNmA6CtNs+pyJmEvBuT9Ai41s0Q28hyLiJvrLFe+22B9fTQ3Ko4em
-	ebX8SFOCZoGe+e2v8tCOlQ2aa4JngI8nlKjjxvIeNkJS6wJ5KoprBC5h4lC2AEtQ
-	uusM6OyG9Pgc6pkZ7NKJGo51Jvkjc2Mxw7zZbRuKqmxTtoPM9UxlDIxYivGoTqSl
-	ekaZNA==
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47mw3080n3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 03:50:59 +0000 (GMT)
-Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-b31e1ef8890so2731397a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 20:50:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751428259; x=1752033059;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B32luW0Sw1ltGtcSblfZe+j06KEyJ9zkhx3k4IlmlpI=;
-        b=qvsJUkU64fnsz2MWku1hIr7rf0G+u9JDYY/WeVznvlpIKppivLckD36Ib433cQdIGN
-         EF756Vwaekw3/rp7NsuuJTLipJe1s6KIDG7aFBxMq27iLaI+fK5ijfb+vdyj/jL/M6ud
-         g9jBXgxC8qSOUrvIBzlCM/gts9EAkQPXwly5g4jE37ZmSWOnCYfqxt6Np+9f2SAfTv4u
-         h2cmIS8W3bNLRMVbHWFQey9BWqFkVL+04B+vcQR6f2z3BoTa7K3JzRmwQ7+UlrHsF0FE
-         mjAgs+NRTG6Unoa0sYXHuAz6cXwI84yABSOUyVA6rJtfGH1CwnkDFeDgh8USrUCIzso3
-         8omA==
-X-Forwarded-Encrypted: i=1; AJvYcCW3VswS4QKMCxW3kvzwrYWhj4OMIVfZWzw7oBVnSbKUJzSeOJvOrwpaTkD8tzH/rUb0hOwk0AKS7AQbdgY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQPLIjFdWDhQlrSgd2i6+cSqGmM03ygrxP393Vhp9earIRQlDT
-	kx/h/SrETQwLfEvLY8JhRfDYwDQp8yl7iZUrCj0D15q1+OB51XspBhnVmBQ8k4PQ8oR1ABXqgqW
-	X/SwC+ift2p9hkL6XujD814ELl1tyCeautmAgujfcSSH4gb0WISl9yr0l8NPfq4z9zA8=
-X-Gm-Gg: ASbGnctSYIHiJ4AczS7Yhll3NZ8ABNCWUdyO/NUDk8MKCWxSdB0NvhfNisdR6ndwX6n
-	bVj4hHqvdE4I25Ac0RGBke6fnA5+WY90VmKUhWnp9V5nFNR5RPPT52wgy1+u+R3FGwVwm/iHlpG
-	pFz6Y/KSYDoSKr75hRNGTwo0Ua8AUZaxb+2oUfeAJJtX3eHLSvp5v+wLgDiBLjPp8m05gQs3/ff
-	FpzsjuC4yq1d1TUYdIKoHKk2VWL2dNqtXzhBHu98PZfH9AjKHOadlTlAtW3S0PugapXLTZkkOG6
-	N0Bx6+Z/PAdkFX6TDFx9SYtMWROK7pvDSY5mA816Ecl5GqN2kyUwcqvCu6oqQh61+BdZkdIWK7W
-	DCaDXtA2jq4HiXJY=
-X-Received: by 2002:a05:6a20:7350:b0:222:c961:af1d with SMTP id adf61e73a8af0-222d7dc49eamr2846927637.8.1751428258809;
-        Tue, 01 Jul 2025 20:50:58 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF8idSmfFKyDABY7yM0MVRpAAZkjEtC9DI11EGGNuOUHqgZpQyGDn56ZzZiQmPlDfFVsxkK9g==
-X-Received: by 2002:a05:6a20:7350:b0:222:c961:af1d with SMTP id adf61e73a8af0-222d7dc49eamr2846895637.8.1751428258347;
-        Tue, 01 Jul 2025 20:50:58 -0700 (PDT)
-Received: from [10.133.33.132] (tpe-colo-wan-fw-bordernet.qualcomm.com. [103.229.16.4])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e300994asm11767768a12.3.2025.07.01.20.50.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 20:50:58 -0700 (PDT)
-Message-ID: <5f2a900a-3c8e-4b16-bd91-500af7d0315e@oss.qualcomm.com>
-Date: Wed, 2 Jul 2025 11:50:51 +0800
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b="YvUrbnoV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.com;
+	s=s31663417; t=1751428383; x=1752033183; i=quwenruo.btrfs@gmx.com;
+	bh=W5HRfOt+lspy5Oi6J0LPHdd2cSYz01zEa2Bs2WBPDUY=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=YvUrbnoVl1PyD+Y/YILcsVCrKpfbTKnCIHw2n7kn5UeR9y55Eq+07Vs1db35/95h
+	 v34AI5E9yw6R66zDE7z0MNpkAK1XucVeiiYq0/uRMMsj0meiDj10iJDuS3WDDjoYe
+	 rucw8DExRK8N+D3KfiKnCinwX+X83AAhEC8Ehcbiesx1u+8RfVnTMBGlpRDMJDz5/
+	 N3l99SM+frQV6QPhmOSaNeVfurQSuzd2a178rZf+AXiWiOQrM6HXxp2QKuC9AZhJw
+	 6GbnKdCQlX7POuZ18MxSlGZGQgcV/5BZlsx3T28I/8XvZvjl/IgqFeEr8ODmGbP72
+	 YeEHhlAdTp+GKek7Gg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [172.16.0.229] ([159.196.52.54]) by mail.gmx.net (mrgmx105
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1MGQj7-1uTl3r1Zyn-006PGa; Wed, 02
+ Jul 2025 05:53:02 +0200
+Message-ID: <281b5606-894f-4fc9-af13-69ebf0941c87@gmx.com>
+Date: Wed, 2 Jul 2025 13:22:59 +0930
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,102 +43,171 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] bus: mhi: don't deinitialize and re-initialize again
-To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Jeff Johnson <jjohnson@kernel.org>,
-        Jeff Hugo <jeff.hugo@oss.qualcomm.com>,
-        Youssef Samir <quic_yabdulra@quicinc.com>,
-        Matthew Leung <quic_mattleun@quicinc.com>, Yan Zhen <yanzhen@vivo.com>,
-        Alexander Wilhelm <alexander.wilhelm@westermo.com>,
-        Alex Elder <elder@kernel.org>, Kunwu Chan <chentao@kylinos.cn>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Siddartha Mohanadoss <smohanad@codeaurora.org>,
-        Sujeev Dias <sdias@codeaurora.org>,
-        Julia Lawall <julia.lawall@lip6.fr>, John Crispin <john@phrozen.org>,
-        Muna Sinada <quic_msinada@quicinc.com>,
-        Venkateswara Naralasetty <quic_vnaralas@quicinc.com>,
-        Maharaja Kennadyrajan <quic_mkenna@quicinc.com>, mhi@lists.linux.dev,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, ath11k@lists.infradead.org
-Cc: kernel@collabora.com
-References: <20250630074330.253867-1-usama.anjum@collabora.com>
- <20250630074330.253867-3-usama.anjum@collabora.com>
+Subject: Re: Weird delay introduced in v6.16-rc only, possible regression
+To: Jens Axboe <axboe@kernel.dk>,
+ "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>
+References: <e597d8c6-ed77-47ae-b030-1016727d6abe@gmx.com>
+ <20f07b3b-194a-4dfe-936e-0f159bf44485@kernel.dk>
+ <69ea6e7a-a6f9-4199-9dc4-01b37092795f@gmx.com>
+ <90fa0bd9-71b7-44f7-9175-641d43e9fe1b@kernel.dk>
 Content-Language: en-US
-From: Baochen Qiang <baochen.qiang@oss.qualcomm.com>
-In-Reply-To: <20250630074330.253867-3-usama.anjum@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=CY4I5Krl c=1 sm=1 tr=0 ts=6864aca3 cx=c_pps
- a=Qgeoaf8Lrialg5Z894R3/Q==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
- a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=QX4gbG5DAAAA:8 a=UYPn-Rg_fxiY8il1LgUA:9
- a=QEXdDO2ut3YA:10 a=x9snwWr2DeNwDh03kgHS:22 a=AbAUZ8qAyYyZVLSsDulk:22
-X-Proofpoint-ORIG-GUID: KNF9pEfM7q0i1gkPMAP4tS4LrSYqCiYO
-X-Proofpoint-GUID: KNF9pEfM7q0i1gkPMAP4tS4LrSYqCiYO
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDAyOSBTYWx0ZWRfX37zJIKYDBckJ
- kuDYSaa1N+ujVd0eeRzyZAKHJqmdURAr7uHvna0NVzuqV6FfpZq2oPfyy5OQ9fhrBdB+QtGdi7F
- ajZC8e41MELNFoiJL8QZx+Fy4XB4kjbeIrx3XvkeMQ7zNYrv5IZ4aoH+Qrb8N7PdxKb8/j1hW5d
- wYAQ9VNliKBulh9AdAkMStpFp7drcxoIjj3xspvqspMi+Wa1/VsDGCoSGIwVetH6OUsQKFcClMB
- APY05XxMhDUnjoIImk/aBRYYEmxzmkwJ16vjzsa7N+Idm9VTkIXVVqEmQeP9zNQ6JcD5yvI3sG3
- SQlXq9aK59QPOcRbe4Qdt5lkYTX6+CogwDtShogkT0Q0D3G+s/ciQbqpW10/lgksAyw4SiVdwFw
- KFwptxhYZ0yN7onwpX05xZTIX0Scu+sK9cmQp1uKE+Hg+ctCm//htd6iBAV3N3md778STpgA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-01_02,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1011
- lowpriorityscore=0 mlxscore=0 phishscore=0 suspectscore=0 bulkscore=0
- malwarescore=0 impostorscore=0 spamscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2507020029
+From: Qu Wenruo <quwenruo.btrfs@gmx.com>
+Autocrypt: addr=quwenruo.btrfs@gmx.com; keydata=
+ xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
+ 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
+ 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
+ 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
+ gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
+ AAHNIlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT7CwJQEEwEIAD4CGwMFCwkI
+ BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCZxF1YAUJEP5a
+ sQAKCRDCPZHzoSX+qF+mB/9gXu9C3BV0omDZBDWevJHxpWpOwQ8DxZEbk9b9LcrQlWdhFhyn
+ xi+l5lRziV9ZGyYXp7N35a9t7GQJndMCFUWYoEa+1NCuxDs6bslfrCaGEGG/+wd6oIPb85xo
+ naxnQ+SQtYLUFbU77WkUPaaIU8hH2BAfn9ZSDX9lIxheQE8ZYGGmo4wYpnN7/hSXALD7+oun
+ tZljjGNT1o+/B8WVZtw/YZuCuHgZeaFdhcV2jsz7+iGb+LsqzHuznrXqbyUQgQT9kn8ZYFNW
+ 7tf+LNxXuwedzRag4fxtR+5GVvJ41Oh/eygp8VqiMAtnFYaSlb9sjia1Mh+m+OBFeuXjgGlG
+ VvQFzsBNBFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcga
+ CbPEwhLj1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj
+ /IrRUUka68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fN
+ GSsRb+pKEKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0
+ q1eW4Jrv0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEv
+ ABEBAAHCwHwEGAEIACYCGwwWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCZxF1gQUJEP5a0gAK
+ CRDCPZHzoSX+qHGpB/kB8A7M7KGL5qzat+jBRoLwB0Y3Zax0QWuANVdZM3eJDlKJKJ4HKzjo
+ B2Pcn4JXL2apSan2uJftaMbNQbwotvabLXkE7cPpnppnBq7iovmBw++/d8zQjLQLWInQ5kNq
+ Vmi36kmq8o5c0f97QVjMryHlmSlEZ2Wwc1kURAe4lsRG2dNeAd4CAqmTw0cMIrR6R/Dpt3ma
+ +8oGXJOmwWuDFKNV4G2XLKcghqrtcRf2zAGNogg3KulCykHHripG3kPKsb7fYVcSQtlt5R6v
+ HZStaZBzw4PcDiaAF3pPDBd+0fIKS6BlpeNRSFG94RYrt84Qw77JWDOAZsyNfEIEE0J6LSR/
+In-Reply-To: <90fa0bd9-71b7-44f7-9175-641d43e9fe1b@kernel.dk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:qLQv5W7NvdE90zMnCjENeIiH58ODtp/g73S4070/tKRX6WO1taT
+ V6shdjS4tAJbzmYi3FvmQ3xwHYzYr6yWUfglE0Px7Ttw2u7V7y1v8izCGWsq9mNVw4kcEb9
+ 1YDw0Tkt/e/aWNSPl09aDWaU1uHWJyjd1MwgDENcjWo2TFnpJw3z7HqK22E+M4/WB22E4U8
+ wtmBT4Ac8wTlBSsvvjp0Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:ay4/e63wevY=;X41lRONQhkcE4Zy9kj0+CrnQP7T
+ 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
+ f94g1aIBH2LYlmCnl8UEHlnLy6n5w==
 
 
 
-On 6/30/2025 3:43 PM, Muhammad Usama Anjum wrote:
-> Don't deinitialize and reinitialize the HAL helpers. The dma memory is
-> deallocated and there is high possibility that we'll not be able to get
-> the same memory allocated from dma when there is high memory pressure.
-> 
-> Tested-on: WCN6855 WLAN.HSP.1.1-03926.13-QCAHSPSWPL_V2_SILICONZ_CE-2.52297.6
-> 
-> Fixes: d5c65159f289 ("ath11k: driver for Qualcomm IEEE 802.11ax devices")
-> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
-> ---
->  drivers/net/wireless/ath/ath11k/core.c | 5 -----
->  1 file changed, 5 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/ath/ath11k/core.c b/drivers/net/wireless/ath/ath11k/core.c
-> index 4488e4cdc5e9e..bc4930fe6a367 100644
-> --- a/drivers/net/wireless/ath/ath11k/core.c
-> +++ b/drivers/net/wireless/ath/ath11k/core.c
-> @@ -2213,14 +2213,9 @@ static int ath11k_core_reconfigure_on_crash(struct ath11k_base *ab)
->  	mutex_unlock(&ab->core_lock);
->  
->  	ath11k_dp_free(ab);
-> -	ath11k_hal_srng_deinit(ab);
->  
->  	ab->free_vdev_map = (1LL << (ab->num_radios * TARGET_NUM_VDEVS(ab))) - 1;
->  
-> -	ret = ath11k_hal_srng_init(ab);
-> -	if (ret)
-> -		return ret;
-> -
+=E5=9C=A8 2025/7/2 07:41, Jens Axboe =E5=86=99=E9=81=93:
+> On 7/1/25 4:07 PM, Qu Wenruo wrote:
+>>
+>>
+>> ? 2025/7/2 02:00, Jens Axboe ??:
+>>> On 6/29/25 3:45 PM, Qu Wenruo wrote:
+>>>> Hi,
+>>>>
+>>>> Recently I'm hitting a very weird delay when doing development inside=
+ a x86_64 VM.
+>>>>
+>>>> The dmesg shows the delay (10+ sec) between virtio blk and device-map=
+per:
+>>>>
+>>>> [    3.651377] virtio_blk virtio4: 10/0/0 default/read/poll queues
+>>>> [    3.653075] virtio_scsi virtio2: 10/0/0 default/read/poll queues
+>>>> [    3.670269] virtio_blk virtio4: [vda] 83886080 512-byte logical bl=
+ocks (42.9 GB/40.0 GiB)
+>>>> [    3.672096] scsi host6: Virtio SCSI HBA
+>>>> [    3.708452]  vda: vda1 vda2
+>>>> [    3.711073] virtio_blk virtio5: 10/0/0 default/read/poll queues
+>>>> [    3.729879] virtio_blk virtio5: [vdb] 167772160 512-byte logical b=
+locks (85.9 GB/80.0 GiB)
+>>>> [    3.737535] virtio_blk virtio8: 10/0/0 default/read/poll queues
+>>>> [    3.747045] virtio_blk virtio8: [vdc] 83886080 512-byte logical bl=
+ocks (42.9 GB/40.0 GiB)
+>>>> [   17.453833] device-mapper: uevent: version 1.0.3
+>>>> [   17.455689] device-mapper: ioctl: 4.50.0-ioctl (2025-04-28) initia=
+lised: dm-devel@lists.linux.dev
+>>>> :: performing fsck on '/dev/os/root'
+>>>> /dev/mapper/os-root: clean, 240299/1048576 files, 3372218/4194304 blo=
+cks
+>>>> :: mounting '/dev/os/root' on real root
+>>>> [   17.871671] EXT4-fs (dm-0): mounted filesystem 00a85626-d289-4817-=
+8183-ee828e221f76 r/w with ordered data mode. Quota mode: none.
+>>>>
+>>>> The VM is running kernel based on upstream commit 78f4e737a53e ("Merg=
+e tag 'for-6.16/dm-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git=
+/device-mapper/linux-dm"), with a lot of extra btrfs patches.
+>>>>
+>>>>
+>>>> The v6.15 kernel from Archlinux is totally fine without any delay.
+>>>>
+>>>> The v6.16-rc kernel may have some different configs, but the config i=
+s used for a long long time, way before v6.15, so it looks like it's somet=
+hing in the v6.16 cycle causing problems.
+>>>>
+>>>> I can definitely do a bisection, but any clue would be appreciated.
+>>>
+>>> Probably a good idea to go ahead with a bisect to help pin it down.
+>>>
+>>
+>> BTW, a little more digging shows it's the `udevadm settle` causing the =
+long delay in the initramfs.
+>>
+>> The rootfs is an ext4 on a LVM lv, so initramfs is required to mount th=
+e rootfs.
+>>
+>> So it may not be the block/dm layer causing the problem.
+>=20
+> Even the more reason to bisect it then, if we don't quite know why it's
+> slow.
+>=20
 
-while I agree there is no need of a dealloc/realloc, we can not simply remove calling the
-_deinit()/_init() pair. At least the memset() cleanup to hal parameters (e.g.
-avail_blk_resource, current_blk_index and num_shadow_reg_configured etc.) inside the
-_init() needs to be kept as the later operation needs a clean state of them.
+It looks like my memory is blurry, I tried as old as v6.14 (v6.13 failed=
+=20
+to compile using the latest gcc 15.1.1), all the same delay.
 
->  	clear_bit(ATH11K_FLAG_CRASH_FLUSH, &ab->dev_flags);
->  
->  	ret = ath11k_core_qmi_firmware_ready(ab);
+Thus I believe it may be some missing kernel config causing the problem.
 
-the _deinit() is still getting called in case ath11k_core_qmi_firmware_ready() fails,
-making it a little odd since there is no _init() anymore with this change, though this is
-the way of current logic (I mean the hal is currently deinit in the error path).
+Let me retry with the base Archlinux kernel config and see what's going=20
+wrong.
 
-Thinking it more, if we hit the error path, seems the only way is to remove ath11k module.
-In that case the _deinit() would be called again in ath11k_pci_remove(), leading to issues
-(at least I see a double free of hal->srng_config). But this is another topic which can be
-fixed in a separate patch.
-
+Thanks,
+Qu
