@@ -1,214 +1,155 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A823023C8C5
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 09:52:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F48123C4E5;
+	Wed,  2 Jul 2025 09:55:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751449976; cv=none; b=qZE3VBEwK7dYGxuZr5X0rfjmA7rxzbi9GxdYR+LRLRBKt8D5amATJaZnfQhpWED4xmvoPsvJe+Og6QOfXpbE/I/VTe499qQmqfSE0BplJXeCiWt8f5UPQubHXfHf1HXGjxh8JTJlpqspeocmMvOuYL6UvuTGltKkh0fJL8e0moM=
+	t=1751450122; cv=none; b=Ltf1df00VPPJpeW7giHEKY/TuYiR6TIWb/o3escnjSVvjIuAC8TUm+O7spFIY5P32aURkKlILvLFtk9/+GngVB3UHZWMZurvJmEneIc/gMXDW512csZIGzFJn+/YJXuZLRkVg3cxdJUmfwgDeRvkbTNwWDINOZQ2H/Sq8KUEkmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751449976; c=relaxed/simple;
-	bh=6pWPj9yJPA1F97NyK/mMakcPyrDtppLr0XwrcICNR0g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=b/Xb3Zc4kaEQXSqhJRkGuZ4znDBOvA3uy8tDE5xWsKheTGbIDMP1TaM1E9bvC+IdAYK1zBMr4kDQX4KwzeG+TBXL/LU1B8q9cRunAb5vb+1uzLx+MduCIVFNfgMA56XB7kXK4AT8ZwL39wuKRJ63Uiv80uxnSa/UlW1pK4V5nBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=nxQnPSzC; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=B17rtKYb; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="nxQnPSzC";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="B17rtKYb"
-Received: from pathway.suse.cz (unknown [10.100.208.146])
-	by smtp-out2.suse.de (Postfix) with ESMTP id 9A7AE1F454;
-	Wed,  2 Jul 2025 09:52:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1751449973; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cGCtkuQDf7npqLhgpdL8AUxIksP8IpG+SBwNiySulak=;
-	b=nxQnPSzCutIWWBuqIvM+lU33+l9SWhyEVKr3ykznNrZ6T7hOXneR7f3WuYca5DNxlnsdd1
-	24o4yX+2dcIXqS1wo/8XuDpDAyKrSdY2YcdPFz3OQQ45mBDWsaZdJxSJCbFAo80AsRi2Wo
-	V9xhd6otm3b9L+7awkwXgAAGRT72OC8=
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1751449972; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cGCtkuQDf7npqLhgpdL8AUxIksP8IpG+SBwNiySulak=;
-	b=B17rtKYbBzAkxUVY7QhgThXZpVzb8+vgr5zYWWxQW6z9BTKWjQ3c13mCY5PhUZXBuvgf02
-	7wnfNUCyXvnfOHYkwBd57CcGA8YV+RAbn67+zFDJuK0YlGYbE0vWSH4lOWhNMDUy/3EuSq
-	xdXADjzeYqtXEIQR0+DrMpgfFZNc1HA=
-From: Petr Mladek <pmladek@suse.com>
-To: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
-	John Ogness <john.ogness@linutronix.de>,
-	Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	David Gow <davidgow@google.com>,
-	Arnd Bergmann <arnd@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Petr Mladek <pmladek@suse.com>
-Subject: [PATCH 3/3] printk: kunit: Fix __counted_by() in struct prbtest_rbdata
-Date: Wed,  2 Jul 2025 11:51:57 +0200
-Message-ID: <20250702095157.110916-4-pmladek@suse.com>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250702095157.110916-1-pmladek@suse.com>
-References: <20250702095157.110916-1-pmladek@suse.com>
+	s=arc-20240116; t=1751450122; c=relaxed/simple;
+	bh=C5QXblfrBCzvu7BdLvGifTigoPSkoFM22gBY88eg8Hc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=raegWlGORjMdb4eTrT1ntRSkYipBaNNepGZpe8zxZtDvbwjXC/VnqQwClpQcNQr7sYzddMr9JTWV1Ue9B6X2B2v9VApiEe31ssXJ2C+AukkqohtTR7a8LC5Y0mSE2I3m8zaFKcjViC8OlCjw2RRRlmlVa84fa1caTJSvzhylxPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-53159d11cecso4112713e0c.2;
+        Wed, 02 Jul 2025 02:55:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751450119; x=1752054919;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aOx75XV9/OUc0GtT1FSm/gKABj7KC8EmhXbi5Ta+wgM=;
+        b=PwskfG/nB6t+tj8b5o9dCBp/Wl6ZGN+uw/FCV6TAuXearukzrmvIg46VYtCvOguTTq
+         IYCYICfQSVtEnVu6dJUkl5X6vi19QSgjqM2jYcLPD2ZYgia1sTdVlbe810zAn5M+WikR
+         Yyw155Cr3XVMP87JdQr/lCE88i0ihWBonR2CFUNBkl8eRccEBvZnC3rAiSwqhzAu9Zly
+         K60dt4oA/BQYB12vrvkFmNHMsgnOUxelI+/hjaxcR7F2o3BySEUgg0E2GuEjxTp/IJea
+         e/5wXXUr9Me/3SzRF4QX5ZjP6bzCoZlfvMK+njt+ikAomEuAME90/rK2ovC1v4eXGZp+
+         nyOA==
+X-Forwarded-Encrypted: i=1; AJvYcCVrjZ1HI8i3KIuB/LPECEjXQX9AtCMVSoxygiRgpAn2Eme9UatzGJEAFWzCDacNJl5cUqn4RJ4lHi6U@vger.kernel.org, AJvYcCVv3VB+vzqA3WbCoN2mDxCNj5ga0OZHZUF5xBZSuMbGfza80YI//rBEhMAi53HhxA9+j7HZ1cQgswu22/Ug205Iba0=@vger.kernel.org, AJvYcCWYZD9JSSA+4jwlejHfF+ef0EWf+pwnjNI9hxOpx8O5D+zxyV0Blg9youc/G7n0Qy+NWfjtga9C@vger.kernel.org, AJvYcCWeMw0O5Flx38Z4ZfhPY/LaFRKWKNv9Auf3OOLr/GuEC0Tc3xMHQlwD5Yt+CAH9ovbU1w7bO8VpAs+B5ZS4@vger.kernel.org, AJvYcCX8CxOKmf/qII8t4AbU6zhaymTsaQAq8l8QFOvVqidSZQQ2KNc00qgHUYHY9rEH7qxGq+pn0JvQL/pN@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlrpYDJascPfi+Hiw6fTcbiIEIo/XuCHTAD4eGwwf19hfIelex
+	ggX/UcQjbQdyGwrEJ0HH4jKm0zJEDhflZYTCTQgLQBLjgOdunI1t0GIyJhgQs8ZU
+X-Gm-Gg: ASbGnctahUWVgFEpLYm4KUnwzSMmTnAf+FOmHVmHfUq4ntieh8VSYpFAzaO7FeNXGSC
+	XJdrogviDx3yPPWfZoyH6xwJICOHxgMbn1BPOBMknaOC21wRIUR+KqyS4HO93r940SdpVYJhH8t
+	PwDzfevl/EUHN07KwEoglCw72qW5ZMfn5JXwm82EWQnrFKOJC7JvgwJOn79cd0iBXsOxcrph2MM
+	N2Zn27BVyZ6VmPjB0vdS3Mqy8PKdEg3BQ3hB5IFAs9mWp+r5lTnvODJMW3wchklDV8BJFV+PCPB
+	O1jTuOZSK5rhP4xZ0kFiCRePMfKEbbDdB18tZgHByoetwDm6SQ+FGxx3jWA3anaRSD/aZ2X2/gN
+	bOs449iGjLROoA046OCD5zX74
+X-Google-Smtp-Source: AGHT+IHQUTerjig7jhM2oeODUMFmoGxzKZinnz4Sg/Dq0Dcvk1urc/btp22t9YpRxgsyIH8VOMyerw==
+X-Received: by 2002:a05:6122:2381:b0:531:2906:7525 with SMTP id 71dfb90a1353d-534583bf125mr1534408e0c.6.1751450119081;
+        Wed, 02 Jul 2025 02:55:19 -0700 (PDT)
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com. [209.85.217.49])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5345ae35c6esm154196e0c.37.2025.07.02.02.55.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Jul 2025 02:55:18 -0700 (PDT)
+Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-4e80d19c7ebso4062278137.3;
+        Wed, 02 Jul 2025 02:55:18 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU3cWRs0mgX1RiqAX/+TdgVjeaIL4Izdw+5inlmy1CzlVCj5JcYlHpo4VKoXl7jf0AkfgNm5jiDNqc8@vger.kernel.org, AJvYcCUvIehNGd9DmP4ucsAYFY/jEV0pduDD2D7+8IpA7jWR9oRfWTVsE4Hwh6OtsDCn3OB+y45B5EHLr50Uur4WNRBSk8o=@vger.kernel.org, AJvYcCUzYa/CT+RiKhiohni+v22MuIx9IjzLhSGQBdL1w7x042uxuce1qUV2SjjYKfjUUHx3N+nmZ0UNurJQ@vger.kernel.org, AJvYcCW/ZTnOf+I+qbufyDCLNrpcWMGivIX1MthUujcdy7NuInPDDSriK+VqyL5Kee74JF+RnJWZ+11zfdZkmt2J@vger.kernel.org, AJvYcCWu5tlv0A0CuoKa13jnGoyf497eWeV4DEoeTDVqahnnzHMYzpK4z4bYcATCU+AJiZzzTOXqcc0/@vger.kernel.org
+X-Received: by 2002:a05:6102:2d0c:b0:4e5:992e:e397 with SMTP id
+ ada2fe7eead31-4f1611b63aemr846718137.19.1751450118032; Wed, 02 Jul 2025
+ 02:55:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-7.30 / 50.00];
-	REPLY(-4.00)[];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	TO_DN_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	R_RATELIMIT(0.00)[to_ip_from(RLpam4jm9phgcop7d53x6uygpb)];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_ZERO(0.00)[0];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.com:mid,linaro.org:email,pathway.suse.cz:helo]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -7.30
+References: <20250702005706.1200059-1-john.madieu.xa@bp.renesas.com> <20250702005706.1200059-4-john.madieu.xa@bp.renesas.com>
+In-Reply-To: <20250702005706.1200059-4-john.madieu.xa@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 2 Jul 2025 11:55:06 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVOhJaYuKqJeJA4N1n-_a=msyaYbiSHpaMw8OkHrprZSA@mail.gmail.com>
+X-Gm-Features: Ac12FXzTWEhjeOAh5YAp_gztZRfyET2-t76qHKNwKKlCmIBxnbJjNyzV2hJk3lE
+Message-ID: <CAMuHMdVOhJaYuKqJeJA4N1n-_a=msyaYbiSHpaMw8OkHrprZSA@mail.gmail.com>
+Subject: Re: [PATCH v4 3/4] pinctrl: renesas: rzg2l: Add PFC_OEN support for
+ RZ/G3E SoC
+To: John Madieu <john.madieu.xa@bp.renesas.com>, prabhakar.mahadev-lad.rj@bp.renesas.com
+Cc: magnus.damm@gmail.com, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, 
+	richardcochran@gmail.com, linux-renesas-soc@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-clk@vger.kernel.org, netdev@vger.kernel.org, biju.das.jz@bp.renesas.com, 
+	john.madieu@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-__counted_by() has to point to a variable which defines the size
-of the related array. The code must never access the array
-beyond this limit.
+Hi John, Prabhakar,
 
-struct prbtest_rbdata currently stores the length of the string.
-And the code access the array beyond the limit when writing
-or reading the trailing '\0'.
+On Wed, 2 Jul 2025 at 02:57, John Madieu <john.madieu.xa@bp.renesas.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Add support to configure the PFC_OEN register on the RZ/G3E SoC for
+> specific pins that require direction control via output-enable.
+>
+> On the RZ/G3E SoC, certain pins such as TXC_TXCLK must be switchable
+> between input and output modes depending on the PHY interface mode
+> (MII or RGMII). This behavior maps to the `output-enable` property in
+> the device tree and requires configuring the PFC_OEN register.
+>
+> Update the r9a09g047_variable_pin_cfg array to include PB1, PE1, PL0,
+> PL1, PL2, and PL4 with PIN_CFG_OEN flags to indicate support for this
+> feature. Define a new rzg3e_hwcfg structure with SoC-specific pin names
+> used for OEN bit mapping.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Store the size of the string, including the trailing '\0' if
-we wanted to keep __counted_by().
+Thanks for your patch!
 
-Consistently use "_size" suffix when the trailing '\0' is counted.
-Note that MAX_RBDATA_TEXT_SIZE was originally used to limit
-the text length.
+> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
 
-When touching the code, make sure that @text_size produced by
-get_random_u32_inclusive() stays within the limits.
+> @@ -3283,6 +3307,19 @@ static const char * const rzv2h_oen_pin_names[] = {
+>         "XSPI0_CKN", "XSPI0_CKP"
+>  };
+>
+> +static const char * const rzg3e_oen_pin_names[] = {
+> +       "PB1", "PE1", "PL4", "PL1", "PL2", "PL0"
+> +};
+> +
+> +static const struct rzg2l_hwcfg rzg3e_hwcfg = {
+> +       .regs = {
+> +               .pwpr = 0x3c04,
+> +       },
+> +       .tint_start_index = 17,
+> +       .oen_pin_names = rzg3e_oen_pin_names,
+> +       .oen_pin_names_len = ARRAY_SIZE(rzg3e_oen_pin_names),
+> +};
+> +
+>  static const struct rzg2l_hwcfg rzv2h_hwcfg = {
+>         .regs = {
+>                 .pwpr = 0x3c04,
+> @@ -3352,7 +3389,7 @@ static struct rzg2l_pinctrl_data r9a09g047_data = {
+>         .dedicated_pins = rzg3e_dedicated_pins,
+>         .n_port_pins = ARRAY_SIZE(r9a09g047_gpio_configs) * RZG2L_PINS_PER_PORT,
+>         .n_dedicated_pins = ARRAY_SIZE(rzg3e_dedicated_pins),
+> -       .hwcfg = &rzv2h_hwcfg,
+> +       .hwcfg = &rzg3e_hwcfg,
+>         .variable_pin_cfg = r9a09g047_variable_pin_cfg,
+>         .n_variable_pin_cfg = ARRAY_SIZE(r9a09g047_variable_pin_cfg),
+>         .num_custom_params = ARRAY_SIZE(renesas_rzv2h_custom_bindings),
 
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Closes: https://lore.kernel.org/r/eaea66b9-266a-46e7-980d-33f40ad4b215@sabinyo.mountain
-Suggested-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-Signed-off-by: Petr Mladek <pmladek@suse.com>
----
- kernel/printk/printk_ringbuffer_kunit_test.c | 47 +++++++++++---------
- 1 file changed, 27 insertions(+), 20 deletions(-)
+I would rather use the existing .oen_{read,write}() abstraction,
+and thus provide new rzg3e_oen_{read,write}() implementations:
 
-diff --git a/kernel/printk/printk_ringbuffer_kunit_test.c b/kernel/printk/printk_ringbuffer_kunit_test.c
-index 0c3030fde8c2..088fe4d8c9b6 100644
---- a/kernel/printk/printk_ringbuffer_kunit_test.c
-+++ b/kernel/printk/printk_ringbuffer_kunit_test.c
-@@ -52,13 +52,12 @@ module_param(runtime_ms, ulong, 0400);
- 
- /* test data structure */
- struct prbtest_rbdata {
--	unsigned int len;
--	char text[] __counted_by(len);
-+	unsigned int size;
-+	char text[] __counted_by(size);
- };
- 
--#define MAX_RBDATA_TEXT_SIZE 0x7f
--/* +1 for terminator. */
--#define MAX_PRB_RECORD_SIZE (sizeof(struct prbtest_rbdata) + MAX_RBDATA_TEXT_SIZE + 1)
-+#define MAX_RBDATA_TEXT_SIZE 0x80
-+#define MAX_PRB_RECORD_SIZE (sizeof(struct prbtest_rbdata) + MAX_RBDATA_TEXT_SIZE)
- 
- struct prbtest_data {
- 	struct kunit *test;
-@@ -74,25 +73,29 @@ struct prbtest_thread_data {
- 
- static void prbtest_fail_record(struct kunit *test, const struct prbtest_rbdata *dat, u64 seq)
- {
--	KUNIT_FAIL(test, "BAD RECORD: seq=%llu len=%u text=%.*s\n",
--		   seq, dat->len,
--		   dat->len <= MAX_RBDATA_TEXT_SIZE ? dat->len : -1,
--		   dat->len <= MAX_RBDATA_TEXT_SIZE ? dat->text : "<invalid>");
-+	unsigned int len;
-+
-+	len = dat->size - 1;
-+
-+	KUNIT_FAIL(test, "BAD RECORD: seq=%llu size=%u text=%.*s\n",
-+		   seq, dat->size,
-+		   len < MAX_RBDATA_TEXT_SIZE ? len : -1,
-+		   len < MAX_RBDATA_TEXT_SIZE ? dat->text : "<invalid>");
- }
- 
- static bool prbtest_check_data(const struct prbtest_rbdata *dat)
- {
- 	unsigned int len;
- 
--	/* Sane length? */
--	if (dat->len < 1 || dat->len > MAX_RBDATA_TEXT_SIZE)
-+	/* Sane size? At least one character + trailing '\0' */
-+	if (dat->size < 2 || dat->size > MAX_RBDATA_TEXT_SIZE)
- 		return false;
- 
--	if (dat->text[dat->len] != '\0')
-+	len = dat->size - 1;
-+	if (dat->text[len] != '\0')
- 		return false;
- 
- 	/* String repeats with the same character? */
--	len = dat->len;
- 	while (len--) {
- 		if (dat->text[len] != dat->text[0])
- 			return false;
-@@ -114,10 +117,14 @@ static int prbtest_writer(void *data)
- 	kunit_info(tr->test_data->test, "start thread %03lu (writer)\n", tr->num);
- 
- 	for (;;) {
--		/* ensure at least 1 character */
--		text_size = get_random_u32_inclusive(1, MAX_RBDATA_TEXT_SIZE);
--		/* +1 for terminator. */
--		record_size = sizeof(struct prbtest_rbdata) + text_size + 1;
-+		/* ensure at least 1 character + trailing '\0' */
-+		text_size = get_random_u32_inclusive(2, MAX_RBDATA_TEXT_SIZE);
-+		if (WARN_ON_ONCE(text_size < 2))
-+			text_size = 2;
-+		if (WARN_ON_ONCE(text_size > MAX_RBDATA_TEXT_SIZE))
-+			text_size = MAX_RBDATA_TEXT_SIZE;
-+
-+		record_size = sizeof(struct prbtest_rbdata) + text_size;
- 		WARN_ON_ONCE(record_size > MAX_PRB_RECORD_SIZE);
- 
- 		/* specify the text sizes for reservation */
-@@ -140,9 +147,9 @@ static int prbtest_writer(void *data)
- 			r.info->text_len = record_size;
- 
- 			dat = (struct prbtest_rbdata *)r.text_buf;
--			dat->len = text_size;
--			memset(dat->text, text_id, text_size);
--			dat->text[text_size] = 0;
-+			dat->size = text_size;
-+			memset(dat->text, text_id, text_size - 1);
-+			dat->text[text_size - 1] = '\0';
- 
- 			prb_commit(&e);
- 
+    -    .oen_read = &rzv2h_oen_read,
+    -    .oen_write = &rzv2h_oen_write,
+    +    .oen_read = &rzg3e_oen_read,
+    +    .oen_write = &rzg3e_oen_write,
+
+Of course this requires refactoring the existing rzv2h_pin_to_oen_bit()
+and rzv2h_oen_{read,write}() functions to avoid duplication.
+Do you agree?
+
+The actual pin parts LGTM.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.50.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
