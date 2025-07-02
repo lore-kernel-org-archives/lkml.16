@@ -1,117 +1,85 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 302BB26FDA5;
-	Wed,  2 Jul 2025 12:28:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E03C1E480;
+	Wed,  2 Jul 2025 12:30:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751459338; cv=none; b=bUC0fIM66uSU45HgBnaUZQM401fgn9hIZlJkDck+4fcsg0vaE7gR6kXnaDWbuKkLil10X1NZUfEhintOHAMOZiPPr+T3FOaCKcHf94b7uR982yqtxqmtsGGraQhEkLAtW7ijiymof89302KB/OKHWdjqWLmjCA9o4vW38sBboVQ=
+	t=1751459461; cv=none; b=PNVe6Qu8PFlu22rgtzTmGIxGgMZi1sJvVDt7i6SxI55AwtfZIRRk8pXG5ziS4JeBMjhJjnTCV2lr3lx8YvzY27Mqo2ugn9twAvLeZp8F1onKr36jjjrYzBgufZz9huiVdfuBjQjj0k0o34bGGILz9JD5hzVwvQUwGYx0kQ6YDOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751459338; c=relaxed/simple;
-	bh=zoqxa8Dth/WIL+RSmgjM63YP+N6qBvdpGWSiRdatsBg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o3GC0PCkc742SFReiOSnUXGtwI8Y8oPSp1bVzBNRnmrODK6UdulHV9oZVU3napdu04ACDmN2bdjEo4BGOerIUZBbUD64SiSA48b3UutQOjiVH0Ws6NoN6EMS1DgB/Pj2VrIEEcY3+n4m51UGUOk/Fr1FZeE8D5yCIyGlLk4ky30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aimjaRiN; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751459461; c=relaxed/simple;
+	bh=ochG6ugWYbmuJiaEjRqcoWoR0DKCjQg/LTcy4LEQKPQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=K+2zgrzzipJZ0VLZnHorxA8NmJmn6KOQlCeVW5Mm+Easj3rZKUClIYODrsd2EBXOZp4FEYEzqnRYj3Sz47HTKvzwBow3zBj18wK3ybfHzMGymPf6qr6Uw2wYUBe7Pm7I4mkmexGoGw+z05r4DvPqzgcNOm+E25aMH88ByXNhoH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=uOclpbdW; arc=none smtp.client-ip=115.124.30.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aimjaRiN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751459338; x=1782995338;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=zoqxa8Dth/WIL+RSmgjM63YP+N6qBvdpGWSiRdatsBg=;
-  b=aimjaRiNhIDq/ud/a1Ouq7G6B8K1Rjec3heqITU4bucRJOzy6IY3cWL1
-   H7l1L81zaDSgFWQjCvN31AtBqhwW5fY2mMoGkBMYb42U11SrVnnlAMFi1
-   GLIQUzvR3V2BwihCUaZXYotR44YMUl84LYgjogeuc1dAveqsLZtJFe4+S
-   3fMwYvyh8MUy1rNdYTgeidK4Wwcd28+VmjFlb0HdTBmZ1ZPryqfnU+VMQ
-   neeAuvUM9mEWqbkr07nKNjUNjKQx+m09y8YX8PhHi//Hw3+bJ/wWhFAHZ
-   pFO1aRfl5OdHrQKH1kDnXU8vntw7XG9tAk5Asdz7gRmG3WS9+8K3D8UGv
-   w==;
-X-CSE-ConnectionGUID: OXtJ+nJQR5eWO8r3+dwVHA==
-X-CSE-MsgGUID: tyc9leZBQJiLva+69552UQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="57426623"
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="57426623"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 05:28:57 -0700
-X-CSE-ConnectionGUID: ZYzfy1TaTmSmBpS29OqyAg==
-X-CSE-MsgGUID: c4FjoOfOQgG2bv26Z60xAg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="153839670"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 05:28:50 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uWwZx-0000000Buum-1vQU;
-	Wed, 02 Jul 2025 15:28:45 +0300
-Date: Wed, 2 Jul 2025 15:28:45 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Anup Patel <apatel@ventanamicro.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Alexandre Ghiti <alex@ghiti.fr>, Len Brown <lenb@kernel.org>,
-	Sunil V L <sunilvl@ventanamicro.com>,
-	Rahul Pathak <rpathak@ventanamicro.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Atish Patra <atish.patra@linux.dev>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 21/24] mailbox/riscv-sbi-mpxy: Add ACPI support
-Message-ID: <aGUl_S9irfhlHmy2@smile.fi.intel.com>
-References: <20250702051345.1460497-1-apatel@ventanamicro.com>
- <20250702051345.1460497-22-apatel@ventanamicro.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="uOclpbdW"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1751459448; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=8sg3F1xvFGQ55WLtut50r+Q56w4tVb4Lz11K8/MRd6o=;
+	b=uOclpbdWwgfALoqMQEtxPocZTP0mS6A0zdpTW6+Q0Kw7VaA0O/4TNcdZvywFkYqjKsXpU7rC02mXFWlYrc6W7UIpDgKrhZPsdBFuMC3p5b6v1hP9Wgp/QG0QhXHOFvAZ/ZMRWi6DQtbdc5Ffn10dtUk/Vrg4W07bo8eWkh6kIpA=
+Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0WgftUI4_1751459444 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 02 Jul 2025 20:30:48 +0800
+From: cp0613@linux.alibaba.com
+To: yury.norov@gmail.com
+Cc: alex@ghiti.fr,
+	aou@eecs.berkeley.edu,
+	arnd@arndb.de,
+	cp0613@linux.alibaba.com,
+	linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux@rasmusvillemoes.dk,
+	palmer@dabbelt.com,
+	paul.walmsley@sifive.com
+Subject: Re: [PATCH 2/2] bitops: rotate: Add riscv implementation using Zbb extension
+Date: Wed,  2 Jul 2025 20:30:43 +0800
+Message-ID: <20250702123043.1460-1-cp0613@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <aGQprv3HTplw9r-q@yury>
+References: <aGQprv3HTplw9r-q@yury>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250702051345.1460497-22-apatel@ventanamicro.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 02, 2025 at 10:43:42AM +0530, Anup Patel wrote:
-> From: Sunil V L <sunilvl@ventanamicro.com>
+On Tue, 1 Jul 2025 14:32:14 -0400, yury.norov@gmail.com wrote:
+
+> > static inline u8 variable_rol8(u8 word, unsigned int shift)
 > 
-> Add ACPI support for the RISC-V SBI message proxy (MPXY) based
-> mailbox driver.
+> Now that it has assembler inlines, would it help to add the __pure
+> qualifier?
 
-...
+Even if the same parameters are passed in, after comparing the disassembly
+with and without the __pure qualifier, it is found that it does not help.
 
-> -		if (dev_of_node(dev))
-> +		if (is_of_node(fwnode)) {
->  			of_msi_configure(dev, dev_of_node(dev));
-> +		} else if (is_acpi_device_node(fwnode)) {
-> +			msi_domain = irq_find_matching_fwnode(imsic_acpi_get_fwnode(dev),
-> +							      DOMAIN_BUS_PLATFORM_MSI);
-> +			dev_set_msi_domain(dev, msi_domain);
-> +		}
+> Please do the following:
+> 
+> 1. Drop the generic_ror8() and keep only ror/l8()
+> 2. Add ror/l16, 34 and 64 tests.
+> 3. Adjust the 'loop' so that each subtest will take 1-10 ms on your hw.
+> 4. Name the function like test_rorl(), and put it next to the test_fns()
+>    in lib/test_bitops.c. Refer the 0a2c6664e56f0 for implementation.
+> 5. Prepend the series with the benchmark patch, just as with const-eval
+>    one, and report before/after for your series. 
+> 
+> > > Please find attached a test for compile-time ror/rol evaluation.
+> > > Please consider prepending your series with it.
+> > 
+> > Okay, I'll bring it to the next series.
+> 
+> Still waiting for bloat-o-meter results.
 
-Actually you don't need to have the if-else-if if I am not mistaken.
-The OF does almost the same as it's done in the second branch for ACPI case.
-How many MSI parents this may have?
+Ok, in the next series I will provide a patch for the benchmark, and then
+prepend the const-eval and benchmark patches, and also provide the results
+of the bloat-o-meter.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thank you very much,
+Pei
