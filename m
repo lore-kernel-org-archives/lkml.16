@@ -1,501 +1,309 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DC21285069
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 13:50:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84B20155CBD
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 13:50:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751464205; cv=none; b=DDrR0pvemecWnLAQLieSgRjTAYDVqcWSyRcA1yNzZnw1kAXW7jp5Enq+gKKSyFAscmRGtWqxopTs+dtx/o3Qj/aJRVQ8FFyqVl1Ay2aLPZM1SAXJ4SXrGejzERmjAwqiGkxULjK/EZ3FgyruFY/sGjCTkOIfaF06NELt5KD26iU=
+	t=1751464234; cv=none; b=VQPKCZ6eFGjaOGYq+sPx3KBTrHVxd2fUZcMoAWn2G1TrniL4lB74QsWq5fxqsKjwINbD0iH/pgYkEQ2/kwJN7gKs3mlQWUf4Doa/T3gs07/2zkvPAsx2Alc7gCT1gtkw6ZW9ywPGylZQBLUf7lYHq2xUqJN2suUU4Gm2SjG4sys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751464205; c=relaxed/simple;
-	bh=QV/aDJ0u1ttJWZYxE7X1Y5ZAjQHgDX0lXTY93PdSuuY=;
-	h=From:Date:Subject:MIME-Version:Message-Id:In-Reply-To:To:Cc:
-	 Content-Type:References; b=dv5GVCG1D75w+GSQgfVb7JDoL6gfXFnDUlppHntOxLjCzevUy4deG4ig2Y97KrVjABc+88pYvWnpvxD1LWOuW3SiA0Acq/iMjmm0WguO3w5E+ebY5OZAdoxrpwFjT5loA1TytgNDWiOfiIvF9rWA3dYv9PZVgD9IHNC33OrAFU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=owPD17Gy; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="owPD17Gy"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250702134959euoutp019d24d7a2d45ebf229bac1c89e9be2b71~Oc2jsyyhF0615206152euoutp01f
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 13:49:59 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250702134959euoutp019d24d7a2d45ebf229bac1c89e9be2b71~Oc2jsyyhF0615206152euoutp01f
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1751464199;
-	bh=1U9KKfn/Ox0ytMzsl8iLL7+cEcZIv+JzvlH5Bzw0Njc=;
-	h=From:Date:Subject:In-Reply-To:To:Cc:References:From;
-	b=owPD17Gyg7bCcsq8H618LizIz9hifJgCiZIT4wEXOKJoS7ijm/Lky9FFuuLshxsno
-	 uhY5Wq7+ruUUi9v4YjkVLJR0Y0k9sBh5/Bo5NtuqjZzTMN9uY29nFowe2wHeQXwxNi
-	 CTTLPXW+fMOQv7VHZLPakdiOdODTJv2Def+kx5vw=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250702134958eucas1p26baf0f661006f5b79c31b2afa683baee~Oc2jCGpvK1291312913eucas1p2l;
-	Wed,  2 Jul 2025 13:49:58 +0000 (GMT)
-Received: from AMDC4942.eu.corp.samsungelectronics.net (unknown
-	[106.210.136.40]) by eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250702134957eusmtip24d86171eda28014afe6e34a2df913865~Oc2h93BsO0829808298eusmtip2d;
-	Wed,  2 Jul 2025 13:49:57 +0000 (GMT)
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-Date: Wed, 02 Jul 2025 15:45:32 +0200
-Subject: [PATCH v7 4/8] rust: pwm: Add driver operations trait and
- registration support
+	s=arc-20240116; t=1751464234; c=relaxed/simple;
+	bh=VFdnDDVOO9lIk5Hfe4qUMw0BDCW/zc7LLYg/JCb62ZU=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=TVagcI5fNkgb3Ac+M66zCKVN5k/pMSq0Pf69ktAr3Hk8ifS8LrgbxUfMHgRaH9+aZLmLvknyOw0XGSx3RP4GWxHeEckQgptJRpIdTc2D8GYlftpKnignJSTAbyfivFWZ5IEmFGOppdPMubHw1Ym0xb9cBmh70jKqi2/s5v3TFAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3df2d0b7c7eso47666655ab.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 06:50:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751464231; x=1752069031;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OC60JwatBaxV0uMbzLxfV8LNaQwX4JXrU2XaoWoQyuM=;
+        b=sJJRiv7X9uKZI+VAr6tjWyRf5txue/QnWx4JPvoOsxKCYPQtOB95NJ9cPGodS1dBt8
+         +uF8b+ZUqtuaDcQgD8q4TpNsT1bLuTd94tH9DEadltonyVIZLNNdCwRENyOE2tUPX4sn
+         3BaT9bNplfOqvS+UA9DROdC5EY6osYlZCEcAT+RowFnzlwfWmLe9oYg0D2/CWJo3E0o8
+         Ldu7AK24zj/CkFHSbI9ypnGk4X1kI6JwtKGzyvNKwRhMcBOj/1pN9COBy9IIkHyrNGSS
+         MWCxQAKEeJuZDcMjmOeQrHTNrS4Hhc4wbU2N4FRSQPFq2CBFuborLmCycbPhqb7c7MtH
+         M8gA==
+X-Forwarded-Encrypted: i=1; AJvYcCUr3ALgFdNO9WjEnL2CuBt0cClevtZaiwBWBYDmVWF6VlmMxcULKE8Lm2YpcJsu49WsBvBlf6JeF8QINXI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzs7cxNekJfSuwTFr9c3l0tjkWC8v9GKjFWJfZMu5KooT26TgZL
+	dwN/SfEQGlieRFkBFcxk8yKae+YMCFyRz8A/eynoFU+MgfipeEKFD36JvGmYrV97o61IXkGDIV/
+	1dpVByS9DoYLEFjta3lIhR+kaRKd5qh7xlQCF/DXXpduQvT3NjIFvNNEvg8Q=
+X-Google-Smtp-Source: AGHT+IEQLSNEmbno1ghWKfh0hXjsYlAGR1mcd9DvIsH5Qp3dNlDqgOysCmEsrH47dXzv0ui7SDFRkjUj/tCGVhKLyISDiMWduyqF
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250702-rust-next-pwm-working-fan-for-sending-v7-4-67ef39ff1d29@samsung.com>
-In-Reply-To: <20250702-rust-next-pwm-working-fan-for-sending-v7-0-67ef39ff1d29@samsung.com>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,  Miguel Ojeda
-	<ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,  Boqun Feng
-	<boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,  Andreas
-	Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,  Trevor
-	Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,  Michal
-	Wilczynski <m.wilczynski@samsung.com>, Guo Ren <guoren@kernel.org>,  Fu Wei
-	<wefu@redhat.com>, Rob Herring <robh@kernel.org>,  Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,  Conor Dooley <conor+dt@kernel.org>,  Paul Walmsley
-	<paul.walmsley@sifive.com>,  Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>,  Alexandre Ghiti <alex@ghiti.fr>,  Marek Szyprowski
-	<m.szyprowski@samsung.com>,  Benno Lossin <lossin@kernel.org>,  Michael
-	Turquette <mturquette@baylibre.com>,  Drew Fustini <fustini@kernel.org>,
-	Benno Lossin <lossin@kernel.org>,  Drew Fustini <fustini@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	devicetree@vger.kernel.org
-X-Mailer: b4 0.15-dev
-X-CMS-MailID: 20250702134958eucas1p26baf0f661006f5b79c31b2afa683baee
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250702134958eucas1p26baf0f661006f5b79c31b2afa683baee
-X-EPHeader: CA
-X-CMS-RootMailID: 20250702134958eucas1p26baf0f661006f5b79c31b2afa683baee
-References: <20250702-rust-next-pwm-working-fan-for-sending-v7-0-67ef39ff1d29@samsung.com>
-	<CGME20250702134958eucas1p26baf0f661006f5b79c31b2afa683baee@eucas1p2.samsung.com>
+X-Received: by 2002:a05:6e02:4506:10b0:3e0:5942:2942 with SMTP id
+ e9e14a558f8ab-3e059422bfcmr11673905ab.6.1751464231597; Wed, 02 Jul 2025
+ 06:50:31 -0700 (PDT)
+Date: Wed, 02 Jul 2025 06:50:31 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68653927.a70a0220.3b7e22.245d.GAE@google.com>
+Subject: [syzbot] [kernel?] KASAN: slab-use-after-free Write in flush_tlb_func
+From: syzbot <syzbot+084b6e5bc1016723a9c4@syzkaller.appspotmail.com>
+To: bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
+	linux-kernel@vger.kernel.org, luto@kernel.org, mingo@redhat.com, 
+	neeraj.upadhyay@kernel.org, paulmck@kernel.org, peterz@infradead.org, 
+	riel@surriel.com, syzkaller-bugs@googlegroups.com, tglx@linutronix.de, 
+	x86@kernel.org, yury.norov@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-Complete the PWM abstraction layer by adding the final components
-required to implement and register a driver.
+Hello,
 
-The main additions are:
+syzbot found the following issue on:
 
- - PwmOps Trait: An interface that drivers can implement to provide
-   their hardware specific logic. It mirrors the C pwm_ops interface,
-   providing hooks for standard PWM operations like apply, request, and
-   waveform handling.
+HEAD commit:    1343433ed389 Add linux-next specific files for 20250630
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=15b3e3d4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c1ce97baf6bd6397
+dashboard link: https://syzkaller.appspot.com/bug?extid=084b6e5bc1016723a9c4
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15716770580000
 
- - FFI VTable and Adapter: The Adapter struct, PwmOpsVTable wrapper, and
-   create_pwm_ops function are introduced. This scaffolding handles the
-   unsafe FFI translation, bridging the gap between the idiomatic PwmOps
-   trait and the C kernel's function-pointer-based vtable.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/c3387c64e9ec/disk-1343433e.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/abf15e85d8dd/vmlinux-1343433e.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/081c344403bc/bzImage-1343433e.xz
 
- - Registration Guard: A final RAII guard that uses the vtable to safely
-   register a Chip with the PWM core via pwmchip_add. Its Drop
-   implementation guarantees that pwmchip_remove is always called,
-   preventing resource leaks.
+The issue was bisected to:
 
-With this patch, the PWM abstraction layer is now complete and ready to
-be used for writing PWM chip drivers in Rust.
+commit a12a498a9738db65152203467820bb15b6102bd2
+Author: Yury Norov [NVIDIA] <yury.norov@gmail.com>
+Date:   Mon Jun 23 00:00:08 2025 +0000
 
-Reviewed-by: Danilo Krummrich <dakr@kernel.org>
-Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+    smp: Don't wait for remote work done if not needed in smp_call_function_many_cond()
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15ee348c580000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=17ee348c580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=13ee348c580000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+084b6e5bc1016723a9c4@syzkaller.appspotmail.com
+Fixes: a12a498a9738 ("smp: Don't wait for remote work done if not needed in smp_call_function_many_cond()")
+
+==================================================================
+BUG: KASAN: slab-use-after-free in instrument_atomic_write include/linux/instrumented.h:82 [inline]
+BUG: KASAN: slab-use-after-free in clear_bit include/asm-generic/bitops/instrumented-atomic.h:41 [inline]
+BUG: KASAN: slab-use-after-free in cpumask_clear_cpu include/linux/cpumask.h:628 [inline]
+BUG: KASAN: slab-use-after-free in flush_tlb_func+0x23d/0x6c0 arch/x86/mm/tlb.c:1132
+Write of size 8 at addr ffff88805f1dca80 by task kworker/1:1/43
+
+CPU: 1 UID: 0 PID: 43 Comm: kworker/1:1 Not tainted 6.16.0-rc4-next-20250630-syzkaller #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+ <IRQ>
+ dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0xd2/0x2b0 mm/kasan/report.c:521
+ kasan_report+0x118/0x150 mm/kasan/report.c:634
+ check_region_inline mm/kasan/generic.c:-1 [inline]
+ kasan_check_range+0x2b0/0x2c0 mm/kasan/generic.c:189
+ instrument_atomic_write include/linux/instrumented.h:82 [inline]
+ clear_bit include/asm-generic/bitops/instrumented-atomic.h:41 [inline]
+ cpumask_clear_cpu include/linux/cpumask.h:628 [inline]
+ flush_tlb_func+0x23d/0x6c0 arch/x86/mm/tlb.c:1132
+ csd_do_func kernel/smp.c:134 [inline]
+ __flush_smp_call_function_queue+0x370/0xaa0 kernel/smp.c:540
+ __sysvec_call_function_single+0xa8/0x3d0 arch/x86/kernel/smp.c:271
+ instr_sysvec_call_function_single arch/x86/kernel/smp.c:266 [inline]
+ sysvec_call_function_single+0x9e/0xc0 arch/x86/kernel/smp.c:266
+ </IRQ>
+ <TASK>
+ asm_sysvec_call_function_single+0x1a/0x20 arch/x86/include/asm/idtentry.h:709
+RIP: 0010:console_flush_all+0x7f7/0xc40 kernel/printk/printk.c:3227
+Code: 48 21 c3 0f 85 e9 01 00 00 e8 65 2d 1f 00 48 8b 5c 24 20 4d 85 f6 75 07 e8 56 2d 1f 00 eb 06 e8 4f 2d 1f 00 fb 48 8b 44 24 28 <42> 80 3c 20 00 74 08 48 89 df e8 3a 41 83 00 48 8b 1b 48 8b 44 24
+RSP: 0018:ffffc90000b36fc0 EFLAGS: 00000293
+RAX: 1ffffffff1d36a63 RBX: ffffffff8e9b5318 RCX: ffff88801faa9e00
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: ffffc90000b37110 R08: ffffffff8fa17437 R09: 1ffffffff1f42e86
+R10: dffffc0000000000 R11: fffffbfff1f42e87 R12: dffffc0000000000
+R13: 0000000000000001 R14: 0000000000000200 R15: ffffffff8e9b52c0
+ __console_flush_and_unlock kernel/printk/printk.c:3285 [inline]
+ console_unlock+0xc4/0x270 kernel/printk/printk.c:3325
+ vprintk_emit+0x5b7/0x7a0 kernel/printk/printk.c:2450
+ dev_vprintk_emit+0x337/0x3f0 drivers/base/core.c:4916
+ dev_printk_emit+0xe0/0x130 drivers/base/core.c:4927
+ _dev_info+0x10a/0x160 drivers/base/core.c:4985
+ announce_device+0x117/0x2c0 drivers/usb/core/hub.c:2417
+ usb_new_device+0x4ef/0x16f0 drivers/usb/core/hub.c:2680
+ hub_port_connect drivers/usb/core/hub.c:5571 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5711 [inline]
+ port_event drivers/usb/core/hub.c:5871 [inline]
+ hub_event+0x2941/0x4a00 drivers/usb/core/hub.c:5953
+ process_one_work kernel/workqueue.c:3239 [inline]
+ process_scheduled_works+0xae1/0x17b0 kernel/workqueue.c:3322
+ worker_thread+0x8a0/0xda0 kernel/workqueue.c:3403
+ kthread+0x70e/0x8a0 kernel/kthread.c:463
+ ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+Allocated by task 5962:
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x3e/0x80 mm/kasan/common.c:68
+ unpoison_slab_object mm/kasan/common.c:319 [inline]
+ __kasan_slab_alloc+0x6c/0x80 mm/kasan/common.c:345
+ kasan_slab_alloc include/linux/kasan.h:250 [inline]
+ slab_post_alloc_hook mm/slub.c:4180 [inline]
+ slab_alloc_node mm/slub.c:4229 [inline]
+ kmem_cache_alloc_noprof+0x1c1/0x3c0 mm/slub.c:4236
+ dup_mm kernel/fork.c:1466 [inline]
+ copy_mm+0xdb/0x4b0 kernel/fork.c:1528
+ copy_process+0x1706/0x3c00 kernel/fork.c:2168
+ kernel_clone+0x21e/0x870 kernel/fork.c:2598
+ __do_sys_clone kernel/fork.c:2741 [inline]
+ __se_sys_clone kernel/fork.c:2725 [inline]
+ __x64_sys_clone+0x18b/0x1e0 kernel/fork.c:2725
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Freed by task 8084:
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x3e/0x80 mm/kasan/common.c:68
+ kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:576
+ poison_slab_object mm/kasan/common.c:247 [inline]
+ __kasan_slab_free+0x62/0x70 mm/kasan/common.c:264
+ kasan_slab_free include/linux/kasan.h:233 [inline]
+ slab_free_hook mm/slub.c:2417 [inline]
+ slab_free mm/slub.c:4680 [inline]
+ kmem_cache_free+0x18f/0x400 mm/slub.c:4782
+ exit_mm+0x1da/0x2c0 kernel/exit.c:581
+ do_exit+0x648/0x2300 kernel/exit.c:947
+ do_group_exit+0x21c/0x2d0 kernel/exit.c:1100
+ __do_sys_exit_group kernel/exit.c:1111 [inline]
+ __se_sys_exit_group kernel/exit.c:1109 [inline]
+ __x64_sys_exit_group+0x3f/0x40 kernel/exit.c:1109
+ x64_sys_call+0x21ba/0x21c0 arch/x86/include/generated/asm/syscalls_64.h:232
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+The buggy address belongs to the object at ffff88805f1dc080
+ which belongs to the cache mm_struct of size 2584
+The buggy address is located 2560 bytes inside of
+ freed 2584-byte region [ffff88805f1dc080, ffff88805f1dca98)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffff88805f1dcb40 pfn:0x5f1d8
+head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+memcg:ffff88805f612801
+anon flags: 0xfff00000000040(head|node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000040 ffff88801a44bb40 0000000000000000 dead000000000001
+raw: ffff88805f1dcb40 00000000000b0009 00000000f5000000 ffff88805f612801
+head: 00fff00000000040 ffff88801a44bb40 0000000000000000 dead000000000001
+head: ffff88805f1dcb40 00000000000b0009 00000000f5000000 ffff88805f612801
+head: 00fff00000000003 ffffea00017c7601 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 5719, tgid 5719 (dhcpcd-run-hook), ts 61767719991, free_ts 61767008311
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x240/0x2a0 mm/page_alloc.c:1848
+ prep_new_page mm/page_alloc.c:1856 [inline]
+ get_page_from_freelist+0x21e4/0x22c0 mm/page_alloc.c:3855
+ __alloc_frozen_pages_noprof+0x181/0x370 mm/page_alloc.c:5145
+ alloc_pages_mpol+0x232/0x4a0 mm/mempolicy.c:2419
+ alloc_slab_page mm/slub.c:2487 [inline]
+ allocate_slab+0x8a/0x370 mm/slub.c:2655
+ new_slab mm/slub.c:2709 [inline]
+ ___slab_alloc+0xbeb/0x1410 mm/slub.c:3891
+ __slab_alloc mm/slub.c:3981 [inline]
+ __slab_alloc_node mm/slub.c:4056 [inline]
+ slab_alloc_node mm/slub.c:4217 [inline]
+ kmem_cache_alloc_noprof+0x283/0x3c0 mm/slub.c:4236
+ dup_mm kernel/fork.c:1466 [inline]
+ copy_mm+0xdb/0x4b0 kernel/fork.c:1528
+ copy_process+0x1706/0x3c00 kernel/fork.c:2168
+ kernel_clone+0x21e/0x870 kernel/fork.c:2598
+ __do_sys_clone kernel/fork.c:2741 [inline]
+ __se_sys_clone kernel/fork.c:2725 [inline]
+ __x64_sys_clone+0x18b/0x1e0 kernel/fork.c:2725
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+page last free pid 5719 tgid 5719 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1392 [inline]
+ __free_frozen_pages+0xb80/0xd80 mm/page_alloc.c:2892
+ __folio_put+0x21b/0x2c0 mm/swap.c:112
+ put_netmem net/core/skbuff.c:7372 [inline]
+ skb_page_unref include/linux/skbuff_ref.h:43 [inline]
+ __skb_frag_unref include/linux/skbuff_ref.h:56 [inline]
+ skb_release_data+0x49a/0x7c0 net/core/skbuff.c:1081
+ skb_release_all net/core/skbuff.c:1152 [inline]
+ napi_consume_skb+0x158/0x1e0 net/core/skbuff.c:1480
+ skb_defer_free_flush net/core/dev.c:6632 [inline]
+ net_rx_action+0x51b/0xe30 net/core/dev.c:7625
+ handle_softirqs+0x286/0x870 kernel/softirq.c:579
+ __do_softirq kernel/softirq.c:613 [inline]
+ invoke_softirq kernel/softirq.c:453 [inline]
+ __irq_exit_rcu+0xca/0x1f0 kernel/softirq.c:680
+ irq_exit_rcu+0x9/0x30 kernel/softirq.c:696
+ common_interrupt+0xbb/0xe0 arch/x86/kernel/irq.c:285
+ asm_common_interrupt+0x26/0x40 arch/x86/include/asm/idtentry.h:693
+
+Memory state around the buggy address:
+ ffff88805f1dc980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88805f1dca00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff88805f1dca80: fb fb fb fc fc fc fc fc fc fc fc fc fc fc fc fc
+                   ^
+ ffff88805f1dcb00: fc fc fc fc fc fc fc fc fa fb fb fb fb fb fb fb
+ ffff88805f1dcb80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+----------------
+Code disassembly (best guess):
+   0:	48 21 c3             	and    %rax,%rbx
+   3:	0f 85 e9 01 00 00    	jne    0x1f2
+   9:	e8 65 2d 1f 00       	call   0x1f2d73
+   e:	48 8b 5c 24 20       	mov    0x20(%rsp),%rbx
+  13:	4d 85 f6             	test   %r14,%r14
+  16:	75 07                	jne    0x1f
+  18:	e8 56 2d 1f 00       	call   0x1f2d73
+  1d:	eb 06                	jmp    0x25
+  1f:	e8 4f 2d 1f 00       	call   0x1f2d73
+  24:	fb                   	sti
+  25:	48 8b 44 24 28       	mov    0x28(%rsp),%rax
+* 2a:	42 80 3c 20 00       	cmpb   $0x0,(%rax,%r12,1) <-- trapping instruction
+  2f:	74 08                	je     0x39
+  31:	48 89 df             	mov    %rbx,%rdi
+  34:	e8 3a 41 83 00       	call   0x834173
+  39:	48 8b 1b             	mov    (%rbx),%rbx
+  3c:	48                   	rex.W
+  3d:	8b                   	.byte 0x8b
+  3e:	44                   	rex.R
+  3f:	24                   	.byte 0x24
+
+
 ---
- rust/kernel/pwm.rs | 372 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 370 insertions(+), 2 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/rust/kernel/pwm.rs b/rust/kernel/pwm.rs
-index 3b383b66c241ac68213924c3aa7bc933a817bc46..e13312a16b2eff3f5171cb24c3082ad06f708ccc 100644
---- a/rust/kernel/pwm.rs
-+++ b/rust/kernel/pwm.rs
-@@ -7,12 +7,14 @@
- //! C header: [`include/linux/pwm.h`](srctree/include/linux/pwm.h).
- 
- use crate::{
--    bindings, device,
-+    bindings,
-+    device::{self, Bound},
-+    devres,
-     error::{self, to_result},
-     prelude::*,
-     types::{ARef, AlwaysRefCounted, ForeignOwnable, Opaque},
- };
--use core::{convert::TryFrom, ptr::NonNull};
-+use core::{convert::TryFrom, marker::PhantomData, ptr::NonNull};
- 
- /// PWM polarity. Mirrors [`enum pwm_polarity`](srctree/include/linux/pwm.h).
- #[derive(Copy, Clone, Debug, PartialEq, Eq)]
-@@ -400,3 +402,369 @@ unsafe impl Send for Chip {}
- // kernel locks, which the C core is responsible for. Any interior mutability is
- // handled and synchronized by the C kernel code.
- unsafe impl Sync for Chip {}
-+
-+/// A resource guard that ensures `pwmchip_remove` is called on drop.
-+///
-+/// This struct is intended to be managed by the `devres` framework by transferring its ownership
-+/// via [`Devres::register`]. This ties the lifetime of the PWM chip registration
-+/// to the lifetime of the underlying device.
-+pub struct Registration {
-+    chip: ARef<Chip>,
-+}
-+
-+impl Registration {
-+    /// Registers a PWM chip with the PWM subsystem.
-+    ///
-+    /// Transfers its ownership to the `devres` framework, which ties its lifetime
-+    /// to the parent device.
-+    /// On unbind of the parent device, the `devres` entry will be dropped, automatically
-+    /// calling `pwmchip_remove`. This function should be called from the driver's `probe`.
-+    pub fn register(
-+        dev: &device::Device<Bound>,
-+        chip: ARef<Chip>,
-+        ops_vtable: &'static PwmOpsVTable,
-+    ) -> Result {
-+        let c_chip_ptr = chip.as_raw();
-+
-+        // SAFETY: `c_chip_ptr` is valid because the `ARef<Chip>` that owns it exists.
-+        // The vtable pointer is also valid. This sets the `.ops` field on the C struct.
-+        unsafe {
-+            (*c_chip_ptr).ops = ops_vtable.as_raw();
-+        }
-+
-+        // SAFETY: `c_chip_ptr` points to a valid chip with its ops initialized.
-+        // `__pwmchip_add` is the C function to register the chip with the PWM core.
-+        unsafe {
-+            to_result(bindings::__pwmchip_add(c_chip_ptr, core::ptr::null_mut()))?;
-+        }
-+
-+        let registration = Registration { chip };
-+
-+        devres::register(dev, registration, GFP_KERNEL)
-+    }
-+}
-+
-+impl Drop for Registration {
-+    fn drop(&mut self) {
-+        let chip_raw = self.chip.as_raw();
-+
-+        // SAFETY: `chip_raw` points to a chip that was successfully registered.
-+        // `bindings::pwmchip_remove` is the correct C function to unregister it.
-+        // This `drop` implementation is called automatically by `devres` on driver unbind.
-+        unsafe {
-+            bindings::pwmchip_remove(chip_raw);
-+        }
-+    }
-+}
-+
-+/// Trait defining the operations for a PWM driver.
-+pub trait PwmOps: 'static + Sized {
-+    /// The driver-specific hardware representation of a waveform.
-+    ///
-+    /// This type must be [`Copy`], [`Default`], and fit within `PWM_WFHWSIZE`.
-+    type WfHw: Copy + Default;
-+
-+    /// Optional hook for when a PWM device is requested.
-+    fn request(_chip: &Chip, _pwm: &Device, _parent_dev: &device::Device<Bound>) -> Result {
-+        Ok(())
-+    }
-+
-+    /// Optional hook for when a PWM device is freed.
-+    fn free(_chip: &Chip, _pwm: &Device, _parent_dev: &device::Device<Bound>) {}
-+
-+    /// Optional hook for capturing a PWM signal.
-+    fn capture(
-+        _chip: &Chip,
-+        _pwm: &Device,
-+        _result: &mut bindings::pwm_capture,
-+        _timeout: usize,
-+        _parent_dev: &device::Device<Bound>,
-+    ) -> Result {
-+        Err(ENOTSUPP)
-+    }
-+
-+    /// Convert a generic waveform to the hardware-specific representation.
-+    /// This is typically a pure calculation and does not perform I/O.
-+    fn round_waveform_tohw(
-+        _chip: &Chip,
-+        _pwm: &Device,
-+        _wf: &Waveform,
-+    ) -> Result<(c_int, Self::WfHw)> {
-+        Err(ENOTSUPP)
-+    }
-+
-+    /// Convert a hardware-specific representation back to a generic waveform.
-+    /// This is typically a pure calculation and does not perform I/O.
-+    fn round_waveform_fromhw(
-+        _chip: &Chip,
-+        _pwm: &Device,
-+        _wfhw: &Self::WfHw,
-+        _wf: &mut Waveform,
-+    ) -> Result<c_int> {
-+        Err(ENOTSUPP)
-+    }
-+
-+    /// Read the current hardware configuration into the hardware-specific representation.
-+    fn read_waveform(
-+        _chip: &Chip,
-+        _pwm: &Device,
-+        _parent_dev: &device::Device<Bound>,
-+    ) -> Result<Self::WfHw> {
-+        Err(ENOTSUPP)
-+    }
-+
-+    /// Write a hardware-specific waveform configuration to the hardware.
-+    fn write_waveform(
-+        _chip: &Chip,
-+        _pwm: &Device,
-+        _wfhw: &Self::WfHw,
-+        _parent_dev: &device::Device<Bound>,
-+    ) -> Result {
-+        Err(ENOTSUPP)
-+    }
-+}
-+/// Bridges Rust `PwmOps` to the C `pwm_ops` vtable.
-+struct Adapter<T: PwmOps> {
-+    _p: PhantomData<T>,
-+}
-+
-+impl<T: PwmOps> Adapter<T> {
-+    /// # Safety
-+    ///
-+    /// `wfhw_ptr` must be valid for writes of `size_of::<T::WfHw>()` bytes.
-+    unsafe fn serialize_wfhw(wfhw: &T::WfHw, wfhw_ptr: *mut c_void) -> Result {
-+        let size = core::mem::size_of::<T::WfHw>();
-+        if size > bindings::PWM_WFHWSIZE as usize {
-+            return Err(EINVAL);
-+        }
-+
-+        // SAFETY: The caller ensures `wfhw_ptr` is valid for `size` bytes.
-+        unsafe {
-+            core::ptr::copy_nonoverlapping(
-+                core::ptr::from_ref::<T::WfHw>(wfhw).cast::<u8>(),
-+                wfhw_ptr.cast::<u8>(),
-+                size,
-+            );
-+        }
-+
-+        Ok(())
-+    }
-+
-+    /// # Safety
-+    ///
-+    /// `wfhw_ptr` must be valid for reads of `size_of::<T::WfHw>()` bytes.
-+    unsafe fn deserialize_wfhw(wfhw_ptr: *const c_void) -> Result<T::WfHw> {
-+        let size = core::mem::size_of::<T::WfHw>();
-+        if size > bindings::PWM_WFHWSIZE as usize {
-+            return Err(EINVAL);
-+        }
-+
-+        let mut wfhw = T::WfHw::default();
-+        // SAFETY: The caller ensures `wfhw_ptr` is valid for `size` bytes.
-+        unsafe {
-+            core::ptr::copy_nonoverlapping(
-+                wfhw_ptr.cast::<u8>(),
-+                core::ptr::from_mut::<T::WfHw>(&mut wfhw).cast::<u8>(),
-+                size,
-+            );
-+        }
-+
-+        Ok(wfhw)
-+    }
-+
-+    /// # Safety
-+    ///
-+    /// Pointers from C must be valid.
-+    unsafe extern "C" fn request_callback(
-+        c: *mut bindings::pwm_chip,
-+        p: *mut bindings::pwm_device,
-+    ) -> c_int {
-+        // SAFETY: PWM core guarentees `c` and `p` are valid pointers.
-+        let (chip, pwm) = unsafe { (Chip::as_ref(c), Device::as_ref(p)) };
-+
-+        // SAFETY: The PWM core guarantees the parent device exists and is bound during callbacks.
-+        let bound_parent = unsafe { chip.bound_parent_device() };
-+        match T::request(chip, pwm, bound_parent) {
-+            Ok(()) => 0,
-+            Err(e) => e.to_errno(),
-+        }
-+    }
-+
-+    /// # Safety
-+    ///
-+    /// Pointers from C must be valid.
-+    unsafe extern "C" fn free_callback(c: *mut bindings::pwm_chip, p: *mut bindings::pwm_device) {
-+        // SAFETY: Relies on the function's contract that `c` and `p` are valid pointers.
-+        let (chip, pwm) = unsafe { (Chip::as_ref(c), Device::as_ref(p)) };
-+
-+        // SAFETY: The PWM core guarantees the parent device exists and is bound during callbacks.
-+        let bound_parent = unsafe { chip.bound_parent_device() };
-+        T::free(chip, pwm, bound_parent);
-+    }
-+
-+    /// # Safety
-+    ///
-+    /// Pointers from C must be valid.
-+    unsafe extern "C" fn capture_callback(
-+        c: *mut bindings::pwm_chip,
-+        p: *mut bindings::pwm_device,
-+        res: *mut bindings::pwm_capture,
-+        timeout: usize,
-+    ) -> c_int {
-+        // SAFETY: Relies on the function's contract that `c` and `p` are valid pointers.
-+        let (chip, pwm, result) = unsafe { (Chip::as_ref(c), Device::as_ref(p), &mut *res) };
-+
-+        // SAFETY: The PWM core guarantees the parent device exists and is bound during callbacks.
-+        let bound_parent = unsafe { chip.bound_parent_device() };
-+        match T::capture(chip, pwm, result, timeout, bound_parent) {
-+            Ok(()) => 0,
-+            Err(e) => e.to_errno(),
-+        }
-+    }
-+
-+    /// # Safety
-+    ///
-+    /// Pointers from C must be valid.
-+    unsafe extern "C" fn round_waveform_tohw_callback(
-+        c: *mut bindings::pwm_chip,
-+        p: *mut bindings::pwm_device,
-+        w: *const bindings::pwm_waveform,
-+        wh: *mut c_void,
-+    ) -> c_int {
-+        // SAFETY: Relies on the function's contract that `c` and `p` are valid pointers.
-+        let (chip, pwm, wf) = unsafe { (Chip::as_ref(c), Device::as_ref(p), Waveform::from(*w)) };
-+        match T::round_waveform_tohw(chip, pwm, &wf) {
-+            Ok((status, wfhw)) => {
-+                // SAFETY: `wh` is valid per this function's safety contract.
-+                if unsafe { Self::serialize_wfhw(&wfhw, wh) }.is_err() {
-+                    return EINVAL.to_errno();
-+                }
-+                status
-+            }
-+            Err(e) => e.to_errno(),
-+        }
-+    }
-+
-+    /// # Safety
-+    ///
-+    /// Pointers from C must be valid.
-+    unsafe extern "C" fn round_waveform_fromhw_callback(
-+        c: *mut bindings::pwm_chip,
-+        p: *mut bindings::pwm_device,
-+        wh: *const c_void,
-+        w: *mut bindings::pwm_waveform,
-+    ) -> c_int {
-+        // SAFETY: Relies on the function's contract that `c` and `p` are valid pointers.
-+        let (chip, pwm) = unsafe { (Chip::as_ref(c), Device::as_ref(p)) };
-+        // SAFETY: `deserialize_wfhw`'s safety contract is met by this function's contract.
-+        let wfhw = match unsafe { Self::deserialize_wfhw(wh) } {
-+            Ok(v) => v,
-+            Err(e) => return e.to_errno(),
-+        };
-+
-+        let mut rust_wf = Waveform::default();
-+        match T::round_waveform_fromhw(chip, pwm, &wfhw, &mut rust_wf) {
-+            Ok(ret) => {
-+                // SAFETY: `w` is guaranteed valid by the C caller.
-+                unsafe {
-+                    *w = rust_wf.into();
-+                };
-+                ret
-+            }
-+            Err(e) => e.to_errno(),
-+        }
-+    }
-+
-+    /// # Safety
-+    ///
-+    /// Pointers from C must be valid.
-+    unsafe extern "C" fn read_waveform_callback(
-+        c: *mut bindings::pwm_chip,
-+        p: *mut bindings::pwm_device,
-+        wh: *mut c_void,
-+    ) -> c_int {
-+        // SAFETY: Relies on the function's contract that `c` and `p` are valid pointers.
-+        let (chip, pwm) = unsafe { (Chip::as_ref(c), Device::as_ref(p)) };
-+
-+        // SAFETY: The PWM core guarantees the parent device exists and is bound during callbacks.
-+        let bound_parent = unsafe { chip.bound_parent_device() };
-+        match T::read_waveform(chip, pwm, bound_parent) {
-+            // SAFETY: `wh` is valid per this function's safety contract.
-+            Ok(wfhw) => match unsafe { Self::serialize_wfhw(&wfhw, wh) } {
-+                Ok(()) => 0,
-+                Err(e) => e.to_errno(),
-+            },
-+            Err(e) => e.to_errno(),
-+        }
-+    }
-+
-+    /// # Safety
-+    ///
-+    /// Pointers from C must be valid.
-+    unsafe extern "C" fn write_waveform_callback(
-+        c: *mut bindings::pwm_chip,
-+        p: *mut bindings::pwm_device,
-+        wh: *const c_void,
-+    ) -> c_int {
-+        // SAFETY: Relies on the function's contract that `c` and `p` are valid pointers.
-+        let (chip, pwm) = unsafe { (Chip::as_ref(c), Device::as_ref(p)) };
-+
-+        // SAFETY: The PWM core guarantees the parent device exists and is bound during callbacks.
-+        let bound_parent = unsafe { chip.bound_parent_device() };
-+
-+        // SAFETY: `wh` is valid per this function's safety contract.
-+        let wfhw = match unsafe { Self::deserialize_wfhw(wh) } {
-+            Ok(v) => v,
-+            Err(e) => return e.to_errno(),
-+        };
-+        match T::write_waveform(chip, pwm, &wfhw, bound_parent) {
-+            Ok(()) => 0,
-+            Err(e) => e.to_errno(),
-+        }
-+    }
-+}
-+
-+/// VTable structure wrapper for PWM operations.
-+/// Mirrors [`struct pwm_ops`](srctree/include/linux/pwm.h).
-+#[repr(transparent)]
-+pub struct PwmOpsVTable(Opaque<bindings::pwm_ops>);
-+
-+// SAFETY: PwmOpsVTable is Send. The vtable contains only function pointers
-+// and a size, which are simple data types that can be safely moved across
-+// threads. The thread-safety of calling these functions is handled by the
-+// kernel's locking mechanisms.
-+unsafe impl Send for PwmOpsVTable {}
-+
-+// SAFETY: PwmOpsVTable is Sync. The vtable is immutable after it is created,
-+// so it can be safely referenced and accessed concurrently by multiple threads
-+// e.g. to read the function pointers.
-+unsafe impl Sync for PwmOpsVTable {}
-+
-+impl PwmOpsVTable {
-+    /// Returns a raw pointer to the underlying `pwm_ops` struct.
-+    pub(crate) fn as_raw(&self) -> *const bindings::pwm_ops {
-+        self.0.get()
-+    }
-+}
-+
-+/// Creates a PWM operations vtable for a type `T` that implements `PwmOps`.
-+///
-+/// This is used to bridge Rust trait implementations to the C `struct pwm_ops`
-+/// expected by the kernel.
-+pub const fn create_pwm_ops<T: PwmOps>() -> PwmOpsVTable {
-+    // SAFETY: `core::mem::zeroed()` is unsafe. For `pwm_ops`, all fields are
-+    // `Option<extern "C" fn(...)>` or data, so a zeroed pattern (None/0) is valid initially.
-+    let mut ops: bindings::pwm_ops = unsafe { core::mem::zeroed() };
-+
-+    ops.request = Some(Adapter::<T>::request_callback);
-+    ops.free = Some(Adapter::<T>::free_callback);
-+    ops.capture = Some(Adapter::<T>::capture_callback);
-+
-+    ops.round_waveform_tohw = Some(Adapter::<T>::round_waveform_tohw_callback);
-+    ops.round_waveform_fromhw = Some(Adapter::<T>::round_waveform_fromhw_callback);
-+    ops.read_waveform = Some(Adapter::<T>::read_waveform_callback);
-+    ops.write_waveform = Some(Adapter::<T>::write_waveform_callback);
-+    ops.sizeof_wfhw = core::mem::size_of::<T::WfHw>();
-+
-+    PwmOpsVTable(Opaque::new(ops))
-+}
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
--- 
-2.34.1
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
