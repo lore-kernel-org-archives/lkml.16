@@ -1,148 +1,220 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D575B151991
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 01:56:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B0F1553AA
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 02:00:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751421400; cv=none; b=sND9gss1P50SghFleHbc+RGZlvq6cUrt7hxRf8y897ZE2nkTZXgK5fODzp6F0kYJNVSdAY4EUyTEZPuJ5Sjn6FRjVbwA7U1ewQ87P9h5kYBV3VrsdMexrUhMJo3xfPhfPfFL2awgZi0Wpq3qKlaYIr2b9XvussMNjtksOt5V2AE=
+	t=1751421618; cv=none; b=R8Yld63qKHm+ACONx5f9scUQquROKJmEJWs6qPyi43kPHE7ptwjmSEUhLM+dryVP0+li1Fsjsuxd86Q+RzaIHY2c2WXOPZtaRgDJGL1IQCKNvC3zw0Sn7z4ewB5zn3/ZpzkcoFu3l4VErdasDYebxQ1KgeB/nYs3zuhvBl2d7Ss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751421400; c=relaxed/simple;
-	bh=lf+W/XheVswP37bZGWyVHx0TjRCAvQU1dQGxBHJnjaw=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ZCXgfvzTGuVwcTEzCGqaDuEtk+gU7rK6nshRJcwYLG81OZb0CdALZGC4aCfB5X3PSq/ZaRiO3VnlSIjbuqk70KNQ4d14UAYyTcaz46AIm8UHow7rusKfwzrKzAEybT11uvZqcSfqXL1yUCLHBc7tIM8vjjod5D0UsdONPOCIpyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3ddc5137992so41771605ab.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 18:56:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751421398; x=1752026198;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=r9p2vmYIDQnjZYKhnWO08w7hs02+yCAMO55AhYPDySY=;
-        b=qWkQEnLPe+caJNFV74zPWnchxQ77XW2ZaOby2nl1HF5PrxVNxo+5TDG9mmAgMX4Ypz
-         8Ct4lTPK3jqXcdv7ey+uexC4FsvTUhzrKjWnIrjFTYxuZz1f+aqp7Rhxg35/7S5x3qUJ
-         IRn43RrFavq01GuqyUZgUcFskiB+NvUAlOlWdR2D4MaDVlIrYOMOHq6NuC+28iBpR6kh
-         2rVJU2krRRVzn/OpZaPBP/QPaU/fCoAK3uD224fkHyI4mBqPUnfoiqctMPUCt3r3OPGk
-         Ycu1WB+1nwRqAsb2r2sh7lyEEwwtai3i4nMMCwJSO/QKREaNBocF22AsQDSWbl23m6cN
-         HcNA==
-X-Forwarded-Encrypted: i=1; AJvYcCUne37HuKq3mGtdJ28mnpiXYsK2PZ58zmpDpe8z8r4q7QTx0f97WHPIOipHTqxpsVA1NDTNRxmB/7Mob8w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7arVIkpNS7S+AafEM72Mn6BZA3RcgxIs6jYW8uMruEnWBDdmK
-	46Z3IC3TTt/naIi+9ntn5vA8reT2Lcgl7UgjouLWZoQFvCbDfDnnACVmQdO/YbgMNzDadCvohKt
-	0u5OCrFFQQ3TvMFEBiEilSjfHvbV66d8q69tCnFO09wxGQR3QjyCNtTg79rU=
-X-Google-Smtp-Source: AGHT+IEb9t007pvwN+7iqKRSqObiWGplA42eErhSjupvknzurqGmT7cb0jDTeUcnzmZgI2X7vy4fnBxX8BGeoAOoTw8hsHBBWLXS
+	s=arc-20240116; t=1751421618; c=relaxed/simple;
+	bh=mNL+vL+xN7bDVuRbaJlPg1tSMlXvcNCBR6ykGypA0R4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rRHACeWOUbhtJP9txYiS3Xy1BXv+GhYZylKbskM9zbP65QOjG6LU3m1vAu5r8mzO1jT4aJzOt/WaqxyUICMfLwJj8teLyhdexacfcBEyuFWpQtFVEUTh5XGS07zGLQboo+GUN+0DMFqP4Rg1GWRNWgWUelxrspURu0+dApQc2c4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=RiE2Gdx1; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="RiE2Gdx1"
+Message-ID: <15ba0933-b0c1-40eb-9d3c-d8837d6ee12a@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751421601;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aKL1FF4hap74WWQz6H6EMD4nNxNTcrjgixOQ6nf32eM=;
+	b=RiE2Gdx1GgXM790DtELGwOhTrItveIzucm7gfHPjoIySLpLc8uXMdXgMbBgMGVFdR2oiPa
+	ZE/7qEHeI0xkLU5TEopXi/q4uCnVDLWJtMiXIoPqwdBooQY0oQ0+BgREr1zLdI0YFaEH6o
+	d8d2D072jp8C+wwdjrBY/r0AvtCnuzk=
+Date: Wed, 2 Jul 2025 09:59:52 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:18c5:b0:3df:3222:278e with SMTP id
- e9e14a558f8ab-3e054934f08mr15804535ab.1.1751421398031; Tue, 01 Jul 2025
- 18:56:38 -0700 (PDT)
-Date: Tue, 01 Jul 2025 18:56:38 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <686491d6.a70a0220.3b7e22.20ea.GAE@google.com>
-Subject: [syzbot] [bpf?] WARNING in check_helper_call
-From: syzbot <syzbot+69014a227f8edad4d8c6@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
-	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
-	linux-kernel@vger.kernel.org, martin.lau@linux.dev, netdev@vger.kernel.org, 
-	sdf@fomichev.me, song@kernel.org, syzkaller-bugs@googlegroups.com, 
-	yonghong.song@linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH RFT net-next 02/10] net: stmmac: Add support for Allwinner
+ A523 GMAC200
+To: Chen-Yu Tsai <wens@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej@kernel.org>, Samuel Holland <samuel@sholland.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>
+References: <20250701165756.258356-1-wens@kernel.org>
+ <20250701165756.258356-3-wens@kernel.org>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yanteng Si <si.yanteng@linux.dev>
+In-Reply-To: <20250701165756.258356-3-wens@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hello,
+在 7/2/25 12:57 AM, Chen-Yu Tsai 写道:
+> From: Chen-Yu Tsai <wens@csie.org>
+> 
+> The Allwinner A523 SoC family has a second Ethernet controller, called
+> the GMAC200 in the BSP and T527 datasheet, and referred to as GMAC1 for
+> numbering. This controller, according to BSP sources, is fully
+> compatible with a slightly newer version of the Synopsys DWMAC core.
+> The glue layer around the controller is the same as found around older
+> DWMAC cores on Allwinner SoCs. The only slight difference is that since
+> this is the second controller on the SoC, the register for the clock
+> delay controls is at a different offset. Last, the integration includes
+> a dedicated clock gate for the memory bus and the whole thing is put in
+> a separately controllable power domain.
+> 
+> Add a new driver for this hardware supporting the integration layer.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> ---
+>   drivers/net/ethernet/stmicro/stmmac/Kconfig   |  12 ++
+>   drivers/net/ethernet/stmicro/stmmac/Makefile  |   1 +
+>   .../ethernet/stmicro/stmmac/dwmac-sun55i.c    | 161 ++++++++++++++++++
+>   3 files changed, 174 insertions(+)
+>   create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-sun55i.c
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/Kconfig b/drivers/net/ethernet/stmicro/stmmac/Kconfig
+> index 67fa879b1e52..38ce9a0cfb5b 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
+> +++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
+> @@ -263,6 +263,18 @@ config DWMAC_SUN8I
+>   	  stmmac device driver. This driver is used for H3/A83T/A64
+>   	  EMAC ethernet controller.
+>   
+> +config DWMAC_SUN55I
+> +	tristate "Allwinner sun55i GMAC200 support"
+> +	default ARCH_SUNXI
+> +	depends on OF && (ARCH_SUNXI || COMPILE_TEST)
+> +	select MDIO_BUS_MUX
+> +	help
+> +	  Support for Allwinner A523/T527 GMAC200 ethernet controllers.
+> +
+> +	  This selects Allwinner SoC glue layer support for the
+> +	  stmmac device driver. This driver is used for A523/T527
+> +	  GMAC200 ethernet controller.
+> +
+>   config DWMAC_THEAD
+>   	tristate "T-HEAD dwmac support"
+>   	depends on OF && (ARCH_THEAD || COMPILE_TEST)
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/Makefile b/drivers/net/ethernet/stmicro/stmmac/Makefile
+> index b591d93f8503..51e068e26ce4 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/Makefile
+> +++ b/drivers/net/ethernet/stmicro/stmmac/Makefile
+> @@ -31,6 +31,7 @@ obj-$(CONFIG_DWMAC_STI)		+= dwmac-sti.o
+>   obj-$(CONFIG_DWMAC_STM32)	+= dwmac-stm32.o
+>   obj-$(CONFIG_DWMAC_SUNXI)	+= dwmac-sunxi.o
+>   obj-$(CONFIG_DWMAC_SUN8I)	+= dwmac-sun8i.o
+> +obj-$(CONFIG_DWMAC_SUN55I)	+= dwmac-sun55i.o
+>   obj-$(CONFIG_DWMAC_THEAD)	+= dwmac-thead.o
+>   obj-$(CONFIG_DWMAC_DWC_QOS_ETH)	+= dwmac-dwc-qos-eth.o
+>   obj-$(CONFIG_DWMAC_INTEL_PLAT)	+= dwmac-intel-plat.o
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun55i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun55i.c
+> new file mode 100644
+> index 000000000000..7fadb90e3098
+> --- /dev/null
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun55i.c
+> @@ -0,0 +1,161 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * dwmac-sun55i.c - Allwinner sun55i GMAC200 specific glue layer
+> + *
+> + * Copyright (C) 2025 Chen-Yu Tsai <wens@csie.org>
+> + *
+> + * syscon parts taken from dwmac-sun8i.c, which is
+> + *
+> + * Copyright (C) 2017 Corentin Labbe <clabbe.montjoie@gmail.com>
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/bits.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/phy.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/stmmac.h>
+> +
+> +#include "stmmac.h"
+> +#include "stmmac_platform.h"
+> +
+> +#define SYSCON_REG		0x34
+> +
+> +/* RMII specific bits */
+> +#define SYSCON_RMII_EN		BIT(13) /* 1: enable RMII (overrides EPIT) */
+insert a blankline.
+> +/* Generic system control EMAC_CLK bits */
+> +#define SYSCON_ETXDC_MASK		GENMASK(12, 10)
+> +#define SYSCON_ERXDC_MASK		GENMASK(9, 5)
+ditto.
+> +/* EMAC PHY Interface Type */
+> +#define SYSCON_EPIT			BIT(2) /* 1: RGMII, 0: MII */
+> +#define SYSCON_ETCS_MASK		GENMASK(1, 0)
+> +#define SYSCON_ETCS_MII		0x0
+> +#define SYSCON_ETCS_EXT_GMII	0x1
+> +#define SYSCON_ETCS_INT_GMII	0x2
+> +
+> +#define MASK_TO_VAL(mask)   ((mask) >> (__builtin_ffsll(mask) - 1))
+> +
+> +static int sun55i_gmac200_set_syscon(struct device *dev,
+> +				     struct plat_stmmacenet_data *plat)
+> +{
+> +	struct device_node *node = dev->of_node;
+> +	struct regmap *regmap;
+> +	u32 val, reg = 0;
+> +
+> +	regmap = syscon_regmap_lookup_by_phandle(node, "syscon");
+> +	if (IS_ERR(regmap))
+> +		return dev_err_probe(dev, PTR_ERR(regmap), "Unable to map syscon\n");
+> +
+-----------
+> +	if (!of_property_read_u32(node, "allwinner,tx-delay-ps", &val)) {
+> +		if (val % 100) {
+> +			dev_err(dev, "tx-delay must be a multiple of 100\n");
+> +			return -EINVAL;
+> +		}
+> +		val /= 100;
+> +		dev_dbg(dev, "set tx-delay to %x\n", val);
+> +		if (val > MASK_TO_VAL(SYSCON_ETXDC_MASK))
+> +			return dev_err_probe(dev, -EINVAL,
+> +					     "Invalid TX clock delay: %d\n",
+> +					     val);
+> +
+> +		reg |= FIELD_PREP(SYSCON_ETXDC_MASK, val);
+> +	}
+> +
+> +	if (!of_property_read_u32(node, "allwinner,rx-delay-ps", &val)) {
+> +		if (val % 100) {
+> +			dev_err(dev, "rx-delay must be a multiple of 100\n");
+> +			return -EINVAL;
+> +		}
+> +		val /= 100;
+> +		dev_dbg(dev, "set rx-delay to %x\n", val);
+> +		if (val > MASK_TO_VAL(SYSCON_ERXDC_MASK))
+> +			return dev_err_probe(dev, -EINVAL,
+> +					     "Invalid RX clock delay: %d\n",
+> +					     val);
+> +
+> +		reg |= FIELD_PREP(SYSCON_ERXDC_MASK, val);
+> +	}
+------------
+These two parts of the code are highly similar.
+Can you construct a separate function?
+> +
+> +	switch (plat->mac_interface) {
 
-syzbot found the following issue on:
-
-HEAD commit:    cce3fee729ee selftests/bpf: Enable dynptr/test_probe_read_..
-git tree:       bpf-next
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=104053d4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=79da270cec5ffd65
-dashboard link: https://syzkaller.appspot.com/bug?extid=69014a227f8edad4d8c6
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=144053d4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13d45770580000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/f286a7ef4940/disk-cce3fee7.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/e2f2ebe1fdc3/vmlinux-cce3fee7.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/6e3070663778/bzImage-cce3fee7.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+69014a227f8edad4d8c6@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-verifier bug: more than one arg with ref_obj_id R2 2 2(1)
-WARNING: CPU: 1 PID: 5835 at kernel/bpf/verifier.c:9678 check_func_arg kernel/bpf/verifier.c:9676 [inline]
-WARNING: CPU: 1 PID: 5835 at kernel/bpf/verifier.c:9678 check_helper_call+0x6052/0x6b60 kernel/bpf/verifier.c:11386
-Modules linked in:
-CPU: 1 UID: 0 PID: 5835 Comm: syz-executor386 Not tainted 6.16.0-rc3-syzkaller-gcce3fee729ee #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:check_func_arg kernel/bpf/verifier.c:9676 [inline]
-RIP: 0010:check_helper_call+0x6052/0x6b60 kernel/bpf/verifier.c:11386
-Code: 48 8b 44 24 18 48 8b 4c 24 38 8b 94 01 d4 00 00 00 8b 8c 24 20 01 00 00 48 c7 c7 e0 a3 91 8b 48 8b 74 24 60 e8 ef 56 ab ff 90 <0f> 0b 90 90 e9 15 d0 ff ff e8 d0 b3 e7 ff c6 05 73 64 b2 0d 01 90
-RSP: 0018:ffffc90003f5ecc0 EFLAGS: 00010246
-RAX: 9de7429615562e00 RBX: 1ffff1100488e229 RCX: ffff888011441e00
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000002
-RBP: ffffc90003f5eeb0 R08: ffffc90003f5e9e7 R09: 1ffff920007ebd3c
-R10: dffffc0000000000 R11: fffff520007ebd3d R12: 0000000000000002
-R13: 0000000000000004 R14: 0000000000000078 R15: 0000000000000002
-FS:  0000555591931380(0000) GS:ffff888125d4d000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000010cac398 CR3: 0000000075382000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- do_check_insn kernel/bpf/verifier.c:19850 [inline]
- do_check+0x95ec/0xe080 kernel/bpf/verifier.c:20017
- do_check_common+0x188f/0x23f0 kernel/bpf/verifier.c:23180
- do_check_main kernel/bpf/verifier.c:23263 [inline]
- bpf_check+0x10252/0x1a5d0 kernel/bpf/verifier.c:24619
- bpf_prog_load+0x1318/0x1930 kernel/bpf/syscall.c:2972
- __sys_bpf+0x5f1/0x860 kernel/bpf/syscall.c:5978
- __do_sys_bpf kernel/bpf/syscall.c:6085 [inline]
- __se_sys_bpf kernel/bpf/syscall.c:6083 [inline]
- __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:6083
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f5b8c4cc4a9
-Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffe9d7aae88 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
-RAX: ffffffffffffffda RBX: 00007ffe9d7ab058 RCX: 00007f5b8c4cc4a9
-RDX: 0000000000000090 RSI: 0000200000000840 RDI: 0000000000000005
-RBP: 00007f5b8c53f610 R08: 0000000000000000 R09: 00007ffe9d7ab058
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
-R13: 00007ffe9d7ab048 R14: 0000000000000001 R15: 0000000000000001
- </TASK>
+> +	case PHY_INTERFACE_MODE_MII:
+> +		/* default */
+> +		break;
+This line of comment seems a bit abrupt here.
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Thanks,
+Yanteng
