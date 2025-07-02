@@ -1,116 +1,72 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611F9231A23;
-	Wed,  2 Jul 2025 21:55:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 168CE23D2B4;
+	Wed,  2 Jul 2025 21:55:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751493321; cv=none; b=ensT2N5pWslDVfZkK7NcDtRxNh3ckGybv7tjO88m5e+y1R2JuGHbcPm9oaY9PQ21ROcbsGNXAlfgqQOjBgtPUnDasuaUlCvRkyuhuhq8IUnI3XzUIW9VHeG94Tr4JMRDs2sxKAXLbDS46W1O1JafrftpmzJp/V+I863Gc2LLdEs=
+	t=1751493338; cv=none; b=CkI+k05WzKhoYb+sk2b/yD4wstKWaCsWwpTXRfXEkhI7fm6Bzj2mxWuuc4RH3hRFiX3WAnKlDQys3HyslbAFxyqhuA2DerK1cWR/KJQ9ysLzTGX8HtibNXfj1BUWjTNshtQbxJ+atUnpdoZ7x6Yp5PzSEb6ondE5sm4XJCnsHXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751493321; c=relaxed/simple;
-	bh=iGkBwzIdbza8qoD4B6aj+xlJlyErE9nD591815HAFqk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ju484IzfxT6Z8nXJPSMtxSyXDMkalErTyg2kcCLUHDOfNjf48nXwyhcQxH7cEo73mzams+4FlYlyVibDbrNnfJrnen5AO3mwM5qRNS8rTp/15qznpUz/9JDd5MuUYidNeBBhlwBrvxUxF9lbiI3p6tLz1jP+ctOglQy7QfjlvrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=txYuBzXB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751493338; c=relaxed/simple;
+	bh=TapG3+JaLlTv1hF0CipdWOSnkgSHAbCyu7aPQb1n74A=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Gu3Dj6Ipr3A4G1ncd06N5sBWO+EYj2QJ82SlildvWQKuHbamiRAXVi5dbVBtMjRx7kt0uIWgTTGy09oMAU5DFR9vURG6GuFA0cI8wjRUnimA0ELrTB8qbO1LM/YY+5r/dWMePaSVu47PUazxjzhGTNFSGnuRW4V9JKxsfZn31Cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aKYC5LkU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="txYuBzXB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBBC2C4CEE7;
-	Wed,  2 Jul 2025 21:55:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aKYC5LkU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38196C4CEE7;
+	Wed,  2 Jul 2025 21:55:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751493319;
-	bh=iGkBwzIdbza8qoD4B6aj+xlJlyErE9nD591815HAFqk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=txYuBzXBSRKbeFVOMXVCBpbM5Smf33hS+2wxhGLkFxlvKyR/BNSy6og0XV5svlqgh
-	 RG1Zi5SgKSqpogdRaqjU1RUpaeUHS1qO3AmzIieSclZbNUStETr0pZbAJGp6IP9BWB
-	 jFLUU9dFMRTy4NgoyGBSrqcUwzY1daDg1fK7RUDVp72TSmzGt4aDJdQywUuBOuIuGl
-	 rdm1BzqTFL3LYmo45rVSfMZ69VsBTvOH7TYTDEUlpPJZpkSy3DtGYIfZ1qL28dfC+L
-	 X2Ro4yRfJrby9W5BveTfy3Nn37QD3x0o86ji8oFjbCMkYHq16pXvogeg03y4PXVCby
-	 kfdGmOegah1Ew==
-Date: Wed, 2 Jul 2025 23:55:12 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Saravana Kannan <saravanak@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Michael Grzeschik <m.grzeschik@pengutronix.de>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Abel Vesa <abel.vesa@linaro.org>, Peng Fan <peng.fan@oss.nxp.com>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Johan Hovold <johan@kernel.org>,
-	Maulik Shah <maulik.shah@oss.qualcomm.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Hiago De Franco <hiago.franco@toradex.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 17/24] driver core: Export get_dev_from_fwnode()
-Message-ID: <aGWqwNXy1AcCGf97@pollux>
-References: <20250701114733.636510-1-ulf.hansson@linaro.org>
- <20250701114733.636510-18-ulf.hansson@linaro.org>
- <2025070205-ignore-passive-17b4@gregkh>
- <aGWH2mH6iZJ3s3lL@pollux>
- <CAGETcx_yVXgvmbDFYe+Nbdp18D-m14W8xO_G9RyAujpag+M9ow@mail.gmail.com>
+	s=k20201202; t=1751493337;
+	bh=TapG3+JaLlTv1hF0CipdWOSnkgSHAbCyu7aPQb1n74A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=aKYC5LkUwDX0ykRw+wH6my9oyimuCO1OZjbJt0g8xasmWSinrremCDfRc2DC+KQnc
+	 ZqXa2IwgSqZUIU54nNFmTdIapgPZhD9uJxZ4xPC+r7daG7LYS4xuenzz/sW2GSc325
+	 alyftUM37JYPz4yikS6b4mjQLui/IbNF7scw/0uNAnlk388mAGj4cHjvaG+wFcggOy
+	 WpNqE9PHCzX8xZNBhcnUZYWuVfWGwl3efgYL5mHblAf9PPt9RGRW27E2RKqhun6hBL
+	 m0Y7gMibVBcxTaWk51ndRl4JQswWfXTZhhqDMEYyn1tBq8b/txyBTRxaNwbvgdtDuy
+	 aCXL1GaiZZ0Cg==
+Date: Wed, 2 Jul 2025 14:55:36 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Jeongjun Park <aha310510@gmail.com>
+Cc: richardcochran@gmail.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, pabeni@redhat.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] ptp: remove unnecessary mutex lock in
+ ptp_clock_unregister()
+Message-ID: <20250702145536.08a6aa7a@kernel.org>
+In-Reply-To: <20250701170353.7255-1-aha310510@gmail.com>
+References: <20250701170353.7255-1-aha310510@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGETcx_yVXgvmbDFYe+Nbdp18D-m14W8xO_G9RyAujpag+M9ow@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 02, 2025 at 02:34:04PM -0700, Saravana Kannan wrote:
-> On Wed, Jul 2, 2025 at 12:26 PM Danilo Krummrich <dakr@kernel.org> wrote:
-> >
-> > On Wed, Jul 02, 2025 at 09:34:12AM +0200, Greg Kroah-Hartman wrote:
-> > > On Tue, Jul 01, 2025 at 01:47:19PM +0200, Ulf Hansson wrote:
-> > > > It has turned out get_dev_from_fwnode() is useful at a few other places
-> > > > outside of the driver core, as in gpiolib.c for example. Therefore let's
-> > > > make it available as a common helper function.
-> > > >
-> > > > Suggested-by: Saravana Kannan <saravanak@google.com>
-> > > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > Tested-by: Hiago De Franco <hiago.franco@toradex.com> # Colibri iMX8X
-> > > > Tested-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com> # TI AM62A,Xilinx ZynqMP ZCU106
-> > > > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> > > > ---
-> > > >  drivers/base/core.c    | 8 ++++++--
-> > > >  include/linux/device.h | 1 +
-> > > >  2 files changed, 7 insertions(+), 2 deletions(-)
-> > > >
-> > >
-> > > Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >
-> > I'm a bit concerned about exporting get_dev_from_fwnode() -- at least without a
-> > clear note on that this helper should be used with caution.
-> >
-> > AFAIK, a struct fwnode_handle instance does not have a reference count for its
-> > struct device pointer.
-> >
-> > Hence, calling get_dev_from_fwnode() with a valid fwnode handle is not enough.
+On Wed,  2 Jul 2025 02:03:53 +0900 Jeongjun Park wrote:
+> ptp_clock_unregister() is called by ptp core and several drivers that
+> require ptp clock feature. And in this function, ptp_vclock_in_use()
+> is called to check if ptp virtual clock is in use, and
+> ptp->is_virtual_clock, ptp->n_vclocks are checked.
 > 
-> Not enough for what?
+> It is true that you should always check ptp->is_virtual_clock to see if
+> you are using ptp virtual clock, but you do not necessarily need to
+> check ptp->n_vclocks.
+> 
+> ptp->n_vclocks is a feature need by ptp sysfs or some ptp cores, so in
+> most cases, except for these callers, it is not necessary to check.
+> 
+> The problem is that ptp_clock_unregister() checks ptp->n_vclocks even
+> when called by a driver other than the ptp core, and acquires
+> ptp->n_vclocks_mux to avoid concurrency issues when checking.
+> 
+> I think this logic is inefficient, so I think it would be appropriate to
+> modify the caller function that must check ptp->n_vclocks to check
+> ptp->n_vclocks in advance before calling ptp_clock_unregister().
 
-Having a valid pointer to a fwnode does not guarantee that fwnode->dev is a
-valid pointer. Given that fwnode is reference counted itself, but only has a
-weak reference of the device behind fwnode->dev, the device may have been
-released already.
-
-If the scope this function is called from can't guarantee that fwnode->dev has
-not been released yet, it's a potential UAF.
-
-Yes, device_del() sets dev->fwnode->dev = NULL. But that makes it still racy.
-
-If someone has a reference count on the fwnode and calls get_dev_from_fwnode()
-while device_del() runs concurrently (assuming that device_del() drops the last
-reference of the device), it's a race with a potential UAF.
-
-We should warn about this, when makeing get_dev_from_fwnode() and API that can
-be used by *everyone*.
-
-- Danilo
+Please repost this and CC Vladimir.
+-- 
+pw-bot: cr
