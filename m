@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5ED515624B;
-	Wed,  2 Jul 2025 22:50:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EB42260575;
+	Wed,  2 Jul 2025 22:50:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751496601; cv=none; b=CHe4ieK5MskB12CiqQnwRgUImdR5AosrQVXpyff/TdwbB9//qLZ3ce4zNsxlCVOp0hxy7JblRsegr1t/MaeRy/wsmcr4f/7Ml9wuvhuZflE2r4EUQcKfNu0QISE4rmPp8XRCuhfieRiW3v0XXqh1aOq5RESGRoKrNUT4nGWhFKQ=
+	t=1751496604; cv=none; b=rlh5ZzhesVvsLPglOHNb46E67JaIApmFYFym6JnDK2GULJUBpEuhG04Cn4Hh2af5twzK9KexwRaXt+hYkkxJPJujvBHBNhULAGwocxNi1E6PfTrVTMtrFMt284KgDHcGTejv3iTqZn3AxFD+8N5cuTqGuBuhYh1SP+Rnq5pMvi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751496601; c=relaxed/simple;
-	bh=wU8Zhraeh1yNzCGp2EgiAgwWtGMVkPgxeEnPDkPMUmQ=;
+	s=arc-20240116; t=1751496604; c=relaxed/simple;
+	bh=Wycl/TIHNL8gwnmGyoRRgjyRHlwQWQEqNA5Db38y2VU=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=FtbGFh1pWWnY/3TXC57UB0MQpn/j9+tOUigkzE7C/pTKEddKeFCMRQm259Y1Fup9VqzFCJ3lXMFD8gCco9GoPrGXhzp2HbvNXItYJZQZ22expYU4pgNV32CQEv71Kwqr1q71fyZfN2dhnEIRAHLhJagOynq3fWu/3iISWnjLVtg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jVrQyKke; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=h0DF6/fpjqwOVftiLFaq7xTbMnDMf0rCTTJnCMVh3sj9VrhDmyprDlLndEWkSqOK25O6lqT8+onAPDR6O1mbvAPD125pTYQgepr4Nd3apOZZDxmwn5JW8E5ePM1h0m82R+k1IYgzMGfkDY2dEgBC1OJoqCx5Bs+yYYIpRvG8TKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AW3KD/H/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jVrQyKke"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A7A4C4CEE7;
-	Wed,  2 Jul 2025 22:50:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AW3KD/H/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B581C4CEF3;
+	Wed,  2 Jul 2025 22:50:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751496601;
-	bh=wU8Zhraeh1yNzCGp2EgiAgwWtGMVkPgxeEnPDkPMUmQ=;
+	s=k20201202; t=1751496604;
+	bh=Wycl/TIHNL8gwnmGyoRRgjyRHlwQWQEqNA5Db38y2VU=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=jVrQyKke7z/XJrrGX4841VHebRnBXnTnWdXEQ/R+A7DGSSWvUUOgZWC3bSto1/8Tm
-	 K/1NV62e4vEE5Tc86WqGxfGaqm+ngndIi19aVgFJhoIXiX9qXu35xeg47vqYB2O3tb
-	 NzICAZPxprMVXUQuH/lURQmVCFJ/URxLk02DJsoHh78u+aqt28RUivbvUVTQlNsWJd
-	 gp+E2rLhc0xW5StqAKPyOO3tDGfOYS9YEuE4o/mog+IwwfUHBDGj2eXYZoX4eZ+qEp
-	 1vB8e4kTExtVgqEKPsizDwSRhPevYRwJjGoqm1TrhkdA+P1ibgZnCgfKqPch+COtAu
-	 riLWeU4TbXHkg==
+	b=AW3KD/H/a7I0wzEGre23ZmtdgiA+poJQ92pc0ROvjV3+BbBti9kNumA5mBhjOv8JZ
+	 oUTBgi8V3Vd53Eki07GBndgLfhvo1uWqcy81v601tuIlQ8piSBkFP6Y2M3yOmnEx2e
+	 pJy3zPY1m+WeFEjbHIYFBmciwD8pKUV6Ag+e+twDvTisQJ/lKxGq8hHxY5hF+q4Qna
+	 LZ4omZMEYH7lV7sfM1pPIPychSbBB9JddNXMUjIBEKvcCBJ4Z6oH3/s33BG/lJuYuV
+	 X/tJR2GSPBmmQyVjRjSn9tD9c0H4FmOKCYDLvuReBUIcQBiZkGSISRTmKVnedmXTm/
+	 uw7V74CvqqX+g==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB06A383B273;
-	Wed,  2 Jul 2025 22:50:26 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EADA6383B274;
+	Wed,  2 Jul 2025 22:50:29 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,62 +37,35 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v12 0/8] Support rate management on traffic
- classes
- in devlink and mlx5
+Subject: Re: [PATCH] net: ipv6: Fix spelling mistake
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <175149662576.890932.9074896205205825131.git-patchwork-notify@kernel.org>
-Date: Wed, 02 Jul 2025 22:50:25 +0000
-References: <20250629142138.361537-1-mbloch@nvidia.com>
-In-Reply-To: <20250629142138.361537-1-mbloch@nvidia.com>
-To: Mark Bloch <mbloch@nvidia.com>
-Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
- edumazet@google.com, andrew+netdev@lunn.ch, horms@kernel.org,
- saeedm@nvidia.com, gal@nvidia.com, leonro@nvidia.com, tariqt@nvidia.com,
- donald.hunter@gmail.com, jiri@resnulli.us, corbet@lwn.net, leon@kernel.org,
- chuck.lever@oracle.com, jlayton@kernel.org, neil@brown.name,
- okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com, shuah@kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-rdma@vger.kernel.org,
- linux-nfs@vger.kernel.org, linux-kselftest@vger.kernel.org
+ <175149662850.890932.9219557571562861851.git-patchwork-notify@kernel.org>
+Date: Wed, 02 Jul 2025 22:50:28 +0000
+References: <20250702055820.112190-1-zhaochenguang@kylinos.cn>
+In-Reply-To: <20250702055820.112190-1-zhaochenguang@kylinos.cn>
+To: Chenguang Zhao <zhaochenguang@kylinos.cn>
+Cc: paul@paul-moore.com, davem@davemloft.net, dsahern@kernel.org,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ netdev@vger.kernel.org, linux-security-module@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 
 Hello:
 
-This series was applied to netdev/net-next.git (main)
+This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Sun, 29 Jun 2025 17:21:30 +0300 you wrote:
-> V12:
-> - Fixed YAML indentation in devlink.yaml.
-> - Removed unused total variable from devlink_nl_rate_tc_bw_set().
-> - Quoted shell variables in devlink.sh and split declarations to fix
->   shellcheck warnings.
-> - Added missing DevlinkFamily imports in selftests to fix pylint
->   warnings.
-> - Pulled changes from net-next to enable these adjustments:
->    Inclusion of DevlinkFamily in YNL test libs.
->    Introduction of nlmsg_for_each_attr_type() macro and its use in nfsd.
+On Wed,  2 Jul 2025 13:58:20 +0800 you wrote:
+> change 'Maximium' to 'Maximum'
 > 
-> [...]
+> Signed-off-by: Chenguang Zhao <zhaochenguang@kylinos.cn>
+> ---
+>  net/ipv6/calipso.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 
 Here is the summary with links:
-  - [net-next,v12,1/8] netlink: introduce type-checking attribute iteration for nlmsg
-    https://git.kernel.org/netdev/net-next/c/42401c423896
-  - [net-next,v12,2/8] devlink: Extend devlink rate API with traffic classes bandwidth management
-    https://git.kernel.org/netdev/net-next/c/566e8f108fc7
-  - [net-next,v12,3/8] selftest: netdevsim: Add devlink rate tc-bw test
-    https://git.kernel.org/netdev/net-next/c/236156d80d5e
-  - [net-next,v12,4/8] net/mlx5: Add no-op implementation for setting tc-bw on rate objects
-    https://git.kernel.org/netdev/net-next/c/71092821244a
-  - [net-next,v12,5/8] net/mlx5: Add support for setting tc-bw on nodes
-    https://git.kernel.org/netdev/net-next/c/96619c485fa6
-  - [net-next,v12,6/8] net/mlx5: Add traffic class scheduling support for vport QoS
-    https://git.kernel.org/netdev/net-next/c/97733d1e00a0
-  - [net-next,v12,7/8] net/mlx5: Manage TC arbiter nodes and implement full support for tc-bw
-    https://git.kernel.org/netdev/net-next/c/cf7e73770d1b
-  - [net-next,v12,8/8] selftests: drv-net: Add test for devlink-rate traffic class bandwidth distribution
-    https://git.kernel.org/netdev/net-next/c/23ca32e4ead4
+  - net: ipv6: Fix spelling mistake
+    https://git.kernel.org/netdev/net-next/c/8b98f34ce1d8
 
 You are awesome, thank you!
 -- 
