@@ -1,181 +1,397 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2065.outbound.protection.outlook.com [40.107.236.65])
+Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010033.outbound.protection.outlook.com [52.101.69.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 766E22CCC9;
-	Wed,  2 Jul 2025 10:14:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.65
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751451301; cv=fail; b=jgEVZfFXR+VL5wZ/wKAXoqQ3Cl5sjI1KTTMh/31o29YhbPWHyWTrsXHMBX2qtc1LAlvUwBCag1qonA0i/hrqoC/VlNGzKrzr83vYzQkP7Yhngj51twHdggKpysHSffmHgbhAhvycElF6n/ykn+v7533JUzNBjhkkg0erBdkq6kk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751451301; c=relaxed/simple;
-	bh=Rsqj0my+vuewFVu0QQPxQvyyjdV18+9AdmfIZNhtUXA=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=R8UniwffqdwASUYsTqKebfYFYkMTwAiZe4yfu1XHYTzK1ekbmrsEFvjRXeKFs/1G8cty4lDBhbjSCDLlG/0pkDTbiCGi+HfxuN0wzlXrY4C/CktwSx4we/r6C4PU9z5nRSUmTDdZwmmcQETVkFrvwsvzdPcZrk6lijZGfhpXegg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=cAJgh0pn; arc=fail smtp.client-ip=40.107.236.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1250253F12
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 10:15:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.33
+ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751451309; cv=fail; b=JgeJarq+VtAtAyQpBWVPslhscJfq4d1UK7SUENBjipoARl48s+uZJsUobtycfbpaT8ztPVJEuL/yFe3EXtUwlrCDEr0zvzLrcFzK0M+BZLNEUgolu7Av1G8N96cJ3U2dPOpdl8s9RtpiIxs2LvfkxKN3/WtM518di9AhZrEI1ec=
+ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751451309; c=relaxed/simple;
+	bh=PHJ1HxGN1CWRAr9Zg91TM9xeTmQGjQLgGXy3xpoOgMk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Niro49jvY+SKHs59AIpn4fGW7OHVvSQPZSIkMd0Y/IzOOctGsFKTMuYfwvjtDZJsx2Ce6wgkEmrJ1U8pASqBzoHXiqYB6OOzRr3iefcF9VZJrBP0VJdOA8ihB1cfJMrf07rpGi3JzW2oxpqJ4mjda+DHRKECcrvWscLX54mAITE=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=L/Rh/gik; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=L/Rh/gik; arc=fail smtp.client-ip=52.101.69.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="cAJgh0pn"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="L/Rh/gik";
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="L/Rh/gik"
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
+ b=N5G+YOLsgiuf+ejbTeJC3OxCirWpZujVHjpnp0uTAmNc1EO3fBpR5PdObGaB9C9+qZ0jdvSaVVdVM6+saokbtG998rh59w0MUfICARs90uIQ3IRAQapIJNnLVRWasUz1jFuYkWGdHNVzrqqdjSO0R0OuaBH7WVjhiuR40x0MYoi/dKlB7/NFTRB75GlG+dSNDd1AlSxSAh1wf9jYFkB5GNuVdj8QZsK/sz9IVPwXmpI/f/fhxyDLIYwO1JX0gG8ekf8Cw5Hq4JWPOQ9V0reJR4DbZceFB1CQPTaStTwXLk3XcQ/Z20I+xXsFGdfsgoJVfzCJ0SSfmlANFoXHWaYG7Q==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=P7txgnyUnulWEoShqX1RgWhXWR2ygK8id+NAmcsoX+4=;
+ b=KtGDmjCWsBZBLjw+l6CVitzdvnX13jGnLUTygHCYMu8VewWe5YbSWpxENsAs6rfa/YawgkeppiR2bq4SQrOJbnv5hqrZFLsBAjHUkEzUgtX5RkDHVt5/99WlyiONV9RAq0ydqOJaX7WH+c3YvyXh20jfteXM1Z1t6JtCSoa8Ac1rBHnf3/94BbTy218nioByxSccUmXaRR/LVuv6kUhnr9xTMNUtLVejwi5zWe29sfMJX/wB3aRwGLPudWA41E39ROkYHpY8cHx6hCZQ/YwILHGQTcFIO0NLBzdae0eRW9he8iVqR9RIx2xfpyEw9iAnMpSMHDx6QPI2wcNFgWsckA==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
+ 4.158.2.129) smtp.rcpttodomain=linaro.org smtp.mailfrom=arm.com; dmarc=pass
+ (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
+ (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
+ spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
+ dmarc=[1,1,header.from=arm.com])
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P7txgnyUnulWEoShqX1RgWhXWR2ygK8id+NAmcsoX+4=;
+ b=L/Rh/gikX959EQttsWK3hhAUq+IdM6WrkHksP4mDz6sWSxra6Jpf8Y+6QdUCyQWgh2Tm4fngrUFR6E5nSsIzsLoy8h0A8xw93uWNa3rApDdhdraVYDGBFo6AmFIuRbfjsF0gJOz9lhKFh2zVBDysvSzHCMkffngrN2UY69v23Ik=
+Received: from DU7P195CA0028.EURP195.PROD.OUTLOOK.COM (2603:10a6:10:54d::28)
+ by PAWPR08MB11204.eurprd08.prod.outlook.com (2603:10a6:102:469::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.31; Wed, 2 Jul
+ 2025 10:14:58 +0000
+Received: from DB1PEPF000509EF.eurprd03.prod.outlook.com
+ (2603:10a6:10:54d:cafe::f4) by DU7P195CA0028.outlook.office365.com
+ (2603:10a6:10:54d::28) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.19 via Frontend Transport; Wed,
+ 2 Jul 2025 10:14:58 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=arm.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
+ client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
+Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
+ DB1PEPF000509EF.mail.protection.outlook.com (10.167.242.73) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.14
+ via Frontend Transport; Wed, 2 Jul 2025 10:14:57 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=w+BAkXseIIaA3m23gayV8/bCXADR6i+JNxEKPjMv5JVhm12x98dl+KLCVGyFgXFBdMWVq2E1XY4hUZrpD8WUJKWmBVx0qQvjMMDwnPJk8cBVB17tvm2qfLEl8qKAh1BAa8Rw0neKyPbpPNWcGFwHiju9DwaCi388ieyo5MDj1QmuF9TkloMB/jCY38j6/9V5YOjI2GqlTKpDHX+Qg/z1jgiJfNYja8j+AQHxjgOEIJmgVMbrjzhVztl8H1+IU7aeAuuZ5enI0E7wJnFenSGM2LWr+3EZtr8KOh8QqccnbTvOaVkEcPWrDAYAnLhchIVtMSHuI9fs88WGqym2W6+xkQ==
+ b=scchOQPmXpN52s9dmVEOPAocH6IOCJpTWPhAHTYEC5JZxKgvLliRIfYXMSQ7O5Slg1TUTq40xhgxdN9GqJNgpEPuBZVhbbdme/JhJy6xuy6UDuRKA0zQiwmvlNpaAjeE/hqaxxQ6AsfFSHaz4g9EiLkAJdkX1qujW4TN6q3lIv8qqQVNPzTLtt/C1lgURstW3FSaFC/YY5g5ROER/XdxZkWUx2344eCPkEFkpi0nL8j/u8Ai9tzPoNJqwQYFvt0EKAVwuC04IKh48FxlRqqZVYaJpp/5bqjSnvjExSnwZBPid10dGwRrkuOoG4wg8293fbIYQip/hwoly58XMR1i6A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HwkcPUSKQDPKvWGQWyKE49uZTTdX6EKQfQ84Wd2jURk=;
- b=f7QB4DrgNJ5duIvcSovEMeyaGCDJeXN6NhYi1aZH6FJ0IyJzinzmKAGRd5Hr2eA3iG0naRFBW/oATX7ULZVfHiAjxwQOvLiiDI+1Oz2h2txs08rLbuBtRkHzv0bXxC5e8J99Wm6q148Gd8Iv33IrgXQc+NU4/gsQZ7kXW6TG90ggU4N/RuYi8e/FstntZsZE28d4d9t7bmnbPwZmynbkVCMpIedeMuv4SSjFzvHMd6jx+PhZbik7gH5XUAsdnAFGoIhdM8NmtPgWGmsa2rflLX+H5kStNPigdoXAEbH4oTEDAHijPydPA+CH5TrhGYhwU78aps56TwaKLw7wJFgyhQ==
+ bh=P7txgnyUnulWEoShqX1RgWhXWR2ygK8id+NAmcsoX+4=;
+ b=qocjm1BCbTeznqBt9Kc9yaRH5fHnSfu4GEqXpUvvNtlLjfkz0R2u4opOPVoYwxxn1cs02K79PkFuimDpGwWj0HhCV3sABm6vOEpUor3lI2ftX3uVRgSQ5vB58yI7AeeEA5H1U6zw9cO0FS1hxSsurc5yza+egekcOcO/fATb4LOKAW9WxA7XBRWysSsjOdtOJO3UV8jbizhUhddssuPAO8jNeL3wWROXKvnW8oa0tw9NOTzzie8lKi1EAsUitAhzXQ9Yj1xhKXmfcp1mvE+IryzuhQnlfmieht+VGVVyM4lBMyJbfIVtSkuokA+kF4BoqqifptK8k2Nir8uTNjjMng==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HwkcPUSKQDPKvWGQWyKE49uZTTdX6EKQfQ84Wd2jURk=;
- b=cAJgh0pntrAKKlWHT7Ql2dMvc/1SvkIjejXseFOa9mG0wQ/41H5XLAdaDC2HlTyuLgqv9x9HbScg8FHe31rzxG/J+zwa+6JaOkPbYtdPFALLkI+EQ/5C2uyzwDdUOMybBAKtbITuATuZ4EC2p/5LYxOifNjq6yzqePvzzbvqqcA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
- by SA1PR12MB9001.namprd12.prod.outlook.com (2603:10b6:806:387::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.20; Wed, 2 Jul
- 2025 10:14:55 +0000
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5%5]) with mapi id 15.20.8901.018; Wed, 2 Jul 2025
- 10:14:55 +0000
-Message-ID: <21bb2afc-4edb-4e45-91fd-9cfb33cac1c7@amd.com>
-Date: Wed, 2 Jul 2025 12:14:48 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] drm/ttm: remove redundant ternaray operation on ret
-To: "Colin King (gmail)" <colin.i.king@gmail.com>,
- "Robert P. J. Day" <rpjday@crashcourse.ca>
-Cc: Huang Rui <ray.huang@amd.com>, Matthew Auld <matthew.auld@intel.com>,
- Matthew Brost <matthew.brost@intel.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- dri-devel@lists.freedesktop.org, kernel-janitors@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250702092541.968932-1-colin.i.king@gmail.com>
- <e3cfe3dd-5edd-ef67-6651-62ecf31cd4ad@crashcourse.ca>
- <4ae91081-a7fe-4937-b416-6b439a4010bc@gmail.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <4ae91081-a7fe-4937-b416-6b439a4010bc@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BL1PR13CA0324.namprd13.prod.outlook.com
- (2603:10b6:208:2c1::29) To PH7PR12MB5685.namprd12.prod.outlook.com
- (2603:10b6:510:13c::22)
+ bh=P7txgnyUnulWEoShqX1RgWhXWR2ygK8id+NAmcsoX+4=;
+ b=L/Rh/gikX959EQttsWK3hhAUq+IdM6WrkHksP4mDz6sWSxra6Jpf8Y+6QdUCyQWgh2Tm4fngrUFR6E5nSsIzsLoy8h0A8xw93uWNa3rApDdhdraVYDGBFo6AmFIuRbfjsF0gJOz9lhKFh2zVBDysvSzHCMkffngrN2UY69v23Ik=
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+Received: from GV1PR08MB10521.eurprd08.prod.outlook.com
+ (2603:10a6:150:163::20) by AS8PR08MB8038.eurprd08.prod.outlook.com
+ (2603:10a6:20b:548::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.32; Wed, 2 Jul
+ 2025 10:14:25 +0000
+Received: from GV1PR08MB10521.eurprd08.prod.outlook.com
+ ([fe80::d430:4ef9:b30b:c739]) by GV1PR08MB10521.eurprd08.prod.outlook.com
+ ([fe80::d430:4ef9:b30b:c739%5]) with mapi id 15.20.8880.027; Wed, 2 Jul 2025
+ 10:14:23 +0000
+Date: Wed, 2 Jul 2025 11:14:19 +0100
+From: Yeoreum Yun <yeoreum.yun@arm.com>
+To: Leo Yan <leo.yan@arm.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Yabin Cui <yabinc@google.com>, Keita Morisaki <keyz@google.com>,
+	Yuanfang Zhang <quic_yuanfang@quicinc.com>,
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 02/28] coresight: etm4x: Always set tracer's device
+ mode on target CPU
+Message-ID: <aGUGe82QxE+vCbx8@e129823.arm.com>
+References: <20250701-arm_cs_pm_fix_v3-v2-0-23ebb864fcc1@arm.com>
+ <20250701-arm_cs_pm_fix_v3-v2-2-23ebb864fcc1@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250701-arm_cs_pm_fix_v3-v2-2-23ebb864fcc1@arm.com>
+X-ClientProxiedBy: LO0P265CA0013.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:355::8) To GV1PR08MB10521.eurprd08.prod.outlook.com
+ (2603:10a6:150:163::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|SA1PR12MB9001:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7b20d510-ac88-4600-c789-08ddb9514a6a
+X-MS-TrafficTypeDiagnostic:
+	GV1PR08MB10521:EE_|AS8PR08MB8038:EE_|DB1PEPF000509EF:EE_|PAWPR08MB11204:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4958e968-9072-4d64-21ca-08ddb9514c21
+X-LD-Processed: f34e5979-57d9-4aaa-ad4d-b122a662184d,ExtAddr,ExtAddr
+x-checkrecipientrouted: true
+NoDisclaimer: true
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Untrusted:
+ BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info-Original:
+ =?us-ascii?Q?8L5/RGcL9nleCsY/tJCAhucF3EYCiUG+m5lDMCzR5JOr4ZemB/LEC0dxcFzZ?=
+ =?us-ascii?Q?43BlkXL9AwIjVH+0PZLfLuHS5vxz1f/TCc2Qp2msx+DZMNgrfFxOdAFZfjrn?=
+ =?us-ascii?Q?KS2h+m/NWgzPoxynXu5/NDI8qakDA+eWHMJ5S0CxKptaQI8aB+RZICCKLoT/?=
+ =?us-ascii?Q?H/VthMhiVSIgAMestmtvD+GDp/i7ub3/ZAzJFDtx0AiCLlimoqwHDoh0mzS8?=
+ =?us-ascii?Q?Q+R0jjatX2xT1bsI9JHAK1AwG8SAmuIcJElTlIDJbqE58Ki7rmATKYnXXVyL?=
+ =?us-ascii?Q?csxNoR6un7Uq3/TraJGU+b4tDOmjU85WJ10ZpOtPwaurh7vXN5zn/VbWMedm?=
+ =?us-ascii?Q?+s3vCjIAS+7TNCItSR3P0tSG4300787UqvGfCf/fddiXWsonJmrQT21B6sJ+?=
+ =?us-ascii?Q?uhenRr/5sWcJlt9+5q329/FEs5YhMMiwJ2GWGl4TYrfn9fiao37sz9QyPvWj?=
+ =?us-ascii?Q?nyW9xJF6YU04gtX4DXDu0OFGhvnlJg822XQGHvuvDvjHog9UhlkqYGyNb7Kl?=
+ =?us-ascii?Q?unTZXBchPHW4nmDjoFMIVwa0XhpeIxipcoGOtwziow1kxK1VNj1KtoEvKF19?=
+ =?us-ascii?Q?m9IJEjvrROU6ZSHtUVfnZruF8B+43WZRR4tKCR9I676Zqf+qTpL2qYsivVTK?=
+ =?us-ascii?Q?yWxu0I2si/l50T8NNeEz8jAfJhVdV/O/lcurM3kiOrn/U2o53e7TZj2NT0bN?=
+ =?us-ascii?Q?slK6chsGBotQ0opPYETERfYb2VjZ/YD153RmD6DZp7herwqpfBj8sqwA1SBk?=
+ =?us-ascii?Q?7Q5sv9umphk6wi63/A/7BCMK7PDeCzLSdH+Gl+3rTVowwUvCu65PfakhBQMQ?=
+ =?us-ascii?Q?pauHDxcu184Zfsd65adN3X9/LlsgnrtmpJphoKPyRO3SyLmDbxF53SG0Mulm?=
+ =?us-ascii?Q?f+SulT1SMVonyZTLCyS4uww0qaSU6gQDNkPSroOSj2hACq8gaNCFInKvexPf?=
+ =?us-ascii?Q?am+fBMr6Z6E0Ag5h4zLDU3GU6BDm8wpomrNlKYEpTSvmz4CdsH3Fa7Zi8r5g?=
+ =?us-ascii?Q?zAiJn7ORCJaIy5Q4lRX+FkMkqvM4zaBJnpO6o052CW4M1AdqvSfkefZHTIFJ?=
+ =?us-ascii?Q?E1EFTBzJ7mMag4UJXH30Tq14NLXMPtBZk8cwFYBjcvQjVnRcCl/JBMZ2+qGD?=
+ =?us-ascii?Q?Nke8IYGVaBN42jl6AwavYWWpVr+xRX13RQxRiIbl821z6QYA0y5om16MfQzM?=
+ =?us-ascii?Q?QD0q/Hv2ObPNT2notBQNLrYD5TpBFz+r0AwEsr8WIEp6QIm6+8VXY1K5uMcG?=
+ =?us-ascii?Q?ZSUUtH6eqR+aqLMBciI1SyShLjFGVxyRVIkqXZ1o65QdIsw+nPPkmJj05+1n?=
+ =?us-ascii?Q?KcP0c53Mg3gRdEgppeiWLj5DyPwyKOOCHeRJ6EHdgLfBMQkDKNDFuAu1ZPKd?=
+ =?us-ascii?Q?T9Qq7+OlxwTq94TjK0M5YZxhiayx6LlYPkTzD7Cjme4HRBICuY46fC0ZFd7T?=
+ =?us-ascii?Q?T5Cnhpn+O3k=3D?=
+X-Forefront-Antispam-Report-Untrusted:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR08MB10521.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB8038
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ DB1PEPF000509EF.eurprd03.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs:
+	62165151-d9c5-47a5-d26b-08ddb951377b
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|14060799003|82310400026|1800799024|36860700013|7416014|376014|35042699022;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TlozUDFNMVBWbHppRjRyb3hPd1FjU1lscVcvS1Jlc3gyanhwMlVwanFTVGJp?=
- =?utf-8?B?eXMvR0RTWmFlRXd2aUh2a29mUHZSZkxWT0NoNWhnSStSWXROdzdLc3ozTFJD?=
- =?utf-8?B?eTdDSE1tRjZGc0lldDgvRHVlL1dyNGxxR1QyK2R1cEl4eHJlU09IWW5XR2FN?=
- =?utf-8?B?ZWtqRGMrbXlxNWp6alo5T3Vsa09WeFhhcGlQQ2pRQ3JUVjY3c3hVU05jNVpM?=
- =?utf-8?B?eFJuVmpobndkT00xWXNXcUhObkhOallid1YySzNBb3oxeWFBMTRVU0JUQjI3?=
- =?utf-8?B?SWRSQm5sdStFQUpRWWhpYnJrYnZic1M4MDIrcWo2L1FjK2lQUktEMEV3T3FM?=
- =?utf-8?B?ZVBvblZkOXFVcW9PRTF3Vks2QndGOENRM0dKMDk0K1NCaVlYUXp5NGpwYzJs?=
- =?utf-8?B?a2Y2cjgybnMrWTBaZmhlY3NJUW1zZFZ3aVZaT1BodEJkOXdzUEhyRllZeTRE?=
- =?utf-8?B?RWFkU045WVh6bXlTT0dUQ0ZPL3BIbmV0TXIzMEU1d1N0bnloR05SbS9lQUNH?=
- =?utf-8?B?TmlMZ2dRV0NvdGlvcEw4MVMxYjFqZWowR0FzbEVuRjBlb0x3L2J2azBzaSs1?=
- =?utf-8?B?UWR2U3dpdkE3NjBqdEljSWJSODQ0c1h4WktVY0dINEhaWmQzeVZPZWxmNERS?=
- =?utf-8?B?dFM5RnNkK1MzNzRTOFlaNzVaTkNzbzNYTlA1Ym8wV1ByVHd0bHpBR3I0L2xi?=
- =?utf-8?B?Wlc3ZHhBYkprdy82Q3p2RW1ha1dlOXJtTnQyU0hwMlZUMEZmWUphMkpmL0k2?=
- =?utf-8?B?d0J6UVIyOTV4MTZiWXFRams5cWRZSlJnWDFlNGRGcC9KNHFUVDBSVHJXRllj?=
- =?utf-8?B?QTA1OE1zdm9BQ2hyd0EvUE1pdVRGSm1jd0ljNVA0TnJicXpHalgwSzNFRENW?=
- =?utf-8?B?aE91eFlTM2w3ck9zVUFKcFV6NXZ6OVh0cXVTdWM2UFNjbXhOUkFMWUk1SUxl?=
- =?utf-8?B?S211dGo4WmxJL2N3c0NvTlgydytsV0hqclRmTTdIVTd2M2hiQWVXR09oMWZM?=
- =?utf-8?B?bVZtaVJkL1I4NUNsTGx3ME9xb0pIV0VxT09FTS9tWmhNK0k1bUcxdHZ3eSs2?=
- =?utf-8?B?SGlkbjhsenpwRGdvS2hJejFLdmZhdHBOU3VCN3kydVQ0RUYraFBLMU11MFlh?=
- =?utf-8?B?cGdMMVRtNldoajBQSVBIMElvaFhqYXd5Y3RUYTRkZWJoLzRUeTI5K0xBVGNx?=
- =?utf-8?B?U0VrYkR2M1NvUnZzS2ZPQUVRaFZZcnFQR3FqZWlpanh2NFZNTnZrY1VDSEpE?=
- =?utf-8?B?c1ErWEJDNTlybHpTcG11d0NYbDlnRmRkUFY1aSt6KzNxRStwSW9FRFNRcWx0?=
- =?utf-8?B?b0ZBM1J4NkNNa1ZrQmxad08vZVNzT3Y1WW40UkpEN1B3SnpDRmtmbTZhVEk0?=
- =?utf-8?B?MzhVMHk2ZmFaVVhGTjdEL2pmVHBKbTAwMmVvTUprVGJOU2MxQjdkZnB4WW1E?=
- =?utf-8?B?Znh6SGRZLzg1elZ5cHBKcVNjUHk3ZzFJckltWEtCUmdtcjl6czk1K1FkbkY2?=
- =?utf-8?B?cWo2cHN5VnpXSmxiaGN1ampxRklNV0pFMFZNU0gwd0NVMVpFc2JLL0I5WEJX?=
- =?utf-8?B?SW9HWE4xNTJoeVVGV0xxSmZUZTB0ckJPOUVUejVtaGYrbXJtcEtQUzJEWFIx?=
- =?utf-8?B?Z2hpYUNRS2p6OW5adTMyVjJhY0NnUUdJRGdlZDZjZFNTb1BCSzhKb3lUUEN0?=
- =?utf-8?B?NXdleGY4L2hjb3NvbWhLUFNTMlhzdGlrMUxDd0MxcTJjN0s0V2thaHo1L3RG?=
- =?utf-8?B?SHB5b3BkNGVRRHR2WTc1T1ZORUFENW8rUWJsQ0Zldis1VUhvclRrZ1Jtcnh0?=
- =?utf-8?B?dlVmNlJreDEvMEhSSlJhNk9acTJhN1AxODZEK3BrYVg1WjlUTzdaVysrUUcy?=
- =?utf-8?B?d0VtQU9lMURGcTh3aHZQcXQ0U1hzc2s0S01xWUZySFkyR2QwVHQzbGhSN1Vx?=
- =?utf-8?Q?P9C5Pw774PY=3D?=
+	=?us-ascii?Q?zyS3DgI+3H3AryMYC1MBllfJISnTUyDRZ4+nooejQjHeMh2490RCz+kBzZdC?=
+ =?us-ascii?Q?pfGgVHPcrx9C1/XChp31peeBhWQ7bfzWdvbCPyBUtbyI18y4XD1JBUdf+13r?=
+ =?us-ascii?Q?pIhRXGprWJz3YUEHD8TH5tneWVFuM1g/xxVQdELrVVEKkfhP1Utpz+nOwRT0?=
+ =?us-ascii?Q?NxdYdcXGnva6+CK1jL2Mc3/AoSuzk64dRR61WGY2rBvHAp5TX+lE9K9TTcaM?=
+ =?us-ascii?Q?YzZz9nHG/FFT/cDP0xQV9w7D2duxbrbia/mPKA4DAMRke5PK7Gx0VMbhJLhf?=
+ =?us-ascii?Q?NsF2Mc0e5GHZTRZCFgeqo5JOiPJR1mF8bJ8Yr//9NTra6kQQED6HCG0TxBCC?=
+ =?us-ascii?Q?C3r84GKSfWRaUKdJKSD6W9orIL4Te7Zx5P2SbiLVpx0+bMkAGq4uwNS2hAeD?=
+ =?us-ascii?Q?U7w06IJHhR9h/qno5KiwWCLtYmlyYpn7S8uWHYeY1l4PemN8CxQeHABXxIgv?=
+ =?us-ascii?Q?2Gx+FevUmYyZinfK+xISN5LxHOG824HOw9wO8dKbLF7yuTgctIFdQZGwZa/p?=
+ =?us-ascii?Q?+6JSFNvHm8GHzCQ4+4fDwf+OmYXKGWn5gW1hehfb32Jzg48vTXm/poNxe4kl?=
+ =?us-ascii?Q?a+Fk2KD0V+ko0rgmQ2zJ4Ji1q3/ktq6Wc9d34lmGE5Ki7tY0UWkgKtd9RIJ/?=
+ =?us-ascii?Q?GjOjOQBqJUZFMj836jh7Nq4GZfIs3cPLXvzcGi2d/uBVXtTPjMI9RExEXAp0?=
+ =?us-ascii?Q?FcZki4QE1vOjt4PVVXdghmu2EYKXP6o2e3wJ31lkVxmWWyxrPUK2k4NbWVxC?=
+ =?us-ascii?Q?I3ujqwxrWUp7rGqvXzM8ovVP4l2LipqWW610wB27qgxH+7fldiXswucQ5awy?=
+ =?us-ascii?Q?n+iFcY9syXjBpY+E6ljDdz2CRQMOEezDIJ5+n2DJgt3QlfVe5m23OhETgZ0G?=
+ =?us-ascii?Q?zPMNlqVsfXTCbvRHPx5feCcFPBYykR/WXr28KQHohymvm7bPh+0YASWm9E8L?=
+ =?us-ascii?Q?CNSY7TfVaNfk2AJ6A6gF6I4lmokdlV9JtFk9AJlvO7yFAjlPR9I9LBqrp4z8?=
+ =?us-ascii?Q?n/4WtKKTkYxVqz4tQpy7Q2k3IFIXsX5vbd14Fx9vuH7H+/sItUY+VnDLlNbK?=
+ =?us-ascii?Q?o9Eb1FdOSRd4KwzsTHu5axAQxFszPjkG2ytO2LsZVeaBX+fnr8OLN4tTLFxv?=
+ =?us-ascii?Q?93loGzXTyx+NDX63mFRBTDfKcgVe4OZg7LWl5ohg9n4aHMKCsH4An64Ttz8Z?=
+ =?us-ascii?Q?q/YvKVXSTZLTwIqtE2CdxvMqPqDkimiKulxYMF3vnAhlWvBMexqUlkXeXDPe?=
+ =?us-ascii?Q?2bb+BFhZjsQzz7sS8zLTppiU22vxAMssq07rlCLvn31xQkpMGERjesFNwuvL?=
+ =?us-ascii?Q?oTw5m6ZIhMyl1BZlndw3eZHmqJ5vD+FDvtUC+zcoqEBGbnm8cliESVp43djX?=
+ =?us-ascii?Q?VKMUuyFAz0ne/j35/WdIfQ5aHTwFgyw5+0lhmtkz2pOYLG1eYZ5yzpr+XS5r?=
+ =?us-ascii?Q?Xi6u26U2CtXVBVQfxdavQfIP3pwHSvkq/Ft+8BGhSPdwLiP8avKTGdmKQWMn?=
+ =?us-ascii?Q?5bKaZPIzwFTh9n6PjD09ekxb3nirjTY2q66l?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZGFXNktvVXpMOGEyeXBTZXRaMGRsVm9LRXQ0WHhIbzJzTlJFV3BtUkJDSHJr?=
- =?utf-8?B?TlZVejRNVnBjSmo2enlUdWwwWEsxME9iOXdjR0NZYlB3NFJuTlZzUzB1RlA0?=
- =?utf-8?B?MjRzUWZ0TTJUSnBXaUFvNHRnVExaSFg1dmxtZmZxcGM2aFJ1bFd0bE9laXNQ?=
- =?utf-8?B?MVA0ZnZzL3A3OUVHZWFZczhtTnZaYzVhZDhnTVBmM2FJT1p2bXl5eDBYM1Vj?=
- =?utf-8?B?MEZQVHcxTm0yM2Y5QnBwcHlaTERQRnJJYVZMdjN0NDlzSFBsa3Z1QzVpQXVO?=
- =?utf-8?B?ZFZwbmMxT21Rd0FGMjVHWDZ3Uy82YjZhSHRhVG1xc3BiaTNhU3FJTjBBKys4?=
- =?utf-8?B?N2JqTFYvNzNyZm5OZ2cyMFZVV2ZwQUhPL3ZQcjI5czhzbDBmbWorRUQ2ZUFX?=
- =?utf-8?B?RW93NkJaNXkyZ3ZsN0w5N2ZwOFNGYnhjY3VIdkc5M29pTWhQZkR6UVo3Nk0w?=
- =?utf-8?B?T3lxUXRRTFcwc2JNWVJhVWxBZzBoNm9TWWZlb0xMRkV2OGJhZ1BqS1pPYjdv?=
- =?utf-8?B?UEtzR0lXQjdWcmNCUnptdnl2SHdtcnQ3STV3aUFOcERkQm5YMEk2cXY1c3NJ?=
- =?utf-8?B?citiMXc2c3FVTjA3OWhTMEdaL29JdFJzSUx2SW16YkE5WGI5clhxSDYyZU4v?=
- =?utf-8?B?V2x2bHlNZTdPRUw4UjJoWUk3MVkvWitNN0JIUlh4aDBiRjlWMDFCMEk5Yi9X?=
- =?utf-8?B?K21ZcE52eGFmVEk5OERpVVVjNU5hUzJEcWh0Z1hpQkpWMzVUL1B4K2hyK2pP?=
- =?utf-8?B?cDgybFhGSWJHQm8yckIxLzBValo1dGRaOGRnSENMc2JveXVORU04N3NEcjQ4?=
- =?utf-8?B?WE5PNDhYRTlSQkg0U21CQmdJS21sSDNzMlBudHFTRnF1ZUdtZTJPdjhQc2Vx?=
- =?utf-8?B?TlU5OCtuZ09nOUxTYjJjS1ZndUZCVlM5MU53VGVkOUFHYVhRRGtZamVsV1Bl?=
- =?utf-8?B?cnIrZE1uUksrMEwzalBnQ09MWWs4V1hPTDUxakMzb0dnUjRoSHpEOGFaTFNs?=
- =?utf-8?B?aldrZzhkZGxtempGaDFkV1h4enZzY3Y1SktrS05TNzZPWmlWZDlpUUVTVE9P?=
- =?utf-8?B?MUdYRkJUOEZqOEdmdVozRU5SaEpFOUM2SENraXh2VTFKOVY1V3lLaFNGUTNl?=
- =?utf-8?B?STRPNyt4dGhwcUUzakdDT3RPY2ZITks0aTVwbDhxMjB6MGI2UlEwRkhoRDNE?=
- =?utf-8?B?VG9EZmRWN3NMM2ROWHd3b2QzRVBMaGtVcFVsMHNBZFRvOVlKdlNXdVQ5UWpC?=
- =?utf-8?B?ankrWW1FcEFKQldIbmJhNUd1VkNwV1VaelhsQ1JUUVpxT2d5S0Z4NVFiZWlz?=
- =?utf-8?B?WE5TZ05Fb3k3Q0hjVXVUUkh0cC9pTGpkNERmUUowZjIxM0hlWDZVZmp6c0FT?=
- =?utf-8?B?SlBTL2JJQnZ1R0xhNWhieURNMFFGZklyY1ZMaytQRmJnTDlzMitlNUV6SnVv?=
- =?utf-8?B?TVZsNWc4elJ1SXozV1pVZUNkT3R4eDlKNVZ2cVA2cGlqYkxJekYxbWdBYkVH?=
- =?utf-8?B?czFvelJ2YUpocTIwZ0ZiQk80OE5XMUkzS0VoNFhKSnU2akVLdkxsNUkyTS9o?=
- =?utf-8?B?NlQzK2s4WFFNalR2SUlxMXBvZUNpWk9haVRqWWM1VFNBQlY5bFduMFdEYW5T?=
- =?utf-8?B?LzZ4aUd6RTJGVUw2K2p5Q0tiZ0NodTJPOFZwNnJWQkl0c2E0SkNsS2lKRFB4?=
- =?utf-8?B?KzNoMUJOQmdhTks1TlZjMitONG9BMzl4NGx1SVYyeWwxakxhK29WbXd0dFdZ?=
- =?utf-8?B?MFNyS0l5RXozK3BsTTBMZGxWSnVFcnNEUHJhWDlURTRTZHoreFN4bXloUG9X?=
- =?utf-8?B?MUY4N0RLMTNKMWJaYU9rZGtCWCtjOFdDVjNLZEVHSDMvSVVIRUxyZ2RNOUNz?=
- =?utf-8?B?eG5kMGNqbGp4ZUMxeVRhWHRtbCtPTXcwVmtiRzRwREh2VDhRcmZSSml3cThz?=
- =?utf-8?B?SXllb0RNa3dGbXMzT2ppSDdVK2VaL3ZDVWJVampzajA2TEJSa3dkemdTQnhZ?=
- =?utf-8?B?UnFWUDFrSWEwcjlGZ1hVTWM0ZVN0eGtObjVjd1RnUjZZekxGbVFPT3plc284?=
- =?utf-8?B?ZW5IWDRkZXBxMFlVM2lZNkhuYk5yc3R1akJRb3M0Z2RSd3ZXU0gvZU4vTmZH?=
- =?utf-8?Q?htug=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7b20d510-ac88-4600-c789-08ddb9514a6a
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 10:14:55.1158
+	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(14060799003)(82310400026)(1800799024)(36860700013)(7416014)(376014)(35042699022);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 10:14:57.5992
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qPxlMZyAOlgpY44OQIequ4ss8O5VGXWk7kQCnX3s4KbMGunWpgUGgpE0fD3M8D7u
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB9001
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4958e968-9072-4d64-21ca-08ddb9514c21
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DB1PEPF000509EF.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR08MB11204
 
-On 02.07.25 11:43, Colin King (gmail) wrote:
-> On 02/07/2025 10:42, Robert P. J. Day wrote:
->>
->>    subject has typo, should be "ternary"
->>
->> rday
-> 
-> Good catch. Can that be fixed up before applying the patch rather than me sending a V2?
+LGTM.
 
-Thomas or me can take care of that before pushing.
+Reviewed-by: Yeoreum Yun <yeoreum.yun@arm.com>
 
-Christian.
+> When enabling a tracer via SysFS interface, the device mode may be set
+> by any CPU - not necessarily the target CPU. This can lead to race
+> condition in SMP, and may result in incorrect mode values being read.
+>
+> Consider the following example, where CPU0 attempts to enable the tracer
+> on CPU1 (the target CPU):
+>
+>  CPU0                                    CPU1
+>  etm4_enable()
+>   ` coresight_take_mode(SYSFS)
+>   ` etm4_enable_sysfs()
+>      ` smp_call_function_single() ---->  etm4_enable_hw_smp_call()
+>      			                /
+>                                        /  CPU idle:
+>                                       /   etm4_cpu_save()
+>                                      /     ` coresight_get_mode()
+> 	       Failed to enable h/w /         ^^^
+>   ` coresight_set_mode(DISABLED) <-'          Read the intermediate SYSFS mode
+>
+> In this case, CPU0 initiates the operation by taking the SYSFS mode to
+> avoid conflicts with the Perf mode. It then sends an IPI to CPU1 to
+> configure the tracer registers. If any error occurs during this process,
+> CPU0 rolls back by setting the mode to DISABLED.
+>
+> However, if CPU1 enters an idle state during this time, it might read
+> the intermediate SYSFS mode. As a result, the CPU PM flow could wrongly
+> save and restore tracer context that is actually disabled.
+>
+> To resolve the issue, this commit moves the device mode setting logic on
+> the target CPU. This ensures that the device mode is only modified by
+> the target CPU, eliminating race condition between mode writes and reads
+> across CPUs.
+>
+> An additional change introduces the etm4_disable_hw_smp_call() function
+> for SMP calls, which disables the tracer and explicitly set the mode to
+> DISABLED during SysFS operations.
+>
+> The flow is updated with this change:
+>
+>  CPU0                                    CPU1
+>  etm4_enable()
+>   ` etm4_enable_sysfs()
+>      ` smp_call_function_single() ---->  etm4_enable_hw_smp_call()
+>                                           ` coresight_take_mode(SYSFS)
+> 	                                    Failed, set back to DISABLED
+>                                           ` coresight_set_mode(DISABLED)
+>
+>                                           CPU idle:
+>                                           etm4_cpu_save()
+>                                            ` coresight_get_mode()
+>                                               ^^^
+>                                               Read out the DISABLED mode
+>
+> Fixes: c38a9ec2b2c1 ("coresight: etm4x: moving etm_drvdata::enable to atomic field")
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+>  drivers/hwtracing/coresight/coresight-etm4x-core.c | 48 +++++++++++++++-------
+>  1 file changed, 33 insertions(+), 15 deletions(-)
+>
+> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> index 42e5d37403addc6ec81f2e3184522d67d1677c04..ee405c88ea5faa130819f96b00b8307f8764d58a 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> @@ -590,10 +590,23 @@ static int etm4_enable_hw(struct etmv4_drvdata *drvdata)
+>  static void etm4_enable_hw_smp_call(void *info)
+>  {
+>  	struct etm4_enable_arg *arg = info;
+> +	struct coresight_device *csdev;
+>
+>  	if (WARN_ON(!arg))
+>  		return;
+> +
+> +	csdev = arg->drvdata->csdev;
+> +	if (!coresight_take_mode(csdev, CS_MODE_SYSFS)) {
+> +		/* Someone is already using the tracer */
+> +		arg->rc = -EBUSY;
+> +		return;
+> +	}
+> +
+>  	arg->rc = etm4_enable_hw(arg->drvdata);
+> +
+> +	/* The tracer didn't start */
+> +	if (arg->rc)
+> +		coresight_set_mode(csdev, CS_MODE_DISABLED);
+>  }
+>
+>  /*
+> @@ -809,6 +822,9 @@ static int etm4_enable_perf(struct coresight_device *csdev,
+>  	int ret = 0;
+>  	struct etmv4_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+>
+> +	if (!coresight_take_mode(csdev, CS_MODE_PERF))
+> +		return -EBUSY;
+> +
+>  	if (WARN_ON_ONCE(drvdata->cpu != smp_processor_id())) {
+>  		ret = -EINVAL;
+>  		goto out;
+> @@ -828,6 +844,9 @@ static int etm4_enable_perf(struct coresight_device *csdev,
+>  	ret = etm4_enable_hw(drvdata);
+>
+>  out:
+> +	/* The tracer didn't start */
+> +	if (ret)
+> +		coresight_set_mode(csdev, CS_MODE_DISABLED);
+>  	return ret;
+>  }
+>
+> @@ -880,11 +899,6 @@ static int etm4_enable(struct coresight_device *csdev, struct perf_event *event,
+>  {
+>  	int ret;
+>
+> -	if (!coresight_take_mode(csdev, mode)) {
+> -		/* Someone is already using the tracer */
+> -		return -EBUSY;
+> -	}
+> -
+>  	switch (mode) {
+>  	case CS_MODE_SYSFS:
+>  		ret = etm4_enable_sysfs(csdev, path);
+> @@ -896,10 +910,6 @@ static int etm4_enable(struct coresight_device *csdev, struct perf_event *event,
+>  		ret = -EINVAL;
+>  	}
+>
+> -	/* The tracer didn't start */
+> -	if (ret)
+> -		coresight_set_mode(csdev, CS_MODE_DISABLED);
+> -
+>  	return ret;
+>  }
+>
+> @@ -951,10 +961,9 @@ static void etm4_disable_trace_unit(struct etmv4_drvdata *drvdata)
+>  	isb();
+>  }
+>
+> -static void etm4_disable_hw(void *info)
+> +static void etm4_disable_hw(struct etmv4_drvdata *drvdata)
+>  {
+>  	u32 control;
+> -	struct etmv4_drvdata *drvdata = info;
+>  	struct etmv4_config *config = &drvdata->config;
+>  	struct coresight_device *csdev = drvdata->csdev;
+>  	struct csdev_access *csa = &csdev->access;
+> @@ -991,6 +1000,15 @@ static void etm4_disable_hw(void *info)
+>  		"cpu: %d disable smp call done\n", drvdata->cpu);
+>  }
+>
+> +static void etm4_disable_hw_smp_call(void *info)
+> +{
+> +	struct etmv4_drvdata *drvdata = info;
+> +
+> +	etm4_disable_hw(drvdata);
+> +
+> +	coresight_set_mode(drvdata->csdev, CS_MODE_DISABLED);
+> +}
+> +
+>  static int etm4_disable_perf(struct coresight_device *csdev,
+>  			     struct perf_event *event)
+>  {
+> @@ -1020,6 +1038,8 @@ static int etm4_disable_perf(struct coresight_device *csdev,
+>  	/* TRCVICTLR::SSSTATUS, bit[9] */
+>  	filters->ssstatus = (control & BIT(9));
+>
+> +	coresight_set_mode(drvdata->csdev, CS_MODE_DISABLED);
+> +
+>  	/*
+>  	 * perf will release trace ids when _free_aux() is
+>  	 * called at the end of the session.
+> @@ -1045,7 +1065,8 @@ static void etm4_disable_sysfs(struct coresight_device *csdev)
+>  	 * Executing etm4_disable_hw on the cpu whose ETM is being disabled
+>  	 * ensures that register writes occur when cpu is powered.
+>  	 */
+> -	smp_call_function_single(drvdata->cpu, etm4_disable_hw, drvdata, 1);
+> +	smp_call_function_single(drvdata->cpu, etm4_disable_hw_smp_call,
+> +				 drvdata, 1);
+>
+>  	raw_spin_unlock(&drvdata->spinlock);
+>
+> @@ -1085,9 +1106,6 @@ static void etm4_disable(struct coresight_device *csdev,
+>  		etm4_disable_perf(csdev, event);
+>  		break;
+>  	}
+> -
+> -	if (mode)
+> -		coresight_set_mode(csdev, CS_MODE_DISABLED);
+>  }
+>
+>  static int etm4_resume_perf(struct coresight_device *csdev)
+>
+> --
+> 2.34.1
+>
 
-> 
-> Colin
-
+--
+Sincerely,
+Yeoreum Yun
