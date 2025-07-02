@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C7A42DE6EE;
-	Wed,  2 Jul 2025 20:16:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E732DE6E0;
+	Wed,  2 Jul 2025 20:18:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751487411; cv=none; b=c7rT3cDvRMjC0tfDvNuDEB9y4NaYa2o6W491CCSXA3Wvc3zi2y6mC2q311JqGCPl1MvrQmnEzC4oxy+XFjhxyWKtGFtVU86EDG0th981bUALCjTuNbHkHGhvEbcGuSH4p7fLVatougvfxyEgEtTVTQHp40TYUAgazCMZYJuxvyY=
+	t=1751487500; cv=none; b=Lc2uf/r5wtW9HhSk597VOVLNspqyTQ4QxEufcZkTki5v7gwLCuC4yZK+NcZyZkHYiDE63Ens1Nf5W+Z/CShixZvg96O9daFHwtCPmU9aVVOBSf0yN2kAmUFZgs3wjfvFhwRN+UBBtauz1J7BhjxMPBtQlcOjN06LgF/K6jwaY7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751487411; c=relaxed/simple;
-	bh=kKwgqTUxVWwdPmdc+f5tNybuH8KrJ5yHvr4ySbSweco=;
+	s=arc-20240116; t=1751487500; c=relaxed/simple;
+	bh=NcF5Lgsozi3TFSSbY4XniUHjQlhATuSDYxxjEZOfZVY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PItkeiIJG44u/6INTyxMhKPILht2QyEdl8Fqn3jp8e6Fb66SiFLAUgOkAkrBuysKrTdnXc8o48zQFCGk9Dh0Jf6OPqyWV760nfL+ojZ8ZA4cMrOWnCv+E0/tnYdMlO3PS2KMO5crCEfuEesmaEQEVUj3d5KgSoahrdtVohvfKKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j0HZqPnp; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=WgkYUFScg24UkYIGCGYYlAQkyPPaMepuTDqxeXiF64w95V9vGKorgZbabSuZdg+8ao7SwpwhmL4Dz3pSNFqC3m8UVQFltAmLOMd3xKa+xQlvjj0C+g6hTT/ciRiHa3JPHPBDApzanXUf7mOBh/bHNoe5tsaPhNuGoPF7Dwwgby0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YYu+6qs6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j0HZqPnp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C470C4CEE7;
-	Wed,  2 Jul 2025 20:16:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YYu+6qs6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA60AC4CEE7;
+	Wed,  2 Jul 2025 20:18:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751487411;
-	bh=kKwgqTUxVWwdPmdc+f5tNybuH8KrJ5yHvr4ySbSweco=;
+	s=k20201202; t=1751487500;
+	bh=NcF5Lgsozi3TFSSbY4XniUHjQlhATuSDYxxjEZOfZVY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=j0HZqPnpyqmitn684wftBUqS8D/8gqCYud30k/xqnoCp1iN/P0IFfll/kT+mecpBF
-	 SJj7I3WIr0Wg6ksoawA1+kHwRfQSfTnRHFi9U0Dn5dd2phxzF1MV7ZvQgaxEK46DMm
-	 tHEEiy7gMoSWEnS9qdOv6S8En5SRuspaneiiIMBV58K1GPyoC4Q64qmmQKun2KASJC
-	 tNUY+DfnesF1+u38s3Ma/caW9blHf5RphalgZwHvrBZwtw7UatpT0FVVvYJDpuhPa4
-	 CBi1smMK+j6E89OIZXmj0pQAlmpw+zbABPDIqXNPRuxWg/SX/O9w0ed45AJz2D+lHu
-	 tajzfy7ak/YNA==
-Message-ID: <e40211c4-8ae3-4aa1-af80-f4a0525a863b@kernel.org>
-Date: Wed, 2 Jul 2025 22:16:44 +0200
+	b=YYu+6qs6aYB9p0c253YPNEopymUMpYODORctEmyvnn4d1xFDqP3hIrV+VFnyPEReD
+	 65QDpjzVtHGOZKtl9l0ICaXyUqGetDtpTWa649hp3VFwulZgzb5KjAq6FDcsaOCbpj
+	 kx6Io6Cy3aaEU6HO+goGDeES/mRzApt2Wb1meRCabDzlt9SUPXJDVfBdrIsE1YFxed
+	 GLONaEor2TxsJRdF9X6GwBT4WKfnW1Hh4wWWgGkDymtuU4NP05M+MnRqSMpWKiI+vp
+	 qRl0uwHqvvRpXbPRAjlzdV8iuGvOX5u1v4ZBaVccqEaz+ffJ9uC1Fp1iPgAmcRiBSM
+	 d+FC6QGjSOzaw==
+Message-ID: <5ea33054-8a08-4bb3-81e7-d832c53979dc@kernel.org>
+Date: Wed, 2 Jul 2025 22:18:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,25 +35,24 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/5] media: dt-bindings: add non-pixel property in iris
- schema
-To: Vikash Garodia <quic_vgarodia@quicinc.com>,
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Abhinav Kumar <abhinav.kumar@linux.dev>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250627-video_cb-v3-0-51e18c0ffbce@quicinc.com>
- <20250627-video_cb-v3-1-51e18c0ffbce@quicinc.com>
- <19dd2e69-ad13-46f2-b99f-04a5e26f10d3@kernel.org>
- <08c8cdfd-099e-7b90-b163-23ecee3a5da4@quicinc.com>
- <118f2cbe-d8bd-4177-b0d5-91d9f1dbbef0@kernel.org>
- <9f5be122-302d-402f-91f2-675507612d32@oss.qualcomm.com>
- <023038d4-2258-4b2d-a3f9-b817ef0173bc@kernel.org>
- <7aa47821-ed22-2602-f56d-a6d58195e75f@quicinc.com>
+Subject: Re: [PATCH v2 07/10] dt-bindings: phy: Add PHY bindings support for
+ FSD SoC
+To: Shradha Todi <shradha.t@samsung.com>, 'Rob Herring' <robh@kernel.org>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-fsd@tesla.com, mani@kernel.org, lpieralisi@kernel.org, kw@linux.com,
+ bhelgaas@google.com, jingoohan1@gmail.com, krzk+dt@kernel.org,
+ conor+dt@kernel.org, alim.akhtar@samsung.com, vkoul@kernel.org,
+ kishon@kernel.org, arnd@arndb.de, m.szyprowski@samsung.com,
+ jh80.chung@samsung.com, pankaj.dubey@samsung.com
+References: <20250625165229.3458-1-shradha.t@samsung.com>
+ <CGME20250625165319epcas5p3721c19f6e6b482438c62dd1ef784de03@epcas5p3.samsung.com>
+ <20250625165229.3458-8-shradha.t@samsung.com>
+ <20250627211721.GA153863-robh@kernel.org>
+ <02af01dbea78$24f01310$6ed03930$@samsung.com>
+ <f877b3d7-d770-4424-9813-da748775f456@kernel.org>
+ <02bf01dbea8c$fc835cb0$f58a1610$@samsung.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -99,19 +98,45 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <7aa47821-ed22-2602-f56d-a6d58195e75f@quicinc.com>
+In-Reply-To: <02bf01dbea8c$fc835cb0$f58a1610$@samsung.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 02/07/2025 18:36, Vikash Garodia wrote:
+On 01/07/2025 15:35, Shradha Todi wrote:
+>>> does not support auto adaptation so we need to tune the PHYs
+>>> according to the use case (considering channel loss, etc). This is why we
 >>
->> Also commit msg says "Existing definition limits the IOVA to an
->> addressable range of 4GiB, and" but I do not see such definition in the
->> binding at all. So what does it refer to?
-> Processors based out of 32 bit OS, can serve addresses in range 0-31, which
-> implies 4GiB (2pow31).
-You are not replying to statements. Your commit msg said "existing
-definition". Point me to the binding part saying that.
+>> So not same? Decide. Either it is same or not, cannot be both.
+>>
+>> If you mean that some wiring is different on the board, then how does it
+>> differ in soc thus how it is per-soc property? If these are use-cases,
+>> then how is even suitable for DT?
+>>
+>> I use your Tesla FSD differently and then I exchange DTSI and compatibles?
+>>
+>> You are no describing real problem and both binding and your
+>> explanations are vague and imprecise. Binding tells nothing about it, so
+>> it is example of skipping important decisions.
+>>
+>>> have 2 different SW PHY initialization sequence depending on the instance
+>>> number. Do you think having different compatible (something like
+>>> tesla,fsd-pcie-phy0 and tesla,fsd-pcie-phy1) and having phy ID as platform data
+>>> is okay in this case? I actually took reference from files like:
+>>
+>> And in different use case on same soc you are going to reverse
+>> compatibles or instance IDs?
+>>
+> 
+> Even though both the PHYs are exactly identical in terms of hardware,
+> they need to be programmed/initialized/configured differently.
+> 
+> Sorry for my misuse of the word "use-case". To clarify, these configurations
+> will always remain the same for FSD SoC even if you use it differently.
+> 
+> I will use different compatibles for them as I understand that it is the best
+> option.
+
+I still do not see the difference in hardware explained.
 
 Best regards,
 Krzysztof
