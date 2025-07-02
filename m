@@ -1,124 +1,196 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B478238C0C;
-	Wed,  2 Jul 2025 10:30:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C997F1F582F
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 10:32:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751452258; cv=none; b=JRcih80wGxwI/M+rfEknxVB6v6zk3++kbUhUbIn7iKQSEtTbdGYKfxfUS+ojm26FkkiBS1O2dKh9MXzXys4ucyvYsDK+OeVU1pXJHu2/BNPeakvSAfxj4ZTtn/OoSumFYoIk2xjud31XpWC+7X/gkXGnXM6iv/RUa1hRrQgYyUs=
+	t=1751452325; cv=none; b=an0v2Ohp45METzPmet/BnJUKil1QELRcQAGCzhLKcO+Vdac6flyzJXEy+nXc0GeqtR/5ou0gTPzqvOLE1p1NfQP/HPKueZjW0fp5G6dvZzQNmUqpGoQjHxr6T9V197i+ikHN8gvvJ3S2l9CEfB+KxuYe5AQZQZhKMz9Dj4TG0k8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751452258; c=relaxed/simple;
-	bh=PwaLIRZZ+zNd55Wo4Lwsq2k0+RwAv0Yy8uSElGUCDoo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=b2p/oU8bN0CXNdWdYMnm30+db6hpFFtOUvkWUsJde6pWqialplMAZmQjh86+lmhZ1czV+GetDGyLry6QoTjW/TMv3a2KsnrL1zeadwtb2THzrHZiIqg0jpRYgBXaRlbd0+nzMtQdg+hjQtoXhMWMmDNNFH7qX/9I3FpjpHgbgtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bXGQ55LvJzKHMyb;
-	Wed,  2 Jul 2025 18:30:53 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 28A341A07FA;
-	Wed,  2 Jul 2025 18:30:52 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP3 (Coremail) with SMTP id _Ch0CgCHNSNaCmVoxoqlAQ--.14629S4;
-	Wed, 02 Jul 2025 18:30:52 +0800 (CST)
-From: Zheng Qixing <zhengqixing@huaweicloud.com>
-To: song@kernel.org,
-	yukuai3@huawei.com
-Cc: linux-raid@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com,
-	houtao1@huawei.com,
-	zhengqixing@huawei.com
-Subject: [PATCH] md/raid1,raid10: strip REQ_NOWAIT from member bios
-Date: Wed,  2 Jul 2025 18:23:41 +0800
-Message-Id: <20250702102341.1969154-1-zhengqixing@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1751452325; c=relaxed/simple;
+	bh=mkCQNzABaIH80058n352KjxD2Hr+/4MbwnTKSluH7Nw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mERr950aFvsH1vnsoTYSFGYGN7UgiHSriJR/5AkdOkfo2e1QELtXhIY2U3Y4PNZ7GGD3cOM2rwj6X6KNndNmf4Xdnds284Y/sNrrpw/V9vr28wrhsk81K84JK1klSZLbLvSd5boH6rim+Ke6vzGHi8MaBC/fBezbdlKcbm0EjRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=O9y6FtW8; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=i+1h7gak; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=kwfiznIg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0NRMIEZB; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="O9y6FtW8";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="i+1h7gak";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="kwfiznIg";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0NRMIEZB"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id AEBDA1F387;
+	Wed,  2 Jul 2025 10:32:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751452322; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LnXRBLsITs2/067KqgtslZSnFKkZefWJfj8CgjTubGY=;
+	b=O9y6FtW8nY1DHM1oy9AuNKd7KiY1zJ3YgStQc+uJrygC074cfBoI6B4qL0O1+ATqABOiky
+	qSVjKbfUcKvb+L9vVVoJLik9ycJCPM/0Z7OuELSo3u/2eAOD6fEtjQcdvebC3cdMOLS1XI
+	Z/WGFKVaLLgF6H/J9nt5d8IuhN7Pk2c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751452322;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LnXRBLsITs2/067KqgtslZSnFKkZefWJfj8CgjTubGY=;
+	b=i+1h7gakAR1yfW0ekTsa//qAVR3SKe07NEXnoJSE6SUsRjJXSLfpHd58QYwnCQnNQ6If7d
+	2bSn2umx06tSq7DQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=kwfiznIg;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=0NRMIEZB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751452320; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LnXRBLsITs2/067KqgtslZSnFKkZefWJfj8CgjTubGY=;
+	b=kwfiznIgXEFUyd2YM872BZnJYApyB7GJsjA+XheePxskSk4Y8mBunItjeVmpK3ad2sLj9F
+	W3zUxxQr3f6uIMRVkYnIJIB/NSRyhdcN4sNeZRoa+zqV6OpImgMG2HPZnPbcYsAeU4pZr4
+	yATVD6+mh9Et6izsBHUUdZjRKrcSdSE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751452320;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LnXRBLsITs2/067KqgtslZSnFKkZefWJfj8CgjTubGY=;
+	b=0NRMIEZBXNOCupYDARVBLPGUD3EZE5wMOkc99AwMry8oypQXQmiM46t7eVzWwzQEb/OFr7
+	5W4YeFWo2bM7kQCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5797013A24;
+	Wed,  2 Jul 2025 10:32:00 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id mlEzEqAKZWiIcwAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Wed, 02 Jul 2025 10:32:00 +0000
+Date: Wed, 2 Jul 2025 11:31:58 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2] tools: mm: Added modern version of shell quote and a
+ stanza
+Message-ID: <m2hwwehnvatm7gjxidtqdu235zloay7uhn4lhh7czvgzcdv7rr@omorwgznyljn>
+References: <20250702072801.10216-1-unixbhaskar@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgCHNSNaCmVoxoqlAQ--.14629S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxJr47Zw4xAw4ruF18uFWfKrg_yoW8uFyfp3
-	9rKa4rZrW5G34rZF1jyayDuayFqwsFga9FkrWxJ3yfZryavFyDWa1rXay0grn8XFn5ury7
-	ZFn0yrsrWF45JFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI
-	7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY
-	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6x
-	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
-	1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1veHDUUUUU==
-X-CM-SenderInfo: x2kh0wptl0x03j6k3tpzhluzxrxghudrp/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250702072801.10216-1-unixbhaskar@gmail.com>
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: AEBDA1F387
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_TO(0.00)[gmail.com];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DWL_DNSWL_BLOCKED(0.00)[suse.de:dkim];
+	RCPT_COUNT_THREE(0.00)[4];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -4.01
+X-Spam-Level: 
 
-From: Zheng Qixing <zhengqixing@huawei.com>
+On Wed, Jul 02, 2025 at 12:19:18PM +0530, Bhaskar Chowdhury wrote:
+> Three things precisely:
+> 
+> Replaced backquote with dollar-parentheses ...that is modern way of quoting in
+> shell script. Improved readability.
+> 
+> Added a stranza of missing/required command for the operation,in this case
+> gnuplot and that too in shell path.
+> 
+> And lastly,use "command -v" to search the command i.e gnuplot and the REASON
+> for that :
+> 
+> The -v option tell show shell will invoke the command specified as its
+> options.Basically to avoid dependency on something outside of the shell.It is
+> also execute command found in the PATH. Essentially, ignoring other similar
+> name stuff curated somewhere else in the system.
+>
 
-RAID layers don't implement proper non-blocking semantics for
-REQ_NOWAIT, making the flag potentially misleading when propagated
-to member disks.
+I don't understand what the point of this is, since we're not looking for the
+executable, we're merely executing it. If command -v searches through PATH, it
+will have the exact same result as just doing 'gnuplot'.
 
-This patch clear REQ_NOWAIT from cloned bios in raid1/raid10. Retain
-original bio's REQ_NOWAIT flag for upper layer error handling.
+> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+> ---
+>  V2: What changes from V1: Verbose changelog, especially using command -v to
+>  find the specific program i.e. gnuplot.
+> 
+>  tools/mm/slabinfo-gnuplot.sh | 44 ++++++++++++++++++++++++------------
+>  1 file changed, 30 insertions(+), 14 deletions(-)
+> 
+> diff --git a/tools/mm/slabinfo-gnuplot.sh b/tools/mm/slabinfo-gnuplot.sh
+> index 873a892147e5..6c9add4bb8ad 100644
+> --- a/tools/mm/slabinfo-gnuplot.sh
+> +++ b/tools/mm/slabinfo-gnuplot.sh
+> @@ -46,6 +46,22 @@ check_file_exist()
+>  	fi
+>  }
+> 
+> +# This variable could have space separated value
+> +my_needed_commands="gnuplot"
+> +
+> +missing_counter=0
+> +for needed_command in $my_needed_commands; do
+> +  if ! hash "$needed_command" >/dev/null 2>&1; then
+> +    printf "Command not found in PATH: %s\n" "$needed_command" >&2
+> +    ((missing_counter++))
+> +  fi
+> +done
+> +
+> +if ((missing_counter > 0)); then
+> +  printf "Minimum %d commands are missing in PATH, aborting\n" "$missing_counter" >&2
+> +  exit 1
+> +fi
 
-Maybe we can implement non-blocking I/O handling mechanisms within
-RAID in future work.
+And this seems unneeded. The script is quite minimal and simple, and it's also
+named "gnuplot". Not sure what else you need there.
 
-Signed-off-by: Zheng Qixing <zhengqixing@huawei.com>
----
- drivers/md/raid1.c  | 3 ++-
- drivers/md/raid10.c | 2 ++
- 2 files changed, 4 insertions(+), 1 deletion(-)
+> +
+>  do_slabs_plotting()
+>  {
+>  	local file=$1
+> @@ -58,13 +74,13 @@ do_slabs_plotting()
+> 
+>  	check_file_exist "$file"
+> 
+> -	out_file=`basename "$file"`
+> +	out_file=$(basename "$file")
 
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 19c5a0ce5a40..213ad5b7e20b 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -1399,7 +1399,7 @@ static void raid1_read_request(struct mddev *mddev, struct bio *bio,
- 	}
- 	read_bio = bio_alloc_clone(mirror->rdev->bdev, bio, gfp,
- 				   &mddev->bio_set);
--
-+	read_bio->bi_opf &= ~REQ_NOWAIT;
- 	r1_bio->bios[rdisk] = read_bio;
- 
- 	read_bio->bi_iter.bi_sector = r1_bio->sector +
-@@ -1649,6 +1649,7 @@ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
- 				wait_for_serialization(rdev, r1_bio);
- 		}
- 
-+		mbio->bi_opf &= ~REQ_NOWAIT;
- 		r1_bio->bios[i] = mbio;
- 
- 		mbio->bi_iter.bi_sector	= (r1_bio->sector + rdev->data_offset);
-diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index b74780af4c22..951b9b443cd1 100644
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -1221,6 +1221,7 @@ static void raid10_read_request(struct mddev *mddev, struct bio *bio,
- 		r10_bio->master_bio = bio;
- 	}
- 	read_bio = bio_alloc_clone(rdev->bdev, bio, gfp, &mddev->bio_set);
-+	read_bio->bi_opf &= ~REQ_NOWAIT;
- 
- 	r10_bio->devs[slot].bio = read_bio;
- 	r10_bio->devs[slot].rdev = rdev;
-@@ -1256,6 +1257,7 @@ static void raid10_write_one_disk(struct mddev *mddev, struct r10bio *r10_bio,
- 			     conf->mirrors[devnum].rdev;
- 
- 	mbio = bio_alloc_clone(rdev->bdev, bio, GFP_NOIO, &mddev->bio_set);
-+	mbio->bi_opf &= ~REQ_NOWAIT;
- 	if (replacement)
- 		r10_bio->devs[n_copy].repl_bio = mbio;
- 	else
+But this sort of changes are probably welcome, though.
 -- 
-2.39.2
-
+Pedro
