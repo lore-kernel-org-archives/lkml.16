@@ -1,140 +1,198 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from trager.us (trager.us [52.5.81.116])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A012F7D18;
-	Wed,  2 Jul 2025 19:30:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E98892F7D18;
+	Wed,  2 Jul 2025 19:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.5.81.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751484656; cv=none; b=oEkC6kh1RhVN0fmI0tk8qW9WJwhWKFZRZnBRAtdvVqmt4nKFWdim1Upfv6mrODzpY9IlpTCHUKA3QG+dDhwv8zd9fryTvaJkvmvxQ126Wlayq3ILORw1M1eB2rar+yhxcxCn0es+DbaoXwtr62Dc9XRvLYdnck2pTF7vR1in2WM=
+	t=1751484695; cv=none; b=gTk7E6ZEDlEHZo05s5Ja+U/cQQwrVrWgHcP7PNtsRiFvb0CBR5iwPBvTxsA4g01+5Z2Ffki6WQxdfx/0x2F7L/EMN/v6THJshxr4BHjL9NfK3/waPMuRj2Z6jEGAok0Au5uKGuwUiqM4EasqIdtiBguUKLiw8zBKl0MoeFFM6bE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751484656; c=relaxed/simple;
-	bh=XvL0C829DR4uLfyjmvI2QXqcasxHCv74BitAVS8zZB4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n20/95wSUdugLGGJ2QPb82Fng2+wBLqpDm8sXrAA+4dWBL6h7luHVp5xsmZKLPgoXC84xb5geJJRqi8TncWcNZgvrxlbvJQ+nSXjK8kTO+Ei17uo/G4IWDFaR3ikimU4GKyhHq1cTjcYyCSblIxA6Rx+tKXl9BI5iqLBikaJvhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fhfCHhjj; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fhfCHhjj"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-60c4521ae2cso12856891a12.0;
-        Wed, 02 Jul 2025 12:30:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751484653; x=1752089453; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=93mGoSsbqUlAUrH7FmREdhftiUMk4vyp04kuxZtnNOw=;
-        b=fhfCHhjjvdYuW34TbGG7f1K4wSmttkteaKexnz4nCXZAhHoV58XHTw5uB55PHy9Br0
-         PSzQ4CVq60yhAaDAifuYNtN7yAFq8V/czh7EWmAG/+LJ24jda0Ds1Ycyd31uGiYj7rbT
-         y7Jh9b843HbRa/2QyWwT+QqaTMkzEQFq0OJf7eRe/zWvPxRgitJ0pEACa0WCzFyxW6Ha
-         2wX63SoilywN3KGntGiLshlTDsUu3n6qojpy+AtTkg5WFPKqvJ2GeapXVt8cZWt6EoR0
-         uEUwOQPVshmkAKbdxoNBoO0uzZWMkbvyEt+UWB/AD+xxsLvfYCMnffPX8T/zV6OiqP0N
-         Idhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751484653; x=1752089453;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=93mGoSsbqUlAUrH7FmREdhftiUMk4vyp04kuxZtnNOw=;
-        b=gscmCi1oRcithA/4FeXorNrok3hfHHGFTGMYkgJnVULGXKu1RHBwZdekARUZIq7l03
-         kdvakpYzs1Wn8UusZtHt0hOYNa50nfrlivxgkiaNPV4uZ5r5crHaS1Y31zVI843iC4p/
-         bK8+sil7Akc1TYEw4Tgmi0UWzu7YXU6/Rr8hgwDCaqaSAEVYLTaFSn3NMAU8L3cndW2W
-         UWHcDWWoKUntocOc7C2gClqEdO+QToruckj1Om2pVC7w9J4/FyX0F5QABX2UPJ3Ylg5S
-         F8dGKsdTcYv6OvluSA+6+f6o4aMmXWsY4OU5jYlHLk6r0/NYB2+4WykjMUub7NMf88ry
-         f4Aw==
-X-Forwarded-Encrypted: i=1; AJvYcCVOyaX3qxT/e9ebTzYmwYTMj2Xzg3fOB/xXickuKy/kfUO1te4DLasL8To2eIFWdFetBJv15gHik0eW@vger.kernel.org, AJvYcCW/ZQZzUQ2lODLV1Uxq0QTlU904O9COzaVIkAxaaHlAwNdKbOBHtR9X9dCbM0diKiV7niuhfKMECXK/Cpzz@vger.kernel.org, AJvYcCWoeDAkFi41fCy/YqrRV/Ina2HyMIv/LoTwjxXnQWgA3DGCsi13BYGbK1KVPGSDIyLlQHh38dDq4cw/@vger.kernel.org, AJvYcCWpgVL5HH0fvX0kAOxHcM5qHP7Yo/OD5/N51zCX2Q0ZBYSUUWizVl51zRW4x9/xrSXZnUYW3xqi9W86Im6EK+iINYY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzki0ed/jAKCqUJE7OgRK7ZmVw6N3RhOnrp+UEd4IVSdu5t3oza
-	sereXu8ucZwMyRnbDf4whhId97SEIc8tN7wtEHg/3ZImPpmSR41GYHlB2vt9/wU2DmlweHmXOdM
-	J0N3XJu7HY+TyJ3MVthQBzBgDjMFJRM8=
-X-Gm-Gg: ASbGncuP30FE94KWm8SPotOiD115Je9I4Rtcfoo2d0TTDdF0P1weNuNkNzT1YqQZTs1
-	O59CJWMsq3MDTXK3u1NKfLexhx3i1LaayHh8T6zZPg18zyxlz3NfL5zzAQ7lCBJUQiR7G3ZytrR
-	utBUY3xHLkDSg1iQshqE+mzTI7EwurV4KBcP1Q56NmRNLxLQ==
-X-Google-Smtp-Source: AGHT+IG/AKI0oxrqbwK7VdmQ2uGe1VyMW31q872pricgjgznY3drPRYj8SluRe6zmCcF8lMQHmCMqmXiPcY3b4ugoRs=
-X-Received: by 2002:a17:907:728a:b0:ae3:5368:be85 with SMTP id
- a640c23a62f3a-ae3d8b20366mr37282466b.47.1751484653205; Wed, 02 Jul 2025
- 12:30:53 -0700 (PDT)
+	s=arc-20240116; t=1751484695; c=relaxed/simple;
+	bh=XpjxKMXhHrJbAkM86bUV3jYSI9PntAn8jRn+vHWr8/s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JqfpiMBhYykYKLni84Zj2CP6IuwdZq8nJM5a+iDMNiTC8dXnMf34nmMr/hX+okmXyuNDN26O6Ypezn6NaKP99DONqCLkoBUXJ4CQk2hjdi+eV1ybWlm1TnOBaDJlUDJ2zM4ERoRQuBEkSkhhEQZDfeu5gYRbUSenTgUewxcXkjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trager.us; spf=pass smtp.mailfrom=trager.us; arc=none smtp.client-ip=52.5.81.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trager.us
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trager.us
+Received: from c-76-104-255-50.hsd1.wa.comcast.net ([76.104.255.50] helo=localhost)
+	by trager.us with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92.3)
+	(envelope-from <lee@trager.us>)
+	id 1uX3Ad-00082C-SN; Wed, 02 Jul 2025 19:31:04 +0000
+From: Lee Trager <lee@trager.us>
+To: Alexander Duyck <alexanderduyck@fb.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	kernel-team@meta.com,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Sanman Pradhan <sanman.p211993@gmail.com>,
+	Mohsin Bashir <mohsin.bashr@gmail.com>,
+	Su Hui <suhui@nfschina.com>,
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Simon Horman <horms@kernel.org>,
+	Lee Trager <lee@trager.us>,
+	Kalesh AP <kalesh-anakkur.purayil@broadcom.com>,
+	Jacob Keller <jacob.e.keller@intel.com>
+Cc: Andrew Lunn <andrew@lunn.ch>,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH net-next 5/6] eth: fbnic: Enable firmware logging
+Date: Wed,  2 Jul 2025 12:12:11 -0700
+Message-ID: <20250702192207.697368-6-lee@trager.us>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250702192207.697368-1-lee@trager.us>
+References: <20250702192207.697368-1-lee@trager.us>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250625141705.151383-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250625141705.151383-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWnDhhJ+G5GvMZw+7WGBdiMfWHPXSwkwOqnK5XtKdyS1A@mail.gmail.com>
-In-Reply-To: <CAMuHMdWnDhhJ+G5GvMZw+7WGBdiMfWHPXSwkwOqnK5XtKdyS1A@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Wed, 2 Jul 2025 20:30:26 +0100
-X-Gm-Features: Ac12FXwkxxZV9AZ9JoAjDma36LcnTBBV9NTDM4QNSyVnYBMWZF3A5jQl4JGa2HI
-Message-ID: <CA+V-a8tMV+eHduBduu_xRYAo7m+AH3ttWBM+BCMAGzF8fzFJLQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] clk: renesas: r9a09g077-cpg: Add RIIC module clocks
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Geert,
+The firmware log buffer is enabled during probe and freed during remove.
+Early versions of firmware do not support sending logs. Once the mailbox is
+up driver will enable logging when supported firmware versions are detected.
+Logging is disabled before the mailbox is freed.
 
-Thank you for the review.
+Signed-off-by: Lee Trager <lee@trager.us>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+---
+ .../net/ethernet/meta/fbnic/fbnic_fw_log.c    | 28 +++++++++++++++++++
+ .../net/ethernet/meta/fbnic/fbnic_fw_log.h    |  2 ++
+ drivers/net/ethernet/meta/fbnic/fbnic_pci.c   | 21 ++++++++++++++
+ 3 files changed, 51 insertions(+)
 
-On Wed, Jul 2, 2025 at 2:46=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68k=
-.org> wrote:
->
-> Hi Prabhakar,
->
-> On Wed, 25 Jun 2025 at 16:17, Prabhakar <prabhakar.csengg@gmail.com> wrot=
-e:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Add RIIC module clocks for: iic0, iic1, and iic2.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Thanks for your patch!
->
-> > --- a/drivers/clk/renesas/r9a09g077-cpg.c
-> > +++ b/drivers/clk/renesas/r9a09g077-cpg.c
-> > @@ -154,6 +154,9 @@ static const struct cpg_core_clk r9a09g077_core_clk=
-s[] __initconst =3D {
-> >
-> >  static const struct mssr_mod_clk r9a09g077_mod_clks[] __initconst =3D =
-{
-> >         DEF_MOD("sci0fck", 8, CLK_SCI0ASYNC),
-> > +       DEF_MOD("iic0", 100, R9A09G077_CLK_PCLKL),
-> > +       DEF_MOD("iic1", 101, R9A09G077_CLK_PCLKL),
-> > +       DEF_MOD("iic2", 501, R9A09G077_CLK_PCLKL),
->
-> Shouldn't that be 601?
-> (MSTPCRA =3D> xx, MSTPCRB =3D> 1xx, MSTPCRG =3D> 6xx)
-> If you agree, I can fix that while applying...
->
-Agreed, thank you for taking care of it.
+diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_fw_log.c b/drivers/net/ethernet/meta/fbnic/fbnic_fw_log.c
+index caedbe7844f7..38749d47cee6 100644
+--- a/drivers/net/ethernet/meta/fbnic/fbnic_fw_log.c
++++ b/drivers/net/ethernet/meta/fbnic/fbnic_fw_log.c
+@@ -8,6 +8,31 @@
+ #include "fbnic_fw.h"
+ #include "fbnic_fw_log.h"
 
-Cheers,
-Prabhakar
++void fbnic_fw_log_enable(struct fbnic_dev *fbd, bool send_hist)
++{
++	int err;
++
++	if (!fbnic_fw_log_ready(fbd))
++		return;
++
++	if (fbd->fw_cap.running.mgmt.version < MIN_FW_VER_CODE_HIST)
++		send_hist = false;
++
++	err = fbnic_fw_xmit_send_logs(fbd, true, send_hist);
++	if (err && err != -EOPNOTSUPP)
++		dev_warn(fbd->dev, "Unable to enable firmware logs: %d\n", err);
++}
++
++void fbnic_fw_log_disable(struct fbnic_dev *fbd)
++{
++	int err;
++
++	err = fbnic_fw_xmit_send_logs(fbd, false, false);
++	if (err && err != -EOPNOTSUPP)
++		dev_warn(fbd->dev, "Unable to disable firmware logs: %d\n",
++			 err);
++}
++
+ int fbnic_fw_log_init(struct fbnic_dev *fbd)
+ {
+ 	struct fbnic_fw_log *log = &fbd->fw_log;
+@@ -26,6 +51,8 @@ int fbnic_fw_log_init(struct fbnic_dev *fbd)
+ 	log->data_start = data;
+ 	log->data_end = data + FBNIC_FW_LOG_SIZE;
 
-> >         DEF_MOD("sdhi0", 1212, R9A09G077_CLK_PCLKAM),
-> >         DEF_MOD("sdhi1", 1213, R9A09G077_CLK_PCLKAM),
-> >  };
->
-> The rest LGTM, so with the above fixed:
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
-8k.org
->
-> In personal conversations with technical people, I call myself a hacker. =
-But
-> when I'm talking to journalists I just say "programmer" or something like=
- that.
->                                 -- Linus Torvalds
++	fbnic_fw_log_enable(fbd, true);
++
+ 	return 0;
+ }
+
+@@ -36,6 +63,7 @@ void fbnic_fw_log_free(struct fbnic_dev *fbd)
+ 	if (!fbnic_fw_log_ready(fbd))
+ 		return;
+
++	fbnic_fw_log_disable(fbd);
+ 	INIT_LIST_HEAD(&log->entries);
+ 	log->size = 0;
+ 	vfree(log->data_start);
+diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_fw_log.h b/drivers/net/ethernet/meta/fbnic/fbnic_fw_log.h
+index 881ee298ede7..cb6555f40a24 100644
+--- a/drivers/net/ethernet/meta/fbnic/fbnic_fw_log.h
++++ b/drivers/net/ethernet/meta/fbnic/fbnic_fw_log.h
+@@ -36,6 +36,8 @@ struct fbnic_fw_log {
+
+ #define fbnic_fw_log_ready(_fbd)	(!!(_fbd)->fw_log.data_start)
+
++void fbnic_fw_log_enable(struct fbnic_dev *fbd, bool send_hist);
++void fbnic_fw_log_disable(struct fbnic_dev *fbd);
+ int fbnic_fw_log_init(struct fbnic_dev *fbd);
+ void fbnic_fw_log_free(struct fbnic_dev *fbd);
+ int fbnic_fw_log_write(struct fbnic_dev *fbd, u64 index, u32 timestamp,
+diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_pci.c b/drivers/net/ethernet/meta/fbnic/fbnic_pci.c
+index 249d3ef862d5..b70e4cadb37b 100644
+--- a/drivers/net/ethernet/meta/fbnic/fbnic_pci.c
++++ b/drivers/net/ethernet/meta/fbnic/fbnic_pci.c
+@@ -291,6 +291,17 @@ static int fbnic_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 		goto free_irqs;
+ 	}
+
++	/* Send the request to enable the FW logging to host. Note if this
++	 * fails we ignore the error and just display a message as it is
++	 * possible the FW is just too old to support the logging and needs
++	 * to be updated.
++	 */
++	err = fbnic_fw_log_init(fbd);
++	if (err)
++		dev_warn(fbd->dev,
++			 "Unable to initialize firmware log buffer: %d\n",
++			 err);
++
+ 	fbnic_devlink_register(fbd);
+ 	fbnic_dbg_fbd_init(fbd);
+ 	spin_lock_init(&fbd->hw_stats_lock);
+@@ -365,6 +376,7 @@ static void fbnic_remove(struct pci_dev *pdev)
+ 	fbnic_hwmon_unregister(fbd);
+ 	fbnic_dbg_fbd_exit(fbd);
+ 	fbnic_devlink_unregister(fbd);
++	fbnic_fw_log_free(fbd);
+ 	fbnic_fw_free_mbx(fbd);
+ 	fbnic_free_irqs(fbd);
+
+@@ -389,6 +401,8 @@ static int fbnic_pm_suspend(struct device *dev)
+ 	rtnl_unlock();
+
+ null_uc_addr:
++	fbnic_fw_log_disable(fbd);
++
+ 	devl_lock(priv_to_devlink(fbd));
+
+ 	fbnic_fw_free_mbx(fbd);
+@@ -434,6 +448,11 @@ static int __fbnic_pm_resume(struct device *dev)
+
+ 	devl_unlock(priv_to_devlink(fbd));
+
++	/* Only send log history if log buffer is empty to prevent duplicate
++	 * log entries.
++	 */
++	fbnic_fw_log_enable(fbd, list_empty(&fbd->fw_log.entries));
++
+ 	/* No netdev means there isn't a network interface to bring up */
+ 	if (fbnic_init_failure(fbd))
+ 		return 0;
+@@ -455,6 +474,8 @@ static int __fbnic_pm_resume(struct device *dev)
+
+ 	return 0;
+ err_free_mbx:
++	fbnic_fw_log_disable(fbd);
++
+ 	rtnl_unlock();
+ 	fbnic_fw_free_mbx(fbd);
+ err_free_irqs:
+--
+2.47.1
