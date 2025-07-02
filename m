@@ -1,165 +1,143 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF77219D8A7
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 09:09:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23ED223B63E;
+	Wed,  2 Jul 2025 09:09:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751447374; cv=none; b=VGtHSvS2VfTiQp4SUWtNdHiLGpacD9GA8vtWVdYZZvmCy3ss4nSqvImRdMXMI6GAVfw+KXKEZZcZmaXPDCy4uLL86+AoTT76RHynj3zrdaSdT+TL95fgmxOIyxem0muUKZe2Vj5P5wRP3024dN6UkokzWZCdGxrnVJaxnkQYggk=
+	t=1751447381; cv=none; b=sEXj1qiztRF0OjN8Od+WXCCJ9hCMi00UNkhnbcSrx0nRoSELzcBrbK/OwqwwYZsWdyI8u0hXJX87Cn22dbxiRNrM8a/d5dvgm2FeUODmM5wNOC8gmPytOQY7r+1Vi0lKsAYY2Pac64sfnFHwqZJT8ejmLN9KW8m2vN79HGepvQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751447374; c=relaxed/simple;
-	bh=urTtuoYkB6NDi0LSN2m00vl9THNpGQAg/BWgDB43mqM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CQ71QTPY7CJ4+vAarVhXYPt1QhwWCX/zz//yAIcbfuxaQf4OQ6bNapeCkm/AUrRnEUBSmlMdM40Z0mGHot5vLIjsxyjqVRMAFefNoiLGkXSB8LKBuuABWGIwhWNIIUGgUoz10CBW2oSEYmUx1RQzfb/Pw9Co7k8rrffzHJEP0Bg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=XJcpNtP6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=gmgXlmut; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fBtVbuH3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=P4eGlMxu; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1751447381; c=relaxed/simple;
+	bh=0H4VRNhn1R1ZPAMSoJAocfaIlIuamu13v6O6ErSefU4=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=VuEP+8UKSe1DO03o8a6rDn5GAu6JrxyprfRoJz/1D/zwAxuT4QeT3VaNCqcscMQfcqE+1nSoQ29PiizDo9YEyJbNv5qYWxRtNRAg//RdCn+ebcw6/3AfwkPaSgM0tuMTT9OJ3s+xeMBttOQX/h1dyy+3OVyKFjLPReddT3+ALEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ji7PweCC; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="XJcpNtP6";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="gmgXlmut";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fBtVbuH3";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="P4eGlMxu"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 3102321189;
-	Wed,  2 Jul 2025 09:09:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751447370; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TsYN+KydblcbGJyH+2QgDKawOYmLVVn1pDOpsr1JdQQ=;
-	b=XJcpNtP6GQIaPRR/mSY2ixOvedMTzz1z0UzXnDjNB5UrH6GnYni9QOq/x31hXxE/64FbVn
-	sVxVf8G9sEw2pxutjFQruXHhK142SmgUrrxXBY0B2N97LxJEQmYcCOQvwSwcjc123ivoxQ
-	EAOoVRtdIFLoHZ7hW/Hq8kxboKawxyg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751447370;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TsYN+KydblcbGJyH+2QgDKawOYmLVVn1pDOpsr1JdQQ=;
-	b=gmgXlmut1qzWz/5rsncqiYPId2MkHwK5t0pgUNucjMym0WgEvJZCa/R/RsIPDLgLBtf/H8
-	4sCtAY3618YSGZAg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=fBtVbuH3;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=P4eGlMxu
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751447369; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TsYN+KydblcbGJyH+2QgDKawOYmLVVn1pDOpsr1JdQQ=;
-	b=fBtVbuH3Cs4wUfyXjIfvYLHYTSvu+kioty+pDAS9dGG9z76crY44XVy0ERhNLJLtOpPOkh
-	jX/PTkVeJdugLGPxkTdWu93676gJvGqP+xuMdX1OYRMD64028cZtKAjNnuZdA+JRTP/yjH
-	F0ydEzbklaz8btvgN/Qp+k4NO4FC7Do=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751447369;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TsYN+KydblcbGJyH+2QgDKawOYmLVVn1pDOpsr1JdQQ=;
-	b=P4eGlMxusc4c+4VQEr8zq8ftcIp2LlusisbfI89F4Z9UmQcT2EtB1mdzj6Yo6UvIehMM8/
-	ZX0JVP4/pKiQfQAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 056301369C;
-	Wed,  2 Jul 2025 09:09:27 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 2YQyOkf3ZGj0WQAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Wed, 02 Jul 2025 09:09:27 +0000
-Date: Wed, 2 Jul 2025 11:09:22 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
-	Byungchul Park <byungchul@sk.com>,
-	Gregory Price <gourry@gourry.net>,
-	Ying Huang <ying.huang@linux.alibaba.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Pedro Falcato <pfalcato@suse.de>, Rik van Riel <riel@surriel.com>,
-	Harry Yoo <harry.yoo@oracle.com>
-Subject: Re: [PATCH v1 3/4] mm: split folio_pte_batch() into
- folio_pte_batch() and folio_pte_batch_ext()
-Message-ID: <aGT3QratnMhCZd46@localhost.localdomain>
-References: <20250627115510.3273675-1-david@redhat.com>
- <20250627115510.3273675-4-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ji7PweCC"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-747c2cc3419so6206713b3a.2;
+        Wed, 02 Jul 2025 02:09:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751447378; x=1752052178; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gGDtUarx9LAAEB5xju/1XolQrw0biFVaUKA480eEFPQ=;
+        b=Ji7PweCC9hDqw5WJamM2MbJvvTOKcO6Rjepk5Q2vM5QdQU8NkpWRcTT/CSsGN4z1Vz
+         f3g2W/mom/ra4t9sFk5StywZjw9PZsAqGMT5OyE34SkyaeuAz2OEwodqlC9H7OG7/EtH
+         DPUC/aJUvhc9iH3ygIsCABMwjJ1Z0N9JVkReRO7Xxor0UwA7EBhX9CZIAv2tpfJfw/8x
+         lDxbwQ/D5F1y73jhp2W7HjZxYYa6sKPp3vvP4xhMPWpBQrnEdM1TtsSAANoC4ge80Jgx
+         12vYKyYIdTQeZ+QVdJ6boTZeMDVT/USW+YpaG/sqH7uGxAT4yYBTU7AFbpQuxy1BhDSo
+         XZ4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751447378; x=1752052178;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=gGDtUarx9LAAEB5xju/1XolQrw0biFVaUKA480eEFPQ=;
+        b=LWSMf+mGqXR9YYo+rCovkqXQmVvWRPONHPZ+SgtCxEUsDUiNoU5ASyNSPWBzMaGi4Z
+         ZtBR9/CljSNTf5LRqQh9mc2oqYKqKyA97ntTwA1kIVbh17krZE0Dw38+pp8ZA/TFd6ZR
+         hURhdc4Oy/zl5aGlTb6YY03qRPgBn+QE1wt/x2GmYpnVW0fl5TEtA3daws88mkFo9pSl
+         JcVf2hPup+37zMlJGjXd3p94+daa/0r2MDwAt6qLCZS0abqbJdomOlWsyN+S29j7qn7B
+         U7hy88SQ6iJ0pzgAKaM48k1njxihxckY1gk+CzMKrhKnVTOs4Et2lYYXky6RkfO+cooI
+         4S3g==
+X-Forwarded-Encrypted: i=1; AJvYcCXFYnRfZN0jotMOb6tP41dZWtCPaZgaaqoCAZP1KgYVM/pW+TlilcvjDZEoXR4i5BqEkBSn4BTnd/vRy5iui3Y=@vger.kernel.org, AJvYcCXheHhHibgmlSwI/AdcLBqovMBmrdqb6L3s6x0s7+72hO70UuoYo1Ag+fB+f+ctcyxbZ4U0lGitSNVwKlw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCZb8Xfxny8zTx7yqf8TJmkGv7vMyvQU3LscG6Usw+kTrjcLJH
+	5QSSB2TcqR800WWrTxPrtQ+Jxwf80r+M/TiNcebeMto/BWM4WftmIh4S
+X-Gm-Gg: ASbGncv1kXQ+En4XpwGHaBr9Wu6OBr/Az5Bb6EdSAiuNcgD847Ve7B6wahRwewdEl/M
+	kuIV+xGQGuQYcrbj+SopADN57wb1C5b1b+cPe/1hA91DKgObFZKCdxBRl8q+wiqhVFsEeBeGXk6
+	GOzl/cd8cXoC3JE/nPp1Imnjzdor22DKx4qKGLUfaUDotCBYwJfRUdAqYwlLjkkQ7PHkZJFQd/x
+	iyV4G4yGv859DnHrLh1bQYk4vigWm1owDIx6iBB6JzZxN2ve9FuUSWDppsE/JmSLtxhewkVD/IG
+	IH2/ctWazdFN8wI8DTzuQCLaLrUHAhC7N/TlCRFhbCuHVqZEgX//6BY+i0l0B2+lgj9DZLB3OXr
+	AGFQNsUrf0nXL6sxDB+0Mx1c/vBS0h+xF4TaUF62Y
+X-Google-Smtp-Source: AGHT+IEsBSMK5TYD/oqHlzADGgv8Ty8PRAvsgXvC9q6zY+nAsV0h5SDcPLVnAAh2GJhANxgklQE9hQ==
+X-Received: by 2002:a05:6a20:3ca3:b0:220:9545:2c96 with SMTP id adf61e73a8af0-222d7dbae47mr4015764637.1.1751447378212;
+        Wed, 02 Jul 2025 02:09:38 -0700 (PDT)
+Received: from localhost (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e3200874sm12296530a12.69.2025.07.02.02.09.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 02:09:37 -0700 (PDT)
+Date: Wed, 02 Jul 2025 18:09:22 +0900 (JST)
+Message-Id: <20250702.180922.1185854079687770335.fujita.tomonori@gmail.com>
+To: a.hindborg@kernel.org, ojeda@kernel.org
+Cc: fujita.tomonori@gmail.com, alex.gaynor@gmail.com, aliceryhl@google.com,
+ anna-maria@linutronix.de, bjorn3_gh@protonmail.com, boqun.feng@gmail.com,
+ dakr@kernel.org, frederic@kernel.org, gary@garyguo.net,
+ jstultz@google.com, linux-kernel@vger.kernel.org, lossin@kernel.org,
+ lyude@redhat.com, rust-for-linux@vger.kernel.org, sboyd@kernel.org,
+ tglx@linutronix.de, tmgross@umich.edu
+Subject: Re: [PATCH v1] rust: time: Add examples with doctest for Delta
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+In-Reply-To: <874ivvvvjw.fsf@kernel.org>
+References: <kyrCsGDYN5QdXPkUe4OxMxU2UzHfJ-vH5z643gA-_KFJIaew0duyMXU0yfTrGN5ZCNaecP8Yu2kIXKXMoWS2lA==@protonmail.internalid>
+	<20250701001809.496389-1-fujita.tomonori@gmail.com>
+	<874ivvvvjw.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250627115510.3273675-4-david@redhat.com>
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,kvack.org,linux-foundation.org,oracle.com,suse.cz,google.com,kernel.org,suse.com,nvidia.com,intel.com,gmail.com,sk.com,gourry.net,linux.alibaba.com,suse.de,surriel.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	TAGGED_RCPT(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email,localhost.localdomain:mid]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 3102321189
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -3.01
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 27, 2025 at 01:55:09PM +0200, David Hildenbrand wrote:
-> Many users (including upcoming ones) don't really need the flags etc,
-> and can live with a function call.
+On Wed, 02 Jul 2025 10:36:19 +0200
+Andreas Hindborg <a.hindborg@kernel.org> wrote:
+
+> "FUJITA Tomonori" <fujita.tomonori@gmail.com> writes:
 > 
-> So let's provide a basic, non-inlined folio_pte_batch().
+>> Add examples with doctest for Delta methods and associated
+>> functions. These examples explicitly test overflow and saturation
+>> behavior.
+>>
+>> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+>> ---
+>>  rust/kernel/time.rs | 67 +++++++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 67 insertions(+)
+>>
+>> diff --git a/rust/kernel/time.rs b/rust/kernel/time.rs
+>> index 64c8dcf548d6..c6322275115a 100644
+>> --- a/rust/kernel/time.rs
+>> +++ b/rust/kernel/time.rs
+>> @@ -228,11 +228,34 @@ impl Delta {
+>>      /// A span of time equal to zero.
+>>      pub const ZERO: Self = Self { nanos: 0 };
+>>
+>> +    /// Create a new [`Delta`] from a number of nanoseconds.
+>> +    ///
+>> +    /// The `nanos` can range from [`i64::MIN`] to [`i64::MAX`].
+>> +    #[inline]
+>> +    pub const fn from_nanos(nanos: i64) -> Self {
+>> +        Self { nanos }
+>> +    }
+>> +
+>>      /// Create a new [`Delta`] from a number of microseconds.
+>>      ///
+>>      /// The `micros` can range from -9_223_372_036_854_775 to 9_223_372_036_854_775.
+>>      /// If `micros` is outside this range, `i64::MIN` is used for negative values,
+>>      /// and `i64::MAX` is used for positive values due to saturation.
+>> +    ///
+>> +    /// # Examples
+>> +    ///
+>> +    /// ```
+>> +    /// let delta = kernel::time::Delta::from_micros(5);
+>> +    /// assert_eq!(delta.as_nanos(), 5_000);
+>> +    /// let delta = kernel::time::Delta::from_micros(9_223_372_036_854_775);
+>> +    /// assert_eq!(delta.as_nanos(), 9_223_372_036_854_775_000);
+>> +    /// let delta = kernel::time::Delta::from_micros(9_223_372_036_854_776);
+>> +    /// assert_eq!(delta.as_nanos(), i64::MAX);
+>> +    /// let delta = kernel::time::Delta::from_micros(-9_223_372_036_854_775);
+>> +    /// assert_eq!(delta.as_nanos(), -9_223_372_036_854_775_000);
+>> +    /// let delta = kernel::time::Delta::from_micros(-9_223_372_036_854_776);
+>> +    /// assert_eq!(delta.as_nanos(), i64::MIN);
+>> +    /// ```
 > 
-> In zap_present_ptes(), where we care about performance, the compiler
-> already seem to generate a call to a common inlined folio_pte_batch()
-> variant, shared with fork() code. So calling the new non-inlined variant
-> should not make a difference.
 > 
-> While at it, drop the "addr" parameter that is unused.
-> 
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+> I think this kind of test would be better suited for the new `#[test]`
+> macro. Would you agree?
 
-FWIW, folio_pte_batch_flags seems more appealling to me as well.
+I think that Miguel suggested adding examples but either is fine by me:
 
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
+https://lore.kernel.org/lkml/CANiq72kiTwpcH6S0XaTEBnLxqyJ6EDVLoZPi9X+MWkanK5wq=w@mail.gmail.com/
 
-
--- 
-Oscar Salvador
-SUSE Labs
