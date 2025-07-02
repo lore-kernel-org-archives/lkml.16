@@ -1,127 +1,85 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 331852BE643
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 18:39:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76FED30E833;
+	Wed,  2 Jul 2025 18:39:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751481581; cv=none; b=ZKz6p4e7lQ62sxwzrLJ7FPWK8InZjtDx0wHqSQhDLColzH/mJ0kZJD95Rt/v9AmIq2oqU5ZDUYtGt0/slS8Vs2Pq3SZ1I5a1s8S7ijjwLYiQycM0YqfXor5G41m9D8yFNEIBqDiKfcwFj+UYxKwHR4SyogaWxH6GLTS6zLGtWg4=
+	t=1751481587; cv=none; b=NvJ4eOkpRFnWzTSOGcXmbj5Aod3yiuKK3XQjtCdfsg4slv3bTgIzkjyFSNKafldCMNB23M46tYz6cpiBgQxSh3rgVFWSkJAzNMevGhFkInK5j8B+0BhBEOSpQw8zz7zg1ywHSrKyMgCq3uN0gTXN5ir19Xhgfhl2Kc2yGinTyZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751481581; c=relaxed/simple;
-	bh=oaGmzUZUXJWd6raW4UkBJCtJB/M94OwXRkxkbmWDquM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=o9PEP7k+uQzx4o6Wj93cKPGi3q54Y2sMdqd0cylGDD933Z2f+vS4NJYw661rDErrHorDuyrIyvtarQEuFdgmVIV8rPC1TUN1V38Geo33JIEba09q9O7EcpIKPuvoxck5E1ArBsSAao0HzsoYRdQFL3r8+PPtfwPCf2/CJUNPtFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr; spf=pass smtp.mailfrom=sartura.hr; dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b=lNxRuD3y; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sartura.hr
+	s=arc-20240116; t=1751481587; c=relaxed/simple;
+	bh=6l0RxST3t939kLUPWkhmp6xRxjdBhMganOmB+2ZBcJg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TEQW6Dxg7BnMS0CwnXTd/95TTVE9sFsV9M05h4w9vHOFUlNH1ViFdxo3nKVB5hjatJfAY5cIg8VEUuGzm8oc1LJBN/qdQUsHLttwm19TAecQVbgwnp2+Y4QIDkyCP8xDR2xROVUsv5GLsfBdS4GTX47CmisBch0AHYwyT6r4Mc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=JSuXjBvr; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b="lNxRuD3y"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-234bfe37cccso87517035ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 11:39:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura.hr; s=sartura; t=1751481579; x=1752086379; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iKtbK/2WRQ+wXXbB4rZi2px+YsVtXfxGP3mE8Odmzx4=;
-        b=lNxRuD3yBHUYnLAht+u0unHI3QeT9wuRbR6j22Z8+QsYiDExKq3z+lSq5Sacv9xjj0
-         M5G46it8COb7NHT+BFekYkiDIHKl8tcROIpLQsM94Mxn8fQw/TLrBAq+Bk3oISHBke/r
-         Yjmm0pbmdND0bIZietxF7HbBc/JxpuaUQRQhGE17lnhXMpnVTtXt6dl7w8QZoXjE0Dnu
-         FmAOGCGf7A8nGM7qP1G0NU6d7Fimf8yF+7cGj8WML10aVvtWsjvzAAFkvl1DQnLClmkP
-         ApL/n7WMvqOuRgBCTaAQmpYUgHGfGRBf6lAszdtVSK5X7x3OZUdRCiGXvg6gwkQefyoT
-         x3Cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751481579; x=1752086379;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iKtbK/2WRQ+wXXbB4rZi2px+YsVtXfxGP3mE8Odmzx4=;
-        b=cjzRfaCFBYS0+s/GRFNw8IQOOuuFkEJ2CjxN5HwsWqBwuFFvImHnurkfJN8QKwLJrv
-         kyzbULbBpMc74vXR9axBJrlMRfq8cLuUXxsMPzA+vxVEiMVSbof33aizYo4ljYqmHWnx
-         QkTgpAIahz+8zkOfnY8PJNT+luQ/SUJKkW3Vf951w/am3J2V0PizOUFK6H5rcLxaG21V
-         +0Ogxs7IPh76z6pt4KXUCEvOLGxjNKoxBJP4mVeza5N6Cj8In9rPOtvKafgnNUZI/kBQ
-         ixaWguToaLSbNje9J1vWSTCVfGTF8dpnuCrInZqHckXgK5bTtHbLUOlyEgVhN13Xngyv
-         DrRg==
-X-Forwarded-Encrypted: i=1; AJvYcCW7Qr1P3TZiDyt+VSMlixxh+chA0JcRJzYvr4Ja+aCMumQiXbu/Su7mGYj5GYI8EiN8oCFMatkKRVLBUDQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyf4fNpmOknRCXreGMMHyAS201r+CYmlQf6cSA9nJMrttr0/8tz
-	oEe5Fubyj7XHF05O3RX3yLlgNU3CzKF1uATO756AIZ2PcKRUJNN+ttkc/rK5/p31BT0=
-X-Gm-Gg: ASbGncvNDGe02ak7CdDR5INKQDZI6x/0zhz2hIHiqLiXUoJblmLpzsH0VrW4ByI38D6
-	hM/ynU5P692TJeq9qxRBRPL0q9Q5NflaP5mLebKUyiEWxKoA329iwRr0Xct9VdAHBNcgdCJCUSL
-	GfA+7JZOzwUFPgR5tuNFwtWCXrO3Glax8hNf64hCumXzz3p2o0OpcJeWS7mAaUjZdW/IzFlUmn8
-	IOaMop0l3QSgBchqh4SzAykKTfHUvQA/JOi5XPcxBfQYkP1wZVAv0/9ZcIwVD4PovulqWTfABv9
-	b22WNUp9Kd4gCsfD0ZjFqv63WDETcCy1Pu8WqqCyO6A8SWJ8jwEkUxyh1t2iSDagCAo189KHbCq
-	gB/PgHtsHGUwX0X3UyvPt1ixMr5zRdyaz8A==
-X-Google-Smtp-Source: AGHT+IFMiw5zVlKSlo142PqqKAhtgqF1TVkOxw4N8sD11BQn40MJ5BTx7e9G7Jb+TWyMfU9vkgJvWA==
-X-Received: by 2002:a17:902:e5c1:b0:235:91a:31 with SMTP id d9443c01a7336-23c796a1c47mr5430865ad.8.1751481579607;
-        Wed, 02 Jul 2025 11:39:39 -0700 (PDT)
-Received: from fedora (cpe-94-253-164-144.zg.cable.xnet.hr. [94.253.164.144])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-23acb2f39bdsm143034195ad.80.2025.07.02.11.39.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 11:39:39 -0700 (PDT)
-From: Robert Marko <robert.marko@sartura.hr>
-To: linux@armlinux.org.uk,
-	nicolas.ferre@microchip.com,
-	alexandre.belloni@bootlin.com,
-	claudiu.beznea@tuxon.dev,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	olivia@selenic.com,
-	herbert@gondor.apana.org.au,
-	davem@davemloft.net,
-	vkoul@kernel.org,
-	andi.shyti@kernel.org,
-	lee@kernel.org,
-	broonie@kernel.org,
-	gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
-	arnd@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-crypto@vger.kernel.org,
-	dmaengine@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	linux-spi@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	o.rempel@pengutronix.de,
-	daniel.machon@microchip.com
-Cc: luka.perkov@sartura.hr,
-	Robert Marko <robert.marko@sartura.hr>
-Subject: [PATCH v8 04/10] mfd: at91-usart: Make it selectable for ARCH_MICROCHIP
-Date: Wed,  2 Jul 2025 20:36:02 +0200
-Message-ID: <20250702183856.1727275-5-robert.marko@sartura.hr>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250702183856.1727275-1-robert.marko@sartura.hr>
-References: <20250702183856.1727275-1-robert.marko@sartura.hr>
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="JSuXjBvr"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=hJI45sJQ3ePvxFVLPLejbi5ubi/MYjabBTxckmO9R3Q=; b=JSuXjBvrOlDRlCFeiwy2SY2SBb
+	zunYm1843S1SXBv59ftsWj31nu2mEK9w6KMMFw/v/pvGnjgff3+r+A7xGyfiU37Gsfrueg8KX8j2O
+	ZxVmiMVOIT0zHYpNotzOSGlj2hzxemShJScoe8uj7y25qe7YTDfjfNQoZkPJ31Yy9PKYqXu3cKalC
+	Dc2pLGeTWyTl+EqF2uzHpXm+6qqb2osoOrP5JmjHr5+Y3KPQ7fQL552vsg14Tu1YgHGVrxrsoykNl
+	VO7kFPC3OGxYcnA4QIsjKo973WYc4YW5EK5ZE5NTzx1hruFfv0jIFFKzHZdqRW4FPawT5J0EEtIWe
+	vj02klAg==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uX2Mw-0000000DKOb-1q5s;
+	Wed, 02 Jul 2025 18:39:42 +0000
+Date: Wed, 2 Jul 2025 19:39:42 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: syzbot <syzbot+6d7771315ecb9233f395@syzkaller.appspotmail.com>
+Cc: brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [fs?] possible deadlock in __simple_recursive_removal
+Message-ID: <20250702183942.GD1880847@ZenIV>
+References: <686574b1.a70a0220.2b31f5.0002.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <686574b1.a70a0220.2b31f5.0002.GAE@google.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-LAN969x uses the Atmel USART, so make it selectable for ARCH_MICROCHIP to
-avoid needing to update depends in future if other Microchip SoC-s use it
-as well.
+On Wed, Jul 02, 2025 at 11:04:33AM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    50c8770a42fa Add linux-next specific files for 20250702
+> git tree:       linux-next
+> console+strace: https://syzkaller.appspot.com/x/log.txt?x=152d348c580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=70c16e4e191115d4
+> dashboard link: https://syzkaller.appspot.com/bug?extid=6d7771315ecb9233f395
+> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=106bd770580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=164b048c580000
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/3d4ef6bedc5b/disk-50c8770a.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/15b7565dc0ef/vmlinux-50c8770a.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/3b397342a62b/bzImage-50c8770a.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+6d7771315ecb9233f395@syzkaller.appspotmail.com
+> 
+> ============================================
+> WARNING: possible recursive locking detected
+> 6.16.0-rc4-next-20250702-syzkaller #0 Not tainted
 
-Signed-off-by: Robert Marko <robert.marko@sartura.hr>
----
- drivers/mfd/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+False positive.  locked_recursive_removal() is called with ->i_rwsem
+on the victim's parent.  It will grab and release ->i_rwsem on
+descendents of victim and victim itself (never more than one held
+simultaneously) and it is used only on filesystems where we never
+change the tree topology.  So the normal ordering of ->i_rwsem is
+upheld there.
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 6fb3768e3d71..0ea3a97bb93d 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -138,7 +138,7 @@ config MFD_AAT2870_CORE
- config MFD_AT91_USART
- 	tristate "AT91 USART Driver"
- 	select MFD_CORE
--	depends on ARCH_AT91 || ARCH_LAN969X || COMPILE_TEST
-+	depends on ARCH_MICROCHIP || COMPILE_TEST
- 	help
- 	  Select this to get support for AT91 USART IP. This is a wrapper
- 	  over at91-usart-serial driver and usart-spi-driver. Only one function
--- 
-2.50.0
-
+Proper annotations would be to have the lock on parent grabbed with
+I_MUTEX_PARENT as class...
