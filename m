@@ -1,114 +1,218 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A6524BBFD;
-	Wed,  2 Jul 2025 10:27:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9439024DCEF
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 10:28:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751452079; cv=none; b=AEiUk1+x8xHJ9uqsVD2u7C5z9AMzBazL8E91bN9Fxg5oO6v29fjLQgqRE4FLCrxULt1orJ8g5VSkv0BMxjPDbZYVwrw3siT7GAF1/RfXy9ScD00/RpbFF0u5opqH7WerF360gYzJH85c9zdmF9E+LfW8JU04WQi7uj14/tXxy78=
+	t=1751452089; cv=none; b=FrF2Cjo9Wlqp+wpa88s/vxnqh8+INAoDdW8LwwcI+4qRCPvgnDs3WrWWCEPwe3Q0wAyP4L0osvySZFAzgc+zV2URHfPxgOvF9jFBOSQoBSTcSu7HByPSdqNQ83klile5QVywPDf1w2A1ewxWHTsYr8Kx85oUhDFuaHFm/oGiDJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751452079; c=relaxed/simple;
-	bh=mKxFnJrFfq5yKXaS2svEXQwbcRkwD+z83At+PELKWzY=;
+	s=arc-20240116; t=1751452089; c=relaxed/simple;
+	bh=HNC2JFG78BM6dYPJfeCu0c/eJ9neL+rvm7FBd1+Y4yk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S92geAgOxmgnQdRHEqViyGguR+4cJ1cUgzmBM7+CHP5TV37aav50GQBtJYaxGfIpKXA3ta2nAR7vBVg3ju56DW84yXvtT37dD/DwOiirUB507u+hp0osI4XlPiTwxXshEbn5Lc06q4hvXTSB83jcl/HMjl8exczBAD9l2Zcjkds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=fCivF7Sn; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=QHeopuHVchxu4g1dWPH8wYcl9llOvTE6IgCNwDOv3ovE5UMFUmg5qbVNgMb5BO7uXWbJnqXtS41lyiu4g9Mc1B0k1NQL4NKvKoOZl8g2fXbjyBSkKoSmyS9F99qYyPYfPbmFx8uDJedZnqR4DoW0BJOeJLfZ8ZqujeQuyeEpMp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CxBM+HxE; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="fCivF7Sn"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 812A240E0217;
-	Wed,  2 Jul 2025 10:27:47 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id tG13KCk_QJPf; Wed,  2 Jul 2025 10:27:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1751452063; bh=K6vtF+/FrP3SZLJ1xW3eTnYKlR656Bz2ybvMfEhgy7k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fCivF7SnbWweND0RenAM+SeXpWWhRNFm7diOBCTtNiFbTia1+A4ubAK+7EWc1Pczs
-	 j55PbI1oOTPZZBUvsyk44Yh2sMO3q/PX3Tb6adz20ZmwpV0DNdgmOsPSE6MpsQy9Yl
-	 8Yvcfttr4npkoc2LpcId+T6tMc6kcHy7yxHqRfOXnmbZN6HFlmdndo2mnCxQz2pZYA
-	 yJUFDzw0DObeiAvLa3j84d+LcnLH2p2h3x74+2zZJhDJPLPOZgMZCil+Hh5Tq+OpZG
-	 23ldmQjXzcBqPEBK1fN1pw3FCJY6w6J8JMMBQlaQMG2h/m20bMtJKVHsBymWiQr7p3
-	 ggpm23yjDoQ6zc29jCsdHF+8wBbdT2+wyt/38eYnSnnqF1nLKarnjLxtdtjHpjBEj7
-	 P3VS6rBs3+gJ8iNxjObUz+vriA9vt8OmihX9s3mfoMwDTQLqRSvVU29J4qpwitvvdN
-	 xTmoRFASFgManLq+nefrBKUuD9CjavMVGNWdoeQVs5cHG4r0jYxnWMnxU88ZvTBIQw
-	 5w/LbBxPwrJi3Qkvos6X+ek3gv1vt9O6lCy2qDNUIqyUjfWwMnVU26viP2y4rYo7qI
-	 8ztdARHlWLtTxYzh1mBf3Cyl4kTDk+EsAjT0DfxYHb3VmVYcKZ1vT+kU2AbBYI7MVz
-	 CMYxsyfYxSjc+ozQ42aLXP7M=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 662C140E01FE;
-	Wed,  2 Jul 2025 10:27:28 +0000 (UTC)
-Date: Wed, 2 Jul 2025 12:27:21 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Datta, Shubhrajyoti" <shubhrajyoti.datta@amd.com>,
-	"Gupta, Nipun" <Nipun.Gupta@amd.com>,
-	"Agarwal, Nikhil" <nikhil.agarwal@amd.com>
-Cc: "Ghannam, Yazen" <Yazen.Ghannam@amd.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"git (AMD-Xilinx)" <git@amd.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	Tony Luck <tony.luck@intel.com>, James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>
-Subject: Re: [PATCH v7 2/5] cdx: Export Symbols for MCDI RPC and
- Initialization
-Message-ID: <20250702102721.GKaGUJiXLkOEC5kdpd@fat_crate.local>
-References: <20250529070017.7288-1-shubhrajyoti.datta@amd.com>
- <20250529070017.7288-3-shubhrajyoti.datta@amd.com>
- <20250613201034.GC171759@yaz-khff2.amd.com>
- <SA1PR12MB89474C0C76A66775B91A20C98170A@SA1PR12MB8947.namprd12.prod.outlook.com>
- <SA1PR12MB8947279143D868E39D30F616817CA@SA1PR12MB8947.namprd12.prod.outlook.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CxBM+HxE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751452086;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=85JXjacu6wCUmkF0dZfE+duwDw5BYHyt88jf8idGi/0=;
+	b=CxBM+HxEKNkrlDHHvC6eXllFZf1Ea0LC7mtfLXOuWMo5kYolOt6Ri1JtRexgNoQeYlPb4J
+	y5db4s3V5uMDYpdBABcxSmP0TzDR5vfEcLaqtWqEUGeacWdPszB01znLoZV/cnJwgrSDD2
+	KXfHRn9zsiLXFYjXvthOJzd1mi85FGY=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-6-yeThntEWMrSkq1428vXDQg-1; Wed, 02 Jul 2025 06:28:05 -0400
+X-MC-Unique: yeThntEWMrSkq1428vXDQg-1
+X-Mimecast-MFC-AGG-ID: yeThntEWMrSkq1428vXDQg_1751452085
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7d413a10b4cso1132534685a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 03:28:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751452085; x=1752056885;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=85JXjacu6wCUmkF0dZfE+duwDw5BYHyt88jf8idGi/0=;
+        b=ojPr2iyUJQKBrgVRBy1cWIvfnH1fbDSogKsA3/csVAfZVAvQ57g6gy1bGkix1YF/vs
+         kTwnxqzLCVOmzBC5LZ9q1CkMXpTFhAPINq9CqnpIhtqFF83LuFqQHnBXOrVSxBWJsNxu
+         neuyhFhM/h2Z35JwSOlQXBYtxTquM0whSJJBvJnPxJHcGZaEUrj9qGtXH0M4i96Iukkd
+         w2Ta92Jl7w0f5pxmMzjJMaStGSuRh6n6JAW5laEbAEG9LQ1axHoUWiykZqyF7lZuM8ls
+         c/rnvc9zvDS4E1UizaUw2jUmrjzvTliokoGOs6jNOeET/ZMsFcbzA+mD5j4dzTYxdMDx
+         JVJA==
+X-Forwarded-Encrypted: i=1; AJvYcCWn7A8iE3zA4XGHec7ZPOMVKN51PO2OQeQFTPDD/HYrTSpvCeGNk1Fmzfe8IX+RKl2kzY4cAF8e4JWMbI8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyMTMToCPQWQiwFku+iQtBq3piwPpzNMDvdaAMcIIWEMHQ4fIj
+	oDNAz/vRU3vBgTvmOsRPaPsFO4nIsgDcXzgcA3uTWZextodtqvgo5vMgCEuhHCjl4Cb3nY5exBO
+	HbnOKd2V3izObj9g9qTGxVa91jGgzjlCpckEv3GNc7Dqh6X/dykEVD7XGHnPTBgLozw==
+X-Gm-Gg: ASbGncu38cSj17p8JlEAl6D7UAYvXXjefdQcx88iDmJyQmK8TlgoHeG81sU2Gxub8Go
+	2Sq5N8BkWxL70BmHsWASsttj32r4LTTBCIrGFPGJC9UrPe62eHjWEb/l9GWaDQeYUUxHjAAW2dd
+	a3jNMA+pcqqO/ZGEeCAmS3FXWNnQW8zYidwB4C6Y0Okt4Q1vMfkHtDy/IMiAsBMnPXzqs/2XVuH
+	nw2/wuldicQELAEAbEeREs7l36zEgKyRcXAAzdL8laZ4DvJBVfIWZY0Ve2KzSLQ+EFCehlxT0TD
+	yos+REUSYPumfxfsqr/Omlk0D03E
+X-Received: by 2002:a05:620a:40c7:b0:7ce:ed86:3c53 with SMTP id af79cd13be357-7d5c47987e4mr317702485a.29.1751452084844;
+        Wed, 02 Jul 2025 03:28:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGR5QITigHAdyrF17S/UdoELcefsX+cFxFfTUVGXCWeNu5QcphpyqGLWYDxcztIwzYT+8d6Rg==
+X-Received: by 2002:a05:620a:40c7:b0:7ce:ed86:3c53 with SMTP id af79cd13be357-7d5c47987e4mr317697485a.29.1751452084338;
+        Wed, 02 Jul 2025 03:28:04 -0700 (PDT)
+Received: from sgarzare-redhat ([193.207.164.126])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7fc15932esm89449261cf.34.2025.07.02.03.27.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 03:28:03 -0700 (PDT)
+Date: Wed, 2 Jul 2025 12:27:30 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Xuewei Niu <niuxuewei97@gmail.com>
+Cc: mst@redhat.com, pabeni@redhat.com, jasowang@redhat.com, 
+	xuanzhuo@linux.alibaba.com, davem@davemloft.net, netdev@vger.kernel.org, stefanha@redhat.com, 
+	leonardi@redhat.com, decui@microsoft.com, virtualization@lists.linux.dev, 
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, fupan.lfp@antgroup.com, 
+	Xuewei Niu <niuxuewei.nxw@antgroup.com>
+Subject: Re: [RESEND PATCH net-next v4 4/4] test/vsock: Add ioctl SIOCINQ
+ tests
+Message-ID: <qe45fgoj32f4lyfpqvor2iyse6rdzhhkji7g5snnyqw4wuxa7s@mu4eghcet6sn>
+References: <20250630075727.210462-1-niuxuewei.nxw@antgroup.com>
+ <20250630075727.210462-5-niuxuewei.nxw@antgroup.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <SA1PR12MB8947279143D868E39D30F616817CA@SA1PR12MB8947.namprd12.prod.outlook.com>
+In-Reply-To: <20250630075727.210462-5-niuxuewei.nxw@antgroup.com>
 
-On Fri, Jun 20, 2025 at 11:03:02AM +0000, Datta, Shubhrajyoti wrote:
-> I plan to have the current (in the cdx) mcdi.h to mcdid.h and move the common parts to
-> Include/linux/cdx/mcdi.h
-> 
-> And for the bitfield.h will move to include/linux/cdx/bitfield.h as most of it is needed
-> by others
-> 
-> 
-> I plan to rename the existing mcdi.h under cdx/controller/ to mcdid.h.
-> The common prototypes and definitions will be moved to the new global header at
-> include/linux/cdx/mcdi.h.
-> 
-> I am using most of (close to 90/95 percent) the bitfield.h, I'll move it to include/linux/cdx/bitfield.h to
->  make it accessible for other subsystems.
-> 
-> Let me know if that sounds good.
+On Mon, Jun 30, 2025 at 03:57:27PM +0800, Xuewei Niu wrote:
+>Add SIOCINQ ioctl tests for both SOCK_STREAM and SOCK_SEQPACKET.
+>
+>The client waits for the server to send data, and checks if the SIOCINQ
+>ioctl value matches the data size. After consuming the data, the client
+>checks if the SIOCINQ value is 0.
+>
+>Signed-off-by: Xuewei Niu <niuxuewei.nxw@antgroup.com>
+>---
+> tools/testing/vsock/vsock_test.c | 80 ++++++++++++++++++++++++++++++++
+> 1 file changed, 80 insertions(+)
+>
+>diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
+>index f669baaa0dca..1f525a7e0098 100644
+>--- a/tools/testing/vsock/vsock_test.c
+>+++ b/tools/testing/vsock/vsock_test.c
+>@@ -1305,6 +1305,56 @@ static void test_unsent_bytes_client(const struct test_opts *opts, int type)
+> 	close(fd);
+> }
+>
+>+static void test_unread_bytes_server(const struct test_opts *opts, int type)
+>+{
+>+	unsigned char buf[MSG_BUF_IOCTL_LEN];
+>+	int client_fd;
+>+
+>+	client_fd = vsock_accept(VMADDR_CID_ANY, opts->peer_port, NULL, type);
+>+	if (client_fd < 0) {
+>+		perror("accept");
+>+		exit(EXIT_FAILURE);
+>+	}
+>+
+>+	for (int i = 0; i < sizeof(buf); i++)
+>+		buf[i] = rand() & 0xFF;
+>+
+>+	send_buf(client_fd, buf, sizeof(buf), 0, sizeof(buf));
+>+	control_writeln("SENT");
+>+
+>+	close(client_fd);
+>+}
+>+
+>+static void test_unread_bytes_client(const struct test_opts *opts, int type)
+>+{
+>+	unsigned char buf[MSG_BUF_IOCTL_LEN];
+>+	int fd;
+>+	int sock_bytes_unread;
+>+
+>+	fd = vsock_connect(opts->peer_cid, opts->peer_port, type);
+>+	if (fd < 0) {
+>+		perror("connect");
+>+		exit(EXIT_FAILURE);
+>+	}
+>+
+>+	control_expectln("SENT");
+>+	/* The data has arrived but has not been read. The expected is
+>+	 * MSG_BUF_IOCTL_LEN.
+>+	 */
+>+	if (!vsock_ioctl_int(fd, TIOCINQ, &sock_bytes_unread,
 
-Well, I'd expect the maintainers of that thing to move:
+I know that TIOCINQ is the same of SIOCINQ, but IMO is confusing, why 
+not using SIOCINQ ?
 
-./scripts/get_maintainer.pl -f drivers/cdx/
-Nipun Gupta <nipun.gupta@amd.com> (maintainer:AMD CDX BUS DRIVER)
-Nikhil Agarwal <nikhil.agarwal@amd.com> (maintainer:AMD CDX BUS DRIVER)
+The rest LGTM.
 
-and maintain.
+Thanks,
+Stefano
 
-Perhaps ping them on internal chat to catch their attention.
+>+			     MSG_BUF_IOCTL_LEN)) {
+>+		fprintf(stderr, "Test skipped, TIOCINQ not supported.\n");
+>+		goto out;
+>+	}
+>+
+>+	recv_buf(fd, buf, sizeof(buf), 0, sizeof(buf));
+>+	/* All data has been consumed, so the expected is 0. */
+>+	vsock_ioctl_int(fd, TIOCINQ, &sock_bytes_unread, 0);
+>+
+>+out:
+>+	close(fd);
+>+}
+>+
+> static void test_stream_unsent_bytes_client(const struct test_opts *opts)
+> {
+> 	test_unsent_bytes_client(opts, SOCK_STREAM);
+>@@ -1325,6 +1375,26 @@ static void test_seqpacket_unsent_bytes_server(const struct test_opts *opts)
+> 	test_unsent_bytes_server(opts, SOCK_SEQPACKET);
+> }
+>
+>+static void test_stream_unread_bytes_client(const struct test_opts *opts)
+>+{
+>+	test_unread_bytes_client(opts, SOCK_STREAM);
+>+}
+>+
+>+static void test_stream_unread_bytes_server(const struct test_opts *opts)
+>+{
+>+	test_unread_bytes_server(opts, SOCK_STREAM);
+>+}
+>+
+>+static void test_seqpacket_unread_bytes_client(const struct test_opts *opts)
+>+{
+>+	test_unread_bytes_client(opts, SOCK_SEQPACKET);
+>+}
+>+
+>+static void test_seqpacket_unread_bytes_server(const struct test_opts *opts)
+>+{
+>+	test_unread_bytes_server(opts, SOCK_SEQPACKET);
+>+}
+>+
+> #define RCVLOWAT_CREDIT_UPD_BUF_SIZE	(1024 * 128)
+> /* This define is the same as in 'include/linux/virtio_vsock.h':
+>  * it is used to decide when to send credit update message during
+>@@ -2051,6 +2121,16 @@ static struct test_case test_cases[] = {
+> 		.run_client = test_stream_nolinger_client,
+> 		.run_server = test_stream_nolinger_server,
+> 	},
+>+	{
+>+		.name = "SOCK_STREAM ioctl(SIOCINQ) functionality",
+>+		.run_client = test_stream_unread_bytes_client,
+>+		.run_server = test_stream_unread_bytes_server,
+>+	},
+>+	{
+>+		.name = "SOCK_SEQPACKET ioctl(SIOCINQ) functionality",
+>+		.run_client = test_seqpacket_unread_bytes_client,
+>+		.run_server = test_seqpacket_unread_bytes_server,
+>+	},
+> 	{},
+> };
+>
+>-- 
+>2.34.1
+>
 
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
