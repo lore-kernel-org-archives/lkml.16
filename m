@@ -1,171 +1,96 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8629231A30
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 12:47:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E5584414
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 12:47:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751460428; cv=none; b=MS71PMcamoNZqPltp9FLf+a7n123VV21RrtCT71MH2YZQhxKCDbKJ5au822hJ6FWqwxZTM7+qQNtuAKGsssP+Fx5MwNqqECs+d6tkBsmymcO0trntRLZ/YQBICFcVSNWl9CifZwAR4HKpexkSfkW9+Gsl0Mj0RBLFGao4pZToOc=
+	t=1751460475; cv=none; b=dphe/Mj8O9UsU3P+gsTADHgbxsdyEYey3vnQVYTUAnEP2HpSf4xS1xJC3b6ScJ4wHtrK1dRGilL1KVqF0QTSAaPPOYUUPEBKOr3xohPC9ojBuuzsrRNQdicPCrzkq8i9sCjxUaUI9dUDMJRVvHQmZszysLOXYY7TVipFrWbST34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751460428; c=relaxed/simple;
-	bh=l+p3bDcBSkJgkgPACPqFtqpENjc+EXoFlJLoQWKKtFM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R5Q5hqqS1RkyZhOZlRE5Qt8ullqZprBMm9qPZhFge3pkWY0j/PFeT71RjOwV9jESAY4Z5H73LcLOzlQZWV+W/+vcJ5LmsYUy3dC2FofbwEkOdBW9K6VscWybHtZn2VSmAlsM7q5bY7h9iyXdBQx/G/ZiAZ0q8fFbVdX57rJ9ikY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=c8j+VtJ9; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ESnPDywp; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QX0CWQCj; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ALNdxtcR; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1751460475; c=relaxed/simple;
+	bh=e5kYHzYmH2aRzXt6VPZN5ZJXDdGIJtTeIUx7G9Xqy9k=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=urJ4oZ3+wjP3jK9I+VzdQugwdCWkYV0KwrnyqtPW7dkC/rGeCrCvvEwMgfzL+8jzkFzkx7AEW6VBvqRh0F2FcoyzRuIFroJrsgDljOcFLENvre3d2166b8k1vQi7Uho1FDxX3U9LYfrB211g49yMvBsjoKZsFFfkD72J+xD1xXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=f4ygA4S7; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="c8j+VtJ9";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ESnPDywp";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QX0CWQCj";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ALNdxtcR"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id BA20E21171;
-	Wed,  2 Jul 2025 12:47:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751460425; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k1wIY7FTlKQzM4gTXb/EEfgvLm5LmwpW3ETkIJgLZjQ=;
-	b=c8j+VtJ9YX236iDh5ujSFWehUKt/yDO2+nPYL7d+SfjtapNmhey0WhzSQk+HX7+4RIEe6Y
-	WVVTtPvuo8F4Sxx7OXgT/Qers4GQW81Ju+9qYdbdDwPyv51gUBPo18kJ1rdYJVxiHUdBLZ
-	60HVoOy9BACxYQyseeQhwgylSbJu7HM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751460425;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k1wIY7FTlKQzM4gTXb/EEfgvLm5LmwpW3ETkIJgLZjQ=;
-	b=ESnPDywpn3TljQ5v0UNHyV5ab7aLXcfCktN7xZ/b1FjfjHxRrj94A51KQnhuPHR1yBZTko
-	LZ28qujdQV6L8KDQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751460423; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k1wIY7FTlKQzM4gTXb/EEfgvLm5LmwpW3ETkIJgLZjQ=;
-	b=QX0CWQCjM7tKWQTzKmW15h6JTE3U9IHQ55Tsa+1UdJRsyLHXV+hvjOyFwpT3U8/0vbOvyk
-	rA+P0Wo5GJ6nGtQ81r1csD/pxqcC6GziFpx6FM9kRJtGn3vJiH02H4cHQUeJcSt1o/opuA
-	qRIp2u0gBaTTc5rhJrKdoaL/KzephRo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751460423;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k1wIY7FTlKQzM4gTXb/EEfgvLm5LmwpW3ETkIJgLZjQ=;
-	b=ALNdxtcRXQpzvotQ/cV98jn5/j/K7zdIvU0Pe1xxilGoAUlGVPUdgYOe5CNqykhHnBfu8e
-	3Nqj1bL9wYIMT7AA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DA08C1369C;
-	Wed,  2 Jul 2025 12:47:02 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id MABhMkYqZWjKIQAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Wed, 02 Jul 2025 12:47:02 +0000
-Date: Wed, 2 Jul 2025 14:46:57 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: Donet Tom <donettom@linux.ibm.com>
-Cc: David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>, Zi Yan <ziy@nvidia.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ritesh Harjani <ritesh.list@gmail.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	KAMEZAWA Hiroyuki <kamezawa.hiroyu@jp.fujitsu.com>
-Subject: Re: [PATCH] drivers/base/node: Handle error properly in
- register_one_node()
-Message-ID: <aGUqQbybFXd6uJu-@localhost.localdomain>
-References: <20250702112856.295176-1-donettom@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f4ygA4S7"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a507e88b0aso3455400f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 05:47:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751460471; x=1752065271; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=e5kYHzYmH2aRzXt6VPZN5ZJXDdGIJtTeIUx7G9Xqy9k=;
+        b=f4ygA4S7O3BHzHJbk+jkI4/OYzynoFH2b0ZjGyzLQHrIWgslFfvMS3gkAt+7dI602q
+         gu6eSIZx8L2kXzwNeJuVNdXxijq2B0q3m+dy2LR/tMWbYepxAROBeq+kyipJHas3eWZC
+         Hq606tXIWfU61HRjIxQ9ReFQC7ZVm3d/Qe0cRM3g+BRGAw/cYl6ZaSUEh4CiJ+y0kWFj
+         I7V88Y8S6QTVFSfDFdF0sY+SULUsjseDoXegj86kSduNf59BLBQvYVA9kzkrGqWqzrIH
+         F7BeROKIj1ihofOlOk1zML1zgiRxmSA72td+a2StTpQh5ujX9Vscz/ngUOXncEaoe9C6
+         r7yA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751460471; x=1752065271;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=e5kYHzYmH2aRzXt6VPZN5ZJXDdGIJtTeIUx7G9Xqy9k=;
+        b=CRalOphN+X/8fdkkyhu0gPJsBhI/Qltnfq5pbb8NJFzoTaX2fISCVm2VAcouADEnUo
+         lASo9cxsVPKrDA2KTDTQN0yAU68Ao3jY06ux3oBXe05lD41E00O02xjTqooBGcjg0QC0
+         0vf+NStbiZrh19NLzO52m3s3d629bmvKTHmVda1baj/q1M+5mXGcrEYqHFWUEbMVZjIH
+         ImXhNma2dELkpnoKL6h/C/w+c7QI9t21RNZxvBqAtqcgjqRSuWTuADGO5RICMU1Ydcux
+         Buy5EqsGaPPvTJm03dGdb/nrPzHJzgAlVa+aXUVvds6idtLoO6oYbOHCEU/auxFM8lGR
+         T7bQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWq6KnsmaHkBtpoMcaAoXT9pFIK+2oFWupSBub+QHj4B2V2uldN6wjzuNkjpyL+xfy5ogYYSYc2cde3w9o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywu7uPXUMH/rZfUXL1uiiyKTwUFAMswqIN++m8lvsXjnNFOnvKo
+	R+RseEVDjQw0py81FzlrxzjYs0WtXbv314Ap5zpHsjYp7M8xLt5gk4TMSQMvlhCl3to=
+X-Gm-Gg: ASbGncvn4+vW+Zjx2fuUAmX37w0fJjOiGIkUyVy/ftRx94vLmbLzoMWemHmXoavZjFQ
+	DGsEXwWp0PPyWY2DOpjt/blhaLqGjyN9AX4djWfsltDYMM9YdQIeN680FI+ofNnyPYcnhMXv9uV
+	KtwpqaVTnNB1EC6njtEJfZqfKLehnMQW+uD69vHjAL5REiGzSzvo8XVGCFbPk6t/1VQKnZ5B8JQ
+	iQErndy0qr+1r38MBGV2q/1EjAyMsuRYUpu5RP5MfRQWujp92x0zsA5eR9SYqjCCwhnMLOb65tV
+	5RG6jgc+eIuLnADdZodLNgAdYY5of4GQfGSYCp6fFKnylW2WnCLk5wRjb098vmVjBQ==
+X-Google-Smtp-Source: AGHT+IGPeeUccLmCtgYtyYD+ZS1Aj6ZgB09U8/1PLF8w5rZHkBfzkakwgdj2Tll4vbsez2P7mMwNwA==
+X-Received: by 2002:a05:6000:402a:b0:3a5:51a3:2ef5 with SMTP id ffacd0b85a97d-3b2015e22c7mr2056080f8f.58.1751460471460;
+        Wed, 02 Jul 2025 05:47:51 -0700 (PDT)
+Received: from draszik.lan ([80.111.64.44])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823b913esm223450335e9.33.2025.07.02.05.47.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 05:47:51 -0700 (PDT)
+Message-ID: <c601dad05c9b8da4779af9c3ec852767e87dc9bc.camel@linaro.org>
+Subject: Re: [PATCH] pinctrl: samsung: Fix gs101 irq chip
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Peter Griffin <peter.griffin@linaro.org>, Krzysztof Kozlowski	
+ <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Alim Akhtar
+	 <alim.akhtar@samsung.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 02 Jul 2025 13:47:50 +0100
+In-Reply-To: <20250702-fix-gs101-irqchip-v1-1-ccc84b44ad72@linaro.org>
+References: <20250702-fix-gs101-irqchip-v1-1-ccc84b44ad72@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1-1+build1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250702112856.295176-1-donettom@linux.ibm.com>
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[redhat.com,linux-foundation.org,nvidia.com,linuxfoundation.org,gmail.com,kvack.org,vger.kernel.org,kernel.org,huawei.com,intel.com,jp.fujitsu.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost.localdomain:mid,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -2.80
 
-On Wed, Jul 02, 2025 at 06:28:56AM -0500, Donet Tom wrote:
-> If register_node() returns an error, it is not handled correctly.
-> The function will proceed further and try to register CPUs under the
-> node, which is not correct.
-> 
-> So, in this patch, if register_node() returns an error, we return
-> immediately from the function.
-> 
-> Signed-off-by: Donet Tom <donettom@linux.ibm.com>
+On Wed, 2025-07-02 at 13:15 +0100, Peter Griffin wrote:
+> When adding the dedicated gs101_wkup_irq_chip struct to support the eint
+> wakeup mask the .eint_con, eint_mask and .eint_pend fields were missed. T=
+he
+> result is that irqs on gs101 for the buttons etc are broken.
+>=20
+> Reported-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+> Fixes: 2642f55d44ce ("pinctrl: samsung: add support for gs101 wakeup mask=
+ programming")
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 > ---
-> 
-... 
-> diff --git a/drivers/base/node.c b/drivers/base/node.c
-> index bef84f01712f..aec991b4c0b2 100644
-> --- a/drivers/base/node.c
-> +++ b/drivers/base/node.c
-> @@ -885,6 +885,8 @@ int register_one_node(int nid)
->  	node_devices[nid] = node;
->  
->  	error = register_node(node_devices[nid], nid);
-> +	if (error)
-> +		return error;
+> Note: no Closes tag as issue was reported on private chat. Permission has
+> been obtained for using the Reported-by tag.
 
-Ok, all current callers (based on mm-unstable) panic or BUG() if this fails,
-but powerpc, in init_phb_dynamic(), which keeps on going.
-Unless it panics somewhere down the road as well.
-
-So I think we need to: 
-
- node_devices[nid] = NULL
- kfree(node)
-
- ?
-
-Also, once Hannes fix lands, we might need that as well.
-
-Anyway, I'd suggest you hold on until Hannes fix lands, so we can later
-rebase all your mem-hotplug on top of that [1].
-
-[1] https://lore.kernel.org/linux-mm/86f89a65-f0f6-4462-9eea-ac691de2f3b6@suse.de/T/#mbf392eb390b8053f96be50da3b40dfd9b62dd389
-
-
--- 
-Oscar Salvador
-SUSE Labs
+Tested-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
