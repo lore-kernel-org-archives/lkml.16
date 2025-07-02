@@ -1,218 +1,138 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mail-m49207.qiye.163.com (mail-m49207.qiye.163.com [45.254.49.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6592C219A8D
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 09:46:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5352E24DD1F;
+	Wed,  2 Jul 2025 09:46:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751449592; cv=none; b=eNV0OPL2A00wl8v3zwXbsLGNbOxC+whgNUBmbNYPSyVF7kIl8OPqb8iKkWBIIeiLTp6cZj3+Pf16Y3g4iuveatle6GXYMmsCiqKqhd2X+irGaas8kggFxZqDssNsZtKPosUwHSHmEqNIQBBPMkN+BKaVDM2upg3YoHQ0QMcH0cU=
+	t=1751449604; cv=none; b=g5ktyZGYmjID7R5uzgpuYfF3nS6c/CcGAXWsxGfoMQCPIBR8uKRx7klPtu0gKs/YFldCuzqzePBVUVzvzORnpXw1j5G+Xq23qVb6DLhnKsmD2Y/b6BUnJQA7Z0UyymUEIB7Gbve2vT8B2owG3vOxhMXD6k5naP04to0IptS6wCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751449592; c=relaxed/simple;
-	bh=fcqLwKrtBfo+Rc0zgHHKHepYzHt0trmddqrZRYjg/Xs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YqlSDe4kCwZo8M51b3TW78ielpKv/Srw8nzhEVOLo7t0ojQrZkvCT3MOpsE2Z3w7PhOoTCrXJWsxKMcRlm5yEuyyl8hSJAOwZrNjx4l4ysxizMT9EWaqW7hoa9dzqC1Vs69EyZYuIpilCOa4NN0B5gy4oFyq9G/NBpyiWRTIIJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uWu2Z-0007ke-ED; Wed, 02 Jul 2025 11:46:07 +0200
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uWu2X-006PhV-26;
-	Wed, 02 Jul 2025 11:46:05 +0200
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uWu2X-00DaqA-1k;
-	Wed, 02 Jul 2025 11:46:05 +0200
-Date: Wed, 2 Jul 2025 11:46:05 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	kernel@pengutronix.de, linux-kernel@vger.kernel.org,
-	Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org,
-	Andre Edich <andre.edich@microchip.com>
-Subject: Re: [PATCH net v1 4/4] net: phy: smsc: Disable IRQ support to
- prevent link state corruption
-Message-ID: <aGT_3SpVVzJFzT6B@pengutronix.de>
-References: <20250701122146.35579-1-o.rempel@pengutronix.de>
- <20250701122146.35579-5-o.rempel@pengutronix.de>
- <aGPba6fX1bqgVfYC@wunner.de>
+	s=arc-20240116; t=1751449604; c=relaxed/simple;
+	bh=R0CWMLD/EEHYNbcG8KgTMPj2hzXibcGsXODlklTI5q4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GEWLFRnLQJV3C0p2BbmcTABZf2xjC5Hk1LYE+FYlfcwYtTDkLXAkM6QBaDHcvo3bWU7feaiX4jIbXvxITNPikbwq42EuV8/cH+yJVTkiITVZqtx047CbTJAPQOVnVYWcdccSVytovd581AT/mtSHyrAyhSSbEx3yYtv/4ayvtYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thundersoft.com; spf=pass smtp.mailfrom=thundersoft.com; dkim=pass (1024-bit key) header.d=thundersoft.com header.i=@thundersoft.com header.b=km48lblw; arc=none smtp.client-ip=45.254.49.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thundersoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thundersoft.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=thundersoft.com header.i=@thundersoft.com header.b="km48lblw"
+Received: from localhost.localdomain (unknown [117.184.129.134])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 1aaa9ed36;
+	Wed, 2 Jul 2025 17:46:31 +0800 (GMT+08:00)
+From: Albert Yang <yangzh0906@thundersoft.com>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	krzk@kernel.org,
+	conor+dt@kernel.org,
+	gordon.ge@bst.ai,
+	catalin.marinas@arm.com,
+	geert.uytterhoeven@gmail.com,
+	will@kernel.org,
+	ulf.hansson@linaro.org,
+	adrian.hunter@intel.com,
+	arnd@arndb.de
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-mmc@vger.kernel.org,
+	soc@lists.linux.dev,
+	bst-upstream@bstai.top,
+	neil.armstrong@linaro.org,
+	jonathan.cameron@huawei.com,
+	bigfoot@classfun.cn,
+	kever.yang@rock-chips.com,
+	mani@kernel.org,
+	geert+renesas@glider.be,
+	andersson@kernel.org,
+	nm@ti.com,
+	nfraprado@collabora.com,
+	quic_tdas@quicinc.com,
+	ebiggers@google.com,
+	victor.shih@genesyslogic.com.tw,
+	shanchun1218@gmail.com,
+	ben.chuang@genesyslogic.com.tw,
+	Albert Yang <yangzh0906@thundersoft.com>
+Subject: [PATCH v2 2/8] dt-bindings: arm: add Black Sesame Technologies (bst) SoC
+Date: Wed,  2 Jul 2025 17:44:38 +0800
+Message-Id: <20250702094444.3523973-3-yangzh0906@thundersoft.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250702094444.3523973-1-yangzh0906@thundersoft.com>
+References: <20250528085403.481055-1-yangzh0906@thundersoft.com>
+ <20250702094444.3523973-1-yangzh0906@thundersoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aGPba6fX1bqgVfYC@wunner.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUhXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDGR1JVk4YGENDTEpJHh5OQ1YVFAkWGhdVEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlKSkxVSkNPVUpJQlVKSE9ZV1kWGg8SFR0UWUFZT0tIVUpLSUhCSklVT1
+	VKT1kG
+X-HM-Tid: 0a97ca87dd3009cckunmee1cabff3ebaba
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Pxg6KTo6TzE*T089KxksHQw9
+	CD4aCQ5VSlVKTE5KT09CTkJIS0NKVTMWGhIXVQIaFRwBE0tCS007DxMOFR8eCQgUHQ9VGBQWRVlX
+	WRILWUFZSkpMVUpDT1VKSUJVSkhPWVdZCAFZQUhKSEw3Bg++
+DKIM-Signature:a=rsa-sha256;
+	b=km48lblwqhJ9eMNaOOixs21bDUWw710nq+WF3nGAJkUGzohpfAFY+A5CVIoRyltnZs22ksywNjzOgET76hamxpDBF9R2HS4wUCyQgTxvo7xVqyRedMN6Tw+WsJO1RgD0TEFox7TMi1Djhh6zAs54h+QEhBwVrqNNP5Gokbgz6uA=; c=relaxed/relaxed; s=default; d=thundersoft.com; v=1;
+	bh=7HId0QjN1Uxd1UcS1PVWLgSUuLheSa0vzbbArIAI4e0=;
+	h=date:mime-version:subject:message-id:from;
 
-Hi Lukas,
+Add device tree bindings for Black Sesame Technologies Arm SoC,
+it consists several SoC models like C1200, etc.
 
-On Tue, Jul 01, 2025 at 02:58:19PM +0200, Lukas Wunner wrote:
-> On Tue, Jul 01, 2025 at 02:21:46PM +0200, Oleksij Rempel wrote:
-> > Disable interrupt handling for the LAN87xx PHY to prevent the network
-> > interface from entering a corrupted state after rapid configuration
-> > changes.
-> > 
-> > When the link configuration is changed quickly, the PHY can get stuck in
-> > a non-functional state. In this state, 'ethtool' reports that a link is
-> > present, but 'ip link' shows NO-CARRIER, and the interface is unable to
-> > transfer data.
-> [...]
-> > --- a/drivers/net/phy/smsc.c
-> > +++ b/drivers/net/phy/smsc.c
-> > @@ -746,10 +746,6 @@ static struct phy_driver smsc_phy_driver[] = {
-> >  	.soft_reset	= smsc_phy_reset,
-> >  	.config_aneg	= lan87xx_config_aneg,
-> >  
-> > -	/* IRQ related */
-> > -	.config_intr	= smsc_phy_config_intr,
-> > -	.handle_interrupt = smsc_phy_handle_interrupt,
-> > -
-> 
-> Well, that's not good.  I guess this means that the interrupt is
-> polled again, so we basically go back to the suboptimal behavior
-> prior to 1ce8b37241ed?
+---
+Changes for v2:
+- Removed unnecessary pipe (`|`) in description
+- Dropped invalid `compatible` entry for standalone SoC
+- Removed root node (`$nodename: '/'`) definition
 
-Not fully. It will disable interrupt support only for the embedded PHY,
-other types of interrupts should work as expected.
+Signed-off-by: Ge Gordon <gordon.ge@bst.ai>
+Signed-off-by: Albert Yang <yangzh0906@thundersoft.com>
+---
+ .../devicetree/bindings/arm/bst.yaml          | 30 +++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/bst.yaml
 
-> Without support for interrupt handling, we can't take advantage
-> of the GPIOs on the chip for interrupt generation.  Nor can we
-> properly support runtime PM if no cable is attached.
-
-Hm... the PHY smsc driver is not using EDPD mode by default if PHY
-interrupts are enabled. Or do you mean other kind of PM?
-
-> What's the actual root cause?  Is it the issue described in this
-> paragraph of 1ce8b37241ed's commit message?
-> 
->     Normally the PHY interrupt should be masked until the PHY driver has
->     cleared it.  However masking requires a (sleeping) USB transaction and
->     interrupts are received in (non-sleepable) softirq context.  I decided
->     not to mask the interrupt at all (by using the dummy_irq_chip's noop
->     ->irq_mask() callback):  The USB interrupt endpoint is polled in 1 msec
->     intervals and normally that's sufficient to wake the PHY driver's IRQ
->     thread and have it clear the interrupt.  If it does take longer, worst
->     thing that can happen is the IRQ thread is woken again.  No big deal.
-
-I'm not sure. It seems to be not the problem.
-
-> There must be better options than going back to polling.
-> E.g. inserting delays to avoid the PHY getting wedged.
-> 
-> TBH I did test this thoroughly back in the day and never
-> witnessed the issue.
-
-I did some testing back in time too. It worked and still works normally
-in the autoneg mode.
-
-What is not working as expected is the fixed mode, especially 10 mbit
-fixed mode.
-
-Here are my current testing results:
-
-# configure 10 mbit forced mode:
-ethtool -s eth0 autoneg off speed 10 duplex half
-# attach cable (can be done wothout reataching cable)
-[10174.585150] smsc_phy_handle_interrupt: MII_LAN83C185_ISF = 0x0098
-[10174.586760] smsc_phy_handle_interrupt: MII_LAN83C185_ISF = 0x0098
-[10174.594636] lan87xx_read_status: link: no, speed: 10, duplex: half, autoneg: off
-[10174.602777] lan87xx_read_status: link: no, speed: 10, duplex: half, autoneg: off
-[10174.841458] smsc_phy_handle_interrupt: MII_LAN83C185_ISF = 0x0098
-[10174.843017] smsc_phy_handle_interrupt: MII_LAN83C185_ISF = 0x0098
-[10174.850619] lan87xx_read_status: link: no, speed: 10, duplex: half, autoneg: off
-[10174.857026] lan87xx_read_status: link: no, speed: 10, duplex: half, autoneg: off
-[10175.425513] smsc_phy_handle_interrupt: MII_LAN83C185_ISF = 0x0098
-[10175.427046] smsc_phy_handle_interrupt: MII_LAN83C185_ISF = 0x0098
-[10175.434871] lan87xx_read_status: link: no, speed: 10, duplex: half, autoneg: off
-[10175.441332] lan87xx_read_status: link: no, speed: 10, duplex: half, autoneg: off
-
-At this point no more interrupts will come and link up state will not be
-detected. Replugging cable will have same result.
-
-The worst part - unplugging the cable may trigger an endless interrupt storm
-(which is some times reproducible in the 10Mbit forced mode):
-[ 1584.132799] smsc_phy_handle_interrupt: MII_LAN83C185_ISF = 0x0098
-[ 1584.134220] smsc_phy_handle_interrupt: MII_LAN83C185_ISF = 0x0098
-[ 1584.389134] smsc_phy_handle_interrupt: MII_LAN83C185_ISF = 0x0098
-[ 1584.390591] smsc_phy_handle_interrupt: MII_LAN83C185_ISF = 0x0098
-[ 1584.644757] smsc_phy_handle_interrupt: MII_LAN83C185_ISF = 0x0098
-[ 1584.646177] smsc_phy_handle_interrupt: MII_LAN83C185_ISF = 0x0098
-[ 1584.900781] smsc_phy_handle_interrupt: MII_LAN83C185_ISF = 0x0098
-[ 1584.902305] smsc_phy_handle_interrupt: MII_LAN83C185_ISF = 0x0098
-[ 1585.158416] smsc_phy_handle_interrupt: MII_LAN83C185_ISF = 0x0098
-
-With latest kernel we can use adaptive polling, wich I added now for
-testing. Here are the results:
-
-[ 2200.702427] lan87xx_read_status: link: no, speed: 10, duplex: half, autoneg: off
-[ 2200.948552] smsc95xx 1-1.1:1.0 enu1u1: intdata: 0x00008000
-[ 2200.949640] smsc95xx 1-1.1:1.0 enu1u1: intdata: 0x00008000
-[ 2200.950182] smsc95xx 1-1.1:1.0 enu1u1: intdata: 0x00008000
-[ 2200.951374] smsc_phy_handle_interrupt: MII_LAN83C185_ISF = 0x0098
-[ 2200.953186] smsc_phy_handle_interrupt: MII_LAN83C185_ISF = 0x0098
-[ 2200.959234] lan87xx_read_status: link: no, speed: 10, duplex: half, autoneg: off
-[ 2201.204270] smsc95xx 1-1.1:1.0 enu1u1: intdata: 0x00008000
-[ 2201.205284] smsc95xx 1-1.1:1.0 enu1u1: intdata: 0x00008000
-[ 2201.207139] smsc_phy_handle_interrupt: MII_LAN83C185_ISF = 0x0098
-[ 2201.208825] smsc_phy_handle_interrupt: MII_LAN83C185_ISF = 0x0098
-[ 2201.216406] lan87xx_read_status: link: no, speed: 10, duplex: half, autoneg: off
-[ 2201.460548] smsc95xx 1-1.1:1.0 enu1u1: intdata: 0x00008000
-[ 2201.461618] smsc95xx 1-1.1:1.0 enu1u1: intdata: 0x00008000
-[ 2201.462181] smsc95xx 1-1.1:1.0 enu1u1: intdata: 0x00008000
-[ 2201.463273] smsc_phy_handle_interrupt: MII_LAN83C185_ISF = 0x0098
-[ 2201.464764] smsc_phy_handle_interrupt: MII_LAN83C185_ISF = 0x0098
-[ 2201.471066] lan87xx_read_status: link: no, speed: 10, duplex: half, autoneg: off
-[ 2201.716547] smsc95xx 1-1.1:1.0 enu1u1: intdata: 0x00008000
-[ 2201.717607] smsc95xx 1-1.1:1.0 enu1u1: intdata: 0x00008000
-[ 2201.718235] smsc95xx 1-1.1:1.0 enu1u1: intdata: 0x00008000
-[ 2201.719267] smsc_phy_handle_interrupt: MII_LAN83C185_ISF = 0x0098
-[ 2201.721035] smsc_phy_handle_interrupt: MII_LAN83C185_ISF = 0x0098
-[ 2201.727488] lan87xx_read_status: link: no, speed: 10, duplex: half, autoneg: off
-[ 2201.972542] smsc95xx 1-1.1:1.0 enu1u1: intdata: 0x00008000
-[ 2201.973614] smsc95xx 1-1.1:1.0 enu1u1: intdata: 0x00008000
-[ 2201.974176] smsc95xx 1-1.1:1.0 enu1u1: intdata: 0x00008000
-[ 2201.975321] smsc_phy_handle_interrupt: MII_LAN83C185_ISF = 0x0098
-[ 2201.977078] smsc_phy_handle_interrupt: MII_LAN83C185_ISF = 0x0098
-[ 2201.983500] lan87xx_read_status: link: no, speed: 10, duplex: half, autoneg: off
-[ 2202.228538] smsc95xx 1-1.1:1.0 enu1u1: intdata: 0x00008000
-[ 2202.229615] smsc95xx 1-1.1:1.0 enu1u1: intdata: 0x00008000
-[ 2202.230174] smsc95xx 1-1.1:1.0 enu1u1: intdata: 0x00008000
-[ 2202.231292] smsc_phy_handle_interrupt: MII_LAN83C185_ISF = 0x0098
-[ 2202.233038] smsc_phy_handle_interrupt: MII_LAN83C185_ISF = 0x0098
-[ 2202.238972] lan87xx_read_status: link: no, speed: 10, duplex: half, autoneg: off
-[ 2202.239018] smsc_phy_get_next_update: next update in 250 jiffies
-[ 2203.258566] lan87xx_read_status: link: yes, speed: 10, duplex: half, autoneg: off
-[ 2203.258756] smsc95xx 1-1.1:1.0 enu1u1: Link is Up - 10Mbps/Half - flow control off
-
-With adaptive polling we can use both. Since IRQ down interrupt works as
-expected, we can use low frequency polling (one per 30 seconds) in link up
-state. On link down state, after last interrupt poll one time per second
-for 30 seconds, then switch to low frequency polling (one per 30
-seconds).
-
-I need to figure out haw to handle an interrupt storm.
-
+diff --git a/Documentation/devicetree/bindings/arm/bst.yaml b/Documentation/devicetree/bindings/arm/bst.yaml
+new file mode 100644
+index 000000000000..e6f48f569768
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/bst.yaml
+@@ -0,0 +1,30 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/arm/bst.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: BST platforms
++
++description:
++  Black Sesame Technologies (BST) is a semiconductor company that produces
++  automotive-grade system-on-chips (SoCs) for intelligent driving, focusing
++  on computer vision and AI capabilities. The BST C1200 family includes SoCs
++  for ADAS (Advanced Driver Assistance Systems) and autonomous driving applications.
++
++maintainers:
++  - Ge Gordon <gordon.ge@bst.ai>
++
++properties:
++  $nodename:
++    const: '/'
++  compatible:
++    oneOf:
++      - description: BST C1200 CDCU1.0 ADAS 4C2G board
++        items:
++          - const: bst,c1200-cdcu1.0-adas-4c2g
++          - const: bst,c1200
++
++additionalProperties: true
++
++...
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.25.1
+
