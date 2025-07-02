@@ -1,227 +1,103 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2064.outbound.protection.outlook.com [40.107.94.64])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 352F419E81F
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 09:33:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751448791; cv=fail; b=lH8IjsN6eAzzqQuK2YLxU0uw5f0foa7IWCa428pQ+b7/Kx8qhn5fytMxBzrnc5j2oPIfAeEvhpzdly0q777AzAMfXYYG/PsyMlN8/5BUX99IbJ2+fKt2N38msoFZnJ5+a4C66+oiRQneAG8V8pW6uZIN8dxSCkWCb/PzaWxXnds=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751448791; c=relaxed/simple;
-	bh=VAdQGkQ8Fb4m6A5sOw9uSBimE73cvWxijQ2O6CFMaRQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=FR250ILyzIBo1DfEyoAuoaQ6Z0WM5F3Xy/JcPZOgx3MStR/EZOjCic9um9YM2HUZlIK/xagaCtrEjdXdeDvw1Bn8HTHkY/INlDVTyryZ6/RoG36VCr3W5+WkR9KhOfOsgxhx6GRCiuQqqKWxoFFbpwYgyj8fBcB7qLXq1uCShHg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=tqI6CrMT; arc=fail smtp.client-ip=40.107.94.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="tqI6CrMT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PG9PmdWgVLiAejn3MCKA+aLg6w6XajqVBdkK1yenm9QBljkgsipZ3ySIoMap1rwH9nkRKN6T+KaDn3GxAddl0NLVHbghDkhMJJg6hxsM+mYbUgom+ANHALhdMfmh1JS63IAv+VRI9yA8fnaqeNf2CcdVSXsd+MW9rcWPQ1jL1xyXHpL66zUUDd2hYier4lOnap2NuG2iMWcEsww9aycLj9W9BHVZRu+hP5GLd+WGCFqk3I/EnC5kNS3j/RwK6HYxJ42BfgBflZbaKd21SC8Xr6D/Xt0zvfEvAPiKgSRz8GYWTPNqUO2+boBmOV7DuWkJ6HnXWu6yD9DGw3DPhqma1A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VAdQGkQ8Fb4m6A5sOw9uSBimE73cvWxijQ2O6CFMaRQ=;
- b=CFOs7eMvSgRrFAMgTLSQHGH+fQLhC5v20SIrbbEhdCO6JZdnhrrmEaLJzGlUw2aAoFIHj+I5phEZBFvNV8cM7H/jMXb/S0RCSFGG7hKxlfuFXkt5N8iBGwcIZRCJ9p/KZO2y8PfVSXnKGCC9GAWWL5jo3U0Dc4/sLdOW2r9zMDq+WZJlKKF8cis+/4OMoaMDirbUfnl2qOBMDm7CLR9ALU0fWQY2n9FzEBFOhDORkfDflSU1vGgzgoJ3wFgbXzxBDqivlgDE23vxI19MNR2AjmMuhuaLvH2goeT9jSFLgizvkExBV9qofN1SmqJCLBz+ff8aNpnKJqRi2d5wbeyJ5Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VAdQGkQ8Fb4m6A5sOw9uSBimE73cvWxijQ2O6CFMaRQ=;
- b=tqI6CrMTzNgLFdzRUdTyMPmxwQIStxTTKfB3ABrXaJtpxklFxgXUIvrPL8fFA3yfL26LeCLRqocNAsE2sgk0551xHKg0QwYI3AqseZdMH7SQhS9gv4A0jBkAdCRReXcGQeJtrWYMuaQI2EZl+GAp61ir5xBL+NP9E6BkE+5SbrePcvzXpIBWe4myoa9SBmoTGmIpAozhLoELMZLFpua7tlzayfbdSCFcaH8p/t+t1QDGqP33c6oTLa8sYBl1vazyquv24nTdyrfIWbAlAM3xDdstY7+pCyBCv8fxtGA8ogK9Eyu5PdK/otumNZpDPtthDts6utgriJ7YVngneb5aDA==
-Received: from SA1PR12MB7199.namprd12.prod.outlook.com (2603:10b6:806:2bc::21)
- by SJ5PPFFA661D690.namprd12.prod.outlook.com (2603:10b6:a0f:fc02::9ab) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.21; Wed, 2 Jul
- 2025 09:33:07 +0000
-Received: from SA1PR12MB7199.namprd12.prod.outlook.com
- ([fe80::ae1b:d89a:dfb6:37c2]) by SA1PR12MB7199.namprd12.prod.outlook.com
- ([fe80::ae1b:d89a:dfb6:37c2%3]) with mapi id 15.20.8901.018; Wed, 2 Jul 2025
- 09:33:07 +0000
-From: Ankit Agrawal <ankita@nvidia.com>
-To: Jason Gunthorpe <jgg@nvidia.com>, "maz@kernel.org" <maz@kernel.org>,
-	"oliver.upton@linux.dev" <oliver.upton@linux.dev>, "joey.gouly@arm.com"
-	<joey.gouly@arm.com>, "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
-	"yuzenghui@huawei.com" <yuzenghui@huawei.com>, "catalin.marinas@arm.com"
-	<catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>,
-	"ryan.roberts@arm.com" <ryan.roberts@arm.com>, "shahuang@redhat.com"
-	<shahuang@redhat.com>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"david@redhat.com" <david@redhat.com>, "ddutile@redhat.com"
-	<ddutile@redhat.com>, "seanjc@google.com" <seanjc@google.com>
-CC: Aniket Agashe <aniketa@nvidia.com>, Neo Jia <cjia@nvidia.com>, Kirti
- Wankhede <kwankhede@nvidia.com>, Krishnakant Jaju <kjaju@nvidia.com>, "Tarun
- Gupta (SW-GPU)" <targupta@nvidia.com>, Vikram Sethi <vsethi@nvidia.com>, Andy
- Currid <acurrid@nvidia.com>, Alistair Popple <apopple@nvidia.com>, John
- Hubbard <jhubbard@nvidia.com>, Dan Williams <danw@nvidia.com>, Zhi Wang
-	<zhiw@nvidia.com>, Matt Ochs <mochs@nvidia.com>, Uday Dhoke
-	<udhoke@nvidia.com>, Dheeraj Nigam <dnigam@nvidia.com>,
-	"alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-	"sebastianene@google.com" <sebastianene@google.com>, "coltonlewis@google.com"
-	<coltonlewis@google.com>, "kevin.tian@intel.com" <kevin.tian@intel.com>,
-	"yi.l.liu@intel.com" <yi.l.liu@intel.com>, "ardb@kernel.org"
-	<ardb@kernel.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"gshan@redhat.com" <gshan@redhat.com>, "linux-mm@kvack.org"
-	<linux-mm@kvack.org>, "tabba@google.com" <tabba@google.com>,
-	"qperret@google.com" <qperret@google.com>, "kvmarm@lists.linux.dev"
-	<kvmarm@lists.linux.dev>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "maobibo@loongson.cn"
-	<maobibo@loongson.cn>
-Subject: Re: [PATCH v9 0/6] KVM: arm64: Map GPU device memory as cacheable
-Thread-Topic: [PATCH v9 0/6] KVM: arm64: Map GPU device memory as cacheable
-Thread-Index: AQHb4mPxHvLAi7AU2UCiiYmQowcOkbQeo1Ok
-Date: Wed, 2 Jul 2025 09:33:06 +0000
-Message-ID:
- <SA1PR12MB7199F8346F2CA802E9F3965DB040A@SA1PR12MB7199.namprd12.prod.outlook.com>
-References: <20250621042111.3992-1-ankita@nvidia.com>
-In-Reply-To: <20250621042111.3992-1-ankita@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR12MB7199:EE_|SJ5PPFFA661D690:EE_
-x-ms-office365-filtering-correlation-id: c0d51525-ed16-4999-e36f-08ddb94b7398
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|376014|7416014|366016|38070700018|921020;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?Tb1tyz2rKdAal7dbRBiT878tQ1eV0AWkGaC1/wtp+dd4vtvC4EEGwxAq3M?=
- =?iso-8859-1?Q?eGm4u3Tfm48u6T8bdmlOvc1DV2IxA1YMV8+NySJrckAgKxn9iT6LoeYEX1?=
- =?iso-8859-1?Q?xhNn5pBZP8SVUDINjV0HmHHneQPOz5anVsGSYfTXRybtOiKcyud8mAB8CD?=
- =?iso-8859-1?Q?yc3j55nxnRkMUaWnEd6lR7HwG/j1MO/6JzCHxF79AopLY0b9hHTLQIaS5x?=
- =?iso-8859-1?Q?+gvjX/L2XD2cEt1uYTY4+Ac76wCz7XJPrl5WDywQN9yp+qDJXbGpS44ZBp?=
- =?iso-8859-1?Q?B0RbTSaFLTPbZsMcNmnHuVVeKyiuwTDhtAFHk0hKINtHDxGAYR2JpQTXZ0?=
- =?iso-8859-1?Q?fEMgkf0gVtnV1QDBQp9rboaJ3fhUHzwC+RLQSN/egO0k0EZgY2Y7ltKGDU?=
- =?iso-8859-1?Q?p7U4qN1mR3OHBvgPBDBqVBoPDgRzg3zjoxSYTIw5HIqIzOa1u9cAjgdvdK?=
- =?iso-8859-1?Q?wqtXGO9tL4+wAweNlW269w/NTEJ/RGRUUSCJi03GkvYCTWHg9WmZBCDbUH?=
- =?iso-8859-1?Q?R/cPvl4GgVlmhDmAQiNpve5hIVbqZ/B/Qi42L0NvI64GAcFc2j23qIc721?=
- =?iso-8859-1?Q?H/nilBcdEYjc1IyjQAxv2qaih5xolExhWEGT+rNXQ1HHi41cmfnoRhGPH4?=
- =?iso-8859-1?Q?II1wU+OvNFQ72KIwYj0OG7BQOcwmXjsb6TC/Bv1yj4RFzNTDM2CYOK1B2F?=
- =?iso-8859-1?Q?Zy9c60cREJ9r6FjtssqmBsSSaPxHWyby8y8HdI/yyc4vX8B+wRlHiFQzcs?=
- =?iso-8859-1?Q?1H2MzR1jB4u/Nsn4BtI4mz+0G4rUfsP3VowU/aX4cfYIi1mSrqolIGF7yx?=
- =?iso-8859-1?Q?BQzbz3Q4d9+1RGuV8sUtTb/EBk97NqK/+5vj1DCJJ0hgrY4B/fD/6qrSbj?=
- =?iso-8859-1?Q?ZAorFNqdwtOojjMaUb8pK5xkNUTfX6XebiLWlSZl+5KrU7qxLCWLPulFhU?=
- =?iso-8859-1?Q?taRe+iTNw+R5dZ99j88k50uvvOqL2JghcyFtynmNPB53QJRrsOynByP4nu?=
- =?iso-8859-1?Q?D6M1IwgBUAI7t4AcJ4ciqt/nThnI6/bsN1AQFSVJANZHaEVe45Dx1sjOcM?=
- =?iso-8859-1?Q?U4c7jjpDeMY+mPpwmAR/CrCXKBcHqKq4X+vW3NBlZ9PoYbB8SNkYwFlant?=
- =?iso-8859-1?Q?wjOfA7yJlh4uXGmt4/5Ieh9Y0Z0mjyxrQeRETUc6rmDr4byy9ZUV64r9bj?=
- =?iso-8859-1?Q?4yE6873SQqu/zpE8loDxNQgSZppCsQqAvW0BkVeCel4B1hACJruVbGlD3b?=
- =?iso-8859-1?Q?eD6l7wYqjkjVgowc/NEWp+Ntf205V1hIecl2QF8kTiL9shMs1qzKXqmKo6?=
- =?iso-8859-1?Q?4rsxFEtuhIyhp4jIg/5KRNGYn3uktHjIscpDOwTADn+BBPjI2yat+Cd2ze?=
- =?iso-8859-1?Q?8Vg2hE80sWDKc3gxxGXsugpUY0N4ypuZZmkso0fSKCcndfF3OlWAMyRk0X?=
- =?iso-8859-1?Q?rS89fbqwcj4sug74PrW6TcckPs8vWKW8ZetUnKTZbzgRL6kJmw/dc1q9qC?=
- =?iso-8859-1?Q?vKtzmIpToGAuzh4q7gKxHEKcgnvOMTV9Jp4fBntxnFAyh974Ijsk5k1QGe?=
- =?iso-8859-1?Q?y3JbqQQ=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR12MB7199.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(38070700018)(921020);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?+2+Sh0PSy7/g5M2FMKfXC2kWZKVCpumIv7QL2x8FubcuD1K6QM3vlzz47z?=
- =?iso-8859-1?Q?ss6LwPFI8VcMjYHlYEbtCvZ7VzPFAPtOilPObt2MpxDNaeQj5mF1N13bRr?=
- =?iso-8859-1?Q?+RIjlbSlXBMDIt99hLilZf4ImOco6IGwip2iuvZjEApRvRJ7oHJymBKWzz?=
- =?iso-8859-1?Q?1FDercG+ZmjobKZlhAI3J64VJgaQTY5OfPL7jNAW8H//xOfzZj/oRQLPeH?=
- =?iso-8859-1?Q?XkbkGoUbdcTd41VupvOi1CNzbB4iIPiUqvMIGBP4NW0xw5yKDWUHJ3Gw9l?=
- =?iso-8859-1?Q?E3RGe7wg+H3tb6LHmEIngakTc/GDaOE7FYwGEiWnviO0+bYYl90k4oizFl?=
- =?iso-8859-1?Q?J6LVXWl7Ykto9Iaw1q97uju/eDO5D6NL54mO9IkqcXSTsdsIvTmTSxkTCn?=
- =?iso-8859-1?Q?76oTCAQq8w2+f1PyfsBKjjo1m7kfyMdpiKETmZaKVijsN5wp2V8yJkPmhf?=
- =?iso-8859-1?Q?K3JMKoDeeen1yIkZvQdwAnYSmzwZ36xm27z/CRCJrm1onT7uMfyubAKNJO?=
- =?iso-8859-1?Q?/N/2LpxTpYakkuyEHwlwqW5oBBrfM+R5xwpLhoKpJndCVidEd1Z1b/lTyI?=
- =?iso-8859-1?Q?mGysRGVU9QE8xD6CFA6iMk77TJlWFulat9c1paRlDm/cePR1fnxpknczOp?=
- =?iso-8859-1?Q?JKVcXiiS5xzqgg29wtkynC8q+7zpq6nVhWiwSQF3FMXeVqd10f9OWf7GPH?=
- =?iso-8859-1?Q?MOjMzTgUKNT4qjGdMARbIHizLKTuHcBNPW38To/13yLd55F4w5aIfAtwJK?=
- =?iso-8859-1?Q?p2vQbMxcJH+9WuW/KJWQDmZHDtyEL6LXUw8kkE3txNaarYPFZYWXj9VRo/?=
- =?iso-8859-1?Q?qwtyxw4j3cmeNkJdtazgSF1W/mdmAZpzlb0JHDq4GdL81Y9T+x7PDSbHFq?=
- =?iso-8859-1?Q?Nq+0mEkAuEFaawuzcVrpoIDEcB2hfAdYt7Yvo52lRjAJhxxBmlGAzoSgmU?=
- =?iso-8859-1?Q?yayGl0/AXHwugkJg6gxh5cioJzGissN9K6PILnTfSW4iCUVcpq+pv69TX2?=
- =?iso-8859-1?Q?L3kVKcc75iTfNAe2ttxmKCylTC97xqOq/vE3NG+YxmSa7skCQKvQgl07hg?=
- =?iso-8859-1?Q?wt3qyYqPziY5Fm6c90gy0da3prntSoUWmh6vF2k3e2ImguOnWsxWRV/m4j?=
- =?iso-8859-1?Q?EKSBz6dyTTinEqjvKRpFf2kM0PrauOI9DgqbxWREMFKyGIxKRXCZtg6Jyi?=
- =?iso-8859-1?Q?T4BcPl96eCk0c8hDtp+/Q+AC/ZsZdyTGJZEmDHgZLgSzf9eYnmnL76XWZO?=
- =?iso-8859-1?Q?yuzh8dQ4/TDU11CYvE2zgtR903VChi16phMbenBkBgwMM8Whdjh9gO/k/5?=
- =?iso-8859-1?Q?sbkd8ZZDIK3HvOqo7JJ3Fpl4t3fTcqGtakINyFCVfbgcuAZdzK52Go7eL4?=
- =?iso-8859-1?Q?qaB/6MK6farHg/tv0eWVagUV9uU7oeZKF1s++CwpMbx3XQIgdK2j5E2+rf?=
- =?iso-8859-1?Q?u2+fBic9AvjMcUb+7woe1NxiwaXVqmR/OvH7MmrApRiaexD+b5jve7Vsv0?=
- =?iso-8859-1?Q?eJyK8aOQfC5HzeQSEOXBNEIJaGxotzm+0D9XhXEtRf+17ShAFj2mcH+HTj?=
- =?iso-8859-1?Q?DQr+FMpTIPr/vcvV9aUba4Mtsc2Nf2toFSoZ/3yT+/5oqqSM1nTk+Gxe93?=
- =?iso-8859-1?Q?a69oIF8g3E/Xc=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE02E19E81F;
+	Wed,  2 Jul 2025 09:33:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751448813; cv=none; b=KpakJe1F3tN7yt32t9JctmJNSrbuON6iBKzEObfmShRBCrwPa9R6u6jaE+J/qJ8CkLxWFbzQKqv5Tp/mgHpvqiQWMQhfRCdcTJP/RMyW+nsQTpvfUafnWM+vGWZKgF0z5CkQnfM9lN8E2XKE5bBd2g0xn5w0sJ89CuM0pcTSYw4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751448813; c=relaxed/simple;
+	bh=pRXeGSm5U8t6McKHv4FJUjNRqcN1PJC9D1NoG+rE8nk=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=VpEtV5lNHWwQHhyb3JfOausA6cqIFbrRD8PkjW5EjRzj8ScG9cTsqDCb7N5CDBRXdibNhAl2/5mZmtq5cKFOZQk2Lt7wj/x4yolKMVzslMx5LqMEtzM2o1/YSQfvg6UBFRb0xTP8LgCJmZ0HF04GEpFJmICNCzFXFqSN3dpRoEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bXF7m5jzmzYQtqL;
+	Wed,  2 Jul 2025 17:33:24 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id A57D01A0E2C;
+	Wed,  2 Jul 2025 17:33:23 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP3 (Coremail) with SMTP id _Ch0CgBXuSbh_GRoMzehAQ--.48711S3;
+	Wed, 02 Jul 2025 17:33:23 +0800 (CST)
+Subject: Re: [PATCH v2 2/5] md/raid0: set chunk_sectors limit
+To: John Garry <john.g.garry@oracle.com>, agk@redhat.com, snitzer@kernel.org,
+ mpatocka@redhat.com, song@kernel.org, hch@lst.de, nilay@linux.ibm.com,
+ axboe@kernel.dk
+Cc: dm-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-raid@vger.kernel.org, linux-block@vger.kernel.org,
+ ojaswin@linux.ibm.com, martin.petersen@oracle.com,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20250618083737.4084373-1-john.g.garry@oracle.com>
+ <20250618083737.4084373-3-john.g.garry@oracle.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <d6191575-8fd8-9f46-081a-6dddd44818c1@huaweicloud.com>
+Date: Wed, 2 Jul 2025 17:33:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR12MB7199.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c0d51525-ed16-4999-e36f-08ddb94b7398
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jul 2025 09:33:06.9045
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: bS53zGTec7sVWMaIbRPKB4c9zpSRb/NwukWvEaOeDONX3GQJv14RghnawDwLqv/fq5zU+SoXv34xg2oeHlYRkA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPFFA661D690
+In-Reply-To: <20250618083737.4084373-3-john.g.garry@oracle.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_Ch0CgBXuSbh_GRoMzehAQ--.48711S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7AF4UWFy7AF1DZF1xWFWDCFg_yoW8Gr1fpw
+	43XFy2vryUJayxu3WDX39rCF4Fq34kGrW29Fy3Zry0gr9rWr1IgrW3JF98XF9Fy3W3Jw17
+	X3W0kF9rG3WjgrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Ib4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
+	e2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4I
+	kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
+	WwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr
+	0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWU
+	JVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJb
+	IYCTnIWIevJa73UjIFyTuYvjxUF1v3UUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-> Grace based platforms such as Grace Hopper/Blackwell Superchips have=0A=
-> CPU accessible cache coherent GPU memory. The GPU device memory is=0A=
-> essentially a DDR memory and retains properties such as cacheability,=0A=
-> unaligned accesses, atomics and handling of executable faults. This=0A=
-> requires the device memory to be mapped as NORMAL in stage-2.=0A=
->=0A=
-> Today KVM forces the memory to either NORMAL or DEVICE_nGnRE depending=0A=
-> on whether the memory region is added to the kernel. The KVM code is=0A=
-> thus restrictive and prevents device memory that is not added to the=0A=
-> kernel to be marked as cacheable. The patch aims to solve this.=0A=
->=0A=
-> A cachebility check is made by consulting the VMA pgprot value. If=0A=
-> the pgprot mapping type is cacheable, it is considered safe to be=0A=
-> mapped cacheable as the KVM S2 will have the same Normal memory type=0A=
-> as the VMA has in the S1 and KVM has no additional responsibility=0A=
-> for safety.=0A=
->=0A=
-> Note when FWB (Force Write Back) is not enabled, the kernel expects to=0A=
-> trivially do cache management by flushing the memory by linearly=0A=
-> converting a kvm_pte to phys_addr to a KVA. The cache management thus=0A=
-> relies on memory being mapped. Since the GPU device memory is not kernel=
-=0A=
-> mapped, exit when the FWB is not supported. Similarly, ARM64_HAS_CACHE_DI=
-C=0A=
-> allows KVM to avoid flushing the icache and turns icache_inval_pou() into=
-=0A=
-> a NOP. So the cacheable PFNMAP is made contingent on these two hardware=
-=0A=
-> features.=0A=
->=0A=
-> The ability to safely do the cacheable mapping of PFNMAP is exposed=0A=
-> through a KVM capability for userspace consumption.=0A=
->=0A=
-> The changes are heavily influenced by the discussions among=0A=
-> maintainers Marc Zyngier and Oliver Upton besides Jason Gunthorpe,=0A=
-> Catalin Marinas, David Hildenbrand, Sean Christopherson [1]. Many=0A=
-> thanks for their valuable suggestions.=0A=
->=0A=
-> Applied over next-20250610 and tested on the Grace Blackwell=0A=
-> platform by booting up VM, loading NVIDIA module [2] and running=0A=
-> nvidia-smi in the VM.=0A=
->=0A=
-> To run CUDA workloads, there is a dependency on the IOMMUFD and the=0A=
-> Nested Page Table patches being worked on separately by Nicolin Chen.=0A=
-> (nicolinc@nvidia.com). NVIDIA has provided git repositories which=0A=
-> includes all the requisite kernel [3] and Qemu [4] patches in case=0A=
-> one wants to try.=0A=
->=0A=
-> v8 -> v9=0A=
-> 1. Included MIXEDMAP to also be considered for cacheable mapping.=0A=
-> (Jason Gunthorpe).=0A=
-> 2. Minor text nits (Jason Gunthorpe).=0A=
-=0A=
-Humble reminder for review.=
+ÔÚ 2025/06/18 16:37, John Garry Ð´µÀ:
+> Currently we use min io size as the chunk size when deciding on the
+> atomic write size limits - see blk_stack_atomic_writes_head().
+> 
+> The limit min_io size is not a reliable value to store the chunk size, as
+> this may be mutated by the block stacking code. Such an example would be
+> for the min io size less than the physical block size, and the min io size
+> is raised to the physical block size - see blk_stack_limits().
+> 
+> The block stacking limits will rely on chunk_sectors in future,
+> so set this value (to the chunk size).
+> 
+> Signed-off-by: John Garry <john.g.garry@oracle.com>
+> ---
+>   drivers/md/raid0.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+
+Sorry about the delay.
+
+Reviewed-by: Yu Kuai <yukuai3@huawei.com>
+> diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
+> index d8f639f4ae12..cbe2a9054cb9 100644
+> --- a/drivers/md/raid0.c
+> +++ b/drivers/md/raid0.c
+> @@ -384,6 +384,7 @@ static int raid0_set_limits(struct mddev *mddev)
+>   	lim.max_write_zeroes_sectors = mddev->chunk_sectors;
+>   	lim.io_min = mddev->chunk_sectors << 9;
+>   	lim.io_opt = lim.io_min * mddev->raid_disks;
+> +	lim.chunk_sectors = mddev->chunk_sectors;
+>   	lim.features |= BLK_FEAT_ATOMIC_WRITES;
+>   	err = mddev_stack_rdev_limits(mddev, &lim, MDDEV_STACK_INTEGRITY);
+>   	if (err)
+> 
+
