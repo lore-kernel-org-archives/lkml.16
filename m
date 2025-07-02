@@ -1,138 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994D52571D4;
-	Wed,  2 Jul 2025 12:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA00D253350;
+	Wed,  2 Jul 2025 12:20:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751458803; cv=none; b=AZXcDfJN0Lt2UKp61CqFLCR+F30gVXAKxZllAGcAaGOA3bJ1VvLo0kM5azXBM2NDIlrTmPwbbfVWksdemgRqKpdiGjGtBEboLNxA6lnfbgmcbAOpV3CjhZXNPE+dC9vIVmTaytMpjhgU32x/lvOTrQjZUd+vj99sDJ1mXfCN2Xc=
+	t=1751458843; cv=none; b=H3POKgOkRiLAzIeORIcnUk8lsn9Fql5V/CDLFEInrCkuEFg+LsyZ0XA+Fy3W6VaOztBxRD7paEA/pvJ/fVobX8ZJWFTB+mLsveur9o41fupIPoeoQxHrqQpUt/azNjKcAoXtRu6IRefG8UbMYB9Y5T0UvNwmAsUeNuXk74ciqKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751458803; c=relaxed/simple;
-	bh=WmHx38wO/IOxW7T06G2NR8K7vP2aHdYi16pgQxbPhH4=;
+	s=arc-20240116; t=1751458843; c=relaxed/simple;
+	bh=64aTKjc/IcbpGG9gKWt+2nVue/MdoRiwlfPf0ILjKpo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iqJNvzOYrcTYAZIif0ChTL1gIH7RpMgll2OAzUYWT/JwdResaC6sU7FE99VcrtdF7o8W937fjO/AH7+bd/Uz/cETLu3ewYKbBm0aalekAKofsA5IaZoL8QdczmNHgoehSXw6BS5us3W5MivaCEbvbpCBydiF6i2BCwtfZDK3NwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RlHHtFxz; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=dMjCVdjsGVRQf5Fwuy8Uz6NcHgJ7dosTiVUOoKjWcFuBEviWECpZJkgjRSdXlS+DwlBwYTUFklx/PW9Ldnn70T09Fm1ce0NMMYDD1sFs3KqnUgmBrshdiqYKUg/P+S/6c8ifrwzJKtfvLPMtk0l/MAJ1XRAunZO2HIiEUh9jHJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aEz897f1; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RlHHtFxz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89AE9C4CEED;
-	Wed,  2 Jul 2025 12:19:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751458803;
-	bh=WmHx38wO/IOxW7T06G2NR8K7vP2aHdYi16pgQxbPhH4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RlHHtFxz92wS4b659x7PaMPM6f7+FUj0A657QPJWj0dwqns/AyxynIVFBiYVMLpMg
-	 5mVkFCUKRFuRhQNfXpcvXLFnVySsciXaflVICjg9HFFFArj9Kw88lIVbpybKSbqjdr
-	 v/OrToPtvN2zUkWED1LyMIIXkBI2WGMrUqGH+flmbsHso4YK8yu3njuk9pFiJsLrPS
-	 VT2nqOocUOF9/OSQi0OZrXsf90jz2bx2uVPo1/NpGkxPvy5YcDaMK4twZh7uSF9oue
-	 xR5TX8DJupxs6QHHRkZhtlWkBfDanF742YTX36hbsJpLJ/y1D23+fccVmKbBnMrEcP
-	 KPaX5TX1ux5rQ==
-Date: Wed, 2 Jul 2025 14:19:56 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Song Liu <song@kernel.org>
-Cc: Song Liu <songliubraving@meta.com>, 
-	Alexei Starovoitov <alexei.starovoitov@gmail.com>, Kernel Team <kernel-team@meta.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Eduard <eddyz87@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, KP Singh <kpsingh@kernel.org>, 
-	Matt Bobrowski <mattbobrowski@google.com>, Amir Goldstein <amir73il@gmail.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tejun Heo <tj@kernel.org>, 
-	Daan De Meyer <daan.j.demeyer@gmail.com>, bpf <bpf@vger.kernel.org>, 
-	Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	LSM List <linux-security-module@vger.kernel.org>
-Subject: Re: [PATCH v3 bpf-next 0/4] Introduce bpf_cgroup_read_xattr
-Message-ID: <20250702-nudelsalat-bestrafen-2762d79d3986@brauner>
-References: <20250623063854.1896364-1-song@kernel.org>
- <20250623-rebel-verlust-8fcd4cdd9122@brauner>
- <CAADnVQ+iqMi2HEj_iH7hsx+XJAsqaMWqSDe4tzcGAnehFWA9Sw@mail.gmail.com>
- <CAPhsuW7JAgXUObzkMAs_B=O09uHfhkgSuFV5nvUJbsv=Fh8JyA@mail.gmail.com>
- <CAADnVQKNR1QES31HPNriYBAzmoxdG=sWyqwvDTtthROgezah3w@mail.gmail.com>
- <6230B3E5-E6B7-4D79-B3A4-9A250B19B242@meta.com>
- <20250701-zipfel-sachlage-c494f4e0df91@brauner>
- <CAPhsuW5Afn7h5W4+ZY-Ly=y55ByXd3TCXej3PXUYkBcj89X7mw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aEz897f1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751458842; x=1782994842;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=64aTKjc/IcbpGG9gKWt+2nVue/MdoRiwlfPf0ILjKpo=;
+  b=aEz897f1q7bf7XAR9LSt27bLtTKuL51R7K+tQRCij+p0CyJoei91o6Mr
+   2tiORroOnfTJGswRavIVIEPomDZyLT5FB6p2Ief2e7qqvwSH2qCRUkLkA
+   12Qg/P6zkQbXKz90b5j2g8m3vBq6dorFF1vsDsDo5gnn8xHFlJF2j8ztY
+   H1w1dhggL1fbFb33j/sBLgvR+dj1lrSqmSQXWL1cmWB04v4oVOOqAsboB
+   nrscgTxq4dCnsN9nFWnxB90oT/k3YkVSS2qvrRSzCieYjrkLVZVWE4FIo
+   Taz2irBVTvjlo1gM6f5EesUZGH6Kk3gysCdnohh8MHck+bsjGO1CB880a
+   Q==;
+X-CSE-ConnectionGUID: 665iHEqlQ2Wx9e6RID6Row==
+X-CSE-MsgGUID: pso3+bjzTdmhyRzmLgjRiw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="53616732"
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="53616732"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 05:20:41 -0700
+X-CSE-ConnectionGUID: 1aETWCKNQ1umOKFoIsAm7Q==
+X-CSE-MsgGUID: ppFS1wN+T+ik1840nkTGjg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="158104826"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 05:20:37 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uWwS1-0000000Bun0-43Su;
+	Wed, 02 Jul 2025 15:20:33 +0300
+Date: Wed, 2 Jul 2025 15:20:33 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Xu Yang <xu.yang_2@nxp.com>
+Cc: ezequiel@vanguardiasur.com.ar, mchehab@kernel.org,
+	laurent.pinchart@ideasonboard.com, hdegoede@redhat.com,
+	gregkh@linuxfoundation.org, mingo@kernel.org, tglx@linutronix.de,
+	viro@zeniv.linux.org.uk, thomas.weissschuh@linutronix.de,
+	dafna.hirschfeld@collabora.com, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	imx@lists.linux.dev, jun.li@nxp.com
+Subject: Re: [PATCH v3 1/3] usb: core: add dma-noncoherent buffer alloc and
+ free API
+Message-ID: <aGUkEbaSOzrtILkZ@smile.fi.intel.com>
+References: <20250702110222.3926355-1-xu.yang_2@nxp.com>
+ <20250702110222.3926355-2-xu.yang_2@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPhsuW5Afn7h5W4+ZY-Ly=y55ByXd3TCXej3PXUYkBcj89X7mw@mail.gmail.com>
+In-Reply-To: <20250702110222.3926355-2-xu.yang_2@nxp.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Tue, Jul 01, 2025 at 09:23:30AM -0700, Song Liu wrote:
-> On Tue, Jul 1, 2025 at 1:32 AM Christian Brauner <brauner@kernel.org> wrote:
-> >
-> > On Fri, Jun 27, 2025 at 04:20:58PM +0000, Song Liu wrote:
-> > >
-> > >
-> > > > On Jun 27, 2025, at 8:59 AM, Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
-> > > >
-> > > > On Thu, Jun 26, 2025 at 9:04 PM Song Liu <song@kernel.org> wrote:
-> > > >>
-> > > >> On Thu, Jun 26, 2025 at 7:14 PM Alexei Starovoitov
-> > > >> <alexei.starovoitov@gmail.com> wrote:
-> > > >> [...]
-> > > >>> ./test_progs -t lsm_cgroup
-> > > >>> Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
-> > > >>> ./test_progs -t lsm_cgroup
-> > > >>> Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
-> > > >>> ./test_progs -t cgroup_xattr
-> > > >>> Summary: 1/8 PASSED, 0 SKIPPED, 0 FAILED
-> > > >>> ./test_progs -t lsm_cgroup
-> > > >>> test_lsm_cgroup_functional:PASS:bind(ETH_P_ALL) 0 nsec
-> > > >>> (network_helpers.c:121: errno: Cannot assign requested address) Failed
-> > > >>> to bind socket
-> > > >>> test_lsm_cgroup_functional:FAIL:start_server unexpected start_server:
-> > > >>> actual -1 < expected 0
-> > > >>> (network_helpers.c:360: errno: Bad file descriptor) getsockopt(SOL_PROTOCOL)
-> > > >>> test_lsm_cgroup_functional:FAIL:connect_to_fd unexpected
-> > > >>> connect_to_fd: actual -1 < expected 0
-> > > >>> test_lsm_cgroup_functional:FAIL:accept unexpected accept: actual -1 < expected 0
-> > > >>> test_lsm_cgroup_functional:FAIL:getsockopt unexpected getsockopt:
-> > > >>> actual -1 < expected 0
-> > > >>> test_lsm_cgroup_functional:FAIL:sk_priority unexpected sk_priority:
-> > > >>> actual 0 != expected 234
-> > > >>> ...
-> > > >>> Summary: 0/1 PASSED, 0 SKIPPED, 1 FAILED
-> > > >>>
-> > > >>>
-> > > >>> Song,
-> > > >>> Please follow up with the fix for selftest.
-> > > >>> It will be in bpf-next only.
-> > > >>
-> > > >> The issue is because cgroup_xattr calls "ip link set dev lo up"
-> > > >> in setup, and calls "ip link set dev lo down" in cleanup. Most
-> > > >> other tests only call "ip link set dev lo up". IOW, it appears to
-> > > >> me that cgroup_xattr is doing the cleanup properly. To fix this,
-> > > >> we can either remove "dev lo down" from cgroup_xattr, or add
-> > > >> "dev lo up" to lsm_cgroups. Do you have any preference one
-> > > >> way or another?
-> > > >
-> > > > It messes with "lo" without switching netns? Ouch.
-> > >
-> > > Ah, I see the problem now.
-> > >
-> > > > Not sure what tests you copied that code from,
-> > > > but all "ip" commands, ping_group_range, and sockets
-> > > > don't need to be in the test. Instead of triggering
-> > > > progs through lsm/socket_connect hook can't you use
-> > > > a simple hook like lsm/bpf or lsm/file_open that doesn't require
-> > > > networking setup ?
-> > >
-> > > Yeah, let me fix the test with a different hook.
-> >
-> > Where's the patch?
+On Wed, Jul 02, 2025 at 07:02:20PM +0800, Xu Yang wrote:
+> This will add usb_alloc_noncoherent() and usb_free_noncoherent()
+> functions to support alloc and free buffer in a dma-noncoherent way.
 > 
-> Here is a fix to kernel/bpf/helprs.c by Eduard:
-> https://lore.kernel.org/bpf/20250627175309.2710973-1-eddyz87@gmail.com/
-> 
-> This fix addresses build errors with certain config.
-> 
-> Here is my fix to the selftests:
-> https://lore.kernel.org/bpf/20250627191221.765921-1-song@kernel.org/
-> 
-> I didn't CC linux-fsdevel because all the changes are in the
-> selftests, and the error is independent of the new code.
+> To explicit manage the memory ownership for the kernel and device,
+> this will also add usb_dma_noncoherent_sync_for_cpu/device() functions
+> and call it at proper time.  The management requires the user save
+> sg_table returned by usb_alloc_noncoherent() to urb->sgt.
 
-Ah great, thank you for the info. That helped and we don't have to care then.
+...
+
+> +	if ((urb->transfer_flags & URB_NO_TRANSFER_DMA_MAP) &&
+> +	    urb->sgt) {
+
+Something weird with the indentation. Here you wrapped, but the very next line
+is not, and they both satisfy 80 limit (even though we have it relaxed now).
+
+> +		dma_sync_sgtable_for_cpu(hcd->self.sysdev, urb->sgt, dir);
+> +		if (dir == DMA_FROM_DEVICE)
+> +			invalidate_kernel_vmap_range(urb->transfer_buffer,
+> +						     urb->transfer_buffer_length);
+> +	}
+
+...
+
+> +
+> +		return ret;
+>  	}
+> +
+> +	if ((urb->transfer_flags & URB_NO_TRANSFER_DMA_MAP) &&
+> +	    urb->sgt) {
+
+Why not
+
+	} else if {
+
+and drop the above return ret; ?
+
+> +		if (dir == DMA_TO_DEVICE)
+> +			flush_kernel_vmap_range(urb->transfer_buffer,
+> +						urb->transfer_buffer_length);
+> +		dma_sync_sgtable_for_device(hcd->self.sysdev, urb->sgt, dir);
+> +	}
+> +
+>  	return ret;
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
