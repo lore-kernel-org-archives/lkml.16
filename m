@@ -1,121 +1,106 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD17228691
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 02:12:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C731553AA;
+	Wed,  2 Jul 2025 02:12:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751422329; cv=none; b=plo+20QfZPKIGZu0uHkKuxW1bScHEmj/jrnm1rS9ssdpF2CVFtXDXfvulOEhEY89OAmtDeW4IrS+SBmJqzHYm6YNZRqr7JpNTdggxWkBwaLptVgZ9Y25HXS7D+vOrONqVagRCmEjBnaeWKgeISaiW954i5gOr5NcGnxjVKweMV4=
+	t=1751422349; cv=none; b=aEbvuKpu8BV5j7tozie75Cf/uKgWfO/kRIoaJp3bJL/W1Mftp9SUh55zNGy3xfl8+RpKVazCH+UHQ5Jw+2wHBEkFRZHoRVl4jVQnaO5ES9xRxkstmayL4MeG7A6Gq+yfOiOjlEgSw3Tignk/puDoC5Nwl9JwrrCNMb49oHjuWVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751422329; c=relaxed/simple;
-	bh=oK1Shwu4Lk05/QEqU2lnVfOho5aeA6R+7xSGIYM5wck=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XadOLEaa7qlJM+ZBhLZFq07nEpd3JWmYgB+6YT4r+zMMAzeCZx2U7SKev4kd5JoFTSiXISCFP5CPJX/w0zyqunnF78j4a69jYch7jHw8+xL9HmW7JEolEuSBKJAWBOHauA+bFQjB9eVvs5a948nBeKmRD25GUfvfUfBB92XA7i0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=awnVcTwi; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751422349; c=relaxed/simple;
+	bh=QExLhnSbB/x30DEL+T86K50SaBnWTT5K33Tm+6SgIlQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=M5zbNaX5ZBt6elrIjg5UnhEpxGnJV26hUVORTPZvUwTX9/7yDw8OMrJuq8oDGehxOZsNGJqsV+tQPdOYxRsF9Q4eqxgLjo39a+2j3yc+wVo7svt8MX4rGKBfcjkd4YiLGdZxLcBmYR4mlMPjKxyC2WpjaK6xsejxgUCYmUOXut8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Su8ZC6sb; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="awnVcTwi"
-Message-ID: <0561da2c-a4d7-49bb-8394-930f10880610@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751422314;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=44R59HWijpEJxOJR76qd3Y0z7tg9JtGI0wJfTjFw3So=;
-	b=awnVcTwiZOD+NS68d0yzctO3ap+VvoitOCfZcBxGLAXq4+6NaL0AQroj8lB9t1LI4ceed7
-	GFjbfckKg/pPmIEyzML8g+J0SdkexYUYVrlfXpXCa0h9UZSj9xzpZEMAnkJRAvxWvNIrrw
-	Lmm3f6A4lg5Ze29PsyqRsiHTZrwoL1g=
-Date: Wed, 2 Jul 2025 10:11:48 +0800
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Su8ZC6sb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1751422331;
+	bh=wmUGv3+hSVocR0bGCaUm3npQbhvP5RBTITs1xd40P0A=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Su8ZC6sbG5UFFpB7Q+XdS9fEHjJZPvOwQ8XssiKydV/ihnEFBi8LZyasg50pvYYXx
+	 wbUT1QOaVgDJEX74Ubdf2rrvd4l81Iy+Gp4vYzkMx7P/DdMlluFRajJhDbwaCcwWt7
+	 ptjiCCGFrYc1q39RiFMpWjcpImoA1aU79y+e71yxMYc8L4QhPXvRtjneEC3wvz7eNg
+	 RXbMVGpodpl9HOfiYjS1iSBnBpUIrvBnfiCcCe0QOksSQmvuAoAyrWoQj7LEbWXtxT
+	 F4yTGdAEFs3uNFuIIqAA8qkdgX47uhB1fRPLxIdNZY3t+3VAjylZ2aZJ4pOUw0BvTj
+	 6h9lzvhpPPdQA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bX3Ld5Lsvz4x21;
+	Wed,  2 Jul 2025 12:12:09 +1000 (AEST)
+Date: Wed, 2 Jul 2025 12:12:22 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg
+ <johan.hedberg@gmail.com>, David Miller <davem@davemloft.net>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: Networking <netdev@vger.kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patches in the bluetooth tree
+Message-ID: <20250702121222.6882dd74@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] LoongArch: Support mem=SIZE kernel parameter
-To: Ming Wang <wangming01@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Andrew Morton <akpm@linux-foundation.org>,
- Bibo Mao <maobibo@loongson.cn>, Hari Bathini <hbathini@linux.ibm.com>,
- Guo Weikang <guoweikang.kernel@gmail.com>,
- Sourabh Jain <sourabhjain@linux.ibm.com>, Usama Arif
- <usamaarif642@gmail.com>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Cc: lixuefeng@loongson.cn, chenhuacai@loongson.cn, gaojuxin@loongson.cn
-References: <20250701090449.2426151-1-wangming01@loongson.cn>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <20250701090449.2426151-1-wangming01@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: multipart/signed; boundary="Sig_/O8qkvtmYyEDNcGjKDJptJmk";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-在 7/1/25 5:04 PM, Ming Wang 写道:
-> The LoongArch mem= parameter parser was previously limited to the
-> mem=SIZE@START format. This was inconvenient for the common use case
-> of simply capping the total system memory, as it forced users to
-> manually specify a start address. It was also inconsistent with the
-> behavior on other architectures.
-> 
-> This patch enhances the parser in early_parse_mem() to also support the
-> more user-friendly mem=SIZE format. The implementation now checks for
-> the presence of the '@' symbol to determine the user's intent:
-> 
-> - If mem=SIZE is provided (no '@'), the kernel now calls
->    memblock_enforce_memory_limit(). This trims memory from the top down
->    to the specified size.
-> - If mem=SIZE@START is used, the original behavior is retained for
->    backward compatibility. This allows for defining specific memory
->    banks.
-> 
-> This change introduces an important usage rule reflected in the code's
-> comments: the mem=SIZE format should only be specified once on the
-> kernel command line. It acts as a single, global cap on total memory. In
-> contrast, the mem=SIZE@START format can be used multiple times to
-> define several distinct memory regions.
-> 
-> Signed-off-by: Ming Wang <wangming01@loongson.cn>
-> ---
->   arch/loongarch/kernel/setup.c | 18 ++++++++++--------
->   1 file changed, 10 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-> index b99fbb388fe0..af59ba180dc2 100644
-> --- a/arch/loongarch/kernel/setup.c
-> +++ b/arch/loongarch/kernel/setup.c
-> @@ -191,6 +191,16 @@ static int __init early_parse_mem(char *p)
->   		return -EINVAL;
->   	}
->   
-> +	start = 0;
-> +	size = memparse(p, &p);
-> +	if (*p == '@')	/* Every mem=... should contain '@' */
-> +		start = memparse(p + 1, &p);
-> +	else {			/* Only one mem=... is allowed if no '@' */
-> +		usermem = 1;
-> +		memblock_enforce_memory_limit(size);
-> +		return 0;
-> +	}
-> +
->   	/*
->   	 * If a user specifies memory size, we
->   	 * blow away any automatically generated
-> @@ -201,14 +211,6 @@ static int __init early_parse_mem(char *p)
->   		memblock_remove(memblock_start_of_DRAM(),
->   			memblock_end_of_DRAM() - memblock_start_of_DRAM());
->   	}
-> -	start = 0;
-> -	size = memparse(p, &p);
-> -	if (*p == '@')
-> -		start = memparse(p + 1, &p);
-> -	else {
-> -		pr_err("Invalid format!\n");
-> -		return -EINVAL;
-> -	}
-I don't understand. Isn't it better to modify the else{} directly here?
+--Sig_/O8qkvtmYyEDNcGjKDJptJmk
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Yanteng
+Hi all,
 
+The following commits are also in the net tree as different commits
+(but the same patches):
+
+  9b36e38d0fb5 ("Bluetooth: HCI: Set extended advertising data synchronousl=
+y")
+  8dcd9b294572 ("Bluetooth: MGMT: mesh_send: check instances prior disablin=
+g advertising")
+  41d630621be1 ("Bluetooth: MGMT: set_mesh: update LE scan interval and win=
+dow")
+  1984453983fd ("Bluetooth: hci_sync: revert some mesh modifications")
+  8466ce07cb6a ("Bluetooth: Prevent unintended pause by checking if adverti=
+sing is active")
+
+These are commits
+
+  89fb8acc3885 ("Bluetooth: HCI: Set extended advertising data synchronousl=
+y")
+  f3cb5676e5c1 ("Bluetooth: MGMT: mesh_send: check instances prior disablin=
+g advertising")
+  e5af67a870f7 ("Bluetooth: MGMT: set_mesh: update LE scan interval and win=
+dow")
+  46c0d947b64a ("Bluetooth: hci_sync: revert some mesh modifications")
+  1f029b4e30a6 ("Bluetooth: Prevent unintended pause by checking if adverti=
+sing is active")
+
+in the net tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/O8qkvtmYyEDNcGjKDJptJmk
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhklYYACgkQAVBC80lX
+0Gx+iwf/RguU165QmqYoZiIK1kA1f76Rh+3FkqLc8wZKxj7yomIx78m+rFQZdw0l
+h7Ga+8R9XN5+v5+c5qEK2Ez82nVX03osLt+xhij3YlJytAp3xh31KzWo0kwSzX4n
+5lJO0/DLoYYnL7J+VLK1N4UXiNp4m0MJHk+0z1jrhQKZ2/fN1R38hTbQA0TUjhIx
+adGtPkvmfBk/YyT/AUbqNUifDJP5oPI/wwweasO2ID5AKnrZhM6HR248G0hPzJex
+EHTd346KKbYeH7BpU0r7zKLMnP+aSHfLgxfVjMHzhWKVsjppAlHfun05FpBFPoWk
+S8x/4CvLXhIFomocIK8vKwUNXF50sw==
+=AneY
+-----END PGP SIGNATURE-----
+
+--Sig_/O8qkvtmYyEDNcGjKDJptJmk--
