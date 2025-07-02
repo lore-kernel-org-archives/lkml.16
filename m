@@ -1,65 +1,55 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411FF3093D8;
-	Wed,  2 Jul 2025 14:54:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D70530AADD;
+	Wed,  2 Jul 2025 14:54:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751468045; cv=none; b=knyImZBWW7nZwLvjio50pmjnW8FTsXbVNnAp2jFM8+7utrNe5fSV84wKbStbN6a8l9xhsYf5QZ1qydK2AbxGWQ20NrT9EayVyp+uCX3lucEcqBEFLjmVZK6g0Z3B4RK82tT7LcqXKwOD/i9NpiRbpJcEehlVkPwWXMW99BTUTyc=
+	t=1751468077; cv=none; b=jKNHbEGdauGnsge/Ps0iC3fprrcE6fvmBqxBvhBeH4W1ejEOck6Td1sHpVTRApKJyeISUIkYEzia7nZ5vipQV0awkqekOF49xOT+hfq3G2hULcOyM8h/WGcM865klkvH+jR0V44DSb3/rDefmAIi53LR6CzDIadfIVkh7SjHreE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751468045; c=relaxed/simple;
-	bh=pCEg0EdOzKP+ZUExkv71c25NkuI2si5Osz6a0iRg3jE=;
+	s=arc-20240116; t=1751468077; c=relaxed/simple;
+	bh=eQ2/A1buAaeHKe+GvIsaoH6T/9HiQLjm/8yCRn8ffmU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gv6pBBIAZILPyjczWXxD9HXFvhp9ZMIlQ5RX1zQGyjYPzXDrMw2YdMg5k8A3Qj8P0qwsarzAT86ys0aEllYQM+HYmYuL+Yp2o7v4mPVM+EAtLmaix/nhtOUZ0pbXOyWrKD065mxWYMnBWFTpfVgkr7zz8wtPxqXKyuYx+3rt+JA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D+ReiwSO; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=RWgbOEcULdhldw56kAbJzA4weE0pAoUlZHrQa70eizcookFhOrcRSka1nc38kbY2nVlFi5l66NWm3fzg2zWgeNKY751oHEuv2Mgp9GZNnSOMiurzj+FEL9l+hYk+Mvi1X3iA/ndiq3AKnND/rOOYMlZdXaez1fWhXYebw0nB7u8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZQG5cWt8; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D+ReiwSO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751468044; x=1783004044;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=pCEg0EdOzKP+ZUExkv71c25NkuI2si5Osz6a0iRg3jE=;
-  b=D+ReiwSO0WdRpR2lhHOZQ40cxKkBxCU1gGwasfbywm0h7kA8bssItJ5o
-   wjm8avOf0x15+YoqeUFWWW2IZyIWrqlzytMICWwc2OUXuNFNgkpbbONjF
-   w2PsOh3+7VYBzgJ2PlG8pHzkauzjQcLqcXwK88Ziog6bU8HustZXGjqXT
-   ygh0rnUjm29TFvLvE1Q8Cu8IdwKFdNEL0Gx+GGdzabBBglMCA2VXlv0Rf
-   stJThK4HYpllqjVONpQWB1BtTuaHANgOmOQBD+xgQG80NX5gl10ljL0tI
-   MbAlUvKZByuaVdmcMLsTVXRFKCtozlNMEL9PEdRt0qkBbmCjY8u6QRjV4
-   w==;
-X-CSE-ConnectionGUID: iyW8BOO0Tz2fXLdnmfa/DA==
-X-CSE-MsgGUID: l1OQY7bmTYiTr28m1cs5lg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="65115576"
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="65115576"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 07:54:04 -0700
-X-CSE-ConnectionGUID: cUXzadvVQxKM5FdeQxjB1A==
-X-CSE-MsgGUID: 6gkIpMEbSmmRCp1lMg8YNQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="185126577"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 07:54:01 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uWyqT-0000000Bwkw-3mLM;
-	Wed, 02 Jul 2025 17:53:57 +0300
-Date: Wed, 2 Jul 2025 17:53:57 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Robert Budai <robert.budai@analog.com>,
-	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: imu: adis16550: rework clock range test
-Message-ID: <aGVIBVsFPcVw3lN6@smile.fi.intel.com>
-References: <20250702-iio-imu-adis16550-rework-clock-range-test-v1-1-b45f3a3b0dc1@baylibre.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZQG5cWt8"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=EYpEhJ438Ygm0susoUO/i2kjn9mzut5gdv/JGZDLwN8=; b=ZQG5cWt8xy8DDyDdLe6QAkTwL1
+	rOvUDh87KFgD+HZ6RWsxkvdbsrG66fNHaewECBZ6zAwu+6gNMDyCtZESjZPhi5OWh7sZ7dknM0kwH
+	3YSF0+I3Wde63EojpdTPLRwKCrCjOzq4rZI8Tdo1oeDDTGUMD5ZCujYmLuItuAQKB59d5OBqZSqG2
+	+7Koq1573KaU+FsTNn66XU1K1e9jmlrD/h/UYBv0UcWHkZRofbgJeiISBg6vKsLaVIdCotdRy1QqQ
+	8WlastzM9o8Sact0jvkmqf6tnZkeq0edEIT3sbyXQXChPU0KnhxRSXIHWYMFW42Wcx0O9Xs/a073q
+	JjfsxVMg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uWyqw-00000007SOj-0Etr;
+	Wed, 02 Jul 2025 14:54:26 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 3857030017D; Wed, 02 Jul 2025 16:54:25 +0200 (CEST)
+Date: Wed, 2 Jul 2025 16:54:25 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Borislav Petkov <bp@alien8.de>, kernel test robot <lkp@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>, llvm@lists.linux.dev,
+	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	x86@kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+	Jinjie Ruan <ruanjinjie@huawei.com>
+Subject: Re: [tip:master 19/19] include/linux/irq-entry-common.h:201:2:
+ error: unexpected token
+Message-ID: <20250702145425.GS1613376@noisy.programming.kicks-ass.net>
+References: <202507020528.N0LtekXt-lkp@intel.com>
+ <20250702123240.GDaGUm6Le4KLL7o_91@fat_crate.local>
+ <aGUtCveV8Ev17_FS@J2N7QTR9R3.cambridge.arm.com>
+ <20250702130915.GEaGUve86iYnv337_Z@fat_crate.local>
+ <aGUxH--v32Bv4T81@J2N7QTR9R3.cambridge.arm.com>
+ <20250702132415.GFaGUy_6q0dZZI9AX3@fat_crate.local>
+ <aGU_IY70Jt4bcbf2@J2N7QTR9R3.cambridge.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,20 +58,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250702-iio-imu-adis16550-rework-clock-range-test-v1-1-b45f3a3b0dc1@baylibre.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <aGU_IY70Jt4bcbf2@J2N7QTR9R3.cambridge.arm.com>
 
-On Wed, Jul 02, 2025 at 09:27:45AM -0500, David Lechner wrote:
-> Rework the clock rate range test to test if sync_mode_data != NULL
-> instead of testing if the for loop index variable. This makes it easier
-> for static analyzers to see that we aren't using an uninitialized
-> sync_mode_data [1].
+On Wed, Jul 02, 2025 at 03:16:01PM +0100, Mark Rutland wrote:
+> On Wed, Jul 02, 2025 at 03:24:15PM +0200, Borislav Petkov wrote:
+> > On Wed, Jul 02, 2025 at 02:16:15PM +0100, Mark Rutland wrote:
+> > > Sounds like a plan.
+> > 
+> > As we figured out on IRC:
+> > 
+> > https://lore.kernel.org/all/20250616-loongarch-fix-warn-cond-llvm-ias-v1-1-6c6d90bb4466@kernel.org/
+> > 
+> > "clang's integrated assembler only supports concatenating strings with
+> > '.ascii'. There was discussion of allowing '.string' / '.asciz' but it
+> > was decided against [1] because it was undesirable to match the behavior
+> > of released binutils at the time, where"
+> > 
+> > and this seems to fix it here:
+> > 
+> > ---
+> > diff --git a/arch/s390/include/asm/bug.h b/arch/s390/include/asm/bug.h
+> > index a185855ab158..46d9eb64bd18 100644
+> > --- a/arch/s390/include/asm/bug.h
+> > +++ b/arch/s390/include/asm/bug.h
+> > @@ -9,7 +9,7 @@
+> >  #else
+> >  #define __BUGVERBOSE_LOCATION(file, line)			\
+> >  		.pushsection .rodata.str, "aMS", @progbits, 1;	\
+> > -	10002:	.string file;					\
+> > +	10002:	.ascii file;					\
+> >  		.popsection;					\
+> >  								\
+> >  		.long 10002b - .;				\
+> > 
+> 
+> IIUC this also needs a trailing "\0" as per the link above, or this
+> won't get a NUL-terminator (but will build just fine).
 
-But at the same time it makes it not to be the usual pattern.,,
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Yup, I ran into this before. Let me go fix that commit.
