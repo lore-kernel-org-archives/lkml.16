@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5621D5ADC;
-	Wed,  2 Jul 2025 02:40:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2091C1DE4C3;
+	Wed,  2 Jul 2025 02:40:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751424002; cv=none; b=MH/Ge+uXwj5LPiI6cp/dSbmPgHtzNXh/6pf9Rrdz4BidD/KrnJT65Fz2uqvVkhsWHFHMOoapBl+OWj+kJi1nTGeB0jhZ2QODETfGceXCTCff0JNETRcTf+kzPPZp6yGT2kP5J4Y4gLpinRnFTd1uwJVQcG3LEPQZLhMLBsl7d64=
+	t=1751424004; cv=none; b=r+fj4pjdRkg8ljWCriyFKuiryjweD6PmFRBMhGrUaVaFW+RRS16AHRvFU6ZomvXrPJHzSsMPvwUwUXdXQBNRxq5PnGKr+AeV73kFkHZ4raBgFSdhSU0JTtwzilZhvGgebEItcoXVfEGctMuxX8S67tm9dbJct7KUAhWNZqdU+SI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751424002; c=relaxed/simple;
-	bh=BgqoyH7BZAdjNzSV8UuKTMppKfENt1BfB4wMrIRE850=;
+	s=arc-20240116; t=1751424004; c=relaxed/simple;
+	bh=uegAaZS7eogMqidDjY4f4rq47lp5m3d7kfUjEelRoDc=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=E0yZcHceAWOht2nfePb1ERffEPqkaLZVC/JOUtWXAyj1z5WU8DAB6PoiCLtYbVT40akQPsHMyHnFTCP0suaLq3B0tpEaDulIVNe86QS2ml+UhGcv/hbKwRcuT77WLN2JyoOkSuSGLBXSmhY4JOOOVaIXru8j4GfrpD7EWebN+iM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C6rFgR/U; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=vAs3ccsdBZTOU9qQn4rt+PFsXMsbYyAB4+L1Jd8jW/0y9r7aPJHyQY4k/Sus9BwfRzsnPlhWV5NlX0W9ZzUtWAxeqvH6lEASzBzHFDiAGHtYVgVzEBw9cJB7RxaCBLCHrdZkyr8gbFfuwlDA+wvS0+rm4AsExjEanftrZBusN9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OldhVjix; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C6rFgR/U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76D83C4CEEF;
-	Wed,  2 Jul 2025 02:40:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OldhVjix"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1F35C4CEEF;
+	Wed,  2 Jul 2025 02:40:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751424002;
-	bh=BgqoyH7BZAdjNzSV8UuKTMppKfENt1BfB4wMrIRE850=;
+	s=k20201202; t=1751424004;
+	bh=uegAaZS7eogMqidDjY4f4rq47lp5m3d7kfUjEelRoDc=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=C6rFgR/UGjtdTidwgGKyZXamMpf13xxwc4hqQbUeb59RuKSpw3puMxppVDXyqEpTN
-	 zPI6QNtetzxZMFZ6EOGceVp6GwXgk0jAmnqbhQiX+PsvVENK+zj1q68R5pRdiyquKT
-	 KAzefG9sSn07mXu6WThKWjM1lStf2UEWsR4uRuJCPvL42b6duw5S7uJSZe0b5kUjTm
-	 XYKMzGx7DxqB8FQZuO9XsuY7DUDEgRpiMGovsATR8HlxkczWxy1HbNrEjESsFNOEZH
-	 yp00P7Pn8+k6mw+02UfNMVGx32WXZGIGHbfGRwzGyMwiigJ/EmiTPFXF/nk5fbzkBa
-	 ZyeDBn4ThsFDA==
+	b=OldhVjix8h8PG8fmFggrAI8+LJByXSl8zqS+vuJ52VqxviX7e4kd732J5S0AcrNii
+	 0910ysFFXrwCgIjuvhk8TCBHcEkvXVJoFGD4lkPQwSMatTitGSbqLOnoIcFs4TwbXR
+	 OavX8DDCNHuNFveM5q3V9VplKpPlL0mOMPVtzZu0ml6NLgAsRW00YlHDPhhEHCkJHo
+	 XZQ8BvOhl8OCKS/8q0q/Kk9ZrCS/JMT2KmAJOre5CXsFUd2IOG89FiqVWQddpVFS6J
+	 pt/u11Ijdubsd+J9FYXDI4492Qv9v+23Igk1RGDePlyx3H3+i2eSqXPlpzYQ+c3gx5
+	 a9aSyhDX8jxUg==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70FC6383BA06;
-	Wed,  2 Jul 2025 02:40:28 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB013383BA06;
+	Wed,  2 Jul 2025 02:40:29 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,43 +37,40 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] net: mana: Handle Reset Request from MANA NIC
+Subject: Re: [PATCH net-next v3 1/1] phy: micrel: add Signal Quality Indicator
+ (SQI) support for KSZ9477 switch PHYs
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <175142402700.183540.8619749523804992864.git-patchwork-notify@kernel.org>
-Date: Wed, 02 Jul 2025 02:40:27 +0000
-References: <1751055983-29760-1-git-send-email-haiyangz@linux.microsoft.com>
-In-Reply-To: <1751055983-29760-1-git-send-email-haiyangz@linux.microsoft.com>
-To: Haiyang Zhang <haiyangz@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
- haiyangz@microsoft.com, decui@microsoft.com, stephen@networkplumber.org,
- kys@microsoft.com, paulros@microsoft.com, olaf@aepfle.de,
- vkuznets@redhat.com, davem@davemloft.net, wei.liu@kernel.org,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, leon@kernel.org,
- longli@microsoft.com, ssengar@linux.microsoft.com,
- linux-rdma@vger.kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
- bpf@vger.kernel.org, ast@kernel.org, hawk@kernel.org, tglx@linutronix.de,
- shradhagupta@linux.microsoft.com, andrew+netdev@lunn.ch,
- kotaranov@microsoft.com, horms@kernel.org, linux-kernel@vger.kernel.org
+ <175142402850.183540.10621772163520728797.git-patchwork-notify@kernel.org>
+Date: Wed, 02 Jul 2025 02:40:28 +0000
+References: <20250627112539.895255-1-o.rempel@pengutronix.de>
+In-Reply-To: <20250627112539.895255-1-o.rempel@pengutronix.de>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: andrew@lunn.ch, hkallweit1@gmail.com, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ kernel@pengutronix.de, linux-kernel@vger.kernel.org, linux@armlinux.org.uk,
+ netdev@vger.kernel.org
 
 Hello:
 
 This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Fri, 27 Jun 2025 13:26:23 -0700 you wrote:
-> From: Haiyang Zhang <haiyangz@microsoft.com>
+On Fri, 27 Jun 2025 13:25:39 +0200 you wrote:
+> Add support for the Signal Quality Indicator (SQI) feature on KSZ9477
+> family switches, providing a relative measure of receive signal quality.
 > 
-> Upon receiving the Reset Request, pause the connection and clean up
-> queues, wait for the specified period, then resume the NIC.
-> In the cleanup phase, the HWC is no longer responding, so set hwc_timeout
-> to zero to skip waiting on the response.
+> The hardware exposes separate SQI readings per channel. For 1000BASE-T,
+> all four channels are read. For 100BASE-TX, only one channel is reported,
+> but which receive pair is active depends on Auto MDI-X negotiation, which
+> is not exposed by the hardware. Therefore, it is not possible to reliably
+> map the measured channel to a specific wire pair.
 > 
 > [...]
 
 Here is the summary with links:
-  - [net-next] net: mana: Handle Reset Request from MANA NIC
-    https://git.kernel.org/netdev/net-next/c/fbe346ce9d62
+  - [net-next,v3,1/1] phy: micrel: add Signal Quality Indicator (SQI) support for KSZ9477 switch PHYs
+    https://git.kernel.org/netdev/net-next/c/f461c7a885d9
 
 You are awesome, thank you!
 -- 
