@@ -1,235 +1,119 @@
-Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011060.outbound.protection.outlook.com [52.101.70.60])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01FD827E05B;
-	Wed,  2 Jul 2025 15:55:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.60
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751471747; cv=fail; b=IOMCmYCZsZHdUScbgq6eNNqVg4kd2EMlyIKxb9FKdH5o/cCYV18936xV4XYmoAGMtMe8SoCUZHQV49AxG0CgmteQhhetKGVkkofF+hGrGlYk3yfzWTEJN5lzwemEy8CIOfSPV7ViaWO/4AmejuvkMbHJ9bWtcP9Oj1PNU6xPkvk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751471747; c=relaxed/simple;
-	bh=TMYzJPhtKQTOf6eg7Ne++/UoUf7k5yDQs+pN0AGDaus=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=PM2RHsmv2Kr+QV7298VvvubM+2O+eorxGCU8Fgx2VrzLT0MNeDRy0kwLdrNi+pzEwTXJ6++39FXvvE6VXh0r7WDal8FqR0HUr631ytTXM0qV72FHK8nzT+ZLf+pL4ReHwIP8MeVN35i8KihtL+mTiTJLtcSOm4LuOEzP5jo1+/E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=nnvuDvSv; arc=fail smtp.client-ip=52.101.70.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2A8128B4EB
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 15:56:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751471800; cv=none; b=tdAHXyhHaAtqC8ubuLA7nSg3RFASGA/+Ey5cNMaNuduBizvGcg99T3V4POGk2nIFan/7aW5wKfJ2smLDr+NEEMQ53AXtkoRQYlpwH6NJVxCXRZHwr8MXVZ5GXeMVfgq5amzRH7uEyBHNvMHTRcueJkCEkahISSWvuEDyM2/7/JY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751471800; c=relaxed/simple;
+	bh=Gg3Ztw5mbV6LN/f/Ji5k38/KgNR5/X94oaYADowlyfY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=EVm776hwHsbdM2zU9F3d2A1BS6h34Qi09cYJ+4VmvndPxRewe68UcCBlafEDvQu2VRiRtv+VaXu+wkWN0oC0sXnG4Ud2/5xdAqo72gAfqHBEE5tr0U+pwCYHWNxGTpSRqRONiI0t6lM1hHrRdfHdDaIoC2B7AP8Aihbj7KA1y8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=cx82pC1A; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="nnvuDvSv"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=smQIAjE8135a+RHo67e/vpU80JM09uAgZyCbIEDKZt6eIXthjL+kMEFby6yLSF23VGRMgIxur31Wwmo74BryPZEu6XxScS0W+Y8sEbmsbMflu2zoE2CxjCqdqYN3YVzBkwtqEooe6XKhF0Q4j/UJeSQ3f/J5wLduxoHroia91t4vSd4MvsYaYLa7JIIYA93T+FC83crQHXxUL4DfzLA1IBW9PJRB6pHDXJMNOuUnbrXEUTmCqnbUUwrCwJX4uXhcLVzo5R5LdR1A4nD5VlHU+eI5F9Gq3QIBoENZLlDbI3ap5CxemtwwyuXxipn74dEF0K16REO/DCcamDQSl5sIsQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=r88DZfH4cW/V57Wk5Ex09EUlio3YpDyK7ms7NEbhnu4=;
- b=rOINAluNkDDidwJQO+3snbeUoiprVQ5Hp9rcLxGM1KcmblVszthwgXssLGrfcZHcUejRyrkQ0mXIQbiwHu9goZWOdwXwYBu4xHfoQeQ28PLL2oo5pLP3e5lhcqVWllijutKFHREtsBk5z6nzMO3+NhfCezCtoiT0jtH+1ZoLlzbO/qMeb/arxY4nIlvZ8sRWPDh5XphZoRLr7j4B6SzA8x+O+SfLve5Lb3MV7yo/PEKqI41u1oI0DJXZuuZUgwNWcu7r1lj9PAAW4gQzbXGKUuHcv/SzeIeIfd6wvR5CqYKi5tjF6l5E3faVNusGr7k0WCRo+fGdKtLdmhTDuHJsfQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=r88DZfH4cW/V57Wk5Ex09EUlio3YpDyK7ms7NEbhnu4=;
- b=nnvuDvSvAkDB3MaDvOrFLJrhgyzg2NTbj1RYEMJn5a17DE8O02wADbqDLgTn8jvPR1H3vdqI47ManWVBPjIHlvFn9yV4ek+0FRSUUY6GirsWjmLVGgL3/v3mOWDtucNjUsEjL5aWffLsY5bArzba6dcpT2eeUpgi80NysV4PHzFYe9DXsY4XPOV/qECWR5HkXgBFbvYq33cdyYDXzt0CYir4MM10qdFBMcgeMm47lyPJIKd16tOpqubhYpIExDOmlKdEzHkX3UkQLkapTH0yflOpZpuuxibZ6gomnQ8no9fEflxA3pmiw8m0nkA3qLnkoOEuzVR/aaMyiQTEIog2gg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DU4PR04MB10598.eurprd04.prod.outlook.com (2603:10a6:10:580::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.20; Wed, 2 Jul
- 2025 15:55:42 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%7]) with mapi id 15.20.8880.029; Wed, 2 Jul 2025
- 15:55:42 +0000
-Date: Wed, 2 Jul 2025 11:55:35 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Rui Miguel Silva <rmfrfs@gmail.com>,
-	Martin Kepplinger <martink@posteo.de>,
-	Purism Kernel Team <kernel@puri.sm>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Eugen Hristev <eugen.hristev@linaro.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Peng Fan <peng.fan@nxp.com>,
-	Alice Yuan <alice.yuan@nxp.com>, Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>, linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-phy@lists.infradead.org, "Guoniu.zhou" <guoniu.zhou@nxp.com>
-Subject: Re: [PATCH 5/7] media: nxp: add DesignWare MIPI CSI2 controller
- driver
-Message-ID: <aGVWd/bo22pPeKVS@lizhi-Precision-Tower-5810>
-References: <20250701-95_cam-v1-0-c5172bab387b@nxp.com>
- <20250701-95_cam-v1-5-c5172bab387b@nxp.com>
- <20250702093806.GF16835@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250702093806.GF16835@pendragon.ideasonboard.com>
-X-ClientProxiedBy: AS4P192CA0007.EURP192.PROD.OUTLOOK.COM
- (2603:10a6:20b:5da::19) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="cx82pC1A"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-60707b740a6so7263716a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 08:56:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fairphone.com; s=fair; t=1751471796; x=1752076596; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dCAc2KTVC/KYVThbWt25dTqshZNAwmGCU6+3oetHyms=;
+        b=cx82pC1AG+m5QUG1yiU/TGP+060ba7XsfTWmAlc9psG9McdkjaoECKhDm+DjU4KfWz
+         Zh/bZi8Jzv4gj0+eHKJv0XyiIo3gMaD4FVzVjarKi4w641RlBor/Lrg/W1gkLEKEWXUx
+         BM/xj2S8iQBYB7xZeLtqdNDDkvIWVCo1mYaoCSshGpnCx8piJYYWPmNrEa8AFu4vYc+Q
+         w4KO0BTKT8V/VhCvAuYI3Mv1+OecEVSbGMHRqwNzn9e+5njwiu11gSxdDVyBv/92AIdU
+         OPc3lfGRIXldsT2OZAjjfNEvuLjp0Zz/NJPW7EmoFfFPyHJGKJOlV96nxZ61y8jQmbnp
+         N59g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751471796; x=1752076596;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dCAc2KTVC/KYVThbWt25dTqshZNAwmGCU6+3oetHyms=;
+        b=a+yp1y0LlQ9H3FqJE17d3NJKSwt+t0xUfBW1rQADSc/WnbGzqEDpm4TtxwyG/p8Dri
+         r9Td6eQvUajJOqFrP8HeBJ+J6O81pja7Fgi+1qmvsw5PGGEnscjkH8o82zwU2H3sCQ8B
+         QqLtKGSROqDRkWS5ge79BM/DI7RACtw38otXxnW1RG8jpLgrkNjyvPm2OgDCl9wnIXBJ
+         iEH7jyKmrY9UvjV2grMrohjz4JPmCcb1E8hwHEvHY0dRkNUiBXugmI7L6am77IVyJdt2
+         Rs++CLgIYFGQpArycEUrMMIugcISm6/Deb5aYCSF07B5WXcVQIBJkeT0Pwejjz0ygrt3
+         QnKg==
+X-Forwarded-Encrypted: i=1; AJvYcCXEo5Zw4iBD7RDqjgHrNqgx5ZT3BkSo1bDmbOYQC43UqS/LeY2upD4c58TwGph3D04vcxt0uJ2cCM9C27s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFKAQ4KjmBtDcT6VonLE5eu6J8fRJizClhI6SaSDOp22+wDh1J
+	gdq8kHQVAjN4MKjWtxaRe/PbMF/JKFSF7psKplkzfwu1m7pVdBzDdBDHatzYozflA30=
+X-Gm-Gg: ASbGncuT+/kG0Rmt0CrnP198/5XKD2F24YLAoaeT3EFOvSaa7nT4kcBZ3JRovDag6eO
+	h6V+M2wezpC+UOxs9m+HhlGC9/uXnGTKDyRAWT3NLQ/RCAOvSwXnpsQeos6T8hJJSgJH1N/gS51
+	eU2beWodz6wOCq0QJiTZI9TOmaPVdy0xl0Tztf8/fBrnDmGn8tg/AeBS+IVjFQpI9KKHUfouZDl
+	pljoVZvwR828ryURA+4O/fBwYCsmHxwM2juPPqIND3urlKkStUgkHW03ka7D8iJjDdVm+H5IAF2
+	8fq5jP9aK6PK5FUSxcG/14PlKjUULVWjWnBhzHZ0n3ifRk3oNpZA2MiRBrnmd0mZZGHM/JS072C
+	HlVDlZxQp6k/iJFxDA3yum5XF4eocaYxHI5XVQtB8/tzKfbcW/xzhL7MgTQXXjxxZedbW4G7csW
+	UN1+DpsBU=
+X-Google-Smtp-Source: AGHT+IHXrZ5By/YIGmoOwxks5XDcOiTKWLCdtObMvsXO7AjbA2fZCsAU3x165zE/3s/lKEpePIpfqQ==
+X-Received: by 2002:aa7:d0cf:0:b0:5f3:857f:2b38 with SMTP id 4fb4d7f45d1cf-60e52d021b7mr2841293a12.17.1751471796023;
+        Wed, 02 Jul 2025 08:56:36 -0700 (PDT)
+Received: from otso.local (2001-1c00-3b8a-ea00-c4de-d39d-05f4-c77a.cable.dynamic.v6.ziggo.nl. [2001:1c00:3b8a:ea00:c4de:d39d:5f4:c77a])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c82909b93sm9151109a12.29.2025.07.02.08.56.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 08:56:35 -0700 (PDT)
+From: Luca Weiss <luca.weiss@fairphone.com>
+Subject: [PATCH v2 0/2] Add pinctrl driver for Milos (SM7635)
+Date: Wed, 02 Jul 2025 17:56:15 +0200
+Message-Id: <20250702-sm7635-pinctrl-v2-0-c138624b9924@fairphone.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DU4PR04MB10598:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1df0996b-0546-4b60-6b1c-08ddb980e5cd
-X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
- BCL:0;ARA:13230040|52116014|7416014|376014|19092799006|366016|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
- =?us-ascii?Q?iKT2dw47ZShwO5buj5PUjnv2eCxiYtk0KYKhvw+SyHDeqlFpjvjXrxXVejvM?=
- =?us-ascii?Q?H+IVIXJaQpxF7ikyJZ7272W1aKHtJuRtcFBE+GFwGbu36EDqQQDtlpIfa0+o?=
- =?us-ascii?Q?y/vr4Urngo55NmFmYWcXgIZKDE/oukXtCFXsVcQSbtoPqXqlBzv7gEwkudsv?=
- =?us-ascii?Q?dAqTyjjMbH5NaDNLMmE0sD8/ar23T4Lco6lOz2V2hEK2i1nk+SOsBNhvTAly?=
- =?us-ascii?Q?vzwXbE0RbyCElla2Fm8Zd/Y8MWZznm8dlm7R+wL2FcAD0uyPHSl+mZu/otl9?=
- =?us-ascii?Q?ieLAYH8IeVSayFVxy4lxrSsFkdgJx6VIJGmq2yu35IK7BGGMF/XY6l84zLyx?=
- =?us-ascii?Q?5WpOKvqy7EwRGOpkx3houad/IrcsQnBlVkRKz3eNgUC0d0kv5JvpnxcW0oAX?=
- =?us-ascii?Q?iwtzUk8wN51OQLR1zuGHiQ4zVJJeIzZsji4ICBUz6e4irfC0kD06OHuTzw4a?=
- =?us-ascii?Q?FWgjKc1Vf1BeXCkLYeWusaR7gbVPi2bkZvUHPIXsXaKbnURc3AbI4A8fN6oT?=
- =?us-ascii?Q?RiGMralVE2wDoRGNnykTQkvAoMTdEHUyJyH+loE/fkKqXNxYIE8zCLQ1gxtG?=
- =?us-ascii?Q?pgmA7W8zvI183ZVwDrifUca+pxhLikgmIglx/9zfJfwLzbY7QGi54xHajbSr?=
- =?us-ascii?Q?GJ53P1mYRuSMb08Ts2SO/t7uAjBZUo9HXIAu3Xyvzl6xXLd1IFi3am2/bENx?=
- =?us-ascii?Q?fyQm/J0Mzj/zHw3i8gozwMcb6rLvCwDf841SylqOeBgAdUssTFXihKSAoIBc?=
- =?us-ascii?Q?9UdVFR02pDoi9OrvQVExwDF9Pxi8UeodBSk2PpTcU5hBDER27HZ5aZs+lcMb?=
- =?us-ascii?Q?I5/Qn/ovHTh1amlfcar1JvsDLx8T8wdxbXsNpaGqrtSZN9FnpxV3vXmfQCFp?=
- =?us-ascii?Q?Xu4jANnH/Dj2tqhsLVt7S/I/OZmugkb816cbbar2EgPgwnNt13MRV1eCLtzD?=
- =?us-ascii?Q?iAMKcPKlMMUmy55NGmVsSkp87pkC2nRu6CKhF7ZW3HG6Dr84tbjQONZ4K4Zx?=
- =?us-ascii?Q?QH0Pe3MMtTkQAjZEeo6B/Ci9vAbS+2TiSzWTtNfUiY8D3v+YWOBoyd0ZUdab?=
- =?us-ascii?Q?2qFqNqrWU0NewmmYT9Iu0TbqMKDl+wW8k8IqWtPZJrPRuDVosSuj6zQuBR7O?=
- =?us-ascii?Q?z4Zo3DROOpSfjhfpJmvARQLPoAJ6FAZJiKDqdjRDee8iDZGhTr2yj4CzZxu9?=
- =?us-ascii?Q?UVwAorRhoWyFYsBaUhLA4W0i+Kx1UJRi/fwC7Y49Mx9BVqUgUVumiRrXOZL1?=
- =?us-ascii?Q?f7JWLbCKd+VT6SUUuy90eduSCe4m5K9gMajmBXO714WWdxYFwdjbRG6ardBg?=
- =?us-ascii?Q?xpkDqCYYkVE7g04g3Sd95q/IAXnxoemuZsVykihrPazSLMKGrlrKBG7hKOAn?=
- =?us-ascii?Q?4vjXoOfTpZmEWBSP/S4C2JD4BzEy4hKgY3nsMgljSItPzPWHz9oA/0Hhg8FV?=
- =?us-ascii?Q?InjNpi8OmXt6jShCWfzX34hbtXO8rsz3tM1P3zqTcFqzvbTbNrIa8g=3D=3D?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(7416014)(376014)(19092799006)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?us-ascii?Q?WFh5KTD1diOAXHtkZsXg8a48z5+8jmjFhkyHBO5I9cZS+NVVerfp1Ea9Oo8j?=
- =?us-ascii?Q?XFfGgZyk6A7dR397lpAfmibAtU1oamZ1PqRqz7/kCZ7mXEpWb2GCq0jRPVj6?=
- =?us-ascii?Q?2qjxRetgWF4MBb758knmNUUByXiVIu3xvgVc8NzB6sU4uK+15ef976emVwpz?=
- =?us-ascii?Q?p/V4svCC+fFHmKMoQ0Mrh7v2jj3190Q4t7CmQGn7vJMcixa1HFP/btjVbVPY?=
- =?us-ascii?Q?WdbJ2zcfXCVMaJiVPNC9NiahE3eNxGBAd6KzVGKmGypQKgpFOx4UkOALlrz9?=
- =?us-ascii?Q?PLVcHR0j8R/NCGZNI6FBTnFvdNjTjJjonzzjJvwQS8dwagYWEGHIwHmliEAx?=
- =?us-ascii?Q?1Ky2UAG0qYQ4wxoD/9jnRQ5b/3Tg9Wr40MiSRefV+xvZUSSt1gf/izLgttfU?=
- =?us-ascii?Q?FMBg0HoupGqs7lDryXV/Iz25XOmaqc0KtR1CoGBb+YeJBX6ln+WGpyuxoB9h?=
- =?us-ascii?Q?X/bdbhNg3NxuCfy4vVgoqWFbnIx4WLwLrLByZUORsKDfs+yWLT4mt7cz8hwv?=
- =?us-ascii?Q?rehnqLb+t6j/52ybS3hmRyItf3Pzo8TVDDmvpm+NmkTm1RcKkRcWNYxvq3dT?=
- =?us-ascii?Q?05xxp2ABNF5EbOlqXGOvDkidq13H0otgkFsggr3lZDLVDdSQXNyRH2JIHM7O?=
- =?us-ascii?Q?4GqGiw7W6WENUpKsZluA8xVYtMKFvtgp/JIyR8r9JHWECHGRd/FQewRagz09?=
- =?us-ascii?Q?YJDcEsRwWAElf5L5E4NtDuW8pFcDvOsI4svWfx3dZrk44scHQ+lSXiYtYAUY?=
- =?us-ascii?Q?GNITrk+4cPzvMJCu5cAsKpLQ3vlm15OmKQ7S0Q9I+uQLFC5O/zVRGoJiqD3y?=
- =?us-ascii?Q?EmCUsFd6yngBTXYq29/2JCwGgCTuEZ4FaQivi9gf+78weqWmsfYBXC3hw3fM?=
- =?us-ascii?Q?gwVbljCHbivTKy5qPaWGsXzDL5HW1Pe3CLTwPwvCF3BbAXaElXAtyhWbPGJx?=
- =?us-ascii?Q?hqCoB9cuCnDSVTrktRtE6OoVxudR0Me3GYrgwKuHW5zrXBvhBIm0W7fzmlTG?=
- =?us-ascii?Q?FTxwKTeN3Qzks2MxJ95hBAAM8Ph6m+NnvDNI05HAkGKKG5Ted6sJtdAHCpgB?=
- =?us-ascii?Q?SKcRYKuuvUNoYfue4gp2yp6ppDXcm76RNvYJhuaaqQGffeTry+m7evdtZrzk?=
- =?us-ascii?Q?QSTbeOEfyOwMFjq0yMSSuNJk9yYf6bymg/hKRi/hvXJkWsb2CSBeFxu995wT?=
- =?us-ascii?Q?evRggGkzcb88kX/YkkwqMAamfECiOHxiLf33rvLBACYiCaNBe4W9w/chD4XC?=
- =?us-ascii?Q?hRIKLVHooJO0iu2JoQaVmhZe9s6p4msE/uwTRFKHc96AkbBHJEIGascnZb+r?=
- =?us-ascii?Q?On8QS1f9UxBJausakQC2RscuFjCIwojHvTzCAhas5I93ErLlIulc01cLQIWp?=
- =?us-ascii?Q?Y2e17wZczQI80c0gipUh75YJYc7PLMrxMjhRouNBhhOQ031BrxRsDByYwR1T?=
- =?us-ascii?Q?aXtyizqvTv8NdskU7FdLYEnKQQxKalJ9702eIujbLHD+YfvXmCq0Bk5BfeOe?=
- =?us-ascii?Q?nxQtyJRN8TmScwHbqye3VeVPN3tNAgWuYBFMx1LcSdKwqL+BdoSkE/GHFD2O?=
- =?us-ascii?Q?zUCM/oWYjNy9iAU2VRg=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1df0996b-0546-4b60-6b1c-08ddb980e5cd
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 15:55:42.0821
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7bgQjkyvpoNg7tm8nT3ao3IIRPrGRW11fKHkSacyQJExyKJpt2ObipoqWaRlEaUiqheS+RTvrwb9i983V8INFg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU4PR04MB10598
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJ9WZWgC/13MQQ6DIBCF4auYWZcGUah01Xs0LhSHOkkFAsa0M
+ dy91KSbLv+XvG+HhJEwwbXaIeJGibwrIU4VmHlwD2Q0lQbBheRKcJaWi2okC+TMGp9MW2ymTum
+ mVSOUU4ho6XWA9770TGn18X34W/1df5T8p7aacYajHTR2nZK6vdmBYpi9w7PxC/Q55w8FF3fas
+ AAAAA==
+X-Change-ID: 20250620-sm7635-pinctrl-9fe3d869346b
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Luca Weiss <luca.weiss@fairphone.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751471795; l=979;
+ i=luca.weiss@fairphone.com; s=20250611; h=from:subject:message-id;
+ bh=Gg3Ztw5mbV6LN/f/Ji5k38/KgNR5/X94oaYADowlyfY=;
+ b=QBFfi9v+fdzcREV4KRyqPt7V0s/Wzvd6gSLuSqnD6tQpuUCQcoANwHrXEuD7fsiaHVXr8OTSZ
+ rqtj7W1yVuMCAPYLDcEv+iu1wcbPQi/Ll9GhXRJ0eKtc0B1meLKGwzG
+X-Developer-Key: i=luca.weiss@fairphone.com; a=ed25519;
+ pk=O1aw+AAust5lEmgrNJ1Bs7PTY0fEsJm+mdkjExA69q8=
 
-On Wed, Jul 02, 2025 at 12:38:06PM +0300, Laurent Pinchart wrote:
-> Hi Frank,
->
-> Thank you for the patch.
->
-> On Tue, Jul 01, 2025 at 06:06:10PM -0400, Frank Li wrote:
-> > From: "Guoniu.zhou" <guoniu.zhou@nxp.com>
-> >
-> > Add V4L2 subdev driver for DesignWare MIPI CSI2 controller.
->
-> This seems to be at least the third instance of a driver for the CSI-2
-> receiver, the first two being
+Document and add the pinctrl driver for the Milos SoC.
 
-when I read spec, I known it should be used at other SoC. But I just jump
-to into this area, not easy to find who use it easily.
+Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+---
+Changes in v2:
+- Rebrand SM7635 to Milos as requested: https://lore.kernel.org/linux-arm-msm/aGMI1Zv6D+K+vWZL@hu-bjorande-lv.qualcomm.com/
+- Link to v1: https://lore.kernel.org/r/20250625-sm7635-pinctrl-v1-0-ebfa9e886594@fairphone.com
 
-> drivers/media/platform/raspberrypi/rp1-cfe/dphy.c and the second one
+---
+Luca Weiss (2):
+      dt-bindings: pinctrl: document the Milos Top Level Mode Multiplexer
+      pinctrl: qcom: Add Milos pinctrl driver
 
-I think this one is not good abstraction. it should be phy driver, which
-use "test" interface to community MIPI phy. I think it'd better create
-a bus driver, like test_if, DPHY should be child devices of this test_if.
+ .../bindings/pinctrl/qcom,milos-tlmm.yaml          |  133 ++
+ drivers/pinctrl/qcom/Kconfig.msm                   |    8 +
+ drivers/pinctrl/qcom/Makefile                      |    1 +
+ drivers/pinctrl/qcom/pinctrl-milos.c               | 1340 ++++++++++++++++++++
+ 4 files changed, 1482 insertions(+)
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250620-sm7635-pinctrl-9fe3d869346b
 
-like
-	csi2@000 {
-		...
-		phys = <&dphy>;
+Best regards,
+-- 
+Luca Weiss <luca.weiss@fairphone.com>
 
-		dphy: dphy {
-			compatible = "...";
-		}
-	}
-
-	The tough problem is that dwc phy have one kind of combo phy, which
-	under both dsi and csi controller's test_if.
-
-	CSI need config such combophy by DSI test_if. I still have not idea
-	how to descript this type hardware yet.
-
-> drivers/media/platform/renesas/rcar-csi2.c (the latter seems to support
-> multiple CSI-2 receivers).
-
-This is one mixed PHY and controller to one drivers, which is not problem
-when use one big MMIO space.
-
-We can create dwc mipi csi common library, let each vendor driver to link
-it (dwc pci/usb did this). The issue is that I have not their hardware to
-test it.
-
-> drivers/staging/media/imx/imx6-mipi-csi2.c
-> seem related too, likely for an old version of the IP.
-
-After we create common dw mipi csi library, we can move this to there.
-
-Frank
-
->
-> Could we please try to avoid code duplication ?
->
-> > Signed-off-by: Guoniu.zhou <guoniu.zhou@nxp.com>
-> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > ---
-> >  MAINTAINERS                                |    1 +
-> >  drivers/media/platform/nxp/Kconfig         |   11 +
-> >  drivers/media/platform/nxp/Makefile        |    1 +
-> >  drivers/media/platform/nxp/dwc-mipi-csi2.c | 1675 ++++++++++++++++++++++++++++
->
-> This should go to drivers/media/platform/synopsys/
->
-> >  4 files changed, 1688 insertions(+)
->
-> [snip]
->
-> --
-> Regards,
->
-> Laurent Pinchart
