@@ -1,52 +1,73 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4E79267AEC;
-	Wed,  2 Jul 2025 11:21:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86AAE25BF1D
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 11:21:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751455274; cv=none; b=REv61tdYF296TMrvtWEl/n6uLEhMh4Mj7+D3vFg6NQbqG7rYytKdnv0nwkWQ5RQDII+HvUAI3IFwSBvwID1z3bfUp5HuXEJNeuZgPKpMUR6D4MTzD49gpmlxGQkkk+Vg9Cn4+F6q/mznNwHdTYtvMNk8vbR2v/u7ETmdOj3lsm4=
+	t=1751455273; cv=none; b=lOFtd2+J9aHJaE49WDx4xScNx0BeGx7mkt+HFqNq5h9pabPFIWS9FzytNPzEY8O8ueMo5y+5P0VKUJz6p7F3qKDzcHpR++w0P0LEDjMt5QpPpfZ4snn+WxfaRhuUITBg4M/7x4KqNdk7eKQIMgyo71zbXttoAp/TJPX3p9uO8bQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751455274; c=relaxed/simple;
-	bh=5e7Gu2hSYoF78NHOOQ4u3fblm9IpAmXxrCi48b0pb34=;
+	s=arc-20240116; t=1751455273; c=relaxed/simple;
+	bh=A38xSljKc5j/Hin6ltpfaZ+hAhX+pVLlWZ3StYFW/Os=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JYv5mWLoGIIktjJpnyHvrhlTc2h0Ia+PepTkrez5fIEfjbviaq2LjoFpR3OyK2mP5KqN//oTn5KCWSbOP+xWrdpMTOoVKwNX7cALcTuSRSQTZaU++nRZ8v8xEBa3OpoRkLP3hScC/X1yF0ApnhlqycU4KuZxYAJZIzUayWtWdWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ae3cd8fdd77so24061866b.1;
-        Wed, 02 Jul 2025 04:21:12 -0700 (PDT)
+	 In-Reply-To:To:Cc; b=OZSZwYsuY1MBnBQ77X3B3TYALznaublwV6vqq+gY5x3vJjm+FJEdUxNOeS8Sj1YRLdF8aSXAgrHHuGkF5WECS/bVKQHH8MOBcVT8jFyjrP+Gxn6TEV/3D4zNZRirLNZZQLmIHLfbCW0KZuepCJ5bKGXbRWl1OW9ERGETPXiQUoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=lW4FckJN; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="lW4FckJN"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5626pBkJ025201
+	for <linux-kernel@vger.kernel.org>; Wed, 2 Jul 2025 11:21:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	5F+sTxGPeHZTq3lkD4jSiUbC1PD//qQ0WXLka1L493g=; b=lW4FckJN4KkT4VVY
+	YXhKSvXJZk72xKdxAf6JrPEnJKL4TbgHXu3V62S9zW5XVJMAuWiNl5aE44Zkqxhn
+	E412RAH5khvaxqVc3XXO8sU1CF+cqx3llMik7/Q9WEu3Y/KRnthvZGuMKSSkJRGo
+	gyTTg39oct3thM9ls4NYyTnyKngbtiBzvX72WZazYBoeE+MJWOjqV8tCK8xYL/2Q
+	urqE1BYMmMipqUTTU1JEiZIo8uUltgdAfwxEpl2eUKGu4sr2459BM+TOyqeo8Gey
+	7x0JGjUjjNvbTiQgRYWRLbHKVJv86Y6o22ySkoJWkK9k5biWJIlYdERxLalKL1vj
+	K90umA==
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47kd64sm15-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 11:21:09 +0000 (GMT)
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2365ab89b52so52723165ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 04:21:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751455271; x=1752060071;
+        d=1e100.net; s=20230601; t=1751455268; x=1752060068;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Gaqp+BTPfvuWnqLQlzPe4IbE5DQFSHBJTK+OlPf0tvE=;
-        b=mFTDY+YdXk8zopoBSkOqY+Icgzsa2cwq2l9HwH5ZD6q547tTgmhN8OyP22mMKQr+cZ
-         JJiJ5lnMKu3ILlHR35CguBw4JqMGHHobT/pfFa/RQs9r6VOCLkYxv6JEkxNjmYFKnbaN
-         RM1eIzCCGWn30qXmkYH94/ZeRS0IJOB1Hi3fcG9oO+H48SrIqOLDJfjhkw9VBERWha9s
-         CovvbT/ga+Q69zWJi2CA6Wgglz5uE6fIBVSzvGijIQ/oQnUx1OGuG5alvYDIeJtcKnK8
-         HITzpaGQjuasGmW3uHMejGTsfD7Rrey/hEjQqOZx0FEtM4ct9pJ4xR5Fbwvcds0tb5j4
-         MDbA==
-X-Forwarded-Encrypted: i=1; AJvYcCV2XOwJGKUQ5Asc/9qaKivRf5fqM6+G30xJY6S8jBdgxWF+ne+pc+4UForZ49gALvyT4hM=@vger.kernel.org, AJvYcCVtDl2rT9m1Ota7P6j4BVWrJwfIfqO8ETdPMBXgf5N9Arkwt9VUAYftWxvgZcMPF0+CXdnsVgnPC/pzrjwCMDY0@vger.kernel.org, AJvYcCX0grO8AekaqTZzdR608aB4Zwo7s3hNlqDzP8lYHWBUdR3d0VkcYGnrO7rSBv5kgnybidaoUN/D@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyhm8ZANK3ue+LEwG/x8zkNPTyCc7295H/jIY8lbx22FK408enl
-	cR1sPbOmy62RGSg10efBH3C8kJGOwo/NNYeSpdE25Ovpiuzga1ODkbxX
-X-Gm-Gg: ASbGncvJ+70C11+pR9jFIlEikxnATUidv15zwQJCXetndxdcZyi/SpVG3k398e73/zg
-	spsiZmBpPutr7rzpD1h/CDvL+qSW682Kb0LXV4279EQCD7aNLIjdvfXeTxVkhzjVKkfsoPEgQMI
-	7mo3wQgiljzU6rTh9LGDxy4CGRP5QbHGxtmcjNui+xQVv+1GcEsBxRaLQNjDex+US2vVCNuleVZ
-	H4lAAL5OvL4yoV8NlDTRTEgjzNESYCQeiV39wY0RGSjPyx/dn2XkNsIcm8W0bsCiaDmNHqa+gXK
-	50nRHdXJGFX3B6t9qtOu3Dj/UrjpaVKeG2t1PiiGlJ3j1etWBhPK
-X-Google-Smtp-Source: AGHT+IEDMdTX1CxQMkgRGRYE/ObcPbJRaUJjkn8KHQ8Bisj1r7G4rCh2u1YanIqxelOJpwlxdpeE6A==
-X-Received: by 2002:a17:907:3e8b:b0:ade:32fa:739e with SMTP id a640c23a62f3a-ae3c2a904e4mr238897866b.2.1751455270920;
-        Wed, 02 Jul 2025 04:21:10 -0700 (PDT)
-Received: from localhost ([2a03:2880:30ff:2::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353ca1cb3sm1057800466b.157.2025.07.02.04.21.09
+        bh=5F+sTxGPeHZTq3lkD4jSiUbC1PD//qQ0WXLka1L493g=;
+        b=hfad/7hb4oofZFFxeGIbsZH6Vf9vB2x7O2R4YSm+m+sZCNki75OE1vxbECisUJnvXG
+         4xw6vRbmu/mHLrB+Sws3VHCZSibdHd5GVxv4t6Wot5THkr3vC3LYbyoI65+51fvqBmQh
+         BnIIZ3z7QSbKMu3citrOzRhuaAR1RRSfh1nkqOXd3qv6AX0Ngqkr7rt9VEOCZLUmDHOf
+         sOa1XJ46AuvHI/iRrm4/bWVNIsNdhmQiS00yRMjNvkzoHZIeNgFdMmXbdi/7rXjLk2OW
+         ScnVEYmeObg0Tjeh887B8F+HYhnUgO2miusY2ShWvXv7yCFnUnjhKVXjjXL5oeDd9bmd
+         cAPg==
+X-Forwarded-Encrypted: i=1; AJvYcCW/fFQjcHGT3k8Byq5q6nhR40Gmsr2OvdcUZ0EgsjKmUMJ1+X18+IlzikvT7vCV/VPsPbOaOqOduz602AU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFsDRJFsmYXY2qGtE3iNuJ0vMLfI0qEh3j0vgR/Tv8JjMy/Ht0
+	KJgYTbqos67amfaEk28urf1aNUavAfuSAfQisjHPxi9W62dgjym19NLKV3PA7e4G60RoTQoa+Vn
+	2/Z5S3SJc4/C58Ut5I5OteY34tOF1A2MGADyeTT9a48kQKxQvAQ0tRzW2dT3iLdL3LFc=
+X-Gm-Gg: ASbGncvgZDubl+GMhEw2gj6oZHZpNIxRA7e0Jfsl1+OvLml0TKLGmmugWSkvDQYEDJU
+	wInI9g1h51qZJdf9IamD21QX/J16WvRzMJhW4pH3R6dUVuqyGjyewTODAaDeVcO90v8Lv6+acYw
+	weskeX6Xi37fDZJIyNmkBnlaQpurPdIWnqg9e+ckwcDn70/vUpDlZGYPKbzo2j1tLwxpPoT+cSC
+	TsPPuNZz0D9sr48V9pmYM5F/9CLTlzlE3IDWoa6IyJy1ww9XJ5mdNXCX5PyQ6AV3yyM7nGjGzGo
+	lMY22iI0kvjNO1pqAiDFduF6I271dnR8QzeOOLxGCWoy7UgWlqhhpkGBJw==
+X-Received: by 2002:a17:903:2bcc:b0:234:9ffb:840a with SMTP id d9443c01a7336-23c6e633930mr27990845ad.50.1751455268120;
+        Wed, 02 Jul 2025 04:21:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHC99kPyn5iGagtvBR5otuGrTDjsarDmdzae+VuRgVq4uL7qGj5kRWq2CxJe9BG7h4QzmssDg==
+X-Received: by 2002:a17:903:2bcc:b0:234:9ffb:840a with SMTP id d9443c01a7336-23c6e633930mr27990475ad.50.1751455267603;
+        Wed, 02 Jul 2025 04:21:07 -0700 (PDT)
+Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23b0b3bc0f1sm83926955ad.171.2025.07.02.04.21.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 04:21:10 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-Date: Wed, 02 Jul 2025 04:21:01 -0700
-Subject: [PATCH net-next v4 2/3] selftests: drv-net: Strip '@' prefix from
- bpftrace map keys
+        Wed, 02 Jul 2025 04:21:07 -0700 (PDT)
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Date: Wed, 02 Jul 2025 16:50:42 +0530
+Subject: [PATCH v5 2/2] PCI: qcom: Add support for multi-root port
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,59 +76,358 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250702-netpoll_test-v4-2-cec227e85639@debian.org>
-References: <20250702-netpoll_test-v4-0-cec227e85639@debian.org>
-In-Reply-To: <20250702-netpoll_test-v4-0-cec227e85639@debian.org>
-To: Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Shuah Khan <shuah@kernel.org>, Simon Horman <horms@kernel.org>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, 
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, bpf@vger.kernel.org, 
- kernel-team@meta.com, Breno Leitao <leitao@debian.org>
-X-Mailer: b4 0.15-dev-dd21f
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1053; i=leitao@debian.org;
- h=from:subject:message-id; bh=5e7Gu2hSYoF78NHOOQ4u3fblm9IpAmXxrCi48b0pb34=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBoZRYiYTBEtC3JkZ9ocdPcMBXa6dXyLxUCB2y0K
- sLcAsA6DzOJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaGUWIgAKCRA1o5Of/Hh3
- beTND/90rxGg4w5ITQE4iXr8TojvxUfs73oXVK7rzP9kn+KibVoOikS2sqsB8Q4JcZK48UyFL8N
- 3dgfhbp3wAUloZHuOlF1zHQJRA+QJmOvpG+rk440yQZFbnag/g1xgH/lzAlnM4YAtF45vy5NWx3
- xWktQrcZTtYm42H6n7LfJa+gw8sLJy+fLHVMXKsAcd3bx2GsftIKoKHXszdgNwuNDuomtXR6ZLA
- vD+Du4nefPtSvWZ6w/ohZ6rFYvfCA4RsKvr1zAinrx7nFmJpoLP1hy4mV2+2fVPG38Z+fwImuy/
- Pw8T4uGKDXYEb+Ny6hgqKh9b1amGKsz9MkleaC7K85SqGzbkGkGW3zPUJJ+BecqubOitPv4GDaL
- 4msu2xoMEbITgeMyDYq221+ZJiqYU8k0oDLsTUTF85J9gKdxRs3iiHbUQRsyOObWeTXm4BStnw5
- e7bck4YCQwh0U6kMx5tB1LCMX9mDII+nrWA0qC53RKAgBfPh2zdnhXbduXGX244bBkqe8qelVXp
- ndqTQPxHGbIOdayJxcFbXg+4G0fpuRUatn35zk/ZVCnPGh3ntEgIRHHOZcPslxRnq2H6F0yhWtB
- rIIJvllAUpwKWb2TtU7jyTTFNdmNqtzMg+vGWeBenBepgXJtQmqkjoG61ewlPObkDqzS/8Unr29
- VhzhsGPYkamhpAg==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+Message-Id: <20250702-perst-v5-2-920b3d1f6ee1@qti.qualcomm.com>
+References: <20250702-perst-v5-0-920b3d1f6ee1@qti.qualcomm.com>
+In-Reply-To: <20250702-perst-v5-0-920b3d1f6ee1@qti.qualcomm.com>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org
+Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_vbadigan@quicinc.com, quic_mrana@quicinc.com,
+        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751455253; l=8478;
+ i=krichai@qti.qualcomm.com; s=20230907; h=from:subject:message-id;
+ bh=A38xSljKc5j/Hin6ltpfaZ+hAhX+pVLlWZ3StYFW/Os=;
+ b=KEyzD4fITStC+0DI6bfdOsdIhKEtdcCoBIWQvDZNodbi8J90QIqtBSTwBGyi86z0THNFalP6b
+ RnPm9uxD0dWDupBjoDLDzVKkA5PbvJZi52wpW9uFKJ7nJqzgwC/RLy5
+X-Developer-Key: i=krichai@qti.qualcomm.com; a=ed25519;
+ pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
+X-Authority-Analysis: v=2.4 cv=Z+PsHGRA c=1 sm=1 tr=0 ts=68651625 cx=c_pps
+ a=IZJwPbhc+fLeJZngyXXI0A==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
+ a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=EUspDBNiAAAA:8 a=kQczSkNYjdDqFxC5ROQA:9
+ a=QEXdDO2ut3YA:10 a=uG9DUKGECoFWVXl0Dc02:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDA5MiBTYWx0ZWRfX6Uj6RbZlVkkd
+ Qzw3rsrR1wcKUKb3YQCkhQIMJV9yf5k5GIohDCXN6VyrWrcBFxe35biDf3B974yMXy8k/HAqYYz
+ judVy4xl1dGr0TkzI8nIi8uhUIAXeYlwnPyS66M2FX7/248DzwSFDHJC3Bf+k1N3SfwlfRreT2d
+ zKykK28/KZQpo38FJCsHVZrBeZOq6F+ZEbXyTrDHQsPAxTkxzVmEpaUTKPcURAnJZM9ubRZ7qYm
+ Z9dJC2UOOlJq3aL9At7EnVdjvOgnjjv/0B2vfzebcvrSVzKlD0H4topOvxkkyPxefYYWJV/hfkM
+ Nsj/mnIkaEsvEfBVcBeGwIC4QRMfZURf5UgPKSZCP5wyudLOxVO9weIoi19SLkICP0UxGL1ZXmp
+ 0C3yAuSe9J8UQsurfbvi6GFTiez3Jybn0tG/sWnglur1cuJLPJziz7SkUEm3AcBd5Y+vPfmy
+X-Proofpoint-GUID: EiTucoFpZVAvrmPs8L7sFNu4AJQXcwiv
+X-Proofpoint-ORIG-GUID: EiTucoFpZVAvrmPs8L7sFNu4AJQXcwiv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-02_01,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 lowpriorityscore=0 clxscore=1015 malwarescore=0 mlxlogscore=999
+ spamscore=0 adultscore=0 mlxscore=0 priorityscore=1501 bulkscore=0
+ impostorscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507020092
 
-The '@' prefix in bpftrace map keys is specific to bpftrace and can be
-safely removed when processing results. This patch modifies the bpftrace
-utility to strip the '@' from map keys before storing them in the result
-dictionary, making the keys more consistent with Python conventions.
+Move phy, PERST# handling to root port and provide a way to have multi-port
+logic.
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
+Currently, QCOM controllers only support single port, and all properties
+are present in the host bridge node itself. This is incorrect, as
+properties like phys, perst-gpios, etc.. can vary per port and should be
+present in the root port node.
+
+To maintain DT backwards compatibility, fallback to the legacy method of
+parsing the host bridge node if the port parsing fails.
+
+pci-bus-common.yaml uses reset-gpios property for representing PERST#, use
+same property instead of perst-gpios.
+
+Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 ---
- tools/testing/selftests/net/lib/py/utils.py | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pci/controller/dwc/pcie-qcom.c | 178 ++++++++++++++++++++++++++++-----
+ 1 file changed, 151 insertions(+), 27 deletions(-)
 
-diff --git a/tools/testing/selftests/net/lib/py/utils.py b/tools/testing/selftests/net/lib/py/utils.py
-index 760ccf6fccccc..33c23a928ed1d 100644
---- a/tools/testing/selftests/net/lib/py/utils.py
-+++ b/tools/testing/selftests/net/lib/py/utils.py
-@@ -213,6 +213,8 @@ def bpftrace(expr, json=None, ns=None, host=None, timeout=None):
-             if one.get('type') != 'map':
-                 continue
-             for k, v in one["data"].items():
-+                if k.startswith('@'):
-+                    k = k.lstrip('@')
-                 ret[k] = v
-         return ret
-     return cmd_obj
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index f7ed1e010eb6607b2e98a42f0051c47e4de2af93..56d04a15edf8f99f6d3b9bfaa037ff922b521888 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -267,6 +267,12 @@ struct qcom_pcie_cfg {
+ 	bool no_l0s;
+ };
+ 
++struct qcom_pcie_port {
++	struct list_head list;
++	struct gpio_desc *reset;
++	struct phy *phy;
++};
++
+ struct qcom_pcie {
+ 	struct dw_pcie *pci;
+ 	void __iomem *parf;			/* DT parf */
+@@ -279,24 +285,37 @@ struct qcom_pcie {
+ 	struct icc_path *icc_cpu;
+ 	const struct qcom_pcie_cfg *cfg;
+ 	struct dentry *debugfs;
++	struct list_head ports;
+ 	bool suspended;
+ 	bool use_pm_opp;
+ };
+ 
+ #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
+ 
+-static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
++static void qcom_perst_assert(struct qcom_pcie *pcie, bool assert)
+ {
+-	gpiod_set_value_cansleep(pcie->reset, 1);
++	struct qcom_pcie_port *port;
++	int val = assert ? 1 : 0;
++
++	if (list_empty(&pcie->ports))
++		gpiod_set_value_cansleep(pcie->reset, val);
++	else
++		list_for_each_entry(port, &pcie->ports, list)
++			gpiod_set_value_cansleep(port->reset, val);
++
+ 	usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);
+ }
+ 
++static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
++{
++	qcom_perst_assert(pcie, true);
++}
++
+ static void qcom_ep_reset_deassert(struct qcom_pcie *pcie)
+ {
+ 	/* Ensure that PERST has been asserted for at least 100 ms */
+ 	msleep(PCIE_T_PVPERL_MS);
+-	gpiod_set_value_cansleep(pcie->reset, 0);
+-	usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);
++	qcom_perst_assert(pcie, false);
+ }
+ 
+ static int qcom_pcie_start_link(struct dw_pcie *pci)
+@@ -1234,6 +1253,59 @@ static bool qcom_pcie_link_up(struct dw_pcie *pci)
+ 	return val & PCI_EXP_LNKSTA_DLLLA;
+ }
+ 
++static void qcom_pcie_phy_exit(struct qcom_pcie *pcie)
++{
++	struct qcom_pcie_port *port;
++
++	if (list_empty(&pcie->ports))
++		phy_exit(pcie->phy);
++	else
++		list_for_each_entry(port, &pcie->ports, list)
++			phy_exit(port->phy);
++}
++
++static void qcom_pcie_phy_power_off(struct qcom_pcie *pcie)
++{
++	struct qcom_pcie_port *port;
++
++	if (list_empty(&pcie->ports)) {
++		phy_power_off(pcie->phy);
++	} else {
++		list_for_each_entry(port, &pcie->ports, list)
++			phy_power_off(port->phy);
++	}
++}
++
++static int qcom_pcie_phy_power_on(struct qcom_pcie *pcie)
++{
++	struct qcom_pcie_port *port;
++	int ret = 0;
++
++	if (list_empty(&pcie->ports)) {
++		ret = phy_set_mode_ext(pcie->phy, PHY_MODE_PCIE, PHY_MODE_PCIE_RC);
++		if (ret)
++			return ret;
++
++		ret = phy_power_on(pcie->phy);
++		if (ret)
++			return ret;
++	} else {
++		list_for_each_entry(port, &pcie->ports, list) {
++			ret = phy_set_mode_ext(port->phy, PHY_MODE_PCIE, PHY_MODE_PCIE_RC);
++			if (ret)
++				return ret;
++
++			ret = phy_power_on(port->phy);
++			if (ret) {
++				qcom_pcie_phy_power_off(pcie);
++				return ret;
++			}
++		}
++	}
++
++	return ret;
++}
++
+ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
+ {
+ 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+@@ -1246,11 +1318,7 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = phy_set_mode_ext(pcie->phy, PHY_MODE_PCIE, PHY_MODE_PCIE_RC);
+-	if (ret)
+-		goto err_deinit;
+-
+-	ret = phy_power_on(pcie->phy);
++	ret = qcom_pcie_phy_power_on(pcie);
+ 	if (ret)
+ 		goto err_deinit;
+ 
+@@ -1273,7 +1341,7 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
+ err_assert_reset:
+ 	qcom_ep_reset_assert(pcie);
+ err_disable_phy:
+-	phy_power_off(pcie->phy);
++	qcom_pcie_phy_power_off(pcie);
+ err_deinit:
+ 	pcie->cfg->ops->deinit(pcie);
+ 
+@@ -1286,7 +1354,7 @@ static void qcom_pcie_host_deinit(struct dw_pcie_rp *pp)
+ 	struct qcom_pcie *pcie = to_qcom_pcie(pci);
+ 
+ 	qcom_ep_reset_assert(pcie);
+-	phy_power_off(pcie->phy);
++	qcom_pcie_phy_power_off(pcie);
+ 	pcie->cfg->ops->deinit(pcie);
+ }
+ 
+@@ -1631,11 +1699,41 @@ static const struct pci_ecam_ops pci_qcom_ecam_ops = {
+ 	}
+ };
+ 
++static int qcom_pcie_parse_port(struct qcom_pcie *pcie, struct device_node *node)
++{
++	struct device *dev = pcie->pci->dev;
++	struct qcom_pcie_port *port;
++	struct gpio_desc *reset;
++	struct phy *phy;
++
++	reset = devm_fwnode_gpiod_get(dev, of_fwnode_handle(node),
++				      "reset", GPIOD_OUT_HIGH, "PERST#");
++	if (IS_ERR(reset))
++		return PTR_ERR(reset);
++
++	phy = devm_of_phy_get(dev, node, NULL);
++	if (IS_ERR(phy))
++		return PTR_ERR(phy);
++
++	port = devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
++	if (!port)
++		return -ENOMEM;
++
++	port->reset = reset;
++	port->phy = phy;
++	INIT_LIST_HEAD(&port->list);
++	list_add_tail(&port->list, &pcie->ports);
++
++	return 0;
++}
++
+ static int qcom_pcie_probe(struct platform_device *pdev)
+ {
+ 	const struct qcom_pcie_cfg *pcie_cfg;
+ 	unsigned long max_freq = ULONG_MAX;
++	struct qcom_pcie_port *port, *tmp;
+ 	struct device *dev = &pdev->dev;
++	struct device_node *of_port;
+ 	struct dev_pm_opp *opp;
+ 	struct qcom_pcie *pcie;
+ 	struct dw_pcie_rp *pp;
+@@ -1701,6 +1799,8 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+ 		goto err_pm_runtime_put;
+ 	}
+ 
++	INIT_LIST_HEAD(&pcie->ports);
++
+ 	pci->dev = dev;
+ 	pci->ops = &dw_pcie_ops;
+ 	pp = &pci->pp;
+@@ -1709,12 +1809,6 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+ 
+ 	pcie->cfg = pcie_cfg;
+ 
+-	pcie->reset = devm_gpiod_get_optional(dev, "perst", GPIOD_OUT_HIGH);
+-	if (IS_ERR(pcie->reset)) {
+-		ret = PTR_ERR(pcie->reset);
+-		goto err_pm_runtime_put;
+-	}
+-
+ 	pcie->parf = devm_platform_ioremap_resource_byname(pdev, "parf");
+ 	if (IS_ERR(pcie->parf)) {
+ 		ret = PTR_ERR(pcie->parf);
+@@ -1737,12 +1831,6 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
+-	pcie->phy = devm_phy_optional_get(dev, "pciephy");
+-	if (IS_ERR(pcie->phy)) {
+-		ret = PTR_ERR(pcie->phy);
+-		goto err_pm_runtime_put;
+-	}
+-
+ 	/* OPP table is optional */
+ 	ret = devm_pm_opp_of_add_table(dev);
+ 	if (ret && ret != -ENODEV) {
+@@ -1789,9 +1877,42 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+ 
+ 	pp->ops = &qcom_pcie_dw_ops;
+ 
+-	ret = phy_init(pcie->phy);
+-	if (ret)
+-		goto err_pm_runtime_put;
++	for_each_available_child_of_node(dev->of_node, of_port) {
++		ret = qcom_pcie_parse_port(pcie, of_port);
++		of_node_put(of_port);
++		if (ret) {
++			if (ret != -ENOENT) {
++				dev_err_probe(pci->dev, ret,
++					      "Failed to parse port nodes %d\n",
++					      ret);
++				goto err_port_del;
++			}
++			break;
++		}
++	}
++
++	/*
++	 * In the case of properties not populated in root port, fallback to the
++	 * legacy method of parsing the host bridge node. This is to maintain DT
++	 * backwards compatibility.
++	 */
++	if (ret) {
++		pcie->phy = devm_phy_optional_get(dev, "pciephy");
++		if (IS_ERR(pcie->phy)) {
++			ret = PTR_ERR(pcie->phy);
++			goto err_pm_runtime_put;
++		}
++
++		pcie->reset = devm_gpiod_get_optional(dev, "perst", GPIOD_OUT_HIGH);
++		if (IS_ERR(pcie->reset)) {
++			ret = PTR_ERR(pcie->reset);
++			goto err_pm_runtime_put;
++		}
++
++		ret = phy_init(pcie->phy);
++		if (ret)
++			goto err_pm_runtime_put;
++	}
+ 
+ 	platform_set_drvdata(pdev, pcie);
+ 
+@@ -1836,7 +1957,10 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+ err_host_deinit:
+ 	dw_pcie_host_deinit(pp);
+ err_phy_exit:
+-	phy_exit(pcie->phy);
++	qcom_pcie_phy_exit(pcie);
++err_port_del:
++	list_for_each_entry_safe(port, tmp, &pcie->ports, list)
++		list_del(&port->list);
+ err_pm_runtime_put:
+ 	pm_runtime_put(dev);
+ 	pm_runtime_disable(dev);
 
 -- 
-2.47.1
+2.34.1
 
