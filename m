@@ -1,136 +1,172 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0FA62DE6F5;
-	Wed,  2 Jul 2025 20:57:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D197F2DE6F5
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 20:58:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751489864; cv=none; b=sJB20PH0yhPgWLwmXDA0PRtYCQaxV233032m+hnCIjX4Wlan8bmaNLN8toWsjL3I46ka6AB5+Vhvnf7mcS9h5D6KZHa+waW/bOoNN5ffR+LraIDVy3+sih7+ck0Xg9yEh+b1pqPmg6f/VTv+w60p9ATgxtdNcnplw30GQ2SDMU4=
+	t=1751489936; cv=none; b=dVZjDOQIIhnrT1bDcone3eGDZOhUNbpRw0XDL736OZam04KdNaK011X9r7l5DSjKVC1o0rwkt/H2FPUqjcGnT6HQnSaVT8t6Y3amov7Z+Ff9AfGDkmR7Tu/PXSvfA6TRlSB1c2+f4SwdNtGHXl/24Vuv6L/Wbe3x65cayzB1YK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751489864; c=relaxed/simple;
-	bh=ueVYBf/vvIdXw8MFHMMhsOsTsQ52WkYR53FawATwmKc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s4BhehIOdNHBmX+3swweDFIkrbVhxB8jh/9Bj0O/Y/wmNanjuVCVhOk73EFRC4RI/5BGGWHm3zl0+q3SfXQfP6erDxCp02aS0zPAXSMKJSiXvpnD3bcoAYuZjmSWm3wKixn5kjta7T8E/BzH0eJbGXsktVnHWjRlIZaH0/zYP/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=goukj6F3; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1751489936; c=relaxed/simple;
+	bh=eTPngYW+xIIJsPFNulV3zvN+v6Iqt2lDwz2DaFgqNr0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FAJZH/ktmB4DV9XiajKbJaykKrFEbYmkhJ+OxKGTt5c1nJyxCSTOtyy0PQI9Z3FDstjVhRmvXzQgi53a1t+KMJe7vp0Vuq64kGiynH40VylSHT2eMOManbCjlsowHBJ+EKiiwL816BxAG5v3uizJFhK8mPG+eSi2LuRL6TvEgng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DpwOBkT2; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="goukj6F3"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-234fcadde3eso64668205ad.0;
-        Wed, 02 Jul 2025 13:57:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1751489862; x=1752094662; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ueVYBf/vvIdXw8MFHMMhsOsTsQ52WkYR53FawATwmKc=;
-        b=goukj6F3jMQs5Cs5faSOT2muGXw9Ss04Jf08C9/1MfOtj58XzmKlKN7aNNubDNxOpz
-         Eq3lHya5yp6JRl6n69kyKgC2i4hrGlbCnPPg28uMVFhwhiP3wjftSCRVPQHKJL7vA+Px
-         yYEYvr+E5c8h9xTgO/FGoXoJcavhZONnj5oX+RIbXzW+XtUj5pg8uQS+u0yonMhj+4Zh
-         mIBfRWeSlgNHumoTZGyP9UaWXKYI5TFq8lSWB/gwwMLYkJI8dk/86AMz4SowXM6YROvr
-         fUBZif9x5uVxIPgzTKAwdhfoZ/QvhRedTiFAzyrsG657GxHHYH36zSF09IP5Xx1OXzqS
-         WzGQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DpwOBkT2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751489932;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WOTU+d2v5BAWQ3IDOfILW9WYtvyZL2oUTXZsgcEBv+A=;
+	b=DpwOBkT2aMpq18ucrYpVtDWn0KkSCLDi+s24VP/svjUKtm3FlmB2ekA2VVtCyR69sVx98k
+	kqKpDhkodCtvzuYO5fij+kspq80tGie592RIicr8W8kLg5uAYmfCwmYHrzqdLGw1QWQJWu
+	5pM0s27pVb1iJjSPd8u/Qh0x5eQa3LE=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-47-iXSliJxXOxyCRKBkZKn1mw-1; Wed, 02 Jul 2025 16:58:51 -0400
+X-MC-Unique: iXSliJxXOxyCRKBkZKn1mw-1
+X-Mimecast-MFC-AGG-ID: iXSliJxXOxyCRKBkZKn1mw_1751489931
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6fb01bb5d9aso111371396d6.3
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 13:58:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751489862; x=1752094662;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ueVYBf/vvIdXw8MFHMMhsOsTsQ52WkYR53FawATwmKc=;
-        b=WDXivzKL7CLI6GmBwOtHsfr2U/B5GToj6IcwaMJes3qXOiM4/Q6ARAvqrxKbmIFIYF
-         m20hDoRMyUNLtmwfWlNNyvJj0C/uhe1ry++p2OHAqxkNpK813ioHme6BsI0uMKYB56N9
-         JLDdtPzAqRcL7U3BLS/AWORPut3i9y8WMMpgBJE+XcZR+4dwsfc97VTgDbe8nM7lY0Uh
-         gIpWrIBWZrPPrVcVGUzJ0PDGONHVI4dHjAgqp8zTNP5zkhqzfwMd4P+xWd0LYIDVDCcA
-         SGHBBBgpXv3WmrGcz9gLB7bWNCbFYWAK1r041QOUAeP4J2Jw6pUrlH5z/ZqHTaS7ZTV6
-         bOdA==
-X-Forwarded-Encrypted: i=1; AJvYcCUDyCm3mpk/d385DViJkmJu1GVOLyj8D/FG0lRo4Kq8jBdIU1HxzQC+oBYRA82oOGXDutAipaE6Bl/I@vger.kernel.org, AJvYcCUPdhSnLffQoFw1LX773vGCaE+qNmFTDYFrUPIsZ5Oe+K8pEZbzjYfFvms9QSiYzJGVUloptpCbzMoZepY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGEpmyPZXQXtDft/mC9hOvNw/0So7CwT4i85sQ61qQ0RnTgzjN
-	CLYL5hzk+J76BlfWMxiSIm3673AU+4ayznnxPsica+nGP8intL3c32SOcOeg5B4wEs37VjHWERC
-	viM5tMGlcyGm556MF7eHjKzgHtlIxzw4=
-X-Gm-Gg: ASbGncuxUpcOItC914LG+B/t9A1imKAXaOnO8bjwhwqjK1XSbRl3JVAO66lwtfBeKhC
-	2C3jkvHn1PVC2Ife3qkpy1swJU49b1ze0rGZfXD7dGL8ZWWZo0nXuay0iUdRDP5MupC8MG3hcpa
-	6TAhNcFR91aiRNGTFz7D+7EkeL892CiLewb3fndSIlP9maxU5CFRLFFCkEX6n/+Hrt9J0mCmjtP
-	ULX
-X-Google-Smtp-Source: AGHT+IGjgIPfifmbYpcB2lF3QfBA5zuc6wFJQKxRY4/yEEmq/VYap82lAwrs8+bzvEScw/tJQqdROF0TMX1gsfJcQ+g=
-X-Received: by 2002:a17:902:d481:b0:235:f078:473e with SMTP id
- d9443c01a7336-23c6e5cade9mr66917995ad.43.1751489862178; Wed, 02 Jul 2025
- 13:57:42 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751489931; x=1752094731;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WOTU+d2v5BAWQ3IDOfILW9WYtvyZL2oUTXZsgcEBv+A=;
+        b=LFs9LRf78RtDJtVkTqz7XqYMP8PuUGTW9tHt5b8tbhM4HjB9fA7Vnqn8TqONG/sf2T
+         JSo3HLWLmjD+YLt+e9A+5l+advmYZf2EJwO8bjim8Lfx0g5WpFLRK+eHWn5sX6LiN9wn
+         dV+A30XzPZPs0xA+gwPHQk9hUSMAsI6c62FzsnqcQvKljdFJ+LdUkXxIbzdkmq0+iFfr
+         7DPW5MWVHYdkuW6GHVgEAOwovnsAWx1vaoasBE8LSouZ0wqOQt9twqBOryQb2LCgyTxJ
+         rZqQpZxyjX87lyYdCbLywGdjV1Rb0uw98w8a6jqV3MTSOuA7qjAYGcIqXValghI/VnqB
+         BdWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWhzbSPaFv/zEz7RSVuJ5AmA1L/WZ0zHFdX3f+vu2zmFBcvPPuwgwxj3JJ3bH7/vcVxfOxBvGYHSZTJRPw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2rhqvQiEykT3Uqx3FIaTEeBAikz51dlqBKbRC4YiqLylKdvlK
+	jcqfnlXg2jrLSrKBsCxACx15Zusut1IRKn8DWEJqAP0NAO81+XX17SSQPBMW1HWzfa1rBkP4SIi
+	hTe9Wy+Qf5f5g1KmKDCL8ROvhCID1y+RJp+pwTYBJXvo5OLojgCgo8LLwsN+cLS1juOvDv+95VA
+	==
+X-Gm-Gg: ASbGnctU9nv92PVhAzgaAY6GzGhLQ+FJ0+t+qOGFytvH2JRUYJGdzJW/MubvKsIU3hw
+	nuZTP9wYej2PrI9gIc5qOXWi2+kNIJFZMy48vKTr2RbmbLpNa51UrPeTlwctbyFcxA1hyuR75an
+	Ix6ARbu03l6YP+HhswCKH4m4eSVfRz0UiOVpsvuN0l3nCzwOiay9/YFDhvfRlyWI2hkF6KOCiZj
+	vnQG9uo90eLqBk49Py+qw7A8A6BP8eUhcFJIYPEruNOI33MHwQbIUMHvZ1x0sfYkNA9YN0ZJVyz
+	z0NlQ/OvMR0qDA==
+X-Received: by 2002:a05:6214:2aa7:b0:6f8:e66b:578e with SMTP id 6a1803df08f44-702bcc67924mr11063106d6.32.1751489930980;
+        Wed, 02 Jul 2025 13:58:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE+QOp1gP5d1ygXeemNGH1JhDJQDSPwFCZsqWpTNaKH+tPWObjk5CcB+1Hqk3D9Ifq7DRzEeg==
+X-Received: by 2002:a05:6214:2aa7:b0:6f8:e66b:578e with SMTP id 6a1803df08f44-702bcc67924mr11062776d6.32.1751489930414;
+        Wed, 02 Jul 2025 13:58:50 -0700 (PDT)
+Received: from x1.local ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd7718da94sm106707176d6.24.2025.07.02.13.58.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 13:58:49 -0700 (PDT)
+Date: Wed, 2 Jul 2025 16:58:46 -0400
+From: Peter Xu <peterx@redhat.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kvm@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Zi Yan <ziy@nvidia.com>, Alex Mastro <amastro@fb.com>,
+	David Hildenbrand <david@redhat.com>,
+	Nico Pache <npache@redhat.com>
+Subject: Re: [PATCH 5/5] vfio-pci: Best-effort huge pfnmaps with !MAP_FIXED
+ mappings
+Message-ID: <aGWdhnw7TKZKH5WM@x1.local>
+References: <aFQkxg08fs7jwXnJ@x1.local>
+ <20250619184041.GA10191@nvidia.com>
+ <aFsMhnejq4fq6L8N@x1.local>
+ <20250624234032.GC167785@nvidia.com>
+ <aFtHbXFO1ZpAsnV8@x1.local>
+ <20250625130711.GH167785@nvidia.com>
+ <aFwt6wjuDzbWM4_C@x1.local>
+ <20250625184154.GI167785@nvidia.com>
+ <aFxNdDpIlx0fZoIN@x1.local>
+ <20250630140537.GW167785@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250628015328.249637-1-da@libre.computer> <CANAwSgTH67T9SBQSFQgFjvyrxNCbtfd9ZaCDZFACWA=ZQ-PYtQ@mail.gmail.com>
- <CAFBinCBwTkVwcBTWOzS+G13+rRM2eftMXZ3GHzW+F+BY0bBBzg@mail.gmail.com>
- <1j4ivued2q.fsf@starbuckisacylon.baylibre.com> <CACqvRUa8EqMbCd2x=di-a6jbMWW8CMo4kgLH=0qnsqHdO16kxA@mail.gmail.com>
- <CAFBinCAkW+G9oV+SOJdac50oLezQnbc358dBgs56-RfjPd-zgA@mail.gmail.com> <CACqvRUYwwgRqid8AbLJ7bp+gTyHw2c=o-pj435Z0PDriJcnnKQ@mail.gmail.com>
-In-Reply-To: <CACqvRUYwwgRqid8AbLJ7bp+gTyHw2c=o-pj435Z0PDriJcnnKQ@mail.gmail.com>
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date: Wed, 2 Jul 2025 22:57:31 +0200
-X-Gm-Features: Ac12FXz6XZtGm-3ti_MXvq5_F1onfeA5_tjNx4dcE-d4NTCOTzJlhlVHJUTnayc
-Message-ID: <CAFBinCA-aFNd+UQR5oWBY+HtMcdefeiH4Oc6bvZTaYDxowYCjw@mail.gmail.com>
-Subject: Re: [RFC] mmc: meson-gx-mmc: add delay during poweroff
-To: Da Xue <da@libre.computer>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Anand Moon <linux.amoon@gmail.com>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Kevin Hilman <khilman@baylibre.com>, linux-mmc@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250630140537.GW167785@nvidia.com>
 
-On Wed, Jul 2, 2025 at 9:07=E2=80=AFPM Da Xue <da@libre.computer> wrote:
->
-> On Wed, Jul 2, 2025 at 2:40=E2=80=AFPM Martin Blumenstingl
-> <martin.blumenstingl@googlemail.com> wrote:
-> >
-> > On Wed, Jul 2, 2025 at 7:22=E2=80=AFPM Da Xue <da@libre.computer> wrote=
-:
-> > >
-> > > On Wed, Jul 2, 2025 at 1:07=E2=80=AFPM Jerome Brunet <jbrunet@baylibr=
-e.com> wrote:
-> > > ...
-> > > > If, as the description suggest, the regulator framework somehow ign=
-ore
-> > > > the timing set in DT, maybe this is what needs to be checked ?
-> > >
-> > > The regulator framework only cares about timing for regulator on.
-> > > Regulator off just turns off the regulator and returns without delay.
-> > There's an exception to this: gpio-regulators without an enable-gpios
-> > property. My understanding is that regulator_disable() is a no-op in
-> > that case (meson_mmc_set_ios() even has a comment above the
-> > switch/case statement), see [0].
-> >
-> > > The code makes incorrect assumptions. Then the kernel resets the boar=
-d
-> > > without having enough time.
-> > Can you please name the board you're testing? I'm worried that I'll be
-> > looking at one .dts but you're looking at another one.
->
-> https://github.com/libre-computer-project/libretech-linux/blob/master/arc=
-h/arm64/boot/dts/amlogic/meson-libretech-cottonwood.dtsi#L481
->
-> vcc_card is a gpio regulator that gets toggled on->off->on.
-Thanks, that clears things up as I was indeed looking at a gpio
-regulator while this is a fixed regulator!
+On Mon, Jun 30, 2025 at 11:05:37AM -0300, Jason Gunthorpe wrote:
+> On Wed, Jun 25, 2025 at 03:26:44PM -0400, Peter Xu wrote:
+> > On Wed, Jun 25, 2025 at 03:41:54PM -0300, Jason Gunthorpe wrote:
+> > > On Wed, Jun 25, 2025 at 01:12:11PM -0400, Peter Xu wrote:
+> > > 
+> > > > After I read the two use cases, I mostly agree.  Just one trivial thing to
+> > > > mention, it may not be direct map but vmap() (see io_region_init_ptr()).
+> > > 
+> > > If it is vmapped then this is all silly, you should vmap and mmmap
+> > > using the same cache colouring and, AFAIK, pgoff is how this works for
+> > > purely userspace.
+> > > 
+> > > Once vmap'd it should determine the cache colour and set the pgoff
+> > > properly, then everything should already work no?
+> > 
+> > I don't yet see how to set the pgoff.  Here pgoff is passed from the
+> > userspace, which follows io_uring's definition (per io_uring_mmap).
+> 
+> That's too bad
+> 
+> So you have to do it the other way and pass the pgoff to the vmap so
+> the vmap ends up with the same colouring as a user VMa holding the
+> same pages..
 
-> I traced the regulator framework a few weeks ago and forgot the final
-> regulator disable function call, but that call basically returned
-> immediately while the regulator-enable function complement had delays
-> implemented.
-Yep, for fixed regulators there's an "off-on-delay-us" device-tree
-property (which translates to "off_on_delay" in the code).
-Its implementation is smart enough to not waste time by adding delays
-at runtime by implementing: on -> off + remember time -> wait
-remaining time + on (meaning: if there was enough time between off and
-the second on there's no additional wait) [0]. On system shutdown it
-will not add any delay unfortunately (where Linux loses control over
-time-keeping), meaning we can end up with too little waiting time.
+Not sure if I get that point, but.. it'll be hard to achieve at least.
 
-Also my understanding is that it's not something that can be fixed in
-u-boot or TF-A. This is because bootrom already has trouble reading
-the next stage from an SD card (which is a valid boot media).
+The vmap() happens (submit/complete queues initializes) when io_uring
+instance is created.  The mmap() happens later, and it can also happen
+multiple times, so that all of the VAs got mmap()ed need to share the same
+colouring with the vmap()..  In this case it sounds reasonable to me to
+have the alignment done at mmap(), against the vmap() results.
 
+> 
+> > So if we want the new API to be proposed here, and make VFIO use it first
+> > (while consider it to be applicable to all existing MMU users at least,
+> > which I checked all of them so far now), I'd think this proper:
+> > 
+> >     int (*mmap_va_hint)(struct file *file, unsigned long *pgoff, size_t len);
+> > 
+> > The changes comparing to previous:
+> > 
+> >     (1) merged pgoff and *phys_pgoff parameters into one unsigned long, so
+> >     the hook can adjust the pgoff for the va allocator to be used.  The
+> >     adjustment will not be visible to future mmap() when VMA is created.
+> 
+> It seems functional, but the above is better, IMHO.
 
-[0] https://elixir.bootlin.com/linux/v6.15/source/drivers/regulator/core.c#=
-L2754
+Do you mean we can start with no modification allowed on *pgoff?  I'd
+prefer having *pgoff modifiable from the start, as it'll not only work for
+io_uring / parisc above since the 1st day (so we don't need to introduce it
+on top, modifying existing users..), but it'll also be cleaner to be used
+in the current VFIO's use case.
+
+> 
+> >     (2) I renamed it to mmap_va_hint(), because *pgoff will be able to be
+> >     updated, so it's not only about ordering, but "order" and "pgoff
+> >     adjustment" hints that the core mm will use when calculating the VA.
+> 
+> Where does order come back though? Returns order?
+
+Yes.
+
+> 
+> It seems viable
+
+After I double check with the API above, I can go and prepare a new version.
+
+Thanks a lot, Jason.
+
+-- 
+Peter Xu
+
