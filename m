@@ -1,42 +1,42 @@
 Received: from esa5.hgst.iphmx.com (esa5.hgst.iphmx.com [216.71.153.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A38482F2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E47D470808
 	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 00:58:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.153.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751417914; cv=none; b=XgXrMj+IaVZWSBPzzVIA3lFCWT7Y43Y0o8oy4usGLh+PRAOigB0FV9H1x4ZiAhSTx7EPNcwu1X9ZuBryi4uHE5hJfyhwdyXit9JC3ofRdrGbNhUYUBLAaX/6LQURvJtL7jDhHVhjkbEjf84dYjevPPvqQmeOIvcZn+odjXE7els=
+	t=1751417915; cv=none; b=KfUcCun0LolLWT1WajkpF3OCPLRpLAEfY+PTfa7TNFEY+FlZFTZFxV6X2qeB4BZ5+gJw8YXjsEmO03tvtdWROeIc023b/0CLyqwoOVQZHmGYxZHSM5BPc3mfw/evTRcsXy2vBw/RS9cPc/sEknrSJiwvMSI2qReyCbxumJ2jmmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751417914; c=relaxed/simple;
-	bh=g65gumUQfZ8kgOdiv2LMg63fItTV1vT54Qwnc+0Aczc=;
+	s=arc-20240116; t=1751417915; c=relaxed/simple;
+	bh=VXNIZYL4TDNV74rDgxN9LTztkyCjwTb19kJ9JH/Ew7U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=epD1YlOcePJ5fcwxzpcBxTvNpPqtH57uw/CIcIbB78LWp5x3jXbXBFwlvakJCW8SGfNr8pFgcGnKzVhOr+Eez7U47SdIeLAT0GQzPd91VfS2QL8Omsb9lr7yqiSES22R+s+W25/g1+qFSPlI5XcR3sUwLQXa5XYxrtk9P7zQSAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=eiVVAApb; arc=none smtp.client-ip=216.71.153.144
+	 MIME-Version; b=rYwf8KlKI7s/HqqLQMRBbewLapNWEDZbq1FjGATS69nlhtxMHGVvEnVzSnKLnzmt6EWOR4v4seH7BWqVv6cvWn5JHXvX8A+8hvioIQPr0V6OC9ZBHuMJUy6gTez9XMxlqaWlY7eTp4rl3GJnsR6UlHTEHSsDWqEJOJGqOfnFKcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=T/qm3F3x; arc=none smtp.client-ip=216.71.153.144
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="eiVVAApb"
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="T/qm3F3x"
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
   t=1751417913; x=1782953913;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=g65gumUQfZ8kgOdiv2LMg63fItTV1vT54Qwnc+0Aczc=;
-  b=eiVVAApbevJZ8KVI1VAPy0f4WPrDLddz2bKW77aI6Gfpo9rU8jZYmRQA
-   pI+WQfsx4ifieVyboM3ef9pbDj0u+9cqwgAmXcw4CKjkotUgMn3HnnmO/
-   j4R9pdCSyylD5r27yafJ9XSzXuvvNmu54F1wWFMJ1sQWgl6XPuNVAXYPc
-   GSVeNp19FwLFuR07kvdMoCoicIdpHdDBhS/aWqI+cRN68kUKwBzX049r2
-   QM961Xjnkj6WiPJZIhIMq5pqqmex+awB2bAwFeJ1cduTf2bbFx7yiPtPl
-   GZJ/OIrTw7v23L+CTXQVwY1R+csSNTdoASc57r5wl9iJCJmsmr+Io+b7y
-   g==;
-X-CSE-ConnectionGUID: GYUOnNPSToiZmjHNfqXx3A==
-X-CSE-MsgGUID: Q15XlPxPS/mfbBdIHlP2rQ==
+  bh=VXNIZYL4TDNV74rDgxN9LTztkyCjwTb19kJ9JH/Ew7U=;
+  b=T/qm3F3xPHwHmy7uFnBymY9IdCC2s6QZgcjtdvTdKa4bj1Z/2TtTVcAB
+   LaMZJZCGRgdEFCqrsqaJsSU8j8eW0Fob3XzRH1celh34IVXX/Me5B1kde
+   sgdHKEm1ocRZPJ8tOsb0Jd6EOpzZXjmDjQCTbqWWW8oGYlQ9dBkJMtGw+
+   tepfeKYmeHEb6tHVgU41Ap9zIaJvwZH/FNvzL70h+7VizloSQV4BLbki3
+   6z42F3SRg1XLIXtJWh06I6Mych4A52Cp/PO+1K93qez6isk1HHnnFvfFR
+   ly3DpSlp6JYawQQuRbBgUJyAVFfQnhpv/UTgaeLBZvFKnYpRq+jviuNVB
+   Q==;
+X-CSE-ConnectionGUID: U62vqzczQsWshdsbix/z0w==
+X-CSE-MsgGUID: bofuy6GnTkqVUk6tpkPq9w==
 X-IronPort-AV: E=Sophos;i="6.16,280,1744041600"; 
-   d="scan'208";a="85608346"
+   d="scan'208";a="85608347"
 Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
   by ob1.hgst.iphmx.com with ESMTP; 02 Jul 2025 08:58:31 +0800
-IronPort-SDR: 686475ad_bkArkAOOVtIgggta6S2MiIc+E6sodQ8Lfh5KkHv3od4SEFb
- ExXKOKDqVszLyRd0+sExrK1kUg0j9YRtz7NQVdw==
+IronPort-SDR: 686475ad_Z3uo29qHjcScXXFtKbpNLCCqGaAC+MKj6s6KWUSazad4j5s
+ XvHN80xBsQeVMRh6ZjRFLR7ks3y5hfAL/+vgaAw==
 Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
   by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 01 Jul 2025 16:56:29 -0700
 WDCIronportException: Internal
@@ -52,9 +52,9 @@ To: kbusch@kernel.org,
 Cc: cassel@kernel.org,
 	dlemoal@kernel.org,
 	kamaljit.singh1@wdc.com
-Subject: [PATCH v2 2/3] nvme: prevent admin controller from smart log fetch (LID 2)
-Date: Tue,  1 Jul 2025 17:58:28 -0700
-Message-ID: <20250702005830.889217-3-kamaljit.singh1@wdc.com>
+Subject: [PATCH v2 3/3] nvme: prevent ioq creation for discovery controllers
+Date: Tue,  1 Jul 2025 17:58:29 -0700
+Message-ID: <20250702005830.889217-4-kamaljit.singh1@wdc.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250702005830.889217-1-kamaljit.singh1@wdc.com>
 References: <20250702005830.889217-1-kamaljit.singh1@wdc.com>
@@ -66,33 +66,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Similar to a discovery ctrl, prevent an admin-ctrl from getting a smart
-log. LID 2 is optional for admin controllers to support.
+Prevent ioq creation for discovery-controllers as the spec prohibits
+them, similarly to the administrative controllers.
 
-In the future when support for the newly added LID=0 (supported log
-pages) is added, GLP accesses can be made smarter by basing such calls
-on response from LID=0 reads.
-
-Reference: NVMe Base rev 2.2, sec 3.1.3.5, fig 31.
+Reference: NVMe Base rev 2.2, sec 3.1.3.4, fig 28.
 
 Signed-off-by: Kamaljit Singh <kamaljit.singh1@wdc.com>
 ---
- drivers/nvme/host/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvme/host/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index a1155fb8d5be..c310634e75f3 100644
+index c310634e75f3..3ad3b1da8b34 100644
 --- a/drivers/nvme/host/core.c
 +++ b/drivers/nvme/host/core.c
-@@ -3705,7 +3705,7 @@ int nvme_init_ctrl_finish(struct nvme_ctrl *ctrl, bool was_suspended)
+@@ -3155,12 +3155,12 @@ static inline bool nvme_admin_ctrl(struct nvme_ctrl *ctrl)
+ }
  
- 	nvme_configure_opal(ctrl, was_suspended);
- 
--	if (!ctrl->identified && !nvme_discovery_ctrl(ctrl)) {
-+	if (!ctrl->identified && !nvme_discovery_ctrl(ctrl) && !nvme_admin_ctrl(ctrl)) {
- 		/*
- 		 * Do not return errors unless we are in a controller reset,
- 		 * the controller works perfectly fine without hwmon.
+ /*
+- * An admin controller has one admin queue, but no I/O queues.
++ * An admin or discovery controller has one admin queue, but no I/O queues.
+  * Override queue_count so it only creates an admin queue.
+  */
+ void nvme_override_prohibited_io_queues(struct nvme_ctrl *ctrl)
+ {
+-	if (nvme_admin_ctrl(ctrl))
++	if (nvme_admin_ctrl(ctrl) || nvme_discovery_ctrl(ctrl))
+ 		ctrl->queue_count = 1;
+ }
+ EXPORT_SYMBOL_GPL(nvme_override_prohibited_io_queues);
 -- 
 2.43.0
 
