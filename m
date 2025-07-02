@@ -1,133 +1,87 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 438662D77EC;
-	Wed,  2 Jul 2025 15:29:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751470154; cv=pass; b=SsexE3E5nw852JHDdHHy/YsYuqm1BdTy+swXS4DqFNN7J4yYg74Fk6EhEJWN7OxIzAGgwMg304jT87bw1H8XACdvXmU9YQHArxo1AMNLDSOGKUvcM5QLXc0wEcJGUeT4KjEmqSBL5SEWQ3X4ErpiY64sE/tLiROXIseOu/Kt5yE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751470154; c=relaxed/simple;
-	bh=4XEKQT76LvS3Y6e6rmkm0GkWsEW6Zw0OCCcFcS67QPk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q2zxSk3GSZgr39mb4lZURim5wBr4W5OOaRkGcetB8bouCm/+o8QWHNY8eAgFPwPeCR5EckDlmAZkBtU5ROO7rasVDiqxvS0BHhX4k/sg0teP0RnSwkvb0kmj7AjFJJrSRaVw4+VDvCQEyA6fQNIS94mb4CUAv6geADol3kHARXc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=CuThlUxt; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 272BE1C84CD;
+	Wed,  2 Jul 2025 15:30:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751470207; cv=none; b=UKVTbkJfSQzB03O6R5W2EY2h0D9luzHgbG+lszrKXhgzSVdQERx74BA9lD1JEPlsb/0xdsbjClHBGl18d3PrV8XuOGieLEzMOIuyG+dskPd6iKZaC2FV8yj0tVVdtyR5EEspzWiRWCCpP7+QUMTRM4TFeXbBbA/AIsWuIzkFd8Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751470207; c=relaxed/simple;
+	bh=1hB7Zt6/rC5KgiBrbFJS8tkSgdS8qaxfYi4Ore/zPkk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=efAUTadAEuvpvRJzvVwS+uUKfvtbqoEohx0IWQfLx3gIyR+ooCSyglbDUcvCHoSuMt0W+Qd1sTDfGHe4bDNIzgU4vLjKTupw9T02JjbmNXgZ2i3tUehRl+FkcqGC4ZXXLADxG+0TPnZSx+fZ+Zt5kFlGCikHf95x10fHLAzz2qk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oQjZ8wsg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="CuThlUxt"
-ARC-Seal: i=1; a=rsa-sha256; t=1751470104; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=SRAugPz6P+3S6Ww1NMrFW+rBm8a+V/pHxmp0f5e9ImTqsgawHg7mJ3Xv9atJN5EKT1ZGw8mwJRFq1hX7WPxk1CMyR2dPjoyHcLt+xkq8x6mI7GysxsLtbA4Ds0cxxe6uJUN7IYYTTKw4cx3BI+QILpcUI9pyfjn1h07LFLqZsEY=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751470104; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=vToI/q0SLNdevcT5MHyyQG4DzTsgKvzxpzAhoFP37GM=; 
-	b=nT+2wCpivFckHAfh8BQVmjtTtjGhJuqX+kjQ778zgcWJ3Jmqpis2mWAbdbLKFmMss1DyOVPrCQ9qJ18+ftHPw+yzClb5wrtrPRTQwTby6V4zvD7qN9orRHbZAK++NesCIC3GZJxIOQjXXAd5gEKAmT3AKsyunyBVt22WEQi+O3k=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
-	dmarc=pass header.from=<usama.anjum@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751470104;
-	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=vToI/q0SLNdevcT5MHyyQG4DzTsgKvzxpzAhoFP37GM=;
-	b=CuThlUxt/Ev8mupL8U0sZk7gy1qW3SfjKatxNKRlQuqNCOSgV3j+CfBgEql6mOSR
-	i6SLjaLJfhb/hEp1z4LZ7ipJk62qa1BFHIH2LjXjOVK7PuNYDJnYP4IeWWmkSAPcewL
-	h1YyybETUyOAT4RKpRGgY+YaSBtbtQZTzLJRUSms=
-Received: by mx.zohomail.com with SMTPS id 1751470102160518.2344574890795;
-	Wed, 2 Jul 2025 08:28:22 -0700 (PDT)
-Message-ID: <defad9df-e248-48d2-a3b6-3f057c6f0b76@collabora.com>
-Date: Wed, 2 Jul 2025 20:28:13 +0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oQjZ8wsg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 416F6C4CEE7;
+	Wed,  2 Jul 2025 15:30:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751470206;
+	bh=1hB7Zt6/rC5KgiBrbFJS8tkSgdS8qaxfYi4Ore/zPkk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oQjZ8wsg7xexe1fb1H5E/QPkW4Oxb32rgzlfDzw5je0/rgRzrjasgqXZdKqMUFOht
+	 UhhSnbaPqc+MP65Uul8jywX2R3iIQacDKEt25Pyz34N7pV48pwLn88EJjv+WopyVMm
+	 CUC1gRcp1+Bz5qP7Dt2MUbc+G1X8nIjrpo45uKIHMy0iEkszX3GlJdBVayxBejpR1v
+	 mVeNzBsX3mssaa2J2UY1jfWIJf8sbzhA55FNRg3+xn8kUziMHacbNEkEYPk+2ormEK
+	 phkd2yhtTkXB5DIEfJk9AuVhVuplk4e8vwsroDkuAdUkXg0lp1zWXpOA5cCQ1GtZLF
+	 hkwfap89cvlfg==
+Date: Wed, 2 Jul 2025 16:30:01 +0100
+From: Lee Jones <lee@kernel.org>
+To: Michael Walle <mwalle@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Julien Panis <jpanis@baylibre.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 0/7] mfd: tps6594: Add TI TPS652G1 support
+Message-ID: <20250702153001.GV10134@google.com>
+References: <20250613114518.1772109-1-mwalle@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] bus: mhi: don't deinitialize and re-initialize again
-To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
- Manivannan Sadhasivam <mani@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
- Jeff Hugo <jeff.hugo@oss.qualcomm.com>,
- Youssef Samir <quic_yabdulra@quicinc.com>,
- Matthew Leung <quic_mattleun@quicinc.com>, Yan Zhen <yanzhen@vivo.com>,
- Alexander Wilhelm <alexander.wilhelm@westermo.com>,
- Alex Elder <elder@kernel.org>, Kunwu Chan <chentao@kylinos.cn>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Siddartha Mohanadoss <smohanad@codeaurora.org>,
- Sujeev Dias <sdias@codeaurora.org>, Julia Lawall <julia.lawall@lip6.fr>,
- John Crispin <john@phrozen.org>, Muna Sinada <quic_msinada@quicinc.com>,
- Venkateswara Naralasetty <quic_vnaralas@quicinc.com>,
- Maharaja Kennadyrajan <quic_mkenna@quicinc.com>, mhi@lists.linux.dev,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-wireless@vger.kernel.org, ath11k@lists.infradead.org
-Cc: kernel@collabora.com
-References: <20250630074330.253867-1-usama.anjum@collabora.com>
- <20250630074330.253867-3-usama.anjum@collabora.com>
- <855ae20a-3675-4cce-b87d-6f25fb69e0a8@oss.qualcomm.com>
-Content-Language: en-US
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <855ae20a-3675-4cce-b87d-6f25fb69e0a8@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250613114518.1772109-1-mwalle@kernel.org>
 
-Thank you for reviewing!
+On Fri, 13 Jun 2025, Michael Walle wrote:
 
-On 7/1/25 7:49 PM, Jeff Johnson wrote:
-> On 6/30/2025 12:43 AM, Muhammad Usama Anjum wrote:
+> Add support for the TI TPS652G1 PMIC which is a stripped down
+> version of the TPS65224. Support for the latter has already been
+> merged. Refactor the regulator driver to ease adding new devices.
+> After doing that adding the TPS652G1 variant is really straight
+> forward. Some care has to be taken by the interrupt handling (of the
+> regulator part) because there interrupts are used for voltage
+> monitoring which this variant doesn't have.
 > 
-> Subject has incorrect prefix, should be "wifi: ath11k: "
+> Michael Walle (7):
+>   mfd: tps6594: Add TI TPS652G1 support
+>   misc: tps6594-pfsm: Add TI TPS652G1 PMIC PFSM
+>   pinctrl: pinctrl-tps6594: Add TPS652G1 PMIC pinctrl and GPIO
+>   regulator: tps6594-regulator: remove interrupt_count
+>   regulator: tps6594-regulator: remove hardcoded buck config
+>   regulator: tps6594-regulator: refactor variant descriptions
+>   regulator: tps6594-regulator: Add TI TPS652G1 PMIC regulators
 > 
-> And ideally it should mention HAL SRNG since it is specific to that allocation
-I'll fix the subject.
+>  drivers/mfd/tps6594-core.c            |  88 ++++++++++-
+>  drivers/mfd/tps6594-i2c.c             |  10 +-
+>  drivers/mfd/tps6594-spi.c             |  10 +-
+>  drivers/misc/tps6594-pfsm.c           |  31 ++--
+>  drivers/pinctrl/pinctrl-tps6594.c     |  35 ++++
+>  drivers/regulator/tps6594-regulator.c | 219 +++++++++++++++-----------
+>  include/linux/mfd/tps6594.h           |   1 +
+>  7 files changed, 284 insertions(+), 110 deletions(-)
 
-> 
->> Don't deinitialize and reinitialize the HAL helpers. The dma memory is
->> deallocated and there is high possibility that we'll not be able to get
->> the same memory allocated from dma when there is high memory pressure.
->>
->> Tested-on: WCN6855 WLAN.HSP.1.1-03926.13-QCAHSPSWPL_V2_SILICONZ_CE-2.52297.6
-> 
-> not quite the right format since it is missing hw version and bus
-I've been using the same tag from last accepted patches. How to construct the
-correct patch?
+Doesn't apply.
 
-> 
->>
->> Fixes: d5c65159f289 ("ath11k: driver for Qualcomm IEEE 802.11ax devices")
->> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
->> ---
->>  drivers/net/wireless/ath/ath11k/core.c | 5 -----
->>  1 file changed, 5 deletions(-)
->>
->> diff --git a/drivers/net/wireless/ath/ath11k/core.c b/drivers/net/wireless/ath/ath11k/core.c
->> index 4488e4cdc5e9e..bc4930fe6a367 100644
->> --- a/drivers/net/wireless/ath/ath11k/core.c
->> +++ b/drivers/net/wireless/ath/ath11k/core.c
->> @@ -2213,14 +2213,9 @@ static int ath11k_core_reconfigure_on_crash(struct ath11k_base *ab)
->>  	mutex_unlock(&ab->core_lock);
->>  
->>  	ath11k_dp_free(ab);
->> -	ath11k_hal_srng_deinit(ab);
->>  
->>  	ab->free_vdev_map = (1LL << (ab->num_radios * TARGET_NUM_VDEVS(ab))) - 1;
->>  
->> -	ret = ath11k_hal_srng_init(ab);
->> -	if (ret)
->> -		return ret;
->> -
->>  	clear_bit(ATH11K_FLAG_CRASH_FLUSH, &ab->dev_flags);
->>  
->>  	ret = ath11k_core_qmi_firmware_ready(ab);
-> 
-> does this patch have any dependency upon the 1/3 patch?
-No
+Please rebase onto v6.16-rc1.
 
-> if not, then it should be sent separately since it should go through the ath
-> tree instead of through the mhi tree.
-Ohh... I see. I'll send it separately.
-
-> 
-> /jeff
-
+-- 
+Lee Jones [李琼斯]
