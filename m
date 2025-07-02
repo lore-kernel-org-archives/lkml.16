@@ -1,284 +1,211 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 668736FC5
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:01:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE9456FC5
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:02:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751464896; cv=none; b=W+tMp3OoPuZ7ObBax0ED23kpXn7i+WePTHJXlbKPbc+FI/IYHtMuS8K7Nz/Gsk7uV//RfCcpX+KpMaBEMwun6J3Cth/rxdOGsxsacpARsPXRc7PjIfANYO/uM5fMGyWiX6AnlFpUyw35AJhqSubgqbJGgzoDtbCnUPV4oIuQaAY=
+	t=1751464960; cv=none; b=PTr9u9cE9+iH2nlz8bs6QIGAFBFluN6nU33o4zHPnS/ho2HFoRNmgzOz1KEfmR91alC74WvpMcJJfOAL59pM5Ab7YrEACtZhBkbwjB2sjI3/M7iAg64RiFAjFeuQ81DtKXMuc4fpyQqH10PiVSNYgqeUMBtlkBhuL28pulWRQVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751464896; c=relaxed/simple;
-	bh=7ur8WwZ7CikILjOqdrWIi0wh6UgznR4Wb+UhLSWIeB8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K3qrsHufZlOGwmjtjfqtyhcf6LGmhnnvNWNuTs3LAT6VJcbv2dc0TPhda7puaJi4ja8+tTj8/e9e2PlBVQ2vvGQMo9HGy7S1kg4CPEw6eFV8HR2Xg+G7JFtsWNkrydjeh7DPpaugDtt2h3b6YfEtqeNc+XOH+XKXeb2zWN30ii8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=igWP6Uve; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="igWP6Uve"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-7fd35b301bdso5051748a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 07:01:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751464894; x=1752069694; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=QO1kxLEhQdwObzXYkHGYcAuf/NFzNzXCcRMRjKdSjMQ=;
-        b=igWP6UveRrZynXBdukHxx4pcoeZDhozQswTq26O+Ky1A5JDRl2BFFI3tx/lgckSDmC
-         J7Pnxk43rsMkz/HPPt9G4A49H//D56/eJnMGqgfa6CY5cVGbriDXNcDc7PI9wS8xCZKM
-         5yP4eAdMoeEMG7Ca0lMz5vyPsQ1RA6+fhdDC5ZGYJPj/3uWvfSO1PXeYoIoZaQCCuaJE
-         hXdEQqwVkB6c0xLRszvdmWHLZM4526WFIPVzIEu0LF/d6R0HhOtsEqaLe9NgHAy0sr3l
-         qx4LdlfWdh7qM3xZ8fDYLwUzZPnzLUYtOqyhmXthajY3r+93A2PksJEmn1MjxnBToCf6
-         zHug==
+	s=arc-20240116; t=1751464960; c=relaxed/simple;
+	bh=/xnQFIqYyIL9Yz85movHuQxtuMf6MHqxcoRtaZvgxNU=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=q24DMDAllU8iZg3muMCGc0cqUFRMlt+OOvtjWPWGRP43c3nU32YCURU3GrdE1T96DaiUSUIYDM9dvlHtoWRw0kCGkSgPnPeV7YK0li7w7JG4wdigUSbTQ086dzFp05Mkq2QTEnCU9P5HZroukb+LGG9KCrzEyYDtgGfTUB3IVi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-87632a0275dso546419839f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 07:02:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751464894; x=1752069694;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QO1kxLEhQdwObzXYkHGYcAuf/NFzNzXCcRMRjKdSjMQ=;
-        b=bsB+qvZMVJb1zjL3xDH0W7/I4olkBJsG3luHqTg+H2hHsBMjhrTVG4/EhR2deHXCP/
-         ILnJTvgIxc0e/n265ugbYhmO6usJHVGBKRoe/OLNE3qRLP8gYbKrTqa0dLcIw+L3Q8jg
-         2h/oHoh9958tbExT/bs/HEe1/xLIevxaI/wHinnCABC6v/mr9sPRz6XDnF2HjURgM8nv
-         mJKwLW+VXHl/0Lr8PYxpp0sWFMDIuvUTsKQ7xmCo7U9eJTHyZ79PDCynaa2FUKIskMhr
-         OenQhlSoiX6WlxrxRYxaK9MJtgNpLHRHxa5I94Y0gvEm5mrwMk85BxPs5iPwXBIdnFsf
-         4Quw==
-X-Forwarded-Encrypted: i=1; AJvYcCVDC5DhTvHJdnd8VMMyz3f2O4MulliqXamjQ0qbi1BdprwDpzaImOX3qVwDw43o/nG8yQ56PpsglRquHAo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvkrQ/vHpLbdszninM3GAGQybZ2E+v14VeGbS5WyK62LfR+tp/
-	GgaMZYeM0WSeEFAD7r4r4rzy6nDO4RALHD9/6uB7xM0ao5PWzGm4vHAFlHukW476x8AC0ht+eyl
-	gxngiPEM56zhQJ3DWhEfvPO5kL/E66ZIpXQhAbvc=
-X-Gm-Gg: ASbGncvf41p+2KLsvy6clTyxJh5bgiMyQWHSdwBBh6buBMpYamcLC0HHn5IB20AIwcG
-	s41vldNrfESgc5b9/ubfI82X8mKbd0AZnk6YXhZEX+Rpxye2TZB5m5URg20IvjRGWxjstK3jjHb
-	YqzU5QS75EWU2hf6/xLbBG79SOvxovH5HW5NIqGJB0HQnsuw==
-X-Google-Smtp-Source: AGHT+IGIG8c+lqWMr2WK3XUTrLfH1GKp+/JJ5CUz0C5+T1dHqbAdNzFKJ/rUgpyFphCq9obTJJfKQ426CCV4bniHh+c=
-X-Received: by 2002:a17:90b:2703:b0:311:ffe8:20e6 with SMTP id
- 98e67ed59e1d1-31a90b1a2c3mr4335825a91.3.1751464891509; Wed, 02 Jul 2025
- 07:01:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751464958; x=1752069758;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dByylAG2c51x5gFXBJ6JiboT2jB5E3W7QnW5fgQ6Oiw=;
+        b=OsYZOcUM1LjvXFfv7Z2kytE8DOSaza3rp97gV6nmh8b37VIaW+6Wb7hFNFR3uiDiLN
+         6kx1+Jn8QiYdBXTQPyw2N0Cxv244BEI/pt+a9HjzyE78T3YzlbRaWYw8pEU/RBADTWhC
+         M56Zly4bXChNK6eU00lzsgWY6ZsS2w1ZPL6UWXiKA32mYdiL4ICwm0dKgBNpRR+NvS8v
+         tIOMzXSDfHwfb8xZr0pXlT24aDqKDzyt1+f4OtP+0/x/5UIdjj5lj5IHwjFbhOliaFAO
+         kCFd+Pr496F8Ib6fGPKWVvoHIJ0vvrmZ5+uHPfF96ghYqFati9C/r3SgByNcqU6dgTs0
+         R9mw==
+X-Forwarded-Encrypted: i=1; AJvYcCWjfiA36xET/pe3YK6gGP58TACFK5LyaY2ibIUknWy54c58qcyln0Gs5Qs7Mew6wOVEZ9eteAQB2BZBaSA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfTkF0NFiW7Sgk0tgGrMOKtW8aXE+PDGZcm5S4qfCuyVryL0Cu
+	knNz/7sd6WKvWyUlE+byHaWp749vfQq1Ys9yLlgRRuI0CyokMuAR85MXzlAO0CFB8k/pLY1/Kvj
+	SWE0QKhXmyztmyE7bGHTAOZAEiLA5qU7HzJz+pJzpFuc8nGMIOoAJZO2MYZA=
+X-Google-Smtp-Source: AGHT+IF4x4Or/xkfZx7+M2g2bxTm2Ngcdv5e6gScnz+K6XgI5teTfxfLyoi8M7MaKmbsiwTQXKRuH36XYi+0I3m7jN8PapKeG5n2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250508165620.15321-1-aha310510@gmail.com> <aBzuh0qb1UPrT86s@pc636>
- <aBzxqiX7unwAqVCY@pc636> <CAO9qdTF3vN5veO3HhGbrq-CkfR1fH_3ueCLjtcY8LOYKCG2mjg@mail.gmail.com>
- <aGUas7_fcLS07mnL@pc636>
-In-Reply-To: <aGUas7_fcLS07mnL@pc636>
-From: Jeongjun Park <aha310510@gmail.com>
-Date: Wed, 2 Jul 2025 23:01:23 +0900
-X-Gm-Features: Ac12FXytpEGD61xI4gVjPopOBnQBPCerPdInR-Lnu5k7RupgGAgjAz_65MrIBXQ
-Message-ID: <CAO9qdTGJ14Gz3nzi+pn--POFP-VK_Rsege6TpATSXubLm7GAUA@mail.gmail.com>
-Subject: Re: [PATCH v6] mm/vmalloc: fix data race in show_numa_info()
-To: Uladzislau Rezki <urezki@gmail.com>
-Cc: akpm@linux-foundation.org, edumazet@google.com, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
+X-Received: by 2002:a5d:88c2:0:b0:861:c238:bf03 with SMTP id
+ ca18e2360f4ac-876c6a292ddmr287486139f.8.1751464957903; Wed, 02 Jul 2025
+ 07:02:37 -0700 (PDT)
+Date: Wed, 02 Jul 2025 07:02:37 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68653bfd.a00a0220.270cb1.0000.GAE@google.com>
+Subject: [syzbot] [usb?] KMSAN: kernel-usb-infoleak in usbhid_raw_request
+From: syzbot <syzbot+fbe9fff1374eefadffb9@syzkaller.appspotmail.com>
+To: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
+	linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-Uladzislau Rezki <urezki@gmail.com> wrote:
->
-> On Wed, Jul 02, 2025 at 01:01:13AM +0900, Jeongjun Park wrote:
-> > Uladzislau Rezki <urezki@gmail.com> wrote:
-> > >
-> > > On Thu, May 08, 2025 at 07:48:55PM +0200, Uladzislau Rezki wrote:
-> > > > On Fri, May 09, 2025 at 01:56:20AM +0900, Jeongjun Park wrote:
-> > > > > The following data-race was found in show_numa_info():
-> > > > >
-> > > > > ==================================================================
-> > > > > BUG: KCSAN: data-race in vmalloc_info_show / vmalloc_info_show
-> > > > >
-> > > > > read to 0xffff88800971fe30 of 4 bytes by task 8289 on cpu 0:
-> > > > >  show_numa_info mm/vmalloc.c:4936 [inline]
-> > > > >  vmalloc_info_show+0x5a8/0x7e0 mm/vmalloc.c:5016
-> > > > >  seq_read_iter+0x373/0xb40 fs/seq_file.c:230
-> > > > >  proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
-> > > > > ....
-> > > > >
-> > > > > write to 0xffff88800971fe30 of 4 bytes by task 8287 on cpu 1:
-> > > > >  show_numa_info mm/vmalloc.c:4934 [inline]
-> > > > >  vmalloc_info_show+0x38f/0x7e0 mm/vmalloc.c:5016
-> > > > >  seq_read_iter+0x373/0xb40 fs/seq_file.c:230
-> > > > >  proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
-> > > > > ....
-> > > > >
-> > > > > value changed: 0x0000008f -> 0x00000000
-> > > > > ==================================================================
-> > > > >
-> > > > > According to this report,there is a read/write data-race because m->private
-> > > > > is accessible to multiple CPUs. To fix this, instead of allocating the heap
-> > > > > in proc_vmalloc_init() and passing the heap address to m->private,
-> > > > > vmalloc_info_show() should allocate the heap.
-> > > > >
-> > > > > Fixes: a47a126ad5ea ("vmallocinfo: add NUMA information")
-> > > > > Suggested-by: Eric Dumazet <edumazet@google.com>
-> > > > > Suggested-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> > > > > Suggested-by: Andrew Morton <akpm@linux-foundation.org>
-> > > > > Signed-off-by: Jeongjun Park <aha310510@gmail.com>
-> > > > > ---
-> > > > > v6: Change CONFIG_NUMA to must be check before doing any work related to the counters array.
-> > > > > - Link to v5: https://lore.kernel.org/all/20250508160800.12540-1-aha310510@gmail.com/
-> > > > > v5: Change heap to be allocated only when CONFIG_NUMA is enabled
-> > > > > - Link to v4: https://lore.kernel.org/all/20250508065558.149091-1-aha310510@gmail.com/
-> > > > > v4: Change the way counters array heap is allocated, per Andrew Morton's suggestion.
-> > > > >     And fix it to call smp_rmb() in the correct location.
-> > > > > - Link to v3: https://lore.kernel.org/all/20250507142552.9446-1-aha310510@gmail.com/
-> > > > > v3: Following Uladzislau Rezki's suggestion, we check v->flags beforehand
-> > > > >     to avoid printing uninitialized members of vm_struct.
-> > > > > - Link to v2: https://lore.kernel.org/all/20250506082520.84153-1-aha310510@gmail.com/
-> > > > > v2: Refactoring some functions and fix patch as per Eric Dumazet suggestion
-> > > > > - Link to v1: https://lore.kernel.org/all/20250505171948.24410-1-aha310510@gmail.com/
-> > > > > ---
-> > > > >  mm/vmalloc.c | 63 +++++++++++++++++++++++++++++-----------------------
-> > > > >  1 file changed, 35 insertions(+), 28 deletions(-)
-> > > > >
-> > > > > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> > > > > index 3ed720a787ec..c1ea9713a1c0 100644
-> > > > > --- a/mm/vmalloc.c
-> > > > > +++ b/mm/vmalloc.c
-> > > > > @@ -3100,7 +3100,7 @@ static void clear_vm_uninitialized_flag(struct vm_struct *vm)
-> > > > >     /*
-> > > > >      * Before removing VM_UNINITIALIZED,
-> > > > >      * we should make sure that vm has proper values.
-> > > > > -    * Pair with smp_rmb() in show_numa_info().
-> > > > > +    * Pair with smp_rmb() in vread_iter() and vmalloc_info_show().
-> > > > >      */
-> > > > >     smp_wmb();
-> > > > >     vm->flags &= ~VM_UNINITIALIZED;
-> > > > > @@ -4914,28 +4914,29 @@ bool vmalloc_dump_obj(void *object)
-> > > > >  #endif
-> > > > >
-> > > > >  #ifdef CONFIG_PROC_FS
-> > > > > -static void show_numa_info(struct seq_file *m, struct vm_struct *v)
-> > > > > -{
-> > > > > -   if (IS_ENABLED(CONFIG_NUMA)) {
-> > > > > -           unsigned int nr, *counters = m->private;
-> > > > > -           unsigned int step = 1U << vm_area_page_order(v);
-> > > > >
-> > > > > -           if (!counters)
-> > > > > -                   return;
-> > > > > +/*
-> > > > > + * Print number of pages allocated on each memory node.
-> > > > > + *
-> > > > > + * This function can only be called if CONFIG_NUMA is enabled
-> > > > > + * and VM_UNINITIALIZED bit in v->flags is disabled.
-> > > > > + */
-> > > > > +static void show_numa_info(struct seq_file *m, struct vm_struct *v,
-> > > > > +                            unsigned int *counters)
-> > > > > +{
-> > > > > +   unsigned int nr;
-> > > > > +   unsigned int step = 1U << vm_area_page_order(v);
-> > > > >
-> > > > > -           if (v->flags & VM_UNINITIALIZED)
-> > > > > -                   return;
-> > > > > -           /* Pair with smp_wmb() in clear_vm_uninitialized_flag() */
-> > > > > -           smp_rmb();
-> > > > > +   if (!counters)
-> > > > > +           return;
-> > > > >
-> > > > > -           memset(counters, 0, nr_node_ids * sizeof(unsigned int));
-> > > > > +   memset(counters, 0, nr_node_ids * sizeof(unsigned int));
-> > > > >
-> > > > > -           for (nr = 0; nr < v->nr_pages; nr += step)
-> > > > > -                   counters[page_to_nid(v->pages[nr])] += step;
-> > > > > -           for_each_node_state(nr, N_HIGH_MEMORY)
-> > > > > -                   if (counters[nr])
-> > > > > -                           seq_printf(m, " N%u=%u", nr, counters[nr]);
-> > > > > -   }
-> > > > > +   for (nr = 0; nr < v->nr_pages; nr += step)
-> > > > > +           counters[page_to_nid(v->pages[nr])] += step;
-> > > > > +   for_each_node_state(nr, N_HIGH_MEMORY)
-> > > > > +           if (counters[nr])
-> > > > > +                   seq_printf(m, " N%u=%u", nr, counters[nr]);
-> > > > >  }
-> > > > >
-> > > > >  static void show_purge_info(struct seq_file *m)
-> > > > > @@ -4962,8 +4963,12 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
-> > > > >     struct vmap_node *vn;
-> > > > >     struct vmap_area *va;
-> > > > >     struct vm_struct *v;
-> > > > > +   unsigned int *counters;
-> > > > >     int i;
-> > > > >
-> > > > > +   if (IS_ENABLED(CONFIG_NUMA))
-> > > > > +           counters = kmalloc(nr_node_ids * sizeof(unsigned int), GFP_KERNEL);
-> > > > > +
-> > > > >     for (i = 0; i < nr_vmap_nodes; i++) {
-> > > > >             vn = &vmap_nodes[i];
-> > > > >
-> > > > > @@ -4979,6 +4984,11 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
-> > > > >                     }
-> > > > >
-> > > > >                     v = va->vm;
-> > > > > +                   if (v->flags & VM_UNINITIALIZED)
-> > > > > +                           continue;
-> > > > > +
-> > > > > +                   /* Pair with smp_wmb() in clear_vm_uninitialized_flag() */
-> > > > > +                   smp_rmb();
-> > > > >
-> > > > >                     seq_printf(m, "0x%pK-0x%pK %7ld",
-> > > > >                             v->addr, v->addr + v->size, v->size);
-> > > > > @@ -5013,7 +5023,9 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
-> > > > >                     if (is_vmalloc_addr(v->pages))
-> > > > >                             seq_puts(m, " vpages");
-> > > > >
-> > > > > -                   show_numa_info(m, v);
-> > > > > +                   if (IS_ENABLED(CONFIG_NUMA))
-> > > > > +                           show_numa_info(m, v, counters);
-> > > > > +
-> > > > >                     seq_putc(m, '\n');
-> > > > >             }
-> > > > >             spin_unlock(&vn->busy.lock);
-> > > > > @@ -5023,19 +5035,14 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
-> > > > >      * As a final step, dump "unpurged" areas.
-> > > > >      */
-> > > > >     show_purge_info(m);
-> > > > > +   if (IS_ENABLED(CONFIG_NUMA))
-> > > > > +           kfree(counters);
-> > > > >     return 0;
-> > > > >  }
-> > > > >
-> > > > >  static int __init proc_vmalloc_init(void)
-> > > > >  {
-> > > > > -   void *priv_data = NULL;
-> > > > > -
-> > > > > -   if (IS_ENABLED(CONFIG_NUMA))
-> > > > > -           priv_data = kmalloc(nr_node_ids * sizeof(unsigned int), GFP_KERNEL);
-> > > > > -
-> > > > > -   proc_create_single_data("vmallocinfo",
-> > > > > -           0400, NULL, vmalloc_info_show, priv_data);
-> > > > > -
-> > > > > +   proc_create_single("vmallocinfo", 0400, NULL, vmalloc_info_show);
-> > > > >     return 0;
-> > > > >  }
-> > > > >  module_init(proc_vmalloc_init);
-> > > > > --
-> > > > LGTM:
-> > > >
-> > > > Reviewed-by: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-> > > >
-> > > > Thank you!
-> > > >
-> > > Also one thing i have just noticed. The "Fixes tag" should be updated to
-> > > this: Fixes: 8e1d743f2c26 ("mm: vmalloc: support multiple nodes in vmallocinfo")
-> > >
-> > > the below one should not be blamed:
-> > >
-> > > Fixes: a47a126ad5ea ("vmallocinfo: add NUMA information")
-> > >
-> > > Thanks!
-> > >
-> > > --
-> > > Uladzislau Rezki
-> >
-> > I've been looking through the stable tree and it seems like this issue
-> > still exists in the stable tree, so I think this patch needs to be
-> > backported.
-> >
-> > What do you think?
-> >
-> If the stable does not have it, we should backport it. But it has to be
-> done only for those where a vmap-node logic is in place. It was delivered
-> starting from the v6.9 kernel version.
->
+Hello,
 
-Then I guess I should backport to 6.12, 6.15. Thanks for letting me know!
+syzbot found the following issue on:
 
-Regards,
-Jeongjun Park
+HEAD commit:    66701750d556 Merge tag 'io_uring-6.16-20250630' of git://g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=169d648c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1d5c61bcebaf295a
+dashboard link: https://syzkaller.appspot.com/bug?extid=fbe9fff1374eefadffb9
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/c23f36e934f7/disk-66701750.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/fb02dd3f3235/vmlinux-66701750.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/0a0df8bd2838/bzImage-66701750.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+fbe9fff1374eefadffb9@syzkaller.appspotmail.com
+
+usb 4-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+usb 4-1: config 0 descriptor??
+microsoft 0003:045E:07DA.0003: unknown main item tag 0x0
+microsoft 0003:045E:07DA.0003: ignoring exceeding usage max
+=====================================================
+BUG: KMSAN: kernel-usb-infoleak in usb_submit_urb+0x5a1/0x2630 drivers/usb/core/urb.c:430
+ usb_submit_urb+0x5a1/0x2630 drivers/usb/core/urb.c:430
+ usb_start_wait_urb+0xc2/0x320 drivers/usb/core/message.c:59
+ usb_internal_control_msg drivers/usb/core/message.c:103 [inline]
+ usb_control_msg+0x27c/0x5b0 drivers/usb/core/message.c:154
+ usbhid_raw_request+0x4ab/0x690 drivers/hid/usbhid/hid-core.c:-1
+ __hid_request+0x2bd/0x500 drivers/hid/hid-core.c:1989
+ hidinput_change_resolution_multipliers drivers/hid/hid-input.c:1950 [inline]
+ hidinput_connect+0x3bf5/0x5cc0 drivers/hid/hid-input.c:2327
+ hid_connect+0x6b4/0x3440 drivers/hid/hid-core.c:2239
+ hid_hw_start+0xfc/0x1e0 drivers/hid/hid-core.c:2354
+ ms_probe+0x2e5/0x890 drivers/hid/hid-microsoft.c:391
+ __hid_device_probe drivers/hid/hid-core.c:2724 [inline]
+ hid_device_probe+0x536/0xab0 drivers/hid/hid-core.c:2761
+ call_driver_probe drivers/base/dd.c:-1 [inline]
+ really_probe+0x4d1/0xd90 drivers/base/dd.c:657
+ __driver_probe_device+0x268/0x380 drivers/base/dd.c:799
+ driver_probe_device+0x70/0x8b0 drivers/base/dd.c:829
+ __device_attach_driver+0x4ee/0x950 drivers/base/dd.c:957
+ bus_for_each_drv+0x3e3/0x680 drivers/base/bus.c:462
+ __device_attach+0x3c8/0x5c0 drivers/base/dd.c:1029
+ device_initial_probe+0x33/0x40 drivers/base/dd.c:1078
+ bus_probe_device+0x3ba/0x5e0 drivers/base/bus.c:537
+ device_add+0x12a9/0x1c10 drivers/base/core.c:3692
+ hid_add_device+0x5ed/0x7b0 drivers/hid/hid-core.c:2907
+ usbhid_probe+0x1fec/0x2660 drivers/hid/usbhid/hid-core.c:1435
+ usb_probe_interface+0xd01/0x1310 drivers/usb/core/driver.c:396
+ call_driver_probe drivers/base/dd.c:-1 [inline]
+ really_probe+0x4d1/0xd90 drivers/base/dd.c:657
+ __driver_probe_device+0x268/0x380 drivers/base/dd.c:799
+ driver_probe_device+0x70/0x8b0 drivers/base/dd.c:829
+ __device_attach_driver+0x4ee/0x950 drivers/base/dd.c:957
+ bus_for_each_drv+0x3e3/0x680 drivers/base/bus.c:462
+ __device_attach+0x3c8/0x5c0 drivers/base/dd.c:1029
+ device_initial_probe+0x33/0x40 drivers/base/dd.c:1078
+ bus_probe_device+0x3ba/0x5e0 drivers/base/bus.c:537
+ device_add+0x12a9/0x1c10 drivers/base/core.c:3692
+ usb_set_configuration+0x3493/0x3b70 drivers/usb/core/message.c:2210
+ usb_generic_driver_probe+0xfc/0x290 drivers/usb/core/generic.c:250
+ usb_probe_device+0x38d/0x690 drivers/usb/core/driver.c:291
+ call_driver_probe drivers/base/dd.c:-1 [inline]
+ really_probe+0x4d1/0xd90 drivers/base/dd.c:657
+ __driver_probe_device+0x268/0x380 drivers/base/dd.c:799
+ driver_probe_device+0x70/0x8b0 drivers/base/dd.c:829
+ __device_attach_driver+0x4ee/0x950 drivers/base/dd.c:957
+ bus_for_each_drv+0x3e3/0x680 drivers/base/bus.c:462
+ __device_attach+0x3c8/0x5c0 drivers/base/dd.c:1029
+ device_initial_probe+0x33/0x40 drivers/base/dd.c:1078
+ bus_probe_device+0x3ba/0x5e0 drivers/base/bus.c:537
+ device_add+0x12a9/0x1c10 drivers/base/core.c:3692
+ usb_new_device+0x104b/0x20c0 drivers/usb/core/hub.c:2663
+ hub_port_connect drivers/usb/core/hub.c:5535 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5675 [inline]
+ port_event drivers/usb/core/hub.c:5835 [inline]
+ hub_event+0x5588/0x7580 drivers/usb/core/hub.c:5917
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0xb8e/0x1d80 kernel/workqueue.c:3321
+ worker_thread+0xedf/0x1590 kernel/workqueue.c:3402
+ kthread+0xd5c/0xf00 kernel/kthread.c:464
+ ret_from_fork+0x1e0/0x310 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Uninit was created at:
+ slab_post_alloc_hook mm/slub.c:4154 [inline]
+ slab_alloc_node mm/slub.c:4197 [inline]
+ __do_kmalloc_node mm/slub.c:4327 [inline]
+ __kmalloc_node_track_caller_noprof+0x96d/0x12f0 mm/slub.c:4347
+ __kmemdup_nul mm/util.c:63 [inline]
+ kstrdup+0x8a/0x2a0 mm/util.c:83
+ kstrdup_const+0x5e/0x90 mm/util.c:103
+ __kernfs_new_node+0x6e/0xa70 fs/kernfs/dir.c:633
+ kernfs_new_node+0x1f0/0x370 fs/kernfs/dir.c:713
+ kernfs_create_dir_ns+0x9a/0x2b0 fs/kernfs/dir.c:1083
+ sysfs_create_dir_ns+0x19c/0x540 fs/sysfs/dir.c:59
+ create_dir lib/kobject.c:73 [inline]
+ kobject_add_internal+0xeed/0x1840 lib/kobject.c:240
+ kobject_add_varg lib/kobject.c:374 [inline]
+ kobject_init_and_add+0x371/0x4e0 lib/kobject.c:457
+ rx_queue_add_kobject net/core/net-sysfs.c:1239 [inline]
+ net_rx_queue_update_kobjects+0x314/0xd40 net/core/net-sysfs.c:1301
+ register_queue_kobjects net/core/net-sysfs.c:2093 [inline]
+ netdev_register_kobject+0x2bc/0x4f0 net/core/net-sysfs.c:2340
+ register_netdevice+0x1b41/0x25d0 net/core/dev.c:11105
+ veth_newlink+0x88f/0x1630 drivers/net/veth.c:1855
+ rtnl_newlink_create+0x41c/0x1250 net/core/rtnetlink.c:3823
+ __rtnl_newlink net/core/rtnetlink.c:3940 [inline]
+ rtnl_newlink+0x2f13/0x3a90 net/core/rtnetlink.c:4055
+ rtnetlink_rcv_msg+0x106c/0x14b0 net/core/rtnetlink.c:6944
+ netlink_rcv_skb+0x54d/0x680 net/netlink/af_netlink.c:2534
+ rtnetlink_rcv+0x35/0x40 net/core/rtnetlink.c:6971
+ netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+ netlink_unicast+0xed8/0x1290 net/netlink/af_netlink.c:1339
+ netlink_sendmsg+0x10b3/0x1250 net/netlink/af_netlink.c:1883
+ sock_sendmsg_nosec net/socket.c:712 [inline]
+ __sock_sendmsg+0x333/0x3d0 net/socket.c:727
+ __sys_sendto+0x593/0x720 net/socket.c:2180
+ __do_sys_sendto net/socket.c:2187 [inline]
+ __se_sys_sendto net/socket.c:2183 [inline]
+ __x64_sys_sendto+0x130/0x200 net/socket.c:2183
+ x64_sys_call+0x3c0b/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:45
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xd9/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Bytes 20-22 of 65535 are uninitialized
+Memory access of size 65535 starts at ffff88804b9e3399
+
+CPU: 1 UID: 0 PID: 42 Comm: kworker/1:1 Not tainted 6.16.0-rc4-syzkaller-00013-g66701750d556 #0 PREEMPT(undef) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+Workqueue: usb_hub_wq hub_event
+=====================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
