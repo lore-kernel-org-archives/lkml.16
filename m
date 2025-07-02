@@ -1,154 +1,179 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD0C134CB;
-	Wed,  2 Jul 2025 03:36:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD845BA2E;
+	Wed,  2 Jul 2025 03:38:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751427367; cv=none; b=Mw75REMijXUrOUEBbqeCNZZrHXZ0BtDd810CiiFOy1R6NkOQIiHFMb/Jx1s/5nvsSmcARQW78gBJ69iVI0MhTIY8kGwn+PwkvAqetm+iSMa5NLm9fkECLzCJPhiHVyZKN9EUcJmrCabN0MuIsH3vhg1zkj7a3CdCY+qR8/aMd8A=
+	t=1751427514; cv=none; b=GpcfB5M5mLHk/w9u7+spjeVEdjTOKvvF52TLYESBBWngA6sDJvLBatLJcjKgqjckDzReZ5yyxe6WDmRZfTAoHo2xW6vdjdljElMIN5x7Jrzakd9vZluePob0fRs66olKVntg2ayNpvXOyTzFX6GQ1xIAbyRM3OnfiwUSopqxTxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751427367; c=relaxed/simple;
-	bh=NBvlrK5XViRYhJdQx7zRW6r4tsqgY4IsuBGgrTdg2Rw=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=uB3+U2R2Sg1Hp4jljvKCjW6igttoCPWFEaNQ0RKyHCDruVZctX+b/GQ65Hnw9B/eAmtVd7s/pmT0KNkN3pxCK+9wi0/ZBzzA3TLj48WURMSXxtWY94GjQxKQ59E2qUyRkFRoxUZ1FMMNy529PhBhb69L1Vi+3NRWWGT5g9XNbSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=wXPsbTml; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1751427514; c=relaxed/simple;
+	bh=I42dZA6BrIQ0jKmJPjFKpXS5ub26rDHIRJyhzt+TrBA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rM2Bvv6gli9taKc+1e2PXIaJlU5ZndJGLgg+pdxBTFrB/V+/oUb67CAtMW+CS+Y3FgW8dvuvEw4LBTTSLSRKfCPSNe8IpRL0UUUmVL9/WjBsqiDylcEaJu8MIY2eFLOcYt10i61vaO4YuIrvFuopS9i+W4eC+lAnpI/d+ibcY2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hOO2mkKj; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="wXPsbTml"
-X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 5623ZsAbA099570, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
-	t=1751427354; bh=6Gt2ptt6+QTAnvc5BVZgyzDfyb+SrE+epvKtkf3w98I=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=wXPsbTmlcytklcdBnrjYZzyl1biB1ohRCTYkb3mC7EaiJOiRZJ86PrFmVvGzQHIT1
-	 YwKhmul9SBIVRBVexb0TDXxGgimn4SgAkVswfL10BOysTDHo02ItF+VblG9qfhQg6r
-	 38Tv9r9+bey9OYxJ5r1T2ey15HueGyYvE5n3EHa03+kNPAA+jVWBRWa0i9aJ2KtuYq
-	 wqfxFHbpLloA2eIs8TWo2k87Ca1Bj1dCwu4sMn5RiT9ms6Iyc8rsu1+EWbn9Kp1B8B
-	 950j6UCNesM1gHo5Cc/Irz2boHvVqsbm1dKghlzoNjNmBbFYg1K9fJsE+rGJuYUp8t
-	 5QUS0vXbVBq2g==
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/3.13/5.93) with ESMTPS id 5623ZsAbA099570
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 2 Jul 2025 11:35:54 +0800
-Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 2 Jul 2025 11:36:17 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXDAG02.realtek.com.tw (172.21.6.101) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 2 Jul 2025 11:36:16 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
- RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
- 15.01.2507.035; Wed, 2 Jul 2025 11:36:16 +0800
-From: Hilda Wu <hildawu@realtek.com>
-To: "marcel@holtmann.org" <marcel@holtmann.org>
-CC: "luiz.dentz@gmail.com" <luiz.dentz@gmail.com>,
-        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Max Chou
-	<max.chou@realtek.com>,
-        "alex_lu@realsil.com.cn" <alex_lu@realsil.com.cn>
-Subject: RE: [PATCH v2 0/2] Bluetooth: Add support for RTK firmware version 3 and enhanced ACL-based download acceleration
-Thread-Topic: [PATCH v2 0/2] Bluetooth: Add support for RTK firmware version 3
- and enhanced ACL-based download acceleration
-Thread-Index: AQHb1sJPczRWSzumC0S0Fn0i59ihhbQeQOnQ
-Date: Wed, 2 Jul 2025 03:36:16 +0000
-Message-ID: <bb5d83c2efa24dd8ad271ce812581d02@realtek.com>
-References: <20250606090559.896242-1-hildawu@realtek.com>
-In-Reply-To: <20250606090559.896242-1-hildawu@realtek.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hOO2mkKj"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-74b54af901bso63442b3a.2;
+        Tue, 01 Jul 2025 20:38:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751427512; x=1752032312; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sEC95VJb0bz9R7l4xl7+6JDksCDLZKzGYa+BlumQWz0=;
+        b=hOO2mkKjwtmynWa66C0CmpDtIkX5cKwAv38zByMG4lpsuVdBAMWIFZ9GtnNTsAYESA
+         draS8hehNdtrNET8JJshBfRtLPZLFk0Q2NJNQcdDyhYqlIXDJzTWODs2H1+ECG2wIgHU
+         fgiOw1KBcUNo5xGsnImIQ0MQgHvjlZhJshJgt2MwwxmbDfMvox3cfLTCcKV6Qe/NRqpJ
+         vePViVKkR1Sc2TNzV4ljLk18o/mdog9L5NhhdkHze+rXE1w++J7eyTiTw6BnCX1Zkxdb
+         LdUGCCOc324JwwuiPu5oEdLDjsugqEFOkfiOAmankkKkpiLINEuDiwiZZ7Xqw72oJfZw
+         MUGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751427512; x=1752032312;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sEC95VJb0bz9R7l4xl7+6JDksCDLZKzGYa+BlumQWz0=;
+        b=HqRJQkQefXoX1N6aUv4TnYpA5qOolfF+z1gfq/bs6wu7wCY6gY8Ljk5gTcViJ5I51O
+         NMAmBlM+F5AK4CNRbv8hqCbIdcz1YutO9h5cnix2olI1q2MctXuU2dVbsYjUF/+mTp6e
+         DQBRqO/744g0G1YxG6NiV7JrLJf5rH9cFhHWVW5AdMyB35xfe3UVwcEIwq8ZpNaX+DaA
+         AnECVrD8KgSGTHJGBBEH6o6ieARIYL8GRS5dEU/mqhs2uyjvvCUA36pztSJU6RMeHLid
+         aAr20UcLsuXXjn689dOtDpmMcF4ZqmIAP/rgVQwm19W14869JhyTnS3ifd1PNp/Gj3UT
+         9yDg==
+X-Forwarded-Encrypted: i=1; AJvYcCVzBHQIcikYiFPVrCBvDz/4qt332C2CvB88Jb0pkU3C0ZAxOD7RYuPo7GA9i6mfrB4p8UMWRpM/4PlPwJgS@vger.kernel.org, AJvYcCWTY/O2xV2r9nyfPjaTKvxqzIYHxC+FnZBf4gi6ty+60xsYboL2D3ze7LTJYD9akd6phDVl/VAZ4/+yfjlH4YPbzfEzbQ==@vger.kernel.org, AJvYcCXXFgRhMCTaHnOI8xLDd3+E5yVVFsN+30GWCRTn1Wq3aXuIvoFJ/kP717OroPbgmCRYVdRTQcsOfQI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3X0xgkjK9JDm0LuzLJq665bmeUoVR7tbtqRfYzMtS+f8WgeLp
+	WjSGQqDzZF3Ctxs50jYYqxHsfzSiw4OkEbaQpFQCHKQIP2XG2NqEyoy5
+X-Gm-Gg: ASbGncvry6z9FZAXqJ829eaL2TZbE5efsjQjVy2LLDDVjKWt/oBtAAJFbN2nK+2UdXK
+	BKwZ6LLEhH2CfM4ChTtHNEkYCCnxL2o8kE8frtDn5aMLTrZGSSWiYaIyFaZ8DGk5oI+/q6hDJxN
+	106E0XZThGbQ6jfanDJ2xjbANbH4f6kIfCaTTpjAqpFd3/JimH0wnQp51JsRN2lMtup6gKIbvCA
+	S0RR21/HTQ2YRav675ra1b+AhfjQ62jUyNj2ShNFuxh7zqU9rf0kTQxit80qM9xoveiMgc9vddx
+	Lg+aAJz7T8Uym1L/vQhqPZmJbMz9wjSjS50wBvuoouzL2qsjZ2uugvjFyRfnWwF+ae+h4I/Hfg8
+	dw5N1uCkaFnj7NoXbuYKRhmwj4KwVVORbOMINefUlaQ==
+X-Google-Smtp-Source: AGHT+IFl+ogsuNHtBnrM1RRuRUoJ7a2vT+PN5+Utd5ZCqqU/01JIgy46EC0TZadlRv3r8Wrq/szsuQ==
+X-Received: by 2002:a05:6a21:b93:b0:215:ef08:5555 with SMTP id adf61e73a8af0-222d7df31c8mr2316401637.11.1751427511987;
+        Tue, 01 Jul 2025 20:38:31 -0700 (PDT)
+Received: from bliptop (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e301d64fsm11783008a12.19.2025.07.01.20.38.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 20:38:31 -0700 (PDT)
+From: "Derek J. Clark" <derekjohn.clark@gmail.com>
+To: Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Armin Wolf <W_Armin@gmx.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Mario Limonciello <superm1@kernel.org>,
+	Luke Jones <luke@ljones.dev>,
+	Xino Ni <nijs1@lenovo.com>,
+	Zhixin Zhang <zhangzx36@lenovo.com>,
+	Mia Shao <shaohz1@lenovo.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+	"Cody T . H . Chiu" <codyit@gmail.com>,
+	John Martens <johnfanv2@gmail.com>,
+	Kurt Borja <kuurtb@gmail.com>,
+	"Derek J . Clark" <derekjohn.clark@gmail.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v13 0/6] platform/x86: Add Lenovo WMI Gaming Series Drivers
+Date: Tue,  1 Jul 2025 20:38:20 -0700
+Message-ID: <20250702033826.1057762-1-derekjohn.clark@gmail.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Marcel, Luiz and Maintainers,
+Adds support for the Lenovo "Gaming Series" of laptop hardware that use
+WMI interfaces that control various power settings. There are multiple WMI
+interfaces that work in concert to provide getting and setting values as
+well as validation of input. Currently only the "Gamezone", "Other
+Mode", and "LENOVO_CAPABILITY_DATA_01" interfaces are implemented, but
+I attempted to structure the driver so that adding the "Custom Mode",
+"Lighting", and other data block interfaces would be trivial in later
+patches.
 
-I hope this message finds you well.
+This driver attempts to standardize the exposed sysfs by mirroring the
+asus-armoury driver currently under review. As such, a lot of
+inspiration has been drawn from that driver.
+https://lore.kernel.org/platform-driver-x86/20250319065827.53478-1-luke@ljones.dev/#t
 
-I submitted two patches for the Bluetooth subsystem recently and wanted to =
-kindly follow up to see if you had a chance to review them:
+The drivers have been tested by me on the Lenovo Legion Go and Legion Go
+S.
 
-- https://patchwork.kernel.org/project/bluetooth/patch/20250606090559.89624=
-2-2-hildawu@realtek.com/
-- https://patchwork.kernel.org/project/bluetooth/patch/20250606090559.89624=
-2-3-hildawu@realtek.com/
-
-These patches address the future chips firmware format enhancement and down=
-load firmware improve.
-
-Please let me know if you need any further info or changes from my side.
-Thank you very much for your time and consideration.
-
-Best regards, =20
-Hilda
-
------Original Message-----
-From: Hilda Wu <hildawu@realtek.com>=20
-Sent: Friday, June 6, 2025 5:06 PM
-To: marcel@holtmann.org
-Cc: luiz.dentz@gmail.com; linux-bluetooth@vger.kernel.org; linux-kernel@vge=
-r.kernel.org; Max Chou <max.chou@realtek.com>; alex_lu@realsil.com.cn
-Subject: [PATCH v2 0/2] Bluetooth: Add support for RTK firmware version 3 a=
-nd enhanced ACL-based download acceleration
-
-Dear Maintainers,
-
-I am submitting a patch for the Bluetooth that introduces support for RTK f=
-irmware version 3 and implements an enhanced download mechanism through ACL=
- to improve firmware loading times.
-
-Patch Overview:
-
-1. Bluetooth: btrtl: Firmware format v3 support
-   - This addition ensures the latest RTK chipsets with firmware version 3
-     are fully supported. It includes necessary modifications to
-     accommodate new firmware structure changes.
-
-2. Bluetooth: btrtl: Add enhanced download support
-   - By leveraging ACL links for firmware transmission, the download
-     process is significantly accelerated, reducing the overall time and
-     enhancing performance.
-
-Testing and Validation:
-
-- The implementation has been tested on various RTK chipsets under Linux
-  based distribution.
-
-Impact and Benefits:
-
-These enhancements are beneficial for future firmware v3 chips and compatib=
-le with previous firmware versions. Users can expect shortened initializati=
-on times.
-
-Your feedback and suggestions are welcome to further refine these changes.
-Thank you for considering these enhancements.
-
-Best regards,
-Hilda
-
+Suggested-by: Mario Limonciello <superm1@kernel.org>
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
 ---
-Change in V2:
-- Move structure to btrtl.h
-- Fill in the missing symbols
-- Fix build warnings
+v13:
+ - Move drivers to new lenovo folder
+v12:
+https://lore.kernel.org/platform-driver-x86/20250609185027.7378-1-derekjohn.clark@gmail.com/
+v11:
+https://lore.kernel.org/platform-driver-x86/20250522015350.471070-1-derekjohn.clark@gmail.com/#t
+v10:
+https://lore.kernel.org/platform-driver-x86/20250515182224.8277-1-derekjohn.clark@gmail.com/
+v9:
+https://lore.kernel.org/platform-driver-x86/20250508235217.12256-1-derekjohn.clark@gmail.com/
+v8:
+https://lore.kernel.org/platform-driver-x86/20250505010659.1450984-1-derekjohn.clark@gmail.com/
+v7:
+https://lore.kernel.org/platform-driver-x86/20250503000142.1190354-1-derekjohn.clark@gmail.com/
+v6:
+https://lore.kernel.org/platform-driver-x86/20250428012029.970017-1-derekjohn.clark@gmail.com/
+v5:
+https://lore.kernel.org/platform-driver-x86/20250408012815.1032357-1-derekjohn.clark@gmail.com/
+v4:
+https://lore.kernel.org/platform-driver-x86/20250317144326.5850-1-derekjohn.clark@gmail.com/
+v3:
+https://lore.kernel.org/platform-driver-x86/20250225220037.16073-1-derekjohn.clark@gmail.com/
+v2:
+https://lore.kernel.org/platform-driver-x86/20250102004854.14874-1-derekjohn.clark@gmail.com/
+v1:
+https://lore.kernel.org/platform-driver-x86/20241217230645.15027-1-derekjohn.clark@gmail.com/
 
-Hilda Wu (2):
-  Bluetooth: btrtl: Firmware format v3 support
-  Bluetooth: btrtl: Add enhanced download support
+*** BLURB HERE ***
 
- drivers/bluetooth/btrtl.c | 857 +++++++++++++++++++++++++++++++++++++-
- drivers/bluetooth/btrtl.h | 122 ++++++
- drivers/bluetooth/btusb.c |   3 +
- 3 files changed, 974 insertions(+), 8 deletions(-)
+Derek J. Clark (6):
+  platform/x86: Add lenovo-wmi-* driver Documentation
+  platform/x86: Add lenovo-wmi-helpers
+  platform/x86: Add Lenovo WMI Events Driver
+  platform/x86: Add Lenovo Capability Data 01 WMI Driver
+  platform/x86: Add Lenovo Gamezone WMI Driver
+  platform/x86: Add Lenovo Other Mode WMI Driver
 
---
-2.34.1
+ .../wmi/devices/lenovo-wmi-gamezone.rst       | 203 ++++++
+ .../wmi/devices/lenovo-wmi-other.rst          | 108 +++
+ MAINTAINERS                                   |   3 +
+ drivers/platform/x86/lenovo/Kconfig           |  41 ++
+ drivers/platform/x86/lenovo/Makefile          |   5 +
+ drivers/platform/x86/lenovo/wmi-capdata01.c   | 302 ++++++++
+ drivers/platform/x86/lenovo/wmi-capdata01.h   |  25 +
+ drivers/platform/x86/lenovo/wmi-events.c      | 196 ++++++
+ drivers/platform/x86/lenovo/wmi-events.h      |  20 +
+ drivers/platform/x86/lenovo/wmi-gamezone.c    | 407 +++++++++++
+ drivers/platform/x86/lenovo/wmi-gamezone.h    |  20 +
+ drivers/platform/x86/lenovo/wmi-helpers.c     |  74 ++
+ drivers/platform/x86/lenovo/wmi-helpers.h     |  20 +
+ drivers/platform/x86/lenovo/wmi-other.c       | 665 ++++++++++++++++++
+ drivers/platform/x86/lenovo/wmi-other.h       |  16 +
+ 15 files changed, 2105 insertions(+)
+ create mode 100644 Documentation/wmi/devices/lenovo-wmi-gamezone.rst
+ create mode 100644 Documentation/wmi/devices/lenovo-wmi-other.rst
+ create mode 100644 drivers/platform/x86/lenovo/wmi-capdata01.c
+ create mode 100644 drivers/platform/x86/lenovo/wmi-capdata01.h
+ create mode 100644 drivers/platform/x86/lenovo/wmi-events.c
+ create mode 100644 drivers/platform/x86/lenovo/wmi-events.h
+ create mode 100644 drivers/platform/x86/lenovo/wmi-gamezone.c
+ create mode 100644 drivers/platform/x86/lenovo/wmi-gamezone.h
+ create mode 100644 drivers/platform/x86/lenovo/wmi-helpers.c
+ create mode 100644 drivers/platform/x86/lenovo/wmi-helpers.h
+ create mode 100644 drivers/platform/x86/lenovo/wmi-other.c
+ create mode 100644 drivers/platform/x86/lenovo/wmi-other.h
+
+-- 
+2.50.0
 
