@@ -1,204 +1,115 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30723202C2B
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 05:15:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 936E4221FCA;
+	Wed,  2 Jul 2025 05:15:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751433340; cv=none; b=uweEsCC3Vjql1wB0NzaRxY5xZkNBSsecw5PjNEh2t46PrEgQ6GbKR54Zod2/7B+QjnSbHqepWFlyOnbtJ6Ftq0NnQLpOWoY3wxS6dzk6MX3uEn7BkfqeeTX1qz1hxW61PEPsjnLLWxpjHA7oNLtUCr3ipjBlITstH3pQv3/AYZw=
+	t=1751433344; cv=none; b=Wc5as4u+yrHXmOKChs4X8/xP0ARj0w5/k32hwVm1ecHJcs4VXMi6ZAp+gxcQOTHvjqLgnksvHVMqPa+LbvX/mCe1jHTsb0VYIBS/0/e5XsqDgwItcC878miZvpa60I3fVyeynQ6MxwSPDUO+WpmmC0Pxtwy0Ceo7kWG48OU34BY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751433340; c=relaxed/simple;
-	bh=vvd5aEr1EHa2kYCEzZk7/ahZeLh22JQayJGJfQ0Amwk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ek4G6BtotYmoor2kjl1vZvmmUkaw3s4wQJ+vAD5TNSV0b/tiL/9SYksg5NxKvXFRcTi3gNTntOEDlwv0Qcf/eJWM6ulkZECbrY9MgPY2c2S/yM2L05bmQ1nWXe6oBJmrWgU82MFPgfJsiM8TpR/ghNWhgoCwh4iFsOT+tP5Q0NQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=deEezXLT; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1751433344; c=relaxed/simple;
+	bh=yA/VFyXgbsNQmFMOwhT88/9R1hkxNmEietIiNZ5dXEs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=I+6Vp9fUvMqCaftxA9au02Onxn80JE9GLgzH2ruNbko69yyAhLcNpDwXQtv0tYMMV2GRNfSWsOuFE7rC40pWXRyJymhDPKiGlh+GWPIEV7g036YVkX/ILCCxWVPea14qiDf5UwhPFLwMjd+wJ+/9VMwwt8brFXjm6yL0s16PdKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JrPshvA4; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="deEezXLT"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2366e5e4dbaso62205665ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 22:15:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1751433338; x=1752038138; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XIoG0/2CSPJ7QI1BAwRn3+gvtI7NC6tH67IoLVRWsu8=;
-        b=deEezXLTMUc7jReGIsMaqikCJeoA+K9+Ii3ZlRcHzAvdaeg/mmcINdo7lQctiJZ3wr
-         1WmwoPPZlOV+maB8PecY/OnbmL+krofCpiRmDYu7EneqoHuo3ZHfbmbwuOl+BFKpPFty
-         lsKLCQjTSa+BvIB767OHGFieY2ujl0C73M5T6mbYACuFHMwTiMsaRWwia2X/YdAu9DS3
-         4liqc0o/axsJb9ZSSPsq4ipC9O3syJ167sJHKdpjjsy1x+nnQAa+0xRRfwIUXh1YCtEf
-         UNYwtb9hCF8ZStOQMjJc/qDNNw4Qf5+zHKP1QUbUDlL6b4PV59wDqVOmD/oIJ0qQlOqT
-         wVKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751433338; x=1752038138;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XIoG0/2CSPJ7QI1BAwRn3+gvtI7NC6tH67IoLVRWsu8=;
-        b=JSGB9mQUeU3b89wrQ4JMFUVtB39RKa2Y90oTrMskXJ2pm/CO3rgCfobsDD84qPZxLG
-         /j1GApR6kQFzCukeDOE/1e+Bp5v87PUJGAq2vOdGv5X3X3lg9ZIK/VBRNY0lAJjrcvRd
-         5xR3kpVPnDplPotZE+s4V8V2pbWnbFCeb90s/jOhNTzDi3YVwUDexEyxtBIyPxQlW7eX
-         Gpwjulc1rEI8DGNDCRcaj0C5vOBhqO6XzqGw10l4RuNXz+TY3+8aOjpUN9hOHzMTUMJi
-         YX0W8lb732qcqwC0MK3T4N80ffzXxnjDw5isBUyjP0JtNmBvdpKRMmw4EaK0DRbyvTsP
-         bBjA==
-X-Forwarded-Encrypted: i=1; AJvYcCX/HDuBnj5gucvZThBWEJA9u7b7iRTf6U8o78oxgF15mMEV9sQVSUpqI62PNK+KeBfa2QS1jgsNbRlBVqM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywbxwg1ojRzrW5Ke1uUMBbHrjXxMe7VtPcM1/y/R91U9YyGiUBS
-	2fkkqrlXGNa3Y8fwQc4VDpAQe/Z/M1Ns8Lh23pkDo0hzpFzvyu0Ik5ef9HNFWp7kfYI=
-X-Gm-Gg: ASbGncvfFmWDYREBLDQDx9El0g/URxn7+Z8TGqFZ95NIgmvDWA6+06q4HpO5TFb2a1w
-	SShdnywj72eSF3/wxWBkt8uFMrWOmOVhgWmRRiO19l2LtL+QiRNg5t+h3O5eCswAbLT+7w8lLpt
-	2Kpdjd8WfUKCsOp7NlbK6b7LQ0CIdfVIk5cZ3ho+sCLpEsgynNShbVN/AUt7zVZ7YFMILOqkpzD
-	pgcHPP7EZVomnNXbAqDlQkj3nnG5zyY13Bao1ODAtwnx9qRA5TTJF3jImL8C+lEKJxBUyOOJien
-	sELONluy51B9AVmdM7APXRjdiL/8xbWu/4/XRelKDwPJxJ8210YKx1MdI1ONDtpVhQrJfoe3gNQ
-	ArV6P0U3txC/Ng/U45pf5dWs/5XQ=
-X-Google-Smtp-Source: AGHT+IFGXbh9c2Bzrg+n0L83k/iOpiHjIddjs0COzT8LmyyeoGEyCI13QifJfOuXuLEn4svubKrHpw==
-X-Received: by 2002:a17:902:d4c5:b0:231:ad5a:fe9c with SMTP id d9443c01a7336-23c6e7eb70cmr19839295ad.15.1751433338295;
-        Tue, 01 Jul 2025 22:15:38 -0700 (PDT)
-Received: from localhost.localdomain ([14.141.91.70])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c6fe31933sm4719595ad.220.2025.07.01.22.15.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 22:15:37 -0700 (PDT)
-From: Anup Patel <apatel@ventanamicro.com>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Len Brown <lenb@kernel.org>,
-	Sunil V L <sunilvl@ventanamicro.com>,
-	Rahul Pathak <rpathak@ventanamicro.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Atish Patra <atish.patra@linux.dev>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Anup Patel <apatel@ventanamicro.com>,
-	Atish Patra <atishp@rivosinc.com>,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v7 12/24] dt-bindings: Add RPMI system MSI interrupt controller bindings
-Date: Wed,  2 Jul 2025 10:43:33 +0530
-Message-ID: <20250702051345.1460497-13-apatel@ventanamicro.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250702051345.1460497-1-apatel@ventanamicro.com>
-References: <20250702051345.1460497-1-apatel@ventanamicro.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JrPshvA4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751433343; x=1782969343;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=yA/VFyXgbsNQmFMOwhT88/9R1hkxNmEietIiNZ5dXEs=;
+  b=JrPshvA4DAbeHm97OcT1DZ3zBFbElQ7EpadkKyhgd/Jn0mXVuX7JAkqf
+   hAIKYWcubkk95IaDM9WMnMxynr9Y6Cbt0Kej2DtsbQczxUuMDphcoKh27
+   2TnH32vB3fMPOc9sjj5BKDDdNuhdrlAiDxT9Vx/tVwkoxG1ydoaT1zlv4
+   2RGM0AVxu/V/Nd0Q2r0bfpKQXXSya2JXFdXJ5EFV9LoVIj2MyT3WmWCYl
+   dsMn9DP6GnlnhUnjm8xfEuUeHxce+pnyH/A39MHyqt4gVoAb371XbZyF1
+   pGKGI1LIEnqZOOUHigp6UaVVy4keAyo1vL8hzWpuJaKvew7MzGMd6wXX7
+   g==;
+X-CSE-ConnectionGUID: 9SkMQcdORMmqPRkBQf5rRg==
+X-CSE-MsgGUID: JRSS3i14TXCmFaGro3MaHQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="53583406"
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="53583406"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 22:15:42 -0700
+X-CSE-ConnectionGUID: oTaVz3k6S1qnLv+V1IVrug==
+X-CSE-MsgGUID: reW8n6DgSlCO/tJh9SjkFw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="153748196"
+Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 22:15:39 -0700
+Message-ID: <7d2214f3-3b54-4b74-a18b-aca1fdf4fdb4@linux.intel.com>
+Date: Wed, 2 Jul 2025 13:14:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION][BISECTED] Performance Regression in IOMMU/VT-d Since
+ Kernel 6.10
+To: Ioanna Alifieraki <ioanna-maria.alifieraki@canonical.com>,
+ kevin.tian@intel.com, jroedel@suse.de, robin.murphy@arm.com,
+ will@kernel.org, joro@8bytes.org, dwmw2@infradead.org,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, stable@vger.kernel.org
+References: <20250701171154.52435-1-ioanna-maria.alifieraki@canonical.com>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20250701171154.52435-1-ioanna-maria.alifieraki@canonical.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add device tree bindings for the RPMI system MSI service group
-based interrupt controller for the supervisor software.
+On 7/2/25 01:11, Ioanna Alifieraki wrote:
+> #regzbot introduced: 129dab6e1286
+> 
+> Hello everyone,
+> 
+> We've identified a performance regression that starts with linux
+> kernel 6.10 and persists through 6.16(tested at commit e540341508ce).
+> Bisection pointed to commit:
+> 129dab6e1286 ("iommu/vt-d: Use cache_tag_flush_range_np() in iotlb_sync_map").
+> 
+> The issue occurs when running fio against two NVMe devices located
+> under the same PCIe bridge (dual-port NVMe configuration). Performance
+> drops compared to configurations where the devices are on different
+> bridges.
+> 
+> Observed Performance:
+> - Before the commit: ~6150 MiB/s, regardless of NVMe device placement.
+> - After the commit:
+>    -- Same PCIe bridge: ~4985 MiB/s
+>    -- Different PCIe bridges: ~6150 MiB/s
+> 
+> 
+> Currently we can only reproduce the issue on a Z3 metal instance on
+> gcp. I suspect the issue can be reproducible if you have a dual port
+> nvme on any machine.
+> At [1] there's a more detailed description of the issue and details
+> on the reproducer.
 
-The RPMI system MSI service group is defined by the RISC-V
-platform management interface (RPMI) specification.
+This test was running on bare metal hardware instead of any
+virtualization guest, right? If that's the case,
+cache_tag_flush_range_np() is almost a no-op.
 
-Reviewed-by: Atish Patra <atishp@rivosinc.com>
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-Signed-off-by: Anup Patel <apatel@ventanamicro.com>
----
- .../riscv,rpmi-system-msi.yaml                | 74 +++++++++++++++++++
- 1 file changed, 74 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,rpmi-system-msi.yaml
+Can you please show me the capability register of the IOMMU by:
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,rpmi-system-msi.yaml b/Documentation/devicetree/bindings/interrupt-controller/riscv,rpmi-system-msi.yaml
-new file mode 100644
-index 000000000000..b10a0532e586
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,rpmi-system-msi.yaml
-@@ -0,0 +1,74 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interrupt-controller/riscv,rpmi-system-msi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: RISC-V RPMI system MSI service group based interrupt controller
-+
-+maintainers:
-+  - Anup Patel <anup@brainfault.org>
-+
-+description: |
-+  The RISC-V Platform Management Interface (RPMI) [1] defines a
-+  messaging protocol which is modular and extensible. The supervisor
-+  software can send/receive RPMI messages via SBI MPXY extension [2]
-+  or some dedicated supervisor-mode RPMI transport.
-+
-+  The RPMI specification [1] defines system MSI service group which
-+  allow application processors to receive MSIs upon system events
-+  such as P2A doorbell, graceful shutdown/reboot request, CPU hotplug
-+  event, memory hotplug event, etc from the platform microcontroller.
-+  The supervisor software can access RPMI system MSI service group via
-+  SBI MPXY channel or some dedicated supervisor-mode RPMI transport.
-+
-+  ===========================================
-+  References
-+  ===========================================
-+
-+  [1] RISC-V Platform Management Interface (RPMI) v1.0 (or higher)
-+      https://github.com/riscv-non-isa/riscv-rpmi/releases
-+
-+  [2] RISC-V Supervisor Binary Interface (SBI) v3.0 (or higher)
-+      https://github.com/riscv-non-isa/riscv-sbi-doc/releases
-+
-+allOf:
-+  - $ref: /schemas/interrupt-controller.yaml#
-+
-+properties:
-+  compatible:
-+    description:
-+      Intended for use by the supervisor software.
-+    const: riscv,rpmi-system-msi
-+
-+  mboxes:
-+    maxItems: 1
-+    description:
-+      Mailbox channel of the underlying RPMI transport or SBI message proxy channel.
-+
-+  msi-parent: true
-+
-+  interrupt-controller: true
-+
-+  "#interrupt-cells":
-+    const: 1
-+
-+required:
-+  - compatible
-+  - mboxes
-+  - msi-parent
-+  - interrupt-controller
-+  - "#interrupt-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    interrupt-controller {
-+        compatible = "riscv,rpmi-system-msi";
-+        mboxes = <&mpxy_mbox 0x2000 0x0>;
-+        msi-parent = <&imsic_slevel>;
-+        interrupt-controller;
-+        #interrupt-cells = <1>;
-+    };
-+...
--- 
-2.43.0
+#cat /sys/bus/pci/devices/[pci_dev_name]/iommu/intel-iommu/cap
 
+> 
+> Could you please advise on the appropriate path forward to mitigate or
+> address this regression?
+> 
+> Thanks,
+> Jo
+> 
+> [1] https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2115738
+
+Thanks,
+baolu
