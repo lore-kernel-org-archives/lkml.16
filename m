@@ -1,111 +1,71 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0641D2D372C;
-	Wed,  2 Jul 2025 15:12:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 087542D374D;
+	Wed,  2 Jul 2025 15:13:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751469172; cv=none; b=cyphPplvsqZmT1CjOlAsCaFgI4Uq4nd+bLRB//nzf+xPSrH7pA2Tr2Czj7XZTSXIrTUa6FHmy3fXV4PN6phuiYMgeVAJqOHIKk8KIzuaf6lWjGcP+27B9SAzzSr/FT7zqRAg6tUwAYPEcnB6FyCP9IAxZ2+orgj24zXltVBkY08=
+	t=1751469199; cv=none; b=AvsB8cQK+zIorjqC4FcDvCitGvml7nb13Mw9qz0FRNsJkgXl1GUtRmqU82ujUxSU2AoHxUxqNiRSlGIauXwKPdiKu7+2fjKoR76p9l/mFv0eSnxJITY/cjwwcnWbBDGFSo6wlyHZjaBusNdhxIGfW7iEVM8p51v5yeTOq1k1QGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751469172; c=relaxed/simple;
-	bh=ymsnVIG0erULraCd4BNu3B+drsHLAexyq03O+NpiP0w=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=o2Z7V9LIBT3bi8bS8V4vA9uxoEpA3xW4chMExWtSV+c3iSX3583bZUgjCRxlfQ20VLb6gtCd8T+CUOcdWpfEUdvje+kc/ZJtwmuYPb45poUrLpsIWNnltZU4qhDHMyID5B+QrhyDvV/vvDc38yWMOUkjQj24Oy+ckkmVmDEqnHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 74B55123D32;
-	Wed,  2 Jul 2025 15:12:48 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 706952000F;
-	Wed,  2 Jul 2025 15:12:46 +0000 (UTC)
-Date: Wed, 2 Jul 2025 11:12:45 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Gabriele Paoloni <gpaoloni@redhat.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- acarmina@redhat.com, chuck.wolber@boeing.com
-Subject: Re: [RFC PATCH 2/2] tracing: add testable specifications for
- event_enable_write/read
-Message-ID: <20250702111245.1fa23138@batman.local.home>
-In-Reply-To: <CA+wEVJarZben=F3Dw0A8_tvAAR7-qb4PrjCj0AGFoq=DH1RJwg@mail.gmail.com>
-References: <20250612104349.5047-1-gpaoloni@redhat.com>
-	<20250612104349.5047-3-gpaoloni@redhat.com>
-	<20250701181119.7b0bc5d6@batman.local.home>
-	<CA+wEVJarZben=F3Dw0A8_tvAAR7-qb4PrjCj0AGFoq=DH1RJwg@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1751469199; c=relaxed/simple;
+	bh=alMe+83Vtp2h4flrvYWTb1xN0VIzLR4w3aagiHmdsE0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=KY2HsAIqWVVVmbFDIU44iokxf4DGuvMGXRY5qt3ZUFdcy0sA+bgxgns+zQdlEI3U19NVUGYOy6AXKQ125ooTEdt4aUpykxEx3BleKivySkfYWpP4yN8n5oabb/zel8I9jZuMW44v2MOVPBkEUpS/P1+5S3cywI4zjmDADpubQuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AKnVn/E7; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AKnVn/E7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82F91C4CEE7;
+	Wed,  2 Jul 2025 15:13:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751469198;
+	bh=alMe+83Vtp2h4flrvYWTb1xN0VIzLR4w3aagiHmdsE0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=AKnVn/E7jaN7kc5wIUHRm7H6UX1gFh78WBUDpcyZkNWUyx3Cq9zcAKWll4I2O3GIZ
+	 zG36OlNWuZ7B/uJFzbLbbLFhsvtc2BzgctM5eZQh/VTSZ08uj9iHgL5m+PrWTOgT9V
+	 Z4778u61M+4wALe2lzlSg9NQEhm5oKltlBjRNqrb7yj1CGVK340VHqV79sZ0PlYt0b
+	 zqznC+MAChghzXVTs6j1PmYnXd7uG9ROTEMgDSj6dUuaLeeRWdLx3/Cnk31TDE+Lr/
+	 F+5x+Dlxn7rPOrYTA08Brzjz725xW5R92O+Q0clScG6HccziF7ZvNBH1Olq4oF3vyq
+	 bNkZAvQkguKUg==
+From: Lee Jones <lee@kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Lee Jones <lee@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Cc: Peter Griffin <peter.griffin@linaro.org>, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
+ linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+ devicetree@vger.kernel.org
+In-Reply-To: <20250627-s2mpg10-binding-comment-v1-1-f37e5187f0fd@linaro.org>
+References: <20250627-s2mpg10-binding-comment-v1-1-f37e5187f0fd@linaro.org>
+Subject: Re: (subset) [PATCH] dt-bindings: mfd: samsung,s2mps11: add
+ comment about interrupts properties
+Message-Id: <175146919627.3032353.7383459922795371559.b4-ty@kernel.org>
+Date: Wed, 02 Jul 2025 16:13:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 706952000F
-X-Rspamd-Server: rspamout02
-X-Stat-Signature: 1madwbwa4gt3iih9kydkp3qf4qjw6wz6
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/1FB+LOdu3E8ndipBvVyP/V38SBjmAr/M=
-X-HE-Tag: 1751469166-946527
-X-HE-Meta: U2FsdGVkX1/1cNiMpd+Evb2QXlsQ6lNsAcRkdpUgwP2lWcDAIXGUy4k2+zRji8MXWkzX/JFCyGVdlyyieQwm1lATxyGyjNoaxlreRY+7q1RUQu+/leMwfLhBnyleO+g+kRzu8W7YJhummudVJwsGW/4T+igjzRjeMKMf/K/JJGQ8jD5butSJsIa0+Gg7dJKlvNDIVN/011tK0rBHhub1fV25bWbPHURa21AxePK5i6GcQHc/MxnN2GE855ifmgZjJMTKBomwLIiLsvqQZhvdk/rg8HdfGf6THKEOaJIuqEK5uysQa8qVTx5Bgeo0iNl0zKXi1nrECJIDAf5uN7cqv2DKLZ7SnIm7HDBgN/PDZNPYmMbtSeth1pVBlwz3WPNKUzb9ohGAHdw=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.15-dev-c81fc
 
-On Wed, 2 Jul 2025 16:59:29 +0200
-Gabriele Paoloni <gpaoloni@redhat.com> wrote:
-
-> Mmm got it. What about
+On Fri, 27 Jun 2025 10:15:25 +0100, André Draszik wrote:
+> Document why the binding uses oneOf when specifying just one of the
+> interrupt properties is supposed to be enough.
 > 
-> * Function's expectations:
-> * - This function shall lock the global event_mutex before performing any
-> *   operation on the target event file and unlock it after all operations on
-> *   the target event file have completed;
-
-Since 99% of the time that a lock is taken in a function it is
-released, I think that should be the default assumption here, and only
-when a lock is taken and not release, that should be explicitly called
-out.
-
-And also we should remove "This function" we know that these
-requirements are for this function.
-
-  - The global event_mutex shall be taken before performing any
-    operation on the target event.
-
-Should be good enough.
-
-If the lock can be released and taken again, that too should be
-explicit in the requirements otherwise it is assumed it is taken once
-and not released until the operation is completed.
-
-> *
-> * - This function shall format the string copied to userspace according to
-> *   the status flags retrieved from the target event file:
-> *    - The first character shall be set to "1" if the enabled flag is
-> set AND the
-> *      soft_disabled flag is not set, else it shall be set to "0";
-> *    - The second character is optional and shall be set to "*" if either the
-> *      soft_disabled flag or the soft_mode flag is set;
-> *   - The string shall be terminated by a newline ("\n") and any remaining
-> *      character shall be set to "0";
-
- - The string copied to user space shall be formatted according to the
-   status flags from the target event file:
-
-   - If the enable flag is set AND the soft_disable flag is not set then
-     the first character shall be set to "1" ELSE it shall be set to "0"
-
-   - If either the soft_disable fag or the soft_mode flag is set then the
-     second character shall be set to "*" ELSE it is skipped.
-
-I think the above is easier to read and is a bit more consolidated.
-Stating the status then the effect is also easier to read.
-
--- Steve
-
-
-> *
-> * - This function shall invoke simple_read_from_buffer() to perform the copy
-> *   of the kernel space string to ubuf.
+> dtschema's fixups.py has special treatment of the interrupts and
+> interrupts-extended properties, but that appears to work at the top
+> level only. Elsewhere, an explicit oneOf is required.
 > 
-> (pls note that the check on cnt has been removed in v3 that is out already)
+> [...]
+
+Applied, thanks!
+
+[1/1] dt-bindings: mfd: samsung,s2mps11: add comment about interrupts properties
+      commit: 37f716488780c4ce9e30a17f3c4ff9baee27c96d
+
+--
+Lee Jones [李琼斯]
 
