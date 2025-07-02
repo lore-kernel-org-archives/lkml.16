@@ -1,167 +1,138 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2774B217666
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 18:38:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26145217666
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 18:39:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751481505; cv=none; b=HBb7caZf0fTUYmAGWRwKANaA/524dJL6Uetbxj/BAPUwDjAvnwGV9XNH8XwIg8nJjUDHRI+kSBYmGK2rD7B7UzgCefd6QWe0GYSZ2Cga3PdiTUEPsmhOEwaGVENqWTSCsUGXWmEAJnWbXHtYhW/ZQfM83R5gWiuUYQWDL4B5Ko0=
+	t=1751481554; cv=none; b=bgR5E4EEiBmGqjRLolxt+KYtTB8OMbWZji3sklW2tx8aNhtT70s+ymEFB0e4kaLdvZysbdQM28m7iTbIiV3YqkXh6PlqjFt9/H/AWxG5d0thq9jnviyJuQ5lHKTUofxus2PZqsNDaNLl2uKIRPV1dorEITkDOwbLvAaAaQdro0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751481505; c=relaxed/simple;
-	bh=FCJONdkLdbC3jCEj6u9UdqpxaakcJuCg/zI6KWMM72w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Xpre4FRXzZHiJaCe7KTAVcLi5M1Vt+CFQ6Q2FkSngH3r+WJz60q+xs6I5Tk2UFvSsFE/Uqr+eLZq+m/XNWIdU7lwRIo+Z0MfSuW1OcUIljoWd7gnx3yjNRLmNiHbRAL57KozkA+ZGSBaDD2zVJKP6oBlFPcatKSHhN56RUPZCd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jSYOS6Xz; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1751481554; c=relaxed/simple;
+	bh=xCRs4dzrc6WcXYmCwUPWRARDoPNR6pE48wQDzbnDrFU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T8ZvUOeGSKlwoXODe4JN1mRmPqEfSmklBCGHE7HdZZPO+yk1i47U6eh0P0zyFpMFCrOyyrDzzJlnXR8yr74CWnfqx+oGFPAbul1pCdtw6b6iLaxhDv2IqEs6dbH76NU/vs7wS2+3AgpqdE3Z81zW+j8LX3F1XtoprcAxpHLoVNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr; spf=pass smtp.mailfrom=sartura.hr; dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b=rd1RwZ+5; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sartura.hr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jSYOS6Xz"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4a5ac8fae12so76201cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 11:38:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b="rd1RwZ+5"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2350fc2591dso1776395ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 11:39:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751481503; x=1752086303; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ULWWPox4qZzsIult38wzmv87aEca+ovc1/tOWVkmBuw=;
-        b=jSYOS6XzV0xPxN6GjZJ+p2hHuRwvGHSy3d2ZXIfkXti9Haol3sBcvaS7bDwVYv2jYA
-         qB7CbPxjK2d406AKoJfqEhjnHV0n/ibMVMmY+jd/MKNkXBOpt4/Rx72NNm2YCKW227mm
-         dx89eIRxdCjoNeTvGnp7iyHfKdDpQgm1S+s8eRvTIpkEM7Tp6Ly/IYk+h0kqVpVhgWOn
-         TFULUU68vR/5HooCZO0bLkUWgmdmK6aQQOF09+f+7tVoWeQ5QpReyt7ppG0AvXSROy04
-         sqeOlWwpUtrDGxopP1yTmKhWZ19uIZ4IznRzfqtyP4HmYeJrDnNilwaGHKWA2X3LmbF3
-         xUPg==
+        d=sartura.hr; s=sartura; t=1751481552; x=1752086352; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=H0vokW/WVWIh/diYEqZYuuuvilgnskYyUw0dTfGNSpI=;
+        b=rd1RwZ+5nubdEQxYyJFun87C00oSIIPar2SyPLa2/vR41WjfK5wDB9i1LDVOJDpgqF
+         8mK9mxPgO5iLW9e81d87+vOykBOkJSpy5k4/eqbi8L6WlqU3ZpVUQToBsGfcbuVW53MR
+         6m+g6CF3ijwp+YW7yc1A472ZsLTMAurLhw4fXlbLyrn3ZMKvAjlS3awXzBr9Y8qy+ys1
+         J3mb8zyJv/tEcP1rp75BdLzpVC/urUFC6R2Wlgey/2IHxk2sarL33GYm5w55fyyzQbqO
+         y2JPdIcPnxWB5UOYSMmDP0WDSsezjeOveo7nWLAxA1wJJ5JzuxQ81IQjOhix55O32dz6
+         MXNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751481503; x=1752086303;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1751481552; x=1752086352;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ULWWPox4qZzsIult38wzmv87aEca+ovc1/tOWVkmBuw=;
-        b=SuIFOlq5gNE8bFlCZY+PPd5aIHmFg2haHSMWD1/5CPX2PIDLLiphZKZ31GdKMOHVSO
-         nHQVldkkwrUN/LNRbCaETDT59xyEc2RV0agMX8LOm1FGFAzcyCpBXWqbxTbUdeSTLZzK
-         kWQLLd2e8V2M1Jb0U3/II1geow7r7afLGcnPzsZ6DFQhpy0Rk8yAurFKHenERi9laEJm
-         ljry6IIwTMZAAPV5pxEzQu+NHutfNEjXUAI8pXxBa3BSC31XkoAIU2Rr7nBpjPun2bt8
-         amcDuc2qvLo+0XAl7NG9B4q3xPRuJRFIrTKO96osOdqb0I62ACFyucpy/A6iVnBzAwTa
-         JaQg==
-X-Forwarded-Encrypted: i=1; AJvYcCXxx/pWRnUyaXi7WlXuTmYHnBG6WxE4z3HZz/CkrZU4SFl/3ozzl0/zQ9qaNW6qjxCvKh+CjBrrmWpZWlc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEQyMtZK4Tr3dc6v7O9JLpMosjJLFBaG8yw7CYTEJd1v9ht4JX
-	EzTbrY+SBCyMO9ADnQ87NHGTzAUfhiV1+MhH67MKaoQ3U7Oytv+FoEDPl4ghFR/LL2t2Pm4FGhc
-	QHuGyQXGvOoWeBQ52GzqfzGT7YAWVyiEqQb5828vQ
-X-Gm-Gg: ASbGncsLUCYbjI06XkEzbE2R4k4YzPpu1q3SD6YNXgSubOx6kFvYWh8s9Ao/9KX175c
-	K4y/5cIEMnuPwksySGnuNlVwnZ6F+wTryADTDh/6Q7X6hu/jcNkGHgPb5TvR6UWCn4VcUPp59Bd
-	7VcUMWitB+O/hXC0zfTRXVeIf8U5hl8zlBlwsXHG4boujXQ/hDquE4ZaS9snxzjOeQgBzMC8U=
-X-Google-Smtp-Source: AGHT+IEEyrti8yJH4HCehYLYox3KLQbM+vM6l6RgHPmxXiAqzAoXtx6qO0ixLzChNC5livK7Thondb2rLcE8ZrQ9Kcw=
-X-Received: by 2002:ac8:7d8c:0:b0:477:63b7:3523 with SMTP id
- d75a77b69052e-4a987e921famr338731cf.4.1751481502743; Wed, 02 Jul 2025
- 11:38:22 -0700 (PDT)
+        bh=H0vokW/WVWIh/diYEqZYuuuvilgnskYyUw0dTfGNSpI=;
+        b=kpgJOz5o1gwJSUqdFqTIewfH/m8kWTRLDZHupiz2fNASYRB3fBey7Ut0uk34ZfxRRb
+         xfhoRsiyJ/gSS6CMQswOKjTto3KOUdC2Xm5pBcqUJL+BYz6ZdTQpmw1FjWJLuoDUv0d2
+         1KR3UcBBnNKHHrIVWWbt60lNHPmFlVHhKk+u6og4GMplIwRYSoqZPDr1WKFpNXsyZZmM
+         3BAN7NTscw1+PhajHatH45oqPdjdYx2lgsVFR+5/Vg9+7LYF37rC0N9q6WCcj/yfJl2K
+         U/dppGfLnP/HwecLMQ90AlLWRtWR4KEc9O8iskNLgdfifrZo5as6/wPkcVKOTj4vrYV7
+         LYCg==
+X-Forwarded-Encrypted: i=1; AJvYcCUe41N2DMarqB1kR/zSbM5Eu9UmIrAD+DC3JITtx/gxFAlQp1H/GgfwrfV3/Oflz80ZbWNUQFsNy40/qlM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+Gxo5rTfsqralYEDX+/j6uv4gWdWUTRVRqWdmTyv6RaWUieFN
+	uR8Sr4yLCtpjhfaasavQg6DWaZquYiAmOLasRiuSER+lhoxYiswsLVTE7VDs3ZEqICk=
+X-Gm-Gg: ASbGncuLqlknyI5pAeYFvTP7nPddjbz9DSUTALK6mB3sBkMpU5+QRUtakUlSqdxPj3c
+	I9CPPo2IqJ5pfgxmrgrxNMCw4/YNAZBGBv22s++d/Uzd6MSW4/BqvJ1fYydRccBjY1kdKUjhAVn
+	Oys/EqceLSZNBZgcn/c3xuXgSgcshqb4e57zFgijVyI9eckf/DumkHVjJghT6Ftn3d/FAVHpT1C
+	2uet/Y7IbolN86Qn1Zlq1nGRh6w9UwJxFKsZC0QODCEI3WOcVNnwI2yPGc6BreIPZq/joQzAIWI
+	dNHRh/+7eTZZdxOIVARXjYZ5ptISy/le3LAwLS5HShyT+FzpbkxxMF78NYcUce4Zdr/uyvIojfJ
+	8//CMvaD4Zc4xXY0Scarg0Ng=
+X-Google-Smtp-Source: AGHT+IGquOgZW20g+Jug5sdpx4963ZXWIcFE/S5pAht3IG0Kq6KeWcjOPzHMuBzGwiWByDwygshOwQ==
+X-Received: by 2002:a17:903:1105:b0:235:f059:17de with SMTP id d9443c01a7336-23c793f0bc4mr7420165ad.15.1751481552430;
+        Wed, 02 Jul 2025 11:39:12 -0700 (PDT)
+Received: from fedora (cpe-94-253-164-144.zg.cable.xnet.hr. [94.253.164.144])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-23acb2f39bdsm143034195ad.80.2025.07.02.11.39.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 11:39:11 -0700 (PDT)
+From: Robert Marko <robert.marko@sartura.hr>
+To: linux@armlinux.org.uk,
+	nicolas.ferre@microchip.com,
+	alexandre.belloni@bootlin.com,
+	claudiu.beznea@tuxon.dev,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	olivia@selenic.com,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	vkoul@kernel.org,
+	andi.shyti@kernel.org,
+	lee@kernel.org,
+	broonie@kernel.org,
+	gregkh@linuxfoundation.org,
+	jirislaby@kernel.org,
+	arnd@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	linux-spi@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	o.rempel@pengutronix.de,
+	daniel.machon@microchip.com
+Cc: luka.perkov@sartura.hr,
+	Robert Marko <robert.marko@sartura.hr>
+Subject: [PATCH v8 00/10] arm64: lan969x: Add support for Microchip LAN969x SoC
+Date: Wed,  2 Jul 2025 20:35:58 +0200
+Message-ID: <20250702183856.1727275-1-robert.marko@sartura.hr>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250619000925.415528-1-pmalani@google.com> <20250619000925.415528-3-pmalani@google.com>
- <ff65b997-eb14-798f-1d2f-c375bf763e71@hisilicon.com> <CAFivqm+hjfDwPJCiHavnZSg2D+OaP5xbQnidmwxQ3HD32ic6EA@mail.gmail.com>
- <ef3f933a-742c-9e8e-9da4-762b33f2de94@hisilicon.com> <CAFivqmLCW2waDnJ0nGbjBd5gs+w+DeszPKe0be3VRLVu06-Ytg@mail.gmail.com>
-In-Reply-To: <CAFivqmLCW2waDnJ0nGbjBd5gs+w+DeszPKe0be3VRLVu06-Ytg@mail.gmail.com>
-From: Prashant Malani <pmalani@google.com>
-Date: Wed, 2 Jul 2025 11:38:11 -0700
-X-Gm-Features: Ac12FXw9NLEKw0kD1SEh0VYR8oLCN-GZjdVDd5bL40tflLYDajSr_Xg5Q2gDMDI
-Message-ID: <CAFivqm+D9mbGku-nZKSUEMcQV5XK_ayarxL9gpV5JyfmhirsPw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] cpufreq: CPPC: Dont read counters for idle CPUs
-To: Jie Zhan <zhanjie9@hisilicon.com>, Ionela Voinescu <ionela.voinescu@arm.com>, 
-	Beata Michalska <beata.michalska@arm.com>
-Cc: Ben Segall <bsegall@google.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	"open list:CPU FREQUENCY SCALING FRAMEWORK" <linux-pm@vger.kernel.org>, Mel Gorman <mgorman@suse.de>, 
-	Peter Zijlstra <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Valentin Schneider <vschneid@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	z00813676 <zhenglifeng1@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi All,
+This patch series adds basic support for Microchip LAN969x SoC.
 
-Ionela, Beata, could you kindly review ?
+It introduces the SoC ARCH symbol itself under the ARCH_MICROCHIP symbol
+which allows to avoid the need to change dependencies of the drivers that
+are shared for Microchip SoC-s in the future.
 
-On Fri, 27 Jun 2025 at 10:07, Prashant Malani <pmalani@google.com> wrote:
->
-> Hi Jie,
->
-> On Fri, 27 Jun 2025 at 00:55, Jie Zhan <zhanjie9@hisilicon.com> wrote:
-> >
-> >
-> > Hi Prashant,
-> >
-> > Sorry for a late reply as I'm busy on other stuff and this doesn't seem to
-> > be an easy issue to solve.
-> >
->
-> No worries, the ping was in general to all the people in the thread :)
->
-> > For the latest kernel, [1] provides a new 'cpuinfo_avg_freq' sysfs file to
-> > reflect the frequency base on AMUs, which is supposed to be more stable.
-> > Though it usually shows 'Resource temporarily unavailable' on my platform
-> > at the moment and looks a bit buggy.
-> >
-> > Most of the related discussions can be found in the reference links in [1].
-> > [1] https://lore.kernel.org/linux-pm/20250131162439.3843071-1-beata.michalska@arm.com/
-> >
-> > As reported, the current frequency sampling method may show an large error
-> > on 1) 100% load, 2) high memory access pressure, 3) idle cpus in your case.
-> >
-> > AFAICS, they may all come from the unstable latency accessing remote AMUs
-> > for 4 times but delaying a fixed 2us sampling window.
->
-> I tried applying [1] which consolidates the ref and del register reads
-> into 1 IPI, but that did not make a difference. The values still
-> fluctuate wildly.
->
-> >
-> > Increase the sampling windows seems to help but also increase the time
-> > overhead, so that's not favoured by people.
-> >
->
-> This experiment did not appear to help in our case. It's a point in
-> the direction that this method is inherently inaccurate during idle
-> situations.
->
-> > On 20/06/2025 13:07, Prashant Malani wrote:
-> > > Hi Jie,
-> > > On Thu, 19 Jun 2025 at 20:53, Jie Zhan <zhanjie9@hisilicon.com> wrote:
-> > >> On 19/06/2025 08:09, Prashant Malani wrote:
-> > >>> t0: ref=899127636, del=3012458473
-> > >>> t1: ref=899129626, del=3012466509
-> > >>> perf=40
-> > >>
-> > >> In this case, the target cpu is mostly idle but not fully idle during the
-> > >> sampling window since the counter grows a little bit.
-> > >> Perhaps some interrupts happen to run on the cpu shortly.
-> >
-> > Check back here again, I don't think it 'mostly idle'.
-> > Diff of ref counters is around 2000, and I guess the ref counter freq is
-> > 1GHz on your platform?  That's exactly 2us, so the target cpu is mostly
-> > busy.
+DTS and further driver will be added in follow-up series.
 
-I think it is pertinent to note: the actual act of reading the CPPC counters
-will (at least for ACPI_ADR_SPACE_FIXED_HARDWARE counters)
-wake the CPU up, so even if a CPU *was* idle, the reading of the counters
-calls cpc_read_ffh() [1] which does an IPI on the target CPU [2] thus waking
-it up from WFI.
+Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+---
+Changes in v8:
+* Move to using ARCH_MICROCHIP as suggested by Arnd
+* Dropped any review tags due to changes
 
-And that brings us back to the original assertion made in this patch:
-the counter values are quite unreliable when the CPU is in this
-idle (or rather I should correct that to, waking from WFI) state.
+Robert Marko (10):
+  arm64: Add config for Microchip SoC platforms
+  ARM: at91: select ARCH_MICROCHIP
+  arm64: lan969x: Add support for Microchip LAN969x SoC
+  mfd: at91-usart: Make it selectable for ARCH_MICROCHIP
+  tty: serial: atmel: make it selectable for ARCH_MICROCHIP
+  spi: atmel: make it selectable for ARCH_MICROCHIP
+  i2c: at91: make it selectable for ARCH_MICROCHIP
+  dma: xdmac: make it selectable for ARCH_MICROCHIP
+  char: hw_random: atmel: make it selectable for ARCH_MICROCHIP
+  crypto: atmel-aes: make it selectable for ARCH_MICROCHIP
 
-This work around probably hits more types of implementations, but
-I can't see another way to limit it to only ARM FFH. Open to suggestions!
-
-[1] https://elixir.bootlin.com/linux/v6.15.4/source/arch/arm64/kernel/topology.c#L482
-[2] https://elixir.bootlin.com/linux/v6.15.4/source/arch/arm64/kernel/topology.c#L453
-
-Best regards,
-
--Prashant
-
+ arch/arm/mach-at91/Kconfig     |  4 +++
+ arch/arm64/Kconfig.platforms   | 49 ++++++++++++++++++++++++----------
+ drivers/char/hw_random/Kconfig |  2 +-
+ drivers/crypto/Kconfig         |  2 +-
+ drivers/dma/Kconfig            |  2 +-
+ drivers/i2c/busses/Kconfig     |  2 +-
+ drivers/mfd/Kconfig            |  2 +-
+ drivers/spi/Kconfig            |  2 +-
+ drivers/tty/serial/Kconfig     |  2 +-
+ 9 files changed, 46 insertions(+), 21 deletions(-)
 
 -- 
--Prashant
+2.50.0
+
