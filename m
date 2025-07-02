@@ -1,82 +1,115 @@
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43DEF248883;
-	Wed,  2 Jul 2025 09:24:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52B2523F41F;
+	Wed,  2 Jul 2025 09:25:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751448289; cv=none; b=d744Q4k6zrh4EKsiio6Umom+2w5NXyhcgZyO6a+GSWocfbzjG8rHZxgFLrK4rytNQEvMkxXTXZUgUl4pPjabA8oM329abQDC9unEAOvYEi+P7PhWL/6fTMghqcj772IF2FbZmtKfk4MIf/U8R4fwiTBPsHZSxzUJwEY8BRokkDQ=
+	t=1751448327; cv=none; b=FXy2QxLkJF1+N3sm1vpnb+O0KAQqz3q5EWZ7k9kV+HNdrUoExrujaaFT5MXRsUfmRIWyu0C9aRD9eWZvY3epJ0MaEmRi9nWxnGkMe8tfzOS81ZUB21HALwzkud1W6D3Opw8MDVvjgCCNsppUoYYdPGj0ym/lqGM7vQ4Q/PKQl6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751448289; c=relaxed/simple;
-	bh=A6Zgby+nTiFE3jSlZGYlVIn5Tqhm0CzwNJz53mOyGv4=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=YPQbXgNTlNd3bplztnCLB8VIoVr9jz+e6mRVpibm0OnwRt5nYcHUvdYPBrGI9UkXVDrFHP0gG/mg9ww8Ks33Usfj2NDBRG4hh92SGrw5V4o6zb4TfxQ4LTklJoPayQif7hFrvdM+gD7CM9T0bSSHial+Hnp6+qOlQDWw0hiGvkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ONbqvuQ8; arc=none smtp.client-ip=115.124.30.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ONbqvuQ8"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1751448282; h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type;
-	bh=gMDwvqQ9L9NQMU8cE/cICQqPymkcmXpH3/yhJsouDq4=;
-	b=ONbqvuQ8G63urdKJS9UiSYyuqUB0x3HeIpDzt/R0PZfiIVhVBRIuXixoWHwKcuJbXas8BvJaZeAM8tCD5I2044OX0dDqoCP8/LFRheacARwDQRsn5ldN4gtNdi2uNCwMnvQUn7xVKP0Cvb7CAjnFsFGa8OF6aTwnt943dvy/syo=
-Received: from 30.221.114.234(mailfrom:chengyou@linux.alibaba.com fp:SMTPD_---0Wgdc04K_1751448281 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 02 Jul 2025 17:24:42 +0800
-Message-ID: <0d4684ef-eb54-2977-dc38-b21c0779fee4@linux.alibaba.com>
-Date: Wed, 2 Jul 2025 17:24:41 +0800
+	s=arc-20240116; t=1751448327; c=relaxed/simple;
+	bh=l+OXJNIycwkqxDvtkEQQL47AAcEoLyHKZN6dUMteqI8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RsizR78jxAtRVWLPG7xg8uVaMBjOWoZlL2cmT/XYNBvnQSuVFfwM1dW5Ux0uVeifkaGuMtBb34WiDQAAJvbR3PMk06VJ51hqyXkrUKflTh7iboHR4u6CldFfRV7OzpwsSa1PQKKb66Jfmk8jIW14scoiLYEGir41C28oMP7xkEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ae0df6f5758so715155866b.0;
+        Wed, 02 Jul 2025 02:25:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751448323; x=1752053123;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iXqizztXrc6l617heC/AMuPzhsNfzw+4PJx5K3hl0+k=;
+        b=MryAo/6QeecAbzjwFSg26icdE9TF5htEpWRQJfS8IbieF5ROjtYqKdwLOOwPvO+/ot
+         y1YlMflM3Iulf6h0j5GvD13OinIZ0vk5fMV+eQQbXr2OC7ZAkXwJ8fqfKQLp5YcefaKT
+         Y13PEmsheI6t+p/zf0QlCjdBDEeH4E2wfj2PSSF0uSJwlwaYqIK6Y4WYXovecn1pzNit
+         YMcWcBgCux9rzbQ9MPHliFDTWZ8za+QoFXZ+NiIrMrBxA6KXqsv8IjQyYGUUK5rnKGDE
+         QOg0hrMuRErbqS/B3N/NlQ68Ugv8Pd2URu+LRnt3cVbct9GAjoOGvUfAm753YU/yE06N
+         IlMA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+3IjLhCw00Dum6yE2dxFIi3/NCCiRNiR2pTt+GcwGXYbkk7hqk8x2Zi9cts+vniaAtFeBGMhdWbh53knOqM3J@vger.kernel.org, AJvYcCWfJLeoLZTvfU0HVtjNZvi4UMISxcKcvOd9bsVmCJBSbpn4+/IaKxDnioxofaEDbWy5IESfqmLsUYqsCuo=@vger.kernel.org, AJvYcCXlOfG1ytJEnYGTobvSBG1+T32AITwxqYjndapaVxbampIcIz60C/bjBqPyixT1a64hykdbp4eZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZ8+KPEIIrUa4wzQeMTmWh29LD+EUoKsg/JGC8xdtzSRUVI6aD
+	l04pA121klupbGOraIpRkOaq2115LsdvSWnZVtWtDfkzpbG+FFN3ma6a
+X-Gm-Gg: ASbGnctux9zyp7xjw7thWPe85mPVDq+IScCH+Do8cHjxcCTipX6+tvGl3nzpT+5Af5A
+	nzp5PjZiFKf6PE7Na+rJenhrg6HKeihqqsriK8vLXKU9J590bCn+8gm1WZKVeO8kMYK0qr/5Fhp
+	v1y5P+UEJTTMGIXcQ++Vfonv++2WzIAhYQX7qDiN5xx1JrXi97CIHd9jMCukdB78XKtYnSD+5vv
+	3jT+qLVsA9s1sYROn6fReqo1W4KXh6HWx8CMrQnAHbCv3DgAUAFcbYPLqqxOOy8hFwQcxgkBQxW
+	eZcv/UGIRBP8VpFq1oa/CTbkuCHW2frjN9DmMh78xOn7jft2OI85
+X-Google-Smtp-Source: AGHT+IFmRFolhslnQ3wJmOGKd1ZC652Hspez4xyKqE787ovmelWtlRNlsVeweq4XaspxJpAb3qWHMg==
+X-Received: by 2002:a17:907:2d09:b0:ae0:d1f3:f7f4 with SMTP id a640c23a62f3a-ae3c2a963d8mr240306566b.13.1751448323235;
+        Wed, 02 Jul 2025 02:25:23 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:6::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353ca2edcsm1027763066b.180.2025.07.02.02.25.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 02:25:22 -0700 (PDT)
+Date: Wed, 2 Jul 2025 02:25:20 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>, Shuah Khan <shuah@kernel.org>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, gustavold@gmail.com
+Subject: Re: [PATCH net-next 6/7] netpoll: move Ethernet setup to push_eth()
+ helper
+Message-ID: <aGT7ALhW060Tv22l@gmail.com>
+References: <20250627-netpoll_untagle_ip-v1-0-61a21692f84a@debian.org>
+ <20250627-netpoll_untagle_ip-v1-6-61a21692f84a@debian.org>
+ <20250701175325.5c1970b9@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.15.1
-From: Cheng Xu <chengyou@linux.alibaba.com>
-Subject: Re: [PATCH] Fix dma_unmap_sg() nents value
-To: Thomas Fourier <fourier.thomas@gmail.com>
-Cc: Kai Shen <kaishen@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250630092346.81017-2-fourier.thomas@gmail.com>
-Content-Language: en-US
-In-Reply-To: <20250630092346.81017-2-fourier.thomas@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250701175325.5c1970b9@kernel.org>
 
-
-
-On 6/30/25 5:23 PM, Thomas Fourier wrote:
-> The dma_unmap_sg() functions should be called with the same nents as the
-> dma_map_sg(), not the value the map function returned.
+On Tue, Jul 01, 2025 at 05:53:25PM -0700, Jakub Kicinski wrote:
+> On Fri, 27 Jun 2025 10:55:52 -0700 Breno Leitao wrote:
+> > +static void push_eth(struct netpoll *np, struct sk_buff *skb)
+> > +{
+> > +	struct ethhdr *eth;
+> > +
+> > +	eth = eth_hdr(skb);
+> > +	ether_addr_copy(eth->h_source, np->dev->dev_addr);
+> > +	ether_addr_copy(eth->h_dest, np->remote_mac);
+> > +}
 > 
-> Fixes: ed10435d3583 ("RDMA/erdma: Implement hierarchical MTT")
-> Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
-> ---
->  drivers/infiniband/hw/erdma/erdma_verbs.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> Can you move the pushing of the header and setting h_proto here?
 > 
+> if the goal of the series is to slice up the code per network layer
+> then its a bit odd for the IP layer handlers to be pushing the L2
+> header and setting its proto.
+> 
+> Just:
+> 
+> 	if (np->ipv6)
+> 		eth->h_proto = htons(ETH_P_IPV6);
+> 	else
+> 		eth->h_proto = htons(ETH_P_IP);
+> 
+> no?
 
-Hi Thomas,
+yes. We can do it. In fact, if we want to do even better, we can move
+the can move the skb_push(skb, ETH_HLEN) and skb_reset_mac_header() here
+as well. This will slice up the code even better.
 
-This patch is already accepted by Leon, and a late thanks to you.
+The function will look like the following:
 
-Cheng Xu
+	static void push_eth(struct netpoll *np, struct sk_buff *skb)
+	{
+		struct ethhdr *eth;
 
-
-> diff --git a/drivers/infiniband/hw/erdma/erdma_verbs.c b/drivers/infiniband/hw/erdma/erdma_verbs.c
-> index af36a8d2df22..ec0ad4086066 100644
-> --- a/drivers/infiniband/hw/erdma/erdma_verbs.c
-> +++ b/drivers/infiniband/hw/erdma/erdma_verbs.c
-> @@ -629,7 +629,8 @@ static struct erdma_mtt *erdma_create_cont_mtt(struct erdma_dev *dev,
->  static void erdma_destroy_mtt_buf_sg(struct erdma_dev *dev,
->  				     struct erdma_mtt *mtt)
->  {
-> -	dma_unmap_sg(&dev->pdev->dev, mtt->sglist, mtt->nsg, DMA_TO_DEVICE);
-> +	dma_unmap_sg(&dev->pdev->dev, mtt->sglist,
-> +		     DIV_ROUND_UP(mtt->size, PAGE_SIZE), DMA_TO_DEVICE);
->  	vfree(mtt->sglist);
->  }
->  
+		eth = skb_push(skb, ETH_HLEN);
+		skb_reset_mac_header(skb);
+		ether_addr_copy(eth->h_source, np->dev->dev_addr);
+		ether_addr_copy(eth->h_dest, np->remote_mac);
+		if (np->ipv6)
+			eth->h_proto = htons(ETH_P_IPV6);
+		else
+			eth->h_proto = htons(ETH_P_IP);
+	}
