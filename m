@@ -1,103 +1,114 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C09E2E4982
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 18:28:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A672E498D
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 18:29:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751480929; cv=none; b=RvMuFRIn3URLBQBA0vJFg3L4MOmFbrXuBKARtvYFT4Wi+m08Qi070a012MXrCzYOiliLy+BaZw3C0OYu4DcsziMM1Ps041P5TjkeZptOMGWf/QI3k1dEzn+xt2M89IppgcBrOYvE797naOYtBOGtShdU4R+3BHr13mkUZilujzY=
+	t=1751480989; cv=none; b=RmxzQEYahgEMHCHvsohckUlKUUfRepfgGt4m8yzu7LUQ7sSp86K3nR5Bdv9ZwcpCT+WDk+saZJP4TmuJmdDxMq5dUWdpFMigu7K8pveJ/80sT/ne2cvfHi+wMbZ/87zvSOJR+1gymtP31LOzeAFirKottYTbRTwEQ3JRDBAUnks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751480929; c=relaxed/simple;
-	bh=avUNtvZK0fUa7aGIuYOyPWZE1iep4kiK5Bl0okgHHA8=;
+	s=arc-20240116; t=1751480989; c=relaxed/simple;
+	bh=1vxlteZGgs8rPgxVkHOhpq5xPFcq85u1536QGsj7Ilw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GtF3HGiewwvnlo1ucUaN1WgK6xd6aorANyF5n1zhFbPJdGkSkyy8s4t59j4NcdLymxZ7GrOi1WYhHuOTzS8rpGiobX6dtkxCZZXxlVsSOw8QSYdI1peceUfLEBzlmmSppbJD9mSvzmIKqNRvC30H5OQEpx7yP1Hsw1ZydTdgclA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=CKnVJuhy; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	 Content-Type:Content-Disposition:In-Reply-To; b=ricuqKHMp05ritvBFd52kByIsa55Wp5EQ4OnyjYxrNSN31yFR/nqtnCmjgZyY+vhCqgZm5c4GvSfsz5BFzw20gXqDwAiB4A58FE9ooA9OLTxLV0xzIY8DoK5YoTbQELAcVf4Ka4q0wLCRM3ELcbhoOJ7lcmAW9zTWxR0H7ndC0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=bcLbLhTi; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="CKnVJuhy"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-748d982e97cso4797677b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 11:28:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1751480927; x=1752085727; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=46MgjvV3epJBZdXixG7o02s3aaxSYe96C/POTn0IK/4=;
-        b=CKnVJuhyqDW5v+l53C2hT1fONwq8LkyRwXuQlUE8TP6Tiuk0uDEcbyM/pfua9Mr4fv
-         VoQLwFamC0UsbQLQXU+FPEQ6YYgc0AotqxO44BpFok8cZc1iGCHD66Lkng7cdHwyXdDG
-         lOythuhDKPjjxAuQ4QG0BugwYUOzZyPHJTEUrZOuqvq4z8FxtZoBsUIkTppRmGzy4eNc
-         AcUB8HTx3a7IOIuw6DKfxGD1lNDBBDnBJV6GF0U7vKieP5rrTvqad41ycewnoFwpZktl
-         /hxOhLLqySNtYZgMUdO+kAT7DyTv3V4sl9J3Jqhw33GoiG2KbLWvIMlVUu1af4PtFzLi
-         1D6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751480927; x=1752085727;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=46MgjvV3epJBZdXixG7o02s3aaxSYe96C/POTn0IK/4=;
-        b=SZBd1BZZxgFzCDZ/MyrswB7tM5nMb3/wExhDAY18/hoQofu5RtmVWotdo1gaiVIRSz
-         szGK2JaIocfd0omPpen9DgvIBp0sarIR0rEWfDmAmk/vTs1HFEZeq+Qf7Lg4oYxPkLVI
-         304ojzq/foYVKrE+EdN19a8mqT3wv8ZAmCHzHNSescj/XkROsbUW2CNxOePhNHA9Gq+L
-         /QyBUPWxPX5veY7zKU9tpOsYaiwU4s/qWo30IQq/jsyQi+dNGNCNYAlTEv6JdPRYJDzw
-         oc8H6IimMbNbg/RDr+jRNNWLnG4+5SqSjgFL4HlpCHOpuxDK6CJmm8/6ZRX2RjRVKJr/
-         pn7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXoTcw4WmUIvRNpycFWIzEFSaRSIRWIVFOGo6cpqy+jdE1bxlAZxA6cJHsYaz4xhR9mmmVIqklI33l3RhM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YysS9df/Y2bX/i62eTPB2TIq9zEvDoCHRcIGKDLvdYNoY/KR9Er
-	T9zad6po0YAp7A7yFoylS7UcjCMLNDIh2QwabHW3ySzTMXvrT/HI2XYeqZSAiaKaHZg=
-X-Gm-Gg: ASbGncvLubXT5RaEe4EIM2XgDKATntDIyqTPomUj8R1nGxRMdlzZIfvEh3ALHq1xFHp
-	YzvCFu/8A5+dCbFYUFMMWdZaIVzRwV4ZGfCvxy72j8IFnNUXOZWtCeGF1jvt71oWhjN72UIL+LX
-	zFwKG4ERjzUt5A8PVf3OWb42O4ey3CC9G/oHHvsH7+qmxV95BClgZXCkonNDxowUfEeBFK+ezUu
-	il+L5DMzD7KAF82dm7BQwDAGM1hGueIL+sgUEw6pTd83qzJ8U5CwffLOBWrZCn/VMksMACePlyc
-	dyXd5aJeLq1cjHmUCFlp0uPbgZgJwfYC/o3z
-X-Google-Smtp-Source: AGHT+IF4ph0eWwg5euxsmabv0EeGQqiK9nx2/cAAJmk4J0EcaWCQHAieQ9iQbzhIPW0jSUPpbcOaPg==
-X-Received: by 2002:a05:6a00:855:b0:748:eb38:8830 with SMTP id d2e1a72fcca58-74ca0c2788emr646222b3a.13.1751480927563;
-        Wed, 02 Jul 2025 11:28:47 -0700 (PDT)
-Received: from ziepe.ca ([130.41.10.202])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af57ef308sm14319981b3a.157.2025.07.02.11.28.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 11:28:46 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1uX2CK-000000051mO-3Dtn;
-	Wed, 02 Jul 2025 15:28:44 -0300
-Date: Wed, 2 Jul 2025 15:28:44 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: lizhe.67@bytedance.com
-Cc: alex.williamson@redhat.com, david@redhat.com, peterx@redhat.com,
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] vfio/type1: optimize vfio_unpin_pages_remote() for
- large folio
-Message-ID: <20250702182844.GE904431@ziepe.ca>
-References: <20250630072518.31846-1-lizhe.67@bytedance.com>
- <20250630072518.31846-5-lizhe.67@bytedance.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="bcLbLhTi"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A98C540E0215;
+	Wed,  2 Jul 2025 18:29:44 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id qvSWt73tl03D; Wed,  2 Jul 2025 18:29:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1751480980; bh=X2eYdTgOAj7ev229sZL74SOmPQikqFp9uPGo50WqjDw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bcLbLhTiAETgQIiVutZtrx993YwtpEm7geaQHYzvQrftPhH10vuzPZzOINRx2G9qM
+	 EPC1NtbBUWskaeiR9mENIhs6oHYjoNEefD+bfbRxwo5YRa21YGeJjyznC6aMN18eKC
+	 bSVZsiKRCVyx/rNCAFAfJxjch8v91EewCCgedXbUv5MZJQdaoYqA3qbnPCgVHu+S9m
+	 R1DUVEcRlu+PalqFiSfOMdKeLlu30DpxDGxLBkPDx5VEpdNCHm8j9opNxwGNM5f7xO
+	 sMT/bqQ8xmOxJxDLpA1PndKQkKKMs1m55HP/tDMBK3e+UriLxlegbGqds5MjPnUyFX
+	 3o1rr+0j/ZYkOFpq774MR3t8ZSdl3FUQ7Qu+lx8ms86ReBgtx+W39fm+u9wO+tEuUj
+	 sOaQlAUaidf4GxhD/JvOIWDOG2w3MajtHud2BEvCOzAzDWDYgAjWk5vngm6iDVMtJo
+	 tMaVatKDb/28S0EfaavMzKNqayxgw32PUPK8f65Si5VWd+3e0aj+eKqciCMjIO5MNy
+	 St0j7BxpZL7I/TifhrW13gIwczW/faJdG+RZTK8fYUqkk1Vtq9v339ObYfisN2Z1TW
+	 WRXpbxzYuuE0fW5RRNQc7M/iFp5sTq2jL9YYFLEzOCAR1HBbL1MgJ+cZM8NwS5fgax
+	 EEdOpvIuIzUxuu6KJHw1ag10=
+Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7879A40E0217;
+	Wed,  2 Jul 2025 18:29:28 +0000 (UTC)
+Date: Wed, 2 Jul 2025 20:29:22 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	kernel test robot <lkp@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>, llvm@lists.linux.dev,
+	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	x86@kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+	Jinjie Ruan <ruanjinjie@huawei.com>
+Subject: Re: [tip:master 19/19] include/linux/irq-entry-common.h:201:2:
+ error: unexpected token
+Message-ID: <20250702182922.GHaGV6gl6axPokuBIr@fat_crate.local>
+References: <20250702130915.GEaGUve86iYnv337_Z@fat_crate.local>
+ <aGUxH--v32Bv4T81@J2N7QTR9R3.cambridge.arm.com>
+ <20250702132415.GFaGUy_6q0dZZI9AX3@fat_crate.local>
+ <aGU_IY70Jt4bcbf2@J2N7QTR9R3.cambridge.arm.com>
+ <20250702145425.GS1613376@noisy.programming.kicks-ass.net>
+ <20250702150739.GT1613376@noisy.programming.kicks-ass.net>
+ <20250702154137.71390C24-hca@linux.ibm.com>
+ <20250702161012.GQ1613200@noisy.programming.kicks-ass.net>
+ <20250702180136.GA3452438@ax162>
+ <20250702181236.GGaGV2lAMxdCg_7MoX@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250630072518.31846-5-lizhe.67@bytedance.com>
+In-Reply-To: <20250702181236.GGaGV2lAMxdCg_7MoX@fat_crate.local>
 
-On Mon, Jun 30, 2025 at 03:25:18PM +0800, lizhe.67@bytedance.com wrote:
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index a02bc340c112..7cacfb2cefe3 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -802,17 +802,29 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
->  	return pinned;
->  }
->  
-> +static inline void put_valid_unreserved_pfns(unsigned long start_pfn,
-> +		unsigned long npage, int prot)
-> +{
-> +	unpin_user_page_range_dirty_lock(pfn_to_page(start_pfn), npage,
-> +					 prot & IOMMU_WRITE);
-> +}
+On Wed, Jul 02, 2025 at 08:12:36PM +0200, Borislav Petkov wrote:
+> On Wed, Jul 02, 2025 at 11:01:36AM -0700, Nathan Chancellor wrote:
+> > Thanks Peter. Did something go awry with the latest rebase? It looks
+> > like current core/bugs has the loongarch issue fixed but "bugs/s390: Use
+> > 'cond_str' in __EMIT_BUG()" seems to have reverted to the broken
+> > version?
+> 
+> Ah crap, lemme fix that.
 
-I don't think you need this wrapper.
+Should be fixed now... famous last words. :-P
 
-This patch and the prior look OK
+git diff e0d1ec28743b a4585558a904
+diff --git a/arch/s390/include/asm/bug.h b/arch/s390/include/asm/bug.h
+index a185855ab158..acb4b13d98c5 100644
+--- a/arch/s390/include/asm/bug.h
++++ b/arch/s390/include/asm/bug.h
+@@ -9,7 +9,7 @@
+ #else
+ #define __BUGVERBOSE_LOCATION(file, line)                      \
+                .pushsection .rodata.str, "aMS", @progbits, 1;  \
+-       10002:  .string file;                                   \
++       10002:  .ascii file "\0";                               \
+                .popsection;                                    \
+                                                                \
+                .long 10002b - .;                               \
 
-Jason
+Thanks!
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
