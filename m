@@ -1,122 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361CE2E7BDD
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 17:12:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B488B2FF490;
+	Wed,  2 Jul 2025 17:14:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751476380; cv=none; b=hKy7uKymdSqZMPhvRC7M4Yj2GvyUovD+o1zSAGeVqUy5HHs3tu6r3eNP2MGSQNtIk6IWgsGUW+693nb7n4tuNeAUr2dcqrGlTZh8JfKrR8J47QkexTA132mmxp/8+9fPKP5VffindyPVry7KpBq+2eSe2Kbn4P4qVp2jokQ3rlc=
+	t=1751476471; cv=none; b=uVs2Qv38RXWMTZFhpudcOqMm33EeM4dy3uhogjyxzlWLpOuvrR0LO6P0y8b9QPrhvuHJuUBla4GHEYkciVLJNpMpjC1amNVOjFKOEwIdVmXTHeMsjfz5HMDAMykHu+lcfXnbl0T/UXEIxOHfJZi8CCI/iGg26nJxa83kQVAmgn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751476380; c=relaxed/simple;
-	bh=VpA9YeSPV1buBUfGYoBCGhasB5CSNGSo6xEes/APcZ0=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uzsB+Hd2BErH2/AmXSi+FKTqvfVrYRhiQeAyKvBkITTSaLRvVEgjdnPWEeJ4JcP5nnWromRbKGWfrevsUcSPc/UeYXPXmzwLUPMgUmgHAX5YQ58mHPon3dPlNXd+RQZBldh8KzQVBw9UxFKmNC9fbdDF/4D5K6vROti9g8XJ9P4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fpMEN0HW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751476471; c=relaxed/simple;
+	bh=PrCZpvNyjYfUaaLn7PMgQspsagzM2AeP465bCGdyST8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JzkNVMQPmZ60TFbtwV+p+4Msyi2u6QwGgFEp242n5enDlczMKcdQXdxtRPVqFbjwLHuRD8B9MS9jNXXnHgrONem096s56uUeykdJ53K8k034cViRkFIl0Rh6eH4/L6TbpAxSB30cq2D9GldYO6yG3+mmTGhBn7c3YoTaohHFk7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZFa93k7p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fpMEN0HW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1329C4CEE7;
-	Wed,  2 Jul 2025 17:12:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZFa93k7p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B466C4CEE7;
+	Wed,  2 Jul 2025 17:14:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751476379;
-	bh=VpA9YeSPV1buBUfGYoBCGhasB5CSNGSo6xEes/APcZ0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=fpMEN0HWTd6AsmeJGwtTkpt/5H04AkNJ561DqGQXhkyHY0APvVXDXnxwwKB16QHVu
-	 0c6UgNZ7VOpIAPIqQYqOMahQD1MJLA+vM5Ao6RBG9sV3fdYXnjXKy+0ILaqY7ieGSk
-	 unrek5/cZAqDkVWwsIRVp3diqugRsh3gAVyvkZp+d53lqIG5VUWzGgtxSRPdrmHYjg
-	 6b2Hs5sPV+HViV9IQnbXZroFznOnr+pGqaxNbH9vjg2sNReMsEJVkenL917P9dy3YS
-	 63z6JvmRJDew993R6dLXrcQgYFi6ryWRncULXDb3BpxNqb1sx/JDOljzsnzBwinE0w
-	 heyY+k0IvR58g==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uX10y-00C2NV-Sm;
-	Wed, 02 Jul 2025 18:12:57 +0100
-Date: Wed, 02 Jul 2025 18:12:56 +0100
-Message-ID: <86ecuybjon.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: catalin.marinas@arm.com,
-	pcc@google.com,
-	will@kernel.org,
-	broonie@kernel.org,
-	anshuman.khandual@arm.com,
-	joey.gouly@arm.com,
-	oliver.upton@linux.dev,
-	frederic@kernel.org,
-	hardevsinh.palaniya@siliconsignals.io,
-	samuel.holland@sifive.com,
-	palmer@rivosinc.com,
-	charlie@rivosinc.com,
-	thiago.bauermann@linaro.org,
-	bgray@linux.ibm.com,
-	tglx@linutronix.de,
-	puranjay@kernel.org,
-	david@redhat.com,
-	yang@os.amperecomputing.com,
-	mbenes@suse.cz,
-	joel.granados@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 5/8] arm64/kvm: expose MTE_STORE_ONLY feature to guest
-In-Reply-To: <20250618092957.2069907-6-yeoreum.yun@arm.com>
-References: <20250618092957.2069907-1-yeoreum.yun@arm.com>
-	<20250618092957.2069907-6-yeoreum.yun@arm.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1751476471;
+	bh=PrCZpvNyjYfUaaLn7PMgQspsagzM2AeP465bCGdyST8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZFa93k7pHQsnWvDkyWsuQF6QgXzetPQCMJskiOaJ1VM+3PLN4VXJQ4bG88BXOLydy
+	 LtIjmllWrZrKlGpufY6hjlCSqekM8AR93RfG5wsuOU9SovGYci4NfHnM/MSajgnfn2
+	 lVh4HU6KgiamaKrBIxtYbzC9ft22tyQsh1SWMlbfSG69FM4W2DfBpGR47gQdiBFxpv
+	 5XNj7ghmU4PyomU5oL0Lak5EMRXnj5LpnVdrt8s1NCeQ1bz8zA0npppO6PbXmT2x11
+	 Am8HBiWxOL25C2lDSHEZXulMrCCemm0wrksiAWoWlb8rTUdyFfVvdrh9nwhsqiIAbL
+	 VWvua0nZaStPg==
+Date: Wed, 2 Jul 2025 10:14:29 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Sam James <sam@gentoo.org>, fweimer@redhat.com,
+	akpm@linux-foundation.org, andrii@kernel.org, axboe@kernel.dk,
+	beaub@linux.microsoft.com, bpf@vger.kernel.org,
+	indu.bhagat@oracle.com, jemarch@gnu.org, jolsa@kernel.org,
+	jpoimboe@kernel.org, jremus@linux.ibm.com,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
+	mingo@kernel.org, peterz@infradead.org, tglx@linutronix.de,
+	torvalds@linux-foundation.org, x86@kernel.org
+Subject: Re: [PATCH v11 00/14] unwind_user: x86: Deferred unwinding
+ infrastructure
+Message-ID: <aGVo9b1xiT1Moq-P@google.com>
+References: <878ql9mlzn.fsf@oldenburg.str.redhat.com>
+ <87wm8qlsuk.fsf@gentoo.org>
+ <20250702121502.6e9d6102@batman.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: yeoreum.yun@arm.com, catalin.marinas@arm.com, pcc@google.com, will@kernel.org, broonie@kernel.org, anshuman.khandual@arm.com, joey.gouly@arm.com, oliver.upton@linux.dev, frederic@kernel.org, hardevsinh.palaniya@siliconsignals.io, samuel.holland@sifive.com, palmer@rivosinc.com, charlie@rivosinc.com, thiago.bauermann@linaro.org, bgray@linux.ibm.com, tglx@linutronix.de, puranjay@kernel.org, david@redhat.com, yang@os.amperecomputing.com, mbenes@suse.cz, joel.granados@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250702121502.6e9d6102@batman.local.home>
 
-On Wed, 18 Jun 2025 10:29:54 +0100,
-Yeoreum Yun <yeoreum.yun@arm.com> wrote:
+On Wed, Jul 02, 2025 at 12:15:02PM -0400, Steven Rostedt wrote:
+> On Wed, 02 Jul 2025 12:44:51 +0100
+> Sam James <sam@gentoo.org> wrote:
 > 
-> expose MTE_STORE_ONLY feature to guest.
+> > In one of the commit messages in the perf series, Steven also gave
+> > `perf record -g -vv true` which was convenient for making sure it's
+> > correctly discovered deferred unwinding support.
 > 
-> Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
-> ---
->  arch/arm64/kvm/sys_regs.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> index c8c92cb9da01..7bc99ed201eb 100644
-> --- a/arch/arm64/kvm/sys_regs.c
-> +++ b/arch/arm64/kvm/sys_regs.c
-> @@ -1620,7 +1620,8 @@ static u64 __kvm_read_sanitised_id_reg(const struct kvm_vcpu *vcpu,
->  		mask = ID_AA64PFR2_EL1_FPMR;
->  
->  		if (kvm_has_mte(vcpu->kvm))
-> -			mask |= ID_AA64PFR2_EL1_MTEFAR;
-> +			mask |= ID_AA64PFR2_EL1_MTEFAR |
-> +				ID_AA64PFR2_EL1_MTESTOREONLY;
->  
->  		val &= mask;
->  		break;
-> @@ -2884,7 +2885,8 @@ static const struct sys_reg_desc sys_reg_descs[] = {
->  				       ID_AA64PFR1_EL1_MTE)),
->  	ID_WRITABLE(ID_AA64PFR2_EL1,
->  		    ID_AA64PFR2_EL1_FPMR |
-> -		    ID_AA64PFR2_EL1_MTEFAR),
-> +		    ID_AA64PFR2_EL1_MTEFAR |
-> +		    ID_AA64PFR2_EL1_MTESTOREONLY),
->  	ID_UNALLOCATED(4,3),
->  	ID_WRITABLE(ID_AA64ZFR0_EL1, ~ID_AA64ZFR0_EL1_RES0),
->  	ID_HIDDEN(ID_AA64SMFR0_EL1),
+> Although I posted the patch, the command "perf record -g -vv true" was
+> Namhyung's idea. Just wanted to give credit where credit was due.
 
-With the subject line fixed:
+Yep, it's to check if perf tool ask the deferred callchain to the
+kernel.  To check if the kernel returns the callchain properly is:
 
-Acked-by: Marc Zyngier <maz@kernel.org>
+  $ perf report -D | grep -A5 CALLCHAIN_DEFERRED
 
-	M.
+Thanks,
+Namhyung
 
--- 
-Without deviation from the norm, progress is not possible.
