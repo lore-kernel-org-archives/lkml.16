@@ -1,512 +1,371 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89820248893;
-	Wed,  2 Jul 2025 22:36:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D51BA2E;
+	Wed,  2 Jul 2025 22:38:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751495769; cv=none; b=MbBc3p85fKEgQ6f8mkavx+T0/H7Cd6U1XR+aBEF28cSWR7LsHoJu9Xp6mqN3v89rZLrUR5XHRAOohI4iaVxcKtqowTONnPeyiEXWCnehHDQr2aIKY9ON1SMwMyzc/+VRC5+7JujTvYz9FGAfoYJfmjZbgCN5hIimFfN7wOFdRP4=
+	t=1751495919; cv=none; b=czAwvVRdDUFOnKYoFHyLar2Zb9DdTqac+WoiTRkKdKcIMh8zIQBlsn5PzDU3Nb7ZZE+yzoIWkz5KM0IGxPB0tBQ6FXDqwPJNSoyjzhJOMgZC5wyASODVjx7LkKO119tfOw2ymST4XSVVAf+e/jTrjgYOjDdsr+cCQGk9371t9oU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751495769; c=relaxed/simple;
-	bh=yK8y5N6gNclPxjmJnRZgewzX2UW9/j0lFf3u2z072sg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mo/yR8ly+i1B8DdnZgH+Q/TolHUszv+Tt6OX+wBg3sXl4N9+mWH/K3nzz2FG0z71QQDKZNfBvcusZh9pIPtw6HifinNzx2YUGkywi0e44V/hXqTJHjqBcsG+jjo1/2oooYyYJ6hlhYYE33pER8DxUOrV09TK/WUa6oD3Fn7rsBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=GMoGaT0d; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1751495919; c=relaxed/simple;
+	bh=M15wTBRDUxuzUSxsq10ndWKT/U/CMaX/pdQy2NUcoRo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KefguDpd7a6lxHoIuVRvDSnFFwPE3hHfzXM3mYI5nYfeiQVLTxHwk08QLnBdbaSnK8iQ97hnVQrkYjF3xL/Q7kXNUkg3BlCMiPst/KwvDj26tyCPamDa9qPcbpE+oejio1ktsQ90PAD/LXfyKHA3rJ99RmHBPY+0HgdT1QgFHF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uGwhfXMP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="GMoGaT0d"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 45C2240ADE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1751495765; bh=yzUoekRs6KviceLIn0+5Pv5CjlxCW0YQP/vVgcegNhw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GMoGaT0dAJZXFUd906FVWEBe3Z2I8AESUza31qgaqgHe1iIWNyFzbNSkByWyZumCP
-	 qdTGapEjLEvSskVvAEeAPmyzrBVZY5Lh2JnQ+titJWrmDWe6HGTlrLLh/3i1nAxa+8
-	 YmA9muPlql9Gb82MuLhWI0mU5z+EtyQSxlmDVss6EGE9gyo5V2z+RQO0JGQ/VRkD6o
-	 NvKVkRPmvYCrUk9jkd6cj7a+1Yah6YXn1SyxjREQ4RQafHEkrQslVgXVu+s1Jze7ot
-	 ESIvOd72+UX3Fc5eJVQg6VAtD6nAfT9Rweo/OEoGnBoX1s3CZMfQ+l3+Gzj4AdKsi9
-	 /sYsKx/V1p3GA==
-Received: from trenco.lwn.net (unknown [IPv6:2601:280:4600:2da9::1fe])
-	by ms.lwn.net (Postfix) with ESMTPA id 45C2240ADE;
-	Wed,  2 Jul 2025 22:36:05 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Akira Yokosawa <akiyks@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 12/12] docs: kdoc: Improve the output text accumulation
-Date: Wed,  2 Jul 2025 16:35:24 -0600
-Message-ID: <20250702223524.231794-13-corbet@lwn.net>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250702223524.231794-1-corbet@lwn.net>
-References: <20250702223524.231794-1-corbet@lwn.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uGwhfXMP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B72E7C4CEE7;
+	Wed,  2 Jul 2025 22:38:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751495918;
+	bh=M15wTBRDUxuzUSxsq10ndWKT/U/CMaX/pdQy2NUcoRo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uGwhfXMPR1PvpKgUQEecCWVX3ZSxSNI26yaRu8fUX0qOzfZhlnZ3Ti2OITm2qM2HU
+	 GpjxFcDZVrrxFlzODXUqYgHWicnu5LTCx4f/+BDhaeXN8hWRRqLwVYIk2VzwJ93n6i
+	 XaAVw6VJL9igfWcPTxADlhrL8VxigEgZz40eWHk242gW1jVSWukHhvy4sFM8eTU6HP
+	 l1R5VnTpTOYpfd5pUCcTRg8NvVywZ4KExZf+QiaeouQMCDY2zudGIZKd8odAzHmpyo
+	 zg1B05dH6Dr/tcl84LefShpkHhFtqFkHz49KeNAQEIB9ccmkh2RrSeo7yat8ZssEGv
+	 KwGcm6bbtzr4g==
+Date: Thu, 3 Jul 2025 01:38:34 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Stefan Berger <stefanb@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
+	Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>,
+	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	David Howells <dhowells@redhat.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	"open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
+	"open list:SECURITY SUBSYSTEM" <linux-security-module@vger.kernel.org>
+Subject: Re: [PATCH v4] tpm: Managed allocations for tpm_buf instances
+Message-ID: <aGW06nxmFXMYEyJ2@kernel.org>
+References: <20250701145136.82726-1-jarkko@kernel.org>
+ <29f206ec-1d9e-4c2f-b051-3af458173692@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <29f206ec-1d9e-4c2f-b051-3af458173692@linux.ibm.com>
 
-Building strings with repeated concatenation is somewhat inefficient in
-Python; it is better to make a list and glom them all together at the end.
-Add a small set of methods to the OutputFormat superclass to manage the
-output string, and use them throughout.
+On Tue, Jul 01, 2025 at 05:42:47PM -0400, Stefan Berger wrote:
+> 
+> 
+> On 7/1/25 10:51 AM, Jarkko Sakkinen wrote:
+> > From: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
+> > 
+> > Repeal and replace tpm_buf_init() and tpm_buf_init_sized() with
+> > tpm_buf_alloc(), which returns a buffer of  memory with the struct tpm_buf
+> > header at the beginning of the returned buffer. This leaves 4090 bytes of
+> > free space for the payload.
+> > 
+> > Given that kfree() is now the destructor for struct tpm_buf instances,
+> > tpm_buf_destroy() becomes obsolete, and can be safely wiped of too.
+> 
+> s/of/off/  or s/wiped of/remove,/
+> 
+> > 
+> > The actual gist is that now a tpm_buf can be now declared using
+> 
+> s/that now a/that a/
+> 
+> > __free(kfree) declared in linux/slab.h:
+> > 
+> > 	struct tpm_buf *buf __free(kfree) = NULL;
+> > 
+> > 	/* ... */
+> > 
+> > 	buf = tpm_buf_alloc();
+> > 
+> > Doing this has two-folded benefits:
+> > 
+> > 1. Yet to be discoverd memory leaks in the pre-existing code base.
+> 
+> -> discovered
+> 
+> 
+> A couple of nits below and one stray 'return rc;' that should not be
+> there...
+> 
+> > 2. Memory leaks concerning  new features and other contributions.
+> > 
+> > In addition, the barrier to contribute is lowered given that managing
+> > memory is a factor easier.
+> > 
+> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
+> > diff --git a/drivers/char/tpm/tpm2-cmd.c b/drivers/char/tpm/tpm2-cmd.c
+> > index 524d802ede26..86b961f4027b 100644
+> > --- a/drivers/char/tpm/tpm2-cmd.c
+> > +++ b/drivers/char/tpm/tpm2-cmd.c
+> > @@ -165,14 +165,18 @@ struct tpm2_pcr_read_out {
+> >   int tpm2_pcr_read(struct tpm_chip *chip, u32 pcr_idx,
+> >   		  struct tpm_digest *digest, u16 *digest_size_ptr)
+> >   {
+> > +	struct tpm_buf *buf __free(kfree) = NULL;
+> >   	int i;
+> >   	int rc;
+> > -	struct tpm_buf buf;
+> >   	struct tpm2_pcr_read_out *out;
+> >   	u8 pcr_select[TPM2_PCR_SELECT_MIN] = {0};
+> >   	u16 digest_size;
+> >   	u16 expected_digest_size = 0;
+> > +	buf = tpm_buf_alloc();
+> > +	if (!buf)
+> > +		return -ENOMEM;
+> > +
+> >   	if (pcr_idx >= TPM2_PLATFORM_PCR)
+> >   		return -EINVAL;
+> > @@ -187,23 +191,21 @@ int tpm2_pcr_read(struct tpm_chip *chip, u32 pcr_idx,
+> >   		expected_digest_size = chip->allocated_banks[i].digest_size;
+> >   	}
+> > -	rc = tpm_buf_init(&buf, TPM2_ST_NO_SESSIONS, TPM2_CC_PCR_READ);
+> > -	if (rc)
+> > -		return rc;
+> > +	tpm_buf_reset(buf, TPM2_ST_NO_SESSIONS, TPM2_CC_PCR_READ);
+> >   	pcr_select[pcr_idx >> 3] = 1 << (pcr_idx & 0x7);
+> > -	tpm_buf_append_u32(&buf, 1);
+> > -	tpm_buf_append_u16(&buf, digest->alg_id);
+> > -	tpm_buf_append_u8(&buf, TPM2_PCR_SELECT_MIN);
+> > -	tpm_buf_append(&buf, (const unsigned char *)pcr_select,
+> > +	tpm_buf_append_u32(buf, 1);
+> > +	tpm_buf_append_u16(buf, digest->alg_id);
+> > +	tpm_buf_append_u8(buf, TPM2_PCR_SELECT_MIN);
+> > +	tpm_buf_append(buf, (const unsigned char *)pcr_select,
+> >   		       sizeof(pcr_select));
+> > -	rc = tpm_transmit_cmd(chip, &buf, 0, "attempting to read a pcr value");
+> > +	rc = tpm_transmit_cmd(chip, buf, 0, "attempting to read a pcr value");
+> >   	if (rc)
+> >   		goto out;
+> 
+> nit: -> return rc; ?
+> 
+> > -	out = (struct tpm2_pcr_read_out *)&buf.data[TPM_HEADER_SIZE];
+> > +	out = (struct tpm2_pcr_read_out *)&buf->data[TPM_HEADER_SIZE];
+> >   	digest_size = be16_to_cpu(out->digest_size);
+> >   	if (digest_size > sizeof(digest->digest) ||
+> >   	    (!digest_size_ptr && digest_size != expected_digest_size)) {
+> > @@ -216,7 +218,6 @@ int tpm2_pcr_read(struct tpm_chip *chip, u32 pcr_idx,
+> >   	memcpy(digest->digest, out->digest, digest_size);
+> >   out:
+> 
+> probably can remove this label
 
-Signed-off-by: Jonathan Corbet <corbet@lwn.net>
----
- scripts/lib/kdoc/kdoc_output.py | 185 +++++++++++++++++---------------
- 1 file changed, 98 insertions(+), 87 deletions(-)
+yup, i agree
 
-diff --git a/scripts/lib/kdoc/kdoc_output.py b/scripts/lib/kdoc/kdoc_output.py
-index ea8914537ba0..d4aabdaa9c51 100644
---- a/scripts/lib/kdoc/kdoc_output.py
-+++ b/scripts/lib/kdoc/kdoc_output.py
-@@ -73,7 +73,19 @@ class OutputFormat:
-         self.config = None
-         self.no_doc_sections = False
- 
--        self.data = ""
-+    #
-+    # Accumulation and management of the output text.
-+    #
-+    def reset_output(self):
-+        self._output = []
-+
-+    def emit(self, text):
-+        """Add a string to out output text"""
-+        self._output.append(text)
-+
-+    def output(self):
-+        """Obtain the accumulated output text"""
-+        return ''.join(self._output)
- 
-     def set_config(self, config):
-         """
-@@ -180,32 +192,31 @@ class OutputFormat:
-         Handles a single entry from kernel-doc parser
-         """
- 
--        self.data = ""
--
-+        self.reset_output()
-         dtype = args.type
- 
-         if dtype == "doc":
-             self.out_doc(fname, name, args)
--            return self.data
-+            return self.output()
- 
-         if not self.check_declaration(dtype, name, args):
--            return self.data
-+            return self.output()
- 
-         if dtype == "function":
-             self.out_function(fname, name, args)
--            return self.data
-+            return self.output()
- 
-         if dtype == "enum":
-             self.out_enum(fname, name, args)
--            return self.data
-+            return self.output()
- 
-         if dtype == "typedef":
-             self.out_typedef(fname, name, args)
--            return self.data
-+            return self.output()
- 
-         if dtype in ["struct", "union"]:
-             self.out_struct(fname, name, args)
--            return self.data
-+            return self.output()
- 
-         # Warn if some type requires an output logic
-         self.config.log.warning("doesn't now how to output '%s' block",
-@@ -274,7 +285,7 @@ class RestFormat(OutputFormat):
- 
-         if self.enable_lineno and ln is not None:
-             ln += 1
--            self.data += f".. LINENO {ln}\n"
-+            self.emit(f".. LINENO {ln}\n")
- 
-     def output_highlight(self, args):
-         """
-@@ -326,7 +337,7 @@ class RestFormat(OutputFormat):
- 
-         # Print the output with the line prefix
-         for line in output.strip("\n").split("\n"):
--            self.data += self.lineprefix + line + "\n"
-+            self.emit(self.lineprefix + line + "\n")
- 
-     def out_section(self, args, out_docblock=False):
-         """
-@@ -343,15 +354,15 @@ class RestFormat(OutputFormat):
- 
-             if out_docblock:
-                 if not self.out_mode == self.OUTPUT_INCLUDE:
--                    self.data += f".. _{section}:\n\n"
--                    self.data += f'{self.lineprefix}**{section}**\n\n'
-+                    self.emit(f".. _{section}:\n\n")
-+                    self.emit(f'{self.lineprefix}**{section}**\n\n')
-             else:
--                self.data += f'{self.lineprefix}**{section}**\n\n'
-+                self.emit(f'{self.lineprefix}**{section}**\n\n')
- 
-             self.print_lineno(args.section_start_lines.get(section, 0))
-             self.output_highlight(text)
--            self.data += "\n"
--        self.data += "\n"
-+            self.emit("\n")
-+        self.emit("\n")
- 
-     def out_doc(self, fname, name, args):
-         if not self.check_doc(name, args):
-@@ -389,41 +400,41 @@ class RestFormat(OutputFormat):
- 
-         self.print_lineno(ln)
-         if args.get('typedef') or not args.get('functiontype'):
--            self.data += f".. c:macro:: {name}\n\n"
-+            self.emit(f".. c:macro:: {name}\n\n")
- 
-             if args.get('typedef'):
--                self.data += "   **Typedef**: "
-+                self.emit("   **Typedef**: ")
-                 self.lineprefix = ""
-                 self.output_highlight(args.get('purpose', ""))
--                self.data += "\n\n**Syntax**\n\n"
--                self.data += f"  ``{signature}``\n\n"
-+                self.emit("\n\n**Syntax**\n\n")
-+                self.emit(f"  ``{signature}``\n\n")
-             else:
--                self.data += f"``{signature}``\n\n"
-+                self.emit(f"``{signature}``\n\n")
-         else:
--            self.data += f".. c:function:: {signature}\n\n"
-+            self.emit(f".. c:function:: {signature}\n\n")
- 
-         if not args.get('typedef'):
-             self.print_lineno(ln)
-             self.lineprefix = "   "
-             self.output_highlight(args.get('purpose', ""))
--            self.data += "\n"
-+            self.emit("\n")
- 
-         # Put descriptive text into a container (HTML <div>) to help set
-         # function prototypes apart
-         self.lineprefix = "  "
- 
-         if args.parameterlist:
--            self.data += ".. container:: kernelindent\n\n"
--            self.data += f"{self.lineprefix}**Parameters**\n\n"
-+            self.emit(".. container:: kernelindent\n\n")
-+            self.emit(f"{self.lineprefix}**Parameters**\n\n")
- 
-         for parameter in args.parameterlist:
-             parameter_name = KernRe(r'\[.*').sub('', parameter)
-             dtype = args.parametertypes.get(parameter, "")
- 
-             if dtype:
--                self.data += f"{self.lineprefix}``{dtype}``\n"
-+                self.emit(f"{self.lineprefix}``{dtype}``\n")
-             else:
--                self.data += f"{self.lineprefix}``{parameter}``\n"
-+                self.emit(f"{self.lineprefix}``{parameter}``\n")
- 
-             self.print_lineno(args.parameterdesc_start_lines.get(parameter_name, 0))
- 
-@@ -432,9 +443,9 @@ class RestFormat(OutputFormat):
-                args.parameterdescs[parameter_name] != KernelDoc.undescribed:
- 
-                 self.output_highlight(args.parameterdescs[parameter_name])
--                self.data += "\n"
-+                self.emit("\n")
-             else:
--                self.data += f"{self.lineprefix}*undescribed*\n\n"
-+                self.emit(f"{self.lineprefix}*undescribed*\n\n")
-             self.lineprefix = "  "
- 
-         self.out_section(args)
-@@ -445,26 +456,26 @@ class RestFormat(OutputFormat):
-         oldprefix = self.lineprefix
-         ln = args.declaration_start_line
- 
--        self.data += f"\n\n.. c:enum:: {name}\n\n"
-+        self.emit(f"\n\n.. c:enum:: {name}\n\n")
- 
-         self.print_lineno(ln)
-         self.lineprefix = "  "
-         self.output_highlight(args.get('purpose', ''))
--        self.data += "\n"
-+        self.emit("\n")
- 
--        self.data += ".. container:: kernelindent\n\n"
-+        self.emit(".. container:: kernelindent\n\n")
-         outer = self.lineprefix + "  "
-         self.lineprefix = outer + "  "
--        self.data += f"{outer}**Constants**\n\n"
-+        self.emit(f"{outer}**Constants**\n\n")
- 
-         for parameter in args.parameterlist:
--            self.data += f"{outer}``{parameter}``\n"
-+            self.emit(f"{outer}``{parameter}``\n")
- 
-             if args.parameterdescs.get(parameter, '') != KernelDoc.undescribed:
-                 self.output_highlight(args.parameterdescs[parameter])
-             else:
--                self.data += f"{self.lineprefix}*undescribed*\n\n"
--            self.data += "\n"
-+                self.emit(f"{self.lineprefix}*undescribed*\n\n")
-+            self.emit("\n")
- 
-         self.lineprefix = oldprefix
-         self.out_section(args)
-@@ -474,14 +485,14 @@ class RestFormat(OutputFormat):
-         oldprefix = self.lineprefix
-         ln = args.declaration_start_line
- 
--        self.data += f"\n\n.. c:type:: {name}\n\n"
-+        self.emit(f"\n\n.. c:type:: {name}\n\n")
- 
-         self.print_lineno(ln)
-         self.lineprefix = "   "
- 
-         self.output_highlight(args.get('purpose', ''))
- 
--        self.data += "\n"
-+        self.emit("\n")
- 
-         self.lineprefix = oldprefix
-         self.out_section(args)
-@@ -493,7 +504,7 @@ class RestFormat(OutputFormat):
-         dtype = args.type
-         ln = args.declaration_start_line
- 
--        self.data += f"\n\n.. c:{dtype}:: {name}\n\n"
-+        self.emit(f"\n\n.. c:{dtype}:: {name}\n\n")
- 
-         self.print_lineno(ln)
- 
-@@ -501,20 +512,20 @@ class RestFormat(OutputFormat):
-         self.lineprefix += "  "
- 
-         self.output_highlight(purpose)
--        self.data += "\n"
-+        self.emit("\n")
- 
--        self.data += ".. container:: kernelindent\n\n"
--        self.data += f"{self.lineprefix}**Definition**::\n\n"
-+        self.emit(".. container:: kernelindent\n\n")
-+        self.emit(f"{self.lineprefix}**Definition**::\n\n")
- 
-         self.lineprefix = self.lineprefix + "  "
- 
-         declaration = declaration.replace("\t", self.lineprefix)
- 
--        self.data += f"{self.lineprefix}{dtype} {name}" + ' {' + "\n"
--        self.data += f"{declaration}{self.lineprefix}" + "};\n\n"
-+        self.emit(f"{self.lineprefix}{dtype} {name}" + ' {' + "\n")
-+        self.emit(f"{declaration}{self.lineprefix}" + "};\n\n")
- 
-         self.lineprefix = "  "
--        self.data += f"{self.lineprefix}**Members**\n\n"
-+        self.emit(f"{self.lineprefix}**Members**\n\n")
-         for parameter in args.parameterlist:
-             if not parameter or parameter.startswith("#"):
-                 continue
-@@ -526,15 +537,15 @@ class RestFormat(OutputFormat):
- 
-             self.print_lineno(args.parameterdesc_start_lines.get(parameter_name, 0))
- 
--            self.data += f"{self.lineprefix}``{parameter}``\n"
-+            self.emit(f"{self.lineprefix}``{parameter}``\n")
- 
-             self.lineprefix = "    "
-             self.output_highlight(args.parameterdescs[parameter_name])
-             self.lineprefix = "  "
- 
--            self.data += "\n"
-+            self.emit("\n")
- 
--        self.data += "\n"
-+        self.emit("\n")
- 
-         self.lineprefix = oldprefix
-         self.out_section(args)
-@@ -610,33 +621,33 @@ class ManFormat(OutputFormat):
-                 continue
- 
-             if line[0] == ".":
--                self.data += "\\&" + line + "\n"
-+                self.emit("\\&" + line + "\n")
-             else:
--                self.data += line + "\n"
-+                self.emit(line + "\n")
- 
-     def out_doc(self, fname, name, args):
-         if not self.check_doc(name, args):
-             return
- 
--        self.data += f'.TH "{self.modulename}" 9 "{self.modulename}" "{self.man_date}" "API Manual" LINUX' + "\n"
-+        self.emit(f'.TH "{self.modulename}" 9 "{self.modulename}" "{self.man_date}" "API Manual" LINUX' + "\n")
- 
-         for section, text in args.sections.items():
--            self.data += f'.SH "{section}"' + "\n"
-+            self.emit(f'.SH "{section}"' + "\n")
-             self.output_highlight(text)
- 
-     def out_function(self, fname, name, args):
-         """output function in man"""
- 
--        self.data += f'.TH "{name}" 9 "{name}" "{self.man_date}" "Kernel Hacker\'s Manual" LINUX' + "\n"
-+        self.emit(f'.TH "{name}" 9 "{name}" "{self.man_date}" "Kernel Hacker\'s Manual" LINUX' + "\n")
- 
--        self.data += ".SH NAME\n"
--        self.data += f"{name} \\- {args['purpose']}\n"
-+        self.emit(".SH NAME\n")
-+        self.emit(f"{name} \\- {args['purpose']}\n")
- 
--        self.data += ".SH SYNOPSIS\n"
-+        self.emit(".SH SYNOPSIS\n")
-         if args.get('functiontype', ''):
--            self.data += f'.B "{args["functiontype"]}" {name}' + "\n"
-+            self.emit(f'.B "{args["functiontype"]}" {name}' + "\n")
-         else:
--            self.data += f'.B "{name}' + "\n"
-+            self.emit(f'.B "{name}' + "\n")
- 
-         count = 0
-         parenth = "("
-@@ -649,68 +660,68 @@ class ManFormat(OutputFormat):
-             dtype = args.parametertypes.get(parameter, "")
-             if function_pointer.match(dtype):
-                 # Pointer-to-function
--                self.data += f'".BI "{parenth}{function_pointer.group(1)}" " ") ({function_pointer.group(2)}){post}"' + "\n"
-+                self.emit(f'".BI "{parenth}{function_pointer.group(1)}" " ") ({function_pointer.group(2)}){post}"' + "\n")
-             else:
-                 dtype = KernRe(r'([^\*])$').sub(r'\1 ', dtype)
- 
--                self.data += f'.BI "{parenth}{dtype}"  "{post}"' + "\n"
-+                self.emit(f'.BI "{parenth}{dtype}"  "{post}"' + "\n")
-             count += 1
-             parenth = ""
- 
-         if args.parameterlist:
--            self.data += ".SH ARGUMENTS\n"
-+            self.emit(".SH ARGUMENTS\n")
- 
-         for parameter in args.parameterlist:
-             parameter_name = re.sub(r'\[.*', '', parameter)
- 
--            self.data += f'.IP "{parameter}" 12' + "\n"
-+            self.emit(f'.IP "{parameter}" 12' + "\n")
-             self.output_highlight(args.parameterdescs.get(parameter_name, ""))
- 
-         for section, text in args.sections.items():
--            self.data += f'.SH "{section.upper()}"' + "\n"
-+            self.emit(f'.SH "{section.upper()}"' + "\n")
-             self.output_highlight(text)
- 
-     def out_enum(self, fname, name, args):
--        self.data += f'.TH "{self.modulename}" 9 "enum {name}" "{self.man_date}" "API Manual" LINUX' + "\n"
-+        self.emit(f'.TH "{self.modulename}" 9 "enum {name}" "{self.man_date}" "API Manual" LINUX' + "\n")
- 
--        self.data += ".SH NAME\n"
--        self.data += f"enum {name} \\- {args['purpose']}\n"
-+        self.emit(".SH NAME\n")
-+        self.emit(f"enum {name} \\- {args['purpose']}\n")
- 
--        self.data += ".SH SYNOPSIS\n"
--        self.data += f"enum {name}" + " {\n"
-+        self.emit(".SH SYNOPSIS\n")
-+        self.emit(f"enum {name}" + " {\n")
- 
-         count = 0
-         for parameter in args.parameterlist:
--            self.data += f'.br\n.BI "    {parameter}"' + "\n"
-+            self.emit(f'.br\n.BI "    {parameter}"' + "\n")
-             if count == len(args.parameterlist) - 1:
--                self.data += "\n};\n"
-+                self.emit("\n};\n")
-             else:
--                self.data += ", \n.br\n"
-+                self.emit(", \n.br\n")
- 
-             count += 1
- 
--        self.data += ".SH Constants\n"
-+        self.emit(".SH Constants\n")
- 
-         for parameter in args.parameterlist:
-             parameter_name = KernRe(r'\[.*').sub('', parameter)
--            self.data += f'.IP "{parameter}" 12' + "\n"
-+            self.emit(f'.IP "{parameter}" 12' + "\n")
-             self.output_highlight(args.parameterdescs.get(parameter_name, ""))
- 
-         for section, text in args.sections.items():
--            self.data += f'.SH "{section}"' + "\n"
-+            self.emit(f'.SH "{section}"' + "\n")
-             self.output_highlight(text)
- 
-     def out_typedef(self, fname, name, args):
-         module = self.modulename
-         purpose = args.get('purpose')
- 
--        self.data += f'.TH "{module}" 9 "{name}" "{self.man_date}" "API Manual" LINUX' + "\n"
-+        self.emit(f'.TH "{module}" 9 "{name}" "{self.man_date}" "API Manual" LINUX' + "\n")
- 
--        self.data += ".SH NAME\n"
--        self.data += f"typedef {name} \\- {purpose}\n"
-+        self.emit(".SH NAME\n")
-+        self.emit(f"typedef {name} \\- {purpose}\n")
- 
-         for section, text in args.sections.items():
--            self.data += f'.SH "{section}"' + "\n"
-+            self.emit(f'.SH "{section}"' + "\n")
-             self.output_highlight(text)
- 
-     def out_struct(self, fname, name, args):
-@@ -718,20 +729,20 @@ class ManFormat(OutputFormat):
-         purpose = args.get('purpose')
-         definition = args.get('definition')
- 
--        self.data += f'.TH "{module}" 9 "{args.type} {name}" "{self.man_date}" "API Manual" LINUX' + "\n"
-+        self.emit(f'.TH "{module}" 9 "{args.type} {name}" "{self.man_date}" "API Manual" LINUX' + "\n")
- 
--        self.data += ".SH NAME\n"
--        self.data += f"{args.type} {name} \\- {purpose}\n"
-+        self.emit(".SH NAME\n")
-+        self.emit(f"{args.type} {name} \\- {purpose}\n")
- 
-         # Replace tabs with two spaces and handle newlines
-         declaration = definition.replace("\t", "  ")
-         declaration = KernRe(r"\n").sub('"\n.br\n.BI "', declaration)
- 
--        self.data += ".SH SYNOPSIS\n"
--        self.data += f"{args.type} {name} " + "{" + "\n.br\n"
--        self.data += f'.BI "{declaration}\n' + "};\n.br\n\n"
-+        self.emit(".SH SYNOPSIS\n")
-+        self.emit(f"{args.type} {name} " + "{" + "\n.br\n")
-+        self.emit(f'.BI "{declaration}\n' + "};\n.br\n\n")
- 
--        self.data += ".SH Members\n"
-+        self.emit(".SH Members\n")
-         for parameter in args.parameterlist:
-             if parameter.startswith("#"):
-                 continue
-@@ -741,9 +752,9 @@ class ManFormat(OutputFormat):
-             if args.parameterdescs.get(parameter_name) == KernelDoc.undescribed:
-                 continue
- 
--            self.data += f'.IP "{parameter}" 12' + "\n"
-+            self.emit(f'.IP "{parameter}" 12' + "\n")
-             self.output_highlight(args.parameterdescs.get(parameter_name))
- 
-         for section, text in args.sections.items():
--            self.data += f'.SH "{section}"' + "\n"
-+            self.emit(f'.SH "{section}"' + "\n")
-             self.output_highlight(text)
--- 
-2.49.0
+> 
+> > -	tpm_buf_destroy(&buf);
+> >   	return rc;
+> >   }
+> > @@ -574,8 +569,8 @@ struct tpm2_pcr_selection {
+> >   ssize_t tpm2_get_pcr_allocation(struct tpm_chip *chip)
+> >   {
+> > +	struct tpm_buf *buf __free(kfree) = NULL;
+> >   	struct tpm2_pcr_selection pcr_selection;
+> > -	struct tpm_buf buf;
+> >   	void *marker;
+> >   	void *end;
+> >   	void *pcr_select_offset;
+> > @@ -587,41 +582,39 @@ ssize_t tpm2_get_pcr_allocation(struct tpm_chip *chip)
+> >   	int rc;
+> >   	int i = 0;
+> > -	rc = tpm_buf_init(&buf, TPM2_ST_NO_SESSIONS, TPM2_CC_GET_CAPABILITY);
+> > -	if (rc)
+> > -		return rc;
+> > +	buf = tpm_buf_alloc();
+> > +	if (!buf)
+> > +		return -ENOMEM;
+> > -	tpm_buf_append_u32(&buf, TPM2_CAP_PCRS);
+> > -	tpm_buf_append_u32(&buf, 0);
+> > -	tpm_buf_append_u32(&buf, 1);
+> > +	tpm_buf_reset(buf, TPM2_ST_NO_SESSIONS, TPM2_CC_GET_CAPABILITY);
+> > +	tpm_buf_append_u32(buf, TPM2_CAP_PCRS);
+> > +	tpm_buf_append_u32(buf, 0);
+> > +	tpm_buf_append_u32(buf, 1);
+> > -	rc = tpm_transmit_cmd(chip, &buf, 9, "get tpm pcr allocation");
+> > +	rc = tpm_transmit_cmd(chip, buf, 9, "get tpm pcr allocation");
+> >   	if (rc)
+> > -		goto out;
+> > +		return rc;
+> >   	nr_possible_banks = be32_to_cpup(
+> > -		(__be32 *)&buf.data[TPM_HEADER_SIZE + 5]);
+> > +		(__be32 *)&buf->data[TPM_HEADER_SIZE + 5]);
+> >   	chip->allocated_banks = kcalloc(nr_possible_banks,
+> >   					sizeof(*chip->allocated_banks),
+> >   					GFP_KERNEL);
+> > -	if (!chip->allocated_banks) {
+> > -		rc = -ENOMEM;
+> > -		goto out;
+> > -	}
+> > +	if (!chip->allocated_banks)
+> > +		return -ENOMEM;
+> > -	marker = &buf.data[TPM_HEADER_SIZE + 9];
+> > +	marker = &buf->data[TPM_HEADER_SIZE + 9];
+> > -	rsp_len = be32_to_cpup((__be32 *)&buf.data[2]);
+> > -	end = &buf.data[rsp_len];
+> > +	rsp_len = be32_to_cpup((__be32 *)&buf->data[2]);
+> > +	end = &buf->data[rsp_len];
+> > +	return rc;
+> 
+> 
+> this doesn't look right...
 
+thanks for catching this!
+
+> 
+> 
+> >   	for (i = 0; i < nr_possible_banks; i++) {
+> >   		pcr_select_offset = marker +
+> >   			offsetof(struct tpm2_pcr_selection, size_of_select);
+> > -		if (pcr_select_offset >= end) {
+> > -			rc = -EFAULT;
+> > -			break;
+> > -		}
+> > +		if (pcr_select_offset >= end)
+> > +			return -EFAULT;
+> >   		memcpy(&pcr_selection, marker, sizeof(pcr_selection));
+> >   		hash_alg = be16_to_cpu(pcr_selection.hash_alg);
+> > @@ -633,7 +626,7 @@ ssize_t tpm2_get_pcr_allocation(struct tpm_chip *chip)
+> > diff --git a/security/keys/trusted-keys/trusted_tpm2.c b/security/keys/trusted-keys/trusted_tpm2.c
+> > index 024be262702f..54bcd8d0621e 100644
+> > --- a/security/keys/trusted-keys/trusted_tpm2.c
+> > +++ b/security/keys/trusted-keys/trusted_tpm2.c
+> > @@ -241,14 +241,23 @@ int tpm2_seal_trusted(struct tpm_chip *chip,
+> >   		      struct trusted_key_payload *payload,
+> >   		      struct trusted_key_options *options)
+> >   {
+> > +	struct tpm_buf *buf __free(kfree) = NULL;
+> > +	struct tpm_buf *sized __free(kfree) = NULL;
+> 
+> Revert order of the above two lines.
+> 
+> >   	off_t offset = TPM_HEADER_SIZE;
+> > -	struct tpm_buf buf, sized;
+> >   	int blob_len = 0;
+> >   	u32 hash;
+> >   	u32 flags;
+> >   	int i;
+> >   	int rc;
+> > +	buf = tpm_buf_alloc();
+> > +	if (!buf)
+> > +		return -ENOMEM;
+> > +
+> > +	sized = tpm_buf_alloc();
+> > +	if (!sized)
+> > +		return -ENOMEM;
+> > +
+> >   	for (i = 0; i < ARRAY_SIZE(tpm2_hash_map); i++) {>   		if
+> (options->hash == tpm2_hash_map[i].crypto_id) {
+> >   			hash = tpm2_hash_map[i].tpm_id;
+> > @@ -270,89 +279,76 @@ int tpm2_seal_trusted(struct tpm_chip *chip,
+> >   	if (rc)
+> >   		goto out_put;
+> > -	rc = tpm_buf_init(&buf, TPM2_ST_SESSIONS, TPM2_CC_CREATE);
+> > -	if (rc) {
+> > -		tpm2_end_auth_session(chip);
+> > -		goto out_put;
+> > -	}
+> > -
+> > -	rc = tpm_buf_init_sized(&sized);
+> > -	if (rc) {
+> > -		tpm_buf_destroy(&buf);
+> > -		tpm2_end_auth_session(chip);
+> > -		goto out_put;
+> > -	}
+> > -
+> > -	tpm_buf_append_name(chip, &buf, options->keyhandle, NULL);
+> > -	tpm_buf_append_hmac_session(chip, &buf, TPM2_SA_DECRYPT,
+> > +	tpm_buf_reset(buf, TPM2_ST_SESSIONS, TPM2_CC_CREATE);
+> > +	tpm_buf_reset_sized(sized);
+> > +	tpm_buf_append_name(chip, buf, options->keyhandle, NULL);
+> > +	tpm_buf_append_hmac_session(chip, buf, TPM2_SA_DECRYPT,
+> >   				    options->keyauth, TPM_DIGEST_SIZE);
+> >   	/* sensitive */
+> > -	tpm_buf_append_u16(&sized, options->blobauth_len);
+> > +	tpm_buf_append_u16(sized, options->blobauth_len);
+> >   	if (options->blobauth_len)
+> > -		tpm_buf_append(&sized, options->blobauth, options->blobauth_len);
+> > +		tpm_buf_append(sized, options->blobauth, options->blobauth_len);
+> > -	tpm_buf_append_u16(&sized, payload->key_len);
+> > -	tpm_buf_append(&sized, payload->key, payload->key_len);
+> > -	tpm_buf_append(&buf, sized.data, sized.length);
+> > +	tpm_buf_append_u16(sized, payload->key_len);
+> > +	tpm_buf_append(sized, payload->key, payload->key_len);
+> > +	tpm_buf_append(buf, sized->data, sized->length);
+> >   	/* public */
+> > -	tpm_buf_reset_sized(&sized);
+> > -	tpm_buf_append_u16(&sized, TPM_ALG_KEYEDHASH);
+> > -	tpm_buf_append_u16(&sized, hash);
+> > +	tpm_buf_reset_sized(sized);
+> > +	tpm_buf_append_u16(sized, TPM_ALG_KEYEDHASH);
+> > +	tpm_buf_append_u16(sized, hash);
+> >   	/* key properties */
+> >   	flags = 0;
+> >   	flags |= options->policydigest_len ? 0 : TPM2_OA_USER_WITH_AUTH;
+> >   	flags |= payload->migratable ? 0 : (TPM2_OA_FIXED_TPM | TPM2_OA_FIXED_PARENT);
+> > -	tpm_buf_append_u32(&sized, flags);
+> > +	tpm_buf_append_u32(sized, flags);
+> >   	/* policy */
+> > -	tpm_buf_append_u16(&sized, options->policydigest_len);
+> > +	tpm_buf_append_u16(sized, options->policydigest_len);
+> >   	if (options->policydigest_len)
+> > -		tpm_buf_append(&sized, options->policydigest, options->policydigest_len);
+> > +		tpm_buf_append(sized, options->policydigest, options->policydigest_len);
+> >   	/* public parameters */
+> > -	tpm_buf_append_u16(&sized, TPM_ALG_NULL);
+> > -	tpm_buf_append_u16(&sized, 0);
+> > +	tpm_buf_append_u16(sized, TPM_ALG_NULL);
+> > +	tpm_buf_append_u16(sized, 0);
+> > -	tpm_buf_append(&buf, sized.data, sized.length);
+> > +	tpm_buf_append(buf, sized->data, sized->length);
+> >   	/* outside info */
+> > -	tpm_buf_append_u16(&buf, 0);
+> > +	tpm_buf_append_u16(buf, 0);
+> >   	/* creation PCR */
+> > -	tpm_buf_append_u32(&buf, 0);
+> > +	tpm_buf_append_u32(buf, 0);
+> > -	if (buf.flags & TPM_BUF_OVERFLOW) {
+> > +	if (buf->flags & TPM_BUF_OVERFLOW) {
+> >   		rc = -E2BIG;
+> >   		tpm2_end_auth_session(chip);
+> >   		goto out;
+> >   	}
+> > -	tpm_buf_fill_hmac_session(chip, &buf);
+> > -	rc = tpm_transmit_cmd(chip, &buf, 4, "sealing data");
+> > -	rc = tpm_buf_check_hmac_response(chip, &buf, rc);
+> > +	tpm_buf_fill_hmac_session(chip, buf);
+> > +	rc = tpm_transmit_cmd(chip, buf, 4, "sealing data");
+> > +	rc = tpm_buf_check_hmac_response(chip, buf, rc);
+> >   	if (rc)
+> >   		goto out;
+> > -	blob_len = tpm_buf_read_u32(&buf, &offset);
+> > -	if (blob_len > MAX_BLOB_SIZE || buf.flags & TPM_BUF_BOUNDARY_ERROR) {
+> > +	blob_len = tpm_buf_read_u32(buf, &offset);
+> > +	if (blob_len > MAX_BLOB_SIZE || buf->flags & TPM_BUF_BOUNDARY_ERROR) {
+> >   		rc = -E2BIG;
+> >   		goto out;
+> >   	}
+> > -	if (buf.length - offset < blob_len) {
+> > +	if (buf->length - offset < blob_len) {
+> >   		rc = -EFAULT;
+> >   		goto out;
+> >   	}
+> > -	blob_len = tpm2_key_encode(payload, options, &buf.data[offset], blob_len);
+> > +	blob_len = tpm2_key_encode(payload, options, &buf->data[offset],
+> > +				   blob_len);
+> >   out:
+> > -	tpm_buf_destroy(&sized);
+> > -	tpm_buf_destroy(&buf);
+> > -
+> >   	if (rc > 0) {
+> >   		if (tpm2_rc_value(rc) == TPM2_RC_HASH)
+> >   			rc = -EINVAL;
+
+
+Thanks for the remarks.
+
+BR, Jarkko
