@@ -1,72 +1,157 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA6821D7989;
-	Wed,  2 Jul 2025 22:59:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 083772DE70A;
+	Wed,  2 Jul 2025 23:00:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751497165; cv=none; b=o7/V9TKJPYD99m+ug4mWND8e1d1U+vH9n5fKzG5laKOJ1lNOzG2+p0ayC+eZhRMrsV/wHjfCQXQrZ6AI+b8+grcSQtT8tdczJHAWfEQpLfI3ZVd03pzMFnnzjGJoyKbOKtNL6qffVOyuunMUyFtR8N34NDw6DWGM44waaJrArhA=
+	t=1751497228; cv=none; b=VXBw1FGgqtl5hAzMfYbfehF+8bIJMGJzIcIkq0BwQLb1Vv/M5TT52I9u0Lg6AgSHXUM7Kr9faB+hIQ8h0KM3hzZjUQEMugFF39+80SHd2+qSsG9dN/b/az/TTwZ1brExkS5Qyr0Jax90b8Te57yQqGEhs9C06bkVVQii+716MOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751497165; c=relaxed/simple;
-	bh=h/5ux6cDiu4o+OyiOw2UsteSU+KlOgS9Vn5nFxjAIFU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=PBKlbXXMAIt3+q9VzlX63oY5QebQFJOZv1nJs71vEQmfDDmCuN0o/n/YB15u1OiohH3oX0oKe645A0xHiYEFK/3jjEsRd8kTRqbzCCohFhYkC6PXdaqgqufL/SUZeXPQKjxKuKFo4inMNa93GHKQ+qoeChLCjkOmG4bkLtElxG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=J3dHg68m; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1751497228; c=relaxed/simple;
+	bh=YoxFkvvT3uGhs9+nxoPloOtRn0pJtIA5kzHG983qo/8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rczV0tumZGB64/bc7oH1qA/C7UbTi0A5ow/YmBX3HmekaiM+qnSJZ9SWUASWKwxuVXyNVHm/h2o/NrVafJBZlyK19U8y9SLb22IDsPrQ4g7XiBeFqzt7MQMANPQ0dwb+2Cj1VHfnB9Nmyp93k4gLmMUUijisiYVq3gTkj4fUqaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LdpJ23gs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="J3dHg68m"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net EDBF3406FC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1751497163; bh=h/5ux6cDiu4o+OyiOw2UsteSU+KlOgS9Vn5nFxjAIFU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=J3dHg68mGFe6mKKbDxYm6dJpD7/bRb7hZY0ok/6ZNb65BCTrcBiS0wLpQZjQXfT34
-	 snN55Gb7Z7HK0oJU18glzjtlu97O183T/lgpCTvWXkGNy+Mu8kMnYYkJw/mTziYhGQ
-	 gv8vPlptg9aEohY9nmfpLT/zm3gMpITFOZoYARYa0TW6a9Qcxeqe1tywHMH4nqv8tH
-	 x4eTpgtNgYXbGoX2GsHWdqdcxVL9cOStc+MhqliIVa4w1IVhLhdGx05k8XB1vwfgvW
-	 VGnQkE9EFlqNLIFp0TdTDcuaicNDugZ/D+ZvMHJOHloRF76TlMLOjP+W6K7amnAEJY
-	 iUyBKgPENxrQQ==
-Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id EDBF3406FC;
-	Wed,  2 Jul 2025 22:59:22 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Bagas Sanjaya <bagasdotme@gmail.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Documentation
- <linux-doc@vger.kernel.org>, Linux ext4 <linux-ext4@vger.kernel.org>
-Cc: Theodore Ts'o <tytso@mit.edu>, Andreas Dilger
- <adilger.kernel@dilger.ca>, "Ritesh Harjani (IBM)"
- <ritesh.list@gmail.com>, "Darrick J. Wong" <djwong@kernel.org>, Bagas
- Sanjaya <bagasdotme@gmail.com>
-Subject: Re: [PATCH 0/5] ext4 docs toctree reorganization
-In-Reply-To: <20250620105643.25141-2-bagasdotme@gmail.com>
-References: <20250620105643.25141-2-bagasdotme@gmail.com>
-Date: Wed, 02 Jul 2025 16:59:22 -0600
-Message-ID: <874ivunqr9.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LdpJ23gs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E1D8C4CEE7;
+	Wed,  2 Jul 2025 23:00:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751497227;
+	bh=YoxFkvvT3uGhs9+nxoPloOtRn0pJtIA5kzHG983qo/8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=LdpJ23gskwvtzo+wI4ZdwYtzxGN3XBWPweYW/AjiS5g5Og+WK1qiwTA5T99m0foMN
+	 dCrosyxmzEEuGSN3hvbdD/sFScH/4vki5rsnInDGIwYgbpsMlj2wF4uTFLpzfxuLk1
+	 mRV386m2m/W5L8+IehWoaZ2bzWiR8XNNMC0yhuY8Q43Er4mpDtzqRcoCrKYzjUwQGs
+	 96WHuvtEML0++8EpClnY5eG3OpSO+RNZalQ8b36CBsqw5Q/15HCJ2GwI93g5dY4rG2
+	 EcyGVAOmAloo3KTvzqITUEPcTUGoaI3rawRKcWUHH+vE0bH32i4bHB9ZTke0VDIxH1
+	 z0HmnMm2Wqs1Q==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: thermal: Convert marvell,armada370-thermal to DT schema
+Date: Wed,  2 Jul 2025 17:55:27 -0500
+Message-ID: <20250702225530.2858649-1-robh@kernel.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Bagas Sanjaya <bagasdotme@gmail.com> writes:
+Convert the Marvell Armada 3xx/XP thermal binding to schema.
 
-> Hi Jon, hi Ted,
->
-> While discussing on my previous ext4 docs reorganization attempt
-> by merging contents [1], Jon suggested that considering current docs
-> file structure, a proper toctree would be ideal [2]. So, here's
-> the patchset that does exactly that.
->
-> Actual conversion to toctree structure is in [1/5], while the rest
-> is cleanups to make the resulting toctree nicer.
->
-> This patchset is based on docs-next tree.
+Drop the AP80x and CP110 as they have long been deprecated and have
+been replaced by a new binding.
 
-Applied, thanks.
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+---
+ .../bindings/thermal/armada-thermal.txt       | 42 -------------------
+ .../thermal/marvell,armada370-thermal.yaml    | 37 ++++++++++++++++
+ 2 files changed, 37 insertions(+), 42 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/thermal/armada-thermal.txt
+ create mode 100644 Documentation/devicetree/bindings/thermal/marvell,armada370-thermal.yaml
 
-jon
+diff --git a/Documentation/devicetree/bindings/thermal/armada-thermal.txt b/Documentation/devicetree/bindings/thermal/armada-thermal.txt
+deleted file mode 100644
+index ab8b8fccc7af..000000000000
+--- a/Documentation/devicetree/bindings/thermal/armada-thermal.txt
++++ /dev/null
+@@ -1,42 +0,0 @@
+-* Marvell Armada 370/375/380/XP thermal management
+-
+-Required properties:
+-
+-- compatible: Should be set to one of the following:
+-    * marvell,armada370-thermal
+-    * marvell,armada375-thermal
+-    * marvell,armada380-thermal
+-    * marvell,armadaxp-thermal
+-    * marvell,armada-ap806-thermal
+-    * marvell,armada-ap807-thermal
+-    * marvell,armada-cp110-thermal
+-
+-Note: these bindings are deprecated for AP806/CP110 and should instead
+-follow the rules described in:
+-Documentation/devicetree/bindings/arm/marvell/ap80x-system-controller.txt
+-Documentation/devicetree/bindings/arm/marvell/cp110-system-controller.txt
+-
+-- reg: Device's register space.
+-  Two entries are expected, see the examples below. The first one points
+-  to the status register (4B). The second one points to the control
+-  registers (8B).
+-  Note: The compatibles marvell,armada370-thermal,
+-  marvell,armada380-thermal, and marvell,armadaxp-thermal must point to
+-  "control MSB/control 1", with size of 4 (deprecated binding), or point
+-  to "control LSB/control 0" with size of 8 (current binding). All other
+-  compatibles must point to "control LSB/control 0" with size of 8.
+-
+-Examples:
+-
+-	/* Legacy bindings */
+-	thermal@d0018300 {
+-		compatible = "marvell,armada370-thermal";
+-		reg = <0xd0018300 0x4
+-		       0xd0018304 0x4>;
+-	};
+-
+-	ap_thermal: thermal@6f8084 {
+-		compatible = "marvell,armada-ap806-thermal";
+-		reg = <0x6f808C 0x4>,
+-		      <0x6f8084 0x8>;
+-	};
+diff --git a/Documentation/devicetree/bindings/thermal/marvell,armada370-thermal.yaml b/Documentation/devicetree/bindings/thermal/marvell,armada370-thermal.yaml
+new file mode 100644
+index 000000000000..2f55b7252e51
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/marvell,armada370-thermal.yaml
+@@ -0,0 +1,37 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/thermal/marvell,armada370-thermal.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Marvell Armada 3xx/XP thermal management
++
++maintainers:
++  - Miquel Raynal <miquel.raynal@bootlin.com>
++
++properties:
++  compatible:
++    enum:
++      - marvell,armada370-thermal
++      - marvell,armada375-thermal
++      - marvell,armada380-thermal
++      - marvell,armadaxp-thermal
++
++  reg:
++    items:
++      - description: status register (4B)
++      - description: control register (4B or 8B)
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    thermal@d0018300 {
++        compatible = "marvell,armada370-thermal";
++        reg = <0xd0018300 0x4
++               0xd0018304 0x4>;
++    };
+-- 
+2.47.2
+
