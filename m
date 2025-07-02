@@ -1,238 +1,1366 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D112BCF51
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 694B12BE7DB;
+	Wed,  2 Jul 2025 14:45:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751467536; cv=none; b=dS7cmoR9J9/THZ3Ngt6dIjVMz8i1MwuKH+A/QLgc7scoVBoBOnSMBygRx8SuXfxSUxGdHzkLpYaii/i5BHsdlgtvbMNRwNSQlvf4rVFthswvxvUxAqbV43imPiStR5zfBiSrc+nyOQPC5b/c/y9YSLroTJChkxCRMEoPM191rhs=
+	t=1751467532; cv=none; b=Ywcf/JP5WQwTGFBU7oOapag5EodMHoHjPhDNOvi9Hh9yCOlt5Eup/J0OZ/tvBtYYnN4T8z/g+YNykKuUCMIODnQlSVJyz3faYwbAXgFuzGvpoDVdz9kut3LhwkG7rIZOv+UED+/pH1xWafHQfHnGQqoyIngby5vRaoJe6Ghe80M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751467536; c=relaxed/simple;
-	bh=KnRsXxuS3PYx608n/NKuWFSSfCm14iJU6Ylj55wt3Vo=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=bRY90HhTLP1Kub7zEXN4pSmfahc9Dc6L8uf0/fAEVnVeIiXgSWpbWit8e5EX0mmZNiRehaRDYBDOUlwkaWXwgoaA8hCgrRwahFQzeE9q4503VRsJ875bjITqbIfxD8VHi+627QYCUv0A8EDUGgK9zDRL733c34BZebQXN8rcRok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3ddc5137992so49902895ab.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 07:45:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751467534; x=1752072334;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=b+oqTp2Og2HX7h9r3Aolir1SZcv+7UJxoxCfvKCxR/E=;
-        b=RbsTzsAzahRb9tiTjNz4XdwU8XT47leEZNcMN0WiWbMC5dqzJ3uucoikZC4IG5vY8n
-         sLqN+nwpwSYJXYqFW0m7heBdNPhSpL2ZtDrUmflOdSUQ/+P0/i3c4X0SapuhJUBVl1ZV
-         8jBqghzpFEvsNR7m+zmZW21lxwxBYZdKwGUReh71vTTzeJaXE5/L2x1H5Hias2y2Avsj
-         GKyOlsMIzEDW8Z79y5hxExa3IbSIYMAmPp85OvO4tTTsRRamZpZ4WSd8dlwoXtW9lTdC
-         HDrB3xxsVIET5KpK/W6gHM3SYTnW/C1Z7Adq9/FO6dVJlvzviylVkmx2YSpwHbXa5hNr
-         /M7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVgwR3XLPGzBItcVl9Vo7WHJeIkidrfYd6SwkbAVbAejLheEEHLIYqEqzVm+uttomoPEG/EJ1z/vv5+j4M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAzTFzXKC/MQS8T7tzx/1viVoLklk584u5hsle9+v6/uI2fhoY
-	v7/mG6+qrNOUgWtCfXyhU0iTsdZx+BSF5ZdzkphDHzQtgIaRRXCMqO4TLOofg/Qr2BNeTY0b3gW
-	W9GBh3yY1DGNZG04imsae6QbL2hk1PkciJ0SpDSqErht+JWyb01DEsfwwvaM=
-X-Google-Smtp-Source: AGHT+IHjo7npVajFLK0WbnSNk9OjJnXgU9PyligF9JndywkNnLdbAESqQAfdNu8AIxGYTLz2dFiruIVNje7kxyXCi8thiNCg+D06
+	s=arc-20240116; t=1751467532; c=relaxed/simple;
+	bh=qUJbQgmg3vtK6khH794H15c7BKU6JzLSzri/j/Yt/wA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uEoMJci4Jn3dVOkuwuaoUAbHewcJ9MvsDN4jLaYUHkVBGhBGzSgwpmgGuNt6aIMBtFJuB4o9GmEr8Bp5rXotmzcUe15iZtbStQTPzn68xSa4Snvs0EWhCgy7ocxVHtf0pB4SCg6wltPRtUTH6eafUBJ+mObawTD1SMxt1QiIJCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=LNqII7X5; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=AQTAqCWw; arc=none smtp.client-ip=202.12.124.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="LNqII7X5";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AQTAqCWw"
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 2AFA67A0183;
+	Wed,  2 Jul 2025 10:45:27 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-06.internal (MEProxy); Wed, 02 Jul 2025 10:45:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1751467527;
+	 x=1751553927; bh=OljubM5lApysgT8YmlDeD9MgsJ79v+jIYwN7mTD7ITA=; b=
+	LNqII7X5mnl++R7b2+gzka6D9a+h1tf55qMZt5Y/BYWA1SIxvtQcbQVu/n+v7Idl
+	zepLvQWVvcOwdMF6+DabNCi6x2z9LwMxyxpGqhopUT6i17WV+I7yiPY2r3yHNZOV
+	rbZVodtSIurCyKhDYZ3R+RiHdileb50dWk1AWNCf9oR/A8wbNYkYmNyab8MJ5LPV
+	VCrZb61PjJgm+j5t+4unLV+rut2qemHQNYGtNtFgV05qInmRjdekVifsM0kUG/+f
+	+de+s/vocisc+lIiZd12TFfpCuUxkIE4RzIm1b2mqUcoMLyFhnG8hLz6LOqm7Hty
+	PaNt618sSkK8MKOyswlBPw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1751467527; x=
+	1751553927; bh=OljubM5lApysgT8YmlDeD9MgsJ79v+jIYwN7mTD7ITA=; b=A
+	QTAqCWw+7HjT29fxJY1IWIwIzY8a31smkoFlzKXBWOBL+6cmj+ylScdTQQdGEK9m
+	u6yo31pxCVGnGodI03bdqicGxgoIBpeHGmd8WZPTHWwn4km5PWL94p+0PwbWmy/7
+	4d781PNtBGOQ1Ww4AO+2JQ8xeyiQ7Box7fi5A/+/y67LpB9tFZq1z0TB8qM2FCcZ
+	r/LZU+J8KMVJzoAVlljJTQugByFk75okntJhRsbsY1ii8zcEF2fz9mguL/pzRAxX
+	ZCSiLi8LiPzUTGt86uLxZDeJJQ1Zhn6rcZ2aVqptgwvTyh8BbKz6O4vU0xt73n60
+	qe/yYO8eRhJoI1WRoO/rA==
+X-ME-Sender: <xms:BkZlaB7cUNfL-RNZT5FqwYPbc88MX7wNKkiGQEJ3uz64KkOQ4ZltfA>
+    <xme:BkZlaO7IzopuQwuQv9PO4whoWvCf6OAH3XdesitDkCo-7fqzGitnwDjXIx9NAx7OD
+    nbGt-b47f84FyP9YZA>
+X-ME-Received: <xmr:BkZlaIe5WXnYF4Cx_axj3V8knaMqYPOFRuLr1p1y6QpjOHa9AW0GHgPACKv-w_jz11UAwmBKYy4GvAs9xZKOVDPGIgA-0gYn7Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddujeeijecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpeffhffvvefukfhfgggtugfgjgesthekredttddtjeenucfhrhhomheppfhikhhlrghs
+    ucfunpguvghrlhhunhguuceonhhikhhlrghsrdhsohguvghrlhhunhgusehrrghgnhgrth
+    gvtghhrdhsvgeqnecuggftrfgrthhtvghrnhepffdtgeefveefgfeutdevveelgfelkeeu
+    vdefgefgfeehfeeijeehudelhfejkefgnecuffhomhgrihhnpehkvghrnhgvlhdrohhrgh
+    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnihhk
+    lhgrshdrshhouggvrhhluhhnugesrhgrghhnrghtvggthhdrshgvpdhnsggprhgtphhtth
+    hopeduiedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepuggvmhhonhhsihhnghhu
+    rhesghhmrghilhdrtghomhdprhgtphhtthhopegtohhsmhhinhdrthgrnhhishhlrghvse
+    grnhgrlhhoghdrtghomhdprhgtphhtthhopehtohhmihdrvhgrlhhkvghinhgvnhdorhgv
+    nhgvshgrshesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepmhgthhgvhh
+    grsgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhr
+    ghdprhgtphhtthhopehjuhhlihgvnhdrmhgrshhsohhtsegtohhllhgrsghorhgrrdgtoh
+    hmpdhrtghpthhtohepshgrkhgrrhhirdgrihhluhhssehlihhnuhigrdhinhhtvghlrdgt
+    ohhmpdhrtghpthhtoheplhgruhhrvghnthdrphhinhgthhgrrhhtsehiuggvrghsohhnsg
+    horghrugdrtghomhdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurght
+    ihhonhdrohhrgh
+X-ME-Proxy: <xmx:BkZlaKK0Oqe2MTmP-c1MMi2kO2YeXgDALMk4M8G6y3uv2hx46Hsoiw>
+    <xmx:BkZlaFI55C_q9Gmuse0jJ2_EbTTJCkzpxW6GEuxALy0H63zL8xemEA>
+    <xmx:BkZlaDywKuSO26PkLT6uzYpYcxwdtXamIXYie3KrZZ7ZBQWIBijdPQ>
+    <xmx:BkZlaBKDcHLsK5qPxxaVgNyRo5-3Oizy8bZZf4UJqevBmyk3jFtwAQ>
+    <xmx:BkZlaH6Y2UDZW4OEgdr6tWnDZieC7Wn6pxU0fPijBibP9EPPIjpzn5Iv>
+Feedback-ID: i80c9496c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 2 Jul 2025 10:45:25 -0400 (EDT)
+Date: Wed, 2 Jul 2025 16:45:23 +0200
+From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+To: Cosmin Tanislav <demonsingur@gmail.com>
+Cc: Cosmin Tanislav <cosmin.tanislav@analog.com>,
+	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Julien Massot <julien.massot@collabora.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-staging@lists.linux.dev, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v5 19/24] media: i2c: maxim-serdes: add MAX96724 driver
+Message-ID: <20250702144523.GB3830050@ragnatech.se>
+References: <20250702132104.1537926-1-demonsingur@gmail.com>
+ <20250702132104.1537926-20-demonsingur@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:18c5:b0:3df:3222:278e with SMTP id
- e9e14a558f8ab-3e054934f08mr41009735ab.1.1751467533742; Wed, 02 Jul 2025
- 07:45:33 -0700 (PDT)
-Date: Wed, 02 Jul 2025 07:45:33 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6865460d.a00a0220.270cb1.0001.GAE@google.com>
-Subject: [syzbot] [kernel?] general protection fault in __cpa_flush_tlb
-From: syzbot <syzbot+169412e85b1803dfda81@syzkaller.appspotmail.com>
-To: bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
-	linux-kernel@vger.kernel.org, luto@kernel.org, mingo@redhat.com, 
-	peterz@infradead.org, syzkaller-bugs@googlegroups.com, tglx@linutronix.de, 
-	x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250702132104.1537926-20-demonsingur@gmail.com>
 
-Hello,
+Hi Cosmin,
 
-syzbot found the following issue on:
+Thanks for your great work, and for taking the time to consider the TPG 
+use-case I had with the driver in staging, much appreciated!
 
-HEAD commit:    1343433ed389 Add linux-next specific files for 20250630
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=10aa93d4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c1ce97baf6bd6397
-dashboard link: https://syzkaller.appspot.com/bug?extid=169412e85b1803dfda81
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10ed648c580000
+On 2025-07-02 16:20:45 +0300, Cosmin Tanislav wrote:
+> Add a new MAX96724 driver that also supports MAX96712, MAX96724F
+> and MAX96724R.
+> 
+> Integrate it with the common deserializer framework, while keeping
+> compatibility with existing usecases, avoiding code duplication, and
+> also enabling more features across all chips.
+> 
+> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/c3387c64e9ec/disk-1343433e.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/abf15e85d8dd/vmlinux-1343433e.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/081c344403bc/bzImage-1343433e.xz
+I have tested this on R-Car V3U that uses MAX96712 in D-PHY mode, V4H 
+that uses MAX96712 in C-PHY mode and V4M that uses MAX96724 in D-PHY 
+mode. And all my test-cases using the TPG (both patterns) pass just as 
+before with the driver in staging!
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+169412e85b1803dfda81@syzkaller.appspotmail.com
+For the TPG usage to replace the driver in staging,
 
-==================================================================
-BUG: KASAN: out-of-bounds in __cpa_flush_tlb+0x46/0x270 arch/x86/mm/pat/set_memory.c:407
-Read of size 8 at addr ffffc90003397920 by task syz-executor/5960
+Tested-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 
-CPU: 0 UID: 0 PID: 5960 Comm: syz-executor Not tainted 6.16.0-rc4-next-20250630-syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Call Trace:
- <IRQ>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:408 [inline]
- print_report+0xd2/0x2b0 mm/kasan/report.c:521
- kasan_report+0x118/0x150 mm/kasan/report.c:634
- __cpa_flush_tlb+0x46/0x270 arch/x86/mm/pat/set_memory.c:407
- csd_do_func kernel/smp.c:134 [inline]
- __flush_smp_call_function_queue+0x370/0xaa0 kernel/smp.c:540
- __sysvec_call_function_single+0xa8/0x3d0 arch/x86/kernel/smp.c:271
- instr_sysvec_call_function_single arch/x86/kernel/smp.c:266 [inline]
- sysvec_call_function_single+0x9e/0xc0 arch/x86/kernel/smp.c:266
- </IRQ>
- <TASK>
- asm_sysvec_call_function_single+0x1a/0x20 arch/x86/include/asm/idtentry.h:709
-RIP: 0010:finish_task_switch+0x26b/0x950 kernel/sched/core.c:5181
-Code: 0f 84 3c 01 00 00 48 85 db 0f 85 63 01 00 00 e9 27 05 00 00 4c 8b 75 d0 4c 89 e7 e8 2f db e0 09 e8 3a 0e 36 00 fb 4c 8b 65 c0 <49> 8d bc 24 18 16 00 00 48 89 f8 48 c1 e8 03 42 0f b6 04 28 84 c0
-RSP: 0018:ffffc9000453f5f8 EFLAGS: 00000282
-RAX: 312751dada94af00 RBX: 0000000000000000 RCX: 312751dada94af00
-RDX: 0000000000000000 RSI: ffffffff8d992cd0 RDI: ffffffff8be31d00
-RBP: ffffc9000453f650 R08: ffffffff8fa17437 R09: 1ffffffff1f42e86
-R10: dffffc0000000000 R11: fffffbfff1f42e87 R12: ffff888021ed9e00
-R13: dffffc0000000000 R14: ffff888023f2da00 R15: ffff8880b863ab18
- context_switch kernel/sched/core.c:5316 [inline]
- __schedule+0x16fd/0x4d00 kernel/sched/core.c:6696
- preempt_schedule_common+0x83/0xd0 kernel/sched/core.c:6876
- preempt_schedule+0xae/0xc0 kernel/sched/core.c:6900
- preempt_schedule_thunk+0x16/0x30 arch/x86/entry/thunk.S:12
- idr_preload_end+0x126/0x200 include/linux/idr.h:191
- alloc_pid+0x35c/0xab0 kernel/pid.c:241
- copy_process+0x198e/0x3c00 kernel/fork.c:2184
- kernel_clone+0x21e/0x870 kernel/fork.c:2598
- __do_sys_clone kernel/fork.c:2741 [inline]
- __se_sys_clone kernel/fork.c:2725 [inline]
- __x64_sys_clone+0x18b/0x1e0 kernel/fork.c:2725
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fd22b785193
-Code: 1f 84 00 00 00 00 00 64 48 8b 04 25 10 00 00 00 45 31 c0 31 d2 31 f6 bf 11 00 20 01 4c 8d 90 d0 02 00 00 b8 38 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 35 89 c2 85 c0 75 2c 64 48 8b 04 25 10 00 00
-RSP: 002b:00007fff68c51808 EFLAGS: 00000246 ORIG_RAX: 0000000000000038
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fd22b785193
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000001200011
-RBP: 0000000000000001 R08: 0000000000000000 R09: 0000000000000001
-R10: 00005555595c77d0 R11: 0000000000000246 R12: 0000000000000000
-R13: 00000000000927c0 R14: 00000000000295d0 R15: 00007fff68c519a0
- </TASK>
+I did have to pull in this patch from Tomi [1], as without it the change 
+in how link freqs are retrieved do not function with the R-Car pipeline.  
 
-The buggy address belongs to the virtual mapping at
- [ffffc90003390000, ffffc90003399000) created by:
- copy_process+0x54b/0x3c00 kernel/fork.c:1998
+1.  https://lore.kernel.org/all/20250530-rcar-streams-v3-1-026655df7138@ideasonboard.com/
 
-The buggy address belongs to the physical page:
-page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x4 pfn:0x76b10
-memcg:ffff88807849f502
-flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
-raw: 00fff00000000000 0000000000000000 dead000000000122 0000000000000000
-raw: 0000000000000004 0000000000000000 00000001ffffffff ffff88807849f502
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 0, migratetype Unmovable, gfp_mask 0x2dc2(GFP_KERNEL|__GFP_HIGHMEM|__GFP_ZERO|__GFP_NOWARN), pid 10519, tgid 10519 (syz.1.2188), ts 169318727845, free_ts 167753086937
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x240/0x2a0 mm/page_alloc.c:1848
- prep_new_page mm/page_alloc.c:1856 [inline]
- get_page_from_freelist+0x21e4/0x22c0 mm/page_alloc.c:3855
- __alloc_frozen_pages_noprof+0x181/0x370 mm/page_alloc.c:5145
- alloc_pages_mpol+0x232/0x4a0 mm/mempolicy.c:2419
- alloc_frozen_pages_noprof mm/mempolicy.c:2490 [inline]
- alloc_pages_noprof+0xa9/0x190 mm/mempolicy.c:2510
- vm_area_alloc_pages mm/vmalloc.c:3642 [inline]
- __vmalloc_area_node mm/vmalloc.c:3720 [inline]
- __vmalloc_node_range_noprof+0x97d/0x12f0 mm/vmalloc.c:3893
- __vmalloc_node_noprof+0xc2/0x110 mm/vmalloc.c:3956
- alloc_thread_stack_node kernel/fork.c:310 [inline]
- dup_task_struct+0x3e7/0x860 kernel/fork.c:876
- copy_process+0x54b/0x3c00 kernel/fork.c:1998
- kernel_clone+0x21e/0x870 kernel/fork.c:2598
- __do_sys_clone3 kernel/fork.c:2902 [inline]
- __se_sys_clone3+0x256/0x2d0 kernel/fork.c:2881
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-page last free pid 49 tgid 49 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1392 [inline]
- __free_frozen_pages+0xb80/0xd80 mm/page_alloc.c:2892
- pagetable_free include/linux/mm.h:2896 [inline]
- pagetable_dtor_free include/linux/mm.h:2994 [inline]
- __tlb_remove_table+0x2d2/0x3b0 include/asm-generic/tlb.h:220
- __tlb_remove_table_free mm/mmu_gather.c:227 [inline]
- tlb_remove_table_rcu+0x85/0x100 mm/mmu_gather.c:290
- rcu_do_batch kernel/rcu/tree.c:2582 [inline]
- rcu_core+0xca8/0x1710 kernel/rcu/tree.c:2838
- handle_softirqs+0x286/0x870 kernel/softirq.c:579
- do_softirq+0xec/0x180 kernel/softirq.c:480
- __local_bh_enable_ip+0x17d/0x1c0 kernel/softirq.c:407
- spin_unlock_bh include/linux/spinlock.h:396 [inline]
- batadv_nc_purge_paths+0x318/0x3b0 net/batman-adv/network-coding.c:471
- batadv_nc_worker+0x369/0x610 net/batman-adv/network-coding.c:722
- process_one_work kernel/workqueue.c:3239 [inline]
- process_scheduled_works+0xae1/0x17b0 kernel/workqueue.c:3322
- worker_thread+0x8a0/0xda0 kernel/workqueue.c:3403
- kthread+0x70e/0x8a0 kernel/kthread.c:463
- ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+> ---
+>  drivers/media/i2c/maxim-serdes/Kconfig    |   11 +
+>  drivers/media/i2c/maxim-serdes/Makefile   |    1 +
+>  drivers/media/i2c/maxim-serdes/max96724.c | 1180 +++++++++++++++++++++
+>  3 files changed, 1192 insertions(+)
+>  create mode 100644 drivers/media/i2c/maxim-serdes/max96724.c
+> 
+> diff --git a/drivers/media/i2c/maxim-serdes/Kconfig b/drivers/media/i2c/maxim-serdes/Kconfig
+> index 648cb891eefe..2acd96cdbfa4 100644
+> --- a/drivers/media/i2c/maxim-serdes/Kconfig
+> +++ b/drivers/media/i2c/maxim-serdes/Kconfig
+> @@ -30,3 +30,14 @@ config VIDEO_MAX96717
+>  
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called max96717.
+> +
+> +config VIDEO_MAX96724
+> +	tristate "Maxim MAX96724 Quad Deserializer support"
+> +	select VIDEO_MAXIM_SERDES
+> +	help
+> +	  This driver supports the Maxim MAX96712, MAX96724, MAX96724F,
+> +	  MAX96724R Quad Deserializers, which convert from four GMSL2
+> +	  links to up to four MIPI D-PHY or C-PHY outputs.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called max96724.
+> diff --git a/drivers/media/i2c/maxim-serdes/Makefile b/drivers/media/i2c/maxim-serdes/Makefile
+> index 04abda6a5437..b6d5aebfaee1 100644
+> --- a/drivers/media/i2c/maxim-serdes/Makefile
+> +++ b/drivers/media/i2c/maxim-serdes/Makefile
+> @@ -2,3 +2,4 @@
+>  max-serdes-objs := max_serdes.o max_ser.o max_des.o
+>  obj-$(CONFIG_VIDEO_MAXIM_SERDES) += max-serdes.o
+>  obj-$(CONFIG_VIDEO_MAX96717) += max96717.o
+> +obj-$(CONFIG_VIDEO_MAX96724) += max96724.o
+> diff --git a/drivers/media/i2c/maxim-serdes/max96724.c b/drivers/media/i2c/maxim-serdes/max96724.c
+> new file mode 100644
+> index 000000000000..701c9445fbd1
+> --- /dev/null
+> +++ b/drivers/media/i2c/maxim-serdes/max96724.c
+> @@ -0,0 +1,1180 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Maxim MAX96724 Quad GMSL2 Deserializer Driver
+> + *
+> + * Copyright (C) 2025 Analog Devices Inc.
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +#include <linux/of_graph.h>
+> +#include <linux/regmap.h>
+> +
+> +#include "max_des.h"
+> +
+> +#define MAX96724_REG0				0x0
+> +
+> +#define MAX96724_REG6				0x6
+> +#define MAX96724_REG6_LINK_EN			GENMASK(3, 0)
+> +
+> +#define MAX96724_DEBUG_EXTRA			0x9
+> +#define MAX96724_DEBUG_EXTRA_PCLK_SRC		GENMASK(1, 0)
+> +#define MAX96724_DEBUG_EXTRA_PCLK_SRC_25MHZ	0b00
+> +#define MAX96724_DEBUG_EXTRA_PCLK_SRC_75MHZ	0b01
+> +#define MAX96724_DEBUG_EXTRA_PCLK_SRC_USE_PIPE	0b10
+> +
+> +#define MAX96724_REG26(x)			(0x10 + (x) / 2)
+> +#define MAX96724_REG26_RX_RATE_PHY(x)		(GENMASK(1, 0) << (4 * ((x) % 2)))
+> +#define MAX96724_REG26_RX_RATE_3GBPS		0b01
+> +#define MAX96724_REG26_RX_RATE_6GBPS		0b10
+> +
+> +#define MAX96724_PWR1				0x13
+> +#define MAX96724_PWR1_RESET_ALL			BIT(6)
+> +
+> +#define MAX96724_CTRL1				0x18
+> +#define MAX96724_CTRL1_RESET_ONESHOT		GENMASK(3, 0)
+> +
+> +#define MAX96724_VIDEO_PIPE_SEL(p)		(0xf0 + (p) / 2)
+> +#define MAX96724_VIDEO_PIPE_SEL_STREAM(p)	(GENMASK(1, 0) << (4 * ((p) % 2)))
+> +#define MAX96724_VIDEO_PIPE_SEL_LINK(p)		(GENMASK(3, 2) << (4 * ((p) % 2)))
+> +
+> +#define MAX96724_VIDEO_PIPE_EN			0xf4
+> +#define MAX96724_VIDEO_PIPE_EN_MASK(p)		BIT(p)
+> +#define MAX96724_VIDEO_PIPE_EN_STREAM_SEL_ALL	BIT(4)
+> +
+> +#define MAX96724_VPRBS(p)			(0x1dc + (p) * 0x20)
+> +#define MAX96724_VPRBS_VIDEO_LOCK		BIT(0)
+> +#define MAX96724_VPRBS_PATGEN_CLK_SRC		BIT(7)
+> +#define MAX96724_VPRBS_PATGEN_CLK_SRC_150MHZ	0b0
+> +#define MAX96724_VPRBS_PATGEN_CLK_SRC_375MHZ	0b1
+> +
+> +#define MAX96724_BACKTOP12			0x40b
+> +#define MAX96724_BACKTOP12_CSI_OUT_EN		BIT(1)
+> +
+> +#define MAX96724_BACKTOP21(p)			(0x414 + (p) / 4 * 0x20)
+> +#define MAX96724_BACKTOP21_BPP8DBL(p)		BIT(4 + (p) % 4)
+> +
+> +#define MAX96724_BACKTOP22(x)			(0x415 + (x) * 0x3)
+> +#define MAX96724_BACKTOP22_PHY_CSI_TX_DPLL	GENMASK(4, 0)
+> +#define MAX96724_BACKTOP22_PHY_CSI_TX_DPLL_EN	BIT(5)
+> +
+> +#define MAX96724_BACKTOP24(p)			(0x417 + (p) / 4 * 0x20)
+> +#define MAX96724_BACKTOP24_BPP8DBL_MODE(p)	BIT(4 + (p) % 4)
+> +
+> +#define MAX96724_BACKTOP30(p)			(0x41d + (p) / 4 * 0x20)
+> +#define MAX96724_BACKTOP30_BPP10DBL3		BIT(4)
+> +#define MAX96724_BACKTOP30_BPP10DBL3_MODE	BIT(5)
+> +
+> +#define MAX96724_BACKTOP31(p)			(0x41e + (p) / 4 * 0x20)
+> +#define MAX96724_BACKTOP31_BPP10DBL2		BIT(6)
+> +#define MAX96724_BACKTOP31_BPP10DBL2_MODE	BIT(7)
+> +
+> +#define MAX96724_BACKTOP32(p)			(0x41f + (p) / 4 * 0x20)
+> +#define MAX96724_BACKTOP32_BPP12(p)		BIT(p)
+> +#define MAX96724_BACKTOP32_BPP10DBL0		BIT(4)
+> +#define MAX96724_BACKTOP32_BPP10DBL0_MODE	BIT(5)
+> +#define MAX96724_BACKTOP32_BPP10DBL1		BIT(6)
+> +#define MAX96724_BACKTOP32_BPP10DBL1_MODE	BIT(7)
+> +
+> +#define MAX96724_MIPI_PHY0			0x8a0
+> +#define MAX96724_MIPI_PHY0_PHY_CONFIG		GENMASK(4, 0)
+> +#define MAX96724_MIPI_PHY0_PHY_4X2		BIT(0)
+> +#define MAX96724_MIPI_PHY0_PHY_2X4		BIT(2)
+> +#define MAX96724_MIPI_PHY0_PHY_1X4A_2X2		BIT(3)
+> +#define MAX96724_MIPI_PHY0_PHY_1X4B_2X2		BIT(4)
+> +#define MAX96724_MIPI_PHY0_FORCE_CSI_OUT_EN	BIT(7)
+> +
+> +#define MAX96724_MIPI_PHY2			0x8a2
+> +#define MAX96724_MIPI_PHY2_PHY_STDB_N_4(x)	(GENMASK(5, 4) << ((x) / 2 * 2))
+> +#define MAX96724_MIPI_PHY2_PHY_STDB_N_2(x)	(BIT(4 + (x)))
+> +
+> +#define MAX96724_MIPI_PHY3(x)			(0x8a3 + (x) / 2)
+> +#define MAX96724_MIPI_PHY3_PHY_LANE_MAP_4	GENMASK(7, 0)
+> +#define MAX96724_MIPI_PHY3_PHY_LANE_MAP_2(x)	(GENMASK(3, 0) << (4 * ((x) % 2)))
+> +
+> +#define MAX96724_MIPI_PHY5(x)			(0x8a5 + (x) / 2)
+> +#define MAX96724_MIPI_PHY5_PHY_POL_MAP_4_0_1	GENMASK(1, 0)
+> +#define MAX96724_MIPI_PHY5_PHY_POL_MAP_4_2_3	GENMASK(4, 3)
+> +#define MAX96724_MIPI_PHY5_PHY_POL_MAP_4_CLK	BIT(5)
+> +#define MAX96724_MIPI_PHY5_PHY_POL_MAP_2(x)	(GENMASK(1, 0) << (3 * ((x) % 2)))
+> +#define MAX96724_MIPI_PHY5_PHY_POL_MAP_2_CLK(x)	BIT(2 + 3 * ((x) % 2))
+> +
+> +#define MAX96724_MIPI_PHY13			0x8ad
+> +#define MAX96724_MIPI_PHY13_T_T3_PREBEGIN	GENMASK(5, 0)
+> +#define MAX96724_MIPI_PHY13_T_T3_PREBEGIN_64X7	FIELD_PREP(MAX96724_MIPI_PHY13_T_T3_PREBEGIN, 63)
+> +
+> +#define MAX96724_MIPI_PHY14			0x8ae
+> +#define MAX96724_MIPI_PHY14_T_T3_PREP		GENMASK(1, 0)
+> +#define MAX96724_MIPI_PHY14_T_T3_PREP_55NS	FIELD_PREP(MAX96724_MIPI_PHY14_T_T3_PREP, 0b01)
+> +#define MAX96724_MIPI_PHY14_T_T3_POST		GENMASK(6, 2)
+> +#define MAX96724_MIPI_PHY14_T_T3_POST_32X7	FIELD_PREP(MAX96724_MIPI_PHY14_T_T3_POST, 31)
+> +
+> +#define MAX96724_MIPI_CTRL_SEL			0x8ca
+> +#define MAX96724_MIPI_CTRL_SEL_MASK(p)		(GENMASK(1, 0) << ((p) * 2))
+> +
+> +#define MAX96724_MIPI_PHY25(x)			(0x8d0 + (x) / 2)
+> +#define MAX96724_MIPI_PHY25_CSI2_TX_PKT_CNT(x)	(GENMASK(3, 0) << (4 * ((x) % 2)))
+> +
+> +#define MAX96724_MIPI_PHY27(x)			(0x8d2 + (x) / 2)
+> +#define MAX96724_MIPI_PHY27_PHY_PKT_CNT(x)	(GENMASK(3, 0) << (4 * ((x) % 2)))
+> +
+> +#define MAX96724_MIPI_TX3(x)			(0x903 + (x) * 0x40)
+> +#define MAX96724_MIPI_TX3_DESKEW_INIT_8X32K	FIELD_PREP(GENMASK(2, 0), 0b001)
+> +#define MAX96724_MIPI_TX3_DESKEW_INIT_AUTO	BIT(7)
+> +
+> +#define MAX96724_MIPI_TX4(x)			(0x904 + (x) * 0x40)
+> +#define MAX96724_MIPI_TX4_DESKEW_PER_2K		FIELD_PREP(GENMASK(2, 0), 0b001)
+> +#define MAX96724_MIPI_TX4_DESKEW_PER_AUTO	BIT(7)
+> +
+> +#define MAX96724_MIPI_TX10(x)			(0x90a + (x) * 0x40)
+> +#define MAX96724_MIPI_TX10_CSI2_CPHY_EN		BIT(5)
+> +#define MAX96724_MIPI_TX10_CSI2_LANE_CNT	GENMASK(7, 6)
+> +
+> +#define MAX96724_MIPI_TX11(p)			(0x90b + (p) * 0x40)
+> +#define MAX96724_MIPI_TX12(p)			(0x90c + (p) * 0x40)
+> +
+> +#define MAX96724_MIPI_TX13(p, x)		(0x90d + (p) * 0x40 + (x) * 0x2)
+> +#define MAX96724_MIPI_TX13_MAP_SRC_DT		GENMASK(5, 0)
+> +#define MAX96724_MIPI_TX13_MAP_SRC_VC		GENMASK(7, 6)
+> +
+> +#define MAX96724_MIPI_TX14(p, x)		(0x90e + (p) * 0x40 + (x) * 0x2)
+> +#define MAX96724_MIPI_TX14_MAP_DST_DT		GENMASK(5, 0)
+> +#define MAX96724_MIPI_TX14_MAP_DST_VC		GENMASK(7, 6)
+> +
+> +#define MAX96724_MIPI_TX45(p, x)		(0x92d + (p) * 0x40 + (x) / 4)
+> +#define MAX96724_MIPI_TX45_MAP_DPHY_DEST(x)	(GENMASK(1, 0) << (2 * ((x) % 4)))
+> +
+> +#define MAX96724_MIPI_TX51(x)			(0x933 + (x) * 0x40)
+> +#define MAX96724_MIPI_TX51_ALT_MEM_MAP_12	BIT(0)
+> +#define MAX96724_MIPI_TX51_ALT_MEM_MAP_8	BIT(1)
+> +#define MAX96724_MIPI_TX51_ALT_MEM_MAP_10	BIT(2)
+> +#define MAX96724_MIPI_TX51_ALT2_MEM_MAP_8	BIT(4)
+> +
+> +#define MAX96724_MIPI_TX54(x)			(0x936 + (x) * 0x40)
+> +#define MAX96724_MIPI_TX54_TUN_EN		BIT(0)
+> +
+> +#define MAX96724_MIPI_TX57(x)			(0x939 + (x) * 0x40)
+> +#define MAX96724_MIPI_TX57_TUN_DEST		GENMASK(5, 4)
+> +#define MAX96724_MIPI_TX57_DIS_AUTO_TUN_DET	BIT(6)
+> +#define MAX96724_DET(p)				BIT(p)
+> +
+> +#define MAX96724_PATGEN_0			0x1050
+> +#define MAX96724_PATGEN_0_VTG_MODE		GENMASK(1, 0)
+> +#define MAX96724_PATGEN_0_VTG_MODE_FREE_RUNNING	0b11
+> +#define MAX96724_PATGEN_0_DE_INV		BIT(2)
+> +#define MAX96724_PATGEN_0_HS_INV		BIT(3)
+> +#define MAX96724_PATGEN_0_VS_INV		BIT(4)
+> +#define MAX96724_PATGEN_0_GEN_DE		BIT(5)
+> +#define MAX96724_PATGEN_0_GEN_HS		BIT(6)
+> +#define MAX96724_PATGEN_0_GEN_VS		BIT(7)
+> +
+> +#define MAX96724_PATGEN_1			0x1051
+> +#define MAX96724_PATGEN_1_PATGEN_MODE		GENMASK(5, 4)
+> +#define MAX96724_PATGEN_1_PATGEN_MODE_DISABLED	0b00
+> +#define MAX96724_PATGEN_1_PATGEN_MODE_CHECKER	0b01
+> +#define MAX96724_PATGEN_1_PATGEN_MODE_GRADIENT	0b10
+> +
+> +#define MAX96724_VS_DLY_2			0x1052
+> +#define MAX96724_VS_HIGH_2			0x1055
+> +#define MAX96724_VS_LOW_2			0x1058
+> +#define MAX96724_V2H_2				0x105b
+> +#define MAX96724_HS_HIGH_1			0x105e
+> +#define MAX96724_HS_LOW_1			0x1060
+> +#define MAX96724_HS_CNT_1			0x1062
+> +#define MAX96724_V2D_2				0x1064
+> +#define MAX96724_DE_HIGH_1			0x1067
+> +#define MAX96724_DE_LOW_1			0x1069
+> +#define MAX96724_DE_CNT_1			0x106b
+> +#define MAX96724_GRAD_INCR			0x106d
+> +#define MAX96724_CHKR_COLOR_A_L			0x106e
+> +#define MAX96724_CHKR_COLOR_B_L			0x1071
+> +#define MAX96724_CHKR_RPT_A			0x1074
+> +#define MAX96724_CHKR_RPT_B			0x1075
+> +#define MAX96724_CHKR_ALT			0x1076
+> +
+> +#define MAX96724_DE_DET				0x11f0
+> +#define MAX96724_HS_DET				0x11f1
+> +#define MAX96724_VS_DET				0x11f2
+> +#define MAX96724_HS_POL				0x11f3
+> +#define MAX96724_VS_POL				0x11f4
+> +#define MAX96724_DET(p)				BIT(p)
+> +
+> +#define MAX96724_DPLL_0(x)			(0x1c00 + (x) * 0x100)
+> +#define MAX96724_DPLL_0_CONFIG_SOFT_RST_N	BIT(0)
+> +
+> +#define MAX96724_PHY1_ALT_CLOCK			5
+> +
+> +static const struct regmap_config max96724_i2c_regmap = {
+> +	.reg_bits = 16,
+> +	.val_bits = 8,
+> +	.max_register = 0x1f00,
+> +};
+> +
+> +struct max96724_priv {
+> +	struct max_des des;
+> +	const struct max96724_chip_info *info;
+> +
+> +	struct device *dev;
+> +	struct i2c_client *client;
+> +	struct regmap *regmap;
+> +
+> +	struct gpio_desc *gpiod_enable;
+> +};
+> +
+> +struct max96724_chip_info {
+> +	unsigned int versions;
+> +	unsigned int modes;
+> +	bool supports_pipe_stream_autoselect;
+> +	unsigned int num_pipes;
+> +
+> +	int (*set_pipe_phy)(struct max_des *des, struct max_des_pipe *pipe,
+> +			    struct max_des_phy *phy);
+> +	int (*set_pipe_tunnel_phy)(struct max_des *des, struct max_des_pipe *pipe,
+> +				   struct max_des_phy *phy);
+> +	int (*set_pipe_tunnel_enable)(struct max_des *des, struct max_des_pipe *pipe,
+> +				      bool enable);
+> +};
+> +
+> +#define des_to_priv(_des) \
+> +	container_of(_des, struct max96724_priv, des)
+> +
+> +static int max96724_wait_for_device(struct max96724_priv *priv)
+> +{
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	for (i = 0; i < 10; i++) {
+> +		unsigned int val;
+> +
+> +		ret = regmap_read(priv->regmap, MAX96724_REG0, &val);
+> +		if (!ret && val)
+> +			return 0;
+> +
+> +		msleep(100);
+> +
+> +		dev_err(priv->dev, "Retry %u waiting for deserializer: %d\n", i, ret);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int max96724_reset(struct max96724_priv *priv)
+> +{
+> +	int ret;
+> +
+> +	ret = max96724_wait_for_device(priv);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_update_bits(priv->regmap, MAX96724_PWR1,
+> +				 MAX96724_PWR1_RESET_ALL,
+> +				 FIELD_PREP(MAX96724_PWR1_RESET_ALL, 1));
+> +	if (ret)
+> +		return ret;
+> +
+> +	fsleep(10000);
+> +
+> +	return max96724_wait_for_device(priv);
+> +}
+> +
+> +static int max96724_reg_read(struct max_des *des, unsigned int reg,
+> +			     unsigned int *val)
+> +{
+> +	struct max96724_priv *priv = des_to_priv(des);
+> +
+> +	return regmap_read(priv->regmap, reg, val);
+> +}
+> +
+> +static int max96724_reg_write(struct max_des *des, unsigned int reg,
+> +			      unsigned int val)
+> +{
+> +	struct max96724_priv *priv = des_to_priv(des);
+> +
+> +	return regmap_write(priv->regmap, reg, val);
+> +}
+> +
+> +static unsigned int max96724_phy_id(struct max_des *des, struct max_des_phy *phy)
+> +{
+> +	unsigned int num_hw_data_lanes = max_des_phy_hw_data_lanes(des, phy);
+> +
+> +	/* PHY 1 is the master PHY when combining PHY 0 and PHY 1. */
+> +	if (phy->index == 0 && num_hw_data_lanes == 4)
+> +		return 1;
+> +
+> +	if (phy->index == 1 && !des->phys[1].enabled)
+> +		return 0;
+> +
+> +	return phy->index;
+> +}
+> +
+> +static int max96724_log_pipe_status(struct max_des *des,
+> +				    struct max_des_pipe *pipe)
+> +{
+> +	struct max96724_priv *priv = des_to_priv(des);
+> +	unsigned int index = pipe->index;
+> +	unsigned int val, mask;
+> +	int ret;
+> +
+> +	ret = regmap_read(priv->regmap, MAX96724_VPRBS(index), &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev_info(priv->dev, "\tvideo_lock: %u\n",
+> +		 !!(val & MAX96724_VPRBS_VIDEO_LOCK));
+> +
+> +	mask = MAX96724_DET(index);
+> +
+> +	ret = regmap_read(priv->regmap, MAX96724_DE_DET, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev_info(priv->dev, "\tde_det: %u\n", !!(val & mask));
+> +
+> +	ret = regmap_read(priv->regmap, MAX96724_HS_DET, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev_info(priv->dev, "\ths_det: %u\n", !!(val & mask));
+> +
+> +	ret = regmap_read(priv->regmap, MAX96724_VS_DET, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev_info(priv->dev, "\tvs_det: %u\n", !!(val & mask));
+> +
+> +	ret = regmap_read(priv->regmap, MAX96724_HS_POL, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev_info(priv->dev, "\ths_pol: %u\n", !!(val & mask));
+> +
+> +	ret = regmap_read(priv->regmap, MAX96724_VS_POL, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev_info(priv->dev, "\tvs_pol: %u\n", !!(val & mask));
+> +
+> +	return 0;
+> +}
+> +
+> +static int max96724_log_phy_status(struct max_des *des,
+> +				   struct max_des_phy *phy)
+> +{
+> +	struct max96724_priv *priv = des_to_priv(des);
+> +	unsigned int index = max96724_phy_id(des, phy);
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	ret = regmap_read(priv->regmap, MAX96724_MIPI_PHY25(index), &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev_info(priv->dev, "\tcsi2_pkt_cnt: %lu\n",
+> +		 field_get(MAX96724_MIPI_PHY25_CSI2_TX_PKT_CNT(index), val));
+> +
+> +	ret = regmap_read(priv->regmap, MAX96724_MIPI_PHY27(index), &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev_info(priv->dev, "\tphy_pkt_cnt: %lu\n",
+> +		 field_get(MAX96724_MIPI_PHY27_PHY_PKT_CNT(index), val));
+> +
+> +	return 0;
+> +}
+> +
+> +static int max96724_set_enable(struct max_des *des, bool enable)
+> +{
+> +	struct max96724_priv *priv = des_to_priv(des);
+> +
+> +	return regmap_assign_bits(priv->regmap, MAX96724_BACKTOP12,
+> +				  MAX96724_BACKTOP12_CSI_OUT_EN, enable);
+> +}
+> +
+> +static const unsigned int max96724_phys_configs_reg_val[] = {
+> +	MAX96724_MIPI_PHY0_PHY_1X4A_2X2,
+> +	MAX96724_MIPI_PHY0_PHY_2X4,
+> +
+> +	MAX96724_MIPI_PHY0_PHY_4X2,
+> +	MAX96724_MIPI_PHY0_PHY_1X4A_2X2,
+> +	MAX96724_MIPI_PHY0_PHY_1X4B_2X2,
+> +	MAX96724_MIPI_PHY0_PHY_2X4,
+> +};
+> +
+> +static const struct max_serdes_phys_config max96724_phys_configs[] = {
+> +	/*
+> +	 * PHY 1 can be in 4-lane mode (combining lanes of PHY 0 and PHY 1)
+> +	 * but only use the data lanes of PHY0, while continuing to use the
+> +	 * clock lane of PHY 1.
+> +	 * Specifying clock-lanes as 5 turns on alternate clocking mode.
+> +	 */
+> +	{ { 2, 0, 2, 2 }, { MAX96724_PHY1_ALT_CLOCK, 0, 0, 0 } },
+> +	{ { 2, 0, 4, 0 }, { MAX96724_PHY1_ALT_CLOCK, 0, 0, 0 } },
+> +
+> +	/*
+> +	 * When combining PHY 0 and PHY 1 to make them function in 4-lane mode,
+> +	 * PHY 1 is the master PHY, but we use PHY 0 here to maintain
+> +	 * compatibility.
+> +	 */
+> +	{ { 2, 2, 2, 2 } },
+> +	{ { 4, 0, 2, 2 } },
+> +	{ { 2, 2, 4, 0 } },
+> +	{ { 4, 0, 4, 0 } },
+> +};
+> +
+> +static int max96724_init_tpg(struct max_des *des)
+> +{
+> +	const struct reg_sequence regs[] = {
+> +		{ MAX96724_GRAD_INCR, MAX_SERDES_GRAD_INCR },
+> +		REG_SEQUENCE_3_LE(MAX96724_CHKR_COLOR_A_L,
+> +				  MAX_SERDES_CHECKER_COLOR_A),
+> +		REG_SEQUENCE_3_LE(MAX96724_CHKR_COLOR_B_L,
+> +				  MAX_SERDES_CHECKER_COLOR_B),
+> +		{ MAX96724_CHKR_RPT_A, MAX_SERDES_CHECKER_SIZE },
+> +		{ MAX96724_CHKR_RPT_B, MAX_SERDES_CHECKER_SIZE },
+> +		{ MAX96724_CHKR_ALT, MAX_SERDES_CHECKER_SIZE },
+> +	};
+> +	struct max96724_priv *priv = des_to_priv(des);
+> +
+> +	return regmap_multi_reg_write(priv->regmap, regs, ARRAY_SIZE(regs));
+> +}
+> +
+> +static int max96724_init(struct max_des *des)
+> +{
+> +	struct max96724_priv *priv = des_to_priv(des);
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	if (priv->info->set_pipe_tunnel_enable) {
+> +		for (i = 0; i < des->ops->num_pipes; i++) {
+> +			ret = regmap_set_bits(priv->regmap, MAX96724_MIPI_TX57(i),
+> +					      MAX96724_MIPI_TX57_DIS_AUTO_TUN_DET);
+> +			if (ret)
+> +				return ret;
+> +		}
+> +	}
+> +
+> +	if (priv->info->supports_pipe_stream_autoselect) {
+> +		/* Enable stream autoselect. */
+> +		ret = regmap_set_bits(priv->regmap, MAX96724_VIDEO_PIPE_EN,
+> +				      MAX96724_VIDEO_PIPE_EN_STREAM_SEL_ALL);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	/* Set PHY mode. */
+> +	ret = regmap_update_bits(priv->regmap, MAX96724_MIPI_PHY0,
+> +				 MAX96724_MIPI_PHY0_PHY_CONFIG,
+> +				 max96724_phys_configs_reg_val[des->phys_config]);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return max96724_init_tpg(des);
+> +}
+> +
+> +static int max96724_init_phy(struct max_des *des, struct max_des_phy *phy)
+> +{
+> +	struct max96724_priv *priv = des_to_priv(des);
+> +	bool is_cphy = phy->bus_type == V4L2_MBUS_CSI2_CPHY;
+> +	unsigned int num_data_lanes = phy->mipi.num_data_lanes;
+> +	unsigned int dpll_freq = phy->link_frequency * 2;
+> +	unsigned int num_hw_data_lanes;
+> +	unsigned int index;
+> +	unsigned int used_data_lanes = 0;
+> +	unsigned int val, mask;
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	index = max96724_phy_id(des, phy);
+> +	num_hw_data_lanes = max_des_phy_hw_data_lanes(des, phy);
+> +
+> +	ret = regmap_update_bits(priv->regmap, MAX96724_MIPI_TX10(index),
+> +				 MAX96724_MIPI_TX10_CSI2_LANE_CNT,
+> +				 FIELD_PREP(MAX96724_MIPI_TX10_CSI2_LANE_CNT,
+> +					    num_data_lanes - 1));
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_assign_bits(priv->regmap, MAX96724_MIPI_TX10(index),
+> +				 MAX96724_MIPI_TX10_CSI2_CPHY_EN, is_cphy);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Configure lane mapping. */
+> +	val = 0;
+> +	for (i = 0; i < num_hw_data_lanes ; i++) {
+> +		unsigned int map;
+> +
+> +		if (i < num_data_lanes)
+> +			map = phy->mipi.data_lanes[i] - 1;
+> +		else
+> +			map = ffz(used_data_lanes);
+> +
+> +		val |= map << (i * 2);
+> +		used_data_lanes |= BIT(map);
+> +	}
+> +
+> +	if (num_hw_data_lanes == 4)
+> +		mask = MAX96724_MIPI_PHY3_PHY_LANE_MAP_4;
+> +	else
+> +		mask = MAX96724_MIPI_PHY3_PHY_LANE_MAP_2(index);
+> +
+> +	ret = regmap_update_bits(priv->regmap, MAX96724_MIPI_PHY3(index),
+> +				 mask, field_prep(mask, val));
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Configure lane polarity. */
+> +	for (i = 0, val = 0; i < num_data_lanes; i++)
+> +		if (phy->mipi.lane_polarities[i + 1])
+> +			val |= BIT(i);
+> +
+> +	if (num_hw_data_lanes == 4) {
+> +		ret = regmap_update_bits(priv->regmap, MAX96724_MIPI_PHY5(index),
+> +					 MAX96724_MIPI_PHY5_PHY_POL_MAP_4_0_1 |
+> +					 MAX96724_MIPI_PHY5_PHY_POL_MAP_4_2_3,
+> +					 FIELD_PREP(MAX96724_MIPI_PHY5_PHY_POL_MAP_4_0_1,
+> +						    val) |
+> +					 FIELD_PREP(MAX96724_MIPI_PHY5_PHY_POL_MAP_4_2_3,
+> +						    val >> 2));
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret = regmap_assign_bits(priv->regmap, MAX96724_MIPI_PHY5(index),
+> +					 MAX96724_MIPI_PHY5_PHY_POL_MAP_4_CLK,
+> +					 phy->mipi.lane_polarities[0]);
+> +		if (ret)
+> +			return ret;
+> +	} else {
+> +		ret = regmap_update_bits(priv->regmap, MAX96724_MIPI_PHY5(index),
+> +					 MAX96724_MIPI_PHY5_PHY_POL_MAP_2(index),
+> +					 field_prep(MAX96724_MIPI_PHY5_PHY_POL_MAP_2(index), val));
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret = regmap_assign_bits(priv->regmap, MAX96724_MIPI_PHY5(index),
+> +					 MAX96724_MIPI_PHY5_PHY_POL_MAP_2_CLK(index),
+> +					 phy->mipi.lane_polarities[0]);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	if (!is_cphy && dpll_freq > 1500000000ull) {
+> +		/* Enable initial deskew with 2 x 32k UI. */
+> +		ret = regmap_write(priv->regmap, MAX96724_MIPI_TX3(index),
+> +				   MAX96724_MIPI_TX3_DESKEW_INIT_AUTO |
+> +				   MAX96724_MIPI_TX3_DESKEW_INIT_8X32K);
+> +		if (ret)
+> +			return ret;
+> +
+> +		/* Enable periodic deskew with 2 x 1k UI.. */
+> +		ret = regmap_write(priv->regmap, MAX96724_MIPI_TX4(index),
+> +				   MAX96724_MIPI_TX4_DESKEW_PER_AUTO |
+> +				   MAX96724_MIPI_TX4_DESKEW_PER_2K);
+> +		if (ret)
+> +			return ret;
+> +	} else {
+> +		/* Disable initial deskew. */
+> +		ret = regmap_write(priv->regmap, MAX96724_MIPI_TX3(index), 0x0);
+> +		if (ret)
+> +			return ret;
+> +
+> +		/* Disable periodic deskew. */
+> +		ret = regmap_write(priv->regmap, MAX96724_MIPI_TX4(index), 0x0);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	if (is_cphy) {
+> +		/* Configure C-PHY timings. */
+> +		ret = regmap_write(priv->regmap, MAX96724_MIPI_PHY13,
+> +				   MAX96724_MIPI_PHY13_T_T3_PREBEGIN_64X7);
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret = regmap_write(priv->regmap, MAX96724_MIPI_PHY14,
+> +				   MAX96724_MIPI_PHY14_T_T3_PREP_55NS |
+> +				   MAX96724_MIPI_PHY14_T_T3_POST_32X7);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	/* Put DPLL block into reset. */
+> +	ret = regmap_clear_bits(priv->regmap, MAX96724_DPLL_0(index),
+> +				MAX96724_DPLL_0_CONFIG_SOFT_RST_N);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Set DPLL frequency. */
+> +	ret = regmap_update_bits(priv->regmap, MAX96724_BACKTOP22(index),
+> +				 MAX96724_BACKTOP22_PHY_CSI_TX_DPLL,
+> +				 FIELD_PREP(MAX96724_BACKTOP22_PHY_CSI_TX_DPLL,
+> +					    div_u64(dpll_freq, 100000000)));
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Enable DPLL frequency. */
+> +	ret = regmap_set_bits(priv->regmap, MAX96724_BACKTOP22(index),
+> +			      MAX96724_BACKTOP22_PHY_CSI_TX_DPLL_EN);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Pull DPLL block out of reset. */
+> +	return regmap_set_bits(priv->regmap, MAX96724_DPLL_0(index),
+> +			       MAX96724_DPLL_0_CONFIG_SOFT_RST_N);
+> +}
+> +
+> +static int max96724_set_phy_mode(struct max_des *des, struct max_des_phy *phy,
+> +				 struct max_des_phy_mode *mode)
+> +{
+> +	struct max96724_priv *priv = des_to_priv(des);
+> +	unsigned int index = max96724_phy_id(des, phy);
+> +	int ret;
+> +
+> +	/* Set alternate memory map modes. */
+> +	ret = regmap_assign_bits(priv->regmap, MAX96724_MIPI_TX51(index),
+> +				 MAX96724_MIPI_TX51_ALT_MEM_MAP_12,
+> +				 mode->alt_mem_map12);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_assign_bits(priv->regmap, MAX96724_MIPI_TX51(index),
+> +				 MAX96724_MIPI_TX51_ALT_MEM_MAP_8,
+> +				 mode->alt_mem_map8);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_assign_bits(priv->regmap, MAX96724_MIPI_TX51(index),
+> +				 MAX96724_MIPI_TX51_ALT_MEM_MAP_10,
+> +				 mode->alt_mem_map10);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return regmap_assign_bits(priv->regmap, MAX96724_MIPI_TX51(index),
+> +				  MAX96724_MIPI_TX51_ALT2_MEM_MAP_8,
+> +				  mode->alt2_mem_map8);
+> +}
+> +
+> +static int max96724_set_phy_enable(struct max_des *des, struct max_des_phy *phy,
+> +				   bool enable)
+> +{
+> +	struct max96724_priv *priv = des_to_priv(des);
+> +	unsigned int index = max96724_phy_id(des, phy);
+> +	unsigned int num_hw_data_lanes;
+> +	unsigned int mask;
+> +
+> +	num_hw_data_lanes = max_des_phy_hw_data_lanes(des, phy);
+> +
+> +	if (num_hw_data_lanes == 4)
+> +		/* PHY 1 -> bits [1:0] */
+> +		/* PHY 2 -> bits [3:2] */
+> +		mask = MAX96724_MIPI_PHY2_PHY_STDB_N_4(index);
+> +	else
+> +		mask = MAX96724_MIPI_PHY2_PHY_STDB_N_2(index);
+> +
+> +	return regmap_assign_bits(priv->regmap, MAX96724_MIPI_PHY2, mask, enable);
+> +}
+> +
+> +static int max96724_set_pipe_remap(struct max_des *des,
+> +				   struct max_des_pipe *pipe,
+> +				   unsigned int i,
+> +				   struct max_des_remap *remap)
+> +{
+> +	struct max96724_priv *priv = des_to_priv(des);
+> +	struct max_des_phy *phy = &des->phys[remap->phy];
+> +	unsigned int phy_id = max96724_phy_id(des, phy);
+> +	unsigned int index = pipe->index;
+> +	int ret;
+> +
+> +	/* Set source Data Type and Virtual Channel. */
+> +	/* TODO: implement extended Virtual Channel. */
+> +	ret = regmap_write(priv->regmap, MAX96724_MIPI_TX13(index, i),
+> +			   FIELD_PREP(MAX96724_MIPI_TX13_MAP_SRC_DT,
+> +				      remap->from_dt) |
+> +			   FIELD_PREP(MAX96724_MIPI_TX13_MAP_SRC_VC,
+> +				      remap->from_vc));
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Set destination Data Type and Virtual Channel. */
+> +	/* TODO: implement extended Virtual Channel. */
+> +	ret = regmap_write(priv->regmap, MAX96724_MIPI_TX14(index, i),
+> +			   FIELD_PREP(MAX96724_MIPI_TX14_MAP_DST_DT,
+> +				      remap->to_dt) |
+> +			   FIELD_PREP(MAX96724_MIPI_TX14_MAP_DST_VC,
+> +				      remap->to_vc));
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Set destination PHY. */
+> +	return regmap_update_bits(priv->regmap, MAX96724_MIPI_TX45(index, i),
+> +				  MAX96724_MIPI_TX45_MAP_DPHY_DEST(i),
+> +				  field_prep(MAX96724_MIPI_TX45_MAP_DPHY_DEST(i),
+> +					     phy_id));
+> +}
+> +
+> +static int max96724_set_pipe_remaps_enable(struct max_des *des,
+> +					   struct max_des_pipe *pipe,
+> +					   unsigned int mask)
+> +{
+> +	struct max96724_priv *priv = des_to_priv(des);
+> +	unsigned int index = pipe->index;
+> +	int ret;
+> +
+> +	ret = regmap_write(priv->regmap, MAX96724_MIPI_TX11(index), mask);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return regmap_write(priv->regmap, MAX96724_MIPI_TX12(index), mask >> 8);
+> +}
+> +
+> +static int max96724_set_pipe_tunnel_phy(struct max_des *des,
+> +					struct max_des_pipe *pipe,
+> +					struct max_des_phy *phy)
+> +{
+> +	struct max96724_priv *priv = des_to_priv(des);
+> +	unsigned int phy_index = max96724_phy_id(des, phy);
+> +
+> +	return regmap_update_bits(priv->regmap, MAX96724_MIPI_TX57(pipe->index),
+> +				  MAX96724_MIPI_TX57_TUN_DEST,
+> +				  FIELD_PREP(MAX96724_MIPI_TX57_TUN_DEST,
+> +					     phy_index));
+> +}
+> +
+> +static int max96724_set_pipe_phy(struct max_des *des, struct max_des_pipe *pipe,
+> +				 struct max_des_phy *phy)
+> +{
+> +	struct max96724_priv *priv = des_to_priv(des);
+> +	unsigned int phy_index = max96724_phy_id(des, phy);
+> +
+> +	return regmap_update_bits(priv->regmap, MAX96724_MIPI_CTRL_SEL,
+> +				  MAX96724_MIPI_CTRL_SEL_MASK(pipe->index),
+> +				  field_prep(MAX96724_MIPI_CTRL_SEL_MASK(pipe->index),
+> +					     phy_index));
+> +}
+> +
+> +static int max96724_set_pipe_enable(struct max_des *des, struct max_des_pipe *pipe,
+> +				    bool enable)
+> +{
+> +	struct max96724_priv *priv = des_to_priv(des);
+> +	unsigned int index = pipe->index;
+> +
+> +	return regmap_assign_bits(priv->regmap, MAX96724_VIDEO_PIPE_EN,
+> +				  MAX96724_VIDEO_PIPE_EN_MASK(index), enable);
+> +}
+> +
+> +static int max96724_set_pipe_stream_id(struct max_des *des, struct max_des_pipe *pipe,
+> +				       unsigned int stream_id)
+> +{
+> +	struct max96724_priv *priv = des_to_priv(des);
+> +	unsigned int index = pipe->index;
+> +
+> +	return regmap_update_bits(priv->regmap, MAX96724_VIDEO_PIPE_SEL(index),
+> +				  MAX96724_VIDEO_PIPE_SEL_STREAM(index),
+> +				  field_prep(MAX96724_VIDEO_PIPE_SEL_STREAM(index),
+> +					     stream_id));
+> +}
+> +
+> +static int max96724_set_pipe_link(struct max_des *des, struct max_des_pipe *pipe,
+> +				  struct max_des_link *link)
+> +{
+> +	struct max96724_priv *priv = des_to_priv(des);
+> +	unsigned int index = pipe->index;
+> +
+> +	return regmap_update_bits(priv->regmap, MAX96724_VIDEO_PIPE_SEL(index),
+> +				  MAX96724_VIDEO_PIPE_SEL_LINK(index),
+> +				  field_prep(MAX96724_VIDEO_PIPE_SEL_LINK(index),
+> +					     link->index));
+> +}
+> +
+> +static int max96724_set_pipe_mode(struct max_des *des,
+> +				  struct max_des_pipe *pipe,
+> +				  struct max_des_pipe_mode *mode)
+> +{
+> +	struct max96724_priv *priv = des_to_priv(des);
+> +	unsigned int index = pipe->index;
+> +	unsigned int reg, mask, mode_mask;
+> +	int ret;
+> +
+> +	/* Set 8bit double mode. */
+> +	ret = regmap_assign_bits(priv->regmap, MAX96724_BACKTOP21(index),
+> +				 MAX96724_BACKTOP21_BPP8DBL(index), mode->dbl8);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_assign_bits(priv->regmap, MAX96724_BACKTOP24(index),
+> +				 MAX96724_BACKTOP24_BPP8DBL_MODE(index),
+> +				 mode->dbl8mode);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Set 10bit double mode. */
+> +	if (index % 4 == 3) {
+> +		reg = MAX96724_BACKTOP30(index);
+> +		mask = MAX96724_BACKTOP30_BPP10DBL3;
+> +		mode_mask = MAX96724_BACKTOP30_BPP10DBL3_MODE;
+> +	} else if (index % 4 == 2) {
+> +		reg = MAX96724_BACKTOP31(index);
+> +		mask = MAX96724_BACKTOP31_BPP10DBL2;
+> +		mode_mask = MAX96724_BACKTOP31_BPP10DBL2_MODE;
+> +	} else if (index % 4 == 1) {
+> +		reg = MAX96724_BACKTOP32(index);
+> +		mask = MAX96724_BACKTOP32_BPP10DBL1;
+> +		mode_mask = MAX96724_BACKTOP32_BPP10DBL1_MODE;
+> +	} else {
+> +		reg = MAX96724_BACKTOP32(index);
+> +		mask = MAX96724_BACKTOP32_BPP10DBL0;
+> +		mode_mask = MAX96724_BACKTOP32_BPP10DBL0_MODE;
+> +	}
+> +
+> +	ret = regmap_assign_bits(priv->regmap, reg, mask, mode->dbl10);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_assign_bits(priv->regmap, reg, mode_mask, mode->dbl10mode);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Set 12bit double mode. */
+> +	return regmap_assign_bits(priv->regmap, MAX96724_BACKTOP32(index),
+> +				  MAX96724_BACKTOP32_BPP12(index), mode->dbl12);
+> +}
+> +
+> +static int max96724_set_pipe_tunnel_enable(struct max_des *des,
+> +					   struct max_des_pipe *pipe, bool enable)
+> +{
+> +	struct max96724_priv *priv = des_to_priv(des);
+> +
+> +	return regmap_assign_bits(priv->regmap, MAX96724_MIPI_TX54(pipe->index),
+> +				  MAX96724_MIPI_TX54_TUN_EN, enable);
+> +}
+> +
+> +static int max96724_select_links(struct max_des *des, unsigned int mask)
+> +{
+> +	struct max96724_priv *priv = des_to_priv(des);
+> +	int ret;
+> +
+> +	ret = regmap_update_bits(priv->regmap, MAX96724_REG6, MAX96724_REG6_LINK_EN,
+> +				 field_prep(MAX96724_REG6_LINK_EN, mask));
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_set_bits(priv->regmap, MAX96724_CTRL1,
+> +			      MAX96724_CTRL1_RESET_ONESHOT);
+> +	if (ret)
+> +		return ret;
+> +
+> +	msleep(60);
+> +
+> +	return 0;
+> +}
+> +
+> +static int max96724_set_link_version(struct max_des *des,
+> +				     struct max_des_link *link,
+> +				     enum max_serdes_gmsl_version version)
+> +{
+> +	struct max96724_priv *priv = des_to_priv(des);
+> +	unsigned int index = link->index;
+> +	unsigned int val;
+> +
+> +	if (version == MAX_SERDES_GMSL_2_6GBPS)
+> +		val = MAX96724_REG26_RX_RATE_6GBPS;
+> +	else
+> +		val = MAX96724_REG26_RX_RATE_3GBPS;
+> +
+> +	return regmap_update_bits(priv->regmap, MAX96724_REG26(index),
+> +				  MAX96724_REG26_RX_RATE_PHY(index),
+> +				  field_prep(MAX96724_REG26_RX_RATE_PHY(index), val));
+> +}
+> +
+> +static int max96724_set_tpg_timings(struct max96724_priv *priv,
+> +				    const struct max_serdes_tpg_timings *tm)
+> +{
+> +	const struct reg_sequence regs[] = {
+> +		REG_SEQUENCE_3(MAX96724_VS_DLY_2, tm->vs_dly),
+> +		REG_SEQUENCE_3(MAX96724_VS_HIGH_2, tm->vs_high),
+> +		REG_SEQUENCE_3(MAX96724_VS_LOW_2, tm->vs_low),
+> +		REG_SEQUENCE_3(MAX96724_V2H_2, tm->v2h),
+> +		REG_SEQUENCE_2(MAX96724_HS_HIGH_1, tm->hs_high),
+> +		REG_SEQUENCE_2(MAX96724_HS_LOW_1, tm->hs_low),
+> +		REG_SEQUENCE_2(MAX96724_HS_CNT_1, tm->hs_cnt),
+> +		REG_SEQUENCE_3(MAX96724_V2D_2, tm->v2d),
+> +		REG_SEQUENCE_2(MAX96724_DE_HIGH_1, tm->de_high),
+> +		REG_SEQUENCE_2(MAX96724_DE_LOW_1, tm->de_low),
+> +		REG_SEQUENCE_2(MAX96724_DE_CNT_1, tm->de_cnt),
+> +	};
+> +	int ret;
+> +
+> +	ret = regmap_multi_reg_write(priv->regmap, regs, ARRAY_SIZE(regs));
+> +	if (ret)
+> +		return ret;
+> +
+> +	return regmap_write(priv->regmap, MAX96724_PATGEN_0,
+> +			    FIELD_PREP(MAX96724_PATGEN_0_VTG_MODE,
+> +				       MAX96724_PATGEN_0_VTG_MODE_FREE_RUNNING) |
+> +			    FIELD_PREP(MAX96724_PATGEN_0_DE_INV, tm->de_inv) |
+> +			    FIELD_PREP(MAX96724_PATGEN_0_HS_INV, tm->hs_inv) |
+> +			    FIELD_PREP(MAX96724_PATGEN_0_VS_INV, tm->vs_inv) |
+> +			    FIELD_PREP(MAX96724_PATGEN_0_GEN_DE, tm->gen_de) |
+> +			    FIELD_PREP(MAX96724_PATGEN_0_GEN_HS, tm->gen_hs) |
+> +			    FIELD_PREP(MAX96724_PATGEN_0_GEN_VS, tm->gen_vs));
+> +}
+> +
+> +static int max96724_set_tpg_clk(struct max96724_priv *priv, u32 clock)
+> +{
+> +	bool patgen_clk_src = 0;
+> +	u8 pclk_src;
+> +	int ret;
+> +
+> +	switch (clock) {
+> +	case 25000000:
+> +		pclk_src = MAX96724_DEBUG_EXTRA_PCLK_SRC_25MHZ;
+> +		break;
+> +	case 75000000:
+> +		pclk_src = MAX96724_DEBUG_EXTRA_PCLK_SRC_75MHZ;
+> +		break;
+> +	case 150000000:
+> +		pclk_src = MAX96724_DEBUG_EXTRA_PCLK_SRC_USE_PIPE;
+> +		patgen_clk_src = MAX96724_VPRBS_PATGEN_CLK_SRC_150MHZ;
+> +		break;
+> +	case 375000000:
+> +		pclk_src = MAX96724_DEBUG_EXTRA_PCLK_SRC_USE_PIPE;
+> +		patgen_clk_src = MAX96724_VPRBS_PATGEN_CLK_SRC_375MHZ;
+> +		break;
+> +	case 0:
+> +		return 0;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	/*
+> +	 * TPG data is always injected on link 0, which is always routed to
+> +	 * pipe 0.
+> +	 */
+> +	ret = regmap_update_bits(priv->regmap, MAX96724_VPRBS(0),
+> +				 MAX96724_VPRBS_PATGEN_CLK_SRC,
+> +				 FIELD_PREP(MAX96724_VPRBS_PATGEN_CLK_SRC,
+> +					    patgen_clk_src));
+> +	if (ret)
+> +		return ret;
+> +
+> +	return regmap_update_bits(priv->regmap, MAX96724_DEBUG_EXTRA,
+> +				  MAX96724_DEBUG_EXTRA_PCLK_SRC,
+> +				  FIELD_PREP(MAX96724_DEBUG_EXTRA_PCLK_SRC,
+> +					     pclk_src));
+> +}
+> +
+> +static int max96724_set_tpg_mode(struct max96724_priv *priv, bool enable)
+> +{
+> +	unsigned int patgen_mode;
+> +
+> +	switch (priv->des.tpg_pattern) {
+> +	case MAX_SERDES_TPG_PATTERN_GRADIENT:
+> +		patgen_mode = MAX96724_PATGEN_1_PATGEN_MODE_GRADIENT;
+> +		break;
+> +	case MAX_SERDES_TPG_PATTERN_CHECKERBOARD:
+> +		patgen_mode = MAX96724_PATGEN_1_PATGEN_MODE_CHECKER;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return regmap_update_bits(priv->regmap, MAX96724_PATGEN_1,
+> +				  MAX96724_PATGEN_1_PATGEN_MODE,
+> +				  FIELD_PREP(MAX96724_PATGEN_1_PATGEN_MODE,
+> +					     enable ? patgen_mode
+> +						    : MAX96724_PATGEN_1_PATGEN_MODE_DISABLED));
+> +}
+> +
+> +static int max96724_set_tpg(struct max_des *des,
+> +			    const struct max_serdes_tpg_entry *entry)
+> +{
+> +	struct max96724_priv *priv = des_to_priv(des);
+> +	struct max_serdes_tpg_timings timings = { 0 };
+> +	int ret;
+> +
+> +	ret = max_serdes_get_tpg_timings(entry, &timings);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = max96724_set_tpg_timings(priv, &timings);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = max96724_set_tpg_clk(priv, timings.clock);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = max96724_set_tpg_mode(priv, entry);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return regmap_assign_bits(priv->regmap, MAX96724_MIPI_PHY0,
+> +				  MAX96724_MIPI_PHY0_FORCE_CSI_OUT_EN, !!entry);
+> +}
+> +
+> +static const struct max_serdes_tpg_entry max96724_tpg_entries[] = {
+> +	MAX_TPG_ENTRY_640X480P60_RGB888,
+> +	MAX_TPG_ENTRY_1920X1080P30_RGB888,
+> +	MAX_TPG_ENTRY_1920X1080P60_RGB888,
+> +};
+> +
+> +static const struct max_des_ops max96724_ops = {
+> +	.num_phys = 4,
+> +	.num_links = 4,
+> +	.num_remaps_per_pipe = 16,
+> +	.phys_configs = {
+> +		.num_configs = ARRAY_SIZE(max96724_phys_configs),
+> +		.configs = max96724_phys_configs,
+> +	},
+> +	.tpg_entries = {
+> +		.num_entries = ARRAY_SIZE(max96724_tpg_entries),
+> +		.entries = max96724_tpg_entries,
+> +	},
+> +	.tpg_mode = MAX_SERDES_GMSL_PIXEL_MODE,
+> +	.tpg_patterns = BIT(MAX_SERDES_TPG_PATTERN_CHECKERBOARD) |
+> +			BIT(MAX_SERDES_TPG_PATTERN_GRADIENT),
+> +	.use_atr = true,
+> +	.reg_read = max96724_reg_read,
+> +	.reg_write = max96724_reg_write,
+> +	.log_pipe_status = max96724_log_pipe_status,
+> +	.log_phy_status = max96724_log_phy_status,
+> +	.set_enable = max96724_set_enable,
+> +	.init = max96724_init,
+> +	.init_phy = max96724_init_phy,
+> +	.set_phy_mode = max96724_set_phy_mode,
+> +	.set_phy_enable = max96724_set_phy_enable,
+> +	.set_pipe_stream_id = max96724_set_pipe_stream_id,
+> +	.set_pipe_link = max96724_set_pipe_link,
+> +	.set_pipe_enable = max96724_set_pipe_enable,
+> +	.set_pipe_remap = max96724_set_pipe_remap,
+> +	.set_pipe_remaps_enable = max96724_set_pipe_remaps_enable,
+> +	.set_pipe_mode = max96724_set_pipe_mode,
+> +	.set_tpg = max96724_set_tpg,
+> +	.select_links = max96724_select_links,
+> +	.set_link_version = max96724_set_link_version,
+> +};
+> +
+> +static const struct max96724_chip_info max96724_info = {
+> +	.versions = BIT(MAX_SERDES_GMSL_2_3GBPS) |
+> +		    BIT(MAX_SERDES_GMSL_2_6GBPS),
+> +	.modes = BIT(MAX_SERDES_GMSL_PIXEL_MODE) |
+> +		 BIT(MAX_SERDES_GMSL_TUNNEL_MODE),
+> +	.set_pipe_tunnel_enable = max96724_set_pipe_tunnel_enable,
+> +	.set_pipe_phy = max96724_set_pipe_phy,
+> +	.set_pipe_tunnel_phy = max96724_set_pipe_tunnel_phy,
+> +	.supports_pipe_stream_autoselect = true,
+> +	.num_pipes = 4,
+> +};
+> +
+> +static const struct max96724_chip_info max96724f_info = {
+> +	.versions = BIT(MAX_SERDES_GMSL_2_3GBPS),
+> +	.modes = BIT(MAX_SERDES_GMSL_PIXEL_MODE) |
+> +		 BIT(MAX_SERDES_GMSL_TUNNEL_MODE),
+> +	.set_pipe_tunnel_enable = max96724_set_pipe_tunnel_enable,
+> +	.set_pipe_phy = max96724_set_pipe_phy,
+> +	.set_pipe_tunnel_phy = max96724_set_pipe_tunnel_phy,
+> +	.supports_pipe_stream_autoselect = true,
+> +	.num_pipes = 4,
+> +};
+> +
+> +static const struct max96724_chip_info max96712_info = {
+> +	.versions = BIT(MAX_SERDES_GMSL_2_3GBPS) |
+> +		    BIT(MAX_SERDES_GMSL_2_6GBPS),
+> +	.modes = BIT(MAX_SERDES_GMSL_PIXEL_MODE),
+> +	.num_pipes = 8,
+> +};
+> +
+> +static int max96724_probe(struct i2c_client *client)
+> +{
+> +	struct device *dev = &client->dev;
+> +	struct max96724_priv *priv;
+> +	struct max_des_ops *ops;
+> +	int ret;
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	ops = devm_kzalloc(dev, sizeof(*ops), GFP_KERNEL);
+> +	if (!ops)
+> +		return -ENOMEM;
+> +
+> +	priv->info = device_get_match_data(dev);
+> +	if (!priv->info) {
+> +		dev_err(dev, "Failed to get match data\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	priv->dev = dev;
+> +	priv->client = client;
+> +	i2c_set_clientdata(client, priv);
+> +
+> +	priv->regmap = devm_regmap_init_i2c(client, &max96724_i2c_regmap);
+> +	if (IS_ERR(priv->regmap))
+> +		return PTR_ERR(priv->regmap);
+> +
+> +	priv->gpiod_enable = devm_gpiod_get_optional(&client->dev, "enable",
+> +						     GPIOD_OUT_LOW);
+> +	if (IS_ERR(priv->gpiod_enable))
+> +		return PTR_ERR(priv->gpiod_enable);
+> +
+> +	if (priv->gpiod_enable) {
+> +		/* PWDN must be held for 1us for reset */
+> +		udelay(1);
+> +
+> +		gpiod_set_value_cansleep(priv->gpiod_enable, 1);
+> +
+> +		/* Maximum power-up time (tLOCK) 4ms */
+> +		usleep_range(4000, 5000);
+> +	}
+> +
+> +	*ops = max96724_ops;
+> +	ops->versions = priv->info->versions;
+> +	ops->modes = priv->info->modes;
+> +	ops->num_pipes = priv->info->num_pipes;
+> +	ops->set_pipe_tunnel_enable = priv->info->set_pipe_tunnel_enable;
+> +	ops->set_pipe_phy = priv->info->set_pipe_phy;
+> +	ops->set_pipe_tunnel_phy = priv->info->set_pipe_tunnel_phy;
+> +	priv->des.ops = ops;
+> +
+> +	ret = max96724_reset(priv);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return max_des_probe(client, &priv->des);
+> +}
+> +
+> +static void max96724_remove(struct i2c_client *client)
+> +{
+> +	struct max96724_priv *priv = i2c_get_clientdata(client);
+> +
+> +	max_des_remove(&priv->des);
+> +
+> +	gpiod_set_value_cansleep(priv->gpiod_enable, 0);
+> +}
+> +
+> +static const struct of_device_id max96724_of_table[] = {
+> +	{ .compatible = "maxim,max96712", .data = &max96712_info },
+> +	{ .compatible = "maxim,max96724", .data = &max96724_info },
+> +	{ .compatible = "maxim,max96724f", .data = &max96724f_info },
+> +	{ .compatible = "maxim,max96724r", .data = &max96724f_info },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, max96724_of_table);
+> +
+> +static struct i2c_driver max96724_i2c_driver = {
+> +	.driver	= {
+> +		.name = "max96724",
+> +		.of_match_table	= max96724_of_table,
+> +	},
+> +	.probe = max96724_probe,
+> +	.remove = max96724_remove,
+> +};
+> +
+> +module_i2c_driver(max96724_i2c_driver);
+> +
+> +MODULE_DESCRIPTION("Maxim MAX96724 Quad GMSL2 Deserializer Driver");
+> +MODULE_AUTHOR("Cosmin Tanislav <cosmin.tanislav@analog.com>");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.50.0
+> 
 
-Memory state around the buggy address:
- ffffc90003397800: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffffc90003397880: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->ffffc90003397900: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-                                  ^
- ffffc90003397980: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffffc90003397a00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-==================================================================
-----------------
-Code disassembly (best guess):
-   0:	0f 84 3c 01 00 00    	je     0x142
-   6:	48 85 db             	test   %rbx,%rbx
-   9:	0f 85 63 01 00 00    	jne    0x172
-   f:	e9 27 05 00 00       	jmp    0x53b
-  14:	4c 8b 75 d0          	mov    -0x30(%rbp),%r14
-  18:	4c 89 e7             	mov    %r12,%rdi
-  1b:	e8 2f db e0 09       	call   0x9e0db4f
-  20:	e8 3a 0e 36 00       	call   0x360e5f
-  25:	fb                   	sti
-  26:	4c 8b 65 c0          	mov    -0x40(%rbp),%r12
-* 2a:	49 8d bc 24 18 16 00 	lea    0x1618(%r12),%rdi <-- trapping instruction
-  31:	00
-  32:	48 89 f8             	mov    %rdi,%rax
-  35:	48 c1 e8 03          	shr    $0x3,%rax
-  39:	42 0f b6 04 28       	movzbl (%rax,%r13,1),%eax
-  3e:	84 c0                	test   %al,%al
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+-- 
+Kind Regards,
+Niklas Söderlund
