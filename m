@@ -1,106 +1,140 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C006827A456;
-	Wed,  2 Jul 2025 13:04:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A0331E485;
+	Wed,  2 Jul 2025 13:05:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751461467; cv=none; b=m0SLBhVmmRRiFsd/dmxU38y/HbXzYtuYAE7o6MWMOtt+L/vY4t8ttcptctaqkKwpzYBROoTUNDRLrtwL4MqSXY4f7FXxT/Aezmdfk7mViQs90bTvZQUARHvtsNnXMORbj1nVe+4Jn6coslpIeXR53AF4KfRdMnhQQFHMu/cdzCY=
+	t=1751461506; cv=none; b=Jpk35XJH09Rt1ld6zUrLiHds5d1zhfQtHpU170HSiENcetKGwfFsAe+vAgBfPOV5bVgvDWL3k4lgSvASJKx4nOo5MvTSFeWvf24i81RPxw2AFhKWEnMYj5ynl4aLK024k0IfsIMGgzWHXahGXC+Kl7gSrm6lNyM3dd46pHlaXZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751461467; c=relaxed/simple;
-	bh=0acfyuC2F7Mv/9fW3QQwYIR0COFJtmohqG1icxC312E=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DTiqoYigMFVgcVJOoxiqMAejrUzwsvRUOR1xoYFWHP9HLs8P/ppkt6oWcYhpwUKfSu4gzG5oxzaQW9CZVKecIAGwnZ+50Oh0BB4vGeDtDo7HO9X+6ty37O/JtxisYhoryy/otjUASCdXHTWhPetvKnRHQcV8gntdAD22lNX68eM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+	s=arc-20240116; t=1751461506; c=relaxed/simple;
+	bh=HjgWc25q2uiagIerSLRdcUn1MeXY7b5/hcSUH9aomzo=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=M/ox2eGfdWq8SP3GXkw6zZSPbVu4Z/ZENeOzTrH271+EL3Qvr9VrFxtFCWICbtvPNc3NgASuWQ/dXvfyg5zf8E/yzQJPIUm/XuZ8D6GGRunFNJft+M1hPaDIVxDkgaqkBKC1pyd+tWOnSiqCCfxEHsfr/g+4E5FPJoE8wfZHwmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4bXKmC6Pbqz13MZJ;
-	Wed,  2 Jul 2025 21:01:47 +0800 (CST)
-Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id C9DEC180064;
-	Wed,  2 Jul 2025 21:04:17 +0800 (CST)
-Received: from localhost.localdomain (10.90.31.46) by
- kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 2 Jul 2025 21:04:17 +0800
-From: Jijie Shao <shaojijie@huawei.com>
-To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <andrew+netdev@lunn.ch>, <horms@kernel.org>
-CC: <shenjian15@huawei.com>, <liuyonglong@huawei.com>,
-	<chenhao418@huawei.com>, <jonathan.cameron@huawei.com>,
-	<shameerali.kolothum.thodi@huawei.com>, <salil.mehta@huawei.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<shaojijie@huawei.com>
-Subject: [PATCH net-next 2/4] net: hns3: disable interrupt when ptp init failed
-Date: Wed, 2 Jul 2025 20:57:29 +0800
-Message-ID: <20250702125731.2875331-3-shaojijie@huawei.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20250702125731.2875331-1-shaojijie@huawei.com>
-References: <20250702125731.2875331-1-shaojijie@huawei.com>
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bXKpt1TgDz6M4tL;
+	Wed,  2 Jul 2025 21:04:06 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id CBD6314038F;
+	Wed,  2 Jul 2025 21:05:01 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 2 Jul
+ 2025 15:05:01 +0200
+Date: Wed, 2 Jul 2025 14:04:59 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+CC: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "Rob
+ Herring" <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
+ Dooley" <conor+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "Sascha
+ Bischoff" <sascha.bischoff@arm.com>, Timothy Hayes <timothy.hayes@arm.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, "Liam R. Howlett"
+	<Liam.Howlett@oracle.com>, Peter Maydell <peter.maydell@linaro.org>, "Mark
+ Rutland" <mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v6 21/31] irqchip/gic-v5: Add GICv5 IRS/SPI support
+Message-ID: <20250702140459.000063ef@huawei.com>
+In-Reply-To: <20250626-gicv5-host-v6-21-48e046af4642@kernel.org>
+References: <20250626-gicv5-host-v6-0-48e046af4642@kernel.org>
+	<20250626-gicv5-host-v6-21-48e046af4642@kernel.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
- kwepemk100013.china.huawei.com (7.202.194.61)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-From: Yonglong Liu <liuyonglong@huawei.com>
 
-When ptp init failed, we'd better disable the interrupt and clear the
-flag, to avoid early report interrupt at next probe.
 
-Fixes: 0bf5eb788512 ("net: hns3: add support for PTP")
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Signed-off-by: Jijie Shao <shaojijie@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_ptp.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+There are more ID masks not using FIELD_PREP() in here, but
+as mentioned in earlier reply, even if we decide those are worth
+cleaning up, no reason it can't be as a trivial patch on top of the
+series.
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_ptp.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_ptp.c
-index ec581d4b696f..4bd52eab3914 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_ptp.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_ptp.c
-@@ -497,14 +497,14 @@ int hclge_ptp_init(struct hclge_dev *hdev)
- 	if (ret) {
- 		dev_err(&hdev->pdev->dev,
- 			"failed to init freq, ret = %d\n", ret);
--		goto out;
-+		goto out_clear_int;
- 	}
- 
- 	ret = hclge_ptp_set_ts_mode(hdev, &hdev->ptp->ts_cfg);
- 	if (ret) {
- 		dev_err(&hdev->pdev->dev,
- 			"failed to init ts mode, ret = %d\n", ret);
--		goto out;
-+		goto out_clear_int;
- 	}
- 
- 	ktime_get_real_ts64(&ts);
-@@ -512,7 +512,7 @@ int hclge_ptp_init(struct hclge_dev *hdev)
- 	if (ret) {
- 		dev_err(&hdev->pdev->dev,
- 			"failed to init ts time, ret = %d\n", ret);
--		goto out;
-+		goto out_clear_int;
- 	}
- 
- 	set_bit(HCLGE_STATE_PTP_EN, &hdev->state);
-@@ -520,6 +520,9 @@ int hclge_ptp_init(struct hclge_dev *hdev)
- 
- 	return 0;
- 
-+out_clear_int:
-+	clear_bit(HCLGE_PTP_FLAG_EN, &hdev->ptp->flags);
-+	hclge_ptp_int_en(hdev, false);
- out:
- 	hclge_ptp_destroy_clock(hdev);
- 
--- 
-2.33.0
+Otherwise just one comment walking back some feedback on an earlier
+patch (as what you had there now makes sense)
 
+Jonathan
+
+> diff --git a/drivers/irqchip/irq-gic-v5-irs.c b/drivers/irqchip/irq-gic-v5-irs.c
+> new file mode 100644
+> index 000000000000..fba8efceb26e
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-gic-v5-irs.c
+> @@ -0,0 +1,434 @@
+
+> -static int gicv5_irq_ppi_domain_translate(struct irq_domain *d,
+> -					  struct irq_fwspec *fwspec,
+> -					  irq_hw_number_t *hwirq,
+> -					  unsigned int *type)
+> +static const struct irq_chip gicv5_spi_irq_chip = {
+> +	.name			= "GICv5-SPI",
+> +	.irq_mask		= gicv5_spi_irq_mask,
+> +	.irq_unmask		= gicv5_spi_irq_unmask,
+> +	.irq_eoi		= gicv5_spi_irq_eoi,
+> +	.irq_set_type		= gicv5_spi_irq_set_type,
+> +	.irq_set_affinity	= gicv5_spi_irq_set_affinity,
+> +	.irq_retrigger		= gicv5_spi_irq_retrigger,
+> +	.irq_get_irqchip_state	= gicv5_spi_irq_get_irqchip_state,
+> +	.irq_set_irqchip_state	= gicv5_spi_irq_set_irqchip_state,
+> +	.flags			= IRQCHIP_SET_TYPE_MASKED |
+> +				  IRQCHIP_SKIP_SET_WAKE	  |
+> +				  IRQCHIP_MASK_ON_SUSPEND,
+> +};
+> +
+> +static __always_inline int gicv5_irq_domain_translate(struct irq_domain *d,
+> +						      struct irq_fwspec *fwspec,
+> +						      irq_hw_number_t *hwirq,
+> +						      unsigned int *type,
+> +						      const u8 hwirq_typ)
+
+>  {
+>  	if (!is_of_node(fwspec->fwnode))
+>  		return -EINVAL;
+> @@ -235,20 +428,39 @@ static int gicv5_irq_ppi_domain_translate(struct irq_domain *d,
+>  	if (fwspec->param_count < 3)
+>  		return -EINVAL;
+>  
+> -	if (fwspec->param[0] != GICV5_HWIRQ_TYPE_PPI)
+> +	if (fwspec->param[0] != hwirq_type)
+>  		return -EINVAL;
+>  
+>  	*hwirq = fwspec->param[1];
+>  
+> -	/*
+> -	 * Handling mode is hardcoded for PPIs, set the type using
+> -	 * HW reported value.
+> -	 */
+> -	*type = gicv5_ppi_irq_is_level(*hwirq) ? IRQ_TYPE_LEVEL_LOW : IRQ_TYPE_EDGE_RISING;
+> +	switch (hwirq_type) {
+> +	case GICV5_HWIRQ_TYPE_PPI:
+> +		/*
+> +		 * Handling mode is hardcoded for PPIs, set the type using
+> +		 * HW reported value.
+> +		 */
+> +		*type = gicv5_ppi_irq_is_level(*hwirq) ? IRQ_TYPE_LEVEL_LOW :
+> +							 IRQ_TYPE_EDGE_RISING;
+> +		break;
+> +	case GICV5_HWIRQ_TYPE_SPI:
+> +		*type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
+
+Ah fair enough in earlier patches on just enforcing 3 parameters for all cases.
+Seems like a sensible simplification once this is taken into account. So ignore that one!
+
+> +		break;
+> +	default:
+> +		BUILD_BUG_ON(1);
+> +	}
+>  
+>  	return 0;
+>  }
