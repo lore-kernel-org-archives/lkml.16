@@ -1,145 +1,110 @@
-Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57E7B199FAB;
-	Wed,  2 Jul 2025 08:10:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1795E21C187
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 08:11:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751443841; cv=none; b=CKAB4sGbA5L8SRVT2LmlfDalDEhUaJCdgKEP8vTITgxDRZ+zDU5jSxwlNfwaqtHGRBzCc+hH+jrULVJL6iaPGYESZyIbK8ov1tdOuZ8ibANrctSXzG1m9Xph1Jrh2cOd7Amvcx4gUmR4uvU+GlPqL7YS2KznONfYZCcAqMZz3OU=
+	t=1751443912; cv=none; b=kWzZ9soH+tXB9tiSHJZmWDE7B+K55XLYcCgjWN6AnJjXs/n0ULVPcHWqJDCy8EhmFUificho2q7amo5yiltRdT4iPdOalf0sZQ5N71xXRd89x5VhHhamnMFD02yNGN1WvX8D1Msw+fbGWkb10wlAACUygc3jEmkTKDUhO5Zx4qM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751443841; c=relaxed/simple;
-	bh=IYdvsYFoOUmuWzYIFan9Coo0HGpRMXkdIvOtm1XmZtI=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=sBMjh84L8rWnp7Qhf3S0aogMHZkwCG0w6CQ1UyU/vLywwRYdwdIO0AotgG2QTBtW6J6Es+Joo+VWe14BBM7vxv4/oHSpBd+g4i7cBhpEUgQNFmLW08rNycAdPoh4dw1FLZNK5DtZvXN+1N8OKLnO3GXoAmj2ifDXBPWR/Phev0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ovn.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ovn.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f68.google.com with SMTP id 5b1f17b1804b1-453643020bdso56211425e9.1;
-        Wed, 02 Jul 2025 01:10:37 -0700 (PDT)
+	s=arc-20240116; t=1751443912; c=relaxed/simple;
+	bh=QG1iZiP+R2rzXaTe56gOjHC0fYF3d/JOXWrEX8czvSw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JzKULMpIbkB/2mx/pi/vwn35G3PqxlsHh7h0ouUjFFidVCkWg9p3vqPx/ORPGuP9Xv0z6pTOxGqRaebriapYwrxkAuOXlOqyr254e9DkoncyYI0FpLlcwhDjqq4LUPlLKXjC5JnSzr1MXzW/zD1d0ENxavK3WfwJXKF6Ui2288s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=XmCcyH2e; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XmCcyH2e"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-235e1d710d8so77394455ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 01:11:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1751443910; x=1752048710; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ndb+JaIMrjzxA+tCLX6/GeFttkCVzpWqjwe11W0C+PU=;
+        b=XmCcyH2eZ+1iYyBqxZGqz3hKWHLiT6hDZ9LdpBV3k95bYP9/xlpjKst8L6GxYj3dHl
+         lB++zWksjl1GR314xlEomUGtOiUcQ2IFC+dh/Ls7PxjVns8cTzHFXgcr6UuqYWcTOm1m
+         oJzwy6dxnLRNYNK5mkgvZ+X6u0BFWre4F8DTI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751443835; x=1752048635;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:cc:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1751443910; x=1752048710;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=r4qNZUHHOq7vIov1oUqkCmQg1k5Vs9lKcvLglpbvPJE=;
-        b=QUOgfC92I2+RhyAo03TZqW5moBRrBev+K1j7/uPHwZJZ99MjqrVPqW2LBSzb0qXyY0
-         dQFX/kx5/4+AzuGt17UMefXCPojxgpPQkpHpyrf+q0qgdlMlyJW5ftq3RhrQnxcd+3OQ
-         H0nQ76T6fxpP54+UVNycXio6B3NJt+fJgyXtRUXd+4TJCx8YT96V/App/oQHlCDv/FcW
-         UPJ/En3IC0aVY1tMa0HR/EDNBE9H9mn4wkCys5kSL8FCA0JtBc/FxS4RYua4JPJyQf3l
-         iCQ6bsW9HCg4Lus04Ozlz2xvaaeP72V6/jyzDuX7Thn0vTloAdSPW0qJPV+u12KeGVUp
-         x+EQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUMnqkeAx0Ke/4ZFY1ylgsG/7ZRaHxrN4ipcTQEprXbH9aJogg9N9TPqDmRhwRWG2ucDR72/U6F@vger.kernel.org, AJvYcCWQI1fUcy9KYKRiu3CLsgftbEJs8Nr5SiryIOq2+8rH+W1/nU/ks+9zSgWFpivU7o+I1B2Jcvlh7Q0hFNE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4lgb7WRB/OzZ3Ol2ouDg6jFNbwIrGfOUzZmQHdPmnXnMn9ZfS
-	0nnc5UUQ8SmX3Qn7Eq1YBW879ikE+sCQ+afr4xj3JX9nxKqitkEb2B/U
-X-Gm-Gg: ASbGnct6V5vJ5be6lxyHWcabVgdO27axB3VksgUmkK6mfyHZI5NMh3UBhldDZq2cjpY
-	PZJayFqUN8V+8PK3c4usT2Gr1rEoz2OqxJ7T5dqEwJZVmxz5biFuZucfQwUZCZSMl1MaIU7h/Tp
-	0jPEkXoWO7ixBrl4tNjBoZhJS/BjXrcdXTO6YbDW63qiQ6Rw6s1BJWxf/BgtGCgExjvDCXEVri7
-	1i7Agp6fgRZOopnnWIaRExL31NNqJFRJqYNP+ql49js+olngy9lWXHt0RHjdUMfA/rj6g36kRaB
-	DLTx3rLzizRFKX7qEvcWKDLSvAMXbJr/+MnY6lfPzKk1BnUEHOU6dtXNsnzXLv0Uu6ePEd2epPQ
-	L3ZV9Y3xYm47Qn2NDoqnwckNwCGF+Oyw=
-X-Google-Smtp-Source: AGHT+IGbHZ0eATGm/cLpijHlH7XRGb1emK4wOWRsjwB6YvW8gqEFhowwHkPbKbDFQ67cgFgAZjE4oA==
-X-Received: by 2002:a05:600c:3b01:b0:453:99f:b1b0 with SMTP id 5b1f17b1804b1-454a3706e45mr17164755e9.20.1751443835437;
-        Wed, 02 Jul 2025 01:10:35 -0700 (PDT)
-Received: from [192.168.88.252] (78-80-97-102.customers.tmcz.cz. [78.80.97.102])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453b35349f0sm32966705e9.1.2025.07.02.01.10.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jul 2025 01:10:34 -0700 (PDT)
-Message-ID: <1040d742-35b3-443d-bcb4-5df0eeb42f93@ovn.org>
-Date: Wed, 2 Jul 2025 10:10:33 +0200
+        bh=Ndb+JaIMrjzxA+tCLX6/GeFttkCVzpWqjwe11W0C+PU=;
+        b=or7QYH25rP1W80tmA79flyRH6e9Rjl7BPquiXQ9LvQpBdrkv+zRCyoNnABYtPtT4lv
+         jU9BxtKACv+9igglpyhnO74XT4J91LJnsda4lGBJVvxSoMElQo7N+WWXaw+qCX0yuWaq
+         AjIewo+KATQGVQctYMKlcndzH30PVwXRzuj5Yj3HQDkB1xx8dsfNuaXICnEnOXLuWh+Q
+         krksMkR6LQaG+voxoZemQqA8HhEk808nB2ZSOni+5f1FImEbUcZM7wG07BQjNfMhsOZ+
+         f6vLNiUrH0eCfyneaB0whmYdI3ix0M6NZL+XfDGn6RiSQqn9bfC8HlbphZRLwRR2d+91
+         rTlw==
+X-Gm-Message-State: AOJu0Ywn82vYfnu4hwr+g0zU6Yo2jGMkl6WgRfXTjoxJYYmCg5mGXfGf
+	uqjyb+qZrueHffhYjoE4thsy9fJ8VM0qA42tBxOnm/X6JI81eaYhN/sfWD57ZCxNm4cmbQV/J8E
+	bMqc=
+X-Gm-Gg: ASbGncvbqwLwN4tdvk8dfcvWcEFhpTWakHS/3bYIwccJ7+KOqaBUG5i7ozXh0TraK6u
+	nW+j5m1cngh2a499+GwVKfD7C17iddFFZD5NmSTF5FIESbico2JYgNIJ8kdV+vDST6SEsUCBd28
+	Qzxo5FO9Imp+wsfIH3ruOTKR0btewRKZTbCbfmJiIgOWiJSYMcmaate8QyvS9bICWgvfe23ZkPg
+	CoAJk7o2WUwBbvkGaS9XOf6kzbYSBoJZeABYMpRTmrDLahujXuYjjddSd9gevu2unnWEYkEOxhs
+	LBzbhlk/PXvMt1Z/fv6noGNw3F+ZiuZEjp+rx8NgZUWEKmt39FbNOM3l0c3BSiRQxw==
+X-Google-Smtp-Source: AGHT+IFyaxLPiNw4RnMZfl9Tf3kKU0bVL2nwN672ya66HP6pYgxM8O8hDYVQs76FVVGhmt0dmGwu+w==
+X-Received: by 2002:a17:903:320b:b0:234:f1ac:c036 with SMTP id d9443c01a7336-23c6e5e23d7mr21917615ad.50.1751443910448;
+        Wed, 02 Jul 2025 01:11:50 -0700 (PDT)
+Received: from google.com ([2401:fa00:8f:203:8825:8cdb:cb6b:8e71])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e3013d7csm12080632a12.11.2025.07.02.01.11.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 01:11:49 -0700 (PDT)
+Date: Wed, 2 Jul 2025 17:11:38 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, virtualization@lists.linux.dev, 
+	linux-fsdevel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Jerrin Shaji George <jerrin.shaji-george@broadcom.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>, 
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
+	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
+	Alistair Popple <apopple@nvidia.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	Minchan Kim <minchan@kernel.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
+	Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>, 
+	Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>, 
+	Oscar Salvador <osalvador@suse.de>, Rik van Riel <riel@surriel.com>, 
+	Harry Yoo <harry.yoo@oracle.com>, Qi Zheng <zhengqi.arch@bytedance.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>
+Subject: Re: [PATCH v1 12/29] mm/zsmalloc: stop using __ClearPageMovable()
+Message-ID: <zmsay3nrpmjec5n7v44svfa7iwl6vklqan4dgjn4wpvsr5hqt7@cqfwdvhncgrg>
+References: <20250630130011.330477-1-david@redhat.com>
+ <20250630130011.330477-13-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: i.maximets@ovn.org, netdev@vger.kernel.org,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- dev@openvswitch.org, linux-kernel@vger.kernel.org,
- Eelco Chaudron <echaudro@redhat.com>, Aaron Conole <aconole@redhat.com>
-Subject: Re: [PATCH net-next] net: openvswitch: allow providing upcall pid for
- the 'execute' command
-To: Jakub Kicinski <kuba@kernel.org>
-References: <20250627220219.1504221-1-i.maximets@ovn.org>
- <20250701192136.6b8f9569@kernel.org>
-Content-Language: en-US
-From: Ilya Maximets <i.maximets@ovn.org>
-Autocrypt: addr=i.maximets@ovn.org; keydata=
- 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
-In-Reply-To: <20250701192136.6b8f9569@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250630130011.330477-13-david@redhat.com>
 
-On 7/2/25 4:21 AM, Jakub Kicinski wrote:
-> On Sat, 28 Jun 2025 00:01:33 +0200 Ilya Maximets wrote:
->> @@ -616,6 +618,7 @@ static int ovs_packet_cmd_execute(struct sk_buff *skb, struct genl_info *info)
->>  	struct sw_flow_actions *sf_acts;
->>  	struct datapath *dp;
->>  	struct vport *input_vport;
->> +	u32 upcall_pid = 0;
->>  	u16 mru = 0;
->>  	u64 hash;
->>  	int len;
->> @@ -651,6 +654,10 @@ static int ovs_packet_cmd_execute(struct sk_buff *skb, struct genl_info *info)
->>  			       !!(hash & OVS_PACKET_HASH_L4_BIT));
->>  	}
->>  
->> +	if (a[OVS_PACKET_ATTR_UPCALL_PID])
->> +		upcall_pid = nla_get_u32(a[OVS_PACKET_ATTR_UPCALL_PID]);
->> +	OVS_CB(packet)->upcall_pid = upcall_pid;
-> 
-> sorry for a late nit:
-> 
-> 	OVS_CB(packet)->upcall_pid =
-> 		nla_get_u32_default(a[OVS_PACKET_ATTR_UPCALL_PID], 0);
-> 
-> ?
+On (25/06/30 14:59), David Hildenbrand wrote:
+[..]
+>  static int zs_page_migrate(struct page *newpage, struct page *page,
+> @@ -1736,6 +1736,13 @@ static int zs_page_migrate(struct page *newpage, struct page *page,
+>  	unsigned long old_obj, new_obj;
+>  	unsigned int obj_idx;
+>  
+> +	/*
+> +	 * TODO: nothing prevents a zspage from getting destroyed while
+> +	 * isolated: we should disallow that and defer it.
+> +	 */
 
-No worries.  I was actually looking for ways to collapse this
-block, but somehow missed these "new" accessors.  I'll send a
-v2 a bit later today in case there will be no further feedback.
-
-Best regards, Ilya Maximets.
+Can you elaborate?
