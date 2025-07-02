@@ -1,63 +1,63 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 416D52F6F98;
-	Wed,  2 Jul 2025 23:03:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14FC22F85DF;
+	Wed,  2 Jul 2025 23:03:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751497430; cv=none; b=qQ4kxUWFgx7SGgzb0nwL+qtGwygj7oWUlj1ffSNuhcGXAtTTexueuNedxeZ9clM+pNbiAn0AqROcXi2RpPhr90y3S6pdlJ2mDr9AUe1u+f/J/kEPqbb2MvoiEglAXyBSE2KqUHxClINN8h7FnMj+pCb3wtkhWA4ucvNIJadK6Ck=
+	t=1751497433; cv=none; b=tbhDAkYrt8Jtd/Sp740GaQLxEKwXy3OnzmJcQrPa7fL/nDNHt2pOHQZ+VtQJxQ6XQjiqu3tRZxJ6vnaz3c3jJ29wDiGRSqqwSwrCFq++RK4hkwT5OcZxGL4kR/5Yjqc/1gG5V+1N0jwTNp3U7Vdgr4Z6uIRqghn8LunJvce5tPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751497430; c=relaxed/simple;
-	bh=s+C0yL1hXzubu2/nbnuUG6U6nRsLcXLdwHincapmv8g=;
+	s=arc-20240116; t=1751497433; c=relaxed/simple;
+	bh=2oCKa77MmvtjuzTFUyhx2spEW5JEAkYP0TnixHDrvQ0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hpi9uBI6FyN2Q7pvtt1SglaTX1AqBr7rn66JCYGlayIDTYXQvrQdRztRBVU2t/3ichIdYV8b33zBkEBfPksIu8aovXA0FNsqDYtSv6JDBsKZ4F5wvmqTNngkq8mr7GNCzFrGDKZwTeU2eYlA9iRVbqJokCG+HJe3NYGQsCj3Aug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nQVGKjuj; arc=none smtp.client-ip=209.85.208.50
+	 MIME-Version:Content-Type; b=UNpu+lJQPok2aty5RXNQpsBxLXP6e+7DtMEFQRQ49qCF/dAEyqoadkORCcoZAMBF8E5HQjFVgnK+8D18APe/aZfwOC+j9twKJsy8hKTs3dr+sWCSb8sPuETUW1byydcYvbE2kIYJzpugoj/CfvOZZp/az0ah7rEjP9rDtZw4SyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h6wMVUBN; arc=none smtp.client-ip=209.85.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nQVGKjuj"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-606a269d440so1563375a12.2;
-        Wed, 02 Jul 2025 16:03:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h6wMVUBN"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-607780f0793so1519562a12.2;
+        Wed, 02 Jul 2025 16:03:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751497427; x=1752102227; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1751497430; x=1752102230; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DZDY8jLX7yIHyfhWXatG/QVlYNUsLcUkgMuRqMMKogY=;
-        b=nQVGKjuj8OjPHDjGPLEUbPJYWFX9Joq5RCMbDKNhoUGVbk9jL2NaAcKwf81o6mnugo
-         Zz/Iq/YCjwQtfPhROLbWrLvF0ZOLfjhs3k1pVJnc42Yy6SSPu6xgLk5W6gQLQ0gcqWoj
-         BxTjLD1ey7tDP0f5qkPSVjr+rU/3PoSG0RoE/HEfyjRQ8Khc9QU63GlbMEJYujUcOsJW
-         qCXe47uPUzxEx9f5egey7z5odB+q9bdc2/TDEH2uw78a7zY+J2DGoUU3r8N5tbudFn5K
-         H2Qn5+XIdLjX9r0l3DZTfP+vJ9y/DEb3It6kN8ZZajj6E4/wzq9miSvwTdBAdJwLhuYQ
-         g1xA==
+        bh=JSMGUq00Wscsa5i+rwtOnSrfeZI1fF8spFiZz7cfc/s=;
+        b=h6wMVUBNKVE9ozZeXwb24Gt00oOBzlDo2x9jzINsHLymSym2HaHt8MDD+yqjjO1RzV
+         prnRwm6tzchVDUWS46QIcA8M5pgBnq1vVZCAy1fpFBwXzoTLIgTQEISIPFMOlhFqRRdy
+         AhMGexdKpDsJZV6AwiEDqZlTdDoHq2kjHTQsLFz4w/hmVozFsQZvoj95gHm8JuECKR0G
+         cGCPHnU8xj5DQoUGNz27dK4OvvHjc8S6e0sVor70OH6dBr1mlS+2N0H2PB9qaHud6CbN
+         n3q4iyLFoEM6nN2n2AneFGD5xO/DZEBhoOjIWxq8v8wICzHTYAZBzSAhL9O4BQ8SsVEq
+         OAaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751497427; x=1752102227;
+        d=1e100.net; s=20230601; t=1751497430; x=1752102230;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DZDY8jLX7yIHyfhWXatG/QVlYNUsLcUkgMuRqMMKogY=;
-        b=xCJ0Pgq6v4/yyPiKJxTYI0ysjkJ79JugD8xRqD9UD5P2qneKXzK3fy6yDItbSTyk6O
-         XX2ycOdZ8lkRaJDn2VvEgM8u13DLGvmTiPNRbwLkLyvDp34v4mqi8W6VB3HZKS5Qzepq
-         I2nJnd9mYe0oAfmNQTqdXqmhXlQ6Jo6zLSfghKvfegQqK+laH7p9lW1rdKtrCCNSUpTa
-         oAMk5FSdF8bfGtc2ZavZUBDPucIKmUzPD8ys9QoQpHGeWg4otF0El/2q1fxQma3e0ZVu
-         JmQdGvkGwnnarjygzxnWCLPhTssTDVHd6LWSgv5b+K6lyZIjQ6XecKnyktGiNzyi28rs
-         1cbA==
-X-Forwarded-Encrypted: i=1; AJvYcCUJ7fNZrLKzPSZaGRpm9Bo2LZ3BG3A3EiNR/c/1Aaqb87F2U2HVSg/EhADkJ9mXF6pGr8j6fQuCp/g=@vger.kernel.org, AJvYcCXeubnhJUIWq/5uF6Lschzz4dXsnX3XEIqAQajIGpKuq6SRLT4c3Ogx6OclEJWEs3uLmnZc7Vgvt4FH3xpo@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFppJWZWRIwKi3QEa2WzikWCiRzEfBf8woQMpmi73QyTwZ1035
-	gUOROVs0bkPxb28Sz+XYBOTg93BA5EE79Cc2OdnShYj772Zv1evCrcbUep5+jA==
-X-Gm-Gg: ASbGncs7pCBLeeMe7Wz/1v86WyZ5qgqelpYpzpr527G2dFhW34djLUJ31vVVMMDuIJX
-	gHUuP81nEOSnSuHjwzAoYUrp4OeSYjk1V9yRrlzVM2/LxFb8UngxtPdJBrJwZ3dyWyf7SL2YfK0
-	ofCCCreZsvVxzDAkaWk86EtgnisDHOO8D08XRjP+po93GrOFv0uUnav0PHTrDABDSKMaAZUISmD
-	MaUtOwN3jfsPIp4vMQTutG27+MsqiJmug+VVDucOdZBO1MUXm9+ao64brqw550DFMb8jlvqb4yO
-	leOfNcBtSM0y1JnNKWVtBhVEGPq7giRnWweN/ngjbncwoF10r7sYnFI49CjWAX3cc8oIGUOZx6h
-	p4DQdogAyGQUdlFPTs5x+p8j1ls6prlO/
-X-Google-Smtp-Source: AGHT+IHIN88VU1mwRV0L8bi40hMCRkMIx/OwlCCCnwoljUwi2PoJ3thzEpuuVI9+SjCK0tqbS/MhBA==
-X-Received: by 2002:a05:6402:4311:b0:606:e469:2532 with SMTP id 4fb4d7f45d1cf-60e7454922dmr106961a12.10.1751497426434;
-        Wed, 02 Jul 2025 16:03:46 -0700 (PDT)
+        bh=JSMGUq00Wscsa5i+rwtOnSrfeZI1fF8spFiZz7cfc/s=;
+        b=fA9/FCB2tdw8g3BQB3+hz+g7bm8XFw/aL+u1cqed6lWhk3Bti/Wu6HIGuUolz6RcpR
+         EUPcXzM099D4I07rojtdrz5TUwmVI5Uj+9B5yKbRi+iZ+RFBk01z+XOaOcmqVSoz2Jex
+         S2AyYKLNvj3oYivdtOgkEq7Yzl3FaTAjyvv/xvwt7REf5XbHfM7yp2GwPrQ9E2xz6jMD
+         g0MI1tPOv7MrZRzPNOZ1OfceN6N84byFCEqMDdKSiUI3JVSvYLYAoddIRYfPb2L4i2yB
+         iO8aRAJdrFIdA5Sgay0+WF7PwPRR2vIXv7OHlmqR57NzmZc3kiC/cy8vRVhOJFuYqHqB
+         lmFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWUXO6owm2dv9OXcNyHEBjAJbK4MFKVJoiDG/CtMv3XSSbn284RJaJGRfIoAYFzVuwMhII4cJ2ZRtc=@vger.kernel.org, AJvYcCXagHfJid48neSqvXEtbeWI8hrvioWZNx7Zh7QdZzZAfv5g3jOImiZF0uVJB6HYLNTxybDSYyPnOuOHeKsE@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyzoh/A0RHhUhMUF9ljj+vgaestwLYVwjPqHAXX2l49OVj5uOfX
+	na4LWCw6m2zswk9glaqwzL8FEMCy7HD+ji3ylN714iFM8QIHz/C2IkE/
+X-Gm-Gg: ASbGnct8uTYSNoA9gAS36/koB6YWfQ6gVlm6hLYMA1U30QGywLXe+pQwpp119XgTdIm
+	f0EuvTzMKrXlEJ7/NO0ziSuwfug7FTf3Fx40HjhpOO9P0F+vLTCVTO+/rOYZ80WWwdor4aD/bqZ
+	9u5flWXokKmaTSrIoECqW3Q/7SnsjXQs9OAF71xsBJjWkIChdiXxfoQ/OhWtj0vR+o3DLj2yZXM
+	AcA8oKAfX509L2PLRmiJkO7t6EbgQ/24ajqIUhVrIr9CMwB4HegCx07POdY2wH2Ib1PaUGhYH3b
+	mTmHctEL9ZT6Ln4xnVTsg2r8qhtmc6Dp0ek+4pCUuj/TyNNn12tMoCCzO8YNr1yAYC3kc/PKspM
+	lTGXx8YWXLe3d7kEutWb160deWripgj0eP7l61GNHZyw=
+X-Google-Smtp-Source: AGHT+IE3HM/yk20/T+LgFmKx7sguDxopwCTI+CHO3W59kYUljAIEQBTlUvCK+ZgLTeBaGo4TuhgiKg==
+X-Received: by 2002:a05:6402:1914:b0:609:a671:ebb9 with SMTP id 4fb4d7f45d1cf-60e52cd6d6dmr1208843a12.5.1751497430072;
+        Wed, 02 Jul 2025 16:03:50 -0700 (PDT)
 Received: from localhost.localdomain (84-72-156-211.dclient.hispeed.ch. [84.72.156.211])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c8319e706sm10031469a12.47.2025.07.02.16.03.44
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c8319e706sm10031469a12.47.2025.07.02.16.03.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 16:03:45 -0700 (PDT)
+        Wed, 02 Jul 2025 16:03:49 -0700 (PDT)
 From: Lothar Rubusch <l.rubusch@gmail.com>
 To: lars@metafoo.de,
 	Michael.Hennerich@analog.com,
@@ -71,9 +71,9 @@ Cc: linux-iio@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	eraretuya@gmail.com,
 	l.rubusch@gmail.com
-Subject: [PATCH v11 6/8] iio: accel: adxl345: extend inactivity time for less than 1s
-Date: Wed,  2 Jul 2025 23:03:13 +0000
-Message-Id: <20250702230315.19297-7-l.rubusch@gmail.com>
+Subject: [PATCH v11 8/8] docs: iio: describe inactivity and free-fall detection on the ADXL345
+Date: Wed,  2 Jul 2025 23:03:15 +0000
+Message-Id: <20250702230315.19297-9-l.rubusch@gmail.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250702230315.19297-1-l.rubusch@gmail.com>
 References: <20250702230315.19297-1-l.rubusch@gmail.com>
@@ -83,413 +83,55 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Inactivity and free-fall events are essentially the same type of sensor
-events. Therefore, inactivity detection (normally set for periods between 1
-and 255 seconds) can be extended for shorter durations to support free-fall
-detection.
-
-For periods shorter than 1 second, the driver automatically configures the
-threshold and duration using the free-fall register. For periods longer
-than 1 second, it uses the inactivity threshold and duration using the
-inactivity registers.
-
-When using the free-fall register, the link bit is not set, which means
-auto-sleep cannot be enabled if activity detection is also active.
+Describe the inactivity detection additionally using the free-fall
+register. Due to the controversial discussions on the mailing list, this
+section of the documentation will be committed separately to allow for a
+more focused and detailed elaboration of the topic.
 
 Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
 ---
- drivers/iio/accel/adxl345_core.c | 201 +++++++++++++++++++++----------
- 1 file changed, 139 insertions(+), 62 deletions(-)
+ Documentation/iio/adxl345.rst | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel/adxl345_core.c
-index 7038a4effd08..614d29e3ed2e 100644
---- a/drivers/iio/accel/adxl345_core.c
-+++ b/drivers/iio/accel/adxl345_core.c
-@@ -40,12 +40,15 @@
- #define ADXL345_REG_INACT_AXIS_MSK	GENMASK(2, 0)
- #define ADXL345_REG_ACT_ACDC_MSK	BIT(7)
- #define ADXL345_REG_INACT_ACDC_MSK	BIT(3)
-+#define ADXL345_REG_NO_ACDC_MSK		0x00
- #define ADXL345_POWER_CTL_INACT_MSK	(ADXL345_POWER_CTL_AUTO_SLEEP | ADXL345_POWER_CTL_LINK)
+diff --git a/Documentation/iio/adxl345.rst b/Documentation/iio/adxl345.rst
+index 8ee01b8b87f4..c5525267ea12 100644
+--- a/Documentation/iio/adxl345.rst
++++ b/Documentation/iio/adxl345.rst
+@@ -150,6 +150,31 @@ functions, so that one follows the other. The auto-sleep function puts the
+ sensor into sleep mode when inactivity is detected, reducing power consumption
+ to the sub-12.5 Hz rate.
  
- #define ADXL345_TAP_Z_EN		BIT(0)
- #define ADXL345_TAP_Y_EN		BIT(1)
- #define ADXL345_TAP_X_EN		BIT(2)
- 
-+#define ADXL345_ACT_INACT_NO_AXIS_EN	0x00
++The inactivity time is configurable between 1 and 255 seconds. In addition to
++inactivity detection, the sensor also supports free-fall detection, which, from
++the IIO perspective, is treated as a fall in magnitude across all axes. In
++sensor terms, free-fall is defined using an inactivity period ranging from 0.000
++to 1.000 seconds.
 +
- #define ADXL345_INACT_Z_EN		BIT(0)
- #define ADXL345_INACT_Y_EN		BIT(1)
- #define ADXL345_INACT_X_EN		BIT(2)
-@@ -88,6 +91,7 @@ enum adxl345_activity_type {
- 	ADXL345_INACTIVITY,
- 	ADXL345_ACTIVITY_AC,
- 	ADXL345_INACTIVITY_AC,
-+	ADXL345_INACTIVITY_FF,
- };
- 
- static const unsigned int adxl345_act_int_reg[] = {
-@@ -95,6 +99,7 @@ static const unsigned int adxl345_act_int_reg[] = {
- 	[ADXL345_INACTIVITY] = ADXL345_INT_INACTIVITY,
- 	[ADXL345_ACTIVITY_AC] = ADXL345_INT_ACTIVITY,
- 	[ADXL345_INACTIVITY_AC] = ADXL345_INT_INACTIVITY,
-+	[ADXL345_INACTIVITY_FF] = ADXL345_INT_FREE_FALL,
- };
- 
- static const unsigned int adxl345_act_thresh_reg[] = {
-@@ -102,6 +107,7 @@ static const unsigned int adxl345_act_thresh_reg[] = {
- 	[ADXL345_INACTIVITY] = ADXL345_REG_THRESH_INACT,
- 	[ADXL345_ACTIVITY_AC] = ADXL345_REG_THRESH_ACT,
- 	[ADXL345_INACTIVITY_AC] = ADXL345_REG_THRESH_INACT,
-+	[ADXL345_INACTIVITY_FF] = ADXL345_REG_THRESH_FF,
- };
- 
- static const unsigned int adxl345_act_acdc_msk[] = {
-@@ -109,6 +115,7 @@ static const unsigned int adxl345_act_acdc_msk[] = {
- 	[ADXL345_INACTIVITY] = ADXL345_REG_INACT_ACDC_MSK,
- 	[ADXL345_ACTIVITY_AC] = ADXL345_REG_ACT_ACDC_MSK,
- 	[ADXL345_INACTIVITY_AC] = ADXL345_REG_INACT_ACDC_MSK,
-+	[ADXL345_INACTIVITY_FF] = ADXL345_REG_NO_ACDC_MSK,
- };
- 
- enum adxl345_odr {
-@@ -191,6 +198,9 @@ struct adxl345_state {
- 	u8 watermark;
- 	u8 fifo_mode;
- 
-+	u8 inact_threshold;
-+	u32 inact_time_ms;
++The driver behaves as follows:
++* If the configured inactivity period is 1 second or more, the driver uses the
++  sensor's inactivity register. This allows the event to be linked with
++  activity detection, use auto-sleep, and be either AC- or DC-coupled.
 +
- 	u32 tap_duration_us;
- 	u32 tap_latent_us;
- 	u32 tap_window_us;
-@@ -335,10 +345,72 @@ static int adxl345_set_measure_en(struct adxl345_state *st, bool en)
- 
- /* activity / inactivity */
- 
-+static int adxl345_set_inact_threshold(struct adxl345_state *st,
-+				       unsigned int threshold)
-+{
-+	int ret;
++* If the inactivity period is less than 1 second, the event is treated as plain
++  inactivity or free-fall detection. In this case, auto-sleep and coupling
++  (AC/DC) are not applied.
 +
-+	st->inact_threshold = min(U8_MAX, threshold);
++* If an inactivity time of 0 seconds is configured, the driver selects a
++  heuristically determined default period (greater than 1 second) to optimize
++  power consumption. This also uses the inactivity register.
 +
-+	ret = regmap_write(st->regmap,
-+			   adxl345_act_thresh_reg[ADXL345_INACTIVITY],
-+			   st->inact_threshold);
-+	if (ret)
-+		return ret;
++Note: It is recommended to use the activity, inactivity, or free-fall registers
++when operating with an ODR between 12.5 Hz and 400 Hz. According to the
++datasheet, the recommended free-fall threshold is between 300 mg and 600 mg
++(register values 0x05 to 0x09), and the suggested free-fall time ranges from
++100 ms to 350 ms (register values 0x14 to 0x46).
 +
-+	return regmap_write(st->regmap,
-+			    adxl345_act_thresh_reg[ADXL345_INACTIVITY_FF],
-+			    st->inact_threshold);
-+}
-+
-+static int adxl345_set_default_time(struct adxl345_state *st)
-+{
-+	int max_boundary = U8_MAX;
-+	int min_boundary = 10;
-+	enum adxl345_odr odr;
-+	unsigned int regval;
-+	unsigned int val;
-+	int ret;
-+
-+	/* Generated inactivity time based on ODR */
-+	ret = regmap_read(st->regmap, ADXL345_REG_BW_RATE, &regval);
-+	if (ret)
-+		return ret;
-+
-+	odr = FIELD_GET(ADXL345_BW_RATE_MSK, regval);
-+	val = clamp(max_boundary - adxl345_odr_tbl[odr][0],
-+		    min_boundary, max_boundary);
-+	st->inact_time_ms = MILLI * val;
-+
-+	/* Inactivity time in s */
-+	return regmap_write(st->regmap, ADXL345_REG_TIME_INACT, val);
-+}
-+
-+static int adxl345_set_inactivity_time(struct adxl345_state *st, u32 val_int)
-+{
-+	st->inact_time_ms = MILLI * val_int;
-+
-+	return regmap_write(st->regmap, ADXL345_REG_TIME_INACT, val_int);
-+}
-+
-+static int adxl345_set_freefall_time(struct adxl345_state *st, u32 val_fract)
-+{
-+	/*
-+	 * Datasheet max. value is 255 * 5000 us = 1.275000 seconds.
-+	 *
-+	 * Recommended values between 100ms and 350ms (0x14 to 0x46)
-+	 */
-+	st->inact_time_ms = DIV_ROUND_UP(val_fract, MILLI);
-+
-+	return regmap_write(st->regmap, ADXL345_REG_TIME_FF,
-+			    DIV_ROUND_CLOSEST(val_fract, 5));
-+}
-+
- /**
-  * adxl345_set_inact_time - Configure inactivity time explicitly or by ODR.
-  * @st: The sensor state instance.
-- * @val_s: A desired time value, between 0 and 255.
-+ * @val_int: The inactivity time, integer part.
-+ * @val_fract: The inactivity time, fractional part when val_int is 0.
-  *
-  * Inactivity time can be configured between 1 and 255 seconds. If a user sets
-  * val_s to 0, a default inactivity time is calculated automatically (since 0 is
-@@ -359,26 +431,24 @@ static int adxl345_set_measure_en(struct adxl345_state *st, bool en)
-  *
-  * Return: 0 or error value.
-  */
--static int adxl345_set_inact_time(struct adxl345_state *st, u32 val_s)
-+static int adxl345_set_inact_time(struct adxl345_state *st, u32 val_int,
-+				  u32 val_fract)
- {
--	int max_boundary = U8_MAX;
--	int min_boundary = 10;
--	unsigned int val = min(val_s, U8_MAX);
--	enum adxl345_odr odr;
--	unsigned int regval;
--	int ret;
--
--	if (val == 0) {
--		ret = regmap_read(st->regmap, ADXL345_REG_BW_RATE, &regval);
--		if (ret)
--			return ret;
--
--		odr = FIELD_GET(ADXL345_BW_RATE_MSK, regval);
--		val = clamp(max_boundary - adxl345_odr_tbl[odr][0],
--			    min_boundary, max_boundary);
-+	if (val_int > 0) {
-+		/* Time >= 1s, inactivity */
-+		return adxl345_set_inactivity_time(st, val_int);
-+	} else if (val_int == 0) {
-+		if (val_fract > 0) {
-+			/* Time < 1s, free-fall */
-+			return adxl345_set_freefall_time(st, val_fract);
-+		} else if (val_fract == 0) {
-+			/* Time == 0.0s */
-+			return adxl345_set_default_time(st);
-+		}
- 	}
- 
--	return regmap_write(st->regmap, ADXL345_REG_TIME_INACT, val);
-+	/* Do not support negative or wrong input. */
-+	return -EINVAL;
- }
- 
- /**
-@@ -401,6 +471,9 @@ static int adxl345_is_act_inact_ac(struct adxl345_state *st,
- 	bool coupling;
- 	int ret;
- 
-+	if (type == ADXL345_INACTIVITY_FF)
-+		return true;
-+
- 	ret = regmap_read(st->regmap, ADXL345_REG_ACT_INACT_CTRL, &regval);
- 	if (ret)
- 		return ret;
-@@ -509,6 +582,9 @@ static int adxl345_is_act_inact_en(struct adxl345_state *st,
- 		if (!en)
- 			return false;
- 		break;
-+	case ADXL345_INACTIVITY_FF:
-+		en = true;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -541,15 +617,20 @@ static int adxl345_set_act_inact_linkbit(struct adxl345_state *st,
- 	if (act_ac_en < 0)
- 		return act_ac_en;
- 
--	inact_en = adxl345_is_act_inact_en(st, ADXL345_INACTIVITY);
--	if (inact_en < 0)
--		return inact_en;
-+	if (type == ADXL345_INACTIVITY_FF) {
-+		inact_en = false;
-+	} else {
-+		inact_en = adxl345_is_act_inact_en(st, ADXL345_INACTIVITY);
-+		if (inact_en < 0)
-+			return inact_en;
-+
-+		inact_ac_en = adxl345_is_act_inact_en(st, ADXL345_INACTIVITY_AC);
-+		if (inact_ac_en < 0)
-+			return inact_ac_en;
- 
--	inact_ac_en = adxl345_is_act_inact_en(st, ADXL345_INACTIVITY_AC);
--	if (inact_ac_en < 0)
--		return inact_ac_en;
-+		inact_en = inact_en || inact_ac_en;
-+	}
- 
--	inact_en = inact_en || inact_ac_en;
- 	act_en = act_en || act_ac_en;
- 
- 	return regmap_assign_bits(st->regmap, ADXL345_REG_POWER_CTL,
-@@ -568,11 +649,15 @@ static int adxl345_set_act_inact_en(struct adxl345_state *st,
- 
- 	if (cmd_en) {
- 		/* When turning on, check if threshold is valid */
--		ret = regmap_read(st->regmap,
--				  adxl345_act_thresh_reg[type],
--				  &threshold);
--		if (ret)
--			return ret;
-+		if (type == ADXL345_ACTIVITY || type == ADXL345_ACTIVITY_AC) {
-+			ret = regmap_read(st->regmap,
-+					  adxl345_act_thresh_reg[type],
-+					  &threshold);
-+			if (ret)
-+				return ret;
-+		} else {
-+			threshold = st->inact_threshold;
-+		}
- 
- 		if (!threshold) /* Just ignore the command if threshold is 0 */
- 			return 0;
-@@ -615,6 +700,9 @@ static int adxl345_set_act_inact_en(struct adxl345_state *st,
- 	case ADXL345_INACTIVITY_AC:
- 		axis_ctrl = ADXL345_INACT_XYZ_EN;
- 		break;
-+	case ADXL345_INACTIVITY_FF:
-+		axis_ctrl = ADXL345_ACT_INACT_NO_AXIS_EN;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -881,7 +969,7 @@ static int adxl345_set_odr(struct adxl345_state *st, enum adxl345_odr odr)
- 		return ret;
- 
- 	/* update inactivity time by ODR */
--	return adxl345_set_inact_time(st, 0);
-+	return adxl345_set_inact_time(st, 0, 0);
- }
- 
- static int adxl345_find_range(struct adxl345_state *st, int val, int val2,
-@@ -918,12 +1006,6 @@ static int adxl345_set_range(struct adxl345_state *st, enum adxl345_range range)
- 	if (ret)
- 		return ret;
- 
--	ret = regmap_read(st->regmap,
--			  adxl345_act_thresh_reg[ADXL345_INACTIVITY],
--			  &inact_threshold);
--	if (ret)
--		return ret;
--
- 	ret = regmap_update_bits(st->regmap, ADXL345_REG_DATA_FORMAT,
- 				 ADXL345_DATA_FORMAT_RANGE,
- 				 FIELD_PREP(ADXL345_DATA_FORMAT_RANGE, range));
-@@ -934,6 +1016,7 @@ static int adxl345_set_range(struct adxl345_state *st, enum adxl345_range range)
- 		/ adxl345_range_factor_tbl[range];
- 	act_threshold = min(U8_MAX, max(1, act_threshold));
- 
-+	inact_threshold = st->inact_threshold;
- 	inact_threshold = inact_threshold * adxl345_range_factor_tbl[range_old]
- 		/ adxl345_range_factor_tbl[range];
- 	inact_threshold = min(U8_MAX, max(1, inact_threshold));
-@@ -943,8 +1026,7 @@ static int adxl345_set_range(struct adxl345_state *st, enum adxl345_range range)
- 	if (ret)
- 		return ret;
- 
--	return regmap_write(st->regmap, adxl345_act_thresh_reg[ADXL345_INACTIVITY],
--			   inact_threshold);
-+	return adxl345_set_inact_threshold(st, inact_threshold);
- }
- 
- static int adxl345_read_avail(struct iio_dev *indio_dev,
-@@ -1189,7 +1271,6 @@ static int adxl345_read_mag_value(struct adxl345_state *st,
- 				  int *val, int *val2)
- {
- 	unsigned int threshold;
--	unsigned int period;
- 	int ret;
- 
- 	switch (info) {
-@@ -1205,25 +1286,16 @@ static int adxl345_read_mag_value(struct adxl345_state *st,
- 			*val2 = MICRO;
- 			return IIO_VAL_FRACTIONAL;
- 		case IIO_EV_DIR_FALLING:
--			ret = regmap_read(st->regmap,
--					  adxl345_act_thresh_reg[type_inact],
--					  &threshold);
--			if (ret)
--				return ret;
--			*val = 62500 * threshold;
-+			*val = 62500 * st->inact_threshold;
- 			*val2 = MICRO;
- 			return IIO_VAL_FRACTIONAL;
- 		default:
- 			return -EINVAL;
- 		}
- 	case IIO_EV_INFO_PERIOD:
--		ret = regmap_read(st->regmap,
--				  ADXL345_REG_TIME_INACT,
--				  &period);
--		if (ret)
--			return ret;
--		*val = period;
--		return IIO_VAL_INT;
-+		*val = st->inact_time_ms;
-+		*val2 = MILLI;
-+		return IIO_VAL_FRACTIONAL;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -1246,14 +1318,12 @@ static int adxl345_write_mag_value(struct adxl345_state *st,
- 					    adxl345_act_thresh_reg[type_act],
- 					    val);
- 		case IIO_EV_DIR_FALLING:
--			return regmap_write(st->regmap,
--					    adxl345_act_thresh_reg[type_inact],
--					    val);
-+			return adxl345_set_inact_threshold(st, val);
- 		default:
- 			return -EINVAL;
- 		}
- 	case IIO_EV_INFO_PERIOD:
--		return adxl345_set_inact_time(st, val);
-+		return adxl345_set_inact_time(st, val, val2);
- 	default:
- 		return -EINVAL;
- 	}
-@@ -1666,6 +1736,17 @@ static int adxl345_push_event(struct iio_dev *indio_dev, int int_stat,
- 			return ret;
- 	}
- 
-+	if (FIELD_GET(ADXL345_INT_FREE_FALL, int_stat)) {
-+		ret = iio_push_event(indio_dev,
-+				     IIO_MOD_EVENT_CODE(IIO_ACCEL, 0,
-+							IIO_MOD_X_AND_Y_AND_Z,
-+							IIO_EV_TYPE_MAG,
-+							IIO_EV_DIR_FALLING),
-+				     ts);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	if (FIELD_GET(ADXL345_INT_WATERMARK, int_stat)) {
- 		samples = adxl345_get_samples(st);
- 		if (samples < 0)
-@@ -1904,15 +1985,11 @@ int adxl345_core_probe(struct device *dev, struct regmap *regmap,
- 		if (ret)
- 			return ret;
- 
--		ret = regmap_write(st->regmap, ADXL345_REG_TIME_INACT, 0x37);
--		if (ret)
--			return ret;
--
- 		ret = regmap_write(st->regmap, ADXL345_REG_THRESH_ACT, 6);
- 		if (ret)
- 			return ret;
- 
--		ret = regmap_write(st->regmap, ADXL345_REG_THRESH_INACT, 4);
-+		ret = adxl345_set_inact_threshold(st, 4);
- 		if (ret)
- 			return ret;
- 
+ In DC-coupled mode, the current acceleration magnitude is directly compared to
+ the values in the THRESH_ACT and THRESH_INACT registers to determine activity or
+ inactivity. In contrast, AC-coupled activity detection uses the acceleration
 -- 
 2.39.5
 
