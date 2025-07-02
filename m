@@ -1,155 +1,237 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A282FD58F;
-	Wed,  2 Jul 2025 15:32:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297842E7BAF;
+	Wed,  2 Jul 2025 15:33:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751470380; cv=none; b=I9MzhQKGMnzBO+2ziJHknBSnjJjA+xDlbfbR+Ki49M8sh+3nKQbBkxkTZH41xXOyjE3SPSwTKtvIpsd7r0Tdd61F7FyMdc+hYJXpNN0e7m/VWNV+WWw0Rwv1uZtvk6e81rsLKvv/Te1/NrmbK2/JRDV+vsCq+1xcyY3TsgwiwWM=
+	t=1751470403; cv=none; b=BECb2XRFnkudC/UfzFdWfs6RpG4O/D0+VlSI6PHnLHrQAWvwd94/7AS8T2CbLtoEad4x3j7u1EDO6L2bD1gPm+jJIXcGlwV3AUKCJtLawzSEiVTPzuy6t+lcYhNR2iX9lTrx6OQBhhhtVQ1gD1hJPudvIRjC6dLOJDPHsmfYVFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751470380; c=relaxed/simple;
-	bh=LDn2AqJEY5N2KJ57SfDAnTYINdlraVlvv2jEUoRc1DE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tWZl8TrCykbbgrxBmmlMF0pivweAY/W1dCiUN8zHDlXsK1nJR5YCFkGpSVX9Zfqm0dYkvp0swNs4E6tQaQXFcewSoPWIAQ6BtdMH3dYQNryR/ebyAhiTlXIIvmRIrzQEUtf/6dOnrOsiEixRu3/1DKuCfuxA1UnNS8UaF0OTfFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l34c7DPZ; arc=none smtp.client-ip=209.85.128.48
+	s=arc-20240116; t=1751470403; c=relaxed/simple;
+	bh=Aj62Fd0EdJ+ratg/xny/rQ3QaLZYtIjr8G4b56xNw/E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kOdHBfSs1Y3g3W2dVG7UEDaFsEEn+ZXgi68/5IizD/3Vlvp08nLmQKV/ggRn0rg8Qa6fpUqkry3EW/ZzNB5I58fN/ranl2t45OBjm9RtlvGwGTuFZzbmdeDMJMvgSCfBqDu82sPYttkAyMkBVXZTVyvxOVHMlucSkyySPj4UIUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Du41MWGD; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l34c7DPZ"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-450828af36aso2551925e9.1;
-        Wed, 02 Jul 2025 08:32:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Du41MWGD"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-235d6de331fso59551595ad.3;
+        Wed, 02 Jul 2025 08:33:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751470377; x=1752075177; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jZleJRf5RL+v6aSyfU03OLzhGc/iTMC1s/D6/TYQvV8=;
-        b=l34c7DPZza8g/H5kGSjna/chlKlTcPU+8s+FipFXCQ7yqsWhFgHUuEm65TF0nGpSoC
-         ck6DTxCVAG9ADMR+cPWsNeR8OMPt24u7n7ic31vIRB+VDpkUdhZSqUVw+odigMy/u+PQ
-         /z87tL9wRt0OsX+EDhgHonHX03UmJckmdAr8OSSA0H3X8Rm1lPhQjVIZaNJ0MwWcQnBF
-         8BbMSmJ8cKeCESw9NYfVM3M4FWLRF6OyZjUh5iZ/rsUo1thJpGIbW9E42tvxgmXeJ5hM
-         zBh/ZS0bDn/H9qlc9lEAOzspDJxdS8M+4Z7r65A6j2J4jPooIYledtiwaVQ+mphk8ZdX
-         tboQ==
+        d=gmail.com; s=20230601; t=1751470401; x=1752075201; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=E1EH/x0hqLVEztTMm5hLeKJHePzrbb36LWWaQlCSnz8=;
+        b=Du41MWGDH9RTAEtojXKV6tFAqFjvAwX5BpcmZyM+1M+0qtiYYRTpXsyoQ15mbzkhfu
+         DKjBGLx/0j8vHOMMD8DRZbda5FzxFkbkPZXyywJbddeXMZfAcPZ1ece8PseAg0fY8Zi5
+         zSXF0llBupGqIXTkZFgt54nry/PRoa798hj8uO2j9sx7mGZLnPfhtImacnZc5vydQ7wg
+         C61geQ4WwRo9fGTpTR+hw5hK7f5rz0/M/TnDYBfh5Sk3KRgl6vGaUMp8vpOv49IcByiI
+         7G6+D425e9uEFD6lKkmVxf60hBz5aVFFCYfankLyilADUbUHMnt8u2yZ57kI3OTLXIqW
+         0DnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751470377; x=1752075177;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jZleJRf5RL+v6aSyfU03OLzhGc/iTMC1s/D6/TYQvV8=;
-        b=mVGh/CIRoNruutuK873dE1PtajwKOV3FznJ8ApI3McU1UmA4Zs5n9hY5v0ZNOdze1I
-         RhhArzfxX3LRluCmCJZCx0zNjGl4Uzd2ElIkCq/CKRJJtJz7TVmZO6peBkaPl2aWFCdA
-         otdNIVD0eNRfgXWv8PyL2dHTw8q6wF3K7I4o8yUCinu4FJF+gDkOelhiJpmIkwZwGpMK
-         7du8ko4CldTknbRbfMIQX+zZnVaeVYsYRiR87GRKT5bSGAE/MdDNJm3RoyP49p7Lb5Uh
-         LR7ctdwBC1PxCPj5reW1+UQwf17l31XvrmMsvfkIzBOKB03TGbDnbdbbkI03fAtrkwvE
-         8UuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU0HHtnYtefu+ov4s/IaegdprJwTjUKZlK95ktuymV5rkV1yONF0zvkqUstYiwnn7FAOaTsVb0kTdo=@vger.kernel.org, AJvYcCWHQxamImwFeywcIYS/6h86q6V/ZdRYVjoQTOna5N2v57J3xVwCntC7T5FsbkhdfIt93ljV7yMwy/UjRzG+@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAdkSCDb+fw/UMu8QkphIiK1Ozl1VC+E7/64uSKzYuQ4o2lFRS
-	VItPez21xgpidSnHkBv6QO/Eo+aLmMgT6lmq5RmkOA3Po9epLX2rlvI=
-X-Gm-Gg: ASbGncvBlmNUoiq093Ytme/omdr8gKcPyACyh3JVJd4WR8ZSDx0itZr8LKcqysou2h1
-	Cepd0BUf1TenCLIQV2vYQzL1hFKWmcKB43pNiEFDhJtKxb3VT7vvTfviVNptC+uvonmpE7XMTuS
-	pAxuWRIMcBO87oZWElNOrwIGGjKs8tL5sJQsRLo4CfcATMCp06NR3cMTqS6hCmA7Kpg2gb2uRIW
-	flKxT/HzHsVVkh6IM9vNGd2xpCMs5FHqu75G/c6VtPqkP87mGgo4YIo3r9G/LuH0L2FizuCR4An
-	gaw1WWIKy2PuExODsoTHTMfwe/Hg0Yi/DBd6g6hffB8Wlke6wX43RDZcbbF+Xv39MKL8KhBQC83
-	vug1cHTnjrgbInsvMQsGpW/JGiQ==
-X-Google-Smtp-Source: AGHT+IHaQbogFU3g7rZ9zyrbww17cgDVv+9tBrm91hDtbaYKc8Y9ausCHDwiYbYKoFeazI9fs8cMFQ==
-X-Received: by 2002:a05:600c:1c1f:b0:453:7011:fce3 with SMTP id 5b1f17b1804b1-454a370cdacmr15831705e9.5.1751470376728;
-        Wed, 02 Jul 2025 08:32:56 -0700 (PDT)
-Received: from localhost (148.red-80-39-52.staticip.rima-tde.net. [80.39.52.148])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7fadf3sm16634440f8f.34.2025.07.02.08.32.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jul 2025 08:32:56 -0700 (PDT)
-Message-ID: <02ffd0a2-3036-475c-9e23-55d706eec7ea@gmail.com>
-Date: Wed, 2 Jul 2025 17:32:55 +0200
+        d=1e100.net; s=20230601; t=1751470401; x=1752075201;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=E1EH/x0hqLVEztTMm5hLeKJHePzrbb36LWWaQlCSnz8=;
+        b=SKVzcgBbdxn9IeRkHy6S5BuwiP0irr/29Uk3lAN65a7C1z03VzAErx6QeCQhXVPooK
+         w6zSjjYH+AegW2zUq5PDatlx86HVS1n0lEIg4DIpwBTyh3YV0/hbeunXMC2WLxqolab2
+         HloTax+AQAp7Nc1rtUmTpo1MM6bQTulZOkLT7rQ/ciTQUKFcaf2F2fecfHQzVCIYYTCd
+         6e++XQ/yE+RkzBEeN9yl6rtjY0+SkCEIqu/TXLvWa6LkxPESy2h0UTll+fyZjWohur/P
+         XVanHchpCqPkOPP8NfPL3DOCW6wmC2jDyrPLDcOOv7CtXCkqsPg7cp11HCSidO8ldrOR
+         HIlw==
+X-Forwarded-Encrypted: i=1; AJvYcCXKTwnvc6XKGmW7wJpJAkz097S5yeDhmaZ6kbke8elGRCj0FEBuxroD2QrCMuNw+Yh/Y83pSA5vdWo3/i8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOG3QXYUHEZq7RXzamf+NwL19q4GhfrTUTORDRZq0Lbp/e72us
+	vHUgQs8m7c4ePyg9/SXulQeNy44yXa34xqi4xGowiLLefb65X/D8iqxgwIohRIcXsEs=
+X-Gm-Gg: ASbGncsr+dveuZhn9IuR4NjL6NQVUpdHfCJ4gY2TU/oFZ/2FiGOCfaOoq1Yt5WGRyf9
+	kFFJyIzRLV/9dVZu0uCUR9MYOOhRWT112X4v+yhzHxL+YBH2ZS9Lzi1QMEiR7LOwzexJVdOJseJ
+	LkPfrTpX0AxRNSNb05YefXPsAls4ZDhJFXP08k05s5UOwqA0DN6KtqM95df275NRTqy1VLglxmT
+	wagrGvQ1qxO+aNuFlY37mC/V2PTwg6rKVobB0JbOMYPdyVjSqxAj+3nvhzSu2ex9Blp1NggKPof
+	c1kU+85OJtqxpvdADeKRyosbIQl+VlXUNiWCFlfeL6k5W+wT+ZWpRdb9Q4QqSTo3OySJ+CgmmDI
+	V
+X-Google-Smtp-Source: AGHT+IGeKN0mY3ixdNXqrHP5b6d6Qr4CNStUVGGtIlA+/rTKBFeorHdTl8pqiv+lDFmFNXENyUADrQ==
+X-Received: by 2002:a17:903:40cf:b0:234:f4da:7eef with SMTP id d9443c01a7336-23c6e5826e1mr59257965ad.52.1751470400941;
+        Wed, 02 Jul 2025 08:33:20 -0700 (PDT)
+Received: from localhost.localdomain ([121.185.186.233])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb39bf5fsm140889545ad.115.2025.07.02.08.33.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 08:33:20 -0700 (PDT)
+From: Jeongjun Park <aha310510@gmail.com>
+To: stable@vger.kernel.org
+Cc: urezki@gmail.com,
+	akpm@linux-foundation.org,
+	edumazet@google.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Jeongjun Park <aha310510@gmail.com>
+Subject: [PATCH 6.15.y] mm/vmalloc: fix data race in show_numa_info()
+Date: Thu,  3 Jul 2025 00:33:12 +0900
+Message-ID: <20250702153312.351080-1-aha310510@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] MAINTAINERS: standardize git.kernel.org URLs
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- DOC ML <linux-doc@vger.kernel.org>, KERNEL ML <linux-kernel@vger.kernel.org>
-References: <20250625142017.237949-1-xose.vazquez@gmail.com>
- <87a55vag0l.fsf@trenco.lwn.net>
-Content-Language: en-US, en-GB, es-ES
-From: Xose Vazquez Perez <xose.vazquez@gmail.com>
-In-Reply-To: <87a55vag0l.fsf@trenco.lwn.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/25/25 7:27 PM, Jonathan Corbet wrote:
+commit 5c5f0468d172ddec2e333d738d2a1f85402cf0bc upstream.
 
-> Xose Vazquez Perez <xose.vazquez@gmail.com> writes:
-> 
->> replace https: with git:, delete trailing /, and identify repos as "git"
->>
->> Cc: Jonathan Corbet <corbet@lwn.net> (maintainer:DOCUMENTATION)
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: DOC ML <linux-doc@vger.kernel.org> (open list:DOCUMENTATION)
->> Cc: KERNEL ML <linux-kernel@vger.kernel.org> (open list)
->> Signed-off-by: Xose Vazquez Perez <xose.vazquez@gmail.com>
->> ---
->>   MAINTAINERS | 50 +++++++++++++++++++++++++-------------------------
->>   1 file changed, 25 insertions(+), 25 deletions(-)
+The following data-race was found in show_numa_info():
 
-> So ... we're changing GitHub URLs from git: to https:, and Gitlab URLs
-> from https: to git:?
-> 
-> Certainly we want to fix URLs that are broken, but is there any real
-> reason to churn up the MAINTAINERS file to "fix" URLs that work?
+==================================================================
+BUG: KCSAN: data-race in vmalloc_info_show / vmalloc_info_show
 
-The reason was to be *consistent* with the rest of the entries.
-Because most of them(380) are using git:, vs 22 for https:
+read to 0xffff88800971fe30 of 4 bytes by task 8289 on cpu 0:
+ show_numa_info mm/vmalloc.c:4936 [inline]
+ vmalloc_info_show+0x5a8/0x7e0 mm/vmalloc.c:5016
+ seq_read_iter+0x373/0xb40 fs/seq_file.c:230
+ proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
+....
 
-$ grep git.kernel.org MAINTAINERS | sed 's#://#:// #' | awk '{print $3}' | sort | uniq -c | sort -n
-       1 git.kernel.org/pub/scm/linux/kernel/git/tj/sched_ext.git
-      22 https://
-     380 git://
+write to 0xffff88800971fe30 of 4 bytes by task 8287 on cpu 1:
+ show_numa_info mm/vmalloc.c:4934 [inline]
+ vmalloc_info_show+0x38f/0x7e0 mm/vmalloc.c:5016
+ seq_read_iter+0x373/0xb40 fs/seq_file.c:230
+ proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
+....
 
-But Greg has some concerns about this protocol:
-https://lore.kernel.org/lkml/2025062654-lubricant-lettuce-3405@gregkh/
-"This bypasses the mirror systems in place with the https: protocol,
-please do not do this without a lot of justification and agreement of
-the hosting providers involved as they will have a large increase in
-resources if this were to change."
+value changed: 0x0000008f -> 0x00000000
+==================================================================
 
-So, the right patch should replace git://git.kernel.org with https://git.kernel.org in all the tree.
-$ git grep -l "git://git.kernel.org"
-Documentation/admin-guide/LSM/apparmor.rst
-Documentation/admin-guide/kdump/kdump.rst
-Documentation/admin-guide/reporting-issues.rst
-Documentation/admin-guide/workload-tracing.rst
-Documentation/arch/arm/keystone/knav-qmss.rst
-Documentation/dev-tools/sparse.rst
-Documentation/filesystems/bcachefs/SubmittingPatches.rst
-Documentation/filesystems/erofs.rst
-Documentation/filesystems/f2fs.rst
-Documentation/maintainer/pull-requests.rst
-Documentation/mm/hwpoison.rst
-Documentation/process/adding-syscalls.rst
-Documentation/process/maintainer-kvm-x86.rst
-Documentation/process/submitting-patches.rst
-Documentation/sound/hd-audio/notes.rst
-Documentation/timers/no_hz.rst
-Documentation/translations/it_IT/process/adding-syscalls.rst
-Documentation/translations/it_IT/process/submitting-patches.rst
-Documentation/translations/sp_SP/process/adding-syscalls.rst
-Documentation/translations/sp_SP/process/maintainer-kvm-x86.rst
-Documentation/translations/sp_SP/process/submitting-patches.rst
-Documentation/translations/zh_CN/admin-guide/reporting-issues.rst
-Documentation/translations/zh_CN/dev-tools/sparse.rst
-Documentation/translations/zh_CN/how-to.rst
-Documentation/translations/zh_CN/maintainer/pull-requests.rst
-Documentation/translations/zh_CN/mm/hwpoison.rst
-Documentation/translations/zh_CN/process/submitting-patches.rst
-Documentation/translations/zh_TW/admin-guide/reporting-issues.rst
-Documentation/translations/zh_TW/dev-tools/sparse.rst
-Documentation/translations/zh_TW/process/submitting-patches.rst
-MAINTAINERS
-drivers/net/wireless/intel/iwlwifi/iwl-drv.c
-scripts/get_maintainer.pl
-scripts/package/debian/copyright
-tools/tracing/rtla/README.txt
-tools/usb/usbip/src/usbip.c
-tools/verification/rv/README.txt
+According to this report,there is a read/write data-race because
+m->private is accessible to multiple CPUs.  To fix this, instead of
+allocating the heap in proc_vmalloc_init() and passing the heap address to
+m->private, vmalloc_info_show() should allocate the heap.
+
+Link: https://lkml.kernel.org/r/20250508165620.15321-1-aha310510@gmail.com
+Fixes: 8e1d743 ("mm: vmalloc: support multiple nodes in vmallocinfo")
+Signed-off-by: Jeongjun Park <aha310510@gmail.com>
+Suggested-by: Eric Dumazet <edumazet@google.com>
+Suggested-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+---
+ mm/vmalloc.c | 63 +++++++++++++++++++++++++++++-----------------------
+ 1 file changed, 35 insertions(+), 28 deletions(-)
+
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 00cf1b575c89..3fb534dcf14d 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -3100,7 +3100,7 @@ static void clear_vm_uninitialized_flag(struct vm_struct *vm)
+ 	/*
+ 	 * Before removing VM_UNINITIALIZED,
+ 	 * we should make sure that vm has proper values.
+-	 * Pair with smp_rmb() in show_numa_info().
++	 * Pair with smp_rmb() in vread_iter() and vmalloc_info_show().
+ 	 */
+ 	smp_wmb();
+ 	vm->flags &= ~VM_UNINITIALIZED;
+@@ -4934,28 +4934,29 @@ bool vmalloc_dump_obj(void *object)
+ #endif
+ 
+ #ifdef CONFIG_PROC_FS
+-static void show_numa_info(struct seq_file *m, struct vm_struct *v)
+-{
+-	if (IS_ENABLED(CONFIG_NUMA)) {
+-		unsigned int nr, *counters = m->private;
+-		unsigned int step = 1U << vm_area_page_order(v);
+ 
+-		if (!counters)
+-			return;
++/*
++ * Print number of pages allocated on each memory node.
++ *
++ * This function can only be called if CONFIG_NUMA is enabled
++ * and VM_UNINITIALIZED bit in v->flags is disabled.
++ */
++static void show_numa_info(struct seq_file *m, struct vm_struct *v,
++				 unsigned int *counters)
++{
++	unsigned int nr;
++	unsigned int step = 1U << vm_area_page_order(v);
+ 
+-		if (v->flags & VM_UNINITIALIZED)
+-			return;
+-		/* Pair with smp_wmb() in clear_vm_uninitialized_flag() */
+-		smp_rmb();
++	if (!counters)
++		return;
+ 
+-		memset(counters, 0, nr_node_ids * sizeof(unsigned int));
++	memset(counters, 0, nr_node_ids * sizeof(unsigned int));
+ 
+-		for (nr = 0; nr < v->nr_pages; nr += step)
+-			counters[page_to_nid(v->pages[nr])] += step;
+-		for_each_node_state(nr, N_HIGH_MEMORY)
+-			if (counters[nr])
+-				seq_printf(m, " N%u=%u", nr, counters[nr]);
+-	}
++	for (nr = 0; nr < v->nr_pages; nr += step)
++		counters[page_to_nid(v->pages[nr])] += step;
++	for_each_node_state(nr, N_HIGH_MEMORY)
++		if (counters[nr])
++			seq_printf(m, " N%u=%u", nr, counters[nr]);
+ }
+ 
+ static void show_purge_info(struct seq_file *m)
+@@ -4983,6 +4984,10 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
+ 	struct vmap_area *va;
+ 	struct vm_struct *v;
+ 	int i;
++	unsigned int *counters;
++
++	if (IS_ENABLED(CONFIG_NUMA))
++		counters = kmalloc(nr_node_ids * sizeof(unsigned int), GFP_KERNEL);
+ 
+ 	for (i = 0; i < nr_vmap_nodes; i++) {
+ 		vn = &vmap_nodes[i];
+@@ -4999,6 +5004,11 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
+ 			}
+ 
+ 			v = va->vm;
++			if (v->flags & VM_UNINITIALIZED)
++				continue;
++
++			/* Pair with smp_wmb() in clear_vm_uninitialized_flag() */
++			smp_rmb();
+ 
+ 			seq_printf(m, "0x%pK-0x%pK %7ld",
+ 				v->addr, v->addr + v->size, v->size);
+@@ -5033,7 +5043,9 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
+ 			if (is_vmalloc_addr(v->pages))
+ 				seq_puts(m, " vpages");
+ 
+-			show_numa_info(m, v);
++			if (IS_ENABLED(CONFIG_NUMA))
++				show_numa_info(m, v, counters);
++
+ 			seq_putc(m, '\n');
+ 		}
+ 		spin_unlock(&vn->busy.lock);
+@@ -5043,19 +5055,14 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
+ 	 * As a final step, dump "unpurged" areas.
+ 	 */
+ 	show_purge_info(m);
++	if (IS_ENABLED(CONFIG_NUMA))
++		kfree(counters);
+ 	return 0;
+ }
+ 
+ static int __init proc_vmalloc_init(void)
+ {
+-	void *priv_data = NULL;
+-
+-	if (IS_ENABLED(CONFIG_NUMA))
+-		priv_data = kmalloc(nr_node_ids * sizeof(unsigned int), GFP_KERNEL);
+-
+-	proc_create_single_data("vmallocinfo",
+-		0400, NULL, vmalloc_info_show, priv_data);
+-
++	proc_create_single("vmallocinfo", 0400, NULL, vmalloc_info_show);
+ 	return 0;
+ }
+ module_init(proc_vmalloc_init);
+--
