@@ -1,131 +1,215 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FB3128A71F
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:38:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FC7729CB2D;
+	Wed,  2 Jul 2025 14:39:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751467133; cv=none; b=td8aw3OxNXIHOe/NMUiFHJKcHq4vK5k/m68Z+1iYT9oYgZRV/bOuUMVORlWclrS3akSTFLRuTO/H+M/UOIQVD+MJvm9eXTLOAR2wljziGOBQA9tB7HJks7q3TBlYlIfMfahS0MA9crgPx7/CibiFaryfLmxkbwbf+YZrFpFXY7k=
+	t=1751467163; cv=none; b=uEk+tYF/VOxINGQjdTwKMXAK87PYco1BSv8UjGEb1NzNvb9y4BLR8PAvb15XYJm64GREoNbjcdvqAw66Y3S+2Q7iVnGGmxYWfKPCnuCpMKfW/NiAxPxRkxrNbePSUIdqFubO5uMWI9AsGoaG/eaSnE5zfSpeQ20PmjIqFwjlkys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751467133; c=relaxed/simple;
-	bh=wZUs0Lg9nLG5vj3a0ZB7yNj+yaPuo6lcWjmwj8/JImo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JtoDGABtJfSyyesDvHh1zORoKEw1fjQxCbaN0qZ5hiqKYFx+NQKJJck5LcVp7/S/S1kIznemGmm1WEfADh8h7r29OYISf09hERyth7ZPVooBd98vx9e4pURRNSTv24dBnkf+jy5qeDzRjBwIDSzWPqA08Q/OYpKPf1i5+/9Gayw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Oa4Y/b/4; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751467163; c=relaxed/simple;
+	bh=6pewEc5UG+XE1jh83JWAjxYS1jsdTJ0WsEn5Uctlnc0=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=C8DN0vH4adnJCLIN9lUG/sHgTVvKuQfYjGA93VQ6l5xoG/XCz+oM5Z6edCC9iQlsHVG8OdQEET8kQpMUKCAeaokETm5vJu4UcUa+LC0QV48b1q+WEQTrrmPjCV2fklzW9TXMk+fm8CbyLUrQZ5GdskZQno2tflrLJYEked7PiL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=DXZ89xVF; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Oa4Y/b/4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751467130;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jsW6zqBgtCDTnvN34Xc+Lxt07USTsTvI2l+xYg+WY9U=;
-	b=Oa4Y/b/4MHUa5BR7YnPi7+LHD02ZjKVS4Lm0LATlTDDYjKOBtiL16TnpC3Fbubl9smiWBh
-	xGmNjf49aFGIibBpjLrMGycGYv8KpyFiC3MwLubuHkBKp0NE8wLNfe4k/36Xw+O7iX2jkn
-	pM6IbouLxY8BowVwcduj0pvvy9TlvzE=
-Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com
- [209.85.167.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-530-FmDmaMDPN8i-4cA9eESOAQ-1; Wed, 02 Jul 2025 10:38:49 -0400
-X-MC-Unique: FmDmaMDPN8i-4cA9eESOAQ-1
-X-Mimecast-MFC-AGG-ID: FmDmaMDPN8i-4cA9eESOAQ_1751467128
-Received: by mail-oi1-f200.google.com with SMTP id 5614622812f47-40b0a248ce8so4065022b6e.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 07:38:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751467128; x=1752071928;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jsW6zqBgtCDTnvN34Xc+Lxt07USTsTvI2l+xYg+WY9U=;
-        b=etmKSfrYfnz65ZzQK/bqVjFdSzxMaUPq3K3R4fFCXath4+bVMn01jB0BQtJQDSQTVn
-         1jeMbHGgG6rkrUe1zbhSOorSsKVBpXm7s9az2zmZDFTQgtvmZLdBFHFXBVXfDu4U9vNF
-         xZeT+zmAU1VXYmKZpUYqNyfVutOSybkdTK9615d+tOGDAh0N2qD3pJm7XEU/Mt03wJ8i
-         SULz3Tu/3y/wWR81a8GoG8+m4t1Dp8qQs6VgiJ9pLE+Qa3tZHu+DQ/D5SivD9dSzk7bc
-         LOF8MT+odjoL/iXGR/mhYa49V8l+cACy12yJg+5Dr96T4hBUvhLEZf/nulARTJyYVRKZ
-         It2g==
-X-Forwarded-Encrypted: i=1; AJvYcCW97GW6zdtMydJSvgtVt+liGlJOLtSypgrusWMuVhsiIiulq5t5TRl1YDpQzQG+d2uds92C3hqR12GOyLg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhcZ6FUsz2rJilYsgcRuU8Ku0z8AX3PepE1GfKSYvhmz0VXcjx
-	5andmpt1dsJzGxPK0NEcyamgZhTzOLfOOVb8pbz05G+ufwVsMtH0Y05wcbqcM/vRh31FuAsmm55
-	zRWJXsl4mmsKwsII+fTjY1YXE6vkzplm8+r4cQfqf0mlaQJqVBCaNpd960B/t1h3UcBtqRPZIW0
-	N7BbyfQE4Sjfuk5RpbUfpk+uirsbKjo+JrX8021F5g
-X-Gm-Gg: ASbGnctv2V4bojQpYhK4KZOEFhUCOQvpBenjzSZQ01STwfQfTfBcja67TN8JapuZpxg
-	pN+v6zDl1N18hdEDX/kW34KI+9P6Ir06NFCS1Y376JBLiDAJi3h6ksGXF7buhlKfD8TBTb76LaD
-	fDZw==
-X-Received: by 2002:a05:6808:1b90:b0:3f8:3489:d93d with SMTP id 5614622812f47-40b88816cbemr2174539b6e.25.1751467128237;
-        Wed, 02 Jul 2025 07:38:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFGJkEyRApKN9Snn2Qns9uRFnPDyzYI0heJJY+yiOKE3hkdxWXuRgqyrbD2KwH2XrfLhobH6R7OolRAxc95iss=
-X-Received: by 2002:a05:6808:1b90:b0:3f8:3489:d93d with SMTP id
- 5614622812f47-40b88816cbemr2174514b6e.25.1751467127863; Wed, 02 Jul 2025
- 07:38:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="DXZ89xVF"
+Received: from [127.0.0.1] (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 562EbC76696595
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Wed, 2 Jul 2025 07:37:13 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 562EbC76696595
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025062101; t=1751467037;
+	bh=vedweYDuCMOClUg69BFkxDuS10njABpMhtr+ugtmIEs=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=DXZ89xVFv179csAkJagaK7K6kHQFaO1KDExUYRflFnbk1CKN98H2A3X0BW/Xn7CWK
+	 p/lSdhUSOX3MLxFsLtQObgctvrt5fYTdx2cNChx0sxRkawi5k300cXWd33YvjZZXaX
+	 ptnAP5XKgtfJAwKM2gbk0WhT1PWBFWHOjUhOzoS+4Tnc0JrzdAkcCLu+z/sbmt+ZuE
+	 muZxbXuKzz/7sHrPRDIs6FwQyK7HKdhEmUXraWviKzczKfmEgA4gOl7SkARtW5uD2q
+	 AdnNdI4UkMYSWpFMLcq7+Ekbou+vpcFC6tLJhkFkxx1i5Bfk2w8mGaXVqiBnr6r2hj
+	 USlw9Y9IQLIZA==
+Date: Wed, 02 Jul 2025 07:37:12 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+CC: Sohil Mehta <sohil.mehta@intel.com>, Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Xiongwei Song <xiongwei.song@windriver.com>,
+        Xin Li <xin3.li@intel.com>, "Mike Rapoport (IBM)" <rppt@kernel.org>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Michael Roth <michael.roth@amd.com>, Tony Luck <tony.luck@intel.com>,
+        Alexey Kardashevskiy <aik@amd.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>, Ingo Molnar <mingo@kernel.org>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+        Kai Huang <kai.huang@intel.com>, Sandipan Das <sandipan.das@amd.com>,
+        Breno Leitao <leitao@debian.org>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>, Hou Tao <houtao1@huawei.com>,
+        Juergen Gross <jgross@suse.com>,
+        Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>,
+        Eric Biggers <ebiggers@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Luis Chamberlain <mcgrof@kernel.org>, Yuntao Wang <ytcoode@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>,
+        Huang Shijie <shijie@os.amperecomputing.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCHv8 14/17] x86/traps: Handle LASS thrown #SS
+User-Agent: K-9 Mail for Android
+In-Reply-To: <5q2zbkzyjknusd3feqolycqialetqfe52yfyzasnr6zp24pmej@4cg2r2hi4pf2>
+References: <20250701095849.2360685-1-kirill.shutemov@linux.intel.com> <20250701095849.2360685-15-kirill.shutemov@linux.intel.com> <95dc18fd-73b0-4019-92d2-c0e6aaf22c96@intel.com> <4DE45AFD-C1E0-4FB8-BE01-44A72C5C6E1E@zytor.com> <5q2zbkzyjknusd3feqolycqialetqfe52yfyzasnr6zp24pmej@4cg2r2hi4pf2>
+Message-ID: <DF2E7B41-46C9-4DAC-A671-EC8D6F53F496@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250625201853.84062-1-stuart.w.hayes@gmail.com>
- <20250625201853.84062-3-stuart.w.hayes@gmail.com> <2025070157-undaunted-curler-bda3@gregkh>
-In-Reply-To: <2025070157-undaunted-curler-bda3@gregkh>
-From: David Jeffery <djeffery@redhat.com>
-Date: Wed, 2 Jul 2025 10:38:35 -0400
-X-Gm-Features: Ac12FXy9HjgNoFaB4FAc6SLNfV66UqBtwIgyuy9-ldwc1GEwfSJnUe5aDVCjxV4
-Message-ID: <CA+-xHTEk_N6qE5w+hWxXfSMJLQ5tFROMVZnr5h2HUmrwEKVdNQ@mail.gmail.com>
-Subject: Re: [PATCH v10 2/5] driver core: don't always lock parent in shutdown
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Stuart Hayes <stuart.w.hayes@gmail.com>, linux-kernel@vger.kernel.org, 
-	"Rafael J . Wysocki" <rafael@kernel.org>, Martin Belanger <Martin.Belanger@dell.com>, 
-	"Oliver O'Halloran" <oohall@gmail.com>, Daniel Wagner <dwagner@suse.de>, Keith Busch <kbusch@kernel.org>, 
-	Lukas Wunner <lukas@wunner.de>, Jeremy Allison <jallison@ciq.com>, Jens Axboe <axboe@fb.com>, 
-	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, linux-nvme@lists.infradead.org, 
-	Nathan Chancellor <nathan@kernel.org>, Jan Kiszka <jan.kiszka@seimens.com>, 
-	Bert Karwatzki <spasswolf@web.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 1, 2025 at 5:03=E2=80=AFAM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On July 2, 2025 3:17:10 AM PDT, "Kirill A=2E Shutemov" <kirill=2Eshutemov@l=
+inux=2Eintel=2Ecom> wrote:
+>On Tue, Jul 01, 2025 at 07:06:10PM -0700, H=2E Peter Anvin wrote:
+>> On July 1, 2025 6:35:40 PM PDT, Sohil Mehta <sohil=2Emehta@intel=2Ecom>=
+ wrote:
+>> >On 7/1/2025 2:58 AM, Kirill A=2E Shutemov wrote:
+>> >> LASS throws a #GP for any violations except for stack register acces=
+ses,
+>> >> in which case it throws a #SS instead=2E Handle this similarly to ho=
+w other
+>> >> LASS violations are handled=2E
+>> >>=20
+>> >
+>> >Maybe I've misunderstood something:
+>> >
+>> >Is the underlying assumption here that #SS were previously only
+>> >generated by userspace, but now they can also be generated by the
+>> >kernel? And we want the kernel generated #SS to behave the same as the=
+ #GP?
+>> >
+>> >> In case of FRED, before handling #SS as LASS violation, kernel has t=
+o
+>> >> check if there's a fixup for the exception=2E It can address #SS due=
+ to
+>> >> invalid user context on ERETU=2E See 5105e7687ad3 ("x86/fred: Fixup
+>> >> fault on ERETU by jumping to fred_entrypoint_user") for more details=
+=2E
+>> >>=20
+>> >> Co-developed-by: Alexander Shishkin <alexander=2Eshishkin@linux=2Ein=
+tel=2Ecom>
+>> >> Signed-off-by: Alexander Shishkin <alexander=2Eshishkin@linux=2Einte=
+l=2Ecom>
+>> >> Signed-off-by: Kirill A=2E Shutemov <kirill=2Eshutemov@linux=2Eintel=
+=2Ecom>
+>> >> ---
+>> >>  arch/x86/kernel/traps=2Ec | 39 +++++++++++++++++++++++++++++++++---=
+---
+>> >>  1 file changed, 33 insertions(+), 6 deletions(-)
+>> >>=20
+>> >> diff --git a/arch/x86/kernel/traps=2Ec b/arch/x86/kernel/traps=2Ec
+>> >> index ceb091f17a5b=2E=2Ef9ca5b911141 100644
+>> >> --- a/arch/x86/kernel/traps=2Ec
+>> >> +++ b/arch/x86/kernel/traps=2Ec
+>> >> @@ -418,12 +418,6 @@ DEFINE_IDTENTRY_ERRORCODE(exc_segment_not_prese=
+nt)
+>> >>  		      SIGBUS, 0, NULL);
+>> >>  }
+>> >> =20
+>> >> -DEFINE_IDTENTRY_ERRORCODE(exc_stack_segment)
+>> >> -{
+>> >> -	do_error_trap(regs, error_code, "stack segment", X86_TRAP_SS, SIGB=
+US,
+>> >> -		      0, NULL);
+>> >> -}
+>> >> -
+>> >>  DEFINE_IDTENTRY_ERRORCODE(exc_alignment_check)
+>> >>  {
+>> >>  	char *str =3D "alignment check";
+>> >> @@ -866,6 +860,39 @@ DEFINE_IDTENTRY_ERRORCODE(exc_general_protectio=
+n)
+>> >>  	cond_local_irq_disable(regs);
+>> >>  }
+>> >> =20
+>> >> +#define SSFSTR "stack segment fault"
+>> >> +
+>> >> +DEFINE_IDTENTRY_ERRORCODE(exc_stack_segment)
+>> >> +{
+>> >> +	if (user_mode(regs))
+>> >> +		goto error_trap;
+>> >> +
+>> >> +	if (cpu_feature_enabled(X86_FEATURE_FRED) &&
+>> >> +	    fixup_exception(regs, X86_TRAP_SS, error_code, 0))
+>> >> +		return;
+>> >> +
+>> >> +	if (cpu_feature_enabled(X86_FEATURE_LASS)) {
+>> >> +		enum kernel_exc_hint hint;
+>> >> +		unsigned long exc_addr;
+>> >> +
+>> >> +		hint =3D get_kernel_exc_address(regs, &exc_addr);
+>> >> +		if (hint !=3D EXC_NO_HINT) {
+>> >
+>> >The brackets are not needed for singular statements=2E Also the max li=
+ne
+>> >length is longer now=2E You can fit this all in a single line=2E
+>> >
+>> >> +			printk(SSFSTR ", %s 0x%lx", kernel_exc_hint_help[hint],
+>> >> +			       exc_addr);
+>> >> +		}
+>> >> +
+>> >
+>> >> +		if (hint !=3D EXC_NON_CANONICAL)
+>> >> +			exc_addr =3D 0;
+>> >> +
+>> >> +		die_addr(SSFSTR, regs, error_code, exc_addr);
+>> >
+>> >The variable names in die_addr() should be generalized as well=2E They
+>> >seem to assume the caller to be a #GP handler=2E
+>> >
+>> >> +		return;
+>> >> +	}
+>> >> +
+>> >> +error_trap:
+>> >> +	do_error_trap(regs, error_code, "stack segment", X86_TRAP_SS, SIGB=
+US,
+>> >> +		      0, NULL);
+>> >> +}
+>> >> +
+>> >>  static bool do_int3(struct pt_regs *regs)
+>> >>  {
+>> >>  	int res;
+>> >
+>>=20
+>> Note: for a FRED system, ERETU can generate #SS for a non-canonical use=
+r space RSP even in the absence of LASS, so if that is not currently handle=
+d that is an active bug=2E
 >
-> On Wed, Jun 25, 2025 at 03:18:50PM -0500, Stuart Hayes wrote:
-> > Don't lock a parent device unless it is needed in device_shutdown. This
-> > is in preparation for making device shutdown asynchronous, when it will
-> > be needed to allow children of a common parent to shut down
-> > simultaneously.
-> >
-> > Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-> > Signed-off-by: David Jeffery <djeffery@redhat.com>
-> > ---
-> >  drivers/base/core.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/base/core.c b/drivers/base/core.c
-> > index cbc0099d8ef2..58c772785606 100644
-> > --- a/drivers/base/core.c
-> > +++ b/drivers/base/core.c
-> > @@ -4823,7 +4823,7 @@ void device_shutdown(void)
-> >               spin_unlock(&devices_kset->list_lock);
-> >
-> >               /* hold lock to avoid race with probe/release */
-> > -             if (parent)
-> > +             if (parent && dev->bus && dev->bus->need_parent_lock)
-> >                       device_lock(parent);
+>It is handled by fixup code inside do_error_trap()=2E We need to add
+>explicit fixup before LASS handling to avoid treating bad userspace RSP a=
+s
+>kernel LASS violation=2E
 >
-> What about parents for a device that is not on a bus?  Don't they need
-> to be properly locked?
 
-From my examination of the code and history, I do not believe so.
-Locking the parent was added before need_parent_lock was added, and
-when the other locations changed to depend on need_parent_lock to lock
-both, device_shutdown was left always locking both.
+Great=2E I was pretty sure, but I wanted to address Sohil's question direc=
+tly=2E Thanks for verifying=2E
 
-It is simple enough to change the if checks to:
-
-if (parent && (!dev->bus || dev->bus->need_parent_lock))
-
-if you think my understanding is wrong and some bus-less devices have
-come to depend on the behavior.
-
-David Jeffery
-
+A LASS violation of any kind in the kernel (unless handled by fixup, inclu=
+ding user access fixup) ought to be fatal, correct?
