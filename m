@@ -1,201 +1,457 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2085.outbound.protection.outlook.com [40.107.92.85])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F6952DE708;
-	Wed,  2 Jul 2025 23:32:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.85
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751499171; cv=fail; b=SKcO3J0Q6FBYaBQcb/28klrNTt97LD/DD9LOMKW7fm6Hbb4B7fdS4rMBps+s0EfOUnEf+US9W5mhpiTtCortZamd6Q2TGPfZVhw4RboSQfVuehsmhB9cBpUD8GM8P9aoo+YJtD6Sy5b2E/dmK+nQNb4igPyA4Bg+uz22/xskED8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751499171; c=relaxed/simple;
-	bh=E93BVmxY++t1mVFUdxtOp9Pf+Tc/j3QNB9sw1rfLGk0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=DdTm++u1nsxu0vMJtaL3AbcRsqZ+r3s1nKbTjefZgSaQZnniQOiD3CjqxBTV8h+sUhqboiAjnU3d9F/y2OPWfgoOd/CSBA97yzFXnm+zlLFKlSkwGyhaL4dkSW4Sxx4X2q3jTQElovTEWbCoVyfgYY5vcPrpE/sb6k3i0xQXWxw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=rilW9YQv; arc=fail smtp.client-ip=40.107.92.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CECF21B9D6
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 23:35:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751499305; cv=none; b=D18j338Orv7y1vaLRofKApXqsTFkC75OXLfkAnch/zRO5vvUTgogMPH2R+75LCAuRIBWafhthbh2RNl9CIoo0E1ddhra5siB0cn+Bg09HelnqF7T9aLKqQMW9/8JOZr2jg5UNbHaNLuuCsohiSLA/NqnxBxagsGdm10Ab+kE0oI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751499305; c=relaxed/simple;
+	bh=L9QY4ZY+NZlfjp+6zJ9Zh0yubN5Tlbcju+8ra9dO3dw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Oa9Y2l4HXaMbYahRqfOftn+wBPqeF+vqei7L2N0lCrzWeHZqoh4C8B9VocsvJWG3EWB0kUuNXRSPprXFU5ehf1tU2NJsLj/94DYahFyQXF4s0E+LHGYUbsTVf6Gzv0CXC/bL1zoDfEz8x43EpOhpnmFrHXHVjmStunq0cRiLuXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N4QnMIaF; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="rilW9YQv"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LVV7+MjOAhivYJw3ls0eE5bPSckI7wRYG2o5un8vU+m9GVEDl8bfJWNsFn+BLRAOIR/FIHF1O/iSPnuhoACpNz3kQjnSRn7ftWLdoYmFmabLq7IcmfWrNh6BQ1McX0JIXGPhNPrbunvw/tkEHaBSPgsIucQb5HtFUheO5/gOwrfMX63vrAGUGP9Uf0p5f6Dcm9wSlSvt85kqah9SDydGLVE94GFi9lRVb4S52itJCVw9+EN9W4VYCJE8y0IysBwItW3nhCrFVsz8nXBDrlrFCpUCW78XfQNkHK/ZllsZZr7cyP3chhRGs3TEMb2v9ViaZJk5GgHfO6bkqcHQQ6+jJA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xbbfBeRJHGy34KfgKAUtanWUQv7IW3qYqgVFTE0Ezj0=;
- b=QJNZmlVwWFdV17VCHDccXfVRRq9/JnX5AhXidn4fy0kPVDf98kWvQhywweyOK9jRQxoP2bijcYVuoAbAUKp65cFYYmBMw5dnmLJLL/DUblNCh0t1vBl5AHmAOJrcsabYX7hp7XBxlXCt3k9Vk8ulW4QFtYmeW7iYRJ2ru3KQNO3t6149qeGVZ6h8tEE9Im8a6ejZh9vtck9MQg/LGLj6pOoaqFzQfkS489o4uV4/II5W8tcD1p+qaLhl1sxfcv6QbKmewZvDRWq44WaISaiBeMAqI5BQGBvp1L+548iEpdiG3IcGeW6oPf05ioU8iPB9tUFLRrhxzq7fdGouMJaLzw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xbbfBeRJHGy34KfgKAUtanWUQv7IW3qYqgVFTE0Ezj0=;
- b=rilW9YQvrRGc2Q+s8WDKSzLppU5Zlo+HkQQZeyWrE2l0C6fHjPCm7pS+mFywhJ/yCI9mGMmVjBphyEm4NL7uGMCLIyCyuV52wjobl0tohm3BuqS5ROE/OcGLBk8BKUZRAvE7w03c+vYUMJLo4YTa6XYqZmGKY/VYyYQV32ZmZ5ZCAlZyHZSC0T7m7ZOJUpMBS3O4mzPlPG0pneK5Wpd79PWRlNdnxOwa3+7N2wtV6AS/hfUm3eH607U0KQvkemfsFaXSn+p1+q6S38288zZ7StQ/vY2dNpknPtIaRNGMgl90n/s1Cre20AAOFqno0d0wfPpr8L/EFUcyFkFWvyj+1Q==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by CY5PR12MB6082.namprd12.prod.outlook.com (2603:10b6:930:2a::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.19; Wed, 2 Jul
- 2025 23:32:47 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%7]) with mapi id 15.20.8880.030; Wed, 2 Jul 2025
- 23:32:46 +0000
-Date: Wed, 2 Jul 2025 20:32:44 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Peter Xu <peterx@redhat.com>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	kvm@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Zi Yan <ziy@nvidia.com>, Alex Mastro <amastro@fb.com>,
-	David Hildenbrand <david@redhat.com>,
-	Nico Pache <npache@redhat.com>
-Subject: Re: [PATCH 5/5] vfio-pci: Best-effort huge pfnmaps with !MAP_FIXED
- mappings
-Message-ID: <20250702233244.GG1139770@nvidia.com>
-References: <20250619184041.GA10191@nvidia.com>
- <aFsMhnejq4fq6L8N@x1.local>
- <20250624234032.GC167785@nvidia.com>
- <aFtHbXFO1ZpAsnV8@x1.local>
- <20250625130711.GH167785@nvidia.com>
- <aFwt6wjuDzbWM4_C@x1.local>
- <20250625184154.GI167785@nvidia.com>
- <aFxNdDpIlx0fZoIN@x1.local>
- <20250630140537.GW167785@nvidia.com>
- <aGWdhnw7TKZKH5WM@x1.local>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aGWdhnw7TKZKH5WM@x1.local>
-X-ClientProxiedBy: BL1PR13CA0198.namprd13.prod.outlook.com
- (2603:10b6:208:2be::23) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N4QnMIaF"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7d098f7bd77so55120485a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 16:35:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751499302; x=1752104102; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5P6VEh+TRCFSWLJBNZkHbbemxNDEsDjf6YXet7p1hbI=;
+        b=N4QnMIaFqkOwcTpk2sVQeVTX74sU3cIJqTcyHfEE84U0lCMZaDbscEsLxROVFDTI8O
+         crgqDEfB+GVwS5wg9n+SHR+eo6ktgLJXytdG9at2x5PVvNNaTZ2Q3wi8qTyBIOWhm+dH
+         aLvd5iTKW7yNDvC0uVBowiNoaAEgnsM4957sFiRcVmFwl/s5L+znAYYuX2MvEdrCIXZ0
+         /LpaVjzteY81A/aNDE9MLhjaouGHZAvxesG3l68B63+cKWhXHp9T6UIMWUC2dKsEwMa7
+         bj9Mh+oOBA0fiwgvrnDowdv+HQK1xjrI5fAQTcpxSRAoSc4FTwNNGUrZQdj957NBSJO7
+         mbTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751499302; x=1752104102;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5P6VEh+TRCFSWLJBNZkHbbemxNDEsDjf6YXet7p1hbI=;
+        b=QW35Yp8+/KC5b3l09nd8pNADRtlcRLayutpvxjnsQPv7U9aPVbl25bqs2AYprD9vqV
+         9f69R+Eai0dWCyuqX4wb4HMT2JhshnR4n0ifb5CoiQ3OfcZD0JRS28Bs4sW/yQQJJ2X9
+         KxU84C195DHNxzp2f8zI9K22rrrbIuf4xcJ3i2j9HE/Z6+CJFTKRZi6SBnp7a2oA5+dI
+         jU3sRnmnHNtLmmNsOUr+dhXtBk+p0T0fFJQv5+tBK5LaNR6GiuAlZ967tIaDrZcKG1ci
+         ArazM6Xg6/4XSpRA/uBLpE+nHUZggns/wEom+hvjKQpiIEFnqwEvdZcasnR43EdpEj+d
+         FuLQ==
+X-Gm-Message-State: AOJu0YwrpXZs4aG5DMo+xZVOhCkDG4VwUwl9jOPOy9WdGhRz0vO299DQ
+	VXfEuRrr6XLRoBwXZGEUD+yWnCRXw1Uc2ss6Xm4311QXf2ZjsP1n4iD4q1t0gJGj
+X-Gm-Gg: ASbGnctGOlvJclbz5amL8y9EXzJg6NtokPBVTpLz3p9mth7f2qlfldKUukKPjIur/S2
+	yoMVbfCN+13v9aI8dY6kO1C40dbFH9ZaW8RzmvfAm6X2icyeqxaD1ZD6QIlbc5WLtExzyERAJHy
+	ZyjrlDGwJ8BCsjjigjZWu0+JyfnyAhoNAwKOZ6tQKU2jEa6X14AY/A7pGmWf5vCGjvBtpz2aen9
+	3o3BCDvs0D6eDZWQXxzB3x9hQGcmtlQDw6xzt6hRFW7jYVZCuRfTBQRb3JJcrpQGw7gI7XAYibR
+	To/u6J/XEcqqa65uF5LrQ1bXnXPGq07GDiCTMx/PAzwKuKuTGegZK7/oR7fTKtxIO/8z/WdEo6Z
+	D13MnAxBej58=
+X-Google-Smtp-Source: AGHT+IEe83t2DrXjJuf4kE9JfQV/TEyelDFDLsJ1VGGW+TsjrPi0t2/+SwB/E6KWWMKvx6fvrTiSzg==
+X-Received: by 2002:a05:620a:172a:b0:7d4:4b12:a39c with SMTP id af79cd13be357-7d5d3fa1c02mr14095485a.16.1751499301863;
+        Wed, 02 Jul 2025 16:35:01 -0700 (PDT)
+Received: from eijiuchiyama-Dell-G15-5530.. ([187.10.131.129])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d45c0fe6dfsm597031185a.58.2025.07.02.16.35.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 16:35:01 -0700 (PDT)
+From: Lucas Eiji Uchiyama <lucaseiji54@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: Lucas Eiji Uchiyama <lucaseiji54@gmail.com>
+Subject: [PATCH] iio: dps310.c: Remove duplication in functions
+Date: Wed,  2 Jul 2025 20:34:41 -0300
+Message-Id: <20250702233441.94203-1-lucaseiji54@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|CY5PR12MB6082:EE_
-X-MS-Office365-Filtering-Correlation-Id: 78ac3229-4645-4ff3-a7f9-08ddb9c0bfe0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?v70MC5PxZPGeS3wof1Nd9p+7x57zCDAW118lYcBlSknK+cILuz+SpfdUUHlt?=
- =?us-ascii?Q?a6ILgGb/jIrKcM4hVxVETCy7xLZTLtv/JZAlmu4WjRQd8+KEJF0ISSbmtQLt?=
- =?us-ascii?Q?sAaWe0SLbCIFT6caIKoCxAdUPfjCix0eJebqO5O/KKS+ikdtAq7s/umyUnuI?=
- =?us-ascii?Q?k1aqKvsGspv8wRI72/9tQSh0mHayxWt+aYfO4pZT57s1htEneus8McwaSfCt?=
- =?us-ascii?Q?MQvxE/w2Ed670THTKvviOkL9qDmVRnM9ZWyJbvKBgXic03Z+jAwxNVKKwZPg?=
- =?us-ascii?Q?+7yjKsqqHbM0AgL9I6jSm+d65965G1Urfhazk1o4le3+JrSSPXOBq+YmFqQX?=
- =?us-ascii?Q?D8+SqeAVigg+dMcNYwZJHx3jYAnNfW26kNfY4Pfuw7KRxmMRUnTCEyKPwiW0?=
- =?us-ascii?Q?VJPfHfoA2Iue4V5BQVboe1aLzQBKEXqO1/5CCFXvsm1gHLvhyN9r/PD1frJ7?=
- =?us-ascii?Q?QxtEbZ5/WOjTtbbc8jUPmClpERqcMpCaF9CfYQ7TmJtkt6Zk6c9Om32P7FNQ?=
- =?us-ascii?Q?klU1yH1U53tK/3sfvBWVmrIuyp26hTXswVb6Q146RcnRwa7JRDjstwQezBFP?=
- =?us-ascii?Q?VBh3m03xSgg8TJV2IhZhf8L33p+cBgF7/wgb9EglSCAC85Pr1+rEeX1aQgTL?=
- =?us-ascii?Q?xBs9FSFwK0vNcKuGYPKiw0bhLA1B8575vsZiikauXPVkU2DhpadZjOxfo7Ak?=
- =?us-ascii?Q?yQvDqRfjfUNG79uRnElSz9RmZ1aPmA4UhkJ/N5Pjdrv27kScBvDupLN+id61?=
- =?us-ascii?Q?BnPdbiVIXZjcFQco8jmn8TTBsdq0kV6Dj44A7liV8Xo8a9kL1og4f1BnyHJq?=
- =?us-ascii?Q?Li39dcPW323P5Du8VtVZZQSvq94P7G25h37PCZSNHETb9Bq1zoD1AAZHEBYQ?=
- =?us-ascii?Q?+sCesxtRpiRY6vsRPvdzvoDfLIy4sRoirXoxIGuqbFwuNE8K5MGjrHpoZhjo?=
- =?us-ascii?Q?GWv3LqlpLGZ1rAnKytx3nQbcG4osTHKLdUBV9bbIuFqOcTgxYONoTdDq6L3E?=
- =?us-ascii?Q?ttKAgUDdsOtFA/2yRMKyRnR0pftKSWMYkSPiW9E6nlUrCDClC60uWfDuovMn?=
- =?us-ascii?Q?XSCyKjhSO2L2CyEqfaDbHrDSeu3wIcK3O16bCJ77kACnbeRN2R3okgyAvt/V?=
- =?us-ascii?Q?8+pBpDphD6TALnJnpHoJ8+XgxOpFPBytRB3yoM/YS2pO+IbVJ5JBf2/Ugcg6?=
- =?us-ascii?Q?XDGnhkHAHYV/+cm/V1s0pqaxsezzynFdWRUMU6JZxb7EoOnrGPcg3kYcYpUz?=
- =?us-ascii?Q?ACbJsOICUraNzHWdvvKijjj8FNmewxQWipN6B+HlvPZN3qSsfnQpKpZddv7y?=
- =?us-ascii?Q?yS383X0H/RuILMUoX5i4XZmcHD+BBbmScdo5hNxHmzaFEcHJBeg3dJ4NRsRL?=
- =?us-ascii?Q?R1QBFMYDX5R3+FA/z/Mr+NOR8pzVbXD2KIMeWwibBQJIGVZXdk+4s5+7M/Ee?=
- =?us-ascii?Q?if3FZIIIivc=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?6CSZqVHl5skAiDAZI+FwlvRSHi/5r+wRGf/eQhlpKqyM9Z41nWcEmfiUjlql?=
- =?us-ascii?Q?xAjQ/C4Qmn19X2ks1kKNHour44OZrzm37OQFYL9B2IfSKT0MBnZirm58KqNY?=
- =?us-ascii?Q?REddYQaG18uwUp5tMfUm0oOI5YfoUu+1uxkpsgSlGRc7suOoQjBVBNZGrDqD?=
- =?us-ascii?Q?y+0Sq8L+VB/Vd2nNdmeYr83yDnbEAxHJ76Y9KAErDSehMXrQm/gKja64TB9q?=
- =?us-ascii?Q?VXf0uNHJrrA9Qu6uWfXmkyFKPK7bJ8hkft8MbzdBBRYLhylM/eY5cmppmR6P?=
- =?us-ascii?Q?IpGayKnEX3H3+Txk6Ypg2+ri2h849AbQTcj+SJWu/TdtUmLGAluFSQRg1UYO?=
- =?us-ascii?Q?+oMR0LBEnuKnht6uh9NdAq/RQ8r9tOAZ6jTEXpVOG+Y+E39iFnxQcIOOKbJ+?=
- =?us-ascii?Q?tkJnxkba5QxoZ+Cd4s09NPLzY38w0jJFoxK92dBD3u4FUoUy9odyy3sNk642?=
- =?us-ascii?Q?pkqKpm8qqzOWMCHvLLxlTr2Fov+YmAiAcxBf19UOajG7g74Ft/5GU5sWlvqe?=
- =?us-ascii?Q?ksds39rMZrAWeRNkEagFEfvBUFlQIM85941Rz8IaAcgesTPXJR7TmQFFK6ho?=
- =?us-ascii?Q?50UdnD6PooNqyUOU9hnFSAr3xg1KvcVctKjI/sYWP2RTuHe9hvoTIr0AFD6V?=
- =?us-ascii?Q?QKQGrJXuFvJPLKB5N0GgQEl3bPgX6JXOgM9SiQD15ZqpbuVuofVO3RnDXJ4Q?=
- =?us-ascii?Q?xgrF0boyXbp2qJGzsiegKBOPckREEdCO8WONPmXw5+Z35GPFCj5ehzTsz9lm?=
- =?us-ascii?Q?5eWRFXEQCUu4ZbajkI6PK7pjKBCqh40zuErXINdGwYME9NA9wKHznTM0kjWJ?=
- =?us-ascii?Q?zLq4cRJ7j4g4y/xgjACNY7mUU+PzhzB2P+0b+7jtweb+3HebzwGHbU6VEFwr?=
- =?us-ascii?Q?xHxTYbQolum5z2JQ5wUnCjOlbck23Q+AmBBWieb+KgE5PajFcoodi6euXYv0?=
- =?us-ascii?Q?PCLUJx0xPn2HXaMX+c2C9s4h0jWDNhYtzkL/DOgCpVFuDrb03k6yj7ek3TsK?=
- =?us-ascii?Q?3EvReB2bGP5X/dXTowlfbopfxm96r/MJGdhy0RovE7VNJYUDQ/Di5c9Uz5Lx?=
- =?us-ascii?Q?BceWgf7ggAvrFYPTmoG1Aq1UaKTIxecxKKuBxGH9ql4eILkeodt0Lm2RclhI?=
- =?us-ascii?Q?Mv9Vkf6PI+ljbejs2HbKdkdLct657uIwoWO00scL+7CNDWQDgYRzd+N+B2z5?=
- =?us-ascii?Q?Msr/nZKnz6kum9wXJ62hjk/642px6JsPtGYqI+5vXDPIozIvQwr37GMCzaFs?=
- =?us-ascii?Q?F502pxh2XPFxLM0K5Ov6+HZGmorFlUr0vuEZYTn8pcVFr96OUFFAegB6F08B?=
- =?us-ascii?Q?8h1DOuQ+T3FmN611WsKzq+2kyO6j//VqoEFCb3m40KPf+GBDpeP44YKHxgn+?=
- =?us-ascii?Q?ha+yvfwlLm9mmI/9yNTGEa2GXmpUC+8tTlsVkIL1rIk0nEwlTUOoCl3BdCur?=
- =?us-ascii?Q?BiUPbfntn6bqpVbiU2zoxxjtyKPcPam1WieLP/gEssXn2yyhvF/QPdmB9v0D?=
- =?us-ascii?Q?XlxJSgirSljGPfrqTxfNXM7wNkMdtzXsRcFe2km0xhmmIibZiQAQqgGnbxVy?=
- =?us-ascii?Q?u7LgUUql+rV3QKOClLTrVsgEQ16rSQV2EZKkzTkY?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 78ac3229-4645-4ff3-a7f9-08ddb9c0bfe0
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 23:32:46.6614
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gpes7mgQOp+CuY5PBJ6rOO3bUcP9D2KZoX3wU4sh3OVAbyzEF9PJd1ZElT7nNmfS
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6082
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 02, 2025 at 04:58:46PM -0400, Peter Xu wrote:
-> > So you have to do it the other way and pass the pgoff to the vmap so
-> > the vmap ends up with the same colouring as a user VMa holding the
-> > same pages..
-> 
-> Not sure if I get that point, but.. it'll be hard to achieve at least.
-> 
-> The vmap() happens (submit/complete queues initializes) when io_uring
-> instance is created.  The mmap() happens later, and it can also happen
-> multiple times, so that all of the VAs got mmap()ed need to share the same
-> colouring with the vmap()..  In this case it sounds reasonable to me to
-> have the alignment done at mmap(), against the vmap() results.
+Consolidate the following functions into shared implementations:
 
-The way this usually works is the memory is bound to a mmap "cookie"
-- the pgoff - which userspace can use as many times as it likes.
+- dps310_get_pres_precision
+- dps310_get_temp_precision
+- dps310_set_pres_precision
+- dps310_set_temp_precision
+- dps310_set_pres_samp_freq
+- dps310_set_temp_samp_freq
+- dps310_get_pres_samp_freq
+- dps310_get_temp_samp_freq
+- dps310_get_pres_k
+- dps310_get_temp_k
 
-Usually you know the thing being allocated will be mmap'd and what
-it's pgoff will be because it is 1:1 with the cookie/pgoff.
+These were replaced by the following unified functions:
 
-Didn't try to guess what io_uring has done here, but, IMHO, it would
-be weird if the pgoffs are not 1:1 with the vmaps.
+- dps310_get_precision
+- dps310_set_precision
+- dps310_set_samp_freq
+- dps310_get_samp_freq
+- dps310_get_k
 
-Since you said the pgoff was constant and not exchanged user/kernel
-then presumably the vmap just needs to use that constant pgoff for its
-colouring.
+Each now takes an additional `mode` parameter indicating whether the
+operation applies to temperature or pressure.
 
-> > > The changes comparing to previous:
-> > > 
-> > >     (1) merged pgoff and *phys_pgoff parameters into one unsigned long, so
-> > >     the hook can adjust the pgoff for the va allocator to be used.  The
-> > >     adjustment will not be visible to future mmap() when VMA is created.
-> > 
-> > It seems functional, but the above is better, IMHO.
-> 
-> Do you mean we can start with no modification allowed on *pgoff?  I'd
-> prefer having *pgoff modifiable from the start, as it'll not only work for
-> io_uring / parisc above since the 1st day (so we don't need to introduce it
-> on top, modifying existing users..), but it'll also be cleaner to be used
-> in the current VFIO's use case.
+All call sites were updated accordingly. To improve readability, new
+macros PRESSURE and TEMPERATURE were introduced and passed to the
+shared functions.
 
-I think modifiably pgoff is really a weird concept... Especially if it
-is only modified for the alignment calculation.
+Additionally, a new macro was defined for:
 
-But if it is the only way so be it
+  BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO) |
+  BIT(IIO_CHAN_INFO_SAMP_FREQ) |
+  BIT(IIO_CHAN_INFO_PROCESSED)
 
-Jason
+since this combination was used twice in the same struct.
+
+Signed-off-by: Lucas Eiji Uchiyama <lucaseiji54@gmail.com>
+---
+ drivers/iio/pressure/dps310.c | 182 +++++++++++++---------------------
+ 1 file changed, 69 insertions(+), 113 deletions(-)
+
+diff --git a/drivers/iio/pressure/dps310.c b/drivers/iio/pressure/dps310.c
+index 8edaa4d10..99188bf4a 100644
+--- a/drivers/iio/pressure/dps310.c
++++ b/drivers/iio/pressure/dps310.c
+@@ -56,6 +56,8 @@
+ #define DPS310_RESET		0x0c
+ #define  DPS310_RESET_MAGIC	0x09
+ #define DPS310_COEF_BASE	0x10
++#define PRESSURE 0
++#define TEMPERATURE 1
+ 
+ /* Make sure sleep time is <= 30ms for usleep_range */
+ #define DPS310_POLL_SLEEP_US(t)		min(30000, (t) / 8)
+@@ -65,6 +67,11 @@
+ #define DPS310_PRS_BASE		DPS310_PRS_B0
+ #define DPS310_TMP_BASE		DPS310_TMP_B0
+ 
++#define INFO_MASK_SEPARATE \
++	 (BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO) | \
++	 BIT(IIO_CHAN_INFO_SAMP_FREQ) | \
++	 BIT(IIO_CHAN_INFO_PROCESSED))
++
+ /*
+  * These values (defined in the spec) indicate how to scale the raw register
+  * values for each level of precision available.
+@@ -95,15 +102,11 @@ struct dps310_data {
+ static const struct iio_chan_spec dps310_channels[] = {
+ 	{
+ 		.type = IIO_TEMP,
+-		.info_mask_separate = BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO) |
+-			BIT(IIO_CHAN_INFO_SAMP_FREQ) |
+-			BIT(IIO_CHAN_INFO_PROCESSED),
++		.info_mask_separate = INFO_MASK_SEPARATE
+ 	},
+ 	{
+ 		.type = IIO_PRESSURE,
+-		.info_mask_separate = BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO) |
+-			BIT(IIO_CHAN_INFO_SAMP_FREQ) |
+-			BIT(IIO_CHAN_INFO_PROCESSED),
++		.info_mask_separate = INFO_MASK_SEPARATE
+ 	},
+ };
+ 
+@@ -256,57 +259,24 @@ static int dps310_startup(struct dps310_data *data)
+ 	return dps310_temp_workaround(data);
+ }
+ 
+-static int dps310_get_pres_precision(struct dps310_data *data, int *val)
+-{
+-	int reg_val, rc;
+-
+-	rc = regmap_read(data->regmap, DPS310_PRS_CFG, &reg_val);
+-	if (rc < 0)
+-		return rc;
+-
+-	*val = BIT(reg_val & GENMASK(2, 0));
+-
+-	return 0;
+-}
+-
+-static int dps310_get_temp_precision(struct dps310_data *data, int *val)
++static int dps310_get_precision(struct dps310_data *data, int *val, int mode)
+ {
+ 	int reg_val, rc;
+-
+-	rc = regmap_read(data->regmap, DPS310_TMP_CFG, &reg_val);
++	if (!mode)
++		rc = regmap_read(data->regmap, DPS310_PRS_CFG, &reg_val);
++	else
++		rc = regmap_read(data->regmap, DPS310_TMP_CFG, &reg_val);
+ 	if (rc < 0)
+ 		return rc;
+ 
+-	/*
+-	 * Scale factor is bottom 4 bits of the register, but 1111 is
+-	 * reserved so just grab bottom three
+-	 */
+ 	*val = BIT(reg_val & GENMASK(2, 0));
+ 
+ 	return 0;
+-}
+-
+-/* Called with lock held */
+-static int dps310_set_pres_precision(struct dps310_data *data, int val)
+-{
+-	int rc;
+-	u8 shift_en;
+-
+-	if (val < 0 || val > 128)
+-		return -EINVAL;
+-
+-	shift_en = val >= 16 ? DPS310_PRS_SHIFT_EN : 0;
+-	rc = regmap_write_bits(data->regmap, DPS310_CFG_REG,
+-			       DPS310_PRS_SHIFT_EN, shift_en);
+-	if (rc)
+-		return rc;
+ 
+-	return regmap_update_bits(data->regmap, DPS310_PRS_CFG,
+-				  DPS310_PRS_PRC_BITS, ilog2(val));
+ }
+ 
+ /* Called with lock held */
+-static int dps310_set_temp_precision(struct dps310_data *data, int val)
++static int dps310_set_precision(struct dps310_data *data, int val, int mode)
+ {
+ 	int rc;
+ 	u8 shift_en;
+@@ -314,32 +284,29 @@ static int dps310_set_temp_precision(struct dps310_data *data, int val)
+ 	if (val < 0 || val > 128)
+ 		return -EINVAL;
+ 
+-	shift_en = val >= 16 ? DPS310_TMP_SHIFT_EN : 0;
+-	rc = regmap_write_bits(data->regmap, DPS310_CFG_REG,
+-			       DPS310_TMP_SHIFT_EN, shift_en);
+-	if (rc)
+-		return rc;
+-
+-	return regmap_update_bits(data->regmap, DPS310_TMP_CFG,
+-				  DPS310_TMP_PRC_BITS, ilog2(val));
+-}
+-
+-/* Called with lock held */
+-static int dps310_set_pres_samp_freq(struct dps310_data *data, int freq)
+-{
+-	u8 val;
+-
+-	if (freq < 0 || freq > 128)
+-		return -EINVAL;
++	if (!mode) {
++		shift_en = val >= 16 ? DPS310_PRS_SHIFT_EN : 0;
++		rc = regmap_write_bits(data->regmap, DPS310_CFG_REG,
++				DPS310_PRS_SHIFT_EN, shift_en);
++		if (rc)
++			return rc;
+ 
+-	val = ilog2(freq) << 4;
++		return regmap_update_bits(data->regmap, DPS310_PRS_CFG,
++				DPS310_PRS_PRC_BITS, ilog2(val));
++	} else {
++		shift_en = val >= 16 ? DPS310_TMP_SHIFT_EN : 0;
++		rc = regmap_write_bits(data->regmap, DPS310_CFG_REG,
++				DPS310_TMP_SHIFT_EN, shift_en);
++		if (rc)
++			return rc;
+ 
+-	return regmap_update_bits(data->regmap, DPS310_PRS_CFG,
+-				  DPS310_PRS_RATE_BITS, val);
++		return regmap_update_bits(data->regmap, DPS310_TMP_CFG,
++				DPS310_TMP_PRC_BITS, ilog2(val));
++	}
+ }
+ 
+ /* Called with lock held */
+-static int dps310_set_temp_samp_freq(struct dps310_data *data, int freq)
++static int dps310_set_samp_freq(struct dps310_data *data, int freq, int mode)
+ {
+ 	u8 val;
+ 
+@@ -348,54 +315,43 @@ static int dps310_set_temp_samp_freq(struct dps310_data *data, int freq)
+ 
+ 	val = ilog2(freq) << 4;
+ 
+-	return regmap_update_bits(data->regmap, DPS310_TMP_CFG,
+-				  DPS310_TMP_RATE_BITS, val);
++	if (!mode)
++		return regmap_update_bits(data->regmap, DPS310_PRS_CFG,
++				DPS310_PRS_RATE_BITS, val);
++	else
++		return regmap_update_bits(data->regmap, DPS310_TMP_CFG,
++				DPS310_TMP_RATE_BITS, val);
+ }
+ 
+-static int dps310_get_pres_samp_freq(struct dps310_data *data, int *val)
++static int dps310_get_samp_freq(struct dps310_data *data, int *val, int mode)
+ {
+ 	int reg_val, rc;
+ 
+-	rc = regmap_read(data->regmap, DPS310_PRS_CFG, &reg_val);
+-	if (rc < 0)
+-		return rc;
+-
+-	*val = BIT((reg_val & DPS310_PRS_RATE_BITS) >> 4);
+-
+-	return 0;
+-}
+-
+-static int dps310_get_temp_samp_freq(struct dps310_data *data, int *val)
+-{
+-	int reg_val, rc;
+-
+-	rc = regmap_read(data->regmap, DPS310_TMP_CFG, &reg_val);
+-	if (rc < 0)
+-		return rc;
++	if (!mode) {
++		rc = regmap_read(data->regmap, DPS310_PRS_CFG, &reg_val);
++		if (rc < 0)
++			return rc;
+ 
+-	*val = BIT((reg_val & DPS310_TMP_RATE_BITS) >> 4);
++		*val = BIT((reg_val & DPS310_PRS_RATE_BITS) >> 4);
++	} else {
++		rc = regmap_read(data->regmap, DPS310_TMP_CFG, &reg_val);
++		if (rc < 0)
++			return rc;
+ 
++		*val = BIT((reg_val & DPS310_TMP_RATE_BITS) >> 4);
++	}
+ 	return 0;
+ }
+ 
+-static int dps310_get_pres_k(struct dps310_data *data, int *val)
++static int dps310_get_k(struct dps310_data *data, int *val, int mode)
+ {
+ 	int reg_val, rc;
+ 
+-	rc = regmap_read(data->regmap, DPS310_PRS_CFG, &reg_val);
+-	if (rc < 0)
+-		return rc;
+-
+-	*val = scale_factors[reg_val & GENMASK(2, 0)];
+-
+-	return 0;
+-}
+-
+-static int dps310_get_temp_k(struct dps310_data *data, int *val)
+-{
+-	int reg_val, rc;
++	if (!mode)
++		rc = regmap_read(data->regmap, DPS310_PRS_CFG, &reg_val);
++	else
++		rc = regmap_read(data->regmap, DPS310_TMP_CFG, &reg_val);
+ 
+-	rc = regmap_read(data->regmap, DPS310_TMP_CFG, &reg_val);
+ 	if (rc < 0)
+ 		return rc;
+ 
+@@ -474,7 +430,7 @@ static int dps310_read_pres_raw(struct dps310_data *data)
+ 	if (mutex_lock_interruptible(&data->lock))
+ 		return -EINTR;
+ 
+-	rc = dps310_get_pres_samp_freq(data, &rate);
++	rc = dps310_get_samp_freq(data, &rate, PRESSURE);
+ 	if (rc)
+ 		goto done;
+ 
+@@ -523,7 +479,7 @@ static int dps310_read_temp_raw(struct dps310_data *data)
+ 	if (mutex_lock_interruptible(&data->lock))
+ 		return -EINTR;
+ 
+-	rc = dps310_get_temp_samp_freq(data, &rate);
++	rc = dps310_get_samp_freq(data, &rate, TEMPERATURE);
+ 	if (rc)
+ 		goto done;
+ 
+@@ -590,11 +546,11 @@ static int dps310_write_raw(struct iio_dev *iio,
+ 	case IIO_CHAN_INFO_SAMP_FREQ:
+ 		switch (chan->type) {
+ 		case IIO_PRESSURE:
+-			rc = dps310_set_pres_samp_freq(data, val);
++			rc = dps310_set_samp_freq(data, val, PRESSURE);
+ 			break;
+ 
+ 		case IIO_TEMP:
+-			rc = dps310_set_temp_samp_freq(data, val);
++			rc = dps310_set_samp_freq(data, TEMPERATURE);
+ 			break;
+ 
+ 		default:
+@@ -606,11 +562,11 @@ static int dps310_write_raw(struct iio_dev *iio,
+ 	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
+ 		switch (chan->type) {
+ 		case IIO_PRESSURE:
+-			rc = dps310_set_pres_precision(data, val);
++			rc = dps310_set_precision(data, val, PRESSURE);
+ 			break;
+ 
+ 		case IIO_TEMP:
+-			rc = dps310_set_temp_precision(data, val);
++			rc = dps310_set_precision(data, val, TEMPERATURE);
+ 			break;
+ 
+ 		default:
+@@ -645,11 +601,11 @@ static int dps310_calculate_pressure(struct dps310_data *data, int *val)
+ 	s64 kp;
+ 	s64 kt;
+ 
+-	rc = dps310_get_pres_k(data, &kpi);
++	rc = dps310_get_k(data, &kpi, PRESSURE);
+ 	if (rc)
+ 		return rc;
+ 
+-	rc = dps310_get_temp_k(data, &kti);
++	rc = dps310_get_k(data, &kti, TEMPERATURE);
+ 	if (rc)
+ 		return rc;
+ 
+@@ -717,7 +673,7 @@ static int dps310_read_pressure(struct dps310_data *data, int *val, int *val2,
+ 
+ 	switch (mask) {
+ 	case IIO_CHAN_INFO_SAMP_FREQ:
+-		rc = dps310_get_pres_samp_freq(data, val);
++		rc = dps310_get_samp_freq(data, val, PRESSURE);
+ 		if (rc)
+ 			return rc;
+ 
+@@ -736,7 +692,7 @@ static int dps310_read_pressure(struct dps310_data *data, int *val, int *val2,
+ 		return IIO_VAL_FRACTIONAL;
+ 
+ 	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
+-		rc = dps310_get_pres_precision(data, val);
++		rc = dps310_get_precision(data, val, PRESSURE);
+ 		if (rc)
+ 			return rc;
+ 		return IIO_VAL_INT;
+@@ -752,7 +708,7 @@ static int dps310_calculate_temp(struct dps310_data *data, int *val)
+ 	s64 t;
+ 	int kt, rc;
+ 
+-	rc = dps310_get_temp_k(data, &kt);
++	rc = dps310_get_k(data, &kt, TEMPERATURE);
+ 	if (rc)
+ 		return rc;
+ 
+@@ -775,7 +731,7 @@ static int dps310_read_temp(struct dps310_data *data, int *val, int *val2,
+ 
+ 	switch (mask) {
+ 	case IIO_CHAN_INFO_SAMP_FREQ:
+-		rc = dps310_get_temp_samp_freq(data, val);
++		rc = dps310_get_samp_freq(data, val, TEMPERATURE);
+ 		if (rc)
+ 			return rc;
+ 
+@@ -793,7 +749,7 @@ static int dps310_read_temp(struct dps310_data *data, int *val, int *val2,
+ 		return IIO_VAL_INT;
+ 
+ 	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
+-		rc = dps310_get_temp_precision(data, val);
++		rc = dps310_get_precision(data, val, TEMPERATURE);
+ 		if (rc)
+ 			return rc;
+ 
+-- 
+2.34.1
+
