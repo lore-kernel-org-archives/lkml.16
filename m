@@ -1,65 +1,49 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA4063093A3;
-	Wed,  2 Jul 2025 14:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B0730AAAE
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:52:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751467906; cv=none; b=eAQhzZ7jaGUoGhMdC1KAelbPy70dSHpC3LaFlkNGphfYVCQQzHzSCJzxZ2TIt+f169GdWQ0xbythSCNav8H4mMIVjMLlp+3DHmVtPUVjOH6lXwsnQWneN+bWuq7RWc2GpTH3htJu7IoWZvHWWHOhRd9WS4TcWVLNSlEBknoexmw=
+	t=1751467926; cv=none; b=IXtkvleF0rmZftq0rQQfcpZYShrs4Gt4v2lmtamZXKtL7Jevmy7LY37NJCPMyynRHoyciuduy9oqwV7DpBSPZ/92auAAvmMat6mESYZ5wYhW9ir097+Iw1+aCYuyzt+dUntEyR/jwbF44JE0wXhMvBlBIbnTTlwuAhjmwJU4eL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751467906; c=relaxed/simple;
-	bh=QaJ6oz0GkwKizYXM3ML6bUNDwcopvdmWHVZn466HqjI=;
+	s=arc-20240116; t=1751467926; c=relaxed/simple;
+	bh=Rm4uKekevq9QVlWcJTU8YYPuS+Ao27X0DY45UpImAO0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AaGa8lipY7J522s5/NAIOIbbuMylt9caDWWZkYUWztWb2dsTHBgNioS7Hyqp1m5yZevjzxM6CFMI0uRXaicg8KMC7kaoffI0fFa+oPLHCPh1RNw5Qr1aeArRbhdAOrnJiOPz7YXyK43/qRiIjEcfA1DUOqB1t5vUyZuGN+JgWFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ai9SII01; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=iLogZuByb+7+R9lA24B3xCF4UuHkSnzszlB1JUnfV9IJUVzvBOdaZtjGLOuIVuzuTuT/Bhwg5uXpL/FDJrligerxm3qf1LOQ9dKV8Y25NAMxSEauGNZXkVDJsrTLcnRf12AV/05a45RkqUDQ2jHxSGWI3I3XIFc2Q+sXOR/NHt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cwdmQY4F; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ai9SII01"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-235f9ea8d08so63894075ad.1;
-        Wed, 02 Jul 2025 07:51:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751467904; x=1752072704; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qBca6/tX4UaiNS88cVzn9ejTz7Ui0nOCiCDYDy5kH/4=;
-        b=Ai9SII01BEx6xE4H8rRwHxto+4km2j5rQKKxHGB4eoph25WOpcQjohdag1yOd+b5ik
-         RKhC3ss1B1Qw+aiayfZEmwwbg96r4Nr1s7A+5uUtlxEEYwr7uHIYHZCfr1KE1wiWWnA3
-         bxAxjapWIxIBxNT4IbHokXvwTK9PLA6MVFe21jyiqsoshMDXy9Dp8DK7dlXnXAHZOSWk
-         lKNrdkhJGCFJarzt12jzFrBufZb5QlR1xx9g/bEGv2XFtQ/GzTa+fjf8rao+GORClHWh
-         dNOiHoAHWm4btaMAS8V8njThyl03/fQTtf5Bh5PlEPNG8LCnkDkLGGdNPZ/37f9/j1y/
-         84Tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751467904; x=1752072704;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=qBca6/tX4UaiNS88cVzn9ejTz7Ui0nOCiCDYDy5kH/4=;
-        b=YvlwhyKldXONsVpeXd1dz+kUrVcw43AnWA6u6Ly74yVjk9rqms1SNljEf/z50lfqxI
-         +LPaC2wEVnfXKHGeFDCSf0NnY1Z4PGBKEDtQS41LzhxRB09DskioZxbnOc+FwyY8mfT6
-         o52hYJpaaoWf4cUxQuFBvgC8iBFYDvQCED4YD+FiCjTRZioFLnLhGoL8GHMhYYu+yBKF
-         d6g++HbeR2wvGKvfUSQ0pWvxMbL1hErRCQufFdK63e72m7egNLuIi9WBKqocpXvRHaIK
-         SxWfA/6WAB+p8p4n9FO8+P7VSyPzs6BO7/8K8UNsv0r8tdYoMaaMBpuI3EINjjYJDMam
-         iiwg==
-X-Forwarded-Encrypted: i=1; AJvYcCUSCQgrA1OOASehGNHtp0uxGHSY1CJmllheUDwe+GDutNAXPZufzERU/yQ1jMjCGfpdx1pE+0Sf2J2vqg==@vger.kernel.org, AJvYcCUmXya3in2/B/11OjmWxkalxIhFJzynhIXZDD1fV1XWVhUf5WsioaiPs3tJwSF7DxrpFK/Il7BUtDpnegWprQ==@vger.kernel.org, AJvYcCUzVxbePPCUEGxjOFnZjGgw08on9hX58kqITwBMcI7pASven2JwzrENYVsHL43rHtvVlEXLAdOUW8/UAX/i@vger.kernel.org, AJvYcCVNnxZt+XgJZMyKyFA2x7GL94OJwEHJoZl1h4zkUPpaRZKj90PFie1pYB/U7zH6BGiUhpmhXpP4wM1ZRw==@vger.kernel.org, AJvYcCWnQG7MuftVijR4WwwzOUjibb/Xr3SZMwifgF9bA6q//j0uJcV2dxiJTM7Su85O2XwjHwPWxRQ8RcU1@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYO4GOOcLA5L3AFEVoQsPaoGvFYa7USxSmFvBfCLYbFS2vJj6W
-	cPLkfWwnKu1WcbleA5s8KmHMWLNqhYX8eRnOn+94TmlaUj0mxtdcZ1Wd
-X-Gm-Gg: ASbGnctGYf6BY2iRl3l7sBL3Zu3bI10jxGywEPtFrdG4/dVblgZNmxyEdZfyVvPJFJY
-	2DLmp0IT3gX7Wbr3Y2Y9hHQDZIGsbNx0qIDdEoochQuvO1yuFiVknoBprjTwjWjKqUyrLn3Zo+6
-	3Wm5v3rXbEvWbyZtnYlNke4z9MjFJqhX3Pe+QVjFGX8vZW9VqL0N9XX37n2Ub45k1rFuOkJmIOR
-	vbPdjyVX+ebNQfynLFe51f5nPDAAscLL7Tqt+Y8bu+qv8OWQx0iOF5AA9xqG7uWsIaYAUJZK7Du
-	W0N7W1TANkywbpi922bYKxF/YcLTvjFuC9WdssBkYwrOfBbEhKvzn8Iow4aRN2ETFiy78XC/TD9
-	A5vOWQvhXbqn0mSzcb7pXnLjmQ+TrU/5IvSg/ZIE=
-X-Google-Smtp-Source: AGHT+IHGXFFKwi9KhnB1akNKraPfzeJ2zmSUqQqb7SzFIxYzfjGRA13Y+veDJQIEsP0m/DU4C4O2oA==
-X-Received: by 2002:a17:902:c94a:b0:232:1daf:6f06 with SMTP id d9443c01a7336-23c6e5d3a53mr39666775ad.47.1751467903710;
-        Wed, 02 Jul 2025 07:51:43 -0700 (PDT)
-Received: from ?IPV6:240e:305:798e:6800:81a5:8e22:d9f1:ac68? ([240e:305:798e:6800:81a5:8e22:d9f1:ac68])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3afc94sm138573955ad.155.2025.07.02.07.51.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jul 2025 07:51:43 -0700 (PDT)
-Message-ID: <34b3f8f1-5adf-4f82-8d06-b906cdf0552d@gmail.com>
-Date: Wed, 2 Jul 2025 22:51:30 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cwdmQY4F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751467923;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GD9a+U7xk2HtEH8u7J5QH3o1jHrobpwDVeF+J5TvPOY=;
+	b=cwdmQY4FQxdRmGvoMRTHJZqMGiKd+TWnnhsoqZElyh+9wAVlFqgJgLXjqWj/UBb69v6SHh
+	nQAxp9W3yWIP8hHRqQ45UuhwKGHRBttlhTzzYPO4hH6Rl+nw+dhuB7iZAbVUIEmhQxFTzN
+	9AOOolL7ehaxAFKB+Jt0Wu+GP2PI6ww=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-84-uepZUSRPOmKXasvFohXj5Q-1; Wed,
+ 02 Jul 2025 10:52:00 -0400
+X-MC-Unique: uepZUSRPOmKXasvFohXj5Q-1
+X-Mimecast-MFC-AGG-ID: uepZUSRPOmKXasvFohXj5Q_1751467917
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8067D1978C9A;
+	Wed,  2 Jul 2025 14:51:56 +0000 (UTC)
+Received: from [10.45.226.95] (unknown [10.45.226.95])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7888630001B9;
+	Wed,  2 Jul 2025 14:51:49 +0000 (UTC)
+Message-ID: <4f2e040b-3761-441c-b8b1-3d6aa90c77fc@redhat.com>
+Date: Wed, 2 Jul 2025 16:51:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,44 +51,77 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/4] fs: change write_begin/write_end interface to take
- struct kiocb *
-To: Matthew Wilcox <willy@infradead.org>
-Cc: "tytso@mit.edu" <tytso@mit.edu>, "hch@infradead.org" <hch@infradead.org>,
- "adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
- "brauner@kernel.org" <brauner@kernel.org>,
- "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
- "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
- "tursulin@ursulin.net" <tursulin@ursulin.net>,
- "airlied@gmail.com" <airlied@gmail.com>,
- "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
- "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
- "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
- "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>,
- "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "chentao325@qq.com" <chentao325@qq.com>,
- "frank.li@vivo.com" <frank.li@vivo.com>
-References: <20250627110257.1870826-1-chentaotao@didiglobal.com>
- <20250627110257.1870826-4-chentaotao@didiglobal.com>
- <aF6-L5Eu7XieS8aM@casper.infradead.org>
-From: Taotao Chen <chentt325@gmail.com>
-In-Reply-To: <aF6-L5Eu7XieS8aM@casper.infradead.org>
+Subject: Re: [PATCH net-next v12 07/14] dpll: zl3073x: Add clock_id field
+To: Jiri Pirko <jiri@resnulli.us>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Prathosh Satish <Prathosh.Satish@microchip.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Shannon Nelson <shannon.nelson@amd.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ Michal Schmidt <mschmidt@redhat.com>, Petr Oros <poros@redhat.com>
+References: <20250629191049.64398-1-ivecera@redhat.com>
+ <20250629191049.64398-8-ivecera@redhat.com>
+ <amsh2xeltgadepx22kvcq4cfyhb3psnxafqhr33ra6nznswsaq@hfq6yrb4zvo7>
+ <e5e3409e-b6a8-4a63-97ac-33e6b1215979@redhat.com>
+ <cpgoccukn5tuespqse5fep4gzzaeggth2dkzqh6l5jjchumfyc@5kjorwx57med>
+Content-Language: en-US
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <cpgoccukn5tuespqse5fep4gzzaeggth2dkzqh6l5jjchumfyc@5kjorwx57med>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
+On 02. 07. 25 2:01 odp., Jiri Pirko wrote:
+> Wed, Jul 02, 2025 at 01:43:38PM +0200, ivecera@redhat.com wrote:
+>>
+>> On 02. 07. 25 12:31 odp., Jiri Pirko wrote:
+>>> Sun, Jun 29, 2025 at 09:10:42PM +0200, ivecera@redhat.com wrote:
+>>>> Add .clock_id to zl3073x_dev structure that will be used by later
+>>>> commits introducing DPLL feature. The clock ID is required for DPLL
+>>>> device registration.
+>>>>
+>>>> To generate this ID, use chip ID read during device initialization.
+>>>> In case where multiple zl3073x based chips are present, the chip ID
+>>>> is shifted and lower bits are filled by an unique value - using
+>>>> the I2C device address for I2C connections and the chip-select value
+>>>> for SPI connections.
+>>>
+>>> You say that multiple chips may have the same chip ID? How is that
+>>> possible? Isn't it supposed to be unique?
+>>> I understand clock ID to be invariant regardless where you plug your
+>>> device. When you construct it from i2c address, sounds wrong.
+>>
+>> The chip id is not like serial number but it is like device id under
+>> PCI. So if you will have multiple chips with this chip id you have to
+>> distinguish somehow between them, this is the reason why I2C address
+>> is added into the final value.
+>>
+>> Anyway this device does not have any attribute that corresponds to
+>> clock id (as per our previous discussion) and it will be better to NOT
+>> require clock id from DPLL core side.
+> 
+> Yes, better not to require it comparing to having it wrong.
 
+It looks that using clock_id==0 is safe from DPLL API point of view.
+The problem is if you will have multiple zl3073x based chips because
+the driver would call dpll_device_get(0 /* clock_id */, channel, module)
 
-在 2025/6/27 23:52, Matthew Wilcox 写道:
-> On Fri, Jun 27, 2025 at 11:03:11AM +0000, 陈涛涛 Taotao Chen wrote:
->> @@ -1399,13 +1400,10 @@ static int write_end_fn(handle_t *handle, struct inode *inode,
->>   }
->>   
->>   /*
->> - * We need to pick up the new inode size which generic_commit_write gave us
->> - * `file' can be NULL - eg, when called from page_symlink().
->> - *
-> Why delete this?  It seems still true to me, other than s/file/iocb/
-Sorry, that was my mistake...
+For 1st chip (e.g. 2 channel) the driver will call:
+dpll_device_get(0, 0, module);
+dpll_device_get(0, 1, module);
+
+and for the second the same that is wrong. The clock_id would help to
+distinguish between them.
+
+Wouldn't it be better to use a random number for clock_id from the
+driver?
+
+Ivan
+
