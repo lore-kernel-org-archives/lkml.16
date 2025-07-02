@@ -1,137 +1,96 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19A902F50B5;
-	Wed,  2 Jul 2025 16:35:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F6C2F3631;
+	Wed,  2 Jul 2025 16:36:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751474159; cv=none; b=b2VFx4RObZjBELrCDMkE4jyPoDFj7A1eOfX8KrXK12OXb2grOtzXIPgfgaDBLv8tHB2thOV7/pGalkgW9sH7qZ4GSFJuIuumVkz/bSHKuh/d5wydDaWvaDOnYdpzLyiLRlrJPYnX6RgE0Dp7v9MKrW5GzCd9TYjleJrhs8A6u7A=
+	t=1751474184; cv=none; b=WH5lFHFRoItmeHnwK5Ndina3HwJoRVkUPeBIr00nB8INlGJdZOMmnqRLG9oLfyLJ2/cOau7PfrFr99C8DmTF0U+Bu6UtrHJ4uKl6pq9snY5FTy+0b4raucJJhxso+GaCUF0wecN8utgYxKS5XDLFrHuE9HrDIZEgv7h8MmmWIq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751474159; c=relaxed/simple;
-	bh=yZEjONrzcZENuzKEaQuvgIhNN+3lLCSPSnVgEE+2jDU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ZnRODVM/MH9qx+mlQU96dwFz5r4/jgQ3qAh/eOhH6qpub541pAwiF6p58726/re+3H+1oVC6q79sN7WsI2FTUaDr+KyWjSLi/ZWpnwnEqvcPvEenRVoFFSeeZkPJNFy+PvwYkgPaKohUJ20l9hBCV9P+WfO5OAmPoElK/3fb2Uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=I1fUlzcv; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1751474184; c=relaxed/simple;
+	bh=cfJL4uwsxTpOOEpCClcy7icfZY43EsxMVhrstr0vxfQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FWZJy0/Q29ft+Uw/h1ehVNecST2AqqHb2nTdgA11cvhvMLdMm15BbuUkE6EF08rB5dwuN/oAKJcuOAFG9NuG260tC2DpbvkpBvA/AumQx7KIV429tn+JCmKsqDX/BugAbOXj+bmCARKMdkmuLhquM4F0ctcQ6+DBqjx9NjaOLNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZP2SwdkV; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="I1fUlzcv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
-	Date:References:In-Reply-To:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=YqPYHUWKBExHrHxxYieGS7K3EpkIcdpaIqcCODsjLkc=; b=I1fUlzcvPF2opKVyBCNm08K86A
-	Y1C8R3Po8WVGkTpbJHk82BQsaOS1cJEUDbPNf2lYAuRstG1SGP8pnLx29MLPcAGtagjG1fwADP9fW
-	DUfmbl3uBGNOJMLyPkyja0I5O5dc9e5AhNEIrHtK4d2XXFY8YddSHTZMwo+MoYRCZk9HpH8A2bAOg
-	MOty2462a0RODzVdmOZ/CrM30C9hWUh8WdfixpPU1V6dQ/5qKkToBaALP1re/h7sIRYS6fk9k2te9
-	+tLFTHLTdxOLZj+fNu2I9bxBuwdio3P4LvAhh4bkF41c/HKF9B8WXxWonYZAYO2Wie8wHLxai8xfS
-	D4dFiuUw==;
-Received: from bl23-10-177.dsl.telepac.pt ([144.64.10.177] helo=localhost)
-	by fanzine2.igalia.com with utf8esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1uX0Qt-00BXYj-OS; Wed, 02 Jul 2025 18:35:39 +0200
-From: Luis Henriques <luis@igalia.com>
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: Bernd Schubert <bernd@bsbernd.com>,  Laura Promberger
- <laura.promberger@cern.ch>,  Dave Chinner <david@fromorbit.com>,  Matt
- Harvey <mharvey@jumptrading.com>,  linux-fsdevel@vger.kernel.org,
-  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] fuse: new workqueue to periodically invalidate
- expired dentries
-In-Reply-To: <CAJfpegue3szRGZs+ogvYjiVt0YUo-=e+hrj-r=8ZDy11Zgrt9w@mail.gmail.com>
-	(Miklos Szeredi's message of "Wed, 2 Jul 2025 17:39:58 +0200")
-References: <20250520154203.31359-1-luis@igalia.com>
-	<CAJfpegue3szRGZs+ogvYjiVt0YUo-=e+hrj-r=8ZDy11Zgrt9w@mail.gmail.com>
-Date: Wed, 02 Jul 2025 17:35:33 +0100
-Message-ID: <87bjq2k0tm.fsf@igalia.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZP2SwdkV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=BHoZQI/zyF4cGymUERYBEyeK3+PwhgUVRUsk6Fb8Mag=; b=ZP2SwdkVhXtaITzZxBbBZnsuIG
+	oLOocLyc+a/DMjjS7hW7HeU7R8eIruHXAApMZnBPF0EJyH2mczbYLYTZ4iGe0lvpdMDO5Qe6JBtSG
+	qOqVQltEJR9gZli6NnK3iwdLGZ8/d61AwvE+dXalAoqmP756IanxoQM/OhfY3VhMSUIesIghq6JWq
+	f4wqsHRR3MsQM7wwdqgs9FT6+OGs5RJxZdWSWWwUcaObK3yXEc6Id0FreCAggKDGEaq/FHgMs4p+Y
+	u1/JJ3uK4wgOhzJTa+wWhJ2zwQYZwRvk1wS5nIq2qppl+s6lAbZTXOlI2D0mL6dDGWeby757alQks
+	g8n3BBKA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uX0RN-00000007UxO-2KEa;
+	Wed, 02 Jul 2025 16:36:09 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 1786D300130; Wed, 02 Jul 2025 18:36:09 +0200 (CEST)
+Date: Wed, 2 Jul 2025 18:36:09 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, x86@kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	"Jose E. Marchesi" <jemarch@gnu.org>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>
+Subject: Re: [PATCH v12 06/14] unwind_user/deferred: Add deferred unwinding
+ interface
+Message-ID: <20250702163609.GR1613200@noisy.programming.kicks-ass.net>
+References: <20250701005321.942306427@goodmis.org>
+ <20250701005451.571473750@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250701005451.571473750@goodmis.org>
 
-On Wed, Jul 02 2025, Miklos Szeredi wrote:
+On Mon, Jun 30, 2025 at 08:53:27PM -0400, Steven Rostedt wrote:
 
-> On Tue, 20 May 2025 at 17:42, Luis Henriques <luis@igalia.com> wrote:
->>
->> This patch adds a new module parameter 'inval_wq' which is used to start=
- a
->> workqueue to periodically invalidate expired dentries.  The value of this
->> new parameter is the period, in seconds, of the workqueue.  When it is s=
-et,
->> every new dentry will be added to an rbtree, sorted by the dentry's expi=
-ry
->> time.
->>
->> When the workqueue is executed, it will check the dentries in this tree =
-and
->> invalidate them if:
->>
->>   - The dentry has timed-out, or if
->>   - The connection epoch has been incremented.
->
-> I wonder, why not make the whole infrastructure global?  There's no
-> reason to have separate rb-trees and workqueues for each fuse
-> instance.
+> +/*
+> + * Read the task context timestamp, if this is the first caller then
+> + * it will set the timestamp.
+> + *
+> + * For this to work properly, the timestamp (local_clock()) must
+> + * have a resolution that will guarantee a different timestamp
+> + * everytime a task makes a system call. That is, two short
+> + * system calls back to back must have a different timestamp.
+> + */
+> +static u64 get_timestamp(struct unwind_task_info *info)
+> +{
+> +	lockdep_assert_irqs_disabled();
+> +
+> +	if (!info->timestamp)
+> +		info->timestamp = local_clock();
+> +
+> +	return info->timestamp;
+> +}
 
-Hmm... true.  My initial approach was to use a mount parameter to enabled
-it for each connection.  When you suggested replacing that by a module
-parameter, I should have done that too.
+I'm very hesitant about this. Modern hardware can do this, but older
+hardware (think Intel Core and AMD Bulldozer etc hardware) might
+struggle with this. They don't have stable TSC and as such will use the
+magic in kernel/sched/clock.c; which can get stuck on a window edge for
+a little bit and re-use timestamps.
 
-> Contention on the lock would be worse, but it's bad as it
-> is, so need some solution, e.g. hashed lock, which is better done with
-> a single instance.
 
-Right, I'll think how to fix it (or at least reduce contention).
-
->> The workqueue will run for, at most, 5 seconds each time.  It will
->> reschedule itself if the dentries tree isn't empty.
->
-> It should check need_resched() instead.
-
-OK.
-
->> diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
->> index 1fb0b15a6088..257ca2b36b94 100644
->> --- a/fs/fuse/dir.c
->> +++ b/fs/fuse/dir.c
->> @@ -34,33 +34,153 @@ static void fuse_advise_use_readdirplus(struct inod=
-e *dir)
->>         set_bit(FUSE_I_ADVISE_RDPLUS, &fi->state);
->>  }
->>
->> -#if BITS_PER_LONG >=3D 64
->> -static inline void __fuse_dentry_settime(struct dentry *entry, u64 time)
->> +struct fuse_dentry {
->> +       u64 time;
->> +       struct rcu_head rcu;
->> +       struct rb_node node;
->> +       struct dentry *dentry;
->> +};
->> +
->
-> You lost the union with rcu_head.   Any other field is okay, none of
-> them matter in rcu protected code.  E.g.
->
-> struct fuse_dentry {
->         u64 time;
->         union {
->                 struct rcu_head rcu;
->                 struct rb_node node;
->         };
->         struct dentry *dentry;
-> };
-
-Oops.  I'll fix that.
-
-Thanks a lot for your feedback, Miklos.  Much appreciated.  I'll re-work
-this patch and send a new revision shortly.
-
-Cheers,
---=20
-Lu=C3=ADs
