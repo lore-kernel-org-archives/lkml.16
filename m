@@ -1,203 +1,168 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9302725DD12;
-	Wed,  2 Jul 2025 10:51:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D82325A33A;
+	Wed,  2 Jul 2025 10:53:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751453488; cv=none; b=FASymjdF0PgOfE2PwE4jaWl8MPUt2l5+UvaYxIy7lCRzV2FRB7zR6ug3exYHYMsI8z/8o6Js6D0igWoFHLKBhPr7zEe+nMZCOUX0ZYT6ItGTku49JUNZvvb/r33snZ8y3sQ9M9vu8nEsa2Oh0bnhmQmlWlGCEeyfrTS29BWvGNs=
+	t=1751453626; cv=none; b=G4lUzzxIbM3qofYeYATVI4cYBRttJLZK1h3hFih1K/+aa+5gq/kLJd+BcbKXj45k33u4UnhS1W3wynRmftZd86NIyZAStRLp34teVaf0MFqm0rMl5JULcqTQupYJquRGdyUW/FUBQL01qcSHJ4N5nM9VYeiBn+xcigmbgli/kHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751453488; c=relaxed/simple;
-	bh=xF9OJWGVVMiNOy5F5fuhXYNqCNOpvXwuxrNpQnAjFoA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hn8letig+bgx+KJRY69Y3lBoTidwAzKgA9nHBvDKZc0MSvFant3Nl33BOJd6QtJxzfDIFPMYCsdS55z8ly6q/KY/oeTCli/kdMCAwxz9xN26OTm7owsgD5+sQgm/rKSGRPHYNa5GmO8lXUvNNldMDOgAOJcdRWJHK+BDGY6So1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bx6/qc80; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751453626; c=relaxed/simple;
+	bh=Xrhf1GwnZkxyiYFhUf+rxHpGqV5vwwoSaFZMXP3lOGY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fXh0EoWRmX/YWCN5i/taj/74O7Y+7olD8OUHtULoSbd9mBXdMm8sfF2KaF82LkDkM09wFqKgUWoh+iKXbAksf/w4Nv5tCC5j4Dkm/mYn0vPSQjmGxoA0+xch/J4TzrinkWTaYR+Ew4ftXNgxHalgwiN1UK1NVbOmHABPJc0Yf6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GUtxFgKq; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bx6/qc80"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 550D3C4CEFA;
-	Wed,  2 Jul 2025 10:51:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751453488;
-	bh=xF9OJWGVVMiNOy5F5fuhXYNqCNOpvXwuxrNpQnAjFoA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Bx6/qc80vQyJvURLfMqv7WjZDLgcNX57rZNlk1SSZN3G9h8JiNASmUF5l66eag/om
-	 zqBf5d8lSqtB31B9AdrhbRyQLMECUlVG1hpX/zaUnK4pnNkxyH3s5PZMhNZ5ld6GKL
-	 d8B/Tx5EX+qZ+k9xK8I166zmjRnSE7NNYheCxbrQpTSaUxwfTiptfY+TXHFcwbuL7A
-	 wEZ15HUzBcHK/zjwYpJ7ggXT/wn/sJojeWna7c2YMcfm6NdvrHVKRYlfiwILy+O9No
-	 VX1/WU5gulbunx9z9Q604anOypq4a3p3oa0wbbrfBozQ4QLyqOgnB9OZoDrIBwcX8R
-	 nObq5a72C+w8Q==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B691C8303C;
-	Wed,  2 Jul 2025 10:51:28 +0000 (UTC)
-From: Max Shevchenko via B4 Relay <devnull+wctrl.proton.me@kernel.org>
-Date: Wed, 02 Jul 2025 13:50:46 +0300
-Subject: [PATCH v4 09/11] ARM: dts: mediatek: add basic support for MT6572
- SoC
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GUtxFgKq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751453624; x=1782989624;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=Xrhf1GwnZkxyiYFhUf+rxHpGqV5vwwoSaFZMXP3lOGY=;
+  b=GUtxFgKqKhcHYIcAyhGbe3uCRe+bY+B8yph519YN5mMivVQWDdrw/95P
+   r/k1NvuQEZ2WjQak9x9Wb4663g2YrJON89WbRM685okezpttI9O5TsaUO
+   AN6sfL8prdn0qK5Axa/qejgMUnnuz4Wm44v20/UxRfIvlaSDkxHv9F2bb
+   naHNjlh37CRDwmi9ZXOKrSxMWAgE7rVWL1CSy1L7elVibpxEH6D8k1UGQ
+   D3l8ZMghtxC0OVfShmOyx4gThfB+Q9tgFd9lCv2/hYrexvVcZj8bCkWXk
+   T1UVZw52+nCTiA01uTi/IetrQYl6C1YTmDi7QzmQui1wtambQBDuKS8Fn
+   g==;
+X-CSE-ConnectionGUID: qdjhNq5nReuRCt79ZU5sBg==
+X-CSE-MsgGUID: liwysPppTcK70hyIbIQ7BQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="52859653"
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="52859653"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 03:53:43 -0700
+X-CSE-ConnectionGUID: UpGjGzV8QDGpLFIE560HUA==
+X-CSE-MsgGUID: klVJK8l4S8Kctp0tk/FcNQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="158303529"
+Received: from cpetruta-mobl1.ger.corp.intel.com (HELO svinhufvud.fi.intel.com) ([10.245.245.162])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 03:53:40 -0700
+Received: from svinhufvud (syyslaukka.retiisi.eu [IPv6:::1])
+	by svinhufvud.fi.intel.com (Postfix) with ESMTPS id E135344390;
+	Wed,  2 Jul 2025 13:53:37 +0300 (EEST)
+Date: Wed, 2 Jul 2025 13:53:36 +0300
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: "Yan, Dongcheng" <dongcheng.yan@intel.com>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
+	hverkuil@xs4all.nl,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Hans de Goede <hdegoede@redhat.com>, u.kleine-koenig@baylibre.com,
+	ricardo.ribalda@gmail.com, bingbu.cao@linux.intel.com,
+	stable@vger.kernel.org, dongcheng.yan@linux.intel.com,
+	hao.yao@intel.com
+Subject: Re: [PATCH v3 1/2] platform/x86: int3472: add hpd pin support
+Message-ID: <aGUPsDglThYGc/3g@svinhufvud>
+References: <20250425104331.3165876-1-dongcheng.yan@intel.com>
+ <5a04f105-3075-3226-6ad6-f2c3f31b29da@linux.intel.com>
+ <116ea6fa-e9b8-4c28-bc31-f4d1589eb34b@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250702-mt6572-v4-9-bde75b7ed445@proton.me>
-References: <20250702-mt6572-v4-0-bde75b7ed445@proton.me>
-In-Reply-To: <20250702-mt6572-v4-0-bde75b7ed445@proton.me>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Thomas Gleixner <tglx@linutronix.de>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, 
- Wim Van Sebroeck <wim@linux-watchdog.org>, 
- Guenter Roeck <linux@roeck-us.net>, Sean Wang <sean.wang@mediatek.com>, 
- Russell King <linux@armlinux.org.uk>
-Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, linux-watchdog@vger.kernel.org, 
- Max Shevchenko <wctrl@proton.me>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751453439; l=3300;
- i=wctrl@proton.me; s=20250603; h=from:subject:message-id;
- bh=Xzi5mW5J7bGwfKfJ6p/3cXr1VKlZLnEwbR0SOET4e6Y=;
- b=Zt6UCSCrLh9n69t36LkTOtpq6BpalA3Cuoapidyqrtc2/Y8pa69I6zftvEqQTirnEl0bRtcxz
- tnBk24DQC7iDEkaLfa/4Q4plVzfQx8e/6HjXOziX56vd8xF6JgJB72H
-X-Developer-Key: i=wctrl@proton.me; a=ed25519;
- pk=JXUx3mL/OrnRvbK57HXgugBjEBKq4QgDKJqp7BALm74=
-X-Endpoint-Received: by B4 Relay for wctrl@proton.me/20250603 with
- auth_id=421
-X-Original-From: Max Shevchenko <wctrl@proton.me>
-Reply-To: wctrl@proton.me
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <116ea6fa-e9b8-4c28-bc31-f4d1589eb34b@intel.com>
 
-From: Max Shevchenko <wctrl@proton.me>
+Hi Dongcheng, Ilpo,
 
-Add basic support for the MediaTek MT6572 SoC.
+On Wed, Jul 02, 2025 at 06:23:19PM +0800, Yan, Dongcheng wrote:
+> Hi Ilpo,
+> 
+> On 7/2/2025 6:19 PM, Ilpo Järvinen wrote:
+> > On Fri, 25 Apr 2025, Dongcheng Yan wrote:
+> > 
+> >> Typically HDMI to MIPI CSI-2 bridges have a pin to signal image data is
+> >> being received. On the host side this is wired to a GPIO for polling or
+> >> interrupts. This includes the Lontium HDMI to MIPI CSI-2 bridges
+> >> lt6911uxe and lt6911uxc.
+> >>
+> >> The GPIO "hpd" is used already by other HDMI to CSI-2 bridges, use it
+> >> here as well.
+> >>
+> >> Signed-off-by: Dongcheng Yan <dongcheng.yan@intel.com>
+> >> ---
+> >>  drivers/platform/x86/intel/int3472/common.h   | 1 +
+> >>  drivers/platform/x86/intel/int3472/discrete.c | 6 ++++++
+> >>  2 files changed, 7 insertions(+)
+> >>
+> >> diff --git a/drivers/platform/x86/intel/int3472/common.h b/drivers/platform/x86/intel/int3472/common.h
+> >> index 51b818e62a25..4593d567caf4 100644
+> >> --- a/drivers/platform/x86/intel/int3472/common.h
+> >> +++ b/drivers/platform/x86/intel/int3472/common.h
+> >> @@ -23,6 +23,7 @@
+> >>  #define INT3472_GPIO_TYPE_CLK_ENABLE				0x0c
+> >>  #define INT3472_GPIO_TYPE_PRIVACY_LED				0x0d
+> >>  #define INT3472_GPIO_TYPE_HANDSHAKE				0x12
+> >> +#define INT3472_GPIO_TYPE_HOTPLUG_DETECT			0x13
+> >>  
+> >>  #define INT3472_PDEV_MAX_NAME_LEN				23
+> >>  #define INT3472_MAX_SENSOR_GPIOS				3
+> >> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+> >> index 394975f55d64..efa3bc7af193 100644
+> >> --- a/drivers/platform/x86/intel/int3472/discrete.c
+> >> +++ b/drivers/platform/x86/intel/int3472/discrete.c
+> >> @@ -191,6 +191,10 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
+> >>  		*con_id = "privacy-led";
+> >>  		*gpio_flags = GPIO_ACTIVE_HIGH;
+> >>  		break;
+> >> +	case INT3472_GPIO_TYPE_HOTPLUG_DETECT:
+> >> +		*con_id = "hpd";
+> >> +		*gpio_flags = GPIO_ACTIVE_HIGH;
+> >> +		break;
+> >>  	case INT3472_GPIO_TYPE_POWER_ENABLE:
+> >>  		*con_id = "avdd";
+> >>  		*gpio_flags = GPIO_ACTIVE_HIGH;
+> >> @@ -221,6 +225,7 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
+> >>   * 0x0b Power enable
+> >>   * 0x0c Clock enable
+> >>   * 0x0d Privacy LED
+> >> + * 0x13 Hotplug detect
+> >>   *
+> >>   * There are some known platform specific quirks where that does not quite
+> >>   * hold up; for example where a pin with type 0x01 (Power down) is mapped to
+> >> @@ -290,6 +295,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+> >>  	switch (type) {
+> >>  	case INT3472_GPIO_TYPE_RESET:
+> >>  	case INT3472_GPIO_TYPE_POWERDOWN:
+> >> +	case INT3472_GPIO_TYPE_HOTPLUG_DETECT:
+> >>  		ret = skl_int3472_map_gpio_to_sensor(int3472, agpio, con_id, gpio_flags);
+> >>  		if (ret)
+> >>  			err_msg = "Failed to map GPIO pin to sensor\n";
+> > 
+> > I was informed about existance of this patch through an off-band channel 
+> > (as I was not among receipients). In future, please include all relevant 
+> > maintainers and MLs as receipients as indicated by 
+> > scripts/get_maintainers.pl.
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Signed-off-by: Max Shevchenko <wctrl@proton.me>
----
- arch/arm/boot/dts/mediatek/mt6572.dtsi | 108 +++++++++++++++++++++++++++++++++
- 1 file changed, 108 insertions(+)
+Hans used to handle these previously and I think that's why you weren't
+cc'd.
 
-diff --git a/arch/arm/boot/dts/mediatek/mt6572.dtsi b/arch/arm/boot/dts/mediatek/mt6572.dtsi
-new file mode 100644
-index 0000000000000000000000000000000000000000..ac70f266d698d3dafb51b22021bd6615124a7416
---- /dev/null
-+++ b/arch/arm/boot/dts/mediatek/mt6572.dtsi
-@@ -0,0 +1,108 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2025 Max Shevchenko <wctrl@proton.me>
-+ */
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	interrupt-parent = <&sysirq>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		enable-method = "mediatek,mt6589-smp";
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x0>;
-+		};
-+		cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x1>;
-+		};
-+	};
-+
-+	uart_clk: dummy26m {
-+		compatible = "fixed-clock";
-+		clock-frequency = <26000000>;
-+		#clock-cells = <0>;
-+	};
-+
-+	system_clk: dummy13m {
-+		compatible = "fixed-clock";
-+		clock-frequency = <13000000>;
-+		#clock-cells = <0>;
-+	};
-+
-+	rtc_clk: dummy32k {
-+		compatible = "fixed-clock";
-+		clock-frequency = <32000>;
-+		#clock-cells = <0>;
-+	};
-+
-+	soc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "simple-bus";
-+		ranges;
-+
-+		watchdog: watchdog@10007000 {
-+			compatible = "mediatek,mt6572-wdt", "mediatek,mt6589-wdt";
-+			reg = <0x10007000 0x100>;
-+			interrupts = <GIC_SPI 126 IRQ_TYPE_LEVEL_LOW>;
-+			timeout-sec = <15>;
-+			#reset-cells = <1>;
-+		};
-+
-+		timer: timer@10008000 {
-+			compatible = "mediatek,mt6572-timer", "mediatek,mt6577-timer";
-+			reg = <0x10008000 0x80>;
-+			interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&system_clk>, <&rtc_clk>;
-+			clock-names = "system-clk", "rtc-clk";
-+		};
-+
-+		sysirq: interrupt-controller@10200100 {
-+			compatible = "mediatek,mt6572-sysirq", "mediatek,mt6577-sysirq";
-+			reg = <0x10200100 0x1c>;
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			interrupt-parent = <&gic>;
-+		};
-+
-+		gic: interrupt-controller@10211000 {
-+			compatible = "arm,cortex-a7-gic";
-+			reg = <0x10211000 0x1000>,
-+			      <0x10212000 0x2000>,
-+			      <0x10214000 0x2000>,
-+			      <0x10216000 0x2000>;
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			interrupt-parent = <&gic>;
-+		};
-+
-+		uart0: serial@11005000 {
-+			compatible = "mediatek,mt6572-uart", "mediatek,mt6577-uart";
-+			reg = <0x11005000 0x400>;
-+			interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&uart_clk>;
-+			clock-names = "baud";
-+			status = "disabled";
-+		};
-+
-+		uart1: serial@11006000 {
-+			compatible = "mediatek,mt6572-uart", "mediatek,mt6577-uart";
-+			reg = <0x11006000 0x400>;
-+			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&uart_clk>;
-+			clock-names = "baud";
-+			status = "disabled";
-+		};
-+	};
-+};
+> > 
+> > This may go through a media tree,
+> > 
+> > Acked-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+
+Thank you!
+
+> > 
+> > 
+> 
+> Thanks a lot and sorry for the trouble caused by me.
+
+No worries.
 
 -- 
-2.50.0
+Kind regards,
 
-
+Sakari Ailus
