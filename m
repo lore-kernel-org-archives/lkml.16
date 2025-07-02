@@ -1,118 +1,131 @@
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CA6323F404;
-	Wed,  2 Jul 2025 13:46:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA282211F
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 13:47:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751463999; cv=none; b=RbIR0Zde9QLVUHidwoq6cquY6TqP/5uKgzZx2Fo1fySX4Geevlmnf9rK1w993QblKMCfN/yOcWazMGEu6QuWffxC2Od/IZ4WHvDmBceo7aPsOD+6ICzGvMN1uv13SDb7tKXUFY31HLvAhmn12yrUc0hJUIUg8+ow8UfkueNv93Y=
+	t=1751464075; cv=none; b=YwdYYH4+RWR4+mqjxov0MYXMjgWl87zgE1Yle5CROYPR7xr/7sNiVxYzlI7UaqNV9eNAPEengIcaWOTdpT4aGnC1OW/D46oL1aVhW3XLqWnXs70B7WkDnZlRzQWIY2Vtj8PrbeHBPFhMfzCeYHyrSAQADLZxPwSax7XLZ9YHbb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751463999; c=relaxed/simple;
-	bh=34bL3484h8f6EhyPZ85OIedeYYI1+zm1EbhL4IbB30I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SQDtVSOTIvdVVpf8dwOOhtSc9ugE2pEuXqYmGUHK96YAt9LFpa5t1k6K2qwUg+rNC0M46w0fyozuPnL9l7aJRPJ8/u8by5MZIEor5zyQFybiYgt8RrZmbR2j2J7StS+/E7s4wWCPvZXNkDmO2GjRky65p3l/Sk515wdG+eb3Ics=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-884f7d29b85so847805241.1;
-        Wed, 02 Jul 2025 06:46:37 -0700 (PDT)
+	s=arc-20240116; t=1751464075; c=relaxed/simple;
+	bh=Wi4DQE46TrDLZnfWQdYfMnq4mgrm6vjP9wNScHh7p80=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QClfbvTLnXWayPKN705wIrwp9kupLQcF220sVy2RPPFRpuTaAi++PP8VEpvjLvWff4u98oDgMzhF0a0DDHjECmOIObDY4cXXHsr3ze0ekqaOBRzAp+IA8WHoL+zpfQSeEK5LO/QwGJ3EANaDXP6k0jreOthTEKMgxE+hnr/j+EQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=hHloAsGw; arc=none smtp.client-ip=209.85.166.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="hHloAsGw"
+Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3df2f20f4bbso21778155ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 06:47:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1751464072; x=1752068872; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/fwakO58UBNp1YzQ6yMq0byfPqW91OqrWRj+mP3UNP0=;
+        b=hHloAsGwArENH/R+XqsXV/ujKD9sGOS7M9vlcn/v4DIJhXQeNMJ7c+c36C6ZA38ovw
+         PMZ3atoGJXsQD6l7XaWTpZpb7hEodsU6FkG5vuZIl7/TFRU8cSM9Uaz0ERHtyYdc2F7Q
+         +bwolhxGXKDCW3mS2h762ITvnwkL6o+xHC8n+zPq7CJAXpXHl744+QctkzWf0grcxBs9
+         NoVPwmqvu+U8y3zb9JT67eQwl8E1SO4PNtYRCKm6SATKL+TdusF7OWppT5p6HYU94TeJ
+         Hz4FBFhU8mUYQl53UBXSHiSFE3BknlBTNsUQyjNRH4QiVOQIbQcuOzR51psMKM7kJH96
+         OM6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751463996; x=1752068796;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4pfd6cAoRrTzkfPu1LB5UQmhr5tgGtIZITSglHPrqe8=;
-        b=oaF4SjqBVG+fVcg3BqkW2484UMvITxL8IgXGEppRufeLmdrS7M8DiSqLmajrYFD0hR
-         q6Ax+T30GjHT4GJ7nzysaaOvnAEWJ31SRzFmzuVXFn88i8NCerOMQuIsdnRK+vq/qff5
-         xI86o/0gXsfkVdtmxbGpPvdosSEBjtt6mGBqLt/W6KquVKecmPJ7sLmRT/nDYvYlXdHv
-         WAeSIXwTPXT5vGgkXIcy7R0IRl9PQ3A5wbjfeRac3uLdSTruf+39uwZLX/2EdVJeAYiO
-         FJtwKT+HbltRmFrRQ99EdbjykLQzbDsgFyxgKFeCKfcCUheTomDiY8SgENasMaGnMHjj
-         s/KA==
-X-Forwarded-Encrypted: i=1; AJvYcCVGzuYD32WWHOYVjpnQHjmnqDQVQUVaAUZKhq/KdijGUQD6SB4Igxp9iST+9NJTmoG+ZMSGSsQnbDCc@vger.kernel.org, AJvYcCWjb+VYZKN9XVy8/fXrdcoD5XGecHzgpHLU7RrBjhkjkenNwtx5R+fW/Grtj077vJsjFcbCR6Hyt7jqEXCZ@vger.kernel.org, AJvYcCXa/rKvWKFesbqAbInrKo4IiG/A1AsWnJc9pEPVQ2fqQpsDMaGFV6GU6a/hwihcl3euwXSyBF98PsSx@vger.kernel.org, AJvYcCXqmzh0BOT4udXhsoyR5q/2YbAwiCeW/XrYaK+/M2o6a8CUNyJy3a5IjDVJgOAjsEFsD9Iep4JT73yWv6C4n83j2OE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUJ/v9TWkwfLPKoswLCvoe+gZ7mjxtXoY75ZkWCyed5ONRnP+w
-	p/O/dlikewXxzahzV4Wbi25V3EXS7Br6vtZqS+Bwde0OVXyEooKSpMS5/90EDlve
-X-Gm-Gg: ASbGnctvt0jbfc20g5/abC6ArGiw8ICNDgcWjONLYsEO40HuKWb/lZL4T/8j/eRxGEb
-	xih52/Vf4pRBTlL1EJM/d+6GSIPz6P0XojnDiD4t1fZaUT0FMEd9Cakf8AGDJx1jmbgUPkiqKup
-	EaqrpdaBiCRiq5hqmkoo6Q23b7FWR8+iuUw4zcLxTj6wRDuZ8ngYxX/BsnAOhu83KX7UMJ4PChD
-	/rvA+M/90M+KMXZrkW74ZLddTzj+rErQglACz8HnyR0/EeBR14dcHZ5jQzLh6dRZjRq2zu8kc9j
-	aliGX1kVPTu8ejXyXxMAK5nnoxA1FX/IqVhwV00U5l+Hu8dx0RnlguB0auQGA6ivxKOKYfj7HAZ
-	UTOnDy6MdRnsAbxNwx/dDLvCEz4Xy
-X-Google-Smtp-Source: AGHT+IEohexNHyUpRphuhFKRsi616M5d22xtSQItSZvEfraV7LENT1M+SI8dv/JcrrMEtAc56i7CrQ==
-X-Received: by 2002:a05:6102:f9a:b0:4e6:fb90:1e21 with SMTP id ada2fe7eead31-4f161074096mr1445161137.2.1751463995870;
-        Wed, 02 Jul 2025 06:46:35 -0700 (PDT)
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com. [209.85.221.175])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4ee4cc5f0e6sm1866801137.30.2025.07.02.06.46.34
+        d=1e100.net; s=20230601; t=1751464072; x=1752068872;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/fwakO58UBNp1YzQ6yMq0byfPqW91OqrWRj+mP3UNP0=;
+        b=kuC5muVpFixP7010cc4BNTLDK2+p+ZXVlVNYG8hLNtBjV6Dzibiu1/WwsgJgfQ1hMH
+         hNgakwZeHdd30b2x5QQy3t7m2N2tjpBn8LTVqTlRAKllulUe26SrsQLFcsc3yilLJeHe
+         7jQjFh4QOjFCF8KS/1lA9QqIUH6ZhEiolNy6iSnSpBXbRRwYwbx1mCiwgPgmjKcXiDF1
+         j31e+Sp7HZOuPAzNTup3AdO5QjW2yCOD7LDvFi9jD9Y5ddYOUP52wWyGPfI8DqwTN/4P
+         QXP+CvQBy7RTILhJWPHXfd6mpVrxvGxLgxKPTF+LFKEifmXTHGVKj15kGhyXnV+wegxZ
+         fnOw==
+X-Forwarded-Encrypted: i=1; AJvYcCW/FV3UvXyqthGHzmK3e4nyqAm0Fp7EuZnNOn8SzgBIvPA7ppBUyBbHcMO67CAbE5PYNjDTgrV/T3z7JTA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxq0EbUpYQKu3te8vGZm9RgaEhu54rqbDGqZjq5E1RXrVjHgwdA
+	6DlAP0JOUzvme5igXivyurYIY/mh1pbZvkEuhUDU/ZJ8TmRNWlkOYkUi7G+dgHmgrqQ=
+X-Gm-Gg: ASbGnctVExYAcGJ4STYHKf/b3oLVrLtdMMw+XY95/Lf4Hvjqv5YgAzDMnzkhGeQvnD7
+	S6WzrG5rvwv5LxT+gwK3SzORvnohAEU3ySN11qefSLxX6DvokoxpykY+k59XPBTun9uUKp8kOFz
+	Fz5Q5GzL1ojjDmtsiH1750EJxw1mfuDAkVDGUPGT20HJaqhNyiJwvo375q5W3MVrUgQDgSLzB/q
+	UfIPVbZtOlp6UXFPaL66s8/1ZemSK7/NAaz1NpOgXFGNy3ULL0Q4SXXimnMsK1BHQtJo5PTx5xQ
+	iJV0aqLZtgb5tcoQnV1+ilGRXaoeNmFyko+slvoXX+kxfsLz2nDMbpuD5ORmSpFee9XEXA==
+X-Google-Smtp-Source: AGHT+IErkdSR/RjPmfMVJFAgKC3aBMy2dkswaAi8yLVXilzzod2q6hfwnomvpLNcB1bsd9raBf8Kuw==
+X-Received: by 2002:a05:6e02:156f:b0:3df:2e87:7184 with SMTP id e9e14a558f8ab-3e054a64a4cmr32804285ab.20.1751464071869;
+        Wed, 02 Jul 2025 06:47:51 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3df4a0b6fa4sm36211665ab.66.2025.07.02.06.47.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jul 2025 06:46:34 -0700 (PDT)
-Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-531466622beso2161714e0c.1;
-        Wed, 02 Jul 2025 06:46:34 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU+yGUJ4BI/JaJM/v+8KVFjysXR3VviN+ffpBrOrVQNVQeCnKAOANm2PvupyO9YSzNWsP1vL721GzfT@vger.kernel.org, AJvYcCUgTDrHVeI9bMlcT1ALeRAuaReGdAvkfFw8nRaO0BZZHSA/HspWAeM/L2SsTiidG2oUg6NYMqD9/6ucHEDa@vger.kernel.org, AJvYcCUgqWY1Ca/su4OErLMqJCb7b+ziUxVsNxzwX2afxNGk3+4QC94M/xOPU4PpXWd0SOwpBgqcBhODrW7g@vger.kernel.org, AJvYcCXYbEdHioFQojHEZaG/VNuqyvqsvyCjqxpLUCnaf9RptboDgz6zqx72cJEFg8HO+UbkbdZ8RvRClIH8w4FHYf0sa44=@vger.kernel.org
-X-Received: by 2002:a05:6122:3a18:b0:529:f50:7904 with SMTP id
- 71dfb90a1353d-53458522f9amr2051964e0c.9.1751463994163; Wed, 02 Jul 2025
- 06:46:34 -0700 (PDT)
+        Wed, 02 Jul 2025 06:47:51 -0700 (PDT)
+Message-ID: <883afab8-336a-434a-b64d-13a5db7c0f24@kernel.dk>
+Date: Wed, 2 Jul 2025 07:47:50 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250625141705.151383-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250625141705.151383-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250625141705.151383-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 2 Jul 2025 15:46:20 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWnDhhJ+G5GvMZw+7WGBdiMfWHPXSwkwOqnK5XtKdyS1A@mail.gmail.com>
-X-Gm-Features: Ac12FXwkY5d7-POGtnUoMsKJ0PzgjY7e_snj97RCbehrlRkDnq1wpHABoeePNjc
-Message-ID: <CAMuHMdWnDhhJ+G5GvMZw+7WGBdiMfWHPXSwkwOqnK5XtKdyS1A@mail.gmail.com>
-Subject: Re: [PATCH 3/3] clk: renesas: r9a09g077-cpg: Add RIIC module clocks
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/4] io_uring/cmd: introduce IORING_URING_CMD_REISSUE flag
+To: Ammar Faizi <ammarfaizi2@gnuweeb.org>, Daniel Vacek <neelx@suse.com>
+Cc: Caleb Sander Mateos <csander@purestorage.com>, Chris Mason <clm@fb.com>,
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+ Mark Harmstone <maharmstone@fb.com>,
+ Linux Btrfs Mailing List <linux-btrfs@vger.kernel.org>,
+ io-uring Mailing List <io-uring@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20250619192748.3602122-1-csander@purestorage.com>
+ <20250619192748.3602122-3-csander@purestorage.com>
+ <76d3c110-821a-471a-ae95-3a4ab1bf3324@kernel.dk>
+ <CAPjX3FfzsHWK=tRwDr4ZSOONq=RftF8THh5SWdT80N6EwesBVA@mail.gmail.com>
+ <33d93770-886f-4337-a922-579e102c0067@gnuweeb.org>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <33d93770-886f-4337-a922-579e102c0067@gnuweeb.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Prabhakar,
+On 7/2/25 12:44 AM, Ammar Faizi wrote:
+> On 7/2/25 1:27 PM, Daniel Vacek wrote:
+>> On Tue, 1 Jul 2025 at 21:04, Jens Axboe <axboe@kernel.dk> wrote:
+>>> Probably fold that under the next statement?
+>>>
+>>>          if (ret == -EAGAIN || ret == -EIOCBQUEUED) {
+>>>                  if (ret == -EAGAIN) {
+>>>                          ioucmd->flags |= IORING_URING_CMD_REISSUE;
+>>>                  return ret;
+>>>          }
+>>>
+>>> ?
+>>
+>> I'd argue the original looks simpler, cleaner.
+> 
+> I propose doing it this way:
+> 
+>     if (ret == -EAGAIN) {
+>         ioucmd->flags |= IORING_URING_CMD_REISSUE;
+>         return ret;
+>     }
+> 
+>     if (ret == -EIOCBQUEUED)
+>         return ret;
+> 
+> It's simpler because the -EAGAIN is only checked once :)
 
-On Wed, 25 Jun 2025 at 16:17, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Add RIIC module clocks for: iic0, iic1, and iic2.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Mine was mostly done for code generation reasons, though probably
+the compiler is smart enough. I did consider yours as well, it's
+more readable. However I'd then write it as:
 
-Thanks for your patch!
+if (ret == -EAGAIN) {
+	ioucmd->flags |= IORING_URING_CMD_REISSUE;
+	return -EAGAIN;
+} else if (ret == -EIOCBQUEUED) {
+	return -EIOCBQUEUED;
+}
 
-> --- a/drivers/clk/renesas/r9a09g077-cpg.c
-> +++ b/drivers/clk/renesas/r9a09g077-cpg.c
-> @@ -154,6 +154,9 @@ static const struct cpg_core_clk r9a09g077_core_clks[] __initconst = {
->
->  static const struct mssr_mod_clk r9a09g077_mod_clks[] __initconst = {
->         DEF_MOD("sci0fck", 8, CLK_SCI0ASYNC),
-> +       DEF_MOD("iic0", 100, R9A09G077_CLK_PCLKL),
-> +       DEF_MOD("iic1", 101, R9A09G077_CLK_PCLKL),
-> +       DEF_MOD("iic2", 501, R9A09G077_CLK_PCLKL),
-
-Shouldn't that be 601?
-(MSTPCRA => xx, MSTPCRB => 1xx, MSTPCRG => 6xx)
-If you agree, I can fix that while applying...
-
->         DEF_MOD("sdhi0", 1212, R9A09G077_CLK_PCLKAM),
->         DEF_MOD("sdhi1", 1213, R9A09G077_CLK_PCLKAM),
->  };
-
-The rest LGTM, so with the above fixed:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
+But we're obviously nitpicking now. The bigger question as posed in
+another patch in this series is whether we need IORING_URING_CMD_REISSUE
+at all in the first place.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Jens Axboe
