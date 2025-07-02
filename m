@@ -1,103 +1,134 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D02217730
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 06:21:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD3F2AE8B;
+	Wed,  2 Jul 2025 06:22:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751437319; cv=none; b=rHq5bAUCJecogeRBJGOjPOYmzoWbu9CNVI55lRcHwYz6J9tMo3VykjdFUua+y5+xbYPsqAfOiJmRwXIHLeTnGi3nbyiGpzyyjwIY4l06iaT0F2//jsQB8GSl0/1hLx4kgPld+o6JydMCG7Uyb4TiDeyrGxik4HpP0uDBQlRg/c0=
+	t=1751437352; cv=none; b=eFxopJiv9FIGNSxrGW/lLafDUfgBlb+5IgjfZ4XrvMJLSj8abJMC304wFlH1mHJzPDHLOnexLlb49UxFXZEoois7mlmSeDb/XjIt8KOoGJ5eTaZBfb4dQYYH2mmF8DlXYuCE2q69gMa2rh5IJeQowyA5w6iYjkCNsdWRKRQEmII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751437319; c=relaxed/simple;
-	bh=Ob91oO3Vo7GCUPhrbw641VDdmlJ1ZGqyGVAcVQVYpLk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=kfXj7tLSIRBmhYHjGhZUu1+M/UFCsa9uPVCQ1IxNZLPFxfO4yBm2TjZYqUp6lVcGzJm1F4FfQ9GdinkdV4GyUnMeuTy58kA3jq6VZL7coJKhD9S5eKz8OrpVFps1DLwz3coA/4Pt9w2NW9Z9igF17R/her4w852NGMQJbq0gMUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=udXL9j1a; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1751437352; c=relaxed/simple;
+	bh=YxS2qPZmDkIwQXB33JykK2wCJt5fRCCG7LCQRbDB53o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eeC5GiyIAT6ZZt79Fy4ttHospUZctZr9LR4uw7LcSzMQ/5jb6ivFiivW0XZmgmhf0iHFK8E5YJEFLsJVLGwvJZSbN8ZMGHK2S4/bGI6KpZZjQ/+1sgOHGSZD0w0tUsF4ZdWw4Rz86x2F5FNZVa7dJhEabPvq88EmL7mmB4u5kG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YhyF7UW+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="udXL9j1a"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4bX8tn3B83z9ssQ;
-	Wed,  2 Jul 2025 08:21:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1751437313; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ob91oO3Vo7GCUPhrbw641VDdmlJ1ZGqyGVAcVQVYpLk=;
-	b=udXL9j1aIsSa1HOw2caxw6IFIpEQqn/HFoTLxJ3Pu9llaSGRw4Q9Wl3yjbGdEdhwgUotGe
-	0UjIFPPxm057R6AqntPUw67R5P03iHDTYqwifCNNO7qBXBo/31RK5RkVGib7d86hkcMkbr
-	sRPkfmuOpD5Lrg4eSeQ9wyQt0pZRNpH300AqUh6EosRJkxwPmuNHw+yQYWvXDrFUb5h26n
-	bXipsEITzSbBoXj704jaBozfQ3ewTjaiLI36jpuBktO9apE5lbnLZTdpNQDNuM1Ievp5a8
-	lEivl6nSHO6Gh+/1j7vhM6TfMKDXbLScDlUpnfI9rOcmnxWTOESvFVgoSaI/Jw==
-Message-ID: <b1c87f95832a27c4435a24223ac5a715cbdd38c2.camel@mailbox.org>
-Subject: Re: [PATCH v9 0/4] Enable debugfs information based on client-id
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: Sunil Khatri <sunil.khatri@amd.com>, Christian =?ISO-8859-1?Q?K=F6nig?=
-	 <christian.koenig@amd.com>, dri-devel@lists.freedesktop.org
-Cc: amd-gfx@lists.freedesktop.org, simona@ffwll.ch, tzimmermann@suse.de, 
-	tursulin@ursulin.net, phasta@kernel.org, dakr@kernel.org, 
-	linux-kernel@vger.kernel.org, Oded Gabbay <ogabbay@kernel.org>, Jeff Hugo
-	 <jeff.hugo@oss.qualcomm.com>
-Date: Wed, 02 Jul 2025 08:21:48 +0200
-In-Reply-To: <20250701164948.8105-1-sunil.khatri@amd.com>
-References: <20250701164948.8105-1-sunil.khatri@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YhyF7UW+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83AF3C4CEEE;
+	Wed,  2 Jul 2025 06:22:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751437352;
+	bh=YxS2qPZmDkIwQXB33JykK2wCJt5fRCCG7LCQRbDB53o=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YhyF7UW+56VlG7sbrJjtyJXsq/gPYdYTiCc57Yww1gIE/F6er2NeGjvt+lPbtTEnH
+	 ALrm1Rj9JZX+48Elg8h2UJBGy30jNpmZvhrzdMMvIb9vsEqp2UEKt/mK14G7majwkg
+	 fa8Ior9dsdpcw+AssMMwSV05PvZlTBw4nVeubRfWJBlyroJmAzvGUJncurdwzr+4qK
+	 RqVxw4nNL0UGRQ8AEUaUvyJhqzSH2NCePZl8gUB6NHuFzjeo3YxIgidRUOmMbYczB1
+	 olQuq8XeWeb9Q32w1HBvHRABdXLHlDVrCVEs1B0UhmDCpK8vUcNc7cuMtDGia16gbI
+	 ZQ87E3ffpucmw==
+Message-ID: <8d869d3b-c815-49fb-a367-c404bfb55d98@kernel.org>
+Date: Wed, 2 Jul 2025 08:22:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MBO-RS-ID: b21141670de3f8496bd
-X-MBO-RS-META: 4ekzzj8jcxr3eiod1bq13zcb77u8gggq
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] dt-bindings: sound: add bindings for pm4125 audio
+ codec
+To: Alexey Klimov <alexey.klimov@linaro.org>
+Cc: Srinivas Kandagatla <srini@kernel.org>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+ Lee Jones <lee@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, linux-arm-msm@vger.kernel.org,
+ linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
+References: <20250626-pm4125_audio_codec_v1-v1-0-e52933c429a0@linaro.org>
+ <20250626-pm4125_audio_codec_v1-v1-1-e52933c429a0@linaro.org>
+ <wcmalvywoginosy5pp7wskgdzjbwbydividmk4dtwguoltiobf@muw5lzkvgu5c>
+ <DAYBDV1I7HH0.1GG9U3LI5NQ97@linaro.org>
+ <d24b2a88-fda7-4a8a-bb5b-73d8a928ff89@kernel.org>
+ <DB13YER95DCW.1IBRJ65LED5GX@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <DB13YER95DCW.1IBRJ65LED5GX@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-T24gVHVlLCAyMDI1LTA3LTAxIGF0IDIyOjE5ICswNTMwLCBTdW5pbCBLaGF0cmkgd3JvdGU6Cj4g
-Y2xpZW50LWlkIGlzIGEgdW5pcXVlIGlkIGFjcm9zcyB0aGUgc3lzdGVtIG5vIG1hdHRlciBpZiBp
-dHMgZnJvbSBhIFZNCj4gb3Igb24gYSBob3N0IHN5c3RlbS4gVGhpcyB1bmlxdWUgaWQgaXMgYSBn
-b29kIGJhc2UgdG8gdXNlIGNyZWF0ZQo+IGNsaWVudC1pZCBiYXNlZCBkZW50cnkgaW4gZGVidWdm
-cyBpbiB0aGUgcm9vdCBkaXJlY3RvcnkuCj4gCj4gVGhpcyBkaXJlY3RvcnkgY291bGQgYmUgYSB1
-bmlxdWUgZGlyZWN0b3J5IHdoZXJlIGRyaXZlcnMgY291bGQgZHVtcAo+IHRoZSBkZWJ1ZyBpbmZv
-cm1hdGlvbi4KPiAKPiBGb3IgYW1kZ3B1IGRyaXZlciwgd2Ugd2FudCB0byBkdW1wIHRoZSBWTSBQ
-VEJBU0UgYWRkcmVzcyBhbmQgTVFEIGZvciAKPiB1c2VycXVldWUgd2hpY2ggY2FuIGJlIHVzZWQg
-YnkgYSB0b29sIGxpa2UgYW1kIHVtciB0byBkdW1wIHRoZSBtZW1vcnkKPiBhbmQgdGhhdCBpcyBy
-ZWFsbHkgaW1wb3J0YW50IHRvIGRlYnVnIHVzZXJxdWV1ZXMgYW5kIFZNIHJlbGF0ZWQKPiBpc3N1
-ZXMuCj4gCj4gT25lIG9mIHRoZSBjaGFsbGVuZ2UgaW4gdGhpcyBob3cgdG8gYWNjZXNzIHRoZSBy
-b290IGRpcmVjdG9yeSB3aGljaAo+IGlzCj4gYmV5b25kIHRoZSBkcm1fZGV2aWNlIGhlbmNlIG1v
-dmluZyB0aGUgZGVidWdmcyByZWxhdGVkIGluZm9ybWF0aW9uIHRvCj4gZHJtX2RlYnVnZnMuYyAK
-PiAKPiBTdW5pbCBLaGF0cmkgKDQpOgo+IMKgIGRybTogbW92ZSBkcm0gYmFzZWQgZGVidWdmcyBm
-dW5jcyB0byBkcm1fZGVidWdmcy5jCj4gwqAgZHJtOiBhZGQgZGVidWdmcyBzdXBwb3J0IG9uIHBl
-ciBjbGllbnQtaWQgYmFzaXMKPiDCoCBkcm0vYW1kZ3B1OiBhZGQgZGVidWdmcyBzdXBwb3J0IGZv
-ciBWTSBwYWdldGFibGUgcGVyIGNsaWVudAo+IMKgIGRybS9hbWRncHU6IGFkZCBzdXBwb3J0IG9m
-IGRlYnVnZnMgZm9yIG1xZCBpbmZvcm1hdGlvbgoKSGksCgpwbGVhc2Ugd2FpdCA+MjRoIGJlZm9y
-ZSBzZW5kaW5nIG5ldyB2ZXJzaW9ucyBvZiBhIHNlcmllcywgc28gdGhhdCBtb3JlCnBlb3BsZSBj
-YW4gb3B0IGluIGFuZCB0cmFmZmljIG9uIHRoZSBsaXN0cyBnZXRzIHJlZHVjZWQKClRoeAoKCj4g
-Cj4gwqBkcml2ZXJzL2FjY2VsL2RybV9hY2NlbC5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIHzCoCAxNiAtLS0KPiDCoGRyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdw
-dV9kZWJ1Z2ZzLmMgfMKgIDUyICsrKysrKysrKwo+IMKgZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRn
-cHUvYW1kZ3B1X2RlYnVnZnMuaCB8wqDCoCAxICsKPiDCoGRyaXZlcnMvZ3B1L2RybS9hbWQvYW1k
-Z3B1L2FtZGdwdV9rbXMuY8KgwqDCoMKgIHzCoMKgIDIgKy0KPiDCoGRyaXZlcnMvZ3B1L2RybS9h
-bWQvYW1kZ3B1L2FtZGdwdV91c2VycS5jwqDCoCB8wqAgNTIgKysrKysrKysrCj4gwqBkcml2ZXJz
-L2dwdS9kcm0vYW1kL2FtZGdwdS9hbWRncHVfdXNlcnEuaMKgwqAgfMKgwqAgMSArCj4gwqBkcml2
-ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9hbWRncHVfdm0uY8KgwqDCoMKgwqAgfMKgwqAgNCArLQo+
-IMKgZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X3ZtLmjCoMKgwqDCoMKgIHzCoMKg
-IDQgKy0KPiDCoGRyaXZlcnMvZ3B1L2RybS9kcm1fZGVidWdmcy5jwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCB8IDExMwo+ICsrKysrKysrKysrKysrKysrKy0tCj4gwqBkcml2ZXJzL2dwdS9k
-cm0vZHJtX2Rydi5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoCAxNCAr
-LS0KPiDCoGRyaXZlcnMvZ3B1L2RybS9kcm1fZmlsZS5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCB8wqDCoCA5ICsrCj4gwqBkcml2ZXJzL2dwdS9kcm0vZHJtX2ludGVybmFsLmjC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqDCoCA2ICstCj4gwqBpbmNsdWRlL2RybS9kcm1f
-YWNjZWwuaMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgwqAgNSAt
-Cj4gwqBpbmNsdWRlL2RybS9kcm1fZGVidWdmcy5owqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIHzCoCAxMSArKwo+IMKgaW5jbHVkZS9kcm0vZHJtX2Rydi5owqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgIDE0ICsrLQo+IMKgaW5jbHVkZS9k
-cm0vZHJtX2ZpbGUuaMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8
-wqDCoCA3ICsrCj4gwqAxNiBmaWxlcyBjaGFuZ2VkLCAyNjUgaW5zZXJ0aW9ucygrKSwgNDYgZGVs
-ZXRpb25zKC0pCj4gCgo=
+On 02/07/2025 01:30, Alexey Klimov wrote:
+>>>>> +  It has RX and TX Soundwire slave devices. This bindings is for the
+>>>>> +  slave devices.
+>>>>
+>>>> Last sentence is redundant and makes no sense. Codec has only slave
+>>>> devices, so how this can be anything else than for slave devices?
+>>>
+>>> This came from other similar files that describe bindings for child codec nodes
+>>> of soundwire nodes. For example from qcom,wcd937x-sdw.yaml.
+>>> Should this be rephrased to "This bindings is for the soundwire slave devices." ?
+>>
+>> You just pasted the same, so I don't get how you want to rephrase into
+>> the same sentence.
+> 
+> Not really.
+> Original sentence: "This bindings is for the slave devices."
+> Sentence from my email: "This bindings is for the soundwire slave devices."
+> 
+> The difference is 1 word.
+> If it doesn't work, then maybe any suggestions?
+> 
+> Maybe "This bindings is for audio codec node that must be a child node of the
+> associated soundwire master node."?
+No, drop, it's not the pattern in the bindings. We don't explain that
+I2C device should be in I2C bus, because that's obvious. Saying this is
+a Soundwire device should be enough.
 
+Best regards,
+Krzysztof
