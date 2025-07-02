@@ -1,45 +1,46 @@
 Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA193210FB;
-	Wed,  2 Jul 2025 13:38:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 099FD280309;
+	Wed,  2 Jul 2025 13:38:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751463530; cv=none; b=IBYvuGIC0fDpm5yclox19uSizCe24GXTRIsrsUktCdvFM+P5gzTYF0Am212eVy2M8EVqiO9VBxR9YU5SysZtQwEM4Kj5227hr/5yBiuJ16yldRQwkyHg0Inlu8jtrgJvZNzJjGjgJpFgEfa3D/UKEbQmKN4g/Vlz8YWNh7KWXaI=
+	t=1751463532; cv=none; b=uIWxXOzePsr+rgues2wKO+Ke6HmD+WIkj93PFEFESjzzFR8E8iL6tK0CsFNysu8RrCJpo1JC2YLMERGubLWyISe9W2seCEGe9lakZbYUX71FL1Q5zbpbCM+0X3LUgpzwMrmSTjoph7hpXDs0DE+Wy7WE8NVRfD8kcfSLS55qGYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751463530; c=relaxed/simple;
-	bh=4eLuzgj8qf2LZev2QCAZV8vLiljlN4KMGlGZep1Hp+8=;
+	s=arc-20240116; t=1751463532; c=relaxed/simple;
+	bh=0eezVt/aGVbqRb2X6TVgbQGZVA1y28V3T+nWy0kU7RY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JBnvjh87tsT0jUqynnTFsWLzc4VIxhj0N32TqyQl/BHEtGyqF2tzBhKN5eLA6v4zw6oH6cTM0JYaOAadnuLB2mSrmYhFf1MX8J/dU8ldJmhZexXscneVPG0xqT767OzNF7O/L11Lxq04kH2WJs6UdatkQbDdHQEMC63WkXgSPv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=CzThAC6a; arc=none smtp.client-ip=185.226.149.38
+	 In-Reply-To:To:Cc; b=bbKm/cFRGbpCCdh3tnpDmCCDdCubmzmfDo35Zejvr+MQJE5dJLVwZmgRnGmAJB3hn5voGOugDoSN5hHYnXdZVgyDEDIgX7AblR5JvtwDAyKmO2nJozpZvF1wuUF2QZWs6XKNPg1L5P31gzyixv7q1S4GkwfdXkMKJbbvKzJ5LO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=OaZXxfJu; arc=none smtp.client-ip=185.226.149.38
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="CzThAC6a"
+	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="OaZXxfJu"
 Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
 	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.93)
 	(envelope-from <mhal@rbox.co>)
-	id 1uWxfX-00GxP8-Ma; Wed, 02 Jul 2025 15:38:35 +0200
+	id 1uWxfe-00GxQR-Cc; Wed, 02 Jul 2025 15:38:42 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
 	s=selector2; h=Cc:To:In-Reply-To:References:Message-Id:
 	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From;
-	bh=tVBIAHVRa1NySUmQqjHQ9VogQkHm52MnGmsms6t9xMo=; b=CzThAC6a8leYxWNj+S+aNDZeuJ
-	QbbNLOSvfrlowi/FYvdbHJ026K6XDtU+RsnGdmUsTFpsq0V5zXk0oMWC6KqYAodF/0IkhFX0vxccF
-	kQavhrIkW9yt67fGGT/J2i1U1LUiMBH4osId+yeIah15IU6fApwaHLTgy4uqYGaZem1/uAm1dPaJv
-	YjNsi0evghn9Kj/o5iABaiOEZfD6ifQ5Zq6WVh4C0ninfrB4sAG1GSjXgtApwRjAoX4TU+qTDLsop
-	JwsCqcdf2TXnJ40xK+LeDyT8EdYe83Xc6sfrcDCtbOt0+7vySVTXivlTRYWXfMpsJ3yGD3tTl/rK0
-	w4NJFYNw==;
+	bh=vFYjW9Cjsjs34VZC5pCoDTbgDzAbHmFDVo/jHajaWgU=; b=OaZXxfJufB9Re57GF6OfRUFJYE
+	cHLRqSG8ebIGp0OWlyLO15x8WJs4IHYH7DlJ91CNAPvLpPis1+hVEfHukB3uk7K5IHhMchwkyi9Kc
+	ZVZwAavLkdRTlb/6Dg0713WqGimY9eb5RQlOi7e7IHOX3ARjl9nWqPa3SZ7GVr0eUZ1jC39gtKtbb
+	+ILBpSUw1t4+GsimtLdkARBgeWoJBo8Mh6xa1uQ9xBzmqwFv2nm1d8Fcki99ZA05Lo3XtJn62JIxM
+	F202h89xIhAJ73qHD105U1Fh+/lTdj4w1gba4barFxLtgYa6Qe68WG94xK7yuXOjXTfUsK9iIeFdW
+	Htei6tjw==;
 Received: from [10.9.9.73] (helo=submission02.runbox)
 	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
 	(envelope-from <mhal@rbox.co>)
-	id 1uWxfX-0006En-D4; Wed, 02 Jul 2025 15:38:35 +0200
+	id 1uWxfd-0006FI-Ov; Wed, 02 Jul 2025 15:38:42 +0200
 Received: by submission02.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.93)
-	id 1uWxfH-009LCR-MU; Wed, 02 Jul 2025 15:38:19 +0200
+	id 1uWxfF-009LCR-5B; Wed, 02 Jul 2025 15:38:17 +0200
 From: Michal Luczaj <mhal@rbox.co>
-Date: Wed, 02 Jul 2025 15:38:12 +0200
-Subject: [PATCH net-next v3 6/6] net: skbuff: Drop unused @skb
+Date: Wed, 02 Jul 2025 15:38:09 +0200
+Subject: [PATCH net-next v3 3/6] net: splice: Drop nr_pages_max
+ initialization
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,7 +49,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250702-splice-drop-unused-v3-6-55f68b60d2b7@rbox.co>
+Message-Id: <20250702-splice-drop-unused-v3-3-55f68b60d2b7@rbox.co>
 References: <20250702-splice-drop-unused-v3-0-55f68b60d2b7@rbox.co>
 In-Reply-To: <20250702-splice-drop-unused-v3-0-55f68b60d2b7@rbox.co>
 To: "David S. Miller" <davem@davemloft.net>, 
@@ -64,41 +65,31 @@ Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
  Michal Luczaj <mhal@rbox.co>
 X-Mailer: b4 0.14.2
 
-Since its introduction in commit 6fa01ccd8830 ("skbuff: Add pskb_extract()
-helper function"), pskb_carve_frag_list() never used the argument @skb.
-Drop it and adapt the only caller.
+splice_pipe_desc::nr_pages_max was initialized unnecessarily in commit
+41c73a0d44c9 ("net: speedup skb_splice_bits()"). spd_fill_page() compares
+spd->nr_pages against a constant MAX_SKB_FRAGS, which makes setting
+nr_pages_max redundant.
 
-No functional change intended.
+Remove the assignment. No functional change intended.
 
 Reviewed-by: Simon Horman <horms@kernel.org>
 Signed-off-by: Michal Luczaj <mhal@rbox.co>
 ---
- net/core/skbuff.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ net/core/skbuff.c | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 4893350bc80a105e0a2870f0de03a687c1117217..277f7d0666691bd54d6e005c84a2166175455490 100644
+index a34fe37cf7a508c8380e35522d9cde266aa440f9..3041f7a3560d58270dffdf923825758f274c8511 100644
 --- a/net/core/skbuff.c
 +++ b/net/core/skbuff.c
-@@ -6757,8 +6757,7 @@ static int pskb_carve(struct sk_buff *skb, const u32 off, gfp_t gfp);
- /* carve out the first eat bytes from skb's frag_list. May recurse into
-  * pskb_carve()
-  */
--static int pskb_carve_frag_list(struct sk_buff *skb,
--				struct skb_shared_info *shinfo, int eat,
-+static int pskb_carve_frag_list(struct skb_shared_info *shinfo, int eat,
- 				gfp_t gfp_mask)
- {
- 	struct sk_buff *list = shinfo->frag_list;
-@@ -6863,7 +6862,7 @@ static int pskb_carve_inside_nonlinear(struct sk_buff *skb, const u32 off,
- 		skb_clone_fraglist(skb);
- 
- 	/* split line is in frag list */
--	if (k == 0 && pskb_carve_frag_list(skb, shinfo, off - pos, gfp_mask)) {
-+	if (k == 0 && pskb_carve_frag_list(shinfo, off - pos, gfp_mask)) {
- 		/* skb_frag_unref() is not needed here as shinfo->nr_frags = 0. */
- 		if (skb_has_frag_list(skb))
- 			kfree_skb_list(skb_shinfo(skb)->frag_list);
+@@ -3189,7 +3189,6 @@ int skb_splice_bits(struct sk_buff *skb, struct sock *sk, unsigned int offset,
+ 	struct splice_pipe_desc spd = {
+ 		.pages = pages,
+ 		.partial = partial,
+-		.nr_pages_max = MAX_SKB_FRAGS,
+ 		.ops = &nosteal_pipe_buf_ops,
+ 		.spd_release = sock_spd_release,
+ 	};
 
 -- 
 2.49.0
