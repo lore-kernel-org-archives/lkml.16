@@ -1,76 +1,114 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B8A20311;
-	Wed,  2 Jul 2025 01:04:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2645384D13
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 01:04:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751418282; cv=none; b=D/hH4jGCGW5cWdHZJgDunFPzlPlNiffLxYnYUwW5gIJLQWEUxUkcjvobtQzSNlKX/raCk/pB0opb83VwgxYvVK5n0f1CY3GFdXjVJhXidUgJ6Stn2urLM/dunMarudzOzfrlSl1HIlqkvvGuPQqDy8prA+GZQXl+crJYZRVlrmA=
+	t=1751418295; cv=none; b=QVgDoA5G56hALe/iToni61BdIrpRsnGxt/j9Z9nZliCRc1ULBSp2bY3ZYd3PZ2q42HiiG/Hcezl4En+KcHL3iSQJUdOqOBgTm20wKu9ajR+0KE4ZSBmHfxjMzO1us6kVVuu5XxW0pfpxZRqsJpSj+rVoHkVAreCUVK3XcdmABBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751418282; c=relaxed/simple;
-	bh=XAafEd/BG8qoJXRKDepV1XfLCyhQ+O787ct9l00N54o=;
-	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=aj4vkkxeKgHMinbIhnLm4z8EyMAG2Jlkgu8wqSAE6dfnEda1jOi3/AO9SfN+fMPqPISqkY9NVb/xB2JNkSqDF7eKnFkza/731IyXANWjpQDSRJAeWe0sBR3LSH5R08a/qwtsESMY66oBck2ji1jQINhgA/poLeKLNtc4kcxwn5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4bX1m40KKgzmZB9;
-	Wed,  2 Jul 2025 09:00:36 +0800 (CST)
-Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id C6F2D140277;
-	Wed,  2 Jul 2025 09:04:36 +0800 (CST)
-Received: from [10.67.120.192] (10.67.120.192) by
- kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 2 Jul 2025 09:04:36 +0800
-Message-ID: <0c0d95ce-7c38-42d7-b45e-e7d388b57ede@huawei.com>
-Date: Wed, 2 Jul 2025 09:04:35 +0800
+	s=arc-20240116; t=1751418295; c=relaxed/simple;
+	bh=mkoinqK8VSa4bSxXL8+6TQQpGHjznYbUGTdepBjTk58=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=jMw0ZDJBC95Qa2H+Ef05T39GYigk2aZMDVdFOMgi5pCn3cTMd0LSpz81+2wCHtOeJyIjIALgCKAyyfS584BQh8wky0dugBteg2fLzCInw/TEfN/QbjdvzxQL1MGE/2IlDKqAm/z80WkUkAXG/X1c+zBmP4mb+fXUDzeslEkzoco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ynaffit.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=STQ65RKJ; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ynaffit.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="STQ65RKJ"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-313f702d37fso3639999a91.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 18:04:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751418293; x=1752023093; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=k6+7FGVXnmiRH7+roF8mwKR5/30REpmZHbgcAOWa//U=;
+        b=STQ65RKJV+S33Zqa812FHDdwqq04rkBovHElIB4km9suluS2AXxxp3LiQn7mbXn7/h
+         rdD/GXYidfR8abM4tzA9kP08JxMmpZGX7vBKxoOXzjJ3hIkRKIr2xYU054I0T4xt9lVU
+         ZMgYKOwTJhiVGi7g1UZ5heRYugUvzph/S5Yv/FePaCXmxtwykKsXIFxoje9NtnyJKyj1
+         tbIVtMqVcDuoHkaBXtaRrMTPmXlfrybRd/j43EkXvMErRLbYpWL5VRGTnTfbW1yzOR7m
+         4V/P26mYI88kJxzhu2zwRhIHooifL2pGOsO8QC/fkd6c/MePe492ybU0NEgEp0/rD4Uv
+         7rKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751418293; x=1752023093;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=k6+7FGVXnmiRH7+roF8mwKR5/30REpmZHbgcAOWa//U=;
+        b=mnEzyhegULViwMRIlUbkQKn1beJZRYMuPhpaQcTNfWZDYEKhHPNe46lmUXBFiNvIzR
+         3PZqYApf6xN2qoNGaHn4ByHK8qtrMdcoDUYtD9NE3D+iMmdLbM8Vjui+z3fL3UtZGafH
+         PTID2CmLCjxV4v3+gbf9NHfBBv3fWfossJ8D8a97xc5xnE4FCRxaYL+1dJ/4j0sKQU7a
+         vva/C+r9N4Z3pfEWhD4VXq9+3461NP+GVtbiTvrlK1Hr0cWAJlM3EH/cN2yRFyDrIIkC
+         zx6upKh4Trn9LXpuJSyXn2M1k97LIf63/KNE9D0blRbcQw+WOidJUgBwPwzqxxIWy2E0
+         ny2w==
+X-Gm-Message-State: AOJu0YwHVlhsk4A6xu7Gf6OAZ+dWayblAicm2wau6AEH4KIYgg4X/J2d
+	FIF+o9dYXzbsXek8pP982A+RSjSPMe+pIKpxHdXeugS5BkB5LPNrYkR5EZXZJv63qWGS5P4FKOM
+	YozuULZ3U7giyTcIntyDDxi+oyw04QFkVaIirke/Z1QM0hcDI/qPSx2lQ5S9HcVKvm5lovkMo9n
+	BlQGEwC6FZyLyCoDW9uVPF3nHLKrvUAil816lsv3xYhCSlhTUOcw==
+X-Google-Smtp-Source: AGHT+IGSGIt25XHkyQSkOAt8ewfiP6oL/YpHwTZsSxQcaWeClZrLFXIh5cq0roz0N+PKZICZZiHaVwqL3JnC
+X-Received: from pjbkl12.prod.google.com ([2002:a17:90b:498c:b0:311:c5d3:c7d0])
+ (user=ynaffit job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3889:b0:312:f0d0:bc4
+ with SMTP id 98e67ed59e1d1-31a90b1c47emr1365291a91.5.1751418293134; Tue, 01
+ Jul 2025 18:04:53 -0700 (PDT)
+Date: Tue,  1 Jul 2025 18:04:40 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-CC: <shaojijie@huawei.com>, <davem@davemloft.net>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <andrew+netdev@lunn.ch>,
-	<horms@kernel.org>, <shenjian15@huawei.com>, <liuyonglong@huawei.com>,
-	<chenhao418@huawei.com>, <jonathan.cameron@huawei.com>,
-	<shameerali.kolothum.thodi@huawei.com>, <salil.mehta@huawei.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 net-next 1/3] net: hibmcge: support scenario without
- PHY
-To: Andrew Lunn <andrew@lunn.ch>
-References: <20250701125446.720176-1-shaojijie@huawei.com>
- <20250701125446.720176-2-shaojijie@huawei.com>
- <9b45bab6-dc6e-40b5-b37c-2b296213e8ed@lunn.ch>
-From: Jijie Shao <shaojijie@huawei.com>
-In-Reply-To: <9b45bab6-dc6e-40b5-b37c-2b296213e8ed@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
- kwepemk100013.china.huawei.com (7.202.194.61)
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
+Message-ID: <20250702010447.2994412-1-ynaffit@google.com>
+Subject: [PATCH v2 0/5] binder: Set up KUnit tests for alloc
+From: Tiffany Yang <ynaffit@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: keescook@google.com, kernel-team@android.com, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
+	Joel Fernandes <joelagnelf@nvidia.com>, Christian Brauner <brauner@kernel.org>, 
+	Carlos Llamas <cmllamas@google.com>, Suren Baghdasaryan <surenb@google.com>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Rae Moar <rmoar@google.com>, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
+Hello,
 
-on 2025/7/2 6:07, Andrew Lunn wrote:
->> +	phydev = fixed_phy_register(&hbg_fixed_phy_status, NULL);
->> +	if (IS_ERR(phydev)) {
->> +		dev_err_probe(dev, IS_ERR(phydev),
-> IS_ERR() returns a bool, where as dev_err_probe() expects an int.
-
-Yeah,
-PTR_ERR(phydev) should be used in there
+binder_alloc_selftest provides a robust set of checks for the binder
+allocator, but it rarely runs because it must hook into a running binder
+process and block all other binder threads until it completes. The test
+itself is a good candidate for conversion to KUnit, and it can be
+further isolated from user processes by using a test-specific lru
+freelist instead of the global one. This series converts the selftest
+to KUnit to make it less burdensome to run and to set up a foundation
+for unit testing future binder_alloc changes.
 
 Thanks,
-Jijie Shao
+Tiffany
 
->
->> +			      "failed to register fixed PHY device\n");
->> +		return IS_ERR(phydev);
-> This also looks wrong.
->
->      Andrew
->
-> ---
-> pw-bot: cr
+Tiffany Yang (5):
+  binder: Fix selftest page indexing
+  binder: Store lru freelist in binder_alloc
+  binder: Scaffolding for binder_alloc KUnit tests
+  binder: Convert binder_alloc selftests to KUnit
+  binder: encapsulate individual alloc test cases
+
+ drivers/android/Kconfig                    |  15 +-
+ drivers/android/Makefile                   |   2 +-
+ drivers/android/binder.c                   |  10 +-
+ drivers/android/binder_alloc.c             |  39 +-
+ drivers/android/binder_alloc.h             |  14 +-
+ drivers/android/binder_alloc_selftest.c    | 306 -----------
+ drivers/android/binder_internal.h          |   4 +
+ drivers/android/tests/.kunitconfig         |   3 +
+ drivers/android/tests/Makefile             |   3 +
+ drivers/android/tests/binder_alloc_kunit.c | 573 +++++++++++++++++++++
+ include/kunit/test.h                       |  12 +
+ lib/kunit/user_alloc.c                     |   4 +-
+ 12 files changed, 645 insertions(+), 340 deletions(-)
+ delete mode 100644 drivers/android/binder_alloc_selftest.c
+ create mode 100644 drivers/android/tests/.kunitconfig
+ create mode 100644 drivers/android/tests/Makefile
+ create mode 100644 drivers/android/tests/binder_alloc_kunit.c
+
+-- 
+2.50.0.727.gbf7dc18ff4-goog
+
