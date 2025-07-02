@@ -1,112 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 413922D781E
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 17:17:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BDED1D63CD
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 17:17:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751476658; cv=none; b=UfRSUSI/LzQZZEgj/Y55NL4AOXTlaNN7NiWk4MqCO3P5926dYvlKx2nCPukyHup7WJGpwmb+mTq+UDt3o/lZLyxuEhVPdgyddgai9e8wUL+OiSBSe3ETfKdf1loEjpnBgPp6cj2EkVjuCVtclCTkEtL+RgLHlfwwbZXM+iAIh+o=
+	t=1751476661; cv=none; b=iLKFVdDAcRtvnmoRUk8jM7EDWltYmAHQ0u7bAHt9Qk+biG64ejweo6KaU2Pcy4OyuyXQYmOnYbAfLDErqmcE6TFwH1bYsU4QV/fPInkTY9EvFj840uLcaQlnrh+nxeTOp5a0N4Txv+7783HB6vYeIgTAOPbgi3u0KRVD7xuEbr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751476658; c=relaxed/simple;
-	bh=+vf25wCjkCvykYnLtQgZdrGwJqDOLdf+jwuxlU5Qc4g=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NYAHNbsx76ELGnUYEXQCtN6gtXkdWh6ejqhMKnexvGl9xswKSKGq9vBuc14+esEOgRoHPTOA5ihJDi2eTVEJOQYX5MNewuBLQgryOAOL0yqnPISTYxJo84c9/rDfKHfaDOACW7MyjSJNSj9mekjmwRf2loToya7Zmqbs5BkfOT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bU9TFi/U; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751476661; c=relaxed/simple;
+	bh=JuILf2t5Lj67QUYAWuV8nzpSXojcfdjsSzuHWCuFoa4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=FZx30Pw1vQBh4zKmIX4rdT+pQ6OJ2bWUIszTVKTKXK9k5A7yW0ZTD8sGJ/uvEXR2m/HddvuMPvaSlr7MhRmF6+uMcOnW2WR7YlLsr10gnPTHuRzt/6XntQ07xWKl2waJMML2d044kV5zDFp4G3opsOcqUpPSppA0WBX25jbwNAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=surriel.com; dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b=A9MZSMYY; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=surriel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bU9TFi/U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1010C4CEE7;
-	Wed,  2 Jul 2025 17:17:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751476657;
-	bh=+vf25wCjkCvykYnLtQgZdrGwJqDOLdf+jwuxlU5Qc4g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=bU9TFi/UIriQe18BgRLtCTlhofLeADM4SH0yzmI3DkPjVs6U2NVoxNEw4TmGlroRd
-	 POUYTVLd7so2R4MbjrtLgg5/I/Q6+zTCKszt7LFpQ8ONXZoroiQpwmz6xzsCff//Oh
-	 1AJ1Ib3XqOpSGw+2Bsx3FP3qpZaCYAApTcqJpORBt4tcxTbYCznt+wr9Ej1b6hx6IW
-	 2stGpaqFIA+Vx1nus1hI5cZZ4XeS0bPQ0HEfXRZtR6fNtIeAi7wQu0KwkyLUCLTC40
-	 fCwkaXR1rE/zbeq18acObsqBFIlUbfR637dQ9aHdqfF+Njl/m4q6ZqW+FZDQg7LGi1
-	 8RrrJlL2LWk5g==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uX15T-00C2Wg-Tn;
-	Wed, 02 Jul 2025 18:17:36 +0100
-Date: Wed, 02 Jul 2025 18:17:34 +0100
-Message-ID: <86cyaibjgx.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: catalin.marinas@arm.com,
-	will@kernel.org,
-	broonie@kernel.org,
-	oliver.upton@linux.dev,
-	ardb@kernel.org,
-	frederic@kernel.org,
-	james.morse@arm.com,
-	joey.gouly@arm.com,
-	scott@os.amperecomputing.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/7] arm64/kvm: expose FEAT_LSUI to guest
-In-Reply-To: <20250617183635.1266015-3-yeoreum.yun@arm.com>
-References: <20250617183635.1266015-1-yeoreum.yun@arm.com>
-	<20250617183635.1266015-3-yeoreum.yun@arm.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b="A9MZSMYY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=surriel.com
+	; s=mail; h=MIME-Version:Content-Transfer-Encoding:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=JuILf2t5Lj67QUYAWuV8nzpSXojcfdjsSzuHWCuFoa4=; b=A9MZSMYYh6JqxgKw76SnfQryti
+	KKq8xvyKdtK8smrGizLYv4d7yQWxFq+OyhLEc9qSTojqAsusJuwt9iJFy5hJ+3XbfmYiSB7ciaTYV
+	J7vjqZ9IK+kXU8iHFBRQtNH2CttOuTcdUeSNhD9RdE6LPoACvwfWtPGKMnksnGdmd73jMByw3ofl8
+	P1cewnXnWek8V1ZFpxPyDh6iY9t08J7CYFblpd3LnAKBwW/8BtZ8MjxeILaNayGBmSRnALCSLvhFM
+	em+Aq4BqawmLbL5hEOm5lUvlgglldeWAbsQ37C+acYn+BLsaRIhSKp+cnWsKGFOtIl/RDisVNjtMg
+	5ZUvhiQg==;
+Received: from fangorn.home.surriel.com ([10.0.13.7])
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@surriel.com>)
+	id 1uX0xC-0000000059R-3cwE;
+	Wed, 02 Jul 2025 13:09:02 -0400
+Message-ID: <f73e23f363b780a0e33e8b0ab7171a2128e16df6.camel@surriel.com>
+Subject: Re: [syzbot] [kernel?] KASAN: slab-use-after-free Write in
+ flush_tlb_func
+From: Rik van Riel <riel@surriel.com>
+To: Jann Horn <jannh@google.com>
+Cc: syzbot <syzbot+084b6e5bc1016723a9c4@syzkaller.appspotmail.com>, 
+	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
+	linux-kernel@vger.kernel.org, luto@kernel.org, mingo@redhat.com, 
+	neeraj.upadhyay@kernel.org, paulmck@kernel.org, peterz@infradead.org, 
+	syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org, 
+	yury.norov@gmail.com, kernel-team <kernel-team@meta.com>, David Hildenbrand
+	 <david@redhat.com>
+Date: Wed, 02 Jul 2025 13:09:02 -0400
+In-Reply-To: <CAG48ez2_4D17XMrEb7+5fwq0RFDFDCsY5OjTB7uaXEzdybxshA@mail.gmail.com>
+References: <68653927.a70a0220.3b7e22.245d.GAE@google.com>
+	 <366d45aea0b64cfc82c0988ae5fe6863bbd28261.camel@surriel.com>
+	 <CAG48ez2_4D17XMrEb7+5fwq0RFDFDCsY5OjTB7uaXEzdybxshA@mail.gmail.com>
+Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
+ keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
+ eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
+ Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
+ lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
+ dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
+ mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
+ gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
+ r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
+ WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
+ 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
+ Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
+ +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
+ g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
+ KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
+ fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
+ 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
+ G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
+ okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
+ TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
+ cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
+ omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
+ QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
+ c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: yeoreum.yun@arm.com, catalin.marinas@arm.com, will@kernel.org, broonie@kernel.org, oliver.upton@linux.dev, ardb@kernel.org, frederic@kernel.org, james.morse@arm.com, joey.gouly@arm.com, scott@os.amperecomputing.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
 
-On Tue, 17 Jun 2025 19:36:30 +0100,
-Yeoreum Yun <yeoreum.yun@arm.com> wrote:
-> 
-> expose FEAT_LSUI to guest.
-> 
-> Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
-> ---
->  arch/arm64/kvm/sys_regs.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> index 76c2f0da821f..5c5a9c3ace2f 100644
-> --- a/arch/arm64/kvm/sys_regs.c
-> +++ b/arch/arm64/kvm/sys_regs.c
-> @@ -1636,7 +1636,8 @@ static u64 __kvm_read_sanitised_id_reg(const struct kvm_vcpu *vcpu,
->  			val &= ~ARM64_FEATURE_MASK(ID_AA64ISAR2_EL1_WFxT);
->  		break;
->  	case SYS_ID_AA64ISAR3_EL1:
-> -		val &= ID_AA64ISAR3_EL1_FPRCVT | ID_AA64ISAR3_EL1_FAMINMAX;
-> +		val &= ID_AA64ISAR3_EL1_FPRCVT | ID_AA64ISAR3_EL1_FAMINMAX |
-> +		       ID_AA64ISAR3_EL1_LSUI;
->  		break;
->  	case SYS_ID_AA64MMFR2_EL1:
->  		val &= ~ID_AA64MMFR2_EL1_CCIDX_MASK;
-> @@ -2921,7 +2922,7 @@ static const struct sys_reg_desc sys_reg_descs[] = {
->  					ID_AA64ISAR2_EL1_APA3 |
->  					ID_AA64ISAR2_EL1_GPA3)),
->  	ID_WRITABLE(ID_AA64ISAR3_EL1, (ID_AA64ISAR3_EL1_FPRCVT |
-> -				       ID_AA64ISAR3_EL1_FAMINMAX)),
-> +				       ID_AA64ISAR3_EL1_FAMINMAX | ID_AA64ISAR3_EL1_LSUI)),
->  	ID_UNALLOCATED(6,4),
->  	ID_UNALLOCATED(6,5),
->  	ID_UNALLOCATED(6,6),
+On Wed, 2025-07-02 at 18:53 +0200, Jann Horn wrote:
+>=20
 
-In the future, please Cc the relevant people and mailing lists.
+> TLB flushes via IPIs on x86 are always synchronous, right?
+> flush_tlb_func is only referenced from native_flush_tlb_multi() in
+> calls to on_each_cpu_mask() (with wait=3Dtrue) or
+> on_each_cpu_cond_mask() (with wait=3D1).
+> So I think this is not an issue, unless you're claiming that we call
+> native_flush_tlb_multi() with an already-freed info->mm?
+>=20
+It looks like there are a least some cases where
+try_to_unmap() can call flush_tlb_range() with
+an mm that belongs to some other process.
 
-With $SUBJECT fixed to match the KVM/arm64 log,
+I don't know whether that is an issue.
 
-Acked-by: Marc Zyngier <maz@kernel.org>
+> And I think the bisected commit really is the buggy one: It looks at
+> "nr_cpus", which tracks *how many CPUs we have to IPI*, but assumes
+> that "nr_cpus" tracks *how many CPUs we posted work to*. Those
+> numbers
+> are not the same: If we post work to a CPU that already had IPI work
+> pending, we just add a list entry without sending another IPI.
+>=20
+Good point, we do need to wait when we enqueue
+work, even if we do not send an IPI anywhere!
 
-	M.
+You are right that the bisected commit is buggy
+and should be reverted.
 
--- 
-Without deviation from the norm, progress is not possible.
+--=20
+All Rights Reversed.
