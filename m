@@ -1,451 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28312798E1;
-	Wed,  2 Jul 2025 13:19:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E811327875C;
+	Wed,  2 Jul 2025 13:19:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751462392; cv=none; b=fkJKdyTKhtCPQPKLyD6xrtEOLKoX8aGjzE/4IQSM748mjjyn+CVGKcYWjr5vediqD3cmnBifHpleTQF2yOBtOzPLHxzIhw78q4MX37ve7Ykp17sMLDgqRZ6E/JzEx7fe+dksQGrFNiy9aUker8GVE9ab52zDo5bGamsbZTyamtI=
+	t=1751462401; cv=none; b=Y+qBUV0SD1BBe3Io0u0Y4gqTWA+jduMdjJOqaCfSC/6b9BZCo55DLLSiigKxLWDjHgWTTa56APbzCOjVcXOKzdQzCh4+Xc18aPlLm8uqsodkli0addmhnqM/G0BtX17/HNbE13SAj+qBBQ/aNwotB/vRBzKBdHAULOE3L1i6Rak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751462392; c=relaxed/simple;
-	bh=S/JJdI/wj8kpTOdAlnf1mLcjQ66qFgptedQaa2V5SzM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SXQBRbzWEHifpFrBdKZ6i4Ra190W7nSlr/7H4+ZK3i2P5bqe3HTBYswVThhTBITygdMBOh4gCC1GwY+xpImVo0uuW613rghPVDL9JGLmdImmthTp5NBxjs6ZDSHvhVHMTBr5x+f909SuOIAjVDVuUeWxPZbtDot8f0MaZQ5E2gU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IZgzWGGi; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IZgzWGGi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F5A1C4CEED;
-	Wed,  2 Jul 2025 13:19:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751462392;
-	bh=S/JJdI/wj8kpTOdAlnf1mLcjQ66qFgptedQaa2V5SzM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=IZgzWGGi2dxQSMqZJhmpmwZsmnpLY/k1RRKrY7Yw+mn9F2OFC73B9T7s8x3Y4Lrj0
-	 FfA5ImoQMFkUaP9LyqjX8YS3N/zvjipCZRjroL65Riju+EmAbKIKii/lpRqhaiNTzO
-	 YQVAxNXvJ3dxT2JbQIkVbT0lZNceSUHd8wvi5GEVLbZj5ZCtO+UPpjfLPyfQVrEets
-	 Y67AA9+RBTEneU4j57aIJAZau3I0cCiTyLFIqlMrjGTHLu/1MXhrqtWfypz2BNGaZ4
-	 lQBLuoo53RYdidm9j9VdYjZ5mUDaF3pwj1kRv2FDZGzzc75QRgdPFTpOVWkFKjVJWO
-	 RQyzRAww9ubRA==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Wed, 02 Jul 2025 15:18:37 +0200
-Subject: [PATCH v14 5/7] rust: module: update the module macro with module
- parameter support
+	s=arc-20240116; t=1751462401; c=relaxed/simple;
+	bh=85ruyl2LVlHR8nSggDDFRbuvkEepOfyZN7EwSafKY6s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NYCH2TJ1lfiybuD/QBygqw4T+fe4mhCcUyJnO1Z0YSGizrg11nT++Deifvz1/NIli8LZ3Kyfi11/lzhfHmU7dZf8lpcmnP2EWyH0fLqRLGKk16B6pj2fVNNqAy2NwP9UMz6ssf/4Fs8W6fEyqFnX78XF88ADSc/0sdn6zoOI5sk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-52b2290e292so1247066e0c.3;
+        Wed, 02 Jul 2025 06:19:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751462398; x=1752067198;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XOjOgujBLhdh42XnOnmsLevgNhI71hwIXKJu5W4lV34=;
+        b=laeutsph7Pspdkmc+pXEAFMegNqSFl08wzACcnFnOv+OTTNzAggEEiG7Owwh6Ed58T
+         o4G2WCshVrceRH9t/8n+93sjMPoU0GtNrzeTxDbhcPVqr7H4n4s74QW1bT0yWsytE+d2
+         l2DierguTuhsOADLmOUCiCD4JzvpHjjuhYr4ueId7IXURCPM72cGg0DysquqrLZL4kK8
+         7cBA07Br+ix586kSRAC800orYrDj8ZBp9YHR9BHPaHTFPfyJtM5F6axmtaMcMx0UXEvp
+         SybzS8ZJ2I1xUfkblREMCuSI5OgwMq3zWfs2j3Ff2UgqyQBwdDmdnWXiCR6wF2jPQ3dT
+         YNsA==
+X-Forwarded-Encrypted: i=1; AJvYcCU9S6crSaOWJLH/MId4FiIXb76shHOlqavoJmIPdZn5NSOWR9XB5nWEHQQ0CZrgMKjpXke0v2IKI0Nsn+z4@vger.kernel.org, AJvYcCUYN/vPw4Emr1O9n3jXwB2SYzqT5vxUhT3unWMWVUm1rMTeRuE93gi2wxw21wkS0uQcyGYVtmDbVgNU@vger.kernel.org, AJvYcCVzICaSWuFxkwLBauq+VWAcVgU6btymEoFRWTOVR7Ppr8LnLe0AIzdS+1ZQc6FHLavQbL9fftAOK7bS0LoN53pN14U=@vger.kernel.org, AJvYcCWd16nHBjQsZdtgIaenSCFKiwbHeS6iSZk90PN49r/vHWM1xgMMswSRz0cmM7GJp8zkwq5OGgohpn+X6g==@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywi+NO/BL92agChEkl8U9S5UeflXUbYxXMmhB/cZ2uKIBC6VpAy
+	Fc2b3so3Wvpaa8nO6BpzdvlKOehX+M0shOUtvaT30mZsVyF9sTRKI/GU+0ZQobFI
+X-Gm-Gg: ASbGncvxs8zubsuaxeELfIYWwCGp+9hu+EnqHjiBVPan2PGnPuEratiUyqtCKDUi9dZ
+	xdpUiU+OdIigOnTD0SQfss932yFFtFR2yCR31q/LYgizQnglhSYbNvneVWiDW20Iys7OBRPa6Mh
+	5dmogTvT0pUUz5c8IFM1jRX4uMYdNGzXvFt0BmiVw681t04BhtzkRlnX8OAVTlZsF5lYLUN22wJ
+	jNLhShbnNagHkymAASApgFMFVXFFq7Eu/wwZd/KW9L2HQORUPbsR8oVQNTK1/Nfi0wCvsQMMOdt
+	f7AwQ9P8NR2fkh2GLPLueQ3zVuUlMdHV3EwjHh455bXLtk6dplce1iAcjkY8hfkVQY04NhJs+Y4
+	1hNVK+7KiAhCs9a7/+bxBwNJq
+X-Google-Smtp-Source: AGHT+IEnwLIndcUKAdrmJZYxxHSNfSGC6MvTSwmlQBJkP2mfWluUyJWP2Jerw8osY6On1i25meOwKw==
+X-Received: by 2002:a05:6122:d08:b0:531:2d3a:32aa with SMTP id 71dfb90a1353d-53457c61245mr1760232e0c.0.1751462397253;
+        Wed, 02 Jul 2025 06:19:57 -0700 (PDT)
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com. [209.85.222.54])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5330924154esm2095754e0c.48.2025.07.02.06.19.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Jul 2025 06:19:57 -0700 (PDT)
+Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-886c8de5d90so208547241.0;
+        Wed, 02 Jul 2025 06:19:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUVAws/ARpojRXD8n8RXhpSUhDIRetjCchDLk3ng7mWSGqk9Ve1SZyttt7axJobFQetZ/9CifuTjBL9RcjT/jYGXDQ=@vger.kernel.org, AJvYcCWG2c9qANNogntx+furJ70rEio7hsdIaNqpBTKeuJPc2s5PcR+J1WJ2d14bicBkr8llAtR1rs4saswEcg==@vger.kernel.org, AJvYcCXGg1oX+8weiUA5yN+m7CUo1V4NtlMRRroQE0WWH7TFywQ7t8NwL/GME6eqcWD4/r0C9RiSSFZwn7BE@vger.kernel.org, AJvYcCXOIJJsHKJse+yyk/oT/z54UmMybgZsnqchNceQ+9VZ+dqFImheMO7E0wZvUy5n1jWYItQHE2Ty0cuJnSyp@vger.kernel.org
+X-Received: by 2002:a05:6102:1620:b0:4e5:963b:738a with SMTP id
+ ada2fe7eead31-4f1612289e4mr1219271137.16.1751462395540; Wed, 02 Jul 2025
+ 06:19:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250702-module-params-v3-v14-5-5b1cc32311af@kernel.org>
-References: <20250702-module-params-v3-v14-0-5b1cc32311af@kernel.org>
-In-Reply-To: <20250702-module-params-v3-v14-0-5b1cc32311af@kernel.org>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Alice Ryhl <aliceryhl@google.com>, Masahiro Yamada <masahiroy@kernel.org>, 
- Nathan Chancellor <nathan@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
- Danilo Krummrich <dakr@kernel.org>, Benno Lossin <lossin@kernel.org>, 
- Benno Lossin <lossin@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>
-Cc: Trevor Gross <tmgross@umich.edu>, 
- Adam Bratschi-Kaye <ark.email@gmail.com>, rust-for-linux@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
- Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
- Daniel Gomez <da.gomez@samsung.com>, Simona Vetter <simona.vetter@ffwll.ch>, 
- Greg KH <gregkh@linuxfoundation.org>, Fiona Behrens <me@kloenk.dev>, 
- Daniel Almeida <daniel.almeida@collabora.com>, 
- linux-modules@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=13415;
- i=a.hindborg@kernel.org; h=from:subject:message-id;
- bh=S/JJdI/wj8kpTOdAlnf1mLcjQ66qFgptedQaa2V5SzM=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBoZTG2SGk38fuu6/kZ1wrzPLTn9Hzk+W+EqeBcX
- IUcOyXuX8WJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaGUxtgAKCRDhuBo+eShj
- d+ObD/9DBhxQ+JDEcSTSfS2koQXQgStBAvO4Nib2Qt4CtkBatLKs4NnDXlx2ng6FRLEcvuIyZLq
- aDKBrGN5rs/UmytDYqXazVcaTOJl5YYrAV4HdEarTHuSFAkpHlZPXhfmvh0e4niNItj6Xc4DZcu
- i/NdtzU+nKyzI7xXHB5k1lKJhhYKrN5hbghNBVgAX1JyZke/nPWESL4wzwCL1dgqNgPAmipIIZu
- yCaXDls7fA/xGXpolwDnsmBXTSNRh7SJcOXFnBKcqrjwmzQcyy3n5PUfuorxPMFXA9Ex3/zWZpB
- n5P83BLXcPXa1+zKwtVLbV1fr2E50H63hvATSSoJa0vY+6w1i23+var5cTdFqR+qcfovbzbOW2r
- rLx0SqYniOI/zCmXWg5qPpxJ+B8Qq0mf2BL6rITmLkxi5R3tS6d0zs7IRjDaKGFeavOojrBeATt
- /tqpjyPOwJ8r75JrFxl9tkVgNr7g3Vopp4YXpRQA8SXdSHtnO/Fn2Tkz7HbQgh7OJaclfiG4+34
- w8wAeYvXesofyW9VFD5DFvw9L7uoxFNmb0ucDlVJp9duXcGACyPLtvsdTmhEW/XVb9fIopm47vA
- T09HoWQ/60bVvqdcKrxWV3K7ohQb07uEsgZMHRgO1/Whzjf2q49v/00/FFEVRo9YLMZWbxVnSNs
- ffV82UudqCgyxjw==
-X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
- fpr=3108C10F46872E248D1FB221376EB100563EF7A7
+References: <20250625130712.140778-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250625130712.140778-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250627210526.GA128966-robh@kernel.org>
+In-Reply-To: <20250627210526.GA128966-robh@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 2 Jul 2025 15:19:43 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdU+hT=i=gs35ia_9vvmqJPAsjscQ0CBhBZK3wyn=35Emg@mail.gmail.com>
+X-Gm-Features: Ac12FXzUqy0vTSjo4_AKL8CJawsMDkDPDtVyP9enUVNCvJ78ZI9kbmcr2DTv_-M
+Message-ID: <CAMuHMdU+hT=i=gs35ia_9vvmqJPAsjscQ0CBhBZK3wyn=35Emg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: renesas: document RZ/T2H and
+ RZ/N2H SoCs
+To: Rob Herring <robh@kernel.org>
+Cc: Prabhakar <prabhakar.csengg@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Allow module parameters to be declared in the rust `module!` macro.
+Hi Rob,
 
-Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
----
- rust/macros/helpers.rs |  25 +++++++
- rust/macros/lib.rs     |  31 +++++++++
- rust/macros/module.rs  | 177 ++++++++++++++++++++++++++++++++++++++++++++++---
- 3 files changed, 223 insertions(+), 10 deletions(-)
+On Fri, 27 Jun 2025 at 23:05, Rob Herring <robh@kernel.org> wrote:
+> On Wed, Jun 25, 2025 at 02:07:10PM +0100, Prabhakar wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Document the pin and GPIO controller IP for the Renesas RZ/T2H
+> > (R9A09G077) and RZ/N2H (R9A09G087) SoCs, and add the shared DTSI
+> > header file used by both the bindings and the driver.
+> >
+> > The RZ/T2H SoC supports 729 pins, while the RZ/N2H supports 576 pins.
+> > Both share the same controller architecture; separate compatible
+> > strings are added for each SoC to distinguish them.
+> >
+> > Co-developed-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> > Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-diff --git a/rust/macros/helpers.rs b/rust/macros/helpers.rs
-index e2602be402c1..365d7eb499c0 100644
---- a/rust/macros/helpers.rs
-+++ b/rust/macros/helpers.rs
-@@ -10,6 +10,17 @@ pub(crate) fn try_ident(it: &mut token_stream::IntoIter) -> Option<String> {
-     }
- }
- 
-+pub(crate) fn try_sign(it: &mut token_stream::IntoIter) -> Option<char> {
-+    let peek = it.clone().next();
-+    match peek {
-+        Some(TokenTree::Punct(punct)) if punct.as_char() == '-' => {
-+            let _ = it.next();
-+            Some(punct.as_char())
-+        }
-+        _ => None,
-+    }
-+}
-+
- pub(crate) fn try_literal(it: &mut token_stream::IntoIter) -> Option<String> {
-     if let Some(TokenTree::Literal(literal)) = it.next() {
-         Some(literal.to_string())
-@@ -103,3 +114,17 @@ pub(crate) fn file() -> String {
-         proc_macro::Span::call_site().file()
-     }
- }
-+
-+/// Parse a token stream of the form `expected_name: "value",` and return the
-+/// string in the position of "value".
-+///
-+/// # Panics
-+///
-+/// - On parse error.
-+pub(crate) fn expect_string_field(it: &mut token_stream::IntoIter, expected_name: &str) -> String {
-+    assert_eq!(expect_ident(it), expected_name);
-+    assert_eq!(expect_punct(it), ':');
-+    let string = expect_string(it);
-+    assert_eq!(expect_punct(it), ',');
-+    string
-+}
-diff --git a/rust/macros/lib.rs b/rust/macros/lib.rs
-index fa847cf3a9b5..2fb520dc930a 100644
---- a/rust/macros/lib.rs
-+++ b/rust/macros/lib.rs
-@@ -28,6 +28,30 @@
- /// The `type` argument should be a type which implements the [`Module`]
- /// trait. Also accepts various forms of kernel metadata.
- ///
-+/// The `params` field describe module parameters. Each entry has the form
-+///
-+/// ```ignore
-+/// parameter_name: type {
-+///     default: default_value,
-+///     description: "Description",
-+/// }
-+/// ```
-+///
-+/// `type` may be one of
-+///
-+/// - [`i8`]
-+/// - [`u8`]
-+/// - [`i8`]
-+/// - [`u8`]
-+/// - [`i16`]
-+/// - [`u16`]
-+/// - [`i32`]
-+/// - [`u32`]
-+/// - [`i64`]
-+/// - [`u64`]
-+/// - [`isize`]
-+/// - [`usize`]
-+///
- /// C header: [`include/linux/moduleparam.h`](srctree/include/linux/moduleparam.h)
- ///
- /// [`Module`]: ../kernel/trait.Module.html
-@@ -44,6 +68,12 @@
- ///     description: "My very own kernel module!",
- ///     license: "GPL",
- ///     alias: ["alternate_module_name"],
-+///     params: {
-+///         my_parameter: i64 {
-+///             default: 1,
-+///             description: "This parameter has a default of 1",
-+///         },
-+///     },
- /// }
- ///
- /// struct MyModule(i32);
-@@ -52,6 +82,7 @@
- ///     fn init(_module: &'static ThisModule) -> Result<Self> {
- ///         let foo: i32 = 42;
- ///         pr_info!("I contain:  {}\n", foo);
-+///         pr_info!("i32 param is:  {}\n", module_parameters::my_parameter.read());
- ///         Ok(Self(foo))
- ///     }
- /// }
-diff --git a/rust/macros/module.rs b/rust/macros/module.rs
-index 1a867a1e787e..2b8123fe9fb0 100644
---- a/rust/macros/module.rs
-+++ b/rust/macros/module.rs
-@@ -26,6 +26,7 @@ struct ModInfoBuilder<'a> {
-     module: &'a str,
-     counter: usize,
-     buffer: String,
-+    param_buffer: String,
- }
- 
- impl<'a> ModInfoBuilder<'a> {
-@@ -34,10 +35,11 @@ fn new(module: &'a str) -> Self {
-             module,
-             counter: 0,
-             buffer: String::new(),
-+            param_buffer: String::new(),
-         }
-     }
- 
--    fn emit_base(&mut self, field: &str, content: &str, builtin: bool) {
-+    fn emit_base(&mut self, field: &str, content: &str, builtin: bool, param: bool) {
-         let string = if builtin {
-             // Built-in modules prefix their modinfo strings by `module.`.
-             format!(
-@@ -51,8 +53,14 @@ fn emit_base(&mut self, field: &str, content: &str, builtin: bool) {
-             format!("{field}={content}\0")
-         };
- 
-+        let buffer = if param {
-+            &mut self.param_buffer
-+        } else {
-+            &mut self.buffer
-+        };
-+
-         write!(
--            &mut self.buffer,
-+            buffer,
-             "
-                 {cfg}
-                 #[doc(hidden)]
-@@ -75,20 +83,118 @@ fn emit_base(&mut self, field: &str, content: &str, builtin: bool) {
-         self.counter += 1;
-     }
- 
--    fn emit_only_builtin(&mut self, field: &str, content: &str) {
--        self.emit_base(field, content, true)
-+    fn emit_only_builtin(&mut self, field: &str, content: &str, param: bool) {
-+        self.emit_base(field, content, true, param)
-     }
- 
--    fn emit_only_loadable(&mut self, field: &str, content: &str) {
--        self.emit_base(field, content, false)
-+    fn emit_only_loadable(&mut self, field: &str, content: &str, param: bool) {
-+        self.emit_base(field, content, false, param)
-     }
- 
-     fn emit(&mut self, field: &str, content: &str) {
--        self.emit_only_builtin(field, content);
--        self.emit_only_loadable(field, content);
-+        self.emit_internal(field, content, false);
-+    }
-+
-+    fn emit_internal(&mut self, field: &str, content: &str, param: bool) {
-+        self.emit_only_builtin(field, content, param);
-+        self.emit_only_loadable(field, content, param);
-+    }
-+
-+    fn emit_param(&mut self, field: &str, param: &str, content: &str) {
-+        let content = format!("{param}:{content}", param = param, content = content);
-+        self.emit_internal(field, &content, true);
-+    }
-+
-+    fn emit_params(&mut self, info: &ModuleInfo) {
-+        let Some(params) = &info.params else {
-+            return;
-+        };
-+
-+        for param in params {
-+            let ops = param_ops_path(&param.ptype);
-+
-+            // Note: The spelling of these fields is dictated by the user space
-+            // tool `modinfo`.
-+            self.emit_param("parmtype", &param.name, &param.ptype);
-+            self.emit_param("parm", &param.name, &param.description);
-+
-+            write!(
-+                self.param_buffer,
-+                "
-+                    pub(crate) static {param_name}:
-+                        ::kernel::module_param::ModuleParamAccess<{param_type}> =
-+                            ::kernel::module_param::ModuleParamAccess::new({param_default});
-+
-+                    #[link_section = \"__param\"]
-+                    #[used]
-+                    static __{module_name}_{param_name}_struct:
-+                        ::kernel::module_param::RacyKernelParam =
-+                        ::kernel::module_param::RacyKernelParam::new(
-+                          ::kernel::bindings::kernel_param {{
-+                            name: if cfg!(MODULE) {{
-+                                ::kernel::c_str!(\"{param_name}\").as_bytes_with_nul()
-+                            }} else {{
-+                                ::kernel::c_str!(\"{module_name}.{param_name}\").as_bytes_with_nul()
-+                            }}.as_ptr(),
-+                            // SAFETY: `__this_module` is constructed by the kernel at load time
-+                            // and will not be freed until the module is unloaded.
-+                            #[cfg(MODULE)]
-+                            mod_: unsafe {{
-+                                (&::kernel::bindings::__this_module
-+                                    as *const ::kernel::bindings::module)
-+                                    .cast_mut()
-+                            }},
-+                            #[cfg(not(MODULE))]
-+                            mod_: ::core::ptr::null_mut(),
-+                            ops: &{ops} as *const ::kernel::bindings::kernel_param_ops,
-+                            perm: 0, // Will not appear in sysfs
-+                            level: -1,
-+                            flags: 0,
-+                            __bindgen_anon_1:
-+                                ::kernel::bindings::kernel_param__bindgen_ty_1 {{
-+                                    arg: {param_name}.as_void_ptr()
-+                                }},
-+                          }}
-+                        );
-+                ",
-+                module_name = info.name,
-+                param_type = param.ptype,
-+                param_default = param.default,
-+                param_name = param.name,
-+                ops = ops,
-+            )
-+            .unwrap();
-+        }
-+    }
-+}
-+
-+fn param_ops_path(param_type: &str) -> &'static str {
-+    match param_type {
-+        "i8" => "::kernel::module_param::PARAM_OPS_I8",
-+        "u8" => "::kernel::module_param::PARAM_OPS_U8",
-+        "i16" => "::kernel::module_param::PARAM_OPS_I16",
-+        "u16" => "::kernel::module_param::PARAM_OPS_U16",
-+        "i32" => "::kernel::module_param::PARAM_OPS_I32",
-+        "u32" => "::kernel::module_param::PARAM_OPS_U32",
-+        "i64" => "::kernel::module_param::PARAM_OPS_I64",
-+        "u64" => "::kernel::module_param::PARAM_OPS_U64",
-+        "isize" => "::kernel::module_param::PARAM_OPS_ISIZE",
-+        "usize" => "::kernel::module_param::PARAM_OPS_USIZE",
-+        t => panic!("Unsupported parameter type {}", t),
-     }
- }
- 
-+fn expect_param_default(param_it: &mut token_stream::IntoIter) -> String {
-+    assert_eq!(expect_ident(param_it), "default");
-+    assert_eq!(expect_punct(param_it), ':');
-+    let sign = try_sign(param_it);
-+    let default = try_literal(param_it).expect("Expected default param value");
-+    assert_eq!(expect_punct(param_it), ',');
-+    let mut value = sign.map(String::from).unwrap_or_default();
-+    value.push_str(&default);
-+    value
-+}
-+
- #[derive(Debug, Default)]
- struct ModuleInfo {
-     type_: String,
-@@ -99,6 +205,50 @@ struct ModuleInfo {
-     description: Option<String>,
-     alias: Option<Vec<String>>,
-     firmware: Option<Vec<String>>,
-+    params: Option<Vec<Parameter>>,
-+}
-+
-+#[derive(Debug)]
-+struct Parameter {
-+    name: String,
-+    ptype: String,
-+    default: String,
-+    description: String,
-+}
-+
-+fn expect_params(it: &mut token_stream::IntoIter) -> Vec<Parameter> {
-+    let params = expect_group(it);
-+    assert_eq!(params.delimiter(), Delimiter::Brace);
-+    let mut it = params.stream().into_iter();
-+    let mut parsed = Vec::new();
-+
-+    loop {
-+        let param_name = match it.next() {
-+            Some(TokenTree::Ident(ident)) => ident.to_string(),
-+            Some(_) => panic!("Expected Ident or end"),
-+            None => break,
-+        };
-+
-+        assert_eq!(expect_punct(&mut it), ':');
-+        let param_type = expect_ident(&mut it);
-+        let group = expect_group(&mut it);
-+        assert_eq!(group.delimiter(), Delimiter::Brace);
-+        assert_eq!(expect_punct(&mut it), ',');
-+
-+        let mut param_it = group.stream().into_iter();
-+        let param_default = expect_param_default(&mut param_it);
-+        let param_description = expect_string_field(&mut param_it, "description");
-+        expect_end(&mut param_it);
-+
-+        parsed.push(Parameter {
-+            name: param_name,
-+            ptype: param_type,
-+            default: param_default,
-+            description: param_description,
-+        })
-+    }
-+
-+    parsed
- }
- 
- impl ModuleInfo {
-@@ -114,6 +264,7 @@ fn parse(it: &mut token_stream::IntoIter) -> Self {
-             "license",
-             "alias",
-             "firmware",
-+            "params",
-         ];
-         const REQUIRED_KEYS: &[&str] = &["type", "name", "license"];
-         let mut seen_keys = Vec::new();
-@@ -140,6 +291,7 @@ fn parse(it: &mut token_stream::IntoIter) -> Self {
-                 "license" => info.license = expect_string_ascii(it),
-                 "alias" => info.alias = Some(expect_string_array(it)),
-                 "firmware" => info.firmware = Some(expect_string_array(it)),
-+                "params" => info.params = Some(expect_params(it)),
-                 _ => panic!("Unknown key \"{key}\". Valid keys are: {EXPECTED_KEYS:?}."),
-             }
- 
-@@ -205,7 +357,9 @@ pub(crate) fn module(ts: TokenStream) -> TokenStream {
-     // Built-in modules also export the `file` modinfo string.
-     let file =
-         std::env::var("RUST_MODFILE").expect("Unable to fetch RUST_MODFILE environmental variable");
--    modinfo.emit_only_builtin("file", &file);
-+    modinfo.emit_only_builtin("file", &file, false);
-+
-+    modinfo.emit_params(&info);
- 
-     format!(
-         "
-@@ -369,15 +523,18 @@ unsafe fn __exit() {{
-                             __MOD.assume_init_drop();
-                         }}
-                     }}
--
-                     {modinfo}
-                 }}
-             }}
-+            mod module_parameters {{
-+                {params}
-+            }}
-         ",
-         type_ = info.type_,
-         name = info.name,
-         ident = ident,
-         modinfo = modinfo.buffer,
-+        params = modinfo.param_buffer,
-         initcall_section = ".initcall6.init"
-     )
-     .parse()
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzt2h-pinctrl.yaml
+> > +additionalProperties:
+>
+> This style was for existing bindings which had no node name pattern.
+> Define a pattern for node names.
 
--- 
-2.47.2
+The node name depends on the device for which pin control is configured.\
+Typical examples are "sd2", "sound", "usb0", ...
+...
+
+> > +  anyOf:
+> > +    - type: object
+> > +      additionalProperties: false
+> > +      allOf:
+> > +        - $ref: pincfg-node.yaml#
+> > +        - $ref: pinmux-node.yaml#
+> > +
+> > +      description:
+> > +        Pin controller client devices use pin configuration subnodes (children
+> > +        and grandchildren) for desired pin configuration.
+> > +        Client device subnodes use the below standard properties.
+> > +
+> > +      properties:
+> > +        pinmux:
+> > +          description:
+> > +            Values are constructed from GPIO port number, pin number, and
+> > +            alternate function configuration number using the RZT2H_PORT_PINMUX()
+> > +            helper macro from <dt-bindings/pinctrl/renesas,r9a09g077-pinctrl.h>.
+> > +        pins: true
+> > +        gpio-hog: true
+> > +        gpios: true
+> > +        input: true
+> > +        input-enable: true
+> > +        output-enable: true
+> > +        output-high: true
+> > +        output-low: true
+> > +        line-name: true
+> > +
+> > +    - type: object
+> > +      additionalProperties:
+> > +        $ref: "#/additionalProperties/anyOf/0"
+>
+> Do you really need both 1 OR 2 levels of nodes? Can't you decide on one
+> way?
+
+Having two possible levels allows us to group pins that need similar
+configuration, which is quite common for e.g. Ethernet and SDHI.
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
