@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F381F03D9;
-	Wed,  2 Jul 2025 21:29:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88F82BE656;
+	Wed,  2 Jul 2025 21:29:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751491784; cv=none; b=XI+hIiwTxII4xuQEUmQConSwOC0I864mgNHw1fXmJDHvAPU0HCZvhnhm0Fur1WBsEp8vSqkrzNe35Puh3jKAUeJTc6HFUvcIdrl2NVnW6S03cqm26djm4Qdzvjs8EZI7qlWdwQdHk3i5xjFVjOiIuf9/Jd2eynse0soW4MVAYig=
+	t=1751491786; cv=none; b=o6AroeKAoMT3QjBQlWdrmOnpmjpwPikqodq24CyTkr1EZk7Ju7xTc5GR+omfh4mbuMcMofG5bnr440APl5g8ScejOIgOsh1Jh3uixG04kkHrypVH01suiiIMjMgZ7V6kPxouf61ohdxgLLtB0m+L3Erj+hrORmXUbo00QamKOX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751491784; c=relaxed/simple;
-	bh=fE62hdLk6to/S3vrqlzE6dTuyTkFSPn3RG8SWSrYAG8=;
+	s=arc-20240116; t=1751491786; c=relaxed/simple;
+	bh=0WNEst3sBeqmgcUmIKzjp8s/Qwi8FrrcsJxDKg7Ym1w=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=JcDhfN9s2b9XI2MbJ66EaHZsWLHn6SXq5MQh7fV/NvXhMr/4JnmrfpAUpMkMblZJXXXi9/dfJYbIX3mJeXGpWmUMq7sfJM14QMqWCiWiKlW7j1udAzTuqJ5WhWQvTr8SrjBB9pQWVjwtsslXssSuZD1YmhqdAS05Ebnq2RZz/3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e+TuWppp; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=GfXdxSJDjj859tdGLKAVNFrA+rG/LVcjkHn20KArPzYbHMjgfw7rWxBRBdC3q/EpLS2kGu+k9VxgF9rqO6PtZpe1I9k9sky0wM56EATetHfbXx2g8zON+nIAqXzbhr50QYB7DjJDK9wH4FclFAkat89BN7tE3XJZUVMUf7oSqvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NfS18JJA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e+TuWppp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F017EC4CEE7;
-	Wed,  2 Jul 2025 21:29:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NfS18JJA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81169C4CEF2;
+	Wed,  2 Jul 2025 21:29:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751491784;
-	bh=fE62hdLk6to/S3vrqlzE6dTuyTkFSPn3RG8SWSrYAG8=;
+	s=k20201202; t=1751491785;
+	bh=0WNEst3sBeqmgcUmIKzjp8s/Qwi8FrrcsJxDKg7Ym1w=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=e+TuWpppAqOInfDEJdwi2gUsj/uG/5bnzmNFEZvmsa8h0ix4gc+K+FrEhktLNoRfL
-	 Fo5lEaliGlPt+OfUOQKVNGDAiF4SlIh16N9LCN4FpeJ3iQTy/vmMabWvOzg5CM8n/i
-	 /706Z21I0uqLmjfZzdK+N2HLSEOKx0T0TsAx1tyf6xar/nzuM+jQiYWIodfonlna80
-	 MdAqn1EtqKGvSgr0YunR2EuEOCdraKuaPri5rpYtahfMIJQX8rnXiscgEMU6jBVs94
-	 W07n5Lso7IHs8BuXpTW57qV5/nZzOstuKUJVCq4umbNzPkgwM6cja7Sa799ZMFgy0s
-	 MlnaTA+F81M5A==
+	b=NfS18JJANYUxJH9ISefFms7MtV7+AXIV0SzQUkrIm0wBiqDKXAQ9lJmvODN+ZDtoJ
+	 edX4Fod5+FSR1dZqv0Dgo3pjOc3SyjyupnkGWVDu43LE3zm3DPH/E1NCji36YwqBE9
+	 zKZ3rZ6da3Krvj0bSG2niC9/+ydgexba3TwxuROLFGa7VGUZ1mkmZwhThrp5jMKMJ+
+	 Oicoj4MsXhXOx4phQONxtDlsDpKdGEr1rzLbv2YgjgTdoewqVazQgsFyK76SRBeN4O
+	 h6yAiedu5e5LYwmVtSLTcwMu+G15EmIh00lOyjHI+AXGkPSzWiz1q1jaziuryGVfTm
+	 heDcexoDeuE2g==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE4A1383B273;
-	Wed,  2 Jul 2025 21:30:09 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33D68383B273;
+	Wed,  2 Jul 2025 21:30:11 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,14 +37,15 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2] net: thunderbolt: Fix the parameter passing of
- tb_xdomain_enable_paths()/tb_xdomain_disable_paths()
+Subject: Re: [PATCH v2] net: thunderbolt: Enable end-to-end flow control also
+ in
+ transmit
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <175149180851.869841.2113483295411512857.git-patchwork-notify@kernel.org>
-Date: Wed, 02 Jul 2025 21:30:08 +0000
-References: <20250628094920.656658-1-zhangjianrong5@huawei.com>
-In-Reply-To: <20250628094920.656658-1-zhangjianrong5@huawei.com>
+ <175149180975.869841.11361314397733527763.git-patchwork-notify@kernel.org>
+Date: Wed, 02 Jul 2025 21:30:09 +0000
+References: <20250628093813.647005-1-zhangjianrong5@huawei.com>
+In-Reply-To: <20250628093813.647005-1-zhangjianrong5@huawei.com>
 To: zhangjianrong <zhangjianrong5@huawei.com>
 Cc: michael.jamet@intel.com, mika.westerberg@linux.intel.com,
  YehezkelShB@gmail.com, andrew+netdev@lunn.ch, davem@davemloft.net,
@@ -58,19 +59,20 @@ Hello:
 This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Sat, 28 Jun 2025 17:49:20 +0800 you wrote:
-> According to the description of tb_xdomain_enable_paths(), the third
-> parameter represents the transmit ring and the fifth parameter represents
-> the receive ring. tb_xdomain_disable_paths() is the same case.
+On Sat, 28 Jun 2025 17:38:13 +0800 you wrote:
+> According to USB4 specification, if E2E flow control is disabled for
+> the Transmit Descriptor Ring, the Host Interface Adapter Layer shall
+> not require any credits to be available before transmitting a Tunneled
+> Packet from this Transmit Descriptor Ring, so e2e flow control should
+> be enabled in both directions.
 > 
-> Fixes: ff7cd07f3064 ("net: thunderbolt: Enable DMA paths only after rings are enabled")
 > Signed-off-by: zhangjianrong <zhangjianrong5@huawei.com>
 > 
 > [...]
 
 Here is the summary with links:
-  - [v2] net: thunderbolt: Fix the parameter passing of tb_xdomain_enable_paths()/tb_xdomain_disable_paths()
-    https://git.kernel.org/netdev/net-next/c/8ec31cb17cd3
+  - [v2] net: thunderbolt: Enable end-to-end flow control also in transmit
+    https://git.kernel.org/netdev/net-next/c/a8065af3346e
 
 You are awesome, thank you!
 -- 
