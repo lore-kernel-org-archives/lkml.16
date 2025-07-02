@@ -1,150 +1,136 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D57474C7F
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 04:59:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96082FB2;
+	Wed,  2 Jul 2025 05:01:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751432380; cv=none; b=LWkNrvu+D5ezEk8fjvBr/cplBUMLkKEDU6unULWsMC6aGATUmzLUBPdY8bE8T6HYiLOxzOYJQ2Qlf/0n/Wo2aXCk+Ki0IUCHW85j0f1mDJshSrxowTgnA+FI4GsTKWv0E++Sy7tRqsUuvSSD3ksRW4XmvruF1zhNAVhRZeBewCQ=
+	t=1751432484; cv=none; b=HG8D9F8rViK8h2NdX5/jn4F9bS7U+ZIVrnoza5Reb4lF+Vt2ykv9Ma7zMIX7qUrPeADeKTExc7SpIEANNbBK3iLs+qBbL4Xsjbpez7KlsUFAKexpnpfdWDcpKyxqmUfL2vONoZCd15PHQvmieXTpGL8KuHH7iZUOyHx6MFXLbPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751432380; c=relaxed/simple;
-	bh=R7+aLc9/U+umTHHMzGua9NIDU7Kxfs2gE2lwsZ72jsk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=Jy++vlZ3og0tqD7WVvcsUN+BfohT4OaJhtXoDxfevDpozA1XXBA2jvzz8ZNp6QZo2J/a3tQEZMDCHpS3uO1cxqcemaWfrS/B/gXB7hp6qp2WjAo+ok0Rg/bZBxu3hKUYo3mC/I1dsjKM65Ds+efGxxO0ie76fHYQOSqzXm8pg7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=q+zSjsik; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="q+zSjsik"
-Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250702045933epoutp0157c19b52d9e30e375445c019d50bc8b5~OVnbiom6a0085300853epoutp01N
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 04:59:33 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250702045933epoutp0157c19b52d9e30e375445c019d50bc8b5~OVnbiom6a0085300853epoutp01N
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1751432373;
-	bh=KGjwLcs04Md+DMRIwwBdUpoAbzxYSvRIXkhW1M49kck=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=q+zSjsikqKNjIdlL8KWnj0WOvd/cQFsbFPA0zhe2H0LZNCqsKxKtwNylDFFo22jm5
-	 a5EjUMalo5zG6fwFh3x8XJPt2v8qguRdHRVe1wrfIBxwaGvUXwVNA0fGDVYx5ukrwW
-	 /D52jnEE+1IDSIH779DnJVGeoc7SPTSZvGkMgZ14=
-Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
-	epcas2p4.samsung.com (KnoxPortal) with ESMTPS id
-	20250702045933epcas2p4f1f10a6b0579532430f51f589f2fffb5~OVnbBKApS2940029400epcas2p4A;
-	Wed,  2 Jul 2025 04:59:33 +0000 (GMT)
-Received: from epcas2p4.samsung.com (unknown [182.195.36.70]) by
-	epsnrtp03.localdomain (Postfix) with ESMTP id 4bX73m2Z1qz3hhTG; Wed,  2 Jul
-	2025 04:59:32 +0000 (GMT)
-Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250702045931epcas2p2817e5e08fbc07afd7418dcf296b93beb~OVnZxTJIQ2974529745epcas2p2s;
-	Wed,  2 Jul 2025 04:59:31 +0000 (GMT)
-Received: from ubuntu (unknown [10.229.95.128]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250702045931epsmtip21019cd1bc071adf164f6d6a49f5fdc0e~OVnZvo_JW2473324733epsmtip2v;
-	Wed,  2 Jul 2025 04:59:31 +0000 (GMT)
-Date: Wed, 2 Jul 2025 14:11:16 +0900
-From: Jung Daehwan <dh10.jung@samsung.com>
-To: Guan-Yu Lin <guanyulin@google.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v14 0/4] Support system sleep with offloaded usb
- transfers
-Message-ID: <20250702051116.GA48861@ubuntu>
+	s=arc-20240116; t=1751432484; c=relaxed/simple;
+	bh=aM2O311AG0MI5x8qPgoLBcOvvK+KMw4egyrI2NlTIh4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cB4ZD7XoE4P5hIzp1fu9he0z2WA1GjYabUs3j2RR5fHFb1jioCkYF6TZUmU2EjuS1k/Z47iaIQ0mtVQz7VKVLf5tV3QFdznozrEWjXYeOUzQ2JK4FAMIlrtpziDsKkOQcD//gRoem2FVWhkif4svbaC79HOInknmqSSIhgB2mXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-555024588a8so4186059e87.0;
+        Tue, 01 Jul 2025 22:01:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751432479; x=1752037279;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=V0rt2nH/TWlCePhqIMfxbMwVAseEB+3Yn8nvDGBHf0Y=;
+        b=lCCQbWbJiQt1NsmLzRWqp7kobxDfeXW766hwaaFAHgHwbOfjRY8dSA9necnUkkO5gm
+         KxNUrdmShXF3KFOaBaTn1BPMnMV4PKcRlm/r+L+brpFi+uNIZdLSxcgWiFHHyzdUnKx5
+         iZ5uLFCP5/WXRIbrkjuuSYfw1zpU14/DJUlN+QOzpF+1DbzTltV/XsRd2h1H5J2gL452
+         IFlmtZ6q/XWfBe2v69UvbG4wacAcm+xp+PD8LzECuWq5IXrrUh+e1GR0911C8uZjwf7e
+         6jFxX+b+FjKMhEPg4+OO41p2wrecOpa3Nth7Ps/zQ2/TIYSHRG3D8thwdhwyjGFqQTYX
+         HnEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUtpOIm/sIvMEStX6GABc+E7wbxGSABEjIX2J9YSicPVW73CCdylILWX+J3Ip3UCtsyn39WFYWveAD6lvKb@vger.kernel.org, AJvYcCWHcvdeSEeNiCsP6sjCNC5UfJGhe7Z0Ua9WhFRIhzrbj06rUZ3jFD3hlPR5XPnMvWoXp7xmXPsN0qmv@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVGsFJLfSanOhYLT9pgqUeXxtCLPyDxH3WEMBMTuT1j1Y8SLSX
+	JnuIAps4iSTQfV9omZbisgdJeoIohmuN3hw5WOrcVNSXwEUKMybwvcCiOl6YbkaO
+X-Gm-Gg: ASbGncso/lvvbgOW2st4Shr2Tv06LpD9csVeSaUzUEsXzr10oSF/DsE0z0WijCQYcKe
+	2nI1+x7RRB93a/JHPUu57Gw/ipWmrYHaxKDqdF3dNwAcvtIY7GliOqljkiIwMr44kVmVRbJD8Ir
+	UeKKwd6+z8Hp8EYHPBE+eoco6FA6lgfGoNypLmN4YqN3NShvdj+e3kbR4Dn+7ECK+6MjAaa1GO3
+	+mMwdQfpDMljP7K2Zlzamvx/TQLfsN575dHshyV2EWpb+A2Z2ZDfDzIw30nDwXfE9MGqFOMzqIt
+	8kvFakcu5l+c9Zsc6yw5DIlQWQaE9xzK47z+GzQpv7haXgRqbWJ6D+J/RRLdIUglmVT+8q5zWab
+	VSnMINBh08vk/HyMG/48=
+X-Google-Smtp-Source: AGHT+IFG9dXhqHdaZHV6aRjDiPPbxhVNAwyQpeQVP0kYHFcxWO4/K/yqM63WaXOZhLNe2KUBF9u9kQ==
+X-Received: by 2002:a05:6512:3ca4:b0:553:2645:4e90 with SMTP id 2adb3069b0e04-55628389775mr434988e87.52.1751432478833;
+        Tue, 01 Jul 2025 22:01:18 -0700 (PDT)
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b2ddc50sm1993541e87.231.2025.07.01.22.01.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Jul 2025 22:01:17 -0700 (PDT)
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-32cd0dfbd66so31294641fa.3;
+        Tue, 01 Jul 2025 22:01:17 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVfl159z/5RVQTsckcOvGW6WXb875jnd53t/621vGuq9cI2JinO3HbfaT6OE292k90lQ+m+qlZK7yVvy++H@vger.kernel.org, AJvYcCXXym3H69YibdS2FX0IiOWWLKTPNMFsZBe+e/o66NnPW/eAMCvStSUdOSmZVc7J1GcW8SChTEgL0ZWD@vger.kernel.org
+X-Received: by 2002:a05:651c:e1b:b0:32a:6c63:92a with SMTP id
+ 38308e7fff4ca-32e0004b940mr3217911fa.22.1751432477399; Tue, 01 Jul 2025
+ 22:01:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAOuDEK3+=FVj2zrajjqsWamqCEx5-0v+dSS=gRLYyO_8YdEy1Q@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-CMS-MailID: 20250702045931epcas2p2817e5e08fbc07afd7418dcf296b93beb
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----6jEij.O31.-jx_HPxteO2QVWZmGJ3cE9whrRgeUheTDLThxq=_14b85a_"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-cpgsPolicy: CPGSC10-234,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250702043313epcas2p4a44401b5ae8930e625c22209bca2dd54
-References: <20250604082449.2029156-1-guanyulin@google.com>
-	<2025060407-geologic-excuse-9ca5@gregkh>
-	<CAOuDEK1471toXVEiNySQtmrRTSPwzo840Q2d5pw9M4fCOfsgTg@mail.gmail.com>
-	<2025061957-daylong-legal-fed1@gregkh>
-	<CAOuDEK1mY7++0NxRYR_+fhQB5+74KB-=MHhk4Dx3cpD6XrG93A@mail.gmail.com>
-	<CGME20250702043313epcas2p4a44401b5ae8930e625c22209bca2dd54@epcas2p4.samsung.com>
-	<CAOuDEK3+=FVj2zrajjqsWamqCEx5-0v+dSS=gRLYyO_8YdEy1Q@mail.gmail.com>
+References: <20250701165756.258356-1-wens@kernel.org> <20250701165756.258356-5-wens@kernel.org>
+In-Reply-To: <20250701165756.258356-5-wens@kernel.org>
+Reply-To: wens@csie.org
+From: Chen-Yu Tsai <wens@csie.org>
+Date: Wed, 2 Jul 2025 13:01:04 +0800
+X-Gmail-Original-Message-ID: <CAGb2v646HvqipGd_C=WJ4LGsumFfF5P9a7XQ7UGO6t1901DDiw@mail.gmail.com>
+X-Gm-Features: Ac12FXxOhT5Y9cipxD-0Dp_WlsoVmLL1HMEja_1PgcoQyh6p3ZogoQeQ7CimJkk
+Message-ID: <CAGb2v646HvqipGd_C=WJ4LGsumFfF5P9a7XQ7UGO6t1901DDiw@mail.gmail.com>
+Subject: Re: [PATCH RFT net-next 04/10] soc: sunxi: sram: register regmap as syscon
+To: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej@kernel.org>, Samuel Holland <samuel@sholland.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-------6jEij.O31.-jx_HPxteO2QVWZmGJ3cE9whrRgeUheTDLThxq=_14b85a_
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Disposition: inline
+On Wed, Jul 2, 2025 at 12:58=E2=80=AFAM Chen-Yu Tsai <wens@kernel.org> wrot=
+e:
+>
+> From: Chen-Yu Tsai <wens@csie.org>
+>
+> Until now, if the system controller had a ethernet controller glue layer
+> control register, a limited access regmap would be registered and tied
+> to the system controller struct device for the ethernet driver to use.
+>
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> ---
+>  drivers/soc/sunxi/sunxi_sram.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/drivers/soc/sunxi/sunxi_sram.c b/drivers/soc/sunxi/sunxi_sra=
+m.c
+> index 4f8d510b7e1e..63c23bdffa78 100644
+> --- a/drivers/soc/sunxi/sunxi_sram.c
+> +++ b/drivers/soc/sunxi/sunxi_sram.c
+> @@ -12,6 +12,7 @@
+>
+>  #include <linux/debugfs.h>
+>  #include <linux/io.h>
+> +#include <linux/mfd/syscon.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+> @@ -377,6 +378,7 @@ static int __init sunxi_sram_probe(struct platform_de=
+vice *pdev)
+>         const struct sunxi_sramc_variant *variant;
+>         struct device *dev =3D &pdev->dev;
+>         struct regmap *regmap;
+> +       int ret;
+>
+>         sram_dev =3D &pdev->dev;
+>
+> @@ -394,6 +396,10 @@ static int __init sunxi_sram_probe(struct platform_d=
+evice *pdev)
+>                 regmap =3D devm_regmap_init_mmio(dev, base, &sunxi_sram_r=
+egmap_config);
+>                 if (IS_ERR(regmap))
+>                         return PTR_ERR(regmap);
+> +
+> +               ret =3D of_syscon_register_regmap(dev->of_node, regmap);
+> +               if (IS_ERR(ret))
 
-On Wed, Jul 02, 2025 at 12:33:00PM +0800, Guan-Yu Lin wrote:
-> On Tue, Jul 1, 2025 at 11:05 PM Guan-Yu Lin <guanyulin@google.com> wrote:
-> >
-> > On Thu, Jun 19, 2025 at 5:27 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > On Wed, Jun 04, 2025 at 08:32:00PM +0800, Guan-Yu Lin wrote:
-> > > > On Wed, Jun 4, 2025 at 6:56 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > > >
-> > > > > On Wed, Jun 04, 2025 at 08:23:06AM +0000, Guan-Yu Lin wrote:
-> > > > >
-> > > > > Is there a reason you aren't cc:ing the developers from a "big android
-> > > > > device company" that is currently testing and finding problems with this
-> > > > > patchset in their device testing?  I will require their signed-off-by or
-> > > > > tested-by in order to even consider accepting this patch series based on
-> > > > > the issues they seem to be finding with it in an
-> > > > > internal-company-bug-reporting-platform that I seem to be also copied
-> > > > > on.
-> > > > >
-> > > > > thanks,
-> > > > >
-> > > > > greg k-h
-> > > >
-> > > > I'm not sure if the company wants to reveal its testing right now
-> > > > since the company raised the problem with the internal system. Hence,
-> > > > we still use the internal system to communicate with them. We
-> > > > understand that "signed-off-by"/"tested-by" tags are required to merge
-> > > > the code, so we'll keep working closely with multiple companies to
-> > > > achieve this.
-> > >
-> > > Great, please do so for the next version you post.
-> > >
-> > > thanks,
-> > >
-> > > greg k-h
-> >
-> > Hi Wesley,
-> >
-> > Right now the system sleep with offloaded usb transfers feature is
-> > pretty much settled. I was wondering if you could test the patch on
-> > your platform? Thanks!
-> >
-> > Regards,
-> > Guan-Yu
-> 
-> Hi Jung,
-> 
-> I noticed that you've adapted the latest sideband design for audio
-> offload in your system. I was wondering if you could adapt this
-> patchset as well to further enable offloaded usb transfers during
-> system suspend? Thanks!
-> 
-> Regards,
-> Guan-Yu
-> 
+BroderTuck on IRC pointed out that this gives a compiler warning.
+Indeed it is incorrect. It should test `ret` directly.
 
-Hi Guan,
+ChenYu
 
-We can't adapt this patchset on Exynos platform now. My co-worker currently
-analyzing it, and it might take some time.
-
-Best Regards,
-Daehwan Jung
-
-------6jEij.O31.-jx_HPxteO2QVWZmGJ3cE9whrRgeUheTDLThxq=_14b85a_
-Content-Type: text/plain; charset="utf-8"
-
-
-------6jEij.O31.-jx_HPxteO2QVWZmGJ3cE9whrRgeUheTDLThxq=_14b85a_--
+> +                       return ret;
+>         }
+>
+>         of_platform_populate(dev->of_node, NULL, NULL, dev);
+> --
+> 2.39.5
+>
+>
