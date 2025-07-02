@@ -1,174 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5787D275846;
-	Wed,  2 Jul 2025 13:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18EE028469A
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:00:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751464780; cv=none; b=mKXq54cUzp4g9T2N7tIcTRprV14XU14pq3x3nO5HYWliuWWu8T0x5Oa6cDq9AehcErSvy+6Ie0RaEuHkOjnmiPM3DCf4RQtisKwF+d8T/+8CdBCF4QNSzp58dzrVrnIm/9wN5LZNyH4LlLJt2pVxs2gONJ9jLJOhnQPd3sSL87Y=
+	t=1751464810; cv=none; b=OCNdD3++mbdZotNCsKyKNCG4CT835G/Td7apNjxz8ZXx5vN3Q3iEOnHRO60vdn+Tlr3jODA7XCT1fEgdcDuAODGEy/9EYiDlr52sE7ToC5CvEGc5mv8sSfReXSgC3+Mdo1TjTOrQa37+A65m0zWtWzRUtJyM6cnOvij6VM0lZA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751464780; c=relaxed/simple;
-	bh=kJfXmDm7NBssI4qDICIYhiXyYISGnFX7WgqKITyf61g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pchJU3kHjLHsRv6BE0kDGL3K4a4F+abnVjA0M/wNkp9xIGHAovQQ7fZKAr2FYxnm7GQiTwh8zRp79ql0RK5TQSUJhRc9iRV1PKCc3q+ytN1vrVyzekQzMkaytbT2djxisYEErMSqwkWmlZUsRVKA67z13g+svSD362kIAKrWEQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IibodPuY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751464810; c=relaxed/simple;
+	bh=334YBk5ho3itaFbhHkxVkPmHyXwS6qZYCVudfb1UGFk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dFBj1Ty6IdTDRk9q5rl5LsoP/VwJnfOVRIdnmJj9xkfojtJuhy3TnPaQbX1p2s0c1QAftf+pSsV3ryB0svnXZ9FOYJvik5ramorHaOmYqpWsadeT/RyYGb3EasuUd4lkB3r5ZsyIjtnwpSVLg/9P6rCuzA0/CA+wYni6L031nm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p8k4UJsN; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IibodPuY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D02CFC4CEE7;
-	Wed,  2 Jul 2025 13:59:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751464779;
-	bh=kJfXmDm7NBssI4qDICIYhiXyYISGnFX7WgqKITyf61g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IibodPuYAcsjAUE9NUbENQBAbqvZXrZuIJEyYWJ9pFz0ltuYqvowtxSR1iNRamVuZ
-	 5DTR2w1js3OI6t39vBXoP3U5DkPrVNOi3W1Fb1c94H3MbkJKtaoLvd2R4OZnkh21bt
-	 6jzu81uTrvqRwIVrHKpPKMnCiKh+eMSYAAhiRHNmdnOgYspLnFrEfiyr1VLAfAW742
-	 wxtFwW8Q50/3hI4IBNnsNBfqtWH6M5WBSrBZbjq6F9Bz7Q6LCd7P4sc4UOSlYoKbFp
-	 1NodI6a94fKicyV9o9qYKtx696FvqGGGDiWEjf/K3LSYPQtP2DqeezkhPdaGGy6AkN
-	 2IA5pweEP8ynw==
-Message-ID: <023038d4-2258-4b2d-a3f9-b817ef0173bc@kernel.org>
-Date: Wed, 2 Jul 2025 15:59:35 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p8k4UJsN"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-4a44b9b2af8so24645511cf.3
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 07:00:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751464808; x=1752069608; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IAy5pJVipOegXkcFxex+Nx+8U9RPqLz52WABvUkCFNQ=;
+        b=p8k4UJsNFmJH8dmxp6Hogh2jRnL0joItbMbK/ovZlfPGo7l1EYY3pDfyeu0s9zTc6+
+         mi2JtYEaTsfSJ0e/BxovsivoZMeXc0ixXlmLTeFFGvapAbbbY6qcFU3I1Lf45SmuCHOz
+         IxVyOmK6c2MVNLciiRam9SGV9suzpBkGImYc+/0vH9F5jXEkKLnvJ+dbQeRNRQMX0BAe
+         ss0hDkTEKXM8oK+fHkeRehHwdEYMKWczTBgkquJZZX1oTHTXqaGZZphrINtXXdTj9dCr
+         oDfhtGaEpuA3yQYkZrEl7gxGymlJIi7YhqnVAHDanAapl2BSbIDUXii3wdLPSNz9g6bP
+         CCbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751464808; x=1752069608;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IAy5pJVipOegXkcFxex+Nx+8U9RPqLz52WABvUkCFNQ=;
+        b=e2/cdumfpRn6VVGgrkvaSb6nv4YotQ9ZrLfGz4jSmKMGDZGqkuOFHiqlLrVmdvnItb
+         glMKlVkJas1vz+rj1m2thz6APcDu9SRq/mGb5NobwVtqPKWMtTkI/GtaKcjghg9lk7GA
+         91OJTp74Edv5CWnIvWET1MObq7J0oYTdlKX4siGNWLJU7HusarMy0frrLNYdbW+GYm8s
+         PTiakmjhZ6ZLgbKuqBkQc0nf7tLnzHAG9/1LkqyVermxcf4iG+Q1OHJBhqYFeIFhtMjD
+         2dBoZKsOnsQ0624cn/ifTmkxQs88v0Y6sREfcvmyc1knekrTzglAMs2+KA8KpjMXeVl3
+         hG6g==
+X-Forwarded-Encrypted: i=1; AJvYcCV0XBqKL9PMnUQGnJUmd/QDaagG9iNSX4bF+GIbHI8vYq9Ve3iOsOLSIoZewybFWInGKAf8deIMxe/s2qk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmXGrRcHBjCV/aE1oWbNy1FL4XhV/PQUCEw6T8Nnna3QcBvtqz
+	5WS3f8qmChz0uwBsLgVtqlhCB/pNhU3DZnI9UWLOnIrBBxV2uGbUc4lPJKuXBjRDP5MEauzsVGm
+	eGy1nwXRgmxdpN8YGwo0LhSxq/P05zzwUqxLyPp/X
+X-Gm-Gg: ASbGncvDI1mVy3ZF3DyUBFIhLqV02JYW3Qqh3pSZHswQbK3G69VW1qCtByBMqk5nX/5
+	NzRapuANDL5xSEuSijmE6ixiA7cBgJONVVS2Zmzyw78ezK9NRipBe3mgQhn4kfasZ2s9Q8bOP9i
+	lIw8H/ZBeApcA83+uXnB2KBmOtYRYa3WgxM9f9/IGbVQ==
+X-Google-Smtp-Source: AGHT+IGWIeV9qlCekPD5yvT3T7J12NSgNsep3S9VUDAzDmKLUwM3JtsT6ag92QX7EemHeWzXB4REymZEuWjnsHWsI2o=
+X-Received: by 2002:ac8:5f53:0:b0:4a8:182f:3514 with SMTP id
+ d75a77b69052e-4a976a204f4mr49474191cf.49.1751464806530; Wed, 02 Jul 2025
+ 07:00:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/5] media: dt-bindings: add non-pixel property in iris
- schema
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Vikash Garodia <quic_vgarodia@quicinc.com>,
- Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Abhinav Kumar <abhinav.kumar@linux.dev>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250627-video_cb-v3-0-51e18c0ffbce@quicinc.com>
- <20250627-video_cb-v3-1-51e18c0ffbce@quicinc.com>
- <19dd2e69-ad13-46f2-b99f-04a5e26f10d3@kernel.org>
- <08c8cdfd-099e-7b90-b163-23ecee3a5da4@quicinc.com>
- <118f2cbe-d8bd-4177-b0d5-91d9f1dbbef0@kernel.org>
- <9f5be122-302d-402f-91f2-675507612d32@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <9f5be122-302d-402f-91f2-675507612d32@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250702110039.15038-1-jiayuan.chen@linux.dev> <c9c5d36bc516e70171d1bb1974806e16020fbff1@linux.dev>
+In-Reply-To: <c9c5d36bc516e70171d1bb1974806e16020fbff1@linux.dev>
+From: Eric Dumazet <edumazet@google.com>
+Date: Wed, 2 Jul 2025 06:59:55 -0700
+X-Gm-Features: Ac12FXwp8XZXi4rEalR7Po7yvbkYy9PGyrgDLaG4STeExITm6ZjzUqu2xPuLOTk
+Message-ID: <CANn89iJdGZq0HW3+uGLCMtekC7G5cPnHChCJFCUhvzuzPuhsrA@mail.gmail.com>
+Subject: Re: [PATCH net-next v1] tcp: Correct signedness in skb remaining
+ space calculation
+To: Jiayuan Chen <jiayuan.chen@linux.dev>
+Cc: netdev@vger.kernel.org, mrpre@163.com, 
+	Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@google.com>, 
+	"David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	David Howells <dhowells@redhat.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 02/07/2025 15:11, Konrad Dybcio wrote:
-> On 7/2/25 1:46 PM, Krzysztof Kozlowski wrote:
->> On 02/07/2025 13:32, Vikash Garodia wrote:
->>>
->>> On 7/2/2025 4:43 PM, Krzysztof Kozlowski wrote:
->>>> On 27/06/2025 17:48, Vikash Garodia wrote:
->>>>> Existing definition limits the IOVA to an addressable range of 4GiB, and
->>>>> even within that range, some of the space is used by IO registers,
->>>>> thereby limiting the available IOVA to even lesser. Video hardware is
->>>>> designed to emit different stream-ID for pixel and non-pixel buffers,
->>>>> thereby introduce a non-pixel sub node to handle non-pixel stream-ID.
->>>>>
->>>>> With this, both iris and non-pixel device can have IOVA range of 0-4GiB
->>>>> individually. Certain video usecases like higher video concurrency needs
->>>>> IOVA higher than 4GiB.
->>>>>
->>>>> Add reference to the reserve-memory schema, which defines reserved IOVA
-> 
-> [...]
-> 
->>>>>    dma-coherent: true
->>>>>  
->>>>> +  non-pixel:
->>>>
->>>> Why EXISTING hardware grows?
->>> Same here, the commit describes the limitation of existing design and also
->>> explains the need for having the non-pixel device. Its not that the hardware is
->>> growing here, rather the hardware stream-IDs are utilized differently to get
->>> higher device addressable range.
->>
->> You are not doing this for a new device. There is no new device here at
->> all. Nowhere here is a new device.
->>
->> Changes for a new device COME TOGETHER with the new device.
->>
->> What you are doing here is changing existing hardware without any
->> explanation why.
-> 
-> This is bindings getting a reality check.. this goes as far back as Venus
-> existed (msm8974/2012)
+On Wed, Jul 2, 2025 at 6:42=E2=80=AFAM Jiayuan Chen <jiayuan.chen@linux.dev=
+> wrote:
+>
+> July 2, 2025 at 19:00, "Jiayuan Chen" <jiayuan.chen@linux.dev> wrote:
+>
+>
+> >
+> > The calculation for the remaining space, 'copy =3D size_goal - skb->len=
+',
+> >
+> > was prone to an integer promotion bug that prevented copy from ever bei=
+ng
+> >
+> > negative.
+> >
+> > The variable types involved are:
+> >
+> > copy: ssize_t (long)
+> >
+> > size_goal: int
+> >
+> > skb->len: unsigned int
+> >
+> > Due to C's type promotion rules, the signed size_goal is converted to a=
+n
+> >
+> > unsigned int to match skb->len before the subtraction. The result is an
+> >
+> > unsigned int.
+> >
+> > When this unsigned int result is then assigned to the s64 copy variable=
+,
+> >
+> > it is zero-extended, preserving its non-negative value. Consequently,
+> >
+> > copy is always >=3D 0.
+> >
+>
+> To better explain this problem, consider the following example:
+> '''
+> #include <sys/types.h>
+> #include <stdio.h>
+> int size_goal =3D 536;
+> unsigned int skblen =3D 1131;
+>
+> void main() {
+>         ssize_t copy =3D 0;
+>         copy =3D size_goal - skblen;
+>         printf("wrong: %zd\n", copy);
+>
+>         copy =3D size_goal - (ssize_t)skblen;
+>         printf("correct: %zd\n", copy);
+>         return;
+> }
+> '''
+> Output:
+> '''
+> wrong: 4294966701
+> correct: -595
+> '''
 
-This won't fly. This is a new binding after long reviews and
-discussions, why Qualcomm does not want to extend existing Venus but
-needs completely new Iris. Well, if you get completely new Iris, you
-cannot use argument of "legacy". We insisted on growing existing
-solution, but choice of abandoning it and coming with a new one means
-you were supposed to do it right since there is no legacy.
+Can you explain how one skb could have more bytes (skb->len) than size_goal=
+ ?
 
-> 
-> We unfortunately have to expect a number of similar updates for all
-> multimedia peripherals (GPU/Camera/Display etc.), as certain mappings
-> must be done through certain SIDs (which are deemed 'secure') and some
-> hardware has general addressing limitations that may have been causing
-> silent issues all along
-> 
-Isn't all this commit msg here about non-pixel stuff just not really
-describing the real problem at all? This commit msg is very vague and
-silent on actual use cases and actual firmware, so even multiple
-readings of commit msg did not help me. Stephan Gerhold now nicely
-summarized what was never told in commit msg - there is a gap in address
-space which is reserved for firmware and no allocations can be done from
-that?
+If we are under this condition, we already have a prior bug ?
 
-Also commit msg says "Existing definition limits the IOVA to an
-addressable range of 4GiB, and" but I do not see such definition in the
-binding at all. So what does it refer to?
-
-
-
-Best regards,
-Krzysztof
+Please describe how you caught this issue.
