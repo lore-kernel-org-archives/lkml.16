@@ -1,49 +1,48 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC3F52BE65F;
-	Wed,  2 Jul 2025 20:47:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D56772DE6F5;
+	Wed,  2 Jul 2025 20:51:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751489231; cv=none; b=mnnJW7oRV4VZ+OLVv5pWmzL14YHIMxagrr9WocplsxAKPVJNsfUGnMSJ/BPrtjlV5h5esX40lmS8yWJDTOoMqmYrk6wDj7vhXh/pHdBVfjm+Dy+w6FR50O9NEtxNO+4747yVKX0CHdEOcln6tCDS9oCNgTR7CXnvQHULLqPcDuM=
+	t=1751489491; cv=none; b=ZvFlk/2l0LrbuRN0gGH5DTPmmWcdjY5E9o/M/quaYTWqvyzgkpSxhBexOXetKwjJWF8tIiC7+GA4wTeP2N36Aqs+yk9/vSYkxdg23HTMRL/DaG61L/KFozw/ysFkly3rX94mbg/w05b5P+OY2qqpaO2NZowoXjC0zLgzwP+DM1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751489231; c=relaxed/simple;
-	bh=b7KpTvLGxlxB3a/FnKhICdjRjsnZi/EjjVjuL7ed9+8=;
+	s=arc-20240116; t=1751489491; c=relaxed/simple;
+	bh=pZB+eUOlfplhCyuQZJ/swT3euXRYIJ+QbX5ELCNIlrs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CczavsrYvqFMpGkSa7pEYa+nWxbToQwVg2Dy32LjmCtKLSliLj5/KlC2nE4ncYWztRFDwjLn1B3OvA+g3cS/E/iGAWYnG32aB7eC2SRTH7G1BvzBdzfHbWvG/fytlGnIk/0JYqPxA4ga7/H4vXPpB+lhDOig8w9TQJAILsQMpqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=listout.xyz; spf=pass smtp.mailfrom=listout.xyz; dkim=pass (2048-bit key) header.d=listout.xyz header.i=@listout.xyz header.b=cbIOmuoW; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=listout.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=listout.xyz
+	 Content-Type:Content-Disposition:In-Reply-To; b=uWIOsTfiFX6DDzyn49EWaeNJvgnIFblEfrb1DsdeX/l9pOWNVrCDPK19aijsGY7kzsrCpPIsUOZYj6k8/KJd8WRSl050Dr2N/5am9IleeDwpV3lfcDVBLl3X2EhC1K3wgKUXwKtiaOwyKIGTs1gFgYWA4SCUpkHVlOMp0MP7RYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=aGrPMuFQ; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=listout.xyz header.i=@listout.xyz header.b="cbIOmuoW"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4bXX4z2XGPz9t9v;
-	Wed,  2 Jul 2025 22:46:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=listout.xyz; s=MBO0001;
-	t=1751489219;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Cj9HS6v1hLzfdQ76bVuuUjdPTAKEhhmP3lT0F4JEgMs=;
-	b=cbIOmuoWsdnUS+VhCcJFdQKvp1C+3vx47T9m38YeVQekkwpWuPusmL3EbsDs/jVk0RMGeJ
-	zb8qJvAGsSfR1fGrlU6O7N8D3HzrJK5gWtkZseHygqRRy90cjJUCXgYPjQU5Qcj3VV4leU
-	iW/5NgQfZrgESGsWNQ8/+khwj6itDmmpETAOnLd/7Uh7cc/gt8OFDeIxFdZF4BykFkR6s2
-	m8pL1iPm53JWvHB10KZQC1FgclV4vvHMfPryKXRh2xTmnI7J4nX6nsWJ64yFShduVALgUg
-	SOATgFC7W5jG5J2oB1dpvLpDbvrp3aE3FGvq4bbaJU4vvwYBHSq/fnog83gx6Q==
-Date: Thu, 3 Jul 2025 02:16:48 +0530
-From: Brahmajit Das <listout@listout.xyz>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-btrfs@vger.kernel.org, clm@fb.com, josef@toxicpanda.com, dsterba@suse.com, 
-	kees@kernel.org, ailiop@suse.com, mark@harmstone.com, 
-	David Sterba <dsterba@suse.cz>, Brahmajit Das <bdas@suse.de>
-Subject: Re: [PATCH v4] btrfs: replace deprecated strcpy with strscpy
-Message-ID: <pef6rt4ggd2gizakr7kqr2p4yn5mh6rqlqojuwx3gaoiexycxi@bzgezdja3pst>
-References: <20250620164957.14922-1-listout@listout.xyz>
- <20250702182712.GA3453770@ax162>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="aGrPMuFQ"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id 98DA01D4C;
+	Wed,  2 Jul 2025 22:51:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1751489464;
+	bh=pZB+eUOlfplhCyuQZJ/swT3euXRYIJ+QbX5ELCNIlrs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aGrPMuFQnkBG+JG1SNXfuOOWKqAofLnAQ3WyxyRbjJ/aq5xS21/wYv23Wtg4jaZM9
+	 RwBFhDx527q5XZHibGrTpaQlvWEyYwqx8UbfOJrP4viYw++oD99CLZdeCJMkwaCyRp
+	 BWAk8LxKHE19SZAVwsaV84LEDGv3fiSHYAxqomcU=
+Date: Wed, 2 Jul 2025 23:51:00 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+Cc: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+Subject: Re: [PATCH v3 01/15] media: rcar-csi2: Use the pad version of
+ v4l2_get_link_freq()
+Message-ID: <20250702205100.GM17819@pendragon.ideasonboard.com>
+References: <20250530-rcar-streams-v3-0-026655df7138@ideasonboard.com>
+ <20250530-rcar-streams-v3-1-026655df7138@ideasonboard.com>
+ <20250602094321.GD3645@pendragon.ideasonboard.com>
+ <20250702150711.GE3830050@ragnatech.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,27 +51,91 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250702182712.GA3453770@ax162>
-X-Rspamd-Queue-Id: 4bXX4z2XGPz9t9v
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250702150711.GE3830050@ragnatech.se>
 
-On 02.07.2025 11:27, Nathan Chancellor wrote:
-> Hi Brahmajit,
+On Wed, Jul 02, 2025 at 05:07:11PM +0200, Niklas Söderlund wrote:
+> On 2025-06-02 12:43:21 +0300, Laurent Pinchart wrote:
+> > On Fri, May 30, 2025 at 04:50:30PM +0300, Tomi Valkeinen wrote:
+> > > Use the new version of v4l2_get_link_freq() which supports media_pad as
+> > > a parameter.
+> > 
+> > The commit message should explain why. With that fixed,
 > 
-> On Fri, Jun 20, 2025 at 10:19:57PM +0530, Brahmajit Das wrote:
-... snip ...
+> How about this,
 > 
-> It looks like the offset_in_page(buf) part of the WARN() in
-> sysfs_emit() gets triggered with this, presumably because kmalloc()
-> returns something that is not page aligned like sysfs_emit() requires?
-> 
-> Cheers,
-> Nathan
+> The pad aware version of v4l2_get_link_freq() tries to retrieve the link 
 
-Hey Nathan, thanks for reporting this. From the QEMU logs this looks
-like on ARM64. Unfortunately I didn't boot test on arm due to not having
-the hardware. I'll setup a qemu test env. for ARM and get back.
+s/pad aware/pad-aware/
 
-Sorry I'm new to kernel development.
+> frequency from the media bus configuration using the get_mbus_config 
+> operation, and only if the subdevice do not implement this operation 
+
+s/do not/does not/
+
+> fall-back to the old method of getting it using the V4L2_CID_LINK_FREQ 
+
+s/fall-back/falls back/
+
+> or V4L2_CID_PIXEL_RATE control.
+> 
+> Update the VIN driver to use the pad aware version to be able to support 
+
+s/pad aware/pad-aware/
+
+> subdevices that only provides the link frequency in the media bus 
+> configuration. As the implementation falls-back to the old method if the 
+
+s/falls-back/falls back/
+
+> subdevice don't support get_mbus_config, or don't provide a link 
+
+s/don't/doesn't/g
+
+> frequency in the v4l2_mbus_config struct, this is fully backward 
+> compatible.
+
+Looks good to me.
+
+As discussed privately, this patch is needed to avoid breakages with the
+latest GMSL2/3 drivers posted in [1] on Gen4 platforms. As the patch
+makes sense on its own without the rest of the series, I'll take it in
+my tree.
+
+[1] lore.kernel.org/linux-media/20250702132104.1537926-1-demonsingur@gmail.com
+
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> > 
+> > > Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+> > > ---
+> > >  drivers/media/platform/renesas/rcar-csi2.c | 4 +++-
+> > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/media/platform/renesas/rcar-csi2.c b/drivers/media/platform/renesas/rcar-csi2.c
+> > > index 9979de4f6ef1..ddbdde23c122 100644
+> > > --- a/drivers/media/platform/renesas/rcar-csi2.c
+> > > +++ b/drivers/media/platform/renesas/rcar-csi2.c
+> > > @@ -954,6 +954,7 @@ static int rcsi2_set_phypll(struct rcar_csi2 *priv, unsigned int mbps)
+> > >  static int rcsi2_calc_mbps(struct rcar_csi2 *priv, unsigned int bpp,
+> > >  			   unsigned int lanes)
+> > >  {
+> > > +	struct media_pad *remote_pad;
+> > >  	struct v4l2_subdev *source;
+> > >  	s64 freq;
+> > >  	u64 mbps;
+> > > @@ -962,8 +963,9 @@ static int rcsi2_calc_mbps(struct rcar_csi2 *priv, unsigned int bpp,
+> > >  		return -ENODEV;
+> > >  
+> > >  	source = priv->remote;
+> > > +	remote_pad = &source->entity.pads[priv->remote_pad];
+> > >  
+> > > -	freq = v4l2_get_link_freq(source->ctrl_handler, bpp, 2 * lanes);
+> > > +	freq = v4l2_get_link_freq(remote_pad, bpp, 2 * lanes);
+> > >  	if (freq < 0) {
+> > >  		int ret = (int)freq;
+> > >  
+
 -- 
 Regards,
-listout
+
+Laurent Pinchart
