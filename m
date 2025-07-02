@@ -1,250 +1,150 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04776211F;
-	Wed,  2 Jul 2025 07:56:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90DCF211F;
+	Wed,  2 Jul 2025 07:57:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751443015; cv=none; b=kC/HYumFPY30SZzxcZKvmpCnpvaXHN0Kfyu4y9pPIJWDRl8bFDVmepLRVbMHmbmsyq/VNQAd8V8xvOBQR1fd9lfD6cjYLhO35UwH7YUmvOF//bTXK5LuYU3PfRYSPP3k75p5eXbfkf+Z6tmuh3O11Ft36Nt3FrOhGHaD2cB2NmY=
+	t=1751443022; cv=none; b=t3T72Ht9UB0PEUfniZlKb+cA8yM9SN4XbAGWEEFxl9Dvx8UWIfs6AN2GPqdKiQ6g2qVEeHqt7MXtPIiz8IAFe221ekZv1bc3QrRDxWjrp1WmPufSK2GnsPqwwAkiYLJ+G2sDFVkVVqApw2FGYjGgTexmp2kIUBAS5LO0n1NWg3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751443015; c=relaxed/simple;
-	bh=Q1X6bbdTEe0yaSMMjkEwghrZRhqOzko97t3w24mThPc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=RCImwZleXOQb7e/SSQkKcl4hhfp6IJy2CRQaeYqr9RnUnTc6uj09eDfBWt2JZqGdmBN/iYpP/6Aq9h73SnCiNR9+adWW5zca9pks0OKmL9LYD6FO482bREOeQAgPEDpRZdf6WrNcQKyBJBlMQq+G2I8Fx8fsbyIl4mrw7Ar635A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mkEbQmU+; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751443022; c=relaxed/simple;
+	bh=iPRdlhGWfx9VLtmj4Qr358Ma925NEGSXkWBmva+PDXA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=plkB7jo3AHMw9b8GRYXVf0e6H++nt1Wt5nO9rgDI6HxMSJyDrl6KjdLUXbq3g+S5cH4K978mUalvmEL3kcmwmUw7DNPTovnyF6TJzvSRqhbz0IDmg0dbDrJXPE5GeiD5GBPJXVsZPol9lS1R3kiCkw7l7vurvdtp7TBw7N65/7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jDAJOT7H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mkEbQmU+"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a582e09144so2990700f8f.1;
-        Wed, 02 Jul 2025 00:56:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751443012; x=1752047812; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=iV/Ph2dG/u7sFBYK4MRj6qlkNVP0kA9qMDQUm1APqRw=;
-        b=mkEbQmU+nQlsK22g6e36oNoe6ZzTGFVZHw87FMIS0ON3doEKGaUP1XAuCZGtWrZ0Lq
-         8vSVlXHO9Sa0KKcsM3bMgHVboMa36Se+zg8XiZh6xxx8pgS/Bykoul5aMuE+aT/eTiV3
-         FGlK/YIMQIFaGOY4dWjCNsPj/JhIJP1K6Aekp3lo9NqdMcFGGrArzMtkjg/q8PIy1jNX
-         62LfJqljk5PdVLuPImFOecbPfJ2gudutHQumZxolUGN4Jih+67+rAKcRHqYFmIv6wS10
-         lm6Nx/7ZSj9rVtThelgFT3Fh93ih9VPLXK0Q8XFqtyQonuVjlfiz/AFJWZwA9ovyTvCi
-         qZJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751443012; x=1752047812;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=iV/Ph2dG/u7sFBYK4MRj6qlkNVP0kA9qMDQUm1APqRw=;
-        b=Pjri87IFlsYmwFhtWJOC9EOduC0Ul2c5oJW72D9mZgHZ1spUHRbYumGmzO8r0IrcS0
-         sk7OUzfNMIfq1xxVKqRbBBUEiJq/35srJs3BzLTNwxcUaw87Ivw4uWjKOiL18oB4ucJc
-         mu9iaZJfF5Q3pnPzBtILWdXvpu1OaXkwcBuX4Skky1CwxG5ly8Rn5JgI6G30gYqFDDXF
-         vC5R1p82Xt4Cz7m6ATL605O4af91Bq3GDnqa4ruCNoSxWdhFqKwDWHJpC2W7tYvgszsy
-         +VQb5cNGKiHSeTyHeS48lqk6XyJpRFtdO/KH/xdja/yLPPJfKem8YDD8HGzwexkCrQmz
-         etVA==
-X-Forwarded-Encrypted: i=1; AJvYcCVD4f5YnSWga3tS1cqKTzqD3p2zGcC8FQUFzpzJh3u4ZRBUS/V5GhfrzxOJIixgFaNYMtkUfceyWpox@vger.kernel.org, AJvYcCXGibaYhJtabClwcLiyEmAHVixXogbuVd3NhvghF4+JqEaFLRprCsp7p0byjBeYpCRT15jGH4PNCNh2@vger.kernel.org, AJvYcCXR9zHXKRCiwP2MGEKIRqx/MuBY+Ab5Y2NC97znD5+BqRkKvZNINCfi/b9Oy4A4bHq/nyqP5GlMFQu7VQDC@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy469XOjWD1T7SinwbYwXd8h1AYC8Uw2jN4obMzipS1gJ1yfL+s
-	8Ywm1ov6R2em9JqVgtS0vBSVOOIjhPdboAVWzun4Rm12e+auaiPLG3yizRYIXE4W
-X-Gm-Gg: ASbGncsMB9SB9g8Zdo8nJ5PclWvPy2gtY+UcCHltfrf30svFhfNZGc+o1JIT9AIWDNG
-	kT+rabC6ZhFhzJzVFqrwfsJC6uZwezhIBDS9aoxG0lm+bfIpVetmvt6LVgMQJ5UGZm1eiQNji3p
-	kDpag/w/TmyCPIZRzCabZFzwTqSwslKyWv1RBSUuEnrPTAMq+WCrZhKAZ0fKB39zXNypORC5baj
-	bolsnsfoEJAm41rNtzUy8/32OlNIBu78CDByU/VjCwFtd+d2yxtzvypxckRcHv3p13DRqhppzJw
-	vFg8U8tHdfZgWn2l40pRjTjgYbWHaF/G+9ecSdsshEW7Mnm7oNa+K29IIl6sJjJ6SnY8Ig==
-X-Google-Smtp-Source: AGHT+IGZkSowDuNZoXR+Ii7wVfmX3g9XMV/x4oWBOkv9yus3iBnYI5QLGYpYmv9BhmtvRzH01HlHDQ==
-X-Received: by 2002:adf:8b04:0:b0:3a4:ec23:dba7 with SMTP id ffacd0b85a97d-3b20095cd2bmr746462f8f.31.1751443012005;
-        Wed, 02 Jul 2025 00:56:52 -0700 (PDT)
-Received: from [192.168.1.187] ([161.230.67.253])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538233c4acsm216227585e9.1.2025.07.02.00.56.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 00:56:51 -0700 (PDT)
-Message-ID: <52c1fe276d16b68b955a00d0417b40902e2aa56e.camel@gmail.com>
-Subject: Re: [PATCH v3 10/12] spi: offload trigger: add ADI Util Sigma-Delta
- SPI driver
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: David Lechner <dlechner@baylibre.com>, Michael Hennerich
-	 <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, Nuno
- =?ISO-8859-1?Q?S=E1?=
-	 <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring
-	 <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
-	 <conor+dt@kernel.org>, Mark Brown <broonie@kernel.org>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-spi@vger.kernel.org
-Date: Wed, 02 Jul 2025 08:57:02 +0100
-In-Reply-To: <20250701-iio-adc-ad7173-add-spi-offload-support-v3-10-42abb83e3dac@baylibre.com>
-References: 
-	<20250701-iio-adc-ad7173-add-spi-offload-support-v3-0-42abb83e3dac@baylibre.com>
-	 <20250701-iio-adc-ad7173-add-spi-offload-support-v3-10-42abb83e3dac@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jDAJOT7H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D4BDC4CEED;
+	Wed,  2 Jul 2025 07:56:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751443022;
+	bh=iPRdlhGWfx9VLtmj4Qr358Ma925NEGSXkWBmva+PDXA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=jDAJOT7HLum6yiMRluiGc4tMSFC54IRmLsQrSvdr2uOF6JHJgGCg3CpR9fHpPRDNy
+	 j5g2vjUhlis20IrYgZ9S2CfzylqaQ9ayGZ8GA72tEsMogJciaC0a+g9eHB8KXv5YK9
+	 y7XQV8ecp2z/J3SjobB3j/rGb3CVKpQF3wexh+SrXIns+8W70gUfT+NcYlhusCGB/b
+	 tiNebM/8pvcgVwXhS/sIxMbUYIBziCMDvbrVi8jbpUPkcxvakHCJB9QbzY25s2Kke9
+	 AsKGkUI7mW/57u+FwKv0XSEL2Kg1IWZme0S6itxsB8+0y+L+shI39jyHpMg+g6e2RF
+	 JGtMVN77NvWhw==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Benno Lossin" <lossin@kernel.org>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
+ <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Alice
+ Ryhl" <aliceryhl@google.com>,  "Masahiro Yamada" <masahiroy@kernel.org>,
+  "Nathan Chancellor" <nathan@kernel.org>,  "Luis Chamberlain"
+ <mcgrof@kernel.org>,  "Danilo Krummrich" <dakr@kernel.org>,  "Nicolas
+ Schier" <nicolas.schier@linux.dev>,  "Trevor Gross" <tmgross@umich.edu>,
+  "Adam Bratschi-Kaye" <ark.email@gmail.com>,
+  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
+  <linux-kbuild@vger.kernel.org>,  "Petr Pavlu" <petr.pavlu@suse.com>,
+  "Sami Tolvanen" <samitolvanen@google.com>,  "Daniel Gomez"
+ <da.gomez@samsung.com>,  "Simona Vetter" <simona.vetter@ffwll.ch>,  "Greg
+ KH" <gregkh@linuxfoundation.org>,  "Fiona Behrens" <me@kloenk.dev>,
+  "Daniel Almeida" <daniel.almeida@collabora.com>,
+  <linux-modules@vger.kernel.org>
+Subject: Re: [PATCH v13 2/6] rust: introduce module_param module
+In-Reply-To: <DB0U12HAEVZ6.JKFPI2UQHDRY@kernel.org> (Benno Lossin's message of
+	"Tue, 01 Jul 2025 17:43:29 +0200")
+References: <20250612-module-params-v3-v13-0-bc219cd1a3f8@kernel.org>
+	<DATW0XWNN45X.1L2WMZ41JJ5O8@kernel.org> <87v7om4jhq.fsf@kernel.org>
+	<RPPvXQKnjK77Kp9mKaiFxbNj1fTHKb_I7_nbY81fZop-Wz8n5TTi4_lpXP9U9AwjocvZKqJPI8PGKufJn9cIzQ==@protonmail.internalid>
+	<DAU0J3T0IEVM.2K7ZRQOVOHF8H@kernel.org> <878qlh4aj1.fsf@kernel.org>
+	<87plepzke5.fsf@kernel.org>
+	<xFouVLxX1_t1mH69FDYwlIhBlI72M0IzQEKn0ntG_wT9z7V5DtbxiwVP_frH_yiS-Gf0q_AhqetbLmuvJ_yP5Q==@protonmail.internalid>
+	<DAX65TRN0TGP.25VZ9DYV86XWY@kernel.org> <87wm8txysl.fsf@kernel.org>
+	<9G3W1seaM7elcwWXaeoaa2nfpFYCf-AmBdvZhACGP13KGUtTPVMwGNYdTQsdtp8ru7GIP3-UYTzXscC1MRUKrg==@protonmail.internalid>
+	<DAZV8OGL8BMH.11SLXBXQ17ZJ9@kernel.org> <87h5zxxtdw.fsf@kernel.org>
+	<H78pT7YnQEhAXdxzl_hhnGVUiQuFpibB21_bjH658fMz_5JYbwsPLYYVh8u1gYnzK3N3ilTEAvqOpkuptVx3rg==@protonmail.internalid>
+	<DB03MZI2FCOW.2JBFL3TY38FK@kernel.org> <87bjq4xpv7.fsf@kernel.org>
+	<ffROWpeKczrWSBlKYov2atJG-QD5l5fUOb2dVCNkWlcT9h6DJpa4joGQpjqtYyLP7HX227fCAayyDQunZ464XQ==@protonmail.internalid>
+	<DB0LKI8BO3HZ.3FF03JN4364RM@kernel.org> <87zfdovvz4.fsf@kernel.org>
+	<UQ6WtusvCeJPizlUr0kA7_g7RGdSRfQ6L29hClAXDKsNlWbtAgmCu_glKbUSeyy3I_NKvN5BJW9HbeHleAhRmw==@protonmail.internalid>
+	<DB0U12HAEVZ6.JKFPI2UQHDRY@kernel.org>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Wed, 02 Jul 2025 09:56:50 +0200
+Message-ID: <87tt3vvxdp.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain
 
-On Tue, 2025-07-01 at 16:37 -0500, David Lechner wrote:
-> Add a new driver for the ADI Util Sigma-Delta SPI FPGA IP core.
->=20
-> This is used to trigger a SPI offload based on a RDY signal from an ADC
-> while masking out other signals on the same line.
->=20
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> ---
-> =C2=A0MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
-> =C2=A0drivers/spi/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 5 +=
-+
-> =C2=A0drivers/spi/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 1 +
-> =C2=A0.../spi/spi-offload-trigger-adi-util-sigma-delta.c | 62
-> ++++++++++++++++++++++
-> =C2=A04 files changed, 69 insertions(+), 1 deletion(-)
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index
-> 60ba572be7f5b48c0ab1d0d9724e19e335e8761b..4ed4977deb6ddc545be39b5c1d5e995=
-9e9fe
-> 64cf 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -23357,7 +23357,7 @@ F:	include/linux/mtd/spi-nor.h
-> =C2=A0
-> =C2=A0SPI OFFLOAD
-> =C2=A0R:	David Lechner <dlechner@baylibre.com>
-> -F:	drivers/spi/spi-offload-trigger-pwm.c
-> +F:	drivers/spi/spi-offload-trigger-*.c
-> =C2=A0F:	drivers/spi/spi-offload.c
-> =C2=A0F:	include/linux/spi/offload/
-> =C2=A0K:	spi_offload
-> diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-> index
-> c51da3fc3604977b05388687e5e64a58370186c4..e69f060d3875c168a2dc701a372e47b=
-8ffd3
-> 3268 100644
-> --- a/drivers/spi/Kconfig
-> +++ b/drivers/spi/Kconfig
-> @@ -1355,6 +1355,11 @@ if SPI_OFFLOAD
-> =C2=A0
-> =C2=A0comment "SPI Offload triggers"
-> =C2=A0
-> +config SPI_OFFLOAD_TRIGGER_ADI_UTIL_SD
-> +	tristate "SPI offload trigger using ADI sigma-delta utility"
-> +	help
-> +	=C2=A0 SPI offload trigger from ADI sigma-delta utility FPGA IP block.
-> +
-> =C2=A0config SPI_OFFLOAD_TRIGGER_PWM
-> =C2=A0	tristate "SPI offload trigger using PWM"
-> =C2=A0	depends on PWM
-> diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
-> index
-> 4ea89f6fc531625060255ecff237470927e1f041..51f9f16ed734424ff10672a04f2ec16=
-6dc63
-> 7e0b 100644
-> --- a/drivers/spi/Makefile
-> +++ b/drivers/spi/Makefile
-> @@ -170,3 +170,4 @@ obj-$(CONFIG_SPI_SLAVE_SYSTEM_CONTROL)	+=3D spi-slave=
--
-> system-control.o
-> =C2=A0
-> =C2=A0# SPI offload triggers
-> =C2=A0obj-$(CONFIG_SPI_OFFLOAD_TRIGGER_PWM)	+=3D spi-offload-trigger-pwm.=
-o
-> +obj-$(CONFIG_SPI_OFFLOAD_TRIGGER_ADI_UTIL_SD) +=3D spi-offload-trigger-a=
-di-
-> util-sigma-delta.o
-> diff --git a/drivers/spi/spi-offload-trigger-adi-util-sigma-delta.c
-> b/drivers/spi/spi-offload-trigger-adi-util-sigma-delta.c
-> new file mode 100644
-> index
-> 0000000000000000000000000000000000000000..8468c773713a3d203b2e668f340ee3f=
-477b8
-> fb6c
-> --- /dev/null
-> +++ b/drivers/spi/spi-offload-trigger-adi-util-sigma-delta.c
-> @@ -0,0 +1,62 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (C) 2025 Analog Devices Inc.
-> + * Copyright (C) 2025 BayLibre, SAS
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/dev_printk.h>
-> +#include <linux/err.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/property.h>
-> +#include <linux/spi/offload/provider.h>
-> +#include <linux/spi/offload/types.h>
-> +#include <linux/types.h>
-> +
-> +static bool adi_util_sigma_delta_match(struct spi_offload_trigger *trigg=
-er,
-> +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 enum spi_offload_trigger_type t=
-ype,
-> +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u64 *args, u32 nargs)
-> +{
-> +	return type =3D=3D SPI_OFFLOAD_TRIGGER_DATA_READY && nargs =3D=3D 0;
-> +}
-> +
-> +static const struct spi_offload_trigger_ops adi_util_sigma_delta_ops =3D=
- {
-> +	.match =3D adi_util_sigma_delta_match,
-> +};
-> +
-> +static int adi_util_sigma_delta_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev =3D &pdev->dev;
-> +	struct spi_offload_trigger_info info =3D {
-> +		.fwnode =3D dev_fwnode(dev),
-> +		.ops =3D &adi_util_sigma_delta_ops,
-> +	};
-> +	struct clk *clk;
-> +
-> +	clk =3D devm_clk_get_enabled(dev, NULL);
-> +	if (IS_ERR(clk))
-> +		return dev_err_probe(dev, PTR_ERR(clk), "Failed to get
-> clock\n");
-> +
+"Benno Lossin" <lossin@kernel.org> writes:
 
-Small nit. Did you consider enabling/disabling the clock on the trigger
-enable()/disable() callback? I guess the ref clk will be enabled anyways by
-someone else but conceptually kind of makes sense to enable the resource on=
-ly
-when needed.
+> On Tue Jul 1, 2025 at 4:14 PM CEST, Andreas Hindborg wrote:
+>> "Benno Lossin" <lossin@kernel.org> writes:
+>>> On Tue Jul 1, 2025 at 10:43 AM CEST, Andreas Hindborg wrote:
+>>>> No, I am OK for now with configfs.
+>>>>
+>>>> But, progress is still great. How about if we add a copy accessor
+>>>> instead for now, I think you proposed that a few million emails ago:
+>>>>
+>>>>     pub fn get(&self) -> T;
+>>>>
+>>>> or maybe rename:
+>>>>
+>>>>     pub fn copy(&self) -> T;
+>>>>
+>>>> Then we are fine safety wise for now, right? It is even sensible for
+>>>> these `T: Copy` types.
+>>>
+>>> That is better than getting a reference, but still someone could read at
+>>> the same time that a write is happening (though we need some new
+>>> abstractions AFAIK?). But I fear that we forget about this issue,
+>>> because it'll be some time until we land parameters that are `!Copy` (if
+>>> at all...)
+>>
+>> No, that could not happen when we are not allowing custom parsing or
+>> sysfs access. Regarding forgetting, I already added a `NOTE` on `!Copy`,
+>> and I would add one on this issue as well.
+>
+> Ultimately this is something for Miguel to decide. I would support an
+> unsafe accessor (we should also make it `-> T`), since there it "can't
+> go wrong", any UB is the fault of the user of the API. It also serves as
+> a good reminder, since a `NOTE` comment shouldn't be something
+> guaranteeing safety (we do have some of these global invariants, but I
+> feel like this one is too tribal and doesn't usually come up, so I feel
+> like it's more dangerous).
 
-Not a big deal (at least to me).
+I see no reason for making it unsafe when it is safe?
 
-- Nuno S=C3=A1
 
-> +	return devm_spi_offload_trigger_register(dev, &info);
-> +}
-> +
-> +static const struct of_device_id adi_util_sigma_delta_of_match_table[] =
-=3D {
-> +	{ .compatible =3D "adi,util-sigma-delta-spi", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, adi_util_sigma_delta_of_match_table);
-> +
-> +static struct platform_driver adi_util_sigma_delta_driver =3D {
-> +	.probe=C2=A0 =3D adi_util_sigma_delta_probe,
-> +	.driver =3D {
-> +		.name =3D "adi-util-sigma-delta-spi",
-> +		.of_match_table =3D adi_util_sigma_delta_of_match_table,
-> +	},
-> +};
-> +module_platform_driver(adi_util_sigma_delta_driver);
-> +
-> +MODULE_AUTHOR("David Lechner <dlechner@baylibre.com>");
-> +MODULE_DESCRIPTION("ADI Sigma-Delta SPI offload trigger utility driver")=
-;
-> +MODULE_LICENSE("GPL");
+    /// Get a copy of the parameter value.
+    ///
+    /// # Note
+    ///
+    /// When this method is called in `const` context, the default
+    /// parameter value will be returned. During module initialization, the
+    /// kernel will populate the parameter with the value supplied at module
+    /// load time or kernel boot time.
+    // NOTE: When sysfs access to parameters are enabled, we have to pass in a
+    // held lock guard here.
+    //
+    // NOTE: When we begin supporting custom parameter parsing with user
+    // supplied code, this method must be synchronized.
+    pub const fn copy(&self) -> T {
+        // SAFETY: As we only support read only parameters with no sysfs
+        // exposure, the kernel will not touch the parameter data after module
+        // initialization. The kernel will update the parameters serially, so we
+        // will not race with other accesses.
+        unsafe { *self.data.get() }
+    }
+
+>
+> I think we should also move this patchset along, we could also opt for
+> no accessor at all :) Then it isn't really useful without the downstream
+> accessor function, but that can come after.
+
+I would rather not merge it without an access method. Then it is just
+dead code, and we will not notice if we break it.
+
+
+Best regards,
+Andreas Hindborg
+
+
+
