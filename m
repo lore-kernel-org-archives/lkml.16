@@ -1,105 +1,183 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 985E72609EC;
-	Wed,  2 Jul 2025 11:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D4C51DF27E
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 11:49:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751456947; cv=none; b=awDTOXxZMcIRGTE8RIGz1RMkfBUX+7mqLiUfnXi5/fYjAuGGfnztd1taXICyQjvshrl7yRlzBp5dOTeZmpGrmHzUVTRSFRIq6hx2UbTJHLigaOuzFYZahbrJo8+5rU0QhLP/wGsxEc88UFO66utUroWGxrn6dkgYerHbxOZDpsI=
+	t=1751456961; cv=none; b=gQAMAx22udXCZbxcRUo+m06EFOQ7XqXNpuzEknn9DV3Dv+XFDAD5SFpcnB7atVWRauavJxaefwIJq7GVOaam5FkVmEo84vEJ0yDY1PBeBmva/1gTu+GCRVEKzbCYoCu0C5hMjs8323kflDoWTFGlbBu43VdG7emCe6Tmz0Exh3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751456947; c=relaxed/simple;
-	bh=7S8TTbRAI6D+VSr2VmhATX//Kg/N5ZEOOWJqec90opI=;
+	s=arc-20240116; t=1751456961; c=relaxed/simple;
+	bh=qWnyvQcndsVB1NxTjPXew1S5g/yDqRUWdFVcFyfOcvc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=shp4OJ/VqdGSQ83KxH8oZG4EorNVSn+OA0QXEbvWwayjlpq8+qK9bQwX5AxGhala3FGbGEV2E1w8dPNC51gfEyhe/EbE5Ql0vrCC1qamfHur/SXdxG3e6FzaCie3Rb7CSdWHuBN7AvMjegXBf6EJO71ZA5Nd9Ac29rsixV0RZbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bAIhmyhN; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=lYfe4fNDPzA1C8Za/TdDd83fxgiYujFllktHr+osjRbSbGwbxMu/Q13NcQow+TUu/UtciiJZ2POaM3yU50JSl+Fbv629ZN/iBArcFg1ut3+bSbKgxajafFzfYoYzMj7Z98BAOqOzMjRNgV7Blzkb03CzCWyJq9OqjNajVIIfFT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tU/WrFHR; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=MIwXesIo; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tU/WrFHR; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=MIwXesIo; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bAIhmyhN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751456945; x=1782992945;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=7S8TTbRAI6D+VSr2VmhATX//Kg/N5ZEOOWJqec90opI=;
-  b=bAIhmyhNWvfzc3xDFwFSczR7oJyM4zTH1Cu2YeePLgdSsLVxgafCTbTR
-   ttel+mXP7N8JeSGWarnMvN8nzZuHq/oIrU+hQWxnFqdv29Siyshw+2Nl9
-   HBs+PEpHOc7dO+BZ2lungEs89D1REyQhqhNYteUSRZSJdtzAChnMevyps
-   osT266Kdp9mPHevp0fXsXyP5dAU2lDYb3zNlMG+qp7dx4onLuz4kpYGAx
-   9mKtsCY3ktq2JleDDbZluRtFTLGxEB+SFUkXDdy6I9DAwR238zzBzaNz5
-   8qq/0t/JnXy7kRvC56aJZvP4It2XC7ZrOkfaqI9nqgUjoUohDJdWq0DVC
-   g==;
-X-CSE-ConnectionGUID: R/h5m9W8Si+WQrX/Jz+N1w==
-X-CSE-MsgGUID: WYnbnmPsSKqoPbBWB0F7Ig==
-X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="56367662"
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="56367662"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 04:49:05 -0700
-X-CSE-ConnectionGUID: u2Qplt5xT6eAeamGXtqN8Q==
-X-CSE-MsgGUID: K2fwQEKIRqCXt0KoO/fEsw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="158315396"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 04:49:02 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uWvxS-0000000BuL3-3kTc;
-	Wed, 02 Jul 2025 14:48:58 +0300
-Date: Wed, 2 Jul 2025 14:48:58 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: "Yan, Dongcheng" <dongcheng.yan@intel.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
-	hverkuil@xs4all.nl, Hans de Goede <hdegoede@redhat.com>,
-	u.kleine-koenig@baylibre.com, ricardo.ribalda@gmail.com,
-	bingbu.cao@linux.intel.com, stable@vger.kernel.org,
-	dongcheng.yan@linux.intel.com, hao.yao@intel.com
-Subject: Re: [PATCH v3 1/2] platform/x86: int3472: add hpd pin support
-Message-ID: <aGUcqmCwmIM3sRiB@smile.fi.intel.com>
-References: <20250425104331.3165876-1-dongcheng.yan@intel.com>
- <5a04f105-3075-3226-6ad6-f2c3f31b29da@linux.intel.com>
- <116ea6fa-e9b8-4c28-bc31-f4d1589eb34b@intel.com>
- <aGUPsDglThYGc/3g@svinhufvud>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tU/WrFHR";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="MIwXesIo";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tU/WrFHR";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="MIwXesIo"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 7AC182116F;
+	Wed,  2 Jul 2025 11:49:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751456957; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AnPBExCtsDj4n5vi94luf18NZFEykytoQmIPPeFAX2A=;
+	b=tU/WrFHR3dRum2miR5UWAkM4WdQn91FfDDvJRwBUXqS+8lnQBGGWjtKvfsa7e62L06du2m
+	/f6EasQoS6o9nlBk1Rou9QkPfszWLJT+tKXt2918kImQgU8vll2c2Z2EsLUMjjErP8UmNv
+	OR38Bnnn78OFRNvm6BpY447YzZ5pp+4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751456957;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AnPBExCtsDj4n5vi94luf18NZFEykytoQmIPPeFAX2A=;
+	b=MIwXesIoyaxSx9h9oTbaqaLitdYPbAVmowe5rhU7YVKSA6Fso7HmtMhsa79sOvshLUmDjk
+	li8mxlscBN8dVRDA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751456957; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AnPBExCtsDj4n5vi94luf18NZFEykytoQmIPPeFAX2A=;
+	b=tU/WrFHR3dRum2miR5UWAkM4WdQn91FfDDvJRwBUXqS+8lnQBGGWjtKvfsa7e62L06du2m
+	/f6EasQoS6o9nlBk1Rou9QkPfszWLJT+tKXt2918kImQgU8vll2c2Z2EsLUMjjErP8UmNv
+	OR38Bnnn78OFRNvm6BpY447YzZ5pp+4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751456957;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AnPBExCtsDj4n5vi94luf18NZFEykytoQmIPPeFAX2A=;
+	b=MIwXesIoyaxSx9h9oTbaqaLitdYPbAVmowe5rhU7YVKSA6Fso7HmtMhsa79sOvshLUmDjk
+	li8mxlscBN8dVRDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CD5AB13A24;
+	Wed,  2 Jul 2025 11:49:16 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 6lvGLrwcZWgKDgAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Wed, 02 Jul 2025 11:49:16 +0000
+Date: Wed, 2 Jul 2025 12:49:10 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: Shardul Bankar <shardulsb08@gmail.com>
+Cc: linux-kernel@vger.kernel.org, pmladek@suse.com, rostedt@goodmis.org, 
+	john.ogness@linutronix.de, senozhatsky@chromium.org, viro@zeniv.linux.org.uk, 
+	brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org
+Subject: Re: [BUG] KASAN: slab-out-of-bounds in vsnprintf triggered by large
+ stack frame
+Message-ID: <i5f3iec7iprrqecr7r7wqhu5xl5cjujizwctsy3tphq2xzxck2@ieszua2sryec>
+References: <9052e70eb1cf8571c1b37bb0cee19aaada7dfe3d.camel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aGUPsDglThYGc/3g@svinhufvud>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <9052e70eb1cf8571c1b37bb0cee19aaada7dfe3d.camel@gmail.com>
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-0.991];
+	MIME_GOOD(-0.10)[text/plain];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	FREEMAIL_TO(0.00)[gmail.com];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
 
-On Wed, Jul 02, 2025 at 01:53:36PM +0300, Sakari Ailus wrote:
-> On Wed, Jul 02, 2025 at 06:23:19PM +0800, Yan, Dongcheng wrote:
-> > On 7/2/2025 6:19 PM, Ilpo Järvinen wrote:
-> > > On Fri, 25 Apr 2025, Dongcheng Yan wrote:
-
-...
-
-> > > I was informed about existance of this patch through an off-band channel 
-> > > (as I was not among receipients). In future, please include all relevant 
-> > > maintainers and MLs as receipients as indicated by 
-> > > scripts/get_maintainers.pl.
+On Tue, Jul 01, 2025 at 10:11:55PM +0530, Shardul Bankar wrote:
+> Hello,
 > 
-> Hans used to handle these previously and I think that's why you weren't
-> cc'd.
+> I would like to report a slab-out-of-bounds bug that can be reliably
+> reproduced with a purpose-built kernel module. This report was
+> initially sent to security@kernel.org, and I was advised to move it to
+> the public lists.
+> 
+> I have confirmed this issue still exists on the latest mainline kernel
+> (v6.16.0-rc4).
+> 
+> Bug Summary:
+> 
+> The bug is a KASAN-reported slab-out-of-bounds write within vsnprintf.
+> It appears to be caused by a latent memory corruption issue, likely
+> related to the names_cache slab.
+> 
+> The vulnerability can be triggered by loading a kernel module that
+> allocates an unusually large stack frame. When compiling the PoC
+> module, GCC explicitly warns about this: warning: the frame size of
+> 29760 bytes is larger than 2048 bytes. This "stack grooming" positions
+> the task's stack to overlap with a stale pointer from a freed
+> names_cache object. A subsequent call to pr_info() then uses this
+> corrupted value, leading to the out-of-bounds write.
+> 
+> Reproducer:
+> 
+> The following minimal kernel module reliably reproduces the crash on my
+> x86-64 test system.
+> 
+> #include <linux/init.h>
+> #include <linux/module.h>
+> #include <linux/printk.h>
+> 
+> #define STACK_FOOTPRINT (3677 * sizeof(void *))
+> 
+> static int __init final_poc_init(void)
+> {
+>     volatile char stack_eater[STACK_FOOTPRINT];
+>     stack_eater[0] = 'A'; // Prevent optimization
+> 
+>     pr_info("Final PoC: Triggering bug with controlled stack
+> layout.\n");
+> 
+>     return -EAGAIN;
+> }
+> 
+> static void __exit final_poc_exit(void) {}
+> 
+> module_init(final_poc_init);
+> module_exit(final_poc_exit);
+> MODULE_LICENSE("GPLv2");
+> MODULE_DESCRIPTION("A PoC to trigger a kernel bug by creating a large
+> stack frame.");
+> 
+>
 
-There are two maintainers of this subsystem and both should be included, no?
-At least I have my own script [1] to send patches and it gives a good heuristics
-of who to include and not. I believe it might give better result then I don't
-know how derived Cc list in this series.
+There's no issue here. You're using an extremely buggy module with a huge local
+variable that far exceeds the stack size, and proving it crashes. Like yeah, of
+course it crashes, you gave it a broken module.
 
-[1]: https://github.com/andy-shev/home-bin-tools/blob/master/ge2maintainer.sh
+Kernel stacks do not expand. You're overwriting other memory in the direct map
+with this. CONFIG_VMAP_STACK=y helps remedy this, but still only adds a single
+page for the stack guard.
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Pedro
