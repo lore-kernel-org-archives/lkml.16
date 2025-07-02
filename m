@@ -1,131 +1,191 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68AEB2A1AA
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 10:03:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FF862367A2;
+	Wed,  2 Jul 2025 10:05:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751450629; cv=none; b=rghzjNf7wSGlTSumEKMO+Ag9bMA46hhYTR1KkJxh0I3A7m/zFepigmBfJ84T3LaXnbpsBkFd3pLRmdaVJrTIZykJaH0jDD4NWhX5BgcEB/swblUOH2UgWmN00S+MEV063fTf2h7wpEJXvJ/uKjHas041RFlcJ4WShmbuXFVFY90=
+	t=1751450723; cv=none; b=PoddB8VsGVnvfOhQ0Qlz9cQoqaTuCcSLeW+Si5niVwQkTIcQx5wG/mbb7RrJFpg5v0N1736mvUDZAYd1oS5+mqPgnTTto7n6kWIID0zpQ64dnxPHPxYJ+9DnhsVUo1cF0zsE0acJXkiE0pJBAItBpKq4pa3PR6BRiP6nSY9RyVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751450629; c=relaxed/simple;
-	bh=rovKCdgkUOXPOgvVeWZ5LO3siIecERaHLLMd5oMtwzQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=FhQxnq+b14D+LTL8N9SK1dFZCrsYNw1w1eTwnrmUt/2awE5rHS8WI2h6aKLOM1uSuX6eRm4kj2BMufiQfKnY5T8zoGL1ikr/EYPmVi/NkPR4p2L9iQSU2bOoflYdH0XkaoLGsp7P6jybvmSjCu+0ZCrmmgWwuQyJMsCqsa5z/5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ZgSpwBKH; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1751450723; c=relaxed/simple;
+	bh=BZYRZ5TFWTzUNC3kGwjRxau2NjTbkYh6g4ciUE81fiA=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=rRfPND9ghT88Y+ph547ksGjEpvFNFtCXzIQsbqbS4nrBUQFSR491xRR7xSGgwVd3vKLhbB0+egJf34Xzy7WO3+Z8y3EuXByNupGhNVXtauFg5GM5OC+iX9Er8qZz27IEEjn/CZ5uJbyzR5CtWA3ZtZ1RhOvCmZTUQc5+0SpGjVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R+7T92zz; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ZgSpwBKH"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5627LLK3029725;
-	Wed, 2 Jul 2025 10:03:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=HJB9lUxpTYnJK+paRvtmjElG/wgCc3
-	Hkv8JjaMSnA7I=; b=ZgSpwBKHCig0iYpq8p4wxe+Mr7pfN/g5/neA8rdpwO40vd
-	EHjTjgXByIRbNq4k8vCqWqx83L84FdD7xkS7YLq7hDTo+4eMbzWR73kJKV0rQh2+
-	ZsfYPA43BXxhsEl+ZpAt1tMin2mEjrJLAIo1FiJQcpNm/n0JkJBDrOSUL5UXiG1d
-	+J90Rez0rc0JEcqVaUD//xc6hosPgiBHoHfGZEkxE046bbS4EfiURjZwFtz/396C
-	qWQBagkeyHKypvaTDUJjsU4FUwxH6UBtJbjLqJ0bP7GC+XPduTsHrhu1pOBC7jdf
-	2rYWRxE/gHZ34lz5PSeeSlJmjYbvs44N8c7WawIA==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j7wrmr6d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Jul 2025 10:03:44 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5625R5B6021106;
-	Wed, 2 Jul 2025 10:03:43 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 47jtquf4c3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Jul 2025 10:03:43 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 562A3fPX53477860
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 2 Jul 2025 10:03:42 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E03082004D;
-	Wed,  2 Jul 2025 10:03:41 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C717E20043;
-	Wed,  2 Jul 2025 10:03:41 +0000 (GMT)
-Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed,  2 Jul 2025 10:03:41 +0000 (GMT)
-From: Sven Schnelle <svens@linux.ibm.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, linux-kernel@vger.kernel.org,
-        Alexander Gordeev <agordeev@linux.ibm.com>
-Subject: Re: [PATCH] objtool: Add missing endianess conversion when checking
- annations
-In-Reply-To: <20250702083825.GM1613200@noisy.programming.kicks-ass.net> (Peter
-	Zijlstra's message of "Wed, 2 Jul 2025 10:38:25 +0200")
-References: <20250514133515.1829691-1-svens@linux.ibm.com>
-	<yt9d1pqz6ll0.fsf@linux.ibm.com>
-	<20250702083825.GM1613200@noisy.programming.kicks-ass.net>
-Date: Wed, 02 Jul 2025 12:03:41 +0200
-Message-ID: <yt9dwm8q6haa.fsf@linux.ibm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R+7T92zz"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7494999de5cso5054466b3a.3;
+        Wed, 02 Jul 2025 03:05:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751450722; x=1752055522; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a1APMQxBHqNTDFKhYsPJPgE3N0Q/GtKtTrkho+3f+8U=;
+        b=R+7T92zzBmN0rC2/JzA8cdsRvjhFkQ66Iey249PTy2ulbDNWOBpOLEghj3T1LrQtI0
+         baHETR4Luv+Ofm+qOHRhbn6JHhv4dNZJDZs6ZTBiMWy+/koMaoNLVLpPfFg0sDuT93g7
+         KFREq9Gyv29xHTFURdNspaCZ9wPo0GYKy/HC+9Q30/7duTgKyZm3xN2ApK4OqYLOcPv3
+         mkaRQZKr4B8rzUateJAjyyMvfo+ofoQUZ/RrKDDGsY/E9m4ICZ+UNULExRunZ7+jZxsg
+         knHVzXcmXiPupwqJpPr9BncjqODCpIVQqvuroO5C/Ow8a557u8GUhncI/TpX5IdsvVd5
+         tbPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751450722; x=1752055522;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=a1APMQxBHqNTDFKhYsPJPgE3N0Q/GtKtTrkho+3f+8U=;
+        b=RmgBKYsrzDpHqMCBspJB3dTvdLW43eSo7JUzWHvmhE8DGeBj17rJw6S6U9pZ5aQhaH
+         Pasyx0w+LEyiY9iIFWmJb2Y4VpcETaaYpZI7UFX+P7eM9yCXeleJed3EjYM3V+exIzRM
+         TYntCKV/2F11BbR3r6iaqwsDNDyo550sgZZZMNaiMxKl4o/XM6Zah2k/UejRCQhIVhpC
+         1ntULs11p4+J6dKR1isQyXIY5BNugCjKLF0Da8K+JiJT5t/jwsi6kkHouk/kzcWxhDyI
+         LMzymMIZjb0AD+YoKdcWe4NJtjhvBxAIxMkV+kxhIonSuP8/1OGtMjmfca146e7ehx+Z
+         hIEw==
+X-Forwarded-Encrypted: i=1; AJvYcCUHdehDxcdYajcevn6i35750FopPZ2CyZ9PF2m/12NG+8+nGPw4kQXIf/DDtagEUkEBh//Xmwfs@vger.kernel.org, AJvYcCV2zbzFcTd+hjm2jOci8HyUK98bK2SUUsIkiHHs3kxU+x3LvrtzH/rxzVuPEyepDIK/KUi9pDz+6VzAB4ZZ@vger.kernel.org, AJvYcCVRJVqrDpZyYansvtgOmQrJ85oamEXvukRPMH+eDWCwPVATcurn+v1uk0EyOUs74DMIY50=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxG8pG850Go3L0BDz/bIO+kvXzemR3D3dHk9WQG1NfN1EcgPf+E
+	seN6mir4PMOO4oThKlGrsEozNYClcC8RKbPRp1feDwp9u4iHn9n4C5aQfZjwquv+qFdE6cf5
+X-Gm-Gg: ASbGncuV/EzgZmAd0CG44HhLNggTt/9nkqMv4qcMjr31Xg3gsSAqyxIdjc849MVly7/
+	/rPkflB6yv9mKHuCTVYRKcyfJJowbRlBO0RQAFZ8l6ejtGRYDFrR/QUqFDd+TM/wSSOE0DPvj0m
+	kLSjomPPQSSTLesxrHsIMJnFtCDJbrpB7MpgqxL+4eBwClkZD6Tyhm1VOEDxm5ANiBJJqRw/qt+
+	imGHngKgup+VhIN/ZqZ6Uyi6uNeFybDykEPXjdCDJYWU7BlIklmFitE59enFfW9vPFyLzevSoxh
+	wL4Gyqq3d4WaKRFmIXZVymOG613jtMoyRp2BuVGwPGQ56C2Z9pQ+bg3DWM7ruDrdQmKQTQQ=
+X-Google-Smtp-Source: AGHT+IFWOp01aw0H2f+dLbLSHH5rCRbGt+ICBReE5quNPSyRzZo0OhEWZTb45SRGcAxR8wdlx3Dh8Q==
+X-Received: by 2002:a05:6a00:1411:b0:747:b043:41e5 with SMTP id d2e1a72fcca58-74b5126b4f3mr2992134b3a.16.1751450721399;
+        Wed, 02 Jul 2025 03:05:21 -0700 (PDT)
+Received: from smtpclient.apple ([23.132.124.130])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af57ef4dbsm14257833b3a.160.2025.07.02.03.05.17
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 02 Jul 2025 03:05:20 -0700 (PDT)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=E/PNpbdl c=1 sm=1 tr=0 ts=68650400 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=JfrnYn6hAAAA:8 a=VnNF1IyMAAAA:8 a=AI3QU7EO4IhOd1qKGRoA:9 a=1CNFftbPRP8L7MoqJWF3:22
-X-Proofpoint-GUID: gRSBysdsfCsFPVmBl2ms5ndZlJuPj-aJ
-X-Proofpoint-ORIG-GUID: gRSBysdsfCsFPVmBl2ms5ndZlJuPj-aJ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDA3OSBTYWx0ZWRfX3m/T2UxFCRwI EOyRxB86U56UaZfb4S5xRGnjywN5KbXwAG3UbQoJcQr2x2XZ+TBLYOfEeVS68cdYmeaFGMNVcxY jBVUNxorbVn4EpF2n/+3YbZBxC0O8jpCs3Em8RgDRgw/+xvlvN9uXs2jwecnLWxBXO1uoSIUcd6
- FaBEIL51E//5bkTEmfvhPTNboWpm7FEVDjxd7QpyBMnlgqL/+WstxtZ9CesPzS8Vwyguv9157dq tusr9hA1h3qfWJDGBu9VQ/uVuu01Pj2U2OK7+tdbdAwwrzbcGG7SCKItdgJnS+QpKxMDMaIc4mO 7ta3Fvfr9UgpnfXRZ2fnMCLfccaMxYbkiGClLTH6NGIdlgHvqrzOJe31HTf19innrKzYcyy2+ov
- 4f02sFKQ59PFGp3ibCnWyJ0bbkJMPPPwywdPEwWvsrUKnKtyZ8bcGw99/s0BTMCu+MqYRn3i
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-02_01,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- bulkscore=0 priorityscore=1501 phishscore=0 suspectscore=0 mlxlogscore=999
- lowpriorityscore=0 mlxscore=0 clxscore=1015 adultscore=0 impostorscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507020079
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [RESEND PATCH net-next v4 2/4] hv_sock: Return the readable bytes
+ in hvs_stream_has_data()
+From: Xuewei Niu <niuxuewei97@gmail.com>
+In-Reply-To: <mofyjvpvlrh75sfu7c7pi4ea6p5nkatkqqtnwpwne7uuhhl5ms@gaqcs3m6i6kx>
+Date: Wed, 2 Jul 2025 18:05:03 +0800
+Cc: mst@redhat.com,
+ pabeni@redhat.com,
+ jasowang@redhat.com,
+ xuanzhuo@linux.alibaba.com,
+ davem@davemloft.net,
+ netdev@vger.kernel.org,
+ stefanha@redhat.com,
+ leonardi@redhat.com,
+ decui@microsoft.com,
+ virtualization@lists.linux.dev,
+ kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ fupan.lfp@antgroup.com,
+ Xuewei Niu <niuxuewei.nxw@antgroup.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <FDB4EF2E-60B4-4264-9F7F-3AA14A60F119@gmail.com>
+References: <20250630075727.210462-1-niuxuewei.nxw@antgroup.com>
+ <20250630075727.210462-3-niuxuewei.nxw@antgroup.com>
+ <mofyjvpvlrh75sfu7c7pi4ea6p5nkatkqqtnwpwne7uuhhl5ms@gaqcs3m6i6kx>
+To: Stefano Garzarella <sgarzare@redhat.com>
+X-Mailer: Apple Mail (2.3826.600.51.1.1)
 
-Peter Zijlstra <peterz@infradead.org> writes:
 
-> On Wed, Jul 02, 2025 at 10:30:51AM +0200, Sven Schnelle wrote:
->> Sven Schnelle <svens@linux.ibm.com> writes:
->> 
->> > cross-compiling a kernel for x86 on s390 produces the following warning:
->> >
->> > drivers/mfd/mc13xxx-core.o: warning: objtool: mc13xxx_reg_rmw+0xc: Unknown annotation type: 50331648
->> >
->> > Fix this by adding the required endianess conversion.
->> >
->> > Fixes: 2116b349e29a ("objtool: Generic annotation infrastructure")
->> > Reported-by: Alexander Gordeev <agordeev@linux.ibm.com>
->> > Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
->> > ---
->> >  tools/objtool/check.c | 2 +-
->> >  1 file changed, 1 insertion(+), 1 deletion(-)
->> >
->> > diff --git a/tools/objtool/check.c b/tools/objtool/check.c
->> > index b21b12ec88d9..35fb871b2c62 100644
->> > --- a/tools/objtool/check.c
->> > +++ b/tools/objtool/check.c
->> > @@ -2316,7 +2316,7 @@ static int read_annotate(struct objtool_file *file,
->> >  	}
->> >  
->> >  	for_each_reloc(sec->rsec, reloc) {
->> > -		type = *(u32 *)(sec->data->d_buf + (reloc_idx(reloc) * sec->sh.sh_entsize) + 4);
->> > +		type = bswap_if_needed(file->elf, *(u32 *)(sec->data->d_buf + (reloc_idx(reloc) * sec->sh.sh_entsize) + 4));
->> >  
->> >  		offset = reloc->sym->offset + reloc_addend(reloc);
->> >  		insn = find_insn(file, reloc->sym->sec, offset);
->> 
->> Gentle ping?
->
-> Oh, I missed there were two of these. I merged this:
->
->  https://lkml.kernel.org/r/175137563313.406.6298042704364318030.tip-bot2@tip-bot2
+> On Jul 2, 2025, at 17:58, Stefano Garzarella <sgarzare@redhat.com> =
+wrote:
+>=20
+> On Mon, Jun 30, 2025 at 03:57:25PM +0800, Xuewei Niu wrote:
+>=20
+> IMO here you should not reset the author to you, but you should keep
+> Dexuan as authour of this patch.
 
-Ok, thanks!
+Well, I did that. However, `./scripts/checkpatch.pl` is unhappy wihtout =
+my SOB.
+Perhaps I should ignore it, and will do in the next :) =20
+
+>=20
+>> When hv_sock was originally added, __vsock_stream_recvmsg() and
+>> vsock_stream_has_data() actually only needed to know whether there
+>> is any readable data or not, so hvs_stream_has_data() was written to
+>> return 1 or 0 for simplicity.
+>>=20
+>> However, now hvs_stream_has_data() should return the readable bytes
+>> because vsock_data_ready() -> vsock_stream_has_data() needs to know =
+the
+>> actual bytes rather than a boolean value of 1 or 0.
+>>=20
+>> The SIOCINQ ioctl support also needs hvs_stream_has_data() to return
+>> the readable bytes.
+>>=20
+>> Let hvs_stream_has_data() return the readable bytes of the payload in
+>> the next host-to-guest VMBus hv_sock packet.
+>>=20
+>> Note: there may be multpile incoming hv_sock packets pending in the
+>> VMBus channel's ringbuffer, but so far there is not a VMBus API that
+>> allows us to know all the readable bytes in total without reading and
+>> caching the payload of the multiple packets, so let's just return the
+>> readable bytes of the next single packet. In the future, we'll either
+>> add a VMBus API that allows us to know the total readable bytes =
+without
+>> touching the data in the ringbuffer, or the hv_sock driver needs to
+>> understand the VMBus packet format and parse the packets directly.
+>>=20
+>> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+>> Signed-off-by: Xuewei Niu <niuxuewei.nxw@antgroup.com>
+>> ---
+>> net/vmw_vsock/hyperv_transport.c | 16 +++++++++++++---
+>> 1 file changed, 13 insertions(+), 3 deletions(-)
+>>=20
+>> diff --git a/net/vmw_vsock/hyperv_transport.c =
+b/net/vmw_vsock/hyperv_transport.c
+>> index 31342ab502b4..64f1290a9ae7 100644
+>> --- a/net/vmw_vsock/hyperv_transport.c
+>> +++ b/net/vmw_vsock/hyperv_transport.c
+>> @@ -694,15 +694,25 @@ static ssize_t hvs_stream_enqueue(struct =
+vsock_sock *vsk, struct msghdr *msg,
+>> static s64 hvs_stream_has_data(struct vsock_sock *vsk)
+>> {
+>> 	struct hvsock *hvs =3D vsk->trans;
+>> +	bool need_refill =3D !hvs->recv_desc;
+>=20
+> For v5 remember to fix this as Paolo suggested. Dexuan proposed a fix =
+on his thread.
+
+Will do. And big thanks to Dexuan for the great work.
+
+Thanks,
+Xuewei
+
+> Stefano
+>=20
+>> 	s64 ret;
+>>=20
+>> 	if (hvs->recv_data_len > 0)
+>> -		return 1;
+>> +		return hvs->recv_data_len;
+>>=20
+>> 	switch (hvs_channel_readable_payload(hvs->chan)) {
+>> 	case 1:
+>> -		ret =3D 1;
+>> -		break;
+>> +		if (!need_refill)
+>> +			return -EIO;
+>> +
+>> +		hvs->recv_desc =3D hv_pkt_iter_first(hvs->chan);
+>> +		if (!hvs->recv_desc)
+>> +			return -ENOBUFS;
+>> +
+>> +		ret =3D hvs_update_recv_data(hvs);
+>> +		if (ret)
+>> +			return ret;
+>> +		return hvs->recv_data_len;
+>> 	case 0:
+>> 		vsk->peer_shutdown |=3D SEND_SHUTDOWN;
+>> 		ret =3D 0;
+>> --=20
+>> 2.34.1
+>>=20
+>=20
+
