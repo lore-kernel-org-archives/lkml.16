@@ -1,105 +1,149 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77CEB254858
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 10:26:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9DBF17A2E6;
+	Wed,  2 Jul 2025 10:27:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751451973; cv=none; b=FRfRM4B6MFite61kVpAuPt/T0oPXekiPiN+urVFM5MSkgEsmNiw+X5qkpE1uZvN0KbQWLx/rDzVN5K6yBAY57oGA86QsQxCKjkzlBkByYPVHyEiKgMKvnQWaox5D3ECnrNEsQNBCuFU0uBHl9zjQWVq3dya+UBIQZTAscoRis5E=
+	t=1751452038; cv=none; b=fkKgu4suyJxdyEQRk50dTqLJtKRmK23DuiEpsJcZUYP4FIaoNrVSsYcGoEcOG2WAnwufxgccETzfvyGfiogCAFvY5Fz75XUa9TYiVpAe3wi/qCDAV01Q5WJlxSLAfslHo4D8wKlUFG3R/H1qXMGXcQ25HUzzWUNt+mQzZCn6St8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751451973; c=relaxed/simple;
-	bh=A7Ag2M/xCPgnbM81/Ed1DfzL0YgWiPbRTDK/kNWLRz4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pMzonNnZK+zc/QPvrqzsfMoBMRNowdiosQuiA7Xmfn+3xMYW7k0ZJZMqgHBXppnoAd+rq/hpZRQf6mkKmbDLJ0W27xd7VKDJN14xYqKaUG0J2s0H2+84eJRJRdVXjLtyL2bg0Ln2kvIn0HWGDBlNWXdhk1XjSLvmWZHV2MA/OAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=mGb7Bmlz; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="mGb7Bmlz"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-453634d8609so47197845e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 03:26:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1751451970; x=1752056770; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yN3/Rce9O/Hh8jlflcA/tOl9nLaEQorrzHfucHxWn78=;
-        b=mGb7Bmlz5/GUSD+zaFlQiXe4qbRmr+J7MCz76Kw6ja5yYPuwSBnB/0kEVLxM9abifM
-         ZvwkBIcyzD5eaygzZdztn/QN0ZOkXhetgxNo3mn40WWpAEMsuj5Gx4pum/JA69pCOP2k
-         +GBT5oJkj0Ga8rXxr1/6mpaGntuhSjAScFxktzwC0ZlhPeZbBNEQrwINQ62lKqXNTPjz
-         ZMn3Uj664DcLFuZihjd3bZudbJTDgUAI8yYMrKTzIfsR3y3nyLzxygYfuFHlkUWGNT1e
-         UTUuo4MtxoJg4rPu5IwfiMVDw8EOW1mbTyfXRUOAl78sp2DQ8m7MXAANO6C+MM6D3SIv
-         NFLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751451970; x=1752056770;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yN3/Rce9O/Hh8jlflcA/tOl9nLaEQorrzHfucHxWn78=;
-        b=fN8AQRsFZXedY+hD+RP8w6hYnH+uGokF/RNmZYXdDlyXFM2SoKhv1mDNpWp7mCXkwV
-         drJAdMIg8BS0zkIgRnoE0LsPBRw9uzKJig9Cpssxamv3L3TryKrLgvdHUNa9DfATlSF1
-         NzbxVpm7V/1f59aX5nj4zr3VvfsxjKG9HX1suOW0+uGG8SWxVbk+1ditZUCArpiPX0km
-         PgL2/l9WhqPENLsjC1IhYneXMF8Xf2LywBg1WfkJEWMNWVg9kLNhEBK338XW8ezJNbNF
-         TmSZ3knaODzHiX8MmvyfoEuqwvr8WWX30hDMcMUOuqzJj8dE9/g6s61RDi5MBpDaXFqy
-         7BVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU5OluaPcZrCPBi/iClttSxhmanNzPZD7reIpr6bGJmdxTJxh0ivbapeK0T+1T3NtmiovdyND/37770ngg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMMz/DtK2/GlGdAVwVt399wPGaQLVNGbsWKIAyiCvjWNYxk3NI
-	fKb6iT4Us/Ro/eenYflWuKKy7e86wZUy8iXXc8ZDIgWCku1HxQQ82Pn0oksCVjrtjao=
-X-Gm-Gg: ASbGncuGtFr/kBggrsA2oHgMQy5qoA182AFP1xq4UGhiCjqT/LkKI4a3KSlPk6DvpM7
-	6Nlf2gDvQLSsY2qe/SmuCwG1fqYSD9ZcCtHCWmZg0dBPifoNt9+OJ6WoUNfu/tfvHlnBhzN3/A/
-	mLyp9mx0yMbMOYSwAGnuaIg48Q3CRJP6IM17cr+2l2kiPYoGL4Ec+sizbPx+ljQaFM084Pje29h
-	9BfL1KnO3tM3Xwu5WIgRDOPedKkSq7sfHqgp+DwTgt24kw27PoIKvrFCmaoUE+NxzG1k91QTSLa
-	Dj8SsvepHGvqLya56Ui/D/HYtAFakw1/TDQpX7AMIdVOJAi4WhARHSncvhxpcWpYSDsCow==
-X-Google-Smtp-Source: AGHT+IE3Ue/jFuqGKk2j82UXQrlkpofLQZxfY4sZQlx7+9veKW80qJCzF944xSFEweUYweW+L+RcHQ==
-X-Received: by 2002:a05:600c:698e:b0:43b:cc42:c54f with SMTP id 5b1f17b1804b1-454a36ec56amr26467775e9.14.1751451969448;
-        Wed, 02 Jul 2025 03:26:09 -0700 (PDT)
-Received: from jiri-mlt ([193.47.165.251])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7e6f8bsm16191924f8f.17.2025.07.02.03.26.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 03:26:08 -0700 (PDT)
-Date: Wed, 2 Jul 2025 12:25:57 +0200
-From: Jiri Pirko <jiri@resnulli.us>
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>, 
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Prathosh Satish <Prathosh.Satish@microchip.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Shannon Nelson <shannon.nelson@amd.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, Michal Schmidt <mschmidt@redhat.com>, 
-	Petr Oros <poros@redhat.com>
-Subject: Re: [PATCH net-next v12 04/14] dpll: zl3073x: Add support for
- devlink device info
-Message-ID: <x23jvoo4eycl5whishhsy2qpb5qajsqcx36amltwkqwu5xuj7s@ghg47je4hbjt>
-References: <20250629191049.64398-1-ivecera@redhat.com>
- <20250629191049.64398-5-ivecera@redhat.com>
+	s=arc-20240116; t=1751452038; c=relaxed/simple;
+	bh=VwCvQamL3OLboOtaKpp5/6Nma/BoEDweaCfWoWZixfc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rRlbgpcOBZdavtmlREtiunbg6SObVUwnUK6FkDErNInBYBI/exjQ0ZUmlrfX+Kg/issklUMu0T4LtZoM/WTGEfJWVk5y/3evaWM4HbIrXyUBnOXE2YN7vUkDJ0UUz/sJECanM3343325aDg7LOkvz89U8JEPanX8JxSiL69yrqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4bXGHp59Cxz2BdVx;
+	Wed,  2 Jul 2025 18:25:26 +0800 (CST)
+Received: from dggpemf500016.china.huawei.com (unknown [7.185.36.197])
+	by mail.maildlp.com (Postfix) with ESMTPS id 99D4C180042;
+	Wed,  2 Jul 2025 18:27:12 +0800 (CST)
+Received: from huawei.com (10.175.124.27) by dggpemf500016.china.huawei.com
+ (7.185.36.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 2 Jul
+ 2025 18:27:11 +0800
+From: Wang Liang <wangliang74@huawei.com>
+To: <davem@davemloft.net>, <dsahern@kernel.org>, <edumazet@google.com>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <horms@kernel.org>
+CC: <yuehaibing@huawei.com>, <zhangchangzhong@huawei.com>,
+	<wangliang74@huawei.com>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next] net: replace ADDRLABEL with dynamic debug
+Date: Wed, 2 Jul 2025 18:44:17 +0800
+Message-ID: <20250702104417.1526138-1-wangliang74@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250629191049.64398-5-ivecera@redhat.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ dggpemf500016.china.huawei.com (7.185.36.197)
 
-Sun, Jun 29, 2025 at 09:10:39PM +0200, ivecera@redhat.com wrote:
+ADDRLABEL only works when it was set in compilation phase. Replace it with
+net_dbg_ratelimited().
 
-[...]
+Signed-off-by: Wang Liang <wangliang74@huawei.com>
+---
+ net/ipv6/addrlabel.c | 32 +++++++++++---------------------
+ 1 file changed, 11 insertions(+), 21 deletions(-)
 
->+	snprintf(buf, sizeof(buf), "%lu.%lu.%lu.%lu",
->+		 FIELD_GET(GENMASK(31, 24), cfg_ver),
->+		 FIELD_GET(GENMASK(23, 16), cfg_ver),
->+		 FIELD_GET(GENMASK(15, 8), cfg_ver),
->+		 FIELD_GET(GENMASK(7, 0), cfg_ver));
->+
->+	return devlink_info_version_running_put(req, "cfg.custom_ver", buf);
-
-Nit:
-
-It's redundant to put "ver" string into version name. Also, isn't it
-rather "custom_config" or "custom_cfg"?
-
+diff --git a/net/ipv6/addrlabel.c b/net/ipv6/addrlabel.c
+index fb63ffbcfc64..567efd626ab4 100644
+--- a/net/ipv6/addrlabel.c
++++ b/net/ipv6/addrlabel.c
+@@ -20,12 +20,6 @@
+ #include <linux/netlink.h>
+ #include <linux/rtnetlink.h>
+ 
+-#if 0
+-#define ADDRLABEL(x...) printk(x)
+-#else
+-#define ADDRLABEL(x...) do { ; } while (0)
+-#endif
+-
+ /*
+  * Policy Table
+  */
+@@ -150,8 +144,8 @@ u32 ipv6_addr_label(struct net *net,
+ 	label = p ? p->label : IPV6_ADDR_LABEL_DEFAULT;
+ 	rcu_read_unlock();
+ 
+-	ADDRLABEL(KERN_DEBUG "%s(addr=%pI6, type=%d, ifindex=%d) => %08x\n",
+-		  __func__, addr, type, ifindex, label);
++	net_dbg_ratelimited("%s(addr=%pI6, type=%d, ifindex=%d) => %08x\n", __func__, addr, type,
++			    ifindex, label);
+ 
+ 	return label;
+ }
+@@ -164,8 +158,8 @@ static struct ip6addrlbl_entry *ip6addrlbl_alloc(const struct in6_addr *prefix,
+ 	struct ip6addrlbl_entry *newp;
+ 	int addrtype;
+ 
+-	ADDRLABEL(KERN_DEBUG "%s(prefix=%pI6, prefixlen=%d, ifindex=%d, label=%u)\n",
+-		  __func__, prefix, prefixlen, ifindex, (unsigned int)label);
++	net_dbg_ratelimited("%s(prefix=%pI6, prefixlen=%d, ifindex=%d, label=%u)\n", __func__,
++			    prefix, prefixlen, ifindex, (unsigned int)label);
+ 
+ 	addrtype = ipv6_addr_type(prefix) & (IPV6_ADDR_MAPPED | IPV6_ADDR_COMPATv4 | IPV6_ADDR_LOOPBACK);
+ 
+@@ -207,8 +201,7 @@ static int __ip6addrlbl_add(struct net *net, struct ip6addrlbl_entry *newp,
+ 	struct hlist_node *n;
+ 	int ret = 0;
+ 
+-	ADDRLABEL(KERN_DEBUG "%s(newp=%p, replace=%d)\n", __func__, newp,
+-		  replace);
++	net_dbg_ratelimited("%s(newp=%p, replace=%d)\n", __func__, newp, replace);
+ 
+ 	hlist_for_each_entry_safe(p, n,	&net->ipv6.ip6addrlbl_table.head, list) {
+ 		if (p->prefixlen == newp->prefixlen &&
+@@ -247,9 +240,8 @@ static int ip6addrlbl_add(struct net *net,
+ 	struct ip6addrlbl_entry *newp;
+ 	int ret = 0;
+ 
+-	ADDRLABEL(KERN_DEBUG "%s(prefix=%pI6, prefixlen=%d, ifindex=%d, label=%u, replace=%d)\n",
+-		  __func__, prefix, prefixlen, ifindex, (unsigned int)label,
+-		  replace);
++	net_dbg_ratelimited("%s(prefix=%pI6, prefixlen=%d, ifindex=%d, label=%u, replace=%d)\n",
++			    __func__, prefix, prefixlen, ifindex, (unsigned int)label, replace);
+ 
+ 	newp = ip6addrlbl_alloc(prefix, prefixlen, ifindex, label);
+ 	if (IS_ERR(newp))
+@@ -271,8 +263,8 @@ static int __ip6addrlbl_del(struct net *net,
+ 	struct hlist_node *n;
+ 	int ret = -ESRCH;
+ 
+-	ADDRLABEL(KERN_DEBUG "%s(prefix=%pI6, prefixlen=%d, ifindex=%d)\n",
+-		  __func__, prefix, prefixlen, ifindex);
++	net_dbg_ratelimited("%s(prefix=%pI6, prefixlen=%d, ifindex=%d)\n", __func__, prefix,
++			    prefixlen, ifindex);
+ 
+ 	hlist_for_each_entry_safe(p, n, &net->ipv6.ip6addrlbl_table.head, list) {
+ 		if (p->prefixlen == prefixlen &&
+@@ -294,8 +286,8 @@ static int ip6addrlbl_del(struct net *net,
+ 	struct in6_addr prefix_buf;
+ 	int ret;
+ 
+-	ADDRLABEL(KERN_DEBUG "%s(prefix=%pI6, prefixlen=%d, ifindex=%d)\n",
+-		  __func__, prefix, prefixlen, ifindex);
++	net_dbg_ratelimited("%s(prefix=%pI6, prefixlen=%d, ifindex=%d)\n", __func__, prefix,
++			    prefixlen, ifindex);
+ 
+ 	ipv6_addr_prefix(&prefix_buf, prefix, prefixlen);
+ 	spin_lock(&net->ipv6.ip6addrlbl_table.lock);
+@@ -312,8 +304,6 @@ static int __net_init ip6addrlbl_net_init(struct net *net)
+ 	int err;
+ 	int i;
+ 
+-	ADDRLABEL(KERN_DEBUG "%s\n", __func__);
+-
+ 	spin_lock_init(&net->ipv6.ip6addrlbl_table.lock);
+ 	INIT_HLIST_HEAD(&net->ipv6.ip6addrlbl_table.head);
+ 
+-- 
+2.34.1
 
