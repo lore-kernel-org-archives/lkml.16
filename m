@@ -1,127 +1,166 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA00D253350;
-	Wed,  2 Jul 2025 12:20:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D61F1E520C
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 12:20:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751458843; cv=none; b=H3POKgOkRiLAzIeORIcnUk8lsn9Fql5V/CDLFEInrCkuEFg+LsyZ0XA+Fy3W6VaOztBxRD7paEA/pvJ/fVobX8ZJWFTB+mLsveur9o41fupIPoeoQxHrqQpUt/azNjKcAoXtRu6IRefG8UbMYB9Y5T0UvNwmAsUeNuXk74ciqKI=
+	t=1751458843; cv=none; b=Ca5rgwv68wmBE/F9lE30dlt9jRev9kfNOZ4h2//mzEfiZsi9h/WW4gAhf37nijmZfDVZhI1yDKdjzLCWceq7tV1tdgNPi2/++tCkX+pCUbuCK7ewz9n43GUf0Yv9wd6B4RpHQMXxoqRrXQ3ovcb+BBd30a34ucI4p2DMWXC10as=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751458843; c=relaxed/simple;
-	bh=64aTKjc/IcbpGG9gKWt+2nVue/MdoRiwlfPf0ILjKpo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dMjCVdjsGVRQf5Fwuy8Uz6NcHgJ7dosTiVUOoKjWcFuBEviWECpZJkgjRSdXlS+DwlBwYTUFklx/PW9Ldnn70T09Fm1ce0NMMYDD1sFs3KqnUgmBrshdiqYKUg/P+S/6c8ifrwzJKtfvLPMtk0l/MAJ1XRAunZO2HIiEUh9jHJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aEz897f1; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	bh=9OTuof7wiH6Hbx52Xl5u/63yLGECDDRiBJS39/TBm0M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YOwGBzH4QZZVTa+Zb5b5pmQHv+wUGoAOG84/R0NNDUxMsvHuHGUf9VBIlBvm5+3QJU7IX8PfbMANNyRoLQl1O3xJMZPi6Y/L3yuVbWsE55Wuml1K4XbgqjD6pTA7AxsuGOCyFO2stDLC1vUYs35MrSmMQOQArU5qmDDnMgNK728=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=FcZcpLok; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aEz897f1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751458842; x=1782994842;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=64aTKjc/IcbpGG9gKWt+2nVue/MdoRiwlfPf0ILjKpo=;
-  b=aEz897f1q7bf7XAR9LSt27bLtTKuL51R7K+tQRCij+p0CyJoei91o6Mr
-   2tiORroOnfTJGswRavIVIEPomDZyLT5FB6p2Ief2e7qqvwSH2qCRUkLkA
-   12Qg/P6zkQbXKz90b5j2g8m3vBq6dorFF1vsDsDo5gnn8xHFlJF2j8ztY
-   H1w1dhggL1fbFb33j/sBLgvR+dj1lrSqmSQXWL1cmWB04v4oVOOqAsboB
-   nrscgTxq4dCnsN9nFWnxB90oT/k3YkVSS2qvrRSzCieYjrkLVZVWE4FIo
-   Taz2irBVTvjlo1gM6f5EesUZGH6Kk3gysCdnohh8MHck+bsjGO1CB880a
-   Q==;
-X-CSE-ConnectionGUID: 665iHEqlQ2Wx9e6RID6Row==
-X-CSE-MsgGUID: pso3+bjzTdmhyRzmLgjRiw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="53616732"
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="53616732"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 05:20:41 -0700
-X-CSE-ConnectionGUID: 1aETWCKNQ1umOKFoIsAm7Q==
-X-CSE-MsgGUID: ppFS1wN+T+ik1840nkTGjg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="158104826"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 05:20:37 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uWwS1-0000000Bun0-43Su;
-	Wed, 02 Jul 2025 15:20:33 +0300
-Date: Wed, 2 Jul 2025 15:20:33 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Xu Yang <xu.yang_2@nxp.com>
-Cc: ezequiel@vanguardiasur.com.ar, mchehab@kernel.org,
-	laurent.pinchart@ideasonboard.com, hdegoede@redhat.com,
-	gregkh@linuxfoundation.org, mingo@kernel.org, tglx@linutronix.de,
-	viro@zeniv.linux.org.uk, thomas.weissschuh@linutronix.de,
-	dafna.hirschfeld@collabora.com, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	imx@lists.linux.dev, jun.li@nxp.com
-Subject: Re: [PATCH v3 1/3] usb: core: add dma-noncoherent buffer alloc and
- free API
-Message-ID: <aGUkEbaSOzrtILkZ@smile.fi.intel.com>
-References: <20250702110222.3926355-1-xu.yang_2@nxp.com>
- <20250702110222.3926355-2-xu.yang_2@nxp.com>
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="FcZcpLok"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-32b4876dfecso73550471fa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 05:20:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1751458839; x=1752063639; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZlDIE+NRAJTFxIDdo85+1avglgQbOvm9gC4lDC40yv8=;
+        b=FcZcpLokZPKQKUziKGccVI3aFdMxzTlObbbxhxjmG3hBv0bye5TDFOM8VFet3Pg3L5
+         /tlSvY9WDiY0XynoIrnn3mifQ16626/wG6lDHoEV+HJGxQtqzZZoBfgtMCNN/rh9VycR
+         OkD8T3DrQ5Q13kU4Fjhx9DiqQf7HhPhI3MGb/jDjdjuo3174cJtak9admxP0wujPXR48
+         aUNRS4uEJ9W6qBF3rlUDxnUsVwTo3qvlDo4an/YYcsiZRb5VP99XfLfdXVIe/xkzyThr
+         I1JVBa7FIIXHgCXsMMKcW4LXR9MOi0BxiKswA5mTN7B5pEp6qzRgkuv52K2zqeouZaJ7
+         92Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751458839; x=1752063639;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZlDIE+NRAJTFxIDdo85+1avglgQbOvm9gC4lDC40yv8=;
+        b=rcP30uyFutVZDDahu3etTywKH0R0G3HUodlvc7UXbeVD2V7PEANLcZTFmiiRfsmMco
+         2gceTRzfefkLGJVwf2Em5GPVeGc3V/FpbhUfLFm3hKlmacj2J2zoGuhI+KzW+wwj7YM3
+         hKIGnWD8KpjrctxXwcjKEAW9nDj08Zquk+apCJE1KOZ7JBCDr/Cwzb7guABJ3fMEKE/E
+         rqHv6e4nNw0Bu8+oV0aHaqCdZlf0QHBprNL3gXUUS3SeeTg2KxlyVJ2HWioKYG7sW3st
+         oEVeLr0uzvemkMe4jXoKCGzidzJ25ism1a8yfOT0yl/BFsGCr/9nnmmsmBlEkcqYb1sS
+         ZOfw==
+X-Forwarded-Encrypted: i=1; AJvYcCVNW6BzvFrtrmiOAFL4cAhbz0nF9ijwGut4mErToBpzMjgVMV9vraAnD5cAivgyLdqh/DfHQPobRuvr8OA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLUYMh4Msee6/1McVEOka25mJgmathGWPbP+v6omlKBcGquct6
+	DklmGJIlGwED78c8tNbbjEXDJu+qNdKtWf+p4v8RzzZgn75nWpC2eVl32wka9ANXes8A0/829C9
+	xpi0bHX2RlZ57cy7Fz4tkJAReFAsj6TAzicu0dHVG9g==
+X-Gm-Gg: ASbGnctetlwh3Ea3j5zCJdWZmsit60pYhMqlUIedrMQJCQxr1dxTLQS78mISp2ysp5D
+	Mguy+xirfDTisxZKu/UXK99dRM79o44KM5vrCvCBl/JKS22yS0tY5HzCnGjXi5g3GWpLhOEMrcn
+	hhixqCyy0hKaT2EPPwT6siGrX6U5AGqkcIR8eoKSPzVgMQ
+X-Google-Smtp-Source: AGHT+IH1lD190ckWcim2q6Zk3SmkYALF/z3+aLiK7gzYQJFBAZHqekWx0X5SLSlbsPJp/7c6iQAutReznlxbFSvgSgc=
+X-Received: by 2002:a05:6512:b0d:b0:554:e7ce:97f8 with SMTP id
+ 2adb3069b0e04-55628ed6c86mr899229e87.15.1751458839282; Wed, 02 Jul 2025
+ 05:20:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250702110222.3926355-2-xu.yang_2@nxp.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+References: <20250702114633.1490974-1-apatel@ventanamicro.com>
+In-Reply-To: <20250702114633.1490974-1-apatel@ventanamicro.com>
+From: Anup Patel <apatel@ventanamicro.com>
+Date: Wed, 2 Jul 2025 17:50:26 +0530
+X-Gm-Features: Ac12FXxE_Q89fF2kuLXVjucIT31RfsCBiQVg9DaPXxssTSlaWFGUaeKT2XWMNbE
+Message-ID: <CAK9=C2WH5QuQcKwTuGUAwF_ewkTDurDig0CU_+rJRtP3HHEpLA@mail.gmail.com>
+Subject: Re: [PATCH v2] irqchip/riscv-imsic: Add kernel parameter to disable IPIs
+To: Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>
+Cc: Anup Patel <anup@brainfault.org>, Atish Patra <atish.patra@linux.dev>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Andrew Jones <ajones@ventanamicro.com>, linux-doc@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 02, 2025 at 07:02:20PM +0800, Xu Yang wrote:
-> This will add usb_alloc_noncoherent() and usb_free_noncoherent()
-> functions to support alloc and free buffer in a dma-noncoherent way.
-> 
-> To explicit manage the memory ownership for the kernel and device,
-> this will also add usb_dma_noncoherent_sync_for_cpu/device() functions
-> and call it at proper time.  The management requires the user save
-> sg_table returned by usb_alloc_noncoherent() to urb->sgt.
-
-...
-
-> +	if ((urb->transfer_flags & URB_NO_TRANSFER_DMA_MAP) &&
-> +	    urb->sgt) {
-
-Something weird with the indentation. Here you wrapped, but the very next line
-is not, and they both satisfy 80 limit (even though we have it relaxed now).
-
-> +		dma_sync_sgtable_for_cpu(hcd->self.sysdev, urb->sgt, dir);
-> +		if (dir == DMA_FROM_DEVICE)
-> +			invalidate_kernel_vmap_range(urb->transfer_buffer,
-> +						     urb->transfer_buffer_length);
-> +	}
-
-...
-
+On Wed, Jul 2, 2025 at 5:16=E2=80=AFPM Anup Patel <apatel@ventanamicro.com>=
+ wrote:
+>
+> When injecting IPIs to a set of harts, the IMSIC IPI support will do
+> a separate MMIO write to the SETIPNUM_LE register of each target hart.
+> This means on a platform where IMSIC is trap-n-emulated, there will be
+> N MMIO traps when injecting IPI to N target harts hence IMSIC IPIs will
+> be slow on such platform compared to the SBI IPI extension.
+>
+> Unfortunately, there is no DT, ACPI, or any other way of discovering
+> whether the underlying IMSIC is trap-n-emulated. Using MMIO write to
+> the SETIPNUM_LE register for injecting IPI is purely a software choice
+> in the IMSIC driver hence add a kernel parameter to allow users disable
+> IMSIC IPIs on platforms with trap-n-emulated IMSIC.
+>
+> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+> ---
+>  Documentation/admin-guide/kernel-parameters.txt |  7 +++++++
+>  drivers/irqchip/irq-riscv-imsic-early.c         | 12 ++++++++++++
+>  2 files changed, 19 insertions(+)
+>
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentat=
+ion/admin-guide/kernel-parameters.txt
+> index f1f2c0874da9..7f0e12d0d260 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -2538,6 +2538,13 @@
+>                         requires the kernel to be built with
+>                         CONFIG_ARM64_PSEUDO_NMI.
+>
+> +       irqchip.riscv_imsic_noipi
+> +                       [RISC-V,EARLY]
+> +                       Force the kernel to not use IMSIC software inject=
+ed MSIs
+> +                       as IPIs. Intended for system where IMSIC is trap-=
+n-emulated,
+> +                       and thus want to reduce MMIO traps when triggerin=
+g IPIs
+> +                       to multiple harts.
 > +
-> +		return ret;
->  	}
+>         irqfixup        [HW]
+>                         When an interrupt is not handled search all handl=
+ers
+>                         for it. Intended to get systems with badly broken
+> diff --git a/drivers/irqchip/irq-riscv-imsic-early.c b/drivers/irqchip/ir=
+q-riscv-imsic-early.c
+> index 1dbc41d7fe80..c6fba92dd5a9 100644
+> --- a/drivers/irqchip/irq-riscv-imsic-early.c
+> +++ b/drivers/irqchip/irq-riscv-imsic-early.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/cpu.h>
+>  #include <linux/export.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/init.h>
+>  #include <linux/io.h>
+>  #include <linux/irq.h>
+>  #include <linux/irqchip.h>
+> @@ -22,6 +23,14 @@
+>  #include "irq-riscv-imsic-state.h"
+>
+>  static int imsic_parent_irq;
+> +static bool imsic_noipi;
 > +
-> +	if ((urb->transfer_flags & URB_NO_TRANSFER_DMA_MAP) &&
-> +	    urb->sgt) {
-
-Why not
-
-	} else if {
-
-and drop the above return ret; ?
-
-> +		if (dir == DMA_TO_DEVICE)
-> +			flush_kernel_vmap_range(urb->transfer_buffer,
-> +						urb->transfer_buffer_length);
-> +		dma_sync_sgtable_for_device(hcd->self.sysdev, urb->sgt, dir);
-> +	}
+> +static int __init imsic_noipi_cfg(char *buf)
+> +{
+> +       imsic_noipi =3D true;
+> +       return 0;
+> +}
+> +early_param("irqchip.riscv_imsic_noipi", imsic_noipi_cfg);
+>
+>  #ifdef CONFIG_SMP
+>  static void imsic_ipi_send(unsigned int cpu)
+> @@ -47,6 +56,9 @@ static int __init imsic_ipi_domain_init(void)
+>  {
+>         int virq;
+>
+> +       if (imsic_noipi)
+> +               return 0;
 > +
->  	return ret;
 
--- 
-With Best Regards,
-Andy Shevchenko
+We can skip enabling/disabling IMSIC_IPI_ID in imsic_ipi_starting_cpu()
+and imsic_ipi_dying_cpu() when imsic_noipi is set.
 
+In addition to the above, we can also re-use the reserved IPI ID for
+devices.
 
+I will quickly send v3. Apologies for the noise.
+
+Regards,
+Anup
