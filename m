@@ -1,118 +1,100 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F7E12E92A9;
-	Wed,  2 Jul 2025 14:15:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 530682EA160
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:16:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751465746; cv=none; b=CvDRCf1EMG8YjVR/Yw2MIP1TmFs8XTGDc+a1gh9tnaSKf5Ey2PEhUCXORB72t5l7eMS8Dw0Cds3p3r7VjlMPO+IYcxK1r1osVTMcwIuRXd1F5udRFcJf02p6Z2rs6F2ykn2+ywFP9tHPo9Glh37K8ZX8oe9+g8P4NDRsJAyQvNU=
+	t=1751465767; cv=none; b=UhQawXDcTmE8BPFXvQk7AL78ljKXZ7N70N0HOedawK0VaxCU4Zhvdwy3JeWhHGWDyEuTOP1/LVOUAweZNK46WlElwZ462x58mTiRCPTdhHCEuFFjUAQQHrCSK2m1HWraMyeRqQeTUT9Pc7jkbpOH0FwgWcSB7ctPFIFJhgMxPCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751465746; c=relaxed/simple;
-	bh=hgVRR0PR/ckdvyIGS+3hX9AlKTj2YA2xeoGPQSp3j2U=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=IZ5A8/3qs9brtsmC6g6kt4o9tfvXmYt/bcIrvXEzVFKxzqQzC8q1wC5ZZTXspLj0ZX1ErQdSnuRe532enqpRawJ/MjZ+drMPbKXiPAOYP7+Hqc2ZSWxYDxKy4JrWU0DyyhOis92L9mSVqaoC1+VrdFpup+oCb/fwHO9RmyGLzxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NqnGC/ha; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NqnGC/ha"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-450cf0120cdso45878185e9.2;
-        Wed, 02 Jul 2025 07:15:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751465743; x=1752070543; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=aRZoP19mVo+xouu+rD216ylrbdoQ3y6C2mRJgbjte3E=;
-        b=NqnGC/hafxF8eNkpoGDhrJ4+tPwPj1Ax+5kt4hyHS/rGmNZfEGnZiXEFU+nJYEpFoL
-         P4vg6JVSxCSyV9N8ig/F9jr/iQmyWktCL7IOuEkP6xm69MBVCQTtxMMIZ1GCoFnYhnTQ
-         tctfcmFueMaIlqTFo6a8ROghh/PFm5BYMFxIBUjySRhIycJHYxtcdgLO0leRnKz8kjYQ
-         eTGrVkXFu/6gjptbooXGrwomIs3c7+NVBQn/ncpNvImTLDRcfhb9rqOtR3yOiUfUQmzE
-         hzj6tL9IP+ihXXH5ThxQyHq8fi8aUacUbIE2gA7jMP8wGoEN2L2oTAOstOx7YpAbQ1CN
-         Jerg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751465743; x=1752070543;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aRZoP19mVo+xouu+rD216ylrbdoQ3y6C2mRJgbjte3E=;
-        b=S0Txyx9lOmWoQdmV3rK3PK24puvX+feGNsp8gyhwfNwYIM7VFMbSbZv7RezyKWusYc
-         dmxF4YowsRERHHtP5TIQnke7IWzgjTfqpg/IY0U10ag4p+TO0YGstovEQEeh5nMyftZM
-         PoL0FTNOxINZ2smEa3QKrjRotPZLhcQ24e/CPv88a4WMlxc9ceJoqR2VXFSsZ8P1Hlrd
-         rSyRbRMjVpom9XkHTsq+RGhaE+kDa37BGUNuJFJ/2wXNmFMshVuf5Kv9Fsrc9AB4sptM
-         lne4gUWoD+ysESc0BH27+q98x1XMXJIBJyOdoy932a9Q1+AyeJ4eaL/XpUGz19S09uP0
-         5PqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUlWgGEIzUEtyJqYJRwM+7fnTu3fyNApoef/hP2SZbiM0ddjc6KzUvOwOTPiCE9ciWy+G53/jVRCP2Eltk=@vger.kernel.org, AJvYcCVreNWHzA0TxrZt1ucIRUNu4MofXIGNMT6vEKginxHz36kQ5sTnrvVvyXI9DdGIv2Bnhu2Uomcc@vger.kernel.org
-X-Gm-Message-State: AOJu0YwA/50wZGmT9hCwqziMS1MQUnSQzb3qPTGLyu7bbA8+/kZUvtJa
-	paQWzdBnM7PylpepalbAo5Qz3cjPR0F0bdtesB6qmemlTGUCAVVo5iEluVgzW5GI
-X-Gm-Gg: ASbGncvHrBdeTUDdQ7zTklvwu4F+dWeFKWLriNxmd0DEm+LcOPzyrpzynv/7hWeD6w8
-	OTfjmyJ1bkpgFqS/5pw5y+NzVznHs4/ayr6uxzPEy9URQIwgETDC7HYpDKqRpeljFa4u3BTuJZ6
-	VHfpciuv3uL4MgcJyvYIpLWroMrOgfw/eTmOoxq9Fa+aRos1s2td2UlZorgHM7MAy+z5nUHIPXf
-	eV4SuzY7hf7BXsq+Ie3HUrOkk30EIu/hz3THaX8bYpdSiCBj23X+mZPahLtSvqXlinxFBTyIiCE
-	znLwnoUB6L0dXSM0gxlmGxaXozGecNTh0AIwM3+IJmslM0nckfoFHfFuvboAXqdqK9nKv3tEBt4
-	=
-X-Google-Smtp-Source: AGHT+IGKvUHBAcdt7Y5rZZoCKXs2ZNpvgRwAwjxch2Y9eD+LU5/6F49qKav6+2grsiDSPNdbmoOjmQ==
-X-Received: by 2002:a05:600c:638e:b0:453:59c2:e4f8 with SMTP id 5b1f17b1804b1-454a36d80d6mr29507715e9.1.1751465742339;
-        Wed, 02 Jul 2025 07:15:42 -0700 (PDT)
-Received: from localhost.localdomain ([45.128.133.218])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a4215dbsm198343375e9.35.2025.07.02.07.15.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 07:15:41 -0700 (PDT)
-From: Oscar Maes <oscmaes92@gmail.com>
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net,
-	dsahern@kernel.org,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Oscar Maes <oscmaes92@gmail.com>
-Subject: [PATCH net] net: ipv4: fix incorrect MTU in broadcast routes
-Date: Wed,  2 Jul 2025 16:15:15 +0200
-Message-Id: <20250702141515.9414-1-oscmaes92@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1751465767; c=relaxed/simple;
+	bh=DIYuzkdweaBOtoLUxlve79p01Dm36bPtHwaVozKAsZM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TXLeqHX+JVTYXgjpF7HVm0Vbv9j5ibd8DvzUOGQkD6oi5BhGD8KqqKea+qWQF9d7LMbFCxrxGt41q7kVD9GQePSBWMB0bQ9cUiujcY1R9qfmCzTkbK05Weow7gfERMZ3eF+HBcMzcJIuozVIEtSVzRdxh/uNKSUkDr9tYaDn7oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EDFAB22C7;
+	Wed,  2 Jul 2025 07:15:50 -0700 (PDT)
+Received: from J2N7QTR9R3.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE3193F6A8;
+	Wed,  2 Jul 2025 07:16:03 -0700 (PDT)
+Date: Wed, 2 Jul 2025 15:16:01 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	kernel test robot <lkp@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>, llvm@lists.linux.dev,
+	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	x86@kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+	Jinjie Ruan <ruanjinjie@huawei.com>
+Subject: Re: [tip:master 19/19] include/linux/irq-entry-common.h:201:2:
+ error: unexpected token
+Message-ID: <aGU_IY70Jt4bcbf2@J2N7QTR9R3.cambridge.arm.com>
+References: <202507020528.N0LtekXt-lkp@intel.com>
+ <20250702123240.GDaGUm6Le4KLL7o_91@fat_crate.local>
+ <aGUtCveV8Ev17_FS@J2N7QTR9R3.cambridge.arm.com>
+ <20250702130915.GEaGUve86iYnv337_Z@fat_crate.local>
+ <aGUxH--v32Bv4T81@J2N7QTR9R3.cambridge.arm.com>
+ <20250702132415.GFaGUy_6q0dZZI9AX3@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250702132415.GFaGUy_6q0dZZI9AX3@fat_crate.local>
 
-Currently, __mkroute_output overrules the MTU value configured for
-broadcast routes.
+On Wed, Jul 02, 2025 at 03:24:15PM +0200, Borislav Petkov wrote:
+> On Wed, Jul 02, 2025 at 02:16:15PM +0100, Mark Rutland wrote:
+> > Sounds like a plan.
+> 
+> As we figured out on IRC:
+> 
+> https://lore.kernel.org/all/20250616-loongarch-fix-warn-cond-llvm-ias-v1-1-6c6d90bb4466@kernel.org/
+> 
+> "clang's integrated assembler only supports concatenating strings with
+> '.ascii'. There was discussion of allowing '.string' / '.asciz' but it
+> was decided against [1] because it was undesirable to match the behavior
+> of released binutils at the time, where"
+> 
+> and this seems to fix it here:
+> 
+> ---
+> diff --git a/arch/s390/include/asm/bug.h b/arch/s390/include/asm/bug.h
+> index a185855ab158..46d9eb64bd18 100644
+> --- a/arch/s390/include/asm/bug.h
+> +++ b/arch/s390/include/asm/bug.h
+> @@ -9,7 +9,7 @@
+>  #else
+>  #define __BUGVERBOSE_LOCATION(file, line)			\
+>  		.pushsection .rodata.str, "aMS", @progbits, 1;	\
+> -	10002:	.string file;					\
+> +	10002:	.ascii file;					\
+>  		.popsection;					\
+>  								\
+>  		.long 10002b - .;				\
+> 
 
-This buggy behaviour can be reproduced with:
+IIUC this also needs a trailing "\0" as per the link above, or this
+won't get a NUL-terminator (but will build just fine).
 
-ip link set dev eth1 mtu 9000
-ip route del broadcast 192.168.0.255 dev eth1 proto kernel scope link src 192.168.0.2
-ip route add broadcast 192.168.0.255 dev eth1 proto kernel scope link src 192.168.0.2 mtu 1500
+While looking at this I spotted that arm64 doesn't propagate the
+cond_str down to __BUGVERBOSE_LOCATION(), which is why we don't
+encounter the same problem today.
 
-The maximum packet size should be 1500, but it is actually 8000:
+We should probably fix that, but it looks like it might need some more
+header wrangling for ASM_BUG(). I thought we'd split that out to avoid
+circular header dependencies, but I could be mistaken.
 
-ping -b 192.168.0.255 -s 8000
+Mark.
 
-Fix __mkroute_output to allow MTU values to be configured for
-for broadcast routes (to support a mixed-MTU local-area-network).
-
-Signed-off-by: Oscar Maes <oscmaes92@gmail.com>
----
- net/ipv4/route.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/net/ipv4/route.c b/net/ipv4/route.c
-index fccb05fb3..a2a3b6482 100644
---- a/net/ipv4/route.c
-+++ b/net/ipv4/route.c
-@@ -2585,7 +2585,6 @@ static struct rtable *__mkroute_output(const struct fib_result *res,
- 	do_cache = true;
- 	if (type == RTN_BROADCAST) {
- 		flags |= RTCF_BROADCAST | RTCF_LOCAL;
--		fi = NULL;
- 	} else if (type == RTN_MULTICAST) {
- 		flags |= RTCF_MULTICAST | RTCF_LOCAL;
- 		if (!ip_check_mc_rcu(in_dev, fl4->daddr, fl4->saddr,
--- 
-2.39.5
-
+> 
+> I leave it to Mr. Z to sort out.
+> 
+> -- 
+> Regards/Gruss,
+>     Boris.
+> 
+> https://people.kernel.org/tglx/notes-about-netiquette
