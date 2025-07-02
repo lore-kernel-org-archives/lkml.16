@@ -1,229 +1,148 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A059822E3F0
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 21:02:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC3A4230268;
+	Wed,  2 Jul 2025 21:03:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751490181; cv=none; b=Q2NDYiSraTjxTN7tSPVYwCqVZS6/b+a61cWgGd/KMvkbss9fej8pvF8gmH5CPLehzqIHv8BlqN66HfkACIqUsyZ5z+Hl8ri4g4uHBfY9WnC2mosdTJ1FI7qX7juanUD6bsU8QKFAQNMlKYlw5UVeDNHDVjv14Zd3Y0trO5hoPpI=
+	t=1751490206; cv=none; b=b8sLuiZ2biSfP8Oa2NReW6wncBNaB+iWI2RaYzHKk4TRRow+JxOZvlJs3YJDqqRQQ/skL1lhA0MGe1ORcjRTkRpgEUa+EM9kNhNVhYajTbD1YUBCM4Lud6jStuiX12hpYZIJF/HSJtQGzXAzz++Arj+6pTjQXoEigFz0FOZ29nE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751490181; c=relaxed/simple;
-	bh=4vQ93QOR7sUMLGuKKWYA5MqL8eulcSCyBQPNC6yOAz0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Cw37fck0tlj00So+QNH7Xmtma8P0CNxHQzpUQnDwalWbKQKifo8DLA2KTrr5F/kyhjqAow4mYs2niS+7tMkkTrv/2hDcOyusLnxIo1VtmUqD6uXuuDUP0+iDbt5/MophTQJQjU5yA+wihGrz6erzH/FIilsMa9eukiU/a8U46L0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lcN/2g1d; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1751490206; c=relaxed/simple;
+	bh=naRdjLcPdsggu6n8OxVx2EKzl9/toXIJWmrz5C5JylM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=MLMHVH+N53FBAR/ToOd3dGuWHeYisCRhOFMFpzQLBdlOL17wogQHkLE4e2pFW/qr2/bH1ycrm9Ta9Yq1FlXY07Njfspw69EhMXWqxvaFFW3QP5/LbKA2ai7Ja0xIaLf24MnDrfmba6mtgbfUAzOwNO95/E4rq/ebxizowejS548=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oX0I/rpg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lcN/2g1d"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7d3dd14a7edso763243785a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 14:02:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751490178; x=1752094978; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EJ91IALf7qL2mLAV9e8zmgMyOJhT80+BeW9rsMA6c10=;
-        b=lcN/2g1dPDvkVT7gcoUnSi5cF3fKLcQFP47h2jxNP4+OcUJX3+z1EU1MijGnA+BhCa
-         6iU5o9D3lUwJH3ZGp2PjvTSuSum1AwrsX5uImQ0WRn318fBx1NNley0entkaXTkt6NTm
-         3/UX3hYj8GjY4/HaWdPaSpEfcNtGjd+dCnGGJ2qZ8GNX12N5iSlrrNbHXENl9JTDfQ9X
-         Zm0NAcugGC9AiyDy6Ogy/IiI5tkPv0enAUSdCACh1H2+APpm35gUKOfxcsQH/RtQ2rWY
-         qmIY+NjArnY1+Pja8Y6cT8f5xIS/pT1fb8dw6o2CguZLfJ3F57jldd3pi8uG2OCXRWmy
-         Zuyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751490178; x=1752094978;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EJ91IALf7qL2mLAV9e8zmgMyOJhT80+BeW9rsMA6c10=;
-        b=Q80lfVk1U1fiwMcBrO/vExwt/F/coXWwPzBu0fRwQnVa2xS7GNVCSU/rw4zRLgwVrr
-         Ht1kcUYOUJjNNG0s2A3jlVgQQfvhs6F5s7dcrb71BxqKbJ2HqWVbPsC9Oc3xUfgECm9G
-         0m2+cMXCCEekKg5UvSB1po1sqdU2japy0ayNFNJqnmUnM3NYgFwqhIPgvZYGRSK7+8Wi
-         sI9LtlTTePVkfMlqzyxvbFnb54Qd3cP3Py5uWL+hT1JYY8TuEqS13/yhTiAPoVvxePXz
-         lFYAsvRKYOQOiDpjBp4m5/zGk4FU2GsxRdsnuXAe7UKoy3yl9nZWwTiyN93Ouw+r28F8
-         x0CQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXWpapgublsXdx3XDEpRwP+8j/l2WDmhuGRxmso/7HK8BNZHqukQR1akdIhwMVafcDyKjPLxWxh356u4W0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJDHPlG9bjV/ds/D0Hm6NL/uCNxGftuOK9tQhezm7lKvJDaSs+
-	m4T6v0NashrZuoZW9VMz+EkLMD7Llzi5ty+cm+2atRsLNiyWmvGn1yvoccBtN93oetWN5QgJePF
-	J63Cxg1K5P+pNi1MCBlK0NnvKXp+pZS9eANFtrpJZ
-X-Gm-Gg: ASbGncsIn4oWj+ogHuOXxOKxAb0iPKFDyF2Q/6t2YVYKmkZ4AUpr7AVVJj1nPVjpPz3
-	DyjLoC5rvf/n6MAjbMb/YQuQZJyxuTQRijoLFBISYYemYPbLvGNK3EPEZPfPKuCPmaTir8YS+Mq
-	OADZFWVwiQ2CvwEASsh+jybh3Fw6xT/xk+hC2a0Rc8j4mc1UwNLOBJ3Byvq7QXyHtSSnh9zh/h
-X-Google-Smtp-Source: AGHT+IHZLJBo9iF9+nKbDyZZYnf6PcVxrcD0+f+tDZM+7z0OQ6NWXKWPaxUOSfKFFIK+EtLpeM3pSDTuYA14QV/DaCA=
-X-Received: by 2002:a05:620a:280d:b0:7d3:f0a0:ea5f with SMTP id
- af79cd13be357-7d5d13f3399mr185371785a.22.1751490177645; Wed, 02 Jul 2025
- 14:02:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oX0I/rpg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F411C4CEEE;
+	Wed,  2 Jul 2025 21:03:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751490206;
+	bh=naRdjLcPdsggu6n8OxVx2EKzl9/toXIJWmrz5C5JylM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=oX0I/rpgpOl+PVs1XtygJG+2K1aU2HQ8q4wtjjy4udHSeOjpmVYT24HzdG8aGF5MV
+	 U3/qGl9K+kfAfMvCsHPbzlkocFUNXKB5Qj3H6T68UZadTHn7dUYsv7U/eHfa+GNIML
+	 vF/N3EgqYEWzemLZDGS+Lt5YRqVjezKSckH2UBbmMzSmOPWjsU0Td0TBWJJWD5KNCG
+	 qaZFavuctiBNZd5sB6niME2Z9Bd5ypP0ihIXyz7GIiK2mmcc2wptqoVumug4TOk8j1
+	 J12Ad7CKXnwo3rLaUwB42yK89Ul1UdWwsS4UiEXAYipprdS4TZFkvVP9r3W85nJ9uL
+	 7iTRKTu+bsmBQ==
+From: SeongJae Park <sj@kernel.org>
+To: Bijan Tabatabai <bijan311@gmail.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	damon@lists.linux.dev,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	akpm@linux-foundation.org,
+	corbet@lwn.net,
+	joshua.hahnjy@gmail.com,
+	bijantabatab@micron.com,
+	venkataravis@micron.com,
+	emirakhur@micron.com,
+	ajayjoshi@micron.com,
+	vtavarespetr@micron.com
+Subject: Re: [RFC PATCH v3 07/13] mm/damon/core: Commit damos->target_nid/migrate_dests
+Date: Wed,  2 Jul 2025 14:03:23 -0700
+Message-Id: <20250702210323.55199-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250702201337.5780-8-bijan311@gmail.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250613134817.681832-1-herve.codina@bootlin.com>
- <20250613134817.681832-5-herve.codina@bootlin.com> <CAJZ5v0g01QzAkpnJGdjEuif9h==tyB94tU3nCbumx_Ya3EOoDQ@mail.gmail.com>
-In-Reply-To: <CAJZ5v0g01QzAkpnJGdjEuif9h==tyB94tU3nCbumx_Ya3EOoDQ@mail.gmail.com>
-From: Saravana Kannan <saravanak@google.com>
-Date: Wed, 2 Jul 2025 14:02:20 -0700
-X-Gm-Features: Ac12FXwhrjwNcoQlswzlpTiwmASKCStdWYLWRIuHlvNKRRZirJ70zPEsjhz1ybo
-Message-ID: <CAGETcx85vKLcFcWBR2G005Nup8UkmVZFLYgd4DuUBOKxHvJn8Q@mail.gmail.com>
-Subject: Re: [PATCH v3 04/28] driver core: Avoid warning when removing a
- device while its supplier is unbinding
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Herve Codina <herve.codina@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Peter Rosin <peda@axentia.se>, Derek Kiernan <derek.kiernan@amd.com>, 
-	Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Davidlohr Bueso <dave@stgolabs.net>, 
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org, 
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-cxl@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>, 
-	Horatiu Vultur <horatiu.vultur@microchip.com>, 
-	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 2, 2025 at 11:22=E2=80=AFAM Rafael J. Wysocki <rafael@kernel.or=
-g> wrote:
->
-> On Fri, Jun 13, 2025 at 3:48=E2=80=AFPM Herve Codina <herve.codina@bootli=
-n.com> wrote:
-> >
-> > During driver removal, the following warning can appear:
-> >    WARNING: CPU: 1 PID: 139 at drivers/base/core.c:1497 __device_links_=
-no_driver+0xcc/0xfc
-> >    ...
-> >    Call trace:
-> >      __device_links_no_driver+0xcc/0xfc (P)
-> >      device_links_driver_cleanup+0xa8/0xf0
-> >      device_release_driver_internal+0x208/0x23c
-> >      device_links_unbind_consumers+0xe0/0x108
-> >      device_release_driver_internal+0xec/0x23c
-> >      device_links_unbind_consumers+0xe0/0x108
-> >      device_release_driver_internal+0xec/0x23c
-> >      device_links_unbind_consumers+0xe0/0x108
-> >      device_release_driver_internal+0xec/0x23c
-> >      driver_detach+0xa0/0x12c
-> >      bus_remove_driver+0x6c/0xbc
-> >      driver_unregister+0x30/0x60
-> >      pci_unregister_driver+0x20/0x9c
-> >      lan966x_pci_driver_exit+0x18/0xa90 [lan966x_pci]
-> >
-> > This warning is triggered when a consumer is removed because the links
-> > status of its supplier is not DL_DEV_DRIVER_BOUND and the link flag
-> > DL_FLAG_SYNC_STATE_ONLY is not set.
-> >
-> > The topology in terms of consumers/suppliers used was the following
-> > (consumer ---> supplier):
-> >
-> >       i2c -----------> OIC ----> PCI device
-> >        |                ^
-> >        |                |
-> >        +---> pinctrl ---+
-> >
-> > When the PCI device is removed, the OIC (interrupt controller) has to b=
-e
-> > removed. In order to remove the OIC, pinctrl and i2c need to be removed
-> > and to remove pinctrl, i2c need to be removed. The removal order is:
-> >   1) i2c
-> >   2) pinctrl
-> >   3) OIC
-> >   4) PCI device
-> >
-> > In details, the removal sequence is the following (with 0000:01:00.0 th=
-e
-> > PCI device):
-> >   driver_detach: call device_release_driver_internal(0000:01:00.0)...
-> >     device_links_busy(0000:01:00.0):
-> >       links->status =3D DL_DEV_UNBINDING
-> >     device_links_unbind_consumers(0000:01:00.0):
-> >       0000:01:00.0--oic link->status =3D DL_STATE_SUPPLIER_UNBIND
-> >       call device_release_driver_internal(oic)...
-> >         device_links_busy(oic):
-> >           links->status =3D DL_DEV_UNBINDING
-> >         device_links_unbind_consumers(oic):
-> >           oic--pinctrl link->status =3D DL_STATE_SUPPLIER_UNBIND
-> >           call device_release_driver_internal(pinctrl)...
-> >             device_links_busy(pinctrl):
-> >               links->status =3D DL_DEV_UNBINDING
-> >             device_links_unbind_consumers(pinctrl):
-> >               pinctrl--i2c link->status =3D DL_STATE_SUPPLIER_UNBIND
-> >               call device_release_driver_internal(i2c)...
-> >                 device_links_busy(i2c): links->status =3D DL_DEV_UNBIND=
-ING
-> >                 __device_links_no_driver(i2c)...
-> >                   pinctrl--i2c link->status is DL_STATE_SUPPLIER_UNBIND
-> >                   oic--i2c link->status is DL_STATE_ACTIVE
-> >                   oic--i2c link->supplier->links.status is DL_DEV_UNBIN=
-DING
-> >
-> > The warning is triggered by the i2c removal because the OIC (supplier)
-> > links status is not DL_DEV_DRIVER_BOUND. Its links status is indeed set
-> > to DL_DEV_UNBINDING.
-> >
-> > It is perfectly legit to have the links status set to DL_DEV_UNBINDING
-> > in that case. Indeed we had started to unbind the OIC which triggered
-> > the consumer unbinding and didn't finish yet when the i2c is unbound.
-> >
-> > Avoid the warning when the supplier links status is set to
-> > DL_DEV_UNBINDING and thus support this removal sequence without any
-> > warnings.
-> >
-> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
->
-> The change is OK, so
->
-> Reviewed-by: Rafael J. Wysocki <rafael@kernel.org>
+On Wed,  2 Jul 2025 15:13:30 -0500 Bijan Tabatabai <bijan311@gmail.com> wrote:
 
-You can add mine too.
+> From: Bijan Tabatabai <bijantabatab@micron.com>
+> 
+> When committing new scheme parameters from the sysfs, copy the
+> target_nid and migrate_dests of the source schemes into the destination
+> schemes.
 
-Reviewed-by: Saravana Kannan <saravanak@google.com>
+Fixing the missed update of target_nid deserves Fixes: and Cc: stable@ in my
+opinion.  Could you please split and post the part as another patch?  For the
+Fixes, I think 83dc7bbaecae ("mm/damon/sysfs: use damon_commit_ctx()") should
+be appripriate.
 
--Saravana
+> 
+> Signed-off-by: Bijan Tabatabai <bijantabatab@micron.com>
 
->
-> but it will clash with
->
-> https://lore.kernel.org/linux-pm/2793309.mvXUDI8C0e@rjwysocki.net/
->
-> that's been queued up by Greg AFAICS.
->
-> > ---
-> >  drivers/base/core.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/base/core.c b/drivers/base/core.c
-> > index 8fead097c404..ce367c44f642 100644
-> > --- a/drivers/base/core.c
-> > +++ b/drivers/base/core.c
-> > @@ -1494,7 +1494,8 @@ static void __device_links_no_driver(struct devic=
-e *dev)
-> >                 if (link->supplier->links.status =3D=3D DL_DEV_DRIVER_B=
-OUND) {
-> >                         WRITE_ONCE(link->status, DL_STATE_AVAILABLE);
-> >                 } else {
-> > -                       WARN_ON(!(link->flags & DL_FLAG_SYNC_STATE_ONLY=
-));
-> > +                       WARN_ON(link->supplier->links.status !=3D DL_DE=
-V_UNBINDING &&
-> > +                               !(link->flags & DL_FLAG_SYNC_STATE_ONLY=
-));
-> >                         WRITE_ONCE(link->status, DL_STATE_DORMANT);
-> >                 }
-> >         }
-> > --
-> > 2.49.0
-> >
+Assuming my above request is accepted,
+
+Reviewed-by: SeongJae Park <sj@kernel.org>
+
+> ---
+>  mm/damon/core.c | 40 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+> 
+> diff --git a/mm/damon/core.c b/mm/damon/core.c
+> index a4c3cfe531df..0565aae8d1fa 100644
+> --- a/mm/damon/core.c
+> +++ b/mm/damon/core.c
+> @@ -943,6 +943,41 @@ static void damos_set_filters_default_reject(struct damos *s)
+>  		damos_filters_default_reject(&s->ops_filters);
+>  }
+>  
+> +static int damos_commit_dests(struct damos *dst, struct damos *src)
+> +{
+> +	struct damos_migrate_dests *dst_dests, *src_dests;
+> +
+> +	dst_dests = &dst->migrate_dests;
+> +	src_dests = &src->migrate_dests;
+> +
+> +	if (dst_dests->nr_dests != src_dests->nr_dests) {
+> +		kfree(dst_dests->node_id_arr);
+> +		kfree(dst_dests->weight_arr);
+> +
+> +		dst_dests->node_id_arr = kmalloc_array(src_dests->nr_dests,
+> +			sizeof(*dst_dests->node_id_arr), GFP_KERNEL);
+> +		if (!dst_dests->node_id_arr) {
+> +			dst_dests->weight_arr = NULL;
+> +			return -ENOMEM;
+> +		}
+> +
+> +		dst_dests->weight_arr = kmalloc_array(src_dests->nr_dests,
+> +			sizeof(*dst_dests->weight_arr), GFP_KERNEL);
+> +		if (!dst_dests->weight_arr) {
+> +			/* ->node_id_arr will be freed by scheme destruction */
+> +			return -ENOMEM;
+> +		}
+> +	}
+> +
+> +	dst_dests->nr_dests = src_dests->nr_dests;
+> +	for (int i = 0; i < src_dests->nr_dests; i++) {
+> +		dst_dests->node_id_arr[i] = src_dests->node_id_arr[i];
+> +		dst_dests->weight_arr[i] = src_dests->weight_arr[i];
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int damos_commit_filters(struct damos *dst, struct damos *src)
+>  {
+>  	int err;
+> @@ -983,6 +1018,11 @@ static int damos_commit(struct damos *dst, struct damos *src)
+>  
+>  	dst->wmarks = src->wmarks;
+>  
+> +	dst->target_nid = src->target_nid;
+> +	err = damos_commit_dests(dst, src);
+> +	if (err)
+> +		return err;
+> +
+
+As mentioned above, let's split and post this part as another individual patch.
+
+>  	err = damos_commit_filters(dst, src);
+>  	return err;
+>  }
+> -- 
+> 2.43.5
+
+
+Thanks,
+SJ
