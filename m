@@ -1,257 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 008682248A4;
-	Wed,  2 Jul 2025 23:40:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751499655; cv=fail; b=ICOUIw1ffjHW9Kei/ZcsVQtxzNOSx3dYUVVG6k5ZQ3DgJavBJUsLOCH22Ra+BfuVM7Bl3vcwfkM6t17cQq2R0L6bsFSE/v+648u8RDLWVgC97xow1NlfU3FvQPiMszFvK8YqWFoXDt6201oa2YhDnGE9MJclJFaO/yQ98BvS6J0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751499655; c=relaxed/simple;
-	bh=03GXylvCWnGn4ojGx+jfvNeALQtdJ59T5UCraQvzGUU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=i2y64nuJoyhuRJh8hoyEwyT32KTfmqI3CyTigWTvjNYYACeYQKfVa5hqC6rdHt+x0d0aHs/OKZRmhobTjcVzRF9ViHKZfvevM/sxMFZETIjMwK+w2gtbWAXmR0RMfx+2/ZdMUhineg9wYBZq0sfFERgJhyWSoYetoUTYEShe3Ec=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q89lAC86; arc=fail smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4BEC246335
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 23:42:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751499753; cv=none; b=d1mKDF5kVPFdtR/Bts1bV2/MOp9sa1P0MST5XOibLL0gIGffktQ7k1k3MmPwMBjzUE5VcTwKfPzQsCDJIXeL9P1lQVs/io38Qrl1pJTL4XY1dJyJdDzS81QpzZXrabr5wVdRrRinIxOXPnmeDnhxzGWiaWC7/WKRp7F/Eb0wLuo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751499753; c=relaxed/simple;
+	bh=jmzUUBjsU5AyPvp94lR4mNCcHNkoZYmCp2eYxl1XYZ0=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=jwZC7glbivdBK6Hzp3gCGsKYRk7HvYgwzmhrYqb0WqI5NjObkSxKiDeH7kXGDhJ0EB8QGoHUD1zATnOtj1m3H4i7wa0gkDhMQ8KYmJNduPEEStVl0kTYeuURzhTjaZ3Rt2pKHnW5BAQG0j24B6vJsiz590+8q6FH9HPJ1iKNvXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=bfA/fko+; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q89lAC86"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751499654; x=1783035654;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=03GXylvCWnGn4ojGx+jfvNeALQtdJ59T5UCraQvzGUU=;
-  b=Q89lAC86JFW7Asu3z8TnKlHrRFxoEwZcbLwm2IhvMDN3RQDq8tHDuFJQ
-   u261Q5wkzZISfESc+8E87mXVsK17lJ0/hWuDca9iKy/htjhuPDfXSTnzF
-   kIJoYGs6YrfDn4eg+nADsjGUnpbrguj8pPJ92OoypBsFib3foEylkt7G9
-   YqMDYZ5SpDNnN/aVBbrHiM4cIaH4U9xqb9ueHRK4639/lsDVzXyx0kXwu
-   s5pQ8Yu6CUd78ol4YOLsD8YKi9Y1LOT7YZLNpuNupnVGJud6Y83nhP/Gu
-   XEyH0a3RCosf3LYAgItunAGiDhEv6wd1DYE0YxTmlMVAIfPKzc50ILkT7
-   w==;
-X-CSE-ConnectionGUID: myyCKXM7Rd6uc/NXQvx8xw==
-X-CSE-MsgGUID: xTPJ5ZB0QqKCfMZJibhcpg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="52930108"
-X-IronPort-AV: E=Sophos;i="6.16,282,1744095600"; 
-   d="scan'208";a="52930108"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 16:40:53 -0700
-X-CSE-ConnectionGUID: WBJgDGWJQ0CqNfknKZcCKw==
-X-CSE-MsgGUID: j/5IjZI+RZKU8WvQSVLZcw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,282,1744095600"; 
-   d="scan'208";a="154959602"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 16:40:53 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 2 Jul 2025 16:40:52 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Wed, 2 Jul 2025 16:40:52 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (40.107.223.82)
- by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 2 Jul 2025 16:40:51 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kRYRpJXT5KHpVx03r5CMiPxGaiZLgNowhKjFzMCJMScMsr4cqw/cuzblryVWEjoM9mbGz1Mng5MMogvESXaO0mBOrEQv6hjMjDqR4hcsmDs44SrcRGfeJ+utm7ih+VfUmyRYCSbHpY6T8slq9lGuXLNSKrsIoc7Oo6QISNcLyVi1/jMGRBxiD+JEbQNdKBbW+GLj2alEIg8WS0LUQRrD4WKJ46inQhMIoVj1g6GtSH/0A4RM22dpJTMHKRV7iKdEwYhZRH/aCyKbx61egb9QeF10fgwtpUas2eywozqgWuu/jgAx+yHng4/KywHhZ8FQNUS+/3oGPs5ACOWJViOElw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RU7MudlnJvTgGcrCapP/CRc4O0DLKiiBU6EFk5Ub+wo=;
- b=FTrzY5q4uyzJ4TFHVYbWXQBiWvdDgITuwtEgi94TJCZPDxwElUWY5sbUqlh/x1aM6yPbpiIGN3w9Y+//+e1nfBLagtcKRB9cszt9ncMv96FceAhxaeZ8EgGG9tUGTkbUTWOUkE3lDtzpi6qFRNwJYNfF+F6MzvKlNMSudSWICn+WQTmDJYs+z3h3JHkSXvzmReBxtSNanUoarfGUZfCZnKrzvMNBDg/9OSYN1H3cHmpkEVmRDP1lGS5ByLK+8V6tsfVip8JZXYaQLi74J65PuoA90do5MarcyWwHAkFNw3eTo1qrtnkF8ApGjwsCFcYQyE6ySfkkj7ucSFSGCTKjxQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by DS7PR11MB6245.namprd11.prod.outlook.com (2603:10b6:8:9a::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.32; Wed, 2 Jul
- 2025 23:39:34 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::8254:d7be:8a06:6efb]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::8254:d7be:8a06:6efb%7]) with mapi id 15.20.8769.022; Wed, 2 Jul 2025
- 23:39:34 +0000
-Date: Wed, 2 Jul 2025 16:39:29 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Dan Williams <dan.j.williams@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Dave Jiang
-	<dave.jiang@intel.com>, David Lechner <dlechner@baylibre.com>, "Davidlohr
- Bueso" <dave@stgolabs.net>, "Fabio M. De Francesco"
-	<fabio.maria.de.francesco@linux.intel.com>, "Fabio M . De Francesco"
-	<fabio.m.de.francesco@linux.intel.com>, Ingo Molnar <mingo@kernel.org>, "Ira
- Weiny" <ira.weiny@intel.com>, Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra
-	<peterz@infradead.org>, Shiju Jose <shiju.jose@huawei.com>, Vishal Verma
-	<vishal.l.verma@intel.com>
-Subject: Re: [PATCH v2 0/8] cleanup: Introduce ACQUIRE(), a guard() for
- conditional locks
-Message-ID: <aGXDMZB6omShJpoj@aschofie-mobl2.lan>
-References: <20250619050416.782871-1-dan.j.williams@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250619050416.782871-1-dan.j.williams@intel.com>
-X-ClientProxiedBy: SJ0PR03CA0107.namprd03.prod.outlook.com
- (2603:10b6:a03:333::22) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="bfA/fko+"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4537edf2c3cso73485825e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 16:42:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=citrix.com; s=google; t=1751499750; x=1752104550; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:subject:references:cc:to:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=jmzUUBjsU5AyPvp94lR4mNCcHNkoZYmCp2eYxl1XYZ0=;
+        b=bfA/fko+VFAMwPzzQl34AiZR/905KKKuXeEcZqjuynx9SQV3gCPBokVmvybWAPrIa3
+         ZFreT4sIw4xbwrMVgwM4qq2StiixPTmqQSruN1quhlepax0l9asodW2nJg2DFfRr020h
+         G2HZFDT0Br53opYPAtqNByDenpdJi8yi67Kpw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751499750; x=1752104550;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:subject:references:cc:to:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jmzUUBjsU5AyPvp94lR4mNCcHNkoZYmCp2eYxl1XYZ0=;
+        b=cbBdR3ICbUfaCXA8PUqxD5H7ZjWOp6joGfMKQ+/krf+mtl3SxQIhIiMurIYadMHluU
+         xWk8UhgBSrGckFNK9rXv3KbDayGoNLBgKeLlRvMMp8x2PzjSfbtu2v8xm7kZSZ6aJpfu
+         xGuTMCEsH7sVr3uqP0+i03NzQ0eDhx6d2MAUnmWzzWtF/y+C1pPVscGewi5EvJdOMajl
+         upvD064bK8sC7VRFmtFOiB7zZEpc9v45Z6SHzIOD5M8VJeGYg8kmgRg/SZB0UfTZFYCm
+         OhtXkkQ3W9TPXX4qzlNYB7qAiJrfSGDz97k8wDBmaFLf3k4jU2JXD17w27jlsWoScUj1
+         zxrw==
+X-Forwarded-Encrypted: i=1; AJvYcCWZkLs3hJ+69d+/GUegH6PMqf6VDWFe8tH3kpE0HYvCXzgdLrEAZrSQAc513JVVdI+bH4jUtHFk0a22oq0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4+T9FMH1Udiy7JrKXuRgsFDJjdiSD8baX3bOyNDKOqULdTx/+
+	T4j2NcYSBN7Nh8xLecsNEYE4yoaurA2xfDZn9iNhH3LNlk5SMbO04B4hf8ZGqZJlxS0=
+X-Gm-Gg: ASbGncuRtcgcUxk32JrdqbfP7se0bc0LgIGHjvRtbi8Ks0iqiSvaWLIFESOjwbxvfkt
+	VTs+EP+A33yM/J48Pdgsc93XGT20M/QzhV9LBYQkB+vWgDSyM3gV57tdvjBHliqWJrBro/N8kPi
+	8Kk1kNvlwyMn3UWQoqVZDs5XvLvywUpFJw4+UQrCdoCHLXMhW6W3uO0fnO67UPMz0co6KF79ZNG
+	PnrlGkf+fFjb9Qw4HH8MKsvDbTvqWBGS5j/5itDYzp7ZmmGuATo5zxwNLrmt6twwyc+EPph9e/t
+	5NmNzXX1LsmAUQjBLP3y2fV4dyGEMs0GfQQwjb5kcJ8N2tH6KqNzEN6kgnLyARCoo4DETKd7zWT
+	o6xHVwXome+MuQfe2Zl/8T4iH3aE=
+X-Google-Smtp-Source: AGHT+IGeCkAGfhe6E529Edv+z8LxXw+ebOxsR4mZdYkZXix8QuKi+zHwvXZzZmFAB06yOq69Z9iXtA==
+X-Received: by 2002:a05:600c:3ba6:b0:442:f98e:f37 with SMTP id 5b1f17b1804b1-454a4e75639mr37321335e9.21.1751499749858;
+        Wed, 02 Jul 2025 16:42:29 -0700 (PDT)
+Received: from [192.168.1.183] (host-92-26-98-202.as13285.net. [92.26.98.202])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a999d399sm10529085e9.25.2025.07.02.16.42.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Jul 2025 16:42:29 -0700 (PDT)
+Message-ID: <4dcd23cb-eb55-42e7-aa76-dbaf2e2a7e07@citrix.com>
+Date: Thu, 3 Jul 2025 00:42:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|DS7PR11MB6245:EE_
-X-MS-Office365-Filtering-Correlation-Id: b41be93a-a702-4b49-c30f-08ddb9c1b302
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?9Wq7vBTw/05OV6fmllVXBs1eK7DepzG2tyYaKYzKxl5Dgw9Al6TXmcyfv3iF?=
- =?us-ascii?Q?cxHHxBCiXYpPfg0vzcXjUAXsmO2qH0M4zPblMyY28fJUmnIxY2sCxPmlCLcr?=
- =?us-ascii?Q?SrNU3+F96f8zh8nduyDRNWr6bd8FSiJ7xqf1HwSaGye6RM7rxkOWyTq24sPU?=
- =?us-ascii?Q?BI8yjBJZfDUBrOrQZiiZL3AkCqhtiq12xiuJyhfJa9JbTX9TnrWLXtGiLz1p?=
- =?us-ascii?Q?LNwVjDruj1RHwCFeqIfzAco9ZcCYgf0I3JZgOsnin8ZDTA731O0klobVNN+L?=
- =?us-ascii?Q?LbDalTOHWeS+KGrcTrkfwba30hP6b0MQrWnaXvJf6/8cuPduuIQauvreLhK3?=
- =?us-ascii?Q?Bw8YhK5yddI4KMy0fyAfchKDsaT75RRWy3uGoUBmIWBH1t4TriYdZL9IWXuI?=
- =?us-ascii?Q?8w4sjzXG+dlVr4KC1B7m5A/fT5IzMgyMBUFolHN8PCFMm/WJxTYqcxwhyMzX?=
- =?us-ascii?Q?Bgxs4NVV1RM0NFD/uqUS+ZM+n0XtlmYvYmh6kVcneIMvhGYSvBEVwuqqkRxw?=
- =?us-ascii?Q?lMUr4zRcIj3nW6xu4KxXYgWyPz5I0VwVALfccSefDRRXywtJD9h3TnipaHfK?=
- =?us-ascii?Q?INexhC8/ilPEW+2AO7BGeFgcTaLDGi5+AIN9Ss4tGoyBpg+gvXtESBEteiaP?=
- =?us-ascii?Q?iEQtiWO6eIlYht67PI31iuLzECXI8mNvOd8XkA7M2ZPWzG9af5SihS56LeVY?=
- =?us-ascii?Q?eTwIDhLw1TRrvkxFZqiksbvWM0nCMJNk3tYsCrlEJnpVcqVKJjxAlwSvEr/R?=
- =?us-ascii?Q?DXfrwHpcTH/aK+mJB9xtazIHLwptpgIzFq0/J6DVSNdwYdAGWpBcT+pDCwkX?=
- =?us-ascii?Q?o4Gmwz0su7e1Te+45vwFTslzUoCiuaC4iHXi1RNK6/wrqG1pVaH9C8p5Ec3L?=
- =?us-ascii?Q?kxLLoiNUWXGF0DniVMljIWM64hUA7px2vK2uL/TcfaC0REId6pBluwY+tSE6?=
- =?us-ascii?Q?Navu/JFi1GL2kxa4m7/ZoAZuUOAiyVjEqgyIrUqTezz6zbPFVQMkD98Fc7pY?=
- =?us-ascii?Q?rVD/e9YYYIrZlR8gWEtVzLjh8LGDBHirynBjbDdH1P0CsbQd/x1jdUMZEVnu?=
- =?us-ascii?Q?cHzcjcVAdLCXOJBHHhNiJC+kHJkKOzR6bePOJQM9LEFyMjSjVBolgHGW8jT1?=
- =?us-ascii?Q?/lZw96zyMzGPbhRngqYlblA8ORBqiVQcMXVOAe8tkn4mhwRhWZC6Tk5KA5oY?=
- =?us-ascii?Q?JOWy9WsTkG6Arlf3DzsrtLtehfZIsQttmyiO1btGItttePRiwk3GBs3vekOc?=
- =?us-ascii?Q?jRiD+QF7r0UFz3Z/zS2v9sd1cSAlwvJOm9EgzrIr5Y7atZMSeSiHt6KhTy5z?=
- =?us-ascii?Q?xUv3R9GAgbd9O/mdAwyrzCrKJdvaYdKR8fVYjvtgjalxiYticlzYcbsA6eaD?=
- =?us-ascii?Q?oVqutUmAedGJk7uaFQlnYfbil77PIKMdk7a4TDLvKksWQIBtSs1yL8oLldx1?=
- =?us-ascii?Q?eXcLu6jJ1rE=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?6vAlh9QQeRoYIpqpjpRfogaWiiF6CXa846xWfQiA12WDa8F35EzE8egvRlan?=
- =?us-ascii?Q?vaX4Phh6hl8ALxHchehrESlkF7NINlXdvt4qRJrcI41O4Xa5DW3gHoMQ3bdF?=
- =?us-ascii?Q?B5QC4TiXSiJ0rft0BrGSJxns5jF3OEbaqIHycL1yIttnINxOUqRzfNDQSeaR?=
- =?us-ascii?Q?ioAOIgaDd6MeQAg/DRRiCvSuqcEiUqXk39VpXNOmnAEM1EGwleXr2YTue7xz?=
- =?us-ascii?Q?dfuc16y3HFZkZDFpAX9Xn/tYknSy5VE+THVDl6RISLd/L/hU43BFWyI1Wai/?=
- =?us-ascii?Q?b/PsL33RDtgJYQOzVEyDwKElINRYLvxYtsGUsbuR5VOpeOwQTy5U4u9rwyE+?=
- =?us-ascii?Q?8Z/7TMiCdcHYScbX4Zgm0QRTwABRmhFy34cvjW35mu/j6aQ+sCY46Sjy54ap?=
- =?us-ascii?Q?lao+LJie5prN7kCoMNCFcA9vC9hd+qLVj8gqQSEPbzxwgz5t3JFZEiNe46m2?=
- =?us-ascii?Q?F5Htu2aaUFYopUTp8M9KZxtDn6S+Vn1ClWlm9Ksg/kfvebpCjhlinZBematj?=
- =?us-ascii?Q?14qr21WxeYrXkVGSqbcF+colgZIVMIYWvv1+SKhtToZZnc7/cMTWD2+FltcQ?=
- =?us-ascii?Q?UYtQaGHzf/pg/YgYzRPx5g2F6grVz2cVKEWM8dYrKmWd9M94WJgVF6gdNlpg?=
- =?us-ascii?Q?PSIGQVzA4r05sHzvsrClx0BEsYiojtjSI5Jtk/5wfwfghS1d0/6VjV+sI0jp?=
- =?us-ascii?Q?ivIjEa3t6R58d9kucf6y1MEhtr4DmzU9HNlY+WEMZqzbWKYHgMj+SP5R3Hh/?=
- =?us-ascii?Q?EvsfWpNW5nKv9+kI6tluJaqZa4N1MB0BpAZn1AaRi4PA7ucAjzIETBGsembf?=
- =?us-ascii?Q?NjWhC1K9v10ZdDasSh0fD4YQ0lIxWyaoNMWLR7Di8GDH3VmETDKFseziw6/Q?=
- =?us-ascii?Q?/Sol3u/7O24C0uLYyqpPBqZzRwyz8MtByGSBh5MwbwfdqhPHvyToMxHy4fzI?=
- =?us-ascii?Q?76TZsSfTYQcORaMjy7g4to8nTuQmtKt2brRXJip+BcIzF+R6k/HBvccR7A/m?=
- =?us-ascii?Q?/illxkeCGMSTTfNB8IuW/fSLvMXH8iI2OWwToCxL/Qzdl5I5O4ot2N2Ygg9I?=
- =?us-ascii?Q?eqrKvGrIwxiSNgX2VjVSyGSrzgPIIPu1AZvbK1Z3pQWPcTBlj3Sitc8Wyy3K?=
- =?us-ascii?Q?VPfCWmYexz1028tangg8/2g01gsUNMAqVBmjuwK0g2VRgD7Ztc450DRSzhbK?=
- =?us-ascii?Q?Ha3nEbrL1RcbpwTal78i+g/HBkStZHn0NWIplEKrhIyi5BMHc4IvLEGpHLF8?=
- =?us-ascii?Q?mmcGJ8+Czd9KwIRkJFl7tbcu/dgOkec8brYcZ6kMivhuC6CKpfa5KeHl/+UE?=
- =?us-ascii?Q?usbf4NL50wfUpPVlypPJCTnUZBHXz6VSHsr4ODaKyNx8/edpb5Yw32oTIEkN?=
- =?us-ascii?Q?Gqsgned01E5OIp0JJbuY7dnHFmO/jSlZDUOekineo/Rd8b6TDz7FQak5APLF?=
- =?us-ascii?Q?znokf0Rr0aFdieyP57JCU2sVXuwMzOA5eV0Tpg2n27E8UewsmkjxyBo1DrnG?=
- =?us-ascii?Q?CozGj68ZtFbuyGmLpcM5h29WktmS0OI98oumxcOPETFDO9j2jPHdr79YYU96?=
- =?us-ascii?Q?GQIyXte//0sftSTDp+Plj0vUP+lcGTx0+PrSGb09TTU8BK+aOfJVEhsnqaXW?=
- =?us-ascii?Q?Kw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: b41be93a-a702-4b49-c30f-08ddb9c1b302
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 23:39:34.2556
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5uYFJhnCvdwZq5f4rDueJ68+NuW4arrskCHK5aMJFFXeHuNO4EqGT1Yhm0SZDdC9G6o180c8jHvVz5Os9nSIQW2q1LM7KeZ438XHYBXrvkA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB6245
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+To: hpa@zytor.com
+Cc: acme@redhat.com, aik@amd.com, akpm@linux-foundation.org,
+ alexander.shishkin@linux.intel.com, ardb@kernel.org, ast@kernel.org,
+ bp@alien8.de, brijesh.singh@amd.com, changbin.du@huawei.com,
+ christophe.leroy@csgroup.eu, corbet@lwn.net, daniel.sneddon@linux.intel.com,
+ dave.hansen@linux.intel.com, ebiggers@google.com, geert+renesas@glider.be,
+ houtao1@huawei.com, jgg@ziepe.ca, jgross@suse.com, jpoimboe@kernel.org,
+ kai.huang@intel.com, kees@kernel.org, kirill.shutemov@linux.intel.com,
+ leitao@debian.org, linux-doc@vger.kernel.org, linux-efi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux@rasmusvillemoes.dk,
+ luto@kernel.org, mcgrof@kernel.org, mhiramat@kernel.org,
+ michael.roth@amd.com, mingo@kernel.org, mingo@redhat.com,
+ namhyung@kernel.org, paulmck@kernel.org, pawan.kumar.gupta@linux.intel.com,
+ peterz@infradead.org, rick.p.edgecombe@intel.com, rppt@kernel.org,
+ sandipan.das@amd.com, shijie@os.amperecomputing.com, sohil.mehta@intel.com,
+ tglx@linutronix.de, tj@kernel.org, tony.luck@intel.com,
+ vegard.nossum@oracle.com, x86@kernel.org, xin3.li@intel.com,
+ xiongwei.song@windriver.com, ytcoode@gmail.com
+References: <4DE45AFD-C1E0-4FB8-BE01-44A72C5C6E1E@zytor.com>
+Subject: Re: [PATCHv8 14/17] x86/traps: Handle LASS thrown #SS
+Content-Language: en-GB
+From: Andrew Cooper <andrew.cooper3@citrix.com>
+Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
+ 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
+ 6+ahAA==
+In-Reply-To: <4DE45AFD-C1E0-4FB8-BE01-44A72C5C6E1E@zytor.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 18, 2025 at 10:04:08PM -0700, Dan Williams wrote:
-> Changes since v1: [1]
-> * Peter took one look at v1 and rewrote it into something significantly
->   better. Unlike my attempt that required suffering a new parallel
->   universe of lock guards, the rewrite reuses existing lock guards.
->   ACQUIRE() can be used any place guard() can be used, and adds
->   ACQUIRE_ERR() to pass the result of conditional locks.
-> 
-> [1]: http://lore.kernel.org/20250507072145.3614298-1-dan.j.williams@intel.com
-> 
-> Note, all the code in patch1 is Peter's I just wrapped it in a changelog
-> and added some commentary. Peter, forgive me if you were still in the
-> process of circling back to this topic. I marked the patch attributed to
-> you as: "Not-yet-signed-off-by". Otherwise, my motivation for going
-> ahead with a formal submission are the multiple patchsets in my review /
-> development queue where I would like to use ACQUIRE().
-> 
-> The orginal motivation of v1 for this work is that the CXL subsystem
-> adopted scope-based helpers and achieved some decent cleanups. However,
-> that work stalled with conditional locks. It stalled due to the pain
-> points of scoped_cond_guard() detailed in patch1.
-> 
-> This work also allows for replacing open-coded equivalents like
-> rwsem_read_intr_acquire() that went upstream in v6.16:
-> 
->     0c6e6f1357cb cxl/edac: Add CXL memory device patrol scrub control feature
-> 
-> The open question from the discussion [2] was whether it was worth
-> defining a __GUARD_IS_ERR() asm helper. I left that alone.
-> 
-> Lastly, this version of ACQUIRE_ERR() matches Peter's original proposal
-> to have the caller pass the lock scope variable by reference [3]. My
-> change of heart came from looking at the conversion and wanting
-> ACQUIRE_ERR() to be more visually distinct from ACQUIRE() especially
-> because it is accessing lock condition metadata, not the lock itself.
-> 
-> E.g.
-> 
->        ACQUIRE(rwsem_read_intr, rwsem)(&cxl_rwsem.region);
->        if ((ret = ACQUIRE_ERR(rwsem_read_intr, &rwsem)))
->                return ret;
-> 
-> Yes, checkpatch disagrees with assignment in if(), but cleanup.h already
-> demands other expections for historical style, and a compact / limited
-> idiom for ACQUIRE_ERR() feels reasonable.
+> Note: for a FRED system, ERETU can generate #SS for a non-canonical user space RSP
 
-Hi Dan,
+How?  Or to phrase it differently, I hope not.
 
-I've been building upon this set and applying this diff to squelch
-those checkpatch ERRORs. Please take a look and consider adding for
-review in next version.
+%rsp is a 64bit value and does not have canonical restrictions elsewhere
+in the architecture, so far as I'm aware.  IRET really can restore a
+non-canonical %rsp, and userspace can run for an indeterminate period of
+time with a non-canonical %rsp as long as there are no stack accesses.
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 664f7b7a622c..193a03fa7114 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -5682,7 +5682,14 @@ sub process {
- 			my ($s, $c) = ($stat, $cond);
- 			my $fixed_assign_in_if = 0;
- 
--			if ($c =~ /\bif\s*\(.*[^<>!=]=[^=].*/s) {
-+			if ($c =~ /\bif\s*\((.*[^<>!=]=[^=].*)\)/s) {
-+				my $expr = $1;
-+
-+				# Allow ACQUIRE_ERR() special case
-+				if ($expr =~ /\w+\s*=\s*ACQUIRE_ERR\s*\(/) {
-+					next;
-+				}
-+
- 				if (ERROR("ASSIGN_IN_IF",
- 					  "do not use assignment in if condition\n" . $herecurr) &&
- 				    $fix && $perl_version_ok) {
+Accesses relative to the the stack using a non-canonical pointer will
+suffer #SS, but ERETU doesn't modify the userspace stack AFAICT.  I
+can't see anything in the ERETU pseudocode in the FRED spec that
+mentions a canonical check or memory access using %rsp.
 
-
-
-snip
-
+~Andrew
