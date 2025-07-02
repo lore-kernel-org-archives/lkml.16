@@ -1,159 +1,269 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD2C265CB0
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 12:03:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38A2A25CC78
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 12:03:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751457782; cv=none; b=IdfssSCRTBRUuUOWfvx2xFY45UzjX5l1Vpm4gSsOjl6YWR+cbvfQ/Y+RF1WrvXUe7/aaAaSQ46SFCoTi9iLSmNdhcyPCMKa0MwjxFyxKQzx2yG6R30Vnqqsdf1meVUt3rDzrTE3RJO7iv7uCzw9Koijd5p3iunwyvMRu12rY5DY=
+	t=1751457808; cv=none; b=ToR0DK3FwOIsCHzyGUvH6+LWbUzUNcMmtQ4PZuSEmZb0pGYIRA0fM/Zei9v1Ya23UdsrIGJG1st7PqetuLvVZ6aceijvsQ7amF/I3ZrPs2EnT7FRt+/0Fw+3sGcojsgUM3BDeq6YBqTqEtcdmBwa/Oo6+5/6l5q9EJjdn6YxoTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751457782; c=relaxed/simple;
-	bh=9OBjOWdofz0ubYLc035JjloaZp9RG4Jzt2NgjvAujAc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DK0H+2h+mf72IOVcaWk2VgqxtkjDAZD34/QdrbWgEEV8DNoKbijZUIeCkxSPpfrQMVqi5+EvKnVWj5S3ryC+Y5yr1ToFqtWlDrOvIIlj4THc9brOq1Vq82uoRitqIC9RXMqKvr9PwVg6L2ic8yEA0vgtbmJyvx+bi2bfAFpwWqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=yl5MV7Y7; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
+	s=arc-20240116; t=1751457808; c=relaxed/simple;
+	bh=WmY+JUfUvwROD+mbFZAOWnPgdjyfSc8zKpixiZNeoBo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OUOPuysedM3gaBNTasqy3OO9eg24X7Y1EFIs6067Kv0WwFka/uCWs8+z6lMXofsMv+gd1/icXKpb5fHO6SEV9CGiVn8bTsINIoPhGZ23fhqIp2BS6wc8pkI3G7e3i+qp3EPDqAA5Kn3+/af8Xh8ezVUUvcV2Mo1cTOdEerqkqug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qmMlghfh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="yl5MV7Y7"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a57ae5cb17so2894446f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 05:03:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1751457779; x=1752062579; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=37vsbM8Nn6JfDGmwzaOKscFK8qNZkRywZ4E54Ix7WTA=;
-        b=yl5MV7Y75g8RwQo3uwNIiSSc58yfgNr/yG5t1p+CyRDULwUTPBRynq1Dh7xwuSoCqe
-         fo6YXCIAKASvDZcmPiRgGKPrsyA00Rg1zsOcebpsTh+lBfUSx8e/U6G4xCv7gv+s9grH
-         8NkM/NqiUurppZlCDe/kxGXKu+xmWLW1z8KJ6hN48qPfLYWXZ+4oDti4VpQl4KqRk8AE
-         dSuRuKWTrCGedTAFvYvQjOPFQ3ZgpBFXS1jBwrgPM5O5xMLfjcwWYQJ6lnxXv0QZ+cNr
-         xI3AdU9P1svaHlKKIAVTw5l671i7jcaBOU0FhXQ6f/0kycmjqA0pG2eGf/Z9GS53Q0ME
-         tSUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751457779; x=1752062579;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=37vsbM8Nn6JfDGmwzaOKscFK8qNZkRywZ4E54Ix7WTA=;
-        b=J8OYchHO/wpsp1qbLg7JI3Z7iuC5ry+OZI1SCb8aq2Z6S9sR7xECnTPbk+Vji79CPg
-         k1ocIGldxwQKUY6Ed5WoTLg1PLlgq3QBeFMF6L5AMvkc7Ht0agzQcBWD+Q/B1Nj9UaiE
-         oDzPCjAgiIYQQeWzHu1rf251wlfp9RwFuN/dPFuE/4z6D2R8lnHQDFfVokUXR84gtH5F
-         z9TUoTw9u3DqdKFucmzKlBetvRwgvzv9qgmNWe4i6lD11aJG7yeXWcqrOmmzlEtlnvck
-         M8QfO+uIZ4lM8MRCRNXQDlMdLjMTHjPvbK18edsw5Mg2wkJZvzddXqkL+0tintEmRbtO
-         +pHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXk+h5vjhUl+UDdrE5q54+PqLmZGZ0yT2fGbL+g2Davu8ydRbKhJUd5KsnoxeB4poQJ2qAWC5N8Qj17EYM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxiDCtLL70RpGjmFg7j3GoBlf17uh6DjSGSBdp2y175QFX8rJDP
-	hoI3h/aQTSxH0W3hmjeYs0JfMOptEesYbKG+yW3C2X40QKSsA717B0GsbNthdzmvlTM=
-X-Gm-Gg: ASbGncs+qYCVKfWM12wnNWg7oEtCXLaAWBMGukU2SMdf/eH3obQ+F1zIbAh/mfOZavH
-	9qfKujT4INyisydhVBIjZUPOeG2VE746LivFpSJp9b7JhSloVC/KNzdfl7yDfdkGHgmPE9NW43+
-	KHXH0y+Yuv3KOYTSYrALv6W5carGHtOuYDKeHz7OGW36Aty4a1QSGcyvwDCU24UFSrVEyhS+mmf
-	EoMjNvqAwJl5XBfIEG+pV5CWsUw4O/+KoMsiYnNZ/JhTYPsohKOESPzdrpbsMAhL2fDqfBCjMzJ
-	r8OaC8FH2VMAE01qxxraL7uD6z77l5aYtlZNI5+E2mA68KA8tjbPL7bO50P+rpaf+WBOujUMokU
-	7eN+W
-X-Google-Smtp-Source: AGHT+IHbVVQaW4FRowFBfmEzpyakEnrdf6FVBPSZnjLiOnlSiWUKwogash8HMSktSg7QFFh0mlJEXA==
-X-Received: by 2002:a05:6000:1aca:b0:3a5:2cb5:642f with SMTP id ffacd0b85a97d-3b2019b7e75mr1918089f8f.34.1751457778695;
-        Wed, 02 Jul 2025 05:02:58 -0700 (PDT)
-Received: from jiri-mlt ([193.47.165.251])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7fb20esm16164594f8f.36.2025.07.02.05.02.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 05:02:58 -0700 (PDT)
-Date: Wed, 2 Jul 2025 14:02:49 +0200
-From: Jiri Pirko <jiri@resnulli.us>
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: netdev@vger.kernel.org, 
-	Prathosh Satish <Prathosh.Satish@microchip.com>, Vadim Fedorenko <vadim.fedorenko@linux.dev>, 
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Shannon Nelson <shannon.nelson@amd.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, Michal Schmidt <mschmidt@redhat.com>, 
-	Petr Oros <poros@redhat.com>
-Subject: Re: [PATCH net-next v12 09/14] dpll: zl3073x: Register DPLL devices
- and pins
-Message-ID: <k2osi2mzfmudh7q3av5raxj33smbdjgnrmaqjx2evjaaloddb3@vublvfldqlnm>
-References: <20250629191049.64398-1-ivecera@redhat.com>
- <20250629191049.64398-10-ivecera@redhat.com>
- <ne36b7ky5cg2g3juejcah7bnvsajihncmpzag3vpjnb3gabz2m@xtxhpfhvfmwl>
- <1848e2f6-a0bb-48e6-9bfc-5ea6cbea2e5c@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qmMlghfh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92295C4CEED;
+	Wed,  2 Jul 2025 12:03:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751457807;
+	bh=WmY+JUfUvwROD+mbFZAOWnPgdjyfSc8zKpixiZNeoBo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=qmMlghfh1SwXMeQnNJYnpfbOFif/th/D4xB3rIY6OQqR0xizBxhWoX2kOJdVQo02n
+	 YObqjyBskpth6pk/sHxA/DqYydR0/toDYNaBNVJC0TgJo89wsBvdChVsVzaqNn0fF0
+	 vigHmXRllpTcnFfMpHAdFa9L7/ubllcbViRL14W4FPDBC2i3QcFf5VBi/eK0KQ8y+5
+	 5AL0QlyQWIdgACCODvbN8/0sAgruiz8RRXHBXzJVSqha1cAAuHBkR84szwDG7aJT4Z
+	 9HbMQEDLk/EJQzPh/th+4o4pT6yKda4Xl30b3tQPjPmLk4MmtrhyFyFs7Df7nPy+8x
+	 L3DUnqy4ZZdhg==
+From: Chao Yu <chao@kernel.org>
+To: jaegeuk@kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Chao Yu <chao@kernel.org>,
+	stable@kernel.org
+Subject: [PATCH] f2fs: fix to avoid UAF in f2fs_sync_inode_meta()
+Date: Wed,  2 Jul 2025 20:03:21 +0800
+Message-ID: <20250702120321.1080759-1-chao@kernel.org>
+X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1848e2f6-a0bb-48e6-9bfc-5ea6cbea2e5c@redhat.com>
+Content-Transfer-Encoding: 8bit
 
-Wed, Jul 02, 2025 at 01:49:22PM +0200, ivecera@redhat.com wrote:
->
->
->On 02. 07. 25 12:57 odp., Jiri Pirko wrote:
->> Sun, Jun 29, 2025 at 09:10:44PM +0200, ivecera@redhat.com wrote:
->> 
->> [...]
->> 
->> > +/**
->> > + * zl3073x_dpll_device_register - register DPLL device
->> > + * @zldpll: pointer to zl3073x_dpll structure
->> > + *
->> > + * Registers given DPLL device into DPLL sub-system.
->> > + *
->> > + * Return: 0 on success, <0 on error
->> > + */
->> > +static int
->> > +zl3073x_dpll_device_register(struct zl3073x_dpll *zldpll)
->> > +{
->> > +	struct zl3073x_dev *zldev = zldpll->dev;
->> > +	u8 dpll_mode_refsel;
->> > +	int rc;
->> > +
->> > +	/* Read DPLL mode and forcibly selected reference */
->> > +	rc = zl3073x_read_u8(zldev, ZL_REG_DPLL_MODE_REFSEL(zldpll->id),
->> > +			     &dpll_mode_refsel);
->> > +	if (rc)
->> > +		return rc;
->> > +
->> > +	/* Extract mode and selected input reference */
->> > +	zldpll->refsel_mode = FIELD_GET(ZL_DPLL_MODE_REFSEL_MODE,
->> > +					dpll_mode_refsel);
->> 
->> Who sets this?
->
->WDYM? refsel_mode register? If so this register is populated from
->configuration stored in flash inside the chip. And the configuration
->is prepared by vendor/OEM.
+syzbot reported an UAF issue as below: [1] [2]
 
-Okay. Any plan to implement on-fly change of this?
+[1] https://syzkaller.appspot.com/text?tag=CrashReport&x=16594c60580000
 
+==================================================================
+BUG: KASAN: use-after-free in __list_del_entry_valid+0xa6/0x130 lib/list_debug.c:62
+Read of size 8 at addr ffff888100567dc8 by task kworker/u4:0/8
 
->
->> > +	zldpll->forced_ref = FIELD_GET(ZL_DPLL_MODE_REFSEL_REF,
->> > +				       dpll_mode_refsel);
->> > +
->> > +	zldpll->dpll_dev = dpll_device_get(zldev->clock_id, zldpll->id,
->> > +					   THIS_MODULE);
->> > +	if (IS_ERR(zldpll->dpll_dev)) {
->> > +		rc = PTR_ERR(zldpll->dpll_dev);
->> > +		zldpll->dpll_dev = NULL;
->> > +
->> > +		return rc;
->> > +	}
->> > +
->> > +	rc = dpll_device_register(zldpll->dpll_dev,
->> > +				  zl3073x_prop_dpll_type_get(zldev, zldpll->id),
->> > +				  &zl3073x_dpll_device_ops, zldpll);
->> > +	if (rc) {
->> > +		dpll_device_put(zldpll->dpll_dev);
->> > +		zldpll->dpll_dev = NULL;
->> > +	}
->> > +
->> > +	return rc;
->> > +}
->> 
->> [...]
->> 
->
+CPU: 1 PID: 8 Comm: kworker/u4:0 Tainted: G        W          6.1.129-syzkaller-00017-g642656a36791 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Workqueue: writeback wb_workfn (flush-7:0)
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x151/0x1b7 lib/dump_stack.c:106
+ print_address_description mm/kasan/report.c:316 [inline]
+ print_report+0x158/0x4e0 mm/kasan/report.c:427
+ kasan_report+0x13c/0x170 mm/kasan/report.c:531
+ __asan_report_load8_noabort+0x14/0x20 mm/kasan/report_generic.c:351
+ __list_del_entry_valid+0xa6/0x130 lib/list_debug.c:62
+ __list_del_entry include/linux/list.h:134 [inline]
+ list_del_init include/linux/list.h:206 [inline]
+ f2fs_inode_synced+0x100/0x2e0 fs/f2fs/super.c:1553
+ f2fs_update_inode+0x72/0x1c40 fs/f2fs/inode.c:588
+ f2fs_update_inode_page+0x135/0x170 fs/f2fs/inode.c:706
+ f2fs_write_inode+0x416/0x790 fs/f2fs/inode.c:734
+ write_inode fs/fs-writeback.c:1460 [inline]
+ __writeback_single_inode+0x4cf/0xb80 fs/fs-writeback.c:1677
+ writeback_sb_inodes+0xb32/0x1910 fs/fs-writeback.c:1903
+ __writeback_inodes_wb+0x118/0x3f0 fs/fs-writeback.c:1974
+ wb_writeback+0x3da/0xa00 fs/fs-writeback.c:2081
+ wb_check_background_flush fs/fs-writeback.c:2151 [inline]
+ wb_do_writeback fs/fs-writeback.c:2239 [inline]
+ wb_workfn+0xbba/0x1030 fs/fs-writeback.c:2266
+ process_one_work+0x73d/0xcb0 kernel/workqueue.c:2299
+ worker_thread+0xa60/0x1260 kernel/workqueue.c:2446
+ kthread+0x26d/0x300 kernel/kthread.c:386
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:295
+ </TASK>
+
+Allocated by task 298:
+ kasan_save_stack mm/kasan/common.c:45 [inline]
+ kasan_set_track+0x4b/0x70 mm/kasan/common.c:52
+ kasan_save_alloc_info+0x1f/0x30 mm/kasan/generic.c:505
+ __kasan_slab_alloc+0x6c/0x80 mm/kasan/common.c:333
+ kasan_slab_alloc include/linux/kasan.h:202 [inline]
+ slab_post_alloc_hook+0x53/0x2c0 mm/slab.h:768
+ slab_alloc_node mm/slub.c:3421 [inline]
+ slab_alloc mm/slub.c:3431 [inline]
+ __kmem_cache_alloc_lru mm/slub.c:3438 [inline]
+ kmem_cache_alloc_lru+0x102/0x270 mm/slub.c:3454
+ alloc_inode_sb include/linux/fs.h:3255 [inline]
+ f2fs_alloc_inode+0x2d/0x350 fs/f2fs/super.c:1437
+ alloc_inode fs/inode.c:261 [inline]
+ iget_locked+0x18c/0x7e0 fs/inode.c:1373
+ f2fs_iget+0x55/0x4ca0 fs/f2fs/inode.c:486
+ f2fs_lookup+0x3c1/0xb50 fs/f2fs/namei.c:484
+ __lookup_slow+0x2b9/0x3e0 fs/namei.c:1689
+ lookup_slow+0x5a/0x80 fs/namei.c:1706
+ walk_component+0x2e7/0x410 fs/namei.c:1997
+ lookup_last fs/namei.c:2454 [inline]
+ path_lookupat+0x16d/0x450 fs/namei.c:2478
+ filename_lookup+0x251/0x600 fs/namei.c:2507
+ vfs_statx+0x107/0x4b0 fs/stat.c:229
+ vfs_fstatat fs/stat.c:267 [inline]
+ vfs_lstat include/linux/fs.h:3434 [inline]
+ __do_sys_newlstat fs/stat.c:423 [inline]
+ __se_sys_newlstat+0xda/0x7c0 fs/stat.c:417
+ __x64_sys_newlstat+0x5b/0x70 fs/stat.c:417
+ x64_sys_call+0x52/0x9a0 arch/x86/include/generated/asm/syscalls_64.h:7
+ do_syscall_x64 arch/x86/entry/common.c:51 [inline]
+ do_syscall_64+0x3b/0x80 arch/x86/entry/common.c:81
+ entry_SYSCALL_64_after_hwframe+0x68/0xd2
+
+Freed by task 0:
+ kasan_save_stack mm/kasan/common.c:45 [inline]
+ kasan_set_track+0x4b/0x70 mm/kasan/common.c:52
+ kasan_save_free_info+0x2b/0x40 mm/kasan/generic.c:516
+ ____kasan_slab_free+0x131/0x180 mm/kasan/common.c:241
+ __kasan_slab_free+0x11/0x20 mm/kasan/common.c:249
+ kasan_slab_free include/linux/kasan.h:178 [inline]
+ slab_free_hook mm/slub.c:1745 [inline]
+ slab_free_freelist_hook mm/slub.c:1771 [inline]
+ slab_free mm/slub.c:3686 [inline]
+ kmem_cache_free+0x291/0x560 mm/slub.c:3711
+ f2fs_free_inode+0x24/0x30 fs/f2fs/super.c:1584
+ i_callback+0x4b/0x70 fs/inode.c:250
+ rcu_do_batch+0x552/0xbe0 kernel/rcu/tree.c:2297
+ rcu_core+0x502/0xf40 kernel/rcu/tree.c:2557
+ rcu_core_si+0x9/0x10 kernel/rcu/tree.c:2574
+ handle_softirqs+0x1db/0x650 kernel/softirq.c:624
+ __do_softirq kernel/softirq.c:662 [inline]
+ invoke_softirq kernel/softirq.c:479 [inline]
+ __irq_exit_rcu+0x52/0xf0 kernel/softirq.c:711
+ irq_exit_rcu+0x9/0x10 kernel/softirq.c:723
+ instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1118 [inline]
+ sysvec_apic_timer_interrupt+0xa9/0xc0 arch/x86/kernel/apic/apic.c:1118
+ asm_sysvec_apic_timer_interrupt+0x1b/0x20 arch/x86/include/asm/idtentry.h:691
+
+Last potentially related work creation:
+ kasan_save_stack+0x3b/0x60 mm/kasan/common.c:45
+ __kasan_record_aux_stack+0xb4/0xc0 mm/kasan/generic.c:486
+ kasan_record_aux_stack_noalloc+0xb/0x10 mm/kasan/generic.c:496
+ __call_rcu_common kernel/rcu/tree.c:2807 [inline]
+ call_rcu+0xdc/0x10f0 kernel/rcu/tree.c:2926
+ destroy_inode fs/inode.c:316 [inline]
+ evict+0x87d/0x930 fs/inode.c:720
+ iput_final fs/inode.c:1834 [inline]
+ iput+0x616/0x690 fs/inode.c:1860
+ do_unlinkat+0x4e1/0x920 fs/namei.c:4396
+ __do_sys_unlink fs/namei.c:4437 [inline]
+ __se_sys_unlink fs/namei.c:4435 [inline]
+ __x64_sys_unlink+0x49/0x50 fs/namei.c:4435
+ x64_sys_call+0x289/0x9a0 arch/x86/include/generated/asm/syscalls_64.h:88
+ do_syscall_x64 arch/x86/entry/common.c:51 [inline]
+ do_syscall_64+0x3b/0x80 arch/x86/entry/common.c:81
+ entry_SYSCALL_64_after_hwframe+0x68/0xd2
+
+The buggy address belongs to the object at ffff888100567a10
+ which belongs to the cache f2fs_inode_cache of size 1360
+The buggy address is located 952 bytes inside of
+ 1360-byte region [ffff888100567a10, ffff888100567f60)
+
+The buggy address belongs to the physical page:
+page:ffffea0004015800 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x100560
+head:ffffea0004015800 order:3 compound_mapcount:0 compound_pincount:0
+flags: 0x4000000000010200(slab|head|zone=1)
+raw: 4000000000010200 0000000000000000 dead000000000122 ffff8881002c4d80
+raw: 0000000000000000 0000000080160016 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Reclaimable, gfp_mask 0xd2050(__GFP_IO|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC|__GFP_RECLAIMABLE), pid 298, tgid 298 (syz-executor330), ts 26489303743, free_ts 0
+ set_page_owner include/linux/page_owner.h:33 [inline]
+ post_alloc_hook+0x213/0x220 mm/page_alloc.c:2637
+ prep_new_page+0x1b/0x110 mm/page_alloc.c:2644
+ get_page_from_freelist+0x3a98/0x3b10 mm/page_alloc.c:4539
+ __alloc_pages+0x234/0x610 mm/page_alloc.c:5837
+ alloc_slab_page+0x6c/0xf0 include/linux/gfp.h:-1
+ allocate_slab mm/slub.c:1962 [inline]
+ new_slab+0x90/0x3e0 mm/slub.c:2015
+ ___slab_alloc+0x6f9/0xb80 mm/slub.c:3203
+ __slab_alloc+0x5d/0xa0 mm/slub.c:3302
+ slab_alloc_node mm/slub.c:3387 [inline]
+ slab_alloc mm/slub.c:3431 [inline]
+ __kmem_cache_alloc_lru mm/slub.c:3438 [inline]
+ kmem_cache_alloc_lru+0x149/0x270 mm/slub.c:3454
+ alloc_inode_sb include/linux/fs.h:3255 [inline]
+ f2fs_alloc_inode+0x2d/0x350 fs/f2fs/super.c:1437
+ alloc_inode fs/inode.c:261 [inline]
+ iget_locked+0x18c/0x7e0 fs/inode.c:1373
+ f2fs_iget+0x55/0x4ca0 fs/f2fs/inode.c:486
+ f2fs_fill_super+0x5360/0x6dc0 fs/f2fs/super.c:4488
+ mount_bdev+0x282/0x3b0 fs/super.c:1445
+ f2fs_mount+0x34/0x40 fs/f2fs/super.c:4743
+ legacy_get_tree+0xf1/0x190 fs/fs_context.c:632
+page_owner free stack trace missing
+
+Memory state around the buggy address:
+ ffff888100567c80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888100567d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff888100567d80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                              ^
+ ffff888100567e00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888100567e80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+[2] https://syzkaller.appspot.com/text?tag=CrashLog&x=13654c60580000
+
+[   24.675720][   T28] audit: type=1400 audit(1745327318.732:72): avc:  denied  { write } for  pid=298 comm="syz-executor399" name="/" dev="loop0" ino=3 scontext=root:sysadm_r:sysadm_t tcontext=system_u:object_r:unlabeled_t tclass=dir permissive=1
+[   24.705426][  T296] ------------[ cut here ]------------
+[   24.706608][   T28] audit: type=1400 audit(1745327318.732:73): avc:  denied  { remove_name } for  pid=298 comm="syz-executor399" name="file0" dev="loop0" ino=4 scontext=root:sysadm_r:sysadm_t tcontext=system_u:object_r:unlabeled_t tclass=dir permissive=1
+[   24.711550][  T296] WARNING: CPU: 0 PID: 296 at fs/f2fs/inode.c:847 f2fs_evict_inode+0x1262/0x1540
+[   24.734141][   T28] audit: type=1400 audit(1745327318.732:74): avc:  denied  { rename } for  pid=298 comm="syz-executor399" name="file0" dev="loop0" ino=4 scontext=root:sysadm_r:sysadm_t tcontext=system_u:object_r:unlabeled_t tclass=dir permissive=1
+[   24.742969][  T296] Modules linked in:
+[   24.765201][   T28] audit: type=1400 audit(1745327318.732:75): avc:  denied  { add_name } for  pid=298 comm="syz-executor399" name="bus" scontext=root:sysadm_r:sysadm_t tcontext=system_u:object_r:unlabeled_t tclass=dir permissive=1
+[   24.768847][  T296] CPU: 0 PID: 296 Comm: syz-executor399 Not tainted 6.1.129-syzkaller-00017-g642656a36791 #0
+[   24.799506][  T296] Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+[   24.809401][  T296] RIP: 0010:f2fs_evict_inode+0x1262/0x1540
+[   24.815018][  T296] Code: 34 70 4a ff eb 0d e8 2d 70 4a ff 4d 89 e5 4c 8b 64 24 18 48 8b 5c 24 28 4c 89 e7 e8 78 38 03 00 e9 84 fc ff ff e8 0e 70 4a ff <0f> 0b 4c 89 f7 be 08 00 00 00 e8 7f 21 92 ff f0 41 80 0e 04 e9 61
+[   24.834584][  T296] RSP: 0018:ffffc90000db7a40 EFLAGS: 00010293
+[   24.840465][  T296] RAX: ffffffff822aca42 RBX: 0000000000000002 RCX: ffff888110948000
+[   24.848291][  T296] RDX: 0000000000000000 RSI: 0000000000000002 RDI: 0000000000000000
+[   24.856064][  T296] RBP: ffffc90000db7bb0 R08: ffffffff822ac6a8 R09: ffffed10200b005d
+[   24.864073][  T296] R10: 0000000000000000 R11: dffffc0000000001 R12: ffff888100580000
+[   24.871812][  T296] R13: dffffc0000000000 R14: ffff88810fef4078 R15: 1ffff920001b6f5c
+
+The root cause is w/ a fuzzed image, f2fs may missed to clear FI_DIRTY_INODE
+flag for target inode, after f2fs_evict_inode(), the inode is still linked in
+sbi->inode_list[DIRTY_META] global list, once it triggers checkpoint,
+f2fs_sync_inode_meta() may access the released inode.
+
+In f2fs_evict_inode(), let's always call f2fs_inode_synced() to clear
+FI_DIRTY_INODE flag and drop inode from global dirty list to avoid this
+UAF issue.
+
+Cc: stable@kernel.org
+Closes: https://syzkaller.appspot.com/bug?extid=849174b2efaf0d8be6ba
+Signed-off-by: Chao Yu <chao@kernel.org>
+---
+ fs/f2fs/inode.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+index 0a9462b51b75..7b4780d5e00e 100644
+--- a/fs/f2fs/inode.c
++++ b/fs/f2fs/inode.c
+@@ -951,8 +951,12 @@ void f2fs_evict_inode(struct inode *inode)
+ 	if (likely(!f2fs_cp_error(sbi) &&
+ 				!is_sbi_flag_set(sbi, SBI_CP_DISABLED)))
+ 		f2fs_bug_on(sbi, is_inode_flag_set(inode, FI_DIRTY_INODE));
+-	else
+-		f2fs_inode_synced(inode);
++
++	/*
++	 * anyway, it needs to remove the inode from sbi->inode_list[DIRTY_META]
++	 * list to avoid UAF in f2fs_sync_inode_meta() during checkpoint.
++	 */
++	f2fs_inode_synced(inode);
+ 
+ 	/* for the case f2fs_new_inode() was failed, .i_ino is zero, skip it */
+ 	if (inode->i_ino)
+-- 
+2.49.0
+
