@@ -1,174 +1,95 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD7327A134;
-	Wed,  2 Jul 2025 13:26:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0FCA2741A3;
+	Wed,  2 Jul 2025 13:27:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751462795; cv=none; b=RfqbRN8w0CVbhwFEfu1UhEmIsWU4EgxwjBPBkughdHJfH6Wo6GAr8IK066bslrQ0y4SZ2pUtyehYQQjhUiCERPKOX88vBPWzob/tsouOtYFUdXatuvzBTAtGfl0/cZli6f7fMnPfcJH13/7x33ifcNR1jG7t3/hAzDgRQtGanR4=
+	t=1751462837; cv=none; b=Oc1b+PR98XLHTBZjz6blIcfLrccZHMFlqkycAyI41DGCUM3zVSVy2S+okPLrqHlTHP3TgorXyFim9uJHcvHws2rnNKB6cP4FGf9eauHcuW6HWwzG1rJXKx3uiPH+XNSqd+96JbPdoEV7mQpkgAoNA3vggjarGXaoZyl0IfgVelU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751462795; c=relaxed/simple;
-	bh=mjBmlz+e1pB0jSHMrgbD3aHEExNuYIYFTGz8QGrONvA=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Un1eP2iy9k4F5lQZRTCIN6gv6rbvap+geN55IvRJhRNXjXZdhDUBiKdUUKXgUrmA0zNzcksZKiktQLzoTQtVEx5w3YdhFwpgh9ooJlsodyY9c/tWsdzIotmWKR4kDAtR9qATYrKxV1VigE/vohoXid05YTxippjeuekyU1qI1SM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bXLHf04Klz6M5HF;
-	Wed,  2 Jul 2025 21:25:34 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id A0CB114022E;
-	Wed,  2 Jul 2025 21:26:29 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 2 Jul
- 2025 15:26:28 +0200
-Date: Wed, 2 Jul 2025 14:26:27 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-CC: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "Rob
- Herring" <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
- Dooley" <conor+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "Sascha
- Bischoff" <sascha.bischoff@arm.com>, Timothy Hayes <timothy.hayes@arm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, "Liam R. Howlett"
-	<Liam.Howlett@oracle.com>, Peter Maydell <peter.maydell@linaro.org>, "Mark
- Rutland" <mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v6 22/31] irqchip/gic-v5: Add GICv5 LPI/IPI support
-Message-ID: <20250702142627.00001979@huawei.com>
-In-Reply-To: <20250626-gicv5-host-v6-22-48e046af4642@kernel.org>
-References: <20250626-gicv5-host-v6-0-48e046af4642@kernel.org>
-	<20250626-gicv5-host-v6-22-48e046af4642@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1751462837; c=relaxed/simple;
+	bh=aeTthio5tDo5yFm/fY8fIx8z+v+Gb5/rApZk6ukOjtw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Ryz20oeDYxJGFAPTCKS4NuEWThSawLadQTwJa0L1IPj+eYxQSVhqVWLT9lDfd2HNlSfV4g8NQbbJTh3+HKSdrK4fNIKWL7g9UBkeTLbpgUAzbdFkZQKplXtTVqZOtgTD3pdaMSTTrLP25vk0DI8y13LjTMn3uzBjyzbEnC/IimA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JKq/GDww; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JKq/GDww"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4860C4CEED;
+	Wed,  2 Jul 2025 13:27:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751462836;
+	bh=aeTthio5tDo5yFm/fY8fIx8z+v+Gb5/rApZk6ukOjtw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=JKq/GDwwbJX6fgpyTI0tB/SctVE6EfPuJkKNB1WUSGaHOqJ9tcz+Dc3JuhtcL1BiH
+	 8mIG8Aju1HmStTVgo+ZFy2HTUEmyp+BbknS9eADtTGXNd/L8bOhYZ0qUfnOEc11udG
+	 ZJmyif6Jaw9td5qvaE+h78K9rD0c26XbQiRXHqpMa9rmhQ7VbCliUL+NOLGZJqRflF
+	 ICJFhekExYv4etDDmt7O7I6yND9RlJtmkko8I4MOzivh9dIfk5lYvAS7auctVGyAj1
+	 JU6IJjJRJIeyl7zIgLpu7ZsmJekiGFBhmfCaqURsmSFcFUpUhfgDf1D5hKFiVIA9iR
+	 2FDg8nv1qRFwA==
+From: Mark Brown <broonie@kernel.org>
+To: Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, David Lechner <dlechner@baylibre.com>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-spi@vger.kernel.org
+In-Reply-To: <20250627-iio-adc-ad7173-add-spi-offload-support-v2-0-f49c55599113@baylibre.com>
+References: <20250627-iio-adc-ad7173-add-spi-offload-support-v2-0-f49c55599113@baylibre.com>
+Subject: Re: (subset) [PATCH v2 00/11] iio: adc: ad7173: add SPI offload
+ support
+Message-Id: <175146283155.53778.17164711650224607474.b4-ty@kernel.org>
+Date: Wed, 02 Jul 2025 14:27:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- frapeml500008.china.huawei.com (7.182.85.71)
+X-Mailer: b4 0.15-dev-cff91
 
-On Thu, 26 Jun 2025 12:26:13 +0200
-Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+On Fri, 27 Jun 2025 18:39:56 -0500, David Lechner wrote:
+> Here comes another series for adding SPI offload support to an ADC.
+> 
+> The primary target is AD411x, but since this uses the ad_sigma_delta
+> shared module, a lot of this series is focused on that.
+> 
+> To start with, we have some cleanups to the ad_sigma_delta code, so feel
+> free to pick these up as they are ready as they generally stand on their
+> own.
+> 
+> [...]
 
-> An IRS supports Logical Peripheral Interrupts (LPIs) and implement
-> Linux IPIs on top of it.
-> 
-> LPIs are used for interrupt signals that are translated by a
-> GICv5 ITS (Interrupt Translation Service) but also for software
-> generated IRQs - namely interrupts that are not driven by a HW
-> signal, ie IPIs.
-> 
-> LPIs rely on memory storage for interrupt routing and state.
-> 
-> LPIs state and routing information is kept in the Interrupt
-> State Table (IST).
-> 
-> IRSes provide support for 1- or 2-level IST tables configured
-> to support a maximum number of interrupts that depend on the
-> OS configuration and the HW capabilities.
-> 
-> On systems that provide 2-level IST support, always allow
-> the maximum number of LPIs; On systems with only 1-level
-> support, limit the number of LPIs to 2^12 to prevent
-> wasting memory (presumably a system that supports a 1-level
-> only IST is not expecting a large number of interrupts).
-> 
-> On a 2-level IST system, L2 entries are allocated on
-> demand.
-> 
-> The IST table memory is allocated using the kmalloc() interface;
-> the allocation required may be smaller than a page and must be
-> made up of contiguous physical pages if larger than a page.
-> 
-> On systems where the IRS is not cache-coherent with the CPUs,
-> cache mainteinance operations are executed to clean and
-> invalidate the allocated memory to the point of coherency
-> making it visible to the IRS components.
-> 
-> On GICv5 systems, IPIs are implemented using LPIs.
-> 
-> Add an LPI IRQ domain and implement an IPI-specific IRQ domain created
-> as a child/subdomain of the LPI domain to allocate the required number
-> of LPIs needed to implement the IPIs.
-> 
-> IPIs are backed by LPIs, add LPIs allocation/de-allocation
-> functions.
-> 
-> The LPI INTID namespace is managed using an IDA to alloc/free LPI INTIDs.
-> 
-> Associate an IPI irqchip with IPI IRQ descriptors to provide
-> core code with the irqchip.ipi_send_single() method required
-> to raise an IPI.
-> 
-> Co-developed-by: Sascha Bischoff <sascha.bischoff@arm.com>
-> Signed-off-by: Sascha Bischoff <sascha.bischoff@arm.com>
-> Co-developed-by: Timothy Hayes <timothy.hayes@arm.com>
-> Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
-> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Marc Zyngier <maz@kernel.org>
+Applied to
 
-Hi Lorenzo,
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-The code in here looks fine to me, but one of the comments
-doesn't seem to match with what the code is doing. Perhaps it's stale and needs
-an update?
+Thanks!
 
-Jonathan
+[08/11] dt-bindings: trigger-source: add ADI Util Sigma-Delta SPI
+        commit: e47a324d6f07c9ef252cfce1f14cfa5110cbed99
+[09/11] spi: offload trigger: add ADI Util Sigma-Delta SPI driver
+        commit: 3fcd3d2fe44dc9dfca20b6aed117f314a50ba0ff
 
-> diff --git a/drivers/irqchip/irq-gic-v5-irs.c b/drivers/irqchip/irq-gic-v5-irs.c
-> index fba8efceb26e..e161acd05bf5 100644
-> --- a/drivers/irqchip/irq-gic-v5-irs.c
-> +++ b/drivers/irqchip/irq-gic-v5-irs.c
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-> +/*
-> + * Try to match the L2 IST size to the pagesize, and if this is not possible
-> + * pick the smallest supported L2 size in order to minimise the requirement for
-> + * physically contiguous blocks of memory as page-sized allocations are
-> + * guaranteed to be physically contiguous, and are by definition the easiest to
-> + * find.
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-This comment is not matching up with the code.  Seems that if a page size match
-is not possible it first tries to pick the largest L2 size below the page size.
-If there are none of those it then falls back to trying steadily larger sizes.
-
-> + *
-> + * Fall back to the smallest supported size (in the event that the pagesize
-> + * itself is not supported) again serves to make it easier to find physically
-> + * contiguous blocks of memory.
-> + */
-> +static unsigned int gicv5_irs_l2_sz(u32 idr2)
-> +{
-> +	switch (PAGE_SIZE) {
-> +	case SZ_64K:
-> +		if (GICV5_IRS_IST_L2SZ_SUPPORT_64KB(idr2))
-> +			return GICV5_IRS_IST_CFGR_L2SZ_64K;
-> +		fallthrough;
-> +	case SZ_16K:
-> +		if (GICV5_IRS_IST_L2SZ_SUPPORT_16KB(idr2))
-> +			return GICV5_IRS_IST_CFGR_L2SZ_16K;
-> +		fallthrough;
-> +	case SZ_4K:
-> +		if (GICV5_IRS_IST_L2SZ_SUPPORT_4KB(idr2))
-> +			return GICV5_IRS_IST_CFGR_L2SZ_4K;
-> +		break;
-> +	}
-> +
-> +	if (GICV5_IRS_IST_L2SZ_SUPPORT_16KB(idr2))
-> +		return GICV5_IRS_IST_CFGR_L2SZ_16K;
-> +
-> +	return GICV5_IRS_IST_CFGR_L2SZ_64K;
-> +}
-
+Thanks,
+Mark
 
