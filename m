@@ -1,77 +1,114 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB6321F0991;
-	Wed,  2 Jul 2025 07:46:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD092309B3;
+	Wed,  2 Jul 2025 07:46:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751442407; cv=none; b=Ql8SS5iQ+3U7gJJ6xo0/X6+EAKRGx1imLUOUrlmEXrO6+QbptoPhmJ7oCGQrhpa4vV9eLug6KMbQsnndg2MC8RsAFCHq0rHSQpwFiBV6sXCgJ+qn+klzlfLL4gbCTpn4LPqyf9heDh+9pP27ZtQ7AJMKwfDW41ge0OAwmB58j7Y=
+	t=1751442409; cv=none; b=nH6IKyq4IVjsYDevVssfcuS/bMJClS+8xl+5p6PJr7Vg/KZm4yseNKNL7+9Rzf5wVqlF5AiBj4Aclr/bUhu7d5E+7OUv6XYYenFw/vpbZCuHqvrU5hbeX9CFIz3MwgLaRllCclIGswPyKo6z/1Jx77BDdKDyb2ekthowvbgm+u0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751442407; c=relaxed/simple;
-	bh=T1dfQtN0fOnpT3jRKO9/i37AUF1Fx6meJL5vsJcl4c8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cZXNkHcO7jSVVhi2kdUn91hbdZmrhfvLmO3f4qYTEuQ8Qon8s9xjjc/E+oqVjelPu8prGD8VLY9/rf9o1942isN4tcKJQf756IKmaXTfLo1yG9p5kFN7pgPSwBgNktklDE5GXdrH4Cv7cS8R7nfJOSdQSCZHeK0EdaHIVn3kNUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=TY+5wL4g; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1751442409; c=relaxed/simple;
+	bh=UPGQs6o7IxPKQ3JcTYGvuyxfO5biIaF57rUkGXslPb4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=cvN40lHstZ+nzIxJY/iNub5bnd1MaU2w1ccMn3KnI9Lyw9qSDn/c/rIXQs1gj9dQa9qzefLE9uH883D9qHf75A4Kfz00ApBK835bbMre2FggqhkBxlEbwNtIpHVasFnsMQUtTzkTUPJCmr4qCW7N2r34P8oEdLJI0kCfw/D87h0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AnV4Ri9J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="TY+5wL4g"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=OFEn8Mwx7iZb4bcLt1+4BA8J7VwQHTbrRClWAd6OzhU=; b=TY+5wL4gDFSoFVqQeDom46pQ3Z
-	DslEO6a82orDnsC9xr7tvmwE9LkDnW1GS1RQeYPD4PSM3xE0VsV6qjCsxtVrRIs7Dt8+xW9DKeK/g
-	jEkUCwbXdJFtMPrHOp4p8hlz5likS8jO47le2YGqEcIhCcgzZhZ+Wze7mORKVH0L7ijQ=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uWsAk-00HYRS-Hx; Wed, 02 Jul 2025 09:46:26 +0200
-Date: Wed, 2 Jul 2025 09:46:26 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: Felix Fietkau <nbd@nbd.name>,
-	Frank Wunderlich <frank-w@public-files.de>,
-	Eric Woudstra <ericwouds@gmail.com>, Elad Yifee <eladwf@gmail.com>,
-	Bo-Cun Chen <bc-bocun.chen@mediatek.com>,
-	Sky Huang <skylake.huang@mediatek.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH net-next v4 3/3] net: ethernet: mtk_eth_soc: use generic
- allocator for SRAM
-Message-ID: <e5d6ac18-4d38-4a01-abd5-8bd4d6c3b05b@lunn.ch>
-References: <cover.1751421358.git.daniel@makrotopia.org>
- <88ae2a765ef809d36e153430bf60aac6ce81d6f1.1751421358.git.daniel@makrotopia.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AnV4Ri9J"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8C270C4CEF8;
+	Wed,  2 Jul 2025 07:46:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751442408;
+	bh=UPGQs6o7IxPKQ3JcTYGvuyxfO5biIaF57rUkGXslPb4=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=AnV4Ri9JJmbRqp+2AmdUWHshc+V6XXIpGoF5GH5eK9UPuYZfVvnpeu34Efkxpr1Ux
+	 DQdgL1zW1Zb72KyiaUuNj7xOQTKoASEA3FduGQSYUbaOSCxcx1XjX7Pl2EvBePrAO6
+	 aPI7EHIS5BkfW4IyRyUrT1BNVE7zTZ3jKaRdTT8rKHKwmk8AtztSlQ25FqEonfdwPm
+	 w6J8A2aqmGWPZuHxBiXrASK64mVUe+EFdKQBmJSXCC99kiCdK6nhGIZrZskCUcIFl5
+	 as2dLtwTRpZXKwO61NrPmUMfV8RhQrs83QmE1bpW5m/SzUAqJR9xtxuCBaYFeDztSP
+	 7A4m+9PwFTyyQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F09BC83013;
+	Wed,  2 Jul 2025 07:46:48 +0000 (UTC)
+From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
+Date: Wed, 02 Jul 2025 02:46:25 -0500
+Subject: [PATCH v5 2/3] cpufreq: dt: Add register helper
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <88ae2a765ef809d36e153430bf60aac6ce81d6f1.1751421358.git.daniel@makrotopia.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250702-tegra124-cpufreq-v5-2-66ab3640a570@gmail.com>
+References: <20250702-tegra124-cpufreq-v5-0-66ab3640a570@gmail.com>
+In-Reply-To: <20250702-tegra124-cpufreq-v5-0-66ab3640a570@gmail.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Viresh Kumar <viresh.kumar@linaro.org>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-tegra@vger.kernel.org, Aaron Kling <webgeek1234@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751442407; l=1698;
+ i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
+ bh=o7BSnjiEeAr40p8PQoKLMNpDwUQoKoaMMFdZbO3EPoY=;
+ b=u4mb1O8HXeuudeU1EGdFvH0aUkecR25S5gJX5CVbPdk8NDZc+4BN+f4lUC6Z8GIrCWEn/rh6x
+ cV07wFV9m6NAs9gOIagCuROX0B+zZJCWw3Xj6o336YmaPmLC3ICPw5n
+X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
+ pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
+X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
+ auth_id=342
+X-Original-From: Aaron Kling <webgeek1234@gmail.com>
+Reply-To: webgeek1234@gmail.com
 
-On Wed, Jul 02, 2025 at 03:38:15AM +0100, Daniel Golle wrote:
-> Use a dedicated "mmio-sram" node and the generic allocator
-> instead of open-coding SRAM allocation for DMA rings.
-> Keep support for legacy device trees but notify the user via a
-> warning to update, and let the ethernet driver create the
-> gen_pool in this case.
-> 
-> Co-developed-by: Frank Wunderlich <frank-w@public-files.de>
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+From: Aaron Kling <webgeek1234@gmail.com>
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Cpufreq-dt currently exports no functions. This means that drivers that
+are based on cpufreq-dt have no way of establishing a depmod dependency
+on it. This helper allows that link.
 
-    Andrew
+Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+---
+ drivers/cpufreq/cpufreq-dt.c | 11 +++++++++++
+ drivers/cpufreq/cpufreq-dt.h |  2 ++
+ 2 files changed, 13 insertions(+)
+
+diff --git a/drivers/cpufreq/cpufreq-dt.c b/drivers/cpufreq/cpufreq-dt.c
+index e80dd982a3e23f6e678d691daba2d8bfda28d93c..506437489b4db241a7a6259274ae84e688772e66 100644
+--- a/drivers/cpufreq/cpufreq-dt.c
++++ b/drivers/cpufreq/cpufreq-dt.c
+@@ -329,6 +329,17 @@ static struct platform_driver dt_cpufreq_platdrv = {
+ };
+ module_platform_driver(dt_cpufreq_platdrv);
+ 
++struct platform_device *cpufreq_dt_pdev_register(struct device *dev)
++{
++	struct platform_device_info cpufreq_dt_devinfo = {};
++
++	cpufreq_dt_devinfo.name = "cpufreq-dt";
++	cpufreq_dt_devinfo.parent = dev;
++
++	return platform_device_register_full(&cpufreq_dt_devinfo);
++}
++EXPORT_SYMBOL_GPL(cpufreq_dt_pdev_register);
++
+ MODULE_ALIAS("platform:cpufreq-dt");
+ MODULE_AUTHOR("Viresh Kumar <viresh.kumar@linaro.org>");
+ MODULE_AUTHOR("Shawn Guo <shawn.guo@linaro.org>");
+diff --git a/drivers/cpufreq/cpufreq-dt.h b/drivers/cpufreq/cpufreq-dt.h
+index 28c8af7ec5ef3ad0aa94f43ad9129600ca094329..fc1889aeb4f1f15fa7c46c2380021bbf40b62f11 100644
+--- a/drivers/cpufreq/cpufreq-dt.h
++++ b/drivers/cpufreq/cpufreq-dt.h
+@@ -22,4 +22,6 @@ struct cpufreq_dt_platform_data {
+ 	int (*resume)(struct cpufreq_policy *policy);
+ };
+ 
++struct platform_device *cpufreq_dt_pdev_register(struct device *dev);
++
+ #endif /* __CPUFREQ_DT_H__ */
+
+-- 
+2.50.0
+
+
