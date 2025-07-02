@@ -1,46 +1,46 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D4317A2EB
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 872671624E1
 	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 01:33:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751420020; cv=none; b=q9NyLEBcv/iObIMiqpgZaG+VJRiZ8Ax4t7nqeyVlovLSS0tSlFSu8MYX2CTaZclGDCxppvTmrYpj/Fav1d7fRQeG7wXiugDC/4FWWkIRRxCGQvzehjZvFZTCkB+Cb2dC+k5Lv5Vh0JePOrnMW9lPB6hqQYi5bplBBQQJPH9BbEM=
+	t=1751420019; cv=none; b=Q1VJyUhKNi7rQ0XMuoM9Ws+X07faiCqjklsyG9ArNodEDSYEJQ8LkdoC2bUJn2vU1y3pgLpTfcHKUL3SKy4B5zeWP9HmRKjCskGraMlXvPtotlxtD8aGlnGaH2Aa0ed4FQLz3OtXAcktGQJyKB8KZ2E3S0+YDpvfKJPNbbE2OAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751420020; c=relaxed/simple;
-	bh=6rgthtioLPgC8TzI1EpGIup0Wnw1i9cSpYZlyhq1vAE=;
+	s=arc-20240116; t=1751420019; c=relaxed/simple;
+	bh=jkZu16TV++r/rlsIuFBGXESmSaZ3ViLtj2A4MmPfWFs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=L7ODinCP7xK1PaXrnwuaXm1n8hQJwnjz3vGw1YgLdedk4RqmNlntIM09DfRT5HsyxUc3ZLJBW/u9G5Wc1R6Ejf19Fcc6AoKm0xStWRGKwUKcHr58eUALIO96FJwmNS4VMq96xaWjgEldBIx7p1PjpGa48yrbIFJIndzXlux4s/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=EKxrZV9b; arc=none smtp.client-ip=203.254.224.33
+	 Content-Type:References; b=uikBO7OrXOgtDT8jhGYT/lZvzznDVKkuO0Ugo089TnkeYyR1opHTpBiMsn79j9kut6UmAQ6mDGhsQwaWnVRtT76QPXMWKfWOCEXnmKp4IiMuQe3pNAQOtBksP/uV9+8L5av46fKDtiI6f82r2+dTf7N1JlODtuSwato91EUvMtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=By6X+rjg; arc=none smtp.client-ip=203.254.224.24
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="EKxrZV9b"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="By6X+rjg"
 Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250702013334epoutp032451bd96ceefe8f1e33a08a2af2bcdda~OSzlMk37n2470624706epoutp03x
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250702013334epoutp01cf61e40f250cc26603a8bb10ec75c051~OSzlKmFTP1790217902epoutp01q
 	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 01:33:34 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250702013334epoutp032451bd96ceefe8f1e33a08a2af2bcdda~OSzlMk37n2470624706epoutp03x
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250702013334epoutp01cf61e40f250cc26603a8bb10ec75c051~OSzlKmFTP1790217902epoutp01q
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
 	s=mail20170921; t=1751420014;
-	bh=MpzzzTN1a7sv35ExTZn8dvG279HkeU3kdloRRozgz+Y=;
+	bh=zPW/2DPyUqiUpfn50eL59ou6U/1tOHY8M/++kogrQi8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EKxrZV9bWmmc5LpNwNNxyWSFEBWkUrGrJTMH9MIey9t/VBT41Mkphu0J98X6Rtq0P
-	 5gnAiUDmAsrL4Ij4o7OzYhz+Dy3lEVZIiI3hYiytmfMMwVbJHo261vcQqiLaYLB/2B
-	 h+P8o+FO3T621V9Lc1YLNsc4ogIdxyGdmXLdkU1I=
+	b=By6X+rjgulRfa92N1SB9suTaQPIfLK4rrpiE3inO604obTmVKR1898GpLYFQfvpUh
+	 5U5/ocI6pehm2EyoODSEkjQ8LC1ZiXm7P1mNbP/Ca0HPl6U3dqq4Il4F0YJkSgiP3M
+	 njs6RKOL17atq+icpCFUtCxFSesmQt/2Z1GzSsP0=
 Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
 	epcas2p1.samsung.com (KnoxPortal) with ESMTPS id
-	20250702013334epcas2p1bc84620e0b37bfba62cc0918e89d8b59~OSzktMNWl0297702977epcas2p14;
-	Wed,  2 Jul 2025 01:33:34 +0000 (GMT)
-Received: from epcas2p2.samsung.com (unknown [182.195.36.70]) by
-	epsnrtp02.localdomain (Postfix) with ESMTP id 4bX2V52jVSz2SSKs; Wed,  2 Jul
+	20250702013333epcas2p126e7e70d4bbcfdb04833275336220291~OSzkjcO940297502975epcas2p1r;
+	Wed,  2 Jul 2025 01:33:33 +0000 (GMT)
+Received: from epcas2p1.samsung.com (unknown [182.195.36.99]) by
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4bX2V50B51z2SSKt; Wed,  2 Jul
 	2025 01:33:33 +0000 (GMT)
 Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
 	epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
-	20250702013332epcas2p39f6fce695eee06f912f5861fe459fbd5~OSzjUh5eo0547705477epcas2p3F;
+	20250702013332epcas2p3fc1442b0c8f8b92c9cdc8dd0398ebcb6~OSzjQtsGE1201012010epcas2p3A;
 	Wed,  2 Jul 2025 01:33:32 +0000 (GMT)
 Received: from asswp146.dsn.sec.samsung.com (unknown [10.229.19.146]) by
 	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250702013332epsmtip2402243e2ee4768654a4eb374e4f5a21a~OSzjQ5WMj2822028220epsmtip2j;
+	20250702013332epsmtip25685b13de179e059b7486107c8b990b9~OSzjMwUUK2820728207epsmtip2l;
 	Wed,  2 Jul 2025 01:33:32 +0000 (GMT)
 From: Sowon Na <sowon.na@samsung.com>
 To: robh@kernel.org, krzk@kernel.org, conor+dt@kernel.org, vkoul@kernel.org,
@@ -48,10 +48,9 @@ To: robh@kernel.org, krzk@kernel.org, conor+dt@kernel.org, vkoul@kernel.org,
 Cc: krzk+dt@kernel.org, linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
 	sowon.na@samsung.com
-Subject: [PATCH 5/5] arm64: dts: exynosautov920: enable support for ufs
- device
-Date: Wed,  2 Jul 2025 10:33:11 +0900
-Message-ID: <20250702013316.2837427-6-sowon.na@samsung.com>
+Subject: [PATCH 4/5] scsi: ufs: exynos: add support for ExynosAutov920 SoC
+Date: Wed,  2 Jul 2025 10:33:10 +0900
+Message-ID: <20250702013316.2837427-5-sowon.na@samsung.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250702013316.2837427-1-sowon.na@samsung.com>
 Precedence: bulk
@@ -61,108 +60,203 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250702013332epcas2p39f6fce695eee06f912f5861fe459fbd5
+X-CMS-MailID: 20250702013332epcas2p3fc1442b0c8f8b92c9cdc8dd0398ebcb6
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: AUTO_CONFIDENTIAL
 CMS-TYPE: 102P
 cpgsPolicy: CPGSC10-234,Y
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250702013332epcas2p39f6fce695eee06f912f5861fe459fbd5
+X-CMS-RootMailID: 20250702013332epcas2p3fc1442b0c8f8b92c9cdc8dd0398ebcb6
 References: <20250702013316.2837427-1-sowon.na@samsung.com>
-	<CGME20250702013332epcas2p39f6fce695eee06f912f5861fe459fbd5@epcas2p3.samsung.com>
+	<CGME20250702013332epcas2p3fc1442b0c8f8b92c9cdc8dd0398ebcb6@epcas2p3.samsung.com>
 
-The exynosautov920 uses v3.1 UFS device.
-Add ufs node for ExynosAutov920 SoC.
-And enable ufs_phy and ufs devices with ufs_fixed_vcc_reg regulator for
-ExynosAutov920 SADK.
+Add a dedicated compatible and drv_data with associated hooks for
+ExynosAutov920 SoC, Samsung Autotomotive SoC series.
+
+ExynosAutov920 has the UFSHCI 3.1 compliant UFS controller.
 
 Signed-off-by: Sowon Na <sowon.na@samsung.com>
 ---
- .../boot/dts/exynos/exynosautov920-sadk.dts   | 17 ++++++++++++
- .../arm64/boot/dts/exynos/exynosautov920.dtsi | 27 +++++++++++++++++++
- 2 files changed, 44 insertions(+)
+ drivers/ufs/host/ufs-exynos.c | 130 +++++++++++++++++++++++++++++++---
+ 1 file changed, 120 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/exynos/exynosautov920-sadk.dts b/arch/arm64/boot/dts/exynos/exynosautov920-sadk.dts
-index a397f068ed53..f979cc1ae6a1 100644
---- a/arch/arm64/boot/dts/exynos/exynosautov920-sadk.dts
-+++ b/arch/arm64/boot/dts/exynos/exynosautov920-sadk.dts
-@@ -52,6 +52,14 @@ memory@80000000 {
- 		      <0x8 0x80000000 0x1 0xfba00000>,
- 		      <0xa 0x00000000 0x2 0x00000000>;
- 	};
+diff --git a/drivers/ufs/host/ufs-exynos.c b/drivers/ufs/host/ufs-exynos.c
+index 3e545af536e5..32b087099ff9 100644
+--- a/drivers/ufs/host/ufs-exynos.c
++++ b/drivers/ufs/host/ufs-exynos.c
+@@ -97,6 +97,10 @@
+ #define UFS_EXYNOSAUTO_RD_SHARABLE	BIT(1)
+ #define UFS_EXYNOSAUTO_SHARABLE		(UFS_EXYNOSAUTO_WR_SHARABLE | \
+ 					 UFS_EXYNOSAUTO_RD_SHARABLE)
++#define UFS_EXYNOSAUTOV920_WR_SHARABLE	BIT(3)
++#define UFS_EXYNOSAUTOV920_RD_SHARABLE	BIT(2)
++#define UFS_EXYNOSAUTOV920_SHARABLE	(UFS_EXYNOSAUTOV920_WR_SHARABLE |\
++					 UFS_EXYNOSAUTOV920_RD_SHARABLE)
+ #define UFS_GS101_WR_SHARABLE		BIT(1)
+ #define UFS_GS101_RD_SHARABLE		BIT(0)
+ #define UFS_GS101_SHARABLE		(UFS_GS101_WR_SHARABLE | \
+@@ -417,6 +421,95 @@ static int exynos7_ufs_post_pwr_change(struct exynos_ufs *ufs,
+ 	return 0;
+ }
+ 
++static int exynosautov920_ufs_pre_link(struct exynos_ufs *ufs)
++{
++	struct ufs_hba *hba = ufs->hba;
++	int i;
++	u32 tx_line_reset_period, rx_line_reset_period;
 +
-+	ufs_fixed_vcc_reg: regulator-0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "ufs-vcc";
-+		gpio = <&gpg3 2 GPIO_ACTIVE_HIGH>;
-+		regulator-boot-on;
-+		enable-active-high;
-+	};
++	rx_line_reset_period = (RX_LINE_RESET_TIME * ufs->mclk_rate)
++				/ NSEC_PER_MSEC;
++	tx_line_reset_period = (TX_LINE_RESET_TIME * ufs->mclk_rate)
++				/ NSEC_PER_MSEC;
++
++	unipro_writel(ufs, 0x5f, 0x44);
++
++	ufshcd_dme_set(hba, UIC_ARG_MIB(0x200), 0x40);
++	ufshcd_dme_set(hba, UIC_ARG_MIB(0x202), 0x02);
++
++	for_each_ufs_rx_lane(ufs, i) {
++		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(VND_RX_CLK_PRD, i),
++			       DIV_ROUND_UP(NSEC_PER_SEC, ufs->mclk_rate));
++		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(VND_RX_CLK_PRD_EN, i), 0x0);
++		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(VND_RX_LINERESET_VALUE2, i),
++			       (rx_line_reset_period >> 16) & 0xFF);
++		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(VND_RX_LINERESET_VALUE1, i),
++			       (rx_line_reset_period >> 8) & 0xFF);
++		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(VND_RX_LINERESET_VALUE0, i),
++			       (rx_line_reset_period) & 0xFF);
++		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x2f, i), 0x69);
++		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x84, i), 0x1);
++		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x25, i), 0xf6);
++	}
++
++	for_each_ufs_tx_lane(ufs, i) {
++		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(VND_TX_CLK_PRD, i),
++			       DIV_ROUND_UP(NSEC_PER_SEC, ufs->mclk_rate));
++		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(VND_TX_CLK_PRD_EN, i),
++			       0x02);
++		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(VND_TX_LINERESET_PVALUE2, i),
++			       (tx_line_reset_period >> 16) & 0xFF);
++		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(VND_TX_LINERESET_PVALUE1, i),
++			       (tx_line_reset_period >> 8) & 0xFF);
++		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(VND_TX_LINERESET_PVALUE0, i),
++			       (tx_line_reset_period) & 0xFF);
++
++		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x04, i), 0x1);
++		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x7f, i), 0x0);
++	}
++
++	ufshcd_dme_set(hba, UIC_ARG_MIB(0x200), 0x0);
++	ufshcd_dme_set(hba, UIC_ARG_MIB(PA_LOCAL_TX_LCC_ENABLE), 0x0);
++	ufshcd_dme_set(hba, UIC_ARG_MIB(0xa011), 0x8000);
++
++	return 0;
++}
++
++static int exynosautov920_ufs_post_link(struct exynos_ufs *ufs)
++{
++	struct ufs_hba *hba = ufs->hba;
++
++	ufshcd_dme_set(hba, UIC_ARG_MIB(0x9529), 0x1);
++	ufshcd_dme_set(hba, UIC_ARG_MIB(0x15a4), 0x3e8);
++	ufshcd_dme_set(hba, UIC_ARG_MIB(0x9529), 0x0);
++
++	return 0;
++}
++
++static int exynosautov920_ufs_pre_pwr_change(struct exynos_ufs *ufs,
++					     struct ufs_pa_layer_attr *pwr)
++{
++	struct ufs_hba *hba = ufs->hba;
++
++	ufshcd_dme_set(hba, UIC_ARG_MIB(0x15d4), 0x1);
++
++	ufshcd_dme_set(hba, UIC_ARG_MIB(DL_FC0PROTTIMEOUTVAL), 8064);
++	ufshcd_dme_set(hba, UIC_ARG_MIB(DL_TC0REPLAYTIMEOUTVAL), 28224);
++	ufshcd_dme_set(hba, UIC_ARG_MIB(DL_AFC0REQTIMEOUTVAL), 20160);
++	ufshcd_dme_set(hba, UIC_ARG_MIB(PA_PWRMODEUSERDATA0), 12000);
++	ufshcd_dme_set(hba, UIC_ARG_MIB(PA_PWRMODEUSERDATA1), 32000);
++	ufshcd_dme_set(hba, UIC_ARG_MIB(PA_PWRMODEUSERDATA2), 16000);
++
++	unipro_writel(ufs, 8064, UNIPRO_DME_POWERMODE_REQ_LOCALL2TIMER0);
++	unipro_writel(ufs, 28224, UNIPRO_DME_POWERMODE_REQ_LOCALL2TIMER1);
++	unipro_writel(ufs, 20160, UNIPRO_DME_POWERMODE_REQ_LOCALL2TIMER2);
++	unipro_writel(ufs, 12000, UNIPRO_DME_POWERMODE_REQ_REMOTEL2TIMER0);
++	unipro_writel(ufs, 32000, UNIPRO_DME_POWERMODE_REQ_REMOTEL2TIMER1);
++	unipro_writel(ufs, 16000, UNIPRO_DME_POWERMODE_REQ_REMOTEL2TIMER2);
++
++	return 0;
++}
++
+ /*
+  * exynos_ufs_auto_ctrl_hcc - HCI core clock control by h/w
+  * Control should be disabled in the below cases
+@@ -951,16 +1044,6 @@ static int exynos_ufs_phy_init(struct exynos_ufs *ufs)
+ 	struct phy *generic_phy = ufs->phy;
+ 	int ret = 0;
+ 
+-	if (ufs->avail_ln_rx == 0 || ufs->avail_ln_tx == 0) {
+-		ufshcd_dme_get(hba, UIC_ARG_MIB(PA_AVAILRXDATALANES),
+-			&ufs->avail_ln_rx);
+-		ufshcd_dme_get(hba, UIC_ARG_MIB(PA_AVAILTXDATALANES),
+-			&ufs->avail_ln_tx);
+-		WARN(ufs->avail_ln_rx != ufs->avail_ln_tx,
+-			"available data lane is not equal(rx:%d, tx:%d)\n",
+-			ufs->avail_ln_rx, ufs->avail_ln_tx);
+-	}
+-
+ 	phy_set_bus_width(generic_phy, ufs->avail_ln_rx);
+ 
+ 	if (generic_phy->power_count) {
+@@ -1065,6 +1148,16 @@ static int exynos_ufs_pre_link(struct ufs_hba *hba)
+ 	/* unipro */
+ 	exynos_ufs_config_unipro(ufs);
+ 
++	if (ufs->avail_ln_rx == 0 || ufs->avail_ln_tx == 0) {
++		ufshcd_dme_get(hba, UIC_ARG_MIB(PA_AVAILRXDATALANES),
++			       &ufs->avail_ln_rx);
++		ufshcd_dme_get(hba, UIC_ARG_MIB(PA_AVAILTXDATALANES),
++			       &ufs->avail_ln_tx);
++		WARN(ufs->avail_ln_rx != ufs->avail_ln_tx,
++		     "available data lane is not equal(rx:%d, tx:%d)\n",
++		     ufs->avail_ln_rx, ufs->avail_ln_tx);
++	}
++
+ 	if (ufs->drv_data->pre_link)
+ 		ufs->drv_data->pre_link(ufs);
+ 
+@@ -2183,6 +2276,21 @@ static const struct exynos_ufs_drv_data gs101_ufs_drvs = {
+ 	.suspend		= gs101_ufs_suspend,
  };
  
- &pinctrl_alive {
-@@ -83,6 +91,15 @@ &usi_0 {
- 	status = "okay";
- };
- 
-+&ufs_0 {
-+	status = "okay";
-+	vcc-supply = <&ufs_fixed_vcc_reg>;
++static const struct exynos_ufs_drv_data exynosautov920_ufs_drvs = {
++	.uic_attr               = &exynos7_uic_attr,
++	.quirks                 = UFSHCD_QUIRK_SKIP_DEF_UNIPRO_TIMEOUT_SETTING,
++	.opts                   = EXYNOS_UFS_OPT_BROKEN_AUTO_CLK_CTRL |
++				  EXYNOS_UFS_OPT_SKIP_CONFIG_PHY_ATTR |
++				  EXYNOS_UFS_OPT_BROKEN_RX_SEL_IDX |
++				  EXYNOS_UFS_OPT_TIMER_TICK_SELECT,
++	.iocc_mask		= UFS_EXYNOSAUTOV920_SHARABLE,
++	.drv_init               = exynosauto_ufs_drv_init,
++	.post_hce_enable        = exynosauto_ufs_post_hce_enable,
++	.pre_link               = exynosautov920_ufs_pre_link,
++	.post_link              = exynosautov920_ufs_post_link,
++	.pre_pwr_change         = exynosautov920_ufs_pre_pwr_change,
 +};
 +
-+&ufs_0_phy {
-+	status = "okay";
-+};
-+
- &xtcxo {
- 	clock-frequency = <38400000>;
- };
-diff --git a/arch/arm64/boot/dts/exynos/exynosautov920.dtsi b/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
-index 0fdf2062930a..f787c28fb0d5 100644
---- a/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
-@@ -1426,6 +1426,12 @@ cmu_hsi2: clock-controller@16b00000 {
- 				      "ethernet";
- 		};
- 
-+		syscon_hsi2: syscon@16c00000 {
-+			compatible = "samsung,exynosautov920-hsi2-sysreg",
-+				     "syscon";
-+			reg = <0x16c00000 0x800>;
-+		};
-+
- 		pinctrl_hsi2: pinctrl@16c10000 {
- 			compatible = "samsung,exynosautov920-pinctrl";
- 			reg = <0x16c10000 0x10000>;
-@@ -1438,6 +1444,27 @@ pinctrl_hsi2ufs: pinctrl@16d20000 {
- 			interrupts = <GIC_SPI 603 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
-+		ufs_0: ufs@16e00000 {
-+			compatible = "samsung,exynosautov920-ufs";
-+			reg = <0x16e00000 0x100>,
-+			      <0x16e01100 0x400>,
-+			      <0x16e80000 0x8000>,
-+			      <0x16d08000 0x800>;
-+			reg-names = "hci", "vs_hci", "unipro", "ufsp";
-+			interrupts = <GIC_SPI 613 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cmu_hsi2 CLK_MOUT_HSI2_UFS_EMBD_USER>,
-+				 <&cmu_hsi2 CLK_MOUT_HSI2_NOC_UFS_USER>;
-+			clock-names = "core_clk", "sclk_unipro_main";
-+			freq-table-hz = <0 0>, <0 0>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&ufs_rst_n &ufs_refclk_out>;
-+			phys = <&ufs_0_phy>;
-+			phy-names = "ufs-phy";
-+			samsung,sysreg = <&syscon_hsi2 0x710>;
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+
- 		ufs_0_phy: phy@16e04000 {
- 			compatible = "samsung,exynosautov920-ufs-phy";
- 			reg = <0x16e04000 0x4000>;
+ static const struct of_device_id exynos_ufs_of_match[] = {
+ 	{ .compatible = "google,gs101-ufs",
+ 	  .data	      = &gs101_ufs_drvs },
+@@ -2192,6 +2300,8 @@ static const struct of_device_id exynos_ufs_of_match[] = {
+ 	  .data	      = &exynosauto_ufs_drvs },
+ 	{ .compatible = "samsung,exynosautov9-ufs-vh",
+ 	  .data	      = &exynosauto_ufs_vh_drvs },
++	{ .compatible = "samsung,exynosautov920-ufs",
++	  .data       = &exynosautov920_ufs_drvs },
+ 	{ .compatible = "tesla,fsd-ufs",
+ 	  .data       = &fsd_ufs_drvs },
+ 	{},
 -- 
 2.45.2
 
