@@ -1,252 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9264429993B;
-	Wed,  2 Jul 2025 13:22:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB9D295519;
+	Wed,  2 Jul 2025 13:21:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751462520; cv=none; b=T+uWl6jfWB8i1NFxhj4wRAHSJW+Hp8Ys+OY2e6A/2FbjNQh7i1kUcPoeodfcuUQvE2Ab1FSO2JQZy/6pq4IPdgXeEXiSvuUsyTafUgZodwBIf0jM9Zd6uV317PfjmmOqSS2nriWi6lms04YmglkQaTtr9gM/BrC1RFvYjFBfblo=
+	t=1751462521; cv=none; b=o8zCiYc4584NNT0AyN6Ub6SAh7/L36HxyrwqJq4N2jxf5zvT8y3YglyiYG96kZNABnXMwhxUai+dFPIKLM7Uo42dTILuCE+X4j2n9AN7ZCJfAfSGSZmYD3UfbhBoSfghg3zDP/DF36z0C3hxHQEK3Cb02XtzwiKJzqgX5uPb78E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751462520; c=relaxed/simple;
-	bh=sJdbcyT65tA1385GHaUsWvMHMst/8WzLbn/qOS3xUdI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=guoydhdKrIdLp0CDxWj7H3e8hOiACQ5go6s9eT5fm9CZ3a+kJksHLwYvobNSemJYV87RoM/UaEoixvI/+TIjtQGxjbjY+sZf8cTLKVGfv5CjBgw/+/E/Eo0OMla3q0+oHeHKtj8Rf9l3YDnCfcN4GF0QsRK4RhqscMxoUDJl8HA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YwK6lB/c; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751462521; c=relaxed/simple;
+	bh=rMxzYZ+ZhxUfDAbKl9a+wghm8sVhn8BbKeD6/4z1tTg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=l1IUGOnCSNjixjCC6noqzGqgaavugETdsq11Rg+OODiFX1MQQhhfWP3eFsnypz1Txn+GskOzv2NXnicnwVldOmF2uuQv8Y85PdFK/Troh0xzVSADdyqs9g4mnz70GBUQsr4Rb5P+XxIVHOak3DL1+FGBtBAZGbiA8mPxI8ucOmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GZnF7uXa; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YwK6lB/c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EB78C4CEEF;
-	Wed,  2 Jul 2025 13:21:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751462520;
-	bh=sJdbcyT65tA1385GHaUsWvMHMst/8WzLbn/qOS3xUdI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YwK6lB/ck+Tb2skmAXpf7h7tZKHWNJnjZ1kAxuBX1XevVsXDU004euryRF9/4sRMT
-	 LhTmpbfYwUyGJMfqJGr5TyshcOkWWHA4gQL4pWu9V+U+1iWHXieSMB7w7LS8syrg18
-	 bMGK5Z/8vwp7TLbElp04nLo7Q8iqvxbJX0mFR9CjrMu1X2VTYTxZ7HauXNakzAGWLD
-	 kjOw7M6U/zHM5XeOoL2U5iWm8cpG1RH5u4Z+Gw10/ZM2zIo1w5EWSr2QBdpySqLwWN
-	 oGM6RS3hJY1KmxtBtbZ6NF2NADyrmkKtGsuzDsHku47PXc01hZfShcD6xgnY3arx3a
-	 7HAZnMtC9Dz7g==
-Date: Wed, 2 Jul 2025 15:21:52 +0200
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Marc Zyngier <maz@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Will Deacon <will@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Peter Maydell <peter.maydell@linaro.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v6 20/31] irqchip/gic-v5: Add GICv5 PPI support
-Message-ID: <aGUycEuLadcG+IfV@lpieralisi>
-References: <20250626-gicv5-host-v6-0-48e046af4642@kernel.org>
- <20250626-gicv5-host-v6-20-48e046af4642@kernel.org>
- <20250702124019.00006b01@huawei.com>
- <aGUqEkascwGFD9x+@lpieralisi>
- <20250702140022.00001c65@huawei.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GZnF7uXa"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-607cc1a2bd8so7492273a12.2;
+        Wed, 02 Jul 2025 06:21:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751462517; x=1752067317; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eMG9pPiDXBBKKvDaMKGXpbOZbg8FN9YULFdxboP6NUI=;
+        b=GZnF7uXaV3znpNn8f5qkSFwd7EyVFIt6XeP/t9onns0fDhKiBFMQImai1613J4JEhI
+         av9Kthk6F0VjZoiArr639YX7GW1yIa8C9BQrzPcMbeBlQTYXhEupsk3ty3JBc61WZqV/
+         YrB88VsYyg0UISUTT52YQ+JHgWpTjbmcOTWR4kWLwuzhoJlMqP4dyHIysTxCiPLi5DDa
+         C2jcsaOSA4jqZ5Rdq3gTinMnZZwM+0qBjYSEInEpnykKHaU90YHx+t5mOHRGWKPh/64I
+         wEgSYX7RNnaWCFIO/jHj8Q6VdYljl8d1WfBW6go0Xawll11S2KE2ovgKHhuXEIooFJAO
+         IuwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751462517; x=1752067317;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eMG9pPiDXBBKKvDaMKGXpbOZbg8FN9YULFdxboP6NUI=;
+        b=BKH1v/VgGJqwSdi0+RPFi3FlrSo2ulMF8OPiuAYzExJcxgbBDsrDyf9kGT132VQ9QC
+         pH3292CzOosdPkOFGayp/+pmytqspsrp6BjDjTmjrUpUntEfPnSTdh5E0rf56AGJWgeo
+         R7XCe4Su7vWuMk516lhoQjJ9q0FQaHRu0ZvxkMSJimMtRkssBDHTgkH/YUqjbUvgjuqz
+         IpiM4vncWDdDPu2sXNvJSgdEOANAv6aAAuR+c1gfTPtNG/00zw7i26g2fmtyDjXzFBWY
+         j/wTCVuoRFO3hWxeNAzYEf71QtKM0m9yQnF0UGpzOVnPxmygCdVTjzP47XNfSqw4mqqR
+         OWwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV9rospokxxyq4lIt7bEQree/xowx/aTUwL+CP4V6E1893BEgNm9HLsELIrmDK0KoyhzJ36p6uhsYVGZQ==@vger.kernel.org, AJvYcCVj8C/1Xk5q5CD+KTddIVxW/ZgTQ+2/pI0BqF7JN+gahwix3P/AZsgFAwhpHSGQS6s09fd/XBe753/VNetw@vger.kernel.org, AJvYcCWiY2Ieovy6Hxjx3Wvm+pSuJF8x2CEhlTMosc2s27RntFViz9yQnHfqP9XUhnPISEpGIGkjK86QekDu@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxh3eegHZnVuSt1yEQ/G68MlJ8JyQ8T+7yXnRwvyOuB4o2pGA2q
+	YFgtf05Shs8IqWbJHBkjBHsxpwXe755RbFAezWBdgmIIAFDXwImkMuGP
+X-Gm-Gg: ASbGnct5B40PPnjab/6b/QoaPjcjyepFt/iMOvHUT0MikABZuvN7cQ6rtedtpo+CTl3
+	+sZzUDsau2gogsgYG2kqsw4id/dko01xThwzs6CysVlqeTpwWKBcT4Qyxjd3n5N373yX3foZ9jp
+	E8LjeQDE5g2NhAokcHeEBzKvgK1v6wYBIx/ooEKWMVGx/1uWDbUAdo2KRz8uMIW12G8Vm9rrjnP
+	4MBhpwNEqqeip7Qm7+4H6Sy5klFG/CJm6QduIKN/3wrnYItcFjt68T1nTDp8y447K/YhEQ81XOu
+	Oow14BPFbqJ34bTaa2/gxMmW1ZXVTtJRULlUjWMtaeGIsnnGXRSkRyFtv6sIvgW+lyAnaD+PSEE
+	=
+X-Google-Smtp-Source: AGHT+IFvLZMhZjDSfshoFpRc939n2lwSc6MfwBSslCP+I3o/TmLmEUPehK/4SzQi266zJ8iQw+lKjg==
+X-Received: by 2002:a17:906:c358:b0:ade:470b:d5ac with SMTP id a640c23a62f3a-ae3c2c7d588mr239742866b.56.1751462517204;
+        Wed, 02 Jul 2025 06:21:57 -0700 (PDT)
+Received: from demon-pc.localdomain ([188.27.131.45])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae35363b094sm1063800966b.22.2025.07.02.06.21.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 06:21:56 -0700 (PDT)
+From: Cosmin Tanislav <demonsingur@gmail.com>
+To: Cosmin Tanislav <cosmin.tanislav@analog.com>,
+	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+	Julien Massot <julien.massot@collabora.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-staging@lists.linux.dev,
+	linux-gpio@vger.kernel.org,
+	Cosmin Tanislav <demonsingur@gmail.com>
+Subject: [PATCH v5 21/24] arm64: defconfig: disable deprecated MAX96712 driver
+Date: Wed,  2 Jul 2025 16:20:47 +0300
+Message-ID: <20250702132104.1537926-22-demonsingur@gmail.com>
+X-Mailer: git-send-email 2.50.0
+In-Reply-To: <20250702132104.1537926-1-demonsingur@gmail.com>
+References: <20250702132104.1537926-1-demonsingur@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250702140022.00001c65@huawei.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 02, 2025 at 02:00:22PM +0100, Jonathan Cameron wrote:
-> On Wed, 2 Jul 2025 14:46:10 +0200
-> Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
-> 
-> > On Wed, Jul 02, 2025 at 12:40:19PM +0100, Jonathan Cameron wrote:
-> > > On Thu, 26 Jun 2025 12:26:11 +0200
-> > > Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
-> > >   
-> > > > The GICv5 CPU interface implements support for PE-Private Peripheral
-> > > > Interrupts (PPI), that are handled (enabled/prioritized/delivered)
-> > > > entirely within the CPU interface hardware.  
-> > > 
-> > > I can't remember where I got to last time so if I repeat stuff that
-> > > you already responded to, feel free to just ignore me this time ;)
-> > > 
-> > > All superficial stuff. Feel free to completely ignore if you like.  
-> > 
-> > We are at v6.16-rc4, series has been on the lists for 3 months, it has
-> > been reviewed and we would like to get it into v6.17 if possible and
-> > deemed reasonable, I am asking you folks please, what should I do ?
-> > 
-> > I can send a v7 with the changes requested below (no bug fixes there)
-> > - it is fine by me - but I need to know please asap if we have a
-> > plan to get this upstream this cycle.
-> 
-> I'm absolutely fine with leaving these be.  The mask stuff I would like
-> to clean up as it applies quite widely in the series but that
-> can be a follow up as no bugs (so far!). 
+The staging MAX96712 driver will be removed as its functionality has
+been moved to the MAX96724 driver which makes use of the Maxim
+GMSL2/3 deserializer framework.
 
-I am certain that at a given state in the development I used the
-FIELD_PREP() on the hwirq_id and then was asked to remove it because
-it does not serve any purpose - this, for the records.
+Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
+---
+ arch/arm64/configs/defconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-Thanks,
-Lorenzo
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 897fc686e6a9..6f4254f562da 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -1300,7 +1300,6 @@ CONFIG_GREYBUS=m
+ CONFIG_GREYBUS_BEAGLEPLAY=m
+ CONFIG_STAGING=y
+ CONFIG_STAGING_MEDIA=y
+-CONFIG_VIDEO_MAX96712=m
+ CONFIG_VIDEO_MESON_VDEC=m
+ CONFIG_SND_BCM2835=m
+ CONFIG_CHROME_PLATFORMS=y
+-- 
+2.50.0
 
-> As Marc said, these are in a good state.
-> 
-> Jonathan
-> 
-> > 
-> > Thanks,
-> > Lorenzo
-> > 
-> > > > diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
-> > > > new file mode 100644
-> > > > index 000000000000..a08daa562d21
-> > > > --- /dev/null
-> > > > +++ b/drivers/irqchip/irq-gic-v5.c
-> > > > @@ -0,0 +1,461 @@
-> > > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > > +/*
-> > > > + * Copyright (C) 2024-2025 ARM Limited, All Rights Reserved.
-> > > > + */
-> > > > +
-> > > > +#define pr_fmt(fmt)	"GICv5: " fmt
-> > > > +
-> > > > +#include <linux/irqdomain.h>
-> > > > +#include <linux/wordpart.h>
-> > > > +
-> > > > +#include <linux/irqchip.h>
-> > > > +#include <linux/irqchip/arm-gic-v5.h>
-> > > > +
-> > > > +#include <asm/cpufeature.h>
-> > > > +#include <asm/exception.h>
-> > > > +
-> > > > +static u8 pri_bits __ro_after_init = 5;
-> > > > +
-> > > > +#define GICV5_IRQ_PRI_MASK	0x1f
-> > > > +#define GICV5_IRQ_PRI_MI	(GICV5_IRQ_PRI_MASK & GENMASK(4, 5 - pri_bits))
-> > > > +
-> > > > +#define PPI_NR	128
-> > > > +
-> > > > +static bool gicv5_cpuif_has_gcie(void)
-> > > > +{
-> > > > +	return this_cpu_has_cap(ARM64_HAS_GICV5_CPUIF);
-> > > > +}
-> > > > +
-> > > > +struct gicv5_chip_data {
-> > > > +	struct fwnode_handle	*fwnode;
-> > > > +	struct irq_domain	*ppi_domain;
-> > > > +};
-> > > > +
-> > > > +static struct gicv5_chip_data gicv5_global_data __read_mostly;  
-> > >   
-> > > > +static void gicv5_hwirq_eoi(u32 hwirq_id, u8 hwirq_type)
-> > > > +{
-> > > > +	u64 cddi = hwirq_id | FIELD_PREP(GICV5_GIC_CDDI_TYPE_MASK, hwirq_type);  
-> > > 
-> > > Slight preference for not needing to care where hwirq_id goes in CDDI or how big
-> > > it is (other than when I checked the header defines).
-> > >  
-> > > 	u64 cddi = FIELD_PREP(GICV5_GIC_CDDI_ID_MASK, hwirq_id) |
-> > >         	   FIELD_PREP(GICV5_GIC_CDDI_TYPE_MASK, hwirq_type);
-> > > 
-> > >   
-> > > > +
-> > > > +	gic_insn(cddi, CDDI);
-> > > > +
-> > > > +	gic_insn(0, CDEOI);
-> > > > +}  
-> > >   
-> > > > +static int gicv5_ppi_irq_get_irqchip_state(struct irq_data *d,
-> > > > +					   enum irqchip_irq_state which,
-> > > > +					   bool *state)
-> > > > +{
-> > > > +	u64 hwirq_id_bit = BIT_ULL(d->hwirq % 64);
-> > > > +
-> > > > +	switch (which) {
-> > > > +	case IRQCHIP_STATE_PENDING:
-> > > > +		*state = !!(read_ppi_sysreg_s(d->hwirq, PPI_PENDING) & hwirq_id_bit);  
-> > > 
-> > > Technically don't need the !! but if you really like it I don't mind that much.
-> > >   
-> > > > +		return 0;
-> > > > +	case IRQCHIP_STATE_ACTIVE:
-> > > > +		*state = !!(read_ppi_sysreg_s(d->hwirq, PPI_ACTIVE) & hwirq_id_bit);
-> > > > +		return 0;
-> > > > +	default:
-> > > > +		pr_debug("Unexpected PPI irqchip state\n");
-> > > > +		return -EINVAL;
-> > > > +	}
-> > > > +}  
-> > > 
-> > >   
-> > > > +static int gicv5_irq_ppi_domain_translate(struct irq_domain *d,
-> > > > +					  struct irq_fwspec *fwspec,
-> > > > +					  irq_hw_number_t *hwirq,
-> > > > +					  unsigned int *type)
-> > > > +{
-> > > > +	if (!is_of_node(fwspec->fwnode))
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	if (fwspec->param_count < 3)  
-> > > 
-> > > I don't care that much, but could relax this seeing as fwspec->param[2]
-> > > isn't used anyway? Maybe a tiny comment on why it matters?
-> > >   
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	if (fwspec->param[0] != GICV5_HWIRQ_TYPE_PPI)
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	*hwirq = fwspec->param[1];
-> > > > +
-> > > > +	/*
-> > > > +	 * Handling mode is hardcoded for PPIs, set the type using
-> > > > +	 * HW reported value.
-> > > > +	 */
-> > > > +	*type = gicv5_ppi_irq_is_level(*hwirq) ? IRQ_TYPE_LEVEL_LOW : IRQ_TYPE_EDGE_RISING;
-> > > > +
-> > > > +	return 0;  
-> > > 
-> > >   
-> > > > +static int __init gicv5_of_init(struct device_node *node, struct device_node *parent)
-> > > > +{
-> > > > +	int ret = gicv5_init_domains(of_fwnode_handle(node));
-> > > > +	if (ret)
-> > > > +		return ret;
-> > > > +
-> > > > +	gicv5_set_cpuif_pribits();
-> > > > +
-> > > > +	ret = gicv5_starting_cpu(smp_processor_id());
-> > > > +	if (ret)
-> > > > +		goto out_dom;
-> > > > +
-> > > > +	ret = set_handle_irq(gicv5_handle_irq);
-> > > > +	if (ret)
-> > > > +		goto out_int;
-> > > > +
-> > > > +	return 0;
-> > > > +
-> > > > +out_int:
-> > > > +	gicv5_cpu_disable_interrupts();
-> > > > +out_dom:
-> > > > +	gicv5_free_domains();  
-> > > 
-> > > Naming is always tricky but I'd not really expect gicv5_free_domains() as the
-> > > pair of gicv5_init_domains() (which is doing creation rather than just initializing).
-> > > 
-> > > Ah well, names are never prefect and I don't really mind.
-> > >   
-> > > > +
-> > > > +	return ret;
-> > > > +}
-> > > > +IRQCHIP_DECLARE(gic_v5, "arm,gic-v5", gicv5_of_init);  
-> > >   
-> > 
-> 
