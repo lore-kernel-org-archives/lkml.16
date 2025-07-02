@@ -1,184 +1,325 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2074.outbound.protection.outlook.com [40.107.92.74])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8192741A3;
-	Wed,  2 Jul 2025 13:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751462852; cv=fail; b=I8m1tgnv2iRSqq9xQBGheQS5RA50wvAUmNQuovscY5oprfqJrYfnT1G/x+e8W18pcQjLLpVElZ7jMS8SSlzIN+yAM/K+nYdZ4ogZOBzGWh0ei7yznSsS79AcoPb7bdekpEaJYGslDm3U+AypTlmV77Mi8Ifof4OUscDYJhTp/oM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751462852; c=relaxed/simple;
-	bh=pXJybz0QCunkNgsfFgYSEMTFQVbLolacCGqJ7rV2ZkY=;
-	h=Content-Type:Date:Message-Id:To:Cc:Subject:From:References:
-	 In-Reply-To:MIME-Version; b=YXYCK+qB6N1+WSb6BP6Pn//pSudW8KRr7ju6nVGpGwu18TrqBNIfhoqHaWLfYNsqPtWfonuerepBFyAwy3hzBqPNwNXipmA4pBVEdfjRnRsu7rN20lhwCHDGnkxf+g+yGex/UkL28CKDl+YHBEPI4pn8ThWmoF590aK0Q4simqk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=KJiP74R5; arc=fail smtp.client-ip=40.107.92.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE21F2741A3;
+	Wed,  2 Jul 2025 13:27:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751462862; cv=none; b=rbsXV+AByARK8WIjKRvJAX1w1lbVeUI8Mr4NO6SxsO8rqupY6hju3yDcxFFEEOh5H34m7c+Oc0sKzcPP1px7yRCCrGZ8jHraktkNb0dvPVziLlmM3pf7YNLdrFYCoFHFnL9BLuYgzpaKszrmdGbky51JX2JMVRm05hN5UT2iqaE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751462862; c=relaxed/simple;
+	bh=slisvBvEmCIr7Kjcl8tWxBfosNKCVxrrtq3pQ2cJ8Yw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ODmgTuobinylq5VRRUsa294bRWvdpXhNFfXXuMKpk1qd5uJPPMoViVcVZWoAQBub2V9GRaw6gEpyyIHDV3Nr3ljr2HRMEJaO4xKxRiZLgnmQvsxFYDzcW3OpyTzLw4s6irs7R6kzxkPy9zplohlg3AGm2ON+VyY6chcCsxkCqAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KZgZ3cCs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="KJiP74R5"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=My87B2FBAs7s/TPrqUB73z4InzGnkfSdd+F54uyILPBYuWcp6QR+K8Rk2Iap36QuIWiMtzhoPOyciBAhO16ozgCrDxlpFe4IMyeGIPOuqXd4JFd542jf1nXMhhSu7TMSIAmnAwEoPmaF/w2d4ZCFSt59JsNmVsyRVpWUUHziAl3cLjX+wE8iLUCs6ATMvNPnsRWfUPyFM4lBE72pKOlwlTr5kTFP/8aAmDXTt0aDq1KyXb6sQo2GmVwYPhdZQ+xFpZ9mkeHVH61ST5CzB61H6IRhlICz2lD0OSB7EkxhRcWXLuss6UzA6lZGFtHdqdiYpAVILwhPsRH7nUrczwUhsw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=31DTE1AenEIDmWez/U2uqd4aFPE/TwVqHVIi0mub2OY=;
- b=QPTFT6D+asdJYK9RcIO2J/rCwqcVNZ5hKUdIjzxX9NuWsDpv/sMfLwvBh9OGFSF/P2/UkQdPkhoKI9CaL/ovxgOhROq4cIWTp3T1M+4CW0M3h0m2T1kl7SE2cElv2tJT0X9Mwj55F5tdt46mzjrZb81Wtz8dcVHNI+ACHYkLWW77L77anHydpGvfTvIgoeKG+fjJFqx9IAmlbXnrZghn7nTr+ziauZpVCPTxa5rHMLuJNLHKG7C0rrXc6tJZel0WrYoehSHM4g8oGzky9KeyxcASPQfvuRiQv4dEfVxNbW2HWusgbOZKzcK9n5XTkzkAS6DADxjxXdm6SfeeGrsqCA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=31DTE1AenEIDmWez/U2uqd4aFPE/TwVqHVIi0mub2OY=;
- b=KJiP74R5pZxSSjXb2OivR6w0VLRUn6xqgSGaTT+NrtE4rXmad5Sj8f64xMpVeLvvWuEtTxF2YYjf5x6f9/ONwYSeo+J8IPb3nc4AwtdEGphxMq8oa7rCXBoLDoz5gWXLsI1UXpPefqT3xuulbz0nchnmcrUxbKCdKZS1juBQo+ltvMUu7dSjXcEM14ovcWbGaacTIDoaoj8ELGOdYjAAxhyRLmNiyvloxANFDjvx59QbBXnoN/W5cjLiN1P4TPZJkhDjRfD4xqeTHObwEfBAhj7XQ9SXWYg9bfHS9QGHn0yzWX01P18IRI6OfCTZZgWESTodWu/FclTMo0A66rrOjA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
- by PH7PR12MB6980.namprd12.prod.outlook.com (2603:10b6:510:1ba::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.26; Wed, 2 Jul
- 2025 13:27:27 +0000
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8901.018; Wed, 2 Jul 2025
- 13:27:27 +0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 02 Jul 2025 22:27:24 +0900
-Message-Id: <DB1LRERP8RYU.1FA5867DN8BCZ@nvidia.com>
-To: "Alexandre Courbot" <acourbot@nvidia.com>, "Daniel Almeida"
- <daniel.almeida@collabora.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex
- Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary
- Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Danilo Krummrich" <dakr@kernel.org>, "Benno Lossin" <lossin@kernel.org>
-Cc: <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH v7] rust: kernel: add support for bits/genmask macros
-From: "Alexandre Courbot" <acourbot@nvidia.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
-References: <20250623-topic-panthor-rs-genmask-v7-1-9f986951e7b5@collabora.com> <DB1LPLOF0O0R.YQBJ0HBDUSKA@nvidia.com>
-In-Reply-To: <DB1LPLOF0O0R.YQBJ0HBDUSKA@nvidia.com>
-X-ClientProxiedBy: TYAPR01CA0123.jpnprd01.prod.outlook.com
- (2603:1096:404:2d::15) To CH2PR12MB3990.namprd12.prod.outlook.com
- (2603:10b6:610:28::18)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KZgZ3cCs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A598C4CEED;
+	Wed,  2 Jul 2025 13:27:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751462862;
+	bh=slisvBvEmCIr7Kjcl8tWxBfosNKCVxrrtq3pQ2cJ8Yw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KZgZ3cCs8WlBsb/oRaNpWq+WQaDmMwVh0+ZxhVgdK2KHRbcyjZIQLgdCt9TtHSLXL
+	 hlpbJQ5bmxBZJC/7wc+yPLLcSnkVyI8YRntTKhH727JPauseLBG2j549biE0vFYawm
+	 Kp1TYqCD2/VckZNBVIUzMG+cUzoB2lVrw9I4RYagIotsPqMmCKY4B3J7P9T2yBZReY
+	 ZripjSJsV75cz6igrXk1+ZLSkyFuXdMr+HhDq0rQsRB3v1PLgmVYgUQPx64LsoRjyo
+	 ttBByorZMKPDjlxLNlyfCll1l91abFTnVJBlhDDuvTJDneXpFlMTdIb+RiGedb3bz1
+	 vJAer7cDA6kIw==
+Date: Wed, 2 Jul 2025 18:57:23 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Kishon Vijay Abraham I <kishon@kernel.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Anup Patel <apatel@ventanamicro.com>, Marc Zyngier <maz@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Shuah Khan <shuah@kernel.org>, 
+	Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Niklas Cassel <cassel@kernel.org>, dlemoal@kernel.org, jdmason@kudzu.us, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, imx@lists.linux.dev, devicetree@vger.kernel.org
+Subject: Re: [PATCH v19 00/10] PCI: EP: Add RC-to-EP doorbell with platform
+ MSI controller
+Message-ID: <roskp2zsjohrgll464u4jtbulzjid523u3yvgciifwiuoygv5t@7f7cj4wfy2y7>
+References: <20250609-ep-msi-v19-0-77362eaa48fa@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|PH7PR12MB6980:EE_
-X-MS-Office365-Filtering-Correlation-Id: a10b7554-6601-45e4-cdb2-08ddb96c2feb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|10070799003|366016|1800799024|376014|7416014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SjEvVTU3L3E2eTJwaUF0OWI0QjVYNExScDVkQlRmclZWL3g3Y1J2ODdjT3JC?=
- =?utf-8?B?Y2RPTUVnMytYVW9tNWZOR2xWZ2o1aGUxaCt3b01pNzN3S2dzejBnWjZscHFz?=
- =?utf-8?B?S2xQUlMveXhhV0RjY2dTM1JiV2dRY3lqYmg3QmRTRjZNeHJSRmpwOVBjYVpo?=
- =?utf-8?B?TVRQNGNCd2t3ejJuUS9aNS92Um5YeUI0YlRTaUsvUDZzRmhOZUw3cFQwYVJU?=
- =?utf-8?B?ekdRK1dEbXlRdGRSYzdtMnh5cjNBemlTd3pqeWlhbys2WW1iakRxaGNTclRw?=
- =?utf-8?B?SHFKYWNucTBSQyt5YWtIV3BKSlE2emQ4a2tRNWhDVjlPYi93VjVIdUkwTklM?=
- =?utf-8?B?Vldablg1QjErNGVmQllrUXJxTXVvWlVYbm9jWCtOb0JFVEVHdWVjb3FBQ3pW?=
- =?utf-8?B?TFkrbFJNeWJKR0xuU0xWUlREU0VyOS9uKzRYRG1kVmx3K3owdW43dzRxRldK?=
- =?utf-8?B?bnEyakwyRklGTS9yWnF6Ly9xQXVTZjdEdFdaUlQ0ZzFLT1dJSkZQckFKS3dv?=
- =?utf-8?B?dlRXWXNpdDZxSUliT2V0MW1uVTUyN2NoM2xSTCtrSWl2VjR3cFhyY1ZkdVMy?=
- =?utf-8?B?MGE4MjJZdnpFSGJDWHZPMDFjYWZQNUNXVUMvaFkrWG1sZ3RGNzNlT3NUWFpT?=
- =?utf-8?B?b0lHb2ZIU05nZ0pxYUQ2QVZUWlRja20rc1RPL3UvRlp2TXEyb3dVb2ZBMTY0?=
- =?utf-8?B?bm40TDJ2S3Y2MEQ2VFBsZUNUbXVJd1RTbUxSVXdFamRTZ2lvWWFWZ1NwMWRP?=
- =?utf-8?B?SXlSUVZ4eEJDWitvUkxIbm9LeWh3eHZFV0VBYmhGNkJkNUNXbXBlQ3BtS0ZT?=
- =?utf-8?B?NkZ5TVNnbmR5ZnUvM1d2Z3F5VUxNL0dtMS9WcE53ekh5aDdIeWQ3Z2hYSXlr?=
- =?utf-8?B?ZWtkb0RuaFBjclhOVWlOTExaaUVUT2hIOFV3RjE5NWJ3UmkyWlJobUdnR2gy?=
- =?utf-8?B?czRUdjB5MDB3TzJCRHhsbEYwOVNRMjVGakdBTHVuMWw5MVFLRzJ2cHBIMCtI?=
- =?utf-8?B?ZytkQlExd2RJVG5CYU41Z3ZaMThqNnNyRTQzOWpsUFBOTnB5RzI5cXJkNUNY?=
- =?utf-8?B?QThXaUNqbHFuZ1ZCSnFyQmVHU09HRWM3TGVkUWpnSS9yNkRFWjI1TEVYWEVF?=
- =?utf-8?B?VTNhTktFZWZlbVl0NUN4OXdQbk5XNFdYRHByQy9XSDNmQ0FnVHNqaEN4dDVQ?=
- =?utf-8?B?dWRuMiszTTlVZHN0eGFzMUdMemZzRmpSS1M0eVVkWm5aRDdONTQvZjJpcXFC?=
- =?utf-8?B?K2lxQ3o3NERMbTNKcTJycDQ0MlRONXRJU3dJMU1ST1o2dnhGUjNuUmh1YlZN?=
- =?utf-8?B?SmRHSUV5cEpUNVdDaDFhU01EUXJsRXIwTW1HK0YvQXlkblZxZHJqcDMvSWd3?=
- =?utf-8?B?UFhMdVFXSlh2VW9mYWRuengyeWRmY0dpaFB5eFV1VVF6RHh4RU80VGZhUUNk?=
- =?utf-8?B?YlU0L3pNUDJYYjd3SERNRzlEL01qNnZGUDAyZVhuYjR2WTErZDMxMUNIYnRL?=
- =?utf-8?B?ME40RDMzaU9NTVZVVGhDZ3FVdjFjQ0FGS0FRTEc1TFczZ3ZBcGVXSGZhSDhN?=
- =?utf-8?B?ODJjeDhWcElMT3B2VklwaHlySFRwWEpFWE5xdHJOelBKRWI5dXBhMEhlUE9X?=
- =?utf-8?B?UW9vb3ZyRUYyN05VbkFhTFRBTHBob3R1Ym5IeUV5OWFGT2R0RUlHcEluN0s5?=
- =?utf-8?B?RG1SY2ZkeVZ0RnQrTWVRbUZOdTZKc2NqOGhXYm5tOEd3SDVJNjFKQndGSTJ6?=
- =?utf-8?B?OE1SdXlnSlduWTZ1NXVzTWNwZ3dJRVZkc0F5Vy9OWC9TS01saXpQd1NlUEtN?=
- =?utf-8?B?ZVVvWnhVd2hTcVlwaVBIcDRPNVhzdlRPT3ZHaysyVjlxeVRTSndFaG1oeGFT?=
- =?utf-8?B?MTVhWm95NHpaLzNURGw1dXBYU25rYXBXc0VTZ1lrQVhNRkVjTWVuMzFuSjhQ?=
- =?utf-8?Q?8Z6BPixlmBd7o0lEN5+QNrLiPuSfsQSI?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(366016)(1800799024)(376014)(7416014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?QlJuazZvakpzaFVIaGJBdVloR3lKbXVIYzRWeGtSK0hqcUl3akoyQ0IySUJD?=
- =?utf-8?B?WkFsUVBBMm10MHNpcngwZTFJamJTVGh1KzVwY0lCd0xxbTFuUmFCazZJeUhU?=
- =?utf-8?B?TUEwM1ZiSTlrUGVsR1E0Z2lJZzJJTHIwNE1kamlWTWRMaXZES1hkR3JHSlc5?=
- =?utf-8?B?QWNQM3Yvd0cydnFXSnNrUjRTeWhFZU84THlqVklidFFDV0owbGtiUnBjNEVC?=
- =?utf-8?B?anhZOWJCcmx1bnFCWVFFRHZUeVBNcmZUZitlQktsMFFXWEc5bjI0bnBzREpB?=
- =?utf-8?B?RzN5QlRjQTZsbzkwbWlHTnM4a3VaOVFvNE9DTHUvWmIvVHlrNk9EMDB1Qy9z?=
- =?utf-8?B?ZHFnVjNWOXE0V3UvVWs1LzNXOUdjOTh6dWZsNTI4bUpzNFZNdEZ5UVphVDhs?=
- =?utf-8?B?WURrRW1OTWgwM1hRbE1ocVU4RmlDak0zdC9hRGtVOGFTYlBBaldtKzU5Y0h0?=
- =?utf-8?B?YVBERzRlcmFkbE1hQnArcW5MU0dNUENSb0lXY3VOUWRWNWc4cU5Pc1lnUmJI?=
- =?utf-8?B?ZkJEUjE5NVRxcFFFQkhSdi9vMG5IM3R6MWsrMTVsRlp4VWlHRkxrVFVON3R2?=
- =?utf-8?B?TU83Zi9HK3JVZWtTUUNXeG5VVkU4aGlMVlI5Ny85TXpEN2w3VDBTT05lTFJw?=
- =?utf-8?B?b2VyMUswek5GOXlRMHU0UjhnTXlnVzFOZFRNaHZNcFFTaDRWSEh5U3dyYTNS?=
- =?utf-8?B?L1ovVTdrVGc1N3RyOWJNYWlmZTZwNm0xT2E1V3k1MDZ5QzJZb01PaEVzY2Mr?=
- =?utf-8?B?Q0JyL1VpUmpUR0NtVHdSYWMwalJWbkltRmZuMzhKUlZ5NmE4UnJ0Q24vaWE1?=
- =?utf-8?B?cEpXbFh3ODBkN3J3UmdIZDBmeU1WbGMyWEdkMGxEV3BlOXI3UFBQZzFqRmV4?=
- =?utf-8?B?RFJsdVVFWWkrcU55SnBSd3FkWmJ6UHgvaUZlem1tUStjUG1CblVZL3JLK1pI?=
- =?utf-8?B?eG12RjFiODRTT29FVXp2NzMwMFNpK0RnYWxxY3QrRE95Z2E3MHY1OUhtbEVH?=
- =?utf-8?B?SFpQeDhSbDBESm0zdmdyT2RSaHpvNURZOGJOTDJBeTlxalJ5WUhuRzhhcUIw?=
- =?utf-8?B?YzdpbXFJZTcyRjJ5RFNjV3F6R0duSHNGdlFaak1pRHo4NklsRHJGUG53TGlO?=
- =?utf-8?B?ZU1ualBNT1dyY1hzQlRXVFh5a3Q1eU51QW5Bd2t0c2pJNm9UdnArbmJtdkM4?=
- =?utf-8?B?OWVLaDhaTGRhME9nTU53L0RlamdDanpIQUJWUmNXNjgxWmVtV3FCdEZEcFFx?=
- =?utf-8?B?cER6YjF5YlJESjVUejRDM29mQTc2d29PaXdOeHhsZ0NmRk9PeXNFUERSRnhu?=
- =?utf-8?B?dFJaTitUQlJrQVRwK0t5ZVFwVEgxbmU2anRGdDJXYm8wVDJnaW9sUHNNQ29V?=
- =?utf-8?B?QU1ZbWNhNS9VOWRwYy9IZGJHaEI1UXpQVEJVSHRuc1pkT1RKdmRtaDlwb1d6?=
- =?utf-8?B?YzFFekNZMUxjZjdQRHFpYWQ0YkdQY3liMDdlUmwyWmxhdUN4MGt4K3dKaXJ3?=
- =?utf-8?B?ZjBIRTBCeUt1SEpLN1lHMzdpSU5hTFhLQW9wbmoyN2trNFdvZEgyejJmMUNV?=
- =?utf-8?B?UzZoaUtSOG5XekwzTGJoSHh1SHhhQTFXdGw4YXdOL0JFLzV2UzUxY2VlMEpr?=
- =?utf-8?B?UGpyTzFGSCtYSnhERVc1amxVOERXYTQwam1GVThmRTR0bnh4cVhKY3VwUkxn?=
- =?utf-8?B?TGtQL2JLSmpab1Z1NDZkY0ZhMVkrQlBmUzBmOENZQUlLQkovaEplMC90K0w0?=
- =?utf-8?B?OVJvNnQyNC9yei9GTnI0M09Rd0o0SlhkOFgwblE3T0Q3WUYyZkdzUVBYZmVq?=
- =?utf-8?B?eEZBUTFCZThFMzA2bjZMMHYzckl1bTF6M0FPRE1tZ2NCWkRqbiszVVdFMGcw?=
- =?utf-8?B?SFpnYnNQVXdnUEZMZkhkZlBlMlp4eDdXYlN0MmJEM3JMQXBTTDZHbm1NTEl1?=
- =?utf-8?B?bDZWQmtiNk43dVlMN205MDhxQjltd1E0dFhwbEpmY3F4ZjF4dTd3VXh3RldL?=
- =?utf-8?B?QXZsUlgvYm52OXNsVEVJOTkya2lnM3R0bitsQXBYenY1SnpKUzAyMElUb3c3?=
- =?utf-8?B?VUluR2ZNZTUxK1BOT3J4cTEzZnRrZzNOMVFTSzhQZ0tMSjhHcjlmbFpWMUIw?=
- =?utf-8?B?VEx1aVJra1pEdElKanMrZ1c5U2VFczlvYXdveERoaWdWbDRocUpXVVRTRk05?=
- =?utf-8?Q?pIiIqhgEQhOBSy8dyUQ7PhZkR5gNyylUw0mdinC7SjnK?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a10b7554-6601-45e4-cdb2-08ddb96c2feb
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 13:27:26.9302
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hyACkHUcju0+lzJdNHJ7djUxOFutTdYjvnsUBXvXPnL0iYw+jcLZHk67KvhIyY3Rp0lSbMTEN3uocIcTgygzaw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6980
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250609-ep-msi-v19-0-77362eaa48fa@nxp.com>
 
-On Wed Jul 2, 2025 at 10:25 PM JST, Alexandre Courbot wrote:
->> +impl_genmask_fn!(
->> +    u64,
->> +    /// # Examples
->> +    ///
->> +    /// ```
->> +    /// # use kernel::bits::genmask_u64;
->> +    /// let mask =3D genmask_u64(21..=3D39);
->> +    /// assert_eq!(mask, 0x000000ffffe00000);
->
-> I think we should also have 2 examples that show the behavior at the
-> limits (i.e. `0..=3D0` and `0..=3D63` here ; possibly others if you can s=
-ee
-> interesting cases.). They are useful to understand how the function
-> actually works, and would also have caught the errors I pointed out
-> above.
+On Mon, Jun 09, 2025 at 12:34:12PM GMT, Frank Li wrote:
+> ┌────────────┐   ┌───────────────────────────────────┐   ┌────────────────┐
+> │            │   │                                   │   │                │
+> │            │   │ PCI Endpoint                      │   │ PCI Host       │
+> │            │   │                                   │   │                │
+> │            │◄──┤ 1.platform_msi_domain_alloc_irqs()│   │                │
+> │            │   │                                   │   │                │
+> │ MSI        ├──►│ 2.write_msi_msg()                 ├──►├─BAR<n>         │
+> │ Controller │   │   update doorbell register address│   │                │
+> │            │   │   for BAR                         │   │                │
+> │            │   │                                   │   │ 3. Write BAR<n>│
+> │            │◄──┼───────────────────────────────────┼───┤                │
+> │            │   │                                   │   │                │
+> │            ├──►│ 4.Irq Handle                      │   │                │
+> │            │   │                                   │   │                │
+> │            │   │                                   │   │                │
+> └────────────┘   └───────────────────────────────────┘   └────────────────┘
+> 
+> This patches based on old https://lore.kernel.org/imx/20221124055036.1630573-1-Frank.Li@nxp.com/
+> 
+> Original patch only target to vntb driver. But actually it is common
+> method.
+> 
+> This patches add new API to pci-epf-core, so any EP driver can use it.
+> 
 
-Also one last nit: users will count the bits on these examples, so to
-make that task easier, please write long hexadecimal values as
-`0x0000_00ff_ffe0_0000`. :)
+Frank, thanks for your persistence in pushing this series, really appreciated!
+I've left some comments, but no real blocker.
+
+Unfortunately, I don't have access to my endpoint setup right now. So I'll go
+ahead with the Tested-by tag from Niklas once my comments are addressed.
+
+- Mani
+
+> Previous v2 discussion here.
+> https://lore.kernel.org/imx/20230911220920.1817033-1-Frank.Li@nxp.com/
+> 
+> Changes in v19:
+> - irq part already in v6.16-rc1, only missed pcie/dts part
+> - rebase to v6.16-rc1
+> - update commit message for patch IMMUTABLE check.
+> - Link to v18: https://lore.kernel.org/r/20250414-ep-msi-v18-0-f69b49917464@nxp.com
+> 
+> Changes in v18:
+> - pci-ep.yaml: sort property order, fix maxvalue to 0x7ffff for msi-map-mask and
+> iommu-map-mask
+> - Link to v17: https://lore.kernel.org/r/20250407-ep-msi-v17-0-633ab45a31d0@nxp.com
+> 
+> Changes in v17:
+> - move document part to pci-ep.yaml
+> - Link to v16: https://lore.kernel.org/r/20250404-ep-msi-v16-0-d4919d68c0d0@nxp.com
+> 
+> Changes in v16:
+> - remove arm64: dts: imx95-19x19-evk: Add PCIe1 endpoint function overlay file
+> because there are better patches, which under review.
+> - Add document for pcie-ep msi-map usage
+> - other change to see each patch's change log
+> About IMMUTABLE (No change for this part, tglx provide feedback)
+> > - This IMMUTABLE thing serves no purpose, because you don't randomly
+> >   plug this end-point block on any MSI controller. They come as part
+> >   of an SoC.
+> 
+> "Yes and no. The problem is that the EP implementation is meant to be a
+> generic library and while GIC-ITS guarantees immutability of the
+> address/data pair after setup, there are architectures (x86, loongson,
+> riscv) where the base MSI controller does not and immutability is only
+> achieved when interrupt remapping is enabled. The latter can be disabled
+> at boot-time and then the EP implementation becomes a lottery across
+> affinity changes.
+> 
+> That was my concern about this library implementation and that's why I
+> asked for a mechanism to ensure that the underlying irqdomain provides a
+> immutable address/data pair.
+> 
+> So it does not matter for GIC-ITS, but in the larger picture it matters.
+> 
+> Thanks,
+> 
+>         tglx
+> "
+> 
+> So it does not matter for GIC-ITS, but in the larger picture it matters.
+> 
+> - Link to v15: https://lore.kernel.org/r/20250211-ep-msi-v15-0-bcacc1f2b1a9@nxp.com
+> 
+> Changes in v15:
+> - rebase to v6.14-rc1
+> - fix build issue find by kernel test robot
+> - Link to v14: https://lore.kernel.org/r/20250207-ep-msi-v14-0-9671b136f2b8@nxp.com
+> 
+> Changes in v14:
+> Marc Zyngier raised concerns about adding DOMAIN_BUS_DEVICE_PCI_EP_MSI. As
+> a result, the approach has been reverted to the v9 method. However, there
+> are several improvements:
+> 
+> MSI now supports msi-map in addition to msi-parent.
+>   - The struct device: id is used as the endpoint function (EPF) device
+> identity to map to the stream ID (sideband information).
+>   - The EPC device tree source (DTS) utilizes msi-map to provide such
+> information.
+>   - The EPF device's of_node is set to the EPC controller’s node. This
+> approach is commonly used for multi-function device (MFD) platform child
+> devices, allowing them to inherit properties from the MFD device’s DTS,
+> such as reset-cells and gpio-cells. This method is well-suited for the
+> current case, as the EPF is inherently created/binded to the EPC and
+> should inherit the EPC’s DTS node properties.
+> 
+> Additionally:
+> 
+> Since the basic IMX95 LUT support has already been merged into the
+> mainline, a DTS and driver increment patch is added to complete the
+> solution. The patch is rebased onto the latest linux-next tree and
+> aligned with the new pcitest framework.
+> 
+> - Link to v13: https://lore.kernel.org/r/20241218-ep-msi-v13-0-646e2192dc24@nxp.com
+> 
+> Changes in v13:
+> - Change to use DOMAIN_BUS_PCI_DEVICE_EP_MSI
+> - Change request id as  func | vfunc << 3
+> - Remove IRQ_DOMAIN_MSI_IMMUTABLE
+> 
+> Thomas Gleixner:
+> 
+> I hope capture all your points in review comments. If missed, let me know.
+> 
+> - Link to v12: https://lore.kernel.org/r/20241211-ep-msi-v12-0-33d4532fa520@nxp.com
+> 
+> Changes in v12:
+> - Change to use IRQ_DOMAIN_MSI_IMMUTABLE and add help function
+> irq_domain_msi_is_immuatble().
+> - split PCI: endpoint: pci-ep-msi: Add MSI address/data pair mutable check to 3 patches
+> - Link to v11: https://lore.kernel.org/r/20241209-ep-msi-v11-0-7434fa8397bd@nxp.com
+> 
+> Changes in v11:
+> - Change to use MSI_FLAG_MSG_IMMUTABLE
+> - Link to v10: https://lore.kernel.org/r/20241204-ep-msi-v10-0-87c378dbcd6d@nxp.com
+> 
+> Changes in v10:
+> 
+> Thomas Gleixner:
+> 	There are big change in pci-ep-msi.c. I am sure if go on the
+> corrent path. The key improvement is remove only 1 function devices's
+> limitation.
+> 
+> 	I use new patch for imutable check, which relative additional
+> feature compared to base enablement patch.
+> 
+> - Remove patch Add msi_remove_device_irq_domain() in platform_device_msi_free_irqs_all()
+> - Add new patch irqchip/gic-v3-its: Avoid overwriting msi_prepare callback if provided by msi_domain_info
+> - Remove only support 1 endpoint function limiation.
+> - Create one MSI domain for each endpoint function devices.
+> - Use "msi-map" in pci ep controler node, instead of of msi-parent. first
+> argument is
+> 	(func_no << 8 | vfunc_no)
+> 
+> - Link to v9: https://lore.kernel.org/r/20241203-ep-msi-v9-0-a60dbc3f15dd@nxp.com
+> 
+> Changes in v9
+> - Add patch platform-msi: Add msi_remove_device_irq_domain() in platform_device_msi_free_irqs_all()
+> - Remove patch PCI: endpoint: Add pci_epc_get_fn() API for customizable filtering
+> - Remove API pci_epf_align_inbound_addr_lo_hi
+> - Move doorbell_alloc in to doorbell_enable function.
+> - Link to v8: https://lore.kernel.org/r/20241116-ep-msi-v8-0-6f1f68ffd1bb@nxp.com
+> 
+> Changes in v8:
+> - update helper function name to pci_epf_align_inbound_addr()
+> - Link to v7: https://lore.kernel.org/r/20241114-ep-msi-v7-0-d4ac7aafbd2c@nxp.com
+> 
+> Changes in v7:
+> - Add helper function pci_epf_align_addr();
+> - Link to v6: https://lore.kernel.org/r/20241112-ep-msi-v6-0-45f9722e3c2a@nxp.com
+> 
+> Changes in v6:
+> - change doorbell_addr to doorbell_offset
+> - use round_down()
+> - add Niklas's test by tag
+> - rebase to pci/endpoint
+> - Link to v5: https://lore.kernel.org/r/20241108-ep-msi-v5-0-a14951c0d007@nxp.com
+> 
+> Changes in v5:
+> - Move request_irq to epf test function driver for more flexiable user case
+> - Add fixed size bar handler
+> - Some minor improvememtn to see each patches's changelog.
+> - Link to v4: https://lore.kernel.org/r/20241031-ep-msi-v4-0-717da2d99b28@nxp.com
+> 
+> Changes in v4:
+> - Remove patch genirq/msi: Add cleanup guard define for msi_lock_descs()/msi_unlock_descs()
+> - Use new method to avoid compatible problem.
+>   Add new command DOORBELL_ENABLE and DOORBELL_DISABLE.
+>   pcitest -B send DOORBELL_ENABLE first, EP test function driver try to
+> remap one of BAR_N (except test register bar) to ITS MSI MMIO space. Old
+> driver don't support new command, so failure return, not side effect.
+>   After test, DOORBELL_DISABLE command send out to recover original map, so
+> pcitest bar test can pass as normal.
+> - Other detail change see each patches's change log
+> - Link to v3: https://lore.kernel.org/r/20241015-ep-msi-v3-0-cedc89a16c1a@nxp.com
+> 
+> Change from v2 to v3
+> - Fixed manivannan's comments
+> - Move common part to pci-ep-msi.c and pci-ep-msi.h
+> - rebase to 6.12-rc1
+> - use RevID to distingiush old version
+> 
+> mkdir /sys/kernel/config/pci_ep/functions/pci_epf_test/func1
+> echo 16 > /sys/kernel/config/pci_ep/functions/pci_epf_test/func1/msi_interrupts
+> echo 0x080c > /sys/kernel/config/pci_ep/functions/pci_epf_test/func1/deviceid
+> echo 0x1957 > /sys/kernel/config/pci_ep/functions/pci_epf_test/func1/vendorid
+> echo 1 > /sys/kernel/config/pci_ep/functions/pci_epf_test/func1/revid
+> ^^^^^^ to enable platform msi support.
+> ln -s /sys/kernel/config/pci_ep/functions/pci_epf_test/func1 /sys/kernel/config/pci_ep/controllers/4c380000.pcie-ep
+> 
+> - use new device ID, which identify support doorbell to avoid broken
+> compatility.
+> 
+>     Enable doorbell support only for PCI_DEVICE_ID_IMX8_DB, while other devices
+>     keep the same behavior as before.
+> 
+>            EP side             RC with old driver      RC with new driver
+>     PCI_DEVICE_ID_IMX8_DB          no probe              doorbell enabled
+>     Other device ID             doorbell disabled*       doorbell disabled*
+> 
+>     * Behavior remains unchanged.
+> 
+> Change from v1 to v2
+> - Add missed patch for endpont/pci-epf-test.c
+> - Move alloc and free to epc driver from epf.
+> - Provide general help function for EPC driver to alloc platform msi irq.
+> - Fixed manivannan's comments.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> Frank Li (10):
+>       PCI: endpoint: Set ID and of_node for function driver
+>       PCI: endpoint: Add RC-to-EP doorbell support using platform MSI controller
+>       PCI: endpoint: pci-ep-msi: Add MSI address/data pair mutable check
+>       PCI: endpoint: Add pci_epf_align_inbound_addr() helper for address alignment
+>       PCI: endpoint: pci-epf-test: Add doorbell test support
+>       misc: pci_endpoint_test: Add doorbell test case
+>       selftests: pci_endpoint: Add doorbell test case
+>       pci: imx6: Add helper function imx_pcie_add_lut_by_rid()
+>       pci: imx6: Add LUT setting for MSI/IOMMU in Endpoint mode
+>       arm64: dts: imx95: Add msi-map for pci-ep device
+> 
+>  arch/arm64/boot/dts/freescale/imx95.dtsi           |   1 +
+>  drivers/misc/pci_endpoint_test.c                   |  82 ++++++++++++
+>  drivers/pci/controller/dwc/pci-imx6.c              |  25 ++--
+>  drivers/pci/endpoint/Makefile                      |   1 +
+>  drivers/pci/endpoint/functions/pci-epf-test.c      | 142 +++++++++++++++++++++
+>  drivers/pci/endpoint/pci-ep-msi.c                  |  90 +++++++++++++
+>  drivers/pci/endpoint/pci-epf-core.c                |  48 +++++++
+>  include/linux/pci-ep-msi.h                         |  28 ++++
+>  include/linux/pci-epf.h                            |  21 +++
+>  include/uapi/linux/pcitest.h                       |   1 +
+>  .../selftests/pci_endpoint/pci_endpoint_test.c     |  28 ++++
+>  11 files changed, 459 insertions(+), 8 deletions(-)
+> ---
+> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+> change-id: 20241010-ep-msi-8b4cab33b1be
+> 
+> Best regards,
+> ---
+> Frank Li <Frank.Li@nxp.com>
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
