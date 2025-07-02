@@ -1,183 +1,143 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC49427A121
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:13:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74CCE27A121
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:14:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751465606; cv=none; b=LcToOncrRBjWoPQRl/71yqSzQ0sBXQgrQbrbfCOhTcu0rhjQox5BsVhBwg1jq2nOtcAdIjSuwNKStScwpr7WNVbpdnLVP60uMOCcdud1Vs5knCYhQnVnbSGWeJwv/xTnBAxNgyNjmNbacWWSMVSyfBuJHp6EMNlYSWTl+L4AkGY=
+	t=1751465661; cv=none; b=XdKnJlPFjBHi+swySsFBYbvtoyZULe0Gk3fCVEBABYwogVsn1DHmnlcny+gOlrtb/fKK0JwKvQXST5AwZZPUi8pxeQbJGihRegn6ejVUG3GYjOgNo9/eORAdEEkeHo5FlMcLlhd1ZqIR4K4G/1sckTAa3n9TdTLoMBQBAsaTR7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751465606; c=relaxed/simple;
-	bh=T2cbnqQkqCu7yJ1ibRZfqew237LIDEtBM6zvXy3oISY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=euPvtPzZPLVU/O/icuFkyThurpCCFP1sXGeIOwnWAiOJhul2SD+FuelZsilOOqWXi2xtv2XixTI7KHpees8Gk0M0sr5S2I0fDXN6ZaHE/RQzy5yhyXEW+V32QCG283pnbWuXUVwitHxVW/cdrgenSBJCHjv4T+pOkXs8DhIWgjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=b2PaRKIH; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1751465661; c=relaxed/simple;
+	bh=zqKGhMgZTNKn8t9nNqOSQ0vaSPiBBITK2Mwmm0guxPo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PmLA03KxfWcdUZRdwiE4iCMtFL2LFxzOlPmznxgQBGMFWosY00s6JUvF5S0KzHLXOuxvdd+rY94oeNR2+A/7wSr6jzZpIvglDuyr0RR70YYKa3jhnSuAT4ma/RMp0b8+43MODvZBZa9jygzPYue9xf17DGCjzsBBeApTl2JG4N0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=AggipgHW; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="b2PaRKIH"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-4a58d95ea53so74979741cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 07:13:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1751465603; x=1752070403; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=LI2D5V4EggMWsDP/C9ghbDqwYMTHQ8Upr7Uk1D8akao=;
-        b=b2PaRKIHNS83igXP3/qMRz9J+6Llacyao2+jWyTXEBLy23E7u50tuB07aAONdHK9yL
-         bX6+QsJpcwBlZLT2r8WVVztPiB+myLlg/aIdcKA/FYrZcjPkILIfLj8XW6Nf6G/5PEbw
-         EzaantsYhzeHe8POJSFwxpkYtrUDw29BoFk2YFyWDT4hHvxBgb31szrd2dciGRriPgR7
-         m5pyxwkgzLt5iYIUWEWHMbQum8TgivKQYkrO4Od5Kwk2igFFwXQk6eGAdtlCecUACW6i
-         MAjXjqj2HpeTts1286h2hQSY0HmKB++2IOIgseGHYcqoCu2zokua7GnnucQQgnSanEsC
-         5W5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751465603; x=1752070403;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LI2D5V4EggMWsDP/C9ghbDqwYMTHQ8Upr7Uk1D8akao=;
-        b=qWwnw4MHIKYLItSaC0vIoICnUPSezsu/3+mu+wCiXUuR1wD/EMwDY/ALvIp6n5Wu33
-         xr6HfGOHmzE5vZ6sjToQChn9Huuzy/xKcu7meOXGdwXly/KWR/Sg/gJ10rlvz247EAAz
-         Zi6tTFhKZOaSSLZYrh0XPe5tis6jbcKXGm8rjIfUDaeAYE/9ATc540748c+BBvSp0N+/
-         O9lQRhBssIBa5WBzzi9KeYOtCaosMZm2C3indGlZuvI59DJ8wGhE752Gi2jnAFtdWBIO
-         D7wf/qeWFIHGa/A5by2pCA22dbJnb9dYhXXI+N+pTkgEChAejur1VW1btTbxR4W9fkM0
-         o0cw==
-X-Forwarded-Encrypted: i=1; AJvYcCWLlTzfndE82TFM5xuqfXfg95iM4ilPkHYD5k0VIGR6dmbrb/26zOPjtzX8ylEomN6oaXnjHoutUWeZ+TQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzZ0XXvl0mSirSkP+XWmdahHhhLDYuVMlB+xU/Pw7Rr85RsR6q
-	J54vMwvRGckIkR81CNAeAZDB8iGJqp1CLXQ2DEEWDSyiqNZEMQ908GFbSZOwq1Gqx6I=
-X-Gm-Gg: ASbGnctcqfuycXc0YiNMVTBqIKcc3Zdh0Yi9GAB1vHhj1JvktFZFCAZLKprN8QsxDn0
-	z7KnYGTeMxLtDSin6ZG9kYNyPMt2wbHuyCERE5BZU+4ZCzoyi190gVVhEtGnY5w5tnAniJ4TCWl
-	jRDaQgcSgBThnGZ9Yud2f64yqPXZAjMU88oK4ymjC0K8NW4PrUpLEurNmb9XWNngsKbMu/14bbx
-	zM+DWvuqkMdxsunzUDkjznutnStDIc2IrMwEcew6STtZKBpTL+IVReOe+ueLab7xYQ/nd2RDRqf
-	tP+pmHWxwZIAaKQQyx1tdtDPJKoMsmozM0aY
-X-Google-Smtp-Source: AGHT+IFGejWlBdta72VP8k4wECxNZ4C8RRbrgrTD+eMk+Zg9yBG/xm3+F7tKfuIfEoyh6KMev8oSSw==
-X-Received: by 2002:a05:622a:1109:b0:4a7:81f6:331e with SMTP id d75a77b69052e-4a977bdec57mr34518361cf.6.1751465603229;
-        Wed, 02 Jul 2025 07:13:23 -0700 (PDT)
-Received: from ziepe.ca ([130.41.10.202])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7fc1061d3sm92215001cf.15.2025.07.02.07.13.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 07:13:22 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1uWyDB-00000004jk4-3JNi;
-	Wed, 02 Jul 2025 11:13:21 -0300
-Date: Wed, 2 Jul 2025 11:13:21 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Vishal Annapurve <vannapurve@google.com>
-Cc: Yan Zhao <yan.y.zhao@intel.com>, Alexey Kardashevskiy <aik@amd.com>,
-	Fuad Tabba <tabba@google.com>,
-	Ackerley Tng <ackerleytng@google.com>, kvm@vger.kernel.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-	linux-fsdevel@vger.kernel.org, ajones@ventanamicro.com,
-	akpm@linux-foundation.org, amoorthy@google.com,
-	anthony.yznaga@oracle.com, anup@brainfault.org,
-	aou@eecs.berkeley.edu, bfoster@redhat.com,
-	binbin.wu@linux.intel.com, brauner@kernel.org,
-	catalin.marinas@arm.com, chao.p.peng@intel.com,
-	chenhuacai@kernel.org, dave.hansen@intel.com, david@redhat.com,
-	dmatlack@google.com, dwmw@amazon.co.uk, erdemaktas@google.com,
-	fan.du@intel.com, fvdl@google.com, graf@amazon.com,
-	haibo1.xu@intel.com, hch@infradead.org, hughd@google.com,
-	ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz,
-	james.morse@arm.com, jarkko@kernel.org, jgowans@amazon.com,
-	jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com,
-	jun.miao@intel.com, kai.huang@intel.com, keirf@google.com,
-	kent.overstreet@linux.dev, kirill.shutemov@intel.com,
-	liam.merwick@oracle.com, maciej.wieczor-retman@intel.com,
-	mail@maciej.szmigiero.name, maz@kernel.org, mic@digikod.net,
-	michael.roth@amd.com, mpe@ellerman.id.au, muchun.song@linux.dev,
-	nikunj@amd.com, nsaenz@amazon.es, oliver.upton@linux.dev,
-	palmer@dabbelt.com, pankaj.gupta@amd.com, paul.walmsley@sifive.com,
-	pbonzini@redhat.com, pdurrant@amazon.co.uk, peterx@redhat.com,
-	pgonda@google.com, pvorel@suse.cz, qperret@google.com,
-	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com,
-	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com,
-	quic_pheragu@quicinc.com, quic_svaddagi@quicinc.com,
-	quic_tsoni@quicinc.com, richard.weiyang@gmail.com,
-	rick.p.edgecombe@intel.com, rientjes@google.com,
-	roypat@amazon.co.uk, rppt@kernel.org, seanjc@google.com,
-	shuah@kernel.org, steven.price@arm.com, steven.sistare@oracle.com,
-	suzuki.poulose@arm.com, thomas.lendacky@amd.com,
-	usama.arif@bytedance.com, vbabka@suse.cz, viro@zeniv.linux.org.uk,
-	vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org,
-	willy@infradead.org, xiaoyao.li@intel.com, yilun.xu@intel.com,
-	yuzenghui@huawei.com, zhiquan1.li@intel.com
-Subject: Re: [RFC PATCH v2 04/51] KVM: guest_memfd: Introduce
- KVM_GMEM_CONVERT_SHARED/PRIVATE ioctls
-Message-ID: <20250702141321.GC904431@ziepe.ca>
-References: <d3832fd95a03aad562705872cbda5b3d248ca321.1747264138.git.ackerleytng@google.com>
- <CA+EHjTxtHOgichL=UvAzczoqS1608RSUNn5HbmBw2NceO941ng@mail.gmail.com>
- <CAGtprH8eR_S50xDnnMLHNCuXrN2Lv_0mBRzA_pcTtNbnVvdv2A@mail.gmail.com>
- <CA+EHjTwjKVkw2_AK0Y0-eth1dVW7ZW2Sk=73LL9NeQYAPpxPiw@mail.gmail.com>
- <CAGtprH_Evyc7tLhDB0t0fN+BUx5qeqWq8A2yZ5-ijbJ5UJ5f-g@mail.gmail.com>
- <9502503f-e0c2-489e-99b0-94146f9b6f85@amd.com>
- <20250624130811.GB72557@ziepe.ca>
- <CAGtprH_qh8sEY3s-JucW3n1Wvoq7jdVZDDokvG5HzPf0HV2=pg@mail.gmail.com>
- <aGTvTbPHuXbvj59t@yzhao56-desk.sh.intel.com>
- <CAGtprH9-njcgQjGZvGbbVX+i8D-qPUOkKFHbOWA20962niLTcw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="AggipgHW"
+Message-ID: <a8ea0565-e20d-4019-a64b-fa8020866411@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751465653;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6uQFp4cJ8AYYwMC7A3lrbx+MnxlYvEYEmihK/yWxec8=;
+	b=AggipgHWO0jdRYz0u1A4o9IuVGIUox6XdD/xi0R/d6J6bhOmrOrOr1EYpHWE0DyawWIISL
+	aq8S/Nw40+gThtNLeZTlRVfpSm7YmtQ0b1ttiCHmMapXtsmm3EOWRYT1vDv0QJKHYW5xD7
+	+6k76+6P75Nfr0qiXUPN0e9Vo8PgH54=
+Date: Wed, 2 Jul 2025 07:14:05 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Subject: Re: [PATCH] bpf: turn off sanitizer in do_misc_fixups for old clang
+Content-Language: en-GB
+To: Arnd Bergmann <arnd@arndb.de>, Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ Arnd Bergmann <arnd@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+ Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+ Luis Gerhorst <luis.gerhorst@fau.de>, bpf <bpf@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, clang-built-linux <llvm@lists.linux.dev>
+References: <20250620113846.3950478-1-arnd@kernel.org>
+ <CAADnVQKAT3UPzcpzkJ6_-powz4YTiDAku4-a+++hrhYdJUnLiw@mail.gmail.com>
+ <361eb614-e145-49dc-aa32-12f313f61b96@linux.dev>
+ <CAEf4BzahSLGiW_F4LtG1tMAb0O1b6D-kO0AcrU2O+nLKVbkvZA@mail.gmail.com>
+ <646c1c27-b940-4ece-aa0f-dbeea8aa7de3@linux.dev>
+ <eb4b4473-c75e-4bfa-9a16-19a5256a558d@app.fastmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yonghong Song <yonghong.song@linux.dev>
+In-Reply-To: <eb4b4473-c75e-4bfa-9a16-19a5256a558d@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGtprH9-njcgQjGZvGbbVX+i8D-qPUOkKFHbOWA20962niLTcw@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Jul 02, 2025 at 06:54:10AM -0700, Vishal Annapurve wrote:
-> On Wed, Jul 2, 2025 at 1:38 AM Yan Zhao <yan.y.zhao@intel.com> wrote:
-> >
-> > On Tue, Jun 24, 2025 at 07:10:38AM -0700, Vishal Annapurve wrote:
-> > > On Tue, Jun 24, 2025 at 6:08 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > > >
-> > > > On Tue, Jun 24, 2025 at 06:23:54PM +1000, Alexey Kardashevskiy wrote:
-> > > >
-> > > > > Now, I am rebasing my RFC on top of this patchset and it fails in
-> > > > > kvm_gmem_has_safe_refcount() as IOMMU holds references to all these
-> > > > > folios in my RFC.
-> > > > >
-> > > > > So what is the expected sequence here? The userspace unmaps a DMA
-> > > > > page and maps it back right away, all from the userspace? The end
-> > > > > result will be the exactly same which seems useless. And IOMMU TLB
-> > >
-> > >  As Jason described, ideally IOMMU just like KVM, should just:
-> > > 1) Directly rely on guest_memfd for pinning -> no page refcounts taken
-> > > by IOMMU stack
-> > In TDX connect, TDX module and TDs do not trust VMM. So, it's the TDs to inform
-> > TDX module about which pages are used by it for DMAs purposes.
-> > So, if a page is regarded as pinned by TDs for DMA, the TDX module will fail the
-> > unmap of the pages from S-EPT.
 
-I don't see this as having much to do with iommufd.
 
-iommufd will somehow support the T=1 iommu inside the TDX module but
-it won't have an IOAS for it since the VMM does not control the
-translation.
+On 7/2/25 12:48 AM, Arnd Bergmann wrote:
+> On Tue, Jul 1, 2025, at 23:28, Yonghong Song wrote:
+>> On 7/1/25 1:45 PM, Andrii Nakryiko wrote:
+>>> On Tue, Jul 1, 2025 at 1:03 PM Yonghong Song <yonghong.song@linux.dev> wrote:
+>>>> On 6/23/25 2:32 PM, Alexei Starovoitov wrote:
+>>>>> On Fri, Jun 20, 2025 at 4:38 AM Arnd Bergmann <arnd@kernel.org> wrote:
+>>>>>> From: Arnd Bergmann <arnd@arndb.de>
+>>>> I checked IR and found the following memory allocations which may contribute
+>>>> excessive stack usage:
+>>>>
+>>>> attr.coerce1, i32 noundef %uattr_size) local_unnamed_addr #0 align 16 !dbg !19800 {
+>>>> entry:
+>>>>      %zext_patch.i = alloca [2 x %struct.bpf_insn], align 16, !DIAssignID !19854
+>>>>      %rnd_hi32_patch.i = alloca [4 x %struct.bpf_insn], align 16, !DIAssignID !19855
+>>>>      %cnt.i = alloca i32, align 4, !DIAssignID !19856
+>>>>      %patch.i766 = alloca [3 x %struct.bpf_insn], align 16, !DIAssignID !19857
+>>>>      %chk_and_sdiv.i = alloca [1 x %struct.bpf_insn], align 4, !DIAssignID !19858
+>>>>      %chk_and_smod.i = alloca [1 x %struct.bpf_insn], align 4, !DIAssignID !19859
+>>>>      %chk_and_div.i = alloca [4 x %struct.bpf_insn], align 16, !DIAssignID !19860
+>>>>      %chk_and_mod.i = alloca [4 x %struct.bpf_insn], align 16, !DIAssignID !19861
+>>>>      %chk_and_sdiv343.i = alloca [8 x %struct.bpf_insn], align 16, !DIAssignID !19862
+>>>>      %chk_and_smod472.i = alloca [9 x %struct.bpf_insn], align 16, !DIAssignID !19863
+>>>>      %desc.i = alloca %struct.bpf_jit_poke_descriptor, align 8, !DIAssignID !19864
+>>>>      %target_size.i = alloca i32, align 4, !DIAssignID !19865
+>>>>      %patch.i = alloca [2 x %struct.bpf_insn], align 16, !DIAssignID !19866
+>>>>      %patch355.i = alloca [2 x %struct.bpf_insn], align 16, !DIAssignID !19867
+>>>>      %ja.i = alloca %struct.bpf_insn, align 8, !DIAssignID !19868
+>>>>      %ret_insn.i.i = alloca [8 x i32], align 16, !DIAssignID !19869
+>>>>      %ret_prog.i.i = alloca [8 x i32], align 16, !DIAssignID !19870
+>>>>      %fd.i = alloca i32, align 4, !DIAssignID !19871
+>>>>      %log_true_size = alloca i32, align 4, !DIAssignID !19872
+>>>> ...
+>>>>
+>>>> So yes, chk_and_{div,mod,sdiv,smod} consumes quite some stack and
+>>>> can be coverted to runtime allocation but that is not enough for 1280
+>>>> stack limit, we need to do more conversion from stack to memory
+>>>> allocation. Will try to have uniform way to convert
+>>>> 'alloca [<num> x %struct.bpf_insn]' to runtime allocation.
+>>>>
+>>> Do we need to go all the way to dynamic allocation? See env->insns_buf
+>>> (which some parts of this function are already using for constructing
+>>> instruction patch), let's just converge on that? It pre-allocates
+>>> space for 32 instructions, should be sufficient for all the use cases,
+>>> no?
+>> Make sense. This is much better. Thanks!
+> I'm not sure if that actually helps on the old clang version, as far
+> as I understood it in my initial analysis, the problem in the
+>
+> struct bpf_insn chk_and_sdiv[] = {
+>                                  /* [R,W]x sdiv 0 -> 0
+>                                   * LLONG_MIN sdiv -1 -> LLONG_MIN
+>                                   * INT_MIN sdiv -1 -> INT_MIN
+>                                   */
+>                                  BPF_MOV64_REG(BPF_REG_AX, insn->src_reg),
+> ...
+> }
+>
+> construct is not the chk_and_sdiv[] array itself but the
+> struct initializer in the BPF_MOV64_REG() macro that leads to
+> having two copies of the struct on the stack and then copying
+> between them. In gcc or clang-18+, these all get folded
+> into a single object on the stack.
 
-The discussion here is for the T=0 iommu which is controlled by
-iommufd and does have an IOAS. It should be popoulated with all the
-shared pages from the guestmemfd.
+See https://lore.kernel.org/bpf/20250702053332.1991516-1-yonghong.song@linux.dev/.
+The above 'struct bpf_insn chk_and_sdiv[] = { ... }' will be removed so
+there will not be stack consumption any more for it. Instead, we use
+the scratch space in bpf_verifier_env.
 
-> > If IOMMU side does not increase refcount, IMHO, some way to indicate that
-> > certain PFNs are used by TDs for DMA is still required, so guest_memfd can
-> > reject the request before attempting the actual unmap.
+>
+> (Disclaimer: I don't understand anything about how clang
+> actually works internally, the above is only speculation on
+> my side, based on the assembler output)
+>
+>        Arnd
 
-This has to be delt with between the TDX module and KVM. When KVM
-gives pages to become secure it may not be able to get them back..
-
-This problem has nothing to do with iommufd.
-
-But generally I expect that the T=1 iommu follows the S-EPT entirely
-and there is no notion of pages "locked for dma". If DMA is ongoing
-and a page is made non-secure then the DMA fails.
-
-Obviously in a mode where there is a vPCI device we will need all the
-pages to be pinned in the guestmemfd to prevent any kind of
-migrations. Only shared/private conversions should change the page
-around.
-
-Maybe this needs to be an integral functionality in guestmemfd?
-
-Jason
