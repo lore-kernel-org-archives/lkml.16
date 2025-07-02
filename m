@@ -1,42 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD6C2F50B7;
-	Wed,  2 Jul 2025 17:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB8A2F50B7
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 17:53:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751478789; cv=none; b=PIyTBqkmXOC95ypLxlDuIvNmgVuSniwIiPd+WItQRzzN2qni8wJS0W47wig3zuvKGrO1LifbjG6ZdvXLe8CF4+iGaLfELu1rUnEgB4vsHwCYbwAEcBNQq6dwFIvnUxVZU8jvDLutJuJs5IOWrElPNOKcz3biY5zol76q4m5TQhw=
+	t=1751478823; cv=none; b=D3JsYENFGFo9TSSmHm1lRzX6nXiTZokTXZKgCnySZ9HqJKk9UeAdLOt59pu8QVtl1kuHc2wLS5uhNVfByZA7T3alD41dMWAi3v9FVTGoOQyB18GF+1qruEyI/29AwdCmzZcQ1oec4nqDenphpaCnetdnRf69Tn5eT8NTI3YBXdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751478789; c=relaxed/simple;
-	bh=7s8fD9aiiXQ1A+aTfaJo538HFe4NxvZ8L1nKHQOXX54=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=oIxDF9+KJ3oSlS0lETm9bPwvaU71Q2+bazBqXwJrq8YvRw+5T2RIkEKDyD9zpkJDAt/woWTy+uFPTg66NAJKO8sEwFsuvEW7LPYEXuA5RxqaC6RbpS7KFz8Wfn1K1KgvPSaoLZ2kz8xxnrHwMUPM/RNCYgxVg9EngNB8t3SPbhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oZr9U1kt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751478823; c=relaxed/simple;
+	bh=uXYLCLa7He0l8SeuuT5s6C5IVlgt4fYu+20zNBy2wiI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dJ32lO3qSZPwLJCPXJeR91HrEepqyQHfUo+Y01AzuZ/tVJ9L1dD8Z4wgPK168zCOyNSn/yuqYOdmFD+cTcvQT8Ln5SMDgvgGe5tBvOkuCBPqspPdesZv0Mh+bLqVAsfICgqa5gt4sW2uoMzhXsuWRsCAZO8+GAMZ1VeL7Nt9ZGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pmnMC2zj; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=agyambVu; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pmnMC2zj; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=agyambVu; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oZr9U1kt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEED1C4CEE7;
-	Wed,  2 Jul 2025 17:53:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751478788;
-	bh=7s8fD9aiiXQ1A+aTfaJo538HFe4NxvZ8L1nKHQOXX54=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=oZr9U1ktTKVcqr3ZrC67+dfmJIMX0LAoxMaQ+QzhgevkBU+EdsCTDD0jgVMmZNUbJ
-	 EM30hjPCjSC28g+uEQ7UsGhfto0VlL397f/R0q8DqK5L37WlXgKsJMKfbZ3SEWnbRa
-	 pxEf6sSnCmERhoOkyRAr5kQ9X0So9wP+ttWaeAs2JvlR+7lsct+xJuzvuVuEOnhuLt
-	 wIlNOEHin2nq+xeuFM7v/4ZOcBJaIiR2VBvOqLSwiP8byuitIg7ezIQ8vPdKvbxcph
-	 05Y1owVmxLHPnZjFMzZxKr1l20WIwH11KAAHS2oxppqmDrkXejfQQh7eyvOdTOWZiU
-	 MUXKRdlPS7JRg==
-Date: Wed, 2 Jul 2025 12:53:07 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	bhelgaas@google.com, lukas@wunner.de, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Jim Quinlan <james.quinlan@broadcom.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2] PCI/pwrctrl: Skip creating pwrctrl device unless
- CONFIG_PCI_PWRCTRL is enabled
-Message-ID: <20250702175307.GA1891739@bhelgaas>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pmnMC2zj";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="agyambVu";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pmnMC2zj";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="agyambVu"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 0400021163;
+	Wed,  2 Jul 2025 17:53:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751478820; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FiMDhOWgDK6aRf46H0zrt2j/bBbAo0BPLVU88GTsNyw=;
+	b=pmnMC2zj224RwnAUnlYQvqnfeIVeR8nocowKQ8dn6EATdfc4u8N8TISPzoiAPVcp190R9H
+	0FfXrZg9w67/rlQExlkcTgynGOgBaagOx8/iJ9W17ljhGGVFH5IRXA6HZhBL4IIq2j4Kuj
+	iX7bzHwZ0wDJlJzvqlJOTPLS90WM8QE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751478820;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FiMDhOWgDK6aRf46H0zrt2j/bBbAo0BPLVU88GTsNyw=;
+	b=agyambVuYYk7F7azrM2/DaReSK43Kp5URpcxsoyad0ADNIL6jenmjSpWtnktE12LCC+ftE
+	wzpTASRxGrHEwrBQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751478820; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FiMDhOWgDK6aRf46H0zrt2j/bBbAo0BPLVU88GTsNyw=;
+	b=pmnMC2zj224RwnAUnlYQvqnfeIVeR8nocowKQ8dn6EATdfc4u8N8TISPzoiAPVcp190R9H
+	0FfXrZg9w67/rlQExlkcTgynGOgBaagOx8/iJ9W17ljhGGVFH5IRXA6HZhBL4IIq2j4Kuj
+	iX7bzHwZ0wDJlJzvqlJOTPLS90WM8QE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751478820;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FiMDhOWgDK6aRf46H0zrt2j/bBbAo0BPLVU88GTsNyw=;
+	b=agyambVuYYk7F7azrM2/DaReSK43Kp5URpcxsoyad0ADNIL6jenmjSpWtnktE12LCC+ftE
+	wzpTASRxGrHEwrBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C5F2E13A24;
+	Wed,  2 Jul 2025 17:53:38 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id DpteLSJyZWj8BAAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Wed, 02 Jul 2025 17:53:38 +0000
+Date: Wed, 2 Jul 2025 19:53:37 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+	Byungchul Park <byungchul@sk.com>,
+	Gregory Price <gourry@gourry.net>,
+	Ying Huang <ying.huang@linux.alibaba.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Pedro Falcato <pfalcato@suse.de>, Rik van Riel <riel@surriel.com>,
+	Harry Yoo <harry.yoo@oracle.com>, Lance Yang <ioworker0@gmail.com>
+Subject: Re: [PATCH v2 4/4] mm: remove boolean output parameters from
+ folio_pte_batch_ext()
+Message-ID: <aGVyIZby0mCBz0Yl@localhost.localdomain>
+References: <20250702104926.212243-1-david@redhat.com>
+ <20250702104926.212243-5-david@redhat.com>
+ <aGU7axcql69-GRQI@localhost.localdomain>
+ <3f8d6f3f-f98b-4f90-95d5-f4a09d61c88a@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,98 +103,62 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <myhg3xn3subujf3buarctgexipvjhale6zyqkhfpnm6qwitlg6@27kjexp337aj>
+In-Reply-To: <3f8d6f3f-f98b-4f90-95d5-f4a09d61c88a@redhat.com>
+X-Spam-Flag: NO
+X-Spam-Score: -2.80
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[23];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,kvack.org,linux-foundation.org,oracle.com,suse.cz,google.com,kernel.org,suse.com,nvidia.com,intel.com,gmail.com,sk.com,gourry.net,linux.alibaba.com,suse.de,surriel.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
 
-On Wed, Jul 02, 2025 at 12:17:00PM +0530, Manivannan Sadhasivam wrote:
-> On Tue, Jul 01, 2025 at 03:35:26PM -0500, Bjorn Helgaas wrote:
-> > [+cc Bart]
-> > 
-> > On Tue, Jul 01, 2025 at 12:17:31PM +0530, Manivannan Sadhasivam wrote:
-> > > If devicetree describes power supplies related to a PCI device, we
-> > > previously created a pwrctrl device even if CONFIG_PCI_PWRCTL was
-> > > not enabled.
-> > > 
-> > > When pci_pwrctrl_create_device() creates and returns a pwrctrl device,
-> > > pci_scan_device() doesn't enumerate the PCI device. It assumes the pwrctrl
-> > > core will rescan the bus after turning on the power. However, if
-> > > CONFIG_PCI_PWRCTL is not enabled, the rescan never happens.
-> > 
-> > Separate from this patch, can we refine the comment in
-> > pci_scan_device() to explain *why* we should skip scanning if a
-> > pwrctrl device was created?  The current comment leaves me with two
-> > questions:
-> > 
-> >   1) How do we know the pwrctrl device is currently off?  If it is
-> >      already on, why should we defer enumerating the device?
+On Wed, Jul 02, 2025 at 04:40:30PM +0200, David Hildenbrand wrote:
+> But more importantly, usually young+dirty is a moving target as HW can
+> usually update it asynchronously.
+
+Ok, you mean they often get queried both at once?
+
+> So in the common case, you really have to rely on the young+dirty bits from
+> get_and_clear_full_ptes(), and not on the current snapshot while the page
+> remains mapped.
 > 
-> I believe you meant to ask "how do we know the PCI device is
-> currently off". If the pwrctrl device is created, then we for sure
-> know that the pwrctrl driver will power on the PCI device at some
-> point (depending on when the driver gets loaded). Even if the device
-> was already powered on, we do not want to probe the client driver
-> because, we have seen race between pwrctrl driver and PCI client
-> driver probing in parallel. So I had imposed a devlink dependency
-> (see b458ff7e8176) that makes sure that the PCI client driver
-> wouldn't get probed until the pwrctrl driver (if the pwrctrl device
-> was created) is probed. This will ensure that the PCI device state
-> is reset and initialized by the pwrctrl driver before the client
-> driver probes.
+> The madvise() use case is rather special in that sense.
 
-I'm confused about this.  Assume there is a pwrctrl device and the
-related PCI device is already powered on when Linux boots.  Apparently
-we do NOT want to enumerate the PCI device?  We want to wait for the
-pwrctrl driver to claim the pwrctrl device and do a rescan?  Even
-though the pwrctrl driver may be a loadable module and may not even be
-available at all?
+I see.
+I mean, codewise this looks like an improvement, I was just puzzled by the
+fact that we're dealing with young+dirty together (while we didn't before),
+but given that get_and_clear_full_ptes() do that already, I guess it makes
+sense if that's the way we usually operate.
 
-It seems to me that a PCI device that is already powered on should be
-enumerated and made available.  If there's a pwrctrl device for it,
-and we decide to load pwrctrl, then we also get the ability to turn
-the PCI device off and on again as needed.  But if we *don't* load
-pwrctrl, it seems like we should still be able to use a PCI device
-that's already powered on.
+I wasn't familiar with that, thinking about it makes sense, but I wonder whether
+we could place a comment either in the definition of FPB_MERGE_YOUNG_DIRTY, or in
+the handling of it in folio_pte_batch_flags().
+I guess in the definition would make more sense.
 
-> >   2) If the pwrctrl device is currently off, won't the Vendor ID read
-> >      just fail like it does for every other non-existent device?  If
-> >      so, why can't we just let that happen?
-> 
-> Again, it is not the pwrctrl device that is off, it is the PCI
-> device. If it is not turned on, yes VID read will fail, but why do
-> we need to read the VID in the first place if we know that the PCI
-> device requires pwrctrl and the pwrctrl driver is going to be probed
-> later.
 
-I was assuming pwrctrl is only required if we want to turn the PCI
-device power on or off.  Maybe that's not true?
+Whether you decide to move forward on the comment or not (could be
+squashed), I'm ok with this. 
 
-> > This behavior is from 2489eeb777af ("PCI/pwrctrl: Skip scanning for
-> > the device further if pwrctrl device is created"), which just says
-> > "there's no need to continue scanning."  Prior to 2489eeb777af, it
-> > looks like we *did* what try to enumerate the device even if a pwrctrl
-> > device was created, and 2489eeb777af doesn't mention a bug fix, so I
-> > assume it's just an optimization.
-> 
-> Yes, it is indeed an optimization.
-> 
-> To summarize, we have imposed a dependency between the PCI client
-> driver and pwrctrl driver to make sure that the PCI device state is
-> fully reset and initialized before the client driver probes.
 
-If the PCI device is already powered on, what more should we do to
-fully reset and initialize it?  If it needed more initialization, I
-assume the platform should have left it powered off.
-
-> So irrespective of whether the PCI device is already powered on or
-> not, it is guaranteed by devlink that the PCI client driver will
-> only get probed *after* the pwrctrl driver (if the device requires
-> it). So we skip scanning the device further if the pwrctrl device is
-> created (which means, the device depends on pwrctrl driver to power
-> manage it).
-
-I'm just as confused as I was before.  I'm assuming pwrctrl basically
-gives us a way to control the main power rails to the PCI device, and 
-the device only depends on pwrctrl in the sense that pwrctrl can
-remove main power and put the device in D3cold, and then restore main
-power so the device can return to D0uninitialized.
-
-Bjorn
+-- 
+Oscar Salvador
+SUSE Labs
