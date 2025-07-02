@@ -1,163 +1,113 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C03B29DB8F
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:11:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD08284B3F;
+	Wed,  2 Jul 2025 14:11:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751465463; cv=none; b=q3WN+S7DDGdYq8vysPW3ZQXn5TDImABfzSnV5iBUoc3jazrtLfdm/POb/UBVRcysyLBp/9dxSd8UiINX2bdMqqbDDgoTW+uHt2MZefyvOuYRDjGTPI9TzTbYlZw5Q+95xL+5Qylh9LIjOqP4QvmUgs+TDRIGSecbktBATlUQfz0=
+	t=1751465507; cv=none; b=XKM5UPn6db3CIlZVOyEIqyKrNqMv56gSIXiMULV0ycAFUyp54t2fD4QqJHVieGZpxO+7MJ1Sovlx7i3P1B0lIY61bfqGS9AOEh6u5B0tYd7fUyi8Ziu7/YQqq/Jp/zZyqhyrgNBkg0YYQUDLQlw+wYPJ46SMNQzDyVxnF3PhDYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751465463; c=relaxed/simple;
-	bh=XH9LIv5DjlEQvQUcxLjrQnIy5UoheiabMEDO0Yq4lQE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=allvYH0ku/A/fEp4h2TCcb6nxXJbKNJp66piSrU5S7q3wPQTtFHYmaZX16zbZz+u+lT7+wlvCJ/iMnoqJqjK1j/Ls2XbWEvVPJrlZXStkc0hGNLPs0vejTRVb0KudCmZcpjArZXn8q0b6S5XbERs0ukH8X1HPDVYiyFl5JErqt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=kzQa8lv5; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=cIRDrzBS; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=kzQa8lv5; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=cIRDrzBS; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1751465507; c=relaxed/simple;
+	bh=jkqGUunWYtC/6FAcQVLaqUo6B0iJuiNRSN0NLvfkka0=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=F/12yMiNKdkuyMLClwFQvBMO8LRVaYwE62BJM6uEwKzdV49YTAERaiykik/N8DzLpVkkF39oI+Yz+WkCeSK1YhRJkPTokaTssv+OC3lPl00kbfn0KWfvmEqIcAtIJ+TBSz4QdiUext2dljQudRwpXb30PCxq52oietV2jR6vTb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XM2yBL9z; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iChPUFrS; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="kzQa8lv5";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="cIRDrzBS";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="kzQa8lv5";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="cIRDrzBS"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 502A32118C;
-	Wed,  2 Jul 2025 14:11:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751465460; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XM2yBL9z";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iChPUFrS"
+Date: Wed, 02 Jul 2025 14:11:42 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751465503;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ec4lvPxD+Im5OIbkkiVJgxQ8vvdCpvany66SPb/hpS4=;
-	b=kzQa8lv5lBQUYWHF9ifqwnq6aMlcduVzP03mFXQ+tUioxTxz8qXQtmTcPE7sSV/tenXq6z
-	XVSqbMCJtHH1wgZbCZQzmhSWyj385W3HgUvNv7SZnpBjS7ans50VgPcUs/45B6Sznb39ds
-	BG8ZeCLs8c8SFbxpajWbmGJ+AuFWO9k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751465460;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	bh=dVB66cXrAO/u4wGJRc/4ma1ZhCHcA+OO3ptdgLPprAc=;
+	b=XM2yBL9zmZ393NkvFj/1PHS/LWRRK08GAaLm6L2EIHCqLDDGk1RWXtwFUDPYC2OtST70P6
+	6xUR+FVGCKOdv1r7LyeTNTzbQtgWCn3pKxuW9U60B+vf0K53HFiP7qPUcx+xbwyrNOmJ2O
+	FS1V/DBRGw5V7WqS/oaYSXxJWdwsnu/uCRzgrVhkYNv5czqcOBwAHSKhWorTJuaCS8CSqq
+	n5l+Tnxx4v1vzwdxuZe095olzOXWC6gnHVjP1aPtUh3QkMtNXTy6UBvcuWCWef8A5LgqVF
+	CwfVXpt/wdDSFMB3obXrRMyW7aHtDFu/FjqHB1fxrtwIucwp8TAXJM1y9C4gxg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751465503;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ec4lvPxD+Im5OIbkkiVJgxQ8vvdCpvany66SPb/hpS4=;
-	b=cIRDrzBSuQju3UVyA+EqGnxxwKVCdf9Y//plPC83pYurqQn6ZoJ58mrG5X7d3Bdsj3yQVW
-	GG2wYlZbRVvMyYBw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=kzQa8lv5;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=cIRDrzBS
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751465460; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ec4lvPxD+Im5OIbkkiVJgxQ8vvdCpvany66SPb/hpS4=;
-	b=kzQa8lv5lBQUYWHF9ifqwnq6aMlcduVzP03mFXQ+tUioxTxz8qXQtmTcPE7sSV/tenXq6z
-	XVSqbMCJtHH1wgZbCZQzmhSWyj385W3HgUvNv7SZnpBjS7ans50VgPcUs/45B6Sznb39ds
-	BG8ZeCLs8c8SFbxpajWbmGJ+AuFWO9k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751465460;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ec4lvPxD+Im5OIbkkiVJgxQ8vvdCpvany66SPb/hpS4=;
-	b=cIRDrzBSuQju3UVyA+EqGnxxwKVCdf9Y//plPC83pYurqQn6ZoJ58mrG5X7d3Bdsj3yQVW
-	GG2wYlZbRVvMyYBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4687713A24;
-	Wed,  2 Jul 2025 14:11:00 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id V242EfQ9ZWgtQAAAD6G6ig
-	(envelope-from <jack@suse.cz>); Wed, 02 Jul 2025 14:11:00 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 02AB7A0A55; Wed,  2 Jul 2025 16:10:59 +0200 (CEST)
-Date: Wed, 2 Jul 2025 16:10:59 +0200
-From: Jan Kara <jack@suse.cz>
-To: Zhang Yi <yi.zhang@huaweicloud.com>
-Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca, jack@suse.cz, 
-	ojaswin@linux.ibm.com, sashal@kernel.org, yi.zhang@huawei.com, libaokun1@huawei.com, 
-	yukuai3@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH v3 04/10] ext4: refactor the block allocation process of
- ext4_page_mkwrite()
-Message-ID: <y66ier4j3kqxagrm4ztdls4iqxpggaj2bt4nwtsi2hen2bgnn3@ph3cev64ie6w>
-References: <20250701130635.4079595-1-yi.zhang@huaweicloud.com>
- <20250701130635.4079595-5-yi.zhang@huaweicloud.com>
+	bh=dVB66cXrAO/u4wGJRc/4ma1ZhCHcA+OO3ptdgLPprAc=;
+	b=iChPUFrSsbDxcUAHxnjFlylj5rZ/O9zsc7Z8F6EAf/fYoa8wA4Mzs0ZtfZyYxG+BElO0IM
+	Uf3EomiH+pajfwAw==
+From: "tip-bot2 for Geert Uytterhoeven" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/drivers] irqchip/renesas-rzv2h: Remove unneeded includes
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: =?utf-8?q?=3Cd4fbffc39af2eaa7bc50a0a97ffb3a22e3c4cb6a=2E17514?=
+ =?utf-8?q?46168=2Egit=2Egeert+renesas=40glider=2Ebe=3E?=
+References: =?utf-8?q?=3Cd4fbffc39af2eaa7bc50a0a97ffb3a22e3c4cb6a=2E175144?=
+ =?utf-8?q?6168=2Egit=2Egeert+renesas=40glider=2Ebe=3E?=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250701130635.4079595-5-yi.zhang@huaweicloud.com>
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.com:email,huawei.com:email]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 502A32118C
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -4.01
+Message-ID: <175146550236.406.13772230982074344211.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Tue 01-07-25 21:06:29, Zhang Yi wrote:
-> From: Zhang Yi <yi.zhang@huawei.com>
-> 
-> The block allocation process and error handling in ext4_page_mkwrite()
-> is complex now. Refactor it by introducing a new helper function,
-> ext4_block_page_mkwrite(). It will call ext4_block_write_begin() to
-> allocate blocks instead of directly calling block_page_mkwrite().
-> Preparing to implement retry logic in a subsequent patch to address
-> situations where the reserved journal credits are insufficient.
-> Additionally, this modification will help prevent potential deadlocks
-> that may occur when waiting for folio writeback while holding the
-> transaction handle.
-> 
-> Suggested-by: Jan Kara <jack@suse.cz>
-> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+The following commit has been merged into the irq/drivers branch of tip:
 
-Looks good! Feel free to add:
+Commit-ID:     41a5f82885e152c364e587ab30df4e582e96b73a
+Gitweb:        https://git.kernel.org/tip/41a5f82885e152c364e587ab30df4e582e96b73a
+Author:        Geert Uytterhoeven <geert+renesas@glider.be>
+AuthorDate:    Wed, 02 Jul 2025 10:53:54 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 02 Jul 2025 16:05:36 +02:00
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+irqchip/renesas-rzv2h: Remove unneeded includes
 
-One typo fix below:
+The RZ/V2H ICU driver does not use clocks, of_address, or syscore.
 
-> +	/* Start jorunal and allocate blocks */
-		 ^^^ journal
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/d4fbffc39af2eaa7bc50a0a97ffb3a22e3c4cb6a.1751446168.git.geert+renesas@glider.be
 
-> +	err = ext4_block_page_mkwrite(inode, folio, get_block);
->  	if (err == -ENOSPC && ext4_should_retry_alloc(inode->i_sb, &retries))
->  		goto retry_alloc;
->  out_ret:
+---
+ drivers/irqchip/irq-renesas-rzv2h.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+diff --git a/drivers/irqchip/irq-renesas-rzv2h.c b/drivers/irqchip/irq-renesas-rzv2h.c
+index 3daa5de..9018d9c 100644
+--- a/drivers/irqchip/irq-renesas-rzv2h.c
++++ b/drivers/irqchip/irq-renesas-rzv2h.c
+@@ -11,18 +11,15 @@
+ 
+ #include <linux/bitfield.h>
+ #include <linux/cleanup.h>
+-#include <linux/clk.h>
+ #include <linux/err.h>
+ #include <linux/io.h>
+ #include <linux/irqchip.h>
+ #include <linux/irqchip/irq-renesas-rzv2h.h>
+ #include <linux/irqdomain.h>
+-#include <linux/of_address.h>
+ #include <linux/of_platform.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/reset.h>
+ #include <linux/spinlock.h>
+-#include <linux/syscore_ops.h>
+ 
+ /* DT "interrupts" indexes */
+ #define ICU_IRQ_START				1
