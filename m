@@ -1,84 +1,229 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C7FF2DE711;
-	Wed,  2 Jul 2025 21:02:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A059822E3F0
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 21:02:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751490179; cv=none; b=u2IpHpexXQB9T5bqOsIn1Ci975ZYHPI8ve0/F+5ZNOiPQAUC49Q8XW3cV93qeTcp4PG1+kEqDx0lEPpl0ZCdiq7mVAbBLIxlqkpJc3IPBhBK9G4kYj9cY1c7Bq+Aye7PnZ8T9NTzhpB1CR09WDpVpew95Qv/0UDIgveFTGRtxWQ=
+	t=1751490181; cv=none; b=Q2NDYiSraTjxTN7tSPVYwCqVZS6/b+a61cWgGd/KMvkbss9fej8pvF8gmH5CPLehzqIHv8BlqN66HfkACIqUsyZ5z+Hl8ri4g4uHBfY9WnC2mosdTJ1FI7qX7juanUD6bsU8QKFAQNMlKYlw5UVeDNHDVjv14Zd3Y0trO5hoPpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751490179; c=relaxed/simple;
-	bh=7VX+4FXtEgWxCwQZYFAkBrVoY00hVeIiCeXazH1tkiM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WzdlK4OYR4PVZxo4tr5/ote/VJEjs6B9h9DxMsGR1m0cVV5oBXdWuJEVQKjy+pCQc6Lv1Ul7Px9sZEaONlNuNgi5+IH/7pzIxO6eTZ7ku3lB8AN15Si6h7OhejJF2cA6cNlwN9fk/elIHdfbdNf8YH+mFAGVDzYzKd5ZCriYjLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TDZOogq3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751490181; c=relaxed/simple;
+	bh=4vQ93QOR7sUMLGuKKWYA5MqL8eulcSCyBQPNC6yOAz0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Cw37fck0tlj00So+QNH7Xmtma8P0CNxHQzpUQnDwalWbKQKifo8DLA2KTrr5F/kyhjqAow4mYs2niS+7tMkkTrv/2hDcOyusLnxIo1VtmUqD6uXuuDUP0+iDbt5/MophTQJQjU5yA+wihGrz6erzH/FIilsMa9eukiU/a8U46L0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lcN/2g1d; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TDZOogq3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53507C4CEE7;
-	Wed,  2 Jul 2025 21:02:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751490178;
-	bh=7VX+4FXtEgWxCwQZYFAkBrVoY00hVeIiCeXazH1tkiM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TDZOogq3sGawwQjdu3BCQrROMBGB/mEWyEMpKiu8E1kCoB0XURRoso6B95kkxsRyd
-	 QMvGAQANDedQhoyrqToRyQCRHoh6sNdvHlKf9VbR5bdNxSTkherThEOEL5kP21wjn8
-	 dig5lWeLkg8+ZL0wwBqEZk00y0Mkk9lMmvb33YPIad7f1e0gD+93VGR18wUwOhg68N
-	 fEshwQTGEEC/9pZu8rnrAHecbrZobfK20CNEGdlgkPEMgVkHBsPNfSQChwqgnrI3t6
-	 7YsRDQ/F/G0HQZNRnm8ILwSCKJt5iP0OLT7Zf/JmdgD+BSa0C3VA+wyqVkfR2rFKQ6
-	 iwpq9lQxjnSiw==
-Date: Wed, 2 Jul 2025 14:02:54 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: kernel test robot <lkp@intel.com>, Nikunj A Dadhania <nikunj@amd.com>,
-	llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [tip:x86/urgent 1/1] arch/x86/coco/sev/core.c:2170:30: warning:
- variable 'dummy' set but not used
-Message-ID: <20250702210254.GA3996668@ax162>
-References: <202507010218.3O5Ge0Xt-lkp@intel.com>
- <20250630192726.GBaGLlHl84xIopx4Pt@fat_crate.local>
- <20250701150644.GA3563357@ax162>
- <20250701152953.GCaGP-8bWPmRWI10Ec@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lcN/2g1d"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7d3dd14a7edso763243785a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 14:02:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751490178; x=1752094978; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EJ91IALf7qL2mLAV9e8zmgMyOJhT80+BeW9rsMA6c10=;
+        b=lcN/2g1dPDvkVT7gcoUnSi5cF3fKLcQFP47h2jxNP4+OcUJX3+z1EU1MijGnA+BhCa
+         6iU5o9D3lUwJH3ZGp2PjvTSuSum1AwrsX5uImQ0WRn318fBx1NNley0entkaXTkt6NTm
+         3/UX3hYj8GjY4/HaWdPaSpEfcNtGjd+dCnGGJ2qZ8GNX12N5iSlrrNbHXENl9JTDfQ9X
+         Zm0NAcugGC9AiyDy6Ogy/IiI5tkPv0enAUSdCACh1H2+APpm35gUKOfxcsQH/RtQ2rWY
+         qmIY+NjArnY1+Pja8Y6cT8f5xIS/pT1fb8dw6o2CguZLfJ3F57jldd3pi8uG2OCXRWmy
+         Zuyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751490178; x=1752094978;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EJ91IALf7qL2mLAV9e8zmgMyOJhT80+BeW9rsMA6c10=;
+        b=Q80lfVk1U1fiwMcBrO/vExwt/F/coXWwPzBu0fRwQnVa2xS7GNVCSU/rw4zRLgwVrr
+         Ht1kcUYOUJjNNG0s2A3jlVgQQfvhs6F5s7dcrb71BxqKbJ2HqWVbPsC9Oc3xUfgECm9G
+         0m2+cMXCCEekKg5UvSB1po1sqdU2japy0ayNFNJqnmUnM3NYgFwqhIPgvZYGRSK7+8Wi
+         sI9LtlTTePVkfMlqzyxvbFnb54Qd3cP3Py5uWL+hT1JYY8TuEqS13/yhTiAPoVvxePXz
+         lFYAsvRKYOQOiDpjBp4m5/zGk4FU2GsxRdsnuXAe7UKoy3yl9nZWwTiyN93Ouw+r28F8
+         x0CQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXWpapgublsXdx3XDEpRwP+8j/l2WDmhuGRxmso/7HK8BNZHqukQR1akdIhwMVafcDyKjPLxWxh356u4W0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJDHPlG9bjV/ds/D0Hm6NL/uCNxGftuOK9tQhezm7lKvJDaSs+
+	m4T6v0NashrZuoZW9VMz+EkLMD7Llzi5ty+cm+2atRsLNiyWmvGn1yvoccBtN93oetWN5QgJePF
+	J63Cxg1K5P+pNi1MCBlK0NnvKXp+pZS9eANFtrpJZ
+X-Gm-Gg: ASbGncsIn4oWj+ogHuOXxOKxAb0iPKFDyF2Q/6t2YVYKmkZ4AUpr7AVVJj1nPVjpPz3
+	DyjLoC5rvf/n6MAjbMb/YQuQZJyxuTQRijoLFBISYYemYPbLvGNK3EPEZPfPKuCPmaTir8YS+Mq
+	OADZFWVwiQ2CvwEASsh+jybh3Fw6xT/xk+hC2a0Rc8j4mc1UwNLOBJ3Byvq7QXyHtSSnh9zh/h
+X-Google-Smtp-Source: AGHT+IHZLJBo9iF9+nKbDyZZYnf6PcVxrcD0+f+tDZM+7z0OQ6NWXKWPaxUOSfKFFIK+EtLpeM3pSDTuYA14QV/DaCA=
+X-Received: by 2002:a05:620a:280d:b0:7d3:f0a0:ea5f with SMTP id
+ af79cd13be357-7d5d13f3399mr185371785a.22.1751490177645; Wed, 02 Jul 2025
+ 14:02:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250701152953.GCaGP-8bWPmRWI10Ec@fat_crate.local>
+References: <20250613134817.681832-1-herve.codina@bootlin.com>
+ <20250613134817.681832-5-herve.codina@bootlin.com> <CAJZ5v0g01QzAkpnJGdjEuif9h==tyB94tU3nCbumx_Ya3EOoDQ@mail.gmail.com>
+In-Reply-To: <CAJZ5v0g01QzAkpnJGdjEuif9h==tyB94tU3nCbumx_Ya3EOoDQ@mail.gmail.com>
+From: Saravana Kannan <saravanak@google.com>
+Date: Wed, 2 Jul 2025 14:02:20 -0700
+X-Gm-Features: Ac12FXwhrjwNcoQlswzlpTiwmASKCStdWYLWRIuHlvNKRRZirJ70zPEsjhz1ybo
+Message-ID: <CAGETcx85vKLcFcWBR2G005Nup8UkmVZFLYgd4DuUBOKxHvJn8Q@mail.gmail.com>
+Subject: Re: [PATCH v3 04/28] driver core: Avoid warning when removing a
+ device while its supplier is unbinding
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Herve Codina <herve.codina@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Peter Rosin <peda@axentia.se>, Derek Kiernan <derek.kiernan@amd.com>, 
+	Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Davidlohr Bueso <dave@stgolabs.net>, 
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+	Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org, 
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-cxl@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>, 
+	Horatiu Vultur <horatiu.vultur@microchip.com>, 
+	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 01, 2025 at 05:29:53PM +0200, Borislav Petkov wrote:
-> On Tue, Jul 01, 2025 at 08:06:44AM -0700, Nathan Chancellor wrote:
-> > Citation needed. This reproduces with Clang 15 (earliest supported on
-> > x86 now), Clang 19, and GCC 15 for me. Were you missing W=1?
-> 
-> Nope.
-> 
-> $ git checkout -b test 4a35d2b5254af89595fd90dae9ee0c8f990a148d
-> Switched to a new branch 'test'
-> $ make CC=clang-19 HOSTCC=clang-19 W=1 arch/x86/coco/sev/core.o
-> ...
->   LINK    /mnt/kernel/kernel/linux/tools/objtool/objtool
->   CC      arch/x86/coco/sev/core.o
-> $ clang-19 --version
-> Debian clang version 19.1.7 (1+b1)
-> Target: x86_64-pc-linux-gnu
-> Thread model: posix
-> InstalledDir: /usr/lib/llvm-19/bin
+On Wed, Jul 2, 2025 at 11:22=E2=80=AFAM Rafael J. Wysocki <rafael@kernel.or=
+g> wrote:
+>
+> On Fri, Jun 13, 2025 at 3:48=E2=80=AFPM Herve Codina <herve.codina@bootli=
+n.com> wrote:
+> >
+> > During driver removal, the following warning can appear:
+> >    WARNING: CPU: 1 PID: 139 at drivers/base/core.c:1497 __device_links_=
+no_driver+0xcc/0xfc
+> >    ...
+> >    Call trace:
+> >      __device_links_no_driver+0xcc/0xfc (P)
+> >      device_links_driver_cleanup+0xa8/0xf0
+> >      device_release_driver_internal+0x208/0x23c
+> >      device_links_unbind_consumers+0xe0/0x108
+> >      device_release_driver_internal+0xec/0x23c
+> >      device_links_unbind_consumers+0xe0/0x108
+> >      device_release_driver_internal+0xec/0x23c
+> >      device_links_unbind_consumers+0xe0/0x108
+> >      device_release_driver_internal+0xec/0x23c
+> >      driver_detach+0xa0/0x12c
+> >      bus_remove_driver+0x6c/0xbc
+> >      driver_unregister+0x30/0x60
+> >      pci_unregister_driver+0x20/0x9c
+> >      lan966x_pci_driver_exit+0x18/0xa90 [lan966x_pci]
+> >
+> > This warning is triggered when a consumer is removed because the links
+> > status of its supplier is not DL_DEV_DRIVER_BOUND and the link flag
+> > DL_FLAG_SYNC_STATE_ONLY is not set.
+> >
+> > The topology in terms of consumers/suppliers used was the following
+> > (consumer ---> supplier):
+> >
+> >       i2c -----------> OIC ----> PCI device
+> >        |                ^
+> >        |                |
+> >        +---> pinctrl ---+
+> >
+> > When the PCI device is removed, the OIC (interrupt controller) has to b=
+e
+> > removed. In order to remove the OIC, pinctrl and i2c need to be removed
+> > and to remove pinctrl, i2c need to be removed. The removal order is:
+> >   1) i2c
+> >   2) pinctrl
+> >   3) OIC
+> >   4) PCI device
+> >
+> > In details, the removal sequence is the following (with 0000:01:00.0 th=
+e
+> > PCI device):
+> >   driver_detach: call device_release_driver_internal(0000:01:00.0)...
+> >     device_links_busy(0000:01:00.0):
+> >       links->status =3D DL_DEV_UNBINDING
+> >     device_links_unbind_consumers(0000:01:00.0):
+> >       0000:01:00.0--oic link->status =3D DL_STATE_SUPPLIER_UNBIND
+> >       call device_release_driver_internal(oic)...
+> >         device_links_busy(oic):
+> >           links->status =3D DL_DEV_UNBINDING
+> >         device_links_unbind_consumers(oic):
+> >           oic--pinctrl link->status =3D DL_STATE_SUPPLIER_UNBIND
+> >           call device_release_driver_internal(pinctrl)...
+> >             device_links_busy(pinctrl):
+> >               links->status =3D DL_DEV_UNBINDING
+> >             device_links_unbind_consumers(pinctrl):
+> >               pinctrl--i2c link->status =3D DL_STATE_SUPPLIER_UNBIND
+> >               call device_release_driver_internal(i2c)...
+> >                 device_links_busy(i2c): links->status =3D DL_DEV_UNBIND=
+ING
+> >                 __device_links_no_driver(i2c)...
+> >                   pinctrl--i2c link->status is DL_STATE_SUPPLIER_UNBIND
+> >                   oic--i2c link->status is DL_STATE_ACTIVE
+> >                   oic--i2c link->supplier->links.status is DL_DEV_UNBIN=
+DING
+> >
+> > The warning is triggered by the i2c removal because the OIC (supplier)
+> > links status is not DL_DEV_DRIVER_BOUND. Its links status is indeed set
+> > to DL_DEV_UNBINDING.
+> >
+> > It is perfectly legit to have the links status set to DL_DEV_UNBINDING
+> > in that case. Indeed we had started to unbind the OIC which triggered
+> > the consumer unbinding and didn't finish yet when the i2c is unbound.
+> >
+> > Avoid the warning when the supplier links status is set to
+> > DL_DEV_UNBINDING and thus support this removal sequence without any
+> > warnings.
+> >
+> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+>
+> The change is OK, so
+>
+> Reviewed-by: Rafael J. Wysocki <rafael@kernel.org>
 
-Spooky, same SHA, build command, and configuration from this thread with
+You can add mine too.
 
-  Debian clang version 19.1.7 (3+b1)
-  Target: x86_64-pc-linux-gnu
-  Thread model: posix
-  InstalledDir: /usr/lib/llvm-19/bin
+Reviewed-by: Saravana Kannan <saravanak@google.com>
 
-from unstable Debian (since it is what I base on for my Debian
-development container) shows it for me... Can't imagine the two Debian
-patch levels would have caused anything here but it is probably not
-worth thinking too much more about since it is already resolved.
+-Saravana
 
-Cheers,
-Nathan
+>
+> but it will clash with
+>
+> https://lore.kernel.org/linux-pm/2793309.mvXUDI8C0e@rjwysocki.net/
+>
+> that's been queued up by Greg AFAICS.
+>
+> > ---
+> >  drivers/base/core.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/base/core.c b/drivers/base/core.c
+> > index 8fead097c404..ce367c44f642 100644
+> > --- a/drivers/base/core.c
+> > +++ b/drivers/base/core.c
+> > @@ -1494,7 +1494,8 @@ static void __device_links_no_driver(struct devic=
+e *dev)
+> >                 if (link->supplier->links.status =3D=3D DL_DEV_DRIVER_B=
+OUND) {
+> >                         WRITE_ONCE(link->status, DL_STATE_AVAILABLE);
+> >                 } else {
+> > -                       WARN_ON(!(link->flags & DL_FLAG_SYNC_STATE_ONLY=
+));
+> > +                       WARN_ON(link->supplier->links.status !=3D DL_DE=
+V_UNBINDING &&
+> > +                               !(link->flags & DL_FLAG_SYNC_STATE_ONLY=
+));
+> >                         WRITE_ONCE(link->status, DL_STATE_DORMANT);
+> >                 }
+> >         }
+> > --
+> > 2.49.0
+> >
