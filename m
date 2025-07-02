@@ -1,108 +1,185 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C5D26B77A
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 12:06:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E1C25BEF3
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 12:06:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751457982; cv=none; b=fZ4EVDXRpxN8UUidZT2eitWWL4kxhxLDYDP0EWRAkPmSzTQEjyeAxuhaEKcN4Ckh1FRQajYKw8fIbX/JDu+djCTeKvmH3gUMFj2/W3MPY/i0jenVHtRxWi1wmwBEdlK3m5eeH/xjFYq3C0nmwGfMNmbde1Y+3R2afI5zgc+a/QU=
+	t=1751458021; cv=none; b=MWFtOFKEwtKPePRhxEN150chUr6uufDv3f0aGUCFdvqeEUa5EfJkeow7/8mEH1ZdLgWOIKJ/pSs7DkHjH2VsOITWCC39G8pNgGswhQF3R1RZfe/GFU8Dn7WqoM6yzDfQmGwswg4oLnPdeuFQ6JLuVXdcWJs5gzsQro2AughfIE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751457982; c=relaxed/simple;
-	bh=GVNj0GiDbzEfuPNlWlITePA20oGFkxhZ//VQ6Wqj9z0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Okk399cli8jgdiu3V2xjrNA3TZ45h2ztQukdhmVmexTdh1DVFmu+H8YGrWfOECA10zNMwGW9azwqXYkOL6PtoTjHkB7Kg+sfmROZjq92cJse3cngKALaUAQhUQI96ZuzG9n9ix/tVRESp2ftYOWu4R5LK97oHKx50Ji7RtXOnoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=elPdaOBf; arc=none smtp.client-ip=209.85.128.44
+	s=arc-20240116; t=1751458021; c=relaxed/simple;
+	bh=mdHutE0as3n8u7f3A7Ru6GJrK4RiB1Pta9XS95fCFnQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VipqjKjbl1Euri0r1AfU6yu3KLiNFXRWSiWGeCcv7KC37fsRP9tfbpZTJcJokC7/mZtR5braWHg/t6QMiP6DBz+wOMYQeeh2Hn0Ouk4sPi8vGxYHx0lBX+amHOxmGKGa8elbFC6uWaPoHGEIFlKVy53S9ZR+SkafA9/xzlDac9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MhimG29U; arc=none smtp.client-ip=209.85.128.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="elPdaOBf"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4538a2fc7ffso45517895e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 05:06:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MhimG29U"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-70e5e6ab7b8so62696537b3.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 05:06:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751457979; x=1752062779; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4I9wHRK6ycL/nw5skCVK6BibKiZIXkW4VmffJ6mPK24=;
-        b=elPdaOBf1Y1osT08GlI0yQdY9yz4+VCtXoORGaEDDCY6UpcbTyPRcbfPBqjBONJVnx
-         MmhuaPOftEXpMQBKVAKHoeXygZ5GBU9TwsTIduNp3yrNBhLzfMmkKlZKb1iWcLUu9KgI
-         7+Blwbrbc5wPF3Uo98ROKzmJMaJX+7urND9kwFBD7IMGk2FLoCclyVkPxEhvDiQA7X6D
-         UXe77TD3LlZqg/anNUEQ3Huokik7tBwmQQGqmKnUrJRy1A7ZKjvRvDaeUSMyMqAIQfKL
-         jt6SEqYCwGM4FQuD0sJ+hYi1Hdc/z4TwR6l5UJcdc2bortlRVmFZbmCMY5VunfmHTQqv
-         AZfA==
+        d=linaro.org; s=google; t=1751458018; x=1752062818; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=H//zs/SGlHTwFgjneb586KPEfZCC73lRKW26G4B/bNw=;
+        b=MhimG29UOWbN0SPcvqLu/Qlo34CZNlfrm1YzZWHB7Wt6CBoFLTmc22gJYJ43GZ8nJW
+         gcLEVN4inwmPinW7/x5Ry8Wy+s8nKIgYfNK5l9VwmWHaOOaZ3/z1VfVSYoMfGQKASRzh
+         EokeylsT+k1XoW/EqBcAWYFBECkaY7wvCd4aCJqoL/llcWL7Dp2uKsa/HMrMz+ngUF5/
+         OQoYhpUeGViiFm8gQAgqy9ujhpJSxlm64InQVCi8y1om4EqnEvfjk0PK4xx3/45cynB7
+         T33qXPHE/7gkre0Y28oV2SaHEg0Ap98Yog8zoYVBqmRsyKomGxTomQh0R5SAoCgQUENJ
+         kBcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751457979; x=1752062779;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4I9wHRK6ycL/nw5skCVK6BibKiZIXkW4VmffJ6mPK24=;
-        b=xSS7IlNl1pdLfK4mrvHk4NUTFWL3dsJo+zyxGl/PFneEHxoZb11s/kQTKAMLEttTS1
-         9vgdfwuie4DYgoQGF7e/0Iq/yy6MZW98w0IgXJVe3nb0nqRxXTq9NnRCm8OFNM5s5LRz
-         iOeX3flzy1Z2omKF9BkpqYn8G0pcDWIe/LbHPXos0DnpH3hU/RyEoMq1fMaDWabJUYCU
-         VaGdBae7umkfpkpYDXufJ1ixBEvaGyLdU+feFqDHiwU6YDSh2IFSgUbr5uBRLk8cMceM
-         g2P75rouQwyp1ApgB5MXvKzwHG3jOFRqT46GdfhTRZfHShe9a71vZHBL26UZXuinbjv5
-         COlg==
-X-Forwarded-Encrypted: i=1; AJvYcCVR34ee0NMBJpPvnuGwwJGGF4KXIoT+vwGD51B/I2vDK5Q9QcdraKaFa1CcC8UcfQEhQakQj4CudzgpnDE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGfiDysxI7fzR2FLHGVDOhIw7WzWnOMs9J06v9t+ORz45+qGVx
-	Dd4T4prmtu5Whq7B0DFpZNSE+c4UDUqZxrjOTvgcLfa9ixMhvlWkiY8qTmZr22qLaMNxQzpWiYJ
-	MSoxPV+8=
-X-Gm-Gg: ASbGncsAZShea4nqRJcC8WuGnIziTS5AHApPs6s2tBR1Gl+MgYmvUgMUH51tPjdwJXG
-	ZUwJJUpe3hJYSw7aLDESiMG13jzJZWGH6mD9875uTstCXD665muyj5XqbjQieOiywjhju/F9yVO
-	u1vFJvxW/sdiE4vDqvfuJTDbJYx/4kKCtN3bXiI4cS5JP7ZOq9FEwzibpJrmmrgGXgBV1y0YREf
-	OytU6M/lHiugWP7POKWdKHmxc58PItZMbPFyqPVYOzwx0cX69qlnJYlPMCM8u3/KZWgV2m1tMOB
-	RK68M0KCScMws3UHLuRFohrbtfGc0vin4HLHNH73zrpa69XuhZW/QMODGzRjmtKbkqtFDlYZI99
-	c2hygMDVJ3J+eIFO13kuHvGRQDckx
-X-Google-Smtp-Source: AGHT+IFiGQ8eoDbIef8H5WgcGBsaUK7l+LIPHU5+0N6yFyzZ/rasF17jb2K+ACo904sf9rWYtcqByA==
-X-Received: by 2002:a05:600c:c08d:b0:453:8e3d:26ef with SMTP id 5b1f17b1804b1-454a3c22568mr18064675e9.6.1751457979384;
-        Wed, 02 Jul 2025 05:06:19 -0700 (PDT)
-Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538233bd14sm230508525e9.2.2025.07.02.05.06.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jul 2025 05:06:18 -0700 (PDT)
-Message-ID: <f5ebf0d6-2f0b-45cc-b99a-b786e5df9edc@linaro.org>
-Date: Wed, 2 Jul 2025 13:06:17 +0100
+        d=1e100.net; s=20230601; t=1751458018; x=1752062818;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=H//zs/SGlHTwFgjneb586KPEfZCC73lRKW26G4B/bNw=;
+        b=rA7XzIfa+3s8QUVdMkRvVZgoYBQVG/LvafbToGt0GSGyvP125usNGOYRROA1DT4uBU
+         rvEEFXPqE4Qc4JbSV8sYQFpnol3BZUu4rLCm9JLZT6R0Wyi5xn0PxZb68cYTtd5QIeNO
+         qR3eJGi8HUXqdQDOAzYjLrkRpgnHzpFd/J+Z7izYizTFZ/6iyn9m5E90Vimt3I2e5Ex7
+         l0rbZ4OZCQwu4TRuVSdgSxq0XziRossOFVoOGMs53e7+sN3/qEVtFwQiUC7272CA6r4k
+         NIUQuZCGSkwJe7aRcX9cfD2m7z/QSTVwIvkUXY1Tnf0JL/M632DbeQIo9YOqO6NYN5xG
+         fA0w==
+X-Forwarded-Encrypted: i=1; AJvYcCULY0Ad52vN4s+3ZBQJoUPqzF8PSMhHZt6lQ88oFUzKwAlnKDl5yGdRGsUMDBE2yzCpgQX8xRlXVha468I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzt4R03hWI09vqqA0u9Rra++ZIHoKJCKFlis+BD7Gy8cbjFSeER
+	51sjE3atFclAEQ+Z24Iv5bFukMQN83dGWfVjlNMOj5NoJRE22c7JrWbA7q/hosyFU3585+R9sml
+	rt/6F4/vvAfTeJ6Z3t8Emeu5+ibFJOVo/HROKzmYfTw==
+X-Gm-Gg: ASbGnctze1rgelTXlnvSLPWGzvKcM0ntV0zYv/uvy//8epsScKz3hjGi9O2JPy7brXN
+	1ZXSQzAXJ3tHkc43k5XVrCIQueVgD3BuehgQ0zxSVlUg5tmkhwMAMSofvJoeQu7g4enHoALlChH
+	fnlqpiT8Il1mPSF6QnVQtzyGKBD0Yx8SwYW+EJbVlv8LvP
+X-Google-Smtp-Source: AGHT+IHvy4ot4cVEUqJ9OPaKV3B11/w9tqUUihTLRsxteLbI5hVPVLYtxESKS56YJ2QmEc+ggte5xRAak7cDxYT6glw=
+X-Received: by 2002:a05:690c:6305:b0:70e:7638:a3a9 with SMTP id
+ 00721157ae682-7164d54935amr34553827b3.18.1751458018380; Wed, 02 Jul 2025
+ 05:06:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/5] Introduce "non-pixel" sub node within iris video
- node
-To: Vikash Garodia <quic_vgarodia@quicinc.com>,
- Krzysztof Kozlowski <krzk@kernel.org>,
- Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Abhinav Kumar <abhinav.kumar@linux.dev>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250627-video_cb-v3-0-51e18c0ffbce@quicinc.com>
- <5f90547d-945a-4e26-b36c-75f2d8a1af97@kernel.org>
- <eab8d79f-7188-9537-9176-3e4d22f0978a@quicinc.com>
- <5ad418d9-8199-43c9-a477-1e3b939c054c@kernel.org>
- <7b6db4fa-2f73-376d-4eb3-64c1c7e6cda3@quicinc.com>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <7b6db4fa-2f73-376d-4eb3-64c1c7e6cda3@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250627204821.1150459-1-k-willis@ti.com> <20250627204821.1150459-3-k-willis@ti.com>
+In-Reply-To: <20250627204821.1150459-3-k-willis@ti.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Wed, 2 Jul 2025 14:06:22 +0200
+X-Gm-Features: Ac12FXwakGRpH39p6UXOySAygWsMTsisIa17xEeHOgmtuD9NMJOQScXlVEjSnu0
+Message-ID: <CAPDyKForKeb=uTkOXWcJea-P9c+7wQ3ZRWFYpTXk=xLoQPsQaw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] pmdomain: ti_sci: Add LPM abort sequence to suspend path
+To: Kendall Willis <k-willis@ti.com>
+Cc: nm@ti.com, kristo@kernel.org, ssantosh@kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, d-gole@ti.com, vishalm@ti.com, sebin.francis@ti.com, 
+	msp@baylibre.com, khilman@baylibre.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 02/07/2025 13:01, Vikash Garodia wrote:
->> Anyway, in other messages I explained what is missing. You are changing
->> existing hardware and you clearly must explain how existing hardware is
->> affected, how can we reproduce it, how users are affected.
-> Exactly all of these i have explained in the commit message. The limitation with
-> existing hardware binding usage and how my new approach mitigates that limition.
-> 
-> Coming to usecase, i made a generic comment saying usecases which needs higher
-> IOVA, i can add the explicit detail about usecase like 8k or higher
-> concurrencies like 32 or higher concurrent sessions.
+On Fri, 27 Jun 2025 at 22:49, Kendall Willis <k-willis@ti.com> wrote:
+>
+> Create ->suspend_late() and ->suspend_noirq() hooks to add abort sequence
+> to any driver within the PM domain with either of those hooks. If a driver
+> fails to suspend with those hooks, add a call to the DM to abort entering
+> the LPM. The suspend hooks of the PM domains driver inserts itself into
+> the suspend path of all devices connected to the TI SCI PM domain. So if
+> any device in the PM domain with either a ->suspend_late() or
+> ->suspend_noirq hook fails to suspend, the PM domain drivers suspend hook
+> will send the abort call to the DM.
+>
+> Adding an abort call in the ->suspend() hook is not necessary. TI SCI
+> suspend sends the message to the DM to prepare to enter a low power mode.
+> TI SCI suspend ALWAYS occurs after the ->suspend() hook for all TI SCI
+> devices has been called.
+>
+> Signed-off-by: Kendall Willis <k-willis@ti.com>
+> ---
+>  drivers/pmdomain/ti/ti_sci_pm_domains.c | 46 ++++++++++++++++++++++++-
+>  1 file changed, 45 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/pmdomain/ti/ti_sci_pm_domains.c b/drivers/pmdomain/ti/ti_sci_pm_domains.c
+> index 82df7e44250bb..975defc16271d 100644
+> --- a/drivers/pmdomain/ti/ti_sci_pm_domains.c
+> +++ b/drivers/pmdomain/ti/ti_sci_pm_domains.c
+> @@ -2,7 +2,7 @@
+>  /*
+>   * TI SCI Generic Power Domain Driver
+>   *
+> - * Copyright (C) 2015-2017 Texas Instruments Incorporated - http://www.ti.com/
+> + * Copyright (C) 2015-2025 Texas Instruments Incorporated - http://www.ti.com/
+>   *     J Keerthy <j-keerthy@ti.com>
+>   *     Dave Gerlach <d-gerlach@ti.com>
+>   */
+> @@ -149,8 +149,47 @@ static int ti_sci_pd_suspend(struct device *dev)
+>
+>         return 0;
+>  }
+> +
+> +static int ti_sci_pd_suspend_late(struct device *dev)
+> +{
+> +       struct generic_pm_domain *genpd = pd_to_genpd(dev->pm_domain);
+> +       struct ti_sci_pm_domain *pd = genpd_to_ti_sci_pd(genpd);
+> +       const struct ti_sci_handle *ti_sci = pd->parent->ti_sci;
+> +       int ret;
+> +
+> +       ret = pm_generic_suspend_late(dev);
+> +       if (ret) {
+> +               dev_err(dev, "%s: Failed to suspend. Abort entering low power mode.\n", __func__);
+> +               if (ti_sci->ops.pm_ops.lpm_abort(ti_sci))
+> +                       dev_err(dev, "%s: Failed to abort.\n", __func__);
+> +               return ret;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int ti_sci_pd_suspend_noirq(struct device *dev)
+> +{
+> +       struct generic_pm_domain *genpd = pd_to_genpd(dev->pm_domain);
+> +       struct ti_sci_pm_domain *pd = genpd_to_ti_sci_pd(genpd);
+> +       const struct ti_sci_handle *ti_sci = pd->parent->ti_sci;
+> +       int ret;
+> +
+> +       ret = pm_generic_suspend_noirq(dev);
+> +       if (ret) {
+> +               dev_err(dev, "%s: Failed to suspend. Abort entering low power mode.\n", __func__);
+> +               if (ti_sci->ops.pm_ops.lpm_abort(ti_sci))
+> +                       dev_err(dev, "%s: Failed to abort.\n", __func__);
+> +               return ret;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  #else
+>  #define ti_sci_pd_suspend              NULL
+> +#define ti_sci_pd_suspend_late         NULL
+> +#define ti_sci_pd_suspend_noirq                NULL
+>  #endif
+>
+>  /*
+> @@ -264,6 +303,11 @@ static int ti_sci_pm_domain_probe(struct platform_device *pdev)
+>                                     pd_provider->ti_sci->ops.pm_ops.set_latency_constraint)
+>                                         pd->pd.domain.ops.suspend = ti_sci_pd_suspend;
+>
+> +                               if (pd_provider->ti_sci->ops.pm_ops.lpm_abort) {
+> +                                       pd->pd.domain.ops.suspend_late = ti_sci_pd_suspend_late;
+> +                                       pd->pd.domain.ops.suspend_noirq = ti_sci_pd_suspend_noirq;
 
-Why not make this change for a new SoC, instead of an existing ?
+This doesn't work as pm_genpd_init() is assigning the
+->suspend_noirq() callback, hence overriding the callback.
 
-That way you don't have to make the argument for retrospective ABI changes.
+Moreover I am not sure this is the correct thing to do, as having your
+own ->suspend_noirq() callback would mean that you will be by-passing
+genpd's internal reference counting to understand when it's fine to
+power-off the PM domain, vi a the ->power_off() callback.
 
----
-bod
+Can the LPM abort be handled from a ->complete() callback instead?
+
+> +                               }
+> +
+>                                 pm_genpd_init(&pd->pd, NULL, true);
+>
+>                                 list_add(&pd->node, &pd_provider->pd_list);
+> --
+> 2.34.1
+>
+
+Kind regards
+Uffe
