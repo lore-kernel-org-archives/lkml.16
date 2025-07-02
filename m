@@ -1,111 +1,131 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 074722BE64A
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 19:51:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5741269830;
+	Wed,  2 Jul 2025 19:54:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751485904; cv=none; b=KRUVg+PkPbuub6Dkou3IS/AkE7PtHcNR0fdu+vbn2p/Tl3TGokU+qy3A7e+Jn2fD02i0mbmFev8VW4BjzYSVHt3x6qhX31nRfdNIKcdjy9DiZV2XpurUcLPTa9ac/orEseGiauBuPIloK9SLc+FqoYjnXWfY4gBbOScmE3R1rPc=
+	t=1751486056; cv=none; b=urILNZCzprDDxalSTxRHQyxH1pvW4bvY5SO1nEqd/xw+XS3DDnCM1UflZoYduMnALZrjM7U0fS3Eolkzdl0O7lUMw7+w0jN4ZcdCT4xGXmYwwMSX0jaV3XQMIVyyvclQHV20leU2f4gN3W0AW5kQmcEpzEi7CuBNiq1qGSqEXTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751485904; c=relaxed/simple;
-	bh=s084wtR88k+Zm0T48J86wDm0Hr7gnC1awK4eSCCArW4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dLIjefWXU6K2RRu4hJAY22cFvvaKg6k/gf3O6CxNbRblFLkmedX4BvNEJEbMA3k/7WPsQaZ/4+hQvPh0bf95jwZjOgjObb3KrR/Sz5PepLIMcPtydhUMS6KxVfdJtcSJbPYW8k0Zaae7e1wrH9BjOtuBH64NREnNT+odvUTa404=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=QUHkN5Iy; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1751486056; c=relaxed/simple;
+	bh=wwz1hIB1NXjK34VbesMPuAkjSQZMf2atfDZ/9HclXM4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y88Z8AkQqQP6OSG/xV+BM62036fKDqbWcgfmdc6ISc8r6mDsn9yi7n3Tyv9gRs/2AUBp25Xz+htY83fg0GgIzMMR4y/1c/0Ny6Dv9uCjTLBGwT6Wr2UCHy87scSrPynBkzw3BsfXqqS95h4ihVGKV6C3U13uJjAuh6450vUsmmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IEytrSfF; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="QUHkN5Iy"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-237f5c7f4d7so8618445ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 12:51:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IEytrSfF"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-60c3aafae23so598513a12.1;
+        Wed, 02 Jul 2025 12:54:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1751485900; x=1752090700; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FztTel//e5oyaa7vSr+Ve5ZZ9B/kFDNC6EmcHFeFbgE=;
-        b=QUHkN5Iywct1or5wb2t3ssdRk8eTVsaWTmsS4Ap4npa7wXD47/p1UC8VpWb7s/t2pk
-         jWUU0xjgQdLmyVbtVcsOBKatgYYT6keeN8X8E0812GQ/wC+iWbxzPTzGwL6dIDL+NHrN
-         hzJO3Q7ibV0Hi0MrNNcHnrIwfWxT6gGKs/EvRVgSu/doAFCHmCsyQ6Il5307C4hu/JGu
-         leDzC1nNzwrSesoWI/JtgcfiDgUWCldox/r+vXzmS2EM0na8OB4SFSILY7Q4PAGVLis+
-         RnsMFvcp+rm4FhqTIe6bD+YAJuhyX9mRvt0Q15/Oxu+ocxqx68bd7dywHEaZp8RWp7g4
-         oVJw==
+        d=gmail.com; s=20230601; t=1751486053; x=1752090853; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TmPW8V8zA0N+0RM8g3oXGj0lKhBGP6NeWfr9DyiUeXw=;
+        b=IEytrSfFNPW+X/mgwDoF5syOcdhDieFJIw8UorwA2SWZpX2mtgUYxzI/wCeGx4yxwp
+         6fEgHghggN8Li5S92S02tvOQZm1aaXq0g4GvJn0P2l/4Y9MQspVIhb1kxckvJgtCsXOk
+         PVddyhn253kHPPeipE7yow4WhJS1kv6n/TIuPlaFbZWjOuJYZYK68mA7tyDoxnq6F9cG
+         m/IexDXUT368Ol7EIeQEZ4UWIwd9cmTly5nnvj4apl4Ef2fvla/LUl+a7fR5/1ZET7Op
+         /R+BqvjN+nCQ7eLIo+w+L/9Yq9iGS306lwjSWc8a4JZRdH3II+KlcyGj/TyHXDpJEu4Z
+         lhgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751485900; x=1752090700;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FztTel//e5oyaa7vSr+Ve5ZZ9B/kFDNC6EmcHFeFbgE=;
-        b=rIaiogq9HouyvRpHbgVxV/LTILRlSRgGDog/bPNsV47Z7zlRKENQ9RyFLaIGHpkwv+
-         +FRlykphktnOudlaGIa0TG7QYo9R75eq+6mCWpg47or8qCVxbFtaa4pGs/wruNkdrwJJ
-         6rUFn+jov92QA7u1UKbk7xATiW6nhByj+nDJH8PUoXoo8fPAWz3dttDMGAZ2N8QNhX/r
-         I6UzY9znuf8g0SPuXMwoSWx4F2AMv3qYrfeLqZ9XuoEgt7tNHl6r8yzSxwncu5T4ZjON
-         F73D9eRVnXltHW2qmCQCbTl2QaiAJ36Hle2RMD9UdSz1CURrlD08XwmVc2B7l3Uz1oDB
-         kydg==
-X-Forwarded-Encrypted: i=1; AJvYcCUpnGwp3ZZBwxi0a9lR+kFrATCBrPi52oCv+1iQk8tQGwm6lCjRPcPFqmfNdLAwDIfyir8OI4xl0ChBfgE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwByPoSzeXtTb6sxVv2KFl+JsZgC4GQ4xWQn7nziMkxMqTGmIPN
-	wQeyEpSmkN2mBtIXOap80QCMIhi5kmA/JmX0ELha4IXSL+cA9kvcn/9o3CnAdZ4w42JSnyLmFQx
-	p96/KH5MvpRfqu7/lTtbwduuF6Qg5UT5onFj8tW+85Q==
-X-Gm-Gg: ASbGncsxt+srZSSyiezJm4pY5fJAsYJX9ymStwp1Fhv7dPscEy6TevQcKVLrMksm09r
-	wC5+D6ykvsW9JTTMlAwVMsMY3COkWXZzgxDHm7MIwP9MDVtahzApaEKQPXwEBN/TzKIHhfKTypV
-	CSKb5krOFSMePaVR0I+M8hCzm0XEea7XjUaIIcrR9DHQB/7f7js2yQNQ==
-X-Google-Smtp-Source: AGHT+IHzKax4rWzgTagFExREvUdZKzP7gz6GIK5OKEX/A1gv3DbccqXrJXg9Q79q2ToGLz5xqYGJ7FpbAJTwCWI+3ts=
-X-Received: by 2002:a17:903:124d:b0:23c:5f36:46a6 with SMTP id
- d9443c01a7336-23c6fcea87bmr20535465ad.12.1751485900234; Wed, 02 Jul 2025
- 12:51:40 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751486053; x=1752090853;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TmPW8V8zA0N+0RM8g3oXGj0lKhBGP6NeWfr9DyiUeXw=;
+        b=Z4RkHOuWfDn2VyHdrRs9U1fGq+EYWXmEssfbVe2zJxsplKiNlbZv8Hbz+DM7EabJQ3
+         NJysZhgPEqulEOzCvWrz8LhLK95iWOQF1NnOn9fwf37ixcYs1COIc403+Uotwpno/kyv
+         56TnA3zdQBij2yeT/CzTSnWBM82kHqSYEx9TtVLlkVlhBu91ZtEEAifx3NP7SQyKLGBh
+         EC6dBKx9xhw1a9e18B+Esx18i3gtgyK52UXxwPwtoQ5sUtfe47CAGXmBJJoqUcmJCKCw
+         x78xFip9pN1VNufz8HfVrFlbwxFKi0/MJcs0jhfwo/4xaJGaOhEsGa0e7+VpViLE1k6X
+         6cvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVBXC8jLc+kRZUtNe4fX7U7uowReiDWaaD/GIaGHYByiuCGZlFOd+txM8nfLY7p8OdR0OJg0hKyTADF@vger.kernel.org, AJvYcCWT4qMNoK5LVCIqeGcGhnZcA8ziv55OmlT3WkSMnW3TbsYH1Cne22Mnp5wFMd+K6Z5OzH07n9Z8Xqa52/Ay@vger.kernel.org
+X-Gm-Message-State: AOJu0YymalxGMEiINgg/dKr2fVpwJB1lX2Kt8z5TNADuSmfh1jVGO0bx
+	EAJiVs75Lktx91w1s/ktb/uEw9S11obGGSHShId0reA5WFZIciRaHHOx
+X-Gm-Gg: ASbGnctEmrggvMF3IlgVQUSjPx1i8DSP1FYIRq8T8SHFB4ruNIyzKMLkwGcpOrL/Sm2
+	9vKIxENklmaoPu48YzaHOy+eD0+WMAUwYI44vZI58YbSGzgUH6Gi5+RVaIj+CkFxKRryQeevXgi
+	WeBzKeJQZi/Y24vS7xqcQmrOYCllPZ+g1z7DFdSvnfSsGaaAMx9KRQi68QGx5b8EmNqjCS3amOH
+	kFlJz/8Aid3db1oyPXZVfx8E+vBM7YsyYEHokeUDLdlRXL5o58jfUcvbZedxAvTdiJP5vpM4VwC
+	xKdgM/lJYW/Y/GEwDEmx9Q8toO7+OSL8tdR00Gimr01UXW+Fkp9PzLhsILboC50/EPk2KJoqqnI
+	HQTNBlxCSD7O6XQ==
+X-Google-Smtp-Source: AGHT+IEEv4SAI/kYMvjmT0AuIHDgZyTBNcF2bWLyaYLuZrid3Rgx7jF4/Zg1edoD8uel5WIfiOf7DQ==
+X-Received: by 2002:a17:906:ef0c:b0:ae0:a464:99d with SMTP id a640c23a62f3a-ae3dd3c1e03mr18767066b.17.1751486052730;
+        Wed, 02 Jul 2025 12:54:12 -0700 (PDT)
+Received: from [192.168.1.129] ([82.79.237.69])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353ca201asm1132959266b.150.2025.07.02.12.54.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Jul 2025 12:54:12 -0700 (PDT)
+Message-ID: <c3deef24-fed7-4405-9953-804bff118c11@gmail.com>
+Date: Wed, 2 Jul 2025 22:54:09 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250619192748.3602122-1-csander@purestorage.com>
- <20250619192748.3602122-4-csander@purestorage.com> <c83a2cb6-3486-4977-9e1e-abda015a4dad@kernel.dk>
-In-Reply-To: <c83a2cb6-3486-4977-9e1e-abda015a4dad@kernel.dk>
-From: Caleb Sander Mateos <csander@purestorage.com>
-Date: Wed, 2 Jul 2025 15:51:28 -0400
-X-Gm-Features: Ac12FXzYvCEJprNA84OmEAiR_yc-BbACnKsWI1JFO0q24cJQIzcr5F8BHED8eZ4
-Message-ID: <CADUfDZr6A51QxVWw2hJF6_FZW7QYoUHwH-JtNEgmkAefMiUjqQ@mail.gmail.com>
-Subject: Re: [PATCH 3/4] btrfs/ioctl: store btrfs_uring_encoded_data in io_btrfs_cmd
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
-	Mark Harmstone <maharmstone@fb.com>, linux-btrfs@vger.kernel.org, io-uring@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 4/6] arm64: dts: imx8mp: convert 'aips5' to 'aipstz5'
+To: Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+ Daniel Baluta <daniel.baluta@nxp.com>, Shengjiu Wang
+ <shengjiu.wang@nxp.com>, Frank Li <Frank.Li@nxp.com>,
+ Marco Felsch <m.felsch@pengutronix.de>,
+ Marc Kleine-Budde <mkl@pengutronix.de>,
+ Alexander Stein <alexander.stein@ew.tq-group.com>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>, devicetree@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250610160152.1113930-1-laurentiumihalcea111@gmail.com>
+ <20250610160152.1113930-5-laurentiumihalcea111@gmail.com>
+ <ac1daf6b-ee06-4076-b86f-b436ca0acd6d@sirena.org.uk>
+Content-Language: en-US
+From: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
+In-Reply-To: <ac1daf6b-ee06-4076-b86f-b436ca0acd6d@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jul 1, 2025 at 3:06=E2=80=AFPM Jens Axboe <axboe@kernel.dk> wrote:
+
+
+On 7/2/2025 9:49 PM, Mark Brown wrote:
+> On Tue, Jun 10, 2025 at 12:01:50PM -0400, Laurentiu Mihalcea wrote:
+>> From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+>>
+>> AIPS5 is actually AIPSTZ5 as it offers some security-related
+>> configurations. Since these configurations need to be applied before
+>> accessing any of the peripherals on the bus, it's better to make AIPSTZ5
+>> be their parent instead of keeping AIPS5 and adding a child node for
+>> AIPSTZ5. Also, because of the security configurations, the address space
+>> of the bus has to be changed to that of the configuration registers.
+>>
+>> Finally, since AIPSTZ5 belongs to the AUDIOMIX power domain, add the
+>> missing 'power-domains' property. The domain needs to be powered on before
+>> attempting to configure the security-related registers.
+> I'm seeing failures to probe the audio devices on the i.MX8MP Verdin
+> system in -next which seem to bisect down to this commit,  I'm seeing
+> separate boot failures on the EVK so haven't been able to confirm the
+> status there.  There's no obvious logging, the dt selftest shows:
 >
-> > @@ -4811,11 +4813,15 @@ static int btrfs_uring_encoded_read(struct io_u=
-ring_cmd *cmd, unsigned int issue
-> >       loff_t pos;
-> >       struct kiocb kiocb;
-> >       struct extent_state *cached_state =3D NULL;
-> >       u64 start, lockend;
-> >       void __user *sqe_addr;
-> > -     struct btrfs_uring_encoded_data *data =3D io_uring_cmd_get_async_=
-data(cmd)->op_data;
-> > +     struct io_btrfs_cmd *bc =3D io_uring_cmd_to_pdu(cmd, struct io_bt=
-rfs_cmd);
-> > +     struct btrfs_uring_encoded_data *data =3D NULL;
-> > +
-> > +     if (cmd->flags & IORING_URING_CMD_REISSUE)
-> > +             data =3D bc->data;
+> # not ok 141 /sound
+> # not ok 142 /sound-hdmi
 >
-> Can this be a btrfs io_btrfs_cmd specific flag? Doesn't seem like it
-> would need to be io_uring wide.
+> Full log at:
+>
+>   https://lava.sirena.org.uk/scheduler/job/1530197#L5119
 
-Maybe. But where are you thinking it would be stored? I don't think
-io_uring_cmd's pdu field would work because it's not initialized
-before the first call to ->uring_cmd(). That's the whole reason I
-needed to add a flag to tell whether this was the first call to
-->uring_cmd() or a subsequent one.
-I also put the flag in the uring_cmd layer because that's where
-op_data was defined. Even though btrfs is the only current user of
-op_data, it seems like it was intended as a generic mechanism that
-other ->uring_cmd() implementations might want to use. It seems like
-the same argument would apply to this flag.
-Thoughts?
+Hi Mark,
 
-Best,
-Caleb
+Thanks for catching this!
+
+After browsing through the provided logs it would seem like no device under the
+AIPSTZ bus gets probed. Right now, my guess is that the AIPSTZ driver is not being
+compiled since CONFIG_IMX_AIPSTZ might be set to 'n'.
+
+Which defconfig is the CI using? Is it arch/arm64/configs/defconfig?
+
+Thanks,
+Laurentiu
