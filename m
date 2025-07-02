@@ -1,165 +1,154 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09BD2652BD;
-	Wed,  2 Jul 2025 13:53:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A1FE27A10A
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 13:54:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751464433; cv=none; b=IvY4Cep4jAdPbw0ia2kj2DVFbJqANiAFBxxJLW/V/nuMaun8XUAZg4BcBa6DjGPeGAdB3pIb5qcDZbhCIE5ceuer6Qxsbd2iUZ2xbkKUvwWTKE+nXceDpyRyvS4CIHIgk2e4D2rQthtnVvCxqTmDWeyz1euRURE+AOd/Cj6QMgQ=
+	t=1751464465; cv=none; b=t1eeW1Nd/c2DhuxtcfpX7X7FXzWf0tdy4j0j64/uxiFf6FFkU/LopFVEQYPfThZDprmkqL5OU9xB2HsL15gjS9N/F6SJz9EjdCkRBBWUGGx58WA7K0JPoLKcJ3RehXkPS0aUSt9L7gH7ZhJzDMkzCHVGR3a1xj3Ysj72J8e4G2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751464433; c=relaxed/simple;
-	bh=oL5ROgMkCNu3a/za1C5UVisYMIlOPy2PoMgM8u/9u5c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eQE26aPw/VB0kyO9Q9aa/7i5Q8T9jqnvHwkKHodwjF0V7LUqJWIEseEbcnhgIKv2imTEuZ+hFxloD/LRzxo6WC5r7moQKYezOrUXADzevoSmL6TupPaQEmSl+jPJe7gIafoepuZ4CUqASj45934iJcnqo9IAYhmt1sFISqZBQW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ISemkQsk; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751464465; c=relaxed/simple;
+	bh=JYcMfo/FRV0MXHDD6f3JXpyZw1uOm6GKaDPQ9wemazA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ptC3QwdRcerysrOBIqyyC0sF06wBEt3oK43zlVb7AB0sPT9ompXiSllXx88fb7JIR5qrz1H0YSa8j385KGMwt7nxiaNRCgL+wL2LlXiS6enHQTGngVgDrd0nL3MF8h8vzEtiz1mWercpzoEatS+Ez51E15J0b8vmBoB5IicGHv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vW5p+89B; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ISemkQsk"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-739b3fe7ce8so7435920b3a.0;
-        Wed, 02 Jul 2025 06:53:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vW5p+89B"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-237f18108d2so416355ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 06:54:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751464431; x=1752069231; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/ZDvTF9WG0Sc0wOYg/V56v6aDtZy6k2fKHx6MlmQhok=;
-        b=ISemkQskYYERDqsm1ksklgeIPgEpEVRSj54uApu8AJNxg9UuqhMPcNYLlKTCp8OXq9
-         5EdV5CS9zoyoD5h60YmhooziOM7k0WEmFrJZ7GW4r34FPAviRkDb48Y/381edFii0SaS
-         UzQePhwjPJJr9iPXDE5w8P4nPJKASxDj6BTIwm389T7n5Q8oXnGGUQF/rLCImZcAzaOV
-         356Rlo8/GWfLF+JR2NPJV2zqY08uwGRTl3icGRxGFI2hTdToIlRGXdgACVI3BFF/xf/O
-         JnYVw62Ok2YQTfUOvvuyelCs8mE+UXEK6gkpjXg+159X484g+RrWVEC1EWkODhYVgWw5
-         zfyA==
+        d=google.com; s=20230601; t=1751464463; x=1752069263; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kJKh0bhmf7f4ICuPLjZddH/eg+QtQRmvEhkym3b4VZM=;
+        b=vW5p+89BxMEqixi/n3Unclc2DoAPPx7T0yzcZIbQMWq+fgM9MupOABCb3C63QIPNy8
+         3NNXf/r5Tzk/fHKVTrklfRXjMsbk9p88aLChECA4u5JmSau48iJk6aaEPTC/XVl/x2V/
+         iA4/Ucl3LS95JVVzIjPU1hYBTosJp2D5afZVk0zxsp5+a5VJS51pnL/fo0NqUnvzzrcs
+         PCRYewa2ENjR+WvisU6K/OwebjDX8uiv8GeNNmyrmra69KgHM4IAeGMBy6p5/mBZt+qO
+         Qy0alvNaZUOIFx9GX2+jcttyIG+aYFKn6XgYJG3ccEreFo7qbr+xbzOcwHcVF01MXiP6
+         D+yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751464431; x=1752069231;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/ZDvTF9WG0Sc0wOYg/V56v6aDtZy6k2fKHx6MlmQhok=;
-        b=Q/8MPw3WEhLfpEhTtgnyPudv5nCoDCBbUXeMBu3fAaFlS7ZKCBoV0me+22i4ln6mIk
-         veW/L0LYX/GAB5SkhApfdfSaXOR9wuMWhoE6GLAiFDpuVkKFiUKld3+LTPSMiBw+Tohb
-         5DVKQD02uByzIVDHibqL4JVwm8SNGH24l52vDj0ce4rVtTQo/iZepugl6o30HGOAREW2
-         Npsds/UFIRZ2jH3inbefhcG+tD7zz61uIj90yOZ6CxJIlevrJliN5nzjL37+G9U5sKec
-         1aVbCwg7D2g8+ueWT9iBnhN8eq+6OPfPfJBUhDHxoVWfXBXlVFSzdKhjkNlEh1jqw38s
-         yBVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV5HZgX+OmfUQ0pCRXAmtSHHwPfHcLZXwjWnN53B1dPA09+9GIM1ZAWdmy0ik6cNoXE/ZsiG5Ic04oC/Vpo@vger.kernel.org, AJvYcCWTqFlHHTMVhGNiDa+NqkWVZPQP3Wd63R86l7mROSeTILrcrDt/qJuQdp39qMTyuebTRqPeeIoyfa+z2yvl@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbNLnfSf7js6G7ivKNrQKqeiUbSA+RRaGrmLwAzyaOCJ4CH8iu
-	dSNisRvvfCgBpLDp8+F9fL9f4jh2O7KdplEdA23n66EnTk1xFsfpo3Vk
-X-Gm-Gg: ASbGncvm/Yb2b02Eb7vWT7LvXF5VmSV4ia9U+qDEE1Q/8CTcFpL1P1HCbsWzhJaGKS2
-	/4jcTT9YbfpqYwDLtHkjjAnuyTvf/bpF7hn2btTsJReMzuQFUe/e1kBJ3N1kpsIsnu/Usc+WeQA
-	r+6oY4wZK1jUey6VI+GkeR3ens+2CxExGqeRjwnxf2JMpuRGVcNmykVVUN4FIv96ebUe5xc7ftP
-	fFcIOAyrVGpDDL8ov1ZIsdwvbJ700f969OZi8Y5XwFNdwOIS50shidHne/TnbxeYQqARSnOSvJG
-	QSbwYBHKbp+NFEERdk7+7hDtGqbydO/ghgQlyiKiq+3Ews2GYpQ4HPC4jUwYNDF6z8mbm1Jg6T6
-	k
-X-Google-Smtp-Source: AGHT+IFY/fMo+EcugOFY0yLHK6w4ow8m13WDFJmbyFs8qEuuD7i0KEMYSTC3rgcjlAP/Ax5lXWr8rw==
-X-Received: by 2002:a05:6a21:4ccc:b0:21a:ed12:bdf9 with SMTP id adf61e73a8af0-222d7df6094mr5135889637.17.1751464431135;
-        Wed, 02 Jul 2025 06:53:51 -0700 (PDT)
-Received: from localhost.localdomain ([121.185.186.233])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e3214d9esm12910305a12.71.2025.07.02.06.53.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 06:53:50 -0700 (PDT)
-From: Jeongjun Park <aha310510@gmail.com>
-To: akpm@linux-foundation.org
-Cc: david@redhat.com,
-	andrii@kernel.org,
-	osalvador@suse.de,
-	Liam.Howlett@Oracle.com,
-	surenb@google.com,
-	christophe.leroy@csgroup.eu,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	syzbot+6246a83e7bd9f8a3e239@syzkaller.appspotmail.com,
-	Jeongjun Park <aha310510@gmail.com>
-Subject: [PATCH next] mm/maps: move kmalloc() call location in do_procmap_query() out of RCU critical section
-Date: Wed,  2 Jul 2025 22:53:32 +0900
-Message-ID: <20250702135332.291866-1-aha310510@gmail.com>
-X-Mailer: git-send-email 2.47.2
+        d=1e100.net; s=20230601; t=1751464463; x=1752069263;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kJKh0bhmf7f4ICuPLjZddH/eg+QtQRmvEhkym3b4VZM=;
+        b=Iwgof32BLteL5e2SmeJEb6aZmXs8QtaABqeqiONK3I9pTj04toNJeXmhH2xDkcJmYM
+         Do/fLfugQhnB70hIFLgzIML/Nv9Nyi3D1oWriZDJk0wT/qUrrtBl6UTYrOpgMYuFLSJO
+         vayGPvsVFumyg1RGRpWEGQUWFyPpsMNRhlnOQeD3UyQi741MfyvxVyHBfqEvHZdcqN+3
+         LEkTzIbCvvF1bRDF1QUHce1lbVktyUdZKVFLOAPKzfr+GeJJd85pxomcJJpHO4Ys0s0Y
+         1DykVpy+uMmqTZnhQqDVZFKpdMNcgRqYw86ln+QaE/Yvc2oKJLnV20q3nw1aqBudLxkS
+         nxIA==
+X-Forwarded-Encrypted: i=1; AJvYcCVCbXZWfuR7CW3Zvuwae9AA8v4Kj1pf83Mwlry5PvzMHSM0mXqgmhdKXqQ5muqAlQRlOYQmnlD2WxUo+LA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJxbhIGFaHf5bp6tHIuFA+7lujg9lydeOscg5lceaAVMNDHU32
+	Ic+X0w+/QGg+csWGyPveod+CsEmPjjTM4HtG322aJBKCJ4UNCU3ESaMshoTM3lrALN9dplai/ln
+	JDKNt4l15xSA2gWjotQsLlDtekwOxqe9SbUQkxD1Z
+X-Gm-Gg: ASbGncuHJkXTLG7310CyKxoNl/o0wT8XX/701KJvAeJ1pqi+vcbZ3V5xN4Er8Qygcy3
+	XJhFED8TbokQXCOvZ2sR8nLFyXuUAdrUl6j0ZfDYT3IxcoyKso/NzrW/B6WfrtDpGCiFnqlMxSD
+	GSobJb86otG+NGTlYyMtt4JaKwC2LJl9kcoiybzoWNoMiHI8gJZ5LF+rp/tGv3zBT8O7+YzoDwH
+	fIT
+X-Google-Smtp-Source: AGHT+IHkpkBgJvS1R3RkrtvsvOEZZf/jKPLYOGmrsQsZdhoqLh6xPOUqe8mNaDmp8JgFozGwZ+2Sa6aXZMCU210+49A=
+X-Received: by 2002:a17:903:1ac5:b0:215:9ab0:402 with SMTP id
+ d9443c01a7336-23c5ffc0004mr6060785ad.18.1751464462881; Wed, 02 Jul 2025
+ 06:54:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1747264138.git.ackerleytng@google.com> <d3832fd95a03aad562705872cbda5b3d248ca321.1747264138.git.ackerleytng@google.com>
+ <CA+EHjTxtHOgichL=UvAzczoqS1608RSUNn5HbmBw2NceO941ng@mail.gmail.com>
+ <CAGtprH8eR_S50xDnnMLHNCuXrN2Lv_0mBRzA_pcTtNbnVvdv2A@mail.gmail.com>
+ <CA+EHjTwjKVkw2_AK0Y0-eth1dVW7ZW2Sk=73LL9NeQYAPpxPiw@mail.gmail.com>
+ <CAGtprH_Evyc7tLhDB0t0fN+BUx5qeqWq8A2yZ5-ijbJ5UJ5f-g@mail.gmail.com>
+ <9502503f-e0c2-489e-99b0-94146f9b6f85@amd.com> <20250624130811.GB72557@ziepe.ca>
+ <CAGtprH_qh8sEY3s-JucW3n1Wvoq7jdVZDDokvG5HzPf0HV2=pg@mail.gmail.com> <aGTvTbPHuXbvj59t@yzhao56-desk.sh.intel.com>
+In-Reply-To: <aGTvTbPHuXbvj59t@yzhao56-desk.sh.intel.com>
+From: Vishal Annapurve <vannapurve@google.com>
+Date: Wed, 2 Jul 2025 06:54:10 -0700
+X-Gm-Features: Ac12FXydqjoi-wuuZAMsDh9iHHkaJIooZH0B4_yVoZTkA8pqs4QeyD27Ae8Anyg
+Message-ID: <CAGtprH9-njcgQjGZvGbbVX+i8D-qPUOkKFHbOWA20962niLTcw@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 04/51] KVM: guest_memfd: Introduce
+ KVM_GMEM_CONVERT_SHARED/PRIVATE ioctls
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Alexey Kardashevskiy <aik@amd.com>, Fuad Tabba <tabba@google.com>, 
+	Ackerley Tng <ackerleytng@google.com>, kvm@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, linux-fsdevel@vger.kernel.org, 
+	ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com, 
+	anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu, 
+	bfoster@redhat.com, binbin.wu@linux.intel.com, brauner@kernel.org, 
+	catalin.marinas@arm.com, chao.p.peng@intel.com, chenhuacai@kernel.org, 
+	dave.hansen@intel.com, david@redhat.com, dmatlack@google.com, 
+	dwmw@amazon.co.uk, erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, 
+	graf@amazon.com, haibo1.xu@intel.com, hch@infradead.org, hughd@google.com, 
+	ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz, 
+	james.morse@arm.com, jarkko@kernel.org, jgowans@amazon.com, 
+	jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com, 
+	jun.miao@intel.com, kai.huang@intel.com, keirf@google.com, 
+	kent.overstreet@linux.dev, kirill.shutemov@intel.com, liam.merwick@oracle.com, 
+	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
+	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
+	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
+	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
+	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
+	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
+	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
+	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
+	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
+	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
+	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
+	steven.sistare@oracle.com, suzuki.poulose@arm.com, thomas.lendacky@amd.com, 
+	usama.arif@bytedance.com, vbabka@suse.cz, viro@zeniv.linux.org.uk, 
+	vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org, 
+	willy@infradead.org, xiaoyao.li@intel.com, yilun.xu@intel.com, 
+	yuzenghui@huawei.com, zhiquan1.li@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In do_procmap_query(), we are allocating name_buf as much as name_buf_sz
-with kmalloc().
+On Wed, Jul 2, 2025 at 1:38=E2=80=AFAM Yan Zhao <yan.y.zhao@intel.com> wrot=
+e:
+>
+> On Tue, Jun 24, 2025 at 07:10:38AM -0700, Vishal Annapurve wrote:
+> > On Tue, Jun 24, 2025 at 6:08=E2=80=AFAM Jason Gunthorpe <jgg@ziepe.ca> =
+wrote:
+> > >
+> > > On Tue, Jun 24, 2025 at 06:23:54PM +1000, Alexey Kardashevskiy wrote:
+> > >
+> > > > Now, I am rebasing my RFC on top of this patchset and it fails in
+> > > > kvm_gmem_has_safe_refcount() as IOMMU holds references to all these
+> > > > folios in my RFC.
+> > > >
+> > > > So what is the expected sequence here? The userspace unmaps a DMA
+> > > > page and maps it back right away, all from the userspace? The end
+> > > > result will be the exactly same which seems useless. And IOMMU TLB
+> >
+> >  As Jason described, ideally IOMMU just like KVM, should just:
+> > 1) Directly rely on guest_memfd for pinning -> no page refcounts taken
+> > by IOMMU stack
+> In TDX connect, TDX module and TDs do not trust VMM. So, it's the TDs to =
+inform
+> TDX module about which pages are used by it for DMAs purposes.
+> So, if a page is regarded as pinned by TDs for DMA, the TDX module will f=
+ail the
+> unmap of the pages from S-EPT.
+>
+> If IOMMU side does not increase refcount, IMHO, some way to indicate that
+> certain PFNs are used by TDs for DMA is still required, so guest_memfd ca=
+n
+> reject the request before attempting the actual unmap.
 
-However, due to the previous commit eff061546ca5 
-("mm/maps: execute PROCMAP_QUERY ioctl under per-vma locks"),
-the location of kmalloc() is located inside the RCU critical section.
+So it looks like guest_memfd will need an interface with KVM/IOMMU
+backends to check if unmapping can succeed. And if unmapping still
+fails, there should be a way for KVM/IOMMU backends to kill the TD and
+any TDIs bound to that TD.
 
-This causes might_sleep_if() to be called inside the RCU critical section,
-so we need to move the call location of kmalloc() outside the RCU critical
-section to prevent this.
-
-Reported-by: syzbot+6246a83e7bd9f8a3e239@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=6246a83e7bd9f8a3e239
-Fixes: eff061546ca5 ("mm/maps: execute PROCMAP_QUERY ioctl under per-vma locks")
-Signed-off-by: Jeongjun Park <aha310510@gmail.com>
----
- fs/proc/task_mmu.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
-
-diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index f3659046efb7..42b0224c6ac9 100644
---- a/fs/proc/task_mmu.c
-+++ b/fs/proc/task_mmu.c
-@@ -595,6 +595,7 @@ static int do_procmap_query(struct proc_maps_private *priv, void __user *uarg)
- 	char build_id_buf[BUILD_ID_SIZE_MAX], *name_buf = NULL;
- 	__u64 usize;
- 	int err;
-+	size_t name_buf_sz;
- 
- 	if (copy_from_user(&usize, (void __user *)uarg, sizeof(usize)))
- 		return -EFAULT;
-@@ -621,12 +622,18 @@ static int do_procmap_query(struct proc_maps_private *priv, void __user *uarg)
- 	if (!mm || !mmget_not_zero(mm))
- 		return -ESRCH;
- 
--	err = query_vma_setup(priv);
--	if (err) {
-+	name_buf_sz = min_t(size_t, PATH_MAX, karg.vma_name_size);
-+
-+	name_buf = kmalloc(name_buf_sz, GFP_KERNEL);
-+	if (!name_buf) {
- 		mmput(mm);
--		return err;
-+		return -ENOMEM;
- 	}
- 
-+	err = query_vma_setup(priv);
-+	if (err)
-+		goto fail_vma_setup;
-+
- 	vma = query_matching_vma(priv, karg.query_addr, karg.query_flags);
- 	if (IS_ERR(vma)) {
- 		err = PTR_ERR(vma);
-@@ -679,20 +686,12 @@ static int do_procmap_query(struct proc_maps_private *priv, void __user *uarg)
- 	}
- 
- 	if (karg.vma_name_size) {
--		size_t name_buf_sz = min_t(size_t, PATH_MAX, karg.vma_name_size);
- 		const struct path *path;
- 		const char *name_fmt;
- 		size_t name_sz = 0;
- 
- 		get_vma_name(vma, &path, &name, &name_fmt);
- 
--		if (path || name_fmt || name) {
--			name_buf = kmalloc(name_buf_sz, GFP_KERNEL);
--			if (!name_buf) {
--				err = -ENOMEM;
--				goto out;
--			}
--		}
- 		if (path) {
- 			name = d_path(path, name_buf, name_buf_sz);
- 			if (IS_ERR(name)) {
-@@ -733,6 +732,7 @@ static int do_procmap_query(struct proc_maps_private *priv, void __user *uarg)
- 
- out:
- 	query_vma_teardown(priv);
-+fail_vma_setup:
- 	mmput(mm);
- 	kfree(name_buf);
- 	return err;
---
+> Otherwise, the unmap of TD-DMA-pinned pages will fail.
+>
+> Upon this kind of unmapping failure, it also doesn't help for host to ret=
+ry
+> unmapping without unpinning from TD.
+>
