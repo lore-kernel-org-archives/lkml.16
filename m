@@ -1,89 +1,75 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED2C30748C
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:34:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B61F827933A
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:34:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751466876; cv=none; b=fNKHFNjqWMDzvuFFOTWGRvwHHI4KvpkyR9/+MycZtV0QJ8LsXzNtXYz+ZluA4QBqbUec1dCNhOwj/purZVU/c0sUv4bMYNlCtub+fruBJlTfRp5p0+3i+c95H8Xe3bXX+LdDWrqoXKXYbFBobzGRyAHFnpvgHgBNR7TUE2JL19c=
+	t=1751466896; cv=none; b=XEbqKkP2Oh5LG1+FXzR3ic0bEj8Y01eMviPE2weCMVHa4RNGYmTfNUFcPYjRi+mGZ3LABC9Lyc6G/IsFh19qszpVeBzZwyiPFISmWAM5vGKPJx6U3OZPpU7eYMtxfnPr06tmTZW8KurZjmDyMjHrZ0e6tIJ3UMbfl+cxQapyB/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751466876; c=relaxed/simple;
-	bh=epLzkS0pNBoPrsvr5Xd6ikwLk40ga6ReZLZIvmH70J0=;
+	s=arc-20240116; t=1751466896; c=relaxed/simple;
+	bh=whjPTZqoz1mpn3P99EDAp4mRg0R9OqWvV40Jvip23Tc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pWuPgbnPFReKqjAP46EvvCHgqnmkBzYWdlSUPBKpVI483720dGwugNK3acUMkYcbaAfjOLVlnBGZPKvhCieAjFWXE126fSaFsFMZyicrRFcCGWf3zFiw47m36EJ8f+mxvwkZKbdZX1ayMWWW926i7DvklawWXGzjeeW4qVJwaTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=cuqwUwUA; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=uZUdu1rh; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=eXUyGZai; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=E0VG6IHZ; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fdd2SNkxWRMMo4qS9awYpy+YZL8+4Yhyxp7SBSyMU8h3t80dTLpiIz8bLuSJqQmizdau+KZCXMLbY4U5jg1Qytr8sRfA+98XCyJWdTY0e4iwofn4XvWwIlIbUmIDXYorqGL/RK492IXppbSHi1CPZiTxR2CKhspXe+53wnXq/eE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=o1I9sydw; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="cuqwUwUA";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="uZUdu1rh";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="eXUyGZai";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="E0VG6IHZ"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id EFD801F38D;
-	Wed,  2 Jul 2025 14:34:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751466873; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=z8Y/km41+XwnsHF2SeWAKoMP9vO75rN03wqB7wxWr5U=;
-	b=cuqwUwUAhUkVzoDgT6Xdv1sA0yRpk9vOlCteZSEjlnDIsA+SIDFD8lfpKvQ7csi1ZOfNgM
-	NwVsecHh/dp8QddDFkSNgoYEZbTstysvxjk1Z14V5tFpqbdO9/AV+lCZGm4tb8y1n03wJB
-	yrUs1EjF03zKmQWhmAk8l6FB3ELwN8I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751466873;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=z8Y/km41+XwnsHF2SeWAKoMP9vO75rN03wqB7wxWr5U=;
-	b=uZUdu1rha3rTVRvPdx+63U+IV+tLWAZBinNwV7V6F5r9F/kJ/60Z+6KDApRiKrHLTFH+ok
-	NvQdT8wq+AejifCA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=eXUyGZai;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=E0VG6IHZ
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751466872; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=z8Y/km41+XwnsHF2SeWAKoMP9vO75rN03wqB7wxWr5U=;
-	b=eXUyGZai8cYwaUuO7cJLFs6EjvE2Cc+GR8oEgZgNEcqdn1rZeQnYwTXVCxaG0knY43ehuT
-	oYC199zSeG0unmAlh3uxuMZw4gMV9UtHq7hrcAvEQH4h4EVTXqP/8z7nA8StlSPL+7E2bO
-	QZUntFzmZr84ZiyiikBNPx21V7UXc7w=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751466872;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=z8Y/km41+XwnsHF2SeWAKoMP9vO75rN03wqB7wxWr5U=;
-	b=E0VG6IHZZ7gebj2RU3ufIOVxxridH9Y+0SWkH+spzCAjRd5VnYIWbNyWkq81KDWahb5OZc
-	+FOsFVFi0wqNPADQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DA8DF13A24;
-	Wed,  2 Jul 2025 14:34:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id /7hWNXhDZWiTRwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Wed, 02 Jul 2025 14:34:32 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 6F560A0A55; Wed,  2 Jul 2025 16:34:24 +0200 (CEST)
-Date: Wed, 2 Jul 2025 16:34:24 +0200
-From: Jan Kara <jack@suse.cz>
-To: Zhang Yi <yi.zhang@huaweicloud.com>
-Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca, jack@suse.cz, 
-	ojaswin@linux.ibm.com, sashal@kernel.org, yi.zhang@huawei.com, libaokun1@huawei.com, 
-	yukuai3@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH v3 08/10] ext4: reserved credits for one extent during
- the folio writeback
-Message-ID: <3lhwbxlfcqt5ou3z2xzo7o7zdvpmgldju33cd2wqnvsszfhnaf@i2qkwhrja7be>
-References: <20250701130635.4079595-1-yi.zhang@huaweicloud.com>
- <20250701130635.4079595-9-yi.zhang@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="o1I9sydw"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4a5840ec53dso83871921cf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 07:34:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rowland.harvard.edu; s=google; t=1751466893; x=1752071693; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3TKAx5VB7svNtSt70XyGj4bAV0TsiO+hpoSUl8zIRR0=;
+        b=o1I9sydwGyCmVZfUKOMJa8w4VLjcLNkgsyvRhBJKKS3+hjemyU2bDA834qOVOfPx+G
+         rOiM+FcSuND2PkLMX/Gt6eSTYBcwIIdc6WeTlcH4fh05xip/zgb2348Avem6loepg7j7
+         LPpr6YF3On+PEdUTkr0KLlJKHoCFj9czzERGThBoJQsf5Cl5acX3Ww+7bEd+XH7Zs2jJ
+         TlmU19CeuSosStWfI052ooz6Cj3emVI6uXWvyzijPsooz1WfpdnPteb3JfhStow8VDdh
+         GAPOfYY1E9G1ef3IHfBWGLnmGjfclzL3I0V4Hhwahkb7Avfavshfq/NT8DEm09/dtIzD
+         ZLWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751466893; x=1752071693;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3TKAx5VB7svNtSt70XyGj4bAV0TsiO+hpoSUl8zIRR0=;
+        b=lXqtGbLulprTqRNLB/ZGxi9OL8KFyr/nNxKa2dI/X4CsusQxOhXdennHrzk4K0+InG
+         n1f/gKtjGOQ04W2rkjl/PmqXpC5FQW22zQTejHfcx6iqTpT3pdWZEBREBP5zdwKFy42N
+         K9A8yPKyGfYyfQRBh2/6h6kochkc02IzhS1U4NciTFGSpq5u336MZgj67Olx/auQ74zO
+         yigllwlbbUq69KUR8HVMAG1fS0fjWBICtq02vqKpbIhVMK3Mnmf+5Faki/OZZjesNzTD
+         ZIaDtW+1xBbO1ptiRjdOYu2pzVknAZxdKVYStI1juYycDc0SoFKrLsHXog4hNpS2x/BA
+         RERg==
+X-Forwarded-Encrypted: i=1; AJvYcCXf3Cju1ayOwL3XeJlPiRrA743/1My4APtL8LIHnEfIg9qu5dZ9Z8jO78IuzuSAurhSijcaFaoZUblpbz4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDHZWvplB2QBjHBhZ7pIxLGKrxZ3wfmN3Jj5Jb0qJNxu3hYq9I
+	jAJzSuCmhpNADkDz8RqUKYmAE1Tee1vv0vtWQcS7a2YvTYLY29QEvDTCAmN8LUrnSME1dkEPOHx
+	rw8w=
+X-Gm-Gg: ASbGnct6Pg5R/3Nr/BjfulAxHDbDuj/ErP5hFy9Hi5kwNOhhbspL4SPdUom0oeL0FO8
+	isz4s4ryCRR/as7co8gFL23dk/IYDHEgHQL/N9b1bp+6zC8PnWEjKL3TjTI58NNA3A806E22OwQ
+	1AfLmZsnj4u4lt5AFCALqAEosl5nJUouYr49vWzlCIVJODz28rFU87ntY8Z4eAtlpleAKRiQPQX
+	9LDGdB5GZMziaMYdTUV3bR1o73fGxb2Mh6jN3keXu5PtWaFHo+qHyjclG/9w1/V6NrUHVk9fA/o
+	JHe0S7wvh1ovCj020a4MAg4dnRGdOKKQxbZkF2O6GImous5gYuNVQ9rTChyELFoHPROBH3ThmE1
+	283jh
+X-Google-Smtp-Source: AGHT+IE25QtcMu+gRgh1b1a6HlThrjgjgV02E8vVzYyLVIybiHtI0Gk28DDRhtjpHXVj/LjmQjaY+A==
+X-Received: by 2002:a05:622a:11cf:b0:4a4:4128:c2ef with SMTP id d75a77b69052e-4a9768d90a6mr43155021cf.6.1751466893357;
+        Wed, 02 Jul 2025 07:34:53 -0700 (PDT)
+Received: from rowland.harvard.edu ([140.247.181.15])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7fc10bec2sm92040121cf.13.2025.07.02.07.34.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 07:34:52 -0700 (PDT)
+Date: Wed, 2 Jul 2025 10:34:51 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Hillf Danton <hdanton@sina.com>
+Cc: syzbot <syzbot+d630bd89141124cc543e@syzkaller.appspotmail.com>,
+	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+	Boqun Feng <boqun.feng@gmail.com>, linux-usb@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [usb?] INFO: task hung in hub_activate (3)
+Message-ID: <fc5f7057-1c91-4354-89d5-f8bdeeae988a@rowland.harvard.edu>
+References: <68648254.a70a0220.3b7e22.20c4.GAE@google.com>
+ <20250702080515.2160-1-hdanton@sina.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -92,119 +78,69 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250701130635.4079595-9-yi.zhang@huaweicloud.com>
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,huawei.com:email]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: EFD801F38D
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -4.01
+In-Reply-To: <20250702080515.2160-1-hdanton@sina.com>
 
-On Tue 01-07-25 21:06:33, Zhang Yi wrote:
-> From: Zhang Yi <yi.zhang@huawei.com>
+On Wed, Jul 02, 2025 at 04:05:14PM +0800, Hillf Danton wrote:
+> On Tue, 01 Jul 2025 17:50:28 -0700
+> > Hello,
+> > 
+> > syzbot found the following issue on:
+> > 
+> > HEAD commit:    1343433ed389 Add linux-next specific files for 20250630
+> > git tree:       linux-next
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=10d1f88c580000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=66357ac5b0466f16
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=d630bd89141124cc543e
+> > compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+> > 
+> > Unfortunately, I don't have any reproducer for this issue yet.
+> > 
+> > Downloadable assets:
+> > disk image: https://storage.googleapis.com/syzbot-assets/b005e1db0f8c/disk-1343433e.raw.xz
+> > vmlinux: https://storage.googleapis.com/syzbot-assets/cb3aa8bfd514/vmlinux-1343433e.xz
+> > kernel image: https://storage.googleapis.com/syzbot-assets/e01227599a09/bzImage-1343433e.xz
+> > 
+> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> > Reported-by: syzbot+d630bd89141124cc543e@syzkaller.appspotmail.com
+> > 
+> > INFO: task kworker/0:0:9 blocked for more than 143 seconds.
+> >       Not tainted 6.16.0-rc4-next-20250630-syzkaller #0
+> > "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> > task:kworker/0:0     state:D stack:21240 pid:9     tgid:9     ppid:2      task_flags:0x4208060 flags:0x00004000
+> > Workqueue: events_power_efficient hub_init_func2
+> > Call Trace:
+> >  <TASK>
+> >  context_switch kernel/sched/core.c:5313 [inline]
+> >  __schedule+0x16f5/0x4d00 kernel/sched/core.c:6696
+> >  __schedule_loop kernel/sched/core.c:6774 [inline]
+> >  schedule+0x165/0x360 kernel/sched/core.c:6789
+> >  schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6846
+> >  __mutex_lock_common kernel/locking/mutex.c:679 [inline]
+> >  __mutex_lock+0x724/0xe80 kernel/locking/mutex.c:747
+> >  device_lock include/linux/device.h:884 [inline]
+> >  hub_activate+0xb7/0x1ea0 drivers/usb/core/hub.c:1096
+> >  process_one_work kernel/workqueue.c:3239 [inline]
+> >  process_scheduled_works+0xae1/0x17b0 kernel/workqueue.c:3322
+> >  worker_thread+0x8a0/0xda0 kernel/workqueue.c:3403
+> >  kthread+0x70e/0x8a0 kernel/kthread.c:463
+> >  ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
+> >  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+> >  </TASK>
 > 
-> After ext4 supports large folios, reserving journal credits for one
-> maximum-ordered folio based on the worst case cenario during the
-> writeback process can easily exceed the maximum transaction credits.
-> Additionally, reserving journal credits for one page is also no
-> longer appropriate.
+> Due to lockdep_set_novalidate_class(&dev->mutex) in device_initialize(),
+> task hung instead of deadlock is reported once more.
 > 
-> Currently, the folio writeback process can either extend the journal
-> credits or initiate a new transaction if the currently reserved journal
-> credits are insufficient. Therefore, it can be modified to reserve
-> credits for only one extent at the outset. In most cases involving
-> continuous mapping, these credits are generally adequate, and we may
-> only need to perform some basic credit expansion. However, in extreme
-> cases where the block size and folio size differ significantly, or when
-> the folios are sufficiently discontinuous, it may be necessary to
-> restart a new transaction and resubmit the folios.
-> 
-> Suggested-by: Jan Kara <jack@suse.cz>
-> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+> 	kworker/0:0:9		kworker/0:5:5923
+> 	---			---
+> 	hub_init_func2()	usb_disconnect()
+> 				device_lock()
+> 	device_lock()		hub_disconnect()
+> 				hub_quiesce()
+> 				flush_delayed_work(&hub->init_work);
+> 	*** DEADLOCK ***
 
-Looks good. Feel free to add:
+This analysis looks right.  How would you fix the deadlock?  Make 
+hub_disconnect do device_unlock() and device_lock() around the 
+flush_delayed_work() call?
 
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
-> ---
->  fs/ext4/inode.c | 25 ++++++++-----------------
->  1 file changed, 8 insertions(+), 17 deletions(-)
-> 
-> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> index 3230734a3014..ceaede80d791 100644
-> --- a/fs/ext4/inode.c
-> +++ b/fs/ext4/inode.c
-> @@ -2546,21 +2546,6 @@ static int mpage_map_and_submit_extent(handle_t *handle,
->  	return err;
->  }
->  
-> -/*
-> - * Calculate the total number of credits to reserve for one writepages
-> - * iteration. This is called from ext4_writepages(). We map an extent of
-> - * up to MAX_WRITEPAGES_EXTENT_LEN blocks and then we go on and finish mapping
-> - * the last partial page. So in total we can map MAX_WRITEPAGES_EXTENT_LEN +
-> - * bpp - 1 blocks in bpp different extents.
-> - */
-> -static int ext4_da_writepages_trans_blocks(struct inode *inode)
-> -{
-> -	int bpp = ext4_journal_blocks_per_folio(inode);
-> -
-> -	return ext4_meta_trans_blocks(inode,
-> -				MAX_WRITEPAGES_EXTENT_LEN + bpp - 1, bpp);
-> -}
-> -
->  static int ext4_journal_folio_buffers(handle_t *handle, struct folio *folio,
->  				     size_t len)
->  {
-> @@ -2917,8 +2902,14 @@ static int ext4_do_writepages(struct mpage_da_data *mpd)
->  		 * not supported by delalloc.
->  		 */
->  		BUG_ON(ext4_should_journal_data(inode));
-> -		needed_blocks = ext4_da_writepages_trans_blocks(inode);
-> -
-> +		/*
-> +		 * Calculate the number of credits needed to reserve for one
-> +		 * extent of up to MAX_WRITEPAGES_EXTENT_LEN blocks. It will
-> +		 * attempt to extend the transaction or start a new iteration
-> +		 * if the reserved credits are insufficient.
-> +		 */
-> +		needed_blocks = ext4_chunk_trans_blocks(inode,
-> +						MAX_WRITEPAGES_EXTENT_LEN);
->  		/* start a new transaction */
->  		handle = ext4_journal_start_with_reserve(inode,
->  				EXT4_HT_WRITE_PAGE, needed_blocks, rsv_blocks);
-> -- 
-> 2.46.1
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Alan Stern
