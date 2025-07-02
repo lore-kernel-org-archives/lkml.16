@@ -1,150 +1,190 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90DCF211F;
-	Wed,  2 Jul 2025 07:57:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0C1211F;
+	Wed,  2 Jul 2025 07:57:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751443022; cv=none; b=t3T72Ht9UB0PEUfniZlKb+cA8yM9SN4XbAGWEEFxl9Dvx8UWIfs6AN2GPqdKiQ6g2qVEeHqt7MXtPIiz8IAFe221ekZv1bc3QrRDxWjrp1WmPufSK2GnsPqwwAkiYLJ+G2sDFVkVVqApw2FGYjGgTexmp2kIUBAS5LO0n1NWg3I=
+	t=1751443076; cv=none; b=rWMT8gbV+VEgmgjKdVn2k9h1hnPfV/DHF0rCEW94Y2Slw/5vyjzfzBEpqJVX8Jwk7aVjOWFozPSYPGxSuKeeUOO4lm/Y4zlSU0EgzEWFdN8+7Q7GH3MS470aM8rD8ddUs/I6hGgbmc/YhkaATRmasWPgtTWJRqE4ZR2lpPm5fHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751443022; c=relaxed/simple;
-	bh=iPRdlhGWfx9VLtmj4Qr358Ma925NEGSXkWBmva+PDXA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=plkB7jo3AHMw9b8GRYXVf0e6H++nt1Wt5nO9rgDI6HxMSJyDrl6KjdLUXbq3g+S5cH4K978mUalvmEL3kcmwmUw7DNPTovnyF6TJzvSRqhbz0IDmg0dbDrJXPE5GeiD5GBPJXVsZPol9lS1R3kiCkw7l7vurvdtp7TBw7N65/7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jDAJOT7H; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751443076; c=relaxed/simple;
+	bh=oferJm658YK0OfXJHRN4ok4UIvbf/DHykHZIPcj8Jb0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Jy6IsatrhdujIPH4x0x1BcUneUsQcPVQeixL4ujFtOrYIHBGffdyVX/d7igSJcIrukTwZ1IIgRePKWtFMEDMpKM3pg4rEJkTOqG5DgG0BQC+Ytb7LYrDkqlfo9bto8qpwmI2ojw5Yn4ABDMw8gTvtyN7NTjx8YiZVcFlsYfWARg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FLt3gF7i; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jDAJOT7H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D4BDC4CEED;
-	Wed,  2 Jul 2025 07:56:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751443022;
-	bh=iPRdlhGWfx9VLtmj4Qr358Ma925NEGSXkWBmva+PDXA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=jDAJOT7HLum6yiMRluiGc4tMSFC54IRmLsQrSvdr2uOF6JHJgGCg3CpR9fHpPRDNy
-	 j5g2vjUhlis20IrYgZ9S2CfzylqaQ9ayGZ8GA72tEsMogJciaC0a+g9eHB8KXv5YK9
-	 y7XQV8ecp2z/J3SjobB3j/rGb3CVKpQF3wexh+SrXIns+8W70gUfT+NcYlhusCGB/b
-	 tiNebM/8pvcgVwXhS/sIxMbUYIBziCMDvbrVi8jbpUPkcxvakHCJB9QbzY25s2Kke9
-	 AsKGkUI7mW/57u+FwKv0XSEL2Kg1IWZme0S6itxsB8+0y+L+shI39jyHpMg+g6e2RF
-	 JGtMVN77NvWhw==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Benno Lossin" <lossin@kernel.org>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
- <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
- <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Alice
- Ryhl" <aliceryhl@google.com>,  "Masahiro Yamada" <masahiroy@kernel.org>,
-  "Nathan Chancellor" <nathan@kernel.org>,  "Luis Chamberlain"
- <mcgrof@kernel.org>,  "Danilo Krummrich" <dakr@kernel.org>,  "Nicolas
- Schier" <nicolas.schier@linux.dev>,  "Trevor Gross" <tmgross@umich.edu>,
-  "Adam Bratschi-Kaye" <ark.email@gmail.com>,
-  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
-  <linux-kbuild@vger.kernel.org>,  "Petr Pavlu" <petr.pavlu@suse.com>,
-  "Sami Tolvanen" <samitolvanen@google.com>,  "Daniel Gomez"
- <da.gomez@samsung.com>,  "Simona Vetter" <simona.vetter@ffwll.ch>,  "Greg
- KH" <gregkh@linuxfoundation.org>,  "Fiona Behrens" <me@kloenk.dev>,
-  "Daniel Almeida" <daniel.almeida@collabora.com>,
-  <linux-modules@vger.kernel.org>
-Subject: Re: [PATCH v13 2/6] rust: introduce module_param module
-In-Reply-To: <DB0U12HAEVZ6.JKFPI2UQHDRY@kernel.org> (Benno Lossin's message of
-	"Tue, 01 Jul 2025 17:43:29 +0200")
-References: <20250612-module-params-v3-v13-0-bc219cd1a3f8@kernel.org>
-	<DATW0XWNN45X.1L2WMZ41JJ5O8@kernel.org> <87v7om4jhq.fsf@kernel.org>
-	<RPPvXQKnjK77Kp9mKaiFxbNj1fTHKb_I7_nbY81fZop-Wz8n5TTi4_lpXP9U9AwjocvZKqJPI8PGKufJn9cIzQ==@protonmail.internalid>
-	<DAU0J3T0IEVM.2K7ZRQOVOHF8H@kernel.org> <878qlh4aj1.fsf@kernel.org>
-	<87plepzke5.fsf@kernel.org>
-	<xFouVLxX1_t1mH69FDYwlIhBlI72M0IzQEKn0ntG_wT9z7V5DtbxiwVP_frH_yiS-Gf0q_AhqetbLmuvJ_yP5Q==@protonmail.internalid>
-	<DAX65TRN0TGP.25VZ9DYV86XWY@kernel.org> <87wm8txysl.fsf@kernel.org>
-	<9G3W1seaM7elcwWXaeoaa2nfpFYCf-AmBdvZhACGP13KGUtTPVMwGNYdTQsdtp8ru7GIP3-UYTzXscC1MRUKrg==@protonmail.internalid>
-	<DAZV8OGL8BMH.11SLXBXQ17ZJ9@kernel.org> <87h5zxxtdw.fsf@kernel.org>
-	<H78pT7YnQEhAXdxzl_hhnGVUiQuFpibB21_bjH658fMz_5JYbwsPLYYVh8u1gYnzK3N3ilTEAvqOpkuptVx3rg==@protonmail.internalid>
-	<DB03MZI2FCOW.2JBFL3TY38FK@kernel.org> <87bjq4xpv7.fsf@kernel.org>
-	<ffROWpeKczrWSBlKYov2atJG-QD5l5fUOb2dVCNkWlcT9h6DJpa4joGQpjqtYyLP7HX227fCAayyDQunZ464XQ==@protonmail.internalid>
-	<DB0LKI8BO3HZ.3FF03JN4364RM@kernel.org> <87zfdovvz4.fsf@kernel.org>
-	<UQ6WtusvCeJPizlUr0kA7_g7RGdSRfQ6L29hClAXDKsNlWbtAgmCu_glKbUSeyy3I_NKvN5BJW9HbeHleAhRmw==@protonmail.internalid>
-	<DB0U12HAEVZ6.JKFPI2UQHDRY@kernel.org>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Wed, 02 Jul 2025 09:56:50 +0200
-Message-ID: <87tt3vvxdp.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FLt3gF7i"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a4fb9c2436so3748181f8f.1;
+        Wed, 02 Jul 2025 00:57:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751443072; x=1752047872; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=oferJm658YK0OfXJHRN4ok4UIvbf/DHykHZIPcj8Jb0=;
+        b=FLt3gF7i2D0kyjFtH6nVcFEZVc8pn3GnqPuKDXneZGpPAp2WADoy+dwslYqMKxuxMC
+         xWIDBY8Iln5Qu2BQNBgYzcG/dGEH3ZWEsf6p9q50ijrrar9ZUj/qsjIyFN9bC08u1hjo
+         D+jYOgvyjt8OZ88YAWQyfpnSSrpjQU+cNAt8IEIqtQdXRlSzSe5nfcOcxNE3rqrfHcbq
+         Ji0Xj4bYRgyRnPnyQyUV1lal9ZBHo7Q218C5kUK5K3VoKPkmzvK2UfVTkV63Okeg3IU5
+         ECcWqhhzn6vtpPXhc7E3OjJpXdtLm4Ri27X3ouXPR8SBvFVukiIvlF8Z1gFxVjVljPEe
+         jMzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751443072; x=1752047872;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oferJm658YK0OfXJHRN4ok4UIvbf/DHykHZIPcj8Jb0=;
+        b=KBxiEDMoKI5TGt4Is2+Kuqgd+TKwDHCIXEzOdMyNYJesbCTG8/l8GSRyyQEam2xNxM
+         HrvBDHbYJ3ck7KRDI6l8yO+lrKfpFhMiFqURmKqPwmlUD2ZP2n4+93teNx096efwI/Hf
+         nPVkAjrpplOhIzBA02ACBGbktcOz8uYEIvXdJ4WZGL9vArAfDVbEi1XPWFjpI5nBVo4S
+         wCzAPpmFHnOZ9xUgT7RBnPltq5eTcsQ5F5bgD0hh5o2XfxztRKxsWK914HTLaKd5W8kp
+         5yXSrEgoiDxFvOw7KMuY84Z6KkSolmJlq/btI6bpz44uIRKHXMExcM4AEPPqvrkf54S1
+         ONYA==
+X-Forwarded-Encrypted: i=1; AJvYcCVHrfC3nrhyWRerJkK0VmsolINbFTxtHPiz1BndUJsu5N+92MIQegbUOp9FY/6rZhkLYxn7IDS98cuV@vger.kernel.org, AJvYcCWdYDbzipiTgstV8YDPuyHjtpR1Up2y/yq4yTZwAZ69OD1aoPbTyEgg37cIR+AFUbVWH73JAKDbL3Ur@vger.kernel.org, AJvYcCX570jr7fOZiBBhPdXvMJbjEOP7Rek3WNPeizD9F2SB8kXToK2EeCg5ubnwV/jppWE5RmJZuuI1sSmSnsrf@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsW4ToS5HyWna1vZnDwdIN1mtW60fSTv27AE2FqWLizDAg2sIW
+	sYVIPiqdY2wxRHDJfD3oUtXefZqkoF0CNWVgvaZ3J6yU4b1XYOPs60eMt4FbFkiD
+X-Gm-Gg: ASbGnculwNGjnhy5+3SNhyEEsxE6VDzCYO4HOdIuFbFu5Oj2gRJUFxuwontZhLxguW9
+	WB0nSCBEE19XjnWkCZvKVuLYEL6hP29Tk3/qkpRe6eKkRK08PO/UPGkeg5abRsFB9ny8kzK2d/N
+	4BA+sShdxXoOIqgELVNBTmvLGqxyiB0bVnqkoJXL0MZcFwuYUCb1i1cnEPhDMWdxjE4dAOG5m7K
+	e6Vq9+Hkz/MnZz5LezGADkfMcGph7ZxRZP0gONNDmoC9Ybv2jHiuD81JrAyZfhBPpCCZt/mYZx0
+	xx5rPORKFesyV8HDgst1GpcqNadzaWbu4SLGXRLwwYEHdIKI1RyFZpR9W6Lz1IBQR7RODw==
+X-Google-Smtp-Source: AGHT+IFXLUR3NDT/WUsJ8mOESQBdYzix9UnmRPYXH18PTjwvmWq4ieqO4e+r6VK0WIJJv++VYUX+AQ==
+X-Received: by 2002:a05:6000:4404:b0:3a5:27ba:47ba with SMTP id ffacd0b85a97d-3b200679c28mr864874f8f.44.1751443072276;
+        Wed, 02 Jul 2025 00:57:52 -0700 (PDT)
+Received: from [192.168.1.187] ([161.230.67.253])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e5f8e1sm15149684f8f.88.2025.07.02.00.57.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 00:57:52 -0700 (PDT)
+Message-ID: <e1ed93170e820ab5e057c35048a04fcd74cdaa8a.camel@gmail.com>
+Subject: Re: [PATCH v3 00/12] iio: adc: ad7173: add SPI offload support
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: David Lechner <dlechner@baylibre.com>, Michael Hennerich
+	 <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, Nuno
+ =?ISO-8859-1?Q?S=E1?=
+	 <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring
+	 <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	 <conor+dt@kernel.org>, Mark Brown <broonie@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-spi@vger.kernel.org, Andy Shevchenko
+	 <andriy.shevchenko@intel.com>
+Date: Wed, 02 Jul 2025 08:58:02 +0100
+In-Reply-To: <20250701-iio-adc-ad7173-add-spi-offload-support-v3-0-42abb83e3dac@baylibre.com>
+References: 
+	<20250701-iio-adc-ad7173-add-spi-offload-support-v3-0-42abb83e3dac@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
 
-"Benno Lossin" <lossin@kernel.org> writes:
+On Tue, 2025-07-01 at 16:37 -0500, David Lechner wrote:
+> Here comes another series for adding SPI offload support to an ADC.
+>=20
+> The primary target is AD411x, but since this uses the ad_sigma_delta
+> shared module, a lot of this series is focused on that.
+>=20
+> To start with, we have some cleanups to the ad_sigma_delta code, so feel
+> free to pick these up as they are ready as they generally stand on their
+> own.
+>=20
+> Then before adding proper SPI offload support, we make use of
+> spi_optimize_message() to reduce CPU usage of all users of this driver
+> during buffered reads.
+>=20
+> Also there is a new dt-binding and driver for a special SPI offload
+> trigger FPGA IP core that is used in this particular setup.
+>=20
+> Then finally actual SPI offload support is added to the ad_sigma_delta
+> module and the ad7173 driver.
+>=20
+> This was tested using EVAL-AD4112ARDZ on a DE10-Nano.
+>=20
+> ---
+> Changes in v3:
+> - Added extra patch to replace 8 with sizeof(s64) in ALIGN() [4/12]
+> - Fixed typo in commit message. [6/12]
+> - Fixed includes in spi offload trigger driver. [10/12]
+> - Link to v2:
+> https://lore.kernel.org/r/20250627-iio-adc-ad7173-add-spi-offload-support=
+-v2-0-f49c55599113@baylibre.com
+>=20
+> Changes in v2:
+> - New patch to fix overallocation of buffer size. [1/11]
+> - Also change int64_t to s64. [3/11]
+> - Fix typo in commit message. [4/11]
+> - Factor out scan_type to reduce line wraps. [4/11]
+> - New patch to clean up include more. [5/11]
+> - Duplicate comment about odd case of 24-bit data. [7/11]
+> - Fixed missing MODULE_IMPORT_NS() [10/11]
+> - Link to v1:
+> https://lore.kernel.org/r/20250620-iio-adc-ad7173-add-spi-offload-support=
+-v1-0-0766f6297430@baylibre.com
+>=20
+> ---
 
-> On Tue Jul 1, 2025 at 4:14 PM CEST, Andreas Hindborg wrote:
->> "Benno Lossin" <lossin@kernel.org> writes:
->>> On Tue Jul 1, 2025 at 10:43 AM CEST, Andreas Hindborg wrote:
->>>> No, I am OK for now with configfs.
->>>>
->>>> But, progress is still great. How about if we add a copy accessor
->>>> instead for now, I think you proposed that a few million emails ago:
->>>>
->>>>     pub fn get(&self) -> T;
->>>>
->>>> or maybe rename:
->>>>
->>>>     pub fn copy(&self) -> T;
->>>>
->>>> Then we are fine safety wise for now, right? It is even sensible for
->>>> these `T: Copy` types.
->>>
->>> That is better than getting a reference, but still someone could read at
->>> the same time that a write is happening (though we need some new
->>> abstractions AFAIK?). But I fear that we forget about this issue,
->>> because it'll be some time until we land parameters that are `!Copy` (if
->>> at all...)
->>
->> No, that could not happen when we are not allowing custom parsing or
->> sysfs access. Regarding forgetting, I already added a `NOTE` on `!Copy`,
->> and I would add one on this issue as well.
->
-> Ultimately this is something for Miguel to decide. I would support an
-> unsafe accessor (we should also make it `-> T`), since there it "can't
-> go wrong", any UB is the fault of the user of the API. It also serves as
-> a good reminder, since a `NOTE` comment shouldn't be something
-> guaranteeing safety (we do have some of these global invariants, but I
-> feel like this one is too tribal and doesn't usually come up, so I feel
-> like it's more dangerous).
+Hi David,
 
-I see no reason for making it unsafe when it is safe?
+Great series. Small nit on the new trigger patch but not really important:
 
+Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
 
-    /// Get a copy of the parameter value.
-    ///
-    /// # Note
-    ///
-    /// When this method is called in `const` context, the default
-    /// parameter value will be returned. During module initialization, the
-    /// kernel will populate the parameter with the value supplied at module
-    /// load time or kernel boot time.
-    // NOTE: When sysfs access to parameters are enabled, we have to pass in a
-    // held lock guard here.
-    //
-    // NOTE: When we begin supporting custom parameter parsing with user
-    // supplied code, this method must be synchronized.
-    pub const fn copy(&self) -> T {
-        // SAFETY: As we only support read only parameters with no sysfs
-        // exposure, the kernel will not touch the parameter data after module
-        // initialization. The kernel will update the parameters serially, so we
-        // will not race with other accesses.
-        unsafe { *self.data.get() }
-    }
-
->
-> I think we should also move this patchset along, we could also opt for
-> no accessor at all :) Then it isn't really useful without the downstream
-> accessor function, but that can come after.
-
-I would rather not merge it without an access method. Then it is just
-dead code, and we will not notice if we break it.
-
-
-Best regards,
-Andreas Hindborg
-
-
-
+> David Lechner (12):
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ad_sigma_delta: don't overalloca=
+te scan buffer
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ad_sigma_delta: sort includes
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ad_sigma_delta: use u8 instead o=
+f uint8_t
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ad_sigma_delta: use sizeof() in =
+ALIGN()
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ad_sigma_delta: use BITS_TO_BYTE=
+S() macro
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ad_sigma_delta: audit included h=
+eaders
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ad_sigma_delta: refactor setting=
+ read address
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ad_sigma_delta: use spi_optimize=
+_message()
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dt-bindings: trigger-source: add ADI Util =
+Sigma-Delta SPI
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spi: offload trigger: add ADI Util Sigma-D=
+elta SPI driver
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ad_sigma_delta: add SPI offload =
+support
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ad7173: add SPI offload support
+>=20
+> =C2=A0.../trigger-source/adi,util-sigma-delta-spi.yaml=C2=A0=C2=A0 |=C2=
+=A0 49 ++++
+> =C2=A0MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 7 +-
+> =C2=A0drivers/iio/adc/ad7173.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 13 +
+> =C2=A0drivers/iio/adc/ad_sigma_delta.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ | 295 +++++++++++++-------
+> -
+> =C2=A0drivers/spi/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=
+=A0 5 +
+> =C2=A0drivers/spi/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 =
+1 +
+> =C2=A0.../spi/spi-offload-trigger-adi-util-sigma-delta.c |=C2=A0 62 +++++
+> =C2=A0include/linux/iio/adc/ad_sigma_delta.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 27 +-
+> =C2=A08 files changed, 345 insertions(+), 114 deletions(-)
+> ---
+> base-commit: d02f330b0c78bcf76643fbb7d3215a58b181f829
+> change-id: 20250620-iio-adc-ad7173-add-spi-offload-support-32a178b666a3
+>=20
+> Best regards,
