@@ -1,117 +1,90 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B01F0219FC;
-	Wed,  2 Jul 2025 02:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A878917A316
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 02:18:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751422533; cv=none; b=q6T5peGw8HaLyzN89eBWpqm1konsd7oRO2uO1uKT5kSdGaw8bOpUgRg13HbL0UC/6yt4iB0s3g7P2wkHmeCJsApZSHuHDuHSb/luWfO791UvAzZFqSpdwaT3mG9lVgg1MjuzpD+jOHjN7wl6aF2t0o2OveNM13KF164MGJLp54Y=
+	t=1751422723; cv=none; b=EAb/63PWPnqLKky86mQ0zxFmeuNxVGKgjvyG2qNMZuvwI5sa4H+BD2pGDHEbXcwrnQlJZLJWl3t6NTVGZfGDwO65agsKtPecn7RNvB9n9yLL03T2/QPTQfhOeLOWUgeiCcFKHLi/hvehAzlUEh8kCcWJORMmXVJaKrEbnF5BkAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751422533; c=relaxed/simple;
-	bh=mf227kKncoURIdLp1KReMZcMntXVrdskgCzq2WR7B3Q=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=LgslTRGhABJBIKRFyTcjMdI5Ive2XZwg81oYeeKwXNO8MT8zE4gjshlYaQOl/W1p+OkZGm/F6aYFJVyyssUx7icWrIeZ9UM5GtjTp5P+eSUFYrDZT34wjGqPcnTa6OjSsMmEkPXr0fWpIOyypayX1iOPGr4vofzRQfMjKHEHyr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JYeoi0lR; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751422723; c=relaxed/simple;
+	bh=yDb7K2gWpOa8KbXyqMKhSrGKILO4NsmhbZBvRWQl2fU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jujg4f8iELOTWU8Af7cYJU3RX/ZVTso5Sgmo2DWLSer7qcZ3KFFDGhTl/Zs7sr7x8kwBYAI8Sn7fVh49t4reLEXB/EViZZqCVlGijnhG6kUsaoQOTZMLrzOkezj3cJp/q2fkLWQaNTrGwZGBHiGw8oORp9AsCCoQT2LqhPEoof0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uUbUMpBi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JYeoi0lR"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-236470b2dceso33197565ad.0;
-        Tue, 01 Jul 2025 19:15:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751422531; x=1752027331; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g31GsV5you24XaAPrCY89ZjlDVNyI0JUrwAbjHIC07c=;
-        b=JYeoi0lR79XNfDsYssMZML3oXb6B1V0mZ7fFS2c7xA0zmc8tgT/gFh3esfHofje5n7
-         /roWrvJKx0hbGOYn6E/KjwcVbTmaH47mg4E+J/eyrxb4DpCaaZjnRHP4QvhZ+gJ5ImCU
-         EHp6ct8oj0xmlAIcvY98FCYmvuaiCka0upNMtxB5Ei8Esjw2XMqnbx9k9EKstztIP1G+
-         sXyW42RmgclA+FwY15CauK4+BnPyGIWmlIxqtizv66H/ogbouYZgA+/pFfI+zUuVZzFJ
-         b5DLk9i6mpuHmSEXNLb+ui4hNMkvNA+OyEXLZNbEh5QOLU51pP0PHm+C4Y3UyZkME4lc
-         RHeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751422531; x=1752027331;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=g31GsV5you24XaAPrCY89ZjlDVNyI0JUrwAbjHIC07c=;
-        b=qDJCrsfucVukS09uVeYi5Kpf/xdeC7hc877BZWmfGJ6SEkbfRm7/+40q4FPSkU/HvJ
-         9c/ZLx/vCwMUKOvNBCKQ+pRMmbiKpCciUxo0hvJ0knyvc3sSOkY1sEZBf+gyKcg1zWNM
-         8iu4G1hQ/RYXOblQcq7f7rd5CTmsrWiE9E2I3PC81rG5STCDgqJFeZ28QvVPGQYq/AeO
-         Ch1WgpspO77J2Lwx+OJiqg+oxlRk3dhSq5Gmv73+fvVQCti6LEbm7ia7WiGEJr3ZlbKB
-         P2TNLWyjPVQLMzNjtbPqFZhBOSAzTtZh1TwSqniLsh6TW7ZrvGKZDMCblcWfZVMNIW5k
-         wI7w==
-X-Forwarded-Encrypted: i=1; AJvYcCUCkPRJ6XmUPUjehd+dP9cDFVTXzQWbHmz0OA3daC4nAPa0i4qEPU8GsTsOFCk4hpWdSRhT8b3g@vger.kernel.org, AJvYcCURzDy9ubZevjKscK7kt2Sn89SEnIhfobryVrqXbhxbrDj56IHKqi/INZxY0Hal9K07EBHjh5FzdC338dKQ@vger.kernel.org, AJvYcCWX5MAhEGT+ifP57iy+A37ME28OYxrG3DHhLIZ/HZvGs2wTqAM6gpsSR3H+5GJN7pgZPjA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yywqq0UXW1zHJ495scJGi04pVMlI73O+hwthWtlr5D3pnNGIE3N
-	ChcP9I4iG+VH3rjS196YPgUa+QiWYUVT6oVxjv0lvL1qJn+7sLMjI7ovl24jUHm0ONHo/XRc
-X-Gm-Gg: ASbGnctB2L0MxRCdqZjHYxdLj6VHsTeJao9WeS2PuLdqep6UkpvSyUvbK6x0daTn21v
-	uqz6IbDHuNiFFssrlYumk6fGtxk7zZWS1pHrhNMdKgk5m1Nzjww6o8Fpa1PSL+Q+i9beZBfKLT4
-	TLnHlBOEdkRe8cgwK/fZG+3Ne0rv3aUVzXb0yo8OkvCaFcTp4/CzXnmYUtzy4o8Yyx8AOuRjeyY
-	s2C7G9ePHVJQ+6820i4h8WloZvQCe31cmKzUeSgcmB3s5oDDKPM/+k4bGuPE6o/XpmytlVLZl7v
-	pSKN8C2f8wfuVfczXb5dyh8aCmgQkWIDcqvEAWO42SwsDcGJEaiz/ZMMG0fyzS5OKevpETk=
-X-Google-Smtp-Source: AGHT+IFU7cSFIO4KkQO2gT16lJGhF5dZmQEW6QhVLm1Oe+2lHVb75yDHEuhj6lpjbfnNle+xNLPuDA==
-X-Received: by 2002:a17:903:2341:b0:234:9375:e081 with SMTP id d9443c01a7336-23c6e5c8868mr13451135ad.42.1751422530838;
-        Tue, 01 Jul 2025 19:15:30 -0700 (PDT)
-Received: from smtpclient.apple ([23.132.124.130])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e31da818sm10336762a12.61.2025.07.01.19.15.26
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 01 Jul 2025 19:15:30 -0700 (PDT)
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uUbUMpBi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0664EC4CEEB;
+	Wed,  2 Jul 2025 02:18:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751422723;
+	bh=yDb7K2gWpOa8KbXyqMKhSrGKILO4NsmhbZBvRWQl2fU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=uUbUMpBi8YExPPZvUnhUsHAq1g5uNn1AN3ccgX58eLft8DPH7zNDv4qdSZkJycdtj
+	 Wnev/En6RxkwfYNK6Y5Pj+/9eGDsAXyHoruKm1NP1V09p2SsST4rFZEJQkZ7ExaQdt
+	 7GXpOBw853+tuQXbcmjEjWuKlCzuYVh8qX6vy/oo2/BgHgraoSnBvVGCLS8//Wo/IX
+	 LFypRahZjb48qVPp3eILrEbsbrQidqoQ35c5nqQqQ0qvbFE0whO6Hygfjc/HT44wXE
+	 VSz5tHgBJUDhCRZe/Obws/aLx+qzpyZFi5m7COV/JARftg6oZ+pGJfn4fL4P1xb2kn
+	 5h9ORtj5oMoEg==
+Message-ID: <c168acff-66ff-4692-b21e-093c0aa592a1@kernel.org>
+Date: Wed, 2 Jul 2025 11:18:40 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [RESEND PATCH net-next v4 0/4] vsock: Introduce SIOCINQ ioctl
- support
-From: Xuewei Niu <niuxuewei97@gmail.com>
-In-Reply-To: <20250701180927.2cafbb5c@kernel.org>
-Date: Wed, 2 Jul 2025 10:15:14 +0800
-Cc: sgarzare@redhat.com,
- mst@redhat.com,
- pabeni@redhat.com,
- jasowang@redhat.com,
- xuanzhuo@linux.alibaba.com,
- davem@davemloft.net,
- netdev@vger.kernel.org,
- stefanha@redhat.com,
- leonardi@redhat.com,
- decui@microsoft.com,
- virtualization@lists.linux.dev,
- kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- fupan.lfp@antgroup.com,
- Xuewei Niu <niuxuewei.nxw@antgroup.com>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] nvme: prevent ioq creation for discovery
+ controllers
+To: Kamaljit Singh <kamaljit.singh1@wdc.com>, kbusch@kernel.org,
+ axboe@kernel.dk, hch@lst.de, sagi@grimberg.me,
+ linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: cassel@kernel.org
+References: <20250702005830.889217-1-kamaljit.singh1@wdc.com>
+ <20250702005830.889217-4-kamaljit.singh1@wdc.com>
+Content-Language: en-US
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <20250702005830.889217-4-kamaljit.singh1@wdc.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <E6A8AF53-7AB0-46C1-AE41-FAB5F443911C@gmail.com>
-References: <20250630075727.210462-1-niuxuewei.nxw@antgroup.com>
- <20250701180927.2cafbb5c@kernel.org>
-To: Jakub Kicinski <kuba@kernel.org>
-X-Mailer: Apple Mail (2.3826.600.51.1.1)
 
-
-> On Jul 2, 2025, at 09:09, Jakub Kicinski <kuba@kernel.org> wrote:
+On 7/2/25 09:58, Kamaljit Singh wrote:
+> Prevent ioq creation for discovery-controllers as the spec prohibits
+> them, similarly to the administrative controllers.
 > 
-> On Mon, 30 Jun 2025 15:57:23 +0800 Xuewei Niu wrote:
->> Introduce SIOCINQ ioctl support for vsock, indicating the length of unread
->> bytes.
->> 
->> Similar with SIOCOUTQ ioctl, the information is transport-dependent.
+> Reference: NVMe Base rev 2.2, sec 3.1.3.4, fig 28.
 > 
-> This series does not apply cleanly on current net-next.
-> Please rebase & repost.
-> Please note that we request that repost do not happen more often than
-> 24 hours apart:
-> https://www.kernel.org/doc/html/next/process/maintainer-netdev.html
+> Signed-off-by: Kamaljit Singh <kamaljit.singh1@wdc.com>
+> ---
+>  drivers/nvme/host/core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+> index c310634e75f3..3ad3b1da8b34 100644
+> --- a/drivers/nvme/host/core.c
+> +++ b/drivers/nvme/host/core.c
+> @@ -3155,12 +3155,12 @@ static inline bool nvme_admin_ctrl(struct nvme_ctrl *ctrl)
+>  }
+>  
+>  /*
+> - * An admin controller has one admin queue, but no I/O queues.
+> + * An admin or discovery controller has one admin queue, but no I/O queues.
+>   * Override queue_count so it only creates an admin queue.
+>   */
+>  void nvme_override_prohibited_io_queues(struct nvme_ctrl *ctrl)
+>  {
+> -	if (nvme_admin_ctrl(ctrl))
+> +	if (nvme_admin_ctrl(ctrl) || nvme_discovery_ctrl(ctrl))
+>  		ctrl->queue_count = 1;
+>  }
+>  EXPORT_SYMBOL_GPL(nvme_override_prohibited_io_queues);
 
-I'll rebase, and send out v5 in a few days, in order to have more comments.
+Repeating comment on patch 1. Can't we do this in nvme_init_subsystem() or may
+be better, in nvme_set_queue_count() or nvme_init_ctrl_finish() ?
 
-Thanks,
-Xuewei
 
-> -- 
-> pw-bot: cr
-
+-- 
+Damien Le Moal
+Western Digital Research
