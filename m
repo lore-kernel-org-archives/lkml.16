@@ -1,115 +1,112 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52B2523F41F;
-	Wed,  2 Jul 2025 09:25:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 183D0245032;
+	Wed,  2 Jul 2025 09:26:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751448327; cv=none; b=FXy2QxLkJF1+N3sm1vpnb+O0KAQqz3q5EWZ7k9kV+HNdrUoExrujaaFT5MXRsUfmRIWyu0C9aRD9eWZvY3epJ0MaEmRi9nWxnGkMe8tfzOS81ZUB21HALwzkud1W6D3Opw8MDVvjgCCNsppUoYYdPGj0ym/lqGM7vQ4Q/PKQl6U=
+	t=1751448369; cv=none; b=RvlAyxt3XWyjRgcHsbfU/76wMEACO+om4z8UKfD8UzPNHquxsPwsksuWH5osVCtEDaDhBJIRbHfxeVgFYstpFrpcb7nS9+LhvCBT8EW0dLFt+rhkbJcA+KGBg+0MpeRkUpU9qVqX2UB5bvTcMUcU5z9HI+Eivj61fsOzQjXqhIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751448327; c=relaxed/simple;
-	bh=l+OXJNIycwkqxDvtkEQQL47AAcEoLyHKZN6dUMteqI8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RsizR78jxAtRVWLPG7xg8uVaMBjOWoZlL2cmT/XYNBvnQSuVFfwM1dW5Ux0uVeifkaGuMtBb34WiDQAAJvbR3PMk06VJ51hqyXkrUKflTh7iboHR4u6CldFfRV7OzpwsSa1PQKKb66Jfmk8jIW14scoiLYEGir41C28oMP7xkEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+	s=arc-20240116; t=1751448369; c=relaxed/simple;
+	bh=bdap8No3+hAEFEUzbP1Pd//m/9aj4ASrR7MCs2OFXRg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dbr5kREwrP+GitLXzh/iwXN17V5eXdqRkUUwQAvxf9t3qdQByiWqm21tm570E3Jt1gNcp9pg7lMd+nd5v/mIzsaiS+RB4yjbyhJrsZA6jQoP/cB8vRUOW0lYVxVucLHrspAN+FFBsqTDm8c7/8OsfVlc3qJXxHh2A1BLkaKu1tM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EQ0c2XHO; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ae0df6f5758so715155866b.0;
-        Wed, 02 Jul 2025 02:25:24 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EQ0c2XHO"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4530921461aso43438845e9.0;
+        Wed, 02 Jul 2025 02:26:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751448366; x=1752053166; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=r2NUWZQo4rEi0elBJOEbc1HR3dKemWrO4/Vi3XFgMFE=;
+        b=EQ0c2XHOhv3BntP9jBG34zJKBIUkKQzz8JI6K+vYTtI1pvLff63aystUWvSTm9TaLJ
+         /ykiRBnMi+fu8tOTRVwapcHWS99Pab41Y81ITv+PfRfRx/W+w1X4Muv0CUyp70JlH1o9
+         ygjQzZAAAiHPv/uPXBStoTFYU9GgNQCGIj/bahpExZcnRL89qoa3BIQAID0W3aovVopv
+         5Ah+55HcvhZRlXhNPqUQkWnQSO4/sfPEnVm+2vyZcJRw9ovH37H37NQLjUnbkXOBzPIs
+         7ACS6jnxZJK8WmD1K2Cil6fE55BrAhNy84q6xkkcP+Sgiqj/Voq4KhblSSxeE5UJB2AK
+         eGtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751448323; x=1752053123;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iXqizztXrc6l617heC/AMuPzhsNfzw+4PJx5K3hl0+k=;
-        b=MryAo/6QeecAbzjwFSg26icdE9TF5htEpWRQJfS8IbieF5ROjtYqKdwLOOwPvO+/ot
-         y1YlMflM3Iulf6h0j5GvD13OinIZ0vk5fMV+eQQbXr2OC7ZAkXwJ8fqfKQLp5YcefaKT
-         Y13PEmsheI6t+p/zf0QlCjdBDEeH4E2wfj2PSSF0uSJwlwaYqIK6Y4WYXovecn1pzNit
-         YMcWcBgCux9rzbQ9MPHliFDTWZ8za+QoFXZ+NiIrMrBxA6KXqsv8IjQyYGUUK5rnKGDE
-         QOg0hrMuRErbqS/B3N/NlQ68Ugv8Pd2URu+LRnt3cVbct9GAjoOGvUfAm753YU/yE06N
-         IlMA==
-X-Forwarded-Encrypted: i=1; AJvYcCU+3IjLhCw00Dum6yE2dxFIi3/NCCiRNiR2pTt+GcwGXYbkk7hqk8x2Zi9cts+vniaAtFeBGMhdWbh53knOqM3J@vger.kernel.org, AJvYcCWfJLeoLZTvfU0HVtjNZvi4UMISxcKcvOd9bsVmCJBSbpn4+/IaKxDnioxofaEDbWy5IESfqmLsUYqsCuo=@vger.kernel.org, AJvYcCXlOfG1ytJEnYGTobvSBG1+T32AITwxqYjndapaVxbampIcIz60C/bjBqPyixT1a64hykdbp4eZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZ8+KPEIIrUa4wzQeMTmWh29LD+EUoKsg/JGC8xdtzSRUVI6aD
-	l04pA121klupbGOraIpRkOaq2115LsdvSWnZVtWtDfkzpbG+FFN3ma6a
-X-Gm-Gg: ASbGnctux9zyp7xjw7thWPe85mPVDq+IScCH+Do8cHjxcCTipX6+tvGl3nzpT+5Af5A
-	nzp5PjZiFKf6PE7Na+rJenhrg6HKeihqqsriK8vLXKU9J590bCn+8gm1WZKVeO8kMYK0qr/5Fhp
-	v1y5P+UEJTTMGIXcQ++Vfonv++2WzIAhYQX7qDiN5xx1JrXi97CIHd9jMCukdB78XKtYnSD+5vv
-	3jT+qLVsA9s1sYROn6fReqo1W4KXh6HWx8CMrQnAHbCv3DgAUAFcbYPLqqxOOy8hFwQcxgkBQxW
-	eZcv/UGIRBP8VpFq1oa/CTbkuCHW2frjN9DmMh78xOn7jft2OI85
-X-Google-Smtp-Source: AGHT+IFmRFolhslnQ3wJmOGKd1ZC652Hspez4xyKqE787ovmelWtlRNlsVeweq4XaspxJpAb3qWHMg==
-X-Received: by 2002:a17:907:2d09:b0:ae0:d1f3:f7f4 with SMTP id a640c23a62f3a-ae3c2a963d8mr240306566b.13.1751448323235;
-        Wed, 02 Jul 2025 02:25:23 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff:6::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353ca2edcsm1027763066b.180.2025.07.02.02.25.22
+        d=1e100.net; s=20230601; t=1751448366; x=1752053166;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=r2NUWZQo4rEi0elBJOEbc1HR3dKemWrO4/Vi3XFgMFE=;
+        b=dLZi/39ZuvyL3GUYKx8aP8CLE0g+M9WNXc8O/nNdagK2yyxmpPP+rfyrPdeZosLgvl
+         qd1FT6x06k97G+4XJ+Rbkgs16w8ahC594OV/+FPFuSD37q9xOs970xZqIqJw0BIOhQgv
+         GOy/nXbfG9M8y24B2GbvJ8vsBJp4EA7b4WatkoIQQufTAWmQ0bWC4rrd4PVyUFhQ973S
+         4mJqhAtB3PhWA863o0cz3/4XnpmzvhQXIesXM5sY0cTtvckWkCyBNyANkp0yei/HajaK
+         Df2xu3DVs4+PreHQOtxg8Bs7OA77O0mKaKMOArwgMK7aBGf6arJIJkxiYnepAnaK3tVA
+         CH0A==
+X-Forwarded-Encrypted: i=1; AJvYcCWYnEMK5JgFKwtX2ybbL0V/REiYRl/RX/oncT4ZYqTiKPgCCsq5pmaODWRycfuQ5g3aprrKMr0pyWmpzoU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzP0am1Q98m1q8DXpaj1d1yDjtX9nc5fRbe9BAuh/27c5XrMHEb
+	KgPTF6yl9nsqYj8s4quV2w+6NOhwQdT7ffq+w2nsBvKyAxAxkHuZsT9C
+X-Gm-Gg: ASbGncu+AXoGN1sPVm5gQzi3YOHWAmLU+CA/xfYDMHjbKpF8lkssb6N/9Va98kVgZP7
+	FJ9VnrJwaioZUtQP/eNpgv8Y8CWwutvMiBGlnCr+HNcHWcGB8RRWEFwGOUoJCre/VHAocDfqLtR
+	kgUjkSzK4tYZjOLXzVYuX0Va7hIjcv/pOPhv7sdqL+KT5q27Mc9TaSANbCUK5pOMNSeC9874d7o
+	O50V53GM6ib8mrFPUCFJnmLiemDWNnimlh/C5xbcwa6eBTbgXbMDZnOLcUGcsmptv2YIG4gv649
+	qKO9wJMMtbVXD8qoNOohCODdXPy534hAUZMjfTx7Afif5IMl/OUhcZVmcKRSVHOoCb/HB4E=
+X-Google-Smtp-Source: AGHT+IG07cQ+CwOEqMsx1VHMq868M5t6QnC5WQEr47cn1qXuSoJcWBD6jVc9AGetWcgUNe/GbL8M+w==
+X-Received: by 2002:a05:600c:538e:b0:453:697:6f08 with SMTP id 5b1f17b1804b1-454a3728b85mr20537325e9.26.1751448366227;
+        Wed, 02 Jul 2025 02:26:06 -0700 (PDT)
+Received: from localhost ([87.254.0.133])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4538234b1b9sm218566675e9.11.2025.07.02.02.26.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 02:25:22 -0700 (PDT)
-Date: Wed, 2 Jul 2025 02:25:20 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, Shuah Khan <shuah@kernel.org>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, gustavold@gmail.com
-Subject: Re: [PATCH net-next 6/7] netpoll: move Ethernet setup to push_eth()
- helper
-Message-ID: <aGT7ALhW060Tv22l@gmail.com>
-References: <20250627-netpoll_untagle_ip-v1-0-61a21692f84a@debian.org>
- <20250627-netpoll_untagle_ip-v1-6-61a21692f84a@debian.org>
- <20250701175325.5c1970b9@kernel.org>
+        Wed, 02 Jul 2025 02:26:05 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Christian Koenig <christian.koenig@amd.com>,
+	Huang Rui <ray.huang@amd.com>,
+	Matthew Auld <matthew.auld@intel.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	dri-devel@lists.freedesktop.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] drm/ttm: remove redundant ternaray operation on ret
+Date: Wed,  2 Jul 2025 10:25:41 +0100
+Message-ID: <20250702092541.968932-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250701175325.5c1970b9@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 01, 2025 at 05:53:25PM -0700, Jakub Kicinski wrote:
-> On Fri, 27 Jun 2025 10:55:52 -0700 Breno Leitao wrote:
-> > +static void push_eth(struct netpoll *np, struct sk_buff *skb)
-> > +{
-> > +	struct ethhdr *eth;
-> > +
-> > +	eth = eth_hdr(skb);
-> > +	ether_addr_copy(eth->h_source, np->dev->dev_addr);
-> > +	ether_addr_copy(eth->h_dest, np->remote_mac);
-> > +}
-> 
-> Can you move the pushing of the header and setting h_proto here?
-> 
-> if the goal of the series is to slice up the code per network layer
-> then its a bit odd for the IP layer handlers to be pushing the L2
-> header and setting its proto.
-> 
-> Just:
-> 
-> 	if (np->ipv6)
-> 		eth->h_proto = htons(ETH_P_IPV6);
-> 	else
-> 		eth->h_proto = htons(ETH_P_IP);
-> 
-> no?
+Currently the only exit path to the end of the function
+__ttm_bo_lru_cursor_next is when pointer res is NULL. The
+ternary operation at the end of the function that checks on
+the value of res is redundant as res can never be non-null
+and hence the expression referencing pointer bo is never
+executed. Clean up the code by replacing the ternary operator
+with just a simple return of NULL
 
-yes. We can do it. In fact, if we want to do even better, we can move
-the can move the skb_push(skb, ETH_HLEN) and skb_reset_mac_header() here
-as well. This will slice up the code even better.
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ drivers/gpu/drm/ttm/ttm_bo_util.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The function will look like the following:
+diff --git a/drivers/gpu/drm/ttm/ttm_bo_util.c b/drivers/gpu/drm/ttm/ttm_bo_util.c
+index cdee664d2e8b..fb8bef50c744 100644
+--- a/drivers/gpu/drm/ttm/ttm_bo_util.c
++++ b/drivers/gpu/drm/ttm/ttm_bo_util.c
+@@ -1016,7 +1016,7 @@ __ttm_bo_lru_cursor_next(struct ttm_bo_lru_cursor *curs)
+ 	}
+ 
+ 	spin_unlock(lru_lock);
+-	return res ? bo : NULL;
++	return NULL;
+ }
+ 
+ /**
+-- 
+2.50.0
 
-	static void push_eth(struct netpoll *np, struct sk_buff *skb)
-	{
-		struct ethhdr *eth;
-
-		eth = skb_push(skb, ETH_HLEN);
-		skb_reset_mac_header(skb);
-		ether_addr_copy(eth->h_source, np->dev->dev_addr);
-		ether_addr_copy(eth->h_dest, np->remote_mac);
-		if (np->ipv6)
-			eth->h_proto = htons(ETH_P_IPV6);
-		else
-			eth->h_proto = htons(ETH_P_IP);
-	}
