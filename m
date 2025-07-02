@@ -1,84 +1,66 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA3F30B988;
-	Wed,  2 Jul 2025 14:56:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C680530AAC3
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:56:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751468167; cv=none; b=g72RbpJyPyBb4m+DZVV2liQDALRl9CV8+We4kjPAuLzIn7nTH0AaRYsQalFZdoiLb7G7fjqoD81U+lf41siItNLwDP8NlRJKvHheh8isRApHGn95ptf8qD0P0VzcXzTtQBody2SaYeEGNBDKuHSCcAvLYxduD61oCbRLxZ5y6Kg=
+	t=1751468185; cv=none; b=dEVk9O3m6/PRCGb+Eqo4DJjmdYftLgDNHeDXqqNU7NgZ0hYJ+h9uDRR2Lo37lZ7ZZb8O7jz4jVrl7bC5gfWTCiOGPwFa7Guhykt9WF5hbj9YfuNoVCcFDbn86X/BDC8QK1TrRrQqmxTfppZW1taIcQDmMlM6O8YR+A/OkB7jpAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751468167; c=relaxed/simple;
-	bh=jPSExSFTuCmZYyW1vpV6frVat4xvr0IfGJRia6zEiEM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XhkpBVr7N4owY3tH6jIk348F3uix3e83VjpK0ZdozdGtLFpy8x5Wp7PDFr7Q3kUfEJJ6eZeoz5bnj0vvxPqIbcV4Bd9JIeKuqKRPzkCvPa60z5aoismMX69snpnb0K/NyW8S2z5u6a5acD+YduC+JCusY1MBPCIX0/yYeT7TBPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TwmzkYlw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751468185; c=relaxed/simple;
+	bh=jlLG8jw2XNIlLLgHIrYUC9gq9L9nTzzjq5qVeTmFLhE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=ptgbkvMcNPZi2kJ+mz+2wDHSEH8zs4K6btfryF68lN2kIn/HkbdcCyzmyZlOppXt2XzD0iB8+7C5Kv9abhwhDqXE93NqtmRl+hqDhcIh2RfZ7QVBfJEsD8lS5qz6ZXN6Xohg4pxm70oDIj3sk/+7n6s+j+HOJKGybBfkERQPhfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T1U1GUmz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TwmzkYlw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3090DC4CEE7;
-	Wed,  2 Jul 2025 14:56:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T1U1GUmz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC87BC4CEE7;
+	Wed,  2 Jul 2025 14:56:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751468167;
-	bh=jPSExSFTuCmZYyW1vpV6frVat4xvr0IfGJRia6zEiEM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TwmzkYlwB9IXoWYiTTPlsJR9akZk93fcjgJg6GoqsidFL3/va22HeolW4AtWm6WBR
-	 qDORl0UL2v1tX9sqxupC621a9pK4Po/zcfQTqQ93FeFqHU4lIAO82OY2azKmqOSw6z
-	 juJ/kKe+A4Jyr4MHP2RmWZD28BsxqVQZ+8LkLAN4S8sP5+TyuHDl+lj1cwEoeV3J87
-	 BQibCF8oi7FhXWzO7FypDa15h26jMsH+ynDLuonuhHj21WNBRSAc3WQRozq20sQCTr
-	 IZTy2epyswxYsioCWK9zFS7c4uUgKPWmtHtAR49sUt6LgUHTa8moooBkgVSEkuRE+G
-	 jQGOPhmB+QPIQ==
-Date: Wed, 2 Jul 2025 07:56:06 -0700
-From: Kees Cook <kees@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, x86@kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	"Jose E. Marchesi" <jemarch@gnu.org>,
-	Beau Belgrave <beaub@linux.microsoft.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>
-Subject: Re: [PATCH v12 00/14] unwind_user: x86: Deferred unwinding
- infrastructure
-Message-ID: <202507020751.CB3EFC2D@keescook>
-References: <20250701005321.942306427@goodmis.org>
- <CAHk-=wijwK_idn0TFvu2NL0vUaQF93xK01_Rru78EMqUHj=b1w@mail.gmail.com>
- <20250630224539.3ccf38b0@gandalf.local.home>
- <202507011547.D291476BE1@keescook>
- <20250701192619.20eb2a58@gandalf.local.home>
+	s=k20201202; t=1751468185;
+	bh=jlLG8jw2XNIlLLgHIrYUC9gq9L9nTzzjq5qVeTmFLhE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=T1U1GUmzWpPxZW62kG9X3X5PrwMGN5mC5Wj9xLzAX0zm53Qgq68T1zAkHyZWbVHEB
+	 I4siZYfYqmAM6R3IPfouUT6Lwt8WQh7b5YzcogtAOLPQxQQoPHAY/pLKXGvOyFISxD
+	 C7Elwp147wsDDxn1K9qvozPhAujCM8atjK1d176TRu4yNyNp4UDNl9vWoevMxLMxfI
+	 5a01cEPmz/by2+45QWXjlE7YgXpBk+w2IQVadELcSyKADJGTExyUGnZNwhMzan2Z3m
+	 YQsUsI62wYQUqxuTuj31C83KMNisSJB5k9t/EApyPlgrWbr1vJIK5DPj0jYhlUDBP9
+	 tG1gNh5D0bWzw==
+From: Lee Jones <lee@kernel.org>
+To: lee@kernel.org, linux@treblig.org
+Cc: linux-kernel@vger.kernel.org
+In-Reply-To: <20250701145625.204048-1-linux@treblig.org>
+References: <20250701145625.204048-1-linux@treblig.org>
+Subject: Re: (subset) [PATCH] mfd: pcf50633: Remove the header
+Message-Id: <175146818451.3021245.17001857329889901395.b4-ty@kernel.org>
+Date: Wed, 02 Jul 2025 15:56:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250701192619.20eb2a58@gandalf.local.home>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.15-dev-c81fc
 
-On Tue, Jul 01, 2025 at 07:26:19PM -0400, Steven Rostedt wrote:
-> On Tue, 1 Jul 2025 15:49:23 -0700 Kees Cook <kees@kernel.org> wrote:
-> > Okay, I've read the cover letter and this wiki page, but I am dense: why
-> > does the _kernel_ want to do this? Shouldn't it only be userspace that
-> > cares about userspace unwinding? I don't use perf, ftrace, and ebpf
-> > enough to make this obvious to me, I guess. ;)
+On Tue, 01 Jul 2025 15:56:25 +0100, linux@treblig.org wrote:
+> The patches to remove all of the pieces of the pcf50633
+> have gone in and we're left with the header.
+> 
+> Remove it.
+> 
+> The pcf50633 was used as part of the OpenMoko devices but
+> the support for its main chip was recently removed in:
+> commit 61b7f8920b17 ("ARM: s3c: remove all s3c24xx support")
+> 
 > [...]
-> Anyway, yeah, it's something that has a ton of interest, as it's the way
-> for tools like perf to give nice graphs of where user space bottlenecks
-> exist.
 
-Right! Yeah, I know it's very wanted -- I wasn't saying "don't this in
-the kernel", but quite literally, "*I* am missing something about why
-this is so important." :) And thank you, now I see: the sampling-based
-profiling of userspace must happen via the kernel.
+Applied, thanks!
 
--- 
-Kees Cook
+[1/1] mfd: pcf50633: Remove the header
+      commit: 31ce8faafb965edadb90d6f416455b517244d623
+
+--
+Lee Jones [李琼斯]
+
