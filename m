@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED5C2DE714;
-	Wed,  2 Jul 2025 20:30:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A99732DE717;
+	Wed,  2 Jul 2025 20:32:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751488243; cv=none; b=UhX7Wgv/UMuhczX6Fhi7PU/yc2CtvFzG+v7/3T0kKy14R3P/JTg5jDI94eDaqnVymwHOpCkninF1L2WX4tovyyDShB9Apotf4NeVc5r9siuqWlND7irXHo5v2xCp32qPA3oqX1o/q7yo2Q/vAFX7PV92/AGZgc6KgvMmT+q3WO4=
+	t=1751488348; cv=none; b=Ux2r5MfgzI8uI1NVc7ofEde+1dPiWR+LYX7qse8ClqdEJ4eYzd1fu9AAlg5P83MSZ/SnzAwBV4W8qMzHjHaSsHlWvhjiWSAAGoM4aSImC2Zypt8CRrMZV0+25YeMCc/+paQJEScF9E1Tp0jcRirMCT76SrIFytqlQfdCE4tTsT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751488243; c=relaxed/simple;
-	bh=40B926dekfZk7Pc/F4+emVpgtLxhyiFMEso0dncmUIA=;
+	s=arc-20240116; t=1751488348; c=relaxed/simple;
+	bh=AQj1KqNi6O1MblNaJlJZf+D7Hyvwx661fg4rUbzcPEk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oWge2T9iWqxeRe2fFvbQyXfX5jNBwHW1+ObGEC8CIYiVptqzPE9TH8BzEmXfPk+AnQdLHUWHAiLcglyVFTE/2J44T5YECvClJiNymmJtClgWEmF4GskSyD5ETjUW1A0wE8UMSkpxpXTKTzNxSBgAftGb4tn4ESxzaKwjbIaq4Q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p6AqKF+c; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=OGqtu9WXB9qPxDUdSsrExsPrTsH0069wu478dQuWDxPdwHcMwIafZuE4V1lYn60r7IeFNsxM/qEeyVm4VucX31RA4IC4nukSYx/1H55g/YjhIPfysZ9L26pda8uBoXljDgvVzFwZ7mlgouFkgJ8r1NwFBXl2BCuRtbmB3cf88WM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c5aVrgxJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p6AqKF+c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0023DC4CEE7;
-	Wed,  2 Jul 2025 20:30:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c5aVrgxJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F416C4CEE7;
+	Wed,  2 Jul 2025 20:32:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751488242;
-	bh=40B926dekfZk7Pc/F4+emVpgtLxhyiFMEso0dncmUIA=;
+	s=k20201202; t=1751488348;
+	bh=AQj1KqNi6O1MblNaJlJZf+D7Hyvwx661fg4rUbzcPEk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=p6AqKF+cwI6HQXTqSt5ZPVF9JLfz3+WXIMuVDLSo9DziV9jgI0nOlVDgMAESYW7gT
-	 saIRoebpuGVzZMKWJ9qidFdeYouV7Bhvw0+f7s5MnZFIXeLkJsLaKIRxYORqpmOhLn
-	 MNrFoqSKaSeLK0lwz1CtHvl6loQ5Kiqr/7xV6jr3oE9mpx3vbxdKHw6l2CkrXPBZg/
-	 mKYkp2evTMXnnhatUO8zM+3ewUyONf+Lx1P7YAAiza+aPlhKaLDySnwAbtyxDCxl3c
-	 EV6voz3nrjSW490VyW+CLJUFVhRvqaEj3s35hC7WZpVVnZLp/68ivxkpI6z05fUeun
-	 YAHxOa0hOA6MQ==
-Message-ID: <04a0d550-3fb4-4cf9-8adf-4ed54e3af7ba@kernel.org>
-Date: Wed, 2 Jul 2025 22:30:37 +0200
+	b=c5aVrgxJxGKr2xUu8ziy+Fu/mIwCiitmsaT49GiTEp9dplVruZg6qmei9buZYRV3U
+	 2nALn0ygDJzbPeys5SGyqZgd9dv0gxXR3VkMXOKJqR8q15KrtlAKfy2RkTnGbJ/Ly5
+	 F5IlpSzI7Ao2yJ/Kfb0F0HWGpdAbihlW7ZoxF20pt8yxWAbgNOngLk5lDyZqLB2ixf
+	 UPVtOborvWksg7N3GZx8jtXyIbJiwBUd87e4Aso9CHZd5GblksYAoZLEDKhy+NvTfi
+	 rTyoUfQ/0vdeklGPJEs67Nn/R7zr7YX/uLx1j15mDfSR4ovbblwUXzUdihLpjAVY3X
+	 EYPJrqvVE/UXA==
+Message-ID: <cf34d7dd-4425-49ec-b430-927c70d1fbc8@kernel.org>
+Date: Wed, 2 Jul 2025 22:32:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,18 +35,20 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] arm64: dts: ti: k3-j721e-main: Make the "scm_conf"
- node a "simple-bus"
-To: Jayesh Choudhary <j-choudhary@ti.com>, nm@ti.com, vigneshr@ti.com,
- devicetree@vger.kernel.org
-Cc: kristo@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, s-vadapalli@ti.com, rogerq@kernel.org, afd@ti.com,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20250603095609.33569-1-j-choudhary@ti.com>
- <20250603095609.33569-2-j-choudhary@ti.com>
- <15da3051-c35e-4876-9185-9079493dc66c@kernel.org>
- <0c69137d-93ad-4843-8512-9885b9cba452@ti.com>
- <d8a8293d-2759-4408-b1a7-a2689383b043@ti.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: remoteproc: qcom,sm8350-pas: document
+ SM7635 MPSS & WPSS
+To: Luca Weiss <luca.weiss@fairphone.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>,
+ ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250627-sm7635-remoteprocs-v2-0-0fa518f8bf6d@fairphone.com>
+ <20250627-sm7635-remoteprocs-v2-1-0fa518f8bf6d@fairphone.com>
+ <20250701-melodic-courageous-mussel-0bed22@krzk-bin>
+ <DB0MZCUM41RA.7Z6461I531VD@fairphone.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -92,51 +94,46 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <d8a8293d-2759-4408-b1a7-a2689383b043@ti.com>
+In-Reply-To: <DB0MZCUM41RA.7Z6461I531VD@fairphone.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 01/07/2025 12:23, Jayesh Choudhary wrote:
-> Hello Krzysztof,
+On 01/07/2025 12:12, Luca Weiss wrote:
+> Hi Krzysztof,
 > 
-> On 04/06/25 15:18, Jayesh Choudhary wrote:
->> Hello Krzysztof,
+> On Tue Jul 1, 2025 at 10:12 AM CEST, Krzysztof Kozlowski wrote:
+>> On Fri, Jun 27, 2025 at 08:55:42AM +0200, Luca Weiss wrote:
+>>> @@ -91,6 +93,7 @@ allOf:
+>>>        properties:
+>>>          compatible:
+>>>            enum:
+>>> +            - qcom,sm7635-mpss-pas
+>>>              - qcom,sm8350-mpss-pas
+>>>              - qcom,sm8450-mpss-pas
+>>>      then:
+>>> @@ -142,6 +145,22 @@ allOf:
+>>>              - const: cx
+>>>              - const: mxc
+>>>  
+>>> +  - if:
+>>> +      properties:
+>>> +        compatible:
+>>> +          enum:
+>>> +            - qcom,sm7635-wpss-pas
 >>
->> On 03/06/25 16:32, Krzysztof Kozlowski wrote:
->>> On 03/06/2025 11:56, Jayesh Choudhary wrote:
->>>> The "scm_conf" bus need not be "syscon". Now that we have "pcie*_ctrl"
->>>> child nodes for "ti,syscon-pcie-ctrl" property in "pcie" nodes, change
->>>> "scm_conf" node to "simple-bus".
->>>> Also remove "reg" property as it is not needed by "simple-bus".
->>>
->>> This (possibly) affects all other users of DTS which were expecting this
->>> ABI. It's not only about forward-compatibility, but other projects.
->>>
->>> Maybe this doe snot matter for you, so explain that in commit msg and
->>> provide rationale why you are affecting other users.
->>>
->>>
->>
->> This should not affect other users of DTS. J784S4 already has this
->> change and it serves as a validation that DT nodes are compatible
->> with other projects (for example uboot driver handles it).
->> Other SoCs are being modified with taking J784S4 as a working reference.
->>
->> Considering this, do I still need to add something? Or is it okay
->> since I am not exactly affecting other projects?
->> Should I add something along the lines of "similar to j784s4...."?
->>
+>> Everything fits better sm6350 and no need for new if:then: entry, at
+>> least it looks like.
 > 
-> Gentle ping on the above comment.
+> True, that seems to work fine as well. I can add it to the
+> qcom,sm6350-pas.yaml bindings instead of sm8350 in the next version.
 > 
-> I have checked other projects like Barebox. That supports TI K3 SoC
-> but only AM62x and AM62L. Nothing in this series affects it.
+> To be honest, I don't quite understand what the concept behind the
+> different PAS bindings are, when an SoC should get a new .yaml file, and
+> when to add to an existing one.
 
-Your answer is really not sufficient, just something to reply so I will
-bug off, so I decided to ignore it.
-
-This affects other projects - it is clearly visible in the diff. You
-removed a compatible and you cannot do that.
+It is purely arbitrary way of organizing things, to reduce amount of
+ifs:then: and make things easier to read. Adding ifs: does not make it
+simple. Adding same SoC to multiple bindings does not make it simple.
 
 Best regards,
 Krzysztof
