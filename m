@@ -1,83 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D8C1239E90;
-	Wed,  2 Jul 2025 21:12:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73851E9B3D;
+	Wed,  2 Jul 2025 21:14:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751490768; cv=none; b=owHh+ooPEzA1BrgUct7MoLT3QSfK1v9k8+Ehfuw8V5OKnKTMyo4u+Xs1Rllh6aYMB35NJRXZRYyEArGuexpOXWMgZhzYDSUs0OvnOa9uODt2Tie7iWzPrdWFBGytjlRe55pJv5J9/F+BgMH/xGS5PKoJjfCh/CNwke4chm4ivRg=
+	t=1751490879; cv=none; b=cKsHiVN+ccavdc+X/wxS39JfdrH2lbmcxP2oX9R2T8141CucRDg4KFY8eiJiWQt1B5uhpoJHgiwfDjJ2sZJDxF/MVzeZULqjW2pXHZKylaiZ0KtXu+ER/fWni6DxSgYMohybHEW8fGARg1HTpIVoODjY1ZiiBTvzat1J9z17nGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751490768; c=relaxed/simple;
-	bh=PBybrmdPM7zrM8eU16XV6OIXKt3aecbUtvMDihivU7Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ewMB3nLa9td1R7871lhwaOE5MZkpl0m9wPKazVuVnditKC8Lt2GnjUk3+y77HlJPnc3mjC65gNEbj5mk7foWqvXvgX41kS3gXKpRbScRzla1AbTY8B7NFgLlzj6PxkNOoySdwzjfum07uriMVw4tWD8vBVNcPyx5iOpO3SwhjNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LIU0waRN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751490879; c=relaxed/simple;
+	bh=IRreGz5DKr52FblTxRK/rFgWXfFqeBVNLQ73T/BEENc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=adLk5RP0pSWJh7XdQUXyAMImzrPQZdU18tkBBiQMkSYdeNBQkchA1UxsXHMDOMQHRGhY1oQ/Nlg6zyRHBDIzvsut6OaVEKSVq0XFKjM0vPLUU/2s27CHT2vUiKU0JpTCWMu1Okb7RshY2BHOtFI6YTNpc8bbG5fIUidQdu5qHjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BWXCyB/d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LIU0waRN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA7CEC4CEE7;
-	Wed,  2 Jul 2025 21:12:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BWXCyB/d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1042C4CEE7;
+	Wed,  2 Jul 2025 21:14:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751490767;
-	bh=PBybrmdPM7zrM8eU16XV6OIXKt3aecbUtvMDihivU7Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LIU0waRNiIeiPXwSighbehOZkYRBLyQQz/OS6cgrq0YpfDjcMuVKWmq2bSTD6tu66
-	 kA6tVC+6djnuqyN0Lj0rL334tlOcAB5r72iewYougOw/bzfu4Lx/nY304Jz7tSU9oj
-	 YaZfI4cthW4dLYj6wxLpbY/zI4K2yg/TiSQZboapPql9zxnqEGN1mz064iyzVaNgQ5
-	 YCS5r4KAwPVcGYmVSWrFN3Qqt7S9sHNgZfMNujLorofqE5HLZLHhNyEACZ2DGB4YlV
-	 w2gaNvdq1Snnwvrp7VO0eBCfOzN3B/iNQ8FhHlELE4LfNlkPoioqXa82k5CnizIR5a
-	 Gd7+4ywf7/owA==
-Date: Wed, 2 Jul 2025 14:12:43 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Bill Wendling <morbo@google.com>
-Cc: Kees Cook <kees@kernel.org>, Jann Horn <jannh@google.com>,
-	Jannik =?iso-8859-1?Q?Gl=FCckert?= <jannik.glueckert@gmail.com>,
-	linux-hardening@vger.kernel.org,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH] kunit/fortify: Add back "volatile" for sizeof() constants
-Message-ID: <20250702211243.GA327934@ax162>
-References: <20250628234034.work.800-kees@kernel.org>
- <CAG48ez0n1E0iuOxPe=jq4MuuP3w2wMSNixmfNmBbB89jyJBSbA@mail.gmail.com>
- <202507010926.1650356E@keescook>
- <CAGG=3QWVM9tTRoGws0X+Jq+m7Fte2JeQC+jUL=EZ5hqGzSY6hg@mail.gmail.com>
+	s=k20201202; t=1751490879;
+	bh=IRreGz5DKr52FblTxRK/rFgWXfFqeBVNLQ73T/BEENc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=BWXCyB/dH4bnI6cFLqHIapEJ6FxIaN/X75SdNdNLbl4umCK+ViQH8MbQt9YPFDy8+
+	 eAsu5lUy6Pvyg8On0qJgNJdKWnFFzBd04DaPhxRbxg3zWr2jZTyXjlobglpNRPTj6Q
+	 Zm4xolPOkOAlR6svjVp8jgT+alkkoImMdKS7rh561cQP5s7PfiknYnSygIkuOOfGP/
+	 nrHtCEVlw8xPOtKOwsv9eJomOgqY16d5eJ7GAuQoppG/nbzKwNJABEgou8Q/Arg2G8
+	 dTQSmlpSAWRQp5sIL6wpXNPTnyh+ZoITkk8SJVvjRhdHI6VyIU8PVMKdw58xh0YsTY
+	 o2P7IM8tYDQow==
+Date: Wed, 2 Jul 2025 14:14:37 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: zhangjianrong <zhangjianrong5@huawei.com>
+Cc: <michael.jamet@intel.com>, <mika.westerberg@linux.intel.com>,
+ <YehezkelShB@gmail.com>, <andrew+netdev@lunn.ch>, <davem@davemloft.net>,
+ <edumazet@google.com>, <pabeni@redhat.com>, <netdev@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <guhengsheng@hisilicon.com>,
+ <caiyadong@huawei.com>, <xuetao09@huawei.com>, <lixinghang1@huawei.com>
+Subject: Re: [PATCH v2] net: thunderbolt: Fix the parameter passing of
+ tb_xdomain_enable_paths()/tb_xdomain_disable_paths()
+Message-ID: <20250702141437.5d4cb9bd@kernel.org>
+In-Reply-To: <20250628094920.656658-1-zhangjianrong5@huawei.com>
+References: <20250628094920.656658-1-zhangjianrong5@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGG=3QWVM9tTRoGws0X+Jq+m7Fte2JeQC+jUL=EZ5hqGzSY6hg@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jul 01, 2025 at 10:38:36AM -0700, Bill Wendling wrote:
-> On Tue, Jul 1, 2025 at 9:27 AM Kees Cook <kees@kernel.org> wrote:
-> > I have not had the time to minimize it, no.
+On Sat, 28 Jun 2025 17:49:20 +0800 zhangjianrong wrote:
+> According to the description of tb_xdomain_enable_paths(), the third
+> parameter represents the transmit ring and the fifth parameter represents
+> the receive ring. tb_xdomain_disable_paths() is the same case.
+> 
+> Fixes: ff7cd07f3064 ("net: thunderbolt: Enable DMA paths only after rings are enabled")
+> Signed-off-by: zhangjianrong <zhangjianrong5@huawei.com>
 
-I can try to extract this into a minimal reproducer next week if nothing
-major crops up over the long weekend.
-
-> OPTIMIZER_HIDE_VAR doesn't have a 'volatile' on it. Could that be it?
-
-I tested
-
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index 6f04a1d8c720..eab208a9a6f4 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -160,7 +160,7 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
- #ifndef OPTIMIZER_HIDE_VAR
- /* Make the optimizer believe the variable can be manipulated arbitrarily. */
- #define OPTIMIZER_HIDE_VAR(var)						\
--	__asm__ ("" : "=r" (var) : "0" (var))
-+	__asm__ volatile("" : "=r" (var) : "0" (var))
- #endif
- 
- #define __UNIQUE_ID(prefix) __PASTE(__PASTE(__UNIQUE_ID_, prefix), __COUNTER__)
-
-but that did not resolve the error.
-
-Cheers,
-Nathan
+I'll add Mika's review tag manually, in the future please add the tags
+you received before reposting.
