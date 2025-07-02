@@ -1,115 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A25255E4E;
-	Wed,  2 Jul 2025 11:36:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E31542652A6
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 11:37:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751456216; cv=none; b=dPOuj/c7MvMZntif0WyP4xjhjkezJYqfvGbZ5NHd9xoTk8xpsK4Ec1Y7HAz1R601AlZBCRf8Rmr2phIE3jfCmh8IoXQVlLCqFX2CFuuv7cAbB4093tVA8TqsIJ8yNFg+yoh5q6HcdozQ6pgZ3Lvirc8vSnt5gttltl0F4PDYs/0=
+	t=1751456237; cv=none; b=rfFDCBd5gEYe77BqnY5v3SyhXdqj4tbtj6HEaXEjzOWQ97LQgmmBXV2agw2M8tgoFZzLGjTM37aybOqPevYmMZTTrXNXEVl7ocrZksnorXwBJBwFFiwU8dbCywL4ptxOzIwg0Cy1afMERDttoPtFpg46JyVj6M/XA+Mn7Riiqgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751456216; c=relaxed/simple;
-	bh=AR2YdjUQDruKw3xwEOLHDbUEwgTRlLLrLUuQcRkPcwk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l5Givj2fGDn6bKVJT4F6xVs+3a8TAY1PoCvBQAH0xYJbNhPZkMWli7TbhD6/os3HoXhu+rBZtnN3EgK4VaYjOOyeAw+0oN9w05witmLbvHgwsyBlPutG+EtvIY3CJaFwS+xq79b1t+sfGfT3x2yGY7Y5q27/hWpzEJmiFl89EYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mF+Mxsfn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751456237; c=relaxed/simple;
+	bh=zAogbkAHdpSMYu9hHlptP9/nDJc3B1iYUikebeaM8dQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PQxm48MKAjNjTCbCZIOwBx3ps3368N+IM96SZob9ZtvUp2yty8KTD09rq9MXFweg9EetaEzissdLTiisUdS1zixT4H+8xQ/L0pUFKf7V8zRBWRLNLcO1z/NgnCpG5b/w0Dg1ZVNMGRS/LWlzynjGJo7yYDoRqZ9SHNevqwPsE1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=FTlDqKCL; arc=none smtp.client-ip=209.85.219.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mF+Mxsfn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E239DC4CEED;
-	Wed,  2 Jul 2025 11:36:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751456216;
-	bh=AR2YdjUQDruKw3xwEOLHDbUEwgTRlLLrLUuQcRkPcwk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mF+MxsfngCXb328CwhUUDfE58INzeO/02EHWhYdfq92zRhxhdu9m3eJy38g/Z2+my
-	 PEo2RicQ5A29nvdeyqkEhYXmYPboIIoBnvwoyjTo33CStZrq6JwcxbeXINWGNT7z3f
-	 V0h82qzbUvYiU0/w0GdHs6pl8GqKnD7kpM5FIhdB/O3UqCLfHOsR83L6FB+gFjKTY0
-	 VvjpbF/cL+u6rtx027/kfZy2nlIfRBljuP/L2/yJYG1Tzj1L1m4ah1WTAD5SV3yc9C
-	 atIKqU3Z259Hwdsi1bfTag54achQvlF3vPxb6tcJRRGnxMXaQac8Pe1qjRKwYG5wv2
-	 f6PbOLbcQg9gQ==
-Date: Wed, 2 Jul 2025 13:36:53 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Paul Kocialkowski <paulk@sys-base.io>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org, 
-	Yong Deng <yong.deng@magewell.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Linus Walleij <linus.walleij@linaro.org>, Icenowy Zheng <icenowy@aosc.xyz>, 
-	Andre Przywara <andre.przywara@arm.com>
-Subject: Re: [PATCH 5/5] drm/sun4i: Run the mixer clock at 297 MHz on V3s
-Message-ID: <20250702-psychedelic-stalwart-jerboa-a626eb@houat>
-References: <20250701201124.812882-1-paulk@sys-base.io>
- <20250701201124.812882-6-paulk@sys-base.io>
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="FTlDqKCL"
+Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6fad3400ea3so60927856d6.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 04:37:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1751456234; x=1752061034; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JuzsZX0ECM0P7YFc0RDsIs6MtWj0mR7kFmi3VabZ4io=;
+        b=FTlDqKCL3/SCDGSdwugIYbm7s2dpoedmFCH+UnBfVhCPvfYSjKFj0tE1eBFbJynNiI
+         5NG4He7XSh4z13h8wVdQ3E2UONC4/DBJQNHVBCAmXSvJpjkA5zonikwvceLboSW9Wp/4
+         a2Qh7ConUN16gV6TfHMgH408h3LzXBz/DjJrmyEit8Tox5cIxhdWAxjmO4vEGifzATeN
+         7okf7eA4O8x1o0wjBDvhBlO0iq5QT2diMEgA0EwcE/JEjUbf4042+qz308R0lvwZSpf+
+         eWcQkL0q3Ln2mvC1zmhKjbWrR1vACaRccC/y5gnEJnJIWzrrLVCZJ3EinY8SIX9Sx+57
+         YyVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751456234; x=1752061034;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JuzsZX0ECM0P7YFc0RDsIs6MtWj0mR7kFmi3VabZ4io=;
+        b=hBWbQGxjcS6Bk44CIlNZ2NS20WfarxGXoi8ogB4dbczbrUBYXrfTODLOSmnDM0fBV4
+         q3m8d1I9+A2xn9xGH76TbP9Nvfs8hgpJc+h/fkODLhjqSM6MI+09+Ner0RsKD0kRsZsF
+         2kI+agR8Cp0khV4iQeoEBIARkMsj77bsF2P4MRnhMgt0LjcD5/gsEi6GeO8CpUZj08F6
+         IJg+OiDkdWE+5SqsD4m6DIXtIoPy4oECbwqpOLcfPhii7nGdlS7B6d4G2Jfq62AYXIOl
+         cR/vPGsBWBunbh/EdvlSJ0Z4mRzkNkQVEJKwuEDaJc7bCAhYczHETC4SZXvizDOx+bvj
+         fqkw==
+X-Forwarded-Encrypted: i=1; AJvYcCVmLQiBkHVHGFSxEZ6rcelpKnoGwaD32NBOFsOYL1fiYXAtmzzdEBfcJsHGtjr73q1YHyEut6tEsxT9vh0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw94yxcNxj16y+97eBUrOd14iaB+BIV1eAkvTIe6Xcvv80UXWxW
+	yHTwWzjL3Rrr1dLQIXg5F5Atsc17yTPHCAalEMIMKOLKcW3TykC3P7exP0kQQePR73g=
+X-Gm-Gg: ASbGnctrhuWAAloTqoXFQ6VtbyLTDAfaZ5HF+tKnycvRG3lBW00Y1fFtXoAxnuFgUc1
+	78XKWNjOmFfW4l/tWIk4iv/Vw9gxw5/3/yrDvNoA1wlsIlHU7S9I5E7EbBfZcGl5J28xcw9EdMr
+	ZAI7mOl4Bu+BdMgAZvOVuYJOcYFqDGAihmtsrli0DO1yfoPElzUXDaghho/P1+yFBM3Zyg1NQSP
+	R3rbJNip/pPmNvTcbnd0G+EomaMQ2Nn//Kk+HgCD5Dt/vUoe3Exx7yYB4ro+HPuWiTth00+L08B
+	M0a56ynlKtM5YEaXtSwDGYUwbPrYM8L4ywaE2Q5oyJ5cLTWz1/FpS+AfEz9+0VcTM2wunYLZP0G
+	qe9V3bqo66BH1yX1vC8x+ldpxyVl1A/pk98M=
+X-Google-Smtp-Source: AGHT+IG2imp757tfBUch+mPjlrSo4FqLZrnMd87ikEDlzWlfKhJEzuvvcBO0t/h7py81wq3vTreWwQ==
+X-Received: by 2002:a05:6214:415:b0:700:c46f:3bd with SMTP id 6a1803df08f44-702b1bab600mr37043216d6.25.1751456233867;
+        Wed, 02 Jul 2025 04:37:13 -0700 (PDT)
+Received: from localhost.localdomain (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd7730ac6csm99218046d6.103.2025.07.02.04.37.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 04:37:13 -0700 (PDT)
+From: Alex Elder <elder@riscstar.com>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	p.zabel@pengutronix.de,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr,
+	dlan@gentoo.org
+Cc: heylenay@4d2.org,
+	inochiama@outlook.com,
+	guodong@riscstar.com,
+	devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	spacemit@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v12 0/6] reset: spacemit: add K1 reset support
+Date: Wed,  2 Jul 2025 06:37:02 -0500
+Message-ID: <20250702113709.291748-1-elder@riscstar.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="v4szwvinjjahevo3"
-Content-Disposition: inline
-In-Reply-To: <20250701201124.812882-6-paulk@sys-base.io>
+Content-Transfer-Encoding: 8bit
+
+This series adds reset controller support for the SpacemiT K1 SoC.
+A SpacemiT reset controller is implemented as an auxiliary device
+associated with a clock controller (CCU).  A new header file
+holds definitions used by both the clock and reset drivers.
+
+The only change in this version is that three of the the four resets
+associated with each PCIe port have been renamed, to align better
+with their corresponding clocks.  This affects patches 1 and 5.
+For example, for PCIe port 0:
+
+    RESET_PCIE0_DBI	(no change)
+    RESET_PCIE0_SLV ->	RESET_PCIE0_SLAVE
+    RESET_PCIE0_MSTR ->	RESET_PCIE0_MASTER
+    RESET_PCIE0_GLB ->	RESET_PCIE0_GLOBAL (no corresponding clock)
+
+No other code has changed since v11.
+
+All of these patches are available here:
+  https://github.com/riscstar/linux/tree/outgoing/reset-v12
+
+					-Alex
+
+Between version 11 and version 12:
+  - Renamed PCIe resets to align with their clock counterparts
+
+Here is version 11 of this series.
+  https://lore.kernel.org/lkml/20250613011139.1201702-1-elder@riscstar.com/
+
+Between version 10 and version 11:
+  - Rebased onto Linux v6.16-rc1
+  - Redefined several "multi-bit" resets as individual ones.
+
+Here is version 10 of this series.
+  https://lore.kernel.org/lkml/20250513215345.3631593-1-elder@riscstar.com/
+
+All other history is available via that link, so I won't reproduce
+it again here.
+
+Alex Elder (6):
+  dt-bindings: soc: spacemit: define spacemit,k1-ccu resets
+  soc: spacemit: create a header for clock/reset registers
+  clk: spacemit: set up reset auxiliary devices
+  clk: spacemit: define three reset-only CCUs
+  reset: spacemit: add support for SpacemiT CCU resets
+  riscv: dts: spacemit: add reset support for the K1 SoC
+
+ .../soc/spacemit/spacemit,k1-syscon.yaml      |  29 +-
+ arch/riscv/boot/dts/spacemit/k1.dtsi          |  18 ++
+ drivers/clk/spacemit/Kconfig                  |   1 +
+ drivers/clk/spacemit/ccu-k1.c                 | 239 +++++++-------
+ drivers/reset/Kconfig                         |   9 +
+ drivers/reset/Makefile                        |   1 +
+ drivers/reset/reset-spacemit.c                | 304 ++++++++++++++++++
+ .../dt-bindings/clock/spacemit,k1-syscon.h    | 141 ++++++++
+ include/soc/spacemit/k1-syscon.h              | 160 +++++++++
+ 9 files changed, 775 insertions(+), 127 deletions(-)
+ create mode 100644 drivers/reset/reset-spacemit.c
+ create mode 100644 include/soc/spacemit/k1-syscon.h
 
 
---v4szwvinjjahevo3
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 5/5] drm/sun4i: Run the mixer clock at 297 MHz on V3s
-MIME-Version: 1.0
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+-- 
+2.45.2
 
-On Tue, Jul 01, 2025 at 10:11:24PM +0200, Paul Kocialkowski wrote:
-> The DE mixer clock is currently set to run at 150 MHz, while the
-> Allwinner BSP configures it at 300 MHz and other platforms typically
-> run at 297 MHz.
->=20
-> 150 MHz appears to be enough given the restricted graphics capabilities
-> of the SoC (with a work area of only 1024x1024). However it typically
-> causes the DE clock to be parented to the periph0 pll instead of the
-> video PLL.
->=20
-> While this should generally not be a concern, it appears (based on
-> experimentation) that both the DE and TCON clocks need to be parented
-> to the same PLL for these units to work. While we cannot represent this
-> constraint in the clock driver, it appears that the TCON clock will
-> often get parented to the video pll (typically running at 297 MHz for
-> the CSI units needs), for instance when driving displays with a 33 MHz
-> pixel clock (33 being a natural divider of 297).
->=20
-> Running the DE clock at 297 MHz will typically result in parenting to
-> the video pll instead of the periph0 pll, thus making the display
-> output functional.
->=20
-> This is all a bit fragile but it solves the issue with displays running
-> at 33 Mhz and brings V3s to use the same frequency as other platforms,
-> making support more unified.
 
-It's beyond fragile, and doesn't have anything to do with the DRM driver.
+Alex Elder (6):
+  dt-bindings: soc: spacemit: define spacemit,k1-ccu resets
+  soc: spacemit: create a header for clock/reset registers
+  clk: spacemit: set up reset auxiliary devices
+  clk: spacemit: define three reset-only CCUs
+  reset: spacemit: add support for SpacemiT CCU resets
+  riscv: dts: spacemit: add reset support for the K1 SoC
 
-You should set up the clock tree properly in the clock driver, and then
-add NO_REPARENT to the DE clock to make sure it stays that way.
+ .../soc/spacemit/spacemit,k1-syscon.yaml      |  29 +-
+ arch/riscv/boot/dts/spacemit/k1.dtsi          |  18 ++
+ drivers/clk/spacemit/Kconfig                  |   1 +
+ drivers/clk/spacemit/ccu-k1.c                 | 239 +++++++-------
+ drivers/reset/Kconfig                         |   9 +
+ drivers/reset/Makefile                        |   1 +
+ drivers/reset/reset-spacemit.c                | 304 ++++++++++++++++++
+ .../dt-bindings/clock/spacemit,k1-syscon.h    | 141 ++++++++
+ include/soc/spacemit/k1-syscon.h              | 160 +++++++++
+ 9 files changed, 775 insertions(+), 127 deletions(-)
+ create mode 100644 drivers/reset/reset-spacemit.c
+ create mode 100644 include/soc/spacemit/k1-syscon.h
 
-And then, you can change the clock rate if you want to, but at least you
-don't set a rate and hope that the side effects work your way, and won't
-happen again.
 
-Maxime
+base-commit: 50c8770a42faf8b1c7abe93e7c114337f580a97d
+-- 
+2.45.2
 
---v4szwvinjjahevo3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaGUZ0QAKCRAnX84Zoj2+
-dkUOAX9QETvGjudIqLH1LHrODK1oz9R7fTZgMW27nwd0xCKcdeLTvQKST2uEzWle
-vJapl8MBfAx2o6ST5tt4OTYqAlQbnHgSbySZjkHgRUqtZhP/pvQc99/anfjE9qN1
-3VMToXuhRg==
-=p0B2
------END PGP SIGNATURE-----
-
---v4szwvinjjahevo3--
