@@ -1,206 +1,179 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E094E26CE18
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 12:01:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 452F1267AEC;
+	Wed,  2 Jul 2025 12:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751457705; cv=none; b=SxpMIG/rx7iFhOKEdZYhoinWR4CwRrnfR15vmQ8mhN13EqAy+CIyMwGR2DgCdB7uQlXIpCR/n19Df7ClfCYYpqprMylL10MQyQjxb051ixnotQR97j0jPeV+6ibGK3FJmFKg89sTmQNuT373svPuixj/J5JTvMb8Rb1WGnv/eDM=
+	t=1751457713; cv=none; b=p/EgTjjB5dDksWAaGwQ7pjbKhm2CQ4v8wnulHGRfaPVd7wLaNaU2C8qy3beM2EkGwJWuwOj0R3GBf94t79Hr/YYxKDlp1mqNbR93LtW4ey6wZiBRRKaUdQNWzOe7X9iP60cei+uFcLe3zE65WtE2v+0P/O7OZH/E29nxv95FJG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751457705; c=relaxed/simple;
-	bh=8Tuk80UZ36wXGTawuYmmkFn5al1BUfxolANcxk7UW1k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W9SJESm7iftDfIOOKQRs5aOPma027oJ/X2DDYwNeATJ1jE9DT6jFl0R3IRVnXaO4zzTGb1E0G6tMYBdE/CY3tbENrcMipHnonAP8wNJuZJZD0Bp3/BaNJ5+ncAhq18c1clypSCuSyaSGx0U87RS/N7hrM1PBdpjGfIEqoIlZkwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TmDc/umt; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751457713; c=relaxed/simple;
+	bh=zQtNcMGzIquLCd/CHysM5N2spJz9eEDEPTNKqaoCOX8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=XO6SUk588yHPMU6fZ1upjO3ECIYyog/MYoQzDnb/x3KfWZzhmXW73HvWoaPoWYcl/60uI/wQGyWBJb63NjgAZID8rgQ1ob25pW0PP93x3w4bpWl+N9OQAI/OSTXkjUbIx2BtnhALrxD1BBgU/pXDfTpV2IW1MQ5Kd1JmuLNIpY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RNJDlxxv; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TmDc/umt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751457702;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=hbO26a8k63GS6w5haaq5bzL3sXJUv+0ecjPsgxsM3dc=;
-	b=TmDc/umt+YSY08hUJsNtfGliljlHGAEOH+4VpfyBWS1KSH80oaXc2EzWNBRVoZq6lThMg3
-	eocfVs+p0ysPCojwD3IYrORGrGRt/E/3SfyJWmnuqEUNselpiQxGp+aVbT8znOg8YD0242
-	xJ3huV2+TuaP3Tm2eRo2wx+ZQExLZf0=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-612-HhuqVnsPN5uVqHg7lJ4ewQ-1; Wed, 02 Jul 2025 08:01:40 -0400
-X-MC-Unique: HhuqVnsPN5uVqHg7lJ4ewQ-1
-X-Mimecast-MFC-AGG-ID: HhuqVnsPN5uVqHg7lJ4ewQ_1751457700
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a578958000so1743604f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 05:01:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751457699; x=1752062499;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=hbO26a8k63GS6w5haaq5bzL3sXJUv+0ecjPsgxsM3dc=;
-        b=hIIRo5UkPAL61fOhTTeVYzKXnkBujwA2Q+3t2oBaOT/Bf3oqMyP8IJxKoG8e3GvuUl
-         BPdZ14PpHAf6LY23kOGtp+cqSkx4MEtBLegE12v24Qpit7yVrC6mqsVoLiUh49up8YRP
-         40FsMUtSb2XHIT2yf+g/tgYbexDEucDtT7UQ4Z4o1n0iYPOD+YtkaSPD4q9bg5DSJP1X
-         Dmqk3GYKsSFQvWdg7Lf2My5LIAd2F3EMF5StNMGAKvoup0oYh/JsDVs0IPasdt6/g7r7
-         cgaZ7A5Kku5zNTVkUFXUYUDWtEeQKaMUM2h+0VSe2Uk/aP6yGA6Z6wsJeCUyxLDJstg4
-         V0qQ==
-X-Gm-Message-State: AOJu0YwbH8HpMt4jt532g//TtHpiO3awBOTjZQno+SiEdsZWum2qIDds
-	Y3FLncgNegO/14+WlUUDArDhskCcFgkjCLC/v4yA5rLcRa35t2qNGkKK6JPabBLaKN0DcMwTefn
-	25DN+w7ybQKFZE3vRcMzfG/2DPwfpP9cfgzMWt7VRHHI1T+l/zFUmA5oOPZ90W9wsbA==
-X-Gm-Gg: ASbGncupUdnLiDF+ZsXQadNH13qItKh2VdpHpfHleswxNU2bx7AiD+BgmBvt12K0jNc
-	PBjyx0QL4m8psMEohbMZVq5qUB012WyT+FBrKa3t54MrA6lmTdITJGhtK4IvTO/WKU/s2xZ30Kx
-	o7mSnPn/nOpixX3pKcWyxp/WYKjVmEvctPvV2kRcmQS77qWH6nlrdiDr1J2C0e8RhlXsmJj02HC
-	yGmJVfMhJQemS8aBo2LwuMIVERIxtVOwRrMwP/CHlL8TaC/I+3rqtxIvWBmXbpLyUJvRVVYLgZ7
-	+63enYAyIAKdSGQ6D3N93j4ajkn00zHbZMxLitS4d/iYdoG2rBq59RM=
-X-Received: by 2002:a05:6000:144d:b0:3a6:d967:380e with SMTP id ffacd0b85a97d-3b1ff24427emr2184915f8f.3.1751457699183;
-        Wed, 02 Jul 2025 05:01:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFOIin31+Uuq9MXmWhu9WBlm6bN7FqxwwrGmyZTVwpVwvMd+yDtoM668iOg5XT1zVyyBI6yww==
-X-Received: by 2002:a05:6000:144d:b0:3a6:d967:380e with SMTP id ffacd0b85a97d-3b1ff24427emr2184804f8f.3.1751457698446;
-        Wed, 02 Jul 2025 05:01:38 -0700 (PDT)
-Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45388888533sm209797225e9.21.2025.07.02.05.01.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jul 2025 05:01:37 -0700 (PDT)
-Message-ID: <a533ae7e-f993-4673-bb00-ec9d10c11c83@redhat.com>
-Date: Wed, 2 Jul 2025 14:01:33 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RNJDlxxv"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 562Asw7m020939;
+	Wed, 2 Jul 2025 12:01:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	FVlWhQQ+b14FmNqD30heTiW9T8Tf/brelVlSxVCs1Qk=; b=RNJDlxxvugzXhAFK
+	jxvph5klDwfisgzEmkWuZ6U5kAjPBFyYd4IS6G3Q2KtSWzilDIyDL/RrsMxphZEH
+	Y/7nTY9410BVQzYPhODUcDA+HV+fciuWqB5oAzyX8TpOPt2rSsEURMmogA06dGRb
+	dvbnAy3of/zBpriAl/c/saq4+pF8bT58hiFQg4a1yXKMwo8gdB4qLJTosNlYkoT+
+	Kfwmmvv8cgGErKr8Oy7min8M+owE6/jCh6jBbFDheZ7Tp0LtAnN12m8UCrPdhxYw
+	IzR6s3OWrQrIDJN9Mv3ONC48QIiF1KNGpXBGi4Ard5zbE0T7NNGB8n/1Rp8tNstF
+	YGsK4g==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47mhxn36pn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Jul 2025 12:01:45 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 562C1huq029489
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 2 Jul 2025 12:01:43 GMT
+Received: from [10.50.58.161] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 2 Jul 2025
+ 05:01:40 -0700
+Message-ID: <7b6db4fa-2f73-376d-4eb3-64c1c7e6cda3@quicinc.com>
+Date: Wed, 2 Jul 2025 17:31:26 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 20/29] mm: convert "movable" flag in page->mapping to a
- page flag
-To: Harry Yoo <harry.yoo@oracle.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- virtualization@lists.linux.dev, linux-fsdevel@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Jerrin Shaji George <jerrin.shaji-george@broadcom.com>,
- Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
- Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
- Ying Huang <ying.huang@linux.alibaba.com>,
- Alistair Popple <apopple@nvidia.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Minchan Kim <minchan@kernel.org>,
- Sergey Senozhatsky <senozhatsky@chromium.org>,
- Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
- Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
- Peter Xu <peterx@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>,
- Chengming Zhou <chengming.zhou@linux.dev>, Miaohe Lin
- <linmiaohe@huawei.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>,
- Oscar Salvador <osalvador@suse.de>, Rik van Riel <riel@surriel.com>,
- Qi Zheng <zhengqi.arch@bytedance.com>, Shakeel Butt <shakeel.butt@linux.dev>
-References: <20250630130011.330477-1-david@redhat.com>
- <20250630130011.330477-21-david@redhat.com> <aGUd34v-4S7eXojo@hyeyoo>
-From: David Hildenbrand <david@redhat.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v3 0/5] Introduce "non-pixel" sub node within iris video
+ node
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <aGUd34v-4S7eXojo@hyeyoo>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+        Dikshita Agarwal
+	<quic_dikshita@quicinc.com>,
+        Abhinav Kumar <abhinav.kumar@linux.dev>,
+        "Bryan
+ O'Donoghue" <bryan.odonoghue@linaro.org>,
+        Mauro Carvalho Chehab
+	<mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250627-video_cb-v3-0-51e18c0ffbce@quicinc.com>
+ <5f90547d-945a-4e26-b36c-75f2d8a1af97@kernel.org>
+ <eab8d79f-7188-9537-9176-3e4d22f0978a@quicinc.com>
+ <5ad418d9-8199-43c9-a477-1e3b939c054c@kernel.org>
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+In-Reply-To: <5ad418d9-8199-43c9-a477-1e3b939c054c@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDA5NyBTYWx0ZWRfX5wTPO1ebF12d
+ LLun7/21txH/GjF74LohlbrKn+aaAh43brmjwfbTkKL9oxmCE8f5nm66CsqCLx9MRiCadKvxJpx
+ 4OVZzJnvgkUJPR8GTaRmv8i1QkXNHeE3JWimSgbQO2y7Cz/sZGJdSpId9DlMHaXlI/dj2CYUHxy
+ zMB29mt03NiqizAcOPpDcT8eu5K5Bdu157yfFw8obLB62jX2r7uthnPFgDUwKw/uaMFozOF2LHA
+ 6dbiDAm+XO0BsgciLHr1JFSOghOt2ipUjMldqWv7WtkbKWmbX9OgD0EZLd6pPtLJyfatNVE7k6V
+ GwWhkJnB5jD5T3AHACcEX+Z8EJ1BdcHWjsB4O6qLd0rLJv31X5qem9000KoGC5nkYb0ygwYAGXE
+ AYbNdJudUITpMzUQQTyCUjXSkyuI2//6scSClkGKoArZXgx5Px94dLiwTukvGX76kcM5BaPA
+X-Authority-Analysis: v=2.4 cv=EbvIQOmC c=1 sm=1 tr=0 ts=68651fa9 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8
+ a=d-4ZcLASQ4404vAoVlQA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: RSk8M61780XpcYmvqoBldalLSZde6uSD
+X-Proofpoint-GUID: RSk8M61780XpcYmvqoBldalLSZde6uSD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-02_01,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 mlxscore=0 priorityscore=1501 mlxlogscore=999 lowpriorityscore=0
+ malwarescore=0 adultscore=0 clxscore=1015 bulkscore=0 impostorscore=0
+ spamscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507020097
 
-On 02.07.25 13:54, Harry Yoo wrote:
-> On Mon, Jun 30, 2025 at 03:00:01PM +0200, David Hildenbrand wrote:
->> Instead, let's use a page flag. As the page flag can result in
->> false-positives, glue it to the page types for which we
->> support/implement movable_ops page migration.
+
+
+On 7/2/2025 5:22 PM, Krzysztof Kozlowski wrote:
+> On 02/07/2025 13:37, Vikash Garodia wrote:
 >>
->> The flag reused by PageMovableOps() might be sued by other pages, so
->> warning in case it is set in page_has_movable_ops() might result in
->> false-positive warnings.
->>
->> Reviewed-by: Zi Yan <ziy@nvidia.com>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
->> ---
+>> On 7/2/2025 4:48 PM, Krzysztof Kozlowski wrote:
+>>> On 27/06/2025 17:48, Vikash Garodia wrote:
+>>>> This series introduces a sub node "non-pixel" within iris video node.
+>>>> Video driver registers this sub node as a platform device and configure 
+>>>> it for DMA operations. All non pixel buffers, i.e bitstream, HFI queues 
+>>>> and internal buffers related to bitstream processing, would be managed 
+>>>> by this non_pixel device.
+>>>>
+>>>> Purpose to add this sub-node:
+>>>> Iris device limits the IOVA to an addressable range of 4GiB, and even 
+>>>> within that range, some of the space is used by IO registers, thereby 
+>>>> limiting the available IOVA to even lesser. For certain video usecase, 
+>>>> this limited range in not sufficient enough, hence it brings the need to 
+>>>> extend the possibility of higher IOVA range.
+>>>>
+>>>> Video hardware is designed to emit different stream-ID for pixel and 
+>>>> non-pixel buffers, thereby introduce a non-pixel sub node to handle 
+>>>> non-pixel stream-ID into a separate platform device.
+>>>> With this, both iris and non-pixel device can have IOVA range of 
+>>>> approximately 0-4GiB individually for each device, thereby doubling the 
+>>>> range of addressable IOVA.
+>>>>
+>>>> Tested on SM8550 and SA8775p hardwares.
+>>>>
+>>>> Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+>>>> ---
+>>>> Changes in v3:
+>>>> - Add info about change in iommus binding (Thanks Krzysztof)
+>>>
+>>> Nothing improved in commit msg. You are changing existing device and the
+>>> reason for that change is not communicated at all.
+>>>
+>>> There was big feedback from qualcomm saying that some commit in the past
+>>> received review, so future commits can repeat the same stuff. If qcom
+>>> approaches that way, sorry, no you need to come with proper commit
+>>> description.
+>>>
+>>> Please align internally how to solve it, because my response that past
+>>> imperfect review is not justification for whatever future issues was not
+>>> enough.
+>> Sure, lets take this as an example and you can suggest to provide a better
+>> commit message for this case, it would help me to compare where is the gap. I
+>> have tried my best to capture and explain the limitations and how the changes
+>> address those limitations. If that is not sufficient, we might have the perfect
+>> message from you and compare to find the gaps and improve, I am sorry, but thats
 > 
-> LGTM,
-> Reviewed-by: Harry Yoo <harry.yoo@oracle.com>
+> It is not question to me: I did not want imperfectness. Qualcomm
+> engineer used issues in existing commits or imperfect commit in
+> discussion, so that's my solution. I don't need that perfect commit, but
+> it seems if I agree to that, then I will have to defend it later. Well,
+> no, I don't want it.
 > 
-> With a question: is there any reason to change the page flag
-> operations to use atomic bit ops? 
+>> how i feel at the moment.
+> Sure, I feel confused now as well.
+> 
+> Anyway, in other messages I explained what is missing. You are changing
+> existing hardware and you clearly must explain how existing hardware is
+> affected, how can we reproduce it, how users are affected.
+Exactly all of these i have explained in the commit message. The limitation with
+existing hardware binding usage and how my new approach mitigates that limition.
 
-As we have the page lock in there, it's complicated. I thought about 
-this when writing that code, and was not able to convince myself that it 
-is safe.
-
-But that was when I was prototyping and reshuffling patches, and we 
-would still have code that would clear the flag.
-
-Given that we only allow setting the flag, it might be okay to use the 
-non-atomic variant as long as there can be nobody racing with us when 
-modifying flags. Especially trying to lock the folio concurrently is the 
-big problem.
-
-In isolate_movable_ops_page(), there is a comment about checking the 
-flag before grabbing the page lock, so that should be handled.
-
-I'll have to check some other cases in balloon/zsmalloc code.
-
--- 
-Cheers,
-
-David / dhildenb
-
+Coming to usecase, i made a generic comment saying usecases which needs higher
+IOVA, i can add the explicit detail about usecase like 8k or higher
+concurrencies like 32 or higher concurrent sessions.
+> 
+> All these answers.
+> 
+> Best regards,
+> Krzysztof
