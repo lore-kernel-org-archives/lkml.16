@@ -1,240 +1,147 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AFDA2D878D;
-	Wed,  2 Jul 2025 19:55:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C95C2D77FE
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 19:57:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751486109; cv=none; b=sHFgEd1NlOeBhnhINWbqik23m09xsCkuJkFCU/0kl4FyLiw2ikJsavRQPdWY23Fv1HBExNKSQxKksuN21g8vWuxXkvmtsqqFDeZ84tOs7frcJYmx/vSMc+uXP2lHQSojmBbetpiliamQxNijEo6Daw6ttlljoTtRvBSBoVZI5TI=
+	t=1751486262; cv=none; b=nB7pITLMlwaqjO7GzjN18YX+lb5Xblwt8+grPgITsI9/HqDMXZDVW5eTaCTWQ7r7U8CHNYx94Xavisf0vducDj2HMZOORiJWJMtznFpn5SUOtxcTu0K4ojtPycjlPoeTISi9oDcb4aTk9M4hZHFWbAq5tgiRtSUy6RjKaRwEUcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751486109; c=relaxed/simple;
-	bh=DbKIiSlo3BFwBLUQLA0frZKOckMm68wzGgf4Mj9nyoU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=Xux1fIkGlx+Udr8iMMIJ1pC6uMJ+gNNd2S1icQCh7n4PE5dyaF4X/U6wJHs1Qz39wBMeSVWSfh0S9caG64uip2eZRtHRV+gTjHPD28qu1LIBWAx4aIacBOpfYiHOBX5xS7p7/7oEjFkS1ofpkjWQ/II4R3vYMi+URgdzVmsUl0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=GpwnSAYt; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+	s=arc-20240116; t=1751486262; c=relaxed/simple;
+	bh=CaQXOmGi1Q4hapePQLyAziFqod4bCIqfR+jrX6VTL94=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=g0Bncl1gTzQ7NNLPJsa+7pin3Bi3Bbt6ud91+VCtv+TS5ZcrRN6XKjoeS74w/ZdTypY8UfpY726nSonbDfrO4gcYEoDblB9ZnaiDMRvQYA/j6HRf/Chi/NO4nq1TrpTFSytFHwbalZG+Aj2P4Ny6bVsU2UQCPc2fucBsH2nCsrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oKTwQiBw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="GpwnSAYt"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 4586EA0BB5;
-	Wed,  2 Jul 2025 21:55:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=mail; bh=Hnj6Hss73CKttxeWGckGF1QXioaUFteDW/dZYQS0Kuw=; b=
-	GpwnSAYtFQ8B/FNUrUl5IpRppAvDB33Y8yyssDgdD7Uc88/FbbI5utUsMUJccouM
-	qo8lirTDB+tQh00nQ6ICs1gZ0t3qjknHj7p5N7Z9n5vl0qUYOxGEFN3OKE6G6n9H
-	rsjxOr2sX5mck1nBky5mAJUiCExNWwYZFK4L+v0YJig+JRfTUL+Xa+P43Q/RS/gq
-	2kl+IGkj+b82XqH9jUXRaMvjbVNpjkSWOcypPDP63srvxCg8gdxPxX7MdqdW6eIs
-	gXjWhN0un+vbmkiI6VZVZTOqAwoDK1h8G4CXiH956FIGkx10KthYmJCLpVpRhurT
-	t43noRkGSmHkYLS6DnwcHB9MmLfVxfDoLNRhjtxn5+u9lmc8NWUqtK6KVUxGG0DP
-	ZVJpab0PeYpGqsOFhtVWl58tN2rt/OWZNWyoC6aZRQ5wRb072L4X/C2rHEPDTaJt
-	giEbhsR9gj6ocsZ0sKWJqz3IXgzbFPjox/eU+pAuZ4rjMm9C7CjcrRoidgrkaLEj
-	CPeFTJ4lVPH6dK3ocGSgIZkGUQf3YVjHyhPNilAR8jy487Zaq693cKqldDHdPFEu
-	fK274L7c5rcv7o1B9MleMQRlgCH1wqFjaGNsdpu/1BG0fcXyiYMtYcJWg+7KdGy/
-	79oBd4Hlb/GUiWakN/ABDBzVyU4xHQZ+Wizvb1fNyPk=
-From: =?utf-8?q?Bence_Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
-Date: Wed, 2 Jul 2025 21:55:00 +0200
-Subject: [PATCH] arm: DT: imx6-savageboard: Replace license text comment
- with SPDX identifier
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oKTwQiBw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DFD4C4CEF1;
+	Wed,  2 Jul 2025 19:57:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751486261;
+	bh=CaQXOmGi1Q4hapePQLyAziFqod4bCIqfR+jrX6VTL94=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=oKTwQiBw+tkM75pAVuwwZGva/mguhz9C9yn+RLuaHYRNtie1OVR0XlbcWjgube/WX
+	 nBPW1fc7RincAaOEAxsvLr2o1PRB0EewchJFTYWZoRwvcrfzttARHZg0mxreIW2t3V
+	 /JaZtglvZW6djsskXWmzLj2uPHsxtGpQghiRDbzZqz5O/ad595fzxRuzTwglzLbQco
+	 57lGg9kbMbDEl+UGIJeipvsRov6NpduFTEw75KNeCpoDvacFuK5lXkh44mjAgADScc
+	 MIWQaMjLCwSAHH/LYoQG0RqzrjlgnD3bS7vnL0D6mE/LXwJzEEnZbC5j5F1fuH6Kbv
+	 QSCDuUD+WvuBg==
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 6F059F40068;
+	Wed,  2 Jul 2025 15:57:40 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Wed, 02 Jul 2025 15:57:40 -0400
+X-ME-Sender: <xms:NI9laCs28QYlhPXfNvAXECAXg4qbxhG3NuDCBMXg9YZfRFjAY3ul-w>
+    <xme:NI9laHfO-CyLcRVqKE-_Ol55xS5aXihGQeRdR8XIEc0iMEY1hznDUBHvDOksQBBDG
+    S9-EIZPOlTvXWVMPyI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddukedvlecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcu
+    uegvrhhgmhgrnhhnfdcuoegrrhhnugeskhgvrhhnvghlrdhorhhgqeenucggtffrrghtth
+    gvrhhnpeejjeffteetfeetkeeijedugeeuvdfgfeefiedtudeikeeggeefkefhudfhlefh
+    veenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
+    hnugdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidquddvkeehudejtddvgedq
+    vdekjedttddvieegqdgrrhhnugeppehkvghrnhgvlhdrohhrghesrghrnhgusgdruggvpd
+    hnsggprhgtphhtthhopedviedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheptggr
+    thgrlhhinhdrmhgrrhhinhgrshesrghrmhdrtghomhdprhgtphhtthhopehlihhnuhigse
+    grrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtoheprghlvgigrghnughrvgdrsggv
+    lhhlohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegurghvvghmsegurghvvg
+    hmlhhofhhtrdhnvghtpdhrtghpthhtohephhgvrhgsvghrthesghhonhguohhrrdgrphgr
+    nhgrrdhorhhgrdgruhdprhgtphhtthhopegrnhguihdrshhhhihtiheskhgvrhhnvghlrd
+    horhhgpdhrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthht
+    ohepjhhirhhishhlrggshieskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhgvvgeskh
+    gvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:NI9laNwqgy5fmKbVuN6ufKbwO6ci8zaZO8U14JNHCAEgzh5P4AhQcw>
+    <xmx:NI9laNNTDjb8W7aNnQQcl_IMMDlm4R1XJ0V42VSvlKV20oZtIMh-Vg>
+    <xmx:NI9laC8HMWDKpPVud9dKnhSew2dXQKf_9r40M52mqN30aq_C-E9CWA>
+    <xmx:NI9laFXljuNhqBIZQBYp2UflD1FESwb5MFox1kvgplWN5ZIFPu17ig>
+    <xmx:NI9laLeU29iC9nuQZTXb33cj2kzAeIBV2fTVHCIrvSYT0kEtjwVZsWbA>
+Feedback-ID: i36794607:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 4464B700068; Wed,  2 Jul 2025 15:57:40 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-ID: <20250702-savage-dts-lic-v1-1-559c78ba9419@prolan.hu>
-X-B4-Tracking: v=1; b=H4sIAJOOZWgC/x3M0QqCYAyG4VuRHTf4G6TRrUQHc04d1F9sIoF47
- y0Pnw++d4NQNw24NRu4rhb2ronzqQGZuU6KNqSBCl1KVwiDV851WAKfJihMJNeR2tJ2kKeP62j
- fI3h/pHsOxd65yvzPvDgWddj3H/x6cyl5AAAA
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "Sascha
- Hauer" <s.hauer@pengutronix.de>, Pengutronix Kernel Team
-	<kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>
-CC: <devicetree@vger.kernel.org>, <imx@lists.linux.dev>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>, "Milo
- Kim" <woogyom.kim@gmail.com>, =?utf-8?q?Bence_Cs=C3=B3k=C3=A1s?=
-	<csokas.bence@prolan.hu>
-X-Mailer: b4 0.13.0
-X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1751486104;VERSION=7994;MC=2793024276;ID=360784;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
-X-ESET-Antispam: OK
-X-EsetResult: clean, is OK
-X-EsetId: 37303A29BB64155D6C7260
+X-ThreadId: Tf4af6f8839cae169
+Date: Wed, 02 Jul 2025 21:57:10 +0200
+From: "Arnd Bergmann" <arnd@kernel.org>
+To: "Robert Marko" <robert.marko@sartura.hr>,
+ "Russell King" <linux@armlinux.org.uk>,
+ "Nicolas Ferre" <nicolas.ferre@microchip.com>,
+ "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
+ "Claudiu Beznea" <claudiu.beznea@tuxon.dev>,
+ "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
+ "Olivia Mackall" <olivia@selenic.com>,
+ "Herbert Xu" <herbert@gondor.apana.org.au>,
+ "David S . Miller" <davem@davemloft.net>, "Vinod Koul" <vkoul@kernel.org>,
+ "Andi Shyti" <andi.shyti@kernel.org>, "Lee Jones" <lee@kernel.org>,
+ "Mark Brown" <broonie@kernel.org>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Jiri Slaby" <jirislaby@kernel.org>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+ dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
+ "Oleksij Rempel" <o.rempel@pengutronix.de>,
+ "Daniel Machon" <daniel.machon@microchip.com>
+Cc: luka.perkov@sartura.hr
+Message-Id: <ea353170-6e03-4231-afc2-3dc45253931d@app.fastmail.com>
+In-Reply-To: <20250702183856.1727275-2-robert.marko@sartura.hr>
+References: <20250702183856.1727275-1-robert.marko@sartura.hr>
+ <20250702183856.1727275-2-robert.marko@sartura.hr>
+Subject: Re: [PATCH v8 01/10] arm64: Add config for Microchip SoC platforms
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Replace verbatim license text with a `SPDX-License-Identifier`.
+On Wed, Jul 2, 2025, at 20:35, Robert Marko wrote:
+> Currently, Microchip SparX-5 SoC is supported and it has its own symbol.
+>
+> However, this means that new Microchip platforms that share drivers need
+> to constantly keep updating depends on various drivers.
+>
+> So, to try and reduce this lets add ARCH_MICROCHIP symbol that drivers
+> could instead depend on.
 
-The comment heades mis-attributes this license to be "X11", but the
-license text does not include the last line "Except as contained in this
-notice, the name of the X Consortium shall not be used in advertising or
-otherwise to promote the sale, use or other dealings in this Software
-without prior written authorization from the X Consortium.". Therefore,
-this license is actually equivalent to the SPDX "MIT" license (confirmed
-by text diffing).
+Thanks for updating the series to my suggestion!
 
-Cc: Milo Kim <woogyom.kim@gmail.com>
-Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
----
- arch/arm/boot/dts/nxp/imx/imx6dl-savageboard.dts   | 39 +---------------------
- arch/arm/boot/dts/nxp/imx/imx6q-savageboard.dts    | 39 +---------------------
- arch/arm/boot/dts/nxp/imx/imx6qdl-savageboard.dtsi | 39 +---------------------
- 3 files changed, 3 insertions(+), 114 deletions(-)
+> @@ -174,6 +160,27 @@ config ARCH_MESON
+>  	  This enables support for the arm64 based Amlogic SoCs
+>  	  such as the s905, S905X/D, S912, A113X/D or S905X/D2
+> 
+> +menuconfig ARCH_MICROCHIP
+> +	bool "Microchip SoC support"
+> +
+> +if ARCH_MICROCHIP
+> +
+> +config ARCH_SPARX5
+> +	bool "Microchip Sparx5 SoC family"
 
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6dl-savageboard.dts b/arch/arm/boot/dts/nxp/imx/imx6dl-savageboard.dts
-index b95469c520a4..21a536c01011 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6dl-savageboard.dts
-+++ b/arch/arm/boot/dts/nxp/imx/imx6dl-savageboard.dts
-@@ -1,43 +1,6 @@
-+// SPDX-License-Identifier: (GPL-2.0-or-later OR MIT)
- /*
-  * Copyright (C) 2017 Milo Kim <woogyom.kim@gmail.com>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-  */
- 
- /dts-v1/;
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6q-savageboard.dts b/arch/arm/boot/dts/nxp/imx/imx6q-savageboard.dts
-index 717ac62fc2cf..2dc20d70b200 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6q-savageboard.dts
-+++ b/arch/arm/boot/dts/nxp/imx/imx6q-savageboard.dts
-@@ -1,43 +1,6 @@
-+// SPDX-License-Identifier: (GPL-2.0-or-later OR MIT)
- /*
-  * Copyright (C) 2017 Milo Kim <woogyom.kim@gmail.com>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-  */
- 
- /dts-v1/;
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6qdl-savageboard.dtsi b/arch/arm/boot/dts/nxp/imx/imx6qdl-savageboard.dtsi
-index 6823a639ed2f..c54cd2a7b7bf 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6qdl-savageboard.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx6qdl-savageboard.dtsi
-@@ -1,43 +1,6 @@
-+// SPDX-License-Identifier: (GPL-2.0-or-later OR MIT)
- /*
-  * Copyright (C) 2017 Milo Kim <woogyom.kim@gmail.com>
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License as
-- *     published by the Free Software Foundation; either version 2 of the
-- *     License, or (at your option) any later version.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-  */
- 
- #include <dt-bindings/gpio/gpio.h>
+This part is the one bit I'm not sure about: The user-visible
+arm64 CONFIG_ARCH_* symbols are usually a little higher-level,
+so I don't think we want both ARCH_MICROCHIP /and/ ARCH_SPARX5
+here, or more generally speaking any of the nested ARCH_*
+symbols.
 
----
-base-commit: 66701750d5565c574af42bef0b789ce0203e3071
-change-id: 20250702-savage-dts-lic-ca22c8f26067
+This version of your patch is going to be slightly annoying
+to existing sparx5 users because updating an old .config
+breaks when ARCH_MICROCHIP is not enabled.
 
-Best regards,
--- 
-Bence Csókás <csokas.bence@prolan.hu>
+The two options that I would prefer here are 
 
+a) make ARCH_SPARX5 a hidden symbol in order to keep the
+   series bisectable, remove it entirely once all references
+   are moved over to ARCH_MICROCHIP
 
+b) Make ARCH_MICROCHIP a hidden symbol that is selected by
+   ARCH_SPARX5 but keep the menu unchanged.
+
+Let's see what the sparx5 and at91 maintainers think about
+these options.
+
+The other patches all look fine to me.
+
+     Arnd
