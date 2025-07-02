@@ -1,464 +1,603 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0076B211C;
-	Wed,  2 Jul 2025 07:25:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BEA41A5BA4;
+	Wed,  2 Jul 2025 07:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751441142; cv=none; b=t6jPxbIa1+jBKa+kyU/q5iLWK1MxXJMPeBHrAwDuBBEAUD1YTXbPc14Nq0RL81RGCGFBg/eaYSo39PZ/c1t5DeeuVZoUwUnTZ0yaTHGNiFrpDiZ+GtSRmnZ2s60Lx0tlVXmPrmZcg+LXz647JNEZXsbOQBNb1zz4WRYLYmJqBXM=
+	t=1751441199; cv=none; b=RlFWgHc7hZYTGvaIxmQ+Ebft45GcBabS412uFYeTtCwwbTaPi0AdcRaPoBExwYflg/JMqlzqcq56MnmSpMW1N5bFHYKzU1IdhqkcNVssHYOFCGilMIy9QKEekv9MOKd15+5RIBTbfVxqZw9bEK9BJDEAlDIe5z5l6+rVMyHO3Gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751441142; c=relaxed/simple;
-	bh=Zb4gl5G0Q16cHXrf3uQhfueLBZY98IA5yjlhfDZ2sOc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=eGgk87JtX5kI9IHAnskHj0d68rSbypECa5EF7yMaKB2aqDLneqbQOOTdJy+22n3DWIUL2eZQLxnfBEIOLfY9xg72Y2a1TWOZMMVftC+KEt7OOKqpFTgytuL0iqFAnEqal583C6HnF8S72ISJM3fSm7Vwt7w53jazOM/9SyHSC2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=YaAn+jnu; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=tN9qjR5I reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1751441199; c=relaxed/simple;
+	bh=xPH4Dg980CBqcKchGjGg6ihIfDaeksXeD86PHEi8g2U=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=Q9nwpR5HujzjgMuzUuM1Ne3amUypj6R19LgRQ4eM5vh9YXdI92v+1LUSrqGk5PT3vcbT7h6z7T68u97e30PvQ3fZjAdAxckcjAWAFaAg7gBbqo9vjGDyfClENcWf9b11fMH5p6/a84swv5knTISEYZKPsR9ZcuQJgqsdH7/0cGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=E7p5OuCL; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="YaAn+jnu";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="tN9qjR5I"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1751441138; x=1782977138;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version;
-  bh=4Z8xDZ/ZL2ciZ56lS7NdVETkfVfkyMw8pA3vkuPMTQc=;
-  b=YaAn+jnufS8ai1yeIBd3d7j+s91J5diw/0BkZWFa3GuXWLH8Eu+pFAW6
-   WhrBoQk68JNzByLy3AT1uaLMybAEXSl8G7n6soOS4Zym1kJ1lFnZH2tJl
-   FA4YjkxiHS4zqj5eCIZnXu7H9n6I77oyEjOWmyT4KjOiCPR5NUDJbNfK+
-   rBYx7NtURhUUVhUyh4MNEspiqxIsrI5/29fx+i2kLSqicATBFBuogVXuV
-   2Q/xNbzF+IDAtTACrJipt+8bSwzyYVBiV+XN60uTunSS+FvLnC5K/8K3B
-   2IqeHdHfo0eLj/V2nsZoVjtZ7NNkzf68B5eqdQjJyq5D5h+3aAQvVRGB8
-   A==;
-X-CSE-ConnectionGUID: jPdAhwMcSzmMfzpTVEFy/A==
-X-CSE-MsgGUID: 8sNEqxqkQVasz0F2KHNOtQ==
-X-IronPort-AV: E=Sophos;i="6.16,281,1744063200"; 
-   d="scan'208";a="44973968"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 02 Jul 2025 09:25:27 +0200
-X-CheckPoint: {6864DEE7-4-ABFC28F4-D6731B76}
-X-MAIL-CPID: 80225D292CE2124FE075540C4B081297_5
-X-Control-Analysis: str=0001.0A006375.6864DEF6.0045,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id BBA7E1688D9;
-	Wed,  2 Jul 2025 09:25:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1751441122;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4Z8xDZ/ZL2ciZ56lS7NdVETkfVfkyMw8pA3vkuPMTQc=;
-	b=tN9qjR5I/tsNgoWA9s8z8TmD0o0Zp4QwbU1oRyKMwjlNAzwqDvnH3C/zpyNdRCk0UQEE9u
-	x5jpP/6NedB3ZyBeF1JMCkBCosFNKh2Hjd9fymZWVU4YfVhIgF0Eff3AaqdbDgw0Nhfo5Q
-	pWVEZH8hI48zaI/enm1wIq9rYg7HAEME4ZhmAYAuBYC8OteF3RXg1tKUrH2j7tyRM+Okp/
-	1nFLujmptIwpVjpMMxVUnCDMuBduNeiXnlwKtrvXCJVQ+Pftfj0me9U8MEhe0F/roPp6iS
-	VPqOUNbm4kOvfXNtwamxQD39cTBkNB/T9tDumOsTrOEvY/qzo09QgwnbTN0HQQ==
-Message-ID: <9042d63de85f7ae8bf73760e9d2d7652c18a738c.camel@ew.tq-group.com>
-Subject: Re: [PATCH v2] arm64: Kconfig.platforms: remove useless select for
- ARCH_K3
-From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To: Guillaume La Roque <glaroque@baylibre.com>
-Cc: Andrew Davis <afd@ti.com>, vishalm@ti.com, linux-omap@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Catalin
- Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Nishanth
- Menon <nm@ti.com>,  linux@ew.tq-group.com
-Date: Wed, 02 Jul 2025 09:25:21 +0200
-In-Reply-To: <e0773f0e-8d2f-4918-aaad-aab6345fdb81@baylibre.com>
-References: <20250519-kconfig-v2-1-56c1a0137a0f@baylibre.com>
-	 <f44c7074337b79df9ad67f62acbc268acc344a23.camel@ew.tq-group.com>
-	 <e0773f0e-8d2f-4918-aaad-aab6345fdb81@baylibre.com>
-Content-Type: multipart/mixed; boundary="=-LTTdKhpzy+FrdVuu6GM7"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="E7p5OuCL"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id C2842A01EB;
+	Wed,  2 Jul 2025 09:26:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=mail; bh=L9mawu75BttQ0R8C0ZKgWcwI6qvXco1im84vXfksbO0=; b=
+	E7p5OuCL+Tm2kGTpFi22oIrg11BIW/490a0M3wYYzBlE7oqkHBDTqlJDNZBLeMxt
+	EsKeby/UcPKxqV+ZIC4MPMVr+FeEUEd/Nu/0ikiVUntYE9Kcx+Gp+lXr/u/jl21w
+	RPJIr2nWPDPejTs9b7D/2sX3vllk8IsdIoCXTq4DXRjNho838srhtBztkcvDSzmL
+	pj737mIY/GejPhP8EhmkDpjHOJPycuap7jOgxTM4MO804duewTXOUviIIrY60kqE
+	GLU5j8AXOf7JdkJ6I6F4h3aTJSaUD96eZhMaHFDMyOQ9MCofj8aC5cFOb9yEAl2q
+	ktCFdCnj9C0XNZgedd0nuFRHCwQqanuf0yN1gpjxj6FH8gJLWGFXR7DXtOYC+L+S
+	GqpagFIb5XRkxtKeNzniOmaJMKZM5AW6XY7tt9TPXKNN3r2hTwr7e+YO/A8Bok/q
+	wzTeAnXzXf8auzF37U1tKfSmSxegyryu0HO5NGgJGLTyUGFTzh8gNDgLovT3r1+O
+	Orgdf943/FA9fPzeXy7y7XQfKYN2JFk6WVgcXMYOY6mZuUCi/NTJFCT10ePun9TM
+	h7EGwuYl8vLQinH3VnXeP/L7emLxToanIhCESNk4CjHQLslbFNAx3gYtpp/Gb3nO
+	yz4L4lfGM95yh8KyCrkyZeICnhYxPIFq8GvRGkFMMko=
+From: =?utf-8?q?Bence_Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
+Date: Wed, 2 Jul 2025 09:26:30 +0200
+Subject: [PATCH] arm: DT: imx6: hummingboard: Replace license text comment
+ with SPDX identifier
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-ID: <20250702-hb-dts-lic-v1-1-bf15c0a74577@prolan.hu>
+X-B4-Tracking: v=1; b=H4sIACXfZGgC/x3MTQrCQAxA4auUrA3MD7bgVYqLTBqdgI4lKSKU3
+ t3R5bd4bwcXU3G4DDuYvNX11TriaQCu1O6CunRDCukcppCwFlw2x4cyMtEYOMecY4IerCY3/fx
+ n87W7kAsWo8b1t3iSb2JwHF+EY3AWdQAAAA==
+To: Russell King <linux@armlinux.org.uk>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam
+	<festevam@gmail.com>
+CC: <devicetree@vger.kernel.org>, <imx@lists.linux.dev>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	Rabeeh Khoury <rabeeh@solid-run.com>, =?utf-8?q?Bence_Cs=C3=B3k=C3=A1s?=
+	<csokas.bence@prolan.hu>
+X-Mailer: b4 0.13.0
+X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1751441191;VERSION=7994;MC=2363341622;ID=348886;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
+X-ESET-Antispam: OK
+X-EsetResult: clean, is OK
+X-EsetId: 37303A29BB64155D6C7364
 
---=-LTTdKhpzy+FrdVuu6GM7
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Replace verbatim license text with a `SPDX-License-Identifier`
 
-On Tue, 2025-07-01 at 20:57 +0200, Guillaume La Roque wrote:
->=20
-> Le 01/07/2025 =C3=A0 16:36, Matthias Schiffer a =C3=A9crit=C2=A0:
-> > On Mon, 2025-05-19 at 10:20 +0200, Guillaume La Roque wrote:
-> > >=20
-> > > After patch done on TI_MESSAGE_MANAGER[1] and TI_SCI_PROTOCOL[2] driv=
-er
-> > > select on ARCH_K3 are not needed anymore.
-> > > Select MAILBOX by default is not needed anymore[3],
-> > > PM_GENERIC_DOMAIN if PM was enabled by default so not needed.
-> >=20
-> > Hi,
->=20
-> Hi,
->=20
-> >=20
-> > what selects PM_GENERIC_DOMAIN in your configuration? linux-next fails =
-to boot
-> > on our AM62x-based TQMa62xx if I don't (partially) revert this patch - =
-I have
-> > not found a way to enable PM_GENERIC_DOMAIN and TI_SCI_PM_DOMAINS witho=
-ut
-> > enabling other unneeded features to pull it in.
-> >=20
-> With master branch if i apply this patch and i do make ARCH=3Darm64=20
-> defconfig and check in .config  both TI_SCI_PM_DOMAINS and=20
-> PM_GENERIC_DOMAINS are enabled.
-> with linux-next it's same. i don't really understand link with  PM part=
-=20
-> in this patch and boot issue on your SOM.
->=20
-> I probably misunderstand something.
->=20
->=20
-> what is your problem exactly ?
->=20
-> if you can share log or link to jobs
+The comment heades mis-attributes this license to be "X11", but the
+license text does not include the last line "Except as contained in this
+notice, the name of the X Consortium shall not be used in advertising or
+otherwise to promote the sale, use or other dealings in this Software
+without prior written authorization from the X Consortium.". Therefore,
+this license is actually equivalent to the SPDX "MIT" license (confirmed
+by text diffing).
+
+On top, half of the files have the fragment "either version 2 of the
+License" for some reason, and not follow up with "or any later version".
+So the resulting SPDX license is still "GPL-2.0-only".
+
+Cc: Rabeeh Khoury <rabeeh@solid-run.com>
+Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
+---
+ .../nxp/imx/imx6dl-hummingboard2-emmc-som-v15.dts  | 39 +---------------------
+ .../dts/nxp/imx/imx6dl-hummingboard2-som-v15.dts   | 39 +---------------------
+ arch/arm/boot/dts/nxp/imx/imx6dl-hummingboard2.dts | 38 +--------------------
+ arch/arm/boot/dts/nxp/imx/imx6dl-solidsense.dts    | 38 +--------------------
+ .../nxp/imx/imx6q-hummingboard2-emmc-som-v15.dts   | 39 +---------------------
+ .../dts/nxp/imx/imx6q-hummingboard2-som-v15.dts    | 39 +---------------------
+ arch/arm/boot/dts/nxp/imx/imx6q-hummingboard2.dts  | 38 +--------------------
+ arch/arm/boot/dts/nxp/imx/imx6q-solidsense.dts     | 38 +--------------------
+ .../dts/nxp/imx/imx6qdl-hummingboard2-emmc.dtsi    | 39 +---------------------
+ .../boot/dts/nxp/imx/imx6qdl-hummingboard2.dtsi    | 38 +--------------------
+ 10 files changed, 10 insertions(+), 375 deletions(-)
+
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6dl-hummingboard2-emmc-som-v15.dts b/arch/arm/boot/dts/nxp/imx/imx6dl-hummingboard2-emmc-som-v15.dts
+index 80313c13bcdb..71cf5ce84a99 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6dl-hummingboard2-emmc-som-v15.dts
++++ b/arch/arm/boot/dts/nxp/imx/imx6dl-hummingboard2-emmc-som-v15.dts
+@@ -1,45 +1,8 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
+ /*
+  * Device Tree file for SolidRun HummingBoard2
+  * Copyright (C) 2015 Rabeeh Khoury <rabeeh@solid-run.com>
+  * Based on work by Russell King
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License as
+- *     published by the Free Software Foundation; either version 2 of the
+- *     License.
+- *
+- *     This file is distributed in the hope that it will be useful
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ /dts-v1/;
+ 
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6dl-hummingboard2-som-v15.dts b/arch/arm/boot/dts/nxp/imx/imx6dl-hummingboard2-som-v15.dts
+index e61ef1156f8b..fed260a9fdc4 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6dl-hummingboard2-som-v15.dts
++++ b/arch/arm/boot/dts/nxp/imx/imx6dl-hummingboard2-som-v15.dts
+@@ -1,45 +1,8 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
+ /*
+  * Device Tree file for SolidRun HummingBoard2
+  * Copyright (C) 2015 Rabeeh Khoury <rabeeh@solid-run.com>
+  * Based on work by Russell King
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License as
+- *     published by the Free Software Foundation; either version 2 of the
+- *     License.
+- *
+- *     This file is distributed in the hope that it will be useful
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ /dts-v1/;
+ 
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6dl-hummingboard2.dts b/arch/arm/boot/dts/nxp/imx/imx6dl-hummingboard2.dts
+index b12cd87f3f94..4e176db56840 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6dl-hummingboard2.dts
++++ b/arch/arm/boot/dts/nxp/imx/imx6dl-hummingboard2.dts
+@@ -1,43 +1,7 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
+ /*
+  * Copyright (C) 2015 Rabeeh Khoury <rabeeh@solid-run.com>
+  * Based on dt work by Russell King
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License
+- *     version 2 as published by the Free Software Foundation.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ /dts-v1/;
+ 
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6dl-solidsense.dts b/arch/arm/boot/dts/nxp/imx/imx6dl-solidsense.dts
+index 2a3699adbed0..fdced9daec4d 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6dl-solidsense.dts
++++ b/arch/arm/boot/dts/nxp/imx/imx6dl-solidsense.dts
+@@ -1,43 +1,7 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
+ /*
+  * Copyright (C) 2015 Rabeeh Khoury <rabeeh@solid-run.com>
+  * Based on dt work by Russell King
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License
+- *     version 2 as published by the Free Software Foundation.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ /dts-v1/;
+ 
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6q-hummingboard2-emmc-som-v15.dts b/arch/arm/boot/dts/nxp/imx/imx6q-hummingboard2-emmc-som-v15.dts
+index 1998ebfa0fe0..af458873b893 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6q-hummingboard2-emmc-som-v15.dts
++++ b/arch/arm/boot/dts/nxp/imx/imx6q-hummingboard2-emmc-som-v15.dts
+@@ -1,45 +1,8 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
+ /*
+  * Device Tree file for SolidRun HummingBoard2
+  * Copyright (C) 2015 Rabeeh Khoury <rabeeh@solid-run.com>
+  * Based on work by Russell King
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License as
+- *     published by the Free Software Foundation; either version 2 of the
+- *     License.
+- *
+- *     This file is distributed in the hope that it will be useful
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ /dts-v1/;
+ 
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6q-hummingboard2-som-v15.dts b/arch/arm/boot/dts/nxp/imx/imx6q-hummingboard2-som-v15.dts
+index d3ad7329cd6d..509724df7f82 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6q-hummingboard2-som-v15.dts
++++ b/arch/arm/boot/dts/nxp/imx/imx6q-hummingboard2-som-v15.dts
+@@ -1,45 +1,8 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
+ /*
+  * Device Tree file for SolidRun HummingBoard2
+  * Copyright (C) 2015 Rabeeh Khoury <rabeeh@solid-run.com>
+  * Based on work by Russell King
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License as
+- *     published by the Free Software Foundation; either version 2 of the
+- *     License.
+- *
+- *     This file is distributed in the hope that it will be useful
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ /dts-v1/;
+ 
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6q-hummingboard2.dts b/arch/arm/boot/dts/nxp/imx/imx6q-hummingboard2.dts
+index 5249f53dcdbc..704ba5b91efa 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6q-hummingboard2.dts
++++ b/arch/arm/boot/dts/nxp/imx/imx6q-hummingboard2.dts
+@@ -1,43 +1,7 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
+ /*
+  * Copyright (C) 2015 Rabeeh Khoury <rabeeh@solid-run.com>
+  * Based on dt work by Russell King
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License
+- *     version 2 as published by the Free Software Foundation.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ /dts-v1/;
+ 
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6q-solidsense.dts b/arch/arm/boot/dts/nxp/imx/imx6q-solidsense.dts
+index 0e6a325df363..d929f131ff41 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6q-solidsense.dts
++++ b/arch/arm/boot/dts/nxp/imx/imx6q-solidsense.dts
+@@ -1,43 +1,7 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
+ /*
+  * Copyright (C) 2015 Rabeeh Khoury <rabeeh@solid-run.com>
+  * Based on dt work by Russell King
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License
+- *     version 2 as published by the Free Software Foundation.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ /dts-v1/;
+ 
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6qdl-hummingboard2-emmc.dtsi b/arch/arm/boot/dts/nxp/imx/imx6qdl-hummingboard2-emmc.dtsi
+index c3efb001c515..87b41d770e80 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6qdl-hummingboard2-emmc.dtsi
++++ b/arch/arm/boot/dts/nxp/imx/imx6qdl-hummingboard2-emmc.dtsi
+@@ -1,44 +1,7 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
+ /*
+  * Device Tree file for SolidRun HummingBoard2
+  * Copyright (C) 2015 Rabeeh Khoury <rabeeh@solid-run.com>
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License as
+- *     published by the Free Software Foundation; either version 2 of the
+- *     License.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
+ &iomuxc {
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6qdl-hummingboard2.dtsi b/arch/arm/boot/dts/nxp/imx/imx6qdl-hummingboard2.dtsi
+index 3069e1738ba2..1e41e6fdd5b4 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6qdl-hummingboard2.dtsi
++++ b/arch/arm/boot/dts/nxp/imx/imx6qdl-hummingboard2.dtsi
+@@ -1,42 +1,6 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
+ /*
+  * Copyright (C) 2015 Rabeeh Khoury <rabeeh@solid-run.com>
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License
+- *     version 2 as published by the Free Software Foundation.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ #include <dt-bindings/sound/fsl-imx-audmux.h>
+ 
+
+---
+base-commit: 66701750d5565c574af42bef0b789ce0203e3071
+change-id: 20250702-hb-dts-lic-caa60c313312
+
+Best regards,
+-- 
+Bence Csókás <csokas.bence@prolan.hu>
 
 
-Hi Guillaume,
-
-with arm64_defconfig, this problem doesn't occur, as other CONFIG_ARCH_* sy=
-mbols
-also have "select PM_GENERIC_DOMAINS" (with or without "if PM").
-
-We are using a smaller config specific to our K3-based SOMs however. I have
-attached a defconfig that shows the problem - if you use this as the base f=
-or
-.config on linux-next, there is no way to enable TI_SCI_PM_DOMAINS, as noth=
-ing
-selects PM_GENERIC_DOMAINS.
-
-So unless I'm missing some other configuration that would actually be usefu=
-l on
-the K3 platform and that would pull in PM_GENERIC_DOMAINS, I think that par=
-t
-needs to be reverted. I can send a patch to that effect later.
-
-Best,
-Matthias
-
-
->=20
-> Regards
-> Guillaume
->=20
-> > Best,
-> > Matthias
-> >=20
-> >=20
-> > >=20
-> > > Remove it and give possibility to enable this driver in modules.
-> > >=20
-> > > [1] https://lore.kernel.org/all/20180828005311.8529-1-nm@ti.com/
-> > > [2] https://lore.kernel.org/all/20250220-ti-firmware-v2-1-ff26883c6ce=
-9@baylibre.com/
-> > > [3] https://lore.kernel.org/all/20250507135213.g6li6ufp3cosxoys@sting=
-ing/
-> > >=20
-> > > Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> > > ---
-> > > Changes in v2:
-> > > - Remove some other config after comment from Nishanth.
-> > > - Link to v1: https://lore.kernel.org/r/20250504-kconfig-v1-1-ab0216f=
-4fa98@baylibre.com
-> > > ---
-> > >   arch/arm64/Kconfig.platforms | 4 ----
-> > >   1 file changed, 4 deletions(-)
-> > >=20
-> > > diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platfo=
-rms
-> > > index 8b76821f190f..bf9e3d76b4c0 100644
-> > > --- a/arch/arm64/Kconfig.platforms
-> > > +++ b/arch/arm64/Kconfig.platforms
-> > > @@ -135,11 +135,7 @@ config ARCH_SPARX5
-> > >  =20
-> > >   config ARCH_K3
-> > >   	bool "Texas Instruments Inc. K3 multicore SoC architecture"
-> > > -	select PM_GENERIC_DOMAINS if PM
-> > > -	select MAILBOX
-> > >   	select SOC_TI
-> > > -	select TI_MESSAGE_MANAGER
-> > > -	select TI_SCI_PROTOCOL
-> > >   	select TI_K3_SOCINFO
-> > >   	help
-> > >   	  This enables support for Texas Instruments' K3 multicore SoC
-> > >=20
-> > > ---
-> > > base-commit: e8ab83e34bdc458b5cd77f201e4ed04807978fb1
-> > > change-id: 20250504-kconfig-68f139fbf337
-> > >=20
-> > > Best regards,
-> >=20
->=20
-
---=20
-TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Germ=
-any
-Amtsgericht M=C3=BCnchen, HRB 105018
-Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan Sch=
-neider
-https://www.tq-group.com/
-
---=-LTTdKhpzy+FrdVuu6GM7
-Content-Disposition: attachment; filename="defconfig"
-Content-Type: text/plain; name="defconfig"; charset="UTF-8"
-Content-Transfer-Encoding: base64
-
-IyBDT05GSUdfTE9DQUxWRVJTSU9OX0FVVE8gaXMgbm90IHNldApDT05GSUdfU1lTVklQQz15CkNP
-TkZJR19QT1NJWF9NUVVFVUU9eQpDT05GSUdfTk9fSFpfSURMRT15CkNPTkZJR19ISUdIX1JFU19U
-SU1FUlM9eQpDT05GSUdfQlBGX1NZU0NBTEw9eQpDT05GSUdfQlBGX0pJVD15CkNPTkZJR19CUEZf
-SklUX0FMV0FZU19PTj15CiMgQ09ORklHX0JQRl9VTlBSSVZfREVGQVVMVF9PRkYgaXMgbm90IHNl
-dApDT05GSUdfUFJFRU1QVD15CkNPTkZJR19JUlFfVElNRV9BQ0NPVU5USU5HPXkKQ09ORklHX0JT
-RF9QUk9DRVNTX0FDQ1Q9eQpDT05GSUdfQlNEX1BST0NFU1NfQUNDVF9WMz15CkNPTkZJR19JS0NP
-TkZJRz15CkNPTkZJR19JS0NPTkZJR19QUk9DPXkKQ09ORklHX01FTUNHPXkKQ09ORklHX0JMS19D
-R1JPVVA9eQpDT05GSUdfQ0ZTX0JBTkRXSURUSD15CkNPTkZJR19DR1JPVVBfUElEUz15CkNPTkZJ
-R19DR1JPVVBfRlJFRVpFUj15CkNPTkZJR19DR1JPVVBfSFVHRVRMQj15CkNPTkZJR19DUFVTRVRT
-PXkKQ09ORklHX0NHUk9VUF9ERVZJQ0U9eQpDT05GSUdfQ0dST1VQX0NQVUFDQ1Q9eQpDT05GSUdf
-Q0dST1VQX1BFUkY9eQpDT05GSUdfQ0dST1VQX0JQRj15CkNPTkZJR19OQU1FU1BBQ0VTPXkKQ09O
-RklHX1VTRVJfTlM9eQpDT05GSUdfQ0hFQ0tQT0lOVF9SRVNUT1JFPXkKQ09ORklHX1NDSEVEX0FV
-VE9HUk9VUD15CkNPTkZJR19CTEtfREVWX0lOSVRSRD15CkNPTkZJR19TWVNGU19TWVNDQUxMPXkK
-Q09ORklHX0VYUEVSVD15CkNPTkZJR19LQUxMU1lNU19BTEw9eQpDT05GSUdfUEVSRl9FVkVOVFM9
-eQpDT05GSUdfS0VYRUM9eQpDT05GSUdfS0VYRUNfRklMRT15CiMgQ09ORklHX0NSQVNIX0RVTVAg
-aXMgbm90IHNldApDT05GSUdfQVJDSF9LMz15CkNPTkZJR19BUk02NF9FUlJBVFVNXzI0NDEwMDc9
-eQpDT05GSUdfQVJNNjRfRVJSQVRVTV8xMjg2ODA3PXkKQ09ORklHX0FSTTY0X0VSUkFUVU1fMTU0
-MjQxOT15CkNPTkZJR19BUk02NF9FUlJBVFVNXzI0NDEwMDk9eQojIENPTkZJR19DQVZJVU1fRVJS
-QVRVTV8yMjM3NSBpcyBub3Qgc2V0CiMgQ09ORklHX0NBVklVTV9FUlJBVFVNXzIzMTU0IGlzIG5v
-dCBzZXQKIyBDT05GSUdfQ0FWSVVNX0VSUkFUVU1fMjc0NTYgaXMgbm90IHNldAojIENPTkZJR19D
-QVZJVU1fRVJSQVRVTV8zMDExNSBpcyBub3Qgc2V0CiMgQ09ORklHX0hJU0lMSUNPTl9FUlJBVFVN
-XzE2MTYwMDgwMiBpcyBub3Qgc2V0CiMgQ09ORklHX1FDT01fRkFMS09SX0VSUkFUVU1fMTAwMyBp
-cyBub3Qgc2V0CiMgQ09ORklHX1FDT01fRkFMS09SX0VSUkFUVU1fMTAwOSBpcyBub3Qgc2V0CiMg
-Q09ORklHX1FDT01fUURGMjQwMF9FUlJBVFVNXzAwNjUgaXMgbm90IHNldAojIENPTkZJR19RQ09N
-X0ZBTEtPUl9FUlJBVFVNX0UxMDQxIGlzIG5vdCBzZXQKQ09ORklHX0FSTTY0X1ZBX0JJVFNfNDg9
-eQpDT05GSUdfU0NIRURfTUM9eQpDT05GSUdfU0NIRURfU01UPXkKQ09ORklHX05SX0NQVVM9MjU2
-CkNPTkZJR19DT01QQVQ9eQpDT05GSUdfUkFORE9NSVpFX0JBU0U9eQojIENPTkZJR19FRkkgaXMg
-bm90IHNldApDT05GSUdfSElCRVJOQVRJT049eQpDT05GSUdfV1FfUE9XRVJfRUZGSUNJRU5UX0RF
-RkFVTFQ9eQpDT05GSUdfRU5FUkdZX01PREVMPXkKQ09ORklHX0NQVV9GUkVRPXkKQ09ORklHX0NQ
-VV9GUkVRX1NUQVQ9eQpDT05GSUdfQ1BVX0ZSRVFfR09WX1BPV0VSU0FWRT15CkNPTkZJR19DUFVf
-RlJFUV9HT1ZfVVNFUlNQQUNFPXkKQ09ORklHX0NQVV9GUkVRX0dPVl9PTkRFTUFORD15CkNPTkZJ
-R19DUFVfRlJFUV9HT1ZfQ09OU0VSVkFUSVZFPXkKQ09ORklHX0NQVUZSRVFfRFQ9eQpDT05GSUdf
-VklSVFVBTElaQVRJT049eQpDT05GSUdfSlVNUF9MQUJFTD15CkNPTkZJR19NT0RVTEVTPXkKQ09O
-RklHX01PRFVMRV9GT1JDRV9MT0FEPXkKQ09ORklHX01PRFVMRV9VTkxPQUQ9eQpDT05GSUdfTU9E
-VUxFX0ZPUkNFX1VOTE9BRD15CkNPTkZJR19NT0RWRVJTSU9OUz15CkNPTkZJR19NT0RVTEVfU1JD
-VkVSU0lPTl9BTEw9eQpDT05GSUdfQkxLX0RFVl9CU0dMSUI9eQojIENPTkZJR19DT1JFX0RVTVBf
-REVGQVVMVF9FTEZfSEVBREVSUyBpcyBub3Qgc2V0CiMgQ09ORklHX0NPTVBBVF9CUksgaXMgbm90
-IHNldApDT05GSUdfS1NNPXkKQ09ORklHX01FTU9SWV9GQUlMVVJFPXkKQ09ORklHX1RSQU5TUEFS
-RU5UX0hVR0VQQUdFPXkKQ09ORklHX0NNQT15CkNPTkZJR19DTUFfQVJFQVM9NwpDT05GSUdfTkVU
-PXkKQ09ORklHX1BBQ0tFVD15CkNPTkZJR19VTklYPXkKQ09ORklHX1hGUk1fVVNFUj1tCkNPTkZJ
-R19ORVRfS0VZPW0KQ09ORklHX0lORVQ9eQpDT05GSUdfSVBfTVVMVElDQVNUPXkKQ09ORklHX0lQ
-X1BOUD15CkNPTkZJR19JUF9QTlBfREhDUD15CkNPTkZJR19JUF9QTlBfQk9PVFA9eQpDT05GSUdf
-SU5FVF9BSD1tCkNPTkZJR19JTkVUX0VTUD1tCkNPTkZJR19JTkVUX0lQQ09NUD1tCkNPTkZJR19J
-TkVUNl9BSD1tCkNPTkZJR19JTkVUNl9JUENPTVA9bQpDT05GSUdfSVBWNl9TSVQ9bQpDT05GSUdf
-SVBWNl9UVU5ORUw9bQpDT05GSUdfTkVURklMVEVSPXkKQ09ORklHX05GX0NPTk5UUkFDSz1tCkNP
-TkZJR19ORl9DT05OVFJBQ0tfRVZFTlRTPXkKQ09ORklHX05FVEZJTFRFUl9YVF9UQVJHRVRfQ0hF
-Q0tTVU09bQpDT05GSUdfTkVURklMVEVSX1hUX1RBUkdFVF9DTEFTU0lGWT1tCkNPTkZJR19ORVRG
-SUxURVJfWFRfVEFSR0VUX0lETEVUSU1FUj1tCkNPTkZJR19ORVRGSUxURVJfWFRfVEFSR0VUX0xP
-Rz1tCkNPTkZJR19ORVRGSUxURVJfWFRfVEFSR0VUX01BUks9bQpDT05GSUdfTkVURklMVEVSX1hU
-X01BVENIX0FERFJUWVBFPW0KQ09ORklHX05FVEZJTFRFUl9YVF9NQVRDSF9DT01NRU5UPW0KQ09O
-RklHX05FVEZJTFRFUl9YVF9NQVRDSF9DT05OVFJBQ0s9bQpDT05GSUdfTkVURklMVEVSX1hUX01B
-VENIX0NQVT1tCkNPTkZJR19ORVRGSUxURVJfWFRfTUFUQ0hfSVBSQU5HRT1tCkNPTkZJR19ORVRG
-SUxURVJfWFRfTUFUQ0hfTEVOR1RIPW0KQ09ORklHX05FVEZJTFRFUl9YVF9NQVRDSF9MSU1JVD1t
-CkNPTkZJR19ORVRGSUxURVJfWFRfTUFUQ0hfTUFDPW0KQ09ORklHX05FVEZJTFRFUl9YVF9NQVRD
-SF9NQVJLPW0KQ09ORklHX05FVEZJTFRFUl9YVF9NQVRDSF9NVUxUSVBPUlQ9bQpDT05GSUdfTkVU
-RklMVEVSX1hUX01BVENIX1BPTElDWT1tCkNPTkZJR19ORVRGSUxURVJfWFRfTUFUQ0hfUEtUVFlQ
-RT1tCkNPTkZJR19ORl9MT0dfSVBWND1tCkNPTkZJR19JUF9ORl9JUFRBQkxFUz1tCkNPTkZJR19J
-UF9ORl9GSUxURVI9bQpDT05GSUdfSVBfTkZfVEFSR0VUX1JFSkVDVD1tCkNPTkZJR19JUF9ORl9O
-QVQ9bQpDT05GSUdfSVBfTkZfVEFSR0VUX01BU1FVRVJBREU9bQpDT05GSUdfSVBfTkZfTUFOR0xF
-PW0KQ09ORklHX0lQX05GX0FSUEZJTFRFUj1tCkNPTkZJR19JUF9ORl9BUlBfTUFOR0xFPW0KQ09O
-RklHX0lQNl9ORl9JUFRBQkxFUz1tCkNPTkZJR19JUDZfTkZfRklMVEVSPW0KQ09ORklHX0lQNl9O
-Rl9UQVJHRVRfUkVKRUNUPW0KQ09ORklHX0lQNl9ORl9NQU5HTEU9bQpDT05GSUdfSVA2X05GX05B
-VD1tCkNPTkZJR19JUDZfTkZfVEFSR0VUX01BU1FVRVJBREU9bQpDT05GSUdfQlJJREdFX05GX0VC
-VEFCTEVTPW0KQ09ORklHX0JSSURHRV9FQlRfQlJPVVRFPW0KQ09ORklHX0JSSURHRV9FQlRfVF9G
-SUxURVI9bQpDT05GSUdfQlJJREdFX0VCVF9UX05BVD1tCkNPTkZJR19CUklER0VfRUJUXzgwMl8z
-PW0KQ09ORklHX0JSSURHRV9FQlRfQU1PTkc9bQpDT05GSUdfQlJJREdFX0VCVF9BUlA9bQpDT05G
-SUdfQlJJREdFX0VCVF9JUD1tCkNPTkZJR19CUklER0VfRUJUX0lQNj1tCkNPTkZJR19CUklER0Vf
-RUJUX0xJTUlUPW0KQ09ORklHX0JSSURHRV9FQlRfTUFSSz1tCkNPTkZJR19CUklER0VfRUJUX1BL
-VFRZUEU9bQpDT05GSUdfQlJJREdFX0VCVF9TVFA9bQpDT05GSUdfQlJJREdFX0VCVF9WTEFOPW0K
-Q09ORklHX0JSSURHRV9FQlRfQVJQUkVQTFk9bQpDT05GSUdfQlJJREdFX0VCVF9ETkFUPW0KQ09O
-RklHX0JSSURHRV9FQlRfTUFSS19UPW0KQ09ORklHX0JSSURHRV9FQlRfUkVESVJFQ1Q9bQpDT05G
-SUdfQlJJREdFX0VCVF9TTkFUPW0KQ09ORklHX0JSSURHRV9FQlRfTE9HPW0KQ09ORklHX0JSSURH
-RV9FQlRfTkZMT0c9bQpDT05GSUdfSVBfU0NUUD1tCkNPTkZJR19CUklER0U9bQpDT05GSUdfQlJJ
-REdFX1ZMQU5fRklMVEVSSU5HPXkKQ09ORklHX1ZMQU5fODAyMVE9eQpDT05GSUdfVkxBTl84MDIx
-UV9HVlJQPXkKQ09ORklHX1ZMQU5fODAyMVFfTVZSUD15CkNPTkZJR19ORVRfU0NIRUQ9eQpDT05G
-SUdfTkVUX1NDSF9IVEI9bQpDT05GSUdfTkVUX1NDSF9IRlNDPW0KQ09ORklHX05FVF9TQ0hfUFJJ
-Tz1tCkNPTkZJR19ORVRfU0NIX01VTFRJUT1tCkNPTkZJR19ORVRfU0NIX1JFRD1tCkNPTkZJR19O
-RVRfU0NIX1NGQj1tCkNPTkZJR19ORVRfU0NIX1NGUT1tCkNPTkZJR19ORVRfU0NIX1RFUUw9bQpD
-T05GSUdfTkVUX1NDSF9UQkY9bQpDT05GSUdfTkVUX1NDSF9DQlM9bQpDT05GSUdfTkVUX1NDSF9F
-VEY9bQpDT05GSUdfTkVUX1NDSF9UQVBSSU89bQpDT05GSUdfTkVUX1NDSF9HUkVEPW0KQ09ORklH
-X05FVF9TQ0hfTkVURU09bQpDT05GSUdfTkVUX1NDSF9EUlI9bQpDT05GSUdfTkVUX1NDSF9NUVBS
-SU89bQpDT05GSUdfTkVUX1NDSF9DSE9LRT1tCkNPTkZJR19ORVRfU0NIX1FGUT1tCkNPTkZJR19O
-RVRfU0NIX0NPREVMPW0KQ09ORklHX05FVF9TQ0hfRlFfQ09ERUw9eQpDT05GSUdfTkVUX1NDSF9J
-TkdSRVNTPW0KQ09ORklHX05FVF9DTFNfQkFTSUM9bQpDT05GSUdfTkVUX0NMU19ST1VURTQ9bQpD
-T05GSUdfTkVUX0NMU19GVz1tCkNPTkZJR19ORVRfQ0xTX1UzMj1tCkNPTkZJR19DTFNfVTMyX01B
-Uks9eQpDT05GSUdfTkVUX0NMU19GTE9XPW0KQ09ORklHX05FVF9DTFNfRkxPV0VSPW0KQ09ORklH
-X05FVF9FTUFUQ0g9eQpDT05GSUdfTkVUX0VNQVRDSF9DTVA9bQpDT05GSUdfTkVUX0VNQVRDSF9O
-QllURT1tCkNPTkZJR19ORVRfRU1BVENIX1UzMj1tCkNPTkZJR19ORVRfRU1BVENIX01FVEE9bQpD
-T05GSUdfTkVUX0VNQVRDSF9URVhUPW0KQ09ORklHX05FVF9DTFNfQUNUPXkKQ09ORklHX05FVF9B
-Q1RfUE9MSUNFPW0KQ09ORklHX05FVF9BQ1RfR0FDVD1tCkNPTkZJR19HQUNUX1BST0I9eQpDT05G
-SUdfTkVUX0FDVF9NSVJSRUQ9bQpDT05GSUdfTkVUX0FDVF9OQVQ9bQpDT05GSUdfTkVUX0FDVF9Q
-RURJVD1tCkNPTkZJR19ORVRfQUNUX1NJTVA9bQpDT05GSUdfTkVUX0FDVF9TS0JFRElUPW0KQ09O
-RklHX05FVF9BQ1RfQ1NVTT1tCkNPTkZJR19ORVRfQUNUX0dBVEU9bQpDT05GSUdfSFNSPXkKQ09O
-RklHX05FVF9TV0lUQ0hERVY9eQpDT05GSUdfQ0FOPXkKQ09ORklHX0JUPXkKQ09ORklHX0JUX0hJ
-RFA9bQpDT05GSUdfQlRfTEVEUz15CkNPTkZJR19CVF9IQ0lCVFVTQj1tCkNPTkZJR19CVF9IQ0lV
-QVJUPW0KQ09ORklHX0JUX0hDSVVBUlRfTVJWTD15CkNPTkZJR19CVF9NUlZMPW0KQ09ORklHX0JU
-X01SVkxfU0RJTz1tCkNPTkZJR19DRkc4MDIxMT1tCkNPTkZJR19OTDgwMjExX1RFU1RNT0RFPXkK
-Q09ORklHX01BQzgwMjExPW0KQ09ORklHX01BQzgwMjExX01FU0g9eQpDT05GSUdfUkZLSUxMPXkK
-Q09ORklHX1BDST15CkNPTkZJR19QQ0lFUE9SVEJVUz15CkNPTkZJR19QQ0lfSU9WPXkKQ09ORklH
-X1BDSV9QQVNJRD15CkNPTkZJR19IT1RQTFVHX1BDST15CkNPTkZJR19QQ0lFX0FMVEVSQT15CkNP
-TkZJR19QQ0lFX0FMVEVSQV9NU0k9eQpDT05GSUdfUENJX0hPU1RfVEhVTkRFUl9QRU09eQpDT05G
-SUdfUENJX0hPU1RfVEhVTkRFUl9FQ0FNPXkKQ09ORklHX1BDSV9IT1NUX0dFTkVSSUM9eQpDT05G
-SUdfUENJX0o3MjFFX0hPU1Q9eQpDT05GSUdfUENJX0o3MjFFX0VQPXkKQ09ORklHX1BDSV9LRVlT
-VE9ORV9IT1NUPXkKQ09ORklHX1BDSV9LRVlTVE9ORV9FUD15CkNPTkZJR19QQ0lfRU5EUE9JTlQ9
-eQpDT05GSUdfUENJX0VORFBPSU5UX0NPTkZJR0ZTPXkKQ09ORklHX1BDSV9FUEZfVEVTVD15CkNP
-TkZJR19QQ0lfRVBGX05UQj15CkNPTkZJR19ERVZUTVBGUz15CkNPTkZJR19ERVZUTVBGU19NT1VO
-VD15CkNPTkZJR19NVEQ9eQpDT05GSUdfTVREX0NNRExJTkVfUEFSVFM9eQpDT05GSUdfTVREX0JM
-T0NLPXkKQ09ORklHX01URF9TUElfTk9SPXkKIyBDT05GSUdfTVREX1NQSV9OT1JfVVNFXzRLX1NF
-Q1RPUlMgaXMgbm90IHNldApDT05GSUdfTVREX1VCST15CkNPTkZJR19PRl9PVkVSTEFZPXkKQ09O
-RklHX0JMS19ERVZfTE9PUD15CkNPTkZJR19CTEtfREVWX05CRD1tCkNPTkZJR19CTEtfREVWX1JB
-TT15CkNPTkZJR19WSVJUSU9fQkxLPXkKQ09ORklHX0JMS19ERVZfTlZNRT1tCkNPTkZJR19TUkFN
-PXkKQ09ORklHX0VFUFJPTV9BVDI0PXkKQ09ORklHX1NDU0k9eQojIENPTkZJR19TQ1NJX1BST0Nf
-RlMgaXMgbm90IHNldApDT05GSUdfQkxLX0RFVl9TRD15CiMgQ09ORklHX1NDU0lfTE9XTEVWRUwg
-aXMgbm90IHNldApDT05GSUdfTUQ9eQpDT05GSUdfQkxLX0RFVl9NRD1tCkNPTkZJR19CTEtfREVW
-X0RNPW0KQ09ORklHX0RNX01JUlJPUj1tCkNPTkZJR19ETV9aRVJPPW0KQ09ORklHX05FVERFVklD
-RVM9eQpDT05GSUdfTUFDVkxBTj1tCkNPTkZJR19NQUNWVEFQPW0KQ09ORklHX1RVTj15CkNPTkZJ
-R19WRVRIPW0KQ09ORklHX1ZJUlRJT19ORVQ9eQpDT05GSUdfRTEwMDA9bQpDT05GSUdfRTEwMDBF
-PW0KQ09ORklHX0lHQlZGPXkKQ09ORklHX1RJX0szX0FNNjVfQ1BTV19OVVNTPXkKQ09ORklHX1RJ
-X0szX0FNNjVfQ1BTV19TV0lUQ0hERVY9eQpDT05GSUdfVElfSzNfQU02NV9DUFRTPXkKQ09ORklH
-X1RJX0lDU1NHX1BSVUVUSD1tCkNPTkZJR19BUVVBTlRJQV9QSFk9eQpDT05GSUdfTUFSVkVMTF9Q
-SFk9eQpDT05GSUdfTUFSVkVMTF8xMEdfUEhZPW0KQ09ORklHX01JQ1JFTF9QSFk9eQpDT05GSUdf
-TUlDUk9TRU1JX1BIWT15CkNPTkZJR19BVDgwM1hfUEhZPXkKQ09ORklHX1JFQUxURUtfUEhZPW0K
-Q09ORklHX1JPQ0tDSElQX1BIWT15CkNPTkZJR19EUDgzODQ4X1BIWT15CkNPTkZJR19EUDgzODY3
-X1BIWT15CkNPTkZJR19EUDgzODY5X1BIWT15CkNPTkZJR19EUDgzVEc3MjBfUEhZPXkKQ09ORklH
-X1ZJVEVTU0VfUEhZPXkKQ09ORklHX0NBTl9NX0NBTj15CkNPTkZJR19DQU5fTV9DQU5fUExBVEZP
-Uk09eQpDT05GSUdfTURJT19CVVNfTVVYX01VTFRJUExFWEVSPXkKQ09ORklHX01ESU9fQlVTX01V
-WF9NTUlPUkVHPXkKQ09ORklHX1VTQl9ORVRfRFJJVkVSUz1tCkNPTkZJR19VU0JfUEVHQVNVUz1t
-CkNPTkZJR19VU0JfUlRMODE1MD1tCkNPTkZJR19VU0JfUlRMODE1Mj1tCkNPTkZJR19VU0JfTEFO
-NzhYWD1tCkNPTkZJR19VU0JfVVNCTkVUPW0KQ09ORklHX1VTQl9ORVRfQ0RDX0VFTT1tCkNPTkZJ
-R19VU0JfTkVUX0RNOTYwMT1tCkNPTkZJR19VU0JfTkVUX1NSOTgwMD1tCkNPTkZJR19VU0JfTkVU
-X1NNU0M3NVhYPW0KQ09ORklHX1VTQl9ORVRfU01TQzk1WFg9bQpDT05GSUdfVVNCX05FVF9QTFVT
-Qj1tCkNPTkZJR19VU0JfTkVUX01DUzc4MzA9bQpDT05GSUdfQVRIMTBLPW0KQ09ORklHX01XSUZJ
-RVg9bQpDT05GSUdfTVdJRklFWF9TRElPPW0KQ09ORklHX0lOUFVUX0VWREVWPXkKQ09ORklHX0tF
-WUJPQVJEX0FEQz1tCkNPTkZJR19LRVlCT0FSRF9HUElPPXkKQ09ORklHX0lOUFVUX1RPVUNIU0NS
-RUVOPXkKQ09ORklHX1RPVUNIU0NSRUVOX0FUTUVMX01YVD1tCkNPTkZJR19UT1VDSFNDUkVFTl9H
-T09ESVg9bQpDT05GSUdfVE9VQ0hTQ1JFRU5fRURUX0ZUNVgwNj1tCkNPTkZJR19UT1VDSFNDUkVF
-Tl9USV9BTTMzNVhfVFNDPW0KQ09ORklHX1RPVUNIU0NSRUVOX1BJWENJUj1tCkNPTkZJR19JTlBV
-VF9NSVNDPXkKQ09ORklHX0lOUFVUX0dQSU9fREVDT0RFUj1tCkNPTkZJR19JTlBVVF9UUFM2NTIx
-OV9QV1JCVVRUT049eQojIENPTkZJR19TRVJJT19TRVJQT1JUIGlzIG5vdCBzZXQKQ09ORklHX1NF
-UklPX0FNQkFLTUk9eQpDT05GSUdfTEVHQUNZX1BUWV9DT1VOVD0xNgpDT05GSUdfU0VSSUFMXzgy
-NTA9eQpDT05GSUdfU0VSSUFMXzgyNTBfQ09OU09MRT15CkNPTkZJR19TRVJJQUxfODI1MF9OUl9V
-QVJUUz0xMApDT05GSUdfU0VSSUFMXzgyNTBfUlVOVElNRV9VQVJUUz0xMApDT05GSUdfU0VSSUFM
-XzgyNTBfRVhURU5ERUQ9eQpDT05GSUdfU0VSSUFMXzgyNTBfU0hBUkVfSVJRPXkKQ09ORklHX1NF
-UklBTF84MjUwX09NQVA9eQpDT05GSUdfU0VSSUFMX09GX1BMQVRGT1JNPXkKQ09ORklHX1NFUklB
-TF9ERVZfQlVTPXkKQ09ORklHX1ZJUlRJT19DT05TT0xFPXkKQ09ORklHX0lQTUlfSEFORExFUj1t
-CkNPTkZJR19JUE1JX0RFVklDRV9JTlRFUkZBQ0U9bQpDT05GSUdfSVBNSV9TST1tCkNPTkZJR19I
-V19SQU5ET01fQ04xMEs9eQpDT05GSUdfVENHX1RQTT15CkNPTkZJR19UQ0dfVElTX0kyQ19JTkZJ
-TkVPTj15CkNPTkZJR19JMkNfQ0hBUkRFVj15CkNPTkZJR19JMkNfT01BUD15CkNPTkZJR19TUEk9
-eQpDT05GSUdfU1BJX0NBREVOQ0VfUVVBRFNQST15CkNPTkZJR19TUElfT01BUDI0WFg9eQpDT05G
-SUdfU1BJX1NQSURFVj15CkNPTkZJR19TUE1JPXkKQ09ORklHX1BJTkNUUkw9eQpDT05GSUdfUElO
-Q1RSTF9TSU5HTEU9eQpDT05GSUdfR1BJT19TWVNGUz15CkNPTkZJR19HUElPX0RBVklOQ0k9eQpD
-T05GSUdfR1BJT19QQ0E5NTNYPXkKQ09ORklHX0dQSU9fUENBOTUzWF9JUlE9eQpDT05GSUdfUE9X
-RVJfU0VRVUVOQ0lORz15CkNPTkZJR19TRU5TT1JTX0pDNDI9eQpDT05GSUdfU0VOU09SU19MTTc1
-PXkKQ09ORklHX1NFTlNPUlNfUFdNX0ZBTj15CkNPTkZJR19USEVSTUFMPXkKQ09ORklHX1RIRVJN
-QUxfR09WX1BPV0VSX0FMTE9DQVRPUj15CkNPTkZJR19DUFVfVEhFUk1BTD15CkNPTkZJR19USEVS
-TUFMX0VNVUxBVElPTj15CkNPTkZJR19LM19USEVSTUFMPXkKQ09ORklHX1dBVENIRE9HPXkKQ09O
-RklHX0szX1JUSV9XQVRDSERPRz15CkNPTkZJR19BUk1fU01DX1dBVENIRE9HPXkKQ09ORklHX01G
-RF9USV9BTTMzNVhfVFNDQURDPXkKQ09ORklHX01GRF9UUFM2NTIxOT15CkNPTkZJR19NRkRfVFBT
-NjU5NF9JMkM9eQpDT05GSUdfUkVHVUxBVE9SPXkKQ09ORklHX1JFR1VMQVRPUl9GSVhFRF9WT0xU
-QUdFPXkKQ09ORklHX1JFR1VMQVRPUl9HUElPPXkKQ09ORklHX1JFR1VMQVRPUl9SQVNQQkVSUllQ
-SV9UT1VDSFNDUkVFTl9BVFRJTlk9eQpDT05GSUdfUkVHVUxBVE9SX1RQUzY1MjE5PXkKQ09ORklH
-X01FRElBX1NVUFBPUlQ9eQpDT05GSUdfTUVESUFfU1VQUE9SVF9GSUxURVI9eQpDT05GSUdfTUVE
-SUFfQ0FNRVJBX1NVUFBPUlQ9eQpDT05GSUdfTUVESUFfUExBVEZPUk1fU1VQUE9SVD15CkNPTkZJ
-R19WSURFT19DQURFTkNFX0NTSTJSWD15CkNPTkZJR19WSURFT19USV9KNzIxRV9DU0kyUlg9eQpD
-T05GSUdfVklERU9fSU1YMjE5PXkKQ09ORklHX1ZJREVPX0lNWDI5MD15CkNPTkZJR19WSURFT19P
-VjkyODI9eQpDT05GSUdfRFJNPXkKQ09ORklHX0RSTV9QQU5FTF9MVkRTPXkKQ09ORklHX0RSTV9Q
-QU5FTF9FRFA9eQpDT05GSUdfRFJNX1BBTkVMX1NJTVBMRT15CkNPTkZJR19EUk1fRElTUExBWV9D
-T05ORUNUT1I9eQpDT05GSUdfRFJNX1RPU0hJQkFfVEMzNTg3NjI9eQpDT05GSUdfRFJNX1RPU0hJ
-QkFfVEMzNTg3Njc9eQpDT05GSUdfRFJNX1RJX1NONjVEU0k4Nj15CkNPTkZJR19EUk1fQ0ROU19E
-U0k9eQpDT05GSUdfRFJNX1RJRFNTPXkKQ09ORklHX0ZCPXkKQ09ORklHX0JBQ0tMSUdIVF9DTEFT
-U19ERVZJQ0U9eQpDT05GSUdfQkFDS0xJR0hUX1BXTT15CkNPTkZJR19MT0dPPXkKQ09ORklHX1NP
-VU5EPXkKQ09ORklHX1NORD15CkNPTkZJR19TTkRfSFJUSU1FUj15CkNPTkZJR19TTkRfRFlOQU1J
-Q19NSU5PUlM9eQpDT05GSUdfU05EX1NPQz15CkNPTkZJR19TTkRfU0lNUExFX0NBUkQ9eQpDT05G
-SUdfU05EX1NPQ19EQVZJTkNJX01DQVNQPXkKQ09ORklHX1NORF9TT0NfVExWMzIwQUlDMzJYNF9J
-MkM9eQpDT05GSUdfSElEX01VTFRJVE9VQ0g9eQpDT05GSUdfVVNCX0hJRD1tCkNPTkZJR19VU0Jf
-Q09OTl9HUElPPXkKQ09ORklHX1VTQj15CiMgQ09ORklHX1VTQl9QQ0kgaXMgbm90IHNldApDT05G
-SUdfVVNCX0FOTk9VTkNFX05FV19ERVZJQ0VTPXkKQ09ORklHX1VTQl9PVEc9eQpDT05GSUdfVVNC
-X09UR19GU009eQpDT05GSUdfVVNCX1hIQ0lfSENEPXkKQ09ORklHX1VTQl9BQ009bQpDT05GSUdf
-VVNCX1NUT1JBR0U9eQpDT05GSUdfVVNCX1VBUz15CkNPTkZJR19VU0JfQ0ROU19TVVBQT1JUPXkK
-Q09ORklHX1VTQl9DRE5TMz15CkNPTkZJR19VU0JfQ0ROUzNfR0FER0VUPXkKQ09ORklHX1VTQl9D
-RE5TM19IT1NUPXkKQ09ORklHX1VTQl9EV0MzPXkKQ09ORklHX1VTQl9TRVJJQUw9bQpDT05GSUdf
-VVNCX1NFUklBTF9DUDIxMFg9bQpDT05GSUdfVVNCX1NFUklBTF9GVERJX1NJTz1tCkNPTkZJR19V
-U0JfU0VSSUFMX1BMMjMwMz1tCkNPTkZJR19VU0JfU0VSSUFMX09QVElPTj1tCkNPTkZJR19VU0Jf
-VEVTVD1tCkNPTkZJR19VU0JfT05CT0FSRF9ERVY9eQpDT05GSUdfTk9QX1VTQl9YQ0VJVj1tCkNP
-TkZJR19VU0JfR0FER0VUPXkKQ09ORklHX1VTQl9HQURHRVRfU1RPUkFHRV9OVU1fQlVGRkVSUz0z
-MgpDT05GSUdfVVNCX0NPTkZJR0ZTPW0KQ09ORklHX1VTQl9DT05GSUdGU19TRVJJQUw9eQpDT05G
-SUdfVVNCX0NPTkZJR0ZTX0FDTT15CkNPTkZJR19VU0JfQ09ORklHRlNfT0JFWD15CkNPTkZJR19V
-U0JfQ09ORklHRlNfTkNNPXkKQ09ORklHX1VTQl9DT05GSUdGU19FQ009eQpDT05GSUdfVVNCX0NP
-TkZJR0ZTX0VDTV9TVUJTRVQ9eQpDT05GSUdfVVNCX0NPTkZJR0ZTX1JORElTPXkKQ09ORklHX1VT
-Ql9DT05GSUdGU19FRU09eQpDT05GSUdfVVNCX0NPTkZJR0ZTX01BU1NfU1RPUkFHRT15CkNPTkZJ
-R19VU0JfQ09ORklHRlNfRl9MQl9TUz15CkNPTkZJR19VU0JfQ09ORklHRlNfRl9GUz15CkNPTkZJ
-R19VU0JfQ09ORklHRlNfRl9ISUQ9eQpDT05GSUdfVVNCX0NPTkZJR0ZTX0ZfUFJJTlRFUj15CkNP
-TkZJR19VU0JfWkVSTz1tCkNPTkZJR19VU0JfRVRIPW0KQ09ORklHX1VTQl9HX05DTT1tCkNPTkZJ
-R19VU0JfR0FER0VURlM9bQpDT05GSUdfVVNCX0ZVTkNUSU9ORlM9bQpDT05GSUdfVVNCX0ZVTkNU
-SU9ORlNfRVRIPXkKQ09ORklHX1VTQl9GVU5DVElPTkZTX1JORElTPXkKQ09ORklHX1VTQl9GVU5D
-VElPTkZTX0dFTkVSSUM9eQpDT05GSUdfVVNCX01BU1NfU1RPUkFHRT1tCkNPTkZJR19VU0JfR19T
-RVJJQUw9bQpDT05GSUdfVVNCX0dfUFJJTlRFUj1tCkNPTkZJR19VU0JfQ0RDX0NPTVBPU0lURT1t
-CkNPTkZJR19VU0JfR19BQ01fTVM9bQpDT05GSUdfVVNCX0dfTVVMVEk9bQpDT05GSUdfVVNCX0df
-TVVMVElfQ0RDPXkKQ09ORklHX1VTQl9HX0hJRD1tCkNPTkZJR19VU0JfR19EQkdQPW0KQ09ORklH
-X01NQz15CkNPTkZJR19NTUNfQkxPQ0tfTUlOT1JTPTMyCkNPTkZJR19NTUNfU0RIQ0k9eQpDT05G
-SUdfTU1DX1NESENJX1BMVEZNPXkKQ09ORklHX01NQ19TREhDSV9BTTY1ND15CkNPTkZJR19ORVdf
-TEVEUz15CkNPTkZJR19MRURTX0NMQVNTPXkKQ09ORklHX0xFRFNfR1BJTz15CkNPTkZJR19MRURT
-X1RSSUdHRVJfVElNRVI9eQpDT05GSUdfTEVEU19UUklHR0VSX0hFQVJUQkVBVD15CkNPTkZJR19M
-RURTX1RSSUdHRVJfQ1BVPXkKQ09ORklHX0xFRFNfVFJJR0dFUl9ERUZBVUxUX09OPXkKQ09ORklH
-X0xFRFNfVFJJR0dFUl9QQU5JQz15CkNPTkZJR19FREFDPXkKIyBDT05GSUdfRURBQ19MRUdBQ1lf
-U1lTRlMgaXMgbm90IHNldApDT05GSUdfUlRDX0NMQVNTPXkKQ09ORklHX1JUQ19EUlZfUENGODUw
-NjM9eQpDT05GSUdfUlRDX0RSVl9USV9LMz15CkNPTkZJR19ETUFERVZJQ0VTPXkKQ09ORklHX1RJ
-X0szX1VETUE9eQpDT05GSUdfVElfSzNfVURNQV9HTFVFX0xBWUVSPXkKQ09ORklHX0RNQUJVRl9I
-RUFQUz15CkNPTkZJR19ETUFCVUZfSEVBUFNfU1lTVEVNPXkKQ09ORklHX0RNQUJVRl9IRUFQU19D
-TUE9eQpDT05GSUdfVUlPPXkKQ09ORklHX1ZGSU89eQpDT05GSUdfVkZJT19QQ0k9eQpDT05GSUdf
-VklSVElPX1BDST15CkNPTkZJR19WSVJUSU9fQkFMTE9PTj15CkNPTkZJR19WSVJUSU9fTU1JTz15
-CkNPTkZJR19DT01NT05fQ0xLX0NTMjAwMF9DUD15CkNPTkZJR19DT01NT05fQ0xLX1ZDNT15CkNP
-TkZJR19USV9TQ0lfQ0xLPXkKQ09ORklHX0hXU1BJTkxPQ0s9eQpDT05GSUdfSFdTUElOTE9DS19P
-TUFQPXkKQ09ORklHX01BSUxCT1g9eQpDT05GSUdfT01BUDJQTFVTX01CT1g9eQpDT05GSUdfQVJN
-X1NNTVU9eQpDT05GSUdfQVJNX1NNTVVfVjM9eQpDT05GSUdfUkVNT1RFUFJPQz15CkNPTkZJR19U
-SV9LM19EU1BfUkVNT1RFUFJPQz1tCkNPTkZJR19USV9LM19NNF9SRU1PVEVQUk9DPW0KQ09ORklH
-X1RJX0szX1I1X1JFTU9URVBST0M9bQpDT05GSUdfUlBNU0dfQ0hBUj1tCkNPTkZJR19SUE1TR19W
-SVJUSU89bQpDT05GSUdfVElfUFJVU1M9eQpDT05GSUdfTUVNT1JZPXkKQ09ORklHX0lJTz15CkNP
-TkZJR19USV9BTTMzNVhfQURDPXkKQ09ORklHX1BXTT15CkNPTkZJR19QV01fVElFSFJQV009eQpD
-T05GSUdfVElfU0NJX0lOVFJfSVJRQ0hJUD15CkNPTkZJR19USV9TQ0lfSU5UQV9JUlFDSElQPXkK
-Q09ORklHX1JFU0VUX0NPTlRST0xMRVI9eQpDT05GSUdfUkVTRVRfVElfU0NJPXkKQ09ORklHX1BI
-WV9DQURFTkNFX1RPUlJFTlQ9eQpDT05GSUdfUEhZX0NBREVOQ0VfRFBIWT15CkNPTkZJR19QSFlf
-Q0FERU5DRV9EUEhZX1JYPXkKQ09ORklHX1BIWV9KNzIxRV9XSVo9eQpDT05GSUdfVEVFPXkKQ09O
-RklHX09QVEVFPXkKQ09ORklHX0lOVEVSQ09OTkVDVD15CkNPTkZJR19FWFQ0X0ZTPXkKQ09ORklH
-X0VYVDRfRlNfUE9TSVhfQUNMPXkKQ09ORklHX0VYVDRfRlNfU0VDVVJJVFk9eQpDT05GSUdfQlRS
-RlNfRlM9bQpDT05GSUdfQlRSRlNfRlNfUE9TSVhfQUNMPXkKQ09ORklHX0ZBTk9USUZZPXkKQ09O
-RklHX0ZBTk9USUZZX0FDQ0VTU19QRVJNSVNTSU9OUz15CkNPTkZJR19RVU9UQT15CkNPTkZJR19B
-VVRPRlNfRlM9eQpDT05GSUdfRlVTRV9GUz15CkNPTkZJR19DVVNFPW0KQ09ORklHX09WRVJMQVlf
-RlM9bQpDT05GSUdfVkZBVF9GUz15CkNPTkZJR19UTVBGUz15CkNPTkZJR19UTVBGU19QT1NJWF9B
-Q0w9eQpDT05GSUdfSFVHRVRMQkZTPXkKQ09ORklHX1VCSUZTX0ZTPXkKQ09ORklHX1NRVUFTSEZT
-PXkKQ09ORklHX05GU19GUz15CkNPTkZJR19ORlNfVjI9eQpDT05GSUdfTkZTX1Y0PXkKQ09ORklH
-X05GU19WNF8xPXkKQ09ORklHX05GU19WNF8yPXkKQ09ORklHX1JPT1RfTkZTPXkKQ09ORklHX0NJ
-RlM9bQojIENPTkZJR19DSUZTX1NUQVRTMiBpcyBub3Qgc2V0CkNPTkZJR19DSUZTX1hBVFRSPXkK
-Q09ORklHX0NJRlNfUE9TSVg9eQpDT05GSUdfTkxTX0NPREVQQUdFXzQzNz15CkNPTkZJR19OTFNf
-SVNPODg1OV8xPXkKQ09ORklHX1NFQ1VSSVRZPXkKQ09ORklHX0xTTT0ibG9ja2Rvd24seWFtYSxs
-b2FkcGluLHNhZmVzZXRpZCxpbnRlZ3JpdHksYnBmIgpDT05GSUdfSU5JVF9TVEFDS19OT05FPXkK
-Q09ORklHX0NSWVBUT19OVUxMPXkKQ09ORklHX0NSWVBUT19DUllQVEQ9eQpDT05GSUdfQ1JZUFRP
-X1hUUz1tCkNPTkZJR19DUllQVE9fQ0NNPXkKQ09ORklHX0NSWVBUT19HQ009eQpDT05GSUdfQ1JZ
-UFRPX0VDSEFJTklWPXkKQ09ORklHX0NSWVBUT19NRDQ9bQpDT05GSUdfQ1JZUFRPX0NSQzMyQz15
-CkNPTkZJR19DUllQVE9fQU5TSV9DUFJORz15CkNPTkZJR19DUllQVE9fVVNFUl9BUElfUk5HPW0K
-Q09ORklHX0NSWVBUT19HSEFTSF9BUk02NF9DRT15CkNPTkZJR19DUllQVE9fU0hBMV9BUk02NF9D
-RT15CkNPTkZJR19DUllQVE9fU0hBM19BUk02ND1tCkNPTkZJR19DUllQVE9fU00zX0FSTTY0X0NF
-PW0KQ09ORklHX0NSWVBUT19BRVNfQVJNNjQ9eQpDT05GSUdfQ1JZUFRPX0FFU19BUk02NF9CUz1t
-CkNPTkZJR19DUllQVE9fQUVTX0FSTTY0X0NFX0NDTT15CkNPTkZJR19DUllQVE9fREVWX1NBMlVM
-PXkKQ09ORklHX0RNQV9DTUE9eQpDT05GSUdfQ01BX1NJWkVfTUJZVEVTPTI0CkNPTkZJR19QUklO
-VEtfVElNRT15CkNPTkZJR19EWU5BTUlDX0RFQlVHPXkKQ09ORklHX0RFQlVHX0lORk9fRFdBUkZf
-VE9PTENIQUlOX0RFRkFVTFQ9eQpDT05GSUdfREVCVUdfSU5GT19TUExJVD15CkNPTkZJR19HREJf
-U0NSSVBUUz15CkNPTkZJR19ERUJVR19GUz15CkNPTkZJR19LR0RCPXkKQ09ORklHX0tHREJfS0RC
-PXkKIyBDT05GSUdfU0xVQl9ERUJVRyBpcyBub3Qgc2V0CkNPTkZJR19SQ1VfQ1BVX1NUQUxMX1RJ
-TUVPVVQ9MzAwCkNPTkZJR19GVU5DVElPTl9UUkFDRVI9eQpDT05GSUdfU0FNUExFUz15CkNPTkZJ
-R19TQU1QTEVfUlBNU0dfQ0xJRU5UPW0KQ09ORklHX01FTVRFU1Q9eQo=
-
-
---=-LTTdKhpzy+FrdVuu6GM7--
