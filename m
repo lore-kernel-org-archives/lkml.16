@@ -1,45 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B15324E01F;
-	Wed,  2 Jul 2025 22:26:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59268246798;
+	Wed,  2 Jul 2025 22:26:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751495200; cv=none; b=P32a7eUNNe2odY4ivqzn0veg2SaVFYu7rF5VxzosURlDIUXHiXLdENTgrWQ5Txy7atb0rKzZfsM+uxkfHDC1XN4YOvyf4BHjgA7PVGSeqNfyi1C3rWMSIcZvE1/nTHd9BiV/hsGuso8UXWspNYmZvZZIzVOfq4548tDMWpD97MQ=
+	t=1751495209; cv=none; b=E16YVudcQeyZne9d2O/UMbGyv6cHlZ4FBtAD/JRxh5kDD0CVmcgjN8YRcQUlQeUo7JLqvKx6GepN89pIORDXZkQIQKuvcw+co9yDVaSQUIUCjGA9deBUr0r4cCxRfdx6U5C0DYxyp0yEJdbPz3UQE798tIy1Wj/ZiNZwoWvgdqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751495200; c=relaxed/simple;
-	bh=qycsZr+lcd6kILxhf/Lt8ju90j4/nzR6AMhAdaCKaqI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bJg4OhzZfNRbBg2LcTqVeXUzdm53sMrFaTEEZiiZG1tzZQ3rxuoTkPmSbYP7ClrAoTIU2gXm0NZKS+eSO7WXs0NkR2MDMmb8HXFIONiQ8wObzY3nuJnjJsHoeBvlhuaJTAOqU+tbeA0at5436stNNLUxTankfLRs0JNRkh5vnLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eR+3u2IO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751495209; c=relaxed/simple;
+	bh=WEwAmw0sdYNez5L1vUl1rRfRRukQ9tqNIhTwwTy8CgM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gjYrqmkDtgtTClSmZhH3fq7ijt6cXAYYXqic9m7k07+izpmFrygUvxDZ0IJtsY+F8seQV7ug4L2mfJPwmPpDnyGUtXGnAat2eFvfYN83T3G8xTGlSA20t6GXTfMrnO9kgrT1BNcA+/9yBk89KprZOkR1sbZseMqe4Ic9XndDLio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RnLBfCzB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eR+3u2IO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2527C4CEF0;
-	Wed,  2 Jul 2025 22:26:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RnLBfCzB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5D62C4CEE7;
+	Wed,  2 Jul 2025 22:26:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751495199;
-	bh=qycsZr+lcd6kILxhf/Lt8ju90j4/nzR6AMhAdaCKaqI=;
+	s=k20201202; t=1751495208;
+	bh=WEwAmw0sdYNez5L1vUl1rRfRRukQ9tqNIhTwwTy8CgM=;
 	h=From:To:Cc:Subject:Date:From;
-	b=eR+3u2IODuxJzvOeghOYQ4bDvhLLZIqeRVCkqj3Rlcc3sBmBzet0EQppAzkWUNmOI
-	 LtGtQ9SE+0IZhFaZTor+32Xic/Esz4XANfod+gTZA1Mvq30131pTW6vDtnPOZMTfq7
-	 uddo+Oq3SSO62PfPixsJ3Ip7lmkS12Hk78K3555I0BxJOhT6tnBgiQeggKO6bTkGPM
-	 AlQfix15KlTCeLuVRBVhGzOMj/r3oXHCZck1CvkHq9uBiEkkDIB7Opvh0n3TkU2gHy
-	 S3U1zwiIo5h4ePEQZyNHMUBfopML/vOT9yQF8HYTOBtJFGCnzEKwCTCRSWUFayZkDo
-	 uxQtMkGrdfRNQ==
+	b=RnLBfCzBsWfdRzYvZkbkp+iDzQd7Y0t2ZUXz8eQh9oKeyVP0Lad+EVL9srQlOg3xZ
+	 bSWUGAR3B3AwqH1wureNffb/S7pKrETLsYFisuzfawOa1jBuaf0C8QcCM/+yNJZw3L
+	 QCrQbn1RMrJG8vRy/7Ig2vHK6iriZ8av+wKeEFUtGRAvUa6A5uMf2Jv34PGoivyLG3
+	 JKq4SDBvXzN8U/EhVT1k2czdORo+br7NcBdRg4hPwpp3+VRykprSXle3mK4uhvhU3e
+	 +jgob49UI+kT9PEH1VwW/1cG3IAcC4uqRXLPGpMEuGg6QP54YQxKl2uIHeL1W7Pqo2
+	 8v41FX4ragmbg==
 From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
+To: Mark Brown <broonie@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Marcin Wojtas <marcin.s.wojtas@gmail.com>
-Cc: netdev@vger.kernel.org,
+	Andrew Lunn <andrew@lunn.ch>,
+	Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc: linux-spi@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: net: Convert Marvell Armada NETA and BM to DT schema
-Date: Wed,  2 Jul 2025 17:26:24 -0500
-Message-ID: <20250702222626.2761199-1-robh@kernel.org>
+Subject: [PATCH] spi: dt-bindings: Convert marvell,orion-spi to DT schema
+Date: Wed,  2 Jul 2025 17:26:42 -0500
+Message-ID: <20250702222643.2761617-1-robh@kernel.org>
 X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -49,85 +46,87 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert Marvell Armada NETA Ethernet Controller and Buffer Manager
-bindings to schema. It is a straight forward conversion.
+Convert the Marvell Orion SPI binding to schema.
+
+Update compatible strings to what is in use. Generally,
+"marvell,orion-spi" is a fallback compatible, but newer variants only
+use "marvell,armada-380-spi".
+
+Mark cell-index as deprecated and not required as some instances don't
+use it already.
 
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../bindings/net/marvell,armada-370-neta.yaml | 79 +++++++++++++++++++
- .../net/marvell,armada-380-neta-bm.yaml       | 60 ++++++++++++++
- .../bindings/net/marvell-armada-370-neta.txt  | 50 ------------
- .../bindings/net/marvell-neta-bm.txt          | 47 -----------
- .../devicetree/bindings/vendor-prefixes.yaml  |  1 +
- 5 files changed, 140 insertions(+), 97 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/marvell,armada-370-neta.yaml
- create mode 100644 Documentation/devicetree/bindings/net/marvell,armada-380-neta-bm.yaml
- delete mode 100644 Documentation/devicetree/bindings/net/marvell-armada-370-neta.txt
- delete mode 100644 Documentation/devicetree/bindings/net/marvell-neta-bm.txt
+ .../bindings/spi/marvell,orion-spi.yaml       | 102 ++++++++++++++++++
+ .../devicetree/bindings/spi/spi-orion.txt     |  79 --------------
+ 2 files changed, 102 insertions(+), 79 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/spi/marvell,orion-spi.yaml
+ delete mode 100644 Documentation/devicetree/bindings/spi/spi-orion.txt
 
-diff --git a/Documentation/devicetree/bindings/net/marvell,armada-370-neta.yaml b/Documentation/devicetree/bindings/net/marvell,armada-370-neta.yaml
+diff --git a/Documentation/devicetree/bindings/spi/marvell,orion-spi.yaml b/Documentation/devicetree/bindings/spi/marvell,orion-spi.yaml
 new file mode 100644
-index 000000000000..8814977da024
+index 000000000000..7f5ec1d7f59b
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/net/marvell,armada-370-neta.yaml
-@@ -0,0 +1,79 @@
++++ b/Documentation/devicetree/bindings/spi/marvell,orion-spi.yaml
+@@ -0,0 +1,102 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/net/marvell,armada-370-neta.yaml#
++$id: http://devicetree.org/schemas/spi/marvell,orion-spi.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Marvell Armada 370/XP/3700/AC5 Ethernet Controller (NETA)
++title: Marvell Orion SPI controller
 +
 +maintainers:
-+  - Marcin Wojtas <marcin.s.wojtas@gmail.com>
++  - Andrew Lunn <andrew@lunn.ch>
++  - Gregory CLEMENT <gregory.clement@bootlin.com>
 +
 +allOf:
-+  - $ref: /schemas/net/ethernet-controller.yaml#
++  - $ref: /schemas/spi/spi-controller.yaml#
 +
 +properties:
 +  compatible:
-+    enum:
-+      - marvell,armada-370-neta
-+      - marvell,armada-xp-neta
-+      - marvell,armada-3700-neta
-+      - marvell,armada-ac5-neta
++    oneOf:
++      - enum:
++          - marvell,orion-spi
++          - marvell,armada-380-spi  # For ap80x and cp11x
++      - items:
++          - enum:
++              - marvell,armada-370-spi
++              - marvell,armada-375-spi
++              - marvell,armada-380-spi
++              - marvell,armada-390-spi
++              - marvell,armada-xp-spi
++          - const: marvell,orion-spi
++
++  cell-index:
++    description: Instance id for the SPI controller
++    deprecated: true
 +
 +  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
++    minItems: 1
++    items:
++      - description: control registers
++      - description: CS0 MBUS target/attribute registers for direct mode
++      - description: CS1 MBUS target/attribute registers for direct mode
++      - description: CS2 MBUS target/attribute registers for direct mode
++      - description: CS3 MBUS target/attribute registers for direct mode
++      - description: CS4 MBUS target/attribute registers for direct mode
++      - description: CS5 MBUS target/attribute registers for direct mode
++      - description: CS6 MBUS target/attribute registers for direct mode
++      - description: CS7 MBUS target/attribute registers for direct mode
 +
 +  clocks:
 +    minItems: 1
 +    maxItems: 2
 +
 +  clock-names:
-+    minItems: 1
 +    items:
 +      - const: core
-+      - const: bus
++      - const: axi
 +
-+  phys:
++  interrupts:
 +    maxItems: 1
-+
-+  tx-csum-limit:
-+    description: Maximum MTU in bytes for Tx checksum offload; default is 1600 for
-+      armada-370-neta and 9800 for others.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-+  buffer-manager:
-+    description: Phandle to hardware buffer manager.
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  bm,pool-long:
-+    description: Pool ID for packets larger than the short threshold.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-+  bm,pool-short:
-+    description: Pool ID for packets smaller than the long threshold.
-+    $ref: /schemas/types.yaml#/definitions/uint32
 +
 +required:
 +  - compatible
@@ -138,205 +137,125 @@ index 000000000000..8814977da024
 +
 +examples:
 +  - |
-+    ethernet@70000 {
-+        compatible = "marvell,armada-370-neta";
-+        reg = <0x70000 0x2500>;
-+        interrupts = <8>;
-+        clocks = <&gate_clk 4>;
-+        tx-csum-limit = <9800>;
-+        phy = <&phy0>;
-+        phy-mode = "rgmii-id";
-+        buffer-manager = <&bm>;
-+        bm,pool-long = <0>;
-+        bm,pool-short = <1>;
++    spi@10600 {
++      compatible = "marvell,orion-spi";
++      #address-cells = <1>;
++      #size-cells = <0>;
++      cell-index = <0>;
++      reg = <0x10600 0x28>;
++      clocks = <&coreclk 0>;
++      interrupts = <23>;
 +    };
-diff --git a/Documentation/devicetree/bindings/net/marvell,armada-380-neta-bm.yaml b/Documentation/devicetree/bindings/net/marvell,armada-380-neta-bm.yaml
-new file mode 100644
-index 000000000000..9392e7126e3e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/marvell,armada-380-neta-bm.yaml
-@@ -0,0 +1,60 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/marvell,armada-380-neta-bm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Marvell Armada 380/XP Buffer Manager (BM)
-+
-+maintainers:
-+  - Marcin Wojtas <marcin.s.wojtas@gmail.com>
-+
-+description:
-+  In order to see how to hook the BM to a given ethernet port, please refer to
-+  Documentation/devicetree/bindings/net/marvell,armada-370-neta.yaml.
-+
-+properties:
-+  compatible:
-+    const: marvell,armada-380-neta-bm
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  internal-mem:
-+    description: Phandle to internal SRAM region
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
-+patternProperties:
-+  "^pool[0-3],capacity$":
-+    description:
-+      size of external buffer pointers' ring maintained in DRAM for pool 0-3
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 128
-+    maximum: 16352
-+
-+  "^pool[0-3],pkt-size$":
-+    description:
-+      maximum packet size for a short buffer pool entry (pool 0-3)
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - internal-mem
-+
-+additionalProperties: false
-+
-+examples:
 +  - |
-+    bm@c8000 {
-+        compatible = "marvell,armada-380-neta-bm";
-+        reg = <0xc8000 0xac>;
-+        clocks = <&gateclk 13>;
-+        internal-mem = <&bm_bppi>;
-+        pool2,capacity = <4096>;
-+        pool1,pkt-size = <512>;
++    #define MBUS_ID(target,attributes) (((target) << 24) | ((attributes) << 16))
++
++    bus {
++        #address-cells = <2>;
++        #size-cells = <1>;
++
++        spi@10600 {
++          compatible = "marvell,orion-spi";
++          #address-cells = <1>;
++          #size-cells = <0>;
++          cell-index = <0>;
++          reg = <MBUS_ID(0xf0, 0x01) 0x10600 0x28>, /* control */
++                <MBUS_ID(0x01, 0x1e) 0 0xffffffff>, /* CS0 */
++                <MBUS_ID(0x01, 0x5e) 0 0xffffffff>, /* CS1 */
++                <MBUS_ID(0x01, 0x9e) 0 0xffffffff>, /* CS2 */
++                <MBUS_ID(0x01, 0xde) 0 0xffffffff>, /* CS3 */
++                <MBUS_ID(0x01, 0x1f) 0 0xffffffff>, /* CS4 */
++                <MBUS_ID(0x01, 0x5f) 0 0xffffffff>, /* CS5 */
++                <MBUS_ID(0x01, 0x9f) 0 0xffffffff>, /* CS6 */
++                <MBUS_ID(0x01, 0xdf) 0 0xffffffff>; /* CS7 */
++          clocks = <&coreclk 0>;
++          interrupts = <23>;
++        };
 +    };
-diff --git a/Documentation/devicetree/bindings/net/marvell-armada-370-neta.txt b/Documentation/devicetree/bindings/net/marvell-armada-370-neta.txt
+diff --git a/Documentation/devicetree/bindings/spi/spi-orion.txt b/Documentation/devicetree/bindings/spi/spi-orion.txt
 deleted file mode 100644
-index 2bf31572b08d..000000000000
---- a/Documentation/devicetree/bindings/net/marvell-armada-370-neta.txt
+index 8434a65fc12a..000000000000
+--- a/Documentation/devicetree/bindings/spi/spi-orion.txt
 +++ /dev/null
-@@ -1,50 +0,0 @@
--* Marvell Armada 370 / Armada XP / Armada 3700 Ethernet Controller (NETA)
+@@ -1,79 +0,0 @@
+-Marvell Orion SPI device
 -
 -Required properties:
--- compatible: could be one of the following:
--	"marvell,armada-370-neta"
--	"marvell,armada-xp-neta"
--	"marvell,armada-3700-neta"
--	"marvell,armada-ac5-neta"
--- reg: address and length of the register set for the device.
--- interrupts: interrupt for the device
--- phy: See ethernet.txt file in the same directory.
--- phy-mode: See ethernet.txt file in the same directory
--- clocks: List of clocks for this device. At least one clock is
--  mandatory for the core clock. If several clocks are given, then the
--  clock-names property must be used to identify them.
+-- compatible : should be on of the following:
+-    - "marvell,orion-spi" for the Orion, mv78x00, Kirkwood and Dove SoCs
+-    - "marvell,armada-370-spi", for the Armada 370 SoCs
+-    - "marvell,armada-375-spi", for the Armada 375 SoCs
+-    - "marvell,armada-380-spi", for the Armada 38x SoCs
+-    - "marvell,armada-390-spi", for the Armada 39x SoCs
+-    - "marvell,armada-xp-spi", for the Armada XP SoCs
+-- reg : offset and length of the register set for the device.
+-	This property can optionally have additional entries to configure
+-	the SPI direct access mode that some of the Marvell SoCs support
+-	additionally to the normal indirect access (PIO) mode. The values
+-	for the MBus "target" and "attribute" are defined in the Marvell
+-	SoC "Functional Specifications" Manual in the chapter "Marvell
+-	Core Processor Address Decoding".
+-	The eight register sets following the control registers refer to
+-	chip-select lines 0 through 7 respectively.
+-- cell-index : Which of multiple SPI controllers is this.
+-- clocks : pointers to the reference clocks for this device, the first
+-	   one is the one used for the clock on the spi bus, the
+-	   second one is optional and is the clock used for the
+-	   functional part of the controller
 -
 -Optional properties:
--- tx-csum-limit: maximum mtu supported by port that allow TX checksum.
--  Value is presented in bytes. If not used, by default 1600B is set for
--  "marvell,armada-370-neta" and 9800B for others.
--- clock-names: List of names corresponding to clocks property; shall be
--  "core" for core clock and "bus" for the optional bus clock.
--- phys: comphy for the ethernet port, see ../phy/phy-bindings.txt
+-- interrupts : Is currently not used.
+-- clock-names : names of used clocks, mandatory if the second clock is
+-		used, the name must be "core", and "axi" (the latter
+-		is only for Armada 7K/8K).
 -
--Optional properties (valid only for Armada XP/38x):
--
--- buffer-manager: a phandle to a buffer manager node. Please refer to
--  Documentation/devicetree/bindings/net/marvell-neta-bm.txt
--- bm,pool-long: ID of a pool, that will accept all packets of a size
--  higher than 'short' pool's threshold (if set) and up to MTU value.
--  Obligatory, when the port is supposed to use hardware
--  buffer management.
--- bm,pool-short: ID of a pool, that will be used for accepting
--  packets of a size lower than given threshold. If not set, the port
--  will use a single 'long' pool for all packets, as defined above.
 -
 -Example:
+-       spi@10600 {
+-	       compatible = "marvell,orion-spi";
+-	       #address-cells = <1>;
+-	       #size-cells = <0>;
+-	       cell-index = <0>;
+-	       reg = <0x10600 0x28>;
+-	       interrupts = <23>;
+-       };
 -
--ethernet@70000 {
--	compatible = "marvell,armada-370-neta";
--	reg = <0x70000 0x2500>;
--	interrupts = <8>;
--	clocks = <&gate_clk 4>;
--	tx-csum-limit = <9800>
--	phy = <&phy0>;
--	phy-mode = "rgmii-id";
--	buffer-manager = <&bm>;
--	bm,pool-long = <0>;
--	bm,pool-short = <1>;
--};
-diff --git a/Documentation/devicetree/bindings/net/marvell-neta-bm.txt b/Documentation/devicetree/bindings/net/marvell-neta-bm.txt
-deleted file mode 100644
-index 07b31050dbe5..000000000000
---- a/Documentation/devicetree/bindings/net/marvell-neta-bm.txt
-+++ /dev/null
-@@ -1,47 +0,0 @@
--* Marvell Armada 380/XP Buffer Manager driver (BM)
+-Example with SPI direct mode support (optionally):
+-	spi0: spi@10600 {
+-		compatible = "marvell,orion-spi";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-		cell-index = <0>;
+-		reg = <MBUS_ID(0xf0, 0x01) 0x10600 0x28>, /* control */
+-		      <MBUS_ID(0x01, 0x1e) 0 0xffffffff>, /* CS0 */
+-		      <MBUS_ID(0x01, 0x5e) 0 0xffffffff>, /* CS1 */
+-		      <MBUS_ID(0x01, 0x9e) 0 0xffffffff>, /* CS2 */
+-		      <MBUS_ID(0x01, 0xde) 0 0xffffffff>, /* CS3 */
+-		      <MBUS_ID(0x01, 0x1f) 0 0xffffffff>, /* CS4 */
+-		      <MBUS_ID(0x01, 0x5f) 0 0xffffffff>, /* CS5 */
+-		      <MBUS_ID(0x01, 0x9f) 0 0xffffffff>, /* CS6 */
+-		      <MBUS_ID(0x01, 0xdf) 0 0xffffffff>; /* CS7 */
+-		interrupts = <23>;
+-	};
 -
--Required properties:
+-To enable the direct mode, the board specific 'ranges' property in the
+-'soc' node needs to add the entries for the desired SPI controllers
+-and its chip-selects that are used in the direct mode instead of PIO
+-mode. Here an example for this (SPI controller 0, device 1 and SPI
+-controller 1, device 2 are used in direct mode. All other SPI device
+-are used in the default indirect (PIO) mode):
+-	soc {
+-		/*
+-		 * Enable the SPI direct access by configuring an entry
+-		 * here in the board-specific ranges property
+-		 */
+-		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xf1000000 0x100000>,	/* internal regs */
+-			 <MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000>,	/* BootROM       */
+-			 <MBUS_ID(0x01, 0x5e) 0 0 0xf1100000 0x10000>,	/* SPI0-DEV1 */
+-			 <MBUS_ID(0x01, 0x9a) 0 0 0xf1110000 0x10000>;	/* SPI1-DEV2 */
 -
--- compatible: should be "marvell,armada-380-neta-bm".
--- reg: address and length of the register set for the device.
--- clocks: a pointer to the reference clock for this device.
--- internal-mem: a phandle to BM internal SRAM definition.
--
--Optional properties (port):
--
--- pool<0 : 3>,capacity: size of external buffer pointers' ring maintained
--  in DRAM. Can be set for each pool (id 0 : 3) separately. The value has
--  to be chosen between 128 and 16352 and it also has to be aligned to 32.
--  Otherwise the driver would adjust a given number or choose default if
--  not set.
--- pool<0 : 3>,pkt-size: maximum size of a packet accepted by a given buffer
--  pointers' pool (id 0 : 3). It will be taken into consideration only when pool
--  type is 'short'. For 'long' ones it would be overridden by port's MTU.
--  If not set a driver will choose a default value.
--
--In order to see how to hook the BM to a given ethernet port, please
--refer to Documentation/devicetree/bindings/net/marvell-armada-370-neta.txt.
--
--Example:
--
--- main node:
--
--bm: bm@c8000 {
--	compatible = "marvell,armada-380-neta-bm";
--	reg = <0xc8000 0xac>;
--	clocks = <&gateclk 13>;
--	internal-mem = <&bm_bppi>;
--	pool2,capacity = <4096>;
--	pool1,pkt-size = <512>;
--};
--
--- internal SRAM node:
--
--bm_bppi: bm-bppi {
--	compatible = "mmio-sram";
--	reg = <MBUS_ID(0x0c, 0x04) 0 0x100000>;
--	ranges = <0 MBUS_ID(0x0c, 0x04) 0 0x100000>;
--	#address-cells = <1>;
--	#size-cells = <1>;
--	clocks = <&gateclk 13>;
--};
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 5d2a7a8d3ac6..741b545e3ab0 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -21,6 +21,7 @@ patternProperties:
-   "^(pciclass|pinctrl-single|#pinctrl-single|PowerPC),.*": true
-   "^(pl022|pxa-mmc|rcar_sound|rotary-encoder|s5m8767|sdhci),.*": true
-   "^(simple-audio-card|st-plgpio|st-spics|ts),.*": true
-+  "^pool[0-3],.*": true
- 
-   # Keep list in alphabetical order.
-   "^100ask,.*":
+-For further information on the MBus bindings, please see the MBus
+-DT documentation:
+-Documentation/devicetree/bindings/bus/mvebu-mbus.txt
 -- 
 2.47.2
 
