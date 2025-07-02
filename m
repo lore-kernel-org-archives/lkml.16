@@ -1,146 +1,119 @@
-Received: from leonov.paulk.fr (leonov.paulk.fr [185.233.101.22])
+Received: from outbound.pv.icloud.com (p-west1-cluster4-host2-snip4-6.eps.apple.com [57.103.65.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14AE4264F8A;
-	Wed,  2 Jul 2025 12:16:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.101.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C10275AE7
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 12:16:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.65.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751458571; cv=none; b=ix7R5+R12xzgxb9i4+5mGKPkdt07z6Vtte9HoK58JtK83dG6Qy6w2FVpLBx3jRfOxvEWDfxEZsNQ9rdR4Tr73RA1c+EYtS5qMWQcwjKD/PtrdLZKfV7Am2BHxaXhap7gDoq3ua18LrhjEJdfItEP6Kq4gnPvrWsZtRafROfc3L4=
+	t=1751458574; cv=none; b=UIAU/nk4goC2id92Uu5/UdpQ9NaYxoI9mrtQEu+mkJD43LEYZtpSOI2SQReGSU1rHkvooK45lbir9uAEnlwrcg1QmB//On2TYaO6EjKptJfx92m7jmTjY+vXek4GLu51daEVFCsEvq2D2Vdu7hcPtuKwvGYtwY7yAelakiwxdJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751458571; c=relaxed/simple;
-	bh=Yk7dR2itmICJrASu1wQYTL0JAgzGuSjOR7cDtLlcqMI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FwUs1N9oSxfmxiVc1W2Q8ApVnK4MNjm0g0MWYylD4C/ExDR8DHvKmqFnE0WdejWj0g1ces7K3CIEKQH4TqotX2/3FiRmNl7wYoVDV/jHQQF+JPh7yEjfRDPv/fBGQTEoJrWX7b+ZivoMPrWIQJkQhnBgIlF3jkEQ4wHz2z2pir4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io; spf=pass smtp.mailfrom=sys-base.io; arc=none smtp.client-ip=185.233.101.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sys-base.io
-Received: from laika.paulk.fr (12.234.24.109.rev.sfr.net [109.24.234.12])
-	by leonov.paulk.fr (Postfix) with ESMTPS id C3B4B1F00057;
-	Wed,  2 Jul 2025 12:15:54 +0000 (UTC)
-Received: by laika.paulk.fr (Postfix, from userid 65534)
-	id 1A9CFAC9A6F; Wed,  2 Jul 2025 12:15:52 +0000 (UTC)
-X-Spam-Level: 
-Received: from collins (unknown [192.168.1.1])
-	by laika.paulk.fr (Postfix) with ESMTPSA id B1D2AAC9A5F;
-	Wed,  2 Jul 2025 12:15:48 +0000 (UTC)
-Date: Wed, 2 Jul 2025 14:15:46 +0200
-From: Paul Kocialkowski <paulk@sys-base.io>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org,
-	Yong Deng <yong.deng@magewell.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Icenowy Zheng <icenowy@aosc.xyz>,
-	Andre Przywara <andre.przywara@arm.com>
-Subject: Re: [PATCH 5/5] drm/sun4i: Run the mixer clock at 297 MHz on V3s
-Message-ID: <aGUi8ot1-0WaReyp@collins>
-References: <20250701201124.812882-1-paulk@sys-base.io>
- <20250701201124.812882-6-paulk@sys-base.io>
- <20250702-psychedelic-stalwart-jerboa-a626eb@houat>
+	s=arc-20240116; t=1751458574; c=relaxed/simple;
+	bh=GCOMtzNGxPOUXBf3m2hfp4nlIguiGZVOTq0XkcMtEDY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=DHtF7asfKYKQ0cJUjgiVb2e15a4UVux7lAGrWI24/ewDavqxeW3dbPyY+hBV3++8/GhymK+ell9vRJB7P1PWoRnFSbBZKAa0irtptQR8nVD+rjRgOj2SJfwYr996KIEhjotl/9zBzxwv2DNiz0+eXvirfwTfIVEXsuJ0MUE+KfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=Eh/7ipCu; arc=none smtp.client-ip=57.103.65.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="Eh/7ipCu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=RqR2RocTuJG7qXywuU1YlEFHpJKHQCBUeEvNifOzZFs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
+	b=Eh/7ipCuB037F477F8d6elXXNg3J92aI4Pd6TvTWF/DZkb9FV2UBk0U7b87tz0XnT
+	 5UDia5Cobz+MSrgQTpjdtJuxvOQh8UJXaGwvEYSztKCF8hNUdDr5amk+ElxGKHeKll
+	 suG1hkZt7hC56Z6YqeZW0eLewT0qwP/3dB6//LF/8BIUKK3Urd3wYqRAXBEczzGb5e
+	 x5vQGXcJW3bUF7GZdKpNJKyVBDMTTp1EOY8+TxTrgo+kZ85OTvcVUjYtJ3BiNsGjuT
+	 yHwfaBdu6TQX4TK5VLiZTYzoSXEGGBjDHt6UpzAyQwKsvqc8K7Mm2Tym/1xpPpcMIP
+	 n3XuofTOs9apQ==
+Received: from outbound.pv.icloud.com (unknown [127.0.0.2])
+	by outbound.pv.icloud.com (Postfix) with ESMTPS id 8E8D918001C1;
+	Wed,  2 Jul 2025 12:16:10 +0000 (UTC)
+Received: from [192.168.1.26] (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
+	by outbound.pv.icloud.com (Postfix) with ESMTPSA id 018E018002A8;
+	Wed,  2 Jul 2025 12:16:07 +0000 (UTC)
+From: Zijun Hu <zijun_hu@icloud.com>
+Date: Wed, 02 Jul 2025 20:15:29 +0800
+Subject: [PATCH v3 1/8] char: misc: Move drivers/misc/misc_minor_kunit.c to
+ drivers/char/
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="VVuCxM2QjPKpSc9g"
-Content-Disposition: inline
-In-Reply-To: <20250702-psychedelic-stalwart-jerboa-a626eb@houat>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250702-rfc_miscdev-v3-1-d8925de7893d@oss.qualcomm.com>
+References: <20250702-rfc_miscdev-v3-0-d8925de7893d@oss.qualcomm.com>
+In-Reply-To: <20250702-rfc_miscdev-v3-0-d8925de7893d@oss.qualcomm.com>
+To: Arnd Bergmann <arnd@arndb.de>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
+ Helge Deller <deller@gmx.de>, "David S. Miller" <davem@davemloft.net>, 
+ Andreas Larsson <andreas@gaisler.com>
+Cc: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>, 
+ Zijun Hu <zijun_hu@icloud.com>, linux-kernel@vger.kernel.org, 
+ linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org, 
+ Zijun Hu <zijun.hu@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Proofpoint-ORIG-GUID: rt-yOLfEan5MKj4mvMKR0bi2e9OEmHq_
+X-Proofpoint-GUID: rt-yOLfEan5MKj4mvMKR0bi2e9OEmHq_
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDA5OSBTYWx0ZWRfX5jWvyHvcI4k0
+ pMqkbXbXet5KK1MW5p/MXHMv19kLDG8Oud1Z/YFNiJ20yefI2r0ckJW5MU8LKT32+I7DwlIHegW
+ uEnWvQelZ6H/Ya5h4Mv4b/4LaxP/m9idxQW5y5zn7zt3hRxvVJfBeGD9hxDehlG0BIuEe2HxCZO
+ iNKmxxbQcgImhOsC1rrjgUGdRr8Fl9wduHwgYqKr2dPUbZC35oPxF2yrMFvf72mBOxILqbPOOZx
+ vTFo6/1aK/pHRLhxji9yazJ7OJqH921FN1rdklCUlqjzQeV1J/6yHGq06VvNhr6cfLXcNMCrs=
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-02_01,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0
+ phishscore=0 suspectscore=0 malwarescore=0 clxscore=1015 adultscore=0
+ mlxlogscore=913 spamscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.22.0-2506060001 definitions=main-2507020099
 
+From: Zijun Hu <zijun.hu@oss.qualcomm.com>
 
---VVuCxM2QjPKpSc9g
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+drivers/misc/misc_minor_kunit.c is to test APIs defined in
+drivers/char/misc.c, but is not in the same directory as the later.
 
-Hi Maxime,
+Move misc_minor_kunit.c to drivers/char/.
 
-Le Wed 02 Jul 25, 13:36, Maxime Ripard a =C3=A9crit :
-> On Tue, Jul 01, 2025 at 10:11:24PM +0200, Paul Kocialkowski wrote:
-> > The DE mixer clock is currently set to run at 150 MHz, while the
-> > Allwinner BSP configures it at 300 MHz and other platforms typically
-> > run at 297 MHz.
-> >=20
-> > 150 MHz appears to be enough given the restricted graphics capabilities
-> > of the SoC (with a work area of only 1024x1024). However it typically
-> > causes the DE clock to be parented to the periph0 pll instead of the
-> > video PLL.
-> >=20
-> > While this should generally not be a concern, it appears (based on
-> > experimentation) that both the DE and TCON clocks need to be parented
-> > to the same PLL for these units to work. While we cannot represent this
-> > constraint in the clock driver, it appears that the TCON clock will
-> > often get parented to the video pll (typically running at 297 MHz for
-> > the CSI units needs), for instance when driving displays with a 33 MHz
-> > pixel clock (33 being a natural divider of 297).
-> >=20
-> > Running the DE clock at 297 MHz will typically result in parenting to
-> > the video pll instead of the periph0 pll, thus making the display
-> > output functional.
-> >=20
-> > This is all a bit fragile but it solves the issue with displays running
-> > at 33 Mhz and brings V3s to use the same frequency as other platforms,
-> > making support more unified.
->=20
-> It's beyond fragile, and doesn't have anything to do with the DRM driver.
->=20
-> You should set up the clock tree properly in the clock driver, and then
-> add NO_REPARENT to the DE clock to make sure it stays that way.
+Signed-off-by: Zijun Hu <zijun.hu@oss.qualcomm.com>
+---
+ drivers/char/Makefile                     | 1 +
+ drivers/{misc => char}/misc_minor_kunit.c | 0
+ drivers/misc/Makefile                     | 1 -
+ 3 files changed, 1 insertion(+), 1 deletion(-)
 
-Thanks for the suggestion! I wasn't aware there was a flag to avoid
-reparenting, sounds like the most reasonable way to solve this issue then.
+diff --git a/drivers/char/Makefile b/drivers/char/Makefile
+index e9b360cdc99a7fee9c70eabcffe9caf763552aa2..7d10d92edcedbff5957d6c5c3426aa9400c94e43 100644
+--- a/drivers/char/Makefile
++++ b/drivers/char/Makefile
+@@ -6,6 +6,7 @@
+ obj-y				+= mem.o random.o
+ obj-$(CONFIG_TTY_PRINTK)	+= ttyprintk.o
+ obj-y				+= misc.o
++obj-$(CONFIG_TEST_MISC_MINOR)   += misc_minor_kunit.o
+ obj-$(CONFIG_ATARI_DSP56K)	+= dsp56k.o
+ obj-$(CONFIG_VIRTIO_CONSOLE)	+= virtio_console.o
+ obj-$(CONFIG_UV_MMTIMER)	+= uv_mmtimer.o
+diff --git a/drivers/misc/misc_minor_kunit.c b/drivers/char/misc_minor_kunit.c
+similarity index 100%
+rename from drivers/misc/misc_minor_kunit.c
+rename to drivers/char/misc_minor_kunit.c
+diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+index 917b9a7183aa1db63cc4049c042c3437f6756a1a..94f44e6c2db79dedc3839bbfb53e10cde103fbc6 100644
+--- a/drivers/misc/Makefile
++++ b/drivers/misc/Makefile
+@@ -23,7 +23,6 @@ obj-$(CONFIG_SENSORS_BH1770)	+= bh1770glc.o
+ obj-$(CONFIG_SENSORS_APDS990X)	+= apds990x.o
+ obj-$(CONFIG_ENCLOSURE_SERVICES) += enclosure.o
+ obj-$(CONFIG_KGDB_TESTS)	+= kgdbts.o
+-obj-$(CONFIG_TEST_MISC_MINOR)	+= misc_minor_kunit.o
+ obj-$(CONFIG_SGI_XP)		+= sgi-xp/
+ obj-$(CONFIG_SGI_GRU)		+= sgi-gru/
+ obj-$(CONFIG_SMPRO_ERRMON)	+= smpro-errmon.o
 
-I'll send another iteration reworking the clock tree then.
+-- 
+2.34.1
 
-> And then, you can change the clock rate if you want to, but at least you
-> don't set a rate and hope that the side effects work your way, and won't
-> happen again.
-
-We might as well still change it. To be honest I don't really see why it was
-set to 150 MHz in the first place.
-
-Cheers,
-
-Paul
-
---=20
-Paul Kocialkowski,
-
-Independent contractor - sys-base - https://www.sys-base.io/
-Free software developer - https://www.paulk.fr/
-
-Expert in multimedia, graphics and embedded hardware support with Linux.
-
---VVuCxM2QjPKpSc9g
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEAbcMXZQMtj1fphLChP3B6o/ulQwFAmhlIvIACgkQhP3B6o/u
-lQyH5w/+JIxMLNpE+lve3HbxC4wqX2HIz1pGfWw1ZFhfrKgJmKhN4IiqfmZpGnPe
-mC+U8F1T4hnqbmEc57eIo6Q1C3hEncq7EyY3oN0TJj7N5MM81Z/eVP1JUZ7XHq3V
-q4Xy9b8/Zm5gDakbUe8ZZD4mLaugMafHA0lQK7OmKd75MeqP+OV68OPpuXCTCQnA
-pVL7vDw19P0paH9sIUOe0NQ0SWYbFYZExVsOxoQnfT1BHz6ltM4bCyTdRNKDcakp
-j56Yd0hPMnlV0khThy0+3tDenkUjPgiznqTzC6pWzhtysXvT4XRQOWQGXaN9C/w5
-BrPbm79yFJ4UOZE0YBIcQNEvpNLP/7ApnMstKs2B4PlU1B6zJeYRWuPWmj7ZJIiO
-H4ckfdJN0+KMtWsm/qOGQ95PgfE2ZjZX17NRq742azRJ/i+YvdjLQQS/BkflehU6
-PUKcSgVecGQU8FXeU3da6ZMViNjy8xalVFceDaoLOMMruRA7dY1hJnRhawQIGJd1
-1soYIRsyZq3y9F+Ij05BxC8TVp5rarfwlwDGdA/53ghGd0/uTikAMzsxpY+HKlCi
-z+JXYN6BqGkUQ7YnqtRU0NoDcKwDWjiinOGaypzT9ULFaPhglmUkHfofqP7R1S7w
-NCbV9amc9uAOOaFNSLb+zIYpYIPr0UPaQ8xCkwJJ1cPHGTUPQgQ=
-=z/Ou
------END PGP SIGNATURE-----
-
---VVuCxM2QjPKpSc9g--
