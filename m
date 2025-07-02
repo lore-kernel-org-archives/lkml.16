@@ -1,82 +1,165 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9E6A14B086;
-	Wed,  2 Jul 2025 13:52:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751464378; cv=pass; b=dBJztGQDbk7Y+ljhEcYM6+5MGf1qN34p7DHRvOuZNSpruAhLAtuHvRnvk5YCMjQiL+iIqFOS7w1OzkfD4ckXF1U0A2yE9bYS1noj3uID8FWeevNGadSPnog8uGrv6wysCEucCJ9tQMRydaeWgNP1uSl90xoPp+dAo+6QNC4+5jE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751464378; c=relaxed/simple;
-	bh=WWdH9Rg7mU10Jv5ogO33/OWhvr6bytpFbwhDBwLFXSA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NXxmyMZPwbROPj9ttOwkJYMcjj2AAM6Z/A7CzeWPkRoi81D/Z+BgsePRHLqrXUUeu5ZdooguAd43Uc3uVtm3cz5CY1wu/YJGqVDq/RGwbyd/C9fbOSLyLMxed6uUrMH6oVpgDWPeeg5GevXXc/OOBbymbm3rT1DvX06O/PLMI8E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=IHSgeDF1; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09BD2652BD;
+	Wed,  2 Jul 2025 13:53:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751464433; cv=none; b=IvY4Cep4jAdPbw0ia2kj2DVFbJqANiAFBxxJLW/V/nuMaun8XUAZg4BcBa6DjGPeGAdB3pIb5qcDZbhCIE5ceuer6Qxsbd2iUZ2xbkKUvwWTKE+nXceDpyRyvS4CIHIgk2e4D2rQthtnVvCxqTmDWeyz1euRURE+AOd/Cj6QMgQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751464433; c=relaxed/simple;
+	bh=oL5ROgMkCNu3a/za1C5UVisYMIlOPy2PoMgM8u/9u5c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eQE26aPw/VB0kyO9Q9aa/7i5Q8T9jqnvHwkKHodwjF0V7LUqJWIEseEbcnhgIKv2imTEuZ+hFxloD/LRzxo6WC5r7moQKYezOrUXADzevoSmL6TupPaQEmSl+jPJe7gIafoepuZ4CUqASj45934iJcnqo9IAYhmt1sFISqZBQW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ISemkQsk; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="IHSgeDF1"
-ARC-Seal: i=1; a=rsa-sha256; t=1751464354; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=COZR+/xkzqEj1RABaicuY/8T1zPmqotCQzMCaKFLGravjvW0y1DoA+f13S2RRSI88LjKHGzhDmf7gNSjgUwUNnAiHah5U6IeG2XAl0gwypkDeNed8ulY3p8HdYq2gXTZIXLC1BkgELblQXYMtSLdg8EZWxhTN74Vm57YXiVxz10=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751464354; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=WLop5YRYnvk33yfjiMinSUU35LkJkYkPTMm6xoYpTH8=; 
-	b=hzbJra6e/ITbMa4/vW9G46syohTHyLepEZQhDQpVPWLetntW2wXLtfikySwUL+PoiVRJ8trEtlTRpaOSL8Dl/l7yg9uiNIGaHPm5sVulNLG4w1n752M5X6ds1CMHL6+wNqO0ublRIVInGGtdlRxBYeZ/BtXKOEEAWUKtIkPvSmM=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
-	dmarc=pass header.from=<usama.anjum@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751464354;
-	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=WLop5YRYnvk33yfjiMinSUU35LkJkYkPTMm6xoYpTH8=;
-	b=IHSgeDF153RnX53qjHTW6p/HUKgisTXQY09YQPRA6suBtQwJFIkoAkhd5ryO63sR
-	qF5jyjQUbDheEcitvEq+YwOlmaOdZidMSqy1aZWqqePLl+kWpJCJpj95v4Xda7D7af4
-	Ql5O5hGBIdoQutH+t966LOxKp0dp769j4wrvNkeE=
-Received: by mx.zohomail.com with SMTPS id 1751464351413899.9669762890401;
-	Wed, 2 Jul 2025 06:52:31 -0700 (PDT)
-Message-ID: <063b278a-ab6b-4c10-9ecf-f4ad7dbc8c14@collabora.com>
-Date: Wed, 2 Jul 2025 18:52:28 +0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ISemkQsk"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-739b3fe7ce8so7435920b3a.0;
+        Wed, 02 Jul 2025 06:53:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751464431; x=1752069231; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/ZDvTF9WG0Sc0wOYg/V56v6aDtZy6k2fKHx6MlmQhok=;
+        b=ISemkQskYYERDqsm1ksklgeIPgEpEVRSj54uApu8AJNxg9UuqhMPcNYLlKTCp8OXq9
+         5EdV5CS9zoyoD5h60YmhooziOM7k0WEmFrJZ7GW4r34FPAviRkDb48Y/381edFii0SaS
+         UzQePhwjPJJr9iPXDE5w8P4nPJKASxDj6BTIwm389T7n5Q8oXnGGUQF/rLCImZcAzaOV
+         356Rlo8/GWfLF+JR2NPJV2zqY08uwGRTl3icGRxGFI2hTdToIlRGXdgACVI3BFF/xf/O
+         JnYVw62Ok2YQTfUOvvuyelCs8mE+UXEK6gkpjXg+159X484g+RrWVEC1EWkODhYVgWw5
+         zfyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751464431; x=1752069231;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/ZDvTF9WG0Sc0wOYg/V56v6aDtZy6k2fKHx6MlmQhok=;
+        b=Q/8MPw3WEhLfpEhTtgnyPudv5nCoDCBbUXeMBu3fAaFlS7ZKCBoV0me+22i4ln6mIk
+         veW/L0LYX/GAB5SkhApfdfSaXOR9wuMWhoE6GLAiFDpuVkKFiUKld3+LTPSMiBw+Tohb
+         5DVKQD02uByzIVDHibqL4JVwm8SNGH24l52vDj0ce4rVtTQo/iZepugl6o30HGOAREW2
+         Npsds/UFIRZ2jH3inbefhcG+tD7zz61uIj90yOZ6CxJIlevrJliN5nzjL37+G9U5sKec
+         1aVbCwg7D2g8+ueWT9iBnhN8eq+6OPfPfJBUhDHxoVWfXBXlVFSzdKhjkNlEh1jqw38s
+         yBVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV5HZgX+OmfUQ0pCRXAmtSHHwPfHcLZXwjWnN53B1dPA09+9GIM1ZAWdmy0ik6cNoXE/ZsiG5Ic04oC/Vpo@vger.kernel.org, AJvYcCWTqFlHHTMVhGNiDa+NqkWVZPQP3Wd63R86l7mROSeTILrcrDt/qJuQdp39qMTyuebTRqPeeIoyfa+z2yvl@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbNLnfSf7js6G7ivKNrQKqeiUbSA+RRaGrmLwAzyaOCJ4CH8iu
+	dSNisRvvfCgBpLDp8+F9fL9f4jh2O7KdplEdA23n66EnTk1xFsfpo3Vk
+X-Gm-Gg: ASbGncvm/Yb2b02Eb7vWT7LvXF5VmSV4ia9U+qDEE1Q/8CTcFpL1P1HCbsWzhJaGKS2
+	/4jcTT9YbfpqYwDLtHkjjAnuyTvf/bpF7hn2btTsJReMzuQFUe/e1kBJ3N1kpsIsnu/Usc+WeQA
+	r+6oY4wZK1jUey6VI+GkeR3ens+2CxExGqeRjwnxf2JMpuRGVcNmykVVUN4FIv96ebUe5xc7ftP
+	fFcIOAyrVGpDDL8ov1ZIsdwvbJ700f969OZi8Y5XwFNdwOIS50shidHne/TnbxeYQqARSnOSvJG
+	QSbwYBHKbp+NFEERdk7+7hDtGqbydO/ghgQlyiKiq+3Ews2GYpQ4HPC4jUwYNDF6z8mbm1Jg6T6
+	k
+X-Google-Smtp-Source: AGHT+IFY/fMo+EcugOFY0yLHK6w4ow8m13WDFJmbyFs8qEuuD7i0KEMYSTC3rgcjlAP/Ax5lXWr8rw==
+X-Received: by 2002:a05:6a21:4ccc:b0:21a:ed12:bdf9 with SMTP id adf61e73a8af0-222d7df6094mr5135889637.17.1751464431135;
+        Wed, 02 Jul 2025 06:53:51 -0700 (PDT)
+Received: from localhost.localdomain ([121.185.186.233])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e3214d9esm12910305a12.71.2025.07.02.06.53.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 06:53:50 -0700 (PDT)
+From: Jeongjun Park <aha310510@gmail.com>
+To: akpm@linux-foundation.org
+Cc: david@redhat.com,
+	andrii@kernel.org,
+	osalvador@suse.de,
+	Liam.Howlett@Oracle.com,
+	surenb@google.com,
+	christophe.leroy@csgroup.eu,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	syzbot+6246a83e7bd9f8a3e239@syzkaller.appspotmail.com,
+	Jeongjun Park <aha310510@gmail.com>
+Subject: [PATCH next] mm/maps: move kmalloc() call location in do_procmap_query() out of RCU critical section
+Date: Wed,  2 Jul 2025 22:53:32 +0900
+Message-ID: <20250702135332.291866-1-aha310510@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/mm: pagemap_scan ioctl: add PFN ZERO test cases
-To: David Hildenbrand <david@redhat.com>,
- Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>
-Cc: kernel@collabora.com, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250630102443.137809-1-usama.anjum@collabora.com>
- <20027e0c-f43b-4d10-a4d6-41dcc38145bd@redhat.com>
- <6846faf7-20b5-4f08-a8f0-9946f993b0e9@collabora.com>
- <f474ef7b-71f3-4169-ba30-74f4afbaeee6@redhat.com>
-Content-Language: en-US
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <f474ef7b-71f3-4169-ba30-74f4afbaeee6@redhat.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
 
-...
->>>
->>>> +
->>>> +    free(mem);
->>>
->>>
->>> Shouldn't this be an munmap() ?
->> free() is being used to free memory allocated by memalign().
-> 
-> Oh, I missed that detail.
-> 
-> I'm afraid memalign+free that might not be what you want: there is no guarantee that what you are getting hasn't been used before and is not already filled with other pages?
-I'm not sure I've been using memalign() to allocate aligned memory and
-the using madvise().
+In do_procmap_query(), we are allocating name_buf as much as name_buf_sz
+with kmalloc().
 
-I'll switch up to mmap() for this test. I'll send v2.
+However, due to the previous commit eff061546ca5 
+("mm/maps: execute PROCMAP_QUERY ioctl under per-vma locks"),
+the location of kmalloc() is located inside the RCU critical section.
 
-> 
+This causes might_sleep_if() to be called inside the RCU critical section,
+so we need to move the call location of kmalloc() outside the RCU critical
+section to prevent this.
 
+Reported-by: syzbot+6246a83e7bd9f8a3e239@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=6246a83e7bd9f8a3e239
+Fixes: eff061546ca5 ("mm/maps: execute PROCMAP_QUERY ioctl under per-vma locks")
+Signed-off-by: Jeongjun Park <aha310510@gmail.com>
+---
+ fs/proc/task_mmu.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index f3659046efb7..42b0224c6ac9 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -595,6 +595,7 @@ static int do_procmap_query(struct proc_maps_private *priv, void __user *uarg)
+ 	char build_id_buf[BUILD_ID_SIZE_MAX], *name_buf = NULL;
+ 	__u64 usize;
+ 	int err;
++	size_t name_buf_sz;
+ 
+ 	if (copy_from_user(&usize, (void __user *)uarg, sizeof(usize)))
+ 		return -EFAULT;
+@@ -621,12 +622,18 @@ static int do_procmap_query(struct proc_maps_private *priv, void __user *uarg)
+ 	if (!mm || !mmget_not_zero(mm))
+ 		return -ESRCH;
+ 
+-	err = query_vma_setup(priv);
+-	if (err) {
++	name_buf_sz = min_t(size_t, PATH_MAX, karg.vma_name_size);
++
++	name_buf = kmalloc(name_buf_sz, GFP_KERNEL);
++	if (!name_buf) {
+ 		mmput(mm);
+-		return err;
++		return -ENOMEM;
+ 	}
+ 
++	err = query_vma_setup(priv);
++	if (err)
++		goto fail_vma_setup;
++
+ 	vma = query_matching_vma(priv, karg.query_addr, karg.query_flags);
+ 	if (IS_ERR(vma)) {
+ 		err = PTR_ERR(vma);
+@@ -679,20 +686,12 @@ static int do_procmap_query(struct proc_maps_private *priv, void __user *uarg)
+ 	}
+ 
+ 	if (karg.vma_name_size) {
+-		size_t name_buf_sz = min_t(size_t, PATH_MAX, karg.vma_name_size);
+ 		const struct path *path;
+ 		const char *name_fmt;
+ 		size_t name_sz = 0;
+ 
+ 		get_vma_name(vma, &path, &name, &name_fmt);
+ 
+-		if (path || name_fmt || name) {
+-			name_buf = kmalloc(name_buf_sz, GFP_KERNEL);
+-			if (!name_buf) {
+-				err = -ENOMEM;
+-				goto out;
+-			}
+-		}
+ 		if (path) {
+ 			name = d_path(path, name_buf, name_buf_sz);
+ 			if (IS_ERR(name)) {
+@@ -733,6 +732,7 @@ static int do_procmap_query(struct proc_maps_private *priv, void __user *uarg)
+ 
+ out:
+ 	query_vma_teardown(priv);
++fail_vma_setup:
+ 	mmput(mm);
+ 	kfree(name_buf);
+ 	return err;
+--
