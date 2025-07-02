@@ -1,41 +1,41 @@
 Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E0E724DCF7
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 23:38:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57B762248A4
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 23:38:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751499487; cv=pass; b=OMQZpdPAJP0CgIYeMDW05ewGJBMAe8D4NLspc0mHApC/eWp9jUxpA+PJBYB8ky/g5rvY4mc4PHLeHgqcZSb/4WjVXNDSqmCo8NYxw3YiRFWyVV9PvaeqnUGwckt6i5OxEX1X7iOb2dbVvBMjVkFX+V4OHBI5vmfl60sNBITtblg=
+	t=1751499496; cv=pass; b=LQiwBfLduJXyJum2o419W2rOUbhAuzMFMS6ggQD0HPUta+k1XfjORK4CMbVo9UV+Pp2gfY5gVTbDKqgi8g4YRdFiV40o96/7FqUt7dJv7IOiDmSrXHISRIqsQSX/rRPuThuLEhqi2SMdIiKflWes7ecmMBYH5ytqfKTJf7JQrO0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751499487; c=relaxed/simple;
-	bh=tFEfKWU89/mON7YzWM3EMlN8oEIpH8lGXHI+RwQ0Q3c=;
+	s=arc-20240116; t=1751499496; c=relaxed/simple;
+	bh=jgZFgX8f1lmIrMc9XkXVrobKxZOqQe3AE+a8f3uEcYA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SIxw5Q4Y3Qm953GDnIdKsk5sRN0dPcIvHpeq1JUkRRHPLATEVyV57RdydOR8CiBA12+2tudFQwcGIbB84hVFcxex+w1saDdzvNsYKhQ9ugNewdp51qcpt2iBd24+Htd76hx+fl3AKayFcDZdrugmyXkYP/cjGD7bSGTlxkdiT3I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=caterina.shablia@collabora.com header.b=kAMl6Osk; arc=pass smtp.client-ip=136.143.188.15
+	 MIME-Version; b=uAGy2vsUaREfjy9K7lsD++pJadm4CIcm6mWyEcelDX3wGI1YZDiybZaxiR2QAWrY2LUbP9O65CF40bYdYJfyH0hpf2B6+kYXPCczbKh8pFZ/9fnRqkWRmfMkDrEyVK3dmQsSiDDcA4FhTXkBg0N0mFLy82totlbkpZ1I2HuUSlE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=caterina.shablia@collabora.com header.b=MCCm6iAF; arc=pass smtp.client-ip=136.143.188.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=caterina.shablia@collabora.com header.b="kAMl6Osk"
-ARC-Seal: i=1; a=rsa-sha256; t=1751499467; cv=none; 
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=caterina.shablia@collabora.com header.b="MCCm6iAF"
+ARC-Seal: i=1; a=rsa-sha256; t=1751499479; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=HFqgAMXNOgWpa1hKJ0HCmKlNEdCOZdC7m7Kl9ZdFRRIWR/I1ubkMf7uig3dXawOq8A/IALa4mZ4J4AVoQrhkrVbS7vXwoMMNC7rIKneyrhNML3wugHQD0yoaqEjUEJhQCXbfo5kGFqrjxUREZTjnhs0m3is9/3E37vbn/qCeLdA=
+	b=AeKM6aCiQgdc2a6iNLJlN0EdTJ6cfZRP1kCKaeL4FmwWJZGnSM7WfKlp04jvlsCfYNlHUQJ4Rj77VS6dt8B/caqOzJgxlA/IYATqjsKlOre5qvoxFawa4LlMFdaPJy5dzkAiZ9YtGCB0gdoBTbJSaEDiQki+M0SaCEK6kcD3aKE=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751499467; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=FUvgtE41glFvTH2scrm4EpwUw9kg8Nm0tZHMNDvhaCc=; 
-	b=j2+n+1WDfYHZdB0xNk8RBUzYmrBe4R0PJ5UTAt5/RXePIHcjERzSqrAhdi5jcPR3VhxfYmWZ74fdNoYadxRWv8qcNAxOjUAV75d7VzkKXp7O0JJKd2BU8CJmHzFeDZLqE13GLhRrFNeYOsk8RFBPELLA3dSxLFOudeKZrQX2jZc=
+	t=1751499479; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=7DDVsSWw3fZUzYJcPL1jaXMTYcK5fhrSoNz2/Lj/3NI=; 
+	b=ClinfhvlS0kRtIMDxIffv+OBG3i+mMtSqvrKgnHHNoObDob5GOOIgWy6VVR5+fCmwPNFwzwSK1Hv3ZPFE4XR5jVd00m49dvMjLq5q6Kejo09m8GudmrxkUybJWHe6hMkc88xDD1Nb29yI9/c7yvW/7ZHlSMtihkPINDaPPAkDEQ=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=caterina.shablia@collabora.com;
 	dmarc=pass header.from=<caterina.shablia@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751499466;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751499478;
 	s=zohomail; d=collabora.com; i=caterina.shablia@collabora.com;
 	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=FUvgtE41glFvTH2scrm4EpwUw9kg8Nm0tZHMNDvhaCc=;
-	b=kAMl6OskCVgLij5QEPpqxyuR4rP6ygXJKQAtnJxxmGMIQDw9Kr8rN6klObovYkeN
-	+8ScCFB5AjUGhI7SDrOmAvkc9kKuRhXWFQ/b8NPdZ3OKkEZt6ZPUuoYoys6b++fYDrh
-	O1QbR1pQ0QfTTfeZivGLpm1bGW+hwZ6r29aujfI4=
-Received: by mx.zohomail.com with SMTPS id 1751499465342857.980489350829;
-	Wed, 2 Jul 2025 16:37:45 -0700 (PDT)
+	bh=7DDVsSWw3fZUzYJcPL1jaXMTYcK5fhrSoNz2/Lj/3NI=;
+	b=MCCm6iAFshoSHg0NlgxB8+Jdn5aSVGaEGJvPOfcS2vpT+7DDgGoY6mjiFNgP62NY
+	TLFBopha2CBsHCXHWVr6OMVtsEtjJhYI34PZc60scGVFtI7yRD2zbBJXbsmJxcJI1bA
+	rES/+md9fY2E3HEAJz87/xlXrOEhZWOYd8NAZnCo=
+Received: by mx.zohomail.com with SMTPS id 1751499476564323.6875734465376;
+	Wed, 2 Jul 2025 16:37:56 -0700 (PDT)
 From: Caterina Shablia <caterina.shablia@collabora.com>
 To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
 	Maxime Ripard <mripard@kernel.org>,
@@ -47,9 +47,9 @@ Cc: kernel@collabora.com,
 	Boris Brezillon <boris.brezillon@collabora.com>,
 	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/7] drm/gpuvm: Kill drm_gpuva_init()
-Date: Wed,  2 Jul 2025 23:36:04 +0000
-Message-ID: <20250702233621.12990-3-caterina.shablia@collabora.com>
+Subject: [PATCH v2 4/7] drm/gpuvm: Add a helper to check if two VA can be merged
+Date: Wed,  2 Jul 2025 23:36:06 +0000
+Message-ID: <20250702233621.12990-5-caterina.shablia@collabora.com>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250702233621.12990-1-caterina.shablia@collabora.com>
 References: <20250702233621.12990-1-caterina.shablia@collabora.com>
@@ -63,49 +63,105 @@ Content-Transfer-Encoding: 8bit
 
 From: Boris Brezillon <boris.brezillon@collabora.com>
 
-drm_gpuva_init() only has one internal user, and given we are about to
-add new optional fields, it only add maintenance burden for no real
-benefit, so let's kill the thing now.
+We are going to add flags/properties that will impact the VA merging
+ability. Instead of sprinkling tests all over the place in
+__drm_gpuvm_sm_map(), let's add a helper aggregating all these checks
+can call it for every existing VA we walk through in the
+__drm_gpuvm_sm_map() loop.
 
 Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
 Signed-off-by: Caterina Shablia <caterina.shablia@collabora.com>
 ---
- include/drm/drm_gpuvm.h | 15 ++++-----------
- 1 file changed, 4 insertions(+), 11 deletions(-)
+ drivers/gpu/drm/drm_gpuvm.c | 47 +++++++++++++++++++++++++++++--------
+ 1 file changed, 37 insertions(+), 10 deletions(-)
 
-diff --git a/include/drm/drm_gpuvm.h b/include/drm/drm_gpuvm.h
-index 2a9629377633..6fdf2aff3e90 100644
---- a/include/drm/drm_gpuvm.h
-+++ b/include/drm/drm_gpuvm.h
-@@ -160,15 +160,6 @@ struct drm_gpuva *drm_gpuva_find_first(struct drm_gpuvm *gpuvm,
- struct drm_gpuva *drm_gpuva_find_prev(struct drm_gpuvm *gpuvm, u64 start);
- struct drm_gpuva *drm_gpuva_find_next(struct drm_gpuvm *gpuvm, u64 end);
- 
--static inline void drm_gpuva_init(struct drm_gpuva *va, u64 addr, u64 range,
--				  struct drm_gem_object *obj, u64 offset)
--{
--	va->va.addr = addr;
--	va->va.range = range;
--	va->gem.obj = obj;
--	va->gem.offset = offset;
--}
--
- /**
-  * drm_gpuva_invalidate() - sets whether the backing GEM of this &drm_gpuva is
-  * invalidated
-@@ -1079,8 +1070,10 @@ void drm_gpuva_ops_free(struct drm_gpuvm *gpuvm,
- static inline void drm_gpuva_init_from_op(struct drm_gpuva *va,
- 					  struct drm_gpuva_op_map *op)
- {
--	drm_gpuva_init(va, op->va.addr, op->va.range,
--		       op->gem.obj, op->gem.offset);
-+	va->va.addr = op->va.addr;
-+	va->va.range = op->va.range;
-+	va->gem.obj = op->gem.obj;
-+	va->gem.offset = op->gem.offset;
+diff --git a/drivers/gpu/drm/drm_gpuvm.c b/drivers/gpu/drm/drm_gpuvm.c
+index ae201d45e6b8..2df04dfcb6ef 100644
+--- a/drivers/gpu/drm/drm_gpuvm.c
++++ b/drivers/gpu/drm/drm_gpuvm.c
+@@ -2098,12 +2098,48 @@ op_unmap_cb(const struct drm_gpuvm_ops *fn, void *priv,
+ 	return fn->sm_step_unmap(&op, priv);
  }
  
- /**
++static bool can_merge(struct drm_gpuvm *gpuvm, const struct drm_gpuva *a,
++		      const struct drm_gpuva *b)
++{
++	/* Only GEM-based mappings can be merged, and they must point to
++	 * the same GEM object.
++	 */
++	if (a->gem.obj != b->gem.obj || !a->gem.obj)
++		return false;
++
++	/* Let's keep things simple for now and force all flags to match. */
++	if (a->flags != b->flags)
++		return false;
++
++	/* Order VAs for the rest of the checks. */
++	if (a->va.addr > b->va.addr)
++		swap(a, b);
++
++	/* We assume the caller already checked that VAs overlap or are
++	 * contiguous.
++	 */
++	if (drm_WARN_ON(gpuvm->drm, b->va.addr > a->va.addr + a->va.range))
++		return false;
++
++	/* We intentionally ignore u64 underflows because all we care about
++	 * here is whether the VA diff matches the GEM offset diff.
++	 */
++	return b->va.addr - a->va.addr == b->gem.offset - a->gem.offset;
++}
++
+ static int
+ __drm_gpuvm_sm_map(struct drm_gpuvm *gpuvm,
+ 		   const struct drm_gpuvm_ops *ops, void *priv,
+ 		   const struct drm_gpuvm_map_req *req)
+ {
+ 	struct drm_gpuva *va, *next;
++	struct drm_gpuva reqva = {
++		.va.addr = req->va.addr,
++		.va.range = req->va.range,
++		.gem.offset = req->gem.offset,
++		.gem.obj = req->gem.obj,
++		.flags = req->flags,
++	};
+ 	u64 req_end = req->va.addr + req->va.range;
+ 	int ret;
+ 
+@@ -2116,12 +2152,9 @@ __drm_gpuvm_sm_map(struct drm_gpuvm *gpuvm,
+ 		u64 addr = va->va.addr;
+ 		u64 range = va->va.range;
+ 		u64 end = addr + range;
+-		bool merge = !!va->gem.obj;
++		bool merge = can_merge(gpuvm, va, &reqva);
+ 
+ 		if (addr == req->va.addr) {
+-			merge &= obj == req->gem.obj &&
+-				 offset == req->gem.offset;
+-
+ 			if (end == req_end) {
+ 				ret = op_unmap_cb(ops, priv, va, merge);
+ 				if (ret)
+@@ -2163,8 +2196,6 @@ __drm_gpuvm_sm_map(struct drm_gpuvm *gpuvm,
+ 			};
+ 			struct drm_gpuva_op_unmap u = { .va = va };
+ 
+-			merge &= obj == req->gem.obj &&
+-				 offset + ls_range == req->gem.offset;
+ 			u.keep = merge;
+ 
+ 			if (end == req_end) {
+@@ -2196,10 +2227,6 @@ __drm_gpuvm_sm_map(struct drm_gpuvm *gpuvm,
+ 				break;
+ 			}
+ 		} else if (addr > req->va.addr) {
+-			merge &= obj == req->gem.obj &&
+-				 offset == req->gem.offset +
+-					   (addr - req->va.addr);
+-
+ 			if (end == req_end) {
+ 				ret = op_unmap_cb(ops, priv, va, merge);
+ 				if (ret)
 -- 
 2.47.2
 
