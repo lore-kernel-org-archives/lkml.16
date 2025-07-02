@@ -1,185 +1,98 @@
-Received: from mailrelay1-3.pub.mailoutpod3-cph3.one.com (mailrelay1-3.pub.mailoutpod3-cph3.one.com [46.30.212.0])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7313A2E7BAF
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 16:09:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.212.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 204E51E0DD8;
+	Wed,  2 Jul 2025 16:10:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751472568; cv=none; b=IfwxB87g14hSQl6BlYM23X+X45zg0FwUfVMQHaA1OP3PDOQdWF6zfhdZZpifmYt3oKUfO6QxzmdBjbjjjIFvtx3MDlyIDIig473uWqu1TcxfDSsD746YwHzYOBKCKnzCXkI+yel9TZ8hv3aKXkL3PR8TYq+roUr6YmKSuBuITvU=
+	t=1751472628; cv=none; b=aWE1FLwA1ZqNbteym4TCfS7F9YepimMrscM98NfZDMreQUsCOocNZWpleQSGDY4O70zqQQEdhfAOH7ULmpyiYl2sDOuK6n5RBfOyynM1sm3WDEngUyzQ5ZhnViLNK0Mto5U9cPiydTyLCPdNea+uJiGXYVl44RQFuOjPmYI1s1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751472568; c=relaxed/simple;
-	bh=SYIW75+wm3VibWBWsPEbk0MAzhXEBD5WcQ0waXQDF8Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VI0luJrqzyBjsVf7o5vTTek/Dvxpa/bCX+E+JbB96QVCGV7QRHr9o+N5HDUhpBm126EGcLXh61G+LyTqOF9OTK/d4dFmzT0gOMiak2VLebF6F0X40TPKqQ4dcSiYcq+F3v3upjN62ZA7QBkCGKU57QFlcLnawQtZ1l+UosEE66M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se; spf=none smtp.mailfrom=konsulko.se; dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=6WROcM2D; dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=dQPUYuCn; arc=none smtp.client-ip=46.30.212.0
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=konsulko.se
+	s=arc-20240116; t=1751472628; c=relaxed/simple;
+	bh=d/6DDJH1wV/ODNau5RFdyJrWY0eEwWDgeUDuqlxT/u4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ThWL/orUBPsH8WyaHbZyQd9sSgLSn798j6WXwqMI6HMSfYk4bxpGu77Fvfy6kaMKLECPdlvI6VEpJahN2tycRKuTGOYUTm1yaBctXUrgyFSa85d6r2XHCX4Wp1JxnBE3tYA6CM4Q6CNgWz6Dlc1crKQp0rx0slCFpc7ji8vTA4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=AvTS2/WF; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="6WROcM2D";
-	dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="dQPUYuCn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1751472564; x=1752077364;
-	d=konsulko.se; s=rsa1;
-	h=content-transfer-encoding:mime-version:references:in-reply-to:message-id:date:
-	 subject:cc:to:from:from;
-	bh=gALnPztzwr59zDTT061QlxUWux/AzyL/kG1HsRDCKCA=;
-	b=6WROcM2DLPsHrpKb49sbmLJLoAnNEZzzsNFVn4HpXFH2oTiJz1jayjOJQn3m23WDnT4bD9nB9P7v3
-	 Cx/b99i8L8evsyjIvvnL28jRGu9lSJGNMdwsflPFm76r0I1oF5weHc0wU8qsHcep10Ak+v1luAAnth
-	 Xqfps3LLH4OwNQVHoowwPcNsqCIGlPDJ4qLI6CJbNYGQexxDTuGjny0+JC26AchRenPPDzgeKUb8cx
-	 AdE5yvnSMIvcwnRB0bKHttLPetfqw2HCs3Aw4k6OEMYLORNrSOrsHwC3nSBHi77BtcmSI7rnenhTa0
-	 FijH7kR5qGSAXnFXcbW+zw2S69Lvh+A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1751472564; x=1752077364;
-	d=konsulko.se; s=ed1;
-	h=content-transfer-encoding:mime-version:references:in-reply-to:message-id:date:
-	 subject:cc:to:from:from;
-	bh=gALnPztzwr59zDTT061QlxUWux/AzyL/kG1HsRDCKCA=;
-	b=dQPUYuCnHuYFEszxvpCEW2oq5+ZNWdHr8saktkE8JByP3BM+uCoVrzoOhA8l8h0HhzlQBysnwsPdW
-	 1IvTTlaDA==
-X-HalOne-ID: e9e51555-575e-11f0-918f-152d8afab6bc
-Received: from slottsdator.home (host-90-238-19-233.mobileonline.telia.com [90.238.19.233])
-	by mailrelay1.pub.mailoutpod3-cph3.one.com (Halon) with ESMTPSA
-	id e9e51555-575e-11f0-918f-152d8afab6bc;
-	Wed, 02 Jul 2025 16:09:23 +0000 (UTC)
-From: Vitaly Wool <vitaly.wool@konsulko.se>
-To: linux-mm@kvack.org
-Cc: akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	rust-for-linux@vger.kernel.org,
-	Vitaly Wool <vitaly.wool@konsulko.se>
-Subject: [PATCH v10 4/4] rust: support large alignments in allocations
-Date: Wed,  2 Jul 2025 18:09:21 +0200
-Message-Id: <20250702160921.3610168-1-vitaly.wool@konsulko.se>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250702160758.3609992-1-vitaly.wool@konsulko.se>
-References: <20250702160758.3609992-1-vitaly.wool@konsulko.se>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AvTS2/WF"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=0epRK0OpAHsu5Xbqj5f1MXvdML5cfnc/geubT1WmD50=; b=AvTS2/WFEmf7N5VxO3wwFykFOz
+	vx9RSS/PiE5Vlf/so4AtLDWqs50t6lmKvFdQCYza844DhDuQsvhnFuBuXfJIKHPhBps9FbkzuHjuW
+	4kYmlY5OCDZ5pGaOoVyr5KmKpRdUOng2Ub2w0h6x/KGAwrLSPof2Z7/b84hLBsJjQ2wxFQfV2m4Ys
+	9zrujuOmthQP6680TdqH3jCS9wol/JGgbDw0Z7+w47YO2QljslSEek8rAPt8xB6N+8BRg44MGqdyb
+	gYXhv7bWY9i8aLetcyBVpqLmBZWkt+eK2UoCEiDK2VzDi1cfL1/bcZiiMV+9yPqb0pX8MhQnfHfjv
+	w35KoTQg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uX02I-00000007Ukt-0P7a;
+	Wed, 02 Jul 2025 16:10:14 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id E89AF300130; Wed, 02 Jul 2025 18:10:12 +0200 (CEST)
+Date: Wed, 2 Jul 2025 18:10:12 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Heiko Carstens <hca@linux.ibm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Borislav Petkov <bp@alien8.de>,
+	kernel test robot <lkp@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>, llvm@lists.linux.dev,
+	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	x86@kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+	Jinjie Ruan <ruanjinjie@huawei.com>,
+	Nathan Chancellor <nathan@kernel.org>
+Subject: Re: [tip:master 19/19] include/linux/irq-entry-common.h:201:2:
+ error: unexpected token
+Message-ID: <20250702161012.GQ1613200@noisy.programming.kicks-ass.net>
+References: <202507020528.N0LtekXt-lkp@intel.com>
+ <20250702123240.GDaGUm6Le4KLL7o_91@fat_crate.local>
+ <aGUtCveV8Ev17_FS@J2N7QTR9R3.cambridge.arm.com>
+ <20250702130915.GEaGUve86iYnv337_Z@fat_crate.local>
+ <aGUxH--v32Bv4T81@J2N7QTR9R3.cambridge.arm.com>
+ <20250702132415.GFaGUy_6q0dZZI9AX3@fat_crate.local>
+ <aGU_IY70Jt4bcbf2@J2N7QTR9R3.cambridge.arm.com>
+ <20250702145425.GS1613376@noisy.programming.kicks-ass.net>
+ <20250702150739.GT1613376@noisy.programming.kicks-ass.net>
+ <20250702154137.71390C24-hca@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250702154137.71390C24-hca@linux.ibm.com>
 
-Add support for large (> PAGE_SIZE) alignments in Rust allocators.
-All the preparations on the C side are already done, we just need
-to add bindings for <alloc>_node_align() functions and start
-using those.
+On Wed, Jul 02, 2025 at 05:41:37PM +0200, Heiko Carstens wrote:
+> On Wed, Jul 02, 2025 at 05:07:39PM +0200, Peter Zijlstra wrote:
+> > > > > diff --git a/arch/s390/include/asm/bug.h b/arch/s390/include/asm/bug.h
+> > > > > index a185855ab158..46d9eb64bd18 100644
+> > > > > --- a/arch/s390/include/asm/bug.h
+> > > > > +++ b/arch/s390/include/asm/bug.h
+> > > > > @@ -9,7 +9,7 @@
+> > > > >  #else
+> > > > >  #define __BUGVERBOSE_LOCATION(file, line)			\
+> > > > >  		.pushsection .rodata.str, "aMS", @progbits, 1;	\
+> > > > > -	10002:	.string file;					\
+> > > > > +	10002:	.ascii file;					\
+> > > > >  		.popsection;					\
+> > > > >  								\
+> > > > >  		.long 10002b - .;				\
+> > > > > 
+> > > > 
+> > > > IIUC this also needs a trailing "\0" as per the link above, or this
+> > > > won't get a NUL-terminator (but will build just fine).
+> > > 
+> > > Yup, I ran into this before. Let me go fix that commit.
+> > 
+> >  + e7e26cfad96c...2a20b2730147 core/bugs -> core/bugs (forced update)
+> 
+> Thank you! But wouldn't you also need to merge Nathan's patch [1] into
+> the loongarch commit (or maybe you are just about to do that)?
+> 
+> [1] https://lore.kernel.org/all/20250616-loongarch-fix-warn-cond-llvm-ias-v1-1-6c6d90bb4466@kernel.org/
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=core/bugs&id=5d476f66e6add0b709a09d60feecff3a2d156800
 
-Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
----
- rust/helpers/slab.c            | 10 ++++++----
- rust/helpers/vmalloc.c         |  5 +++--
- rust/kernel/alloc/allocator.rs | 27 ++++++++-------------------
- 3 files changed, 17 insertions(+), 25 deletions(-)
-
-diff --git a/rust/helpers/slab.c b/rust/helpers/slab.c
-index 8472370a4338..d729be798f31 100644
---- a/rust/helpers/slab.c
-+++ b/rust/helpers/slab.c
-@@ -3,13 +3,15 @@
- #include <linux/slab.h>
- 
- void * __must_check __realloc_size(2)
--rust_helper_krealloc_node(const void *objp, size_t new_size, gfp_t flags, int node)
-+rust_helper_krealloc_node_align(const void *objp, size_t new_size, unsigned long align,
-+				gfp_t flags, int node)
- {
--	return krealloc_node(objp, new_size, flags, node);
-+	return krealloc_node_align(objp, new_size, align, flags, node);
- }
- 
- void * __must_check __realloc_size(2)
--rust_helper_kvrealloc_node(const void *p, size_t size, gfp_t flags, int node)
-+rust_helper_kvrealloc_node_align(const void *p, size_t size, unsigned long align,
-+				gfp_t flags, int node)
- {
--	return kvrealloc_node(p, size, flags, node);
-+	return kvrealloc_node_align(p, size, align, flags, node);
- }
-diff --git a/rust/helpers/vmalloc.c b/rust/helpers/vmalloc.c
-index 62d30db9a1a6..7d7f7336b3d2 100644
---- a/rust/helpers/vmalloc.c
-+++ b/rust/helpers/vmalloc.c
-@@ -3,7 +3,8 @@
- #include <linux/vmalloc.h>
- 
- void * __must_check __realloc_size(2)
--rust_helper_vrealloc_node(const void *p, size_t size, gfp_t flags, int node)
-+rust_helper_vrealloc_node_align(const void *p, size_t size, unsigned long align,
-+				gfp_t flags, int node)
- {
--	return vrealloc_node(p, size, flags, node);
-+	return vrealloc_node_align(p, size, align, flags, node);
- }
-diff --git a/rust/kernel/alloc/allocator.rs b/rust/kernel/alloc/allocator.rs
-index 15d737fe89ed..1a54513533cf 100644
---- a/rust/kernel/alloc/allocator.rs
-+++ b/rust/kernel/alloc/allocator.rs
-@@ -61,20 +61,21 @@ struct ReallocFunc(
-     unsafe extern "C" fn(
-         *const crate::ffi::c_void,
-         usize,
-+        crate::ffi::c_ulong,
-         u32,
-         crate::ffi::c_int,
-     ) -> *mut crate::ffi::c_void,
- );
- 
- impl ReallocFunc {
--    // INVARIANT: `krealloc_node` satisfies the type invariants.
--    const KREALLOC: Self = Self(bindings::krealloc_node);
-+    // INVARIANT: `krealloc_node_align` satisfies the type invariants.
-+    const KREALLOC: Self = Self(bindings::krealloc_node_align);
- 
--    // INVARIANT: `vrealloc_node` satisfies the type invariants.
--    const VREALLOC: Self = Self(bindings::vrealloc_node);
-+    // INVARIANT: `vrealloc_node_align` satisfies the type invariants.
-+    const VREALLOC: Self = Self(bindings::vrealloc_node_align);
- 
--    // INVARIANT: `kvrealloc_node` satisfies the type invariants.
--    const KVREALLOC: Self = Self(bindings::kvrealloc_node);
-+    // INVARIANT: `kvrealloc_node_align` satisfies the type invariants.
-+    const KVREALLOC: Self = Self(bindings::kvrealloc_node_align);
- 
-     /// # Safety
-     ///
-@@ -116,7 +117,7 @@ unsafe fn call(
-         // - Those functions provide the guarantees of this function.
-         let raw_ptr = unsafe {
-             // If `size == 0` and `ptr != NULL` the memory behind the pointer is freed.
--            self.0(ptr.cast(), size, flags.0, nid.0).cast()
-+            self.0(ptr.cast(), size, layout.align(), flags.0, nid.0).cast()
-         };
- 
-         let ptr = if size == 0 {
-@@ -160,12 +161,6 @@ unsafe fn realloc_node(
-         flags: Flags,
-         nid: NumaNode,
-     ) -> Result<NonNull<[u8]>, AllocError> {
--        // TODO: Support alignments larger than PAGE_SIZE.
--        if layout.align() > bindings::PAGE_SIZE {
--            pr_warn!("Vmalloc does not support alignments larger than PAGE_SIZE yet.\n");
--            return Err(AllocError);
--        }
--
-         // SAFETY: If not `None`, `ptr` is guaranteed to point to valid memory, which was previously
-         // allocated with this `Allocator`.
-         unsafe { ReallocFunc::VREALLOC.call(ptr, layout, old_layout, flags, nid) }
-@@ -185,12 +180,6 @@ unsafe fn realloc_node(
-         flags: Flags,
-         nid: NumaNode,
-     ) -> Result<NonNull<[u8]>, AllocError> {
--        // TODO: Support alignments larger than PAGE_SIZE.
--        if layout.align() > bindings::PAGE_SIZE {
--            pr_warn!("KVmalloc does not support alignments larger than PAGE_SIZE yet.\n");
--            return Err(AllocError);
--        }
--
-         // SAFETY: If not `None`, `ptr` is guaranteed to point to valid memory, which was previously
-         // allocated with this `Allocator`.
-         unsafe { ReallocFunc::KVREALLOC.call(ptr, layout, old_layout, flags, nid) }
--- 
-2.39.2
-
+Uh, indeed. Let me go do so.
