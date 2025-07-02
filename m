@@ -1,68 +1,78 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2080.outbound.protection.outlook.com [40.107.92.80])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C1741DFE20
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 09:38:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.80
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751449111; cv=fail; b=tgCIOxlyrvBC3bMGyJ2LBvMiiX9RYI4LpjDZrJTuMm3OrWunuaE8t4wzZ/TFPiYxiVh8UMWufdDDFGlyig82UVyp3YdAaVgnwIHbsRbaX9OHc32C+RceJt6yL9dF6CfahGCtsI4Z+/B+lZsU3JknEYLP2qu5oWs4vYSYL77SjSI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751449111; c=relaxed/simple;
-	bh=WUTRRKjhrV5HWtclgDt+lHi5Jcpn459G/e/ZdI7dHmw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VlC2oaato69Wt5tPc7Ato9KNrllArqXMQ62HyVp6z2LhlqlqudO3hsAW/60dEecxUpJqo4vxhNSOAO6Q6HN0W3D5sUUiDLxUd4PQzElsOpuwG54MseN0HuQ2IT4Mz92IxmLhUhO32y054QOpODDqQstHh2qeG5tvKdvl5iVw0JU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=FohEalkm; arc=fail smtp.client-ip=40.107.92.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04FBA246BA5
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 09:38:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751449113; cv=none; b=O+wQPALmS7SIC9zQWhgW436T7Vp8DifeV33jUnrYq8YTpRt5LQDT60vUDhBaagfFAc9FLI58kqTSixjvE6SHkljtuvDPfNMN90ZuXrRjV6rlNIIkdnQvQ5rNcirLk7wXl7AoKjlQZyfJI49hhv9v55QsMXiNOyDDbcGQVtRQjPk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751449113; c=relaxed/simple;
+	bh=m2wyl7kz+6uvmmXfe8oX2ix01eADdAyzpV7Qj2FgNzg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=IhPyEBlSajYpgmIZ2Qu5Ch1wDXAF5+PZjhJ5yJpDLiX/YQTv9Sj3HAZVTjNBZro5BEmTJuei2VSLRhjYmfIic1d4G/3Lzs+4mzZf3qZW9ZGJcrIp9PlUAATq4RpW67pK9wz76EhwVCK//Tjvj5aLX23CI3rdKfZqNs07AAubUK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Cwh40Ej9; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="FohEalkm"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wGbeH6p/rEQ2fw8Y0eTqQ2xr4ikusvgkZifvtuwOuzb+Iq16+/Tp8f06ewB7cKFespeDB+HH7P7jre+S5v7biZlt7OVQdC8vaUSAgBzVrMpqF5RpAcouwBA1CcMYtcOyWyVj1SsyB32i/bszibhTiYQGl/25FIZDey3SIfdqQViQT4VEIn5GQ3P/JLo0e+IKS4/zOutKc0493vM6SzsWvGOmMibT9YgBbuUEqeIg818dJjODAo8eFOu4unKI3ZzIudSI8c3GO1xAq60zL517H2AsUIz7SqdfB0CcOc7eob5Hu2MM1QKZ2ehDtz0uR07zyzqFnK5iR+Z0Jl6nlalZjg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YsqddeSUVnAAjPCa4Dg9s+6W30WAyYANdZYluGAALhA=;
- b=bvRen6Y/hwfgLOWhheZzBquy11kR/vzPgdHaHDwmKYjlVJRpw6E2TbOgF0H4eguK9oVKYgLZrKGd8E+sVu9uJBQ6VDrYiWbjhU1D2uXgNt0BnIWyBMu44nENRz/G6KBts32GDg5yxSkK6+5P3N3wmE2HHjR0jXKnX5ZrYA5DX0btxjg8pcT4jTJ2DXKlprYdQJz77Z6A/ALwCsPscGWjMlJBRezF4oX5Ewr8wwvX5y8UvV9Y2h5KBW9Pyhys1qFcDYkUPyRN5up0/H0EFubLdoZwXoaM5d7z0WXePxl/EUWni75Q2XesJgqmH+WPOVj1bbQ3vt7J55LBuXFn/TOY2w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=8bytes.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YsqddeSUVnAAjPCa4Dg9s+6W30WAyYANdZYluGAALhA=;
- b=FohEalkmjCKjTpAHggVnuZ524GVFPTDuCjDOQ3rtUSaDz9KEH04/XAkYJyquA+oo0u3ooyA+luw2Pff25VrjsOkAoiPLCiXjNI/Z2b1wY6dYb0SzWVLUB7n1yUfVFjc0XPWpwYoZF0ci/QDr0eBvf1/tgTNJUZHOhUoUulrxfK4=
-Received: from CH0PR03CA0205.namprd03.prod.outlook.com (2603:10b6:610:e4::30)
- by SA5PPFF3CB57EDE.namprd12.prod.outlook.com (2603:10b6:80f:fc04::8eb) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.25; Wed, 2 Jul
- 2025 09:38:24 +0000
-Received: from CH1PEPF0000AD7D.namprd04.prod.outlook.com
- (2603:10b6:610:e4:cafe::51) by CH0PR03CA0205.outlook.office365.com
- (2603:10b6:610:e4::30) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.19 via Frontend Transport; Wed,
- 2 Jul 2025 09:38:24 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH1PEPF0000AD7D.mail.protection.outlook.com (10.167.244.86) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8901.15 via Frontend Transport; Wed, 2 Jul 2025 09:38:24 +0000
-Received: from BLRDHSRIVAS.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 2 Jul
- 2025 04:38:20 -0500
-From: Dheeraj Kumar Srivastava <dheerajkumar.srivastava@amd.com>
-To: <joro@8bytes.org>, <suravee.suthikulpanit@amd.com>, <will@kernel.org>,
-	<robin.murphy@arm.com>, <linux-kernel@vger.kernel.org>,
-	<iommu@lists.linux.dev>, <Vasant.Hegde@amd.com>
-CC: <dheerajkumar.srivastava@amd.com>
-Subject: [PATCH v7 0/8] Introduce debugfs support in IOMMU
-Date: Wed, 2 Jul 2025 15:07:56 +0530
-Message-ID: <20250702093804.849-1-dheerajkumar.srivastava@amd.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Cwh40Ej9"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-748d982e92cso5005479b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 02:38:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1751449111; x=1752053911; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rTjwaEFPERHrYF9Gap7nfZ/7bPQeZGoi21gGb1ngn+I=;
+        b=Cwh40Ej9k08gi71cELpAAEsOkellRirr9wJIZzKHIIc+7VVjX3TXyDqCDgsYhkGUPE
+         dnsTZJ8+Hhkyd0IXdthsbIcSW3hvX6C0f7Ow4rKSaKL0YnenOHsJXGCNAKVcL4QLtX4G
+         aX/G6W7iKSRjOvwlGlq3Ds16wKcerKR6TSgzSBBCdUAJqdwRM/flnEl9tdTDPMbD/IPY
+         x/w9kO+XTAqp1xFDFSicgcZayrjJY5p9GnqO5wMlgYai5isSLgiVyZSHH1qbCuXbcNr/
+         iPXmviFWHN4OXGC0LenyMOGPKF+fIxIa91Vb+pm3pE75YQhDlpoe+8ymHZ+o++ar0hgG
+         QTJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751449111; x=1752053911;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rTjwaEFPERHrYF9Gap7nfZ/7bPQeZGoi21gGb1ngn+I=;
+        b=foYlLINCclVz275MutkmtgHHReo7PBPJ62iLr/MqmBjJDF5zu3GUFBHm6g0foWr6iV
+         LvAXeN00Tw3VAy7lUMAQBZPY85e/kZ3kSKRX9kpB37olpLHUbNdmfUow2pE629FI2avb
+         ZNYCEH0g/THEO++kccAaxl6/uezW58p8WCEceRhKamuiETyTCFXveTv6G6qIQmQi6ZI6
+         R3F+D7DpdDlMPqzUDjE98a+3YZKGHJN34yb0cHvn4GSx05/ipotom84OH7/6GYs76012
+         IcUYlySxSneyiSWejAsKmDn1mpNYgoguWYZ1h2E/rI4JhMvk6/E3f29UCybraPyBi/U0
+         flpA==
+X-Forwarded-Encrypted: i=1; AJvYcCUd4U1Sd9nqZBCpvCuUQSSxrV272hzE+hqM7TO8xVcBNQPBTt/LAJqYWb5EWE4FPqSzT5Bs1cnX7Tdfe8A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtMOJjMWqXg7T2QXtNuAjAVkgfEbtYkz0Sv2YfFFEK9imaU0Rj
+	J3JFUjbqjJDMCeaPf/qP1CJg3go29jR4T3LWHsjI0HB4OdC82Cg10pM7DjKvNwuLMVo=
+X-Gm-Gg: ASbGncuIzyZYet+5P24ZLS4udAR1CbfTlCcJD1V+IQHOWXIjsSZzEv2kykwTrPOhP/R
+	Dp1dLw+LYDHHJ/8HcvfYphoEWdw2DLW6vwnGZiO/cMlsiF36DliPiFyvrlWTt9w/HX7VlAv3ZGd
+	Yjn3FF/dLZgrghXxUp4N1heSe8l/Rjbi0v+DXci5lUAFZXFBtatiGDwZH+a4z31gblDZ7l7mGom
+	ChU6n9tt1bc2SRTonBIbNvrV7IrNLyyH0FgVZyGCAg256OGMR29Ny/LCn4BD+T59F2MvIvfySIj
+	THswjIc3rBeBuiOAelBKI1RQ7ScUqQ7poADtRA+/alIOZPp+rdcJTcc3dUr2XXXK9LDzaqFIaVN
+	BQ9diUPHLRlbncg==
+X-Google-Smtp-Source: AGHT+IGUO3B6nRDUzdmIQ2oO+7AEV740xR2OLJFkN6pT/Dska04jgo/ItMW9V4JJBw44CxgrOpO0sA==
+X-Received: by 2002:a05:6a00:2eaa:b0:740:9d7c:aeb9 with SMTP id d2e1a72fcca58-74b512bf44emr3128818b3a.21.1751449111276;
+        Wed, 02 Jul 2025 02:38:31 -0700 (PDT)
+Received: from localhost.localdomain ([203.208.189.10])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af557439csm13901447b3a.80.2025.07.02.02.38.27
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 02 Jul 2025 02:38:30 -0700 (PDT)
+From: lizhe.67@bytedance.com
+To: david@redhat.com
+Cc: alex.williamson@redhat.com,
+	jgg@nvidia.com,
+	jgg@ziepe.ca,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lizhe.67@bytedance.com,
+	peterx@redhat.com
+Subject: Re: [PATCH 0/4] vfio/type1: optimize vfio_pin_pages_remote() and vfio_unpin_pages_remote() for large folio
+Date: Wed,  2 Jul 2025 17:38:24 +0800
+Message-ID: <20250702093824.78538-1-lizhe.67@bytedance.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <6508ccf7-5ce0-4274-9afb-a41bf192d81b@redhat.com>
+References: <6508ccf7-5ce0-4274-9afb-a41bf192d81b@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,228 +80,39 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD7D:EE_|SA5PPFF3CB57EDE:EE_
-X-MS-Office365-Filtering-Correlation-Id: f8e75501-e2df-4804-e9c1-08ddb94c30c1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?wNRZHBX3Zl5VXfbzg3WqNnXjG0YZBQQODSEc/0fS2NvVdWvDBDxKZcBkbXcC?=
- =?us-ascii?Q?iu+rm0XT+4cSwAxQegoohihAuy2nAVmeCljsZnge49vqZgLJlZrK/GyObyCc?=
- =?us-ascii?Q?+X/04GlElV5aHH/QSFHOqIdPRi9xMqTH5gdcCeqogbDtSTgJHaC01jqrOAKF?=
- =?us-ascii?Q?D1eFEIPandsLg3jWztSfScL/le6VIzbiyp7dxibD8nWFPF1mcEUq1C0PJjDi?=
- =?us-ascii?Q?l5CsXhbA60MfFn2YlcY8pz4IuaFsZnx25+qGs3NgmpJvYeUpPAFOxFVF2m5I?=
- =?us-ascii?Q?XufV5+Rhd/aJql+9neg+e8+DYBfeoCvkq5eGKmHiUagkLcr0a/9zV+YodGdF?=
- =?us-ascii?Q?kJRiBKOgkzY1O/8qhcWrriXKJlTaeZ16NzCq0BiHjwgAkA0P10PrigTj4JX3?=
- =?us-ascii?Q?V7LReNmV2SegqFKSEB3FGpKiWDbrX17BoeHmM29ANufLwiTgJB5pcacupnc7?=
- =?us-ascii?Q?ubRk6vTe7xfoK+4gcvKnG7tIvuaBZBB1CI7J6xGPi4RQ9crvL3F//AXILfM3?=
- =?us-ascii?Q?mrtQQR/XniRNT++UwVeExJXOL8yY/a+vgh/OhfiX39+Qmex31BvTwMU3J5MP?=
- =?us-ascii?Q?NG4/UAXRpbnIcDRSw8d4XAcmOXJLEIFzvVxTrYeGbdidHLbEGSagla/t6pql?=
- =?us-ascii?Q?rqYlJ7AtXsvV51wZ0Z9DGqy61tsH4RcvbZ9OULfXXVFMdfKFWKerPo1Z3QCr?=
- =?us-ascii?Q?U4SUFy9ZDPI7qNmvmjUtRCsx1qzlj8wYRWaC2f/+es4hLZjQczxy0PO70vp0?=
- =?us-ascii?Q?YF33wYPl2sAu6iG5b/i3Wuh37PAyo7obwchHEeAJp0tw38Xu8E2OqfO7VF/R?=
- =?us-ascii?Q?GJ8dPOqa/xS3H/a+T3Qx4jyzGFU6OglQeyNur/Ot0lBEIMyJ+SW6rETRI8bl?=
- =?us-ascii?Q?5bGBTuhWkUzp+oJTwKuI1DlvU9dyG1WzRZUbzKZF1N3JomtUbFmhivnBc4cf?=
- =?us-ascii?Q?0TCA0wDIsDcqxOEy6+d0cfyUaPY0pFzESQXqJiXHX45BmJ8yN0K4JnKUxrBP?=
- =?us-ascii?Q?FPoxt0tZ3BGVUIZlPQYDy1SFRDOh60PG3a/jHkGWA5Mr0JvZAo4sgca3Esy4?=
- =?us-ascii?Q?VqTAZ17ltKgb5GMpabu+Yr4aJa4J82x7+cTSVzycCGnsZ0stc3XyG+Y0dMZ1?=
- =?us-ascii?Q?mBCtTuQvYy+C5GJHzD9oslQdz2WbAFOpevWL2LU+IqCg+ukgNjXi2akhcvne?=
- =?us-ascii?Q?NvCvE0l6R79smDGIE7T5Vu3XzRh2Y9p9K5eefqSqY5zLLCOZrdbnEdzbw1gq?=
- =?us-ascii?Q?O5fTtgF8t/EMAt82PM3OUi7U+3JRwM86jSw3L8xmrmGWw1/i4yZU13qza8i/?=
- =?us-ascii?Q?cK/hxZJ7LsNImKQrGJjCBZ/ox7mLiXa08tU40fiY649/BxpYSqlcg6bNLjoX?=
- =?us-ascii?Q?cB3bFkxxRzJ7Ai1YZgGt+J5MMIIETCdj3OGs+fmVX0OjVI+flo5UpcctAGfP?=
- =?us-ascii?Q?P9ptdjLHaPtlx7X5c0y9X3gp2lLRdpUZUQAGZ8phiHcCrp1HMrEnp/ZRrish?=
- =?us-ascii?Q?pbcX6uQxrkByrb6H5OFyV621maW844xDsy1N?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 09:38:24.2610
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f8e75501-e2df-4804-e9c1-08ddb94c30c1
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH1PEPF0000AD7D.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA5PPFF3CB57EDE
 
-Introducing debugfs support in AMD/IOMMU driver that will allow
-userspace to dump below IOMMU information
-1) MMIO and Capability register per IOMMU
-2) Command buffer
-3) Device table entry
-4) Interrupt remapping table entry
+On Wed, 2 Jul 2025 10:15:29 +0200, david@redhat.com wrote:
 
-Analyzing contents of IOMMU data structures helps in understanding IOMMU
-capabilities and behavior and debug issues faster.
+> Jason mentioned in reply to the other series that, ideally, vfio 
+> shouldn't be messing with folios at all.
+>
+> While we now do that on the unpin side, we still do it at the pin side.
 
-1. MMIO and Capability registers - Add support to dump MMIO and Capability
-   registers per IOMMU.
+Yes.
 
-   Example:
-   a. Write MMIO register offset to dump it
-      $ echo 0x18 > /sys/kernel/debug/iommu/amd/iommu00/mmio
-      $ cat /sys/kernel/debug/iommu/amd/iommu00/mmio
+> Which makes me wonder if we can avoid folios in patch #1 in 
+> contig_pages(), and simply collect pages that correspond to consecutive 
+> PFNs.
 
-      Output:
-      $ Offset:0x18 Value:0x000c22000003f48d
+In my opinion, comparing whether the pfns of two pages are contiguous
+is relatively inefficient. Using folios might be a more efficient
+solution.
 
-    b. Write capability register offset to dump it
-       $ echo 0x10 > /sys/kernel/debug/iommu/amd/iommu00/capability
-       $ cat /sys/kernel/debug/iommu/amd/iommu00/capability
+Given that 'page' is already in use within vfio, it seems that adopting
+'folio' wouldn't be particularly troublesome? If you have any better
+suggestions, I sincerely hope you would share them with me.
 
-       Output:
-       $ Offset:0x10 Value:0x00203040
+> What was the reason again, that contig_pages() would not exceed a single 
+> folio?
 
-2. Command buffer - Add support to dump per IOMMU command buffer.
+Regarding this issue, I think Alex and I are on the same page[1]. For a
+folio, all of its pages have the same invalid or reserved state. In
+the function vfio_pin_pages_remote(), we need to ensure that the state
+is the same as the previous pfn (through variable 'rsvd' and function
+is_invalid_reserved_pfn()). Therefore, we do not want the return value
+of contig_pages() to exceed a single folio.
 
-   Example:
-   a. cat /sys/kernel/debug/iommu/amd/iommu00/cmdbuf
+Thanks,
+Zhe
 
-   Output:
-   CMD Buffer Head Offset:339 Tail Offset:339
-     0: 00835001 10000001 00009900 00000000
-     1: 00000000 30000005 fffff003 7fffffff
-     2: 00835001 10000001 00009901 00000000
-     3: 00000000 30000005 fffff003 7fffffff
-     4: 00835001 10000001 00009902 00000000
-   ........................................
-   ........................................
-   ........................................
-
-3. Device table - Add support to dump device table per IOMMU.
-
-   Example:
-   a. Write device id to dump device table entry for that device
-      $ echo 0000:01:00.0 > /sys/kernel/debug/iommu/amd/devid
-      $ cat /sys/kernel/debug/iommu/amd/devid
-
-      Output:
-      0000:01:00.0
-
-      Dump the device table entry for the input given
-      $ cat /sys/kernel/debug/iommu/amd/devtbl
-
-      Output:
-      DeviceId             QWORD[3]         QWORD[2]         QWORD[1]         QWORD[0] iommu
-      0000:01:00.0 0000000000000000 20000001373b8013 0000000000000038 6000000114d7b603 iommu3
-
-    b. Write device id to dump device table entry for that device
-      $ echo 01:00.0 > /sys/kernel/debug/iommu/amd/devid
-      $ cat /sys/kernel/debug/iommu/amd/devid
-
-      Output:
-      0000:01:00.0
-
-      Dump the device table entry for the input given
-      $ cat /sys/kernel/debug/iommu/amd/devtbl
-
-      Output:
-      DeviceId             QWORD[3]         QWORD[2]         QWORD[1]         QWORD[0] iommu
-      0000:01:00.0 0000000000000000 20000001373b8013 0000000000000038 6000000114d7b603 iommu3
-
-4. Interrupt remapping table - Add support to dump IRT table valid entries in
-   "iommu_irqtbl" file. This supports user input to dump IRT entry for a
-   specific pci device.
-
-   Example:
-   a. Write device id to dump device table entry for that device
-      $ echo 0000:01:00.0 > /sys/kernel/debug/iommu/amd/devid
-      $ cat /sys/kernel/debug/iommu/amd/devid
-
-      Output:
-      0000:01:00.0
-
-      Dump the device table entry for the input given
-      $ cat /sys/kernel/debug/iommu/amd/irtbl
-
-      Output:
-      DeviceId 0000:01:00.0
-      IRT[0000] 0000000000000020 0000000000000241
-      IRT[0001] 0000000000000020 0000000000000841
-      IRT[0002] 0000000000000020 0000000000002041
-      IRT[0003] 0000000000000020 0000000000008041
-      IRT[0004] 0000000000000020 0000000000020041
-      ..........................................
-      ..........................................
-      ..........................................
-
-   b. Write device id to dump device table entry for that device
-      $ echo 01:00.0 > /sys/kernel/debug/iommu/amd/devid
-      $ cat /sys/kernel/debug/iommu/amd/devid
-
-      Output:
-      0000:01:00.0
-
-      Dump the device table entry for the input given
-      $ cat /sys/kernel/debug/iommu/amd/irttbl
-
-      Output:
-      Device 0000:01:00.0
-      IRT[0000] 0000000000000020 0000000000000241
-      IRT[0001] 0000000000000020 0000000000000841
-      IRT[0002] 0000000000000020 0000000000002041
-      IRT[0003] 0000000000000020 0000000000008041
-      IRT[0004] 0000000000000020 0000000000020041
-      ..........................................
-      ..........................................
-      ..........................................
-
-Changes since v6:
--> Patch 1/8 and 2/8: Use "dbg_iommu_offset" and "dbg_cap_offset" instead of "iommu_offset"
-   and "cap_offset" respectively.
--> Patch 6/8, 7/8 and 8/8: Minor rephrases and grammar edits.
-
-Changes since v5:
--> Patch 7/8: Use macros to fetch IRT table length for DTE.
-
-Changes since v4:
--> Maintain per IOMMU variable for mmio_offset and capability_offset.
--> Get intrrupt table length from DTE instead of using MAX_IRQS_PER_TABLE.
-
-Changes since v3:
--> Patch 2/8: Print 64 bits instead of 32 bits for MMIO registers dump. Since most of
-   the MMIO registers are 64 bits.
--> Patch 5/8: Update commit message with the need to add support for device_id input.
--> Patch 3/8: Throw error message mentioning valid capability offset range if user capability
-   offset's input is not in valid range and input fails.
-
-Changes since v2:
--> Patch 2/8 and 3/8: Use single file mmio and capability for input and output registers
-   offset and register's dump respctively.
--> Patch 8/8: Correct path for files "irqtbl" and "devtbl" in Documentation
-
-Changes since v1:
--> Patch 2/8 and 3/8: Use kstrtou32_from_user() instead of memdup_user_nul() --> kstrtou32()
--> Patch 4/8: Dump command buffer head and tail offset instead of head and tail pointer registers.
--> Patch 8/8: Fix bot reported warning on v1 patch series.
-
-Dheeraj Kumar Srivastava (8):
-  iommu/amd: Refactor AMD IOMMU debugfs initial setup
-  iommu/amd: Add debugfs support to dump IOMMU MMIO registers
-  iommu/amd: Add debugfs support to dump IOMMU Capability registers
-  iommu/amd: Add debugfs support to dump IOMMU command buffer
-  iommu/amd: Add support for device id user input
-  iommu/amd: Add debugfs support to dump device table
-  iommu/amd: Add debugfs support to dump IRT Table
-  iommu/amd: Add documentation for AMD IOMMU debugfs support
-
- Documentation/ABI/testing/debugfs-amd-iommu | 114 ++++++
- drivers/iommu/amd/amd_iommu.h               |   4 +-
- drivers/iommu/amd/amd_iommu_types.h         |   9 +
- drivers/iommu/amd/debugfs.c                 | 378 +++++++++++++++++++-
- drivers/iommu/amd/init.c                    |   5 +-
- drivers/iommu/amd/iommu.c                   |   7 -
- 6 files changed, 496 insertions(+), 21 deletions(-)
- create mode 100644 Documentation/ABI/testing/debugfs-amd-iommu
-
--- 
-2.25.1
-
+[1]: https://lore.kernel.org/all/20250613081613.0bef3d39.alex.williamson@redhat.com/
