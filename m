@@ -1,132 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 266AA230BD4;
-	Wed,  2 Jul 2025 07:51:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E58DD1D63F0;
+	Wed,  2 Jul 2025 07:52:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751442662; cv=none; b=jUPM6H7Uke7/nuXimU1FWRxwwu7uSsU43dvnGmJ2yyBwthBGBpDP0USwfhFMryxRi4dACyvofImLhrm11Ks0YsC6RCaYJE1aJB2wIwEtyP+p9ligUcILr0A7MBIunpx2+2gC3SRhSfnBh0TIjuSBOBdqZl8uju/eOPSTQlnKfwI=
+	t=1751442750; cv=none; b=LNzjViw5jVWbd1tpyx3w8gHEuLQnopWd/UZt/yzfBZN6mD4SYLeCCgFepYvXHkwzr67jXLyRmjIhIkp7LIVkwbdrga3uF7Z4iUCJLlAbRhrPIjzhXQX1obH5VZV2ijx+Tk7GLJb12QhiFDZytxFK5dufYlBTUtVXA/Xpb6o8C+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751442662; c=relaxed/simple;
-	bh=k8J6bw7qUijMDcnUBmDdYgC0NRQa9b09ibKM5hAyvCA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=b/EkIqSCjmiU9InJESpPynflOgKZgD8qF83YOjazguNSpzbseJR7NC8F1xdSQyIQpNqYM3Gv8DugUHbjB7QiMUeJGdQ1n8CE8Ls468lPuz7jupQVeCCVXF7swT0UtbRlMxNb7CHCbwG+uANi8esWjOmp7gvZCpmPMtA3iejN/qI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F5HOWbF9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751442750; c=relaxed/simple;
+	bh=psC4EIcRFAA6nXCkfRSfcP/9nJC3Ic+ED7YumMPPN0k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iQb4V3UtM1YN7wM15n7PEeH8nW2IosGGyo1EF+/rPcKdS39oeE3YD21yTEGr1AR1YhGlp9ucGCemZPlB11JuOKDwT3ukJAuqCcvHLpDDwRBVm79ez5MZg32/YzH+T+6P5dZrI3uWAiHkpofJxKvzwej29r4P2twHuMtsvO9gGFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Uf3qTihf; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F5HOWbF9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE849C4CEED;
-	Wed,  2 Jul 2025 07:50:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751442661;
-	bh=k8J6bw7qUijMDcnUBmDdYgC0NRQa9b09ibKM5hAyvCA=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=F5HOWbF9MWloGOKPKXRrqEoPJyMWJXV72nyEenQJKuSrlSyOjCBrjUybzuehfGCAh
-	 aQ2SHrtvwHiwilmFu5UrhhzSKEfEbISzf0qf8y1WwYFBsLCxk0EWkCkJrIODG3+5Wl
-	 3oBadofTN4yJFUiVfnfi631lgeC71gzoowDejZHKJlMVaWySnVk6TqbBJLJQzGJ9Rq
-	 dSBJmi4Y3uxEwNcBjXmpEzTgPgIGYo5Yw/fIhtaegFFVpsYm68Mt03y1+v3Xfad21x
-	 29t/QryCe7uUPWSCa/mrkuSNnZUqJVMgvxq06YB/L8g3KrLWyRKyXoj96Dep5m2g1E
-	 Yb9IVj4PlQznA==
-Message-ID: <34b0f5e2-0341-41cb-8915-8f1606e14827@kernel.org>
-Date: Wed, 2 Jul 2025 09:50:56 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uf3qTihf"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3b20fcbaf3aso56230f8f.0;
+        Wed, 02 Jul 2025 00:52:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751442747; x=1752047547; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eZekfSyAqtX7ay8LYeSzU2qV2gsXWRfo6lTGO3aiPrE=;
+        b=Uf3qTihf8z9yZockwNv/tA+1Mz7rVBr9TxsAw/o8JhSaZmpi5x/gHJ7qDpgsAvrY5d
+         7bvp7WShNX1PQC+JCKnbtBYCVih1m1NG09Gq2XJZFWVtJnH3neS06NsoQp60UE0Hu0xO
+         n8/qIEohUuxY4DVBtWqsBoWRKBdJ4O4kMQ6kPSrJS9oeNk9rW0/HEzUX7GBZkpo4ikId
+         YENS0TxNi6GIECR9DfFqbBlzvkc5m/7eIF4KNf5Yo9XhxLK73RYp5GDVhskNqT37/BDY
+         D/Zxkp5EAuCJBDWCZp6GY0FIPg9eodnKdbJ50QjmBvpQj8Ieu5fwfeGF+8Y7We0T+Hgy
+         49Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751442747; x=1752047547;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eZekfSyAqtX7ay8LYeSzU2qV2gsXWRfo6lTGO3aiPrE=;
+        b=i8gN6hkZxfCTM3r7K0NNksiX5QN31FNgOmb12alf4ekGnPptd952BZvOYvPq3kSbQ8
+         2rTXo4xR+UvyOhWGMgz5Y8thSHYpl/qI7eTGUszt/i7rUDiLxWjw44xMpVgVpaguwQBR
+         vaW1VvcwTpiFEynAizLu5LX6Y//HfVMwFfQABoyDxrGtbXm2WcvW0ENsQWVQIXO8K+2T
+         5Qk5PNYXqN7GGR74E4XsptEVN9Z8OpfLVjalTYUmZMBXexcjnwYFk8ta9JN2W7Vyc5NX
+         wuNC+YukgJhW9Tmi+ULIA+wZuJgnhudyL4W85+gc2/TjPw5JEfQT4OnlQfeVMIYgt01W
+         nKMw==
+X-Forwarded-Encrypted: i=1; AJvYcCUiZNxGQ5Jc3ogcxTrnAUbnuYAvu4PcmZdeyvJKKUJFkxEtaVXKEqXwn6pKW93tKZmahe65lelYlMeCUTM=@vger.kernel.org, AJvYcCXNbYInR4mCq0diAgFk7DV6tsS3h3nAfxTH6se/VNbZUshjdLejdKtSnxb85BNCOo3uc7sYf7Ka@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMmBxyi41zwGg9TLKy/po0C0k3iJLnAHj0PRJJOsdl1j9TVP5V
+	3tC2HDCSzg6OUg9L53rRz+eQ/8eiqi4K9g+kGqCnadqLYkKeEB0KVaLX
+X-Gm-Gg: ASbGncsJd+Xqt4gMJiVtun0mnPPTznCbWeWAm9IOcNVTupWqBQPUF/QtBcs35y4nX0T
+	NXZK6Cx+dqzlUtFQO9lWHe5VEBJi1gXHN5o3dKCLQDT/CH68SPhHS2Tso7wPK3buo5eUG2XA89a
+	pl8IBe4yMCysr6H2wSXfSiPBfzsewmpGwAcLNC7IUtmiAZyH2YigpOGatf+JxgK5wTd4aBGMy8q
+	wP5Gz46ULcZ+MIvqGZnsXOhV9i+XN2+/VCoNikz2pgx3CoQCEUDk5JTiI8hhtaxKOzZqi4Uw81e
+	bistqS/ACrEqalyU3Cs67WbZW1M6OTsIyMUCIGdIORVpfes63a+MFuemtF+wtE0tNcvHwvXaNeL
+	8rAV4OIa31HkITmtFbFhtBOgAPMLGcuHt
+X-Google-Smtp-Source: AGHT+IHtpOODdNjCttcGEwAR/ZOVtqTOG2M4YBetjV1pmZw+7+K6bzUcgHkJ0WZIOMLzC9g7ohrktw==
+X-Received: by 2002:adf:ec52:0:b0:3a4:e0ad:9aa5 with SMTP id ffacd0b85a97d-3b1fd26862cmr323703f8f.11.1751442747049;
+        Wed, 02 Jul 2025 00:52:27 -0700 (PDT)
+Received: from thomas-precision3591.. (eduroam-109159.grenet.fr. [130.190.109.159])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a88c7e6f74sm15321418f8f.3.2025.07.02.00.52.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 00:52:26 -0700 (PDT)
+From: Thomas Fourier <fourier.thomas@gmail.com>
+To: 
+Cc: Thomas Fourier <fourier.thomas@gmail.com>,
+	Chris Snook <chris.snook@gmail.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net] net: ag71xx: Add missing check after DMA map
+Date: Wed,  2 Jul 2025 09:50:46 +0200
+Message-ID: <20250702075048.40677-2-fourier.thomas@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/5] ARM: dts: aspeed: Add Facebook Darwin (AST2600) BMC
-To: rentao.bupt@gmail.com, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
- Andrew Jeffery <andrew@codeconstruct.com.au>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
- linux-kernel@vger.kernel.org, Tao Ren <taoren@meta.com>
-References: <20250702050421.13729-1-rentao.bupt@gmail.com>
- <20250702050421.13729-6-rentao.bupt@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250702050421.13729-6-rentao.bupt@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 02/07/2025 07:04, rentao.bupt@gmail.com wrote:
-> diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-darwin.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-darwin.dts
-> new file mode 100644
-> index 000000000000..f902230dada3
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-darwin.dts
-> @@ -0,0 +1,92 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +// Copyright (c) 2021 Facebook Inc.
-> +
-> +/dts-v1/;
-> +
-> +#include "ast2600-facebook-netbmc-common.dtsi"
-> +
-> +/ {
-> +	model = "Facebook Darwin BMC";
-> +	compatible = "facebook,darwin-bmc", "aspeed,ast2600";
+The DMA map functions can fail and should be tested for errors.
 
-Please run scripts/checkpatch.pl on the patches and fix reported
-warnings. After that, run also 'scripts/checkpatch.pl --strict' on the
-patches and (probably) fix more warnings. Some warnings can be ignored,
-especially from --strict run, but the code here looks like it needs a
-fix. Feel free to get in touch if the warning is not clear.
+Fixes: d51b6ce441d3 ("net: ethernet: add ag71xx driver")
+Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
+---
+ drivers/net/ethernet/atheros/ag71xx.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-It does not look like you tested the DTS against bindings. Please run
-`make dtbs_check W=1` (see
-Documentation/devicetree/bindings/writing-schema.rst or
-https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
-for instructions).
-Maybe you need to update your dtschema and yamllint. Don't rely on
-distro packages for dtschema and be sure you are using the latest
-released dtschema.
+diff --git a/drivers/net/ethernet/atheros/ag71xx.c b/drivers/net/ethernet/atheros/ag71xx.c
+index d8e6f23e1432..0e68ab225e0a 100644
+--- a/drivers/net/ethernet/atheros/ag71xx.c
++++ b/drivers/net/ethernet/atheros/ag71xx.c
+@@ -1198,7 +1198,8 @@ static int ag71xx_buffer_size(struct ag71xx *ag)
+ 
+ static bool ag71xx_fill_rx_buf(struct ag71xx *ag, struct ag71xx_buf *buf,
+ 			       int offset,
+-			       void *(*alloc)(unsigned int size))
++			       void *(*alloc)(unsigned int size),
++			       void (*free)(void *))
+ {
+ 	struct ag71xx_ring *ring = &ag->rx_ring;
+ 	struct ag71xx_desc *desc;
+@@ -1213,6 +1214,11 @@ static bool ag71xx_fill_rx_buf(struct ag71xx *ag, struct ag71xx_buf *buf,
+ 	buf->rx.rx_buf = data;
+ 	buf->rx.dma_addr = dma_map_single(&ag->pdev->dev, data, ag->rx_buf_size,
+ 					  DMA_FROM_DEVICE);
++	if (dma_mapping_error(&ag->pdev->dev, buf->rx.dma_addr)) {
++		free(data);
++		buf->rx.rx_buf = NULL;
++		return false;
++	}
+ 	desc->data = (u32)buf->rx.dma_addr + offset;
+ 	return true;
+ }
+@@ -1241,7 +1247,7 @@ static int ag71xx_ring_rx_init(struct ag71xx *ag)
+ 		struct ag71xx_desc *desc = ag71xx_ring_desc(ring, i);
+ 
+ 		if (!ag71xx_fill_rx_buf(ag, &ring->buf[i], ag->rx_buf_offset,
+-					netdev_alloc_frag)) {
++					netdev_alloc_frag, skb_free_frag)) {
+ 			ret = -ENOMEM;
+ 			break;
+ 		}
+@@ -1275,7 +1281,7 @@ static int ag71xx_ring_rx_refill(struct ag71xx *ag)
+ 
+ 		if (!ring->buf[i].rx.rx_buf &&
+ 		    !ag71xx_fill_rx_buf(ag, &ring->buf[i], offset,
+-					napi_alloc_frag))
++					napi_alloc_frag, skb_free_frag))
+ 			break;
+ 
+ 		desc->ctrl = DESC_EMPTY;
+@@ -1511,6 +1517,10 @@ static netdev_tx_t ag71xx_hard_start_xmit(struct sk_buff *skb,
+ 
+ 	dma_addr = dma_map_single(&ag->pdev->dev, skb->data, skb->len,
+ 				  DMA_TO_DEVICE);
++	if (dma_mapping_error(&ag->pdev->dev, dma_addr)) {
++		netif_dbg(ag, tx_err, ndev, "DMA mapping error\n");
++		goto err_drop;
++	}
+ 
+ 	i = ring->curr & ring_mask;
+ 	desc = ag71xx_ring_desc(ring, i);
+-- 
+2.43.0
 
-
-
-Best regards,
-Krzysztof
