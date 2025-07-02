@@ -1,376 +1,136 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C262DE6F5
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 20:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0FA62DE6F5;
+	Wed,  2 Jul 2025 20:57:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751489852; cv=none; b=FaVHmfTHHyimsG9EV5JFBZzMNrR3trVvi3IhY4JyOEKfev1dPzFSHIjizq/vn8wlPqWqMmVyI/iO+m6NPcruoSp4heYm0V33APDJm5EtcMP1lFSuLLXQkSfqyFbz6OR3u/ADZHgvKZKCYcJUJ+vVOAylcLgObnxdB2MaiRKCSqk=
+	t=1751489864; cv=none; b=sJB20PH0yhPgWLwmXDA0PRtYCQaxV233032m+hnCIjX4Wlan8bmaNLN8toWsjL3I46ka6AB5+Vhvnf7mcS9h5D6KZHa+waW/bOoNN5ffR+LraIDVy3+sih7+ck0Xg9yEh+b1pqPmg6f/VTv+w60p9ATgxtdNcnplw30GQ2SDMU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751489852; c=relaxed/simple;
-	bh=KDcXOE1zhROiHK+fRoIz8A4aWDXPZSi9W8bZeIQIp2o=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Y9bDTXl2wK61yPmM6pWSi1RlWDiPCIZgyMZe2kWSgAM9X1IPQae5stu2Xzlq4nmgOg9w94xAl0XDyqLP25BsSmelFh+eN6OjtCTdJlf6ZsNAgRiU4s2eHQXGQZNfkx44nW5jhnV5vcP6O90/N+usu5EnEr8asUJPkBGcFafzxu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nn2j6vj7; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+	s=arc-20240116; t=1751489864; c=relaxed/simple;
+	bh=ueVYBf/vvIdXw8MFHMMhsOsTsQ52WkYR53FawATwmKc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=s4BhehIOdNHBmX+3swweDFIkrbVhxB8jh/9Bj0O/Y/wmNanjuVCVhOk73EFRC4RI/5BGGWHm3zl0+q3SfXQfP6erDxCp02aS0zPAXSMKJSiXvpnD3bcoAYuZjmSWm3wKixn5kjta7T8E/BzH0eJbGXsktVnHWjRlIZaH0/zYP/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=goukj6F3; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nn2j6vj7"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b2fdba7f818so5567431a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 13:57:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="goukj6F3"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-234fcadde3eso64668205ad.0;
+        Wed, 02 Jul 2025 13:57:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751489850; x=1752094650; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sW4QNQizmwSJEDRBMKEYI4xwGlCEtKex6a+194UsQcU=;
-        b=nn2j6vj7lB1M+St5b7ynLC8TWX064VPvd1tM9pFRCzgiHVwj7Jl6Qg9rvjUuY+MCyA
-         yd+Qazl8mDT5HE2Y3LIZw1Y2KWigLT0pXiLM4LOFMG3PuJobXUxRz1jB9XfAYK1oyixj
-         jWKzyBqNUq7qOnxzKZFtSOjbIP1as0n/bLZOwewZFM1a1Omhc6o7gD2OPpejay7YGDI5
-         LN25vAlm/NdRnxiOFIKHr1zg3sTgCM1QrD2N4RLtFBVSfELz36pzO3hlpwUHMz0HRP7e
-         sh7gneqX6ODWBpX14Koif8FjCHU/6wfflRWCgslhw/iSUyPc6XzCkudZvjzoi6yMqdDE
-         AU4Q==
+        d=googlemail.com; s=20230601; t=1751489862; x=1752094662; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ueVYBf/vvIdXw8MFHMMhsOsTsQ52WkYR53FawATwmKc=;
+        b=goukj6F3jMQs5Cs5faSOT2muGXw9Ss04Jf08C9/1MfOtj58XzmKlKN7aNNubDNxOpz
+         Eq3lHya5yp6JRl6n69kyKgC2i4hrGlbCnPPg28uMVFhwhiP3wjftSCRVPQHKJL7vA+Px
+         yYEYvr+E5c8h9xTgO/FGoXoJcavhZONnj5oX+RIbXzW+XtUj5pg8uQS+u0yonMhj+4Zh
+         mIBfRWeSlgNHumoTZGyP9UaWXKYI5TFq8lSWB/gwwMLYkJI8dk/86AMz4SowXM6YROvr
+         fUBZif9x5uVxIPgzTKAwdhfoZ/QvhRedTiFAzyrsG657GxHHYH36zSF09IP5Xx1OXzqS
+         WzGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751489850; x=1752094650;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=sW4QNQizmwSJEDRBMKEYI4xwGlCEtKex6a+194UsQcU=;
-        b=HAh7W8lsa6R5PMmoedsMvtBtNFEUTgFeu++6Qa9nIwLm+VTKN8ByeUrZAgIrPImvKS
-         0SYomcZdLBeN8Ex7ommFrMz962OrUXBFkrwga0oJic/HTs+vPdLNlRJ20Ir8fyRbxw/f
-         Ny1HBlisSI9qAjNvdnlO18kXNsGY28eSTDEH7OC9HpWrLVdOoa8rtD6XdGtJm3xnyO7H
-         YCUbZJ3ZhZuvFCOvQSpklXI5ar+7cPLwlnUkWSa4GCmvwdn/xFJn4717+oGaeyFD3egT
-         Gp7gyIZcsLS3UKPI9EZAnbXryPOs3aSetReK76J9AWXImnk3cmAq6D71H87EFEn91+v7
-         Ebzw==
-X-Forwarded-Encrypted: i=1; AJvYcCWLfn5Qs6xqyQzPgmSbxnCYwWmu6eh81GrY/Ee9Lc7mMl0uoxp4ZsLwHVs/aQyku38JY/6mSJXV0TeAquw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKZh8qxXDSxU2HWRM7E72ZCQovSIJJF9KKfjGxs8M9WxiaZ6Z1
-	m5023NtqBAdHy80bkY0xpmyAFMKDY6Go0TUTacB6pOgKp3mozl896cuMzxIeEG3zjeQl4ObjZ/z
-	Lm/IaGehcoTHS0ckyihhGrqRdrQ==
-X-Google-Smtp-Source: AGHT+IFb6SLIfuP52bs7wPWNruqTvRPL2KxyKrl6XOJ9FUw5uFkFZJRds7UighTHcqwZzHj8XWrac1IRDdOAVI0Q4w==
-X-Received: from pghq9.prod.google.com ([2002:a63:e209:0:b0:b36:36f4:9862])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6300:6199:b0:215:ead1:b867 with SMTP id adf61e73a8af0-222d7de178bmr7733706637.14.1751489849762;
- Wed, 02 Jul 2025 13:57:29 -0700 (PDT)
-Date: Wed, 02 Jul 2025 13:57:28 -0700
-In-Reply-To: <04d3e455d07042a0ab8e244e6462d9011c914581.camel@intel.com>
+        d=1e100.net; s=20230601; t=1751489862; x=1752094662;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ueVYBf/vvIdXw8MFHMMhsOsTsQ52WkYR53FawATwmKc=;
+        b=WDXivzKL7CLI6GmBwOtHsfr2U/B5GToj6IcwaMJes3qXOiM4/Q6ARAvqrxKbmIFIYF
+         m20hDoRMyUNLtmwfWlNNyvJj0C/uhe1ry++p2OHAqxkNpK813ioHme6BsI0uMKYB56N9
+         JLDdtPzAqRcL7U3BLS/AWORPut3i9y8WMMpgBJE+XcZR+4dwsfc97VTgDbe8nM7lY0Uh
+         gIpWrIBWZrPPrVcVGUzJ0PDGONHVI4dHjAgqp8zTNP5zkhqzfwMd4P+xWd0LYIDVDCcA
+         SGHBBBgpXv3WmrGcz9gLB7bWNCbFYWAK1r041QOUAeP4J2Jw6pUrlH5z/ZqHTaS7ZTV6
+         bOdA==
+X-Forwarded-Encrypted: i=1; AJvYcCUDyCm3mpk/d385DViJkmJu1GVOLyj8D/FG0lRo4Kq8jBdIU1HxzQC+oBYRA82oOGXDutAipaE6Bl/I@vger.kernel.org, AJvYcCUPdhSnLffQoFw1LX773vGCaE+qNmFTDYFrUPIsZ5Oe+K8pEZbzjYfFvms9QSiYzJGVUloptpCbzMoZepY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGEpmyPZXQXtDft/mC9hOvNw/0So7CwT4i85sQ61qQ0RnTgzjN
+	CLYL5hzk+J76BlfWMxiSIm3673AU+4ayznnxPsica+nGP8intL3c32SOcOeg5B4wEs37VjHWERC
+	viM5tMGlcyGm556MF7eHjKzgHtlIxzw4=
+X-Gm-Gg: ASbGncuxUpcOItC914LG+B/t9A1imKAXaOnO8bjwhwqjK1XSbRl3JVAO66lwtfBeKhC
+	2C3jkvHn1PVC2Ife3qkpy1swJU49b1ze0rGZfXD7dGL8ZWWZo0nXuay0iUdRDP5MupC8MG3hcpa
+	6TAhNcFR91aiRNGTFz7D+7EkeL892CiLewb3fndSIlP9maxU5CFRLFFCkEX6n/+Hrt9J0mCmjtP
+	ULX
+X-Google-Smtp-Source: AGHT+IGjgIPfifmbYpcB2lF3QfBA5zuc6wFJQKxRY4/yEEmq/VYap82lAwrs8+bzvEScw/tJQqdROF0TMX1gsfJcQ+g=
+X-Received: by 2002:a17:902:d481:b0:235:f078:473e with SMTP id
+ d9443c01a7336-23c6e5cade9mr66917995ad.43.1751489862178; Wed, 02 Jul 2025
+ 13:57:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <a3cace55ee878fefc50c68bb2b1fa38851a67dd8.camel@intel.com>
- <diqzms9vju5j.fsf@ackerleytng-ctop.c.googlers.com> <447bae3b7f5f2439b0cb4eb77976d9be843f689b.camel@intel.com>
- <zlxgzuoqwrbuf54wfqycnuxzxz2yduqtsjinr5uq4ss7iuk2rt@qaaolzwsy6ki>
- <4cbdfd3128a6dcc67df41b47336a4479a07bf1bd.camel@intel.com>
- <diqz5xghjca4.fsf@ackerleytng-ctop.c.googlers.com> <aGJxU95VvQvQ3bj6@yzhao56-desk.sh.intel.com>
- <a40d2c0105652dfcc01169775d6852bd4729c0a3.camel@intel.com>
- <diqzms9pjaki.fsf@ackerleytng-ctop.c.googlers.com> <fe6de7e7d72d0eed6c7a8df4ebff5f79259bd008.camel@intel.com>
- <aGNrlWw1K6nkWdmg@yzhao56-desk.sh.intel.com> <cd806e9a190c6915cde16a6d411c32df133a265b.camel@intel.com>
- <diqzy0t74m61.fsf@ackerleytng-ctop.c.googlers.com> <04d3e455d07042a0ab8e244e6462d9011c914581.camel@intel.com>
-Message-ID: <diqz7c0q48g7.fsf@ackerleytng-ctop.c.googlers.com>
-Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge pages
-From: Ackerley Tng <ackerleytng@google.com>
-To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, "Zhao, Yan Y" <yan.y.zhao@intel.com>
-Cc: "quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, "Li, Xiaoyao" <xiaoyao.li@intel.com>, 
-	"Li, Zhiquan1" <zhiquan1.li@intel.com>, "Du, Fan" <fan.du@intel.com>, 
-	"Hansen, Dave" <dave.hansen@intel.com>, "david@redhat.com" <david@redhat.com>, 
-	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, "tabba@google.com" <tabba@google.com>, 
-	"vbabka@suse.cz" <vbabka@suse.cz>, "Shutemov, Kirill" <kirill.shutemov@intel.com>, 
-	"michael.roth@amd.com" <michael.roth@amd.com>, "seanjc@google.com" <seanjc@google.com>, 
-	"Weiny, Ira" <ira.weiny@intel.com>, "Peng, Chao P" <chao.p.peng@intel.com>, 
-	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "Yamahata, Isaku" <isaku.yamahata@intel.com>, 
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"Annapurve, Vishal" <vannapurve@google.com>, "jroedel@suse.de" <jroedel@suse.de>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Miao, Jun" <jun.miao@intel.com>, 
-	"pgonda@google.com" <pgonda@google.com>, "x86@kernel.org" <x86@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <20250628015328.249637-1-da@libre.computer> <CANAwSgTH67T9SBQSFQgFjvyrxNCbtfd9ZaCDZFACWA=ZQ-PYtQ@mail.gmail.com>
+ <CAFBinCBwTkVwcBTWOzS+G13+rRM2eftMXZ3GHzW+F+BY0bBBzg@mail.gmail.com>
+ <1j4ivued2q.fsf@starbuckisacylon.baylibre.com> <CACqvRUa8EqMbCd2x=di-a6jbMWW8CMo4kgLH=0qnsqHdO16kxA@mail.gmail.com>
+ <CAFBinCAkW+G9oV+SOJdac50oLezQnbc358dBgs56-RfjPd-zgA@mail.gmail.com> <CACqvRUYwwgRqid8AbLJ7bp+gTyHw2c=o-pj435Z0PDriJcnnKQ@mail.gmail.com>
+In-Reply-To: <CACqvRUYwwgRqid8AbLJ7bp+gTyHw2c=o-pj435Z0PDriJcnnKQ@mail.gmail.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date: Wed, 2 Jul 2025 22:57:31 +0200
+X-Gm-Features: Ac12FXz6XZtGm-3ti_MXvq5_F1onfeA5_tjNx4dcE-d4NTCOTzJlhlVHJUTnayc
+Message-ID: <CAFBinCA-aFNd+UQR5oWBY+HtMcdefeiH4Oc6bvZTaYDxowYCjw@mail.gmail.com>
+Subject: Re: [RFC] mmc: meson-gx-mmc: add delay during poweroff
+To: Da Xue <da@libre.computer>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Anand Moon <linux.amoon@gmail.com>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Kevin Hilman <khilman@baylibre.com>, linux-mmc@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-"Edgecombe, Rick P" <rick.p.edgecombe@intel.com> writes:
-
-> On Tue, 2025-07-01 at 14:48 -0700, Ackerley Tng wrote:
->> Perhaps we had different understandings of f/g :P
+On Wed, Jul 2, 2025 at 9:07=E2=80=AFPM Da Xue <da@libre.computer> wrote:
 >
-> Ah yes, I thought you were saying that guestmemfd would use poison intern=
-ally
-> via some gmem_buggy_page() or similar. I guess I thought it is more of
-> guestmemfd's job. But as Yan pointed out, we need to handle non gmem page=
- errors
-> too. Currently we leak, but it would be nice to keep the handling symmetr=
-ical.
-> Which would be easier if we did it all in TDX code.
+> On Wed, Jul 2, 2025 at 2:40=E2=80=AFPM Martin Blumenstingl
+> <martin.blumenstingl@googlemail.com> wrote:
+> >
+> > On Wed, Jul 2, 2025 at 7:22=E2=80=AFPM Da Xue <da@libre.computer> wrote=
+:
+> > >
+> > > On Wed, Jul 2, 2025 at 1:07=E2=80=AFPM Jerome Brunet <jbrunet@baylibr=
+e.com> wrote:
+> > > ...
+> > > > If, as the description suggest, the regulator framework somehow ign=
+ore
+> > > > the timing set in DT, maybe this is what needs to be checked ?
+> > >
+> > > The regulator framework only cares about timing for regulator on.
+> > > Regulator off just turns off the regulator and returns without delay.
+> > There's an exception to this: gpio-regulators without an enable-gpios
+> > property. My understanding is that regulator_disable() is a no-op in
+> > that case (meson_mmc_set_ios() even has a comment above the
+> > switch/case statement), see [0].
+> >
+> > > The code makes incorrect assumptions. Then the kernel resets the boar=
+d
+> > > without having enough time.
+> > Can you please name the board you're testing? I'm worried that I'll be
+> > looking at one .dts but you're looking at another one.
 >
-
-I meant to set HWpoison externally from guest_memfd because I feel that
-it is a separate thing. Unmap failures are similar to discovering a
-memory error. If setting HWpoison on memory error is external to
-guest_memfd, setting HWpoison on unmap failure should also be
-conceptually external to guest_memfd.
-
-After Yan pointed out that non-guest_memfd page errors need to be
-handled, it aligns with the idea that setting HWpoison is external to
-guest_memfd.
-
-I agree keeping the handling symmetrical would be best, so in both cases
-the part of KVM TDX code that sees the unmap failure should directly set
-HWpoison and not go through guest_memfd.
-
->>=20
->> I meant that TDX module should directly set the HWpoison flag on the
->> folio (HugeTLB or 4K, guest_memfd or not), not call into guest_memfd.
->>=20
->> guest_memfd will then check this flag when necessary, specifically:
->>=20
->> * On faults, either into guest or host page tables=20
->> * When freeing the page
->> =C2=A0=C2=A0=C2=A0 * guest_memfd will not return HugeTLB pages that are =
-poisoned to
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 HugeTLB and just leak it
->> =C2=A0=C2=A0=C2=A0 * 4K pages will be freed normally, because free_pages=
-_prepare() will
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 check for HWpoison and skip freeing, from=
- __folio_put() ->
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 free_frozen_pages() -> __free_frozen_page=
-s() ->
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 free_pages_prepare()
->> * I believe guest_memfd doesn't need to check HWpoison on conversions [1=
-]
->>=20
->> [1] https://lore.kernel.org/all/diqz5xghjca4.fsf@ackerleytng-ctop.c.goog=
-lers.com/
+> https://github.com/libre-computer-project/libretech-linux/blob/master/arc=
+h/arm64/boot/dts/amlogic/meson-libretech-cottonwood.dtsi#L481
 >
-> If a poisoned page continued to be used, it's a bit weird, no?=20
-
-Do you mean "continued to be used" in the sense that it is present in a
-filemap and belongs to a (guest_memfd) inode?
-
-A poisoned page is not faulted in anywhere, and in that sense the page
-is not "used". In the case of regular poisoning as in a call to
-memory_failure(), the page is unmapped from the page tables. If that
-page belongs to guest_memfd, in today's code [2], guest_memfd
-intentionally does not truncate it from the filemap. For guest_memfd,
-handling the HWpoison at fault time is by design; keeping it present in
-the filemap is by design.
-
-In the case of TDX unmap failures leading to HWpoison, the only place it
-may remain mapped is in the Secure-EPTs. I use "may" because I'm not
-sure about how badly the unmap failed. But either way, the TD gets
-bugged, all vCPUs of the TD are stopped, so the HWpoison-ed page is no
-longer "used".
-
-[2] https://github.com/torvalds/linux/blob/b4911fb0b060899e4eebca0151eb56de=
-b86921ec/virt/kvm/guest_memfd.c#L334
-
-> It could take an
-> #MC for another reason from userspace and the handling code would see the=
- page
-> flag is already set. If it doesn't already trip up some MM code somewhere=
-, it
-> might put undue burden on the memory failure code to have to expect repea=
-ted
-> poisoning of the same memory.
->
-
-If it does take another #MC and go to memory_failure(), memory_failure()
-already checks for the HWpoison flag being set [3]. This is handled by
-killing the process. There is similar handling for a HugeTLB
-folio. We're not introducing anything new by using HWpoison; we're
-buying into the HWpoison framework, which already handles seeing a
-HWpoison when handling a poison.
-
-[3] https://github.com/torvalds/linux/blob/b4911fb0b060899e4eebca0151eb56de=
-b86921ec/mm/memory-failure.c#L2270
-
->>=20
->> > What about a kvm_gmem_buggy_cleanup() instead of the system wide one. =
-KVM calls
->> > it and then proceeds to bug the TD only from the KVM side. It's not as=
- safe for
->> > the system, because who knows what a buggy TDX module could do. But TD=
-X module
->> > could also be buggy without the kernel catching wind of it.
->> >=20
->> > Having a single callback to basically bug the fd would solve the atomi=
-c context
->> > issue. Then guestmemfd could dump the entire fd into memory_failure() =
-instead of
->> > returning the pages. And developers could respond by fixing the bug.
->> >=20
->>=20
->> This could work too.
->>=20
->> I'm in favor of buying into the HWpoison system though, since we're
->> quite sure this is fair use of HWpoison.
->
-> Do you mean manually setting the poison flag, or calling into memory_fail=
-ure(),
-> and friends?
-
-I mean manually setting the poison flag.
-
-* If regular 4K page, set the flag.
-* If THP page (not (yet) supported by guest_memfd), set the poison flag
-  on the specific subpage causing the error, and in addition set THP'S has_=
-hwpoison
-  flag
-* If HugeTLB page, call folio_set_hugetlb_hwpoison() on the subpage.
-
-This is already the process in memory_failure() and perhaps some
-refactoring could be done.
-
-I think calling memory_failure() would do too much, since in addition to
-setting the flag, memory_failure() also sometimes does freeing and may
-kill processes, and triggers the users of the page to further handle the
-HWpoison.
-
-> If we set them manually, we need to make sure that it does not have
-> side effects on the machine check handler. It seems risky/messy to me. Bu=
-t
-> Kirill didn't seem worried.
->
-
-I believe the memory_failure() is called from the machine check handler:
-
-DEFINE_IDTENTRY_MCE(exc_machine_check)
-  -> exc_machine_check_kernel()
-     -> do_machine_check()
-        -> kill_me_now() or kill_me_maybe()
-           -> memory_failure()
-
-(I might have quoted just one of the paths and I'll have to look into it
-more.)
-
-For now, IIUC setting the poison flag is a subset of memory_failure(), whic=
-h is a
-subset of what the machine check handler does.
-
-memory_failure() handles an already poisoned page, so I don't see any
-side effects.
-
-I'm happy that Kirill didn't seem worried :) Rick, let me know if you
-see any specific risks.
-
-> Maybe we could bring the poison page flag up to DavidH and see if there i=
-s any
-> concern before going down this path too far?
->
-
-I can do that. David's cc-ed on this email, and I hope to get a chance
-to talk about handling HWpoison (generally, not TDX specifically) at the
-guest_memfd bi-weekly upstream call on 2025-07-10 so I can bring this up
-too.
-
->>=20
->> Are you saying kvm_gmem_buggy_cleanup() will just set the HWpoison flag
->> on the parts of the folios in trouble?
->
-> I was saying kvm_gmem_buggy_cleanup() can set a bool on the fd, similar t=
-o
-> VM_BUG_ON() setting vm_dead.
-
-Setting a bool on the fd is a possible option too. Comparing an
-inode-level boolean and HWpoison, I still prefer HWpoison because
-
-1. HWpoison gives us more information about which (sub)folio was
-   poisoned. We can think of the bool on the fd as an fd-wide
-   poisoning. If we don't know which subpage has an error, we're forced
-   to leak the entire fd when the inode is released, which could be a
-   huge amount of memory leaked.
-2. HWpoison is already checked on faults, so there is no need to add an
-   extra check on a bool
-3. For HugeTLB, HWpoison will have to be summarized/itemized on merge/split=
- to handle
-   regular non-TDX related HWpoisons, so no additional code there.
-
-> After an invalidate, if gmem see this, it needs to
-> assume everything failed, and invalidate everything and poison all guest =
-memory.
-> The point was to have the simplest possible handling for a rare error.
-
-I agree a bool will probably result in fewer lines of code being changed
-and could be a fair first cut, but I feel like we would very quickly
-need another patch series to get more granular information and not have
-to leak an entire fd worth of memory.
-
-Along these lines, Yan seems to prefer setting HWpoison on the entire
-folio without going into the details of the exact subfolios being
-poisoned. I think this is a possible in-between solution that doesn't
-require leaking the entire fd worth of memory, but it still leaks more
-than just where the actual error happened.
-
-I'm willing to go with just setting HWpoison on the entire large folio
-as a first cut and leak more memory than necessary (because if we don't
-know which subpage it is, we are forced to leak everything to be safe).
-
-However, this patch series needs a large page provider in guest_memfd, and
-will only land either after THP or HugeTLB support lands in
-guest_memfd.
-
-For now if you're testing on guest_memfd+HugeTLB,
-folio_set_hugetlb_hwpoison() already exists, why not use it?
-
-> Although
-> it's only a proposal. The TDX emergency shutdown option may be simpler st=
-ill.
-> But killing all TDs is not ideal. So thought we could at least consider o=
-ther
-> options.
->
-> If we have a solution where TDX needs to do something complicated because
-> something of its specialness, it may get NAKed.
-
-Using HWpoison is generic, since guest_memfd needs to handle HWpoison
-for regular memory errors anyway. Even if it is not a final solution, it
-should be good enough, if not for this patch series to merge, at least
-for the next RFC of this patch series. :)
-
-> This is my main concern with the
-> direction of this problem/solution. AFAICT, we are not even sure of a con=
-crete
-> problem, and it appears to be special to TDX. So the complexity budget sh=
-ould be
-> small. It's in sharp contrast to the length of the discussion.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+> vcc_card is a gpio regulator that gets toggled on->off->on.
+Thanks, that clears things up as I was indeed looking at a gpio
+regulator while this is a fixed regulator!
+
+> I traced the regulator framework a few weeks ago and forgot the final
+> regulator disable function call, but that call basically returned
+> immediately while the regulator-enable function complement had delays
+> implemented.
+Yep, for fixed regulators there's an "off-on-delay-us" device-tree
+property (which translates to "off_on_delay" in the code).
+Its implementation is smart enough to not waste time by adding delays
+at runtime by implementing: on -> off + remember time -> wait
+remaining time + on (meaning: if there was enough time between off and
+the second on there's no additional wait) [0]. On system shutdown it
+will not add any delay unfortunately (where Linux loses control over
+time-keeping), meaning we can end up with too little waiting time.
+
+Also my understanding is that it's not something that can be fixed in
+u-boot or TF-A. This is because bootrom already has trouble reading
+the next stage from an SD card (which is a valid boot media).
+
+
+[0] https://elixir.bootlin.com/linux/v6.15/source/drivers/regulator/core.c#=
+L2754
