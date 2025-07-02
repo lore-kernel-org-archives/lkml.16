@@ -1,231 +1,250 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99886200BA1;
-	Wed,  2 Jul 2025 07:55:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751442947; cv=fail; b=LOzEIt21o1Y7XCHn4kEXPVqeldnDjad9IO917KdK7niVFi2t73yQw7/2DigAFWT9zvT4eaQ1yKtrPbYQ1bBGPWpcFRtej4OOTgX9pRgxM6AqoNUkc2SwrDD+3s1wodE2+iGwcgQ8frM5qwdEMIJsqZ9zAaqNtK77MGBmn+ePzHE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751442947; c=relaxed/simple;
-	bh=q7Q7Jq1JIpzy56YmeTUZSKSRLNZDC1sXkYrrc0WoJhw=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=KQqTSU0WuXoaC5gHFrGJFU0uwfkXnu36eY37KtyYs1CCYDEA5IlaRw4YCks25INLyvlGq805o1w5rtH+f3WAhEBERy3ZjejquMhkpbBgHz90C1CRJyNguSBXRslTOOgoVJ//Zo0XFdSXSQ0OOmqt4Q6p1ixPRNTdGMUytJbx69M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FqGxchHr; arc=fail smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04776211F;
+	Wed,  2 Jul 2025 07:56:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751443015; cv=none; b=kC/HYumFPY30SZzxcZKvmpCnpvaXHN0Kfyu4y9pPIJWDRl8bFDVmepLRVbMHmbmsyq/VNQAd8V8xvOBQR1fd9lfD6cjYLhO35UwH7YUmvOF//bTXK5LuYU3PfRYSPP3k75p5eXbfkf+Z6tmuh3O11Ft36Nt3FrOhGHaD2cB2NmY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751443015; c=relaxed/simple;
+	bh=Q1X6bbdTEe0yaSMMjkEwghrZRhqOzko97t3w24mThPc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=RCImwZleXOQb7e/SSQkKcl4hhfp6IJy2CRQaeYqr9RnUnTc6uj09eDfBWt2JZqGdmBN/iYpP/6Aq9h73SnCiNR9+adWW5zca9pks0OKmL9LYD6FO482bREOeQAgPEDpRZdf6WrNcQKyBJBlMQq+G2I8Fx8fsbyIl4mrw7Ar635A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mkEbQmU+; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FqGxchHr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751442946; x=1782978946;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=q7Q7Jq1JIpzy56YmeTUZSKSRLNZDC1sXkYrrc0WoJhw=;
-  b=FqGxchHrBb1v/+tfW6Yw3vJh0uuZhmV+Luo2XwKmFejDQ4GNiIsNOHTk
-   2QOXrZucJzfBUmU1SDz+Mhpy5hFlkmUBwM2BiOsKYrdR3j0BvCWrOgr2J
-   kj92e1IOud9nZe7DqdXqiHZVr+cRQVWjYiW5JWZLVx0+PfrOUfwtHQVJX
-   JSp/8Ko40xBVsB/RcGaFgw79McmkpIiJ6iMkGs82mu3dIBw/q6JxvYK5k
-   xdt5WTvVbH/gGFN3ZOWGISuQ1b8ad24kZ0Sw1/P++XXTRH5X3jfXEszRy
-   Dp5dFGwybQdqaoVIP4+N60Httjrqic+Nt9WnqJsAJ/hUN3xfPk+uBa4GS
-   Q==;
-X-CSE-ConnectionGUID: 9TEFQPBjScSLVivSHQGzrA==
-X-CSE-MsgGUID: CWS+DHlzQ+qv7XbpbLj2tQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="64421616"
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="64421616"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 00:55:44 -0700
-X-CSE-ConnectionGUID: zzTzT3NQR/CMmemX9Im/Kw==
-X-CSE-MsgGUID: ol0naELHQCqGmUF6lS5ysw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="154088325"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 00:55:43 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 2 Jul 2025 00:55:43 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Wed, 2 Jul 2025 00:55:43 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (40.107.236.42)
- by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 2 Jul 2025 00:55:42 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Yp844wdDgLa/9jzVtTM3rKQGewiqiEJq3D/1wvAoMuBJhDvNBgJvaVzRl/4TxQDKSvWcrsix0z0fUru427eZXiK6BOpzVC8xzYhQOgJgTz5Yy54b066v2fWTAQSOn0tvRnvYJ7Huv4GbSoG6YPT8rGxd7QplIXxnu/6GvShX2CkYOP86QDkNXY4mLcvLAPCeweB9KIWrmr+Ongx6H0mkpfd/xsn23ndYT9KFgI9i+nz4bCA+aLjCQlLv6qu0gu2nbFEmvCm6pXzVzwYBXVcbUV//XszxNG8A/gUWxWvbX1pxQ6Z0t94CgwTvRqcq7h7bauM077EOuwCRgv7OTDsiRw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YG3ZoaNkvH0G9xHejdNAfdMNo5K33aNNeu7c0PfIjik=;
- b=xKrmnvq9XoU1g6NpWLWebiobHsiJCrtY82RjQ75jaRQItrSP7a4kD34fz7k9LGaNgPTYl0YJ8CIHlpB6/GxTZhJ1yozMuYhb76we4dNzWOT/bir+U7f7KrLuQLSQtgHkjSbFl2HO7gvtOmJfgmKsVs2ygjPBXZGktzLQfS9favjaaMZv+Gg38X0gZK2wZ5ZRXsKO2Twe5QZiDSVrPLxM5esVA58ophg9g0iSuPVGhn4fwUhBSXvXkRyIE0B1xx6D2gpLXdDsA6SnH0wnPDZPw7w721QumT2ibhJ/ETOFvtDrJr853QBM10kFHeL0Rpn+K2366JLNlzBcZTJpn6i+hg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CH3PR11MB8660.namprd11.prod.outlook.com (2603:10b6:610:1ce::13)
- by SA3PR11MB8047.namprd11.prod.outlook.com (2603:10b6:806:2fc::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.20; Wed, 2 Jul
- 2025 07:55:13 +0000
-Received: from CH3PR11MB8660.namprd11.prod.outlook.com
- ([fe80::cfad:add4:daad:fb9b]) by CH3PR11MB8660.namprd11.prod.outlook.com
- ([fe80::cfad:add4:daad:fb9b%5]) with mapi id 15.20.8835.025; Wed, 2 Jul 2025
- 07:55:12 +0000
-Date: Wed, 2 Jul 2025 15:54:59 +0800
-From: Chao Gao <chao.gao@intel.com>
-To: Kai Huang <kai.huang@intel.com>
-CC: <dave.hansen@intel.com>, <bp@alien8.de>, <tglx@linutronix.de>,
-	<peterz@infradead.org>, <mingo@redhat.com>, <hpa@zytor.com>,
-	<thomas.lendacky@amd.com>, <x86@kernel.org>,
-	<kirill.shutemov@linux.intel.com>, <rick.p.edgecombe@intel.com>,
-	<linux-kernel@vger.kernel.org>, <pbonzini@redhat.com>, <seanjc@google.com>,
-	<kvm@vger.kernel.org>, <reinette.chatre@intel.com>,
-	<isaku.yamahata@intel.com>, <dan.j.williams@intel.com>,
-	<ashish.kalra@amd.com>, <nik.borisov@suse.com>, <sagis@google.com>, "Farrah
- Chen" <farrah.chen@intel.com>
-Subject: Re: [PATCH v3 6/6] KVM: TDX: Explicitly do WBINVD upon reboot
- notifier
-Message-ID: <aGTl09wV1Kt6b0Hz@intel.com>
-References: <cover.1750934177.git.kai.huang@intel.com>
- <6cc612331718a8bdaae9ee7071b6a360d71f2ab8.1750934177.git.kai.huang@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <6cc612331718a8bdaae9ee7071b6a360d71f2ab8.1750934177.git.kai.huang@intel.com>
-X-ClientProxiedBy: SG2P153CA0043.APCP153.PROD.OUTLOOK.COM (2603:1096:4:c6::12)
- To CH3PR11MB8660.namprd11.prod.outlook.com (2603:10b6:610:1ce::13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mkEbQmU+"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a582e09144so2990700f8f.1;
+        Wed, 02 Jul 2025 00:56:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751443012; x=1752047812; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=iV/Ph2dG/u7sFBYK4MRj6qlkNVP0kA9qMDQUm1APqRw=;
+        b=mkEbQmU+nQlsK22g6e36oNoe6ZzTGFVZHw87FMIS0ON3doEKGaUP1XAuCZGtWrZ0Lq
+         8vSVlXHO9Sa0KKcsM3bMgHVboMa36Se+zg8XiZh6xxx8pgS/Bykoul5aMuE+aT/eTiV3
+         FGlK/YIMQIFaGOY4dWjCNsPj/JhIJP1K6Aekp3lo9NqdMcFGGrArzMtkjg/q8PIy1jNX
+         62LfJqljk5PdVLuPImFOecbPfJ2gudutHQumZxolUGN4Jih+67+rAKcRHqYFmIv6wS10
+         lm6Nx/7ZSj9rVtThelgFT3Fh93ih9VPLXK0Q8XFqtyQonuVjlfiz/AFJWZwA9ovyTvCi
+         qZJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751443012; x=1752047812;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=iV/Ph2dG/u7sFBYK4MRj6qlkNVP0kA9qMDQUm1APqRw=;
+        b=Pjri87IFlsYmwFhtWJOC9EOduC0Ul2c5oJW72D9mZgHZ1spUHRbYumGmzO8r0IrcS0
+         sk7OUzfNMIfq1xxVKqRbBBUEiJq/35srJs3BzLTNwxcUaw87Ivw4uWjKOiL18oB4ucJc
+         mu9iaZJfF5Q3pnPzBtILWdXvpu1OaXkwcBuX4Skky1CwxG5ly8Rn5JgI6G30gYqFDDXF
+         vC5R1p82Xt4Cz7m6ATL605O4af91Bq3GDnqa4ruCNoSxWdhFqKwDWHJpC2W7tYvgszsy
+         +VQb5cNGKiHSeTyHeS48lqk6XyJpRFtdO/KH/xdja/yLPPJfKem8YDD8HGzwexkCrQmz
+         etVA==
+X-Forwarded-Encrypted: i=1; AJvYcCVD4f5YnSWga3tS1cqKTzqD3p2zGcC8FQUFzpzJh3u4ZRBUS/V5GhfrzxOJIixgFaNYMtkUfceyWpox@vger.kernel.org, AJvYcCXGibaYhJtabClwcLiyEmAHVixXogbuVd3NhvghF4+JqEaFLRprCsp7p0byjBeYpCRT15jGH4PNCNh2@vger.kernel.org, AJvYcCXR9zHXKRCiwP2MGEKIRqx/MuBY+Ab5Y2NC97znD5+BqRkKvZNINCfi/b9Oy4A4bHq/nyqP5GlMFQu7VQDC@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy469XOjWD1T7SinwbYwXd8h1AYC8Uw2jN4obMzipS1gJ1yfL+s
+	8Ywm1ov6R2em9JqVgtS0vBSVOOIjhPdboAVWzun4Rm12e+auaiPLG3yizRYIXE4W
+X-Gm-Gg: ASbGncsMB9SB9g8Zdo8nJ5PclWvPy2gtY+UcCHltfrf30svFhfNZGc+o1JIT9AIWDNG
+	kT+rabC6ZhFhzJzVFqrwfsJC6uZwezhIBDS9aoxG0lm+bfIpVetmvt6LVgMQJ5UGZm1eiQNji3p
+	kDpag/w/TmyCPIZRzCabZFzwTqSwslKyWv1RBSUuEnrPTAMq+WCrZhKAZ0fKB39zXNypORC5baj
+	bolsnsfoEJAm41rNtzUy8/32OlNIBu78CDByU/VjCwFtd+d2yxtzvypxckRcHv3p13DRqhppzJw
+	vFg8U8tHdfZgWn2l40pRjTjgYbWHaF/G+9ecSdsshEW7Mnm7oNa+K29IIl6sJjJ6SnY8Ig==
+X-Google-Smtp-Source: AGHT+IGZkSowDuNZoXR+Ii7wVfmX3g9XMV/x4oWBOkv9yus3iBnYI5QLGYpYmv9BhmtvRzH01HlHDQ==
+X-Received: by 2002:adf:8b04:0:b0:3a4:ec23:dba7 with SMTP id ffacd0b85a97d-3b20095cd2bmr746462f8f.31.1751443012005;
+        Wed, 02 Jul 2025 00:56:52 -0700 (PDT)
+Received: from [192.168.1.187] ([161.230.67.253])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538233c4acsm216227585e9.1.2025.07.02.00.56.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 00:56:51 -0700 (PDT)
+Message-ID: <52c1fe276d16b68b955a00d0417b40902e2aa56e.camel@gmail.com>
+Subject: Re: [PATCH v3 10/12] spi: offload trigger: add ADI Util Sigma-Delta
+ SPI driver
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: David Lechner <dlechner@baylibre.com>, Michael Hennerich
+	 <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, Nuno
+ =?ISO-8859-1?Q?S=E1?=
+	 <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring
+	 <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	 <conor+dt@kernel.org>, Mark Brown <broonie@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-spi@vger.kernel.org
+Date: Wed, 02 Jul 2025 08:57:02 +0100
+In-Reply-To: <20250701-iio-adc-ad7173-add-spi-offload-support-v3-10-42abb83e3dac@baylibre.com>
+References: 
+	<20250701-iio-adc-ad7173-add-spi-offload-support-v3-0-42abb83e3dac@baylibre.com>
+	 <20250701-iio-adc-ad7173-add-spi-offload-support-v3-10-42abb83e3dac@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR11MB8660:EE_|SA3PR11MB8047:EE_
-X-MS-Office365-Filtering-Correlation-Id: 277bb017-2404-4242-7d82-08ddb93dc5fc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?tjkSAVn1bH7uYnwJWqVna7j7iNFNvxxtP6iMz/HQtAuEswr7KtnhmW4OYSiP?=
- =?us-ascii?Q?oSMmDldPTbkmZGRp3DeHUwE9L3cNiv6FqxVWwWpXlb1G0LQQqq12xQdTpFKN?=
- =?us-ascii?Q?PNRyCBBMw6xOqz8cG+ujbru6oA8ODsQeInoijHX4a7Psx9ruWiYDjG5Dn+ga?=
- =?us-ascii?Q?97qkLZrswRNybbLJr+3QYzrV/zp7UPHGz3Kp5ux2no7kQip5Q7cm0rq7UMRp?=
- =?us-ascii?Q?bqQ86aGxA/G+j0l/pRuE+gchz5WcoagHAH0r4l/Ecj7NGTUBNFNmXnBE95rt?=
- =?us-ascii?Q?cKMimQkRFtthva1C4JBUgw2BW5BYWWPAJXCyzSQZ7pRNR/ufJQWMgis1QQ5k?=
- =?us-ascii?Q?ZXgGaSryjUivD1JLGsM+JHwIp75Mf6awBfFP4llAtAQe+ertZymatJFSaevg?=
- =?us-ascii?Q?eIH87nlPWVn6th2/qoirtSYw3acBBCOp8nRY9P9H524vH8XnDIX8/8Ox93N2?=
- =?us-ascii?Q?8O2IunhAkfr32vBUbgCtwL5LvnpGnsRJxHVwJ3Q9OmyFx705q68qj8rj+p4x?=
- =?us-ascii?Q?SgtXD8DQXlv3obIf+cO9xOJ5I0g1myVf8+zAz3gwdn8E/YZWntAok15zNWpF?=
- =?us-ascii?Q?1R7y53uU11TmYtetpVvEua4fw5gjs7FDMlkQVwMVF5r3genQIEj0cFRh20nM?=
- =?us-ascii?Q?/ID9dQIxoHnBEGNpQLdMcNH6xjSvq60VNiTQYZny6W+zVIRW4Zmr5muR06k5?=
- =?us-ascii?Q?hQ47vbAvDTr1L13Uq4k4X6lESXoYZ6pWlnVYFBytB1Fbr6+f4taKFmkG0/Ov?=
- =?us-ascii?Q?gApcNDQLZpFbfG2FEOmQjz++ykfDoKln2ZxmBl+D/f83n8zmKbdbZ2qmwCNk?=
- =?us-ascii?Q?UimXGTrFbKWmFwUPOFScNiEDl4X4cNlaQZcMw5+mMmtxuuiXxeeJ+f8dEOgf?=
- =?us-ascii?Q?prnmwJDHJ5QZzles3860mdI+LB2/DVbIz1anwz+FMEOvUMAHjWcKZhY1lKnh?=
- =?us-ascii?Q?wkkOnLuZrwxKju5O5lMR2HrivSnlWMNyoCYfE4ihkxpQsoDU1BiWmvGizBG3?=
- =?us-ascii?Q?RaMTOWtlQTjtIcguMQThU2vXqV+PRltDs4H4RoS6bVrqkKG7SVwuVUYtyGEV?=
- =?us-ascii?Q?GcRhwdMa5qDiAhc1KXzJdBEGVFI05EadyPootyib+6njZQ13kGhMiz24Kevl?=
- =?us-ascii?Q?n0KFNLWiuCdnTwG8+rp1RNFuJVopoUsvBKd6Ru61eAZ+x9Q4sN3X0Jfr6N3C?=
- =?us-ascii?Q?rF48s2OVyCoqVCOfoh8jFHVEQphMT1lJQTrPZ6YpxYPi4rouGMtPJ5AgMBYB?=
- =?us-ascii?Q?n7X0FMC7f2b3VYJ2TBQT8XhsxKArZ3Qc+s1jhsDeElEEOgZXg8RI4eWGQpPd?=
- =?us-ascii?Q?DVTu85pjX+HuIwU6rXIbQkYUFu2Aro5dhpFDYidQsLOO/V2o2aaHLRyktcQY?=
- =?us-ascii?Q?1zD3tv2LAzTKvjZB04f8D4DegzIhAqstgWxQ79HwLUHgl72osKelaOXKjprj?=
- =?us-ascii?Q?ooZy4VTOjtg=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB8660.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?5ryE5+GXkQ4647lQ+cHThGXzTvhzlUiG2AdKishNgtw499m9HUHyaaIZapOn?=
- =?us-ascii?Q?pk599ALiG1FTOi4/8I/QqM1W+yV/NoHVOB/fUcRYtNSssXBhuciipW67CkQT?=
- =?us-ascii?Q?r3nttFm1YB8Ohny+rSc/lXwlAz9q2PBgMgcRmPQ2CD8fmTti4OpwOBSojZQp?=
- =?us-ascii?Q?deDGm+1xGxJ5Hj3xR+Rf8aXtSAd4moHloQPTyv8OibV+unX97H3NwNKaKoJy?=
- =?us-ascii?Q?BxVaKHHpbZgeNoiK9+bhIB9llN/T5LU+fcWYFpo0NFh8+K5qyOILMVvOOHT2?=
- =?us-ascii?Q?hIH9NYWFzlMoIDQT85anZFu28XSpEyPYZYqB0ra1jOI29xyzUsMDXdPv877/?=
- =?us-ascii?Q?LBkRHGBbJ9NOj0RRQ0wejdxUx0EZajyNj+WjzkQ1Gf1aave9kk/qfmXXFhOp?=
- =?us-ascii?Q?U/zpvPI5tES26tvm537bjrB48unHyLVG9tPjsQ/h/PSNRJZJEDKNwOemrWKL?=
- =?us-ascii?Q?1LHSkObTXF2y4gq9swu52vGAw7N9HZScpEk2CvRtNNZmPXrWOcOVW9ZizWGs?=
- =?us-ascii?Q?B1PeAWtHm6NU6+Ye+wFdhYT9PMQRNH64grQsK/CBNM62VqBKb8CmCurFm0VX?=
- =?us-ascii?Q?XHVmvzJ5tOtzuwC7V6WMqehYoaENf6iBDZ3UrJ1XxvvjsOs1avRkdY5/Xe1M?=
- =?us-ascii?Q?nYwFiiRpH6uvgdhhNGobQD/dAeCedM7BY5kG5/Xf6WzsMaBxjPighwnCp3CI?=
- =?us-ascii?Q?DwfeCugDJmx0qldWb8D6RJmDj/c+nhOIMycnhipArDVbxcWPykRLK/r17/QM?=
- =?us-ascii?Q?U109pCD83zrE7kYmXhjKIgn94ghfN79slfYL0m9c0f8U8+j02LkPErYmTrly?=
- =?us-ascii?Q?xveZ75590ZG8vw29xigrKrE/6aepplH02LgdYz1aPd/JsSjhw/AwrBD/7V0l?=
- =?us-ascii?Q?OxTx1Ij5feDBBGjuwrHjLx/+piTpUwgMPzXSwGg/E8pf48PZv91uSPN8+7LJ?=
- =?us-ascii?Q?in6MffEVv6AM0LKJK+2SKNA8GPxKD2fWuZYAB4bmarQwcgq48cpW4H5UvXMm?=
- =?us-ascii?Q?oj4wF8kFhVFi4sIUgFwkDLOfRzeQDKJU36Vy5NhBdhZ+ZSO4MP9eVhAnpr4V?=
- =?us-ascii?Q?Ofbp33hNs8Cv6zHJU9lDfJD8ECTkp+8TNjiQ2RCqNqNK1Nq0u3CU6iMvTzqF?=
- =?us-ascii?Q?ZXuQb/KT/bo1LCZtfEUOInAYSP3AZjp4i2d9C7nQo2ChqykKGa+VfX8GtjxX?=
- =?us-ascii?Q?9VXRXzBVPaA7Z7zmzkvEJuZDzl7x00URIqtHEXF3tHUPzUU2MRZQFJm8LXCH?=
- =?us-ascii?Q?iFl94g4CZsKMQJ8MN3lpDlbDZxaL03zqmeyiAsiT5f8ngkGKkKQGmBFXQZUK?=
- =?us-ascii?Q?P4CglB5FkrE6+QzwHaEHG0EQ4ZNfaiqsD0lG/5lywvY9ml5QJXTDYqdNq1Rx?=
- =?us-ascii?Q?rgfqUVj8ZZJFnf3dQaRkwGVrkIWuH2jcom7Scl1MfICzZwIol0OxjmNkpV3q?=
- =?us-ascii?Q?so+Cl9W8F+Oa4hH7Z48g3fX7vnfcEneWWhnZ2ZseAT/01dd5Fh+7haPeUB77?=
- =?us-ascii?Q?dVzdlr/jSmw/neNEHgRVc4FukyiPqjsp96bP5qio2CYEiqek2qM6nEF9X2pK?=
- =?us-ascii?Q?BiDu11GLzgqJ/QfGlzLjfkE5p0HOl3wSoizGYXG8?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 277bb017-2404-4242-7d82-08ddb93dc5fc
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB8660.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 07:55:12.7006
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jGnot7xYVND+2WBDHf5CgX+0UZqJvuj/pi+msLw90McB5gSEbCTDJwFakpjMRfSlRei+VCGIab2SgwZTIJC9mg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR11MB8047
-X-OriginatorOrg: intel.com
 
->--- a/arch/x86/virt/vmx/tdx/tdx.c
->+++ b/arch/x86/virt/vmx/tdx/tdx.c
->@@ -1870,3 +1870,12 @@ u64 tdh_phymem_page_wbinvd_hkid(u64 hkid, struct page *page)
-> 	return seamcall(TDH_PHYMEM_PAGE_WBINVD, &args);
-> }
-> EXPORT_SYMBOL_GPL(tdh_phymem_page_wbinvd_hkid);
->+
->+void tdx_cpu_flush_cache(void)
->+{
->+	lockdep_assert_preemption_disabled();
->+
->+	wbinvd();
+On Tue, 2025-07-01 at 16:37 -0500, David Lechner wrote:
+> Add a new driver for the ADI Util Sigma-Delta SPI FPGA IP core.
+>=20
+> This is used to trigger a SPI offload based on a RDY signal from an ADC
+> while masking out other signals on the same line.
+>=20
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> ---
+> =C2=A0MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
+> =C2=A0drivers/spi/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 5 +=
++
+> =C2=A0drivers/spi/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 1 +
+> =C2=A0.../spi/spi-offload-trigger-adi-util-sigma-delta.c | 62
+> ++++++++++++++++++++++
+> =C2=A04 files changed, 69 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index
+> 60ba572be7f5b48c0ab1d0d9724e19e335e8761b..4ed4977deb6ddc545be39b5c1d5e995=
+9e9fe
+> 64cf 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -23357,7 +23357,7 @@ F:	include/linux/mtd/spi-nor.h
+> =C2=A0
+> =C2=A0SPI OFFLOAD
+> =C2=A0R:	David Lechner <dlechner@baylibre.com>
+> -F:	drivers/spi/spi-offload-trigger-pwm.c
+> +F:	drivers/spi/spi-offload-trigger-*.c
+> =C2=A0F:	drivers/spi/spi-offload.c
+> =C2=A0F:	include/linux/spi/offload/
+> =C2=A0K:	spi_offload
+> diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+> index
+> c51da3fc3604977b05388687e5e64a58370186c4..e69f060d3875c168a2dc701a372e47b=
+8ffd3
+> 3268 100644
+> --- a/drivers/spi/Kconfig
+> +++ b/drivers/spi/Kconfig
+> @@ -1355,6 +1355,11 @@ if SPI_OFFLOAD
+> =C2=A0
+> =C2=A0comment "SPI Offload triggers"
+> =C2=A0
+> +config SPI_OFFLOAD_TRIGGER_ADI_UTIL_SD
+> +	tristate "SPI offload trigger using ADI sigma-delta utility"
+> +	help
+> +	=C2=A0 SPI offload trigger from ADI sigma-delta utility FPGA IP block.
+> +
+> =C2=A0config SPI_OFFLOAD_TRIGGER_PWM
+> =C2=A0	tristate "SPI offload trigger using PWM"
+> =C2=A0	depends on PWM
+> diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
+> index
+> 4ea89f6fc531625060255ecff237470927e1f041..51f9f16ed734424ff10672a04f2ec16=
+6dc63
+> 7e0b 100644
+> --- a/drivers/spi/Makefile
+> +++ b/drivers/spi/Makefile
+> @@ -170,3 +170,4 @@ obj-$(CONFIG_SPI_SLAVE_SYSTEM_CONTROL)	+=3D spi-slave=
+-
+> system-control.o
+> =C2=A0
+> =C2=A0# SPI offload triggers
+> =C2=A0obj-$(CONFIG_SPI_OFFLOAD_TRIGGER_PWM)	+=3D spi-offload-trigger-pwm.=
+o
+> +obj-$(CONFIG_SPI_OFFLOAD_TRIGGER_ADI_UTIL_SD) +=3D spi-offload-trigger-a=
+di-
+> util-sigma-delta.o
+> diff --git a/drivers/spi/spi-offload-trigger-adi-util-sigma-delta.c
+> b/drivers/spi/spi-offload-trigger-adi-util-sigma-delta.c
+> new file mode 100644
+> index
+> 0000000000000000000000000000000000000000..8468c773713a3d203b2e668f340ee3f=
+477b8
+> fb6c
+> --- /dev/null
+> +++ b/drivers/spi/spi-offload-trigger-adi-util-sigma-delta.c
+> @@ -0,0 +1,62 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2025 Analog Devices Inc.
+> + * Copyright (C) 2025 BayLibre, SAS
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/dev_printk.h>
+> +#include <linux/err.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/property.h>
+> +#include <linux/spi/offload/provider.h>
+> +#include <linux/spi/offload/types.h>
+> +#include <linux/types.h>
+> +
+> +static bool adi_util_sigma_delta_match(struct spi_offload_trigger *trigg=
+er,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 enum spi_offload_trigger_type t=
+ype,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u64 *args, u32 nargs)
+> +{
+> +	return type =3D=3D SPI_OFFLOAD_TRIGGER_DATA_READY && nargs =3D=3D 0;
+> +}
+> +
+> +static const struct spi_offload_trigger_ops adi_util_sigma_delta_ops =3D=
+ {
+> +	.match =3D adi_util_sigma_delta_match,
+> +};
+> +
+> +static int adi_util_sigma_delta_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev =3D &pdev->dev;
+> +	struct spi_offload_trigger_info info =3D {
+> +		.fwnode =3D dev_fwnode(dev),
+> +		.ops =3D &adi_util_sigma_delta_ops,
+> +	};
+> +	struct clk *clk;
+> +
+> +	clk =3D devm_clk_get_enabled(dev, NULL);
+> +	if (IS_ERR(clk))
+> +		return dev_err_probe(dev, PTR_ERR(clk), "Failed to get
+> clock\n");
+> +
 
-Shouldn't you check the per-CPU variable first? so that WBINVD can be
-skipped if there is nothing incoherent.
+Small nit. Did you consider enabling/disabling the clock on the trigger
+enable()/disable() callback? I guess the ref clk will be enabled anyways by
+someone else but conceptually kind of makes sense to enable the resource on=
+ly
+when needed.
 
-And reboot notifier looks the wrong place for WBINVD. Because SEAMCALLs
-(see below) called after the reboot notifier will set the per-CPU variable
-again. So in some cases, this patch will result in an *extra* WBINVD
-instead of moving WBINVD to an earlier stage.
+Not a big deal (at least to me).
 
-kernel_kexec()
-  ->kernel_restart_prepare()
-    ->blocking_notifier_call_chain() // reboot notifier
-  ->syscore_shutdown()
-    -> ...
-      ->tdx_disable_virtualization_cpu()
-        ->tdx_flush_vp()
+- Nuno S=C3=A1
 
->+	this_cpu_write(cache_state_incoherent, false);
->+}
->+EXPORT_SYMBOL_GPL(tdx_cpu_flush_cache);
-
-I wonder why we don't simply perform WBINVD in
-vt_disable_virtualization_cpu() after VMXOFF, i.e.,
-
-diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
-index d1e02e567b57..1ad3c28b8eff 100644
---- a/arch/x86/kvm/vmx/main.c
-+++ b/arch/x86/kvm/vmx/main.c
-@@ -19,6 +19,8 @@ static void vt_disable_virtualization_cpu(void)
-	if (enable_tdx)
-		tdx_disable_virtualization_cpu();
-	vmx_disable_virtualization_cpu();
-+	/* Explain why WBINVD is needed */
-+	if (enable_tdx)
-+		wbinvd();
- }
- 
- static __init int vt_hardware_setup(void)
-
-It can solve the cache line aliasing problem and is much simpler than
-patches 1-2 and 6.
+> +	return devm_spi_offload_trigger_register(dev, &info);
+> +}
+> +
+> +static const struct of_device_id adi_util_sigma_delta_of_match_table[] =
+=3D {
+> +	{ .compatible =3D "adi,util-sigma-delta-spi", },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, adi_util_sigma_delta_of_match_table);
+> +
+> +static struct platform_driver adi_util_sigma_delta_driver =3D {
+> +	.probe=C2=A0 =3D adi_util_sigma_delta_probe,
+> +	.driver =3D {
+> +		.name =3D "adi-util-sigma-delta-spi",
+> +		.of_match_table =3D adi_util_sigma_delta_of_match_table,
+> +	},
+> +};
+> +module_platform_driver(adi_util_sigma_delta_driver);
+> +
+> +MODULE_AUTHOR("David Lechner <dlechner@baylibre.com>");
+> +MODULE_DESCRIPTION("ADI Sigma-Delta SPI offload trigger utility driver")=
+;
+> +MODULE_LICENSE("GPL");
