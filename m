@@ -1,173 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from r3-24.sinamail.sina.com.cn (r3-24.sinamail.sina.com.cn [202.108.3.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 652CC253350;
-	Wed,  2 Jul 2025 11:54:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A92DD264FB1
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 11:55:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.108.3.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751457253; cv=none; b=huU+In9DcKjUN1eA3DiFdjj+xmi2myMQps+mKYw2UsRls/QW287dE6Gz6fRuW1klUZo2JSd0CPdvmS2BC5qIDOewuE8yDk4S5qY9aJqwjBw42ovIZi1EZWWVd/FiQcqV5zr/4p9FkH5PVlr+XgPx5Iip58J4b6WZpspsvT/SRmw=
+	t=1751457321; cv=none; b=sqiHlG0yTG8JWT9Ii3x6F0abvoSRGUZ55bH+TYl52TIXFTONKwv4YcA1793d3oilhyn4Jj0EHTpDBfEEXodNEUcyGTqtl5Dc4f7oEfe4XaJcWqFgNHW/gohymVWkrn15CmPJm5cG5Yc51UFDQCt6g+XoT2ZIEmLSgvHm48xLNvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751457253; c=relaxed/simple;
-	bh=51ntc3v8cmvjZI/r+UiTIJnPnh8GVtBK5vSwJbWdrI4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=t63uHVGbTzLioaFF2xheDbYYB9RKyN2a5LEcCwLOR2UhL/Fyp9YFcTEMaqj6pHFGrRpfhOcbjXhTSUiOCevUUu3oqsCl+zw3Usqn8lVmQ1OmICeVcg8iBM0qdkvUh8qvde9bKuuaqtKeuaJ87LA8jjhaP1DrsDVEVyMAwY7SnZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q+pCYzVF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751457321; c=relaxed/simple;
+	bh=dlx2FKvh5KxNnKfT7plX+nNxjpgRTjf2jmxci8Y3K18=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AdcLsiusHw7mNv1MUBhzitNLiR0diuyDvOu0xB18kKFK9V94T1OGbM0QUxKAiBQ3EIffgDLMkf6cVtemv19tC3O70Xrx950kwGANZG7TzFZffxPKWKaj5kU0jowjPJp9ahza9gNw0uw34TCtyHdxRMJa5Qx15qvvuy1bPcuDdNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b=mPgYLH6p; arc=none smtp.client-ip=202.108.3.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q+pCYzVF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B828DC4CEED;
-	Wed,  2 Jul 2025 11:54:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751457252;
-	bh=51ntc3v8cmvjZI/r+UiTIJnPnh8GVtBK5vSwJbWdrI4=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=q+pCYzVFO55aHFyrvBVjgygMtcQMI6Ye0hKajIJ8n26GD2aqs2TceVcVwi/9oromQ
-	 UrxxWb3Ft+xQ6aZHHAvWDx4pgofuBAGhL7gqeuheELCBi/CuoDFV8SOrrBybQYMTD2
-	 xqsQTwRsJ64or+winuXHlspiQAUzUhDLTbQX4loj5R7R+OCjNvUMkDGAyeQlhIhmbl
-	 QdlRuADQ8ei/tBjQF7XXO1DXrBp+6TMtIOKnewtMAeI7OtU2UoesLFu5KjHtniFJUD
-	 vcrIgcw/c8oGPwDv6HZWPxHWoT4I00SYi/GgBEhS1MX4lwRAW8cLn7x6XL8jfi2QMz
-	 W91t6dtKrP64A==
-Message-ID: <5a5bb85f-84de-4e3a-83ff-4516706b7ad4@kernel.org>
-Date: Wed, 2 Jul 2025 13:54:07 +0200
+	dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b="mPgYLH6p"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sina.com; s=201208; t=1751457314;
+	bh=CHgdD7ib/9vm5T5SbLulw41eXK/ubaOG9XmTPiLdi9c=;
+	h=From:Subject:Date:Message-ID;
+	b=mPgYLH6pLxmIVa0ZYQc+p/mhSGRmWZ5dUasjOB1IxqSMs9C3MVrqBZQ4B6jy3Sz7c
+	 lQDdjA/lL0eqsHzQ4KWt/FiNTT4CsYQTgm0VDvHroyInt//+jqxMwKORfv3QKrftn4
+	 koGHvsXm71fHwlXK3kN2wYN+C55YYlrftxF+zViM=
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([114.249.58.236])
+	by sina.com (10.54.253.31) with ESMTP
+	id 68651E1800002759; Wed, 2 Jul 2025 19:55:05 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 7825396816273
+X-SMAIL-UIID: 7BD8B49E7D8E4E6D88D35DF59CB6F904-20250702-195505-1
+From: Hillf Danton <hdanton@sina.com>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Michal Hocko <mhocko@kernel.org>,
+	linux-mm@kvack.org,
+	Marcelo Tosatti <mtosatti@redhat.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 0/6 v3] sched/mm: LRU drain flush on nohz_full
+Date: Wed,  2 Jul 2025 19:54:52 +0800
+Message-ID: <20250702115454.2183-1-hdanton@sina.com>
+In-Reply-To: <aGPWYWKKWhr2rxMG@localhost.localdomain>
+References: <20250410152327.24504-1-frederic@kernel.org> <20250412025831.4010-1-hdanton@sina.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/5] Introduce "non-pixel" sub node within iris video
- node
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Vikash Garodia <quic_vgarodia@quicinc.com>,
- Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Abhinav Kumar <abhinav.kumar@linux.dev>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250627-video_cb-v3-0-51e18c0ffbce@quicinc.com>
- <5f90547d-945a-4e26-b36c-75f2d8a1af97@kernel.org>
- <eab8d79f-7188-9537-9176-3e4d22f0978a@quicinc.com>
- <5ad418d9-8199-43c9-a477-1e3b939c054c@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
- QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
- +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
- ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
- 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
- hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
- tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
- 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
- naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
- hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
- whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
- qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
- RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
- Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
- H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
- dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
- AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
- jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
- zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
- XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <5ad418d9-8199-43c9-a477-1e3b939c054c@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 02/07/2025 13:52, Krzysztof Kozlowski wrote:
-> On 02/07/2025 13:37, Vikash Garodia wrote:
->>
->> On 7/2/2025 4:48 PM, Krzysztof Kozlowski wrote:
->>> On 27/06/2025 17:48, Vikash Garodia wrote:
->>>> This series introduces a sub node "non-pixel" within iris video node.
->>>> Video driver registers this sub node as a platform device and configure 
->>>> it for DMA operations. All non pixel buffers, i.e bitstream, HFI queues 
->>>> and internal buffers related to bitstream processing, would be managed 
->>>> by this non_pixel device.
->>>>
->>>> Purpose to add this sub-node:
->>>> Iris device limits the IOVA to an addressable range of 4GiB, and even 
->>>> within that range, some of the space is used by IO registers, thereby 
->>>> limiting the available IOVA to even lesser. For certain video usecase, 
->>>> this limited range in not sufficient enough, hence it brings the need to 
->>>> extend the possibility of higher IOVA range.
->>>>
->>>> Video hardware is designed to emit different stream-ID for pixel and 
->>>> non-pixel buffers, thereby introduce a non-pixel sub node to handle 
->>>> non-pixel stream-ID into a separate platform device.
->>>> With this, both iris and non-pixel device can have IOVA range of 
->>>> approximately 0-4GiB individually for each device, thereby doubling the 
->>>> range of addressable IOVA.
->>>>
->>>> Tested on SM8550 and SA8775p hardwares.
->>>>
->>>> Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
->>>> ---
->>>> Changes in v3:
->>>> - Add info about change in iommus binding (Thanks Krzysztof)
->>>
->>> Nothing improved in commit msg. You are changing existing device and the
->>> reason for that change is not communicated at all.
->>>
->>> There was big feedback from qualcomm saying that some commit in the past
->>> received review, so future commits can repeat the same stuff. If qcom
->>> approaches that way, sorry, no you need to come with proper commit
->>> description.
->>>
->>> Please align internally how to solve it, because my response that past
->>> imperfect review is not justification for whatever future issues was not
->>> enough.
->> Sure, lets take this as an example and you can suggest to provide a better
->> commit message for this case, it would help me to compare where is the gap. I
->> have tried my best to capture and explain the limitations and how the changes
->> address those limitations. If that is not sufficient, we might have the perfect
->> message from you and compare to find the gaps and improve, I am sorry, but thats
-> 
-> It is not question to me: I did not want imperfectness. Qualcomm
+On Tue, 1 Jul 2025 14:36:49 +0200 Frederic Weisbecker wrote
+>Le Sat, Apr 12, 2025 at 10:58:22AM +0800, Hillf Danton a écrit :
+>> On Thu, 10 Apr 2025 17:23:21 +0200 Frederic Weisbecker wrote
+>> > Hi,
+>> > 
+>> > When LRUs are pending, the drain can be triggered remotely, whether the
+>> > remote CPU is running in userspace in nohz_full mode or not. This kind
+>> > of noise is expected to be caused by preparatory work before a task
+>> > runs isolated in userspace. This patchset is a proposal to flush that
+>> > before the task starts its critical work in userspace.
+>> > 
+>> Alternatively add a syscall for workloads on isolated CPUs to flush
+>> this xxx and prepare that yyy before entering the critical work, instead
+>> of adding random (nice) patches today and next month. Even prctl can
+>> do lru_add_and_bh_lrus_drain(), and prctl looks more preferable over
+>> adding a syscall.
+>
+>In an ideal world, this is indeed what we should do now. And I still wish we
+>can do this in the future.
+>
+>The problem is that this has been tried by the past and the work was never
+>finished because that syscall eventually didn't meet the need for the people
+>working on it.
+>
+>I would volunteer to start a simple prctl to do such a flush, something that
+>can be extended in the future, should the need arise, but such a new ABI must
+>be thought through along with the CPU isolation community.
+>
+>Unfortunately there is no such stable CPU isolation community. Many developers
+>in this area contribute changes and then switch to other things. As for the CPU
+>isolation users, they are usually very quiet.
+>
+Given your footprint in the MAINTAINERS file,
 
-Double negation... should be:
+HIGH-RESOLUTION TIMERS, TIMER WHEEL, CLOCKEVENTS
+M:	Anna-Maria Behnsen <anna-maria@linutronix.de>
+M:	Frederic Weisbecker <frederic@kernel.org>
+M:	Thomas Gleixner <tglx@linutronix.de>
 
-"It is not question to me: I did not want perfectness. Qualcomm"
+NOHZ, DYNTICKS SUPPORT
+M:	Anna-Maria Behnsen <anna-maria@linutronix.de>
+M:	Frederic Weisbecker <frederic@kernel.org>
+M:	Ingo Molnar <mingo@kernel.org>
+M:	Thomas Gleixner <tglx@linutronix.de>
 
-> engineer used issues in existing commits or imperfect commit in
-> discussion, so that's my solution. I don't need that perfect commit, but
-> it seems if I agree to that, then I will have to defend it later. Well,
-> no, I don't want it.
-> 
->> how i feel at the moment.
-> Sure, I feel confused now as well.
-> 
-> Anyway, in other messages I explained what is missing. You are changing
-> existing hardware and you clearly must explain how existing hardware is
-> affected, how can we reproduce it, how users are affected.
-> 
-> All these answers.
+POSIX CLOCKS and TIMERS
+M:	Anna-Maria Behnsen <anna-maria@linutronix.de>
+M:	Frederic Weisbecker <frederic@kernel.org>
+M:	Thomas Gleixner <tglx@linutronix.de>
 
+READ-COPY UPDATE (RCU)
+M:	"Paul E. McKenney" <paulmck@kernel.org>
+M:	Frederic Weisbecker <frederic@kernel.org> (kernel/rcu/tree_nocb.h)
+M:	Neeraj Upadhyay <neeraj.upadhyay@kernel.org> (kernel/rcu/tasks.h)
+M:	Joel Fernandes <joel@joelfernandes.org>
+M:	Josh Triplett <josh@joshtriplett.org>
+M:	Boqun Feng <boqun.feng@gmail.com>
+M:	Uladzislau Rezki <urezki@gmail.com>
 
+I am happy to close the chance for you to deliver patch like a starter.
 
-Best regards,
-Krzysztof
+>I can't assume all the possible usecases myself and therefore I would easily do
+>it wrong.
+>
+>In the meantime, the patchset here is a proposal that hopefully should work for
+>many usecases.
+>
+>Thanks.
+>
+>-- 
+>Frederic Weisbecker
+>SUSE Labs
