@@ -1,362 +1,403 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EEB923497B
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 23:54:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751500495; cv=none; b=VvLKWislEvS0NBU3tJlVMKFw+C8TNwO+vQqEr6YRAl1s0gXVP0LM4qJJPJ9CqixtqMkPeHrdhGojgLo+V/GDuH4+0KTCbsIlRQmYnuZPBYyJDjnnDwNL0WlTv8piEDxtjvBGhsE7MhRhlqPOlZ+cPnNdco1aLaopo2v5lpIDh2U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751500495; c=relaxed/simple;
-	bh=iwTRdUnl8urifr6NN4kmJNJEdsYkrgaYJMKbNfNczFE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f6Tv42I1yM1E4gWE1g1Shn8AtbPdcpq6fMS2/kDv0ngi1u5ava/ser4ThPnmEAhwUyqrNpjgZhR5VSI+nPUwAl1rixTKafODGM2hocFGnEZw7yUuw5cdHz+YAA0uXZ1L2BSqh4QRYysBwFW0A+A8U8gE4csS2K7xL8CqUA/KUuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=fbLu8cuf; arc=none smtp.client-ip=209.85.166.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E0E01386B4
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 23:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751500565; cv=fail; b=I+bASUa4B78AuL69Sej0YvqaM01yKKW6BlzEg4XPooPpkAvs299EMFRQvb3tzpNob3FRbJzq6Hq6RLXeofl6Q4mAtcGV0aN3RU3nTBNgyk7Cuoj6HkaN3AgzirYBndQNF2iajMJKJfzZuG+oOo5zgQ0UgPCbQ/Af1+IbNqIytFg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751500565; c=relaxed/simple;
+	bh=OUi/FTa7fqDlVR9Qv17Ef0hyHcLfisGWHUtZI8vUyDw=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=V1IhJ8+a7qyTiGJTXgVMvs04ZiRVOQDil6KiB+xaLxtRVsandE37NrmZWN1Q/2x7d/uk6LFH2WAQFkJHphvp3Xq1jjAxOcDzNgWyi7y4tyxYNsc6yFOnA7l1BKlwDM+KrjxA3Ut3Ztv10cuXP4tDEg8sS0otQgw0hVxXQo2MlGA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A9wlYomW; arc=fail smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="fbLu8cuf"
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-875dd57d63bso20547839f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 16:54:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1751500492; x=1752105292; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=l5OcDJyaerbz3u2+n5fd++VYEBGlJa2rFmRXIU9HxPI=;
-        b=fbLu8cufVwP3tBBeuGQii0SD+FJp8b/PRLaxdUxlVEo5kCWv9l/rTu7MQA9fSJoscu
-         8o1V6TicMG2Tk/AolxjCRqsafOWid6snFvm82Sey6nFOd4AKT88BoVuaSJX1GcG+Sxl+
-         WRAgtfxmljWx54zmN9To9Rv+r3EBYlACsQpu0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751500492; x=1752105292;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=l5OcDJyaerbz3u2+n5fd++VYEBGlJa2rFmRXIU9HxPI=;
-        b=f9p/rvdXjMzCzcTVm9ewzMzzOs7Kr53QnYpv/JjbllrNyIdBvHLpZm2Jl4nGVw8fAx
-         ld3D2cnXXswTAAl1mUFXQRCWQ+pJXVpJpbrGn06pz4x/b8pIREPv1SekVJofMfpEZCTm
-         n5Ydrqmu24VG3SBCyz8wJMsvDKPeHPk7aKcuvO04GdlLeqgxL/sxfSnCxYiItN8Owao/
-         SZCqzxnxpMgPEYMkF4kdApx8Vyxjzcqk0gRsOEuQg2jldYNSm/edAOsXbGbwFqwFq2ID
-         uENDGkl9PxS4wODTCwWeiJ0XS6yW9uai0BYBcT3+0UyXYDL3KcPG/CadOgg6ldbbNzhv
-         jjHA==
-X-Forwarded-Encrypted: i=1; AJvYcCXOrWFACk7fVWwosUxGLo2gAMheDGvjnaC9sTv1Y+FUHPA/4wMfdxWcfZQvrKQq7CaGCGZ0bJYuul8ZbiY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpS8AhTXipcv0inw/kh9gSa/Qg/Bck6AlRi8mB4UQqUWtZV1ZL
-	Bl2polZxEkjDHRtACunyP+HdPZCMV2C1VGrP8u2nmBsJ3xnkFEJuHC6JjPzhIxOrYdU=
-X-Gm-Gg: ASbGncvfQYj76se4/cRLOAMlwH90VWDO7RUMtEhd0oiqoWRM6VvJ/dLRcXrBdSNoQ6S
-	NK6hO51914/IyB2zzjkYZRBw94T2i2Kga0cyQF+Qbskbq+YF4zh8Q00y8VMy9vVOjkdGxk6jjoH
-	DIWKXaMs20WeM6Ofts2AM5d4GmnEemC1XRzFIZ93jDuMtaWhJgwIVPRbRzL6toYwsRwogWkPsTI
-	MaMv1VzNaoIGuWdMy/BuA/eOsYg09eprxbk37FSU9tkazsHZSsVuVFH0v1MNw5TQvEaeEj3fFvI
-	rr9opPCBkXIvc4n0mKuGZ2VdZ9I+8RAL2XpdTqjPeAJtxVBtBJlO141b2t3cMN6l21MEvXYwSag
-	/jvrVLTKe
-X-Google-Smtp-Source: AGHT+IGFkVMnELVy5DhISbgiigJ1qt+uXUgpX82QCN7yGpwekWXLqy5ZE83NeG26xdt1XVXu7azg1Q==
-X-Received: by 2002:a05:6602:1f97:b0:85e:16e9:5e8d with SMTP id ca18e2360f4ac-876d54a211dmr11602439f.7.1751500491997;
-        Wed, 02 Jul 2025 16:54:51 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-50204a93102sm3155321173.104.2025.07.02.16.54.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jul 2025 16:54:51 -0700 (PDT)
-Message-ID: <1a13cf53-ffed-4521-917e-9c2856a5e348@linuxfoundation.org>
-Date: Wed, 2 Jul 2025 17:54:50 -0600
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A9wlYomW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751500563; x=1783036563;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=OUi/FTa7fqDlVR9Qv17Ef0hyHcLfisGWHUtZI8vUyDw=;
+  b=A9wlYomWyBWiYOvabq2cKS17Snv/rLAfgjwOM+3Ui6T5RYGLQxdUuRVG
+   spIRYLKHupOFnnkc20ndcojpQx+8P1F/BuY0ajjCldj/AK//rhBQUoVCP
+   Y9Y/fCr/1urJ1FsOHMdHxLWiwMlqUoaeRh/ZE441hTpOef39637WaGOp4
+   uT8BmEr0crxyjRJPxLkyjYIseSZudrz3o7a+yZzTTZGWdtVUImf8FmydR
+   7QBwNYjqXP5RnXmQySDxjPuhpn9jAaimWaSpzOi3bFugxP/Aai3THYEBt
+   ybHUzs4iCRC8t2iV7GcGKx4ZtWQEFnY0cQMuKg442OwIgUT7IFuJvaBGs
+   w==;
+X-CSE-ConnectionGUID: gjNZBWskSyOiVNTDMJ6HlQ==
+X-CSE-MsgGUID: Vw4gyHY2RiKvbBAWjzMExQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="57490742"
+X-IronPort-AV: E=Sophos;i="6.16,282,1744095600"; 
+   d="scan'208";a="57490742"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 16:56:03 -0700
+X-CSE-ConnectionGUID: ir+gwd5bQCynbgzQhP8Pjg==
+X-CSE-MsgGUID: 2HhngbO9RfWdd6W21tel1g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,282,1744095600"; 
+   d="scan'208";a="185153310"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 16:56:03 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 2 Jul 2025 16:56:02 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Wed, 2 Jul 2025 16:56:02 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (40.107.223.75)
+ by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 2 Jul 2025 16:56:02 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=U9AkouFaNYKKnwgXscPC7B6+GB1LooNZ9TZeCJ3+HwYTacvADkz/+v+ZkxbNrICbWNyC9dC0seDJ5kfgMny/HLXjjgV6MExlg4nyMGvRgmx2f5N345DZVYnBnmMSVeP11VYUUVoq+9ISXhO7VAhAKxbSSIL9SgjWXyxjw7H2WUAbIY0ioiMimk5PRKDS0ESTIiuJ0qasBNlGBwPNy8vELf5da7LxkvIDiK4glOFumb1CQ93oXcHTgIJWB/uVC041/x2mr7G59FlkFhASweYA3Z6C/Uwi4jBvhbHjGs2/r0Exb1IdHTuhcCLynkdhmajqx9liAVSinmkgSaFqBlz9vQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qJHAqCJ8RhZmZbxoTWqxv6ojwu/IjzG6JhCNB6MpkDk=;
+ b=JLFrFcpG5QSWOKXODoBhGVbLT0RfgqhF9SmOdRwpLnpKc6dgJ0eYpRuAjVflhY629V6ak741O8YnKKwHWF6eI4aWQe4IVlsx48ViNn2ITbD1WZmPsBubg85zTf9X9j1gl0/sNp34v5SBgojMmLb2Yut4Axb+0rms36/lXRE2nDH8/6TWTO7BHHjYAw5UXnvbpkkIsfg02pzcwnpzUyUSBGIIrHBvqUs8HLdO+0w4jvJDceoJXIEn1gFAAU325Sw9QzAbxoXNn8/W5xX1+Es0Q0YFs9rMzDQncgIemO8pw8R/1JsugLW9MRNIohJTVRRGLbfLj0MkuKo5sZGxIa8+cA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH7PR11MB7605.namprd11.prod.outlook.com (2603:10b6:510:277::5)
+ by DS0PR11MB8050.namprd11.prod.outlook.com (2603:10b6:8:117::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.20; Wed, 2 Jul
+ 2025 23:56:00 +0000
+Received: from PH7PR11MB7605.namprd11.prod.outlook.com
+ ([fe80::d720:25db:67bb:6f50]) by PH7PR11MB7605.namprd11.prod.outlook.com
+ ([fe80::d720:25db:67bb:6f50%4]) with mapi id 15.20.8857.025; Wed, 2 Jul 2025
+ 23:55:59 +0000
+Message-ID: <73a03548-fa7c-41b0-9f61-0b3264ee0533@intel.com>
+Date: Wed, 2 Jul 2025 16:55:57 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 04/10] drm/xe/xe_late_bind_fw: Initialize late binding
+ firmware
+To: Badal Nilawar <badal.nilawar@intel.com>, <intel-xe@lists.freedesktop.org>,
+	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+CC: <anshuman.gupta@intel.com>, <rodrigo.vivi@intel.com>,
+	<alexander.usyskin@intel.com>, <gregkh@linuxfoundation.org>
+References: <20250702165216.557074-1-badal.nilawar@intel.com>
+ <20250702165216.557074-5-badal.nilawar@intel.com>
+Content-Language: en-US
+From: Daniele Ceraolo Spurio <daniele.ceraolospurio@intel.com>
+In-Reply-To: <20250702165216.557074-5-badal.nilawar@intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BY3PR05CA0037.namprd05.prod.outlook.com
+ (2603:10b6:a03:39b::12) To PH7PR11MB7605.namprd11.prod.outlook.com
+ (2603:10b6:510:277::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] usbip: convert to use faux_device
-To: Zongmin Zhou <min_halo@163.com>, Greg KH <gregkh@linuxfoundation.org>
-Cc: shuah@kernel.org, valentina.manea.m@gmail.com, i@zenithal.me,
- linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
- zhouzongmin@kylinos.cn, Shuah Khan <skhan@linuxfoundation.org>
-References: <2a327b520760271471717fff9b222cdc34967489.1746662386.git.zhouzongmin@kylinos.cn>
- <20250604065410.76069-1-min_halo@163.com>
- <2025061926-paycheck-footnote-a2b8@gregkh>
- <c7a2cc26-794e-49e1-bf8c-35617bb8060f@163.com>
- <2025062010-hardiness-flashily-cb0f@gregkh>
- <9d95bb75-586c-48dc-9e34-432cc13fd99f@163.com>
- <2025062004-navy-emboss-4743@gregkh>
- <2e0bbc5a-e74a-4fb5-884c-686dbaf99caf@linuxfoundation.org>
- <48ab511e-2847-4daa-98de-a234b8584b78@163.com>
- <fac026d8-12c8-4c1f-96a7-264ced8391f1@linuxfoundation.org>
- <a29703bd-08b7-489b-8fb0-15838a1245ab@163.com>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <a29703bd-08b7-489b-8fb0-15838a1245ab@163.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-
-On 7/1/25 20:12, Zongmin Zhou wrote:
-> 
-> On 2025/7/2 06:56, Shuah Khan wrote:
->> On 6/23/25 21:21, Zongmin Zhou wrote:
->>>
->>> On 2025/6/21 01:26, Shuah Khan wrote:
->>>> On 6/20/25 03:27, Greg KH wrote:
->>>>> On Fri, Jun 20, 2025 at 05:19:33PM +0800, Zongmin Zhou wrote:
->>>>>>
->>>>>> On 2025/6/20 12:29, Greg KH wrote:
->>>>>>> On Fri, Jun 20, 2025 at 10:16:16AM +0800, Zongmin Zhou wrote:
->>>>>>>> On 2025/6/19 19:01, Greg KH wrote:
->>>>>>>>> On Wed, Jun 04, 2025 at 02:54:10PM +0800, Zongmin Zhou wrote:
->>>>>>>>>> From: Zongmin Zhou <zhouzongmin@kylinos.cn>
->>>>>>>>>>
->>>>>>>>>> The vhci driver does not need to create a platform device,
->>>>>>>>>> it only did so because it was simple to do that in order to
->>>>>>>>>> get a place in sysfs to hang some device-specific attributes.
->>>>>>>>>> Now the faux device interface is more appropriate,change it
->>>>>>>>>> over to use the faux bus instead.
->>>>>>>>>>
->>>>>>>>>> Signed-off-by: Zongmin Zhou <zhouzongmin@kylinos.cn>
->>>>>>>>>> ---
->>>>>>>>>> Changes in v2:
->>>>>>>>>> - don't change faux create api,just call probe on vhci_hcd_init.
->>>>>>>>>>
->>>>>>>>>>     drivers/usb/usbip/vhci.h             |  4 +-
->>>>>>>>>>     drivers/usb/usbip/vhci_hcd.c         | 86 +++++++++++-----------------
->>>>>>>>>>     drivers/usb/usbip/vhci_sysfs.c       | 68 +++++++++++-----------
->>>>>>>>>>     tools/usb/usbip/libsrc/vhci_driver.h |  2 +-
->>>>>>>>>>     4 files changed, 72 insertions(+), 88 deletions(-)
->>>>>>>>> I get the following build errors from this patch:
->>>>>>>>>
->>>>>>>>> drivers/usb/usbip/vhci_hcd.c:1462:12: error: ‘vhci_hcd_resume’ defined but not used [-Werror=unused-function]
->>>>>>>>>     1462 | static int vhci_hcd_resume(struct faux_device *fdev)
->>>>>>>>>          |            ^~~~~~~~~~~~~~~
->>>>>>>>> drivers/usb/usbip/vhci_hcd.c:1418:12: error: ‘vhci_hcd_suspend’ defined but not used [-Werror=unused-function]
->>>>>>>>>     1418 | static int vhci_hcd_suspend(struct faux_device *fdev, pm_message_t state)
->>>>>>>>>          |            ^~~~~~~~~~~~~~~~
->>>>>>>>> cc1: all warnings being treated as errors
->>>>>>>>>
->>>>>>>>> Are you sure you tested this?
->>>>>>>> I apologize for not enabling -Werror, which resulted in missing this error
->>>>>>>> warning.
->>>>>>>> I have tested usbip feature use the new patch,but not test system
->>>>>>>> suspend/resume.
->>>>>>>> The faux bus type don't add pm function,and vhci-hcd driver can't register
->>>>>>>> it.
->>>>>>>> Maybe have to add suspend/resume for it.like below:
->>>>>>>> static const struct bus_type faux_bus_type = {
->>>>>>>>       .name        = "faux",
->>>>>>>>       .match        = faux_match,
->>>>>>>>       .probe        = faux_probe,
->>>>>>>>       .remove        = faux_remove,
->>>>>>>>       .resume     = faux_resume,
->>>>>>>>       .suspend    = faux_suspend,
->>>>>>>> };
->>>>>>>>
->>>>>>>> Is that right?
->>>>>>>> Your expertise would be greatly valued.
->>>>>>> As this is not real hardware, why do you need the suspend/resume
->>>>>>> callbacks at all?  What is happening here that requires them?
->>>>>> @greg,
->>>>>> The vhci_hcd_suspend/vhci_hcd_resume interfaces are not designed for this
->>>>>> faux device, but rather to
->>>>>> manipulate the HCD_FLAG_HW_ACCESSIBLE bit in the hcd flags associated with
->>>>>> the faux device.
->>>>>> For example:
->>>>>> During system standby: clear_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags)
->>>>>> During system wakeup: set_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags)
->>>>>>
->>>>>> Previously, these two functions were registered through platform_driver,
->>>>>> but faux bus does not have the relevant interface, so they were not called,
->>>>>> resulting in this compilation warning error.
->>>>>>
->>>>>> This raises the question: Should the faux bus implement PM-related
->>>>>> interface?
->>>>>> I'm uncertain whether these functions are essential for the vhci-hcd driver
->>>>>> or if they can be safely removed.
->>>>>>
->>>>>> However, during system standby/wakeup tests with remote USB devices bound to
->>>>>> the vhci-hcd driver,
->>>>>> I observed consistent failure scenarios across both the original platform
->>>>>> bus and faux bus patch implementations.
->>>>
->>>> suspend and resume hooks have been in the code from beginning
->>>> in the CONFIG_PM path. The original authors are skeptical about
->>>> what should happen during suspend"
->>>>
->>>> /* what should happen for USB/IP under suspend/resume? */
->>>> suspend hook checks for active connections and sends EBBUSY
->>>> back to pm core.
->>>>
->>>> Active connection means any of the ports are in USB_PORT_STAT_CONNECTION
->>>> state. So as long as there are active connections between vhci client
->>>> and the host, suspend won't work. So we really don't know what happens
->>>> to the active connections if there are no suspend/resume hooks.
->>>>
->>>> If there are no active connections, then it will clear the HCD_FLAG_HW_ACCESSIBLE
->>>> bit and returns to pm core to continue with suspend.
->>>>
->>>> resume sets the HCD_FLAG_HW_ACCESSIBLE flag to indicate hardware is accessible
->>>> and initiates port status poll.
->>>>
->>>> - suspend hook prevents suspend
->>>>
->>>> With faux device since there is no suspend and resume hook, I would expect
->>>> these hooks are not a factor in suspend and resume.
->>>>
->>>> vhci_hcd is a special case virtual driver as it is a proxy for controlling
->>>> hardware on the host.
->>>>
->>>> Zongmin,
->>>>
->>>> Do suspend/resume work when vhci_hcd is not loaded?
->>>> What happens when when system suspends and resumes with faux device?
->>>> Can you send me dmesg logs and pm logs?
->>>>
->>> Hi Greg,shuah
->>>
->>> Yes, system with vhci_hcd unload or just load vhci_hcd driver
->>> without usbip devices bound to vhci_hcd,system suspend/resume worked well.
->>> Some logs for you.
->>
->> Sorry for the delay. I was at a conference last week.
->> Thank you for sending these logs.
->>
->>> 1.system with vhci_hcd driver load,but don't bound any usbip devices to vhci_hcd,suspend/resume worked well.
->>> see dmesg-faux bus-load.log
->>
->>
->>>
->>> 2.usbip device bound to vhci_hcd,and do system suspend action,suspend/resume worked failed.
->>> I observed two distinct failure scenario:
->>> Scenario 1: System failed to enter suspend state,and will auto resume;
->>
->>
->>> the log for use platform bus:
->>> dmesg-platform bus-device bound-auto resume.log
->>
->> This is clear from the suspend hook in the vhci_hcd.
->> When it returns EBUSY, suspend will fail and move to
->> auto resume.
->>
->>> the log for use faux bus:
->>> dmesg-faux bus-device bound-auto resume.log
->>
->> It is good that the behavior is same with faux bus even though
->> suspend hook isn't called. I will take a look at the log.
->>
->>>
->>> Scenario 2: System resume failed with black screen freeze,a forced restart of the machine is require.
->>> the log for use platform bus:
->>> dmesg-platform bus-device bound-black screen.log
->>> the log for use faux bus:
->>> dmesg-faux bus-device bound-black screen.log
->>
->> That is bad. When does this happen? Is there a difference in
->> configuration?
->>
-> No, there's no difference. The same code is used for two different failure scenarios.
-> I just tested many times. These two different situations occur probabilistically.
-> But they both happened only when the USBIP device is bound to the vhci_hcd driver.
->> The behavior same for platform bus and faux bus. Sounds like
->> an existing problem that needs to be debugged separately.
->>
->> I will take a look at all these logs and get back to you in
->> a day or two.
->>
-
-I looked at the logs and here is what I found:
-
-Scenario 1:
-   dmesg-faux bus-device bound-auto resume.log
-   dmesg-platform bus-device bound-auto resume.log
-
-In this case suspend bailed out way before driver suspend
-when vhci_hcd is using platform and faux bus.
-
-Freezing remaining freezable tasks failed after 20.006 seconds (0 tasks refusing to freeze, wq_busy=1)
-Restarting kernel threads ... done
-OOM killer enabled.
-Restarting tasks ... done.
-random: crng reseeded on system resumption
-PM: suspend exit
-
-Auto-resume of the user-space worked. Scenario 1 isn't really
-interesting.
-
-Scenario 2:
-   dmesg-faux bus-device bound-black screen.log
-   dmesg-platform bus-device bound-black screen.log
-
-Even though the result is the same in seeing blank screen, how
-we get there is different.
-
-=================
-faux-bus device:
-=================
-- suspend worked - looks like
-   usb 4-1: PM: calling usb_dev_suspend @ 6054, parent: usb4
-   usb 4-1: PM: usb_dev_suspend returned 0 after 13675 usecs
-   usb usb4: PM: calling usb_dev_suspend @ 6055, parent: vhci_hcd.0
-   usb usb4: PM: usb_dev_suspend returned 0 after 9 usecs
-
-vhci_hcd suspend isn't in play here. usb_dev_suspend() returns.
-See below
-
-usb 4-1: PM: usb_dev_suspend returned message.
-
--------------------------------------------------------------
-
-- resume started (assuming it has been initiated by user)
-
-[  650.027491][ T6056] pci 0000:00:01.0: PM: pci_pm_suspend_noirq returned 0 after 304 usecs
-
-See see timestamp difference between the last suspend message and the
-first resume message.
-[  674.000257][   T39] pci 0000:00:00.0: PM: calling pci_pm_resume_noirq @ 39, parent: pci0000:00
-
-usb 4-1 usb_dev_resume never returns.
-
-[  674.071125][ T6117] usb usb4: PM: usb_dev_resume returned 0 after 21110 usecs
-[  674.113991][ T6126] usb 4-1: PM: calling usb_dev_resume @ 6126, parent: usb4
-
--------------------------------------------------------------
-
-=====================
-platform bus device
-=====================
-
-- suspend was aborted because vhci_hcd suspend routine returned error
-
-[  297.854621][ T9402] usb 4-1: PM: calling usb_dev_suspend @ 9402, parent: usb4
-[  297.868524][ T9402] usb 4-1: PM: usb_dev_suspend returned 0 after 13214 usecs
-[  297.869994][ T9403] usb usb4: PM: calling usb_dev_suspend @ 9403, parent: vhci_hcd.0
-[  297.871959][ T9403] usb usb4: PM: usb_dev_suspend returned 0 after 30 usecs
-[  297.873644][ T9394] vhci_hcd vhci_hcd.0: PM: calling platform_pm_suspend @ 9394, parent: platform
-[  297.874738][ T9394] vhci_hcd vhci_hcd.0: We have 1 active connection. Do not suspend.
-[  297.875369][ T9394] vhci_hcd vhci_hcd.0: PM: dpm_run_callback(): platform_pm_suspend returns -16
-[  297.876078][ T9394] vhci_hcd vhci_hcd.0: PM: platform_pm_suspend returned -16 after 1341 usecs
-[  297.876774][ T9394] vhci_hcd vhci_hcd.0: PM: failed to suspend: error -16
-
-- the following triggers resume
-[  297.877321][ T9394] PM: Some devices failed to suspend, or early wake event detected
-
-[  297.881065][ T9403] usb usb3: PM: usb_dev_resume returned 0 after 19 usecs
-[  297.904551][ T9408] usb usb4: PM: usb_dev_resume returned 0 after 22911 usecs
-[  297.905148][ T9418] usb 4-1: PM: calling usb_dev_resume @ 9418, parent: usb4
-
-usb 4-1 usb_dev_resume never returns.
-
-Note - In both cases, usb_dev_resume doesn't return. When it is called is the
-difference.
-
-I don't think suspend/resume works when devices are bound. Suspend exits and
-starts resume which seems to fail because it doesn't handle the virtual usb
-device resume. There is a missing piece here.
-
-When vhci_hcd imports a device and acts as a proxy between the virtual mass
-storage device (e.g in this case) - it appears suspend and resume are
-handled as if it is a usb device. Maybe this is incorrect?
-
-usb_dev_suspend() works and usb_dev_resume() on these virtual usb devices?
-Do we need to handle this in usb_dev_resume()?
-
-Talking out loud - I have to do some looking into.
-
-thanks,
--- Shuah
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR11MB7605:EE_|DS0PR11MB8050:EE_
+X-MS-Office365-Filtering-Correlation-Id: e5d52d67-74e1-4557-5c92-08ddb9c3fe97
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?M2diR0Z1Y05GMVo0Zk5SZkRSUjhVNGxwSEE5WXVDYkhFMGdhOEJNMmlpRVBv?=
+ =?utf-8?B?VWs3dHhIWGR1N2xwU0dGSit4YWdwajI2eTZpVkxKUmhGSVh0dno2NEQzYlRT?=
+ =?utf-8?B?bm5uVFVCZGFsb1U0MUdGTWJpck1CSTI2Q3J1OWV6L0RaY2h5T1pyKzdEYjcx?=
+ =?utf-8?B?U0lKUHdSa0VGS0lyZDhsM2lwTVB1Z3NNRFhUMEgrSTN4N1dNcWNlbFQ0L0ZH?=
+ =?utf-8?B?RHNjY3FKY1VlNkh1eTFuSzJKcklSSFdMTGU2STFHZjhkTEVwa05QU0g1dTVO?=
+ =?utf-8?B?MkluOHNCTmxuek9KZmNyaFN5akVwaDJxcXJSLzM2Znk3QWNSbFBZVlRVMW8y?=
+ =?utf-8?B?Zmx6Vk05dDVLTUxpYU1ibnoxYUlpcmR6WSsrU3FyRC8wN1VGajBvZGFlUW5E?=
+ =?utf-8?B?OFlFNHVnb25kR0pGRUNnZ1lObG41Z2JaWFY3UmZpTlJZSWV1YURrQ3dHeTla?=
+ =?utf-8?B?bWY4NktGUXZqUkN2SlpLS01jTnZsVjhqK0pFa0ZVZXVJTy82K1dGNyt1SW94?=
+ =?utf-8?B?NnNTWXNqY2NTNjBvU1poL2VxTTI5Q0dnUzZFTHdUMCtYUTJQcVJtSVlPK25q?=
+ =?utf-8?B?MFpKb1FIeG84RUlUbUI1WVJsdFJBUVVTZUk0WTZJUDdaSnFyREptM0ZpZEN3?=
+ =?utf-8?B?QnpSalp1RmJGQU9OblpTQ1ZCR1hSVzUzRjI4cEFYbXp2MFJvTGo4Vm1aMVZr?=
+ =?utf-8?B?djkrc2pFLzF0Rm9uYXBsb1N0L21NajIvaU13T0hKS2o1dVlpbHJXb0tzOFpp?=
+ =?utf-8?B?UUVSUTlMMUsvcTdSSTI2WHRMMGZpeTBCcENIMWxrc3VDdW9lTXRZWTVnSXpK?=
+ =?utf-8?B?Q1ZvMHhWUVl4MW0zNDgyYzdjMklseEl1SDJDWmptcjQrWkJZVkNQLzdzVWdI?=
+ =?utf-8?B?M3E3RmlDOVlneDYrWlJkdHpvc0s4RFA5Ri9pcmphZFhFL3pNNkxkUCtMa2pB?=
+ =?utf-8?B?QTF4ODNHb2xGUFJ2YnhCdnZ5N0VsbDM5cTV4NG5hYm1CRUFjQlNUeVU1a1Fp?=
+ =?utf-8?B?eHdGVzVqRzFacGtlVkJiRHFieFNQODUyUXlTazZlMWRUU3hXbkZad3hlUXA2?=
+ =?utf-8?B?TGZUNHMyRkpkMk5vdjVGdWVkb0ZFTmg5SGxSSUVPQ1BIbmRMNDBQLzVVeGlJ?=
+ =?utf-8?B?c3JyUm5tdWJ1UjVVaE02RklEbW5acDBLZExuOWdwTCszdWI0MExBQ09sUXNs?=
+ =?utf-8?B?Q1FoM09VVzNrVEdaekRoSzdXTkZSdklpd3ZxYW0yQzF3cUdJUTQ3VjVRQ0M0?=
+ =?utf-8?B?UjFLaW9FS1ZsQVFPODE2UXhUWllqeUk2TGFSMTljclVhMy9hcmdUTXRDenF0?=
+ =?utf-8?B?VnJFa3RqeEJhVnROTEV1Vk5yTmRxeXJGUk1ZR0N6NWVPMkFuelI5eEp4TGc0?=
+ =?utf-8?B?MlM0Z3JjVlJiM0VZVjRxNUJUQ0N2ZUNHZ1Q2U3VPeGVic09qUFdxZk1MVlBD?=
+ =?utf-8?B?d3NGT2o0ZUNodVZlU1BlZW1TQXhQUnZYdFZWdzVrb0RlaHZjYklwZGhJSTNw?=
+ =?utf-8?B?UW9QSjZEWTZVWWowMFd3U2k3OFBkYWo4K2IxYkpGWUFZajZBYjY3YnBtdW1P?=
+ =?utf-8?B?TWxCaEw5eXF1amRxUWx5YmNlYmRKYlVzeVp6dXRlSVN2YUxzUEREQ21GSmJU?=
+ =?utf-8?B?YmpIanhnM2RPelMzejNVQXVKb1I4bVVnUzlEd0JySkt2bThmU2VPSEJOMGty?=
+ =?utf-8?B?bkVkMllRd1NpVnh2Y0VhR2N3QzcwWHBrcjUrVGdkdXlVbHlDWU5VcFEyZlF4?=
+ =?utf-8?B?bWNDMElWeFRKWjEzZXBaSnBERlVtNmVIeUVOa3k5a0Y4b0tmcTl5RmkvVHlw?=
+ =?utf-8?B?VWF0YXlYN25NUm5hUGpiR0ZEMXpYK1NqMzRMcjFlVEpFZUVmZjNLVU9RUTFM?=
+ =?utf-8?B?ZTN3ODdWb3NZZ3RYTGN5T1FxQTlSUEkrQWh1eUgwV2g4dkdLK2cwMWcwdzJG?=
+ =?utf-8?Q?UdInFkKq0Uc=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB7605.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?b1pkR21XQ3hHd2NLQmRYMmlFcHd4bkdkTC9ZL2psUWM5Q20zUktoaEUvUFI4?=
+ =?utf-8?B?RUk1bXRaanNuQTh1YzMvNmhpZFNpanh3MmRtbDlzODRUNGRtWEU1WUhna3Y5?=
+ =?utf-8?B?aDAvYjA3YlhJVVQ0WnFla0hSUHNUV1luVlk3ZGRucEtLK1lCbHlSSHNjalFk?=
+ =?utf-8?B?R1hmenZXSXYvdDk0UzRtdVZKS1V1MGw3SFU1dEpWSHRHaWRONDJROGNtZzg1?=
+ =?utf-8?B?MkMyZ09UTkthZFZKS2tUb2xuQStYYm1ZckE2ZGdNSHFsemtIR0RQTVE2bFVx?=
+ =?utf-8?B?VVoybTFRZjNocXRQMUV4aHo5TGY0a21vSmdwWUlhcVEwWWpydWdrUHV0OGls?=
+ =?utf-8?B?akdhczdUY3Q0ODhOaTVFREkrQ3NsdTBkUUVPKzJrcVdEZ2RmY0NZM24wUDdE?=
+ =?utf-8?B?ZVpFam5kNjRDK201NXNzZnlCbTlpUkwvS0t5QWlHOEJQZFVOdFVqajJxREw1?=
+ =?utf-8?B?S2ltR2trTUxwMnN0TVhrRzVGdjFZY01vUmt4aGU1WnkxUGxMbUJnQkJQSDJu?=
+ =?utf-8?B?L1M4QzlLMFRnWWt5bzM2UEFsSFRoQ3dCNlZtT3pPeDJtMW9oZEdqSU1IbW5E?=
+ =?utf-8?B?dzU0bzlNcFJBdVdPQXQ5WVhYeGxhY2tid3lBY1VSNDVObVhsN2h0OVNCcm9v?=
+ =?utf-8?B?cWp2Mi9EWGg1VERyRUp1c0pjakk3VTk3bWszMUpQZ29URGpTb0EvODJGWmFv?=
+ =?utf-8?B?cjVaYnFRVEkrTHVsRGZUM25QNlo0Q1lla0hzL0tnRVpMQ09jYXcvY1ZSZ3Ra?=
+ =?utf-8?B?Um8rZXY0M0ZkbGwweHVUL1V6QStwQlZrWHY1T1QzZUJRSlAvak81VUpZTUxH?=
+ =?utf-8?B?RjNsYUhiZzhVa1ZWOGx6TVhYaWhVVzNhcm9CbUdWT2t1V3Y2ZlJocEc1YjRN?=
+ =?utf-8?B?T05jTmgyYTBzb3BhYlRUR1NEUWtzcUp3VnlWRktMSFY1TktWNlFZS2xzSkd1?=
+ =?utf-8?B?ek83d3NhR3o3M2xSV3BQZDFSbnMvc3dURkRadHJNRWxKN3c2Mk1hNTRkYXln?=
+ =?utf-8?B?M3FXdlB4MVVlczZ2SnUzeUhkWGtuNmQ4T09leUowV2gyT3VJdDZieEZEdGp4?=
+ =?utf-8?B?aEdQYjVvTHk3WGpEWEcxaEs2OXJNWUZkK3pZdTVrTmJtNVpBS3VLMHdmZUE0?=
+ =?utf-8?B?bE9zOXFVLzRWMHFXaTBPU3B1YU1IS1QwMEVuL3dwNk55MnY1T2h5T2hiN2k0?=
+ =?utf-8?B?eTArYWxiaDNCRGVQbTF5YzgzODJoaXZiU1NIQmpXM0UzTmFpdzR3ZkZsYzll?=
+ =?utf-8?B?ejVRbEtiUlZsR01lbi9DWDZmMTl3TWVtNStCdmtiK05JZ0RwRmZlZzFRUE0x?=
+ =?utf-8?B?cUc4eFd6dENnemZEd3Z4QlVvSVhZaWRUdnRNam5LOHlYSXRDQ0JHcHJJZitZ?=
+ =?utf-8?B?VFhReU1jRlBvejhjdC9RMXgvM3drYjI4U0dpSnpPQTdaemIzL3NzM3pURkpW?=
+ =?utf-8?B?MXpJK3Bvai9ncERNZllMYjl2WWxOYTJUcmhMeWYvWkRpakpkSzNQMDZwVWZP?=
+ =?utf-8?B?QXZ3djN1WGRndG5nbkd3VTRhdnFRcTJ4RTh2R21ZNEN2MDhHNGROYW4rRXNV?=
+ =?utf-8?B?UWFscGZqdEF1bmQ4VHg4WHRCVkpSMk1sRlN1bkgxeW5xbDFtTjhJcnZyaWpL?=
+ =?utf-8?B?U3RzeDErb2dDQUZtTnhCWDVSSnFqc3czU05kRnR3K3kycllzVUtCQi82U0pw?=
+ =?utf-8?B?REFQOUF2RFlLbkV1SC9OZ0kvVFU2a1hqenRhZWRkbWVFaFJBV29QaWd1Wm5X?=
+ =?utf-8?B?bVBEc3lYOEhyaEN6WHhFY0pJR1BnVzUxWEJhbTNPYWd4cE1RKzB0c1NZZHpW?=
+ =?utf-8?B?WXhIOUhpN1lidGQzN01lKzRIeVFWMUNqOFU4UjNQU2xaYnNKUHhBUTA5bEFr?=
+ =?utf-8?B?ZUJmclQ2MlRUd3NtREY1Z0didGlIVWZqTG1sbExTbzlxblRKTFZaV1hJTkZ0?=
+ =?utf-8?B?YjdXTzdJZm12RDNJbFpYb2FLT2dqVFU4VVQwbFJQa1czNVJZOVZpQUx2ZnV5?=
+ =?utf-8?B?V3cwczcrR3JRZEw3ZEpDK2RrT0tWUmVBU1pQb2NKRFpzS09vem12dU94Q3Mw?=
+ =?utf-8?B?Q2hycU1CRDc0VzU3dW92dUg0MDhUUGRvb3JZSHJOaFlGeHdHTDkvM3JmWmMw?=
+ =?utf-8?B?Vi9rMzMwNWhUREM3M2lsSUpXUEZzSXljaHlrNFpWME1ET00xOTRKc3crdDMw?=
+ =?utf-8?Q?bkVgq887cacouyRC3ThqLgc=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: e5d52d67-74e1-4557-5c92-08ddb9c3fe97
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB7605.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 23:55:59.8954
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Tvsiwjabqy91G3sWJaxlypY9QYmI0pMOJNLTRFZAX6DAGsTCvqWj6Ww0x7d1YcCEUNhOAhUs1OuTJtebXbpTvDADFp6ROmAVDCk9bRhW5mg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB8050
+X-OriginatorOrg: intel.com
 
 
 
+On 7/2/2025 9:52 AM, Badal Nilawar wrote:
+> Search for late binding firmware binaries and populate the meta data of
+> firmware structures.
+>
+> v2 (Daniele):
+>   - drm_err if firmware size is more than max pay load size
+>   - s/request_firmware/firmware_request_nowarn/ as firmware will
+>     not be available for all possible cards
+> v3 (Daniele):
+>   - init firmware from within xe_late_bind_init, propagate error
+>   - switch late_bind_fw to array to handle multiple firmware types
+> v4 (Daniele):
+>   - Alloc payload dynamically, fix nits
+>
+> Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
+> ---
+>   drivers/gpu/drm/xe/xe_late_bind_fw.c       | 100 ++++++++++++++++++++-
+>   drivers/gpu/drm/xe/xe_late_bind_fw_types.h |  30 +++++++
+>   2 files changed, 129 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/xe/xe_late_bind_fw.c b/drivers/gpu/drm/xe/xe_late_bind_fw.c
+> index 22e79f0dbbdf..ca2370af3c27 100644
+> --- a/drivers/gpu/drm/xe/xe_late_bind_fw.c
+> +++ b/drivers/gpu/drm/xe/xe_late_bind_fw.c
+> @@ -5,6 +5,7 @@
+>   
+>   #include <linux/component.h>
+>   #include <linux/delay.h>
+> +#include <linux/firmware.h>
+>   
+>   #include <drm/drm_managed.h>
+>   #include <drm/intel/i915_component.h>
+> @@ -13,6 +14,16 @@
+>   
+>   #include "xe_device.h"
+>   #include "xe_late_bind_fw.h"
+> +#include "xe_pcode.h"
+> +#include "xe_pcode_api.h"
+> +
+> +static const u32 fw_id_to_type[] = {
+> +		[XE_LB_FW_FAN_CONTROL] = CSC_LATE_BINDING_TYPE_FAN_CONTROL,
+> +	};
+> +
+> +static const char * const fw_id_to_name[] = {
+> +		[XE_LB_FW_FAN_CONTROL] = "fan_control",
+> +	};
+>   
+>   static struct xe_device *
+>   late_bind_to_xe(struct xe_late_bind *late_bind)
+> @@ -20,6 +31,89 @@ late_bind_to_xe(struct xe_late_bind *late_bind)
+>   	return container_of(late_bind, struct xe_device, late_bind);
+>   }
+>   
+> +static int xe_late_bind_fw_num_fans(struct xe_late_bind *late_bind)
+> +{
+> +	struct xe_device *xe = late_bind_to_xe(late_bind);
+> +	struct xe_tile *root_tile = xe_device_get_root_tile(xe);
+> +	u32 uval;
+> +
+> +	if (!xe_pcode_read(root_tile,
+> +			   PCODE_MBOX(FAN_SPEED_CONTROL, FSC_READ_NUM_FANS, 0), &uval, NULL))
+> +		return uval;
+> +	else
+> +		return 0;
+> +}
+> +
+> +static int __xe_late_bind_fw_init(struct xe_late_bind *late_bind, u32 fw_id)
+> +{
+> +	struct xe_device *xe = late_bind_to_xe(late_bind);
+> +	struct pci_dev *pdev = to_pci_dev(xe->drm.dev);
+> +	struct xe_late_bind_fw *lb_fw;
+> +	const struct firmware *fw;
+> +	u32 num_fans;
+> +	int ret;
+> +
+> +	if (fw_id >= XE_LB_FW_MAX_ID)
+> +		return -EINVAL;
+> +
+> +	lb_fw = &late_bind->late_bind_fw[fw_id];
+> +
+> +	lb_fw->id = fw_id;
+> +	lb_fw->type = fw_id_to_type[lb_fw->id];
+> +	lb_fw->flags &= ~CSC_LATE_BINDING_FLAGS_IS_PERSISTENT;
+> +
+> +	if (lb_fw->type == CSC_LATE_BINDING_TYPE_FAN_CONTROL) {
+> +		num_fans = xe_late_bind_fw_num_fans(late_bind);
+> +		drm_dbg(&xe->drm, "Number of Fans: %d\n", num_fans);
+> +		if (!num_fans)
+> +			return 0;
+> +	}
+> +
+> +	snprintf(lb_fw->blob_path, sizeof(lb_fw->blob_path), "xe/%s_8086_%04x_%04x_%04x.bin",
+> +		 fw_id_to_name[lb_fw->id], pdev->device,
+> +		 pdev->subsystem_vendor, pdev->subsystem_device);
+> +
+> +	drm_dbg(&xe->drm, "Request late binding firmware %s\n", lb_fw->blob_path);
+> +	ret = firmware_request_nowarn(&fw, lb_fw->blob_path, xe->drm.dev);
+> +	if (ret) {
+> +		drm_dbg(&xe->drm, "%s late binding fw not available for current device",
+> +			fw_id_to_name[lb_fw->id]);
+> +		return 0;
+> +	}
+> +
+> +	if (fw->size > MAX_PAYLOAD_SIZE) {
+> +		drm_err(&xe->drm, "Firmware %s size %zu is larger than max pay load size %u\n",
+> +			lb_fw->blob_path, fw->size, MAX_PAYLOAD_SIZE);
+> +		release_firmware(fw);
+> +		return -ENODATA;
+> +	}
+> +
+> +	lb_fw->payload_size = fw->size;
+> +	lb_fw->payload = drmm_kzalloc(&xe->drm, lb_fw->payload_size, GFP_KERNEL);
+> +	if (!lb_fw->payload) {
+> +		release_firmware(fw);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	memcpy((void *)lb_fw->payload, fw->data, lb_fw->payload_size);
+> +	release_firmware(fw);
+> +
+> +	return 0;
+> +}
+> +
+> +static int xe_late_bind_fw_init(struct xe_late_bind *late_bind)
+> +{
+> +	int ret;
+> +	int fw_id;
+> +
+> +	for (fw_id = 0; fw_id < XE_LB_FW_MAX_ID; fw_id++) {
+> +		ret = __xe_late_bind_fw_init(late_bind, fw_id);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +	return 0;
+> +}
+> +
+>   static int xe_late_bind_component_bind(struct device *xe_kdev,
+>   				       struct device *mei_kdev, void *data)
+>   {
+> @@ -79,5 +173,9 @@ int xe_late_bind_init(struct xe_late_bind *late_bind)
+>   		return err;
+>   	}
+>   
+> -	return devm_add_action_or_reset(xe->drm.dev, xe_late_bind_remove, late_bind);
+> +	err = devm_add_action_or_reset(xe->drm.dev, xe_late_bind_remove, late_bind);
+> +	if (err)
+> +		return err;
+> +
+> +	return xe_late_bind_fw_init(late_bind);
+>   }
+> diff --git a/drivers/gpu/drm/xe/xe_late_bind_fw_types.h b/drivers/gpu/drm/xe/xe_late_bind_fw_types.h
+> index 9806d17291ad..7d5dcb28b784 100644
+> --- a/drivers/gpu/drm/xe/xe_late_bind_fw_types.h
+> +++ b/drivers/gpu/drm/xe/xe_late_bind_fw_types.h
+> @@ -10,6 +10,34 @@
+>   #include <linux/mutex.h>
+>   #include <linux/types.h>
+>   
+> +#define MAX_PAYLOAD_SIZE SZ_4K
+
+Sorry I didn't realize it earlier, but this is in a header so it needs a 
+prefix to avoid clashes, something like XE_LB_MAX_PAYLOAD_SIZE. I'm ok 
+if you fix that when merging. With that:
+
+Reviewed-by: Daniele Ceraolo Spurio <daniele.ceraolospurio@intel.com>
+
+Daniele
+
+> +
+> +/**
+> + * xe_late_bind_fw_id - enum to determine late binding fw index
+> + */
+> +enum xe_late_bind_fw_id {
+> +	XE_LB_FW_FAN_CONTROL = 0,
+> +	XE_LB_FW_MAX_ID
+> +};
+> +
+> +/**
+> + * struct xe_late_bind_fw
+> + */
+> +struct xe_late_bind_fw {
+> +	/** @late_bind_fw.id: firmware index */
+> +	u32 id;
+> +	/** @late_bind_fw.blob_path: firmware binary path */
+> +	char blob_path[PATH_MAX];
+> +	/** @late_bind_fw.type: firmware type */
+> +	u32  type;
+> +	/** @late_bind_fw.flags: firmware flags */
+> +	u32  flags;
+> +	/** @late_bind_fw.payload: to store the late binding blob */
+> +	const u8  *payload;
+> +	/** @late_bind_fw.payload_size: late binding blob payload_size */
+> +	size_t payload_size;
+> +};
+> +
+>   /**
+>    * struct xe_late_bind_component - Late Binding services component
+>    * @mei_dev: device that provide Late Binding service.
+> @@ -30,6 +58,8 @@ struct xe_late_bind_component {
+>   struct xe_late_bind {
+>   	/** @late_bind.component: struct for communication with mei component */
+>   	struct xe_late_bind_component component;
+> +	/** @late_bind.late_bind_fw: late binding firmware array */
+> +	struct xe_late_bind_fw late_bind_fw[XE_LB_FW_MAX_ID];
+>   };
+>   
+>   #endif
 
