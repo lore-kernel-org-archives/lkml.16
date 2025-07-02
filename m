@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E492F50A6;
-	Wed,  2 Jul 2025 17:06:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1F70264F87
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 17:06:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751475980; cv=none; b=JXibGtRWW5xCfXPJ2piUW0THwPUhctV9o4JAqXKqwA8qu4xEBNAzIVjkdY2Rr4dwmW4iK/mNp6E2ZjSt2suuZWlhN5X/Yb3BrmG5szvOxD3d3lzN4XrLIDSGGp0oKZX/lrn042Ly45gOFYdbbzgqaofjP7g53M8gx2EthfPLphA=
+	t=1751475986; cv=none; b=h9peZviV8e4DWgM0lLnK8odeyAQclBQ7aGypeIDxukf6zt+twA1SiCFvcD6crdi0+FsmkdgCZABeOeOgrpl72ApT+mfn6DKcLzfkiRFDui+UZEXUxq0PoDdBE99WwTjjqcXMLlju6ecpeT5ugjMBcogy5o4+g5iQxFjuuIA6gNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751475980; c=relaxed/simple;
-	bh=SS5WjG9ciU0is62oTGBUTmsQ/HoYLWJkqHyZ316UcXY=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=JQvZKkYL7dfaooky5kvG+qhjiJ0YQ/QKtwAed3Qua7rwV7zoH53Y2QDu/RsMAUpYpbcvKo0qaJeZAgfzmhfFAxYX9fZATQy6ZbxWhE1J9OwfdCmlPOLXOMc7hmRwDZcpJaFo3nuNHzB1+xFT5ZFoJ1fiLtz2pwI8Pb0RENL6xYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kSDZUO1g; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751475986; c=relaxed/simple;
+	bh=TE6yC0/TeGtczwxqtSzRd1vq1cumwLwU96EIw+yDtcs=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=QaXYiUVkGz537RggpYrkaVR3sm6Q/iPQ/xty8gB6UqNlyagyxYtK3tZiRbgtZdJPUlZtDd9OlohJ/8utjn9Hi1ACKORR5yWIF/xA0bAasVVWolilcDvlEn91weCTiz0mX/UMkgYcCxIBtiZ1mdGXsYgIkm+NP4M9RRiA5Tc9nzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BSgc1yEJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kSDZUO1g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DF43C4CEE7;
-	Wed,  2 Jul 2025 17:06:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BSgc1yEJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B022CC4CEED;
+	Wed,  2 Jul 2025 17:06:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751475980;
-	bh=SS5WjG9ciU0is62oTGBUTmsQ/HoYLWJkqHyZ316UcXY=;
+	s=k20201202; t=1751475986;
+	bh=TE6yC0/TeGtczwxqtSzRd1vq1cumwLwU96EIw+yDtcs=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=kSDZUO1gCtnw+NE9t4yrLbdHnbR5oDtcfp/fJucvtb3d2/sgadVMk1D6Cw7eSKLEz
-	 EdZ+h4QjHKmovf+1V2vwN20kRMJGM161TECMiZDYvd/+ZAklt0wXUzO/5UFCCqa8TZ
-	 growX3wxEUO96GtWRUOOKfpWLJSjRuU7bIOyp/130CWP5f54y90IPJVQ0ZIZxqimFi
-	 8J18rY6TO3HdvddFReQCVPrMzUIg+Eg4Ld6Ky48yjj9YbeQ9RSG919hvO/XDn87ctC
-	 KPQK/vJQXS8gzT/QkqeJ6BU8Zbn7tGOxKVDG4GlLR11zp637SgrwrKcu4WxcTOMOvh
-	 Y+M78JvwIqQ4g==
+	b=BSgc1yEJjl47Cv28PUjVTuOJzCPihQeuK/FfHo7AGeR9cdrqRcTdrkoEs0//ZxX0W
+	 rWtdzOxQmB7L1q/j/ZHwmcyddH0jrhDf9VO1uVxLxe+CY+bkRhN0TZyPtx3onTd1iw
+	 UsDkXYrjPjOaDTDem1OMPVrRVXekpxMC8nULN/PEPJPsaGL4phDFZOdDDZ2ar/4Rtl
+	 ugSXiYyIporDmEYjnZ/2ysuna/CgTqoZGNteV4D66HAaDWG2WSefJfkDLly2aoXEx3
+	 Y6npx0/9hAlHslL553rSXXi4N+bJJ8TpTmQMRZRirZ1ra7efJfxWdEOrpOInAbb6JL
+	 nqmfy1zIcgL5Q==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33DE0383B273;
-	Wed,  2 Jul 2025 17:06:46 +0000 (UTC)
-Subject: Re: [GIT PULL] s390 fixes for 6.16-rc5
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70D1C383B273;
+	Wed,  2 Jul 2025 17:06:52 +0000 (UTC)
+Subject: Re: [GIT PULL] MFD fixes for v6.16
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <02f08dcb-fcdf-45a9-a598-c252018153cf@agordeev.local>
-References: <02f08dcb-fcdf-45a9-a598-c252018153cf@agordeev.local>
-X-PR-Tracked-List-Id: <linux-s390.vger.kernel.org>
-X-PR-Tracked-Message-Id: <02f08dcb-fcdf-45a9-a598-c252018153cf@agordeev.local>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-6.16-4
-X-PR-Tracked-Commit-Id: 62355f1f87b8c7f8785a8dd3cd5ca6e5b513566a
+In-Reply-To: <20250701133928.GP10134@google.com>
+References: <20250701133928.GP10134@google.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250701133928.GP10134@google.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/mfd-fixes-6.16
+X-PR-Tracked-Commit-Id: d9d79e4f7dc935fea96dbf3de524404c08d08b03
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ba6a2f25d3d0c813bc5f70c4437002ecc90b85d5
-Message-Id: <175147600481.796050.6100271038912961977.pr-tracker-bot@kernel.org>
-Date: Wed, 02 Jul 2025 17:06:44 +0000
-To: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Vasily Gorbik <gor@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: 65c1736c8e9d06bfa5cc734b156518ff65926918
+Message-Id: <175147601116.796050.7495527574972998964.pr-tracker-bot@kernel.org>
+Date: Wed, 02 Jul 2025 17:06:51 +0000
+To: Lee Jones <lee@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Wed, 2 Jul 2025 16:15:25 +0200:
+The pull request you sent on Tue, 1 Jul 2025 14:39:28 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-6.16-4
+> git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/mfd-fixes-6.16
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ba6a2f25d3d0c813bc5f70c4437002ecc90b85d5
+https://git.kernel.org/torvalds/c/65c1736c8e9d06bfa5cc734b156518ff65926918
 
 Thank you!
 
