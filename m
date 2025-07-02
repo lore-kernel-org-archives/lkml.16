@@ -1,128 +1,106 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C0FF1C6B4;
-	Wed,  2 Jul 2025 01:12:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF7B3C30;
+	Wed,  2 Jul 2025 01:18:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751418740; cv=none; b=Ob223oFXCCpVvFnnMIIXHhHU3xInQtnV/YvErcrHM3wFMb6BO4HrGSYNl/UmqhaNv9guH62BieMM4i47GDKPpJ51KTIvhqlM141oKaxtPLhD8UZIAxVAORebJ3oQodWtXQvH9LpwSe82temdqgg8LFtVv68+MykDmiBxy2gD9Tw=
+	t=1751419124; cv=none; b=PAJjm1cBr5hoa61/DeMzmmGy8rmOMV1PZuVUMjBNx9UiTpEHTB6BZ41JuRNAUNPvfxbF9/ekNFfxvT1dPD1jgninnLWFN2Eq8kJ8V7Z+fx4mZU5YFWRzF2SLve+38fld9NOprMMkrB9P4KbotoDpB4h4u7kiAM9cXWQzYRszEDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751418740; c=relaxed/simple;
-	bh=N5+gz5om4Byi90spvxYFYA2quL0W1CQzGIFb7DubHi4=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=gQgJjZLMM1XyMJ+uYaFaD180fY0Lz6V5ZIxBp6oBbvgw1L2ADFbx03n6GRiGKXubOIopErQionouwD7oEUeJtaB8zbaYSeD47L0e6OH5JETIMbT6Us6Hizseg/0XZ0u5luK0I+idWS13DakCHOqiLHeUeLq5J8GEACKr4g7usb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bX21W0QgpzYQvCD;
-	Wed,  2 Jul 2025 09:12:15 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id E50021A08DC;
-	Wed,  2 Jul 2025 09:12:13 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP3 (Coremail) with SMTP id _Ch0CgB3JSNph2RotTN7AQ--.3691S3;
-	Wed, 02 Jul 2025 09:12:11 +0800 (CST)
-Subject: Re: [PATCH] nbd: fix false lockdep deadlock warning
-To: Nilay Shroff <nilay@linux.ibm.com>, Yu Kuai <yukuai1@huaweicloud.com>,
- Ming Lei <ming.lei@redhat.com>
-Cc: josef@toxicpanda.com, axboe@kernel.dk, hch@infradead.org, hare@suse.de,
- linux-block@vger.kernel.org, nbd@other.debian.org,
- linux-kernel@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- johnny.chenyi@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20250627092348.1527323-1-yukuai1@huaweicloud.com>
- <aF56oVEzTygIOUTN@fedora>
- <c2fbaacc-62a1-4a98-4157-2637b7f242b7@huaweicloud.com>
- <197b6dca-56be-438d-a60f-21011367c5ed@linux.ibm.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <99b4afce-de05-ddcb-2634-b19214cf4534@huaweicloud.com>
-Date: Wed, 2 Jul 2025 09:12:09 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1751419124; c=relaxed/simple;
+	bh=Q3ZlQcXLusGO7or5b6gbAN76N6KRrX9bFVhn/AXPoDQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=tQk+3EIcjh8guQEXY+i6QVOtF+HZfDM0MpADhhXc23fN1LLu+nIhhUXMgZTsuiHk1+PlkxwhYsJ+ZYQWvfoPDuzP27SjFpd0jy3zWE2jkkzVgmo2xGIlRKR2sg8C5hUhJg/219R0dpwWJxW/lerGw1zhaXIq5GGD8KwqvKYD/GU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IvoeSzGM; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IvoeSzGM"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1C881C4CEEB;
+	Wed,  2 Jul 2025 01:18:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751419124;
+	bh=Q3ZlQcXLusGO7or5b6gbAN76N6KRrX9bFVhn/AXPoDQ=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=IvoeSzGMjkbTzs0OeT9pXsMaTabkeloJwgX2wcUdGzxUBxcm35JbpaDV/P7Aev0Ko
+	 clmqIktb3nuNauaNRqv4wjxWTyPiUGyH0UQ3a3NwFI5Z5323Xx3wwDjVjKmKvae+DU
+	 ErraIGxYRnfNTaNjwApvEqdpODrO+2IEH0OD/zLCReh7RJmqOKo9MjX8++ByP7I1M8
+	 oTCqT1L6O5DDK1U2z2vRfWts3nuXSTKZ1XnoxULF5pwSX+5agAXcJNST2hb37u/vs/
+	 v1TiDnffzf23FO9VTF4eGb7x/vunKnnEAJI8Wz9vkJ6x661or9hAzGr7sJDmlyuh+v
+	 T+C4KwqvBy3+A==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F31C7EE30;
+	Wed,  2 Jul 2025 01:18:44 +0000 (UTC)
+From: Yang Li via B4 Relay <devnull+yang.li.amlogic.com@kernel.org>
+Date: Wed, 02 Jul 2025 09:18:42 +0800
+Subject: [PATCH] Bluetooth: hci_core: lookup pa sync need check BIG sync
+ state
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <197b6dca-56be-438d-a60f-21011367c5ed@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgB3JSNph2RotTN7AQ--.3691S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7urW7Ww4xAFWfZrW5WrWfKrg_yoW8Xr45pF
-	ZYkFW7GrW5K3ZYq34jkw1UCFWrCr1DJa1Dtr1UWa47CrWUZrZY9r40qrnIgryUJrWkJr1U
-	ta4YyF43uw43ZrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBF14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250702-pa_sync-v1-1-7a96f5c2d012@amlogic.com>
+X-B4-Tracking: v=1; b=H4sIAPGIZGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDcwND3YLE+OLKvGRdo7Rk87RkyzRTS6NkJaDqgqLUtMwKsEnRsbW1AGv
+ pFS1ZAAAA
+To: Marcel Holtmann <marcel@holtmann.org>, 
+ Johan Hedberg <johan.hedberg@gmail.com>, 
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>
+Cc: linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Yang Li <yang.li@amlogic.com>
+X-Mailer: b4 0.13-dev-f0463
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751419122; l=1160;
+ i=yang.li@amlogic.com; s=20240418; h=from:subject:message-id;
+ bh=GHF9U6GehkWVyzq0OzaU+JceT54aR44ovVM4Bx+2rpk=;
+ b=eXovFOziL0YnMbRRQ5YVkV12C93VSCnu6TecapyGQ2OjfXYA8mgRc/OPiy0TVXdTOs0FztD/E
+ qjG/4wvabekCKCj+qnJaf73QtkMQbVoB6oNjkiZn2XkfU256Ep1Eq37
+X-Developer-Key: i=yang.li@amlogic.com; a=ed25519;
+ pk=86OaNWMr3XECW9HGNhkJ4HdR2eYA5SEAegQ3td2UCCs=
+X-Endpoint-Received: by B4 Relay for yang.li@amlogic.com/20240418 with
+ auth_id=180
+X-Original-From: Yang Li <yang.li@amlogic.com>
+Reply-To: yang.li@amlogic.com
 
-Hi,
+From: Yang Li <yang.li@amlogic.com>
 
-在 2025/07/01 21:28, Nilay Shroff 写道:
-> 
-> 
-> On 6/28/25 6:18 AM, Yu Kuai wrote:
->> Hi,
->>
->> 在 2025/06/27 19:04, Ming Lei 写道:
->>> I guess the patch in the following link may be simper, both two take
->>> similar approach:
->>>
->>> https://lore.kernel.org/linux-block/aFjbavzLAFO0Q7n1@fedora/
->>
->> I this the above approach has concurrent problems if nbd_start_device
->> concurrent with nbd_start_device:
->>
->> t1:
->> nbd_start_device
->> lock
->> num_connections = 1
->> unlock
->>      t2:
->>      nbd_add_socket
->>      lock
->>      config->num_connections++
->>      unlock
->>          t3:
->>          nbd_start_device
->>          lock
->>          num_connections = 2
->>          unlock
->>          blk_mq_update_nr_hw_queues
->>
->> blk_mq_update_nr_hw_queues
->> //nr_hw_queues updated to 1 before failure
->> return -EINVAL
->>
-> 
-> In the above case, yes I see that t1 would return -EINVAL (as
-> config->num_connections doesn't match with num_connections)
-> but then t3 would succeed to update nr_hw_queue (as both
-> config->num_connections and num_connections set to 2 this
-> time). Isn't it? If yes, then the above patch (from Ming)
-> seems good.
+Ignore the big sync connections, we are looking for the PA
+sync connection that was created as a result of the PA sync
+established event.
 
-Emm, I'm confused, If you agree with the concurrent process, then
-t3 update nr_hw_queues to 2 first and return sucess, later t1 update
-nr_hw_queues back to 1 and return failure.
+Signed-off-by: Yang Li <yang.li@amlogic.com>
+---
+ include/net/bluetooth/hci_core.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Thanks,
-Kuai
+diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
+index 3ce1fb6f5822..646b0c5fd7a5 100644
+--- a/include/net/bluetooth/hci_core.h
++++ b/include/net/bluetooth/hci_core.h
+@@ -1400,6 +1400,13 @@ hci_conn_hash_lookup_pa_sync_handle(struct hci_dev *hdev, __u16 sync_handle)
+ 		if (c->type != BIS_LINK)
+ 			continue;
+ 
++		/* Ignore the big sync connections, we are looking
++		 * for the PA sync connection that was created as
++		 * a result of the PA sync established event.
++		 */
++		if (test_bit(HCI_CONN_BIG_SYNC, &c->flags))
++			continue;
++
+ 		/* Ignore the listen hcon, we are looking
+ 		 * for the child hcon that was created as
+ 		 * a result of the PA sync established event.
 
-> 
-> Thanks,
-> --Nilay
-> .
-> 
+---
+base-commit: 3bc46213b81278f3a9df0324768e152de71eb9fe
+change-id: 20250701-pa_sync-2fc7fc9f592c
+
+Best regards,
+-- 
+Yang Li <yang.li@amlogic.com>
+
 
