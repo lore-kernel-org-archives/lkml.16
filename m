@@ -1,95 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B158D30AAB5;
-	Wed,  2 Jul 2025 14:53:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411FF3093D8;
+	Wed,  2 Jul 2025 14:54:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751468020; cv=none; b=tIx+bK2omLylFPLUWpvUIvQzfsflZQ36KzXmL/ipvaCRG/tL0qq/QuJO8MyydugW/azADFIXFyUi49RBTg0V1TRww9I8UHiMwKq7qlQoTDv+NK6CDhSu7cSYgHK7nLF8379TnAwBzuD9S/Vqpqyy3YfNlCxcg6tujuSAoodGYkQ=
+	t=1751468045; cv=none; b=knyImZBWW7nZwLvjio50pmjnW8FTsXbVNnAp2jFM8+7utrNe5fSV84wKbStbN6a8l9xhsYf5QZ1qydK2AbxGWQ20NrT9EayVyp+uCX3lucEcqBEFLjmVZK6g0Z3B4RK82tT7LcqXKwOD/i9NpiRbpJcEehlVkPwWXMW99BTUTyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751468020; c=relaxed/simple;
-	bh=YB+SqpHJK/1OIVhZqx+TQHSDi0rUKrHSsi1YuF2D9c8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=M1EkmaR/j4vgE/ZCugR83n3YIr585z8w9KmDy90Jf7kfghArDDWhbmA8M1m9vlIcrDZZseMbEkHDag0r2aDeFQhggT0IQN0WZlXohyBRcJXx2z56QVYu1LNESJV21/Omvn2/d8x1rElWDvYL+B2dNkI5jqnRnb5EnvQCt+2sgrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=psjtlS2e; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751468045; c=relaxed/simple;
+	bh=pCEg0EdOzKP+ZUExkv71c25NkuI2si5Osz6a0iRg3jE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gv6pBBIAZILPyjczWXxD9HXFvhp9ZMIlQ5RX1zQGyjYPzXDrMw2YdMg5k8A3Qj8P0qwsarzAT86ys0aEllYQM+HYmYuL+Yp2o7v4mPVM+EAtLmaix/nhtOUZ0pbXOyWrKD065mxWYMnBWFTpfVgkr7zz8wtPxqXKyuYx+3rt+JA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D+ReiwSO; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="psjtlS2e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1FF3C4CEEF;
-	Wed,  2 Jul 2025 14:53:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751468020;
-	bh=YB+SqpHJK/1OIVhZqx+TQHSDi0rUKrHSsi1YuF2D9c8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=psjtlS2exQUV1FflYSGUEdM+ELbGrJXtQnnS3BYUJMzovaoPoAgVcdNR8Jq6B0iiI
-	 MlJD2yH3V8/SJnwICIv/s/FAwy6WuttwOUcGtgHklBxDeD9i6BmP6/FSQSZRatdaUg
-	 27n9AljlL7ZmXrzFglDngSQfeiO2F6TSAnLNf7Yyj9YMddE6TiBuhalC/80x8dcOVm
-	 LH3c0GVtdeksrTFfHCfTrZgGBnZSeKz0BWRkeu+MLJXsKTl4CON4ndkb5inOG/DlD+
-	 SYT034zlDwtd2oRjGNQ07r9sAgWPzwKHDoBwdbOSb2+uNq5O0JKZNIT2qDgECXJFaw
-	 MFMmqLaxQEkPw==
-From: Mark Brown <broonie@kernel.org>
-To: Srinivas Kandagatla <srini@kernel.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-Cc: linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- kernel@oss.qualcomm.com
-In-Reply-To: <20250701102915.4016108-1-quic_pkumpatl@quicinc.com>
-References: <20250701102915.4016108-1-quic_pkumpatl@quicinc.com>
-Subject: Re: [PATCH v1 0/2] Add sound card support for QCS8275
-Message-Id: <175146801653.192310.9791150746905326384.b4-ty@kernel.org>
-Date: Wed, 02 Jul 2025 15:53:36 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D+ReiwSO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751468044; x=1783004044;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=pCEg0EdOzKP+ZUExkv71c25NkuI2si5Osz6a0iRg3jE=;
+  b=D+ReiwSO0WdRpR2lhHOZQ40cxKkBxCU1gGwasfbywm0h7kA8bssItJ5o
+   wjm8avOf0x15+YoqeUFWWW2IZyIWrqlzytMICWwc2OUXuNFNgkpbbONjF
+   w2PsOh3+7VYBzgJ2PlG8pHzkauzjQcLqcXwK88Ziog6bU8HustZXGjqXT
+   ygh0rnUjm29TFvLvE1Q8Cu8IdwKFdNEL0Gx+GGdzabBBglMCA2VXlv0Rf
+   stJThK4HYpllqjVONpQWB1BtTuaHANgOmOQBD+xgQG80NX5gl10ljL0tI
+   MbAlUvKZByuaVdmcMLsTVXRFKCtozlNMEL9PEdRt0qkBbmCjY8u6QRjV4
+   w==;
+X-CSE-ConnectionGUID: iyW8BOO0Tz2fXLdnmfa/DA==
+X-CSE-MsgGUID: l1OQY7bmTYiTr28m1cs5lg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="65115576"
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="65115576"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 07:54:04 -0700
+X-CSE-ConnectionGUID: cUXzadvVQxKM5FdeQxjB1A==
+X-CSE-MsgGUID: 6gkIpMEbSmmRCp1lMg8YNQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="185126577"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 07:54:01 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uWyqT-0000000Bwkw-3mLM;
+	Wed, 02 Jul 2025 17:53:57 +0300
+Date: Wed, 2 Jul 2025 17:53:57 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Robert Budai <robert.budai@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: imu: adis16550: rework clock range test
+Message-ID: <aGVIBVsFPcVw3lN6@smile.fi.intel.com>
+References: <20250702-iio-imu-adis16550-rework-clock-range-test-v1-1-b45f3a3b0dc1@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-cff91
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250702-iio-imu-adis16550-rework-clock-range-test-v1-1-b45f3a3b0dc1@baylibre.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Tue, 01 Jul 2025 15:59:13 +0530, Prasad Kumpatla wrote:
-> This patchset adds support for sound card on Qualcomm QCS8275 boards.
-> 
-> Prasad Kumpatla (2):
->   ASoC: dt-bindings: qcom,qcs8275-snd: Add QCS8275 sound card
->   ASoC: qcom: sc8280xp: Add support for QCS8275
-> 
->  Documentation/devicetree/bindings/sound/qcom,sm8250.yaml | 1 +
->  sound/soc/qcom/sc8280xp.c                                | 1 +
->  2 files changed, 2 insertions(+)
-> 
-> [...]
+On Wed, Jul 02, 2025 at 09:27:45AM -0500, David Lechner wrote:
+> Rework the clock rate range test to test if sync_mode_data != NULL
+> instead of testing if the for loop index variable. This makes it easier
+> for static analyzers to see that we aren't using an uninitialized
+> sync_mode_data [1].
 
-Applied to
+But at the same time it makes it not to be the usual pattern.,,
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Thanks!
-
-[1/2] ASoC: dt-bindings: qcom,sm8250: Add QCS8275 sound card
-      commit: 3b8dc31715e31ab930d36ef7b98ffc714344e411
-[2/2] ASoC: qcom: sc8280xp: Add support for QCS8275
-      commit: 34d340d48e595f8dfd4e72fe4100d2579dbe4a1a
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
 
