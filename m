@@ -1,219 +1,270 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A4E5246781;
-	Wed,  2 Jul 2025 10:33:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751452434; cv=none; b=Z8jVb0fj6ByY97qZd1EMMKmUhxXDNd8ty7y//qvOnTAEuUrGSzksocJaImkx97YJjSIY96Sjz7T0PtOM0u+f40p+z/c08epzoNCHDTRGQKLKJhAGQ+bfYZWGS2zMdgx6SZvtcYZnn8Ch4W9WSYksJMMCJ+PrJG+a2zW2kBGGYg4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751452434; c=relaxed/simple;
-	bh=Zr4lURcAt0rx9IueClgNCAvtqGi3g4wuS+sj1uYDWIE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=oOtuKmLK6v2j04LjssOSkpdkQ0YZS1cRe5FF0b5yoigfnJ4kb1sMzDQ+EHIpGjRpaZQc+8F4WSY4YR0oRU4OwiKzOpLRHwzCGZvyu4le8iB6bI0ECz3nYYwz+rrisTovlCD524m/q15CGl2aVcxeY5A50E6rkcuw1wc7IMga14M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RQ0+mZIp; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 772EF229B16;
+	Wed,  2 Jul 2025 10:36:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751452565; cv=fail; b=Cl/QgJhcGWkpZIfUlix6zUb+NeqkLMEk7xqbAk9phCs9ExwZ81LCOYWFhSxIHQNHdZN2nqTMhMSJXkcZnwWeb3e2EasFA3rapgPeaQOCfySQzAv/00jarmOCiONJUmGvvwPD6KSfzJ9maaokMagaVNoTvWrUqnAN9PneWzdE+1c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751452565; c=relaxed/simple;
+	bh=wmpXeRun1lzwL39oJhl4jgAgANST87bCo+qcxqdrqP8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=AaJKUSrAPlr12uyNzwcAvw70MOfhWpwtMt6U82Q1bMXsaUhxhKo9NeVAWpaqtJgdji7uVH1crvomBbXS56uf9tlKlN9H4LNJTHdicTJUHk+tBqGjZkB3iKO/vo1GwTe4gOZxvJN6fi2MYw9upICnI3JAy7Bv06SpIeMp2W154bU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Q1wq+7Wl; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=l71awHLA; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RQ0+mZIp"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56235evB020939;
-	Wed, 2 Jul 2025 10:33:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	tyuuEW55huNUHGYc+9oBljKgGuuKmVR8um5xHUVVKiE=; b=RQ0+mZIpNSh3Iz8A
-	RhHHe/+V1EIUnRYRbCEqxvllc8tpS6BrYL8QMLhA00tqScPxK2S61Ajr5QW7IyHn
-	69UqGMyj1bg7FxZXrArNwefXmRzc/8eEhUkmA6Yo5ibCoi4ScJ0tUqm97HP3yvkX
-	sKP6xOJASdNFBdRp+pUSu9YELcP0ceE/Mpup9XSxnNB4QNvCnfjce4P8Lz6K8dX6
-	LNVMWDwmrOLcztG1rROXp3+9ncHuXE+94fWNOCJyExgWIG3g/sZq8FKGoO09Y984
-	1fJgj7HbYAxmP3doQUwjBWCjneo+ENIponHFK9sT3jLUYl4iMX8AGUwZLfyim+F4
-	EE3Mmg==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47mhxn2xt9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Jul 2025 10:33:40 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 562AXdZl022880
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 2 Jul 2025 10:33:39 GMT
-Received: from [10.253.36.62] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Wed, 2 Jul
- 2025 03:33:33 -0700
-Message-ID: <ade0437b-3c23-4174-b4c5-6c90037abf14@quicinc.com>
-Date: Wed, 2 Jul 2025 18:33:31 +0800
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Q1wq+7Wl";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="l71awHLA"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5627MY5e025687;
+	Wed, 2 Jul 2025 10:34:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=ryoEYXEMleJRTt6vsQ
+	ai5LCQrCzfqUEj1QQ8hsiUsLs=; b=Q1wq+7Wla7V1Dd+L174RlKjG/elSgC3hdg
+	bRBidaaCi8ZUSLxgs10FxD/r0n6K0W9LsG6giu5BkJpzvEhp7CDTrVFvK+9Kz+Oo
+	yxc3sxhHSADS/qEn8lpp7rl/lJjOEY0RKClwAzC6u0ppeIV/vnvY6S1ndYAeauWq
+	zDu9/iH/mFZEVy9hKmbGcHMSGnFVRJ74ZaMSQLVrTKpaa68SvwnmT5l4SQm1XEsY
+	LpZC9UBYGHnqcyhUaLnNquw4Zs/yZlOSCd/zWTW6r7066tv+1v0Si/X48ZCn/oDt
+	Z8J72r3EHujpPnC2d7W0HxK3vdQwDTsLA/XBWuaetJC/frmYeP9Q==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47j766epmq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 02 Jul 2025 10:34:39 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 562AQELm025107;
+	Wed, 2 Jul 2025 10:34:38 GMT
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11on2076.outbound.protection.outlook.com [40.107.220.76])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 47j6uj9rr6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 02 Jul 2025 10:34:38 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=tzQxL+JdQuzmcEBGRrlZ2nY5+nOFb1vmm1eeaReQyRvq7ofvxdDv7JhzF0XJ4/04i4l8BAegRo7JgNplPHFmoGZ3JBi8eNB3d0W6GuNdM0RmO4QW2/bF/xEbSlLdU9vOHcvJDIXf+M1thGawpiSWjN89KuUQ98yIE76k/3tIiEaXQ/ia73zPURyhqxPyF9x8M6eIyHzvmZ2ngvgsYaCsLgyRi4k+TrXHPnpTUNiPRtC8ywooji6i8iYGXecTqptdbULWyrYGwYbcOAVbzeV1ys8pUIf0+GxWP2VopPW+9NItYmble+8+YEwZ356+gGsQ+tgqTkKBmqLcdZhw98XTQg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ryoEYXEMleJRTt6vsQai5LCQrCzfqUEj1QQ8hsiUsLs=;
+ b=rSC7htvnU6JwKer6l+jGeYNa7wcDjgl9kz2OjK14UOgP2gMID9Sd5C80k2zrmpKefj/ExVyQq1xG5VAv5649apWnpXQs0Eh1On5FKKTOTLT8q+FocDb/AtlFI6Xnn6dIJO/KfM24sQMuwzLZ6wKV965LavfPJnCgBs2Qo93pCqsNZFha4I1eOYo9UdSOTnv/QpdTAC846GSiR11CSjmu8J1naobOV5LEqoBa5nZ2SJS4pyp5ekQoXNK11aKRI4stDyVHCyi5H8NnxMV+BVk2V2YhG+yuqq7ob8drWRKAMgCH938WaDw7k66VFi8Xe3kjrhK2eA3h+GcIOOAywW7MnQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ryoEYXEMleJRTt6vsQai5LCQrCzfqUEj1QQ8hsiUsLs=;
+ b=l71awHLAwgvs6l+U9ebUabfM17HeRz4i9cFxkJE6BTTnwCe4AAPLW99pGKMcOcUwvt//Qh4VnEMoc+K8Th1Kfpmq7mV3dyzRveUma7LXwRqKs7J3X6IPy3eS85VcdS0D+FCyBPeArRzFYWGQA40nstxa+3Y1jVxtAyx2lkT6YB4=
+Received: from CH3PR10MB7329.namprd10.prod.outlook.com (2603:10b6:610:12c::16)
+ by PH7PR10MB5879.namprd10.prod.outlook.com (2603:10b6:510:130::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.28; Wed, 2 Jul
+ 2025 10:34:34 +0000
+Received: from CH3PR10MB7329.namprd10.prod.outlook.com
+ ([fe80::c2a4:fdda:f0c2:6f71]) by CH3PR10MB7329.namprd10.prod.outlook.com
+ ([fe80::c2a4:fdda:f0c2:6f71%6]) with mapi id 15.20.8880.029; Wed, 2 Jul 2025
+ 10:34:34 +0000
+Date: Wed, 2 Jul 2025 19:34:04 +0900
+From: Harry Yoo <harry.yoo@oracle.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        virtualization@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Jerrin Shaji George <jerrin.shaji-george@broadcom.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+        Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+        Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>,
+        Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+        Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
+        Ying Huang <ying.huang@linux.alibaba.com>,
+        Alistair Popple <apopple@nvidia.com>,
+        Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Brendan Jackman <jackmanb@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+        John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
+        Xu Xin <xu.xin16@zte.com.cn>,
+        Chengming Zhou <chengming.zhou@linux.dev>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Naoya Horiguchi <nao.horiguchi@gmail.com>,
+        Oscar Salvador <osalvador@suse.de>, Rik van Riel <riel@surriel.com>,
+        Qi Zheng <zhengqi.arch@bytedance.com>,
+        Shakeel Butt <shakeel.butt@linux.dev>
+Subject: Re: [PATCH v1 19/29] mm: stop storing migration_ops in page->mapping
+Message-ID: <aGULHOwAfVItRNr6@hyeyoo>
+References: <20250630130011.330477-1-david@redhat.com>
+ <20250630130011.330477-20-david@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250630130011.330477-20-david@redhat.com>
+X-ClientProxiedBy: SE2P216CA0029.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:101:114::6) To CH3PR10MB7329.namprd10.prod.outlook.com
+ (2603:10b6:610:12c::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/8] dt-bindings: clock: qcom: Add NSS clock controller
- for IPQ5424 SoC
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette
-	<mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Georgi Djakov <djakov@kernel.org>,
-        Philipp Zabel
-	<p.zabel@pengutronix.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        "Konrad
- Dybcio" <konradybcio@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Anusha Rao <quic_anusha@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <quic_kkumarcs@quicinc.com>,
-        <quic_linchen@quicinc.com>, <quic_leiwei@quicinc.com>,
-        <quic_suruchia@quicinc.com>, <quic_pavir@quicinc.com>
-References: <20250627-qcom_ipq5424_nsscc-v2-0-8d392f65102a@quicinc.com>
- <20250627-qcom_ipq5424_nsscc-v2-5-8d392f65102a@quicinc.com>
- <20250701-optimistic-esoteric-swallow-d93fc6@krzk-bin>
-Content-Language: en-US
-From: Luo Jie <quic_luoj@quicinc.com>
-In-Reply-To: <20250701-optimistic-esoteric-swallow-d93fc6@krzk-bin>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDA4NSBTYWx0ZWRfX8ic95YwncjRA
- R4a/ZplQ4CcTmnpeSbBXjN38NorRfGm7Ty1Ot++Z+mRMrbEH9rm4bVxtycdNHSp9qs2NibUFiba
- kjc7NUW4FXBBu43LDB5pY51vR2GQA/dKl1FJsaseUplIdTgdZyMO3i7dTNjVgVkzjbfCIjE7Rl/
- 3Ix9k4evJes1nmfqFZNw0lcj84C4dO0tuPZtHAFUUDLTXcJLlNRPYb7WGY+ysmlTfLV0c+sdl8v
- 4YuekVKu7AqhaSS/CRFirak/41IDSoojDw/IqV/BmHWeTxChg4hDHYl/pW4QSyKyskU5l1B/EB3
- PF/ecM+oIhCfBcFQ7C35HXitpcR1HEUniMkTIPhtm+jEGrtmOWnBbEqGp9WeFC19yOHfYVQkzxc
- aUItSPNWmB+JABtSCmH/8jMDuGsSFA+COQfNGsMpKt2sxLzyGvq+yv1AF81Y2K2MGL2nXb7Z
-X-Authority-Analysis: v=2.4 cv=EbvIQOmC c=1 sm=1 tr=0 ts=68650b04 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=gEfo2CItAAAA:8
- a=COk6AnOGAAAA:8 a=VwQbUJbxAAAA:8 a=l8XhYvs3ogmA2MLIGYEA:9 a=QEXdDO2ut3YA:10
- a=sptkURWiP4Gy88Gu7hUp:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: ZJFKHmu4BoQDsqmwOJcsqj0rTrgYuXIn
-X-Proofpoint-GUID: ZJFKHmu4BoQDsqmwOJcsqj0rTrgYuXIn
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR10MB7329:EE_|PH7PR10MB5879:EE_
+X-MS-Office365-Filtering-Correlation-Id: 26c0a078-6f36-43e2-7c82-08ddb954092f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?T3ADkQLr9vNTyoX0C1cOdHJp5pDFCUszfxqdf7s5dkP1WAkrq0tuzGKG6cbn?=
+ =?us-ascii?Q?ZF1zi468s87LHp5N+KP0EEQg17kyg0qrrElRuIAGZ2f+E+PaqflpzrIAHKnt?=
+ =?us-ascii?Q?0liFi+Vg8lhn2IklYHQ7h6E23CAYzmm1c7mxdKPK+c2KCMC/tMzcagxjzFWL?=
+ =?us-ascii?Q?cZf3O+2E6VjW1ZzoqWLxXT7He6C17j1PjL25mhjNd5iXwp7WXoQ11XeyhF5x?=
+ =?us-ascii?Q?nq4RzIfapi4APt+Rhq1sFZxK5w6thG3am3jJZg6obJYUWA2TnRbW2O6WLSy7?=
+ =?us-ascii?Q?IDR6v4tms+dwG4khlZHUO3SwROac+5XdHI87HK44ub+TuRekfRZKSo+zrknE?=
+ =?us-ascii?Q?sD1kKbl2tovCTB+N79DF8EF8GfzdPxSF/52XqQUXOH7iWDmzF3SpJI0CRFlJ?=
+ =?us-ascii?Q?mlkTbps6ZKRrHjyC5Yn9XjIAZknTTpKCn1FEoAG9lIJtrk4Ruc7MQzR23i28?=
+ =?us-ascii?Q?+z/OG19t2puX+JeORgm+20Dp2+mp73Fv+RMn7Z0QCn/V/Hxd3vmUNcJLeotu?=
+ =?us-ascii?Q?oDzbTlzI2eja3Kyd57S9vkoxAfzsta2UzMnpc0Sgmn4ZJJn+wss/Mi1nfyNb?=
+ =?us-ascii?Q?yR5vRHUzVEPsmOkyQJpqhSZ5exlL7uBBx1+4d4xJ80cTJCDguBwemvLU6ep2?=
+ =?us-ascii?Q?vEstK2IiG/OzO+5PybkgZG6RIgkmdYVCno2MldP7zGPu5ITf2T8OOpWh38gP?=
+ =?us-ascii?Q?W20NE2sUb3vHkqcVn1RjNft4FPQTsIDrBF5ZkzqA3MGXotwPJiYKKN0oyOoJ?=
+ =?us-ascii?Q?rzAG2IPP2/GqE+qmixbphr9eLQARN1vLqxet0iqtgO4z2oMCQO7wUZcy5Ylc?=
+ =?us-ascii?Q?R/GEdWGPX2Slr0eWqAVuG4whyqbK9oBV/Bk5dNVWQI3feCtGT/4sHEm/I2VF?=
+ =?us-ascii?Q?SxW4cawYwFsw8ZPhkS3HCqpg8kvV39CYLZIGWCBk5UzTB2tHncskgxrW/E1/?=
+ =?us-ascii?Q?euRBOkZ5j5EtyWN1Y+HvmBvLCPbt2IFKeYXQwuq0uYJUbiNE98nUd/PBWkm3?=
+ =?us-ascii?Q?5r5yfb9HRDg5loXhRBUG1xDVosAia3fyAHFG/P6/1Fi+TzOB5UGeGqSh4NUr?=
+ =?us-ascii?Q?4eI8s8G4UnyI7YRNLp+uBcepfoRztq0u7KzUqxFXE9OXsiFWAb8dFrsR2mNm?=
+ =?us-ascii?Q?LZ+Ja+J0sVFTtOyW/GZ+Vv657wzMoMH41Cd+URSMQ1U0ROu78GmPgkSd2/Nu?=
+ =?us-ascii?Q?lrT5Zf/o68l4vglflhEeZg7BwqIuXgv4PqMSlqSlYSin2QwahKc8RVaQFsqQ?=
+ =?us-ascii?Q?EVLyLJuq+PnxXuM6m9m5vS8us/Vb0zh2lwIiUYTGSs0Y4pFNtW/w9bxAB9mO?=
+ =?us-ascii?Q?6MUiy3FjIKXymUceX0qUd7cY3OoiOOH3XDBOYSgtp9cK5qrOoyjK3qHmYQBx?=
+ =?us-ascii?Q?hykAuK/uja6SQx3yn5Q+0CRile4RyZUgEiVEdsdf01QiuXxXbcjXM8vMpDPU?=
+ =?us-ascii?Q?5IyUBNjE5kk=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR10MB7329.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Lj9pU/SjHfwja5Zd4KhneXcWvWvC/SeURVp5424C2IZqol6/PZmx0CIEXB6A?=
+ =?us-ascii?Q?pDzDkt4TnwSI+V0HwEk5jRS+jM9RF1YPRvydCPRAeDzRZGrRL+7MYK3JVr7V?=
+ =?us-ascii?Q?HDMgfIc15PWsEMa6c2TH9K0lq5aApDSahpYPyOl/nlgYyaxVNz2QrLOPhjNq?=
+ =?us-ascii?Q?6XcpU005X43PYcA5hXmvxzwKiFTwreX3k8+qnd2mvyWy8LnqkbnUvb4sQ9eY?=
+ =?us-ascii?Q?92GJDfE9hvekE1H7qsvjUeMkVwZ8aWPysR8XlzhE2avalt0xoa1e3dfrQjxH?=
+ =?us-ascii?Q?dkw+fH+8D981ReHPtq0B9zek74r6DrGoYvxbNcrhUryYptJ82dm7yjhmucxV?=
+ =?us-ascii?Q?Hcl13LQYw2uCQXnZqutBXX0iQnmP28bzvaLzorWAoBWhyQoKS++KuOTW8044?=
+ =?us-ascii?Q?XgHusshdJuPM44hfvK92AKikmeay12jo5U70vpmMZDBEBYzXY98o0QWynpDt?=
+ =?us-ascii?Q?ZvYOtseRJnGeK+OdZaBzEh04qYoBqZUNJM2fTR8H6yA5+Hfv5M//zRSzB1Q4?=
+ =?us-ascii?Q?zmXcm440KufR14HK20ADk3QJzKWaePa0G1eCZWsYTDiSK4cZtbCkySKpKH1U?=
+ =?us-ascii?Q?xDpTkql2Zv/v6Cgm26r2QmojMFsuJzuXyP7EFocjX5Rdq4U+IYKZBTmLGRVN?=
+ =?us-ascii?Q?iJDHDuzqgkef33hFYyhJo6cDZuHqTm7xkSwr43MZvL0Q3mSCPjL3KqUR3+ie?=
+ =?us-ascii?Q?OW35Z/zpVPHbbgpDzIeblDuNQXS27kFtjKlAzUNdRxfCJ/NA0eBGTGl0TMVM?=
+ =?us-ascii?Q?v+53jFN7nMjavbQnxG48LuP7O+I7tzNk+ecjUkQzaeubygXMm6GVR0e1b51P?=
+ =?us-ascii?Q?laf/gRjFwIEcEE5Yj+MuzVPw6PcC6kOyv4ZYSc46UzqNqZcQnf+jNd9jke55?=
+ =?us-ascii?Q?KRlWSQ2/VPAGL9RAV9u9Vnm6AJ3Hf/JyM8BJ21Jp/ElpCPooxTV12D9ktZSg?=
+ =?us-ascii?Q?QMhm/g+v3/DheDdFVIW0gMOTiJCcqKrMV5rEsDUUn+5FISPW/C5If+E9cJ/l?=
+ =?us-ascii?Q?buMkd5tapLurA9cRvTnsIEn6usgoECG0sbsApvjat/7b4mF3xBDT+EG8ZMKL?=
+ =?us-ascii?Q?RdCnvYxwqYYSS6B81d4noKlXYyCJmp/Gv1II6krJLBvZHt9uwxdbayFkXL0p?=
+ =?us-ascii?Q?tTN+Rp7qm+bwGVBHQgzSHhWUcvpgniK/zkA8yq+hrOvI2YTMqLtidiyklxuj?=
+ =?us-ascii?Q?nl8ajfd3HW2XLHBu2sOWEBWv567F2YmwNEv9+k0au6+DaJBfe0vQg+GCIQEQ?=
+ =?us-ascii?Q?dPa+kM2aB7sL/wfZIiyUntq8Ie6k2J9HGTU9zj0pnG+6vzAJbfgiJT+vhcgK?=
+ =?us-ascii?Q?V98frbudPXBTvcMhBdoUgFORNFjdcb4GG41dD+VEwOe+/lhphZ7yM+3v7d4W?=
+ =?us-ascii?Q?cOaXVsUJSaZinu7XglJVICSo+JNoGPnOqq9r0fYVlbBeeKRU2jv8MF2g4n9e?=
+ =?us-ascii?Q?8S7xhv4XSd6AUwJyrK3h2v/dA29BmCuq4WaSPbISszsnd2zkvTA01Uz9J+Oj?=
+ =?us-ascii?Q?0fN4z0bRyo7S7MgcHNUs6qr+gJB+oDy3LFBHH36KiCwF0UahCErayHZlITXm?=
+ =?us-ascii?Q?lYT0W5/ghGh5hCkes1jrczu+r9FtwDfMLicNWit7?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	YVgnU/Yz8FZIwGiPmzSaijkLVCH7ZLuL5MoC/2AmWb3dYlRWbNWm7PbTK50ny8peK2SVa81heAEuTKeeZQdrIqiGNiTEqWTOZgh4iKAWoyy+vmJlk4I8PhcXF3TNEWTui9eo9xQEBhhvofHp15aZWKwsWf79JVAoAzT2TQEX2IxtEUBVPKtH6xbKMwBX2/05ByotxCeUbwZHkXU/ZvWCsrZnK/01DeF3ZyzRQNlUiSYcXX0d+G8y0U2YA6ls32fZ1BmeNy/JUEIAv9wgwZp+DMT2xNFT1/GtCWrp+dwKggJ5NLXNm9pAPtcbgAPNy8f0ekVSP7QvvmdYHqmoV1bDKMMQ0mEonFG/DEattt1fxauJZkz2YKY98EFjAM38I3mkAb9X5K3Ub1uY91LO99SEYO06+njCGcvZ98Tahq4MMU487W8BjI31D/tH02gm6d/O5gDBaRffLdVzDcAJo16BCP6kkLTAqVlJnq+T1RPKBOL+psTLoLlGjL4fhHLoROQeev/YWyoa9wCBfk/Avr0u6icoXH/D+BG7Jo8RncYdd3lGgj7weRvsf6pS/hwojKLXccvivBcc4I4g55oTiWwF//HMebdKo0QL5lRyCjWV3bk=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 26c0a078-6f36-43e2-7c82-08ddb954092f
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR10MB7329.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 10:34:34.1455
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pEuMvZACo1sUiQOUt3Kf70gOvSm1DxQW3DrE42qvWJjM7eX6oUgmaRBQRevzPpKOKhMJ86HrFnVq4shHuNv2Rg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB5879
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
  definitions=2025-07-02_01,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 mlxscore=0 priorityscore=1501 mlxlogscore=999 lowpriorityscore=0
- malwarescore=0 adultscore=0 clxscore=1015 bulkscore=0 impostorscore=0
- spamscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507020085
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ bulkscore=0 malwarescore=0 spamscore=0 phishscore=0 suspectscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2505160000 definitions=main-2507020086
+X-Proofpoint-GUID: EhcxjFScwZP1sZ4-VzISSBU1aKbzy6m5
+X-Proofpoint-ORIG-GUID: EhcxjFScwZP1sZ4-VzISSBU1aKbzy6m5
+X-Authority-Analysis: v=2.4 cv=b82y4sGx c=1 sm=1 tr=0 ts=68650b3f b=1 cx=c_pps a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Wb1JkmetP80A:10 a=GoEa3M9JfhUA:10 a=Ikd4Dj_1AAAA:8 a=20KFwNOVAAAA:8 a=-6JlZ2V7PJ7UHZdLrFIA:9 a=CjuIK1q_8ugA:10 cc=ntf awl=host:13215
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDA4NSBTYWx0ZWRfX/Ipi9rEw/2qk SfhWnKKygO1muwtp/vXZ5bCYh6sEWoA8fmu2xl2TSGNpZqZw2UN7nFgZ2fSZGpYoXG2bydYlMWx YUrcpUmlGeDB84b3cMaCFeJTHeXsve7saRBV5kbaRfCgrcm0ZBFxEX2VuyyWva9tGLjL7dDTiFT
+ or9aBtxefFg0Th2S2nFkY8cwYnKp8gDHuMCIqsUs0vrgYosTvKl1Hp9nrS24Qc5s27MSsxZWIK+ FmzAHHZ115NCvseiGbIlB/tNQYzmLnxtFu5kzbdYNjOHJnYQ7vApuPqsWnKrAe6JBbW2mEEq7fV uBU5gRcoeg0tAwz73dee4JiHPvoHXlJZyxG55A23r60Inf50dI8QTUKskHIkp2LtJcI2LBHEARa
+ BCsFNtYgR6oXfYO/NLlGsUuyvhSyRCkNToHXok9CtC4vS1sSkSvxWD+MqvXGKtCtrmRFuDMi
 
+On Mon, Jun 30, 2025 at 03:00:00PM +0200, David Hildenbrand wrote:
+> ... instead, look them up statically based on the page type. Maybe in the
+> future we want a registration interface? At least for now, it can be
+> easily handled using the two page types that actually support page
+> migration.
+> 
+> The remaining usage of page->mapping is to flag such pages as actually
+> being movable (having movable_ops), which we will change next.
+> 
+> Reviewed-by: Zi Yan <ziy@nvidia.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
 
+> +static const struct movable_operations *page_movable_ops(struct page *page)
+> +{
+> +	VM_WARN_ON_ONCE_PAGE(!page_has_movable_ops(page), page);
+> +
+> +	/*
+> +	 * If we enable page migration for a page of a certain type by marking
+> +	 * it as movable, the page type must be sticky until the page gets freed
+> +	 * back to the buddy.
+> +	 */
+> +#ifdef CONFIG_BALLOON_COMPACTION
+> +	if (PageOffline(page))
+> +		/* Only balloon compaction sets PageOffline pages movable. */
+> +		return &balloon_mops;
+> +#endif /* CONFIG_BALLOON_COMPACTION */
+> +#if defined(CONFIG_ZSMALLOC) && defined(CONFIG_COMPACTION)
+> +	if (PageZsmalloc(page))
+> +		return &zsmalloc_mops;
+> +#endif /* defined(CONFIG_ZSMALLOC) && defined(CONFIG_COMPACTION) */
 
-On 7/1/2025 4:22 PM, Krzysztof Kozlowski wrote:
-> On Fri, Jun 27, 2025 at 08:09:21PM +0800, Luo Jie wrote:
->> NSS clock controller provides the clocks and resets to the networking
->> blocks such as PPE (Packet Process Engine) and UNIPHY (PCS) on IPQ5424
->> devices.
->>
->> Add the compatible "qcom,ipq5424-nsscc" support based on the current
->> IPQ9574 NSS clock controller DT binding file. ICC clocks are always
->> provided by the NSS clock controller of IPQ9574 and IPQ5424, so add
->> interconnect-cells as required DT property.
->>
->> Also add master/slave ids for IPQ5424 networking interfaces, which is
->> used by nss-ipq5424 driver for providing interconnect services using
->> icc-clk framework.
->>
->> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
->> ---
->>   .../bindings/clock/qcom,ipq9574-nsscc.yaml         | 70 +++++++++++++++++++---
->>   include/dt-bindings/clock/qcom,ipq5424-nsscc.h     | 65 ++++++++++++++++++++
->>   include/dt-bindings/interconnect/qcom,ipq5424.h    | 13 ++++
->>   include/dt-bindings/reset/qcom,ipq5424-nsscc.h     | 46 ++++++++++++++
->>   4 files changed, 186 insertions(+), 8 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/clock/qcom,ipq9574-nsscc.yaml b/Documentation/devicetree/bindings/clock/qcom,ipq9574-nsscc.yaml
->> index 17252b6ea3be..0029a148a397 100644
->> --- a/Documentation/devicetree/bindings/clock/qcom,ipq9574-nsscc.yaml
->> +++ b/Documentation/devicetree/bindings/clock/qcom,ipq9574-nsscc.yaml
->> @@ -4,7 +4,7 @@
->>   $id: http://devicetree.org/schemas/clock/qcom,ipq9574-nsscc.yaml#
->>   $schema: http://devicetree.org/meta-schemas/core.yaml#
->>   
->> -title: Qualcomm Networking Sub System Clock & Reset Controller on IPQ9574
->> +title: Qualcomm Networking Sub System Clock & Reset Controller on IPQ9574 and IPQ5424
->>   
->>   maintainers:
->>     - Bjorn Andersson <andersson@kernel.org>
->> @@ -12,21 +12,29 @@ maintainers:
->>   
->>   description: |
->>     Qualcomm networking sub system clock control module provides the clocks,
->> -  resets on IPQ9574
->> +  resets on IPQ9574 and IPQ5424
->>   
->> -  See also::
->> +  See also:
->> +    include/dt-bindings/clock/qcom,ipq5424-nsscc.h
->>       include/dt-bindings/clock/qcom,ipq9574-nsscc.h
->> +    include/dt-bindings/reset/qcom,ipq5424-nsscc.h
->>       include/dt-bindings/reset/qcom,ipq9574-nsscc.h
->>   
->>   properties:
->>     compatible:
->> -    const: qcom,ipq9574-nsscc
->> +    enum:
->> +      - qcom,ipq5424-nsscc
->> +      - qcom,ipq9574-nsscc
->>   
->>     clocks:
->>       items:
->>         - description: Board XO source
->> -      - description: CMN_PLL NSS 1200MHz (Bias PLL cc) clock source
->> -      - description: CMN_PLL PPE 353MHz (Bias PLL ubi nc) clock source
->> +      - description: CMN_PLL NSS (Bias PLL cc) clock source. This clock rate
->> +          can vary for different IPQ SoCs. For example, it is 1200 MHz on the
->> +          IPQ9574 and 300 MHz on the IPQ5424.
->> +      - description: CMN_PLL PPE (Bias PLL ubi nc) clock source. The clock
->> +          rate can vary for different IPQ SoCs. For example, it is 353 MHz
->> +          on the IPQ9574 and 375 MHz on the IPQ5424
->>         - description: GCC GPLL0 OUT AUX clock source
->>         - description: Uniphy0 NSS Rx clock source
->>         - description: Uniphy0 NSS Tx clock source
->> @@ -42,8 +50,12 @@ properties:
->>     clock-names:
->>       items:
->>         - const: xo
->> -      - const: nss_1200
->> -      - const: ppe_353
->> +      - enum:
->> +          - nss_1200
->> +          - nss
-> 
-> No, that's the same clock.
+What happens if:
+  CONFIG_ZSMALLOC=y
+  CONFIG_TRANSPARENT_HUGEPAGE=n
+  CONFIG_COMPACTION=n
+  CONFIG_MIGRATION=y
 
-OK.
+?
 
-> 
-> 
->> +      - enum:
->> +          - ppe_353
->> +          - ppe
-> 
-> No, that's the same clock!
-> 
-> The frequencies are not part of input pin. Input pin tells you this is
-> clock for PPE, not this is clock for PPE 353 and another for PPE xxx.
-> 
-> Best regards,
-> Krzysztof
-> 
+> +	return NULL;
+> +}
+> +
+>  /**
+>   * isolate_movable_ops_page - isolate a movable_ops page for migration
+>   * @page: The page.
 
-Ok. Our only concern with dropping the suffix and using a common name
-was renaming the existing property (initially added for IPQ9574 SoC)
-from 'ppe_353' to 'ppe'. However I do agree that dropping suffix is the
-better approach. Thanks for the suggestion.
+Otherwise LGTM.
 
+-- 
+Cheers,
+Harry / Hyeonggon
