@@ -1,168 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D82325A33A;
-	Wed,  2 Jul 2025 10:53:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B62253B7E
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 10:54:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751453626; cv=none; b=G4lUzzxIbM3qofYeYATVI4cYBRttJLZK1h3hFih1K/+aa+5gq/kLJd+BcbKXj45k33u4UnhS1W3wynRmftZd86NIyZAStRLp34teVaf0MFqm0rMl5JULcqTQupYJquRGdyUW/FUBQL01qcSHJ4N5nM9VYeiBn+xcigmbgli/kHs=
+	t=1751453668; cv=none; b=YbA3uames4VAhg+7BQ0OeTBAfI5Wh6QqHJVWYl0D//AXEgxBsJ2fEbo0Yo8zzRIfYYY5XGGwmfOqbgUtCSBz1whYHYkfDKBE/ggL3tDvw5AxtoiYAYh4IqorvemuKj6+OPKPE6IbxoT3Xn2tdJcCV0mRYk2fu5v+vakWchbPkYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751453626; c=relaxed/simple;
-	bh=Xrhf1GwnZkxyiYFhUf+rxHpGqV5vwwoSaFZMXP3lOGY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fXh0EoWRmX/YWCN5i/taj/74O7Y+7olD8OUHtULoSbd9mBXdMm8sfF2KaF82LkDkM09wFqKgUWoh+iKXbAksf/w4Nv5tCC5j4Dkm/mYn0vPSQjmGxoA0+xch/J4TzrinkWTaYR+Ew4ftXNgxHalgwiN1UK1NVbOmHABPJc0Yf6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GUtxFgKq; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751453668; c=relaxed/simple;
+	bh=DWeR+/uQQSYMmH/LvahmZ0RIw9E1q0WXOgj4Vn2Kq3c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bMiQFT6FOQZsy5IrHbRGk+MfrzotSpSdnXMXeR2aXcDdgr9rWkQ8NREGvb4ra3gH2AwYIuOJw2uuLupYTma6ihDI/AjHCd3JUrGSZrALNMFQsNJD5D43OyaFi+WEh6ih9EZLBT6yZu+SIVAJvbQb3p3K+g447t86YuGRsnZ+1sA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=N2+PRhfs; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GUtxFgKq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751453624; x=1782989624;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=Xrhf1GwnZkxyiYFhUf+rxHpGqV5vwwoSaFZMXP3lOGY=;
-  b=GUtxFgKqKhcHYIcAyhGbe3uCRe+bY+B8yph519YN5mMivVQWDdrw/95P
-   r/k1NvuQEZ2WjQak9x9Wb4663g2YrJON89WbRM685okezpttI9O5TsaUO
-   AN6sfL8prdn0qK5Axa/qejgMUnnuz4Wm44v20/UxRfIvlaSDkxHv9F2bb
-   naHNjlh37CRDwmi9ZXOKrSxMWAgE7rVWL1CSy1L7elVibpxEH6D8k1UGQ
-   D3l8ZMghtxC0OVfShmOyx4gThfB+Q9tgFd9lCv2/hYrexvVcZj8bCkWXk
-   T1UVZw52+nCTiA01uTi/IetrQYl6C1YTmDi7QzmQui1wtambQBDuKS8Fn
-   g==;
-X-CSE-ConnectionGUID: qdjhNq5nReuRCt79ZU5sBg==
-X-CSE-MsgGUID: liwysPppTcK70hyIbIQ7BQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="52859653"
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="52859653"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 03:53:43 -0700
-X-CSE-ConnectionGUID: UpGjGzV8QDGpLFIE560HUA==
-X-CSE-MsgGUID: klVJK8l4S8Kctp0tk/FcNQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="158303529"
-Received: from cpetruta-mobl1.ger.corp.intel.com (HELO svinhufvud.fi.intel.com) ([10.245.245.162])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 03:53:40 -0700
-Received: from svinhufvud (syyslaukka.retiisi.eu [IPv6:::1])
-	by svinhufvud.fi.intel.com (Postfix) with ESMTPS id E135344390;
-	Wed,  2 Jul 2025 13:53:37 +0300 (EEST)
-Date: Wed, 2 Jul 2025 13:53:36 +0300
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: "Yan, Dongcheng" <dongcheng.yan@intel.com>
-Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
-	hverkuil@xs4all.nl,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>, u.kleine-koenig@baylibre.com,
-	ricardo.ribalda@gmail.com, bingbu.cao@linux.intel.com,
-	stable@vger.kernel.org, dongcheng.yan@linux.intel.com,
-	hao.yao@intel.com
-Subject: Re: [PATCH v3 1/2] platform/x86: int3472: add hpd pin support
-Message-ID: <aGUPsDglThYGc/3g@svinhufvud>
-References: <20250425104331.3165876-1-dongcheng.yan@intel.com>
- <5a04f105-3075-3226-6ad6-f2c3f31b29da@linux.intel.com>
- <116ea6fa-e9b8-4c28-bc31-f4d1589eb34b@intel.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="N2+PRhfs"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-450cf0120cdso43198435e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 03:54:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1751453664; x=1752058464; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2Jg9h1VCLy4qgpopj8IiT7Jm8iMsC+mvB1PgrDfbBVE=;
+        b=N2+PRhfscD0orJLHMjTS5mMyjsrnqnShvdO0j55Hvw2Ix+mMm0+yiKGtnMsidce9db
+         k5X2PZWu2GEwuOmHVf+M8Zn8T8rGQ8xtZvVC/33j7mYNgtrMSYZcovZNTjxjloWqgMpp
+         CqAlGhXVDA9VauMbUq7fTMSkExaFaIHd+RhUTnoSfUyNHM9NSzMA2tlWYkC/MpztWfvc
+         5jh2DVm03v9WzJZlRCJmqS+p3z1ZQEV3cyEaI6wdsaA+uk3nybOKub/z0nIYtjabUKh0
+         OFf5ZW77JrBjQl5m6WEf5jPO4+qsPYt73E00g9QT7sLO0k4YenAekQZYVVmru6sHYidR
+         muWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751453664; x=1752058464;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2Jg9h1VCLy4qgpopj8IiT7Jm8iMsC+mvB1PgrDfbBVE=;
+        b=uwU+5/dcW01YN4UkBKjH8zx+sTXqf/ienhllKTyoHGDJBjbYyZUw0dwBroXybLFVdf
+         cUvH8qAqr/mvlViZgcfS/fAD8yYJ02h0rIu1WYQ4CbA8tvonvpTt7qK0ieH/KAvlV5rG
+         Ngza1EYHvrXxrBwDqHvFxGBJ5TyFgo7r47fhjRoBeYDNSsgDvnmatVhPfdB5pEn8SDIT
+         jwp3effZBkXGoY4cujIZ6okugu/riXat5aZ+A+3bicpJ45FNQRRUtpGt4GeRnNs/2PtJ
+         ixNc3u+alBOZe3MknOC1GdIt2eGxhEQ7SywLeRokT8n5RSRxsZ3u3t2EPOphMmQ/5kKq
+         kJEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXr8AkkkL98/X53olXC29sDNAolfA13lMbwM+esclzopZ9b2477wOlIcrXPWckMRr3dQAWy1KRqDa8IHVg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfdJ4yNqnaG9UOxOYOn5o9iI8lSE3+8t1O1cwmpTviSye3jxWM
+	aYS3noWhOiWFCZSfv19JP065EN9CvQyz1hRfiFRHkLx4IEqgyFTGVPkxDRNUuubdEc4=
+X-Gm-Gg: ASbGncsVm+VIxp+OrFD2D5vykeztWdo64qrwK0A+dKq9f4eNbRJBz6d3cKxfNicHGeZ
+	J+MGtiARPJyRPPbZJ2L4ML8tbYNEyjxl7SMxg1tfiws0G09a3le+5MCCvLXeWnOLbcPSmdRPNOP
+	poyVmYVqnA2cLwTqQMqijLX1W2HcFjEYe2ahAjCgUsxHyPI/T/P6Avzfg8gVjQUHuIt5rjc5oi6
+	v3zZHYTG2ScXRmGYF9JRsbwRTZtLZONNGZmtaQD6OmwPpefhAOwj6JnTVXewz1TNrn62gpWOQGC
+	h8Xt0YdCR3GjhzR0h6+DyApfTbDAdDObtEawYGYbjYE/FTk8A8nD7sth9nSj4S2Q4VcUGCPGoA4
+	11f7qMB13DJRo0v4iRVhtnzzpYxHd
+X-Google-Smtp-Source: AGHT+IGAIK/G/I8tdPVOI217bep69ojNDn163oQvep1EwZXnaYnHz492awG91UUkdfrnfI0nWERljQ==
+X-Received: by 2002:a05:600c:3b24:b0:442:f12f:bd9f with SMTP id 5b1f17b1804b1-454a371d3eemr24456755e9.27.1751453664299;
+        Wed, 02 Jul 2025 03:54:24 -0700 (PDT)
+Received: from ?IPV6:2001:a61:13c3:8601:acfb:599e:12fa:d72a? ([2001:a61:13c3:8601:acfb:599e:12fa:d72a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7e6f74sm15728135f8f.3.2025.07.02.03.54.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Jul 2025 03:54:24 -0700 (PDT)
+Message-ID: <560fa48a-7e0b-4b50-bebb-b3600efaadd3@suse.com>
+Date: Wed, 2 Jul 2025 12:54:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <116ea6fa-e9b8-4c28-bc31-f4d1589eb34b@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] net: usb: usbnet: fix use-after-free in race on workqueue
+To: Jakub Kicinski <kuba@kernel.org>, Oliver Neukum <oneukum@suse.com>
+Cc: Paolo Abeni <pabeni@redhat.com>, "Peter GJ. Park"
+ <gyujoon.park@samsung.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ netdev@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Ming Lei <ming.lei@canonical.com>
+References: <CGME20250625093354epcas1p1c9817df6e1d1599e8b4eb16c5715a6fd@epcas1p1.samsung.com>
+ <20250625-usbnet-uaf-fix-v1-1-421eb05ae6ea@samsung.com>
+ <87a7f8a6-71b1-4b90-abc7-0a680f2a99cf@redhat.com>
+ <ebd0bb9b-8e66-4119-b011-c1a737749fb2@suse.com>
+ <20250701182617.07d6e437@kernel.org>
+Content-Language: en-US
+From: Oliver Neukum <oneukum@suse.com>
+In-Reply-To: <20250701182617.07d6e437@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Dongcheng, Ilpo,
+On 02.07.25 03:26, Jakub Kicinski wrote:
+> On Tue, 1 Jul 2025 15:22:54 +0200 Oliver Neukum wrote:
 
-On Wed, Jul 02, 2025 at 06:23:19PM +0800, Yan, Dongcheng wrote:
-> Hi Ilpo,
+>> That is indeed a core question, which we really need an answer to.
+>> Do I interpret dev_close_many() correctly, if I state that the
+>> ndo_stop() method will _not_ be called if the device has never been
+>> opened?
 > 
-> On 7/2/2025 6:19 PM, Ilpo Järvinen wrote:
-> > On Fri, 25 Apr 2025, Dongcheng Yan wrote:
-> > 
-> >> Typically HDMI to MIPI CSI-2 bridges have a pin to signal image data is
-> >> being received. On the host side this is wired to a GPIO for polling or
-> >> interrupts. This includes the Lontium HDMI to MIPI CSI-2 bridges
-> >> lt6911uxe and lt6911uxc.
-> >>
-> >> The GPIO "hpd" is used already by other HDMI to CSI-2 bridges, use it
-> >> here as well.
-> >>
-> >> Signed-off-by: Dongcheng Yan <dongcheng.yan@intel.com>
-> >> ---
-> >>  drivers/platform/x86/intel/int3472/common.h   | 1 +
-> >>  drivers/platform/x86/intel/int3472/discrete.c | 6 ++++++
-> >>  2 files changed, 7 insertions(+)
-> >>
-> >> diff --git a/drivers/platform/x86/intel/int3472/common.h b/drivers/platform/x86/intel/int3472/common.h
-> >> index 51b818e62a25..4593d567caf4 100644
-> >> --- a/drivers/platform/x86/intel/int3472/common.h
-> >> +++ b/drivers/platform/x86/intel/int3472/common.h
-> >> @@ -23,6 +23,7 @@
-> >>  #define INT3472_GPIO_TYPE_CLK_ENABLE				0x0c
-> >>  #define INT3472_GPIO_TYPE_PRIVACY_LED				0x0d
-> >>  #define INT3472_GPIO_TYPE_HANDSHAKE				0x12
-> >> +#define INT3472_GPIO_TYPE_HOTPLUG_DETECT			0x13
-> >>  
-> >>  #define INT3472_PDEV_MAX_NAME_LEN				23
-> >>  #define INT3472_MAX_SENSOR_GPIOS				3
-> >> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-> >> index 394975f55d64..efa3bc7af193 100644
-> >> --- a/drivers/platform/x86/intel/int3472/discrete.c
-> >> +++ b/drivers/platform/x86/intel/int3472/discrete.c
-> >> @@ -191,6 +191,10 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
-> >>  		*con_id = "privacy-led";
-> >>  		*gpio_flags = GPIO_ACTIVE_HIGH;
-> >>  		break;
-> >> +	case INT3472_GPIO_TYPE_HOTPLUG_DETECT:
-> >> +		*con_id = "hpd";
-> >> +		*gpio_flags = GPIO_ACTIVE_HIGH;
-> >> +		break;
-> >>  	case INT3472_GPIO_TYPE_POWER_ENABLE:
-> >>  		*con_id = "avdd";
-> >>  		*gpio_flags = GPIO_ACTIVE_HIGH;
-> >> @@ -221,6 +225,7 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
-> >>   * 0x0b Power enable
-> >>   * 0x0c Clock enable
-> >>   * 0x0d Privacy LED
-> >> + * 0x13 Hotplug detect
-> >>   *
-> >>   * There are some known platform specific quirks where that does not quite
-> >>   * hold up; for example where a pin with type 0x01 (Power down) is mapped to
-> >> @@ -290,6 +295,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
-> >>  	switch (type) {
-> >>  	case INT3472_GPIO_TYPE_RESET:
-> >>  	case INT3472_GPIO_TYPE_POWERDOWN:
-> >> +	case INT3472_GPIO_TYPE_HOTPLUG_DETECT:
-> >>  		ret = skl_int3472_map_gpio_to_sensor(int3472, agpio, con_id, gpio_flags);
-> >>  		if (ret)
-> >>  			err_msg = "Failed to map GPIO pin to sensor\n";
-> > 
-> > I was informed about existance of this patch through an off-band channel 
-> > (as I was not among receipients). In future, please include all relevant 
-> > maintainers and MLs as receipients as indicated by 
-> > scripts/get_maintainers.pl.
+> Correct, open and close are paired. Most drivers would crash if we
+> tried to close them before they ever got opened.
 
-Hans used to handle these previously and I think that's why you weren't
-cc'd.
+Thank you for clarifying that.
 
-> > 
-> > This may go through a media tree,
-> > 
-> > Acked-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-
-Thank you!
-
-> > 
-> > 
+>> I am sorry to be a stickler here, but if that turns out to be true,
+>> usbnet is not the only driver that has this bug.
 > 
-> Thanks a lot and sorry for the trouble caused by me.
+> Shooting from the hip slightly, but its unusual for a driver to start
+> link monitoring before open. After all there can be no packets on a
+> device that's closed. Why not something like:
 
-No worries.
+It turns out that user space wants to know whether there is carrier
+even before it uses an interface because it uses that information
+to decide whether to use the link.
 
--- 
-Kind regards,
+https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=444043
 
-Sakari Ailus
+However, it looks to me like the issue is specifically
+queuing work for kevent. That would call for reverting
+0162c55463057 ("usbnet: apply usbnet_link_change")
+[taking author into CC]
+
+	Regards
+		Oliver
+
