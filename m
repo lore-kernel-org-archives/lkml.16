@@ -1,141 +1,152 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ACE61A2C04
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 06:00:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C45E1DF96F;
+	Wed,  2 Jul 2025 06:01:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751436059; cv=none; b=WvGntwh38smK6T716BPFWIdrcj+7ROPxczEYAUIPeCt73qiBH+hX+eW9+eLFQ4+xoMUpEsgqDRXJdpB+I7oAE6n3wDH8V668gefBvjiKQrtD+oe1jfrCI6Q27Qm3aR5W0ato8iNW0vCYhnlB7rTuD2HfD45y2y9MQFlaDMjKWbc=
+	t=1751436068; cv=none; b=OjZXu/1KqsWyy2L5mYQzUafUMreDZ4l6PWr4UHTucTnE8oPoaYnlEDoaJ6NNy3bDuDyfTwef1B0YyaaDOlHTpn6wM/aWASDM0KyKO79WZi3xv4Djqla0d+KNyqvp8CiENmnUzc7toBGMrxrjpMeGBmPyl1OCzlHatyh5ZkrPIvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751436059; c=relaxed/simple;
-	bh=4gUo5mhAQoIRF3zDizyxmkFzfYyi85yyGqjfCEGTlIk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ag83A58VWFNmrr5g9bYW4+cI+SP/XvAiwhH4E0QwaRG+dYp9fG1KFXbT7p/pPuKur3DWdZCtFKWTEz/ZnEWUnCP0gKDAwv+bd7zZH3c+E0dBVOXjOuZFJVjIY//y1YPGZCTPEmtoAd0xetXFpbbhkDTUN7QofTQFeiMUCYjpWM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UJ4bxkv1; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751436068; c=relaxed/simple;
+	bh=uiChSvZj4suPEgBnlqfn38z0ZrpKB48CFH9gUHqFA9E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dgcgwqU6vgk8iNvIMYyJjcZDDS60D9fd+gQ4xlyejTzErPnH8FDG09o7/I5E+gtYJjC9NBwd1G98+9uoWP1Pi4QYfbulAMCXg651lTibBKQZHw2O4YF3VF0MVed3KiN7kbbREMWxsfGJjub09crmTwUV1fvrSR0Yl+4B/WkhwLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ovsAoToY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UJ4bxkv1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751436055;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hlMD3t7ycJKRomUVuQAiuk5BAoj5s4ukulb+cMLGP2s=;
-	b=UJ4bxkv1mq7BB2B0GuTSK+8j5/A3NhlupAtbUetnBtscJVxW/YRJGAnWDmwW6LkPfAm0bt
-	NEz43u+6YftnbMqfUp0lrXOSdAhqqy5fZvYgmEM77tKaHcsxQupxagIugYkZCP3LejKm6/
-	B0wWGoIgOcSxO0JUvnVGIsDWp+24x94=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-600-cY2WhJ9yNnWCB4gRyLU_-g-1; Wed,
- 02 Jul 2025 02:00:53 -0400
-X-MC-Unique: cY2WhJ9yNnWCB4gRyLU_-g-1
-X-Mimecast-MFC-AGG-ID: cY2WhJ9yNnWCB4gRyLU_-g_1751436048
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4E0671955EC3;
-	Wed,  2 Jul 2025 06:00:48 +0000 (UTC)
-Received: from h1.redhat.com (unknown [10.22.88.112])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C9E7A180045B;
-	Wed,  2 Jul 2025 06:00:32 +0000 (UTC)
-From: Nico Pache <npache@redhat.com>
-To: linux-mm@kvack.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: david@redhat.com,
-	ziy@nvidia.com,
-	baolin.wang@linux.alibaba.com,
-	lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	ryan.roberts@arm.com,
-	dev.jain@arm.com,
-	corbet@lwn.net,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	akpm@linux-foundation.org,
-	baohua@kernel.org,
-	willy@infradead.org,
-	peterx@redhat.com,
-	wangkefeng.wang@huawei.com,
-	usamaarif642@gmail.com,
-	sunnanyong@huawei.com,
-	vishal.moola@gmail.com,
-	thomas.hellstrom@linux.intel.com,
-	yang@os.amperecomputing.com,
-	kirill.shutemov@linux.intel.com,
-	aarcange@redhat.com,
-	raquini@redhat.com,
-	anshuman.khandual@arm.com,
-	catalin.marinas@arm.com,
-	tiwai@suse.de,
-	will@kernel.org,
-	dave.hansen@linux.intel.com,
-	jack@suse.cz,
-	cl@gentwo.org,
-	jglisse@google.com,
-	surenb@google.com,
-	zokeefe@google.com,
-	hannes@cmpxchg.org,
-	rientjes@google.com,
-	mhocko@suse.com,
-	rdunlap@infradead.org
-Subject: [PATCH v8 09/15] khugepaged: avoid unnecessary mTHP collapse attempts
-Date: Tue,  1 Jul 2025 23:57:36 -0600
-Message-ID: <20250702055742.102808-10-npache@redhat.com>
-In-Reply-To: <20250702055742.102808-1-npache@redhat.com>
-References: <20250702055742.102808-1-npache@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ovsAoToY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB46FC4CEEE;
+	Wed,  2 Jul 2025 06:01:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751436068;
+	bh=uiChSvZj4suPEgBnlqfn38z0ZrpKB48CFH9gUHqFA9E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ovsAoToYxtNoitFll0qxh4FcNat2AtZHg5/hEee2H5KzClsgV1iFHvomVrJ5SEB+5
+	 UF0WDWi9DQIlCNvWpuNsBIny4kK5vKBCwc9vgYKMOLjPNfKyXgPja3svXpIl9lvhKP
+	 xvRAIt6WznV/Gpy1oikITJLrGMmT4TqdVHKKVRUkpqn8XDxAYurDtmCu/14qKH7VNa
+	 jOuZ0qk4mZm6mOaAOEfy0ON3sp0Q3s6JlMuYnHtFfk5Cyy8aOqQb2tXbc3jBpS6gXd
+	 WIQVeXVA88BEaMi8AI/a7iag6KPBcUtzbXsbxkNixl9+swVZV29QOxxK9d4DQFQAxn
+	 rralP+/VQ7pkg==
+Date: Wed, 2 Jul 2025 08:01:05 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Benjamin Larsson <benjamin.larsson@genexis.eu>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: Re: [PATCH v19] pwm: airoha: Add support for EN7581 SoC
+Message-ID: <wntjec4p7nepuauucwqwgwcresphjikln7cqchep3vjocpuo6u@6hjpkwcbvx7d>
+References: <20250630114504.8308-1-ansuelsmth@gmail.com>
+ <bwtk2nac2eo2jgf2lousguw7o34tzhz7mesdo3jfaf4gc3pri6@tff3h4f4274u>
+ <686434fb.050a0220.efc3e.909b@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="hra54f6mnib5eiut"
+Content-Disposition: inline
+In-Reply-To: <686434fb.050a0220.efc3e.909b@mx.google.com>
 
-There are cases where, if an attempted collapse fails, all subsequent
-orders are guaranteed to also fail. Avoid these collapse attempts by
-bailing out early.
 
-Signed-off-by: Nico Pache <npache@redhat.com>
----
- mm/khugepaged.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+--hra54f6mnib5eiut
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v19] pwm: airoha: Add support for EN7581 SoC
+MIME-Version: 1.0
 
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 61d2b3ebc7ac..50e1d7ef7e6d 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -1358,6 +1358,23 @@ static int khugepaged_scan_bitmap(struct mm_struct *mm, unsigned long address,
- 				collapsed += (1 << order);
- 				continue;
- 			}
-+			/*
-+			 * Some ret values indicate all lower order will also
-+			 * fail, dont trying to collapse smaller orders
-+			 */
-+			if (ret == SCAN_EXCEED_NONE_PTE ||
-+				ret == SCAN_EXCEED_SWAP_PTE ||
-+				ret == SCAN_EXCEED_SHARED_PTE ||
-+				ret == SCAN_PTE_NON_PRESENT ||
-+				ret == SCAN_PTE_UFFD_WP ||
-+				ret == SCAN_ALLOC_HUGE_PAGE_FAIL ||
-+				ret == SCAN_CGROUP_CHARGE_FAIL ||
-+				ret == SCAN_COPY_MC ||
-+				ret == SCAN_PAGE_LOCK ||
-+				ret == SCAN_PAGE_COUNT)
-+				goto next;
-+			else
-+				break;
- 		}
- 
- next:
--- 
-2.49.0
+On Tue, Jul 01, 2025 at 09:20:24PM +0200, Christian Marangi wrote:
+> On Tue, Jul 01, 2025 at 09:40:03AM +0200, Uwe Kleine-K=F6nig wrote:
+> > > +	shift =3D AIROHA_PWM_REG_CYCLE_CFG_SHIFT(shift);
+> > > +
+> > > +	/* Configure frequency divisor */
+> > > +	mask =3D AIROHA_PWM_WAVE_GEN_CYCLE << shift;
+> > > +	val =3D FIELD_PREP(AIROHA_PWM_WAVE_GEN_CYCLE, period_ticks) << shif=
+t;
+> > > +	ret =3D regmap_update_bits(pc->regmap, AIROHA_PWM_REG_CYCLE_CFG_VAL=
+UE(offset),
+> > > +				 mask, val);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	offset =3D bucket;
+> > > +	shift =3D do_div(offset, AIROHA_PWM_BUCKET_PER_FLASH_PROD);
+> > > +	shift =3D AIROHA_PWM_REG_GPIO_FLASH_PRD_SHIFT(shift);
+> > > +
+> > > +	/* Configure duty cycle */
+> > > +	mask =3D AIROHA_PWM_GPIO_FLASH_PRD_HIGH << shift;
+> > > +	val =3D FIELD_PREP(AIROHA_PWM_GPIO_FLASH_PRD_HIGH, duty_ticks) << s=
+hift;
+> > > +	ret =3D regmap_update_bits(pc->regmap, AIROHA_PWM_REG_GPIO_FLASH_PR=
+D_SET(offset),
+> > > +				 mask, val);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	mask =3D AIROHA_PWM_GPIO_FLASH_PRD_LOW << shift;
+> > > +	val =3D FIELD_PREP(AIROHA_PWM_GPIO_FLASH_PRD_LOW,
+> > > +			 AIROHA_PWM_DUTY_FULL - duty_ticks) << shift;
+> > > +	return regmap_update_bits(pc->regmap, AIROHA_PWM_REG_GPIO_FLASH_PRD=
+_SET(offset),
+> > > +				  mask, val);
+> >=20
+> > Strange hardware, why do you have to configure both the high and the low
+> > relative duty? What happens if AIROHA_PWM_GPIO_FLASH_PRD_LOW +
+> > AIROHA_PWM_GPIO_FLASH_PRD_HIGH !=3D AIROHA_PWM_DUTY_FULL?
+>=20
+> From documentation it gets rejected and configured bucket doesn't work.
 
+ok.
+
+> > > [...]
+> > > +	/*
+> > > +	 * Duty is divided in 255 segment, normalize it to check if we
+> > > +	 * can share a generator.
+> > > +	 */
+> > > +	duty_ns =3D DIV_U64_ROUND_UP(duty_ns * AIROHA_PWM_DUTY_FULL,
+> > > +				   AIROHA_PWM_DUTY_FULL);
+> >=20
+> > This looks bogus. This is just duty_ns =3D duty_ns, or what do I miss?
+> > Also duty_ns is an u32 and AIROHA_PWM_DUTY_FULL an int, so there is no
+> > need for a 64 bit division.
+>=20
+> duty_ns * 255 goes beyond max u32.
+
+In that case duty_ns * AIROHA_PWM_DUTY_FULL overflows to a smaller
+value. Just because the value then is used by DIV_U64_ROUND_UP doesn't
+fix the overflow. You need (u64)duty_ns * AIROHA_PWM_DUTY_FULL then.
+
+> 225000000000.
+>=20
+> Some revision ago it was asked to round also the duty_ns. And this is
+> really to round_up duty in 255 segment.
+
+Yes, and I identified this as the code that intends to do that. Please
+double check this really works. I would claim you need:
+
+	duty_ns =3D DIV_ROUND_UP(duty_ns, AIROHA_PWM_DUTY_FULL) * AIROHA_PWM_DUTY_=
+FULL;
+
+here because no matter if you round up or down, dividing
+n * AIROHA_PWM_DUTY_FULL by AIROHA_PWM_DUTY_FULL yields n.
+
+Best regards
+Uwe
+
+--hra54f6mnib5eiut
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhkyx4ACgkQj4D7WH0S
+/k6ylQgAoJB6fA64UueHzEZkMoZSOrwR5C7d2I24qhxKbrkbkiJdNqzO8HvRWlGs
+sXTY04ZbJauj63r8WRXvV86biiTSYv+EV0qkT5mOOyLI9/9oiIOPuvtTFQPoryQc
+xRF7q7csHZFryIqxO36q7vcGZB7Pw4LOwzAf/weUNsR1tKAHaQtE2gErbxGl7zZ8
+tzAeqwsvsdcZthjaD95SGe+YnrSJ/uD79Vv8ks0e4tbcKKD+HIKN15topqrS9bfP
+1UqsYZ6m2v5Pl9bnGM+CRr48reQJtIo7eNYKLyIVXkZydJVnjKaJMV2bWVnFrzWk
+1Tkz3d/JFO2W3fZStA7u/neMOOotRw==
+=hcqn
+-----END PGP SIGNATURE-----
+
+--hra54f6mnib5eiut--
