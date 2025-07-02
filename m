@@ -1,89 +1,169 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB7E23C51B
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 09:12:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9D51EE7A1
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 09:13:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751447554; cv=none; b=R0+se8c5xLVx/q154ANS1ZlHSka6h2fQaOCzI3b11CWRVmdLyrjSEzeWer70iCoy78OBKjP7uy999bpj0nyZZjnD09M3sS2HOliWmB0X3U5u4oXRVqRqTD1Phks5vnFn61rblb6LRLrM34avGcm++PEVXnjREGYxWnXRrs9fM0Y=
+	t=1751447584; cv=none; b=tssVD5njj0Zzerz8r246j6dAgNzXJvj5UQYIz0c/3WtM3AA0DK8RyAgQ5FEO+Vk4qBKbAaxT2T82GFQIK6tBRI6H4T5wXS12bP8gUuSBvEHfD6i7No3uwGRz7OLfae340vN+1M0GP4It2eJgIftWmQYrm5akQ4RLKnu2EovylXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751447554; c=relaxed/simple;
-	bh=xDQ3r+CVA2MvW2DIbPjmzu6pJqc9zfZSPhLjDhnE9nU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AhzqJ7G3SRJAPZ7ojRDYiQSNhLwTgtExUhI+chMac1sWvriBUBW1c5bSv90weGpLZhNK6yNioeSHoD+EGmhfBDy+PYa4new5HoFfLsq7d7TeNaRvs4q1JXvdCawc1yI5BGyEwV7jevgLTg85SsaCCXnzhwKYHnCdWBPjpimNqXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=0wZpanZ6; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1751447584; c=relaxed/simple;
+	bh=Bw+luCpgfro4plTSzFDqCPmRYgzWS01RJtIYCu6pB2M=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=Cuktz3VUUnBgv16fH+Rk9/H9Me85ypCX43QnCIGOUpS4/yng5z0Ffhi09aybMSNF/FMPlYoCcDzdwPjxcD52MUMvIB56zhgHGjFo0BUn7qsTnauSxJkKQDSHkRJZJFHYylX5DRliKLNfoX4UIErl81bVgYcs9D9rp5ZzYtDXKWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=N9Wy0j0I; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="0wZpanZ6"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-32b43cce9efso34060651fa.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 02:12:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="N9Wy0j0I"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7d41cd4114aso1142691885a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 02:13:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751447551; x=1752052351; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xDQ3r+CVA2MvW2DIbPjmzu6pJqc9zfZSPhLjDhnE9nU=;
-        b=0wZpanZ6q4w5lghJ8+oCTxIPZMMARJc+e8MjWGx1WFpdr+AkdO1wHfGWkSj+88yKnT
-         0MBl9PlRd5Vr2dSdEennUL7Eyn75y7pybyK4t1iU6seBt9n7Ga2sVTA+OWN0qrHXkIj9
-         rRL6AkZQLbmPh9uJTYMWLvm0ji79TEWGOp0Y98DDp/bRoX3inaY/KUD9Q2j3Q3m7zDA+
-         6fN+Je6hxy9LwBnJQXq0ClFrNaYRFLJIWIzMSuJ5WZkpyZsw08v6aF6bJF5Mz+X2LDxT
-         nnorS3ZcVBXXBsRA0eoCSujT2QoOFO6as3D9oMVGA3WP8UyxfzxB58okxDI9qSMhM7mc
-         Whfw==
+        d=sifive.com; s=google; t=1751447582; x=1752052382; darn=vger.kernel.org;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=05oSeZnKkOuwHRWSxX5BsGUyoGxJgB1j6SCGcyk/mG8=;
+        b=N9Wy0j0ICRCwFRBtyvAhAbj63REf0h0DMlAczkhotv/LrB439b6jhb5Zp6hqC3byt3
+         MKS6tpP3ESEDek7ZreGzitOQzCb8AKDLAH3pCDy36Q9X+LJzrlGj21mdU4Ilwc3kGl9m
+         SVkNpdus/dMgu3daps7Q+AvLxAvfvLcWOEhA3tDddUzDHd3mf1/jeilRwgS2KfVlXLKP
+         07XdM+FOy38b6tXPkkPmUaEJZGZhzu6DqD0soEnehU7J4gt9cVeQAFCyd5S+JdKE83CB
+         xY0945R9GhCe5p2X+NzGphGSmwoFn/lUbcVxU+6ZT5lyGoz2+VfdRRvp9NwbG+Mx0td3
+         LZqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751447551; x=1752052351;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xDQ3r+CVA2MvW2DIbPjmzu6pJqc9zfZSPhLjDhnE9nU=;
-        b=k//E15lfD0gxYa/IaI9oC+z2lWsByG8YrWjZgk81le5XEL3regH6U42ZPW0IdbxILE
-         OCINrwfj42Dxz4jA3KzsGgwe1Kzy+4Ad2G/oxsA4f8Iam3jK2i0cqtf+OpzeZEXoDMue
-         fbKQYrU/YmCTKMjZL228KctEEYO/AUWA7e4iNFPCesHN6oUAzOs4f0cexwXvgp1CN3td
-         Kurn9ZTefqUu1Fhki075K4+NaXiPMqRPxyYG+U3xqVeUG4MOTdt6iNpmBA2gowtUu3vo
-         p1eIJFAui3kmkdgX3ft+CIKF1p/tjtHf3pfowS0cVbFF1BiccZPj4ZW/HE0YO7tgy4ca
-         TM1w==
-X-Forwarded-Encrypted: i=1; AJvYcCVUNuTnWJ337plSn/amD+De4luph3kH3cQFp2PTp5zsJQju7C3b5nNjtSZix6SSrIHjCv5B/3FQ64ZQn5s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8Rj4GOsxM5UFSJyoVsJ3NIQ5SNvvdlIDXR1wkEXQF4OtnbFgZ
-	5eWcsnEtPk3pjseHRbd5TQKgcQgc4fPYesgdyctnYEC61ymNgT1tbIC+GTUbcEFULks/6JF05An
-	5CC0CINqH7hXooQV3S/7Otx2teKJJqdNPL0EDUGbMsQ==
-X-Gm-Gg: ASbGncuXW5t33j65ggXL+9DHjtWoEwjWSxXWdUYq/P1nFMksW/emddSiGd5xSwOCNV0
-	tnpNIV1hAPNxhv/F/2UC1U6+owxXagMJtoIwWiToHQSnKjnXQba7Ei0lhs7tQ/F6RDEw4lUSaYY
-	wVu8ZAFKnwTm2IbYi8ednXJTzxUKFtQg7apOIMiub5EQqXD6b9r4r21vkoPxoYf7b1PbFX2YnHH
-	iDRdJqt5yY=
-X-Google-Smtp-Source: AGHT+IGOZzkO1OwG83M5R7T/iwIIt03xBqkgvGbvumPwq6cTDhbG6uhpfE+o6LLXo7iqTTlkfw6EIY/MkRt2Vf2gdSE=
-X-Received: by 2002:a05:6512:ad0:b0:553:3332:b661 with SMTP id
- 2adb3069b0e04-5562831e686mr655555e87.26.1751447550548; Wed, 02 Jul 2025
- 02:12:30 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751447582; x=1752052382;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=05oSeZnKkOuwHRWSxX5BsGUyoGxJgB1j6SCGcyk/mG8=;
+        b=Sdw/WKOQDxm3xMZN+cCW8LPfajwJWUmW3UF75mWAmfPpRvokqVna150TQncK9xmEgW
+         ApRPxdsu88+Zj2QNi0u8Ypz3CQGPi75bo1IqXirOZs0utbvtX/5pkRACJQYED3182tT9
+         mMOlIBFzuJx4tIPe2snO2cMWvM3x47SeiPFn9kIK0IrizxCtgH3eUqSrRIYFp19pJ392
+         QViuJOdYolo+RH5/Ze1pP9YNMYGA8tC1X1PWIfZMxQF1nqU48pskWzgcmjgOz+tDso1V
+         vODEuyYlNyX5IS1PRkq79ZnP9yIxzHSe3+9ybUGg2iZOl1xrtFGbeFrUQ4v0coJAF7XY
+         EF7w==
+X-Forwarded-Encrypted: i=1; AJvYcCXd15aiw3twDI580fRp1jIfCm1Du2/d/VjioyaXzd3cnTzv18DqwC30bRZcGbCapcEaF1pG4MNa2Uplsv4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9etYCgOCkgm5IT32mYCFTk1h0Ts6yLeiMsnSc0lCqhg+5q7C6
+	aP4+2PvAvnZoNPsMAOnFlSYadjPsfUqb4pvzobUes78l/W1Ttmm84T0cOJ2my/oTZt8=
+X-Gm-Gg: ASbGncvUOHjnTqNxaieU8G6qsfqE7Fc9R4KAT5eLWmd504raKMu2WHGZqTxG7Mwk0bE
+	ennFMhAQ+rliwPQRTnASZROdP63Owm6BJg1wUROk46jovfGMJSk1wgs0GzVsooozIGLht3Umlyt
+	EPsawHUcoVIB7nhsLpw3igeOtNI4JGd9cNoK43GMC1vs/FvJ4ire2NMZxqsYslnmmf66e+g15gq
+	JAlM4ojy/6l6rWf5OJAIzGnW9r+OzwK/IfWDBPsFs7Ez4td4zDrfdf5YkVmCLvctNC2qV2l7XBw
+	r/Xz6katpMoZzXnTgcgsIAyIPneE4Iavph+K+th/5CC5PuFvK4Mer9HAO+Bj/X74WmCyZz1oAe1
+	ywcA6VOYJ
+X-Google-Smtp-Source: AGHT+IFJq/oyXbT34XXbgyZs+VaHr9wzfkSMmLdoDz1YCb55z55iK/HwDroOxqnoVByLo9PegJxBuQ==
+X-Received: by 2002:a05:620a:439c:b0:7d4:28d9:efbe with SMTP id af79cd13be357-7d5c4718eccmr335297885a.32.1751447582153;
+        Wed, 02 Jul 2025 02:13:02 -0700 (PDT)
+Received: from hsinchu26.internal.sifive.com ([210.176.154.34])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d4431344f7sm911736285a.2.2025.07.02.02.12.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 02:13:01 -0700 (PDT)
+From: Nick Hu <nick.hu@sifive.com>
+To: conor+dt@kernel.org,
+	krzk+dt@kernel.org,
+	Cyan Yang <cyan.yang@sifive.com>,
+	Nick Hu <nick.hu@sifive.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>
+Subject: [PATCH v3 1/3] dt-bindings: power: Add SiFive Domain Management controllers
+Date: Wed,  2 Jul 2025 17:12:34 +0800
+Message-Id: <20250702091236.5281-2-nick.hu@sifive.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20250702091236.5281-1-nick.hu@sifive.com>
+References: <20250702091236.5281-1-nick.hu@sifive.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250702-gpio-palmas-gpio-v3-1-e04633e0bc54@gmail.com>
-In-Reply-To: <20250702-gpio-palmas-gpio-v3-1-e04633e0bc54@gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 2 Jul 2025 11:12:19 +0200
-X-Gm-Features: Ac12FXyhL6sPoysjJZpRI7EGiwwFIYaEf3nOZTpdrJft6HPxNUo3LDKY5pf-H74
-Message-ID: <CAMRc=Md4YP6fp5fnFf5p+EkSamg15dDUgxgeY+E1OqteiEPRJQ@mail.gmail.com>
-Subject: Re: [PATCH v3] gpio: palmas: Allow building as a module
-To: webgeek1234@gmail.com
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 2, 2025 at 7:56=E2=80=AFAM Aaron Kling via B4 Relay
-<devnull+webgeek1234.gmail.com@kernel.org> wrote:
->
-> From: Aaron Kling <webgeek1234@gmail.com>
->
-> The driver works fine as a module, so allowing building as such. This
-> adds an exit handler to support module unload.
->
-> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
-> ---
+SiFive Domain Management controller includes the following components
+- SiFive Tile Management Controller
+- SiFive Cluster Management Controller
+- SiFive Core Complex Management Controller
 
-This doesn't apply on top of linux-next.
+These controllers control the clock and power domain of the
+corresponding domain.
 
-Bart
+Add `- {}` for the first entry [1][2]. Once the SoCs are ready, we will
+add the SoC compatible string at that time.
+
+Links:
+- [1] https://lore.kernel.org/lkml/20250311195953.GA14239-robh@kernel.org/
+- [2] https://lore.kernel.org/lkml/CAKddAkAzDGL-7MbroRqQnZzPXOquUMKNuGGppqB-d_XZXbcvBA@mail.gmail.com/T/#t
+
+Signed-off-by: Nick Hu <nick.hu@sifive.com>
+Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
+---
+ .../devicetree/bindings/power/sifive,tmc.yaml | 58 +++++++++++++++++++
+ 1 file changed, 58 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/sifive,tmc.yaml
+
+diff --git a/Documentation/devicetree/bindings/power/sifive,tmc.yaml b/Documentation/devicetree/bindings/power/sifive,tmc.yaml
+new file mode 100644
+index 000000000000..4ab2b94785f4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/sifive,tmc.yaml
+@@ -0,0 +1,58 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/power/sifive,tmc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: SiFive Domain Management Controller
++
++maintainers:
++  - Cyan Yang <cyan.yang@sifive.com>
++  - Nick Hu <nick.hu@sifive.com>
++  - Samuel Holland <samuel.holland@sifive.com>
++
++description: |
++  SiFive Domain Management Controllers includes the following components
++    - Tile Management Controller (TMC)
++    - Cluster Management Controller (CMC)
++    - Subsystem Management Controller (SMC)
++  These controllers manage both the clock and power domains of the
++  associated components. They support the SiFive Quiet Interface Protocol
++  (SQIP) starting from Version 1. The control method differs from Version
++  0, making them incompatible.
++
++allOf:
++  - $ref: power-domain.yaml#
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - {} # Leave a empty for future SoC specific compatible string
++          - const: sifive,cmc2
++      - items:
++          - {} # Leave a empty for future SoC specific compatible string
++          - const: sifive,smc0
++      - items:
++          - {} # Leave a empty for future SoC specific compatible string
++          - const: sifive,smc1
++      - items:
++          - {} # Leave a empty for future SoC specific compatible string
++          - const: sifive,tmc0
++      - items:
++          - {} # Leave a empty for future SoC specific compatible string
++          - const: sifive,tmc1
++
++  reg:
++    maxItems: 1
++
++  "#power-domain-cells":
++    const: 0
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++# The example will be added once the SoCs are ready
+-- 
+2.17.1
+
