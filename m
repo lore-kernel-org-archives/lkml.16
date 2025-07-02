@@ -1,116 +1,137 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 724241DF977;
-	Wed,  2 Jul 2025 07:40:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 021C51DF977;
+	Wed,  2 Jul 2025 07:41:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751442064; cv=none; b=kFVgChSI2J4whUzzeeW3tTbpyezKJu+VFPF3YQv81zUT/AgBX87RluFdo14fiOAGUlhmZdAZ+ojT0+4tIwpBz4Y2wb1aCfeJx0zwoo1WtDeBLGtqovg8Igo0dCTeOU4skjhMJuDaG6Aqi1O+VL2qv6RNXHRkRePiW/2C7FZH4Yk=
+	t=1751442074; cv=none; b=j9jGGqGxRBEVQzsIF+lweXTBxLTsemdaCKTscZuC7lyOs5l2fm/3q179TykoK6EK5ILSw172ihkVMHoscgXPCo1VqTBpMNQsNxl9IUBafBcdJAHALZrwZexKkT09ePHDv3SwiDFMDFPmVYAMZOmQHxyMVAe6UnlZVJY253aRonQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751442064; c=relaxed/simple;
-	bh=Q+tJOgDXSyHv7cn+GwyRvugVT/KDOb3xDLGrdh76eAw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=EpNwZtMJzckTA3T2owL+3eFLdFfe8UxenPI576te29TQH3f+Qk6WHA2k7aQjGCNTjqbVnJr2jqnxilyLWJbzFrEEKCjYIgiCWwKmWIgKYJvem4YmjgNsHsyDgmmyLZmYbsODM7w9lJ6c9K+HBEYHT/BuE1JOYTrPT0pZCiK+znA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=NW+O2ndk; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1751442074; c=relaxed/simple;
+	bh=UzLkJySr0bSrKIhdfCuNOAlXwUui49s11voxKMYCT3c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zw4js8l5wFpFR5vLHRfsW5e6bL+p8Ked2Xznsln9muftmMQZGs8GZSuijqEq1cme2Lw5D/5f69SxMqW+ksA/cziK4ajyFeVbpOqxPmLqB9ylv2sgGOqkyo2VYvjiid2JichC72k6bU6JZNjUcrK5r+2VH8+sJgZSnAqVaqFxtzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Kcys7Ugp; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NW+O2ndk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1751442041;
-	bh=10rrKV1mRpMK7w0xooZ94xMtgBGMsUxVJ0NQ3XuotQo=;
-	h=Date:From:To:Cc:Subject:From;
-	b=NW+O2ndkZ7jJgB93qVbYFfhLetrAe4r0v13Jrx0oQb/5ast4qCjSezlcA3Cs4JA+n
-	 QVG2TLcQiUECnX5Ybn/qJesvi0PdUB4opnJtzzQAC6mxUk4kSQQ34Dozos2C3LyU5u
-	 DzJG7rq7ivutuxYF4rMKnMWnL5XwL6VlU/juW+u3hUIi+CuTpHHgaT5dSFz77NZK4b
-	 XGPeFIPCGU1vEV0dbpdaKB+J+og8aeNu4lWekIp4vF2P6wR4Zr15ixCq1BmlaygUru
-	 s0lSn9VgDT7DuWAFJszr2PjlY9RuYGz1/AGW6tp8sYbtBBsdJxZ5u7d0jSyQcPxc7N
-	 JagkolXNCif4Q==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bXBdj10Bmz4wcZ;
-	Wed,  2 Jul 2025 17:40:40 +1000 (AEST)
-Date: Wed, 2 Jul 2025 17:40:54 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Andrew Jeffery <andrew@codeconstruct.com.au>, Joel Stanley
- <joel@jms.id.au>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: duplicate patches in the bmc tree
-Message-ID: <20250702174054.383aef05@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Kcys7Ugp"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=g3H13LtSgQj1P8RdnugkkMSydyZVAi3d+H2HGvnEnuk=; b=Kcys7Ugp8rQKNiCWyTG7s6sUVv
+	QlBDGrO0b/gCjZt2iBE4wlc6AKF/POB7eBKUT2vgJ+DdhOKyXYqOvD5PR3go1d0Jfv80adtrfx9Ye
+	kYIBvINgOa/LvHawepNQhG6C2RxWjlMzJ/cmZ00gEXD2rgOWJkqnhXzvtURYNreVhX5w=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uWs5A-00HYLu-BX; Wed, 02 Jul 2025 09:40:40 +0200
+Date: Wed, 2 Jul 2025 09:40:40 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: rentao.bupt@gmail.com
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+	Tao Ren <taoren@meta.com>
+Subject: Re: [PATCH 5/5] ARM: dts: aspeed: Add Facebook Darwin (AST2600) BMC
+Message-ID: <a6f6966b-50ee-4b4f-9422-96c6ac9391a2@lunn.ch>
+References: <20250702050421.13729-1-rentao.bupt@gmail.com>
+ <20250702050421.13729-6-rentao.bupt@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/l+oVLjgMHyk/mGIsyq_c_GI";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250702050421.13729-6-rentao.bupt@gmail.com>
 
---Sig_/l+oVLjgMHyk/mGIsyq_c_GI
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jul 01, 2025 at 10:04:16PM -0700, rentao.bupt@gmail.com wrote:
+> From: Tao Ren <rentao.bupt@gmail.com>
+> 
+> Add initial device tree for the Meta (Facebook) Darwin AST2600 BMC.
+> 
+> Darwin is Meta's rack switch platform with an AST2600 BMC integrated for
+> health monitoring purpose.
+> 
+> Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+> ---
+>  arch/arm/boot/dts/aspeed/Makefile             |  1 +
+>  .../dts/aspeed/aspeed-bmc-facebook-darwin.dts | 92 +++++++++++++++++++
+>  2 files changed, 93 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-darwin.dts
+> 
+> diff --git a/arch/arm/boot/dts/aspeed/Makefile b/arch/arm/boot/dts/aspeed/Makefile
+> index 2e5f4833a073..debbfc0151f8 100644
+> --- a/arch/arm/boot/dts/aspeed/Makefile
+> +++ b/arch/arm/boot/dts/aspeed/Makefile
+> @@ -20,6 +20,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
+>  	aspeed-bmc-facebook-bletchley.dtb \
+>  	aspeed-bmc-facebook-catalina.dtb \
+>  	aspeed-bmc-facebook-cmm.dtb \
+> +	aspeed-bmc-facebook-darwin.dtb \
+>  	aspeed-bmc-facebook-elbert.dtb \
+>  	aspeed-bmc-facebook-fuji.dtb \
+>  	aspeed-bmc-facebook-galaxy100.dtb \
+> diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-darwin.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-darwin.dts
+> new file mode 100644
+> index 000000000000..f902230dada3
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-darwin.dts
+> @@ -0,0 +1,92 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +// Copyright (c) 2021 Facebook Inc.
+> +
+> +/dts-v1/;
+> +
+> +#include "ast2600-facebook-netbmc-common.dtsi"
+> +
+> +/ {
+> +	model = "Facebook Darwin BMC";
+> +	compatible = "facebook,darwin-bmc", "aspeed,ast2600";
+> +
+> +	aliases {
+> +		serial0 = &uart5;
+> +		serial1 = &uart1;
+> +		serial2 = &uart2;
+> +		serial3 = &uart3;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = &uart5;
+> +	};
+> +
+> +	iio-hwmon {
+> +		compatible = "iio-hwmon";
+> +		io-channels = <&adc0 0>, <&adc0 1>, <&adc0 2>, <&adc0 3>,
+> +			      <&adc0 4>, <&adc0 5>, <&adc0 6>, <&adc0 7>,
+> +			      <&adc1 0>, <&adc1 1>, <&adc1 2>, <&adc1 3>,
+> +			      <&adc1 4>, <&adc1 5>, <&adc1 6>, <&adc1 7>;
+> +	};
+> +
+> +	spi_gpio: spi {
+> +		num-chipselects = <1>;
+> +		cs-gpios = <&gpio0 ASPEED_GPIO(X, 0) GPIO_ACTIVE_LOW>;
+> +	};
+> +};
+> +
+> +/*
+> + * BMC's "mac3" controller is connected to BCM53134P's IMP_RGMII port
+> + * directly (fixed link, no PHY in between).
+> + * Note: BMC's "mdio0" controller is connected to BCM53134P's MDIO
+> + * interface, and the MDIO channel will be enabled in dts later (when
+> + * "bcm53xx" driver's probe failure is solved on the platform).
+> + */
+> +&mac3 {
+> +	status = "okay";
+> +	phy-mode = "rgmii";
 
-Hi all,
+How do RGMII delays work? Connections to switches have to be handled
+different to PHYs, to avoid double delays. But is there extra long
+clock lines? Or are you expecting the switch to add the delays?
 
-The following commits are also in the aspeed tree as different commits
-(but the same patches):
-
-  05a8cfc12f1c ("ARM: dts: aspeed: system1: Add GPIO line name")
-  24c5110ce866 ("ARM: dts: aspeed: system1: Reduce sgpio speed")
-  2f0f9cc149f5 ("dt-bindings: arm: aspeed: add Nvidia's GB200NVL BMC")
-  322dbe88fe88 ("ARM: dts: aspeed: system1: Remove VRs max8952")
-  373d9b5989e0 ("ARM: dts: aspeed: catalina: Enable MCTP support for NIC ma=
-nage
-ment")
-  3969aadf4be9 ("ARM: dts: aspeed: system1: Update LED gpio name")
-  4de4329d8a76 ("ARM: dts: aspeed: system1: Disable gpio pull down")
-  6b357c149ec5 ("dt-bindings: ipmi: Add binding for IPMB device")
-  6e8b400dddd1 ("ARM: dts: aspeed: catalina: Add IO Mezz board thermal sens=
-or nodes")
-  7c59fb16bfee ("ARM: dts: aspeed: Rework APB nodes")
-  8c2d9fc03293 ("ARM: dts: aspeed: catalina: Add second source fan controll=
-er support")
-  8f58b439c451 ("ARM: dts: aspeed: catalina: Remove INA238 and INA230 nodes=
-")
-  90e9de1d0921 ("ARM: dts: aspeed: Add device tree for Nvidia's GB200NVL BM=
-C")
-  94706cdd3ead ("ARM: dts: aspeed: bletchley: remove unused ethernet-phy no=
-de")
-  94776ee4e1ec ("ARM: dts: aspeed: Align GPIO hog name with bindings")
-  a2c2d4c41785 ("ARM: dts: aspeed: catalina: Add Front IO board remote ther=
-mal sensor")
-  a7d6d2d622d7 ("ARM: dts: aspeed: Remove swift machine")
-  aadc4c3ddd1e ("ARM: dts: aspeed: catalina: Update CBC FRU EEPROM I2C bus =
-and address")
-  c8c33f37a6a6 ("ARM: dts: aspeed: system1: Mark GPIO line high/low")
-  d276bb9fb5b6 ("ARM: dts: aspeed: catalina: Add MP5990 power sensor node")
-  df89538262c5 ("ARM: dts: aspeed: catalina: Enable multi-master on additio=
-nal I2C buses")
-  ebd7b3c42ffa ("ARM: dts: aspeed: catalina: Add fan controller support")
-  f06ff444bf79 ("ARM: dts: aspeed: system1: Add IPMB device")
-  f2919835b87e ("ARM: dts: aspeed: catalina: Add second source HSC node sup=
-port")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/l+oVLjgMHyk/mGIsyq_c_GI
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhk4oYACgkQAVBC80lX
-0Gzyswf+JT8SgeqbGbjI/0JPSQ+6qj6LglhAEc4b8OS7soDOCPZZKEVSjidkU7GU
-3FnEE9VcEEvaW1guDUxabAnF8QYi6s8WOJprLrjcpqoF9/hg8TcwIFFP7UsZRt00
-DxM+f/R97eh6lZMgGEAWWGJBr3TxXyYSbPFxDDBHjLXYpdU+NIgdvzk2w0RLJxD2
-FP7iwNWkTCa2XPBlzoX6cmWvtIo5eI7wHk0isi0iLY4YOxu3wWddbmAqcQG7jd7v
-W7Scm5uBPItov/WINioBmh3TmfqWAx8uk4cT1SQtW76dpZNyz58hwpzk6iwXctge
-b6D9MF2CwUSCU3moX9Q4vxQZvuwJKw==
-=isJn
------END PGP SIGNATURE-----
-
---Sig_/l+oVLjgMHyk/mGIsyq_c_GI--
+      Andrew
