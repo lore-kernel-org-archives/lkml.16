@@ -1,191 +1,171 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6569D4414
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 12:46:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8629231A30
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 12:47:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751460407; cv=none; b=boqZl4UGhJ4rVKstmu5shA/jnIybx7S53IJG3LiWnQrMo4Z5+nt/XAKUuyNqYgegLsw/5iu/+k0Y81Gb2wvGQr//EhFwX5CWAMBfqsBqrgSoHBii0ioeG4n2HCGnKp+57TYVehsEUiLdA2BHAR94Oq5dB3jqO8nt3TVm02KwkYI=
+	t=1751460428; cv=none; b=MS71PMcamoNZqPltp9FLf+a7n123VV21RrtCT71MH2YZQhxKCDbKJ5au822hJ6FWqwxZTM7+qQNtuAKGsssP+Fx5MwNqqECs+d6tkBsmymcO0trntRLZ/YQBICFcVSNWl9CifZwAR4HKpexkSfkW9+Gsl0Mj0RBLFGao4pZToOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751460407; c=relaxed/simple;
-	bh=Vnm8i+8d7xQD+aN4CxboT/B1vBfsPCcMdkRsSsbXzIc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=rKPcNByGqbhjC97c3B8CgJ9Zeh6AamgxZuV2Axap3CGIvx6klljEx06HvGjjiZvIAuSwIlkvgC+CK1oLcbIRmrK7iL35rpAWwky6MH4EYRRy4duc02BE2a3dOeehjipCj3+tZ1nqGmpZDy7cGTov8ggIDO5lWEjSjfvxBjvBMTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f1RR+Tfa; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751460428; c=relaxed/simple;
+	bh=l+p3bDcBSkJgkgPACPqFtqpENjc+EXoFlJLoQWKKtFM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R5Q5hqqS1RkyZhOZlRE5Qt8ullqZprBMm9qPZhFge3pkWY0j/PFeT71RjOwV9jESAY4Z5H73LcLOzlQZWV+W/+vcJ5LmsYUy3dC2FofbwEkOdBW9K6VscWybHtZn2VSmAlsM7q5bY7h9iyXdBQx/G/ZiAZ0q8fFbVdX57rJ9ikY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=c8j+VtJ9; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ESnPDywp; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QX0CWQCj; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ALNdxtcR; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f1RR+Tfa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751460403;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dayIu0cR4lV3Z0pfruMI7uRbjrFkXUE4pSNwlQFvgnc=;
-	b=f1RR+TfaZbg9iSAW0iXcq9IrmqafdsIA+zpfXW+ZcbNABkrEiaC+FdkOzviZ9hVDKXmaf5
-	97bO51q2l8bUXsB5L2EbrlsbSoz+AusZvZpjQOk6D7i1L7R5UGk56uHmAZ69ery0FcSNWX
-	9Xfi9+Vohep29rTv9q6he6/7eCRqLBQ=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-67-iLhXe5m7PdeBi0Rg7dU-cA-1; Wed,
- 02 Jul 2025 08:46:38 -0400
-X-MC-Unique: iLhXe5m7PdeBi0Rg7dU-cA-1
-X-Mimecast-MFC-AGG-ID: iLhXe5m7PdeBi0Rg7dU-cA_1751460396
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="c8j+VtJ9";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ESnPDywp";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QX0CWQCj";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ALNdxtcR"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5127B193F048;
-	Wed,  2 Jul 2025 12:46:36 +0000 (UTC)
-Received: from RHTRH0061144 (unknown [10.22.65.59])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EA33B180045B;
-	Wed,  2 Jul 2025 12:46:33 +0000 (UTC)
-From: Aaron Conole <aconole@redhat.com>
-To: Ilya Maximets <i.maximets@ovn.org>
-Cc: netdev@vger.kernel.org,  "David S. Miller" <davem@davemloft.net>,  Eric
- Dumazet <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>,  Paolo
- Abeni <pabeni@redhat.com>,  Simon Horman <horms@kernel.org>,
-  dev@openvswitch.org,  linux-kernel@vger.kernel.org,  Eelco Chaudron
- <echaudro@redhat.com>
-Subject: Re: [PATCH net-next] net: openvswitch: allow providing upcall pid
- for the 'execute' command
-In-Reply-To: <b450a7f2-cab4-4b71-aec8-ef867403663a@ovn.org> (Ilya Maximets's
-	message of "Wed, 2 Jul 2025 14:37:05 +0200")
-References: <20250627220219.1504221-1-i.maximets@ovn.org>
-	<f7tms9mssb0.fsf@redhat.com>
-	<b450a7f2-cab4-4b71-aec8-ef867403663a@ovn.org>
-Date: Wed, 02 Jul 2025 08:46:26 -0400
-Message-ID: <f7tcyaisqu5.fsf@redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id BA20E21171;
+	Wed,  2 Jul 2025 12:47:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751460425; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=k1wIY7FTlKQzM4gTXb/EEfgvLm5LmwpW3ETkIJgLZjQ=;
+	b=c8j+VtJ9YX236iDh5ujSFWehUKt/yDO2+nPYL7d+SfjtapNmhey0WhzSQk+HX7+4RIEe6Y
+	WVVTtPvuo8F4Sxx7OXgT/Qers4GQW81Ju+9qYdbdDwPyv51gUBPo18kJ1rdYJVxiHUdBLZ
+	60HVoOy9BACxYQyseeQhwgylSbJu7HM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751460425;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=k1wIY7FTlKQzM4gTXb/EEfgvLm5LmwpW3ETkIJgLZjQ=;
+	b=ESnPDywpn3TljQ5v0UNHyV5ab7aLXcfCktN7xZ/b1FjfjHxRrj94A51KQnhuPHR1yBZTko
+	LZ28qujdQV6L8KDQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751460423; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=k1wIY7FTlKQzM4gTXb/EEfgvLm5LmwpW3ETkIJgLZjQ=;
+	b=QX0CWQCjM7tKWQTzKmW15h6JTE3U9IHQ55Tsa+1UdJRsyLHXV+hvjOyFwpT3U8/0vbOvyk
+	rA+P0Wo5GJ6nGtQ81r1csD/pxqcC6GziFpx6FM9kRJtGn3vJiH02H4cHQUeJcSt1o/opuA
+	qRIp2u0gBaTTc5rhJrKdoaL/KzephRo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751460423;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=k1wIY7FTlKQzM4gTXb/EEfgvLm5LmwpW3ETkIJgLZjQ=;
+	b=ALNdxtcRXQpzvotQ/cV98jn5/j/K7zdIvU0Pe1xxilGoAUlGVPUdgYOe5CNqykhHnBfu8e
+	3Nqj1bL9wYIMT7AA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DA08C1369C;
+	Wed,  2 Jul 2025 12:47:02 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id MABhMkYqZWjKIQAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Wed, 02 Jul 2025 12:47:02 +0000
+Date: Wed, 2 Jul 2025 14:46:57 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Donet Tom <donettom@linux.ibm.com>
+Cc: David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>, Zi Yan <ziy@nvidia.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ritesh Harjani <ritesh.list@gmail.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	KAMEZAWA Hiroyuki <kamezawa.hiroyu@jp.fujitsu.com>
+Subject: Re: [PATCH] drivers/base/node: Handle error properly in
+ register_one_node()
+Message-ID: <aGUqQbybFXd6uJu-@localhost.localdomain>
+References: <20250702112856.295176-1-donettom@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250702112856.295176-1-donettom@linux.ibm.com>
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[redhat.com,linux-foundation.org,nvidia.com,linuxfoundation.org,gmail.com,kvack.org,vger.kernel.org,kernel.org,huawei.com,intel.com,jp.fujitsu.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost.localdomain:mid,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -2.80
 
-Ilya Maximets <i.maximets@ovn.org> writes:
+On Wed, Jul 02, 2025 at 06:28:56AM -0500, Donet Tom wrote:
+> If register_node() returns an error, it is not handled correctly.
+> The function will proceed further and try to register CPUs under the
+> node, which is not correct.
+> 
+> So, in this patch, if register_node() returns an error, we return
+> immediately from the function.
+> 
+> Signed-off-by: Donet Tom <donettom@linux.ibm.com>
+> ---
+> 
+... 
+> diff --git a/drivers/base/node.c b/drivers/base/node.c
+> index bef84f01712f..aec991b4c0b2 100644
+> --- a/drivers/base/node.c
+> +++ b/drivers/base/node.c
+> @@ -885,6 +885,8 @@ int register_one_node(int nid)
+>  	node_devices[nid] = node;
+>  
+>  	error = register_node(node_devices[nid], nid);
+> +	if (error)
+> +		return error;
 
-> On 7/2/25 2:14 PM, Aaron Conole wrote:
->> Ilya Maximets <i.maximets@ovn.org> writes:
->> 
->>> When a packet enters OVS datapath and there is no flow to handle it,
->>> packet goes to userspace through a MISS upcall.  With per-CPU upcall
->>> dispatch mechanism, we're using the current CPU id to select the
->>> Netlink PID on which to send this packet.  This allows us to send
->>> packets from the same traffic flow through the same handler.
->>>
->>> The handler will process the packet, install required flow into the
->>> kernel and re-inject the original packet via OVS_PACKET_CMD_EXECUTE.
->>>
->>> While handling OVS_PACKET_CMD_EXECUTE, however, we may hit a
->>> recirculation action that will pass the (likely modified) packet
->>> through the flow lookup again.  And if the flow is not found, the
->>> packet will be sent to userspace again through another MISS upcall.
->>>
->>> However, the handler thread in userspace is likely running on a
->>> different CPU core, and the OVS_PACKET_CMD_EXECUTE request is handled
->>> in the syscall context of that thread.  So, when the time comes to
->>> send the packet through another upcall, the per-CPU dispatch will
->>> choose a different Netlink PID, and this packet will end up processed
->>> by a different handler thread on a different CPU.
->> 
->> Just wondering but why can't we choose the existing core handler when
->> running the packet_cmd_execute?  For example, when looking into the
->> per-cpu table we know what the current core is, can we just queue to
->> that one?  I actually thought that's what the PER_CPU dispatch mode was
->> supposed to do.
->
-> This is exactly how it works today and it is the problem, because our
-> userspace handler is running on a different CPU and so the 'current CPU'
-> during the packet_cmd_execute is different from the one where kernel
-> was processing the original upcall.
->
->> Or is it that we want to make sure we keep the
->> association between the skbuff for re-injection always?
->
-> We want the same packet to be enqueued to the same upcall socket after
-> each recirculation, so it gets handled by the same userspace thread.
->
->> 
->>> The process continues as long as there are new recirculations, each
->>> time the packet goes to a different handler thread before it is sent
->>> out of the OVS datapath to the destination port.  In real setups the
->>> number of recirculations can go up to 4 or 5, sometimes more.
->> 
->> Is it because the userspace handler threads are being rescheduled across
->> CPUs?
->
-> Yes.  Userspace handlers are not pinned to a specific core in most cases,
-> so they will be running on different CPUs and will float around.
->
->> Do we still see this behavior if we pinned each handler thread to
->> a specific CPU rather than letting the scheduler make the decision?
->
-> If you pin each userspace thread to a core that is specified in the
-> PCPU_UPCALL_PIDS for the socket that it is listening on, then the
-> problem will go away, as the packet_cmd_execute syscall will be executed
-> on the same core where the kernel received the original packet.
-> However, that's not possible in many cases (reserved CPUs, different
-> CPU affinity for IRQs and userspace applications, etc.) and not desired
-> as may impact performance of the system, because the kernel and userspace
-> will compete for the same core.
+Ok, all current callers (based on mm-unstable) panic or BUG() if this fails,
+but powerpc, in init_phb_dynamic(), which keeps on going.
+Unless it panics somewhere down the road as well.
 
-Just wanted to make sure I was understanding the problem.  Okay, this
-makes sense.
+So I think we need to: 
 
->> 
->>> There is always a chance to re-order packets while processing upcalls,
->>> because userspace will first install the flow and then re-inject the
->>> original packet.  So, there is a race window when the flow is already
->>> installed and the second packet can match it and be forwarded to the
->>> destination before the first packet is re-injected.  But the fact that
->>> packets are going through multiple upcalls handled by different
->>> userspace threads makes the reordering noticeably more likely, because
->>> we not only have a race between the kernel and a userspace handler
->>> (which is hard to avoid), but also between multiple userspace handlers.
->>>
->>> For example, let's assume that 10 packets got enqueued through a MISS
->>> upcall for handler-1, it will start processing them, will install the
->>> flow into the kernel and start re-injecting packets back, from where
->>> they will go through another MISS to handler-2.  Handler-2 will install
->>> the flow into the kernel and start re-injecting the packets, while
->>> handler-1 continues to re-inject the last of the 10 packets, they will
->>> hit the flow installed by handler-2 and be forwarded without going to
->>> the handler-2, while handler-2 still re-injects the first of these 10
->>> packets.  Given multiple recirculations and misses, these 10 packets
->>> may end up completely mixed up on the output from the datapath.
->>>
->>> Let's allow userspace to specify on which Netlink PID the packets
->>> should be upcalled while processing OVS_PACKET_CMD_EXECUTE.
->>> This makes it possible to ensure that all the packets are processed
->>> by the same handler thread in the userspace even with them being
->>> upcalled multiple times in the process.  Packets will remain in order
->>> since they will be enqueued to the same socket and re-injected in the
->>> same order.  This doesn't eliminate re-ordering as stated above, since
->>> we still have a race between kernel and the userspace thread, but it
->>> allows to eliminate races between multiple userspace threads.
->>>
->>> Userspace knows the PID of the socket on which the original upcall is
->>> received, so there is no need to send it up from the kernel.
->>>
->>> Solution requires storing the value somewhere for the duration of the
->>> packet processing.  There are two potential places for this: our skb
->>> extension or the per-CPU storage.  It's not clear which is better,
->>> so just following currently used scheme of storing this kind of things
->>> along the skb.
->> 
->> With this change we're almost full on the OVS sk_buff control block.
->> Might be good to mention it in the commit message if you're respinning.
->
-> Are we full?  The skb->cb size is 48 bytes and we're only using 24
-> with this change, unless I'm missing something.
+ node_devices[nid] = NULL
+ kfree(node)
 
-Hrrm... I guess I miscounted.  Yes I agree, with this change we're at 24
-bytes in-use on 64-bit platform.  Okay no worries.
+ ?
 
-> Best regards, Ilya Maximets.
+Also, once Hannes fix lands, we might need that as well.
 
+Anyway, I'd suggest you hold on until Hannes fix lands, so we can later
+rebase all your mem-hotplug on top of that [1].
+
+[1] https://lore.kernel.org/linux-mm/86f89a65-f0f6-4462-9eea-ac691de2f3b6@suse.de/T/#mbf392eb390b8053f96be50da3b40dfd9b62dd389
+
+
+-- 
+Oscar Salvador
+SUSE Labs
