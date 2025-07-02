@@ -1,222 +1,330 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 510EA246781;
-	Wed,  2 Jul 2025 11:31:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EEBB221F37
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 11:33:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751455888; cv=none; b=ReR5k1Bk2grlgqPezCY7lMsCgnxGP5EDAq4r2NVklHjezHhPNXdPqSUENLaOnZt7gSbZ+Voh4yN893HKH0KzpBw4NYcXWntdhOrlANzXyeU7fGaiO5ucOdO+Eky8ST74IvF4soReh62Qyu7oIexoI/p6c6P74lYqVFmju3J+coo=
+	t=1751455983; cv=none; b=pDimTUGFV5VF1r1rJR0JjkcAjAkFEpIQSVTxgQkGBkylVXf1zKP5FFqpzwfRoWTyJqqDit60B0eTkNOr2VggELKXkJHtyIC+7bY7IgT5Sw2X7gFzYCj/3RAXr76CzH1dJiXHtMyPeKAS1dNNH8vlItOx1z1pnDvsHTO/HysPFOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751455888; c=relaxed/simple;
-	bh=W/m4AwEeK352N+Pmwvp6Pelc/+FLIPylcBqXF2jNqTE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FoFVycKxZ3JqqSq6mUiT/+oWvgnT+nGvmhXjBS49iJTyjeqjgfv11XcwGvy2RmpLTY4IOlhsQk5hjOM/MbMorz/2aEo7JM/cLhNxaiouFErdnD/b9xIgZXg8JtzQccChjHsQ5Z1FX8Ghj6dV+WIZwSqJyJ4riLddNbA0sJ5NtCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=idXs37NI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751455983; c=relaxed/simple;
+	bh=rqR/bHPvJnN+kWF5c+Z3oM7RS06898Jd8iBY8bYVvcw=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=MoE2d23VWCNglDfFJlR6G2pnUlJoGOCQcTSqCCIOGbe6yy4AnoKQ1BX03XPMSb1ReAheS5aUHuCEsicQ1DdEFqvtHSdNx9D2sBVOTDmXe/Ain1LooCsEUKX3mzCWR7aqbT5G2tsmPdKYmY+021EbMZPdl1OY/QuuniJrXZFOt5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kQqKSTGB; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="idXs37NI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55701C4CEED;
-	Wed,  2 Jul 2025 11:31:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751455887;
-	bh=W/m4AwEeK352N+Pmwvp6Pelc/+FLIPylcBqXF2jNqTE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=idXs37NIUea7zkC0f/Q/tVp024o0QasGZgAkF1gqdALEN1il9TVdmoRF5oPhbiDMl
-	 lNjqgwNn0mcQg2+D7Rw/XVnQrkojXv9Re6tvspv/w9Brq49B4p9ABYaa1dIo/bBthK
-	 /8tmWFrryqLzmAhxJyuTlhIKeeujxcU0pIb3bUMJYPofEQiWqO52AreG1NUedI/Scv
-	 l9N9gTY8Gx7Bq4XHfUtDGBZSgV2MqxITUuD7nmcgdCELmGJ1chfnTkRynb73JDVMrU
-	 tSbL6tXqMDc9BVtjDOjIasg0LIc95I398tzSuyujJJZdTKEO6vvpTmUkLYJRgwbF+4
-	 os8GGwAgBmmsA==
-Date: Wed, 2 Jul 2025 17:01:10 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Kishon Vijay Abraham I <kishon@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Anup Patel <apatel@ventanamicro.com>, Marc Zyngier <maz@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Shuah Khan <shuah@kernel.org>, 
-	Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Niklas Cassel <cassel@kernel.org>, dlemoal@kernel.org, jdmason@kudzu.us, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, imx@lists.linux.dev, devicetree@vger.kernel.org
-Subject: Re: [PATCH v19 02/10] PCI: endpoint: Add RC-to-EP doorbell support
- using platform MSI controller
-Message-ID: <kife5sc4dmoxt7b6werw7l3dcq46rx634wmwxyuenjkp6xstqe@np6g6z55r7sz>
-References: <20250609-ep-msi-v19-0-77362eaa48fa@nxp.com>
- <20250609-ep-msi-v19-2-77362eaa48fa@nxp.com>
- <bvwpyg4amnuuqimcqxhwrtejfng66c2jenti3t7dgeegcc73vc@o5c5isvg2s4c>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kQqKSTGB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751455982; x=1782991982;
+  h=date:from:to:cc:subject:message-id;
+  bh=rqR/bHPvJnN+kWF5c+Z3oM7RS06898Jd8iBY8bYVvcw=;
+  b=kQqKSTGB8++mP0M852wFz7lTLINkfK4/haaHvhQsa4ZTmvB5xF0+8a0t
+   M2zt8g/ZfdxPApZNoPR+Krkc1kw2MZU1s0flOjOnNPcd3FxpR+ehM62Bd
+   +rVjQzdwKLNte44an3CiYW8rI7ojGJfpJ1SGNkyRlMJiiplUjCnNSXPWP
+   ywUwWGXs5i1lFauZSxDI0KTUgYjxAMGYlahZMc37F/alRLDLfu/mHNOaI
+   6uDWhrcsvWwmVZpQd9rUM0738mQSUJPm3GID+pnltH4PecNhMImV6Y/PP
+   LrcqhRqkCegQGrHOPY2fq64RrAXXcT01AvLN/oUhiSGpETo0MdunLKH9r
+   g==;
+X-CSE-ConnectionGUID: zNiR7cAOSfOHBhunlFmA/g==
+X-CSE-MsgGUID: RGw8Q3AURCGzFeikocIOpw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="53838772"
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="53838772"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 04:33:01 -0700
+X-CSE-ConnectionGUID: 3CkILaNrRvyfgYHOgjfXeA==
+X-CSE-MsgGUID: ZLvUscvQTXaYBJ3Kl3vQig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="154596601"
+Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 02 Jul 2025 04:33:00 -0700
+Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uWvhx-0000Z1-15;
+	Wed, 02 Jul 2025 11:32:57 +0000
+Date: Wed, 02 Jul 2025 19:32:50 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:sched/urgent] BUILD SUCCESS
+ 009836b4fa52f92cba33618e773b1094affa8cd2
+Message-ID: <202507021937.PrSe2Kw1-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bvwpyg4amnuuqimcqxhwrtejfng66c2jenti3t7dgeegcc73vc@o5c5isvg2s4c>
 
-On Wed, Jul 02, 2025 at 04:54:12PM GMT, Manivannan Sadhasivam wrote:
-> On Mon, Jun 09, 2025 at 12:34:14PM GMT, Frank Li wrote:
-> > Doorbell feature is implemented by mapping the EP's MSI interrupt
-> > controller message address to a dedicated BAR in the EPC core. It is the
-> > responsibility of the EPF driver to pass the actual message data to be
-> > written by the host to the doorbell BAR region through its own logic.
-> > 
-> > Tested-by: Niklas Cassel <cassel@kernel.org>
-> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > ---
-> > Change from v15 to v16
-> > - fix rebase conflict
-> > 
-> > Change from v14 to v15
-> > - check CONFIG_GENERIC_MSI
-> > 
-> > Fix below build error
-> > | Reported-by: kernel test robot <lkp@intel.com>
-> > | Closes: https://lore.kernel.org/oe-kbuild-all/202502082204.6PRR3cfG-lkp@intel.com/
-> > 
-> > All errors (new ones prefixed by >>):
-> > 
-> >    drivers/pci/endpoint/pci-ep-msi.c: In function 'pci_epf_alloc_doorbell':
-> > >> drivers/pci/endpoint/pci-ep-msi.c:53:15: error: implicit declaration of function 'platform_device_msi_init_and_alloc_irqs' [-Werror=implicit-function-declaration]
-> >       53 |         ret = platform_device_msi_init_and_alloc_irqs(&epf->dev, num_db, pci_epf_write_msi_msg);
-> > 
-> > | Reported-by: kernel test robot <lkp@intel.com>
-> > | Closes: https://lore.kernel.org/oe-kbuild-all/202502082242.pOq1hB1d-lkp@intel.com/
-> > 
-> > All errors (new ones prefixed by >>):
-> > 
-> >    drivers/pci/endpoint/pci-ep-msi.c: In function 'pci_epf_alloc_doorbell':
-> > >> drivers/pci/endpoint/pci-ep-msi.c:49:14: error: implicit declaration of function 'irq_domain_is_msi_immutable'; did you mean 'irq_domain_is_msi_device'? [-Werror=implicit-function-declaration]
-> >       49 |         if (!irq_domain_is_msi_immutable(dom)) {
-> > 
-> > Change from v13 to v14
-> > - basic roll back to v9
-> > - use device:id as msi-map input, its will handle it
-> > - use existed platform_device_msi_init_and_alloc_irqs()
-> > - pass down epf->dev point, because epf->dev of-node will be the same as
-> > epc's parent.
-> > 
-> > Change from v12 to v13
-> > - Use DOMAIN_BUS_DEVICE_PCI_EP_MSI
-> > 
-> > Change from v10 to v12
-> > - none
-> > 
-> > Change from v9 to v10
-> > - Create msi domain for each function device.
-> > - Remove only function support limiation. My hardware only support one
-> > function, so not test more than one case.
-> > - use "msi-map" descript msi information
-> > 
-> >   msi-map = <func_no << 8  | vfunc_no, &its, start_stream_id,  size>;
-> > 
-> > Chagne from v8 to v9
-> > - sort header file
-> > - use pci_epc_get(dev_name(msi_desc_to_dev(desc)));
-> > - check epf number at pci_epf_alloc_doorbell
-> > - Add comments for miss msi-parent case
-> > 
-> > change from v5 to v8
-> > -none
-> > 
-> > Change from v4 to v5
-> > - Remove request_irq() in pci_epc_alloc_doorbell() and leave to EP function
-> > driver, so ep function driver can register differece call back function for
-> > difference doorbell events and set irq affinity to differece CPU core.
-> > - Improve error message when MSI allocate failure.
-> > 
-> > Change from v3 to v4
-> > - msi change to use msi_get_virq() avoid use msi_for_each_desc().
-> > - add new struct for pci_epf_doorbell_msg to msi msg,virq and irq name.
-> > - move mutex lock to epc function
-> > - initialize variable at declear place.
-> > - passdown epf to epc*() function to simplify code.
-> > ---
-> >  drivers/pci/endpoint/Makefile     |  1 +
-> >  drivers/pci/endpoint/pci-ep-msi.c | 82 +++++++++++++++++++++++++++++++++++++++
-> >  include/linux/pci-ep-msi.h        | 28 +++++++++++++
-> >  include/linux/pci-epf.h           | 16 ++++++++
-> >  4 files changed, 127 insertions(+)
-> > 
-> > diff --git a/drivers/pci/endpoint/Makefile b/drivers/pci/endpoint/Makefile
-> > index 95b2fe47e3b06..c502ea7ef367c 100644
-> > --- a/drivers/pci/endpoint/Makefile
-> > +++ b/drivers/pci/endpoint/Makefile
-> > @@ -6,3 +6,4 @@
-> >  obj-$(CONFIG_PCI_ENDPOINT_CONFIGFS)	+= pci-ep-cfs.o
-> >  obj-$(CONFIG_PCI_ENDPOINT)		+= pci-epc-core.o pci-epf-core.o\
-> >  					   pci-epc-mem.o functions/
-> > +obj-$(CONFIG_GENERIC_MSI_IRQ)		+= pci-ep-msi.o
-> 
-> I don't think we should build this driver for generic CONFIG_GENERIC_MSI_IRQ
-> Kconfig. You should create a new EP specific Kconfig and make it depend on
-> CONFIG_GENERIC_MSI_IRQ.
-> 
-> > diff --git a/drivers/pci/endpoint/pci-ep-msi.c b/drivers/pci/endpoint/pci-ep-msi.c
-> > new file mode 100644
-> > index 0000000000000..549b55b864d0e
-> > --- /dev/null
-> > +++ b/drivers/pci/endpoint/pci-ep-msi.c
-> > @@ -0,0 +1,82 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * PCI Endpoint *Controller* (EPC) MSI library
-> > + *
-> > + * Copyright (C) 2025 NXP
-> > + * Author: Frank Li <Frank.Li@nxp.com>
-> > + */
-> > +
-> > +#include <linux/device.h>
-> > +#include <linux/irqdomain.h>
-> > +#include <linux/module.h>
-> > +#include <linux/msi.h>
-> > +#include <linux/of_irq.h>
-> > +#include <linux/pci-epc.h>
-> > +#include <linux/pci-epf.h>
-> > +#include <linux/pci-ep-cfs.h>
-> > +#include <linux/pci-ep-msi.h>
-> > +#include <linux/slab.h>
-> > +
-> > +static void pci_epf_write_msi_msg(struct msi_desc *desc, struct msi_msg *msg)
-> > +{
-> > +	struct pci_epf *epf = to_pci_epf(desc->dev);
-> > +
-> > +	if (epf && epf->db_msg && desc->msi_index < epf->num_db)
-> > +		memcpy(&epf->db_msg[desc->msi_index].msg, msg, sizeof(*msg));
-> > +}
-> > +
-> > +int pci_epf_alloc_doorbell(struct pci_epf *epf, u16 num_db)
-> > +{
-> > +	struct pci_epc *epc = epf->epc;
-> > +	struct device *dev = &epf->dev;
-> > +	struct irq_domain *dom;
-> > +	void *msg;
-> > +	u32 rid;
-> > +	int ret;
-> > +	int i;
-> > +
-> > +	rid = PCI_EPF_DEVID(epf->func_no, epf->vfunc_no);
-> > +	dom = of_msi_map_get_device_domain(epc->dev.parent, rid, DOMAIN_BUS_PLATFORM_MSI);
-> > +	if (!dom) {
-> > +		dev_err(dev, "Can't find msi domain\n");
-> 
-> s/msi/MSI
-> 
-> Perhaps, "Can't find MSI domain for parent device" to be more explicit that we
-> are searching for MSI domain in parent device?
-> 
-> > +		return -EINVAL;
-> 
-> -ENODATA
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched/urgent
+branch HEAD: 009836b4fa52f92cba33618e773b1094affa8cd2  sched/core: Fix migrate_swap() vs. hotplug
 
-Sorry, -ENODEV here and below.
+elapsed time: 1296m
 
-- Mani
+configs tested: 253
+configs skipped: 8
 
--- 
-மணிவண்ணன் சதாசிவம்
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    clang-19
+alpha                            allyesconfig    gcc-15.1.0
+alpha                               defconfig    gcc-15.1.0
+arc                              allmodconfig    clang-19
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    clang-19
+arc                                 defconfig    gcc-15.1.0
+arc                   randconfig-001-20250701    gcc-13.3.0
+arc                   randconfig-001-20250702    clang-19
+arc                   randconfig-002-20250701    gcc-15.1.0
+arc                   randconfig-002-20250702    clang-19
+arc                        vdk_hs38_defconfig    gcc-15.1.0
+arm                              allmodconfig    clang-19
+arm                               allnoconfig    clang-21
+arm                               allnoconfig    gcc-15.1.0
+arm                              allyesconfig    clang-19
+arm                                 defconfig    gcc-15.1.0
+arm                          gemini_defconfig    gcc-15.1.0
+arm                      integrator_defconfig    gcc-15.1.0
+arm                        multi_v7_defconfig    gcc-15.1.0
+arm                        mvebu_v7_defconfig    gcc-15.1.0
+arm                          pxa3xx_defconfig    clang-18
+arm                   randconfig-001-20250701    clang-17
+arm                   randconfig-001-20250702    clang-19
+arm                   randconfig-002-20250701    gcc-8.5.0
+arm                   randconfig-002-20250702    clang-19
+arm                   randconfig-003-20250701    clang-21
+arm                   randconfig-003-20250702    clang-19
+arm                   randconfig-004-20250701    clang-21
+arm                   randconfig-004-20250702    clang-19
+arm                           tegra_defconfig    clang-18
+arm                           u8500_defconfig    gcc-15.1.0
+arm                         vf610m4_defconfig    clang-18
+arm                         wpcm450_defconfig    gcc-15.1.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                               defconfig    gcc-15.1.0
+arm64                 randconfig-001-20250701    clang-21
+arm64                 randconfig-001-20250702    clang-19
+arm64                 randconfig-002-20250701    gcc-15.1.0
+arm64                 randconfig-002-20250702    clang-19
+arm64                 randconfig-003-20250701    clang-18
+arm64                 randconfig-003-20250702    clang-19
+arm64                 randconfig-004-20250701    gcc-8.5.0
+arm64                 randconfig-004-20250702    clang-19
+csky                              allnoconfig    gcc-15.1.0
+csky                                defconfig    gcc-15.1.0
+csky                  randconfig-001-20250701    gcc-11.5.0
+csky                  randconfig-001-20250702    gcc-14.2.0
+csky                  randconfig-002-20250701    gcc-10.5.0
+csky                  randconfig-002-20250702    gcc-14.2.0
+hexagon                          allmodconfig    clang-17
+hexagon                          allmodconfig    clang-19
+hexagon                           allnoconfig    clang-21
+hexagon                           allnoconfig    gcc-15.1.0
+hexagon                          allyesconfig    clang-19
+hexagon                          allyesconfig    clang-21
+hexagon                             defconfig    gcc-15.1.0
+hexagon               randconfig-001-20250701    clang-21
+hexagon               randconfig-001-20250702    gcc-14.2.0
+hexagon               randconfig-002-20250701    clang-21
+hexagon               randconfig-002-20250702    gcc-14.2.0
+i386                             allmodconfig    clang-20
+i386                              allnoconfig    clang-20
+i386                             allyesconfig    clang-20
+i386        buildonly-randconfig-001-20250701    gcc-12
+i386        buildonly-randconfig-001-20250702    clang-20
+i386        buildonly-randconfig-002-20250701    gcc-12
+i386        buildonly-randconfig-002-20250702    clang-20
+i386        buildonly-randconfig-003-20250701    gcc-12
+i386        buildonly-randconfig-003-20250702    clang-20
+i386        buildonly-randconfig-004-20250701    gcc-12
+i386        buildonly-randconfig-004-20250702    clang-20
+i386        buildonly-randconfig-005-20250701    gcc-12
+i386        buildonly-randconfig-005-20250702    clang-20
+i386        buildonly-randconfig-006-20250701    clang-20
+i386        buildonly-randconfig-006-20250702    clang-20
+i386                                defconfig    clang-20
+i386                  randconfig-001-20250702    clang-20
+i386                  randconfig-002-20250702    clang-20
+i386                  randconfig-003-20250702    clang-20
+i386                  randconfig-004-20250702    clang-20
+i386                  randconfig-005-20250702    clang-20
+i386                  randconfig-006-20250702    clang-20
+i386                  randconfig-007-20250702    clang-20
+i386                  randconfig-011-20250702    gcc-12
+i386                  randconfig-012-20250702    gcc-12
+i386                  randconfig-013-20250702    gcc-12
+i386                  randconfig-014-20250702    gcc-12
+i386                  randconfig-015-20250702    gcc-12
+i386                  randconfig-016-20250702    gcc-12
+i386                  randconfig-017-20250702    gcc-12
+loongarch                        allmodconfig    gcc-15.1.0
+loongarch                         allnoconfig    gcc-15.1.0
+loongarch                           defconfig    gcc-15.1.0
+loongarch             randconfig-001-20250701    gcc-13.3.0
+loongarch             randconfig-001-20250702    gcc-14.2.0
+loongarch             randconfig-002-20250701    gcc-15.1.0
+loongarch             randconfig-002-20250702    gcc-14.2.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+m68k                                defconfig    gcc-15.1.0
+m68k                        m5307c3_defconfig    gcc-15.1.0
+m68k                           virt_defconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+mips                           gcw0_defconfig    clang-18
+mips                            gpr_defconfig    clang-18
+mips                           ip32_defconfig    gcc-15.1.0
+mips                         rt305x_defconfig    gcc-15.1.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-15.1.0
+nios2                               defconfig    gcc-15.1.0
+nios2                 randconfig-001-20250701    gcc-14.2.0
+nios2                 randconfig-001-20250702    gcc-14.2.0
+nios2                 randconfig-002-20250701    gcc-13.3.0
+nios2                 randconfig-002-20250702    gcc-14.2.0
+openrisc                          allnoconfig    clang-21
+openrisc                         allyesconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-12
+openrisc                 simple_smp_defconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    clang-21
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-12
+parisc                randconfig-001-20250701    gcc-14.3.0
+parisc                randconfig-001-20250702    gcc-14.2.0
+parisc                randconfig-002-20250701    gcc-10.5.0
+parisc                randconfig-002-20250702    gcc-14.2.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    clang-21
+powerpc                          allyesconfig    clang-21
+powerpc                          allyesconfig    gcc-15.1.0
+powerpc                      chrp32_defconfig    gcc-15.1.0
+powerpc                       ebony_defconfig    gcc-15.1.0
+powerpc                     mpc512x_defconfig    gcc-15.1.0
+powerpc                    mvme5100_defconfig    gcc-15.1.0
+powerpc               randconfig-001-20250701    gcc-13.3.0
+powerpc               randconfig-001-20250702    gcc-14.2.0
+powerpc               randconfig-002-20250701    clang-21
+powerpc               randconfig-002-20250702    gcc-14.2.0
+powerpc               randconfig-003-20250701    clang-21
+powerpc               randconfig-003-20250702    gcc-14.2.0
+powerpc                     sequoia_defconfig    clang-18
+powerpc                     sequoia_defconfig    gcc-15.1.0
+powerpc64             randconfig-001-20250701    clang-21
+powerpc64             randconfig-001-20250702    gcc-14.2.0
+powerpc64             randconfig-002-20250701    clang-21
+powerpc64             randconfig-002-20250702    gcc-14.2.0
+powerpc64             randconfig-003-20250701    gcc-10.5.0
+powerpc64             randconfig-003-20250702    gcc-14.2.0
+riscv                            allmodconfig    clang-21
+riscv                            allmodconfig    gcc-15.1.0
+riscv                             allnoconfig    clang-21
+riscv                            allyesconfig    clang-16
+riscv                            allyesconfig    gcc-15.1.0
+riscv                               defconfig    gcc-12
+riscv                 randconfig-001-20250701    gcc-14.3.0
+riscv                 randconfig-001-20250702    clang-21
+riscv                 randconfig-002-20250701    gcc-10.5.0
+riscv                 randconfig-002-20250702    clang-21
+s390                             allmodconfig    clang-18
+s390                             allmodconfig    gcc-15.1.0
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-15.1.0
+s390                                defconfig    gcc-12
+s390                  randconfig-001-20250701    gcc-9.3.0
+s390                  randconfig-001-20250702    clang-21
+s390                  randconfig-002-20250701    clang-17
+s390                  randconfig-002-20250702    clang-21
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                                  defconfig    gcc-12
+sh                        edosk7705_defconfig    gcc-15.1.0
+sh                             espt_defconfig    clang-18
+sh                             espt_defconfig    gcc-15.1.0
+sh                    randconfig-001-20250701    gcc-15.1.0
+sh                    randconfig-001-20250702    clang-21
+sh                    randconfig-002-20250701    gcc-13.3.0
+sh                    randconfig-002-20250702    clang-21
+sh                           se7722_defconfig    gcc-15.1.0
+sh                     sh7710voipgw_defconfig    gcc-15.1.0
+sh                        sh7763rdp_defconfig    gcc-15.1.0
+sh                  sh7785lcr_32bit_defconfig    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                 randconfig-001-20250701    gcc-10.3.0
+sparc                 randconfig-001-20250702    clang-21
+sparc                 randconfig-002-20250701    gcc-15.1.0
+sparc                 randconfig-002-20250702    clang-21
+sparc64                             defconfig    gcc-12
+sparc64               randconfig-001-20250701    gcc-8.5.0
+sparc64               randconfig-001-20250702    clang-21
+sparc64               randconfig-002-20250701    gcc-12.4.0
+sparc64               randconfig-002-20250702    clang-21
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    clang-19
+um                               allyesconfig    gcc-12
+um                                  defconfig    gcc-12
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250701    gcc-12
+um                    randconfig-001-20250702    clang-21
+um                    randconfig-002-20250701    gcc-12
+um                    randconfig-002-20250702    clang-21
+um                           x86_64_defconfig    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250701    gcc-12
+x86_64      buildonly-randconfig-001-20250702    gcc-11
+x86_64      buildonly-randconfig-002-20250701    gcc-12
+x86_64      buildonly-randconfig-002-20250702    gcc-11
+x86_64      buildonly-randconfig-003-20250701    gcc-12
+x86_64      buildonly-randconfig-003-20250702    gcc-11
+x86_64      buildonly-randconfig-004-20250701    gcc-12
+x86_64      buildonly-randconfig-004-20250702    gcc-11
+x86_64      buildonly-randconfig-005-20250701    clang-20
+x86_64      buildonly-randconfig-005-20250702    gcc-11
+x86_64      buildonly-randconfig-006-20250701    clang-20
+x86_64      buildonly-randconfig-006-20250702    gcc-11
+x86_64                              defconfig    clang-20
+x86_64                                  kexec    clang-20
+x86_64                randconfig-004-20250702    gcc-12
+x86_64                randconfig-005-20250702    gcc-12
+x86_64                randconfig-006-20250702    gcc-12
+x86_64                randconfig-007-20250702    gcc-12
+x86_64                randconfig-008-20250702    gcc-12
+x86_64                randconfig-071-20250702    clang-20
+x86_64                randconfig-072-20250702    clang-20
+x86_64                randconfig-073-20250702    clang-20
+x86_64                randconfig-074-20250702    clang-20
+x86_64                randconfig-075-20250702    clang-20
+x86_64                randconfig-076-20250702    clang-20
+x86_64                randconfig-077-20250702    clang-20
+x86_64                randconfig-078-20250702    clang-20
+x86_64                               rhel-9.4    clang-20
+x86_64                           rhel-9.4-bpf    gcc-12
+x86_64                         rhel-9.4-kunit    gcc-12
+x86_64                           rhel-9.4-ltp    gcc-12
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                  cadence_csp_defconfig    gcc-15.1.0
+xtensa                randconfig-001-20250701    gcc-15.1.0
+xtensa                randconfig-001-20250702    clang-21
+xtensa                randconfig-002-20250701    gcc-13.3.0
+xtensa                randconfig-002-20250702    clang-21
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
