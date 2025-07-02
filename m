@@ -1,114 +1,80 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E2EE1C3F02;
-	Wed,  2 Jul 2025 15:17:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD7E1C700C;
+	Wed,  2 Jul 2025 15:18:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751469452; cv=none; b=LAc3810Zlu+avW5A4Dpp8KRSUTT+jhWO/j5JS9mLz2epFRhniWeG27JDcfUdXt1Tbd2z6VUIvC7m42XxaMBr7Gd9Qvlc6tuKzNEgYDHdgmt99mTYE43O3wvg3h0rUY5HhXSbg/in9cATwAvFshTbbHnFA5cf6f2i8zzL4I07C58=
+	t=1751469518; cv=none; b=GGQzmQRl2zquWLL1qB6lDkmDwGGcxN6ZTSIBvuABKEqOpgmLWkjSsZ/Wgug23530wSnJ2V+/pdBtmYb+s6l9KNqxGGd6NBorif1Ol8WaLTFA7C2iG3Wj1KB06BZt8OVAbWKHmf5kIUqvGJaCOvJ/kuJQLTrYz27KZM1eJW+ba/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751469452; c=relaxed/simple;
-	bh=0J/bQNTWUK3CBlRXBmlUER6bfndlkg4+YTtCvX1E1t4=;
+	s=arc-20240116; t=1751469518; c=relaxed/simple;
+	bh=oF9g4X7KgjS/c6li8VSN+63EDU68bK9gdw5MKEWVQ8M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NZPzk/cvSYt0YpzgJXLoRfDDp6ijUFXBbSpJBKpVSeMP0NiVTyfDvkiiN6J+RO5PbMSWrKeXb/6xYimPG/BPBfdTjnZeHtJNxr2KDQ5DDmRvu+nCiShDCdQiEtZNvU1t5kAr0El7R47Y0mB1nPAY8gQ3HwtPUKlYT+iECwnzvVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AVakEbLi; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=rvS+R5Jfr3BRHGoLirG9lm9oHalCKxwYPP3m+eER3lJ+LN8koDHJ5Hm22oaeLYbbWMWyielc0OmZJFV1QSZZw5poMTQls62qwm0Tx1kZMEs37u/z9liXBYxKtFrWqqmO9VYprBV3wajl5IMJnaB2rvYoyIoxKPEpKb7U5ov2HLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uTcgQomD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AVakEbLi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751469451; x=1783005451;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0J/bQNTWUK3CBlRXBmlUER6bfndlkg4+YTtCvX1E1t4=;
-  b=AVakEbLieg6ccSqcjXQKTgaTm2fmg3OEn0oYBj0DVybrdTQj7iQkmRfV
-   omoZvllQPKp072AinHzi07bnbVlZkS5qSxcL7mRK4n2HODz58W3vZi96s
-   L/Rh5po/eAPUt7YVGCrFs7asMYbQ6wQ7Nw3yiQcVcjKQk005gyhmX8TZH
-   UCenPzZ7IuncZWsF5HU0hmvHb2ofiGqsZd4rD1v2LGamo/I7yIPdbdG5a
-   nHjTefmjJ2cJXHFisX9yxRhgg1S1yuLSX0gG4y+yJ+Y3GFjK01yfiwlme
-   0bxRRwDPkWIbd+8kvFhs7sQo/GHb3pwhRhhizIC2b8B/6ROZBcyLuoVem
-   A==;
-X-CSE-ConnectionGUID: cME5MhDNRdiWrFrMk1xthw==
-X-CSE-MsgGUID: cKHl+qIbQd6YwLKgVGKD0Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="71341605"
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="71341605"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 08:17:30 -0700
-X-CSE-ConnectionGUID: wEnsnc39Tai9vIOaOuvRTw==
-X-CSE-MsgGUID: 2P04b6y7SBG7QtOLh6hrhA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="153511918"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 08:17:27 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uWzDA-0000000Bx6z-1YDq;
-	Wed, 02 Jul 2025 18:17:24 +0300
-Date: Wed, 2 Jul 2025 18:17:24 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Robert Budai <robert.budai@analog.com>,
-	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: imu: adis16550: rework clock range test
-Message-ID: <aGVNhIwn7CXO_lpP@smile.fi.intel.com>
-References: <20250702-iio-imu-adis16550-rework-clock-range-test-v1-1-b45f3a3b0dc1@baylibre.com>
- <aGVIBVsFPcVw3lN6@smile.fi.intel.com>
- <aGVJPRmn1-HUBb40@smile.fi.intel.com>
- <3778ad13-3b62-4f68-946d-b861b0df4272@baylibre.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uTcgQomD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 612DCC4CEE7;
+	Wed,  2 Jul 2025 15:18:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751469517;
+	bh=oF9g4X7KgjS/c6li8VSN+63EDU68bK9gdw5MKEWVQ8M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uTcgQomDunwklFtclIOdvGA6h5WV7hjLjzpfSE/47Lm0NDsfZ/e6H5Na7YUt/9kUJ
+	 xRj7Qo3LJqsRhQlUKSyBEhw9z598o5Xx2P4YnLE0jUpot9PGwu7VEsHeaIuIuHdVba
+	 wfCwscvLH36Z5IelO2prPUuQJsVDplP+6zZuW0+dgg6Idqqr1s6FLTNlpArGe6faG/
+	 TKkle3LootKUBy/Qy3cDhcU91124hAgF8ccB5StwokBbcaenomPDWcrgR/Z4FQxjjl
+	 txvLHTFYOnP8dKigV1QVSV/grqikO++0NUdBfN6NveIvK2T1y7af2ASW0tRAe7alCc
+	 l6Cw+Dw85j1fQ==
+Date: Wed, 2 Jul 2025 16:18:32 +0100
+From: Lee Jones <lee@kernel.org>
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: herbert@gondor.apana.org.au, jarkko@kernel.org,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	davem@davemloft.net, linux-crypto@vger.kernel.org,
+	peterhuewe@gmx.de, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+	Yinggang Gu <guyinggang@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: Re: [PATCH v11 1/4] mfd: Add support for Loongson Security Engine
+ chip controller
+Message-ID: <20250702151832.GT10134@google.com>
+References: <20250619025138.2854-1-zhaoqunqin@loongson.cn>
+ <20250619025138.2854-2-zhaoqunqin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <3778ad13-3b62-4f68-946d-b861b0df4272@baylibre.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250619025138.2854-2-zhaoqunqin@loongson.cn>
 
-On Wed, Jul 02, 2025 at 10:07:17AM -0500, David Lechner wrote:
-> On 7/2/25 9:59 AM, Andy Shevchenko wrote:
-> > On Wed, Jul 02, 2025 at 05:53:57PM +0300, Andy Shevchenko wrote:
-> >> On Wed, Jul 02, 2025 at 09:27:45AM -0500, David Lechner wrote:
-> >>> Rework the clock rate range test to test if sync_mode_data != NULL
-> >>> instead of testing if the for loop index variable. This makes it easier
-> >>> for static analyzers to see that we aren't using an uninitialized
-> >>> sync_mode_data [1].
-> >>
-> >> But at the same time it makes it not to be the usual pattern.,,
-> > 
-> > Reading the static analyser output I think the first hunk is only what we need,
-> > but this is still false positive and it's problem of that static
-> > analyser. Have you filed a bug there? (My point is that modifying the code for
-> > the advantage of false positives of some static analyser is wrong road to go
-> > in my opinion.)
-> 
-> I agree that we shouldn't fix this _only_ to make the static analyzer
-> happy. But I had to think quite a bit harder to see that the existing
-> code was correct compared to what I have proposed here.
-> 
-> But if this is a common pattern that I just haven't learned to identify
-> at a glance yet and everybody else can easily see that the existing code
-> is correct, then perhaps it isn't worth the change.
+On Thu, 19 Jun 2025, Qunqin Zhao wrote:
 
-To me checking against index variable (when it's integer, obviously) is correct
-thing to do and regular pattern. OTOH, if the "index" is a pointer and rather
-we call it "iterator", the angle of view is different because in some cases
-it may lead to stale or invalid value which might be mistakenly dereferenced or
-speculated (see more in the discussion about list entry APIs [entry is a
-keyword here] and if list_entry_is_head() is a good approach.)
+> Loongson Security Engine chip supports RNG, SM2, SM3 and SM4 accelerator
+> engines. This is the base driver for other specific engine drivers.
+> 
+> Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
+> Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
+> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>  drivers/mfd/Kconfig             |  11 ++
+>  drivers/mfd/Makefile            |   2 +
+>  drivers/mfd/loongson-se.c       | 253 ++++++++++++++++++++++++++++++++
+>  include/linux/mfd/loongson-se.h |  53 +++++++
+>  4 files changed, 319 insertions(+)
+>  create mode 100644 drivers/mfd/loongson-se.c
+>  create mode 100644 include/linux/mfd/loongson-se.h
+
+This looks okay to me now.
+
+Let me know when you have all of the other Acks.  Unless we decided
+otherwise, this whole set should be merged via one subsystem (usually
+MFD).  Once tested and merged, I can send out a pull-request for other
+maintainers to pull from if they so wish.
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Lee Jones [李琼斯]
