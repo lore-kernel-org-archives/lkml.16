@@ -1,46 +1,38 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E2310F2;
-	Wed,  2 Jul 2025 05:23:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from azure-sdnproxy.icoremail.net (l-sdnproxy.icoremail.net [20.188.111.126])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F18A10F2;
+	Wed,  2 Jul 2025 05:24:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=20.188.111.126
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751433827; cv=none; b=Aoi0XbJdZriu3lOvuWDz+/n08wocz/71p7KGGiC79Z5m+9GMZ3vb0qh1QnwPq/uqhDnOAImK/fI07FxXgmZZ7kRWMuvrq4HhHW6kKmirDmSFvPY9E8JqljjyL0+6U2AwLNUi+C3rWNDKSjAdv5CxsyBZVygaIFSNdZJWCaW2woU=
+	t=1751433895; cv=none; b=FC8Utfvm9BQuGxO1M0QJlrZuly7oumIwf0tnD+/S5A26GNgoGshu72nIL/0zF65VmjMRy4cICetZwdbsMaH3hT1Rpz8hJTsMuUIFVrnPgT8ZPG6X31wGd/1WPETYsWG4/906D7RKSrsq6zm2ntHQdoLkbyVImaMDof8RcshGIPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751433827; c=relaxed/simple;
-	bh=y61RM2CZLTlPVFVJqIH6LbDQqTpJ/f7eA4CyIMT9MBI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mBvnoam42eIetxiQ1rumahTFjGK3B6Uv0U95xzOCc+RHEL5+gPOVaR39VM5ULpD6+t9tUlmOAW90FLcKjo2d2xgTmCQhBvjGhiacoebPY15FRbqOFJ33gy2dTEeXENhHIe3GddqHofyLmw9rhnO8qKpZPu6XVQm5Gkm2YCF0cS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kD5rO6Fg; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kD5rO6Fg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1987C4CEEE;
-	Wed,  2 Jul 2025 05:23:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751433825;
-	bh=y61RM2CZLTlPVFVJqIH6LbDQqTpJ/f7eA4CyIMT9MBI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kD5rO6Fgl5n5OQ70/HCQbU58LVDC5YmnhjnsHg/wWrDItFOo/cqp4zKYOEYcWfiZ4
-	 Q1yWAz/ffQ4azvj+4+P3/A78FqV6daelnWyHc2EYYlP1DJUeMrRHXqgWsgLFcAnNKY
-	 dTHQ19lFeGS2p6fCKJDFefLaLG9LwnmMJ+lS1GK4TwtwwkXAHh3mD5Z29WG4XdunEn
-	 VTEzVzf1ApQqAcXt+Pm1MDwLVvoOhQn0KPI7hrJAGHRHAgvcRu6j81S316EM/X/BSV
-	 Hfjt7D1aldbQtcCTSeIeNgHuqJTPAK6Wt21+lP/BPbiJkeQTSY+pXDQSbBuAH7kTrs
-	 XXslgqmaIfC+A==
-From: SeongJae Park <sj@kernel.org>
-To: SeongJae Park <sj@kernel.org>
-Cc: Bijan Tabatabai <bijan311@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Bijan Tabatabai <bijantabatab@micron.com>,
-	damon@lists.linux.dev,
-	kernel-team@meta.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [RFC PATCH 0/4] mm/damon: add DAMOS_MIGRATE_{HOT,COLD} destination nodes and weights
-Date: Tue,  1 Jul 2025 22:23:41 -0700
-Message-Id: <20250702052341.54336-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250702002316.1139-1-sj@kernel.org>
-References: 
+	s=arc-20240116; t=1751433895; c=relaxed/simple;
+	bh=lv8cewQCgzixt5VgJBiBFjJgHw9OMLzI1aEuGxmzV7k=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=Ryj7lQlW9Dbd0h1Zn6eGSQlnU8YY/rYAhqI4zUjqP0vkLaBnjV3KVXydoUjID01e10v4F6FWOWvceGiqZ6614eP+uRoXCUoEZOfLIGTvoYxNrJ/Ncc0oQ7SDcKQnUzJrm4j8b6NqXFFIQgV90ctHS2KK0h8o/XlQT3n4UYVEFu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=20.188.111.126
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
+Received: from zju.edu.cn (unknown [115.197.243.13])
+	by mtasvr (Coremail) with SMTP id _____wB3JDqOwmRoSorRAw--.1372S3;
+	Wed, 02 Jul 2025 13:24:31 +0800 (CST)
+Received: from localhost (unknown [115.197.243.13])
+	by mail-app1 (Coremail) with SMTP id yy_KCgCH2GONwmRoLVFUAA--.52319S2;
+	Wed, 02 Jul 2025 13:24:30 +0800 (CST)
+From: Lin Ma <linma@zju.edu.cn>
+To: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	linma@zju.edu.cn,
+	mingo@kernel.org,
+	tglx@linutronix.de,
+	pwn9uin@gmail.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] drm: sanitize ttm_device_funcs.evict_flags/move casting
+Date: Wed,  2 Jul 2025 13:24:21 +0800
+Message-Id: <20250702052421.80423-1-linma@zju.edu.cn>
+X-Mailer: git-send-email 2.39.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,38 +40,73 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:yy_KCgCH2GONwmRoLVFUAA--.52319S2
+X-CM-SenderInfo: qtrwiiyqvtljo62m3hxhgxhubq/
+X-CM-DELIVERINFO: =?B?5EqoYQXKKxbFmtjJiESix3B1w3tPqcowV1L23Bze5QtIr9Db75bEBiiEybVhThS0pI
+	APHpkT0S87xKjFuOcc67InCDD3v9V3Anj4iC7G9ZqY7PGAVCKnxWeso1VfHbRg8HTfH2jO
+	EoJwzi3UeBu6yLCm71+VKUjJTMQVRzgKF9lnMIMw
+X-Coremail-Antispam: 1Uk129KBj93XoW7uFyfZFy5XF1DJr4rGw1xJFc_yoW8Ar43pF
+	47Cry7ZrWUKa12qr1Iqa18ZFy3Aan2qFW8W3Wqv34S9F1YyF1DXrW5Jry5JrW5JFnrJryf
+	trnFy3sIv3W5AacCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Eb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AK
+	xVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0Y48IcxkI7V
+	AKI48G6xCjnVAKz4kxM4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI7VAKI48JMxC2
+	0s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI
+	0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE
+	14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20x
+	vaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8
+	JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU801v3UUUUU==
 
-On Tue,  1 Jul 2025 17:23:16 -0700 SeongJae Park <sj@kernel.org> wrote:
+Our analysis revealed that most handlers in ttm_device_funcs perform
+type checks before invoking container_of on ttm_buffer_object.
 
-> On Tue,  1 Jul 2025 17:39:37 -0500 Bijan Tabatabai <bijan311@gmail.com> wrote:
-> 
-> > On Sat, 21 Jun 2025 10:31:27 -0700 SeongJae Park <sj@kernel.org> wrote:
-[...]
-> > I am finishing up V3 of the interleave patchset using these patches. It
-> > has mostly worked great, but I noticed that damos->migrate_dest was not
-> > being updated in damos_commit(), so new weights would not be applied. This
-> > meant that you could not update the interleave weights by committing the
-> > damon state. I also saw that damos->target_nid was also not being updated
-> > here. I will will have a patch fixing
-> 
-> Nice catch, thank you for finding the bug and making the fix!
-> 
-> > this with the V3 of the interleave
-> > patchset that I will hopefully send out tomorrow.
-> 
-> I cannot wait, but please take your time! :)
+For instance, commit d03d858970a1 ("drm/radeon/kms: Check if bo we got
+from ttm are radeon object or not") introduced an object type check (
+based on the comparison with destroy function).
 
-I just realized this series is missing documentation updates.  So I just
-posted[1] RFC v2 of this series with two documentation update patches and
-trivial commit messages wordsmithing.  Note that other parts are same to RFC
-v1, including the damos_commit() bug and damos_migrate_dest name.
+This commit adds the missing type checks in the nouveau_bo_evict_flags
+and bo_driver_move handlers.
 
-Please pick the version to your v3 of interleave patch series if possible.
+Signed-off-by: Lin Ma <linma@zju.edu.cn>
+---
+ drivers/gpu/drm/drm_gem_vram_helper.c | 3 +++
+ drivers/gpu/drm/nouveau/nouveau_bo.c  | 3 +++
+ 2 files changed, 6 insertions(+)
 
-[1] https://lore.kernel.org/20250702051558.54138-1-sj@kernel.org
+diff --git a/drivers/gpu/drm/drm_gem_vram_helper.c b/drivers/gpu/drm/drm_gem_vram_helper.c
+index 22b1fe9c03b8..40d1b584327e 100644
+--- a/drivers/gpu/drm/drm_gem_vram_helper.c
++++ b/drivers/gpu/drm/drm_gem_vram_helper.c
+@@ -855,6 +855,9 @@ static int bo_driver_move(struct ttm_buffer_object *bo,
+ 		return 0;
+ 	}
+ 
++	if (!drm_is_gem_vram(bo))
++		return -EINVAL;
++
+ 	gbo = drm_gem_vram_of_bo(bo);
+ 
+ 	return drm_gem_vram_bo_driver_move(gbo, evict, ctx, new_mem);
+diff --git a/drivers/gpu/drm/nouveau/nouveau_bo.c b/drivers/gpu/drm/nouveau/nouveau_bo.c
+index b96f0555ca14..81a66246d547 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_bo.c
++++ b/drivers/gpu/drm/nouveau/nouveau_bo.c
+@@ -887,6 +887,9 @@ nouveau_bo_evict_flags(struct ttm_buffer_object *bo, struct ttm_placement *pl)
+ {
+ 	struct nouveau_bo *nvbo = nouveau_bo(bo);
+ 
++	if (bo->destroy != nouveau_bo_del_ttm)
++		return;
++
+ 	switch (bo->resource->mem_type) {
+ 	case TTM_PL_VRAM:
+ 		nouveau_bo_placement_set(nvbo, NOUVEAU_GEM_DOMAIN_GART,
+-- 
+2.17.1
 
-
-Thanks,
-SJ
-
-[...]
