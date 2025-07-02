@@ -1,334 +1,114 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8591B30AAAC
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:50:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBB8E30AAA4
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:50:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751467830; cv=none; b=YpaCSkCGxWZ2SfU0MKnfmTW15JGoTW/gGiuqe8TA7SSM8oqr62Bt9V5vAx4qO5zkVyCD7iPpWplCZsETmlRf1XaTNYk2vadvi6o1dLvM3QhzHl+GzEzYHGg62RI8pdiLblKzNxNeuOqT4haCVdOPcEA9+k1junZBf6W1jnOftsY=
+	t=1751467847; cv=none; b=BTmTnql+f5/ohE42qQWyLcRr/EUaa+XGUIycRgosIu51sfEDXxA2G755tpr4H8e7FMFmWmq+AEADRozYE+NGFQbqhnCRyNYIok6QQZeyMVj4HayM1fk/TuPxnO1lmzm7P93qAODDpoqN+v72jJRfRkEveVuwK30XyE5rNkPD2Rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751467830; c=relaxed/simple;
-	bh=pT4yzj1lNpIXcGjJ5NDJQt7dDxIa2I5li6dwbOXXR5k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ltw6fXaDGAoSvhOQXMkqDQpeGz8Y86d62Ay7jSlmRPt3KgxG0Ow7z/7g0ZV0j2ejQcL0XQ1cQ6ND5psikqkA9yz6La4kbC6NR8Eiv00MD5jlToCVoYlCJKEkixrrBhAzNeMrJW1PJy6ek27EfsUQ4QJIxxpRD0Q/FmWZPiPRqDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=IzPoI/X0; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=vBd71ZZa; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=IzPoI/X0; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=vBd71ZZa; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1751467847; c=relaxed/simple;
+	bh=bGDmRbJlC9g2n00fZnTFalUFPsZkCq3Xcia/+S1QojU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=h6nB9NcXmzeTy7+irsm+9Q4jv7UiGNgOyFPQPPg3KsFa7UGPnEwQpsv/MiDy81TT/CF8183uZWMwfPKP+v9YfnfeFXpQF0lFxSOP97WIOILAO1g8ZGjHQZAVzASxLtrknr5LnCXRuttQWszzJXSPEPnVhiKH9zX+Ea9kdYTobMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fl8eO+hr; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="IzPoI/X0";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="vBd71ZZa";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="IzPoI/X0";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="vBd71ZZa"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id BDF352118A;
-	Wed,  2 Jul 2025 14:50:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751467826; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QNiWvVaJQ0hv8VndO0kB03luYJm/SCoG/PASRPiJfM4=;
-	b=IzPoI/X04qX+BE7RNhoQglY4Hmnhl4Y6XoZUsX8KBxwtbM356/ceHcyIvwZvCsaQB8LhgS
-	aAkDWgFBqIPCQ+ISDm+4oNW/1jcql0kTrQbm83vLXOKU/4tkylF3QMPshSJWBVvMDzoSWg
-	m+28UG2wjWsYblyZCUREufplzJUnzu0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751467826;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QNiWvVaJQ0hv8VndO0kB03luYJm/SCoG/PASRPiJfM4=;
-	b=vBd71ZZasTrs4yLhYJgxEMoP/b+r5ADYr1FAOCq4TJqxKr831xeC6AZopY3UkdMpzVVXj8
-	ZE19RQShTpMqocDg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751467826; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QNiWvVaJQ0hv8VndO0kB03luYJm/SCoG/PASRPiJfM4=;
-	b=IzPoI/X04qX+BE7RNhoQglY4Hmnhl4Y6XoZUsX8KBxwtbM356/ceHcyIvwZvCsaQB8LhgS
-	aAkDWgFBqIPCQ+ISDm+4oNW/1jcql0kTrQbm83vLXOKU/4tkylF3QMPshSJWBVvMDzoSWg
-	m+28UG2wjWsYblyZCUREufplzJUnzu0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751467826;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QNiWvVaJQ0hv8VndO0kB03luYJm/SCoG/PASRPiJfM4=;
-	b=vBd71ZZasTrs4yLhYJgxEMoP/b+r5ADYr1FAOCq4TJqxKr831xeC6AZopY3UkdMpzVVXj8
-	ZE19RQShTpMqocDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 19D661369C;
-	Wed,  2 Jul 2025 14:50:26 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id LXr6BTJHZWgLTQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Wed, 02 Jul 2025 14:50:26 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 0796DA0A55; Wed,  2 Jul 2025 16:50:21 +0200 (CEST)
-Date: Wed, 2 Jul 2025 16:50:21 +0200
-From: Jan Kara <jack@suse.cz>
-To: Zhang Yi <yi.zhang@huaweicloud.com>
-Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca, jack@suse.cz, 
-	ojaswin@linux.ibm.com, sashal@kernel.org, yi.zhang@huawei.com, libaokun1@huawei.com, 
-	yukuai3@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH v3 09/10] ext4: replace ext4_writepage_trans_blocks()
-Message-ID: <bq37dhlk3uxrwmejrhqkvjthlq7j3fac7dggkchpdzx7m223jl@njfevshlrkgh>
-References: <20250701130635.4079595-1-yi.zhang@huaweicloud.com>
- <20250701130635.4079595-10-yi.zhang@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fl8eO+hr"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-451d7b50815so34631595e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 07:50:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751467843; x=1752072643; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bGDmRbJlC9g2n00fZnTFalUFPsZkCq3Xcia/+S1QojU=;
+        b=fl8eO+hr+B5/m7SMDuoL0hDElM0F8Ng3rf5t2KhFFOAzzQEDtFyWslG88Z9QqC5Sf5
+         7v5DYq6xk7WQb+8mfmHJCk0v0CFqoQLidHvLrWYFzTe+EJJEBxj8XcO5uYrabIB5GC4B
+         m59caVfTNNCIVvk0PtCTarYaCEHQHQlZoWe+ITVR5KKcQPAyxMUSP5Pi1/LVJk/ByLPf
+         9fMrIcTep2isSuXSuX2VdiOldY1TxIP9DU16j5LJBxL9MrpjwNsj0/gW04YQnifnL4NL
+         OIC9H/TBnmN4GHQpTksKjWXKagqy80fwgQs2D90pvli0Wl7kI5gJrmKsGDIzFnpMG0Ld
+         jKDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751467843; x=1752072643;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bGDmRbJlC9g2n00fZnTFalUFPsZkCq3Xcia/+S1QojU=;
+        b=E9GtECTqXB4pCDJCtkOPEDNP04mEEORuRdiNRBGlZ4/40lhGBWYkWpoBtP8jK52+Ba
+         GPsTXxzw+uLY3ozf9IGcHF1VU6pkwIAOKbG+gBbbIQZ5ZfxnIqgLx2TRuxMHy1Jp23d8
+         oAkWggnNzFJ4FJz0sOWKj+Jjxqu/HZv4iWNQRLhRj6IHgLU5zhNNtLlELgXgfUfGM31U
+         1FQnQXtU73EnpYKYz0pNi5lsCjnLmG9e0beNxpLTQwjW3PA8sCQiOoGfcMg12Tc0vV+L
+         C1SdlK78fTyTvw5afhecvyZwMc3Wt0FkRxjz4808/LT7/3WFqDG8+5LANht/RX98VFjm
+         4KDw==
+X-Forwarded-Encrypted: i=1; AJvYcCXn20k7zeVXaQEDxAlEdsjWyk/rC+cs/GGqgeXJlHjt0QTk+2TUwycNDOg2kQkNhkTnJxg2MpWtEN8U8s4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2tIHXThcjxrzBxPiok9V/Du4ywrE26LmNPDG/Ixrc3ZqFBjaB
+	yW5WZ4jzinkEMVnsXhT5ySu1nmZbs8eH5vVKpeYURqX1Lbnr13kOcBDH9M3MFwTfEm2uxDx3bQb
+	1ww2SbecPDU13/9S7UAqZoZM7hjOYiQl/kuNfjff0
+X-Gm-Gg: ASbGnctCNmtNhd9UvnozLN6rPGFyHfwMW6BIpGUtIJZAPpokg1heeona03A8Ex0S8+E
+	PAEFNJ4lCd6/4sJ329iQeREbxWSV9wfrAbNa7HgDb4FmavRG+in0RrVhxZMbfnuFgIT3EJVA4ng
+	JW1M9LCWKDVwTlcNW4hhq2nxKmCLz8ikea4zFMkJDln3gX
+X-Google-Smtp-Source: AGHT+IG+nGGlVC1LAKFybNU3aqbmD0eZd0ceRrzz5dRVvQ8OU1lPy3YrwXIf80CODXdFzmMy/vEJc2Ci9DIJm39I9S0=
+X-Received: by 2002:a05:600c:1c94:b0:43d:b3:f95 with SMTP id
+ 5b1f17b1804b1-454a373259emr30006825e9.28.1751467843001; Wed, 02 Jul 2025
+ 07:50:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250701130635.4079595-10-yi.zhang@huaweicloud.com>
-X-Spam-Flag: NO
-X-Spam-Score: -3.80
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,imap1.dmz-prg2.suse.org:helo,suse.com:email]
-X-Spam-Level: 
+References: <20250702-module-params-v3-v14-0-5b1cc32311af@kernel.org>
+ <20250702-module-params-v3-v14-1-5b1cc32311af@kernel.org> <QU7IDrQqnXyNZDFF_jgZ4qTsRLPmUeeWedU_T1i11uOyc1E83Zo4tETj_oPxSfJySNZZ4-XEVBlkZJ-MZech4g==@protonmail.internalid>
+ <CAH5fLghw5TDrzmFZB=tORR5Lxx4WoG4wer6y5NuFdod2_tb6zg@mail.gmail.com> <87ms9mvgu4.fsf@kernel.org>
+In-Reply-To: <87ms9mvgu4.fsf@kernel.org>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Wed, 2 Jul 2025 16:50:30 +0200
+X-Gm-Features: Ac12FXwuZ185xGqP0rxNGwOW-SGS_WRsBbvNFuZzozirA5KDsx5bUbkVgIxui7g
+Message-ID: <CAH5fLggY2Ei14nVJzLBEoR1Rut1GKU4SZX=+14tuRH1aSuQVTA@mail.gmail.com>
+Subject: Re: [PATCH v14 1/7] rust: sync: add `OnceLock`
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Benno Lossin <lossin@kernel.org>, 
+	Nicolas Schier <nicolas.schier@linux.dev>, Trevor Gross <tmgross@umich.edu>, 
+	Adam Bratschi-Kaye <ark.email@gmail.com>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
+	Daniel Gomez <da.gomez@samsung.com>, Simona Vetter <simona.vetter@ffwll.ch>, 
+	Greg KH <gregkh@linuxfoundation.org>, Fiona Behrens <me@kloenk.dev>, 
+	Daniel Almeida <daniel.almeida@collabora.com>, linux-modules@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue 01-07-25 21:06:34, Zhang Yi wrote:
-> From: Zhang Yi <yi.zhang@huawei.com>
-> 
-> After ext4 supports large folios, the semantics of reserving credits in
-> pages is no longer applicable. In most scenarios, reserving credits in
-> extents is sufficient. Therefore, introduce ext4_chunk_trans_extent()
-> to replace ext4_writepage_trans_blocks(). move_extent_per_page() is the
-> only remaining location where we are still processing extents in pages.
-> 
-> Suggested-by: Jan Kara <jack@suse.cz>
-> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+On Wed, Jul 2, 2025 at 3:54=E2=80=AFPM Andreas Hindborg <a.hindborg@kernel.=
+org> wrote:
+>
+> "Alice Ryhl" <aliceryhl@google.com> writes:
+>
+> > On Wed, Jul 2, 2025 at 3:19=E2=80=AFPM Andreas Hindborg <a.hindborg@ker=
+nel.org> wrote:
+> >>
+> >> Introduce the `OnceLock` type, a container that can only be written on=
+ce.
+> >> The container uses an internal atomic to synchronize writes to the int=
+ernal
+> >> value.
+> >>
+> >> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+> >
+> > This type provides no way to wait for initialization to finish if it's
+> > ongoing. Do you not need that?
+>
+> I don't, and in my use case it would cause a deadlock to wait. Anyway,
+> it might be useful to others. Would you add it now, or wait for a user?
 
-Looks good. Feel free to add:
+Waiting would require additional fields so it should probably be a
+different type. It's more that we probably want the OnceLock name for
+that other type for consistency with stdlib, so perhaps this should be
+renamed? The name could be SetOnce or similar.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
-> ---
->  fs/ext4/ext4.h        |  2 +-
->  fs/ext4/extents.c     |  6 +++---
->  fs/ext4/inline.c      |  6 +++---
->  fs/ext4/inode.c       | 33 +++++++++++++++------------------
->  fs/ext4/move_extent.c |  3 ++-
->  fs/ext4/xattr.c       |  2 +-
->  6 files changed, 25 insertions(+), 27 deletions(-)
-> 
-> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-> index 18373de980f2..f705046ba6c6 100644
-> --- a/fs/ext4/ext4.h
-> +++ b/fs/ext4/ext4.h
-> @@ -3064,9 +3064,9 @@ extern int ext4_punch_hole(struct file *file, loff_t offset, loff_t length);
->  extern void ext4_set_inode_flags(struct inode *, bool init);
->  extern int ext4_alloc_da_blocks(struct inode *inode);
->  extern void ext4_set_aops(struct inode *inode);
-> -extern int ext4_writepage_trans_blocks(struct inode *);
->  extern int ext4_normal_submit_inode_data_buffers(struct jbd2_inode *jinode);
->  extern int ext4_chunk_trans_blocks(struct inode *, int nrblocks);
-> +extern int ext4_chunk_trans_extent(struct inode *inode, int nrblocks);
->  extern int ext4_meta_trans_blocks(struct inode *inode, int lblocks,
->  				  int pextents);
->  extern int ext4_zero_partial_blocks(handle_t *handle, struct inode *inode,
-> diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
-> index b543a46fc809..f0f155458697 100644
-> --- a/fs/ext4/extents.c
-> +++ b/fs/ext4/extents.c
-> @@ -5171,7 +5171,7 @@ ext4_ext_shift_path_extents(struct ext4_ext_path *path, ext4_lblk_t shift,
->  				credits = depth + 2;
->  			}
->  
-> -			restart_credits = ext4_writepage_trans_blocks(inode);
-> +			restart_credits = ext4_chunk_trans_extent(inode, 0);
->  			err = ext4_datasem_ensure_credits(handle, inode, credits,
->  					restart_credits, 0);
->  			if (err) {
-> @@ -5431,7 +5431,7 @@ static int ext4_collapse_range(struct file *file, loff_t offset, loff_t len)
->  
->  	truncate_pagecache(inode, start);
->  
-> -	credits = ext4_writepage_trans_blocks(inode);
-> +	credits = ext4_chunk_trans_extent(inode, 0);
->  	handle = ext4_journal_start(inode, EXT4_HT_TRUNCATE, credits);
->  	if (IS_ERR(handle))
->  		return PTR_ERR(handle);
-> @@ -5527,7 +5527,7 @@ static int ext4_insert_range(struct file *file, loff_t offset, loff_t len)
->  
->  	truncate_pagecache(inode, start);
->  
-> -	credits = ext4_writepage_trans_blocks(inode);
-> +	credits = ext4_chunk_trans_extent(inode, 0);
->  	handle = ext4_journal_start(inode, EXT4_HT_TRUNCATE, credits);
->  	if (IS_ERR(handle))
->  		return PTR_ERR(handle);
-> diff --git a/fs/ext4/inline.c b/fs/ext4/inline.c
-> index a1bbcdf40824..d5b32d242495 100644
-> --- a/fs/ext4/inline.c
-> +++ b/fs/ext4/inline.c
-> @@ -562,7 +562,7 @@ static int ext4_convert_inline_data_to_extent(struct address_space *mapping,
->  		return 0;
->  	}
->  
-> -	needed_blocks = ext4_writepage_trans_blocks(inode);
-> +	needed_blocks = ext4_chunk_trans_extent(inode, 1);
->  
->  	ret = ext4_get_inode_loc(inode, &iloc);
->  	if (ret)
-> @@ -1864,7 +1864,7 @@ int ext4_inline_data_truncate(struct inode *inode, int *has_inline)
->  	};
->  
->  
-> -	needed_blocks = ext4_writepage_trans_blocks(inode);
-> +	needed_blocks = ext4_chunk_trans_extent(inode, 1);
->  	handle = ext4_journal_start(inode, EXT4_HT_INODE, needed_blocks);
->  	if (IS_ERR(handle))
->  		return PTR_ERR(handle);
-> @@ -1979,7 +1979,7 @@ int ext4_convert_inline_data(struct inode *inode)
->  			return 0;
->  	}
->  
-> -	needed_blocks = ext4_writepage_trans_blocks(inode);
-> +	needed_blocks = ext4_chunk_trans_extent(inode, 1);
->  
->  	iloc.bh = NULL;
->  	error = ext4_get_inode_loc(inode, &iloc);
-> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> index ceaede80d791..572a70b6a934 100644
-> --- a/fs/ext4/inode.c
-> +++ b/fs/ext4/inode.c
-> @@ -1295,7 +1295,8 @@ static int ext4_write_begin(struct file *file, struct address_space *mapping,
->  	 * Reserve one block more for addition to orphan list in case
->  	 * we allocate blocks but write fails for some reason
->  	 */
-> -	needed_blocks = ext4_writepage_trans_blocks(inode) + 1;
-> +	needed_blocks = ext4_chunk_trans_extent(inode,
-> +			ext4_journal_blocks_per_folio(inode)) + 1;
->  	index = pos >> PAGE_SHIFT;
->  
->  	if (ext4_test_inode_state(inode, EXT4_STATE_MAY_INLINE_DATA)) {
-> @@ -4462,7 +4463,7 @@ int ext4_punch_hole(struct file *file, loff_t offset, loff_t length)
->  		return ret;
->  
->  	if (ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS))
-> -		credits = ext4_writepage_trans_blocks(inode);
-> +		credits = ext4_chunk_trans_extent(inode, 2);
->  	else
->  		credits = ext4_blocks_for_truncate(inode);
->  	handle = ext4_journal_start(inode, EXT4_HT_TRUNCATE, credits);
-> @@ -4611,7 +4612,7 @@ int ext4_truncate(struct inode *inode)
->  	}
->  
->  	if (ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS))
-> -		credits = ext4_writepage_trans_blocks(inode);
-> +		credits = ext4_chunk_trans_extent(inode, 1);
->  	else
->  		credits = ext4_blocks_for_truncate(inode);
->  
-> @@ -6238,25 +6239,19 @@ int ext4_meta_trans_blocks(struct inode *inode, int lblocks, int pextents)
->  }
->  
->  /*
-> - * Calculate the total number of credits to reserve to fit
-> - * the modification of a single pages into a single transaction,
-> - * which may include multiple chunks of block allocations.
-> - *
-> - * This could be called via ext4_write_begin()
-> - *
-> - * We need to consider the worse case, when
-> - * one new block per extent.
-> + * Calculate the journal credits for modifying the number of blocks
-> + * in a single extent within one transaction. 'nrblocks' is used only
-> + * for non-extent inodes. For extent type inodes, 'nrblocks' can be
-> + * zero if the exact number of blocks is unknown.
->   */
-> -int ext4_writepage_trans_blocks(struct inode *inode)
-> +int ext4_chunk_trans_extent(struct inode *inode, int nrblocks)
->  {
-> -	int bpp = ext4_journal_blocks_per_folio(inode);
->  	int ret;
->  
-> -	ret = ext4_meta_trans_blocks(inode, bpp, bpp);
-> -
-> +	ret = ext4_meta_trans_blocks(inode, nrblocks, 1);
->  	/* Account for data blocks for journalled mode */
->  	if (ext4_should_journal_data(inode))
-> -		ret += bpp;
-> +		ret += nrblocks;
->  	return ret;
->  }
->  
-> @@ -6634,10 +6629,12 @@ static int ext4_block_page_mkwrite(struct inode *inode, struct folio *folio,
->  	handle_t *handle;
->  	loff_t size;
->  	unsigned long len;
-> +	int credits;
->  	int ret;
->  
-> -	handle = ext4_journal_start(inode, EXT4_HT_WRITE_PAGE,
-> -				    ext4_writepage_trans_blocks(inode));
-> +	credits = ext4_chunk_trans_extent(inode,
-> +			ext4_journal_blocks_per_folio(inode));
-> +	handle = ext4_journal_start(inode, EXT4_HT_WRITE_PAGE, credits);
->  	if (IS_ERR(handle))
->  		return PTR_ERR(handle);
->  
-> diff --git a/fs/ext4/move_extent.c b/fs/ext4/move_extent.c
-> index 1f8493a56e8f..adae3caf175a 100644
-> --- a/fs/ext4/move_extent.c
-> +++ b/fs/ext4/move_extent.c
-> @@ -280,7 +280,8 @@ move_extent_per_page(struct file *o_filp, struct inode *donor_inode,
->  	 */
->  again:
->  	*err = 0;
-> -	jblocks = ext4_writepage_trans_blocks(orig_inode) * 2;
-> +	jblocks = ext4_meta_trans_blocks(orig_inode, block_len_in_page,
-> +					 block_len_in_page) * 2;
->  	handle = ext4_journal_start(orig_inode, EXT4_HT_MOVE_EXTENTS, jblocks);
->  	if (IS_ERR(handle)) {
->  		*err = PTR_ERR(handle);
-> diff --git a/fs/ext4/xattr.c b/fs/ext4/xattr.c
-> index 8d15acbacc20..3fb93247330d 100644
-> --- a/fs/ext4/xattr.c
-> +++ b/fs/ext4/xattr.c
-> @@ -962,7 +962,7 @@ int __ext4_xattr_set_credits(struct super_block *sb, struct inode *inode,
->  	 * so we need to reserve credits for this eventuality
->  	 */
->  	if (inode && ext4_has_inline_data(inode))
-> -		credits += ext4_writepage_trans_blocks(inode) + 1;
-> +		credits += ext4_chunk_trans_extent(inode, 1) + 1;
->  
->  	/* We are done if ea_inode feature is not enabled. */
->  	if (!ext4_has_feature_ea_inode(sb))
-> -- 
-> 2.46.1
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Alice
