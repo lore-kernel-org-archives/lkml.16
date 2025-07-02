@@ -1,94 +1,164 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1ECA2DCF54;
-	Wed,  2 Jul 2025 15:31:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 419BD2E7BCB
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 15:31:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751470293; cv=none; b=umzcJMc/nUS8oIlAUqhBqnGeETAg1/07CmP0Zw8Sz2pXB141fKKNHHJ82fjQyCIhpyr2dFeYje7VngZigxfv2llIDqWCw/PkjBJ9C1vr9pZm66WaVkhPE2Gl06qG8MjoJLGy+FNm4WjdrHVrFrwMVju2bwjqXhB15ONSBj4iE1k=
+	t=1751470314; cv=none; b=ZH8rYxMOnKe8SWVWCZd40uSMIKbLUqsUktSWnYWC9oN/+JF5Io0oF9osbX8AO+ky6v3Ym+30gdpfxEzOXBfHcKUe6wLJW3tAo5C0kajnNJ03f7TtHy1JBx8ZS4PknNFDMzqHL51/GZdtmKLQQMxzkpE1rfHtmSX/IpfsLYezT4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751470293; c=relaxed/simple;
-	bh=uen+p/SpnS8I1WQoDUDT9JW1oagT5qtNuCnGAgbM+E4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LnOwQQ3YxycF3ey9Ga8rz8Nc77XWMQ//Q8h27Z1dSPP8DqaZ9eadfdojIsPLRxfzKgqKONgMoxehglcqk8G3p4jbzcCWhTqpmwSG0sQiu0Zk1cbBYToBSFo9qNXfEX7NbxcpWkegqou71NbDrKK4FY/I/CtgD82+YXeK40x2llY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bXP1Z48Fjz6L54f;
-	Wed,  2 Jul 2025 23:28:34 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2070814022E;
-	Wed,  2 Jul 2025 23:31:28 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 2 Jul
- 2025 17:31:27 +0200
-Date: Wed, 2 Jul 2025 16:31:26 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-CC: David Lechner <dlechner@baylibre.com>, Lars-Peter Clausen
-	<lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan
- Cameron <jic23@kernel.org>, Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Robert Budai <robert.budai@analog.com>, "Andy Shevchenko" <andy@kernel.org>,
-	<linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iio: imu: adis16550: rework clock range test
-Message-ID: <20250702163126.000007ac@huawei.com>
-In-Reply-To: <aGVNhIwn7CXO_lpP@smile.fi.intel.com>
-References: <20250702-iio-imu-adis16550-rework-clock-range-test-v1-1-b45f3a3b0dc1@baylibre.com>
-	<aGVIBVsFPcVw3lN6@smile.fi.intel.com>
-	<aGVJPRmn1-HUBb40@smile.fi.intel.com>
-	<3778ad13-3b62-4f68-946d-b861b0df4272@baylibre.com>
-	<aGVNhIwn7CXO_lpP@smile.fi.intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1751470314; c=relaxed/simple;
+	bh=/1kRWoC2EsLIFEi+ZoNxnFy6k7VTG3sy3RXoHv/e3nE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=kIV97WzeVbI+E7aazgK5g5ESMtCvHwRyGeWr1dAmSCzSe7cE5Js16HAHUVePVUj6gqaaVwQpjCg0KHp/eiwmeRhfyVXKcdhH1pDkMyitxvLr2HMlmetpG/JXFx6XVBuvHblBU7Tkaw1YmYF231RRZFxUAmMB78AdqBQ7hPbMK4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hV4hAe1F; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hV4hAe1F"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a4e749d7b2so1218271f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 08:31:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751470310; x=1752075110; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LS59bh+aYEEoA2xZkY56WfoUxH9ABdUpUJ8WT1B/mAs=;
+        b=hV4hAe1FHqB9kXnKN3sHLNfDx8lxk36b8xdKs045h+9NYQcRUe/FVQsX/V9sLK2yHf
+         j4KGYKCQYH1TYRudRJnuq0zHRnyfVLFOkihBi6ChiyCyV+CUPcGtsZkEQ/MKIPd+PdQ8
+         FXiWkvzuGGFa/nynbx/PItp6bZEHgj1V8sfoKVe3mWmMb4XfhrY01iMrqqc57z4S6Udf
+         HYkl7FHXuSp/Xhs8IlxTXL2WK7KAafJT449dnGfI2AIV04mWoZCPAfcEcwg9P7J+U7hH
+         HBgNlL66JxdLaPkjCG1tozXNrjxuR/+rX7fS2ZMtqH6W9oKwj+NhEPmoNvoTCO6KaFmC
+         39cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751470310; x=1752075110;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LS59bh+aYEEoA2xZkY56WfoUxH9ABdUpUJ8WT1B/mAs=;
+        b=t/oCc/4n72PwoUgucjdt5J5S/h3tUJ8LPl1BAuU5YJ17bm6qQIaWFLt5VQgI/B9RBh
+         W8PrxzTNmFxU0/j7flunoyGkRHhIeSSNp2rvIGSTcd9GWXt+0ufGMT+v+nn7w3lGr36M
+         NKceT++1930bEr6SY6p4N1itFJivZ65tcTmVf7waVafu/iFtK2OFpzADywre4wO/nmBu
+         1ziIvZbuvig5GqopnNSq+1BjF64qVzWhzEpdZacWH8rJn+flfE/T44gDuIKUPB46UELn
+         HSinc2Q5D8i3ecNgd84DPsaQrJb62Pf8vUHHXuC7FW4bpRk0WeMVJZcoGoqxnUehrR2R
+         dWcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX1gboh1lsB8u3TSml+S+2hxa/PfrzJbGTfld9OG8vr8MGCaLCjof4xyBFHEcSqFKOarGYXp1vSG7PMg4M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxJbO+IzibEjADIKa9OqSeKgu2pxM0+bE6XfHzwSTxZvN5ytCk
+	U75LVATjM90I11J5ZUWcE4KNO+2VDIYG7dsxZiwEsgRaW1GWUVu1XPxIchetnSGQYC7ImYgSc9p
+	k+XJc
+X-Gm-Gg: ASbGncuvPrVqMoqjBPZMINMSH9GXGdzC8/SnDRPM6/cjUZ4Nz2hSj4p/xoR+lToLYs2
+	2G8KZ/2ijU3unsyS4k5ar46+3//Yg7HBIZYocerM3eivqKZ0dVRza/EdaM7Tu0luF3oIVYcJMX+
+	5VnUeiSC5EMA7vxh4MJo0oIYiVs6udpqvJeOahtBCYmhjN6C/7OP49wFYRupJ/AL/hT8yp49v6O
+	eOshlFwG/uyCj8KALojRfuK08a+FLvTCqzivaOhXCX7h3KKqNRo/13HSCqHH5b6UBV05IHE+ZVV
+	3YfxHDkJSCtVsatMwbZo/h5eFCknHBcovn+rSl4dKocHb5NXWBQCoWXNvYpJ87Fl/1d7rhpVdPv
+	h9EJ50w==
+X-Google-Smtp-Source: AGHT+IES6iUbDyize6ToIJZ0dWMNbjtXPFT0gpuS9it5XKMDA3ArL2EKriSzAXWLW85soefAH74ZZQ==
+X-Received: by 2002:a5d:5f52:0:b0:3a5:1306:3c30 with SMTP id ffacd0b85a97d-3b1fb064480mr1055958f8f.0.1751470310428;
+        Wed, 02 Jul 2025 08:31:50 -0700 (PDT)
+Received: from [192.168.1.110] ([178.197.222.89])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e52c8esm16506660f8f.55.2025.07.02.08.31.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Jul 2025 08:31:49 -0700 (PDT)
+Message-ID: <246f847a-df24-48a5-ae8c-97fba7f5b3cf@linaro.org>
+Date: Wed, 2 Jul 2025 17:31:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] media: iris: Be explicit in naming of VPU2 power off
+ handlers
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Abhinav Kumar <abhinav.kumar@linux.dev>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250702134227.211104-2-krzysztof.kozlowski@linaro.org>
+ <dd5717a7-9476-4207-967f-a30e7cb3b3e7@linaro.org>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ 2+47PN9NZAOyb771QoVr8A==
+In-Reply-To: <dd5717a7-9476-4207-967f-a30e7cb3b3e7@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- frapeml500008.china.huawei.com (7.182.85.71)
 
-On Wed, 2 Jul 2025 18:17:24 +0300
-Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
-
-> On Wed, Jul 02, 2025 at 10:07:17AM -0500, David Lechner wrote:
-> > On 7/2/25 9:59 AM, Andy Shevchenko wrote:  
-> > > On Wed, Jul 02, 2025 at 05:53:57PM +0300, Andy Shevchenko wrote:  
-> > >> On Wed, Jul 02, 2025 at 09:27:45AM -0500, David Lechner wrote:  
-> > >>> Rework the clock rate range test to test if sync_mode_data != NULL
-> > >>> instead of testing if the for loop index variable. This makes it easier
-> > >>> for static analyzers to see that we aren't using an uninitialized
-> > >>> sync_mode_data [1].  
-> > >>
-> > >> But at the same time it makes it not to be the usual pattern.,,  
-> > > 
-> > > Reading the static analyser output I think the first hunk is only what we need,
-> > > but this is still false positive and it's problem of that static
-> > > analyser. Have you filed a bug there? (My point is that modifying the code for
-> > > the advantage of false positives of some static analyser is wrong road to go
-> > > in my opinion.)  
-> > 
-> > I agree that we shouldn't fix this _only_ to make the static analyzer
-> > happy. But I had to think quite a bit harder to see that the existing
-> > code was correct compared to what I have proposed here.
-> > 
-> > But if this is a common pattern that I just haven't learned to identify
-> > at a glance yet and everybody else can easily see that the existing code
-> > is correct, then perhaps it isn't worth the change.  
+On 02/07/2025 17:07, Bryan O'Donoghue wrote:
+>>   {
+>>   	dev_pm_genpd_set_hwmode(core->pmdomain_tbl->pd_devs[IRIS_HW_POWER_DOMAIN], false);
+>>   	iris_disable_power_domains(core, core->pmdomain_tbl->pd_devs[IRIS_HW_POWER_DOMAIN]);
+>> diff --git a/drivers/media/platform/qcom/iris/iris_vpu_common.h b/drivers/media/platform/qcom/iris/iris_vpu_common.h
+>> index 93b7fa27be3b..8f63f243dd0d 100644
+>> --- a/drivers/media/platform/qcom/iris/iris_vpu_common.h
+>> +++ b/drivers/media/platform/qcom/iris/iris_vpu_common.h
+>> @@ -24,8 +24,8 @@ void iris_vpu_clear_interrupt(struct iris_core *core);
+>>   int iris_vpu_watchdog(struct iris_core *core, u32 intr_status);
+>>   int iris_vpu_prepare_pc(struct iris_core *core);
+>>   int iris_vpu_power_on(struct iris_core *core);
+>> -int iris_vpu_power_off_controller(struct iris_core *core);
+>> -void iris_vpu_power_off_hw(struct iris_core *core);
+>> +int iris_vpu2_power_off_controller(struct iris_core *core);
+>> +void iris_vpu2_power_off_hw(struct iris_core *core);
+>>   void iris_vpu_power_off(struct iris_core *core);
+>>   
+>>   #endif
 > 
-> To me checking against index variable (when it's integer, obviously) is correct
-> thing to do and regular pattern. OTOH, if the "index" is a pointer and rather
-> we call it "iterator", the angle of view is different because in some cases
-> it may lead to stale or invalid value which might be mistakenly dereferenced or
-> speculated (see more in the discussion about list entry APIs [entry is a
-> keyword here] and if list_entry_is_head() is a good approach.)
+> I prefer these names with an explicit v2 more logical/consistent with 
+> the hw names.
 > 
+> Acked-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 
-Original code looks fine to me and is a very common pattern.  So I'd argue
-the static analyzer needs some work.
 
-Jonathan
+Thanks.
+
+I got some patchwork complains, so it seems I missed something which
+clang did not catch. There will be a v2.
+
+
+Best regards,
+Krzysztof
