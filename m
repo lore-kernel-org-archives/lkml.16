@@ -1,98 +1,115 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12B101C5F06
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 05:38:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F25A1F78E0;
+	Wed,  2 Jul 2025 05:38:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751434685; cv=none; b=BFYehn5LTiRtLjXYHT4oUZL5cEmJQuDp306rPHGJErK+vO+6m2vfEXmPFB6hnjFIsih+kl0rZsNvV9QQetl/u6BrTkacFrq4NSxCadNm9LK5BhdWxR+JWTj/v4JjeQOzrFGS2P1dMSTknxbO5K2cKTk3CbIvyTj5N++VIR5lWYc=
+	t=1751434728; cv=none; b=go6bY2lunQwy1CKrz2342R1wk7yxp1C50dZAErAaFYhjsK3wg4iNHGJCEYHQZb4xcd532RYjlSDDIlZNxIoas8+8UYmb8qel/avmj7z9Je3IZqEU6m3IIbC+OkCHH+aIfzh0q7iPfCpj2wkwf9XxAGL4ySLF67JCNHvkLUQZ46s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751434685; c=relaxed/simple;
-	bh=b4jYhBLaJVWS8uCLTTvFGVkJv0bteHOKXi+J5IzUiHo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LhegQFm0CVLvk95R5MebHX8h42FIyE1BWI8LJDISZ2L/9BQIcGoWHpnjEx6B7yCLCWwew2aXkDJT2mADkLkHMDnLvaOLwzU/QKFbbB3SjRT4D/o2sxpQtbwhBJ+qFHdVFR6YCWwqlIAMRvKewFjsgUKSvJ0VKJGsR6zUKEvx/Bg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=OIN8OM2L; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+	s=arc-20240116; t=1751434728; c=relaxed/simple;
+	bh=hTA2CZ3v5y4ItL9+NDilGn2wlcY1554mf2+p4paVvX4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=lHcrI2u1d+VpHTIWbDQPI5LpilKcf4AGEnacPBPiSEUY/loDQql1kOpljI7BvrsqLbL30XiXY13vCBzjSCjoOwsAHN79KT3zlSK+BIG3OpC0Es1ECvC5j4gbQ6IEmXwdaUYagA66wllMHRlh+/pmYcxjNW2/qWZmyrtuiRDnr4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=WPa37nwb; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="OIN8OM2L"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4a58f79d6e9so84451211cf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 22:38:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1751434682; x=1752039482; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=XBw4HF7qWDcXJbgwvgqT6jgJQFstUmKnuwkt3nojl78=;
-        b=OIN8OM2LvfCfeppp1blKo4zz/zy9cmevcQIaJ35ew16/rePFm5GyPHBvq52DM6O0dQ
-         QhMlYrCDozus4YFg6mFJX3h3A2WjGwP2KrqHOzo4TTtll9dn39FfYC5kQ3fuaN/TBSyf
-         RxZllTUwZ/orTxmsAsmzxZx+J4CuUxLoTYB2I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751434682; x=1752039482;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XBw4HF7qWDcXJbgwvgqT6jgJQFstUmKnuwkt3nojl78=;
-        b=ZxWVMD4487mbvE8ny0OOkjYHIrVc9qGP+OQtD4wpHZxySLxHa6NDa7bNOubT5V2/CR
-         PBFRS2y2fafxoaSehnqrjWDQZ7DSWWacrZO7OsdWFbezoGkWXXcmqw3DX3lc1I5c1uUI
-         tjrvDTe5A5UKFGmeM/rG9GdtEqztvfFySJzuUcPIBdhic8sZ7it3nVLSoppZAxWWbi8u
-         Ns5DYeK/ZXrPcBRM85BjkaORZBto1oOBtEHpgU43Q02ubZNgMKYW2lMFBHk7ZqioOBas
-         jbfECcdUBB8CLZ/pJIhQyg0aWOldZMUOVLIxz0m2T4NBiaSBJdZUodWOhYfyFT1YIGro
-         B60Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU3fu5SOMUJmvHNpKqzobH4LD3nNRYinxPaDjEDYeJFXPCP13CktuwfJXkIVgYZASCKuO/Yz2p+1EVmpIU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVgyQd5n2LkRxdb5NQmSbddVZJU3o0PBYCsjPlnZLgjvXqsCUx
-	WsO+KBwMbsgrMUwWRsaFLhrZMviPk0SVC6mdhKe/hLqbZKospALjIVl1QhzcvpEj/dYqMgTedkB
-	Cbyrfk6LrdM5/hC2tSjKIhIEo5jXdfSC6gt0d8NuiSQ==
-X-Gm-Gg: ASbGncsm6afLx8Ry9+qGdYINDayG2mvWZo6s8mbe3jKkKsria63dJuc+vU+RPcxd7QF
-	rShtfBgFXUSwSR7otB8Pf5x42Jla90teyIFJ2uZmOcT8Oi/OFb8/ogD0CN60TKGQrS91KXF3Uex
-	NvC3eCGxjYNhgRlCCpgeyQMT385dV9ZmzMCe3aaA2OX8o0uHcAylYOnSUpqpmCocZT4mbix3+aO
-	zkeHMq5/JFf7DQ=
-X-Google-Smtp-Source: AGHT+IF8xAcXBcrSYEe9Ba8cdGjOrU848zSeBK/Ng3+OTDZ69YucBQEbh5zW/k8ND8IcNbh6AVxqSBsNCfOLuuhGP7Q=
-X-Received: by 2002:a05:622a:1827:b0:4a7:face:ce10 with SMTP id
- d75a77b69052e-4a976a13b4amr29650981cf.31.1751434681962; Tue, 01 Jul 2025
- 22:38:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WPa37nwb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1751434704;
+	bh=0PxzEV4blDMy5UoNkpuYTQMcVlsXTpkSz471UW67rjk=;
+	h=Date:From:To:Cc:Subject:From;
+	b=WPa37nwbVMgrnukt+gF/L10XtJN/paxKtuFx2wPbqIfvZf7dZZYk5TyyvIhERQRYI
+	 Moh5O/rAa3GsHLBrxUz+QNhtoMKvQhaUJRIpRBg7t5qO2kEFZFeuQ+jbh48irZvjg5
+	 VkGdLwa+GqsCchJE0AsDO/AcX6M23mvAQX7Rdfru5EwpqQoQ1aQoJ00WUaBjIIQA6G
+	 sqwGsMPh9bQVFcYHCy3TNcSnv37QUGOJ7ijxMlwm2ob2IxIKV9SVA5M89Ayh9NdBoc
+	 jGCGS8CSoOEeBUdU2hQz+000CjoSAr6aDNhu58nPjSNO87jG3Q7YgDZaSi8G9JxzbL
+	 dxX+3HF1B/SVw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bX7wb430Gz4wcr;
+	Wed,  2 Jul 2025 15:38:23 +1000 (AEST)
+Date: Wed, 2 Jul 2025 15:38:36 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Kishon Vijay Abraham I <kishon@kernel.org>, Vinod Koul
+ <vkoul@kernel.org>, Jonathan Corbet <corbet@lwn.net>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>, "Rob Herring (Arm)"
+ <robh@kernel.org>, Xose Vazquez Perez <xose.vazquez@gmail.com>
+Subject: linux-next: manual merge of the phy-next tree with the jc_docs tree
+Message-ID: <20250702153836.146165af@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610045321.4030262-1-senozhatsky@chromium.org> <20250610045321.4030262-2-senozhatsky@chromium.org>
-In-Reply-To: <20250610045321.4030262-2-senozhatsky@chromium.org>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Wed, 2 Jul 2025 07:37:51 +0200
-X-Gm-Features: Ac12FXzLD6BJxilx6zyt-xoL-NaGTq-9HFVDoqCZzsuZQN3zCETTYbd9SUoGWps
-Message-ID: <CAJfpegvVojwCaoTkdGcP_LJT8q-m6_VMyxciKoFFXFVvuDW-SA@mail.gmail.com>
-Subject: Re: [PATCHv2 2/2] fuse: use freezable wait in fuse_get_req()
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ben Segall <bsegall@google.com>, Tomasz Figa <tfiga@chromium.org>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/TmU0+OIib8lzcE/zv0b12vN";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Tue, 10 Jun 2025 at 06:53, Sergey Senozhatsky
-<senozhatsky@chromium.org> wrote:
->
-> Use freezable wait in fuse_get_req() so that it won't block
-> the system from entering suspend:
->
->  Freezing user space processes failed after 20.009 seconds
->  Call trace:
->   __switch_to+0xcc/0x168
->   schedule+0x57c/0x1138
->   fuse_get_req+0xd0/0x2b0
->   fuse_simple_request+0x120/0x620
->   fuse_getxattr+0xe4/0x158
->   fuse_xattr_get+0x2c/0x48
->   __vfs_getxattr+0x160/0x1d8
->   get_vfs_caps_from_disk+0x74/0x1a8
->   __audit_inode+0x244/0x4d8
->   user_path_at_empty+0x2e0/0x390
->   __arm64_sys_faccessat+0xdc/0x260
->
-> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+--Sig_/TmU0+OIib8lzcE/zv0b12vN
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Applied, thanks.
+Hi all,
 
-Miklos
+Today's linux-next merge of the phy-next tree got a conflict in:
+
+  MAINTAINERS
+
+between commit:
+
+  739ca710a777 ("MAINTAINERS: replace git protocol for github")
+
+from the jc_docs tree and commit:
+
+  3ed7be12756d ("dt-bindings: phy: Convert qca,ar7100-usb-phy to DT schema")
+
+from the phy-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc MAINTAINERS
+index ea884d4e18f3,04cda64989c5..000000000000
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@@ -3833,8 -3822,8 +3833,8 @@@ ATHEROS 71XX/9XXX USB PHY DRIVE
+  M:	Alban Bedel <albeu@free.fr>
+  S:	Maintained
+  W:	https://github.com/AlbanBedel/linux
+ -T:	git git://github.com/AlbanBedel/linux
+ +T:	git https://github.com/AlbanBedel/linux.git
+- F:	Documentation/devicetree/bindings/phy/phy-ath79-usb.txt
++ F:	Documentation/devicetree/bindings/phy/qca,ar7100-usb-phy.yaml
+  F:	drivers/phy/qualcomm/phy-ath79-usb.c
+ =20
+  ATHEROS ATH GENERIC UTILITIES
+
+--Sig_/TmU0+OIib8lzcE/zv0b12vN
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhkxdwACgkQAVBC80lX
+0GweHgf/YcHnj5AB2kb8q/KPjwc05qpQLugWZhQRkqlss5mlnstvdmyNqs9aY77Y
+Y5dx7joa+hVosD3YLVcnQQc5BAaLv8UfEYd/7KpUKNtt5m4ZgM5A/IAhpxHdPwmS
+xVdtxe8dYCRJ5dWQfp7a7RJ+UdwLUMnYyKft7lXMBEmQhKa44ZrcJ5p/oanRYRh/
+YPxH6QbIK4xQuZ0AESeDf7H33HX4jErQ/qNRg7LI6ngo4GfQETRRCCRlO6YMGh40
+ismIs40wG5mBsRvDSACMkCFBtwvtXY13V+D4CGYbKN8vWsRQxML5G/RsVOJ195Ah
+MnSvdovFHL/ybeMleqjtLSdpHG48ng==
+=mZZ8
+-----END PGP SIGNATURE-----
+
+--Sig_/TmU0+OIib8lzcE/zv0b12vN--
