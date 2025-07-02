@@ -1,70 +1,184 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52C122D77E4;
-	Wed,  2 Jul 2025 16:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC7CF1E0DD8;
+	Wed,  2 Jul 2025 16:11:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751472657; cv=none; b=K4zMqc0w9UedoLS32rM9U6HIHxucMd9DR6X0f5Q9ZuPhWQUS2MUN6l60IxWvJRDPJeE5iYo6QwuyUYlQwdKKCvvltmibL6C1SJaX5Jr3UIlNcAVfKvD5cNB7NQrIdssuiDpRUVyvQRZ0QSAMsfPgu8+jR/G6fe7mARJdqvLFEGc=
+	t=1751472709; cv=none; b=RRHeoznXm30KstXDmm5jc+amBg9GZohyVa34x5uozFZwX8AoML1vAsm3+JtCp0nVEOFqsbnijtrKRKDGZWO6uPfIbrDzmCI8vNMKNngY0sjRKRY5u2Dhf5o9LLUxKw8Vo+LnC34qGcJCuBdo24UmMw0amtY4Wv2CK6N2K8jV9+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751472657; c=relaxed/simple;
-	bh=YdCT133p82j/BMPf6XPBFAhX9tGEdrgh/9PMIHJn8ng=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BMbfyvIWrhn8iNXf93N3oG5rKlbk/szivmXZnCxy/A9tqOa3bwfDzhdsVx1aOtyXxkG5v5MBdkBMQKM6+I8+fnRbcQxKho7QqsMGHiK/26Tk9vYWKckwyedWxNJlkCskFVE4f+dR8mZiGyngnNXOrltzh0UuUhn2hnvSfbOtRME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L5xHOkLS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751472709; c=relaxed/simple;
+	bh=yS/Dw9mwlzCfupsNGgq6I0EPxICqWfjGtM2H6uUtaGY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TUnQsO4ZcYj7pTeojna3KYdZpftg5e5zAMaOzIk3/oCD8xvLC0o72BnncQ/sfadrKeN16tQ15xu7tHazvGxYyKqKjOtSHkTD7vdLJC7n3XOTEI8MKuYEfhN9o2pMPzHPDXEmBTGaEeP/03xU/iJ1kVUGinFBbWuptLO5dxHazWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=gZNSODaO; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L5xHOkLS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52CF3C4CEE7;
-	Wed,  2 Jul 2025 16:10:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751472656;
-	bh=YdCT133p82j/BMPf6XPBFAhX9tGEdrgh/9PMIHJn8ng=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=L5xHOkLSmVeNk2d9iOrtcD1bQ7piTvl8rrMPPnbXwbxYKPYxqrs0lDRYam3VHOIAd
-	 6F6yxcsIgyRbzg50gzQk262bUjAcE/zPlrEFLDCSYE1Zx7icTC7y1vjIQ1vEoUCEkz
-	 Of/TgwJoFOr0N3984xFJDDFU34uPkGDzzuNUnbeEiz2crveRXtCLw24Ejl5cOpvCL4
-	 Evb8HE14ncX4Scd5qeavGIWrkrc6Pg2DC2Zbn2IoIzVjwTIiUQrJFtruCsyJ3/Tytd
-	 41CNdloAawF0jHMhdnZr2kA+JW6FS2QMkTiRzsQhmEUnSxL4tW2wUI9SOZa2dJWQml
-	 EamIJPunholxA==
-Date: Wed, 2 Jul 2025 09:10:55 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Cc: Gabriel Goller <g.goller@proxmox.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Jonathan Corbet
- <corbet@lwn.net>, David Ahern <dsahern@kernel.org>, netdev@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] ipv6: add `force_forwarding` sysctl to enable
- per-interface forwarding
-Message-ID: <20250702091055.3d70a5ee@kernel.org>
-In-Reply-To: <7c47cfb6-c1f1-42a1-8137-37f8f03fa970@6wind.com>
-References: <20250702074619.139031-1-g.goller@proxmox.com>
-	<20250702073458.3294b431@kernel.org>
-	<7c47cfb6-c1f1-42a1-8137-37f8f03fa970@6wind.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="gZNSODaO"
+Received: from [100.66.201.102] (unknown [40.68.200.63])
+	by linux.microsoft.com (Postfix) with ESMTPSA id EA292201A4D4;
+	Wed,  2 Jul 2025 09:11:44 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EA292201A4D4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1751472707;
+	bh=g9AKuBvLaq/WBbfdsgGRcIJWQPeX4lLdRaRJp8x1I0s=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gZNSODaO7kwE0UbD/eZnrrO8CNnaIStHeRpiXeUoWuTm32wGkNosO/Q/m36jWsf4r
+	 s89HlQZMl2Vn07oGhTh9ghiRIVFv5ZIxoz6MojX+knBBI2GGmi2ApkzjZpbP32mhvk
+	 SPbGGBrhS+4UicxwTkulUP/Hjw05OEeTJ1fAAU1Y=
+Message-ID: <ca26fba1-c2bb-40a1-bb5e-92811c4a6fc6@linux.microsoft.com>
+Date: Wed, 2 Jul 2025 18:11:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 1/1] KVM: VMX: Use Hyper-V EPT flush for local TLB
+ flushes
+To: Vitaly Kuznetsov <vkuznets@redhat.com>,
+ Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, kvm@vger.kernel.org
+Cc: Dave Hansen <dave.hansen@linux.intel.com>, linux-kernel@vger.kernel.org,
+ alanjiang@microsoft.com, chinang.ma@microsoft.com,
+ andrea.pellegrini@microsoft.com, Kevin Tian <kevin.tian@intel.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, linux-hyperv@vger.kernel.org
+References: <cover.1750432368.git.jpiotrowski@linux.microsoft.com>
+ <4266fc8f76c152a3ffcbb2d2ebafd608aa0fb949.1750432368.git.jpiotrowski@linux.microsoft.com>
+ <875xghoaac.fsf@redhat.com>
+Content-Language: en-US
+From: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
+In-Reply-To: <875xghoaac.fsf@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Wed, 2 Jul 2025 17:14:42 +0200 Nicolas Dichtel wrote:
-> > Should we invert the polarity? It appears that the condition below only
-> > let's this setting _disable_ forwarding. IMO calling it "force" suggests
-> > to the user that it will force it to be enabled.  
-> Not sure to follow you. When force_forwarding is set to 1 the forwarding is
-> always enabled.
+On 27/06/2025 10:31, Vitaly Kuznetsov wrote:
+> Jeremi Piotrowski <jpiotrowski@linux.microsoft.com> writes:
 > 
-> sysctl | all.forwarding | iface.force_forwarding | packet processing from iface
->        |      0         |           0            |        no forward
->        |      0         |           1            |         forward
->        |      1         |           0            |         forward
->        |      1         |           1            |         forward
+>> Use Hyper-V's HvCallFlushGuestPhysicalAddressSpace for local TLB flushes.
+>> This makes any KVM_REQ_TLB_FLUSH_CURRENT (such as on root alloc) visible to
+>> all CPUs which means we no longer need to do a KVM_REQ_TLB_FLUSH on CPU
+>> migration.
+>>
+>> The goal is to avoid invept-global in KVM_REQ_TLB_FLUSH. Hyper-V uses a
+>> shadow page table for the nested hypervisor (KVM) and has to invalidate all
+>> EPT roots when invept-global is issued. This has a performance impact on
+>> all nested VMs.  KVM issues KVM_REQ_TLB_FLUSH on CPU migration, and under
+>> load the performance hit causes vCPUs to use up more of their slice of CPU
+>> time, leading to more CPU migrations. This has a snowball effect and causes
+>> CPU usage spikes.
+>>
+>> By issuing the hypercall we are now guaranteed that any root modification
+>> that requires a local TLB flush becomes visible to all CPUs. The same
+>> hypercall is already used in kvm_arch_flush_remote_tlbs and
+>> kvm_arch_flush_remote_tlbs_range.  The KVM expectation is that roots are
+>> flushed locally on alloc and we achieve consistency on migration by
+>> flushing all roots - the new behavior of achieving consistency on alloc on
+>> Hyper-V is a superset of the expected guarantees. This makes the
+>> KVM_REQ_TLB_FLUSH on CPU migration no longer necessary on Hyper-V.
+> 
+> Sounds reasonable overall, my only concern (not sure if valid or not) is
+> that using the hypercall for local flushes is going to be more expensive
+> than invept-context we do today and thus while the performance is
+> improved for the scenario when vCPUs are migrating a lot, we will take a
+> hit in other cases.
+> 
 
-Ugh, I can't read comparisons to zero.
-Let's switch to more sane logic:
+Discussion below, I think the impact should be limited and will try to quantify it.
 
-	if (idev && !READ_ONCE(idev->cnf.force_forwarding) &&
-	    !READ_ONCE(net->ipv6.devconf_all->forwarding))
+>>
+>> Coincidentally - we now match the behavior of SVM on Hyper-V.
+>>
+>> Signed-off-by: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
+>> ---
+>>  arch/x86/include/asm/kvm_host.h |  1 +
+>>  arch/x86/kvm/vmx/vmx.c          | 20 +++++++++++++++++---
+>>  arch/x86/kvm/vmx/vmx_onhyperv.h |  6 ++++++
+>>  arch/x86/kvm/x86.c              |  3 +++
+>>  4 files changed, 27 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+>> index b4a391929cdb..d3acab19f425 100644
+>> --- a/arch/x86/include/asm/kvm_host.h
+>> +++ b/arch/x86/include/asm/kvm_host.h
+>> @@ -1077,6 +1077,7 @@ struct kvm_vcpu_arch {
+>>  
+>>  #if IS_ENABLED(CONFIG_HYPERV)
+>>  	hpa_t hv_root_tdp;
+>> +	bool hv_vmx_use_flush_guest_mapping;
+>>  #endif
+>>  };
+>>  
+>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+>> index 4953846cb30d..f537e0df56fc 100644
+>> --- a/arch/x86/kvm/vmx/vmx.c
+>> +++ b/arch/x86/kvm/vmx/vmx.c
+>> @@ -1485,8 +1485,12 @@ void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu)
+>>  		/*
+>>  		 * Flush all EPTP/VPID contexts, the new pCPU may have stale
+>>  		 * TLB entries from its previous association with the vCPU.
+>> +		 * Unless we are running on Hyper-V where we promotes local TLB
+> 
+> s,promotes,promote, or, as Sean doesn't like pronouns, 
+> 
+> "... where local TLB flushes are promoted ..."
+> 
+
+Will do.
+
+>> +		 * flushes to be visible across all CPUs so no need to do again
+>> +		 * on migration.
+>>  		 */
+>> -		kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
+>> +		if (!vmx_hv_use_flush_guest_mapping(vcpu))
+>> +			kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
+>>  
+>>  		/*
+>>  		 * Linux uses per-cpu TSS and GDT, so set these when switching
+>> @@ -3243,11 +3247,21 @@ void vmx_flush_tlb_current(struct kvm_vcpu *vcpu)
+>>  	if (!VALID_PAGE(root_hpa))
+>>  		return;
+>>  
+>> -	if (enable_ept)
+>> +	if (enable_ept) {
+>> +		/*
+>> +		 * hyperv_flush_guest_mapping() has the semantics of
+>> +		 * invept-single across all pCPUs. This makes root
+>> +		 * modifications consistent across pCPUs, so an invept-global
+>> +		 * on migration is no longer required.
+>> +		 */
+>> +		if (vmx_hv_use_flush_guest_mapping(vcpu))
+>> +			return (void)WARN_ON_ONCE(hyperv_flush_guest_mapping(root_hpa));
+>> +
+> 
+> HvCallFlushGuestPhysicalAddressSpace sounds like a heavy operation as it
+> affects all processors. Is there any visible perfomance impact of this
+> change when there are no migrations (e.g. with vCPU pinning)? Or do we
+> believe that Hyper-V actually handles invept-context the exact same way?
+> 
+I'm going to have to do some more investigation to answer that - do you have an
+idea of a workload that would be sensitive to tlb flushes that I could compare
+this on?
+
+In terms of cost, Hyper-V needs to invalidate the VMs shadow page table for a root
+and do the tlb flush. The first part is CPU intensive but is the same in both cases
+(hypercall and invept-single). The tlb flush part will require a bit more work for
+the hypercall as it needs to happen on all cores, and the tlb will now be empty
+for that root.
+
+My assumption is that these local tlb flushes are rather rare as they will
+only happen when:
+- new root is allocated
+- we need to switch to a special root
+
+So not very frequent post vm boot (with or without pinning). And the effect of the
+tlb being empty for that root on other CPUs should be a neutral, as users of the
+root would have performed the same local flush at a later point in time (when using it).
+
+All the other mmu updates use kvm_flush_remote_tlbs* which already go through the
+hypercall.
+
+Jeremi
+
