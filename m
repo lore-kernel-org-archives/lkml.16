@@ -1,129 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165B61DDC07;
-	Wed,  2 Jul 2025 17:01:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D5B52F50AA;
+	Wed,  2 Jul 2025 17:03:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751475700; cv=none; b=WSheRe9nNTTDAWlXLTNXRq+bD38/t+JFq5UXND4Yiqly2MYx1WOjde/wukn4J56qusyGcqVrGmTR3/nX3slCu/RY+ajDDIF5t/pUosUynnbyB+vOaI4WyADI6eVFJPE4I461cFrMsqJjDda8D5kvS32aoNSeQ7wR/aW9xQ4sM8c=
+	t=1751475783; cv=none; b=iSAJHUokdYCXp6MagCyk+VE+lSuu/Y+C1mj6mFP2SLrJhDu8EUsWTeGzzm9UclufgvRD/XUwxAFN8syoJ0JtpQ5/WARIWwnMxirwt3/NWUEq3ahelKvrOT8URuQSGBsOSjE2RbfeCIj/MqG9AakRT/qHWzD2+ONZ8+VJ75tLhPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751475700; c=relaxed/simple;
-	bh=K6npPwHBi2DGHnFB8cl+vvK8I6ibe7HqdGsOF64ZxCs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PgcEkWDoFBHVJWhX7mjSm8ECWBrpHsEOFAMJRnHXbvUREFToRlKkBYkf3pl29SBVX2kjXqYukn5iYnqfLvc9vZSEfNj613gEi3+Lf+XZy2NpNaBv9huLHGWuo8VcxMk8nnuih4gMTcqVSulscabAXBhpxUetcVrBDL6S78wAYF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o+8BCDQy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751475783; c=relaxed/simple;
+	bh=aNb8Jo05IlhvYWus7qI8e6hB83PPs0BVSd2VAGTFDnw=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=OP0A0fyK/rg9JyXy6obAofGybGbOWc83MtV43hSXASC+SNwR/J/ixqzJ3rZIfyDot3Yn3bJEKNRw8iJ9bZYTapLGVEA0BHT5eTfRQEpmwuv189NHuIRTlXiC7UDTNeQPFjySWPuO0Lqa+64XBRNpfYu8EnxCHDv1/vMhLU7ML44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=I8yStWsb; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o+8BCDQy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90D77C4CEFC;
-	Wed,  2 Jul 2025 17:01:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751475699;
-	bh=K6npPwHBi2DGHnFB8cl+vvK8I6ibe7HqdGsOF64ZxCs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=o+8BCDQyeUWWo69CKGFQez5Cbr20o/NSDZkTrZ0tTOe8blmA9sQucX/SN9hQvQM3z
-	 3UNH+1M7T9wUWomD/rBq7FXAztDaRmQNJYaMlvLPIMfwwHxxpHD93CEjlVkwc5LHqJ
-	 b5ChwVZdRQH0xpa83i8d5YfPIJ0jeWbqP6eNYWCaEnt33HMn6EFjk4+oJPok8lE/W3
-	 x3As9zOkVRITFiQOizLS0IeaySaMNi9tZ18xg9Qdm4D7SPJr+ewiRpv3m98niSMBG6
-	 ikU4p1dlCNjNJdnTmJNAjpTqrVD1gdR128NVqBTlrP/B2BB/vXjL0kuMBRZMayNKwO
-	 zI+IFgmJdp7tA==
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-60d6303a11eso3324488eaf.0;
-        Wed, 02 Jul 2025 10:01:39 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUYwefQOofi5XyJ3rPyOknxKfk4NITVrzf8JyP/GWUYvkBvK+bGA0hNvazM8ZsibPsXg9/ZNFTiCBwYW78b@vger.kernel.org, AJvYcCViqZzvApYk1WL6x4lHgseeK7D8yXBFYw0keYwIziui6JFhhaQdfSu2XleW5Y6SWniMh7ArNilvqbd5Tw==@vger.kernel.org, AJvYcCWMY1Lo7WWxfDtHVhcIXTJ0pYuxwHKy4iFOoUJLWcuk06sBCe3ZcK5eTzC9iH8JKO7Op4PBD/ijdOuE@vger.kernel.org, AJvYcCX+YvXnvqXSWLqqYPf6qxu4bRy12W5csRwU8O0Ai+0MQZG5MAjLkkUGYvZKrLyRo99Nn2slF9tiBE0C@vger.kernel.org
-X-Gm-Message-State: AOJu0YzI4xZtmI8ZvEWe4ep03txrSqps5/UCmi7JSDgtQNR68xuP5k1t
-	uxvMcsA1HA9LvfZd7md+I8qUDZWOAQuEiD/huS/KjVKlfpci9JLcbQjUDA4QQuasXGms/K7EJeG
-	cJSJJwtQPzxOD1OyRJqnXedipNT9Y3Mg=
-X-Google-Smtp-Source: AGHT+IGPd++aiCNQ4qfuEIoYUI2K930oDrPPW3BNMd8Apd55Lv82AJ7wV9K+7i8ylCY8TGknSq7EnGbvDAKM/sPSrwE=
-X-Received: by 2002:a4a:ca89:0:b0:611:aabf:2b7d with SMTP id
- 006d021491bc7-612012d05e1mr2142271eaf.7.1751475698640; Wed, 02 Jul 2025
- 10:01:38 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="I8yStWsb"
+Received: from [100.65.201.133] (unknown [20.236.11.69])
+	by linux.microsoft.com (Postfix) with ESMTPSA id E8FC3201B1A1;
+	Wed,  2 Jul 2025 10:03:01 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E8FC3201B1A1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1751475782;
+	bh=rBNBX0hmwvIxL4Bz04/uy+wy+svBh5lvviAOi9RO3yI=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=I8yStWsb/6/3CLjF9Y0rQzHLlSYBtNyEJVJ1anM7YX8mNe2pUajWUSAqsdicMSe1W
+	 KN7bdXa63Fo5Gvu/FZj9c2f0rtzPH0ljFk8X+wPPo+4yIKLfQuzd5EWDan3yYfD2LP
+	 fC1wqYIuLwvaNSVbs3DvSMFV1UsM3sy1Cr9HiHLQ=
+Message-ID: <4a176d9f-3a05-4eb4-b64d-b6b7f5ed2413@linux.microsoft.com>
+Date: Wed, 2 Jul 2025 10:03:01 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250702051345.1460497-1-apatel@ventanamicro.com>
- <20250702051345.1460497-15-apatel@ventanamicro.com> <CAJZ5v0ifCN7OWEw0DHpULSmXn4nCb9EdJMjQPJwmdoF_y0nfjA@mail.gmail.com>
- <aGVF8Gqzs2YZf1Os@sunil-laptop>
-In-Reply-To: <aGVF8Gqzs2YZf1Os@sunil-laptop>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 2 Jul 2025 19:01:27 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iYjc2JurNAJyr1o03Mr7DJyc=MdHvbTsCsC76JR0suNQ@mail.gmail.com>
-X-Gm-Features: Ac12FXwjgoj03UiKdGXfM8DuaJdwtG5xtG-ENxekbig-Cp5sM0uIGBwVeivKWu8
-Message-ID: <CAJZ5v0iYjc2JurNAJyr1o03Mr7DJyc=MdHvbTsCsC76JR0suNQ@mail.gmail.com>
-Subject: Re: [PATCH v7 14/24] ACPI: property: Refactor acpi_fwnode_get_reference_args()
-To: Sunil V L <sunilvl@ventanamicro.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Anup Patel <apatel@ventanamicro.com>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jassi Brar <jassisinghbrar@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Len Brown <lenb@kernel.org>, Rahul Pathak <rpathak@ventanamicro.com>, 
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>, Atish Patra <atish.patra@linux.dev>, 
-	Andrew Jones <ajones@ventanamicro.com>, Samuel Holland <samuel.holland@sifive.com>, 
-	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/2] PCI: Reduce FLR delay to 10ms for MSFT devices
+From: Graham Whyte <grwhyte@linux.microsoft.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>, Niklas Cassel <cassel@kernel.org>,
+ linux-pci@vger.kernel.org, shyamsaini@linux.microsoft.com, code@tyhicks.com,
+ Okaya@kernel.org, bhelgaas@google.com, linux-kernel@vger.kernel.org
+References: <20250616210530.GA1106466@bhelgaas>
+ <2dfbbd15-c03a-45b6-99a6-fa36772676bc@linux.microsoft.com>
+Content-Language: en-US
+In-Reply-To: <2dfbbd15-c03a-45b6-99a6-fa36772676bc@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 2, 2025 at 4:45=E2=80=AFPM Sunil V L <sunilvl@ventanamicro.com>=
- wrote:
->
-> On Wed, Jul 02, 2025 at 12:07:36PM +0200, Rafael J. Wysocki wrote:
-> > On Wed, Jul 2, 2025 at 7:15=E2=80=AFAM Anup Patel <apatel@ventanamicro.=
-com> wrote:
-> > >
-> > > From: Sunil V L <sunilvl@ventanamicro.com>
-> > >
-> > > Currently acpi_fwnode_get_reference_args() calls the public function
-> > > __acpi_node_get_property_reference() which ignores the nargs_prop
-> > > parameter.
-> >
-> > Which I suppose is a problem.  Why is it so?
-> >
-> fwnode_property_get_reference_args() documents as below.
->
-> * @nargs_prop: The name of the property telling the number of
->  *              arguments in the referred node. NULL if @nargs is known,
->  *              otherwise @nargs is ignored. Only relevant on OF.
->  * @nargs:      Number of arguments. Ignored if @nargs_prop is non-NULL.
->
-> You can see that nargs_prop is not supported with ACPI currently. Since
-> fwnode_property_get_reference_args() calls
-> __acpi_node_get_property_reference(), there is no way to determine the
-> nargs from the nargs_prop currently with ACPI. Since
-> fwnode_property_get_reference_args() is a common API across DT and ACPI,
-> it is a problem for users.
 
-So the problem is that if nargs_prop is passed to
-fwnode_property_get_reference_args() and it is a valid "cells"
-property, OF will use it to obtain the number of reference arguments
-and ACPI will ignore it.  To make it work the same way in both cases,
-acpi_fwnode_get_reference_args() needs to be modified to take
-nargs_prop into account properly.  This is the key information that
-needs to go into the patch changelog.
 
-> > > To fix this, make __acpi_node_get_property_reference() to
-> > > call the static acpi_fwnode_get_reference() so that callers of
-> > > fwnode_get_reference_args() can still pass a valid property name to
-> > > fetch the number of arguments.
-> >
-> > Are the current callers of acpi_fwnode_get_reference_args() going to
-> > be affected by this change and if so, then how?
-> >
-> Good question!. If some one is currently passing both valid nargs_prop an=
-d
-> nargs with ACPI, now with this change it will start getting the value
-> from nargs_prop which was simply ignored earlier. However, I see only 2
-> combinations how fwnode_property_get_reference_args() is being used.
->
-> (nargs_prop =3D NULL) && (args_count !=3D0)
-> or
-> (nargs_prop !=3D NULL) && (args_count =3D 0)
+On 6/18/2025 9:42 AM, Graham Whyte wrote:
+> 
+> 
+> On 6/16/2025 2:05 PM, Bjorn Helgaas wrote:
+>> On Mon, Jun 16, 2025 at 12:02:41PM -0700, Graham Whyte wrote:
+>>> On 6/13/2025 8:33 AM, Bjorn Helgaas wrote:
+>>>> On Thu, Jun 12, 2025 at 09:41:45AM -0700, Graham Whyte wrote:
+>>>>> On 6/11/2025 11:31 PM, Christoph Hellwig wrote:
+>>>>>> On Wed, Jun 11, 2025 at 01:08:21PM -0700, Graham Whyte wrote:
+>>>>>>> We can ask our HW engineers to implement function readiness but we need
+>>>>>>> to be able to support exiting products, hence why posting it as a quirk.
+>>>>>>
+>>>>>> Your report sounds like it works perfectly fine, it's just that you
+>>>>>> want to reduce the delay.  For that you'll need to stick to the standard
+>>>>>> methods instead of adding quirks, which are for buggy hardware that does
+>>>>>> not otherwise work.
+>>>>>
+>>>>> Bjorn, what would you recommend as next steps here?
+>>>>
+>>>> This is a tough call and I don't pretend to have an obvious answer.  I
+>>>> understand the desire to improve performance.  On the other hand, PCI
+>>>> has been successful over the long term because devices adhere to
+>>>> standardized ways of doing things, which makes generic software
+>>>> possible.  Quirks degrade that story, of course, especially when there
+>>>> is an existing standardized solution that isn't being used.  I'm not
+>>>> at all happy about vendors that decide against the standard solution
+>>>> and then ask OS folks to do extra work to compensate.
+>>>
+>>> Should someone want to implement readiness time reporting down the road,
+>>> they'll need to do the same work as patch 1 in this series (making the
+>>> flr delay a configurable parameter).
+>>
+>> Sure.  That's a trivial change.  The problem is the quirk itself.
+>>
+>> The Readiness Time Reporting Extended Capability is read-only with no
+>> control bits in it so it requires no actual logic in the device.
+>> Maybe you can just implement that capability with a firmware change on
+>> the device and add the corresponding Linux support for it.
+> 
+> Hi Bjorn,
+> 
+> We checked with our HW folks, it's not possible for us to update the pci
+> register components with this particular card, they are read only. What
+> are your thoughts on the sysfs approach mentioned in the previous email?
+> 
+> Thanks,
+> Graham
 
-OK
+Hi Bjorn, just wanted to follow up on this here.
