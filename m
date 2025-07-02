@@ -1,103 +1,92 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3431DF977;
-	Wed,  2 Jul 2025 07:21:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751440889; cv=pass; b=Y8ARP46MFggWUHyOr0MeAoEFLWGsaL0jEhdCp19gRi7uEgVLym5QcpVYIwz4Cgsrbhoitg8dNScuMUZj+RNGiQSk7eq1tgInyOxzoAXX887n3+qh9HEkZmaOy8UOtoCCHVBm6nxTH289kqjhpiJs07GGS3fSA6+zHvXSnuIvbmI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751440889; c=relaxed/simple;
-	bh=fQv1DrWsxhniOSaglMegWviPrsXQovkHo2ngrthRNB8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GG2YA8WpGJNIEWbpEYUrcKzMLL9R4IsQVK77ZeW0I5GtPu4y2CqO4TwUIjC7uIj+XRE6kCzDWnnQ0Mrbw4a9sIuo45KgU9iGEy+D4ovtaexbdlRyVWc7p7JOK0Q0m8bPOZsFmqepqez/5jM56G1I5ckUmHYv5l1vcKTVZAtkOic=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=NzryM7S0; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="NzryM7S0"
-ARC-Seal: i=1; a=rsa-sha256; t=1751440858; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=eedqEcFZKrJR0/dzEYaej978C/dQ1ozZhKtnQG6xOQIXsr9SYuQP9DxfeejwtT0VUtRaC6hZe7LAp06xEaX2aPkX8szbBIMbvHzVNa23utxapT/17nmhGvj8LwEZWLOKWPytGa11Hn1ftgJrAVxr8qTDf9vCqgwUHHp6VIfzddw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751440858; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Q2LxtsF+ZY1C4SvYmke8RqTHozKgOopGjqEZpGjcMXw=; 
-	b=LsRgnGoF6ego8pY8JHbiPvHgtt4F0130PJz/UjMB2kGverWA5xEPjeBU5RJY1tdReaQ+BqxEz7r5fzllbv0ZCmzd6EcUqkz75vPyWxvDjKXD5PuTHbpah/TN2T3wJAYw5A7S60GROkNowfGHIhP18p/dN5uKpD5QXQoMTtWuLfk=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751440857;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
-	bh=Q2LxtsF+ZY1C4SvYmke8RqTHozKgOopGjqEZpGjcMXw=;
-	b=NzryM7S0O8SNnLRptIczq5ZYqqXT8idTZlnwnK3T0IoaRzukCMdFLWA8rhX8GmH2
-	8y8AsJXB+ZfhFrIlqA+QUeO0cu5lzeLGatLdt9FF6rYy+1/DnvzPdWOe+RAKc3xFCVY
-	+Yl3Hx7GR/lcqAeDb1UqnY8Ue098S5xdWmdkcEeQ=
-Received: by mx.zohomail.com with SMTPS id 1751440856933760.1793466823643;
-	Wed, 2 Jul 2025 00:20:56 -0700 (PDT)
-From: Li Ming <ming.li@zohomail.com>
-To: akpm@linux-foundation.org,
-	andriy.shevchenko@linux.intel.com,
-	bhelgaas@google.com,
-	ilpo.jarvinen@linux.intel.com,
-	dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	shiju.jose@huawei.com
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Li Ming <ming.li@zohomail.com>
-Subject: [PATCH v2 2/3] cxl/edac: Fix wrong dpa checking for PPR operation
-Date: Wed,  2 Jul 2025 15:20:07 +0800
-Message-Id: <20250702072008.468371-2-ming.li@zohomail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250702072008.468371-1-ming.li@zohomail.com>
-References: <20250702072008.468371-1-ming.li@zohomail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F571DF977;
+	Wed,  2 Jul 2025 07:21:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751440916; cv=none; b=mwMliEePsU6qy8l2OzvqApqBHxXVxRBxZtsYke/0TKvGFRTxceh6pg425qCwFi3p4AikLVwzterO0srjamUV1p6V2+hrztsgW74kcKnliQm+0x/+sTTY+UoT1SSq2d7eAFzXtKAOpF45H9gI+uXU8DoJ094Kms2eX8uZKWl0Bx4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751440916; c=relaxed/simple;
+	bh=hg/fpzh0iibuHgzu9OoE8pUDa3xBOZXjJIvugVRypCg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PNhZX5MVQpq0oQT2FbQXu1apQYCskhhOrl3b/y4JrIMY6n+VUuuRLHFJ2Y17LCKzzdifRI6CzmVYNttTEMtT98CeXJoR7WISjOlqpM0AAyha+XaBo0YYohWGo5p+YgrYBft1VUiOlnwtc4Kk0gSTgy7ZdrU0dC2naPwoybSOw8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-32addf54a00so34284241fa.1;
+        Wed, 02 Jul 2025 00:21:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751440907; x=1752045707;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hg/fpzh0iibuHgzu9OoE8pUDa3xBOZXjJIvugVRypCg=;
+        b=Vejqni5DMN1uW2nmcJA7oQdfqsYG9yb3CjIt4Rpo3LWm6LPDQ64Kk6q503lY9A5aob
+         GX5tphyWWXVzk82FyptVu6G3hGkbiWIwG/pTukDvwD5JSd+XnWXEQYWf6Sp/oe65dg7L
+         iaAiXG/f3VApjAL4bCXfh5YiaCog+sI7c8oC1/Z7LcP8Px7qIFV0PL3gny/Bh05E3fre
+         Lr7VhSniFuPs26GLYUGhuxeoGZj73yi0j+H48zTD69zl4+fq71G8nt8whN326W14PeSB
+         qnIiLtMskXN8ruO4+ZakoW4nVkQM/9AFKZGzqAFx4Gy/rsZMGx/59oBlndj5cKHtQ7ab
+         XCzw==
+X-Forwarded-Encrypted: i=1; AJvYcCUGyyXLOQmeqZhUQhXbymfvC+yuBA27zDOy1PYaJ49tpSLEKDtWkSwWR3AWKYLL5IRNHHv4B3tMDrN8I5WM@vger.kernel.org, AJvYcCUtVZAw4y1kZwg450/VWycek/waB5jdjBepgIRBvzVHKKXAeBI/i2cabH56/0ahzSDoxn4pkMsbU2hOLA==@vger.kernel.org, AJvYcCVGVnWdSCs6FUQEMSKhdrPfSbfiyMIDtzW4zdISde4SKvkKnmYljx0AiT/RJkCuCEXTlYY8hPxrcOPH@vger.kernel.org, AJvYcCXdrJ2nfZMjvStzm9NTswAiNacjb/3REuGFv2LVFSwLopp9RYFDrncifVI411EwTTSh2iJMYL/mE8h6@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvDmJqnFctUbin0gtOgva+v48+dvPEzvwQkmCyqu9I15mn7SwP
+	knWt5LUUriuLHNQQ13kC6MDw99mkOdxwemSSvZapWl7DhhF/8JZ3MjXzz9rNjAP/
+X-Gm-Gg: ASbGncv/LaoyPB6FIh4v6f86SXHQFHzworeq4U4Kwc9cygAiLrW5T7CDTGa+f5tdOiP
+	5vSc4RPOXv1o1jgGK1JrrJUT2FnmqYPfZLOAj084mc1EoKqmBbhEonL2NYwinka2OYOwBX44Gcj
+	i7v4E1UUClcbVPlSfNU/NFejUtKbI0hoIOTyBWpbQ+Q5Ca6aKTV6M7nyluDYYrVSMNSH6l5TPZx
+	FfRleYsuIgKgBOoMX3hc0nSS/izQmXIAzwNMixnttNTpT/1liKqCrUTuXIhrEJRk4MGj2wDalmn
+	xn5xm/pVfvgplOapYRCktS+SaNoJ6ogbYHSIz+XdJu+ksHoUu9zw8kBLe0yOvzyT25GS7g2jOQB
+	DrBFLqe6vYCxM3e1lSk4=
+X-Google-Smtp-Source: AGHT+IHgLRqkzL+NlyH8Y6vVuR8370P3PmAbmab6X52g4MP/vDndubojlp9QRSfXIxwvisq4oLRqMA==
+X-Received: by 2002:a05:6512:3ba6:b0:553:24bb:daa1 with SMTP id 2adb3069b0e04-5562829f64dmr616313e87.11.1751440906742;
+        Wed, 02 Jul 2025 00:21:46 -0700 (PDT)
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b2c5e6esm2056383e87.156.2025.07.02.00.21.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Jul 2025 00:21:45 -0700 (PDT)
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-32b43cce9efso33353911fa.3;
+        Wed, 02 Jul 2025 00:21:45 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU0wwoySBpjLrgSHrtrl/b0FSEySBxY6scQIaEULw88HLqwX9P73b0fM9jtFjbjr7iubQpmrxifM+fFzg==@vger.kernel.org, AJvYcCUolpaqVoLQqb1N8wwTecjngshn9OzEu7QVTJ698PjumqY0lqVtcKznYNCXljHGDrFEpNmPrJrl2uf2@vger.kernel.org, AJvYcCWOXOZ6+6W5B7k30IbhssfBQWiO8gVIfTeVEYtF5z/TQjcCia4FlYorpVQVFA3G/+3sqfXnKqsNjmhL@vger.kernel.org, AJvYcCXA0xoWBOtN5TQAt06UVlQrN/nRHnvjZRz4QLotZx7EqbOhqO/YVkc8gGQNlaBISUS+sYCBMD9EerWMuv9K@vger.kernel.org
+X-Received: by 2002:a2e:881a:0:b0:32a:6e77:3e57 with SMTP id
+ 38308e7fff4ca-32e00059701mr5163051fa.21.1751440904870; Wed, 02 Jul 2025
+ 00:21:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Feedback-ID: rr08011227c6ea6696967f1a637e32cae00000ab352c030e463eb2677b92429603d7f51bed31ff06256733ae:zu08011227eec59116cf5a5a629860baf40000e77c37cea583470221d53da7a038de8a3ba7b9f78ad0991387:rf0801122d453a16631c24640696ad569d00003acafbc2f8121cf718b4bd843ed9d142653a86c1c831065b78e339cb8464dd:ZohoMail
-X-ZohoMailClient: External
+References: <20250701201124.812882-1-paulk@sys-base.io> <20250701201124.812882-2-paulk@sys-base.io>
+In-Reply-To: <20250701201124.812882-2-paulk@sys-base.io>
+Reply-To: wens@csie.org
+From: Chen-Yu Tsai <wens@csie.org>
+Date: Wed, 2 Jul 2025 15:21:32 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65KrLwM+gQEWFVrzCcGPL+Fdhmb9b0FTJGkxrDqv4ucig@mail.gmail.com>
+X-Gm-Features: Ac12FXzCUNmtlDRkeXVtg02FaWchFlhOllywrVEAHXAtLHX_qmyxYGIEnu1zURg
+Message-ID: <CAGb2v65KrLwM+gQEWFVrzCcGPL+Fdhmb9b0FTJGkxrDqv4ucig@mail.gmail.com>
+Subject: Re: [PATCH 1/5] pinctrl: sunxi: v3s: Fix wrong comment about UART2 pinmux
+To: Paul Kocialkowski <paulk@sys-base.io>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org, 
+	Yong Deng <yong.deng@magewell.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Maxime Ripard <mripard@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Linus Walleij <linus.walleij@linaro.org>, Icenowy Zheng <icenowy@aosc.xyz>, 
+	Andre Przywara <andre.przywara@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-DPA 0 is considered invalid in cxl_do_ppr(), but per Table 8-143. "Get
-Partition Info Output Payload" in CXL r3.2 section 8.2.10.9.2.1 "Get
-Partition Info(Opcode 4100h)", it mentions that DPA 0 is a valid address
-of a CXL device. So the correct implementation should be checking if the
-DPA is in the DPA range of the CXL device rather than checking if the
-DPA is equal to 0.
+On Wed, Jul 2, 2025 at 4:13=E2=80=AFAM Paul Kocialkowski <paulk@sys-base.io=
+> wrote:
+>
+> The original comment doesn't match the pin attribution, probably due
+> to a hasty copy/paste.
+>
+> Signed-off-by: Paul Kocialkowski <paulk@sys-base.io>
 
-Fixes: be9b359e056a ("cxl/edac: Add CXL memory device soft PPR control feature")
-Signed-off-by: Li Ming <ming.li@zohomail.com>
----
- drivers/cxl/core/edac.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
-index 623aaa4439c4..1cf65b1538b9 100644
---- a/drivers/cxl/core/edac.c
-+++ b/drivers/cxl/core/edac.c
-@@ -1923,8 +1923,11 @@ static int cxl_ppr_set_nibble_mask(struct device *dev, void *drv_data,
- static int cxl_do_ppr(struct device *dev, void *drv_data, u32 val)
- {
- 	struct cxl_ppr_context *cxl_ppr_ctx = drv_data;
-+	struct cxl_memdev *cxlmd = cxl_ppr_ctx->cxlmd;
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
- 
--	if (!cxl_ppr_ctx->dpa || val != EDAC_DO_MEM_REPAIR)
-+	if (!resource_contains_addr(&cxlds->dpa_res, cxl_ppr_ctx->dpa) ||
-+	    val != EDAC_DO_MEM_REPAIR)
- 		return -EINVAL;
- 
- 	return cxl_mem_perform_ppr(cxl_ppr_ctx);
--- 
-2.34.1
-
+Acked-by Chen-Yu Tsai <wens@csie.org>
