@@ -1,133 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71BC2221F03;
-	Wed,  2 Jul 2025 20:33:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E56C225A47;
+	Wed,  2 Jul 2025 20:36:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751488438; cv=none; b=fTHHbyLIMapdnPlnEEoVZ4I2kfan2gYfHdurNFfLbTeE0qObwL7QTDOaR0CutB75D3ElcprV4plZgYl/GLnWrEvicZJyHiQ2XIJfAXEnJMEraZu3TTyLrdFBi7kaAUIIAGT4jOLIwmJDT/U2Ee+vmNxt98LJgp7EiEPik+mZKGg=
+	t=1751488599; cv=none; b=FhSnGv7zSrxRJFAiDDy3WWuXjW/ZbJyRZgjusVHQ0355WeQC00vx+BsXPshAzBGQahjCir0r4dj+t44yIqJzDk+VUcNDn+1A0blVcr8ZAdffu02v6UOdnPGVp1fSPFthqYaDh6PGfAggydwClkZ/FkDYUgkMjRnDNcUbCOH04c4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751488438; c=relaxed/simple;
-	bh=gCZxcp80Zc/TvUBmFbhKY2bvAwhVupnUXUBlhnDmqDI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B3skri9tooBT2GmPPGOyy/cInbUGPrFki7Gaor2GXuDkwdmksZrvTNIx1kyz044qJkU4WpQm0V/5/+yj7UKAbJXQw63V+59O6ZhjG8F2QJi/VrA/1xsLEidAk7cZJOJ8kWGza0Y9ABMUnPu2pJ0vOyWRXfoVbU81gRLTseYBpP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P0cJHMNx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751488599; c=relaxed/simple;
+	bh=UHbg1/UyJzNZ5VbvWRDHl96+t09qk51IhNMHxPIyE14=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=O4B1mHikIHuxVhPvod/8bfZN3vHhMtcTpi6bEDOGk4uEYYDlIMjxEoPfnS28zgc8lKIUZ6IkJACyGPoIkqpDLJnGFfY0UrT7t5Phj6FSdFK08tK+43dwnjd1krrNfVt7efBc90KGuVyhXoj/X9yBeg3O4dwHethj9KOBrlDx9d4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=hmXmvFwH; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P0cJHMNx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5B0DC4CEE7;
-	Wed,  2 Jul 2025 20:33:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751488437;
-	bh=gCZxcp80Zc/TvUBmFbhKY2bvAwhVupnUXUBlhnDmqDI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=P0cJHMNx98Io1+j6CqWgHphltaTzqD/n4k6LezCCOFYqmSZLPcaHq4sZf//mkWD7E
-	 V181RSGod454zU2b09H4xW52Cxw82+xXAkH3HNmQH6RWxQjkqFjaiPKqIXYfBGQrab
-	 6MCk920pj/UlXppIK4fLL9rkGJyp2uE+YuWSVzO3BsEU9rer1dnsV6XGh4DFEoyZ11
-	 WZKEIgyhn+G5z29KGSyFH+qKdONz3SNwcIrjPN5YIM73PrXymUG98lJkO+jUUATqh8
-	 /oVlT6NVue+vmNfoOJS+4iQTfcKq4QWq2QpROzE2ii8eyrdFWhdgFVrTKnT4vhGD4B
-	 S4mchEqILJiFA==
-Message-ID: <507205ff-fdb8-4f43-ab69-418cfd9da4af@kernel.org>
-Date: Wed, 2 Jul 2025 22:33:50 +0200
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="hmXmvFwH"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 4E0C4A01EB;
+	Wed,  2 Jul 2025 22:36:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=mail; bh=JHDXm9BinfGvPYJ4rbFhjhl5QPKB2DM20YHX6OUX4OE=; b=
+	hmXmvFwHCpTZMa72KPZpclc5q6OdG7H8H4JJsjzhjR06eyJ5c0bE+tzVtut5QFmb
+	n9Ogd6TbMDZHfPQespNg+gL+huZR8NidQwFuH52C0mNQM8Ns4KGYLYKthp9AA0lS
+	75Ikrvoxx8mqE0Z4fP694hhUvdJ3PnY99xzQ2fk4sXRKpcZ9GWo+G3vEYPnxMN2D
+	NyLEDDSooLwyGqRhmC0FaVV2Rsj8EV7x3Admyap4QsD1jd6LOtF5HC1Kk57SLs6c
+	3RbhTvcZLTwN8T9Af5jiC9LWRPoD7DhPoGKZjlbeftiJXxs3wEt4uz1wOvzDYMHr
+	z8whP6cYoZzJSCzxN25mpyE4yj0CIY9Uu7sbwwuImeVYkU97ys4VbZM55pDZjunW
+	PykzcPySUPyPzwYgXpZK7hzEJbowkcTZHf1rhvs51jVBLupo0/yvdMfcjgbDu5QG
+	kqeIe0euikQow2y93jlIdlsIZvnXQBMCZoXyrgoYzIINabKqN8bBcNwas1E0b2OF
+	JXz2zYx3DQORoHK2ZwUOxcWeJcbHJ0CYzoe/V+XOKwiDacpkIpDwLq0ejvmiHumW
+	ditTdKqVX9rtKMcfMmOSnxzIvGSEPmom5QxaVqzaaNbfcoxwFU8t3ueVxJKQJwJQ
+	AViBTallMsmcyYI1w9pTvAZ5eWhrff4RrmR4PvcbasQ=
+From: =?utf-8?q?Bence_Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
+Date: Wed, 2 Jul 2025 22:36:28 +0200
+Subject: [PATCH] arm: DT: imx6-litesom: Replace license text comment with
+ SPDX identifier
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] dt-bindings: remoteproc: qcom,sm8550-pas: document
- SM7635 ADSP & CDSP
-To: Luca Weiss <luca.weiss@fairphone.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>,
- ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250627-sm7635-remoteprocs-v2-0-0fa518f8bf6d@fairphone.com>
- <20250627-sm7635-remoteprocs-v2-2-0fa518f8bf6d@fairphone.com>
- <20250701-pretty-vivacious-panther-540ff4@krzk-bin>
- <DB0N2N5JIUNS.3UFD0C81VYS9F@fairphone.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <DB0N2N5JIUNS.3UFD0C81VYS9F@fairphone.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-ID: <20250702-litesom-dts-lic-v1-1-401e4d141bf0@prolan.hu>
+X-B4-Tracking: v=1; b=H4sIAEuYZWgC/x3M0QrCMAyF4VcZuTZQ66Toq4gXaRNdwHXSFBHG3
+ t3Mu/NdnH8Fk6ZicB1WaPJR06U6jocBykT1KajshhjiOaQQ8aVdbJmRu/kuSHxJaZTMcmLw17v
+ JQ7//4u3uzmSCuVEt096Zybo02LYf7F9AlXoAAAA=
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "Sascha
+ Hauer" <s.hauer@pengutronix.de>, Pengutronix Kernel Team
+	<kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>
+CC: <devicetree@vger.kernel.org>, <imx@lists.linux.dev>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	Marcin Niestroj <m.niestroj@grinn-global.com>,
+	=?utf-8?q?Bence_Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
+X-Mailer: b4 0.13.0
+X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1751488594;VERSION=7994;MC=2422277437;ID=361087;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
+X-ESET-Antispam: OK
+X-EsetResult: clean, is OK
+X-EsetId: 37303A29BB64155D6C7260
 
-On 01/07/2025 12:16, Luca Weiss wrote:
->>>    - if:
->>>        properties:
->>>          compatible:
->>> @@ -185,6 +205,7 @@ allOf:
->>>          compatible:
->>>            contains:
->>>              enum:
->>> +              - qcom,sm7635-adsp-pas
->>>                - qcom,sm8550-adsp-pas
->>>                - qcom,sm8650-adsp-pas
->>>                - qcom,sm8750-adsp-pas
->>
->> sm6350 fits, doesn't it?
-> 
-> Not quite, for sure the firmware-name and memory-region for adsp and
-> cdsp on this SoC requires the dtb firmware file as well, apart from that
-> it looks similar enough.
+Replace verbatim license text with a `SPDX-License-Identifier`.
 
-I looked briefly, so indeed it might not fit well. That's on you to
-investigate and find the best candidate which will mean the least amount
-of changes or the simplest binding.
+The comment heades mis-attributes this license to be "X11", but the
+license text does not include the last line "Except as contained in this
+notice, the name of the X Consortium shall not be used in advertising or
+otherwise to promote the sale, use or other dealings in this Software
+without prior written authorization from the X Consortium.". Therefore,
+this license is actually equivalent to the SPDX "MIT" license (confirmed
+by text diffing).
 
-> 
-> I'm also okay with creating a new (after the whole renaming thing)
-> qcom,milos-pas.yaml which contains the bindings for all 4 *-pas'es.
+Cc: Marcin Niestroj <m.niestroj@grinn-global.com>
+Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
+---
+ arch/arm/boot/dts/nxp/imx/imx6ul-liteboard.dts | 38 +-------------------------
+ arch/arm/boot/dts/nxp/imx/imx6ul-litesom.dtsi  | 38 +-------------------------
+ 2 files changed, 2 insertions(+), 74 deletions(-)
 
-If it does not fit sm6350 or others then yes, new binding it is.
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6ul-liteboard.dts b/arch/arm/boot/dts/nxp/imx/imx6ul-liteboard.dts
+index 5e62272acfba..7a4127670a6f 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6ul-liteboard.dts
++++ b/arch/arm/boot/dts/nxp/imx/imx6ul-liteboard.dts
+@@ -1,44 +1,8 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
+ /*
+  * Copyright 2016 Grinn
+  *
+  * Author: Marcin Niestroj <m.niestroj@grinn-global.com>
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License
+- *     version 2 as published by the Free Software Foundation.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
+ /dts-v1/;
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6ul-litesom.dtsi b/arch/arm/boot/dts/nxp/imx/imx6ul-litesom.dtsi
+index 8d6893210842..c387753f833b 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6ul-litesom.dtsi
++++ b/arch/arm/boot/dts/nxp/imx/imx6ul-litesom.dtsi
+@@ -1,44 +1,8 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
+ /*
+  * Copyright 2016 Grinn
+  *
+  * Author: Marcin Niestroj <m.niestroj@grinn-global.com>
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License
+- *     version 2 as published by the Free Software Foundation.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
+ #include "imx6ul.dtsi"
 
-
+---
+base-commit: 66701750d5565c574af42bef0b789ce0203e3071
+change-id: 20250702-litesom-dts-lic-ad9774ebde3d
 
 Best regards,
-Krzysztof
+-- 
+Bence Csókás <csokas.bence@prolan.hu>
+
+
