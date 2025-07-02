@@ -1,132 +1,241 @@
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from s1.g1.infrastructure.qtmlabs.xyz (s1.g1.infrastructure.qtmlabs.xyz [107.172.1.117])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169092EFDAB
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:16:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E077E27E045;
+	Wed,  2 Jul 2025 14:18:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=107.172.1.117
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751465819; cv=none; b=miLXwc5n9zNQ7RHc7ponoKbaykEW6qZVMbM6mVSVeq8mRe/EOK8KjxMSS7Kw2a+BxwWwe5TzDU5d2PkA3KZAEsF4rdBNerCgyw31JPIzODNl2LXTdNW3m/pJZMwH4W0scrmgORlCZSuZ+WXorRfhRsmA1PP3aUOJaX3g39GBXyk=
+	t=1751465899; cv=none; b=Gv3hQDlmNoh9tNWMqYCZK5a/B1pt6P/lZO/jfsDF0cZNRP7MYI80L+8WKusfeqei5x+R2MWvEn0Pu4E5AwNqjBvq+gZwsMCeQIJYnipf1ZBaVeRvZqxikNF5yVWudYmFFRTr5IqyzJG4f8X2HmP2ZBxK1DeA3bWgMNxPSoUmKS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751465819; c=relaxed/simple;
-	bh=ivkSgMTtV81CdANQ5XafOK5UJU4ttt5I90ZuP9XelP8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U9FeNApyVyt3GqjS9nSF7bRqi6XbzRhEwEAFDBkjj1c4PYGwwykzSvQ4nAgHBeTXXh8sfHXhs3lJ2WPlVDr1oC7aespwSjzqhW0r6EDKDR1qeZixheq3H89S5ih4ECJGXgYgWLYWyO3LJDwzPwZO3dD+K+mPOEZuEN9CjNdZGAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=QIJsd0F/; arc=none smtp.client-ip=209.85.160.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1751465899; c=relaxed/simple;
+	bh=wIKE1020V0qv2Fmt9yYrtkgZMCevG4AYvjudvzYfK/g=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=d8KnSWRJRDBh7d13+44PSV/hwiPv4VdCA7dcoFIGZ9OTxUyLBXUQp3LcfLAqyK9ltr8CnTvYc7I8za+kfkS42346i4lwk+FFCzX6rVHagnhRfXnmXN25jjc3FFVKmotNIFUrZnoJYoxykfXGlsF+0G65NPg82LTyabE1JWPBdBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz; spf=pass smtp.mailfrom=qtmlabs.xyz; dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b=IKBhXOGG; arc=none smtp.client-ip=107.172.1.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qtmlabs.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="QIJsd0F/"
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-2e95ab2704fso3061351fac.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 07:16:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751465815; x=1752070615; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sCNt8orVvRnPdLUcXvMNqNxbNUJlKlGrsoDHbOPwgJM=;
-        b=QIJsd0F/MbFF49Boy+x1Af49w/0wyrnkTsPYjdyr9VuNaiOCkgY23qxpljBn7nqmAp
-         liOIHpmk/RCAdlYe0wweHopiZBw0ShCotJCrr7CijEH0teqdvRPrhFYQIy3rHqk4nIrI
-         uZLHdY/RkOgJhvj7b7tmQSjHGRRqlTm7v12KSGANWWKbKJcHI0g9jaIZI7Yuvw5anyDI
-         uVwK6o6T7mH5TrL1r9rjtD1NkFPixUBzdloXmnqW5qA9dmX5vQ/D13kBYVx44mZGGbc2
-         hLg66JW1Mn+TSLgVmmd8fJYNcp6+AfBn0nFPibF7DWjenQKPDp8nVdxCQ9KcirRN4/ja
-         3Bxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751465815; x=1752070615;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sCNt8orVvRnPdLUcXvMNqNxbNUJlKlGrsoDHbOPwgJM=;
-        b=u3AYwIeA16D4H8DeUrc78sPN71O+M9wyOLjLuGXLRzOspT+HYYFZcOUrzPq1DgHtCm
-         ptKBY27OA/MrBavU+fEXET+SRRntbtPVUG8X/hFO6JQ7FY5EaNzYw4Se89puB4yIh0U5
-         ICh/Yl4w4u7tBVzsXUkv0rxq85y5dYhQbmbepiTd9HSIs68tpMOQ50BRPT2eJKXXAftQ
-         GsuaffLD+rCMiFKM54JmZ7fVBo5IRdsDstZ5DbrO7YH7MXSd23mzeg1k2kEVBq18m+La
-         +4QmQkgNUL0DFtVJtrB5TuBjkF1Az4vRP7ZY6Xh2KJ1paQb1OxlyjGu4mrDyPmg9xdOW
-         B3OA==
-X-Forwarded-Encrypted: i=1; AJvYcCVri7HRg3+K0FH5wZ0Gh4zEiuQL5Zgodua5KQ05keSGb15Tz/wm0ocJENvCwIEQl+ckp8BFcwMq7ZLA29Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzs2Be50XBNsHN/jAqQe8n5MOMtHiAbR7xTPRMIl+1jhukxtx6z
-	hzdaJMfk4FJpqn9FoepL5+Ptii23PvG5mC0BXOqxzXOjwEwi4W5QW4hUow8Hph2C6i8=
-X-Gm-Gg: ASbGncv+RX6/rPJ0yyKhhR3uLkf3dgGe4Tv1bLYgnGEzNG6SejmQobfstlPgh96k/iM
-	jZQ5JCULcri0qXYyjCJs+WsrkCM++H+fTbZd2OtODJ7sDGuopMqHaPs40KbuHOfeVinLIsxXONh
-	VN0GvgycxEcL23hS9cZq3SL2K3CMORo2ynl1U9uwPOCuAgi8nwuX94/2lwXbQLLoP4cVRFuH0yq
-	ykwSD+WaMcLTUHScJudmh/HMnTlzMtuMuXde5S7/dFsE3j4qwcYxLFcAzK0pUy+7pJlG1oiQA2X
-	nujGoIleXMUsOWV7lSm6nsAnR+twslb7G4UiS7TGWSrtuqgAMHgBIpf2fRqaJOy01RSivp150li
-	sYgNLx+mUmq9nMuMoB2jf5S20WVb/hxRRRW0haK0=
-X-Google-Smtp-Source: AGHT+IE3wezFD6gq5YO9AtpQHZYWN89aAqaWHJI6eS+Rikhf0NRsNSoAVq5E1EldNNLhjkG+5ZMahA==
-X-Received: by 2002:a05:6870:288:b0:296:b568:7901 with SMTP id 586e51a60fabf-2f5a8c19495mr1923947fac.16.1751465814997;
-        Wed, 02 Jul 2025 07:16:54 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:70a7:ca49:a250:f1d5? ([2600:8803:e7e4:1d00:70a7:ca49:a250:f1d5])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2efd50f9748sm3929916fac.37.2025.07.02.07.16.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jul 2025 07:16:53 -0700 (PDT)
-Message-ID: <f96b68a5-d750-45f0-8cdd-9761b5daca1d@baylibre.com>
-Date: Wed, 2 Jul 2025 09:16:51 -0500
+	dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b="IKBhXOGG"
+From: Myrrh Periwinkle <myrrhperiwinkle@qtmlabs.xyz>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qtmlabs.xyz; s=dkim;
+	t=1751465895;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=khygtNqcYP/9iuQRn1zO8R3qSotuUVJXwVa8X3vt3VE=;
+	b=IKBhXOGGXjI5htxl23TKl2X5BgoZjPy0mc1VkIsoVADwFNshnFt4IdRKsKEg352/rUW50p
+	gJvPbfQWt3JFa56LKH1C94sXPelj9TppBbTL6dB4opGXA2yk2J/bI4yl5byI9OvEYMvvHG
+	ot7lRCV78xfFx4qygvLopnYvoOtCgPS751Yx08iN4q1xlLPDn8rSjW8quFHtAMRGeGY0sM
+	gXwA2Ny8Cotvoyq0Lrx4HlOblzcRBQT5YcKt6KgyMHz/P+pQqmcRucAJFEb5/4AJxbGlfS
+	fUWrUh/pAkETppRk8Lm2N9XD96xY8fsHrx1ciKYjXi01NrHq7Zmpg+SOycf4Ew==
+Authentication-Results: s1.g1.infrastructure.qtmlabs.xyz;
+	auth=pass smtp.mailfrom=myrrhperiwinkle@qtmlabs.xyz
+Date: Wed, 02 Jul 2025 21:17:58 +0700
+Subject: [PATCH 2/2] vt: defkeymap: Map keycodes above 127 to K_HOLE
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iio: st_lsm6dsx: Replace scnprintf with sysfs_emit
-To: Akshay Bansod <akbansd@gmail.com>, Lorenzo Bianconi <lorenzo@kernel.org>,
- Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>
-Cc: linux-kernel-mentees@lists.linuxfoundation.org,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250702135855.59955-1-akbansd@gmail.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20250702135855.59955-1-akbansd@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250702-vt-misc-unicode-fixes-v1-2-c27e143cc2eb@qtmlabs.xyz>
+References: <20250702-vt-misc-unicode-fixes-v1-0-c27e143cc2eb@qtmlabs.xyz>
+In-Reply-To: <20250702-vt-misc-unicode-fixes-v1-0-c27e143cc2eb@qtmlabs.xyz>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Jiri Slaby <jirislaby@kernel.org>, Arthur Taylor <art@ified.ca>
+Cc: Greg Kroah-Hartman <gregkh@suse.de>, linux-kernel@vger.kernel.org, 
+ linux-serial@vger.kernel.org, 
+ Myrrh Periwinkle <myrrhperiwinkle@qtmlabs.xyz>, stable@vger.kernel.org
+X-Spamd-Bar: -------
 
-On 7/2/25 8:58 AM, Akshay Bansod wrote:
-> Update the sysfs interface for sampling frequency and scale attributes.
-> Replace `scnprintf()` with `sysfs_emit_at()` which is PAGE_SIZE-aware
-> and recommended for use in sysfs.
-> 
-> Signed-off-by: Akshay Bansod <akbansd@gmail.com>
-> ---
-> 
-> Testing:
-> - Built the driver (`st_lsm6dsx_i2c`) as a module.
-> - Tested using `i2c-stub` to mock the device.
-> - Verified that reading sysfs attributes like `sampling_frequency_available`
->   works correctly and shows no change in functionality.
+The maximum number of keycodes got bumped to 256 a very long time ago,
+but the default keymaps were never adjusted to match. This is causing
+the kernel to interpret keycodes above 127 as U+0000 if the shipped
+generated keymap is used.
 
-Nice to see it was actually tested. :-)
+Fix this by mapping all keycodes above 127 to K_HOLE so the kernel
+ignores them.
 
-> 
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-> index c65ad4982..1cef10919 100644
-> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-> @@ -2035,7 +2035,7 @@ st_lsm6dsx_sysfs_sampling_frequency_avail(struct device *dev,
->  
->  	odr_table = &sensor->hw->settings->odr_table[sensor->id];
->  	for (i = 0; i < odr_table->odr_len; i++)
-> -		len += scnprintf(buf + len, PAGE_SIZE - len, "%d.%03d ",
-> +		len += sysfs_emit_at(buf, len, "%d.%03d ",
->  				 odr_table->odr_avl[i].milli_hz / 1000,
->  				 odr_table->odr_avl[i].milli_hz % 1000);
+The contents of this patche were generated by rerunning `loadkeys
+--mktable --unicode` and only including the changes to map keycodes
+above 127 to K_HOLE.
 
-Let's keep checkpatch happy and change the indent of the wrapped lines to
-line up with ( since the ( moved.
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Myrrh Periwinkle <myrrhperiwinkle@qtmlabs.xyz>
+Cc: stable@vger.kernel.org
+---
+ drivers/tty/vt/defkeymap.c_shipped | 112 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 112 insertions(+)
 
->  	buf[len - 1] = '\n';
-> @@ -2054,7 +2054,7 @@ static ssize_t st_lsm6dsx_sysfs_scale_avail(struct device *dev,
->  
->  	fs_table = &hw->settings->fs_table[sensor->id];
->  	for (i = 0; i < fs_table->fs_len; i++)
-> -		len += scnprintf(buf + len, PAGE_SIZE - len, "0.%09u ",
-> +		len += sysfs_emit_at(buf, len, "0.%09u ",
->  				 fs_table->fs_avl[i].gain);
+diff --git a/drivers/tty/vt/defkeymap.c_shipped b/drivers/tty/vt/defkeymap.c_shipped
+index 0c043e4f292e8ac50c7b3cd75afd8c8b84d5bd09..6af7bf8d5460c52aadd9b62cdc8048418fbdba08 100644
+--- a/drivers/tty/vt/defkeymap.c_shipped
++++ b/drivers/tty/vt/defkeymap.c_shipped
+@@ -23,6 +23,22 @@ unsigned short plain_map[NR_KEYS] = {
+ 	0xf118,	0xf601,	0xf602,	0xf117,	0xf600,	0xf119,	0xf115,	0xf116,
+ 	0xf11a,	0xf10c,	0xf10d,	0xf11b,	0xf11c,	0xf110,	0xf311,	0xf11d,
+ 	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
+ };
+ 
+ static unsigned short shift_map[NR_KEYS] = {
+@@ -42,6 +58,22 @@ static unsigned short shift_map[NR_KEYS] = {
+ 	0xf20b,	0xf601,	0xf602,	0xf117,	0xf600,	0xf20a,	0xf115,	0xf116,
+ 	0xf11a,	0xf10c,	0xf10d,	0xf11b,	0xf11c,	0xf110,	0xf311,	0xf11d,
+ 	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
+ };
+ 
+ static unsigned short altgr_map[NR_KEYS] = {
+@@ -61,6 +93,22 @@ static unsigned short altgr_map[NR_KEYS] = {
+ 	0xf118,	0xf601,	0xf602,	0xf117,	0xf600,	0xf119,	0xf115,	0xf116,
+ 	0xf11a,	0xf10c,	0xf10d,	0xf11b,	0xf11c,	0xf110,	0xf311,	0xf11d,
+ 	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
+ };
+ 
+ static unsigned short ctrl_map[NR_KEYS] = {
+@@ -80,6 +128,22 @@ static unsigned short ctrl_map[NR_KEYS] = {
+ 	0xf118,	0xf601,	0xf602,	0xf117,	0xf600,	0xf119,	0xf115,	0xf116,
+ 	0xf11a,	0xf10c,	0xf10d,	0xf11b,	0xf11c,	0xf110,	0xf311,	0xf11d,
+ 	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
+ };
+ 
+ static unsigned short shift_ctrl_map[NR_KEYS] = {
+@@ -99,6 +163,22 @@ static unsigned short shift_ctrl_map[NR_KEYS] = {
+ 	0xf118,	0xf601,	0xf602,	0xf117,	0xf600,	0xf119,	0xf115,	0xf116,
+ 	0xf11a,	0xf10c,	0xf10d,	0xf11b,	0xf11c,	0xf110,	0xf311,	0xf11d,
+ 	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
+ };
+ 
+ static unsigned short alt_map[NR_KEYS] = {
+@@ -118,6 +198,22 @@ static unsigned short alt_map[NR_KEYS] = {
+ 	0xf118,	0xf210,	0xf211,	0xf117,	0xf600,	0xf119,	0xf115,	0xf116,
+ 	0xf11a,	0xf10c,	0xf10d,	0xf11b,	0xf11c,	0xf110,	0xf311,	0xf11d,
+ 	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
+ };
+ 
+ static unsigned short ctrl_alt_map[NR_KEYS] = {
+@@ -137,6 +233,22 @@ static unsigned short ctrl_alt_map[NR_KEYS] = {
+ 	0xf118,	0xf601,	0xf602,	0xf117,	0xf600,	0xf119,	0xf115,	0xf20c,
+ 	0xf11a,	0xf10c,	0xf10d,	0xf11b,	0xf11c,	0xf110,	0xf311,	0xf11d,
+ 	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
++	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
+ };
+ 
+ unsigned short *key_maps[MAX_NR_KEYMAPS] = {
 
-ditto
-
->  	buf[len - 1] = '\n';
->  
+-- 
+2.50.0
 
