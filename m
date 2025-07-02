@@ -1,90 +1,130 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from trager.us (trager.us [52.5.81.116])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43EBD2BE652
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 19:24:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51BFE1A3168;
+	Wed,  2 Jul 2025 19:26:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.5.81.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751484301; cv=none; b=XIJGr2WBNcAdZMULth6gVU9UP/WoyiE2ZGurkTKMhbil5e5kZ860wu1xCLJbK74XzHEwmKOoiAcrfawRkJUbukDvwp03Wkbfh4YbaSbHiOQQfTpjbPy5mSeA8ItVlMW7T/+7NVN3/b7S2hXIM9dfFCfgHna2zrcNFM/jHWNBy68=
+	t=1751484377; cv=none; b=MjpGhBLja83ABo7Qrbt0AelQax+OK8OD+ik0AE7FaGusniywjPlX9eEd60jwfs0k9E1vqBoXQ+A/Y1XcCXqhcuGGIi3r4lnkui22eD2p6rhG7bb41xls0kf0yAd7/gv6rPma7VZ7x/Ao8j8i6jeEh55EmvBELdBE3yyx++7cRFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751484301; c=relaxed/simple;
-	bh=KK4ynMiBHY0thbjaKNOn/kUYd4MYbYdKNVAr0/lf4n4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=M0yb8llQ252ra9L0kuv+1vz5x+6CEpXxJ0GGhAMy1ROfY0WiiuytnqK1ooVriK/F+wxtV4K7dNEwRC8Z9vSSTfp9u4C05wnOlZIDx3BtSWnmIjUdcUg1vKlncYZQUAPAao2zJZc+XBx5IUGLExp8nVkcU5SyL4BNB+PWhe2mDyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=ByItZai0; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="ByItZai0"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e81f311a86fso5668743276.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 12:24:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1751484297; x=1752089097; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RisGUs6Qykk07nJw80m0Ftg7mf8erIx6Cg/HctC8ynk=;
-        b=ByItZai0w8MGT3rkQg9Fse6epWc0z7aza9psyjNIslDY02rb45inRL5w27IE/oJ11f
-         toscM2B9hzhUCDHK15bMnsPE/Di2s1Fnzup6bh7976ZiwfV/heNX4UwBgb9ogSoco/OL
-         k8ON+PSZdN4V8YpzO6Y9Ggr/S6rKfC40f5GbvphbrqMm9Xzo20823UAr62YyCVa6TdV6
-         5kiXFi6zt5BX5S4WFny3X9Qf+qxgCUBdRgJ/F/hF0BTnYamqKTtPEijdzi4/9ClftHUD
-         oAJ5qjAaRWbqoSuQSZK8e4mnB9jHFs9k/8Ko8BjapzrR+Z4FqGj85d7nSwCD1SUGYz/q
-         GIxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751484297; x=1752089097;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RisGUs6Qykk07nJw80m0Ftg7mf8erIx6Cg/HctC8ynk=;
-        b=vUmVZFlV6lWaEjbc0LGn1CfQwKo/m5bisk8rNc8Z6qFU+9eykXDX8XhtjrciUY5KCn
-         bwe654tdcj5tRscxxJdyqF6/ttEifszcsqpWQTmXy3hqe9qX8Ry6PomsJm7OZCjsYJy5
-         n7oe1XyE1/FWZa4scw1c1XJ5wOfhfbGACDjuj4v/9czaCmMJhd4HqokAg2qrtud1hbWn
-         K8NAQ0kmL3KAb8/FYKS1F0DrfH4n29SFzWj4wV70IoLilaEVi1NMyOlPcxsnbxpTjalc
-         x3VyfSVmZpiq2Vkl/fxqR3RFvgwy5Qgtg3NtSCjvC4eWsmBl3qUVbipl3uqJmjPxC6VN
-         +CjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWB9jqUSJpjFxYpDwOMLQdaIGqjznmBzVixLJQALXYoypE8/NAucVReUxJ+aB3T2Z/l3UuPiqkz2q17h38=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEKZhDuTkstKlqMt+evEoFqcqDEMdIyaM4cl8zw3i/1fdNiY0B
-	93HN2FsWlPTpcduro71RSyTXaNVpGp+IQ8obsVQO1tq/mViReSwjg1AnUKbD3+QoQoTzdqCZ250
-	+xSle4FPABQT9F3Lf4GGE/qmnyWpEKCNpsr3KUH2v
-X-Gm-Gg: ASbGncvnarorJjx4LdwbIiTDeIztUdP2BA/WNbF0Qw8c8/LdC9Z+gEr95M4Gmfy1aaL
-	Zf3/MlFqvB9+2Ge1V+6RF/ouW1NhXUMYa3ihF1lXOSebt3+RPUe8liax5ydZaA0uvLYE/sDPAzu
-	caYXXbL/o7KueAZQc72t7STWWVn/sfqy+ooidqb0zOKpE=
-X-Google-Smtp-Source: AGHT+IHvhasAtxRO9RpFu2NYbRrcynF3zeEZltmoq9Luzh1btO4Igu87XYFa3nEiA/TfmY8TNO2agVgG/zRUYfJtTIM=
-X-Received: by 2002:a05:690c:6486:b0:70e:185b:356d with SMTP id
- 00721157ae682-7164d398834mr54967477b3.14.1751484297140; Wed, 02 Jul 2025
- 12:24:57 -0700 (PDT)
+	s=arc-20240116; t=1751484377; c=relaxed/simple;
+	bh=1FprbJCOjhBvFKmkocfnqc/yP2VIf6fib2j6Q3hUr84=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=GWdWkKv5ZmfPqNO4eBYpjHbRSU6Ei3t5Vj3NMnOpVnzrqpm4vgIyA6RMxrzihU7e+/ro3YOwl9qJj/Fqb/M4HEUoRmtrqHYQ68FUhVao7YdxQ72BPGlwZ9pm1pgY9B80cfmq35c0P6Ufz0fmpjYzz/oeC2CD20Gb3/Gcc9YoEPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trager.us; spf=pass smtp.mailfrom=trager.us; arc=none smtp.client-ip=52.5.81.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trager.us
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trager.us
+Received: from c-76-104-255-50.hsd1.wa.comcast.net ([76.104.255.50] helo=localhost)
+	by trager.us with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92.3)
+	(envelope-from <lee@trager.us>)
+	id 1uX35s-000810-Ab; Wed, 02 Jul 2025 19:26:08 +0000
+From: Lee Trager <lee@trager.us>
+To: Alexander Duyck <alexanderduyck@fb.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	kernel-team@meta.com,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Sanman Pradhan <sanman.p211993@gmail.com>,
+	Mohsin Bashir <mohsin.bashr@gmail.com>,
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Su Hui <suhui@nfschina.com>,
+	Simon Horman <horms@kernel.org>,
+	Lee Trager <lee@trager.us>,
+	Jacob Keller <jacob.e.keller@intel.com>
+Cc: Andrew Lunn <andrew@lunn.ch>,
+	Kalesh AP <kalesh-anakkur.purayil@broadcom.com>,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH net-next 2/6] eth: fbnic: Use FIELD_PREP to generate minimum firmware version
+Date: Wed,  2 Jul 2025 12:12:08 -0700
+Message-ID: <20250702192207.697368-3-lee@trager.us>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250702192207.697368-1-lee@trager.us>
+References: <20250702192207.697368-1-lee@trager.us>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250702055820.112190-1-zhaochenguang@kylinos.cn>
-In-Reply-To: <20250702055820.112190-1-zhaochenguang@kylinos.cn>
-From: Paul Moore <paul@paul-moore.com>
-Date: Wed, 2 Jul 2025 15:24:46 -0400
-X-Gm-Features: Ac12FXyjMghT7240fFXsw7E25qCJfe8hMIplSYH8wjk3i5VEZLbQ2yBp0Z1HQmU
-Message-ID: <CAHC9VhTg7cwXu17tHMgSJF3ZRWjA_ozZg3TK3aLJOs2X4QBJ=w@mail.gmail.com>
-Subject: Re: [PATCH] net: ipv6: Fix spelling mistake
-To: Chenguang Zhao <zhaochenguang@kylinos.cn>
-Cc: "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 2, 2025 at 1:59=E2=80=AFAM Chenguang Zhao <zhaochenguang@kylino=
-s.cn> wrote:
->
-> change 'Maximium' to 'Maximum'
->
-> Signed-off-by: Chenguang Zhao <zhaochenguang@kylinos.cn>
-> ---
->  net/ipv6/calipso.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+Create a new macro based on FIELD_PREP to generate easily readable minimum
+firmware version ints. This macro will prevent the mistake from the
+previous patch from happening again.
 
-Acked-by: Paul Moore <paul@paul-moore.com>
+Signed-off-by: Lee Trager <lee@trager.us>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+---
+ drivers/net/ethernet/meta/fbnic/fbnic_csr.h | 13 +++++++------
+ drivers/net/ethernet/meta/fbnic/fbnic_fw.c  | 13 ++++++-------
+ 2 files changed, 13 insertions(+), 13 deletions(-)
 
---=20
-paul-moore.com
+diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_csr.h b/drivers/net/ethernet/meta/fbnic/fbnic_csr.h
+index e2b251eddbb3..06b9c49e51a2 100644
+--- a/drivers/net/ethernet/meta/fbnic/fbnic_csr.h
++++ b/drivers/net/ethernet/meta/fbnic/fbnic_csr.h
+@@ -12,13 +12,14 @@
+ #define DESC_BIT(nr)		BIT_ULL(nr)
+ #define DESC_GENMASK(h, l)	GENMASK_ULL(h, l)
+
++#define FW_VER_CODE(_major, _minor, _patch, _build) (		      \
++		FIELD_PREP(FBNIC_FW_CAP_RESP_VERSION_MAJOR, _major) | \
++		FIELD_PREP(FBNIC_FW_CAP_RESP_VERSION_MINOR, _minor) | \
++		FIELD_PREP(FBNIC_FW_CAP_RESP_VERSION_PATCH, _patch) | \
++		FIELD_PREP(FBNIC_FW_CAP_RESP_VERSION_BUILD, _build))
++
+ /* Defines the minimum firmware version required by the driver */
+-#define MIN_FW_MAJOR_VERSION    0
+-#define MIN_FW_MINOR_VERSION    10
+-#define MIN_FW_PATCH_VERSION    6
+-#define MIN_FW_VERSION_CODE     (MIN_FW_MAJOR_VERSION * (1u << 24) + \
+-				 MIN_FW_MINOR_VERSION * (1u << 16) + \
+-				 MIN_FW_PATCH_VERSION * (1u << 8))
++#define MIN_FW_VER_CODE				FW_VER_CODE(0, 10, 6, 0)
+
+ #define PCI_DEVICE_ID_META_FBNIC_ASIC		0x0013
+
+diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_fw.c b/drivers/net/ethernet/meta/fbnic/fbnic_fw.c
+index cdc1e2938a64..ac7804a8a22c 100644
+--- a/drivers/net/ethernet/meta/fbnic/fbnic_fw.c
++++ b/drivers/net/ethernet/meta/fbnic/fbnic_fw.c
+@@ -573,16 +573,15 @@ static int fbnic_fw_parse_cap_resp(void *opaque, struct fbnic_tlv_msg **results)
+ 	if (!fbd->fw_cap.running.mgmt.version)
+ 		return -EINVAL;
+
+-	if (fbd->fw_cap.running.mgmt.version < MIN_FW_VERSION_CODE) {
++	if (fbd->fw_cap.running.mgmt.version < MIN_FW_VER_CODE) {
++		char required_ver[FBNIC_FW_VER_MAX_SIZE];
+ 		char running_ver[FBNIC_FW_VER_MAX_SIZE];
+
+ 		fbnic_mk_fw_ver_str(fbd->fw_cap.running.mgmt.version,
+ 				    running_ver);
+-		dev_err(fbd->dev, "Device firmware version(%s) is older than minimum required version(%02d.%02d.%02d)\n",
+-			running_ver,
+-			MIN_FW_MAJOR_VERSION,
+-			MIN_FW_MINOR_VERSION,
+-			MIN_FW_PATCH_VERSION);
++		fbnic_mk_fw_ver_str(MIN_FW_VER_CODE, required_ver);
++		dev_err(fbd->dev, "Device firmware version(%s) is older than minimum required version(%s)\n",
++			running_ver, required_ver);
+ 		/* Disable TX mailbox to prevent card use until firmware is
+ 		 * updated.
+ 		 */
+@@ -1167,7 +1166,7 @@ int fbnic_mbx_poll_tx_ready(struct fbnic_dev *fbd)
+ 	 * to indicate we entered the polling state waiting for a response
+ 	 */
+ 	for (fbd->fw_cap.running.mgmt.version = 1;
+-	     fbd->fw_cap.running.mgmt.version < MIN_FW_VERSION_CODE;) {
++	     fbd->fw_cap.running.mgmt.version < MIN_FW_VER_CODE;) {
+ 		if (!tx_mbx->ready)
+ 			err = -ENODEV;
+ 		if (err)
+--
+2.47.1
