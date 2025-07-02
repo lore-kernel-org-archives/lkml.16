@@ -1,204 +1,116 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87C9D219E8C;
-	Wed,  2 Jul 2025 07:39:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751441988; cv=pass; b=FMG/XXK7urvWAqGzT/RucJuG9vu64NDjb+M+ifYmP95YmrkeCsg0H1vFMDe6UFlHDPxMSkoszshET0APvP6XviFUzWXgpWHjZWJGksP2pjJUFj2VEMiiSmRjLpzx8TL4B/V9JPh31h0k5kEdcBTMMx6AiFCMWc1QSqLWIAu998s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751441988; c=relaxed/simple;
-	bh=BLIq5vj4c8xsi6t/A3iQ1LDcDCW83a66Xr98kkzGJSU=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=CnrONMMVUvslfOT9+/tXnR2pnOJC8+zAkFExdJchTYw7onoSu0Ntuh25zBoULFKSqf1bOeX91RZOVdcyDO2y9/gYAd2qZe0tcPt3lBiUSU7Ncb8ePPWF+1341hzm6ocGxDPfhoWZGx2FzsEJbBqfFm3OLwnQ8DexX/O1XmpWlco=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=VZ0ClbI4; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 724241DF977;
+	Wed,  2 Jul 2025 07:40:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751442064; cv=none; b=kFVgChSI2J4whUzzeeW3tTbpyezKJu+VFPF3YQv81zUT/AgBX87RluFdo14fiOAGUlhmZdAZ+ojT0+4tIwpBz4Y2wb1aCfeJx0zwoo1WtDeBLGtqovg8Igo0dCTeOU4skjhMJuDaG6Aqi1O+VL2qv6RNXHRkRePiW/2C7FZH4Yk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751442064; c=relaxed/simple;
+	bh=Q+tJOgDXSyHv7cn+GwyRvugVT/KDOb3xDLGrdh76eAw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=EpNwZtMJzckTA3T2owL+3eFLdFfe8UxenPI576te29TQH3f+Qk6WHA2k7aQjGCNTjqbVnJr2jqnxilyLWJbzFrEEKCjYIgiCWwKmWIgKYJvem4YmjgNsHsyDgmmyLZmYbsODM7w9lJ6c9K+HBEYHT/BuE1JOYTrPT0pZCiK+znA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=NW+O2ndk; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="VZ0ClbI4"
-ARC-Seal: i=1; a=rsa-sha256; t=1751441966; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=NmUh/1fjpIBArR4N9g4lqkbzkmO110cbQJsMuglmkB5CZV0paCjiWvwJqDXRd5hfsMD3+BgEYxkRX0L3gIEoBOGiaAkVET/D0xh0JJIzJ/rv4bVtEptW6s5Oy5a+SUB/0IHiV4P9RY0QRO+wlZlINvR+qIl1HiQwOI31069Enx8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751441966; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=+KxUmFeRC8bMIw5Ny9ddbbRTXTvex9p04JtTzsIBz/Q=; 
-	b=EINfJhRxOE82S/I83LeHXTnUAWOY6Q8aRHpX2doyMKAt3zj5C4lYZyQFWd3NHt9BqBEN3r91LHW170aZqLLkAV820NQUv/7U340m/hRxQcsh89cc3oPFL2BE5GUSTGsq2pmA/Fkw6yNkvyjDnIEUmbgGjJtQ52KUrI9i+mV3b3k=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
-	dmarc=pass header.from=<usama.anjum@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751441966;
-	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Cc:Cc:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=+KxUmFeRC8bMIw5Ny9ddbbRTXTvex9p04JtTzsIBz/Q=;
-	b=VZ0ClbI4Zwnmgg+XayfBJRLWhMg0lJ12UPuI5wgUT2yrVVZwoK69Am7bVjupAovB
-	0UvxQxyMjFmXio5f7t5CYruxkhSta5kMblB0EeiNQCC79t4BEIaSyxxQJF/cWh7QlX3
-	rtSv0JVccKgSI1IXAVqyzDNlCceEZgPMOzW/+isw=
-Received: by mx.zohomail.com with SMTPS id 1751441963179311.66631066300556;
-	Wed, 2 Jul 2025 00:39:23 -0700 (PDT)
-Message-ID: <6846faf7-20b5-4f08-a8f0-9946f993b0e9@collabora.com>
-Date: Wed, 2 Jul 2025 12:39:17 +0500
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NW+O2ndk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1751442041;
+	bh=10rrKV1mRpMK7w0xooZ94xMtgBGMsUxVJ0NQ3XuotQo=;
+	h=Date:From:To:Cc:Subject:From;
+	b=NW+O2ndkZ7jJgB93qVbYFfhLetrAe4r0v13Jrx0oQb/5ast4qCjSezlcA3Cs4JA+n
+	 QVG2TLcQiUECnX5Ybn/qJesvi0PdUB4opnJtzzQAC6mxUk4kSQQ34Dozos2C3LyU5u
+	 DzJG7rq7ivutuxYF4rMKnMWnL5XwL6VlU/juW+u3hUIi+CuTpHHgaT5dSFz77NZK4b
+	 XGPeFIPCGU1vEV0dbpdaKB+J+og8aeNu4lWekIp4vF2P6wR4Zr15ixCq1BmlaygUru
+	 s0lSn9VgDT7DuWAFJszr2PjlY9RuYGz1/AGW6tp8sYbtBBsdJxZ5u7d0jSyQcPxc7N
+	 JagkolXNCif4Q==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bXBdj10Bmz4wcZ;
+	Wed,  2 Jul 2025 17:40:40 +1000 (AEST)
+Date: Wed, 2 Jul 2025 17:40:54 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Andrew Jeffery <andrew@codeconstruct.com.au>, Joel Stanley
+ <joel@jms.id.au>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patches in the bmc tree
+Message-ID: <20250702174054.383aef05@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: usama.anjum@collabora.com, kernel@collabora.com, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] selftests/mm: pagemap_scan ioctl: add PFN ZERO test cases
-To: David Hildenbrand <david@redhat.com>,
- Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>
-References: <20250630102443.137809-1-usama.anjum@collabora.com>
- <20027e0c-f43b-4d10-a4d6-41dcc38145bd@redhat.com>
-Content-Language: en-US
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <20027e0c-f43b-4d10-a4d6-41dcc38145bd@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: multipart/signed; boundary="Sig_/l+oVLjgMHyk/mGIsyq_c_GI";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On 7/1/25 7:51 PM, David Hildenbrand wrote:
-> On 30.06.25 12:24, Muhammad Usama Anjum wrote:
->> Add test cases to test the correctness of PFN ZERO flag of pagemap_scan
->> ioctl. Test with normal pages backed memory and huge pages backed
->> memory.
-> 
-> Just to verify: would this trigger on kernels before my fix?
-Yes, it does trigger the bug without the fix.
+--Sig_/l+oVLjgMHyk/mGIsyq_c_GI
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> 
->>
->> Cc: David Hildenbrand <david@redhat.com>
->> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
->> ---
->> The bug has been fixed [1].
->>
->> [1] https://lore.kernel.org/all/20250617143532.2375383-1-david@redhat.com
->> ---
->>   tools/testing/selftests/mm/pagemap_ioctl.c | 57 +++++++++++++++++++++-
->>   1 file changed, 56 insertions(+), 1 deletion(-)
->>
->> diff --git a/tools/testing/selftests/mm/pagemap_ioctl.c b/tools/
->> testing/selftests/mm/pagemap_ioctl.c
->> index 57b4bba2b45f3..6138de0087edf 100644
->> --- a/tools/testing/selftests/mm/pagemap_ioctl.c
->> +++ b/tools/testing/selftests/mm/pagemap_ioctl.c
->> @@ -1,4 +1,5 @@
->>   // SPDX-License-Identifier: GPL-2.0
->> +
->>   #define _GNU_SOURCE
->>   #include <stdio.h>
->>   #include <fcntl.h>
->> @@ -1480,6 +1481,57 @@ static void transact_test(int page_size)
->>                     extra_thread_faults);
->>   }
->>   +void zeropfn_tests(void)
->> +{
->> +    unsigned long long mem_size;
->> +    struct page_region vec;
->> +    int i, ret;
->> +    char *mem;
->> +
->> +    /* Test with page backed memory */
-> 
-> What is "page backed memory" ? :)
-I mean, normal memory which isn't huge page backed. I've renamed it to
-Test with normal memory.
+Hi all,
 
-> 
->> +    mem_size = 10 * page_size;
->> +    mem = mmap(NULL, mem_size, PROT_READ, MAP_PRIVATE | MAP_ANON, -1,
->> 0);
->> +    if (mem == MAP_FAILED)
->> +        ksft_exit_fail_msg("error nomem\n");
->> +
->> +    /* Touch each page to ensure it's mapped */
->> +    for (i = 0; i < mem_size; i += page_size)
->> +        (void)((volatile char *)mem)[i];
->> +
->> +    ret = pagemap_ioctl(mem, mem_size, &vec, 1, 0,
->> +                (mem_size / page_size), PAGE_IS_PFNZERO, 0, 0,
->> PAGE_IS_PFNZERO);
->> +    if (ret < 0)
->> +        ksft_exit_fail_msg("error %d %d %s\n", ret, errno,
->> strerror(errno));
->> +
->> +    ksft_test_result(ret == 1 && LEN(vec) == (mem_size / page_size),
->> +             "%s all pages must have PFNZERO set\n", __func__);
->> +
->> +    munmap(mem, mem_size);
->> +
->> +    /* Test with huge page */
->> +    mem_size = 10 * hpage_size;
->> +    mem = memalign(hpage_size, mem_size);
->> +    if (!mem)
->> +        ksft_exit_fail_msg("error nomem\n");
->> +
->> +    ret = madvise(mem, mem_size, MADV_HUGEPAGE);
->> +    if (ret)
->> +        ksft_exit_fail_msg("madvise failed %d %s\n", errno,
->> strerror(errno));
-> 
-> Might fail on older kernels, so we usually treat this as a skip.
-I'll skip it in next version.
+The following commits are also in the aspeed tree as different commits
+(but the same patches):
 
-> 
->> +
->> +    for (i = 0; i < mem_size; i += hpage_size)
->> +        (void)((volatile char *)mem)[i];
->> +
->> +    ret = pagemap_ioctl(mem, mem_size, &vec, 1, 0,
->> +                (mem_size / page_size), PAGE_IS_PFNZERO, 0, 0,
->> PAGE_IS_PFNZERO);
->> +    if (ret < 0)
->> +        ksft_exit_fail_msg("error %d %d %s\n", ret, errno,
->> strerror(errno));
->> +
->> +    ksft_test_result(ret == 1 && LEN(vec) == (mem_size / page_size),
->> +             "%s all huge pages must have PFNZERO set\n", __func__);
-> 
-> Wouldn't this be able to fail if /sys/kernel/mm/transparent_hugepage/
-> use_zero_page is set to false, 
-I wasn't aware of it. I'll check user_zero_page first as initial condition.
+  05a8cfc12f1c ("ARM: dts: aspeed: system1: Add GPIO line name")
+  24c5110ce866 ("ARM: dts: aspeed: system1: Reduce sgpio speed")
+  2f0f9cc149f5 ("dt-bindings: arm: aspeed: add Nvidia's GB200NVL BMC")
+  322dbe88fe88 ("ARM: dts: aspeed: system1: Remove VRs max8952")
+  373d9b5989e0 ("ARM: dts: aspeed: catalina: Enable MCTP support for NIC ma=
+nage
+ment")
+  3969aadf4be9 ("ARM: dts: aspeed: system1: Update LED gpio name")
+  4de4329d8a76 ("ARM: dts: aspeed: system1: Disable gpio pull down")
+  6b357c149ec5 ("dt-bindings: ipmi: Add binding for IPMB device")
+  6e8b400dddd1 ("ARM: dts: aspeed: catalina: Add IO Mezz board thermal sens=
+or nodes")
+  7c59fb16bfee ("ARM: dts: aspeed: Rework APB nodes")
+  8c2d9fc03293 ("ARM: dts: aspeed: catalina: Add second source fan controll=
+er support")
+  8f58b439c451 ("ARM: dts: aspeed: catalina: Remove INA238 and INA230 nodes=
+")
+  90e9de1d0921 ("ARM: dts: aspeed: Add device tree for Nvidia's GB200NVL BM=
+C")
+  94706cdd3ead ("ARM: dts: aspeed: bletchley: remove unused ethernet-phy no=
+de")
+  94776ee4e1ec ("ARM: dts: aspeed: Align GPIO hog name with bindings")
+  a2c2d4c41785 ("ARM: dts: aspeed: catalina: Add Front IO board remote ther=
+mal sensor")
+  a7d6d2d622d7 ("ARM: dts: aspeed: Remove swift machine")
+  aadc4c3ddd1e ("ARM: dts: aspeed: catalina: Update CBC FRU EEPROM I2C bus =
+and address")
+  c8c33f37a6a6 ("ARM: dts: aspeed: system1: Mark GPIO line high/low")
+  d276bb9fb5b6 ("ARM: dts: aspeed: catalina: Add MP5990 power sensor node")
+  df89538262c5 ("ARM: dts: aspeed: catalina: Enable multi-master on additio=
+nal I2C buses")
+  ebd7b3c42ffa ("ARM: dts: aspeed: catalina: Add fan controller support")
+  f06ff444bf79 ("ARM: dts: aspeed: system1: Add IPMB device")
+  f2919835b87e ("ARM: dts: aspeed: catalina: Add second source HSC node sup=
+port")
 
-> or if mmap() gave us a suboptimally-
-> aligned range?
-mem = memalign(hpage_size, mem_size) is being used to allocate this. So
-aligment should be correct.
+--=20
+Cheers,
+Stephen Rothwell
 
-> 
-> You'd have to read each and every page to get the ordinary shared
-> zeropage in these configs instead without making the test too complicated.
-In the above for loop, we are reading each new page already. Let's
-resolve this and then I'll post the v2 which is ready.
+--Sig_/l+oVLjgMHyk/mGIsyq_c_GI
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-> 
->> +
->> +    free(mem);
-> 
-> 
-> Shouldn't this be an munmap() ?
-free() is being used to free memory allocated by memalign().
+-----BEGIN PGP SIGNATURE-----
 
-> 
->> +}
->> +
->>   int main(int __attribute__((unused)) argc, char *argv[])
->>   {
->>       int shmid, buf_size, fd, i, ret;
->> @@ -1494,7 +1546,7 @@ int main(int __attribute__((unused)) argc, char
->> *argv[])
->>       if (init_uffd())
->>           ksft_exit_pass();
->>   -    ksft_set_plan(115);
->> +    ksft_set_plan(117);
-> 
-> We should probably look into converting this test to kselftest_harness.
-> 
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhk4oYACgkQAVBC80lX
+0Gzyswf+JT8SgeqbGbjI/0JPSQ+6qj6LglhAEc4b8OS7soDOCPZZKEVSjidkU7GU
+3FnEE9VcEEvaW1guDUxabAnF8QYi6s8WOJprLrjcpqoF9/hg8TcwIFFP7UsZRt00
+DxM+f/R97eh6lZMgGEAWWGJBr3TxXyYSbPFxDDBHjLXYpdU+NIgdvzk2w0RLJxD2
+FP7iwNWkTCa2XPBlzoX6cmWvtIo5eI7wHk0isi0iLY4YOxu3wWddbmAqcQG7jd7v
+W7Scm5uBPItov/WINioBmh3TmfqWAx8uk4cT1SQtW76dpZNyz58hwpzk6iwXctge
+b6D9MF2CwUSCU3moX9Q4vxQZvuwJKw==
+=isJn
+-----END PGP SIGNATURE-----
 
-
--- 
-Regards,
-Usama
+--Sig_/l+oVLjgMHyk/mGIsyq_c_GI--
