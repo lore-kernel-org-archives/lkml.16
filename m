@@ -1,75 +1,71 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2089.outbound.protection.outlook.com [40.107.236.89])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2080.outbound.protection.outlook.com [40.107.93.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDF64301136;
-	Wed,  2 Jul 2025 15:56:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7F6C303DC2;
+	Wed,  2 Jul 2025 15:56:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.80
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751471817; cv=fail; b=ruQLdfNeTCzvTfxkZD4LiFObPQSip+snxpUmzeWSW5X+Yz82Sc104EzoxUZJuP9JffjrBnarQ8dLICjafyeDEHU8KFpxOtfhTrriKmsgzi9Z0vDrFVrOM5nTZKCJ3lXsvdcBcS4/WaN8XLn99aFWTC+V60Ym0IO1lrdVAF7izjY=
+	t=1751471816; cv=fail; b=fiYbLmgQnY9NqVYNHy2fCPSkzvEw3xOG6XYuLunGX3lpq0chDACBeLgki25eAltU4JPUyhsSjJhEDa3A+XdBqiYpAo+39OFWAFF9jdJh1Ky44izP3UGQFDJLNwb8rVujPpN+Q9W5w04EXi5OBQFiQon5RhkLqPur0lvw+gCIBdE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751471817; c=relaxed/simple;
-	bh=OFFehtcvDNqd0teoQK4hGb/OxCM6JyYHvn/4et8YNT0=;
+	s=arc-20240116; t=1751471816; c=relaxed/simple;
+	bh=04m3xibnrN3zHWWp5Snvclwi2QU+FEUbZdhgGGzNEiM=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cRAL0eARI4baliM/yuHmfczOicBZw+ARR56WFUDsDxvGOvgd6+iBuoQtzbyuCIL5HRmrW2pQMhW0HQWDrmMa51fk7c0jzt616IWCq5RmsA/zV82s3/ZSmR8V2vL/6yt+hLEsOOhXHf+ie/dwnPpS1JFNWLUpMniX84rcZpC+IHg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=lQEP/fZM; arc=fail smtp.client-ip=40.107.236.89
+	 MIME-Version:Content-Type; b=XdUv175Yx5bYjt6jYZF1OnQ13ghQ78MKSTcnTYj02Z/plqME9Y9rLcqGPkG/ZTI7r/Xi+0dMAIlswAyHFzTcFQVZP/JvJThn5Y8OePAS5rBN+onqQpKhAY45t88KC/YjQYpDNcWkx9jpVJAc//W7JZW5mmTLBu9S0RziEDm6JCw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=BM2t+XRx; arc=fail smtp.client-ip=40.107.93.80
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="lQEP/fZM"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="BM2t+XRx"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nNvfoUg1WmgBmwICbxKl3tCAnbIz9QYF+yJZo/IMOm6yUEYVKObE6eSFqqEyqK23jvnbEIpVOJDpaEyOquXNaPk1rqIq7IE1gY188yFVEOCa/9pqTDeYQFdJ7Hcy88ncyitkbuQSPaPKekcZKF1T2mfLHI9RsiL4ZJmPEfGgsWdHa/v7Tgxzm9MrxEWV9vCTR1QKpvf7I9HNvGHXLWpZ3GFcWq8bkY0nE9g47H2UwMA8valquHSMt26wVAUH8eLPhkBLgnWZl0jHe/xt7JbHBZLkWxnRq2HxJUlbFC9pyPbA4VFNEo4b4xNNIPL26aGgVh2ZIx+p8H9A6XLx7EUYYA==
+ b=iNGMUiMsHJh7mdBEe6deN/Mh4GYlRWpaT9m12zIJNKMT64PLTN509szHB7/2miVUFiMQ68JwkAVRkEsPHv2Vrsr5+PHUa7r0z8fpvPyB8J0yIX6oLaTrEupMT1kDRgVE+eP3Xf9OiA8UyY5RLqy/xticZ6MnCqNZddHgtM37oMQLT8sXBBxzBqMURAhglHewY4hVlt5tSGLR3n/VHMopueUpG/AGrrM1LoApUE+k8EwLuc9KJekbyGqfty4SUuct2BdO5poJSqPKr7JJAaa8KDhQ1ri3S3Kw83nbd9HS+dp4dktqaKv+HC4rjOQA8QWL8unHByQhsY5zUmSgdPPDPQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rAtbRtZeUwmOdtlonTJrDR6RlOBMrOsYhe4fWNIQVbM=;
- b=Av84sRSk49FGoaYuYvn5VDjeIICaCqwOP2vvV/n4Vp1z4TniNixN6Z1UdXKwi7eSDgmthZng8YlhQynCgzOgA6CMnUzoywWYUhUXyCpG818lFMxnaFNxFwE7vrPUgvi+JVe176FIs0kV2X0j91jZEQI17xjM7Bd8gngJM14c6DE1aH4pvxI5zKuFu54jm4C9aD+CcPlMPHe17bCzUKkrSoqkEGVn9MUDhs+T3Qa9aUo9NV0PtV0xyrYEBySCY8+2PSJ+TiHSCD4EdHQDCVtSjwa7+atgpg//NnfHa7Di2Xam5nkHozMRM2JKSJ8/b1c07Ao2ttraLwlPfD5MEsgmSQ==
+ bh=jNQkpdphobxwMnliY58m62gFCEfkKWVU589PrjZHcpo=;
+ b=dHnDXCvByxuAgdR8m/w2ZgjEdCJxYP2/96AAbmX7H3I5gOpG4yBLGjrBRUCLezGStL4QMHA3Z6q/mKYTMSstkpqJBAqDtXuADBe/KhMKhloE/G2jWhd/PdlBVUB5+S94Z0+yUm4Os3+vfPAN2uoTl8VPFXMuDPP+tkUAycyvOdWMi8TkCc8wcFhxaq2kxIPELZxMVH4hscLUGYO5CyrOUiulwx1UyWZ9bruq/0MVSYeRoGlPj47AQuld3tI1L/OmXICrD/rS7tT8AlzL30zvXnSaAlY71P9YPt7HqZ1w37rt6HlrpXPtQmWaCzHTiFVaC2MT1ArhYUTH9ttKCWFyuQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rAtbRtZeUwmOdtlonTJrDR6RlOBMrOsYhe4fWNIQVbM=;
- b=lQEP/fZMXcei75xWMKCSglPizYYnmert8kiAO/HWBtCqW2sbltvT55aHc+PYTAcQV9zuleQT3L+7I9GQTcJoLKbMfVNmWNWG0LfX+58E4TfsmUz7A6ykvMfBcVn7N4qWwe63J6sYOupXQMDwSq30D0LhOXBTfqglhmVq7sztx3w=
-Received: from BN1PR13CA0025.namprd13.prod.outlook.com (2603:10b6:408:e2::30)
- by PH7PR12MB6611.namprd12.prod.outlook.com (2603:10b6:510:211::11) with
+ bh=jNQkpdphobxwMnliY58m62gFCEfkKWVU589PrjZHcpo=;
+ b=BM2t+XRxmSn2XIZXJayY7DP0S1uGw51cMriIP4EHm56BVgn7MaFNdsTYF9NwSCKPoR7MFdJsy+yTZPPEsihoq5ljvbY7EPAu7pQByuf/yAdaSILHBAuGLDsLlH9DUJsr/NaaI8sxNlKM9BI6fSqH8Kstcx1icAYA8JmJUe9aNnE=
+Received: from CH0PR13CA0021.namprd13.prod.outlook.com (2603:10b6:610:b1::26)
+ by DM6PR12MB4300.namprd12.prod.outlook.com (2603:10b6:5:21a::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.32; Wed, 2 Jul
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.20; Wed, 2 Jul
  2025 15:56:48 +0000
-Received: from BN1PEPF00005FFC.namprd05.prod.outlook.com
- (2603:10b6:408:e2:cafe::7a) by BN1PR13CA0025.outlook.office365.com
- (2603:10b6:408:e2::30) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.18 via Frontend Transport; Wed,
+Received: from CH3PEPF00000017.namprd21.prod.outlook.com
+ (2603:10b6:610:b1:cafe::81) by CH0PR13CA0021.outlook.office365.com
+ (2603:10b6:610:b1::26) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.20 via Frontend Transport; Wed,
  2 Jul 2025 15:56:48 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
 Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN1PEPF00005FFC.mail.protection.outlook.com (10.167.243.228) with Microsoft
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ CH3PEPF00000017.mail.protection.outlook.com (10.167.244.122) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8901.20 via Frontend Transport; Wed, 2 Jul 2025 15:56:48 +0000
-Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ 15.20.8922.1 via Frontend Transport; Wed, 2 Jul 2025 15:56:48 +0000
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 2 Jul
- 2025 10:56:42 -0500
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB05.amd.com
- (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 2 Jul
- 2025 10:56:42 -0500
+ 2025 10:56:47 -0500
 Received: from xsjgregoryw50.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
  (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Wed, 2 Jul 2025 10:56:41 -0500
+ Transport; Wed, 2 Jul 2025 10:56:47 -0500
 From: Gregory Williams <gregory.williams@amd.com>
 To: <ogabbay@kernel.org>, <michal.simek@amd.com>, <robh@kernel.org>
 CC: Gregory Williams <gregory.williams@amd.com>,
 	<dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>
-Subject: [PATCH V1 3/9] dt-bindings: power: Add AMD Versal power domain bindings
-Date: Wed, 2 Jul 2025 08:56:24 -0700
-Message-ID: <20250702155630.1737227-4-gregory.williams@amd.com>
+Subject: [PATCH V1 8/9] accel: amd-ai-engine: Create tile memory information
+Date: Wed, 2 Jul 2025 08:56:29 -0700
+Message-ID: <20250702155630.1737227-9-gregory.williams@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250702155630.1737227-1-gregory.williams@amd.com>
 References: <20250702155630.1737227-1-gregory.williams@amd.com>
@@ -81,126 +77,391 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-Received-SPF: None (SATLEXMB05.amd.com: gregory.williams@amd.com does not
+Received-SPF: None (SATLEXMB03.amd.com: gregory.williams@amd.com does not
  designate permitted sender hosts)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF00005FFC:EE_|PH7PR12MB6611:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2feff4ff-a995-4bab-3f34-08ddb9810d62
+X-MS-TrafficTypeDiagnostic: CH3PEPF00000017:EE_|DM6PR12MB4300:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5b788693-fe46-4492-9ded-08ddb9810d8a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|82310400026|376014|36860700013|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?2lP3AAtDEsOD8TDFNmk3Z3+AXeLJMjKk+Vq3E4lhTxr0B4DYOMLfe0XsOlz1?=
- =?us-ascii?Q?LzwJzJhdGtVrrOu92ebLPizaTxHLeC8aZDTLWEPTfeEojc8nYf8LJ0PikFFi?=
- =?us-ascii?Q?JvaIX8bhzhqnVoy9QeIzkdfB7XRnv2cxPV/Vq/54/iuah4vqMIjYu4ebWcfH?=
- =?us-ascii?Q?VvRHU1QSxyWPXF5ykdoNAbLS/OOTs9R3k2b4DVInZ1PS8Mf6xJNAQT+uz8Ec?=
- =?us-ascii?Q?zNF8nT8t5VQBDc6AR7HJbvPN4D4Rihjd5+W9De9q+Adq55CZWXoSn7aEs5wH?=
- =?us-ascii?Q?8FMz+hkqBAYUAzENTl4uc/X7PrqvfMtVx4/8IMubw2K4ubr4J562j2VtFvKS?=
- =?us-ascii?Q?Uv8jHmnhxI40x++1wP16Ho916yVtfQHjyUzd+d/LEG7aITCu96hOho7TBUSn?=
- =?us-ascii?Q?X0wx1pDgj0ZXAWm7dnEXm6SagMOC49l63BNoGOkvvih6HW0YMU9lz67kuYxG?=
- =?us-ascii?Q?U6s28uoC7Pbk2mMYa9NvMsgUjF0HLKvEctT6WDuFDr3YFz/+4HWfAT9nteBZ?=
- =?us-ascii?Q?CTAkyA1+EvO01m9+iCfOjnrpgveGDoMmEBi+i97gFt2VtMJD4hbmQeSU5GZP?=
- =?us-ascii?Q?ZVBms6zELguFxEKxLa/lWvqtT4hN5lbjevnCB/J2zsDb05yg1Z+ci8+mDYoc?=
- =?us-ascii?Q?uqGdc5zqJIJEXHgVVVPRBRT/P6NiUIpb00dLCkc0lCTpgkw4nWHnD1m686fu?=
- =?us-ascii?Q?GBxDOTquVfBxAmjFgRwMHM9Ib8kE2yrLMglJDy11S+oH+ACVu+I2aPQx6vDi?=
- =?us-ascii?Q?C0JqRDtEWf5SjCABUKiYV8LgFIcI2TklC5qrL4JMFdf3xvMkNVmR1XBwTGpW?=
- =?us-ascii?Q?uK4iRGujgOYi6n/htsKLdH6nS2GUb7T19u39C++Cmq8QvqrhGLcCRwBl/tig?=
- =?us-ascii?Q?uIiUh2H5E5uxrJaKyvwuJrrAcGroZvFu0WzYpwXqzhuD43y3TlE4fqgJbOjC?=
- =?us-ascii?Q?151f6w4nBT8aLXPnemCls/nOv+bVLxBvMucn51Czr3TJFV9jYLBaQYcgQsW9?=
- =?us-ascii?Q?l/ll0bY0JAOuVuF55cnNQM280/I6SNZmMelQYBgl1xKRZvh+YRsyqh+9bysw?=
- =?us-ascii?Q?mVPdURxYw/KJABuL5bjy3l6l5r036vPoIrVh3gWdq9sod1yIlGMLvRq5PhXA?=
- =?us-ascii?Q?l5bDz8Fb+4HskaRE/Lp49vLlTMpfjDb9VWEbEg7/mGL/Ep/yAPt8TXs95k6E?=
- =?us-ascii?Q?ofB/4tRfgvFbaXXT6vIt93qao9Fcfpk7py7HOyW42oq5nVjhQWUbwTLNL41o?=
- =?us-ascii?Q?5sYEPKfvkgRfw0iNmxXiRnk0dxymU0oFTskwj4BaqTFalmqEq19fLKfhp3D0?=
- =?us-ascii?Q?Xs8xkSsAqj6V2PaQCZTHi6mevpxE0X4GmvY6PdRnM4tUtsnbCK55dRxW0Goy?=
- =?us-ascii?Q?jPFz+afutM9+C5RwoLW9WqitsQO5grA474Av5/JPaELrdbENGkkkRvCgnGzJ?=
- =?us-ascii?Q?eTYkJ6ZdeX4CZuU9kK3KkakHghMznqaPY9Pcn3oy8hL0EiFqyRlCsg5mmUbD?=
- =?us-ascii?Q?//VJHXMNgq6oLr67Nr7u8bEOml6+tYKkfCjJ?=
+	=?us-ascii?Q?FP71XR4JUwascbsJoBs3FvpwQKfMhH+vUCLL0lPJjQuldeLAZvrmsjqTByyh?=
+ =?us-ascii?Q?sGdEnnKtdwMofkiXdVcqqQLd0MqUn196iTtjswQcRGWcanwu6RYEE0ZT7rcQ?=
+ =?us-ascii?Q?nSWXso1++CvBF++Y94XzVHjI8UmicfXphEQdJX+RKpXso3DFestjbf61bEHW?=
+ =?us-ascii?Q?pGu1UVS6PdEyTeeONvblFmZDDTUpT3eTcnjcnVsAQ49EGu2uCD3xC/k7KIoy?=
+ =?us-ascii?Q?jj+hnVe7vFf6OulCgRLJTRZth8in5yeGzg+BpcPg/RNJyy6NmQBN99w/m0b+?=
+ =?us-ascii?Q?TjLqJtBQ/oVhOePyUVZSlevy6ILApsJwVGRrjcJ6rKfDKSUeHwngC0vLMa90?=
+ =?us-ascii?Q?vxajPmST5pAMx5r6BIxH46EA9QNtkaDNMeYjlijFhUmDlQ2RoWiaPfa447U5?=
+ =?us-ascii?Q?OaogrGO6/cbWt0SuoOtlYzrN/+/+xRh+ldIiytKm67n/kfsg/XLkwFaqpWwd?=
+ =?us-ascii?Q?Gw3KKVUH39O8xLsnCgiT7n7ncyD23+n2617zc/fayuY92Dt3hY7Xf5FqIJcb?=
+ =?us-ascii?Q?FOiXW83Ow8/yeWF4k0KgtxqkW4YuN8obdjxYr1x0U9VUNK5IwWNAcDY+CAcn?=
+ =?us-ascii?Q?V5JgFyYD5t5HldpCa1PGoBjZ3eQZDm92m8p6uwpZC2/PXIOT4Lg3cgzTEVLE?=
+ =?us-ascii?Q?KH9KM2mcv3s9FvpOxE+m1sgmGwUy1Do+6yghZdyn7MUEu/sgDBm3mzVxW7aJ?=
+ =?us-ascii?Q?yt4NLLOJ4GOJs8BiLr2JUzw0wukvFmaodJycjKt0i/6gHrwsWCQdhP/YkuoH?=
+ =?us-ascii?Q?aJJs3oyvqc5WrmaxOUv0JDb9OoATkw9mYC/5cmXaW69CCCywJhVA0wyCwxoo?=
+ =?us-ascii?Q?89ZG/fj0LLLbOzMpyzsQkHh7Z7epLR+QILZl2x5N4+MykWbS6n5SPH6SW+J5?=
+ =?us-ascii?Q?qu47F4SWF4Wx11QwUm+PNB2jaX8yRmRwh0LU+KrqtvmXH+CFPPabN4/vgGdf?=
+ =?us-ascii?Q?xizsJRwkd0BWzRYrHTye63KDTFcb0UByWuAazKGAuAxxvqniI8WVwPf917Oh?=
+ =?us-ascii?Q?bW0fKLn44Ht6Ow3ivcdqE1PuuK1sULp8LSZU6Zet34y/cEzELdW2ypAm7MqN?=
+ =?us-ascii?Q?aOPv18b0TXu1gzUQFGxnpvFawn6m8HKLkb8nX19iDU2l/QO4FYre6H6Jfpyg?=
+ =?us-ascii?Q?gDo2GkInJKOI+RE4sqb11Iit2kSGcY0vC6n1vGzRSjpAgWQwuhkQGmanazw6?=
+ =?us-ascii?Q?CAxVJk21zkciTbtjN2yx1TcvT/QLw8hVbhcdsdS5s1EInhRk+HrW5go5l4eT?=
+ =?us-ascii?Q?EsVftFO3/yTdw7u7ogU6LwQpugdjBbrdZGCN6UlMldjLEXTF/z4oocQg0XLy?=
+ =?us-ascii?Q?rRNtRTjb8kLWBeJkLiaJaiZ9u+7FA1cgJ7i8+ZObN6IbxMICT8eh1fc35qWd?=
+ =?us-ascii?Q?K1ZenHek/Rz/G+KEwIWx8bfoRWW8gYQue6vFvQtqYBm0qk02Xs/mJl1T7sp6?=
+ =?us-ascii?Q?d2oDZOJjtHp4ZkpTgvw5HYTczYzYA54F0VRP8UvJp6TdVZHrbD6e6dVLmMfl?=
+ =?us-ascii?Q?8xGNWOVaUZBuDLnjOBX4KgHaXD9wn9fOJ8ym?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(36860700013)(1800799024);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(36860700013)(1800799024);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 15:56:48.2525
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 15:56:48.5016
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2feff4ff-a995-4bab-3f34-08ddb9810d62
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5b788693-fe46-4492-9ded-08ddb9810d8a
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BN1PEPF00005FFC.namprd05.prod.outlook.com
+	CH3PEPF00000017.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6611
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4300
 
-Define Versal power domain value macros.
+Creates tile memory information structure to store size and offsets for
+core data and program memory and memory tile memory for AIEML.
 
 Signed-off-by: Gregory Williams <gregory.williams@amd.com>
 ---
- include/dt-bindings/power/xlnx-versal-power.h | 55 +++++++++++++++++++
- 1 file changed, 55 insertions(+)
- create mode 100644 include/dt-bindings/power/xlnx-versal-power.h
+ drivers/accel/amd-ai-engine/ai-engine-aie.c   | 39 +++++++++
+ drivers/accel/amd-ai-engine/ai-engine-aieml.c | 47 ++++++++++
+ .../accel/amd-ai-engine/ai-engine-internal.h  | 85 +++++++++++++------
+ drivers/accel/amd-ai-engine/ai-engine-part.c  | 45 ++++++++++
+ 4 files changed, 192 insertions(+), 24 deletions(-)
 
-diff --git a/include/dt-bindings/power/xlnx-versal-power.h b/include/dt-bindings/power/xlnx-versal-power.h
-new file mode 100644
-index 000000000000..effbc70e5a12
---- /dev/null
-+++ b/include/dt-bindings/power/xlnx-versal-power.h
-@@ -0,0 +1,55 @@
-+/* SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause) */
-+/*
-+ *  Copyright (C) 2019 - 2021 Xilinx, Inc.
-+ *  Copyright (C) 2024 Advanced Micro Devices, Inc.
+diff --git a/drivers/accel/amd-ai-engine/ai-engine-aie.c b/drivers/accel/amd-ai-engine/ai-engine-aie.c
+index 5e3cb44a16c8..056db0b7be0e 100644
+--- a/drivers/accel/amd-ai-engine/ai-engine-aie.c
++++ b/drivers/accel/amd-ai-engine/ai-engine-aie.c
+@@ -16,6 +16,8 @@
+ #define AIE_COL_SHIFT		23U
+ #define AIE_ROW_SHIFT		18U
+ 
++#define NUM_TYPES_OF_MEM	2U
++
+ /*
+  * Register offsets
+  */
+@@ -41,6 +43,42 @@ static u32 aie_get_tile_type(struct aie_device *adev, struct aie_location *loc)
+ 	return AIE_TILE_TYPE_SHIMNOC;
+ }
+ 
++static unsigned int aie_get_mem_info(struct aie_device *adev,
++				     struct aie_range *range,
++				     struct aie_part_mem *pmem)
++{
++	u8 start_row, num_rows;
++	unsigned int i;
++
++	if (range->start.row + range->size.row <= 1) {
++		/* SHIM row only, no memories in this range */
++		return 0;
++	}
++	if (!pmem)
++		return NUM_TYPES_OF_MEM;
++
++	for (i = 0; i < NUM_TYPES_OF_MEM; i++) {
++		struct aie_mem *mem = &pmem[i].mem;
++
++		memcpy(&mem->range, range, sizeof(*range));
++	}
++
++	start_row = adev->ttype_attr[AIE_TILE_TYPE_TILE].start_row;
++	num_rows = adev->ttype_attr[AIE_TILE_TYPE_TILE].num_rows;
++	/* Setup tile data memory information */
++	pmem[0].mem.offset = 0;
++	pmem[0].mem.size = KBYTES(32);
++	pmem[0].mem.range.start.row = start_row;
++	pmem[0].mem.range.size.row = num_rows;
++	/* Setup program memory information */
++	pmem[1].mem.offset = 0x20000;
++	pmem[1].mem.size = KBYTES(16);
++	pmem[1].mem.range.start.row = start_row;
++	pmem[1].mem.range.size.row = num_rows;
++
++	return NUM_TYPES_OF_MEM;
++}
++
+ /* aie_scan_part_clocks() - scan clocks of a partition
+  * @apart: AI engine partition
+  *
+@@ -258,6 +296,7 @@ static int aie_set_part_clocks(struct aie_partition *apart)
+ }
+ static const struct aie_tile_operations aie_ops = {
+ 	.get_tile_type = aie_get_tile_type,
++	.get_mem_info = aie_get_mem_info,
+ 	.scan_part_clocks = aie_scan_part_clocks,
+ 	.set_part_clocks = aie_set_part_clocks,
+ };
+diff --git a/drivers/accel/amd-ai-engine/ai-engine-aieml.c b/drivers/accel/amd-ai-engine/ai-engine-aieml.c
+index 328688942a6a..7730609ff7c0 100644
+--- a/drivers/accel/amd-ai-engine/ai-engine-aieml.c
++++ b/drivers/accel/amd-ai-engine/ai-engine-aieml.c
+@@ -50,6 +50,52 @@ static u32 aieml_get_tile_type(struct aie_device *adev,
+ 	return AIE_TILE_TYPE_SHIMNOC;
+ }
+ 
++static unsigned int aieml_get_mem_info(struct aie_device *adev,
++				       struct aie_range *range,
++				       struct aie_part_mem *pmem)
++{
++	u8 start_row, num_rows;
++	unsigned int i;
++
++	if (range->start.row + range->size.row <= 1) {
++		/* SHIM row only, no memories in this range */
++		return 0;
++	}
++
++	if (!pmem)
++		return NUM_TYPES_OF_MEM;
++
++	for (i = 0; i < NUM_TYPES_OF_MEM; i++) {
++		struct aie_mem *mem = &pmem[i].mem;
++
++		memcpy(&mem->range, range, sizeof(*range));
++	}
++
++	start_row = adev->ttype_attr[AIE_TILE_TYPE_TILE].start_row;
++	num_rows = adev->ttype_attr[AIE_TILE_TYPE_TILE].num_rows;
++	/* Setup tile data memory information */
++	pmem[0].mem.offset = 0;
++	pmem[0].mem.size = KBYTES(64);
++	pmem[0].mem.range.start.row = start_row;
++	pmem[0].mem.range.size.row = num_rows;
++
++	/* Setup program memory information */
++	pmem[1].mem.offset = 0x20000;
++	pmem[1].mem.size = KBYTES(16);
++	pmem[1].mem.range.start.row = start_row;
++	pmem[1].mem.range.size.row = num_rows;
++
++	start_row = adev->ttype_attr[AIE_TILE_TYPE_MEMORY].start_row;
++	num_rows = adev->ttype_attr[AIE_TILE_TYPE_MEMORY].num_rows;
++	/* Setup memory tile memory information */
++	pmem[2].mem.offset = 0;
++	pmem[2].mem.size = KBYTES(512);
++	pmem[2].mem.range.start.row = start_row;
++	pmem[2].mem.range.size.row = num_rows;
++
++	return NUM_TYPES_OF_MEM;
++}
++
+ /* aieml_scan_part_clocks() - scan clocks of a partition
+  * @apart: AI engine partition
+  *
+@@ -188,6 +234,7 @@ static int aieml_set_part_clocks(struct aie_partition *apart)
+ 
+ static const struct aie_tile_operations aieml_ops = {
+ 	.get_tile_type = aieml_get_tile_type,
++	.get_mem_info = aieml_get_mem_info,
+ 	.scan_part_clocks = aieml_scan_part_clocks,
+ 	.set_part_clocks = aieml_set_part_clocks,
+ };
+diff --git a/drivers/accel/amd-ai-engine/ai-engine-internal.h b/drivers/accel/amd-ai-engine/ai-engine-internal.h
+index 31a45575cc43..13a39c4e3331 100644
+--- a/drivers/accel/amd-ai-engine/ai-engine-internal.h
++++ b/drivers/accel/amd-ai-engine/ai-engine-internal.h
+@@ -68,30 +68,6 @@ struct aie_device;
+ struct aie_partition;
+ struct aie_aperture;
+ 
+-/**
+- * struct aie_tile_operations - AI engine device operations
+- * @get_tile_type: get type of tile based on tile operation
+- * @scan_part_clocks: scan partition modules to check whether the modules are
+- *		      clock gated or not, and update the soft clock states
+- *		      structure. It is required to be called when the partition
+- *		      is requested so that the driver knows which modules are
+- *		      clock gated when the partition is requested. This function
+- *		      expects the caller to apply partition lock before calling
+- *		      this function.
+- * @set_part_clocks: set partition modules clocks gate registers based on the
+- *		     partition clock states bitmap. This function expects the
+- *		     caller to apply partition lock before calling this
+- *		     function. The caller function will need to set the bitmap
+- *		     on which tiles are required to be clocked on.
+- * Different AI engine device version has its own device
+- * operation.
+- */
+-struct aie_tile_operations {
+-	u32 (*get_tile_type)(struct aie_device *adev, struct aie_location *loc);
+-	int (*scan_part_clocks)(struct aie_partition *apart);
+-	int (*set_part_clocks)(struct aie_partition *apart);
+-};
+-
+ /**
+  * struct aie_resource - AI engine resource structure
+  * @bitmap: resource bitmap
+@@ -112,6 +88,37 @@ struct aie_range {
+ 	struct aie_location size;
+ };
+ 
++/**
++ * struct aie_mem - AIE memory information
++ * @range: range of tiles of the memory
++ * @offset: register offset within a tile of the memory
++ * @size: of a the memory in one tile
 + */
++struct aie_mem {
++	struct aie_range range;
++	__kernel_size_t offset;
++	__kernel_size_t size;
++};
 +
-+#ifndef _DT_BINDINGS_VERSAL_POWER_H
-+#define _DT_BINDINGS_VERSAL_POWER_H
++/**
++ * struct aie_part_mem - AI engine partition memory information structure
++ * @apart: AI engine partition
++ * @mem: memory information of a type of memory
++ * @size: size of the total memories in the partition
++ *
++ * This structure is to keep the information of a type of memory in a
++ * partition. The memory information will be stored in @mem property.
++ * The following information will be kept:
++ *  * memory start address offset within a tile
++ *  * memory size
++ *  * what tiles contain this type of memory
++ */
++struct aie_part_mem {
++	struct aie_partition *apart;
++	struct aie_mem mem;
++	size_t size;
++};
 +
-+#define PM_DEV_RPU0_0				(0x18110005U)
-+#define PM_DEV_RPU0_1				(0x18110006U)
-+#define PM_DEV_OCM_0				(0x18314007U)
-+#define PM_DEV_OCM_1				(0x18314008U)
-+#define PM_DEV_OCM_2				(0x18314009U)
-+#define PM_DEV_OCM_3				(0x1831400aU)
-+#define PM_DEV_TCM_0_A				(0x1831800bU)
-+#define PM_DEV_TCM_0_B				(0x1831800cU)
-+#define PM_DEV_TCM_1_A				(0x1831800dU)
-+#define PM_DEV_TCM_1_B				(0x1831800eU)
-+#define PM_DEV_USB_0				(0x18224018U)
-+#define PM_DEV_GEM_0				(0x18224019U)
-+#define PM_DEV_GEM_1				(0x1822401aU)
-+#define PM_DEV_SPI_0				(0x1822401bU)
-+#define PM_DEV_SPI_1				(0x1822401cU)
-+#define PM_DEV_I2C_0				(0x1822401dU)
-+#define PM_DEV_I2C_1				(0x1822401eU)
-+#define PM_DEV_CAN_FD_0				(0x1822401fU)
-+#define PM_DEV_CAN_FD_1				(0x18224020U)
-+#define PM_DEV_UART_0				(0x18224021U)
-+#define PM_DEV_UART_1				(0x18224022U)
-+#define PM_DEV_GPIO				(0x18224023U)
-+#define PM_DEV_TTC_0				(0x18224024U)
-+#define PM_DEV_TTC_1				(0x18224025U)
-+#define PM_DEV_TTC_2				(0x18224026U)
-+#define PM_DEV_TTC_3				(0x18224027U)
-+#define PM_DEV_SWDT_LPD				(0x18224028U)
-+#define PM_DEV_SWDT_FPD				(0x18224029U)
-+#define PM_DEV_OSPI				(0x1822402aU)
-+#define PM_DEV_QSPI				(0x1822402bU)
-+#define PM_DEV_GPIO_PMC				(0x1822402cU)
-+#define PM_DEV_I2C_PMC				(0x1822402dU)
-+#define PM_DEV_SDIO_0				(0x1822402eU)
-+#define PM_DEV_SDIO_1				(0x1822402fU)
-+#define PM_DEV_RTC				(0x18224034U)
-+#define PM_DEV_ADMA_0				(0x18224035U)
-+#define PM_DEV_ADMA_1				(0x18224036U)
-+#define PM_DEV_ADMA_2				(0x18224037U)
-+#define PM_DEV_ADMA_3				(0x18224038U)
-+#define PM_DEV_ADMA_4				(0x18224039U)
-+#define PM_DEV_ADMA_5				(0x1822403aU)
-+#define PM_DEV_ADMA_6				(0x1822403bU)
-+#define PM_DEV_ADMA_7				(0x1822403cU)
-+#define PM_DEV_AI				(0x18224072U)
+ /**
+  * struct aie_tile_attr - AI engine device tile type attributes
+  * @start_row: start row
+@@ -126,6 +133,34 @@ struct aie_tile_attr {
+ 	const enum aie_module_type *mods;
+ };
+ 
++/**
++ * struct aie_tile_operations - AI engine device operations
++ * @get_tile_type: get type of tile based on tile operation
++ * @get_mem_info: get different types of memories information
++ * @scan_part_clocks: scan partition modules to check whether the modules are
++ *		      clock gated or not, and update the soft clock states
++ *		      structure. It is required to be called when the partition
++ *		      is requested so that the driver knows which modules are
++ *		      clock gated when the partition is requested. This function
++ *		      expects the caller to apply partition lock before calling
++ *		      this function.
++ * @set_part_clocks: set partition modules clocks gate registers based on the
++ *		     partition clock states bitmap. This function expects the
++ *		     caller to apply partition lock before calling this
++ *		     function. The caller function will need to set the bitmap
++ *		     on which tiles are required to be clocked on.
++ * Different AI engine device version has its own device
++ * operation.
++ */
++struct aie_tile_operations {
++	u32 (*get_tile_type)(struct aie_device *adev, struct aie_location *loc);
++	unsigned int (*get_mem_info)(struct aie_device *adev,
++				     struct aie_range *range,
++				     struct aie_part_mem *pmem);
++	int (*scan_part_clocks)(struct aie_partition *apart);
++	int (*set_part_clocks)(struct aie_partition *apart);
++};
 +
-+#endif
+ /**
+  * struct aie_device - AI engine device structure
+  * @apertures: list of apertures
+@@ -188,6 +223,7 @@ struct aie_aperture {
+  * @range: range of partition
+  * @cores_clk_state: bitmap to indicate the power state of core and mem tiles
+  * @tiles_inuse: bitmap to indicate if a tile is in use
++ * @pmems: pointer to partition memories types
+  * @mlock: protection for AI engine partition operations
+  * @freq_req: required frequency
+  */
+@@ -198,6 +234,7 @@ struct aie_partition {
+ 	struct aie_range range;
+ 	struct aie_resource cores_clk_state;
+ 	struct aie_resource tiles_inuse;
++	struct aie_part_mem *pmems;
+ 	struct mutex mlock; /* protection for AI engine partition operations */
+ 	u64 freq_req;
+ };
+diff --git a/drivers/accel/amd-ai-engine/ai-engine-part.c b/drivers/accel/amd-ai-engine/ai-engine-part.c
+index 83099cb60161..878597eff202 100644
+--- a/drivers/accel/amd-ai-engine/ai-engine-part.c
++++ b/drivers/accel/amd-ai-engine/ai-engine-part.c
+@@ -12,6 +12,44 @@
+ 
+ #include "ai-engine-internal.h"
+ 
++/**
++ * aie_part_create_mems_info() - creates array to store the AI engine partition
++ *				 different memories types information
++ * @apart: AI engine partition
++ *
++ * Return: 0 for success, negative value for failure
++ *
++ * This function will create array to store the information of different
++ * memories types in the partition. This array is stored in @apart->pmems.
++ */
++static int aie_part_create_mems_info(struct aie_partition *apart)
++{
++	unsigned int i, num_mems;
++
++	num_mems = apart->adev->ops->get_mem_info(apart->adev, &apart->range,
++						  NULL);
++	if (!num_mems)
++		return 0;
++
++	apart->pmems = devm_kcalloc(apart->aperture->dev, num_mems,
++				    sizeof(struct aie_part_mem),
++				    GFP_KERNEL);
++	if (!apart->pmems)
++		return -ENOMEM;
++
++	apart->adev->ops->get_mem_info(apart->adev, &apart->range,
++				       apart->pmems);
++	for (i = 0; i < num_mems; i++) {
++		struct aie_mem *mem = &apart->pmems[i].mem;
++
++		apart->pmems[i].apart = apart;
++		apart->pmems[i].size = mem->size *
++				       mem->range.size.col *
++				       mem->range.size.row;
++	}
++	return 0;
++}
++
+ /**
+  * aie_part_release() - release an AI engine partition instance
+  * @apart: AI engine partition device
+@@ -29,6 +67,7 @@ void aie_part_release(struct aie_partition *apart)
+ 	aie_resource_uninitialize(&apart->cores_clk_state);
+ 	aie_resource_uninitialize(&apart->tiles_inuse);
+ 	list_del(&apart->node);
++	devm_kfree(aperture->dev, apart->pmems);
+ 	devm_kfree(aperture->dev, apart);
+ 	mutex_unlock(&aperture->mlock);
+ }
+@@ -64,6 +103,12 @@ struct aie_partition *aie_part_create(struct aie_aperture *aperture,
+ 	apart->range.start.row = aperture->range.start.row;
+ 	apart->range.size.row = aperture->range.size.row;
+ 
++	ret = aie_part_create_mems_info(apart);
++	if (ret) {
++		dev_err(aperture->dev, "failed to create tile memory information.");
++		return ERR_PTR(ret);
++	}
++
+ 	/* SHIM row always enabled so it is not needed in the bitmap */
+ 	num_tiles = apart->range.size.col * (apart->range.size.row - 1);
+ 	ret = aie_resource_initialize(&apart->cores_clk_state, num_tiles);
 -- 
 2.34.1
 
