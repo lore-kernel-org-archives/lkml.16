@@ -1,65 +1,73 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B62253B7E
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 10:54:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A362417E6
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 10:55:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751453668; cv=none; b=YbA3uames4VAhg+7BQ0OeTBAfI5Wh6QqHJVWYl0D//AXEgxBsJ2fEbo0Yo8zzRIfYYY5XGGwmfOqbgUtCSBz1whYHYkfDKBE/ggL3tDvw5AxtoiYAYh4IqorvemuKj6+OPKPE6IbxoT3Xn2tdJcCV0mRYk2fu5v+vakWchbPkYM=
+	t=1751453708; cv=none; b=WgQ8rl/ZQX6LO+eViK3gbUSiS+rQSMXepjFtU5JOxbo6jbZQT8Xvbsu7qmiTFENYScjHVru7TNUM35er6cxNo+XiNDAEhPt7LSVttAGaLJkg9NPPdoGZxYs6bmK7NoAuMid6BKBrSiV6ddTI1clxAdX9LVR4XSI4jkQuEbj5tdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751453668; c=relaxed/simple;
-	bh=DWeR+/uQQSYMmH/LvahmZ0RIw9E1q0WXOgj4Vn2Kq3c=;
+	s=arc-20240116; t=1751453708; c=relaxed/simple;
+	bh=HJyf305xWispnULlnnZ3Q3DtQcVy4HyrdmFWRFyLtuc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bMiQFT6FOQZsy5IrHbRGk+MfrzotSpSdnXMXeR2aXcDdgr9rWkQ8NREGvb4ra3gH2AwYIuOJw2uuLupYTma6ihDI/AjHCd3JUrGSZrALNMFQsNJD5D43OyaFi+WEh6ih9EZLBT6yZu+SIVAJvbQb3p3K+g447t86YuGRsnZ+1sA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=N2+PRhfs; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 In-Reply-To:Content-Type; b=tEfeDSz+Edw19Tcxh2jeFYYxHtiRsHH0p5/h8EGoMJaiaYKCThbN2qPCSrsARLyZoxGebLHlrqcwB/E4LZLMjAbf9gM3shedox+ocjhywZsob9pRNeHVTbtAWe1RdxXnvjrabK8jPBhXzWu2wzjSI1W78LU+t1mQ5eAZw+VtXtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=m/X6c4iF; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="N2+PRhfs"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-450cf0120cdso43198435e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 03:54:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1751453664; x=1752058464; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2Jg9h1VCLy4qgpopj8IiT7Jm8iMsC+mvB1PgrDfbBVE=;
-        b=N2+PRhfscD0orJLHMjTS5mMyjsrnqnShvdO0j55Hvw2Ix+mMm0+yiKGtnMsidce9db
-         k5X2PZWu2GEwuOmHVf+M8Zn8T8rGQ8xtZvVC/33j7mYNgtrMSYZcovZNTjxjloWqgMpp
-         CqAlGhXVDA9VauMbUq7fTMSkExaFaIHd+RhUTnoSfUyNHM9NSzMA2tlWYkC/MpztWfvc
-         5jh2DVm03v9WzJZlRCJmqS+p3z1ZQEV3cyEaI6wdsaA+uk3nybOKub/z0nIYtjabUKh0
-         OFf5ZW77JrBjQl5m6WEf5jPO4+qsPYt73E00g9QT7sLO0k4YenAekQZYVVmru6sHYidR
-         muWw==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="m/X6c4iF"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56270fQH024875
+	for <linux-kernel@vger.kernel.org>; Wed, 2 Jul 2025 10:55:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	vk7TqcM/VAPxFNM7d3Vzya/VRZ4hi3qF661iXGADBDM=; b=m/X6c4iFCTta0kJR
+	zo6MvIGC3UD3V0FUVx/TXYrsL6IY1pAoqm8srfIx7DBcf6/lnIrk0JA8ZpCTvH4Z
+	o6uFzzZPsEuHVEWmaVwPlrRmRlVshqPzWtiD2fgqAYV93+OrILVoeksFdWbaygqA
+	RBPSY0rBRUB1HGBiTjdSXZClhgU4BUirMCpMR93/0rwds9u+Q2rWydI0mstHFx82
+	nRww7j5a+aZs+bLk8t0UWJvYe6Gukr4nSuiMdLUtIrd4WeJNIqGIO8JCIj2fDvxA
+	FSRBtL1kC1NHVIG6moQms8qGt+QWCs2nJIevpV3CuUjZjNXUeoDzLA6sGSUP02nI
+	sT2NiA==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j80246qb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 10:55:05 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7d0a9d20c2eso147978885a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 03:55:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751453664; x=1752058464;
+        d=1e100.net; s=20230601; t=1751453705; x=1752058505;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2Jg9h1VCLy4qgpopj8IiT7Jm8iMsC+mvB1PgrDfbBVE=;
-        b=uwU+5/dcW01YN4UkBKjH8zx+sTXqf/ienhllKTyoHGDJBjbYyZUw0dwBroXybLFVdf
-         cUvH8qAqr/mvlViZgcfS/fAD8yYJ02h0rIu1WYQ4CbA8tvonvpTt7qK0ieH/KAvlV5rG
-         Ngza1EYHvrXxrBwDqHvFxGBJ5TyFgo7r47fhjRoBeYDNSsgDvnmatVhPfdB5pEn8SDIT
-         jwp3effZBkXGoY4cujIZ6okugu/riXat5aZ+A+3bicpJ45FNQRRUtpGt4GeRnNs/2PtJ
-         ixNc3u+alBOZe3MknOC1GdIt2eGxhEQ7SywLeRokT8n5RSRxsZ3u3t2EPOphMmQ/5kKq
-         kJEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXr8AkkkL98/X53olXC29sDNAolfA13lMbwM+esclzopZ9b2477wOlIcrXPWckMRr3dQAWy1KRqDa8IHVg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfdJ4yNqnaG9UOxOYOn5o9iI8lSE3+8t1O1cwmpTviSye3jxWM
-	aYS3noWhOiWFCZSfv19JP065EN9CvQyz1hRfiFRHkLx4IEqgyFTGVPkxDRNUuubdEc4=
-X-Gm-Gg: ASbGncsVm+VIxp+OrFD2D5vykeztWdo64qrwK0A+dKq9f4eNbRJBz6d3cKxfNicHGeZ
-	J+MGtiARPJyRPPbZJ2L4ML8tbYNEyjxl7SMxg1tfiws0G09a3le+5MCCvLXeWnOLbcPSmdRPNOP
-	poyVmYVqnA2cLwTqQMqijLX1W2HcFjEYe2ahAjCgUsxHyPI/T/P6Avzfg8gVjQUHuIt5rjc5oi6
-	v3zZHYTG2ScXRmGYF9JRsbwRTZtLZONNGZmtaQD6OmwPpefhAOwj6JnTVXewz1TNrn62gpWOQGC
-	h8Xt0YdCR3GjhzR0h6+DyApfTbDAdDObtEawYGYbjYE/FTk8A8nD7sth9nSj4S2Q4VcUGCPGoA4
-	11f7qMB13DJRo0v4iRVhtnzzpYxHd
-X-Google-Smtp-Source: AGHT+IGAIK/G/I8tdPVOI217bep69ojNDn163oQvep1EwZXnaYnHz492awG91UUkdfrnfI0nWERljQ==
-X-Received: by 2002:a05:600c:3b24:b0:442:f12f:bd9f with SMTP id 5b1f17b1804b1-454a371d3eemr24456755e9.27.1751453664299;
-        Wed, 02 Jul 2025 03:54:24 -0700 (PDT)
-Received: from ?IPV6:2001:a61:13c3:8601:acfb:599e:12fa:d72a? ([2001:a61:13c3:8601:acfb:599e:12fa:d72a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7e6f74sm15728135f8f.3.2025.07.02.03.54.23
+        bh=vk7TqcM/VAPxFNM7d3Vzya/VRZ4hi3qF661iXGADBDM=;
+        b=LqrV7qPjbisIqcwmh5cagiEiCG2etqVKMSJ/HhpCLR6TsLpRhS2FQJycjECiGzTQ2o
+         7lnivjGiBJbcG2c0VHjnTaollXpgx+xMNneTuDc4a5bJ3g2zai5Hsk1QfDThOlibO4BX
+         C36wnmssB5PNLAyGoYJAo5ySh/3200g8G22gWwuZMF/MDBlUY5G9CGJGR2IvrhUk3CGv
+         5kDlCyUBOyxnSLl2DAYh69pR8CA7PbG8sC5Foa3O3L8F1hbyLJpslucupTkuqe9j4aEK
+         OISDt1A/2X2k7q5Vv0KfStbNHOwsrpsyWjNLhOhndTROe/xiPcD5n1T7MzT6n7mGz4lw
+         UJFw==
+X-Forwarded-Encrypted: i=1; AJvYcCVWA4sn0zT9ZasU+/OwgYtLx76VgtkQoEHOf2WsLOqbwkVG6AXRPzbqfpRgw9E5N+TGZfBz4KdB2+SBCRA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqpXARHZtCCLHCUEtpFFM7I9EgvlsZq36/4DzBv/iftA+eFi3s
+	xJkl/D4+bRDfcMxEnR73vJh5aQ5ZgofGfVqmONAkq2ekOv6eFtuPUXY7mvMIB8pASeNsKdw5v35
+	gUE/aw8EekcmGrSIUy4N6e7GU7WLc0D7UgMU+C076t1UPgrcRHHZHPChidYnXSI468SA=
+X-Gm-Gg: ASbGncu/ykZpYX2CnEY4UijDp8fH76JEfgZ0e+Qubyb8bdvt/CK9cF0aXeQyohlVaa1
+	Gd7NGMUw8FovYLasQGrPQIhuPQy4Y5PJEjI4kubDOC+Ay3+PFYX4JWa/L3NSi6a2gobznDchIs2
+	hZC0sE7poV/CbTO2ZYjgTmfhxNDXGRJHNCwo3rxH6T4FrWLvrr+GkGgJeU7aT87p+6i9dBuNKnr
+	ho2Lm3M+0jZxxQXfqtwaCL8JXdcBsqI19LZc3cmyDITBTZoaN/K+6k0NvnVVmqEwKShU3D0OC2A
+	/f5XlVznjkTGElZoNIURsPrX1SHGyGp5YBbbnWYCXPr7f5Arpyv8FUs4VOtIWgFGi6Eu4r5865w
+	K/SI=
+X-Received: by 2002:a05:622a:82:b0:494:b869:abf7 with SMTP id d75a77b69052e-4a97689a84fmr11869601cf.3.1751453704791;
+        Wed, 02 Jul 2025 03:55:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH7S2eRUdhaoYyMorGOcDEdRDtdhRw10Y97aNdF7YBj0R59JlX2lq1116ZUFVEFw99flEQ4Vg==
+X-Received: by 2002:a05:622a:82:b0:494:b869:abf7 with SMTP id d75a77b69052e-4a97689a84fmr11869461cf.3.1751453704291;
+        Wed, 02 Jul 2025 03:55:04 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c828bb118sm8938089a12.2.2025.07.02.03.55.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jul 2025 03:54:24 -0700 (PDT)
-Message-ID: <560fa48a-7e0b-4b50-bebb-b3600efaadd3@suse.com>
-Date: Wed, 2 Jul 2025 12:54:23 +0200
+        Wed, 02 Jul 2025 03:55:03 -0700 (PDT)
+Message-ID: <9c4005b7-8c01-4880-b0dd-5be4841616c7@oss.qualcomm.com>
+Date: Wed, 2 Jul 2025 12:55:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,55 +75,57 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] net: usb: usbnet: fix use-after-free in race on workqueue
-To: Jakub Kicinski <kuba@kernel.org>, Oliver Neukum <oneukum@suse.com>
-Cc: Paolo Abeni <pabeni@redhat.com>, "Peter GJ. Park"
- <gyujoon.park@samsung.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- netdev@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-kernel@vger.kernel.org, Ming Lei <ming.lei@canonical.com>
-References: <CGME20250625093354epcas1p1c9817df6e1d1599e8b4eb16c5715a6fd@epcas1p1.samsung.com>
- <20250625-usbnet-uaf-fix-v1-1-421eb05ae6ea@samsung.com>
- <87a7f8a6-71b1-4b90-abc7-0a680f2a99cf@redhat.com>
- <ebd0bb9b-8e66-4119-b011-c1a737749fb2@suse.com>
- <20250701182617.07d6e437@kernel.org>
+Subject: Re: [PATCH RFC 3/5] pinctrl: qcom: sm8650: mark the `gpio` pin
+ function as a non-strict function
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Alexey Klimov <alexey.klimov@linaro.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20250702-pinctrl-gpio-pinfuncs-v1-0-ed2bd0f9468d@linaro.org>
+ <20250702-pinctrl-gpio-pinfuncs-v1-3-ed2bd0f9468d@linaro.org>
 Content-Language: en-US
-From: Oliver Neukum <oneukum@suse.com>
-In-Reply-To: <20250701182617.07d6e437@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250702-pinctrl-gpio-pinfuncs-v1-3-ed2bd0f9468d@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: 6bsWzrjwY25iRGy5LSeRYXkXsHERuoJ1
+X-Authority-Analysis: v=2.4 cv=YPWfyQGx c=1 sm=1 tr=0 ts=68651009 cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=KKAkSRfTAAAA:8 a=JchxpsDTO30hHQ2eRcMA:9
+ a=QEXdDO2ut3YA:10 a=ZXulRonScM0A:10 a=bTQJ7kPSJx9SKPbeHEYW:22
+ a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: 6bsWzrjwY25iRGy5LSeRYXkXsHERuoJ1
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDA4OCBTYWx0ZWRfX8quUy3SYD6gE
+ 3SmofW+0AFGJRNEcErWNIMh3W6qRoDkNDTDYIsOadpJq+YV7GbOWR86r9l+nM7Z8AivzBZK1zYZ
+ zxXai11XQPftkAfDZsQ/LLxlMMK+DC+ozsTEEjh6myPxT/LsDfcJh5/SZyPUw9W6lDc6tzH4Dxp
+ QC8fZF/1lSoHs2F1+VkYnFlh0ZV8A/j3spgeD76wzCAOIVBfGw04Ifo5YzMkEps1wW/yo5qNjvm
+ ijW54H1aPBT6283WA7D/FdNJZHdDRy15S5m/2ReKrhaQnwpkyJ/tKluCh7luJGBAHTExYYrqC9A
+ W0AoW1bcuSyf5gYtdjdm/HV/aCUUXH8C6kdCqn0ueYUS4fPGY7jLRGxjpV2YNSH/iKhT4ja+lss
+ qtyvRvaLdpgOOJom35uHMuq65KsGor5IC4PYccVDSR+/+h1j6O2GKZ1CpRSTUeItyJN4nWn3
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-02_01,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 mlxlogscore=563 mlxscore=0 malwarescore=0 suspectscore=0
+ lowpriorityscore=0 clxscore=1015 impostorscore=0 adultscore=0
+ priorityscore=1501 bulkscore=0 phishscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2507020088
 
-On 02.07.25 03:26, Jakub Kicinski wrote:
-> On Tue, 1 Jul 2025 15:22:54 +0200 Oliver Neukum wrote:
-
->> That is indeed a core question, which we really need an answer to.
->> Do I interpret dev_close_many() correctly, if I state that the
->> ndo_stop() method will _not_ be called if the device has never been
->> opened?
+On 7/2/25 10:45 AM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> Correct, open and close are paired. Most drivers would crash if we
-> tried to close them before they ever got opened.
-
-Thank you for clarifying that.
-
->> I am sorry to be a stickler here, but if that turns out to be true,
->> usbnet is not the only driver that has this bug.
+> Allow pins muxed to the "gpio" function to be requested as GPIOs even if
+> pinmux_ops say the controller should be strict.
 > 
-> Shooting from the hip slightly, but its unusual for a driver to start
-> link monitoring before open. After all there can be no packets on a
-> device that's closed. Why not something like:
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
 
-It turns out that user space wants to know whether there is carrier
-even before it uses an interface because it uses that information
-to decide whether to use the link.
+fwiw this simple change could be a single 'run sed on all files' if
+we decide to go with this approach
 
-https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=444043
-
-However, it looks to me like the issue is specifically
-queuing work for kevent. That would call for reverting
-0162c55463057 ("usbnet: apply usbnet_link_change")
-[taking author into CC]
-
-	Regards
-		Oliver
-
+Konrad
