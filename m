@@ -1,85 +1,42 @@
-Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E914A3093D8;
-	Wed,  2 Jul 2025 14:52:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7936030AAA2;
+	Wed,  2 Jul 2025 14:52:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751467928; cv=none; b=QGGZlRH/2ET0SahHQr9ZkGpOOghNAPsu09+qIXxAOIBireeiX+ayPdc8/B4Kji8WvVvQ1dEhIBZz2kl3tEM+5n8+6a7AwLlwjsZFkoCCFggB4+5clwwdBai41lOalOd/w7CO7tUFU4fxxFVA21iS7R+2XlSWQqS4gFPho/Z+eLs=
+	t=1751467944; cv=none; b=Lmjp2fUtgu8Zs9e9qzGofWQddifBkMuz2RY2Emh6Lk9AXjmC888lCzpelZLrRiu37xsh4cKiK5W926/lcayedrgrTDAJdZK6m/mE04sMi1I+6r1KWrNRrdIuoaNq62qrz0LrFj248xnxQvRGq6fHDLHObWb0hBtR1MlJv+BtJsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751467928; c=relaxed/simple;
-	bh=c5YO8Q6fqo9a7i/BZ1Pu+lEXRY2gSYoqGCcNPYTg9lw=;
+	s=arc-20240116; t=1751467944; c=relaxed/simple;
+	bh=MVpi/2/2fnQ827YrHnh39S3IE0+g76KY9HjB0fDt6co=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MPVpcNTahtrdtSgnt8rgFgoJ87QCWifnBbGO+eP8D5G4Z/nTACxcP7Z3S9kU2+uLKWDzsXaZJ1EPp+0FYgtDUl1xbtwanmzhSQ4q8ePDed9q8ZR36V/1B28WrVr0pll4gERaJMSK3S0/bJ2F6Ageax+tbjNEp/azvgq+L9aaJY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tyhicks.com; spf=pass smtp.mailfrom=tyhicks.com; dkim=pass (2048-bit key) header.d=tyhicks.com header.i=@tyhicks.com header.b=TaK1NUrp; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ZVc+l++F; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tyhicks.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tyhicks.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=WXZFN+eqMXl7b6xf9HqwINhUsct3Cxt2/df0gvLnHHWcZy0BemCbqrfF2f4bzJbGLoaljZPOhq9XL/W7HpnD8qhu7yXKYLo+LVpsVAchVZej9WJ1EcMxMmlfOXkh59+kvbCjkInwVPhBn79oUsCHVvrx2e5X2aFLv7tjDDoR2fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mIVPzie0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tyhicks.com header.i=@tyhicks.com header.b="TaK1NUrp";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZVc+l++F"
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id F36DF14001FC;
-	Wed,  2 Jul 2025 10:52:04 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-12.internal (MEProxy); Wed, 02 Jul 2025 10:52:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tyhicks.com; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1751467924; x=1751554324; bh=A8fMjHitcx
-	dIM6PCP7N5H3M8CWgWa7BSB4FNRbpMw6c=; b=TaK1NUrpLAZp1N1/2KrKW28fdq
-	UpXwEf0JAz1tGoiJWiqJoRmGkQbONKQ2Cs7XyOuyFpaUFknwIEq6/1kHqP6dPYhD
-	FZ7EDGJQENgQwrOPxOnaCHYUD/zxi/BoBsht+vgCUjRIK9iUCfmM/RjV20AB9l5V
-	Mw6QqCUqFv8s+MUCRah+SCXqggiyrREOUhId/i3eJNPUkbTonXDZIHLLgp3bOxXs
-	0u7JtgfkNMRJxhV6yvzP8Q7WIl9ksP0o5FJBFqfsA2WsuoWy4XXv+W+Mr0t0hdAg
-	RVfWG4BABiUXcZbaWGowpGiiXvCpJgv6ZgG2RNWyz+R2QN1xyOhUyaJQGbcQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1751467924; x=1751554324; bh=A8fMjHitcxdIM6PCP7N5H3M8CWgWa7BSB4F
-	NRbpMw6c=; b=ZVc+l++FsRlxPFsB05YzzBVvPDBwEHP/Nr8I1Z8hr9eYGBGK3et
-	ev9zSc+NFTYaE8nbq2bP/Lb9ZRsXyi2c8xwH2Z4gXVsASp2L35Ow3bShqmOeEHTm
-	wbMibR/tXZ6xiSLumtxmlgHs6oqYSPIKeo+MI/rE8ej9RrN+Ww90p/JFvt2okclC
-	Xd/Vt2/iDSZ6mxNSSX8vqyLf0bPPmrnvmUM0Z18LjW6zwudrb6LnngCDcYnEUTfv
-	/zu2sYjpHMcbg50Xq7Kfoi1XarDSXoE9be5q8x5198PIojee2/hfLm7a/LH7w8IJ
-	JlOG5w4GT6/uzpe8AG+bzjU/VJxP6neSkPQ==
-X-ME-Sender: <xms:lEdlaNDqHWNgyO9P5Ue-dLFo_T6nqCYG3znMkSLGueNfA9h4YOJ1Hw>
-    <xme:lEdlaLj2aTTxS7US4j-F7FZxDI2C5ZuyGUBN4GsMxZc6oCgg4yCfSwOxMKO4idXKZ
-    _i2TwLkrJu4bXYXdJI>
-X-ME-Received: <xmr:lEdlaIm0x31A6m3_ofzZMGu5zFhgaSagO3wkqa4LglRNpbyG0NdNl5DRkw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddujeeikecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefvhihlvghrucfj
-    ihgtkhhsuceotghouggvsehthihhihgtkhhsrdgtohhmqeenucggtffrrghtthgvrhhnpe
-    dvhedvtddthfefhfdtgfelheefgefgudejueevkeduveekvdegjedttdefgfelieenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegtohguvgesth
-    ihhhhitghkshdrtghomhdpnhgspghrtghpthhtohephedpmhhouggvpehsmhhtphhouhht
-    pdhrtghpthhtohepghhiohhmvghtthhisegvnhhnvggvnhhnvgdrtghomhdprhgtphhtth
-    hopegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmpdhrtghp
-    thhtohepmhgvrghgrghnlhhlohihugeslhhinhhugidrmhhitghrohhsohhfthdrtghomh
-    dprhgtphhtthhopehlihhnuhigqdhrthgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhr
-    tghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:lEdlaHxganuAlhHrYQPz6jIOukMXcMTk-04yD8teA6AdX7oq0CoCBA>
-    <xmx:lEdlaCRBjtUe9r2jjKgfcRoajC7Q35veAIENJ6atl7_xxaxv4pevaQ>
-    <xmx:lEdlaKawLoI77_Cowd_lY4kM1Xfst2souQAb59EzOavSivApIEyYBg>
-    <xmx:lEdlaDTsO6CEnILRLqNiG7-SgqotdY8wfTDc1C-S2BQRTX0PZkd-xQ>
-    <xmx:lEdlaNwQivqErY9gVSKQXDEDiOzTGUyTbBL9FlGNkzbGfdzdnSBpwtR5>
-Feedback-ID: i78e14604:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 2 Jul 2025 10:52:04 -0400 (EDT)
-Date: Wed, 2 Jul 2025 09:52:02 -0500
-From: Tyler Hicks <code@tyhicks.com>
-To: Rodolfo Giometti <giometti@enneenne.com>, alexandre.belloni@bootlin.com
-Cc: Meagan Lloyd <meaganlloyd@linux.microsoft.com>,
-	linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] Expand oscillator stop flag (OSF) validity check to
- ds1341
-Message-ID: <aGVHkgDaWN83X9hA@redbud>
-References: <1749665656-30108-1-git-send-email-meaganlloyd@linux.microsoft.com>
- <aGMVtfwB5gmBuW4T@redbud>
- <91ea3b14-20c5-4e5b-a88a-206748a6d36c@enneenne.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mIVPzie0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA287C4CEED;
+	Wed,  2 Jul 2025 14:52:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751467944;
+	bh=MVpi/2/2fnQ827YrHnh39S3IE0+g76KY9HjB0fDt6co=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mIVPzie0g1QxXxVl5u8UA/5kqjPs2xIqMzvwfvS0QVxTWTmrGT63OqB48u7OKTvw5
+	 9Q2qPKYWVxtLKfPx0Jgumg+G7Y8tF+8Ib6+I5Hxbrgqu84McvazwXTjpVZaiKyTNuE
+	 RZVe3K66xIjGCer1I6zWHH/bxcyGDzLXyfJsV8J9t2WXBIVEHxUojXP/q2XiWz8iQ5
+	 hG5OaAUXtDZ/Q+FLmKzmqBkbrcIp7QbdtM6Wr+S+c0xWvRDObWwZOHs9fCHcziGNhA
+	 pKnxdYuO+KAR0VEBmVyMtQt2vndp9SQee0krjRYHmXsOKGNQgvCnC5+LOfIoqXUwgA
+	 BG17hnalNHCxA==
+Date: Wed, 2 Jul 2025 09:52:23 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Sayali Lokhande <quic_sayalil@quicinc.com>
+Cc: conor+dt@kernel.org, andersson@kernel.org,
+	linux-mmc-owner@vger.kernel.org, linux-kernel@vger.kernel.org,
+	krzk+dt@kernel.org, devicetree@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, konradybcio@kernel.org
+Subject: Re: [PATCH V3 1/3] dt-bindings: mmc: Add sdhci compatible for qcs8300
+Message-ID: <175146791377.1660977.16811984013097391499.robh@kernel.org>
+References: <20250702085927.10370-1-quic_sayalil@quicinc.com>
+ <20250702085927.10370-2-quic_sayalil@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -88,83 +45,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <91ea3b14-20c5-4e5b-a88a-206748a6d36c@enneenne.com>
+In-Reply-To: <20250702085927.10370-2-quic_sayalil@quicinc.com>
 
-On 2025-07-02 16:37:41, Rodolfo Giometti wrote:
-> On 01/07/25 00:54, Tyler Hicks wrote:
-> > [Adding Rodolfo Giometti]
-> > 
-> > On 2025-06-11 11:14:14, Meagan Lloyd wrote:
-> > > We would like to use CONFIG_RTC_HCTOSYS to sync a supercapacitor-backed
-> > > DS1342 RTC to the kernel time early in boot. An obstacle is that the
-> > > sync in rtc_hctosys() is unconditional as long as rtc_read_time()
-> > > succeeds and in some power loss situations, our RTC comes up with either
-> > > an unpredictable future time or the default 01/01/00 from the datasheet.
-> > > Syncing a future time, followed by an NTP sync would not be desired as
-> > > it would result in a backwards time jump. The sync feature is useful in
-> > > boot scenarios where power is maintained so syncing only when the RTC
-> > > data is valid would allow us to make use of the feature.
-> > > 
-> > > The DS1342 has the oscillator stop flag (OSF) which is a status flag
-> > > indicating that the oscillator stopped for a period of time. It can be
-> > > set due to power loss. Some chip types in the ds1307 driver already use
-> > > the OSF to determine whether .read_time should provide valid data or
-> > > return -EINVAL. This patch series expands that handling to the ds1341
-> > > chip type (DS1341 and DS1342 share a datasheet).
-> > > 
-> > > These changes enable us to make use of CONFIG_RTC_HCTOSYS as they
-> > > prevent the invalid time from getting synced to the kernel time. It will
-> > > also prevent userspace programs from getting the invalid time as the fix
-> > > cuts it off at the source - the .read_time function.
-> > 
-> > These two patches look good to me, although I'm not an expert in RTC drivers.
-> > I've reviewed the DS1341/DS1342 datasheet and the approach that Meagan has
-> > taken makes sense to me given our (Meagan and I work together) desire to use
-> > CONFIG_RTC_HCTOSYS and the need to avoid syncing from an invalid RTC state.
-> > 
-> > I've added Rodolfo because he first added the logic to clear the Oscillator
-> > Stop Flag, during driver initialization, way back in 2007 with v2.6.23 commit
-> > be5f59f4b67f ("rtc-ds1307: oscillator restart for ds13{37,38,39,40}") and may
-> > have additional context to provide.
-> > 
-> > Alexandre and Rodolfo, does this approach make sense to you? If not, do you
-> > have any other suggestions on how to make CONFIG_RTC_HCTOSYS work with this
-> > driver? Thanks!
-> 
-> They look good to me. You can add my Acked-by line to all of them:
-> 
->     Acked-by: Rodolfo Giometti <giometti@enneenne.com>
 
-Thanks for taking a look!
-
-I should have formally given my Reviewed-by tag for both patches earlier in the thread:
-
-  Reviewed-by: Tyler Hicks <code@tyhicks.com>
-
-Tyler
-
+On Wed, 02 Jul 2025 14:29:25 +0530, Sayali Lokhande wrote:
+> Document the sdhci compatible for Qualcomm qcs8300
+> to support function for emmc on the Soc.
 > 
-> Rodolfo
+> Signed-off-by: Sayali Lokhande <quic_sayalil@quicinc.com>
+> ---
+>  Documentation/devicetree/bindings/mmc/sdhci-msm.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> > Tyler
-> > 
-> > > 
-> > > Meagan Lloyd (2):
-> > >    rtc: ds1307: remove clear of oscillator stop flag (OSF) in probe
-> > >    rtc: ds1307: handle oscillator stop flag (OSF) for ds1341
-> > > 
-> > >   drivers/rtc/rtc-ds1307.c | 15 ++++++++++++---
-> > >   1 file changed, 12 insertions(+), 3 deletions(-)
-> > > 
-> > > 
-> > > base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-> > > -- 
-> > > 2.49.0
-> > > 
-> 
-> -- 
-> GNU/Linux Solutions                  e-mail: giometti@enneenne.com
-> Linux Device Driver                          giometti@linux.it
-> Embedded Systems                     phone:  +39 349 2432127
-> UNIX programming
-> 
+
+
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
+
+If a tag was not added on purpose, please state why and what changed.
+
+Missing tags:
+
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
+
+
+
