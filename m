@@ -1,139 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A99732DE717;
-	Wed,  2 Jul 2025 20:32:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A47AC221F03;
+	Wed,  2 Jul 2025 20:33:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751488348; cv=none; b=Ux2r5MfgzI8uI1NVc7ofEde+1dPiWR+LYX7qse8ClqdEJ4eYzd1fu9AAlg5P83MSZ/SnzAwBV4W8qMzHjHaSsHlWvhjiWSAAGoM4aSImC2Zypt8CRrMZV0+25YeMCc/+paQJEScF9E1Tp0jcRirMCT76SrIFytqlQfdCE4tTsT8=
+	t=1751488401; cv=none; b=iTsNNl1EIjbnTTJC202hzRz2WpUsaw8kCqIJMgCBUZ3akA9rv2MpjNMs8WR4ksvNun05z+RJBN2ZVlGsPAadc64k9WnJtzDAXpTaBi5v7zlqWEYx/4aogMvyCcd7gTwQFynoLFQZ5Ow1GjH9Vx/fbLdkTKU+aQd6Tohp2TQ5mfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751488348; c=relaxed/simple;
-	bh=AQj1KqNi6O1MblNaJlJZf+D7Hyvwx661fg4rUbzcPEk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OGqtu9WXB9qPxDUdSsrExsPrTsH0069wu478dQuWDxPdwHcMwIafZuE4V1lYn60r7IeFNsxM/qEeyVm4VucX31RA4IC4nukSYx/1H55g/YjhIPfysZ9L26pda8uBoXljDgvVzFwZ7mlgouFkgJ8r1NwFBXl2BCuRtbmB3cf88WM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c5aVrgxJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751488401; c=relaxed/simple;
+	bh=TnU/sk0OD7aWwA5HkeV/e3lpPQayYxGYFTTqDsslg/Y=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=SqCKDVQhxw+lsmhF14uhJkJP87Ltb2jZ4MkJhiSwQRAPtr5wqrk0972X0beFZs8s+XDgqNcReMNnkFKLodcJ16YpIR/ebu8CbajC1DA3X0U8SF2KgfcBA/fApAh/HCWrYU46gSLKZL10S9foLtLmR6uzO+XOj4TD2/szIjjQxbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VBi8wumQ; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c5aVrgxJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F416C4CEE7;
-	Wed,  2 Jul 2025 20:32:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751488348;
-	bh=AQj1KqNi6O1MblNaJlJZf+D7Hyvwx661fg4rUbzcPEk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=c5aVrgxJxGKr2xUu8ziy+Fu/mIwCiitmsaT49GiTEp9dplVruZg6qmei9buZYRV3U
-	 2nALn0ygDJzbPeys5SGyqZgd9dv0gxXR3VkMXOKJqR8q15KrtlAKfy2RkTnGbJ/Ly5
-	 F5IlpSzI7Ao2yJ/Kfb0F0HWGpdAbihlW7ZoxF20pt8yxWAbgNOngLk5lDyZqLB2ixf
-	 UPVtOborvWksg7N3GZx8jtXyIbJiwBUd87e4Aso9CHZd5GblksYAoZLEDKhy+NvTfi
-	 rTyoUfQ/0vdeklGPJEs67Nn/R7zr7YX/uLx1j15mDfSR4ovbblwUXzUdihLpjAVY3X
-	 EYPJrqvVE/UXA==
-Message-ID: <cf34d7dd-4425-49ec-b430-927c70d1fbc8@kernel.org>
-Date: Wed, 2 Jul 2025 22:32:22 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VBi8wumQ"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7425bd5a83aso4560114b3a.0;
+        Wed, 02 Jul 2025 13:33:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751488399; x=1752093199; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=TnU/sk0OD7aWwA5HkeV/e3lpPQayYxGYFTTqDsslg/Y=;
+        b=VBi8wumQfckbHOsiOQdHR+OdhPuocGeiBG1tVLOMn77ZnVGnWX/q8PVfQ1FGsjxMZg
+         c0bw+pXvc60g66nX0zdW3XSqRpvJvQX3Fz3WTRXJlTII0QNF+DT6K+F88mgBPUzY6keb
+         rVuhMCO3AV34POAd99fY+ODwtmWqKqx5H2BXE4NrOSRc9gfumkjztmUr6tdExNXB5Fi9
+         8s5o29cI1chPWlGBinPv1SP2Mn/dTLcMDbfijbXooJFe9YgEVi6BH3POqS5jI88aa3pM
+         9i7NitVEnUV1HSuN/AwnqPld+Qk+hvo7mc1MUavPTRdbqXX3g3iaCOiDLQJMsDglpl+W
+         j/Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751488399; x=1752093199;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TnU/sk0OD7aWwA5HkeV/e3lpPQayYxGYFTTqDsslg/Y=;
+        b=XPQAe2IVEvy9dxOm/zQkCy5Wj0pO6t3yWzpVFuoGtEI1ks2NwlVKDxYm4o+j6p2QfG
+         fjNeZrxXQ5XYMN5ZgeNsFRZnRNC3GXGMeCnARw7J+e59KTzYb2KbUdWsB1SJFxmLIlfJ
+         yK6YsnTpgfkZm0gN7sedHPPd8VQygdCVz1cDOrOZ4U+oXtI5EIFa2St8/PUqbIvBLssN
+         +CqSkKjpg7xjOPeX71/f+hil8Yl1sF2Q7ww5ZagfOpH1eLzmKDsxpTJMSkyWHplgfI9o
+         KdBHGrUNH3st67VISf+83wrW1KqNhWLm42eMH6AA1GoEl2s2rQ1A1yBllULnqBd8V9Ko
+         DezQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVoN0h1mSlHH/m4Nz/ctdUrQtYFTJ4BKxNIr5lisLf27TSwJ7pWqBHQiV+iWVf81w/yZZdJKIAKykYbE8o/@vger.kernel.org, AJvYcCWh4dXUYMHaZf2Ra655HL/gBAo5GuMnMEttQrOLKEFQ7aLz2ww2vmOSJ3xkDW7sMFQ9MWMUQDCvuN+qCRzkv7zf@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMLXzbk9Uwe16tUQ7UpkeJG21I4t2md/bktm/fZ72b1INlK9Zg
+	EuIbs4MpyDnmbRw/B++1Fvycm1BeN513W3+SgmqCv6w/wrLZmBTqtz8845r7UiL9R9Y=
+X-Gm-Gg: ASbGncseKn3NBV+cRJobszKcCE8dURRJwnsqXUsN17U+zRMFTF7/BClLDSRwQL+AbLP
+	xVKrI1FzkAbmKnBbu29VR5hFGALL5oiyxk/CvEO/ElIIVcpC5oED2in+MgjE3843xCUmr9ecqlZ
+	/EyNMjvpCeYmrGFb43Fq9Ii9G7Ah65Gy3fg05OPWFWx6VCe0GNlyvBGPqEGmuUElMCoBY1iKj2w
+	BEU7PpfuuDhpNqGoh4r/pCTPnFqlGnnRHDoQHK5zhFGPdXkVDvq2oNlwHtySZfMlueoIv6iqGa8
+	G8uwaFeedhOQHKZLYKYRU6KnpeX6/XtaKoxTu39MaO6SH44KzlMb7Zm1+JjzMW/muTWz
+X-Google-Smtp-Source: AGHT+IEZEazQ7PWX1sPklfJKlXDCWYPEl9W6FjIBrwCYKJIUDhI8e9KBqhIU+S4XVSSgpYDJtCQ3Xw==
+X-Received: by 2002:a05:6a00:17a6:b0:748:9d26:bb0a with SMTP id d2e1a72fcca58-74b5138bbdemr6543826b3a.18.1751488398753;
+        Wed, 02 Jul 2025 13:33:18 -0700 (PDT)
+Received: from [192.168.1.12] ([223.185.43.246])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af540ae41sm15342862b3a.19.2025.07.02.13.33.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 13:33:18 -0700 (PDT)
+Message-ID: <56091d9b2c9b4d565da7569a81d8b85f0f7d4c7b.camel@gmail.com>
+Subject: Re: [UNDERSTOOD] KASAN: slab-out-of-bounds in vsnprintf triggered
+ by large stack frame
+From: Shardul Bankar <shardulsb08@gmail.com>
+To: Kees Cook <kees@kernel.org>, Petr Mladek <pmladek@suse.com>
+Cc: linux-kernel@vger.kernel.org, rostedt@goodmis.org, 
+ john.ogness@linutronix.de, senozhatsky@chromium.org,
+ viro@zeniv.linux.org.uk,  brauner@kernel.org, jack@suse.cz,
+ linux-fsdevel@vger.kernel.org,  linux-hardening@vger.kernel.org
+Date: Thu, 03 Jul 2025 02:03:09 +0530
+In-Reply-To: <202507020716.1B1E38593@keescook>
+References: <9052e70eb1cf8571c1b37bb0cee19aaada7dfe3d.camel@gmail.com>
+	 <aGUfd7mxQOOpkHz8@pathway.suse.cz> <202507020716.1B1E38593@keescook>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] dt-bindings: remoteproc: qcom,sm8350-pas: document
- SM7635 MPSS & WPSS
-To: Luca Weiss <luca.weiss@fairphone.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>,
- ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250627-sm7635-remoteprocs-v2-0-0fa518f8bf6d@fairphone.com>
- <20250627-sm7635-remoteprocs-v2-1-0fa518f8bf6d@fairphone.com>
- <20250701-melodic-courageous-mussel-0bed22@krzk-bin>
- <DB0MZCUM41RA.7Z6461I531VD@fairphone.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <DB0MZCUM41RA.7Z6461I531VD@fairphone.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 01/07/2025 12:12, Luca Weiss wrote:
-> Hi Krzysztof,
-> 
-> On Tue Jul 1, 2025 at 10:12 AM CEST, Krzysztof Kozlowski wrote:
->> On Fri, Jun 27, 2025 at 08:55:42AM +0200, Luca Weiss wrote:
->>> @@ -91,6 +93,7 @@ allOf:
->>>        properties:
->>>          compatible:
->>>            enum:
->>> +            - qcom,sm7635-mpss-pas
->>>              - qcom,sm8350-mpss-pas
->>>              - qcom,sm8450-mpss-pas
->>>      then:
->>> @@ -142,6 +145,22 @@ allOf:
->>>              - const: cx
->>>              - const: mxc
->>>  
->>> +  - if:
->>> +      properties:
->>> +        compatible:
->>> +          enum:
->>> +            - qcom,sm7635-wpss-pas
->>
->> Everything fits better sm6350 and no need for new if:then: entry, at
->> least it looks like.
-> 
-> True, that seems to work fine as well. I can add it to the
-> qcom,sm6350-pas.yaml bindings instead of sm8350 in the next version.
-> 
-> To be honest, I don't quite understand what the concept behind the
-> different PAS bindings are, when an SoC should get a new .yaml file, and
-> when to add to an existing one.
 
-It is purely arbitrary way of organizing things, to reduce amount of
-ifs:then: and make things easier to read. Adding ifs: does not make it
-simple. Adding same SoC to multiple bindings does not make it simple.
 
-Best regards,
-Krzysztof
+Hello all,
+
+Thank you to Pedro, Petr, and Kees for taking the time to provide such
+a detailed analysis and clarification. My apologies for the initial
+misinterpretation.
+
+I now understand that the issue reported is not a latent kernel bug,
+but the expected and correct behavior when a module overflows its
+fixed-size kernel stack. Your explanation that the KASAN report was a
+direct symptom of this overflow, rather than the trigger of a separate
+bug, was the key piece I was missing.
+
+> Try this and see how the crash changes:
+>=20
+> static int __init final_poc_init(void)
+> {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0volatile char stack_eater=
+[STACK_FOOTPRINT];
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0for (int i =3D STACK_FOOT=
+PRINT - 1; i >=3D 0; i++)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0stack_eater[i] =3D 'A';
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0...
+>=20
+> :)
+>=20
+> >=20
+As you suggested, Kees, I did try the PoC with the stack-clashing loop.
+It was an insightful experiment, as it demonstrated how the specific
+symptoms of the crash could change depending on exactly which memory
+was corrupted by the overflow. It helped solidify my understanding of
+the root cause.
+
+I appreciate you all sharing your expertise and helping me learn from
+this.
+
+Thank you,
+Shardul Bankar
