@@ -1,191 +1,247 @@
-Received: from mail187-29.suw11.mandrillapp.com (mail187-29.suw11.mandrillapp.com [198.2.187.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A5B223339
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 09:48:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.2.187.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A43F9248886;
+	Wed,  2 Jul 2025 09:48:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751449730; cv=none; b=Pn9PK3aQTKJ6Q9ymSAfbLl14+GfsChJ/BONUImwUFWlRUbQRLmwMMaCn7jcjHGENL3x8iYAGVsAY1qWAFlZcCz9gUOyLvXd0AWGLR7s/bAl3a8PoPdR/SrpDoyez1vroAuOLquhE381Xjgww93dFVNVTSx5RsOtVPkmAT8ohPsQ=
+	t=1751449735; cv=none; b=UR5lyrggaDlrP421LrmkCWxiaWdsF+EjHACu42qIW6wN/EHT1kB6PovmsdjWtI1JiEbJudTa02rrSuKYHtvvh9P3nQKJavsAxovDkKWQw4OURViipI6SkbeBEYTTCdnmH3wXnkMMk33HKSLxRYAVipIvU65Rhx2vTf2cW6/SiTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751449730; c=relaxed/simple;
-	bh=ISdpG1QNUqMvPpZim7SIb2eWx2VudgLouDOUPZqGh+0=;
-	h=From:Subject:To:Cc:Message-Id:Date:MIME-Version:Content-Type; b=p+nvbgnIlxqRpG+NIEdkrMqbH5LW4hlxWezEpDhJ5JY9mRUo1ATlizasQxRUSa9YeqOiLx8SBxTIR+hQOeHC3GPpn7+Rw86Gu6AvK28pKOw084si4kgOggL66oWqzzisj88wNMT3P5Q1cqfrNmwUWXCsj4VV2aTPfRsNr8PLEt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vates.tech; spf=pass smtp.mailfrom=bounce.vates.tech; dkim=pass (2048-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b=w/V5op1H; dkim=pass (2048-bit key) header.d=vates.tech header.i=teddy.astie@vates.tech header.b=oIqyzEIn; arc=none smtp.client-ip=198.2.187.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vates.tech
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bounce.vates.tech
+	s=arc-20240116; t=1751449735; c=relaxed/simple;
+	bh=8bvu6RQ9bOq4O7IorMEYHaYhu7iXNr7d73XJajJuo6E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tyV0W7Dit1h3OoyrF8QF4+0VVNge3Z8qHslDcMcGKU1tH65xlVbpR0Uk6TkhzjvXEhp2g0EJn1geEU6IIgq1vmftNB7M8qfX0Tic2N2e10nL0yPQmknyRb8K8e2qO3aEqW07NJ64AlY58kjz7RJKIEOXpWm4Cybtc8XrlHCVY2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RZWAMP+p; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="w/V5op1H";
-	dkim=pass (2048-bit key) header.d=vates.tech header.i=teddy.astie@vates.tech header.b="oIqyzEIn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com;
-	s=mte1; t=1751449726; x=1751719726;
-	bh=FHgL1whZVBmBSD9h9bZZ8bhpnADjwgrqmGTO+bcYsPU=;
-	h=From:Subject:To:Cc:Message-Id:Feedback-ID:Date:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:CC:Date:Subject:From;
-	b=w/V5op1HvBY1onsk3VJY+KLX1YcId73hczT4qANYvsTN0lnvWzq3FoDmMb34uEIwG
-	 25gabQQj7LYTCvVcRToV+EgashIYKusRx49SxXjuf8ZvCHKB4gAQf4C3OiQn+LA/KE
-	 ei+BAc+uv4ZJmC89WItjiQgcEQ7FuC9b38UgpXzCMi/gbH9kM1I/y85ycnL//cCl6Z
-	 0xbFhKYNRp0MYDGxIdrb7lgK40+bJErNzsCLHeUwSHuSahAdjBakBWJQMHKtQHqyoA
-	 dsRdu+l+J0U+Y/FYSPj1bi3RvQULiDr/dilxAE3thY026C0YfCihtbmaVBR6W4HGUl
-	 teKs4lBWXsnpA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vates.tech; s=mte1;
-	t=1751449726; x=1751710226; i=teddy.astie@vates.tech;
-	bh=FHgL1whZVBmBSD9h9bZZ8bhpnADjwgrqmGTO+bcYsPU=;
-	h=From:Subject:To:Cc:Message-Id:Feedback-ID:Date:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:CC:Date:Subject:From;
-	b=oIqyzEInM3vSn0bb7p/5THfq2VmR3h/6Q/ix9k8avxhQq1gdYm7l+NXcAAbqfx0eU
-	 pE3Y7B1BX4SEr1HjSnAsOXDmnrsLfPWrBBkGyXkECH964jK+zo1G6HjmoyMydhaMaS
-	 omEyS1M7OLMzMxBzlrAalT5uZIWmBJdoRSkLIGY0UiVw55N7PfgGmq+FJHiS1Ko/qL
-	 3ukhOOXSQpm6SRyUNLvH47sSqq45BXCI1JVTOybo7erL1XDAidgWAFvkk+JhMiskMd
-	 iq1U0lLW4PjmgHJ9vmPpcXV+arviHXY2UQoyV5BS1b/DShpaqTn8Fvcv/cHi/q8vCZ
-	 BBDKR/2OR8Xfw==
-Received: from pmta09.mandrill.prod.suw01.rsglab.com (localhost [127.0.0.1])
-	by mail187-29.suw11.mandrillapp.com (Mailchimp) with ESMTP id 4bXFTV1p1Fz7lmgWY
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 09:48:46 +0000 (GMT)
-From: "Teddy Astie" <teddy.astie@vates.tech>
-Subject: =?utf-8?Q?[PATCH=205.15.y=20v2]=20xen:=20replace=20xen=5Fremap()=20with=20memremap()?=
-Received: from [37.26.189.201] by mandrillapp.com id 1345525288b54e389c5d6931b119a54f; Wed, 02 Jul 2025 09:48:46 +0000
-X-Mailer: git-send-email 2.50.0
-X-Bm-Disclaimer: Yes
-X-Bm-Milter-Handled: 4ffbd6c1-ee69-4e1b-aabd-f977039bd3e2
-X-Bm-Transport-Timestamp: 1751449724214
-To: linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
-Cc: "Teddy Astie" <teddy.astie@vates.tech>, "Boris Ostrovsky" <boris.ostrovsky@oracle.com>, "Juergen Gross" <jgross@suse.com>, "Stefano Stabellini" <sstabellini@kernel.org>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Sasha Levin" <sashal@kernel.org>, "Jason Andryuk" <jason.andryuk@amd.com>, stable@vger.kernel.org, "kernel test robot" <lkp@intel.com>
-Message-Id: <816ab25650e06a5fb51c5a51ec0108aa2238271a.1751449523.git.teddy.astie@vates.tech>
-X-Native-Encoded: 1
-X-Report-Abuse: =?UTF-8?Q?Please=20forward=20a=20copy=20of=20this=20message,=20including=20all=20headers,=20to=20abuse@mandrill.com.=20You=20can=20also=20report=20abuse=20here:=20https://mandrillapp.com/contact/abuse=3Fid=3D30504962.1345525288b54e389c5d6931b119a54f?=
-X-Mandrill-User: md_30504962
-Feedback-ID: 30504962:30504962.20250702:md
-Date: Wed, 02 Jul 2025 09:48:46 +0000
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RZWAMP+p"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ae36e88a5daso837394066b.1;
+        Wed, 02 Jul 2025 02:48:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751449732; x=1752054532; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hybYjnvwAm+UD7pG+n18JpAuRvA2jfHhyn3nT8VWieU=;
+        b=RZWAMP+pdn09WkZJWHC+rLdnmbhJ9BcCP6rro+7vAHY1rR+mwRTcpk+JTnQxuh9WCN
+         wFTxn+Bt72bLjDELkFhLT4/asx5mV1rTmKJdgXyafQNnQ2eVCr0NXfkSZXzazUrQq42/
+         fw9kuF+bXBeYVGd7y0VsoJVIuAf4kR0L1DXsW7NX4MrLwoTqKZLGyxEil3mw4o9CPb7K
+         c2r7ojZYOhm5/wTBF/rNDA729B2A+VjOGDHHiPd5TB+qhJQeJDeYlsrS1huGpL064Tiu
+         0q0FKHiMYrWfEIkqzIsO1Ph+v+GifLlvjLR3huA5/96lbVwp2/Ghkh+369ec8RPIUJEt
+         xVsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751449732; x=1752054532;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hybYjnvwAm+UD7pG+n18JpAuRvA2jfHhyn3nT8VWieU=;
+        b=McpFZj9PFcqKMQVmb24dPxgXn7wiF9F18fS/3w+m4hHRn2xlkbafWVSN13t41d4rai
+         mXthYtOYpccjhg/IrM5T0Pbfzr0JtZmh10HX5dhk5RVo+0Ru+VA3P8yAmCS7072fAzRw
+         UGuiWK9qoqooUU56+9vHzfaxxuldrjoufGD6PuVwzImOs8aW0dRspXbktzm5+73RNlM8
+         vU9MAjs6454CJ0Pj744dDaks4IErERQj5sOw4WjG5adf4wuPkNf45D94qe4UaO+kDC1m
+         X3N63e/EvjtYXmDJqAsvnKWMtHS8XD3TAPZhamixU8UcIpWl+/sXYAVRtbp0w1SF5cXQ
+         j7ZA==
+X-Forwarded-Encrypted: i=1; AJvYcCWGWAgXVAQXXVXfk29P8QD9YzPI/jUn5/WoDrurxRYAT6aSyWAQclrXJSfOUto9760RzfONi1iExrxk5qel@vger.kernel.org, AJvYcCWg+4ontzOtx9wo6E4SXW2Vo0M640ErrVQhZwnJEhAygnj8AwM6D/Br/06sTvRo7F+hKy4GmoZRGgo=@vger.kernel.org, AJvYcCWjU3N7SwsApTPCYwTMbkE2fS2aBHNmdM2+3htgZQ/qh/1nLA2I5zhRUSOMAj3/j8GTT51EZ177D/nRbW4zzg==@vger.kernel.org, AJvYcCXJy/6hoJnq4QSScexFbyDUoy5MFbdcldSOkXUv+7CXm7c7f52tvCJgXp9a3Jq7HkYYj7Z6T/wO7Yy8@vger.kernel.org, AJvYcCXLAgRpKFKp96WtnajaJXQUopwGX+VzgyIjEI7gAoNFxBzfUV1IDKAkTc3hzSoCcfX0zudtd2WT0g==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxY50VAqqBwKxhXfoyxX3CR9GQQLt3UZEFyaRMxvfStdXbR2SRQ
+	qPJJkesoXKZ1LlHwC9TtAnM2yS/O+vlV2uZlD3yv74CO54m/887mUMW4o9fBHZ1h8Xsw0hH4wcr
+	GoeNbyK3Jr0oKBxn6hKKSvF/YE0+P2dI=
+X-Gm-Gg: ASbGnct+SngJHs4UMKAso/imSOaCqOJB3mOrN3IZY0fqQvt8/yJkbMS6/pa/icfPmhu
+	Emy97ZW6nFj6S5zZZxWerUEj5dq5XgysDxgbhzADMhR4qWPqD9BDsoyAdIKflwuHBK1xAZiAET3
+	1U8QfQV1ZGdXeXzUBk5sfJ4jH6uhsEyXgaEZsDiS1FEHQ=
+X-Google-Smtp-Source: AGHT+IHLqiR5a8+aLQTtKNl+EMNjlPIqitVXeaPDfSISN7eMa1focgYCTjl8R2KUTfI0pf6WE2boiiwz9b4vZPegI9E=
+X-Received: by 2002:a17:906:c105:b0:ae3:a799:8e81 with SMTP id
+ a640c23a62f3a-ae3c2e198fcmr211718066b.39.1751449731340; Wed, 02 Jul 2025
+ 02:48:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+References: <20250630-xattrat-syscall-v6-0-c4e3bc35227b@kernel.org>
+ <20250630-xattrat-syscall-v6-5-c4e3bc35227b@kernel.org> <20250701183105.GP10009@frogsfrogsfrogs>
+ <CAOQ4uxiCpGcZ7V8OqssP2xKsN0ZiAO7mQ_1Qt705BrcHeSPmBg@mail.gmail.com>
+ <20250701194002.GS10009@frogsfrogsfrogs> <20250701195405.xf27mjknu5bnunue@pali>
+ <CAOQ4uxjZWGz2bqen4F+fkQqZYQjKyufFVky4tOTnwng4D5G4nQ@mail.gmail.com>
+In-Reply-To: <CAOQ4uxjZWGz2bqen4F+fkQqZYQjKyufFVky4tOTnwng4D5G4nQ@mail.gmail.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Wed, 2 Jul 2025 11:48:39 +0200
+X-Gm-Features: Ac12FXxV4u1B6-BmM0AZMJvjzMTREyX2SAzPlWjz7bFYcU7JeOVoqxtdkyrdRVE
+Message-ID: <CAOQ4uxhrW--Du4XvSWficnRenv24U4hwnCQtNsH4F5d4jaPjFg@mail.gmail.com>
+Subject: Re: [PATCH v6 5/6] fs: prepare for extending file_get/setattr()
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+Cc: "Darrick J. Wong" <djwong@kernel.org>, Andrey Albershteyn <aalbersh@redhat.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Casey Schaufler <casey@schaufler-ca.com>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Paul Moore <paul@paul-moore.com>, 
+	linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
+	selinux@vger.kernel.org, Andrey Albershteyn <aalbersh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Juergen Gross <jgross@suse.com>
+On Wed, Jul 2, 2025 at 9:03=E2=80=AFAM Amir Goldstein <amir73il@gmail.com> =
+wrote:
+>
+> On Tue, Jul 1, 2025 at 9:54=E2=80=AFPM Pali Roh=C3=A1r <pali@kernel.org> =
+wrote:
+> >
+> > On Tuesday 01 July 2025 12:40:02 Darrick J. Wong wrote:
+> > > On Tue, Jul 01, 2025 at 09:27:38PM +0200, Amir Goldstein wrote:
+> > > > On Tue, Jul 1, 2025 at 8:31=E2=80=AFPM Darrick J. Wong <djwong@kern=
+el.org> wrote:
+> > > > >
+> > > > > On Mon, Jun 30, 2025 at 06:20:15PM +0200, Andrey Albershteyn wrot=
+e:
+> > > > > > From: Amir Goldstein <amir73il@gmail.com>
+> > > > > >
+> > > > > > We intend to add support for more xflags to selective filesyste=
+ms and
+> > > > > > We cannot rely on copy_struct_from_user() to detect this extens=
+ion.
+> > > > > >
+> > > > > > In preparation of extending the API, do not allow setting xflag=
+s unknown
+> > > > > > by this kernel version.
+> > > > > >
+> > > > > > Also do not pass the read-only flags and read-only field fsx_ne=
+xtents to
+> > > > > > filesystem.
+> > > > > >
+> > > > > > These changes should not affect existing chattr programs that u=
+se the
+> > > > > > ioctl to get fsxattr before setting the new values.
+> > > > > >
+> > > > > > Link: https://lore.kernel.org/linux-fsdevel/20250216164029.2067=
+3-4-pali@kernel.org/
+> > > > > > Cc: Pali Roh=C3=A1r <pali@kernel.org>
+> > > > > > Cc: Andrey Albershteyn <aalbersh@redhat.com>
+> > > > > > Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+> > > > > > Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
+> > > > > > ---
+> > > > > >  fs/file_attr.c           |  8 +++++++-
+> > > > > >  include/linux/fileattr.h | 20 ++++++++++++++++++++
+> > > > > >  2 files changed, 27 insertions(+), 1 deletion(-)
+> > > > > >
+> > > > > > diff --git a/fs/file_attr.c b/fs/file_attr.c
+> > > > > > index 4e85fa00c092..62f08872d4ad 100644
+> > > > > > --- a/fs/file_attr.c
+> > > > > > +++ b/fs/file_attr.c
+> > > > > > @@ -99,9 +99,10 @@ EXPORT_SYMBOL(vfs_fileattr_get);
+> > > > > >  int copy_fsxattr_to_user(const struct fileattr *fa, struct fsx=
+attr __user *ufa)
+> > > > > >  {
+> > > > > >       struct fsxattr xfa;
+> > > > > > +     __u32 mask =3D FS_XFLAGS_MASK;
+> > > > > >
+> > > > > >       memset(&xfa, 0, sizeof(xfa));
+> > > > > > -     xfa.fsx_xflags =3D fa->fsx_xflags;
+> > > > > > +     xfa.fsx_xflags =3D fa->fsx_xflags & mask;
+> > > > >
+> > > > > I wonder, should it be an error if a filesystem sets an fsx_xflag=
+s bit
+> > > > > outside of FS_XFLAGS_MASK?  I guess that's one way to prevent
+> > > > > filesystems from overriding the VFS bits. ;)
+> > > >
+> > > > I think Pali has a plan on how to ensure that later
+> > > > when the mask is provided via the API.
+> > > >
+> > > > >
+> > > > > Though couldn't that be:
+> > > > >
+> > > > >         xfa.fsx_xflags =3D fa->fsx_xflags & FS_XFLAGS_MASK;
+> > > > >
+> > > > > instead?  And same below?
+> > > > >
+> > > >
+> > > > Indeed. There is a reason for the var, because the next series
+> > > > by Pali will use a user provided mask, which defaults to FS_XFLAGS_=
+MASK,
+> > > > so I left it this way.
+> > > >
+> > > > I don't see a problem with it keeping as is, but if it bothers you
+> > > > I guess we can re-add the var later.
+> > >
+> > > Nah, it doesn't bother me that much.
+> > >
+> > > > > >       xfa.fsx_extsize =3D fa->fsx_extsize;
+> > > > > >       xfa.fsx_nextents =3D fa->fsx_nextents;
+> > > > > >       xfa.fsx_projid =3D fa->fsx_projid;
+> > > > > > @@ -118,11 +119,16 @@ static int copy_fsxattr_from_user(struct =
+fileattr *fa,
+> > > > > >                                 struct fsxattr __user *ufa)
+> > > > > >  {
+> > > > > >       struct fsxattr xfa;
+> > > > > > +     __u32 mask =3D FS_XFLAGS_MASK;
+> > > > > >
+> > > > > >       if (copy_from_user(&xfa, ufa, sizeof(xfa)))
+> > > > > >               return -EFAULT;
+> > > > > >
+> > > > > > +     if (xfa.fsx_xflags & ~mask)
+> > > > > > +             return -EINVAL;
+> > > > >
+> > > > > I wonder if you want EOPNOTSUPP here?  We don't know how to suppo=
+rt
+> > > > > unknown xflags.  OTOH if you all have beaten this to death while =
+I was
+> > > > > out then don't start another round just for me. :P
+> > > >
+> > > > We have beaten this API almost to death for sure ;)
+> > > > I don't remember if we discussed this specific aspect,
+> > > > but I am personally in favor of
+> > > > EOPNOTSUPP :=3D the fs does not support the set/get operation
+> > > > EINVAL :=3D some flags provided as value is invalid
+> > > >
+> > > > For example, if the get API provides you with a mask of the
+> > > > valid flags that you can set, if you try to set flags outside of
+> > > > that mask you get EINVAL.
+> > > >
+> > > > That's my interpretation, but I agree that EOPNOTSUPP can also
+> > > > make sense in this situation.
+> > >
+> > > <nod> I think I'd rather EOPNOTSUPP for "bits are set that the kernel
+> > > doesn't recognize" and EINVAL (or maybe something else like
+> > > EPROTONOSUPPORT) for "fs driver will not let you change this bit".
+> > > At least for the syscall interface; we probably have to flatten that =
+to
+> > > EOPNOTSUPP for both legacy ioctls.
+>
+> Given the precedents of returning EOPNOTSUPP in xfs_fileattr_set()
+> and ext4_ioctl_setflags() for flags that cannot be set, I agree.
+>
 
-[ upstream commit 41925b105e345ebc84cedb64f59d20cb14a62613 ]
+Wait, I misparsed what you wrote, so I think I "agreed" only to the
+first part of your suggestion.
 
-xen_remap() is used to establish mappings for frames not under direct
-control of the kernel: for Xenstore and console ring pages, and for
-grant pages of non-PV guests.
+My claim is that unlike the xfs_has_v3inodes() check in
+xfs_ioctl_setattr_xflags(),
+ext4/f2fs etc return EOPNOTSUPP for various flags depending on supported fs
+features (e.g. casefold,dax,encryption), so I think it will be hard to
+impose a strict rule
+where "fs does not support the feature" returns EINVAL in the syscalls API.
 
-Today xen_remap() is defined to use ioremap() on x86 (doing uncached
-mappings), and ioremap_cache() on Arm (doing cached mappings).
+Therefore, I propose to change the code in this patch to
+return EOPNOTSUPP for flags that kernel does not support
+and with coming changes from Pali, it will also return the same
+EOPNOTSUPP for flags that the fs instance does not support.
 
-Uncached mappings for those use cases are bad for performance, so they
-should be avoided if possible. As all use cases of xen_remap() don't
-require uncached mappings (the mapped area is always physical RAM),
-a mapping using the standard WB cache mode is fine.
+Christian,
 
-As sparse is flagging some of the xen_remap() use cases to be not
-appropriate for iomem(), as the result is not annotated with the
-__iomem modifier, eliminate xen_remap() completely and replace all
-use cases with memremap() specifying the MEMREMAP_WB caching mode.
+Can you please amend the return value in the following chunk:
 
-xen_unmap() can be replaced with memunmap().
+@@ -119,11 +120,16 @@ static int copy_fsxattr_from_user(struct fileattr *fa=
+,
+                                  struct fsxattr __user *ufa)
+ {
+        struct fsxattr xfa;
++       __u32 mask =3D FS_XFLAGS_MASK;
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Acked-by: Stefano Stabellini <sstabellini@kernel.org>
-Link: https://lore.kernel.org/r/20220530082634.6339-1-jgross@suse.com
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Teddy Astie <teddy.astie@vates.tech> [backport to 5.15.y]
----
-v2:
-- also remove xen_remap/xen_unmap on ARM
----
- arch/x86/include/asm/xen/page.h   | 3 ---
- drivers/xen/grant-table.c         | 6 +++---
- drivers/xen/xenbus/xenbus_probe.c | 3 +--
- include/xen/arm/page.h            | 3 ---
- 4 files changed, 4 insertions(+), 11 deletions(-)
+        if (copy_from_user(&xfa, ufa, sizeof(xfa)))
+                return -EFAULT;
 
-diff --git a/arch/x86/include/asm/xen/page.h b/arch/x86/include/asm/xen/page.h
-index 1a162e559753..c183b7f9efef 100644
---- a/arch/x86/include/asm/xen/page.h
-+++ b/arch/x86/include/asm/xen/page.h
-@@ -355,9 +355,6 @@ unsigned long arbitrary_virt_to_mfn(void *vaddr);
- void make_lowmem_page_readonly(void *vaddr);
- void make_lowmem_page_readwrite(void *vaddr);
- 
--#define xen_remap(cookie, size) ioremap((cookie), (size))
--#define xen_unmap(cookie) iounmap((cookie))
--
- static inline bool xen_arch_need_swiotlb(struct device *dev,
- 					 phys_addr_t phys,
- 					 dma_addr_t dev_addr)
-diff --git a/drivers/xen/grant-table.c b/drivers/xen/grant-table.c
-index 0a2d24d6ac6f..a10e0741bec5 100644
---- a/drivers/xen/grant-table.c
-+++ b/drivers/xen/grant-table.c
-@@ -743,7 +743,7 @@ int gnttab_setup_auto_xlat_frames(phys_addr_t addr)
- 	if (xen_auto_xlat_grant_frames.count)
- 		return -EINVAL;
- 
--	vaddr = xen_remap(addr, XEN_PAGE_SIZE * max_nr_gframes);
-+	vaddr = memremap(addr, XEN_PAGE_SIZE * max_nr_gframes, MEMREMAP_WB);
- 	if (vaddr == NULL) {
- 		pr_warn("Failed to ioremap gnttab share frames (addr=%pa)!\n",
- 			&addr);
-@@ -751,7 +751,7 @@ int gnttab_setup_auto_xlat_frames(phys_addr_t addr)
- 	}
- 	pfn = kcalloc(max_nr_gframes, sizeof(pfn[0]), GFP_KERNEL);
- 	if (!pfn) {
--		xen_unmap(vaddr);
-+		memunmap(vaddr);
- 		return -ENOMEM;
- 	}
- 	for (i = 0; i < max_nr_gframes; i++)
-@@ -770,7 +770,7 @@ void gnttab_free_auto_xlat_frames(void)
- 	if (!xen_auto_xlat_grant_frames.count)
- 		return;
- 	kfree(xen_auto_xlat_grant_frames.pfn);
--	xen_unmap(xen_auto_xlat_grant_frames.vaddr);
-+	memunmap(xen_auto_xlat_grant_frames.vaddr);
- 
- 	xen_auto_xlat_grant_frames.pfn = NULL;
- 	xen_auto_xlat_grant_frames.count = 0;
-diff --git a/drivers/xen/xenbus/xenbus_probe.c b/drivers/xen/xenbus/xenbus_probe.c
-index 2068f83556b7..77ca24611293 100644
---- a/drivers/xen/xenbus/xenbus_probe.c
-+++ b/drivers/xen/xenbus/xenbus_probe.c
-@@ -982,8 +982,7 @@ static int __init xenbus_init(void)
- #endif
- 		xen_store_gfn = (unsigned long)v;
- 		xen_store_interface =
--			xen_remap(xen_store_gfn << XEN_PAGE_SHIFT,
--				  XEN_PAGE_SIZE);
-+			memremap(xen_store_gfn << XEN_PAGE_SHIFT, XEN_PAGE_SIZE, MEMREMAP_WB);
- 		break;
- 	default:
- 		pr_warn("Xenstore state unknown\n");
-diff --git a/include/xen/arm/page.h b/include/xen/arm/page.h
-index ac1b65470563..f831cfeca000 100644
---- a/include/xen/arm/page.h
-+++ b/include/xen/arm/page.h
-@@ -109,9 +109,6 @@ static inline bool set_phys_to_machine(unsigned long pfn, unsigned long mfn)
- 	return __set_phys_to_machine(pfn, mfn);
- }
- 
--#define xen_remap(cookie, size) ioremap_cache((cookie), (size))
--#define xen_unmap(cookie) iounmap((cookie))
--
- bool xen_arch_need_swiotlb(struct device *dev,
- 			   phys_addr_t phys,
- 			   dma_addr_t dev_addr);
--- 
-2.50.0
++       if (xfa.fsx_xflags & ~mask)
++               return -EOPNOTSUPP;
++
 
-
-
-Teddy Astie | Vates XCP-ng Developer
-
-XCP-ng & Xen Orchestra - Vates solutions
-
-web: https://vates.tech
-
+Thanks,
+Amir.
