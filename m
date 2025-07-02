@@ -1,203 +1,81 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mx3.wp.pl (mx3.wp.pl [212.77.101.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57A3F1885B8
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 21:48:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751492902; cv=fail; b=ohWu/9lXzLMBSBsG7hZOIRswKs76lVO5O2z0+V16WWH6DM6L5CGaWToGrLamIwE2TGFndgC/DL0Q+07CdwJSdVUI6LuHA4dc5QKfahHUjnx8nmo10ykFLDoWHmgBRFsGhr443ncs8p8jF31jaippPr6q+4iXjWKdOaTBcETbKgc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751492902; c=relaxed/simple;
-	bh=bw+j5H+8EtANbua8BmJB138RkiBEpgQ9Fn6Te7D+7Rs=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Pwd2NnX9/tVW8Hxnb1yGpYd+gnqEV/hO8mc+qZylTuFfdTLgpJF4j8WLgI7+M06aMc4GMbO6lg72RhOaAFFkhUWTbVXQfV4k1GsRyZeEJJSGTksDkbdK7B39Duv+ernz65CPVkvmswTk4ccq7bTSaLRC2TWcx2hAgWBdpD4pyo0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IBahw/JI; arc=fail smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3336C23ABB7
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 21:48:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.77.101.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751492923; cv=none; b=VzQlhAVIxZL261XKazTARqM99xYYuOmd1ythAdJYwCpd/gL1CyM4a2NTTBWa4r09xGFz/bK2Tur1/C0q8uXS+okOXIAjJktqdWY1qLCsWk4Ly1esUkYK/cBvgTlR7Q4J3swvqsidthiLzNJykOsJ50wB0+hEx4wVG+kEerlmG/c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751492923; c=relaxed/simple;
+	bh=e+HqgpkvhRskkCcjr4bwXspxdDh6JWME0eMmo2K1kwc=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=WCCLts7rvBQuBDW4m8Up4T1/DLEdzB4W6Ty4vcvoUWr6BzzD1t2RFGW8ck+oV7ZMQXUaY5VWVIbQ7HrJD5XdF9Cq5wYqq+Q4MhfU3u4yuJpao8w3tWBpE0D00ACystUg5FYksKVjzzG91WJuXH9o+DvtOFc8qTLDNW4MfZneIxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl; spf=pass smtp.mailfrom=wp.pl; dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b=FGUQmwg2; arc=none smtp.client-ip=212.77.101.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IBahw/JI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751492901; x=1783028901;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=bw+j5H+8EtANbua8BmJB138RkiBEpgQ9Fn6Te7D+7Rs=;
-  b=IBahw/JIXW0GI7ADLwglrsXy8BMH1yIfNlugmTNDP0skrasSeDDNZKJk
-   A3M68rAbcdg14K0UEiIPuE85hBr/p0ncBrNFeuqrgGsEDLf8sLmy9+m2+
-   dk2h+yTSiwsf/uhl/vGzcAuBq3/QY4wkv51iOvbd+EmJWQRrWitGZ+O8v
-   +4Yw7WKOXDx7UVVfZZCh94jV/D0EmLQ9GgjT1cwJxIxqcy49sHKHQ1Ilk
-   8uxj/8OPkuIsp5WBPOuypTDz3lf4JZt6C/aOrW/KZPxDJrOqfwMbKkSE0
-   T15A+kg6NtqSTE7pva6dvYfEyjDf2bUOVaZCbCj8T2hUpH1p87NlQdUei
-   A==;
-X-CSE-ConnectionGUID: kN8rMw3IT5eUQaAItJGETw==
-X-CSE-MsgGUID: HjCx+wFBT+S+G0oqANoKZA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="64051074"
-X-IronPort-AV: E=Sophos;i="6.16,282,1744095600"; 
-   d="scan'208";a="64051074"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 14:48:20 -0700
-X-CSE-ConnectionGUID: q8xNtlzYTPGzm3q2qHp4wg==
-X-CSE-MsgGUID: rZeNE/BiSs2Xd9etjqLWGA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,282,1744095600"; 
-   d="scan'208";a="153958877"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 14:48:20 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 2 Jul 2025 14:48:19 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Wed, 2 Jul 2025 14:48:19 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (40.107.220.41)
- by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 2 Jul 2025 14:48:19 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YgqaCs0YtxYFFjKLcmiKoFJfh73rhn48M+43g6Xj1i0+XIP71R/Zu2BX/hGn0cTaXUgSKc3Jla++zwKOxDd2z7cnBBIpEzv/SIdWDLbxm1fmaRktZ78wI4caPihEHMR8h2b+MWejBWvkxo4zQdoXU0DVHubrU4GP1owUl7TRwQKvuhRrpsWHlRX1uKjeaKfLP4groN4ZUCD1Ciotwkg5KpzTrzA7VKXjc5FzTncaQv9ZzJYszYxIzri0y/aQJziDh13gkKLn+QR9LW2Hxrcpxc5IVZSwaAPZh/UVUd89sl0c9ed9rfrW+c7R0I4RFfa4OJnM90QP1j4o8mQ6jPWuUg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VeL5TBLek9YuOuHPnwyMxK5gUq66Fo2JtaU1GTFWtQ0=;
- b=ggJ4SSatQ+Wy5l1arg4ggtA9QfdUm6Li+c23OGT082POb0WDSRwhTvB2PmJzXE52i2p2rFToIxRRTTJvfm4tJWpK6KNb8IXpfmwVpOY/5Hyd1NVLYEoeNogu4Nk5cts0m6zZP9C9auB3GPHq64CfjUvAbHqaURxP5I026d1//pwcjI7z3TY6aLwvpl/GEoMwGMoODeuQnJTIPP+uXKObpKDt+IOOoVOwyLEmAWR6u1Phk2GelVNeVaINKe9ESFRHsnUq75ncOW08ENCDWfk84+Et2e8zQ8ZpsvHSt2eiJqGBRIaBb0wmj3f2oqdmGz+WUIBIHIkXKndN3ao7jDCzUw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB8427.namprd11.prod.outlook.com (2603:10b6:806:373::19)
- by LV3PR11MB8577.namprd11.prod.outlook.com (2603:10b6:408:1b8::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.31; Wed, 2 Jul
- 2025 21:48:17 +0000
-Received: from SA1PR11MB8427.namprd11.prod.outlook.com
- ([fe80::b156:b61b:d462:b781]) by SA1PR11MB8427.namprd11.prod.outlook.com
- ([fe80::b156:b61b:d462:b781%5]) with mapi id 15.20.8880.021; Wed, 2 Jul 2025
- 21:48:17 +0000
-Date: Wed, 2 Jul 2025 17:48:13 -0400
-From: Rodrigo Vivi <rodrigo.vivi@intel.com>
-To: Badal Nilawar <badal.nilawar@intel.com>
-CC: <intel-xe@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-	<linux-kernel@vger.kernel.org>, <anshuman.gupta@intel.com>,
-	<alexander.usyskin@intel.com>, <gregkh@linuxfoundation.org>,
-	<daniele.ceraolospurio@intel.com>
-Subject: Re: [PATCH v5 10/10] drm/xe/xe_late_bind_fw: Select
- INTEL_MEI_LATE_BIND for CI
-Message-ID: <aGWpHRrPR39LWKQ1@intel.com>
-References: <20250702165216.557074-1-badal.nilawar@intel.com>
- <20250702165216.557074-11-badal.nilawar@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250702165216.557074-11-badal.nilawar@intel.com>
-X-ClientProxiedBy: SJ0PR05CA0210.namprd05.prod.outlook.com
- (2603:10b6:a03:330::35) To SA1PR11MB8427.namprd11.prod.outlook.com
- (2603:10b6:806:373::19)
+	dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b="FGUQmwg2"
+Received: (wp-smtpd smtp.wp.pl 32088 invoked from network); 2 Jul 2025 23:48:32 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=20241105;
+          t=1751492912; bh=QkGp+3Fu5XVnyvQn7eeIzbmUQEGbR66f9BykQ6InEVE=;
+          h=From:To:Subject;
+          b=FGUQmwg25MZJfDyKf2+cF2PhiPOB+37g3E5FT3rMQcQydFO54zwxuDyzU7uFrAztD
+           KvvuhPyeVWkqZpy2WqHUOW8EmjsXDdAjanDvF3k2NyWHTW7glIr5pY3S1Tfi0JdVEH
+           TJ9M8cfvKFWzm8uCEwEt5ujFQbvww9T7IOokBRnKoNMHgy3MDdUfUXOZbJD7uIaTOi
+           PmUYxv7Cn4alRfUlRTF5PIHSzvbn13coAP+RvxvjjILw0T/QXhUCVpITLyMmrZyvSy
+           NzntldPX6C+4buYcZrfHm2Xj/WJqTDTtpi5sMLKAJC9ijQdOWUcMwo6jBXDK9tNKRl
+           bD4EBh6RsiXHw==
+Received: from 83.5.239.54.ipv4.supernova.orange.pl (HELO laptop-olek.lan) (olek2@wp.pl@[83.5.239.54])
+          (envelope-sender <olek2@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <jic23@kernel.org>; 2 Jul 2025 23:48:32 +0200
+From: Aleksander Jan Bajkowski <olek2@wp.pl>
+To: jic23@kernel.org,
+	dlechner@baylibre.com,
+	nuno.sa@analog.com,
+	andy@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	olek2@wp.pl,
+	zhiyong.tao@mediatek.com,
+	linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH v2 0/2] Add thermal sensors support for MT7981
+Date: Wed,  2 Jul 2025 23:48:28 +0200
+Message-Id: <20250702214830.255898-1-olek2@wp.pl>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB8427:EE_|LV3PR11MB8577:EE_
-X-MS-Office365-Filtering-Correlation-Id: ac0057c6-d20a-4f00-1e7b-08ddb9b2276d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?BG6wwdYoy6rHO8FBj9zIul46NBIWhcfO33VAmZT4AT/X0S4o/1cSRdXaRDWZ?=
- =?us-ascii?Q?NVKurZWaFMV7kjU8EiRmTLfEzZaNtP2GRRWQihsa65osf8hS7/h15Ex82rG9?=
- =?us-ascii?Q?5UCU67mYRPdH7wgHC03cTf3FxSWyWLd24w/Av727Ka4z7DjZfYpKyUTXUYwy?=
- =?us-ascii?Q?vlkqwZCaXQPXaTgb3cEwVSpwgDm4ubvJoTADSge3GjJ7Rzk+F5x6YtFnHIMv?=
- =?us-ascii?Q?PfE8cSXmhVp4Y+mXSyEk/H5MrHBL8Ks+gfLtbHeQQBjqH04QvhBIilPrULkg?=
- =?us-ascii?Q?w6+N+NEIROGgZDYpGw0O/zVxQIgPjLxEXiu1pBAIbArOrKJT1ZCychL/lMj4?=
- =?us-ascii?Q?IIKqtixN4iuR43benGz8y+VcWM5oVFQxjNj4gyZW+Tp8H9EyMX5a36Nsz+J7?=
- =?us-ascii?Q?+pK8nnHDvq0BngY0Ds+iGcVN7bArys5qsksv9TDk3kQNXY+GEhS8zExoDX8U?=
- =?us-ascii?Q?uXi2a7miKMTfuIsl7nlg0rrL6T7a1toqpBvBRh/sBRcBgDVnPuTYEwDQkXF3?=
- =?us-ascii?Q?6xISGL1iF+LF45J+VZHPieO43veRHd8TXmdBcF6lNjiMT/DRmAReauAoQ3uX?=
- =?us-ascii?Q?MlAtaWnsJcO5IDi+6PzSa+RzZcy8c49QD1EhGzcA6jK3O7jffN5LtBrlwjyW?=
- =?us-ascii?Q?c4VpgsjBBxgZaXsPmPsmKLaTXMeFwf3ZwNLyb8MROXMHRT4t7xNemSNNBpLC?=
- =?us-ascii?Q?WRIItNC7Vae5qjp1OF6icZXudqikIlfQtr01xRLoSTf6l8aFexgYhrsv0dVH?=
- =?us-ascii?Q?tw9Ckxf6B3w7J3USlAmxTvjKLiaeb5IndAcTLF8GmYxYvY7d3+RGu33LCjJC?=
- =?us-ascii?Q?lRfAr3Yo6Tl7PkZPBmP+1troGIovTXe57OLrVZ3SYHLnY7fw6fQQUY62KoRW?=
- =?us-ascii?Q?nVaQnUDHpC+SYKDFICxG9InQB08dWFaT1CyAJY30H28TiUYvgut+jTWclslj?=
- =?us-ascii?Q?Js0cnBGwlLgxCyh4rWIXMnomPm5aKGlE6u2yYbRSyQHxdXn5B4g7CVBX+Ewi?=
- =?us-ascii?Q?YfsB/N6WEpAb8srRXa2Lj0nIBccPTAbTn+qRis0Qbd1Vn4arsosAYElBCkBH?=
- =?us-ascii?Q?GzvOzhSAy8jKK8grvuqKU6fCCwntw9EfVuuJJmxnOXPoEUb8kFW3XNoNqHT7?=
- =?us-ascii?Q?4eAfrLw6n7Jl4usKuIDYsaSlQyVqAp7W8z0VEbPPdCMgWEcf6Fc3e9QXkKTk?=
- =?us-ascii?Q?dKxdbif3dV4xjA7tdbPQlsTCU8HIrTLJg4qMZaYVItxj+ex33YmrGr2JcR4T?=
- =?us-ascii?Q?9jwNMvrWyN8fTTYz5kEnT+jX49ZktzC7lyS17wb8nmI1DHqRp7S9MyiJ+w0V?=
- =?us-ascii?Q?fWc9digQMDBwmps82FPKAjX8CiKlNUGORRNe5f2Jh79i5v0JrDAypnEpXI8v?=
- =?us-ascii?Q?CIlpXTGphuupIXSto3csd+DcjnnZabgQbiVGt+JCzpN2RtNbVC2xidIk2zcu?=
- =?us-ascii?Q?K/C4DG3LN5E=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB8427.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?j/mx9aFM7tWka2A7+7ohHunt+Y0xFgp+PQWs+y2TYVa8CsHqC0GiWDEtD8GX?=
- =?us-ascii?Q?wYZZv9rHBb8rFgxJfy/VOzCskVxxu4IyMjRoTyytk45p++lwK7CAqN8ddWp5?=
- =?us-ascii?Q?uKSXJG9P4Y8xFIeoDoxpGXo/GzTR0YDPlY9EGIOyiC13oW+fEBpJqZpMreZO?=
- =?us-ascii?Q?6eWlUVCqIHebsNSxD1JpdK7lJNWe0PxUAXhFsdtKk7zwZDwGovU5FI0Qn4nF?=
- =?us-ascii?Q?S1c79V8zO6oxO7FkYnPALUclITB+45ARMk80cong4Awp4lNmgNismHtH3UwE?=
- =?us-ascii?Q?59q9hEQCiFlU5SrnWimHZwh/LWadZnCBzYBOywPOXFeg0LkQd0XwlENoHReG?=
- =?us-ascii?Q?dGHV9EOF+AfHTGtiIsovWjm45CuibaASSDwJMQzAsHVKP1BClGjlx1YzUZrv?=
- =?us-ascii?Q?13Nasv0gGcngXI6K8j7YKE6qwiARBK9iLqi+KGwMXN/iNo04AA2qwkROWeUw?=
- =?us-ascii?Q?9ewVZMLZO+Bgg4LxmxgKCGG2+qEH9ZwK22yX0ZHS9rtfa4i7XyfXXGBlUhxS?=
- =?us-ascii?Q?I1pmoE/H287vu0i/b6nBgkVoWzAp72vKf5fuUxmIcXn99ikGPsBHahbUT6FQ?=
- =?us-ascii?Q?LzvlIdfJzg2fgrg8E63L8cXjkHUOU85mFtrPB9xZa3nQfrPScbQsdPePq13F?=
- =?us-ascii?Q?1HOBJweP9EeTT/pYLkw1nRDhXKQ8/rUn/PxsSvviRUodkODz0n9SJKRCxx85?=
- =?us-ascii?Q?Ibx1jbPJtAYBk/EjgcJ80DDeVsQrimHyEEwaITb9pagcVfVuukDub6jURZgJ?=
- =?us-ascii?Q?TIohhMqPc84ejjj4ue8oinc8DRXExcuNjOgXLoQVfnPZnUOZlM59BHYp2EAT?=
- =?us-ascii?Q?qSjWTBxq/pWsSrn5qvhHDpYiQChW1QRXmDJUDEzM72XY15C7NtC4oZ/yutiO?=
- =?us-ascii?Q?APrwbwtHVDvKJt8h214I1wjtmDy3hpZAWS59q2vQxECTcARh+SXx7FXzbfe9?=
- =?us-ascii?Q?RupdkhcyA3AIuCWBAUht4B3I7V2ntZp6+JNCZLSrS/4ai3xl+CWYWt816KUt?=
- =?us-ascii?Q?hIV1+mj0JXusowbtfh6w5iNRVO0WVh8XTOaZh328L5xqsKRIlOPxBI8J3aNf?=
- =?us-ascii?Q?8VnJWoqKC104HmzDVCQoiQXtMdOhLeeKAwaMKpNVC0ywV565/W8JQCvjTW9/?=
- =?us-ascii?Q?j0KU4w41gn2q5Qy53EGMHvFmNvlFoTLAI5LmOPGscBYY7XDESFfdlAq5x6iC?=
- =?us-ascii?Q?Sz8nkks799XTapaYLCgDbMN+LZThC5+gVxZ7ow5ne+SlB2GlCYu8x7lJs8Hr?=
- =?us-ascii?Q?/1BAJWTyWwsYk/zQldUWY5QtgKEZYA7CxPKpn0DdSzKhJDSiWFUeuwNryiL/?=
- =?us-ascii?Q?84dA/kwq66oKJWW8OwhGHql3jsHhiMtWI+rlsNYyZRli/9x89CfvSJvd7bQ8?=
- =?us-ascii?Q?bYsXouy4lGNmkxKz3ndz5XaFp08a5WAsRrlu7HxSzlxSafNmucwB846/xHzZ?=
- =?us-ascii?Q?MWB2LjDEzlT0tySqz9u71qLtnk761LZBZmf4FcklA6KEVI/DlhnB2ezuipDC?=
- =?us-ascii?Q?WwtZdzAlC5q2n+Y3W84broopsUQNzMqcdTufj0eGe0qJYYDBsHvhfwn9GXdh?=
- =?us-ascii?Q?Mv5gpRhQI58W/tBd9YE/iVPCutnmesgoSj+ap+tvpSeRXPxX3NmUUI7Rypiz?=
- =?us-ascii?Q?Hg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: ac0057c6-d20a-4f00-1e7b-08ddb9b2276d
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB8427.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 21:48:17.5492
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hl8Yf1H9tUSZZNqnEJMDBM+7LebFDJSN1K+WCFok5AvbgZMFoNGWm0nbirbLAzNAd5cay3kJfSQNJBcx8Ct/fQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR11MB8577
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
+X-WP-MailID: de0d4fa9d5cfaba10f7407784c50ddb1
+X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
+X-WP-SPAM: NO 000000A [UYPk]                               
 
-On Wed, Jul 02, 2025 at 10:22:16PM +0530, Badal Nilawar wrote:
-> Do not review
+This patch adds support for the temperature sensor in the MT7981 SoC.
+This sensor is exactly the same as the one in the MT7986.
 
-Why?
+Changes in v2:
+ - added fallback to an existing compatible string
+ - removed second patch as obsolete
 
-Why don't we add this dependency here?
+Aleksander Jan Bajkowski (2):
+  dt-bindings: iio: adc: Add support for MT7981
+  arm64: dts: mediatek: add thermal sensor support on mt7981
 
-> 
-> Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
-> ---
->  drivers/gpu/drm/xe/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/gpu/drm/xe/Kconfig b/drivers/gpu/drm/xe/Kconfig
-> index f66e6d39e319..ef3f4807b0b3 100644
-> --- a/drivers/gpu/drm/xe/Kconfig
-> +++ b/drivers/gpu/drm/xe/Kconfig
-> @@ -45,6 +45,7 @@ config DRM_XE
->  	select WANT_DEV_COREDUMP
->  	select AUXILIARY_BUS
->  	select HMM_MIRROR
-> +	select INTEL_MEI_LATE_BIND
->  	help
->  	  Driver for Intel Xe2 series GPUs and later. Experimental support
->  	  for Xe series is also available.
-> -- 
-> 2.34.1
-> 
+ .../iio/adc/mediatek,mt2701-auxadc.yaml       |  1 +
+ arch/arm64/boot/dts/mediatek/mt7981b.dtsi     | 32 ++++++++++++++++++-
+ 2 files changed, 32 insertions(+), 1 deletion(-)
+
+-- 
+2.39.5
+
