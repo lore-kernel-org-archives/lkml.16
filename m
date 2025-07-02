@@ -1,60 +1,66 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323AC1DF27F;
-	Wed,  2 Jul 2025 12:23:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD72813AA53
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 12:24:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751459040; cv=none; b=krGU4WSgWOUQIsQvc/N4FhVUsEXvxq1YjlYDbZ5SuMUOOO8fWlhc5gQusPQWGkBJSssNinYqm1LxGvTcL1PmB6pk2frn/onVuQkQRiKvndNb7Pqx8fB0g+fJtk41sV9UIaBRVLygIXHp9XfBkJTsTShco7hWVpCexKS4GZUlPNM=
+	t=1751459048; cv=none; b=Rd9aWtwW9WZziJDY/e+kaHBWbW8QFVZNLssCPK8YybKtHCdCRoKLN4bW8wY5hiIvO0/4OXmZGJ4fLujjo2CGKx0CMFA0+Lc+dLIkAXxtyU8DHQ+uDKmbOCVHNWQn1MzI69Q3nV648nGT6ELuiNYvccH9XMfGWkqTIZaZDPy1tdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751459040; c=relaxed/simple;
-	bh=7MXsvefg93WoDNxgQrzmnxeJinMCDTf4uZTRkhJS/pQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DyU0JjqkrhA9gkWFC+kk/tDC2GZjjt2A8d/eCZb0yIpv/qx1IHQ5Ia9RGKFVBy3IYKpHk3HeK5Y3BZY51oJrCF+22e/uVbFlCTm7jF0vHpUxZ17MhaZ8f/BhYdluRfSmHhTBCaEA1/R11caEl0zTwLslzVFNyLpA7Dmp85t2PPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=BDM7WFDA; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1751459048; c=relaxed/simple;
+	bh=O1QOsfQKfSBvWRmSVxSzFdhWW+0snVjTcsBpLdZpgOo=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=WZf1CTQG/S1AnZwpfC/gKMjscd1PC+GOUHulCHF1lyhJMSq1xjhwtwmdpz8b9KzNcT2B3U+w0QnApGcqRePo2PKyODFVJfA38FywRB32MRsVAirIt71iYo648tUgaEY2/aI+JHN/vKbWvhfg50VMrN6pVcTYsdC97aPrKHC3uJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=QyATK5xu; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="BDM7WFDA"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5629TjxU013644;
-	Wed, 2 Jul 2025 12:23:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=UdBAqe
-	jzoUw+UgaBlhXeMSEbuN5A8uBlJuHZIqvXh4A=; b=BDM7WFDAb1M1owrIjk0IoQ
-	I60vhnYcmtOvIXIBdsOnySMhNbLlJHwf805Eq353MhEg+Y7tIbYooSqqvW0jOLEe
-	KBEtuu//NN29vPtL+EhJufYXhnScDRqjtBp5OdGm/w7kLNZnHj4tP23WKLBGIo/A
-	uQNM6zkmLE4hGVZFTt4p5SmnhlS97FSbl0zvkQLACXE2utH7sOouoDcl14b16Yyn
-	TMl1wfc4SqrtJ/OXSVbGpkXGGRiHbLldjTtZvSlst+3UVoxaq5PMK7TnabOL6MJy
-	HwEdblujIDPYD4w9aUqpAaGTn7eP7k6opl4eHkrWcGl7q31gxq51Sl78NRaqYRiQ
-	==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j6u1w3xw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Jul 2025 12:23:29 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5629JcjL021078;
-	Wed, 2 Jul 2025 12:23:29 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 47jtqufmps-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Jul 2025 12:23:28 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 562CNPnv44106226
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 2 Jul 2025 12:23:25 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 369572004E;
-	Wed,  2 Jul 2025 12:23:25 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D9FCF20043;
-	Wed,  2 Jul 2025 12:23:24 +0000 (GMT)
-Received: from [9.152.222.224] (unknown [9.152.222.224])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  2 Jul 2025 12:23:24 +0000 (GMT)
-Message-ID: <51903e66-56bc-42a4-b80c-9c3223e2a48a@linux.ibm.com>
-Date: Wed, 2 Jul 2025 14:23:24 +0200
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="QyATK5xu"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-748f5a4a423so2710499b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 05:24:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1751459046; x=1752063846; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=aZZQ0b9PR4kHg3DyEsxDVtoWqZbIHgud0yNfUX8vIa0=;
+        b=QyATK5xuvBU8dCSgFiYMeERp70YYyC4IIGC7+PHi7bYltCoNCdaogk68pLRG8jEtr/
+         4J3agww+4THUTs9qVsFKZKTzhfu8Z9kBXa5glKAz7Q0d/Mfn7RfTQzdBfojBz45N4nCu
+         aDAx/7wuVMC2rDhX2ur0uLntwdELLrGB2YrOcdRiuHAohwogv66KAyHc3HFvD20CIzyP
+         nzqPyFE5vWvthpKTxPQizgvMFOQUvbQOfIvYpeazzstn5THEqcqJufM7+tcB59fvGz0d
+         Sa5A/dZn7eIpGoJ+G4x8nkIaKuz8dPKOTx/2BwyJ/MGwpLdwSqNfys9lDpLgEyABM6EM
+         ZSEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751459046; x=1752063846;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aZZQ0b9PR4kHg3DyEsxDVtoWqZbIHgud0yNfUX8vIa0=;
+        b=tBs6u45g1OyvMUaKbrxRYAbOLWi6t8P7ZzKAnVWqzIUDJtrXJnX4xYv3pNAw47iduY
+         rLeXSGeBR05oblUk4UhbY2roDujROPlqsmfVDBU2B/QNG0PyR3soTe6wTzhl0ChXbk72
+         gbUeJyEP8xNH2bdEE9M+3d8bcWW33Q93nKoEQbNtik/GCyLfFpnQeEf3rRtSoXuJr+8H
+         VriCsSHbqcTUzUIf+7owY89fz2FWiiikEx38qFKDV+zuKU5XoD8vUT2/qymWX5TXV7SR
+         D+BktCn1TIRtAfKN+4pdZ8pepN+Qn3bI4vBxKsLax4Yb8OX4kgE5N3X4LPEsyI1pBk2Q
+         EJVw==
+X-Gm-Message-State: AOJu0YyF3vV94gSGEiMTUoqb5O8nIQnP+5LAgYkVvnXwBm56/1Ykf/eX
+	gh/KuL5HhryqFgw+lzdBp1t7MjDLCRd/rWrY5FDk9x7cpmIkMx8UwSrW9GK7r/uOPo4=
+X-Gm-Gg: ASbGnctEXDaDwi9dLAUIhR1i6z+u0D2Y2lg8fz5YT4nicD5WuiWg2atA0LwVerq+UhD
+	0FySGDskfSiiFedH4TAdid+pYox+T+J5sbn63Z/KoqIy1VE7WsSA6LOh3b8Zr8TbOT5Rt9ijWRP
+	wc9OHDeWg4pqOxexoRmMnjkKlLrztBVa+PuJsYJcHbOnmNOngCiHEfqf//3pFa0AuJWRgULuqMz
+	z/tIHulS8k8SpOepi0CAzFScZyZ4WyflS6xxRQBRdtY9rY6ERlgrNIudBeXlKP7gvLBccVsmCGo
+	iM+i4KsV2kFb1R1LUd24YdGFO1Ai/pIf///udzuP9IvaHtLfCX7iq3uJvHkA9kkvzPSbkv7GJCO
+	McumRJRLzi+rwQBzf494g7ZnZPwSoFSAFc9zN
+X-Google-Smtp-Source: AGHT+IETkeRfDcmNB9+WEm2yGsnJ6OgHgpRfUmc69FAO+OZBAHjIaiAqF+dsmTgGpCmrfOlIUgPTQA==
+X-Received: by 2002:a05:6a21:48d:b0:21f:5aa1:3124 with SMTP id adf61e73a8af0-222d7df0870mr5638079637.13.1751459046175;
+        Wed, 02 Jul 2025 05:24:06 -0700 (PDT)
+Received: from ?IPV6:fdbd:ff1:ce00:1d76:cc0:e1b1:8778:e58c? ([2001:c10:ff04:0:1000::8])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e31beab2sm13027706a12.47.2025.07.02.05.24.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Jul 2025 05:24:05 -0700 (PDT)
+From: Liangyan <liangyan.peng@bytedance.com>
+X-Google-Original-From: Liangyan <liangyan.peng@google.com>
+Message-ID: <8145bb17-8ba4-4d9d-a995-5f8b09db99c4@google.com>
+Date: Wed, 2 Jul 2025 20:23:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,94 +68,108 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 08/11] perf tools: Minimal CALLCHAIN_DEFERRED support
-To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        x86@kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Indu Bhagat <indu.bhagat@oracle.com>,
-        "Jose E. Marchesi" <jemarch@gnu.org>,
-        Beau Belgrave <beaub@linux.microsoft.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
-References: <20250701180410.755491417@goodmis.org>
- <20250701180456.884974538@goodmis.org>
+Subject: Re: [External] Re: [RFC] x86/kvm: Use native qspinlock by default
+ when realtime hinted
+To: Bibo Mao <maobibo@loongson.cn>, Liangyan <liangyan.peng@bytedance.com>,
+ pbonzini@redhat.com, vkuznets@redhat.com, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+ wanpengli@tencent.com
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, kvm@vger.kernel.org
+References: <20250702064218.894-1-liangyan.peng@bytedance.com>
+ <806e3449-a7b1-fa57-b220-b791428fb28b@loongson.cn>
 Content-Language: en-US
-From: Jens Remus <jremus@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20250701180456.884974538@goodmis.org>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <806e3449-a7b1-fa57-b220-b791428fb28b@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: axbO-Vk8p0TWJ0uevcQWCloOnJFQGtqY
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDEwMCBTYWx0ZWRfX+YfD2C4mM3TP DZMmJfN2CnKikoPEdppg5lNczoasu01L0XpLgqT29WXQqORGJOfKEA4/RMU4qfS7FJ+rZD4MfZT G2YhSgzJDw43PYZ6JRdXV6PaPUgJXQpBzsEhi+QPCFIyXZdNHkg1USkvdmXFkBkI9wzLtRRLGDw
- hd8OgRTJCsNpjQ//sBw41BpoMycktdAKXZMMPlLFIxVfuvbydDA3OCkvl4Z2soQYmmmXzoWyTsV UVm3VJ+3mo6NhF1n2QLsykDOeNKaaUsISjtTV131z/LqFVL+NOniBs5w/31JpJa1AkBcXM77VUh bYztdFIZCsr2K+U9QZaqy5t3RLuiQPNud++2dMoXqmVeIQNMyFjhT6EakrQ7eNFTMaQCd7KU4h4
- /M5swsKeo4rwEK/UdU28Au3O8KW+v1LSSNbnDOkGRwzAACV4dyySrniFg0xb1yfbjcg5dZMN
-X-Proofpoint-GUID: axbO-Vk8p0TWJ0uevcQWCloOnJFQGtqY
-X-Authority-Analysis: v=2.4 cv=GrRC+l1C c=1 sm=1 tr=0 ts=686524c2 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8 a=0MvmVg10__VCTnNSAJcA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-02_01,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 adultscore=0 mlxlogscore=999 mlxscore=0 impostorscore=0
- phishscore=0 spamscore=0 suspectscore=0 bulkscore=0 malwarescore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507020100
 
-Hello Steve!
+We test that unixbench spawn has big improvement in Intel 8582c 120-CPU 
+guest vm if switch to qspinlock.
 
-On 01.07.2025 20:04, Steven Rostedt wrote:
-> From: Namhyung Kim <namhyung@kernel.org>
+Command: ./Run -c 120 spawn
+
+Use virt_spin_lock:
+System Benchmarks Partial Index   BASELINE       RESULT  INDEX
+Process Creation                     126.0      71878.4   5704.6
+                                                         ========
+System Benchmarks Index Score (Partial Only)              5704.6
+
+
+Use qspinlock:
+System Benchmarks Partial Index   BASELINE       RESULT    INDEX
+Process Creation                     126.0     173566.6  13775.1
+                                                         ========
+System Benchmarks Index Score (Partial Only              13775.1
+
+
+Regards,
+Liangyan
+
+On 2025/7/2 16:19, Bibo Mao wrote:
 > 
-> Add a new event type for deferred callchains and a new callback for the
-> struct perf_tool.  For now it doesn't actually handle the deferred
-> callchains but it just marks the sample if it has the PERF_CONTEXT_
-> USER_DEFFERED in the callchain array.
-
-> diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
-
-> @@ -151,6 +151,12 @@ struct perf_record_switch {
->  	__u32			 next_prev_tid;
->  };
->  
-> +struct perf_record_callchain_deferred {
-> +	struct perf_event_header header;
-
-At minimum the timestamp field added to perf with "[PATCH v12 07/11]
-perf: Support deferred user callchains for per CPU events" needs to be
-added here as well:
-
-	__u64			 timestamp;
-
-Otherwise this and any subsequent enhancements of the perf tools do no
-longer work at all.  But probably the timestamp field also needs to be
-used for some purpose?
-
-> +	__u64			 nr;
-> +	__u64			 ips[];
-> +};
-> +
-
-Thanks and regards,
-Jens
--- 
-Jens Remus
-Linux on Z Development (D3303)
-+49-7031-16-1128 Office
-jremus@de.ibm.com
-
-IBM
-
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
+> 
+> On 2025/7/2 下午2:42, Liangyan wrote:
+>> When KVM_HINTS_REALTIME is set and KVM_FEATURE_PV_UNHALT is clear,
+>> currently guest will use virt_spin_lock.
+>> Since KVM_HINTS_REALTIME is set, use native qspinlock should be safe
+>> and have better performance than virt_spin_lock.
+> Just be curious, do you have actual data where native qspinlock has 
+> better performance than virt_spin_lock()?
+> 
+> By my understanding, qspinlock is not friendly with VM. When lock is 
+> released, it is acquired with one by one order in contending queue. If 
+> the first vCPU in contending queue is preempted, the other vCPUs can not 
+> get lock. On physical machine it is almost impossible that CPU 
+> contending lock is preempted.
+> 
+> Regards
+> Bibo Mao
+>>
+>> Signed-off-by: Liangyan <liangyan.peng@bytedance.com>
+>> ---
+>>   arch/x86/kernel/kvm.c | 18 +++++++++---------
+>>   1 file changed, 9 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+>> index 921c1c783bc1..9080544a4007 100644
+>> --- a/arch/x86/kernel/kvm.c
+>> +++ b/arch/x86/kernel/kvm.c
+>> @@ -1072,6 +1072,15 @@ static void kvm_wait(u8 *ptr, u8 val)
+>>    */
+>>   void __init kvm_spinlock_init(void)
+>>   {
+>> +    /*
+>> +     * Disable PV spinlocks and use native qspinlock when dedicated 
+>> pCPUs
+>> +     * are available.
+>> +     */
+>> +    if (kvm_para_has_hint(KVM_HINTS_REALTIME)) {
+>> +        pr_info("PV spinlocks disabled with KVM_HINTS_REALTIME 
+>> hints\n");
+>> +        goto out;
+>> +    }
+>> +
+>>       /*
+>>        * In case host doesn't support KVM_FEATURE_PV_UNHALT there is 
+>> still an
+>>        * advantage of keeping virt_spin_lock_key enabled: 
+>> virt_spin_lock() is
+>> @@ -1082,15 +1091,6 @@ void __init kvm_spinlock_init(void)
+>>           return;
+>>       }
+>> -    /*
+>> -     * Disable PV spinlocks and use native qspinlock when dedicated 
+>> pCPUs
+>> -     * are available.
+>> -     */
+>> -    if (kvm_para_has_hint(KVM_HINTS_REALTIME)) {
+>> -        pr_info("PV spinlocks disabled with KVM_HINTS_REALTIME 
+>> hints\n");
+>> -        goto out;
+>> -    }
+>> -
+>>       if (num_possible_cpus() == 1) {
+>>           pr_info("PV spinlocks disabled, single CPU\n");
+>>           goto out;
+>>
+> 
 
