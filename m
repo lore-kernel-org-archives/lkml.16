@@ -1,191 +1,239 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 941AC275851
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 13:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D251B33062;
+	Wed,  2 Jul 2025 13:00:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751461205; cv=none; b=D6HoIZTDo2Z908qv+XrQoEsRvRMBWX+W0+vXt8Ld3HlTwZDoZVmJu7qNInYJD3HnHyroe4cAmV2q8l7GIdxKgPkFrYrmPH/+FuuGkuWVmd3u/FR7N4cPW/XdS6E29X+c8xLYtDcMe8eWL5vLL9X2OV8GY6tnZl48JUAjCC6xteY=
+	t=1751461230; cv=none; b=jUsJi4SEM0VwK+bdpJxuADfhULMBvVeAHJ7OZ/UKW7UdrJPlOZSY7vHh8nTDJ77YN1FJrtCTYU0focOahYalhtSvKkKO3sDMPEMeTlNAo2lGRZxhw6opVBcNcF6wvNiGBiyesdPEL1xhTJ5OiLaOZW4Jgbn4QI5v2LK2qWi3yfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751461205; c=relaxed/simple;
-	bh=1XQY2y1nQnHhezrjkMBlLaRc5RG+HJsC077eRt6Totg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CZGxUC2/399HhqhfQTyi5bQlEzpqDDOE3PXVO5RgZ5A6JDhF2SvXMosAhkLtw8TDqB74/tpKAfDZCbLWgB6TsgHuqGUO0KvpbcduJ5miJBj/AkFFcj7Pa66wcioTSqd/R6HzE3FR2Wcktd2D4Y965tC9TR9PeBcN7h7CHw1Kop4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 29C121424;
-	Wed,  2 Jul 2025 05:59:48 -0700 (PDT)
-Received: from J2N7QTR9R3.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 67B023F58B;
-	Wed,  2 Jul 2025 06:00:02 -0700 (PDT)
-Date: Wed, 2 Jul 2025 14:00:00 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: kernel test robot <lkp@intel.com>
-Cc: x86-ml <x86@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [tip:master] BUILD REGRESSION
- 104f02a7798f7e8aba25545f9d485035532260b2
-Message-ID: <aGUtUH3eVE_T7IVa@J2N7QTR9R3.cambridge.arm.com>
-References: <202507022036.gBgIDWyi-lkp@intel.com>
+	s=arc-20240116; t=1751461230; c=relaxed/simple;
+	bh=lN700IS7BDtAJR577uBTn2f0F5Waeb7HXX+H9+FASio=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oHJ7JnavBs3eDoaFb7I6yUYrCSR47wB7p/XgQEvCMepWwKh5n0edgrT9s70nrv8Z1tQTLFq1MUiWaHuxwYYf22IOS9Rp/uR7LIkkj1QBTk0xwdYZCotO0lJAGByIj7Wq4eJepnOUxClmLxYVIipUjAV2VuwjoK53HKzA97l/EK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bXKgH1bWZz6L54w;
+	Wed,  2 Jul 2025 20:57:31 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 734A614011A;
+	Wed,  2 Jul 2025 21:00:24 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 2 Jul
+ 2025 15:00:23 +0200
+Date: Wed, 2 Jul 2025 14:00:22 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+CC: Thomas Gleixner <tglx@linutronix.de>, Catalin Marinas
+	<catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, Will Deacon <will@kernel.org>, Arnd Bergmann
+	<arnd@arndb.de>, Sascha Bischoff <sascha.bischoff@arm.com>, Timothy Hayes
+	<timothy.hayes@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, "Liam R.
+ Howlett" <Liam.Howlett@oracle.com>, Peter Maydell <peter.maydell@linaro.org>,
+	Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v6 20/31] irqchip/gic-v5: Add GICv5 PPI support
+Message-ID: <20250702140022.00001c65@huawei.com>
+In-Reply-To: <aGUqEkascwGFD9x+@lpieralisi>
+References: <20250626-gicv5-host-v6-0-48e046af4642@kernel.org>
+	<20250626-gicv5-host-v6-20-48e046af4642@kernel.org>
+	<20250702124019.00006b01@huawei.com>
+	<aGUqEkascwGFD9x+@lpieralisi>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202507022036.gBgIDWyi-lkp@intel.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Wed, Jul 02, 2025 at 08:47:51PM +0800, kernel test robot wrote:
-> tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
-> branch HEAD: 104f02a7798f7e8aba25545f9d485035532260b2  Merge core/entry into tip/master
-> 
-> Error/Warning (recently discovered and may have been fixed):
-> 
->     https://lore.kernel.org/oe-kbuild-all/202507020528.N0LtekXt-lkp@intel.com
-> 
->     drivers/net/ethernet/intel/iavf/iavf_main.c:2399:2: error: unexpected token
->     include/linux/irq-entry-common.h:201:2: error: unexpected token
-> 
-> Error/Warning ids grouped by kconfigs:
-> 
-> recent_errors
-> `-- s390-allmodconfig
->     |-- drivers-net-ethernet-intel-iavf-iavf_main.c:error:unexpected-token
->     `-- include-linux-irq-entry-common.h:error:unexpected-token
+On Wed, 2 Jul 2025 14:46:10 +0200
+Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
 
-For the sake of the archive, this is the same issue being discussed at:
+> On Wed, Jul 02, 2025 at 12:40:19PM +0100, Jonathan Cameron wrote:
+> > On Thu, 26 Jun 2025 12:26:11 +0200
+> > Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+> >   
+> > > The GICv5 CPU interface implements support for PE-Private Peripheral
+> > > Interrupts (PPI), that are handled (enabled/prioritized/delivered)
+> > > entirely within the CPU interface hardware.  
+> > 
+> > I can't remember where I got to last time so if I repeat stuff that
+> > you already responded to, feel free to just ignore me this time ;)
+> > 
+> > All superficial stuff. Feel free to completely ignore if you like.  
+> 
+> We are at v6.16-rc4, series has been on the lists for 3 months, it has
+> been reviewed and we would like to get it into v6.17 if possible and
+> deemed reasonable, I am asking you folks please, what should I do ?
+> 
+> I can send a v7 with the changes requested below (no bug fixes there)
+> - it is fine by me - but I need to know please asap if we have a
+> plan to get this upstream this cycle.
 
-  https://lore.kernel.org/oe-kbuild-all/202507020528.N0LtekXt-lkp@intel.com/#t
+I'm absolutely fine with leaving these be.  The mask stuff I would like
+to clean up as it applies quite widely in the series but that
+can be a follow up as no bugs (so far!). 
 
-Mark.
+As Marc said, these are in a good state.
+
+Jonathan
 
 > 
-> elapsed time: 1444m
+> Thanks,
+> Lorenzo
 > 
-> configs tested: 117
-> configs skipped: 3
+> > > diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
+> > > new file mode 100644
+> > > index 000000000000..a08daa562d21
+> > > --- /dev/null
+> > > +++ b/drivers/irqchip/irq-gic-v5.c
+> > > @@ -0,0 +1,461 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > +/*
+> > > + * Copyright (C) 2024-2025 ARM Limited, All Rights Reserved.
+> > > + */
+> > > +
+> > > +#define pr_fmt(fmt)	"GICv5: " fmt
+> > > +
+> > > +#include <linux/irqdomain.h>
+> > > +#include <linux/wordpart.h>
+> > > +
+> > > +#include <linux/irqchip.h>
+> > > +#include <linux/irqchip/arm-gic-v5.h>
+> > > +
+> > > +#include <asm/cpufeature.h>
+> > > +#include <asm/exception.h>
+> > > +
+> > > +static u8 pri_bits __ro_after_init = 5;
+> > > +
+> > > +#define GICV5_IRQ_PRI_MASK	0x1f
+> > > +#define GICV5_IRQ_PRI_MI	(GICV5_IRQ_PRI_MASK & GENMASK(4, 5 - pri_bits))
+> > > +
+> > > +#define PPI_NR	128
+> > > +
+> > > +static bool gicv5_cpuif_has_gcie(void)
+> > > +{
+> > > +	return this_cpu_has_cap(ARM64_HAS_GICV5_CPUIF);
+> > > +}
+> > > +
+> > > +struct gicv5_chip_data {
+> > > +	struct fwnode_handle	*fwnode;
+> > > +	struct irq_domain	*ppi_domain;
+> > > +};
+> > > +
+> > > +static struct gicv5_chip_data gicv5_global_data __read_mostly;  
+> >   
+> > > +static void gicv5_hwirq_eoi(u32 hwirq_id, u8 hwirq_type)
+> > > +{
+> > > +	u64 cddi = hwirq_id | FIELD_PREP(GICV5_GIC_CDDI_TYPE_MASK, hwirq_type);  
+> > 
+> > Slight preference for not needing to care where hwirq_id goes in CDDI or how big
+> > it is (other than when I checked the header defines).
+> >  
+> > 	u64 cddi = FIELD_PREP(GICV5_GIC_CDDI_ID_MASK, hwirq_id) |
+> >         	   FIELD_PREP(GICV5_GIC_CDDI_TYPE_MASK, hwirq_type);
+> > 
+> >   
+> > > +
+> > > +	gic_insn(cddi, CDDI);
+> > > +
+> > > +	gic_insn(0, CDEOI);
+> > > +}  
+> >   
+> > > +static int gicv5_ppi_irq_get_irqchip_state(struct irq_data *d,
+> > > +					   enum irqchip_irq_state which,
+> > > +					   bool *state)
+> > > +{
+> > > +	u64 hwirq_id_bit = BIT_ULL(d->hwirq % 64);
+> > > +
+> > > +	switch (which) {
+> > > +	case IRQCHIP_STATE_PENDING:
+> > > +		*state = !!(read_ppi_sysreg_s(d->hwirq, PPI_PENDING) & hwirq_id_bit);  
+> > 
+> > Technically don't need the !! but if you really like it I don't mind that much.
+> >   
+> > > +		return 0;
+> > > +	case IRQCHIP_STATE_ACTIVE:
+> > > +		*state = !!(read_ppi_sysreg_s(d->hwirq, PPI_ACTIVE) & hwirq_id_bit);
+> > > +		return 0;
+> > > +	default:
+> > > +		pr_debug("Unexpected PPI irqchip state\n");
+> > > +		return -EINVAL;
+> > > +	}
+> > > +}  
+> > 
+> >   
+> > > +static int gicv5_irq_ppi_domain_translate(struct irq_domain *d,
+> > > +					  struct irq_fwspec *fwspec,
+> > > +					  irq_hw_number_t *hwirq,
+> > > +					  unsigned int *type)
+> > > +{
+> > > +	if (!is_of_node(fwspec->fwnode))
+> > > +		return -EINVAL;
+> > > +
+> > > +	if (fwspec->param_count < 3)  
+> > 
+> > I don't care that much, but could relax this seeing as fwspec->param[2]
+> > isn't used anyway? Maybe a tiny comment on why it matters?
+> >   
+> > > +		return -EINVAL;
+> > > +
+> > > +	if (fwspec->param[0] != GICV5_HWIRQ_TYPE_PPI)
+> > > +		return -EINVAL;
+> > > +
+> > > +	*hwirq = fwspec->param[1];
+> > > +
+> > > +	/*
+> > > +	 * Handling mode is hardcoded for PPIs, set the type using
+> > > +	 * HW reported value.
+> > > +	 */
+> > > +	*type = gicv5_ppi_irq_is_level(*hwirq) ? IRQ_TYPE_LEVEL_LOW : IRQ_TYPE_EDGE_RISING;
+> > > +
+> > > +	return 0;  
+> > 
+> >   
+> > > +static int __init gicv5_of_init(struct device_node *node, struct device_node *parent)
+> > > +{
+> > > +	int ret = gicv5_init_domains(of_fwnode_handle(node));
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	gicv5_set_cpuif_pribits();
+> > > +
+> > > +	ret = gicv5_starting_cpu(smp_processor_id());
+> > > +	if (ret)
+> > > +		goto out_dom;
+> > > +
+> > > +	ret = set_handle_irq(gicv5_handle_irq);
+> > > +	if (ret)
+> > > +		goto out_int;
+> > > +
+> > > +	return 0;
+> > > +
+> > > +out_int:
+> > > +	gicv5_cpu_disable_interrupts();
+> > > +out_dom:
+> > > +	gicv5_free_domains();  
+> > 
+> > Naming is always tricky but I'd not really expect gicv5_free_domains() as the
+> > pair of gicv5_init_domains() (which is doing creation rather than just initializing).
+> > 
+> > Ah well, names are never prefect and I don't really mind.
+> >   
+> > > +
+> > > +	return ret;
+> > > +}
+> > > +IRQCHIP_DECLARE(gic_v5, "arm,gic-v5", gicv5_of_init);  
+> >   
 > 
-> tested configs:
-> alpha                             allnoconfig    gcc-15.1.0
-> alpha                            allyesconfig    gcc-15.1.0
-> arc                               allnoconfig    gcc-15.1.0
-> arc                   randconfig-001-20250701    gcc-13.3.0
-> arc                   randconfig-002-20250701    gcc-15.1.0
-> arm                               allnoconfig    clang-21
-> arm                          pxa3xx_defconfig    clang-21
-> arm                   randconfig-001-20250701    clang-17
-> arm                   randconfig-002-20250701    gcc-8.5.0
-> arm                   randconfig-003-20250701    clang-21
-> arm                   randconfig-004-20250701    clang-21
-> arm                           tegra_defconfig    gcc-15.1.0
-> arm                         vf610m4_defconfig    gcc-15.1.0
-> arm64                             allnoconfig    gcc-15.1.0
-> arm64                 randconfig-001-20250701    clang-21
-> arm64                 randconfig-002-20250701    gcc-15.1.0
-> arm64                 randconfig-003-20250701    clang-18
-> arm64                 randconfig-004-20250701    gcc-8.5.0
-> csky                              allnoconfig    gcc-15.1.0
-> csky                  randconfig-001-20250701    gcc-11.5.0
-> csky                  randconfig-002-20250701    gcc-10.5.0
-> hexagon                          allmodconfig    clang-17
-> hexagon                           allnoconfig    clang-21
-> hexagon                          allyesconfig    clang-21
-> hexagon               randconfig-001-20250701    clang-21
-> hexagon               randconfig-002-20250701    clang-21
-> i386                             allmodconfig    gcc-12
-> i386                              allnoconfig    gcc-12
-> i386        buildonly-randconfig-001-20250701    gcc-12
-> i386        buildonly-randconfig-002-20250701    gcc-12
-> i386        buildonly-randconfig-003-20250701    gcc-12
-> i386        buildonly-randconfig-004-20250701    gcc-12
-> i386        buildonly-randconfig-005-20250701    gcc-12
-> i386        buildonly-randconfig-006-20250701    clang-20
-> i386                                defconfig    clang-20
-> loongarch                        allmodconfig    gcc-15.1.0
-> loongarch                         allnoconfig    gcc-15.1.0
-> loongarch             randconfig-001-20250701    gcc-13.3.0
-> loongarch             randconfig-002-20250701    gcc-15.1.0
-> m68k                             allmodconfig    gcc-15.1.0
-> m68k                              allnoconfig    gcc-15.1.0
-> m68k                             allyesconfig    gcc-15.1.0
-> microblaze                       allmodconfig    gcc-15.1.0
-> microblaze                        allnoconfig    gcc-15.1.0
-> microblaze                       allyesconfig    gcc-15.1.0
-> mips                              allnoconfig    gcc-15.1.0
-> mips                          eyeq6_defconfig    clang-21
-> mips                           gcw0_defconfig    clang-21
-> mips                            gpr_defconfig    clang-18
-> nios2                             allnoconfig    gcc-14.2.0
-> nios2                 randconfig-001-20250701    gcc-14.2.0
-> nios2                 randconfig-002-20250701    gcc-13.3.0
-> openrisc                          allnoconfig    gcc-15.1.0
-> openrisc                         allyesconfig    gcc-15.1.0
-> openrisc                            defconfig    gcc-15.1.0
-> parisc                           allmodconfig    gcc-15.1.0
-> parisc                            allnoconfig    gcc-15.1.0
-> parisc                           allyesconfig    gcc-15.1.0
-> parisc                              defconfig    gcc-15.1.0
-> parisc                randconfig-001-20250701    gcc-14.3.0
-> parisc                randconfig-002-20250701    gcc-10.5.0
-> parisc64                         alldefconfig    gcc-15.1.0
-> powerpc                          allmodconfig    gcc-15.1.0
-> powerpc                           allnoconfig    gcc-15.1.0
-> powerpc                          allyesconfig    clang-21
-> powerpc               randconfig-001-20250701    gcc-13.3.0
-> powerpc               randconfig-002-20250701    clang-21
-> powerpc               randconfig-003-20250701    clang-21
-> powerpc                     sequoia_defconfig    clang-17
-> powerpc64             randconfig-001-20250701    clang-21
-> powerpc64             randconfig-002-20250701    clang-21
-> powerpc64             randconfig-003-20250701    gcc-10.5.0
-> riscv                            allmodconfig    clang-21
-> riscv                             allnoconfig    gcc-15.1.0
-> riscv                            allyesconfig    clang-16
-> riscv                               defconfig    clang-21
-> riscv                 randconfig-001-20250701    gcc-14.3.0
-> riscv                 randconfig-002-20250701    gcc-10.5.0
-> s390                             allmodconfig    clang-18
-> s390                              allnoconfig    clang-21
-> s390                             allyesconfig    gcc-15.1.0
-> s390                  randconfig-001-20250701    gcc-9.3.0
-> s390                  randconfig-002-20250701    clang-17
-> sh                               allmodconfig    gcc-15.1.0
-> sh                                allnoconfig    gcc-15.1.0
-> sh                               allyesconfig    gcc-15.1.0
-> sh                         apsh4a3a_defconfig    gcc-15.1.0
-> sh                         ecovec24_defconfig    gcc-15.1.0
-> sh                             espt_defconfig    gcc-15.1.0
-> sh                    randconfig-001-20250701    gcc-15.1.0
-> sh                    randconfig-002-20250701    gcc-13.3.0
-> sh                   secureedge5410_defconfig    gcc-15.1.0
-> sh                        sh7757lcr_defconfig    gcc-15.1.0
-> sparc                            allmodconfig    gcc-15.1.0
-> sparc                             allnoconfig    gcc-15.1.0
-> sparc                 randconfig-001-20250701    gcc-10.3.0
-> sparc                 randconfig-002-20250701    gcc-15.1.0
-> sparc64               randconfig-001-20250701    gcc-8.5.0
-> sparc64               randconfig-002-20250701    gcc-12.4.0
-> um                               allmodconfig    clang-19
-> um                                allnoconfig    clang-21
-> um                               allyesconfig    gcc-12
-> um                    randconfig-001-20250701    gcc-12
-> um                    randconfig-002-20250701    gcc-12
-> x86_64                            allnoconfig    clang-20
-> x86_64                           allyesconfig    clang-20
-> x86_64      buildonly-randconfig-001-20250701    gcc-12
-> x86_64      buildonly-randconfig-002-20250701    gcc-12
-> x86_64      buildonly-randconfig-003-20250701    gcc-12
-> x86_64      buildonly-randconfig-004-20250701    gcc-12
-> x86_64      buildonly-randconfig-005-20250701    clang-20
-> x86_64      buildonly-randconfig-006-20250701    clang-20
-> x86_64                              defconfig    gcc-11
-> x86_64                          rhel-9.4-rust    clang-18
-> xtensa                            allnoconfig    gcc-15.1.0
-> xtensa                randconfig-001-20250701    gcc-15.1.0
-> xtensa                randconfig-002-20250701    gcc-13.3.0
-> 
-> --
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
-> 
+
