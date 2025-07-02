@@ -1,116 +1,97 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0512A1AA;
-	Wed,  2 Jul 2025 03:10:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751425851; cv=pass; b=pG/5s3PEAeE7VPE48I5zGwGTzjdBd+3p5SDSZR+6NEfMQAQI93Q3/2t4dRp65MINixscSGFuVi0EaiFQn4y86H6VC1xa69VdQD+N0tRYsJrCg8eTg8ItISqLx0iz8Vj89zxnZUMMooa9yLeSgtvNXCdtid2Ldsu6Y94XsJ1ZBA8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751425851; c=relaxed/simple;
-	bh=vB/bRw7mFEOpN1qxnHiykYCOW17QQ/rr/o+IPmh4y5Q=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=EOdYukiz9pt/MGzr14KJ+gjtSOwoKgn8GPRlwJjQyymfRkOUQKGW0OsBDI1VyrVO64FlQt7XIaM0yYoBOLV/GpTPE9pyFuQOffrkgqvBeakqW+nKsVBOx90URDAQetVH1dRWwhFkJkBn+VVYmbSLRVGqMwyqeqH8m00c6Qe2iFY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=cFlxaOsx; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D34AD51;
+	Wed,  2 Jul 2025 03:12:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751425941; cv=none; b=pdJtZeNKgEipa3U4C3AA36o4fhyXppwgESVEg5I3b26H9MU5YFZAT9IPhrzdj9fKyuuVg4s1sIWvycBDFcI0WLauDZ5epWCb8nfBl7ICIGfKMbHSEkNOlKH+8bC9eaFVvlsL6j1hur7c5232Imlxb7401/A4fzIFUrtRSn4qC1o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751425941; c=relaxed/simple;
+	bh=qVZrCfXUOLvZ91iYV94x6z3FWKL+0s92wJdsIAMgA6Y=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=QatsmyU7DyQmOUGuW6JWqn7ak26b5I7/XhQTrVE0j8cbl6XsWe6HNTeGarfGGGhtz1k9LjI39z4XnjDAQPxcQBYw236lhNgMrV38iYBC/E5lNjtV3Oh2egWK1pORzGwlg1BVC1re923MozA2Fp8XDivY76A8FgZ5weB52q2+rZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CRHP+aIP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="cFlxaOsx"
-ARC-Seal: i=1; a=rsa-sha256; t=1751425814; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Xr2cK+CvHwCuLF6dqXXOm/rllWOBEN3wTLEfVyx3HLw+Tx8nsUmMnmuBj9W6XziZWV+cj7hneaVu7wXBvA9yzfX+uT8PfA9a3p5HwkhipQD2Hi8Xucq88FlOlY4pcH3wFl+HKzuIAniXGtsoSaUhEzM1p/lWq/xgTZ0kzAjX/Cg=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751425814; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=vB/bRw7mFEOpN1qxnHiykYCOW17QQ/rr/o+IPmh4y5Q=; 
-	b=UNQtavYyRj4TxsQRH734yLFUks9OFmyPo2t8gUt0F+p0DqsZwx+9Vb4/qx5LDBac+Id+oPXfwziiUXBEoj2i2GBuJCRkua6Vl0sTET2IkDZRcFxuucIYmvIrJMnf+U19+gfKFLNOaksL5yYROvfLrJMN8FbcSgkugQLt8YvvJiI=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=icenowy.me;
-	spf=pass  smtp.mailfrom=uwu@icenowy.me;
-	dmarc=pass header.from=<uwu@icenowy.me>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751425814;
-	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=vB/bRw7mFEOpN1qxnHiykYCOW17QQ/rr/o+IPmh4y5Q=;
-	b=cFlxaOsxOq+v8V4Nltv2Ir58bEEoGVmiSvLcstC5HyUk/RCZcqn+vgiFAuJxBWWo
-	EdHlWnIUU+E6xh7d06gfViIrGt4VDk619PqpMN+p550b/GFbehA2rAgvIg8L3Z5G/Cm
-	8eKKru+QCFjsQHFklTpaCyHWVwVEoBwf19cNevA5B9IjJFAQ/v3IbIJtu9ZmPYCWunE
-	854MkUXIw5et57gmT36wcwLJqRsXavJgFP9dGRMZ0XpWB7UbCJu1fXzaqNcaRYbBAao
-	vMFrIZi6sSXF7a/ZEEt+nOwGVpeniKAaRbqPmrIj8PxpGr8TvSPdquQwtjARmUNfBFH
-	EyDbRayMsw==
-Received: by mx.zohomail.com with SMTPS id 175142581211425.435655253733216;
-	Tue, 1 Jul 2025 20:10:12 -0700 (PDT)
-Message-ID: <4a9b51f36da2500604f8d1099b0765f1e3764f10.camel@icenowy.me>
-Subject: Re: [PATCH 3/5] clk: sunxi-ng: v3s: Fix CSI1 MCLK clock name
-From: Icenowy Zheng <uwu@icenowy.me>
-To: Paul Kocialkowski <paulk@sys-base.io>, linux-media@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-gpio@vger.kernel.org
-Cc: Yong Deng <yong.deng@magewell.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec
- <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, Michael
- Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
- Maxime Ripard <mripard@kernel.org>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>,  David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, Linus Walleij <linus.walleij@linaro.org>,  Icenowy Zheng
- <icenowy@aosc.xyz>, Andre Przywara <andre.przywara@arm.com>
-Date: Wed, 02 Jul 2025 11:10:02 +0800
-In-Reply-To: <20250701201124.812882-4-paulk@sys-base.io>
-References: <20250701201124.812882-1-paulk@sys-base.io>
-	 <20250701201124.812882-4-paulk@sys-base.io>
-Organization: Anthon Open-Source Community
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CRHP+aIP"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0C375C4CEF0;
+	Wed,  2 Jul 2025 03:12:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751425941;
+	bh=qVZrCfXUOLvZ91iYV94x6z3FWKL+0s92wJdsIAMgA6Y=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=CRHP+aIPYoKUK2nn4RswuiuE6F9sPBa0M6D55mw9A6jhiSbE3Jwbq0wEQGd75DKRQ
+	 GXNCdL0GmqIO4ySWl7MfYmH7wRW0bLYiKNJXtGlUYwM7m2/7vSvCTe+1pcCWaxAEfQ
+	 rT0QVse2W19H+nz4v9jB17PnlY1A2e7U4WwEseC1CHR+IRCchp9ed68xGNCwh40Kk3
+	 7klaXSzUjUL2/2cl4Y+zbDytbLKHQUURnpIKqOxcFGEDYipcaKpEEUThFfm+g+RG3V
+	 5trrJQm2Ow7PYArfDkll/a2qSBUdHK5mCEaaMFkMf9KzQuY0JXxvhTat+mU2gjbj57
+	 M0rv4q/Kie5UA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EADDEC83038;
+	Wed,  2 Jul 2025 03:12:20 +0000 (UTC)
+From: Yang Li via B4 Relay <devnull+yang.li.amlogic.com@kernel.org>
+Date: Wed, 02 Jul 2025 11:12:12 +0800
+Subject: [PATCH] Bluetooth: hci_event: Hold PA sync conn when BIG sync
+ established
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250702-hold_pa_sync-v1-1-3cbdd2c29c41@amlogic.com>
+X-B4-Tracking: v=1; b=H4sIAIujZGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDcwMj3Yz8nJT4gsT44sq8ZF1Lw+RE80QLw8SUNAMloJaCotS0zAqwcdG
+ xtbUAEHq1GF4AAAA=
+To: Marcel Holtmann <marcel@holtmann.org>, 
+ Johan Hedberg <johan.hedberg@gmail.com>, 
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Yang Li <yang.li@amlogic.com>
+X-Mailer: b4 0.13-dev-f0463
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751425939; l=881;
+ i=yang.li@amlogic.com; s=20240418; h=from:subject:message-id;
+ bh=V8m462H5RbM/oJyz7gwSJlctSKUTcMZaUXIOO+asIqY=;
+ b=riJZDjp3zgUR2fA0G+8xAl/LyGaVa3g9bI9F8QneD/Ww/NxnKDpw+LBf30rOisdEUp0vP+ZtP
+ rdPSLdxZP/1CZR60+ROi7n4bxzniCxzLFsS7vO24Tbt9Z8qR53sXttI
+X-Developer-Key: i=yang.li@amlogic.com; a=ed25519;
+ pk=86OaNWMr3XECW9HGNhkJ4HdR2eYA5SEAegQ3td2UCCs=
+X-Endpoint-Received: by B4 Relay for yang.li@amlogic.com/20240418 with
+ auth_id=180
+X-Original-From: Yang Li <yang.li@amlogic.com>
+Reply-To: yang.li@amlogic.com
 
-=E5=9C=A8 2025-07-01=E6=98=9F=E6=9C=9F=E4=BA=8C=E7=9A=84 22:11 +0200=EF=BC=
-=8CPaul Kocialkowski=E5=86=99=E9=81=93=EF=BC=9A
-> The CSI1 MCLK clock is reported as "csi-mclk" while it is specific to
-> CSI1 as the name of the definition indicates. Fix it in the driver.
->=20
-> Fixes: d0f11d14b0bc ("clk: sunxi-ng: add support for V3s CCU")
-> Signed-off-by: Paul Kocialkowski <paulk@sys-base.io>
-> ---
-> =C2=A0drivers/clk/sunxi-ng/ccu-sun8i-v3s.c | 2 +-
-> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-> b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-> index d12791b31a9d..86d933d1ac72 100644
-> --- a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-> +++ b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-> @@ -366,7 +366,7 @@ static const char * const csi_sclk_parents[] =3D {
-> "pll-video", "pll-isp" };
-> =C2=A0static SUNXI_CCU_M_WITH_MUX_GATE(csi_sclk_clk, "csi-sclk",
-> csi_sclk_parents,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x134, 16, 4, 24, 3, BIT(31),=
- 0);
-> =C2=A0
-> -static SUNXI_CCU_M_WITH_MUX_GATE(csi1_mclk_clk, "csi-mclk",
-> csi_mclk_parents,
-> +static SUNXI_CCU_M_WITH_MUX_GATE(csi1_mclk_clk, "csi1-mclk",
-> csi_mclk_parents,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x134, 0, 5, 8, 3, BIT(15), 0=
-);
+From: Yang Li <yang.li@amlogic.com>
 
-Yes, there exists csi0-mclk.
+Hold PA sync connection to prevent cleanup during hci_conn_timeout.
 
-Reviewed-By: Icenowy Zheng <uwu@icenowy.me>
+Signed-off-by: Yang Li <yang.li@amlogic.com>
+---
+ net/bluetooth/hci_event.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> =C2=A0
-> =C2=A0static SUNXI_CCU_M_WITH_GATE(ve_clk, "ve", "pll-ve",
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index e817c4a77f97..85ae1608e028 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -6968,6 +6968,9 @@ static void hci_le_big_sync_established_evt(struct hci_dev *hdev, void *data,
+ 
+ 		if (!ev->status) {
+ 			conn->state = BT_CONNECTED;
++			/* Prevent cleanup in hci_conn_timeout. */
++			hci_conn_hold(conn);
++
+ 			set_bit(HCI_CONN_BIG_SYNC, &bis->flags);
+ 			hci_debugfs_create_conn(conn);
+ 			hci_conn_add_sysfs(conn);
+
+---
+base-commit: 3bc46213b81278f3a9df0324768e152de71eb9fe
+change-id: 20250702-hold_pa_sync-91ca7a81adf0
+
+Best regards,
+-- 
+Yang Li <yang.li@amlogic.com>
+
 
