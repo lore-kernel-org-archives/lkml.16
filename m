@@ -1,117 +1,105 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4D7722A1E6;
-	Wed,  2 Jul 2025 08:03:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F5D7137923;
+	Wed,  2 Jul 2025 08:04:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751443383; cv=none; b=RkfHWhX9zEpIFW6LjRpe2LHdXWzFNUn4Z7Pkmv7SU1bgC7z/9B7kme1OqMQl5OqD43H2wKRjxOjmnVVtPxNkZiN0hYXepaKvDn4j5GPUeSEkPsyPTrlF2m/TumA8Hxm+wzFJNfg96gSw9WgHmD2EHGB+Hegvb0r98e6vuXnEg3w=
+	t=1751443496; cv=none; b=HRVIFZoEBhhfY8tQEISLFOIIVZlT2aV3RznnqFFPyyeLJiOBBYssg4Yub2W970akvZwVAz2bllGradTFRg9yslz75ChgR5aPgXBUtodMJO4CF7pxgelF3GvobByWvjIg0FT/0xewKCA7GNEsqxEflbawtX9ufsAYuvWhQRoDl/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751443383; c=relaxed/simple;
-	bh=ffWQ6O38v/x/gxv3LUGu99DY+WZqho8Of4jNbG4Mh9I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fZDD0nxKsGmcKrT4kvCQFGaHepoImUuHSVjxyCNtv/O/fLmKenIVNaEJXIxRspSeXJtQjrmxJ52cIjsQBc3YXJ+V0XUMhcmHwa6JvZk9Xubp9xTzzv+LUmDOmZoHtQjeByYtRlMDa/XtclZgLKe+CMQ0V+0hch9cScG5CG0egZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EEd7A31B; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751443496; c=relaxed/simple;
+	bh=l0pSZlRPG8LstMnELObDfWKePkirOAxhEP7OlBTiROU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bRFRLg1eH/Jym3et1O/TXWijKNa8YyKlhry77y3fmv5x80fXgWYMFr5cprQ+88vYmk77ZYtaDTXIDix9NxwBtQyW2jBcQnT2BWc/IgTJkaj6inGfWq96QiZMzysnZNF3gmEEyTvFadOqTg6jWD77Mn3w8TtAEMDIFs8y+YiBq8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cM49nz4T; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EEd7A31B"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-453079c1e2eso7329975e9.3;
-        Wed, 02 Jul 2025 01:03:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751443380; x=1752048180; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=OgFaDugDrTNr1qllBEB2czmYTDrkllakFBrtkgwbdUg=;
-        b=EEd7A31BpIrgCCF2Jfiy40LytUrA2uhyFFJ0ZPuLthBK9sAbLGCw/svcDfGiMs4zCw
-         OfXYNJydvqgmim98Is6rnTT6cavFTh5+e42v7GHAjBx4Epoe37GQVsYcbPM3I4P8ubXp
-         mSkgfvKZRUAsrGIBMwMjNth5yyngOzqzsTymWkQwnr2gns8b7EzRp6zll19sE85Xn+Pz
-         eiGWNd3u/5S+7xGx1bzE99wes8vzBjkd475SfC3UrRAELqP9z/9ECxC2t8/Fe+jDKSwt
-         w/3XTKrWK9N3KFfD9Ha4Db2lB8vAuJfSn4lo79Af76SbWoLmuUiDz0OIAQKO29D6V/Nb
-         /pzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751443380; x=1752048180;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OgFaDugDrTNr1qllBEB2czmYTDrkllakFBrtkgwbdUg=;
-        b=rfYPXESQQhNhKxvLS1WxXPGU1vfw7rTzqQKJoYIVPxmJdr1X798jNZYhPdukFlU32C
-         mupAIFMBO5EHzfa92ew07F/BT8TqCG+d4YT9oVfeZ0BBMRWuZNy09/479UW65gu/H4Rh
-         0FSVhEahNSzQ/PGrjfujg7THTLELqxtVQHm5+8IcSstRhhx6eq1+1VXa7/FgatLQz2aS
-         4AK6jQume8qA8bH90qQXq8tuK3YxBGGaghzAs6EwmaKfmx/X8s1rm0YOnFD7b2n1ZFYd
-         5sm7e/PMwGsUMdEiqJdLI5P/jWciFboxGz3TSzPYZAnsW1NzfukortI1VG+LnpLrQhF3
-         IbQw==
-X-Forwarded-Encrypted: i=1; AJvYcCW1DJ7NwjN/SOLMzUB6OUbtV/hDmBZ9YrHQtylj+GF67Ec/BGw9RknVP+WPjMzUbCMRVPDg5/+P44+fmlBynjWAUDE=@vger.kernel.org, AJvYcCWVp1N03tMiSq+zcVVWCfxVCdiultb7ppmxiVIzRpvkRjyMkimaWoV62cfBdfLMyFL3PqcRk+8k@vger.kernel.org, AJvYcCWc6ZYl3JXnRzncxOoI/nrTPlEDVq9aoZZHiKt1CY7+b+J2TGmsUUZdjbGv0LYqbR5EiVowocad8fg+298=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgJUVTRhYenY8AsJB9EJdKiK6Xya+xqOkk8bjB6fy3ObR52ol3
-	AjGjmBDnXqnZIWa5fGm447Lqv5ENU+vkbFsi2KmwkVqgZVKL9op3BUXr
-X-Gm-Gg: ASbGnctr1cG5LcgiATSEWlmhu6azmwY/WJEZJIyQIMw6epSdhaGmJYxArqxl1S3FsTQ
-	d91CxYZSXmvZ8XYBSHf448j7qd1sjNOz2jSo9qFmfz/oMRQmcXZp+HTaB0IJ5frodIK+PZIoCru
-	dTckJP4eBypfJrlj9/IUFfdYj0mXfogXd8YHkNuyUzuMWT6plCkDblSZ6Wq4A20/pQ3eEeJQLFB
-	aXbZS3qOCf8XiuhQMiH0CTr82LpcN41mWEiAfzIPYusfXYl7RQwChSXETdL/9WkKZipCODXYDmc
-	ePVed2wOJHgNgXturA8qGEE9+raf6qn0NYyWShUeG6beyrN16CrtxeHJk9NCUan/IAceJ1uomzg
-	SRJFyCy66/DE501/d/eFGdnKTDhpUe5Nq
-X-Google-Smtp-Source: AGHT+IHi4NOn49y7I9xWwftMlzal3wazSY9a434KghFoZe3qNhO3D7IEhjD0ok5Edxe7Zzc5jQUaPg==
-X-Received: by 2002:a05:600c:c0c4:b0:439:8294:2115 with SMTP id 5b1f17b1804b1-454a372ece2mr5565635e9.8.1751443379899;
-        Wed, 02 Jul 2025 01:02:59 -0700 (PDT)
-Received: from thomas-precision3591.. (eduroam-109159.grenet.fr. [130.190.109.159])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4538a3a5599sm194032485e9.13.2025.07.02.01.02.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 01:02:59 -0700 (PDT)
-From: Thomas Fourier <fourier.thomas@gmail.com>
-To: 
-Cc: Thomas Fourier <fourier.thomas@gmail.com>,
-	stable@vger.kernel.org,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	linux-mtd@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] mtd: rawnand: renesas: Add missing check after DMA map
-Date: Wed,  2 Jul 2025 10:01:06 +0200
-Message-ID: <20250702080110.46839-2-fourier.thomas@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cM49nz4T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751443495; x=1782979495;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=l0pSZlRPG8LstMnELObDfWKePkirOAxhEP7OlBTiROU=;
+  b=cM49nz4TBTComOWsfLgZfKYPbq8Gd0mwC6WIw6UFT+wwbWjL0MApbrWB
+   T3/PP8yng5/OSEvDerrVnnf+c7m81SaiUC4iKTU8y1TQQEMOdaxTK+Uw4
+   t+qmtOxvBc5YX91KVsvcv2C5ig6Png8iqMd7hEjQMwOPqIyeWvWQ2EHik
+   7OgqHQIAz+ShPiHQG+jcmhD1f8s2lhjGdUdd3GytfWzVE/WuUTF2RBlFT
+   lrhyMnQ37QJ/JCOOjouwb5LLFkx3WZ9Qy09mwavpzIdxDTkdvcjm/aLH5
+   CWfb4F6QmHV0n67KP3+iH/QTLsZlkdJ420N1Ps5xDwnzPF9J30GEegVld
+   w==;
+X-CSE-ConnectionGUID: jLaDj3QgSPKpONs/K6xi7w==
+X-CSE-MsgGUID: zEu/3CbLRgSKr2oIWkYOMQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="57536231"
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="57536231"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 01:04:54 -0700
+X-CSE-ConnectionGUID: ZjpuVCdBQyWgkIfdFROO8Q==
+X-CSE-MsgGUID: 9nb3zhAlSeq/KFRxve4Q5Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="154556266"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 01:04:51 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uWsSW-0000000BrMJ-28tk;
+	Wed, 02 Jul 2025 11:04:48 +0300
+Date: Wed, 2 Jul 2025 11:04:48 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-spi@vger.kernel.org
+Subject: Re: [PATCH v3 00/12] iio: adc: ad7173: add SPI offload support
+Message-ID: <aGToIInJLMHmB4ay@smile.fi.intel.com>
+References: <20250701-iio-adc-ad7173-add-spi-offload-support-v3-0-42abb83e3dac@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250701-iio-adc-ad7173-add-spi-offload-support-v3-0-42abb83e3dac@baylibre.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-The DMA map functions can fail and should be tested for errors.
+On Tue, Jul 01, 2025 at 04:37:48PM -0500, David Lechner wrote:
+> Here comes another series for adding SPI offload support to an ADC.
+> 
+> The primary target is AD411x, but since this uses the ad_sigma_delta
+> shared module, a lot of this series is focused on that.
+> 
+> To start with, we have some cleanups to the ad_sigma_delta code, so feel
+> free to pick these up as they are ready as they generally stand on their
+> own.
+> 
+> Then before adding proper SPI offload support, we make use of
+> spi_optimize_message() to reduce CPU usage of all users of this driver
+> during buffered reads.
+> 
+> Also there is a new dt-binding and driver for a special SPI offload
+> trigger FPGA IP core that is used in this particular setup.
+> 
+> Then finally actual SPI offload support is added to the ad_sigma_delta
+> module and the ad7173 driver.
+> 
+> This was tested using EVAL-AD4112ARDZ on a DE10-Nano.
 
-Fixes: d8701fe890ec ("mtd: rawnand: renesas: Add new NAND controller driver")
-Cc: stable@vger.kernel.org
-Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
----
- drivers/mtd/nand/raw/renesas-nand-controller.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+This version LGTM,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-diff --git a/drivers/mtd/nand/raw/renesas-nand-controller.c b/drivers/mtd/nand/raw/renesas-nand-controller.c
-index 44f6603736d1..ac8c1b80d7be 100644
---- a/drivers/mtd/nand/raw/renesas-nand-controller.c
-+++ b/drivers/mtd/nand/raw/renesas-nand-controller.c
-@@ -426,6 +426,9 @@ static int rnandc_read_page_hw_ecc(struct nand_chip *chip, u8 *buf,
- 	/* Configure DMA */
- 	dma_addr = dma_map_single(rnandc->dev, rnandc->buf, mtd->writesize,
- 				  DMA_FROM_DEVICE);
-+	if (dma_mapping_error(rnandc->dev, dma_addr))
-+		return -ENOMEM;
-+
- 	writel(dma_addr, rnandc->regs + DMA_ADDR_LOW_REG);
- 	writel(mtd->writesize, rnandc->regs + DMA_CNT_REG);
- 	writel(DMA_TLVL_MAX, rnandc->regs + DMA_TLVL_REG);
-@@ -606,6 +609,9 @@ static int rnandc_write_page_hw_ecc(struct nand_chip *chip, const u8 *buf,
- 	/* Configure DMA */
- 	dma_addr = dma_map_single(rnandc->dev, (void *)rnandc->buf, mtd->writesize,
- 				  DMA_TO_DEVICE);
-+	if (dma_mapping_error(rnandc->dev, dma_addr))
-+		return -ENOMEM;
-+
- 	writel(dma_addr, rnandc->regs + DMA_ADDR_LOW_REG);
- 	writel(mtd->writesize, rnandc->regs + DMA_CNT_REG);
- 	writel(DMA_TLVL_MAX, rnandc->regs + DMA_TLVL_REG);
 -- 
-2.43.0
+With Best Regards,
+Andy Shevchenko
+
 
