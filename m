@@ -1,124 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F240023817D;
-	Wed,  2 Jul 2025 08:30:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9F941DFE20
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 08:31:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751445013; cv=none; b=S6pdp66oe6TEW2d580zDlK3HDhrCCoT0gbd5yCICPh/IzHX4kcsoOcM0n2BCC4vkFhyZAzRJ8mH2lI7NOOA+72qTQXdwPgkG/HoSfzO5xkNzODBwJ0AdEtcc35lfkr30prlZttdhvy8m0hkucRvNxwaUDzXb/A1XBKV8vm8KZ2A=
+	t=1751445069; cv=none; b=IbkW/hCdsVSDwKj7u6OaRGFt3zSyWz5UQdbQ94aW8+2bhRijz4UZU9VIhp1z4bbHF/FudhOj0KcC3F0WXSirIdk21lmTcNWea703F5CfM5xponuKx9tZmwwDUcSS0Kug34VJgXJfMOmN0Sv8YaClrQl9D1AsiaPu67Z72sjAcys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751445013; c=relaxed/simple;
-	bh=gn8Zc85bDvq6Yw8JF2nDhKZdd2hRMJcauN+/NgAcs8k=;
+	s=arc-20240116; t=1751445069; c=relaxed/simple;
+	bh=JWnhWvn5tEcYrJv61gKK//rVuDV7lbCIkt1Fq+PYNcc=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=gCLzkbarGwMjBeNBLrrlQuRGOi4Nvh1+S6EJl0ZFAgtKg5h6GFfuBrV21neMohoBFcbv9U10n0O+7xmDacT5TTVIjarSvSnvyljGJkqSG2NQv2cPMJGkpzgBNAbLsB057DKhvEjJiJxy2tRPslLI/YE5B4tazDx0+3A84lVKPw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a9ym5aiF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=XpMTpU6XLLabklz4JDdd2oaXboCE+wlSxkAngl7iiPZgXEp9UdWzyGa30p6IkUT9K0OEYEMsnMOiIm2EeMXw1GPwh99fiqk0L0mI/VtqKLTFVhHqEexa9mH3fksFMVU8GkDGmC+4wgKp4j/J5I/maxBs6IMic3y66oBUU48aJUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=K/u+9Wro; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a9ym5aiF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C50C2C4CEF1;
-	Wed,  2 Jul 2025 08:30:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751445012;
-	bh=gn8Zc85bDvq6Yw8JF2nDhKZdd2hRMJcauN+/NgAcs8k=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=a9ym5aiFDlphY7bTPOEHI3m+wdRV61RZgi9V815irDzEy7y72+ZUMLd2+ve6+ufzf
-	 7y8p4mu0euNoB1x52LivNm11DSwd9Sa65Hbum8084GbJHE3rN0SpjWrDpNwCDpsOs6
-	 Pm3PHHHSrfRhjelqtzFW+n5yW/qbTFsAJDnpuJNkmolklTny1b9xFxIl9qynO5F0Hm
-	 BR7Etk53j/KVX5IQF2zeOAKjpxM0zm54MMDeVsnIRAhJVRAjWpeNwJTa60E1xWeeJi
-	 yU9WCiIWDD9a2Xgijciy64PEk92flAv2vg9GoAAfJNdWMuExGRHTln0fF8iVkNsJSp
-	 4BUSs6vjXDkEw==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Benno Lossin" <lossin@kernel.org>
-Cc: "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>,  "Miguel Ojeda"
- <ojeda@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
- <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
- =?utf-8?Q?=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Alice Ryhl" <aliceryhl@google.com>,
-  "Masahiro Yamada" <masahiroy@kernel.org>,  "Nathan Chancellor"
- <nathan@kernel.org>,  "Luis Chamberlain" <mcgrof@kernel.org>,  "Danilo
- Krummrich" <dakr@kernel.org>,  "Nicolas Schier"
- <nicolas.schier@linux.dev>,  "Trevor Gross" <tmgross@umich.edu>,  "Adam
- Bratschi-Kaye" <ark.email@gmail.com>,  <rust-for-linux@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>,  <linux-kbuild@vger.kernel.org>,  "Petr
- Pavlu" <petr.pavlu@suse.com>,  "Sami Tolvanen" <samitolvanen@google.com>,
-  "Daniel Gomez" <da.gomez@samsung.com>,  "Simona Vetter"
- <simona.vetter@ffwll.ch>,  "Greg KH" <gregkh@linuxfoundation.org>,  "Fiona
- Behrens" <me@kloenk.dev>,  "Daniel Almeida"
- <daniel.almeida@collabora.com>,  <linux-modules@vger.kernel.org>
-Subject: Re: [PATCH v13 2/6] rust: introduce module_param module
-In-Reply-To: <DB0VJ9HRT0VG.GT9HOT7J29EL@kernel.org> (Benno Lossin's message of
-	"Tue, 01 Jul 2025 18:54:16 +0200")
-References: <20250612-module-params-v3-v13-0-bc219cd1a3f8@kernel.org>
-	<RPPvXQKnjK77Kp9mKaiFxbNj1fTHKb_I7_nbY81fZop-Wz8n5TTi4_lpXP9U9AwjocvZKqJPI8PGKufJn9cIzQ==@protonmail.internalid>
-	<DAU0J3T0IEVM.2K7ZRQOVOHF8H@kernel.org> <878qlh4aj1.fsf@kernel.org>
-	<87plepzke5.fsf@kernel.org>
-	<xFouVLxX1_t1mH69FDYwlIhBlI72M0IzQEKn0ntG_wT9z7V5DtbxiwVP_frH_yiS-Gf0q_AhqetbLmuvJ_yP5Q==@protonmail.internalid>
-	<DAX65TRN0TGP.25VZ9DYV86XWY@kernel.org> <87wm8txysl.fsf@kernel.org>
-	<9G3W1seaM7elcwWXaeoaa2nfpFYCf-AmBdvZhACGP13KGUtTPVMwGNYdTQsdtp8ru7GIP3-UYTzXscC1MRUKrg==@protonmail.internalid>
-	<DAZV8OGL8BMH.11SLXBXQ17ZJ9@kernel.org> <87h5zxxtdw.fsf@kernel.org>
-	<H78pT7YnQEhAXdxzl_hhnGVUiQuFpibB21_bjH658fMz_5JYbwsPLYYVh8u1gYnzK3N3ilTEAvqOpkuptVx3rg==@protonmail.internalid>
-	<DB03MZI2FCOW.2JBFL3TY38FK@kernel.org> <87bjq4xpv7.fsf@kernel.org>
-	<ffROWpeKczrWSBlKYov2atJG-QD5l5fUOb2dVCNkWlcT9h6DJpa4joGQpjqtYyLP7HX227fCAayyDQunZ464XQ==@protonmail.internalid>
-	<DB0LKI8BO3HZ.3FF03JN4364RM@kernel.org> <87zfdovvz4.fsf@kernel.org>
-	<DB0U12HAEVZ6.JKFPI2UQHDRY@kernel.org>
-	<CANiq72kFUSFgBv7Es3Mhe4HUaSPZk0EVW=JaMdaAGHsQOxYN6w@mail.gmail.com>
-	<DLItXbaTBCeUnpS5vUdbrgE6pmpI-SNBpTVnLMea7RLdHat3KNnjpuhSseC9m0X6Nk8q3cCRBLc-Q7IoEcvIog==@protonmail.internalid>
-	<DB0VJ9HRT0VG.GT9HOT7J29EL@kernel.org>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Wed, 02 Jul 2025 10:30:03 +0200
-Message-ID: <87frffvvuc.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="K/u+9Wro"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 561LRlKZ006903;
+	Wed, 2 Jul 2025 08:30:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=+NSs0nj8Gces/5GOvMFHmAd18hLosj
+	vHUupciVxjhlk=; b=K/u+9WromCOZiOUZRWFQxcTuj2ITfyUT6BFC+4wcb3OzJz
+	HaThGaNTtNL2DgoCGFx7OPZEVvBZj+0wfMVJVUkEwOWI61wGNu/D123u0AF9C2y3
+	837WYen/8Zs6B9MWry9LB627CXWvdnstRHjSPE6O7LIHShBt0Rggr8zEAk9dBm0U
+	w95F03ViMgh9nrk0bn7NH3cA1byVzkyPQ35DVpJDUYhAEaflvhMoAYDJcIatr5bj
+	Za0ZU+beoDsm/cRKg93F1tBQodGAYlmvl8wDuv+ZgFS9y5g17P/RlSRKu5pPjk9/
+	vWZEFbDNN/UvnRylKza4bPkr4MPXvmByWpHt5sGg==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j6u1v0b9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Jul 2025 08:30:54 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5625pNtE012043;
+	Wed, 2 Jul 2025 08:30:54 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47jv7mxh16-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Jul 2025 08:30:54 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5628UqWA56820198
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 2 Jul 2025 08:30:52 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3F3232004B;
+	Wed,  2 Jul 2025 08:30:52 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2951520040;
+	Wed,  2 Jul 2025 08:30:52 +0000 (GMT)
+Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed,  2 Jul 2025 08:30:52 +0000 (GMT)
+From: Sven Schnelle <svens@linux.ibm.com>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+        Alexander Gordeev <agordeev@linux.ibm.com>
+Subject: Re: [PATCH] objtool: Add missing endianess conversion when checking
+ annations
+In-Reply-To: <20250514133515.1829691-1-svens@linux.ibm.com> (Sven Schnelle's
+	message of "Wed, 14 May 2025 15:35:15 +0200")
+References: <20250514133515.1829691-1-svens@linux.ibm.com>
+Date: Wed, 02 Jul 2025 10:30:51 +0200
+Message-ID: <yt9d1pqz6ll0.fsf@linux.ibm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: EnMoh6oyu6nonv6U5BQsq1ON9Do85O3t
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDA2NiBTYWx0ZWRfX8NRvE2609ld8 74ziSLOslx+KEL8NVLIQ3xflx/VQ9tkJPKt9JGSDHRLVI9HJtcSim2109QjYYHzcYZq3p7abX1+ 9O32FxzlfSFHk3TwZLC730PXVbxuu587QtAzRbrTc6jI9ZCLW5SwAYvWBgZN8pEQ3gIrHVK0ndj
+ 3WhC4sz4jmea6YJwQOzZW6R9+970Dx0+HkNNS5WVWNkz5QkFqR8Qwjl99s8/oqznUterc+lLL5r amSB0ZVUUIENQOKUdNLRoVJT7jsKIAPKTOnj84LzS4vzouvct5zKvlfgSPBBkBcwXU6C/14kvTn gk3JPJgLIhPsZwXg6ifezwUDEq+dr51x64Y8e7O1UZATuhQ6Xo/TiWEDY1SGPgRUh5VilDU8aNR
+ 2JXHpWsjVwGuHJm1wUtNKD5GO+0REVaOU90hFBvz6KSNOPrgv3UtLDcBjlW4MliBj8kwwYBZ
+X-Proofpoint-GUID: EnMoh6oyu6nonv6U5BQsq1ON9Do85O3t
+X-Authority-Analysis: v=2.4 cv=GrRC+l1C c=1 sm=1 tr=0 ts=6864ee3f cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=Wb1JkmetP80A:10 a=VnNF1IyMAAAA:8 a=peRKbTyMqrF04Hhbx_IA:9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-01_02,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ priorityscore=1501 adultscore=0 mlxlogscore=833 mlxscore=0 impostorscore=0
+ phishscore=0 spamscore=0 suspectscore=0 bulkscore=0 malwarescore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507020066
 
-"Benno Lossin" <lossin@kernel.org> writes:
+Sven Schnelle <svens@linux.ibm.com> writes:
 
-> On Tue Jul 1, 2025 at 6:27 PM CEST, Miguel Ojeda wrote:
->> On Tue, Jul 1, 2025 at 5:43=E2=80=AFPM Benno Lossin <lossin@kernel.org> =
-wrote:
->>>
->>> Ultimately this is something for Miguel to decide.
->>
->> Only if you all cannot get to an agreement ;)
+> cross-compiling a kernel for x86 on s390 produces the following warning:
 >
-> :)
+> drivers/mfd/mc13xxx-core.o: warning: objtool: mc13xxx_reg_rmw+0xc: Unknown annotation type: 50331648
 >
->> If Andreas wants to have it already added, then I would say just mark
->> it `unsafe` as Benno recommends (possibly with an overbearing
->> precondition), given it has proven subtle/forgettable enough and that,
->> if I understand correctly, it would actually become unsafe if someone
->> "just" added "reasonably-looking code" elsewhere.
+> Fix this by adding the required endianess conversion.
 >
-> Yeah, if we added code that ran at the same time as the parameter
-> parsing (such as custom parameter parsing or a way to start a "thread"
-> before the parsing is completed) it would be a problem.
-
-Guys, we are not going to accidentally add this. I do not think this is
-a valid concern.
-
+> Fixes: 2116b349e29a ("objtool: Generic annotation infrastructure")
+> Reported-by: Alexander Gordeev <agordeev@linux.ibm.com>
+> Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+> ---
+>  tools/objtool/check.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
->> That way we have an incentive to make it safe later on and, more
->> importantly, to think again about it when such a patch lands,
->> justifying it properly. And it could plausibly protect out-of-tree
->> users, too.
->>
->> This is all assuming that we will not have many users of this added
->> right away (in a cycle or two), i.e. assuming it will be easy to
->> change callers later on (if only to remove the `unsafe {}`).
->
-> Yeah we would add internal synchronization and could keep the API the
-> same (except removing unsafe of course).
+> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+> index b21b12ec88d9..35fb871b2c62 100644
+> --- a/tools/objtool/check.c
+> +++ b/tools/objtool/check.c
+> @@ -2316,7 +2316,7 @@ static int read_annotate(struct objtool_file *file,
+>  	}
+>  
+>  	for_each_reloc(sec->rsec, reloc) {
+> -		type = *(u32 *)(sec->data->d_buf + (reloc_idx(reloc) * sec->sh.sh_entsize) + 4);
+> +		type = bswap_if_needed(file->elf, *(u32 *)(sec->data->d_buf + (reloc_idx(reloc) * sec->sh.sh_entsize) + 4));
+>  
+>  		offset = reloc->sym->offset + reloc_addend(reloc);
+>  		insn = find_insn(file, reloc->sym->sec, offset);
 
-That is true. But I am not going to add an unsafe block to a driver just
-to read module parameters. If we cannot reach agreement on merging this
-with the `copy` access method, I would rather wait on a locking version.
-
-
-Best regards,
-Andreas Hindborg
-
-
+Gentle ping?
