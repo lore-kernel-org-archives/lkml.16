@@ -1,176 +1,591 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mta-64-226.siemens.flowmailer.net (mta-64-226.siemens.flowmailer.net [185.136.64.226])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86FA423C4F9
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 22:29:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CAD2BA2D
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 22:29:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751495353; cv=none; b=P2As6p4P4FnS43EvX0AXLS/hoz7rFYYiGr+js8Xdk45ej4PFFXBRI/l3tRQQCLrR67P2tGBI4Qy9JdE6PdIbhvXygs0rlsG0HB01pTbaww8axUlyswksUjbWV0SbkQDxjqtrwJhDVZw9utdIzCaSH5+6epYBVdLcKT5RqRH8q+I=
+	t=1751495368; cv=none; b=Usiloc4vDg/kJ/Yei6cUpiQwc7paDsjwHpcNtJ5EmzVMm9uo4YMij5eggHlXuzhHDXH2LYGEvjZsqIwvZl9zrnl65fadn9yT1EP6e0JAjMrAOT75v76wlgepkzZblS3I73/k9nn8xK30gk0fivZ0bXeK9ZcAuq3VRsYO1L4sPsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751495353; c=relaxed/simple;
-	bh=up5bIfuRe1fh3Im2a2gPebVavaYz7/DHfHtuntIyrf0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NszH9sJnATfSZHFR+VkylP50b0o6FeHI1irsIvfYvd2+dtW3dvnhjomcQhZAuEaMTNhHMmIlaLyuNs5NxSGMwe+jLKr0jhpWQQSfH/ldmsU8NX//hfu8rHzrEqNPo0KFvqxxbDc3JYnhuW4Xq0ESG5HEZRud2djcK0ZO3Zt/lhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Wz3TSuHy; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1751495368; c=relaxed/simple;
+	bh=1HjfBJmpquWx0sI3AlG0fpXwHDxN3DSwVGc5PCBebPE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NrdAc/iOJDO7nbGbnRXIw53FVxaftHYe5PHrXP4YYoHpjTuWAoD5H4DJvDxyjqEs/yqBUgfkwnZe7dhZV/6lSWOIZr0VxNGj6dMqQAFfGT3lb5bQ4TdYo0dcO7Y8s5VUDQMK7kfLtOr9JxPoe+9F7lx1COEH3O2v0oLmnDDZXCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=alexander.sverdlin@siemens.com header.b=iNwrVb4X; arc=none smtp.client-ip=185.136.64.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Wz3TSuHy"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 562Dcdl3028664
-	for <linux-kernel@vger.kernel.org>; Wed, 2 Jul 2025 22:29:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=BgDDI86k+9nrqehhROmR+AQC
-	x3airBLaLzyH+/CSltk=; b=Wz3TSuHy8B9lSuyMjnWMsvL8ffmgZOBUjpAb9o+B
-	WxvSXCHUXubtjRRdR8Hwf1xFjBDhL4n+XhdVygBtclHUPRU6vCW1Utc2QjFVGEyv
-	EDWTZd4a2i42N8SKSwIBMNFqf4tlzdvsoinqos4/7/6Wp+G02mGS/BKtZYEqptXc
-	fFpaqvJcU5pUSWI9Rh30GRqNYsEvErvQ6IzXWIVtx9HZc6vuEIaMlZXtABs6+a35
-	g5vz8OPC3uJcuGso2lHWIfYtSiP3I3QKKcg1l4bKfsILU2ZJCk6G2cvkzdKSXcTh
-	3177S7rczzTCCKpAyZPFKaeOAxn4r5A4zXgNOBqt4F0Agg==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j7bvxara-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 22:29:10 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7d45e0dbee2so709249585a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 15:29:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751495349; x=1752100149;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BgDDI86k+9nrqehhROmR+AQCx3airBLaLzyH+/CSltk=;
-        b=bMHeWT2ohvGbxDAvvnFyj//OJxLEKKoJg67hJE9+1qYjNj9GDTsFJKgsvUx+3AG/xJ
-         KJQG61LRqwxdSQGwp+L4Xx85kHKvJHEDNI2xVpEfIeANM3VHcU2HO3zpDdUYs/1tvx2a
-         HXBWksPyZRvHUrQ9VBzv8LhvXF8GzUq8f2l8la5mDjb/H809lu63h9xnHIrGWh/WSL1H
-         tuM79G/KkJCpTdkGCZp0C8Ng9BKN2JI4OrlI1orACPF0UBShcGViXnDJ6/h6uDekZ/sB
-         uqZM+yalHl1LBiyPqr1NHc39c5AlfKi8OcwcTOs/5EIul6CIOKSkhGvIMrdt52oNggod
-         6gjw==
-X-Forwarded-Encrypted: i=1; AJvYcCUfb833OPwMmJGMFUFXu3ib+BSbgCf1VCri7ZnwKw4vqgMHFog35tFa1Ls7zwi7lQVEQlNksjq2YT0H/3w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAb4jUZkNf6kEj18Q6nQO5NYWJJudRkdP8JDU9B01zhCIE5DH2
-	c/lm0X92zpUvmHskCvOz4UyKbA+aBKrb256ZfyEOyI2JSDAsRGSNYgH7Sc7r8TmdbeVSDxVsLK8
-	+aCOKofXwaY5RPeKgr2qtVCW292ARP/KutKJWgfwoyECNXQpmFAQRU+4Z63dzqxiCF7g=
-X-Gm-Gg: ASbGnctLVDnjvtnOG9+biEwLSEpVfoa2hksbip06eFR9tbg2MqFYP2BCl0EMQHLwFwm
-	lswD8lenUva+Y9AwaeveQxdxLd+CEpRen6GgbMx9x5Iqu395x1TkBXNELuVeme3y9xpKnqlmJ0P
-	vbv8+1hvufXcOXTv3KHm9IHuWZLPayD/ZDgLGIHDNXapu257Oghl+Qn/eoZfxG7Brl+FzuWPsUK
-	3/N0lbCjVD+Vfs3+vQnqJ+srKcTB9WUuWilnIub1h9INRX3CvspmS7UdqPu4oBKSV6eR6VKiYiH
-	9Tl2ETrocU2JCdw3FvnqWUcksmVxclwVsoHmnauPkVTssPlpvE/bXNlQCaJFYLLVnzK2hY8upIQ
-	2m/AIXpDe9Dn2i1RfywFvWp7Wr0pQ9UVOF68=
-X-Received: by 2002:a05:620a:46a6:b0:7d4:5c30:2acd with SMTP id af79cd13be357-7d5c4717717mr613056285a.28.1751495349303;
-        Wed, 02 Jul 2025 15:29:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFrSVTOJQ9y1rva3UBmjLIEBviVC9kwZsRJcNapTvyl3wOwWuQm4n9kgbG/8VBXUhQbv5kwMQ==
-X-Received: by 2002:a05:620a:46a6:b0:7d4:5c30:2acd with SMTP id af79cd13be357-7d5c4717717mr613052785a.28.1751495348903;
-        Wed, 02 Jul 2025 15:29:08 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b2eff7dsm2261580e87.246.2025.07.02.15.29.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 15:29:07 -0700 (PDT)
-Date: Thu, 3 Jul 2025 01:29:06 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik <quic_imrashai@quicinc.com>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] dt-bindings: clock: qcom,videocc: Add sc8180x
- compatible
-Message-ID: <mzmer4g7df7xqhnstpfhyzcm2irpmsk4iwtx6esjksp34lpkk5@76lrsoyb5cp6>
-References: <20250702-sc8180x-videocc-dt-v3-0-916d443d8a38@quicinc.com>
- <20250702-sc8180x-videocc-dt-v3-1-916d443d8a38@quicinc.com>
+	dkim=pass (2048-bit key) header.d=siemens.com header.i=alexander.sverdlin@siemens.com header.b="iNwrVb4X"
+Received: by mta-64-226.siemens.flowmailer.net with ESMTPSA id 20250702222916ca624d31c9e36a2c46
+        for <linux-kernel@vger.kernel.org>;
+        Thu, 03 Jul 2025 00:29:16 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm1;
+ d=siemens.com; i=alexander.sverdlin@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc;
+ bh=8K7+NkkI5KyKo1597u2GdjHkWsakhR2KOTTYNF0g4jo=;
+ b=iNwrVb4XCXJPMrr8oybFHigri/p2sqZfT7WIqxzZsN+DG/bY4JBpaIFvBJ4ozbz63FZhsN
+ EmdDfnpaUS4zhMZWXoCJiPaXS+3bQFd4Gyu5ySQkY+CzuFPCwnzImLLQKGPCheaidMSZV9pU
+ 1p0mjf8w5t2Q3ABpcQj+m6nolGAzfd3Yikie/Gkg4IEGHj7yK3zsqfDUbJQUnihp0U5iSBkv
+ LeeFARkdEfVmLoAPbTwk/L4V8vmGjIfD4gJJT+Dndr+ZUZ3csXmSy8lEFwrZNTpholS8NM6C
+ wD53HLQsnr37ty66soqHa+qJrtFkyxMTdWeea/1kRzWaJsIFqE9lvAow==;
+From: "A. Sverdlin" <alexander.sverdlin@siemens.com>
+To: linux-kernel@vger.kernel.org
+Cc: Alexander Sverdlin <alexander.sverdlin@siemens.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Michael Walle <mwalle@kernel.org>,
+	Hui Wang <hui.wang@canonical.com>
+Subject: [PATCH] eeprom: at25: convert to spi-mem API
+Date: Thu,  3 Jul 2025 00:28:22 +0200
+Message-ID: <20250702222823.864803-1-alexander.sverdlin@siemens.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250702-sc8180x-videocc-dt-v3-1-916d443d8a38@quicinc.com>
-X-Proofpoint-GUID: U0nmkGvWQ0zI_EBmmlzvYrVaM4igG7Kf
-X-Authority-Analysis: v=2.4 cv=RJCzH5i+ c=1 sm=1 tr=0 ts=6865b2b6 cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8 a=_TNEKbHo1ymzoaDRxC8A:9 a=CjuIK1q_8ugA:10
- a=PEH46H7Ffwr30OY-TuGO:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: U0nmkGvWQ0zI_EBmmlzvYrVaM4igG7Kf
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDE4NiBTYWx0ZWRfX3qzMQ1oSV23o
- NDVa/8kRnM/aVzJx3E93axX5bxRq8PwDOnvhTIqZBMM4HcI5wCC2dq0MjtGx1oPQkkc0+JM3PcZ
- 6oluOC0Rod07qFi+Af3BcPsXS7W+fVeUHJ9byZyJ9ECUc3BQalrW7x/Wju3s82G65pIjDhEqMux
- urdNsztTCr7TMmnTvW8XnyvBEDmaebwAvQLpLlPXjfHPbZG1L/xPA2LQu2xzYUeSyMnO+8xP9od
- v6H8ETVcKjAhcL6httuwZOQ7cvPxDtn15Yqke6cWEO74QdGwlku0nfYIswekOcfCWH0zSO8QFwG
- FxUXI1ebb68OP+Rbm7R4X1hYOtGuuQZToIc0rlBc0KVO1I7OSVEaeNMtJ3QvbAbX5ZO5sXAKLqd
- lq9Q193XujdXg0UU5jsAjPOFEXoHo22FI2MMt/xZHZiMquBX5WXN3N+Ce8y4zL/o1Y9Fk9Zc
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-02_04,2025-07-02_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 impostorscore=0 priorityscore=1501 mlxlogscore=999 adultscore=0
- malwarescore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 phishscore=0
- bulkscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507020186
+Content-Transfer-Encoding: 8bit
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-456497:519-21489:flowmailer
 
-On Wed, Jul 02, 2025 at 08:43:13PM +0530, Satya Priya Kakitapalli wrote:
-> The sc8180x video clock controller block is identical to that
-> of sm8150. Add a new compatible string for sc8180x videocc and
-> use sm8150 as fallback.
-> 
-> Signed-off-by: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
-> ---
->  .../devicetree/bindings/clock/qcom,videocc.yaml       | 19 ++++++++++++-------
->  1 file changed, 12 insertions(+), 7 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,videocc.yaml b/Documentation/devicetree/bindings/clock/qcom,videocc.yaml
-> index 5f7738d6835c4ba999402e163fc85a07e3a47a5a..b490caaf843243a7a96395fdd2b99972a45679f9 100644
-> --- a/Documentation/devicetree/bindings/clock/qcom,videocc.yaml
-> +++ b/Documentation/devicetree/bindings/clock/qcom,videocc.yaml
-> @@ -23,13 +23,17 @@ description: |
->  
->  properties:
->    compatible:
-> -    enum:
-> -      - qcom,sc7180-videocc
-> -      - qcom,sc7280-videocc
-> -      - qcom,sdm845-videocc
-> -      - qcom,sm6350-videocc
-> -      - qcom,sm8150-videocc
-> -      - qcom,sm8250-videocc
-> +    oneOf:
-> +      - enum:
-> +          - qcom,sc7180-videocc
-> +          - qcom,sc7280-videocc
-> +          - qcom,sdm845-videocc
-> +          - qcom,sm6350-videocc
-> +          - qcom,sm8150-videocc
-> +          - qcom,sm8250-videocc
-> +      - items:
-> +          - const: qcom,sc8180x-videocc
-> +          - const: qcom,sm8150-videocc
->  
->    clocks:
->      minItems: 1
-> @@ -111,6 +115,7 @@ allOf:
->        properties:
->          compatible:
->            enum:
-> +            - qcom,sc8180x-videocc
+From: Alexander Sverdlin <alexander.sverdlin@siemens.com>
 
-Is there a need for this? Isn't it already covered by the SM8150 entry?
+Replace the RAW SPI accesses with spi-mem API. The latter will fall back to
+RAW SPI accesses if spi-mem callbacks are not implemented by a controller
+driver.
 
->              - qcom,sm8150-videocc
->      then:
->        properties:
-> 
-> -- 
-> 2.25.1
-> 
+Notable advantages:
+- read function now allocates a bounce buffer for SPI DMA compatibility,
+  similar to write function;
+- the driver can now be used in conjunction with SPI controller drivers
+  providing spi-mem API only, e.g. spi-nxp-fspi.
+- during the initial probe the driver polls busy/ready status bit for 25ms
+  instead of giving up instantly and hoping that the FW didn't write the
+  EEPROM
 
+Notes:
+- mutex_lock() has been dropped from fm25_aux_read() because the latter is
+  only being called in probe phase and therefore cannot race with
+  at25_ee_read() or at25_ee_write()
+
+Quick 4KB block size test with CY15B102Q 256KB F-RAM over spi_omap2_mcspi
+driver (no spi-mem ops provided, fallback to raw SPI inside spi-mem):
+
+OP	| throughput, KB/s	| change
+--------+-----------------------+-------
+write	| 1717.847 -> 1656.684	| -3.6%
+read	| 1115.868 -> 1059.367	| -5.1%
+
+The lower throughtput probably comes from the 3 messages per SPI transfer
+inside spi-mem instead of hand-crafted 2 messages per transfer in the
+former at25 code. However, if the raw SPI access is not preserved, then
+the driver doesn't grow from the lines-of-code perspective and subjectively
+could be considered even a bit simpler.
+
+Higher performance impact on the read operation could be explained by the
+newly introduced bounce buffer in read operation. I didn't find any
+explanation or guarantee, why would a bounce buffer be not needed on the
+read side, so I assume it's a pure luck that nobody read EEPROM into
+some variable on stack on an architecture where kernel stack would be
+not DMA-able.
+
+Cc: Michael Walle <mwalle@kernel.org>
+Cc: Hui Wang <hui.wang@canonical.com>
+Link: https://lore.kernel.org/all/28ab8b72afee1af59b628f7389f0d7f5@kernel.org/
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
+---
+ drivers/misc/eeprom/Kconfig |   1 +
+ drivers/misc/eeprom/at25.c  | 321 ++++++++++++++++++------------------
+ 2 files changed, 162 insertions(+), 160 deletions(-)
+
+diff --git a/drivers/misc/eeprom/Kconfig b/drivers/misc/eeprom/Kconfig
+index cb1c4b8e7fd37..0bef5b93bd6dc 100644
+--- a/drivers/misc/eeprom/Kconfig
++++ b/drivers/misc/eeprom/Kconfig
+@@ -37,6 +37,7 @@ config EEPROM_AT25
+ 	depends on SPI && SYSFS
+ 	select NVMEM
+ 	select NVMEM_SYSFS
++	select SPI_MEM
+ 	help
+ 	  Enable this driver to get read/write support to most SPI EEPROMs
+ 	  and Cypress FRAMs,
+diff --git a/drivers/misc/eeprom/at25.c b/drivers/misc/eeprom/at25.c
+index 595ceb9a71261..20611320e7152 100644
+--- a/drivers/misc/eeprom/at25.c
++++ b/drivers/misc/eeprom/at25.c
+@@ -7,8 +7,10 @@
+  */
+ 
+ #include <linux/bits.h>
++#include <linux/cleanup.h>
+ #include <linux/delay.h>
+ #include <linux/device.h>
++#include <linux/iopoll.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/property.h>
+@@ -17,6 +19,7 @@
+ 
+ #include <linux/spi/eeprom.h>
+ #include <linux/spi/spi.h>
++#include <linux/spi/spi-mem.h>
+ 
+ #include <linux/nvmem-provider.h>
+ 
+@@ -35,13 +38,12 @@
+ 
+ struct at25_data {
+ 	struct spi_eeprom	chip;
+-	struct spi_device	*spi;
++	struct spi_mem		*spimem;
+ 	struct mutex		lock;
+ 	unsigned		addrlen;
+ 	struct nvmem_config	nvmem_config;
+ 	struct nvmem_device	*nvmem;
+ 	u8 sernum[FM25_SN_LEN];
+-	u8 command[EE_MAXADDRLEN + 1];
+ };
+ 
+ #define	AT25_WREN	0x06		/* latch the write enable */
+@@ -74,20 +76,29 @@ struct at25_data {
+ 
+ #define	io_limit	PAGE_SIZE	/* bytes */
+ 
++/* Handle the address MSB as part of instruction byte */
++static u8 at25_instr(struct at25_data *at25, u8 instr, unsigned int off)
++{
++	if (!(at25->chip.flags & EE_INSTR_BIT3_IS_ADDR))
++		return instr;
++	if (off < BIT(at25->addrlen * 8))
++		return instr;
++	return instr | AT25_INSTR_BIT3;
++}
++
+ static int at25_ee_read(void *priv, unsigned int offset,
+ 			void *val, size_t count)
+ {
++	u8 *bounce __free(kfree) = kmalloc(min(count, io_limit), GFP_KERNEL);
+ 	struct at25_data *at25 = priv;
+ 	char *buf = val;
+-	size_t max_chunk = spi_max_transfer_size(at25->spi);
+ 	unsigned int msg_offset = offset;
+ 	size_t bytes_left = count;
+ 	size_t segment;
+-	u8			*cp;
+-	ssize_t			status;
+-	struct spi_transfer	t[2];
+-	struct spi_message	m;
+-	u8			instr;
++	int status;
++
++	if (!bounce)
++		return -ENOMEM;
+ 
+ 	if (unlikely(offset >= at25->chip.byte_len))
+ 		return -EINVAL;
+@@ -97,87 +108,67 @@ static int at25_ee_read(void *priv, unsigned int offset,
+ 		return -EINVAL;
+ 
+ 	do {
+-		segment = min(bytes_left, max_chunk);
+-		cp = at25->command;
++		struct spi_mem_op op;
+ 
+-		instr = AT25_READ;
+-		if (at25->chip.flags & EE_INSTR_BIT3_IS_ADDR)
+-			if (msg_offset >= BIT(at25->addrlen * 8))
+-				instr |= AT25_INSTR_BIT3;
++		segment = min(bytes_left, io_limit);
+ 
+-		mutex_lock(&at25->lock);
++		op = (struct spi_mem_op)SPI_MEM_OP(SPI_MEM_OP_CMD(at25_instr(at25, AT25_READ,
++									     msg_offset), 1),
++						   SPI_MEM_OP_ADDR(at25->addrlen, msg_offset, 1),
++						   SPI_MEM_OP_NO_DUMMY,
++						   SPI_MEM_OP_DATA_IN(segment, bounce, 1));
+ 
+-		*cp++ = instr;
+-
+-		/* 8/16/24-bit address is written MSB first */
+-		switch (at25->addrlen) {
+-		default:	/* case 3 */
+-			*cp++ = msg_offset >> 16;
+-			fallthrough;
+-		case 2:
+-			*cp++ = msg_offset >> 8;
+-			fallthrough;
+-		case 1:
+-		case 0:	/* can't happen: for better code generation */
+-			*cp++ = msg_offset >> 0;
+-		}
+-
+-		spi_message_init(&m);
+-		memset(t, 0, sizeof(t));
+-
+-		t[0].tx_buf = at25->command;
+-		t[0].len = at25->addrlen + 1;
+-		spi_message_add_tail(&t[0], &m);
+-
+-		t[1].rx_buf = buf;
+-		t[1].len = segment;
+-		spi_message_add_tail(&t[1], &m);
+-
+-		status = spi_sync(at25->spi, &m);
++		status = spi_mem_adjust_op_size(at25->spimem, &op);
++		if (status)
++			return status;
++		segment = op.data.nbytes;
+ 
++		mutex_lock(&at25->lock);
++		status = spi_mem_exec_op(at25->spimem, &op);
+ 		mutex_unlock(&at25->lock);
+-
+ 		if (status)
+ 			return status;
++		memcpy(buf, bounce, segment);
+ 
+ 		msg_offset += segment;
+ 		buf += segment;
+ 		bytes_left -= segment;
+ 	} while (bytes_left > 0);
+ 
+-	dev_dbg(&at25->spi->dev, "read %zu bytes at %d\n",
++	dev_dbg(&at25->spimem->spi->dev, "read %zu bytes at %d\n",
+ 		count, offset);
+ 	return 0;
+ }
+ 
+-/* Read extra registers as ID or serial number */
++/*
++ * Read extra registers as ID or serial number
++ *
++ * Allow for the callers to provide @buf on stack (not necessary DMA-capable)
++ * by allocating a bounce buffer internally.
++ */
+ static int fm25_aux_read(struct at25_data *at25, u8 *buf, uint8_t command,
+ 			 int len)
+ {
++	u8 *bounce __free(kfree) = kmalloc(len, GFP_KERNEL);
++	struct spi_mem_op op;
+ 	int status;
+-	struct spi_transfer t[2];
+-	struct spi_message m;
+-
+-	spi_message_init(&m);
+-	memset(t, 0, sizeof(t));
+ 
+-	t[0].tx_buf = at25->command;
+-	t[0].len = 1;
+-	spi_message_add_tail(&t[0], &m);
+-
+-	t[1].rx_buf = buf;
+-	t[1].len = len;
+-	spi_message_add_tail(&t[1], &m);
++	if (!bounce)
++		return -ENOMEM;
+ 
+-	mutex_lock(&at25->lock);
++	op = (struct spi_mem_op)SPI_MEM_OP(SPI_MEM_OP_CMD(command, 1),
++					   SPI_MEM_OP_NO_ADDR,
++					   SPI_MEM_OP_NO_DUMMY,
++					   SPI_MEM_OP_DATA_IN(len, bounce, 1));
+ 
+-	at25->command[0] = command;
++	status = spi_mem_exec_op(at25->spimem, &op);
++	dev_dbg(&at25->spimem->spi->dev, "read %d aux bytes --> %d\n", len, status);
++	if (status)
++		return status;
+ 
+-	status = spi_sync(at25->spi, &m);
+-	dev_dbg(&at25->spi->dev, "read %d aux bytes --> %d\n", len, status);
++	memcpy(buf, bounce, len);
+ 
+-	mutex_unlock(&at25->lock);
+-	return status;
++	return 0;
+ }
+ 
+ static ssize_t sernum_show(struct device *dev, struct device_attribute *attr, char *buf)
+@@ -195,14 +186,47 @@ static struct attribute *sernum_attrs[] = {
+ };
+ ATTRIBUTE_GROUPS(sernum);
+ 
++/*
++ * Poll Read Status Register with timeout
++ *
++ * Return:
++ * 0, if the chip is ready
++ * [positive] Status Register value as-is, if the chip is busy
++ * [negative] error code in case of read failure
++ */
++static int at25_wait_ready(struct at25_data *at25)
++{
++	u8 *bounce __free(kfree) = kmalloc(1, GFP_KERNEL);
++	struct spi_mem_op op;
++	int status;
++
++	if (!bounce)
++		return -ENOMEM;
++
++	op = (struct spi_mem_op)SPI_MEM_OP(SPI_MEM_OP_CMD(AT25_RDSR, 1),
++					   SPI_MEM_OP_NO_ADDR,
++					   SPI_MEM_OP_NO_DUMMY,
++					   SPI_MEM_OP_DATA_IN(1, bounce, 1));
++
++	read_poll_timeout(spi_mem_exec_op, status,
++			  status || !(bounce[0] & AT25_SR_nRDY), false,
++			  USEC_PER_MSEC, USEC_PER_MSEC * EE_TIMEOUT,
++			  at25->spimem, &op);
++	if (status < 0)
++		return status;
++	if (!(bounce[0] & AT25_SR_nRDY))
++		return 0;
++
++	return bounce[0];
++}
++
+ static int at25_ee_write(void *priv, unsigned int off, void *val, size_t count)
+ {
++	u8 *bounce __free(kfree) = kmalloc(min(count, io_limit), GFP_KERNEL);
+ 	struct at25_data *at25 = priv;
+-	size_t maxsz = spi_max_transfer_size(at25->spi);
+ 	const char *buf = val;
+-	int			status = 0;
+-	unsigned		buf_size;
+-	u8			*bounce;
++	unsigned int buf_size;
++	int status;
+ 
+ 	if (unlikely(off >= at25->chip.byte_len))
+ 		return -EFBIG;
+@@ -211,11 +235,8 @@ static int at25_ee_write(void *priv, unsigned int off, void *val, size_t count)
+ 	if (unlikely(!count))
+ 		return -EINVAL;
+ 
+-	/* Temp buffer starts with command and address */
+ 	buf_size = at25->chip.page_size;
+-	if (buf_size > io_limit)
+-		buf_size = io_limit;
+-	bounce = kmalloc(buf_size + at25->addrlen + 1, GFP_KERNEL);
++
+ 	if (!bounce)
+ 		return -ENOMEM;
+ 
+@@ -223,85 +244,64 @@ static int at25_ee_write(void *priv, unsigned int off, void *val, size_t count)
+ 	 * For write, rollover is within the page ... so we write at
+ 	 * most one page, then manually roll over to the next page.
+ 	 */
+-	mutex_lock(&at25->lock);
++	guard(mutex)(&at25->lock);
+ 	do {
+-		unsigned long	timeout, retries;
+-		unsigned	segment;
+-		unsigned	offset = off;
+-		u8		*cp = bounce;
+-		int		sr;
+-		u8		instr;
+-
+-		*cp = AT25_WREN;
+-		status = spi_write(at25->spi, cp, 1);
+-		if (status < 0) {
+-			dev_dbg(&at25->spi->dev, "WREN --> %d\n", status);
+-			break;
+-		}
+-
+-		instr = AT25_WRITE;
+-		if (at25->chip.flags & EE_INSTR_BIT3_IS_ADDR)
+-			if (offset >= BIT(at25->addrlen * 8))
+-				instr |= AT25_INSTR_BIT3;
+-		*cp++ = instr;
++		struct spi_mem_op op = SPI_MEM_OP(SPI_MEM_OP_CMD(AT25_WREN, 1),
++						  SPI_MEM_OP_NO_ADDR,
++						  SPI_MEM_OP_NO_DUMMY,
++						  SPI_MEM_OP_NO_DATA);
++		unsigned int segment;
+ 
+-		/* 8/16/24-bit address is written MSB first */
+-		switch (at25->addrlen) {
+-		default:	/* case 3 */
+-			*cp++ = offset >> 16;
+-			fallthrough;
+-		case 2:
+-			*cp++ = offset >> 8;
+-			fallthrough;
+-		case 1:
+-		case 0:	/* can't happen: for better code generation */
+-			*cp++ = offset >> 0;
++		status = spi_mem_exec_op(at25->spimem, &op);
++		if (status < 0) {
++			dev_dbg(&at25->spimem->spi->dev, "WREN --> %d\n", status);
++			return status;
+ 		}
+ 
+ 		/* Write as much of a page as we can */
+-		segment = buf_size - (offset % buf_size);
++		segment = buf_size - (off % buf_size);
+ 		if (segment > count)
+ 			segment = count;
+-		if (segment > maxsz)
+-			segment = maxsz;
+-		memcpy(cp, buf, segment);
+-		status = spi_write(at25->spi, bounce,
+-				segment + at25->addrlen + 1);
+-		dev_dbg(&at25->spi->dev, "write %u bytes at %u --> %d\n",
+-			segment, offset, status);
+-		if (status < 0)
+-			break;
++		if (segment > io_limit)
++			segment = io_limit;
++
++		op = (struct spi_mem_op)SPI_MEM_OP(SPI_MEM_OP_CMD(at25_instr(at25, AT25_WRITE, off),
++								  1),
++						   SPI_MEM_OP_ADDR(at25->addrlen, off, 1),
++						   SPI_MEM_OP_NO_DUMMY,
++						   SPI_MEM_OP_DATA_OUT(segment, bounce, 1));
++
++		status = spi_mem_adjust_op_size(at25->spimem, &op);
++		if (status)
++			return status;
++		segment = op.data.nbytes;
++
++		memcpy(bounce, buf, segment);
++
++		status = spi_mem_exec_op(at25->spimem, &op);
++		dev_dbg(&at25->spimem->spi->dev, "write %u bytes at %u --> %d\n",
++			segment, off, status);
++		if (status)
++			return status;
+ 
+ 		/*
+ 		 * REVISIT this should detect (or prevent) failed writes
+ 		 * to read-only sections of the EEPROM...
+ 		 */
+ 
+-		/* Wait for non-busy status */
+-		timeout = jiffies + msecs_to_jiffies(EE_TIMEOUT);
+-		retries = 0;
+-		do {
+-
+-			sr = spi_w8r8(at25->spi, AT25_RDSR);
+-			if (sr < 0 || (sr & AT25_SR_nRDY)) {
+-				dev_dbg(&at25->spi->dev,
+-					"rdsr --> %d (%02x)\n", sr, sr);
+-				/* at HZ=100, this is sloooow */
+-				msleep(1);
+-				continue;
+-			}
+-			if (!(sr & AT25_SR_nRDY))
+-				break;
+-		} while (retries++ < 3 || time_before_eq(jiffies, timeout));
+-
+-		if ((sr < 0) || (sr & AT25_SR_nRDY)) {
+-			dev_err(&at25->spi->dev,
++		status = at25_wait_ready(at25);
++		if (status < 0) {
++			dev_err_probe(&at25->spimem->spi->dev, status,
++				      "Read Status Redister command failed\n");
++			return status;
++		}
++		if (status) {
++			dev_dbg(&at25->spimem->spi->dev,
++				"Status %02x\n", status);
++			dev_err(&at25->spimem->spi->dev,
+ 				"write %u bytes offset %u, timeout after %u msecs\n",
+-				segment, offset,
+-				jiffies_to_msecs(jiffies -
+-					(timeout - EE_TIMEOUT)));
+-			status = -ETIMEDOUT;
+-			break;
++				segment, off, EE_TIMEOUT);
++			return -ETIMEDOUT;
+ 		}
+ 
+ 		off += segment;
+@@ -310,9 +310,6 @@ static int at25_ee_write(void *priv, unsigned int off, void *val, size_t count)
+ 
+ 	} while (count > 0);
+ 
+-	mutex_unlock(&at25->lock);
+-
+-	kfree(bounce);
+ 	return status;
+ }
+ 
+@@ -429,31 +426,33 @@ static const struct spi_device_id at25_spi_ids[] = {
+ };
+ MODULE_DEVICE_TABLE(spi, at25_spi_ids);
+ 
+-static int at25_probe(struct spi_device *spi)
++static int at25_probe(struct spi_mem *mem)
+ {
+-	struct at25_data	*at25 = NULL;
+-	int			err;
+-	int			sr;
++	struct spi_device *spi = mem->spi;
+ 	struct spi_eeprom *pdata;
++	struct at25_data *at25;
+ 	bool is_fram;
++	int err;
++
++	at25 = devm_kzalloc(&spi->dev, sizeof(*at25), GFP_KERNEL);
++	if (!at25)
++		return -ENOMEM;
++
++	at25->spimem = mem;
+ 
+ 	/*
+ 	 * Ping the chip ... the status register is pretty portable,
+-	 * unlike probing manufacturer IDs. We do expect that system
+-	 * firmware didn't write it in the past few milliseconds!
++	 * unlike probing manufacturer IDs.
+ 	 */
+-	sr = spi_w8r8(spi, AT25_RDSR);
+-	if (sr < 0 || sr & AT25_SR_nRDY) {
+-		dev_dbg(&spi->dev, "rdsr --> %d (%02x)\n", sr, sr);
++	err = at25_wait_ready(at25);
++	if (err < 0)
++		return dev_err_probe(&spi->dev, err, "Read Status Register command failed\n");
++	if (err) {
++		dev_err(&spi->dev, "Not ready (%02x)\n", err);
+ 		return -ENXIO;
+ 	}
+ 
+-	at25 = devm_kzalloc(&spi->dev, sizeof(*at25), GFP_KERNEL);
+-	if (!at25)
+-		return -ENOMEM;
+-
+ 	mutex_init(&at25->lock);
+-	at25->spi = spi;
+ 	spi_set_drvdata(spi, at25);
+ 
+ 	is_fram = fwnode_device_is_compatible(dev_fwnode(&spi->dev), "cypress,fm25");
+@@ -514,17 +513,19 @@ static int at25_probe(struct spi_device *spi)
+ 
+ /*-------------------------------------------------------------------------*/
+ 
+-static struct spi_driver at25_driver = {
+-	.driver = {
+-		.name		= "at25",
+-		.of_match_table = at25_of_match,
+-		.dev_groups	= sernum_groups,
++static struct spi_mem_driver at25_driver = {
++	.spidrv = {
++		.driver = {
++			.name		= "at25",
++			.of_match_table = at25_of_match,
++			.dev_groups	= sernum_groups,
++		},
++		.id_table	= at25_spi_ids,
+ 	},
+ 	.probe		= at25_probe,
+-	.id_table	= at25_spi_ids,
+ };
+ 
+-module_spi_driver(at25_driver);
++module_spi_mem_driver(at25_driver);
+ 
+ MODULE_DESCRIPTION("Driver for most SPI EEPROMs");
+ MODULE_AUTHOR("David Brownell");
 -- 
-With best wishes
-Dmitry
+2.50.0
+
