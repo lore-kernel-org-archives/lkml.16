@@ -1,64 +1,64 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7045A2459D1
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 09:22:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7747E246779
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 09:22:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751448140; cv=none; b=Bnr4cLd3kcWclxK6tIvj1Gml0LHdhO8ktSs+WGbD+YguZ0pgZc8naqRuY/U7MnuKoRkIiA90mteOC1SH4kD2n0VLlvNxRUe3WEJkVyk+eQNcJeNRi3mafkLsafs/+Flb9wkXpjUvFG2hMd3e9yVjHyFKrCSyXyqnL4UkUFGASlQ=
+	t=1751448141; cv=none; b=ICimvwedFKsvsnrQPTzGAkmIHv1b+0qlJmnyMEyMj78VwxA2sbaEwJdwXb1V89747efnF3Mlbkzxa9KARMCc0/yubxNTuygsgaUdOOFbQhBgF2kVxkA1Pg/thTg8sif65iPihKGFsq34proEhAnUxlkQDygjYgqgVpAjJ+9Oj8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751448140; c=relaxed/simple;
-	bh=y8+ZGCw9wnewLNofUvKWCpB47AebmN2nx7KegRySQ0M=;
+	s=arc-20240116; t=1751448141; c=relaxed/simple;
+	bh=zGHKNbtNrBS41rLCNYxur+PCOJJmaiH5uINBZq1HxL4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ft0lxDCFlg2BJ1iuZVo1NjPVPElyTqGkQcwjdY4GrNEvSm0/4+aspFzYhwrrtIlTiBFDHxcuQSVi/Pdnd0pwcBbqfGNuWxG6g9rDFQ33WW9KY1tIMNMuwGpYVxdvlomnrz6vEeK4X4uMthdq2JzwWGeN0iO14F/nQecK+3Bqy0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=HneRPIMv; arc=none smtp.client-ip=209.85.221.43
+	 In-Reply-To:To:Cc; b=qufGilq3WzyqpCqydDG+Ngvg9eIpJvWqx3LTEHVm4q67tmozMaUGHFYexj+9uZIr9fsg9hAKsUGd0hViRlBERAyZ841oe1UKj3BaCmaC+OczuZQ18kIo4QqKSJTIm51767hdGg+/3eYyAF4tmuaIOmB8uwCFYQkflMKN4GMrRjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=FtP6HE4r; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="HneRPIMv"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a4fd1ba177so4282588f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 02:22:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="FtP6HE4r"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-453066fad06so44461915e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 02:22:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751448136; x=1752052936; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751448138; x=1752052938; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=pQ4953DYX730X6Pl4pCdKBLcok8eGFLQghf6CkEicDE=;
-        b=HneRPIMvBEKgCOJlSmfAw4EgjCkUiWqZEVWILflgY0/uUtYeVvRkQtrcHONADXCNoO
-         tRXbYV0lWC5Qwgk9gGcd2bd0TAjZ3GMPNhOIPxjdckuZW7V/dl7FEr4NK5fqa8g50MPh
-         GdHqgC1zAt5eJYWneb0iHqX3kLqpn/YQZ5P7ZPemDnq8JSCJ+uT1qDW1IhoBqU7GoF2j
-         AhsrFvef6QZCmpPpenlgf10l4WvggcD2H5fKcr1yNqWk/6j3vXB4tuVCO7JBSrMSD3iz
-         QunFjKRVtrMNTZWtMo0qWwxCQIy0SPHKETxvNO44NQmHTTGb4dRNanBFJJV/ow0nlX0M
-         kL6A==
+        bh=dp3qpaLxdoL/9VDJ6nL5BaV3W6j7nnnxGCE6fZ2JVIs=;
+        b=FtP6HE4rnSaxLqzZzuYG1SVWNtNRpycyaF3AMaHCLdVHVDx9U5Z+aXh1fQ2kcvNL/8
+         fCKI5jn/T5HfhScJZPviLcg6M+nq/MeU1le+n/3VJC51WZ2+ikennv/u39ORdkl6yfLW
+         SYifRGQRU4x4borSsaUWP1NeTNBcJ6+P/dFjk0mpYeA68QBZDdQY24s81E0CbxunDwnV
+         /cmspDmDkUiIgo2xiqkss9icUuMoKbpTHRY2TUPcPa+YMFxKrCHQfZdiulM55mTKqfBz
+         eO9vgLSuxfJjEfwQNnLAHPDNP6nQQpJi9GXcS8AKdzsOJQc1KXf8YPFZ3qDnLe+oad6F
+         GgMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751448136; x=1752052936;
+        d=1e100.net; s=20230601; t=1751448138; x=1752052938;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pQ4953DYX730X6Pl4pCdKBLcok8eGFLQghf6CkEicDE=;
-        b=sbLMpRC6uKLh+NOxg5foh6n05MFoKknspOW+0DoRlM5CquOkgtOAWwtWdbRFiXc3xA
-         BirxUEr/Ddn43ugRW/IGczivAAG9E6/WjJ8PJYeR8elnlG6PAbtiwmw/3xvV8N45NGPn
-         mrUqeQosIrNLZosu0zDSmeYZ2vdAf7JQL4AgNcM1zCjmYGUGigneMr+XTeEilm7N+eLG
-         X0dklrqOzUlYdUr+uF2Rxpp/2pwSIgBO9p7GAOMAT3AijHbDOrFUqhh4zYukl8gNRQLM
-         rxqsNiEuYelIymewULfUnJtkOYaNxiE8eUN56UuTnF6xEDrF0+O4pFNbT/qJ1ItN2lzV
-         dpcQ==
-X-Gm-Message-State: AOJu0YyqoAN+zT+gbArqoa9TdzLZL7Ti+Z/7wSo+HAhd46ENXHT5pEgO
-	0COxQPnTeOqB2qkpy+3em/KGAOHYJUNdigGEd9F4FURml2kY8KKZsULK8+ZNKzJuY4Y=
-X-Gm-Gg: ASbGncvqPqd0wCjDi9zdC7rAVy2n9FiGHsmI3CeVkqSV/QdWJqlF1r3cz2DIJrr+60r
-	niY130etS4NeUyn6AHs7XJe6S8uQaktKAsKh5j3TF4GEpXBb5lYSmZyuyMY4Q+G32BXpSqJQ9Aa
-	MoOR3ytVaz5sFp6QQWysXILuBBPKki7fudI1ars3piJiqJQ2judpkDBY3mA050YJ/bKAoYZoTcO
-	11iLfVi1WLEFYq+O1FH1lSuSKnMuSb5h54qltkTTnXfAOfTGTj8SUogLsgrI2ZjiDJWGkiGEoY2
-	5wU5+hpSAtLb2G78pI75SGs4gxCkRNsf9UE+V0SFUfIPrKcTgyJF+g==
-X-Google-Smtp-Source: AGHT+IFy+dbKnRMVyYVM9ja1MDJ2jsqlQp/nEGAueozbl8hzF+fw2nR7L/R/qjacSv5mPDCxKpcWjQ==
-X-Received: by 2002:a05:6000:248a:b0:3a4:f70d:aff0 with SMTP id ffacd0b85a97d-3b1f7ae6ee0mr1649457f8f.14.1751448135688;
-        Wed, 02 Jul 2025 02:22:15 -0700 (PDT)
+        bh=dp3qpaLxdoL/9VDJ6nL5BaV3W6j7nnnxGCE6fZ2JVIs=;
+        b=au5+CJstm9z6dFGW2EmbX1NxojC40EK5mpOgsCIDnRg8cXLVBSvhbAkgN4RuxIqlXo
+         jmE2xXX+gFWpY/o4RZOczdwF1zllhwdeGEdSsy0963Wqr/bnyKjwR59ZhHcL/YMx3gEw
+         K2xYx8XzROrKIwZRviFNg2xlsH9QTxGpcxXCoVGxVGSpbTUj9ir/C2rrFzej64hp+bcI
+         4DMXELFgbzQwSChUzzXbtIWMjsNCGOK13EiNe/oOZiBZuce1Ba+gYfxodK2y1xvxR5Hk
+         QGJrHkBiJzRTX4hD/wJ+Ja9/TkudLj4bv2sAfAcVzsohX0Hs6svR9O0E2QhwBYoenf3Z
+         tWuQ==
+X-Gm-Message-State: AOJu0Yxl7QOTxinrIlDYQLDIKTWmbgzFt12WDR6BsBjYfqwZnkyfArd0
+	MOyzWrb/wDoo/ph9iTYnHc4F7Tdfl42kZCe6AJes0O5SbkxI17z/7jsrJdMhf66XCt0=
+X-Gm-Gg: ASbGncu3Q6ZPGaVbxCcAp4c3lhJqCKEpGOSPPZgs9Ubu3lW2ruNqpx0Tpu2daxVdb1S
+	LS93oouyejz2TahbG6mMOL8FB64e+rGVfFTGvLjXtD3qijnMPJB+2BIkijp8hLEKJOjUJtQbnMd
+	Zqllrs7MVw+wXFxPDDcpo6ZBcp7xwsrVN/+OL5qnrtALdyPHuDlkJbv9RWd1hPhMFlAkwcaozSg
+	ZbWmkiaNeaeVPww7uCVSeyd+kf7eI97ftAm+anL001lNaVkLXTDoPL9MaYHHorD7bnyTy9Tqv3R
+	cD8S4xIE95pjtrhgYjeGAMBIEQoFwtjOwoptQaUe5Vf3SiGxBN/SWA==
+X-Google-Smtp-Source: AGHT+IHjF9A77ATHBE3b9SvMdK9lJT3V87Bih4BU12gvPzJDNkmjN6VHlXOPrM1x33gj1i/Cj7OAEw==
+X-Received: by 2002:a05:600c:1d09:b0:453:1058:f8c1 with SMTP id 5b1f17b1804b1-454a36dc7bemr26756415e9.3.1751448137808;
+        Wed, 02 Jul 2025 02:22:17 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:8827:d0e:25e:834a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a406489sm195844165e9.27.2025.07.02.02.22.14
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a406489sm195844165e9.27.2025.07.02.02.22.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 02:22:15 -0700 (PDT)
+        Wed, 02 Jul 2025 02:22:17 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 02 Jul 2025 11:22:08 +0200
-Subject: [PATCH v2 1/8] gpio: generic: add new generic GPIO chip API
+Date: Wed, 02 Jul 2025 11:22:10 +0200
+Subject: [PATCH v2 3/8] gpio: mxc: use new generic GPIO chip API
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,7 +67,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250702-gpio-mmio-rework-v2-1-6b77aab684d8@linaro.org>
+Message-Id: <20250702-gpio-mmio-rework-v2-3-6b77aab684d8@linaro.org>
 References: <20250702-gpio-mmio-rework-v2-0-6b77aab684d8@linaro.org>
 In-Reply-To: <20250702-gpio-mmio-rework-v2-0-6b77aab684d8@linaro.org>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -79,173 +79,153 @@ Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
  imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5967;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4640;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=pB2Xuhhwxk5LYCzli8T80nbGaaOUFOOv5AWJwibECv4=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoZPpEU/2fp9wrpMS14IJmNecxSGbWX4sGcofEa
- IgAdrNk+BiJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaGT6RAAKCRARpy6gFHHX
- cjPgEADBIdI3NwEpid9TDAiABxWhTsVPd5UOMc7dqo1CxnLpB1ra9kx2TuHCGnyaefSiKZAqbOx
- ZYT9begIVywJahkysJ+PDjKI6FLO/TNG1YfDJiQ2mHq6KVfeKAGMZaAQrQzq9ApQcKAO4nPkUht
- w2XSSsz84qOuBO2EGMt/U3z2YS3b7eJMPEK4zgdSFUO+OP+nEttwWrn/t4s7cO40TfhvjYCLLeu
- vfrcWLovH97g55wx7fyJtWTimMHX4WbLSc+xikqtN6JXMJY+4Kk1wfWYeKnpOl0HnekJfEnHUqi
- 0AUbPcd1V+hCc71mnIbX6erwQH/FcPKI+XPnU1fLhMoMaAs8wDKf7WT8DXyQrK4+Ov4JcjV6jh1
- 25YWIAT2JDTZFlZnUoKDX6mj086XBsUNxaZixzt0OBmBCSJ53+ORQKqDbYqwocOPEhQ0+T0Sert
- gbhX1YkvDimVnt7lOEWw+qjfTGS49ULiBjr/0sLlAWqSRKVDskKD2cqQMqDuQohmBk7v4Pd4mj+
- p22ivAuf2iVnrLoyEr+QiBELgFhPlKRfeRVZ5wtZwompJ6OaMZgqRTUJlh1DWwNTe/oQH7haCPh
- BHYs0xbiubt880Od0nrMgvFPonaX+K+D3YV7g7jnlnjzZNX1o/MMirclzFYGXRCb42NIWd/KY7I
- 041ci388PceItXQ==
+ bh=ArrJt1nq0/DyMnLRqYgOtwp6wmTkd8ckjtCqzdNL0po=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoZPpEb1a2Iujd3m6Dlq9qCVuQ1Gay7cvpxMQ4G
+ 8uVzp1zKdCJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaGT6RAAKCRARpy6gFHHX
+ coL3EADbnsSHboTOP67UtjJ1KfYAcu2cco3pEtdOD/wcQwvCs1oENdMmSFvj3/vvliHwnUDQoBB
+ 8d9K803SD2wRFHp8mwhxSTaQs/5KronLBcc0YW0cuf8rLF6ZWJ2L/D4fHLgootUcHEGpFjWpDzM
+ AT9HAEa8pch5jvkq1NYCYlwyASLUvtOK/FqXw0Pdq6kpKZJuVBfsbRZC7p1pBQs8h777sqvhTeG
+ ZEp6owZnFUs6FMY4CNohTvkIpAtBgOk28droEpctwLgDLm1OEyCGT3KjKhhQSMC62jvonrHj8Hg
+ OMSQvXrQ7xSFGaj/pBdarGbtItdoM72Ar8gOqyXiCclxhOlaTEQm1tpIB83LLrOf6u03qOk5R7s
+ Biwzu8qoubwnR4G+s8ZQdtYMpWm5TukofpRkhFboE5NZ3ICZ0qqqivzmrl5GiGKFXhRgd2SRM+p
+ LJjyeeTgX1fHyD6XwNP8v6x729useTcDxA0m/FAFAArw/9USWIddgzc3wPr7o+CoSXvqI/WL73M
+ jVtlyEzryR/+thIAOcyHGvxqZdBA+jofsDudB/SwwJTHIN/OWM/tBhkFOj5PihEJUxIJ0bAlH9S
+ uOcujET0gOwaiB4KPVDR4yVbnOFfJfyalXRJ2umXGRW61M4IUDFHA/3/GRlV2GMyKBsxm2CjL6a
+ 8bhoo/c8RjwdhKQ==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-As the first step in removing the fields specific to the gpio-mmio
-module from struct gpio_chip, we introduce a new set of generic GPIO
-chip interfaces that are meant to replace the existing bgpio_ ones.
-
-The new initialization function - gpio_generic_chip_init() - takes a
-configuration structure as argument instead of 9 separate parameters.
-This will allow easy extension if needed in the future. We hide the
-locking details behind a set of helpers in order to be able to move the
-raw spinlock out of struct gpio_chip without the users noticing.
-
-For now, the new APIs just wrap the existing ones. Once all users have
-been converted to the new interfaces, we'll pull them into gpio-mmio and
-implement them in a backward-compatible way while also moving all fields
-specific to the generic GPIO chip into struct gpio_generic_chip.
+Convert the driver to using the new generic GPIO chip interfaces from
+linux/gpio/generic.h.
 
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- include/linux/gpio/generic.h | 120 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 120 insertions(+)
+ drivers/gpio/gpio-mxc.c | 41 ++++++++++++++++++++++++-----------------
+ 1 file changed, 24 insertions(+), 17 deletions(-)
 
-diff --git a/include/linux/gpio/generic.h b/include/linux/gpio/generic.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..b511acd58ab0099b727bf929b7a4e9f9836cd5bc
---- /dev/null
-+++ b/include/linux/gpio/generic.h
-@@ -0,0 +1,120 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
+diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
+index 1c37168c8d0a657d7f93067d9ac95cfbd821f757..433cbadc3a4cc67ebc89a4702280975fa8d2c9bc 100644
+--- a/drivers/gpio/gpio-mxc.c
++++ b/drivers/gpio/gpio-mxc.c
+@@ -23,6 +23,7 @@
+ #include <linux/spinlock.h>
+ #include <linux/syscore_ops.h>
+ #include <linux/gpio/driver.h>
++#include <linux/gpio/generic.h>
+ #include <linux/of.h>
+ #include <linux/bug.h>
+ 
+@@ -65,7 +66,7 @@ struct mxc_gpio_port {
+ 	int irq_high;
+ 	void (*mx_irq_handler)(struct irq_desc *desc);
+ 	struct irq_domain *domain;
+-	struct gpio_chip gc;
++	struct gpio_generic_chip gen_gc;
+ 	struct device *dev;
+ 	u32 both_edges;
+ 	struct mxc_gpio_reg_saved gpio_saved_reg;
+@@ -179,7 +180,7 @@ static int gpio_set_irq_type(struct irq_data *d, u32 type)
+ 		if (GPIO_EDGE_SEL >= 0) {
+ 			edge = GPIO_INT_BOTH_EDGES;
+ 		} else {
+-			val = port->gc.get(&port->gc, gpio_idx);
++			val = port->gen_gc.gc.get(&port->gen_gc.gc, gpio_idx);
+ 			if (val) {
+ 				edge = GPIO_INT_LOW_LEV;
+ 				pr_debug("mxc: set GPIO %d to low trigger\n", gpio_idx);
+@@ -200,7 +201,7 @@ static int gpio_set_irq_type(struct irq_data *d, u32 type)
+ 		return -EINVAL;
+ 	}
+ 
+-	scoped_guard(raw_spinlock_irqsave, &port->gc.bgpio_lock) {
++	scoped_guard(gpio_generic_lock_irqsave, &port->gen_gc) {
+ 		if (GPIO_EDGE_SEL >= 0) {
+ 			val = readl(port->base + GPIO_EDGE_SEL);
+ 			if (edge == GPIO_INT_BOTH_EDGES)
+@@ -222,7 +223,7 @@ static int gpio_set_irq_type(struct irq_data *d, u32 type)
+ 		port->pad_type[gpio_idx] = type;
+ 	}
+ 
+-	return port->gc.direction_input(&port->gc, gpio_idx);
++	return port->gen_gc.gc.direction_input(&port->gen_gc.gc, gpio_idx);
+ }
+ 
+ static void mxc_flip_edge(struct mxc_gpio_port *port, u32 gpio)
+@@ -231,7 +232,7 @@ static void mxc_flip_edge(struct mxc_gpio_port *port, u32 gpio)
+ 	u32 bit, val;
+ 	int edge;
+ 
+-	guard(raw_spinlock_irqsave)(&port->gc.bgpio_lock);
++	guard(gpio_generic_lock_irqsave)(&port->gen_gc);
+ 
+ 	reg += GPIO_ICR1 + ((gpio & 0x10) >> 2); /* lower or upper register */
+ 	bit = gpio & 0xf;
+@@ -414,6 +415,7 @@ static void mxc_update_irq_chained_handler(struct mxc_gpio_port *port, bool enab
+ 
+ static int mxc_gpio_probe(struct platform_device *pdev)
+ {
++	struct gpio_generic_chip_config config = { };
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct mxc_gpio_port *port;
+ 	int irq_count;
+@@ -473,27 +475,31 @@ static int mxc_gpio_probe(struct platform_device *pdev)
+ 		port->mx_irq_handler = mx3_gpio_irq_handler;
+ 
+ 	mxc_update_irq_chained_handler(port, true);
+-	err = bgpio_init(&port->gc, &pdev->dev, 4,
+-			 port->base + GPIO_PSR,
+-			 port->base + GPIO_DR, NULL,
+-			 port->base + GPIO_GDIR, NULL,
+-			 BGPIOF_READ_OUTPUT_REG_SET);
 +
-+#ifndef __LINUX_GPIO_GENERIC_H
-+#define __LINUX_GPIO_GENERIC_H
++	config.dev = &pdev->dev;
++	config.sz = 4;
++	config.dat = port->base + GPIO_PSR;
++	config.set = port->base + GPIO_DR;
++	config.dirout = port->base + GPIO_GDIR;
++	config.flags = BGPIOF_READ_OUTPUT_REG_SET;
 +
-+#include <linux/cleanup.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/spinlock.h>
-+
-+struct device;
-+
-+/**
-+ * struct gpio_generic_chip_config - Generic GPIO chip configuration data
-+ * @dev: Parent device of the new GPIO chip (compulsory).
-+ * @sz: Size (width) of the MMIO registers in bytes, typically 1, 2 or 4.
-+ * @dat: MMIO address for the register to READ the value of the GPIO lines, it
-+ *       is expected that a 1 in the corresponding bit in this register means
-+ *       the line is asserted.
-+ * @set: MMIO address for the register to SET the value of the GPIO lines, it
-+ *       is expected that we write the line with 1 in this register to drive
-+ *       the GPIO line high.
-+ * @clr: MMIO address for the register to CLEAR the value of the GPIO lines,
-+ *       it is expected that we write the line with 1 in this register to
-+ *       drive the GPIO line low. It is allowed to leave this address as NULL,
-+ *       in that case the SET register will be assumed to also clear the GPIO
-+ *       lines, by actively writing the line with 0.
-+ * @dirout: MMIO address for the register to set the line as OUTPUT. It is
-+ *          assumed that setting a line to 1 in this register will turn that
-+ *          line into an output line. Conversely, setting the line to 0 will
-+ *          turn that line into an input.
-+ * @dirin: MMIO address for the register to set this line as INPUT. It is
-+ *         assumed that setting a line to 1 in this register will turn that
-+ *         line into an input line. Conversely, setting the line to 0 will
-+ *         turn that line into an output.
-+ * @flags: Different flags that will affect the behaviour of the device, such
-+ *         as endianness etc.
-+ */
-+struct gpio_generic_chip_config {
-+	struct device *dev;
-+	unsigned long sz;
-+	void __iomem *dat;
-+	void __iomem *set;
-+	void __iomem *clr;
-+	void __iomem *dirout;
-+	void __iomem *dirin;
-+	unsigned long flags;
-+};
-+
-+/**
-+ * struct gpio_generic_chip - Generic GPIO chip implementation.
-+ * @gc: The underlying struct gpio_chip object, implementing low-level GPIO
-+ *      chip routines.
-+ */
-+struct gpio_generic_chip {
-+	struct gpio_chip gc;
-+};
-+
-+/**
-+ * gpio_generic_chip_init() - Initialize a generic GPIO chip.
-+ * @chip: Generic GPIO chip to set up.
-+ * @cfg: Generic GPIO chip configuration.
-+ *
-+ * Returns 0 on success, negative error number on failure.
-+ */
-+static inline int
-+gpio_generic_chip_init(struct gpio_generic_chip *chip,
-+		       const struct gpio_generic_chip_config *cfg)
-+{
-+	return bgpio_init(&chip->gc, cfg->dev, cfg->sz, cfg->dat, cfg->set,
-+			  cfg->clr, cfg->dirout, cfg->dirin, cfg->flags);
-+}
-+
-+/**
-+ * gpio_generic_chip_set() - Set the GPIO line value of the generic GPIO chip.
-+ * @chip: Generic GPIO chip to use.
-+ * @offset: Hardware offset of the line to set.
-+ * @value: New GPIO line value.
-+ *
-+ * Some modules using the generic GPIO chip, need to set line values in their
-+ * direction setters but they don't have access to the gpio-mmio symbols so
-+ * they use the function pointer in struct gpio_chip directly. This is not
-+ * optimal and can lead to crashes at run-time in some instances. This wrapper
-+ * provides a safe interface for users.
-+ *
-+ * Returns: 0 on success, negative error number of failure.
-+ */
-+static inline int
-+gpio_generic_chip_set(struct gpio_generic_chip *chip, unsigned int offset,
-+		      int value)
-+{
-+	if (WARN_ON(!chip->gc.set_rv))
-+		return -EOPNOTSUPP;
-+
-+	return chip->gc.set_rv(&chip->gc, offset, value);
-+}
-+
-+#define gpio_generic_chip_lock(gen_gc) \
-+	raw_spin_lock(&(gen_gc)->gc.bgpio_lock)
-+
-+#define gpio_generic_chip_unlock(gen_gc) \
-+	raw_spin_unlock(&(gen_gc)->gc.bgpio_lock)
-+
-+#define gpio_generic_chip_lock_irqsave(gen_gc, flags) \
-+	raw_spin_lock_irqsave(&(gen_gc)->gc.bgpio_lock, flags)
-+
-+#define gpio_generic_chip_unlock_irqrestore(gen_gc, flags) \
-+	raw_spin_unlock_irqrestore(&(gen_gc)->gc.bgpio_lock, flags)
-+
-+DEFINE_LOCK_GUARD_1(gpio_generic_lock,
-+		    struct gpio_generic_chip,
-+		    gpio_generic_chip_lock(_T->lock),
-+		    gpio_generic_chip_unlock(_T->lock))
-+
-+DEFINE_LOCK_GUARD_1(gpio_generic_lock_irqsave,
-+		    struct gpio_generic_chip,
-+		    gpio_generic_chip_lock_irqsave(_T->lock, _T->flags),
-+		    gpio_generic_chip_unlock_irqrestore(_T->lock, _T->flags),
-+		    unsigned long flags)
-+
-+#endif /* __LINUX_GPIO_GENERIC_H */
++	err = gpio_generic_chip_init(&port->gen_gc, &config);
+ 	if (err)
+ 		goto out_bgio;
+ 
+-	port->gc.request = mxc_gpio_request;
+-	port->gc.free = mxc_gpio_free;
+-	port->gc.to_irq = mxc_gpio_to_irq;
++	port->gen_gc.gc.request = mxc_gpio_request;
++	port->gen_gc.gc.free = mxc_gpio_free;
++	port->gen_gc.gc.to_irq = mxc_gpio_to_irq;
+ 	/*
+ 	 * Driver is DT-only, so a fixed base needs only be maintained for legacy
+ 	 * userspace with sysfs interface.
+ 	 */
+ 	if (IS_ENABLED(CONFIG_GPIO_SYSFS))
+-		port->gc.base = of_alias_get_id(np, "gpio") * 32;
++		port->gen_gc.gc.base = of_alias_get_id(np, "gpio") * 32;
+ 	else /* silence boot time warning */
+-		port->gc.base = -1;
++		port->gen_gc.gc.base = -1;
+ 
+-	err = devm_gpiochip_add_data(&pdev->dev, &port->gc, port);
++	err = devm_gpiochip_add_data(&pdev->dev, &port->gen_gc.gc, port);
+ 	if (err)
+ 		goto out_bgio;
+ 
+@@ -567,7 +573,8 @@ static bool mxc_gpio_generic_config(struct mxc_gpio_port *port,
+ 	if (of_device_is_compatible(np, "fsl,imx8dxl-gpio") ||
+ 	    of_device_is_compatible(np, "fsl,imx8qxp-gpio") ||
+ 	    of_device_is_compatible(np, "fsl,imx8qm-gpio"))
+-		return (gpiochip_generic_config(&port->gc, offset, conf) == 0);
++		return (gpiochip_generic_config(&port->gen_gc.gc,
++						offset, conf) == 0);
+ 
+ 	return false;
+ }
 
 -- 
 2.48.1
