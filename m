@@ -1,71 +1,43 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A035E2D9480
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 15:25:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751469947; cv=none; b=QR2Oc78+PIrum/5qJ0vvVZTDtdExPElwcuVL55s4HhB3vAsQCrUoc3WPkwdTap7MrkBIDb8pgmyPAot3REBuOb5GRmH+BOY1byS6LRVXixg8ZDmP1xH0RnXsvo2gnKy5FrCl0PKRGy5dUPK/lDz3uSeubw9/CUP4BVGC0cp1bUA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751469947; c=relaxed/simple;
-	bh=ozAq4H7NKMi99W0DR+dgxSwDGggAfgQwOjbIsAOjbpo=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23C8327FD6E;
+	Wed,  2 Jul 2025 15:26:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751469965; cv=pass; b=lCWazgcErF6cuPSL4xZ/zULmJ1CkgE/sxIMBIy1GrogVPhUh2BB/NxptYbg5akt7/1VHAA0to5IuPZIwvEhY6kEyeW+5By6o1Ds9X/md/DRlRWDyXYmjtuz1yzLvhX7f7IKTzJCYi6qIR8IwrsWw0w12hhZf1ZD77H4VgRgEuZA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751469965; c=relaxed/simple;
+	bh=YI5xJQzkom4sdxkvBnrOayW443RFDT8jwoEmyUtPD7w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CU769YsfJrBoXOYm3LeoIRQxTN2cUvBa1nqkXDZWDAmJbM2vHhZiXcnWhMEKfUcYWQw5ZqGKOVyNufgL83DyrS61rLkl7miHFL5MLBdJ1tP9MbQVqD0LDsQ4FrLLL9/XyV/apgqa+IHb5VwBpbv5NlYsp8SR4g3L8GqqIm9bGfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Bn1K/m0P; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=oqMfAXh8Sdxgm5j4qs+uUMjuFow5Ch05cLUeORbsCSYAPjFMMqITLBu4Uh40cG+LULFoUp0QpwjlSmznenl3Q6tKU02cn1M3yqoMcDWLWiJxsmfvFHRE3jIqxLftKP7LLytw8YU3kUIy6jndYcJM2k6oUK5/ApSAyj7qF47rRCU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=DeNXlsfH; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bn1K/m0P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751469944;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=1zZV1K34K5vsU5bBEYqLthbNyfG8BgJV/i5Welf7t/g=;
-	b=Bn1K/m0PU2U3QSPaMiHDZ9IEss70sP4dyQo4AqGCa2DIdZPw/BydGbJ10nCodpn103KH03
-	L5f6F+VWaJ2ilXVktUADQx9RXOuakOluJM7WppwrFEQnYdTwVstNENYyw+ylX4uDPjvTsx
-	IhcWTw6S1PxNjCZwOVRx+RrtgmOkm4g=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-634-8lFnDwDqOGCzdZDvmdpykw-1; Wed, 02 Jul 2025 11:25:43 -0400
-X-MC-Unique: 8lFnDwDqOGCzdZDvmdpykw-1
-X-Mimecast-MFC-AGG-ID: 8lFnDwDqOGCzdZDvmdpykw_1751469942
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a578958000so1850041f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 08:25:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751469942; x=1752074742;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=1zZV1K34K5vsU5bBEYqLthbNyfG8BgJV/i5Welf7t/g=;
-        b=iJ8pFZ8aWjdJD6Q9blOE8NzjXijwtW+OqicFQg8onlAkYwU1hx+EZIT96dWfpUgPcs
-         edW27oenyw2/Q+ch1tROMD0eoSCarzy/TJmvLXIvSASt8DHXYj/Zh2B3hbevcSr/mdWI
-         CLuiug0wq7yMSzWJY7JkwJYq0HVpQc5R2LdwEch8QFxFzNhS+sDxLFySuBsB91dLK160
-         rBmxVjZy90ENtf/xwVVYwa+KfNxDbDWqVXe6OTVtpvGcZyPAPF6Dpx9fmFhBROMX4f/M
-         pR6oqwxodyT0285tFzLEOE1AQUE2xijckVFBiflte++9ETtqg49QPZI9tiWcdiwDgHM5
-         6Bhg==
-X-Gm-Message-State: AOJu0Yxo3ZEj3NHfN5q6sXnhWQJ25qy2RyrfkrWcbV/NDyib+NGderE9
-	qj9/OmaPSRrWHkKo3X13V1AWWPYZl1ZDOHwUQVY5M5I8OcespqNYLjMwckavbE1kMAXjWTK/MVA
-	y871T52T1AW4/DOllihBuxyTnX7de7uATRm5l8rs9vzBUR/xNlKq+K2KxNqF5BQLjgQ==
-X-Gm-Gg: ASbGnctSHMM1ifiipQDXuj5ACPkBIk+eu8dt3+yPASnQfU1wNibADRuD8a7WzP5iwKQ
-	rC20YcWpGcoVeY+Pndxzsa+M0GIWPqbudbCVF/N6kpR7Cy5g8Pdwgr448WFCySq+qBqPyD2gFny
-	6vdLFiSjj+me/4Qw8x1BUU/SrScW7xPVtuXpSdM1m7WCWrlr4F4XOjWrL7RrpI0NM9MkGQY1pth
-	jxJp26IiEQTh2ajwdxNuidPHJxSNK5oBmdCFCwYTSUQ9IwHCuiCH7oHclYT6X9yyje2CvSdQkKE
-	na5Pj7Ny00RkvOLATYJEU+cdYyuXSvRyvA3pWUM+QsYlcRCFKI7/ym0=
-X-Received: by 2002:a05:6000:40cc:b0:3a5:2f23:3780 with SMTP id ffacd0b85a97d-3b1ffcd6a02mr2834580f8f.18.1751469942182;
-        Wed, 02 Jul 2025 08:25:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFsUNCCRvW2G8ERz1v+CzxV36sRx/sOGiOA5hGIRC55Fq8/UJikBoj+bsw3If92RbCTbdxtOA==
-X-Received: by 2002:a05:6000:40cc:b0:3a5:2f23:3780 with SMTP id ffacd0b85a97d-3b1ffcd6a02mr2834527f8f.18.1751469941626;
-        Wed, 02 Jul 2025 08:25:41 -0700 (PDT)
-Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e52ad2sm16118859f8f.48.2025.07.02.08.25.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jul 2025 08:25:41 -0700 (PDT)
-Message-ID: <e76b6a9d-b887-4790-a2fd-032648be99ff@redhat.com>
-Date: Wed, 2 Jul 2025 17:25:38 +0200
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="DeNXlsfH"
+ARC-Seal: i=1; a=rsa-sha256; t=1751469910; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Wh4ld+IjPq9rN2v5JrrVbNCJ9Tenxzp/ewU5rqFiunyck4YH3W/tqzh9RZebHG9/ZumIQDhyv5HaQIhnaxA7xPvOmM8lQRQnR189PqUybYczVNFT4AIlTrrAP9D74+vqrH5LwOnwJNo4cPSXgixvX36ChYUJwsrd3oC1lLPCPZg=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1751469910; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=mSSYZlzjDorHVrW9kO4wmXJF7vcClWLjaQL8PerBKvE=; 
+	b=dhdQKgAwyG58FQVyICKT4UXpZblCNhIUSpwm3Xg+BFbPESCNAEFUUOcwJGqofWtMAlsyEPky41WQsUzaTyJ0yp4dJdZgTKWKOkVwNVITcLkDVg4C2z/rpf8G7pVD1n5ZpM0kxwOwZFBDOypzGPWuZO4mdOFyVf5WBCWEYDU81uI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
+	dmarc=pass header.from=<usama.anjum@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751469910;
+	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=mSSYZlzjDorHVrW9kO4wmXJF7vcClWLjaQL8PerBKvE=;
+	b=DeNXlsfHaMk2Kd1KbaP+z5CgMeLB/0Y79MStxyfuES5HDSFJK/8eDKuQ6yEEGcl8
+	z/QOHyIUBVrJunQiap/b+INWBeqtAytqUaKAnv60qL1mZGjRYpXmjO3Dgla5mOfL/GB
+	SVkbt+cCJd9w+pA5ueE3JjlaEEEN3y/GCx97BCgo=
+Received: by mx.zohomail.com with SMTPS id 1751469909243485.9751973058537;
+	Wed, 2 Jul 2025 08:25:09 -0700 (PDT)
+Message-ID: <ed010318-8a10-4a8c-b8d4-721bdf631c2b@collabora.com>
+Date: Wed, 2 Jul 2025 20:25:03 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,166 +45,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 20/29] mm: convert "movable" flag in page->mapping to a
- page flag
-To: Harry Yoo <harry.yoo@oracle.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- virtualization@lists.linux.dev, linux-fsdevel@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Jerrin Shaji George <jerrin.shaji-george@broadcom.com>,
- Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
- Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
- Ying Huang <ying.huang@linux.alibaba.com>,
- Alistair Popple <apopple@nvidia.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Minchan Kim <minchan@kernel.org>,
- Sergey Senozhatsky <senozhatsky@chromium.org>,
- Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
- Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
- Peter Xu <peterx@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>,
- Chengming Zhou <chengming.zhou@linux.dev>, Miaohe Lin
- <linmiaohe@huawei.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>,
- Oscar Salvador <osalvador@suse.de>, Rik van Riel <riel@surriel.com>,
- Qi Zheng <zhengqi.arch@bytedance.com>, Shakeel Butt <shakeel.butt@linux.dev>
-References: <20250630130011.330477-1-david@redhat.com>
- <20250630130011.330477-21-david@redhat.com> <aGUd34v-4S7eXojo@hyeyoo>
- <a533ae7e-f993-4673-bb00-ec9d10c11c83@redhat.com> <aGUtxakO8p_94rTl@hyeyoo>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH 2/3] bus: mhi: don't deinitialize and re-initialize again
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+ Jeff Johnson <jjohnson@kernel.org>, Jeff Hugo <jeff.hugo@oss.qualcomm.com>,
+ Youssef Samir <quic_yabdulra@quicinc.com>,
+ Matthew Leung <quic_mattleun@quicinc.com>, Yan Zhen <yanzhen@vivo.com>,
+ Alexander Wilhelm <alexander.wilhelm@westermo.com>,
+ Alex Elder <elder@kernel.org>, Kunwu Chan <chentao@kylinos.cn>,
+ Siddartha Mohanadoss <smohanad@codeaurora.org>,
+ Sujeev Dias <sdias@codeaurora.org>, Julia Lawall <julia.lawall@lip6.fr>,
+ John Crispin <john@phrozen.org>, Muna Sinada <quic_msinada@quicinc.com>,
+ Venkateswara Naralasetty <quic_vnaralas@quicinc.com>,
+ Maharaja Kennadyrajan <quic_mkenna@quicinc.com>, mhi@lists.linux.dev,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
+ kernel@collabora.com
+References: <20250630074330.253867-1-usama.anjum@collabora.com>
+ <20250630074330.253867-3-usama.anjum@collabora.com>
+ <2025070128-chihuahua-slimness-da88@gregkh>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <aGUtxakO8p_94rTl@hyeyoo>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <2025070128-chihuahua-slimness-da88@gregkh>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-On 02.07.25 15:01, Harry Yoo wrote:
-> On Wed, Jul 02, 2025 at 02:01:33PM +0200, David Hildenbrand wrote:
->> On 02.07.25 13:54, Harry Yoo wrote:
->>> On Mon, Jun 30, 2025 at 03:00:01PM +0200, David Hildenbrand wrote:
->>>> Instead, let's use a page flag. As the page flag can result in
->>>> false-positives, glue it to the page types for which we
->>>> support/implement movable_ops page migration.
->>>>
->>>> The flag reused by PageMovableOps() might be sued by other pages, so
->>>> warning in case it is set in page_has_movable_ops() might result in
->>>> false-positive warnings.
->>>>
->>>> Reviewed-by: Zi Yan <ziy@nvidia.com>
->>>> Signed-off-by: David Hildenbrand <david@redhat.com>
->>>> ---
->>>
->>> LGTM,
->>> Reviewed-by: Harry Yoo <harry.yoo@oracle.com>
->>>
->>> With a question: is there any reason to change the page flag
->>> operations to use atomic bit ops?
+On 7/1/25 3:25 PM, Greg Kroah-Hartman wrote:
+> On Mon, Jun 30, 2025 at 12:43:29PM +0500, Muhammad Usama Anjum wrote:
+>> Don't deinitialize and reinitialize the HAL helpers. The dma memory is
+>> deallocated and there is high possibility that we'll not be able to get
+>> the same memory allocated from dma when there is high memory pressure.
 >>
->> As we have the page lock in there, it's complicated. I thought about this
->> when writing that code, and was not able to convince myself that it is safe.
+>> Tested-on: WCN6855 WLAN.HSP.1.1-03926.13-QCAHSPSWPL_V2_SILICONZ_CE-2.52297.6
 >>
->> But that was when I was prototyping and reshuffling patches, and we would
->> still have code that would clear the flag.
->   
->> Given that we only allow setting the flag, it might be okay to use the
->> non-atomic variant as long as there can be nobody racing with us when
->> modifying flags. Especially trying to lock the folio concurrently is the big
->> problem.
->>
->> In isolate_movable_ops_page(), there is a comment about checking the flag
->> before grabbing the page lock, so that should be handled.
+>> Fixes: d5c65159f289 ("ath11k: driver for Qualcomm IEEE 802.11ax devices")
 > 
-> Right.
-> 
->> I'll have to check some other cases in balloon/zsmalloc code.
-> 
-> Okay, it's totally fine to go with atomic version and then
-> switching back to non atomic ops when we're sure it's safe.
-> 
-
-I'll definitely do the following:
-
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index 8b23a74963feb..5f2b570735852 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -1145,9 +1145,11 @@ PAGEFLAG(Isolated, isolated, PF_ANY);
-   * the flag might be used in other context for other pages. Always use
-   * page_has_movable_ops() instead.
-   */
--PAGEFLAG(MovableOps, movable_ops, PF_NO_TAIL);
-+TESTPAGEFLAG(MovableOps, movable_ops, PF_NO_TAIL);
-+SETPAGEFLAG(MovableOps, movable_ops, PF_NO_TAIL);
-  #else /* !CONFIG_MIGRATION */
--PAGEFLAG_FALSE(MovableOps, movable_ops);
-+TESTPAGEFLAG_FALSE(MovableOps, movable_ops);
-+SETPAGEFLAG_NOOP(MovableOps, movable_ops);
-  #endif /* CONFIG_MIGRATION */
-  
-  /**
-
-Because the flag must not get cleared.
-
-There is no __SETPAGEFLAG_NOOP yet, unfortunately.
--- 
-Cheers,
-
-David / dhildenb
-
+> No cc: stable?
+I'll add it to entire series.
