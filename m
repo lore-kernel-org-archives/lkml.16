@@ -1,197 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BCA32727E2;
-	Wed,  2 Jul 2025 13:28:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5640289E03;
+	Wed,  2 Jul 2025 13:28:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751462893; cv=none; b=eI0DQ2xJO96Li3sm91ji9xoXaamW/IiwGCJT6Plh1pGEyAbw1YMNuvIjc1kB3VbeUj/Eay2acQGxOTpcNvHPY10PhOcGBV2IZu/FtUX+N+XjhS9ewr0Ry8zjQjFwgUgJlXc5/86kiE1tH6bCyYyhgeb3YI9hyLutv0tosmA3siw=
+	t=1751462909; cv=none; b=j2BHqNzOKXzsn4V42RXAveU24kuXh1unkugBb+TgIu9E1U4QCfin1xmGP6BsNckf9HFoArDOhoHx/aV5s7NloNXukmK4J5yK7TAxBhW2tTA8/BD5/xGofb6ZvABd2xQSGXXAQPSLIQPt0hRro0rZ3X1yPKEpwcA5djY0p1FINzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751462893; c=relaxed/simple;
-	bh=bPtWi2+/IrDUn+HheU/a56H/VJ+K3+rY5j0OYCr0awQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fdoNcEUZO44nI9vvi0SMYN0RKJ6e/V90QX94/zARoeZMPRiH7/rQV7h0vwx/2AfBx/p1YnvQNGLjB21Ki9v+sjs2MhSp/glks82NklCi9OlMme9TYi9A7RBdw7zEIN4z6HhOoKin4SPfBuG/ehNZIloFoW33dnrchJ5tW3/Gr20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f4+l0rfv; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751462909; c=relaxed/simple;
+	bh=wkmkkZivDEA1UxZm/WS0P0Mc3cKQij1LFXnN/TyZv7I=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=SziU1ZE23Gh05cTCzKRzT0adyMSfRgKSoZfCbxLI/iKuI8BvUT+LZtmdMUgoLc+2R+3d/X+Pr/vDWorGgYoM1C912iHT7cbsNX3W8rjmb0Vw/kAD/PwosmTxgGktkWG5SxUFaxKcuuC+FwfMA733y8Ztf+Je5Nu+iMnTotTr1sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pt9YTI+t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f4+l0rfv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751462892; x=1782998892;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=bPtWi2+/IrDUn+HheU/a56H/VJ+K3+rY5j0OYCr0awQ=;
-  b=f4+l0rfvQ+JlO9BBMZPuBofIXKO6q720+leQN/UJ+pSb9lVW1zCvAb1c
-   oUzzlnJoMtbsPpMcY+6/uInA64g4ALUSBc5k7FHGPfD49Rb79QTM94LKi
-   8tStYiAMNrKAdUxQjtHE65XlphYNYjLggENuij+ZNAshZHMYchxRCt2d+
-   SJ4nFFoa08q98KhxYO+cK/LoW+s1xSuYcppD2Ymlg5lNYnTaVimFDahZs
-   cdt3CSYEUihw/RVJzP7t5i+5P1oTn7MxJi5E+FB2u6u232faLsb7P0CKZ
-   D98OdKBFbHialmNwTNeHz3YK6gETogzafaxFT/u2eIDyADqv7Bf5Ft2Yx
-   A==;
-X-CSE-ConnectionGUID: wiRE/g8hS8u6YDJaMRWj1A==
-X-CSE-MsgGUID: DTP+Ge8sTc66+UJ9yY2WBA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="53898825"
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="53898825"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 06:28:11 -0700
-X-CSE-ConnectionGUID: ZOBRGeyiRYmGwYNxtTi/IQ==
-X-CSE-MsgGUID: qgnJ4L6UQQqKVMLd5kpaVQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="191244914"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa001.jf.intel.com with ESMTP; 02 Jul 2025 06:27:57 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 9A4071E0; Wed, 02 Jul 2025 16:27:55 +0300 (EEST)
-Date: Wed, 2 Jul 2025 16:27:55 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Sohil Mehta <sohil.mehta@intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel <ardb@kernel.org>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Xiongwei Song <xiongwei.song@windriver.com>, Xin Li <xin3.li@intel.com>, 
-	"Mike Rapoport (IBM)" <rppt@kernel.org>, Brijesh Singh <brijesh.singh@amd.com>, 
-	Michael Roth <michael.roth@amd.com>, Tony Luck <tony.luck@intel.com>, 
-	Alexey Kardashevskiy <aik@amd.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Ingo Molnar <mingo@kernel.org>, 
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Daniel Sneddon <daniel.sneddon@linux.intel.com>, 
-	Kai Huang <kai.huang@intel.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Breno Leitao <leitao@debian.org>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Hou Tao <houtao1@huawei.com>, Juergen Gross <jgross@suse.com>, 
-	Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@google.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Yuntao Wang <ytcoode@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>, 
-	Huang Shijie <shijie@os.amperecomputing.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
-	linux-mm@kvack.org
-Subject: Re: [PATCHv8 14/17] x86/traps: Handle LASS thrown #SS
-Message-ID: <mgo3qfjekobe6qflwkpey3p7tzsp3b2mrirama4w2rxyckce7g@3gce3fn5emvu>
-References: <20250701095849.2360685-1-kirill.shutemov@linux.intel.com>
- <20250701095849.2360685-15-kirill.shutemov@linux.intel.com>
- <95dc18fd-73b0-4019-92d2-c0e6aaf22c96@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pt9YTI+t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 261FEC4CEED;
+	Wed,  2 Jul 2025 13:28:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751462909;
+	bh=wkmkkZivDEA1UxZm/WS0P0Mc3cKQij1LFXnN/TyZv7I=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=pt9YTI+tMGuYoDA8HXTHtUWsI29ivxk0ww/xQbHDQyWJ0TP0xsuFtwMFnzysFfyxD
+	 MVRG8P+pyJ7h14t/sQcvsm8ieaMhSD0dBqaNhV0am/ID6Lb+nDLZK1IjpMCdtYYT5z
+	 aO3tj3f7WxrB4iOV4xTqtNSuyPzrhj6Xytl7RX4Qara99G9kvPl/foVjQI/kNv2FG2
+	 JlrhvK8A3Saig9cUSHKDPR23mQBMud6GeF62rrODKCgf8fQhkdHV9LO3ZROHfC3iOU
+	 pXGgwo4KqMzm49iosSizxauCE7Bm/FqCJ6WvGkMSpialapgw27m4oF5HWX4Zn5u0vE
+	 x1NaCIK/+kbGg==
+Date: Wed, 02 Jul 2025 08:28:28 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <95dc18fd-73b0-4019-92d2-c0e6aaf22c96@intel.com>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org, 
+ Richard Weinberger <richard@nod.at>, Conor Dooley <conor+dt@kernel.org>, 
+ linux-mtd@lists.infradead.org, imx@lists.linux.dev, 
+ Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>, 
+ linux-arm-kernel@lists.infradead.org, 
+ Miquel Raynal <miquel.raynal@bootlin.com>, linux-kernel@vger.kernel.org, 
+ Vignesh Raghavendra <vigneshr@ti.com>, Vladimir Zapolskiy <vz@mleia.com>
+To: Frank Li <Frank.Li@nxp.com>
+In-Reply-To: <20250701212455.3106629-1-Frank.Li@nxp.com>
+References: <20250701212455.3106629-1-Frank.Li@nxp.com>
+Message-Id: <175146290647.1131327.11939010351638573167.robh@kernel.org>
+Subject: Re: [PATCH v2 1/1] dt-bindings: mtd: convert lpc32xx-slc.txt to
+ yaml format
 
-On Tue, Jul 01, 2025 at 06:35:40PM -0700, Sohil Mehta wrote:
-> On 7/1/2025 2:58 AM, Kirill A. Shutemov wrote:
-> > LASS throws a #GP for any violations except for stack register accesses,
-> > in which case it throws a #SS instead. Handle this similarly to how other
-> > LASS violations are handled.
-> > 
+
+On Tue, 01 Jul 2025 17:24:54 -0400, Frank Li wrote:
+> Convert lpc32xx-slc.txt to yaml format.
+> - add clocks and partitions to match existed dts.
+> - allow nand-on-flash-bbt.
 > 
-> Maybe I've misunderstood something:
-> 
-> Is the underlying assumption here that #SS were previously only
-> generated by userspace, but now they can also be generated by the
-> kernel? And we want the kernel generated #SS to behave the same as the #GP?
-
-It can be generated by both kernel and userspace if RSP gets corrupted.
-
-So far, do_error_trap() did the trick, handling what has to be handled.
-LASS requires a bit more, though.
-
-> 
-> > In case of FRED, before handling #SS as LASS violation, kernel has to
-> > check if there's a fixup for the exception. It can address #SS due to
-> > invalid user context on ERETU. See 5105e7687ad3 ("x86/fred: Fixup
-> > fault on ERETU by jumping to fred_entrypoint_user") for more details.
-> > 
-> > Co-developed-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > ---
-> >  arch/x86/kernel/traps.c | 39 +++++++++++++++++++++++++++++++++------
-> >  1 file changed, 33 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-> > index ceb091f17a5b..f9ca5b911141 100644
-> > --- a/arch/x86/kernel/traps.c
-> > +++ b/arch/x86/kernel/traps.c
-> > @@ -418,12 +418,6 @@ DEFINE_IDTENTRY_ERRORCODE(exc_segment_not_present)
-> >  		      SIGBUS, 0, NULL);
-> >  }
-> >  
-> > -DEFINE_IDTENTRY_ERRORCODE(exc_stack_segment)
-> > -{
-> > -	do_error_trap(regs, error_code, "stack segment", X86_TRAP_SS, SIGBUS,
-> > -		      0, NULL);
-> > -}
-> > -
-> >  DEFINE_IDTENTRY_ERRORCODE(exc_alignment_check)
-> >  {
-> >  	char *str = "alignment check";
-> > @@ -866,6 +860,39 @@ DEFINE_IDTENTRY_ERRORCODE(exc_general_protection)
-> >  	cond_local_irq_disable(regs);
-> >  }
-> >  
-> > +#define SSFSTR "stack segment fault"
-> > +
-> > +DEFINE_IDTENTRY_ERRORCODE(exc_stack_segment)
-> > +{
-> > +	if (user_mode(regs))
-> > +		goto error_trap;
-> > +
-> > +	if (cpu_feature_enabled(X86_FEATURE_FRED) &&
-> > +	    fixup_exception(regs, X86_TRAP_SS, error_code, 0))
-> > +		return;
-> > +
-> > +	if (cpu_feature_enabled(X86_FEATURE_LASS)) {
-> > +		enum kernel_exc_hint hint;
-> > +		unsigned long exc_addr;
-> > +
-> > +		hint = get_kernel_exc_address(regs, &exc_addr);
-> > +		if (hint != EXC_NO_HINT) {
-> 
-> The brackets are not needed for singular statements. Also the max line
-> length is longer now. You can fit this all in a single line.
-
-I think line split if justified. It is 120 characters long otherwise.
-And with multi-line statement, brackets help readability.
-
-I don't see a reason to change it.
-
-> > +			printk(SSFSTR ", %s 0x%lx", kernel_exc_hint_help[hint],
-> > +			       exc_addr);
-> > +		}
-> > +
-> 
-> > +		if (hint != EXC_NON_CANONICAL)
-> > +			exc_addr = 0;
-> > +
-> > +		die_addr(SSFSTR, regs, error_code, exc_addr);
-> 
-> The variable names in die_addr() should be generalized as well. They
-> seem to assume the caller to be a #GP handler.
-
-Okay, will fold into "x86/traps: Generalize #GP address decode and hint
-code".
-
-> > +		return;
-> > +	}
-> > +
-> > +error_trap:
-> > +	do_error_trap(regs, error_code, "stack segment", X86_TRAP_SS, SIGBUS,
-> > +		      0, NULL);
-> > +}
-> > +
-> >  static bool do_int3(struct pt_regs *regs)
-> >  {
-> >  	int res;
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> change in v2
+> - fix miss 's' at partition.yaml
+> - remove ref nand-controller.yaml because existed dts have not nand child
+> nodes.
+> ---
+>  .../devicetree/bindings/mtd/lpc32xx-slc.txt   | 52 ----------
+>  .../bindings/mtd/nxp,lpc3220-slc.yaml         | 96 +++++++++++++++++++
+>  2 files changed, 96 insertions(+), 52 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mtd/lpc32xx-slc.txt
+>  create mode 100644 Documentation/devicetree/bindings/mtd/nxp,lpc3220-slc.yaml
 > 
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mtd/nxp,lpc3220-slc.example.dtb: nand-controller@20020000 (nxp,lpc3220-slc): '#address-cells' is a required property
+	from schema $id: http://devicetree.org/schemas/mtd/nand-controller.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mtd/nxp,lpc3220-slc.example.dtb: nand-controller@20020000 (nxp,lpc3220-slc): '#size-cells' is a required property
+	from schema $id: http://devicetree.org/schemas/mtd/nand-controller.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250701212455.3106629-1-Frank.Li@nxp.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
