@@ -1,46 +1,46 @@
 Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D74871519A6
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 01:33:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D4317A2EB
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 01:33:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751420018; cv=none; b=jb2C+AVo4W5ZOq2Zbuv5o+XxjPAEShDJNcsa52mayE4eqZiN0qL3/IAv/CmViNhsmzTrz0KocgQNiM9sKbPCWpR6f/PaonB2GSUnIEuiqZXTORP1AJ7FBzX7EDUMIGqCaJw4QEvvFi8yMLJ5W/pYZOZezrTiwNWxIyrK12CceB8=
+	t=1751420020; cv=none; b=q9NyLEBcv/iObIMiqpgZaG+VJRiZ8Ax4t7nqeyVlovLSS0tSlFSu8MYX2CTaZclGDCxppvTmrYpj/Fav1d7fRQeG7wXiugDC/4FWWkIRRxCGQvzehjZvFZTCkB+Cb2dC+k5Lv5Vh0JePOrnMW9lPB6hqQYi5bplBBQQJPH9BbEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751420018; c=relaxed/simple;
-	bh=FOQoi89NUv54CfgsP9AV7d7jkdFwueCr9s+C4BSQtMk=;
+	s=arc-20240116; t=1751420020; c=relaxed/simple;
+	bh=6rgthtioLPgC8TzI1EpGIup0Wnw1i9cSpYZlyhq1vAE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=Kbi86Te36u3wo7+7IiZRzOuC/p2nGoBO+pXNYe5ZeqXlaPIOtiwLrhN7/J2Vcp8l7DOmWu2Hmwd0If7wpFA9+/TTLLy7aacY3eyoT0GrS4NPF0zFIu+fDa0vZGGfTUZDkXsoPKKTd7JCvHsnZ+20eRrH3vp+BsBAQlw8aHTTQBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=E3A6/9j9; arc=none smtp.client-ip=203.254.224.33
+	 Content-Type:References; b=L7ODinCP7xK1PaXrnwuaXm1n8hQJwnjz3vGw1YgLdedk4RqmNlntIM09DfRT5HsyxUc3ZLJBW/u9G5Wc1R6Ejf19Fcc6AoKm0xStWRGKwUKcHr58eUALIO96FJwmNS4VMq96xaWjgEldBIx7p1PjpGa48yrbIFJIndzXlux4s/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=EKxrZV9b; arc=none smtp.client-ip=203.254.224.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="E3A6/9j9"
-Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250702013334epoutp03a4fec35b8f6fd9d70763b38f6a6a1fa7~OSzksXsJo2361423614epoutp03a
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="EKxrZV9b"
+Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250702013334epoutp032451bd96ceefe8f1e33a08a2af2bcdda~OSzlMk37n2470624706epoutp03x
 	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 01:33:34 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250702013334epoutp03a4fec35b8f6fd9d70763b38f6a6a1fa7~OSzksXsJo2361423614epoutp03a
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250702013334epoutp032451bd96ceefe8f1e33a08a2af2bcdda~OSzlMk37n2470624706epoutp03x
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
 	s=mail20170921; t=1751420014;
-	bh=e8uOO/gv79Kb1+qWVAngQIMnnEJqThV7WDw1WnemYmM=;
+	bh=MpzzzTN1a7sv35ExTZn8dvG279HkeU3kdloRRozgz+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=E3A6/9j9EFYSrOwl2OEHkn59Ghts1Mifwm/H2Xl9lEU+ptdoN3dv1oeZ93bcVv2P0
-	 lOU9fe1wpGL3nhGfDUS0cg+oBm6Z8TU0VhPQl/hdIz/22IJU7bGA1SWScJQAKGsd+2
-	 tgoITgCQ3ZjU+Kgq9QhBVWU0YafeZpx7yxqWCI48=
+	b=EKxrZV9bWmmc5LpNwNNxyWSFEBWkUrGrJTMH9MIey9t/VBT41Mkphu0J98X6Rtq0P
+	 5gnAiUDmAsrL4Ij4o7OzYhz+Dy3lEVZIiI3hYiytmfMMwVbJHo261vcQqiLaYLB/2B
+	 h+P8o+FO3T621V9Lc1YLNsc4ogIdxyGdmXLdkU1I=
 Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
-	epcas2p3.samsung.com (KnoxPortal) with ESMTPS id
-	20250702013333epcas2p34183624e903d9a57745a17e5e1975fe7~OSzkTl1pV1430414304epcas2p3t;
-	Wed,  2 Jul 2025 01:33:33 +0000 (GMT)
-Received: from epcas2p4.samsung.com (unknown [182.195.36.101]) by
-	epsnrtp02.localdomain (Postfix) with ESMTP id 4bX2V461pkz2SSKj; Wed,  2 Jul
-	2025 01:33:32 +0000 (GMT)
+	epcas2p1.samsung.com (KnoxPortal) with ESMTPS id
+	20250702013334epcas2p1bc84620e0b37bfba62cc0918e89d8b59~OSzktMNWl0297702977epcas2p14;
+	Wed,  2 Jul 2025 01:33:34 +0000 (GMT)
+Received: from epcas2p2.samsung.com (unknown [182.195.36.70]) by
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4bX2V52jVSz2SSKs; Wed,  2 Jul
+	2025 01:33:33 +0000 (GMT)
 Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas2p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250702013332epcas2p159e663ba3bde9f5bf28ccd743c211fd8~OSzjAH4wL0297502975epcas2p1f;
+	epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
+	20250702013332epcas2p39f6fce695eee06f912f5861fe459fbd5~OSzjUh5eo0547705477epcas2p3F;
 	Wed,  2 Jul 2025 01:33:32 +0000 (GMT)
 Received: from asswp146.dsn.sec.samsung.com (unknown [10.229.19.146]) by
 	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250702013332epsmtip2a6a84522c61cf883db518b17369feb0a~OSzi8lg5Z2705927059epsmtip2Q;
+	20250702013332epsmtip2402243e2ee4768654a4eb374e4f5a21a~OSzjQ5WMj2822028220epsmtip2j;
 	Wed,  2 Jul 2025 01:33:32 +0000 (GMT)
 From: Sowon Na <sowon.na@samsung.com>
 To: robh@kernel.org, krzk@kernel.org, conor+dt@kernel.org, vkoul@kernel.org,
@@ -48,9 +48,10 @@ To: robh@kernel.org, krzk@kernel.org, conor+dt@kernel.org, vkoul@kernel.org,
 Cc: krzk+dt@kernel.org, linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
 	sowon.na@samsung.com
-Subject: [PATCH 1/5] phy: samsung-ufs: update calibration settings for EVT2
-Date: Wed,  2 Jul 2025 10:33:07 +0900
-Message-ID: <20250702013316.2837427-2-sowon.na@samsung.com>
+Subject: [PATCH 5/5] arm64: dts: exynosautov920: enable support for ufs
+ device
+Date: Wed,  2 Jul 2025 10:33:11 +0900
+Message-ID: <20250702013316.2837427-6-sowon.na@samsung.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250702013316.2837427-1-sowon.na@samsung.com>
 Precedence: bulk
@@ -60,140 +61,108 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250702013332epcas2p159e663ba3bde9f5bf28ccd743c211fd8
+X-CMS-MailID: 20250702013332epcas2p39f6fce695eee06f912f5861fe459fbd5
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: AUTO_CONFIDENTIAL
 CMS-TYPE: 102P
 cpgsPolicy: CPGSC10-234,Y
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250702013332epcas2p159e663ba3bde9f5bf28ccd743c211fd8
+X-CMS-RootMailID: 20250702013332epcas2p39f6fce695eee06f912f5861fe459fbd5
 References: <20250702013316.2837427-1-sowon.na@samsung.com>
-	<CGME20250702013332epcas2p159e663ba3bde9f5bf28ccd743c211fd8@epcas2p1.samsung.com>
+	<CGME20250702013332epcas2p39f6fce695eee06f912f5861fe459fbd5@epcas2p3.samsung.com>
 
-The hardware EVT version for exynosautov920 has been updated, with EVT2
-confirmed as the final production version. Accordingly, this patch updates
-the UFS PHY calibration settings to match EVT2 hardware characteristics.
-
-This ensures stable operation and optimal performance on the finalized EVT2
-hardware revision.
-
-Tested on exynosautov920 EVT2.
+The exynosautov920 uses v3.1 UFS device.
+Add ufs node for ExynosAutov920 SoC.
+And enable ufs_phy and ufs devices with ufs_fixed_vcc_reg regulator for
+ExynosAutov920 SADK.
 
 Signed-off-by: Sowon Na <sowon.na@samsung.com>
 ---
- drivers/phy/samsung/phy-exynosautov920-ufs.c | 39 +++++++-------------
- drivers/phy/samsung/phy-samsung-ufs.h        |  1 -
- 2 files changed, 14 insertions(+), 26 deletions(-)
+ .../boot/dts/exynos/exynosautov920-sadk.dts   | 17 ++++++++++++
+ .../arm64/boot/dts/exynos/exynosautov920.dtsi | 27 +++++++++++++++++++
+ 2 files changed, 44 insertions(+)
 
-diff --git a/drivers/phy/samsung/phy-exynosautov920-ufs.c b/drivers/phy/samsung/phy-exynosautov920-ufs.c
-index 21ef79c42f95..5ff9fc3a0615 100644
---- a/drivers/phy/samsung/phy-exynosautov920-ufs.c
-+++ b/drivers/phy/samsung/phy-exynosautov920-ufs.c
-@@ -12,8 +12,7 @@
- #define EXYNOSAUTOV920_EMBEDDED_COMBO_PHY_CTRL_EN		BIT(0)
- #define EXYNOSAUTOV920_EMBEDDED_COMBO_PHY_CDR_LOCK_STATUS	0x5e
- 
--#define EXYNOSAUTOV920_CDR_LOCK_OFFSET				0xce4
--
-+#define EXYNOSAUTOV920_CAL_DONE_OFFSET				0xce0
- #define PHY_EXYNOSAUTOV920_LANE_OFFSET				0x200
- #define PHY_TRSV_REG_CFG_AUTOV920(o, v, d) \
- 	PHY_TRSV_REG_CFG_OFFSET(o, v, d, PHY_EXYNOSAUTOV920_LANE_OFFSET)
-@@ -32,7 +31,7 @@ static const struct samsung_ufs_phy_cfg exynosautov920_pre_init_cfg[] = {
- 	PHY_TRSV_REG_CFG_AUTOV920(0x202, 0x06, PWR_MODE_ANY),
- 	PHY_TRSV_REG_CFG_AUTOV920(0x203, 0x0a, PWR_MODE_ANY),
- 	PHY_TRSV_REG_CFG_AUTOV920(0x204, 0x00, PWR_MODE_ANY),
--	PHY_TRSV_REG_CFG_AUTOV920(0x205, 0x10, PWR_MODE_ANY),
-+	PHY_TRSV_REG_CFG_AUTOV920(0x205, 0x11, PWR_MODE_ANY),
- 	PHY_TRSV_REG_CFG_AUTOV920(0x207, 0x0c, PWR_MODE_ANY),
- 	PHY_TRSV_REG_CFG_AUTOV920(0x2e1, 0xc0, PWR_MODE_ANY),
- 	PHY_TRSV_REG_CFG_AUTOV920(0x22d, 0xf8, PWR_MODE_ANY),
-@@ -46,6 +45,7 @@ static const struct samsung_ufs_phy_cfg exynosautov920_pre_init_cfg[] = {
- 	PHY_TRSV_REG_CFG_AUTOV920(0x23e, 0x14, PWR_MODE_ANY),
- 	PHY_TRSV_REG_CFG_AUTOV920(0x23f, 0x13, PWR_MODE_ANY),
- 
-+	PHY_TRSV_REG_CFG_AUTOV920(0x36e, 0x05, PWR_MODE_ANY),
- 	PHY_TRSV_REG_CFG_AUTOV920(0x240, 0x4a, PWR_MODE_ANY),
- 	PHY_TRSV_REG_CFG_AUTOV920(0x243, 0x40, PWR_MODE_ANY),
- 	PHY_TRSV_REG_CFG_AUTOV920(0x244, 0x02, PWR_MODE_ANY),
-@@ -76,6 +76,10 @@ static const struct samsung_ufs_phy_cfg exynosautov920_pre_init_cfg[] = {
- 	PHY_TRSV_REG_CFG_AUTOV920(0x2bc, 0x06, PWR_MODE_ANY),
- 	PHY_TRSV_REG_CFG_AUTOV920(0x2bd, 0x06, PWR_MODE_ANY),
- 	PHY_TRSV_REG_CFG_AUTOV920(0x2be, 0x06, PWR_MODE_ANY),
-+	PHY_TRSV_REG_CFG_AUTOV920(0x2e4, 0x1a, PWR_MODE_ANY),
-+	PHY_TRSV_REG_CFG_AUTOV920(0x2ed, 0x25, PWR_MODE_ANY),
-+	PHY_TRSV_REG_CFG_AUTOV920(0x269, 0x1a, PWR_MODE_ANY),
-+	PHY_TRSV_REG_CFG_AUTOV920(0x2f4, 0x2f, PWR_MODE_ANY),
- 	PHY_TRSV_REG_CFG_AUTOV920(0x34b, 0x01, PWR_MODE_ANY),
- 	PHY_TRSV_REG_CFG_AUTOV920(0x34c, 0x24, PWR_MODE_ANY),
- 	PHY_TRSV_REG_CFG_AUTOV920(0x34d, 0x23, PWR_MODE_ANY),
-@@ -107,40 +111,25 @@ static const struct samsung_ufs_phy_cfg exynosautov920_post_pwr_hs_cfg[] = {
- 
- #define DELAY_IN_US	40
- #define RETRY_CNT	100
--#define EXYNOSAUTOV920_CDR_LOCK_MASK	0x8
-+#define EXYNOSAUTOV920_CAL_DONE_MASK	0x8
- 
--int exynosautov920_ufs_phy_wait_cdr_lock(struct phy *phy, u8 lane)
-+static int exynosautov920_ufs_phy_wait_for_cal(struct phy *phy, u8 lane)
- {
- 	struct samsung_ufs_phy *ufs_phy = get_samsung_ufs_phy(phy);
- 	u32 reg, i;
- 
--	struct samsung_ufs_phy_cfg cfg[4] = {
--		PHY_TRSV_REG_CFG_AUTOV920(0x222, 0x10, PWR_MODE_ANY),
--		PHY_TRSV_REG_CFG_AUTOV920(0x222, 0x18, PWR_MODE_ANY),
--		PHY_TRSV_REG_CFG_AUTOV920(0x246, 0x01, PWR_MODE_ANY),
--		END_UFS_PHY_CFG,
--	};
--
- 	for (i = 0; i < RETRY_CNT; i++) {
- 		udelay(DELAY_IN_US);
- 
--		reg = readl(ufs_phy->reg_pma + EXYNOSAUTOV920_CDR_LOCK_OFFSET +
-+		reg = readl(ufs_phy->reg_pma + EXYNOSAUTOV920_CAL_DONE_OFFSET +
- 			(PHY_APB_ADDR(PHY_EXYNOSAUTOV920_LANE_OFFSET) * lane));
- 
--		if ((reg & EXYNOSAUTOV920_CDR_LOCK_MASK)
--					== EXYNOSAUTOV920_CDR_LOCK_MASK) {
--			samsung_ufs_phy_config(ufs_phy, &cfg[2], lane);
-+		if ((reg & EXYNOSAUTOV920_CAL_DONE_MASK)
-+					== EXYNOSAUTOV920_CAL_DONE_MASK)
- 			return 0;
--		}
--
--		udelay(DELAY_IN_US);
--
--		/* Disable and enable CDR */
--		samsung_ufs_phy_config(ufs_phy, &cfg[0], lane);
--		samsung_ufs_phy_config(ufs_phy, &cfg[1], lane);
- 	}
- 
--	dev_err(ufs_phy->dev, "failed to get phy cdr lock\n");
-+	dev_err(ufs_phy->dev, "failed to wait for cal done\n");
- 	return -ETIMEDOUT;
- }
- 
-@@ -164,5 +153,5 @@ const struct samsung_ufs_phy_drvdata exynosautov920_ufs_phy = {
- 	.clk_list = exynosautov920_ufs_phy_clks,
- 	.num_clks = ARRAY_SIZE(exynosautov920_ufs_phy_clks),
- 	.cdr_lock_status_offset = EXYNOSAUTOV920_EMBEDDED_COMBO_PHY_CDR_LOCK_STATUS,
--	.wait_for_cdr = exynosautov920_ufs_phy_wait_cdr_lock,
-+	.wait_for_cal = exynosautov920_ufs_phy_wait_for_cal,
+diff --git a/arch/arm64/boot/dts/exynos/exynosautov920-sadk.dts b/arch/arm64/boot/dts/exynos/exynosautov920-sadk.dts
+index a397f068ed53..f979cc1ae6a1 100644
+--- a/arch/arm64/boot/dts/exynos/exynosautov920-sadk.dts
++++ b/arch/arm64/boot/dts/exynos/exynosautov920-sadk.dts
+@@ -52,6 +52,14 @@ memory@80000000 {
+ 		      <0x8 0x80000000 0x1 0xfba00000>,
+ 		      <0xa 0x00000000 0x2 0x00000000>;
+ 	};
++
++	ufs_fixed_vcc_reg: regulator-0 {
++		compatible = "regulator-fixed";
++		regulator-name = "ufs-vcc";
++		gpio = <&gpg3 2 GPIO_ACTIVE_HIGH>;
++		regulator-boot-on;
++		enable-active-high;
++	};
  };
-diff --git a/drivers/phy/samsung/phy-samsung-ufs.h b/drivers/phy/samsung/phy-samsung-ufs.h
-index a28f148081d1..895741e800da 100644
---- a/drivers/phy/samsung/phy-samsung-ufs.h
-+++ b/drivers/phy/samsung/phy-samsung-ufs.h
-@@ -143,7 +143,6 @@ static inline void samsung_ufs_phy_ctrl_isol(
- }
  
- int samsung_ufs_phy_wait_for_lock_acq(struct phy *phy, u8 lane);
--int exynosautov920_ufs_phy_wait_cdr_lock(struct phy *phy, u8 lane);
- void samsung_ufs_phy_config(struct samsung_ufs_phy *phy,
- 			    const struct samsung_ufs_phy_cfg *cfg, u8 lane);
+ &pinctrl_alive {
+@@ -83,6 +91,15 @@ &usi_0 {
+ 	status = "okay";
+ };
  
++&ufs_0 {
++	status = "okay";
++	vcc-supply = <&ufs_fixed_vcc_reg>;
++};
++
++&ufs_0_phy {
++	status = "okay";
++};
++
+ &xtcxo {
+ 	clock-frequency = <38400000>;
+ };
+diff --git a/arch/arm64/boot/dts/exynos/exynosautov920.dtsi b/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
+index 0fdf2062930a..f787c28fb0d5 100644
+--- a/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
++++ b/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
+@@ -1426,6 +1426,12 @@ cmu_hsi2: clock-controller@16b00000 {
+ 				      "ethernet";
+ 		};
+ 
++		syscon_hsi2: syscon@16c00000 {
++			compatible = "samsung,exynosautov920-hsi2-sysreg",
++				     "syscon";
++			reg = <0x16c00000 0x800>;
++		};
++
+ 		pinctrl_hsi2: pinctrl@16c10000 {
+ 			compatible = "samsung,exynosautov920-pinctrl";
+ 			reg = <0x16c10000 0x10000>;
+@@ -1438,6 +1444,27 @@ pinctrl_hsi2ufs: pinctrl@16d20000 {
+ 			interrupts = <GIC_SPI 603 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 
++		ufs_0: ufs@16e00000 {
++			compatible = "samsung,exynosautov920-ufs";
++			reg = <0x16e00000 0x100>,
++			      <0x16e01100 0x400>,
++			      <0x16e80000 0x8000>,
++			      <0x16d08000 0x800>;
++			reg-names = "hci", "vs_hci", "unipro", "ufsp";
++			interrupts = <GIC_SPI 613 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cmu_hsi2 CLK_MOUT_HSI2_UFS_EMBD_USER>,
++				 <&cmu_hsi2 CLK_MOUT_HSI2_NOC_UFS_USER>;
++			clock-names = "core_clk", "sclk_unipro_main";
++			freq-table-hz = <0 0>, <0 0>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&ufs_rst_n &ufs_refclk_out>;
++			phys = <&ufs_0_phy>;
++			phy-names = "ufs-phy";
++			samsung,sysreg = <&syscon_hsi2 0x710>;
++			dma-coherent;
++			status = "disabled";
++		};
++
+ 		ufs_0_phy: phy@16e04000 {
+ 			compatible = "samsung,exynosautov920-ufs-phy";
+ 			reg = <0x16e04000 0x4000>;
 -- 
 2.45.2
 
