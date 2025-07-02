@@ -1,212 +1,116 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6271824676D;
-	Wed,  2 Jul 2025 09:13:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BABA4219A8D;
+	Wed,  2 Jul 2025 09:14:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751447627; cv=none; b=oLjKQaq4qBhsoMqgzlwMQCbgP8ykRSqCv1Hbjo5v49qfuLnjljg4507uXkco259tO006yzsGdg3W1c8SJpSTdA49vuPvLO0r7D9UN7qC1kjnrHE7Sqm9IUXzzBnHTqYuIKw8PS9FzsiyPSiZV5gqEGeNGfrkNIa0buefTX6OXng=
+	t=1751447643; cv=none; b=gXE9WJ8QlPHGGguZFeTHIYailiaVLxgflva+T0urd5DfjmjsdcbCeNLk2/lz4s/CjqoEIxn1OBjomcgs7sVtwaZ5VtJJD1cwAdNmE7WKXf/8I+ybjy14gByMmA/hwuPF3qiGGjvBLx2o65nrZqCkBcb0p0sdjJhdTKj1vq0xvnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751447627; c=relaxed/simple;
-	bh=3AwoxwJiU9EyGszIQ10pnOCKHNdEHKc8Wtx+KAnYTEM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=GzLfsnItuiIvx1M6KtfGMKgTSK6J3y2NmJIJq6O3+Ccnuo5ppxHRdyjoaswXeQ1ZTSAUE+D6ET9wEsAXSd5oD6FcRc5zis8FAluTDNCepdtphikQqLWBJXOeyCQLxdtHM31Eg/72irbbhBRXwWW9qmIaB96cLrcwrowJezlAp8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=h8nAaYmZ; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1751447643; c=relaxed/simple;
+	bh=arp/RXJFijFrUN/wQbLbSmWxuyiKJielKbqEREc+Y6U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ol2jHyHFefd1KDiCciCbGw+4/t2ig1nMLAMeluIeg2AdQ8/XGQzAryF9mTD9m5H8MZqbwMG9GmKrm3X4HUg77BvrjmHq29owajkEjx3b59JxJXiFhG21FkIgyLvtET9RC6sTFzfNL1rW3xBYi3sqOYs/v99RVaRYE3/9srhkHVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b90bYBqD; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="h8nAaYmZ"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5625dk4D018581;
-	Wed, 2 Jul 2025 09:13:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	RuDaSPT4WfvGzFOu+WoJ/f0z/7OBazhEeAmX0F1+6nA=; b=h8nAaYmZOL5+ZThn
-	hpsWzH8k+cnGG8fRr5Up2hmWBgjbKXnRkacDU2SYiT235nFofKOcozexUzc8WVLD
-	795FAJQobNhmIWL4VZCz6WT5u+KzR3yKImGT07cTpHavU7zYAyI240P+3RNvaboj
-	XDS5KprShk2fjFMW2lscKcwhpigaaBUFx8AhZSaGV9hQb89WFCXu4rtSAVdkH4gX
-	oDdqiUbqMXSnFe2rLpKZr7TMh7bAXX6Ii2o0HMEoYELz4m3DbeNLgUDwW4cFrZB/
-	ZxwzLhKxPks5vMhbfzoMPVdyW3fl/zy+UlgJH3eo5nfATjG+fhsHIX0AXuTxoLtW
-	4bWTmQ==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j8fxm1v8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Jul 2025 09:13:42 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5629Dfjg026227
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 2 Jul 2025 09:13:41 GMT
-Received: from hu-tdas-hyd.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Wed, 2 Jul 2025 02:13:37 -0700
-From: Taniya Das <quic_tdas@quicinc.com>
-Date: Wed, 2 Jul 2025 14:43:11 +0530
-Subject: [PATCH v5 3/3] arm64: dts: qcom: qcs615: Add CPU scaling clock
- node
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b90bYBqD"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-60c5b7cae8bso7024594a12.1;
+        Wed, 02 Jul 2025 02:14:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751447640; x=1752052440; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=YOnKL2iySZqX8VVh+L223ZxSRCRPq10Nr2PZwBL+7sg=;
+        b=b90bYBqDrbJrzU3s3ghZlttO3/Zv+ncaWuah9dZLZUAWFNNfVGDoTNtIRlv39Cf0pX
+         tCaGaXmi/r5ON9Z5j3Fn+SoC+Dn0Xyb8oNjIk9Auep1VYxQgupMfCKHDqxigomHkhmwm
+         5MGopEKNMF7nzSIEi1fW+y/A+S+XvevZiV0mtBf/4a/60ei9MCJ1+qyHYY/DB3HZCGyw
+         rHUQCEQwLH0CmPJVFeD+SYAztkugfgAQoyQHUPn/IC0s8RVtW3RxlVWixLiMrYFFSU3v
+         aP9aEPEdYvwD4esDuZH2H6RGzPHKpgW2Y1sEW1mEdzDMHU8vdTtp5NdE0WwHe2WXngyQ
+         E4Kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751447640; x=1752052440;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YOnKL2iySZqX8VVh+L223ZxSRCRPq10Nr2PZwBL+7sg=;
+        b=Meh2qccrN75Psdg8tQKvBVFn/EE0hibpNSg6vPRlQ9nyt0pITdrAWzlOeoQQeZrNfU
+         JGNyL3qSS0Xwf240W8ZW1K2lPCoiuUM3igURkcpED00vjLUfQRC0CvD6+falUp/cYswT
+         GXDb8TJqu1xglM0acUefSajQ4nNcm1ZwZQjHNHNC/g5fOEZzKQgM0I6iTetwRa6cXd30
+         Rbdai8rBIwk7nKUrJWXQYLJI8aRhI+Hz1FbYww5ThHPoJQ6xMdCWm5YAeBeJkjcPpZnc
+         iuwoUFAGjLHTsPWKOI61QzXqFziuTNZY2U+V6HDFWtlhaph0m8aFsx5+uItWibfpRJKj
+         CcYA==
+X-Forwarded-Encrypted: i=1; AJvYcCUw4zEoPjHzrMXRKgiFkVCWOGDqCESVj2C4sk5vQCFdeUArs53i7gfDsAgrgD8TTAf0Mo3w01Lt/FSN6xYv6Q==@vger.kernel.org, AJvYcCV8o9/QKj23j9ONlAi58V3TV6OCQpg1QqIUAeJnOPhNVX2am2a90iIYjTUraZgX0Ooqf/KRhXI+2xe3@vger.kernel.org, AJvYcCViAhHhrL4Y6OlxvjAh71MMY5h6K6XFLfjyzuyZxqsMa5Z7w486tYr7/EWRJXqKsxMEkfWJ/TFlrPM=@vger.kernel.org, AJvYcCWDnLP2Auo2dC6CEPbMA9O/TeH5bD3BvmW9B7HP7gcoZtduAhuQjy5IRnXnayG0mS2VWvNLKVvW8Q==@vger.kernel.org, AJvYcCWVNlHl7mM7UN+YZT+skqUg8fvjB2Rq5NtcsutyxERRwIxMdVOEPckQIF2/VR9CwxoU0IYJG8Bogv/ezNCW@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9eiT/JP11azitllBg1w+YkG2PVxV0EPwrTIufMS3ACOMF2Hr/
+	AKVLNcLmZEL6TjI5t1fPeHiOtwjkE0XlGEU2RTm+M6D6wcOpw+62qpR3acvQjDPEwgiW0+0reeu
+	8oQaq4oGqN1fNqI4DY4USwDTydTJ8kAQ=
+X-Gm-Gg: ASbGnctg5wiXqaUbbJPpc/bjndt1NN1bb7DALM2h+UUwaW3lUYwEABSMhH0vCJnDdLm
+	8SszhGfO8t+cgmZspNG1ie4fX504GbBPxSdITP94Mfow+UBaeo/3g9JgS567gDMPN1CC7qbcXg1
+	IjgXU8RpMJanE+OU4YqO+siPsxnRp3RG5MZYMBDLGPSbGoZPUgCY5XqQ==
+X-Google-Smtp-Source: AGHT+IGlk8ck2yGJiSvYpbNFUVRsx8Y0aQIabBLOLnPDFVgvwubtNKreUJ+vATAAMAwvHsiBczX2MScCqWUycc9KxFQ=
+X-Received: by 2002:a17:907:94c3:b0:add:ed3a:e792 with SMTP id
+ a640c23a62f3a-ae3c2da9581mr192429266b.47.1751447639461; Wed, 02 Jul 2025
+ 02:13:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250702-qcs615-mm-cpu-dt-v4-v5-3-df24896cbb26@quicinc.com>
-References: <20250702-qcs615-mm-cpu-dt-v4-v5-0-df24896cbb26@quicinc.com>
-In-Reply-To: <20250702-qcs615-mm-cpu-dt-v4-v5-0-df24896cbb26@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "Rafael J. Wysocki"
-	<rafael@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Manivannan
- Sadhasivam" <mani@kernel.org>
-CC: Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik
-	<quic_imrashai@quicinc.com>,
-        Jagadeesh Kona <quic_jkona@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        Taniya Das
-	<quic_tdas@quicinc.com>
-X-Mailer: b4 0.15-dev-aa3f6
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDA3NCBTYWx0ZWRfX61JM86lsVHmW
- sS+fCL8ucm3fGjoEbgsxNpM2q/IeS2zfC3c4J56UclOw05t5lnXG//05SF4Nc8OPIQMqGRhMD48
- NniPQygh1p1k4Lx4NHcoPr/4TcaDQ+MurChGB/v2aKjnEC45jBnHAIYA6fRgU0T27NvHnFNYJq+
- HKkkPYu6T0Vlm6MeNeRKL7SiXeqADtDar064K0k9I+muZ4II9xsE/RR+sTpVzD6gXw0l9K9nHNP
- /lC0pp80fYadqrwCVdjUqgpAF6j+qIRlvPtjdZYPoO/5IRa8OlJwcm08rN9jAIjPevfkQ/ojznD
- cgvQy0lvgV+a3DNH3kw0IcTwqbKN7TSd0WrTYgN7NfubW2TmqvpiUN1tVelz4Yoe49Z3UnurPIx
- zpHHgA0Y56289c2soFs9l04CmveKXsJ+4kHhIyAdeCjahIaJ9GpVoP3WAo4NXz64Cd3faL7O
-X-Proofpoint-GUID: b9WIbcxBpW7t0n0RAv8Wkat0xvZVrJLJ
-X-Proofpoint-ORIG-GUID: b9WIbcxBpW7t0n0RAv8Wkat0xvZVrJLJ
-X-Authority-Analysis: v=2.4 cv=TqPmhCXh c=1 sm=1 tr=0 ts=6864f846 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8
- a=glh6sAxJXOJWtZD9WfkA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-02_01,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 bulkscore=0 mlxlogscore=999 suspectscore=0 adultscore=0
- phishscore=0 malwarescore=0 clxscore=1011 lowpriorityscore=0 mlxscore=0
- impostorscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507020074
+References: <20250630-xattrat-syscall-v6-0-c4e3bc35227b@kernel.org>
+ <20250630-xattrat-syscall-v6-6-c4e3bc35227b@kernel.org> <20250701-bauzaun-riskieren-595464ef81c4@brauner>
+In-Reply-To: <20250701-bauzaun-riskieren-595464ef81c4@brauner>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Wed, 2 Jul 2025 11:13:48 +0200
+X-Gm-Features: Ac12FXwQ_wZQ_QCTo4zCnlXIsD2UE88jy3YPrf_EnnTl4HhmrEsOq9hi_uihdY0
+Message-ID: <CAOQ4uxjfs=YJmgj0CfJ1NxuPaHgh4B6Vou6jG-WBoi1hGdSDdQ@mail.gmail.com>
+Subject: Re: [PATCH v6 6/6] fs: introduce file_getattr and file_setattr syscalls
+To: Christian Brauner <brauner@kernel.org>
+Cc: Andrey Albershteyn <aalbersh@redhat.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Casey Schaufler <casey@schaufler-ca.com>, Jan Kara <jack@suse.cz>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>, 
+	Paul Moore <paul@paul-moore.com>, linux-api@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-xfs@vger.kernel.org, selinux@vger.kernel.org, 
+	Andrey Albershteyn <aalbersh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Add cpufreq-hw node to support CPU frequency scaling.
+> > +/*
+> > + * Variable size structure for file_[sg]et_attr().
+> > + *
+> > + * Note. This is alternative to the structure 'struct fileattr'/'struct fsxattr'.
+> > + * As this structure is passed to/from userspace with its size, this can
+> > + * be versioned based on the size.
+> > + */
+> > +struct fsx_fileattr {
+> > +     __u32   fsx_xflags;     /* xflags field value (get/set) */
+> > +     __u32   fsx_extsize;    /* extsize field value (get/set)*/
+> > +     __u32   fsx_nextents;   /* nextents field value (get)   */
+> > +     __u32   fsx_projid;     /* project identifier (get/set) */
+> > +     __u32   fsx_cowextsize; /* CoW extsize field value (get/set) */
+>
+> This misses a:
+>
+> __u32 __spare;
+>
+> so there's no holes in the struct. :)
 
-Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
----
- arch/arm64/boot/dts/qcom/qcs615.dtsi | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+Adding __spare and not verifying that it is zeroed gets us to the
+point that we are not able to replace __spare with a real field later.
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs615.dtsi b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-index 5adf409d7ce7226042c759cc83ceca331097ae37..142338069a74cc6c263e17d84efa22ccd0c26813 100644
---- a/arch/arm64/boot/dts/qcom/qcs615.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-@@ -36,6 +36,8 @@ cpu0: cpu@0 {
- 			capacity-dmips-mhz = <1024>;
- 			dynamic-power-coefficient = <100>;
- 			next-level-cache = <&l2_0>;
-+			clocks = <&cpufreq_hw 0>;
-+			qcom,freq-domain = <&cpufreq_hw 0>;
- 			#cooling-cells = <2>;
- 
- 			l2_0: l2-cache {
-@@ -56,6 +58,8 @@ cpu1: cpu@100 {
- 			capacity-dmips-mhz = <1024>;
- 			dynamic-power-coefficient = <100>;
- 			next-level-cache = <&l2_100>;
-+			clocks = <&cpufreq_hw 0>;
-+			qcom,freq-domain = <&cpufreq_hw 0>;
- 
- 			l2_100: l2-cache {
- 			      compatible = "cache";
-@@ -75,6 +79,8 @@ cpu2: cpu@200 {
- 			capacity-dmips-mhz = <1024>;
- 			dynamic-power-coefficient = <100>;
- 			next-level-cache = <&l2_200>;
-+			clocks = <&cpufreq_hw 0>;
-+			qcom,freq-domain = <&cpufreq_hw 0>;
- 
- 			l2_200: l2-cache {
- 			      compatible = "cache";
-@@ -94,6 +100,8 @@ cpu3: cpu@300 {
- 			capacity-dmips-mhz = <1024>;
- 			dynamic-power-coefficient = <100>;
- 			next-level-cache = <&l2_300>;
-+			clocks = <&cpufreq_hw 0>;
-+			qcom,freq-domain = <&cpufreq_hw 0>;
- 
- 			l2_300: l2-cache {
- 			      compatible = "cache";
-@@ -113,6 +121,8 @@ cpu4: cpu@400 {
- 			capacity-dmips-mhz = <1024>;
- 			dynamic-power-coefficient = <100>;
- 			next-level-cache = <&l2_400>;
-+			clocks = <&cpufreq_hw 0>;
-+			qcom,freq-domain = <&cpufreq_hw 0>;
- 
- 			l2_400: l2-cache {
- 			      compatible = "cache";
-@@ -132,6 +142,8 @@ cpu5: cpu@500 {
- 			capacity-dmips-mhz = <1024>;
- 			dynamic-power-coefficient = <100>;
- 			next-level-cache = <&l2_500>;
-+			clocks = <&cpufreq_hw 0>;
-+			qcom,freq-domain = <&cpufreq_hw 0>;
- 
- 			l2_500: l2-cache {
- 			      compatible = "cache";
-@@ -151,6 +163,8 @@ cpu6: cpu@600 {
- 			capacity-dmips-mhz = <1740>;
- 			dynamic-power-coefficient = <404>;
- 			next-level-cache = <&l2_600>;
-+			clocks = <&cpufreq_hw 1>;
-+			qcom,freq-domain = <&cpufreq_hw 1>;
- 			#cooling-cells = <2>;
- 
- 			l2_600: l2-cache {
-@@ -171,6 +185,8 @@ cpu7: cpu@700 {
- 			capacity-dmips-mhz = <1740>;
- 			dynamic-power-coefficient = <404>;
- 			next-level-cache = <&l2_700>;
-+			clocks = <&cpufreq_hw 1>;
-+			qcom,freq-domain = <&cpufreq_hw 1>;
- 
- 			l2_700: l2-cache {
- 			      compatible = "cache";
-@@ -3891,6 +3907,19 @@ glink_edge: glink-edge {
- 				qcom,remote-pid = <2>;
- 			};
- 		};
-+
-+		cpufreq_hw: cpufreq@18323000 {
-+			compatible = "qcom,qcs615-cpufreq-hw", "qcom,cpufreq-hw";
-+			reg = <0 0x18323000 0 0x1400>, <0 0x18325800 0 0x1400>;
-+			reg-names = "freq-domain0", "freq-domain1";
-+
-+			clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GPLL0>;
-+			clock-names = "xo", "alternate";
-+
-+			#freq-domain-cells = <1>;
-+			#clock-cells = <1>;
-+		};
-+
- 	};
- 
- 	arch_timer: timer {
+I suggest to resolve this hole as Darrick and Pali suggested by making it
+__u64 fsx_xflags
 
--- 
-2.34.1
+w.r.t Darrick's comment, I kind of like it that the name for the UAPI
+struct (fsxattr)
+differs from the name of the kernel internal representation (fileattr), but
+I agree that fsx_fileattr does not give a good hint on what it is.
 
+I think that renaming struct fsx_fileattr to struct fsxattr64 along
+with changing the
+width of fsx_xflags will help reduce the confusion of users.
+
+What do you guys think?
+
+Thanks,
+Amir.
