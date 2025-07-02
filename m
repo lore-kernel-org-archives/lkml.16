@@ -1,157 +1,205 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2060.outbound.protection.outlook.com [40.107.244.60])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED71A2F5081;
-	Wed,  2 Jul 2025 16:38:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.60
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751474283; cv=fail; b=HYW6NKs0Z8qOdkyFozBUeyXzLsml0JLGl7qDpayiNi6TLXX9MMXLrQmm+pUf5mghpgIl3a0zA2DKAkAvN/IrbMfZQFYP31d0IFIK/CIEG9WkVnZNkRouV0CjBUUL2xm/C66jnXPB+uVfI8e5MBGqLYI56RMOheHwBukqzyRRddg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751474283; c=relaxed/simple;
-	bh=QvO9KDgrGCTFTrUq/8Ak4IkxUF+Hti5WqRABg/ZKnKI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=om2L5/qP2/m/WwXXssUHNYk0YjYhLumB24JDM2XHyIMpKmojl6MrpDLjpTg9rq+uOA8iXrW/3hfmqCkZYrqLFQjD8nP2KHeXGDdj1pCTPKEDmZUi0DmhsxC9nVmRwPKTkhokOYEMJOKsfDVJlKYI9+DOS7c1oAVGgddD5Sb54QQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NWsZxgqh; arc=fail smtp.client-ip=40.107.244.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11252F5086;
+	Wed,  2 Jul 2025 16:38:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751474291; cv=none; b=LLNUJSe372EIbc4/Ar/aQnWH1vzIveeUDe2FUpWdqrd5PDAOPpzNNyjsmqCwLNYpfBHApca/kNPxOAzYhzd6GBKJOm59TupMGRbJJpBV1T6If8J4IWNudbkekKVovjGcHhVTzx7m5Tj8ZLwdTmiqH3M1A+01h7QXA3axp0v6/Wo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751474291; c=relaxed/simple;
+	bh=Qc9qaZjtszTGfIo1ETHEUtNH5a2Y5/f+r7cHk6zLCuA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qVR0ciropc/GjzsqgNwkrG934o6/maL9N4JiiFbcn2+co5w+jsCyu6lnmQqwLk/XNXa9sTihir53qJRVluurKlU4RB2REMtF8nxHBhDsSPepiOfCa3UAb9yToVsda86TQGt3hb0zLZ5nOJwRSmUff4gnXb8U0qm6exPS1QygOZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KMVg3dYL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NWsZxgqh"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oPn0G7KJc2mzfYGo+b45YLRt0YR060AOszjEdBnIDcHe2Zi+TA+CkWeycUHwAu5kI8xMYdvkmvQ27u+SedTf0LcPb64eDO+3/9wXAr4qS9zbjNuiS8MrpVpZVr8yMPel+UqlodDrB3z8Jh+I0Gt31/7tToZaca503bm8ItoXGNK0tDyXQ5HBJDFQJD2hPMt/y4X33+aCFArQ93E10kn0IZAuVQ1OdAP152v0LoUfJ2Ci+JeL8OGROEzzWotUjEtjVOIgWDq2A2J20A3lIX7g7BM+v4nc6rQ5cXbRm5s8SqCzxhfKhYfvC+/B4zhVv3qp/wsQ6AXjsLYtkaK4JhN4Wg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aBGIPN8mOmT6tjgjmzzkd4RO7hW82cAQ7iOGOCJv3mU=;
- b=L62LfD76yfP95eYwh8XPMqUTCHpQTKH0hSw6b28kmLsl8fb6lfw/r+MMqEVSrxAYMWQtnA4ljIIfBySlWblacJ0RlOuPLFRRrgL1G9wst0ZObdtqbf8v+F8DAq7ZnWmqiCCHYckmBrPb1pAT9NswdAy0NJxgMASyv9a7aeNx1laB1VKgqdYd2iSljg4MlKWmUHrqLDPpZtj1kInWMVsKE0DRvcINkgW+co5FzNVGTz9ia1wQaPT2sSCBxybaG5IZFCWxzNzuzDMwHkeHSo2o9VIFZW34Va69KF/u3mvcYrl/VRIupCh/qII0P1SMvmY+AHFlVN/QZ6upCef+l8POxA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=ziepe.ca smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aBGIPN8mOmT6tjgjmzzkd4RO7hW82cAQ7iOGOCJv3mU=;
- b=NWsZxgqhiuu3qnmhZew22+p07i+Ymi4LuLH+SbCZgjN4hPczBTOrjARQfBNzgdWOrGuSlkLpe6WD6f8wnyACp52SIiammcOq5/maY2I3sJ0BNpfmE00ewp8eHWKajwTHlYo+dvWv6eyYItuoD2O8Doj/sIMvkFrekl01ws69ey8=
-Received: from BN9PR03CA0903.namprd03.prod.outlook.com (2603:10b6:408:107::8)
- by BY5PR12MB4291.namprd12.prod.outlook.com (2603:10b6:a03:20c::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.21; Wed, 2 Jul
- 2025 16:37:55 +0000
-Received: from BN3PEPF0000B073.namprd04.prod.outlook.com
- (2603:10b6:408:107:cafe::20) by BN9PR03CA0903.outlook.office365.com
- (2603:10b6:408:107::8) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.32 via Frontend Transport; Wed,
- 2 Jul 2025 16:37:55 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN3PEPF0000B073.mail.protection.outlook.com (10.167.243.118) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8901.15 via Frontend Transport; Wed, 2 Jul 2025 16:37:55 +0000
-Received: from driver-dev1.pensando.io (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 2 Jul
- 2025 11:37:54 -0500
-From: Brett Creeley <brett.creeley@amd.com>
-To: <jgg@ziepe.ca>, <yishaih@nvidia.com>,
-	<shameerali.kolothum.thodi@huawei.com>, <kevin.tian@intel.com>,
-	<alex.williamson@redhat.com>, <kvm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <brett.creeley@amd.com>
-Subject: [PATCH] vfio/pds: Fix missing detach_ioas op
-Date: Wed, 2 Jul 2025 09:37:44 -0700
-Message-ID: <20250702163744.69767-1-brett.creeley@amd.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KMVg3dYL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34A0BC4CEE7;
+	Wed,  2 Jul 2025 16:38:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751474290;
+	bh=Qc9qaZjtszTGfIo1ETHEUtNH5a2Y5/f+r7cHk6zLCuA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KMVg3dYLUaNyfuSBOfBXNwS3dJMPaU7p8P4tXXQzf/3p1CZXHWxsu+U4+KHbw/8Ep
+	 1SmQeG/jqruES5oXpLVu5y3lCHXMI70Md2yNVm6DV0NWeNlkK2mRw+24f5FIVzvAT9
+	 odpAX1YvQqK/1hldpCiexN0q2RbOfPNlkzeR2zRymdgXAoDyWhUgfuVNCj+TrnTOGd
+	 3QMykmPmHpJIrTW6PiHdTMIFfaErsDejIpKsHyX8SxBPLoSr/DBRB7K1mMc+nWqP1u
+	 w+wGkPe3j/WnHFmjcFoyeKmU7LNeV2XJgDzMHkkH226McR033f5zuogRE+LfX/2KNt
+	 aCSVhhnkvTATQ==
+Date: Wed, 2 Jul 2025 17:38:06 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] docs: dt: writing-bindings: Express better expectation
+ of "specific"
+Message-ID: <20250702-dicing-yo-yo-ddccd5ae7d5a@spud>
+References: <20250702161700.229458-2-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B073:EE_|BY5PR12MB4291:EE_
-X-MS-Office365-Filtering-Correlation-Id: f18ff39a-c16c-4774-faa9-08ddb986cbbd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|36860700013|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?vDnx6NR1ldHOcTV7VFPg+hgeWQ/sir6Lh/gJOI29RBdvnNcxruCosS24Oe6C?=
- =?us-ascii?Q?cjexFh4WaTO4VtmqqxzbhMPktmlX4bCAf3KRQRgyaQE8YBYFaQTsRV42w2j3?=
- =?us-ascii?Q?mH3o0NFav0mbKq/ikbCw/OxXQIfaz0TWzIsCRFOZEAI5fwrMUEc+Mx73aplS?=
- =?us-ascii?Q?aLm+A53iN46V8iXcBxs2d61lrEOyQdVZPQIlinir2l2QDNeXZ+SFnOSiAQx6?=
- =?us-ascii?Q?R4vMhwsc4Fsmm08sb0c1E0gvYZKAvSe6s+o2b/JsgLQvPOLLywM4KpCpN2QM?=
- =?us-ascii?Q?dV2c9TJuvge+QjPjiRrvs+Qqj1ngLaDLqHUP13WuHrESlWVO97JkSINFcbIk?=
- =?us-ascii?Q?FmxhG9VTohi+Q27Bt5Ig+7yrmVrX2djthhg5rOiyYdkyBgNz91C3eE4+MOMP?=
- =?us-ascii?Q?hHOxz3labZ5Dc0UyyZk6uG9+biCjuFJ6iQ7kvQ4Zqq8fGkOkftD7Hbfi2Ubr?=
- =?us-ascii?Q?o8thajf2k68UDo2rJtwgPV1tnAWnT/+KQEjlZvsy25LYYqMN2cmILlpF6YHv?=
- =?us-ascii?Q?eiSTfbys3HAaesrYJ8HK6ZbPWVSWdgTpSCyRgyrU2I/uu6UtDwEstLAxn4VR?=
- =?us-ascii?Q?rhoVzIshmRZrKYSWI7CzFxNwunbb/rqO1b10Kgp4eszzTNjvZSy8+XBepbDg?=
- =?us-ascii?Q?RGX0bYVOm5m2ESQnABBask6ku5kqGVket6U8b8ELGDCXLe/skBi6r+WSVtnL?=
- =?us-ascii?Q?cgfXiMU/JiIMS6jEMX2jZvx9/gMbgnUN12CvBM/QzwF660FAWIBFunhJD7HC?=
- =?us-ascii?Q?xVX5ReqkEtE+QhrQ4upK5IxABW1vP6fsaSedvQW4fKYKZUJXhOXfwBbn1pCd?=
- =?us-ascii?Q?iONk84ICaJf/aBCZz2VDkddYhTK/jHKmL7kxu+LV3eWU6mSG4x8MRm107ZoI?=
- =?us-ascii?Q?PmtaaXUEF4jIlZT7dVrpMDKyh1CAUmgNzwV54qgoM29MZPzOAC5qawNdH0Vu?=
- =?us-ascii?Q?A04RdQk4Lrlzs0gquknOTy9/p0UtLRFGginkj4AvYgBv1t23NlDA0cFB8RV0?=
- =?us-ascii?Q?I5uGuxe1rBqhI1tK+wyzt8G7G1F7RvVnzosE4Q0MRLXxjjcfx69AA63ZFyGe?=
- =?us-ascii?Q?WFCxDvkl4JeFjhb3uGnU8Q7APIu++rP4dLE4yDPi1WW4KH5EYtB32gTD68Rr?=
- =?us-ascii?Q?RhxRkX3cFAJts2DTnmys2pZyLzQaJ/6QfSWVaqSr6mQV0J2crOkUzPNQytrr?=
- =?us-ascii?Q?CsL7z3AwZoyiFcOuhslfK7nalKKxXydEmenOXx/2VHa2wOhFqaowwE99d+cl?=
- =?us-ascii?Q?qYvFMr3Lk0YeU026tpT+yJuo4RRjle4UxmXadWRfAbARJSxws7yvcMebxec4?=
- =?us-ascii?Q?GwC4gLmGGJWPECLghW6orPVY8c6PQGPk687AjiycCyEFfaXjMktjGADmwT92?=
- =?us-ascii?Q?97zEv3yFd29MFVNEZQw0OvHUEIrSVzA0UwVGOb/KwtohUy7Vwml/rv0GLq7J?=
- =?us-ascii?Q?79unDxqhPRcREuh6GjI5VT4Wf2+Dq3JeY2KvCietz4gY1Wv0IEDar001V4Ar?=
- =?us-ascii?Q?6NIQmC15OvzezjC6k/2zntBjrIpcw0N13Z2S?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 16:37:55.1036
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f18ff39a-c16c-4774-faa9-08ddb986cbbd
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN3PEPF0000B073.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4291
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ExsRr/5aIlsNDTUR"
+Content-Disposition: inline
+In-Reply-To: <20250702161700.229458-2-krzysztof.kozlowski@linaro.org>
 
-When CONFIG_IOMMUFD is enabled and a device is bound to the pds_vfio_pci
-driver, the following WARN_ON() trace is seen and probe fails:
 
-WARNING: CPU: 0 PID: 5040 at drivers/vfio/vfio_main.c:317 __vfio_register_dev+0x130/0x140 [vfio]
-<...>
-pds_vfio_pci 0000:08:00.1: probe with driver pds_vfio_pci failed with error -22
+--ExsRr/5aIlsNDTUR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This is because the driver's vfio_device_ops.detach_ioas isn't set.
+On Wed, Jul 02, 2025 at 06:17:01PM +0200, Krzysztof Kozlowski wrote:
+> Devicetree bindings are supposed to be specific in terms of compatibles
+> and other properties.  Short "specific" has many implications, so extend
+> the description to cover them: no family names, avoid generic SoC
+> fallbacks, avoid versioned compatibles, avoid properties implied by
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IDK if it is intentional, but while you mention this here it doesn't
+appear in the text below. Probably as simple as "DON'T use versioned
+compatibles, unless documenting a HDL IP core"?
 
-Fix this by using the generic vfio_iommufd_physical_detach_ioas
-function.
+> compatible.
+>=20
+> Also document desired lack of ABI impact and acceptable solution if such
+> needs arises: clearly marking it in commit msg.
+>=20
+> All above follows established Devicetree bindings maintainers review
+> practice, so no new rules are introduced here.
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>=20
+> ---
+>=20
+> I have vast (~10-page) document describing DT bindings and DTS rules,
+> based on Rob's and other people's reviews (with references...). Let me
+> try to funnel it here gradually. Why gradually? The intention of
+> writing-bindings document is to be concise, so rephrasing my 10 pages
+> covering each little detail into generic, concise rule is not that easy,
+> especially for non-native speaker.
+>=20
+> Optionally I could also post my 10-page guide somewhere, but then it
+> would be one more document to ignore. I think we have enough of such.
+> Ah, and I would have one less topic for conference. :)
+> ---
+>  .../devicetree/bindings/writing-bindings.rst  | 25 +++++++++++++++----
+>  1 file changed, 20 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/writing-bindings.rst b/Doc=
+umentation/devicetree/bindings/writing-bindings.rst
+> index 1ad081de2dd0..dc0e4b63984c 100644
+> --- a/Documentation/devicetree/bindings/writing-bindings.rst
+> +++ b/Documentation/devicetree/bindings/writing-bindings.rst
+> @@ -39,10 +39,15 @@ Overall design
+>  Properties
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =20
+> -- DO make 'compatible' properties specific. DON'T use wildcards in compa=
+tible
+> -  strings. DO use fallback compatibles when devices are the same as or a=
+ subset
+> -  of prior implementations. DO add new compatibles in case there are new
+> -  features or bugs.
+> +- DO make 'compatible' properties specific. DON'T use wildcards or
+> +  device-family names in compatible strings.
 
-Fixes: 38fe3975b4c2 ("vfio/pds: Initial support for pds VFIO driver")
-Signed-off-by: Brett Creeley <brett.creeley@amd.com>
----
- drivers/vfio/pci/pds/vfio_dev.c | 1 +
- 1 file changed, 1 insertion(+)
+> DO use fallback compatibles when
+> +  devices are the same as or a subset of prior implementations.
 
-diff --git a/drivers/vfio/pci/pds/vfio_dev.c b/drivers/vfio/pci/pds/vfio_dev.c
-index 76a80ae7087b..f6e0253a8a14 100644
---- a/drivers/vfio/pci/pds/vfio_dev.c
-+++ b/drivers/vfio/pci/pds/vfio_dev.c
-@@ -204,6 +204,7 @@ static const struct vfio_device_ops pds_vfio_ops = {
- 	.bind_iommufd = vfio_iommufd_physical_bind,
- 	.unbind_iommufd = vfio_iommufd_physical_unbind,
- 	.attach_ioas = vfio_iommufd_physical_attach_ioas,
-+	.detach_ioas = vfio_iommufd_physical_detach_ioas,
- };
- 
- const struct vfio_device_ops *pds_vfio_ops_info(void)
--- 
-2.17.1
+Isn't this wrong? If you're a subset of a prior implementation, falling
+back to the prior implementation's compatible would enable features that
+are not present in the new device. That's not something you introduced,
+it's the existing wording, but I don't think that's correct. It would have
+to be a /superset/ of a prior implementation for this to be correct, no?
 
+> DO add new
+> +  compatibles in case there are new features or bugs.
+
+I think it might be best to break each "DO" or "DON'T" into a bullet
+point of its own. At least it'd make it more clear what the specific dos
+and don'ts are.
+
+> +
+> +   - Use SoC-specific compatible for all SoC devices, followed by a fall=
+back if
+
+"Use a".
+
+> +     appropriate.
+> +
+> +   - Specific SoC compatible is also preferred for the fallbacks.
+
+I hate to nitpick language to a non-native speaker, but when you have a
+plural "fallbacks", it would be "Specific SoC compatibles are also
+preferred". Probably also "SoC-specific" too, to match the wording used
+in the bullet prior?
+
+> =20
+>  - DO use a vendor prefix on device-specific property names. Consider if
+>    properties could be common among devices of the same class. Check other
+> @@ -51,12 +56,22 @@ Properties
+>  - DON'T redefine common properties. Just reference the definition and de=
+fine
+>    constraints specific to the device.
+> =20
+> +- DON'T add properties to avoid a specific compatible.  DON'T add proper=
+ties if
+> +  they are implied by (deducible from) the compatible.
+> +
+>  - DO use common property unit suffixes for properties with scientific un=
+its.
+>    Recommended suffixes are listed at
+>    https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas=
+/property-units.yaml
+> =20
+>  - DO define properties in terms of constraints. How many entries? What a=
+re
+> -  possible values? What is the order?
+> +  possible values? What is the order? All these constraints represent th=
+e ABI
+> +  as well.
+> +
+> +- DON't change the ABI, but if ever needed to change, then DO explicitly
+
+"DON'T", not "DON't". But this immediately contradicts itself, so maybe
+a different wording could be used here. Maybe "DON'T make changes that
+break the ABI without explicit and detailed rationale for why the
+changes have to be made and their impact."?
+
+> +  document that in the commit msg with rationale WHY ABI has to be broke=
+n and
+> +  what is the impact. ABI impact is beyond Linux kernel, because it cove=
+rs also
+
+I think this should be "ABI impact /goes/ beyond /the/ Linux kernel,
+because it /also/ covers other open-source upstream projects.".
+
+Cheers,
+Conor.
+
+> +  other open-source upstream projects.
+> +
+> =20
+>  Typical cases and caveats
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+> --=20
+> 2.43.0
+>=20
+
+--ExsRr/5aIlsNDTUR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaGVgbgAKCRB4tDGHoIJi
+0v+SAQDiSRz2cEksHUrXKYhuPZfURXHZTVQuM4alHdgIjusWfgEAnsR8HMVKSvzM
+bbZv4zC519Chhfd2InIlDy1eUjmG4g0=
+=ELdN
+-----END PGP SIGNATURE-----
+
+--ExsRr/5aIlsNDTUR--
