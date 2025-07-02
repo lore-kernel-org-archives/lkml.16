@@ -1,310 +1,87 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3404621D3F6
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 06:36:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15746219A72;
+	Wed,  2 Jul 2025 06:36:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751438172; cv=none; b=XlQYHZycs8Zuf+p0yN6ZTfGU5EJzo74EhHhmMgFAPoSJnerrwAwvYRunNV7YfKU4jkr+wWcnr2HDL+VGsQcARA2d+WsJKTsbGr3CtiCe7K6DByTn4GeFj5sr1bRpBPrg377Yz4r+xQtxFA2Oeqp72qOtBK/rRBQhPFmhpY46oRE=
+	t=1751438188; cv=none; b=ORZmMaKXppa6oQ+b2MkVUONEjD0v+Grf9dy9rp0QFbcUEsUxogz/1K+SL3HgHpPTYTPaFU0JjoXY3IxN04+22OoQDwQCsfHx18i9Ao69wBy5eoUF9M2E7+YTGC5iU08dHyk6ers3bu/1LqywnAY24wssFLExodG3D9eHmAOc+rY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751438172; c=relaxed/simple;
-	bh=loZYD/7+d+SyvCcFV0YaDppWBmbpIQX+C6/7Reg6fiQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=HZTogrUGtPtdp91yqVE/eGD7Ze/vVj78IPyDNF+XDgRpEQpZtM+WIdl5mOMbAOujZGj549xpIoMIhxmV/5QylM9rPlvXoRlzgl/tHF1SaFF0o7we058107Nn5lnZi5nMCWlAcbxCuThLPEe8+azSr+51Rxk7EmJWXHXWcuXSUSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=vDq9Y0DO; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1751438188; c=relaxed/simple;
+	bh=V4QjxPC5V3OVInIUvfeN2FPT8MN8DD7KSv0VnN9r1V0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=sAh1YIDYW0RBOIfo6GFSDcvjOBcWjOvuQo4pf1IA85OVwzXZWh6aqVKoy9Jd5/Hp6BXym/7aCzDmySEJABsJ/BNwTxy8a4Rnc+xSOkXXebrIvVFtF6UYRqt+wPkGNnusbI8QVHq6A1zRYM30mqPV+5oonAzWqfuPh2446YLyp6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Hu0MWRDy; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vDq9Y0DO"
-Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 5626Zqja3851315;
-	Wed, 2 Jul 2025 01:35:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1751438152;
-	bh=jOAZPdRxmxpydDoyMxiBT6V441wiwaKmDzKIIsUgjHk=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=vDq9Y0DOi/bjtGMSCbyu8x55cw3htCWcvunM0H/WNjMJmoBp4zM+4eGUePy5SPfbv
-	 YT6MRYNNl0E3blkVEQ5Fpz1AUcvsLwZFg+EJe+VV+t3VWkIAibBpHCMudZvk8AnEZd
-	 YOqiCRShBjo5+V2lVQnhihXTcNybP/xsWRV41iIc=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 5626Zq213294411
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Wed, 2 Jul 2025 01:35:52 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Wed, 2
- Jul 2025 01:35:51 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Wed, 2 Jul 2025 01:35:51 -0500
-Received: from [172.24.227.166] (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [172.24.227.166])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5626ZmVK2667037;
-	Wed, 2 Jul 2025 01:35:48 -0500
-Message-ID: <ef7df56a-8c72-4146-95a1-ec65450cb4b4@ti.com>
-Date: Wed, 2 Jul 2025 12:05:47 +0530
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Hu0MWRDy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1751438168;
+	bh=YB2UDereTETtBpJlylMDGKHz/iacjhjFr7eKz4FmJbY=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Hu0MWRDyd6ZerGfP04o+5eE95VTrje9Ap2MnjXGHeQyCtv4E3/CMY8/j6x6zJNI06
+	 jiixwpBxMRZ0FhDTpN/1691ZwPhVTMz8sFBbFMweCin84CoRAMHqxTv7YlaNPLWQj2
+	 4YJbJZCd5VbIB6cFt352rDXaEJECulc4eWWnAd/nERKVkDmtFcuVfFBIPZ2l5SxU0/
+	 svRRp/SpY3gcm2eJQkftp4EdATVsRD+GkVZQNLVg5zLimU14pEZnaJXezyshtqqcOP
+	 H360MmMB2SW8i+ARA4t8iiLRTfNm7uTR4P+nPmmt3pZgdYeQDm3/QXgvmaws4h84pH
+	 cXsumRuexMtPg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bX9CD4Dgdz4wyV;
+	Wed,  2 Jul 2025 16:36:08 +1000 (AEST)
+Date: Wed, 2 Jul 2025 16:36:22 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Shuah Khan <shuah@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patch in the kselftest tree
+Message-ID: <20250702163622.12bd45dc@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] drm/tidss: Remove max_pclk_khz from tidss display
- features
-To: Devarsh Thakkar <devarsht@ti.com>, <jyri.sarha@iki.fi>,
-        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <tzimmermann@suse.de>, <dri-devel@lists.freedesktop.org>,
-        <tomi.valkeinen@ideasonboard.com>, <mwalle@kernel.org>
-CC: <airlied@gmail.com>, <simona@ffwll.ch>, <linux-kernel@vger.kernel.org>
-References: <20250701095541.190422-1-j-choudhary@ti.com>
- <20250701095541.190422-3-j-choudhary@ti.com>
- <a382dc7d-94f8-4fe5-99a6-913e73d4a808@ti.com>
-Content-Language: en-US
-From: Jayesh Choudhary <j-choudhary@ti.com>
-In-Reply-To: <a382dc7d-94f8-4fe5-99a6-913e73d4a808@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: multipart/signed; boundary="Sig_/aDepFjW6iKDfG28yKNUQAma";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Hello Devarsh,
+--Sig_/aDepFjW6iKDfG28yKNUQAma
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 01/07/25 18:42, Devarsh Thakkar wrote:
-> Hi Jayesh,
-> 
-> On 01/07/25 15:25, Jayesh Choudhary wrote:
->> TIDSS hardware by itself does not have variable max_pclk for each VP.
->> The maximum pixel clock is determined by the limiting factor between
->> the functional clock and the PLL
-> 
-> and the pixel clock
+Hi all,
 
-PLL is the parent to that pixel clock so seemed implicit to me.
-But will make it more clear.
+The following commit is also in the mm-nonmm-unstable tree as a different
+commit (but the same patch):
 
-> .
->>
->> The limitation that has been modeled till now comes from the clock
->> (PLL can only be programmed to a particular max value). Instead of
->> putting it as a constant field in dispc_features, we can query the
->> DM to see if requested clock can be set or not and use it in
->> "mode_valid()".
->>
->> Replace constant "max_pclk_khz" in dispc_features with "curr_max_pclk"
->> in tidss_device structure which would be modified in runtime.
->> In mode_valid() call, check if a best frequency match for mode clock
->> can be found or not using "clk_round_rate()". Based on that, propagate
->> "cur_max_pclk" and query DM again only if the requested mode clock
->> is greater than cur_max_pclk. (As the preferred display mode is usually
->> the max resolution, driver ends up checking the highest clock the first
->> time itself which is used in subsequent checks)
->>
->> Since TIDSS display controller provides clock tolerance of 5%, we use
->> this while checking the curr_max_pclk. Also, move up "dispc_pclk_diff()"
->> before it is called.
->>
->> This will make the existing compatibles reusable
-> 
-> reusable if DSS features are same across two SoCs and only difference 
-> being the pixel clock.
+  fd4fadf0da98 ("selftests: ptrace: add set_syscall_info to .gitignore")
 
-Sure.
+This is commit
 
-> 
->>
->> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
->> ---
->>   drivers/gpu/drm/tidss/tidss_dispc.c | 77 +++++++++++------------------
->>   drivers/gpu/drm/tidss/tidss_dispc.h |  1 -
->>   drivers/gpu/drm/tidss/tidss_drv.h   |  2 +
->>   3 files changed, 31 insertions(+), 49 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/tidss/tidss_dispc.c 
->> b/drivers/gpu/drm/tidss/tidss_dispc.c
->> index 3f6cff2ab1b2..fb59a6a0f86a 100644
->> --- a/drivers/gpu/drm/tidss/tidss_dispc.c
->> +++ b/drivers/gpu/drm/tidss/tidss_dispc.c
->> @@ -58,10 +58,6 @@ static const u16 
->> tidss_k2g_common_regs[DISPC_COMMON_REG_TABLE_LEN] = {
->>   const struct dispc_features dispc_k2g_feats = {
->>       .min_pclk_khz = 4375,
->> -    .max_pclk_khz = {
->> -        [DISPC_VP_DPI] = 150000,
->> -    },
->> -
->>       /*
->>        * XXX According TRM the RGB input buffer width up to 2560 should
->>        *     work on 3 taps, but in practice it only works up to 1280.
->> @@ -144,11 +140,6 @@ static const u16 
->> tidss_am65x_common_regs[DISPC_COMMON_REG_TABLE_LEN] = {
->>   };
->>   const struct dispc_features dispc_am65x_feats = {
->> -    .max_pclk_khz = {
->> -        [DISPC_VP_DPI] = 165000,
->> -        [DISPC_VP_OLDI_AM65X] = 165000,
->> -    },
->> -
->>       .scaling = {
->>           .in_width_max_5tap_rgb = 1280,
->>           .in_width_max_3tap_rgb = 2560,
->> @@ -244,11 +235,6 @@ static const u16 
->> tidss_j721e_common_regs[DISPC_COMMON_REG_TABLE_LEN] = {
->>   };
->>   const struct dispc_features dispc_j721e_feats = {
->> -    .max_pclk_khz = {
->> -        [DISPC_VP_DPI] = 170000,
->> -        [DISPC_VP_INTERNAL] = 600000,
->> -    },
->> -
->>       .scaling = {
->>           .in_width_max_5tap_rgb = 2048,
->>           .in_width_max_3tap_rgb = 4096,
->> @@ -315,11 +301,6 @@ const struct dispc_features dispc_j721e_feats = {
->>   };
->>   const struct dispc_features dispc_am625_feats = {
->> -    .max_pclk_khz = {
->> -        [DISPC_VP_DPI] = 165000,
->> -        [DISPC_VP_INTERNAL] = 170000,
->> -    },
->> -
->>       .scaling = {
->>           .in_width_max_5tap_rgb = 1280,
->>           .in_width_max_3tap_rgb = 2560,
->> @@ -376,15 +357,6 @@ const struct dispc_features dispc_am625_feats = {
->>   };
->>   const struct dispc_features dispc_am62a7_feats = {
->> -    /*
->> -     * if the code reaches dispc_mode_valid with VP1,
->> -     * it should return MODE_BAD.
->> -     */
->> -    .max_pclk_khz = {
->> -        [DISPC_VP_TIED_OFF] = 0,
->> -        [DISPC_VP_DPI] = 165000,
->> -    },
->> -
->>       .scaling = {
->>           .in_width_max_5tap_rgb = 1280,
->>           .in_width_max_3tap_rgb = 2560,
->> @@ -441,10 +413,6 @@ const struct dispc_features dispc_am62a7_feats = {
->>   };
->>   const struct dispc_features dispc_am62l_feats = {
->> -    .max_pclk_khz = {
->> -        [DISPC_VP_DPI] = 165000,
->> -    },
->> -
->>       .subrev = DISPC_AM62L,
->>       .common = "common",
->> @@ -1347,25 +1315,49 @@ static void dispc_vp_set_default_color(struct 
->> dispc_device *dispc,
->>               DISPC_OVR_DEFAULT_COLOR2, (v >> 32) & 0xffff);
->>   }
->> +/*
->> + * Calculate the percentage difference between the requested pixel 
->> clock rate
->> + * and the effective rate resulting from calculating the clock 
->> divider value.
->> + */
->> +unsigned int dispc_pclk_diff(unsigned long rate, unsigned long 
->> real_rate)
->> +{
->> +    int r = rate / 100, rr = real_rate / 100;
->> +
->> +    return (unsigned int)(abs(((rr - r) * 100) / r));
->> +}
->> +
->> +static int check_pixel_clock(struct dispc_device *dispc,
->> +                 u32 hw_videoport, unsigned long clock)
->> +{
->> +    if (clock > dispc->tidss->curr_max_pclk[hw_videoport] &&
->> +        !dispc->tidss->is_oldi_vp[hw_videoport]) {
->> +        unsigned long round_clock = 
->> clk_round_rate(dispc->vp_clk[hw_videoport], clock);
->> +
->> +        if (dispc_pclk_diff(clock, round_clock) > 5)
->> +            return -EINVAL;
->> +
->> +        dispc->tidss->curr_max_pclk[hw_videoport] = round_clock;
->> +    }
->> +
->> +    return 0;
->> +}
->> +
->>   enum drm_mode_status dispc_vp_mode_valid(struct dispc_device *dispc,
->>                        u32 hw_videoport,
->>                        const struct drm_display_mode *mode)
->>   {
->>       u32 hsw, hfp, hbp, vsw, vfp, vbp;
->>       enum dispc_vp_bus_type bus_type;
->> -    int max_pclk;
->>       bus_type = dispc->feat->vp_bus_type[hw_videoport];
->> -    max_pclk = dispc->feat->max_pclk_khz[bus_type];
->> -
->> -    if (WARN_ON(max_pclk == 0))
->> +    if (WARN_ON(bus_type == DISPC_VP_TIED_OFF))
->>           return MODE_BAD;
->>       if (mode->clock < dispc->feat->min_pclk_khz)
->>           return MODE_CLOCK_LOW;
->> -    if (mode->clock > max_pclk)
->> +    if (check_pixel_clock(dispc, hw_videoport, mode->clock * 1000))
->>           return MODE_CLOCK_HIGH;
->>       if (mode->hdisplay > 4096)
->> @@ -1437,17 +1429,6 @@ void dispc_vp_disable_clk(struct dispc_device 
->> *dispc, u32 hw_videoport)
->>       clk_disable_unprepare(dispc->vp_clk[hw_videoport]);
->>   }
->> -/*
->> - * Calculate the percentage difference between the requested pixel 
->> clock rate
->> - * and the effective rate resulting from calculating the clock 
->> divider value.
->> - */
->> -unsigned int dispc_pclk_diff(unsigned long rate, unsigned long 
->> real_rate)
->> -{
->> -    int r = rate / 100, rr = real_rate / 100;
->> -
->> -    return (unsigned int)(abs(((rr - r) * 100) / r));
->> -}
->> -
->>   int dispc_vp_set_clk_rate(struct dispc_device *dispc, u32 hw_videoport,
->>                 unsigned long rate)
->>   {
->> diff --git a/drivers/gpu/drm/tidss/tidss_dispc.h 
->> b/drivers/gpu/drm/tidss/tidss_dispc.h
->> index 60c1b400eb89..fbfe6e304ac8 100644
->> --- a/drivers/gpu/drm/tidss/tidss_dispc.h
->> +++ b/drivers/gpu/drm/tidss/tidss_dispc.h
->> @@ -78,7 +78,6 @@ enum dispc_dss_subrevision {
->>   struct dispc_features {
->>       int min_pclk_khz;
->> -    int max_pclk_khz[DISPC_VP_MAX_BUS_TYPE];
->>       struct dispc_features_scaling scaling;
->> diff --git a/drivers/gpu/drm/tidss/tidss_drv.h 
->> b/drivers/gpu/drm/tidss/tidss_drv.h
->> index 82beaaceadb3..e89c38a386f7 100644
->> --- a/drivers/gpu/drm/tidss/tidss_drv.h
->> +++ b/drivers/gpu/drm/tidss/tidss_drv.h
->> @@ -25,6 +25,8 @@ struct tidss_device {
->>       const struct dispc_features *feat;
->>       struct dispc_device *dispc;
->>       bool is_oldi_vp[TIDSS_MAX_PORTS];
->> +    /* stores max supported pixel clock requested during checking 
->> modes */
-> 
-> Stores highest pixel clock value found to be valid while checking 
-> supported modes for connected display
+  1d8c98f3b408 ("selftests: ptrace: add set_syscall_info to .gitignore")
 
-Will change in v4.
+in the mm-nonmm-unstable tree.
 
-Thanks,
-Jayesh
+--=20
+Cheers,
+Stephen Rothwell
 
-> 
-> With suggested changes,
-> Reviewed-by: Devarsh Thakkar <devarsht@ti.com>
-> 
-> Regards
-> Devarsh
-> 
->> +    unsigned long curr_max_pclk[TIDSS_MAX_PORTS];
->>       unsigned int num_crtcs;
+--Sig_/aDepFjW6iKDfG28yKNUQAma
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhk02YACgkQAVBC80lX
+0Gycvgf/RQB3xwowT9piwkEbNhDvv3mtTYBUgtYXLA0zfZjfaqX4PV0gbjEWxisA
+auEbpE24j3r3D+npdP/RnzCuujQ7xwPCKG6FuEOMgWy3wIMgxQ+e4SoOYmOYXqST
+4UlHZJ2KTWtUFbaFPqjoqcUl8Ho2HNJAzH6dxr6eRMGXEp9yoAEvTmbIAw6e+40R
+bo5+KkR56bvWQARBK0qRCa/1boeptmRKU/6um3M3kMaaVNb8/beURaQoix59D6al
+OLYP3FfpvVkmDItJ5UtOZSagdA15ytysdQkpxCNcAFmsMBfcPFqKe2mf0BSx7uZA
+Y+AnuaFagifoB06Tciqnp6kKDhMdMg==
+=DGPV
+-----END PGP SIGNATURE-----
+
+--Sig_/aDepFjW6iKDfG28yKNUQAma--
