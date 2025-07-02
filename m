@@ -1,132 +1,126 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F037028983B
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:28:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6030F2F5326;
+	Wed,  2 Jul 2025 14:28:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751466494; cv=none; b=XaBV5ov3+ywqrQcsKTUUeX+U/VD+97czp1mEBrr6QzmiiM0wKDndvxEvpIg3hoNqI9TORuyPaOeye08rqBrw2QKuXurB8pxrZ/i4g/WKN3xLGoBUHzeFsBQSo/XCH+Gaun+G7Ha9v4H/3gChyFDkqcw4eHAeOv7OHyvGO+k3yx4=
+	t=1751466503; cv=none; b=WYQJTcdNzF2By0pS1WrTrZxR7GBC32JW+HsLKyzNpDfLS2EYNIOPHpDQFOakPHeUQWYE+JjAG0zGLbckmF3orFbSo/RJl3L/b9j1vU6wU1i9oB+yeRrGaBsZG4LI40fJmdVEhw6mhTGlTZSpVjYf03/Ote1RwUVtkF5LPV8ZSWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751466494; c=relaxed/simple;
-	bh=3BZ0EcZ9iIT2Npi/5+c9zN+CG0dtM3domuiUCe2i5HU=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=K7KSpwKpBlNk8UOQXGFKVXqKOZXCi8UB5Nj0m9IwixVtfscvrSaiiS3QlnBbZu85e7NlfaP8PGph9oFXRbgsnDJOp9OXV5+Dxw9CoqA3e9QYb1KnWqlogkIZH/gdfdI61U8ycNpA6jEaU3iJlupVlr90fwjpejf9Z0nzCc8dMg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fwnDSJfT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Q6skPXuV; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fwnDSJfT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Q6skPXuV; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fwnDSJfT";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Q6skPXuV";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fwnDSJfT";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Q6skPXuV"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 39F5E1F38D;
-	Wed,  2 Jul 2025 14:28:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751466491; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WKn7nfpLbQdqLa3Gs0ktQFA3G6rpEXBOvOOQ2Vt1jAA=;
-	b=fwnDSJfTUmwZLoHz+HjVYImTpYgkINHONMux7weGAK9eTGxFEF8vWxu68aLLsGrzGOjxA+
-	3XD9NpcAq2sLyOEE9CMTbCTJN+o97A/vubuGcxiwSCVAf8XcdXPNnbW5MuXApLXF0B335q
-	eeVpBdBKGid2+HivQC/XGpp3YGhjnoM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751466491;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WKn7nfpLbQdqLa3Gs0ktQFA3G6rpEXBOvOOQ2Vt1jAA=;
-	b=Q6skPXuVu/qhu1XZQdhAz6pImBHp2Ymjc4l/a5NSUPi9zMLAYMCTMIM74Jn+3lcNBzfQDn
-	3ok95wZx+XM71KAQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751466491; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WKn7nfpLbQdqLa3Gs0ktQFA3G6rpEXBOvOOQ2Vt1jAA=;
-	b=fwnDSJfTUmwZLoHz+HjVYImTpYgkINHONMux7weGAK9eTGxFEF8vWxu68aLLsGrzGOjxA+
-	3XD9NpcAq2sLyOEE9CMTbCTJN+o97A/vubuGcxiwSCVAf8XcdXPNnbW5MuXApLXF0B335q
-	eeVpBdBKGid2+HivQC/XGpp3YGhjnoM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751466491;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WKn7nfpLbQdqLa3Gs0ktQFA3G6rpEXBOvOOQ2Vt1jAA=;
-	b=Q6skPXuVu/qhu1XZQdhAz6pImBHp2Ymjc4l/a5NSUPi9zMLAYMCTMIM74Jn+3lcNBzfQDn
-	3ok95wZx+XM71KAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0CC1913A54;
-	Wed,  2 Jul 2025 14:28:11 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id HGD6AftBZWiBRQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Wed, 02 Jul 2025 14:28:11 +0000
-Date: Wed, 02 Jul 2025 16:28:10 +0200
-Message-ID: <87ms9mvf9h.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Ivan Orlov <ivan.orlov0322@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: pcmtest: Replace deprecated strcpy() with strscpy()
-In-Reply-To: <20250701120525.185831-2-thorsten.blum@linux.dev>
-References: <20250701120525.185831-2-thorsten.blum@linux.dev>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	s=arc-20240116; t=1751466503; c=relaxed/simple;
+	bh=NsFJdJ2JaJtHywUYIehF4YOfb8c7yEr59Tfk0oV3x1I=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jPh33B5ad36F50cDsQ/J3KXH2W4mr6AtaGBCJUSZffVNLX6bpyAhbKaA4fhd1OT/5FCMAsOfnqAKUO5zVGRUrvNv7TWdVgp7xaQJTj4igNkuL9EKAMoisiMzmNgz7IZN45/BeAMSaABfsb4RnEwPpw/lrkm+KQMm9boK5bQTn0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bXMfy4N74z6M4tS;
+	Wed,  2 Jul 2025 22:27:22 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 53C1F1402EA;
+	Wed,  2 Jul 2025 22:28:18 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 2 Jul
+ 2025 16:28:17 +0200
+Date: Wed, 2 Jul 2025 15:28:16 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Sascha Bischoff <Sascha.Bischoff@arm.com>
+CC: "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "kvmarm@lists.linux.dev"
+	<kvmarm@lists.linux.dev>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	nd <nd@arm.com>, "maz@kernel.org" <maz@kernel.org>, "oliver.upton@linux.dev"
+	<oliver.upton@linux.dev>, Joey Gouly <Joey.Gouly@arm.com>, Suzuki Poulose
+	<Suzuki.Poulose@arm.com>, "yuzenghui@huawei.com" <yuzenghui@huawei.com>,
+	"will@kernel.org" <will@kernel.org>, "tglx@linutronix.de"
+	<tglx@linutronix.de>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	Timothy Hayes <Timothy.Hayes@arm.com>
+Subject: Re: [PATCH v2 1/5] irqchip/gic-v5: Skip deactivate for forwarded
+ PPI interrupts
+Message-ID: <20250702152816.000010da@huawei.com>
+In-Reply-To: <20250627100847.1022515-2-sascha.bischoff@arm.com>
+References: <20250627100847.1022515-1-sascha.bischoff@arm.com>
+	<20250627100847.1022515-2-sascha.bischoff@arm.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spamd-Result: default: False [-1.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[gmail.com,perex.cz,suse.com,vger.kernel.org];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,imap1.dmz-prg2.suse.org:helo,linux.dev:email]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -1.80
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, 01 Jul 2025 14:05:25 +0200,
-Thorsten Blum wrote:
+On Fri, 27 Jun 2025 10:09:01 +0000
+Sascha Bischoff <Sascha.Bischoff@arm.com> wrote:
+
+> If a PPI interrupt is forwarded to a guest, skip the deactivate and
+> only EOI. Rely on the guest deactivating both the virtual and physical
+> interrupts (due to ICH_LRx_EL2.HW being set) later on as part of
+> handling the injected interrupt. This mimics the behaviour seen on
+> native GICv3.
 > 
-> strcpy() is deprecated; use strscpy() instead.
+> This is part of adding support for the GICv3 compatibility mode on a
+> GICv5 host.
 > 
-> No functional changes intended.
+> Reviewed-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
 > 
-> Link: https://github.com/KSPP/linux/issues/88
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 
-Applied now.  Thanks.
+Trivial but no gaps in tag blocks.  So no blank line here.
+Some scripting will moan about this and I think that will hit you if
+this goes into linux next.
 
+> Co-authored-by: Timothy Hayes <timothy.hayes@arm.com>
+> Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
+> Signed-off-by: Sascha Bischoff <sascha.bischoff@arm.com>
+> ---
+>  drivers/irqchip/irq-gic-v5.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
+> index 7a11521eeeca..6b42c4af5c79 100644
+> --- a/drivers/irqchip/irq-gic-v5.c
+> +++ b/drivers/irqchip/irq-gic-v5.c
+> @@ -213,6 +213,12 @@ static void gicv5_hwirq_eoi(u32 hwirq_id, u8 hwirq_type)
+>  
+>  static void gicv5_ppi_irq_eoi(struct irq_data *d)
+>  {
+> +	/* Skip deactivate for forwarded PPI interrupts */
+> +	if (irqd_is_forwarded_to_vcpu(d)) {
+> +		gic_insn(0, CDEOI);
+> +		return;
+> +	}
+> +
+>  	gicv5_hwirq_eoi(d->hwirq, GICV5_HWIRQ_TYPE_PPI);
+>  }
+>  
+> @@ -494,6 +500,16 @@ static bool gicv5_ppi_irq_is_level(irq_hw_number_t hwirq)
+>  	return !!(read_ppi_sysreg_s(hwirq, PPI_HM) & bit);
+>  }
+>  
+> +static int gicv5_ppi_irq_set_vcpu_affinity(struct irq_data *d, void *vcpu)
+> +{
+> +	if (vcpu)
+> +		irqd_set_forwarded_to_vcpu(d);
+> +	else
+> +		irqd_clr_forwarded_to_vcpu(d);
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct irq_chip gicv5_ppi_irq_chip = {
+>  	.name			= "GICv5-PPI",
+>  	.irq_mask		= gicv5_ppi_irq_mask,
+> @@ -501,6 +517,7 @@ static const struct irq_chip gicv5_ppi_irq_chip = {
+>  	.irq_eoi		= gicv5_ppi_irq_eoi,
+>  	.irq_get_irqchip_state	= gicv5_ppi_irq_get_irqchip_state,
+>  	.irq_set_irqchip_state	= gicv5_ppi_irq_set_irqchip_state,
+> +	.irq_set_vcpu_affinity	= gicv5_ppi_irq_set_vcpu_affinity,
+>  	.flags			= IRQCHIP_SKIP_SET_WAKE	  |
+>  				  IRQCHIP_MASK_ON_SUSPEND,
+>  };
 
-Takashi
