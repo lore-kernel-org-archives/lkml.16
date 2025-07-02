@@ -1,100 +1,96 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D5B52F50AA;
-	Wed,  2 Jul 2025 17:03:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 645562D374D;
+	Wed,  2 Jul 2025 17:03:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751475783; cv=none; b=iSAJHUokdYCXp6MagCyk+VE+lSuu/Y+C1mj6mFP2SLrJhDu8EUsWTeGzzm9UclufgvRD/XUwxAFN8syoJ0JtpQ5/WARIWwnMxirwt3/NWUEq3ahelKvrOT8URuQSGBsOSjE2RbfeCIj/MqG9AakRT/qHWzD2+ONZ8+VJ75tLhPU=
+	t=1751475819; cv=none; b=noZNhBaSc/BUqIAmS0N1t4c1XjzPZiZ0qw3jT/+pR0BmcbiASZOaDAHbKPEMi3e5/o8GxWGr3v4/ZbQ6OH9QQ8pxC/m2m/EXHeQFOHgF2u+VrPBNIKr0YzO7jo0uUbG6b6+WELCB+7s/j8lbIDAkpmDhy3ivMufk+Tz/kKv6Ptk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751475783; c=relaxed/simple;
-	bh=aNb8Jo05IlhvYWus7qI8e6hB83PPs0BVSd2VAGTFDnw=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=OP0A0fyK/rg9JyXy6obAofGybGbOWc83MtV43hSXASC+SNwR/J/ixqzJ3rZIfyDot3Yn3bJEKNRw8iJ9bZYTapLGVEA0BHT5eTfRQEpmwuv189NHuIRTlXiC7UDTNeQPFjySWPuO0Lqa+64XBRNpfYu8EnxCHDv1/vMhLU7ML44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=I8yStWsb; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1751475819; c=relaxed/simple;
+	bh=FfAbMiOIExUx33ujBp24OXlZu0uA7H5HkaSI88+JvWs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rMCmII4iSBUdtqdi4/29VFLvtrUvp0HtjutMjoABJ8M/hGuIX69prBIw+zwiRCGvQcRWwEhUe0RyHqaoG3hQKzlzwB5icLbc+wYD5WTA5MRs0YMNvrrktTFprLJ3aFA3VLlM7zZ/lKAHB4nJm0tLh/Aqz8g6E1HOhcC/WuW+U9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZqxzavR0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="I8yStWsb"
-Received: from [100.65.201.133] (unknown [20.236.11.69])
-	by linux.microsoft.com (Postfix) with ESMTPSA id E8FC3201B1A1;
-	Wed,  2 Jul 2025 10:03:01 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E8FC3201B1A1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1751475782;
-	bh=rBNBX0hmwvIxL4Bz04/uy+wy+svBh5lvviAOi9RO3yI=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=I8yStWsb/6/3CLjF9Y0rQzHLlSYBtNyEJVJ1anM7YX8mNe2pUajWUSAqsdicMSe1W
-	 KN7bdXa63Fo5Gvu/FZj9c2f0rtzPH0ljFk8X+wPPo+4yIKLfQuzd5EWDan3yYfD2LP
-	 fC1wqYIuLwvaNSVbs3DvSMFV1UsM3sy1Cr9HiHLQ=
-Message-ID: <4a176d9f-3a05-4eb4-b64d-b6b7f5ed2413@linux.microsoft.com>
-Date: Wed, 2 Jul 2025 10:03:01 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZqxzavR0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5463C4CEE7;
+	Wed,  2 Jul 2025 17:03:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751475818;
+	bh=FfAbMiOIExUx33ujBp24OXlZu0uA7H5HkaSI88+JvWs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZqxzavR0TQr4KX66l+sjLWQrtImaTboOqXtsug2qI6s4YVO8z+ySRFZWH65QYshsr
+	 iLUDf5HyPyzzIzLJJ7Sj5iX3NaZA8q1StN0m+asv0mb8KWQFjiPPFjtnV4yj2I8how
+	 1KMss9x5OXThZTsY19N7gac3oGCCBZuXqmMbGpOg/ZRL14bFL9hPP/1d/qwKju5Etb
+	 tOZZ6MnfYFBGwXadvWrF0MmVWeViB9j36p+yBqaFoijIDRsNzFIzZbhWz30GeCwjNl
+	 IcN28fU986Pycd4XVQfxSlgzI1MTXVkm4GRcBMQkeu4VbxFwAgkmvrEiFLito2sh3T
+	 5izHG2ARVqQMQ==
+Date: Wed, 2 Jul 2025 10:03:35 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: Ian Rogers <irogers@google.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	agordeev@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com
+Subject: Re: [Ping][PATCH] perf list: Add IBM z17 event descriptions
+Message-ID: <aGVmZ_VQiFfYCSaS@google.com>
+References: <20250623132731.899525-1-tmricht@linux.ibm.com>
+ <CAP-5=fV_hXzq0A-91NakejcQGnvPp+uJGGe=vccwM+47JVCmtA@mail.gmail.com>
+ <ad905a68-a89b-458d-8a8b-2081a6656b91@linux.ibm.com>
+ <283e109b-9eb5-4e7d-b7df-215f54496503@linux.ibm.com>
+ <CAP-5=fVcNqE9txXQgO+EUV6xz3Mvsqin9FP8FNUztPp35LW2Ng@mail.gmail.com>
+ <a63ecea7-8ab0-4691-897c-09f6efa82068@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/2] PCI: Reduce FLR delay to 10ms for MSFT devices
-From: Graham Whyte <grwhyte@linux.microsoft.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>, Niklas Cassel <cassel@kernel.org>,
- linux-pci@vger.kernel.org, shyamsaini@linux.microsoft.com, code@tyhicks.com,
- Okaya@kernel.org, bhelgaas@google.com, linux-kernel@vger.kernel.org
-References: <20250616210530.GA1106466@bhelgaas>
- <2dfbbd15-c03a-45b6-99a6-fa36772676bc@linux.microsoft.com>
-Content-Language: en-US
-In-Reply-To: <2dfbbd15-c03a-45b6-99a6-fa36772676bc@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a63ecea7-8ab0-4691-897c-09f6efa82068@linux.ibm.com>
 
+Hello,
 
+On Wed, Jul 02, 2025 at 10:57:58AM +0200, Thomas Richter wrote:
+> On 6/27/25 18:55, Ian Rogers wrote:
+> > On Fri, Jun 27, 2025 at 1:13 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
+> >>
+> >> On 6/24/25 08:35, Thomas Richter wrote:
+> >>
+> >> Gently Ping
+> >>
+> >> Ian, I have responded to your comments some days ago.
+> > 
+> > Thanks Thomas, minor nit in your explanation the events must exist as
+> > they are in json, but the json events are only exposed if the PMU is
+> > present, so the has_event is more of a has_pmu test. Maybe we should
+> > add a function like this to the metrics to make this kind of case
+> > clearer. Maybe `perf list` should test the events of a metric and hide
+> > metrics when the events aren't available to avoid the have_event
+> > logic. I'm a bit uncomfortable with that as the events may not be
+> > available because of permission issues, but it'd still be useful to
+> > know the metrics are around. Anyway I'm digressing.
+> > 
+> > Reviewed-by: Ian Rogers <irogers@google.com>
+> > 
+> > Thanks,
+> > Ian
+> > 
+> 
+> Arnaldo, Namhyung,
+> 
+> with Ian Rogers Reviewed-by: approval, it is possible to
+> accept this patch soon, so it will land in the next merge-window.
+> 
+> That will give me an commit-id which I need for my addon work.
+> 
+> Thanks a lot for your help.
 
-On 6/18/2025 9:42 AM, Graham Whyte wrote:
-> 
-> 
-> On 6/16/2025 2:05 PM, Bjorn Helgaas wrote:
->> On Mon, Jun 16, 2025 at 12:02:41PM -0700, Graham Whyte wrote:
->>> On 6/13/2025 8:33 AM, Bjorn Helgaas wrote:
->>>> On Thu, Jun 12, 2025 at 09:41:45AM -0700, Graham Whyte wrote:
->>>>> On 6/11/2025 11:31 PM, Christoph Hellwig wrote:
->>>>>> On Wed, Jun 11, 2025 at 01:08:21PM -0700, Graham Whyte wrote:
->>>>>>> We can ask our HW engineers to implement function readiness but we need
->>>>>>> to be able to support exiting products, hence why posting it as a quirk.
->>>>>>
->>>>>> Your report sounds like it works perfectly fine, it's just that you
->>>>>> want to reduce the delay.  For that you'll need to stick to the standard
->>>>>> methods instead of adding quirks, which are for buggy hardware that does
->>>>>> not otherwise work.
->>>>>
->>>>> Bjorn, what would you recommend as next steps here?
->>>>
->>>> This is a tough call and I don't pretend to have an obvious answer.  I
->>>> understand the desire to improve performance.  On the other hand, PCI
->>>> has been successful over the long term because devices adhere to
->>>> standardized ways of doing things, which makes generic software
->>>> possible.  Quirks degrade that story, of course, especially when there
->>>> is an existing standardized solution that isn't being used.  I'm not
->>>> at all happy about vendors that decide against the standard solution
->>>> and then ask OS folks to do extra work to compensate.
->>>
->>> Should someone want to implement readiness time reporting down the road,
->>> they'll need to do the same work as patch 1 in this series (making the
->>> flr delay a configurable parameter).
->>
->> Sure.  That's a trivial change.  The problem is the quirk itself.
->>
->> The Readiness Time Reporting Extended Capability is read-only with no
->> control bits in it so it requires no actual logic in the device.
->> Maybe you can just implement that capability with a firmware change on
->> the device and add the corresponding Linux support for it.
-> 
-> Hi Bjorn,
-> 
-> We checked with our HW folks, it's not possible for us to update the pci
-> register components with this particular card, they are read only. What
-> are your thoughts on the sysfs approach mentioned in the previous email?
-> 
-> Thanks,
-> Graham
+Sorry about the delay, I'll process this soon.
 
-Hi Bjorn, just wanted to follow up on this here.
+Thanks,
+Namhyung
+
