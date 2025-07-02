@@ -1,121 +1,117 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC042F7CF5;
-	Wed,  2 Jul 2025 19:21:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528851A3168
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 19:22:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751484082; cv=none; b=DDMDTYKDC6miaFo4xHv8NxfJ+Pjz+MYO/JKC+u3Bd8DlM0OCS0Xe0n4h4/yUrWxWg8CdV6Hvtq3NX7Z7n32d4xtSdYp4OyJ/I0p1WTybWH7glQ9DT2rH413ZYqGnN9aPnXsvTghe8zN2gc0D9HBa1wFqKvztXQyaf741+2M+s74=
+	t=1751484168; cv=none; b=kO68ACf48Dh2zxHm3F39DQ2dDhISu50ercmWrxC/g/M9gM7u08oy/xOfejaxBcHW4EGodOgub6LcaufV0h+Szac7OolyU2QZ/s+QFO/1lwMR53P7iVsBzQ1//bWC+HJWB/HAlt7DWUIUw6vyA6Xvn1NUpdU+ttxo2ZWT60dNzIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751484082; c=relaxed/simple;
-	bh=dueNBlsJVSAVJ2AlhlfnyDbPope+jpVaZnfUAMmtjv4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mIVBLnKCSyLyroT1ND3xqwXiT2yRcsSdwbcjReTBOsGxMFSVLNMMAFuTT19bVWkn8gZ6sdBKatN8vk9nSszQbA4aCfsH6eeFCk9c0UAa6FWbDYHDsvkvP9uQUgGIBCXh4e3HuJ/JdNODpAoIMqRy4uFjXxmmpBYc8z5xQcfRbtg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 130A51D5FB3;
-	Wed,  2 Jul 2025 19:21:17 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id AD6D06000F;
-	Wed,  2 Jul 2025 19:21:12 +0000 (UTC)
-Date: Wed, 2 Jul 2025 15:21:11 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra
- <peterz@infradead.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
- Masami Hiramatsu <mhiramat@kernel.org>, Josh Poimboeuf
- <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa
- <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner
- <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu Bhagat
- <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
- Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
- Andrew Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>,
- Florian Weimer <fweimer@redhat.com>
-Subject: Re: [PATCH v12 06/14] unwind_user/deferred: Add deferred unwinding
- interface
-Message-ID: <20250702152111.1bec7214@batman.local.home>
-In-Reply-To: <47a43d27-7eac-4f88-a783-afdd3a97bb11@efficios.com>
-References: <20250701005321.942306427@goodmis.org>
-	<20250701005451.571473750@goodmis.org>
-	<20250702163609.GR1613200@noisy.programming.kicks-ass.net>
-	<20250702124216.4668826a@batman.local.home>
-	<CAHk-=wiXjrvif6ZdunRV3OT0YTrY=5Oiw1xU_F1L93iGLGUdhQ@mail.gmail.com>
-	<20250702132605.6c79c1ec@batman.local.home>
-	<20250702134850.254cec76@batman.local.home>
-	<CAHk-=wiU6aox6-QqrUY1AaBq87EsFuFa6q2w40PJkhKMEX213w@mail.gmail.com>
-	<482f6b76-6086-47da-a3cf-d57106bdcb39@efficios.com>
-	<20250702150535.7d2596df@batman.local.home>
-	<47a43d27-7eac-4f88-a783-afdd3a97bb11@efficios.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1751484168; c=relaxed/simple;
+	bh=HZJTmy8iMO10Pr+vq8YahlcUAGD8UjSWaZ2SUQyXxWE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KcElzC7mYNCx8eK1T6/Qv3st/AuFtuFQVmGbPzUPGlTL5cDpNtn+UwGKaVk5UvaouAfI7KyjUbyeu2UZjgO3qnCvHID33icF1nHj/R+o15r/QrJDrHjerPAJLxorzpRQIk0Xk/oFyIhPK5ygMjqsuCDV23KC04Jos/5rxtUKFzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eg5TndSs; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eg5TndSs"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2357c61cda7so1115ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 12:22:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751484165; x=1752088965; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HZJTmy8iMO10Pr+vq8YahlcUAGD8UjSWaZ2SUQyXxWE=;
+        b=eg5TndSsd/8ua+GCAxL4VSws/Xy/v3jrUWwbEI6utsy1J/U3c36JIWEy0N/J8SD+wk
+         bpcZy0iWJrWtqqT4ntpG5RKKzsf4AF6Ba+nhCGZl9LagDOl+82EPMNAuuLSiCq4cmV8A
+         rNSEfh3KE2VmRcx9daMJW9MuVUfgtBeT0DOmTbyksWJv1Ycj4wvVk+PnUjCMnDhe1T55
+         deAboam/+iq35n4D6YJOMqUonDR75ZePL6KF7Y5f62qtOr2F0j12lpcx0EBKqnca2wsp
+         1GrRH4tS1/zOObjhh3zJBo/czHED9Xft2CK5ltyJLhQ3nelIQ0AaSqyNh9X5s/kF2Vd2
+         Bc1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751484165; x=1752088965;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HZJTmy8iMO10Pr+vq8YahlcUAGD8UjSWaZ2SUQyXxWE=;
+        b=OzW+5PIbdtHsAT43kHk9alVe907AmPuaQnTMH/kV0cT6U5/DVE+X1CJ3r9WbyS4tq2
+         gmqpn8t7Yq17snw0PLPC0OM8oNgsmZqbn1QXxb7vAouUhvlTCQd7xkOVk/r85H3nwAI6
+         2xLj+hGPbfaL7C9WqQXsNB9dCZerDx8dyMu4iEO4zD3v1eTYWKISzhsSVNaNjg1Qt5dR
+         FC24XDzjlS/mw/42T7gVxUtPmIkLaJUc4NxN5u9GTEh+xve3eXQU2CaiqpqK5KF2l80t
+         nETzNvkDGUqYU4ktFWunJCfFv2LJ5W/25+xozqurScF6Nyz8gKcR/WxN93yO7oDYC8z3
+         /7UQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUh7xFCJuC/WHE6efKoe3UoqkCYxPLkTptOTABk7TMStMmbLZBQRljylYTpQ9XI9xN8QzMWJhF3+y6B2Xw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1MzCArCfXCAl52eX/aGXdZ+VXt+aGCmd9k75258RemVWy5kHo
+	C+7BFyubLohpc59eYyPQtIcM1bVjvZi2eCHkdn2EXGgx2NuZMdvNsNzbc5kPHSduYkdd8X036cm
+	pO+ChrkLCce/3yel7PpZDLrIhVTUhezT7FTpVuYZR
+X-Gm-Gg: ASbGncsrEdA8i5+F2ogqlQse7WNqCUqBBtT/pTq9V0SdNH5nyYpWuOuX9yKEgei6nk/
+	fdX/fNibcYyNdanaG1csOpZi2rinrsDPKqw9kj+FY7v0+e68bTbf8Tro8GW52cUKjVj28BtTfGA
+	Av5aJzCPTuTzzlWqc0hPooov3rhTHHA9EOsHA6GWe3rHKtZ26STUP+Z/+subE5NS9iQKHZW165i
+	U1WQQSwww==
+X-Google-Smtp-Source: AGHT+IHQLSfiroyPrvtjIH75/x04Z0wW7cXXEfFpIKcEWvbcst14grCY9C1M69L5O8b1+9jLgicKYNu7hMebt3h6sbs=
+X-Received: by 2002:a17:903:15cc:b0:231:d0ef:e8fb with SMTP id
+ d9443c01a7336-23c79ada75emr506775ad.10.1751484165285; Wed, 02 Jul 2025
+ 12:22:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: ymt99nrw7w58osra5c1t68kcgjbx66gf
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: AD6D06000F
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+MPIlH+ZKwpz+NY4Y3E+2OcjN0mP5AlDI=
-X-HE-Tag: 1751484072-743416
-X-HE-Meta: U2FsdGVkX18C67Kx2uvUWXB1myunFSzqcXROa4Mz0sEEwtEUaH9GNNx/hF/sHro7iEOVSD7UV6dcPgmIJr2a66ei1TTkEldQiU5A+QZRZ0f85zfqac+USamVcYteesVH+K8xbPvMOmc0oXj1k2FdoKpW/0K2+Kleq4aRitZ9SJ1LMwCsN0qj8jeVzshPiI1H4huV5kSegQyVJKio34fE44Fk9Zl0eOOi5V6EH0O6LxyYA2w1DsKxlobc1F/QKF/w7MG3xUQuWarOeFulgNfIkz+9VmKdMyWKl/Dak4VN9SGoSk9cddRqrthXEZWp1YfXKyyGVuoj4VSrtZVHFwKqGgPwHAFwfaL+Xh8F3V1xNmZSKZGdbPkOgbh2OiZSXBof
+References: <20250630080603.36171-1-jiahao.kernel@gmail.com>
+ <CAJj2-QGHLRqY4mPyAPg2eT+y+4yNfNb__nON5ndkY8WG0UmKVQ@mail.gmail.com> <f50f8ddd-2ce8-47dc-657e-7b0edf80a508@gmail.com>
+In-Reply-To: <f50f8ddd-2ce8-47dc-657e-7b0edf80a508@gmail.com>
+From: Yuanchu Xie <yuanchu@google.com>
+Date: Wed, 2 Jul 2025 12:22:28 -0700
+X-Gm-Features: Ac12FXy1ZNhvLawpJ6OqYRFDRVM6dlFtYPyl7ZfzYq-VH3wH2jHIMoCeLMX6ok0
+Message-ID: <CAJj2-QGgHSdzq5DqSi5M+XGeKWRD8aeH_C-OptyCDeV9CEHkBA@mail.gmail.com>
+Subject: Re: [PATCH] mm/mglru: Stop try_to_inc_min_seq() if the oldest
+ generation LRU lists are not empty
+To: Hao Jia <jiahao.kernel@gmail.com>
+Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, yuzhao@google.com, 
+	kinseyho@google.com, david@redhat.com, mhocko@kernel.org, 
+	zhengqi.arch@bytedance.com, shakeel.butt@linux.dev, 
+	lorenzo.stoakes@oracle.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	Hao Jia <jiahao1@lixiang.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2 Jul 2025 15:12:45 -0400
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+On Tue, Jul 1, 2025 at 10:45=E2=80=AFPM Hao Jia <jiahao.kernel@gmail.com> w=
+rote:
+>
+> Perhaps another way to explain it is clearer.
+>
+> It is known that min_seq[type] has not increased, that is, min_seq[type]
+> is equal to lrugen->min_seq[type], then the following:
+>
+> case 1: min_seq[type] has not been reassigned and changed before
+> judgment min_seq[type] <=3D lrugen->min_seq[type].
+>
+> Then the subsequent min_seq[type] <=3D lrugen->min_seq[type] judgment wil=
+l
+> always be true.
+>
+>
+> case 2: min_seq[type] is reassigned to seq, before judgment
+> min_seq[type] <=3D lrugen->min_seq[type].
+>
+> Then at least the condition of min_seq[type] > seq must be met before
+> min_seq[type] will be reassigned to seq.
+> That is to say, before the reassignment, lrugen->min_seq[type] > seq is
+> met, and then min_seq[type] =3D seq.
+>
+> Then the following min_seq[type]=EF=BC=88seq=EF=BC=89 <=3D lrugen->min_se=
+q[type] judgment
+> is always true.
 
-> > But you are missing one more thing that the trace can use, and that's
-> > the time sequence. As soon as the same thread has a new id you can
-> > assume all the older user space traces are not applicable for any new
-> > events for that thread, or any other thread with the same thread ID.  
-> 
-> In order for the scheme you describe to work, you need:
-> 
-> - instrumentation of task lifetime (exit/fork+clone),
-> - be sure that the events related to that instrumentation were not
->    dropped.
-> 
-> I'm not sure about ftrace, but in LTTng enabling instrumentation of
-> task lifetime is entirely up to the user.
+This sounds good to me. Can you change the code to use one bool to
+detect any increments in `min_seq[type]`? You don't need `int
+seq_inc_flags[ANON_AND_FILE] =3D {0};`
 
-Has nothing to do with task lifetime. If you see a deferred request
-with id of 1 from task 8888, and then later you see either a deferred
-request or a stack trace with an id other than 1 for task 8888, you can
-then say all events before now are no longer eligible for new deferred
-stack traces.
+Also update the commit message with what you have here. IMO much more clear=
+.
 
-> 
-> And even if it's enabled, events can be discarded (e.g. buffer full).
-
-The only case is if you see a deferred request with id 1 for task 8888,
-then you start dropping all events and that task 8888 exits and a new
-one appears with task id 8888 where it too has a deferred request with
-id 1 then you start picking up events again and see a deferred stack
-trace for the new task 8888 where it's id is 1, you lose.
-
-But other than that exact scenario, it should not get confused.
-
-> 
-> > 
-> > Thus the only issue that can truly be a problem is if you have missed
-> > events where thread id wraps around. I guess that could be possible if
-> > a long running task finally exits and it's thread id is reused
-> > immediately. Is that a common occurrence?  
-> 
-> You just need a combination of thread ID re-use and either no
-> instrumentation of task lifetime or events discarded to trigger this.
-
-Again, it's seeing a new request with another id for the same task, you
-don't need to worry about it. You don't even need to look at fork and
-exit events.
-
-> Even if it's not so frequent, at large scale and in production, I
-> suspect that this will happen quite often.
-
-Really? As I explained above?
-
--- Steve
+Thanks,
+Yuanchu
