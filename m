@@ -1,135 +1,191 @@
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail187-29.suw11.mandrillapp.com (mail187-29.suw11.mandrillapp.com [198.2.187.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E9D5247297;
-	Wed,  2 Jul 2025 09:47:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A5B223339
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 09:48:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.2.187.29
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751449663; cv=none; b=ZJUu9gprHOKMS5k6jrMHxFiPI/rI8IEmrQXW3xOzE/WU9kU6ws+u3bc4VoO+ydq64TFMB5l0Tn6APzb+2owoN8SVE+bBynEru1a1Jsh63/TqlGbcl7jG2U3g1ABoQnyFtbnKPon7PHKIqOLaGKBRiAbAqQez5gBf8Cy5PNJt9y8=
+	t=1751449730; cv=none; b=Pn9PK3aQTKJ6Q9ymSAfbLl14+GfsChJ/BONUImwUFWlRUbQRLmwMMaCn7jcjHGENL3x8iYAGVsAY1qWAFlZcCz9gUOyLvXd0AWGLR7s/bAl3a8PoPdR/SrpDoyez1vroAuOLquhE381Xjgww93dFVNVTSx5RsOtVPkmAT8ohPsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751449663; c=relaxed/simple;
-	bh=Ouh2tjXOCV5J1xbDYQClFn1faPkd4g72dS9hnpcKiwc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KFBeGQ2O87XNd1SVPY7iQ4lYlGTVKx4jaPiwz1eddJc3D8DC4GIAv7VcYQM+uFTWT4pkgMxJcfl+EkXLwtl+kBjYq+YrSETkL1/LPVIGm1xhsrWFu7fOQ/2omXcfXDlDf7Ny+sU05Kly68QoUXvNHvfrE/VBY7jLdnS/2wdeOsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-87f4c8e9cdcso1520255241.2;
-        Wed, 02 Jul 2025 02:47:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751449660; x=1752054460;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UJLSZzMoHvI3XA3eUYjDZLD323ifNHYwsv3Hd6lOZUk=;
-        b=K4tw+vOGERB5jPntnu3uo+har3n5vaHjHsUPSpL2Pfl9+WJZKsh5KWnclZAZnGhlZ4
-         18Ur3LTdSLko5EojrpqmH20lsYQ7FrAhz1BLGNECRdQZfk/o/A/wBLKdNj6M6Gqyp19e
-         GBZJC6zw4N5q55Ld6kfiOR0bc5R0EfUdBWOz/KxGY0YXmQB+Cf0Yi9EdhILS5u7OChIL
-         8a7m0TupWLGSZmFxE2gCb2RbwC4qJkFs4grrwc9Xr8hDg6/AS7G0cWVBRwrX9thTU0J2
-         NOTvxEpwL6SYDvuBSGPGz9jbZCOqd83ofV8VgrvHAaucpX/BEu2K0/9YaSejh21puuHI
-         cCQg==
-X-Forwarded-Encrypted: i=1; AJvYcCUa3eAOcq10WMeh5cSjK8KbluyKhOotrUdXNVtqwvZrfh2bVU//hOkC2kQt684Z/9el9v6ohdUj@vger.kernel.org, AJvYcCVhB7i9ygtG4Ops5OiKUZR8esu5wA2/CIkIQeAyuHB3WyZBtb7IJ25DktMipHyM/4wd+Umqekxhpxvm@vger.kernel.org, AJvYcCWiZ7REFq+yVIZFveWXdD5Z8DUbmOTtSS3qZ99oYrT8IqvdFCg1CyvSaMNnUTvmLKyCGnO42C6AU12f@vger.kernel.org, AJvYcCWz6sW6J/ANgmlI9yfOK85B1FWpX2+buXm0ZHiUfclLxeFxBGo/Dj5klPzKsMakpfrH+EtQdulLxFxZBgY+@vger.kernel.org, AJvYcCXU7OaFn459Ei3ytaRzbEM0iqwAq9tl/BeImMx6H+YqMZeYr5u6rSbWZ26kQe3WnLDdcelhiziDxdD+J/fMBfaVVQg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZxZ5jOGFWnTE2ifZZKCYIRyr/WcWFpHnh9acTHBs3Tw4zvrHA
-	n9b79hTXfb0izTvSRXGU6QAGLt+8eWTGEkxduIO+zQlssBrYfwjKH5+BJHfEKcHo
-X-Gm-Gg: ASbGncuTzah0PkjykJNIyHlQdkdryqQ+PVHUY98IQAPmzp/I5ftWX3wq+3d3xnp3hYa
-	qk56h3OOVHihMj8KC0Kjnkrzw+kiBM0ctgoTO1zhTrKpiw2JirFXi0qTscxBThelhgJ/ZzWSyzK
-	0HxTitq9CK4otFhpLWwShUqTlZz7ZZM1uZu+uPponj4e+0GwU936Vx2H2hCWuF7SC1yKCMGfR6+
-	0gszWG/jy9e1MDOWuDwPcOP04eDsR5At9otH0dohVKdnCV3Wtru76XcPf/JRqf73zf17ohsVnRm
-	3cRIHiWKR3eRPuWKEBu8j5ONf1dCYSQwnO7izF8TRBwvKJKz0FS4fO2Bv2vxO/joQw8K2M2ut5+
-	5ILcbl7AXZPGVj+hKx42E2dyP
-X-Google-Smtp-Source: AGHT+IFnbx4WhcjjRJhuYKew+vkIZVG5I7u/AhmG8xwPh273vO3UIHNcJCeZ+stYHAYQZdh042SYNg==
-X-Received: by 2002:a05:6102:41ab:b0:4ec:c50c:399f with SMTP id ada2fe7eead31-4f16117a294mr803148137.11.1751449660106;
-        Wed, 02 Jul 2025 02:47:40 -0700 (PDT)
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com. [209.85.217.50])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4ee4c7ec2cfsm1776243137.7.2025.07.02.02.47.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jul 2025 02:47:39 -0700 (PDT)
-Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-4e7fc3309f2so1584627137.2;
-        Wed, 02 Jul 2025 02:47:39 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUG6VowTjowzfY9ejsqrzOa/fvya25urfdq4YVCXg4DAKVURqr5dgWpiErNyrVOBffHGD4e2La+HVcF@vger.kernel.org, AJvYcCUeJHyQAvITNXJKQw4rgKWsdymWqD12UJ+RANqxdVfC9vJMxR6Yw6cHw4EhhpjKCLJPmErJWBRk59V2YT7ua9DwETQ=@vger.kernel.org, AJvYcCVOy0C1N+x1kJ0UsV+eBK5eSDx4QjnolcPpdDKga6/dGOCPJ49aolt6TGQQJQ8+rXIonaMuOpH/@vger.kernel.org, AJvYcCWiCKqTrsptwVvSK7OHrHyD9siyIOiH2GlxaCXg5BGaWhXNgy3VkzkRqvcAt18AMBC1KEEy96ShQO/Lde8Q@vger.kernel.org, AJvYcCXeXhoJRMzpx2OoDbei+oMCH72QpaaJFo8+vjLC3E5f58jgOXf2ySroq5TzirO5yqmm+Ssp80PfYX9/@vger.kernel.org
-X-Received: by 2002:a05:6102:b0d:b0:4e7:efa3:6475 with SMTP id
- ada2fe7eead31-4f1614301fdmr617117137.25.1751449659490; Wed, 02 Jul 2025
- 02:47:39 -0700 (PDT)
+	s=arc-20240116; t=1751449730; c=relaxed/simple;
+	bh=ISdpG1QNUqMvPpZim7SIb2eWx2VudgLouDOUPZqGh+0=;
+	h=From:Subject:To:Cc:Message-Id:Date:MIME-Version:Content-Type; b=p+nvbgnIlxqRpG+NIEdkrMqbH5LW4hlxWezEpDhJ5JY9mRUo1ATlizasQxRUSa9YeqOiLx8SBxTIR+hQOeHC3GPpn7+Rw86Gu6AvK28pKOw084si4kgOggL66oWqzzisj88wNMT3P5Q1cqfrNmwUWXCsj4VV2aTPfRsNr8PLEt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vates.tech; spf=pass smtp.mailfrom=bounce.vates.tech; dkim=pass (2048-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b=w/V5op1H; dkim=pass (2048-bit key) header.d=vates.tech header.i=teddy.astie@vates.tech header.b=oIqyzEIn; arc=none smtp.client-ip=198.2.187.29
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vates.tech
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bounce.vates.tech
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="w/V5op1H";
+	dkim=pass (2048-bit key) header.d=vates.tech header.i=teddy.astie@vates.tech header.b="oIqyzEIn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com;
+	s=mte1; t=1751449726; x=1751719726;
+	bh=FHgL1whZVBmBSD9h9bZZ8bhpnADjwgrqmGTO+bcYsPU=;
+	h=From:Subject:To:Cc:Message-Id:Feedback-ID:Date:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:CC:Date:Subject:From;
+	b=w/V5op1HvBY1onsk3VJY+KLX1YcId73hczT4qANYvsTN0lnvWzq3FoDmMb34uEIwG
+	 25gabQQj7LYTCvVcRToV+EgashIYKusRx49SxXjuf8ZvCHKB4gAQf4C3OiQn+LA/KE
+	 ei+BAc+uv4ZJmC89WItjiQgcEQ7FuC9b38UgpXzCMi/gbH9kM1I/y85ycnL//cCl6Z
+	 0xbFhKYNRp0MYDGxIdrb7lgK40+bJErNzsCLHeUwSHuSahAdjBakBWJQMHKtQHqyoA
+	 dsRdu+l+J0U+Y/FYSPj1bi3RvQULiDr/dilxAE3thY026C0YfCihtbmaVBR6W4HGUl
+	 teKs4lBWXsnpA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vates.tech; s=mte1;
+	t=1751449726; x=1751710226; i=teddy.astie@vates.tech;
+	bh=FHgL1whZVBmBSD9h9bZZ8bhpnADjwgrqmGTO+bcYsPU=;
+	h=From:Subject:To:Cc:Message-Id:Feedback-ID:Date:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:CC:Date:Subject:From;
+	b=oIqyzEInM3vSn0bb7p/5THfq2VmR3h/6Q/ix9k8avxhQq1gdYm7l+NXcAAbqfx0eU
+	 pE3Y7B1BX4SEr1HjSnAsOXDmnrsLfPWrBBkGyXkECH964jK+zo1G6HjmoyMydhaMaS
+	 omEyS1M7OLMzMxBzlrAalT5uZIWmBJdoRSkLIGY0UiVw55N7PfgGmq+FJHiS1Ko/qL
+	 3ukhOOXSQpm6SRyUNLvH47sSqq45BXCI1JVTOybo7erL1XDAidgWAFvkk+JhMiskMd
+	 iq1U0lLW4PjmgHJ9vmPpcXV+arviHXY2UQoyV5BS1b/DShpaqTn8Fvcv/cHi/q8vCZ
+	 BBDKR/2OR8Xfw==
+Received: from pmta09.mandrill.prod.suw01.rsglab.com (localhost [127.0.0.1])
+	by mail187-29.suw11.mandrillapp.com (Mailchimp) with ESMTP id 4bXFTV1p1Fz7lmgWY
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 09:48:46 +0000 (GMT)
+From: "Teddy Astie" <teddy.astie@vates.tech>
+Subject: =?utf-8?Q?[PATCH=205.15.y=20v2]=20xen:=20replace=20xen=5Fremap()=20with=20memremap()?=
+Received: from [37.26.189.201] by mandrillapp.com id 1345525288b54e389c5d6931b119a54f; Wed, 02 Jul 2025 09:48:46 +0000
+X-Mailer: git-send-email 2.50.0
+X-Bm-Disclaimer: Yes
+X-Bm-Milter-Handled: 4ffbd6c1-ee69-4e1b-aabd-f977039bd3e2
+X-Bm-Transport-Timestamp: 1751449724214
+To: linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
+Cc: "Teddy Astie" <teddy.astie@vates.tech>, "Boris Ostrovsky" <boris.ostrovsky@oracle.com>, "Juergen Gross" <jgross@suse.com>, "Stefano Stabellini" <sstabellini@kernel.org>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Sasha Levin" <sashal@kernel.org>, "Jason Andryuk" <jason.andryuk@amd.com>, stable@vger.kernel.org, "kernel test robot" <lkp@intel.com>
+Message-Id: <816ab25650e06a5fb51c5a51ec0108aa2238271a.1751449523.git.teddy.astie@vates.tech>
+X-Native-Encoded: 1
+X-Report-Abuse: =?UTF-8?Q?Please=20forward=20a=20copy=20of=20this=20message,=20including=20all=20headers,=20to=20abuse@mandrill.com.=20You=20can=20also=20report=20abuse=20here:=20https://mandrillapp.com/contact/abuse=3Fid=3D30504962.1345525288b54e389c5d6931b119a54f?=
+X-Mandrill-User: md_30504962
+Feedback-ID: 30504962:30504962.20250702:md
+Date: Wed, 02 Jul 2025 09:48:46 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250702005706.1200059-1-john.madieu.xa@bp.renesas.com> <20250702005706.1200059-3-john.madieu.xa@bp.renesas.com>
-In-Reply-To: <20250702005706.1200059-3-john.madieu.xa@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 2 Jul 2025 11:47:27 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVsvWrTBXkZ4etWy-8sPH4TG7AEyD_Z27RBWutNvpmUHA@mail.gmail.com>
-X-Gm-Features: Ac12FXyvUOO4u1emMGsdqUSyi2v-LKjWFuqnGZiY-qtjH2LDcXJWx9ecan2toDc
-Message-ID: <CAMuHMdVsvWrTBXkZ4etWy-8sPH4TG7AEyD_Z27RBWutNvpmUHA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/4] pinctrl: renesas: rzg2l: Pass OEN pin names
-To: John Madieu <john.madieu.xa@bp.renesas.com>, prabhakar.mahadev-lad.rj@bp.renesas.com
-Cc: magnus.damm@gmail.com, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, 
-	richardcochran@gmail.com, linux-renesas-soc@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-clk@vger.kernel.org, netdev@vger.kernel.org, biju.das.jz@bp.renesas.com, 
-	john.madieu@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-Hi John, Prabhakar,
+From: Juergen Gross <jgross@suse.com>
 
-On Wed, 2 Jul 2025 at 02:57, John Madieu <john.madieu.xa@bp.renesas.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Pass the OEN pin names via the SoC-specific hardware configuration
-> structure to allow reuse of rzv2h_oen_read() and rzv2h_oen_write()
-> on multiple SoCs.
->
-> On the RZ/V2H(P) and RZ/G3E SoCs, the PFC_OEN register is located at the
-> same offset. However, the register controls different pins on each SoC.
-> Hardcoding the pin names in the common logic prevents reusability.
->
-> Extend struct rzg2l_hwcfg to include an array of OEN pin names and its
-> length. Use these values in rzv2h_pin_to_oen_bit() to determine the bit
-> position dynamically based on the active SoC.
->
-> This enables shared handling of OEN register access while accounting for
-> SoC-specific pin mappings.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+[ upstream commit 41925b105e345ebc84cedb64f59d20cb14a62613 ]
 
-Thanks for your patch!
+xen_remap() is used to establish mappings for frames not under direct
+control of the kernel: for Xenstore and console ring pages, and for
+grant pages of non-PV guests.
 
-> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> @@ -257,6 +257,8 @@ enum rzg2l_iolh_index {
->   * @func_base: base number for port function (see register PFC)
->   * @oen_max_pin: the maximum pin number supporting output enable
->   * @oen_max_port: the maximum port number supporting output enable
-> + * @oen_pin_names: array of pin names for output enable
-> + * @oen_pin_names_len: length of the oen_pin_names array
->   */
->  struct rzg2l_hwcfg {
->         const struct rzg2l_register_offsets regs;
-> @@ -269,6 +271,8 @@ struct rzg2l_hwcfg {
->         u8 func_base;
->         u8 oen_max_pin;
->         u8 oen_max_port;
-> +       const char * const *oen_pin_names;
-> +       u8 oen_pin_names_len;
+Today xen_remap() is defined to use ioremap() on x86 (doing uncached
+mappings), and ioremap_cache() on Arm (doing cached mappings).
 
-Please exchange the order of the members, so the u8 fits in the
-existing hole.
+Uncached mappings for those use cases are bad for performance, so they
+should be avoided if possible. As all use cases of xen_remap() don't
+require uncached mappings (the mapped area is always physical RAM),
+a mapping using the standard WB cache mode is fine.
 
-However, I think you better drop this patch, and use the existing
-rzg2l_pinctrl_data.oen_{read,write]() abstraction instead.
+As sparse is flagging some of the xen_remap() use cases to be not
+appropriate for iomem(), as the result is not annotated with the
+__iomem modifier, eliminate xen_remap() completely and replace all
+use cases with memremap() specifying the MEMREMAP_WB caching mode.
 
->  };
+xen_unmap() can be replaced with memunmap().
 
-Gr{oetje,eeting}s,
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Acked-by: Stefano Stabellini <sstabellini@kernel.org>
+Link: https://lore.kernel.org/r/20220530082634.6339-1-jgross@suse.com
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Teddy Astie <teddy.astie@vates.tech> [backport to 5.15.y]
+---
+v2:
+- also remove xen_remap/xen_unmap on ARM
+---
+ arch/x86/include/asm/xen/page.h   | 3 ---
+ drivers/xen/grant-table.c         | 6 +++---
+ drivers/xen/xenbus/xenbus_probe.c | 3 +--
+ include/xen/arm/page.h            | 3 ---
+ 4 files changed, 4 insertions(+), 11 deletions(-)
 
-                        Geert
-
+diff --git a/arch/x86/include/asm/xen/page.h b/arch/x86/include/asm/xen/page.h
+index 1a162e559753..c183b7f9efef 100644
+--- a/arch/x86/include/asm/xen/page.h
++++ b/arch/x86/include/asm/xen/page.h
+@@ -355,9 +355,6 @@ unsigned long arbitrary_virt_to_mfn(void *vaddr);
+ void make_lowmem_page_readonly(void *vaddr);
+ void make_lowmem_page_readwrite(void *vaddr);
+ 
+-#define xen_remap(cookie, size) ioremap((cookie), (size))
+-#define xen_unmap(cookie) iounmap((cookie))
+-
+ static inline bool xen_arch_need_swiotlb(struct device *dev,
+ 					 phys_addr_t phys,
+ 					 dma_addr_t dev_addr)
+diff --git a/drivers/xen/grant-table.c b/drivers/xen/grant-table.c
+index 0a2d24d6ac6f..a10e0741bec5 100644
+--- a/drivers/xen/grant-table.c
++++ b/drivers/xen/grant-table.c
+@@ -743,7 +743,7 @@ int gnttab_setup_auto_xlat_frames(phys_addr_t addr)
+ 	if (xen_auto_xlat_grant_frames.count)
+ 		return -EINVAL;
+ 
+-	vaddr = xen_remap(addr, XEN_PAGE_SIZE * max_nr_gframes);
++	vaddr = memremap(addr, XEN_PAGE_SIZE * max_nr_gframes, MEMREMAP_WB);
+ 	if (vaddr == NULL) {
+ 		pr_warn("Failed to ioremap gnttab share frames (addr=%pa)!\n",
+ 			&addr);
+@@ -751,7 +751,7 @@ int gnttab_setup_auto_xlat_frames(phys_addr_t addr)
+ 	}
+ 	pfn = kcalloc(max_nr_gframes, sizeof(pfn[0]), GFP_KERNEL);
+ 	if (!pfn) {
+-		xen_unmap(vaddr);
++		memunmap(vaddr);
+ 		return -ENOMEM;
+ 	}
+ 	for (i = 0; i < max_nr_gframes; i++)
+@@ -770,7 +770,7 @@ void gnttab_free_auto_xlat_frames(void)
+ 	if (!xen_auto_xlat_grant_frames.count)
+ 		return;
+ 	kfree(xen_auto_xlat_grant_frames.pfn);
+-	xen_unmap(xen_auto_xlat_grant_frames.vaddr);
++	memunmap(xen_auto_xlat_grant_frames.vaddr);
+ 
+ 	xen_auto_xlat_grant_frames.pfn = NULL;
+ 	xen_auto_xlat_grant_frames.count = 0;
+diff --git a/drivers/xen/xenbus/xenbus_probe.c b/drivers/xen/xenbus/xenbus_probe.c
+index 2068f83556b7..77ca24611293 100644
+--- a/drivers/xen/xenbus/xenbus_probe.c
++++ b/drivers/xen/xenbus/xenbus_probe.c
+@@ -982,8 +982,7 @@ static int __init xenbus_init(void)
+ #endif
+ 		xen_store_gfn = (unsigned long)v;
+ 		xen_store_interface =
+-			xen_remap(xen_store_gfn << XEN_PAGE_SHIFT,
+-				  XEN_PAGE_SIZE);
++			memremap(xen_store_gfn << XEN_PAGE_SHIFT, XEN_PAGE_SIZE, MEMREMAP_WB);
+ 		break;
+ 	default:
+ 		pr_warn("Xenstore state unknown\n");
+diff --git a/include/xen/arm/page.h b/include/xen/arm/page.h
+index ac1b65470563..f831cfeca000 100644
+--- a/include/xen/arm/page.h
++++ b/include/xen/arm/page.h
+@@ -109,9 +109,6 @@ static inline bool set_phys_to_machine(unsigned long pfn, unsigned long mfn)
+ 	return __set_phys_to_machine(pfn, mfn);
+ }
+ 
+-#define xen_remap(cookie, size) ioremap_cache((cookie), (size))
+-#define xen_unmap(cookie) iounmap((cookie))
+-
+ bool xen_arch_need_swiotlb(struct device *dev,
+ 			   phys_addr_t phys,
+ 			   dma_addr_t dev_addr);
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.50.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
+
+Teddy Astie | Vates XCP-ng Developer
+
+XCP-ng & Xen Orchestra - Vates solutions
+
+web: https://vates.tech
+
