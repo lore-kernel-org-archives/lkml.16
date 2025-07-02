@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5640289E03;
-	Wed,  2 Jul 2025 13:28:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C68622727E2;
+	Wed,  2 Jul 2025 13:28:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751462909; cv=none; b=j2BHqNzOKXzsn4V42RXAveU24kuXh1unkugBb+TgIu9E1U4QCfin1xmGP6BsNckf9HFoArDOhoHx/aV5s7NloNXukmK4J5yK7TAxBhW2tTA8/BD5/xGofb6ZvABd2xQSGXXAQPSLIQPt0hRro0rZ3X1yPKEpwcA5djY0p1FINzg=
+	t=1751462910; cv=none; b=E4QYsGWVCrxXlEkXVobZajC9u+7MaKcIrNcnrtaMqieVtv3fvwr+PqXx8f4/8/T2KnJOSPGyYYdKjtOGY47AW2AxxW4FLrqwKOrsQKapdwmaaIGdE1qB9qrN/WPhy7OS3qI2gocnpib2IisP87VE+HMyDgufhF/wWhR6C9teGiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751462909; c=relaxed/simple;
-	bh=wkmkkZivDEA1UxZm/WS0P0Mc3cKQij1LFXnN/TyZv7I=;
+	s=arc-20240116; t=1751462910; c=relaxed/simple;
+	bh=s7dPMDSNFCaxgnmXl3jsTNsiVKnZxD23neqgWnhUH6E=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=SziU1ZE23Gh05cTCzKRzT0adyMSfRgKSoZfCbxLI/iKuI8BvUT+LZtmdMUgoLc+2R+3d/X+Pr/vDWorGgYoM1C912iHT7cbsNX3W8rjmb0Vw/kAD/PwosmTxgGktkWG5SxUFaxKcuuC+FwfMA733y8Ztf+Je5Nu+iMnTotTr1sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pt9YTI+t; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=XpZn3czYLY78BzUezaUwSdheSMF5LmoXi25HCuw+8ls0h4dRfT8vdRqlYibziOD6wOldRAPAFIj5Qss/PtlgCaDiP6H+67VWdoZH601tfBkaU/Vz+m365SuJs4ClTr1q4KgBpmvSRwoWS5fLLHVdSPCWlu5fDo3Dll1URVfLwZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cnaI9L1O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pt9YTI+t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 261FEC4CEED;
-	Wed,  2 Jul 2025 13:28:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cnaI9L1O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40A67C4CEED;
+	Wed,  2 Jul 2025 13:28:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751462909;
-	bh=wkmkkZivDEA1UxZm/WS0P0Mc3cKQij1LFXnN/TyZv7I=;
+	s=k20201202; t=1751462910;
+	bh=s7dPMDSNFCaxgnmXl3jsTNsiVKnZxD23neqgWnhUH6E=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=pt9YTI+tMGuYoDA8HXTHtUWsI29ivxk0ww/xQbHDQyWJ0TP0xsuFtwMFnzysFfyxD
-	 MVRG8P+pyJ7h14t/sQcvsm8ieaMhSD0dBqaNhV0am/ID6Lb+nDLZK1IjpMCdtYYT5z
-	 aO3tj3f7WxrB4iOV4xTqtNSuyPzrhj6Xytl7RX4Qara99G9kvPl/foVjQI/kNv2FG2
-	 JlrhvK8A3Saig9cUSHKDPR23mQBMud6GeF62rrODKCgf8fQhkdHV9LO3ZROHfC3iOU
-	 pXGgwo4KqMzm49iosSizxauCE7Bm/FqCJ6WvGkMSpialapgw27m4oF5HWX4Zn5u0vE
-	 x1NaCIK/+kbGg==
-Date: Wed, 02 Jul 2025 08:28:28 -0500
+	b=cnaI9L1OWTrKRNlCI4KsY+Atqx8R1kDdC5c/OC0xo5+PomSudEdO3KrPRFL96mhLP
+	 0E4qYktzHnRZlW+fyuxxpATSfRKYuRLdco3vymq0BtAOy0r7Kvk2kiRg0WvOLCYl71
+	 46ilTbvTphSUThoDDK9ohos5adiyiuZAjH0EpZ8c9qd1rBOnERdg1u7M8uEOE4vrFW
+	 +aFWXdGSZCVS/QriSL9i5YCbq8NzVfvlxHG406eE7MM4EZ22diFt3vc+dhJi0LlWnV
+	 lnOMRN8L9txAdDGVTGDkvBxrxI8iJk3G1NxkoUdlwq+xN0UFXWXqwp3fOrBupViVcV
+	 XKjYst3PKGJqQ==
+Date: Wed, 02 Jul 2025 08:28:29 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,38 +36,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org, 
- Richard Weinberger <richard@nod.at>, Conor Dooley <conor+dt@kernel.org>, 
- linux-mtd@lists.infradead.org, imx@lists.linux.dev, 
- Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>, 
+Cc: Conor Dooley <conor+dt@kernel.org>, Richard Weinberger <richard@nod.at>, 
+ Vladimir Zapolskiy <vz@mleia.com>, linux-mtd@lists.infradead.org, 
+ Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>, imx@lists.linux.dev, 
+ Miquel Raynal <miquel.raynal@bootlin.com>, 
  linux-arm-kernel@lists.infradead.org, 
- Miquel Raynal <miquel.raynal@bootlin.com>, linux-kernel@vger.kernel.org, 
- Vignesh Raghavendra <vigneshr@ti.com>, Vladimir Zapolskiy <vz@mleia.com>
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>
 To: Frank Li <Frank.Li@nxp.com>
-In-Reply-To: <20250701212455.3106629-1-Frank.Li@nxp.com>
-References: <20250701212455.3106629-1-Frank.Li@nxp.com>
-Message-Id: <175146290647.1131327.11939010351638573167.robh@kernel.org>
-Subject: Re: [PATCH v2 1/1] dt-bindings: mtd: convert lpc32xx-slc.txt to
+In-Reply-To: <20250701212525.3106709-1-Frank.Li@nxp.com>
+References: <20250701212525.3106709-1-Frank.Li@nxp.com>
+Message-Id: <175146290703.1131376.6667811203278241042.robh@kernel.org>
+Subject: Re: [PATCH v2 1/1] dt-bindings: mtd: convert lpc32xx-mlc.txt to
  yaml format
 
 
-On Tue, 01 Jul 2025 17:24:54 -0400, Frank Li wrote:
-> Convert lpc32xx-slc.txt to yaml format.
-> - add clocks and partitions to match existed dts.
-> - allow nand-on-flash-bbt.
+On Tue, 01 Jul 2025 17:25:24 -0400, Frank Li wrote:
+> Convert lpc32xx-mlc.txt to yaml format.
+> 
+> Additional changes:
+> - replace _ with - in property names.
+> - add missed clocks to align lpc32xx.dtsi.
+> - allow partitions subnode.
 > 
 > Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > ---
 > change in v2
-> - fix miss 's' at partition.yaml
-> - remove ref nand-controller.yaml because existed dts have not nand child
-> nodes.
+> - remove nand-controller.yaml.
+> - add clocks
+> - update examples to align lpc32xx.dtsi
+> - add partitions although no mlc users under upstream tree. It should be
+> similar with slc case.
 > ---
->  .../devicetree/bindings/mtd/lpc32xx-slc.txt   | 52 ----------
->  .../bindings/mtd/nxp,lpc3220-slc.yaml         | 96 +++++++++++++++++++
->  2 files changed, 96 insertions(+), 52 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/mtd/lpc32xx-slc.txt
->  create mode 100644 Documentation/devicetree/bindings/mtd/nxp,lpc3220-slc.yaml
+>  .../devicetree/bindings/mtd/lpc32xx-mlc.txt   | 50 -----------
+>  .../bindings/mtd/nxp,lpc3220-mlc.yaml         | 88 +++++++++++++++++++
+>  2 files changed, 88 insertions(+), 50 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mtd/lpc32xx-mlc.txt
+>  create mode 100644 Documentation/devicetree/bindings/mtd/nxp,lpc3220-mlc.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
@@ -75,14 +80,14 @@ My bot found errors running 'make dt_binding_check' on your patch:
 yamllint warnings/errors:
 
 dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mtd/nxp,lpc3220-slc.example.dtb: nand-controller@20020000 (nxp,lpc3220-slc): '#address-cells' is a required property
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mtd/nxp,lpc3220-mlc.example.dtb: nand-controller@200a8000 (nxp,lpc3220-mlc): '#address-cells' is a required property
 	from schema $id: http://devicetree.org/schemas/mtd/nand-controller.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mtd/nxp,lpc3220-slc.example.dtb: nand-controller@20020000 (nxp,lpc3220-slc): '#size-cells' is a required property
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mtd/nxp,lpc3220-mlc.example.dtb: nand-controller@200a8000 (nxp,lpc3220-mlc): '#size-cells' is a required property
 	from schema $id: http://devicetree.org/schemas/mtd/nand-controller.yaml#
 
 doc reference errors (make refcheckdocs):
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250701212455.3106629-1-Frank.Li@nxp.com
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250701212525.3106709-1-Frank.Li@nxp.com
 
 The base for the series is generally the latest rc1. A different dependency
 should be noted in *this* patch.
