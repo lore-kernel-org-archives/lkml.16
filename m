@@ -1,140 +1,190 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from relay15.mail.gandi.net (relay15.mail.gandi.net [217.70.178.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A0331E485;
-	Wed,  2 Jul 2025 13:05:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D248275AF8;
+	Wed,  2 Jul 2025 13:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751461506; cv=none; b=Jpk35XJH09Rt1ld6zUrLiHds5d1zhfQtHpU170HSiENcetKGwfFsAe+vAgBfPOV5bVgvDWL3k4lgSvASJKx4nOo5MvTSFeWvf24i81RPxw2AFhKWEnMYj5ynl4aLK024k0IfsIMGgzWHXahGXC+Kl7gSrm6lNyM3dd46pHlaXZA=
+	t=1751461514; cv=none; b=dZ8FBT69XXbHt0IYto84PI7K6ZXwIYWGjcH8SZnWJCX8NbW19VtmV6rmHGpUSwcs3wgK3uUe3Ty4jQVEIjn0R+eqvzlbGqUN6L5HLxfh/+FRhTeThwAoxA23K6i4kzQF23aHTnopfswhs0GRUHD+zsakSc5NQnH06PWi50a5L68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751461506; c=relaxed/simple;
-	bh=HjgWc25q2uiagIerSLRdcUn1MeXY7b5/hcSUH9aomzo=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=M/ox2eGfdWq8SP3GXkw6zZSPbVu4Z/ZENeOzTrH271+EL3Qvr9VrFxtFCWICbtvPNc3NgASuWQ/dXvfyg5zf8E/yzQJPIUm/XuZ8D6GGRunFNJft+M1hPaDIVxDkgaqkBKC1pyd+tWOnSiqCCfxEHsfr/g+4E5FPJoE8wfZHwmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bXKpt1TgDz6M4tL;
-	Wed,  2 Jul 2025 21:04:06 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id CBD6314038F;
-	Wed,  2 Jul 2025 21:05:01 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 2 Jul
- 2025 15:05:01 +0200
-Date: Wed, 2 Jul 2025 14:04:59 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-CC: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "Rob
- Herring" <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
- Dooley" <conor+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "Sascha
- Bischoff" <sascha.bischoff@arm.com>, Timothy Hayes <timothy.hayes@arm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, "Liam R. Howlett"
-	<Liam.Howlett@oracle.com>, Peter Maydell <peter.maydell@linaro.org>, "Mark
- Rutland" <mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v6 21/31] irqchip/gic-v5: Add GICv5 IRS/SPI support
-Message-ID: <20250702140459.000063ef@huawei.com>
-In-Reply-To: <20250626-gicv5-host-v6-21-48e046af4642@kernel.org>
-References: <20250626-gicv5-host-v6-0-48e046af4642@kernel.org>
-	<20250626-gicv5-host-v6-21-48e046af4642@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1751461514; c=relaxed/simple;
+	bh=6DbrUrjzqWPuGW013KxBtcgEZYWvCNIy8XMvL+T0r2M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VvggNev95GcUFjF3dYvF99tn8Bie/awmgnBcDWsbAL30pZSo8Aznw79yfTgacD6+GMZN8v+Jl+WIK2O8KQp0ooN7Z89LlRfNIA1BXqR9FCmm48dZjL7fRhT7OdYdH1/UPzvB9u8BUXCYxzRnb1CjAC/UfyDMdJHZdDT+ZGG194Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.178.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 330F344211;
+	Wed,  2 Jul 2025 13:05:07 +0000 (UTC)
+Message-ID: <6d478129-324a-4c5a-8258-4abe3d0732d6@ghiti.fr>
+Date: Wed, 2 Jul 2025 15:05:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- frapeml500008.china.huawei.com (7.182.85.71)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Random oops on SG2042 with Linux 6.16-rc and dynamic
+ ftrace
+To: Yao Zi <ziyao@disroot.org>, Andy Chiu <andybnac@gmail.com>,
+ alexghiti@rivosinc.com, palmer@dabbelt.com, Andy Chiu
+ <andy.chiu@sifive.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@rivosinc.com>, Mark Rutland <mark.rutland@arm.com>,
+ puranjay12@gmail.com, paul.walmsley@sifive.com, greentime.hu@sifive.com,
+ nick.hu@sifive.com, nylon.chen@sifive.com, eric.lin@sifive.com,
+ vicent.chen@sifive.com, zong.li@sifive.com, yongxuan.wang@sifive.com,
+ samuel.holland@sifive.com, olivia.chu@sifive.com, c2232430@gmail.com
+Cc: Han Gao <rabenda.cn@gmail.com>, Vivian Wang <wangruikang@iscas.ac.cn>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, linux-riscv@lists.infradead.org
+References: <aGODMpq7TGINddzM@pie.lan>
+ <b060e694-caa0-4aa5-ac67-75531a5f60eb@ghiti.fr> <aGUO8L7oXpvEpvZo@pie.lan>
+Content-Language: en-US
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <aGUO8L7oXpvEpvZo@pie.lan>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddujeegjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnhepudffueegvddtgeeluefhueetteeugeeffeekhfehffdvudfhgedvheduudekffegnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpihhnfhhrrgguvggrugdrohhrghenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmeejlegutdemleelfhgtmeeirghfsgemhedvtdelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmeejlegutdemleelfhgtmeeirghfsgemhedvtdelpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmeejlegutdemleelfhgtmeeirghfsgemhedvtdelngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopedvhedprhgtphhtthhopeiiihihrghoseguihhsrhhoohhtrdhorhhgpdhrtghpthhtoheprghnugihsghnrggtsehgmhgrihhlrdgtohhmpdhrt
+ ghpthhtoheprghlvgigghhhihhtihesrhhivhhoshhinhgtrdgtohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtoheprghnugihrdgthhhiuhesshhifhhivhgvrdgtohhmpdhrtghpthhtohepsghjohhrnhesrhhivhhoshhinhgtrdgtohhmpdhrtghpthhtohepmhgrrhhkrdhruhhtlhgrnhgusegrrhhmrdgtohhmpdhrtghpthhtohepphhurhgrnhhjrgihuddvsehgmhgrihhlrdgtohhm
+
+Hi Yao,
+
+On 7/2/25 12:50, Yao Zi wrote:
+> On Tue, Jul 01, 2025 at 02:27:32PM +0200, Alexandre Ghiti wrote:
+>> Hi Yao,
+>>
+>> On 7/1/25 08:41, Yao Zi wrote:
+>>> Linux v6.16 built with dynamic ftrace randomly oops or triggers
+>>> ftrace_bug() on Sophgo SG2042 when booting systemd-based userspace,
+> ...
+>
+>>> Not sure either reverting the commits or fixing them up is a better
+>>> idea, but anyway the fatal first issue shouidn't go into the stable
+>>> release.
+>> Let's fix this, we were expecting issues with dynamic ftrace :)
+>>
+>> So the following diff fixes all the issues you mentioned (not the first
+>> crash though, I'll let you test and see if it works better, I don't have
+>> this board):
+> Thanks for the fix! I've tested it with both QEMU and SG2042, it does
+> fix the lockdep failures as well as the boot time crash on SG2042. The
+> boot-time crash is caused by the race so will disappear as long as we
+> fix the race.
+>
+>> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
+>> index 4c6c24380cfd9..97ced537aa1e0 100644
+>> --- a/arch/riscv/kernel/ftrace.c
+>> +++ b/arch/riscv/kernel/ftrace.c
+>> @@ -14,6 +14,16 @@
+>>   #include <asm/text-patching.h>
+>>
+>>   #ifdef CONFIG_DYNAMIC_FTRACE
+>> +void ftrace_arch_code_modify_prepare(void)
+>> +{
+>> +       mutex_lock(&text_mutex);
+>> +}
+>> +
+>> +void ftrace_arch_code_modify_post_process(void)
+>> +{
+>> +       mutex_unlock(&text_mutex);
+>> +}
+>> +
+>>   unsigned long ftrace_call_adjust(unsigned long addr)
+>>   {
+>>          if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS))
+>> @@ -29,10 +39,8 @@ unsigned long arch_ftrace_get_symaddr(unsigned long
+>> fentry_ip)
+>>
+>>   void arch_ftrace_update_code(int command)
+>>   {
+>> -       mutex_lock(&text_mutex);
+>>          command |= FTRACE_MAY_SLEEP;
+>>          ftrace_modify_all_code(command);
+>> -       mutex_unlock(&text_mutex);
+>>          flush_icache_all();
+>>   }
+>>
+>> @@ -149,16 +157,17 @@ int ftrace_init_nop(struct module *mod, struct
+>> dyn_ftrace *rec)
+>>          unsigned int nops[2], offset;
+>>          int ret;
+>>
+>> +       mutex_lock(&text_mutex);
+> Besides using the guard API, could we swap the order between
+> ftrace_rec_set_nop_ops() and calculation of the nops array? This shrinks
+> the critical region a little.
 
 
+If you don't mind, I won't, I don't like initializing stuff which could 
+never be used in case of error.
 
-There are more ID masks not using FIELD_PREP() in here, but
-as mentioned in earlier reply, even if we decide those are worth
-cleaning up, no reason it can't be as a trivial patch on top of the
-series.
 
-Otherwise just one comment walking back some feedback on an earlier
-patch (as what you had there now makes sense)
+>
+> With or without the change, here's my tag,
+>
+> Tested-by: Yao Zi <ziyao@disroot.org>
+>
+> and also
+>
+> Reported-by: Han Gao <rabenda.cn@gmail.com>
+> Reported-by: Vivian Wang <wangruikang@iscas.ac.cn>
+>
+> for their first-hand report of boot-time crash and analysis for the
+> first lock issue.
 
-Jonathan
 
-> diff --git a/drivers/irqchip/irq-gic-v5-irs.c b/drivers/irqchip/irq-gic-v5-irs.c
-> new file mode 100644
-> index 000000000000..fba8efceb26e
-> --- /dev/null
-> +++ b/drivers/irqchip/irq-gic-v5-irs.c
-> @@ -0,0 +1,434 @@
+I'll add all those tags in the patch I'll send today (or tomorrow if the 
+CI is slow).
 
-> -static int gicv5_irq_ppi_domain_translate(struct irq_domain *d,
-> -					  struct irq_fwspec *fwspec,
-> -					  irq_hw_number_t *hwirq,
-> -					  unsigned int *type)
-> +static const struct irq_chip gicv5_spi_irq_chip = {
-> +	.name			= "GICv5-SPI",
-> +	.irq_mask		= gicv5_spi_irq_mask,
-> +	.irq_unmask		= gicv5_spi_irq_unmask,
-> +	.irq_eoi		= gicv5_spi_irq_eoi,
-> +	.irq_set_type		= gicv5_spi_irq_set_type,
-> +	.irq_set_affinity	= gicv5_spi_irq_set_affinity,
-> +	.irq_retrigger		= gicv5_spi_irq_retrigger,
-> +	.irq_get_irqchip_state	= gicv5_spi_irq_get_irqchip_state,
-> +	.irq_set_irqchip_state	= gicv5_spi_irq_set_irqchip_state,
-> +	.flags			= IRQCHIP_SET_TYPE_MASKED |
-> +				  IRQCHIP_SKIP_SET_WAKE	  |
-> +				  IRQCHIP_MASK_ON_SUSPEND,
-> +};
-> +
-> +static __always_inline int gicv5_irq_domain_translate(struct irq_domain *d,
-> +						      struct irq_fwspec *fwspec,
-> +						      irq_hw_number_t *hwirq,
-> +						      unsigned int *type,
-> +						      const u8 hwirq_typ)
+Thanks again for the great bug report, really appreciated.
 
->  {
->  	if (!is_of_node(fwspec->fwnode))
->  		return -EINVAL;
-> @@ -235,20 +428,39 @@ static int gicv5_irq_ppi_domain_translate(struct irq_domain *d,
->  	if (fwspec->param_count < 3)
->  		return -EINVAL;
->  
-> -	if (fwspec->param[0] != GICV5_HWIRQ_TYPE_PPI)
-> +	if (fwspec->param[0] != hwirq_type)
->  		return -EINVAL;
->  
->  	*hwirq = fwspec->param[1];
->  
-> -	/*
-> -	 * Handling mode is hardcoded for PPIs, set the type using
-> -	 * HW reported value.
-> -	 */
-> -	*type = gicv5_ppi_irq_is_level(*hwirq) ? IRQ_TYPE_LEVEL_LOW : IRQ_TYPE_EDGE_RISING;
-> +	switch (hwirq_type) {
-> +	case GICV5_HWIRQ_TYPE_PPI:
-> +		/*
-> +		 * Handling mode is hardcoded for PPIs, set the type using
-> +		 * HW reported value.
-> +		 */
-> +		*type = gicv5_ppi_irq_is_level(*hwirq) ? IRQ_TYPE_LEVEL_LOW :
-> +							 IRQ_TYPE_EDGE_RISING;
-> +		break;
-> +	case GICV5_HWIRQ_TYPE_SPI:
-> +		*type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
+Alex
 
-Ah fair enough in earlier patches on just enforcing 3 parameters for all cases.
-Seems like a sensible simplification once this is taken into account. So ignore that one!
 
-> +		break;
-> +	default:
-> +		BUILD_BUG_ON(1);
-> +	}
->  
->  	return 0;
->  }
+>
+> Regards,
+> Yao Zi
+>
+>>          ret = ftrace_rec_set_nop_ops(rec);
+>>          if (ret)
+>> -               return ret;
+>> +               goto end;
+>>
+>>          offset = (unsigned long) &ftrace_caller - pc;
+>>          nops[0] = to_auipc_t0(offset);
+>>          nops[1] = RISCV_INSN_NOP4;
+>>
+>> -       mutex_lock(&text_mutex);
+>>          ret = patch_insn_write((void *)pc, nops, 2 * MCOUNT_INSN_SIZE);
+>> +end:
+>>          mutex_unlock(&text_mutex);
+>>
+>>          return ret;
+>>
+>> Andy is also taking a look, I'll let him confirm the above fix is correct.
+>>
+>> Thanks for the thorough report!
+>>
+>> Alex
+>>
+>>
+>>> Thanks for your suggestions on the problems.
+>>>
+>>> Regards,
+>>> Yao Zi
+>>>
+>>> [1]: https://lore.kernel.org/all/20250407180838.42877-1-andybnac@gmail.com/
+>>>
+>>> #regzbot introduced: 881dadf0792c
+>>>
+>>> _______________________________________________
+>>> linux-riscv mailing list
+>>> linux-riscv@lists.infradead.org
+>>> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
