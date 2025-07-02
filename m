@@ -1,100 +1,122 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C80632FC3C6
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 17:12:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361CE2E7BDD
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 17:12:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751476358; cv=none; b=eu/JbXQIqkdH/Z71QbmVChpEARuMM/C40jMfAJeR3MjMwa6CK2EL6tuiSZrhzoFdGFc/1EiiBG6LJTw6bvK8ROoeG/wh4XYU6kxH7HYghtB3AzQO6xlNGOtc7RoYSkwukgXdloxPYbO8GGmiWNBVmxWIiAsH6RkIGyEEuZUNeLQ=
+	t=1751476380; cv=none; b=hKy7uKymdSqZMPhvRC7M4Yj2GvyUovD+o1zSAGeVqUy5HHs3tu6r3eNP2MGSQNtIk6IWgsGUW+693nb7n4tuNeAUr2dcqrGlTZh8JfKrR8J47QkexTA132mmxp/8+9fPKP5VffindyPVry7KpBq+2eSe2Kbn4P4qVp2jokQ3rlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751476358; c=relaxed/simple;
-	bh=uyk3nNKvwr6Kc6AS1ACdSIzjcmwLNF4UD3MrXExKwks=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=LxxZAVV9WLFhS2lQF5O3P2y7Tred8kuOJM54hYG8vI0JjGAIz1dOBD50A8FHb8zDybDgu0G3idIc1Rb7PHBxqIRHr1w5F4J0aEt+0TcWegEGRN1ZdoBwpE/x87cv0XImmdSPmD3oDlxlq1ZalSSe1pTyN93szeBF7V/3ZJciAzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kLBfRa/z; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+gj9VmfH; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751476380; c=relaxed/simple;
+	bh=VpA9YeSPV1buBUfGYoBCGhasB5CSNGSo6xEes/APcZ0=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uzsB+Hd2BErH2/AmXSi+FKTqvfVrYRhiQeAyKvBkITTSaLRvVEgjdnPWEeJ4JcP5nnWromRbKGWfrevsUcSPc/UeYXPXmzwLUPMgUmgHAX5YQ58mHPon3dPlNXd+RQZBldh8KzQVBw9UxFKmNC9fbdDF/4D5K6vROti9g8XJ9P4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fpMEN0HW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kLBfRa/z";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+gj9VmfH"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751476354;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2qr+Jt0jvNc2rmYdxHT0LMmYAe3eQkw9Ib9EVKQj4Tw=;
-	b=kLBfRa/zRi4pMTlPJ5PLzp0kmUsGmZrBHs+DL34PODPHelMUPdz7jx/vnfjRCsY2Hlisxq
-	yJWFyFtAnlwn542P0dw5QExJVfeftTUGiFoGArsGXdSnbEDffz4qtUgajNWsMW+EUS2+6D
-	xJSrxzSPvKrPOAmGhTnZnlCnDaC/8J6IxB44bHFYAUhXdCa4hGlYSAL2nSQdx6Yd7hfomy
-	heXAvgCKWg8+2066GiPAKJJd+lWB4yG3c4AmObXL4VdAovf9e6sXnKlvvwQ4W/Y8F2QA61
-	OFgI8eGLwBuy2+HxB+nPepWnoRMWLwmJe+F0VpEX2/MA1rF8AN6j8ODnYqr5jQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751476354;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2qr+Jt0jvNc2rmYdxHT0LMmYAe3eQkw9Ib9EVKQj4Tw=;
-	b=+gj9VmfHST1g9wivbS6hRm9JVlGlpCj1rGcTQqAMejDQAU86UR+mLURSc+9hvVg3XyGU+X
-	psbQP3HgwvJLvhBw==
-To: Jann Horn <jannh@google.com>, Rik van Riel <riel@surriel.com>,
- yury.norov@gmail.com
-Cc: syzbot <syzbot+084b6e5bc1016723a9c4@syzkaller.appspotmail.com>,
- bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
- linux-kernel@vger.kernel.org, luto@kernel.org, mingo@redhat.com,
- neeraj.upadhyay@kernel.org, paulmck@kernel.org, peterz@infradead.org,
- syzkaller-bugs@googlegroups.com, x86@kernel.org, kernel-team
- <kernel-team@meta.com>, David Hildenbrand <david@redhat.com>
-Subject: Re: [syzbot] [kernel?] KASAN: slab-use-after-free Write in
- flush_tlb_func
-In-Reply-To: <CAG48ez1VMw=aE88eTfk9BscrmS7axJG=j_TrTui+htLF9-4Wqw@mail.gmail.com>
-References: <68653927.a70a0220.3b7e22.245d.GAE@google.com>
- <366d45aea0b64cfc82c0988ae5fe6863bbd28261.camel@surriel.com>
- <CAG48ez2_4D17XMrEb7+5fwq0RFDFDCsY5OjTB7uaXEzdybxshA@mail.gmail.com>
- <CAG48ez1VMw=aE88eTfk9BscrmS7axJG=j_TrTui+htLF9-4Wqw@mail.gmail.com>
-Date: Wed, 02 Jul 2025 19:12:31 +0200
-Message-ID: <874ivuldog.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fpMEN0HW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1329C4CEE7;
+	Wed,  2 Jul 2025 17:12:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751476379;
+	bh=VpA9YeSPV1buBUfGYoBCGhasB5CSNGSo6xEes/APcZ0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fpMEN0HWTd6AsmeJGwtTkpt/5H04AkNJ561DqGQXhkyHY0APvVXDXnxwwKB16QHVu
+	 0c6UgNZ7VOpIAPIqQYqOMahQD1MJLA+vM5Ao6RBG9sV3fdYXnjXKy+0ILaqY7ieGSk
+	 unrek5/cZAqDkVWwsIRVp3diqugRsh3gAVyvkZp+d53lqIG5VUWzGgtxSRPdrmHYjg
+	 6b2Hs5sPV+HViV9IQnbXZroFznOnr+pGqaxNbH9vjg2sNReMsEJVkenL917P9dy3YS
+	 63z6JvmRJDew993R6dLXrcQgYFi6ryWRncULXDb3BpxNqb1sx/JDOljzsnzBwinE0w
+	 heyY+k0IvR58g==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uX10y-00C2NV-Sm;
+	Wed, 02 Jul 2025 18:12:57 +0100
+Date: Wed, 02 Jul 2025 18:12:56 +0100
+Message-ID: <86ecuybjon.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: catalin.marinas@arm.com,
+	pcc@google.com,
+	will@kernel.org,
+	broonie@kernel.org,
+	anshuman.khandual@arm.com,
+	joey.gouly@arm.com,
+	oliver.upton@linux.dev,
+	frederic@kernel.org,
+	hardevsinh.palaniya@siliconsignals.io,
+	samuel.holland@sifive.com,
+	palmer@rivosinc.com,
+	charlie@rivosinc.com,
+	thiago.bauermann@linaro.org,
+	bgray@linux.ibm.com,
+	tglx@linutronix.de,
+	puranjay@kernel.org,
+	david@redhat.com,
+	yang@os.amperecomputing.com,
+	mbenes@suse.cz,
+	joel.granados@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 5/8] arm64/kvm: expose MTE_STORE_ONLY feature to guest
+In-Reply-To: <20250618092957.2069907-6-yeoreum.yun@arm.com>
+References: <20250618092957.2069907-1-yeoreum.yun@arm.com>
+	<20250618092957.2069907-6-yeoreum.yun@arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: yeoreum.yun@arm.com, catalin.marinas@arm.com, pcc@google.com, will@kernel.org, broonie@kernel.org, anshuman.khandual@arm.com, joey.gouly@arm.com, oliver.upton@linux.dev, frederic@kernel.org, hardevsinh.palaniya@siliconsignals.io, samuel.holland@sifive.com, palmer@rivosinc.com, charlie@rivosinc.com, thiago.bauermann@linaro.org, bgray@linux.ibm.com, tglx@linutronix.de, puranjay@kernel.org, david@redhat.com, yang@os.amperecomputing.com, mbenes@suse.cz, joel.granados@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Wed, Jul 02 2025 at 19:00, Jann Horn wrote:
-> On Wed, Jul 2, 2025 at 6:53=E2=80=AFPM Jann Horn <jannh@google.com> wrote:
->> TLB flushes via IPIs on x86 are always synchronous, right?
->> flush_tlb_func is only referenced from native_flush_tlb_multi() in
->> calls to on_each_cpu_mask() (with wait=3Dtrue) or
->> on_each_cpu_cond_mask() (with wait=3D1).
->> So I think this is not an issue, unless you're claiming that we call
->> native_flush_tlb_multi() with an already-freed info->mm?
->>
->> And I think the bisected commit really is the buggy one: It looks at
->> "nr_cpus", which tracks *how many CPUs we have to IPI*, but assumes
->> that "nr_cpus" tracks *how many CPUs we posted work to*. Those numbers
->> are not the same: If we post work to a CPU that already had IPI work
->> pending, we just add a list entry without sending another IPI.
->
-> Or in other words: After that blamed commit, if CPU 1 posts a TLB
-> flush to CPU 3, and then CPU 2 also quickly posts a TLB flush to CPU
-> 3, then CPU 2 will erroneously not wait for the TLB flush to complete
-> before reporting flush completion, which AFAICS means we can get both
-> stale TLB entries and (less often) UAF.
+On Wed, 18 Jun 2025 10:29:54 +0100,
+Yeoreum Yun <yeoreum.yun@arm.com> wrote:
+> 
+> expose MTE_STORE_ONLY feature to guest.
+> 
+> Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+> ---
+>  arch/arm64/kvm/sys_regs.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+> index c8c92cb9da01..7bc99ed201eb 100644
+> --- a/arch/arm64/kvm/sys_regs.c
+> +++ b/arch/arm64/kvm/sys_regs.c
+> @@ -1620,7 +1620,8 @@ static u64 __kvm_read_sanitised_id_reg(const struct kvm_vcpu *vcpu,
+>  		mask = ID_AA64PFR2_EL1_FPMR;
+>  
+>  		if (kvm_has_mte(vcpu->kvm))
+> -			mask |= ID_AA64PFR2_EL1_MTEFAR;
+> +			mask |= ID_AA64PFR2_EL1_MTEFAR |
+> +				ID_AA64PFR2_EL1_MTESTOREONLY;
+>  
+>  		val &= mask;
+>  		break;
+> @@ -2884,7 +2885,8 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+>  				       ID_AA64PFR1_EL1_MTE)),
+>  	ID_WRITABLE(ID_AA64PFR2_EL1,
+>  		    ID_AA64PFR2_EL1_FPMR |
+> -		    ID_AA64PFR2_EL1_MTEFAR),
+> +		    ID_AA64PFR2_EL1_MTEFAR |
+> +		    ID_AA64PFR2_EL1_MTESTOREONLY),
+>  	ID_UNALLOCATED(4,3),
+>  	ID_WRITABLE(ID_AA64ZFR0_EL1, ~ID_AA64ZFR0_EL1_RES0),
+>  	ID_HIDDEN(ID_AA64SMFR0_EL1),
 
-Right you are. Well analyzed and I missed it when taking the lot.
+With the subject line fixed:
 
-> I think the correct version of that commit would be to revert that
-> commit and instead just move the "run_remote =3D true;" line down, below
-> the cond_func() check.
+Acked-by: Marc Zyngier <maz@kernel.org>
 
-I remove it from the relevant tip branch
+	M.
 
-Thanks,
-
-        tglx
-
+-- 
+Without deviation from the norm, progress is not possible.
