@@ -1,190 +1,176 @@
-Received: from relay15.mail.gandi.net (relay15.mail.gandi.net [217.70.178.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D248275AF8;
-	Wed,  2 Jul 2025 13:05:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D0541C5D62;
+	Wed,  2 Jul 2025 13:05:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751461514; cv=none; b=dZ8FBT69XXbHt0IYto84PI7K6ZXwIYWGjcH8SZnWJCX8NbW19VtmV6rmHGpUSwcs3wgK3uUe3Ty4jQVEIjn0R+eqvzlbGqUN6L5HLxfh/+FRhTeThwAoxA23K6i4kzQF23aHTnopfswhs0GRUHD+zsakSc5NQnH06PWi50a5L68=
+	t=1751461560; cv=none; b=o8Qlw/2Dz6hbIqYurcl5/mm5/IOxdFbbR9QLcVAWYZG8XRLkfOgql3VC6YwEucrfJj5IUTYne3K5DogYSxmTNJUf4slCZGSjLAdEsnbtZDDTEIGbVK7Xlss3jJRDS/BfC6Z8WO8eA3yDMBiaSHyia+xBqnzApMVzUc8JF9z6ktY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751461514; c=relaxed/simple;
-	bh=6DbrUrjzqWPuGW013KxBtcgEZYWvCNIy8XMvL+T0r2M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VvggNev95GcUFjF3dYvF99tn8Bie/awmgnBcDWsbAL30pZSo8Aznw79yfTgacD6+GMZN8v+Jl+WIK2O8KQp0ooN7Z89LlRfNIA1BXqR9FCmm48dZjL7fRhT7OdYdH1/UPzvB9u8BUXCYxzRnb1CjAC/UfyDMdJHZdDT+ZGG194Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.178.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 330F344211;
-	Wed,  2 Jul 2025 13:05:07 +0000 (UTC)
-Message-ID: <6d478129-324a-4c5a-8258-4abe3d0732d6@ghiti.fr>
-Date: Wed, 2 Jul 2025 15:05:06 +0200
+	s=arc-20240116; t=1751461560; c=relaxed/simple;
+	bh=HdgdvIsErRYB55Bx2nUsDKO5isYMPC38e3HOD98FCCY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FwVTGh6+llEYo/nRbETcL10GDur2gaDJGOpLxqkiaijlryBpPiCUrviH68CofDyEP1BH75M4qk7Ve3Upndp4lNa5DtHoDtx4jZ0t41HWp3VvU0CEWea4GvGAEsxBx4zBx2Rbc6tjYX9aGUOFxSq3CbzWUZz9VYo6iwG3mSWY2EQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WXPfSYmP; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WXPfSYmP"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-3137c2021a0so5846987a91.3;
+        Wed, 02 Jul 2025 06:05:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751461558; x=1752066358; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3sl6m6l7WchtXeiLO8eyqbnD5skRu04k6LyNWNAViEc=;
+        b=WXPfSYmPe0geVK8nvO5z1wJQc7kj6p288uvkNqtp5857LDWMzFGn39aL8Ss21hwHlz
+         VCK89Olhkw+qdeF1mhroyKbzzY21Ikwvv5lRYCvAUnW0FU0HE5dYkbrC5tsESnqWOEh+
+         QoPzsSzUrf1BnoAIQ+YIm5wABZOzVTjudeplbnPlLK6WaAaycRRuIJx7qV1yNk0llri0
+         R0XMrIDeG7Ks55lrAclCA7XcYxAwT8C5F9i2LC9APbuA+sC0KKuJbhpYP9pDFJ+iicRy
+         akRz0vwViJ8QnjVmFyZCJ0+rRvTsVzH1EfY/k2I8ye5crF/HLMHGHpSzMn9iTbBMkZrG
+         UCRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751461558; x=1752066358;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3sl6m6l7WchtXeiLO8eyqbnD5skRu04k6LyNWNAViEc=;
+        b=Q3xU0zpiDlhxjl1mUHUYv0lnzFEr7upZMoyNKCxk+Tc/QCPdHLAJEilliC733eY3S3
+         +ppeMrf52DyRL+dDSmbk/NR4hTatXkNwmbeRQ0f76L5zj8JO5hMghmcU+AAIkO7yuJaB
+         Nxt4TKvPAs9/klo6+hxrSFMFcfvV9oTd2asOcMOKQnCWjsi+AY30WnOIsI1fTExXzIB+
+         czOC77gmtd9icpnRYGtseW4dKKE7pyU+LFWZyycIMj2Bj34vEfsbgZT+3PhW2PB7CX7+
+         uZlUPWMdQ9Q7wchrUUcX4O+6DmscoayagpD24tgbo/WpKr8fuLt321AIJmhn8UgcmnDx
+         MmRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVP7sc5ntcdeyz8PN760P5J5ZDm27j8zfuYNj2VHFh7I/V5N8O0z1pnYNXK3xYql7fJRsTB9kBE/vMIEFl2@vger.kernel.org, AJvYcCXobmATV5N8JlyxipjLZDWtbvFn0JOjiOGcvsY0J1Jn6oNhlF4YT3AqwCkQWXLd/WgDpm+gTa/+RaiAtEwCBlM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygDfG0soiUCoG79Kx4r+2ZqHgS5awAbCq7J3V+zcepkllQoCBX
+	PsFRLHFigGr8+sXg6REW1NbmOPJadx18/Bx93Swavx4tG1Bpw4fY+aUbidpzNrW5Fif+CAcgBug
+	qGuNA6ugp0o+t2HlYsVjr03+H7bg8rhU=
+X-Gm-Gg: ASbGncvHoFYgC0C+lNgQDnz9R3YjBA5+PPosExoMGJ8loswhDrrLtgu9+nQrWKEx/JK
+	2b/YqAxKVgrd1WijNWUV6IFpRvCiAZn3SMrLaC5fgUd+xPRrhyBGZBCwD78TKbELNyuaSZ3xYg3
+	Ol0gf3BMCET+oALS3eZtD65sFxDhskI+5OaKLAOkS3JA==
+X-Google-Smtp-Source: AGHT+IE6oAo1JpcGKMDAjbhxBaddxdPQrbeSqqDdlGEg1cIFpEnuZo1kj/DTMX7hU11oivcuZ0mdaYInt5vFda8BjXo=
+X-Received: by 2002:a17:90b:2f85:b0:311:c5d9:2c70 with SMTP id
+ 98e67ed59e1d1-31a90bbbc58mr4844308a91.15.1751461558139; Wed, 02 Jul 2025
+ 06:05:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Random oops on SG2042 with Linux 6.16-rc and dynamic
- ftrace
-To: Yao Zi <ziyao@disroot.org>, Andy Chiu <andybnac@gmail.com>,
- alexghiti@rivosinc.com, palmer@dabbelt.com, Andy Chiu
- <andy.chiu@sifive.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
- <bjorn@rivosinc.com>, Mark Rutland <mark.rutland@arm.com>,
- puranjay12@gmail.com, paul.walmsley@sifive.com, greentime.hu@sifive.com,
- nick.hu@sifive.com, nylon.chen@sifive.com, eric.lin@sifive.com,
- vicent.chen@sifive.com, zong.li@sifive.com, yongxuan.wang@sifive.com,
- samuel.holland@sifive.com, olivia.chu@sifive.com, c2232430@gmail.com
-Cc: Han Gao <rabenda.cn@gmail.com>, Vivian Wang <wangruikang@iscas.ac.cn>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- regressions@lists.linux.dev, linux-riscv@lists.infradead.org
-References: <aGODMpq7TGINddzM@pie.lan>
- <b060e694-caa0-4aa5-ac67-75531a5f60eb@ghiti.fr> <aGUO8L7oXpvEpvZo@pie.lan>
-Content-Language: en-US
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <aGUO8L7oXpvEpvZo@pie.lan>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddujeegjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnhepudffueegvddtgeeluefhueetteeugeeffeekhfehffdvudfhgedvheduudekffegnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpihhnfhhrrgguvggrugdrohhrghenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmeejlegutdemleelfhgtmeeirghfsgemhedvtdelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmeejlegutdemleelfhgtmeeirghfsgemhedvtdelpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmeejlegutdemleelfhgtmeeirghfsgemhedvtdelngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopedvhedprhgtphhtthhopeiiihihrghoseguihhsrhhoohhtrdhorhhgpdhrtghpthhtoheprghnugihsghnrggtsehgmhgrihhlrdgtohhmpdhrt
- ghpthhtoheprghlvgigghhhihhtihesrhhivhhoshhinhgtrdgtohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtoheprghnugihrdgthhhiuhesshhifhhivhgvrdgtohhmpdhrtghpthhtohepsghjohhrnhesrhhivhhoshhinhgtrdgtohhmpdhrtghpthhtohepmhgrrhhkrdhruhhtlhgrnhgusegrrhhmrdgtohhmpdhrtghpthhtohepphhurhgrnhhjrgihuddvsehgmhgrihhlrdgtohhm
+References: <20250606090559.896242-1-hildawu@realtek.com> <bb5d83c2efa24dd8ad271ce812581d02@realtek.com>
+In-Reply-To: <bb5d83c2efa24dd8ad271ce812581d02@realtek.com>
+From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Date: Wed, 2 Jul 2025 09:05:43 -0400
+X-Gm-Features: Ac12FXxK5DRKSYIh__84LUfk7KyFThl1pvNIEPjiZub5MkPnhl9voiddthWtZi4
+Message-ID: <CABBYNZK4a15mEDuRtAaSj+y5WzpP751shTLGi1FJg+0eQft+BA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] Bluetooth: Add support for RTK firmware version 3
+ and enhanced ACL-based download acceleration
+To: Hilda Wu <hildawu@realtek.com>
+Cc: "marcel@holtmann.org" <marcel@holtmann.org>, 
+	"linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Max Chou <max.chou@realtek.com>, 
+	"alex_lu@realsil.com.cn" <alex_lu@realsil.com.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Yao,
+Hi Hilda,
 
-On 7/2/25 12:50, Yao Zi wrote:
-> On Tue, Jul 01, 2025 at 02:27:32PM +0200, Alexandre Ghiti wrote:
->> Hi Yao,
->>
->> On 7/1/25 08:41, Yao Zi wrote:
->>> Linux v6.16 built with dynamic ftrace randomly oops or triggers
->>> ftrace_bug() on Sophgo SG2042 when booting systemd-based userspace,
-> ...
+On Tue, Jul 1, 2025 at 11:35=E2=80=AFPM Hilda Wu <hildawu@realtek.com> wrot=
+e:
 >
->>> Not sure either reverting the commits or fixing them up is a better
->>> idea, but anyway the fatal first issue shouidn't go into the stable
->>> release.
->> Let's fix this, we were expecting issues with dynamic ftrace :)
->>
->> So the following diff fixes all the issues you mentioned (not the first
->> crash though, I'll let you test and see if it works better, I don't have
->> this board):
-> Thanks for the fix! I've tested it with both QEMU and SG2042, it does
-> fix the lockdep failures as well as the boot time crash on SG2042. The
-> boot-time crash is caused by the race so will disappear as long as we
-> fix the race.
+> Hi Marcel, Luiz and Maintainers,
 >
->> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
->> index 4c6c24380cfd9..97ced537aa1e0 100644
->> --- a/arch/riscv/kernel/ftrace.c
->> +++ b/arch/riscv/kernel/ftrace.c
->> @@ -14,6 +14,16 @@
->>   #include <asm/text-patching.h>
->>
->>   #ifdef CONFIG_DYNAMIC_FTRACE
->> +void ftrace_arch_code_modify_prepare(void)
->> +{
->> +       mutex_lock(&text_mutex);
->> +}
->> +
->> +void ftrace_arch_code_modify_post_process(void)
->> +{
->> +       mutex_unlock(&text_mutex);
->> +}
->> +
->>   unsigned long ftrace_call_adjust(unsigned long addr)
->>   {
->>          if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS))
->> @@ -29,10 +39,8 @@ unsigned long arch_ftrace_get_symaddr(unsigned long
->> fentry_ip)
->>
->>   void arch_ftrace_update_code(int command)
->>   {
->> -       mutex_lock(&text_mutex);
->>          command |= FTRACE_MAY_SLEEP;
->>          ftrace_modify_all_code(command);
->> -       mutex_unlock(&text_mutex);
->>          flush_icache_all();
->>   }
->>
->> @@ -149,16 +157,17 @@ int ftrace_init_nop(struct module *mod, struct
->> dyn_ftrace *rec)
->>          unsigned int nops[2], offset;
->>          int ret;
->>
->> +       mutex_lock(&text_mutex);
-> Besides using the guard API, could we swap the order between
-> ftrace_rec_set_nop_ops() and calculation of the nops array? This shrinks
-> the critical region a little.
-
-
-If you don't mind, I won't, I don't like initializing stuff which could 
-never be used in case of error.
-
-
+> I hope this message finds you well.
 >
-> With or without the change, here's my tag,
+> I submitted two patches for the Bluetooth subsystem recently and wanted t=
+o kindly follow up to see if you had a chance to review them:
 >
-> Tested-by: Yao Zi <ziyao@disroot.org>
+> - https://patchwork.kernel.org/project/bluetooth/patch/20250606090559.896=
+242-2-hildawu@realtek.com/
+> - https://patchwork.kernel.org/project/bluetooth/patch/20250606090559.896=
+242-3-hildawu@realtek.com/
 >
-> and also
+> These patches address the future chips firmware format enhancement and do=
+wnload firmware improve.
 >
-> Reported-by: Han Gao <rabenda.cn@gmail.com>
-> Reported-by: Vivian Wang <wangruikang@iscas.ac.cn>
->
-> for their first-hand report of boot-time crash and analysis for the
-> first lock issue.
+> Please let me know if you need any further info or changes from my side.
+> Thank you very much for your time and consideration.
+
+Don't send reminders, just resend the patches, also the kernel test
+bot did respond with an error message, please fix it before resending
+it.
 
 
-I'll add all those tags in the patch I'll send today (or tomorrow if the 
-CI is slow).
-
-Thanks again for the great bug report, really appreciated.
-
-Alex
-
-
+> Best regards,
+> Hilda
 >
-> Regards,
-> Yao Zi
+> -----Original Message-----
+> From: Hilda Wu <hildawu@realtek.com>
+> Sent: Friday, June 6, 2025 5:06 PM
+> To: marcel@holtmann.org
+> Cc: luiz.dentz@gmail.com; linux-bluetooth@vger.kernel.org; linux-kernel@v=
+ger.kernel.org; Max Chou <max.chou@realtek.com>; alex_lu@realsil.com.cn
+> Subject: [PATCH v2 0/2] Bluetooth: Add support for RTK firmware version 3=
+ and enhanced ACL-based download acceleration
 >
->>          ret = ftrace_rec_set_nop_ops(rec);
->>          if (ret)
->> -               return ret;
->> +               goto end;
->>
->>          offset = (unsigned long) &ftrace_caller - pc;
->>          nops[0] = to_auipc_t0(offset);
->>          nops[1] = RISCV_INSN_NOP4;
->>
->> -       mutex_lock(&text_mutex);
->>          ret = patch_insn_write((void *)pc, nops, 2 * MCOUNT_INSN_SIZE);
->> +end:
->>          mutex_unlock(&text_mutex);
->>
->>          return ret;
->>
->> Andy is also taking a look, I'll let him confirm the above fix is correct.
->>
->> Thanks for the thorough report!
->>
->> Alex
->>
->>
->>> Thanks for your suggestions on the problems.
->>>
->>> Regards,
->>> Yao Zi
->>>
->>> [1]: https://lore.kernel.org/all/20250407180838.42877-1-andybnac@gmail.com/
->>>
->>> #regzbot introduced: 881dadf0792c
->>>
->>> _______________________________________________
->>> linux-riscv mailing list
->>> linux-riscv@lists.infradead.org
->>> http://lists.infradead.org/mailman/listinfo/linux-riscv
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> Dear Maintainers,
+>
+> I am submitting a patch for the Bluetooth that introduces support for RTK=
+ firmware version 3 and implements an enhanced download mechanism through A=
+CL to improve firmware loading times.
+>
+> Patch Overview:
+>
+> 1. Bluetooth: btrtl: Firmware format v3 support
+>    - This addition ensures the latest RTK chipsets with firmware version =
+3
+>      are fully supported. It includes necessary modifications to
+>      accommodate new firmware structure changes.
+>
+> 2. Bluetooth: btrtl: Add enhanced download support
+>    - By leveraging ACL links for firmware transmission, the download
+>      process is significantly accelerated, reducing the overall time and
+>      enhancing performance.
+>
+> Testing and Validation:
+>
+> - The implementation has been tested on various RTK chipsets under Linux
+>   based distribution.
+>
+> Impact and Benefits:
+>
+> These enhancements are beneficial for future firmware v3 chips and compat=
+ible with previous firmware versions. Users can expect shortened initializa=
+tion times.
+>
+> Your feedback and suggestions are welcome to further refine these changes=
+.
+> Thank you for considering these enhancements.
+>
+> Best regards,
+> Hilda
+>
+> ---
+> Change in V2:
+> - Move structure to btrtl.h
+> - Fill in the missing symbols
+> - Fix build warnings
+>
+> Hilda Wu (2):
+>   Bluetooth: btrtl: Firmware format v3 support
+>   Bluetooth: btrtl: Add enhanced download support
+>
+>  drivers/bluetooth/btrtl.c | 857 +++++++++++++++++++++++++++++++++++++-
+>  drivers/bluetooth/btrtl.h | 122 ++++++
+>  drivers/bluetooth/btusb.c |   3 +
+>  3 files changed, 974 insertions(+), 8 deletions(-)
+>
+> --
+> 2.34.1
+>
+
+
+--=20
+Luiz Augusto von Dentz
