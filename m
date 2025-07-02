@@ -1,272 +1,217 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF14265CA7;
-	Wed,  2 Jul 2025 10:56:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BA8E25487B;
+	Wed,  2 Jul 2025 10:56:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751453783; cv=none; b=LhZFoLf0q4xRTSwxsur75295V3vsGKwMjaVHylaE+MWPN+352MVK32ZxHmLI3D+hbhSPMVv2G0A6PhZK1LxNagkqW9ejfiggZWpcRH9OU1XMc1WnxOxplDu638VFu/kMgELta8LO4PucNSMJCYz6WiBGMoWuH4BmYcqonajLiKM=
+	t=1751453788; cv=none; b=kPbJwIzwuy8HxcQGcByhIsV/Jg3kyjijt2tZnMnIjJMzdkxCnkZ5MworGVqd7Ud/7Q1LCubkthd6sCCjGRTEGjIAxhaaRRAODS9XrTnd4ma4YLRcAX48VE+kYkJwKyMMcenPoHnzpt4qQXK1tLTv4pT7gTInyRsDCr2rt6Mn5sI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751453783; c=relaxed/simple;
-	bh=UPtwc4zFRPeDHCaVqzmBpz8neaN6jBJVv8I5ATBq008=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gbmdi6bhPlHeVWyI495jBI8inR3AkgssPruFD0K+KQ0hsridvuobO5tagjsoSzhV1MWRnnCfefFuBWk6MNYRBaCuNekCZ6vu1upMA+1nSdy+wHHcBrGvQeOHfzNnChLjwyA7TkzRZ22VPAZzkTaLvYLeF5HFRSiflQLKghyXDRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=OsNT/XBH; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1751453788; c=relaxed/simple;
+	bh=1QQTqlYHUjewASmFh86Dd+jl+m64vZGkDAeB+lVVa3I=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=s9iBtf5WDx+bO9syp0fcG7k0CAvVy119E+LnzCzEf1YPpT4IQCquiIBbnwD/huz1ON5+WwslDqavkKf7Po2f4E23yHQ5TtK7m5Rb5nVphTmcWpFnPeNMCVHaESuSCT6iYCnRV81QzGAznDE5nktfSWSDu7Hrj/S+J+d6GcYF/EU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LpOxNU2i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="OsNT/XBH"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4bXGzF6Z2Jz9tWy;
-	Wed,  2 Jul 2025 12:56:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1751453770; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gz27GezlXTQrMHknTZCeUyKPAgt7TIG1apN6pbXeoEg=;
-	b=OsNT/XBHhbijr30fIjuYUL8+evGiEi5+pQoimRPC7ALZF3+BSa5EXP3VOnrTscreAraEGZ
-	jLiUJp/sHXf2MIoVpTGnle7sLGP/11Ig3qlbTCjUyehgxpiPf0ekRaNVC+R/TlV5CDkGpu
-	u/fpHsxT216iDobSqcvAz2Zp2j2zvWdJHh0FI346o4V/KQ4x2g5g6+nKR6DpQ3XGtT5UX+
-	QfrRN2W37ZwUMznzLyVsjG2b2PuSoOrSDz60hmO/ET5oN8T+i8AtXSlYNMxTlGc7PyDqUt
-	kn+OOf2SVW0lq0QTY3wRa23pux+BRe6/aeACXCf7vyagdB0oet954QwL/2xhVw==
-Message-ID: <6762d33b4fe8e7b264a7403f228e6ec6723ae623.camel@mailbox.org>
-Subject: Re: [PATCH 2/6] drm/sched/tests: Port to cancel_job()
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>, Philipp Stanner
- <phasta@kernel.org>, Lyude Paul <lyude@redhat.com>, Danilo Krummrich
- <dakr@kernel.org>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, Matthew Brost <matthew.brost@intel.com>, Christian
- =?ISO-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Sumit Semwal
- <sumit.semwal@linaro.org>, Pierre-Eric Pelloux-Prayer
- <pierre-eric.pelloux-prayer@amd.com>
-Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	linaro-mm-sig@lists.linaro.org
-Date: Wed, 02 Jul 2025 12:56:03 +0200
-In-Reply-To: <f9b55d5b-0018-4850-a9b7-2f267467e957@igalia.com>
-References: <20250701132142.76899-3-phasta@kernel.org>
-	 <20250701132142.76899-5-phasta@kernel.org>
-	 <f9b55d5b-0018-4850-a9b7-2f267467e957@igalia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LpOxNU2i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6191BC4CEED;
+	Wed,  2 Jul 2025 10:56:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751453788;
+	bh=1QQTqlYHUjewASmFh86Dd+jl+m64vZGkDAeB+lVVa3I=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=LpOxNU2iXlzUMjuDs+pwZoOkqTB/E4QcIqBMSsLbakjG3hsyBxa20RX+C9IXT8fUs
+	 Es+pHBjSKppItfEyfevlMG0YSk5TfnX0VqGtJcriImj9JSCwkZXLBXZ3BesgKYc4Tl
+	 FDB4rbzewqnK1rvn6G5FuYYRDleDXKSzipH+UJjxLBu08XAV7IDxEadc41VCiAdllk
+	 LymXFS0xcd4VZw4ad1d4+91dnb57a6xf6f8LsDU+317YFEhT4kmERoooWzdFYs6bNG
+	 nfC0xtOPiQs8HpnCC+yI8+6/yZ3WdwYbyqerk6gI26rufZbSTf7ZcEQ76Wtovu+XIq
+	 8YJVSYrLAyPSA==
+From: Mark Brown <broonie@kernel.org>
+Date: Wed, 02 Jul 2025 11:39:11 +0100
+Subject: [PATCH v18 6/8] selftests/clone3: Factor more of main loop into
+ test_clone3()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MBO-RS-META: 3wp6oc1wto6y4c8s6acowbuo57rutw3p
-X-MBO-RS-ID: 30b1c1d7b94b1f12f12
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250702-clone3-shadow-stack-v18-6-7965d2b694db@kernel.org>
+References: <20250702-clone3-shadow-stack-v18-0-7965d2b694db@kernel.org>
+In-Reply-To: <20250702-clone3-shadow-stack-v18-0-7965d2b694db@kernel.org>
+To: "Rick P. Edgecombe" <rick.p.edgecombe@intel.com>, 
+ Deepak Gupta <debug@rivosinc.com>, Szabolcs Nagy <Szabolcs.Nagy@arm.com>, 
+ "H.J. Lu" <hjl.tools@gmail.com>, Florian Weimer <fweimer@redhat.com>, 
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+ Vincent Guittot <vincent.guittot@linaro.org>, 
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, 
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, 
+ Christian Brauner <brauner@kernel.org>, Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, jannh@google.com, bsegall@google.com, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Yury Khrustalev <yury.khrustalev@arm.com>, 
+ Wilco Dijkstra <wilco.dijkstra@arm.com>, linux-kselftest@vger.kernel.org, 
+ linux-api@vger.kernel.org, Mark Brown <broonie@kernel.org>, 
+ Kees Cook <kees@kernel.org>, Kees Cook <kees@kernel.org>, 
+ Shuah Khan <skhan@linuxfoundation.org>
+X-Mailer: b4 0.15-dev-cff91
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3931; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=1QQTqlYHUjewASmFh86Dd+jl+m64vZGkDAeB+lVVa3I=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBoZRAuvvRb9vSY24fWNYftM0LX9zwuQimD4vpu5
+ 0gySvY5gNmJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCaGUQLgAKCRAk1otyXVSH
+ 0FLlB/wO8Lb0XAEZWEHIGsXmrZmZrsbHbT1//ucOkd/A1nqah/KGorfMYY1rzfTftgel7oQflbB
+ cHhOs195j/SH7OD1b1V9gyC8/pPltvTYJQGNtsjV+rLNpFD0L9qt1F8oCJF5/0CZUW3ryLVR5yh
+ aAee6bLhrZ6bLRT9+V4DwzMQ1PDgR5KJoZ82l+4WvVg9Yx0lfv9dKkArgQpuF9ihWmxnsPV+f/g
+ UREtX3aDsgnPytKIxAPxzw15+12ksGNhs4bKnOZHacZAT/+20TEuMFDVPB/qDnybvauWBa1sFaM
+ GfhwUg3xgSXz1PCstdkmrXQ7Aklntu9pcJQ6Z2825TbS+5A0
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-On Wed, 2025-07-02 at 11:36 +0100, Tvrtko Ursulin wrote:
->=20
-> On 01/07/2025 14:21, Philipp Stanner wrote:
-> > The GPU Scheduler now supports a new callback, cancel_job(), which
-> > lets
-> > the scheduler cancel all jobs which might not yet be freed when
-> > drm_sched_fini() runs. Using this callback allows for significantly
-> > simplifying the mock scheduler teardown code.
-> >=20
-> > Implement the cancel_job() callback and adjust the code where
-> > necessary.
->=20
-> Cross referencing against my version I think you missed this hunk:
->=20
-> --- a/drivers/gpu/drm/scheduler/tests/sched_tests.h
-> +++ b/drivers/gpu/drm/scheduler/tests/sched_tests.h
-> @@ -49,7 +49,6 @@ struct drm_mock_scheduler {
->=20
-> =C2=A0=C2=A0	spinlock_t		lock;
-> =C2=A0=C2=A0	struct list_head	job_list;
-> -	struct list_head	done_list;
->=20
-> =C2=A0=C2=A0	struct {
-> =C2=A0=C2=A0		u64		context;
->=20
+In order to make it easier to add more configuration for the tests and
+more support for runtime detection of when tests can be run pass the
+structure describing the tests into test_clone3() rather than picking
+the arguments out of it and have that function do all the per-test work.
 
-Right, overlooked that one.
+No functional change.
 
->=20
-> I also had this:
->=20
-> @@ -97,7 +96,8 @@ struct drm_mock_sched_job {
-> =C2=A0=C2=A0	struct completion	done;
->=20
-> =C2=A0 #define DRM_MOCK_SCHED_JOB_DONE		0x1
-> -#define DRM_MOCK_SCHED_JOB_TIMEDOUT	0x2
-> +#define DRM_MOCK_SCHED_JOB_CANCELED	0x2
-> +#define DRM_MOCK_SCHED_JOB_TIMEDOUT	0x4
->=20
-> And was setting it in the callback. And since we should add a test to
-> explicitly cover the new callback, and just the callback, that could=20
-> make it very easy to do it.
+Reviewed-by: Kees Cook <kees@kernel.org>
+Tested-by: Kees Cook <kees@kernel.org>
+Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ tools/testing/selftests/clone3/clone3.c | 77 ++++++++++++++++-----------------
+ 1 file changed, 37 insertions(+), 40 deletions(-)
 
-What do you imagine that to look like? The scheduler only invokes the
-callback on tear down.
+diff --git a/tools/testing/selftests/clone3/clone3.c b/tools/testing/selftests/clone3/clone3.c
+index e61f07973ce5..e066b201fa64 100644
+--- a/tools/testing/selftests/clone3/clone3.c
++++ b/tools/testing/selftests/clone3/clone3.c
+@@ -30,6 +30,19 @@ enum test_mode {
+ 	CLONE3_ARGS_INVAL_EXIT_SIGNAL_NSIG,
+ };
+ 
++typedef bool (*filter_function)(void);
++typedef size_t (*size_function)(void);
++
++struct test {
++	const char *name;
++	uint64_t flags;
++	size_t size;
++	size_function size_function;
++	int expected;
++	enum test_mode test_mode;
++	filter_function filter;
++};
++
+ static int call_clone3(uint64_t flags, size_t size, enum test_mode test_mode)
+ {
+ 	struct __clone_args args = {
+@@ -109,30 +122,40 @@ static int call_clone3(uint64_t flags, size_t size, enum test_mode test_mode)
+ 	return 0;
+ }
+ 
+-static bool test_clone3(uint64_t flags, size_t size, int expected,
+-			enum test_mode test_mode)
++static void test_clone3(const struct test *test)
+ {
++	size_t size;
+ 	int ret;
+ 
++	if (test->filter && test->filter()) {
++		ksft_test_result_skip("%s\n", test->name);
++		return;
++	}
++
++	if (test->size_function)
++		size = test->size_function();
++	else
++		size = test->size;
++
++	ksft_print_msg("Running test '%s'\n", test->name);
++
+ 	ksft_print_msg(
+ 		"[%d] Trying clone3() with flags %#" PRIx64 " (size %zu)\n",
+-		getpid(), flags, size);
+-	ret = call_clone3(flags, size, test_mode);
++		getpid(), test->flags, size);
++	ret = call_clone3(test->flags, size, test->test_mode);
+ 	ksft_print_msg("[%d] clone3() with flags says: %d expected %d\n",
+-			getpid(), ret, expected);
+-	if (ret != expected) {
++			getpid(), ret, test->expected);
++	if (ret != test->expected) {
+ 		ksft_print_msg(
+ 			"[%d] Result (%d) is different than expected (%d)\n",
+-			getpid(), ret, expected);
+-		return false;
++			getpid(), ret, test->expected);
++		ksft_test_result_fail("%s\n", test->name);
++		return;
+ 	}
+ 
+-	return true;
++	ksft_test_result_pass("%s\n", test->name);
+ }
+ 
+-typedef bool (*filter_function)(void);
+-typedef size_t (*size_function)(void);
+-
+ static bool not_root(void)
+ {
+ 	if (getuid() != 0) {
+@@ -160,16 +183,6 @@ static size_t page_size_plus_8(void)
+ 	return getpagesize() + 8;
+ }
+ 
+-struct test {
+-	const char *name;
+-	uint64_t flags;
+-	size_t size;
+-	size_function size_function;
+-	int expected;
+-	enum test_mode test_mode;
+-	filter_function filter;
+-};
+-
+ static const struct test tests[] = {
+ 	{
+ 		.name = "simple clone3()",
+@@ -319,24 +332,8 @@ int main(int argc, char *argv[])
+ 	ksft_set_plan(ARRAY_SIZE(tests));
+ 	test_clone3_supported();
+ 
+-	for (i = 0; i < ARRAY_SIZE(tests); i++) {
+-		if (tests[i].filter && tests[i].filter()) {
+-			ksft_test_result_skip("%s\n", tests[i].name);
+-			continue;
+-		}
+-
+-		if (tests[i].size_function)
+-			size = tests[i].size_function();
+-		else
+-			size = tests[i].size;
+-
+-		ksft_print_msg("Running test '%s'\n", tests[i].name);
+-
+-		ksft_test_result(test_clone3(tests[i].flags, size,
+-					     tests[i].expected,
+-					     tests[i].test_mode),
+-				 "%s\n", tests[i].name);
+-	}
++	for (i = 0; i < ARRAY_SIZE(tests); i++)
++		test_clone3(&tests[i]);
+ 
+ 	ksft_finished();
+ }
 
-We also don't have tests that only test free_job() and the like, do
-we?=C2=A0
-
-You cannot test a callback for the scheduler, because the callback is
-implemented in the driver.
-
-Callbacks are tested by using the scheduler. In this case, it's tested
-the intended way by the unit tests invoking drm_sched_free().
-
-
-P.
-
-
->=20
-> > Signed-off-by: Philipp Stanner <phasta@kernel.org>
-> > ---
-> > =C2=A0 .../gpu/drm/scheduler/tests/mock_scheduler.c=C2=A0 | 66 +++++++-=
-------
-> > -----
-> > =C2=A0 1 file changed, 23 insertions(+), 43 deletions(-)
-> >=20
-> > diff --git a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
-> > b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
-> > index 49d067fecd67..2d3169d95200 100644
-> > --- a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
-> > +++ b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
-> > @@ -63,7 +63,7 @@ static void drm_mock_sched_job_complete(struct
-> > drm_mock_sched_job *job)
-> > =C2=A0=C2=A0	lockdep_assert_held(&sched->lock);
-> > =C2=A0=20
-> > =C2=A0=C2=A0	job->flags |=3D DRM_MOCK_SCHED_JOB_DONE;
-> > -	list_move_tail(&job->link, &sched->done_list);
-> > +	list_del(&job->link);
-> > =C2=A0=C2=A0	dma_fence_signal_locked(&job->hw_fence);
-> > =C2=A0=C2=A0	complete(&job->done);
-> > =C2=A0 }
-> > @@ -236,26 +236,39 @@ mock_sched_timedout_job(struct drm_sched_job
-> > *sched_job)
-> > =C2=A0=20
-> > =C2=A0 static void mock_sched_free_job(struct drm_sched_job *sched_job)
-> > =C2=A0 {
-> > -	struct drm_mock_scheduler *sched =3D
-> > -			drm_sched_to_mock_sched(sched_job->sched);
-> > =C2=A0=C2=A0	struct drm_mock_sched_job *job =3D
-> > drm_sched_job_to_mock_job(sched_job);
-> > -	unsigned long flags;
-> > =C2=A0=20
-> > -	/* Remove from the scheduler done list. */
-> > -	spin_lock_irqsave(&sched->lock, flags);
-> > -	list_del(&job->link);
-> > -	spin_unlock_irqrestore(&sched->lock, flags);
-> > =C2=A0=C2=A0	dma_fence_put(&job->hw_fence);
-> > -
-> > =C2=A0=C2=A0	drm_sched_job_cleanup(sched_job);
-> > =C2=A0=20
-> > =C2=A0=C2=A0	/* Mock job itself is freed by the kunit framework. */
-> > =C2=A0 }
-> > =C2=A0=20
-> > +static void mock_sched_cancel_job(struct drm_sched_job *sched_job)
-> > +{
-> > +	struct drm_mock_scheduler *sched =3D
-> > drm_sched_to_mock_sched(sched_job->sched);
-> > +	struct drm_mock_sched_job *job =3D
-> > drm_sched_job_to_mock_job(sched_job);
-> > +	unsigned long flags;
-> > +
-> > +	hrtimer_cancel(&job->timer);
-> > +
-> > +	spin_lock_irqsave(&sched->lock, flags);
-> > +	if (!dma_fence_is_signaled_locked(&job->hw_fence)) {
-> > +		list_del(&job->link);
-> > +		dma_fence_set_error(&job->hw_fence, -ECANCELED);
-> > +		dma_fence_signal_locked(&job->hw_fence);
-> > +	}
-> > +	spin_unlock_irqrestore(&sched->lock, flags);
-> > +
-> > +	/* The GPU Scheduler will call
-> > drm_sched_backend_ops.free_job(), still.
-> > +	 * Mock job itself is freed by the kunit framework. */
->=20
-> /*
-> =C2=A0 * Multiline comment style to stay consistent, at least in this
-> file.
-> =C2=A0 */
->=20
-> The rest looks good, but I need to revisit the timeout/free handling=20
-> since it has been a while and you changed it recently.
->=20
-> Regards,
->=20
-> Tvrtko
->=20
-> > +}
-> > +
-> > =C2=A0 static const struct drm_sched_backend_ops drm_mock_scheduler_ops
-> > =3D {
-> > =C2=A0=C2=A0	.run_job =3D mock_sched_run_job,
-> > =C2=A0=C2=A0	.timedout_job =3D mock_sched_timedout_job,
-> > -	.free_job =3D mock_sched_free_job
-> > +	.free_job =3D mock_sched_free_job,
-> > +	.cancel_job =3D mock_sched_cancel_job,
-> > =C2=A0 };
-> > =C2=A0=20
-> > =C2=A0 /**
-> > @@ -289,7 +302,6 @@ struct drm_mock_scheduler
-> > *drm_mock_sched_new(struct kunit *test, long timeout)
-> > =C2=A0=C2=A0	sched->hw_timeline.context =3D dma_fence_context_alloc(1);
-> > =C2=A0=C2=A0	atomic_set(&sched->hw_timeline.next_seqno, 0);
-> > =C2=A0=C2=A0	INIT_LIST_HEAD(&sched->job_list);
-> > -	INIT_LIST_HEAD(&sched->done_list);
-> > =C2=A0=C2=A0	spin_lock_init(&sched->lock);
-> > =C2=A0=20
-> > =C2=A0=C2=A0	return sched;
-> > @@ -304,38 +316,6 @@ struct drm_mock_scheduler
-> > *drm_mock_sched_new(struct kunit *test, long timeout)
-> > =C2=A0=C2=A0 */
-> > =C2=A0 void drm_mock_sched_fini(struct drm_mock_scheduler *sched)
-> > =C2=A0 {
-> > -	struct drm_mock_sched_job *job, *next;
-> > -	unsigned long flags;
-> > -	LIST_HEAD(list);
-> > -
-> > -	drm_sched_wqueue_stop(&sched->base);
-> > -
-> > -	/* Force complete all unfinished jobs. */
-> > -	spin_lock_irqsave(&sched->lock, flags);
-> > -	list_for_each_entry_safe(job, next, &sched->job_list,
-> > link)
-> > -		list_move_tail(&job->link, &list);
-> > -	spin_unlock_irqrestore(&sched->lock, flags);
-> > -
-> > -	list_for_each_entry(job, &list, link)
-> > -		hrtimer_cancel(&job->timer);
-> > -
-> > -	spin_lock_irqsave(&sched->lock, flags);
-> > -	list_for_each_entry_safe(job, next, &list, link)
-> > -		drm_mock_sched_job_complete(job);
-> > -	spin_unlock_irqrestore(&sched->lock, flags);
-> > -
-> > -	/*
-> > -	 * Free completed jobs and jobs not yet processed by the
-> > DRM scheduler
-> > -	 * free worker.
-> > -	 */
-> > -	spin_lock_irqsave(&sched->lock, flags);
-> > -	list_for_each_entry_safe(job, next, &sched->done_list,
-> > link)
-> > -		list_move_tail(&job->link, &list);
-> > -	spin_unlock_irqrestore(&sched->lock, flags);
-> > -
-> > -	list_for_each_entry_safe(job, next, &list, link)
-> > -		mock_sched_free_job(&job->base);
-> > -
-> > =C2=A0=C2=A0	drm_sched_fini(&sched->base);
-> > =C2=A0 }
-> > =C2=A0=20
->=20
+-- 
+2.39.5
 
