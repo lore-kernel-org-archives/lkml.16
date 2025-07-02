@@ -1,193 +1,97 @@
-Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C366C70805
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 22:25:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6311EC014;
+	Wed,  2 Jul 2025 22:25:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751495131; cv=none; b=FzKDmvXyrkiZFR7YyXrmFhi1jCn0kIIdejG3tBpohymptivHJkl7fcMV8zV0ojv/ufWp0XXvJwI5bbL7h/8Z2zJhrrRtaISVNUBZhOKsJ2EsjUZbr5oCK3/WUZeKR0bI1iD6+JBhZfSCsj3thTzwHknVINIK7sdIGzK9Jhl+Rpw=
+	t=1751495147; cv=none; b=g6MbZGvtobxb9FJICy7EIq8Bx+um+XImrNdfHprRmUEaBTHs0FP1BJwuvfrYsG2BEOz5Vun+PdffEctceVNFoC98l2C8zMp4Wq6moTHxVnffiOEx//tBSJ0Dru2eZdoSxeawbJ/iXA3kw0+D1hSgwW7VyHchC2vTTRENhD7FAKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751495131; c=relaxed/simple;
-	bh=FwB4e6b9DTOqtJf7coY+vgdQ52tc5Z4DuBrnjuvcQCk=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=iOBbkNNa3TPM/El6cGeubnUaKVW3+TgpPaQ8WmyNbbMRCTThx4/q35HxT1G3LUiYeDijY4JQa4wCpZCg1xeyarfXTtYV3xofB8Vs5AMwmFG9rA5jGsgJO9JRGsJeMRyEDMJ3NqsTHTFc/4oaiLZznO0GfguoWHem/aWsNVMqA9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-87326a81ceaso34489939f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 15:25:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751495129; x=1752099929;
-        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
-         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pErhI2u+uq8KWGvVut0ueMZ9mVMNWYhQEEkRMdxrjbE=;
-        b=rIyR8+O4Wbe7TdyGYtF523p4s1ByZG+ntbsD9ahs2qkSYtcWffc1gMiRssQj47Y/kO
-         YHsvxFgml5h3mCl8NSeTez4f8OsKgWdUvaQAQXFpmtoo/EE/g/IbqNB1B5+3HEoQkY6c
-         Z0MbyIEKZ8xQ9IEgAthEtgw9nDrXXJalS8TEU4iPFSIqvbEFSPOcfdmNoBPyVApc2U4k
-         bs9b5KxY+BVK6/SwJBjENCTi4RhT0IGAG5OXthcgiCWFyMYkMpIAwCD0uznO1sfi/2YI
-         QjmiklleXtCPvqUJ9NaLFiZfKB+DnT3rNhp5PIJAhjbU0Q3S5CM7Uiyv6xJpBMDEM1jo
-         hPXw==
-X-Forwarded-Encrypted: i=1; AJvYcCWZ6TLUcQfHPzsZmFkEO7dRdS0H8eZcn89i9RI0cB4Xi0r79uDf6keRl01Ksky3r4/taGsloDIZi7Sv6g8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCyykfM3Bf37LLQzYwNc5CaLXpxkzzHNJoF2HKP07/7vp7yHXc
-	/zIAaTendkvYfggCrp1sunLS8G2lLAqXD5lm1HQc5SsmNvt6GUlD4QT7DM2tFvZFjCjF9m6hiLV
-	u7wsIDqnZe9O+d7GgmI3yJ9qUm4sWywfMDERMJD3cg8GlowKa2mJhdyi+TDs=
-X-Google-Smtp-Source: AGHT+IEMfsXDKOrjk3mfsESFHHcRI3MnClkTMAWdQwp13B9+52qg3BbQun2vWaYTX8iX15bCjNG91w2PbqNKb/bucdCTpCNfNbHK
+	s=arc-20240116; t=1751495147; c=relaxed/simple;
+	bh=MwSzMaVxElbMoA80k1apSgysQXQEqvxMNUak62jT0TA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HuHrewttuqTmYmPwRSFJA+TzQOOfpP3c5+OEG5qzZevePZYQeN8CTALpCn69fH39kS7pdlnz9LjAbezkXJJypxdOfokhORdKcowm0jAUpDwQbraVk4hnf1we4nW3P4uk4WNri8L0bcVToYYBRO9v3zFv5TRuDl06M0w1shen2OE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O0l3irHS; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O0l3irHS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EA1EC4CEE7;
+	Wed,  2 Jul 2025 22:25:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751495147;
+	bh=MwSzMaVxElbMoA80k1apSgysQXQEqvxMNUak62jT0TA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=O0l3irHSIuKJitCC+fz/PUca4JhrF6A12hcwBs7eBf1yWZih4NxOlkv8YokfZHKWE
+	 NpqhGqn3j1QGOs2mml7tFRGAjzTq/jwHFZEohhg15dyhgaeTsgv8mpvecQ8IULDfHB
+	 gCKfjvxRDoj4q76HD2tciCBBxzliVx1q6G+RyweQ4Clns7F6rpXfzwigGv50ALEtTJ
+	 ouEVqkcEe7avVJhgGBuxHySex2eKFzUqD1GR4hp3MGrLdjE77ZGbK9WhoTJs/rntcv
+	 nDxjGIos0ccLW6nlcyDluQX24aDt9Uu+MxQm4VFNQz97zIb5j9dcj2VI3of6tStfOg
+	 zggxhoclzbszQ==
+Date: Thu, 3 Jul 2025 01:25:43 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Lee Jones <lee@kernel.org>,
+	herbert@gondor.apana.org.au, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, davem@davemloft.net,
+	linux-crypto@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca,
+	linux-integrity@vger.kernel.org,
+	Yinggang Gu <guyinggang@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: Re: [PATCH v11 3/4] tpm: Add a driver for Loongson TPM device
+Message-ID: <aGWx5-XvdhpLdXEC@kernel.org>
+References: <aFs2RDOeOKvWUN2L@kernel.org>
+ <20250625080527.GN795775@google.com>
+ <aFvhorr3kZSuzVpv@kernel.org>
+ <20250625134047.GX795775@google.com>
+ <aFwsIs6ri3HZictC@kernel.org>
+ <20250626103030.GA10134@google.com>
+ <aF0oHDVQKVfGZNV2@kernel.org>
+ <CAAhV-H7nyKHS70BGh7nwjuGwSWayCbUY=1-zWMU4N3bJZtH1gQ@mail.gmail.com>
+ <aF2Rn0R4AlopEwz8@kernel.org>
+ <86b5e396-54d4-7b36-8848-06f41083ba59@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a4f:b0:3df:3548:4961 with SMTP id
- e9e14a558f8ab-3e05c35212cmr17965975ab.6.1751495128983; Wed, 02 Jul 2025
- 15:25:28 -0700 (PDT)
-Date: Wed, 02 Jul 2025 15:25:28 -0700
-In-Reply-To: <686571dd.a70a0220.2b31f5.0001.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6865b1d8.a70a0220.5d25f.06c3.GAE@google.com>
-Subject: Re: [syzbot] [fs?] WARNING: suspicious RCU usage in proc_sys_compare
-From: syzbot <syzbot+268eaa983b2fb27e5e38@syzkaller.appspotmail.com>
-To: joel.granados@kernel.org, kees@kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <86b5e396-54d4-7b36-8848-06f41083ba59@loongson.cn>
 
-syzbot has found a reproducer for the following issue on:
+On Fri, Jun 27, 2025 at 02:46:11PM +0800, Qunqin Zhao wrote:
+> 
+> 在 2025/6/27 上午2:29, Jarkko Sakkinen 写道:
+> > On Thu, Jun 26, 2025 at 08:48:35PM +0800, Huacai Chen wrote:
+> > > But there is another coherency, you can see this in the 1st patch:
+> > > 
+> > > +static const struct mfd_cell engines[] = {
+> > > + { .name = "loongson-rng" },
+> > > + { .name = "loongson-tpm" },
+> > > +};
+> > I thought already after ffa driver from ARM that I need to fix up
+> > the naming a bit before it explodes. Thus, I'll stick to this.
+> > 
+> > And e.g., I could easily find DRM driver with opposite order.
+> Next revision:
+> 
+> +static const struct mfd_cell engines[] = {
+> +	{ .name = "loongson-rng" },
+> +	{ .name = "tpm_loongson" },
+> +};
+> Then
+> "loongson-rng" can match MFD and Crypto subsystem naming convention.
+> "tpm_loongson" can match TPM subsystem naming convention.
 
-HEAD commit:    50c8770a42fa Add linux-next specific files for 20250702
-git tree:       linux-next
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=3D1656b48c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dd831c9dfe03f77e=
-c
-dashboard link: https://syzkaller.appspot.com/bug?extid=3D268eaa983b2fb27e5=
-e38
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-=
-1~exp1~20250514183223.118), Debian LLD 20.1.6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D117a148c58000=
-0
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D1050f982580000
+Great, this works for me. Thank you, appreciate it!
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/eb40fda2e0ca/disk-=
-50c8770a.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/cba4d214940c/vmlinux-=
-50c8770a.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/4b23ed647866/bzI=
-mage-50c8770a.xz
+> 
+> 
+> Thanks,
+> Qunqin
+> 
+> > > Huacai
+> > BR, Jarkko
+> 
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit=
-:
-Reported-by: syzbot+268eaa983b2fb27e5e38@syzkaller.appspotmail.com
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
-WARNING: suspicious RCU usage
-6.16.0-rc4-next-20250702-syzkaller #0 Not tainted
------------------------------
-fs/proc/proc_sysctl.c:934 suspicious rcu_dereference_check() usage!
-
-other info that might help us debug this:
-
-
-rcu_scheduler_active =3D 2, debug_locks =3D 1
-3 locks held by syz-executor847/5848:
- #0: ffff88805c84c428 (sb_writers#3){.+.+}-{0:0}, at: mnt_want_write+0x41/0=
-x90 fs/namespace.c:557
- #1: ffff888030198c30 (&sb->s_type->i_mutex_key#10){++++}-{4:4}, at: inode_=
-lock_shared include/linux/fs.h:884 [inline]
- #1: ffff888030198c30 (&sb->s_type->i_mutex_key#10){++++}-{4:4}, at: open_l=
-ast_lookups fs/namei.c:3806 [inline]
- #1: ffff888030198c30 (&sb->s_type->i_mutex_key#10){++++}-{4:4}, at: path_o=
-penat+0x8cb/0x3830 fs/namei.c:4043
- #2: ffff88805d995560 (&lockref->lock){+.+.}-{3:3}, at: spin_lock include/l=
-inux/spinlock.h:351 [inline]
- #2: ffff88805d995560 (&lockref->lock){+.+.}-{3:3}, at: d_alloc_parallel+0x=
-ace/0x15e0 fs/dcache.c:2623
-
-stack backtrace:
-CPU: 1 UID: 0 PID: 5848 Comm: syz-executor847 Not tainted 6.16.0-rc4-next-2=
-0250702-syzkaller #0 PREEMPT(full)=20
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Goo=
-gle 05/07/2025
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- lockdep_rcu_suspicious+0x140/0x1d0 kernel/locking/lockdep.c:6871
- proc_sys_compare+0x27d/0x2c0 fs/proc/proc_sysctl.c:934
- d_same_name fs/dcache.c:2179 [inline]
- d_alloc_parallel+0x1060/0x15e0 fs/dcache.c:2637
- lookup_open fs/namei.c:3630 [inline]
- open_last_lookups fs/namei.c:3807 [inline]
- path_openat+0xa3b/0x3830 fs/namei.c:4043
- do_filp_open+0x1fa/0x410 fs/namei.c:4073
- do_sys_openat2+0x121/0x1c0 fs/open.c:1434
- do_sys_open fs/open.c:1449 [inline]
- __do_sys_openat fs/open.c:1465 [inline]
- __se_sys_openat fs/open.c:1460 [inline]
- __x64_sys_openat+0x138/0x170 fs/open.c:1460
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7faf9ff7a291
-Code: 75 57 89 f0 25 00 00 41 00 3d 00 00 41 00 74 49 80 3d da ab 08 00 00 =
-74 6d 89 da 48 89 ee bf 9c ff ff ff b8 01 01 00 00 0f 05 <48> 3d 00 f0 ff f=
-f 0f 87 93 00 00 00 48 8b 54 24 28 64 48 2b 14 25
-RSP: 002b:00007fff03f8f390 EFLAGS: 00000202 ORIG_RAX: 0000000000000101
-RAX: ffffffffffffffda RBX: 0000000000080001 RCX: 00007faf9ff7a291
-RDX: 0000000000080001 RSI: 00007faf9ffcb7d7 RDI: 00000000ffffff9c
-RBP: 00007faf9ffcb7d7 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000202 R12: 00007fff03f8f430
-R13: 00007faf9fffa590 R14: 0000000000000000 R15: 0000000000000001
- </TASK>
-chnl_net:caif_netlink_parms(): no params data found
-bridge0: port 1(bridge_slave_0) entered blocking state
-bridge0: port 1(bridge_slave_0) entered disabled state
-bridge_slave_0: entered allmulticast mode
-bridge_slave_0: entered promiscuous mode
-bridge0: port 2(bridge_slave_1) entered blocking state
-bridge0: port 2(bridge_slave_1) entered disabled state
-bridge_slave_1: entered allmulticast mode
-bridge_slave_1: entered promiscuous mode
-bond0: (slave bond_slave_0): Enslaving as an active interface with an up li=
-nk
-bond0: (slave bond_slave_1): Enslaving as an active interface with an up li=
-nk
-team0: Port device team_slave_0 added
-team0: Port device team_slave_1 added
-batman_adv: batadv0: Adding interface: batadv_slave_0
-batman_adv: batadv0: The MTU of interface batadv_slave_0 is too small (1500=
-) to handle the transport of batman-adv packets. Packets going over this in=
-terface will be fragmented on layer2 which could impact the performance. Se=
-tting the MTU to 1560 would solve the problem.
-batman_adv: batadv0: Not using interface batadv_slave_0 (retrying later): i=
-nterface not active
-batman_adv: batadv0: Adding interface: batadv_slave_1
-batman_adv: batadv0: The MTU of interface batadv_slave_1 is too small (1500=
-) to handle the transport of batman-adv packets. Packets going over this in=
-terface will be fragmented on layer2 which could impact the performance. Se=
-tting the MTU to 1560 would solve the problem.
-batman_adv: batadv0: Not using interface batadv_slave_1 (retrying later): i=
-nterface not active
-hsr_slave_0: entered promiscuous mode
-hsr_slave_1: entered promiscuous mode
-debugfs: 'hsr0' already exists in 'hsr'
-Cannot create hsr debugfs directory
-netdevsim netdevsim2 netdevsim0: renamed from eth0
-netdevsim netdevsim2 netdevsim1: renamed from eth1
-netdevsim netdevsim2 netdevsim2: renamed from eth2
-netdevsim netdevsim2 netdevsim3: renamed from eth3
-8021q: adding VLAN 0 to HW filter on device bond0
-8021q: adding VLAN 0 to HW filter on device team0
-8021q: adding VLAN 0 to HW filter on device batadv0
-veth0_vlan: entered promiscuous mode
-veth1_vlan: entered promiscuous mode
-veth0_macvtap: entered promiscuous mode
-veth1_macvtap: entered promiscuous mode
-
-
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+BR, Jarkko
