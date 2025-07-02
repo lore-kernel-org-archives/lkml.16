@@ -1,222 +1,140 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2D727702D;
-	Wed,  2 Jul 2025 13:15:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA1DA2741C0;
+	Wed,  2 Jul 2025 13:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751462169; cv=none; b=FWHcw12AOVf/mHvpESPkFJ5Z40j7jhoZydcQlgrLjpaJqW21173h3TFNF9a1btoY8+JRU8jex2e2Xz0yN+IDpguZ8pelrNLUSPnjmYW2234YjHsGcDteMb9alIrxYfH0CwDs5DYtTUytCuTvmgBLHagbrypL4fp9OVAN3slJavg=
+	t=1751462173; cv=none; b=klB6XNP+3XOb/BpmbEhHhrMeB6B4/c6DFMg+vgKkMc9xqXVB3HHWVWb63hKkgYCpHVTVR7bkHJdq8gz6ODXdY0KUHeP3ACPEtolZFnEXapmR9LlrhLKGdcn4+mAzCMxAGogzpyKU4oHXPnze+8VrZh/uFn/Md0cUAgTQHsIP7hI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751462169; c=relaxed/simple;
-	bh=3f4gcrnMSKnMOdj6g/xhAF++jPkWPplseWiRneurOfM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jqoM3Y0C4aHQ6rm4NhYOCEr/0mUIUkeWiWom0uy6D/Q0nr9JAX5JOkvh0ohs9bC4pq1dv6hSVn0lNP5w3Nooch49nJGYnMfq+/8rz7k/8dkVV6X58u1Qv/vLKXEwWsyghocP/pObm3ZkOPBeOP9AgcY+GPfusMQ+pvS3xfarQrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4bXL3C3MP1ztSk3;
-	Wed,  2 Jul 2025 21:14:47 +0800 (CST)
-Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3FB8414010D;
-	Wed,  2 Jul 2025 21:15:55 +0800 (CST)
-Received: from localhost.localdomain (10.90.31.46) by
- kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 2 Jul 2025 21:15:54 +0800
-From: Jijie Shao <shaojijie@huawei.com>
-To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <andrew+netdev@lunn.ch>, <horms@kernel.org>
-CC: <shenjian15@huawei.com>, <liuyonglong@huawei.com>,
-	<chenhao418@huawei.com>, <jonathan.cameron@huawei.com>,
-	<shameerali.kolothum.thodi@huawei.com>, <salil.mehta@huawei.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<shaojijie@huawei.com>
-Subject: [PATCH net 4/4] net: hns3: default enable tx bounce buffer when smmu enabled
-Date: Wed, 2 Jul 2025 21:09:01 +0800
-Message-ID: <20250702130901.2879031-5-shaojijie@huawei.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20250702130901.2879031-1-shaojijie@huawei.com>
-References: <20250702130901.2879031-1-shaojijie@huawei.com>
+	s=arc-20240116; t=1751462173; c=relaxed/simple;
+	bh=GdEMIMP/ZD2NlQMB7UwdH4vkioz/Fr9+gYnj68JSXJE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HRmmO+3DRYIw+95Be5ritqnFBF/UAiZW+D3N3rXuBlG+slYnFNzCveO5/02dFsYe50pziF5x0wzeRKITQnhDFHeHNrK0sovdjfW3BBAkEbhPJLsQs+ynPA57p2eJ1KHcdWfG3HWIa/J3TwBkg/GiRoIFJu84f6J2bdDBeNbn2bQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K8gk/D1N; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K8gk/D1N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33346C4CEF1;
+	Wed,  2 Jul 2025 13:16:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751462173;
+	bh=GdEMIMP/ZD2NlQMB7UwdH4vkioz/Fr9+gYnj68JSXJE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=K8gk/D1N97NJRGD8yl+gE3NWFQ+5KuP9HYW2FqRyQ/4JTJEPBM8X/N982uJJ6EzMR
+	 VsYVfyeUXgaaFLZYStMMQjnubPBkNAnDKUWGWHn9cVf2eQkAeknknYNqnZUPYNNYRs
+	 WIkGwK8fpIZ7R1NHzL//sWRtHihvtdClFEPPnuAPf1PqwWK6XtQu0SVtpUo8vmDLWG
+	 kS62HZt1jSyObot7BUj2ILorYHb7/RMCH9MqByKhQSIF2WGVnxDTl94yP52JgglKFz
+	 jfA1dqr6x0/RSi7JDqTzDdcqvlJ+u7ExRK1D37Ec/MFkGavGNzb/QLw/eIQtNa7dYY
+	 xECWnyEfd/wNQ==
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-6118b000506so1630266eaf.0;
+        Wed, 02 Jul 2025 06:16:13 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWDs5D46GfyjnLOrN+I1ctIxWwASMv+z7qa0e7z0ifbcg6i2wwYD+GCIsVNir8xLF6EG+BURhIXuU3jlQ==@vger.kernel.org, AJvYcCWi4ydMWnI46TPvr97ZoqxKYLjuJaEaE63Y+bFAaWjEyZgmuw9LXBt1O82PsyzWmm1RnlUPqYtfNNNms8Cf@vger.kernel.org, AJvYcCX5Bxg6kJBYUt68W2XVrtPLx+duycWI6UZdxGL7hrHHyAswQ7DNamIjOLPHBbUE5RraLbAthpCDWLFt@vger.kernel.org, AJvYcCXcr3V3LRXlxUItxvDUbjb/+c0yT0ayxsiygVuT3T89TUPCUEnHnRWX5+ePjFEKMHuXwxXvAsu66FWA@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdwDYJ7lNQZax+QSsBLF72GKKtjwZz1GVdQFA6rzpgHF5FFvrB
+	+OJnDgm1S/4QIA+hZQEYB/058A3+W03SGTQoK2W1xCOM63Z7TvXo46LUravygMocU3NfU4obP+P
+	e2KH5YRNZY7jfgHagP6QwLGq3gUWU770=
+X-Google-Smtp-Source: AGHT+IExuMqttOKIUYDi+vcXqSuKCbKvlhqQnT1REYwcx9EA5ftg4W7ZWLLFZPOL0rfqf8a4k8cL0HPmiaY5KvT1aRo=
+X-Received: by 2002:a05:6820:1e0d:b0:611:af6f:ee77 with SMTP id
+ 006d021491bc7-612010dfe12mr1692210eaf.8.1751462172310; Wed, 02 Jul 2025
+ 06:16:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
- kwepemk100013.china.huawei.com (7.202.194.61)
+References: <20250702051345.1460497-1-apatel@ventanamicro.com>
+ <20250702051345.1460497-16-apatel@ventanamicro.com> <CAJZ5v0iYYuK2GF2Pg3NiO4vLFzoYm6Q3Dnk5O2DkMJm1R3qSfQ@mail.gmail.com>
+ <aGUaFX9WgTW1I_ZO@smile.fi.intel.com> <CAJZ5v0h=qzS67Xu6NUfN_LmQUmKF9=AtkaRrTx81td0m-mRNNg@mail.gmail.com>
+ <aGUsg121lenWHL-w@smile.fi.intel.com>
+In-Reply-To: <aGUsg121lenWHL-w@smile.fi.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 2 Jul 2025 15:16:01 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0ja5eUiAn7Ht5+-7-b40JtzsCqmztN9WdtLY=kJ7vbtQw@mail.gmail.com>
+X-Gm-Features: Ac12FXwc4zqpJNNErqBqjCI2hKLQ3Xi8ekft38n4p6qLhM2Gh3XrHd9uynY6pvk
+Message-ID: <CAJZ5v0ja5eUiAn7Ht5+-7-b40JtzsCqmztN9WdtLY=kJ7vbtQw@mail.gmail.com>
+Subject: Re: [PATCH v7 15/24] ACPI: property: Add support for cells property
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Anup Patel <apatel@ventanamicro.com>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jassi Brar <jassisinghbrar@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>, 
+	Rahul Pathak <rpathak@ventanamicro.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>, 
+	Atish Patra <atish.patra@linux.dev>, Andrew Jones <ajones@ventanamicro.com>, 
+	Samuel Holland <samuel.holland@sifive.com>, Anup Patel <anup@brainfault.org>, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The SMMU engine on HIP09 chip has a hardware issue.
-SMMU pagetable prefetch features may prefetch and use a invalid PTE
-even the PTE is valid at that time. This will cause the device trigger
-fake pagefaults. The solution is to avoid prefetching by adding a
-SYNC command when smmu mapping a iova. But the performance of nic has a
-sharp drop. Then we do this workaround, always enable tx bounce buffer,
-avoid mapping/unmapping on TX path.
+On Wed, Jul 2, 2025 at 2:56=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Wed, Jul 02, 2025 at 02:39:30PM +0200, Rafael J. Wysocki wrote:
+> > On Wed, Jul 2, 2025 at 1:38=E2=80=AFPM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > > On Wed, Jul 02, 2025 at 12:20:55PM +0200, Rafael J. Wysocki wrote:
+> > > > On Wed, Jul 2, 2025 at 7:16=E2=80=AFAM Anup Patel <apatel@ventanami=
+cro.com> wrote:
+>
+> ...
+>
+> > > > >  static int acpi_fwnode_get_reference_args(const struct fwnode_ha=
+ndle *fwnode,
+> > > > >                                           const char *propname, c=
+onst char *nargs_prop,
+> > > > >                                           unsigned int args_count=
+, unsigned int index,
+> > >
+> > > > >         const struct acpi_device_data *data;
+> > > > >         struct fwnode_handle *ref_fwnode;
+> > > > >         struct acpi_device *device;
+> > > > > +       unsigned int nargs_count;
+> > > > >         int ret, idx =3D 0;
+> > >
+> > > > > +                       nargs_count =3D acpi_fwnode_get_args_coun=
+t(device, nargs_prop);
+> > > >
+> > > > I think it should work the same way as it used to for the callers t=
+hat
+> > > > pass args_count, so maybe
+> > > >
+> > > > if (!args_count)
+> > > >         args_count =3D acpi_fwnode_get_args_count(device, nargs_pro=
+p);
+> > >
+> > > But this is different variable.
+> >
+> > Of course it is different.  It is an acpi_fwnode_get_reference_args() p=
+arameter.
+> >
+> > > > >                         element++;
+> > > > > -
+> > > > >                         ret =3D acpi_get_ref_args(idx =3D=3D inde=
+x ? args : NULL,
+> > > > >                                                 acpi_fwnode_handl=
+e(device),
+> > > > > -                                               &element, end, ar=
+gs_count);
+> > > > > +                                               &element, end,
+> > > > > +                                               nargs_count ? nar=
+gs_count : args_count);
+> > > >
+> > > > And this change would not be necessary?
+> > >
+> > > This is not the same check as proposed above.
+> >
+> > No, it is not.
+> >
+> > It just makes the function work the same way it did before the change
+> > for the callers who passed nozero args_count and so they might be
+> > forgiven expecting that it would be taken into account.
+>
+> I see your point now. But do we have such a user? I dunno.
 
-This issue only affects HNS3, so we always enable
-tx bounce buffer when smmu enabled to improve performance.
-
-Fixes: 295ba232a8c3 ("net: hns3: add device version to replace pci revision")
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
-Signed-off-by: Jijie Shao <shaojijie@huawei.com>
----
- .../net/ethernet/hisilicon/hns3/hns3_enet.c   | 31 +++++++++++++++++
- .../net/ethernet/hisilicon/hns3/hns3_enet.h   |  2 ++
- .../ethernet/hisilicon/hns3/hns3_ethtool.c    | 33 +++++++++++++++++++
- 3 files changed, 66 insertions(+)
-
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 49fcee7a6d0f..b028ca9a67a5 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -11,6 +11,7 @@
- #include <linux/irq.h>
- #include <linux/ip.h>
- #include <linux/ipv6.h>
-+#include <linux/iommu.h>
- #include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/skbuff.h>
-@@ -1039,6 +1040,8 @@ static bool hns3_can_use_tx_sgl(struct hns3_enet_ring *ring,
- static void hns3_init_tx_spare_buffer(struct hns3_enet_ring *ring)
- {
- 	u32 alloc_size = ring->tqp->handle->kinfo.tx_spare_buf_size;
-+	struct net_device *netdev = ring_to_netdev(ring);
-+	struct hns3_nic_priv *priv = netdev_priv(netdev);
- 	struct hns3_tx_spare *tx_spare;
- 	struct page *page;
- 	dma_addr_t dma;
-@@ -1080,6 +1083,7 @@ static void hns3_init_tx_spare_buffer(struct hns3_enet_ring *ring)
- 	tx_spare->buf = page_address(page);
- 	tx_spare->len = PAGE_SIZE << order;
- 	ring->tx_spare = tx_spare;
-+	ring->tx_copybreak = priv->tx_copybreak;
- 	return;
- 
- dma_mapping_error:
-@@ -4874,6 +4878,30 @@ static void hns3_nic_dealloc_vector_data(struct hns3_nic_priv *priv)
- 	devm_kfree(&pdev->dev, priv->tqp_vector);
- }
- 
-+static void hns3_update_tx_spare_buf_config(struct hns3_nic_priv *priv)
-+{
-+#define HNS3_MIN_SPARE_BUF_SIZE (2 * 1024 * 1024)
-+#define HNS3_MAX_PACKET_SIZE (64 * 1024)
-+
-+	struct iommu_domain *domain = iommu_get_domain_for_dev(priv->dev);
-+	struct hnae3_ae_dev *ae_dev = hns3_get_ae_dev(priv->ae_handle);
-+	struct hnae3_handle *handle = priv->ae_handle;
-+
-+	if (ae_dev->dev_version < HNAE3_DEVICE_VERSION_V3)
-+		return;
-+
-+	if (!(domain && iommu_is_dma_domain(domain)))
-+		return;
-+
-+	priv->min_tx_copybreak = HNS3_MAX_PACKET_SIZE;
-+	priv->min_tx_spare_buf_size = HNS3_MIN_SPARE_BUF_SIZE;
-+
-+	if (priv->tx_copybreak < priv->min_tx_copybreak)
-+		priv->tx_copybreak = priv->min_tx_copybreak;
-+	if (handle->kinfo.tx_spare_buf_size < priv->min_tx_spare_buf_size)
-+		handle->kinfo.tx_spare_buf_size = priv->min_tx_spare_buf_size;
-+}
-+
- static void hns3_ring_get_cfg(struct hnae3_queue *q, struct hns3_nic_priv *priv,
- 			      unsigned int ring_type)
- {
-@@ -5107,6 +5135,7 @@ int hns3_init_all_ring(struct hns3_nic_priv *priv)
- 	int i, j;
- 	int ret;
- 
-+	hns3_update_tx_spare_buf_config(priv);
- 	for (i = 0; i < ring_num; i++) {
- 		ret = hns3_alloc_ring_memory(&priv->ring[i]);
- 		if (ret) {
-@@ -5311,6 +5340,8 @@ static int hns3_client_init(struct hnae3_handle *handle)
- 	priv->ae_handle = handle;
- 	priv->tx_timeout_count = 0;
- 	priv->max_non_tso_bd_num = ae_dev->dev_specs.max_non_tso_bd_num;
-+	priv->min_tx_copybreak = 0;
-+	priv->min_tx_spare_buf_size = 0;
- 	set_bit(HNS3_NIC_STATE_DOWN, &priv->state);
- 
- 	handle->msg_enable = netif_msg_init(debug, DEFAULT_MSG_LEVEL);
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-index d3bad5d1b888..933e3527ed82 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-@@ -596,6 +596,8 @@ struct hns3_nic_priv {
- 	struct hns3_enet_coalesce rx_coal;
- 	u32 tx_copybreak;
- 	u32 rx_copybreak;
-+	u32 min_tx_copybreak;
-+	u32 min_tx_spare_buf_size;
- };
- 
- union l3_hdr_info {
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-index d5454e126c85..a752d0e3db3a 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-@@ -1927,6 +1927,31 @@ static int hns3_set_tx_spare_buf_size(struct net_device *netdev,
- 	return ret;
- }
- 
-+static int hns3_check_tx_copybreak(struct net_device *netdev, u32 copybreak)
-+{
-+	struct hns3_nic_priv *priv = netdev_priv(netdev);
-+
-+	if (copybreak < priv->min_tx_copybreak) {
-+		netdev_err(netdev, "tx copybreak %u should be no less than %u!\n",
-+			   copybreak, priv->min_tx_copybreak);
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+static int hns3_check_tx_spare_buf_size(struct net_device *netdev, u32 buf_size)
-+{
-+	struct hns3_nic_priv *priv = netdev_priv(netdev);
-+
-+	if (buf_size < priv->min_tx_spare_buf_size) {
-+		netdev_err(netdev,
-+			   "tx spare buf size %u should be no less than %u!\n",
-+			   buf_size, priv->min_tx_spare_buf_size);
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
- static int hns3_set_tunable(struct net_device *netdev,
- 			    const struct ethtool_tunable *tuna,
- 			    const void *data)
-@@ -1943,6 +1968,10 @@ static int hns3_set_tunable(struct net_device *netdev,
- 
- 	switch (tuna->id) {
- 	case ETHTOOL_TX_COPYBREAK:
-+		ret = hns3_check_tx_copybreak(netdev, *(u32 *)data);
-+		if (ret)
-+			return ret;
-+
- 		priv->tx_copybreak = *(u32 *)data;
- 
- 		for (i = 0; i < h->kinfo.num_tqps; i++)
-@@ -1957,6 +1986,10 @@ static int hns3_set_tunable(struct net_device *netdev,
- 
- 		break;
- 	case ETHTOOL_TX_COPYBREAK_BUF_SIZE:
-+		ret = hns3_check_tx_spare_buf_size(netdev, *(u32 *)data);
-+		if (ret)
-+			return ret;
-+
- 		old_tx_spare_buf_size = h->kinfo.tx_spare_buf_size;
- 		new_tx_spare_buf_size = *(u32 *)data;
- 		netdev_info(netdev, "request to set tx spare buf size from %u to %u\n",
--- 
-2.33.0
-
+Well, __acpi_node_get_property_reference() gets called in a couple of place=
+s.
