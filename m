@@ -1,48 +1,101 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E0F923C51B
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 09:06:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45AA81420DD
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 09:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751447179; cv=none; b=WE0a9TLFXMa++JCQaCuUZF+He2b814xSyHV8c0veGGoSgrXHqV7UTgIEfTuHoQZiTxEYxNNaYxy3nBlwC6yHP41EJkH8CwbJW9Z/MKOFHxlnNM5WyQuEbvwBNEmjn0EJhfHIsE4iFnP7mhsetYFwEAtoWPY5Ox7ZeDWtCWtgIYk=
+	t=1751447275; cv=none; b=JLGWbXDcsfUAsklpgzp21eojuw7RHWPD789w/k48v8qmCHm4Rn8WrC8VTcyXpD4OtBhEE3XOv5iHRS+TohzSFjbp0GiqqbuHXMhjPd1qecJRbbMtRtp0PiKao4WL9qC9hipdRxI4BIX2dZNCJ96GrieOtYhOH/i2UMjpA07SrOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751447179; c=relaxed/simple;
-	bh=qWQYLcF2AAGRx/CVILM4+Wh16U+upllGo9FxrHP/1Js=;
+	s=arc-20240116; t=1751447275; c=relaxed/simple;
+	bh=uGwbwc2vDZcCmUn4tX1K0uHRS8K2PLiYjOCY2lCgyVA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sNin7rVj+uslrfaprtfZLLbZXfgoLe3ZB7SwHSXwsmH/XhhidAjRtZxf58xpV2k69xjdMaYyVZ2JHl4NGKbvzIZqS4ZC1Fqk/mEgrN6t17UXV7sOsiZ2VOjXhcet1S4GdrXpBfSYoiSgcmwLdcduDl8B/YB/rcB7k8YsVVqPsRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=jkvUt3rD; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=FaacuCqGr06ldaMfIz2TeCpDW6IqeNQl68MaPNmRMT0YbkhfbbQJ/D7P/VOV30ZKPAMyHT9Tod0DEtLCoGibZRqJAZJAmTld2XlulNtSpajaSw+3Cs2w3OrbXl1jhYG1B6fk9wSBNSbFt/1cfuqhLKhyv/WJGtKBJ+3l/BqlWiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YjlWNsOV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=CiXv54a/; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YjlWNsOV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=CiXv54a/; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jkvUt3rD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=7yYZ7D7mpffybeFSkvi6sI8K1ligOfKZH0hDhP/Vqkw=; b=jkvUt3rDuZLsmNB7ZfpPh5T0eM
-	Yk9gcQFZstXnAun8aN2212Xx5mlMXtLy/w1+Mb71EIkDfrnF4Xx+Y8m7aAZmy39lEhkIQylym6ARF
-	KmHFQgHl85xmuV+LV5UWtZFm+6J/pBibs+iPi7o1q+ClbPFn3GSYoUqwowPWzIuuIS6/hS5LWmIh/
-	aH4x/vFt1bEaKZNppcFJB8sP61a60DBmAP4784dScXUEGEPfZvFNU+3J/zikoWvJ/Ygs3mseYNajx
-	iUEmzaS3jdQV18KOWXBnr2fxfoRiMdivAtNSTsvy8N6JwkVtTskjRkOugrOLhPBM/cs/ujW8D9o59
-	jakZKQ/w==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uWtPz-00000009Led-0Sfd;
-	Wed, 02 Jul 2025 09:06:15 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id AE2D7300125; Wed, 02 Jul 2025 11:06:14 +0200 (CEST)
-Date: Wed, 2 Jul 2025 11:06:14 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Wladislav Wiebe <wladislav.wiebe@nokia.com>
-Cc: anna-maria@linutronix.de, frederic@kernel.org, mingo@kernel.org,
-	tglx@linutronix.de, akpm@linux-foundation.org,
-	bigeasy@linutronix.de, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] irq: add support for warning on long-running IRQ handlers
-Message-ID: <20250702090614.GP1613200@noisy.programming.kicks-ass.net>
-References: <20250630124721.18232-1-wladislav.wiebe@nokia.com>
- <20250630132517.GM1613376@noisy.programming.kicks-ass.net>
- <c77690ff-9f3d-4ab8-9443-b377134e90ca@nokia.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YjlWNsOV";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="CiXv54a/";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YjlWNsOV";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="CiXv54a/"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 20D7421185;
+	Wed,  2 Jul 2025 09:07:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751447271; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=P2fD/2YL7KNYrFMoa0ML6XAgkOGWhDNJ70P1HU6KJaI=;
+	b=YjlWNsOV1sSS3J9CyIw57rl8hd8PVXUWqJDsNq+NJ0d34QgIlsGz7coPGka03v/EWlUsyb
+	y9rOyHeJsaiW3b117Bk6ngAZoX1zVoJdjbKVA70G0p3fbyeRsSn06plEscHosUBA6x9ECh
+	QzjwDOZaOtRN+dfejDHBi0kaidBVNYM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751447271;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=P2fD/2YL7KNYrFMoa0ML6XAgkOGWhDNJ70P1HU6KJaI=;
+	b=CiXv54a/Am3bR4gTcZgrBwFs2sk0eQWzOh1O+a0iG484R7wkuFq00aD9/dlYpUutwo3EG2
+	O6B79FWQXQaaaXDg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=YjlWNsOV;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="CiXv54a/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751447271; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=P2fD/2YL7KNYrFMoa0ML6XAgkOGWhDNJ70P1HU6KJaI=;
+	b=YjlWNsOV1sSS3J9CyIw57rl8hd8PVXUWqJDsNq+NJ0d34QgIlsGz7coPGka03v/EWlUsyb
+	y9rOyHeJsaiW3b117Bk6ngAZoX1zVoJdjbKVA70G0p3fbyeRsSn06plEscHosUBA6x9ECh
+	QzjwDOZaOtRN+dfejDHBi0kaidBVNYM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751447271;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=P2fD/2YL7KNYrFMoa0ML6XAgkOGWhDNJ70P1HU6KJaI=;
+	b=CiXv54a/Am3bR4gTcZgrBwFs2sk0eQWzOh1O+a0iG484R7wkuFq00aD9/dlYpUutwo3EG2
+	O6B79FWQXQaaaXDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E121F1369C;
+	Wed,  2 Jul 2025 09:07:49 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Qiw6NOX2ZGiMWQAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Wed, 02 Jul 2025 09:07:49 +0000
+Date: Wed, 2 Jul 2025 11:07:40 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+	Byungchul Park <byungchul@sk.com>,
+	Gregory Price <gourry@gourry.net>,
+	Ying Huang <ying.huang@linux.alibaba.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Pedro Falcato <pfalcato@suse.de>, Rik van Riel <riel@surriel.com>,
+	Harry Yoo <harry.yoo@oracle.com>
+Subject: Re: [PATCH v1 3/4] mm: split folio_pte_batch() into
+ folio_pte_batch() and folio_pte_batch_ext()
+Message-ID: <aGT23D7BBFNXyykW@localhost.localdomain>
+References: <20250627115510.3273675-1-david@redhat.com>
+ <20250627115510.3273675-4-david@redhat.com>
+ <aGT1s-32GpVfVZNU@localhost.localdomain>
+ <17777b93-41f0-4943-963f-0330489b01bc@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,29 +104,62 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c77690ff-9f3d-4ab8-9443-b377134e90ca@nokia.com>
+In-Reply-To: <17777b93-41f0-4943-963f-0330489b01bc@redhat.com>
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 20D7421185
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MIME_TRACE(0.00)[0:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[22];
+	RCVD_COUNT_TWO(0.00)[2];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,kvack.org,linux-foundation.org,oracle.com,suse.cz,google.com,kernel.org,suse.com,nvidia.com,intel.com,gmail.com,sk.com,gourry.net,linux.alibaba.com,suse.de,surriel.com];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[]
+X-Spam-Score: -3.01
+X-Spam-Level: 
 
-On Mon, Jun 30, 2025 at 03:59:17PM +0200, Wladislav Wiebe wrote:
-> 
-> On 30/06/2025 15:25, Peter Zijlstra wrote:
-> > CAUTION: This is an external email. Please be very careful when clicking links or opening attachments. See the URL nok.it/ext for additional information.
-> >
-> >
-> >
-> > On Mon, Jun 30, 2025 at 02:46:44PM +0200, Wladislav Wiebe wrote:
-> >> Introduce a new option CONFIG_IRQ_LATENCY_WARN that enables warnings when
-> >> IRQ handlers take an unusually long time to execute.
-> >>
-> >> When triggered, the warning includes the CPU, IRQ number, handler address,
-> >> name, and execution duration, for example:
-> >>
-> >>   [CPU0] latency on IRQ[787:bad_irq_handler+0x1/0x34 [bad_irq]], took: 5 jiffies (~50 ms)
-> >>
-> >> To keep runtime overhead minimal, this implementation uses a jiffies-based
-> >> timing mechanism. While coarse, it is sufficient to detect problematic IRQs.
-> > local_clock() was found to be excessively expensive?
-> 
-> Perhaps not excessively expensive, but jiffies is the lowest-overhead option here, isn't it?
+On Wed, Jul 02, 2025 at 11:05:17AM +0200, David Hildenbrand wrote:
+> Not necessarily inlined into the body (there might still be a function call,
+> depending on what the compiler decides), but inlined into the object file
+> and optimized by propagating constants.
 
-Yeah, but since it varies in length and even the shortest (1ms) might be
-too long for some, it is of very limited use.
+I see.
+
+> > With this change, a single function, folio_pte_batch(), identical to folio_pte_batch_ext
+> > but without the runtime checks for those arguments will be created (folio_pte_batch()),
+> > and so the users of it won't have it inlined in their body ?
+> 
+> Right. We have a single folio_pte_batch() that is optimized by propagating
+> all constants. Instead of having one per object file, we have a single
+> shared one.
+
+Alright, clear to me now, thanks for claryfing ;-)!
+
+ 
+
+-- 
+Oscar Salvador
+SUSE Labs
