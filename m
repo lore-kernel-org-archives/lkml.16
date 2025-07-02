@@ -1,132 +1,112 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C7D1E8338;
-	Wed,  2 Jul 2025 16:28:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC20E179A7;
+	Wed,  2 Jul 2025 16:31:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751473733; cv=none; b=CzL8TJcPuU+eDGnn1sELTnDW4xk3WKsMy/xRoifkrH0jEuDIT8At5uiSTjCdenRBofFKpxva5cAa5KIKZps5gdkyJrUdw9PWmrQ5Dn6/aBBS+IiqohW56w5IL+gO9KSVMnkoujAL1R4VCiAmaEe0/uuYouDuc6DB0OwerGaX8rE=
+	t=1751473915; cv=none; b=CGcFNh0e9xB4Nw+qs2XuX2LK+uSrItyD/4IjXLAUKdYxYOT/H52VvDOZyh/s1TLUwfWyxKVm9Nqd29E9fBu3moB+ug2n6G6zrxkgO49NaRYOkbhxnhawVbGmmp6mxTXSeU+7OGke/hPxI41vsdzTFKdcYFOAlRQv23cGTd4OXiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751473733; c=relaxed/simple;
-	bh=O78i3PtYhDv6nhyXLLngxRq6HcuIuz811l6iEc8QL50=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KOPKdggoSBvfTHyn3OxgwAhjPoxc/4ryLuS4vsUwK7zigJIQOy5seP+RFMjxgQAE0D9wqOgBnlAu3MzOwGMoFl8FiR4+r4w4M1b+CZ8sCRZIXwstX6iWaHUX6Lm/jA7ts9Ng2rfT6b97/gREHEFqDvKlrsdWMoRYRYzjH8S9oBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id DAD3D1602BE;
-	Wed,  2 Jul 2025 16:28:42 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id 2B2DB20025;
-	Wed,  2 Jul 2025 16:28:38 +0000 (UTC)
-Date: Wed, 2 Jul 2025 12:28:37 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jens Remus <jremus@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa
- <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner
- <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu Bhagat
- <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
- Belgrave <beaub@linux.microsoft.com>, Linus Torvalds
- <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>,
- Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>, Heiko
- Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
-Subject: Re: [PATCH v12 08/11] perf tools: Minimal CALLCHAIN_DEFERRED
- support
-Message-ID: <20250702122837.4bb6f259@batman.local.home>
-In-Reply-To: <51903e66-56bc-42a4-b80c-9c3223e2a48a@linux.ibm.com>
-References: <20250701180410.755491417@goodmis.org>
-	<20250701180456.884974538@goodmis.org>
-	<51903e66-56bc-42a4-b80c-9c3223e2a48a@linux.ibm.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1751473915; c=relaxed/simple;
+	bh=IrCNo4PC0NsD0HLz0/9tt4ktA9q6Z/+LdaUaSaX08Bs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VkAD4SV4txE8WCzDXtXdLxCnouMmyzd5kUVjVPO1OrUxQSdIr5xjF9PQyJvi3XRCCh/VpcZHNvcBmsYI7g1F+gvBhcf2iOdovR2gTbrP0vKjdPA7OsElm52/C6PDhJDNUE4zhZCPE0CUBQLuJsSA3z/H6D6LmpK3m8U+kBcuaZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LIjXtCoc; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LIjXtCoc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751473914; x=1783009914;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=IrCNo4PC0NsD0HLz0/9tt4ktA9q6Z/+LdaUaSaX08Bs=;
+  b=LIjXtCocoBCU7G+Yjv+QUsHlFtbec55yYweV31gx53/c3mgR7NlxVn3n
+   a5f8jJgS8rc0jqGXxLpjgkv9mQZp/OgwnQuSHpuIP1pmIsSovGPghK5CF
+   f64YF6ZSpS2julppBJ+S5mJSJStzhuX/rEcPhfUbn9gv3UAf3oeg3Vmun
+   0k/7APO2ZC37apILd3QLI6iz1FibguCrdrlymy8rvlFLiDdJJsQgSbfaI
+   NAjWBD8JVWsjgLLB+3WiUdGMND/sYJ1c1OFeT9AsqOKL0p0DHhBvFgboN
+   HnbHWvjCoxRNF2yUsQ3S0QaVVpjgAF6k1xYZ9qytQSAYDPrp2GDDLDgCs
+   Q==;
+X-CSE-ConnectionGUID: xyF0ZTR4TCG7oNhfQSyQ6w==
+X-CSE-MsgGUID: zK/D4CSOSq29a1TVdVDULQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="53656282"
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="53656282"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 09:31:33 -0700
+X-CSE-ConnectionGUID: o41iukwUTKKgv6CK8P0eiQ==
+X-CSE-MsgGUID: TJ1zwm1GSr6100lGBcwqBQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="153576647"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 09:31:32 -0700
+Date: Wed, 2 Jul 2025 09:31:30 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: Breno Leitao <leitao@debian.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+	James Morse <james.morse@arm.com>, Borislav Petkov <bp@alien8.de>,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH] acpi/ghes: add TAINT_MACHINE_CHECK on GHES panic path
+Message-ID: <aGVe4nv18dRHHV16@agluck-desk3>
+References: <20250702-add_tain-v1-1-9187b10914b9@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: hrz3gr8g8fnuszqbuqb6g7193rtpwyne
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: 2B2DB20025
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19STW27tMHZTYbWFvw7VDDjMIJafpmxz8w=
-X-HE-Tag: 1751473718-90826
-X-HE-Meta: U2FsdGVkX19qOqy4HoAPzJi9tpj2DHOur5zvbjBtGWXEhvfNsWPD0KDCFYiPR4CkwkQ/ooiR8NESddj/qft5mDm4IdNoqp3V4wBKp24XYQWpoLRCsLAlZ4jvr3LzyLKZ3GjuwUqlimtshFO80UcXhVoqEayyxTlkagitb2hc613XuGtjeFqncew5yn/9dK6m94OoUDvNAlgL5mAV++k88I0zlFSSGn4lZTmhBCQ00HUialrop1Ml7rkRf29Qzq56ZWCmz7tAZ+voi/r5jCuwB33TfYsDhjyK9ZI6UZLegM6PKOSA2iScAoj2FCqscd4gAVlMcZ6jFS1YNwcVmuV8pdg+OMaVyOJv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250702-add_tain-v1-1-9187b10914b9@debian.org>
 
-On Wed, 2 Jul 2025 14:23:24 +0200
-Jens Remus <jremus@linux.ibm.com> wrote:
+On Wed, Jul 02, 2025 at 08:39:51AM -0700, Breno Leitao wrote:
+> When a GHES (Generic Hardware Error Source) triggers a panic, add the
+> TAINT_MACHINE_CHECK taint flag to the kernel. This explicitly marks the
 
-> > +struct perf_record_callchain_deferred {
-> > +	struct perf_event_header header;  
+While it might not strictly be a machine check that caused GHES to
+panic, it seems close enough from the available TAINT options.
+
+So unless someone feels it would be better to create a new TAINT
+flag (TAINT_FATAL_GHES? TAINT_FIRMWARE_REPORTED_FATAL_ERRROR?)
+then this seems OK to me.
+
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+
+> kernel as tainted due to a machine check event, improving diagnostics
+> and post-mortem analysis. The taint is set with LOCKDEP_STILL_OK to
+> indicate lockdep remains valid.
 > 
-> At minimum the timestamp field added to perf with "[PATCH v12 07/11]
-> perf: Support deferred user callchains for per CPU events" needs to be
-> added here as well:
-
-Thanks for the review.
-
+> At large scale deployment, this helps to quickly determin panics that
+> are coming due to hardware failures.
 > 
-> 	__u64			 timestamp;
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> ---
+>  drivers/acpi/apei/ghes.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> Otherwise this and any subsequent enhancements of the perf tools do no
-> longer work at all.  But probably the timestamp field also needs to be
-> used for some purpose?
-
-OK, so this may be part of the discussion about using this as a
-timestamp. The timestamp is the timestamp given by the deferred trace
-infrastructure. It holds the time that this stack trace is valid for.
-But that's assuming that the timestamp is the same as what perf is
-using.
-
-In case of dropped events, we could have the case of:
-
-  system_call() {
-    <nmi> {
-      take kernel stack trace
-      ask for deferred trace.
-
-   [EVENTS START DROPPING HERE]
-    }
-    Call deferred callback to record trace [ BUT IS DROPPED ]
-  }
-
-  system_call() {
-    <nmi> {
-      take kernel stack trace
-      ask for deferred trace [ STILL DROPPING ]
-    }
-    [ READER CATCHES UP AND STARTS READING EVENTS AGAIN]
-
-    Call deferred callback to record trace
-  }
-
-The user space tool will see that kernel stack traces of the first
-system call, then it will see events dropped, and then it will see the
-deferred user space stack trace of the second call.
-
-If the timestamps are in sync with perf and what is passed in, then the
-tool will see that the kernel stack traces from the first system call
-are older than the timestamp of the user stack trace and know that they
-are not related.
-
-Without either saving the timestamp along with the kernel stack traces,
-or having the timestamps in sync, user space will not know whether or
-not if the user space stack trace of the second system call belongs to
-the kernel stack traces that were recorded in the first system call.
-
-I guess the question is, do we just not associate stack traces beyond
-where events are dropped? If so, we don't even need to save the
-timestamp.
-
--- Steve
-
-
+> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+> index f0584ccad4519..3d44f926afe8e 100644
+> --- a/drivers/acpi/apei/ghes.c
+> +++ b/drivers/acpi/apei/ghes.c
+> @@ -1088,6 +1088,8 @@ static void __ghes_panic(struct ghes *ghes,
+>  
+>  	__ghes_print_estatus(KERN_EMERG, ghes->generic, estatus);
+>  
+> +	add_taint(TAINT_MACHINE_CHECK, LOCKDEP_STILL_OK);
+> +
+>  	ghes_clear_estatus(ghes, estatus, buf_paddr, fixmap_idx);
+>  
+>  	if (!panic_timeout)
 > 
-> > +	__u64			 nr;
-> > +	__u64			 ips[];
-> > +};
+> ---
+> base-commit: e96ee511c906c59b7c4e6efd9d9b33917730e000
+> change-id: 20250702-add_tain-902925f3eb96
+> 
+> Best regards,
+> --  
+> Breno Leitao <leitao@debian.org>
+> 
