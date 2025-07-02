@@ -1,33 +1,48 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6A3E1B4F1F;
-	Wed,  2 Jul 2025 06:35:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3404621D3F6
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 06:36:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751438153; cv=none; b=cELha6YQaQ1BXoJPaYQgIXuPvrgkssNaG5O8y8NYvX88w3HmBQeQsM/dristANj9kD8dM+WmDFWKecqZyzMB8dJRueoZgHDUfKCBWDSD6XKwMRkFzCObP+DR1u0TYK0vyVCHYCdA1DTwtqTrUDl2OGwbEHDs3QE4Kpvu6X/t22M=
+	t=1751438172; cv=none; b=XlQYHZycs8Zuf+p0yN6ZTfGU5EJzo74EhHhmMgFAPoSJnerrwAwvYRunNV7YfKU4jkr+wWcnr2HDL+VGsQcARA2d+WsJKTsbGr3CtiCe7K6DByTn4GeFj5sr1bRpBPrg377Yz4r+xQtxFA2Oeqp72qOtBK/rRBQhPFmhpY46oRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751438153; c=relaxed/simple;
-	bh=fqRreMA45Df/KL0jkrdfhWf0A/YHyyRMveuTP4pWk1k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PPYB11HPaGrsS2cNLTIwtVkDclI6hUG/Rh/AWhlbA7pq75ZyPcRCvjY97SQihrkoPPuPw6N9HxYSU7k+Rg4cNasS0WBDyB1jjuZIOS49+8aj/H8pU8nD6TFAuPGhAsQYhIa21f4fndRhcoIiAyxsHQZfxLBzX9aTyJWGlL+IkQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FnqVTslP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751438172; c=relaxed/simple;
+	bh=loZYD/7+d+SyvCcFV0YaDppWBmbpIQX+C6/7Reg6fiQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=HZTogrUGtPtdp91yqVE/eGD7Ze/vVj78IPyDNF+XDgRpEQpZtM+WIdl5mOMbAOujZGj549xpIoMIhxmV/5QylM9rPlvXoRlzgl/tHF1SaFF0o7we058107Nn5lnZi5nMCWlAcbxCuThLPEe8+azSr+51Rxk7EmJWXHXWcuXSUSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=vDq9Y0DO; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FnqVTslP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98DFBC4CEEF;
-	Wed,  2 Jul 2025 06:35:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751438152;
-	bh=fqRreMA45Df/KL0jkrdfhWf0A/YHyyRMveuTP4pWk1k=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FnqVTslPsn1EY7AXbZKh8dNczsiWErGA7u5XM2+Z1Bw/rmh9BfEqA+8Rka5HTH5h6
-	 ZuYbzQxZqGIkoXHIHLvcDd6SAxNWguinhQAAHiWKE7nR9AdP4UoyZmEIrS6dh+cjZt
-	 OAAftjALjnsN8a46ehHdmnljPdkucF6giob2qG/RTmve6wrn/92G5vXvUZG0ZUHunE
-	 IVWjfl3hNRLqpIOsJgEcowpLWi4jBuI5af5WrvORk3ztFhT8O1L+g83dzSwHNV38ow
-	 YE4FI2UAaelPXD9D3T+AoVdpxCMCDIYBsAoBQIIjEO7/wMIvT2421QNX5+t+XdYlfI
-	 w3svJ24Yj8/Yg==
-Message-ID: <daf6fb72-5849-49f7-b17a-818944eb9f1e@kernel.org>
-Date: Wed, 2 Jul 2025 08:35:42 +0200
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vDq9Y0DO"
+Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 5626Zqja3851315;
+	Wed, 2 Jul 2025 01:35:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1751438152;
+	bh=jOAZPdRxmxpydDoyMxiBT6V441wiwaKmDzKIIsUgjHk=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=vDq9Y0DOi/bjtGMSCbyu8x55cw3htCWcvunM0H/WNjMJmoBp4zM+4eGUePy5SPfbv
+	 YT6MRYNNl0E3blkVEQ5Fpz1AUcvsLwZFg+EJe+VV+t3VWkIAibBpHCMudZvk8AnEZd
+	 YOqiCRShBjo5+V2lVQnhihXTcNybP/xsWRV41iIc=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 5626Zq213294411
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Wed, 2 Jul 2025 01:35:52 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Wed, 2
+ Jul 2025 01:35:51 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Wed, 2 Jul 2025 01:35:51 -0500
+Received: from [172.24.227.166] (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [172.24.227.166])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5626ZmVK2667037;
+	Wed, 2 Jul 2025 01:35:48 -0500
+Message-ID: <ef7df56a-8c72-4146-95a1-ec65450cb4b4@ti.com>
+Date: Wed, 2 Jul 2025 12:05:47 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,108 +50,261 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/7] media: nxp: add DesignWare MIPI CSI2 controller
- driver
-To: Frank Li <Frank.Li@nxp.com>, Rui Miguel Silva <rmfrfs@gmail.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Martin Kepplinger <martink@posteo.de>, Purism Kernel Team <kernel@puri.sm>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Eugen Hristev <eugen.hristev@linaro.org>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Peng Fan <peng.fan@nxp.com>,
- Alice Yuan <alice.yuan@nxp.com>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-phy@lists.infradead.org,
- "Guoniu.zhou" <guoniu.zhou@nxp.com>
-References: <20250701-95_cam-v1-0-c5172bab387b@nxp.com>
- <20250701-95_cam-v1-5-c5172bab387b@nxp.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v3 2/3] drm/tidss: Remove max_pclk_khz from tidss display
+ features
+To: Devarsh Thakkar <devarsht@ti.com>, <jyri.sarha@iki.fi>,
+        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+        <tzimmermann@suse.de>, <dri-devel@lists.freedesktop.org>,
+        <tomi.valkeinen@ideasonboard.com>, <mwalle@kernel.org>
+CC: <airlied@gmail.com>, <simona@ffwll.ch>, <linux-kernel@vger.kernel.org>
+References: <20250701095541.190422-1-j-choudhary@ti.com>
+ <20250701095541.190422-3-j-choudhary@ti.com>
+ <a382dc7d-94f8-4fe5-99a6-913e73d4a808@ti.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250701-95_cam-v1-5-c5172bab387b@nxp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Jayesh Choudhary <j-choudhary@ti.com>
+In-Reply-To: <a382dc7d-94f8-4fe5-99a6-913e73d4a808@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 02/07/2025 00:06, Frank Li wrote:
-> +
-> +static const struct of_device_id dwc_csi_device_of_match[] = {
-> +	{ .compatible = "snps,dw-mipi-csi2-v150" },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, dwc_csi_device_of_match);
-> +
-> +static struct platform_driver dwc_csi_device_driver = {
-> +	.driver = {
-> +		.owner          = THIS_MODULE,
+Hello Devarsh,
 
-That's 12 or 15 year old downstream code. Drop.
-
-> +		.name           = "dwc-mipi-csi2",
-> +		.of_match_table = dwc_csi_device_of_match,
-> +		.pm             = &dwc_csi_device_pm_ops,
-> +	},
-> +	.probe  = dwc_csi_device_probe,
-> +	.remove = dwc_csi_device_remove,
-> +};
-> +
-> +module_platform_driver(dwc_csi_device_driver);
-> +
-> +MODULE_DESCRIPTION("DesignWare Core MIPI CSI2 driver");
-> +MODULE_LICENSE("GPL");
-> +MODULE_ALIAS("platform: dwc-mipi-csi2");
-
-No, drop.
-
-> +MODULE_AUTHOR("NXP Semiconductor, Inc.");
+On 01/07/25 18:42, Devarsh Thakkar wrote:
+> Hi Jayesh,
 > 
+> On 01/07/25 15:25, Jayesh Choudhary wrote:
+>> TIDSS hardware by itself does not have variable max_pclk for each VP.
+>> The maximum pixel clock is determined by the limiting factor between
+>> the functional clock and the PLL
+> 
+> and the pixel clock
 
+PLL is the parent to that pixel clock so seemed implicit to me.
+But will make it more clear.
 
-Best regards,
-Krzysztof
+> .
+>>
+>> The limitation that has been modeled till now comes from the clock
+>> (PLL can only be programmed to a particular max value). Instead of
+>> putting it as a constant field in dispc_features, we can query the
+>> DM to see if requested clock can be set or not and use it in
+>> "mode_valid()".
+>>
+>> Replace constant "max_pclk_khz" in dispc_features with "curr_max_pclk"
+>> in tidss_device structure which would be modified in runtime.
+>> In mode_valid() call, check if a best frequency match for mode clock
+>> can be found or not using "clk_round_rate()". Based on that, propagate
+>> "cur_max_pclk" and query DM again only if the requested mode clock
+>> is greater than cur_max_pclk. (As the preferred display mode is usually
+>> the max resolution, driver ends up checking the highest clock the first
+>> time itself which is used in subsequent checks)
+>>
+>> Since TIDSS display controller provides clock tolerance of 5%, we use
+>> this while checking the curr_max_pclk. Also, move up "dispc_pclk_diff()"
+>> before it is called.
+>>
+>> This will make the existing compatibles reusable
+> 
+> reusable if DSS features are same across two SoCs and only difference 
+> being the pixel clock.
+
+Sure.
+
+> 
+>>
+>> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+>> ---
+>>   drivers/gpu/drm/tidss/tidss_dispc.c | 77 +++++++++++------------------
+>>   drivers/gpu/drm/tidss/tidss_dispc.h |  1 -
+>>   drivers/gpu/drm/tidss/tidss_drv.h   |  2 +
+>>   3 files changed, 31 insertions(+), 49 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/tidss/tidss_dispc.c 
+>> b/drivers/gpu/drm/tidss/tidss_dispc.c
+>> index 3f6cff2ab1b2..fb59a6a0f86a 100644
+>> --- a/drivers/gpu/drm/tidss/tidss_dispc.c
+>> +++ b/drivers/gpu/drm/tidss/tidss_dispc.c
+>> @@ -58,10 +58,6 @@ static const u16 
+>> tidss_k2g_common_regs[DISPC_COMMON_REG_TABLE_LEN] = {
+>>   const struct dispc_features dispc_k2g_feats = {
+>>       .min_pclk_khz = 4375,
+>> -    .max_pclk_khz = {
+>> -        [DISPC_VP_DPI] = 150000,
+>> -    },
+>> -
+>>       /*
+>>        * XXX According TRM the RGB input buffer width up to 2560 should
+>>        *     work on 3 taps, but in practice it only works up to 1280.
+>> @@ -144,11 +140,6 @@ static const u16 
+>> tidss_am65x_common_regs[DISPC_COMMON_REG_TABLE_LEN] = {
+>>   };
+>>   const struct dispc_features dispc_am65x_feats = {
+>> -    .max_pclk_khz = {
+>> -        [DISPC_VP_DPI] = 165000,
+>> -        [DISPC_VP_OLDI_AM65X] = 165000,
+>> -    },
+>> -
+>>       .scaling = {
+>>           .in_width_max_5tap_rgb = 1280,
+>>           .in_width_max_3tap_rgb = 2560,
+>> @@ -244,11 +235,6 @@ static const u16 
+>> tidss_j721e_common_regs[DISPC_COMMON_REG_TABLE_LEN] = {
+>>   };
+>>   const struct dispc_features dispc_j721e_feats = {
+>> -    .max_pclk_khz = {
+>> -        [DISPC_VP_DPI] = 170000,
+>> -        [DISPC_VP_INTERNAL] = 600000,
+>> -    },
+>> -
+>>       .scaling = {
+>>           .in_width_max_5tap_rgb = 2048,
+>>           .in_width_max_3tap_rgb = 4096,
+>> @@ -315,11 +301,6 @@ const struct dispc_features dispc_j721e_feats = {
+>>   };
+>>   const struct dispc_features dispc_am625_feats = {
+>> -    .max_pclk_khz = {
+>> -        [DISPC_VP_DPI] = 165000,
+>> -        [DISPC_VP_INTERNAL] = 170000,
+>> -    },
+>> -
+>>       .scaling = {
+>>           .in_width_max_5tap_rgb = 1280,
+>>           .in_width_max_3tap_rgb = 2560,
+>> @@ -376,15 +357,6 @@ const struct dispc_features dispc_am625_feats = {
+>>   };
+>>   const struct dispc_features dispc_am62a7_feats = {
+>> -    /*
+>> -     * if the code reaches dispc_mode_valid with VP1,
+>> -     * it should return MODE_BAD.
+>> -     */
+>> -    .max_pclk_khz = {
+>> -        [DISPC_VP_TIED_OFF] = 0,
+>> -        [DISPC_VP_DPI] = 165000,
+>> -    },
+>> -
+>>       .scaling = {
+>>           .in_width_max_5tap_rgb = 1280,
+>>           .in_width_max_3tap_rgb = 2560,
+>> @@ -441,10 +413,6 @@ const struct dispc_features dispc_am62a7_feats = {
+>>   };
+>>   const struct dispc_features dispc_am62l_feats = {
+>> -    .max_pclk_khz = {
+>> -        [DISPC_VP_DPI] = 165000,
+>> -    },
+>> -
+>>       .subrev = DISPC_AM62L,
+>>       .common = "common",
+>> @@ -1347,25 +1315,49 @@ static void dispc_vp_set_default_color(struct 
+>> dispc_device *dispc,
+>>               DISPC_OVR_DEFAULT_COLOR2, (v >> 32) & 0xffff);
+>>   }
+>> +/*
+>> + * Calculate the percentage difference between the requested pixel 
+>> clock rate
+>> + * and the effective rate resulting from calculating the clock 
+>> divider value.
+>> + */
+>> +unsigned int dispc_pclk_diff(unsigned long rate, unsigned long 
+>> real_rate)
+>> +{
+>> +    int r = rate / 100, rr = real_rate / 100;
+>> +
+>> +    return (unsigned int)(abs(((rr - r) * 100) / r));
+>> +}
+>> +
+>> +static int check_pixel_clock(struct dispc_device *dispc,
+>> +                 u32 hw_videoport, unsigned long clock)
+>> +{
+>> +    if (clock > dispc->tidss->curr_max_pclk[hw_videoport] &&
+>> +        !dispc->tidss->is_oldi_vp[hw_videoport]) {
+>> +        unsigned long round_clock = 
+>> clk_round_rate(dispc->vp_clk[hw_videoport], clock);
+>> +
+>> +        if (dispc_pclk_diff(clock, round_clock) > 5)
+>> +            return -EINVAL;
+>> +
+>> +        dispc->tidss->curr_max_pclk[hw_videoport] = round_clock;
+>> +    }
+>> +
+>> +    return 0;
+>> +}
+>> +
+>>   enum drm_mode_status dispc_vp_mode_valid(struct dispc_device *dispc,
+>>                        u32 hw_videoport,
+>>                        const struct drm_display_mode *mode)
+>>   {
+>>       u32 hsw, hfp, hbp, vsw, vfp, vbp;
+>>       enum dispc_vp_bus_type bus_type;
+>> -    int max_pclk;
+>>       bus_type = dispc->feat->vp_bus_type[hw_videoport];
+>> -    max_pclk = dispc->feat->max_pclk_khz[bus_type];
+>> -
+>> -    if (WARN_ON(max_pclk == 0))
+>> +    if (WARN_ON(bus_type == DISPC_VP_TIED_OFF))
+>>           return MODE_BAD;
+>>       if (mode->clock < dispc->feat->min_pclk_khz)
+>>           return MODE_CLOCK_LOW;
+>> -    if (mode->clock > max_pclk)
+>> +    if (check_pixel_clock(dispc, hw_videoport, mode->clock * 1000))
+>>           return MODE_CLOCK_HIGH;
+>>       if (mode->hdisplay > 4096)
+>> @@ -1437,17 +1429,6 @@ void dispc_vp_disable_clk(struct dispc_device 
+>> *dispc, u32 hw_videoport)
+>>       clk_disable_unprepare(dispc->vp_clk[hw_videoport]);
+>>   }
+>> -/*
+>> - * Calculate the percentage difference between the requested pixel 
+>> clock rate
+>> - * and the effective rate resulting from calculating the clock 
+>> divider value.
+>> - */
+>> -unsigned int dispc_pclk_diff(unsigned long rate, unsigned long 
+>> real_rate)
+>> -{
+>> -    int r = rate / 100, rr = real_rate / 100;
+>> -
+>> -    return (unsigned int)(abs(((rr - r) * 100) / r));
+>> -}
+>> -
+>>   int dispc_vp_set_clk_rate(struct dispc_device *dispc, u32 hw_videoport,
+>>                 unsigned long rate)
+>>   {
+>> diff --git a/drivers/gpu/drm/tidss/tidss_dispc.h 
+>> b/drivers/gpu/drm/tidss/tidss_dispc.h
+>> index 60c1b400eb89..fbfe6e304ac8 100644
+>> --- a/drivers/gpu/drm/tidss/tidss_dispc.h
+>> +++ b/drivers/gpu/drm/tidss/tidss_dispc.h
+>> @@ -78,7 +78,6 @@ enum dispc_dss_subrevision {
+>>   struct dispc_features {
+>>       int min_pclk_khz;
+>> -    int max_pclk_khz[DISPC_VP_MAX_BUS_TYPE];
+>>       struct dispc_features_scaling scaling;
+>> diff --git a/drivers/gpu/drm/tidss/tidss_drv.h 
+>> b/drivers/gpu/drm/tidss/tidss_drv.h
+>> index 82beaaceadb3..e89c38a386f7 100644
+>> --- a/drivers/gpu/drm/tidss/tidss_drv.h
+>> +++ b/drivers/gpu/drm/tidss/tidss_drv.h
+>> @@ -25,6 +25,8 @@ struct tidss_device {
+>>       const struct dispc_features *feat;
+>>       struct dispc_device *dispc;
+>>       bool is_oldi_vp[TIDSS_MAX_PORTS];
+>> +    /* stores max supported pixel clock requested during checking 
+>> modes */
+> 
+> Stores highest pixel clock value found to be valid while checking 
+> supported modes for connected display
+
+Will change in v4.
+
+Thanks,
+Jayesh
+
+> 
+> With suggested changes,
+> Reviewed-by: Devarsh Thakkar <devarsht@ti.com>
+> 
+> Regards
+> Devarsh
+> 
+>> +    unsigned long curr_max_pclk[TIDSS_MAX_PORTS];
+>>       unsigned int num_crtcs;
