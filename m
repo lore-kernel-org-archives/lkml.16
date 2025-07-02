@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D92714A62B;
-	Wed,  2 Jul 2025 02:39:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5621D5ADC;
+	Wed,  2 Jul 2025 02:40:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751423999; cv=none; b=ulcoCWjy3VeA0QdH0CB1lJfBJfTsvByaJrXPfmgzgTMoWBSXlDdCTOKdneg1aXGtQuzgZVYPVm25CdLV9XOcLWPTO5WB1Not9P3FyWxhv81xsKrpHb7Tglipzfy3Y5EtN4AWX+OkJ8TDO7WvaCVg4TXALBqctMcdCWyixXYlfe4=
+	t=1751424002; cv=none; b=MH/Ge+uXwj5LPiI6cp/dSbmPgHtzNXh/6pf9Rrdz4BidD/KrnJT65Fz2uqvVkhsWHFHMOoapBl+OWj+kJi1nTGeB0jhZ2QODETfGceXCTCff0JNETRcTf+kzPPZp6yGT2kP5J4Y4gLpinRnFTd1uwJVQcG3LEPQZLhMLBsl7d64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751423999; c=relaxed/simple;
-	bh=mmwcxFS8M6BVCedb3hMbZp6UScETxHWyOl9HJAxO40s=;
+	s=arc-20240116; t=1751424002; c=relaxed/simple;
+	bh=BgqoyH7BZAdjNzSV8UuKTMppKfENt1BfB4wMrIRE850=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=B9p6M9oghV+d6hLjBgpglBGPQSca5STL9+1oeV1Zq74Plt/rCN5xNdLXagbflHiQh/UwuCCU5yW4pGXSTwspwOi0aacNatexZVfvjdq5B2D7k9PvrziUo8ht2PVv7GcQ32f3Kuhq0HfJ4i41cU9FUjJuHR9Eulj8CKFjvQ3G6zA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n/Bf/eU3; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=E0yZcHceAWOht2nfePb1ERffEPqkaLZVC/JOUtWXAyj1z5WU8DAB6PoiCLtYbVT40akQPsHMyHnFTCP0suaLq3B0tpEaDulIVNe86QS2ml+UhGcv/hbKwRcuT77WLN2JyoOkSuSGLBXSmhY4JOOOVaIXru8j4GfrpD7EWebN+iM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C6rFgR/U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n/Bf/eU3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7175CC4CEEB;
-	Wed,  2 Jul 2025 02:39:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C6rFgR/U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76D83C4CEEF;
+	Wed,  2 Jul 2025 02:40:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751423999;
-	bh=mmwcxFS8M6BVCedb3hMbZp6UScETxHWyOl9HJAxO40s=;
+	s=k20201202; t=1751424002;
+	bh=BgqoyH7BZAdjNzSV8UuKTMppKfENt1BfB4wMrIRE850=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=n/Bf/eU3GH5kqN6/P4xhXUz+CJD6ND+K+pLKPupMzivmzFJ1cGY8UtLQRsVcMpzNL
-	 i/QsrfI17ioj0i9Wr4zRIyVvTU1iMoKK8sWyPQFOeNW7TwnFGG7Fwh9/lcFy5LEZxI
-	 AHL7ErcMutJc/s8zMdWX8O9gWS6V8FYbmqkqYTJ0NpRpL89de1OJ+yL5tMfwZFAxLd
-	 kSmm4inheufYpyMsWPhX3Nbdj5r8GGgqi6XObdbUJ4xq3dUgRHlE9l/qr8e1OVgGA9
-	 0KSi7PQM8YuHDE//NY/nGsLxpXJvfBraVlec7DVkv/XvoITspUOa40W2RpbW+VXZ/h
-	 TdNul3qS5Q/8g==
+	b=C6rFgR/UGjtdTidwgGKyZXamMpf13xxwc4hqQbUeb59RuKSpw3puMxppVDXyqEpTN
+	 zPI6QNtetzxZMFZ6EOGceVp6GwXgk0jAmnqbhQiX+PsvVENK+zj1q68R5pRdiyquKT
+	 KAzefG9sSn07mXu6WThKWjM1lStf2UEWsR4uRuJCPvL42b6duw5S7uJSZe0b5kUjTm
+	 XYKMzGx7DxqB8FQZuO9XsuY7DUDEgRpiMGovsATR8HlxkczWxy1HbNrEjESsFNOEZH
+	 yp00P7Pn8+k6mw+02UfNMVGx32WXZGIGHbfGRwzGyMwiigJ/EmiTPFXF/nk5fbzkBa
+	 ZyeDBn4ThsFDA==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70E81383BA06;
-	Wed,  2 Jul 2025 02:40:25 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70FC6383BA06;
+	Wed,  2 Jul 2025 02:40:28 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,41 +37,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/2] seg6: fix typos in comments within the SRv6
- subsystem
+Subject: Re: [PATCH net-next] net: mana: Handle Reset Request from MANA NIC
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <175142402424.183540.7987068313674190464.git-patchwork-notify@kernel.org>
-Date: Wed, 02 Jul 2025 02:40:24 +0000
-References: <20250629171226.4988-1-andrea.mayer@uniroma2.it>
-In-Reply-To: <20250629171226.4988-1-andrea.mayer@uniroma2.it>
-To: Andrea Mayer <andrea.mayer@uniroma2.it>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, dsahern@kernel.org, horms@kernel.org, shuah@kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- stefano.salsano@uniroma2.it, paolo.lungaroni@uniroma2.it
+ <175142402700.183540.8619749523804992864.git-patchwork-notify@kernel.org>
+Date: Wed, 02 Jul 2025 02:40:27 +0000
+References: <1751055983-29760-1-git-send-email-haiyangz@linux.microsoft.com>
+In-Reply-To: <1751055983-29760-1-git-send-email-haiyangz@linux.microsoft.com>
+To: Haiyang Zhang <haiyangz@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+ haiyangz@microsoft.com, decui@microsoft.com, stephen@networkplumber.org,
+ kys@microsoft.com, paulros@microsoft.com, olaf@aepfle.de,
+ vkuznets@redhat.com, davem@davemloft.net, wei.liu@kernel.org,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, leon@kernel.org,
+ longli@microsoft.com, ssengar@linux.microsoft.com,
+ linux-rdma@vger.kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+ bpf@vger.kernel.org, ast@kernel.org, hawk@kernel.org, tglx@linutronix.de,
+ shradhagupta@linux.microsoft.com, andrew+netdev@lunn.ch,
+ kotaranov@microsoft.com, horms@kernel.org, linux-kernel@vger.kernel.org
 
 Hello:
 
-This series was applied to netdev/net-next.git (main)
+This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Sun, 29 Jun 2025 19:12:24 +0200 you wrote:
-> In this patchset, we correct some typos found both in the SRv6 Endpoints
-> implementation (i.e., seg6local) and in some SRv6 selftests, using
-> codespell.
+On Fri, 27 Jun 2025 13:26:23 -0700 you wrote:
+> From: Haiyang Zhang <haiyangz@microsoft.com>
 > 
-> The patchset is organized as follows:
->   Patch 1/2: seg6: fix lenghts typo in a comment
->   Patch 2/2: selftests: seg6: fix instaces typo in comments
+> Upon receiving the Reset Request, pause the connection and clean up
+> queues, wait for the specified period, then resume the NIC.
+> In the cleanup phase, the HWC is no longer responding, so set hwc_timeout
+> to zero to skip waiting on the response.
 > 
 > [...]
 
 Here is the summary with links:
-  - [net-next,1/2] seg6: fix lenghts typo in a comment
-    https://git.kernel.org/netdev/net-next/c/db3e2ceab3c7
-  - [net-next,2/2] selftests: seg6: fix instaces typo in comments
-    https://git.kernel.org/netdev/net-next/c/3bedaff19bd8
+  - [net-next] net: mana: Handle Reset Request from MANA NIC
+    https://git.kernel.org/netdev/net-next/c/fbe346ce9d62
 
 You are awesome, thank you!
 -- 
