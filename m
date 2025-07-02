@@ -1,335 +1,168 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F331DDC07
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 16:48:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A48542F50B4;
+	Wed,  2 Jul 2025 16:49:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751474930; cv=none; b=j+mTlsYxZV7Rm1GOtLjd+JX3V2mFZ5VSVesWSzneXGBUp+xYs/gxNJTCLEkxYqPjv5PiwoJbbShjhYsFRaLlHIvSIkGZnUdai2Wx7m+VNzmbKrEtKZM2XZr3dCi9noRJK5zz4TldJCu7gkX8FWWZuWTMegMEPYL8WW+j1RJip64=
+	t=1751474999; cv=none; b=s/88saz41yzMDy1NfM3yzQicD09tR58IXqZYsz8gV9CZVCYBHZy1eFM7GR/5lBCeioj4qDT+sMc8XmO5sgOeBIAMfDHcmXU6aftYNyV3NbS0lBgwtc0qeMKPJR1ixl5W2WvqQo7imqblzF7X6fZ3+tEwyjADNdUF9HaHDGaKuMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751474930; c=relaxed/simple;
-	bh=3NNDUeuHsvo2VX6nwrGAtLPPIQB8S69YI6TjV7kH6Xo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=O8KHhv6QDsLtnqF8z0Ji+R0ZzWMFQZ5zxaLN/Xf8xnobwwJmtUq5c9CwicdhsVU7q5t6gLwomvGnLVLa4Lzj5n34hlQSpxqbx/E75XWxkv9u2j3l68jEfMOz+TIzzD3Zd2ReTq32mQPenNdLo1h1Hl5FXLIOBcnrekW1/0GkXKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=jox5dEQL; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1751474999; c=relaxed/simple;
+	bh=Hh/4tWWTDXvZ8GsDxvsEMlv9qEMhw4hDFi2Gr2kYNwA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CTMgeX3XWxpLZ+9VXQn/rBCW+7MmBvrCJLEn2sJduYn1xln5e0X37zuyWEjrQ9ClY0KSgejI4NanPklRZo5rIC5j63tOLmmEClbfKgs8EJUjGOhHIWxmFuE5HoVOV0FwDQroymKpKSYR5rIrMdr4CGer4Ci8IDPHve59aWD4quA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=QhDuSF9w; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="jox5dEQL"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-450ce3a2dd5so37382355e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 09:48:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751474925; x=1752079725; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wQYTPO1XpKJCQcWh+sfxZYptd6FBAp1btwUGf5q+fT0=;
-        b=jox5dEQLzQGHzatEkgxyIbRCgQ3U2OtENHotL4Tg4U4PHRgItjRPl+3R4kFbCMcqh7
-         gTvhB+Ac6K8BiKyy0XyyXEEHZUdYmjvVLbIMJWGKUg8QQPb1aK0xshvJVo0jWDGk5hIj
-         bhS7/w//EVOsXVImBFFVer4zQBF/AhCG+iLwmljnFVYuaFQGa38oxPK+Xzw957ZBiDBK
-         nDAn5kUbK2w6le0ojB8a3gIw/JVb74F19Aw7tZ8REd22myolUN1C4jpQ/OvCxGGdfF+c
-         A+9aTgCOxEyCKrU7OF5kYSWWTFgCuJwZVwCNnaLXbXzT5eAxxq6IxxZSkrxCVZWFiJ/f
-         RaGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751474925; x=1752079725;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wQYTPO1XpKJCQcWh+sfxZYptd6FBAp1btwUGf5q+fT0=;
-        b=epq4fTdWw9LfZaXkNiV0HYgfomiEOaBEZ3dIunwlP1AUPxlV6UmDUgQ7yxIthfZXYS
-         ayUb3Ymlz/IPF7RXCr8NEhd23PaDjoFYUwLDTtOSGhU+uiZ9UCt33/PcsGHXjiJYLKq8
-         y5nK9u2mvbiGz6I+BfGvvU6bjTUSC2v/7Gxg56RidR4Lso98x5vOlZVrWa50K+1bcPiV
-         BW0lZrI+dd+UqGWM167htSkEshFc+CaRYYnyOtxUpkZwjFkclfpgvvUxn/k3LZqcaIU1
-         +fo8ndE2BZst5F4AtNj8n3LZ5sU5TDhSLgql3NsLzoMjO2gXi9fZ31rlmuEI+qB1a2DN
-         zh4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWTfJNH3B0LlVnSRgfQept6YlJqqwehCJ7LXK2OFV8LuysXHRxi09+CZ/H/wZM2GuwcOKvzdEChDM3Bm4Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPIbTorOMUbG11prkGhckjH3/AOZzl2FTnjmJDSqtNvSx0MMot
-	eGb174R20j5xYZaMyLNjpU3/vSMasuYIeCta5ZAM8y/NjC2h0DtruJGFXS0KEUgNfYE=
-X-Gm-Gg: ASbGncsZfmJII1ec6YryyPgqOX3cgexeiQGCg7QUoFJxW5OdlBetiIWSJ1rR0S+0SgB
-	mBKeoipkqzoFX8ZZx3VZCKMcqGUMYTaP5QymPioyFST0PZBUCYR63TfoztT0vIdNNxOxmwGe7+4
-	LbJvbC1k8AO3xyzCFQPvOqM19dRWwcpg+coSPYTJN8JNDDvjKoxfznH7V7uWYleYoav4Wbizwx6
-	EbSvZSO6EfgtYX7bmF2kn589nqmYws2RCGdFMiZVu2k/yRqv7fHBR2bB4rF93f1SU38f3n7i6J5
-	H3IOP8bdyOp50R3I+II5leYfuk1RXZvCaHhIazgr4Pi2FC7epS0mmObS3XzNW8JGbE2nu1NOscz
-	r
-X-Google-Smtp-Source: AGHT+IEPJ3J0rEglf3oRey19XgMB/CO1+HMV7zcZXiSO8hUTEF7svDZo9kfDS9gTj/hL3PROF/qvPw==
-X-Received: by 2002:a05:600c:138c:b0:43d:ac5:11e8 with SMTP id 5b1f17b1804b1-454a37030a9mr35785855e9.21.1751474925290;
-        Wed, 02 Jul 2025 09:48:45 -0700 (PDT)
-Received: from toaster.baylibre.com ([2a01:e0a:3c5:5fb1:5542:4bad:e07b:9489])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-454a9bac51bsm2871155e9.39.2025.07.02.09.48.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 09:48:44 -0700 (PDT)
-From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Wed, 02 Jul 2025 18:48:33 +0200
-Subject: [PATCH v3 1/2] NTB: epf: Allow arbitrary BAR mapping
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QhDuSF9w"
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 562GnRZ53292728;
+	Wed, 2 Jul 2025 11:49:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1751474967;
+	bh=Lutp9KfC58W6Br8Zye34zSE8rie3h5J1OHlUnj/vYxE=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=QhDuSF9wOD3wbINzyf7LIdazZrN5c+m6sGSe6TvMY/YC+PFFyNqJj7Q1ga0R7ly2o
+	 uhmCRMPFszW+SmsK/7advkPj0QVRvA6CRaj5S2bq9PYgdaczojuP6b5p2G0RklTYqx
+	 ufq2S2pnOtTbOk2W0xLZ6yHyS0Ucp1N3f+KvQOnc=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 562GnRX94092324
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Wed, 2 Jul 2025 11:49:27 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Wed, 2
+ Jul 2025 11:49:27 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Wed, 2 Jul 2025 11:49:27 -0500
+Received: from DMZ007XYY.dhcp.ti.com (dmz007xyy.dhcp.ti.com [128.247.29.251])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 562GnQ5M3771376;
+	Wed, 2 Jul 2025 11:49:26 -0500
+From: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+To: <aaro.koskinen@iki.fi>, <andreas@kemnade.info>, <khilman@baylibre.com>,
+        <rogerq@kernel.org>, <tony@atomide.com>, <linus.walleij@linaro.org>,
+        <brgl@bgdev.pl>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
+CC: <m-leonard@ti.com>, <praneeth@ti.com>, <jcormier@criticallink.com>
+Subject: [PATCH v5 1/2] gpio: tps65219: Update _IDX & _OFFSET macro prefix
+Date: Wed, 2 Jul 2025 11:49:25 -0500
+Message-ID: <20250702164926.2990958-2-s-ramamoorthy@ti.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250702164926.2990958-1-s-ramamoorthy@ti.com>
+References: <20250702164926.2990958-1-s-ramamoorthy@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250702-ntb-rcar-support-v3-1-4268d9c85eb7@baylibre.com>
-References: <20250702-ntb-rcar-support-v3-0-4268d9c85eb7@baylibre.com>
-In-Reply-To: <20250702-ntb-rcar-support-v3-0-4268d9c85eb7@baylibre.com>
-To: Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>, 
- Allen Hubbe <allenbh@gmail.com>
-Cc: ntb@lists.linux.dev, linux-kernel@vger.kernel.org, 
- Frank Li <Frank.li@nxp.com>, 
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
- Yuya Hamamachi <yuya.hamamachi.sx@renesas.com>, 
- Jerome Brunet <jbrunet@baylibre.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7038; i=jbrunet@baylibre.com;
- h=from:subject:message-id; bh=3NNDUeuHsvo2VX6nwrGAtLPPIQB8S69YI6TjV7kH6Xo=;
- b=owEBbQKS/ZANAwAKAeb8Dxw38tqFAcsmYgBoZWLq4jf9IHzmy8o9jT+bID9kK6LiS7h9DfG9m
- lk4fM25b5+JAjMEAAEKAB0WIQT04VmuGPP1bV8btxvm/A8cN/LahQUCaGVi6gAKCRDm/A8cN/La
- hbJBD/4w0rnGn+LFyUs7FufUN9eRBCGjVuT4+6lnVtibIcv+PiiNCRgUnr6Pu/uFIPQXj1q4pNI
- rv56iocDz84MXwDZVSxx6ppA/3NzYDN3ZUIznMvLoWAP4lE3vpe9c4L1ywwtdyOcbx98osCsxU9
- 3Y4zcujnKdqAVcr2NYs7kGw5nBXwGDMn7yAUZMtr0xju4J6rFz6XahqcGDMEyeOXcSanPNwsgga
- iGCUS1n93xUUTU+O15LI24Ar0LASWtLw9WVs/wdwP1IFGSzAqQUlmk5Mt23/8j1mvELzpFvqj6A
- sYc2NLy4V1Q2SenLghs43ADk/sRA5NAdqAqdfGOEvFqa2aypfZlXDF05s8FllMdtTseZB6RZSk3
- EjPQL7mLN7BsNw2ISfs24HvOxaKXSHf4WPT+sjcd5J32BRt1pyXW0gxRnKMn0PWWhr/ww/mAd20
- lLtMjNPk+eG4+Tg+O0A4Tord8oLafjOK/1dcojHVGB9+Zkf5sD5sBkAoL0MjRx6EaBXabzURF9H
- ZCUQXcOtxMIdG2WCPAd5SRmM5OvXjcNtouB9cbUMOoBuLtbHzuolRLhU6s+kja3dTqLFytbWLq1
- E8VFL3ER92LPUIL+7rTAkOit4fE5468zsEKA9Hrcq3qenqGHFKQua9+v5wvOxN7Xt38oFmY5uBd
- s1SE+X++DTOLiQA==
-X-Developer-Key: i=jbrunet@baylibre.com; a=openpgp;
- fpr=F29F26CF27BAE1A9719AE6BDC3C92AAF3E60AED9
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-The NTB epf host driver assumes the BAR number associated with a memory
-window is just incremented from the BAR number associated with MW1. This
-seems to have been enough so far but this is not really how the endpoint
-side work and the two could easily become mis-aligned.
+TPS65215 and TPS65219 are overlapping PMIC devices. While their regulator
+features differe, the GPIO features are the same. In the TPS65219 MFD
+driver, the 2 PMICs share the same "tps65219-gpio" compatible string to
+limit support for TPS65215 in this GPIO driver to comments.
 
-ntb_epf_mw_to_bar() even assumes that the BAR number is the memory window
-index + 2, which means the function only returns a proper result if BAR_2
-is associated with MW1.
+The TPS6521X_GPIO0_IDX and TPS6521X_GPIO0_OFFSET macro name prefixes are
+updated to indicate these macros apply to both PMICs.
 
-Instead, fully describe and allow arbitrary NTB BAR mapping.
-
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+Reviewed-by: Roger Quadros <rogerq@kernel.org>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/ntb/hw/epf/ntb_hw_epf.c | 103 +++++++++++++++++++++-------------------
- 1 file changed, 53 insertions(+), 50 deletions(-)
+ drivers/gpio/gpio-tps65219.c | 27 +++++++++++++++++----------
+ 1 file changed, 17 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/ntb/hw/epf/ntb_hw_epf.c b/drivers/ntb/hw/epf/ntb_hw_epf.c
-index 00f0e78f685bf7917b02dd8a52b5b35f68d5bb64..2b51156e01b0f22ef282d80c08c22af92f49307b 100644
---- a/drivers/ntb/hw/epf/ntb_hw_epf.c
-+++ b/drivers/ntb/hw/epf/ntb_hw_epf.c
-@@ -49,6 +49,7 @@
- #define NTB_EPF_COMMAND_TIMEOUT	1000 /* 1 Sec */
+diff --git a/drivers/gpio/gpio-tps65219.c b/drivers/gpio/gpio-tps65219.c
+index 526640c39a11..3c762103babc 100644
+--- a/drivers/gpio/gpio-tps65219.c
++++ b/drivers/gpio/gpio-tps65219.c
+@@ -1,8 +1,8 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * GPIO driver for TI TPS65219 PMICs
++ * GPIO driver for TI TPS65215/TPS65219 PMICs
+  *
+- * Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
++ * Copyright (C) 2025 Texas Instruments Incorporated - http://www.ti.com/
+  */
  
- enum pci_barno {
-+	NO_BAR = -1,
- 	BAR_0,
- 	BAR_1,
- 	BAR_2,
-@@ -57,16 +58,26 @@ enum pci_barno {
- 	BAR_5,
- };
+ #include <linux/bits.h>
+@@ -13,8 +13,15 @@
+ #include <linux/regmap.h>
  
-+enum epf_ntb_bar {
-+	BAR_CONFIG,
-+	BAR_PEER_SPAD,
-+	BAR_DB,
-+	BAR_MW1,
-+	BAR_MW2,
-+	BAR_MW3,
-+	BAR_MW4,
-+	NTB_BAR_NUM,
-+};
+ #define TPS65219_GPIO0_DIR_MASK		BIT(3)
+-#define TPS65219_GPIO0_OFFSET		2
+-#define TPS65219_GPIO0_IDX		0
++#define TPS6521X_GPIO0_OFFSET		2
++#define TPS6521X_GPIO0_IDX		0
 +
-+#define NTB_EPF_MAX_MW_COUNT	(NTB_BAR_NUM - BAR_MW1)
-+
- struct ntb_epf_dev {
- 	struct ntb_dev ntb;
- 	struct device *dev;
- 	/* Mutex to protect providing commands to NTB EPF */
- 	struct mutex cmd_lock;
++/*
++ * TPS65215 & TPS65219 GPIO mapping
++ * Linux gpio offset 0 -> GPIO (pin16) -> bit_offset 2
++ * Linux gpio offset 1 -> GPO1 (pin8 ) -> bit_offset 0
++ * Linux gpio offset 2 -> GPO2 (pin17) -> bit_offset 1
++ */
  
--	enum pci_barno ctrl_reg_bar;
--	enum pci_barno peer_spad_reg_bar;
--	enum pci_barno db_reg_bar;
--	enum pci_barno mw_bar;
-+	const enum pci_barno *barno_map;
+ struct tps65219_gpio {
+ 	struct gpio_chip gpio_chip;
+@@ -26,7 +33,7 @@ static int tps65219_gpio_get_direction(struct gpio_chip *gc, unsigned int offset
+ 	struct tps65219_gpio *gpio = gpiochip_get_data(gc);
+ 	int ret, val;
  
- 	unsigned int mw_count;
- 	unsigned int spad_count;
-@@ -85,17 +96,6 @@ struct ntb_epf_dev {
+-	if (offset != TPS65219_GPIO0_IDX)
++	if (offset != TPS6521X_GPIO0_IDX)
+ 		return GPIO_LINE_DIRECTION_OUT;
  
- #define ntb_ndev(__ntb) container_of(__ntb, struct ntb_epf_dev, ntb)
+ 	ret = regmap_read(gpio->tps->regmap, TPS65219_REG_MFP_1_CONFIG, &val);
+@@ -42,7 +49,7 @@ static int tps65219_gpio_get(struct gpio_chip *gc, unsigned int offset)
+ 	struct device *dev = gpio->tps->dev;
+ 	int ret, val;
  
--struct ntb_epf_data {
--	/* BAR that contains both control region and self spad region */
--	enum pci_barno ctrl_reg_bar;
--	/* BAR that contains peer spad region */
--	enum pci_barno peer_spad_reg_bar;
--	/* BAR that contains Doorbell region and Memory window '1' */
--	enum pci_barno db_reg_bar;
--	/* BAR that contains memory windows*/
--	enum pci_barno mw_bar;
--};
--
- static int ntb_epf_send_command(struct ntb_epf_dev *ndev, u32 command,
- 				u32 argument)
+-	if (offset != TPS65219_GPIO0_IDX) {
++	if (offset != TPS6521X_GPIO0_IDX) {
+ 		dev_err(dev, "GPIO%d is output only, cannot get\n", offset);
+ 		return -ENOTSUPP;
+ 	}
+@@ -71,7 +78,7 @@ static void tps65219_gpio_set(struct gpio_chip *gc, unsigned int offset, int val
+ 	struct device *dev = gpio->tps->dev;
+ 	int v, mask, bit;
+ 
+-	bit = (offset == TPS65219_GPIO0_IDX) ? TPS65219_GPIO0_OFFSET : offset - 1;
++	bit = (offset == TPS6521X_GPIO0_IDX) ? TPS6521X_GPIO0_OFFSET : offset - 1;
+ 
+ 	mask = BIT(bit);
+ 	v = value ? mask : 0;
+@@ -117,7 +124,7 @@ static int tps65219_gpio_direction_input(struct gpio_chip *gc, unsigned int offs
+ 	struct tps65219_gpio *gpio = gpiochip_get_data(gc);
+ 	struct device *dev = gpio->tps->dev;
+ 
+-	if (offset != TPS65219_GPIO0_IDX) {
++	if (offset != TPS6521X_GPIO0_IDX) {
+ 		dev_err(dev, "GPIO%d is output only, cannot change to input\n", offset);
+ 		return -ENOTSUPP;
+ 	}
+@@ -131,7 +138,7 @@ static int tps65219_gpio_direction_input(struct gpio_chip *gc, unsigned int offs
+ static int tps65219_gpio_direction_output(struct gpio_chip *gc, unsigned int offset, int value)
  {
-@@ -144,7 +144,7 @@ static int ntb_epf_mw_to_bar(struct ntb_epf_dev *ndev, int idx)
- 		return -EINVAL;
- 	}
+ 	tps65219_gpio_set(gc, offset, value);
+-	if (offset != TPS65219_GPIO0_IDX)
++	if (offset != TPS6521X_GPIO0_IDX)
+ 		return 0;
  
--	return idx + 2;
-+	return ndev->barno_map[BAR_MW1 + idx];
- }
+ 	if (tps65219_gpio_get_direction(gc, offset) == GPIO_LINE_DIRECTION_OUT)
+@@ -179,5 +186,5 @@ module_platform_driver(tps65219_gpio_driver);
  
- static int ntb_epf_mw_count(struct ntb_dev *ntb, int pidx)
-@@ -413,7 +413,9 @@ static int ntb_epf_mw_set_trans(struct ntb_dev *ntb, int pidx, int idx,
- 		return -EINVAL;
- 	}
- 
--	bar = idx + ndev->mw_bar;
-+	bar = ntb_epf_mw_to_bar(ndev, idx);
-+	if (bar < 0)
-+		return bar;
- 
- 	mw_size = pci_resource_len(ntb->pdev, bar);
- 
-@@ -455,7 +457,9 @@ static int ntb_epf_peer_mw_get_addr(struct ntb_dev *ntb, int idx,
- 	if (idx == 0)
- 		offset = readl(ndev->ctrl_reg + NTB_EPF_MW1_OFFSET);
- 
--	bar = idx + ndev->mw_bar;
-+	bar = ntb_epf_mw_to_bar(ndev, idx);
-+	if (bar < 0)
-+		return bar;
- 
- 	if (base)
- 		*base = pci_resource_start(ndev->ntb.pdev, bar) + offset;
-@@ -560,6 +564,11 @@ static int ntb_epf_init_dev(struct ntb_epf_dev *ndev)
- 	ndev->mw_count = readl(ndev->ctrl_reg + NTB_EPF_MW_COUNT);
- 	ndev->spad_count = readl(ndev->ctrl_reg + NTB_EPF_SPAD_COUNT);
- 
-+	if (ndev->mw_count > NTB_EPF_MAX_MW_COUNT) {
-+		dev_err(dev, "Unsupported MW count: %u\n", ndev->mw_count);
-+		return -EINVAL;
-+	}
-+
- 	return 0;
- }
- 
-@@ -596,14 +605,15 @@ static int ntb_epf_init_pci(struct ntb_epf_dev *ndev,
- 		dev_warn(&pdev->dev, "Cannot DMA highmem\n");
- 	}
- 
--	ndev->ctrl_reg = pci_iomap(pdev, ndev->ctrl_reg_bar, 0);
-+	ndev->ctrl_reg = pci_iomap(pdev, ndev->barno_map[BAR_CONFIG], 0);
- 	if (!ndev->ctrl_reg) {
- 		ret = -EIO;
- 		goto err_pci_regions;
- 	}
- 
--	if (ndev->peer_spad_reg_bar) {
--		ndev->peer_spad_reg = pci_iomap(pdev, ndev->peer_spad_reg_bar, 0);
-+	if (ndev->barno_map[BAR_PEER_SPAD] != ndev->barno_map[BAR_CONFIG]) {
-+		ndev->peer_spad_reg = pci_iomap(pdev,
-+						ndev->barno_map[BAR_PEER_SPAD], 0);
- 		if (!ndev->peer_spad_reg) {
- 			ret = -EIO;
- 			goto err_pci_regions;
-@@ -614,7 +624,7 @@ static int ntb_epf_init_pci(struct ntb_epf_dev *ndev,
- 		ndev->peer_spad_reg = ndev->ctrl_reg + spad_off  + spad_sz;
- 	}
- 
--	ndev->db_reg = pci_iomap(pdev, ndev->db_reg_bar, 0);
-+	ndev->db_reg = pci_iomap(pdev, ndev->barno_map[BAR_DB], 0);
- 	if (!ndev->db_reg) {
- 		ret = -EIO;
- 		goto err_pci_regions;
-@@ -659,12 +669,7 @@ static void ntb_epf_cleanup_isr(struct ntb_epf_dev *ndev)
- static int ntb_epf_pci_probe(struct pci_dev *pdev,
- 			     const struct pci_device_id *id)
- {
--	enum pci_barno peer_spad_reg_bar = BAR_1;
--	enum pci_barno ctrl_reg_bar = BAR_0;
--	enum pci_barno db_reg_bar = BAR_2;
--	enum pci_barno mw_bar = BAR_2;
- 	struct device *dev = &pdev->dev;
--	struct ntb_epf_data *data;
- 	struct ntb_epf_dev *ndev;
- 	int ret;
- 
-@@ -675,18 +680,10 @@ static int ntb_epf_pci_probe(struct pci_dev *pdev,
- 	if (!ndev)
- 		return -ENOMEM;
- 
--	data = (struct ntb_epf_data *)id->driver_data;
--	if (data) {
--		peer_spad_reg_bar = data->peer_spad_reg_bar;
--		ctrl_reg_bar = data->ctrl_reg_bar;
--		db_reg_bar = data->db_reg_bar;
--		mw_bar = data->mw_bar;
--	}
-+	ndev->barno_map = (const enum pci_barno *)id->driver_data;
-+	if (!ndev->barno_map)
-+		return -EINVAL;
- 
--	ndev->peer_spad_reg_bar = peer_spad_reg_bar;
--	ndev->ctrl_reg_bar = ctrl_reg_bar;
--	ndev->db_reg_bar = db_reg_bar;
--	ndev->mw_bar = mw_bar;
- 	ndev->dev = dev;
- 
- 	ntb_epf_init_struct(ndev, pdev);
-@@ -730,30 +727,36 @@ static void ntb_epf_pci_remove(struct pci_dev *pdev)
- 	ntb_epf_deinit_pci(ndev);
- }
- 
--static const struct ntb_epf_data j721e_data = {
--	.ctrl_reg_bar = BAR_0,
--	.peer_spad_reg_bar = BAR_1,
--	.db_reg_bar = BAR_2,
--	.mw_bar = BAR_2,
-+static const enum pci_barno j721e_map[NTB_BAR_NUM] = {
-+	[BAR_CONFIG]	= BAR_0,
-+	[BAR_PEER_SPAD]	= BAR_1,
-+	[BAR_DB]	= BAR_2,
-+	[BAR_MW1]	= BAR_2,
-+	[BAR_MW2]	= BAR_3,
-+	[BAR_MW3]	= BAR_4,
-+	[BAR_MW4]	= BAR_5
- };
- 
--static const struct ntb_epf_data mx8_data = {
--	.ctrl_reg_bar = BAR_0,
--	.peer_spad_reg_bar = BAR_0,
--	.db_reg_bar = BAR_2,
--	.mw_bar = BAR_4,
-+static const enum pci_barno mx8_map[NTB_BAR_NUM] = {
-+	[BAR_CONFIG]	= BAR_0,
-+	[BAR_PEER_SPAD]	= BAR_0,
-+	[BAR_DB]	= BAR_2,
-+	[BAR_MW1]	= BAR_4,
-+	[BAR_MW2]	= BAR_5,
-+	[BAR_MW3]	= NO_BAR,
-+	[BAR_MW4]	= NO_BAR
- };
- 
- static const struct pci_device_id ntb_epf_pci_tbl[] = {
- 	{
- 		PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_J721E),
- 		.class = PCI_CLASS_MEMORY_RAM << 8, .class_mask = 0xffff00,
--		.driver_data = (kernel_ulong_t)&j721e_data,
-+		.driver_data = (kernel_ulong_t)j721e_map,
- 	},
- 	{
- 		PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, 0x0809),
- 		.class = PCI_CLASS_MEMORY_RAM << 8, .class_mask = 0xffff00,
--		.driver_data = (kernel_ulong_t)&mx8_data,
-+		.driver_data = (kernel_ulong_t)mx8_map,
- 	},
- 	{ },
- };
-
+ MODULE_ALIAS("platform:tps65219-gpio");
+ MODULE_AUTHOR("Jonathan Cormier <jcormier@criticallink.com>");
+-MODULE_DESCRIPTION("TPS65219 GPIO driver");
++MODULE_DESCRIPTION("TPS65215/TPS65219 GPIO driver");
+ MODULE_LICENSE("GPL");
 -- 
-2.47.2
+2.43.0
 
