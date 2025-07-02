@@ -1,190 +1,120 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0C1211F;
-	Wed,  2 Jul 2025 07:57:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FF3E1885B8;
+	Wed,  2 Jul 2025 07:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751443076; cv=none; b=rWMT8gbV+VEgmgjKdVn2k9h1hnPfV/DHF0rCEW94Y2Slw/5vyjzfzBEpqJVX8Jwk7aVjOWFozPSYPGxSuKeeUOO4lm/Y4zlSU0EgzEWFdN8+7Q7GH3MS470aM8rD8ddUs/I6hGgbmc/YhkaATRmasWPgtTWJRqE4ZR2lpPm5fHo=
+	t=1751443145; cv=none; b=IkazmiPVhKoQ7Jjm+ms0k01DIbkswI0mo1NZl7kK9sruT74tEX4hV6Mzol5/HaGYIrsyNGktNTV08o5d5WSScc8QPjoCZ/LvAPjpGR/qtcqw1re4zGDQ5ov83QoOZ+XGXHkv4LHkZy8vWoTt8Bd826Tap9vHysbJPuUfOBmou0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751443076; c=relaxed/simple;
-	bh=oferJm658YK0OfXJHRN4ok4UIvbf/DHykHZIPcj8Jb0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Jy6IsatrhdujIPH4x0x1BcUneUsQcPVQeixL4ujFtOrYIHBGffdyVX/d7igSJcIrukTwZ1IIgRePKWtFMEDMpKM3pg4rEJkTOqG5DgG0BQC+Ytb7LYrDkqlfo9bto8qpwmI2ojw5Yn4ABDMw8gTvtyN7NTjx8YiZVcFlsYfWARg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FLt3gF7i; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751443145; c=relaxed/simple;
+	bh=iZDqSRF7JrWoop63heCZMy2IoVgHMVBjOcbmD/U+N0A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=noT6NIXZCIXx8PkoTsNx6SlLmF29IUMzTmLf+Ojha6uXv7nG22kj7IQ9dRtqDL9Codcply0pT+Bk0UgW0DfLi7Q5K6LaKQ3ZOwzkYVUW8MVN7PjD/vwTjKMuFuFmyQYXwM4A1OjY1NWWvKAgMxBa2DGcYGJ/989PX47gBXSe9fg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lwfurohX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FLt3gF7i"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a4fb9c2436so3748181f8f.1;
-        Wed, 02 Jul 2025 00:57:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751443072; x=1752047872; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=oferJm658YK0OfXJHRN4ok4UIvbf/DHykHZIPcj8Jb0=;
-        b=FLt3gF7i2D0kyjFtH6nVcFEZVc8pn3GnqPuKDXneZGpPAp2WADoy+dwslYqMKxuxMC
-         xWIDBY8Iln5Qu2BQNBgYzcG/dGEH3ZWEsf6p9q50ijrrar9ZUj/qsjIyFN9bC08u1hjo
-         D+jYOgvyjt8OZ88YAWQyfpnSSrpjQU+cNAt8IEIqtQdXRlSzSe5nfcOcxNE3rqrfHcbq
-         Ji0Xj4bYRgyRnPnyQyUV1lal9ZBHo7Q218C5kUK5K3VoKPkmzvK2UfVTkV63Okeg3IU5
-         ECcWqhhzn6vtpPXhc7E3OjJpXdtLm4Ri27X3ouXPR8SBvFVukiIvlF8Z1gFxVjVljPEe
-         jMzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751443072; x=1752047872;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oferJm658YK0OfXJHRN4ok4UIvbf/DHykHZIPcj8Jb0=;
-        b=KBxiEDMoKI5TGt4Is2+Kuqgd+TKwDHCIXEzOdMyNYJesbCTG8/l8GSRyyQEam2xNxM
-         HrvBDHbYJ3ck7KRDI6l8yO+lrKfpFhMiFqURmKqPwmlUD2ZP2n4+93teNx096efwI/Hf
-         nPVkAjrpplOhIzBA02ACBGbktcOz8uYEIvXdJ4WZGL9vArAfDVbEi1XPWFjpI5nBVo4S
-         wCzAPpmFHnOZ9xUgT7RBnPltq5eTcsQ5F5bgD0hh5o2XfxztRKxsWK914HTLaKd5W8kp
-         5yXSrEgoiDxFvOw7KMuY84Z6KkSolmJlq/btI6bpz44uIRKHXMExcM4AEPPqvrkf54S1
-         ONYA==
-X-Forwarded-Encrypted: i=1; AJvYcCVHrfC3nrhyWRerJkK0VmsolINbFTxtHPiz1BndUJsu5N+92MIQegbUOp9FY/6rZhkLYxn7IDS98cuV@vger.kernel.org, AJvYcCWdYDbzipiTgstV8YDPuyHjtpR1Up2y/yq4yTZwAZ69OD1aoPbTyEgg37cIR+AFUbVWH73JAKDbL3Ur@vger.kernel.org, AJvYcCX570jr7fOZiBBhPdXvMJbjEOP7Rek3WNPeizD9F2SB8kXToK2EeCg5ubnwV/jppWE5RmJZuuI1sSmSnsrf@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsW4ToS5HyWna1vZnDwdIN1mtW60fSTv27AE2FqWLizDAg2sIW
-	sYVIPiqdY2wxRHDJfD3oUtXefZqkoF0CNWVgvaZ3J6yU4b1XYOPs60eMt4FbFkiD
-X-Gm-Gg: ASbGnculwNGjnhy5+3SNhyEEsxE6VDzCYO4HOdIuFbFu5Oj2gRJUFxuwontZhLxguW9
-	WB0nSCBEE19XjnWkCZvKVuLYEL6hP29Tk3/qkpRe6eKkRK08PO/UPGkeg5abRsFB9ny8kzK2d/N
-	4BA+sShdxXoOIqgELVNBTmvLGqxyiB0bVnqkoJXL0MZcFwuYUCb1i1cnEPhDMWdxjE4dAOG5m7K
-	e6Vq9+Hkz/MnZz5LezGADkfMcGph7ZxRZP0gONNDmoC9Ybv2jHiuD81JrAyZfhBPpCCZt/mYZx0
-	xx5rPORKFesyV8HDgst1GpcqNadzaWbu4SLGXRLwwYEHdIKI1RyFZpR9W6Lz1IBQR7RODw==
-X-Google-Smtp-Source: AGHT+IFXLUR3NDT/WUsJ8mOESQBdYzix9UnmRPYXH18PTjwvmWq4ieqO4e+r6VK0WIJJv++VYUX+AQ==
-X-Received: by 2002:a05:6000:4404:b0:3a5:27ba:47ba with SMTP id ffacd0b85a97d-3b200679c28mr864874f8f.44.1751443072276;
-        Wed, 02 Jul 2025 00:57:52 -0700 (PDT)
-Received: from [192.168.1.187] ([161.230.67.253])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e5f8e1sm15149684f8f.88.2025.07.02.00.57.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 00:57:52 -0700 (PDT)
-Message-ID: <e1ed93170e820ab5e057c35048a04fcd74cdaa8a.camel@gmail.com>
-Subject: Re: [PATCH v3 00/12] iio: adc: ad7173: add SPI offload support
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: David Lechner <dlechner@baylibre.com>, Michael Hennerich
-	 <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, Nuno
- =?ISO-8859-1?Q?S=E1?=
-	 <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring
-	 <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
-	 <conor+dt@kernel.org>, Mark Brown <broonie@kernel.org>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-spi@vger.kernel.org, Andy Shevchenko
-	 <andriy.shevchenko@intel.com>
-Date: Wed, 02 Jul 2025 08:58:02 +0100
-In-Reply-To: <20250701-iio-adc-ad7173-add-spi-offload-support-v3-0-42abb83e3dac@baylibre.com>
-References: 
-	<20250701-iio-adc-ad7173-add-spi-offload-support-v3-0-42abb83e3dac@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lwfurohX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E819EC4CEF1;
+	Wed,  2 Jul 2025 07:59:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751443145;
+	bh=iZDqSRF7JrWoop63heCZMy2IoVgHMVBjOcbmD/U+N0A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lwfurohXaD4grteMK5WKkUjqNNxdqmbwlTPxD6zYbFmhPBMNNu2d2Lo9IkZ/bkA78
+	 Bgoro6Co4SfW8tZZFnJYc2OlrQ7788Th7Oe0WzLwd8NAe56ncr7zVIAl4rVYPRJc/8
+	 iASLEZHgIDqEeSZVIpDflWB84dNQkSDqcmQZONyqu5CrJuesaddvXHPt47o0QNrQfu
+	 V2XIqo1fq0DZVqMkEVI9ZmDyYPcwysfNjYtj69AgEYssZJO9Jk/TJn7QM0unfuNsRO
+	 RHEr86LztZv3Uw7ZMrUEwFiR5lkCF4ZlCWusf8m7AxgceyjSiQ7M04xheXQgnyRm89
+	 lSf2yusjca9cQ==
+Message-ID: <7e1b7e90-9e10-4580-a543-111001240f91@kernel.org>
+Date: Wed, 2 Jul 2025 09:58:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/5] dt-bindings: media: Add the Raspberry Pi HEVC
+ decoder
+To: Dave Stevenson <dave.stevenson@raspberrypi.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, John Cox
+ <john.cox@raspberrypi.com>, Dom Cobley <dom@raspberrypi.com>,
+ review list <kernel-list@raspberrypi.com>,
+ Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Cc: John Cox <jc@kynesim.co.uk>, Stefan Wahren <wahrenst@gmx.net>,
+ linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20250701-media-rpi-hevc-dec-v4-0-057cfa541177@raspberrypi.com>
+ <20250701-media-rpi-hevc-dec-v4-3-057cfa541177@raspberrypi.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
+ QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
+ +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
+ ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
+ 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
+ hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
+ tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
+ 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
+ naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
+ hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
+ whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
+ qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
+ RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
+ Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
+ H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
+ dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
+ AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
+ jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
+ zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
+ XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
+In-Reply-To: <20250701-media-rpi-hevc-dec-v4-3-057cfa541177@raspberrypi.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 2025-07-01 at 16:37 -0500, David Lechner wrote:
-> Here comes another series for adding SPI offload support to an ADC.
->=20
-> The primary target is AD411x, but since this uses the ad_sigma_delta
-> shared module, a lot of this series is focused on that.
->=20
-> To start with, we have some cleanups to the ad_sigma_delta code, so feel
-> free to pick these up as they are ready as they generally stand on their
-> own.
->=20
-> Then before adding proper SPI offload support, we make use of
-> spi_optimize_message() to reduce CPU usage of all users of this driver
-> during buffered reads.
->=20
-> Also there is a new dt-binding and driver for a special SPI offload
-> trigger FPGA IP core that is used in this particular setup.
->=20
-> Then finally actual SPI offload support is added to the ad_sigma_delta
-> module and the ad7173 driver.
->=20
-> This was tested using EVAL-AD4112ARDZ on a DE10-Nano.
->=20
+On 01/07/2025 18:01, Dave Stevenson wrote:
+> Adds a binding for the HEVC decoder IP owned by Raspberry Pi.
+> 
+> Instantiations of the decoder IP can currently be found in
+> the Broadcom BCM2711 and BCM2712 SoCs.
+> 
+> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+> 
 > ---
-> Changes in v3:
-> - Added extra patch to replace 8 with sizeof(s64) in ALIGN() [4/12]
-> - Fixed typo in commit message. [6/12]
-> - Fixed includes in spi offload trigger driver. [10/12]
-> - Link to v2:
-> https://lore.kernel.org/r/20250627-iio-adc-ad7173-add-spi-offload-support=
--v2-0-f49c55599113@baylibre.com
->=20
-> Changes in v2:
-> - New patch to fix overallocation of buffer size. [1/11]
-> - Also change int64_t to s64. [3/11]
-> - Fix typo in commit message. [4/11]
-> - Factor out scan_type to reduce line wraps. [4/11]
-> - New patch to clean up include more. [5/11]
-> - Duplicate comment about odd case of 24-bit data. [7/11]
-> - Fixed missing MODULE_IMPORT_NS() [10/11]
-> - Link to v1:
-> https://lore.kernel.org/r/20250620-iio-adc-ad7173-add-spi-offload-support=
--v1-0-0766f6297430@baylibre.com
->=20
-> ---
+> 
 
-Hi David,
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Great series. Small nit on the new trigger patch but not really important:
-
-Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
-
-> David Lechner (12):
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ad_sigma_delta: don't overalloca=
-te scan buffer
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ad_sigma_delta: sort includes
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ad_sigma_delta: use u8 instead o=
-f uint8_t
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ad_sigma_delta: use sizeof() in =
-ALIGN()
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ad_sigma_delta: use BITS_TO_BYTE=
-S() macro
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ad_sigma_delta: audit included h=
-eaders
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ad_sigma_delta: refactor setting=
- read address
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ad_sigma_delta: use spi_optimize=
-_message()
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dt-bindings: trigger-source: add ADI Util =
-Sigma-Delta SPI
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spi: offload trigger: add ADI Util Sigma-D=
-elta SPI driver
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ad_sigma_delta: add SPI offload =
-support
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ad7173: add SPI offload support
->=20
-> =C2=A0.../trigger-source/adi,util-sigma-delta-spi.yaml=C2=A0=C2=A0 |=C2=
-=A0 49 ++++
-> =C2=A0MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 7 +-
-> =C2=A0drivers/iio/adc/ad7173.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 13 +
-> =C2=A0drivers/iio/adc/ad_sigma_delta.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- | 295 +++++++++++++-------
-> -
-> =C2=A0drivers/spi/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=
-=A0 5 +
-> =C2=A0drivers/spi/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 =
-1 +
-> =C2=A0.../spi/spi-offload-trigger-adi-util-sigma-delta.c |=C2=A0 62 +++++
-> =C2=A0include/linux/iio/adc/ad_sigma_delta.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 27 +-
-> =C2=A08 files changed, 345 insertions(+), 114 deletions(-)
-> ---
-> base-commit: d02f330b0c78bcf76643fbb7d3215a58b181f829
-> change-id: 20250620-iio-adc-ad7173-add-spi-offload-support-32a178b666a3
->=20
-> Best regards,
+Best regards,
+Krzysztof
