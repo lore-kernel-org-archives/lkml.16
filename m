@@ -1,114 +1,168 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0481828688C
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:00:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 877A328640B
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:00:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751464815; cv=none; b=LMzc1wI544W5bR70nc55ACiXO7Ham6NqyJNXa7eP2EVvNSN2PmelhzIB+b2R7fWMOswYxpvSI4UjusSi72cH7sf/dls/A8aHHcTQtVY8lsCNEdNYeO/s0MrtXMLYoI/FRlfyx7ffJAg8YN2veDs3Gn8dO8YuJsjGCS60AbjmLOo=
+	t=1751464822; cv=none; b=GGAIuFtG/BGSIo0622ZXJn4IfqcJbyqj3jkoYbeyaB/wT8a07RzoA8fO91KCRPaJuSlQbeK/W9WpWMN86MRLrl+0LZMRo2cmjgTNQx5Hca8oukpAikv7vZsHVCNMCm7feF/0VWAADNP1/bfiR0qHbYYTqVheeI2/qyMr7FznWdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751464815; c=relaxed/simple;
-	bh=8BkaOVft+W2bYAK2FXK/p+ptB3nhhLtqcS7ezMLmfIc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=izahAsxlT+MTkQV7wCYp5ng/X2TVWA6lw/F1dgS5SswX/VK5M11NPNZMfwY3w2WNOwK4s2sh8RjMCQfVWz+w5Vv3HyFGOJlFnb0AOjkjbsRH2/06F5tVoZ3AlLk7McHHNs9h7Ik6y0jie65lIR/3Aer/DBGMuzfFTOiNLSxyovY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=listout.xyz; spf=pass smtp.mailfrom=listout.xyz; dkim=pass (2048-bit key) header.d=listout.xyz header.i=@listout.xyz header.b=y2GkHQz2; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=listout.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=listout.xyz
+	s=arc-20240116; t=1751464822; c=relaxed/simple;
+	bh=o1eOb5ZjMILIlhh/zhBFDxtKYI/io5O3KBBCErdGwQM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mzTYwSqNkl1R1eUvo00azhwxzlLdMHJraVBRO46d5o1o38MFZ20xnQDjfr3UW1AUy8VbK8b3LVCycdxgKu2zGEiYDGvVpaYxYn3iPB7Mk61qC0K1MdlsGIZhprooVLebU3uvroZKRmH/a7Y0hgmYEJ7C4wxzwCfZJn0IZXnh3vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=uyMj+XKz; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ztdvVxzF; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=uyMj+XKz; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ztdvVxzF; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=listout.xyz header.i=@listout.xyz header.b="y2GkHQz2"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="uyMj+XKz";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ztdvVxzF";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="uyMj+XKz";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ztdvVxzF"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4bXM3Y1Qtdz9tdp;
-	Wed,  2 Jul 2025 16:00:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=listout.xyz; s=MBO0001;
-	t=1751464809;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=RT/fvfvkATMUMVde7NV2a6COYwtEX90/2hkOIdHqpjE=;
-	b=y2GkHQz2UQEHOFp2GM9wtjhZcPgazeBmjcMYg9bLJvm2P365bMuBdX4ScmMm3uTLlaX0YQ
-	zFgwBWbg4G/u/ZnUGLhhUih1G0MVKHftnZIKzfGpIJB0YdUBW6FjULE8eP/b8j7vboSgfI
-	Qqb4gzzZnBfawzHDshQMzGcIpb3VHVNlsuUpMyXh4WzFL76OWBBfiDKjzXVEyluSbUbjWH
-	lO8CDAEw5yukzAlrkuWkZcJ8UiqEm4OHsJ2Ieo2S/wGrRjqeKPfvC7AZ2J32zNfqI4XbBh
-	In7zofENoKK73Pq5YkTxyUwsTZf7dgxXuTZVExjwORwnkHnR0Ocb1cMQPoEung==
-From: Brahmajit Das <listout@listout.xyz>
-To: linux-kernel@vger.kernel.org
-Cc: alexander.usyskin@intel.com,
-	tomas.winkler@intel.com,
-	gregkh@linuxfoundation.org
-Subject: [PATCH v2] samples: mei: Fix building on musl libc
-Date: Wed,  2 Jul 2025 19:29:55 +0530
-Message-ID: <20250702135955.24955-1-listout@listout.xyz>
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 72BB31F38D;
+	Wed,  2 Jul 2025 14:00:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751464818; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KonS7cv/G9gzTUrpW1rGIG1iuK5W8/1IKztK8Mu1XO4=;
+	b=uyMj+XKz39UxrdzMtyrBsFtS95teaCi94Xxf49fDUQLfiycJ2ec5JOAAREHGLgFVb96S5d
+	4TCa5pe1fCdXt+kLhLW07IMIBQO+zP6CpHxZw5XD4v+A4i2+5zxUCo71lZKYTMlfzIwWZh
+	EubwWx4ev/qmgG8APO9ClCue91oEtVM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751464818;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KonS7cv/G9gzTUrpW1rGIG1iuK5W8/1IKztK8Mu1XO4=;
+	b=ztdvVxzFzrBrPPHs14FmGsYmlixiWnvLiMdwom9ORka3RFw+Tj1vdDd38fxYB8/mCjRFYn
+	ESb63tVyzZQNwQDw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=uyMj+XKz;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=ztdvVxzF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751464818; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KonS7cv/G9gzTUrpW1rGIG1iuK5W8/1IKztK8Mu1XO4=;
+	b=uyMj+XKz39UxrdzMtyrBsFtS95teaCi94Xxf49fDUQLfiycJ2ec5JOAAREHGLgFVb96S5d
+	4TCa5pe1fCdXt+kLhLW07IMIBQO+zP6CpHxZw5XD4v+A4i2+5zxUCo71lZKYTMlfzIwWZh
+	EubwWx4ev/qmgG8APO9ClCue91oEtVM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751464818;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KonS7cv/G9gzTUrpW1rGIG1iuK5W8/1IKztK8Mu1XO4=;
+	b=ztdvVxzFzrBrPPHs14FmGsYmlixiWnvLiMdwom9ORka3RFw+Tj1vdDd38fxYB8/mCjRFYn
+	ESb63tVyzZQNwQDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3F46A13A24;
+	Wed,  2 Jul 2025 14:00:17 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 6XWBDHE7ZWhGPAAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Wed, 02 Jul 2025 14:00:17 +0000
+Date: Wed, 2 Jul 2025 16:00:11 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+	Byungchul Park <byungchul@sk.com>,
+	Gregory Price <gourry@gourry.net>,
+	Ying Huang <ying.huang@linux.alibaba.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Pedro Falcato <pfalcato@suse.de>, Rik van Riel <riel@surriel.com>,
+	Harry Yoo <harry.yoo@oracle.com>, Lance Yang <ioworker0@gmail.com>
+Subject: Re: [PATCH v2 4/4] mm: remove boolean output parameters from
+ folio_pte_batch_ext()
+Message-ID: <aGU7axcql69-GRQI@localhost.localdomain>
+References: <20250702104926.212243-1-david@redhat.com>
+ <20250702104926.212243-5-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4bXM3Y1Qtdz9tdp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250702104926.212243-5-david@redhat.com>
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[23];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[vger.kernel.org,kvack.org,linux-foundation.org,oracle.com,suse.cz,google.com,kernel.org,suse.com,nvidia.com,intel.com,gmail.com,sk.com,gourry.net,linux.alibaba.com,suse.de,surriel.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 72BB31F38D
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -3.01
 
-The header bits/wordsize.h is glibc specific and on building on musl
-with allyesconfig results in
+On Wed, Jul 02, 2025 at 12:49:26PM +0200, David Hildenbrand wrote:
+> Instead, let's just allow for specifying through flags whether we want
+> to have bits merged into the original PTE.
+> 
+> For the madvise() case, simplify by having only a single parameter for
+> merging young+dirty. For madvise_cold_or_pageout_pte_range() merging the
+> dirty bit is not required, but also not harmful. This code is not that
+> performance critical after all to really force all micro-optimizations.
 
-samples/mei/mei-amt-version.c:77:10: fatal error: bits/wordsize.h: No such file or directory
-   77 | #include <bits/wordsize.h>
-      |          ^~~~~~~~~~~~~~~~~
+Seems a bit odd to me to have the dirty-young bit being treat as "one".
+You mention that this is done because the only user of it doesn't really
+care about dirty vs non-dirty and it's not harmful eitherway, so micro-optimizing
+this isn't worth at this moment.
 
-mei-amt-version.c build file without bits/wordsize.h on musl and glibc.
+But what if we grop another user which wants to make this distinction and
+where it matters dirty vs non-dirty/young vs not-young.
+Wouldn't be better to have it separated from the start?
 
-However on musl we get the follwing error without sys/time.h
+And I'm not talking about micro-optimizing, because that's clear that it
+doesn't matter, but for clarity purposes.
+It seems a lot more organic/natural/obvious to me.
 
-samples/mei/mei-amt-version.c: In function 'mei_recv_msg':
-samples/mei/mei-amt-version.c:159:24: error: storage size of 'tv' isn't known
-  159 |         struct timeval tv;
-      |                        ^~
-samples/mei/mei-amt-version.c:160:9: error: unknown type name 'fd_set'
-  160 |         fd_set set;
-      |         ^~~~~~
-samples/mei/mei-amt-version.c:168:9: error: implicit declaration of function 'FD_ZERO' [-Wimplicit-function-declaration]
-  168 |         FD_ZERO(&set);
-      |         ^~~~~~~
-samples/mei/mei-amt-version.c:169:9: error: implicit declaration of function 'FD_SET'; did you mean 'L_SET'? [-Wimplicit-function-declaration]
-  169 |         FD_SET(me->fd, &set);
-      |         ^~~~~~
-      |         L_SET
-samples/mei/mei-amt-version.c:170:14: error: implicit declaration of function 'select' [-Wimplicit-function-declaration]
-  170 |         rc = select(me->fd + 1, &set, NULL, NULL, &tv);
-      |              ^~~~~~
-samples/mei/mei-amt-version.c:171:23: error: implicit declaration of function 'FD_ISSET' [-Wimplicit-function-declaration]
-  171 |         if (rc > 0 && FD_ISSET(me->fd, &set)) {
-      |                       ^~~~~~~~
-samples/mei/mei-amt-version.c:159:24: warning: unused variable 'tv' [-Wunused-variable]
-  159 |         struct timeval tv;
-      |                        ^~
 
-Hence the the file has been included.
 
-Fixes: c52827cc4ddf ("staging/mei: add mei user space example")
-Signed-off-by: Brahmajit Das <listout@listout.xyz>
----
- samples/mei/mei-amt-version.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/samples/mei/mei-amt-version.c b/samples/mei/mei-amt-version.c
-index 867debd3b912..1d7254bcb44c 100644
---- a/samples/mei/mei-amt-version.c
-+++ b/samples/mei/mei-amt-version.c
-@@ -69,11 +69,11 @@
- #include <string.h>
- #include <fcntl.h>
- #include <sys/ioctl.h>
-+#include <sys/time.h>
- #include <unistd.h>
- #include <errno.h>
- #include <stdint.h>
- #include <stdbool.h>
--#include <bits/wordsize.h>
- #include <linux/mei.h>
- 
- /*****************************************************************************
 -- 
-2.50.0
-
+Oscar Salvador
+SUSE Labs
