@@ -1,205 +1,108 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C48A2E4992;
-	Wed,  2 Jul 2025 18:37:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2D442E4992;
+	Wed,  2 Jul 2025 18:37:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751481425; cv=none; b=oBHieAtVy3/3dlAM7ifVpeC8kVRpv1VfyCv9uBXqKKWHlBwJdbODQdAvgdX3G1zYjYrjymeVhquJTDfn6nD2zX9ISZNaqEPZ6dJh9bSgWbvlhQ433e32hu4GEcIKXBTqy7nAsH3gFqlJBuLGoYgiT5Y6aT50AosgB/JPPkbd0/o=
+	t=1751481471; cv=none; b=h5yDM6B8x17TSDAnSGaABQg+eunpKcHZZg+8PkZ6a+oRhNnEPXFJg9ckDsjpsEZwgqfOG+daGlN2agySuaH8C/dFL+66GVv9hYPABSHu4zOHVjFynKWxo0QCplW30PkeZfMgR6o9fGTLHoxUk1BKV6K/HU/5hAsVfV+smJPdy94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751481425; c=relaxed/simple;
-	bh=mDuuDEo7hJVCDmiNn9b+8+ybz+apZqRUyfPLZwxi2sI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=R3/SUSQEcU72BfmwfJB/TURz1V79+1VJeWt0BXOhsER9KbG8pzxqPdVa5P7tjIwV+ZZbzBeMRy0X7hCBoOzQ2mKdkIeFmpm8lRvDnOt6gGRxathDO2ggPb2IVX+UQcl6xAyhTxU3uYn/AXYXTL4zqqWSFORHKMxVnV9ZcfdxKio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id C682E10652D;
-	Wed,  2 Jul 2025 18:37:01 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id 15B6420011;
-	Wed,  2 Jul 2025 18:36:58 +0000 (UTC)
-Date: Wed, 2 Jul 2025 14:36:57 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Gabriele Paoloni <gpaoloni@redhat.com>
-Subject: [PATCH] tracing: Remove EVENT_FILE_FL_SOFT_MODE flag
-Message-ID: <20250702143657.18dd1882@batman.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1751481471; c=relaxed/simple;
+	bh=nW2vHO9QQCcm4Z1QN6Img2usutOZCb4Epl3Ntbf/DTQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JCx5ondSluWjDfFZ/mzJFoVaVnpPt9LO0wyxVzdBpo8XBOsDa4LrHEFbEhCWLKAzgk0tyPdB/7cffKmTIvGIk7nxMN6qQ4teGky0vXheqt0NoMKtd9oCW/azvpUpMAGM+wRG/5Ega2G4wLT+fm26hD75ipMD8H5B8+f6LHG/soc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=enuDigA1; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="enuDigA1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF803C4CEE7;
+	Wed,  2 Jul 2025 18:37:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751481470;
+	bh=nW2vHO9QQCcm4Z1QN6Img2usutOZCb4Epl3Ntbf/DTQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=enuDigA1H4yfVcmL85Sf42DWqCl5EwKedbw4LRHZ2VolbMFgbMQwu9pRDLto8Z7bO
+	 7RlZuCrLMrTG0XPISeGGqMgXoO4pBIDABRCkleRvH4yqV08V2RhdceDotEsEsnEYNB
+	 JQd/BdAZ406Tol+twzmYxnSwzRUXhYKRpgcT7UFqbkZXO6d/GlGDb90wEfAlTSj0w1
+	 GYGmoylrr+EGvB3agTFd8zAESEDEtotgYR+VhoKexOtVbU4e5CMV/mi4qBNsbhiupE
+	 abVxV9CyrIlm/czXAZ9RWCt8TZQwTohd2FxZqa8wzAMwpxwqZX3jLLwga8sI3G1S8c
+	 XjIWj4oMOzlNw==
+Date: Wed, 2 Jul 2025 11:37:50 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Andrey Albershteyn <aalbersh@redhat.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Casey Schaufler <casey@schaufler-ca.com>, Jan Kara <jack@suse.cz>,
+	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+	Paul Moore <paul@paul-moore.com>, linux-api@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-xfs@vger.kernel.org, selinux@vger.kernel.org,
+	Andrey Albershteyn <aalbersh@kernel.org>
+Subject: Re: [PATCH v6 6/6] fs: introduce file_getattr and file_setattr
+ syscalls
+Message-ID: <20250702183750.GW10009@frogsfrogsfrogs>
+References: <20250630-xattrat-syscall-v6-0-c4e3bc35227b@kernel.org>
+ <20250630-xattrat-syscall-v6-6-c4e3bc35227b@kernel.org>
+ <20250701184317.GQ10009@frogsfrogsfrogs>
+ <20250702-stagnation-dackel-294bb4cd9f3d@brauner>
+ <CAOQ4uximwjYabeO=-ktMtnzMsx6KXBs=pUsgNno=_qgpQnpHCA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: zoean7keiabjx1k5d1bz7phkybkdfp9d
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: 15B6420011
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/EnB+sZHxoyfhuA9GO4s6x+pfSn9COnK0=
-X-HE-Tag: 1751481418-778989
-X-HE-Meta: U2FsdGVkX1+8nu+gn7WrnX5rXzbbSRWGkevilAlr9elubWiAqZkiMWe/x5OEuyVbcAU+z+qojtWY8SDe/uiAcKcrOnu1dEtUV69PRaHeTSLjfvDsFqsYiBIwfe/6qV07+/tlz2wu6GzLLT2FejYSkAEXo1KY2d/0pDWVkYcydXxHm8YwXkawVsPyzmFwxKIoYuNy2ejNcl2IS6voRoK1+ZC8X9BbaSYyWw8arbOPgo5DymalCF15iBgG7J16M+CzAGf1DkNUkd/8rOpVPVUUH7Hb2AyUZJzkhtwRCMUVUm9XHD0jlz8XiqvgpX7q5Mz/vv6XiCEna+QInxwU0TAgLbz/rOy9rd8hbHjp8JPFbtip3rVjDyPHvJQBjCvrq+abtdmCsjwjHX2qymyFUWecTg==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOQ4uximwjYabeO=-ktMtnzMsx6KXBs=pUsgNno=_qgpQnpHCA@mail.gmail.com>
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Wed, Jul 02, 2025 at 03:43:28PM +0200, Amir Goldstein wrote:
+> On Wed, Jul 2, 2025 at 2:40 PM Christian Brauner <brauner@kernel.org> wrote:
+> >
+> > > Er... "fsx_fileattr" is the struct that the system call uses?
+> > >
+> > > That's a little confusing considering that xfs already has a
+> > > xfs_fill_fsxattr function that actually fills a struct fileattr.
+> > > That could be renamed xfs_fill_fileattr.
+> > >
+> > > I dunno.  There's a part of me that would really rather that the
+> > > file_getattr and file_setattr syscalls operate on a struct file_attr.
+> >
+> > Agreed, I'm pretty sure I suggested this during an earlier review. Fits
+> > in line with struct mount_attr and others. Fwiw, struct fileattr (the
+> > kernel internal thing) should've really been struct file_kattr or struct
+> > kernel_file_attr. This is a common pattern now:
+> >
+> > struct mount_attr vs struct mount_kattr
+> >
+> > struct clone_args vs struct kernel_clone_kargs
+> >
+> > etc.
+> >file_attr
+> 
+> I can see the allure, but we have a long history here with fsxattr,
+> so I think it serves the users better to reference this history with
+> fsxattr64.
 
-When soft disabling of trace events was first created, it needed to have a
-way to know if a file had a user that was using it with soft disabled (for
-triggers that need to enable or disable events from a context that can not
-really enable or disable the event, it would set SOFT_DISABLED to state it
-is disabled). The flag SOFT_MODE was used to denote that an event had a
-user that would enable or disable it via the SOFT_DISABLED flag.
+<shrug> XFS has a long history with 'struct fsxattr' (the structure you
+passed to XFS_IOC_FSGETXATTR) but the rest of the kernel needn't be so
+fixated upon the historical name.  ext4/f2fs/overlay afaict are just
+going along for the ride.
 
-Commit 1cf4c0732db3c ("tracing: Modify soft-mode only if there's no other
-referrer") fixed a bug where if two users were using the SOFT_DISABLED
-flag the accounting would get messed up as the SOFT_MODE flag could only
-handle one user. That commit added the sm_ref counter which kept track of
-how many users were using the event in "soft mode". This made the
-SOFT_MODE flag redundant as it should only be set if the sm_ref counter is
-non zero.
+IOWs I like brauner's struct file_attr and struct file_kattr
+suggestions.
 
-Remove the SOFT_MODE flag and just use the sm_ref counter to know the
-event is in soft mode or not. This makes the code a bit simpler.
+> That, and also, avoid the churn of s/fileattr/file_kattr/
+> If you want to do this renaming, please do it in the same PR
+> because I don't like the idea of having both file_attr and fileattr
+> in the tree for an unknown period.
 
-Link: https://lore.kernel.org/all/20250702111908.03759998@batman.local.home/
+But yeah, that ought to be a treewide change done at the same time.
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- include/linux/trace_events.h |  3 ---
- kernel/trace/trace_events.c  | 24 ++++++++++++------------
- 2 files changed, 12 insertions(+), 15 deletions(-)
+--D
 
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index fa9cf4292dff..04307a19cde3 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -480,7 +480,6 @@ enum {
- 	EVENT_FILE_FL_RECORDED_TGID_BIT,
- 	EVENT_FILE_FL_FILTERED_BIT,
- 	EVENT_FILE_FL_NO_SET_FILTER_BIT,
--	EVENT_FILE_FL_SOFT_MODE_BIT,
- 	EVENT_FILE_FL_SOFT_DISABLED_BIT,
- 	EVENT_FILE_FL_TRIGGER_MODE_BIT,
- 	EVENT_FILE_FL_TRIGGER_COND_BIT,
-@@ -618,7 +617,6 @@ extern int __kprobe_event_add_fields(struct dynevent_cmd *cmd, ...);
-  *  RECORDED_TGID - The tgids should be recorded at sched_switch
-  *  FILTERED	  - The event has a filter attached
-  *  NO_SET_FILTER - Set when filter has error and is to be ignored
-- *  SOFT_MODE     - The event is enabled/disabled by SOFT_DISABLED
-  *  SOFT_DISABLED - When set, do not trace the event (even though its
-  *                   tracepoint may be enabled)
-  *  TRIGGER_MODE  - When set, invoke the triggers associated with the event
-@@ -633,7 +631,6 @@ enum {
- 	EVENT_FILE_FL_RECORDED_TGID	= (1 << EVENT_FILE_FL_RECORDED_TGID_BIT),
- 	EVENT_FILE_FL_FILTERED		= (1 << EVENT_FILE_FL_FILTERED_BIT),
- 	EVENT_FILE_FL_NO_SET_FILTER	= (1 << EVENT_FILE_FL_NO_SET_FILTER_BIT),
--	EVENT_FILE_FL_SOFT_MODE		= (1 << EVENT_FILE_FL_SOFT_MODE_BIT),
- 	EVENT_FILE_FL_SOFT_DISABLED	= (1 << EVENT_FILE_FL_SOFT_DISABLED_BIT),
- 	EVENT_FILE_FL_TRIGGER_MODE	= (1 << EVENT_FILE_FL_TRIGGER_MODE_BIT),
- 	EVENT_FILE_FL_TRIGGER_COND	= (1 << EVENT_FILE_FL_TRIGGER_COND_BIT),
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 120531268abf..0980f4def360 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -768,6 +768,7 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
- {
- 	struct trace_event_call *call = file->event_call;
- 	struct trace_array *tr = file->tr;
-+	bool soft_mode = atomic_read(&file->sm_ref) != 0;
- 	int ret = 0;
- 	int disable;
- 
-@@ -782,7 +783,7 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
- 		 * is set we do not want the event to be enabled before we
- 		 * clear the bit.
- 		 *
--		 * When soft_disable is not set but the SOFT_MODE flag is,
-+		 * When soft_disable is not set but the soft_mode is,
- 		 * we do nothing. Do not disable the tracepoint, otherwise
- 		 * "soft enable"s (clearing the SOFT_DISABLED bit) wont work.
- 		 */
-@@ -790,11 +791,11 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
- 			if (atomic_dec_return(&file->sm_ref) > 0)
- 				break;
- 			disable = file->flags & EVENT_FILE_FL_SOFT_DISABLED;
--			clear_bit(EVENT_FILE_FL_SOFT_MODE_BIT, &file->flags);
-+			soft_mode = false;
- 			/* Disable use of trace_buffered_event */
- 			trace_buffered_event_disable();
- 		} else
--			disable = !(file->flags & EVENT_FILE_FL_SOFT_MODE);
-+			disable = !soft_mode;
- 
- 		if (disable && (file->flags & EVENT_FILE_FL_ENABLED)) {
- 			clear_bit(EVENT_FILE_FL_ENABLED_BIT, &file->flags);
-@@ -812,8 +813,8 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
- 
- 			WARN_ON_ONCE(ret);
- 		}
--		/* If in SOFT_MODE, just set the SOFT_DISABLE_BIT, else clear it */
--		if (file->flags & EVENT_FILE_FL_SOFT_MODE)
-+		/* If in soft mode, just set the SOFT_DISABLE_BIT, else clear it */
-+		if (soft_mode)
- 			set_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &file->flags);
- 		else
- 			clear_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &file->flags);
-@@ -823,7 +824,7 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
- 		 * When soft_disable is set and enable is set, we want to
- 		 * register the tracepoint for the event, but leave the event
- 		 * as is. That means, if the event was already enabled, we do
--		 * nothing (but set SOFT_MODE). If the event is disabled, we
-+		 * nothing (but set soft_mode). If the event is disabled, we
- 		 * set SOFT_DISABLED before enabling the event tracepoint, so
- 		 * it still seems to be disabled.
- 		 */
-@@ -832,7 +833,7 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
- 		else {
- 			if (atomic_inc_return(&file->sm_ref) > 1)
- 				break;
--			set_bit(EVENT_FILE_FL_SOFT_MODE_BIT, &file->flags);
-+			soft_mode = true;
- 			/* Enable use of trace_buffered_event */
- 			trace_buffered_event_enable();
- 		}
-@@ -840,7 +841,7 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
- 		if (!(file->flags & EVENT_FILE_FL_ENABLED)) {
- 			bool cmd = false, tgid = false;
- 
--			/* Keep the event disabled, when going to SOFT_MODE. */
-+			/* Keep the event disabled, when going to soft mode. */
- 			if (soft_disable)
- 				set_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &file->flags);
- 
-@@ -1792,8 +1793,7 @@ event_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
- 	    !(flags & EVENT_FILE_FL_SOFT_DISABLED))
- 		strcpy(buf, "1");
- 
--	if (flags & EVENT_FILE_FL_SOFT_DISABLED ||
--	    flags & EVENT_FILE_FL_SOFT_MODE)
-+	if (atomic_read(&file->sm_ref) != 0)
- 		strcat(buf, "*");
- 
- 	strcat(buf, "\n");
-@@ -3584,7 +3584,7 @@ static int probe_remove_event_call(struct trace_event_call *call)
- 			continue;
- 		/*
- 		 * We can't rely on ftrace_event_enable_disable(enable => 0)
--		 * we are going to do, EVENT_FILE_FL_SOFT_MODE can suppress
-+		 * we are going to do, soft mode can suppress
- 		 * TRACE_REG_UNREGISTER.
- 		 */
- 		if (file->flags & EVENT_FILE_FL_ENABLED)
-@@ -3997,7 +3997,7 @@ static int free_probe_data(void *data)
- 
- 	edata->ref--;
- 	if (!edata->ref) {
--		/* Remove the SOFT_MODE flag */
-+		/* Remove soft mode */
- 		__ftrace_event_enable_disable(edata->file, 0, 1);
- 		trace_event_put_ref(edata->file->event_call);
- 		kfree(edata);
--- 
-2.47.2
-
+> 
+> Thanks,
+> Amir.
+> 
