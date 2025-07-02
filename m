@@ -1,129 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C64F1E485;
-	Wed,  2 Jul 2025 12:39:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE1EE271449;
+	Wed,  2 Jul 2025 12:40:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751459982; cv=none; b=q3fcJtPwQEqSciWx8iO9/NlIHGbagL/+qbDP0TAaSV5f9dS1UC4YyHL/6Ruwww5d519oEj+vsrHCfFv1ybPwdKRHL9WQnunV7sQEChuQRfvc3iepjCqR22jfdzpEOSBh0aoHD2mLynbbXUCZa0P3Uww4eaUYzkuoMcybcKYd9TA=
+	t=1751460025; cv=none; b=JhNK//WMO9jvdwvDGLyBozqkXWtuKZqIl11skCkYvzdxBYnKY+vWT+2CEM/04m6Jp7/J74iF7I87jPSiEFvppWp/J4vzvEVUiFblIz8UdCbAZIXqkraNsJ70FV8rujY+Xu8U+YOZs3oQF2LY9Fifc0I7zR7Ia9a3gLye3DLkJd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751459982; c=relaxed/simple;
-	bh=RXfGdpMxEW2mvf3XGFHZjd8a9jo+IHTngUjPMRBX77E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=E2Ya4BgiChq5a+1I0SLQGaZrrBXW99bPbxLLsqvEuDnImDEPYhi39SDoIN6y0IsCIZ/yg7TTi6v/TJ9T0s/emJrrg8D7S/Y7KyrulE/RjFfQ6yg1mM74aurQdDxLOrAIZ/bRGtQ2qB2eDK2PPH4F+9WGDUd4xLinSD9ybnX7ygU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S/eKRVFZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751460025; c=relaxed/simple;
+	bh=PZV1Mjm8WRt0BTVC+LtJNn6scged36v1d0AnwXcvL8U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t6zbut5CK7gpufKaEblooIDyeU7LdIo/vgMGXkuASdvIAvvtKCHUeA4GNmQQyhzNkoNxCXR6devzBr9UfukxLMI6Lt2mAeM49Te2YkUnzlDE+3vga/hS59RWQRa7JtbBomwPauQmn8zM52hCOKodWJiT16ptsxmRrNU9ZtxFogM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bBasmfAg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S/eKRVFZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03ABBC4CEF2;
-	Wed,  2 Jul 2025 12:39:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bBasmfAg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BDF5C4CEF0;
+	Wed,  2 Jul 2025 12:40:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751459982;
-	bh=RXfGdpMxEW2mvf3XGFHZjd8a9jo+IHTngUjPMRBX77E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=S/eKRVFZCRbBbtovWvZH4KxhDC/eufK748/Q9/d2OpPmfuN6s0ESLnb5xlSq0ahFe
-	 9PWb2kCrl79vNKt6brA5YaNYfYr2/5GrH6Nj6oWAmfq3IatjkgF/iqyGkVoYbc97MD
-	 eFeVHg4clwOecBcip/WC2GggM6PI4O24+u3KLTuAD8vlmGEIBCrlnDSRF1dycGEoaw
-	 vy8d1zG4CsgBtmmEYAK93ULhEW/nOT0Eq12kL3gYNrXY+w2kJf9wG52eB5TeHIfKEq
-	 /odi82LETxPI+RVMUBMdW7Zyj2YP8fGjGThNPfq76mVJbn/7/vuQgEqNUoXLIvZvjG
-	 5RTXP5EWC/UkQ==
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-611a7c617a7so968401eaf.1;
-        Wed, 02 Jul 2025 05:39:41 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUR4OJnyjBIPYNUpkTCnuIEjZmM2xPzi0OSnDXI6UaeP2TD+VZiQZ/4u9H11UCPfjEnx1WFlmHvRK4z@vger.kernel.org, AJvYcCUc/h1pjSYrPaRYnp7iULXabFKZIfH1rh7P3jH+AEvd6ZfVoxVoJttOMgeYKdG5rUzy+K7DVHEotqRG5sCz@vger.kernel.org, AJvYcCVGUh7lt2HwfyVpkFSD824GdYjsoc9dJk1Ug//dTtyzMWHvflFarB70drwt8qnUB46yyf9QZ8MVXLZvHQ==@vger.kernel.org, AJvYcCWGTzqSU8L44RhduYMKH1eeZYNOTGPudhyiOnrIXmLaKqUOGqTFMffWi2SfOgEJ36qMe6G68tuJrxwt@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxd1/t1LTzPEjwUt/FhD11vWg6mjDvFcflwdVjUciTG0j6uvx8J
-	z5dOPtvBPuRCqaaaW5CDtphPUHP2/Sz8gNH5xCcnqNfbPGyornjCxHI1dTFXaQ/Qwszj3qJMnsN
-	5PVBCbeEFzn9/RnFpv+HXTaCjO5JfhS8=
-X-Google-Smtp-Source: AGHT+IGW25OfeA+0PsSXYDwv8m1B6RMZiKJW4YrXLQ0ampAUyQxrE9UfHC02pfBOxDa9YiBqQVbM3vLvBrJdVfo07lk=
-X-Received: by 2002:a05:6808:1383:b0:406:5a47:a081 with SMTP id
- 5614622812f47-40b8875166amr2066248b6e.13.1751459981281; Wed, 02 Jul 2025
- 05:39:41 -0700 (PDT)
+	s=k20201202; t=1751460024;
+	bh=PZV1Mjm8WRt0BTVC+LtJNn6scged36v1d0AnwXcvL8U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bBasmfAg4ZR2h68mT47lufx94gDB+Hsf6CVYKKtn5CI+M+wjJ29rLJB4wE98OjHoE
+	 iR8Nkc+0laghIBqOVV3hX1cPkmDLADa8zGLr6UMS+TBAsCsaHkyjbb+yeVzmPZsVVA
+	 KmtiKIsI0p1lyKA1/XY7EVdgiMlis3LUehPD67HdcomfR9EDD+IsXV/FoBKujEpX/y
+	 ez07gBaPGj7M6Ok28o29jixwxfPb5dEh4/EiJ5Cgp5/0G9T7DXLF8xtPi4UxPud90z
+	 h0/0OVfMJvrPZtn+fm7Ye22jQGBu8+rf0wPbRoLE62vzms5FYI5SlPitq4XnfxuMbE
+	 Z8zkoZ+NKdjLg==
+Date: Wed, 2 Jul 2025 14:40:18 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Andrey Albershteyn <aalbersh@redhat.com>, 
+	Amir Goldstein <amir73il@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Casey Schaufler <casey@schaufler-ca.com>, Jan Kara <jack@suse.cz>, 
+	Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>, Paul Moore <paul@paul-moore.com>, linux-api@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
+	selinux@vger.kernel.org, Andrey Albershteyn <aalbersh@kernel.org>
+Subject: Re: [PATCH v6 6/6] fs: introduce file_getattr and file_setattr
+ syscalls
+Message-ID: <20250702-stagnation-dackel-294bb4cd9f3d@brauner>
+References: <20250630-xattrat-syscall-v6-0-c4e3bc35227b@kernel.org>
+ <20250630-xattrat-syscall-v6-6-c4e3bc35227b@kernel.org>
+ <20250701184317.GQ10009@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250702051345.1460497-1-apatel@ventanamicro.com>
- <20250702051345.1460497-16-apatel@ventanamicro.com> <CAJZ5v0iYYuK2GF2Pg3NiO4vLFzoYm6Q3Dnk5O2DkMJm1R3qSfQ@mail.gmail.com>
- <aGUaFX9WgTW1I_ZO@smile.fi.intel.com>
-In-Reply-To: <aGUaFX9WgTW1I_ZO@smile.fi.intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 2 Jul 2025 14:39:30 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0h=qzS67Xu6NUfN_LmQUmKF9=AtkaRrTx81td0m-mRNNg@mail.gmail.com>
-X-Gm-Features: Ac12FXypBdgduXgh2Soy9Mv3gI1-zeaGzzf1uZj9CeuqmyjyihvOhvxvz4Yj7ag
-Message-ID: <CAJZ5v0h=qzS67Xu6NUfN_LmQUmKF9=AtkaRrTx81td0m-mRNNg@mail.gmail.com>
-Subject: Re: [PATCH v7 15/24] ACPI: property: Add support for cells property
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Anup Patel <apatel@ventanamicro.com>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jassi Brar <jassisinghbrar@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>, 
-	Rahul Pathak <rpathak@ventanamicro.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>, 
-	Atish Patra <atish.patra@linux.dev>, Andrew Jones <ajones@ventanamicro.com>, 
-	Samuel Holland <samuel.holland@sifive.com>, Anup Patel <anup@brainfault.org>, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250701184317.GQ10009@frogsfrogsfrogs>
 
-On Wed, Jul 2, 2025 at 1:38=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Wed, Jul 02, 2025 at 12:20:55PM +0200, Rafael J. Wysocki wrote:
-> > On Wed, Jul 2, 2025 at 7:16=E2=80=AFAM Anup Patel <apatel@ventanamicro.=
-com> wrote:
->
-> ...
->
-> > >  static int acpi_fwnode_get_reference_args(const struct fwnode_handle=
- *fwnode,
-> > >                                           const char *propname, const=
- char *nargs_prop,
-> > >                                           unsigned int args_count, un=
-signed int index,
->
-> > >         const struct acpi_device_data *data;
-> > >         struct fwnode_handle *ref_fwnode;
-> > >         struct acpi_device *device;
-> > > +       unsigned int nargs_count;
-> > >         int ret, idx =3D 0;
->
-> > > +                       nargs_count =3D acpi_fwnode_get_args_count(de=
-vice, nargs_prop);
-> >
-> > I think it should work the same way as it used to for the callers that
-> > pass args_count, so maybe
-> >
-> > if (!args_count)
-> >         args_count =3D acpi_fwnode_get_args_count(device, nargs_prop);
->
-> But this is different variable.
+> Er... "fsx_fileattr" is the struct that the system call uses?
+> 
+> That's a little confusing considering that xfs already has a
+> xfs_fill_fsxattr function that actually fills a struct fileattr.
+> That could be renamed xfs_fill_fileattr.
+> 
+> I dunno.  There's a part of me that would really rather that the
+> file_getattr and file_setattr syscalls operate on a struct file_attr.
 
-Of course it is different.  It is an acpi_fwnode_get_reference_args() param=
-eter.
+Agreed, I'm pretty sure I suggested this during an earlier review. Fits
+in line with struct mount_attr and others. Fwiw, struct fileattr (the
+kernel internal thing) should've really been struct file_kattr or struct
+kernel_file_attr. This is a common pattern now:
 
-> > >                         element++;
-> > > -
-> > >                         ret =3D acpi_get_ref_args(idx =3D=3D index ? =
-args : NULL,
-> > >                                                 acpi_fwnode_handle(de=
-vice),
-> > > -                                               &element, end, args_c=
-ount);
-> > > +                                               &element, end,
-> > > +                                               nargs_count ? nargs_c=
-ount : args_count);
-> >
-> > And this change would not be necessary?
->
-> This is not the same check as proposed above.
+struct mount_attr vs struct mount_kattr
 
-No, it is not.
+struct clone_args vs struct kernel_clone_kargs
 
-It just makes the function work the same way it did before the change
-for the callers who passed nozero args_count and so they might be
-forgiven expecting that it would be taken into account.
+etc.
+
+> 
+> More whining/bikeshedding to come.
+> 
+> <snip stuff that looks ok to me>
+> 
+> <<well, I still dislike the CLASS(fd, fd)(fd) syntax...>>
+
+Noted, and duly ignored...
+
+> 
+> > diff --git a/include/uapi/linux/fs.h b/include/uapi/linux/fs.h
+> > index 0098b0ce8ccb..0784f2033ba4 100644
+> > --- a/include/uapi/linux/fs.h
+> > +++ b/include/uapi/linux/fs.h
+> > @@ -148,6 +148,24 @@ struct fsxattr {
+> >  	unsigned char	fsx_pad[8];
+> >  };
+> >  
+> > +/*
+> > + * Variable size structure for file_[sg]et_attr().
+> > + *
+> > + * Note. This is alternative to the structure 'struct fileattr'/'struct fsxattr'.
+> > + * As this structure is passed to/from userspace with its size, this can
+> > + * be versioned based on the size.
+> > + */
+> > +struct fsx_fileattr {
+> > +	__u32	fsx_xflags;	/* xflags field value (get/set) */
+> 
+> Should this to be __u64 from the start?  Seeing as (a) this struct is
+
+Agreed. I changed that.
