@@ -1,112 +1,146 @@
-Received: from azure-sdnproxy.icoremail.net (l-sdnproxy.icoremail.net [20.188.111.126])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F18A10F2;
-	Wed,  2 Jul 2025 05:24:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=20.188.111.126
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2D6E10F9;
+	Wed,  2 Jul 2025 05:27:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751433895; cv=none; b=FC8Utfvm9BQuGxO1M0QJlrZuly7oumIwf0tnD+/S5A26GNgoGshu72nIL/0zF65VmjMRy4cICetZwdbsMaH3hT1Rpz8hJTsMuUIFVrnPgT8ZPG6X31wGd/1WPETYsWG4/906D7RKSrsq6zm2ntHQdoLkbyVImaMDof8RcshGIPs=
+	t=1751434059; cv=none; b=Hl8tN7fiIMWG7V/MKmC9uNDLmWpbTZDjeN8CMwzvzB8/mR46QgK0zgkkRQiXnF1x3pW6byEJTkkqXJa3ObDZvILpjPWY52GppaNI7UXNoF4iljSahBDU6OIpP4TTsdBtS+xNrMcBAFSj/N1JsiN8YY8OZFgejXHB0Z4SYH8QMCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751433895; c=relaxed/simple;
-	bh=lv8cewQCgzixt5VgJBiBFjJgHw9OMLzI1aEuGxmzV7k=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=Ryj7lQlW9Dbd0h1Zn6eGSQlnU8YY/rYAhqI4zUjqP0vkLaBnjV3KVXydoUjID01e10v4F6FWOWvceGiqZ6614eP+uRoXCUoEZOfLIGTvoYxNrJ/Ncc0oQ7SDcKQnUzJrm4j8b6NqXFFIQgV90ctHS2KK0h8o/XlQT3n4UYVEFu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=20.188.111.126
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from zju.edu.cn (unknown [115.197.243.13])
-	by mtasvr (Coremail) with SMTP id _____wB3JDqOwmRoSorRAw--.1372S3;
-	Wed, 02 Jul 2025 13:24:31 +0800 (CST)
-Received: from localhost (unknown [115.197.243.13])
-	by mail-app1 (Coremail) with SMTP id yy_KCgCH2GONwmRoLVFUAA--.52319S2;
-	Wed, 02 Jul 2025 13:24:30 +0800 (CST)
-From: Lin Ma <linma@zju.edu.cn>
-To: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	linma@zju.edu.cn,
-	mingo@kernel.org,
-	tglx@linutronix.de,
-	pwn9uin@gmail.com,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] drm: sanitize ttm_device_funcs.evict_flags/move casting
-Date: Wed,  2 Jul 2025 13:24:21 +0800
-Message-Id: <20250702052421.80423-1-linma@zju.edu.cn>
-X-Mailer: git-send-email 2.39.0
+	s=arc-20240116; t=1751434059; c=relaxed/simple;
+	bh=snNUAsnORcKOYh9hKd9fSgC1zweCJ39RM4mwSSIpfc0=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=a2jkYeJb5JN7/uUTR3CLpvVAfvoYFluqI+mq/LkXiZDQIsfOPSU1FN3q9nG4wIMKizZJxfe2tvVX9d/d7rejDK2VPCcSstXMMaWsluOc9NAiuwLNAVsWiEcIZ0kKfBA6DUYxVuv1GA0Vm6hXRIX3xvVMuvmej6JqDelZrdNFSAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=YQtF32II; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="YQtF32II"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
+	s=s31663417; t=1751434019; x=1752038819; i=frank-w@public-files.de;
+	bh=ocX+LiR9BtypRDOe9giWuZ6zdLW4XcmiYNpdeZQm2ws=;
+	h=X-UI-Sender-Class:Date:From:To:CC:Subject:Reply-to:In-Reply-To:
+	 References:Message-ID:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=YQtF32IIGW1bOIhg/DGGFGZbk++Yq3n5VM1OhIjZgh9ILMQqSVF4TmRQVcWg2RGR
+	 Oq3pSuhaDly5IghK1NeTXez4Oo0/XJ0JzHhfg/CJE6fod1fsAGwg34COavNQzEzhj
+	 tkJF3NI2z5U+KZJf/+JkzwGIRm0v1cU3o2ORmuyYxFKEZ66YwNXVP1o5p6v+RWS2K
+	 eWcsQ0F3QPAOxk4/fzUIGGgfFJqEn/e5DIHvdwcVB2SIPx/eraW4KSZT6LO8h0+4K
+	 HYNF/YW6bU7WolpJhkVS5HdpsGu2GFA/Kqm7LOLUx9VYlDclz7ukV4bf9ywR8uSLy
+	 UTNwa/ekcFrhbVrAfQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [127.0.0.1] ([194.15.85.168]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MWici-1uD1xL1XCK-00PXM7; Wed, 02
+ Jul 2025 07:26:59 +0200
+Date: Wed, 02 Jul 2025 07:26:52 +0200
+From: Frank Wunderlich <frank-w@public-files.de>
+To: Frank Wunderlich <linux@fw-web.de>, MyungJoo Ham <myungjoo.ham@samsung.com>,
+ Kyungmin Park <kyungmin.park@samsung.com>,
+ Chanwoo Choi <cw00.choi@samsung.com>, Georgi Djakov <djakov@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+ Vladimir Oltean <olteanv@gmail.com>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+CC: Johnson Wang <johnson.wang@mediatek.com>,
+ =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
+ Landen Chao <Landen.Chao@mediatek.com>, DENG Qingfang <dqfext@gmail.com>,
+ Sean Wang <sean.wang@mediatek.com>, Daniel Golle <daniel@makrotopia.org>,
+ Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>,
+ linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v7 00/14] further mt7988 devicetree work
+User-Agent: K-9 Mail for Android
+Reply-to: frank-w@public-files.de
+In-Reply-To: <20250628165451.85884-1-linux@fw-web.de>
+References: <20250628165451.85884-1-linux@fw-web.de>
+Message-ID: <41FC3305-F6B9-4EBF-BC26-0203A7F3329E@public-files.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:yy_KCgCH2GONwmRoLVFUAA--.52319S2
-X-CM-SenderInfo: qtrwiiyqvtljo62m3hxhgxhubq/
-X-CM-DELIVERINFO: =?B?5EqoYQXKKxbFmtjJiESix3B1w3tPqcowV1L23Bze5QtIr9Db75bEBiiEybVhThS0pI
-	APHpkT0S87xKjFuOcc67InCDD3v9V3Anj4iC7G9ZqY7PGAVCKnxWeso1VfHbRg8HTfH2jO
-	EoJwzi3UeBu6yLCm71+VKUjJTMQVRzgKF9lnMIMw
-X-Coremail-Antispam: 1Uk129KBj93XoW7uFyfZFy5XF1DJr4rGw1xJFc_yoW8Ar43pF
-	47Cry7ZrWUKa12qr1Iqa18ZFy3Aan2qFW8W3Wqv34S9F1YyF1DXrW5Jry5JrW5JFnrJryf
-	trnFy3sIv3W5AacCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Eb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AK
-	xVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAF
-	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0Y48IcxkI7V
-	AKI48G6xCjnVAKz4kxM4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI7VAKI48JMxC2
-	0s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI
-	0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE
-	14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20x
-	vaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8
-	JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU801v3UUUUU==
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:+0ij2U4Sm1jTDlnh1aeuBvKJA+kgKHBWGyfwk5h8SLM8bOL5I+b
+ urRm0KZG1vEjPM3lmK/DKQtdzqxf6yJmNBy9coNRFfmn0VihR74jyuyoebpSLYzFy1v+v3u
+ vSznWJtdRDX4jentQ7yg63BjAtKB8yMXmkZY5DB1xcRhpRU2e/B3BuVKEM9Ytrk0ItKBqMo
+ GgUWENJ4VwIVQTFp5HkSQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Nq+lDfMhpeQ=;aBgJLF/kLqYk+izV8BvM8GZXlux
+ 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
 
-Our analysis revealed that most handlers in ttm_device_funcs perform
-type checks before invoking container_of on ttm_buffer_object.
 
-For instance, commit d03d858970a1 ("drm/radeon/kms: Check if bo we got
-from ttm are radeon object or not") introduced an object type check (
-based on the comparison with destroy function).
+>Frank Wunderlich (14):
+=2E=2E=2E
+>  dt-bindings: net: dsa: mediatek,mt7530: add dsa-port definition for
+>    mt7988
+>  dt-bindings: net: dsa: mediatek,mt7530: add internal mdio bus
+>  dt-bindings: interconnect: add mt7988-cci compatible
+>  arm64: dts: mediatek: mt7988: add cci node
+=2E=2E=2E
+>  arm64: dts: mediatek: mt7988a-bpi-r4: add proc-supply for cci
+>  arm64: dts: mediatek: mt7988a-bpi-r4: drop unused pins
+>  arm64: dts: mediatek: mt7988a-bpi-r4: add gpio leds
+=2E=2E=2E
 
-This commit adds the missing type checks in the nouveau_bo_evict_flags
-and bo_driver_move handlers.
+Hi Angelo,
 
-Signed-off-by: Lin Ma <linma@zju.edu.cn>
----
- drivers/gpu/drm/drm_gem_vram_helper.c | 3 +++
- drivers/gpu/drm/nouveau/nouveau_bo.c  | 3 +++
- 2 files changed, 6 insertions(+)
-
-diff --git a/drivers/gpu/drm/drm_gem_vram_helper.c b/drivers/gpu/drm/drm_gem_vram_helper.c
-index 22b1fe9c03b8..40d1b584327e 100644
---- a/drivers/gpu/drm/drm_gem_vram_helper.c
-+++ b/drivers/gpu/drm/drm_gem_vram_helper.c
-@@ -855,6 +855,9 @@ static int bo_driver_move(struct ttm_buffer_object *bo,
- 		return 0;
- 	}
- 
-+	if (!drm_is_gem_vram(bo))
-+		return -EINVAL;
-+
- 	gbo = drm_gem_vram_of_bo(bo);
- 
- 	return drm_gem_vram_bo_driver_move(gbo, evict, ctx, new_mem);
-diff --git a/drivers/gpu/drm/nouveau/nouveau_bo.c b/drivers/gpu/drm/nouveau/nouveau_bo.c
-index b96f0555ca14..81a66246d547 100644
---- a/drivers/gpu/drm/nouveau/nouveau_bo.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_bo.c
-@@ -887,6 +887,9 @@ nouveau_bo_evict_flags(struct ttm_buffer_object *bo, struct ttm_placement *pl)
- {
- 	struct nouveau_bo *nvbo = nouveau_bo(bo);
- 
-+	if (bo->destroy != nouveau_bo_del_ttm)
-+		return;
-+
- 	switch (bo->resource->mem_type) {
- 	case TTM_PL_VRAM:
- 		nouveau_bo_placement_set(nvbo, NOUVEAU_GEM_DOMAIN_GART,
--- 
-2.17.1
-
+Maybe you can take the already reviewed
+patches (except exthernet + switch) so i do
+not need to resend them again and again
+and spam people too much because of the
+ethernet binding changes?
+regards Frank
