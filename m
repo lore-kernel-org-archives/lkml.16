@@ -1,157 +1,228 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E2C247DE1
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 12:45:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4F532367D3;
+	Wed,  2 Jul 2025 12:46:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751460353; cv=none; b=gMm/dRTcGyU7HbSpAbp3ybyGdQ5kQ9vgFNoFdl4ERxZEly3WZ5mlO3skLnNkqPBWdXLdv6WU0F4cgKET25ZQUL4OXGxafPOPfhSQBcJt4NkZ6zib3uAKG7pSKYOEXxxT90r5HqFdCwF9gMAQ6OHQQF+X1PEfUOvFaNFzVpL0oAc=
+	t=1751460378; cv=none; b=HP7TNq5NPEyjGP3tz3eYn/ExBR3o8PW9sLOTN8EB9o0iqnKyF8qgWCxfNr8+VAe+ySjJ4LVstdzAd3FJA7QQiBQSAtP46LR3kKmS8iAfH43QtsRNv08/M5IuJUptJOqGGzTV1l4+PY+zv7b4AH1zmm2Wr9raIIn/iWPXVg2Z7xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751460353; c=relaxed/simple;
-	bh=L6hhUirJkO/7sMRAQX56jA6n5wv/jVQ37SKFMn2Twmg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nEKJ4SmEjnbpg0kW3EAGNINlvi6tPsIxLvHoMX1w+D33aOjG46UV08uFjFsiRYIaLTGARWKNa/YekEkrtpdx5LK57jQJhTOUJGYkWR3tQZ13uGa5mpFkylzgJn/dii1Hca1EeQ2tHzU3jlSB8+KbFC2SCEm1lgDlQGMl0di9M2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=X/5x6WQx; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1751460378; c=relaxed/simple;
+	bh=xNQPpZ20lOA6x5uCrJooB3aWOdhA2rmyyeDbQ7gnXko=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=blwlP4BGLp0cIIyMey+2cO23hZxkNoZJhrB648rSA6gQCGl7OMC71uW6ksxLxDynrfGJR5zhptzfdvTZn7v9WSE9vEXTUIdShWP1YmtmWR8BuSwJwMZHLw9tDkKH4+xdVPRh1tHgudqJfFT+vo81F4srIAZ7V3VDWPcvFtaziu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mNR7wl67; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="X/5x6WQx"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5626Kveu032399
-	for <linux-kernel@vger.kernel.org>; Wed, 2 Jul 2025 12:45:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	/aPyaghMl71l2+WzfUFrAleiaGBW4YqofoCOldr6ncM=; b=X/5x6WQxi9fGjLKr
-	rheR6uxLJBHs7sCO/OqCjPbI3v0159zQ59jiEx2Qc7IbQiRAGxaVHL0f981YgjQI
-	7/vIXPtP0KlBPab7cdrQHK2+O9VmDiyjnNNNNsgVmw8n8ThUcie7QmffSJMRH7i9
-	T1pnTkMvWCYnjc+s/QjUbIlnsY2jRBcvlbc9VXR+2mFdCGhg4N8aS9ORaHfZytdY
-	EBgwc1t1uTQ/qmk/kgtIeaqDJ+XatGLU2Tc6mpy6XUXk7n/ksouzXz7TZ6fdycUu
-	bRUGaiDbIiWNWLRJIit9T/a66HJgcWUMOMGZybp2ZVLzCtnbORFgHWkQf2klhfD4
-	z4OiUw==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j63kcrun-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 12:45:50 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7d0976a24ceso218851585a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 05:45:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751460349; x=1752065149;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/aPyaghMl71l2+WzfUFrAleiaGBW4YqofoCOldr6ncM=;
-        b=BQqiaa6aFuaPERKrtsUfRyeGEN5VYeHP0kHjj6WETPTXHNO86LD8PF32NFpAQCgRQX
-         W07VlDHS8H5yrpjW2uX8bHLcm+026afo6H3+puR0Gj1raQhMeAlYcIvczBjWBBb7MvqM
-         vbhMa9I1BmFn8R4qg30lxeYsfiUuRcuA+H1GWD2u2u/MBYFKq54aJmz/UbT+OHWme65f
-         17xGUvZn6lxWxvFHr6IybBeyt22nxg33BVKGImqu1/NQz+yEudu/i31AVy98TWAUEjDE
-         RyU6DgVAlt+Qk2oWuG4g0cE8Mmddjx9nklFFwgMb2PttQqvt77Iw59jaVqkN4GrVw40x
-         hwnA==
-X-Forwarded-Encrypted: i=1; AJvYcCVRDERB2eklJlEvo2j+sswOmG1PCx1yemd9Qcs0VCeocu6Lz/6ltv2KGGV1Qaa/EEKNoX4aJjYeLX2eNSQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSTg1iRnRi84D09zI+dG0eEVg4AoR4DJuPKwO33BTpagmPmfCZ
-	uNQwzh4C0hsFAP1D6IFnU3BAegS3ZoZB4ECBvwHiK4xZFq5RQBf2I/SyWtzu74Nnu0/M38QSfG3
-	V2sX9Z96QZAgopZAWNzklRls69dBs5loq+xSUEIjWWXGnaqV0qFvJPjogn4YHXEmuPpw=
-X-Gm-Gg: ASbGncv3pUUbZMUp0jR3v5rqqwlqHQ8WAJc5WBiLugva/O5gLQxkXXUbCk2Oel4Cj5Q
-	fPfFnuup9A/9z0893/fy8jYCDLJSq8GkwQlWfZLTCrs/MKeGF6K0yvsb+3bUgJ89pzsic0zi2XW
-	B4PKJzniw3hrhV3PY7vNZBeAlSBBXzBHVKSzFpIcxVEofNJZBitU1eAu6u6/XtgbUG8ZaWsbuos
-	f8FLMEstd4ac0PIZyUWni5yLPsztp9+NOFxfe2rboxMw79S468375sISAuhZYO5ovcqyiIVkkIA
-	0YxBqEkRCgk4sQtSqVxveR+17jc9GElz0yyFbZ8jXtLntJP7twSOK0+a3KacuJSwCi9wuEuTh+y
-	MX9c=
-X-Received: by 2002:a05:620a:3954:b0:7d4:1ecb:dc36 with SMTP id af79cd13be357-7d5c471292emr162613985a.3.1751460349413;
-        Wed, 02 Jul 2025 05:45:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGenMXUQ0DABCm6z4G1Os0/aj+Iw9lPISHCubjt8QuuBByfXmzEI7utX9xCWSS65elyzu6UuA==
-X-Received: by 2002:a05:620a:3954:b0:7d4:1ecb:dc36 with SMTP id af79cd13be357-7d5c471292emr162611685a.3.1751460348937;
-        Wed, 02 Jul 2025 05:45:48 -0700 (PDT)
-Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353c6bfafsm1081492366b.130.2025.07.02.05.45.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jul 2025 05:45:48 -0700 (PDT)
-Message-ID: <13046a5b-f66e-42f6-90e3-17f7adb709b4@oss.qualcomm.com>
-Date: Wed, 2 Jul 2025 14:45:46 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mNR7wl67"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59500C4CEED;
+	Wed,  2 Jul 2025 12:46:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751460378;
+	bh=xNQPpZ20lOA6x5uCrJooB3aWOdhA2rmyyeDbQ7gnXko=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mNR7wl67fUJ2fLWJnrx1eA6CYJm6IV4JftZYI+XEmFVsz7lMGCEwGdCC5HQJKSL+P
+	 WbmtKE5A2VC1USq0Zsu02x7JgMEDqI3gACbYL4GUNmkzSQNkm5l7OettVTB8PxH4jg
+	 j1YwlRsQiXVoIOgLo/OtOkw1wX8jRCEMXx6p9WelxYiMLV42sQIdcs8glj9kFFvMVI
+	 pqRPtMWSLgSw3hdmoOxX3X5LUSuHyDDW/0aBNru7JFTLVe7mTzPYNj4vyBOXlR4TI7
+	 GObGd74Oiz8VsftLMHHvCOJqdJSHHn8DOzxIFepQJmodlbIv0Q7gdZkSD544yKhGl/
+	 DnCgvewI3yFFQ==
+Date: Wed, 2 Jul 2025 14:46:10 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Marc Zyngier <maz@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Will Deacon <will@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Peter Maydell <peter.maydell@linaro.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v6 20/31] irqchip/gic-v5: Add GICv5 PPI support
+Message-ID: <aGUqEkascwGFD9x+@lpieralisi>
+References: <20250626-gicv5-host-v6-0-48e046af4642@kernel.org>
+ <20250626-gicv5-host-v6-20-48e046af4642@kernel.org>
+ <20250702124019.00006b01@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/5] media: iris: register and configure non-pixel node
- as platform device
-To: Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Dikshita Agarwal <quic_dikshita@quicinc.com>,
-        Abhinav Kumar <abhinav.kumar@linux.dev>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250627-video_cb-v3-0-51e18c0ffbce@quicinc.com>
- <20250627-video_cb-v3-2-51e18c0ffbce@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250627-video_cb-v3-2-51e18c0ffbce@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=ZKfXmW7b c=1 sm=1 tr=0 ts=686529fe cx=c_pps
- a=50t2pK5VMbmlHzFWWp8p/g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8 a=Fpb8j_qVfG1HvjMpLOEA:9
- a=QEXdDO2ut3YA:10 a=IoWCM6iH3mJn3m4BftBB:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDEwNCBTYWx0ZWRfX9uifZqT0FtV7
- w4GPHik1k/AftJ9I1qq+s0QL3bCLj0s1tB0BPEQd0prjXPvVoAVJTvZWP3jHzeG+3k5Yy2Fs3CU
- fNtEQzmOh1Kl8LhbG2gxVk/EUJ4ClHD9zsxSnqozuXKt9fCa0aE7oYXLItSnpbvvNxjifJA9Msf
- +WYlQaU//xEDxUyBduB/HSckp+bPnRkyehKCORQF3+wka4rSdwAb5w/4KTSfIMuIyQgoPeXRqyn
- veBC+9G8tbNR6aMNsvk8NlDUfO78hSHGANX4PNBdJsNwLQxYCWM1yDgAkD8itJVkEiVQ7X3vL8r
- S41tKkFSmGESLMd8AjNevvWegzJk76q0RG0WZAeUXX3tEdVfsJat3/mH5A+2gcl/HJwsKrJ3LJv
- vyiuPZSrXnvhSfi2UNcHnqCu9xJQnYlrSRoxCsX0CbDETTPIpWRzfKD46aHmYZjIRxp49MDe
-X-Proofpoint-ORIG-GUID: TPzcOfMiLzwuDxa-EmZJ39nN5lIsqqGu
-X-Proofpoint-GUID: TPzcOfMiLzwuDxa-EmZJ39nN5lIsqqGu
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-02_01,2025-07-02_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 mlxscore=0 mlxlogscore=999 spamscore=0 suspectscore=0
- bulkscore=0 priorityscore=1501 lowpriorityscore=0 phishscore=0
- impostorscore=0 malwarescore=0 clxscore=1015 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2507020104
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250702124019.00006b01@huawei.com>
 
-On 6/27/25 5:48 PM, Vikash Garodia wrote:
-> Register "non_pixel" child node as a platform device, and configure its
-> DMA via of_dma_configure(). This ensures proper IOMMU attachment and DMA
-> setup for the "non_pixel" device.
-> All non pixel memory, i.e bitstream buffers, HFI queues and internal
-> buffers related to bitstream processing, would be managed by non_pixel
-> device.
+On Wed, Jul 02, 2025 at 12:40:19PM +0100, Jonathan Cameron wrote:
+> On Thu, 26 Jun 2025 12:26:11 +0200
+> Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
 > 
-> Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
-> ---
+> > The GICv5 CPU interface implements support for PE-Private Peripheral
+> > Interrupts (PPI), that are handled (enabled/prioritized/delivered)
+> > entirely within the CPU interface hardware.
+> 
+> I can't remember where I got to last time so if I repeat stuff that
+> you already responded to, feel free to just ignore me this time ;)
+> 
+> All superficial stuff. Feel free to completely ignore if you like.
 
-[...]
+We are at v6.16-rc4, series has been on the lists for 3 months, it has
+been reviewed and we would like to get it into v6.17 if possible and
+deemed reasonable, I am asking you folks please, what should I do ?
 
-> +	memset(&info, 0, sizeof(info));
-> +	info.fwnode = &np_node->fwnode;
-> +	info.parent = core->dev;
-> +	info.name = np_node->name;
-> +	info.dma_mask = DMA_BIT_MASK(32);
+I can send a v7 with the changes requested below (no bug fixes there)
+- it is fine by me - but I need to know please asap if we have a
+plan to get this upstream this cycle.
 
-I'm not 1000% sure, but I fear that with the current description:
+Thanks,
+Lorenzo
 
-iris_resv: reservation-iris {
-	iommu-addresses = <&iris_non_pixel 0x0 0x0 0x0 0x25800000>,
-	                  <&iris_non_pixel 0x0 0xe0000000 0x0 0x20000000>;
-};
-
-this only works by luck, and once we introduce a platform that needs >32b
-address space access, a change here will break the existing platforms, as
-the higher parts are not forbidden.
-
-We can work around it like the Tegra folks by filling out the upper size
-dword, but I think it only further makes the iommu-addresses binding look
-silly..
-
-I'll submit a patch to (in my view) improve it soon
-
-Konrad
-
+> > diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
+> > new file mode 100644
+> > index 000000000000..a08daa562d21
+> > --- /dev/null
+> > +++ b/drivers/irqchip/irq-gic-v5.c
+> > @@ -0,0 +1,461 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Copyright (C) 2024-2025 ARM Limited, All Rights Reserved.
+> > + */
+> > +
+> > +#define pr_fmt(fmt)	"GICv5: " fmt
+> > +
+> > +#include <linux/irqdomain.h>
+> > +#include <linux/wordpart.h>
+> > +
+> > +#include <linux/irqchip.h>
+> > +#include <linux/irqchip/arm-gic-v5.h>
+> > +
+> > +#include <asm/cpufeature.h>
+> > +#include <asm/exception.h>
+> > +
+> > +static u8 pri_bits __ro_after_init = 5;
+> > +
+> > +#define GICV5_IRQ_PRI_MASK	0x1f
+> > +#define GICV5_IRQ_PRI_MI	(GICV5_IRQ_PRI_MASK & GENMASK(4, 5 - pri_bits))
+> > +
+> > +#define PPI_NR	128
+> > +
+> > +static bool gicv5_cpuif_has_gcie(void)
+> > +{
+> > +	return this_cpu_has_cap(ARM64_HAS_GICV5_CPUIF);
+> > +}
+> > +
+> > +struct gicv5_chip_data {
+> > +	struct fwnode_handle	*fwnode;
+> > +	struct irq_domain	*ppi_domain;
+> > +};
+> > +
+> > +static struct gicv5_chip_data gicv5_global_data __read_mostly;
+> 
+> > +static void gicv5_hwirq_eoi(u32 hwirq_id, u8 hwirq_type)
+> > +{
+> > +	u64 cddi = hwirq_id | FIELD_PREP(GICV5_GIC_CDDI_TYPE_MASK, hwirq_type);
+> 
+> Slight preference for not needing to care where hwirq_id goes in CDDI or how big
+> it is (other than when I checked the header defines).
+>  
+> 	u64 cddi = FIELD_PREP(GICV5_GIC_CDDI_ID_MASK, hwirq_id) |
+>         	   FIELD_PREP(GICV5_GIC_CDDI_TYPE_MASK, hwirq_type);
+> 
+> 
+> > +
+> > +	gic_insn(cddi, CDDI);
+> > +
+> > +	gic_insn(0, CDEOI);
+> > +}
+> 
+> > +static int gicv5_ppi_irq_get_irqchip_state(struct irq_data *d,
+> > +					   enum irqchip_irq_state which,
+> > +					   bool *state)
+> > +{
+> > +	u64 hwirq_id_bit = BIT_ULL(d->hwirq % 64);
+> > +
+> > +	switch (which) {
+> > +	case IRQCHIP_STATE_PENDING:
+> > +		*state = !!(read_ppi_sysreg_s(d->hwirq, PPI_PENDING) & hwirq_id_bit);
+> 
+> Technically don't need the !! but if you really like it I don't mind that much.
+> 
+> > +		return 0;
+> > +	case IRQCHIP_STATE_ACTIVE:
+> > +		*state = !!(read_ppi_sysreg_s(d->hwirq, PPI_ACTIVE) & hwirq_id_bit);
+> > +		return 0;
+> > +	default:
+> > +		pr_debug("Unexpected PPI irqchip state\n");
+> > +		return -EINVAL;
+> > +	}
+> > +}
+> 
+> 
+> > +static int gicv5_irq_ppi_domain_translate(struct irq_domain *d,
+> > +					  struct irq_fwspec *fwspec,
+> > +					  irq_hw_number_t *hwirq,
+> > +					  unsigned int *type)
+> > +{
+> > +	if (!is_of_node(fwspec->fwnode))
+> > +		return -EINVAL;
+> > +
+> > +	if (fwspec->param_count < 3)
+> 
+> I don't care that much, but could relax this seeing as fwspec->param[2]
+> isn't used anyway? Maybe a tiny comment on why it matters?
+> 
+> > +		return -EINVAL;
+> > +
+> > +	if (fwspec->param[0] != GICV5_HWIRQ_TYPE_PPI)
+> > +		return -EINVAL;
+> > +
+> > +	*hwirq = fwspec->param[1];
+> > +
+> > +	/*
+> > +	 * Handling mode is hardcoded for PPIs, set the type using
+> > +	 * HW reported value.
+> > +	 */
+> > +	*type = gicv5_ppi_irq_is_level(*hwirq) ? IRQ_TYPE_LEVEL_LOW : IRQ_TYPE_EDGE_RISING;
+> > +
+> > +	return 0;
+> 
+> 
+> > +static int __init gicv5_of_init(struct device_node *node, struct device_node *parent)
+> > +{
+> > +	int ret = gicv5_init_domains(of_fwnode_handle(node));
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	gicv5_set_cpuif_pribits();
+> > +
+> > +	ret = gicv5_starting_cpu(smp_processor_id());
+> > +	if (ret)
+> > +		goto out_dom;
+> > +
+> > +	ret = set_handle_irq(gicv5_handle_irq);
+> > +	if (ret)
+> > +		goto out_int;
+> > +
+> > +	return 0;
+> > +
+> > +out_int:
+> > +	gicv5_cpu_disable_interrupts();
+> > +out_dom:
+> > +	gicv5_free_domains();
+> 
+> Naming is always tricky but I'd not really expect gicv5_free_domains() as the
+> pair of gicv5_init_domains() (which is doing creation rather than just initializing).
+> 
+> Ah well, names are never prefect and I don't really mind.
+> 
+> > +
+> > +	return ret;
+> > +}
+> > +IRQCHIP_DECLARE(gic_v5, "arm,gic-v5", gicv5_of_init);
+> 
