@@ -1,93 +1,99 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D56751E633C;
-	Wed,  2 Jul 2025 17:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C0E624C060;
+	Wed,  2 Jul 2025 17:38:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751477837; cv=none; b=lGdYDPbbsSIvdv9qFj54CjYyrZMJu2Z/4qoFHegrZPhKUyLX5QU4JtDbvrNM5Ntv4hiaKhQ2eatHs4Rq7Ze+TuZ63xDGQkCd0rcDarRZd0acPZivoOOCbN6k/gEVj0xmakq1MGVmtbPmzDqUawxtIfbr0vtc5b0XAUK/yKvdt00=
+	t=1751477900; cv=none; b=k+FApQQV6uCBrR6V25hqVTR6XJX8hHauz5xKvMGtOBC7cIZ8VEVq5zD7JEytpJWMx//2rCCrLtVWYobpqFFTtl4yI8fPZFZy/YjpS54teirkEJlpHuZjbwOY9b7Z4Xz0Jt3jsKDMjP3UE8aILN6Uc93TeJcAzrvYrO31BwRNino=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751477837; c=relaxed/simple;
-	bh=+3iu10ARXrli6aYGeWMSd0G/SI4ynrsF78F10CwdKD8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fYd/Ix2ZmHR5UR06Uo7FoYInEwurN0FUxC1TJIJIfIwJx0Dek+ehAPfPAl+cd5BiEtltyGoKWQkWIsd+IQOQazGisaCBzX4HE8eVxjnLtXJmPGlsvvLioYsE11iMBYmhgNB4AiRpIo10W2s1pYB8pJ3E5FKhwZ0I1pYy5iyT1Kg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xv4t9T92; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751477900; c=relaxed/simple;
+	bh=9I9NerHyEGC5XpGaf6vyj6koIRuYlKsZkV3w3GMUvpQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=mYFzpRiO1JUBiZBFtnfiFLQ+iHvDX/1YKntHiROpE7j0IHohQRDcV3zDVkDBpvx8NylhjYKaqPPjV5mI2JBHfjYD+50dNnWKVToZoc1j2OP4l4dD/iVw/qAUzN5heC+RgVypgSwhiNsvH4lQCmTNC/jDB0FY9fOPGwmNga+yugo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cUNrYxCc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xv4t9T92"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e8276224c65so6286536276.0;
-        Wed, 02 Jul 2025 10:37:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751477835; x=1752082635; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+3iu10ARXrli6aYGeWMSd0G/SI4ynrsF78F10CwdKD8=;
-        b=Xv4t9T92UPQNgMKyWg+UGwLUUfQ/W1/TiJlt8BROqImgwFN7yxCFw8n6dMRtFn4r9b
-         U0uKfE0MkBmQU0S2MWY6Y6DimRqYlddKEZn43S+fW1c864qNZ66F5DXfh2hNd6vZ7lzO
-         HqM20c6UFOiFBveQro6ebibefKxr9rTGNT7Muj5U/pjfKyj8zhHb0QBOecju9jA6vnHk
-         pT/gCVURa4xY0HRfTFFI2Y6FZ+P2MoAOkYot04HK76kZaF7HqDQStfGd2Xg8/50FeVxM
-         TYSUEbJzFGlTfdScujz0dfXWAkt9tvvnHPFJyJhItdUfjbUnEpJ7Hdzr1088O2AMMsJm
-         zs1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751477835; x=1752082635;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+3iu10ARXrli6aYGeWMSd0G/SI4ynrsF78F10CwdKD8=;
-        b=nd42mbpl3PSd8NvJH07cLY/yH3jF8gD646S1UD9SEE7zyDmyeywm/I1n6Pmsc7igDM
-         IbxoVKE2YIbv8eigLnf60vIKkhERWPoA1CQxFlPH6akDqgWnSZWuqGVd/KbMcuCPbY2M
-         73y9kpX86uJzq1oGAw5z7o7SASL1e4qm2JoIS8EEY9sib+lzUffnyg4f+R5VeXDBFXGq
-         Wk9Sw/Zb0jgdnePuQjWp7j6fo7ggGLJt6CXetkyBalqyBXaFLqYEEtaj6M6gH5SlN88/
-         O/f2cPVjKDdMETVQcIdhKG8+s9rqb11905MB1ngRecpIA7IVumwgLa+w1+T4y9YKgndt
-         bSlA==
-X-Forwarded-Encrypted: i=1; AJvYcCVqk/Orp5VuB1ZvT4A95WZYhaedhn8dBHhY1W+FAR+N9yFm0ZYXjWDW4awtnl9xn4evaYjMKYCixRFsvT1t8pod@vger.kernel.org, AJvYcCW5V6MiA3ALUw/YD3E0w036p6vGMAgGNk14TNih1xehRW0ijwSNmE5/c50uTfCi8KKnTUzCS2VEaRElSVQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4saYm/m4lAfQ39NguE++ixMzN0TucdZnhtJvIsKXl0PbVY/zC
-	S3YMP7S0jAwE+jtVijQo19C4r0Z1KLZOgIGKx5+UcQ5CHwkj1lCXwW55Tn8FwObhaeHklIYiCMk
-	vzLC6Vcr2PNnlgNjLrCtoSabkZadrXbTDHQNBRUM=
-X-Gm-Gg: ASbGncv6lSTXp+kyesWDC8RWTEt6EzgUcNTHJnudWG4SA3D3wDE+TBWxbFX5dzXSkMW
-	D4heicoeCiVO3SS5t2s9NaLOdVUsuE7dsW40n20oHlDc0NOIbmOC6GmFTw99XBo6MGaJ3k02dV0
-	p23/5er6S3ygqdGskp2VLmRBFUyqlncpdM39AnC4itberj4b6NTbRtO1+b+uPFl2GqcuZ9OC83W
-	V0d
-X-Google-Smtp-Source: AGHT+IG65yWaIH+GMe5uFx9j4slTz+xcfrbtnzt86UHGCPNc2S++CK6rMAk8qWiyENa3BvDVqurWq+l2oPlvEZC1Mro=
-X-Received: by 2002:a05:690c:6886:b0:714:3e9:dd3 with SMTP id
- 00721157ae682-71658fbcc71mr7959357b3.6.1751477834545; Wed, 02 Jul 2025
- 10:37:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cUNrYxCc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0F28C4CEEF;
+	Wed,  2 Jul 2025 17:38:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751477900;
+	bh=9I9NerHyEGC5XpGaf6vyj6koIRuYlKsZkV3w3GMUvpQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=cUNrYxCcZzuBz13YM2YeZJsZtE4GKg7jHOCCiKgquYherMBWxjxCZ2eKcQSur41ZB
+	 N3x2Ca82+HKFiDJlPSZ+2StkpcmfhVlnBeX/MifE0DbrDnmWicVqS2V+G2rNoIfMOY
+	 0phWRzE0/GTpFX5SW3Xk/x68IAfmD3SeGg4R1OUPLwOKyIiXqEk3xFg5j4moVHRglQ
+	 xZH2d44IzclHTjffSyL+XPIbMrXpgeBnZp1k3pj1QIYg6JhJee1SO9RfJAEYAS77xY
+	 MyzxhdE+ZvUeEEomzPH5LCLm8y6MD++SAXjv9kWjkeblGsdx2y2lxZgW67cL/umEiw
+	 gQEpVXiLd6Vkg==
+From: SeongJae Park <sj@kernel.org>
+To: Usama Arif <usamaarif642@gmail.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	David Hildenbrand <david@redhat.com>,
+	linux-mm@kvack.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Jann Horn <jannh@google.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Christian Brauner <brauner@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Barry Song <21cnbao@gmail.com>,
+	linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-api@vger.kernel.org,
+	Pedro Falcato <pfalcato@suse.de>,
+	Matthew Wilcox <willy@infradead.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Subject: Re: [DISCUSSION] proposed mctl() API
+Date: Wed,  2 Jul 2025 10:38:16 -0700
+Message-Id: <20250702173816.59935-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <6d8832bb-b5a7-4cd9-b92c-c93f2c1fe182@gmail.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250702171704.22559-2-moonhee.lee.ca@gmail.com>
-In-Reply-To: <20250702171704.22559-2-moonhee.lee.ca@gmail.com>
-From: Moonhee Lee <moonhee.lee.ca@gmail.com>
-Date: Wed, 2 Jul 2025 10:37:03 -0700
-X-Gm-Features: Ac12FXxSvmf-vd0t6RoDD8VwiJfrWPOWXyAk3_FBBMmpe3i4cdXWTYiNc4YjfZE
-Message-ID: <CAF3JpA7q6WRMNar-EqOd6afTogyiUoRq+GnWp0sdv5rakLpsYw@mail.gmail.com>
-Subject: Re: [PATCH v2] selftests/kexec: fix test_kexec_jump build
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: kexec@lists.infradead.org, dwmw@amazon.co.uk, mingo@kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kernel-mentees@lists.linux.dev, shuah@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 2, 2025 at 10:17=E2=80=AFAM Moon Hee Lee <moonhee.lee.ca@gmail.=
-com> wrote:
-> ---
-> Changes in v2:
-> - Dropped the .gitignore addition, as it is already handled in [1]
->
-> [1] https://lore.kernel.org/r/20250623232549.3263273-1-dyudaken@gmail.com
+On Wed, 2 Jul 2025 15:15:01 +0100 Usama Arif <usamaarif642@gmail.com> wrote:
 
-Just noticed I had the wrong address in the To field =E2=80=94 the correct =
-one
-(skhan@linuxfoundation.org) was already in Cc, but sending this to fix it
-properly.
+[...]
+> In terms of the approach of doing this, IMHO, I dont think the way to do this
+> is controversial. After the great feedback from Lorenzo on the prctl series, the
+> approach would be for userpsace to make a call that just does for_each_vma of the process,
+> madvises the VMAs,
 
-No changes to the patch.
+One dirty hack that I can think off the top of my head for doing this without
+new kernel changes is, unsurprisingly, using DAMOS.  Using DAMOS, users can do
+madvise(MADV_HUGEPAGE) to virtual address ranges of specific access patterns.
+It is aimed to be used for hot regions, while using similar one of
+MADV_NOHUGEPAGE for cold regions.  An experiment with a prototype[1] showed it
+eliminates about 80% of internal fragmentation caused memory overhead while
+keeping 46% of performance improvement under a constrained situation.
+
+If you set the access pattern as any pattern, hence, you can do
+madvise(MADV_HUGEPAGE) for effectively entire virtual address space of the
+process.  DAMON user-space tool supports periodically tracking childs and
+applying same DAMOS scheme to those.  So, for example, below hack could be
+tried.
+
+    # damo start $(pidof XXX) --damos_action hugepage --include_child_tasks
+
+I'm working with Usama at Meta but not very closely involved in THP works, so
+I'm not sure if this works for Usama's case and others.  I even not tried this
+at all on any test environment.  So I'm not recommending this but just sharing
+a thought for more brainsorming, and that's why I call this a dirty hack.
+
+[1] https://assets.amazon.science/b7/2b/ce53222247739b174f2b54498d1a/daos-data-access-aware-operating-system.pdf
+
 
 Thanks,
-Moonhee
+SJ
+
+[...]
