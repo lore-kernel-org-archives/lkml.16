@@ -1,258 +1,115 @@
-Received: from trager.us (trager.us [52.5.81.116])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 047382BE654;
-	Wed,  2 Jul 2025 19:27:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.5.81.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D87FE2BE656;
+	Wed,  2 Jul 2025 19:28:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751484475; cv=none; b=ok9hFyMcC6Ncks7EiscFdjGvhEnrm4b12989yD7qrrnCgnRnVeCQvo8SsvTJOHOiEyTpKKWWjYGc9BMBqlov7dhQb0V2DtqaT/syffOEnMPy22BrUVO4NV6lmpg+Z4a7bacvdUssndhy7RSMPoQNaWKRL5eHSniK/H4gJdDNkR4=
+	t=1751484506; cv=none; b=kmMXAJ4AzHRcuCT15yDAvXjP0nvNMRlTGWP1syDqwz2UANVR2BQum16yeAln8cP3KEQp0l0EmveV9pMIaczopg+c1QlW8XTUEKZgszODPwkc1UqzZFme4o8f3NfFB10FMssxIfpjUOGm2q0PIncz5AUZDNutiZqmM2MqFIOOS+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751484475; c=relaxed/simple;
-	bh=UDEOnODcQ0m+DPqLV7SWa5FiyuiV2KQLIAWVwGyX7kY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ajzK4RkiSkqkRCSk4jZNk0PVfd7a3swwVC3DEvB/VRk9oeaUlU7rOAO/0j+FxMzC1sxa2RJxt9oFmJtCxDdPMiugG9yE91p3RIgxCQPSmAUHJZ5QJeGSGQZIbtCqQw8PN3iHP+1qfETUF1t6ln4gIEp4bi8N4oZqWv9dumIvPVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trager.us; spf=pass smtp.mailfrom=trager.us; arc=none smtp.client-ip=52.5.81.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trager.us
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trager.us
-Received: from c-76-104-255-50.hsd1.wa.comcast.net ([76.104.255.50] helo=localhost)
-	by trager.us with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-	(Exim 4.92.3)
-	(envelope-from <lee@trager.us>)
-	id 1uX37S-00081M-2y; Wed, 02 Jul 2025 19:27:46 +0000
-From: Lee Trager <lee@trager.us>
-To: Alexander Duyck <alexanderduyck@fb.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	kernel-team@meta.com,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Mohsin Bashir <mohsin.bashr@gmail.com>,
-	Sanman Pradhan <sanman.p211993@gmail.com>,
-	Su Hui <suhui@nfschina.com>,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Simon Horman <horms@kernel.org>,
-	Lee Trager <lee@trager.us>,
-	Kalesh AP <kalesh-anakkur.purayil@broadcom.com>,
-	Jacob Keller <jacob.e.keller@intel.com>
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH net-next 3/6] eth: fbnic: Create ring buffer for firmware logs
-Date: Wed,  2 Jul 2025 12:12:09 -0700
-Message-ID: <20250702192207.697368-4-lee@trager.us>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250702192207.697368-1-lee@trager.us>
-References: <20250702192207.697368-1-lee@trager.us>
+	s=arc-20240116; t=1751484506; c=relaxed/simple;
+	bh=xih0f0IrVpiwPNIQN3FuiM2jsdd/W6PIPe7Fb7/bOkc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ftIaonTKWDqZgmCZp2pbzKeFpCLs6K5723cr5vesY1cXCZ+EG2hmDYsZIF2ZnFGeJmDRmp5tbTvMlIJvAefECfHswn12TodvkUoevdZIgw55Wbbe9+UA7uyy+AswMD2Hh8YUtH4z1kbtY+HOQz3KwJBByUW5bsYMUxc9sBVNN+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E+VCUjiD; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E+VCUjiD"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-60c60f7eeaaso12052954a12.0;
+        Wed, 02 Jul 2025 12:28:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751484503; x=1752089303; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xih0f0IrVpiwPNIQN3FuiM2jsdd/W6PIPe7Fb7/bOkc=;
+        b=E+VCUjiD5iQKfMDRBMF1FnuPX+OCGSr5qEhAog9ulP9jxk9J8I248S952ImwJmtZ0V
+         Y+Nzm51L9O+5UmJIBD52SbZmSF84GHq7GIfdQ6leHMUXk345xFJBlrD9JjYT1tMYgywl
+         g1r/pH/6uhEOZvdDy3J1X8tecLMeG6waSUVN8sBMy1NAzICwksHAKDnytQPJxtswUMuU
+         2rTiVTIFqa3zDxuhYpz7cfml3xxQA+IZ6Ohx3YkaCsWK1LJEbfYlSqg0ptbwMPys5QpG
+         c+xahbbL0MwOf5dbTAN7JZbHCGYiAZJhOoJHInKDHph6M+0qzSfXs4jlBRf94oVF5ylj
+         sMZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751484503; x=1752089303;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xih0f0IrVpiwPNIQN3FuiM2jsdd/W6PIPe7Fb7/bOkc=;
+        b=RSGt5lZ6omVuRPZxkkUKU8y1hF1JNo2M/hqWKjIu0zxQWhFq1JeegaqjSN+jZ6As+i
+         k4D3mE2lRFV6rJvWopyqWCYHso9x8CJMSmQBk1oQ/4ccnjAI2MtqBY1bv0srpPSew1pD
+         ud4Hpu43iuWtn4N7mctaOKolSNcn/tc6vgCfq+j7hXr5QsNR9Au6ZJMhTlLu8lJx//EV
+         NnnGzvFsICLabpsv82NeZkwY+8UAfmSMAySygLeiJgCGsKyltY5XQVVrhb7grNu8jcnR
+         SQki/1lKrol3DrEzMuMygT3C2NeLFblAPaazqxrAPdTaOmDiXQx9EuZIkhYfocKjyxAI
+         HX9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUmS2y0xKC2DatxOMyNBYk6t1PMlETEO3eqg7hCojFncTUlhm4zUJpG3Y5h6gP+ok83FtYEY8EG0XjfF7fY@vger.kernel.org, AJvYcCV1jedj8pgT11dQIxi3JAJO2kWhuXqCLQvaQzNlIntKZtuZpmcmQUuabB/BUQAhjkCV8UobFmwzKCwzbFPFb1dsONI=@vger.kernel.org, AJvYcCWuqHayBDdQVknauUMHr+TpW4OVcXMS79q7IDNT3+XxFzpPuQP9hkGrh2oA7IsxeZycXeBN2BqPZttf@vger.kernel.org, AJvYcCXrFsZvB04NUgzilQH0a87RauWFIoSL32EnRxwaLTjTD75pcLvedxozTHQVOG7x1uYHTLQwSY9p4SZs@vger.kernel.org
+X-Gm-Message-State: AOJu0YzywA++sYtIqfIbt3D4COHHlC/PPXpJlTt+t5vaCeaPceHVpYOi
+	07KqSsgZ0WjPjzUqeFFRSQj3v3kQQvIyvneXZ/wTByzraPPFwJoZoNg86BVRnI0N9RmESy2RHeM
+	aZofW78Z+svSV/qag70xKH/AeIrTav56lAmuMqYo=
+X-Gm-Gg: ASbGnctHqXjtdYdef60lipLIxQV64dFutMUqIBQV4t+agpAPN9euITuHM4lXdtlxaGV
+	Uw6IItZnvvD+APYfv4bW6TZU33QjCJoKlB6Jl5wCDXsWOzHsiJ0jb/86omIF1TLCH8hFUaaEoNz
+	Xxuf5aQjFaBPh1Fej40dGa3yLYim5QqH9og3H74RfTPKeiGA==
+X-Google-Smtp-Source: AGHT+IE/26ZGPj4QJDw6qpUc3nD2BeQNoD6ogI7+uKO1XyauigWU5XVfBCs81BmFBQwMtqbz+/auirfJKgcCXcSCFzk=
+X-Received: by 2002:a05:6402:5208:b0:60c:3a86:e117 with SMTP id
+ 4fb4d7f45d1cf-60e5364e311mr3566885a12.34.1751484502896; Wed, 02 Jul 2025
+ 12:28:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250627204237.214635-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250627204237.214635-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdVpL4gdPB=vEbGiA4neNiUSKdxvKU3AFGVROsdes3VaPA@mail.gmail.com> <CAMuHMdUNG0YzL8gLaukdgbzEEPHXaG+YZRruddGjqt96XRrqLg@mail.gmail.com>
+In-Reply-To: <CAMuHMdUNG0YzL8gLaukdgbzEEPHXaG+YZRruddGjqt96XRrqLg@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Wed, 2 Jul 2025 20:27:55 +0100
+X-Gm-Features: Ac12FXwFlupBYcEpmCxkYg_zcbmeQfa_-hTGAw2ui_pb142vwFJa2E-vLtLI5PU
+Message-ID: <CA+V-a8sKA7yj68KOA26gMvhU+hjnp0CUf62Typ4LkAfd-1Ee5w@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] dt-bindings: clock: renesas,r9a09g056/57-cpg: Add
+ XSPI core clock
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When enabled, firmware may send logs messages which are specific to the
-device and not the host. Create a ring buffer to store these messages
-which are read by a user through DebugFS. Buffer access is protected by
-a spinlock.
+Hi Geert,
 
-Signed-off-by: Lee Trager <lee@trager.us>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
----
- drivers/net/ethernet/meta/fbnic/Makefile      |  1 +
- drivers/net/ethernet/meta/fbnic/fbnic.h       |  3 +
- .../net/ethernet/meta/fbnic/fbnic_fw_log.c    | 95 +++++++++++++++++++
- .../net/ethernet/meta/fbnic/fbnic_fw_log.h    | 43 +++++++++
- 4 files changed, 142 insertions(+)
- create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_fw_log.c
- create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_fw_log.h
+Thank you for the review.
 
-diff --git a/drivers/net/ethernet/meta/fbnic/Makefile b/drivers/net/ethernet/meta/fbnic/Makefile
-index 0dbc634adb4b..15e8ff649615 100644
---- a/drivers/net/ethernet/meta/fbnic/Makefile
-+++ b/drivers/net/ethernet/meta/fbnic/Makefile
-@@ -12,6 +12,7 @@ fbnic-y := fbnic_csr.o \
- 	   fbnic_devlink.o \
- 	   fbnic_ethtool.o \
- 	   fbnic_fw.o \
-+	   fbnic_fw_log.o \
- 	   fbnic_hw_stats.o \
- 	   fbnic_hwmon.o \
- 	   fbnic_irq.o \
-diff --git a/drivers/net/ethernet/meta/fbnic/fbnic.h b/drivers/net/ethernet/meta/fbnic/fbnic.h
-index 65815d4f379e..c376e06880c9 100644
---- a/drivers/net/ethernet/meta/fbnic/fbnic.h
-+++ b/drivers/net/ethernet/meta/fbnic/fbnic.h
-@@ -12,6 +12,7 @@
+On Wed, Jul 2, 2025 at 7:22=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68k=
+.org> wrote:
+>
+> On Tue, 1 Jul 2025 at 14:34, Geert Uytterhoeven <geert@linux-m68k.org> wr=
+ote:
+> > On Fri, 27 Jun 2025 at 22:42, Prabhakar <prabhakar.csengg@gmail.com> wr=
+ote:
+> > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > >
+> > > Add XSPI core clock definitions to the clock bindings for the Renesas
+> > > R9A09G056 and R9A09G057 SoCs. These clocks IDs are used to support XS=
+PI
+> > > interface.
+> > >
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com=
+>
+> >
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > i.e. will split, and queue in renesas-r9a09g056-dt-binding-defs and
+> > renesas-r9a09g057-dt-binding-defs, to be shared by renesas-clk and
+> > renesas-devel.
+>
+> Looks like I can do without the split, as both dt-bindings-defs branches
+> are upstream.
+>
+Thanks.
 
- #include "fbnic_csr.h"
- #include "fbnic_fw.h"
-+#include "fbnic_fw_log.h"
- #include "fbnic_hw_stats.h"
- #include "fbnic_mac.h"
- #include "fbnic_rpc.h"
-@@ -85,6 +86,8 @@ struct fbnic_dev {
-
- 	/* Lock protecting access to hw_stats */
- 	spinlock_t hw_stats_lock;
-+
-+	struct fbnic_fw_log fw_log;
- };
-
- /* Reserve entry 0 in the MSI-X "others" array until we have filled all
-diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_fw_log.c b/drivers/net/ethernet/meta/fbnic/fbnic_fw_log.c
-new file mode 100644
-index 000000000000..caedbe7844f7
---- /dev/null
-+++ b/drivers/net/ethernet/meta/fbnic/fbnic_fw_log.c
-@@ -0,0 +1,95 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) Meta Platforms, Inc. and affiliates. */
-+
-+#include <linux/spinlock.h>
-+#include <linux/vmalloc.h>
-+
-+#include "fbnic.h"
-+#include "fbnic_fw.h"
-+#include "fbnic_fw_log.h"
-+
-+int fbnic_fw_log_init(struct fbnic_dev *fbd)
-+{
-+	struct fbnic_fw_log *log = &fbd->fw_log;
-+	void *data;
-+
-+	if (WARN_ON_ONCE(fbnic_fw_log_ready(fbd)))
-+		return -EEXIST;
-+
-+	data = vmalloc(FBNIC_FW_LOG_SIZE);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	spin_lock_init(&fbd->fw_log.lock);
-+	INIT_LIST_HEAD(&log->entries);
-+	log->size = FBNIC_FW_LOG_SIZE;
-+	log->data_start = data;
-+	log->data_end = data + FBNIC_FW_LOG_SIZE;
-+
-+	return 0;
-+}
-+
-+void fbnic_fw_log_free(struct fbnic_dev *fbd)
-+{
-+	struct fbnic_fw_log *log = &fbd->fw_log;
-+
-+	if (!fbnic_fw_log_ready(fbd))
-+		return;
-+
-+	INIT_LIST_HEAD(&log->entries);
-+	log->size = 0;
-+	vfree(log->data_start);
-+	log->data_start = NULL;
-+	log->data_end = NULL;
-+}
-+
-+int fbnic_fw_log_write(struct fbnic_dev *fbd, u64 index, u32 timestamp,
-+		       char *msg)
-+{
-+	struct fbnic_fw_log_entry *entry, *head, *tail, *next;
-+	struct fbnic_fw_log *log = &fbd->fw_log;
-+	size_t msg_len = strlen(msg) + 1;
-+	unsigned long flags;
-+	void *entry_end;
-+
-+	if (!fbnic_fw_log_ready(fbd)) {
-+		dev_err(fbd->dev, "Firmware sent log entry without being requested!\n");
-+		return -ENOSPC;
-+	}
-+
-+	spin_lock_irqsave(&log->lock, flags);
-+
-+	if (list_empty(&log->entries)) {
-+		entry = log->data_start;
-+	} else {
-+		head = list_first_entry(&log->entries, typeof(*head), list);
-+		entry = (struct fbnic_fw_log_entry *)&head->msg[head->len + 1];
-+		entry = PTR_ALIGN(entry, 8);
-+	}
-+
-+	entry_end = &entry->msg[msg_len + 1];
-+
-+	/* We've reached the end of the buffer, wrap around */
-+	if (entry_end > log->data_end) {
-+		entry = log->data_start;
-+		entry_end = &entry->msg[msg_len + 1];
-+	}
-+
-+	/* Make room for entry by removing from tail. */
-+	list_for_each_entry_safe_reverse(tail, next, &log->entries, list) {
-+		if (entry <= tail && entry_end > (void *)tail)
-+			list_del(&tail->list);
-+		else
-+			break;
-+	}
-+
-+	entry->index = index;
-+	entry->timestamp = timestamp;
-+	entry->len = msg_len;
-+	strscpy(entry->msg, msg, entry->len);
-+	list_add(&entry->list, &log->entries);
-+
-+	spin_unlock_irqrestore(&log->lock, flags);
-+
-+	return 0;
-+}
-diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_fw_log.h b/drivers/net/ethernet/meta/fbnic/fbnic_fw_log.h
-new file mode 100644
-index 000000000000..881ee298ede7
---- /dev/null
-+++ b/drivers/net/ethernet/meta/fbnic/fbnic_fw_log.h
-@@ -0,0 +1,43 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (c) Meta Platforms, Inc. and affiliates. */
-+
-+#ifndef _FBNIC_FW_LOG_H_
-+#define _FBNIC_FW_LOG_H_
-+
-+#include <linux/spinlock.h>
-+#include <linux/types.h>
-+
-+/* A 512K log buffer was chosen fairly arbitrarily */
-+#define FBNIC_FW_LOG_SIZE	(512 * 1024) /* bytes */
-+
-+/* Firmware log output is prepended with log index followed by a timestamp.
-+ * The timestamp is similar to Zephyr's format DD:HH:MM:SS.MMM
-+ */
-+#define FBNIC_FW_LOG_FMT	"[%5lld] [%02ld:%02ld:%02ld:%02ld.%03ld] %s\n"
-+
-+struct fbnic_dev;
-+
-+struct fbnic_fw_log_entry {
-+	struct list_head	list;
-+	u64			index;
-+	u32			timestamp;
-+	u16			len;
-+	char			msg[] __counted_by(len);
-+};
-+
-+struct fbnic_fw_log {
-+	void			*data_start;
-+	void			*data_end;
-+	size_t			size;
-+	struct list_head	entries;
-+	/* Spin lock for accessing or modifying entries */
-+	spinlock_t		lock;
-+};
-+
-+#define fbnic_fw_log_ready(_fbd)	(!!(_fbd)->fw_log.data_start)
-+
-+int fbnic_fw_log_init(struct fbnic_dev *fbd);
-+void fbnic_fw_log_free(struct fbnic_dev *fbd);
-+int fbnic_fw_log_write(struct fbnic_dev *fbd, u64 index, u32 timestamp,
-+		       char *msg);
-+#endif /* _FBNIC_FW_LOG_H_ */
---
-2.47.1
+Cheers,
+Prabhakar
