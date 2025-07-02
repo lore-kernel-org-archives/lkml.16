@@ -1,95 +1,190 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA9778F5D
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 10:17:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8660478F5D;
+	Wed,  2 Jul 2025 10:17:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751451440; cv=none; b=rsoTBqbb2WzW3yE8RdbDZ81lL0PErkJuzWML7+apXqif9WNi6Ut1gTJEWwsZPGB937S4NPLpydulfNMlwmhprGHLdDKiI/drcsiYm778VdXYdoJhwIDw3iWUFgqpC9mPzKU+5B4SmOuwj+HTuQWUPXT0JDv7Ir4NRUNL6tBwG8M=
+	t=1751451445; cv=none; b=Xuo9cCNfiRujCiIWipGR7P+TK+spnO7Rd/HgHESUqkFPVZAatZ1m8OABsqWxQhyHy0yoI8FIibOe3QJ4nALXiIIu12QDj038py3MFYoOzOq4+FOQrxYxnI+aJKMHIOzuzo/GWZrERsjSisHcLoBkcWShMZhbv3l/8u5FieUOZeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751451440; c=relaxed/simple;
-	bh=OQXKIEV7E/i3m2568pnhNxUhnfzOk+xoGPAzZX26p2g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b5u8YUHPubrFd34MO98usxDbY6bndQQojjzmtAk8Gm2TkBP+P1gQevo5SYG9uCIcvL0TegYDnOxHvHRuqambz0r/ySa1jWCxgeUG/wvDAtTRlBe+JNF24OhpRp+tQ8MxXvWyD8BrtmQvT+wYR7bpB5lZ4AiAcwshniz3mlHrJlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PncWELkh; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751451445; c=relaxed/simple;
+	bh=0vykiB83G9vcIlf4hVyInQxt2iop2prV08IcMSSFKbA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NmfvSPrBedoimbAI3a2bPQAIY5lt4K2+Jld8RKmXSiJt8jmFYExR9pU7aBsegF+qaVW5qAC5rDSwqdp8nZniovfb9uljDqUV780dqXMY3RQlMg8gZL4WCxyP+yIxHY1isHj2ZLtB4kmHR3vEZ1RfpvO50nVb1Ci8u23LCGbwriA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eLA8VYQu; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PncWELkh"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-713fba639f3so65373577b3.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 03:17:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751451438; x=1752056238; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=OQXKIEV7E/i3m2568pnhNxUhnfzOk+xoGPAzZX26p2g=;
-        b=PncWELkhYStIDYvpkt+cmLi7ceI/MofG9FKaUWvhVtX9ofMSsD5BZAujzKYZeVgJVs
-         t5HSNQhofqMPKHNfIeXWEvkAyYA0U9XM9KatJuTxoN0yDgyWnpndEdlu6LNMQQ9VMcqv
-         PM2TTpOvd9+Elb+lkD/ben5swF79YAN7A0oxo0KEqxzpgA4c7kqm/IxPUbTGrz+0JFQE
-         +N7Pb+kniaZcR9XiyO+hJjbksJ4dRskhEJ2qZ6kwndynMBfX0bdB2s/BNeUkGWgInv8g
-         XAy/UbR9lmPv9+hTiPwuXkgHbjS05hVg7h5BZaPizZUWt7ael40h08qsla7QkOxMnRXW
-         rKuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751451438; x=1752056238;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OQXKIEV7E/i3m2568pnhNxUhnfzOk+xoGPAzZX26p2g=;
-        b=ZCZ3FmiWF4Dq0QS4jo19V9cuIM+giphPggZiQ7GPcXVdgqMlIqV4t7KM6OkXrunPnz
-         ZDh/FbBkxJ9L4wQrSp/veaKBz+P5JlUO8/XwB/9OEvnBh+nMUj7RVgo/4Mmfg+d0b5hQ
-         j3AUNuJzTGPcpganPMvrJ6kXGdpZam3IpPPQNG8p2UIR01fNSv0zvvxi1eNJfKD4p+ut
-         R2R2YvfBMf+YLQmFjETqgkU+3dPQUGbEY9KRv3M7ajC9774uFEyAcJTIxg62Jef8xfSl
-         D8we/+NhLpHK9rWw9kmQNDOtmYKFwx1iiEaxbymRshcR7PL4wZyxltbsKTcENED2h5Fk
-         j0Wg==
-X-Forwarded-Encrypted: i=1; AJvYcCV7Qj3EJshCgrPtycRPkmO2HyWl+AkGBF14+0TzhYUlQVT1nvIINcBlpZlQpC0PScy3Txm7R58cRTayOhU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTk3VHt7wGUlU4XDdz3fUl+hYH3YvuOJXYPHBHC1R+3X1c+J2I
-	ssU+06HmY0tH1KmfUKBUgbpXmjm8GlZtZcw3HEza8iuY6GawkrRfdnPbBFKfxRJoVRs2vjoQRFf
-	Zg7qcC+DpYd5dmhC/i9jePYW+2eqkWiX9MbTKbJ/5Zw==
-X-Gm-Gg: ASbGnctWsFZxLZxAxBOiiTy/kPs/mkJU7yALwZOdl+KWx02TpsEXDi7iAkrJWw2BGUH
-	5NETs4DaU9Y5RjmSSmlf70v6mJ9pxPa6oSjCyR/3a1EsfdhRRilV6mP/T4vaVI05q62To9Xgzrv
-	EJF9op9dBPeWL1O0Ph8uodbahLncWTZMSUoj9Kovsgakb/lnA6WcEdfQ==
-X-Google-Smtp-Source: AGHT+IFkxNQMKBmmJ9CHpNmpP2Eu7W4sPO7KthCl2z1kt7FCPHBJbjsCw8uI9+EZQUZEtSbd0EqItRiyQR16Ssqrmf4=
-X-Received: by 2002:a05:690c:4a0b:b0:6fb:a696:b23b with SMTP id
- 00721157ae682-7164d571f91mr29995547b3.33.1751451437681; Wed, 02 Jul 2025
- 03:17:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eLA8VYQu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751451443; x=1782987443;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0vykiB83G9vcIlf4hVyInQxt2iop2prV08IcMSSFKbA=;
+  b=eLA8VYQukU9Jdh6lAWURn/6PevgvYymidlVkAcHe72kafPYeXZMSp02F
+   e86T/ydwSKUGRXFdK1uMggO7PrvpVrLxfnyY58R7LAhZfVJxmKyjTBfAU
+   xLesN8E165BGnMr/ha2tJ4qXdCZrVQ5qC7RZoa5EUP/odPTg/d0hzf1MR
+   aGW7OuFQC38TwhTEkCXxxSsmffHLAZLf543gjiz/pJARm5bi7FqF/vUE/
+   erOm0gAq1paiL6m8vtKF5AyV+j6q6tH6ffDfSYJ8osaTuRJuOuQZASykA
+   CKqF11cc6Yr5MYwxMCO7hjvG0+7HLyF21314LPSAvaoVZvG/1a2J/KEsP
+   A==;
+X-CSE-ConnectionGUID: 1WKmC+AoR6+7YaDlYwDYKA==
+X-CSE-MsgGUID: Iyd4lCF3Ri+Dq3S/FyYiWA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="71166790"
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="71166790"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 03:17:22 -0700
+X-CSE-ConnectionGUID: H0AE6E4lRXKuG3TgVZexbw==
+X-CSE-MsgGUID: +FtBcl7SSGuSI820sqPDbA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="153491981"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa006.jf.intel.com with ESMTP; 02 Jul 2025 03:17:11 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 1298D1E0; Wed, 02 Jul 2025 13:17:10 +0300 (EEST)
+Date: Wed, 2 Jul 2025 13:17:10 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Sohil Mehta <sohil.mehta@intel.com>, Andy Lutomirski <luto@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Xiongwei Song <xiongwei.song@windriver.com>, 
+	Xin Li <xin3.li@intel.com>, "Mike Rapoport (IBM)" <rppt@kernel.org>, 
+	Brijesh Singh <brijesh.singh@amd.com>, Michael Roth <michael.roth@amd.com>, 
+	Tony Luck <tony.luck@intel.com>, Alexey Kardashevskiy <aik@amd.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jonathan Corbet <corbet@lwn.net>, Ingo Molnar <mingo@kernel.org>, 
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Daniel Sneddon <daniel.sneddon@linux.intel.com>, 
+	Kai Huang <kai.huang@intel.com>, Sandipan Das <sandipan.das@amd.com>, 
+	Breno Leitao <leitao@debian.org>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Hou Tao <houtao1@huawei.com>, Juergen Gross <jgross@suse.com>, 
+	Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@google.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Yuntao Wang <ytcoode@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>, 
+	Huang Shijie <shijie@os.amperecomputing.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
+	linux-mm@kvack.org
+Subject: Re: [PATCHv8 14/17] x86/traps: Handle LASS thrown #SS
+Message-ID: <5q2zbkzyjknusd3feqolycqialetqfe52yfyzasnr6zp24pmej@4cg2r2hi4pf2>
+References: <20250701095849.2360685-1-kirill.shutemov@linux.intel.com>
+ <20250701095849.2360685-15-kirill.shutemov@linux.intel.com>
+ <95dc18fd-73b0-4019-92d2-c0e6aaf22c96@intel.com>
+ <4DE45AFD-C1E0-4FB8-BE01-44A72C5C6E1E@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250701142313.9880-1-terry.tritton@linaro.org> <87ikkblkff.ffs@tglx>
-In-Reply-To: <87ikkblkff.ffs@tglx>
-From: Terry Tritton <terry.tritton@linaro.org>
-Date: Wed, 2 Jul 2025 11:17:06 +0100
-X-Gm-Features: Ac12FXzqBxkveVShIhOUpDdDjk97AbKpwZ2ofDUlNcnP0hGUSjlvZVzO9wDFzKE
-Message-ID: <CABeuJB3voQYT0FZ2ETBL_OVW6Lec6bOntLfKQd_J-huJJOyzHA@mail.gmail.com>
-Subject: Re: [PATCH v2] selftests/futex: Convert 32bit timespec struct to
- 64bit version for 32bit compatibility mode
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Shuah Khan <shuah@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
-	ttritton@google.com, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Wei Gao <wegao@suse.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4DE45AFD-C1E0-4FB8-BE01-44A72C5C6E1E@zytor.com>
 
-> > Signed-off-by: Wei Gao <wegao@suse.com>
-> > Signed-off-by: Terry Tritton <terry.tritton@linaro.org>
->
-> This is still wrong.
->
-> If it is based on someone else work, then you need to attribute it
-> Originally-by and omit the Signed-off-by of the original author.
->
-> If you just picked it up and adopted it to a later kernel version then
-> you need to add 'From: Original Author' and preserve his Signed-off-by.
->
-> If you collaborated with him, then you want to use Co-developed-by.
->
-> All of this is documented in Documentation/process/
->
+On Tue, Jul 01, 2025 at 07:06:10PM -0700, H. Peter Anvin wrote:
+> On July 1, 2025 6:35:40 PM PDT, Sohil Mehta <sohil.mehta@intel.com> wrote:
+> >On 7/1/2025 2:58 AM, Kirill A. Shutemov wrote:
+> >> LASS throws a #GP for any violations except for stack register accesses,
+> >> in which case it throws a #SS instead. Handle this similarly to how other
+> >> LASS violations are handled.
+> >> 
+> >
+> >Maybe I've misunderstood something:
+> >
+> >Is the underlying assumption here that #SS were previously only
+> >generated by userspace, but now they can also be generated by the
+> >kernel? And we want the kernel generated #SS to behave the same as the #GP?
+> >
+> >> In case of FRED, before handling #SS as LASS violation, kernel has to
+> >> check if there's a fixup for the exception. It can address #SS due to
+> >> invalid user context on ERETU. See 5105e7687ad3 ("x86/fred: Fixup
+> >> fault on ERETU by jumping to fred_entrypoint_user") for more details.
+> >> 
+> >> Co-developed-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> >> Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> >> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> >> ---
+> >>  arch/x86/kernel/traps.c | 39 +++++++++++++++++++++++++++++++++------
+> >>  1 file changed, 33 insertions(+), 6 deletions(-)
+> >> 
+> >> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+> >> index ceb091f17a5b..f9ca5b911141 100644
+> >> --- a/arch/x86/kernel/traps.c
+> >> +++ b/arch/x86/kernel/traps.c
+> >> @@ -418,12 +418,6 @@ DEFINE_IDTENTRY_ERRORCODE(exc_segment_not_present)
+> >>  		      SIGBUS, 0, NULL);
+> >>  }
+> >>  
+> >> -DEFINE_IDTENTRY_ERRORCODE(exc_stack_segment)
+> >> -{
+> >> -	do_error_trap(regs, error_code, "stack segment", X86_TRAP_SS, SIGBUS,
+> >> -		      0, NULL);
+> >> -}
+> >> -
+> >>  DEFINE_IDTENTRY_ERRORCODE(exc_alignment_check)
+> >>  {
+> >>  	char *str = "alignment check";
+> >> @@ -866,6 +860,39 @@ DEFINE_IDTENTRY_ERRORCODE(exc_general_protection)
+> >>  	cond_local_irq_disable(regs);
+> >>  }
+> >>  
+> >> +#define SSFSTR "stack segment fault"
+> >> +
+> >> +DEFINE_IDTENTRY_ERRORCODE(exc_stack_segment)
+> >> +{
+> >> +	if (user_mode(regs))
+> >> +		goto error_trap;
+> >> +
+> >> +	if (cpu_feature_enabled(X86_FEATURE_FRED) &&
+> >> +	    fixup_exception(regs, X86_TRAP_SS, error_code, 0))
+> >> +		return;
+> >> +
+> >> +	if (cpu_feature_enabled(X86_FEATURE_LASS)) {
+> >> +		enum kernel_exc_hint hint;
+> >> +		unsigned long exc_addr;
+> >> +
+> >> +		hint = get_kernel_exc_address(regs, &exc_addr);
+> >> +		if (hint != EXC_NO_HINT) {
+> >
+> >The brackets are not needed for singular statements. Also the max line
+> >length is longer now. You can fit this all in a single line.
+> >
+> >> +			printk(SSFSTR ", %s 0x%lx", kernel_exc_hint_help[hint],
+> >> +			       exc_addr);
+> >> +		}
+> >> +
+> >
+> >> +		if (hint != EXC_NON_CANONICAL)
+> >> +			exc_addr = 0;
+> >> +
+> >> +		die_addr(SSFSTR, regs, error_code, exc_addr);
+> >
+> >The variable names in die_addr() should be generalized as well. They
+> >seem to assume the caller to be a #GP handler.
+> >
+> >> +		return;
+> >> +	}
+> >> +
+> >> +error_trap:
+> >> +	do_error_trap(regs, error_code, "stack segment", X86_TRAP_SS, SIGBUS,
+> >> +		      0, NULL);
+> >> +}
+> >> +
+> >>  static bool do_int3(struct pt_regs *regs)
+> >>  {
+> >>  	int res;
+> >
+> 
+> Note: for a FRED system, ERETU can generate #SS for a non-canonical user space RSP even in the absence of LASS, so if that is not currently handled that is an active bug.
 
-Ah sorry, I thought it was just the order that was wrong.
+It is handled by fixup code inside do_error_trap(). We need to add
+explicit fixup before LASS handling to avoid treating bad userspace RSP as
+kernel LASS violation.
 
-Thanks for pointing me in the right direction!
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
