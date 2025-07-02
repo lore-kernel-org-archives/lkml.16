@@ -1,130 +1,127 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68389224244
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 06:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29CEC8BEC;
+	Wed,  2 Jul 2025 07:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751439580; cv=none; b=uvyGNYdpMHWeNiorVogP+Ak2a/JE3Q29Sl9mwgFgWDxfjdV/B5Jh/uu+fsC+o5sCpkJ55LINxCyx06YWpNUiO8mxinBvQBHIWoZDaGp2TRJO+GG+LepTxDSoe0IrY0XFM61Y1WK76xxQTnkSWKxQbZlcpv0KfREdyCQcwSkmE8Y=
+	t=1751439625; cv=none; b=I/xjxRQQRUqLPh/km2Tbr1InRxkxx09XB8N3vYWmW8OsnMX76I6p/Hmcy1YfNl+0UVU9XJLmcfsMmvUpBR45mUEfNlM68ByDkuYBQ+pSRj/k8ynvgLtGO1r7MK979wfdGxGvC/lL3UxGIzxe/HRXId0N7qd/MCX+QIWUYHB8RRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751439580; c=relaxed/simple;
-	bh=FuVYA1DBsUs8nHuz1QNLYEtINvz/XpKrOjhWBEaED8w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eBynpx2c4KcIJIBgcxxQNfY+xpV0+E+k8JlxNE6QaC5tCk8uo4uEBWEEUDy7U1XjX7Yc0qVCk0fP1g7Tp0lYrGDP5rtE2jhwFxCYP5jD7i+ANY/H8s4Mc88UhuulRuB4GmmR89HlBgel1mAbIbzhlr4H+Ond7nxN6HakX/Pkr+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XEqnz72S; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751439625; c=relaxed/simple;
+	bh=2tZo2cCjA0Y2GCvOVo50+39/Qu2y80q7jpcHyKlVS+U=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=ZM1Lv2gDANoQZwHxO1aUWcL1+4KTwCvnw6xkhNqZYtfoLxuikVNQ9deZNblZG0OqUH0GfIkwrJNiKcL01fpsdPTLOHOAEiy6ZCgLr0UIBrNRsMjrm2XTiYBKPH/pHbUIwmv/gopI71Wh1gfZYdwrctIL/eSA4F7v63M16SlIoag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EnDpyaZa; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XEqnz72S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751439577;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9oktXAsQiQp5i7sShP6Y80qG42xcBA2kpSrzl21Pw1E=;
-	b=XEqnz72SmnVD4BbsnT0PEkgzUfohFQtMpE+5fgfAWcUG1SGNNsJd+UtVQ2yR1w/hyp+mBg
-	/8qTE8DY0phVQU52pJrywTr6/leCUyR7IuWk8uLPY4+O5bXGvEG5kZw1yX9+mGqhJ7wjfs
-	n5wBgxnf24dL6rYBc7FAqx/M4wnUkc4=
-Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com
- [209.85.210.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-178-Ife2ZeUQOdS3DLaxIASs0Q-1; Wed, 02 Jul 2025 02:59:36 -0400
-X-MC-Unique: Ife2ZeUQOdS3DLaxIASs0Q-1
-X-Mimecast-MFC-AGG-ID: Ife2ZeUQOdS3DLaxIASs0Q_1751439575
-Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-7425efba1a3so7430128b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 23:59:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EnDpyaZa"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2352400344aso61202815ad.2;
+        Wed, 02 Jul 2025 00:00:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751439623; x=1752044423; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HuJaex6WWCvWthSyFQwlZmsNHe6Z60g/4P8w8lI7ZPQ=;
+        b=EnDpyaZaNJ7vAtqD4lZEW524XZwvImU7IEEmvl4lDfeh6ZeKvl/9ZiexO+Vuhv27+V
+         u9SofFRqh79kPMvFDHbRbfg135DyHVGdoRKloJUnz9zPbVM8WHW7oeB/1yg9Yv09T1Ja
+         FpLUAghZKKrojsoMmlnV2kghZTh3O1LLC2EriVg5iRGLqkxLm0zz0hW/nsF6cNN64i+T
+         h79+zjVbRefrDQ7b+5R7ocCMMDpIaCOjedh7JiLphzJBfumm5JF7FtUSl2eY/YQVil6I
+         A4Dlv0ysrrtLJyw6tLl2fEwjIOtNwmPrZiL61JGacINgtZxNFl8Pq6vbu4UHsidRp75V
+         sGAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751439575; x=1752044375;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1751439623; x=1752044423;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9oktXAsQiQp5i7sShP6Y80qG42xcBA2kpSrzl21Pw1E=;
-        b=mKg0ucaGN50fc9iF6itQIfSJgaeugxoFY/LQRp9Fz9E6EVpjMOiqR/HFsTlo7vvscC
-         HhgCkr8/JzeK/YmtuKxX+SplMorkfZsKJD0UyFfnhCN2eMckje+Pwy9Xn6g9lMuOIRn2
-         yI2zWEA2lHCPkzdXrInHh2hp0dEZ0JeqnkXzXRuWERGaUI/cwAG+E2ZnX2Vi1YyIloW/
-         OomzbIvloOIaGgxO6QA2kylIw0/MPQuLd7DNOMFwV7Krjeg6WBdC2apKnMFiwMfSN95t
-         NbgC455eIFMz/293p68DEfEKlbHIejFo++Ef3rtRNWvh8TNhUTQ6Wuac3pQwUM4c3n37
-         dAcA==
-X-Forwarded-Encrypted: i=1; AJvYcCWpSLsLOtR5qkQmR1vZvbLohw2hnqUkKMrHsWRc3ZRECkFBMu6rF8Ol5pOOk+hoCDFnskegluaIu6cO43c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxgq5bWdJGGUgtNJ9XtIK+uo/phHgDUkqUiaZL4m1Koe9w4rjgM
-	mEV9/SGmue94iNh6ohw8vTMOZvOn+24pNrw3lYoOnvvmxAl/R60t//nS/GNCFwudPIMykwxCHV9
-	hkmgsivqLMhjYG2NTU2mL1/CaknF0f/7NHZSAGuh3txxpuhbdpNuNcyR0Nf9Er3oFT/a/KNPgAF
-	dJqM+GfNrDG4qIvr2lqJgGz5NkbA1Vub9pcGtENaGR
-X-Gm-Gg: ASbGnctiNnFv82PfEu94O5vBrriHgu8/XozEm+gJ467pk5Yfibiiu/xwPmcspZ1trVM
-	GNzQ0T/RlaPLQviBvkxusoF04Q0kyDinBjksvlF/4yGe+yPW/voirPq3BfgoBDZVq+iJPR7su39
-	8s
-X-Received: by 2002:a05:6a00:18a8:b0:746:25d1:b712 with SMTP id d2e1a72fcca58-74b520c7795mr2076717b3a.7.1751439574923;
-        Tue, 01 Jul 2025 23:59:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFs7ktrYM9fwj/23hUCctOhF9JiJbm2p5i56/LZ5EavRIaEm0fNI4z9W3n/6Xdc5OGC8rN13n7jqzjq8exUvhQ=
-X-Received: by 2002:a05:6a00:18a8:b0:746:25d1:b712 with SMTP id
- d2e1a72fcca58-74b520c7795mr2076679b3a.7.1751439574437; Tue, 01 Jul 2025
- 23:59:34 -0700 (PDT)
+        bh=HuJaex6WWCvWthSyFQwlZmsNHe6Z60g/4P8w8lI7ZPQ=;
+        b=n0LM39WnjqL9yanr8C92R/1M7P9+XR/VgWA5wO1pQQv8OFo3In4bdUwsm9XRT1dH3x
+         YFop4eNoVdtvWMGbAHHg4U7MrZQBvLlbym3U5e1YB5g83iaXJGAFdBVYpLmh6RWLbkyO
+         SU5G1BDxJ9f+WVpCCNfSb5yPE12Amb2IoMMJeiiYCJP4E8buTET+hPoD9tBPJuVOopDa
+         dJAgEteGwxsJ6OUq26wNltK+vuhuUfraLT6BSqtW5EySuqJVOEveZ/xybPuTWVVr3JcL
+         CTcdGvCIMKdDgljKRPd2GNjAj+8+aLGPk1mFzVmPfo6KwKcHBfXnDiBva57tcWT9OwDt
+         cKhw==
+X-Forwarded-Encrypted: i=1; AJvYcCUXVa1mbA4v/YsDRJXFy1aHGACaX9p4Mkg+77QP2UQgjQhOjn5PaiMrD6ruOi68GUMV40ayTLwQqeMF2iY=@vger.kernel.org, AJvYcCV3b/GzWjuT2uzhyPwc23ORp9gZ9wxGpVMLcrj2+C0EoupRr7fcP0CsmNhcJ71fRvS/3pjtcE6tUA==@vger.kernel.org, AJvYcCVNz/7y6HGiTE7t02+daNhvQKXTgcGf99f45aXCAvInDi0AMav3cB3wslswEfSJ7y076y+M919HRy1tNhjQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmCtSA5C7AJbARRRgAI0eOdToWs/YCCODvQwWZJf62Jv0q+0Zn
+	3MTtuxT3y4pxeAbQpER7AvPawG9drUPFZpTwTn+W9OLLyWrHeYHSeich
+X-Gm-Gg: ASbGncuf5mC/OxgxiJQeTz1gsPTI+GG8TVVnIT5TZD0Jxufp9SgzvZaDKpIfDE7LdzU
+	RcFKVXFEmyWExzy3B3IPGZAbIOIRsJZShKYBMEgGbk0h6EXio0BWJzqY4pUub8AVDeQ72ADvpoJ
+	JZaEbghY7omAIrrSfVp/vasX6Hxfp44VtPu1GLtzdjm8KDh4SJ27mMWZVpJSnc/XjODuwjytwFn
+	Z8k3YUIVK0JnJVJuqB1hjniPpZ9wSG4RdSrKDHEa2b8wdr1NqrCix6y3PFMwFsO/PzEsP6ppppO
+	FDGkBQLOnRaTGeOXlmZ+dCHezSsh/8hmmUU+Cf9yKZxf2Q==
+X-Google-Smtp-Source: AGHT+IFOdpABx4MlRPwIZhUJXprp9yFf7WggnL876/MWdg4L4MqT/Gj2sYyf+A7M2qEqkz2SU6wlVQ==
+X-Received: by 2002:a17:902:d2c6:b0:234:8ef1:aa7b with SMTP id d9443c01a7336-23c6e48f8admr21749835ad.20.1751439623346;
+        Wed, 02 Jul 2025 00:00:23 -0700 (PDT)
+Received: from smtpclient.apple ([2402:d0c0:11:86::1])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3ad188sm121967755ad.147.2025.07.02.00.00.19
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 02 Jul 2025 00:00:22 -0700 (PDT)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250701011401.74851-9-jasowang@redhat.com> <202507021212.rhQmuuvi-lkp@intel.com>
-In-Reply-To: <202507021212.rhQmuuvi-lkp@intel.com>
-From: Jason Wang <jasowang@redhat.com>
-Date: Wed, 2 Jul 2025 14:59:20 +0800
-X-Gm-Features: Ac12FXxiZW_D57LUa3xpUl0ycvSaJSDuvuQ1l02cBG4QNnzDlhokAJCadnvHiDk
-Message-ID: <CACGkMEuu=qw4GMzM9x=WdYEaVBxQEvEq2mYKtQZiQFYocgmgWQ@mail.gmail.com>
-Subject: Re: [PATCH 8/9] vdpa: introduce map ops
-To: kernel test robot <lkp@intel.com>
-Cc: mst@redhat.com, xuanzhuo@linux.alibaba.com, eperezma@redhat.com, 
-	llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, 
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	hch@infradead.org, xieyongji@bytedance.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
+Subject: Re: [PATCH 2/4] io_uring/cmd: introduce IORING_URING_CMD_REISSUE flag
+From: Alan Huang <mmpgouride@gmail.com>
+In-Reply-To: <33d93770-886f-4337-a922-579e102c0067@gnuweeb.org>
+Date: Wed, 2 Jul 2025 15:00:07 +0800
+Cc: Daniel Vacek <neelx@suse.com>,
+ Jens Axboe <axboe@kernel.dk>,
+ Caleb Sander Mateos <csander@purestorage.com>,
+ Chris Mason <clm@fb.com>,
+ Josef Bacik <josef@toxicpanda.com>,
+ David Sterba <dsterba@suse.com>,
+ Mark Harmstone <maharmstone@fb.com>,
+ Linux Btrfs Mailing List <linux-btrfs@vger.kernel.org>,
+ io-uring Mailing List <io-uring@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <07162148-1F57-4198-BC82-08501232C2A9@gmail.com>
+References: <20250619192748.3602122-1-csander@purestorage.com>
+ <20250619192748.3602122-3-csander@purestorage.com>
+ <76d3c110-821a-471a-ae95-3a4ab1bf3324@kernel.dk>
+ <CAPjX3FfzsHWK=tRwDr4ZSOONq=RftF8THh5SWdT80N6EwesBVA@mail.gmail.com>
+ <33d93770-886f-4337-a922-579e102c0067@gnuweeb.org>
+To: Ammar Faizi <ammarfaizi2@gnuweeb.org>
+X-Mailer: Apple Mail (2.3826.500.181.1.5)
 
-On Wed, Jul 2, 2025 at 1:21=E2=80=AFPM kernel test robot <lkp@intel.com> wr=
-ote:
->
-> Hi Jason,
->
-> kernel test robot noticed the following build errors:
->
-> [auto build test ERROR on mst-vhost/linux-next]
-> [also build test ERROR on linus/master v6.16-rc4 next-20250701]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
->
-> url:    https://github.com/intel-lab-lkp/linux/commits/Jason-Wang/virtio_=
-ring-constify-virtqueue-pointer-for-DMA-helpers/20250701-091746
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git lin=
-ux-next
-> patch link:    https://lore.kernel.org/r/20250701011401.74851-9-jasowang%=
-40redhat.com
-> patch subject: [PATCH 8/9] vdpa: introduce map ops
-> config: x86_64-randconfig-073-20250702 (https://download.01.org/0day-ci/a=
-rchive/20250702/202507021212.rhQmuuvi-lkp@intel.com/config)
-> compiler: clang version 20.1.7 (https://github.com/llvm/llvm-project 6146=
-a88f60492b520a36f8f8f3231e15f3cc6082)
-> rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
-> reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/archi=
-ve/20250702/202507021212.rhQmuuvi-lkp@intel.com/reproduce)
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
-ion of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202507021212.rhQmuuvi-lkp=
-@intel.com/
->
-> All errors (new ones prefixed by >>):
->
->    drivers/vdpa/mlx5/net/mlx5_vnet.c:3405:21: error: no member named 'dma=
-_dev' in 'struct vdpa_device'
->     3405 |         return mvdev->vdev.dma_dev;
->          |                ~~~~~~~~~~~ ^
+On Jul 2, 2025, at 14:44, Ammar Faizi <ammarfaizi2@gnuweeb.org> wrote:
+> 
+> On 7/2/25 1:27 PM, Daniel Vacek wrote:
+>> On Tue, 1 Jul 2025 at 21:04, Jens Axboe <axboe@kernel.dk> wrote:
+>>> Probably fold that under the next statement?
+>>> 
+>>>         if (ret == -EAGAIN || ret == -EIOCBQUEUED) {
+>>>                 if (ret == -EAGAIN) {
+>>>                         ioucmd->flags |= IORING_URING_CMD_REISSUE;
+>>>                 return ret;
+>>>         }
+>>> 
+>>> ?
+>> I'd argue the original looks simpler, cleaner.
+> 
+> I propose doing it this way:
+> 
+> if (ret == -EAGAIN) {
+> ioucmd->flags |= IORING_URING_CMD_REISSUE;
+> return ret;
+> }
+> 
+> if (ret == -EIOCBQUEUED)
+> return ret;
+> 
+> It's simpler because the -EAGAIN is only checked once :)
 
-It seems I forgot to convert mlx5 divers. Will do that in the next
-version (if we agree this is the right direction).
 
-Thanks
+Agreed
+
+
+> 
+> -- 
+> Ammar Faizi
+> 
 
