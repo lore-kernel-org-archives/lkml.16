@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E3D1A26B;
-	Wed,  2 Jul 2025 00:49:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D52CB78F51;
+	Wed,  2 Jul 2025 00:49:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751417389; cv=none; b=eDyCO12wRstxtnJ4xUQVFVzYhxyfEWCU61zyB7JywJjN6H4DUbhYP7QJtOeO9nU/sd6HhxsY/AEZ14MlUNoatJceQLItsOoT12M+M6FPUsr0QRlfZYSyt/d7NE74Rzjo3LV0Odwh4GXakjdmxi4vIJbjjJuPPANCChtiFj7ULhY=
+	t=1751417393; cv=none; b=Qfkf58HgvnRU3ubjjK+20eALoC6kxtri5MgMafwmBdO0E0qBQwHW/cy6Jg1DLuC6SatZvQN4wmpHckWGGWv6LyNQMrl2GCkG7YOzASaf0FlVr81CiqXpqcdkvPSks1KgIpndW7iBFBwiy9xGfiw7xfCxX+z+Ri7ns8NA6EygHvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751417389; c=relaxed/simple;
-	bh=GP0PuCKZEQ/V9VgJSdJa34Zo7nvxZUDs6kHnohiQCfo=;
+	s=arc-20240116; t=1751417393; c=relaxed/simple;
+	bh=9pmS1r+NUKM6GwYPe0/1xFH/myUByv2YF4GN6MCRvNs=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=HFAbgVUD5/xvqFqKRFTt70hQVwyQ4bz+cbv9OKXMSQ9JSUNqKALIFWWFIoZyQHwz7DsUXIo+DkkfmM2Mukbt8h1xzblW3bcJUWSpPlnaEK1y4KH2EYQW9Itm2gIOwCjhr1dgvJ/5vqZaSgbIqeXCpt+cTgkcbKyh6FhfLkHDxnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X+oULs7p; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=UDyt0gfnDtAwGeJ/sRNWUQnjR3lXZLCRMq0+JueMYQRwfWH0i7eVyC1DzwlBtVVAE10cK7ZMOp3K+1IuA31ZYHQhAZf0U8bewssCY6rmoSMf6djpRQ2mKApuN3QebmSwugW/QldUfz9OGWBzTxQfvoZT5g9AsYAo7W+e3oe4kfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mJ85lQTZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X+oULs7p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B90F8C4CEEB;
-	Wed,  2 Jul 2025 00:49:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mJ85lQTZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76F93C4CEF1;
+	Wed,  2 Jul 2025 00:49:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751417388;
-	bh=GP0PuCKZEQ/V9VgJSdJa34Zo7nvxZUDs6kHnohiQCfo=;
+	s=k20201202; t=1751417392;
+	bh=9pmS1r+NUKM6GwYPe0/1xFH/myUByv2YF4GN6MCRvNs=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=X+oULs7pRX1CgyRmh9nursF0tDUuQN4IqwegmGWZ4NnOy9HpqtTlNIuDL9P/ZPFVt
-	 Hb2EXuoBUZYwyFStG/t6hj2XPwBrOEI+pZTFWV9KdtHo5WB+0zSgI4Elu1YRU32val
-	 pyDyd9eJTA1KRaaXmMNIEam6Gv4nelcrbPLd9UP4Hp30w67wEzgbOpaZFezMyHF+W8
-	 tGw0vF77mqUlWOwOdDA0hSm7/jM2R4oJuNOAMtxHbZYJR05HpZnS7Eg3vNQjqjaMe+
-	 MremE2S6SWFZEXxLIvKev3q4iuRcR1ov1PN0p0DhVWh0C9cgQKTzxWxKGLVXCf6b2j
-	 5fOXA1SChX8KA==
+	b=mJ85lQTZR2lONcY5z7KIwWI9p5CeEO01vZTHn/rgFsPVNEujA+2j+Le0+vqPYpsQz
+	 4J8XyvKqJomK4C8CCX1MxdYWiMrtCLMvK5O9c5Hpu5DnBZQsgO0oVgRhavEvSHabdG
+	 dBImWXXij0ANzt9H/qh2kvGNMiYXHM27+qOoyZeSnxaVHwhFwAKpJAOUNkCSfTsqWB
+	 F/N7novewWBobHnZZSRpGPcPz7FNgURaH9YcVzgqicVPyNMTpPPEl7pvgw8PnkOT6+
+	 7SPyYpVZ5YmVOwM3nasf+qpnv/f+eJaxpShOBGg/pQ1UYOd2rMpfrwbWb6ei3rlooi
+	 cB8fJoei3zB2A==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADE4A383BA06;
-	Wed,  2 Jul 2025 00:50:14 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70C3D383BA06;
+	Wed,  2 Jul 2025 00:50:18 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,42 +37,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v1 1/2] selftests: pp-bench: remove unneeded
- linux/version.h
+Subject: Re: [PATCH v2 1/1] dt-bindings: net: convert nxp,lpc1850-dwmac.txt to
+ yaml format
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <175141741351.160580.4880481171336535052.git-patchwork-notify@kernel.org>
-Date: Wed, 02 Jul 2025 00:50:13 +0000
-References: <20250627200501.1712389-1-almasrymina@google.com>
-In-Reply-To: <20250627200501.1712389-1-almasrymina@google.com>
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, shuah@kernel.org,
- toke@redhat.com, hawk@kernel.org, ilias.apalodimas@linaro.org, lkp@intel.com
+ <175141741724.160580.15489613753821420716.git-patchwork-notify@kernel.org>
+Date: Wed, 02 Jul 2025 00:50:17 +0000
+References: <20250630161613.2838039-1-Frank.Li@nxp.com>
+In-Reply-To: <20250630161613.2838039-1-Frank.Li@nxp.com>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, imx@lists.linux.dev, vz@mleia.com
 
 Hello:
 
-This series was applied to netdev/net-next.git (main)
+This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Fri, 27 Jun 2025 20:04:51 +0000 you wrote:
-> linux/version.h was used by the out-of-tree version, but not needed in
-> the upstream one anymore.
+On Mon, 30 Jun 2025 12:16:12 -0400 you wrote:
+> Convert nxp,lpc1850-dwmac.txt to yaml format.
 > 
-> While I'm at it, sort the includes.
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202506271434.Gk0epC9H-lkp@intel.com/
-> Signed-off-by: Mina Almasry <almasrymina@google.com>
+> Additional changes:
+> - compatible string add fallback as "nxp,lpc1850-dwmac", "snps,dwmac-3.611"
+> "snps,dwmac".
+> - add common interrupts, interrupt-names, clocks, clock-names, resets and
+>   reset-names properties.
+> - add ref snps,dwmac.yaml.
+> - add phy-mode in example to avoid dt_binding_check warning.
+> - update examples to align lpc18xx.dtsi.
 > 
 > [...]
 
 Here is the summary with links:
-  - [net-next,v1,1/2] selftests: pp-bench: remove unneeded linux/version.h
-    https://git.kernel.org/netdev/net-next/c/8d3e0982f7c2
-  - [net-next,v1,2/2] selftests: pp-bench: remove page_pool_put_page wrapper
-    https://git.kernel.org/netdev/net-next/c/be75d319d1b3
+  - [v2,1/1] dt-bindings: net: convert nxp,lpc1850-dwmac.txt to yaml format
+    https://git.kernel.org/netdev/net-next/c/69fcb70c4334
 
 You are awesome, thank you!
 -- 
