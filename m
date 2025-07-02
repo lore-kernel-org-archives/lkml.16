@@ -1,215 +1,623 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from server.couthit.com (server.couthit.com [162.240.164.96])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D864C30B995;
-	Wed,  2 Jul 2025 15:18:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 956322D0C8D;
+	Wed,  2 Jul 2025 15:18:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.240.164.96
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751469527; cv=none; b=K0FhhwMIAT4/zhXK8BMuWihK6mV1+UM2M4LNDuy5lKurD6wjZgcl+d3A2BbcyjI3PHgHf+HrCzhQP72jGITAjuAB5v0FOltCnGHsjd6rYll3O06ORLZF9MDQUNgTqIWvmsSykxul/igQyVyTyOX9oLqnILnmJvfZMuo9oJtw6Nk=
+	t=1751469539; cv=none; b=NbR+n7LdgtrQYvFKLXtOobdmhCCDILxCbAHVcBff2cF28X39Uv6FRjgHDljCIeWxAN6Zea1EbTmwUFwDWKR4crQUuX4E2El87OpIiGT5gDByEUlsRcBoqm5SedQ4Rsoffo4NgHX4fx8/5lZaU3KJtReLvwgeZmd6VHTKVdVRU98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751469527; c=relaxed/simple;
-	bh=o3eyvE0FZSxLk36Gq5SIwWDzbP/UZukqZgbIboPYkLE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dRxRrA67eBcnyTtC0YddfRBAzwJZK+rW0r7nvmTSOqNgelDkD2ZA2dSh9dAmrYOJ6owvCgyTEW341DQ+QfbyIYESNFWNYkViXZWiWKlvsuGc4YDLRCwBV1Shsi1kxSLPs6/Mt+IOun8OvuuCFL/10BJ0jTVn3ZRogQ4+lLOk9vQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F/uuQ4D/; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751469539; c=relaxed/simple;
+	bh=8VgRT0XQg+TCNT+PtrhuqOD+Sx/mv/6iZs5JfwvGAI8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=h0fW/e/toRZ4lUQ4WCwIk+uBnqGPTgH7N2oZn4C5xmz3MP4ffWYHpVc2T2k0UDqrgtnMM/y2YQ6IJScS3Ji9wVtrphd2+6wpXRZSBPvqsi4zZ7mhHOTx1Vj3hh9GSmFExFhFAPT5/aiicacKxTiWtXGe8Dqdo5MiGWgEB0W2jcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=couthit.com; spf=pass smtp.mailfrom=couthit.com; dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b=CtRflv67; arc=none smtp.client-ip=162.240.164.96
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=couthit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=couthit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F/uuQ4D/"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-748e63d4b05so3054000b3a.2;
-        Wed, 02 Jul 2025 08:18:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751469525; x=1752074325; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/WfTpr+MC7D5hMbN8aa00FoylKg/j/JmHV5iUWtrt48=;
-        b=F/uuQ4D/Yx1xgm2vLhSTD6npAECIrhYsXKIAed6lwwWczu7mEP1/eyCkvRi1QUsvtA
-         6Lu9DK8wDPzSLuIwxbv/PpdbhBkJq9cV52hZTHl2Nfjph6onciGfmD5nqDQVRdVmPRY9
-         zwvoXZaL9fwYNx3VfWWtQ8Iwtv1RILs0hjwxggNVG+NULMXoFj3jtG3M3mGZqU598cgp
-         NUKxgt1seDMbK8/zsLn0bKAfYsMA7mjtvVN3WJ6akWKw4W2a/w/3I5qZPkUEfcOMzf7E
-         pqy5VoSunFppF370Nj+JgyIEDaoB2rcLwmDnnXYwuC7HqCLNr4MJh2rEdAa7J7y7nTJB
-         bjng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751469525; x=1752074325;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/WfTpr+MC7D5hMbN8aa00FoylKg/j/JmHV5iUWtrt48=;
-        b=MGvplbSsBu76WXbtYuyq9FxduZuIdqb43mQ5uz9aTOfq0y89Uf8e5RBWZeYxc1IRF2
-         YypzCL2TilxV4dalsNBmGghqSTZSRfSn91t8ysdfZhu0CAzOMLNkH8GPdnPdkSLMfkDC
-         OpE1mIdOvA6oVPTyt3+pa/iIb43gW4rIA1mkTBzj1dm1UTMASUN/dIcOV03AkSOwarpR
-         NMJv/ZEcVleSuWTvIc89Vpt9Ch8tHeHkhNqKxq+MPibSK2V064pmiMuj7+T00ZQmbQoX
-         15abA1HTQtCHBqHgnfHtCmHs7giFl/cyqks4bn84ryprnJeAyCxqVHonyGpurzaq0OxJ
-         pYVA==
-X-Forwarded-Encrypted: i=1; AJvYcCUJjGY4qgyO+l4yL9uWjniCQg3Vy0xaTzLcUYBqrBUZAbquW+mcQiHMvoAxSiLnuAl1Zjc7Vwbk9x3nFsRV@vger.kernel.org, AJvYcCUdc97KU5vSRSYEZ4oi2PoiNALt3fnlw1K0Uzvf2lxncZzmcllHaiNXw6OsQV2AvwxLghk=@vger.kernel.org, AJvYcCV190gyW+GheBRwAW72zfEWUebSoUlKkuY73ocgz0nwHsetTrYdScdZ076sAEHrdmyIDwgVpJwm@vger.kernel.org, AJvYcCVMwP1T//DL6DP+jUzuAHiH4MoTEYspi2MkYSZbldQd99yj7VK2INMS++H8ePoUy3UBYOeVMenvnrBu@vger.kernel.org, AJvYcCXpawHnrIplWT2RDDPwzgT483+JfAsMxqGbFmpeBaGeUkCPA9nww06+2IhjcSo7aFfpLlwPGkahVY6BB7AtL4oT@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHiq5aLQNf/hbWYmI4rQRLyhmyvmqTUtKLS5STiyuItP0jARvr
-	LN07dalY650Wl6Z76q7HxYK9rSZcZLJCrSoNuE1cg7/k/NKC7ZkU9BI=
-X-Gm-Gg: ASbGnct4zxckjQgA/JSLy5yYS2fcm9gb7+M9PK/Cbl79zEnnBezryoZKnXCrCn6V91i
-	p3LSVQhdkq/dRUDQ1ZVy3+XQw1C5V7b2swASHjvMv21Kmi7eYkS8sT4DoZ7hFPMyssc+hxTuvD/
-	srZP371GZeMgvw/cHjjAwPuGfcBbQ5Ibblx4dgOcalBCLYZZQKRgwG3r6ngPQLxCRZU3c3DxsY5
-	Y3LSfhpt/Se9Ba6pK1uoWAdZ2rMgN5cL4Oyav1s23XUrbT3F88eA/YvOYgyTTG6yRY7euJIe4RC
-	5NNaYf4xDTR1EVPzBQ5SaIdEQgqzFW58c+P9pGDn+vnml+ZTZEN6uQhsD/1tj5n6QTeV7LdnFdw
-	Oo0cgX2rbEuHbtye4ykoNbnQpSWLEoyPnVQ==
-X-Google-Smtp-Source: AGHT+IFqg4JzfauY+XxeHTc1LYSCfLUbxmop666wkaWl715tRit7N3zBPPXoOqrKCtMSSqjKSYHLDA==
-X-Received: by 2002:a05:6a00:4fc5:b0:748:3a1a:ba72 with SMTP id d2e1a72fcca58-74b513bd7b2mr4696793b3a.20.1751469524887;
-        Wed, 02 Jul 2025 08:18:44 -0700 (PDT)
-Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-74af54099e1sm15305484b3a.18.2025.07.02.08.18.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 08:18:44 -0700 (PDT)
-Date: Wed, 2 Jul 2025 08:18:43 -0700
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: "Song, Yoong Siang" <yoong.siang.song@intel.com>
-Cc: "David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>, Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>,
-	Shuah Khan <shuah@kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH bpf-next 2/2] selftests/bpf: Enhance XDP Rx Metadata
- Handling
-Message-ID: <aGVN01flIJzvCo6S@mini-arch>
-References: <20250701042940.3272325-1-yoong.siang.song@intel.com>
- <20250701042940.3272325-3-yoong.siang.song@intel.com>
- <aGQNWXe6FBks8D3U@mini-arch>
- <IA3PR11MB925416396633E361F37E819DD840A@IA3PR11MB9254.namprd11.prod.outlook.com>
- <IA3PR11MB9254C961FD048793FD0013EAD840A@IA3PR11MB9254.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b="CtRflv67"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=couthit.com
+	; s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=pPk//+67/mg5j0CnEHrV6KthkD8K1AISFcua3MTEzgY=; b=CtRflv671QS1ylA1KW0dNCUEtu
+	8WeW47DkjfPg4aeGnRKNYsYgYEIoxX8nF+9HtZxMLey5hkm/DYgeXfKfeacisWdPENhXmorRvm0Tv
+	7Rl2g5gsRws4a0z1AhIEm5MRmp5iFcZ1SNADR2mOoI5W4pRN/j5ETddQuS9nsoc2Otl/hx48eg3b+
+	XgqHGp5668YVLDDUB6133DdwJkrNZrmCgzcTlqwlrHr7290o0mNByZ2A1Bw6ZJk5zWDWBTW7cUF//
+	fZIb7fQkNERwV7PJzf2dAa8u51C8YZW6/Eqwb38g3sYULd9FTBELLw1m0estmRd/i2Etnmlee50Ud
+	7Sa3HOSA==;
+Received: from [122.175.9.182] (port=28647 helo=cypher.couthit.local)
+	by server.couthit.com with esmtpa (Exim 4.98.1)
+	(envelope-from <parvathi@couthit.com>)
+	id 1uWzEZ-00000004S81-3kgK;
+	Wed, 02 Jul 2025 11:18:52 -0400
+From: Parvathi Pudi <parvathi@couthit.com>
+To: danishanwar@ti.com,
+	rogerq@kernel.org,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	ssantosh@kernel.org,
+	richardcochran@gmail.com,
+	s.hauer@pengutronix.de,
+	m-karicheri2@ti.com,
+	glaroque@baylibre.com,
+	afd@ti.com,
+	saikrishnag@marvell.com,
+	m-malladi@ti.com,
+	jacob.e.keller@intel.com,
+	diogo.ivo@siemens.com,
+	javier.carrasco.cruz@gmail.com,
+	horms@kernel.org,
+	s-anna@ti.com,
+	basharath@couthit.com,
+	parvathi@couthit.com
+Cc: linux-arm-kernel@lists.infradead.org,
+	netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	vadim.fedorenko@linux.dev,
+	pratheesh@ti.com,
+	prajith@ti.com,
+	vigneshr@ti.com,
+	praneeth@ti.com,
+	srk@ti.com,
+	rogerq@ti.com,
+	krishna@couthit.com,
+	pmohan@couthit.com,
+	mohan@couthit.com
+Subject: [PATCH net-next v10 05/11] net: ti: prueth: Adds ethtool support for ICSSM PRUETH Driver
+Date: Wed,  2 Jul 2025 20:47:50 +0530
+Message-Id: <20250702151756.1656470-6-parvathi@couthit.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250702140633.1612269-1-parvathi@couthit.com>
+References: <20250702140633.1612269-1-parvathi@couthit.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <IA3PR11MB9254C961FD048793FD0013EAD840A@IA3PR11MB9254.namprd11.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - server.couthit.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - couthit.com
+X-Get-Message-Sender-Via: server.couthit.com: authenticated_id: parvathi@couthit.com
+X-Authenticated-Sender: server.couthit.com: parvathi@couthit.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-On 07/02, Song, Yoong Siang wrote:
-> On Wednesday, July 2, 2025 10:23 AM, Song, Yoong Siang <yoong.siang.song@intel.com> wrote:
-> >On Wednesday, July 2, 2025 12:31 AM, Stanislav Fomichev <stfomichev@gmail.com>
-> >wrote:
-> >>On 07/01, Song Yoong Siang wrote:
-> >>> Introduce the XDP_METADATA_SIZE macro to ensure that user applications can
-> >>> consistently retrieve the correct location of struct xdp_meta.
-> >>>
-> >>> Prior to this commit, the XDP program adjusted the data_meta backward by
-> >>> the size of struct xdp_meta, while the user application retrieved the data
-> >>> by calculating backward from the data pointer. This approach only worked if
-> >>> xdp_buff->data_meta was equal to xdp_buff->data before calling
-> >>> bpf_xdp_adjust_meta.
-> >>>
-> >>> With the introduction of XDP_METADATA_SIZE, both the XDP program and user
-> >>> application now calculate and identify the location of struct xdp_meta from
-> >>> the data pointer. This ensures the implementation remains functional even
-> >>> when there is device-reserved metadata, making the tests more portable
-> >>> across different NICs.
-> >>>
-> >>> Signed-off-by: Song Yoong Siang <yoong.siang.song@intel.com>
-> >>> ---
-> >>>  tools/testing/selftests/bpf/prog_tests/xdp_metadata.c |  2 +-
-> >>>  tools/testing/selftests/bpf/progs/xdp_hw_metadata.c   | 10 +++++++++-
-> >>>  tools/testing/selftests/bpf/progs/xdp_metadata.c      |  8 +++++++-
-> >>>  tools/testing/selftests/bpf/xdp_hw_metadata.c         |  2 +-
-> >>>  tools/testing/selftests/bpf/xdp_metadata.h            |  7 +++++++
-> >>>  5 files changed, 25 insertions(+), 4 deletions(-)
-> >>>
-> >>> diff --git a/tools/testing/selftests/bpf/prog_tests/xdp_metadata.c
-> >>b/tools/testing/selftests/bpf/prog_tests/xdp_metadata.c
-> >>> index 19f92affc2da..8d6c2633698b 100644
-> >>> --- a/tools/testing/selftests/bpf/prog_tests/xdp_metadata.c
-> >>> +++ b/tools/testing/selftests/bpf/prog_tests/xdp_metadata.c
-> >>> @@ -302,7 +302,7 @@ static int verify_xsk_metadata(struct xsk *xsk, bool
-> >>sent_from_af_xdp)
-> >>>
-> >>>  	/* custom metadata */
-> >>>
-> >>> -	meta = data - sizeof(struct xdp_meta);
-> >>> +	meta = data - XDP_METADATA_SIZE;
-> >>>
-> >>>  	if (!ASSERT_NEQ(meta->rx_timestamp, 0, "rx_timestamp"))
-> >>>  		return -1;
-> >>> diff --git a/tools/testing/selftests/bpf/progs/xdp_hw_metadata.c
-> >>b/tools/testing/selftests/bpf/progs/xdp_hw_metadata.c
-> >>> index 330ece2eabdb..72242ac1cdcd 100644
-> >>> --- a/tools/testing/selftests/bpf/progs/xdp_hw_metadata.c
-> >>> +++ b/tools/testing/selftests/bpf/progs/xdp_hw_metadata.c
-> >>> @@ -27,6 +27,7 @@ extern int bpf_xdp_metadata_rx_vlan_tag(const struct
-> >>xdp_md *ctx,
-> >>>  SEC("xdp.frags")
-> >>>  int rx(struct xdp_md *ctx)
-> >>>  {
-> >>> +	int metalen_used, metalen_to_adjust;
-> >>>  	void *data, *data_meta, *data_end;
-> >>>  	struct ipv6hdr *ip6h = NULL;
-> >>>  	struct udphdr *udp = NULL;
-> >>> @@ -72,7 +73,14 @@ int rx(struct xdp_md *ctx)
-> >>>  		return XDP_PASS;
-> >>>  	}
-> >>>
-> >>> -	err = bpf_xdp_adjust_meta(ctx, -(int)sizeof(struct xdp_meta));
-> >>
-> >>[..]
-> >>
-> >>> +	metalen_used = ctx->data - ctx->data_meta;
-> >>
-> >>Is the intent here to query how much metadata has been consumed/reserved
-> >>by the driver?
-> >Yes.
-> >
-> >>Looking at IGC it has the following code/comment:
-> >>
-> >>	bi->xdp->data += IGC_TS_HDR_LEN;
-> >>
-> >>	/* HW timestamp has been copied into local variable. Metadata
-> >>	 * length when XDP program is called should be 0.
-> >>	 */
-> >>	bi->xdp->data_meta += IGC_TS_HDR_LEN;
-> >>
-> >>Are you sure that metadata size is correctly exposed to the bpf program?
-> >You are right, the current igc driver didn't expose the metadata size correctly.
-> >I submitted [1] to fix it.
-> >
-> >[1] https://patchwork.ozlabs.org/project/intel-wired-
-> >lan/patch/20250701080955.3273137-1-yoong.siang.song@intel.com/
-> >
-> >>
-> >>My assumptions was that we should just unconditionally do bpf_xdp_adjust_meta
-> >>with -XDP_METADATA_SIZE and that should be good enough.
-> >
-> >The checking is just for precautions. No problem if directly adjust the meta
-> >unconditionally.
-> >That will save processing time for each packet as well.
-> >I will remove the checking and submit v2.
-> >
-> >Thanks & Regards
-> >Siang
-> >
-> 
-> Hi Stanislav Fomichev,
-> 
-> I submitted v2. But after that, I think twice. IMHO, 
-> err = bpf_xdp_adjust_meta(ctx, (int)(ctx->data - ctx->data_meta - XDP_METADATA_SIZE));
-> is better than
-> err = bpf_xdp_adjust_meta(ctx, -(int)XDP_METADATA_SIZE);
-> because it is more robust.
-> 
-> Any thoughts?
+From: Roger Quadros <rogerq@ti.com>
 
-My preference is on keeping everything as is and converting to
--(int)XDP_METADATA_SIZE. Making IGC properly expose (temporary) metadata len
-is a user visible change, not sure we have a good justification?
+Changes for enabling ethtool support for the newly added PRU Ethernet
+interfaces. Extends the support for statistics collection from PRU internal
+memory and displays it in the user space. Along with statistics,
+enable/disable of features, configuring link speed etc.are now supported.
+
+The firmware running on PRU maintains statistics in internal data memory.
+When requested ethtool collects all the statistics for the specified
+interface and displays it in the user space.
+
+Makefile is updated to include ethtool support into PRUETH driver.
+
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: Andrew F. Davis <afd@ti.com>
+Signed-off-by: Basharath Hussain Khaja <basharath@couthit.com>
+Signed-off-by: Parvathi Pudi <parvathi@couthit.com>
+---
+ drivers/net/ethernet/ti/Makefile              |   2 +-
+ drivers/net/ethernet/ti/icssm/icssm_ethtool.c | 237 ++++++++++++++++++
+ drivers/net/ethernet/ti/icssm/icssm_prueth.c  |  34 +++
+ drivers/net/ethernet/ti/icssm/icssm_prueth.h  | 133 ++++++++++
+ 4 files changed, 405 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/net/ethernet/ti/icssm/icssm_ethtool.c
+
+diff --git a/drivers/net/ethernet/ti/Makefile b/drivers/net/ethernet/ti/Makefile
+index 93c0a4d0e33a..f21dd11118ab 100644
+--- a/drivers/net/ethernet/ti/Makefile
++++ b/drivers/net/ethernet/ti/Makefile
+@@ -4,7 +4,7 @@
+ #
+ 
+ obj-$(CONFIG_TI_PRUETH) += icssm-prueth.o
+-icssm-prueth-y := icssm/icssm_prueth.o
++icssm-prueth-y := icssm/icssm_prueth.o icssm/icssm_ethtool.o
+ 
+ obj-$(CONFIG_TI_CPSW) += cpsw-common.o
+ obj-$(CONFIG_TI_DAVINCI_EMAC) += cpsw-common.o
+diff --git a/drivers/net/ethernet/ti/icssm/icssm_ethtool.c b/drivers/net/ethernet/ti/icssm/icssm_ethtool.c
+new file mode 100644
+index 000000000000..6faa46ba6364
+--- /dev/null
++++ b/drivers/net/ethernet/ti/icssm/icssm_ethtool.c
+@@ -0,0 +1,237 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Texas Instruments ICSSM Ethernet Driver
++ *
++ * Copyright (C) 2018-2022 Texas Instruments Incorporated - https://www.ti.com/
++ *
++ */
++
++#include <linux/if_bridge.h>
++#include <linux/if_vlan.h>
++#include "icssm_prueth.h"
++
++/* set PRU firmware statistics */
++void icssm_emac_set_stats(struct prueth_emac *emac,
++			  struct port_statistics *pstats)
++{
++	void __iomem *dram;
++
++	dram = emac->prueth->mem[emac->dram].va;
++	memcpy_toio(dram + STATISTICS_OFFSET, pstats, STAT_SIZE);
++}
++
++/* get statistics maintained by the PRU firmware into @pstats */
++void icssm_emac_get_stats(struct prueth_emac *emac,
++			  struct port_statistics *pstats)
++{
++	void __iomem *dram;
++
++	dram = emac->prueth->mem[emac->dram].va;
++	memcpy_fromio(pstats, dram + STATISTICS_OFFSET, STAT_SIZE);
++}
++
++/**
++ * icssm_emac_get_drvinfo - Get EMAC driver information
++ * @ndev: The network adapter
++ * @info: ethtool info structure containing name and version
++ *
++ * Returns EMAC driver information (name and version)
++ */
++static void icssm_emac_get_drvinfo(struct net_device *ndev,
++				   struct ethtool_drvinfo *info)
++{
++	struct prueth_emac *emac = netdev_priv(ndev);
++	struct prueth *prueth = emac->prueth;
++
++	strscpy(info->driver, dev_driver_string(prueth->dev),
++		sizeof(info->driver));
++}
++
++#define PRUETH_STAT_OFFSET(m, stats_type)       \
++{                                               \
++	#m,                                     \
++	offsetof(struct port_statistics, m),    \
++	stats_type                              \
++}
++
++struct icssm_prueth_stats {
++	char string[ETH_GSTRING_LEN];
++	u32 offset;
++	bool standard_stats;
++};
++
++static const struct icssm_prueth_stats prueth_ethtool_stats[] = {
++	PRUETH_STAT_OFFSET(tx_bcast, false),
++	PRUETH_STAT_OFFSET(tx_mcast, false),
++	PRUETH_STAT_OFFSET(tx_ucast, false),
++	PRUETH_STAT_OFFSET(tx_octets, true),
++	PRUETH_STAT_OFFSET(rx_bcast, false),
++	PRUETH_STAT_OFFSET(rx_mcast, false),
++	PRUETH_STAT_OFFSET(rx_ucast, false),
++	PRUETH_STAT_OFFSET(rx_octets, true),
++
++	PRUETH_STAT_OFFSET(tx64byte, true),
++	PRUETH_STAT_OFFSET(tx65_127byte, true),
++	PRUETH_STAT_OFFSET(tx128_255byte, true),
++	PRUETH_STAT_OFFSET(tx256_511byte, true),
++	PRUETH_STAT_OFFSET(tx512_1023byte, true),
++	PRUETH_STAT_OFFSET(tx1024byte, true),
++	PRUETH_STAT_OFFSET(rx64byte, true),
++	PRUETH_STAT_OFFSET(rx65_127byte, true),
++	PRUETH_STAT_OFFSET(rx128_255byte, true),
++	PRUETH_STAT_OFFSET(rx256_511byte, true),
++	PRUETH_STAT_OFFSET(rx512_1023byte, true),
++	PRUETH_STAT_OFFSET(rx1024byte, true),
++
++	PRUETH_STAT_OFFSET(late_coll, true),
++	PRUETH_STAT_OFFSET(single_coll, true),
++	PRUETH_STAT_OFFSET(multi_coll, true),
++	PRUETH_STAT_OFFSET(excess_coll, true),
++
++	PRUETH_STAT_OFFSET(rx_misalignment_frames, false),
++	PRUETH_STAT_OFFSET(stormprev_counter_bc, false),
++	PRUETH_STAT_OFFSET(stormprev_counter_mc, false),
++	PRUETH_STAT_OFFSET(stormprev_counter_uc, false),
++	PRUETH_STAT_OFFSET(mac_rxerror, false),
++	PRUETH_STAT_OFFSET(sfd_error, false),
++	PRUETH_STAT_OFFSET(def_tx, true),
++	PRUETH_STAT_OFFSET(mac_txerror, false),
++	PRUETH_STAT_OFFSET(rx_oversized_frames, false),
++	PRUETH_STAT_OFFSET(rx_undersized_frames, false),
++	PRUETH_STAT_OFFSET(rx_crc_frames, true),
++	PRUETH_STAT_OFFSET(dropped_packets, false),
++
++	PRUETH_STAT_OFFSET(tx_hwq_overflow, false),
++	PRUETH_STAT_OFFSET(tx_hwq_underflow, false),
++	PRUETH_STAT_OFFSET(vlan_dropped, true),
++	PRUETH_STAT_OFFSET(multicast_dropped, true),
++};
++
++void icssm_emac_update_hardware_stats(struct prueth_emac *emac)
++{
++	void __iomem *dram, *stat_base;
++	int i;
++
++	dram = emac->prueth->mem[emac->dram].va;
++	stat_base = dram + STATISTICS_OFFSET;
++
++	for (i = 0; i < ARRAY_SIZE(prueth_ethtool_stats); i++)
++		emac->emac_stats[i] = ioread32(stat_base + i * sizeof(u32));
++}
++
++static int icssm_emac_get_sset_count(struct net_device *ndev, int stringset)
++{
++	switch (stringset) {
++	case ETH_SS_STATS:
++		return ICSSM_NUM_STANDARD_STATS;
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
++static void icssm_emac_get_strings(struct net_device *ndev, u32 stringset,
++				   u8 *data)
++{
++	u8 *p = data;
++	int i;
++
++	switch (stringset) {
++	case ETH_SS_STATS:
++		for (i = 0; i < ARRAY_SIZE(prueth_ethtool_stats); i++) {
++			if (!prueth_ethtool_stats[i].standard_stats)
++				ethtool_puts(&p,
++					     prueth_ethtool_stats[i].string);
++		}
++		break;
++	default:
++		break;
++	}
++}
++
++static void icssm_emac_get_ethtool_stats(struct net_device *ndev,
++					 struct ethtool_stats *stats, u64 *data)
++{
++	struct prueth_emac *emac = netdev_priv(ndev);
++	int i;
++
++	icssm_emac_update_hardware_stats(emac);
++
++	for (i = 0; i < ARRAY_SIZE(prueth_ethtool_stats); i++) {
++		if (!prueth_ethtool_stats[i].standard_stats)
++			*(data++) = emac->emac_stats[i];
++	}
++}
++
++static void icssm_emac_get_regs(struct net_device *ndev,
++				struct ethtool_regs *regs, void *p)
++{
++	struct prueth_emac *emac = netdev_priv(ndev);
++	struct prueth *prueth = emac->prueth;
++
++	regs->version = PRUETH_REG_DUMP_GET_VER(prueth);
++}
++
++static const struct ethtool_rmon_hist_range icssm_emac_rmon_ranges[] = {
++	{    0,   64},
++	{   65,  127},
++	{  128,  255},
++	{  256,  511},
++	{  512,  1023},
++	{ 1024,  EMAC_MAX_PKTLEN},
++	{}
++};
++
++static void
++icssm_emac_get_rmon_stats(struct net_device *ndev,
++			  struct ethtool_rmon_stats *rmon_stats,
++			  const struct ethtool_rmon_hist_range **ranges)
++{
++	struct prueth_emac *emac = netdev_priv(ndev);
++	struct port_statistics pstats;
++
++	*ranges = icssm_emac_rmon_ranges;
++	icssm_emac_get_stats(emac, &pstats);
++
++	rmon_stats->undersize_pkts = pstats.rx_undersized_frames;
++	rmon_stats->oversize_pkts = pstats.rx_oversized_frames;
++
++	rmon_stats->hist[0] = pstats.tx64byte;
++	rmon_stats->hist[1] = pstats.tx65_127byte;
++	rmon_stats->hist[2] = pstats.tx128_255byte;
++	rmon_stats->hist[3] = pstats.tx256_511byte;
++	rmon_stats->hist[4] = pstats.tx512_1023byte;
++
++	rmon_stats->hist_tx[0] = pstats.rx64byte;
++	rmon_stats->hist_tx[1] = pstats.rx65_127byte;
++	rmon_stats->hist_tx[2] = pstats.rx128_255byte;
++	rmon_stats->hist_tx[3] = pstats.rx256_511byte;
++	rmon_stats->hist_tx[4] = pstats.rx1024byte;
++}
++
++static void
++icssm_emac_get_eth_mac_stats(struct net_device *ndev,
++			     struct ethtool_eth_mac_stats *mac_stats)
++{
++	struct prueth_emac *emac = netdev_priv(ndev);
++	struct port_statistics pstats;
++
++	icssm_emac_get_stats(emac, &pstats);
++
++	mac_stats->LateCollisions = pstats.late_coll;
++	mac_stats->SingleCollisionFrames = pstats.single_coll;
++	mac_stats->MultipleCollisionFrames = pstats.multi_coll;
++}
++
++/* Ethtool support for EMAC adapter */
++const struct ethtool_ops emac_ethtool_ops = {
++	.get_drvinfo = icssm_emac_get_drvinfo,
++	.get_link_ksettings = phy_ethtool_get_link_ksettings,
++	.set_link_ksettings = phy_ethtool_set_link_ksettings,
++	.get_link = ethtool_op_get_link,
++	.get_sset_count = icssm_emac_get_sset_count,
++	.get_strings = icssm_emac_get_strings,
++	.get_ethtool_stats = icssm_emac_get_ethtool_stats,
++	.get_regs = icssm_emac_get_regs,
++	.get_rmon_stats = icssm_emac_get_rmon_stats,
++	.get_eth_mac_stats = icssm_emac_get_eth_mac_stats,
++};
++EXPORT_SYMBOL_GPL(emac_ethtool_ops);
+diff --git a/drivers/net/ethernet/ti/icssm/icssm_prueth.c b/drivers/net/ethernet/ti/icssm/icssm_prueth.c
+index 532d9e7fdd38..2b10538c616e 100644
+--- a/drivers/net/ethernet/ti/icssm/icssm_prueth.c
++++ b/drivers/net/ethernet/ti/icssm/icssm_prueth.c
+@@ -920,6 +920,8 @@ static int icssm_emac_ndo_open(struct net_device *ndev)
+ 
+ 	icssm_prueth_emac_config(emac);
+ 
++	icssm_emac_set_stats(emac, &emac->stats);
++
+ 	ret = icssm_emac_set_boot_pru(emac, ndev);
+ 	if (ret)
+ 		return ret;
+@@ -975,6 +977,8 @@ static int icssm_emac_ndo_stop(struct net_device *ndev)
+ 	/* stop the PRU */
+ 	rproc_shutdown(emac->pru);
+ 
++	icssm_emac_get_stats(emac, &emac->stats);
++
+ 	/* free rx interrupts */
+ 	free_irq(emac->rx_irq, ndev);
+ 
+@@ -1068,10 +1072,39 @@ static enum netdev_tx icssm_emac_ndo_start_xmit(struct sk_buff *skb,
+ 	return ret;
+ }
+ 
++/**
++ * icssm_emac_ndo_get_stats64 - EMAC get statistics function
++ * @ndev: The EMAC network adapter
++ * @stats: rtnl_link_stats structure
++ *
++ * Called when system wants to get statistics from the device.
++ *
++ */
++static void icssm_emac_ndo_get_stats64(struct net_device *ndev,
++				       struct rtnl_link_stats64 *stats)
++{
++	struct prueth_emac *emac = netdev_priv(ndev);
++	struct port_statistics pstats;
++
++	icssm_emac_get_stats(emac, &pstats);
++
++	stats->rx_packets = ndev->stats.rx_packets;
++	stats->rx_bytes = ndev->stats.rx_bytes;
++	stats->tx_packets = ndev->stats.tx_packets;
++	stats->tx_bytes = ndev->stats.tx_bytes;
++	stats->tx_errors = ndev->stats.tx_errors;
++	stats->tx_dropped = ndev->stats.tx_dropped;
++	stats->multicast = pstats.rx_mcast;
++
++	stats->rx_over_errors = ndev->stats.rx_over_errors;
++	stats->rx_length_errors = ndev->stats.rx_length_errors;
++}
++
+ static const struct net_device_ops emac_netdev_ops = {
+ 	.ndo_open = icssm_emac_ndo_open,
+ 	.ndo_stop = icssm_emac_ndo_stop,
+ 	.ndo_start_xmit = icssm_emac_ndo_start_xmit,
++	.ndo_get_stats64 = icssm_emac_ndo_get_stats64,
+ };
+ 
+ /* get emac_port corresponding to eth_node name */
+@@ -1200,6 +1233,7 @@ static int icssm_prueth_netdev_init(struct prueth *prueth,
+ 	phy_remove_link_mode(emac->phydev, ETHTOOL_LINK_MODE_Asym_Pause_BIT);
+ 
+ 	ndev->netdev_ops = &emac_netdev_ops;
++	ndev->ethtool_ops = &emac_ethtool_ops;
+ 
+ 	netif_napi_add(ndev, &emac->napi, icssm_emac_napi_poll);
+ 
+diff --git a/drivers/net/ethernet/ti/icssm/icssm_prueth.h b/drivers/net/ethernet/ti/icssm/icssm_prueth.h
+index 0dde5c8e4fb4..c44edf47bce3 100644
+--- a/drivers/net/ethernet/ti/icssm/icssm_prueth.h
++++ b/drivers/net/ethernet/ti/icssm/icssm_prueth.h
+@@ -27,6 +27,12 @@
+ #define EMAC_MAX_FRM_SUPPORT (ETH_HLEN + VLAN_HLEN + ETH_DATA_LEN + \
+ 			      ICSSM_LRE_TAG_SIZE)
+ 
++#define PRUETH_REG_DUMP_VER		1
++
++/* Encoding: 32-16: Reserved, 16-8: Reg dump version, 8-0: Ethertype */
++#define PRUETH_REG_DUMP_GET_VER(x)	((PRUETH_REG_DUMP_VER << 8) | \
++					 ((x)->eth_type))
++
+ /* PRU Ethernet Type - Ethernet functionality (protocol
+  * implemented) provided by the PRU firmware being loaded.
+  */
+@@ -108,6 +114,124 @@ struct prueth_packet_info {
+ 	bool timestamp;
+ };
+ 
++#define ICSSM_NUM_STANDARD_STATS       18
++#define ICSSM_NUM_STATS      40
++
++/**
++ * struct port_statistics - Statistics structure for capturing statistics
++ *			    on PRUs
++ * @tx_bcast: Number of broadcast packets sent
++ * @tx_mcast:Number of multicast packets sent
++ * @tx_ucast:Number of unicast packets sent
++ *
++ * @tx_octets:Number of undersized frames rcvd
++ *
++ * @rx_bcast:Number of broadcast packets rcvd
++ * @rx_mcast:Number of multicast packets rcvd
++ * @rx_ucast:Number of unicast packets rcvd
++ *
++ * @rx_octets:Number of Rx packets
++ *
++ * @tx64byte:Number of 64 byte packets sent
++ * @tx65_127byte:Number of 65-127 byte packets sent
++ * @tx128_255byte:Number of 128-255 byte packets sent
++ * @tx256_511byte:Number of 256-511 byte packets sent
++ * @tx512_1023byte:Number of 512-1023 byte packets sent
++ * @tx1024byte:Number of 1024 and larger size packets sent
++ *
++ * @rx64byte:Number of 64 byte packets rcvd
++ * @rx65_127byte:Number of 65-127 byte packets rcvd
++ * @rx128_255byte:Number of 128-255 byte packets rcvd
++ * @rx256_511byte:Number of 256-511 byte packets rcvd
++ * @rx512_1023byte:Number of 512-1023 byte packets rcvd
++ * @rx1024byte:Number of 1024 and larger size packets rcvd
++ *
++ * @late_coll:Number of late collisions(Half Duplex)
++ * @single_coll:Number of single collisions (Half Duplex)
++ * @multi_coll:Number of multiple collisions (Half Duplex)
++ * @excess_coll:Number of excess collisions(Half Duplex)
++ *
++ * @rx_misalignment_frames:Number of non multiple of 8 byte frames rcvd
++ * @stormprev_counter_bc: Storm prevention count for broadcast frames
++ * @stormprev_counter_mc: Storm prevention count for multicast frames
++ * @stormprev_counter_uc: Storm prevention count for unicast frames
++ * @mac_rxerror:Number of MAC receive errors
++ * @sfd_error:Number of invalid SFD
++ * @def_tx:Number of transmissions deferred
++ * @mac_txerror:Number of MAC transmit errors
++ * @rx_oversized_frames:Number of oversized frames rcvd
++ * @rx_undersized_frames:Number of undersized frames rcvd
++ * @rx_crc_frames:Number of CRC error frames rcvd
++ * @dropped_packets:Number of packets dropped due to link down on opposite port
++ *
++ * @tx_hwq_overflow:Hardware Tx Queue (on PRU) over flow count
++ * @tx_hwq_underflow:Hardware Tx Queue (on PRU) under flow count
++ *
++ * @cs_error: Number of carrier sense errors
++ * @sqe_test_error: Number of MAC receive errors
++ *
++ * Above fields are aligned so that it's consistent
++ * with the memory layout in PRU DRAM, this is to facilitate easy
++ * memcpy. Don't change the order of the fields.
++ *
++ * @vlan_dropped: Number of VLAN tagged packets dropped
++ * @multicast_dropped: Number of multicast packets dropped
++ */
++struct port_statistics {
++	u32 tx_bcast;
++	u32 tx_mcast;
++	u32 tx_ucast;
++
++	u32 tx_octets;
++
++	u32 rx_bcast;
++	u32 rx_mcast;
++	u32 rx_ucast;
++
++	u32 rx_octets;
++
++	u32 tx64byte;
++	u32 tx65_127byte;
++	u32 tx128_255byte;
++	u32 tx256_511byte;
++	u32 tx512_1023byte;
++	u32 tx1024byte;
++
++	u32 rx64byte;
++	u32 rx65_127byte;
++	u32 rx128_255byte;
++	u32 rx256_511byte;
++	u32 rx512_1023byte;
++	u32 rx1024byte;
++
++	u32 late_coll;
++	u32 single_coll;
++	u32 multi_coll;
++	u32 excess_coll;
++
++	u32 rx_misalignment_frames;
++	u32 stormprev_counter_bc;
++	u32 stormprev_counter_mc;
++	u32 stormprev_counter_uc;
++	u32 mac_rxerror;
++	u32 sfd_error;
++	u32 def_tx;
++	u32 mac_txerror;
++	u32 rx_oversized_frames;
++	u32 rx_undersized_frames;
++	u32 rx_crc_frames;
++	u32 dropped_packets;
++
++	u32 tx_hwq_overflow;
++	u32 tx_hwq_underflow;
++
++	u32 cs_error;
++	u32 sqe_test_error;
++
++	u32 vlan_dropped;
++	u32 multicast_dropped;
++} __packed;
++
+ /* In switch mode there are 3 real ports i.e. 3 mac addrs.
+  * however Linux sees only the host side port. The other 2 ports
+  * are the switch ports.
+@@ -204,6 +328,8 @@ struct prueth_emac {
+ 	struct phy_device *phydev;
+ 	struct prueth_queue_desc __iomem *rx_queue_descs;
+ 	struct prueth_queue_desc __iomem *tx_queue_descs;
++	struct port_statistics stats; /* stats holder when i/f is down */
++	u32 emac_stats[ICSSM_NUM_STATS];
+ 
+ 	int link;
+ 	int speed;
+@@ -242,6 +368,8 @@ struct prueth {
+ 	u8 emac_configured;
+ };
+ 
++extern const struct ethtool_ops emac_ethtool_ops;
++
+ void icssm_parse_packet_info(struct prueth *prueth, u32 buffer_descriptor,
+ 			     struct prueth_packet_info *pkt_info);
+ int icssm_emac_rx_packet(struct prueth_emac *emac, u16 *bd_rd_ptr,
+@@ -255,4 +383,9 @@ static inline void icssm_emac_finish_napi(struct prueth_emac *emac,
+ 	enable_irq(irq);
+ }
+ 
++void icssm_emac_update_hardware_stats(struct prueth_emac *emac);
++void icssm_emac_set_stats(struct prueth_emac *emac,
++			  struct port_statistics *pstats);
++void icssm_emac_get_stats(struct prueth_emac *emac,
++			  struct port_statistics *pstats);
+ #endif /* __NET_TI_PRUETH_H */
+-- 
+2.34.1
+
