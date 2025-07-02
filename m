@@ -1,203 +1,114 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315D5309DB6;
-	Wed,  2 Jul 2025 15:15:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E2EE1C3F02;
+	Wed,  2 Jul 2025 15:17:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751469310; cv=none; b=FEaoBjLEx2nxALr+pf1I2E0FHE3kkuJi5Aso8Vx8DoKIp49HP3GiK6ywwJzFWfPjG7aEcNyTUzcTgIBDrCZ0o7Z6IWrfiJ7M9IUGH79U3iaz+b+kZoeY/eTDRpt5Vdht+q/r5Lm81D7ToKANFuFe3WUxW7N4gDXBWmU3x79oJ5w=
+	t=1751469452; cv=none; b=LAc3810Zlu+avW5A4Dpp8KRSUTT+jhWO/j5JS9mLz2epFRhniWeG27JDcfUdXt1Tbd2z6VUIvC7m42XxaMBr7Gd9Qvlc6tuKzNEgYDHdgmt99mTYE43O3wvg3h0rUY5HhXSbg/in9cATwAvFshTbbHnFA5cf6f2i8zzL4I07C58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751469310; c=relaxed/simple;
-	bh=rMtiv8YhynFvbsomd0RDzdkphRuywmb5Mi8W2Ow6GbE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=a/DU8TjNZZWzn1Y1oJwhFJrkEMw2bXhKTGwzhiVNyO67sS+ja6qHHEXy4QmOOjvT5Huz0Kkwy0xLEipX7kiyS7E8hWuZVlqXRvOlFrSXqXOvuKUxkw6Ft/xnO9cTKaLNq4g2HVgWr8+ehIfM5ng58es0Hw5ePvdgFx3Aa4VdItI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RQNWozAT; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1751469452; c=relaxed/simple;
+	bh=0J/bQNTWUK3CBlRXBmlUER6bfndlkg4+YTtCvX1E1t4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NZPzk/cvSYt0YpzgJXLoRfDDp6ijUFXBbSpJBKpVSeMP0NiVTyfDvkiiN6J+RO5PbMSWrKeXb/6xYimPG/BPBfdTjnZeHtJNxr2KDQ5DDmRvu+nCiShDCdQiEtZNvU1t5kAr0El7R47Y0mB1nPAY8gQ3HwtPUKlYT+iECwnzvVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AVakEbLi; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RQNWozAT"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56289uS1024893;
-	Wed, 2 Jul 2025 15:14:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=e4wK+4rwZxs
-	fbxeM4+gkxG8Wyl3xF7TFhgrE9SEs9zg=; b=RQNWozAT7pTp+mKQhCA7oi/lhtn
-	HMrQEtXirKZcGrqY/Rq741eXGjT1Dr82TRs7CaZgeRvALTRc8kNa4mwDdmjhulch
-	UN+Qs/Q79rUeiTSHBtWI4gWOL+6uMxM14xAM5c+YjiN/NlKakKulp3i0DSzeRy2z
-	XNtwHAOhxHGb9679N7O2k5RBo6Ci1jgu8Y5lCOHRDmyS3TTPWgcJj/9ba25vyFIy
-	4+oXUp4d5gvlfZLNVtV03EpgKZGxe2sXTZ24mx7kPXfKMlzJS1nPAf9UF05aoUeV
-	f7KIiLSFxwiOJZlMiETijkNcuVoKyj53lM2Ivw1EDfLovPj3b8/gpinSzZA==
-Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j8024x5h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Jul 2025 15:14:48 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 562FEihF025534;
-	Wed, 2 Jul 2025 15:14:45 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 47j9fm57pw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Wed, 02 Jul 2025 15:14:44 +0000
-Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 562FEi6R025529;
-	Wed, 2 Jul 2025 15:14:44 GMT
-Received: from hu-maiyas-hyd.qualcomm.com (hu-nitirawa-hyd.qualcomm.com [10.213.109.152])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 562FEiUK025525;
-	Wed, 02 Jul 2025 15:14:44 +0000
-Received: by hu-maiyas-hyd.qualcomm.com (Postfix, from userid 2342877)
-	id CB87D61C6C3; Wed,  2 Jul 2025 20:44:43 +0530 (+0530)
-From: Nitin Rawat <quic_nitirawa@quicinc.com>
-To: mani@kernel.org, James.Bottomley@HansenPartnership.com,
-        martin.petersen@oracle.com, bvanassche@acm.org,
-        neil.armstrong@linaro.org, konrad.dybcio@oss.qualcomm.com
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, Nitin Rawat <quic_nitirawa@quicinc.com>
-Subject: [PATCH V1 2/2] scsi: ufs: qcom: Enable QUnipro Internal Clock Gating
-Date: Wed,  2 Jul 2025 20:44:41 +0530
-Message-ID: <20250702151441.8061-3-quic_nitirawa@quicinc.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250702151441.8061-1-quic_nitirawa@quicinc.com>
-References: <20250702151441.8061-1-quic_nitirawa@quicinc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AVakEbLi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751469451; x=1783005451;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0J/bQNTWUK3CBlRXBmlUER6bfndlkg4+YTtCvX1E1t4=;
+  b=AVakEbLieg6ccSqcjXQKTgaTm2fmg3OEn0oYBj0DVybrdTQj7iQkmRfV
+   omoZvllQPKp072AinHzi07bnbVlZkS5qSxcL7mRK4n2HODz58W3vZi96s
+   L/Rh5po/eAPUt7YVGCrFs7asMYbQ6wQ7Nw3yiQcVcjKQk005gyhmX8TZH
+   UCenPzZ7IuncZWsF5HU0hmvHb2ofiGqsZd4rD1v2LGamo/I7yIPdbdG5a
+   nHjTefmjJ2cJXHFisX9yxRhgg1S1yuLSX0gG4y+yJ+Y3GFjK01yfiwlme
+   0bxRRwDPkWIbd+8kvFhs7sQo/GHb3pwhRhhizIC2b8B/6ROZBcyLuoVem
+   A==;
+X-CSE-ConnectionGUID: cME5MhDNRdiWrFrMk1xthw==
+X-CSE-MsgGUID: cKHl+qIbQd6YwLKgVGKD0Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="71341605"
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="71341605"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 08:17:30 -0700
+X-CSE-ConnectionGUID: wEnsnc39Tai9vIOaOuvRTw==
+X-CSE-MsgGUID: 2P04b6y7SBG7QtOLh6hrhA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="153511918"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 08:17:27 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uWzDA-0000000Bx6z-1YDq;
+	Wed, 02 Jul 2025 18:17:24 +0300
+Date: Wed, 2 Jul 2025 18:17:24 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Robert Budai <robert.budai@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: imu: adis16550: rework clock range test
+Message-ID: <aGVNhIwn7CXO_lpP@smile.fi.intel.com>
+References: <20250702-iio-imu-adis16550-rework-clock-range-test-v1-1-b45f3a3b0dc1@baylibre.com>
+ <aGVIBVsFPcVw3lN6@smile.fi.intel.com>
+ <aGVJPRmn1-HUBb40@smile.fi.intel.com>
+ <3778ad13-3b62-4f68-946d-b861b0df4272@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: BpyLdfUUr919O-huM3sd44IzLmdLBFWH
-X-Authority-Analysis: v=2.4 cv=YPWfyQGx c=1 sm=1 tr=0 ts=68654ce8 cx=c_pps
- a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
- a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8 a=ntjNA1mAdOrbGcrCdYgA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: BpyLdfUUr919O-huM3sd44IzLmdLBFWH
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDEyNSBTYWx0ZWRfX0coFgFvjhVrd
- 4NNft5wjBZy4GWC8Xcw3ohEA68tvHJ6xVSDqWp27NHUCa5ljcz6ZNa49/hcbNYNAc5q+7CClXVr
- TEgBNT2tw64xc50z0jEFIn6rlkHE0AvqexgzZriR3rQWQLQt+q/BlAP0jtlMnOKoBS8dUghfjmL
- UMy4LmeYnHRc4pu6CC4RLhtLhqYoxOVHkKj0ViAkiYNIJz3dbTjvJa09AGpBX9Ssy0iaICyN0Q5
- s8OPrPy45BQqF92BxoOZFAzTSuThQeRl0IJTmH5QKAI5T/oyrz4dJKZYKTfjJGIbdHMjpY+ewc5
- uc7MuP16WWO67yQaKYQk4UAWhZYgXQQCqJ730UySK8L3ZqjM3uwyWMCMRluBZ9mHnn8PFBS7MUK
- JeShV5f/IZbiLKWeJl+w5LzjU9DjGDpPKm1u5O/k7dRQRmWvMOPzGvRhBbdh8k3IjzF48PIP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-02_02,2025-07-02_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 mlxlogscore=999 mlxscore=0 malwarescore=0 suspectscore=0
- lowpriorityscore=0 clxscore=1015 impostorscore=0 adultscore=0
- priorityscore=1501 bulkscore=0 phishscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2507020125
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3778ad13-3b62-4f68-946d-b861b0df4272@baylibre.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Enable internal clock gating for QUnipro by setting the following
-attributes to 1 during host controller initialization:
-- DL_VS_CLK_CFG
-- PA_VS_CLK_CFG_REG
-- DME_VS_CORE_CLK_CTRL.DME_HW_CGC_EN
+On Wed, Jul 02, 2025 at 10:07:17AM -0500, David Lechner wrote:
+> On 7/2/25 9:59 AM, Andy Shevchenko wrote:
+> > On Wed, Jul 02, 2025 at 05:53:57PM +0300, Andy Shevchenko wrote:
+> >> On Wed, Jul 02, 2025 at 09:27:45AM -0500, David Lechner wrote:
+> >>> Rework the clock rate range test to test if sync_mode_data != NULL
+> >>> instead of testing if the for loop index variable. This makes it easier
+> >>> for static analyzers to see that we aren't using an uninitialized
+> >>> sync_mode_data [1].
+> >>
+> >> But at the same time it makes it not to be the usual pattern.,,
+> > 
+> > Reading the static analyser output I think the first hunk is only what we need,
+> > but this is still false positive and it's problem of that static
+> > analyser. Have you filed a bug there? (My point is that modifying the code for
+> > the advantage of false positives of some static analyser is wrong road to go
+> > in my opinion.)
+> 
+> I agree that we shouldn't fix this _only_ to make the static analyzer
+> happy. But I had to think quite a bit harder to see that the existing
+> code was correct compared to what I have proposed here.
+> 
+> But if this is a common pattern that I just haven't learned to identify
+> at a glance yet and everybody else can easily see that the existing code
+> is correct, then perhaps it isn't worth the change.
 
-This change is necessary to support the internal clock gating mechanism
-in Qualcomm UFS host controller.
+To me checking against index variable (when it's integer, obviously) is correct
+thing to do and regular pattern. OTOH, if the "index" is a pointer and rather
+we call it "iterator", the angle of view is different because in some cases
+it may lead to stale or invalid value which might be mistakenly dereferenced or
+speculated (see more in the discussion about list entry APIs [entry is a
+keyword here] and if list_entry_is_head() is a good approach.)
 
-Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
----
- drivers/ufs/host/ufs-qcom.c | 21 +++++++++++++++++++++
- drivers/ufs/host/ufs-qcom.h | 35 +++++++++++++++++++++++++++++++++++
- 2 files changed, 56 insertions(+)
+-- 
+With Best Regards,
+Andy Shevchenko
 
-diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
-index dfdc52333a96..25b5f83b049c 100644
---- a/drivers/ufs/host/ufs-qcom.c
-+++ b/drivers/ufs/host/ufs-qcom.c
-@@ -558,11 +558,32 @@ static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
-  */
- static void ufs_qcom_enable_hw_clk_gating(struct ufs_hba *hba)
- {
-+	int err = 0;
-+
-+	/* Enable UTP internal clock gating */
- 	ufshcd_rmwl(hba, REG_UFS_CFG2_CGC_EN_ALL, REG_UFS_CFG2_CGC_EN_ALL,
- 		    REG_UFS_CFG2);
-
- 	/* Ensure that HW clock gating is enabled before next operations */
- 	ufshcd_readl(hba, REG_UFS_CFG2);
-+
-+	/* Enable Unipro internal clock gating */
-+	err = ufshcd_dme_rmw(hba, DL_VS_CLK_CFG_MASK,
-+			     DL_VS_CLK_CFG_MASK, DL_VS_CLK_CFG);
-+	if (err)
-+		goto out;
-+
-+	err = ufshcd_dme_rmw(hba, PA_VS_CLK_CFG_REG_MASK,
-+			     PA_VS_CLK_CFG_REG_MASK, PA_VS_CLK_CFG_REG);
-+	if (err)
-+		goto out;
-+
-+	err = ufshcd_dme_rmw(hba, DME_VS_CORE_CLK_CTRL_DME_HW_CGC_EN,
-+			     DME_VS_CORE_CLK_CTRL_DME_HW_CGC_EN,
-+			     DME_VS_CORE_CLK_CTRL);
-+out:
-+	if (err)
-+		dev_err(hba->dev, "hw clk gating enabled failed\n");
- }
-
- static int ufs_qcom_hce_enable_notify(struct ufs_hba *hba,
-diff --git a/drivers/ufs/host/ufs-qcom.h b/drivers/ufs/host/ufs-qcom.h
-index 0a5cfc2dd4f7..d8ad3cb3bd1c 100644
---- a/drivers/ufs/host/ufs-qcom.h
-+++ b/drivers/ufs/host/ufs-qcom.h
-@@ -24,6 +24,15 @@
-
- #define UFS_QCOM_LIMIT_HS_RATE		PA_HS_MODE_B
-
-+/* bit and mask definitions for PA_VS_CLK_CFG_REG attribute */
-+#define PA_VS_CLK_CFG_REG      0x9004
-+#define PA_VS_CLK_CFG_REG_MASK GENMASK(8, 0)
-+
-+/* bit and mask definitions for DL_VS_CLK_CFG attribute */
-+#define DL_VS_CLK_CFG          0xA00B
-+#define DL_VS_CLK_CFG_MASK GENMASK(9, 0)
-+#define DME_VS_CORE_CLK_CTRL_DME_HW_CGC_EN             BIT(9)
-+
- /* QCOM UFS host controller vendor specific registers */
- enum {
- 	REG_UFS_SYS1CLK_1US                 = 0xC0,
-@@ -234,6 +243,32 @@ static inline void ufs_qcom_deassert_reset(struct ufs_hba *hba)
- 	ufshcd_readl(hba, REG_UFS_CFG1);
- }
-
-+/**
-+ * ufshcd_dme_rmw - get modify set a dme attribute
-+ * @hba - per adapter instance
-+ * @mask - mask to apply on read value
-+ * @val - actual value to write
-+ * @attr - dme attribute
-+ */
-+static inline int ufshcd_dme_rmw(struct ufs_hba *hba, u32 mask,
-+				 u32 val, u32 attr)
-+{
-+	u32 cfg = 0;
-+	int err = 0;
-+
-+	err = ufshcd_dme_get(hba, UIC_ARG_MIB(attr), &cfg);
-+	if (err)
-+		goto out;
-+
-+	cfg &= ~mask;
-+	cfg |= (val & mask);
-+
-+	err = ufshcd_dme_set(hba, UIC_ARG_MIB(attr), cfg);
-+
-+out:
-+	return err;
-+}
-+
- /* Host controller hardware version: major.minor.step */
- struct ufs_hw_version {
- 	u16 step;
---
-2.48.1
 
