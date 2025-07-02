@@ -1,82 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 925762BE658;
-	Wed,  2 Jul 2025 18:52:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF22E2BE637;
+	Wed,  2 Jul 2025 18:52:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751482326; cv=none; b=oHk4EP90k5/NlXGBcGdyNW5EohrYE5wu9hJ+HOhlCjvAGNoHE+4aaslWYkTxlOnHTuuKis/F+exdc4aqcww3RCoGLibJqLO9+LWIwgaCu3M/0pvSBKTD0kBqWXjWQeKiw9JfIB/l/Nd+hF+IWjO02/W9Og94isE/jFIXcGG2rHs=
+	t=1751482334; cv=none; b=Ry1OHr/FHjJAhnuc14Ex7zeyLmDstYCzNwI1JC/Tv657k9UnqmMjvLOQ+49GmcrvwgL5KCxKRcjUhYZ4R9s0+IkAbbb0H/gRjq8HcgBYAdMbvqmGSOMbYeueU7x3tCmemsUQDrPJJ4wIStwX3fHw7SW6lfGV4Vqk7U1eQYyIGek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751482326; c=relaxed/simple;
-	bh=SGyeQlibR1BxJUiKs8Y3RHmbhvqdYbs9YQezGtbJUF0=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=hBQ8JLQXEqRgCzsKFsShw4sSquJGqgu5c/LLTDc0TngfUrgi47X9mqd8dyg+ZkXiBVLjJqXNVy5dYv+qxTLzFnutcqLf3ErTpARldrHuZb4LyqGkkKQi10lfIIB5Vh5mrqn/ixFOiFh29DiSCNj/R292VNVqGiMsv5BRRxgWKNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h13kiYuq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751482334; c=relaxed/simple;
+	bh=OHk7XwglHJcDWN72KQjJUAxP0PTjfem32WqdpZA4khw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QrVl8fHwmUW/pAlCL1tOPelG2s6E2aDcWwvACJ6ch5vUNbrN+9+MWxKaSxvkzsWwMxvzrCLN/4XRubaiL8xRb4GPRMwwQ1ylpa2YyqB3vQBy4C1GnN5dBFWFXok8vHl0LRaV1QT5LgXoX5Js4Sk3e1ce9xFjgrvFKm15+TqXfk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iM0ZzfxT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h13kiYuq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C9AFC4CEE7;
-	Wed,  2 Jul 2025 18:52:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iM0ZzfxT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45663C4CEE7;
+	Wed,  2 Jul 2025 18:52:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751482326;
-	bh=SGyeQlibR1BxJUiKs8Y3RHmbhvqdYbs9YQezGtbJUF0=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=h13kiYuqSnh82zieUjhHSdEouxLX44BEeA0ySmnp9JDXpj33nyfp311XK3rf/Fe78
-	 /G7oAzfRKSyN6lQpAlvdVxDn0sA0+gb68Tru2my4x9pboDfeNAELEyL1kQdbJChha+
-	 6X20edkJsOliLp2herjFfowxsExIy7hsNGbyFsrP2i2PeX7UriHxe5atJNsQ/tM+Fm
-	 82woA3Zr+LCMrf3grYKFZurV53ze6a7Vh5FZrtWA659bL3HKJ9mCwSXL5eoo+wbAVz
-	 2t+jPW00OGmccSMv7QbZKudlc94xgiq4+AZsXcb8dME4wHl+m61jxEdKErqLyYn8vh
-	 ph/TMUH0MUBpA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAE31383B273;
-	Wed,  2 Jul 2025 18:52:31 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1751482334;
+	bh=OHk7XwglHJcDWN72KQjJUAxP0PTjfem32WqdpZA4khw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iM0ZzfxT+xq4GpA8fIVxugSeI1LBwGsjeitUjYcIA3//vGtGY55runcEoY+NiyKTy
+	 mxyi4kjHC+c7Tfgn2FJPDORAOzvmdpD53Za2drdZPFidSFt4h4roFGhyBVmoA2HEmo
+	 wSja+nZwAH0djf2ev2tfvFTvHFemJFVVGQnkoeWLJ+39aYOt6VxB3IcGpUl5Ay5TfA
+	 uFWP9Fya+UYH8gBqoZTvxzX1E7luxDgqnCh9ZPOmMJD8eOcppnI4U8liL5K3Xvizfl
+	 ieMrUgCf9gIXRBhBLPMqz37iHtde2UPEXO6o+iU7zo7Kv/GExbXDfEJ4fUwMCIIRuD
+	 ng+Cf3ERhd2fA==
+Date: Wed, 2 Jul 2025 11:52:13 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Jinliang Zheng <alexjlzheng@gmail.com>
+Cc: alexjlzheng@tencent.com, brauner@kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-xfs@vger.kernel.org
+Subject: Re: [PATCH] iomap: avoid unnecessary ifs_set_range_uptodate() with
+ locks
+Message-ID: <20250702185213.GY10009@frogsfrogsfrogs>
+References: <20250701184737.GA9991@frogsfrogsfrogs>
+ <20250702120912.36380-1-alexjlzheng@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] riscv: cpu_ops_sbi: Use static array for boot_data
-From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: 
- <175148235075.828808.9774709298630060770.git-patchwork-notify@kernel.org>
-Date: Wed, 02 Jul 2025 18:52:30 +0000
-References: <20250624-riscv-hsm-boot-data-array-v1-1-50b5eeafbe61@iscas.ac.cn>
-In-Reply-To: 
- <20250624-riscv-hsm-boot-data-array-v1-1-50b5eeafbe61@iscas.ac.cn>
-To: Vivian Wang <wangruikang@iscas.ac.cn>
-Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
- alexghiti@rivosinc.com, atishp@rivosinc.com, anup@brainfault.org,
- uwu@dram.page, rabenda.cn@gmail.com, ziyao@disroot.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250702120912.36380-1-alexjlzheng@tencent.com>
 
-Hello:
-
-This patch was applied to riscv/linux.git (fixes)
-by Alexandre Ghiti <alexghiti@rivosinc.com>:
-
-On Tue, 24 Jun 2025 16:04:46 +0800 you wrote:
-> Since commit 6b9f29b81b15 ("riscv: Enable pcpu page first chunk
-> allocator"), if NUMA is enabled, the page percpu allocator may be used
-> on very sparse configurations, or when requested on boot with
-> percpu_alloc=page.
+On Wed, Jul 02, 2025 at 08:09:12PM +0800, Jinliang Zheng wrote:
+> On Tue, 1 Jul 2025 11:47:37 -0700, djwong@kernel.org wrote:
+> > On Tue, Jul 03, 2025 at 10:48:47PM +0800, alexjlzheng@gmail.com wrote:
+> > > From: Jinliang Zheng <alexjlzheng@tencent.com>
+> > > 
+> > > In the buffer write path, iomap_set_range_uptodate() is called every
+> > > time iomap_end_write() is called. But if folio_test_uptodate() holds, we
+> > > know that all blocks in this folio are already in the uptodate state, so
+> > > there is no need to go deep into the critical section of state_lock to
+> > > execute bitmap_set().
+> > > 
+> > > Although state_lock may not have significant lock contention due to
+> > > folio lock, this patch at least reduces the number of instructions.
+> > > 
+> > > Signed-off-by: Jinliang Zheng <alexjlzheng@tencent.com>
+> > > ---
+> > >  fs/iomap/buffered-io.c | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > > 
+> > > diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+> > > index 3729391a18f3..fb4519158f3a 100644
+> > > --- a/fs/iomap/buffered-io.c
+> > > +++ b/fs/iomap/buffered-io.c
+> > > @@ -71,6 +71,9 @@ static void iomap_set_range_uptodate(struct folio *folio, size_t off,
+> > >  	unsigned long flags;
+> > >  	bool uptodate = true;
+> > >  
+> > > +	if (folio_test_uptodate(folio))
+> > > +		return;
+> > 
+> > Looks fine, but how exhaustively have you tested this with heavy IO
+> > workloads?  I /think/ it's the case that folios always creep towards
+> > ifs_is_fully_uptodate() == true state and once they've gotten there
+> > never go back.  But folio state bugs are tricky to detect once they've
+> > crept in.
 > 
-> In that case, percpu data gets put in the vmalloc area. However,
-> sbi_hsm_hart_start() needs the physical address of a sbi_hart_boot_data,
-> and simply assumes that __pa() would work. This causes the just started
-> hart to immediately access an invalid address and hang.
+> I tested fio, ltp and xfstests combined for about 30 hours. The command
+> used for fio test is:
 > 
-> [...]
+>   fio --name=4k-rw \
+>     --filename=/data2/testfile \
+>     --size=1G \
+>     --bs=4096 \
+>     --ioengine=libaio \
+>     --iodepth=32 \
+>     --rw=randrw \
+>     --direct=0 \
+>     --buffered=1 \
+>     --numjobs=16 \
+>     --runtime=60 \
+>     --time_based \
+>     --group_reporting
+> 
+> ltp and xfstests showed no noticeable errors caused by this patch.
 
-Here is the summary with links:
-  - riscv: cpu_ops_sbi: Use static array for boot_data
-    https://git.kernel.org/riscv/c/2b29be967ae4
+<nod> I think this fine then...
+Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+--D
 
-
+> 
+> thanks,
+> Jinliang Zheng. :)
+> 
+> > 
+> > --D
+> > 
+> > > +
+> > >  	if (ifs) {
+> > >  		spin_lock_irqsave(&ifs->state_lock, flags);
+> > >  		uptodate = ifs_set_range_uptodate(folio, ifs, off, len);
+> > > -- 
+> > > 2.49.0
+> > > 
+> > > 
+> 
