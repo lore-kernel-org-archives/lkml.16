@@ -1,60 +1,101 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0370B2E499A;
-	Wed,  2 Jul 2025 18:32:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D492E49A1;
+	Wed,  2 Jul 2025 18:33:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751481130; cv=none; b=gpR29kGHDfn2ReGz+rdsbXHC2w60yHv0TKxdYWBVhugGY4gQRrw4kMqvhxUf6S0fnVXCoUMUW14mr/ExbCenVpc4W2F0bT0Dhv+LIMh/odukxAvZyl1KgZTmNDP8KHErId7ldxCQbiwIkcSCFFamkm0ToKNeOJtNsQ+7RpzjBWI=
+	t=1751481201; cv=none; b=BRkjGUzEWiYNQ/V3DrgtTiSi7/r7DKNRahYXHUfxl4ACAj13//1Unw9L7M3aNUgmVRZgJ3XeODM17oE4wUlVHHQ0Ps6kOoboAU7mQbOdU/TQjmU77rBLTaywNGGPaSfcdOBT9pK6h803DTait3+vsr8BQGB2JvC6ot1zbjy0atc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751481130; c=relaxed/simple;
-	bh=rWpOcvP+W+OOf5yE/WLEynEehWPGL5qGyompIkSsJ9M=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Mdc/A//AOrd2l+7Ut0Kk62gnvPhmcGA2P6833oKg+ncVPiKMb5boiA569eEdqfF/RxPm8yxPIFIuPL4Xm8TQlKjXKLzmbcP6B5jmhfXRL8ZgisRWXrDGsOpZFWgeHYQV4W/QkP/j4i002EQ8Ydoa1ZorzqZ71Vf5r07ehIn7Yds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oMWQJ6gG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751481201; c=relaxed/simple;
+	bh=AZX4rOaDzDq62apRDx1lLWeZhM/Z0FWgjhK2Pd+yBac=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=efZzdr1EWecL2kfa1/DUalDILP+QLW8K4rZoUudqlpOjdPFwLipZgEty2CnobVErR0gjCMV46Oi2TcdLiSchDFoT2yzJmk+AuqJJw+IwJqBPaErRmyJDyTH8PEeKmGqH5kBDQPGIp6O0bZX98YdCz9UcBo9PgFBLBMcotZl/Z7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VgE0oDx/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oMWQJ6gG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41D20C4CEE7;
-	Wed,  2 Jul 2025 18:32:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VgE0oDx/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74A10C4CEF2;
+	Wed,  2 Jul 2025 18:33:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751481129;
-	bh=rWpOcvP+W+OOf5yE/WLEynEehWPGL5qGyompIkSsJ9M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=oMWQJ6gGNInR2o/D29RHlpYXwDzMvEJ/JcKyGBiUafqWn6weK/ksFws7nzpVfEuxx
-	 0TKKXgrtsIDnCkgJgd/xrGfeSc6Y8GefGh+87EEgvbTZ2e3Rtehy1n6Hpt4kOBaP4O
-	 8GsUIzGhxCx1fBVdi5IwS7lWfDFccYD1zsidcgYL/9t9uP62Y0ktQNV+9tjMRk566J
-	 pZbrXi5ZcuG3MOb5v7+cwqneZziI1py75b0z9fe1/FssCQdycGOBcK73sS3eV+Ts60
-	 Le46wI9cTNtCZmGewFLfoOBSaPgwu+cb5sqsEgG5ex9wWFKbHrH8F9/QIfyikA5XN4
-	 cuf9DHFPbFgPA==
-Date: Wed, 2 Jul 2025 11:32:08 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Dragos Tatulea <dtatulea@nvidia.com>
-Cc: <almasrymina@google.com>, <asml.silence@gmail.com>, Andrew Lunn
- <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, "Eric
- Dumazet" <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon
- Horman <horms@kernel.org>, Saeed Mahameed <saeedm@nvidia.com>,
- <tariqt@nvidia.com>, <cratiu@nvidia.com>, <netdev@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC net-next 1/4] net: Allow non parent devices to be used for
- ZC DMA
-Message-ID: <20250702113208.5adafe79@kernel.org>
-In-Reply-To: <20250702172433.1738947-2-dtatulea@nvidia.com>
-References: <20250702172433.1738947-1-dtatulea@nvidia.com>
-	<20250702172433.1738947-2-dtatulea@nvidia.com>
+	s=k20201202; t=1751481201;
+	bh=AZX4rOaDzDq62apRDx1lLWeZhM/Z0FWgjhK2Pd+yBac=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=VgE0oDx/GuPnfWBo4Fib8YKW138d0HEJUoT+N0lpdxAZm9tmmXVcIStrTCMtGp4AS
+	 BYJXF90JGZbrOSXkmZj4LAGudGlzJJmpFqYoT+uJmbBLMq2svnR8EOGN+tPVAhZXgc
+	 h8LCDjWuDn3NmNi0L66uopbvsa2xpWALeSzttHqOa6fHXBLebiKH3Gz1/w/uqHcENj
+	 T1OqXchDq6sV2qL8CFnY2qvJmRo90HbP1oTyHJWroz1wF0ktfrxiCuDOE96GWs0+3Z
+	 WCPXboWpi7fVZ1QDzlB2jDs57nLxv8Yid4NW3dgUyYCpDZoBy+Qk+RTqzbXPNpcOG+
+	 lPvMqIQacMSsQ==
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-40a7322f081so1172830b6e.3;
+        Wed, 02 Jul 2025 11:33:21 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW+rG+4lIcRGyJOjpB7Hg+a9JkysmjVNg6VQQddm9TIojjqy1y+fvIOSCurm0nbVlqr/CRA3hwc7RxaiiFq@vger.kernel.org, AJvYcCWEPUMG4rtSaggcYhcJToQj+Z9QUP2QXiTI+KobQKYPcja1EI6mPCN1cqPC6ZnnmRpnYR9merrfY04=@vger.kernel.org, AJvYcCXdGISGa7bYYbttiDOGXZJVYkgjpktIDvU/5tIuahOwTkXuPKnmwG/lbelJx92VqqOL1JPcI+Z3Y9s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOYZLle5wfT3IuQLoaJWWjJoogG+ZE8WbBmCU0OiiWSG6LLbkC
+	UIVz2SKZf76KU0F6cnk4Z0zpaOYdRnedZH2YVGlN1Wz+ImWRyaWcDY8xy2IRir4AEqa9Y4FuE6U
+	ybaPeeHzk08BuniPVgjg32y8N+ORwZ4U=
+X-Google-Smtp-Source: AGHT+IFpOfezcX0xxZb3iI/WWci7TV15gILr09AdZat7JaaqZKvWehMMV/hHEe5T6txTb6mOM+ZmdaFhbcT7OQNCXLA=
+X-Received: by 2002:a05:6808:1811:b0:406:76e4:c4f with SMTP id
+ 5614622812f47-40bf1523e20mr227445b6e.18.1751481200577; Wed, 02 Jul 2025
+ 11:33:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <a0f5b68d-e321-4ed3-a22c-24f80f4d906f@linuxfoundation.org> <20250523220238.455718-1-sumanth.gavini@yahoo.com>
+In-Reply-To: <20250523220238.455718-1-sumanth.gavini@yahoo.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 2 Jul 2025 20:33:09 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0j83tV765Sfd4qB+pYc8YyUuuafyEnAg95tQKMprcfCMw@mail.gmail.com>
+X-Gm-Features: Ac12FXy13MjsFgPz0R3_QnmlQ4eVkvBhZKCj16xgvWW9BOuzJ2deYDBmTpZ44TY
+Message-ID: <CAJZ5v0j83tV765Sfd4qB+pYc8YyUuuafyEnAg95tQKMprcfCMw@mail.gmail.com>
+Subject: Re: [PATCH v2] docs: ABI: Fix "diasble" to "disable"
+To: Sumanth Gavini <sumanth.gavini@yahoo.com>
+Cc: skhan@linuxfoundation.org, rjw@rjwysocki.net, stern@rowland.harvard.edu, 
+	arjan@linux.intel.com, linux@dominikbrodowski.net, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2 Jul 2025 20:24:23 +0300 Dragos Tatulea wrote:
-> For zerocopy (io_uring, devmem), there is an assumption that the
-> parent device can do DMA. However that is not always the case:
-> for example mlx5 SF devices have an auxiliary device as a parent.
+On Sat, May 24, 2025 at 12:02=E2=80=AFAM Sumanth Gavini
+<sumanth.gavini@yahoo.com> wrote:
+>
+>  Fix misspelling reported by codespell
+>
+> Signed-off-by: Sumanth Gavini <sumanth.gavini@yahoo.com>
+> ---
+> changes in v2:
+> - No code changes
+>   - Link to v1: https://lore.kernel.org/lkml/a0f5b68d-e321-4ed3-a22c-24f8=
+0f4d906f@linuxfoundation.org/
+> - Addressed review comments from Shuah Khan.
+>   - get_maintainers.pl doesn't give you the complete list, So resending
+>     the patchv2 with linux-pm, doccumentation list and PM maintainers
+>
+> ---
+>  Documentation/ABI/testing/sysfs-devices-power | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Documentation/ABI/testing/sysfs-devices-power b/Documentatio=
+n/ABI/testing/sysfs-devices-power
+> index 54195530e97a..d3da88b26a53 100644
+> --- a/Documentation/ABI/testing/sysfs-devices-power
+> +++ b/Documentation/ABI/testing/sysfs-devices-power
+> @@ -56,7 +56,7 @@ Date:         January 2009
+>  Contact:       Rafael J. Wysocki <rjw@rjwysocki.net>
+>  Description:
+>                 The /sys/devices/.../async attribute allows the user spac=
+e to
+> -               enable or diasble the device's suspend and resume callbac=
+ks to
+> +               enable or disable the device's suspend and resume callbac=
+ks to
+>                 be executed asynchronously (ie. in separate threads, in p=
+arallel
+>                 with the main suspend/resume thread) during system-wide p=
+ower
+>                 transitions (eg. suspend to RAM, hibernation).
+> --
 
-Noob question -- I thought that the point of SFs was that you can pass
-them thru to a VM. How do they not have DMA support? Is it added on
-demand by the mediated driver or some such?
+Applied as 6.17 material, thanks!
