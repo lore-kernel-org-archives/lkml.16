@@ -1,148 +1,173 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8FCB2673B0
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 11:53:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 652CC253350;
+	Wed,  2 Jul 2025 11:54:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751457208; cv=none; b=CRcIaB0XfhAlQsfYcwb2VASxHehtKsYUtWgi//l9CBMz1HxMgGhah4YNENRjtTuhTfFNmS5P6cmUSuOwZU0SXT19sBO+5E0+m8qmlg4eX+m0DLJVDwPMRGUTTYlIEEnUrsSZn7IA9jetQB0/tdWvc9otcNiy+KEUqIXIt4Nmdmw=
+	t=1751457253; cv=none; b=huU+In9DcKjUN1eA3DiFdjj+xmi2myMQps+mKYw2UsRls/QW287dE6Gz6fRuW1klUZo2JSd0CPdvmS2BC5qIDOewuE8yDk4S5qY9aJqwjBw42ovIZi1EZWWVd/FiQcqV5zr/4p9FkH5PVlr+XgPx5Iip58J4b6WZpspsvT/SRmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751457208; c=relaxed/simple;
-	bh=naK8tfrx78nSaWldqy9EQEOR5KX753eTWBA09RDWDvE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=l0yCKnyVzW0xOqEP2+km0GxHrojG/tAfyWIxt1kRhHLUh7KDlFb5DtEEOWCacc/qN57ZGPp6DqIAEiSCSLP4xJDkZ9+dVsLcU3g4p3FWb9tbjGB/a4xNbBUqBYeJabpLpqV9fJ5BuaEapI6EO32gy2Q4Ih5jt317diQvUfpi+hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SpvqkgQH; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751457253; c=relaxed/simple;
+	bh=51ntc3v8cmvjZI/r+UiTIJnPnh8GVtBK5vSwJbWdrI4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=t63uHVGbTzLioaFF2xheDbYYB9RKyN2a5LEcCwLOR2UhL/Fyp9YFcTEMaqj6pHFGrRpfhOcbjXhTSUiOCevUUu3oqsCl+zw3Usqn8lVmQ1OmICeVcg8iBM0qdkvUh8qvde9bKuuaqtKeuaJ87LA8jjhaP1DrsDVEVyMAwY7SnZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q+pCYzVF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SpvqkgQH"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7490702fc7cso4823849b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 04:53:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751457206; x=1752062006; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HUfO2oo0Z9XyCb4GeHR70Q/rZmttNocm9srrrIHuSlI=;
-        b=SpvqkgQHwvd0awnIf/gzHD9vuoaRhoFT10vZFp/56JHrol0nty544sMo9fwnBSfhys
-         dzOzA7dMlGZu7lBHhvAWs1unZlgdvNXSXmkcDTXazf8L0er2SiHjhFDDcReZCKsbGmuX
-         59gxEd14JmMoRBgUJeKlZTuLvpELZdCso3BSjAhlKUN7d7tQBukaluyXc9IVzyP37N1b
-         89XnMsbXQzJkQUw4rTgJN1SlFsnX2230vxuLVBJz4B3QhzFHZ362pAwsa517sE2SzdOl
-         2bfVOtMdThUGf1vZI8+xPb0gAxk7Zjhbcp57JjrtyQ2N7o0A86i3/l17NchnimlgjAva
-         OOIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751457206; x=1752062006;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HUfO2oo0Z9XyCb4GeHR70Q/rZmttNocm9srrrIHuSlI=;
-        b=RvR9DlkcRr/MhzI/Y8XS+Glxsi9C8FHQWJoluBG7R1mf3ok0gSEr6eCAasPSuKcg9t
-         LXKt32tzlhTZa513s2SVaOCLTa+IbmeaB8khr6T/Pz1td9FK0EfrQDic4imDMxzOIvnm
-         4Vbp/hD547tiADGxLu1Ip50bVVf5KJdxOGxo2meCLE04cjmA9pMByvpqs/KeITqGFQkP
-         WTmqLKoTJBl8X+eYgLVNeWYuuoAVbp0SAKtEheQsgpypgQ1vYisxM/1w5c2fyWZuh+KY
-         koB0J8POIcvJUHZ5fivqO1xzKzEhCsOCcmFDeowdT03vHp5hHdk8CX09j9Jn1hoK2agz
-         bxKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVGeF96v7W591iAsNynbl4xFEehklwncCwMWrQ4rmLAhTalUA/yZka81zpCI6Leq6iwEP8JoyHn8NHUXEM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRrTJaJ6nEvZeOZcfJVdCrRT3+o6KAXpNve4xC7AUUXWUOe1ZX
-	8QZsX9wg3wPHvJNm/tuxCm65qSHv1vnY84Be8JMza+chE32/uc8MLOgC
-X-Gm-Gg: ASbGnctOB7kbVNJ8xeV1qmkgixeUWAXPxAT3IcWR1N4Ta0l1pVoF9cQM7tBGMX8EgiC
-	tk5nP8sByrLcfD4mwCSUHI44dusLBXx0AMqhoJYOea0GwuNQdvJ7SlF/Efw5CArOuwmi11H2Xdd
-	xUrYNB8Ofu/OZ4tLO6hkjY/lyDO37lEAGRRlxPnaQHKrvfydJVqVWGde2wWWJistpYg1BdIQije
-	emPtGEL6BnH+kI28qzo1mznCz7yT0Po0gebxl1P4hX5fLddgicvChtcS6z6G8n0lIk35SNVYSvG
-	17t2xiGU6XNfxSEN22gO9uFuQ2apYqzE6xeVtgopN8oerKGnovyT43AelJ8lhkO7gSR6Lp5uhfT
-	L
-X-Google-Smtp-Source: AGHT+IE6PMWCDk0z4y198hGuLgo73AAg07JUIaYu7xIUgQ/m7u46Y+hmpzlyfeuW9K+ogZqcvyxVWQ==
-X-Received: by 2002:a05:6a20:7f94:b0:220:92f:4d97 with SMTP id adf61e73a8af0-222d7db2c54mr4882532637.4.1751457205943;
-        Wed, 02 Jul 2025 04:53:25 -0700 (PDT)
-Received: from localhost.localdomain ([121.185.186.233])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e31c39fbsm12871036a12.42.2025.07.02.04.53.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 04:53:25 -0700 (PDT)
-From: Jeongjun Park <aha310510@gmail.com>
-To: syzbot+6246a83e7bd9f8a3e239@syzkaller.appspotmail.com
-Cc: syzkaller-bugs@googlegroups.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [syzbot] [fs?] BUG: sleeping function called from invalid context in procfs_procmap_ioctl
-Date: Wed,  2 Jul 2025 20:53:21 +0900
-Message-ID: <20250702115321.230757-1-aha310510@gmail.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <686502ff.a70a0220.3b7e22.22bb.GAE@google.com>
-References: <686502ff.a70a0220.3b7e22.22bb.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q+pCYzVF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B828DC4CEED;
+	Wed,  2 Jul 2025 11:54:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751457252;
+	bh=51ntc3v8cmvjZI/r+UiTIJnPnh8GVtBK5vSwJbWdrI4=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=q+pCYzVFO55aHFyrvBVjgygMtcQMI6Ye0hKajIJ8n26GD2aqs2TceVcVwi/9oromQ
+	 UrxxWb3Ft+xQ6aZHHAvWDx4pgofuBAGhL7gqeuheELCBi/CuoDFV8SOrrBybQYMTD2
+	 xqsQTwRsJ64or+winuXHlspiQAUzUhDLTbQX4loj5R7R+OCjNvUMkDGAyeQlhIhmbl
+	 QdlRuADQ8ei/tBjQF7XXO1DXrBp+6TMtIOKnewtMAeI7OtU2UoesLFu5KjHtniFJUD
+	 vcrIgcw/c8oGPwDv6HZWPxHWoT4I00SYi/GgBEhS1MX4lwRAW8cLn7x6XL8jfi2QMz
+	 W91t6dtKrP64A==
+Message-ID: <5a5bb85f-84de-4e3a-83ff-4516706b7ad4@kernel.org>
+Date: Wed, 2 Jul 2025 13:54:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/5] Introduce "non-pixel" sub node within iris video
+ node
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Abhinav Kumar <abhinav.kumar@linux.dev>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250627-video_cb-v3-0-51e18c0ffbce@quicinc.com>
+ <5f90547d-945a-4e26-b36c-75f2d8a1af97@kernel.org>
+ <eab8d79f-7188-9537-9176-3e4d22f0978a@quicinc.com>
+ <5ad418d9-8199-43c9-a477-1e3b939c054c@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <5ad418d9-8199-43c9-a477-1e3b939c054c@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-#syz test git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+On 02/07/2025 13:52, Krzysztof Kozlowski wrote:
+> On 02/07/2025 13:37, Vikash Garodia wrote:
+>>
+>> On 7/2/2025 4:48 PM, Krzysztof Kozlowski wrote:
+>>> On 27/06/2025 17:48, Vikash Garodia wrote:
+>>>> This series introduces a sub node "non-pixel" within iris video node.
+>>>> Video driver registers this sub node as a platform device and configure 
+>>>> it for DMA operations. All non pixel buffers, i.e bitstream, HFI queues 
+>>>> and internal buffers related to bitstream processing, would be managed 
+>>>> by this non_pixel device.
+>>>>
+>>>> Purpose to add this sub-node:
+>>>> Iris device limits the IOVA to an addressable range of 4GiB, and even 
+>>>> within that range, some of the space is used by IO registers, thereby 
+>>>> limiting the available IOVA to even lesser. For certain video usecase, 
+>>>> this limited range in not sufficient enough, hence it brings the need to 
+>>>> extend the possibility of higher IOVA range.
+>>>>
+>>>> Video hardware is designed to emit different stream-ID for pixel and 
+>>>> non-pixel buffers, thereby introduce a non-pixel sub node to handle 
+>>>> non-pixel stream-ID into a separate platform device.
+>>>> With this, both iris and non-pixel device can have IOVA range of 
+>>>> approximately 0-4GiB individually for each device, thereby doubling the 
+>>>> range of addressable IOVA.
+>>>>
+>>>> Tested on SM8550 and SA8775p hardwares.
+>>>>
+>>>> Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+>>>> ---
+>>>> Changes in v3:
+>>>> - Add info about change in iommus binding (Thanks Krzysztof)
+>>>
+>>> Nothing improved in commit msg. You are changing existing device and the
+>>> reason for that change is not communicated at all.
+>>>
+>>> There was big feedback from qualcomm saying that some commit in the past
+>>> received review, so future commits can repeat the same stuff. If qcom
+>>> approaches that way, sorry, no you need to come with proper commit
+>>> description.
+>>>
+>>> Please align internally how to solve it, because my response that past
+>>> imperfect review is not justification for whatever future issues was not
+>>> enough.
+>> Sure, lets take this as an example and you can suggest to provide a better
+>> commit message for this case, it would help me to compare where is the gap. I
+>> have tried my best to capture and explain the limitations and how the changes
+>> address those limitations. If that is not sufficient, we might have the perfect
+>> message from you and compare to find the gaps and improve, I am sorry, but thats
+> 
+> It is not question to me: I did not want imperfectness. Qualcomm
 
----
- fs/proc/task_mmu.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+Double negation... should be:
 
-diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index f3659046efb7..42b0224c6ac9 100644
---- a/fs/proc/task_mmu.c
-+++ b/fs/proc/task_mmu.c
-@@ -595,6 +595,7 @@ static int do_procmap_query(struct proc_maps_private *priv, void __user *uarg)
- 	char build_id_buf[BUILD_ID_SIZE_MAX], *name_buf = NULL;
- 	__u64 usize;
- 	int err;
-+	size_t name_buf_sz;
- 
- 	if (copy_from_user(&usize, (void __user *)uarg, sizeof(usize)))
- 		return -EFAULT;
-@@ -621,12 +622,18 @@ static int do_procmap_query(struct proc_maps_private *priv, void __user *uarg)
- 	if (!mm || !mmget_not_zero(mm))
- 		return -ESRCH;
- 
--	err = query_vma_setup(priv);
--	if (err) {
-+	name_buf_sz = min_t(size_t, PATH_MAX, karg.vma_name_size);
-+
-+	name_buf = kmalloc(name_buf_sz, GFP_KERNEL);
-+	if (!name_buf) {
- 		mmput(mm);
--		return err;
-+		return -ENOMEM;
- 	}
- 
-+	err = query_vma_setup(priv);
-+	if (err)
-+		goto fail_vma_setup;
-+
- 	vma = query_matching_vma(priv, karg.query_addr, karg.query_flags);
- 	if (IS_ERR(vma)) {
- 		err = PTR_ERR(vma);
-@@ -679,20 +686,12 @@ static int do_procmap_query(struct proc_maps_private *priv, void __user *uarg)
- 	}
- 
- 	if (karg.vma_name_size) {
--		size_t name_buf_sz = min_t(size_t, PATH_MAX, karg.vma_name_size);
- 		const struct path *path;
- 		const char *name_fmt;
- 		size_t name_sz = 0;
- 
- 		get_vma_name(vma, &path, &name, &name_fmt);
- 
--		if (path || name_fmt || name) {
--			name_buf = kmalloc(name_buf_sz, GFP_KERNEL);
--			if (!name_buf) {
--				err = -ENOMEM;
--				goto out;
--			}
--		}
- 		if (path) {
- 			name = d_path(path, name_buf, name_buf_sz);
- 			if (IS_ERR(name)) {
-@@ -733,6 +732,7 @@ static int do_procmap_query(struct proc_maps_private *priv, void __user *uarg)
- 
- out:
- 	query_vma_teardown(priv);
-+fail_vma_setup:
- 	mmput(mm);
- 	kfree(name_buf);
- 	return err;
---
+"It is not question to me: I did not want perfectness. Qualcomm"
+
+> engineer used issues in existing commits or imperfect commit in
+> discussion, so that's my solution. I don't need that perfect commit, but
+> it seems if I agree to that, then I will have to defend it later. Well,
+> no, I don't want it.
+> 
+>> how i feel at the moment.
+> Sure, I feel confused now as well.
+> 
+> Anyway, in other messages I explained what is missing. You are changing
+> existing hardware and you clearly must explain how existing hardware is
+> affected, how can we reproduce it, how users are affected.
+> 
+> All these answers.
+
+
+
+Best regards,
+Krzysztof
