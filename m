@@ -1,185 +1,133 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BE171DFE20;
-	Wed,  2 Jul 2025 10:50:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 019642571D4;
+	Wed,  2 Jul 2025 10:51:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751453456; cv=none; b=XA1IRo6mg80z0BL+LLEcHPK1PNi+je3CNSYwWT9FkuoOkRQe3ExdLx/0rJC17eASNtIx/uq0Pa5Zis4+vdyBJ9upJ3/n01CIhILwO/I3wWtweCOQ6BtLPO6sYjnTZ2YTVUOUwZSsQlRwfvSSmbr25sIfCCm3fUcJMvF7y8w12uQ=
+	t=1751453488; cv=none; b=ANo3v+15D80JtHLwSnYpxF5DR8V4hX6UOun/RHPLhGGJFUG7BBgOLWG4KJ2ENlALfx29t9xpGDkcpzdALzgqj4PGDBU4WqmloZtCdiZqVJa8Yd7n+BIoFkws+idkzqnB6aMmONBDGxfAVDIVIpsp0GkKsxm6TDNr/c8OY1KwO2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751453456; c=relaxed/simple;
-	bh=vmWjYoBfYxlOYco20r6RIBn8cZBvLKaPN8KKU21TzFQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kUJmWs/cABK/VEU6GhCpoaa2DCcZ2LjJbY5Vu2oSWrZvzopaQGqM3Fapj7z+KjCw+sZritSPa794lXkGkwbIVKq7cRNX5rnkJKEQkwG2xuXd160o9H99filsH+LaaUgu9VeTfznrgq2GT+qnWuMiN5YMN6J2f6jeEwz6Yd8KH2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=RnVx24f9; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1751453488; c=relaxed/simple;
+	bh=MV2mMqrsywSQ8XEX8eIYyfXz5q6RId1u/Dc6AHhTFO4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=sHEjmt82uw5lYt6tynzMNs+qud8Pp2W25Zl3Y2QKdsQNjjbpREJP64DQJejSUeAqYLCNLxvwrIzFIRD34wq1Bq0Fijh/L0fWB6UdUgEJ27HWtSA/40KfJGc/ZxeBwUpqlQFBuGcenp9/y0bv9B/iDBS2oItn+i6tGoDBGQ93Hmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lwy074kL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="RnVx24f9"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id D1B6D25989;
-	Wed,  2 Jul 2025 12:50:44 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id wXDIgFDv1hRC; Wed,  2 Jul 2025 12:50:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1751453443; bh=vmWjYoBfYxlOYco20r6RIBn8cZBvLKaPN8KKU21TzFQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=RnVx24f9NbGTPcW02J4/MbYtrfymL7Riba0/wdfkV2lAwx9rP1m+kCb0/bcq307O4
-	 oo9GMzcj/rrGQHZbDaRM4t07RH4cxgUK3TTX28E+t9UGTl7uB57tiZLJIqt+uWJY9G
-	 8V4Hut87c6Yg8tkudmT3/DYNX8AokQCL2xqQN6Ney3mA4DulZg7hJIyOQHsQNWydD0
-	 kuTPDcem79XpW8KZVfCXb5OyWqMHGfDMNuXZCECPze1vHh8B1U4vylPGACv1d2nfOA
-	 UFivrXR741lHUtMOtf8VrjvIZpDhJpYf9idLf9b7WxCIwe5TC3y24Iyw73FmSH5JD+
-	 HB4t47eI68uJQ==
-Date: Wed, 2 Jul 2025 10:50:24 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Alexandre Ghiti <alex@ghiti.fr>, Andy Chiu <andybnac@gmail.com>,
-	alexghiti@rivosinc.com, palmer@dabbelt.com,
-	Andy Chiu <andy.chiu@sifive.com>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
-	Mark Rutland <mark.rutland@arm.com>, puranjay12@gmail.com,
-	paul.walmsley@sifive.com, greentime.hu@sifive.com,
-	nick.hu@sifive.com, nylon.chen@sifive.com, eric.lin@sifive.com,
-	vicent.chen@sifive.com, zong.li@sifive.com,
-	yongxuan.wang@sifive.com, samuel.holland@sifive.com,
-	olivia.chu@sifive.com, c2232430@gmail.com
-Cc: Han Gao <rabenda.cn@gmail.com>, Vivian Wang <wangruikang@iscas.ac.cn>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	regressions@lists.linux.dev, linux-riscv@lists.infradead.org
-Subject: Re: [REGRESSION] Random oops on SG2042 with Linux 6.16-rc and
- dynamic ftrace
-Message-ID: <aGUO8L7oXpvEpvZo@pie.lan>
-References: <aGODMpq7TGINddzM@pie.lan>
- <b060e694-caa0-4aa5-ac67-75531a5f60eb@ghiti.fr>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lwy074kL"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C621BC4CEED;
+	Wed,  2 Jul 2025 10:51:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751453487;
+	bh=MV2mMqrsywSQ8XEX8eIYyfXz5q6RId1u/Dc6AHhTFO4=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=Lwy074kLgKo/DrcGKqhjxzinwCdvqlTScrd4/lL/hkuiuq27kbp3wf7tDVxqS7B+x
+	 F+XIwBuG/JNeZh/w3fGbBta11+p1xzPd8G/E6vQd2caDQZFb6H++s+GaR3QTN4Jvfc
+	 Cqh+cnB7jKQ4uA7VRNhDQZsI2LGbE3eSue0Tb85QXukmUSAItBP66RNAjwOWHY2f9Z
+	 Xc13pOljho4d3qkXGjRQ43gQ4o0uBm9Y0Nc2Z7q81a7mcivZjJ+oHHP4K7AaDN9Qic
+	 t60X5d9+Zw+tsT7s2rXmrVbEYVtH9d7DzguErD1Z4QMc3XWOTOeEL6/DwZ0xWOfJ7L
+	 5jkoa8zN8r7dA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9256C8303C;
+	Wed,  2 Jul 2025 10:51:27 +0000 (UTC)
+From: Max Shevchenko via B4 Relay <devnull+wctrl.proton.me@kernel.org>
+Subject: [PATCH v4 00/11] ARM: Add support for MediaTek MT6572 SoC
+Date: Wed, 02 Jul 2025 13:50:37 +0300
+Message-Id: <20250702-mt6572-v4-0-bde75b7ed445@proton.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b060e694-caa0-4aa5-ac67-75531a5f60eb@ghiti.fr>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAP0OZWgC/13MTQ6CMBCG4auQrq1pp/+uvIdxQaCVLqCkJY2Gc
+ HcLUSQuv8k874ySjd4mdKlmFG32yYehDH6qUNPVw8Ni35aNgIAgkhrcT1IowNYpXbOWCyo1Ks9
+ jtM4/t9DtXnbn0xTia+tmul4/CSDfRKaYYAstVxqIIxyuYwxTGM69RWsiw5HJnUFhTjnNgRppt
+ Pxn7McUoTtjhWnDVONqxpwRR7YsyxtVyahhCgEAAA==
+X-Change-ID: 20250619-mt6572-ef78a3d45168
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Thomas Gleixner <tglx@linutronix.de>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, 
+ Wim Van Sebroeck <wim@linux-watchdog.org>, 
+ Guenter Roeck <linux@roeck-us.net>, Sean Wang <sean.wang@mediatek.com>, 
+ Russell King <linux@armlinux.org.uk>
+Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, linux-watchdog@vger.kernel.org, 
+ Max Shevchenko <wctrl@proton.me>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751453439; l=2538;
+ i=wctrl@proton.me; s=20250603; h=from:subject:message-id;
+ bh=MV2mMqrsywSQ8XEX8eIYyfXz5q6RId1u/Dc6AHhTFO4=;
+ b=fx0ojaT7IM1H7gtp9SN7htFt8MTf0CWYRzHJOJDypSd22BTlhRLBTF3nK1kDkThQVJtwPe6NQ
+ ZpJ1aDGzhChBGaSPTPEeodQlvmGW1xp9P/foi8vLGauPHKdJ3Z6AVpF
+X-Developer-Key: i=wctrl@proton.me; a=ed25519;
+ pk=JXUx3mL/OrnRvbK57HXgugBjEBKq4QgDKJqp7BALm74=
+X-Endpoint-Received: by B4 Relay for wctrl@proton.me/20250603 with
+ auth_id=421
+X-Original-From: Max Shevchenko <wctrl@proton.me>
+Reply-To: wctrl@proton.me
 
-On Tue, Jul 01, 2025 at 02:27:32PM +0200, Alexandre Ghiti wrote:
-> Hi Yao,
-> 
-> On 7/1/25 08:41, Yao Zi wrote:
-> > Linux v6.16 built with dynamic ftrace randomly oops or triggers
-> > ftrace_bug() on Sophgo SG2042 when booting systemd-based userspace,
+This series of patches adds support for the MT6572 SoC and
+the JTY D101 tablet and Lenovo A369i smartphone based on it.
 
-...
+Signed-off-by: Max Shevchenko <wctrl@proton.me>
+---
+Changes in v4:
+- Specify the unit-address for the memory node
+- Link to v3: https://lore.kernel.org/r/20250701-mt6572-v3-0-8937cfa33f95@proton.me
 
-> > Not sure either reverting the commits or fixing them up is a better
-> > idea, but anyway the fatal first issue shouidn't go into the stable
-> > release.
-> 
-> Let's fix this, we were expecting issues with dynamic ftrace :)
-> 
-> So the following diff fixes all the issues you mentioned (not the first
-> crash though, I'll let you test and see if it works better, I don't have
-> this board):
+Changes in v3:
+- Remove the compatible property from the SoC devicetree
+- Link to v2: https://lore.kernel.org/r/20250626-mt6572-v2-0-f7f842196986@proton.me
 
-Thanks for the fix! I've tested it with both QEMU and SG2042, it does
-fix the lockdep failures as well as the boot time crash on SG2042. The
-boot-time crash is caused by the race so will disappear as long as we
-fix the race.
+Changes in v2:
+- Drop the status property for the board devicetrees
+- Add an soc node for the MT6572 and reorder the nodes and properties
+- Change the commit title to a more descriptive one
+- Change the cover title to the correct one
+- Link to v1: https://lore.kernel.org/r/20250620-mt6572-v1-0-e2d47820f042@proton.me
 
-> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
-> index 4c6c24380cfd9..97ced537aa1e0 100644
-> --- a/arch/riscv/kernel/ftrace.c
-> +++ b/arch/riscv/kernel/ftrace.c
-> @@ -14,6 +14,16 @@
->  #include <asm/text-patching.h>
-> 
->  #ifdef CONFIG_DYNAMIC_FTRACE
-> +void ftrace_arch_code_modify_prepare(void)
-> +{
-> +       mutex_lock(&text_mutex);
-> +}
-> +
-> +void ftrace_arch_code_modify_post_process(void)
-> +{
-> +       mutex_unlock(&text_mutex);
-> +}
-> +
->  unsigned long ftrace_call_adjust(unsigned long addr)
->  {
->         if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS))
-> @@ -29,10 +39,8 @@ unsigned long arch_ftrace_get_symaddr(unsigned long
-> fentry_ip)
-> 
->  void arch_ftrace_update_code(int command)
->  {
-> -       mutex_lock(&text_mutex);
->         command |= FTRACE_MAY_SLEEP;
->         ftrace_modify_all_code(command);
-> -       mutex_unlock(&text_mutex);
->         flush_icache_all();
->  }
-> 
-> @@ -149,16 +157,17 @@ int ftrace_init_nop(struct module *mod, struct
-> dyn_ftrace *rec)
->         unsigned int nops[2], offset;
->         int ret;
-> 
-> +       mutex_lock(&text_mutex);
+---
+Max Shevchenko (11):
+      dt-bindings: serial: mediatek,uart: add MT6572
+      dt-bindings: interrupt-controller: mediatek,mt6577-sysirq: add MT6572
+      dt-bindings: timer: mediatek: add MT6572
+      dt-bindings: watchdog: mediatek,mtk-wdt: add MT6572
+      dt-bindings: vendor-prefixes: add JTY
+      dt-bindings: arm: mediatek: add boards based on the MT6572 SoC
+      ARM: mediatek: add board_dt_compat entry for the MT6572 SoC
+      ARM: mediatek: add MT6572 smp bring up code
+      ARM: dts: mediatek: add basic support for MT6572 SoC
+      ARM: dts: mediatek: add basic support for JTY D101 board
+      ARM: dts: mediatek: add basic support for Lenovo A369i board
 
-Besides using the guard API, could we swap the order between
-ftrace_rec_set_nop_ops() and calculation of the nops array? This shrinks
-the critical region a little.
+ .../devicetree/bindings/arm/mediatek.yaml          |   5 +
+ .../mediatek,mt6577-sysirq.yaml                    |   1 +
+ .../devicetree/bindings/serial/mediatek,uart.yaml  |   1 +
+ .../devicetree/bindings/timer/mediatek,timer.yaml  |   1 +
+ .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
+ .../bindings/watchdog/mediatek,mtk-wdt.yaml        |   1 +
+ arch/arm/boot/dts/mediatek/Makefile                |   2 +
+ arch/arm/boot/dts/mediatek/mt6572-jty-d101.dts     |  61 ++++++++++++
+ arch/arm/boot/dts/mediatek/mt6572-lenovo-a369i.dts |  56 +++++++++++
+ arch/arm/boot/dts/mediatek/mt6572.dtsi             | 108 +++++++++++++++++++++
+ arch/arm/mach-mediatek/Kconfig                     |   4 +
+ arch/arm/mach-mediatek/mediatek.c                  |   1 +
+ arch/arm/mach-mediatek/platsmp.c                   |   7 ++
+ 13 files changed, 250 insertions(+)
+---
+base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
+change-id: 20250619-mt6572-ef78a3d45168
 
-With or without the change, here's my tag,
+Best regards,
+-- 
+Max Shevchenko <wctrl@proton.me>
 
-Tested-by: Yao Zi <ziyao@disroot.org>
 
-and also
-
-Reported-by: Han Gao <rabenda.cn@gmail.com>
-Reported-by: Vivian Wang <wangruikang@iscas.ac.cn>
-
-for their first-hand report of boot-time crash and analysis for the
-first lock issue.
-
-Regards,
-Yao Zi
-
->         ret = ftrace_rec_set_nop_ops(rec);
->         if (ret)
-> -               return ret;
-> +               goto end;
-> 
->         offset = (unsigned long) &ftrace_caller - pc;
->         nops[0] = to_auipc_t0(offset);
->         nops[1] = RISCV_INSN_NOP4;
-> 
-> -       mutex_lock(&text_mutex);
->         ret = patch_insn_write((void *)pc, nops, 2 * MCOUNT_INSN_SIZE);
-> +end:
->         mutex_unlock(&text_mutex);
-> 
->         return ret;
-> 
-> Andy is also taking a look, I'll let him confirm the above fix is correct.
-> 
-> Thanks for the thorough report!
-> 
-> Alex
-> 
-> 
-> > 
-> > Thanks for your suggestions on the problems.
-> > 
-> > Regards,
-> > Yao Zi
-> > 
-> > [1]: https://lore.kernel.org/all/20250407180838.42877-1-andybnac@gmail.com/
-> > 
-> > #regzbot introduced: 881dadf0792c
-> > 
-> > _______________________________________________
-> > linux-riscv mailing list
-> > linux-riscv@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-riscv
