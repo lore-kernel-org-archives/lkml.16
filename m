@@ -1,168 +1,193 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F1C928541F
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:03:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 301F6275AE8
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:04:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751464983; cv=none; b=TFspmwYhkqI7cAlNnIYVjmbyJ5menBNVJwfxfBOWz/xRAh2wK1Wej7qOnqUfHyZ16r8C0nsnvA24mtRrTNhkAot/Ffm634gFUOOdbM4kkXT07laNpz/sRP7amm70ghcL6ujkhtc1L4YRwLSgapdm5LxSQO7vzxoHJzYPVC7UVOU=
+	t=1751465063; cv=none; b=g9JeiJkuldaE3MTBj9FHwihzFYqXTGPByD6Ktrm4weXGg9DjqFK8AO092H5ZxBl6wPPrFQJ9f1ilrHoHYhfx964IFr011UbSO2SG52tIq42T/ch4cjbg5JNai9N0hjo+TodRXRKyGL9ugmFxjSUIuVA3vCJVxIStoNWvX1jXG1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751464983; c=relaxed/simple;
-	bh=w9xLP90+ayLc+1sYeBMpVBhY8AdDb/1wgWcz4K04vhk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=trniYvCD2j3UUwR4sX7yV1hXyLhVCZRJuMl6YgJUsoKMigo9Fx4vWNx5ypFJKB3GIFL9Ndp4M+s9Qiqp4xPELWErsADL7zVTMQFB8m2tEEdLtz+w7ZBLv7ZfplACZSgDgRbV+hLfe9/LTOTRyFRfP4xpc/Q4h/GP9ohifE5mnHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=N2VCwfGG; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1751465063; c=relaxed/simple;
+	bh=dGjxNlhxEbC6iORzBV8XZ7p+ClVx6uxTgcW37j0RdmA=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=TjxolTmJJNIXwYC7EE3mchlhAgKBGzfgcTvFXDUqAe0rfeiHjyz5z4ObOtAeNcCOlZHcQy7N+aMexYatsIpApsQXyvaRPq7t19B5bSBdIntEOCEPaVBDQKxiuYC70mB7C0ZOP2Uwft7LwyS14kt40c7ZZqqBvLmh3x4CWmdetS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a/RI0Weo; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="N2VCwfGG"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 562Da05m007067
-	for <linux-kernel@vger.kernel.org>; Wed, 2 Jul 2025 14:03:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	UPCD0AbKy4uQjUrZK3gQh2e0DrRheClUuURBVYRNDDk=; b=N2VCwfGG6NBuKXHl
-	QLYieeoIO5cNYNHy0ETMqS/cMpNi53RZpa2PRAYEB9+Xxxzo30D9i77nMXNfdVi4
-	2QvdK7Shto7WW0OK4FIyJzp8ik9foWgBgS5uMBdVD4w0GZPpxzmWlbgEUrrhegmf
-	FUS9wvDd6kt5dZUEvYxpT/uH7n+0dSPY+2G36CegYyBS+EF3WINN8aVXj+zydmu/
-	hT0RxAZiarDcmyXT31LzpK2kfB1gmsXnPpaoKTU2RwLM/JIHMebdC7WeCuy3guU6
-	0ixW0EML5rSg9IGyzMTexIj+MN7cJHN/qEiheQAPJjZzhX7Ek4i8OHbFErbn3qgn
-	5pQLfQ==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47kn5jh8aw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 14:03:00 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7d09b74dc4bso148223985a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 07:03:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751464978; x=1752069778;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UPCD0AbKy4uQjUrZK3gQh2e0DrRheClUuURBVYRNDDk=;
-        b=Y4Z/Ve1x3yniJA809VarhaDd7a9sastPLlweQteCbkorD2wz2h6Kl1JaAuhnGMfz+0
-         Qf8ENXhHwcZxI2EdD0LRkUITc1iylFE0ik0cQMud9QrFHjejSVmO3G+cQ6Grgz0eKn2s
-         yZTcdwMfFsw76v9e/NwV1Xv5FDw3sYJitVFDZDO4YqfJGHx51j1V5kxPt7J+lz28Y3mk
-         SbuRlDjRRzmen01L6GouArKx+cYvcIT2GqV+oDWHpo6gamSOGHoOAGuDIq742XADmuSy
-         yiBNKfItD8LrT3uPkWZ77F13HW6Bgvd1bRiCXCctffaMYhPiMt9pAEoK9VpL1xzFutJU
-         m9eA==
-X-Forwarded-Encrypted: i=1; AJvYcCXWqE6ylYXKof+KcgVAYWwfbb78Lov6io1K1DwB0mBxQcSlTN+7WiPiOvbB3vW7R+DXtF1w3AI+ZRux8OE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuNtiwD17XiDPZ/6LwQzPz0N/H9R1nniZSNA5AqyI8pbJTSHvW
-	OS2rCAQPiya2z/dlUuyLfOJDE8zr/wp6LDxbcbhXwEFkKldAI4aFcROuGqIfXPtEYUOtq3dZkfu
-	/jDTdtDiKtkfWniJ7Up5jaNtc6NBDZPnVgHqyupyE73ri5uywz0vV3SKMMS1XcTNKPLs=
-X-Gm-Gg: ASbGncvjcIRWiDQ7gRZvF8zHO9s7G+54SAhaNLOG73r0GnlZAUsIOILs6B0SUhtp4u2
-	qTwIIjq8SoFFXxZBbhANB1cIWY6hSdvQAQb53TO/QxdpDsEG2Kzsne32vZnw9W7kxNH3pXN7dfd
-	NBeHtkkLkxfhUSVdc8cUcos5HRQJAgFt+bdGdAb0ZxN+sh+bRRklfo0CGJJhXDyS18eWM3DFQJV
-	qS8pkcjnvfxAtUThgMF8Dy3GUaVaI1Yjo1A7keDTbKGhamp+CFMq81+RlOFXQa7WPQH1bHl+Caw
-	ltspIwZq1wynSpbSvjm9DTvOXzACkKH21Xg5ODlYwbqDy4dx2sTCBZp56daXBhFKoQ2Fha4E5VS
-	BuZA=
-X-Received: by 2002:a05:620a:6009:b0:7c3:c814:591d with SMTP id af79cd13be357-7d5c4712edamr157508585a.1.1751464978151;
-        Wed, 02 Jul 2025 07:02:58 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHK0NLQr9opky8nQy86TjPixbKtYzWYESdBlrd9f6gMI8n3YCnfEIgoK3ktCcSinV5RnjaizA==
-X-Received: by 2002:a05:620a:6009:b0:7c3:c814:591d with SMTP id af79cd13be357-7d5c4712edamr157506685a.1.1751464977525;
-        Wed, 02 Jul 2025 07:02:57 -0700 (PDT)
-Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c831cd0dbsm9185926a12.58.2025.07.02.07.02.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jul 2025 07:02:56 -0700 (PDT)
-Message-ID: <803adfad-a601-4d65-b877-e8ec10969698@oss.qualcomm.com>
-Date: Wed, 2 Jul 2025 16:02:55 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a/RI0Weo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751465062; x=1783001062;
+  h=date:from:to:cc:subject:message-id;
+  bh=dGjxNlhxEbC6iORzBV8XZ7p+ClVx6uxTgcW37j0RdmA=;
+  b=a/RI0WeouoyN+XDGcwZcqWoJ5Mo7xPIdFOhxDpRt5Yuylf5tRi3PUv3Y
+   MwyRITqG0LfqM7hGRts6HJ/S2szQWRdBtMVVBsxTQF2bihaBw0K/ksuHN
+   Bt1iHbxQmgVRSbUA0rCVJwdIOdbEnXcTuAp7ICWskGAM8zc9WGD9B7o7K
+   OI+7JJ6vhpRXF7wVwcV3ZX84UuBdrWvROFRFJCyDc49BfM7L03ocihg9y
+   VkYCoLbDEG/zfbAOy1Nnq53W4iINUtYarDI2sdh9oMLx0rzQd8AL+mE7s
+   Hvwdr91Da+Nr3UT1Y88FiMViIUBM+5opeiwTT8zhnkY2POGmcq6bdFkMC
+   A==;
+X-CSE-ConnectionGUID: pmh/l2SaQ+aZzteqF8fN3Q==
+X-CSE-MsgGUID: kdywgv0uRI6RYrp6xDhtjA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="53691186"
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="53691186"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 07:04:21 -0700
+X-CSE-ConnectionGUID: ud9rScSjRcSM7XUiJEXW5w==
+X-CSE-MsgGUID: VyIoNFgJQkW/Pt1KSyvlug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="154641441"
+Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 02 Jul 2025 07:04:20 -0700
+Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uWy4Q-0000iJ-14;
+	Wed, 02 Jul 2025 14:04:18 +0000
+Date: Wed, 02 Jul 2025 22:03:35 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:locking/urgent] BUILD SUCCESS
+ 9a57c3773152a3ff2c35cc8325e088d011c9f83b
+Message-ID: <202507022222.Jqxilsu1-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] media: iris: Be explicit in naming of VPU2 power off
- handlers
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Dikshita Agarwal <quic_dikshita@quicinc.com>,
-        Abhinav Kumar <abhinav.kumar@linux.dev>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20250702134227.211104-2-krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250702134227.211104-2-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=KtJN2XWN c=1 sm=1 tr=0 ts=68653c14 cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=KKAkSRfTAAAA:8 a=ORHsN169zhdEUPBzc4IA:9
- a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: eOwDv9lRBTPHA4wLixM4f76TDzDvfviS
-X-Proofpoint-GUID: eOwDv9lRBTPHA4wLixM4f76TDzDvfviS
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDExNCBTYWx0ZWRfX+qe/33tujYvB
- i/StdpfU7rTbQTkH52okdJP5FfWbJk4Onwzb68UWRrNO1t02khIiOj0QpeLE7gXrJODRtEpAVin
- jkYjc4HcPD+IXsvv3XJIV6Mr/OsvKL8fN9u9CnoqmdiiklLvEVuZQWa2YNlqf0dWk12PG3BoVWg
- Gx0hm6Qp2q6Rw75tG5HildkziZjCtfNGr0CJMgBTh4RSwlQwKlRqGYYyaN+ExIT4hwXLC5BBqcg
- 56UdFrUh7pl83BmBFo3O78wsKw8sVV99E/el11JJc3/4de2+UR2uj0XZo7jMft9Cl7+SZbgtG3r
- htEXHUGT7LFkKQ3UyMtaS4/mYTjK3jJBMap3UnQ5bMnqECAei3HFebFcx7TbTAc6V+o4nhYwDua
- JznZRYWLhQSPqTeQMuCmKOnhMtiPglZo2DZ17BfRdq1Dj2kpdmtQV7YsTpCPxxBuqDpsTbsx
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-02_02,2025-07-02_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 bulkscore=0 priorityscore=1501 malwarescore=0 suspectscore=0
- mlxscore=0 spamscore=0 adultscore=0 lowpriorityscore=0 phishscore=0
- clxscore=1015 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507020114
 
-On 7/2/25 3:42 PM, Krzysztof Kozlowski wrote:
-> Driver implements different callbacks for power off hardware
-> (.power_off_hw) and power off controller (.power_off_controller):
-> 
->  - iris_vpu_power_off_hw + iris_vpu_power_off_controller,
->  - iris_vpu3_power_off_hardware,
->  - iris_vpu33_power_off_hardware + iris_vpu33_power_off_controller,
-> 
-> The first group (iris_vpu_power_off_hw() and
-> iris_vpu_power_off_controller()) is used on older VPU2 designs but also
-> called from newer ones: iris_vpu3_power_off_hardware() calls
-> iris_vpu_power_off_controller().
-> 
-> In the same time there is wrapper iris_vpu_power_off() which calls
-> respective callbacks (the VPU2, VPU3 etc).
-> 
-> Let's make it more obvious which function is a generic wrapper over
-> specific VPU/platform callbacks (iris_vpu_power_off()) and which one is
-> the callback by adding "2" to callbacks used on VPU2.  No functional
-> changes.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking/urgent
+branch HEAD: 9a57c3773152a3ff2c35cc8325e088d011c9f83b  futex: Temporary disable FUTEX_PRIVATE_HASH
 
-[...]
+elapsed time: 1447m
 
-> diff --git a/drivers/media/platform/qcom/iris/iris_vpu3x.c b/drivers/media/platform/qcom/iris/iris_vpu3x.c
-> index 9b7c9a1495ee..a2c8a1650153 100644
-> --- a/drivers/media/platform/qcom/iris/iris_vpu3x.c
-> +++ b/drivers/media/platform/qcom/iris/iris_vpu3x.c
-> @@ -104,7 +104,7 @@ static void iris_vpu3_power_off_hardware(struct iris_core *core)
->  	writel(0x0, core->reg_base + CPU_CS_AHB_BRIDGE_SYNC_RESET);
->  
->  disable_power:
-> -	iris_vpu_power_off_hw(core);
-> +	iris_vpu2_power_off_hw(core);
->  }
->  
->  static void iris_vpu33_power_off_hardware(struct iris_core *core)
-> @@ -142,7 +142,7 @@ static void iris_vpu33_power_off_hardware(struct iris_core *core)
->  	writel(0x0, core->reg_base + CPU_CS_AHB_BRIDGE_SYNC_RESET);
->  
->  disable_power:
-> -	iris_vpu_power_off_hw(core);
-> +	iris_vpu2_power_off_hw(core);
->  }
+configs tested: 116
+configs skipped: 2
 
-I don't really like how v3 calls v2 ops internally.. and there's
-nothing really vpu2-specific about what the function does.
-Maybe something along the lines of "iris_disable_resources"?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Konrad
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    gcc-15.1.0
+arc                   randconfig-001-20250701    gcc-13.3.0
+arc                   randconfig-002-20250701    gcc-15.1.0
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-15.1.0
+arm                         assabet_defconfig    clang-18
+arm                       netwinder_defconfig    gcc-15.1.0
+arm                   randconfig-001-20250701    clang-17
+arm                   randconfig-002-20250701    gcc-8.5.0
+arm                   randconfig-003-20250701    clang-21
+arm                   randconfig-004-20250701    clang-21
+arm                          sp7021_defconfig    gcc-15.1.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                 randconfig-001-20250701    clang-21
+arm64                 randconfig-002-20250701    gcc-15.1.0
+arm64                 randconfig-003-20250701    clang-18
+arm64                 randconfig-004-20250701    gcc-8.5.0
+csky                              allnoconfig    gcc-15.1.0
+csky                  randconfig-001-20250701    gcc-11.5.0
+csky                  randconfig-002-20250701    gcc-10.5.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250701    clang-21
+hexagon               randconfig-002-20250701    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250702    clang-20
+i386        buildonly-randconfig-002-20250702    gcc-12
+i386        buildonly-randconfig-003-20250702    clang-20
+i386        buildonly-randconfig-004-20250702    clang-20
+i386        buildonly-randconfig-005-20250702    gcc-12
+i386        buildonly-randconfig-006-20250702    clang-20
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-15.1.0
+loongarch                         allnoconfig    gcc-15.1.0
+loongarch             randconfig-001-20250701    gcc-13.3.0
+loongarch             randconfig-002-20250701    gcc-15.1.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+mips                          eyeq6_defconfig    clang-21
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250701    gcc-14.2.0
+nios2                 randconfig-002-20250701    gcc-13.3.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                randconfig-001-20250701    gcc-14.3.0
+parisc                randconfig-002-20250701    gcc-10.5.0
+parisc64                         alldefconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                    amigaone_defconfig    gcc-15.1.0
+powerpc               randconfig-001-20250701    gcc-13.3.0
+powerpc               randconfig-002-20250701    clang-21
+powerpc               randconfig-003-20250701    clang-21
+powerpc64             randconfig-001-20250701    clang-21
+powerpc64             randconfig-002-20250701    clang-21
+powerpc64             randconfig-003-20250701    gcc-10.5.0
+riscv                             allnoconfig    gcc-15.1.0
+riscv                 randconfig-001-20250701    gcc-14.3.0
+riscv                 randconfig-002-20250701    gcc-10.5.0
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-15.1.0
+s390                  randconfig-001-20250701    gcc-9.3.0
+s390                  randconfig-002-20250701    clang-17
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                         apsh4a3a_defconfig    gcc-15.1.0
+sh                         ecovec24_defconfig    gcc-15.1.0
+sh                             espt_defconfig    gcc-15.1.0
+sh                    randconfig-001-20250701    gcc-15.1.0
+sh                    randconfig-002-20250701    gcc-13.3.0
+sh                   secureedge5410_defconfig    gcc-15.1.0
+sh                        sh7757lcr_defconfig    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                 randconfig-001-20250701    gcc-10.3.0
+sparc                 randconfig-002-20250701    gcc-15.1.0
+sparc64               randconfig-001-20250701    gcc-8.5.0
+sparc64               randconfig-002-20250701    gcc-12.4.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250701    gcc-12
+um                    randconfig-002-20250701    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250701    gcc-12
+x86_64      buildonly-randconfig-002-20250701    gcc-12
+x86_64      buildonly-randconfig-003-20250701    gcc-12
+x86_64      buildonly-randconfig-004-20250701    gcc-12
+x86_64      buildonly-randconfig-005-20250701    clang-20
+x86_64      buildonly-randconfig-006-20250701    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-18
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20250701    gcc-15.1.0
+xtensa                randconfig-002-20250701    gcc-13.3.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
