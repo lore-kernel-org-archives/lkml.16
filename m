@@ -1,46 +1,46 @@
 Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D73FA70810
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77DD02F5E
 	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 01:33:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751420017; cv=none; b=hA4uPwbdyLooPsym0D9/t1YPc6v/QPt2QTXkUy5Dw9fIj63zPdomioFqWWSCz2PzjBJBIfgf/r75eOmU2Jl6aUW6i3+7q+oKgj2DQI3VTHuKHm//E4IC68neaVJg9CI4nB2AiRx+elJWMyqEJe5LG2OAK9yzhAv2uLOYYGPC4/Q=
+	t=1751420018; cv=none; b=gWIjRGV50ZW6swPo1mqjRm7mPGJyIx/a0zJxIPid9Z/JahHLpBf09G7LAZ8BMIMdzxjvFgOtnoKhACDhPKrYemHQhbPlXTgb7wb+g3QruZTX0JNdosy7PJAtglxl1cyMdn1akrPjgtvmjIZHs7PzmadCX/sVMdsdB+WgzMBMZU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751420017; c=relaxed/simple;
+	s=arc-20240116; t=1751420018; c=relaxed/simple;
 	bh=AF7omRMZRLd5scwxtbkEuD3UqDHzNIQwcvhUKNY2VNc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=Qr95FLUL6Xx6fRy4LqkWUvtU4MH342/h9JQ+oLG0tzIq3O479P9jtV9PszFPXzW/j4XZ8oAwWUSARNEcsz3RHNdoNRBao+AahhIlgduLEF90AiK53OblZRSdiePh4K4+IDOvk8gqxX1cUGtw+m+M9hx35kJeSw0vomNgRf55y2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=VOg0IE7M; arc=none smtp.client-ip=203.254.224.25
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
+	 References; b=JjrsP1WhVqZ3QDXGfEZXojj7YVD2Qh2W16LGjNIvdOyw8wsaXHHTYl4kYVzje1nnSUDpUqAkbsE3oQ7lyJul2Ppqvw9++S2BhOjV3RdcwO9iT6wNyqB9pbBRWe1dQeiVSH3lzq6dII9d12bUMARWlvfnVM3qewqQFyaBt5oYs+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=PRfDgnPy; arc=none smtp.client-ip=203.254.224.25
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VOg0IE7M"
-Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250702013334epoutp02cbe0edc9eddecaf45ac64232fd515f36~OSzk7TqFX1647116471epoutp02S
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 01:33:34 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250702013334epoutp02cbe0edc9eddecaf45ac64232fd515f36~OSzk7TqFX1647116471epoutp02S
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="PRfDgnPy"
+Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250702013333epoutp02db106de7b227a7c2472c861a7f2107e9~OSzka9Kas1530515305epoutp02G
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 01:33:33 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250702013333epoutp02db106de7b227a7c2472c861a7f2107e9~OSzka9Kas1530515305epoutp02G
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1751420014;
+	s=mail20170921; t=1751420013;
 	bh=dAX8Jb9Bx+UN5wIdbfjnE5hKdAw3VOpDOA4U8IQYlBI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VOg0IE7MnDnIPec+P6KpTpDtDKcczG86q+gmmVWOJpuPUhK0NFQWO+6fEtYHr8Xwc
-	 1ZQ8+EDh3JbM7Th47edvXx/SMPALXiFhx9NUxgOomqycmLBO6jkwzOVXrn/5P9Qgwq
-	 X3hS5Ffyq9/zGPJ9sKxvETJtS9z7p57TmB+75sd0=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas2p1.samsung.com (KnoxPortal) with ESMTPS id
-	20250702013333epcas2p1f160b339b02f3cc764218f175698cd60~OSzkpvePm0297702977epcas2p12;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=PRfDgnPyY4I9kSSdor01uODZ7ueKTFGvqgLtw7hJEFRYdrQAhINsIZbz7YIHn1FLh
+	 wg5S49awn2ML+73blddTQNc8jDvrbkWO+h4SPwRVnm4h8URx4+il286thHv6vHnz9B
+	 3nc9Ohjl9mH6rsmxFQbEQj6nkNFaC3O77zzfZ1Uw=
+Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
+	epcas2p4.samsung.com (KnoxPortal) with ESMTPS id
+	20250702013333epcas2p4d73d892c396c3c464258c92b92a2432f~OSzkC46nl0722207222epcas2p4S;
 	Wed,  2 Jul 2025 01:33:33 +0000 (GMT)
-Received: from epcas2p4.samsung.com (unknown [182.195.36.88]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4bX2V52xyPz6B9mK; Wed,  2 Jul
-	2025 01:33:33 +0000 (GMT)
+Received: from epcas2p2.samsung.com (unknown [182.195.36.91]) by
+	epsnrtp03.localdomain (Postfix) with ESMTP id 4bX2V44mcBz3hhTB; Wed,  2 Jul
+	2025 01:33:32 +0000 (GMT)
 Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
 	epcas2p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250702013332epcas2p1d9e8394c75dd90b6e32122050001fec3~OSzjadxBo0051400514epcas2p1A;
+	20250702013332epcas2p168d0293f0b7385b0cca88c649fe9c813~OSzi8Bsvt0051400514epcas2p18;
 	Wed,  2 Jul 2025 01:33:32 +0000 (GMT)
 Received: from asswp146.dsn.sec.samsung.com (unknown [10.229.19.146]) by
 	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250702013332epsmtip22ff47c2e047a5efa0f8547e90bb56aa3~OSzjUs-0b2820728207epsmtip2m;
+	20250702013332epsmtip26c988295d5b5383a3cbcc5159d45b2e9~OSzi2IFUf2822028220epsmtip2i;
 	Wed,  2 Jul 2025 01:33:32 +0000 (GMT)
 From: Sowon Na <sowon.na@samsung.com>
 To: robh@kernel.org, krzk@kernel.org, conor+dt@kernel.org, vkoul@kernel.org,
@@ -49,10 +49,9 @@ Cc: krzk+dt@kernel.org, linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
 	sowon.na@samsung.com
 Subject: [PATCH 0/5] ufs-exynos support for ExynosAutov920
-Date: Wed,  2 Jul 2025 10:33:12 +0900
-Message-ID: <20250702013316.2837427-7-sowon.na@samsung.com>
+Date: Wed,  2 Jul 2025 10:33:06 +0900
+Message-ID: <20250702013316.2837427-1-sowon.na@samsung.com>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250702013316.2837427-1-sowon.na@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,16 +59,15 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250702013332epcas2p1d9e8394c75dd90b6e32122050001fec3
+X-CMS-MailID: 20250702013332epcas2p168d0293f0b7385b0cca88c649fe9c813
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: AUTO_CONFIDENTIAL
 CMS-TYPE: 102P
 cpgsPolicy: CPGSC10-234,Y
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250702013332epcas2p1d9e8394c75dd90b6e32122050001fec3
-References: <20250702013316.2837427-1-sowon.na@samsung.com>
-	<CGME20250702013332epcas2p1d9e8394c75dd90b6e32122050001fec3@epcas2p1.samsung.com>
+X-CMS-RootMailID: 20250702013332epcas2p168d0293f0b7385b0cca88c649fe9c813
+References: <CGME20250702013332epcas2p168d0293f0b7385b0cca88c649fe9c813@epcas2p1.samsung.com>
 
 Hi,
 
