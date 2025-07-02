@@ -1,263 +1,382 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from trager.us (trager.us [52.5.81.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A94F2F7CE1
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 19:28:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E13732BE656;
+	Wed,  2 Jul 2025 19:29:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.5.81.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751484542; cv=none; b=mC/ijE1l3IfPlfRVQuZEjul9vzekpX5eOkbsUg4bg+XdZyQY9xngQTo81Rm6X/iWPHj52Il5cRJnm4sMjTeiuDwQ1bVQJMyZt8P4EsT2VQGCVj2CZ7MGO7tFopa+lmPsdz19gHC94hPfhqlXQ5hktx8ZFacRT+oT0BenPiL2C3M=
+	t=1751484565; cv=none; b=HFkSfxWMrFmFTj8Rc2wDudSOYyIWv6xO4Xg7CsBnGO4PEV3JZ9kYFX0eX1uWPqCT1zqSnDyInkfXHt0dmU22kWeQg0VTK+ZzZSUWAsh9MjLUzAxD2Ay8py/KipCkHc3Vz0a3HqjrXCqqWsZsTVU4jMJN8HHQU7AqLUdd2ovP89M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751484542; c=relaxed/simple;
-	bh=E8flaWw2++poWNVYNidJyMe0WHnyGRsXcMcoUOKMvqw=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=GOEk9BxapQ/gE9PqhYqlxU+QWTybzG4ncM1sgW1X/VuNoLcalCkPvpGWQdHD9uJKycR7j/R61lRRnHfcZ3f1a2Zv9Is1XMIja9Gt3Ghc60VVk27vCQfn9VYHZ2wP03b/9agN/m1FCyN9l+DJGTq++f1kGHxl7LfXCoIO82pCu1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HBAQ2lm4; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HBAQ2lm4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751484540; x=1783020540;
-  h=date:from:to:cc:subject:message-id;
-  bh=E8flaWw2++poWNVYNidJyMe0WHnyGRsXcMcoUOKMvqw=;
-  b=HBAQ2lm4f5BVCdoog5GSDK1b7amXMZodAdngdG8B7dxwW8rpFMcZXh+4
-   iKk+hzU1nnMeaPVRBHw16I6hownXwgWmn7W1iJIKjuCapyo/c2ZO9ny03
-   LSMj+vW8eQN3C5ZOe9vJpHWim+QmWNQOCrYn9GLlVycFOsm4iBXO2sH1w
-   S4wMNC7R8Ym3QpqiM0h5c69NjQJOYBFO4KyejYiUwpWjKmyDBbRhOu5RH
-   u3ycVs7IHniaM6Lo0JFieL1tKBwsYNGAnfBZymN/VZHY1Ha75xrEdWM4B
-   3U1V+lztSzoV5TBIDduiFAFIbhD+yFh58YSt0MzmfKOyQTvz0nUyEwAjn
-   w==;
-X-CSE-ConnectionGUID: bhnK927wQzik/BUadcwHIw==
-X-CSE-MsgGUID: pNTK8t2dQVqmLhkYE/UKoA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="64846773"
-X-IronPort-AV: E=Sophos;i="6.16,282,1744095600"; 
-   d="scan'208";a="64846773"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 12:29:00 -0700
-X-CSE-ConnectionGUID: iqIXe/RSThOyLyvAYA2PDA==
-X-CSE-MsgGUID: FOsCUlmBTsWHAs32xbkcWg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,282,1744095600"; 
-   d="scan'208";a="158541682"
-Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 02 Jul 2025 12:28:59 -0700
-Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uX38a-00010t-0h;
-	Wed, 02 Jul 2025 19:28:56 +0000
-Date: Thu, 03 Jul 2025 03:28:04 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Subject: [gustavoars:testing/wfamnae-next20250701] BUILD SUCCESS
- 2251db9b5842843a20bd397903c41c338ff7a215
-Message-ID: <202507030350.xP9XVxcj-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1751484565; c=relaxed/simple;
+	bh=rtPutSKWhgqsRdvkma+dOgbJpiK129bmyj9iZSvxP7A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=HV3SBlFuVIpzh+Fx1Y270ey2ypQ27AiYEgiUF0MkzUtY748rEoPwJHtfMHbsPh+B/aKej1H+w5G1GOXpFSkEWhoson32LYgFXzV7UIG3Wf4CmXxFkIopfdteVbiIhlOc6B2p9Jo0n37eD5V2MfT7t5D51q8XR0h246iaxYBnRWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trager.us; spf=pass smtp.mailfrom=trager.us; arc=none smtp.client-ip=52.5.81.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trager.us
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trager.us
+Received: from c-76-104-255-50.hsd1.wa.comcast.net ([76.104.255.50] helo=localhost)
+	by trager.us with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92.3)
+	(envelope-from <lee@trager.us>)
+	id 1uX38t-00081r-M4; Wed, 02 Jul 2025 19:29:15 +0000
+From: Lee Trager <lee@trager.us>
+To: Alexander Duyck <alexanderduyck@fb.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	kernel-team@meta.com,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Mohsin Bashir <mohsin.bashr@gmail.com>,
+	Sanman Pradhan <sanman.p211993@gmail.com>,
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Su Hui <suhui@nfschina.com>,
+	Simon Horman <horms@kernel.org>,
+	Lee Trager <lee@trager.us>,
+	Kalesh AP <kalesh-anakkur.purayil@broadcom.com>,
+	Jacob Keller <jacob.e.keller@intel.com>
+Cc: Andrew Lunn <andrew@lunn.ch>,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH net-next 4/6] eth: fbnic: Add mailbox support for firmware logs
+Date: Wed,  2 Jul 2025 12:12:10 -0700
+Message-ID: <20250702192207.697368-5-lee@trager.us>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250702192207.697368-1-lee@trager.us>
+References: <20250702192207.697368-1-lee@trager.us>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git testing/wfamnae-next20250701
-branch HEAD: 2251db9b5842843a20bd397903c41c338ff7a215  treewide-TRAILING_OVERLAP: Avoid -Wflex-array-member-not-at-end warnings
+By default firmware will not send logs to the host. This must be explicitly
+enabled by the driver. The mailbox has the concept of a flag which is a u32
+used as a boolean. Lack of flag defaults to a value of false. When enabling
+logging historical logs may be optionally requested. These are log messages
+generated by the NIC before the driver was loaded. The driver also sends a
+log version to support changing the logging format in the future.
 
-elapsed time: 1449m
+[SEND_LOGS_REQ] = {
+    [SEND_LOGS]          /* flag to request log reporting */
+    [SEND_LOGS_HISTORY]  /* flag to request historical logs */
+    [SEND_LOGS_VERSION]  /* u32 indicating the log format version */
+}
 
-configs tested: 186
-configs skipped: 5
+Logs may be sent to the user either one at a time, or when historical logs
+are requested in bulk. Firmware may not send more than 14 messages in bulk
+to prevent flooding the mailbox.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+[LOG_MSG] = {
+    [LOG_INDEX]     /* entry 0 - u64 index of log */
+    [LOG_MSEC]      /* entry 0 - u32 timestamp of log */
+    [LOG_MSG]       /* entry 0 - char log message up to 256 */
+    [LOG_LENGTH]    /* u32 of remaining log items in arrays */
+    [LOG_INDEX_ARRAY] = {
+        [LOG_INDEX] /* entry 1 - u64 index of log */
+	[LOG_INDEX] /* entry 2 - u64 index of log */
+	...
+    }
+    [LOG_MSEC_ARRAY] = {
+        [LOG_MSEC]  /* entry 1 - u32 timestamp of log */
+	[LOG_MSEC]  /* entry 2 - u32 timestamp of log */
+	...
+    }
+    [LOG_MSG_ARRAY] = {
+        [LOG_MSG]   /* entry 1 - char log message up to 256 */
+	[LOG_MSG]   /* entry 2 - char log message up to 256 */
+	...
+    }
+}
 
-tested configs:
-alpha                            alldefconfig    gcc-15.1.0
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    clang-19
-alpha                            allyesconfig    gcc-15.1.0
-alpha                               defconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                                 defconfig    gcc-15.1.0
-arc                   randconfig-001-20250702    gcc-10.5.0
-arc                   randconfig-002-20250702    gcc-14.3.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-15.1.0
-arm                                 defconfig    gcc-15.1.0
-arm                      integrator_defconfig    clang-21
-arm                   randconfig-001-20250702    clang-17
-arm                   randconfig-002-20250702    clang-19
-arm                   randconfig-003-20250702    clang-21
-arm                   randconfig-004-20250702    clang-17
-arm                         vf610m4_defconfig    gcc-15.1.0
-arm64                             allnoconfig    gcc-15.1.0
-arm64                               defconfig    gcc-15.1.0
-arm64                 randconfig-001-20250702    clang-21
-arm64                 randconfig-002-20250702    clang-21
-arm64                 randconfig-003-20250702    clang-21
-arm64                 randconfig-004-20250702    clang-21
-csky                              allnoconfig    gcc-15.1.0
-csky                                defconfig    gcc-15.1.0
-csky                  randconfig-001-20250702    gcc-15.1.0
-csky                  randconfig-001-20250703    gcc-8.5.0
-csky                  randconfig-002-20250702    gcc-15.1.0
-csky                  randconfig-002-20250703    gcc-8.5.0
-hexagon                          allmodconfig    clang-17
-hexagon                          allmodconfig    clang-19
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-19
-hexagon                          allyesconfig    clang-21
-hexagon                             defconfig    gcc-15.1.0
-hexagon               randconfig-001-20250702    clang-21
-hexagon               randconfig-001-20250703    gcc-8.5.0
-hexagon               randconfig-002-20250702    clang-21
-hexagon               randconfig-002-20250703    gcc-8.5.0
-i386                             allmodconfig    clang-20
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    clang-20
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    clang-20
-i386        buildonly-randconfig-001-20250702    clang-20
-i386        buildonly-randconfig-001-20250703    gcc-12
-i386        buildonly-randconfig-002-20250702    gcc-12
-i386        buildonly-randconfig-002-20250703    gcc-12
-i386        buildonly-randconfig-003-20250702    clang-20
-i386        buildonly-randconfig-003-20250703    gcc-12
-i386        buildonly-randconfig-004-20250702    clang-20
-i386        buildonly-randconfig-004-20250703    gcc-12
-i386        buildonly-randconfig-005-20250702    gcc-12
-i386        buildonly-randconfig-005-20250703    gcc-12
-i386        buildonly-randconfig-006-20250702    clang-20
-i386        buildonly-randconfig-006-20250703    gcc-12
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-15.1.0
-loongarch                         allnoconfig    gcc-15.1.0
-loongarch                           defconfig    gcc-15.1.0
-loongarch             randconfig-001-20250702    gcc-15.1.0
-loongarch             randconfig-001-20250703    gcc-8.5.0
-loongarch             randconfig-002-20250702    gcc-15.1.0
-loongarch             randconfig-002-20250703    gcc-8.5.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                                defconfig    gcc-15.1.0
-m68k                        m5307c3_defconfig    gcc-15.1.0
-m68k                        stmark2_defconfig    gcc-15.1.0
-m68k                           sun3_defconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                  cavium_octeon_defconfig    gcc-15.1.0
-mips                      loongson3_defconfig    gcc-15.1.0
-mips                       rbtx49xx_defconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                               defconfig    gcc-15.1.0
-nios2                 randconfig-001-20250702    gcc-14.2.0
-nios2                 randconfig-001-20250703    gcc-8.5.0
-nios2                 randconfig-002-20250702    gcc-14.2.0
-nios2                 randconfig-002-20250703    gcc-8.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250702    gcc-12.4.0
-parisc                randconfig-001-20250703    gcc-8.5.0
-parisc                randconfig-002-20250702    gcc-9.3.0
-parisc                randconfig-002-20250703    gcc-8.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    gcc-15.1.0
-powerpc               mpc834x_itxgp_defconfig    clang-21
-powerpc               randconfig-001-20250702    gcc-11.5.0
-powerpc               randconfig-001-20250703    gcc-8.5.0
-powerpc               randconfig-002-20250702    gcc-11.5.0
-powerpc               randconfig-002-20250703    gcc-8.5.0
-powerpc               randconfig-003-20250702    clang-21
-powerpc               randconfig-003-20250703    gcc-8.5.0
-powerpc                     tqm8540_defconfig    gcc-15.1.0
-powerpc64             randconfig-001-20250702    clang-21
-powerpc64             randconfig-001-20250703    gcc-8.5.0
-powerpc64             randconfig-002-20250702    clang-19
-powerpc64             randconfig-002-20250703    gcc-8.5.0
-powerpc64             randconfig-003-20250702    clang-21
-powerpc64             randconfig-003-20250703    gcc-8.5.0
-riscv                            allmodconfig    gcc-15.1.0
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    gcc-15.1.0
-riscv                 randconfig-001-20250702    clang-21
-riscv                 randconfig-001-20250703    gcc-12
-riscv                 randconfig-002-20250702    clang-21
-riscv                 randconfig-002-20250703    gcc-12
-s390                             allmodconfig    clang-18
-s390                             allmodconfig    gcc-15.1.0
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-15.1.0
-s390                  randconfig-001-20250702    gcc-10.5.0
-s390                  randconfig-001-20250703    gcc-12
-s390                  randconfig-002-20250702    clang-21
-s390                  randconfig-002-20250703    gcc-12
-sh                               alldefconfig    gcc-15.1.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                    randconfig-001-20250702    gcc-15.1.0
-sh                    randconfig-001-20250703    gcc-12
-sh                    randconfig-002-20250702    gcc-15.1.0
-sh                    randconfig-002-20250703    gcc-12
-sh                           se7721_defconfig    gcc-15.1.0
-sh                           se7724_defconfig    gcc-15.1.0
-sh                  sh7785lcr_32bit_defconfig    gcc-15.1.0
-sparc                            alldefconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20250702    gcc-12.4.0
-sparc                 randconfig-001-20250703    gcc-12
-sparc                 randconfig-002-20250702    gcc-15.1.0
-sparc                 randconfig-002-20250703    gcc-12
-sparc64               randconfig-001-20250702    gcc-9.3.0
-sparc64               randconfig-001-20250703    gcc-12
-sparc64               randconfig-002-20250702    gcc-11.5.0
-sparc64               randconfig-002-20250703    gcc-12
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    clang-19
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250702    clang-21
-um                    randconfig-001-20250703    gcc-12
-um                    randconfig-002-20250702    clang-21
-um                    randconfig-002-20250703    gcc-12
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250702    gcc-12
-x86_64      buildonly-randconfig-002-20250702    gcc-11
-x86_64      buildonly-randconfig-003-20250702    clang-20
-x86_64      buildonly-randconfig-004-20250702    clang-20
-x86_64      buildonly-randconfig-005-20250702    clang-20
-x86_64      buildonly-randconfig-006-20250702    gcc-12
-x86_64                              defconfig    clang-20
-x86_64                              defconfig    gcc-11
-x86_64                                  kexec    clang-20
-x86_64                               rhel-9.4    clang-20
-x86_64                           rhel-9.4-bpf    gcc-12
-x86_64                         rhel-9.4-kunit    gcc-12
-x86_64                           rhel-9.4-ltp    gcc-12
-x86_64                          rhel-9.4-rust    clang-18
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                       common_defconfig    gcc-15.1.0
-xtensa                randconfig-001-20250702    gcc-14.3.0
-xtensa                randconfig-001-20250703    gcc-12
-xtensa                randconfig-002-20250702    gcc-12.4.0
-xtensa                randconfig-002-20250703    gcc-12
+Signed-off-by: Lee Trager <lee@trager.us>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+---
+ drivers/net/ethernet/meta/fbnic/fbnic_csr.h |  14 ++
+ drivers/net/ethernet/meta/fbnic/fbnic_fw.c  | 166 ++++++++++++++++++++
+ drivers/net/ethernet/meta/fbnic/fbnic_fw.h  |  36 +++++
+ 3 files changed, 216 insertions(+)
 
+diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_csr.h b/drivers/net/ethernet/meta/fbnic/fbnic_csr.h
+index 06b9c49e51a2..a81db842aa53 100644
+--- a/drivers/net/ethernet/meta/fbnic/fbnic_csr.h
++++ b/drivers/net/ethernet/meta/fbnic/fbnic_csr.h
+@@ -21,6 +21,20 @@
+ /* Defines the minimum firmware version required by the driver */
+ #define MIN_FW_VER_CODE				FW_VER_CODE(0, 10, 6, 0)
+
++/* Defines the minimum firmware version required for firmware logs */
++#define MIN_FW_VER_CODE_LOG			FW_VER_CODE(0, 12, 9, 0)
++
++/* Driver can request that firmware sends all cached logs in bulk. This
++ * feature was enabled on older firmware however firmware has a bug
++ * which attempted to send 30 messages per mbx message which caused an
++ * overflow flooding the mailbox. This results in a kernel warning
++ * related to corrupt mailbox messages.
++ *
++ * If firmware is new enough only request sending historical logs when
++ * the log buffer is empty to prevent duplicate logs.
++ */
++#define MIN_FW_VER_CODE_HIST			FW_VER_CODE(25, 5, 7, 0)
++
+ #define PCI_DEVICE_ID_META_FBNIC_ASIC		0x0013
+
+ #define FBNIC_CLOCK_FREQ	(600 * (1000 * 1000))
+diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_fw.c b/drivers/net/ethernet/meta/fbnic/fbnic_fw.c
+index ac7804a8a22c..0c55be7d2547 100644
+--- a/drivers/net/ethernet/meta/fbnic/fbnic_fw.c
++++ b/drivers/net/ethernet/meta/fbnic/fbnic_fw.c
+@@ -1034,6 +1034,169 @@ static int fbnic_fw_parse_tsene_read_resp(void *opaque,
+ 	return err;
+ }
+
++static const struct fbnic_tlv_index fbnic_fw_log_req_index[] = {
++	FBNIC_TLV_ATTR_U32(FBNIC_FW_LOG_MSEC),
++	FBNIC_TLV_ATTR_U64(FBNIC_FW_LOG_INDEX),
++	FBNIC_TLV_ATTR_STRING(FBNIC_FW_LOG_MSG, FBNIC_FW_LOG_MAX_SIZE),
++	FBNIC_TLV_ATTR_U32(FBNIC_FW_LOG_LENGTH),
++	FBNIC_TLV_ATTR_ARRAY(FBNIC_FW_LOG_MSEC_ARRAY),
++	FBNIC_TLV_ATTR_ARRAY(FBNIC_FW_LOG_INDEX_ARRAY),
++	FBNIC_TLV_ATTR_ARRAY(FBNIC_FW_LOG_MSG_ARRAY),
++	FBNIC_TLV_ATTR_LAST
++};
++
++static int fbnic_fw_process_log_array(struct fbnic_tlv_msg **results,
++				      u16 length, u16 arr_type_idx,
++				      u16 attr_type_idx,
++				      struct fbnic_tlv_msg **tlv_array_out)
++{
++	struct fbnic_tlv_msg *attr;
++	int attr_len;
++	int err;
++
++	if (!results[attr_type_idx])
++		return -EINVAL;
++
++	tlv_array_out[0] = results[attr_type_idx];
++
++	if (!length)
++		return 0;
++
++	if (!results[arr_type_idx])
++		return -EINVAL;
++
++	attr = results[arr_type_idx];
++	attr_len = le16_to_cpu(attr->hdr.len) / sizeof(u32) - 1;
++	err = fbnic_tlv_attr_parse_array(&attr[1], attr_len, &tlv_array_out[1],
++					 fbnic_fw_log_req_index,
++					 attr_type_idx,
++					 length);
++	if (err)
++		return err;
++
++	return 0;
++}
++
++static int fbnic_fw_parse_logs(struct fbnic_dev *fbd,
++			       struct fbnic_tlv_msg **msec_tlv,
++			       struct fbnic_tlv_msg **index_tlv,
++			       struct fbnic_tlv_msg **log_tlv,
++			       int count)
++{
++	int i;
++
++	for (i = 0; i < count; i++) {
++		char log[FBNIC_FW_LOG_MAX_SIZE];
++		ssize_t len;
++		u64 index;
++		u32 msec;
++		int err;
++
++		if (!msec_tlv[i] || !index_tlv[i] || !log_tlv[i]) {
++			dev_warn(fbd->dev, "Received log message with missing attributes!\n");
++			return -EINVAL;
++		}
++
++		index = fbnic_tlv_attr_get_signed(index_tlv[i], 0);
++		msec = fbnic_tlv_attr_get_signed(msec_tlv[i], 0);
++		len = fbnic_tlv_attr_get_string(log_tlv[i], log,
++						FBNIC_FW_LOG_MAX_SIZE);
++		if (len < 0)
++			return len;
++
++		err = fbnic_fw_log_write(fbd, index, msec, log);
++		if (err)
++			return err;
++	}
++
++	return 0;
++}
++
++static int fbnic_fw_parse_log_req(void *opaque,
++				  struct fbnic_tlv_msg **results)
++{
++	struct fbnic_tlv_msg *index_tlv[FBNIC_FW_MAX_LOG_HISTORY];
++	struct fbnic_tlv_msg *msec_tlv[FBNIC_FW_MAX_LOG_HISTORY];
++	struct fbnic_tlv_msg *log_tlv[FBNIC_FW_MAX_LOG_HISTORY];
++	struct fbnic_dev *fbd = opaque;
++	u16 length;
++	int err;
++
++	length = fta_get_uint(results, FBNIC_FW_LOG_LENGTH);
++	if (length >= FBNIC_FW_MAX_LOG_HISTORY)
++		return -E2BIG;
++
++	err = fbnic_fw_process_log_array(results, length,
++					 FBNIC_FW_LOG_MSEC_ARRAY,
++					 FBNIC_FW_LOG_MSEC, msec_tlv);
++	if (err)
++		return err;
++
++	err = fbnic_fw_process_log_array(results, length,
++					 FBNIC_FW_LOG_INDEX_ARRAY,
++					 FBNIC_FW_LOG_INDEX, index_tlv);
++	if (err)
++		return err;
++
++	err = fbnic_fw_process_log_array(results, length,
++					 FBNIC_FW_LOG_MSG_ARRAY,
++					 FBNIC_FW_LOG_MSG, log_tlv);
++	if (err)
++		return err;
++
++	err = fbnic_fw_parse_logs(fbd, msec_tlv, index_tlv, log_tlv,
++				  length + 1);
++	if (err)
++		return err;
++
++	return 0;
++}
++
++int fbnic_fw_xmit_send_logs(struct fbnic_dev *fbd, bool enable,
++			    bool send_log_history)
++{
++	struct fbnic_tlv_msg *msg;
++	int err;
++
++	if (fbd->fw_cap.running.mgmt.version < MIN_FW_VER_CODE_LOG) {
++		dev_warn(fbd->dev, "Firmware version is too old to support firmware logs!\n");
++		return -EOPNOTSUPP;
++	}
++
++	msg = fbnic_tlv_msg_alloc(FBNIC_TLV_MSG_ID_LOG_SEND_LOGS_REQ);
++	if (!msg)
++		return -ENOMEM;
++
++	if (enable) {
++		err = fbnic_tlv_attr_put_flag(msg, FBNIC_SEND_LOGS);
++		if (err)
++			goto free_message;
++
++		/* Report request for version 1 of logs */
++		err = fbnic_tlv_attr_put_int(msg, FBNIC_SEND_LOGS_VERSION,
++					     FBNIC_FW_LOG_VERSION);
++		if (err)
++			goto free_message;
++
++		if (send_log_history) {
++			err = fbnic_tlv_attr_put_flag(msg,
++						      FBNIC_SEND_LOGS_HISTORY);
++			if (err)
++				goto free_message;
++		}
++	}
++
++	err = fbnic_mbx_map_tlv_msg(fbd, msg);
++	if (err)
++		goto free_message;
++
++	return 0;
++
++free_message:
++	free_page((unsigned long)msg);
++	return err;
++}
++
+ static const struct fbnic_tlv_parser fbnic_fw_tlv_parser[] = {
+ 	FBNIC_TLV_PARSER(FW_CAP_RESP, fbnic_fw_cap_resp_index,
+ 			 fbnic_fw_parse_cap_resp),
+@@ -1053,6 +1216,9 @@ static const struct fbnic_tlv_parser fbnic_fw_tlv_parser[] = {
+ 	FBNIC_TLV_PARSER(TSENE_READ_RESP,
+ 			 fbnic_tsene_read_resp_index,
+ 			 fbnic_fw_parse_tsene_read_resp),
++	FBNIC_TLV_PARSER(LOG_MSG_REQ,
++			 fbnic_fw_log_req_index,
++			 fbnic_fw_parse_log_req),
+ 	FBNIC_TLV_MSG_ERROR
+ };
+
+diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_fw.h b/drivers/net/ethernet/meta/fbnic/fbnic_fw.h
+index 555b231b38c1..fde331696fdd 100644
+--- a/drivers/net/ethernet/meta/fbnic/fbnic_fw.h
++++ b/drivers/net/ethernet/meta/fbnic/fbnic_fw.h
+@@ -22,7 +22,20 @@ struct fbnic_fw_mbx {
+ #define FBNIC_FW_VER_MAX_SIZE			32
+ // Formatted version is in the format XX.YY.ZZ_RRR_COMMIT
+ #define FBNIC_FW_CAP_RESP_COMMIT_MAX_SIZE	(FBNIC_FW_VER_MAX_SIZE - 13)
++#define FBNIC_FW_LOG_VERSION			1
+ #define FBNIC_FW_LOG_MAX_SIZE			256
++/*
++ * The max amount of logs which can fit in a single mailbox message. Firmware
++ * assumes each mailbox message is 4096B. The amount of messages supported is
++ * calculated as 4096 minus headers for message, arrays, and length minus the
++ * size of length divided by headers for each array plus the maximum LOG size,
++ * and the size of MSEC and INDEX. Put another way:
++ *
++ * MAX_LOG_HISTORY = ((4096 - TLV_HDR_SZ * 5 - LENGTH_SZ)
++ *                    / (FBNIC_FW_LOG_MAX_SIZE + TLV_HDR_SZ * 3 + MSEC_SZ
++ *                       + INDEX_SZ))
++ */
++#define FBNIC_FW_MAX_LOG_HISTORY		14
+
+ struct fbnic_fw_ver {
+ 	u32 version;
+@@ -82,6 +95,8 @@ int fbnic_fw_xmit_fw_write_chunk(struct fbnic_dev *fbd,
+ 				 int cancel_error);
+ int fbnic_fw_xmit_tsene_read_msg(struct fbnic_dev *fbd,
+ 				 struct fbnic_fw_completion *cmpl_data);
++int fbnic_fw_xmit_send_logs(struct fbnic_dev *fbd, bool enable,
++			    bool send_log_history);
+ struct fbnic_fw_completion *fbnic_fw_alloc_cmpl(u32 msg_type);
+ void fbnic_fw_put_cmpl(struct fbnic_fw_completion *cmpl_data);
+
+@@ -125,6 +140,9 @@ enum {
+ 	FBNIC_TLV_MSG_ID_FW_FINISH_UPGRADE_RESP		= 0x29,
+ 	FBNIC_TLV_MSG_ID_TSENE_READ_REQ			= 0x3C,
+ 	FBNIC_TLV_MSG_ID_TSENE_READ_RESP		= 0x3D,
++	FBNIC_TLV_MSG_ID_LOG_SEND_LOGS_REQ		= 0x43,
++	FBNIC_TLV_MSG_ID_LOG_MSG_REQ			= 0x44,
++	FBNIC_TLV_MSG_ID_LOG_MSG_RESP			= 0x45,
+ };
+
+ #define FBNIC_FW_CAP_RESP_VERSION_MAJOR		CSR_GENMASK(31, 24)
+@@ -199,4 +217,22 @@ enum {
+ 	FBNIC_FW_FINISH_UPGRADE_MSG_MAX
+ };
+
++enum {
++	FBNIC_SEND_LOGS				= 0x0,
++	FBNIC_SEND_LOGS_VERSION			= 0x1,
++	FBNIC_SEND_LOGS_HISTORY			= 0x2,
++	FBNIC_SEND_LOGS_MSG_MAX
++};
++
++enum {
++	FBNIC_FW_LOG_MSEC			= 0x0,
++	FBNIC_FW_LOG_INDEX			= 0x1,
++	FBNIC_FW_LOG_MSG			= 0x2,
++	FBNIC_FW_LOG_LENGTH			= 0x3,
++	FBNIC_FW_LOG_MSEC_ARRAY			= 0x4,
++	FBNIC_FW_LOG_INDEX_ARRAY		= 0x5,
++	FBNIC_FW_LOG_MSG_ARRAY			= 0x6,
++	FBNIC_FW_LOG_MSG_MAX
++};
++
+ #endif /* _FBNIC_FW_H_ */
 --
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.47.1
