@@ -1,215 +1,108 @@
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A2C326C3B8;
-	Wed,  2 Jul 2025 12:05:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C5D26B77A
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 12:06:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751457955; cv=none; b=VExL/KJmK251puw4k5IwJE8q01jh0ZbdHIy6FpiRxn5DJ35hEuMR/lQzjJxvqdhEU5cLmMJRyZFvYKiPriIGjLxNUNUJ2DJyVOXN2uRtUMZYa3xrc/yAmp9k/pw3o6GUBemlPQ24lQ3GgLbyto532Psjesgdf2AYPpJQdgzyq0M=
+	t=1751457982; cv=none; b=fZ4EVDXRpxN8UUidZT2eitWWL4kxhxLDYDP0EWRAkPmSzTQEjyeAxuhaEKcN4Ckh1FRQajYKw8fIbX/JDu+djCTeKvmH3gUMFj2/W3MPY/i0jenVHtRxWi1wmwBEdlK3m5eeH/xjFYq3C0nmwGfMNmbde1Y+3R2afI5zgc+a/QU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751457955; c=relaxed/simple;
-	bh=otXCCYDqXbZXzkKorXyslIDNgdIqmIjtatTHokyVyaY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZBq5w8j6oC/A45Cj/nHnArTEiWW14kqBY6ri3T6zGwEmISdgqBJTY+jLkqkWeVSDZZPH/Syg0Va4disaRH6m8OJV0ThW+nUJSFXPYGgdZUryfeOVAj+M0+UKFVNrf21qOzkZfVzHQknOcxtTpsWGQo8zZA40TFWquCublYjwCgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-CSE-ConnectionGUID: r+eVYdDBQ12wGVrnc62sUw==
-X-CSE-MsgGUID: jwJuG788SIe8xFaxH6/DJw==
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 02 Jul 2025 21:05:45 +0900
-Received: from localhost.localdomain (unknown [10.226.92.89])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 5BBDC41F551C;
-	Wed,  2 Jul 2025 21:05:42 +0900 (JST)
-From: Biju Das <biju.das.jz@bp.renesas.com>
-To: Marc Kleine-Budde <mkl@pengutronix.de>,
-	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>,
-	linux-can@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Biju Das <biju.das.au@gmail.com>
-Subject: [PATCH v2] can: rcar_canfd: Drop unused macros
-Date: Wed,  2 Jul 2025 13:05:29 +0100
-Message-ID: <20250702120539.98490-1-biju.das.jz@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1751457982; c=relaxed/simple;
+	bh=GVNj0GiDbzEfuPNlWlITePA20oGFkxhZ//VQ6Wqj9z0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Okk399cli8jgdiu3V2xjrNA3TZ45h2ztQukdhmVmexTdh1DVFmu+H8YGrWfOECA10zNMwGW9azwqXYkOL6PtoTjHkB7Kg+sfmROZjq92cJse3cngKALaUAQhUQI96ZuzG9n9ix/tVRESp2ftYOWu4R5LK97oHKx50Ji7RtXOnoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=elPdaOBf; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="elPdaOBf"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4538a2fc7ffso45517895e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 05:06:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751457979; x=1752062779; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4I9wHRK6ycL/nw5skCVK6BibKiZIXkW4VmffJ6mPK24=;
+        b=elPdaOBf1Y1osT08GlI0yQdY9yz4+VCtXoORGaEDDCY6UpcbTyPRcbfPBqjBONJVnx
+         MmhuaPOftEXpMQBKVAKHoeXygZ5GBU9TwsTIduNp3yrNBhLzfMmkKlZKb1iWcLUu9KgI
+         7+Blwbrbc5wPF3Uo98ROKzmJMaJX+7urND9kwFBD7IMGk2FLoCclyVkPxEhvDiQA7X6D
+         UXe77TD3LlZqg/anNUEQ3Huokik7tBwmQQGqmKnUrJRy1A7ZKjvRvDaeUSMyMqAIQfKL
+         jt6SEqYCwGM4FQuD0sJ+hYi1Hdc/z4TwR6l5UJcdc2bortlRVmFZbmCMY5VunfmHTQqv
+         AZfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751457979; x=1752062779;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4I9wHRK6ycL/nw5skCVK6BibKiZIXkW4VmffJ6mPK24=;
+        b=xSS7IlNl1pdLfK4mrvHk4NUTFWL3dsJo+zyxGl/PFneEHxoZb11s/kQTKAMLEttTS1
+         9vgdfwuie4DYgoQGF7e/0Iq/yy6MZW98w0IgXJVe3nb0nqRxXTq9NnRCm8OFNM5s5LRz
+         iOeX3flzy1Z2omKF9BkpqYn8G0pcDWIe/LbHPXos0DnpH3hU/RyEoMq1fMaDWabJUYCU
+         VaGdBae7umkfpkpYDXufJ1ixBEvaGyLdU+feFqDHiwU6YDSh2IFSgUbr5uBRLk8cMceM
+         g2P75rouQwyp1ApgB5MXvKzwHG3jOFRqT46GdfhTRZfHShe9a71vZHBL26UZXuinbjv5
+         COlg==
+X-Forwarded-Encrypted: i=1; AJvYcCVR34ee0NMBJpPvnuGwwJGGF4KXIoT+vwGD51B/I2vDK5Q9QcdraKaFa1CcC8UcfQEhQakQj4CudzgpnDE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGfiDysxI7fzR2FLHGVDOhIw7WzWnOMs9J06v9t+ORz45+qGVx
+	Dd4T4prmtu5Whq7B0DFpZNSE+c4UDUqZxrjOTvgcLfa9ixMhvlWkiY8qTmZr22qLaMNxQzpWiYJ
+	MSoxPV+8=
+X-Gm-Gg: ASbGncsAZShea4nqRJcC8WuGnIziTS5AHApPs6s2tBR1Gl+MgYmvUgMUH51tPjdwJXG
+	ZUwJJUpe3hJYSw7aLDESiMG13jzJZWGH6mD9875uTstCXD665muyj5XqbjQieOiywjhju/F9yVO
+	u1vFJvxW/sdiE4vDqvfuJTDbJYx/4kKCtN3bXiI4cS5JP7ZOq9FEwzibpJrmmrgGXgBV1y0YREf
+	OytU6M/lHiugWP7POKWdKHmxc58PItZMbPFyqPVYOzwx0cX69qlnJYlPMCM8u3/KZWgV2m1tMOB
+	RK68M0KCScMws3UHLuRFohrbtfGc0vin4HLHNH73zrpa69XuhZW/QMODGzRjmtKbkqtFDlYZI99
+	c2hygMDVJ3J+eIFO13kuHvGRQDckx
+X-Google-Smtp-Source: AGHT+IFiGQ8eoDbIef8H5WgcGBsaUK7l+LIPHU5+0N6yFyzZ/rasF17jb2K+ACo904sf9rWYtcqByA==
+X-Received: by 2002:a05:600c:c08d:b0:453:8e3d:26ef with SMTP id 5b1f17b1804b1-454a3c22568mr18064675e9.6.1751457979384;
+        Wed, 02 Jul 2025 05:06:19 -0700 (PDT)
+Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538233bd14sm230508525e9.2.2025.07.02.05.06.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Jul 2025 05:06:18 -0700 (PDT)
+Message-ID: <f5ebf0d6-2f0b-45cc-b99a-b786e5df9edc@linaro.org>
+Date: Wed, 2 Jul 2025 13:06:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/5] Introduce "non-pixel" sub node within iris video
+ node
+To: Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Krzysztof Kozlowski <krzk@kernel.org>,
+ Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Abhinav Kumar <abhinav.kumar@linux.dev>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250627-video_cb-v3-0-51e18c0ffbce@quicinc.com>
+ <5f90547d-945a-4e26-b36c-75f2d8a1af97@kernel.org>
+ <eab8d79f-7188-9537-9176-3e4d22f0978a@quicinc.com>
+ <5ad418d9-8199-43c9-a477-1e3b939c054c@kernel.org>
+ <7b6db4fa-2f73-376d-4eb3-64c1c7e6cda3@quicinc.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <7b6db4fa-2f73-376d-4eb3-64c1c7e6cda3@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Drop unused macros from the rcar_canfd.c.
+On 02/07/2025 13:01, Vikash Garodia wrote:
+>> Anyway, in other messages I explained what is missing. You are changing
+>> existing hardware and you clearly must explain how existing hardware is
+>> affected, how can we reproduce it, how users are affected.
+> Exactly all of these i have explained in the commit message. The limitation with
+> existing hardware binding usage and how my new approach mitigates that limition.
+> 
+> Coming to usecase, i made a generic comment saying usecases which needs higher
+> IOVA, i can add the explicit detail about usecase like 8k or higher
+> concurrencies like 32 or higher concurrent sessions.
 
-Reported-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Closes: https://lore.kernel.org/all/7ff93ff9-f578-4be2-bdc6-5b09eab64fe6@wanadoo.fr/
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+Why not make this change for a new SoC, instead of an existing ?
+
+That way you don't have to make the argument for retrospective ABI changes.
+
 ---
-v1->v2:
- * Dropped the Rb tags.
- * Restored simple simple bit definitions as it serve as documentation.
- * Restored register offsets will become anonymous gaps when the register
-   offsets are replaced by C structs.
----
- drivers/net/can/rcar/rcar_canfd.c | 93 -------------------------------
- 1 file changed, 93 deletions(-)
-
-diff --git a/drivers/net/can/rcar/rcar_canfd.c b/drivers/net/can/rcar/rcar_canfd.c
-index 417d9196f41e..b3c8c592fb0e 100644
---- a/drivers/net/can/rcar/rcar_canfd.c
-+++ b/drivers/net/can/rcar/rcar_canfd.c
-@@ -224,8 +224,6 @@
- 
- /* RSCFDnCFDRFPTRx */
- #define RCANFD_RFPTR_RFDLC(x)		(((x) >> 28) & 0xf)
--#define RCANFD_RFPTR_RFPTR(x)		(((x) >> 16) & 0xfff)
--#define RCANFD_RFPTR_RFTS(x)		(((x) >> 0) & 0xffff)
- 
- /* RSCFDnCFDRFFDSTSx */
- #define RCANFD_RFFDSTS_RFFDF		BIT(2)
-@@ -257,12 +255,9 @@
- /* RSCFDnCFDCFIDk */
- #define RCANFD_CFID_CFIDE		BIT(31)
- #define RCANFD_CFID_CFRTR		BIT(30)
--#define RCANFD_CFID_CFID_MASK(x)	((x) & 0x1fffffff)
- 
- /* RSCFDnCFDCFPTRk */
- #define RCANFD_CFPTR_CFDLC(x)		(((x) & 0xf) << 28)
--#define RCANFD_CFPTR_CFPTR(x)		(((x) & 0xfff) << 16)
--#define RCANFD_CFPTR_CFTS(x)		(((x) & 0xff) << 0)
- 
- /* RSCFDnCFDCFFDCSTSk */
- #define RCANFD_CFFDCSTS_CFFDF		BIT(2)
-@@ -328,59 +323,6 @@
- #define RCANFD_CFPCTR(gpriv, ch, idx) \
- 	((gpriv)->info->regs->cfpctr + (0x0c * (ch)) + (0x04 * (idx)))
- 
--/* RSCFDnCFDFESTS / RSCFDnFESTS */
--#define RCANFD_FESTS			(0x0238)
--/* RSCFDnCFDFFSTS / RSCFDnFFSTS */
--#define RCANFD_FFSTS			(0x023c)
--/* RSCFDnCFDFMSTS / RSCFDnFMSTS */
--#define RCANFD_FMSTS			(0x0240)
--/* RSCFDnCFDRFISTS / RSCFDnRFISTS */
--#define RCANFD_RFISTS			(0x0244)
--/* RSCFDnCFDCFRISTS / RSCFDnCFRISTS */
--#define RCANFD_CFRISTS			(0x0248)
--/* RSCFDnCFDCFTISTS / RSCFDnCFTISTS */
--#define RCANFD_CFTISTS			(0x024c)
--
--/* RSCFDnCFDTMCp / RSCFDnTMCp */
--#define RCANFD_TMC(p)			(0x0250 + (0x01 * (p)))
--/* RSCFDnCFDTMSTSp / RSCFDnTMSTSp */
--#define RCANFD_TMSTS(p)			(0x02d0 + (0x01 * (p)))
--
--/* RSCFDnCFDTMTRSTSp / RSCFDnTMTRSTSp */
--#define RCANFD_TMTRSTS(y)		(0x0350 + (0x04 * (y)))
--/* RSCFDnCFDTMTARSTSp / RSCFDnTMTARSTSp */
--#define RCANFD_TMTARSTS(y)		(0x0360 + (0x04 * (y)))
--/* RSCFDnCFDTMTCSTSp / RSCFDnTMTCSTSp */
--#define RCANFD_TMTCSTS(y)		(0x0370 + (0x04 * (y)))
--/* RSCFDnCFDTMTASTSp / RSCFDnTMTASTSp */
--#define RCANFD_TMTASTS(y)		(0x0380 + (0x04 * (y)))
--/* RSCFDnCFDTMIECy / RSCFDnTMIECy */
--#define RCANFD_TMIEC(y)			(0x0390 + (0x04 * (y)))
--
--/* RSCFDnCFDTXQCCm / RSCFDnTXQCCm */
--#define RCANFD_TXQCC(m)			(0x03a0 + (0x04 * (m)))
--/* RSCFDnCFDTXQSTSm / RSCFDnTXQSTSm */
--#define RCANFD_TXQSTS(m)		(0x03c0 + (0x04 * (m)))
--/* RSCFDnCFDTXQPCTRm / RSCFDnTXQPCTRm */
--#define RCANFD_TXQPCTR(m)		(0x03e0 + (0x04 * (m)))
--
--/* RSCFDnCFDTHLCCm / RSCFDnTHLCCm */
--#define RCANFD_THLCC(m)			(0x0400 + (0x04 * (m)))
--/* RSCFDnCFDTHLSTSm / RSCFDnTHLSTSm */
--#define RCANFD_THLSTS(m)		(0x0420 + (0x04 * (m)))
--/* RSCFDnCFDTHLPCTRm / RSCFDnTHLPCTRm */
--#define RCANFD_THLPCTR(m)		(0x0440 + (0x04 * (m)))
--
--/* RSCFDnCFDGTINTSTS0 / RSCFDnGTINTSTS0 */
--#define RCANFD_GTINTSTS0		(0x0460)
--/* RSCFDnCFDGTINTSTS1 / RSCFDnGTINTSTS1 */
--#define RCANFD_GTINTSTS1		(0x0464)
--/* RSCFDnCFDGTSTCFG / RSCFDnGTSTCFG */
--#define RCANFD_GTSTCFG			(0x0468)
--/* RSCFDnCFDGTSTCTR / RSCFDnGTSTCTR */
--#define RCANFD_GTSTCTR			(0x046c)
--/* RSCFDnCFDGLOCKK / RSCFDnGLOCKK */
--#define RCANFD_GLOCKK			(0x047c)
- /* RSCFDnCFDGRMCFG */
- #define RCANFD_GRMCFG			(0x04fc)
- 
-@@ -398,12 +340,6 @@
- /* RSCFDnGAFLXXXj offset */
- #define RCANFD_C_GAFL_OFFSET		(0x0500)
- 
--/* RSCFDnRMXXXq -> RCANFD_C_RMXXX(q) */
--#define RCANFD_C_RMID(q)		(0x0600 + (0x10 * (q)))
--#define RCANFD_C_RMPTR(q)		(0x0604 + (0x10 * (q)))
--#define RCANFD_C_RMDF0(q)		(0x0608 + (0x10 * (q)))
--#define RCANFD_C_RMDF1(q)		(0x060c + (0x10 * (q)))
--
- /* RSCFDnRFXXx -> RCANFD_C_RFXX(x) */
- #define RCANFD_C_RFOFFSET	(0x0e00)
- #define RCANFD_C_RFID(x)	(RCANFD_C_RFOFFSET + (0x10 * (x)))
-@@ -423,17 +359,6 @@
- #define RCANFD_C_CFDF(ch, idx, df) \
- 	(RCANFD_C_CFOFFSET + 0x08 + (0x30 * (ch)) + (0x10 * (idx)) + (0x04 * (df)))
- 
--/* RSCFDnTMXXp -> RCANFD_C_TMXX(p) */
--#define RCANFD_C_TMID(p)		(0x1000 + (0x10 * (p)))
--#define RCANFD_C_TMPTR(p)		(0x1004 + (0x10 * (p)))
--#define RCANFD_C_TMDF0(p)		(0x1008 + (0x10 * (p)))
--#define RCANFD_C_TMDF1(p)		(0x100c + (0x10 * (p)))
--
--/* RSCFDnTHLACCm */
--#define RCANFD_C_THLACC(m)		(0x1800 + (0x04 * (m)))
--/* RSCFDnRPGACCr */
--#define RCANFD_C_RPGACC(r)		(0x1900 + (0x04 * (r)))
--
- /* R-Car Gen4 Classical and CAN FD mode specific register map */
- #define RCANFD_GEN4_GAFL_OFFSET		(0x1800)
- 
-@@ -452,12 +377,6 @@ struct rcar_canfd_f_c {
- /* RSCFDnCFDGAFLXXXj offset */
- #define RCANFD_F_GAFL_OFFSET		(0x1000)
- 
--/* RSCFDnCFDRMXXXq -> RCANFD_F_RMXXX(q) */
--#define RCANFD_F_RMID(q)		(0x2000 + (0x20 * (q)))
--#define RCANFD_F_RMPTR(q)		(0x2004 + (0x20 * (q)))
--#define RCANFD_F_RMFDSTS(q)		(0x2008 + (0x20 * (q)))
--#define RCANFD_F_RMDF(q, b)		(0x200c + (0x04 * (b)) + (0x20 * (q)))
--
- /* RSCFDnCFDRFXXx -> RCANFD_F_RFXX(x) */
- #define RCANFD_F_RFOFFSET(gpriv)	((gpriv)->info->regs->rfoffset)
- #define RCANFD_F_RFID(gpriv, x)		(RCANFD_F_RFOFFSET(gpriv) + (0x80 * (x)))
-@@ -482,23 +401,11 @@ struct rcar_canfd_f_c {
- 	(RCANFD_F_CFOFFSET(gpriv) + 0x0c + (0x180 * (ch)) + (0x80 * (idx)) + \
- 	 (0x04 * (df)))
- 
--/* RSCFDnCFDTMXXp -> RCANFD_F_TMXX(p) */
--#define RCANFD_F_TMID(p)		(0x4000 + (0x20 * (p)))
--#define RCANFD_F_TMPTR(p)		(0x4004 + (0x20 * (p)))
--#define RCANFD_F_TMFDCTR(p)		(0x4008 + (0x20 * (p)))
--#define RCANFD_F_TMDF(p, b)		(0x400c + (0x20 * (p)) + (0x04 * (b)))
--
--/* RSCFDnCFDTHLACCm */
--#define RCANFD_F_THLACC(m)		(0x6000 + (0x04 * (m)))
--/* RSCFDnCFDRPGACCr */
--#define RCANFD_F_RPGACC(r)		(0x6400 + (0x04 * (r)))
--
- /* Constants */
- #define RCANFD_FIFO_DEPTH		8	/* Tx FIFO depth */
- #define RCANFD_NAPI_WEIGHT		8	/* Rx poll quota */
- 
- #define RCANFD_NUM_CHANNELS		8	/* Eight channels max */
--#define RCANFD_CHANNELS_MASK		BIT((RCANFD_NUM_CHANNELS) - 1)
- 
- #define RCANFD_GAFL_PAGENUM(entry)	((entry) / 16)
- #define RCANFD_CHANNEL_NUMRULES		1	/* only one rule per channel */
--- 
-2.43.0
-
+bod
