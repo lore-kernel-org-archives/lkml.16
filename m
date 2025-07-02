@@ -1,161 +1,123 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43BA2265CD0;
-	Wed,  2 Jul 2025 11:39:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B03265CD0;
+	Wed,  2 Jul 2025 11:39:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751456374; cv=none; b=Iu3KZUergqVp9kbPutZIxdKgjYnxnEafpgAl1gySfgk0JPQs6tG/mWY6pJNasaRrFwT8TVluUq3jZq3LlYMx8OTeUDS+BqS+dDt6Q7Z02A14jVCNx6Xp+SxXbYc5wczH6fO5utFxuA5+KwZn4VLvXvHP0FMTT7i8ZFwcUto8Lx4=
+	t=1751456393; cv=none; b=aKNr4Vh2x6ls9MnqxdpNus2/8FQNZqsV0CEhlGC9+R2J1pWXlzGZJBxhq7gsjm1e/gABlZXGeZAXZBP6wM827LUfysMHEWF0lXdkRYnl4TOosk1PlP3Ow9/ud8Hgn4DLLMQ/zivg/jDjfwM1bGgA+gSNaL+uKV9B6Yq7/ygUWuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751456374; c=relaxed/simple;
-	bh=v6saksW8Caqa3y5KRNV+vSZS7ie/jhuoui51AlwXf7k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hrcIm5KSPQR+KynNgeKGYDPTcZ+XH6eZBbNjVL7TfxR9vxy9sjUsv7ndpoKz7JBvlo9+UyXq9ixycAj08NV35YbHI4nZxmwD/vkj0kLcdgww/R9+sqvsyUkFZGCoJ/Ba+zHV7a1v4wCB4Etd6Y4yPVY50ZIrIPYW4NkvksujVso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i12nkX6K; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751456393; c=relaxed/simple;
+	bh=p00VWiUPzkdDyPB1nCYCXxNBRT+8vis4nL3VseuWccI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Wj0NvrsdgQ17wydBVIzo5dL1enN81sEUQ2iwNGrlmvWfbDtcrU4B7DsXpWxn8eaW7Zm2UliBSDndRZL0qDxfvNVdTjUJF8DqmBAzxmMqtoEJNdudtoBpHzN5JLsvGCiiAk9vaSDsAsp6bx9p6tmkQUadbqkPNFjdAGE3pWkz4QI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=oOmx2oeS; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i12nkX6K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751456372; x=1782992372;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=v6saksW8Caqa3y5KRNV+vSZS7ie/jhuoui51AlwXf7k=;
-  b=i12nkX6KePKsTzSyCbJg7mcAKzn4I7HwVXH1Q+pX2ZLor97N2rDK1JlI
-   625fUfGZt5BeSReeNCoL8z3MxGb5deHdDUwtYRvJDBoBYTfrBcZIvEjtx
-   cjxlQMPHDBTZHuEHmFPQMSh86SfcdWNRgwy5oxeens3O11QS5/OlSzYwL
-   Aum2x7D9LPHaES6PEWKuRCtEZWx9VlpplJWlVNpCCywC6oW0llFj5ybpI
-   pT5vfwp8RBGDkpqOQD4s05+yD/21+uJmCaHSRivHW/rD2oEcVLxlYh99H
-   GzipJxDo9CSSe9tk60Ugt4caTj0/KiI0iDb5rYkU5F8tT45XXQs8kRVEh
-   w==;
-X-CSE-ConnectionGUID: lJMvkXwYQ4O29/jIE43FXw==
-X-CSE-MsgGUID: AOIUzDZBSlado5EPrEXHeQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="53839539"
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="53839539"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 04:39:30 -0700
-X-CSE-ConnectionGUID: mlpi9m3FSByAEgGF4mUwsw==
-X-CSE-MsgGUID: kJgdkV2/ROyIIrCgnKDzDQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="184998772"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 04:39:25 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uWvo8-0000000BuBI-3Jry;
-	Wed, 02 Jul 2025 14:39:20 +0300
-Date: Wed, 2 Jul 2025 14:39:20 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Anup Patel <apatel@ventanamicro.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Alexandre Ghiti <alex@ghiti.fr>, Len Brown <lenb@kernel.org>,
-	Sunil V L <sunilvl@ventanamicro.com>,
-	Rahul Pathak <rpathak@ventanamicro.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Atish Patra <atish.patra@linux.dev>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 15/24] ACPI: property: Add support for cells property
-Message-ID: <aGUaaOQaya-SaasR@smile.fi.intel.com>
-References: <20250702051345.1460497-1-apatel@ventanamicro.com>
- <20250702051345.1460497-16-apatel@ventanamicro.com>
- <CAJZ5v0iYYuK2GF2Pg3NiO4vLFzoYm6Q3Dnk5O2DkMJm1R3qSfQ@mail.gmail.com>
- <aGUaFX9WgTW1I_ZO@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oOmx2oeS"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 562BLnSF010373;
+	Wed, 2 Jul 2025 11:39:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Nh0RTnBGgLzzQGynJ72K11XlI/jzJYOaADoX7NzOJ6o=; b=oOmx2oeSWM19Nbc/
+	h7SgAYoZ0ghxZDTIRTnVNWY3viiDH2aFQvEIN6WqvfHDOUaCY+x15Kuc8Ogu/iD+
+	utqmNEA+soBKMMgXbs7/S4qYo0a3Bv4tEuB4NjsF4WZ7uwKy/DWixlj/e+QMlmQC
+	LGxDtbX/B2OGDlN73MCoW5woYAXiUw4dvUzPOrxK1QUBI5NQiB45wVZH+6PFZ1PI
+	uhavbWEk9HJkIclsjcKtb7pACVgjCEypHRY0+H6o/QfgeY1sWKLYxf+3lHf6dCnC
+	/6+AiO+gvcTwJrwjBqK535x7sA6YZkg6WBXnID0KqYYkg6MovSYciyw1f/6Eby/H
+	GLP+xQ==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47mw309e36-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Jul 2025 11:39:46 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 562BdkTC016484
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 2 Jul 2025 11:39:46 GMT
+Received: from [10.50.58.161] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 2 Jul 2025
+ 04:39:42 -0700
+Message-ID: <05ba89d5-3f1d-7f57-d5ae-685198dde01d@quicinc.com>
+Date: Wed, 2 Jul 2025 17:09:40 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aGUaFX9WgTW1I_ZO@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
-
-On Wed, Jul 02, 2025 at 02:37:58PM +0300, Andy Shevchenko wrote:
-> On Wed, Jul 02, 2025 at 12:20:55PM +0200, Rafael J. Wysocki wrote:
-> > On Wed, Jul 2, 2025 at 7:16 AM Anup Patel <apatel@ventanamicro.com> wrote:
-
-...
-
-> > >  static int acpi_fwnode_get_reference_args(const struct fwnode_handle *fwnode,
-> > >                                           const char *propname, const char *nargs_prop,
-> > >                                           unsigned int args_count, unsigned int index,
-> 
-> > >         const struct acpi_device_data *data;
-> > >         struct fwnode_handle *ref_fwnode;
-> > >         struct acpi_device *device;
-> > > +       unsigned int nargs_count;
-> > >         int ret, idx = 0;
-> 
-> > > +                       nargs_count = acpi_fwnode_get_args_count(device, nargs_prop);
-> > 
-> > I think it should work the same way as it used to for the callers that
-> > pass args_count, so maybe
-> > 
-> > if (!args_count)
-> >         args_count = acpi_fwnode_get_args_count(device, nargs_prop);
-> 
-> But this is different variable.
-> 
-> > >                         element++;
-> > > -
-> > >                         ret = acpi_get_ref_args(idx == index ? args : NULL,
-> > >                                                 acpi_fwnode_handle(device),
-> > > -                                               &element, end, args_count);
-> > > +                                               &element, end,
-> > > +                                               nargs_count ? nargs_count : args_count);
-> > 
-> > And this change would not be necessary?
-> 
-> This is not the same check as proposed above.
-> But this can be made shorter with Elvis in use:
-> 
-> 						&element, end, nargs_count ?: args_count);
-> 
-> > And analogously below.
-> 
-> And below. And in case if there is a new proposal to have
-> 
-> 	if (!nargs_count)
-
-I meant
-
-	if (!nargs_prop)
-
-here of course.
-
-> 		args_count = acpi_fwnode_get_args_count(device, nargs_prop);
-> 
-> that is exactly what I asked to drop as it's included in the
-> acpi_fwnode_get_args_count() already, i.e. no need to check this in
-> the caller and in the callee.
-> 
-> > >                         if (ret < 0)
-> > >                                 return ret;
-
--- 
-With Best Regards,
-Andy Shevchenko
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v3 2/5] media: iris: register and configure non-pixel node
+ as platform device
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+        Dikshita Agarwal
+	<quic_dikshita@quicinc.com>,
+        Abhinav Kumar <abhinav.kumar@linux.dev>,
+        "Bryan
+ O'Donoghue" <bryan.odonoghue@linaro.org>,
+        Mauro Carvalho Chehab
+	<mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250627-video_cb-v3-0-51e18c0ffbce@quicinc.com>
+ <20250627-video_cb-v3-2-51e18c0ffbce@quicinc.com>
+ <156729ff-86f6-49a9-8b3c-7d0fd6737fb9@kernel.org>
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+In-Reply-To: <156729ff-86f6-49a9-8b3c-7d0fd6737fb9@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=CY4I5Krl c=1 sm=1 tr=0 ts=68651a83 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10
+ a=xP6s1nvhhRLa_WC7hBcA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: bELSOmMpHGCbGnSJGPc6VDgMUwNOJPlZ
+X-Proofpoint-GUID: bELSOmMpHGCbGnSJGPc6VDgMUwNOJPlZ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDA5NCBTYWx0ZWRfX+GHeckRbH7BM
+ Z+lmAYXQS7mpXscqPNPbpferBg5B6PJ3zQ5dmIC5pnVdUS9PKHl0rlT1yqMOtBQng54GUAxhUg+
+ j3H4drn1rIuGhrL9v5m3xUry+Fr6sgxpEPAth3v/FbUXVoOK/3+TlZDBQ+FqMyo4d2L30DbKj5t
+ 3a+Rv4LJnYXHN/IYOY9U8YJizV3soK6KIPcfCrtVUB0cYqF6KMJVXrcKWvLok3Tv6D6miN6/dCL
+ PiRiXYch5znitcvOS02LFASWRqQiNJTWxr1Q3nck7Gpcx1EahE4RYmQsTkzzpVWpQ5vPbBr6qZf
+ kUirdJYSo6+7W4eF38lJYekDA40zHGUFF+fBLvCvDJUE2VvwjOBv/trhqlmZZwxuGINA4WdKos6
+ FeZB2BMTbRAof1RhMScx71qEPRGZIP9brpVQTM8Z6Bs98ff/4qOAvaaYLTlJAwgDvwkJ2VTF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-02_01,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 mlxlogscore=949 priorityscore=1501 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 phishscore=0 suspectscore=0 bulkscore=0
+ malwarescore=0 impostorscore=0 spamscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2507020094
 
 
+On 7/2/2025 4:34 PM, Krzysztof Kozlowski wrote:
+> On 27/06/2025 17:48, Vikash Garodia wrote:
+>>  
+>> +static int iris_init_non_pixel_node(struct iris_core *core)
+>> +{
+>> +	struct platform_device_info info;
+>> +	struct platform_device *pdev;
+>> +	struct device_node *np_node;
+>> +	int ret;
+>> +
+>> +	np_node = of_get_child_by_name(core->dev->of_node, "non_pixel");
+> 
+> Never tested.
+Yes, thats correct, but it have been sorted out now.
+
+> 
+> Best regards,
+> Krzysztof
