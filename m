@@ -1,171 +1,123 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 659C1238177
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 08:42:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 745F922DA1B;
+	Wed,  2 Jul 2025 08:42:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751445742; cv=none; b=ZNRrSINEoq+EVtIcS7+L6gG8g7bab144HYW1Td/VIMDZR2vwXxpVwxIZUUCMVQqt/7SZqnof9D22Y65q6RCSWS30IiCesBNP358WaTIrJrazZkP7Ct5+561CzJANlXc8qUpAiMWn/WjAD+I7gtsohVHB3ZYybAScUW2Qj6BoPOY=
+	t=1751445773; cv=none; b=k7lHisfOH6PsNiBsmuBQ2xZoWuqkL/RwdY39REVWMgINurnQv6Pb3bsGCGMzew+8ScDH00lFNctaftpZYJi6uGID5vwmi4Xo87VWgB68FZKl9fQXFCp+vIZ2OA/iKi0+QK7vqYLjzG8IRC2yLZmXHg2U9GXn8Ww8zuvTJRSlM+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751445742; c=relaxed/simple;
-	bh=n3lGFbe4VAuGNEMCQBO8DFMLi0H9T5mjz8s6f0ODa3E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sEm843bBNq04FHS0Ai6MoyhWc9JBVaba+byARrsI+hbfIAs7h0VFaMVkTRbZg2KGq14lv46jSAIxws2uB2UPYjK0QmZF9+IppFdid8mWUxOid4lae3PuPuWSVl/UXVJ3s1RRE54askWx1ozAqPFBloyhV9M421hzT0f7l/wEkfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=KPvIdnrf; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1tT4+xW/; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=KPvIdnrf; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1tT4+xW/; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="KPvIdnrf";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1tT4+xW/";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="KPvIdnrf";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1tT4+xW/"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 7DF342116E;
-	Wed,  2 Jul 2025 08:42:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751445737; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jU2bqc1mBirNwkpAEUTKLOgtJSq8z+qHvFX/1pA5K3g=;
-	b=KPvIdnrf2W5r/V8c0HlZjQsYbIa913azRk6tifhUjd1gfC/R6iakGDF7DNruBeci4IDTKT
-	jX07h5GlvmqRiJpJ7n0+bjSNHKQ/tVDfHuQOl8IhM1QPfmwjJ6oRFvSapbJi4cXLitUzJ5
-	h1bXqsGoq1DzndVnxfqTrJJGopeMw9Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751445737;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jU2bqc1mBirNwkpAEUTKLOgtJSq8z+qHvFX/1pA5K3g=;
-	b=1tT4+xW/ZzRfq9fMuYAiXP/y58cdzahxouxX1YBZav2YWJWxcqQXLMOx2yGca/05YoUpm0
-	r43CuAimn8u0kCAQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=KPvIdnrf;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="1tT4+xW/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751445737; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jU2bqc1mBirNwkpAEUTKLOgtJSq8z+qHvFX/1pA5K3g=;
-	b=KPvIdnrf2W5r/V8c0HlZjQsYbIa913azRk6tifhUjd1gfC/R6iakGDF7DNruBeci4IDTKT
-	jX07h5GlvmqRiJpJ7n0+bjSNHKQ/tVDfHuQOl8IhM1QPfmwjJ6oRFvSapbJi4cXLitUzJ5
-	h1bXqsGoq1DzndVnxfqTrJJGopeMw9Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751445737;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jU2bqc1mBirNwkpAEUTKLOgtJSq8z+qHvFX/1pA5K3g=;
-	b=1tT4+xW/ZzRfq9fMuYAiXP/y58cdzahxouxX1YBZav2YWJWxcqQXLMOx2yGca/05YoUpm0
-	r43CuAimn8u0kCAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 514151369C;
-	Wed,  2 Jul 2025 08:42:16 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id AR7VEOjwZGgsUgAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Wed, 02 Jul 2025 08:42:16 +0000
-Date: Wed, 2 Jul 2025 10:42:14 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
-	Byungchul Park <byungchul@sk.com>,
-	Gregory Price <gourry@gourry.net>,
-	Ying Huang <ying.huang@linux.alibaba.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Pedro Falcato <pfalcato@suse.de>, Rik van Riel <riel@surriel.com>,
-	Harry Yoo <harry.yoo@oracle.com>
-Subject: Re: [PATCH v1 2/4] mm: smaller folio_pte_batch() improvements
-Message-ID: <aGTw5ipC-ITJGfv0@localhost.localdomain>
-References: <20250627115510.3273675-1-david@redhat.com>
- <20250627115510.3273675-3-david@redhat.com>
+	s=arc-20240116; t=1751445773; c=relaxed/simple;
+	bh=ZWncWZqL3YVF7XFQNnWoJCmyi0/LyOh5Xf815k+EKh0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=l9IKspGw6K80TZ8I/4+TeAmNFq9AvdPCSynUcdsZdQfYbfZD6PleZnRWA0Eqlvski7os5H1yinFLl0wWwVVHQjQ0Q2tUQs6iUPulrHqTFBXvYLNja6/MNpCawgLyvjHue9T8yEsm5ikPQl57VT4vSfFJp0eM3QVW6rqVBQLxVjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4bXCzJ696Qz2BdTy;
+	Wed,  2 Jul 2025 16:41:00 +0800 (CST)
+Received: from kwepemo200008.china.huawei.com (unknown [7.202.195.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9F8ED140278;
+	Wed,  2 Jul 2025 16:42:46 +0800 (CST)
+Received: from huawei.com (10.67.175.28) by kwepemo200008.china.huawei.com
+ (7.202.195.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 2 Jul
+ 2025 16:42:45 +0800
+From: Xinyu Zheng <zhengxinyu6@huawei.com>
+To: <mst@redhat.com>, <jasowang@redhat.com>, <pbonzini@redhat.com>,
+	<stefanha@redhat.com>, <virtualization@lists.linux-foundation.org>,
+	<kvm@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <gregkh@linuxfoundation.org>,
+	<stable@vger.kernel.org>
+CC: <zhengxinyu6@huawei.com>
+Subject: [PATCH v5.10] vhost-scsi: protect vq->log_used with vq->mutex
+Date: Wed, 2 Jul 2025 08:29:45 +0000
+Message-ID: <20250702082945.4164475-1-zhengxinyu6@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250627115510.3273675-3-david@redhat.com>
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 7DF342116E
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[vger.kernel.org,kvack.org,linux-foundation.org,oracle.com,suse.cz,google.com,kernel.org,suse.com,nvidia.com,intel.com,gmail.com,sk.com,gourry.net,linux.alibaba.com,suse.de,surriel.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:email,localhost.localdomain:mid]
-X-Spam-Score: -3.01
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ kwepemo200008.china.huawei.com (7.202.195.61)
 
-On Fri, Jun 27, 2025 at 01:55:08PM +0200, David Hildenbrand wrote:
-> Let's clean up a bit:
-> 
-> (1) No need for start_ptep vs. ptep anymore, we can simply use ptep
-> 
-> (2) Let's switch to "unsigned int" for everything
-> 
-> (3) We can simplify the code by leaving the pte unchanged after the
->     pte_same() check.
-> 
-> (4) Clarify that we should never exceed a single VMA; it indicates a
->     problem in the caller.
-> 
-> No functional change intended.
-> 
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+From: Dongli Zhang <dongli.zhang@oracle.com>
 
-Hi David :-),
+[ Upstream commit f591cf9fce724e5075cc67488c43c6e39e8cbe27 ]
 
-I have to confess that I fell in the same trap as Lorenzo wrt.
-__pte_batch_clear_ignored changing the pte value.
-So I'm not sure if it would be nice to place a little comment in
-__pte_batch_clear_ignored claryfing that pte's value remains unchanged ?
+The vhost-scsi completion path may access vq->log_base when vq->log_used is
+already set to false.
 
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
+    vhost-thread                       QEMU-thread
 
+vhost_scsi_complete_cmd_work()
+-> vhost_add_used()
+   -> vhost_add_used_n()
+      if (unlikely(vq->log_used))
+                                      QEMU disables vq->log_used
+                                      via VHOST_SET_VRING_ADDR.
+                                      mutex_lock(&vq->mutex);
+                                      vq->log_used = false now!
+                                      mutex_unlock(&vq->mutex);
+
+				      QEMU gfree(vq->log_base)
+        log_used()
+        -> log_write(vq->log_base)
+
+Assuming the VMM is QEMU. The vq->log_base is from QEMU userpace and can be
+reclaimed via gfree(). As a result, this causes invalid memory writes to
+QEMU userspace.
+
+The control queue path has the same issue.
+
+CVE-2025-38074
+Cc: stable@vger.kernel.org#5.10.x
+Cc: gregkh@linuxfoundation.org
+Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+Acked-by: Jason Wang <jasowang@redhat.com>
+Reviewed-by: Mike Christie <michael.christie@oracle.com>
+Message-Id: <20250403063028.16045-2-dongli.zhang@oracle.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+[ Conflicts in drivers/vhost/scsi.c
+  bacause vhost_scsi_complete_cmd_work() has been refactored. ]
+Signed-off-by: Xinyu Zheng <zhengxinyu6@huawei.com>
+---
+ drivers/vhost/scsi.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/vhost/scsi.c b/drivers/vhost/scsi.c
+index a23a65e7d828..fcde3752b4f1 100644
+--- a/drivers/vhost/scsi.c
++++ b/drivers/vhost/scsi.c
+@@ -579,8 +579,10 @@ static void vhost_scsi_complete_cmd_work(struct vhost_work *work)
+ 		ret = copy_to_iter(&v_rsp, sizeof(v_rsp), &iov_iter);
+ 		if (likely(ret == sizeof(v_rsp))) {
+ 			struct vhost_scsi_virtqueue *q;
+-			vhost_add_used(cmd->tvc_vq, cmd->tvc_vq_desc, 0);
+ 			q = container_of(cmd->tvc_vq, struct vhost_scsi_virtqueue, vq);
++			mutex_lock(&q->vq.mutex);
++			vhost_add_used(cmd->tvc_vq, cmd->tvc_vq_desc, 0);
++			mutex_unlock(&q->vq.mutex);
+ 			vq = q - vs->vqs;
+ 			__set_bit(vq, signal);
+ 		} else
+@@ -1193,8 +1195,11 @@ static void vhost_scsi_tmf_resp_work(struct vhost_work *work)
+ 	else
+ 		resp_code = VIRTIO_SCSI_S_FUNCTION_REJECTED;
+ 
++	mutex_lock(&tmf->svq->vq.mutex);
+ 	vhost_scsi_send_tmf_resp(tmf->vhost, &tmf->svq->vq, tmf->in_iovs,
+ 				 tmf->vq_desc, &tmf->resp_iov, resp_code);
++	mutex_unlock(&tmf->svq->vq.mutex);
++
+ 	vhost_scsi_release_tmf_res(tmf);
+ }
  
 -- 
-Oscar Salvador
-SUSE Labs
+2.34.1
+
