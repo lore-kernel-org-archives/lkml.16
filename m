@@ -1,153 +1,173 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526EB26CE18;
-	Wed,  2 Jul 2025 11:38:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C9C225A31;
+	Wed,  2 Jul 2025 11:38:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751456305; cv=none; b=j38tVvT6N4vgQQRmOCNh/WXQjsCPg1AfzoPOcjvVGcbtlq4gCLjzy/hl/4sNSnxPGi+9YoHMczQ0qHVf6QxLBkSMVDEPpA8h0fA6d9haQIFGoB0oXmnTQOb/gwxDbxCFijI8w99W8xOBa9hpHcNyH4Xh5TsLatQ5053+vFgBBrw=
+	t=1751456326; cv=none; b=aI59W70qMYM4fQ3TIg/dsXQ+Vxt/0K/6URaqBzQCLuMUjks4ZZT+YQ19L4v/zOEjQ5nVAzRFui2NjW1LirwS6kmo012sscp8bC9sxKXuCVk3/slKtrPM6G3SOcYeF3yZk2ri1N+LX1qN5e8RE2pAM0+EVDP03amdZ1tTRH9fGzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751456305; c=relaxed/simple;
-	bh=8056Uj0wz0wgEnIFo1WgItTu5Ag81jUe+yTOlA3bAfY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=qwVsE2Z0ejGE1r22VsSO4mpfv0Uo04pS9nJQJaHcfwVUnpqdfp6/xZDdJXKKuoWxi0Gy/GgjMSUWtQ2+L8SBbENNxQiFnO6fLWMoBetWSn45qSv8p8m8VMRI5oo8gqyeOoc+g1wsZDAHS6M52zY04FNpw9OOLgRcAF8LV6hLFSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fACBcku4; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1751456326; c=relaxed/simple;
+	bh=6D65NQrcz7NwOKOr8hiTmabKhGb17NOweOxgq2rLoRU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SBpoKhhIHnqpggB+QTWl+9L9JA8BUXa5IFUAUlM/czuMEAe2UWa5R9qF3VrDoMtPzr5tRuiVgw5EEm3bJiYKTVju9oXV7qXWNGe5r1KhbJGmIUyn1tU2cG7Wnp4J2FXiKxzFZf647xDeWw4E09d17zQ5u5+7KOsedVnVbcQJKf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oKuHx5Xm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fACBcku4"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5629iHOT021088;
-	Wed, 2 Jul 2025 11:38:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	a57o9xe8zYx2IGmqYKV1sTFeDgomWcmqi8iH3JX84gw=; b=fACBcku4teKNmZEn
-	tL/ebXOnzuzme3GVFnX/EcNA25xv0XXeQjFV+RD6bTwgi/t9bd1eMLZ3h44iDA/a
-	IPmP1lgGEM11ASut5stYuVqgqqZsC+etvtrJS4LfXKkT0KIgE0VNgh4uH5HL4VQU
-	ZqQsN1LhEIR2lxGTiGkUkfS8P4zCqThMDgLu21wthSz7Fa5gYJWvwSyPh5AcsWrw
-	+5D0w+i2oEstfI1yVk22tp0iWUNBRAEbYS8273uttlCpX9L2qeFJQtv+7/gCCSBX
-	BolZ4qBcf55g/S+mp67GPI4VMnsKF17LjkYZQ8OU8hQX29F+H8UxM+7s9tyCEuCV
-	dpmlhg==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47mhxn34r2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Jul 2025 11:38:17 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 562BcG2B031671
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 2 Jul 2025 11:38:16 GMT
-Received: from [10.50.58.161] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 2 Jul 2025
- 04:38:12 -0700
-Message-ID: <eab8d79f-7188-9537-9176-3e4d22f0978a@quicinc.com>
-Date: Wed, 2 Jul 2025 17:07:59 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oKuHx5Xm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01412C4CEED;
+	Wed,  2 Jul 2025 11:38:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751456326;
+	bh=6D65NQrcz7NwOKOr8hiTmabKhGb17NOweOxgq2rLoRU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oKuHx5XmFRNHZtV5pSfKZMRhbFK9Q/V8oBQttSQwv9h1BoZj2mm169T+YyXbMPl35
+	 MkWW3EY3dKtbc8PrPx3G1R0Hz0CZYoKi1R8NejVaAjeAQBNFp1H67e0eSXN49NUzyU
+	 8nWheZ/Z3Ej0ul4a/+WASK+txRA2lLb1VhQgkZ+OVdYhxvh+BpWMr88wnW7FyPmn0Y
+	 YwYHjIcQsY0BF3n/c7nHKDYuObm3MF0BchGYbyrLOXQUFsI7fOupP6s8YttGBDroTl
+	 C2Go5SyvImfXwciAAzFTpR5fLmc736by4kg3aDbnHQXBU8rCI/Q2gEvGnhQym960Mp
+	 LBq5wdH5IqiYg==
+Date: Wed, 2 Jul 2025 12:38:41 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Jorge Marques <gastmaier@gmail.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>,
+	Jorge Marques <jorge.marques@analog.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-i3c@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] dt-bindings: i3c: Add adi-i3c-master
+Message-ID: <20250702-armchair-favorite-c734b53444e2@spud>
+References: <20250626-adi-i3c-master-v4-0-3846a1f66d5e@analog.com>
+ <20250626-adi-i3c-master-v4-1-3846a1f66d5e@analog.com>
+ <20250627-steadfast-ferret-of-expertise-5c8ff2@krzk-bin>
+ <tl5fckhrivaqfyzwyb2o2a7gykpigwend7z2nduqgbbej3hqbs@vxxtsadhtdmt>
+ <41782ded-908b-46ef-8f75-4d2565476b7c@kernel.org>
+ <cfi6rzhco2ba6pcbk57l7tblimuks5jnpgaly7nbedbrpyhtma@u46if22kurwk>
+ <v2ybju75bpjdqxfkell47nlkeyal36ylmnqt2yvpncxnmp2irb@pygx56jsyxkr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v3 0/5] Introduce "non-pixel" sub node within iris video
- node
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Dikshita Agarwal
-	<quic_dikshita@quicinc.com>,
-        Abhinav Kumar <abhinav.kumar@linux.dev>,
-        "Bryan
- O'Donoghue" <bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab
-	<mchehab@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250627-video_cb-v3-0-51e18c0ffbce@quicinc.com>
- <5f90547d-945a-4e26-b36c-75f2d8a1af97@kernel.org>
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-In-Reply-To: <5f90547d-945a-4e26-b36c-75f2d8a1af97@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDA5NCBTYWx0ZWRfX1Zrov1N9vn27
- 6nZ8yZvMi7mLfVwNNouH+IBqajXQdkfKhsl7WoRSonpuT4DakCiYAV2HRlKyjsABMbGLau7iBBt
- iR77jUwTl0DOUVb4BVMXT7GY6AmINvyeOEsj3kVTV09470muSkkxeOyIfFkr8OcRGu2+ndlz3Wu
- L6nscBsik7C7Dsn8yQ4HtJ7ul1yTyySTo1EAr+VBAgw+Wft6dk3Dl5ncOdxW24rgIRiX2YWKh7k
- XO7SxPfnvEex8vgGD23dWoYOMPpJRFCTL6UMjXRzvBzfe7aJ6qZ0vLfzKDA7Xa2qRSVZAim5FUw
- 8HBryy/8TlSO3K/Aqa+tDr7dZZ92GqyDZhBVbyt1yPzwgNupDI0clhuloQKQiYJkpQ2rLJqo4XQ
- Zqc8gGN4IxcqtRuZCGGT7uk5jUrTvNfYI/gAD37EKUJksXNRX4xNWR353w/K4rOeTTyCPrN3
-X-Authority-Analysis: v=2.4 cv=EbvIQOmC c=1 sm=1 tr=0 ts=68651a29 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8
- a=FAPGtHrcAQRzihrybRgA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: o__H4BpoLMtwVIiAUdCGrtdgNXd17NV8
-X-Proofpoint-GUID: o__H4BpoLMtwVIiAUdCGrtdgNXd17NV8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-02_01,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 mlxscore=0 priorityscore=1501 mlxlogscore=999 lowpriorityscore=0
- malwarescore=0 adultscore=0 clxscore=1015 bulkscore=0 impostorscore=0
- spamscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507020094
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="AzTkVZ/OYZqMKI4S"
+Content-Disposition: inline
+In-Reply-To: <v2ybju75bpjdqxfkell47nlkeyal36ylmnqt2yvpncxnmp2irb@pygx56jsyxkr>
 
 
-On 7/2/2025 4:48 PM, Krzysztof Kozlowski wrote:
-> On 27/06/2025 17:48, Vikash Garodia wrote:
->> This series introduces a sub node "non-pixel" within iris video node.
->> Video driver registers this sub node as a platform device and configure 
->> it for DMA operations. All non pixel buffers, i.e bitstream, HFI queues 
->> and internal buffers related to bitstream processing, would be managed 
->> by this non_pixel device.
->>
->> Purpose to add this sub-node:
->> Iris device limits the IOVA to an addressable range of 4GiB, and even 
->> within that range, some of the space is used by IO registers, thereby 
->> limiting the available IOVA to even lesser. For certain video usecase, 
->> this limited range in not sufficient enough, hence it brings the need to 
->> extend the possibility of higher IOVA range.
->>
->> Video hardware is designed to emit different stream-ID for pixel and 
->> non-pixel buffers, thereby introduce a non-pixel sub node to handle 
->> non-pixel stream-ID into a separate platform device.
->> With this, both iris and non-pixel device can have IOVA range of 
->> approximately 0-4GiB individually for each device, thereby doubling the 
->> range of addressable IOVA.
->>
->> Tested on SM8550 and SA8775p hardwares.
->>
->> Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
->> ---
->> Changes in v3:
->> - Add info about change in iommus binding (Thanks Krzysztof)
-> 
-> Nothing improved in commit msg. You are changing existing device and the
-> reason for that change is not communicated at all.
-> 
-> There was big feedback from qualcomm saying that some commit in the past
-> received review, so future commits can repeat the same stuff. If qcom
-> approaches that way, sorry, no you need to come with proper commit
-> description.
-> 
-> Please align internally how to solve it, because my response that past
-> imperfect review is not justification for whatever future issues was not
-> enough.
-Sure, lets take this as an example and you can suggest to provide a better
-commit message for this case, it would help me to compare where is the gap. I
-have tried my best to capture and explain the limitations and how the changes
-address those limitations. If that is not sufficient, we might have the perfect
-message from you and compare to find the gaps and improve, I am sorry, but thats
-how i feel at the moment.
-> 
-> Best regards,
-> Krzysztof
+--AzTkVZ/OYZqMKI4S
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Jul 02, 2025 at 12:58:00PM +0200, Jorge Marques wrote:
+> On Fri, Jun 27, 2025 at 06:02:26PM +0200, Jorge Marques wrote:
+> > On Fri, Jun 27, 2025 at 04:49:19PM +0200, Krzysztof Kozlowski wrote:
+> > > On 27/06/2025 16:38, Jorge Marques wrote:
+> > > > On Fri, Jun 27, 2025 at 08:56:55AM +0200, Krzysztof Kozlowski wrote:
+> > > >> On Thu, Jun 26, 2025 at 12:07:36PM +0200, Jorge Marques wrote:
+> > > >>> Add bindings doc for ADI I3C Controller IP core, a FPGA synthesiz=
+able IP
+> > > >>> core that implements the MIPI I3C Basic controller specification.
+> > > >>
+> > > >> How did you resolve my last comment? I don't see any explanation -
+> > > >> neither here nor in the binding description. Binding description is
+> > > >> actually better place, I think now.
+> > > >>
+> > > >> Best regards,
+> > > >> Krzysztof
+> > > >>
+> > > >=20
+> > > > Hi Krzysztof,
+> > > >=20
+> > > > I forgot to condense out discussion on v4.
+> > > > What about this binding description:
+> > > >=20
+> > > >   description: |
+> > > >     FPGA-based I3C controller designed to interface with I3C and I2C
+> > > >     peripherals, implementing a subset of the I3C-basic specificati=
+on.
+> > > >     The IP core is tested on arm, microblaze, and arm64 architectur=
+es.
+> > > >     It takes one or two clocks, axi and i3c. If only axi is provide=
+d,
+> > > >     then there is no clock signal to the i3c input clock pin and axi
+> > >=20
+> > > This is obvious from the schema, drop.
+> > Ack.
+> >=20
+> > >=20
+> > > >     clock drives the whole IP. The compatible is suffixed by 1.00.a
+> > > >     foreseeing future controllers by Analog Devices Inc. and breaki=
+ng
+> > > >     changes.
+> > >=20
+> > > I don't understand that. How are you breaking any changes? And how
+> > > 1.00.a predicts future? I don't think this reflects previous discussi=
+on.
+> > > Why you were asked to go with v1.00.a?
+> > The -1.00.a suffix came from this discussion:
+> >  =20
+> >   https://lore.kernel.org/linux-i3c/ildi2pup2zkyv4stuknkrjysex3yzsbrrsr=
+wbgcc4xgvdhwrdd@7qh4y6mutgy2/
+> >=20
+> > Other adi bindings use this suffix. I personally wouldn't add any suffix
+> > unless told otherwise, as I expressed on the thread. Should I drop it?
+> > or suffix it with something else?
+
+>=20
+> I went after the reason of the historically -1.00.a suffix and
+> discovered that they came into existence due to AMD Xilinx auto
+> generation devicetree tool SDTGen
+> https://github.com/Xilinx/system-device-tree-xlnx
+> that would automatically suffix with the IP version, defaulting to 1.00.a,
+> and for a seamless experience, the were copied over to the dt-bindings.
+>=20
+> The adi,axi-pwmgen dt-binding went more creative and suffixed with
+> -2.00.a, while never enforcing Vivado to yield the devicetree with such
+> value (Major version is asserted in the driver through reg access, the
+> current core version is v2.1.1)
+>=20
+> Testing on my side (AMD Xilinx Vivado 2024.2), it seems Vivado now
+> defaults to 1.0, so the previous bindings from the other IPs are not
+> accurate anymore, either, (axi-pwmgen auto gens
+> `compatible =3D "xlnx,axi-pwm-gen-1.0";` (`xlnx` instead of `adi`, also)).
+>=20
+> For fun, the current Vivado version thinks the devicetree node for the
+> i3c master should be as follows:
+>=20
+>   i3c_host_interface: i3c_controller_host_interface@44a00000 {
+>           compatible =3D "xlnx,i3c-controller-host-interface-1.0";
+>           reg =3D <0x44a00000 0x10000>;
+>           clocks =3D <&clkc 15>;
+>           clock-names =3D "s_axi_aclk";
+>   };
+>=20
+> Let me know if we can drop the suffix, or replace with something else.
+> The current register defined core version is v0.1.0.
+
+Please, as I requested in the original thread, add versioning
+information. I'm clearly not asking you to make up some garbage version
+number, or to add "1.00a" if that's not an accurate version (and never
+did AFAICT). If 0.1.0 is the version of the IP core, I'd like you to use
+that.
+
+If other ADI IP cores are using crap version numbers that came from
+some Xilinx tooling that don't represent the actual versions of the IPs,
+that's probably something you should mention to your colleagues that
+maintain those bindings.
+
+--AzTkVZ/OYZqMKI4S
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaGUaQQAKCRB4tDGHoIJi
+0opmAP90ILv17HBwblHZxoE06P46Yei39DKWzTDARH4j+CqtygEA90BCiZRJSpUP
+Hnr5ERbaqQ4vUWt8259P3N6dpG43SAM=
+=0JJi
+-----END PGP SIGNATURE-----
+
+--AzTkVZ/OYZqMKI4S--
