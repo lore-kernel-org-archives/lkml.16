@@ -1,126 +1,134 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6030F2F5326;
-	Wed,  2 Jul 2025 14:28:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 970EC2E718B
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:32:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751466503; cv=none; b=WYQJTcdNzF2By0pS1WrTrZxR7GBC32JW+HsLKyzNpDfLS2EYNIOPHpDQFOakPHeUQWYE+JjAG0zGLbckmF3orFbSo/RJl3L/b9j1vU6wU1i9oB+yeRrGaBsZG4LI40fJmdVEhw6mhTGlTZSpVjYf03/Ote1RwUVtkF5LPV8ZSWQ=
+	t=1751466727; cv=none; b=auzjEjMuqjyXlWm0kLVt91gLHiU8VSyptBORu/bXpp8Q+FWx75HnZWe+k6nsewFpSDGroqMEb0ds9AHwaJTNIyF+UOcqvM8uOw9agxqKRmTGXR5AN3eS+Y3OigZdGkjnuO+d+gJo6Wg+HcbJ6+5/Fh2wjMqef+ZDqREQFd7eJQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751466503; c=relaxed/simple;
-	bh=NsFJdJ2JaJtHywUYIehF4YOfb8c7yEr59Tfk0oV3x1I=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jPh33B5ad36F50cDsQ/J3KXH2W4mr6AtaGBCJUSZffVNLX6bpyAhbKaA4fhd1OT/5FCMAsOfnqAKUO5zVGRUrvNv7TWdVgp7xaQJTj4igNkuL9EKAMoisiMzmNgz7IZN45/BeAMSaABfsb4RnEwPpw/lrkm+KQMm9boK5bQTn0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bXMfy4N74z6M4tS;
-	Wed,  2 Jul 2025 22:27:22 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 53C1F1402EA;
-	Wed,  2 Jul 2025 22:28:18 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 2 Jul
- 2025 16:28:17 +0200
-Date: Wed, 2 Jul 2025 15:28:16 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Sascha Bischoff <Sascha.Bischoff@arm.com>
-CC: "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "kvmarm@lists.linux.dev"
-	<kvmarm@lists.linux.dev>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	nd <nd@arm.com>, "maz@kernel.org" <maz@kernel.org>, "oliver.upton@linux.dev"
-	<oliver.upton@linux.dev>, Joey Gouly <Joey.Gouly@arm.com>, Suzuki Poulose
-	<Suzuki.Poulose@arm.com>, "yuzenghui@huawei.com" <yuzenghui@huawei.com>,
-	"will@kernel.org" <will@kernel.org>, "tglx@linutronix.de"
-	<tglx@linutronix.de>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	Timothy Hayes <Timothy.Hayes@arm.com>
-Subject: Re: [PATCH v2 1/5] irqchip/gic-v5: Skip deactivate for forwarded
- PPI interrupts
-Message-ID: <20250702152816.000010da@huawei.com>
-In-Reply-To: <20250627100847.1022515-2-sascha.bischoff@arm.com>
-References: <20250627100847.1022515-1-sascha.bischoff@arm.com>
-	<20250627100847.1022515-2-sascha.bischoff@arm.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1751466727; c=relaxed/simple;
+	bh=kNyuH7WLAtOiZ59gEXSG0VtJ7ygKLG7MtztYM37F/Ng=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t6dF3HAcTMVRI5kycIIeLcpz2b0M+CxK6tSz8u0MoHNBp8HKpCZVDAdh9BgT46gYLcFF5yJ/d6LVdBqpAvb6CqUAi9YzeabTaf0236rfb7WcMpZVKNiOEb6enKg5XbvI7FmOB9etguomi+/6tCX4/i7zt3EYJhdgUE5EJ6WLmtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=k522Uubj; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="k522Uubj"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6fafd3cc8f9so74239916d6.3
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 07:32:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rowland.harvard.edu; s=google; t=1751466724; x=1752071524; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=OM0zfei5f0inErN/uNSMXzIQ9/mBfPLCdVqE3t8DrBI=;
+        b=k522Uubj8tc0tdptpXACapeAWwseeeUoSl5NGt8iP0ON2xIiwIja3V9LjVAOaiyCOx
+         nhw8qHVx/V3kzOekGdgRJSaPeTkpWa79dOUR0FbpNy0WiD4LHP4dn102LfokEAGXfn9N
+         VImBrJtFFtqygHGpK8y2QbL05uYVI0vCAfqugfrEQgs0TWPtBic5/whHVGJYmF49kzEv
+         dFbjTGCrUzieguUcYI/CG8xEcPqzCLkQWdJU2Sj8tbPZy5sbUZVIVOG4HIwNnzicWjyP
+         GDOIH1TathY8Ypy+vBgcYW4L9NVfgZVGg+PC9mKA6gT1iUCsw/QS01N4Y+x6/QX+Zcja
+         LYWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751466724; x=1752071524;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OM0zfei5f0inErN/uNSMXzIQ9/mBfPLCdVqE3t8DrBI=;
+        b=JNUS0y29pAcmIKNEwIscMsnaBX0KuRXBHdW3ih4aWe+Z8YheOtEyIUpEYkIsLLHsn6
+         vxthiVSdh1Au6NRFV392FPJ8PrZj8SrzeiN5NakzDhcKBXSrKnLFr1ER1FUj+W5Hl9H2
+         adTShgqCAPeRFPM8QNT1XpH37FAS8XK3G0M28Hgl1RIaMpAHmjYWAZXRAdOyY5o31KPU
+         Y2CKtSi9KDUuRXuVGfcwF/tuUVOMnXfpinU577Q07JhjQ33TOxunJ475Bl0JNEfUW2J8
+         kf23TEFlQLMaK4OqkUNVkVDxVjLBhDrwl3CY2Tc1lR+B9NZhPqZkQiYOrMRRjE22cxnV
+         /cTA==
+X-Forwarded-Encrypted: i=1; AJvYcCVSD3VPEpAAelMWGPL1uefIlRk36BXrJ6LiDc+oJk9KhFCZNkogbFyuswm/i5aTM4/wQDjxi30xjCjKnSY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5BeYmqZtMCjs6zTz/9WCwyRAW7P6c/eBJAROvx4+H0HJloUqJ
+	0KDVnqA1nJmW5VD7U5loXsgcy2s/BB6xIZp2ioeb4DYimad3LUxc2EJCewBbBTip2R9SSDb+Zoc
+	9FtU=
+X-Gm-Gg: ASbGncv/5VrtgDRYcgIdvx7xlN6x2lC2jIC5d8POCB2f+IeAfxvjte/VFSWSRHJ6rJJ
+	lTJUID1wv6QZ5YYhnufPk1VhwVmf/kaobcNuzYzpOoU+Y7ZgGMiZ80XP2CG3gXx7eKzspNjW460
+	s24mXUxdXKmQC9tGhqFCEwGexGVZGKY6qsmJJnpZpwyQKtwnKNUNFjqlb5zRchm8eMNskAzY0tg
+	oOpVcPztNwM84qHiJWwjUKRZyDqRfuICYY8nBQYbUrnb8KCvMw098th+Y4q4aeeTVInDT4fJX/J
+	EJ8pCZEFmIdtxYKTrSLLYgDZFiUvCyeH60Bvr2jqXc3sFVmUPy+B/zqGBAAl6EISggCLmb9dDVQ
+	oU/+Z
+X-Google-Smtp-Source: AGHT+IGUPShe/+yBmwn3/UQ4X2UjDVvrgr8iJo66Gp3M0ocSLCxEcEabV1oGRD+eHhzqQPhNVXK6Ew==
+X-Received: by 2002:a05:6214:1c08:b0:6fd:75e1:16c4 with SMTP id 6a1803df08f44-702b1bb187emr42595926d6.20.1751466724441;
+        Wed, 02 Jul 2025 07:32:04 -0700 (PDT)
+Received: from rowland.harvard.edu ([140.247.181.15])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd772e4fddsm101024496d6.65.2025.07.02.07.32.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 07:32:04 -0700 (PDT)
+Date: Wed, 2 Jul 2025 10:32:01 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Xu Yang <xu.yang_2@nxp.com>
+Cc: ezequiel@vanguardiasur.com.ar, mchehab@kernel.org,
+	laurent.pinchart@ideasonboard.com, hdegoede@redhat.com,
+	gregkh@linuxfoundation.org, mingo@kernel.org, tglx@linutronix.de,
+	andriy.shevchenko@linux.intel.com, viro@zeniv.linux.org.uk,
+	thomas.weissschuh@linutronix.de, dafna.hirschfeld@collabora.com,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org, imx@lists.linux.dev, jun.li@nxp.com
+Subject: Re: [PATCH v3 1/3] usb: core: add dma-noncoherent buffer alloc and
+ free API
+Message-ID: <198ddef7-8623-400f-8e2e-ffd6c4bfd2cf@rowland.harvard.edu>
+References: <20250702110222.3926355-1-xu.yang_2@nxp.com>
+ <20250702110222.3926355-2-xu.yang_2@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250702110222.3926355-2-xu.yang_2@nxp.com>
 
-On Fri, 27 Jun 2025 10:09:01 +0000
-Sascha Bischoff <Sascha.Bischoff@arm.com> wrote:
-
-> If a PPI interrupt is forwarded to a guest, skip the deactivate and
-> only EOI. Rely on the guest deactivating both the virtual and physical
-> interrupts (due to ICH_LRx_EL2.HW being set) later on as part of
-> handling the injected interrupt. This mimics the behaviour seen on
-> native GICv3.
+On Wed, Jul 02, 2025 at 07:02:20PM +0800, Xu Yang wrote:
+> This will add usb_alloc_noncoherent() and usb_free_noncoherent()
+> functions to support alloc and free buffer in a dma-noncoherent way.
 > 
-> This is part of adding support for the GICv3 compatibility mode on a
-> GICv5 host.
+> To explicit manage the memory ownership for the kernel and device,
+> this will also add usb_dma_noncoherent_sync_for_cpu/device() functions
+> and call it at proper time.  The management requires the user save
+> sg_table returned by usb_alloc_noncoherent() to urb->sgt.
 > 
-> Reviewed-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
 > 
-
-Trivial but no gaps in tag blocks.  So no blank line here.
-Some scripting will moan about this and I think that will hit you if
-this goes into linux next.
-
-> Co-authored-by: Timothy Hayes <timothy.hayes@arm.com>
-> Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
-> Signed-off-by: Sascha Bischoff <sascha.bischoff@arm.com>
 > ---
->  drivers/irqchip/irq-gic-v5.c | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
+> Changes in v3:
+>  - put Return section at the end of description
+>  - correct some abbreviations
+>  - remove usb_dma_noncoherent_sync_for_cpu() and
+>    usb_dma_noncoherent_sync_for_device()
+>  - do DMA sync in usb_hcd_map_urb_for_dma() and
+>    usb_hcd_unmap_urb_for_dma()
+>  - call flush_kernel_vmap_range() for OUT transfers
+>    and invalidate_kernel_vmap_range() for IN transfers
+> ---
+>  drivers/usb/core/hcd.c | 19 ++++++++++
+>  drivers/usb/core/usb.c | 80 ++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/usb.h    | 11 ++++++
+>  3 files changed, 110 insertions(+)
 > 
-> diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
-> index 7a11521eeeca..6b42c4af5c79 100644
-> --- a/drivers/irqchip/irq-gic-v5.c
-> +++ b/drivers/irqchip/irq-gic-v5.c
-> @@ -213,6 +213,12 @@ static void gicv5_hwirq_eoi(u32 hwirq_id, u8 hwirq_type)
+> diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
+> index c22de97432a0..e0fa6d6d273b 100644
+> --- a/drivers/usb/core/hcd.c
+> +++ b/drivers/usb/core/hcd.c
+> @@ -1366,6 +1366,14 @@ void usb_hcd_unmap_urb_for_dma(struct usb_hcd *hcd, struct urb *urb)
+>  				urb->transfer_buffer_length,
+>  				dir);
 >  
->  static void gicv5_ppi_irq_eoi(struct irq_data *d)
->  {
-> +	/* Skip deactivate for forwarded PPI interrupts */
-> +	if (irqd_is_forwarded_to_vcpu(d)) {
-> +		gic_insn(0, CDEOI);
-> +		return;
+> +	if ((urb->transfer_flags & URB_NO_TRANSFER_DMA_MAP) &&
+> +	    urb->sgt) {
+
+Shouldn't this be "else if"?  There aren't any circumstances where a 
+driver might want to do two DMA mappings for the same buffer, are there?
+
+> +		dma_sync_sgtable_for_cpu(hcd->self.sysdev, urb->sgt, dir);
+> +		if (dir == DMA_FROM_DEVICE)
+> +			invalidate_kernel_vmap_range(urb->transfer_buffer,
+> +						     urb->transfer_buffer_length);
 > +	}
 > +
->  	gicv5_hwirq_eoi(d->hwirq, GICV5_HWIRQ_TYPE_PPI);
->  }
->  
-> @@ -494,6 +500,16 @@ static bool gicv5_ppi_irq_is_level(irq_hw_number_t hwirq)
->  	return !!(read_ppi_sysreg_s(hwirq, PPI_HM) & bit);
->  }
->  
-> +static int gicv5_ppi_irq_set_vcpu_affinity(struct irq_data *d, void *vcpu)
-> +{
-> +	if (vcpu)
-> +		irqd_set_forwarded_to_vcpu(d);
-> +	else
-> +		irqd_clr_forwarded_to_vcpu(d);
-> +
-> +	return 0;
-> +}
-> +
->  static const struct irq_chip gicv5_ppi_irq_chip = {
->  	.name			= "GICv5-PPI",
->  	.irq_mask		= gicv5_ppi_irq_mask,
-> @@ -501,6 +517,7 @@ static const struct irq_chip gicv5_ppi_irq_chip = {
->  	.irq_eoi		= gicv5_ppi_irq_eoi,
->  	.irq_get_irqchip_state	= gicv5_ppi_irq_get_irqchip_state,
->  	.irq_set_irqchip_state	= gicv5_ppi_irq_set_irqchip_state,
-> +	.irq_set_vcpu_affinity	= gicv5_ppi_irq_set_vcpu_affinity,
->  	.flags			= IRQCHIP_SKIP_SET_WAKE	  |
->  				  IRQCHIP_MASK_ON_SUSPEND,
->  };
 
+Alan Stern
