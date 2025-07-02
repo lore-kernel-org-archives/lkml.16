@@ -1,173 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C9C225A31;
-	Wed,  2 Jul 2025 11:38:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43BA2265CD0;
+	Wed,  2 Jul 2025 11:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751456326; cv=none; b=aI59W70qMYM4fQ3TIg/dsXQ+Vxt/0K/6URaqBzQCLuMUjks4ZZT+YQ19L4v/zOEjQ5nVAzRFui2NjW1LirwS6kmo012sscp8bC9sxKXuCVk3/slKtrPM6G3SOcYeF3yZk2ri1N+LX1qN5e8RE2pAM0+EVDP03amdZ1tTRH9fGzs=
+	t=1751456374; cv=none; b=Iu3KZUergqVp9kbPutZIxdKgjYnxnEafpgAl1gySfgk0JPQs6tG/mWY6pJNasaRrFwT8TVluUq3jZq3LlYMx8OTeUDS+BqS+dDt6Q7Z02A14jVCNx6Xp+SxXbYc5wczH6fO5utFxuA5+KwZn4VLvXvHP0FMTT7i8ZFwcUto8Lx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751456326; c=relaxed/simple;
-	bh=6D65NQrcz7NwOKOr8hiTmabKhGb17NOweOxgq2rLoRU=;
+	s=arc-20240116; t=1751456374; c=relaxed/simple;
+	bh=v6saksW8Caqa3y5KRNV+vSZS7ie/jhuoui51AlwXf7k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SBpoKhhIHnqpggB+QTWl+9L9JA8BUXa5IFUAUlM/czuMEAe2UWa5R9qF3VrDoMtPzr5tRuiVgw5EEm3bJiYKTVju9oXV7qXWNGe5r1KhbJGmIUyn1tU2cG7Wnp4J2FXiKxzFZf647xDeWw4E09d17zQ5u5+7KOsedVnVbcQJKf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oKuHx5Xm; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=hrcIm5KSPQR+KynNgeKGYDPTcZ+XH6eZBbNjVL7TfxR9vxy9sjUsv7ndpoKz7JBvlo9+UyXq9ixycAj08NV35YbHI4nZxmwD/vkj0kLcdgww/R9+sqvsyUkFZGCoJ/Ba+zHV7a1v4wCB4Etd6Y4yPVY50ZIrIPYW4NkvksujVso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i12nkX6K; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oKuHx5Xm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01412C4CEED;
-	Wed,  2 Jul 2025 11:38:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751456326;
-	bh=6D65NQrcz7NwOKOr8hiTmabKhGb17NOweOxgq2rLoRU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oKuHx5XmFRNHZtV5pSfKZMRhbFK9Q/V8oBQttSQwv9h1BoZj2mm169T+YyXbMPl35
-	 MkWW3EY3dKtbc8PrPx3G1R0Hz0CZYoKi1R8NejVaAjeAQBNFp1H67e0eSXN49NUzyU
-	 8nWheZ/Z3Ej0ul4a/+WASK+txRA2lLb1VhQgkZ+OVdYhxvh+BpWMr88wnW7FyPmn0Y
-	 YwYHjIcQsY0BF3n/c7nHKDYuObm3MF0BchGYbyrLOXQUFsI7fOupP6s8YttGBDroTl
-	 C2Go5SyvImfXwciAAzFTpR5fLmc736by4kg3aDbnHQXBU8rCI/Q2gEvGnhQym960Mp
-	 LBq5wdH5IqiYg==
-Date: Wed, 2 Jul 2025 12:38:41 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Jorge Marques <gastmaier@gmail.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>,
-	Jorge Marques <jorge.marques@analog.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i12nkX6K"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751456372; x=1782992372;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=v6saksW8Caqa3y5KRNV+vSZS7ie/jhuoui51AlwXf7k=;
+  b=i12nkX6KePKsTzSyCbJg7mcAKzn4I7HwVXH1Q+pX2ZLor97N2rDK1JlI
+   625fUfGZt5BeSReeNCoL8z3MxGb5deHdDUwtYRvJDBoBYTfrBcZIvEjtx
+   cjxlQMPHDBTZHuEHmFPQMSh86SfcdWNRgwy5oxeens3O11QS5/OlSzYwL
+   Aum2x7D9LPHaES6PEWKuRCtEZWx9VlpplJWlVNpCCywC6oW0llFj5ybpI
+   pT5vfwp8RBGDkpqOQD4s05+yD/21+uJmCaHSRivHW/rD2oEcVLxlYh99H
+   GzipJxDo9CSSe9tk60Ugt4caTj0/KiI0iDb5rYkU5F8tT45XXQs8kRVEh
+   w==;
+X-CSE-ConnectionGUID: lJMvkXwYQ4O29/jIE43FXw==
+X-CSE-MsgGUID: AOIUzDZBSlado5EPrEXHeQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="53839539"
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="53839539"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 04:39:30 -0700
+X-CSE-ConnectionGUID: mlpi9m3FSByAEgGF4mUwsw==
+X-CSE-MsgGUID: kJgdkV2/ROyIIrCgnKDzDQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="184998772"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 04:39:25 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uWvo8-0000000BuBI-3Jry;
+	Wed, 02 Jul 2025 14:39:20 +0300
+Date: Wed, 2 Jul 2025 14:39:20 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Anup Patel <apatel@ventanamicro.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-i3c@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] dt-bindings: i3c: Add adi-i3c-master
-Message-ID: <20250702-armchair-favorite-c734b53444e2@spud>
-References: <20250626-adi-i3c-master-v4-0-3846a1f66d5e@analog.com>
- <20250626-adi-i3c-master-v4-1-3846a1f66d5e@analog.com>
- <20250627-steadfast-ferret-of-expertise-5c8ff2@krzk-bin>
- <tl5fckhrivaqfyzwyb2o2a7gykpigwend7z2nduqgbbej3hqbs@vxxtsadhtdmt>
- <41782ded-908b-46ef-8f75-4d2565476b7c@kernel.org>
- <cfi6rzhco2ba6pcbk57l7tblimuks5jnpgaly7nbedbrpyhtma@u46if22kurwk>
- <v2ybju75bpjdqxfkell47nlkeyal36ylmnqt2yvpncxnmp2irb@pygx56jsyxkr>
+	Conor Dooley <conor+dt@kernel.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Alexandre Ghiti <alex@ghiti.fr>, Len Brown <lenb@kernel.org>,
+	Sunil V L <sunilvl@ventanamicro.com>,
+	Rahul Pathak <rpathak@ventanamicro.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Atish Patra <atish.patra@linux.dev>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 15/24] ACPI: property: Add support for cells property
+Message-ID: <aGUaaOQaya-SaasR@smile.fi.intel.com>
+References: <20250702051345.1460497-1-apatel@ventanamicro.com>
+ <20250702051345.1460497-16-apatel@ventanamicro.com>
+ <CAJZ5v0iYYuK2GF2Pg3NiO4vLFzoYm6Q3Dnk5O2DkMJm1R3qSfQ@mail.gmail.com>
+ <aGUaFX9WgTW1I_ZO@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="AzTkVZ/OYZqMKI4S"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <v2ybju75bpjdqxfkell47nlkeyal36ylmnqt2yvpncxnmp2irb@pygx56jsyxkr>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aGUaFX9WgTW1I_ZO@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
+
+On Wed, Jul 02, 2025 at 02:37:58PM +0300, Andy Shevchenko wrote:
+> On Wed, Jul 02, 2025 at 12:20:55PM +0200, Rafael J. Wysocki wrote:
+> > On Wed, Jul 2, 2025 at 7:16 AM Anup Patel <apatel@ventanamicro.com> wrote:
+
+...
+
+> > >  static int acpi_fwnode_get_reference_args(const struct fwnode_handle *fwnode,
+> > >                                           const char *propname, const char *nargs_prop,
+> > >                                           unsigned int args_count, unsigned int index,
+> 
+> > >         const struct acpi_device_data *data;
+> > >         struct fwnode_handle *ref_fwnode;
+> > >         struct acpi_device *device;
+> > > +       unsigned int nargs_count;
+> > >         int ret, idx = 0;
+> 
+> > > +                       nargs_count = acpi_fwnode_get_args_count(device, nargs_prop);
+> > 
+> > I think it should work the same way as it used to for the callers that
+> > pass args_count, so maybe
+> > 
+> > if (!args_count)
+> >         args_count = acpi_fwnode_get_args_count(device, nargs_prop);
+> 
+> But this is different variable.
+> 
+> > >                         element++;
+> > > -
+> > >                         ret = acpi_get_ref_args(idx == index ? args : NULL,
+> > >                                                 acpi_fwnode_handle(device),
+> > > -                                               &element, end, args_count);
+> > > +                                               &element, end,
+> > > +                                               nargs_count ? nargs_count : args_count);
+> > 
+> > And this change would not be necessary?
+> 
+> This is not the same check as proposed above.
+> But this can be made shorter with Elvis in use:
+> 
+> 						&element, end, nargs_count ?: args_count);
+> 
+> > And analogously below.
+> 
+> And below. And in case if there is a new proposal to have
+> 
+> 	if (!nargs_count)
+
+I meant
+
+	if (!nargs_prop)
+
+here of course.
+
+> 		args_count = acpi_fwnode_get_args_count(device, nargs_prop);
+> 
+> that is exactly what I asked to drop as it's included in the
+> acpi_fwnode_get_args_count() already, i.e. no need to check this in
+> the caller and in the callee.
+> 
+> > >                         if (ret < 0)
+> > >                                 return ret;
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
---AzTkVZ/OYZqMKI4S
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Jul 02, 2025 at 12:58:00PM +0200, Jorge Marques wrote:
-> On Fri, Jun 27, 2025 at 06:02:26PM +0200, Jorge Marques wrote:
-> > On Fri, Jun 27, 2025 at 04:49:19PM +0200, Krzysztof Kozlowski wrote:
-> > > On 27/06/2025 16:38, Jorge Marques wrote:
-> > > > On Fri, Jun 27, 2025 at 08:56:55AM +0200, Krzysztof Kozlowski wrote:
-> > > >> On Thu, Jun 26, 2025 at 12:07:36PM +0200, Jorge Marques wrote:
-> > > >>> Add bindings doc for ADI I3C Controller IP core, a FPGA synthesiz=
-able IP
-> > > >>> core that implements the MIPI I3C Basic controller specification.
-> > > >>
-> > > >> How did you resolve my last comment? I don't see any explanation -
-> > > >> neither here nor in the binding description. Binding description is
-> > > >> actually better place, I think now.
-> > > >>
-> > > >> Best regards,
-> > > >> Krzysztof
-> > > >>
-> > > >=20
-> > > > Hi Krzysztof,
-> > > >=20
-> > > > I forgot to condense out discussion on v4.
-> > > > What about this binding description:
-> > > >=20
-> > > >   description: |
-> > > >     FPGA-based I3C controller designed to interface with I3C and I2C
-> > > >     peripherals, implementing a subset of the I3C-basic specificati=
-on.
-> > > >     The IP core is tested on arm, microblaze, and arm64 architectur=
-es.
-> > > >     It takes one or two clocks, axi and i3c. If only axi is provide=
-d,
-> > > >     then there is no clock signal to the i3c input clock pin and axi
-> > >=20
-> > > This is obvious from the schema, drop.
-> > Ack.
-> >=20
-> > >=20
-> > > >     clock drives the whole IP. The compatible is suffixed by 1.00.a
-> > > >     foreseeing future controllers by Analog Devices Inc. and breaki=
-ng
-> > > >     changes.
-> > >=20
-> > > I don't understand that. How are you breaking any changes? And how
-> > > 1.00.a predicts future? I don't think this reflects previous discussi=
-on.
-> > > Why you were asked to go with v1.00.a?
-> > The -1.00.a suffix came from this discussion:
-> >  =20
-> >   https://lore.kernel.org/linux-i3c/ildi2pup2zkyv4stuknkrjysex3yzsbrrsr=
-wbgcc4xgvdhwrdd@7qh4y6mutgy2/
-> >=20
-> > Other adi bindings use this suffix. I personally wouldn't add any suffix
-> > unless told otherwise, as I expressed on the thread. Should I drop it?
-> > or suffix it with something else?
-
->=20
-> I went after the reason of the historically -1.00.a suffix and
-> discovered that they came into existence due to AMD Xilinx auto
-> generation devicetree tool SDTGen
-> https://github.com/Xilinx/system-device-tree-xlnx
-> that would automatically suffix with the IP version, defaulting to 1.00.a,
-> and for a seamless experience, the were copied over to the dt-bindings.
->=20
-> The adi,axi-pwmgen dt-binding went more creative and suffixed with
-> -2.00.a, while never enforcing Vivado to yield the devicetree with such
-> value (Major version is asserted in the driver through reg access, the
-> current core version is v2.1.1)
->=20
-> Testing on my side (AMD Xilinx Vivado 2024.2), it seems Vivado now
-> defaults to 1.0, so the previous bindings from the other IPs are not
-> accurate anymore, either, (axi-pwmgen auto gens
-> `compatible =3D "xlnx,axi-pwm-gen-1.0";` (`xlnx` instead of `adi`, also)).
->=20
-> For fun, the current Vivado version thinks the devicetree node for the
-> i3c master should be as follows:
->=20
->   i3c_host_interface: i3c_controller_host_interface@44a00000 {
->           compatible =3D "xlnx,i3c-controller-host-interface-1.0";
->           reg =3D <0x44a00000 0x10000>;
->           clocks =3D <&clkc 15>;
->           clock-names =3D "s_axi_aclk";
->   };
->=20
-> Let me know if we can drop the suffix, or replace with something else.
-> The current register defined core version is v0.1.0.
-
-Please, as I requested in the original thread, add versioning
-information. I'm clearly not asking you to make up some garbage version
-number, or to add "1.00a" if that's not an accurate version (and never
-did AFAICT). If 0.1.0 is the version of the IP core, I'd like you to use
-that.
-
-If other ADI IP cores are using crap version numbers that came from
-some Xilinx tooling that don't represent the actual versions of the IPs,
-that's probably something you should mention to your colleagues that
-maintain those bindings.
-
---AzTkVZ/OYZqMKI4S
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaGUaQQAKCRB4tDGHoIJi
-0opmAP90ILv17HBwblHZxoE06P46Yei39DKWzTDARH4j+CqtygEA90BCiZRJSpUP
-Hnr5ERbaqQ4vUWt8259P3N6dpG43SAM=
-=0JJi
------END PGP SIGNATURE-----
-
---AzTkVZ/OYZqMKI4S--
