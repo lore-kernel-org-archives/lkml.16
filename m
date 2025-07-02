@@ -1,146 +1,146 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 645ED1C6B4;
-	Wed,  2 Jul 2025 11:15:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4A9B1C6B4;
+	Wed,  2 Jul 2025 11:16:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751454943; cv=none; b=SXSKyiiNOCEvfdYmpFarZ1HSmYWl/QQAL4eYEx93j/+p3KNPPArpYfxFYtAduY3BRYqEH7NeIILV/K/L/8PE6RS/xOh8es2HfrS+v5Ju6K44DIikICrJbxobeGUWez7HVWg46z5BUtB67oitXI0GBo9MUd3TSIpN2R1CVeJ97dM=
+	t=1751454980; cv=none; b=V2VRm4bEQ8zUNj53xMx1ERxLU80UEzwJCivO8AbhrOuPObMFXUz4EvpcnfW6Sp2cLZIfLNQglSFLAhHzK6M3du379+UexqbxPDf1XED2NhhKFk0qSIc7l0aKZzIe9UHaivR6v8FbkkrlzUhzrX8v1J4P10j2R3hbtgiJqR0pa+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751454943; c=relaxed/simple;
-	bh=XHBfs/7WOQ9scU2jSPtKSd9vllzVKRNvz7nUZ1NCE98=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dNh8e/PLHA/E+GvY0m9/Yb8z0rH0mO5ZGxu9SBz8WCpBTRewVVq2BW/X/oC4jjRhOGdFiXTgV9EtZTXI4ameO4SZqdvNPmNjlgX82dyIa71dqC6tAZvLrAuE0dUC54c6bPL4Tm85PM+faCrBeLIWxG30TLAuKuVgqaJMi12fqYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AD/suekz; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751454980; c=relaxed/simple;
+	bh=a9LE6Y+vuyYOJr2W2j2JX2kgLXmLCf01k+fEeLX/O4E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=I2ztDU0WQpanXUrCwNkHIvGxx0z4APhWA/495IwaaTC8ZLF0G+TVszTSPufwOM39kaSJndCqZk3g/89Gsf8p6XExY4maGmgnVihTtUPd9e65lnfyKG1fvH0zNqfICp+iWSuW4L3nsPNp5lwHbBoR/kE4i+ZUNlbzP2wHgXDGXsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=kXaSjN/V; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AD/suekz"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-453647147c6so71385835e9.2;
-        Wed, 02 Jul 2025 04:15:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751454940; x=1752059740; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RkdySRtSGxI+LD2PLhuDfgWtTtkxYO/qJtJNP0L3PfU=;
-        b=AD/suekzVL4tPjszhBn/i4HaUDAUHBy4ABwGqToCIgEjwz+jWZaIlepeDQKXc/GxPn
-         XDSwj5jZeFbXUH0IIGNAdFnxiia0JZhbLiaRyhzjuyMzppqOT/xzyCkIVE2nW0jjIwoZ
-         zc05AWVouEy49sq16sWOUsdJLgNQOTO35gfatbuIuETvsh3yQXkabwdIu6Ei7CuOjI0k
-         2frc3BykNDGpwZTJdk8wm332zIJW08kqHwQHubcjIRnESflcEv5+MV3hxi2+ZdD2JC5Z
-         xxD9QwEmEx2xzgJ3ZFPSu/N0CUH5DVK+/LU3JNp04B7PhAe3S9+u53WwwVMHyY8usruI
-         xmTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751454940; x=1752059740;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RkdySRtSGxI+LD2PLhuDfgWtTtkxYO/qJtJNP0L3PfU=;
-        b=L64VaEaMiPxFS81QQf6Q9wB+DrdVbE6wa0Dhj2QIxGMjppbffdGIJOr0dlEDZjsERi
-         wyDwzZ4CQ2U6FGC1xm4xVg++cKAgXDwXrYW4HDWbusAPMaRHmnTykBH+S6pPkueokrn6
-         JbqO0X3RO3rY/vfzcaYfUciSA2x9qeWFMDhHZ71Cs/FB5tU4TcUCtqloEVMX8AuMqn76
-         1Dsk5B06KlLz8lUGGClOsNucIfIYJqL1IMtb2id4jsjgmKxBDYSqUnIrOHvNvUCoG3vF
-         WFSPMit9kk5pcMvM7RuwzeqRCyw8jcjvgsRCeOMGrLl5kTJiT/XnHMZXMdGy9hwvwsPb
-         fJhg==
-X-Forwarded-Encrypted: i=1; AJvYcCUVo5fIkzT31Q39oT8TvB3CGtuFNbsowyxBce5wW3p8az3ZNevl3g09LUkUe1S8ohc31Ad/Ewan7Fwe@vger.kernel.org, AJvYcCUk8A1C5AGUEMehDZoC+k41srCkW52dlz1TIUJD6i0/wNlaZo8H4oyd7+QIb3FD300eWuUX3TbXJdgw@vger.kernel.org, AJvYcCUn/BzpuA+XG1qLe47JSUxuHCJ5z+JdA119O3WUHlm0OQaIKTqscHO8qbvvs4/dTAbA4bJetPkK@vger.kernel.org, AJvYcCV3A7ekWVk8ejGt+xfcb67v4XzFcrIS2isFOw0Xk+BXjihyGVktYkyEhbeHykjKWF+88DENoibI8PRDMZ/qHNn2oqA=@vger.kernel.org, AJvYcCW2fqxjLPzJXzpHE/vbIpx7DuyiFoJJnHNey2e7jhpm8waEVfBLh7teHkcz9/69VtDEZvqTACPUvgWXaI+a@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTyFpOK0U95sVFiinnKdIgH1BUdOU3OpcT4Y+S2doH8EpNcrD3
-	s0ZLUAm2pxRs+yUH+j+YiQHRojTTgXcFrqdNug3BJdzH0+fyt9P+lvhXrKnhnAPohMaArf/ruUW
-	nVLqG99ZqwmAn8eyQ2jn8N//FLoKs5Og=
-X-Gm-Gg: ASbGncvLoUT9p23ueeTy/kzMCDBgDLmTM9+9iqeRBlL2eOhUDTGqqJg59fJ5/dfJVqL
-	8owON+c+dSetZapr+OqT+TynCj399XvuexHKLxPhsa3e+V3DztnZIoE5XLfWp0EcvwXIvORqbsj
-	Op3UX3+Me/V5Gb3S7Kex+ayp2ykd475nvR/Y3/MQ1+wVNM9Gt2x+XzQJvS8JRigrebAQq9nw2kl
-	ojT
-X-Google-Smtp-Source: AGHT+IGVdU3EbgW14kmi+l6rweiSFF+JR6bWIZlhS1tOmGLwvf9J6IHUAv3porE4RSNMgnM94zU9E2wUmQHddBSVfH8=
-X-Received: by 2002:a05:6000:43d8:b0:3a4:f9e7:2796 with SMTP id
- ffacd0b85a97d-3b2001ac40bmr1421973f8f.35.1751454939432; Wed, 02 Jul 2025
- 04:15:39 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="kXaSjN/V"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=vB
+	oJGHy0ISIe9dsE3K0UfQijWN6qYHy8h2nd32aYn0c=; b=kXaSjN/VSLR+fLQh5x
+	V2uqZSj7SAbIMImSPvPT+DZuz8vNVqIBDBrMAjk/mjtY4Z6hBUCoKfCXi5D0wJJ5
+	5NDs7ZdNZlUGjifdUV094PvRR2s8Z6DpR3FqpRIpaCQ87HKE/vKQpNp8qAMmymq2
+	dvDTRAMKRToNO9p81kIf+JS+E=
+Received: from ProDesk.. (unknown [])
+	by gzsmtp5 (Coremail) with SMTP id QCgvCgCHTGOvFGVoldg0Aw--.49301S2;
+	Wed, 02 Jul 2025 19:15:00 +0800 (CST)
+From: Andy Yan <andyshrk@163.com>
+To: dmitry.baryshkov@oss.qualcomm.com
+Cc: mripard@kernel.org,
+	neil.armstrong@linaro.org,
+	dri-devel@lists.freedesktop.org,
+	dianders@chromium.org,
+	jani.nikula@intel.com,
+	lyude@redhat.com,
+	jonathanh@nvidia.com,
+	p.zabel@pengutronix.de,
+	simona@ffwll.ch,
+	victor.liu@nxp.com,
+	rfoss@kernel.org,
+	chunkuang.hu@kernel.org,
+	cristian.ciocaltea@collabora.com,
+	Laurent.pinchart@ideasonboard.com,
+	linux-arm-msm@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	freedreno@lists.freedesktop.org,
+	Andy Yan <andyshrk@163.com>
+Subject: [PATCH v2 0/2] Pass down connector to drm bridge detect hook
+Date: Wed,  2 Jul 2025 19:14:42 +0800
+Message-ID: <20250702111453.102539-1-andyshrk@163.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250702005706.1200059-1-john.madieu.xa@bp.renesas.com>
- <20250702005706.1200059-3-john.madieu.xa@bp.renesas.com> <CAMuHMdVsvWrTBXkZ4etWy-8sPH4TG7AEyD_Z27RBWutNvpmUHA@mail.gmail.com>
-In-Reply-To: <CAMuHMdVsvWrTBXkZ4etWy-8sPH4TG7AEyD_Z27RBWutNvpmUHA@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Wed, 2 Jul 2025 12:15:13 +0100
-X-Gm-Features: Ac12FXyoV27N90uiKRpolLpIwAqhAe8ZcyesbtrNWpZW4tvLgY188hwbPdZn7n8
-Message-ID: <CA+V-a8sbaFDXMj0fiF=Y9X1kwLHY66qgJz=pOEXHA4f6OGS6GQ@mail.gmail.com>
-Subject: Re: [PATCH v4 2/4] pinctrl: renesas: rzg2l: Pass OEN pin names
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: John Madieu <john.madieu.xa@bp.renesas.com>, prabhakar.mahadev-lad.rj@bp.renesas.com, 
-	magnus.damm@gmail.com, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, 
-	richardcochran@gmail.com, linux-renesas-soc@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-clk@vger.kernel.org, netdev@vger.kernel.org, biju.das.jz@bp.renesas.com, 
-	john.madieu@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hi Geert,
-
-Thank you for the review.
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:QCgvCgCHTGOvFGVoldg0Aw--.49301S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxAw48KrWfKF1UWr4UWr15urg_yoW5KF4fpF
+	W2qFyavry0yF4aka1xAF18AF90y3Z7XFWrKry2v3sI93WFvF1UArsxAayrXryDGFyxJr12
+	ywn7GrWxGF12yaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zigTmxUUUUU=
+X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbBkA9+XmhlDvqMnwAAsV
 
 
-On Wed, Jul 2, 2025 at 10:54=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> Hi John, Prabhakar,
->
-> On Wed, 2 Jul 2025 at 02:57, John Madieu <john.madieu.xa@bp.renesas.com> =
-wrote:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Pass the OEN pin names via the SoC-specific hardware configuration
-> > structure to allow reuse of rzv2h_oen_read() and rzv2h_oen_write()
-> > on multiple SoCs.
-> >
-> > On the RZ/V2H(P) and RZ/G3E SoCs, the PFC_OEN register is located at th=
-e
-> > same offset. However, the register controls different pins on each SoC.
-> > Hardcoding the pin names in the common logic prevents reusability.
-> >
-> > Extend struct rzg2l_hwcfg to include an array of OEN pin names and its
-> > length. Use these values in rzv2h_pin_to_oen_bit() to determine the bit
-> > position dynamically based on the active SoC.
-> >
-> > This enables shared handling of OEN register access while accounting fo=
-r
-> > SoC-specific pin mappings.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Thanks for your patch!
->
-> > --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > @@ -257,6 +257,8 @@ enum rzg2l_iolh_index {
-> >   * @func_base: base number for port function (see register PFC)
-> >   * @oen_max_pin: the maximum pin number supporting output enable
-> >   * @oen_max_port: the maximum port number supporting output enable
-> > + * @oen_pin_names: array of pin names for output enable
-> > + * @oen_pin_names_len: length of the oen_pin_names array
-> >   */
-> >  struct rzg2l_hwcfg {
-> >         const struct rzg2l_register_offsets regs;
-> > @@ -269,6 +271,8 @@ struct rzg2l_hwcfg {
-> >         u8 func_base;
-> >         u8 oen_max_pin;
-> >         u8 oen_max_port;
-> > +       const char * const *oen_pin_names;
-> > +       u8 oen_pin_names_len;
->
-> Please exchange the order of the members, so the u8 fits in the
-> existing hole.
->
-OK.
+In some application scenarios, we hope to get the corresponding
+connector when the bridge's detect hook is invoked.
 
-> However, I think you better drop this patch, and use the existing
-> rzg2l_pinctrl_data.oen_{read,write]() abstraction instead.
->
-Ok agreed, I will switch to that.
+For example, we may want to call drm_dp_read_sink_count_cap(which needs
+a drm_connector) at the dp deteck hook, intel_dp and nouveau_dp do this
+at it's connector's detetc_ctx/detect hook.
 
-Cheers,
-Prabhakar
+But for a bridge driver, it's detect hook is initiated by the connector,
+there is no connector passed down.
+
+In most cases, we can get the connector by
+drm_atomic_get_connector_for_encoder
+if the encoder attached to the bridge is enabled, however there will
+still be some scenarios where the detect hook of the bridge is called
+but the corresponding encoder has not been enabled yet. For instance,
+this occurs when the device is hot plug in for the first time.
+
+Since the call to bridge's detect is initiated by the connector, passing
+down the corresponding connector directly will make things simpler.
+
+Before preparing this patch, we have had some discussions on the details
+here[0].
+
+PATCH1 adjust the dp/hdmi_audio_* callback parameters order, make it
+maintain the same parameter order as get_modes and edid_read.
+PATCH2 add connector to detect hook.
+
+[0]https://patchwork.freedesktop.org/patch/640712/?series=143573&rev=5
+
+Changes in v2:
+- Adjust the dp/hdmi_audio_* callback parameters order.
+
+Andy Yan (2):
+  drm/bridge: Make dp/hdmi_audio_* callback keep the same paramter order
+    with get_modes
+  drm/bridge: Pass down connector to drm bridge detect hook
+
+ drivers/gpu/drm/bridge/adv7511/adv7511.h      | 16 +++----
+ .../gpu/drm/bridge/adv7511/adv7511_audio.c    | 12 +++---
+ drivers/gpu/drm/bridge/adv7511/adv7511_cec.c  |  4 +-
+ drivers/gpu/drm/bridge/adv7511/adv7511_drv.c  |  3 +-
+ drivers/gpu/drm/bridge/analogix/anx7625.c     |  2 +-
+ .../drm/bridge/cadence/cdns-mhdp8546-core.c   |  3 +-
+ drivers/gpu/drm/bridge/chrontel-ch7033.c      |  2 +-
+ drivers/gpu/drm/bridge/display-connector.c    | 11 +++--
+ drivers/gpu/drm/bridge/ite-it6263.c           |  3 +-
+ drivers/gpu/drm/bridge/ite-it6505.c           |  2 +-
+ drivers/gpu/drm/bridge/ite-it66121.c          |  3 +-
+ drivers/gpu/drm/bridge/lontium-lt8912b.c      |  6 +--
+ drivers/gpu/drm/bridge/lontium-lt9611.c       | 15 +++----
+ drivers/gpu/drm/bridge/lontium-lt9611uxc.c    |  3 +-
+ .../bridge/megachips-stdpxxxx-ge-b850v3-fw.c  |  3 +-
+ drivers/gpu/drm/bridge/sii902x.c              |  3 +-
+ drivers/gpu/drm/bridge/simple-bridge.c        |  2 +-
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c  | 14 +++----
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c     |  3 +-
+ drivers/gpu/drm/bridge/tc358767.c             |  5 ++-
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c         |  3 +-
+ drivers/gpu/drm/bridge/ti-tfp410.c            |  2 +-
+ drivers/gpu/drm/bridge/ti-tpd12s015.c         |  8 +++-
+ .../gpu/drm/display/drm_bridge_connector.c    | 20 ++++-----
+ drivers/gpu/drm/drm_bridge.c                  |  5 ++-
+ drivers/gpu/drm/mediatek/mtk_dp.c             |  3 +-
+ drivers/gpu/drm/mediatek/mtk_hdmi.c           |  3 +-
+ drivers/gpu/drm/msm/dp/dp_audio.c             |  8 ++--
+ drivers/gpu/drm/msm/dp/dp_audio.h             |  8 ++--
+ drivers/gpu/drm/msm/dp/dp_drm.c               |  3 +-
+ drivers/gpu/drm/msm/hdmi/hdmi.h               | 10 ++---
+ drivers/gpu/drm/msm/hdmi/hdmi_audio.c         |  8 ++--
+ drivers/gpu/drm/msm/hdmi/hdmi_bridge.c        |  2 +-
+ drivers/gpu/drm/msm/hdmi/hdmi_hpd.c           |  4 +-
+ drivers/gpu/drm/rockchip/rk3066_hdmi.c        |  2 +-
+ drivers/gpu/drm/xlnx/zynqmp_dp.c              |  3 +-
+ include/drm/drm_bridge.h                      | 42 ++++++++++---------
+ 37 files changed, 139 insertions(+), 110 deletions(-)
+
+-- 
+2.43.0
+
+base-commit: 56e5375b23f342dfa3179395aacc1b47395fddf7
+branch: drm-misc-next
+
