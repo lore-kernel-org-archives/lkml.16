@@ -1,80 +1,91 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EDE325486A
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 23:10:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B45D2F50B2
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 23:10:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751497847; cv=none; b=OtnU6YKgz3KVUUvudUr1Urz6RWwWQQbCBqQCRbgYp4KVzo6AOP/YU/ySVHtRvoZTGCghAxa50X5JlnUG3d6nErZ1pK/a+TcYoqjxt5ItBOLh0H5yiIxmWK3GMQnP2tQQIPFLKBFmr0XsD0sybsmMRAte/LcZHsxIYjpMgVYOlBE=
+	t=1751497856; cv=none; b=CUZcMP2HR0zWlttIg/f2Q+nHTAonyZcEE6+NWIyNZVxcKlwEYI+eulRPrdi1HVj/leyK+1QPi9wg/Xut8IyrGopxKdI4IsMf1+CcUwD81cXn90eymLlf97/ulvun/IGxaSz7qE/gAy3aPhsd4aVOlcXSFSQ5JeFma2gVuI9wf8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751497847; c=relaxed/simple;
-	bh=ES6R/dc09ENGTbzh9aT7c4A7hNPzFe3ijPzR6uwDoWs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=o2Zhmu3MZBP/vGXSi5EXEWCTW/FxTV1Gdai+vHBv8sRosslhOBFfn6948raOLNw4/TSuh9DmTZi062CrjVOG9Hd0a/l/Ef4f8bHE9At5M9yA0Xjw5FWFqYa6QucLtcWyG3vSYvkfuULI3dW+j73/nrM2pxyywrdafvI04eGIxX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=pnwV2zni; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1751497856; c=relaxed/simple;
+	bh=uTkKxEpHkYTPh6vfi37hBJCkHIf6S1UQSyunlbFTeck=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MO7H+RY1hvoyw0/PIFxSvQ8crX7Guzc96lUQbaKYU3ucvtVcq48uTTz3RKqmjdgbKbb5397DZgI1fh2kIhvdec+K7kbvrl6rVlsJgJsnhPApS5XatctEL0I/M6q0kt23pFaMVrsy+d0RVY8Q0Hlt4IDw/+BLaYsG6vdR4h+3KRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=WBuJaMoG; arc=none smtp.client-ip=209.85.166.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="pnwV2zni"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 5E862406FC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1751497845; bh=ZSNY2Ai/WC/OiXjZSwBAqbYGoY4FqQQ8vMsXVptJa4k=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=pnwV2zniILlzzgWS3FxrHaFenDzx6D7VYwLtb2yIyfQ2iR9hGXYYHMh5PVV8E1Gi4
-	 wbXtQrYbofP5I4ttSZVbyfDFG/hIeNwzzoVKl2PuP6l9R3MEFXfBnUv+jyX+zZcz8x
-	 qFd70QKUzCmqF0cNLcT3SvivbQ3q1pR7yRCIYFir3LxHre18JbaHfnDl3TEshxRBwt
-	 4hf2EuBcDqak4zl89YA78Basp96DmQg+0Ye/XX50WfQJQ4VIwXz7UIKiE7UotoJ6KS
-	 GQvfPtckQCqzbJxvBUskN43uLh3IIw1H8wAuEsdEPefUpc1oJSkR2XTQ4TMXkSo+X3
-	 vrmJoSkEiXxcQ==
-Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 5E862406FC;
-	Wed,  2 Jul 2025 23:10:45 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: WangYuli <wangyuli@uniontech.com>, masahiroy@kernel.org,
- ojeda@kernel.org, nathan@kernel.org, alan.maguire@oracle.com,
- laurent.pinchart@ideasonboard.com, kris.van.hees@oracle.com,
- linux@weissschuh.net, tamird@gmail.com, vegard.nossum@oracle.com,
- ardb@kernel.org, mchehab+huawei@kernel.org, lizhijian@fujitsu.com
-Cc: linux-kernel@vger.kernel.org, zhanjun@uniontech.com,
- niecheng1@uniontech.com, guanwentao@uniontech.com, WangYuli
- <wangyuli@uniontech.com>
-Subject: Re: [PATCH] gitignore: allow .pylintrc to be tracked
-In-Reply-To: <1A357750FF71847E+20250623071933.311947-1-wangyuli@uniontech.com>
-References: <1A357750FF71847E+20250623071933.311947-1-wangyuli@uniontech.com>
-Date: Wed, 02 Jul 2025 17:10:44 -0600
-Message-ID: <87pleimbnv.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="WBuJaMoG"
+Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-875dd57d63bso19554839f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 16:10:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1751497852; x=1752102652; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mRzmI2UqKh+nJzvITL/rvNkTaM9BurV04cBbc5PSwYM=;
+        b=WBuJaMoGKQMTZS4EQs/AJAXya1trqBTXROqzPweMLHv0bYpXVQcLu+RjpVeBFEGvg7
+         daKXtfy4yqCo8wQ5vmvxjMAcDco53B02FfQyyzQE8npJY4Q7QrIQkgNByQ+//+zq3o7H
+         bPGZKzu/KHn4NjALSGsUUgAdDaQqsEkHpRL9jQ/5QNl/zw7laV0L/O1PZoGeFrYMvO8r
+         j6SHiEijFJXpmyN3p8eyhEYgZVG0shxLVR1Yl0QBCKpbhT3SaalZIr/SjJP5Q3QHDERg
+         DQWCpwiG2bu+vNNmgi8iJXwcJVWoNspyVS1XVWjwDnBSS+vbdcTEtP9ipvag4S5wH+Ll
+         Pitg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751497852; x=1752102652;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mRzmI2UqKh+nJzvITL/rvNkTaM9BurV04cBbc5PSwYM=;
+        b=nB2jZuPT+WW9SY0tw/3zgtFLC+/Q5uCjy8s1fzTQRQj7xkA2Af1jyBiwrqJ2z1JVik
+         lm+8m39HfycjmIZVAZ/trdMxyF2tjy+8GGlTOLReWWbt+BUelWHcZn08AqIWq/WuhO/v
+         26uYnRChNtNnZiQsAgewf6SJxEPyr0pL9OCXr3CsUlnfsegx/8La60J9o3G7SuSwW2PI
+         uUvslhre5xHm0x6IsHbUSlARJzT1koNJMT770WNJQSCBHxS9mBWwuXn2odjJ9x3D2u7f
+         ket7wtnKiPaSS1qDR+S8lmwUzf0hAO7XclA+3FWlW+iRLEHYeJOs/IeLoqu/B4HKKniJ
+         UaYw==
+X-Forwarded-Encrypted: i=1; AJvYcCURoQ/nV5T/+s0q4MXq8UBARTLs8hUIdCORbMdcTBA+DRepHhQX4U7Olm28l3QeiSZd4I40Q3Uqqw0Yb+8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxa+GGdts3ubKWy5ljx+noUQVYtBYoSaI077q/pfgaRiR0+Bt24
+	886se4Qpaocq52MHllXobDZjvHmRInRKgFyK8KvtPMDzdH2YW0YMi97MzlqU0ImcgPg8zJpRu6E
+	cz0WA
+X-Gm-Gg: ASbGncuWknFLQbRpjlIm22M9+b9qC7JiKAqturR8nOTJLtzSnnwdztflviyidKH1Teq
+	mgkI9jV+trg2O2lMc0NPzMWHG75tSLsf6qeUzAX76YA8EI5qyfleE8f0V+7cXhrZL02yucWhzPN
+	OVNuLdUtdmuwhT3cmNKkD4BP025KyIeOjxVwch3BKDDQ0z6GAr0Dd7WMQMHdKZkY6salAGGarbx
+	T41RRIynpdzo3nOWCQbQBkgu9yP/Er1XhrOzx8/DazcYqKQOT+phPkCmRpuLTDd3BD0ZUsDw6u4
+	EIR7526zO7UgzzW4TfDQnx18jEjrrD/GYO/eiA+umgFSZY6Gc1MbHqlLbWY=
+X-Google-Smtp-Source: AGHT+IEhq6pHfoYzDGLlZdC+PVUvVjUAZEeRL0VjPgqTYNKczZpb3LgZuwy+H6ypeQSFtzmTk8D1IQ==
+X-Received: by 2002:a5e:d907:0:b0:876:4204:b63d with SMTP id ca18e2360f4ac-876d54b924fmr1678639f.8.1751497852133;
+        Wed, 02 Jul 2025 16:10:52 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-50204ab05a8sm3182428173.120.2025.07.02.16.10.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Jul 2025 16:10:51 -0700 (PDT)
+Message-ID: <2cf2350f-286a-42cb-aa02-2eee7099fe22@kernel.dk>
+Date: Wed, 2 Jul 2025 17:10:50 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] io_uring/rsrc: skip atomic refcount for uncloned buffers
+To: Caleb Sander Mateos <csander@purestorage.com>
+Cc: io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250619143435.3474028-1-csander@purestorage.com>
+ <CADUfDZo5O1zONAdyLnp+Nm2ackD5K5hMtQsO_q4fqfxF2wTcPA@mail.gmail.com>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <CADUfDZo5O1zONAdyLnp+Nm2ackD5K5hMtQsO_q4fqfxF2wTcPA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-WangYuli <wangyuli@uniontech.com> writes:
+On 7/2/25 3:11 PM, Caleb Sander Mateos wrote:
+> Hi Jens,
+> Any concerns with this one? I thought it was a fairly straightforward
+> optimization in the ublk zero-copy I/O path.
 
-> The .pylintrc file was introduced by commit 02df8e3b333c ("docs: add a
-> .pylintrc file with sys path for docs scripts") to provide Python path
-> configuration for documentation scripts. However, the generic ".*" rule
-> in .gitignore causes this tracked file to be ignored, leading to warnings
-> during kernel builds.
->
-> Add !.pylintrc to the exception list to explicitly allow this
-> configuration file to be tracked by git, consistent with other
-> development tool configuration files like .clang-format and .rustfmt.toml.
->
-> This resolves the build warning:
->   .pylintrc: warning: ignored by one of the .gitignore files
->
-> Fixes: 02df8e3b333c ("docs: add a .pylintrc file with sys path for docs scripts")
-> Signed-off-by: WangYuli <wangyuli@uniontech.com>
-> ---
->  .gitignore | 1 +
->  1 file changed, 1 insertion(+)
+Nope looks fine, I just have a largish backlog from being gone for 10
+days. I'll queue it up for 6.17.
 
-Applied, thanks.
+-- 
+Jens Axboe
 
-jon
