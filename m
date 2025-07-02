@@ -1,205 +1,258 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11252F5086;
-	Wed,  2 Jul 2025 16:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35F72F5083
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 16:39:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751474291; cv=none; b=LLNUJSe372EIbc4/Ar/aQnWH1vzIveeUDe2FUpWdqrd5PDAOPpzNNyjsmqCwLNYpfBHApca/kNPxOAzYhzd6GBKJOm59TupMGRbJJpBV1T6If8J4IWNudbkekKVovjGcHhVTzx7m5Tj8ZLwdTmiqH3M1A+01h7QXA3axp0v6/Wo=
+	t=1751474348; cv=none; b=Ud+RDCeBssCUUHy6e79VjX2+irB6NeC4FGqPcG70ENSu0kPSrLIoM3g43wXv1gPTcOJeeAGNbAf8Ao+2QkT54vWrM4KP2xFxWX92oUVE3yYRl9XJSIaa4syw0zc0Hw2rfamoyH0UoNAohdkdN8KX9cu+D//ErDdFkPOP/md/Wz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751474291; c=relaxed/simple;
-	bh=Qc9qaZjtszTGfIo1ETHEUtNH5a2Y5/f+r7cHk6zLCuA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qVR0ciropc/GjzsqgNwkrG934o6/maL9N4JiiFbcn2+co5w+jsCyu6lnmQqwLk/XNXa9sTihir53qJRVluurKlU4RB2REMtF8nxHBhDsSPepiOfCa3UAb9yToVsda86TQGt3hb0zLZ5nOJwRSmUff4gnXb8U0qm6exPS1QygOZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KMVg3dYL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751474348; c=relaxed/simple;
+	bh=uaoDmFt5MdiEmWQDYL79r2WCwxdlNPXP2frjhUx9qbE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sh5cRLioPaMTUOzJRH2QP39vQXUCRS3n73QMVmyGTy4zAgA5sDN5DOaNLMh4vKlP44Lf7OVXxMMwdsjJWWUYD86OXskruSO5NrFyFl8fGpjjg2cbHhsQSB6q8vmYf7jyCeeVte+CrcgUoh41KfyYjY7f0qSAasxL9lW/s3jL/24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ANDQRyUn; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KMVg3dYL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34A0BC4CEE7;
-	Wed,  2 Jul 2025 16:38:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751474290;
-	bh=Qc9qaZjtszTGfIo1ETHEUtNH5a2Y5/f+r7cHk6zLCuA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KMVg3dYLUaNyfuSBOfBXNwS3dJMPaU7p8P4tXXQzf/3p1CZXHWxsu+U4+KHbw/8Ep
-	 1SmQeG/jqruES5oXpLVu5y3lCHXMI70Md2yNVm6DV0NWeNlkK2mRw+24f5FIVzvAT9
-	 odpAX1YvQqK/1hldpCiexN0q2RbOfPNlkzeR2zRymdgXAoDyWhUgfuVNCj+TrnTOGd
-	 3QMykmPmHpJIrTW6PiHdTMIFfaErsDejIpKsHyX8SxBPLoSr/DBRB7K1mMc+nWqP1u
-	 w+wGkPe3j/WnHFmjcFoyeKmU7LNeV2XJgDzMHkkH226McR033f5zuogRE+LfX/2KNt
-	 aCSVhhnkvTATQ==
-Date: Wed, 2 Jul 2025 17:38:06 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: dt: writing-bindings: Express better expectation
- of "specific"
-Message-ID: <20250702-dicing-yo-yo-ddccd5ae7d5a@spud>
-References: <20250702161700.229458-2-krzysztof.kozlowski@linaro.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ANDQRyUn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751474344;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Jfc/aXVSwDrtCgjMQUEfsAD9qKlUmCpxUhW3T4bZimY=;
+	b=ANDQRyUnWtGjMx+5FDWNp8o/l+yRRJzaxWPcnGQwnPQzRf1JnI7bxxz6OeAILyFgAgt+sc
+	200eWYxKfaH4vxXUsSTVwfFJXWB5mFXyFsDzjn2V9EPLgQwztkgL0WTgPypctejcIHf+76
+	+/ikRVXNuM+HpQv0yF1QFiKq8ajx1QA=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-591--0pHkxJ3M8SoMOhY3p61Cw-1; Wed, 02 Jul 2025 12:39:03 -0400
+X-MC-Unique: -0pHkxJ3M8SoMOhY3p61Cw-1
+X-Mimecast-MFC-AGG-ID: -0pHkxJ3M8SoMOhY3p61Cw_1751474343
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4a985909a64so2921641cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 09:39:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751474343; x=1752079143;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Jfc/aXVSwDrtCgjMQUEfsAD9qKlUmCpxUhW3T4bZimY=;
+        b=QsrUnAsPXcH0SJr9a7wjkYIUPeIQuAn4qcWx/fOtZUWG/dnUf4OjPgs0sx2rLEXA7C
+         WKLHDKo3PGudSIsRDsWAxkMVC2F+EUZTNgEUzz3m8xFnOP92Z3EBGpYeBqJYGl/jbOeH
+         /0rtYSez2HroJxnp80Puf/t3/ogVEBveGGUuK2+HOr+HIwf+b0m9MBJ7DVrm51lhrd4h
+         BVsk+fydyqCW6Rb/VCPkyUD5BP6TfYYqhiD4yLma6BqDO/dLTojEVc9N0VUpoH/ObsJe
+         sqt9E/EuJhqzPXWy0iNbUXrkipfiOKbseDYU2hkUTjL9i9SZEdhEIRM1n8tjl3Gz7/XA
+         YZjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUPMXazdAOkjvgSxwZvCgJA6EXWzOmpRnQ5FFzov0qWTCulvP3LaunBN/5JZa7r+/BdDmnQwBi4I1/Q1Ro=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBWCF53ZUyBJ8iHA0vo668+Ys5kLOCtUQs1nHIR/J47Et+gQC1
+	Ve+gQi0Wk311cZi96bIb3WJt9Yg/MvRL6GW4KJHfkJlNM9DYS2fo894rvxH27fIRAd03GWFzY5v
+	KPBGDE297GlX4m5n50GbLWjbPeqyRZcsFe9PllN99TndOxepYmw+uE0rf/I/YcOk8fvpJfApJ0M
+	hk4+UNzO5eu2CVahLTzhKtKaAlP3mDM8zSfCZPtP5d
+X-Gm-Gg: ASbGnctSvr2GI4bd4CxtPVkGGbX6q/dSwte55iB+mX8u5+pc8CzKCR1jftTiT3bEOpj
+	KjJgZaGJqFkOyDJFKJxcQ9McPOkSnKWqrM/Ur+w042adkel87rGabJNvkP7c3D/amwgGfs33WlV
+	QHCmH2Ib1zgE6pyrIy9a4MR95AYDdRdht7Y2WH
+X-Received: by 2002:ac8:7f88:0:b0:4a7:14c4:2385 with SMTP id d75a77b69052e-4a9769dc844mr57214451cf.42.1751474342913;
+        Wed, 02 Jul 2025 09:39:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEw4yAkotoG5cEMZRyDySUOCQVlKJOYuRgpyGuPwZ8EjflOgtMDslQB7Zt3culBn1OKv5gWCFnk2utBfWB+tRY=
+X-Received: by 2002:ac8:7f88:0:b0:4a7:14c4:2385 with SMTP id
+ d75a77b69052e-4a9769dc844mr57213911cf.42.1751474342348; Wed, 02 Jul 2025
+ 09:39:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ExsRr/5aIlsNDTUR"
-Content-Disposition: inline
-In-Reply-To: <20250702161700.229458-2-krzysztof.kozlowski@linaro.org>
-
-
---ExsRr/5aIlsNDTUR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250620085618.4489-1-gpaoloni@redhat.com> <20250701195939.3e297e20@gandalf.local.home>
+ <CA+wEVJY2a_ERXemup7EefPPXHOv8DAfyauuP6Mn5vHYFkbbBcQ@mail.gmail.com> <20250702104058.3cf9c1a3@batman.local.home>
+In-Reply-To: <20250702104058.3cf9c1a3@batman.local.home>
+From: Gabriele Paoloni <gpaoloni@redhat.com>
+Date: Wed, 2 Jul 2025 18:38:51 +0200
+X-Gm-Features: Ac12FXz3zMqkdtDe-RC_XPl6_jJB2pqOswiPd5qPN2SMzw6LBfOWhsDDoFVoMcA
+Message-ID: <CA+wEVJY+WbHECt3Vu+23B2PrpVoaRnaY=ncnXP3aHAjbgVNVMg@mail.gmail.com>
+Subject: Re: [RFC PATCH RESEND] tracing: add kernel documentation for
+ trace_array_set_clr_event, trace_set_clr_event and supporting functions
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 02, 2025 at 06:17:01PM +0200, Krzysztof Kozlowski wrote:
-> Devicetree bindings are supposed to be specific in terms of compatibles
-> and other properties.  Short "specific" has many implications, so extend
-> the description to cover them: no family names, avoid generic SoC
-> fallbacks, avoid versioned compatibles, avoid properties implied by
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-IDK if it is intentional, but while you mention this here it doesn't
-appear in the text below. Probably as simple as "DON'T use versioned
-compatibles, unless documenting a HDL IP core"?
+On Wed, Jul 2, 2025 at 4:41=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
+ wrote:
+>
+> On Wed, 2 Jul 2025 15:45:41 +0200
+> Gabriele Paoloni <gpaoloni@redhat.com> wrote:
+>
+> > >
+> > > > For each of the documented functions, as part of the extensive
+> > > > description, a set of "Function's expectations" are described in
+> > > > a way that facilitate:
+> > > > 1) evaluating the current code and any proposed modification
+> > > >    to behave as described;
+> > > > 2) writing kernel tests to verify the code to behave as described.
+> > > >
+> > > > Signed-off-by: Gabriele Paoloni <gpaoloni@redhat.com>
+> > > > ---
+> > > > Re-sending as no feedbacks have been received.
+> >
+> > Now that I am reading this I realized that I missed the most important
+> > discussion comments from v1, so I am adding them back here inline
+> > below (BTW one more reason to avoid RESENDs):
+> >
+> > While working on the documentation of __ftrace_event_enable_disable,
+> > I realized that the EVENT_FILE_FL_SOFT_MODE flag is mainly used
+> > internally in the function itself, whereas it is EVENT_FILE_FL_SOFT_DIS=
+ABLED
+> > that prevents tracing the event.
+> > In this perspective I see that, starting from the initial state, if for
+> > a specific event we invoke __ftrace_event_enable_disable with enable=3D=
+1
+> > and soft_disable=3D0, the EVENT_FILE_FL_ENABLED is set whereas
+> > EVENT_FILE_FL_SOFT_MODE and EVENT_FILE_FL_SOFT_DISABLED are not.
+> > Now if for that event we invoke __ftrace_event_enable_disable again wit=
+h
+> > enable=3D1 and soft_disable=3D1, EVENT_FILE_FL_ENABLED stays set,
+> > EVENT_FILE_FL_SOFT_MODE is set, while EVENT_FILE_FL_SOFT_DISABLED
+> > remains not set. Instead if from the initial state we directly invoke
+> > __ftrace_event_enable_disable with enable=3D1 and soft_disable=3D1, all
+> > the status flag mentioned above are all set (EVENT_FILE_FL_ENABLED,
+> > EVENT_FILE_FL_SOFT_MODE and EVENT_FILE_FL_SOFT_DISABLED).
+> > Now I wonder if:
+> > a) such a behaviour is consistent with the code expectation;
+>
+> Yes, and I verified it by looking at the comments in the code. But this
+> should have been documented at the top of the function too.
 
-> compatible.
->=20
-> Also document desired lack of ABI impact and acceptable solution if such
-> needs arises: clearly marking it in commit msg.
->=20
-> All above follows established Devicetree bindings maintainers review
-> practice, so no new rules are introduced here.
->=20
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->=20
-> ---
->=20
-> I have vast (~10-page) document describing DT bindings and DTS rules,
-> based on Rob's and other people's reviews (with references...). Let me
-> try to funnel it here gradually. Why gradually? The intention of
-> writing-bindings document is to be concise, so rephrasing my 10 pages
-> covering each little detail into generic, concise rule is not that easy,
-> especially for non-native speaker.
->=20
-> Optionally I could also post my 10-page guide somewhere, but then it
-> would be one more document to ignore. I think we have enough of such.
-> Ah, and I would have one less topic for conference. :)
-> ---
->  .../devicetree/bindings/writing-bindings.rst  | 25 +++++++++++++++----
->  1 file changed, 20 insertions(+), 5 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/writing-bindings.rst b/Doc=
-umentation/devicetree/bindings/writing-bindings.rst
-> index 1ad081de2dd0..dc0e4b63984c 100644
-> --- a/Documentation/devicetree/bindings/writing-bindings.rst
-> +++ b/Documentation/devicetree/bindings/writing-bindings.rst
-> @@ -39,10 +39,15 @@ Overall design
->  Properties
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> =20
-> -- DO make 'compatible' properties specific. DON'T use wildcards in compa=
-tible
-> -  strings. DO use fallback compatibles when devices are the same as or a=
- subset
-> -  of prior implementations. DO add new compatibles in case there are new
-> -  features or bugs.
-> +- DO make 'compatible' properties specific. DON'T use wildcards or
-> +  device-family names in compatible strings.
+Ok thanks, in the next revision I will also add info that
+contextualises the possible
+state transitions.
 
-> DO use fallback compatibles when
-> +  devices are the same as or a subset of prior implementations.
+>
+> > b) if it would make sense to have a standard enable invocation followed
+> >    by a soft enable invocation to end up in the same state as a single
+> >    invocation of soft enable;
+>
+> No, because the two need to be done together.
 
-Isn't this wrong? If you're a subset of a prior implementation, falling
-back to the prior implementation's compatible would enable features that
-are not present in the new device. That's not something you introduced,
-it's the existing wording, but I don't think that's correct. It would have
-to be a /superset/ of a prior implementation for this to be correct, no?
+Yes, following your explanation below I see now.
 
-> DO add new
-> +  compatibles in case there are new features or bugs.
+>
+> > c) eventually if we could get rid of the soft_mode flag and simplify
+> >    the code to only use the soft_disabled flag.
+>
+> The reason for the soft_mode flag is that this needs to handle two
+> users of the same event. One has it enabled (no soft mode at all) and
+> the other has it disabled in a soft mode.
+>
+> The SOFT_MODE flag is to state that there's at least one user that is
+> using this in soft mode and has it disabled.
+>
+> Let me explain the purpose of SOFT_MODE.
+>
+> When you echo 1 into the enable file of an event it enables the event
+> and it starts tracing immediately. This would be: enable=3D1 soft_disable=
+=3D0.
+>
+> Same for echoing in 0 into the enable file. It would disable the event:
+> enable=3D0 soft_disable=3D0.
+>
+> To enable or disable an event, it requires an expensive update to the
+> static branches to turn the nops in the code into calls to the tracing
+> infrastructure.
+>
+> Now we have a feature where you could enable one event when another
+> event is hit with specific fields (or any field).
+>
+>   echo 'enable_event:irq:irq_handler_entry if next_comm=3D=3D"migrate"' >=
+ /sys/kernel/tracing/events/sched/sched_switch/trigger
+>
+> The above adds a trigger to the sched_switch event where if the
+> next_comm is "migrate", it will enable the irq:irq_handler_entry event.
+>
+> But to enable an event from an event handler which doesn't allow
+> sleeping or locking, it can't simply call
+> __ftrace_event_enable_disable() to enable the event. That would most
+> likely cause a kernel crash or lockup if it did.
+>
+> To handle this case, when the trigger is added, it enables the event
+> but puts the event into "soft mode" disabled. The trigger code would
+> call __ftrace_event_enable_disable() with enable=3D1 and soft_disable=3D1=
+.
+> Meaning, "enable this event, but also set the soft_disable bit".
+>
+> This enables the event with the soft_disable flag set. That means, the
+> irq_handler_entry event will call into the tracing system every time.
+> But because the SOFT_DISABLE is set in the event, it will simply do
+> nothing.
+>
+> After doing the above trigger:
+>
+>   # cat /sys/kernel/tracing/events/irq/irq_handler_entry/enable
+>   0*
+>
+> That means it's disabled in "soft mode".
+>
+> But let's say I also want to enable the event!
+>
+>   # echo 1 > /sys/kernel/tracing/events/irq/irq_handler_entry/enable
+>   # cat /sys/kernel/tracing/events/irq/irq_handler_entry/enable
+>   1*
+>
+> The above called __ftrace_event_enable_disable() with: enable=3D1 and sof=
+t_disable=3D0.
+>
+> Which means "enable this event for real". Well, it can't forget that
+> there's a trigger on it. But the event shouldn't be ignored when
+> triggered, so it will clear the SOFT_DISABLE flag and have the event be
+> traced.
+>
+> But if we disable it again:
+>
+>   # echo 0 > /sys/kernel/tracing/events/irq/irq_handler_entry/enable
+>   # cat /sys/kernel/tracing/events/irq/irq_handler_entry/enable
+>   0*
+>
+> It must still remember that there's a user that has this event soft
+> disabled and may enable it in the future.
+>
+> When the trigger fires, it will clear the SOFT_DISABLE bit making the
+> event "enabled".
+>
+> The __ftrace_event_enable_disable() needs to keep track of all the
+> users that have this event enabled but will switch between soft disable
+> and enable. To add itself, it calls this function with enable=3D1
+> soft_disable=3D1 and to remove itself, it calls it with enable=3D0 and
+> soft_disable=3D1.
+>
+> Now technically, the SOFT_MODE bit should only be set iff the ref count
+> is greater than zero. But it's easier to test a flag than to always
+> test a ref count.
+>
+> Hope that explains this better. And yes, it can get somewhat confusing,
+> which is why I said this is a good function to document the
+> requirements for ;-)
 
-I think it might be best to break each "DO" or "DON'T" into a bullet
-point of its own. At least it'd make it more clear what the specific dos
-and don'ts are.
+I think I understand now:
+SOFT_MODE means that one user requested a soft enable for the event,
+however that does not guarantee that the event is not already enabled from
+a previous standard enable (in which case the SOFT_DISABLED flag will
+not be set as it would compromise the previous user).
+So a soft disable request is needed to "undo" previous soft enables; this i=
+n
+consideration of the SOFT_DISABLED flag (telling if there is an active user
+with a standard enable).
 
-> +
-> +   - Use SoC-specific compatible for all SoC devices, followed by a fall=
-back if
+Many thanks! This really helps to better contextualize function expectation=
+s
+in the next revision of the patch.
 
-"Use a".
+Gab
 
-> +     appropriate.
-> +
-> +   - Specific SoC compatible is also preferred for the fallbacks.
+>
+> -- Steve
+>
 
-I hate to nitpick language to a non-native speaker, but when you have a
-plural "fallbacks", it would be "Specific SoC compatibles are also
-preferred". Probably also "SoC-specific" too, to match the wording used
-in the bullet prior?
-
-> =20
->  - DO use a vendor prefix on device-specific property names. Consider if
->    properties could be common among devices of the same class. Check other
-> @@ -51,12 +56,22 @@ Properties
->  - DON'T redefine common properties. Just reference the definition and de=
-fine
->    constraints specific to the device.
-> =20
-> +- DON'T add properties to avoid a specific compatible.  DON'T add proper=
-ties if
-> +  they are implied by (deducible from) the compatible.
-> +
->  - DO use common property unit suffixes for properties with scientific un=
-its.
->    Recommended suffixes are listed at
->    https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas=
-/property-units.yaml
-> =20
->  - DO define properties in terms of constraints. How many entries? What a=
-re
-> -  possible values? What is the order?
-> +  possible values? What is the order? All these constraints represent th=
-e ABI
-> +  as well.
-> +
-> +- DON't change the ABI, but if ever needed to change, then DO explicitly
-
-"DON'T", not "DON't". But this immediately contradicts itself, so maybe
-a different wording could be used here. Maybe "DON'T make changes that
-break the ABI without explicit and detailed rationale for why the
-changes have to be made and their impact."?
-
-> +  document that in the commit msg with rationale WHY ABI has to be broke=
-n and
-> +  what is the impact. ABI impact is beyond Linux kernel, because it cove=
-rs also
-
-I think this should be "ABI impact /goes/ beyond /the/ Linux kernel,
-because it /also/ covers other open-source upstream projects.".
-
-Cheers,
-Conor.
-
-> +  other open-source upstream projects.
-> +
-> =20
->  Typical cases and caveats
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D
-> --=20
-> 2.43.0
->=20
-
---ExsRr/5aIlsNDTUR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaGVgbgAKCRB4tDGHoIJi
-0v+SAQDiSRz2cEksHUrXKYhuPZfURXHZTVQuM4alHdgIjusWfgEAnsR8HMVKSvzM
-bbZv4zC519Chhfd2InIlDy1eUjmG4g0=
-=ELdN
------END PGP SIGNATURE-----
-
---ExsRr/5aIlsNDTUR--
