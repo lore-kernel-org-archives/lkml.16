@@ -1,69 +1,104 @@
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 053EC2F50B7
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 17:53:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FFF5309A75
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 17:54:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751478830; cv=none; b=ctklTaf9AFRMJzXcCuuQNtHHnOhw2nXECqZi2/t98pi3i3CSc3xDgr6pXhw/RqGR9Vo3sUf3cVCaxoygx1s34pJ2CqMhwsSZ6Wbg1gKSx4jHHgRCX7B4F4LMJeZieKoBIDuqxHLLWHPGj84xRMV6nS9nPrlzq/DDJpONVA5UHmM=
+	t=1751478847; cv=none; b=Ff8VUe0PFWdvg+Ik8ly/3pvjP17f0mTfBoW74VKKiOXPefB88PeRoxZDbP1DUUkvS/yirHZJhlZmksAbrTXSPzGhMxsdrbnoRdOnHeFR+ca5HZBqXFXnl68/SxO5mtVk8UPlQ+ee4k7pLIVNt3kL47jsZE5MQI+1ASC9SWN+X8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751478830; c=relaxed/simple;
-	bh=RG6kDLoXRwCf1N7Yaw0WU2DTaFH2ftCRrZV9+yZfpvE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YlKH+2ez9ljvX6lMkqWA7X0PI5LxmiNaGKwTtH4+M8xX5U6RJroFhbZFv2n9lzh8sYldvAnshcjv28IA8E5JGf0UBrJ77aOoaagIUZSg26fUrKZ8WuqxHFOmEGX6ABeNioyKcMTrdqRihXOCC4L3RKCgMdnvTo904ECxHlyottg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=T/0X5JsO; arc=none smtp.client-ip=91.218.175.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751478847; c=relaxed/simple;
+	bh=k89fQPiBNyDB/0V+EIFMALygaQ9NdDpzKAK2yXffWXA=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=I6i9EK8Y7SqtGl5QJ3Z0OpF+fKymXH1YbMSQga3NF3MMqN+RvJCEd71Z3ysodivRSTjtBCanAmdRnr5YZUTHFkVtVMxqPNunYXKCFyK1UW9ZyT6PCM2uAuZaC4uUG1XIvpSpZenAeh5xA/dWL++/LsK+1fPqxRmt0oIf/1cLrBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tG+k6u3b; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="T/0X5JsO"
-Date: Wed, 2 Jul 2025 13:53:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751478815;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RG6kDLoXRwCf1N7Yaw0WU2DTaFH2ftCRrZV9+yZfpvE=;
-	b=T/0X5JsOzHMOSQHvnsWVjmw6jF1LKzaKBliLfCKf9goT0wnVGdHoInw2zAGeqkDsmTNMSD
-	Zg93Btjybdls5dsEWzTbODd4Dh5/sPRo2UHejKv2Pb5Lqbn9lkFRcLXeYT4kfwu37vqro8
-	5Z5NAaK09pcEO//ryWmkBcDcVtrvG7w=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: "Carl E. Thompson" <cet@carlthompson.net>
-Cc: John Stoffel <john@stoffel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] bcachefs fixes for 6.16-rc4
-Message-ID: <fomli5univuatcdc7syty56wffm4uvslocxkufks27otyix7fl@6c5i7w7g64qo>
-References: <ahdf2izzsmggnhlqlojsnqaedlfbhomrxrtwd2accir365aqtt@6q52cm56jmuf>
- <CAHk-=wi+k8E4kWR8c-nREP0+EA4D+=rz5j0Hdk3N6cWgfE03-Q@mail.gmail.com>
- <xl2fyyjk4kjcszcgypirhoyflxojzeyxkzoevvxsmo26mklq7i@jw2ou76lh2py>
- <26723.62463.967566.748222@quad.stoffel.home>
- <gq2c4qlivewr2j5tp6cubfouvr42jww4ilhx3l55cxmbeotejk@emoy2z2ztmi2>
- <751434463.112.1751478094192@mail.carlthompson.net>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tG+k6u3b"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-31366819969so5712229a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 10:54:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751478845; x=1752083645; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:from:subject:message-id:mime-version
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qx+srozlbEc9LS3I6ua+gsxIOcIl9/CZgn+gg4jjp6A=;
+        b=tG+k6u3bGbUPpFmi4eRYHQNPYme7n3F4hOLDpiWeoXSlFwLcLtkFrE6BN/hUHrDQW7
+         bE22TNtZxrP8LG+UkEjMMhrHtBOhP1LxuzgiVXcBC6W7hPqCwIdF/HnuKVYvJ24wZWKO
+         wr2SaveUavsdlDycypqSSafLRQh82frbBUIcteT3nBYjg9EM9pGx8USiHWrEF2B0apFV
+         akyj++phDu0In74mHr7vVL8xpUbhAxTJse4j9EhCpSPVKONWkKDux1Xjkq0zKlEbb3QY
+         owmSz+Uh8i0ZORuSubqyitkplFkAb4Kv5sH/mUdDZAcEIAvASnvxnBbJRo1mCpYPiUIf
+         gpYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751478845; x=1752083645;
+        h=content-transfer-encoding:to:from:subject:message-id:mime-version
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qx+srozlbEc9LS3I6ua+gsxIOcIl9/CZgn+gg4jjp6A=;
+        b=Y1Kf/1fdFjAk2CTLSBtMOIIYClhe1pHYo45dimJI0gkSOxFkyh92PNtmnAHA4ldYs9
+         UtmnNpsgwPrHRAEO18NUEZzH7ZFyc6UyfeIRbTyO753satt/0xjvCcBKXk6IfzjbQu5t
+         nVxDEdIo1BaqHNO1MhIj69Aowwa17lMezezOioPiq2tuSiE5lP5yhX3r66L1PAW6zUVq
+         DNaSCG/yFT0YU2HczloHrT6+nPkp+emPUITi1UyCZV6owhzwrc9gSwjhaybXU/Fc00Pe
+         vIAlkPc12cfQiTltLyRGC8cCbha8LFwUZlz8tWzRsDJ68eKXKS0n9TNE5kVxKMObW7fO
+         RcqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXpfnzi+hJjPBUtPxLSO73Xlah6AwM5S5D94/PI9g9HDXPfxfXVY2EXhzAoih++JuLDeROt+4SoO5spQ2E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUkoii2F3fkt1cF8kT01ak+qohrkQdow6EjCqlY/jlmqC0jVj0
+	Kf4dIZ3Bg+aD/miq4s9wzN1OmXklY/ITGEMl8SvyBEtnTZiRJlmjKVc6c4Ux1Is0P9y9qo+iZeE
+	v4ORsOW0XaQ==
+X-Google-Smtp-Source: AGHT+IEhKU+BfPwXUZA28Afv177AAOxLT+LlkCtxGs7XMWzoEm8no/XF9kxpC9GQYle/zPOoVwc8OzBjJTID
+X-Received: from pjuw4.prod.google.com ([2002:a17:90a:d604:b0:313:221f:6571])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3dc4:b0:2ee:d371:3227
+ with SMTP id 98e67ed59e1d1-31a90bd92a6mr6467837a91.17.1751478845442; Wed, 02
+ Jul 2025 10:54:05 -0700 (PDT)
+Date: Wed,  2 Jul 2025 10:54:02 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <751434463.112.1751478094192@mail.carlthompson.net>
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
+Message-ID: <20250702175402.761818-1-irogers@google.com>
+Subject: [PATCH v1] perf genelf: Fix NO_LIBDW=1 build
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Yuzhuo Jing <yuzhuo@google.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 02, 2025 at 10:41:34AM -0700, Carl E. Thompson wrote:
-> Kent, at this point in bcachefs' development you want complete control
-> over your development processes and timetable that you simply can't
-> get in the mainline kernel. It's in your own best interest for you to
-> develop out-of-tree for now.
+With NO_LIBDW=3D1 a new unused-parameter warning/error has appeared:
+```
+util/genelf.c: In function =E2=80=98jit_write_elf=E2=80=99:
+util/genelf.c:163:32: error: unused parameter =E2=80=98load_addr=E2=80=99 [=
+-Werror=3Dunused-parameter]
+  163 | jit_write_elf(int fd, uint64_t load_addr, const char *sym,
+```
 
-Carl, all I'm doing is stating up front what it's going to take to get
-this done right.
+Fixes: e3f612c1d8f3 ("perf genelf: Remove libcrypto dependency and use buil=
+t-in sha1()")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/genelf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I'm not particularly pushing one way or the other for bcachefs to stay
-in; there are pros and cons either way. It'll be disruptive for it to be
-out, but if the alternative is disrupting process too much and driving
-Linus and I completely completely nuts, that's ok.
+diff --git a/tools/perf/util/genelf.c b/tools/perf/util/genelf.c
+index fcf86a27f69e..591548b10e34 100644
+--- a/tools/perf/util/genelf.c
++++ b/tools/perf/util/genelf.c
+@@ -160,7 +160,7 @@ jit_add_eh_frame_info(Elf *e, void* unwinding, uint64_t=
+ unwinding_header_size,
+  * csize: the code size in bytes
+  */
+ int
+-jit_write_elf(int fd, uint64_t load_addr, const char *sym,
++jit_write_elf(int fd, uint64_t load_addr __maybe_unused, const char *sym,
+ 	      const void *code, int csize,
+ 	      void *debug __maybe_unused, int nr_debug_entries __maybe_unused,
+ 	      void *unwinding, uint64_t unwinding_header_size, uint64_t unwinding=
+_size)
+--=20
+2.50.0.727.gbf7dc18ff4-goog
 
-Everyone please be patient. This is a 10+ year process, no one thing is
-make or break.
