@@ -1,59 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6848626E703;
-	Wed,  2 Jul 2025 13:56:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27B9F275846;
+	Wed,  2 Jul 2025 13:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751464569; cv=none; b=PFjFEoL5LtvFrfSOeUyKFLwAZWKD76Y/XT3vsG/o4LE9N3kMg9iu2sNFIlAb5kgM6v3BSGRSPBeXx4qMdY/QjuF7yuh4m3oKYI5cTslA1rkGVrNCDJa9WpidoJAgwuTeoFPIiDTxCKg8mZnVyiZoC+oB+6uo/5+8SDPf4fOJrnU=
+	t=1751464775; cv=none; b=mOYt07s4T2ujVL7wkqoQGt1/Jvj/CRI9NJJw1am4ZgKIXIooDmaf5ZNo2O6XdKlVu/mtVzvVsqcm2NmBbU+A3Ak4a7EaaVyXo9z5zBnHzjvIsYNeQmcbelcxv1URsesKPHPBNlDiQwaDX3+Q+/F8/pyvf3JMZl32LotcVQSP1/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751464569; c=relaxed/simple;
-	bh=WtBsD7bFa/td4ItScapL6sHI3Wry7a5SITse4w2Nv58=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=hf9y5GDUzsyGC0e62WkZebyAIZtkzzYhZYaU6G17oEI/C3Gh9hQloh4vFTH0+calFtsYf5i3czBNgrQ3G8blYwL6jcgiQX1toJiWNOX/Dma3vY5zx+F04CtdyBnN80ZreufmyFJtB/EcRy6YDBhKCPJzR9mS8LWXjOHXWnOPt+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8A3EC4CEE7;
-	Wed,  2 Jul 2025 13:56:08 +0000 (UTC)
-Received: from wens.tw (localhost [127.0.0.1])
-	by wens.tw (Postfix) with ESMTP id DE7D75F949;
-	Wed,  2 Jul 2025 21:56:05 +0800 (CST)
-From: Chen-Yu Tsai <wens@csie.org>
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
- Paul Kocialkowski <paulk@sys-base.io>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Samuel Holland <samuel@sholland.org>
-In-Reply-To: <20250701201534.815513-1-paulk@sys-base.io>
-References: <20250701201534.815513-1-paulk@sys-base.io>
-Subject: Re: [PATCH 1/2] ARM: dts: sun8i: v3s: Add RGB666 LCD PE pins
- definition
-Message-Id: <175146456585.641360.7859504612515623199.b4-ty@csie.org>
-Date: Wed, 02 Jul 2025 21:56:05 +0800
+	s=arc-20240116; t=1751464775; c=relaxed/simple;
+	bh=+z/pyj4SUuWOCUUWNHIbttFGlxzh7+YiGzzHAMi1ArA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PyaXo9WDzdxFaWOYg7ifd88Egd9t39+nRdu3jApTehyoQLnW7QkmhGfJ3DKPToc5RqL9W/j92pyNHu/kycdJq3LqL8ZJD50QsQ2heC9frmNg3DELXEG5tBTyLVSVD0bxZ0XjaHuB2I3a5FALNxEoyUAihjV9JA3+BoP/Uu3zOc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MA+UVhQd; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MA+UVhQd"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-748feca4a61so2561499b3a.3;
+        Wed, 02 Jul 2025 06:59:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751464773; x=1752069573; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uG2cVUfdVKK+VnskBFnudLceDCCRLKIh6XoDBmMRx/Y=;
+        b=MA+UVhQdEHlnNI3lQlYQMy69278oVDs6J/JeMutUp40HcpdNYau5s0sWFOnHIWyu9m
+         S/0hu2vJKd1Gbnguk+qJi/c9tzLTSqyg4GUDPytsM0bdRTiBIBr2n/1ABontXG7t16Pw
+         rOwF2aEBNq+VmgKu5anZ05JfoAQGKaNWfK9AnGqmyrP0vAy1AMK67Kt1g8v9FueoVBm6
+         +w7kMKcsUKv92WBTlmw5EalhuoYGpXJtcS6QUjxJK4R8Bvf10l3YUmhe8/HTw1xFc3X/
+         m7qbqhZAQJg7uqwGv70CfgkBU1BpRPkB0M+LgfM1ogT+6FB5Fkv5a2VO2+zARcvsPeBB
+         Ss8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751464773; x=1752069573;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uG2cVUfdVKK+VnskBFnudLceDCCRLKIh6XoDBmMRx/Y=;
+        b=crOxM7OjM8moeTBXkbzLznYJjCpsMdq+25uqLjzILDSeY+MBOIdxIuuQ737cF6WyKI
+         Vh3737wAKjhrTB2VXGqpXHQ+Z1+eOLIfNFEa9pM3myudM5PxWb6f5VV4HXT9awA+ukba
+         GDzs/oGRsDIKFdwmHblx2lD778/6ojMiWfXzXOv6MXZ0QWSsh7xh0r6dPNROQka1AOve
+         Huzdp0Q63boS8Y7wDNAGOhxyr2Z6ntTCGo8MoohaQwAnRk0Pub+JBwm2+TKDm14APvgT
+         EH1D1DsifdpLssIjszgYcZ9KEfX25olFCexTQFwVtI64r9eWFEo9huCv5SASCVt86EI1
+         caHA==
+X-Forwarded-Encrypted: i=1; AJvYcCVfcA18rFLFGvtCINANtIsb+LacnYxmVBa1eZwfrhCD33wo9C9/u/YvcDIVl9Vu5sa8jpaMvvC8N8QfgdDc@vger.kernel.org, AJvYcCW9g2+whSc67hMM4KAMUPs+Cy1IPfzsQtdtD9b9UGfG5oxRFwuKeS2IkTOtNcjWwoSwBCrjqhZp3k4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxIWez5TmpWUxUxOVkwCWoMlz/3MOh+M2t0lgUvXpOUBANDMq6
+	9bDiF8dndET+Ir4Ii4E8k8rU+0A+rEeQGAbcSHzDFmhxYodGlC69D8FKm3YxQQ==
+X-Gm-Gg: ASbGncv5S6yHZcq0vf92pd866AIq+Vu0esB7PE7r0gMdhTi+cb+4Tacc0RM4a5oZZfr
+	5WplwiLxQsCyGwPUKVdsH1FfweG4InbabIw4ML3DGEmjRe4hki3DQig7IhxBY6skW7GGeg9Qpwt
+	NvtANLir0/0nH8Ka3vX4XY/jtzCzUHUvvwhaKrLhB9qrxlFtya5IEKJ7ovxS3PfNyvaWenLLGzq
+	qv0MgSTamemiuwCeSGAdyY9CpWM3Bdt/6dUHw4tVkfE8M+6m+FRBmju0RhmcyzQHRThuHbMCYLh
+	WS+KoiWyXl4uBTYQ7S4OFEUGvCYxZAolUfFW9kwnTimzS5ntLgKZJbRuCNdNKUPQRx8kZHE=
+X-Google-Smtp-Source: AGHT+IGoIJTyN7a6y/nAlqjM8UO2CTT19q+9ZhHui8cXpmy25QIZ9nb0qQ0kk3cJnPI4P2Bm/a0WuA==
+X-Received: by 2002:a05:6a21:6b16:b0:21f:d0f6:13ba with SMTP id adf61e73a8af0-222d7dc4f84mr4825622637.1.1751464773339;
+        Wed, 02 Jul 2025 06:59:33 -0700 (PDT)
+Received: from localhost.localdomain ([36.50.162.229])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af541c38esm14459329b3a.46.2025.07.02.06.59.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 06:59:32 -0700 (PDT)
+From: Akshay Bansod <akbansd@gmail.com>
+To: Lorenzo Bianconi <lorenzo@kernel.org>,
+	Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>
+Cc: linux-kernel-mentees@lists.linuxfoundation.org,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] iio: st_lsm6dsx: Replace scnprintf with sysfs_emit
+Date: Wed,  2 Jul 2025 19:28:54 +0530
+Message-ID: <20250702135855.59955-1-akbansd@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
 
-On Tue, 01 Jul 2025 22:15:33 +0200, Paul Kocialkowski wrote:
-> The V3s (and other packages) supports RGB666 LCD output on PE pins.
-> 
-> 
+Update the sysfs interface for sampling frequency and scale attributes.
+Replace `scnprintf()` with `sysfs_emit_at()` which is PAGE_SIZE-aware
+and recommended for use in sysfs.
 
-Applied to sunxi/dt-for-6.17 in local tree, thanks!
+Signed-off-by: Akshay Bansod <akbansd@gmail.com>
+---
 
-[1/2] ARM: dts: sun8i: v3s: Add RGB666 LCD PE pins definition
-      commit: fdc0682e1153a6180eaab35033b05ad4ce35b6a5
-[2/2] ARM: dts: sun8i: v3: Add RGB666 LCD PD pins definition
-      commit: 62ac3b380334ca0be4f7b2b1bfb3dbbaf2efcfa7
+Testing:
+- Built the driver (`st_lsm6dsx_i2c`) as a module.
+- Tested using `i2c-stub` to mock the device.
+- Verified that reading sysfs attributes like `sampling_frequency_available`
+  works correctly and shows no change in functionality.
 
-Best regards,
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+index c65ad4982..1cef10919 100644
+--- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+@@ -2035,7 +2035,7 @@ st_lsm6dsx_sysfs_sampling_frequency_avail(struct device *dev,
+ 
+ 	odr_table = &sensor->hw->settings->odr_table[sensor->id];
+ 	for (i = 0; i < odr_table->odr_len; i++)
+-		len += scnprintf(buf + len, PAGE_SIZE - len, "%d.%03d ",
++		len += sysfs_emit_at(buf, len, "%d.%03d ",
+ 				 odr_table->odr_avl[i].milli_hz / 1000,
+ 				 odr_table->odr_avl[i].milli_hz % 1000);
+ 	buf[len - 1] = '\n';
+@@ -2054,7 +2054,7 @@ static ssize_t st_lsm6dsx_sysfs_scale_avail(struct device *dev,
+ 
+ 	fs_table = &hw->settings->fs_table[sensor->id];
+ 	for (i = 0; i < fs_table->fs_len; i++)
+-		len += scnprintf(buf + len, PAGE_SIZE - len, "0.%09u ",
++		len += sysfs_emit_at(buf, len, "0.%09u ",
+ 				 fs_table->fs_avl[i].gain);
+ 	buf[len - 1] = '\n';
+ 
 -- 
-Chen-Yu Tsai <wens@csie.org>
+2.49.0
 
