@@ -1,146 +1,255 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34AE31D2F42;
-	Wed,  2 Jul 2025 02:54:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751424870; cv=none; b=dIxmq7SqgsOSl/NZAiQThvcBKlLp826q+4qodpfqkjQQQF+w1MGG9ZH25fXaMl4+FpnVEZVzhxc6v6JYw/mct+7TKJX5N1EkvZ+Ep1uQY3GpUSL/GwBp9jw4+dcJ4ULnGVLYCel3ZjxeeEBTzSR9bNBsb75dmOhdAgLaC+JELf4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751424870; c=relaxed/simple;
-	bh=DsySgbbUQc788joFj5oTItv/GmC10MRZdG1rqdOZQg0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lzvY99dOdDnIPIiD/m6AmRsg7IYev6Yy8OrbsSQU5JzjFIYJL34NeONSTuk6M9Ib3EtuXaf0tzn+VdyPBv0r/hJ0Vax47RuSGKt0d4zg+j3x0Hv4cxHQHZ3SL84Q6qW/nW7loB9uijUmmkYgyBwiO4YcOhCNgcUCLmva1gYLKjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=GjESWrA5; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39CCA32C85;
+	Wed,  2 Jul 2025 02:56:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751425013; cv=fail; b=rO/EQF2lsf7Yhkcbg/HDVDjzUbxn7vrtOPyxnxedd98JwbAr1tcoAswASY4LNInj2fqL6OshWhGCUS95YqGm8FYKlEiHfr6auKGZTyaeTMguA0jRQxTgz1WFHYAQUfXlURurQxVhOMzthxqeop3Z3l0sRR8RJcFBT6RCTyIsFUs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751425013; c=relaxed/simple;
+	bh=Lx4WmWgPJRzydRWIWTtQXDp9ME8DLmWNiV4bWlpFJQI=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=NdMVXpsx6JUXUu6265A3JUmacqzPkngHurNXXnFAB0Bj+mRmA3fII0qN/NO4E5W2MiKi+tHJF/EZOIe9sQovqJ0tft2JYHq6lG0kvtGVRVY2lqyBc+8uiO6Ihnt5Z1V1LHQ4EJRs1QoJXeU6hG3zo39VCJj5d0R3jLG6NC7ym5Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YIw2iYJe; arc=fail smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="GjESWrA5"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 561HTrRs032748;
-	Wed, 2 Jul 2025 02:54:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	f7DmUnS+ybl/RnHEOnXU9a4omgJnpLCDyxPhASO9ViA=; b=GjESWrA5YmQqxC/g
-	UDU8Lcf3srqk8+OiI9zukdkuFCLaYVZtcDdT/F/wg8oG4YHq5cRaeAg9tkAll4Sk
-	3Hb7qWRwMEMkGyMr5MuAWio6WChjlslfFR3mBF/1NxuIbZW4Y+Qe4ziHQwo+R3kb
-	3EIqRgdKIgEhYDXeiuoHqJcdepxYmpKeqP910fpE+LoJL542JErpXfLeiNyG53+N
-	V3hYGgTiwMq9Cuf2aMx0PSgEIIFERezlGmawj6riYMRU8qRcFNSqG/a+3y76BX2k
-	lrdPVJGGmp9F2G9iSicLaV+d1l+xKnakaTdUZu/STqptUAMkgzkO/nG5eBMW939q
-	0/iUFQ==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j7qmawdb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Jul 2025 02:54:23 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5622sMUT031576
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 2 Jul 2025 02:54:22 GMT
-Received: from hu-lxu5-sha.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YIw2iYJe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751425012; x=1782961012;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=Lx4WmWgPJRzydRWIWTtQXDp9ME8DLmWNiV4bWlpFJQI=;
+  b=YIw2iYJeUAIENJJKR/FAB2u9PbuhK5r4pkUbJg1p6Q3Sc9zQ2XVhGrwt
+   mnAl9RBkPg8jc/qodBgO6qtlBVJ6QvTnvKZg31dDkRH1ovjcT8rU1J7tG
+   mznWFIuAchDqEn07/99YSyB0nmZayW38fWRyvu24LVan/SKj3lraLUk5t
+   g324mlMjWRIb4doHfe8oeFjwQFgy5fEEuJi70QdXqkP8F0+lk2MvtA3hi
+   rYKhG7n9YPGaf89evrZwmTWYGfcrHyWwTJ2X35w3KoHVU5L69YP9jwfws
+   P1hgFBXlQaDIC6xwH+5mgV46zoYwyLFJuTHk9jjf4TepbsHfQSzefNdr/
+   g==;
+X-CSE-ConnectionGUID: Bc5dk3o9RaGMF16yzphUIA==
+X-CSE-MsgGUID: G13JXMkxR1GpHKJJJOSRLA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="65163093"
+X-IronPort-AV: E=Sophos;i="6.16,280,1744095600"; 
+   d="scan'208";a="65163093"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 19:56:51 -0700
+X-CSE-ConnectionGUID: IqowxoYxSM+6h22iFR+KXw==
+X-CSE-MsgGUID: KGBJ1+d4TT+78ZuOiSzjwQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,280,1744095600"; 
+   d="scan'208";a="153348153"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 19:56:50 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Tue, 1 Jul 2025 19:54:18 -0700
-From: Ling Xu <quic_lxu5@quicinc.com>
-To: <srini@kernel.org>, <amahesh@qti.qualcomm.com>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <andersson@kernel.org>,
-        <konradybcio@kernel.org>, <arnd@arndb.de>,
-        <gregkh@linuxfoundation.org>
-CC: <quic_kuiw@quicinc.com>, <ekansh.gupta@oss.qualcomm.com>,
-        <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        Ling Xu
-	<quic_lxu5@quicinc.com>
-Subject: [PATCH v5 4/4] misc: fastrpc: add support for gdsp remoteproc
-Date: Wed, 2 Jul 2025 08:23:41 +0530
-Message-ID: <20250702025341.1473332-5-quic_lxu5@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250702025341.1473332-1-quic_lxu5@quicinc.com>
-References: <20250702025341.1473332-1-quic_lxu5@quicinc.com>
+ 15.2.1544.25; Tue, 1 Jul 2025 19:56:49 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Tue, 1 Jul 2025 19:56:49 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (40.107.93.77) by
+ edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Tue, 1 Jul 2025 19:56:48 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BIvYKeDRJ37aU64l1MLZNrYg9Ljk9V+QzBnJkZcR9OzwYtc/c6N8OVvcAGDqL8s7f8NqXU9J8XeM4AvmhwZWq8IxHRaAaHZ8KAFIIkT8OUtC83ffRHOx0XTuIfrmV4BcK6027MjW0iq3Ioh1CB6QzUG3NSk/j/zaZXSc01hV2CchJiGnhFxsKJbWqP4k/HIVx2KAthVa+EMYD0PYtqEwRVc4PpEkqN5NSOEXRmaoJ7Nl9ePMgmmNk/mkIlNEV4GUQgr9JfbYPb9wLfZNfCja9Umv0cZwWzNQRpHYEE5DHyvwustwKzVDl/aFb3iDzHITkj94kXyI3JoQwuacQpg6tg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NmQkDYh11GAsJbi5x5bqvrdz3dnep/k2o1/CwdANmRU=;
+ b=pmrAy2owXX7WpBW5r+6xraoP90DZpJyeq2vcpsLi2piYTl6LsHj/tu3+XAELRlhJYIDpwiiPsNkGaP/5t/NJm8kT82SFBEvSj/WEhrkiczJ+23L+i0jKXq0wAQZ/rXKUieN0+AguZ7niBimubkgiwa9NRTImtg+FCFZxikJgG14PL13HwsWRD5OyKFxyg18Pom6inVGQbzLUS/gacGJuh7WrmwMHMqZ4FQvNw145vUITrSfDYQ/FJLgjpIlcjVHCRXTNygwIgI3qesTqFKAPqnYfxnD7mAsWDHiQ9Mn1+F1q2G9rGgDcyjN9JaygHglKItjmOMOmfyvf3M6Ep1ODAw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
+ by PH7PR11MB6793.namprd11.prod.outlook.com (2603:10b6:510:1b7::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.19; Wed, 2 Jul
+ 2025 02:56:44 +0000
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf%6]) with mapi id 15.20.8901.018; Wed, 2 Jul 2025
+ 02:56:43 +0000
+Message-ID: <29acd88c-144e-493e-8721-07828a480d76@intel.com>
+Date: Tue, 1 Jul 2025 19:56:40 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v14 29/32] fs/resctrl: Introduce the interface to modify
+ assignments in a group
+To: "Moger, Babu" <bmoger@amd.com>, Babu Moger <babu.moger@amd.com>,
+	<corbet@lwn.net>, <tony.luck@intel.com>, <Dave.Martin@arm.com>,
+	<james.morse@arm.com>, <tglx@linutronix.de>, <mingo@redhat.com>,
+	<bp@alien8.de>, <dave.hansen@linux.intel.com>
+CC: <x86@kernel.org>, <hpa@zytor.com>, <akpm@linux-foundation.org>,
+	<rostedt@goodmis.org>, <paulmck@kernel.org>, <thuth@redhat.com>,
+	<ardb@kernel.org>, <gregkh@linuxfoundation.org>, <seanjc@google.com>,
+	<thomas.lendacky@amd.com>, <pawan.kumar.gupta@linux.intel.com>,
+	<manali.shukla@amd.com>, <perry.yuan@amd.com>, <kai.huang@intel.com>,
+	<peterz@infradead.org>, <xiaoyao.li@intel.com>, <kan.liang@linux.intel.com>,
+	<mario.limonciello@amd.com>, <xin3.li@intel.com>, <gautham.shenoy@amd.com>,
+	<xin@zytor.com>, <chang.seok.bae@intel.com>, <fenghuay@nvidia.com>,
+	<peternewman@google.com>, <maciej.wieczor-retman@intel.com>,
+	<eranian@google.com>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+References: <cover.1749848714.git.babu.moger@amd.com>
+ <1fa5ee1e36bb599ae33d772e7a3c40fd3a4abe82.1749848715.git.babu.moger@amd.com>
+ <7d149e94-ab9d-4db7-abb6-83aaec1e6735@intel.com>
+ <3a3f7af5-6b21-46f5-88e4-d534c9cacb10@amd.com>
+From: Reinette Chatre <reinette.chatre@intel.com>
+Content-Language: en-US
+In-Reply-To: <3a3f7af5-6b21-46f5-88e4-d534c9cacb10@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MW4PR03CA0125.namprd03.prod.outlook.com
+ (2603:10b6:303:8c::10) To SJ2PR11MB7573.namprd11.prod.outlook.com
+ (2603:10b6:a03:4d2::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=C4TpyRP+ c=1 sm=1 tr=0 ts=68649f5f cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8 a=d01il73eTdEK0Eih25sA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: Vxyh76GFmH2DEBZRX475t7STpJp5IzUC
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDAyMyBTYWx0ZWRfXww/nXG8/9/NG
- aa13q8Q8vSY1RWlFWKTcUwoY93IA0Xj1Wkn8TLgfzlj42CuBpPmnFfZg1kOe71vRrDYuHwDCxa6
- KA2gE9ySNNiKoEXK5RkM1Ne91YXVvoXbg9RlduA0ZbYX4xk6CRSAw406I9VLfNbP2z/RJdb78FD
- Q0XeZjPhjd7TJv16ZB41hTJtltE67J8JFkA9nVJy/QjPj0zsIilNz2PD41Bo2jc6eF3c5pal2pz
- Apj2ixXGn1ghZzUIe1wiXu0u7qP0b5VfLH3LvWlcT+srxkJG7l9L1cMEDPsjP+aTjq5YePvjlU5
- Rbzvq1hk70dGzp5cK0U2ypSzPd0cx5005fUQo2X0GyY8/vH9C6m9hjavq4/vX2QbyXwnntsKsO/
- tqawMMfjtoyNU0DhcoUuOwQwnuZvDfKfAPnEckMiNixxzXtYGP2VwVuby8u3wCu//8ukgcdU
-X-Proofpoint-GUID: Vxyh76GFmH2DEBZRX475t7STpJp5IzUC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-01_02,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 phishscore=0 suspectscore=0 bulkscore=0 lowpriorityscore=0
- clxscore=1015 priorityscore=1501 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507020023
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|PH7PR11MB6793:EE_
+X-MS-Office365-Filtering-Correlation-Id: b3aa655a-8901-41f1-61cd-08ddb914138c
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014|921020;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?L3pUVkZVOTNEYVVPTjV2UnhVQUxXMklYSkRUN2Y1bWFuSjRCRXRpSmNENTJ6?=
+ =?utf-8?B?c0JkejZxM1hEVFZPQ2JGRitwSlk2MGEyZlhRMzhxTlpJenNTMmw5SUx0Nlli?=
+ =?utf-8?B?cGpkd0ZQaEpNNUdBVHVPamU3VWVZODZ6NjZTb21VWjBjYlAwT1BXRURHM2Ji?=
+ =?utf-8?B?dnhLODNqVzNVZ1ZRMUpzY2ZKK25uQjgwRHB3anoxYzdmS05wREVCL2JTL2N3?=
+ =?utf-8?B?c3F0a00wQWErUG1ha3NjZlg5dm5TaG5rY2dxOHZOLzRSK0NEQUNqSUN3VVhZ?=
+ =?utf-8?B?U1lIRlJCUEt1RkNFN3VGNlVxeHhlTFNGNC9wZHFQM3hHOGV1bkowbk1qcit2?=
+ =?utf-8?B?NS9ObWtOb1Q1eHFXYjRJQzFSMHo1czZ5N3lGeWQrNTdMMFU0c0pQay9HSTdV?=
+ =?utf-8?B?d2pLRHUrN3pYcVNySE16VHdPTjVVZGZ5YzlRSUphdnNQUXVILzRkUmw3S2N0?=
+ =?utf-8?B?MFp4QTVMb2RHcllsK2doRDVrTVk4OVlqRXBWclR5UXJURmVmanROVlhuUEtu?=
+ =?utf-8?B?QzNOMUxQUDhyMXZldDhoUG5SUWtEZVBnVnNXbytZYVdUbWRhdSszSkRvVGRu?=
+ =?utf-8?B?QXNKQ0N0cWtSdzVWTHhmRmQySzJjeHA2T2hiVEYvQVZVOXl2Smt5bFJGbmNr?=
+ =?utf-8?B?TUZhY1pYZzFTOFgzU0hUd2kybmZIZ2VKb3U5cFNyY3VnajVPc1pnVDhxcFBT?=
+ =?utf-8?B?NTJRRTI2QVhTUFNLT2V4Yit6RkhNMENra1FvSTY4SndISDZzcWNIU2dxSEZB?=
+ =?utf-8?B?UUxvVXRCMlEzL0hlRVdDYW9pWG11ZTFoajVEcTdaQ2NxcVVXQjBBODl4bllx?=
+ =?utf-8?B?SVQwOUtzZUN4N01XR3Bna0RJZHhxTS9sQ0hwZzI4WVpGL1VtRkpRb2pTVVVi?=
+ =?utf-8?B?MlhaaFZzcGF4N3UvQklkcEJlcnd0cDYxeWpSb0Rkalc3SE9Wc0IrVWxUNzg0?=
+ =?utf-8?B?SDRpcHFDYkZXZTFPcU00ZjJQVGJ6ZXdSSnBIRlZyNlBQU1NZRUhWaFZNSWQ1?=
+ =?utf-8?B?eWkwUG8vbjU3dEpqLzRxQlIxYStvTmlUc1F1VDlQYnJBU3dHaFNlSFgxVnFY?=
+ =?utf-8?B?cHVNK2x0VGJOTFJLQU96YU8wdDNCRnNmeTRxZGpyaUpUbGZDRmZYek42bUNx?=
+ =?utf-8?B?QVduZWxrcGE5MUc3MUs3QlQzYjFnUEJzMC9mcUYrVk9kMHk3OXhVNmdpcERv?=
+ =?utf-8?B?WHBGRHRMdEQxN3p2Q2UyQWdYMFRCNEFqWkJkRHVFUXIxODRpR0xDZ3BGQkZI?=
+ =?utf-8?B?OFFrQWpQNm0xVlBDSysyOXdrVkhYdExYZE1XL0xTdjNtM1FPZUcvdWVMdGx2?=
+ =?utf-8?B?RHd6YXY3R2VEYUk4dlkrbDVlaFBWRU1nUkRtSUU3Z2J5Qnc2ZS93bEhlQXlm?=
+ =?utf-8?B?bytmZHlkdTBackNkM2ZXa3hGKzdPek02SmE4endXSU1SclYwdnVNNzhnQVd3?=
+ =?utf-8?B?VjFmaVNDRStZbExuL0dpei9mcEV5VVdsRTloaWNQU05tNlFJVXB4S2JxOFNu?=
+ =?utf-8?B?UXQwNkpxeTZRZFdOVG1GejRnYzNscWxRMERkWDRBS3ZUQVErUFUwOTJuWStD?=
+ =?utf-8?B?OGtaQzZZanJPZkJXcy84MGJQWWkwUFJUTnYyL0VaeUt2Qmx0SGJDNVJNWlVv?=
+ =?utf-8?B?MlNzaUdxdTlkY3VRVG9UaHpyTER5QlR6eUFyd0l5blpkV2NzOVFsQmxUZytT?=
+ =?utf-8?B?MmtjMWxoN3R1cEp4R3ZEYjdwWVNuVFc5MnJVaEJ5WkNVN1h0czA1VlhJTnRQ?=
+ =?utf-8?B?UEU1WlU3QThBeVdmT3VacDcwZDJRZHZpZXZWV0M5UTJDUDVnZXc1L055dndH?=
+ =?utf-8?B?WnpSNjRXNG9MTFdQUGlpZ1ZuRjE4WjFaZ3dDL3lNOC9SdnpUR1p4VEJjQXJJ?=
+ =?utf-8?B?NlJEWnFFeE5Pem5xaUwySmdNSnU4R3hrUmRQYXZzUThaWFUyTVNZdklTK0JU?=
+ =?utf-8?B?NS8xamdDVVhLLzNyU045OEJtQzJuOFVYY2VITng5WFZLaW5vekIzdDFZanIr?=
+ =?utf-8?B?cnRjdHlVS3JBPT0=?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cnd0aURiaTB5UVVLQlFGZ3dGelUzVCtwNThzV1cvZ2ZOb0ExM2dDMEE2WWsv?=
+ =?utf-8?B?WGpMK2VVQjVnbjU5bE05QzVkempsazRmSlJTNHMzeWZ3QXFacm5kdUxlTUlT?=
+ =?utf-8?B?UmhQaEF5NmlWYUpuTUpRUnNBNkFVaFdhaGFDbUZMdU16M0pHRFM5RXJuR0Za?=
+ =?utf-8?B?bWxBdzBOOXlRSW9wdUUwa2VGSDk4VUZjcEdTaTk4MlNNbWE2U2p6RjJjNG9h?=
+ =?utf-8?B?clRtWUk2K2tqNi9UbG1rSk5lNlRqaS9TMlJwMmFja3NPM0RZd2x1QjJNUVBj?=
+ =?utf-8?B?ME9ubGM3Ni9rZU1hRXZ3aURSYmM0OFdHTGQ0d3o3M2cybXZJSEEzLzVaR2FU?=
+ =?utf-8?B?bUw4bEN5U0hSNFlDb1ZDRXFNVm0rdkFCZHJSSE1LZEo0VjhVRE1obUlFQlBX?=
+ =?utf-8?B?ZEFvbUpwOFZEdDhHZjdsSDhGRnRDRnVwQVBxQ0ZzdEVEOHFxdnc1TlFJNzY0?=
+ =?utf-8?B?T2RSeVR3MnRKbEVCaWhkUHhuSXBtNWxtTGc4a1pYYU5ZbXNNZ2Q2Nk1DNFhE?=
+ =?utf-8?B?ZFdmdTY2Sm11bHJjc0xlOW5Bb0ZBVnZWWERPMWdwaFo0NFh6V2FnOE1JZTRR?=
+ =?utf-8?B?MGphdzhCNFRBakIxUXZ3Ti9xOEVKMWc0R3pBdmlveHFDcnJ5VkxMRFBlZUN3?=
+ =?utf-8?B?QzcwQUxhajVUQmVkd3RFQ3VjYTVRcEZVd2F2Z1V1L0ZQa2swT1BLNjgrMXRL?=
+ =?utf-8?B?a01NTlZJUVBOa2plSlF5T0VaSXJMa2NONFd2OVFrOU9ObmJueG83dlVuVnpZ?=
+ =?utf-8?B?aVFEb216NHpqK0hOdGFRZDJaZUg3SnZUYXF1ZVZ2aExyWDlkWjNkbmQ1aG92?=
+ =?utf-8?B?VkN6U1Z5SmhMbXNuL2t3VldEblhvMWNhVFEyQlJJZDVGSlJvRG1sZzhzRTFk?=
+ =?utf-8?B?QjM4WDJsRkR3OEllOTZwdmdIcUhzckwyVXFEYkp5OFVjV3dFNzMyd0d2N3dB?=
+ =?utf-8?B?aVVLTXhNVVhQdE9UaEt6QWtjQlVFckdOYzE0bXBPbml6S2d4cHhDdUpOcmla?=
+ =?utf-8?B?ZlVHM3RHZ0trQVQ1L0ZOK1ZTeFhBV2lrOHRIUVZPdHNrblROTXZoZGdpRXdi?=
+ =?utf-8?B?d3Y0bXRCQzYxQ3lhL1k3UFE0ZjlwREc5YWJESXFESm8zRldTMHRpRHc0N2lj?=
+ =?utf-8?B?SUNGTk45d0FrdmxJVVArbFB0YnFreXNndFVrYjViZ2N3aC9xc042RlRVbVls?=
+ =?utf-8?B?aXh6RzBwN1BTMVRReVE3MmJZUnQrTEQ4dUxlZ2VhbUJkNUFjRXgxelhOVGdu?=
+ =?utf-8?B?WG5HcHhzWFNyYmE3aVpYU3BEM21nZjdtODA2ZWU0UFNMbWJ4YWlMVEdZRGJE?=
+ =?utf-8?B?TnBrNy9idlk2TjRsdEZicWU5VVNmaTdpdTZUaFZ4dUdIQ09JQk9rU1d0TVBi?=
+ =?utf-8?B?UkZrS0c0WlBrdEx1S2VLbFVzMU5kaEZvZGlJSWxscVBIZFVTM1gvTk12ZzV2?=
+ =?utf-8?B?TkovZTh6QVhOWVdCd1VVSEttZWE0MlNHZlRVQjZhazR0YlA5UWROYkZiQTN5?=
+ =?utf-8?B?QWl2Q2pJN3dnRlJ6SUJiaWt2dlZHUnBaTno5eGZPcC9HM1g3cEEwL1Zhelcw?=
+ =?utf-8?B?Wk90SUpyeU45RGVkTWh1Vm1Gbm11UXBFcGdBSVd5Yjc3MzdOMzhYNUVoalpW?=
+ =?utf-8?B?c3hlc0xsUnFzdnFJR3FzNE1DbW1oUktkcHpnOVk2UnVPSks4eEtzL2lSYnZL?=
+ =?utf-8?B?bnB0eTdTZ1V1SEVsNVlPRmhGcStXMUFyMEJ6Y0gxcHpqNlYvYW11QjRMV0I3?=
+ =?utf-8?B?d3ZIT1E2dDBLNFNaaGIyZlVNdlFTbk5jNjZ4Y1NTRXo0UzlsZ0xrWklJd1Rk?=
+ =?utf-8?B?SjFKUFJEQk5oeDk0Zy84RFh2V3ZaVDhXMnd6TktMblpNOW9vOFl5YWU0aDNl?=
+ =?utf-8?B?emV4aHhvMkl1WnZsa1VnYU5IY0I2RFF1QTE0cTBaQjFxL0MwTmsyQ2Njdjhj?=
+ =?utf-8?B?dzNaZHdpU3JOV01uS1lwNC80NHJaL3pRSXI4RkVjdHNYOW14TFdLWG5zekV4?=
+ =?utf-8?B?LzY0YW8yOFdPdFZMMURzZUY4T1MwRjA2N1FlajBLWEF2RUZWZ0lIa1owcFdY?=
+ =?utf-8?B?SjRFOW56dDhLZ0tTdUN6dkt5U1pIRlp1emJ3ZTJqYXlITmlrOXpnRm14eEZu?=
+ =?utf-8?B?OWNGcWNFeDhESUd4VUZhRnJBKzloMEVuU3lTc3ZKcnQ3WlhEWHdob1k4ak93?=
+ =?utf-8?B?aEE9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: b3aa655a-8901-41f1-61cd-08ddb914138c
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 02:56:43.7642
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WWgmLHP5wkhWsmWn5ycfxSDv/0zqzMcqmGDlkO1baDIPsEYJkaL8u7f9ZeClTaJ4yjYbjCQaOrdRdBnzOJdnJo59nu3IX/JPemO6ksP39C8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6793
+X-OriginatorOrg: intel.com
 
-The fastrpc driver has support for 5 types of remoteprocs. There are
-some products which support GDSP remoteprocs. GDSP is General Purpose
-DSP where tasks can be offloaded. This patch extends the driver to
-support GDSP remoteprocs.
+Hi Babu,
 
-Signed-off-by: Ling Xu <quic_lxu5@quicinc.com>
----
- drivers/misc/fastrpc.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+On 7/1/25 7:18 PM, Moger, Babu wrote:
+> On 6/25/2025 6:38 PM, Reinette Chatre wrote:
+>> On 6/13/25 2:05 PM, Babu Moger wrote:
 
-diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
-index 441f5851eb97..2d2242d28d01 100644
---- a/drivers/misc/fastrpc.c
-+++ b/drivers/misc/fastrpc.c
-@@ -27,7 +27,8 @@
- #define MDSP_DOMAIN_ID (1)
- #define SDSP_DOMAIN_ID (2)
- #define CDSP_DOMAIN_ID (3)
--#define FASTRPC_DOMAIN_MAX    CDSP_DOMAIN_ID
-+#define GDSP_DOMAIN_ID (4)
-+#define FASTRPC_DOMAIN_MAX    GDSP_DOMAIN_ID
- #define FASTRPC_MAX_SESSIONS	14
- #define FASTRPC_MAX_VMIDS	16
- #define FASTRPC_ALIGN		128
-@@ -2250,6 +2251,8 @@ static int fastrpc_get_domain_id(const char *domain)
- 		return MDSP_DOMAIN_ID;
- 	else if (!strncmp(domain, "sdsp", 4))
- 		return SDSP_DOMAIN_ID;
-+	else if (!strncmp(domain, "gdsp", 4))
-+		return GDSP_DOMAIN_ID;
- 
- 	return -EINVAL;
- }
-@@ -2324,13 +2327,14 @@ static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
- 	case ADSP_DOMAIN_ID:
- 	case MDSP_DOMAIN_ID:
- 	case SDSP_DOMAIN_ID:
--		/* Unsigned PD offloading is only supported on CDSP */
-+		/* Unsigned PD offloading is only supported on CDSP and GDSP */
- 		data->unsigned_support = false;
- 		err = fastrpc_device_register(rdev, data, secure_dsp, domain);
- 		if (err)
- 			goto err_free_data;
- 		break;
- 	case CDSP_DOMAIN_ID:
-+	case GDSP_DOMAIN_ID:
- 		data->unsigned_support = true;
- 		/* Create both device nodes so that we can allow both Signed and Unsigned PD */
- 		err = fastrpc_device_register(rdev, data, true, domain);
--- 
-2.34.1
+>>
+>> Apart from simplifying the code an additional benefit is to avoid
+>> (ab)use case where user/bot may write:
+>>     # echo "mbm_total_bytes:*=_;*=e;*=_" > /sys/fs/resctrl/mbm_L3_assignments
+>>
+> 
+> Why should we restrict this?
+
+I see it as unnecessary churn that can easily be avoided.
+
+> 
+>>> +    } else if (!id_str || kstrtoul(id_str, 10, &dom_id)) {
+>>> +        rdt_last_cmd_puts("Missing domain id\n");
+>>> +        return -EINVAL;
+>>> +    }
+>>> +
+>>> +    /* Verify if the dom_id is valid */
+>>> +    found = false;
+>>> +    list_for_each_entry(d, &r->mon_domains, hdr.list) {
+>>> +        if (d->hdr.id == dom_id) {
+>>
+>> Similarly, resctrl_get_assign_state() (new name TBD) can be
+>> called directly and "found" can be dropped.
+> 
+> I think we still need to know if the domain id matched or not.
+
+Of course, and when the domain ID matches, just call 
+resctrl_get_assign_state()/rdtgroup_modify_assign_state()
+
+> 
+> I think it is better to call resctrl_get_assign_state()(now rdtgroup_modify_assign_state()) at once place. Code is easy to follow.
+
+This is not clear to me. Will surely take a look at how this turned out.
+
+> 
+> I have taken care of most of the stuff. You can review again in next version.
+
+ok, thank you.
+
+Reinette
 
