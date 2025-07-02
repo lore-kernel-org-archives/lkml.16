@@ -1,56 +1,65 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 150172D3739;
-	Wed,  2 Jul 2025 15:07:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48AC22D372E;
+	Wed,  2 Jul 2025 15:11:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751468878; cv=none; b=AkFSJSb3e5W9ZYOke47GDotpMndITEiRbbqep89jxVJwY4c2tmBE5Qrs5umBo0Lk/DeCKutMehGVSv8Cw9MNFJeqhT/kU5wax8YDgMJHGsO5TQ3g2yQXskS/jRJOGxh//Vo51b3bqeIa8EL3epMvZhqWeL+U2oxX9lO9wU4riQ0=
+	t=1751469105; cv=none; b=HI9HY8Bm43cCTYAVKlXVafZKo7KHeE8UqfOUGUzFIJQXxiNCeXqetm+0sjd9OZpMXM45vPFNq6qB4C99QF/C1bNfY1FB5nKsh88+0xKJ3v04NuYb6mHtpRNLDA8yF0aI1km4oe+w7K5P4eUEdW5FXIj8eFBNWdjuUzQeWkCMioQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751468878; c=relaxed/simple;
-	bh=Ee+bd0jw4bqeEr+/W544zg+oeHVNqDzCX2e0zaohiyE=;
+	s=arc-20240116; t=1751469105; c=relaxed/simple;
+	bh=KCqLE/wRYsVMzqwg3Wkn1fl5tpd3/S+Ubh3A4qMr6zo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UadVk+bIHJmYGHGmQEMnEXIZr5QPbjGXcRKrKGYL8WiQrCaZaMa7i3qvbAtsDVc2jpBnHdh5wZ5TlcW3ZkNZ+TDZuIZDoWe9hTVqo1Vm6vXA5El8DZIisMGyIKNA0j8K9ioIzgKs8ak04kf/x6qY4gvIG0WwYbIHk77BBcqX278=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BN8TerN7; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=G5/dv5pZTTKW8fjUq41oIv/e1oPpZ070YFy9JIqy0bX+HyyX7WlvvnSWFhsl5VQXNzQGrYIyfCZIM3S+5sHjrFNUUxTDSp0Sx6QkV49WpWTwzgiz014BLMAhgRZ3614v4wgIgASNIY4qtxDfyF5cBGB/XA34U0UaZOeXT4xiwX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ay4raOHI; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BN8TerN7"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=mRETQHgJjXJ0ep3jOM3xiPYKuBNHEdiIRN9HCejwg2E=; b=BN8TerN7Mb7LDGMt4ibgafL2M3
-	NZ3UJzXRDJC2fnlzUA3KoKd7OSYCZxeJxpP6wBb562TUNe+s8qlemGdIu80hlo6FFw2C6FDqV50FI
-	39fVi+6/t9nURxqoJz3Ao+LtvLkXWnTKC7KQ8Yb3cu7znq/CTx/xnTSC8Y0NJ8X1kDEuWKwsrPcCj
-	lf+K3dnPUZQ6mKRTd0BE6vctPT+CL+py6JHvQK9zL0IJN+TE+XtPRIvG185EvevMGct+sZmBrz84h
-	gKbsne7KnvE53rfT5m8GQbSrwPQDbMy5XPMGpUIQ4qXaRT4FErM7/qIFAImVNkcr3HB4U6YeIef/Z
-	oXAK4sSQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uWz3k-0000000AAex-1hWG;
-	Wed, 02 Jul 2025 15:07:40 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 581D5300158; Wed, 02 Jul 2025 17:07:39 +0200 (CEST)
-Date: Wed, 2 Jul 2025 17:07:39 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Mark Rutland <mark.rutland@arm.com>, hca@linux.ibm.com
-Cc: Borislav Petkov <bp@alien8.de>, kernel test robot <lkp@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>, llvm@lists.linux.dev,
-	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	x86@kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-	Jinjie Ruan <ruanjinjie@huawei.com>
-Subject: Re: [tip:master 19/19] include/linux/irq-entry-common.h:201:2:
- error: unexpected token
-Message-ID: <20250702150739.GT1613376@noisy.programming.kicks-ass.net>
-References: <202507020528.N0LtekXt-lkp@intel.com>
- <20250702123240.GDaGUm6Le4KLL7o_91@fat_crate.local>
- <aGUtCveV8Ev17_FS@J2N7QTR9R3.cambridge.arm.com>
- <20250702130915.GEaGUve86iYnv337_Z@fat_crate.local>
- <aGUxH--v32Bv4T81@J2N7QTR9R3.cambridge.arm.com>
- <20250702132415.GFaGUy_6q0dZZI9AX3@fat_crate.local>
- <aGU_IY70Jt4bcbf2@J2N7QTR9R3.cambridge.arm.com>
- <20250702145425.GS1613376@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ay4raOHI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751469104; x=1783005104;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=KCqLE/wRYsVMzqwg3Wkn1fl5tpd3/S+Ubh3A4qMr6zo=;
+  b=Ay4raOHIfWlN9uGajkh2GR+3XJxhqmVIJ++RiIp805U/NN6Rz/DftJFT
+   42+/1+spXOJCrtyFa5V77xa7MHvJVMuWT/IibZLw28o8jrJNoTZ5OLbek
+   f3YJ3O48N3RFYCHE/rCvlhjrPnBnff4y1MJGHczkCCd0zogV8ZdymVKYO
+   jRWodrI0Zrpy8URC4QLJ9Kdmh7mRdLufsXSVk+UiuADRXXEr3KD3Gw5xO
+   +iZ09y/OtsBlT66qB67dGPaJOCFMPjZpBsWNVvz2kGb2W8gVCyBWJQ/tV
+   mlUl0xaKc0VhWBqgYluXAGj81hD9BtL5lz+es6d6Ejb3k3kHtYMC26ck0
+   Q==;
+X-CSE-ConnectionGUID: KwYRvsMVRjamzsdEgG4TmA==
+X-CSE-MsgGUID: NTgC7K0vTIWxJoR780DTLg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="53915009"
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="53915009"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 08:11:40 -0700
+X-CSE-ConnectionGUID: 0lyey7JLR9GLWWXjy4ylEA==
+X-CSE-MsgGUID: t+dxjrH9QeC0MJ43c/0dPw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="154663466"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 08:11:37 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uWz7W-0000000Bx0u-1pKJ;
+	Wed, 02 Jul 2025 18:11:34 +0300
+Date: Wed, 2 Jul 2025 18:11:33 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Akhil R <akhilrajeev@nvidia.com>
+Cc: andi.shyti@kernel.org, digetx@gmail.com, jonathanh@nvidia.com,
+	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-tegra@vger.kernel.org, p.zabel@pengutronix.de,
+	thierry.reding@gmail.com, conor+dt@kernel.org,
+	devicetree@vger.kernel.org, krzk+dt@kernel.org,
+	ldewangan@nvidia.com, robh@kernel.org
+Subject: Re: [PATCH v5 2/3] i2c: tegra: make reset an optional property
+Message-ID: <aGVMJab9-G_bOqQh@smile.fi.intel.com>
+References: <20250702133450.64257-1-akhilrajeev@nvidia.com>
+ <20250702133450.64257-2-akhilrajeev@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,45 +68,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250702145425.GS1613376@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250702133450.64257-2-akhilrajeev@nvidia.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Wed, Jul 02, 2025 at 04:54:25PM +0200, Peter Zijlstra wrote:
-> On Wed, Jul 02, 2025 at 03:16:01PM +0100, Mark Rutland wrote:
-> > On Wed, Jul 02, 2025 at 03:24:15PM +0200, Borislav Petkov wrote:
-> > > On Wed, Jul 02, 2025 at 02:16:15PM +0100, Mark Rutland wrote:
-> > > > Sounds like a plan.
-> > > 
-> > > As we figured out on IRC:
-> > > 
-> > > https://lore.kernel.org/all/20250616-loongarch-fix-warn-cond-llvm-ias-v1-1-6c6d90bb4466@kernel.org/
-> > > 
-> > > "clang's integrated assembler only supports concatenating strings with
-> > > '.ascii'. There was discussion of allowing '.string' / '.asciz' but it
-> > > was decided against [1] because it was undesirable to match the behavior
-> > > of released binutils at the time, where"
-> > > 
-> > > and this seems to fix it here:
-> > > 
-> > > ---
-> > > diff --git a/arch/s390/include/asm/bug.h b/arch/s390/include/asm/bug.h
-> > > index a185855ab158..46d9eb64bd18 100644
-> > > --- a/arch/s390/include/asm/bug.h
-> > > +++ b/arch/s390/include/asm/bug.h
-> > > @@ -9,7 +9,7 @@
-> > >  #else
-> > >  #define __BUGVERBOSE_LOCATION(file, line)			\
-> > >  		.pushsection .rodata.str, "aMS", @progbits, 1;	\
-> > > -	10002:	.string file;					\
-> > > +	10002:	.ascii file;					\
-> > >  		.popsection;					\
-> > >  								\
-> > >  		.long 10002b - .;				\
-> > > 
-> > 
-> > IIUC this also needs a trailing "\0" as per the link above, or this
-> > won't get a NUL-terminator (but will build just fine).
+On Wed, Jul 02, 2025 at 07:04:48PM +0530, Akhil R wrote:
+> For controllers that has an internal software reset, make the reset
+> property optional. This provides an option to use Tegra I2C in systems
+> that choose to restrict reset control from Linux or not to implement
+> the ACPI _RST method.
 > 
-> Yup, I ran into this before. Let me go fix that commit.
+> Internal reset was not required when the reset control was mandatory.
+> But on platforms where the resets are outside the control of Linux,
+> this had to be implemented by just returning success from BPMP or with
+> an empty _RST method in the ACPI table, basically ignoring the reset.
+> 
+> While the internal reset is not identical to the hard reset of the
+> controller, this will reset all the internal state of the controller
+> including FIFOs. This may slightly alter the behaviour in systems
+> which were ignoring the reset but it should not cause any functional
+> difference since all the required I2C registers are configured after
+> this reset, just as in boot. Considering that this sequence is hit
+> during the boot or during the I2C recovery path from an error, the
+> internal reset provides a better alternative than just ignoring the
+> reset.
 
- + e7e26cfad96c...2a20b2730147 core/bugs -> core/bugs (forced update)
+...
+
+> +static int tegra_i2c_master_reset(struct tegra_i2c_dev *i2c_dev)
+> +{
+> +	if (!i2c_dev->hw->has_mst_reset)
+> +		return -EOPNOTSUPP;
+> +
+> +	i2c_writel(i2c_dev, 0x1, I2C_MASTER_RESET_CNTRL);
+
+> +	udelay(2);
+
+fsleep()
+and perhaps explain why this is needed.
+
+> +	i2c_writel(i2c_dev, 0x0, I2C_MASTER_RESET_CNTRL);
+
+> +	udelay(2);
+
+Ditto.
+
+> +	return 0;
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
