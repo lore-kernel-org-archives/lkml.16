@@ -1,122 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B108017A316;
-	Wed,  2 Jul 2025 14:55:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC9F307AEC;
+	Wed,  2 Jul 2025 14:55:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751468137; cv=none; b=eUZyFWGTQRH1Z97lryY/PXKEDiH32n0ZxTPyVWN+VOcizz5Kx+zATt6U5AF2dFPxlYWv3ApbEBNbCjwZqNF9LevB6u59kspDJkXTn4qPw/22ZUgdW360ywvSESwyDEoNJTJEcZyjWaN870J9iPS9Ydq/ZaCQPxvBTlZu+TRr8Rk=
+	t=1751468152; cv=none; b=L1qP2N1h94iEa5pNC6BK7EOFzl/kCysPf1HIXEIxrCt+pOZkGg9K7bxdQDG2uAUVzmPJpTkbfju4zh6/XAWb+dKBLORxkNXcQpH3uZSPtv/xH9pKxwIdywNnjodzpHUjPvDVUUAVduui0KZVK+wmGb8vzoiMdEG3MEKD10Zp81Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751468137; c=relaxed/simple;
-	bh=odc42PZm0xJO0diX1K58N47iddxW3a0F4HZfOHM34QQ=;
+	s=arc-20240116; t=1751468152; c=relaxed/simple;
+	bh=rLyX23ymLYa8j5VfciRa5YAFA/KvzENBXUoIUXYhWnw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mhmtbFsk30+RmabzEz3wqq1ScH147T2X8n47JiyojZVeoZRRbXhvJ0qxja9sg48C3Jkzm53y9EdpxYlI+wk9iiTXc4GZpNlu4UMP24Xg2K6po+Wa5voeJRF0JjtpmVJVfDIAb/mnM1yOXZaCvLrTdnGbLpIbX3NTR40micnw85I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X4dOc7rR; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=eAa83E/Hy4W3GY1qtSzQPVzqZi2dHv2DkhWk82+hbKHaMX5UCndZ2o01qwNRyuG9bdK1vZaBnAlL6PJQn5ySQdPtLUcBhhpLoXSqi9hFdAKr5R9CQ+m3l5jtBciuFC76WQRbXS61S5J0i679GqPiCr3i99Cl0rVhaAoC9UYmfDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lXEcwP+6; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X4dOc7rR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7004C4CEE7;
-	Wed,  2 Jul 2025 14:55:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751468137;
-	bh=odc42PZm0xJO0diX1K58N47iddxW3a0F4HZfOHM34QQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X4dOc7rRMoTUrPqkvoVH5KlxVpdU6iDMm2rDEi+KlTjIIDv+7QNH9XaqWCWQj4OoT
-	 zbzjAWxc3IYGTwZrkS3cvU9VHATYI/yGlBu2sn96cJrffqibdZeCa/0G4jjmoziguF
-	 GlZ3vbYwRHql8BA9Q4SCt1HgQ7URRolg7gqp0ShtPK2P37mdoegDMOHpDzVqW/vTRa
-	 BrrmyEINlk52COqWZhKyeTsDkIsaKHvntPkZmJYEYD533pltwZ5NWi8gTlrABTWN5V
-	 Yucf/dcJQpMPS0K9YHh5kyNeSkz9kiXrM1c4UZgPuQrVSMQEwf4s4UXaij+akTO8KS
-	 jFhyFmMdklDiA==
-Date: Wed, 2 Jul 2025 20:25:17 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Kishon Vijay Abraham I <kishon@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Anup Patel <apatel@ventanamicro.com>, Marc Zyngier <maz@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Shuah Khan <shuah@kernel.org>, 
-	Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Niklas Cassel <cassel@kernel.org>, dlemoal@kernel.org, jdmason@kudzu.us, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, imx@lists.linux.dev, devicetree@vger.kernel.org
-Subject: Re: [PATCH v19 01/10] PCI: endpoint: Set ID and of_node for function
- driver
-Message-ID: <75opnvi46fbmsnmykjwn3gmir7r3uqhzp7tfoua42cado6aopu@dmos2v2qd3jn>
-References: <20250609-ep-msi-v19-0-77362eaa48fa@nxp.com>
- <20250609-ep-msi-v19-1-77362eaa48fa@nxp.com>
- <ne5yrjtdevmndqds4uwo2ppq6gay2wuwjouyf33lqr5g3nfkwr@lkwqlwqjqbmx>
- <aGVE6veZm3bL0mVJ@lizhi-Precision-Tower-5810>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lXEcwP+6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751468150; x=1783004150;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rLyX23ymLYa8j5VfciRa5YAFA/KvzENBXUoIUXYhWnw=;
+  b=lXEcwP+6DdglkKyAV78h8yrHHpsO/9tjZpWqy5ZaLf2RDJAvnYhnPp5Z
+   86W5QbAqco9FzJRBXxqt46Hd8uezsQgOguD/C8vpdbtW3W7jWfsqIHa0s
+   TbSIXVV3Qff2TSvvbGZLiVig0ayopcBIV1070D2fhYOGvBeRbPcIoIXVj
+   WvtzZyL+oMIsqniy4+1FSxsNhRW0m7yi3qQzdrZQyjPnk5ErHVholjVH5
+   G38jVVlM70rFCKV5QhwPOnTYOpweJOCwk5gEs6yNUgY0CbHJil48RDuVQ
+   GzfbhZdFyP2Ad1H7sIiSFi1/376DiuRySWvwQM4HFJAYi2FaN5zyUJA+Y
+   w==;
+X-CSE-ConnectionGUID: HimKoylSTYynfZ4OQ+b9MA==
+X-CSE-MsgGUID: mc1wTu8FRoCiTFI9fANxxg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="53886530"
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="53886530"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 07:55:50 -0700
+X-CSE-ConnectionGUID: XN4ArCpnT4OmAZgIK5ZmGw==
+X-CSE-MsgGUID: YvrNEx8VSl2LgAQ71WXxpg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="191269399"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 07:55:48 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uWysC-0000000BwmV-3TTU;
+	Wed, 02 Jul 2025 17:55:44 +0300
+Date: Wed, 2 Jul 2025 17:55:44 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Akshay Bansod <akbansd@gmail.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	linux-kernel-mentees@lists.linuxfoundation.org,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: st_lsm6dsx: Replace scnprintf with sysfs_emit
+Message-ID: <aGVIcBLgXZj_YR7B@smile.fi.intel.com>
+References: <20250702135855.59955-1-akbansd@gmail.com>
+ <f96b68a5-d750-45f0-8cdd-9761b5daca1d@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aGVE6veZm3bL0mVJ@lizhi-Precision-Tower-5810>
+In-Reply-To: <f96b68a5-d750-45f0-8cdd-9761b5daca1d@baylibre.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Wed, Jul 02, 2025 at 10:40:53AM GMT, Frank Li wrote:
-> On Wed, Jul 02, 2025 at 04:30:48PM +0530, Manivannan Sadhasivam wrote:
-> > On Mon, Jun 09, 2025 at 12:34:13PM GMT, Frank Li wrote:
-> > > Set device ID as 'vfunc_no << 3 | func_no' and use
-> > > 'device_set_of_node_from_dev()' to set 'of_node' the same as the EPC parent
-> > > device.
-> > >
-> > > Currently, EPF 'of_node' is NULL, but many functions depend on 'of_node'
-> > > settings, such as DMA, IOMMU, and MSI. At present, all DMA allocation
-> > > functions use the EPC's device node, but they should use the EPF one.
-> > > For multiple function drivers, IOMMU/MSI should be different for each
-> > > function driver.
-> > >
-> >
-> > We don't define OF node for any function, so device_set_of_node_from_dev() also
-> > ends up reusing the EPC node. So how can you make use of it in multi EPF setup?
-> 
-> In mfd devices, children devices reuse parent's of_node
-> drivers/gpio/gpio-adp5585.c
-> drivers/input/keyboard/adp5589-keys.c
-> drivers/pwm/pwm-adp5585.c
-> 
-> multi EPF should be similar to create multi children devices of mfd.
-> 
+On Wed, Jul 02, 2025 at 09:16:51AM -0500, David Lechner wrote:
+> On 7/2/25 8:58 AM, Akshay Bansod wrote:
+> > Update the sysfs interface for sampling frequency and scale attributes.
+> > Replace `scnprintf()` with `sysfs_emit_at()` which is PAGE_SIZE-aware
+> > and recommended for use in sysfs.
 
-No, they are not similar. MFD are real physical devices, but EPFs are (so far)
-software based entities.
+...
 
-> > I don't understand.
+> > +		len += sysfs_emit_at(buf, len, "%d.%03d ",
+> >  				 odr_table->odr_avl[i].milli_hz / 1000,
+> >  				 odr_table->odr_avl[i].milli_hz % 1000);
 > 
-> >
-> > > If multiple function devices share the same EPC device, there will be
-> > > no isolation between them. Setting the ID and 'of_node' prepares for
-> > > proper support.
-> 
-> Only share the same of_node.
-> 
-> Actually pci host bridge have similar situation, all pci ep devices reuse
-> bridge's of node. framework use rid to distringuish it. EPF can use device::id
-> to do similar things.
-> 
-> Actually iommu face the similar problem. So far, there are not EP device enable
-> iommu yet, because it needs special mapping.
-> 
-> Prevously, I consider create dymatic of_node for each EPF and copy iommu/msi
-> information to each children. But when I see adp5585 case, I think direct
-> use parent's of_node should be simple and good enough.
-> 
-> In future, I suggest add children dt binding for it. For example: EPF provide
-> a mailbox interface. how other dts node to refer to this mailbox's phandle?
-> 
+> Let's keep checkpatch happy and change the indent of the wrapped lines to
+> line up with ( since the ( moved.
 
-As I said above, EPFs are not real devices. There is currently only one
-exception, MHI, which is backed by a hardware entity. So we cannot add
-devicetree nodes for EPF, unless each EPF is a hardware entity.
-
-- Mani
+While I see the point, wouldn't be better to have 1000 replaced with MILLI
+at the same time?
 
 -- 
-மணிவண்ணன் சதாசிவம்
+With Best Regards,
+Andy Shevchenko
+
+
