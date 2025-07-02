@@ -1,147 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F3342C031D;
-	Wed,  2 Jul 2025 15:04:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12CC02D0C9C
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 15:04:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751468651; cv=none; b=EPY5xN1iGxnSy7Kce4bSs/Y7R+YcpbBGeLWxsMwtLpYGVsMuRT5jB1IO1EBK0TYbuHmHcNR8FmE9dRQnfAm56A1Z7cLPqaEkhO83pzblLqDg7+ravpy1xsJlROe/RU8vuEnfz26oM/zbfclcPE6MPACwjODZ0QZqxa7d/cYtYSE=
+	t=1751468667; cv=none; b=U9EOmsnrRow0wR22d5lBxMhvSoOrvk6RCKGktqQpyTHJgl2r7sZ0MjYJxEURA9suT7G0NaVbXK9DZOdfUOYiXK4XS+0yo9Z0f785vFVJ0eZ0FhUQyV2nFFHQQTBNRIjJjW2iCkk1BEC4RJB0EHbTQeD/zq8PJ0gJwDTm+hnb19M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751468651; c=relaxed/simple;
-	bh=qj9JN0bIoM4q2XRV4+8lwVEY0tAGtWi0mdzE0otu6Yc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JaJyipC5D+f2aWKCKH8H08NhNMo60760aD9wQB5GiS6lr8YoO1qfPKCLGUtFhG7T23DQWpcflEHdlwPYmIa38IMKf4U8czyjeNFfTf0imSIPRHWNou7a7vJ08PA5HpjeXKO6ubl9vB2G/wdxrSVqW6mQD1HuFZKbyBSVWf34E9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PxFHGchs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751468667; c=relaxed/simple;
+	bh=+1Y6ZNOjjbezKMVrD98UVg4jqhd2A4KkLJqkx9x2Baw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Sx77RYDxfxbOAM/+oe4R0OI9Pf3TwWriu6UtEaTX4B/5KfZPGzrWJq2BtrTY7gFzeJN+v2ifUZUJ5TbJJB8mhJmEV3A9oj0RkJoxT1fP27eA3fXyRiZEMT/obAZfY9+RBsVtQYb/rFoW+eZ8SFKEtpMP7tBx5qN8NAStRse+z3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ttuknxK9; arc=none smtp.client-ip=209.85.161.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PxFHGchs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FABEC4CEED;
-	Wed,  2 Jul 2025 15:04:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751468649;
-	bh=qj9JN0bIoM4q2XRV4+8lwVEY0tAGtWi0mdzE0otu6Yc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PxFHGchsmxBrVAg+gQXYdRI8x3QES6OSYnCtYmCBe9sSdNjtJKPplC7fjl7c61y8C
-	 EXFuwR+kUIyYTyUbgHn2EuP3kLuq9NSQD4xv4caY0TQkiLUGM1uQKmj24StIIeH3rb
-	 KcfiVyXFzk4js6/KJBiYbnCi56Y3VVOi/9RzWkYT7hqntRgxaTad70RUsCK9th/an5
-	 qfsncyxnICCAPi77FNFOeOsHPlQclOffy57Y39eKgpPir+Osu1tMG+2kZEAWQrYk+Z
-	 KJngg4qUaP2jmgoIi5xZ4JV4Y4PtexxTM3eMrIQ+BARNHkq1h7Sie2EJS7MKo8vHjk
-	 k3kbFPfu45nKw==
-Date: Wed, 2 Jul 2025 16:04:05 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Cc: Jorge Marques <gastmaier@gmail.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Jorge Marques <jorge.marques@analog.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-i3c@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] dt-bindings: i3c: Add adi-i3c-master
-Message-ID: <20250702-aliens-outage-958601861590@spud>
-References: <20250626-adi-i3c-master-v4-0-3846a1f66d5e@analog.com>
- <20250626-adi-i3c-master-v4-1-3846a1f66d5e@analog.com>
- <20250627-steadfast-ferret-of-expertise-5c8ff2@krzk-bin>
- <tl5fckhrivaqfyzwyb2o2a7gykpigwend7z2nduqgbbej3hqbs@vxxtsadhtdmt>
- <41782ded-908b-46ef-8f75-4d2565476b7c@kernel.org>
- <cfi6rzhco2ba6pcbk57l7tblimuks5jnpgaly7nbedbrpyhtma@u46if22kurwk>
- <v2ybju75bpjdqxfkell47nlkeyal36ylmnqt2yvpncxnmp2irb@pygx56jsyxkr>
- <aGVA779eeNZ0zWsa@debian-BULLSEYE-live-builder-AMD64>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ttuknxK9"
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-60d666804ebso4040520eaf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 08:04:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751468665; x=1752073465; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EpSkZNRj+KNJmdYaS5yXC0vQwBvPJpgN8lcF/7GiAl8=;
+        b=ttuknxK98Vt3loy6Us3Hs02Rl0a4FcCwv8We5fMr0+10SedIQrpSr1JkDw3BUvLhCQ
+         vCrTsZ0APQJAIGU8vE14VL/2rx923USjgEFaiTzWx+icUnWuNr/4I8/Kd/p+F7evkmEj
+         K0dfjGMAQ35tYZV22CK9urHHG87q0Zvxj7VJZScJ461DF+B1QMdjhzoJEW4lyNbkkARd
+         p9QL2sctCB/QX2bw6f+uV5WuOdesQJVXxHOaE0eGU5R1uybr5kgugB5NDKYr2dEcHQTW
+         hWm5rxIHjX+r60CkFduv6q36EcNObTf2Gwc1b83/NVlCo7RPQArLvta8wLFh4VkrEuZ6
+         KQxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751468665; x=1752073465;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EpSkZNRj+KNJmdYaS5yXC0vQwBvPJpgN8lcF/7GiAl8=;
+        b=nV/zNIfpDWnnIdlZ4shLYvHHsN+V78h9wwhWvaT8/ADIq9pVK9V8EIQg8VCwHN4Yfx
+         LNn6TZj21MgTAZZGsscWv5ASIjLZa3LjIdaNOjEdhCU3NxyvOloEMptvgUWLgFfkTNmk
+         SReP9Z2EMyXnHra5ADCJALWK5F5zPCDssz9x0pjSxx+x3cFWBENdta35c6sHSZih9tnh
+         qvsXTMMrC0pFHp11whH0oSQ6/uz333+vlghUOqw+oRJqAWBzYLjQt3m+OqQcP1vb132s
+         X1Ax5o/TqFXyuhyMelSkGQnWyfCSbwPJOJq53I+ibndx0kWAJUhwgnAwtxNVbVucwfjY
+         ywiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXrCNSpVz2UPqAE/KAJGR2iati7jB1cC+Gz58nszOSJ+HFY3B6w+CzzuHKgpSUIqbs30aKbTElu37mgtO8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDvXzZwrZsqrM60aIfS8KTgzvqwIHHfB8mgY9MXNf3MWLo8nhF
+	MYl6FYPNlEfHuwu/8MhRw9wfl406/n+16+7hwcSuDz/ZUqgoSeeom+QkR0zo9FB8HmM=
+X-Gm-Gg: ASbGnctmz0/5eQyoU6AM9foiBzvzAmNsn/FFYFxP6mzSFRo+arPbi/SxtCz4E02YD3D
+	zfYjDO69NOJ56nCgfeACupHA6WM2Qo+sVk/gtIMweEFq/2AsX5r7WpUYqnhOPrng1Z38KEZDo3D
+	laJzCFRqOYsX9e7eVSBtD04Lp6Dz5o6QDhJTQz/pkfQ/Ar/tl320sfB1bv3asf9gw92Y7U2MHme
+	rm8YGlpxl41Qxy7ynBuTgBkKS2jNOqjdeKTyzWfPO60S8Gqm60VHzAaBCajdiUjpWBcERnubJhR
+	TFigLMnAkKVSoQSdzj66RF07c/iq+xOP/g/dnE9XpsvLsnsnsicC32jTCQ9PrNNPh2K4aq8Qeop
+	G2AvfnZfGkBk/ygzTGVk5jUPjX+YRA9U+Is2YBHpr6DjprQuGEg==
+X-Google-Smtp-Source: AGHT+IFce9C5ghIoSx3a2rGe/4a+oNnev+bEZ9sPLErCFoyKvHyn2elLjaO6JeBMAX7wGFfiUCYBRw==
+X-Received: by 2002:a05:6871:796:b0:2d4:dc79:b92 with SMTP id 586e51a60fabf-2f6472a600cmr2079285fac.6.1751468664770;
+        Wed, 02 Jul 2025 08:04:24 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:5c00:24f0:997b:5458? ([2600:8803:e7e4:1d00:5c00:24f0:997b:5458])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73afb124960sm2543365a34.66.2025.07.02.08.04.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Jul 2025 08:04:24 -0700 (PDT)
+Message-ID: <e474db53-1b52-48b0-9253-2f62a3861bb4@baylibre.com>
+Date: Wed, 2 Jul 2025 10:04:23 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="L1KGBXrwH67o7R7G"
-Content-Disposition: inline
-In-Reply-To: <aGVA779eeNZ0zWsa@debian-BULLSEYE-live-builder-AMD64>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iio: st_lsm6dsx: Replace scnprintf with sysfs_emit
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Akshay Bansod <akbansd@gmail.com>, Lorenzo Bianconi <lorenzo@kernel.org>,
+ Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ linux-kernel-mentees@lists.linuxfoundation.org, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250702135855.59955-1-akbansd@gmail.com>
+ <f96b68a5-d750-45f0-8cdd-9761b5daca1d@baylibre.com>
+ <aGVIcBLgXZj_YR7B@smile.fi.intel.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <aGVIcBLgXZj_YR7B@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-
---L1KGBXrwH67o7R7G
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Jul 02, 2025 at 11:23:43AM -0300, Marcelo Schmitt wrote:
-> Hello,
->=20
-> On 07/02, Jorge Marques wrote:
-> > On Fri, Jun 27, 2025 at 06:02:26PM +0200, Jorge Marques wrote:
-> > > On Fri, Jun 27, 2025 at 04:49:19PM +0200, Krzysztof Kozlowski wrote:
-> > > > On 27/06/2025 16:38, Jorge Marques wrote:
-> > > > > On Fri, Jun 27, 2025 at 08:56:55AM +0200, Krzysztof Kozlowski wro=
-te:
-> > > > >> On Thu, Jun 26, 2025 at 12:07:36PM +0200, Jorge Marques wrote:
-> > > > >>> Add bindings doc for ADI I3C Controller IP core, a FPGA synthes=
-izable IP
-> > > > >>> core that implements the MIPI I3C Basic controller specificatio=
-n.
-> > > > >>
+On 7/2/25 9:55 AM, Andy Shevchenko wrote:
+> On Wed, Jul 02, 2025 at 09:16:51AM -0500, David Lechner wrote:
+>> On 7/2/25 8:58 AM, Akshay Bansod wrote:
+>>> Update the sysfs interface for sampling frequency and scale attributes.
+>>> Replace `scnprintf()` with `sysfs_emit_at()` which is PAGE_SIZE-aware
+>>> and recommended for use in sysfs.
+> 
 > ...
-> >=20
-> > I went after the reason of the historically -1.00.a suffix and
-> > discovered that they came into existence due to AMD Xilinx auto
-> > generation devicetree tool SDTGen
-> > https://github.com/Xilinx/system-device-tree-xlnx
-> > that would automatically suffix with the IP version, defaulting to 1.00=
-=2Ea,
-> > and for a seamless experience, the were copied over to the dt-bindings.
-> >=20
-> > The adi,axi-pwmgen dt-binding went more creative and suffixed with
-> > -2.00.a, while never enforcing Vivado to yield the devicetree with such
-> > value (Major version is asserted in the driver through reg access, the
-> > current core version is v2.1.1)
-> >=20
-> > Testing on my side (AMD Xilinx Vivado 2024.2), it seems Vivado now
-> > defaults to 1.0, so the previous bindings from the other IPs are not
-> > accurate anymore, either, (axi-pwmgen auto gens
-> > `compatible =3D "xlnx,axi-pwm-gen-1.0";` (`xlnx` instead of `adi`, also=
-)).
-> >=20
-> > For fun, the current Vivado version thinks the devicetree node for the
-> > i3c master should be as follows:
-> >=20
-> >   i3c_host_interface: i3c_controller_host_interface@44a00000 {
-> >           compatible =3D "xlnx,i3c-controller-host-interface-1.0";
-> >           reg =3D <0x44a00000 0x10000>;
-> >           clocks =3D <&clkc 15>;
-> >           clock-names =3D "s_axi_aclk";
-> >   };
-> >=20
-> > Let me know if we can drop the suffix, or replace with something else.
-> > The current register defined core version is v0.1.0.
->=20
-> I have no say in how dt-bindings should be, but having the IP version num=
-ber
-> automatically generated doesn't sound like a sane thing to do IMHO. Maybe=
- try to
-> standardize with -1.00.a suffix? Though one could also argue about droppi=
-ng such
-> suffixes. Since we were told that the convention is to have the file name=
- to
-> follow the compatible, I would go with 'xlnx,i3c-controller-host-interfac=
-e'
-> (without any suffix) so the file name is smaller and clearer IMHO. dt mai=
-ntainers
-> might prefer that in a different way.
+> 
+>>> +		len += sysfs_emit_at(buf, len, "%d.%03d ",
+>>>  				 odr_table->odr_avl[i].milli_hz / 1000,
+>>>  				 odr_table->odr_avl[i].milli_hz % 1000);
+>>
+>> Let's keep checkpatch happy and change the indent of the wrapped lines to
+>> line up with ( since the ( moved.
+> 
+> While I see the point, wouldn't be better to have 1000 replaced with MILLI
+> at the same time?
+> 
 
-To my knowledge this is an ADI IP from their HDL catalogue:
-https://github.com/analogdevicesinc/hdl/tree/main/library/i3c_controller
-I see no reason why it should have an "xlnx" vendor prefix - and I don't
-think Jorge was seriously suggesting it either, given they mentioned it
-was being shared "for fun".
+For anything with 3 zeros, I don't consider MILLI better (or worse).
+Science shows that the average human can easily see 3 or 4 things
+without having to count them [1]. So it is only when we start getting
+more 0s than that is when I think we should be picky about using macros
+instead.
 
---L1KGBXrwH67o7R7G
-Content-Type: application/pgp-signature; name="signature.asc"
+And in this particular case, we are converting milli to micro so `1000`
+should be replaced by `(MICRO / MILLI)` if we are going to do that.
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaGVKZQAKCRB4tDGHoIJi
-0sjAAQCRJxw3ls7Pe6USBE3wFSZgnw2v13vG/nVg62Ip2v91kAD9Eue1UjXWxexy
-CoOEsjQ7V6tYsmDw2UPtnNbCEdAJRAE=
-=ce7m
------END PGP SIGNATURE-----
-
---L1KGBXrwH67o7R7G--
+[1]: https://www.scientificamerican.com/article/your-brain-finds-it-easy-to-size-up-four-objects-but-not-five-heres-why/
