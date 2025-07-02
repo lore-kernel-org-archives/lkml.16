@@ -1,230 +1,166 @@
-Received: from esa2.hgst.iphmx.com (esa2.hgst.iphmx.com [68.232.143.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B4B019A
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 18:21:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.143.124
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751480484; cv=fail; b=RI/L1vG/zNcTApJZnY56I4ZOPjosi6y6ZsWlGICHCo4XQC+oTIBzhRl7QeeGl8z9+kEK4C1QwYoVInJvYAqbjR1DYxe07C5Vos/vBm5LHbm4DIashjvrMBqCNZ9HxO/O3hx8UAukwXcYCyhhHAVjrn6v94kpkSyWUd++mm7vuKA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751480484; c=relaxed/simple;
-	bh=JjjYFjqBaUvCVAewHgQAsYtgAlSAvrQZT+fOk3f05SQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Nm1ohswIew/zjZtnSEgQ31GyoUOhBkCY1Zxz1GRx+UqJhCm8ikJSDvEw8HSsCWd+mg+qgXBBUVLBOorAL0UpCdufniXfy4MVo7OzCsdR2O4pUPvKw0CtdxiB3SwSWxzwagD/e0HFsfIh3NX1o7iGo2MCyx56bUPbjcmQydwgDb8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=WqL0rVz/; dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b=o4UVZjNm; arc=fail smtp.client-ip=68.232.143.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B38E719A
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 18:21:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751480516; cv=none; b=U7n+6QZgBFYnN27s5jpjds7f2STXqnFiwf5KYw3BCxxo3ZDAJVefdXDkSsHHOUFnusVNXIBwJonMhRel+F1KXKoBtYx5qEiNs1+mpeVMW75YTlUWhCIA0pICwAte7zmMn0alVrntl0MMPkgn0i/VIW5cfR36s1N9A+3fOj3hfR0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751480516; c=relaxed/simple;
+	bh=8dPL6cewj+QXiDVpMgLbkUYfzccaNgbPuZ9A+ZlbtD8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QfY+YNiX4e+7IxC/rniXcvVdeG4175+DAFmK6gRiUc5Wv6MVw131qP4hpp9CPO/obAeNLL0oBeYK7sbfkfQbN+32itnVY9fc9BaKPBouvG+mpkfCvXGCgfqVrFGNelu6WLhuv7NXjg9JDvuLNJ0LV/AHFu7pqI2FvrtCy8smz0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ft/YCqpO; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="WqL0rVz/";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="o4UVZjNm"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1751480483; x=1783016483;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=JjjYFjqBaUvCVAewHgQAsYtgAlSAvrQZT+fOk3f05SQ=;
-  b=WqL0rVz/Al/rZflhLeK8NwRtP8Kp5BET/nrLhLXulLLRfqKhJrgWfggC
-   1SVja5UrmcUcN8/zs5B/nEpse+Cy+YPx1nnn+6IQsclrSaUn1RxNG5v+T
-   ZNzfoL7L9JPyKRRsi8k2gyVqtJClqcP/Fs2q+eEip+O1CNx8S0Dhd0XXt
-   N9lF5lLTSg2yz+Tl0QlUw9LVxlhZAZtT1ZkLqLJKE4O7hcK2oqExGviff
-   knq23xdN9/f+NQVWxzU8U9UjvBaoS6E4vFd7JFMNnKrEAqE/UqoEnLaCb
-   wtkB0u6wqiaeKU6FznEkpq6cgBa8S+bFoL6EYuNvMcInjayh9HyCM4778
-   g==;
-X-CSE-ConnectionGUID: Uo23O51xTV+u3ZKPFbdllA==
-X-CSE-MsgGUID: lGpvAs1/Qte/4E8D+Qo+iA==
-X-IronPort-AV: E=Sophos;i="6.16,282,1744041600"; 
-   d="scan'208";a="91728569"
-Received: from mail-dm6nam10on2077.outbound.protection.outlook.com (HELO NAM10-DM6-obe.outbound.protection.outlook.com) ([40.107.93.77])
-  by ob1.hgst.iphmx.com with ESMTP; 03 Jul 2025 02:21:21 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Kc2eXywK9V3ve6NMGEBj1vAARdQNZjNYmm+0ch/gKpSdZcXNufqzvP8jJpa2sD7sN/raEQ3VFu8Spfm7pKlZz43lspIoCJs++dajG4IPzm9qOivM8oNnrqP8Phl3uCFW9av+WCxP2d7//fRss7hohdirAr7MbEiZxngIJq0dA25+QjcfzsNfh23BCKpOOZX8Xp7jgfnyaMyzLcX9DxajJyyvzxix02fPXyOgE3uVdde/AgUVdVWbMb7J/3Nk38bcOqebRbu02n4cl6nxC3u4DEhYVV1ryk09i/z9VDVnB3V0U5CWxpbpvtDpt39HLSvDldEMpgNSQ4mI8Er5UodGGg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JjjYFjqBaUvCVAewHgQAsYtgAlSAvrQZT+fOk3f05SQ=;
- b=wjOMXwHfsTbPQTOFjKOw8QgU7+dX0G6kgVUrHIlhjuf9jLCjeQXeYgGKebHwjrVR5zrFmwvq1W+26XayjT1e52ipG7KksJeSSiNW1xCJfCpDVhNCs8W5l977Oe7u/2nT5cvA7CGLySJPibCRPGnNimOsuxnL+1T8Jq+tJEA1kmechyXgfZBB3gOPceCBfo7CLet+38S5TawttCBL4USs5VpDtfRr0Bln7YpqGK/c2wIbOyoI1cPT0XkW71itO6xgxfY30kxW0gRcxUbbgk2wbW/D1W9IFyoHyW+lWSRpFwPe5gY+mAp6jtUy5zBu76xw3KvcyYmlQU7KrNe8OHXAFQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ft/YCqpO"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ae0de0c03e9so1083450566b.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 11:21:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JjjYFjqBaUvCVAewHgQAsYtgAlSAvrQZT+fOk3f05SQ=;
- b=o4UVZjNmNaxzXJ4zudxbWtxIRTGANzOe6wyso11jFQ3c2mK9Y/JqnDcckp/Z4TMwEg/KkhBWzbTIYACYgfp+QKXVOb/ZGJvXa05K0OHIlLz6XD4Xrqjib8hQd8SjL3MDacxg48LtXIuSgLZeo7sqjkCFdEr6pd+VxjZJXMZX+3U=
-Received: from MN2PR04MB6862.namprd04.prod.outlook.com (2603:10b6:208:1ed::18)
- by PH0PR04MB8452.namprd04.prod.outlook.com (2603:10b6:510:294::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.25; Wed, 2 Jul
- 2025 18:21:19 +0000
-Received: from MN2PR04MB6862.namprd04.prod.outlook.com
- ([fe80::67d7:8033:78e7:9eb8]) by MN2PR04MB6862.namprd04.prod.outlook.com
- ([fe80::67d7:8033:78e7:9eb8%4]) with mapi id 15.20.8880.023; Wed, 2 Jul 2025
- 18:21:19 +0000
-From: Kamaljit Singh <Kamaljit.Singh1@wdc.com>
-To: Damien Le Moal <dlemoal@kernel.org>, "kbusch@kernel.org"
-	<kbusch@kernel.org>, "axboe@kernel.dk" <axboe@kernel.dk>, hch <hch@lst.de>,
-	"sagi@grimberg.me" <sagi@grimberg.me>, "linux-nvme@lists.infradead.org"
-	<linux-nvme@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-CC: "cassel@kernel.org" <cassel@kernel.org>
-Subject: Re: [PATCH v2 2/3] nvme: prevent admin controller from smart log
- fetch (LID 2)
-Thread-Topic: [PATCH v2 2/3] nvme: prevent admin controller from smart log
- fetch (LID 2)
-Thread-Index: AQHb6uxwekBsdO86LEKXtCaOeLhxjbQeGA0AgAELCsg=
-Date: Wed, 2 Jul 2025 18:21:19 +0000
-Message-ID:
- <MN2PR04MB68627C5DD4EEB073CC4E3EC7BC40A@MN2PR04MB6862.namprd04.prod.outlook.com>
-References: <20250702005830.889217-1-kamaljit.singh1@wdc.com>
- <20250702005830.889217-3-kamaljit.singh1@wdc.com>
- <36499d5b-4203-432a-a822-95b6d20d458f@kernel.org>
-In-Reply-To: <36499d5b-4203-432a-a822-95b6d20d458f@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=wdc.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MN2PR04MB6862:EE_|PH0PR04MB8452:EE_
-x-ms-office365-filtering-correlation-id: bf39d407-0f9a-4e50-b772-08ddb9953de8
-x-ld-processed: b61c8803-16f3-4c35-9b17-6f65f441df86,ExtAddr
-wdcipoutbound: EOP-TRUE
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|19092799006|366016|376014|38070700018;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?1kpxJDMVBz/jrNoAX1uoNoxzeENx4W2KF3Ks+le11CvAM3MDMVm5lgcr0E?=
- =?iso-8859-1?Q?kwweIKJdm9psx8nursYlwguS/jO38xhTg7yEoG12QLOYrXOG1G1gjWlxN3?=
- =?iso-8859-1?Q?2PeoHrmqQoWHc5DVHZtkWxcq0aWWF4xgo1c6SRF1beg+yveQEye7WIfste?=
- =?iso-8859-1?Q?5U0XFSVCc9FxJBnNVWMCiGkGI8IppOhxBFUgsFU8lxAIQOXbU1lBUDSVvB?=
- =?iso-8859-1?Q?HS4NizyXlnrP0PSpuNt/PvQ+jyAol+ZJuOPypJ9gWI9XMOO8ZvmTftilU/?=
- =?iso-8859-1?Q?NJR3o+eZ3d/GU2HVju2dx1nqFxE346HHNx+TG05rvdbJcusr7G+/UC7ves?=
- =?iso-8859-1?Q?W3FhFF2gPzSXRAAyqwguhNGqBYPvHWWZdfVp9yAyqYsSG2R7jW6GSYoPOZ?=
- =?iso-8859-1?Q?7aHJMCO2oBW9MJ2N/nOULbDw5FA3heeLtatNa70ErEZUv8F7tjw3lOIlRP?=
- =?iso-8859-1?Q?5xVQ1sX745jIyfSAj9oqVCHZ1FNbjAT7M44WY/crEhqZQh3/oStyF4LG++?=
- =?iso-8859-1?Q?TAGwlqz08afLwDprNO566MoOx2XApDwvVr9hEqxOESh4DSiAkCEM5Bqw6z?=
- =?iso-8859-1?Q?bJO2kixrAxhyvmG6BmGe7uneCPNgmBCJGe57vJwGbtyIZPlIFLKYFSpGAc?=
- =?iso-8859-1?Q?XqNeIb5Ua1dh6bhLQB4NWDKbCgYqkHrEUv779yeQGudGUhbaBMyuTQaqG1?=
- =?iso-8859-1?Q?Gx4Fr0re8huS7QMyN5Ut18v+4h3VRcjF01N/WR/558DXjBp29UHXRzkwU/?=
- =?iso-8859-1?Q?HvXPIlrgp0g17lOMhzIPKLspZniHfLPqRYYT/1lrPPZhjkal2aCVpX0MU3?=
- =?iso-8859-1?Q?k72f1CavjBrzNSPHltF9Qh2z02jx8J8a1lz3Und9dhd4WNr/yD3gpCy9PN?=
- =?iso-8859-1?Q?WW6bAPq3WClxRaU7r6p8u4pb0ItTJ54P8AQv5wly/MWzvydpq++prWPK+o?=
- =?iso-8859-1?Q?xBjZ/605g5ypA3LrvOXAmmAgnrMLVPcwizm15jRrtJpxdmdgfIo5wSY4Uc?=
- =?iso-8859-1?Q?OAgHumF5Foz6GHIgJP9Gyfa+PL9drcJma8Fm20qXIqz+BI7MnzA0l2or31?=
- =?iso-8859-1?Q?dJ0FL0FdynZ5K1eDmNzBLURDXa6gfU09w+pZDsAovdXHHC++x+YxgmxLI1?=
- =?iso-8859-1?Q?jedJqXW9m+2P0lNDGcnJ2hdkedN2H4kTGCypLfkF678wnlM5jU2i9UkBgC?=
- =?iso-8859-1?Q?7oT/3yTKfmeGGEiEM9Lag+qiDHq/XWghsJRrqgqGgqU76L6qzlGwV+GL3z?=
- =?iso-8859-1?Q?PQUvonJRMEYl9bQf3evU5NbSSdjzZl1Q/QNeTYBVvKcKoeZs+u28yhJ/Ne?=
- =?iso-8859-1?Q?c5OgKuCWcbNLOK0LmOTWPBsJYaXPn+NI/wTDRsCV5qPgB7s/b3OwKlwAs7?=
- =?iso-8859-1?Q?/oKkA+xaMz/PfmIBz8xrrdrEkW5GJt+0QxY0arVBV1lKqV2cOpClAthgYa?=
- =?iso-8859-1?Q?fjTSUXoVdBJZr9EcIQYWUa3RSffy2bdF+E7z5+r3h6z+LvBhOFlzjkMGFr?=
- =?iso-8859-1?Q?IpDmLlFGwCwwQvEOWOOSq1wBIT2YrAw6ykHBJs7WEG5Q=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR04MB6862.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(19092799006)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?dTnQjAP9FjDaTAMnr7bjmv99wHDGtN67LYwhZUloCB/WMtQ79LbZCGLZlV?=
- =?iso-8859-1?Q?J1eUkERAIqBXVpfJheuxozfAxDbLSfdVBCHnk6ptz0ADa1B8czoYQ4DDOZ?=
- =?iso-8859-1?Q?0b/LLU/cvnDkF9oAodFB0Tkws65Es0q8YlBbdZB2KOQUAzDgohqsrTmjsq?=
- =?iso-8859-1?Q?L/qT/J9qNXxulYs9qpgUXAXGqEzNC3gQQldP4QU4RLym65dr+CBg0DJWZW?=
- =?iso-8859-1?Q?GgkFFj5daA5DMQYmWnPzttiuoJ9Hh8kBMzMWjEoortJPIb0e/ZrstR0LAg?=
- =?iso-8859-1?Q?KfEitEPdGqnr4NrNNU2eeDH+nGyl4vsX2djcfVgRn2HmNkw1Di/pvEuhTJ?=
- =?iso-8859-1?Q?FEEjjx2RXOBoh6OgdGN1gWyDOUcHUlZQisx1B65hPbJGr9GDUP/Ve7F7da?=
- =?iso-8859-1?Q?ObxbOvm2tddwQIZBUxsaQJUNuHzZRa+4GvmBKUKhkMBVW5bXBNW3hpqf2S?=
- =?iso-8859-1?Q?4uFTwpVWwA1Fg+U+bNsNTlRqdMFAWjbZj0SeQJQYXN613470/5jePHIYfg?=
- =?iso-8859-1?Q?mvABsqSCQZTPpqJ6tKk1hf5mej5A71EaLf1/MwqMiF1x9m+WPJJ1+4RwST?=
- =?iso-8859-1?Q?uKafNoNLiQa2BfZyyGLcfE+P3wSu11kYQTDUsBIgluHd2nykO1T0jXYwRA?=
- =?iso-8859-1?Q?7VaeghZNX5rnLocBVA/fSAfy5XwNWuGhIY500xDow+wK6lCocuqLcjrdBp?=
- =?iso-8859-1?Q?Z8WAkdiTH6lCZCBKXG4iavwE3yxFdVDkk3l2byXKhrpkxpKj0zXUHeTFcF?=
- =?iso-8859-1?Q?wwA3yiQV976Z739oWVEFlsn4c/Ck0ho9lzLEPodtL1sm5J7uG/BoNXHMS+?=
- =?iso-8859-1?Q?JSYhVkI5Urv5NmXuIH+yXELb/D3t7TkHys1gMphvmvHxyA9tm4gv52luVl?=
- =?iso-8859-1?Q?6DCgOYCFBBIRzB0fGhUPnsh1F5kWPYPsMxhZ+HPThYvP0ztvPzhddn7ETm?=
- =?iso-8859-1?Q?2BNQNkqbEpirM2YRUGLXmOwX+vMosqFICLeIQCqgU8bcWHEnw0pOF281ZL?=
- =?iso-8859-1?Q?A+Ssx+0yC8HMcUHVfCigGjqN9/uy6SUcaUqkubwg6zsPGlFPN9qtZQnyA+?=
- =?iso-8859-1?Q?aclwfvdpiAxunrLdBugAHVAWxfAARrkAARjKfFSb9xQxvQTYhsPVQPmESZ?=
- =?iso-8859-1?Q?qhtuYVTjj/0OFGsvsv45kaebNJsoIomjuC3yfunhT+jZv3DNO1FGlQ5KDc?=
- =?iso-8859-1?Q?Z3T6JzymrP3mKHPtOquv/oCWPC6uwjilFdh4y+GrCydfRk5izvJYsT1c8k?=
- =?iso-8859-1?Q?O79+9dpWsGyhJV3OSzriWbXhgMr5fbKgDQMYmUsTmtA4N315cxXFcqUKuY?=
- =?iso-8859-1?Q?gG4B6T7LO8peLpIFfc1PXiciHK7jsYcPsYoCqiFUNWtxtI7UJdfNIBtt1/?=
- =?iso-8859-1?Q?Zvl4x3w3KGFLk9hRn2b6vjLBpcmu2Iv6y45uY1Q+AvSrcZZ+t6c34T/3fL?=
- =?iso-8859-1?Q?8eMGt4CxeEKnbth9nleTYy/l9zETVZoRVtrG+Q95zcyCTGV9zuio7263Cq?=
- =?iso-8859-1?Q?AuL+m9Eppv5NzKyi7yA7RJ9oWbTt4cJx0+P5qbfPHmdDoEwGUCGylqMRnH?=
- =?iso-8859-1?Q?n6Jw9GM4Omh5L+zlHvQoiYaogFpRYG2hR3LadLvkQcEBqJcHZhINAqeXdi?=
- =?iso-8859-1?Q?0tMnRU7oqfnOdrlj5Up3UPW3DHfhSUVkDD?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        d=linux-foundation.org; s=google; t=1751480513; x=1752085313; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=gAzEH7Ab5cAtbqr3Xp/qBBT6LGjJFnrqCTGw1ULOX9I=;
+        b=ft/YCqpO0FXHmQ+DZb14BXdPk+Yx/t5+rI0YwNA3RvujJAVMwTfI6u+5MQ1o1cX6VT
+         YbpeQ3Dg+XauhGKR1IdzsknmbPBMoCYt20eYyUiVvnupxPFy8hA4hVyHILp0AsPMlJng
+         rhiIFIowUh5zVWZyuMtJ8DSCYa+vTvFhUlNXA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751480513; x=1752085313;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gAzEH7Ab5cAtbqr3Xp/qBBT6LGjJFnrqCTGw1ULOX9I=;
+        b=FwskNONVtt7R+gWvqZmZ9CmciUs0dR3KVpmI4rCxeyAXyyNMxZG6qzztVc3GLAGtsS
+         Dy0TTNSPNtxGTrKRe1a8gUgYDSyLEQP2774BXwMPSdYfFq+1plQWJGHYJ4G9Nrw5J/Vg
+         a49xdQjoKzjStmOvSPZ9rcoeBVeCkiSkZ6Hq9vEgIgJoGoTrO367FI5iuEgJQtaE5Zlr
+         asJEcj2HH3olZMYII+EoaVpfsefy/PA9MGkKTOV6PFg1MLLtUZx3AG9PCRjt3Ju6QdIj
+         dQ3vSexd7xwVTCa2sTs9ABfISZ3UBWjsOzqPh71h8gjAqBroooQNTBFVZGUW+tHawIBt
+         QTFg==
+X-Forwarded-Encrypted: i=1; AJvYcCXGlszUxc0R4/6uq+siO2RtCn8URlGebvC3emW1+dw+LE6Qzi5xC/HKxlynO9ZEzVOPqCLkazj29/ClTKg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwU/2oqKtlyqDWaHvMlQ4FUjMZemwubUTBoxeQKWftee6kbtHsU
+	X2LzVdfxgEZb5mgEITP2dEX+rP0tQThqaqxaLw/Sd1aoZbw6hX6urDNjd9um9QhvV8K6buno/Ph
+	edCkVik3Iwg==
+X-Gm-Gg: ASbGncvZZhVX7FzO1Nxg9TglvEuIPRoK7/L0vjs7vPxBkRJI3JXjWxVxJ8BlClWkjJG
+	3RdrWTDzWFupuH3zDHkPrwTEAVq3i/o5e++oMdvev9h9vWGEykUdufoglsA0vCjucIqqNn34AT8
+	L8ySZ3yXc3uRWy0QnbmWThZKGGxNCaYOquzniovWTL8iFhj0LdniTDfu86Nx6keTAHVWEZG2M2e
+	/Ofht/j0YfbggH/PN7H4uP1Wc5AU+3wd0w2paEKN/KB/8Qt+XBWcyPQoxjCf212PM3lBs5NVEui
+	Y6rMklyPxTj/G9ZWnYVOegQ1WXWH2CDvANqeqhgpocxeCOzy1Ix/dxHBHpfLFcv2Kg3BlWOqk3E
+	UWFCFMwkVAVVb6/8dHHRZozFIklHe2qpR2B45
+X-Google-Smtp-Source: AGHT+IF4eVKbChoFs/jpegvAPatF2hTUX6RyFZmozOBlecpckEhHOFaRQ+hQMcf3nbV5KPCaYxwLng==
+X-Received: by 2002:a17:907:2da9:b0:ae3:a78d:a08a with SMTP id a640c23a62f3a-ae3c2b12a5amr371083666b.6.1751480512639;
+        Wed, 02 Jul 2025 11:21:52 -0700 (PDT)
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com. [209.85.208.48])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353c6bda4sm1127662566b.141.2025.07.02.11.21.51
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Jul 2025 11:21:52 -0700 (PDT)
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-60c60f7eeaaso11945102a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 11:21:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVYAV7tCakmVI0WNYIXcbX45rB5JC4SPUO0fc79TBxR2UvTiXLwHa2uiM2HSt0wHcrk5hJVgyAsqoUtlF0=@vger.kernel.org
+X-Received: by 2002:a05:6402:270d:b0:60c:5268:5587 with SMTP id
+ 4fb4d7f45d1cf-60e5362ef3emr2951767a12.29.1751480511414; Wed, 02 Jul 2025
+ 11:21:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	oiCuYua6qT1m3Y3FvJP7GPmRl/YhVQL2lCcGuQiAr65EW0rdZAAu5hSnHI0vxLVoe3i2IC54/x4DfN2jkjOqKSX9t9S3J60yIeyzj6j8g44BjXVNzrPanJB14xTJ0StDpWoRckc+iWxEtbK5I2V9IZAbecHzwJEJTg+TkMBY0mX0zCk2yMYrIe5qItcAxnVsuLd479uUsUVzJ5b8hg5X/ZpDLIsw+OQPO22ik8EeIIIQSBjJKf7xr6ZWep86WIsiW5oALQHZyheCi0Hk028w8Zjint+N9P8IZhBZzDmrtvDxdHl2zI5FUsCPIeBoOIHBJ0uE0bbNbJQCdhi51ojd1AbzFEoPcMqpLtY4FbwJy+VHnzEED8ST57qci0ZxA60cI/F8GdNLt0lsWeVciaASLTVZBfZpOSHXJBmKULKpfLJS+wEr+AfEbAeWIGUE9qj7/U8evFz+jM5SummSFaqp2Xne8mRgdFDRC5zPT5hq4QzuCyBwbJ75ZoPozYqzJsnoiNGaXLFDS3uPH86Nd06JyT4vwv4zm9i10KZ7Ypt/TOQeCgitFMGW8/1mGgM1BK8kSYZ97CEX8KcxENF8ukfxC9BVeGe6CBhiWiHr6Hf7owaYATO4wUa2jumtbqpaXunl
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR04MB6862.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bf39d407-0f9a-4e50-b772-08ddb9953de8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jul 2025 18:21:19.5929
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 73TK0psGateggSJJ3DQV10i7zU6iVpIcLwZMhdrvsui8G/nTAErk8E+gYzEwfINQAwI/CdgWSl/6MgCnLgssjA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR04MB8452
+References: <20250701005321.942306427@goodmis.org> <20250701005451.571473750@goodmis.org>
+ <20250702163609.GR1613200@noisy.programming.kicks-ass.net>
+ <20250702124216.4668826a@batman.local.home> <CAHk-=wiXjrvif6ZdunRV3OT0YTrY=5Oiw1xU_F1L93iGLGUdhQ@mail.gmail.com>
+ <20250702132605.6c79c1ec@batman.local.home> <20250702134850.254cec76@batman.local.home>
+In-Reply-To: <20250702134850.254cec76@batman.local.home>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 2 Jul 2025 11:21:34 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiU6aox6-QqrUY1AaBq87EsFuFa6q2w40PJkhKMEX213w@mail.gmail.com>
+X-Gm-Features: Ac12FXxdVtdafV1DjZUKNDDMmbhEtpMMqjKmEMhutyb6_ij-Rv8l7HBE6kdoJJ4
+Message-ID: <CAHk-=wiU6aox6-QqrUY1AaBq87EsFuFa6q2w40PJkhKMEX213w@mail.gmail.com>
+Subject: Re: [PATCH v12 06/14] unwind_user/deferred: Add deferred unwinding interface
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Andrii Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, 
+	"Jose E. Marchesi" <jemarch@gnu.org>, Beau Belgrave <beaub@linux.microsoft.com>, 
+	Jens Remus <jremus@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Damien,=0A=
-=0A=
-On 7/1/25 19:14, Damien Le Moal wrote:=0A=
->> Similar to a discovery ctrl, prevent an admin-ctrl from getting a smart=
-=0A=
->> log. LID 2 is optional for admin controllers to support.=0A=
-=0A=
->If it is optional, when the admin controller support it, why prevent it ?=
-=0A=
->This is what your code does... Or is it that at this stage of the=0A=
->initialization, you do not know yet if the admin controller supports LTD 2=
- ?=0A=
-Yes, the latter. If the admin controller does not support LID=3D2 then GLP=
-=0A=
-will fail. My suggestion is to revisit this later and add smarts based on=
-=0A=
-LID=3D0 (supported log pages) response from the controller.=0A=
-=0A=
->=0A=
-> In the future when support for the newly added LID=3D0 (supported log=0A=
-> pages) is added, GLP accesses can be made smarter by basing such calls=0A=
-> on response from LID=3D0 reads.=0A=
->=0A=
-> Reference: NVMe Base rev 2.2, sec 3.1.3.5, fig 31.=0A=
->=0A=
-> Signed-off-by: Kamaljit Singh <kamaljit.singh1@wdc.com>=0A=
-> ---=0A=
->=A0 drivers/nvme/host/core.c | 2 +-=0A=
->=A0 1 file changed, 1 insertion(+), 1 deletion(-)=0A=
->=0A=
-> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c=0A=
-> index a1155fb8d5be..c310634e75f3 100644=0A=
-> --- a/drivers/nvme/host/core.c=0A=
-> +++ b/drivers/nvme/host/core.c=0A=
-> @@ -3705,7 +3705,7 @@ int nvme_init_ctrl_finish(struct nvme_ctrl *ctrl, b=
-ool was_suspended)=0A=
->=0A=
->=A0=A0=A0=A0=A0=A0 nvme_configure_opal(ctrl, was_suspended);=0A=
->=0A=
-> -=A0=A0=A0=A0 if (!ctrl->identified && !nvme_discovery_ctrl(ctrl)) {=0A=
-> +=A0=A0=A0=A0 if (!ctrl->identified && !nvme_discovery_ctrl(ctrl) && !nvm=
-e_admin_ctrl(ctrl)) {=0A=
->=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 /*=0A=
->=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 * Do not return errors unles=
-s we are in a controller reset,=0A=
->=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 * the controller works perfe=
-ctly fine without hwmon.=0A=
-=0A=
-=0A=
-Thanks,=0A=
-Kamaljit =
+On Wed, 2 Jul 2025 at 10:49, Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> To still be able to use a 32 bit cmpxchg (for racing with an NMI), we
+> could break this number up into two 32 bit words. One with the CPU that
+> it was created on, and one with the per_cpu counter:
+
+Do you actually even need a cpu number at all?
+
+If this is per-thread, maybe just a per-thread counter would be good?
+And you already *have* that per-thread thing, in
+'current->unwind_info'.
+
+And the work is using task_work, so the worker callback is also per-thread.
+
+Also, is racing with NMI even a thing for the sequence number? I would
+expect that the only thing that NMI would race with is the 'pending'
+field, not the sequence number.
+
+IOW, I think the logic could be
+
+ - check 'pending' non-atomically, just because it's cheap
+
+ - do a try_cmpxchg() on pending to actually deal with nmi races
+
+Actually, there are no SMP issues, just instruction atomicity - so a
+'local_try_cmpxchg() would be sufficient, but that's a 'long' not a
+'u32' ;^(
+
+ - now you are exclusive for that thread, you're done, no more need
+for any atomic counter or percpu things
+
+And then the next step is to just say "pending is the low bit of the
+id word" and having a separate 31-bit counter that gets incremented by
+"get_cookie()".
+
+So then you end up with something like
+
+  // New name for 'get_timestamp()'
+  get_current_cookie() { return current->unwind_info.cookie; }
+  // New name for 'get_cookie()':
+  // 31-bit counter by just leaving bit #0 alone
+  get_new_cookie() { current->unwind_info.cookie += 2; }
+
+and then unwind_deferred_request() would do something like
+
+  unwind_deferred_request()
+  {
+        int old, new;
+
+        if (current->unwind_info.id)
+                return 1;
+
+        guard(irqsave)();
+        // For NMI, if we race with 'get_new_cookie()'
+        // we don't care if we get the old or the new one
+        old = 0; new = get_current_cookie() | 1;
+        if (!try_cmpxchg(&current->unwind_info.id, &old, new))
+                return 1;
+        .. now schedule the thing with that cookie set.
+
+Hmm?
+
+But I didn't actually look at the users, so maybe I'm missing some
+reason why you want to have a separate per-cpu value.
+
+Or maybe I missed something else entirely, and the above is complete
+garbage and the ramblings of a insane mind.
+
+It happens.
+
+Off to get more coffee.
+
+             Linus
