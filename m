@@ -1,172 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB44E1E487;
-	Wed,  2 Jul 2025 12:31:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03BCB1DA4E;
+	Wed,  2 Jul 2025 12:32:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751459497; cv=none; b=HzC1YWoVKuQX58Ek303/twf6hS3wWguYKR6lndw/vtdGQjqQONMK5qXfSeEP2wbfD9Lcu1RdMauulx4Ps/6zzAe+1PQ2kh9dpU5iqD5PxsjL6OQNeg601zB5St11+VNGNJ2SqegvageS9Uhp/0szEUACEqoWcy2R/ctics6Sl1k=
+	t=1751459543; cv=none; b=Ps/gx+XYZeZ6P10QnqQK4lChz6oZ+HLxylYb/WiClECJ3chKywjGM9fWrNz77y96D1oG1VdzowDr2OwVN4XFxalve8QVu4+umIFhs9SZNSF1GF3iWkhbOoLSftKpPFZnLEzN3q8DuLanWN9Zp/Fm6sjsnHfvY+dC/SwVkpwrniw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751459497; c=relaxed/simple;
-	bh=HyLomZoUIsBZI28vt4NzRZMuAo9iSJ1mkcus3zmJ/uI=;
+	s=arc-20240116; t=1751459543; c=relaxed/simple;
+	bh=PfZ54BR/DQeTkZbbJMQYs5PKz2moe77bxCc/RiZ+xB0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EggvUCg+KTQmLANeH4Px+lj+sbk9GMj2UzgZ5CYgxi77/lA4d9I/07rjKzSl+u0zAYmjIMZNFodJXC0esL5XmVNht+uyASLehNnFbIWeFMmIGuOg/aYgUgR/IojQ96WXABQYNO7xS8GmBH8NunfaO5k2n+jmK07CIp3KUYDaisU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZQIOuCNM; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=oWimnnkeuTcDmpBnx7uJlQUounscpFL1h4/1mzgjd0YTbwz+MnkDygF5IyREs/xjlyGwwaMSlb/NC5BhVlWwKP+aArYXttllCLGgnjWwX+B8OrJci36wsOjbUYpvolYhRqSSp09yxYCmDzF33k865BeQ5z7WxG9cOiMLiMZOhKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lHyKwge7; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZQIOuCNM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0877C4CEED;
-	Wed,  2 Jul 2025 12:31:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751459497;
-	bh=HyLomZoUIsBZI28vt4NzRZMuAo9iSJ1mkcus3zmJ/uI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZQIOuCNMICguAzeBgxu+HHL77MCyaObg/26HSEUCrXWPkUd23kVGSO+krBqrgQDjE
-	 mqpEtRaeIZTNVpMnC7ZSpNLLvoKTfdwSnMAVI6e+ddliSNa4hjOxsmEmAimZUFx9Lt
-	 XjHN+M2S7/rCFQ+9QG1fl2Akq4wqY2suSIJr9x3bxPv3Ge3YAhOIvKQpq+YvdJ8Alr
-	 5FGix2e4Cql3/KPuymrOlR3aEWS3ik5beTXLqXMe1PPIjuw+DmAbw+2FLOWnRdAHhd
-	 Pr6Dw818Pd5W32CmctWaoz/Q8YfP+nMAAw9KII2KckiGPrFrt1HPC9IXKuGhBg7o4+
-	 RUy6Keg7shOYA==
-Date: Wed, 2 Jul 2025 18:01:18 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Kishon Vijay Abraham I <kishon@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Anup Patel <apatel@ventanamicro.com>, Marc Zyngier <maz@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Shuah Khan <shuah@kernel.org>, 
-	Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Niklas Cassel <cassel@kernel.org>, dlemoal@kernel.org, jdmason@kudzu.us, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, imx@lists.linux.dev, devicetree@vger.kernel.org
-Subject: Re: [PATCH v19 04/10] PCI: endpoint: Add
- pci_epf_align_inbound_addr() helper for address alignment
-Message-ID: <n6wdkexskwjd7k5zwaaqeb36zdsxzcshsm7f5czv44rmocswex@pzbpehep2teu>
-References: <20250609-ep-msi-v19-0-77362eaa48fa@nxp.com>
- <20250609-ep-msi-v19-4-77362eaa48fa@nxp.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lHyKwge7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751459542; x=1782995542;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=PfZ54BR/DQeTkZbbJMQYs5PKz2moe77bxCc/RiZ+xB0=;
+  b=lHyKwge784i79aDH2xwJOSKES+CwvHUWa0VNPz1btI9vGucIgJoo0h48
+   p89n8o6tdqX/QHgrH+9RsmVsQzvGvwfKGb6y0VsjBFL8JSwtZscfhIg6A
+   rrL4MN+LzaMd3ItWx794PDxQySqFIPQi71F1TmBUuGAQ0eKHYOWMMKSlg
+   e8iQSUxC7BxfiNOwunmnISlfa+L0dvbWfeOo8PR3Cx9LDTglI9l+xuoQq
+   zUKHBj1TIONlpj4FADVJXsgZ1WCkQ2eXYYUm31CTW57DAM8PB2N0BDlct
+   QqcG6SCG3OmAz1nD0W3KGnpNDBniUw95yXQNjLLUTCY7MTqnkJkNidbza
+   A==;
+X-CSE-ConnectionGUID: cRiIuYT+SBmC56hYsQpRzw==
+X-CSE-MsgGUID: z5umHr+3S9KxHFD6dwZo/A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="65207575"
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="65207575"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 05:32:21 -0700
+X-CSE-ConnectionGUID: la87R4sVRIqU5y8Oay7TYw==
+X-CSE-MsgGUID: Al/ue6ziSIGLMd4nKgkYYA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="158629264"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 05:32:14 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uWwdF-0000000BuxV-4C67;
+	Wed, 02 Jul 2025 15:32:10 +0300
+Date: Wed, 2 Jul 2025 15:32:09 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Anup Patel <apatel@ventanamicro.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Alexandre Ghiti <alex@ghiti.fr>, Len Brown <lenb@kernel.org>,
+	Sunil V L <sunilvl@ventanamicro.com>,
+	Rahul Pathak <rpathak@ventanamicro.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Atish Patra <atish.patra@linux.dev>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 05/24] mailbox: Allow controller specific mapping
+ using fwnode
+Message-ID: <aGUmyeUMgBPVlxPh@smile.fi.intel.com>
+References: <20250702051345.1460497-1-apatel@ventanamicro.com>
+ <20250702051345.1460497-6-apatel@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250609-ep-msi-v19-4-77362eaa48fa@nxp.com>
+In-Reply-To: <20250702051345.1460497-6-apatel@ventanamicro.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Mon, Jun 09, 2025 at 12:34:16PM GMT, Frank Li wrote:
-> Introduce the helper function pci_epf_align_inbound_addr() to adjust
-> addresses according to PCI BAR alignment requirements, converting addresses
-> into base and offset values.
+On Wed, Jul 02, 2025 at 10:43:26AM +0530, Anup Patel wrote:
+> Introduce optional fw_node() callback which allows a mailbox controller
+> driver to provide controller specific mapping using fwnode.
 > 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> Change from v15 to v16
-> - none
-> 
-> Change from v14 to v15
-> - change out address type to dma_addr_t to fix below build issue
-> 
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202502082311.G1hWGggF-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
->    drivers/pci/endpoint/functions/pci-epf-test.c: In function 'pci_epf_test_enable_doorbell':
-> >> drivers/pci/endpoint/functions/pci-epf-test.c:726:42: error: passing argument 4 of 'pci_epf_align_inbound_addr' from incompatible pointer type [-Werror=incompatible-pointer-types]
->      726 |                                          &epf_test->db_bar.phys_addr, &offset);
->          |                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~
->          |                                          |
->          |                                          dma_addr_t * {aka unsigned int *}
->    In file included from include/linux/pci-epc.h:12,
-> 
-> Change form v9 to v14
-> - none
-> 
-> change from v8 to v9
-> - pci_epf_align_inbound_addr(), base and off must be not NULL
-> - rm pci_epf_align_inbound_addr_lo_hi()
-> 
-> change from v7 to v8
-> - change name to pci_epf_align_inbound_addr()
-> - update comment said only need for memory, which not allocated by
-> pci_epf_alloc_space().
-> 
-> change from v6 to v7
-> - new patch
-> ---
->  drivers/pci/endpoint/pci-epf-core.c | 44 +++++++++++++++++++++++++++++++++++++
->  include/linux/pci-epf.h             |  3 +++
->  2 files changed, 47 insertions(+)
-> 
-> diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
-> index 95fb3d7c1d45e..33e14a6b1549a 100644
-> --- a/drivers/pci/endpoint/pci-epf-core.c
-> +++ b/drivers/pci/endpoint/pci-epf-core.c
-> @@ -481,6 +481,50 @@ struct pci_epf *pci_epf_create(const char *name)
->  }
->  EXPORT_SYMBOL_GPL(pci_epf_create);
->  
-> +/**
-> + * pci_epf_align_inbound_addr() - Get base address and offset that match BAR's
-> + *			  alignment requirement
+> The Linux OF framework already implements fwnode operations for the
+> Linux DD framework so the fw_xlate() callback works fine with device
+> tree as well.
 
-'Align the given address based on the BAR alignment requirement'
-
-> + * @epf: the EPF device
-> + * @addr: the address of the memory
-
-'inbound address to be aligned'
-
-> + * @bar: the BAR number corresponding to map addr
-
-s/map addr/the given addr
-
-> + * @base: return base address, which match BAR's alignment requirement.
-
-'base address matching the @bar alignment requirement'
-
-> + * @off: return offset.
-
-'offset to be added to the @base address'
-
-> + *
-> + * Helper function to convert input 'addr' to base and offset, which match
-
-s/convert/align
-
-> + * BAR's alignment requirement.
-> + *
-> + * The pci_epf_alloc_space() function already accounts for alignment. This is
-> + * primarily intended for use with other memory regions not allocated by
-> + * pci_epf_alloc_space(), such as peripheral register spaces or the trigger
-> + * address for a platform MSI controller.
-> + */
-> +int pci_epf_align_inbound_addr(struct pci_epf *epf, enum pci_barno bar,
-> +			       u64 addr, dma_addr_t *base, size_t *off)
-> +{
-> +	const struct pci_epc_features *epc_features;
-> +	u64 align;
-> +
-> +	if (!base || !off)
-> +		return -EINVAL;
-> +
-> +	epc_features = pci_epc_get_features(epf->epc, epf->func_no, epf->vfunc_no);
-> +	if (!epc_features) {
-> +		dev_err(&epf->dev, "epc_features not implemented\n");
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	align = epc_features->align;
-> +	align = align ? align : 128;
-
-From where this 128 byte alignment comes from?
-
-- Mani
+Looks okay to me, FWIW,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 -- 
-மணிவண்ணன் சதாசிவம்
+With Best Regards,
+Andy Shevchenko
+
+
