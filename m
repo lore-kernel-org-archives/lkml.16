@@ -1,162 +1,119 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04D791DACB1
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:44:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812EF307AE8;
+	Wed,  2 Jul 2025 14:44:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751467449; cv=none; b=N9SPJxMmEJwl+ZBf7qMkmED1qvVmm4BEfFL0/EDA7KgnT0Y2TJBQTnlte5xFZF8kB+YTC0N+IVBmFYt7nQrRdwHstT0/OWweCczu8eJItW+HagtcFPbFKSM34qCAfPdhjIgM+GI59hQwPPHH89f7zhN7gsH2Uppfb/wMs05E+bg=
+	t=1751467482; cv=none; b=DQ8zwHdWL5m62vUe6gqm4H2Pg52XWlojIMFalNkcoFx+//hsHvCFy+6OY0uUuNgTzBL1eXX8bDSBKUT54CggCMeagCVdKc2/jq1eyBYCQFR+OZAhWvepVtttEU7XrNV+jb5GB3UfTYBVxtl6qzYBMx6PiSlYDWebShj9Rwwa/WM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751467449; c=relaxed/simple;
-	bh=6Wb49X0BJHbqwWrkROi+YR+7r3jK71+OW26GsASEmwY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Lldzv2l57FN4BQpp4PnBv+AH0WSg613VACzZwBMgBToC73hB8Usezo+bIfXXHdPcdzYn/k1W8d2xh43DQZxmXjSkyJ02zgphDEdb0nzUOutV0q9hFhK7t1XHtuRQ/KLtvsEmTmrhNQPyGpix/T47HMSMToM2MCOljQeZA0BI8JI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=glBzfBPj; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751467482; c=relaxed/simple;
+	bh=dIhZkNW3gjEURrt2LwtYenbRsdX0gVg1dIBAdJYfSgY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BGrchqS22kfFnglWe6zA1qZQwF1zFQSPmFaJzQnfBqPvFcg7BtwFuOAsl7Aql2yiY1rh0TdGYYaai9eqK39kM5OZmHi3+69qwAL20o2ktOqU1hk8XJ9cQmPrGG/RtNeRUdkE8UJmRIpRB/18hsh9Yi4u/rckfsEPsl/iE0Tnig4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O7fJak/R; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="glBzfBPj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751467446;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=v5kZ8LByR5tDk+2RARWaEVx7RJMhvOELDCL82WVT4Mo=;
-	b=glBzfBPjwTJoMLLS8WuByre84o4A3yZ6yRbphgVibZhvMhwDRHGKlrjQd0qzruaG9GIg+B
-	EdOkidyAhRdeO2KrgcTQF5eSML+DzJ1dQ7ITMumVPlB8x0ad/FXENU2r/hrDYrvb4yVgwI
-	8MUCvZEKvkYevcW4F8wdmdTW4jNS+tw=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-649-mZHA4WJ-O2WYc1xxDP2HMg-1; Wed, 02 Jul 2025 10:44:05 -0400
-X-MC-Unique: mZHA4WJ-O2WYc1xxDP2HMg-1
-X-Mimecast-MFC-AGG-ID: mZHA4WJ-O2WYc1xxDP2HMg_1751467444
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3af3c860ed7so1149413f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 07:44:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O7fJak/R"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7d3cc0017fdso488724685a.3;
+        Wed, 02 Jul 2025 07:44:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751467479; x=1752072279; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lVAUHsF9DNYSa/iYiugjbpYggI5LGAKgst70gtbBVuQ=;
+        b=O7fJak/RjWVRz1KYw2g/xdaxguuFW/HJZPcOaj5pEj9ID0Qgqdzyx7Vtybt7VPREDZ
+         qj9SNcbmP4DWL1SPB7iLZWe7iNHy4oArNGB0tEz1tcKNzTphbnYK6ChWj7NWelQ5G3LG
+         BOwEz0kwx0zb5m1Hwk5KQfOlVht9ts5iaOM7noUW+INQ0ytSQhp8+SNxINioHCkaf/Yo
+         AkaMKk8RREl2n7X5AlC3RzVgg3BHHqjxQCCW4Zfdeyia06hr3G9ZZ1MQPbE9RBxaA13B
+         vjVc7lUJDJDaNDWj734UvZqCj9tXqCMAZOZG56+SvD/RA2gyQKoN1uSd+0kKOvKNZTzH
+         +6RA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751467444; x=1752072244;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=v5kZ8LByR5tDk+2RARWaEVx7RJMhvOELDCL82WVT4Mo=;
-        b=VY/qSeK7tkxKb03vb/GC1DJOFVwvKkV2nc7XH7m8reFOJh78QPR4KZjQId3FF9Ce58
-         jn6VfVXYWxxiV1ubwJRDnPa/EM5z8FaQJPXS+ojQcgXkHq3SsgiBTwaHL1yy75yUIY+S
-         4m1JHWGq6mI/EO8iC+JAFgte9pJujTPBnpFULNwDFp5B8V+aLIDipL/6CN8ZdboGqV1A
-         lzLSSNmCwuVLlsV5LBOYAyCkoIYwpnG09U2B22n3XtEZEznNn7yj3JuTJjA7bMsotw66
-         /jfBnVelYIln6XmMST+oQfk4GRKEnQ1CaJKnxvnNjPiT4AtqBPrw8kulLmgE92yy/j49
-         xvwg==
-X-Forwarded-Encrypted: i=1; AJvYcCWU6BAv0M38/1p5VEOXm7Vb2D8mbC8B2Wm4zkDWjWz/IXX4ef0jXd5wrmAf8mVIvu3aJqDaezZCm6yqRoM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYNnDXrxeAcKxpzTvQhx27MBIp5ciWZ4ZbGOKAjEdAqhPef9QE
-	Tn8cKW1vQv9MG0YLZ0oFYPuy3282Ve8Z1B7EJt/3GXM33pYzoBfUdV9acTo6yHnBLKRESCFPLsb
-	5Mb3sIptZ+bdBAyW62qgJgkXdi4ry8cm/JlHffG96yPc438rAf9S+uKNOMPg4DwYjlA==
-X-Gm-Gg: ASbGncuRMcB0fFZD1sv/4lVgmsu8H1hmc2UVtaefBcz1bkngy+dx/r6/vG7rPMBdQNs
-	HdGCuDanjvM/JOYYbes9/EkyZF7Y9IRAzAq1e2wt7a5Dm6EJl1pIkJeZCLJ7aZXaknC1dQHhile
-	HnNTv4lMW13ad0OyaZNBGLVljr86DqiH8J755msEZTaazKnWRVca+lXYHWLXcsaIOZ2yHtIQVvN
-	8SQf4a9jhH1j2+C3x9jggwimz5Rni1bmx4Wu4lH61KOo8kIp04cKyHPOESo5OBrD5GhU212OgR9
-	eEPoUhM7gXZn8aC8/JgYBBqOkMrG0mChOQxtT42IK/uB9vVJklYbiFg=
-X-Received: by 2002:adf:9b84:0:b0:3a4:f744:e00c with SMTP id ffacd0b85a97d-3b20095ce61mr1968565f8f.29.1751467443770;
-        Wed, 02 Jul 2025 07:44:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFp7NbPcO7rJZWXvSnrni21vm6TsH+e1Wf8nuopye15pGumcNSxUt3JtyGqe+Gm1zDhsN9hOA==
-X-Received: by 2002:adf:9b84:0:b0:3a4:f744:e00c with SMTP id ffacd0b85a97d-3b20095ce61mr1968544f8f.29.1751467443279;
-        Wed, 02 Jul 2025 07:44:03 -0700 (PDT)
-Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e52a26sm16417581f8f.51.2025.07.02.07.44.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jul 2025 07:44:02 -0700 (PDT)
-Message-ID: <693725d9-a293-414f-a706-f77446e335b1@redhat.com>
-Date: Wed, 2 Jul 2025 16:44:01 +0200
+        d=1e100.net; s=20230601; t=1751467479; x=1752072279;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lVAUHsF9DNYSa/iYiugjbpYggI5LGAKgst70gtbBVuQ=;
+        b=DRhoaa86/7qcOsrq6LmvnNexiirTp+sh8KR0yXailrGm78zB26uHgC9obBb9eIeBRP
+         MnjCKUkWBdJ2Oj2ozE6bSkxRmJwlYbsWiFE4Qzsw+l3M30OGQlUkkCnp6kjhdsWLTbNQ
+         EdKLc7c0ixt/0kgp0QXTvgJIm5LmQ4kMKxjAaKwPUYApz3BS8nYdJvwmjkGE2CNiu4uy
+         naHfQB26pr86gP/pfxQmftZgTXAH86hybe7DANYaKVBPhy0cYUyP1IQkOyixlYz7RIS5
+         gN8Xl5i8/UMw6wzWDiCB8xyblJpOhUAox1VSLZDFiLWik8MiPLpoGL6dpKX3WY7XfaUa
+         ZfDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXMP1KHwL4ZZby8FA3dSLzNxQ1aA60GDFhnrys1xDzTVVhJni0YVvptu9Ai2DnS4lkmT8WknSJuMbQ=@vger.kernel.org, AJvYcCXUXBD8xFmPxrTNphIr2oJ4OY3dMewTieHY40GLZsP8eli9fG6JoEvAarTTTHGzq3iSBxwlhmxTedkLXgXY@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjDMeJhUkxEESehK8jYZeLgBctmqw7V6Oi+KbVzPAL4tRKM3yk
+	J5cKryVFf0e9/64wE9lsdFawSIcbl27MZqseRQGWkUujjtWDlaeCvRWD
+X-Gm-Gg: ASbGncs/6a1IxEF54lN53oSid4foXxFNYSkTyZfnEVZ0e1NrbL32tHYOWmqc1hvYrGk
+	o2GCEEKtQSk7JQlT2VkmMvd9I1LY71Yn6BWBj/IqGOT5BagZh6vI3XRzu6knRSOBxMs2HrIaX4C
+	ExyuGP5l7TcaxkmJwvUbpqS/TFfyXIoJw4RYUDBpUDKIJeq7tD2KFNE52lpyvvdQKbNmsKNPDmD
+	7MbK81INux4Yd8B6//kgF4hlf5nbbWxw2ZYgVbajtoNDA566LWCeeaX7T2iWXMOaHihT9sEfXVc
+	IZKcdvya8j9xkr8a2dLBxnT/aBOhP0/Y4U/2fl12rDzNkO0JqcL2x+zlcsR4Fce49cb1Pg==
+X-Google-Smtp-Source: AGHT+IEUUzQZ77xkfyRexb4hYyJNdV0cwKqIdsWyojwhD5PuT/fqb0HqrNPfKT4SY2N7KTfvoOQ7tQ==
+X-Received: by 2002:a05:620a:4711:b0:7d4:4b7d:fc66 with SMTP id af79cd13be357-7d5c4725221mr506896585a.18.1751467479088;
+        Wed, 02 Jul 2025 07:44:39 -0700 (PDT)
+Received: from localhost ([2804:30c:b15:b200:425a:de22:1d7f:2d4b])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7d453bc5b00sm663795285a.92.2025.07.02.07.44.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 07:44:38 -0700 (PDT)
+Date: Wed, 2 Jul 2025 11:46:38 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: adc: ad4000: don't use shift_right()
+Message-ID: <aGVGTn3zFV1CuSQp@debian-BULLSEYE-live-builder-AMD64>
+References: <20250702-iio-adc-ad4000-don-t-use-shift_right-v1-1-041c2d6c3950@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH next] mm/maps: move kmalloc() call location in
- do_procmap_query() out of RCU critical section
-To: Jeongjun Park <aha310510@gmail.com>, akpm@linux-foundation.org
-Cc: andrii@kernel.org, osalvador@suse.de, Liam.Howlett@Oracle.com,
- surenb@google.com, christophe.leroy@csgroup.eu,
- linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- syzbot+6246a83e7bd9f8a3e239@syzkaller.appspotmail.com
-References: <20250702135332.291866-1-aha310510@gmail.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250702135332.291866-1-aha310510@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250702-iio-adc-ad4000-don-t-use-shift_right-v1-1-041c2d6c3950@baylibre.com>
 
-On 02.07.25 15:53, Jeongjun Park wrote:
-> In do_procmap_query(), we are allocating name_buf as much as name_buf_sz
-> with kmalloc().
+On 07/02, David Lechner wrote:
+> Drop use of shift_right() macro for unsigned value. The shift_right()
+> macro is intended for signed values and is not needed for unsigned
+> values.
 > 
-> However, due to the previous commit eff061546ca5
-> ("mm/maps: execute PROCMAP_QUERY ioctl under per-vma locks"),
-> the location of kmalloc() is located inside the RCU critical section.
+> This was found by a static analysis tool [1].
 > 
-> This causes might_sleep_if() to be called inside the RCU critical section,
-> so we need to move the call location of kmalloc() outside the RCU critical
-> section to prevent this.
+> Link: https://github.com/analogdevicesinc/linux/pull/2831/files#diff-c14a34a6492576d22e7192cc0f61ad0083190aeb627191596fe12462f0c6f21aR557 [1]
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> ---
+Reviewed-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+
+>  drivers/iio/adc/ad4000.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Reported-by: syzbot+6246a83e7bd9f8a3e239@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=6246a83e7bd9f8a3e239
-> Fixes: eff061546ca5 ("mm/maps: execute PROCMAP_QUERY ioctl under per-vma locks")
-
-That commit is not upstream yet (and the commit id is not stable), so it 
-should be squashed into the problematic commit.
-
-As a side note: the patch subject of this and the original patch should 
-start with "fs/proc/task_mmu", not "mm/maps".
-
--- 
-Cheers,
-
-David / dhildenb
-
+> diff --git a/drivers/iio/adc/ad4000.c b/drivers/iio/adc/ad4000.c
+> index 5609a7845b6f50b5818613170df6b234f8f0c496..fd3d79fca78581e51bb904d0bcfeda3d3663ea25 100644
+> --- a/drivers/iio/adc/ad4000.c
+> +++ b/drivers/iio/adc/ad4000.c
+> @@ -554,7 +554,7 @@ static void ad4000_fill_scale_tbl(struct ad4000_state *st,
+>  	val = mult_frac(st->vref_mv, MICRO, st->gain_milli);
+>  
+>  	/* Would multiply by NANO here but we multiplied by extra MILLI */
+> -	tmp2 = shift_right((u64)val * MICRO, scale_bits);
+> +	tmp2 = (u64)val * MICRO >> scale_bits;
+>  	tmp0 = div_s64_rem(tmp2, NANO, &tmp1);
+>  
+>  	/* Store scale for when span compression is disabled */
+> 
+> ---
+> base-commit: 6742eff60460e77158d4f1b233f17e0345c9e66a
+> change-id: 20250702-iio-adc-ad4000-don-t-use-shift_right-bda6e41152b6
+> 
+> Best regards,
+> -- 
+> David Lechner <dlechner@baylibre.com>
+> 
+> 
