@@ -1,172 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC97823B63E;
-	Wed,  2 Jul 2025 09:47:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E9D5247297;
+	Wed,  2 Jul 2025 09:47:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751449661; cv=none; b=S70gQQbNRuroIa7qJwv6ixM/u5t7ZwF54zUdGD+jaT2XoRb/Xv3Dnq2/Ps/1IBYefOlLIZk+4bCCyFtfxHvHzkWZhatvwSOHIL3YDTvPTweO91Br38NxAuHV5bksZf+U9J4vu8emtMz/F8SJPCdPT13Geo/D8Qg59jyh95PTuJE=
+	t=1751449663; cv=none; b=ZJUu9gprHOKMS5k6jrMHxFiPI/rI8IEmrQXW3xOzE/WU9kU6ws+u3bc4VoO+ydq64TFMB5l0Tn6APzb+2owoN8SVE+bBynEru1a1Jsh63/TqlGbcl7jG2U3g1ABoQnyFtbnKPon7PHKIqOLaGKBRiAbAqQez5gBf8Cy5PNJt9y8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751449661; c=relaxed/simple;
-	bh=QquxLZIFBNYCLtfN2WN90KA9i4NdGTFGsp2moSfYXE4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iPPNVc4hjkx4ZU9eL3RaehdIUsx+OeHEQxWcu+YOAhMSxlQy5+ijrZBGO5WC1qMxhTfE13mwlSU4UE0qohMrOVXqOei3IuC/Kb5T9Ds6zx2S42KPSH4WU4vJkasijH0ANC8Xa5SbRIMs4dFwM06j2kG3WxWxASxGN3bYZw0g0XI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fyhjKVqI; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fyhjKVqI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751449660; x=1782985660;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=QquxLZIFBNYCLtfN2WN90KA9i4NdGTFGsp2moSfYXE4=;
-  b=fyhjKVqIUkxJb1JKT2G3z8DrvoAhm64ajH18/4AL9eTwL4sKR3L+zEKd
-   WoFJzqiZoqsYj38FYd6ATJhl9wx/7FLhganpuoIRJlY/WMG7w3PwszVJ+
-   RiPR798CF8rF+OMhUYRiQxTxTaDxOdxiea7AXahS0cnzjM4XYTjPdA2YJ
-   2IP7EnC/O8XcZ/C+Xvhq+j1/b88dxgCRLZU8RSQrJPSYr5UbEaQCeSuMq
-   HvghIS88wu+qdatejZ4yU9L7LBkEMDVGccJssUVtKrvBpf41yjvxHCK4n
-   RP9nrxGvm1gjtav27jhE7dioWsRgoFik+H+uU3nzCEilEWI2M9iu4K026
-   Q==;
-X-CSE-ConnectionGUID: n+fzfk3QQ1CDo6Vjuen9HQ==
-X-CSE-MsgGUID: nlaHByvfR5W1VGMsWkXO0g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="52968088"
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="52968088"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 02:47:38 -0700
-X-CSE-ConnectionGUID: LkxK1xTYTBadfjlqZ0+zdg==
-X-CSE-MsgGUID: kgMQFbTfRx2+ltJURfIKBQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="154180676"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa007.jf.intel.com with ESMTP; 02 Jul 2025 02:47:26 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 427B11E0; Wed, 02 Jul 2025 12:47:24 +0300 (EEST)
-Date: Wed, 2 Jul 2025 12:47:24 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Sohil Mehta <sohil.mehta@intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel <ardb@kernel.org>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Xiongwei Song <xiongwei.song@windriver.com>, Xin Li <xin3.li@intel.com>, 
-	"Mike Rapoport (IBM)" <rppt@kernel.org>, Brijesh Singh <brijesh.singh@amd.com>, 
-	Michael Roth <michael.roth@amd.com>, Tony Luck <tony.luck@intel.com>, 
-	Alexey Kardashevskiy <aik@amd.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Ingo Molnar <mingo@kernel.org>, 
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Daniel Sneddon <daniel.sneddon@linux.intel.com>, 
-	Kai Huang <kai.huang@intel.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Breno Leitao <leitao@debian.org>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Hou Tao <houtao1@huawei.com>, Juergen Gross <jgross@suse.com>, 
-	Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@google.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Yuntao Wang <ytcoode@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>, 
-	Huang Shijie <shijie@os.amperecomputing.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
-	linux-mm@kvack.org
-Subject: Re: [PATCHv8 04/17] x86/cpu: Defer CR pinning setup until after EFI
- initialization
-Message-ID: <5s25fkpxv6p3ai2iagtgyqhpt3c4cv54q6lgeeebizsseediyy@wl4epcc7i35a>
-References: <20250701095849.2360685-1-kirill.shutemov@linux.intel.com>
- <20250701095849.2360685-5-kirill.shutemov@linux.intel.com>
- <080df169-0f47-40ea-b7b3-4d1a35bee151@intel.com>
+	s=arc-20240116; t=1751449663; c=relaxed/simple;
+	bh=Ouh2tjXOCV5J1xbDYQClFn1faPkd4g72dS9hnpcKiwc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KFBeGQ2O87XNd1SVPY7iQ4lYlGTVKx4jaPiwz1eddJc3D8DC4GIAv7VcYQM+uFTWT4pkgMxJcfl+EkXLwtl+kBjYq+YrSETkL1/LPVIGm1xhsrWFu7fOQ/2omXcfXDlDf7Ny+sU05Kly68QoUXvNHvfrE/VBY7jLdnS/2wdeOsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-87f4c8e9cdcso1520255241.2;
+        Wed, 02 Jul 2025 02:47:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751449660; x=1752054460;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UJLSZzMoHvI3XA3eUYjDZLD323ifNHYwsv3Hd6lOZUk=;
+        b=K4tw+vOGERB5jPntnu3uo+har3n5vaHjHsUPSpL2Pfl9+WJZKsh5KWnclZAZnGhlZ4
+         18Ur3LTdSLko5EojrpqmH20lsYQ7FrAhz1BLGNECRdQZfk/o/A/wBLKdNj6M6Gqyp19e
+         GBZJC6zw4N5q55Ld6kfiOR0bc5R0EfUdBWOz/KxGY0YXmQB+Cf0Yi9EdhILS5u7OChIL
+         8a7m0TupWLGSZmFxE2gCb2RbwC4qJkFs4grrwc9Xr8hDg6/AS7G0cWVBRwrX9thTU0J2
+         NOTvxEpwL6SYDvuBSGPGz9jbZCOqd83ofV8VgrvHAaucpX/BEu2K0/9YaSejh21puuHI
+         cCQg==
+X-Forwarded-Encrypted: i=1; AJvYcCUa3eAOcq10WMeh5cSjK8KbluyKhOotrUdXNVtqwvZrfh2bVU//hOkC2kQt684Z/9el9v6ohdUj@vger.kernel.org, AJvYcCVhB7i9ygtG4Ops5OiKUZR8esu5wA2/CIkIQeAyuHB3WyZBtb7IJ25DktMipHyM/4wd+Umqekxhpxvm@vger.kernel.org, AJvYcCWiZ7REFq+yVIZFveWXdD5Z8DUbmOTtSS3qZ99oYrT8IqvdFCg1CyvSaMNnUTvmLKyCGnO42C6AU12f@vger.kernel.org, AJvYcCWz6sW6J/ANgmlI9yfOK85B1FWpX2+buXm0ZHiUfclLxeFxBGo/Dj5klPzKsMakpfrH+EtQdulLxFxZBgY+@vger.kernel.org, AJvYcCXU7OaFn459Ei3ytaRzbEM0iqwAq9tl/BeImMx6H+YqMZeYr5u6rSbWZ26kQe3WnLDdcelhiziDxdD+J/fMBfaVVQg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZxZ5jOGFWnTE2ifZZKCYIRyr/WcWFpHnh9acTHBs3Tw4zvrHA
+	n9b79hTXfb0izTvSRXGU6QAGLt+8eWTGEkxduIO+zQlssBrYfwjKH5+BJHfEKcHo
+X-Gm-Gg: ASbGncuTzah0PkjykJNIyHlQdkdryqQ+PVHUY98IQAPmzp/I5ftWX3wq+3d3xnp3hYa
+	qk56h3OOVHihMj8KC0Kjnkrzw+kiBM0ctgoTO1zhTrKpiw2JirFXi0qTscxBThelhgJ/ZzWSyzK
+	0HxTitq9CK4otFhpLWwShUqTlZz7ZZM1uZu+uPponj4e+0GwU936Vx2H2hCWuF7SC1yKCMGfR6+
+	0gszWG/jy9e1MDOWuDwPcOP04eDsR5At9otH0dohVKdnCV3Wtru76XcPf/JRqf73zf17ohsVnRm
+	3cRIHiWKR3eRPuWKEBu8j5ONf1dCYSQwnO7izF8TRBwvKJKz0FS4fO2Bv2vxO/joQw8K2M2ut5+
+	5ILcbl7AXZPGVj+hKx42E2dyP
+X-Google-Smtp-Source: AGHT+IFnbx4WhcjjRJhuYKew+vkIZVG5I7u/AhmG8xwPh273vO3UIHNcJCeZ+stYHAYQZdh042SYNg==
+X-Received: by 2002:a05:6102:41ab:b0:4ec:c50c:399f with SMTP id ada2fe7eead31-4f16117a294mr803148137.11.1751449660106;
+        Wed, 02 Jul 2025 02:47:40 -0700 (PDT)
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com. [209.85.217.50])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4ee4c7ec2cfsm1776243137.7.2025.07.02.02.47.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Jul 2025 02:47:39 -0700 (PDT)
+Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-4e7fc3309f2so1584627137.2;
+        Wed, 02 Jul 2025 02:47:39 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUG6VowTjowzfY9ejsqrzOa/fvya25urfdq4YVCXg4DAKVURqr5dgWpiErNyrVOBffHGD4e2La+HVcF@vger.kernel.org, AJvYcCUeJHyQAvITNXJKQw4rgKWsdymWqD12UJ+RANqxdVfC9vJMxR6Yw6cHw4EhhpjKCLJPmErJWBRk59V2YT7ua9DwETQ=@vger.kernel.org, AJvYcCVOy0C1N+x1kJ0UsV+eBK5eSDx4QjnolcPpdDKga6/dGOCPJ49aolt6TGQQJQ8+rXIonaMuOpH/@vger.kernel.org, AJvYcCWiCKqTrsptwVvSK7OHrHyD9siyIOiH2GlxaCXg5BGaWhXNgy3VkzkRqvcAt18AMBC1KEEy96ShQO/Lde8Q@vger.kernel.org, AJvYcCXeXhoJRMzpx2OoDbei+oMCH72QpaaJFo8+vjLC3E5f58jgOXf2ySroq5TzirO5yqmm+Ssp80PfYX9/@vger.kernel.org
+X-Received: by 2002:a05:6102:b0d:b0:4e7:efa3:6475 with SMTP id
+ ada2fe7eead31-4f1614301fdmr617117137.25.1751449659490; Wed, 02 Jul 2025
+ 02:47:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <080df169-0f47-40ea-b7b3-4d1a35bee151@intel.com>
+References: <20250702005706.1200059-1-john.madieu.xa@bp.renesas.com> <20250702005706.1200059-3-john.madieu.xa@bp.renesas.com>
+In-Reply-To: <20250702005706.1200059-3-john.madieu.xa@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 2 Jul 2025 11:47:27 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVsvWrTBXkZ4etWy-8sPH4TG7AEyD_Z27RBWutNvpmUHA@mail.gmail.com>
+X-Gm-Features: Ac12FXyvUOO4u1emMGsdqUSyi2v-LKjWFuqnGZiY-qtjH2LDcXJWx9ecan2toDc
+Message-ID: <CAMuHMdVsvWrTBXkZ4etWy-8sPH4TG7AEyD_Z27RBWutNvpmUHA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/4] pinctrl: renesas: rzg2l: Pass OEN pin names
+To: John Madieu <john.madieu.xa@bp.renesas.com>, prabhakar.mahadev-lad.rj@bp.renesas.com
+Cc: magnus.damm@gmail.com, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, 
+	richardcochran@gmail.com, linux-renesas-soc@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-clk@vger.kernel.org, netdev@vger.kernel.org, biju.das.jz@bp.renesas.com, 
+	john.madieu@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jul 01, 2025 at 12:03:01PM -0700, Sohil Mehta wrote:
-> On 7/1/2025 2:58 AM, Kirill A. Shutemov wrote:
-> > From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > 
-> > In order to map the EFI runtime services, set_virtual_address_map()
-> > needs to be called, which resides in the lower half of the address
-> > space. This means that LASS needs to be temporarily disabled around
-> > this call. This can only be done before the CR pinning is set up.
-> > 
-> > Move CR pinning setup behind the EFI initialization.
-> > 
-> > Wrapping efi_enter_virtual_mode() into lass_disable/enable_enforcement()
-> 
-> I believe this should be lass_stac()/clac() since we reverted to the
-> original naming.
+Hi John, Prabhakar,
 
-Doh. Will fix.
+On Wed, 2 Jul 2025 at 02:57, John Madieu <john.madieu.xa@bp.renesas.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Pass the OEN pin names via the SoC-specific hardware configuration
+> structure to allow reuse of rzv2h_oen_read() and rzv2h_oen_write()
+> on multiple SoCs.
+>
+> On the RZ/V2H(P) and RZ/G3E SoCs, the PFC_OEN register is located at the
+> same offset. However, the register controls different pins on each SoC.
+> Hardcoding the pin names in the common logic prevents reusability.
+>
+> Extend struct rzg2l_hwcfg to include an array of OEN pin names and its
+> length. Use these values in rzv2h_pin_to_oen_bit() to determine the bit
+> position dynamically based on the active SoC.
+>
+> This enables shared handling of OEN register access while accounting for
+> SoC-specific pin mappings.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-> > is not enough because AC flag gates data accesses, but not instruction
-> > fetch. Clearing the CR4 bit is required.
-> > 
-> > Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > Suggested-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > ---
-> >  arch/x86/kernel/cpu/common.c | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-> > index 4f430be285de..9918121e0adc 100644
-> > --- a/arch/x86/kernel/cpu/common.c
-> > +++ b/arch/x86/kernel/cpu/common.c
-> > @@ -2081,7 +2081,6 @@ static __init void identify_boot_cpu(void)
-> >  	enable_sep_cpu();
-> >  #endif
-> >  	cpu_detect_tlb(&boot_cpu_data);
-> > -	setup_cr_pinning();
-> >  
-> >  	tsx_init();
-> >  	tdx_init();
-> > @@ -2532,10 +2531,14 @@ void __init arch_cpu_finalize_init(void)
-> >  
-> >  	/*
-> >  	 * This needs to follow the FPU initializtion, since EFI depends on it.
-> > +	 *
-> > +	 * EFI twiddles CR4.LASS. Do it before CR pinning.
-> >  	 */
-> >  	if (efi_enabled(EFI_RUNTIME_SERVICES))
-> >  		efi_enter_virtual_mode();
-> >  
-> > +	setup_cr_pinning();
-> > +
-> 
-> Instead of EFI toggling CR4.LASS, why not defer the first LASS
-> activation itself?
-> 
-> i.e.
-> 
-> 	if (efi_enabled(EFI_RUNTIME_SERVICES))
-> 		efi_enter_virtual_mode();
-> 
-> 	setup_lass();
-> 
-> 	setup_cr_pinning();
-> 
-> 
-> This way, we can avoid the following patch (#5) altogether.
+Thanks for your patch!
 
-That's definitely an option.
+> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> @@ -257,6 +257,8 @@ enum rzg2l_iolh_index {
+>   * @func_base: base number for port function (see register PFC)
+>   * @oen_max_pin: the maximum pin number supporting output enable
+>   * @oen_max_port: the maximum port number supporting output enable
+> + * @oen_pin_names: array of pin names for output enable
+> + * @oen_pin_names_len: length of the oen_pin_names array
+>   */
+>  struct rzg2l_hwcfg {
+>         const struct rzg2l_register_offsets regs;
+> @@ -269,6 +271,8 @@ struct rzg2l_hwcfg {
+>         u8 func_base;
+>         u8 oen_max_pin;
+>         u8 oen_max_port;
+> +       const char * const *oen_pin_names;
+> +       u8 oen_pin_names_len;
 
-The benefit of current approach is that the enforcement is enabled
-earlier and cover more boot code, providing marginal protection
-improvement.
+Please exchange the order of the members, so the u8 fits in the
+existing hole.
 
-I also like that related security features (SMEP/SMAP/UMIP/LASS) are
-enabled in the same place.
+However, I think you better drop this patch, and use the existing
+rzg2l_pinctrl_data.oen_{read,write]() abstraction instead.
 
-In the end it is a judgement call.
+>  };
 
-Maintainers, any preference?
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
