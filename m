@@ -1,89 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB238F77;
-	Wed,  2 Jul 2025 02:30:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7820D8F77
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 02:31:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751423443; cv=none; b=aOmhdwz+Y7If3OewIqAkLU4GeJTbI8rsLJI6UeHzWlYCHUXdfK6kgJ6Z/LRIWD9vZtqJUJH5jhBbvd1Iebu3GqcLz6sriyJF48fi4SmpTS4YWEpmh1nv164UfzOKP5HiAmuGkhXZWJlT7ObnRtCkcmCVCDTfL0nLmwCP487tFI4=
+	t=1751423503; cv=none; b=pqBNYfciswNK0y2pIRZA3TMi2IyyrN379VSQNC4sKTGoEmUgKTRQi20HhVw/bApJnVRqzvsVO518KUx4m/aXvrpZTD2QXFohwhiM4v9oBFJMYVVR7LOL8YkFFZQlASzWxoNHQYiDkyN9Hq7r6m6XYYFMeF1leUZH+IWsVWld0gY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751423443; c=relaxed/simple;
-	bh=nOJFQfwOfss2NyHRh7Sf9V00Sdr8q6zas3oVjvzNpvg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lMpRQR9oQ/UQSoguOj7W8Et2YY5jgYQKZWaeeqvBYUqCnnww6XIyz9DKLPBt926l/XQc3acyMfZbFim7M+5HPDBELX82N+1sM6EoKoQIJey96/cTWqBh9fXa9ftk7kGaKf4jTKdUTLrPcgW0AcTVePUsbBoq3AEVGF6+Op/JJbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SjzbSl/T; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751423503; c=relaxed/simple;
+	bh=6iQ7WmwuVdriz7MaoWsLX07A7ttd5u5ifqXXe5zPMAw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PCvH/iO1Sqc5CvkDdqMT7gBbRahCc+icHy27pO1Vg8edreSKZg9L80++qaUdzO+TMSK+jqEI4HeTYfCp9qiW9Gv91IBcdH/F9l5vBXMGLMtiyE/b1mdTmN9SZXg6hboFLbgnWUIyKmqubMb+29DxR39Vmw2Ve0dMW6UfwW6dwvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WP1czUgT; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SjzbSl/T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7213C4CEEB;
-	Wed,  2 Jul 2025 02:30:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751423442;
-	bh=nOJFQfwOfss2NyHRh7Sf9V00Sdr8q6zas3oVjvzNpvg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=SjzbSl/TPrFOocvezBId2X3qbDulB9UGKGJ8Rq1YTyF6X8mpB2ndzkBI38ylvFn7X
-	 IXZuejIZ/mOinCifATVRwL/DwR7Yb4XGE6gZzpP8b3lVkmMf9Zhohq4LoAGnkUe17x
-	 1vWQfIFbytT6ed2HKWvMu8i37ArON0Qpgw2+Bc+XQA9lXt0OPzS+eg4+Q+fSB68wXD
-	 E8h7fsMQ2vEjoA3L9V7P9sBG0vR9jFMYhNOKOynYGCFfIVd4U9T2u1A27QdJ2qIVa2
-	 UrMgKaRhjNfYRTeU8vf+M8CQ2L8ALQ39wiv42BU9GFdpbOMdRP9E7ZVC00OPopZftU
-	 Q1Kp7nA9qijzA==
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-32b78b5aa39so38323351fa.1;
-        Tue, 01 Jul 2025 19:30:42 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV7tq0bj/OvjjMr1UDqgO66grEarzoxPxs5uCWSpUpOm7X2ODoCF27hxPW7JMxsfn/aYM2kixquluIOT6I=@vger.kernel.org, AJvYcCWyR1OovcaW78xUcO4grg1lpyEfch8oowiA1JXM0/HY1rP3sz4vmSMJPQMjBtsDQCYpHqgzUF2Fw5VhQeajDw==@vger.kernel.org, AJvYcCXtL7Sh3y+LPsGVI6wwNnsyGKxGTPx44XSuynweaKzfvAErQI/2ImJr0LSwZAHezpAXA7RUO7JEm0iHbdXz@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTOTBFC5prqWonaa7uX8iRgsKJIpoc3LermA4VV6Fu1g6kp1mq
-	fLcACPKYyLpQGR1BTzs9bF/Bdii+Nftr9pP2k2dYVj6kl21eg7TLw1Q4hSAjFv1S+gOwAgHKrdq
-	4d8DB9m1Hnh6al3qZBWknrwGqV5kO+u0=
-X-Google-Smtp-Source: AGHT+IG8qma5BlB/p8uudhBhIOVBWqyt28tuit7Uo1ecmsNa3uMEIakYE9tjYUTQZClYvDp0LFbPMinm6Fs0RucwRAo=
-X-Received: by 2002:a05:651c:31c2:b0:32a:8ac3:93f7 with SMTP id
- 38308e7fff4ca-32dfff87430mr3318591fa.14.1751423441403; Tue, 01 Jul 2025
- 19:30:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WP1czUgT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751423501; x=1782959501;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6iQ7WmwuVdriz7MaoWsLX07A7ttd5u5ifqXXe5zPMAw=;
+  b=WP1czUgT3Llk4pcVMg2S4i64LReU24ShclBZKOSmzLEPISfU/G+ausNV
+   piDZeYAM+mYedsryxj76QI8/tX1fAgp8WJEXr3h3pg6XbsTdRq/ZeLFyw
+   TONlyvAUq1siuYPYLpitlfcE3lmbjxfT0QqYTtZVXE65qL5we/uWKQZmE
+   52aHTSsVbclkj9m0Kkxg/tAtXojQTyCjfurNS589oI10w9vwcobwIwiug
+   V7sbpmuDFabYC/d2P4gjUcrJx8VoUoXClNn1cCJ5up4Ze1iQr3vvSpUV1
+   AzUU3olRiH898RTN4/MxRouCIPZMaJCVaKbbihhMf/9n8sBHDXFxQbvQ7
+   g==;
+X-CSE-ConnectionGUID: HlGREMdpR0+cj0xabIeD+w==
+X-CSE-MsgGUID: gopRJx1NQyKGqCGwhHg7lQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="65053522"
+X-IronPort-AV: E=Sophos;i="6.16,280,1744095600"; 
+   d="scan'208";a="65053522"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 19:31:41 -0700
+X-CSE-ConnectionGUID: F+T+WGjNRAaqpghHlNfwsw==
+X-CSE-MsgGUID: m7KRpRdwTCG7dUqw7NMSbw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,280,1744095600"; 
+   d="scan'208";a="184980877"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa002.jf.intel.com with ESMTP; 01 Jul 2025 19:31:38 -0700
+Date: Wed, 2 Jul 2025 10:23:41 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: "Tian, Kevin" <kevin.tian@intel.com>,
+	"will@kernel.org" <will@kernel.org>,
+	"aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"joro@8bytes.org" <joro@8bytes.org>,
+	"robin.murphy@arm.com" <robin.murphy@arm.com>,
+	"shuah@kernel.org" <shuah@kernel.org>,
+	"nicolinc@nvidia.com" <nicolinc@nvidia.com>,
+	"aik@amd.com" <aik@amd.com>,
+	"Williams, Dan J" <dan.j.williams@intel.com>,
+	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+	"Xu, Yilun" <yilun.xu@intel.com>
+Subject: Re: [PATCH v3 2/5] iommufd: Destroy vdevice on idevice destroy
+Message-ID: <aGSYLVmV17g832Ta@yilunxu-OptiPlex-7050>
+References: <20250627033809.1730752-1-yilun.xu@linux.intel.com>
+ <20250627033809.1730752-3-yilun.xu@linux.intel.com>
+ <BL1PR11MB52712CE938B57E41C34580908C46A@BL1PR11MB5271.namprd11.prod.outlook.com>
+ <aGJkitx6wjfQ888t@yilunxu-OptiPlex-7050>
+ <20250630145051.GY167785@nvidia.com>
+ <aGOoCa3BkV7KrwVz@yilunxu-OptiPlex-7050>
+ <20250701121315.GD167785@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAK7LNASzE1CtRo9T4byPXJtB-HtuWsGe=OLba+8JU9fB28Chow@mail.gmail.com>
- <20250701152000.2477659-1-gprocida@google.com>
-In-Reply-To: <20250701152000.2477659-1-gprocida@google.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Wed, 2 Jul 2025 11:30:05 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAR3YqsQc_kVfLba8Ti8HtrRWGr=KKB+MRdcKE5j8HOtHQ@mail.gmail.com>
-X-Gm-Features: Ac12FXymuWYHvG3lICt1yLtE4SzCSkfOmdBQFCOI03uSMYviSsyoQoon5NM3XSM
-Message-ID: <CAK7LNAR3YqsQc_kVfLba8Ti8HtrRWGr=KKB+MRdcKE5j8HOtHQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] gendwarfksyms - improve symtypes output
-To: Giuliano Procida <gprocida@google.com>
-Cc: Sami Tolvanen <samitolvanen@google.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-modules@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250701121315.GD167785@nvidia.com>
 
-On Wed, Jul 2, 2025 at 12:20=E2=80=AFAM Giuliano Procida <gprocida@google.c=
-om> wrote:
->
-> When investigating MODVERSIONS CRC changes from one build to the next,
-> we need to diff corresponding symtypes files. However, gendwarfksyms
-> did not order these files.
->
-> The first change in this series makes gendwarfksyms code conform to
-> the preferred style for the size parameter passed to allocation
-> functions.
->
-> https://github.com/torvalds/linux/blob/v6.15/Documentation/process/coding=
--style.rst?plain=3D1#L941
->
-> The second change in this series ensures symtypes are output in key
-> order.
->
-> The series is marked as v2 to distinguish it from earlier versions
-> where the changes were posted individually.
->
+On Tue, Jul 01, 2025 at 09:13:15AM -0300, Jason Gunthorpe wrote:
+> On Tue, Jul 01, 2025 at 05:19:05PM +0800, Xu Yilun wrote:
+> > On Mon, Jun 30, 2025 at 11:50:51AM -0300, Jason Gunthorpe wrote:
+> > > On Mon, Jun 30, 2025 at 06:18:50PM +0800, Xu Yilun wrote:
+> > > 
+> > > > I need to reconsider this, seems we need a dedicated vdev lock to
+> > > > synchronize concurrent vdev abort/destroy.
+> > > 
+> > > It is not possible to be concurrent
+> > > 
+> > > destroy is only called once after it is no longer possible to call
+> > > abort.
+> > 
+> > I'm almost about to drop the "abort twice" idea. [1]
+> > 
+> > [1]: https://lore.kernel.org/linux-iommu/20250625123832.GF167785@nvidia.com/
+> > 
+> > See from the flow below,
+> > 
+> >   T1. iommufd_device_unbind(idev)
+> > 	iommufd_device_destroy(obj)
+> > 		mutex_lock(&idev->igroup->lock)
+> >  		iommufd_vdevice_abort(idev->vdev.obj)
+> > 		mutex_unlock(&idev->igroup->lock)
+> > 	kfree(obj)
+> > 
+> >   T2. iommufd_destroy(vdev_id)
+> > 	iommufd_vdevice_destroy(obj)
+> > 		mutex_lock(&vdev->idev->igroup->lock)
+> > 		iommufd_vdevice_abort(obj);
+> > 		mutex_unlock(&vdev->idev->igroup->lock)
+> > 	kfree(obj)
+> > 
+> > iommufd_vdevice_destroy() will access idev->igroup->lock, but it is
+> > possible the idev is already freed at that time:
+> > 
+> >                                             iommufd_destroy(vdev_id)
+> >                                             iommufd_vdevice_destroy(obj)
+> >   iommufd_device_unbind(idev)
+> >   iommufd_device_destroy(obj)
+> >   mutex_lock(&idev->igroup->lock)
+> >                                             mutex_lock(&vdev->idev->igroup->lock) (wait)
+> >   iommufd_vdevice_abort(idev->vdev.obj)
+> >   mutex_unlock(&idev->igroup->lock)
+> >   kfree(obj)
+> >                                             mutex_lock(&vdev->idev->igroup->lock) (PANIC)
+> >                                             iommufd_vdevice_abort(obj)
+> >                                             ...
+> 
+> Yes, you can't touch idev inside the destroy function at all, under
+> any version. idev is only valid if you have a refcount on vdev.
+> 
+> But why are you touching this lock? Arrange things so abort doesn't
+> touch the idev??
 
-Both applied to linux-kbuild.
-Thanks!
+idev has a pointer idev->vdev to track the vdev's lifecycle.
+idev->igroup->lock protects the pointer. At the end of
+iommufd_vdevice_destroy() this pointer should be NULLed so that idev
+knows vdev is really destroyed.
+
+I haven't found a safer way for vdev to sync up its validness with idev
+w/o touching idev.
+
+I was thinking of using vdev->idev and some vdev lock for tracking
+instead. Then iommufd_vdevice_abort() doesn't touch idev. But it is
+still the same, just switch to put idev in risk:
 
 
+                                               iommufd_destroy(vdev_id)
+                                               iommufd_vdevice_destroy(obj)
+  iommufd_device_unbind(idev)
+  iommufd_device_destroy(obj)
+                                               mutex_lock(&vdev->some_lock)
+  mutex_lock(&idev->vdev->some_lock) (wait)
+                                               iommufd_vdevice_abort(obj)
+                                               mutex_unlock(&vdev->some_lock)
+                                               kfree(obj)
+  mutex_lock(&idev->vdev->some_lock) (PANIC)
+  iommufd_vdevice_abort(idev->vdev.obj)
+  ...
 
---=20
-Best Regards
-Masahiro Yamada
+Thanks,
+Yilun
