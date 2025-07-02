@@ -1,260 +1,137 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2054.outbound.protection.outlook.com [40.107.93.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926B610F2
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 04:32:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751430745; cv=fail; b=Z7/fkAbkEvyUC73dGIBgCHmdzNr5hQ5jXjOq1lVrcVi/+VspVWPB/1oM6y3qhp0LtWQGyX5SvPD519II+n3676DYT686c4W3jlT1yl5brvjMKRQ7hH3mOiaLLLg09aasNlJvhYXwZRlorTVyjkyot1AuGwsSN6thVfFeB6QP2iY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751430745; c=relaxed/simple;
-	bh=W/BsuPQN7ZKGSRSE6VQLQYgtLBlZEx75oY9bdtiELkE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Kz/alxPiSxJ22zB0MRnVBVSMDl3r01e56myWALrE834WskGeFmULyir/ALzXVnLmbFSIoiw06MHwivCVzQf5/585FVqXWHP7a6osxC1BSqz9855aq5nDESCSBvR3mf4sCBViK2xgeiCDbpZke26pvRaJqVEbPhwTILCOMdwOLDo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Ndc+Yr2G; arc=fail smtp.client-ip=40.107.93.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3078E555
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 04:33:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751430792; cv=none; b=SwyFeROuSGdKN0nFnBeMiGzJw7fP9qTN+IH0jJwXEsyc8G3UA9Tq9PO6MTZL0rCJqyzV4tBPIxCFe32yiEeiLezbmrivWYTKKrlqvLwXV9Cdg8v1J2bPFA2IGJNTV53ixwP5Ikw9pbc8Ate7lwQ2dv0HVfm9ZTFHhgD7kEimHGI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751430792; c=relaxed/simple;
+	bh=V+yKMN52ursvZcOAwRHO3lkom4QQNqnBRvji1e+HM7A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uHUMqzNMHAEEVDoBtPLwwPDfTTdFcdlBUwdhKj0/5sc3bLGvt48k8SJDEuFBB/evUaQh9iXxykNI6BiqHRUzvTM4Aj3M12hWKDEUVqoWVvxNwoedwBf7+8Oj10GTJgBr2K6wt8QQhhPtUeyattnvjc9Ix6PvFRxDAarvTKjMLUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zrl6l6Km; arc=none smtp.client-ip=209.85.166.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Ndc+Yr2G"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IXd3yaSua8h4ytrmWhr3uHdvSMfI0ufhsxAv3il3QVfhPoldrDWvWdRO0xMk38L8YQzFnsYG2PK1QSP1JuEPf+OXOEDMMrwBnZXS70sYtWJVxdcdH6APwSpJtfohEjdpY+mE8CcHkhmypinyMaRG7F8XTWDQwMD3QAe++x7bs8kCI921Lw6PX5+jsc3v9CnMdX27FZa3OZuTjW/xT9EeLS8WrMwlb9rl+jt30JSOFMxAFtaUOFtttnaMbCYag9TNkqgNEmdspVNzWGFkwhjRZPCPOKI2M0ug7ad/pbV8nqnVR01NPDXyMVu3LfH0SKjqqsZtgBQ4nHDWGka8+3jIPw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kqNWblbUOXzfzYFa1cJNy/eHuHpz9R9+4gimBOk0Mlw=;
- b=ZcwBmVFKqoxQjG7LxcEwsZxYKygLZMF7ls8xWBjTAgcwOwE1819vd3zCdysYueUy1YHMFzDz9On8R4xNMrXCwA+XDbXAGSutPMee1drRQHdG5pNDA6CsjeaihyKS0ADC5e4h5M4gBSr3NEm1UW80oZUreELqn8j5ZrxJCT7qJXbHCiDv2Rjlabj1KGibKXZD3glpJOlHMhSh4t9wqe3QpoaiGScZ63yn6DNFPPTn8sF/aEjUvoy0i+Q9wnF6mbI+T/n+JhpChF+1R3ZnEku/4iyQqUiRJ1VFzb85cVynyGtXSVXtf5Ojdz5TubJMjHCVfMytkMS1+A/3NSPqxahBLg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kqNWblbUOXzfzYFa1cJNy/eHuHpz9R9+4gimBOk0Mlw=;
- b=Ndc+Yr2G5yhMAlpm3mXkdregTkSHCwdOVZhUclDTIlKqbGgPNjWXEi09cdkjeCEnZiTOVpv0DRVlijnVQM7crwLGvZwRIKuTEVeTjDFuaGp/TOudEiy5voh8FVG18jaW79Pl5rpM58Qkf+G31a8WNmviw+xcr6MKJWquZGd5LV0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from IA1PR12MB6460.namprd12.prod.outlook.com (2603:10b6:208:3a8::13)
- by DS7PR12MB5909.namprd12.prod.outlook.com (2603:10b6:8:7a::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.31; Wed, 2 Jul
- 2025 04:32:20 +0000
-Received: from IA1PR12MB6460.namprd12.prod.outlook.com
- ([fe80::c819:8fc0:6563:aadf]) by IA1PR12MB6460.namprd12.prod.outlook.com
- ([fe80::c819:8fc0:6563:aadf%6]) with mapi id 15.20.8901.018; Wed, 2 Jul 2025
- 04:32:20 +0000
-Message-ID: <e9666935-f7af-4419-bb85-e1f041c64ea9@amd.com>
-Date: Wed, 2 Jul 2025 10:02:14 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG] Kernel panic in __migrate_swap_task() on 6.16-rc2 (NULL
- pointer dereference)
-To: "Chen, Yu C" <yu.c.chen@intel.com>, Jirka Hladky <jhladky@redhat.com>,
- Abhigyan ghosh <zscript.team.zs@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Suneeth D <Suneeth.D@amd.com>
-References: <CAE4VaGBLJxpd=NeRJXpSCuw=REhC5LWJpC29kDy-Zh2ZDyzQZA@mail.gmail.com>
- <07D9F8BC-47A7-4E87-8655-C978C056E308@gmail.com>
- <CAE4VaGBQnMp953tsv13s=CiaaiW+EZNuvh6dCuRA7MWbyU_Hsw@mail.gmail.com>
- <CAE4VaGAak=U-oLwXvPZsiNRnRvNL_ROKL8AJCSkCm+zPOjf2qQ@mail.gmail.com>
- <31bd3395-cfe3-4af5-bc1c-fa8d26629b93@intel.com>
- <d0b7b52b-c370-4ad7-8a03-d785f1505372@intel.com>
-Content-Language: en-US
-From: "Aithal, Srikanth" <sraithal@amd.com>
-In-Reply-To: <d0b7b52b-c370-4ad7-8a03-d785f1505372@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN3PR01CA0132.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:bf::16) To IA1PR12MB6460.namprd12.prod.outlook.com
- (2603:10b6:208:3a8::13)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zrl6l6Km"
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3de210e6076so225955ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 21:33:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751430790; x=1752035590; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G6ibeF7iQFN6MXFCKTT12fPtzRdzmMgmVRdt8ogRjrw=;
+        b=zrl6l6Km3g65R5OKwYJQJSYXd6ojUkHfKNvGCJmZ3otCsrizo43EUjcXgHQ0KdWTbF
+         TNV2D2ylMcCIlH1apXtQvmbEONGhCIgFsZdxdUOU6hYpcst636vLnig78diSDyJt3R0g
+         GbLkMJS5n3nZVFlLalzgJ2a3DGDnDhC1odXmRL3EPCsglIyFWrLuRdUyopc+m4y6AUR0
+         pN5okWl2Urqwja4SoFKB7W7/ih9lu9+hKOIuu1IOnGtEacRr1ssROuTxZwI2WTOFV+Cm
+         krbuPyXQo/llgP/mdpTnICxRVGOd53e2nxIK/nKxW59fA7FyAgjeZz/nQPJ5YfpBPS+m
+         3EaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751430790; x=1752035590;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=G6ibeF7iQFN6MXFCKTT12fPtzRdzmMgmVRdt8ogRjrw=;
+        b=dW+oAFZvGtskazJjK+tg0XNKBiN1oLBIoHUxRMTlQ6rkirbjf8qvdSEDapNo/06j9b
+         f8YkR4fp3USLbq2HOTlu1DEpER4kLoiOkbRwj+n/2dw0EBjRjCGbkElwRFZ8fOcIm7Hv
+         GGkTMuQtKRARBmpTkBFWf39QGViV9CAtyDyKjPbG3jkI14w1Q6Z+47FOZmGlbmTl6aJ5
+         1j7/os82Aoplu1VymjJ4WxHRb3Zxd0oTe3bsObyeemVt/NBeETKy2CW+SJwiAIpZtyBa
+         EvgMvLWQO56U3TbqOiypyxzYM2aNx6ClBIou02DEYI34S4H7gRSKRROWAwntdgBLPuxf
+         zCDA==
+X-Forwarded-Encrypted: i=1; AJvYcCXTuqwpjrBrcvm+xxup6D4lLV0BGOcxewTNclm/mufPAQXPmneR1TFzkuKpOqixE9f7fbt7EHGlrdrspIo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2K+yk+VaSOzcq72ANJw53FbWGmoqyAxUhVO6WhroQGujO6DU/
+	AJsZUalSdRbwAIMoXOZlnKsyr5hZpIHGgq2NHjXIFXos8XMHtcnhwjRETfUJkCUWniXO5eyBwoi
+	AXH6FADceSNpJPiJIHWncmjW1AlwO1JD1TsmwemLF
+X-Gm-Gg: ASbGnct3+UXsmZhh92KehtvrUnjhDgwwOGNtt3QrfIdge69i1OWUe1QZ5Pgai2LxB7Y
+	lpQBqO+30hz+KOCGqhQW8SzIlMxzDf3ugGtnETfOeXs256YWbGJ6LNh5atKgM0Yk9lsxLNNPpfw
+	ehWOWEPVZSJadCDYMoeOLIsOBfkxACZV7eVCCB8E+LRcaDVTcynEJPSoEcmtHq0T/gEJi/uKZSy
+	A==
+X-Google-Smtp-Source: AGHT+IFhAG7FmsUNvWegEmSDkXGcLC7QCKJe8X1+A6cDiTAh0Ppff/d4janmsYhEacLJkqjEiLzvlo+uvuAA7hdxFV0=
+X-Received: by 2002:a05:6e02:148d:b0:3dd:c9c2:820e with SMTP id
+ e9e14a558f8ab-3e04a07a123mr5428215ab.23.1751430789780; Tue, 01 Jul 2025
+ 21:33:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR12MB6460:EE_|DS7PR12MB5909:EE_
-X-MS-Office365-Filtering-Correlation-Id: e6302662-fbd0-4009-1ee3-08ddb9216ea2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Vm5CeDZ5cmRkTVZIVW5La3hGNjA3YTRIWEJGc3h0ZnZTajR1eW5DN0JyM0lE?=
- =?utf-8?B?NlFYSGZINmYxSXVqZmpCNE8xcGpGMFNzaDRrOUsxcnQvUFJkbFhPMng0NTNl?=
- =?utf-8?B?L25UMVFsN3krYjNDK250azE1VnNja1FYbDNnejZCbXdQYUY5YU42eFJ3cmpp?=
- =?utf-8?B?Y3dXdzVNbTNVcHJEVnlxN2MrSldrd29hWm1lSU5mUGh2dVMyVEhhcEtmSVJQ?=
- =?utf-8?B?WHBpWlRud0xyYWVCaGRFR1gxMldaUkM2SXI1bEZhcGd0TzFzMGZHaFExMGs2?=
- =?utf-8?B?R2YvTGU2YU5nZWZrOXU0eG1ZL1JGWk92UVhpam4reGdaSEZYMGo3d3NFQ29k?=
- =?utf-8?B?bFY3VFFKSHNTMDBQR3BJbTdIdnhNelVGTmpTZVVlWm1mNko1TXUxQXZ4RVNY?=
- =?utf-8?B?ZUw4QkFtYTUrMzBEY2YzenhzekJQazZvcEtQV2Z0TDJkbXZwL1F1cWR5dlRx?=
- =?utf-8?B?WmgxbVcxelpZNk9wTzk3ekgxNUxWTmpPcjJpUXAvZW5QcVBCM25aSjU4MS9Z?=
- =?utf-8?B?Q3VFVndleFA5aUE1K1V5cEs1bUc2MndpdmhTa2hZT0piSHpvZUFlb2xEa2Nm?=
- =?utf-8?B?TkVVSjIwaW9yQlJ5RUtRalJBYjJqZ3dRMWpjV0VJSFlvR08xRE1YN254MWRY?=
- =?utf-8?B?VjJLR2hrc3BxSlRZYTJ3WWEwOHE5ZCt3bkZoWFh3eWJiejIxSUxsYW5XejYz?=
- =?utf-8?B?V1Vidk4ybytQa085RTc4RWpJNDRDV1JtUTJLQzFCclBUeGdya1dndnFKWTdT?=
- =?utf-8?B?UGE0YUhLckZlTkpBc3ovRXIrWW5DOWMxOXJhZ1dVWXNseS8wT2VFcEphRnZa?=
- =?utf-8?B?cFBpYlAzMzZILzRYZFZiaWVyU1FmZ0M2U3RxamFaT2lLNmUzSkY4VERXZ0dB?=
- =?utf-8?B?b0VXUFYzcHNLNEFHYUJlNER4cVB3UWpDV0FUZ0wvRWpmS1UvRUZQdjlQQTNV?=
- =?utf-8?B?bDJOWmVyTEQyS0h6TUF0Y2JsRUpLa1JxeXFFTUFuL3VlbktnMWJoVmxGdW8r?=
- =?utf-8?B?eHBQUkQwdHFLZzE1RFp3eUdpK2U5MURIL2JUR0U3dnpQVjFORDkrblFWTUh0?=
- =?utf-8?B?cFRnM0VMVzhVdW9ucVVvM29pTjdMM0FSd1pOOEVoY0NOQU0wZjJuaVg5Y2Yz?=
- =?utf-8?B?dVlpZDkzZXJWQUhIb21KL0t6dkpLbHo5R3N6TWhWaUpVa2o0TzJINVFCV3ZN?=
- =?utf-8?B?YnV4QXQ5TWZOTmlSQ1JOMk1YYnlnOHFBangyK3Rsc3RoY2J3UklNVkE2WGdx?=
- =?utf-8?B?WjFnZXRDTkxPOHRzTUd3QXlET0ViN2xmbEJoMmZkMUUrMzkrRnB6eThHaUZu?=
- =?utf-8?B?L1FOSUhxeW8zR0hXemtKSXR5dzEwMFZMMksvMkZCZy9IQm1LUFdvUHJnaGQv?=
- =?utf-8?B?Z2RBUHBMdG5oSWd2elY4YTN2MG1oODVFLzBoWms3cjVha280ak0zWnhKQmdX?=
- =?utf-8?B?dXZmZjVvd05HZ3NUcVBLdjN2THZXYjNTOWFRejlUbnpNUEVMd2FMQzFOQm1J?=
- =?utf-8?B?OVJwZzNQS2t2SjN0UlRIenhRMENyS1dOUE11SmQ4aDZzL0o1aGtlV0EyVThZ?=
- =?utf-8?B?TGpFZnhNWEVVNS9iaDJ0NnpCdCtheVRIVXdPUTJ2RHVNN1lmc3k0MGxoSXc3?=
- =?utf-8?B?UW5NVWtxU0FOWnl6S0J3Y2dPUVR1TnpIenBLTHpRSHlPT2tyRWdmN3NmZHl1?=
- =?utf-8?B?b0tUNUUvdXRrcHI5K09INlljaGtGRURLeElZRExOcU0vekhhMENHY3ljUk1E?=
- =?utf-8?B?TlhYcnR6eVBXNVVmaWNNdzBUaExMckV6WjdKeS9UeDRiWHZWUFRuZDBGdWdv?=
- =?utf-8?B?UlRVci9hd0RtTWN4RXUxQ3p1eUdEdW5DMjhMOG5la2hpT1pNemEvajVmdW5x?=
- =?utf-8?B?R2FkdXZmUWo4RHBkdVBEbjc1NnNpYzd1UnFnNzZHajRFay9mQmhOZHhPbU8r?=
- =?utf-8?Q?X0LizvAfnVT/lVqPYHZsDbMHVmXRTTFF?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB6460.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?S3pzdDl1ckxLaXNPaVE1dGk4aStsd2wzVnhyVlhORVE2Q21JM3pPVmRjVFAr?=
- =?utf-8?B?TjN2eTlkMFZtTkJyQ2xrM3VNTS9Ib0x5ZTJCTC9yQ3ZIL2VPRE1zL05LRUF4?=
- =?utf-8?B?a29yekQ3VW1Ta1Jac1RYbmVSWEhWeWNsTDRjL0xjVkxqV2VCWXNsVVBHN0RT?=
- =?utf-8?B?cUFncGdhMnJCWlBWZElyOEg1aXJZNEdsVWg3QWFjZFhuMjdURFpzMWVwWXgv?=
- =?utf-8?B?WGRPYlg0OXRBbUZNMkpnOXRya21zU2VRYmVwNSs5QTVRVVBUdHpwYkdXcUFN?=
- =?utf-8?B?cU9yWjNQaGprSG53UmEyeFZ6bHRTdldRQzZqYmgwdTJrQkpCeHBXVGxSREF3?=
- =?utf-8?B?d3ZuelVYUXdGRUVZM01jTW9uVFFOMDdabE54NkdkRVFvc1N0YW5KdXdPQmFL?=
- =?utf-8?B?T0hZSlZuUjdSNHFDeHNDdzVydGY4YXlQemFVaXZYRElUOU9RWGc2OTFKSjdY?=
- =?utf-8?B?T2RJSWUrdGFReHRLczVuY1RvMVMxbitMSHF1cER3WVBSWlJ6ckhFU2hFKzJO?=
- =?utf-8?B?Tk4vZnFvWWFWS05yMkJjNVlqYVBOenROYUFTalJoK1E4Y0JTTzlZQVNxYmtk?=
- =?utf-8?B?TWE1aXYrREhaQWdySXd3Y0txM2ZHZ3pNMHFxOUhGNHFXZ3FsQ1JNSUo5T2hC?=
- =?utf-8?B?NTBQSUJGYlVRK0Z4Ry8wQWcyTTl3K1RwbHRoK09aci9DZjZiaVN1S1FPSmdL?=
- =?utf-8?B?ZnRQRFkySmpHcXpwaDVTd1J4K2hTaWcrdkl6MFpDekZSbjRGalV3T3pBU1Rr?=
- =?utf-8?B?dFZCMEVIR1JUaTVOWjJ0OFl5bE5BQmhWR3M0bENHZWZSVXZiRnZvRDMvZmpG?=
- =?utf-8?B?QzZnNE9KbVVFeVNwcmd4bUNnODJoL3VMYlZNaW9aSGVtYXdnOC9oZUV0UERa?=
- =?utf-8?B?Rlo4TDdWWThwR3dyTzVwTXZDUTFEZGpQTkdCNXlWTGd3bGdud3AvVmp0ZERJ?=
- =?utf-8?B?NlpxRWZnamZhenlPN0dPWmp4NEdQUXZDSFB6amtJckZQY3ZxRGFSYzl0WGF5?=
- =?utf-8?B?WkhtUy96VnE1UStGdEZ5b25QMU1lM3RsRUlWd0NtL24xN3liYlQrYjhGeUNJ?=
- =?utf-8?B?RFZMMytUMVBDRm9weWQyczd5Rm5nM3ZWNHFQRnNpeXViakFEeWY0QWdHSit1?=
- =?utf-8?B?MExHdmk0Z0NrNnBra2Rid0Z4ME5uL2Fob3NydFNEUHhEY2ZOaVpwUStWR2J3?=
- =?utf-8?B?LzZ1ajU5bGlORVRYb1hsaXRVc1pTdldpb0pYc0RYMUNCamswSzRPUzBLckIx?=
- =?utf-8?B?VTFkQjVkbVZDRHF5YnpuRUF6dE5DYXBkWTM4RlUyeU56blBNTy85VXlCc2Z6?=
- =?utf-8?B?Y2VPZTNzNS9WM1dsWmM3eUE3RUxtODlpR2NZeGY3WWZ5ODJEcU15OXg0aGx1?=
- =?utf-8?B?eXpFWU9yQ2Y5ckhTV2hGT1d2Vlg4cHdqczdlQTY5bU80VXIyQm1tNlZlSlJQ?=
- =?utf-8?B?eGxRVDdvaGNkazBIVGQrbGxWTkFyTXNYTTJ3cWdOaHh4cU9XaytDNVFWaW1z?=
- =?utf-8?B?Zy9hWGlQTG42WGxxY3hQcTFId2Z0ZmV0VGhCMXNwd3Bjd1h0SzIvOXFVV0lo?=
- =?utf-8?B?N0VBVFhvbVhReldTakFXNGFBcWUzRnY3bXUyQlcwcGR4WGF0K3E2Ym9CUlg3?=
- =?utf-8?B?MFhLRWR0VGRHVnQ2TkhWR2ZJU2lxYjZyUUxNUWVqdGZsNzJwSlQ5ZHlMdnFT?=
- =?utf-8?B?U1ZXUWtrTEFzUTZTaUtBOVZmWmdlSWFnY3BNbXVyT0cwVlBwaXRobHhWWXBq?=
- =?utf-8?B?SEswRGp5ODVPZDNud05FOUJaaTJITlMrMWNxYUROUldsQmdRM2I0akNEQ0c2?=
- =?utf-8?B?UTFjcHdXZlQyYjdDZ3g4N21ndG5kaWMybUc0M0NKWEc2eEQ3RFRXdFBycWRX?=
- =?utf-8?B?cXF3aS84TFlpYmJoeDZuWkZXYS93NkJkVWhyY2IwdU1oYm1iZCtnbzFOanVM?=
- =?utf-8?B?bXZzWHBjZnE2OWs5RkIxZnhFaUZQVUJaNzN4cXFtRVhValdWU1hGek03Vzgx?=
- =?utf-8?B?K0lnMkhWYWY5d0dBKytYdGE3d3g4elpKT2JQcXBkcFRIZWhOOXc3S0UxQlVV?=
- =?utf-8?B?bzZza0F0UmlJbCtEdjJqcXRNRXdKY0hVMnlBc2NvWW5uc0NXYXdEZFFWOWFO?=
- =?utf-8?Q?QNDrX+qe3bHl39TG6HUy8dal4?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e6302662-fbd0-4009-1ee3-08ddb9216ea2
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB6460.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 04:32:20.2642
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qnkXWS5vVOJJrkZgmX5ZSY4ceDLh9YtA7ccAtOpiqdyIy3pnoJs3F2JRuDFRxB/q2sKW5SG/dMbIUcAxCGyaOQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5909
+References: <20250604082449.2029156-1-guanyulin@google.com>
+ <2025060407-geologic-excuse-9ca5@gregkh> <CAOuDEK1471toXVEiNySQtmrRTSPwzo840Q2d5pw9M4fCOfsgTg@mail.gmail.com>
+ <2025061957-daylong-legal-fed1@gregkh> <CAOuDEK1mY7++0NxRYR_+fhQB5+74KB-=MHhk4Dx3cpD6XrG93A@mail.gmail.com>
+In-Reply-To: <CAOuDEK1mY7++0NxRYR_+fhQB5+74KB-=MHhk4Dx3cpD6XrG93A@mail.gmail.com>
+From: Guan-Yu Lin <guanyulin@google.com>
+Date: Wed, 2 Jul 2025 12:33:00 +0800
+X-Gm-Features: Ac12FXy2XrB-PQl8vwk3j9enF8UMK7euznjxv9NYAA8UCnZfd5AtSLx-n3WC5Pc
+Message-ID: <CAOuDEK3+=FVj2zrajjqsWamqCEx5-0v+dSS=gRLYyO_8YdEy1Q@mail.gmail.com>
+Subject: Re: [PATCH v14 0/4] Support system sleep with offloaded usb transfers
+To: Greg KH <gregkh@linuxfoundation.org>, dh10.jung@samsung.com
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/27/2025 1:03 PM, Chen, Yu C wrote:
-> On 6/27/2025 3:16 PM, Chen, Yu C wrote:
->> Hi Jirka,
->>
->> On 6/27/2025 5:46 AM, Jirka Hladky wrote:
->>> Hi Chen and all,
->>>
->>> we have now verified that the following commit causes a kernel panic
->>> discussed in this thread:
->>>
->>> ad6b26b6a0a79 sched/numa: add statistics of numa balance task
->>>
->>> Reverting this commit fixes the issue.
->>>
->>> I'm happy to help debug this further or test a proposed fix.
->>>
->>
->> Thanks very much for your report, it seems that there is a
->> race condition that when the swap task candidate was chosen,
->> but its mm_struct get released due to task exit, then later
->> when doing the task swaping, the p->mm is NULL which caused
->> the problem:
->>
->> CPU0                                   CPU1
->> :
->> ...
->> task_numa_migrate
->>    task_numa_find_cpu
->>     task_numa_compare
->>       # a normal task p is chosen
->>       env->best_task = p
->>
->>                                         # p exit:
->>                                         exit_signals(p);
->>                                            p->flags |= PF_EXITING
->>                                         exit_mm
->>                                            p->mm = NULL;
->>
->>     migrate_swap_stop
->>       __migrate_swap_task((arg->src_task, arg->dst_cpu)
->>        count_memcg_event_mm(p->mm, NUMA_TASK_SWAP)# p->mm is NULL
->>
->> Could you please help check if the following debug patch works,
-> 
-> Attached the patch:
-> 
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 8988d38d46a3..82fc966b390c 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -3364,7 +3364,12 @@ static void __migrate_swap_task(struct 
-> task_struct *p, int cpu)
->   {
->       __schedstat_inc(p->stats.numa_task_swapped);
->       count_vm_numa_event(NUMA_TASK_SWAP);
-> -    count_memcg_event_mm(p->mm, NUMA_TASK_SWAP);
-> +    if (unlikely(!p->mm)) {
-> +        trace_printk("!! (%d %s) flags=%lx\n", p->pid, p->comm,
-> +                p->flags);
-> +    } else {
-> +        count_memcg_event_mm(p->mm, NUMA_TASK_SWAP);
-> +    }
-> 
->       if (task_on_rq_queued(p)) {
->           struct rq *src_rq, *dst_rq;
+On Tue, Jul 1, 2025 at 11:05=E2=80=AFPM Guan-Yu Lin <guanyulin@google.com> =
+wrote:
+>
+> On Thu, Jun 19, 2025 at 5:27=E2=80=AFPM Greg KH <gregkh@linuxfoundation.o=
+rg> wrote:
+> >
+> > On Wed, Jun 04, 2025 at 08:32:00PM +0800, Guan-Yu Lin wrote:
+> > > On Wed, Jun 4, 2025 at 6:56=E2=80=AFPM Greg KH <gregkh@linuxfoundatio=
+n.org> wrote:
+> > > >
+> > > > On Wed, Jun 04, 2025 at 08:23:06AM +0000, Guan-Yu Lin wrote:
+> > > >
+> > > > Is there a reason you aren't cc:ing the developers from a "big andr=
+oid
+> > > > device company" that is currently testing and finding problems with=
+ this
+> > > > patchset in their device testing?  I will require their signed-off-=
+by or
+> > > > tested-by in order to even consider accepting this patch series bas=
+ed on
+> > > > the issues they seem to be finding with it in an
+> > > > internal-company-bug-reporting-platform that I seem to be also copi=
+ed
+> > > > on.
+> > > >
+> > > > thanks,
+> > > >
+> > > > greg k-h
+> > >
+> > > I'm not sure if the company wants to reveal its testing right now
+> > > since the company raised the problem with the internal system. Hence,
+> > > we still use the internal system to communicate with them. We
+> > > understand that "signed-off-by"/"tested-by" tags are required to merg=
+e
+> > > the code, so we'll keep working closely with multiple companies to
+> > > achieve this.
+> >
+> > Great, please do so for the next version you post.
+> >
+> > thanks,
+> >
+> > greg k-h
+>
+> Hi Wesley,
+>
+> Right now the system sleep with offloaded usb transfers feature is
+> pretty much settled. I was wondering if you could test the patch on
+> your platform? Thanks!
+>
+> Regards,
+> Guan-Yu
 
-I was encountering the same issue as mentioned earlier in this thread, 
-which has been recurring in our daily linux-next CI builds within our 
-virtualization CI stream where we observed this BUG appearing randomly 
-during the runs.
+Hi Jung,
 
-Additionally, we were able to reproduce this issue while running the 
-autonuma benchmark. As mentioned earlier, the BUG would occur randomly 
-across iterations, typically between the 5th and 10th iterations.
+I noticed that you've adapted the latest sideband design for audio
+offload in your system. I was wondering if you could adapt this
+patchset as well to further enable offloaded usb transfers during
+system suspend? Thanks!
 
-We consistently encountered this issue up to the 
-6.16.0-rc4-next-20250630 build 
-[https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git].
-
-After applying the aforementioned patch ontop of next-20250630 build, I 
-tested it in our virtualization CI and with the autonuma benchmark 
-reproducer described below, and the issue no longer occurred. The patch 
-appears to have resolved the reported problem.
-
-
-git clone https://github.com/pholasek/autonuma-benchmark.git
-cd autonuma-benchmark
-for i in $(seq 1 80); do bash ./start_bench.sh -s -t; done
-Note: The server running the autonuma-benchmark must have at least two 
-nodes.
-
-If the provided fix is final, please feel free to include the following 
-Tested-by tag:
-
-Tested-by: Srikanth Aithal <Srikanth.Aithal@amd.com>
-Tested-by: Suneeth D <Suneeth.D@amd.com>
-
+Regards,
+Guan-Yu
