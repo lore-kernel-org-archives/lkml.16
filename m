@@ -1,112 +1,115 @@
-Received: from server-vie001.gnuweeb.org (server-vie001.gnuweeb.org [89.58.62.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968481EC006;
-	Wed,  2 Jul 2025 06:44:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.62.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17F92AE8E;
+	Wed,  2 Jul 2025 06:46:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751438659; cv=none; b=GBg40UhbGYcloublkSxZ5oPlzyPkIgsNd/FkQLM0ntjCLqy+XoKBlBc/SbyY2riwwzD70Y8OgOmUUO75m3qRfOCsjJb0xMtefZaDXVIrHa0rX9gDdH8+Y1tjaPw+lHRGN0pWyJwa05Kmb9wOl83VaKb1xbrhX0GmkGqgO3RKoOQ=
+	t=1751438803; cv=none; b=YAsEQUDAMCbwsEGmf0tx2r8e/0+tH4jMRXGWd4Gz3mjMmVymDNpVKxQiv4Ph0kiP/XMa1SMLS2FGJQV9lO2Ays6sYEKxnfRqJkoLQ6PfbnaheK6R9YQc8sMVtK9iNbe64aJOfKAjIt33ddkCO49ZXvl8vh74zO4Jkyc5ThewZmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751438659; c=relaxed/simple;
-	bh=LXET+yFHDbgo4qVwdOx2McXfbA8uUlH7HtuZp6PV4+g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TaFPq1RK/rS4f5JVX6aBVl5CIEtSHv0hucRX9aGrlyxj0m7ALVDQRH7ufQqh0cASGmTKCr3cl4zWy2GD6TJ7KpHbKSxzSvosVnjgY7630upslyW/9kRgxcigpFVeTwa5DZvRrsQhpviJt9jrQAQiqYC6+MavcrKrDYmVc/gKBrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org; spf=pass smtp.mailfrom=gnuweeb.org; dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b=XJChU8ck; arc=none smtp.client-ip=89.58.62.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnuweeb.org
+	s=arc-20240116; t=1751438803; c=relaxed/simple;
+	bh=zMHzm0hMduct+wHoWhsqVIpYxmo48Ijy2VBnTRILvKM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AAd9E63+0N3V0aM6Dl9cc3LM5Fdv0fUcmJRDzzi6fbd/6/GijHnl3u48iYZ9BqFM98ntdHQpd+yqwB+EZ9Lkh4mcMMJZ46aWOFqLfjOZae8YRiAazNMO39g6fIFw1hN2cWuL1Vp3i0n4MWVgG1LB5f+WUl3WlBSzEc8ndDDerY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U5M6YrvA; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b="XJChU8ck"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gnuweeb.org;
-	s=default; t=1751438649;
-	bh=LXET+yFHDbgo4qVwdOx2McXfbA8uUlH7HtuZp6PV4+g=;
-	h=Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
-	 Content-Language:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:Message-ID:Date:From:Reply-To:Subject:To:
-	 Cc:In-Reply-To:References:Resent-Date:Resent-From:Resent-To:
-	 Resent-Cc:User-Agent:Content-Type:Content-Transfer-Encoding;
-	b=XJChU8ckSBAkU66lOTuIgtlFyCgF1v6oKuJ4iKVHQy4QHacbvCpthFs3GYAqKGy/y
-	 Cl4NAYbtkmiZ4hiJQTnhwAeftTHPQP9P0Xnb+YPEc2x/aJm+j8ENjf1R51C8zDhJ4t
-	 jOvbzkGT/0FWo/KCKPsFBCgais1DiKoyaYRKoyTsHyfAObuSlkUOKi1JWK869VWgwj
-	 TpCyUzJoMlBsGUGawMruOoVo7NUN4OcSg/jP1kZSvHRCfxXl0sqqHFIOhkEkMoQi57
-	 ScmTS5T5iFKG3MxBGsgDfJvsqZGHm7Z70pj8z6UvVg2YjlPoGT2KJIIHQwYn6GwIwz
-	 TOSIS4lXANtzA==
-Received: from [10.0.0.2] (unknown [182.253.126.240])
-	by server-vie001.gnuweeb.org (Postfix) with ESMTPSA id 076D921099DE;
-	Wed,  2 Jul 2025 06:44:06 +0000 (UTC)
-Message-ID: <33d93770-886f-4337-a922-579e102c0067@gnuweeb.org>
-X-Gw-Bpl: wU/cy49Bu1yAPm0bW2qiliFUIEVf+EkEatAboK6pk2H2LSy2bfWlPAiP3YIeQ5aElNkQEhTV9Q==
-Date: Wed, 2 Jul 2025 13:44:04 +0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U5M6YrvA"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-450ddb35583so8311695e9.1;
+        Tue, 01 Jul 2025 23:46:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751438800; x=1752043600; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=z44fZXCKQ2rdMNWqQElWdKkxsLIoVt0uR3JUXZYJwhs=;
+        b=U5M6YrvA+4/QVuCdS2Wxf3xveBCmadi9UaP4jkQDCGQwXekmpkSTgZ9tTruseLc/GY
+         jFS5YDNUI4/sNH1tSbhIAZZ9OOuXta7rG+FjEbmiMMJzjNv/DsIFS4NJozElOkk76/lC
+         0JaUn7S/DiFoKKHjUI7MIK8q+JGYWEHsWFmSrEXr5vJuMxKwtrxH3X/fwzcLmqE6s1f9
+         AGp7F1Z1E8+A5lHBIJ0rV4+EF2aJyr7FcnmrDykFjjMeOcoXt/7tfVHKzZ/WEWf5d7TL
+         b1qluDkp5EyCwnnlP0ED2wJH/uUoIFMOzNCwAKz7tiNTaiJTmMsZ1xDLP1egknzbscfm
+         rNnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751438800; x=1752043600;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=z44fZXCKQ2rdMNWqQElWdKkxsLIoVt0uR3JUXZYJwhs=;
+        b=iTA5Et6o6lNhJ7WlPzUHHn5L2K1OrySNVkJfNz7pZthfbXNmki39L9r9Ro03tP1ODu
+         pI6iT23R0yv5q/BHENASOMwlJu2YlC/xtVyhSqMvDazWHNo1Aja9w42XJib8r4xCRqZ4
+         3jOxqrLuA5fkGl03W/AvXOATra48p+gKurFNolPyCDM10g+IBHNWHi43pOo0RlVeD6ik
+         VxFmwKe7ER46er+ir1LTOldpxRhk2/UnRXv8+0DxfYjhduV6H8GtugLLp+I1WmV6LNmx
+         VoYXjg9Fukt2f5REHDlLr2p648UdR9n96Okys7lrkEPbkJrvdmcqFZe3YulfbBZpcyJR
+         IWtA==
+X-Forwarded-Encrypted: i=1; AJvYcCVVFmIq7/15WMK8ZeJdmdxpDmLaOTdbvFp3J+u3DhMG5JyE/T0vxzzm7iXutVsi8QzP3+xiEYsB@vger.kernel.org, AJvYcCVzKr2jiwWRzBa2JC0L4YyZGG4oHvv5wiGpczAihmbkqxFwGQK4KjpA6lx4ieQeEYRQgmKL5LUA57RQc4Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzat8CF23ivF6N1vRkmP4EmXlqycQMImtuwhga4vuN8bVG4hvQW
+	G/9ksW5DrdPj7tvIXY1Po/BXicg6U/A9Hx23CkZMjcs64UjFAmiVeKJk
+X-Gm-Gg: ASbGncuUXkorZd4urkbpiJcAXpP/PkHxRLIwaUC+aphvAjQhYb+RnK4/Kzl/lnVlQLy
+	hPkR5lJXakGEZmq6dWkJS+GigcCV8NoZJn8sUlO3Cad+wegYu8QYlqGIcrdJN0rMvsgpZcIIQ+G
+	3eUxm1fbhzteN5KEGXPJaBs0tUukZbEVKRCtt4jNSXsdKHeUd39qTN4cSDWFSaEOVU/3OIdJXae
+	nCzymhXF28vr6uuKGt946EsfJuoMDJcYmqx3B+UvtzpXYgADo19ScZbCiZnosfVg6kZ5jOeu7h2
+	KVvKTu/MUQWq29Yx2OZPETNbnRd3UvCTBYLKPUQiqYImiwBOSSk2v8afPRQyUbfe3WxVG691aB0
+	0xrS+4/vVkBA8
+X-Google-Smtp-Source: AGHT+IGEU3Ny06YRoZuAUkzUDN3QOXyRXaO7n1F+q8fEIPVppChrJnd6v3AlCTeUUNL0apHLFRr+KQ==
+X-Received: by 2002:a05:6000:22c1:b0:3a6:d403:6429 with SMTP id ffacd0b85a97d-3b1fe8a00d6mr415529f8f.4.1751438799651;
+        Tue, 01 Jul 2025 23:46:39 -0700 (PDT)
+Received: from thomas-precision3591.imag.fr ([2001:660:5301:24:9d5:215:761c:daff])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a88c7fab7asm15156201f8f.24.2025.07.01.23.46.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 23:46:39 -0700 (PDT)
+From: Thomas Fourier <fourier.thomas@gmail.com>
+To: 
+Cc: Thomas Fourier <fourier.thomas@gmail.com>,
+	stable@vger.kernel.org,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	Alexander Dahl <ada@thorsis.com>,
+	Boris Brezillon <bbrezillon@kernel.org>,
+	linux-mtd@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] mtd: rawnand: atmel: Fix dma_mapping_error() address
+Date: Wed,  2 Jul 2025 08:45:11 +0200
+Message-ID: <20250702064515.18145-2-fourier.thomas@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] io_uring/cmd: introduce IORING_URING_CMD_REISSUE flag
-To: Daniel Vacek <neelx@suse.com>
-Cc: Jens Axboe <axboe@kernel.dk>,
- Caleb Sander Mateos <csander@purestorage.com>, Chris Mason <clm@fb.com>,
- Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
- Mark Harmstone <maharmstone@fb.com>,
- Linux Btrfs Mailing List <linux-btrfs@vger.kernel.org>,
- io-uring Mailing List <io-uring@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20250619192748.3602122-1-csander@purestorage.com>
- <20250619192748.3602122-3-csander@purestorage.com>
- <76d3c110-821a-471a-ae95-3a4ab1bf3324@kernel.dk>
- <CAPjX3FfzsHWK=tRwDr4ZSOONq=RftF8THh5SWdT80N6EwesBVA@mail.gmail.com>
-Content-Language: en-US
-From: Ammar Faizi <ammarfaizi2@gnuweeb.org>
-Autocrypt: addr=ammarfaizi2@gnuweeb.org; keydata=
- xsBNBGECqsMBCADy9cU6jMSaJECZXmbOE1Sox1zeJXEy51BRQNOEKbsR0dnRNUCl2tUR1rxd
- M+8V9TQUInBxERJcOdbUKibS8PQRy1g8LKJO/yrrMN8SFqnxYyX8M3WDz1PWuJ7DZE4gECtj
- RPuYN978y9w7Hi6micjraQeXbNp1S7MxEk5AxtlokO6u6Mrdm1WRNDytagkY61PP+5lJwiQS
- XOqiSLyT/ydEbG/hdBiOTOEN4J8MxE+p2xwhHjSTvU4ehq1b6b6N62pIA0r6NMRtdqp0c+Qv
- 3SVkTV8TVHcck60ZKaNtKQTsCObqUHKRurU1qmF6i2Zs+nfL/e+EtT0NVOVEipRZrkGXABEB
- AAHNJUFtbWFyIEZhaXppIDxhbW1hcmZhaXppMkBnbnV3ZWViLm9yZz7CwI4EEwEKADgCGwMF
- CwkIBwIGFQoJCAsCBBYCAwECHgECF4AWIQTok3JtyOTA3juiAQc2T7o0/xcKSwUCZ/1d1QAK
- CRA2T7o0/xcKS6fgCADlWw9ZPvM8Qv9Zdhle6zyCnwTnoZsadBnabY3NGFAo0YVNnByUy5HN
- inN92F1W71D06IrPJr/0rcCt1mJWM8TuQiU3LdEC+1Go99XA48x94grtxkZiBKKUmGU7HU4p
- 5bdTj3Ki8HYCaaHz73VeLsPGvXc6uzMtHCHubErIvbf1VsXOuGo4xhxveT/RutKrJto81YWp
- zlrvbU8DJOvRuzBbNk/N/SgpyceVT+g3hAnoySUV1nweeNdnOZZ8LsH5bjCyJ8oq0n1NfngY
- u1BXSqCNKPh/QrVsXpvlWuvWog1k/GbtxQoIJ2lizJPrxA8kjUI/oQ/S9DDejiLD7yzXeUUw
- zjgEZ/1bwhIKKwYBBAGXVQEFAQEHQELDQDfZ2b77GoJFe9RHDa2xOd3X4QZPuRcqvwu2h74j
- AwEIB8LAfAQYAQoAJhYhBOiTcm3I5MDeO6IBBzZPujT/FwpLBQJn/VvCAhsMBQkI3sMOAAoJ
- EDZPujT/FwpLC9UH/Am+C8AQsDFNpTUWzkqEwTMAcXBES9sRr9Hx3AbysOuEF28LwAGaHlx9
- pn17tiusZcDQ3TnJnbp4pdUt6n1HYZqR04Nrkz7fbirFJQ214vHFov0lc8g26OdEVHWqHtKN
- GGAryZaaT2c8aqRX3X8BraFyjj35cFLKeUJDnKBWDt4ztvQnnHPi9GH74h1O/mglcMyM3EnM
- AOWKeYsHlJf98mt8gRamko7WOG473faeN1IO/iTZIdUEjzsTmzITehrqMm6FVFPFOUtmQG4M
- 9X95XOk5hOL7VvJZpLc3lZdccyaWP2yJ14AX3QMBJjZuPpfDCJCVPb7PBa8fOWMghEO8hTo=
-In-Reply-To: <CAPjX3FfzsHWK=tRwDr4ZSOONq=RftF8THh5SWdT80N6EwesBVA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 7/2/25 1:27 PM, Daniel Vacek wrote:
-> On Tue, 1 Jul 2025 at 21:04, Jens Axboe <axboe@kernel.dk> wrote:
->> Probably fold that under the next statement?
->>
->>          if (ret == -EAGAIN || ret == -EIOCBQUEUED) {
->>                  if (ret == -EAGAIN) {
->>                          ioucmd->flags |= IORING_URING_CMD_REISSUE;
->>                  return ret;
->>          }
->>
->> ?
-> 
-> I'd argue the original looks simpler, cleaner.
+It seems like what was intended is to test if the dma_map of the
+previous line failed but the wrong dma address was passed.
 
-I propose doing it this way:
+Fixes: f88fc122cc34 ("mtd: nand: Cleanup/rework the atmel_nand driver")
+Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
+---
+v1 -> v2:
+- Add stable@vger.kernel.org
+- Fix subject prefix
 
-	if (ret == -EAGAIN) {
-		ioucmd->flags |= IORING_URING_CMD_REISSUE;
-		return ret;
-	}
+ drivers/mtd/nand/raw/atmel/nand-controller.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-	if (ret == -EIOCBQUEUED)
-		return ret;
-
-It's simpler because the -EAGAIN is only checked once :)
-
+diff --git a/drivers/mtd/nand/raw/atmel/nand-controller.c b/drivers/mtd/nand/raw/atmel/nand-controller.c
+index dedcca87defc..84ab4a83cbd6 100644
+--- a/drivers/mtd/nand/raw/atmel/nand-controller.c
++++ b/drivers/mtd/nand/raw/atmel/nand-controller.c
+@@ -373,7 +373,7 @@ static int atmel_nand_dma_transfer(struct atmel_nand_controller *nc,
+ 	dma_cookie_t cookie;
+ 
+ 	buf_dma = dma_map_single(nc->dev, buf, len, dir);
+-	if (dma_mapping_error(nc->dev, dev_dma)) {
++	if (dma_mapping_error(nc->dev, buf_dma)) {
+ 		dev_err(nc->dev,
+ 			"Failed to prepare a buffer for DMA access\n");
+ 		goto err;
 -- 
-Ammar Faizi
+2.43.0
+
