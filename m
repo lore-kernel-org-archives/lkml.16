@@ -1,66 +1,60 @@
-Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9CB22D0C68
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 15:53:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B26793196D8;
+	Wed,  2 Jul 2025 15:54:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751471615; cv=none; b=Lei25KPHIEwsVqDTCDrCPpqVg7GasatkRrPubWvhhBhO6AMHS/77jbwb28Au/zTyn91kcslzh9bKeMRXk3IgZcWQSnbRUjzjjs2I4woLQXCtmMPsrF3JCjVjn/R+zJs5ae9jLR5NrYhLg+cKJM178NavCd3ki2HeUBz+cZaqRpg=
+	t=1751471668; cv=none; b=ayTM8OpNqfHbHIOc7dTctKv5wULlR60LM6vIvZbw6mcQ0FvOcnUTVFEglK5zXGcO6+JoWzDB6288tHp8KpJO0izxGLcXsdK74ACTDwtQBwo7iGoU/AWszOt/0uO6o3b+TBzvLkpqG55E3SxhhaRGoCnwfmzdsep5UfGEReYZYIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751471615; c=relaxed/simple;
-	bh=SnlgmvXX9oBJ2pQVKACQLITc0HfSCd9SV1QSCI/mbkY=;
+	s=arc-20240116; t=1751471668; c=relaxed/simple;
+	bh=1F43+7fwHzAd9yWVEVAylcR0AdP9hhm3Sf59ofmBB58=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k/HUeuqZi8Qk1KyuHUclszik/xlRffNpL+pKEAg8z3Xf9jbm+rcZXjH3LZXVItDCYS9SoB1mvEm8FCCZjiJ6RKgH7wGim8YqCSU49Vy7gM0JubBozhAFEZM2S4jgo3e4dU2xzZ7nz6NeYhQVpkE5zmHTZgAAI+dJ9vxNhrt0Wzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=W0KQKoGq; arc=none smtp.client-ip=209.85.160.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	 In-Reply-To:Content-Type; b=bPfrqt/eZwY0mfUV5FcglScq2AbOfQcB4st54aqzIuRzI1v1kKadmLCx8s8XHGUIDrxomjfLQcC4qRFbTpDGibrCtU2Q3x1rbVMK7V3+1Cfu2Ri4r1tuOu1OmkAe5OlOj7rWBx4SYcm/9pXgTr0POhkZGjjfiCtIlO6vKCJJ8g0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JcaKcfzG; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="W0KQKoGq"
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-2ef891cd058so3588146fac.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 08:53:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751471613; x=1752076413; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9Kino+XqZYEqgWvIyTiqrJSAa+M+qswg1+WCL0GmDq8=;
-        b=W0KQKoGqIUOcxiksiji1jTpJYnhg68zabcFq5EA+TFgLq0oWijZKfcg8SrJMDbVj5/
-         4DEDaacT3x4OMNDe3IFKzkhHUQaHS9WBOXFjkHYHSC9Q15hDxmURDuLFGSKjxRooZBYL
-         AYv+sH512FTt8l7yE78pwDS/4bvPlIEc3a4cPoyWTgPV20Zua+bgZIZp5mVpCJtnxpk8
-         RjEqYi01wUJE3unzjytv9c6bvQVvHEGz9VJw06H99wyEAOcP/D7cBzfudl/d0eewSDAJ
-         TL0uE7VXeRbJdBF+CarTyBpGR1+Zo7ADj8FUa2Rssf8EK/Hd/2vOfopsr0VOrGsPBd3s
-         0ASQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751471613; x=1752076413;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9Kino+XqZYEqgWvIyTiqrJSAa+M+qswg1+WCL0GmDq8=;
-        b=T0SgPCiPxmrYIZgMY8/la+bIi1W3gLHSCJwy7JtSOUrmYUK4gp1jHMUd82JjDAdUql
-         u+iEWqufoXOC4H2UuXVQ8LBVCqi6R3bLIxC4mAQD+Wrd7KKm7t5Je3FcwY/SWrAzm2qT
-         soAb2Z41FtyvCehbfeTm+XHnjV1cPXAGleAUvg5C5pF68DjAIklc9bjqR46drdHKzzoz
-         5Gqk/ahYEVRFSHjECvHaJiAhMp/GxCCJ1puDhzIZlMcAeVCVwRWGvIvE3PpPKdQOy54Z
-         9jQXEKPe/lgDTG5HpNh6YcHulGQUWHnNs5HWtIZYbvFx/vriTMKYGFrXTgFRmOwe0bCp
-         YP/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVaXNxXLlWscQiv6hzstqi8vkvb8AKlKbq2LA5ZI2LSXRpVdCjHpcn9dmFFpgKkyqTq94wcwkehBOjUNoE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzX+Lp6DRFrPM+ljmprkHIrBjLaP8ZONg04y130g+gLH+t+A0Di
-	iXVbxnG3uc3Fj4DmQ415oeQSoJYJavCxj5bA/5nDmClT13GjXiR1oxMyfT2ByIYRUzL+bDF4+Uk
-	a74nqfnk=
-X-Gm-Gg: ASbGncszPkDZuVyw10ySp4OYZGcaqR934gukWkevN0+g9qfl0MFcvBbB5DMjEkokMkL
-	GqbTCRxmwUWZSJ1kTPM/TRio6ilu3O8NnsKWbOvbOa/9dYlII6BVz17QWfS0u2wbBq+oqq9hCpj
-	He7X1kSreDvuw9XZBBN2tmZWP5BAbc0Q2zcW54sMIcHMizqmmIgsCuX3/3OojNymyZkbge2mUr+
-	ZmvlhTJeM3vFQuN1UCzuBU1ebI1CT1+HQPLoPfR2gTmg/afbhthCrR7C+W8RSnL4yYwcLd62QJo
-	qRDoMxzMH4htQvOCt0h36OQLXmT7SEmNA64ZGkNKb2Dipxl9PlZFb/Pj0RyydUTVEjoYrYY3O8c
-	wNoMHi/dCX4S+28PMW44h8SCA4zs/egDUL63Jd/8nznqLMgFDyw==
-X-Google-Smtp-Source: AGHT+IHqyqv4bHA7mWxBx95w1LJXjzoruqsxFeBP7aW/iw0Ov87EOi4MTilwG8uSt/H50TBf7IQPGg==
-X-Received: by 2002:a05:6870:944c:b0:2d6:667c:511f with SMTP id 586e51a60fabf-2f5a89fd32dmr2992756fac.9.1751471612809;
-        Wed, 02 Jul 2025 08:53:32 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:5c00:24f0:997b:5458? ([2600:8803:e7e4:1d00:5c00:24f0:997b:5458])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2efd4eab4e3sm3980916fac.4.2025.07.02.08.53.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jul 2025 08:53:32 -0700 (PDT)
-Message-ID: <3361875b-712e-423f-88ed-baf41af5ad22@baylibre.com>
-Date: Wed, 2 Jul 2025 10:53:31 -0500
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JcaKcfzG"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 562ESsmV014229;
+	Wed, 2 Jul 2025 15:53:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=LtTTnJ
+	nGndDo0Uo8vt93cMjsCMckI6r3gJDGK3u+F90=; b=JcaKcfzGh/3gSovt2lTpqj
+	6XsqPupj0l9CqN+wDXUTkecMFjp6/lqX93y47jJWblLwiapVh1CIfCToGimL7A8/
+	sZR6fDJMmdlTfgtd+8ttLzEydPUUzmD09ccS1LNP1XDz1Cazjjify/uVztKqG78Q
+	hcIXQ2ey4TR4TDABacjdiHsVljKUsknwGPCR/OUwoFmXNVJLDy19X1lorBPKOvmO
+	aq2AbxVs9C2etk6VT8gYD2EAAKykjqhFs5ZCA/6pIwJOYhCp83ka906IvWm601KM
+	3pV/+MWP4fbZx2yRHzpv8axHMb2Csff99ppmUpv9VQ92wP0AWlo+rldluAxlzTSQ
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j84dejsb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Jul 2025 15:53:12 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 562F7mZZ021354;
+	Wed, 2 Jul 2025 15:53:11 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 47jwe3g0dk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Jul 2025 15:53:11 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 562Fr7In43385296
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 2 Jul 2025 15:53:07 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6FAB320043;
+	Wed,  2 Jul 2025 15:53:07 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1CB8D20040;
+	Wed,  2 Jul 2025 15:53:07 +0000 (GMT)
+Received: from [9.152.222.224] (unknown [9.152.222.224])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  2 Jul 2025 15:53:07 +0000 (GMT)
+Message-ID: <d0aa861d-e1bb-4ab4-8ccb-d9fdc39738a9@linux.ibm.com>
+Date: Wed, 2 Jul 2025 17:53:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,69 +62,197 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iio: st_lsm6dsx: Replace scnprintf with sysfs_emit
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>,
- Akshay Bansod <akbansd@gmail.com>, Lorenzo Bianconi <lorenzo@kernel.org>,
- Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- linux-kernel-mentees@lists.linuxfoundation.org, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250702135855.59955-1-akbansd@gmail.com>
- <f96b68a5-d750-45f0-8cdd-9761b5daca1d@baylibre.com>
- <aGVIcBLgXZj_YR7B@smile.fi.intel.com>
- <e474db53-1b52-48b0-9253-2f62a3861bb4@baylibre.com>
- <20250702163342.00003c66@huawei.com>
+Subject: Re: [PATCH v12 07/14] unwind_user/deferred: Make unwind deferral
+ requests NMI-safe
+To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        x86@kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Indu Bhagat <indu.bhagat@oracle.com>,
+        "Jose E. Marchesi" <jemarch@gnu.org>,
+        Beau Belgrave <beaub@linux.microsoft.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
+References: <20250701005321.942306427@goodmis.org>
+ <20250701005451.737614486@goodmis.org>
 Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20250702163342.00003c66@huawei.com>
+From: Jens Remus <jremus@linux.ibm.com>
+Organization: IBM Deutschland Research & Development GmbH
+In-Reply-To: <20250701005451.737614486@goodmis.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 8koNIRB4XGfsbHXgfXDECKQMOD4e7nav
+X-Proofpoint-GUID: 8koNIRB4XGfsbHXgfXDECKQMOD4e7nav
+X-Authority-Analysis: v=2.4 cv=Ib6HWXqa c=1 sm=1 tr=0 ts=686555e8 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VnNF1IyMAAAA:8 a=yazbiPPT3PS1vEbXeL8A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDEzMCBTYWx0ZWRfXy+OmPy/xqIQ1 2E0dcXZu0Cm8CupqOR5zUrGy115/Hfy36QAnvQjKNhd17eA6mVNY08i3UDck4207Ka8gCzY8j/E AkCUeVAegpnfURtjZuvRef9nh1QM3oFPyeKduEL+mB3sqRwUzSQG68EwiU861JMP6INc/5QZAqy
+ ys5JEXKaQJrmlrU0FHIdOlNoj5Sivhlk3JW5kKLGLgaJDk0+ULJmkAMvC5Yb16I6RTbZk+cQlS3 H1jL430VO91K3KVJ859HZzMQCupPqRQ93x/jzte9eaTvQpTaMEXuqs5W+bELmS6DsL1gYCg3+Q1 R+zvCZTi+dxTscoMvHOx3Z3UgKsvFg9DOMr4mvq0bvhfkkX5MeXoA1wgh+U6MY4mv20rKnO5e4f
+ zV189DnjZREklahV4FN/i0Xv2kPGXh2Ym/WaSmGCM0g/HoDmkYcp5GMTlq8mH+pJnZaLrIdL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-02_02,2025-07-02_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
+ clxscore=1015 mlxlogscore=999 lowpriorityscore=0 impostorscore=0
+ mlxscore=0 malwarescore=0 spamscore=0 priorityscore=1501 adultscore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507020130
 
-On 7/2/25 10:33 AM, Jonathan Cameron wrote:
-> On Wed, 2 Jul 2025 10:04:23 -0500
-> David Lechner <dlechner@baylibre.com> wrote:
-> 
->> On 7/2/25 9:55 AM, Andy Shevchenko wrote:
->>> On Wed, Jul 02, 2025 at 09:16:51AM -0500, David Lechner wrote:  
->>>> On 7/2/25 8:58 AM, Akshay Bansod wrote:  
->>>>> Update the sysfs interface for sampling frequency and scale attributes.
->>>>> Replace `scnprintf()` with `sysfs_emit_at()` which is PAGE_SIZE-aware
->>>>> and recommended for use in sysfs.  
->>>
->>> ...
->>>   
->>>>> +		len += sysfs_emit_at(buf, len, "%d.%03d ",
->>>>>  				 odr_table->odr_avl[i].milli_hz / 1000,
->>>>>  				 odr_table->odr_avl[i].milli_hz % 1000);  
->>>>
->>>> Let's keep checkpatch happy and change the indent of the wrapped lines to
->>>> line up with ( since the ( moved.  
->>>
->>> While I see the point, wouldn't be better to have 1000 replaced with MILLI
->>> at the same time?
->>>   
->>
->> For anything with 3 zeros, I don't consider MILLI better (or worse).
->> Science shows that the average human can easily see 3 or 4 things
->> without having to count them [1]. So it is only when we start getting
->> more 0s than that is when I think we should be picky about using macros
->> instead.
->>
->> And in this particular case, we are converting milli to micro so `1000`
->> should be replaced by `(MICRO / MILLI)` if we are going to do that.
-> No we aren't.
-> 
-> This one is converting from milli_hz to hz + sticking to milli for the decimal
-> part.
-> 
-> Lots of other IIO cases where you would have been right, but I think not here.
+Hello Steve!
 
-Oops. The %03d instead of %06d should have given it away!
+On 01.07.2025 02:53, Steven Rostedt wrote:
+> Make unwind_deferred_request() NMI-safe so tracers in NMI context can
+> call it and safely request a user space stacktrace when the task exits.
 
->>
->> [1]: https://www.scientificamerican.com/article/your-brain-finds-it-easy-to-size-up-four-objects-but-not-five-heres-why/
->>
->>
-> 
+> diff --git a/include/linux/unwind_deferred_types.h b/include/linux/unwind_deferred_types.h
+
+> @@ -2,6 +2,9 @@
+>  #ifndef _LINUX_UNWIND_USER_DEFERRED_TYPES_H
+>  #define _LINUX_UNWIND_USER_DEFERRED_TYPES_H
+>  
+> +#include <asm/local64.h>
+> +#include <asm/local.h>
+
+This creates the following circular dependency, that breaks the build on
+s390 as follows, whenever local64.h is included first, so that local64_t
+is not yet defined when unwind_deferred_types.h gets included down the
+line:
+
+
+Circular dependency:
+
+include/linux/unwind_deferred_types.h
+arch/<arch>/include/generated/asm/local64.h
+include/asm-generic/local64.h
+include/linux/percpu.h
+include/linux/sched.h
+include/linux/unwind_deferred_types.h
+
+
+Compile error on s390:
+
+  CC      net/ipv4/proc.o
+In file included from ./include/linux/sched.h:49,
+                 from ./include/linux/percpu.h:12,
+                 from ./include/asm-generic/local64.h:5,
+                 from ./arch/s390/include/generated/asm/local64.h:1,
+                 from ./include/linux/u64_stats_sync.h:71,
+                 from ./include/net/snmp.h:47,
+                 from ./include/net/netns/mib.h:5,
+                 from ./include/net/net_namespace.h:17,
+                 from net/ipv4/proc.c:31:
+./include/linux/unwind_deferred_types.h:17:9: error: unknown type name ‘local64_t’; did you mean ‘local_t’?
+   17 |         local64_t               timestamp;
+      |         ^~~~~~~~~
+      |         local_t
+
+
+Reason it fails on s390:
+
+net/ipv4/proc.c
++- include/net/net_namespace.h
+   +- include/net/netns/mib.h
+      +- include/net/snmp.h
+         +- include/linux/u64_stats_sync.h
+            +- arch/s390/include/generated/asm/local64.h   <-- ISSUE: local64.h gets included before unwind_deferred_types.h
+               +- include/asm-generic/local64.h
+                  +- include/linux/percpu.h
+                     +- include/linux/sched.h
+                        +- include/linux/unwind_deferred_types.h   <-- ERROR: local64_t not yet defined
+
+
+Reason it does not fail on x86:
+
+net/ipv4/proc.c
++- include/net/net_namespace.h
+   +- include/linux/workqueue.h
+   |  +- include/linux/timer.h
+   |     +- include/linux/ktime.h
+   |        +- include/linux/jiffies.h
+   |           +- include/linux/time.h
+   |               +- include/linux/time32.h
+   |                  +- include/linux/timex.h
+   |                     +- arch/x86/include/asm/timex.h
+   |                        +- arch/x86/include/asm/tsc.h
+   |                           +- arch/x86/include/asm/msr.h
+   |                              +- include/linux/percpu.h
+   |                                 +- include/linux/sched.h
+   |                                    +- include/linux/unwind_deferred_types.h   <-- OK: unwind_deferred_types.h gets included before local64.h
+   |                                       +- arch/x86/include/generated/asm/local64.h
+   |                                          +- include/asm-generic/local64.h
+   |                                           [ +- include/linux/percpu.h ]
+   +- include/net/netns/mib.h
+      +- include/net/snmp.h
+         +- include/linux/u64_stats_sync.h
+            +- arch/x86/include/generated/asm/local64.h   <-- OK: local64.h comes after unwind_deferred_types.h
+             [ +- include/asm-generic/local64.h ]
+                [ +- include/linux/percpu.h ]
+                   [ +- include/linux/sched.h ]
+                      [ +- include/linux/unwind_deferred_types.h ]
+
+
+My colleague Heiko Carstens (on Cc) suggested the following potential fix
+that breaks the circular dependency, provided local[64].h does not ever
+need percpu.h.  At least I verified that defconfig x86 and s390 builds
+still work.
+
+diff --git a/include/asm-generic/local.h b/include/asm-generic/local.h
+index 7f97018df66f..3e7ce6a9e18e 100644
+--- a/include/asm-generic/local.h
++++ b/include/asm-generic/local.h
+@@ -2,7 +2,6 @@
+ #ifndef _ASM_GENERIC_LOCAL_H
+ #define _ASM_GENERIC_LOCAL_H
+ 
+-#include <linux/percpu.h>
+ #include <linux/atomic.h>
+ #include <asm/types.h>
+ 
+diff --git a/include/asm-generic/local64.h b/include/asm-generic/local64.h
+index 14963a7a6253..1f9af89916cb 100644
+--- a/include/asm-generic/local64.h
++++ b/include/asm-generic/local64.h
+@@ -2,7 +2,6 @@
+ #ifndef _ASM_GENERIC_LOCAL64_H
+ #define _ASM_GENERIC_LOCAL64_H
+ 
+-#include <linux/percpu.h>
+ #include <asm/types.h>
+
+> +
+>  struct unwind_cache {
+>  	unsigned int		nr_entries;
+>  	unsigned long		entries[];
+> @@ -10,8 +13,8 @@ struct unwind_cache {
+>  struct unwind_task_info {
+>  	struct unwind_cache	*cache;
+>  	struct callback_head	work;
+> -	u64			timestamp;
+> -	int			pending;
+> +	local64_t		timestamp;
+> +	local_t			pending;
+>  };
+>  
+>  #endif /* _LINUX_UNWIND_USER_DEFERRED_TYPES_H */
+
+Regards,
+Jens
+-- 
+Jens Remus
+Linux on Z Development (D3303)
++49-7031-16-1128 Office
+jremus@de.ibm.com
+
+IBM
+
+IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
+IBM Data Privacy Statement: https://www.ibm.com/privacy/
 
