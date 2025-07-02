@@ -1,2481 +1,1941 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9F1FAD2C;
-	Wed,  2 Jul 2025 06:02:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A402AE8B;
+	Wed,  2 Jul 2025 06:04:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751436177; cv=none; b=bDsv6NCfz3tx/wL2IG0Z7YoMieSqb8aKh/oVskAqmpciyEnWoowHmfITogzzE8OcaSUf2/vN/mNHuBzKUu7stov5diUI4vXeJMghVgzPRk80m2xRUxQcGaOkqJ3agoYwy4aWJnTqUK34vkahCY/vZGibWyEIVyTv7KoSyvw7qo8=
+	t=1751436292; cv=none; b=QzVX7fe4TJbftCofTEXB4lGJsSo+oPuDLTDYhyHQnJgw9MpLNCAK6s4sv3NrvpvWWcpnRO6J6tp4Uozgsca+pHsysxMVgU+JGi9BoRChFbZ7gMU1LNTRsuf7pYsgXAHQbuSfJ7B/Si0F7RGg3D+c9VJRs4Pdw0ix2JbBnraomts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751436177; c=relaxed/simple;
-	bh=AxKsrJ3zBwoEzyx1MNy9YcTWFWhSTJrCxMAGiXNISPk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iKxalbvulJjtXg4INwmmKghHzjbOejIgh55dEt2BC9ES7UnTpo/ytm1tw4lQ67+kcybogeXoWRNv0tkhV6btDAbI33fdVDAUvVzeqJ7z211vw6FHw/Vob5bw2j+OPpgGNPniYQx8w/bu30c/BsoRFURn71xm2XcGd/84StPRAcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from [127.0.0.2] (unknown [210.73.43.2])
-	by APP-01 (Coremail) with SMTP id qwCowAC3pqpny2RomPduAA--.1282S4;
-	Wed, 02 Jul 2025 14:02:16 +0800 (CST)
-From: Vivian Wang <wangruikang@iscas.ac.cn>
-Date: Wed, 02 Jul 2025 14:01:41 +0800
-Subject: [PATCH net-next v3 2/5] net: spacemit: Add K1 Ethernet MAC
+	s=arc-20240116; t=1751436292; c=relaxed/simple;
+	bh=iE1Qa1O08zgGUQ9U8bAu8ZmpGhAjpYnRD4GKgrhOZIs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mcx9jDtdD96qY5xYOHWmkGA8+Kf2d9xIsjZSgzTNDXP9pm5/4I0bYETy7HEoxK8NTwKt0QQrxEw7tC310I0ihWtRWBTxT/3HB+2kal7sZl7A4DIaiR+XhokFgsm9Cez4W2oxIPWS1j3NphiVrEY5EUwpX1ol6kTiAKPhm96YBYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=WxpjwqwV; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=WuZNgWC+ reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="WxpjwqwV";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="WuZNgWC+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1751436287; x=1782972287;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=OV53IEWwEDTTRlXpkVnoptAVZCHi+93GwOV4TIoYshE=;
+  b=WxpjwqwVtj3Doq1HYdOHrUnO0a575osTZbeUM5vRrA90TrReTNROkD6L
+   Y0nTMApYmmsiNH2C+evaOB/lCGryKjU6/oYBFSs9S224vhpT8Ag9ciqvD
+   7js6aJGVqxaN/CzNfsvf7bl3mz0MeaL4qZqTOTO7D5AJVXzYdRPW5aX8X
+   onuAnp99caIMq/w1ojKQaIpIrGvbtJaeEIUmAXg2YNjv50h8iEGpxAlS5
+   CzyAPkdM6Z6mQxhSJDrIH0fqYfxPt2GUwEzlZH1O1cqtWfNfbszTHh80E
+   RSVzb2DjzhF1Oab1Nh3iNBBjqbYih03KtlhPObr3nSne+xvXZm9XP0Rr1
+   w==;
+X-CSE-ConnectionGUID: TvOF+xKyTAeg8Rv0qAeQHQ==
+X-CSE-MsgGUID: 70meUJAaR/ue0Skw6iZVJw==
+X-IronPort-AV: E=Sophos;i="6.16,281,1744063200"; 
+   d="scan'208";a="44971237"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 02 Jul 2025 08:04:43 +0200
+X-CheckPoint: {6864CBFB-22-B6FA1C9B-ED1A9D03}
+X-MAIL-CPID: 32F67E8275DB11609814F9C71730DEFE_2
+X-Control-Analysis: str=0001.0A006372.6864CC30.001B,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 647C5160F80;
+	Wed,  2 Jul 2025 08:04:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1751436279;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OV53IEWwEDTTRlXpkVnoptAVZCHi+93GwOV4TIoYshE=;
+	b=WuZNgWC+ClDiyDuIvCSRSoLyGzQEJ6recOBDQnecvKNcdXI3sM1eqfH3w/b6qk9m5bg7J9
+	MBWwSPJZ/FT/0ClkCPD2Po++834BypHXcly8mvX1b/lBECwOaVKZLli27RdvYzFjfKWKz5
+	sgBYI0qTTsqTXXZ65MhhcyLydny/6mu/N0Z0e66uno9vy6F7h7AjLx4COzHWTjxWGsCSiu
+	nKMOPIC4irf/T8mA/6Tq4xUSzRLC20vAz2+TndaynJuoW4dG5xVivmnWHCaSrZp7nSZwN5
+	k9guGOA1eNSJ2MJkkON2EXZLvDb9Tfx9djfXnMBX/h/V45s6xMpd3vq12U1TsA==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Rui Miguel Silva <rmfrfs@gmail.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Martin Kepplinger <martink@posteo.de>, Purism Kernel Team <kernel@puri.sm>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Eugen Hristev <eugen.hristev@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Peng Fan <peng.fan@nxp.com>,
+ Alice Yuan <alice.yuan@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Frank Li <Frank.Li@nxp.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-phy@lists.infradead.org,
+ Frank Li <Frank.Li@nxp.com>, "Guoniu.zhou" <guoniu.zhou@nxp.com>
+Subject:
+ Re: [PATCH 5/7] media: nxp: add DesignWare MIPI CSI2 controller driver
+Date: Wed, 02 Jul 2025 08:04:36 +0200
+Message-ID: <1933947.CQOukoFCf9@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <20250701-95_cam-v1-5-c5172bab387b@nxp.com>
+References:
+ <20250701-95_cam-v1-0-c5172bab387b@nxp.com>
+ <20250701-95_cam-v1-5-c5172bab387b@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250702-net-k1-emac-v3-2-882dc55404f3@iscas.ac.cn>
-References: <20250702-net-k1-emac-v3-0-882dc55404f3@iscas.ac.cn>
-In-Reply-To: <20250702-net-k1-emac-v3-0-882dc55404f3@iscas.ac.cn>
-To: Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>, 
- Vivian Wang <wangruikang@iscas.ac.cn>, 
- Philipp Zabel <p.zabel@pengutronix.de>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Alexandre Ghiti <alex@ghiti.fr>
-Cc: Vivian Wang <uwu@dram.page>, Lukas Bulwahn <lukas.bulwahn@redhat.com>, 
- Geert Uytterhoeven <geert+renesas@glider.be>, 
- Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>, 
- netdev@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
- linux-kernel@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-CM-TRANSID:qwCowAC3pqpny2RomPduAA--.1282S4
-X-Coremail-Antispam: 1UD129KBjvAXoWDXw1fuw15WF1Uuw4rtFWrKrg_yoWxZrW8Wo
-	WxXasxtr1rJFyxZw4v9r1xXF17ZFnrZr1UGayrAFy8Wa9Fv3Wvk3y5Gw43Aw1YvFW5tFW5
-	WF9Yq3ZxAr4SyF95n29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UjIYCTnIWjp_UUUOD7AC8VAFwI0_Wr0E3s1l1xkIjI8I6I8E6xAIw20EY4v20xva
-	j40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7IE14v26r15M28IrcIa0x
-	kI8VCY1x0267AKxVW5JVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84AC
-	jcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr
-	1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1l
-	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI
-	8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1l
-	F7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2
-	IY04v7MxkF7I0En4kS14v26r4a6rW5MxkIecxEwVAFwVW8AwCF04k20xvY0x0EwIxGrwCF
-	x2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14
-	v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY
-	67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI
-	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjTR_eOJUUUUU
-X-CM-SenderInfo: pzdqw2pxlnt03j6l2u1dvotugofq/
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Last-TLS-Session-Version: TLSv1.3
 
-The Ethernet MACs found on SpacemiT K1 appears to be a custom design
-that only superficially resembles some other embedded MACs. SpacemiT
-refers to them as "EMAC", so let's just call the driver "k1_emac".
+Hi,
 
-This driver is based on "k1x-emac" in the same directory in the vendor's
-tree [1]. Some debugging tunables have been fixed to vendor-recommended
-defaults, and PTP support is not included yet.
+thanks for the patch.
 
-[1]: https://github.com/spacemit-com/linux-k1x
+Am Mittwoch, 2. Juli 2025, 00:06:10 CEST schrieb Frank Li:
+> From: "Guoniu.zhou" <guoniu.zhou@nxp.com>
+>=20
+> Add V4L2 subdev driver for DesignWare MIPI CSI2 controller.
+>=20
+> Signed-off-by: Guoniu.zhou <guoniu.zhou@nxp.com>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  MAINTAINERS                                |    1 +
+>  drivers/media/platform/nxp/Kconfig         |   11 +
+>  drivers/media/platform/nxp/Makefile        |    1 +
+>  drivers/media/platform/nxp/dwc-mipi-csi2.c | 1675 ++++++++++++++++++++++=
+++++++
+>  4 files changed, 1688 insertions(+)
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e208c91f1405f..f67db23cb9d6f 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15022,6 +15022,7 @@ F:	Documentation/devicetree/bindings/media/nxp,im=
+x-mipi-csi2.yaml
+>  F:	Documentation/devicetree/bindings/media/nxp,imx7-csi.yaml
+>  F:	Documentation/devicetree/bindings/media/nxp,imx8mq-mipi-csi2.yaml
+>  F:	Documentation/devicetree/bindings/media/snps,dw-mipi-csi2-v150.yaml
+> +F:	drivers/media/platform/nxp/dwc-mipi-csi2.c
+>  F:	drivers/media/platform/nxp/imx-mipi-csis.c
+>  F:	drivers/media/platform/nxp/imx-parallel-csi.c
+>  F:	drivers/media/platform/nxp/imx7-media-csi.c
+> diff --git a/drivers/media/platform/nxp/Kconfig b/drivers/media/platform/=
+nxp/Kconfig
+> index 5df6f97d16f29..b7a4aed706443 100644
+> --- a/drivers/media/platform/nxp/Kconfig
+> +++ b/drivers/media/platform/nxp/Kconfig
+> @@ -4,6 +4,17 @@
+> =20
+>  comment "NXP media platform drivers"
+> =20
+> +config VIDEO_DWC_MIPI_CSIS
+> +	tristate "DesignWare Cores MIPI CSI-2 receiver found on i.MX93"
+> +	depends on ARCH_MXC || COMPILE_TEST
+> +	depends on VIDEO_DEV
+> +	select MEDIA_CONTROLLER
+> +	select V4L2_FWNODE
+> +	select VIDEO_V4L2_SUBDEV_API
+> +	help
+> +	  Video4Linux2 sub-device driver for the DesignWare Cores MIPI
+> +	  CSI-2 receiver used on i.MX93.
+> +
+>  config VIDEO_IMX7_CSI
+>  	tristate "NXP CSI Bridge driver"
+>  	depends on ARCH_MXC || COMPILE_TEST
+> diff --git a/drivers/media/platform/nxp/Makefile b/drivers/media/platform=
+/nxp/Makefile
+> index 9a9b2a1d6886c..a0a025c169aca 100644
+> --- a/drivers/media/platform/nxp/Makefile
+> +++ b/drivers/media/platform/nxp/Makefile
+> @@ -4,6 +4,7 @@ obj-y +=3D dw100/
+>  obj-y +=3D imx-jpeg/
+>  obj-y +=3D imx8-isi/
+> =20
+> +obj-$(CONFIG_VIDEO_DWC_MIPI_CSIS) +=3D dwc-mipi-csi2.o
+>  obj-$(CONFIG_VIDEO_IMX7_CSI) +=3D imx7-media-csi.o
+>  obj-$(CONFIG_VIDEO_IMX8MQ_MIPI_CSI2) +=3D imx8mq-mipi-csi2.o
+>  obj-$(CONFIG_VIDEO_IMX_PARALLEL_CSI) +=3D imx-parallel-csi.o
+> diff --git a/drivers/media/platform/nxp/dwc-mipi-csi2.c b/drivers/media/p=
+latform/nxp/dwc-mipi-csi2.c
+> new file mode 100644
+> index 0000000000000..cd57c06b95848
+> --- /dev/null
+> +++ b/drivers/media/platform/nxp/dwc-mipi-csi2.c
+> @@ -0,0 +1,1675 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2025 NXP
+> + */
+> +
+> +#include <linux/bits.h>
+> +#include <linux/clk.h>
+> +#include <linux/errno.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +
+> +#include <media/mipi-csi2.h>
+> +#include <media/v4l2-ctrls.h>
+> +#include <media/v4l2-event.h>
+> +#include <media/v4l2-fwnode.h>
+> +#include <media/v4l2-mc.h>
+> +#include <media/v4l2-subdev.h>
+> +
+> +/* MIPI CSI-2 Host Controller Registers Define */
+> +
+> +/* Core Version */
+> +#define CSI2RX_VERSION					0x0
+> +
+> +/* Number of Lanes */
+> +#define CSI2RX_N_LANES					0x4
+> +#define   CSI2RX_N_LANES_N_LANES(x)			FIELD_PREP(GENMASK(2, 0), (x) - 1)
+> +
+> +/* Logic Reset */
+> +#define CSI2RX_HOST_RESETN				0x8
+> +#define   CSI2RX_HOST_RESETN_ENABLE			BIT(0)
+> +
+> +/* Main Interrupt Status */
+> +#define CSI2RX_INT_ST_MAIN				0xc
+> +#define   CSI2RX_INT_ST_MAIN_FATAL_ERR_PHY		BIT(0)
+> +#define   CSI2RX_INT_ST_MAIN_FATAL_ERR_PKT		BIT(1)
+> +#define   CSI2RX_INT_ST_MAIN_FATAL_ERR_BNDRY_FRAMEL	BIT(2)
+> +#define   CSI2RX_INT_ST_MAIN_FATAL_ERR_SEQ_FRAME	BIT(3)
+> +#define   CSI2RX_INT_ST_MAIN_FATAL_ERR_CRC_FRAME	BIT(4)
+> +#define   CSI2RX_INT_ST_MAIN_FATAL_ERR_PLD_CRC		BIT(5)
+> +#define   CSI2RX_INT_ST_MAIN_ERR_DID			BIT(6)
+> +#define   CSI2RX_INT_ST_MAIN_ERR_ECC			BIT(7)
+> +#define   CSI2RX_INT_ST_MAIN_ERR_PHY			BIT(16)
+> +#define   CSI2RX_INT_ST_MAIN_FATAL_ERR_IPI		BIT(18)
+> +
+> +/* Data monitor */
+> +#define CSI2RX_DATA_IDS_1_DT				0x10
+> +#define   CSI2RX_DATA_IDS_1_DT_DATA_ID0(x)		FIELD_PREP(GENMASK(5, 0), (x=
+))
+> +#define   CSI2RX_DATA_IDS_1_DT_DATA_ID1(x)		FIELD_PREP(GENMASK(13, 8), (=
+x))
+> +#define   CSI2RX_DATA_IDS_1_DT_DATA_ID2(x)		FIELD_PREP(GENMASK(21, 16), =
+(x))
+> +#define   CSI2RX_DATA_IDS_1_DT_DATA_ID3(x)		FIELD_PREP(GENMASK(29, 24), =
+(x))
+> +
+> +#define CSI2RX_DATA_IDS_2_DT				0x14
+> +#define   CSI2RX_DATA_IDS_2_DT_DATA_ID4(x)		FIELD_PREP(GENMASK(5, 0), (x=
+))
+> +#define   CSI2RX_DATA_IDS_2_DT_DATA_ID5(x)		FIELD_PREP(GENMASK(13, 8), (=
+x))
+> +#define   CSI2RX_DATA_IDS_2_DT_DATA_ID6(x)		FIELD_PREP(GENMASK(21, 16), =
+(x))
+> +#define   CSI2RX_DATA_IDS_2_DT_DATA_ID7(x)		FIELD_PREP(GENMASK(29, 24), =
+(x))
+> +
+> +#define CSI2RX_DATA_IDS_1_VC				0x30
+> +#define   CSI2RX_DATA_IDS_1_VC_DATA_ID0(x)		FIELD_PREP(GENMASK(3, 0), (x=
+))
+> +#define   CSI2RX_DATA_IDS_1_VC_DATA_ID1(x)		FIELD_PREP(GENMASK(11, 8), (=
+x))
+> +#define   CSI2RX_DATA_IDS_1_VC_DATA_ID2(x)		FIELD_PREP(GENMASK(19, 16), =
+(x))
+> +#define   CSI2RX_DATA_IDS_1_VC_DATA_ID3(x)		FIELD_PREP(GENMASK(27, 24), =
+(x))
+> +
+> +#define CSI2RX_DATA_IDS_2_VC				0x34
+> +#define   CSI2RX_DATA_IDS_2_VC_DATA_ID4(x)		FIELD_PREP(GENMASK(3, 0), (x=
+))
+> +#define   CSI2RX_DATA_IDS_2_VC_DATA_ID5(x)		FIELD_PREP(GENMASK(11, 8), (=
+x))
+> +#define   CSI2RX_DATA_IDS_2_VC_DATA_ID6(x)		FIELD_PREP(GENMASK(19, 16), =
+(x))
+> +#define   CSI2RX_DATA_IDS_2_VC_DATA_ID7(x)		FIELD_PREP(GENMASK(27, 24), =
+(x))
+> +
+> +/* PHY Shutdown */
+> +#define CSI2RX_DPHY_SHUTDOWNZ				0x40
+> +#define   CSI2RX_DPHY_SHUTDOWNZ_ENABLE			BIT(0)
+> +
+> +/* DPHY Reset */
+> +#define CSI2RX_DPHY_RSTZ				0x44
+> +#define   CSI2RX_DPHY_RSTZ_ENABLE			BIT(0)
+> +
+> +/* RX PHY Status */
+> +#define CSI2RX_DPHY_RX_STATUS				0x48
+> +#define   CSI2RX_DPHY_RX_STATUS_DATA_LANE0_ULP		BIT(0)
+> +#define   CSI2RX_DPHY_RX_STATUS_DATA_LANE1_ULP		BIT(1)
+> +#define   CSI2RX_DPHY_RX_STATUS_CLK_LANE_ULP		BIT(16)
+> +#define   CSI2RX_DPHY_RX_STATUS_CLK_LANE_HS		BIT(17)
+> +
+> +/* STOP STATE PHY Status */
+> +#define CSI2RX_DPHY_STOPSTATE				0x4c
+> +#define   CSI2RX_DPHY_STOPSTATE_DATA_LANE0		BIT(0)
+> +#define   CSI2RX_DPHY_STOPSTATE_DATA_LANE1		BIT(1)
+> +#define   CSI2RX_DPHY_STOPSTATE_DATA_LANE2		BIT(2)
+> +#define   CSI2RX_DPHY_STOPSTATE_DATA_LANE3		BIT(3)
+> +#define   CSI2RX_DPHY_STOPSTATE_CLK_LANE		BIT(16)
+> +
+> +/* DPHY Test and Control Interface 1 */
+> +#define CSI2RX_DPHY_TEST_CTRL0				0x50
+> +#define   CSI2RX_DPHY_TEST_CTRL0_TEST_CLR		BIT(0)
+> +#define   CSI2RX_DPHY_TEST_CTRL0_TEST_CLKEN		BIT(1)
+> +
+> +/* DPHY Test and Control Interface 2 */
+> +#define CSI2RX_DPHY_TEST_CTRL1				0x54
+> +#define   CSI2RX_DPHY_TEST_CTRL1_TEST_DIN(x)		FIELD_PREP(GENMASK(7, 0), =
+(x))
+> +#define   CSI2RX_DPHY_TEST_CTRL1_TEST_DOUT(x)		FIELD_GET(GENMASK(15, 8),=
+ (x))
+> +#define   CSI2RX_DPHY_TEST_CTRL1_TEST_EN			BIT(16)
+> +
+> +/* Pattern Generator vertical Resolution */
+> +#define CSI2RX_PPI_PG_PATTERN_VRES			0x60
+> +#define   CSI2RX_PPI_PG_PATTERN_VRES_VRES(x)		FIELD_PREP(GENMASK(15, 0),=
+ (x))
+> +
+> +/* Pattern Generator horizontal Resolution */
+> +#define CSI2RX_PPI_PG_PATTERN_HRES			0x64
+> +#define   CSI2RX_PPI_PG_PATTERN_HRES_HRES(x)		FIELD_PREP(GENMASK(15, 0),=
+ (x))
+> +
+> +/* Pattern Generator */
+> +#define CSI2RX_PPI_PG_CONFIG				0x68
+> +#define   CSI2RX_PPI_PG_CONFIG_PG_MODE(x)		FIELD_PREP(1, (x))
+> +#define   CSI2RX_PPI_PG_CONFIG_DATA_TYPE(x)		FIELD_PREP(GENMASK(13, 8), =
+(x))
+> +#define   CSI2RX_PPI_PG_CONFIG_VIR_CHAN(x)		FIELD_PREP(GENMASK(15, 14), =
+(x))
+> +#define   CSI2RX_PPI_PG_CONFIG_VIR_CHAN_EX(x)		FIELD_PREP(GENMASK(17, 16=
+), (x))
+> +#define   CSI2RX_PPI_PG_CONFIG_VIR_CHAN_EX_2_EN		BIT(18)
+> +
+> +/* Pattern Generator Enable */
+> +#define CSI2RX_PPI_PG_ENABLE				0x6c
+> +#define   CSI2RX_PPI_PG_ENABLE_EN			BIT(0)
+> +
+> +/* Pattern Generator Status */
+> +#define CSI2RX_PPI_PG_STATUS				0x70
+> +#define   CSI2RX_PPI_PG_STATUS_ACTIVE			BIT(0)
+> +
+> +/* IPI Mode */
+> +#define CSI2RX_IPI_MODE					0x80
+> +#define   CSI2RX_IPI_MODE_CONTROLLER			BIT(1)
+> +#define   CSI2RX_IPI_MODE_COLOR_MODE16			BIT(8)
+> +#define   CSI2RX_IPI_MODE_CUT_THROUGH			BIT(16)
+> +#define   CSI2RX_IPI_MODE_ENABLE			BIT(24)
+> +
+> +/* IPI Virtual Channel */
+> +#define CSI2RX_IPI_VCID					0x84
+> +#define   CSI2RX_IPI_VCID_VC(x)				FIELD_PREP(GENMASK(1, 0), (x))
+> +#define   CSI2RX_IPI_VCID_VC_0_1(x)			FIELD_PREP(GENMASK(3, 2), (x))
+> +#define   CSI2RX_IPI_VCID_VC_2				BIT(4)
+> +
+> +/* IPI Data Type */
+> +#define CSI2RX_IPI_DATA_TYPE				0x88
+> +#define   CSI2RX_IPI_DATA_TYPE_DT(x)			FIELD_PREP(GENMASK(5, 0), (x))
+> +#define   CSI2RX_IPI_DATA_TYPE_EMB_DATA_EN		BIT(8)
+> +
+> +/* IPI Flush Memory */
+> +#define CSI2RX_IPI_MEM_FLUSH				0x8c
+> +#define   CSI2RX_IPI_MEM_FLUSH_AUTO			BIT(8)
+> +
+> +/* IPI HSA */
+> +#define CSI2RX_IPI_HSA_TIME				0x90
+> +#define   CSI2RX_IPI_HSA_TIME_VAL(x)			FIELD_PREP(GENMASK(11, 0), (x))
+> +
+> +/* IPI HBP */
+> +#define CSI2RX_IPI_HBP_TIME				0x94
+> +#define   CSI2RX_IPI_HBP_TIME_VAL(x)			FIELD_PREP(GENMASK(11, 0), (x))
+> +
+> +/* IPI HSD */
+> +#define CSI2RX_IPI_HSD_TIME				0x98
+> +#define   CSI2RX_IPI_HSD_TIME_VAL(x)			FIELD_PREP(GENMASK(11, 0), (x))
+> +
+> +/* IPI HLINE */
+> +#define CSI2RX_IPI_HLINE_TIME				0x9C
+> +#define   CSI2RX_IPI_HLINE_TIME_VAL(x)			FIELD_PREP(GENMASK(14, 0), (x))
+> +
+> +/* IPI Soft Reset */
+> +#define CSI2RX_IPI_SOFTRSTN				0xa0
+> +
+> +/* IPI Advanced Features */
+> +#define CSI2RX_IPI_ADV_FEATURES				0xac
+> +#define   CSI2RX_IPI_ADV_FEATURES_DT_OVER_WRITE_EN	BIT(0)
+> +#define   CSI2RX_IPI_ADV_FEATURES_DT_OVER_WRITE(x)	FIELD_PREP(GENMASK(13=
+, 8), (x))
+> +#define   CSI2RX_IPI_ADV_FEATURES_LINE_EVENT_SEL	BIT(16)
+> +#define   CSI2RX_IPI_ADV_FEATURES_SYNC_VIDEO_PKT	BIT(17)
+> +#define   CSI2RX_IPI_ADV_FEATURES_SYNC_LS_PKT		BIT(18)
+> +#define   CSI2RX_IPI_ADV_FEATURES_SYNC_NULL_PKT		BIT(19)
+> +#define   CSI2RX_IPI_ADV_FEATURES_SYNC_BLANKING_PKT	BIT(20)
+> +#define   CSI2RX_IPI_ADV_FEATURES_SYNC_EMBEDDED_PKT	BIT(21)
+> +#define   CSI2RX_IPI_ADV_FEATURES_SYNC_EVENT_MODE	BIT(24)
+> +
+> +/* IPI VSA */
+> +#define CSI2RX_IPI_VSA_LINES				0xb0
+> +#define   CSI2RX_IPI_VSA_LINES_VAL(x)			FIELD_PREP(GENMASK(9, 0), (x))
+> +
+> +/* IPI VBP */
+> +#define CSI2RX_IPI_VBP_LINES				0xb4
+> +#define   CSI2RX_IPI_VBP_LINES_VAL(x)			FIELD_PREP(GENMASK(9, 0), (x))
+> +
+> +/* IPI VFP */
+> +#define CSI2RX_IPI_VFP_LINES				0xb8
+> +#define   CSI2RX_IPI_VFP_LINES_VAL(x)			FIELD_PREP(GENMASK(9, 0), (x))
+> +
+> +/* IPI VACTIVE */
+> +#define CSI2RX_IPI_VACTIVE_LINES			0xbc
+> +#define   CSI2RX_IPI_VACTIVE_LINES_VAL(x)		FIELD_PREP(GENMASK(13, 0), (x=
+))
+> +
+> +/* Fatal Interruption Caused by PHY */
+> +#define CSI2RX_INT_ST_DPHY_FATAL			0xe0
+> +#define   CSI2RX_INT_ST_DPHY_FATAL_ERR_SOT_LANE0	BIT(0)
+> +#define   CSI2RX_INT_ST_DPHY_FATAL_ERR_SOT_LANE1	BIT(1)
+> +
+> +/* Mask for Fatal Interruption Caused by PHY */
+> +#define CSI2RX_INT_MSK_DPHY_FATAL			0xe4
+> +#define   CSI2RX_INT_MSK_DPHY_FATAL_ERR_SOT_LANE0	BIT(0)
+> +#define   CSI2RX_INT_MSK_DPHY_FATAL_ERR_SOT_LANE1	BIT(1)
+> +
+> +/* Force for Fatal Interruption Caused by PHY */
+> +#define CSI2RX_INT_FORCE_DPHY_FATAL			0xe8
+> +
+> +/* Fatal Interruption Caused During Packet Construction */
+> +#define CSI2RX_INT_ST_PKT_FATAL				0xf0
+> +#define   CSI2RX_INT_ST_PKT_FATAL_ERR_ECC		BIT(0)
+> +#define   CSI2RX_INT_ST_PKT_FATAL_ERR_PAYLOAD		BIT(1)
+> +
+> +/* Mask for Fatal Interruption Caused During Packet Construction */
+> +#define CSI2RX_INT_MSK_PKT_FATAL			0xf4
+> +#define   CSI2RX_INT_MSK_PKT_FATAL_ERR_ECC		BIT(0)
+> +#define   CSI2RX_INT_MSK_PKT_FATAL_ERR_PAYLOAD		BIT(1)
+> +
+> +/* Force for Fatal Interruption Caused During Packet Construction */
+> +#define CSI2RX_INT_FORCE_PKT_FATAL			0xf8
+> +
+> +/* Interruption Caused by PHY */
+> +#define CSI2RX_INT_ST_DPHY				0x110
+> +#define   CSI2RX_INT_ST_DPHY_ERR_SOT_LANE0		BIT(0)
+> +#define   CSI2RX_INT_ST_DPHY_ERR_SOT_LANE1		BIT(1)
+> +#define   CSI2RX_INT_ST_DPHY_ERR_ESC_LANE0		BIT(16)
+> +#define   CSI2RX_INT_ST_DPHY_ERR_ESC_LANE1		BIT(17)
+> +
+> +/* Mask for Interruption Caused by PHY */
+> +#define CSI2RX_INT_MSK_DPHY				0x114
+> +#define   CSI2RX_INT_MSK_DPHY_SOT_ERR_LANE0		BIT(0)
+> +#define   CSI2RX_INT_MSK_DPHY_SOT_ERR_LANE1		BIT(1)
+> +#define   CSI2RX_INT_MSK_DPHY_ESC_ERR_LANE0		BIT(16)
+> +#define   CSI2RX_INT_MSK_DPHY_ESC_ERR_LANE1		BIT(17)
+> +
+> +/* Force for Interruption Caused by PHY */
+> +#define CSI2RX_INT_FORCE_DPHY				0x118
+> +
+> +/* Fatal Interruption Caused by IPI Interface */
+> +#define CSI2RX_INT_ST_IPI_FATAL				0x140
+> +#define   CSI2RX_INT_ST_IPI_FATAL_ERR_IFFIFO_UNDERFLOW	BIT(0)
+> +#define   CSI2RX_INT_ST_IPI_FATAL_ERR_IFFIFO_OVERFLOW	BIT(1)
+> +#define   CSI2RX_INT_ST_IPI_FATAL_ERR_FRAME_SYNC	BIT(2)
+> +#define   CSI2RX_INT_ST_IPI_FATAL_ERR_FIFO_NOT_EMPTY	BIT(3)
+> +#define   CSI2RX_INT_ST_IPI_FATAL_ERR_HLINE_TIME	BIT(4)
+> +#define   CSI2RX_INT_ST_IPI_FATAL_ERR_FIFO_OVERFLOW	BIT(5)
+> +#define   CSI2RX_INT_ST_IPI_FATAL_ERR_PD_FIFO_OVERFLOW	BIT(6)
+> +
+> +/* Mask for Fatal Interruption Caused by IPI Interface */
+> +#define CSI2RX_INT_MSK_IPI_FATAL			0x144
+> +#define   CSI2RX_INT_MSK_IPI_FATAL_ERR_IFFIFO_UNDERFLOW	BIT(0)
+> +#define   CSI2RX_INT_MSK_IPI_FATAL_ERR_IFFIFO_OVERFLOW	BIT(1)
+> +#define   CSI2RX_INT_MSK_IPI_FATAL_ERR_FRAME_SYNC	BIT(2)
+> +#define   CSI2RX_INT_MSK_IPI_FATAL_ERR_FIFO_NOT_EMPTY	BIT(3)
+> +#define   CSI2RX_INT_MSK_IPI_FATAL_ERR_HLINE_TIME	BIT(4)
+> +#define   CSI2RX_INT_MSK_IPI_FATAL_ERR_FIFO_OVERFLOW	BIT(5)
+> +#define   CSI2RX_INT_MSK_IPI_FATAL_ERR_PD_FIFO_OVERFLOW	BIT(6)
+> +
+> +/* Force for Fatal Interruption Caused by IPI Interface */
+> +#define CSI2RX_INT_FORCE_IPI_FATAL			0x148
+> +
+> +/* Data De-Scrambling */
+> +#define CSI2RX_SCRAMBLING				0x300
+> +
+> +/* De-scrambler Seed for Lane 1 */
+> +#define CSI2RX_SCRAMBLING_SEED1				0x304
+> +
+> +/* De-scrambler Seed for Lane 2 */
+> +#define CSI2RX_SCRAMBLING_SEED2				0x308
+> +
+> +#define DWC_CSI2RX_PAD_SINK				0
+> +#define DWC_CSI2RX_PAD_SOURCE				1
+> +#define DWC_CSI2RX_PADS_NUM				2
+> +
+> +#define DWC_CSI2RX_DEF_MBUS_CODE			MEDIA_BUS_FMT_UYVY8_1X16
+> +#define DWC_CSI2RX_DEF_PIX_WIDTH			1920U
+> +#define DWC_CSI2RX_DEF_PIX_HEIGHT			1080U
+> +#define DWC_CSI2RX_MAX_PIX_WIDTH			0xffff
+> +#define DWC_CSI2RX_MAX_PIX_HEIGHT			0xffff
+> +
+> +struct dwc_csi_event {
+> +	u32 mask;
+> +	const char * const name;
+> +	unsigned int counter;
+> +};
+> +
+> +static const struct dwc_csi_event dwc_events[] =3D {
+> +	{ CSI2RX_INT_ST_MAIN_FATAL_ERR_IPI, "IPI Interface Fatal Error" },
+> +	{ CSI2RX_INT_ST_MAIN_ERR_PHY, "PHY Error" },
+> +	{ CSI2RX_INT_ST_MAIN_ERR_ECC, "Header Single Bit Error" },
+> +	{ CSI2RX_INT_ST_MAIN_ERR_DID, "Data ID Error" },
+> +	{ CSI2RX_INT_ST_MAIN_FATAL_ERR_PLD_CRC, "Payload CRC Fatal Error" },
+> +	{ CSI2RX_INT_ST_MAIN_FATAL_ERR_CRC_FRAME, "Frame CRC Fatal Error" },
+> +	{ CSI2RX_INT_ST_MAIN_FATAL_ERR_SEQ_FRAME, "Frame Sequence Fatal Error" =
+},
+> +	{ CSI2RX_INT_ST_MAIN_FATAL_ERR_BNDRY_FRAMEL, "Frame Boundaries Fatal Er=
+ror" },
+> +	{ CSI2RX_INT_ST_MAIN_FATAL_ERR_PKT, "Packet Construction Fatal Error" },
+> +	{ CSI2RX_INT_ST_MAIN_FATAL_ERR_PHY, "PHY Fatal Error" },
+> +};
+> +
+> +#define DWC_NUM_EVENTS		ARRAY_SIZE(dwc_events)
+> +#define DWC_EVENT_MASK		0x500ff
+> +
+> +struct dwc_csi_pix_format {
+> +	u32 code;
+> +	u32 output;
+> +	u32 data_type;
+> +	u8 width;
+> +};
+> +
+> +struct dwc_csi_device {
+> +	struct device *dev;
+> +	void __iomem *regs;
+> +	struct phy *phy;
+> +	struct clk_bulk_data *clks;
+> +	int num_clks;
+> +	struct v4l2_subdev sd;
+> +	struct v4l2_async_notifier notifier;
+> +	struct v4l2_subdev *source_sd;
+> +	struct v4l2_ctrl_handler ctrl_handler;
+> +	struct media_pad pads[DWC_CSI2RX_PADS_NUM];
+> +	u16 remote_pad;
+> +
+> +	struct v4l2_mbus_config_mipi_csi2 bus;
+> +	u32 cfgclkfreqrange;
+> +	u32 hsfreqrange;
+> +	u64 enabled_streams;
+> +
+> +	/* Use driver mutex lock for the ctrl lock */
+> +	struct mutex lock;
+> +
+> +	struct dwc_csi_event events[DWC_NUM_EVENTS];
+> +	const struct dwc_csi_pix_format *csi_fmt;
+> +
+> +	/* Used for pattern generator */
+> +	bool pg_enable;
+> +	enum {
+> +		PATTERN_DISABLED,
+> +		PATTERN_VERTICAL,
+> +		PATTERN_HORIZONTAL,
+> +	} pg_pattern;
+> +};
+> +
+> +/* List of supported pixel formats for the subdev */
+> +static const struct dwc_csi_pix_format dwc_csi_formats[] =3D {
+> +	/* YUV formats */
+> +	{
+> +		.code =3D MEDIA_BUS_FMT_UYVY8_1X16,
+> +		.output =3D MEDIA_BUS_FMT_UYVY8_1X16,
+> +		.data_type =3D MIPI_CSI2_DT_YUV422_8B,
+> +		.width =3D 16,
+> +	},
+> +	/* RGB formats */
+> +	{
+> +		.code =3D MEDIA_BUS_FMT_RGB565_1X16,
+> +		.output =3D MEDIA_BUS_FMT_RGB565_1X16,
+> +		.data_type =3D MIPI_CSI2_DT_RGB565,
+> +		.width =3D 16,
+> +	}, {
+> +		.code =3D MEDIA_BUS_FMT_BGR888_1X24,
+> +		.output =3D MEDIA_BUS_FMT_RGB888_1X24,
+> +		.data_type =3D MIPI_CSI2_DT_RGB888,
+> +		.width =3D 24,
+> +	},
+> +	/* RAW (Bayer and greyscale) formats. */
+> +	{
+> +		.code =3D MEDIA_BUS_FMT_SBGGR8_1X8,
+> +		.output =3D MEDIA_BUS_FMT_SBGGR8_1X8,
+> +		.data_type =3D MIPI_CSI2_DT_RAW8,
+> +		.width =3D 8,
+> +	}, {
+> +		.code =3D MEDIA_BUS_FMT_SGBRG8_1X8,
+> +		.output =3D MEDIA_BUS_FMT_SGBRG8_1X8,
+> +		.data_type =3D MIPI_CSI2_DT_RAW8,
+> +		.width =3D 8,
+> +	}, {
+> +		.code =3D MEDIA_BUS_FMT_SGRBG8_1X8,
+> +		.output =3D MEDIA_BUS_FMT_SGRBG8_1X8,
+> +		.data_type =3D MIPI_CSI2_DT_RAW8,
+> +		.width =3D 8,
+> +	}, {
+> +		.code =3D MEDIA_BUS_FMT_SRGGB8_1X8,
+> +		.output =3D MEDIA_BUS_FMT_SRGGB8_1X8,
+> +		.data_type =3D MIPI_CSI2_DT_RAW8,
+> +		.width =3D 8,
+> +	}, {
+> +		.code =3D MEDIA_BUS_FMT_Y8_1X8,
+> +		.output =3D MEDIA_BUS_FMT_Y8_1X8,
+> +		.data_type =3D MIPI_CSI2_DT_RAW8,
+> +		.width =3D 8,
+> +	}, {
+> +		.code =3D MEDIA_BUS_FMT_SBGGR10_1X10,
+> +		.output =3D MEDIA_BUS_FMT_SBGGR10_1X10,
+> +		.data_type =3D MIPI_CSI2_DT_RAW10,
+> +		.width =3D 10,
+> +	}, {
+> +		.code =3D MEDIA_BUS_FMT_SGBRG10_1X10,
+> +		.output =3D MEDIA_BUS_FMT_SGBRG10_1X10,
+> +		.data_type =3D MIPI_CSI2_DT_RAW10,
+> +		.width =3D 10,
+> +	}, {
+> +		.code =3D MEDIA_BUS_FMT_SGRBG10_1X10,
+> +		.output =3D MEDIA_BUS_FMT_SGRBG10_1X10,
+> +		.data_type =3D MIPI_CSI2_DT_RAW10,
+> +		.width =3D 10,
+> +	}, {
+> +		.code =3D MEDIA_BUS_FMT_SRGGB10_1X10,
+> +		.output =3D MEDIA_BUS_FMT_SRGGB10_1X10,
+> +		.data_type =3D MIPI_CSI2_DT_RAW10,
+> +		.width =3D 10,
+> +	}, {
+> +		.code =3D MEDIA_BUS_FMT_Y10_1X10,
+> +		.output =3D MEDIA_BUS_FMT_Y10_1X10,
+> +		.data_type =3D MIPI_CSI2_DT_RAW10,
+> +		.width =3D 10,
+> +	}, {
+> +		.code =3D MEDIA_BUS_FMT_SBGGR12_1X12,
+> +		.output =3D MEDIA_BUS_FMT_SBGGR12_1X12,
+> +		.data_type =3D MIPI_CSI2_DT_RAW12,
+> +		.width =3D 12,
+> +	}, {
+> +		.code =3D MEDIA_BUS_FMT_SGBRG12_1X12,
+> +		.output =3D MEDIA_BUS_FMT_SGBRG12_1X12,
+> +		.data_type =3D MIPI_CSI2_DT_RAW12,
+> +		.width =3D 12,
+> +	}, {
+> +		.code =3D MEDIA_BUS_FMT_SGRBG12_1X12,
+> +		.output =3D MEDIA_BUS_FMT_SGRBG12_1X12,
+> +		.data_type =3D MIPI_CSI2_DT_RAW12,
+> +		.width =3D 12,
+> +	}, {
+> +		.code =3D MEDIA_BUS_FMT_SRGGB12_1X12,
+> +		.output =3D MEDIA_BUS_FMT_SRGGB12_1X12,
+> +		.data_type =3D MIPI_CSI2_DT_RAW12,
+> +		.width =3D 12,
+> +	}, {
+> +		.code =3D MEDIA_BUS_FMT_Y12_1X12,
+> +		.output =3D MEDIA_BUS_FMT_Y12_1X12,
+> +		.data_type =3D MIPI_CSI2_DT_RAW12,
+> +		.width =3D 12,
+> +	}, {
+> +		.code =3D MEDIA_BUS_FMT_SBGGR14_1X14,
+> +		.output =3D MEDIA_BUS_FMT_SBGGR14_1X14,
+> +		.data_type =3D MIPI_CSI2_DT_RAW14,
+> +		.width =3D 14,
+> +	}, {
+> +		.code =3D MEDIA_BUS_FMT_SGBRG14_1X14,
+> +		.output =3D MEDIA_BUS_FMT_SGBRG14_1X14,
+> +		.data_type =3D MIPI_CSI2_DT_RAW14,
+> +		.width =3D 14,
+> +	}, {
+> +		.code =3D MEDIA_BUS_FMT_SGRBG14_1X14,
+> +		.output =3D MEDIA_BUS_FMT_SGRBG14_1X14,
+> +		.data_type =3D MIPI_CSI2_DT_RAW14,
+> +		.width =3D 14,
+> +	}, {
+> +		.code =3D MEDIA_BUS_FMT_SRGGB14_1X14,
+> +		.output =3D MEDIA_BUS_FMT_SRGGB14_1X14,
+> +		.data_type =3D MIPI_CSI2_DT_RAW14,
+> +		.width =3D 14,
+> +	}, {
+> +		.code =3D MEDIA_BUS_FMT_SBGGR16_1X16,
+> +		.output =3D MEDIA_BUS_FMT_SBGGR16_1X16,
+> +		.data_type =3D MIPI_CSI2_DT_RAW16,
+> +		.width =3D 16,
+> +	}, {
+> +		.code =3D MEDIA_BUS_FMT_SGBRG16_1X16,
+> +		.output =3D MEDIA_BUS_FMT_SGBRG16_1X16,
+> +		.data_type =3D MIPI_CSI2_DT_RAW16,
+> +		.width =3D 16,
+> +	}, {
+> +		.code =3D MEDIA_BUS_FMT_SGRBG16_1X16,
+> +		.output =3D MEDIA_BUS_FMT_SGRBG16_1X16,
+> +		.data_type =3D MIPI_CSI2_DT_RAW16,
+> +		.width =3D 16,
+> +	}, {
+> +		.code =3D MEDIA_BUS_FMT_SRGGB16_1X16,
+> +		.output =3D MEDIA_BUS_FMT_SRGGB16_1X16,
+> +		.data_type =3D MIPI_CSI2_DT_RAW16,
+> +		.width =3D 16,
+> +	}
+> +};
+> +
+> +static const struct v4l2_mbus_framefmt dwc_csi_default_fmt =3D {
+> +	.code =3D DWC_CSI2RX_DEF_MBUS_CODE,
+> +	.width =3D DWC_CSI2RX_DEF_PIX_WIDTH,
+> +	.height =3D DWC_CSI2RX_DEF_PIX_HEIGHT,
+> +	.field =3D V4L2_FIELD_NONE,
+> +	.colorspace =3D V4L2_COLORSPACE_SMPTE170M,
+> +	.xfer_func =3D V4L2_MAP_XFER_FUNC_DEFAULT(V4L2_COLORSPACE_SMPTE170M),
+> +	.ycbcr_enc =3D V4L2_MAP_YCBCR_ENC_DEFAULT(V4L2_COLORSPACE_SMPTE170M),
+> +	.quantization =3D V4L2_QUANTIZATION_LIM_RANGE,
+> +};
+> +
+> +static const struct dwc_csi_pix_format *find_csi_format(u32 code)
+> +{
+> +	int i;
+> +
+> +	for (i =3D 0; i < ARRAY_SIZE(dwc_csi_formats); i++)
+> +		if (code =3D=3D dwc_csi_formats[i].code)
+> +			return &dwc_csi_formats[i];
+> +
+> +	return &dwc_csi_formats[0];
+> +}
+> +
+> +static inline void dwc_csi_write(struct dwc_csi_device *csidev, unsigned=
+ int offset, u32 val)
+> +{
+> +	writel(val, csidev->regs + offset);
+> +}
+> +
+> +static inline u32 dwc_csi_read(struct dwc_csi_device *csidev, unsigned i=
+nt offset)
+> +{
+> +	return readl(csidev->regs + offset);
+> +}
 
-Signed-off-by: Vivian Wang <wangruikang@iscas.ac.cn>
----
- drivers/net/ethernet/Kconfig            |    1 +
- drivers/net/ethernet/Makefile           |    1 +
- drivers/net/ethernet/spacemit/Kconfig   |   29 +
- drivers/net/ethernet/spacemit/Makefile  |    6 +
- drivers/net/ethernet/spacemit/k1_emac.c | 1884 +++++++++++++++++++++++++++++++
- drivers/net/ethernet/spacemit/k1_emac.h |  420 +++++++
- 6 files changed, 2341 insertions(+)
+Please don't add simple wrappers around writel/readl. Instead consider
+using regmap-mmio. This also adds the possibility to have register access
+tracing.
 
-diff --git a/drivers/net/ethernet/Kconfig b/drivers/net/ethernet/Kconfig
-index f86d4557d8d7756a5e27bc17578353b5c19ca108..aead145dd91d129b7bb410f2d4d754c744dddbf4 100644
---- a/drivers/net/ethernet/Kconfig
-+++ b/drivers/net/ethernet/Kconfig
-@@ -188,6 +188,7 @@ source "drivers/net/ethernet/sis/Kconfig"
- source "drivers/net/ethernet/sfc/Kconfig"
- source "drivers/net/ethernet/smsc/Kconfig"
- source "drivers/net/ethernet/socionext/Kconfig"
-+source "drivers/net/ethernet/spacemit/Kconfig"
- source "drivers/net/ethernet/stmicro/Kconfig"
- source "drivers/net/ethernet/sun/Kconfig"
- source "drivers/net/ethernet/sunplus/Kconfig"
-diff --git a/drivers/net/ethernet/Makefile b/drivers/net/ethernet/Makefile
-index 67182339469a0d8337cc4e92aa51e498c615156d..998dd628b202ced212748450753fe180f0440c74 100644
---- a/drivers/net/ethernet/Makefile
-+++ b/drivers/net/ethernet/Makefile
-@@ -91,6 +91,7 @@ obj-$(CONFIG_NET_VENDOR_SOLARFLARE) += sfc/
- obj-$(CONFIG_NET_VENDOR_SGI) += sgi/
- obj-$(CONFIG_NET_VENDOR_SMSC) += smsc/
- obj-$(CONFIG_NET_VENDOR_SOCIONEXT) += socionext/
-+obj-$(CONFIG_NET_VENDOR_SPACEMIT) += spacemit/
- obj-$(CONFIG_NET_VENDOR_STMICRO) += stmicro/
- obj-$(CONFIG_NET_VENDOR_SUN) += sun/
- obj-$(CONFIG_NET_VENDOR_SUNPLUS) += sunplus/
-diff --git a/drivers/net/ethernet/spacemit/Kconfig b/drivers/net/ethernet/spacemit/Kconfig
-new file mode 100644
-index 0000000000000000000000000000000000000000..85ef61a9b4eff4249ad2d32a6e7dbf283b0c180f
---- /dev/null
-+++ b/drivers/net/ethernet/spacemit/Kconfig
-@@ -0,0 +1,29 @@
-+config NET_VENDOR_SPACEMIT
-+	bool "SpacemiT devices"
-+	default y
-+	depends on ARCH_SPACEMIT || COMPILE_TEST
-+	help
-+	  If you have a network (Ethernet) device belonging to this class,
-+	  say Y.
-+
-+	  Note that the answer to this question does not directly affect
-+	  the kernel: saying N will just cause the configurator to skip all
-+	  the questions regarding SpacemiT devices. If you say Y, you will
-+	  be asked for your specific chipset/driver in the following questions.
-+
-+if NET_VENDOR_SPACEMIT
-+
-+config SPACEMIT_K1_EMAC
-+	tristate "SpacemiT K1 Ethernet MAC driver"
-+	depends on ARCH_SPACEMIT || COMPILE_TEST
-+	depends on MFD_SYSCON
-+	depends on OF
-+	default m if ARCH_SPACEMIT
-+	select PHYLIB
-+	help
-+	  This driver supports the Ethernet MAC in the SpacemiT K1 SoC.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called k1_emac.
-+
-+endif # NET_VENDOR_SPACEMIT
-diff --git a/drivers/net/ethernet/spacemit/Makefile b/drivers/net/ethernet/spacemit/Makefile
-new file mode 100644
-index 0000000000000000000000000000000000000000..d29efd997a4ff5dcb50986e439997df7e3650570
---- /dev/null
-+++ b/drivers/net/ethernet/spacemit/Makefile
-@@ -0,0 +1,6 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Makefile for the SpacemiT network device drivers.
-+#
-+
-+obj-$(CONFIG_SPACEMIT_K1_EMAC) += k1_emac.o
-diff --git a/drivers/net/ethernet/spacemit/k1_emac.c b/drivers/net/ethernet/spacemit/k1_emac.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..3929355cf81f8a4450ce8f7d748b0ed12b7a08c7
---- /dev/null
-+++ b/drivers/net/ethernet/spacemit/k1_emac.c
-@@ -0,0 +1,1884 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * SpacemiT K1 Ethernet driver
-+ *
-+ * Copyright (C) 2023-2025 SpacemiT (Hangzhou) Technology Co. Ltd
-+ * Copyright (C) 2025 Vivian Wang <wangruikang@iscas.ac.cn>
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/etherdevice.h>
-+#include <linux/ethtool.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_mdio.h>
-+#include <linux/of_net.h>
-+#include <linux/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/pm.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+#include <linux/rtnetlink.h>
-+#include <linux/timer.h>
-+#include <linux/types.h>
-+
-+#include "k1_emac.h"
-+
-+#define DRIVER_NAME "k1_emac"
-+
-+#define EMAC_DEFAULT_BUFSIZE		1536
-+#define EMAC_RX_BUF_2K			2048
-+#define EMAC_RX_BUF_4K			4096
-+
-+/* Tuning parameters from SpacemiT */
-+#define EMAC_TX_FRAMES			64
-+#define EMAC_TX_COAL_TIMEOUT		40000
-+#define EMAC_RX_FRAMES			64
-+#define EMAC_RX_COAL_TIMEOUT		(600 * 312)
-+
-+#define DEFAULT_TX_ALMOST_FULL		0x1f8
-+#define DEFAULT_TX_THRESHOLD		1518
-+#define DEFAULT_RX_THRESHOLD		12
-+#define DEFAULT_TX_RING_NUM		1024
-+#define DEFAULT_RX_RING_NUM		1024
-+#define DEFAULT_DMA_BURST		MREGBIT_BURST_16WORD
-+#define HASH_TABLE_SIZE			64
-+
-+enum rx_frame_status {
-+	RX_FRAME_OK,
-+	RX_FRAME_DISCARD,
-+};
-+
-+struct desc_buf {
-+	u64 dma_addr;
-+	void *buff_addr;
-+	u16 dma_len;
-+	u8 map_as_page;
-+};
-+
-+struct emac_tx_desc_buffer {
-+	struct sk_buff *skb;
-+	struct desc_buf buf[2];
-+};
-+
-+struct emac_rx_desc_buffer {
-+	struct sk_buff *skb;
-+	u64 dma_addr;
-+	void *buff_addr;
-+	u16 dma_len;
-+	u8 map_as_page;
-+};
-+
-+/**
-+ * struct emac_desc_ring - Software-side information for one descriptor ring
-+ * Same struture used for both RX and TX
-+ * @desc_addr: Virtual address to the descriptor ring memory
-+ * @desc_dma_addr: DMA address of the descriptor ring
-+ * @total_size: Size of ring in bytes
-+ * @total_cnt: Number of descriptors
-+ * @head: Next descriptor to associate a buffer with
-+ * @tail: Next descriptor to check status bit
-+ * @rx_desc_buf: Array of descriptors for RX
-+ * @tx_desc_buf: Array of descriptors for TX, with max of two buffers each
-+ */
-+struct emac_desc_ring {
-+	void *desc_addr;
-+	dma_addr_t desc_dma_addr;
-+	u32 total_size;
-+	u32 total_cnt;
-+	u32 head;
-+	u32 tail;
-+	union {
-+		struct emac_rx_desc_buffer *rx_desc_buf;
-+		struct emac_tx_desc_buffer *tx_desc_buf;
-+	};
-+};
-+
-+struct emac_priv {
-+	void __iomem *iobase;
-+	u32 dma_buf_sz;
-+	struct emac_desc_ring tx_ring;
-+	struct emac_desc_ring rx_ring;
-+
-+	struct net_device *ndev;
-+	struct napi_struct napi;
-+	struct platform_device *pdev;
-+	struct clk *bus_clk;
-+	struct clk *ref_clk;
-+	struct regmap *regmap_apmu;
-+	u32 regmap_apmu_offset;
-+	int irq;
-+
-+	phy_interface_t phy_interface;
-+
-+	struct emac_hw_stats *hw_stats;
-+
-+	u32 tx_count_frames;
-+	u32 tx_coal_frames;
-+	u32 tx_coal_timeout;
-+	struct work_struct tx_timeout_task;
-+
-+	struct timer_list txtimer;
-+
-+	u32 tx_delay;
-+	u32 rx_delay;
-+
-+	/* Held when reading statistics counters because of indirect access */
-+	spinlock_t stats_lock;
-+};
-+
-+static void emac_wr(struct emac_priv *priv, u32 reg, u32 val)
-+{
-+	writel(val, priv->iobase + reg);
-+}
-+
-+static int emac_rd(struct emac_priv *priv, u32 reg)
-+{
-+	return readl(priv->iobase + reg);
-+}
-+
-+#define EMAC_ETHTOOL_STAT(x) \
-+	{ #x, offsetof(struct emac_hw_stats, x) / sizeof(u32) }
-+
-+static const struct emac_ethtool_stats {
-+	char str[ETH_GSTRING_LEN];
-+	u32 offset;
-+} emac_ethtool_stats[] = {
-+	EMAC_ETHTOOL_STAT(tx_ok_pkts),
-+	EMAC_ETHTOOL_STAT(tx_total_pkts),
-+	EMAC_ETHTOOL_STAT(tx_ok_bytes),
-+	EMAC_ETHTOOL_STAT(tx_err_pkts),
-+	EMAC_ETHTOOL_STAT(tx_singleclsn_pkts),
-+	EMAC_ETHTOOL_STAT(tx_multiclsn_pkts),
-+	EMAC_ETHTOOL_STAT(tx_lateclsn_pkts),
-+	EMAC_ETHTOOL_STAT(tx_excessclsn_pkts),
-+	EMAC_ETHTOOL_STAT(tx_unicast_pkts),
-+	EMAC_ETHTOOL_STAT(tx_multicast_pkts),
-+	EMAC_ETHTOOL_STAT(tx_broadcast_pkts),
-+	EMAC_ETHTOOL_STAT(tx_pause_pkts),
-+	EMAC_ETHTOOL_STAT(rx_ok_pkts),
-+	EMAC_ETHTOOL_STAT(rx_total_pkts),
-+	EMAC_ETHTOOL_STAT(rx_crc_err_pkts),
-+	EMAC_ETHTOOL_STAT(rx_align_err_pkts),
-+	EMAC_ETHTOOL_STAT(rx_err_total_pkts),
-+	EMAC_ETHTOOL_STAT(rx_ok_bytes),
-+	EMAC_ETHTOOL_STAT(rx_total_bytes),
-+	EMAC_ETHTOOL_STAT(rx_unicast_pkts),
-+	EMAC_ETHTOOL_STAT(rx_multicast_pkts),
-+	EMAC_ETHTOOL_STAT(rx_broadcast_pkts),
-+	EMAC_ETHTOOL_STAT(rx_pause_pkts),
-+	EMAC_ETHTOOL_STAT(rx_len_err_pkts),
-+	EMAC_ETHTOOL_STAT(rx_len_undersize_pkts),
-+	EMAC_ETHTOOL_STAT(rx_len_oversize_pkts),
-+	EMAC_ETHTOOL_STAT(rx_len_fragment_pkts),
-+	EMAC_ETHTOOL_STAT(rx_len_jabber_pkts),
-+	EMAC_ETHTOOL_STAT(rx_64_pkts),
-+	EMAC_ETHTOOL_STAT(rx_65_127_pkts),
-+	EMAC_ETHTOOL_STAT(rx_128_255_pkts),
-+	EMAC_ETHTOOL_STAT(rx_256_511_pkts),
-+	EMAC_ETHTOOL_STAT(rx_512_1023_pkts),
-+	EMAC_ETHTOOL_STAT(rx_1024_1518_pkts),
-+	EMAC_ETHTOOL_STAT(rx_1519_plus_pkts),
-+	EMAC_ETHTOOL_STAT(rx_drp_fifo_full_pkts),
-+	EMAC_ETHTOOL_STAT(rx_truncate_fifo_full_pkts),
-+};
-+
-+static int emac_phy_interface_config(struct emac_priv *priv)
-+{
-+	u32 val = 0, mask = PHY_INTF_RGMII;
-+
-+	switch (priv->phy_interface) {
-+	case PHY_INTERFACE_MODE_RMII:
-+		mask |= REF_CLK_SEL;
-+		break;
-+	case PHY_INTERFACE_MODE_RGMII:
-+	case PHY_INTERFACE_MODE_RGMII_ID:
-+	case PHY_INTERFACE_MODE_RGMII_RXID:
-+	case PHY_INTERFACE_MODE_RGMII_TXID:
-+		val |= PHY_INTF_RGMII;
-+
-+		mask |= RGMII_TX_CLK_SEL;
-+		break;
-+	default:
-+		netdev_err(priv->ndev, "Unsupported PHY interface %d",
-+			   priv->phy_interface);
-+		return -EINVAL;
-+	}
-+
-+	regmap_update_bits(priv->regmap_apmu,
-+			   priv->regmap_apmu_offset + APMU_EMAC_CTRL_REG,
-+			   mask, val);
-+
-+	return 0;
-+}
-+
-+static int emac_reset_hw(struct emac_priv *priv)
-+{
-+	/* Disable all interrupts */
-+	emac_wr(priv, MAC_INTERRUPT_ENABLE, 0x0);
-+	emac_wr(priv, DMA_INTERRUPT_ENABLE, 0x0);
-+
-+	/* Disable transmit and receive units */
-+	emac_wr(priv, MAC_RECEIVE_CONTROL, 0x0);
-+	emac_wr(priv, MAC_TRANSMIT_CONTROL, 0x0);
-+
-+	/* Disable DMA */
-+	emac_wr(priv, DMA_CONTROL, 0x0);
-+
-+	/* Reset MAC and stats */
-+	emac_wr(priv, MAC_GLOBAL_CONTROL,
-+		MREGBIT_RESET_RX_STAT_COUNTERS |
-+			MREGBIT_RESET_TX_STAT_COUNTERS);
-+	emac_wr(priv, MAC_GLOBAL_CONTROL, 0x0);
-+
-+	return 0;
-+}
-+
-+static int emac_init_hw(struct emac_priv *priv)
-+{
-+	u32 rxirq = 0, dma = 0;
-+
-+	regmap_set_bits(priv->regmap_apmu,
-+			priv->regmap_apmu_offset + APMU_EMAC_CTRL_REG,
-+			AXI_SINGLE_ID);
-+
-+	/* Disable transmit and receive units */
-+	emac_wr(priv, MAC_RECEIVE_CONTROL, 0x0);
-+	emac_wr(priv, MAC_TRANSMIT_CONTROL, 0x0);
-+
-+	/* Enable mac address 1 filtering */
-+	emac_wr(priv, MAC_ADDRESS_CONTROL, MREGBIT_MAC_ADDRESS1_ENABLE);
-+
-+	/* Zero initialize the multicast hash table */
-+	emac_wr(priv, MAC_MULTICAST_HASH_TABLE1, 0x0);
-+	emac_wr(priv, MAC_MULTICAST_HASH_TABLE2, 0x0);
-+	emac_wr(priv, MAC_MULTICAST_HASH_TABLE3, 0x0);
-+	emac_wr(priv, MAC_MULTICAST_HASH_TABLE4, 0x0);
-+
-+	/* Configure Thresholds */
-+	emac_wr(priv, MAC_TRANSMIT_FIFO_ALMOST_FULL, DEFAULT_TX_ALMOST_FULL);
-+	emac_wr(priv, MAC_TRANSMIT_PACKET_START_THRESHOLD,
-+		DEFAULT_TX_THRESHOLD);
-+	emac_wr(priv, MAC_RECEIVE_PACKET_START_THRESHOLD, DEFAULT_RX_THRESHOLD);
-+
-+	/* RX IRQ mitigation */
-+	rxirq = EMAC_RX_FRAMES & MREGBIT_RECEIVE_IRQ_FRAME_COUNTER_MASK;
-+	rxirq |= (EMAC_RX_COAL_TIMEOUT
-+		  << MREGBIT_RECEIVE_IRQ_TIMEOUT_COUNTER_SHIFT) &
-+		 MREGBIT_RECEIVE_IRQ_TIMEOUT_COUNTER_MASK;
-+
-+	rxirq |= MREGBIT_RECEIVE_IRQ_MITIGATION_ENABLE;
-+	emac_wr(priv, DMA_RECEIVE_IRQ_MITIGATION_CTRL, rxirq);
-+
-+	/* Disable and reset DMA */
-+	emac_wr(priv, DMA_CONTROL, 0x0);
-+
-+	emac_wr(priv, DMA_CONFIGURATION, MREGBIT_SOFTWARE_RESET);
-+	usleep_range(9000, 10000);
-+	emac_wr(priv, DMA_CONFIGURATION, 0x0);
-+	usleep_range(9000, 10000);
-+
-+	dma |= MREGBIT_STRICT_BURST;
-+	dma |= MREGBIT_DMA_64BIT_MODE;
-+	dma |= DEFAULT_DMA_BURST;
-+
-+	emac_wr(priv, DMA_CONFIGURATION, dma);
-+
-+	return 0;
-+}
-+
-+static void emac_set_mac_addr(struct emac_priv *priv, const unsigned char *addr)
-+{
-+	emac_wr(priv, MAC_ADDRESS1_HIGH, ((addr[1] << 8) | addr[0]));
-+	emac_wr(priv, MAC_ADDRESS1_MED, ((addr[3] << 8) | addr[2]));
-+	emac_wr(priv, MAC_ADDRESS1_LOW, ((addr[5] << 8) | addr[4]));
-+}
-+
-+static void emac_dma_start_transmit(struct emac_priv *priv)
-+{
-+	emac_wr(priv, DMA_TRANSMIT_POLL_DEMAND, 0xFF);
-+}
-+
-+static void emac_enable_interrupt(struct emac_priv *priv)
-+{
-+	u32 val;
-+
-+	val = emac_rd(priv, DMA_INTERRUPT_ENABLE);
-+	val |= MREGBIT_TRANSMIT_TRANSFER_DONE_INTR_ENABLE;
-+	val |= MREGBIT_RECEIVE_TRANSFER_DONE_INTR_ENABLE;
-+	emac_wr(priv, DMA_INTERRUPT_ENABLE, val);
-+}
-+
-+static void emac_disable_interrupt(struct emac_priv *priv)
-+{
-+	u32 val;
-+
-+	val = emac_rd(priv, DMA_INTERRUPT_ENABLE);
-+	val &= ~MREGBIT_TRANSMIT_TRANSFER_DONE_INTR_ENABLE;
-+	val &= ~MREGBIT_RECEIVE_TRANSFER_DONE_INTR_ENABLE;
-+	emac_wr(priv, DMA_INTERRUPT_ENABLE, val);
-+}
-+
-+static u32 emac_tx_avail(struct emac_priv *priv)
-+{
-+	struct emac_desc_ring *tx_ring = &priv->tx_ring;
-+	u32 avail;
-+
-+	if (tx_ring->tail > tx_ring->head)
-+		avail = tx_ring->tail - tx_ring->head - 1;
-+	else
-+		avail = tx_ring->total_cnt - tx_ring->head + tx_ring->tail - 1;
-+
-+	return avail;
-+}
-+
-+static void emac_tx_coal_timer_resched(struct emac_priv *priv)
-+{
-+	mod_timer(&priv->txtimer,
-+		  jiffies + usecs_to_jiffies(priv->tx_coal_timeout));
-+}
-+
-+static void emac_tx_coal_timer(struct timer_list *t)
-+{
-+	struct emac_priv *priv = timer_container_of(priv, t, txtimer);
-+
-+	napi_schedule(&priv->napi);
-+}
-+
-+static bool emac_tx_should_interrupt(struct emac_priv *priv, u32 pkt_num)
-+{
-+	bool should_interrupt;
-+
-+	/* Manage TX mitigation */
-+	priv->tx_count_frames += pkt_num;
-+	if (likely(priv->tx_coal_frames > priv->tx_count_frames)) {
-+		emac_tx_coal_timer_resched(priv);
-+		should_interrupt = false;
-+	} else {
-+		priv->tx_count_frames = 0;
-+		should_interrupt = true;
-+	}
-+
-+	return should_interrupt;
-+}
-+
-+static void emac_free_tx_buf(struct emac_priv *priv, int i)
-+{
-+	struct emac_tx_desc_buffer *tx_buf;
-+	struct emac_desc_ring *tx_ring;
-+	struct desc_buf *buf;
-+	int j;
-+
-+	tx_ring = &priv->tx_ring;
-+	tx_buf = &tx_ring->tx_desc_buf[i];
-+
-+	for (j = 0; j < 2; j++) {
-+		buf = &tx_buf->buf[j];
-+		if (buf->dma_addr) {
-+			if (buf->map_as_page)
-+				dma_unmap_page(&priv->pdev->dev, buf->dma_addr,
-+					       buf->dma_len, DMA_TO_DEVICE);
-+			else
-+				dma_unmap_single(&priv->pdev->dev,
-+						 buf->dma_addr, buf->dma_len,
-+						 DMA_TO_DEVICE);
-+
-+			buf->dma_addr = 0;
-+			buf->map_as_page = false;
-+			buf->buff_addr = NULL;
-+		}
-+	}
-+
-+	if (tx_buf->skb) {
-+		dev_kfree_skb_any(tx_buf->skb);
-+		tx_buf->skb = NULL;
-+	}
-+}
-+
-+static void emac_clean_tx_desc_ring(struct emac_priv *priv)
-+{
-+	struct emac_desc_ring *tx_ring = &priv->tx_ring;
-+	u32 i;
-+
-+	/* Free all the TX ring skbs */
-+	for (i = 0; i < tx_ring->total_cnt; i++)
-+		emac_free_tx_buf(priv, i);
-+
-+	tx_ring->head = 0;
-+	tx_ring->tail = 0;
-+}
-+
-+static void emac_clean_rx_desc_ring(struct emac_priv *priv)
-+{
-+	struct emac_rx_desc_buffer *rx_buf;
-+	struct emac_desc_ring *rx_ring;
-+	u32 i;
-+
-+	rx_ring = &priv->rx_ring;
-+
-+	/* Free all the RX ring skbs */
-+	for (i = 0; i < rx_ring->total_cnt; i++) {
-+		rx_buf = &rx_ring->rx_desc_buf[i];
-+		if (rx_buf->skb) {
-+			dma_unmap_single(&priv->pdev->dev, rx_buf->dma_addr,
-+					 rx_buf->dma_len, DMA_FROM_DEVICE);
-+
-+			dev_kfree_skb(rx_buf->skb);
-+			rx_buf->skb = NULL;
-+		}
-+	}
-+
-+	rx_ring->tail = 0;
-+	rx_ring->head = 0;
-+}
-+
-+static int emac_alloc_tx_resources(struct emac_priv *priv)
-+{
-+	struct emac_desc_ring *tx_ring = &priv->tx_ring;
-+	struct platform_device *pdev = priv->pdev;
-+	u32 size;
-+
-+	size = sizeof(struct emac_tx_desc_buffer) * tx_ring->total_cnt;
-+
-+	tx_ring->tx_desc_buf = kzalloc(size, GFP_KERNEL);
-+	if (!tx_ring->tx_desc_buf)
-+		return -ENOMEM;
-+
-+	tx_ring->total_size = tx_ring->total_cnt * sizeof(struct emac_desc);
-+	tx_ring->total_size = ALIGN(tx_ring->total_size, PAGE_SIZE);
-+
-+	tx_ring->desc_addr = dma_alloc_coherent(&pdev->dev, tx_ring->total_size,
-+						&tx_ring->desc_dma_addr,
-+						GFP_KERNEL);
-+	if (!tx_ring->desc_addr) {
-+		kfree(tx_ring->tx_desc_buf);
-+		return -ENOMEM;
-+	}
-+
-+	tx_ring->head = 0;
-+	tx_ring->tail = 0;
-+
-+	return 0;
-+}
-+
-+static int emac_alloc_rx_resources(struct emac_priv *priv)
-+{
-+	struct emac_desc_ring *rx_ring = &priv->rx_ring;
-+	struct platform_device *pdev = priv->pdev;
-+	u32 buf_len;
-+
-+	buf_len = sizeof(struct emac_rx_desc_buffer) * rx_ring->total_cnt;
-+
-+	rx_ring->rx_desc_buf = kzalloc(buf_len, GFP_KERNEL);
-+	if (!rx_ring->rx_desc_buf)
-+		return -ENOMEM;
-+
-+	rx_ring->total_size = rx_ring->total_cnt * sizeof(struct emac_desc);
-+
-+	rx_ring->total_size = ALIGN(rx_ring->total_size, PAGE_SIZE);
-+
-+	rx_ring->desc_addr = dma_alloc_coherent(&pdev->dev, rx_ring->total_size,
-+						&rx_ring->desc_dma_addr,
-+						GFP_KERNEL);
-+	if (!rx_ring->desc_addr) {
-+		kfree(rx_ring->rx_desc_buf);
-+		return -ENOMEM;
-+	}
-+
-+	rx_ring->head = 0;
-+	rx_ring->tail = 0;
-+
-+	return 0;
-+}
-+
-+static void emac_free_tx_resources(struct emac_priv *priv)
-+{
-+	struct emac_desc_ring *tr = &priv->tx_ring;
-+	struct device *dev = &priv->pdev->dev;
-+
-+	emac_clean_tx_desc_ring(priv);
-+
-+	kfree(tr->tx_desc_buf);
-+	tr->tx_desc_buf = NULL;
-+
-+	dma_free_coherent(dev, tr->total_size, tr->desc_addr,
-+			  tr->desc_dma_addr);
-+	tr->desc_addr = NULL;
-+}
-+
-+static void emac_free_rx_resources(struct emac_priv *priv)
-+{
-+	struct emac_desc_ring *rr = &priv->rx_ring;
-+	struct device *dev = &priv->pdev->dev;
-+
-+	emac_clean_rx_desc_ring(priv);
-+
-+	kfree(rr->rx_desc_buf);
-+	rr->rx_desc_buf = NULL;
-+
-+	dma_free_coherent(dev, rr->total_size, rr->desc_addr,
-+			  rr->desc_dma_addr);
-+	rr->desc_addr = NULL;
-+}
-+
-+static int emac_tx_clean_desc(struct emac_priv *priv)
-+{
-+	struct net_device *ndev = priv->ndev;
-+	struct emac_desc_ring *tx_ring;
-+	struct emac_desc *tx_desc;
-+	u32 i;
-+
-+	netif_tx_lock(ndev);
-+
-+	tx_ring = &priv->tx_ring;
-+
-+	i = tx_ring->tail;
-+
-+	while (i != tx_ring->head) {
-+		tx_desc = &((struct emac_desc *)tx_ring->desc_addr)[i];
-+
-+		/* Stop checking if desc still own by DMA */
-+		if (READ_ONCE(tx_desc->desc0) & TX_DESC_0_OWN)
-+			break;
-+
-+		emac_free_tx_buf(priv, i);
-+		memset(tx_desc, 0, sizeof(struct emac_desc));
-+
-+		if (++i == tx_ring->total_cnt)
-+			i = 0;
-+	}
-+
-+	tx_ring->tail = i;
-+
-+	if (unlikely(netif_queue_stopped(ndev) &&
-+		     emac_tx_avail(priv) > tx_ring->total_cnt / 4))
-+		netif_wake_queue(ndev);
-+
-+	netif_tx_unlock(ndev);
-+
-+	return 0;
-+}
-+
-+static u32 rx_frame_len(struct emac_desc *desc)
-+{
-+	return (desc->desc0 & RX_DESC_0_FRAME_PACKET_LENGTH_MASK) >>
-+	       RX_DESC_0_FRAME_PACKET_LENGTH_SHIFT;
-+}
-+
-+static int emac_rx_frame_status(struct emac_priv *priv, struct emac_desc *desc)
-+{
-+	/* Drop if not last descriptor */
-+	if (!(desc->desc0 & RX_DESC_0_LAST_DESCRIPTOR)) {
-+		netdev_dbg(priv->ndev, "RX not last descriptor\n");
-+		return RX_FRAME_DISCARD;
-+	}
-+
-+	if (desc->desc0 & RX_DESC_0_FRAME_RUNT) {
-+		netdev_dbg(priv->ndev, "RX runt frame\n");
-+		return RX_FRAME_DISCARD;
-+	}
-+
-+	if (desc->desc0 & RX_DESC_0_FRAME_CRC_ERR) {
-+		netdev_dbg(priv->ndev, "RX frame CRC error\n");
-+		return RX_FRAME_DISCARD;
-+	}
-+
-+	if (desc->desc0 & RX_DESC_0_FRAME_MAX_LEN_ERR) {
-+		netdev_dbg(priv->ndev, "RX frame exceeds max length\n");
-+		return RX_FRAME_DISCARD;
-+	}
-+
-+	if (desc->desc0 & RX_DESC_0_FRAME_JABBER_ERR) {
-+		netdev_dbg(priv->ndev, "RX frame jabber error\n");
-+		return RX_FRAME_DISCARD;
-+	}
-+
-+	if (desc->desc0 & RX_DESC_0_FRAME_LENGTH_ERR) {
-+		netdev_dbg(priv->ndev, "RX frame length error\n");
-+		return RX_FRAME_DISCARD;
-+	}
-+
-+	if (rx_frame_len(desc) <= ETH_FCS_LEN ||
-+	    rx_frame_len(desc) > priv->dma_buf_sz) {
-+		netdev_dbg(priv->ndev, "RX frame length unacceptable\n");
-+		return RX_FRAME_DISCARD;
-+	}
-+	return RX_FRAME_OK;
-+}
-+
-+/* RX and TX use the same layout for {RX,TX}_DESC_1_BUFFER_SIZE_{1,2} */
-+
-+static u32 make_buf_size_1(u32 size)
-+{
-+	return (size << TX_DESC_1_BUFFER_SIZE_1_SHIFT) &
-+	       TX_DESC_1_BUFFER_SIZE_1_MASK;
-+}
-+
-+static u32 make_buf_size_2(u32 size)
-+{
-+	return (size << TX_DESC_1_BUFFER_SIZE_2_SHIFT) &
-+	       TX_DESC_1_BUFFER_SIZE_2_MASK;
-+}
-+
-+static void emac_alloc_rx_desc_buffers(struct emac_priv *priv)
-+{
-+	struct emac_desc_ring *rx_ring = &priv->rx_ring;
-+	struct emac_desc rx_desc, *rx_desc_addr;
-+	struct net_device *ndev = priv->ndev;
-+	struct emac_rx_desc_buffer *rx_buf;
-+	struct sk_buff *skb;
-+	u32 i;
-+
-+	i = rx_ring->head;
-+	rx_buf = &rx_ring->rx_desc_buf[i];
-+
-+	while (!rx_buf->skb) {
-+		skb = netdev_alloc_skb_ip_align(ndev, priv->dma_buf_sz);
-+		if (!skb)
-+			break;
-+
-+		skb->dev = ndev;
-+
-+		rx_buf->skb = skb;
-+		rx_buf->dma_len = priv->dma_buf_sz;
-+		rx_buf->dma_addr = dma_map_single(&priv->pdev->dev, skb->data,
-+						  priv->dma_buf_sz,
-+						  DMA_FROM_DEVICE);
-+		if (dma_mapping_error(&priv->pdev->dev, rx_buf->dma_addr)) {
-+			netdev_err(ndev, "dma_mapping_error\n");
-+			goto dma_map_err;
-+		}
-+
-+		rx_desc_addr = &((struct emac_desc *)rx_ring->desc_addr)[i];
-+
-+		memset(&rx_desc, 0, sizeof(rx_desc));
-+
-+		rx_desc.buffer_addr_1 = rx_buf->dma_addr;
-+		rx_desc.desc1 = make_buf_size_1(rx_buf->dma_len);
-+
-+		if (++i == rx_ring->total_cnt) {
-+			rx_desc.desc1 |= RX_DESC_1_END_RING;
-+			i = 0;
-+		}
-+
-+		*rx_desc_addr = rx_desc;
-+		dma_wmb();
-+		WRITE_ONCE(rx_desc_addr->desc0, rx_desc.desc0 | RX_DESC_0_OWN);
-+
-+		rx_buf = &rx_ring->rx_desc_buf[i];
-+	}
-+
-+	rx_ring->head = i;
-+	return;
-+
-+dma_map_err:
-+	dev_kfree_skb_any(skb);
-+	rx_buf->skb = NULL;
-+}
-+
-+/* Returns number of packets received */
-+static int emac_rx_clean_desc(struct emac_priv *priv, int budget)
-+{
-+	struct net_device *ndev = priv->ndev;
-+	struct emac_rx_desc_buffer *rx_buf;
-+	struct emac_desc_ring *rx_ring;
-+	struct sk_buff *skb = NULL;
-+	struct emac_desc *rx_desc;
-+	u32 got = 0, skb_len, i;
-+	int status;
-+
-+	rx_ring = &priv->rx_ring;
-+
-+	i = rx_ring->tail;
-+
-+	while (budget--) {
-+		rx_desc = &((struct emac_desc *)rx_ring->desc_addr)[i];
-+
-+		/* Stop checking if rx_desc still owned by DMA */
-+		if (READ_ONCE(rx_desc->desc0) & RX_DESC_0_OWN)
-+			break;
-+
-+		dma_rmb();
-+
-+		rx_buf = &rx_ring->rx_desc_buf[i];
-+
-+		if (!rx_buf->skb)
-+			break;
-+
-+		got++;
-+
-+		dma_unmap_single(&priv->pdev->dev, rx_buf->dma_addr,
-+				 rx_buf->dma_len, DMA_FROM_DEVICE);
-+
-+		status = emac_rx_frame_status(priv, rx_desc);
-+		if (unlikely(status == RX_FRAME_DISCARD)) {
-+			ndev->stats.rx_dropped++;
-+			dev_kfree_skb_irq(rx_buf->skb);
-+			rx_buf->skb = NULL;
-+		} else {
-+			skb = rx_buf->skb;
-+			skb_len = rx_frame_len(rx_desc) - ETH_FCS_LEN;
-+			skb_put(skb, skb_len);
-+			skb->dev = ndev;
-+			ndev->hard_header_len = ETH_HLEN;
-+
-+			skb->protocol = eth_type_trans(skb, ndev);
-+
-+			skb->ip_summed = CHECKSUM_NONE;
-+
-+			napi_gro_receive(&priv->napi, skb);
-+
-+			ndev->stats.rx_packets++;
-+			ndev->stats.rx_bytes += skb_len;
-+
-+			memset(rx_desc, 0, sizeof(struct emac_desc));
-+			rx_buf->skb = NULL;
-+		}
-+
-+		if (++i == rx_ring->total_cnt)
-+			i = 0;
-+	}
-+
-+	rx_ring->tail = i;
-+
-+	emac_alloc_rx_desc_buffers(priv);
-+
-+	return got;
-+}
-+
-+static int emac_rx_poll(struct napi_struct *napi, int budget)
-+{
-+	struct emac_priv *priv = container_of(napi, struct emac_priv, napi);
-+	int work_done;
-+
-+	emac_tx_clean_desc(priv);
-+
-+	work_done = emac_rx_clean_desc(priv, budget);
-+	if (work_done < budget && napi_complete_done(napi, work_done))
-+		emac_enable_interrupt(priv);
-+
-+	return work_done;
-+}
-+
-+/*
-+ * For convenience, skb->data is fragment 0, frags[0] is fragment 1, etc.
-+ *
-+ * Each descriptor can hold up to two fragments, called buffer 1 and 2. For each
-+ * fragment f, if f % 2 == 0, it uses buffer 1, otherwise it uses buffer 2.
-+ */
-+
-+static int emac_tx_map_frag(struct device *dev, struct emac_desc *tx_desc,
-+			    struct emac_tx_desc_buffer *tx_buf,
-+			    struct sk_buff *skb, u32 frag_idx)
-+{
-+	bool map_as_page, buf_idx;
-+	const skb_frag_t *frag;
-+	phys_addr_t addr;
-+	u32 len;
-+	int ret;
-+
-+	buf_idx = frag_idx % 2;
-+
-+	if (frag_idx == 0) {
-+		/* Non-fragmented part */
-+		len = skb_headlen(skb);
-+		addr = dma_map_single(dev, skb->data, len, DMA_TO_DEVICE);
-+		map_as_page = false;
-+	} else {
-+		/* Fragment */
-+		frag = &skb_shinfo(skb)->frags[frag_idx - 1];
-+		len = skb_frag_size(frag);
-+		addr = skb_frag_dma_map(dev, frag, 0, len, DMA_TO_DEVICE);
-+		map_as_page = true;
-+	}
-+
-+	ret = dma_mapping_error(dev, addr);
-+	if (ret)
-+		return ret;
-+
-+	tx_buf->buf[buf_idx].dma_addr = addr;
-+	tx_buf->buf[buf_idx].dma_len = len;
-+	tx_buf->buf[buf_idx].map_as_page = map_as_page;
-+
-+	if (buf_idx == 0) {
-+		tx_desc->buffer_addr_1 = addr;
-+		tx_desc->desc1 |= make_buf_size_1(len);
-+	} else {
-+		tx_desc->buffer_addr_2 = addr;
-+		tx_desc->desc1 |= make_buf_size_2(len);
-+	}
-+
-+	return 0;
-+}
-+
-+static void emac_tx_mem_map(struct emac_priv *priv, struct sk_buff *skb)
-+{
-+	struct emac_desc_ring *tx_ring = &priv->tx_ring;
-+	struct emac_desc tx_desc, *tx_desc_addr;
-+	struct device *dev = &priv->pdev->dev;
-+	struct emac_tx_desc_buffer *tx_buf;
-+	u32 head, old_head, frag_num, f;
-+	bool buf_idx;
-+
-+	frag_num = skb_shinfo(skb)->nr_frags;
-+	head = tx_ring->head;
-+	old_head = head;
-+
-+	for (f = 0; f < frag_num + 1; f++) {
-+		buf_idx = f % 2;
-+
-+		/*
-+		 * If using buffer 1, initialize a new desc. Otherwise, use
-+		 * buffer 2 of previous fragment's desc.
-+		 */
-+		if (!buf_idx) {
-+			tx_buf = &tx_ring->tx_desc_buf[head];
-+			tx_desc_addr =
-+				&((struct emac_desc *)tx_ring->desc_addr)[head];
-+			memset(&tx_desc, 0, sizeof(tx_desc));
-+
-+			/*
-+			 * Give ownership for all but first desc initially. For
-+			 * first desc, give at the end so DMA cannot start
-+			 * reading uninitialized descs.
-+			 */
-+			if (head != old_head)
-+				tx_desc.desc0 |= TX_DESC_0_OWN;
-+
-+			if (++head == tx_ring->total_cnt) {
-+				/* Just used last desc in ring */
-+				tx_desc.desc1 |= TX_DESC_1_END_RING;
-+				head = 0;
-+			}
-+		}
-+
-+		if (emac_tx_map_frag(dev, &tx_desc, tx_buf, skb, f)) {
-+			netdev_err(priv->ndev, "Map TX frag %d failed", f);
-+			goto dma_map_err;
-+		}
-+
-+		if (f == 0)
-+			tx_desc.desc1 |= TX_DESC_1_FIRST_SEGMENT;
-+
-+		if (f == frag_num) {
-+			tx_desc.desc1 |= TX_DESC_1_LAST_SEGMENT;
-+			tx_buf->skb = skb;
-+			if (emac_tx_should_interrupt(priv, frag_num + 1))
-+				tx_desc.desc1 |=
-+					TX_DESC_1_INTERRUPT_ON_COMPLETION;
-+		}
-+
-+		*tx_desc_addr = tx_desc;
-+	}
-+
-+	/* All descriptors are ready, give ownership for first desc */
-+	tx_desc_addr = &((struct emac_desc *)tx_ring->desc_addr)[old_head];
-+	dma_wmb();
-+	WRITE_ONCE(tx_desc_addr->desc0, tx_desc_addr->desc0 | TX_DESC_0_OWN);
-+
-+	emac_dma_start_transmit(priv);
-+
-+	tx_ring->head = head;
-+
-+	return;
-+
-+dma_map_err:
-+	dev_kfree_skb_any(skb);
-+	priv->ndev->stats.tx_dropped++;
-+}
-+
-+static int emac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-+{
-+	struct emac_priv *priv = netdev_priv(ndev);
-+	int nfrags = skb_shinfo(skb)->nr_frags;
-+	struct device *dev = &priv->pdev->dev;
-+
-+	if (unlikely(emac_tx_avail(priv) < nfrags + 1)) {
-+		if (!netif_queue_stopped(ndev)) {
-+			netif_stop_queue(ndev);
-+			dev_err_ratelimited(dev, "TX ring full, stop TX queue\n");
-+		}
-+		return NETDEV_TX_BUSY;
-+	}
-+
-+	emac_tx_mem_map(priv, skb);
-+
-+	ndev->stats.tx_packets++;
-+	ndev->stats.tx_bytes += skb->len;
-+
-+	/* Make sure there is space in the ring for the next TX. */
-+	if (unlikely(emac_tx_avail(priv) <= MAX_SKB_FRAGS + 2))
-+		netif_stop_queue(ndev);
-+
-+	return NETDEV_TX_OK;
-+}
-+
-+static u32 emac_tx_read_stat_cnt(struct emac_priv *priv, u8 cnt)
-+{
-+	u32 val, tmp;
-+	int ret;
-+
-+	val = 0x8000 | cnt;
-+	emac_wr(priv, MAC_TX_STATCTR_CONTROL, val);
-+	val = emac_rd(priv, MAC_TX_STATCTR_CONTROL);
-+
-+	ret = readl_poll_timeout_atomic(priv->iobase + MAC_TX_STATCTR_CONTROL,
-+					val, !(val & 0x8000), 100, 10000);
-+
-+	if (ret) {
-+		netdev_err(priv->ndev, "read TX stat timeout\n");
-+		return ret;
-+	}
-+
-+	tmp = emac_rd(priv, MAC_TX_STATCTR_DATA_HIGH);
-+	val = tmp << 16;
-+	tmp = emac_rd(priv, MAC_TX_STATCTR_DATA_LOW);
-+	val |= tmp;
-+
-+	return val;
-+}
-+
-+static u32 emac_rx_read_stat_cnt(struct emac_priv *priv, u8 cnt)
-+{
-+	u32 val, tmp;
-+	int ret;
-+
-+	val = 0x8000 | cnt;
-+	emac_wr(priv, MAC_RX_STATCTR_CONTROL, val);
-+	val = emac_rd(priv, MAC_RX_STATCTR_CONTROL);
-+
-+	ret = readl_poll_timeout_atomic(priv->iobase + MAC_RX_STATCTR_CONTROL,
-+					val, !(val & 0x8000), 100, 10000);
-+
-+	if (ret) {
-+		netdev_err(priv->ndev, "read RX stat timeout\n");
-+		return ret;
-+	}
-+
-+	tmp = emac_rd(priv, MAC_RX_STATCTR_DATA_HIGH);
-+	val = tmp << 16;
-+	tmp = emac_rd(priv, MAC_RX_STATCTR_DATA_LOW);
-+	val |= tmp;
-+
-+	return val;
-+}
-+
-+static int emac_set_mac_address(struct net_device *ndev, void *addr)
-+{
-+	struct emac_priv *priv = netdev_priv(ndev);
-+	int ret = eth_mac_addr(ndev, addr);
-+
-+	if (ret)
-+		return ret;
-+
-+	/* If running, set now; if not running it will be set in emac_up. */
-+	if (netif_running(ndev))
-+		emac_set_mac_addr(priv, ndev->dev_addr);
-+
-+	return 0;
-+}
-+
-+static void emac_mac_multicast_filter_clear(struct emac_priv *priv)
-+{
-+	emac_wr(priv, MAC_MULTICAST_HASH_TABLE1, 0x0);
-+	emac_wr(priv, MAC_MULTICAST_HASH_TABLE2, 0x0);
-+	emac_wr(priv, MAC_MULTICAST_HASH_TABLE3, 0x0);
-+	emac_wr(priv, MAC_MULTICAST_HASH_TABLE4, 0x0);
-+}
-+
-+/* Configure Multicast and Promiscuous modes */
-+static void emac_rx_mode_set(struct net_device *ndev)
-+{
-+	struct emac_priv *priv = netdev_priv(ndev);
-+	u32 crc32, bit, reg, hash, val;
-+	struct netdev_hw_addr *ha;
-+	u32 mc_filter[4] = { 0 };
-+
-+	val = emac_rd(priv, MAC_ADDRESS_CONTROL);
-+
-+	val &= ~MREGBIT_PROMISCUOUS_MODE;
-+
-+	if (ndev->flags & IFF_PROMISC) {
-+		/* Enable promisc mode */
-+		val |= MREGBIT_PROMISCUOUS_MODE;
-+	} else if ((ndev->flags & IFF_ALLMULTI) ||
-+		   (netdev_mc_count(ndev) > HASH_TABLE_SIZE)) {
-+		/* Accept all multicast frames by setting every bit */
-+		emac_wr(priv, MAC_MULTICAST_HASH_TABLE1, 0xffff);
-+		emac_wr(priv, MAC_MULTICAST_HASH_TABLE2, 0xffff);
-+		emac_wr(priv, MAC_MULTICAST_HASH_TABLE3, 0xffff);
-+		emac_wr(priv, MAC_MULTICAST_HASH_TABLE4, 0xffff);
-+	} else if (!netdev_mc_empty(ndev)) {
-+		emac_mac_multicast_filter_clear(priv);
-+		netdev_for_each_mc_addr(ha, ndev) {
-+			/* Calculate the CRC of the MAC address */
-+			crc32 = ether_crc(ETH_ALEN, ha->addr);
-+
-+			/*
-+			 * The hash table is an array of 4 16-bit registers. It
-+			 * is treated like an array of 64 bits (bits[hash]). Use
-+			 * the upper 6 bits of the above CRC as the hash value.
-+			 */
-+			hash = (crc32 >> 26) & 0x3F;
-+			reg = hash / 16;
-+			bit = hash % 16;
-+			mc_filter[reg] |= BIT(bit);
-+		}
-+		emac_wr(priv, MAC_MULTICAST_HASH_TABLE1, mc_filter[0]);
-+		emac_wr(priv, MAC_MULTICAST_HASH_TABLE2, mc_filter[1]);
-+		emac_wr(priv, MAC_MULTICAST_HASH_TABLE3, mc_filter[2]);
-+		emac_wr(priv, MAC_MULTICAST_HASH_TABLE4, mc_filter[3]);
-+	}
-+
-+	emac_wr(priv, MAC_ADDRESS_CONTROL, val);
-+}
-+
-+static int emac_change_mtu(struct net_device *ndev, int mtu)
-+{
-+	struct emac_priv *priv = netdev_priv(ndev);
-+	u32 frame_len;
-+
-+	if (netif_running(ndev)) {
-+		netdev_err(ndev, "must be stopped to change MTU\n");
-+		return -EBUSY;
-+	}
-+
-+	frame_len = mtu + ETH_HLEN + ETH_FCS_LEN;
-+
-+	if (frame_len <= EMAC_DEFAULT_BUFSIZE)
-+		priv->dma_buf_sz = EMAC_DEFAULT_BUFSIZE;
-+	else if (frame_len <= EMAC_RX_BUF_2K)
-+		priv->dma_buf_sz = EMAC_RX_BUF_2K;
-+	else
-+		priv->dma_buf_sz = EMAC_RX_BUF_4K;
-+
-+	ndev->mtu = mtu;
-+
-+	return 0;
-+}
-+
-+static void emac_tx_timeout(struct net_device *ndev, unsigned int txqueue)
-+{
-+	struct emac_priv *priv = netdev_priv(ndev);
-+
-+	schedule_work(&priv->tx_timeout_task);
-+}
-+
-+static int emac_mii_read(struct mii_bus *bus, int phy_addr, int regnum)
-+{
-+	struct emac_priv *priv = bus->priv;
-+	u32 cmd = 0, val;
-+	int ret;
-+
-+	cmd |= phy_addr & 0x1F;
-+	cmd |= (regnum & 0x1F) << 5;
-+	cmd |= MREGBIT_START_MDIO_TRANS | MREGBIT_MDIO_READ_WRITE;
-+
-+	emac_wr(priv, MAC_MDIO_DATA, 0x0);
-+	emac_wr(priv, MAC_MDIO_CONTROL, cmd);
-+
-+	ret = readl_poll_timeout(priv->iobase + MAC_MDIO_CONTROL, val,
-+				 !((val >> 15) & 0x1), 100, 10000);
-+
-+	if (ret)
-+		return ret;
-+
-+	val = emac_rd(priv, MAC_MDIO_DATA);
-+	return val;
-+}
-+
-+static int emac_mii_write(struct mii_bus *bus, int phy_addr, int regnum,
-+			  u16 value)
-+{
-+	struct emac_priv *priv = bus->priv;
-+	u32 cmd = 0, val;
-+	int ret;
-+
-+	emac_wr(priv, MAC_MDIO_DATA, value);
-+
-+	cmd |= phy_addr & 0x1F;
-+	cmd |= (regnum & 0x1F) << 5;
-+	cmd |= MREGBIT_START_MDIO_TRANS;
-+
-+	emac_wr(priv, MAC_MDIO_CONTROL, cmd);
-+
-+	ret = readl_poll_timeout(priv->iobase + MAC_MDIO_CONTROL, val,
-+				 !((val >> 15) & 0x1), 100, 10000);
-+
-+	return ret;
-+}
-+
-+static int emac_mdio_init(struct emac_priv *priv)
-+{
-+	struct device *dev = &priv->pdev->dev;
-+	struct device_node *mii_np;
-+	struct mii_bus *mii;
-+	int ret;
-+
-+	mii = devm_mdiobus_alloc(dev);
-+	if (!mii)
-+		return -ENOMEM;
-+
-+	mii->priv = priv;
-+	mii->name = "k1_emac_mii";
-+	mii->read = emac_mii_read;
-+	mii->write = emac_mii_write;
-+	mii->parent = dev;
-+	mii->phy_mask = 0xffffffff;
-+	snprintf(mii->id, MII_BUS_ID_SIZE, "%s", priv->pdev->name);
-+
-+	mii_np = of_get_available_child_by_name(dev->of_node, "mdio-bus");
-+
-+	ret = devm_of_mdiobus_register(dev, mii, mii_np);
-+	if (ret)
-+		dev_err_probe(dev, ret, "Failed to register mdio bus\n");
-+
-+	of_node_put(mii_np);
-+	return ret;
-+}
-+
-+static void emac_get_strings(struct net_device *dev, u32 stringset, u8 *data)
-+{
-+	int i;
-+
-+	switch (stringset) {
-+	case ETH_SS_STATS:
-+		for (i = 0; i < ARRAY_SIZE(emac_ethtool_stats); i++) {
-+			memcpy(data, emac_ethtool_stats[i].str,
-+			       ETH_GSTRING_LEN);
-+			data += ETH_GSTRING_LEN;
-+		}
-+		break;
-+	}
-+}
-+
-+static int emac_get_sset_count(struct net_device *dev, int sset)
-+{
-+	switch (sset) {
-+	case ETH_SS_STATS:
-+		return ARRAY_SIZE(emac_ethtool_stats);
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static void emac_stats_update(struct emac_priv *priv)
-+{
-+	struct emac_hw_stats *hwstats = priv->hw_stats;
-+	u32 *stats = (u32 *)hwstats;
-+	int i;
-+
-+	for (i = 0; i < EMAC_TX_STATS_NUM; i++)
-+		stats[i] = emac_tx_read_stat_cnt(priv, i);
-+
-+	for (i = 0; i < EMAC_RX_STATS_NUM; i++)
-+		stats[i + EMAC_TX_STATS_NUM] = emac_rx_read_stat_cnt(priv, i);
-+}
-+
-+static void emac_get_ethtool_stats(struct net_device *dev,
-+				   struct ethtool_stats *stats, u64 *data)
-+{
-+	struct emac_priv *priv = netdev_priv(dev);
-+	struct emac_hw_stats *hwstats;
-+	unsigned long flags;
-+	u32 *data_src;
-+	u64 *data_dst;
-+	int i;
-+
-+	hwstats = priv->hw_stats;
-+
-+	if (netif_running(dev) && netif_device_present(dev)) {
-+		if (spin_trylock_irqsave(&priv->stats_lock, flags)) {
-+			emac_stats_update(priv);
-+			spin_unlock_irqrestore(&priv->stats_lock, flags);
-+		}
-+	}
-+
-+	data_dst = data;
-+
-+	for (i = 0; i < ARRAY_SIZE(emac_ethtool_stats); i++) {
-+		data_src = (u32 *)hwstats + emac_ethtool_stats[i].offset;
-+		*data_dst++ = (u64)(*data_src);
-+	}
-+}
-+
-+static int emac_ethtool_get_regs_len(struct net_device *dev)
-+{
-+	return (EMAC_DMA_REG_CNT + EMAC_MAC_REG_CNT) * sizeof(u32);
-+}
-+
-+static void emac_ethtool_get_regs(struct net_device *dev,
-+				  struct ethtool_regs *regs, void *space)
-+{
-+	struct emac_priv *priv = netdev_priv(dev);
-+	u32 *reg_space = space;
-+	int i;
-+
-+	regs->version = 1;
-+
-+	for (i = 0; i < EMAC_DMA_REG_CNT; i++)
-+		reg_space[i] = emac_rd(priv, DMA_CONFIGURATION + i * 4);
-+
-+	for (i = 0; i < EMAC_MAC_REG_CNT; i++)
-+		reg_space[i + EMAC_DMA_REG_CNT] =
-+			emac_rd(priv, MAC_GLOBAL_CONTROL + i * 4);
-+}
-+
-+static void emac_get_drvinfo(struct net_device *dev,
-+			     struct ethtool_drvinfo *info)
-+{
-+	strscpy(info->driver, DRIVER_NAME, sizeof(info->driver));
-+	info->n_stats = ARRAY_SIZE(emac_ethtool_stats);
-+}
-+
-+static void emac_tx_timeout_task(struct work_struct *work)
-+{
-+	struct net_device *ndev;
-+	struct emac_priv *priv;
-+
-+	priv = container_of(work, struct emac_priv, tx_timeout_task);
-+	ndev = priv->ndev;
-+
-+	rtnl_lock();
-+
-+	/* No need to reset if already down */
-+	if (!netif_running(ndev)) {
-+		rtnl_unlock();
-+		return;
-+	}
-+
-+	netdev_err(ndev, "MAC reset due to TX timeout\n");
-+
-+	netif_trans_update(ndev); /* prevent tx timeout */
-+	dev_close(ndev);
-+	dev_open(ndev, NULL);
-+
-+	rtnl_unlock();
-+}
-+
-+static void emac_sw_init(struct emac_priv *priv)
-+{
-+	priv->dma_buf_sz = EMAC_DEFAULT_BUFSIZE;
-+
-+	priv->tx_ring.total_cnt = DEFAULT_TX_RING_NUM;
-+	priv->rx_ring.total_cnt = DEFAULT_RX_RING_NUM;
-+
-+	spin_lock_init(&priv->stats_lock);
-+
-+	INIT_WORK(&priv->tx_timeout_task, emac_tx_timeout_task);
-+
-+	priv->tx_coal_frames = EMAC_TX_FRAMES;
-+	priv->tx_coal_timeout = EMAC_TX_COAL_TIMEOUT;
-+
-+	timer_setup(&priv->txtimer, emac_tx_coal_timer, 0);
-+}
-+
-+static irqreturn_t emac_interrupt_handler(int irq, void *dev_id)
-+{
-+	struct net_device *ndev = (struct net_device *)dev_id;
-+	struct emac_priv *priv = netdev_priv(ndev);
-+	bool should_schedule = false;
-+	u32 status;
-+	u32 clr = 0;
-+
-+	status = emac_rd(priv, DMA_STATUS_IRQ);
-+
-+	if (status & MREGBIT_TRANSMIT_TRANSFER_DONE_IRQ) {
-+		clr |= MREGBIT_TRANSMIT_TRANSFER_DONE_IRQ;
-+		should_schedule = true;
-+	}
-+
-+	if (status & MREGBIT_TRANSMIT_DES_UNAVAILABLE_IRQ)
-+		clr |= MREGBIT_TRANSMIT_DES_UNAVAILABLE_IRQ;
-+
-+	if (status & MREGBIT_TRANSMIT_DMA_STOPPED_IRQ)
-+		clr |= MREGBIT_TRANSMIT_DMA_STOPPED_IRQ;
-+
-+	if (status & MREGBIT_RECEIVE_TRANSFER_DONE_IRQ) {
-+		clr |= MREGBIT_RECEIVE_TRANSFER_DONE_IRQ;
-+		should_schedule = true;
-+	}
-+
-+	if (status & MREGBIT_RECEIVE_DES_UNAVAILABLE_IRQ)
-+		clr |= MREGBIT_RECEIVE_DES_UNAVAILABLE_IRQ;
-+
-+	if (status & MREGBIT_RECEIVE_DMA_STOPPED_IRQ)
-+		clr |= MREGBIT_RECEIVE_DMA_STOPPED_IRQ;
-+
-+	if (status & MREGBIT_RECEIVE_MISSED_FRAME_IRQ)
-+		clr |= MREGBIT_RECEIVE_MISSED_FRAME_IRQ;
-+
-+	if (should_schedule) {
-+		if (napi_schedule_prep(&priv->napi)) {
-+			emac_disable_interrupt(priv);
-+			__napi_schedule_irqoff(&priv->napi);
-+		}
-+	}
-+
-+	emac_wr(priv, DMA_STATUS_IRQ, clr);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void emac_configure_tx(struct emac_priv *priv)
-+{
-+	u32 val;
-+
-+	/* Set base address */
-+	val = (u32)(priv->tx_ring.desc_dma_addr);
-+	emac_wr(priv, DMA_TRANSMIT_BASE_ADDRESS, val);
-+
-+	/* Set TX inter-frame gap value, enable transmit */
-+	val = emac_rd(priv, MAC_TRANSMIT_CONTROL);
-+	val &= ~MREGBIT_IFG_LEN;
-+	val |= MREGBIT_TRANSMIT_ENABLE;
-+	val |= MREGBIT_TRANSMIT_AUTO_RETRY;
-+	emac_wr(priv, MAC_TRANSMIT_CONTROL, val);
-+
-+	emac_wr(priv, DMA_TRANSMIT_AUTO_POLL_COUNTER, 0x0);
-+
-+	/* Start TX DMA */
-+	val = emac_rd(priv, DMA_CONTROL);
-+	val |= MREGBIT_START_STOP_TRANSMIT_DMA;
-+	emac_wr(priv, DMA_CONTROL, val);
-+}
-+
-+static void emac_configure_rx(struct emac_priv *priv)
-+{
-+	u32 val;
-+
-+	/* Set base address */
-+	val = (u32)(priv->rx_ring.desc_dma_addr);
-+	emac_wr(priv, DMA_RECEIVE_BASE_ADDRESS, val);
-+
-+	/* Enable receive */
-+	val = emac_rd(priv, MAC_RECEIVE_CONTROL);
-+	val |= MREGBIT_RECEIVE_ENABLE;
-+	val |= MREGBIT_STORE_FORWARD;
-+	emac_wr(priv, MAC_RECEIVE_CONTROL, val);
-+
-+	/* Start RX DMA */
-+	val = emac_rd(priv, DMA_CONTROL);
-+	val |= MREGBIT_START_STOP_RECEIVE_DMA;
-+	emac_wr(priv, DMA_CONTROL, val);
-+}
-+
-+static void emac_adjust_link(struct net_device *dev)
-+{
-+	struct emac_priv *priv = netdev_priv(dev);
-+	struct phy_device *phydev = dev->phydev;
-+	u32 ctrl;
-+
-+	if (phydev->link) {
-+		ctrl = emac_rd(priv, MAC_GLOBAL_CONTROL);
-+
-+		/* Update duplex and speed from PHY */
-+
-+		if (!phydev->duplex)
-+			ctrl &= ~MREGBIT_FULL_DUPLEX_MODE;
-+		else
-+			ctrl |= MREGBIT_FULL_DUPLEX_MODE;
-+
-+		ctrl &= ~MREGBIT_SPEED;
-+
-+		switch (phydev->speed) {
-+		case SPEED_1000:
-+			ctrl |= MREGBIT_SPEED_1000M;
-+			break;
-+		case SPEED_100:
-+			ctrl |= MREGBIT_SPEED_100M;
-+			break;
-+		case SPEED_10:
-+			ctrl |= MREGBIT_SPEED_10M;
-+			break;
-+		default:
-+			netdev_err(dev, "Unknown speed: %d\n", phydev->speed);
-+			phydev->speed = SPEED_UNKNOWN;
-+			break;
-+		}
-+
-+		emac_wr(priv, MAC_GLOBAL_CONTROL, ctrl);
-+	}
-+
-+	phy_print_status(phydev);
-+}
-+
-+static void emac_update_delay_line(struct emac_priv *priv)
-+{
-+	u32 mask = 0, val = 0;
-+
-+	mask |= EMAC_RX_DLINE_EN;
-+	mask |= EMAC_RX_DLINE_STEP_MASK | EMAC_RX_DLINE_CODE_MASK;
-+	mask |= EMAC_TX_DLINE_EN;
-+	mask |= EMAC_TX_DLINE_STEP_MASK | EMAC_TX_DLINE_CODE_MASK;
-+
-+	switch (priv->phy_interface) {
-+	case PHY_INTERFACE_MODE_RGMII:
-+	case PHY_INTERFACE_MODE_RGMII_ID:
-+	case PHY_INTERFACE_MODE_RGMII_RXID:
-+	case PHY_INTERFACE_MODE_RGMII_TXID:
-+		val |= EMAC_RX_DLINE_EN;
-+		val |= EMAC_DLINE_STEP_15P6 << EMAC_RX_DLINE_STEP_SHIFT;
-+		val |= (priv->rx_delay << EMAC_RX_DLINE_CODE_SHIFT) &
-+		       EMAC_RX_DLINE_CODE_MASK;
-+
-+		val |= EMAC_TX_DLINE_EN;
-+		val |= EMAC_DLINE_STEP_15P6 << EMAC_TX_DLINE_STEP_SHIFT;
-+		val |= (priv->tx_delay << EMAC_TX_DLINE_CODE_SHIFT) &
-+		       EMAC_TX_DLINE_CODE_MASK;
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	regmap_update_bits(priv->regmap_apmu,
-+			   priv->regmap_apmu_offset + APMU_EMAC_DLINE_REG,
-+			   mask, val);
-+}
-+
-+static int emac_phy_connect(struct net_device *ndev)
-+{
-+	struct emac_priv *priv = netdev_priv(ndev);
-+	struct device *dev = &priv->pdev->dev;
-+	struct phy_device *phydev;
-+	struct device_node *np;
-+	int ret;
-+
-+	ret = of_get_phy_mode(dev->of_node, &priv->phy_interface);
-+	if (ret) {
-+		dev_err(dev, "No phy-mode found");
-+		return ret;
-+	}
-+
-+	np = of_parse_phandle(dev->of_node, "phy-handle", 0);
-+	if (!np && of_phy_is_fixed_link(dev->of_node))
-+		np = of_node_get(dev->of_node);
-+
-+	if (!np) {
-+		dev_err(dev, "No PHY specified");
-+		return -ENODEV;
-+	}
-+
-+	ret = emac_phy_interface_config(priv);
-+	if (ret)
-+		goto err_node_put;
-+
-+	phydev = of_phy_connect(ndev, np, &emac_adjust_link, 0,
-+				priv->phy_interface);
-+	if (!phydev) {
-+		dev_err(dev, "Could not attach to PHY\n");
-+		ret = -ENODEV;
-+		goto err_node_put;
-+	}
-+
-+	phydev->mac_managed_pm = true;
-+
-+	ndev->phydev = phydev;
-+
-+	emac_update_delay_line(priv);
-+
-+err_node_put:
-+	of_node_put(np);
-+	return ret;
-+}
-+
-+static int emac_up(struct emac_priv *priv)
-+{
-+	struct platform_device *pdev = priv->pdev;
-+	struct net_device *ndev = priv->ndev;
-+	int ret;
-+
-+	pm_runtime_get_sync(&pdev->dev);
-+
-+	ret = emac_phy_connect(ndev);
-+	if (ret) {
-+		dev_err(&pdev->dev, "emac_phy_connect failed\n");
-+		goto err;
-+	}
-+
-+	emac_init_hw(priv);
-+
-+	emac_set_mac_addr(priv, ndev->dev_addr);
-+	emac_configure_tx(priv);
-+	emac_configure_rx(priv);
-+
-+	emac_alloc_rx_desc_buffers(priv);
-+
-+	phy_start(ndev->phydev);
-+
-+	ret = request_irq(priv->irq, emac_interrupt_handler, IRQF_SHARED,
-+			  ndev->name, ndev);
-+	if (ret) {
-+		dev_err(&pdev->dev, "request_irq failed\n");
-+		goto request_irq_failed;
-+	}
-+
-+	/* Don't enable MAC interrupts */
-+	emac_wr(priv, MAC_INTERRUPT_ENABLE, 0x0);
-+
-+	/* Enable DMA interrupts */
-+	emac_wr(priv, DMA_INTERRUPT_ENABLE,
-+		MREGBIT_TRANSMIT_TRANSFER_DONE_INTR_ENABLE |
-+			MREGBIT_TRANSMIT_DMA_STOPPED_INTR_ENABLE |
-+			MREGBIT_RECEIVE_TRANSFER_DONE_INTR_ENABLE |
-+			MREGBIT_RECEIVE_DMA_STOPPED_INTR_ENABLE |
-+			MREGBIT_RECEIVE_MISSED_FRAME_INTR_ENABLE);
-+
-+	napi_enable(&priv->napi);
-+
-+	netif_start_queue(ndev);
-+	return 0;
-+
-+request_irq_failed:
-+	emac_reset_hw(priv);
-+	phy_stop(ndev->phydev);
-+	phy_disconnect(ndev->phydev);
-+
-+err:
-+	pm_runtime_put_sync(&pdev->dev);
-+	return ret;
-+}
-+
-+static int emac_down(struct emac_priv *priv)
-+{
-+	struct platform_device *pdev = priv->pdev;
-+	struct net_device *ndev = priv->ndev;
-+
-+	netif_stop_queue(ndev);
-+
-+	phy_stop(ndev->phydev);
-+	phy_disconnect(ndev->phydev);
-+
-+	emac_wr(priv, MAC_INTERRUPT_ENABLE, 0x0);
-+	emac_wr(priv, DMA_INTERRUPT_ENABLE, 0x0);
-+
-+	free_irq(priv->irq, ndev);
-+
-+	napi_disable(&priv->napi);
-+
-+	emac_reset_hw(priv);
-+
-+	pm_runtime_put_sync(&pdev->dev);
-+	return 0;
-+}
-+
-+/* Called when net interface is brought up. */
-+static int emac_open(struct net_device *ndev)
-+{
-+	struct emac_priv *priv = netdev_priv(ndev);
-+	struct device *dev = &priv->pdev->dev;
-+
-+	int ret;
-+
-+	ret = emac_alloc_tx_resources(priv);
-+	if (ret) {
-+		dev_err(dev, "Error when setting up the Tx resources\n");
-+		goto emac_alloc_tx_resource_fail;
-+	}
-+
-+	ret = emac_alloc_rx_resources(priv);
-+	if (ret) {
-+		dev_err(dev, "Error when setting up the Rx resources\n");
-+		goto emac_alloc_rx_resource_fail;
-+	}
-+
-+	ret = emac_up(priv);
-+	if (ret) {
-+		dev_err(dev, "Error when bringing interface up\n");
-+		goto emac_up_fail;
-+	}
-+	return 0;
-+
-+emac_up_fail:
-+	emac_free_rx_resources(priv);
-+emac_alloc_rx_resource_fail:
-+	emac_free_tx_resources(priv);
-+emac_alloc_tx_resource_fail:
-+	return ret;
-+}
-+
-+/* Called when interface is brought down. */
-+static int emac_close(struct net_device *ndev)
-+{
-+	struct emac_priv *priv = netdev_priv(ndev);
-+
-+	emac_down(priv);
-+	emac_free_tx_resources(priv);
-+	emac_free_rx_resources(priv);
-+
-+	return 0;
-+}
-+
-+static const struct ethtool_ops emac_ethtool_ops = {
-+	.get_link_ksettings     = phy_ethtool_get_link_ksettings,
-+	.set_link_ksettings     = phy_ethtool_set_link_ksettings,
-+	.get_drvinfo            = emac_get_drvinfo,
-+	.nway_reset             = phy_ethtool_nway_reset,
-+	.get_link               = ethtool_op_get_link,
-+	.get_strings            = emac_get_strings,
-+	.get_sset_count         = emac_get_sset_count,
-+	.get_ethtool_stats      = emac_get_ethtool_stats,
-+	.get_regs		= emac_ethtool_get_regs,
-+	.get_regs_len		= emac_ethtool_get_regs_len,
-+};
-+
-+static const struct net_device_ops emac_netdev_ops = {
-+	.ndo_open               = emac_open,
-+	.ndo_stop               = emac_close,
-+	.ndo_start_xmit         = emac_start_xmit,
-+	.ndo_set_mac_address    = emac_set_mac_address,
-+	.ndo_eth_ioctl          = phy_do_ioctl_running,
-+	.ndo_change_mtu         = emac_change_mtu,
-+	.ndo_tx_timeout         = emac_tx_timeout,
-+	.ndo_set_rx_mode        = emac_rx_mode_set,
-+};
-+
-+/* Currently we always use 15.6 ps/step for the delay line */
-+
-+static u32 delay_ps_to_unit(u32 ps)
-+{
-+	return DIV_ROUND_CLOSEST(ps * 10, 156);
-+}
-+
-+static u32 delay_unit_to_ps(u32 unit)
-+{
-+	return DIV_ROUND_CLOSEST(unit * 156, 10);
-+}
-+
-+#define EMAC_MAX_DELAY_UNIT \
-+	(EMAC_TX_DLINE_CODE_MASK >> EMAC_TX_DLINE_CODE_SHIFT)
-+
-+/* Minus one just to be safe from rounding errors */
-+#define EMAC_MAX_DELAY_PS	(delay_unit_to_ps(EMAC_MAX_DELAY_UNIT - 1))
-+
-+static int emac_config_dt(struct platform_device *pdev, struct emac_priv *priv)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct device *dev = &pdev->dev;
-+	u8 mac_addr[ETH_ALEN] = { 0 };
-+	int ret;
-+
-+	priv->iobase = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(priv->iobase))
-+		return dev_err_probe(dev, PTR_ERR(priv->iobase),
-+				     "ioremap failed\n");
-+
-+	priv->regmap_apmu =
-+		syscon_regmap_lookup_by_phandle_args(np, "spacemit,apmu", 1,
-+						     &priv->regmap_apmu_offset);
-+
-+	if (IS_ERR(priv->regmap_apmu))
-+		return dev_err_probe(dev, PTR_ERR(priv->regmap_apmu),
-+				     "failed to get syscon\n");
-+
-+	priv->irq = platform_get_irq(pdev, 0);
-+	if (priv->irq < 0)
-+		return -ENXIO;
-+
-+	ret = of_get_mac_address(np, mac_addr);
-+	if (ret) {
-+		if (ret == -EPROBE_DEFER)
-+			return dev_err_probe(dev, ret,
-+					     "Can't get MAC address\n");
-+
-+		dev_info(&pdev->dev, "Using random MAC address\n");
-+		eth_hw_addr_random(priv->ndev);
-+	} else {
-+		eth_hw_addr_set(priv->ndev, mac_addr);
-+	}
-+
-+	priv->tx_delay = 0;
-+	priv->rx_delay = 0;
-+
-+	of_property_read_u32(np, "tx-internal-delay-ps", &priv->tx_delay);
-+	of_property_read_u32(np, "rx-internal-delay-ps", &priv->rx_delay);
-+
-+	if (priv->tx_delay > EMAC_MAX_DELAY_PS) {
-+		dev_err(&pdev->dev,
-+			"tx-internal-delay-ps too large: max %d, got %d",
-+			EMAC_MAX_DELAY_PS, priv->tx_delay);
-+		return -EINVAL;
-+	}
-+
-+	if (priv->rx_delay > EMAC_MAX_DELAY_PS) {
-+		dev_err(&pdev->dev,
-+			"rx-internal-delay-ps too large: max %d, got %d",
-+			EMAC_MAX_DELAY_PS, priv->rx_delay);
-+		return -EINVAL;
-+	}
-+
-+	priv->tx_delay = delay_ps_to_unit(priv->tx_delay);
-+	priv->rx_delay = delay_ps_to_unit(priv->rx_delay);
-+
-+	return 0;
-+}
-+
-+static int emac_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct reset_control *reset;
-+	struct net_device *ndev;
-+	struct emac_priv *priv;
-+	int ret;
-+
-+	ndev = devm_alloc_etherdev(dev, sizeof(struct emac_priv));
-+	if (!ndev)
-+		return -ENOMEM;
-+
-+	ndev->hw_features = NETIF_F_SG;
-+	ndev->features |= ndev->hw_features;
-+
-+	ndev->min_mtu = ETH_MIN_MTU;
-+	ndev->max_mtu = EMAC_RX_BUF_4K - (ETH_HLEN + ETH_FCS_LEN);
-+
-+	priv = netdev_priv(ndev);
-+	priv->ndev = ndev;
-+	priv->pdev = pdev;
-+	platform_set_drvdata(pdev, priv);
-+	priv->hw_stats = devm_kzalloc(dev, sizeof(*priv->hw_stats), GFP_KERNEL);
-+	if (!priv->hw_stats) {
-+		dev_err(dev, "Failed to allocate memory for stats\n");
-+		ret = -ENOMEM;
-+		goto err;
-+	}
-+
-+	ret = emac_config_dt(pdev, priv);
-+	if (ret < 0) {
-+		dev_err(dev, "Configuration failed\n");
-+		goto err;
-+	}
-+
-+	ndev->watchdog_timeo = 5 * HZ;
-+	ndev->base_addr = (unsigned long)priv->iobase;
-+	ndev->irq = priv->irq;
-+
-+	ndev->ethtool_ops = &emac_ethtool_ops;
-+	ndev->netdev_ops = &emac_netdev_ops;
-+
-+	devm_pm_runtime_enable(&pdev->dev);
-+
-+	priv->bus_clk = devm_clk_get_enabled(&pdev->dev, NULL);
-+	if (IS_ERR(priv->bus_clk)) {
-+		ret = dev_err_probe(dev, PTR_ERR(priv->bus_clk),
-+				    "Failed to get clock\n");
-+		goto err;
-+	}
-+
-+	reset = devm_reset_control_get_optional_exclusive_deasserted(&pdev->dev,
-+								     NULL);
-+	if (IS_ERR(reset)) {
-+		ret = dev_err_probe(dev, PTR_ERR(reset),
-+				    "Failed to get reset\n");
-+		goto err;
-+	}
-+
-+	emac_sw_init(priv);
-+
-+	if (of_phy_is_fixed_link(dev->of_node)) {
-+		ret = of_phy_register_fixed_link(dev->of_node);
-+		if (ret) {
-+			dev_err_probe(dev, ret,
-+				      "Failed to register fixed-link");
-+			goto err_timer_delete;
-+		}
-+	}
-+
-+	ret = emac_mdio_init(priv);
-+	if (ret)
-+		goto err_timer_delete;
-+
-+	SET_NETDEV_DEV(ndev, &pdev->dev);
-+
-+	ret = devm_register_netdev(dev, ndev);
-+	if (ret) {
-+		dev_err(dev, "devm_register_netdev failed\n");
-+		goto err_timer_delete;
-+	}
-+
-+	netif_napi_add(ndev, &priv->napi, emac_rx_poll);
-+	netif_carrier_off(ndev);
-+
-+	return 0;
-+
-+err_timer_delete:
-+	timer_delete_sync(&priv->txtimer);
-+err:
-+	return ret;
-+}
-+
-+static void emac_remove(struct platform_device *pdev)
-+{
-+	struct emac_priv *priv = platform_get_drvdata(pdev);
-+
-+	emac_reset_hw(priv);
-+}
-+
-+static int emac_resume(struct device *dev)
-+{
-+	struct emac_priv *priv = dev_get_drvdata(dev);
-+	struct net_device *ndev = priv->ndev;
-+	int ret;
-+
-+	ret = clk_prepare_enable(priv->bus_clk);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to enable bus clock: %d\n", ret);
-+		return ret;
-+	}
-+
-+	if (!netif_running(ndev))
-+		return 0;
-+
-+	emac_open(ndev);
-+	netif_device_attach(ndev);
-+	return 0;
-+}
-+
-+static int emac_suspend(struct device *dev)
-+{
-+	struct emac_priv *priv = dev_get_drvdata(dev);
-+	struct net_device *ndev = priv->ndev;
-+
-+	if (!ndev || !netif_running(ndev)) {
-+		clk_disable_unprepare(priv->bus_clk);
-+		return 0;
-+	}
-+
-+	emac_close(ndev);
-+	clk_disable_unprepare(priv->bus_clk);
-+	netif_device_detach(ndev);
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops emac_pm_ops = {
-+	SYSTEM_SLEEP_PM_OPS(emac_suspend, emac_resume)
-+};
-+
-+static const struct of_device_id emac_of_match[] = {
-+	{ .compatible = "spacemit,k1-emac" },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, emac_of_match);
-+
-+static struct platform_driver emac_driver = {
-+	.probe = emac_probe,
-+	.remove = emac_remove,
-+	.driver = {
-+		.name = DRIVER_NAME,
-+		.of_match_table = of_match_ptr(emac_of_match),
-+		.pm = &emac_pm_ops,
-+	},
-+};
-+module_platform_driver(emac_driver);
-+
-+MODULE_DESCRIPTION("SpacemiT K1 Ethernet driver");
-+MODULE_AUTHOR("Vivian Wang <wangruikang@iscas.ac.cn>");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/net/ethernet/spacemit/k1_emac.h b/drivers/net/ethernet/spacemit/k1_emac.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..b4ccd938a46c0062c48b4a6b5a4f2a57afa01abd
---- /dev/null
-+++ b/drivers/net/ethernet/spacemit/k1_emac.h
-@@ -0,0 +1,420 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * SpacemiT K1 Ethernet hardware definitions
-+ *
-+ * Copyright (C) 2023-2025 SpacemiT (Hangzhou) Technology Co. Ltd
-+ * Copyright (C) 2025 Vivian Wang <wangruikang@iscas.ac.cn>
-+ */
-+
-+#ifndef _K1_EMAC_H_
-+#define _K1_EMAC_H_
-+
-+/* APMU syscon registers */
-+
-+#define APMU_EMAC_CTRL_REG				0x0
-+
-+#define PHY_INTF_RGMII					BIT(2)
-+
-+/*
-+ * Only valid for RMII mode
-+ * 0: Ref clock from External PHY
-+ * 1: Ref clock from SoC
-+ */
-+#define REF_CLK_SEL					BIT(3)
-+
-+/*
-+ * Function clock select
-+ * 0: 208 MHz
-+ * 1: 312 MHz
-+ */
-+#define FUNC_CLK_SEL					BIT(4)
-+
-+/* Only valid for RMII, invert TX clk */
-+#define RMII_TX_CLK_SEL					BIT(6)
-+
-+/* Only valid for RMII, invert RX clk */
-+#define RMII_RX_CLK_SEL					BIT(7)
-+
-+/*
-+ * Only valid for RGMII
-+ * 0: TX clk from RX clk
-+ * 1: TX clk from SoC
-+ */
-+#define RGMII_TX_CLK_SEL				BIT(8)
-+
-+#define PHY_IRQ_EN					BIT(12)
-+#define AXI_SINGLE_ID					BIT(13)
-+
-+#define RMII_TX_PHASE_SHIFT				16
-+#define RMII_TX_PHASE_MASK				GENMASK(18, 16)
-+#define RMII_RX_PHASE_SHIFT				20
-+#define RMII_RX_PHASE_MASK				GENMASK(22, 20)
-+
-+#define RGMII_TX_PHASE_SHIFT				24
-+#define RGMII_TX_PHASE_MASK				GENMASK(26, 24)
-+#define RGMII_RX_PHASE_SHIFT				28
-+#define RGMII_RX_PHASE_MASK				GENMASK(30, 28)
-+
-+#define APMU_EMAC_DLINE_REG				0x4
-+
-+#define EMAC_RX_DLINE_EN				BIT(0)
-+#define EMAC_RX_DLINE_STEP_SHIFT			4
-+#define EMAC_RX_DLINE_STEP_MASK				GENMASK(5, 4)
-+#define EMAC_RX_DLINE_CODE_SHIFT			8
-+#define EMAC_RX_DLINE_CODE_MASK				GENMASK(15, 8)
-+
-+#define EMAC_TX_DLINE_EN				BIT(16)
-+#define EMAC_TX_DLINE_STEP_SHIFT			20
-+#define EMAC_TX_DLINE_STEP_MASK				GENMASK(21, 20)
-+#define EMAC_TX_DLINE_CODE_SHIFT			24
-+#define EMAC_TX_DLINE_CODE_MASK				GENMASK(31, 24)
-+
-+#define EMAC_DLINE_STEP_15P6				0  /* 15.6 ps/step */
-+#define EMAC_DLINE_STEP_24P4				1  /* 24.4 ps/step */
-+#define EMAC_DLINE_STEP_29P7				2  /* 29.7 ps/step */
-+#define EMAC_DLINE_STEP_35P1				3  /* 35.1 ps/step */
-+
-+/* DMA register set */
-+#define DMA_CONFIGURATION				0x0000
-+#define DMA_CONTROL					0x0004
-+#define DMA_STATUS_IRQ					0x0008
-+#define DMA_INTERRUPT_ENABLE				0x000c
-+
-+#define DMA_TRANSMIT_AUTO_POLL_COUNTER			0x0010
-+#define DMA_TRANSMIT_POLL_DEMAND			0x0014
-+#define DMA_RECEIVE_POLL_DEMAND				0x0018
-+
-+#define DMA_TRANSMIT_BASE_ADDRESS			0x001c
-+#define DMA_RECEIVE_BASE_ADDRESS			0x0020
-+#define DMA_MISSED_FRAME_COUNTER			0x0024
-+#define DMA_STOP_FLUSH_COUNTER				0x0028
-+
-+#define DMA_RECEIVE_IRQ_MITIGATION_CTRL			0x002c
-+
-+#define DMA_CURRENT_TRANSMIT_DESCRIPTOR_POINTER		0x0030
-+#define DMA_CURRENT_TRANSMIT_BUFFER_POINTER		0x0034
-+#define DMA_CURRENT_RECEIVE_DESCRIPTOR_POINTER		0x0038
-+#define DMA_CURRENT_RECEIVE_BUFFER_POINTER		0x003c
-+
-+/* MAC Register set */
-+#define MAC_GLOBAL_CONTROL				0x0100
-+#define MAC_TRANSMIT_CONTROL				0x0104
-+#define MAC_RECEIVE_CONTROL				0x0108
-+#define MAC_MAXIMUM_FRAME_SIZE				0x010c
-+#define MAC_TRANSMIT_JABBER_SIZE			0x0110
-+#define MAC_RECEIVE_JABBER_SIZE				0x0114
-+#define MAC_ADDRESS_CONTROL				0x0118
-+#define MAC_MDIO_CLK_DIV				0x011c
-+#define MAC_ADDRESS1_HIGH				0x0120
-+#define MAC_ADDRESS1_MED				0x0124
-+#define MAC_ADDRESS1_LOW				0x0128
-+#define MAC_ADDRESS2_HIGH				0x012c
-+#define MAC_ADDRESS2_MED				0x0130
-+#define MAC_ADDRESS2_LOW				0x0134
-+#define MAC_ADDRESS3_HIGH				0x0138
-+#define MAC_ADDRESS3_MED				0x013c
-+#define MAC_ADDRESS3_LOW				0x0140
-+#define MAC_ADDRESS4_HIGH				0x0144
-+#define MAC_ADDRESS4_MED				0x0148
-+#define MAC_ADDRESS4_LOW				0x014c
-+#define MAC_MULTICAST_HASH_TABLE1			0x0150
-+#define MAC_MULTICAST_HASH_TABLE2			0x0154
-+#define MAC_MULTICAST_HASH_TABLE3			0x0158
-+#define MAC_MULTICAST_HASH_TABLE4			0x015c
-+#define MAC_FC_CONTROL					0x0160
-+#define MAC_FC_PAUSE_FRAME_GENERATE			0x0164
-+#define MAC_FC_SOURCE_ADDRESS_HIGH			0x0168
-+#define MAC_FC_SOURCE_ADDRESS_MED			0x016c
-+#define MAC_FC_SOURCE_ADDRESS_LOW			0x0170
-+#define MAC_FC_DESTINATION_ADDRESS_HIGH			0x0174
-+#define MAC_FC_DESTINATION_ADDRESS_MED			0x0178
-+#define MAC_FC_DESTINATION_ADDRESS_LOW			0x017c
-+#define MAC_FC_PAUSE_TIME_VALUE				0x0180
-+#define MAC_MDIO_CONTROL				0x01a0
-+#define MAC_MDIO_DATA					0x01a4
-+#define MAC_RX_STATCTR_CONTROL				0x01a8
-+#define MAC_RX_STATCTR_DATA_HIGH			0x01ac
-+#define MAC_RX_STATCTR_DATA_LOW				0x01b0
-+#define MAC_TX_STATCTR_CONTROL				0x01b4
-+#define MAC_TX_STATCTR_DATA_HIGH			0x01b8
-+#define MAC_TX_STATCTR_DATA_LOW				0x01bc
-+#define MAC_TRANSMIT_FIFO_ALMOST_FULL			0x01c0
-+#define MAC_TRANSMIT_PACKET_START_THRESHOLD		0x01c4
-+#define MAC_RECEIVE_PACKET_START_THRESHOLD		0x01c8
-+#define MAC_STATUS_IRQ					0x01e0
-+#define MAC_INTERRUPT_ENABLE				0x01e4
-+
-+/* Used for register dump */
-+#define EMAC_DMA_REG_CNT		16
-+#define EMAC_MAC_REG_CNT		124
-+
-+/* DMA_CONFIGURATION (0x0000) */
-+
-+/*
-+ * 0-DMA controller in normal operation mode,
-+ * 1-DMA controller reset to default state,
-+ * clearing all internal state information
-+ */
-+#define MREGBIT_SOFTWARE_RESET				BIT(0)
-+
-+#define MREGBIT_BURST_1WORD				BIT(1)
-+#define MREGBIT_BURST_2WORD				BIT(2)
-+#define MREGBIT_BURST_4WORD				BIT(3)
-+#define MREGBIT_BURST_8WORD				BIT(4)
-+#define MREGBIT_BURST_16WORD				BIT(5)
-+#define MREGBIT_BURST_32WORD				BIT(6)
-+#define MREGBIT_BURST_64WORD				BIT(7)
-+#define MREGBIT_BURST_LENGTH				GENMASK(7, 1)
-+#define MREGBIT_DESCRIPTOR_SKIP_LENGTH			GENMASK(12, 8)
-+
-+/* For Receive and Transmit DMA operate in Big-Endian mode for Descriptors. */
-+#define MREGBIT_DESCRIPTOR_BYTE_ORDERING		BIT(13)
-+
-+#define MREGBIT_BIG_LITLE_ENDIAN			BIT(14)
-+#define MREGBIT_TX_RX_ARBITRATION			BIT(15)
-+#define MREGBIT_WAIT_FOR_DONE				BIT(16)
-+#define MREGBIT_STRICT_BURST				BIT(17)
-+#define MREGBIT_DMA_64BIT_MODE				BIT(18)
-+
-+/* DMA_CONTROL (0x0004) */
-+#define MREGBIT_START_STOP_TRANSMIT_DMA			BIT(0)
-+#define MREGBIT_START_STOP_RECEIVE_DMA			BIT(1)
-+
-+/* DMA_STATUS_IRQ (0x0008) */
-+#define MREGBIT_TRANSMIT_TRANSFER_DONE_IRQ		BIT(0)
-+#define MREGBIT_TRANSMIT_DES_UNAVAILABLE_IRQ		BIT(1)
-+#define MREGBIT_TRANSMIT_DMA_STOPPED_IRQ		BIT(2)
-+#define MREGBIT_RECEIVE_TRANSFER_DONE_IRQ		BIT(4)
-+#define MREGBIT_RECEIVE_DES_UNAVAILABLE_IRQ		BIT(5)
-+#define MREGBIT_RECEIVE_DMA_STOPPED_IRQ			BIT(6)
-+#define MREGBIT_RECEIVE_MISSED_FRAME_IRQ		BIT(7)
-+#define MREGBIT_MAC_IRQ					BIT(8)
-+#define MREGBIT_TRANSMIT_DMA_STATE			GENMASK(18, 16)
-+#define MREGBIT_RECEIVE_DMA_STATE			GENMASK(23, 20)
-+
-+/* DMA_INTERRUPT_ENABLE (0x000c) */
-+#define MREGBIT_TRANSMIT_TRANSFER_DONE_INTR_ENABLE	BIT(0)
-+#define MREGBIT_TRANSMIT_DES_UNAVAILABLE_INTR_ENABLE	BIT(1)
-+#define MREGBIT_TRANSMIT_DMA_STOPPED_INTR_ENABLE	BIT(2)
-+#define MREGBIT_RECEIVE_TRANSFER_DONE_INTR_ENABLE	BIT(4)
-+#define MREGBIT_RECEIVE_DES_UNAVAILABLE_INTR_ENABLE	BIT(5)
-+#define MREGBIT_RECEIVE_DMA_STOPPED_INTR_ENABLE		BIT(6)
-+#define MREGBIT_RECEIVE_MISSED_FRAME_INTR_ENABLE	BIT(7)
-+#define MREGBIT_MAC_INTR_ENABLE				BIT(8)
-+
-+/* DMA_RECEIVE_IRQ_MITIGATION_CTRL (0x002c) */
-+#define MREGBIT_RECEIVE_IRQ_FRAME_COUNTER_MASK		GENMASK(7, 0)
-+#define MREGBIT_RECEIVE_IRQ_TIMEOUT_COUNTER_SHIFT	8
-+#define MREGBIT_RECEIVE_IRQ_TIMEOUT_COUNTER_MASK	GENMASK(27, 8)
-+#define MREGBIT_RECEIVE_IRQ_FRAME_COUNTER_MODE		BIT(30)
-+#define MREGBIT_RECEIVE_IRQ_MITIGATION_ENABLE		BIT(31)
-+
-+/* MAC_GLOBAL_CONTROL (0x0100) */
-+#define MREGBIT_SPEED					GENMASK(1, 0)
-+#define MREGBIT_SPEED_10M				0x0
-+#define MREGBIT_SPEED_100M				BIT(0)
-+#define MREGBIT_SPEED_1000M				BIT(1)
-+#define MREGBIT_FULL_DUPLEX_MODE			BIT(2)
-+#define MREGBIT_RESET_RX_STAT_COUNTERS			BIT(3)
-+#define MREGBIT_RESET_TX_STAT_COUNTERS			BIT(4)
-+#define MREGBIT_UNICAST_WAKEUP_MODE			BIT(8)
-+#define MREGBIT_MAGIC_PACKET_WAKEUP_MODE		BIT(9)
-+
-+/* MAC_TRANSMIT_CONTROL (0x0104) */
-+#define MREGBIT_TRANSMIT_ENABLE				BIT(0)
-+#define MREGBIT_INVERT_FCS				BIT(1)
-+#define MREGBIT_DISABLE_FCS_INSERT			BIT(2)
-+#define MREGBIT_TRANSMIT_AUTO_RETRY			BIT(3)
-+#define MREGBIT_IFG_LEN					GENMASK(6, 4)
-+#define MREGBIT_PREAMBLE_LENGTH				GENMASK(9, 7)
-+
-+/* MAC_RECEIVE_CONTROL (0x0108) */
-+#define MREGBIT_RECEIVE_ENABLE				BIT(0)
-+#define MREGBIT_DISABLE_FCS_CHECK			BIT(1)
-+#define MREGBIT_STRIP_FCS				BIT(2)
-+#define MREGBIT_STORE_FORWARD				BIT(3)
-+#define MREGBIT_STATUS_FIRST				BIT(4)
-+#define MREGBIT_PASS_BAD_FRAMES				BIT(5)
-+#define MREGBIT_ACOOUNT_VLAN				BIT(6)
-+
-+/* MAC_MAXIMUM_FRAME_SIZE (0x010c) */
-+#define MREGBIT_MAX_FRAME_SIZE				GENMASK(13, 0)
-+
-+/* MAC_TRANSMIT_JABBER_SIZE (0x0110) */
-+#define MREGBIT_TRANSMIT_JABBER_SIZE			GENMASK(15, 0)
-+
-+/* MAC_RECEIVE_JABBER_SIZE (0x0114) */
-+#define MREGBIT_RECEIVE_JABBER_SIZE			GENMASK(15, 0)
-+
-+/* MAC_ADDRESS_CONTROL (0x0118) */
-+#define MREGBIT_MAC_ADDRESS1_ENABLE			BIT(0)
-+#define MREGBIT_MAC_ADDRESS2_ENABLE			BIT(1)
-+#define MREGBIT_MAC_ADDRESS3_ENABLE			BIT(2)
-+#define MREGBIT_MAC_ADDRESS4_ENABLE			BIT(3)
-+#define MREGBIT_INVERSE_MAC_ADDRESS1_ENABLE		BIT(4)
-+#define MREGBIT_INVERSE_MAC_ADDRESS2_ENABLE		BIT(5)
-+#define MREGBIT_INVERSE_MAC_ADDRESS3_ENABLE		BIT(6)
-+#define MREGBIT_INVERSE_MAC_ADDRESS4_ENABLE		BIT(7)
-+#define MREGBIT_PROMISCUOUS_MODE			BIT(8)
-+
-+/* MAC_FC_CONTROL (0x0160) */
-+#define MREGBIT_FC_DECODE_ENABLE			BIT(0)
-+#define MREGBIT_FC_GENERATION_ENABLE			BIT(1)
-+#define MREGBIT_AUTO_FC_GENERATION_ENABLE		BIT(2)
-+#define MREGBIT_MULTICAST_MODE				BIT(3)
-+#define MREGBIT_BLOCK_PAUSE_FRAMES			BIT(4)
-+
-+/* MAC_FC_PAUSE_FRAME_GENERATE (0x0164) */
-+#define MREGBIT_GENERATE_PAUSE_FRAME			BIT(0)
-+
-+/* MAC_FC_PAUSE_TIME_VALUE (0x0180) */
-+#define MREGBIT_MAC_FC_PAUSE_TIME			GENMASK(15, 0)
-+
-+/* MAC_MDIO_CONTROL (0x01a0) */
-+#define MREGBIT_PHY_ADDRESS				GENMASK(4, 0)
-+#define MREGBIT_REGISTER_ADDRESS			GENMASK(9, 5)
-+#define MREGBIT_MDIO_READ_WRITE				BIT(10)
-+#define MREGBIT_START_MDIO_TRANS			BIT(15)
-+
-+/* MAC_MDIO_DATA (0x01a4) */
-+#define MREGBIT_MDIO_DATA				GENMASK(15, 0)
-+
-+/* MAC_RX_STATCTR_CONTROL (0x01a8) */
-+#define MREGBIT_RX_COUNTER_NUMBER			GENMASK(4, 0)
-+#define MREGBIT_START_RX_COUNTER_READ			BIT(15)
-+
-+/* MAC_RX_STATCTR_DATA_HIGH (0x01ac) */
-+#define MREGBIT_RX_STATCTR_DATA_HIGH			GENMASK(15, 0)
-+/* MAC_RX_STATCTR_DATA_LOW (0x01b0) */
-+#define MREGBIT_RX_STATCTR_DATA_LOW			GENMASK(15, 0)
-+
-+/* MAC_TX_STATCTR_CONTROL (0x01b4) */
-+#define MREGBIT_TX_COUNTER_NUMBER			GENMASK(4, 0)
-+#define MREGBIT_START_TX_COUNTER_READ			BIT(15)
-+
-+/* MAC_TX_STATCTR_DATA_HIGH (0x01b8) */
-+#define MREGBIT_TX_STATCTR_DATA_HIGH			GENMASK(15, 0)
-+/* MAC_TX_STATCTR_DATA_LOW (0x01bc) */
-+#define MREGBIT_TX_STATCTR_DATA_LOW			GENMASK(15, 0)
-+
-+/* MAC_TRANSMIT_FIFO_ALMOST_FULL (0x01c0) */
-+#define MREGBIT_TX_FIFO_AF				GENMASK(13, 0)
-+
-+/* MAC_TRANSMIT_PACKET_START_THRESHOLD (0x01c4) */
-+#define MREGBIT_TX_PACKET_START_THRESHOLD		GENMASK(13, 0)
-+
-+/* MAC_RECEIVE_PACKET_START_THRESHOLD (0x01c8) */
-+#define MREGBIT_RX_PACKET_START_THRESHOLD		GENMASK(13, 0)
-+
-+/* MAC_STATUS_IRQ (0x01e0) */
-+#define MREGBIT_MAC_UNDERRUN_IRQ			BIT(0)
-+#define MREGBIT_MAC_JABBER_IRQ				BIT(1)
-+
-+/* MAC_INTERRUPT_ENABLE (0x01e4) */
-+#define MREGBIT_MAC_UNDERRUN_INTERRUPT_ENABLE		BIT(0)
-+#define MREGBIT_JABBER_INTERRUPT_ENABLE			BIT(1)
-+
-+/* RX DMA descriptor */
-+
-+#define RX_DESC_0_FRAME_PACKET_LENGTH_SHIFT		0
-+#define RX_DESC_0_FRAME_PACKET_LENGTH_MASK		GENMASK(13, 0)
-+#define RX_DESC_0_FRAME_ALIGN_ERR			BIT(14)
-+#define RX_DESC_0_FRAME_RUNT				BIT(15)
-+#define RX_DESC_0_FRAME_ETHERNET_TYPE			BIT(16)
-+#define RX_DESC_0_FRAME_VLAN				BIT(17)
-+#define RX_DESC_0_FRAME_MULTICAST			BIT(18)
-+#define RX_DESC_0_FRAME_BROADCAST			BIT(19)
-+#define RX_DESC_0_FRAME_CRC_ERR				BIT(20)
-+#define RX_DESC_0_FRAME_MAX_LEN_ERR			BIT(21)
-+#define RX_DESC_0_FRAME_JABBER_ERR			BIT(22)
-+#define RX_DESC_0_FRAME_LENGTH_ERR			BIT(23)
-+#define RX_DESC_0_FRAME_MAC_ADDR1_MATCH			BIT(24)
-+#define RX_DESC_0_FRAME_MAC_ADDR2_MATCH			BIT(25)
-+#define RX_DESC_0_FRAME_MAC_ADDR3_MATCH			BIT(26)
-+#define RX_DESC_0_FRAME_MAC_ADDR4_MATCH			BIT(27)
-+#define RX_DESC_0_FRAME_PAUSE_CTRL			BIT(28)
-+#define RX_DESC_0_LAST_DESCRIPTOR			BIT(29)
-+#define RX_DESC_0_FIRST_DESCRIPTOR			BIT(30)
-+#define RX_DESC_0_OWN					BIT(31)
-+
-+#define RX_DESC_1_BUFFER_SIZE_1_SHIFT			0
-+#define RX_DESC_1_BUFFER_SIZE_1_MASK			GENMASK(11, 0)
-+#define RX_DESC_1_BUFFER_SIZE_2_SHIFT			12
-+#define RX_DESC_1_BUFFER_SIZE_2_MASK			GENMASK(23, 12)
-+							/* [24] reserved */
-+#define RX_DESC_1_SECOND_ADDRESS_CHAINED		BIT(25)
-+#define RX_DESC_1_END_RING				BIT(26)
-+							/* [29:27] reserved */
-+#define RX_DESC_1_RX_TIMESTAMP				BIT(30)
-+#define RX_DESC_1_PTP_PKT				BIT(31)
-+
-+/* TX DMA descriptor */
-+
-+							/* [29:0] unused */
-+#define TX_DESC_0_TX_TIMESTAMP				BIT(30)
-+#define TX_DESC_0_OWN					BIT(31)
-+
-+#define TX_DESC_1_BUFFER_SIZE_1_SHIFT			0
-+#define TX_DESC_1_BUFFER_SIZE_1_MASK			GENMASK(11, 0)
-+#define TX_DESC_1_BUFFER_SIZE_2_SHIFT			12
-+#define TX_DESC_1_BUFFER_SIZE_2_MASK			GENMASK(23, 12)
-+#define TX_DESC_1_FORCE_EOP_ERROR			BIT(24)
-+#define TX_DESC_1_SECOND_ADDRESS_CHAINED		BIT(25)
-+#define TX_DESC_1_END_RING				BIT(26)
-+#define TX_DESC_1_DISABLE_PADDING			BIT(27)
-+#define TX_DESC_1_ADD_CRC_DISABLE			BIT(28)
-+#define TX_DESC_1_FIRST_SEGMENT				BIT(29)
-+#define TX_DESC_1_LAST_SEGMENT				BIT(30)
-+#define TX_DESC_1_INTERRUPT_ON_COMPLETION		BIT(31)
-+
-+struct emac_desc {
-+	u32 desc0;
-+	u32 desc1;
-+	u32 buffer_addr_1;
-+	u32 buffer_addr_2;
-+};
-+
-+struct emac_hw_stats {
-+	u32 tx_ok_pkts;
-+	u32 tx_total_pkts;
-+	u32 tx_ok_bytes;
-+	u32 tx_err_pkts;
-+	u32 tx_singleclsn_pkts;
-+	u32 tx_multiclsn_pkts;
-+	u32 tx_lateclsn_pkts;
-+	u32 tx_excessclsn_pkts;
-+	u32 tx_unicast_pkts;
-+	u32 tx_multicast_pkts;
-+	u32 tx_broadcast_pkts;
-+	u32 tx_pause_pkts;
-+	u32 rx_ok_pkts;
-+	u32 rx_total_pkts;
-+	u32 rx_crc_err_pkts;
-+	u32 rx_align_err_pkts;
-+	u32 rx_err_total_pkts;
-+	u32 rx_ok_bytes;
-+	u32 rx_total_bytes;
-+	u32 rx_unicast_pkts;
-+	u32 rx_multicast_pkts;
-+	u32 rx_broadcast_pkts;
-+	u32 rx_pause_pkts;
-+	u32 rx_len_err_pkts;
-+	u32 rx_len_undersize_pkts;
-+	u32 rx_len_oversize_pkts;
-+	u32 rx_len_fragment_pkts;
-+	u32 rx_len_jabber_pkts;
-+	u32 rx_64_pkts;
-+	u32 rx_65_127_pkts;
-+	u32 rx_128_255_pkts;
-+	u32 rx_256_511_pkts;
-+	u32 rx_512_1023_pkts;
-+	u32 rx_1024_1518_pkts;
-+	u32 rx_1519_plus_pkts;
-+	u32 rx_drp_fifo_full_pkts;
-+	u32 rx_truncate_fifo_full_pkts;
-+};
-+
-+#define EMAC_TX_STATS_NUM				12
-+#define EMAC_RX_STATS_NUM				25
-+
-+#endif /* _K1_EMAC_H_ */
+> +
+> +/*
+> + * DWC MIPI CSI-2 Host Controller Hardware operation
+> + */
+> +static int dwc_csi_device_pg_enable(struct dwc_csi_device *csidev)
+> +{
+> +	const struct dwc_csi_pix_format *csi_fmt =3D csidev->csi_fmt;
+> +	struct v4l2_subdev *sd =3D &csidev->sd;
+> +	struct v4l2_subdev_state *state;
+> +	struct v4l2_mbus_framefmt *fmt;
+> +	u32 val;
+> +
+> +	if (!csidev->pg_enable)
+> +		return 0;
+> +
+> +	if (!csi_fmt) {
+> +		dev_err(csidev->dev, "CSI pixel format is NULL\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (csi_fmt->data_type !=3D MIPI_CSI2_DT_RGB888) {
+> +		dev_err(csidev->dev, "Pattern generator only support RGB888\n");
 
--- 
-2.49.0
+s/support/supports/
+
+> +		return -EINVAL;
+> +	}
+> +
+> +	state =3D v4l2_subdev_lock_and_get_active_state(sd);
+> +	/* Pattern generator create data stream only according to stream 0 */
+
+s/create/creates/
+
+> +	fmt =3D v4l2_subdev_state_get_format(state, DWC_CSI2RX_PAD_SINK, 0);
+> +
+> +	val =3D CSI2RX_PPI_PG_PATTERN_HRES_HRES(fmt->width);
+> +	dwc_csi_write(csidev, CSI2RX_PPI_PG_PATTERN_HRES, val);
+> +
+> +	val =3D CSI2RX_PPI_PG_PATTERN_VRES_VRES(fmt->height);
+> +	dwc_csi_write(csidev, CSI2RX_PPI_PG_PATTERN_VRES, val);
+> +
+> +	val =3D CSI2RX_PPI_PG_CONFIG_DATA_TYPE(csi_fmt->data_type);
+> +	val |=3D CSI2RX_PPI_PG_CONFIG_VIR_CHAN(0);
+> +	val |=3D CSI2RX_PPI_PG_CONFIG_PG_MODE(csidev->pg_pattern);
+> +	dwc_csi_write(csidev, CSI2RX_PPI_PG_CONFIG, val);
+> +
+> +	/*
+> +	 * Select line start packets to construct vertical
+> +	 * timing information for IPI interface
+> +	 */
+> +	val =3D CSI2RX_IPI_ADV_FEATURES_SYNC_EVENT_MODE;
+> +	val |=3D CSI2RX_IPI_ADV_FEATURES_SYNC_LS_PKT;
+> +	val |=3D CSI2RX_IPI_ADV_FEATURES_LINE_EVENT_SEL;
+> +	dwc_csi_write(csidev, CSI2RX_IPI_ADV_FEATURES, val);
+> +
+> +	val =3D CSI2RX_PPI_PG_ENABLE_EN;
+> +	dwc_csi_write(csidev, CSI2RX_PPI_PG_ENABLE, val);
+> +
+> +	v4l2_subdev_unlock_state(state);
+> +
+> +	return 0;
+> +}
+> +
+> +static void dwc_csi_device_pg_disable(struct dwc_csi_device *csidev)
+> +{
+> +	dwc_csi_write(csidev, CSI2RX_PPI_PG_ENABLE, 0);
+> +}
+> +
+> +static void dwc_csi_ipi_enable(struct dwc_csi_device *csidev)
+> +{
+> +	u32 val;
+> +
+> +	/* Memory is automatically flushed at each Frame Start */
+> +	val =3D CSI2RX_IPI_MEM_FLUSH_AUTO;
+> +	dwc_csi_write(csidev, CSI2RX_IPI_MEM_FLUSH, val);
+> +
+> +	/* Enable IPI */
+> +	val =3D dwc_csi_read(csidev, CSI2RX_IPI_MODE);
+> +	val |=3D CSI2RX_IPI_MODE_ENABLE;
+> +	dwc_csi_write(csidev, CSI2RX_IPI_MODE, val);
+> +}
+> +
+> +static void dwc_csi_ipi_disable(struct dwc_csi_device *csidev)
+> +{
+> +	dwc_csi_write(csidev, CSI2RX_IPI_MODE, 0);
+> +}
+> +
+> +static void dwc_csi_device_ipi_config(struct dwc_csi_device *csidev)
+> +{
+> +	const struct dwc_csi_pix_format *csi_fmt =3D csidev->csi_fmt;
+> +	u32 val;
+> +
+> +	/* Do IPI soft reset */
+> +	dwc_csi_write(csidev, CSI2RX_IPI_SOFTRSTN, 0x0);
+> +	dwc_csi_write(csidev, CSI2RX_IPI_SOFTRSTN, 0x1);
+
+Use dwc_csi_device_reset()
+
+> +
+> +	/* Select virtual channel and data type to be processed by IPI */
+> +	val =3D CSI2RX_IPI_DATA_TYPE_DT(csi_fmt->data_type);
+> +	dwc_csi_write(csidev, CSI2RX_IPI_DATA_TYPE, val);
+> +
+> +	/* Set virtual channel 0 as default */
+> +	val  =3D CSI2RX_IPI_VCID_VC(0);
+> +	dwc_csi_write(csidev, CSI2RX_IPI_VCID, val);
+> +
+> +	/*
+> +	 * Select IPI camera timing mode and allow the pixel stream
+> +	 * to be non-continuous when pixel interface FIFO is empty
+> +	 */
+> +	val =3D dwc_csi_read(csidev, CSI2RX_IPI_MODE);
+> +	val &=3D ~CSI2RX_IPI_MODE_CONTROLLER;
+> +	val &=3D ~CSI2RX_IPI_MODE_COLOR_MODE16;
+
+So this enables 48 Bit interface, instead of 16 Bit. What does that
+mean given that IPI is an internal IP block?
+
+> +	val |=3D CSI2RX_IPI_MODE_CUT_THROUGH;
+> +	dwc_csi_write(csidev, CSI2RX_IPI_MODE, val);
+> +}
+> +
+> +static void dwc_csi_device_reset(struct dwc_csi_device *csidev)
+> +{
+> +	/* Reset mipi csi host, active low */
+> +	dwc_csi_write(csidev, CSI2RX_HOST_RESETN, 0);
+> +	dwc_csi_write(csidev, CSI2RX_HOST_RESETN, 1);
+> +}
+> +
+> +static void dwc_csi_device_startup(struct dwc_csi_device *csidev)
+> +{
+> +	/* Release DWC_mipi_csi2_host from reset */
+> +	dwc_csi_device_reset(csidev);
+> +
+> +	phy_init(csidev->phy);
+> +
+> +	phy_reset(csidev->phy);
+> +}
+> +
+> +static int dwc_csi_get_dphy_configuration(struct dwc_csi_device *csidev,
+> +					  union phy_configure_opts *opts)
+> +{
+> +	struct phy_configure_opts_mipi_dphy *cfg =3D &opts->mipi_dphy;
+> +	struct v4l2_subdev *source =3D csidev->source_sd;
+> +	s64 link_freq;
+> +
+> +	link_freq =3D v4l2_get_link_freq(source->ctrl_handler,
+> +				       csidev->csi_fmt->width,
+> +				       csidev->bus.num_data_lanes * 2);
+> +	if (link_freq < 0) {
+> +		dev_err(csidev->dev, "Unable to obtain link frequency: %d\n",
+> +			(int)link_freq);
+> +		return link_freq;
+> +	}
+> +
+> +	memset(cfg, 0x0, sizeof(*cfg));
+> +	cfg->hs_clk_rate =3D link_freq * 2;
+> +	cfg->lanes =3D csidev->bus.num_data_lanes;
+> +
+> +	return 0;
+> +}
+> +
+> +static void dwc_csi_dphy_prep(struct dwc_csi_device *csidev)
+> +{
+> +	u32 val;
+> +
+> +	/* Release synopsis DPHY test codes from reset */
+> +	dwc_csi_write(csidev, CSI2RX_DPHY_RSTZ, 0x0);
+> +	dwc_csi_write(csidev, CSI2RX_DPHY_SHUTDOWNZ, 0x0);
+> +
+> +	val =3D dwc_csi_read(csidev, CSI2RX_DPHY_TEST_CTRL0);
+> +	val &=3D ~CSI2RX_DPHY_TEST_CTRL0_TEST_CLR;
+> +	dwc_csi_write(csidev, CSI2RX_DPHY_TEST_CTRL0, val);
+> +
+> +	/*
+> +	 * ndelay is not necessary have MMIO operation, need dummy read to make
+> +	 * sure above write reach target.
+> +	 */
+> +	dwc_csi_read(csidev, CSI2RX_DPHY_TEST_CTRL0);
+> +	/* Wait for at least 15ns */
+> +	ndelay(15);
+
+What does the comment mean? You are reading that register twice, see below.
+If you write to that register, you may need to wait 15ns before reading bac=
+k.
+But reading back, waiting and reading back, doesn't make sense to me.
+
+> +
+> +	val =3D dwc_csi_read(csidev, CSI2RX_DPHY_TEST_CTRL0);
+> +	val |=3D CSI2RX_DPHY_TEST_CTRL0_TEST_CLR;
+> +	dwc_csi_write(csidev, CSI2RX_DPHY_TEST_CTRL0, val);
+> +}
+> +
+> +static void dwc_csi_dphy_release_reset(struct dwc_csi_device *csidev)
+> +{
+> +	/* Release PHY from reset */
+> +	dwc_csi_write(csidev, CSI2RX_DPHY_SHUTDOWNZ, 0x1);
+> +	/*
+> +	 * ndelay is not necessary have MMIO operation, need dummy read to make
+> +	 * sure above write reach target.
+> +	 */
+> +	dwc_csi_read(csidev, CSI2RX_DPHY_SHUTDOWNZ);
+> +	ndelay(5);
+> +	dwc_csi_write(csidev, CSI2RX_DPHY_RSTZ, 0x1);
+> +	dwc_csi_read(csidev, CSI2RX_DPHY_RSTZ);
+> +	ndelay(5);
+> +}
+> +
+> +static int dwc_csi_device_init(struct dwc_csi_device *csidev)
+> +{
+> +	struct device *dev =3D csidev->dev;
+> +	union phy_configure_opts opts;
+> +	u32 phy_stopstate;
+> +	u32 val;
+> +	int ret;
+> +
+> +	ret =3D dwc_csi_get_dphy_configuration(csidev, &opts);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D phy_set_mode(csidev->phy, PHY_MODE_MIPI_DPHY);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D phy_configure(csidev->phy, &opts);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dwc_csi_write(csidev, CSI2RX_HOST_RESETN, 0);
+> +	dwc_csi_dphy_prep(csidev);
+> +	dwc_csi_write(csidev, CSI2RX_N_LANES, CSI2RX_N_LANES_N_LANES(opts.mipi_=
+dphy.lanes));
+> +	ret =3D phy_power_on(csidev->phy);
+> +	dwc_csi_dphy_release_reset(csidev);
+> +	dwc_csi_write(csidev, CSI2RX_HOST_RESETN, 0x1);
+> +
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Check if lanes are in stop state */
+> +	phy_stopstate =3D CSI2RX_DPHY_STOPSTATE_CLK_LANE;
+> +	phy_stopstate |=3D GENMASK(csidev->bus.num_data_lanes - 1, 0);
+> +	ret =3D readl_poll_timeout(csidev->regs + CSI2RX_DPHY_STOPSTATE,
+> +				 val, (val & phy_stopstate) !=3D phy_stopstate,
+> +				 10, 10000);
+> +	if (ret) {
+> +		dev_err(dev, "Lanes are not in stop state(%#x)\n", val);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void dwc_csi_device_hs_rx_start(struct dwc_csi_device *csidev)
+> +{
+> +	dwc_csi_ipi_enable(csidev);
+> +}
+> +
+> +static int dwc_csi_device_hs_rx_stop(struct dwc_csi_device *csidev)
+> +{
+> +	struct device *dev =3D csidev->dev;
+> +	u32 val;
+> +
+> +	phy_power_off(csidev->phy);
+> +	phy_exit(csidev->phy);
+> +	dwc_csi_ipi_disable(csidev);
+> +
+> +	/* Check clock lanes are not in High Speed Mode */
+> +	val =3D dwc_csi_read(csidev, CSI2RX_DPHY_RX_STATUS);
+> +	if (val & CSI2RX_DPHY_RX_STATUS_CLK_LANE_HS) {
+> +		dev_err(dev, "Clock lanes are still in HS mode\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void dwc_csi_device_enable_interrupts(struct dwc_csi_device *csid=
+ev, bool on)
+> +{
+> +	/* Define errors to be enabled */
+> +	dwc_csi_write(csidev, CSI2RX_INT_MSK_DPHY_FATAL, on ? 0x3 : 0);
+> +	dwc_csi_write(csidev, CSI2RX_INT_MSK_PKT_FATAL, on ? 0x3 : 0);
+> +	dwc_csi_write(csidev, CSI2RX_INT_MSK_DPHY, on ? 0x30003 : 0);
+> +	dwc_csi_write(csidev, CSI2RX_INT_MSK_IPI_FATAL, on ? 0x7f : 0);
+> +}
+> +
+> +static void dwc_csi_clear_counters(struct dwc_csi_device *csidev)
+> +{
+> +	unsigned int i;
+> +
+> +	for (i =3D 0; i < DWC_NUM_EVENTS; ++i)
+> +		csidev->events[i].counter =3D 0;
+> +}
+> +
+> +static void dwc_csi_log_counters(struct dwc_csi_device *csidev)
+> +{
+> +	unsigned int i;
+> +	int counter;
+> +
+> +	for (i =3D 0; i < DWC_NUM_EVENTS; ++i) {
+> +		counter =3D csidev->events[i].counter;
+> +		if (counter > 0)
+> +			dev_info(csidev->dev, "%s events: %d\n",
+> +				 csidev->events[i].name,
+> +				 counter);
+> +	}
+> +}
+> +
+> +static void dwc_csi_dump_regs(struct dwc_csi_device *csidev)
+> +{
+> +#define DWC_MIPI_CSIS_DEBUG_REG(name)		{name, #name}
+> +	static const struct {
+> +		u32 offset;
+> +		const char * const name;
+> +	} registers[] =3D {
+> +		DWC_MIPI_CSIS_DEBUG_REG(CSI2RX_VERSION),
+> +		DWC_MIPI_CSIS_DEBUG_REG(CSI2RX_N_LANES),
+> +		DWC_MIPI_CSIS_DEBUG_REG(CSI2RX_HOST_RESETN),
+> +		DWC_MIPI_CSIS_DEBUG_REG(CSI2RX_INT_ST_MAIN),
+> +		DWC_MIPI_CSIS_DEBUG_REG(CSI2RX_DATA_IDS_1_DT),
+> +		DWC_MIPI_CSIS_DEBUG_REG(CSI2RX_DATA_IDS_2_DT),
+> +		DWC_MIPI_CSIS_DEBUG_REG(CSI2RX_DATA_IDS_1_VC),
+> +		DWC_MIPI_CSIS_DEBUG_REG(CSI2RX_DATA_IDS_2_VC),
+> +		DWC_MIPI_CSIS_DEBUG_REG(CSI2RX_DPHY_SHUTDOWNZ),
+> +		DWC_MIPI_CSIS_DEBUG_REG(CSI2RX_DPHY_RSTZ),
+> +		DWC_MIPI_CSIS_DEBUG_REG(CSI2RX_DPHY_RX_STATUS),
+> +		DWC_MIPI_CSIS_DEBUG_REG(CSI2RX_DPHY_STOPSTATE),
+> +		DWC_MIPI_CSIS_DEBUG_REG(CSI2RX_DPHY_TEST_CTRL0),
+> +		DWC_MIPI_CSIS_DEBUG_REG(CSI2RX_DPHY_TEST_CTRL1),
+> +		DWC_MIPI_CSIS_DEBUG_REG(CSI2RX_PPI_PG_PATTERN_VRES),
+> +		DWC_MIPI_CSIS_DEBUG_REG(CSI2RX_PPI_PG_PATTERN_HRES),
+> +		DWC_MIPI_CSIS_DEBUG_REG(CSI2RX_PPI_PG_CONFIG),
+> +		DWC_MIPI_CSIS_DEBUG_REG(CSI2RX_PPI_PG_ENABLE),
+> +		DWC_MIPI_CSIS_DEBUG_REG(CSI2RX_PPI_PG_STATUS),
+> +		DWC_MIPI_CSIS_DEBUG_REG(CSI2RX_IPI_MODE),
+> +		DWC_MIPI_CSIS_DEBUG_REG(CSI2RX_IPI_VCID),
+> +		DWC_MIPI_CSIS_DEBUG_REG(CSI2RX_IPI_DATA_TYPE),
+> +		DWC_MIPI_CSIS_DEBUG_REG(CSI2RX_IPI_MEM_FLUSH),
+> +		DWC_MIPI_CSIS_DEBUG_REG(CSI2RX_IPI_SOFTRSTN),
+> +		DWC_MIPI_CSIS_DEBUG_REG(CSI2RX_IPI_ADV_FEATURES),
+> +		DWC_MIPI_CSIS_DEBUG_REG(CSI2RX_INT_ST_DPHY_FATAL),
+> +		DWC_MIPI_CSIS_DEBUG_REG(CSI2RX_INT_ST_PKT_FATAL),
+> +		DWC_MIPI_CSIS_DEBUG_REG(CSI2RX_INT_ST_DPHY_FATAL),
+> +		DWC_MIPI_CSIS_DEBUG_REG(CSI2RX_INT_ST_IPI_FATAL),
+> +	};
+> +
+> +	unsigned int i;
+> +	u32 cfg;
+> +
+> +	dev_dbg(csidev->dev, "--- REGISTERS ---\n");
+> +
+> +	for (i =3D 0; i < ARRAY_SIZE(registers); i++) {
+> +		cfg =3D dwc_csi_read(csidev, registers[i].offset);
+> +		dev_dbg(csidev->dev, "%14s[0x%02x]: 0x%08x\n",
+> +			registers[i].name, registers[i].offset, cfg);
+> +	}
+> +}
+> +
+> +/*
+> + * V4L2 subdev operations
+> + */
+> +
+> +static inline struct dwc_csi_device *
+> +sd_to_dwc_csi_device(struct v4l2_subdev *sdev)
+> +{
+> +	return container_of(sdev, struct dwc_csi_device, sd);
+> +}
+> +
+> +static int __dwc_csi_subdev_set_routing(struct v4l2_subdev *sd,
+> +					struct v4l2_subdev_state *state,
+> +					struct v4l2_subdev_krouting *routing)
+> +{
+> +	int ret;
+> +
+> +	if (routing->num_routes > V4L2_FRAME_DESC_ENTRY_MAX)
+> +		return -EINVAL;
+> +
+> +	ret =3D v4l2_subdev_routing_validate(sd, routing,
+> +					   V4L2_SUBDEV_ROUTING_ONLY_1_TO_1);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return v4l2_subdev_set_routing_with_fmt(sd, state, routing,
+> +						&dwc_csi_default_fmt);
+> +}
+> +
+> +static int dwc_csi_subdev_init_state(struct v4l2_subdev *sd,
+> +				     struct v4l2_subdev_state *sd_state)
+> +{
+> +	struct v4l2_subdev_route routes[] =3D {
+> +		{
+> +			.sink_pad =3D DWC_CSI2RX_PAD_SINK,
+> +			.sink_stream =3D 0,
+> +			.source_pad =3D DWC_CSI2RX_PAD_SOURCE,
+> +			.source_stream =3D 0,
+> +			.flags =3D V4L2_SUBDEV_ROUTE_FL_ACTIVE,
+> +		},
+> +	};
+> +
+> +	struct v4l2_subdev_krouting routing =3D {
+> +		.num_routes =3D ARRAY_SIZE(routes),
+> +		.routes =3D routes,
+> +	};
+> +
+> +	return __dwc_csi_subdev_set_routing(sd, sd_state, &routing);
+> +}
+> +
+> +static int dwc_csi_subdev_enum_mbus_code(struct v4l2_subdev *sd,
+> +					 struct v4l2_subdev_state *sd_state,
+> +					 struct v4l2_subdev_mbus_code_enum *code)
+> +{
+> +	/*
+> +	 * The CSIS can't transcode in any way, the source format is identical
+> +	 * to the sink format.
+> +	 */
+> +	if (code->pad =3D=3D DWC_CSI2RX_PAD_SOURCE) {
+> +		struct v4l2_mbus_framefmt *fmt;
+> +
+> +		if (code->index > 0)
+> +			return -EINVAL;
+> +
+> +		fmt =3D v4l2_subdev_state_get_format(sd_state, code->pad,
+> +						   code->stream);
+> +		code->code =3D fmt->code;
+> +		return 0;
+> +	}
+> +
+> +	if (code->index >=3D ARRAY_SIZE(dwc_csi_formats))
+> +		return -EINVAL;
+> +
+> +	code->code =3D dwc_csi_formats[code->index].code;
+> +
+> +	return 0;
+> +}
+> +
+> +static int dwc_csi_subdev_set_fmt(struct v4l2_subdev *sd,
+> +				  struct v4l2_subdev_state *sd_state,
+> +				  struct v4l2_subdev_format *sdformat)
+> +{
+> +	struct dwc_csi_device *csidev =3D sd_to_dwc_csi_device(sd);
+> +	struct dwc_csi_pix_format const *csi_fmt;
+> +	struct v4l2_mbus_framefmt *fmt;
+> +	unsigned int align;
+> +
+> +	/*
+> +	 * The CSIS can't transcode in any way, the source format can't be
+> +	 * modified.
+> +	 */
+> +	if (sdformat->pad =3D=3D DWC_CSI2RX_PAD_SOURCE)
+> +		return v4l2_subdev_get_fmt(sd, sd_state, sdformat);
+> +
+> +	/*
+> +	 * Validate the media bus code and clamp and align the size.
+> +	 *
+> +	 * The total number of bits per line must be a multiple of 8. We thus
+> +	 * need to align the width for formats that are not multiples of 8
+> +	 * bits.
+> +	 */
+> +	csi_fmt =3D find_csi_format(sdformat->format.code);
+> +
+> +	switch (csi_fmt->width % 8) {
+> +	case 0:
+> +		align =3D 0;
+> +		break;
+> +	case 4:
+> +		align =3D 1;
+> +		break;
+> +	case 2:
+> +	case 6:
+> +		align =3D 2;
+> +		break;
+> +	default:
+> +		/* 1, 3, 5, 7 */
+> +		align =3D 3;
+> +		break;
+> +	}
+> +
+> +	v4l_bound_align_image(&sdformat->format.width, 1,
+> +			      DWC_CSI2RX_MAX_PIX_WIDTH, align,
+> +			      &sdformat->format.height, 1,
+> +			      DWC_CSI2RX_MAX_PIX_HEIGHT, 0, 0);
+> +
+> +	fmt =3D v4l2_subdev_state_get_format(sd_state, sdformat->pad,
+> +					   sdformat->stream);
+> +	if (!fmt)
+> +		return -EINVAL;
+> +
+> +	*fmt =3D sdformat->format;
+> +
+> +	/* Set default code if user set an invalid value */
+> +	fmt->code =3D csi_fmt->code;
+> +
+> +	/* Propagate the format from sink stream to source stream */
+> +	fmt =3D v4l2_subdev_state_get_opposite_stream_format(sd_state, sdformat=
+=2D>pad,
+> +							   sdformat->stream);
+> +	if (!fmt)
+> +		return -EINVAL;
+> +
+> +	*fmt =3D sdformat->format;
+> +	/* The format on the source pad might change due to unpacking. */
+> +	fmt->code =3D csi_fmt->output;
+> +
+> +	/* Store the CSIS format descriptor for active formats. */
+> +	if (sdformat->which =3D=3D V4L2_SUBDEV_FORMAT_ACTIVE)
+> +		csidev->csi_fmt =3D csi_fmt;
+> +
+> +	return 0;
+> +}
+> +
+> +static int dwc_csi_get_frame_desc(struct v4l2_subdev *sd, unsigned int p=
+ad,
+> +				  struct v4l2_mbus_frame_desc *fd)
+> +{
+> +	struct dwc_csi_device *csidev =3D sd_to_dwc_csi_device(sd);
+> +	struct v4l2_mbus_frame_desc source_fd;
+> +	struct v4l2_subdev_route *route;
+> +	struct v4l2_subdev_state *state;
+> +	int ret;
+> +
+> +	if (pad !=3D DWC_CSI2RX_PAD_SOURCE)
+> +		return -EINVAL;
+> +
+> +	memset(fd, 0, sizeof(*fd));
+> +
+> +	ret =3D v4l2_subdev_call(csidev->source_sd, pad, get_frame_desc,
+> +			       csidev->remote_pad, &source_fd);
+> +	if (ret < 0) {
+> +		dev_info(csidev->dev,
+> +			 "Remote sub-device on pad %d should implement .get_frame_desc! Forci=
+ng VC =3D 0 and DT =3D %x\n",
+> +			 pad, csidev->csi_fmt->data_type);
+
+Is this dev_info or dev_warn? Maybe Laurent or other V4L folks can give
+some hints.
+
+> +		fd->type =3D V4L2_MBUS_FRAME_DESC_TYPE_CSI2;
+> +		fd->num_entries =3D 1;
+> +		fd->entry[0].pixelcode =3D csidev->csi_fmt->code;
+> +		fd->entry[0].bus.csi2.vc =3D 0;
+> +		fd->entry[0].bus.csi2.dt =3D csidev->csi_fmt->data_type;
+> +
+> +		return 0;
+> +	}
+> +
+> +	fd->type =3D V4L2_MBUS_FRAME_DESC_TYPE_CSI2;
+> +
+> +	state =3D v4l2_subdev_lock_and_get_active_state(sd);
+> +
+> +	for_each_active_route(&state->routing, route) {
+> +		struct v4l2_mbus_frame_desc_entry *entry =3D NULL;
+> +		unsigned int i;
+> +
+> +		if (route->source_pad !=3D pad)
+> +			continue;
+> +
+> +		for (i =3D 0; i < source_fd.num_entries; ++i) {
+> +			if (source_fd.entry[i].stream =3D=3D route->sink_stream) {
+> +				entry =3D &source_fd.entry[i];
+> +				break;
+> +			}
+> +		}
+> +
+> +		if (!entry) {
+> +			dev_err(csidev->dev,
+> +				"Failed to find stream from source frames desc\n");
+> +			ret =3D -EPIPE;
+> +			goto out_unlock;
+> +		}
+> +
+> +		fd->entry[fd->num_entries].stream =3D route->source_stream;
+> +		fd->entry[fd->num_entries].flags =3D entry->flags;
+> +		fd->entry[fd->num_entries].length =3D entry->length;
+> +		fd->entry[fd->num_entries].pixelcode =3D entry->pixelcode;
+> +		fd->entry[fd->num_entries].bus.csi2.vc =3D entry->bus.csi2.vc;
+> +		fd->entry[fd->num_entries].bus.csi2.dt =3D entry->bus.csi2.dt;
+> +
+> +		fd->num_entries++;
+> +	}
+> +
+> +out_unlock:
+> +	v4l2_subdev_unlock_state(state);
+> +	return ret;
+> +}
+> +
+> +static int dwc_csi_set_routing(struct v4l2_subdev *sd,
+> +			       struct v4l2_subdev_state *state,
+> +			       enum v4l2_subdev_format_whence which,
+> +			       struct v4l2_subdev_krouting *routing)
+> +{
+> +	if (which =3D=3D V4L2_SUBDEV_FORMAT_ACTIVE &&
+> +	    media_entity_is_streaming(&sd->entity))
+> +		return -EBUSY;
+> +
+> +	return __dwc_csi_subdev_set_routing(sd, state, routing);
+> +}
+> +
+> +static int dwc_csi_start_stream(struct dwc_csi_device *csidev)
+> +{
+> +	int ret;
+> +
+> +	dwc_csi_device_startup(csidev);
+> +
+> +	ret =3D dwc_csi_device_init(csidev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dwc_csi_device_ipi_config(csidev);
+> +
+> +	ret =3D dwc_csi_device_pg_enable(csidev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dwc_csi_device_hs_rx_start(csidev);
+> +
+> +	dwc_csi_device_enable_interrupts(csidev, true);
+> +
+> +	return 0;
+> +}
+> +
+> +static void dwc_csi_stop_stream(struct dwc_csi_device *csidev)
+> +{
+> +	dwc_csi_device_enable_interrupts(csidev, false);
+> +	dwc_csi_device_hs_rx_stop(csidev);
+> +	dwc_csi_device_pg_disable(csidev);
+> +}
+> +
+> +static int dwc_csi_enable_streams(struct v4l2_subdev *sd,
+> +				  struct v4l2_subdev_state *state, u32 pad,
+> +				  u64 streams_mask)
+> +{
+> +	struct dwc_csi_device *csidev =3D sd_to_dwc_csi_device(sd);
+> +	u64 sink_streams;
+> +	int ret;
+> +
+> +	if (!csidev->source_sd) {
+> +		dev_err(csidev->dev, "Sensor don't link with CSIS pad\n");
+
+s/don't/doesn't/
+
+> +		return -EPIPE;
+> +	}
+> +
+> +	if (!csidev->enabled_streams) {
+> +		ret =3D pm_runtime_resume_and_get(csidev->dev);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		ret =3D v4l2_ctrl_handler_setup(&csidev->ctrl_handler);
+> +		if (ret < 0)
+> +			goto err_runtime_put;
+> +
+> +		dwc_csi_clear_counters(csidev);
+> +
+> +		ret =3D dwc_csi_start_stream(csidev);
+> +		if (ret < 0)
+> +			goto err_runtime_put;
+> +
+> +		dwc_csi_dump_regs(csidev);
+> +		dwc_csi_log_counters(csidev);
+
+Are you sure you want to dump all the registers every time you start
+a stream?
+
+> +	}
+> +
+> +	sink_streams =3D v4l2_subdev_state_xlate_streams(state, DWC_CSI2RX_PAD_=
+SOURCE,
+> +						       DWC_CSI2RX_PAD_SINK,
+> +						       &streams_mask);
+> +
+> +	dev_dbg(csidev->dev, "remote sd: %s pad: %u, sink_stream:0x%llx\n",
+> +		csidev->source_sd->name, csidev->remote_pad, sink_streams);
+> +
+> +	ret =3D v4l2_subdev_enable_streams(csidev->source_sd, csidev->remote_pa=
+d,
+> +					 sink_streams);
+> +	if (ret)
+> +		return ret;
+> +
+> +	csidev->enabled_streams |=3D streams_mask;
+> +
+> +	return 0;
+> +
+> +err_runtime_put:
+> +	pm_runtime_put(csidev->dev);
+> +	return ret;
+> +}
+> +
+> +static int dwc_csi_disable_streams(struct v4l2_subdev *sd,
+> +				   struct v4l2_subdev_state *state, u32 pad,
+> +				   u64 streams_mask)
+> +{
+> +	struct dwc_csi_device *csidev =3D sd_to_dwc_csi_device(sd);
+> +	u64 sink_streams;
+> +	int ret;
+> +
+> +	sink_streams =3D v4l2_subdev_state_xlate_streams(state, DWC_CSI2RX_PAD_=
+SOURCE,
+> +						       DWC_CSI2RX_PAD_SINK,
+> +						       &streams_mask);
+> +
+> +	ret =3D v4l2_subdev_disable_streams(csidev->source_sd, csidev->remote_p=
+ad,
+> +					  sink_streams);
+> +	if (ret)
+> +		return ret;
+> +
+> +	csidev->enabled_streams &=3D ~streams_mask;
+> +
+> +	if (!csidev->enabled_streams) {
+> +		dwc_csi_stop_stream(csidev);
+> +		dwc_csi_log_counters(csidev);
+> +		pm_runtime_put(csidev->dev);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int dwc_csi_subdev_log_status(struct v4l2_subdev *sd)
+> +{
+> +	struct dwc_csi_device *csidev =3D sd_to_dwc_csi_device(sd);
+> +
+> +	dwc_csi_log_counters(csidev);
+> +	return 0;
+> +}
+> +
+> +static const struct v4l2_subdev_core_ops dwc_csi_subdev_core_ops =3D {
+> +	.log_status =3D dwc_csi_subdev_log_status,
+> +	.subscribe_event =3D v4l2_ctrl_subdev_subscribe_event,
+> +	.unsubscribe_event =3D v4l2_event_subdev_unsubscribe,
+> +};
+> +
+> +static const struct v4l2_subdev_pad_ops dwc_csi_subdev_pad_ops =3D {
+> +	.enum_mbus_code	=3D dwc_csi_subdev_enum_mbus_code,
+> +	.get_fmt =3D v4l2_subdev_get_fmt,
+> +	.set_fmt =3D dwc_csi_subdev_set_fmt,
+> +	.get_frame_desc =3D dwc_csi_get_frame_desc,
+> +	.set_routing =3D dwc_csi_set_routing,
+> +	.enable_streams =3D dwc_csi_enable_streams,
+> +	.disable_streams =3D dwc_csi_disable_streams,
+> +};
+> +
+> +static const struct v4l2_subdev_ops dwc_csi_subdev_ops =3D {
+> +	.core  =3D &dwc_csi_subdev_core_ops,
+> +	.pad   =3D &dwc_csi_subdev_pad_ops,
+> +};
+> +
+> +static const struct v4l2_subdev_internal_ops dwc_csi_internal_ops =3D {
+> +	.init_state =3D dwc_csi_subdev_init_state,
+> +};
+> +
+> +/*
+> + * Media entity operations
+> + */
+> +
+> +static int dwc_csi_link_setup(struct media_entity *entity,
+> +			      const struct media_pad *local_pad,
+> +			      const struct media_pad *remote_pad, u32 flags)
+> +{
+> +	struct v4l2_subdev *sd =3D media_entity_to_v4l2_subdev(entity);
+> +	struct dwc_csi_device *csidev =3D sd_to_dwc_csi_device(sd);
+> +	struct v4l2_subdev *remote_sd;
+> +
+> +	dev_dbg(csidev->dev, "link setup %s -> %s", remote_pad->entity->name,
+> +		local_pad->entity->name);
+> +
+> +	/* We only care about the link to the source. */
+> +	if (!(local_pad->flags & MEDIA_PAD_FL_SINK))
+> +		return 0;
+> +
+> +	remote_sd =3D media_entity_to_v4l2_subdev(remote_pad->entity);
+> +
+> +	if (flags & MEDIA_LNK_FL_ENABLED) {
+> +		if (csidev->source_sd)
+> +			return -EBUSY;
+> +
+> +		csidev->source_sd =3D remote_sd;
+> +		csidev->remote_pad =3D remote_pad->index;
+> +	} else {
+> +		csidev->source_sd =3D NULL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int dwc_csi_link_validate(struct media_link *link)
+> +{
+> +	struct media_pad *sink_pad =3D link->sink;
+> +	struct v4l2_subdev *sink_sd;
+> +	struct dwc_csi_device *csidev;
+> +
+> +	sink_sd =3D media_entity_to_v4l2_subdev(sink_pad->entity);
+> +	csidev =3D sd_to_dwc_csi_device(sink_sd);
+> +
+> +	dev_dbg(csidev->dev, "entity name:%s pad index=3D%d\n",
+> +		sink_sd->name, sink_pad->index);
+> +
+> +	/*
+> +	 * Skip link validate when pattern enabled since the source
+> +	 * data will be from CSI pattern generator, not sensor.
+> +	 */
+> +	if (csidev->pg_enable && sink_pad->index =3D=3D DWC_CSI2RX_PAD_SINK)
+> +		return 0;
+> +
+> +	return v4l2_subdev_link_validate(link);
+> +}
+> +
+> +static const struct media_entity_operations dwc_csi_entity_ops =3D {
+> +	.link_setup	=3D dwc_csi_link_setup,
+> +	.link_validate	=3D dwc_csi_link_validate,
+> +	.get_fwnode_pad =3D v4l2_subdev_get_fwnode_pad_1_to_1,
+> +};
+> +
+> +/*
+> + * Async subdev notifier
+> + */
+> +
+> +static inline struct dwc_csi_device *
+> +notifier_to_dwc_csi_device(struct v4l2_async_notifier *n)
+> +{
+> +	return container_of(n, struct dwc_csi_device, notifier);
+> +}
+> +
+> +static int dwc_csi_notify_bound(struct v4l2_async_notifier *notifier,
+> +				struct v4l2_subdev *sd,
+> +				struct v4l2_async_connection *asd)
+> +{
+> +	struct dwc_csi_device *csidev =3D notifier_to_dwc_csi_device(notifier);
+> +	struct media_pad *sink =3D &csidev->sd.entity.pads[DWC_CSI2RX_PAD_SINK];
+> +
+> +	return v4l2_create_fwnode_links_to_pad(sd, sink, 0);
+> +}
+> +
+> +static const struct v4l2_async_notifier_operations dwc_csi_notify_ops =
+=3D {
+> +	.bound =3D dwc_csi_notify_bound,
+> +};
+> +
+> +static int dwc_csi_async_register(struct dwc_csi_device *csidev)
+> +{
+> +	struct v4l2_fwnode_endpoint vep =3D {
+> +		.bus_type =3D V4L2_MBUS_CSI2_DPHY,
+> +	};
+> +	struct v4l2_async_connection *asd;
+> +	struct fwnode_handle *ep;
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	v4l2_async_subdev_nf_init(&csidev->notifier, &csidev->sd);
+> +
+> +	ep =3D fwnode_graph_get_endpoint_by_id(dev_fwnode(csidev->dev), 0, 0,
+> +					     FWNODE_GRAPH_ENDPOINT_NEXT);
+> +	if (!ep)
+> +		return -ENOTCONN;
+> +
+> +	ret =3D v4l2_fwnode_endpoint_parse(ep, &vep);
+> +	if (ret)
+> +		goto err_parse;
+> +
+> +	for (i =3D 0; i < vep.bus.mipi_csi2.num_data_lanes; ++i) {
+> +		if (vep.bus.mipi_csi2.data_lanes[i] !=3D i + 1) {
+> +			dev_err(csidev->dev,
+> +				"data lanes reordering is not supported");
+> +			ret =3D -EINVAL;
+> +			goto err_parse;
+> +		}
+> +	}
+> +
+> +	csidev->bus =3D vep.bus.mipi_csi2;
+> +
+> +	dev_dbg(csidev->dev, "data lanes: %d\n", csidev->bus.num_data_lanes);
+> +	dev_dbg(csidev->dev, "flags: 0x%08x\n", csidev->bus.flags);
+> +
+> +	asd =3D v4l2_async_nf_add_fwnode_remote(&csidev->notifier, ep,
+> +					      struct v4l2_async_connection);
+> +	if (IS_ERR(asd)) {
+> +		ret =3D PTR_ERR(asd);
+> +		goto err_parse;
+> +	}
+> +
+> +	fwnode_handle_put(ep);
+> +
+> +	csidev->notifier.ops =3D &dwc_csi_notify_ops;
+> +
+> +	ret =3D v4l2_async_nf_register(&csidev->notifier);
+> +	if (ret)
+> +		goto err_notifier_clean;
+> +
+> +	ret =3D v4l2_async_register_subdev(&csidev->sd);
+> +	if (ret)
+> +		goto err_unreg_notifier;
+> +
+> +	return ret;
+> +
+> +err_unreg_notifier:
+> +	v4l2_async_nf_unregister(&csidev->notifier);
+> +err_notifier_clean:
+> +	v4l2_async_nf_cleanup(&csidev->notifier);
+> +err_parse:
+> +	fwnode_handle_put(ep);
+> +	return ret;
+> +}
+> +
+> +/*
+> + * Pattern Generator Controller operations
+> + */
+> +
+> +static const char * const test_pattern_menu[] =3D {
+> +	"Disabled",
+> +	"Vertical Color Bars",
+> +	"Horizontal Color Bars",
+> +};
+> +
+> +static inline struct dwc_csi_device *ctrl_to_csidev(struct v4l2_ctrl *ct=
+rl)
+> +{
+> +	return container_of(ctrl->handler, struct dwc_csi_device, ctrl_handler);
+> +}
+> +
+> +static int dwc_csi_s_ctrl(struct v4l2_ctrl *ctrl)
+> +{
+> +	struct dwc_csi_device *csidev  =3D ctrl_to_csidev(ctrl);
+> +	int ret =3D 0;
+> +
+> +	switch (ctrl->id) {
+> +	case V4L2_CID_TEST_PATTERN:
+> +		/* Pattern index start from 0 */
+> +		csidev->pg_pattern =3D ctrl->val - 1;
+
+ctrl->val is s32 which not supposed to wrap. IIRC this is undefined behavio=
+r.
+Just set pg_pattern if strl->val is non-zero.
+You only active test pattern when stream is started. Does it make sense to
+allow setting this control only while streaming is disabled?
+
+Thanks, I'll give it a try soon.
+
+Best regards
+Alexander
+
+> +		csidev->pg_enable =3D (ctrl->val) ? true : false;
+> +		break;
+> +	default:
+> +		ret =3D -EINVAL;
+> +		break;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct v4l2_ctrl_ops dwc_csi_ctrl_ops =3D {
+> +	.s_ctrl =3D dwc_csi_s_ctrl,
+> +};
+> +
+> +static int dwc_csi_controls_init(struct dwc_csi_device *csidev)
+> +{
+> +	struct v4l2_ctrl_handler *handler =3D &csidev->ctrl_handler;
+> +	int ret;
+> +
+> +	v4l2_ctrl_handler_init(handler, 1);
+> +
+> +	/* Use driver mutex lock for the ctrl lock */
+> +	handler->lock =3D &csidev->lock;
+> +
+> +	v4l2_ctrl_new_std_menu_items(handler, &dwc_csi_ctrl_ops,
+> +				     V4L2_CID_TEST_PATTERN,
+> +				     ARRAY_SIZE(test_pattern_menu) - 1,
+> +				     0, 0, test_pattern_menu);
+> +
+> +	if (handler->error) {
+> +		ret =3D handler->error;
+> +		v4l2_ctrl_handler_free(handler);
+> +		return ret;
+> +	}
+> +
+> +	csidev->sd.ctrl_handler =3D handler;
+> +	return 0;
+> +}
+> +
+> +static void dwc_csi_controls_cleanup(void *data)
+> +{
+> +	struct dwc_csi_device *csidev =3D data;
+> +
+> +	v4l2_ctrl_handler_free(&csidev->ctrl_handler);
+> +}
+> +
+> +/*
+> + * Suspend/resume
+> + */
+> +
+> +static int dwc_csi_system_suspend(struct device *dev)
+> +{
+> +	return pm_runtime_force_suspend(dev);
+> +}
+> +
+> +static int dwc_csi_system_resume(struct device *dev)
+> +{
+> +	int ret;
+> +
+> +	ret =3D pm_runtime_force_resume(dev);
+> +	if (ret < 0) {
+> +		dev_err(dev, "force resume %s failed!\n", dev_name(dev));
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int dwc_csi_runtime_suspend(struct device *dev)
+> +{
+> +	struct v4l2_subdev *sd =3D dev_get_drvdata(dev);
+> +	struct dwc_csi_device *csidev =3D sd_to_dwc_csi_device(sd);
+> +
+> +	clk_bulk_disable_unprepare(csidev->num_clks, csidev->clks);
+> +
+> +	return 0;
+> +}
+> +
+> +static int dwc_csi_runtime_resume(struct device *dev)
+> +{
+> +	struct v4l2_subdev *sd =3D dev_get_drvdata(dev);
+> +	struct dwc_csi_device *csidev =3D sd_to_dwc_csi_device(sd);
+> +
+> +	return clk_bulk_prepare_enable(csidev->num_clks, csidev->clks);
+> +}
+> +
+> +static const struct dev_pm_ops dwc_csi_device_pm_ops =3D {
+> +	SET_SYSTEM_SLEEP_PM_OPS(dwc_csi_system_suspend, dwc_csi_system_resume)
+> +	SET_RUNTIME_PM_OPS(dwc_csi_runtime_suspend, dwc_csi_runtime_resume, NUL=
+L)
+> +};
+> +
+> +static irqreturn_t dwc_csi_irq_handler(int irq, void *priv)
+> +{
+> +	struct dwc_csi_device *csidev =3D priv;
+> +	u32 status;
+> +	int i;
+> +
+> +	/* Hardware auto clean after read */
+> +	status =3D dwc_csi_read(csidev, CSI2RX_INT_ST_MAIN);
+> +
+> +	if (status & DWC_EVENT_MASK) {
+> +		for (i =3D 0; i < DWC_NUM_EVENTS; ++i) {
+> +			struct dwc_csi_event *event =3D &csidev->events[i];
+> +
+> +			if (status & event->mask)
+> +				event->counter++;
+> +		}
+> +	}
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static inline void dwc_csi_param_init(struct dwc_csi_device *csidev)
+> +{
+> +	csidev->csi_fmt =3D &dwc_csi_formats[0];
+> +}
+> +
+> +static int dwc_csi_subdev_init(struct dwc_csi_device *csidev)
+> +{
+> +	struct v4l2_subdev *sd =3D &csidev->sd;
+> +	int ret;
+> +
+> +	v4l2_subdev_init(sd, &dwc_csi_subdev_ops);
+> +	sd->owner =3D THIS_MODULE;
+> +	snprintf(sd->name, sizeof(sd->name), "csidev-%s", dev_name(csidev->dev)=
+);
+> +	sd->internal_ops =3D &dwc_csi_internal_ops;
+> +
+> +	sd->flags |=3D V4L2_SUBDEV_FL_HAS_DEVNODE |
+> +		     V4L2_SUBDEV_FL_HAS_EVENTS | V4L2_SUBDEV_FL_STREAMS;
+> +	sd->entity.function =3D MEDIA_ENT_F_VID_IF_BRIDGE;
+> +	sd->entity.ops =3D &dwc_csi_entity_ops;
+> +
+> +	sd->dev =3D csidev->dev;
+> +
+> +	csidev->pads[DWC_CSI2RX_PAD_SINK].flags =3D MEDIA_PAD_FL_SINK;
+> +	csidev->pads[DWC_CSI2RX_PAD_SOURCE].flags =3D MEDIA_PAD_FL_SOURCE;
+> +
+> +	ret =3D media_entity_pads_init(&csidev->sd.entity, DWC_CSI2RX_PADS_NUM,
+> +				     csidev->pads);
+> +	if (ret) {
+> +		dev_err(csidev->dev, "Failed to init pads\n");
+> +		return ret;
+> +	}
+> +
+> +	ret =3D v4l2_subdev_init_finalize(sd);
+> +	if (ret)
+> +		media_entity_cleanup(&sd->entity);
+> +
+> +	return ret;
+> +}
+> +
+> +static void dwc_csi_subdev_cleanup(void *data)
+> +{
+> +	struct dwc_csi_device *csidev =3D data;
+> +
+> +	v4l2_subdev_cleanup(&csidev->sd);
+> +	media_entity_cleanup(&csidev->sd.entity);
+> +}
+> +
+> +static int dwc_csi_device_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev =3D &pdev->dev;
+> +	struct dwc_csi_device *csidev;
+> +	int irq;
+> +	int ret;
+> +
+> +	csidev =3D devm_kzalloc(dev, sizeof(*csidev), GFP_KERNEL);
+> +	if (!csidev)
+> +		return -ENOMEM;
+> +
+> +	mutex_init(&csidev->lock);
+> +
+> +	csidev->dev =3D dev;
+> +	memcpy(csidev->events, dwc_events, sizeof(dwc_events));
+> +
+> +	csidev->regs =3D devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(csidev->regs)) {
+> +		dev_err(dev, "Failed to get DWC csi2 register map\n");
+> +		return PTR_ERR(csidev->regs);
+> +	}
+> +
+> +	csidev->phy =3D devm_phy_get(dev, "rx");
+> +	if (IS_ERR(csidev->phy))
+> +		return dev_err_probe(dev, PTR_ERR(csidev->phy),
+> +				     "Failed to get DPHY Rx\n");
+> +
+> +	irq =3D platform_get_irq(pdev, 0);
+> +	if (irq < 0)
+> +		return dev_err_probe(dev, irq, "Failed to get IRQ\n");
+> +
+> +	ret =3D devm_request_irq(dev, irq, dwc_csi_irq_handler, 0,
+> +			       dev_name(dev), csidev);
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret, "Failed to request IRQ\n");
+> +
+> +	csidev->num_clks =3D devm_clk_bulk_get_all(dev, &csidev->clks);
+> +
+> +	dwc_csi_param_init(csidev);
+> +
+> +	ret =3D dwc_csi_subdev_init(csidev);
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret, "Failed to initialize subdev\n");
+> +
+> +	ret =3D devm_add_action_or_reset(dev, dwc_csi_subdev_cleanup, csidev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D dwc_csi_controls_init(csidev);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to initialize controls\n");
+> +
+> +	ret =3D devm_add_action_or_reset(dev, dwc_csi_controls_cleanup, csidev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	platform_set_drvdata(pdev, &csidev->sd);
+> +
+> +	ret =3D dwc_csi_async_register(csidev);
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret, "Async register failed\n");
+> +
+> +	pm_runtime_enable(dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static void dwc_csi_device_remove(struct platform_device *pdev)
+> +{
+> +	struct v4l2_subdev *sd =3D platform_get_drvdata(pdev);
+> +	struct dwc_csi_device *csidev =3D sd_to_dwc_csi_device(sd);
+> +
+> +	v4l2_async_nf_unregister(&csidev->notifier);
+> +	v4l2_async_nf_cleanup(&csidev->notifier);
+> +	v4l2_async_unregister_subdev(&csidev->sd);
+> +
+> +	pm_runtime_disable(&pdev->dev);
+> +
+> +	fwnode_handle_put(csidev->sd.fwnode);
+> +	mutex_destroy(&csidev->lock);
+> +
+> +	pm_runtime_set_suspended(&pdev->dev);
+> +}
+> +
+> +static const struct of_device_id dwc_csi_device_of_match[] =3D {
+> +	{ .compatible =3D "snps,dw-mipi-csi2-v150" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, dwc_csi_device_of_match);
+> +
+> +static struct platform_driver dwc_csi_device_driver =3D {
+> +	.driver =3D {
+> +		.owner          =3D THIS_MODULE,
+> +		.name           =3D "dwc-mipi-csi2",
+> +		.of_match_table =3D dwc_csi_device_of_match,
+> +		.pm             =3D &dwc_csi_device_pm_ops,
+> +	},
+> +	.probe  =3D dwc_csi_device_probe,
+> +	.remove =3D dwc_csi_device_remove,
+> +};
+> +
+> +module_platform_driver(dwc_csi_device_driver);
+> +
+> +MODULE_DESCRIPTION("DesignWare Core MIPI CSI2 driver");
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform: dwc-mipi-csi2");
+> +MODULE_AUTHOR("NXP Semiconductor, Inc.");
+>=20
+>=20
+
+
+=2D-=20
+TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht M=FCnchen, HRB 105018
+Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
+http://www.tq-group.com/
+
 
