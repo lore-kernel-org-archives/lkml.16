@@ -1,152 +1,108 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8CB24AEE0
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 01:38:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA158225D7
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 01:41:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751420326; cv=none; b=amU5dp85UygC9bjVLsrnTE9Ym7Xu4WVnbB+k7B0BQQrauJEDRon1dW7fXaU2ZtTR4icuRGXuNPv7rNxJ01dCPZreBmm9Rr1Piha0VLCgdJ3v+13QUQy52Mu3gdnlVHBYihCoxgdBy3UYeuOnxJ/ngDRfS0cxfA+NaUhkQ+xcKcA=
+	t=1751420472; cv=none; b=Jvi/93TBz0TdNrPJLJNtoskTGoCP8WSOuiHckr0+eBQzfptym9bMHsubWI1bmoe0NmpXy1GhR0xD7wsj2KVFBsDd/fFRu7AWb4ONJT3OpBu95PySlMYkeFXEe/el7dyVCs2Wko16EUhz/T6TAFXUVjOdDd3Xu3RALttH1+2TOeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751420326; c=relaxed/simple;
-	bh=vPktWFba1CaphVOiurjNVMsrvjbgo6h4NsplM3lBGxg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EvaysHw8hOF9Ilj6cPm3zYHmI7rXcqT1ZFkWU7ys1uqGarGasvqxbHgl0pvi9exRzuklwN0YnE+UVw3bIron5GWiINSMNFuYPcNqZh2e92iQA53y5WXYm+xwx/1VK1hYtxtijapH/SMEFcwixDgpvltH2Ybi0/Pnl2j71yIJqCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=t8IqLnjY; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t8IqLnjY"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-237f270513bso280315ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 18:38:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751420323; x=1752025123; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kp2cPDX2Gx1yqqbKf91cIrL6zATVqvS/PN2+ecRrrmc=;
-        b=t8IqLnjYPzVIKJvLqEcu5L4RelzvpZlXd5WVV1p0NW72QL3BDNku6DZAAQndt51A5R
-         R8E1uck1wsiTur+DaeswyeSy9Km91e/QwM5r6kZZDGD1Pmq2pE2mMiq5DvirzfwaziMi
-         OxgVlvj7VLisQdOAUMlv8jF9kBu7qVTvKhPdbAFdOlZhEI9vvGeeVdIlmMbWUSsyu5C6
-         fci+24DChMbsS4ptDZu6qy4BZ0XWcQ6om44Cp5knQ6hf18TkAQF4uifLwFKEX5oLhwDD
-         TVb2GU8dNxtpbFG8ouYw/NrGgMUIpKVyn8I6oDNLXVJ3qg9aAi04Oi67FPx6Bzs2X4W+
-         NYJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751420323; x=1752025123;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kp2cPDX2Gx1yqqbKf91cIrL6zATVqvS/PN2+ecRrrmc=;
-        b=e6Opat8DH2V9ANtJJtNd6RIIkb3Qo5mo2nk7a3OVJHeiNX40GXqhbJ5b1vR7qLGwD4
-         deaeewLhwkpfC6ZqcfdVZcASMnEkDoo8y1HHbjPfOUhaOaiHO6bL81LW/SRmp76U0TEg
-         AVqD67RD1zjrw1ldAvzKKoSntw+pjNfwNI2RwpUDYhTKd0JqJvO9jZLJwDygdy0rql+K
-         fKqFZBpfL8j8089iMvOTMRceeT+7vWoAbRuK5dm8X+sSrLDCDKRRhNhcrLQTXQLkgv6r
-         GRfXAqcSQC1hacKT34wnDgwRxyxoRlZKKd2qJgJu61+dZgesR9M1hN4/wwds/I7R/d6e
-         EoJg==
-X-Forwarded-Encrypted: i=1; AJvYcCWr2JT/C+Yu3IwwJLxRx01WMJhQw+CML/Sz0QvMpSjcNUjQBrtMnzR0S7Xne0iFswhfAUwbk2msk/5XQrs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2hX6UHAEa6RLgiuUiDM4iBMXwPrSKWW9LBLvsVJki3sUm45Kg
-	AACzcSVh0CvzTb8aKogEAoO/oqB6jPgu0WI5cLdFfJc997021TLc9d9RZt/JS/wHPw==
-X-Gm-Gg: ASbGncumsOpc85Rigx3wwx8vAi6hnIKgeB0okW+YU01jyJUc8tv33TgDuDNN9LLsg7/
-	jlh0i93bFECkqRWAW7n23U9q1OwhyiMJDfYKhUo2Xt1Ap1Ob8dKnscxtF+uAKuXw4U9bNwKqFXj
-	bq6MGG2EPBLnsQra7yXktdSYPUdP994LHmIhMDuEVkDmHtLc6ORRlVjKSAMhodFqrZfJTZSsTzn
-	S/nZa7DihZ2feGLUvQ/6F/r9Yo0+ionwnIETRGThqYLi8WDeq4TZHwFfXkQ5GpapNvcnEPf9hfr
-	kUIOO7wwjmjKjdwY4dp6gxjPbPxgXdhQpsFb9FtfaP2EW8mz5+DHhI37qxP7InhI9TDFDD1pV/O
-	I+UNRMa1U1J5VIOY5Wx87
-X-Google-Smtp-Source: AGHT+IGlz2Z9E445R3idcc5ZRjEaWuytfr7E4KLC8vSsZvwO+Dw22SVfjYoD7L1quVzpUqXy09mcbA==
-X-Received: by 2002:a17:902:c401:b0:235:e1fa:1fbc with SMTP id d9443c01a7336-23c5fd70ee8mr4718365ad.0.1751420322911;
-        Tue, 01 Jul 2025 18:38:42 -0700 (PDT)
-Received: from google.com (232.98.126.34.bc.googleusercontent.com. [34.126.98.232])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af540b394sm13073470b3a.36.2025.07.01.18.38.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 18:38:42 -0700 (PDT)
-Date: Wed, 2 Jul 2025 01:38:33 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
-	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
-	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
-	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
-	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
-	zhangzekun11@huawei.com, iommu@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
-	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com,
-	dwmw2@infradead.org, baolu.lu@linux.intel.com
-Subject: Re: [PATCH v7 27/28] iommu/tegra241-cmdqv: Add user-space use support
-Message-ID: <aGSNmf5Q82xEbDpX@google.com>
-References: <aGQGm1-i4M75b9Qp@google.com>
- <aGQ6KCI9OZEwHdxS@Asurada-Nvidia>
- <aGQ_F7Qx3scbbA-J@google.com>
- <aGRDtYRXFLoT+PrI@Asurada-Nvidia>
- <aGRIctg4T6cQECx4@google.com>
- <aGRcPSwaJkTeUrMx@Asurada-Nvidia>
- <aGRmaOORg-YDfncY@google.com>
- <aGRozoIDIlgl9H9x@Asurada-Nvidia>
- <aGR55PUBnwb8qT8U@google.com>
- <aGSBTpY0nkdp2TTL@Asurada-Nvidia>
+	s=arc-20240116; t=1751420472; c=relaxed/simple;
+	bh=Z17D8hbRXfXhqlBIMcMhJaRdJOWdZJdkKbrUsOxGlfk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qglIZXaCaSdXmQ9AOLSkk7xDr+yiFVbd+puLACKYOQvJYA0vmqSO6Ae2K3/++2bWMaOkIuQrZh0kbznirGo7KLyytSm0N5emKhGdbFnP/RhLMXgTtaJvgUZdJhSRBzZaAKZIOs8QIQHcBIGgTT10gP3LIEuLaPmJ6clExz1Aqug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
+Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 5621f8D6010583;
+	Wed, 2 Jul 2025 10:41:08 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+	(authenticated bits=0)
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 5621f7NX010579
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+	Wed, 2 Jul 2025 10:41:07 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <1921ec99-7abb-42f1-a56b-d1f0f5bc1377@I-love.SAKURA.ne.jp>
+Date: Wed, 2 Jul 2025 10:41:07 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aGSBTpY0nkdp2TTL@Asurada-Nvidia>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [mm?] WARNING in xfs_init_fs_context
+To: Zi Yan <ziy@nvidia.com>, Vlastimil Babka <vbabka@suse.cz>,
+        Barry Song <baohua@kernel.org>
+Cc: syzbot <syzbot+359a67b608de1ef72f65@syzkaller.appspotmail.com>,
+        akpm@linux-foundation.org, apopple@nvidia.com, byungchul@sk.com,
+        david@redhat.com, gourry@gourry.net, joshua.hahnjy@gmail.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        matthew.brost@intel.com, rakie.kim@sk.com,
+        syzkaller-bugs@googlegroups.com, ying.huang@linux.alibaba.com
+References: <6861c281.a70a0220.3b7e22.0ab8.GAE@google.com>
+ <DDD5FAAF-F698-4FC8-B49C-FD1D3B283A8E@nvidia.com>
+Content-Language: en-US
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+In-Reply-To: <DDD5FAAF-F698-4FC8-B49C-FD1D3B283A8E@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Anti-Virus-Server: fsav101.rs.sakura.ne.jp
+X-Virus-Status: clean
 
-On Tue, Jul 01, 2025 at 05:46:06PM -0700, Nicolin Chen wrote:
-> On Wed, Jul 02, 2025 at 12:14:28AM +0000, Pranjal Shrivastava wrote:
-> > Thus, coming back to the two initial points:
-> > 
-> > 1) Issuing "non-invalidation" commands through .cache_invalidate could
-> >    be confusing, I'm not asking to change the op name here, but if we
-> >    plan to label it, let's label them as "Trapped commands" OR
-> >    "non-accelerated" commands as you suggested.
+On 2025/07/02 0:01, Zi Yan wrote:
+>>  __alloc_frozen_pages_noprof+0x319/0x370 mm/page_alloc.c:4972
+>>  alloc_pages_mpol+0x232/0x4a0 mm/mempolicy.c:2419
+>>  alloc_slab_page mm/slub.c:2451 [inline]
+>>  allocate_slab+0xe2/0x3b0 mm/slub.c:2627
+>>  new_slab mm/slub.c:2673 [inline]
 > 
-> VCMDQ only accelerates limited invalidation commands, not all of
-> them: STE cache invalidation and CD cache invalidation commands
-> still go down to that op.
+> new_slab() allows __GFP_NOFAIL, since GFP_RECLAIM_MASK has it.
+> In allocate_slab(), the first allocation without __GFP_NOFAIL
+> failed, the retry used __GFP_NOFAIL but kmem_cache order
+> was greater than 1, which led to the warning above.
 > 
+> Maybe allocate_slab() should just fail when kmem_cache
+> order is too big and first trial fails? I am no expert,
+> so add Vlastimil for help. Barry, who added the nofail
+> warning is cc’d.
 
-Right, I'm just saying the "other" non-accelerated commands that are
-NOT invalidations also go down that op. So, if we add a comment, let's 
-not call them "non-invalidation" commands.
+Indeed. In allocate_slab(struct kmem_cache *s, gfp_t flags, int node),
 
-> > 2) The "FIXME" confusion: The comment in arm_vsmmu_cache_invalidate
-> >    mentions we'd like to "fix" the issuing of commands through the main
-> >    cmdq and instead like to group by "type", if that "type" is the queue
-> >    type (which I assume it is because IOMMU_TYPE has to be arm-smmu-v3),
-> 
-> I recall that FIXME is noted by Jason at that time. And it should
-> be interpreted as "group by opcode", IIUIC.
+	/*
+	 * Let the initial higher-order allocation fail under memory pressure
+	 * so we fall-back to the minimum order allocation.
+	 */
+	alloc_gfp = (flags | __GFP_NOWARN | __GFP_NORETRY) & ~__GFP_NOFAIL;
+	if ((alloc_gfp & __GFP_DIRECT_RECLAIM) && oo_order(oo) > oo_order(s->min))
+		alloc_gfp = (alloc_gfp | __GFP_NOMEMALLOC) & ~__GFP_RECLAIM;
 
-I see.. I misunderstood that..
+	slab = alloc_slab_page(alloc_gfp, node, oo);
+	if (unlikely(!slab)) {
+		oo = s->min;
+		alloc_gfp = flags;
+		/*
+		 * Allocation may have failed due to fragmentation.
+		 * Try a lower order alloc if possible
+		 */
+		slab = alloc_slab_page(alloc_gfp, node, oo);
 
-> 
-> The thing is that for a host kernel that enabled in-kernel VCMDQs,
-> those trapped user commands can be just issued to the smmu->cmdq
-> or a vcmdq (picked via the get_secondary_cmdq impl_op).
-> 
+__GFP_NOFAIL needs to be dropped unless s->min is either 0 or 1.
 
-Ohh.. so maybe some sort of a load balancing thing?
+		if (unlikely(!slab))
+			return NULL;
+		stat(s, ORDER_FALLBACK);
+	}
 
-> >    what do we plan to do differently there, given that the op is only
-> >    for trapped commands *have* to go through the main CMDQ?
-> 
-> If we do something differently there, it could just do a one-time
-> get_secondary_cmdq call to pick a in-kernel vcmdq over smmu->cmdq
-> to fill in all the trapped commands.
-> 
 
-Alright.
 
-> And this is not related to this series at all.
+By the way, why is xfs_init_fs_context() using __GFP_NOFAIL ?
 
-Agreed, sorry for the confusion then.. I thought that the "type" meant
-the queue type.. I guess it's all done then. I have no further questions
+	mp = kzalloc(sizeof(struct xfs_mount), GFP_KERNEL | __GFP_NOFAIL);
+	if (!mp)
+		return -ENOMEM;
 
-Thanks for the clarification!
+This looks an allocation attempt which can fail safely.
 
-> 
-> Nicolin
-
-Praan
