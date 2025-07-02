@@ -1,174 +1,203 @@
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1A4A1DF977;
-	Wed,  2 Jul 2025 07:20:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65221E47AE
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 07:20:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751440858; cv=none; b=GoioimNnYCBrNYp9SgJ126F7/zw/9JNs8zBxOY4C8/BsEWZROAQOa7GrWYZRtCe6nrwHm0VI4dEd98GA+OYtRn7PGR6qnoE3c0JiVNWG+QCgs8zDC/ftuHguJ4KDEb7ZpKZwajnd3/pUo0+qKd+W/htY8hiydsxKKA4aik2n9qk=
+	t=1751440858; cv=none; b=rbeQ6bVleUXiQRTwkMR0fbkBfT4jWaMrrfl6fY2K2XMJgU3owhBjh1jxppLty9LCTaj6lnd9oc5ZKq+7KiXubfCVkOCW+2We7Ef15Qiybi1KVcccL6NfJzT4iyaQ7JGZ1lkopNcGcjmSThY700KQbYw7gPdUfC/AYw8SjmRtITA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751440858; c=relaxed/simple;
-	bh=MdYtqvofNcs1ler6sTIPSc9X1xjblJnNld2TD7UDg+c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cF0bkFvbZI9ksGw19XPDobst0KOE8hlI1nPQHsFscdY+gu0t/BaTV+cJx8gwLNtCQU+JpiY5zu7yOPG5rhkdnAo0zxNUjMkPvgEmTelUoUf0ei3qIru4KsQ3/qUsGZ2SineJim41GVm2VM3JxIKCojSIo4DfT5LKWI2KnlghN3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EtHTyF5u; arc=none smtp.client-ip=209.85.166.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=rDdbRQ2GykeER2SnX1xkF1pAGy/+zzWxsZ+2SzCxzYg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=USco6JaPDmfajVGEfuz4YaXx+TVk4uQ97IQlJkJCf2EaAY/yBlcdp7uHcOI5gYmukKDTMHMEiGy/uyhYwCOK/xw+AO2v/qKMpla+NUmapOX4hXsnVVG4gEstew02yn/ReqfBIxGtBCgqos3RSn2vE635eqxNG8WT6DxXINTBJ7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LNq4hjC+; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EtHTyF5u"
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3d948ce7d9dso23152435ab.2;
-        Wed, 02 Jul 2025 00:20:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751440856; x=1752045656; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jlKXcUS3jg408kymTooqcQurJM+0HaAxwssjdjwXTBw=;
-        b=EtHTyF5uSJFGEZ+doROPga/ykdR/WDHGnU6te+sgSUp5gF64J5jXlaVwh0AUf/V4QT
-         rr0G5r8ZypMkLiMBqgYpswznRk3MWBc7z7Tn9Lf7xwjd9YNliVS3Q1XoCSlu1QyussMx
-         oLGEL0+eDR1EX/KaeJHSG9zHFGCtF43wJ1d3C10qryQEbrLEKU90gxI7ClyG0fmsWMJM
-         hYRJ76JJfcbrL/rYt4RXQF8yk0icOg444JUcRLY282UMXLQa2o64RjWUG/2qNV+lirSj
-         cJEcXHI87oykajU7sqiElY/h2yp0OoDCoCjvuY1sgqITkth6tClFBd1xsb7C0dh+3tXb
-         Jmyw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LNq4hjC+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751440855;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=3UQYnC1Uj+FP/5u+XpjAfPehyEkGumzn9sTZOVjMEoY=;
+	b=LNq4hjC+LHDCyykwPPzFH7pTTRIuaqM3qaZqMqmzhPngxkkKGherOVZTrUHhqE22eEPbvt
+	1ed74vyFdBT9muCW876LrcjyHtAhE34LqZF0gXUlK/AiETn/GfZVdOwquTElnYcWEXhOEw
+	wSEsQ+Sy6jhc9tKZhtIr3gyx3ed299A=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-153-9b2eoFVgOp2kU7u0UoqdIg-1; Wed, 02 Jul 2025 03:20:54 -0400
+X-MC-Unique: 9b2eoFVgOp2kU7u0UoqdIg-1
+X-Mimecast-MFC-AGG-ID: 9b2eoFVgOp2kU7u0UoqdIg_1751440853
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-453a190819bso21198505e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 00:20:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751440856; x=1752045656;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jlKXcUS3jg408kymTooqcQurJM+0HaAxwssjdjwXTBw=;
-        b=B+hqNkzqG8AO0hVOf022ey7Jv2JP9ofu39BW0FJrmi46EeHTa0P4OMYnLT8ngYZHmW
-         MeYncQHVRPBSJIDbB9wgnFjW9PSvEXrSC3YFtxx2upZ5r2kmcNkAmZJ88wo6e8TmtUI8
-         +dnznVWseVy4MIzFlevV1/qqGYo0FzfmPHgd3omhm0ndHVcJG6CRz6/7zwp4PKi/qPly
-         dtfaSgBuqqM4fmXbV3QYMdeCZ3q0Zuv+e8huKZIsOcY2JqlSHANaSuutDWKhVBh8jMI5
-         J8B6pDzK8LmrazvKSZ5wM/ei47XtmbjHmp16EQ77R7mOefe30UNsQrtZhSS2Cdalnlsf
-         BcfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVyqJjdh4gb5Bfl4QcA70F3P0lIVSmzudTe+XbUsqlC2ZC/+NrAjzOItE0VmqzafOB8dYOCRv9Ag/wp3gRl+9tXrg==@vger.kernel.org, AJvYcCWRkQ/XXBPhpP9a479DY5KSWnONArlpbzxVPe9Ay7IIVIIRIb4eJLoPnYDdJDkVDLp1wOPXRk9j/yahLpk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydvZZrQ7fqhLtBYwCMSdeTsJHxRves/zRZIDYaPoTM5NKEjsaq
-	oA5HTvrRWA5MaQD0m5vjigCXPsewpAq8jYdmXl1ItivsKvNY7qJJT4hrn9R4QmXoSWEsv1AQima
-	SRfwNP++EhgE82UAXhk7ib9S+GSle5SA=
-X-Gm-Gg: ASbGnctYrXwUXeD33IzI6/4Fl8xvEBLJLx55lx7B8Tn9nSjiz9n5TmrGJNcfEj2uRJp
-	ql/lYXavgBvDPJO+MKXLYNe8uGX85uYgsKgWo+OjILQRDoQYhK6qnpX+Mutpv2R7WRwhxzU6Opj
-	V237Cvw6s16JX9jza+yC/VS9cSs2t1OkXYMJnPq0KYETI=
-X-Google-Smtp-Source: AGHT+IFHgMa8Mngls2xpKyZO5bXtEpSnlalV27UKMs8KgtahvMNmHCQIvV4/VqDTKCW7KQqdACPzThHXTAdqppHtWsk=
-X-Received: by 2002:a05:6e02:1a61:b0:3e0:4f30:c951 with SMTP id
- e9e14a558f8ab-3e0549c655bmr22307415ab.14.1751440855622; Wed, 02 Jul 2025
- 00:20:55 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751440853; x=1752045653;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3UQYnC1Uj+FP/5u+XpjAfPehyEkGumzn9sTZOVjMEoY=;
+        b=Va46+t4AGWCppoc9WUYB4KNb0DJ9wVHcYRrNOzyAFGv9Oqskaeki20bH/MkAGhW9uc
+         lNf9uocNduzXkRZDPHo736NPZRZGsYZ2AYx9Qy2Y3N9v5gk0QUDJKh/AL3YKQ4Jkdtdh
+         OjaYF+pB34W4u8Zez2+Pz7NA4qVEp0PFfwXfmOjAIFrnsgCnJlxCESqpfmGaeVVPPHGc
+         pFK6PKbTOOvwsn6OYETgMyNmIcrJD3+zc/S4vlJjL8j9Yr0SgsYT3a3ntdsnlSWuo2yE
+         Vjt15QuKRkoyFYUTA3PzHWXnzEmAdFp52sdzsoWZARyF+MjRyZ2kBGASE/+OE5sh8SgH
+         I+8w==
+X-Gm-Message-State: AOJu0YzAvtaMaphKoJxcItvuxFupeFyrrFCesVwfWqE2ncJZC/Eh6CUj
+	d+H+cCj4G7RX9iMSSFDpHRikmiTDALfmtY9N8jyWy50MTtTZy6j3OJZiIsYg67vKO4ymAFgSuem
+	PEeEZt/y3cvFhe9wAux5+NuLQjN0cPsrvBRPDZYleSBIsaXv2Ne0F5ird/K3qdF/dP40hK004TQ
+	G0V4KZAE7FLoJLxduyX55JQxGLMjj6JZEpFlVtwa6LGUQ=
+X-Gm-Gg: ASbGncsadMnDGgHPzpMLEWMH8UO82X5YUDsIeOYUCBNCieQHEa/8jwl0E+tqOyvQJBn
+	Q+C1CpvWwThiPmXFWI2cTnBkTZ8FPUZmvv8m8hdRknu5EIww9LmwQc9+w/mWXngdel8bo/BwKmJ
+	fRJIXCzFvNQM3XB5OAZzCuGljPkv+HWSSjM/zFDGjH6zsiMOHM1RGE+aZ6m4gxMmFhhOBh7mo7U
+	iS9S1aA3lQbY5yME7XQCSeOAj2viH0QTo8Tv8WfgtXJICShE7ccV05hn2Skxh5sO5e2ilbSoW9z
+	RSyQ6FrUZfv108CY
+X-Received: by 2002:a05:600c:4686:b0:43d:fa59:af97 with SMTP id 5b1f17b1804b1-454a373566emr14889325e9.32.1751440852843;
+        Wed, 02 Jul 2025 00:20:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFU12Z8ggQ0R6Z0B/hxd+EmZh3IQvavd5AT/0Ts/FptyhpCk8URLdlTDVsIsvjAtWLz35dAzQ==
+X-Received: by 2002:a05:600c:4686:b0:43d:fa59:af97 with SMTP id 5b1f17b1804b1-454a373566emr14889055e9.32.1751440852301;
+        Wed, 02 Jul 2025 00:20:52 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:152e:1400:856d:9957:3ec3:1ddc])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823ad01csm220359205e9.22.2025.07.02.00.20.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 00:20:51 -0700 (PDT)
+Date: Wed, 2 Jul 2025 03:20:50 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: [PATCH RFC v3] pci: report surprise removal event
+Message-ID: <1eac13450ade12cc98b15c5864e5bcd57f9e9882.1751440755.git.mst@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618062644.3895785-1-shengjiu.wang@nxp.com>
- <20250618062644.3895785-3-shengjiu.wang@nxp.com> <aGLBvXtSRlaKujqM@p14s>
- <CAA+D8AO4o7dqTyL4aZ+H5VnroTQUNAHM-io5rvJ2r_sasPYs9g@mail.gmail.com> <aGP-ZVuhBdd1GPLe@p14s>
-In-Reply-To: <aGP-ZVuhBdd1GPLe@p14s>
-From: Shengjiu Wang <shengjiu.wang@gmail.com>
-Date: Wed, 2 Jul 2025 15:20:34 +0800
-X-Gm-Features: Ac12FXxqvi6u6raIhWimY1G1UCrc7Xt2DJUxgPMKdt9-02GjFtqtqI7XWKxLVQE
-Message-ID: <CAA+D8ANtw1xTg7OQOFoDeQcdp05Eo9Uo1t=MKcGjtkSYfJqBVw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] remoteproc: imx_dsp_rproc: Add support of coredump
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Shengjiu Wang <shengjiu.wang@nxp.com>, andersson@kernel.org, shawnguo@kernel.org, 
-	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, 
-	linux-remoteproc@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	iuliana.prodan@nxp.com, daniel.baluta@nxp.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email 2.27.0.106.g8ac3dc51b1
+X-Mutt-Fcc: =sent
 
-On Tue, Jul 1, 2025 at 11:27=E2=80=AFPM Mathieu Poirier
-<mathieu.poirier@linaro.org> wrote:
->
-> On Tue, Jul 01, 2025 at 10:28:33AM +0800, Shengjiu Wang wrote:
-> > On Tue, Jul 1, 2025 at 1:05=E2=80=AFAM Mathieu Poirier
-> > <mathieu.poirier@linaro.org> wrote:
-> > >
-> > > On Wed, Jun 18, 2025 at 02:26:44PM +0800, Shengjiu Wang wrote:
-> > > > Add call rproc_coredump_set_elf_info() to initialize the elf info f=
-or
-> > > > coredump, otherwise coredump will report an error "ELF class is not=
- set".
-> > > >
-> > > > Remove the DSP IRAM and DRAM segment in coredump list, because afte=
-r
-> > > > stop, DSP power is disabled, the IRAM and DRAM can't be accessed.
-> > > >
-> > > > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> > > > ---
-> > > >  drivers/remoteproc/imx_dsp_rproc.c | 6 +++---
-> > > >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > > >
-> > > > diff --git a/drivers/remoteproc/imx_dsp_rproc.c b/drivers/remotepro=
-c/imx_dsp_rproc.c
-> > > > index 9b9cddb224b0..9e7efb77b6e5 100644
-> > > > --- a/drivers/remoteproc/imx_dsp_rproc.c
-> > > > +++ b/drivers/remoteproc/imx_dsp_rproc.c
-> > > > @@ -738,9 +738,7 @@ static int imx_dsp_rproc_add_carveout(struct im=
-x_dsp_rproc *priv)
-> > > >               mem =3D rproc_mem_entry_init(dev, (void __force *)cpu=
-_addr, (dma_addr_t)att->sa,
-> > > >                                          att->size, da, NULL, NULL,=
- "dsp_mem");
-> > > >
-> > > > -             if (mem)
-> > > > -                     rproc_coredump_add_segment(rproc, da, att->si=
-ze);
-> > > > -             else
-> > > > +             if (!mem)
-> > >
-> > > Flag rproc->recovery_disabled is never set to true, meaning that sinc=
-e this
-> > > driver was introduced, some kind of recovery was available.
-> >
-> > Actually since this driver was introduced, the recovery can't work.
-> > We didn't test the recovery function before. sorry for the mistake.
->
-> Let me see if I get this right:
->
-> (1) Almost 5 years ago you sent me a driver with code you did not test.
+At the moment, in case of a surprise removal, the regular remove
+callback is invoked, exclusively.  This works well, because mostly, the
+cleanup would be the same.
 
-Driver was tested but missed the recovery/coredump function.
+However, there's a race: imagine device removal was initiated by a user
+action, such as driver unbind, and it in turn initiated some cleanup and
+is now waiting for an interrupt from the device. If the device is now
+surprise-removed, that never arrives and the remove callback hangs
+forever.
 
-> (2) It took all this time to realize and fix the problem.
+For example, this was reported for virtio-blk:
 
-I just realized that the recovery/coredump is one of the functions supporte=
-d
-by remoteproc.
+	1. the graceful removal is ongoing in the remove() callback, where disk
+	   deletion del_gendisk() is ongoing, which waits for the requests +to
+	   complete,
 
-> (3) I should trust that, this time, you have tested your code.
+	2. Now few requests are yet to complete, and surprise removal started.
 
-recovery/coredump has been tested.
+	At this point, virtio block driver will not get notified by the driver
+	core layer, because it is likely serializing remove() happening by
+	+user/driver unload and PCI hotplug driver-initiated device removal.  So
+	vblk driver doesn't know that device is removed, block layer is waiting
+	for requests completions to arrive which it never gets.  So
+	del_gendisk() gets stuck.
 
-Best regards
-Shengjiu Wang
+Drivers can artificially add timeouts to handle that, but it can be
+flaky.
 
->
-> Did I understand all that correctly?
->
-> >
-> > >
-> > > I worry that your work will introduce regression for other users.  Da=
-niel and
-> > > Iuliana, once again have to ask you to look at this patchset.
-> > >
-> > > Thanks,
-> > > Mathieu
-> > >
-> > > >                       return -ENOMEM;
-> > > >
-> > > >               rproc_add_carveout(rproc, mem);
-> > > > @@ -1203,6 +1201,8 @@ static int imx_dsp_rproc_probe(struct platfor=
-m_device *pdev)
-> > > >               goto err_detach_domains;
-> > > >       }
-> > > >
-> > > > +     rproc_coredump_set_elf_info(rproc, ELFCLASS32, EM_XTENSA);
-> > > > +
-> > > >       pm_runtime_enable(dev);
-> > > >
-> > > >       return 0;
-> > > > --
-> > > > 2.34.1
-> > > >
-> > >
+Instead, let's add a way for the driver to be notified about the
+disconnect. It can then do any necessary cleanup, knowing that the
+device is inactive.
+
+Since cleanups can take a long time, this takes an approach
+of a work struct that the driver initiates and enables
+on probe, and tears down on remove.
+
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+---
+
+
+Compile tested only.
+
+Note: this minimizes core code. I considered a more elaborate API
+that would be easier to use, but decided to be conservative until
+there are multiple users.
+
+changes from v2
+	v2 was corrupted, fat fingers :(
+
+changes from v1:
+        switched to a WQ, with APIs to enable/disable
+        added motivation
+
+
+ drivers/pci/pci.h   |  6 ++++++
+ include/linux/pci.h | 27 +++++++++++++++++++++++++++
+ 2 files changed, 33 insertions(+)
+
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index b81e99cd4b62..208b4cab534b 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -549,6 +549,12 @@ static inline int pci_dev_set_disconnected(struct pci_dev *dev, void *unused)
+ 	pci_dev_set_io_state(dev, pci_channel_io_perm_failure);
+ 	pci_doe_disconnected(dev);
+ 
++	if (READ_ONCE(dev->disconnect_work_enable)) {
++		/* Make sure work is up to date. */
++		smp_rmb();
++		schedule_work(&dev->disconnect_work);
++	}
++
+ 	return 0;
+ }
+ 
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 51e2bd6405cd..b2168c5d0679 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -550,6 +550,10 @@ struct pci_dev {
+ 	/* These methods index pci_reset_fn_methods[] */
+ 	u8 reset_methods[PCI_NUM_RESET_METHODS]; /* In priority order */
+ 
++	/* Report disconnect events */
++	u8 disconnect_work_enable;
++	struct work_struct disconnect_work;
++
+ #ifdef CONFIG_PCIE_TPH
+ 	u16		tph_cap;	/* TPH capability offset */
+ 	u8		tph_mode;	/* TPH mode */
+@@ -2657,6 +2661,29 @@ static inline bool pci_is_dev_assigned(struct pci_dev *pdev)
+ 	return (pdev->dev_flags & PCI_DEV_FLAGS_ASSIGNED) == PCI_DEV_FLAGS_ASSIGNED;
+ }
+ 
++/*
++ * Caller must initialize @pdev->disconnect_work before invoking this.
++ * Caller also must check pci_device_is_present afterwards, since
++ * if device is already gone when this is called, work will not run.
++ */
++static inline void pci_set_disconnect_work(struct pci_dev *pdev)
++{
++	/* Make sure WQ has been initialized already */
++	smp_wmb();
++
++	WRITE_ONCE(pdev->disconnect_work_enable, 0x1);
++}
++
++static inline void pci_clear_disconnect_work(struct pci_dev *pdev)
++{
++	WRITE_ONCE(pdev->disconnect_work_enable, 0x0);
++
++	/* Make sure to stop using work from now on. */
++	smp_wmb();
++
++	cancel_work_sync(&pdev->disconnect_work);
++}
++
+ /**
+  * pci_ari_enabled - query ARI forwarding status
+  * @bus: the PCI bus
+-- 
+MST
+
