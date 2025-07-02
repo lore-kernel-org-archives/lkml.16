@@ -1,176 +1,99 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D0541C5D62;
-	Wed,  2 Jul 2025 13:05:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751461560; cv=none; b=o8Qlw/2Dz6hbIqYurcl5/mm5/IOxdFbbR9QLcVAWYZG8XRLkfOgql3VC6YwEucrfJj5IUTYne3K5DogYSxmTNJUf4slCZGSjLAdEsnbtZDDTEIGbVK7Xlss3jJRDS/BfC6Z8WO8eA3yDMBiaSHyia+xBqnzApMVzUc8JF9z6ktY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751461560; c=relaxed/simple;
-	bh=HdgdvIsErRYB55Bx2nUsDKO5isYMPC38e3HOD98FCCY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FwVTGh6+llEYo/nRbETcL10GDur2gaDJGOpLxqkiaijlryBpPiCUrviH68CofDyEP1BH75M4qk7Ve3Upndp4lNa5DtHoDtx4jZ0t41HWp3VvU0CEWea4GvGAEsxBx4zBx2Rbc6tjYX9aGUOFxSq3CbzWUZz9VYo6iwG3mSWY2EQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WXPfSYmP; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 666B126771B;
+	Wed,  2 Jul 2025 13:06:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751461570; cv=pass; b=pmFkEfc2KULVbg4HC36ikLEjbjHdb2mto8hBnLmLMb1qXosHU1nfrtOkDE1KKFWfxOqdvCRGSnU/+P61s8CP998+/cmvcW+0E+fWDm1EuFG01+oAgWt/v6t13Yk66OPBhEBpuuOy1DqIot7VcbM5hciyTXZ09+1LOfh2/nVQlF0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751461570; c=relaxed/simple;
+	bh=sfT5q1GCk139yZl1ZuQRka7S8TZTkbjz7Bsz+AfeQxM=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=ol3wS+QIzMVSSltyBE+T+oS3Xzo+sphdycB4XOivHcghosOLIGGKZwdx1Yj7xuPiFyh7jyHS1f6+C+5HBJmb39oEA0yGZ1BU4n/Gau5A0aaLfy8CdOk8/44Yh9hV1naM2JQwhOVUWAXh6JE3BMT6VRckU84t0l8T4GJS/dg/d3E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=asR0ylms; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WXPfSYmP"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-3137c2021a0so5846987a91.3;
-        Wed, 02 Jul 2025 06:05:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751461558; x=1752066358; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3sl6m6l7WchtXeiLO8eyqbnD5skRu04k6LyNWNAViEc=;
-        b=WXPfSYmPe0geVK8nvO5z1wJQc7kj6p288uvkNqtp5857LDWMzFGn39aL8Ss21hwHlz
-         VCK89Olhkw+qdeF1mhroyKbzzY21Ikwvv5lRYCvAUnW0FU0HE5dYkbrC5tsESnqWOEh+
-         QoPzsSzUrf1BnoAIQ+YIm5wABZOzVTjudeplbnPlLK6WaAaycRRuIJx7qV1yNk0llri0
-         R0XMrIDeG7Ks55lrAclCA7XcYxAwT8C5F9i2LC9APbuA+sC0KKuJbhpYP9pDFJ+iicRy
-         akRz0vwViJ8QnjVmFyZCJ0+rRvTsVzH1EfY/k2I8ye5crF/HLMHGHpSzMn9iTbBMkZrG
-         UCRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751461558; x=1752066358;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3sl6m6l7WchtXeiLO8eyqbnD5skRu04k6LyNWNAViEc=;
-        b=Q3xU0zpiDlhxjl1mUHUYv0lnzFEr7upZMoyNKCxk+Tc/QCPdHLAJEilliC733eY3S3
-         +ppeMrf52DyRL+dDSmbk/NR4hTatXkNwmbeRQ0f76L5zj8JO5hMghmcU+AAIkO7yuJaB
-         Nxt4TKvPAs9/klo6+hxrSFMFcfvV9oTd2asOcMOKQnCWjsi+AY30WnOIsI1fTExXzIB+
-         czOC77gmtd9icpnRYGtseW4dKKE7pyU+LFWZyycIMj2Bj34vEfsbgZT+3PhW2PB7CX7+
-         uZlUPWMdQ9Q7wchrUUcX4O+6DmscoayagpD24tgbo/WpKr8fuLt321AIJmhn8UgcmnDx
-         MmRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVP7sc5ntcdeyz8PN760P5J5ZDm27j8zfuYNj2VHFh7I/V5N8O0z1pnYNXK3xYql7fJRsTB9kBE/vMIEFl2@vger.kernel.org, AJvYcCXobmATV5N8JlyxipjLZDWtbvFn0JOjiOGcvsY0J1Jn6oNhlF4YT3AqwCkQWXLd/WgDpm+gTa/+RaiAtEwCBlM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygDfG0soiUCoG79Kx4r+2ZqHgS5awAbCq7J3V+zcepkllQoCBX
-	PsFRLHFigGr8+sXg6REW1NbmOPJadx18/Bx93Swavx4tG1Bpw4fY+aUbidpzNrW5Fif+CAcgBug
-	qGuNA6ugp0o+t2HlYsVjr03+H7bg8rhU=
-X-Gm-Gg: ASbGncvHoFYgC0C+lNgQDnz9R3YjBA5+PPosExoMGJ8loswhDrrLtgu9+nQrWKEx/JK
-	2b/YqAxKVgrd1WijNWUV6IFpRvCiAZn3SMrLaC5fgUd+xPRrhyBGZBCwD78TKbELNyuaSZ3xYg3
-	Ol0gf3BMCET+oALS3eZtD65sFxDhskI+5OaKLAOkS3JA==
-X-Google-Smtp-Source: AGHT+IE6oAo1JpcGKMDAjbhxBaddxdPQrbeSqqDdlGEg1cIFpEnuZo1kj/DTMX7hU11oivcuZ0mdaYInt5vFda8BjXo=
-X-Received: by 2002:a17:90b:2f85:b0:311:c5d9:2c70 with SMTP id
- 98e67ed59e1d1-31a90bbbc58mr4844308a91.15.1751461558139; Wed, 02 Jul 2025
- 06:05:58 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="asR0ylms"
+ARC-Seal: i=1; a=rsa-sha256; t=1751461550; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=mw/uMhCZAtozQK8r5zEYobiHKhAsQJ6FtLPilglRlmmbdNerjdFfrou2pnwG8WVrvSKFq72mAiDnwJ3Hj+G55W01gbQRCMGZLsPaU07+v4TmPK9+PoeUovxjMudIfCFJg7k3E2qP16gWlFin08o2xZDhsGV4sA39OGhJx6GLYPk=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1751461550; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=sfT5q1GCk139yZl1ZuQRka7S8TZTkbjz7Bsz+AfeQxM=; 
+	b=Me2RxfMQJqoAmUYXCncVN+j9vXzFTz23DLOGF6LBPsSkxxq2yJaKB7tCKbZ5RC7pQR5ILcyfnC4h5TSqCozQ+7rce6KUTV7WYEJBkfjUWNHqzgyXZLQ6atZqdCI0LzEC0h7TBNm2a9M+/hlFclj8nvHSLR3ytMqPXMu2m6nqdd8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751461550;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=sfT5q1GCk139yZl1ZuQRka7S8TZTkbjz7Bsz+AfeQxM=;
+	b=asR0ylmsiL5OlGhDTmx9mTyfpVj8EyXzsuoogSadSza1PuGApeBCoZiTX/+jFWrC
+	NogYShRFABZZ3iJGJpEouZcz/JxQ4POXP+EuCdOVcOcm5U26U8teTmLfzs7YlEtJ5YR
+	7V6zWbTduYK1oJ2Zkk6I3e8NQBA9ZG0UGZlO5gqo=
+Received: by mx.zohomail.com with SMTPS id 1751461547793174.49808757376593;
+	Wed, 2 Jul 2025 06:05:47 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250606090559.896242-1-hildawu@realtek.com> <bb5d83c2efa24dd8ad271ce812581d02@realtek.com>
-In-Reply-To: <bb5d83c2efa24dd8ad271ce812581d02@realtek.com>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Wed, 2 Jul 2025 09:05:43 -0400
-X-Gm-Features: Ac12FXxK5DRKSYIh__84LUfk7KyFThl1pvNIEPjiZub5MkPnhl9voiddthWtZi4
-Message-ID: <CABBYNZK4a15mEDuRtAaSj+y5WzpP751shTLGi1FJg+0eQft+BA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] Bluetooth: Add support for RTK firmware version 3
- and enhanced ACL-based download acceleration
-To: Hilda Wu <hildawu@realtek.com>
-Cc: "marcel@holtmann.org" <marcel@holtmann.org>, 
-	"linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Max Chou <max.chou@realtek.com>, 
-	"alex_lu@realsil.com.cn" <alex_lu@realsil.com.cn>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [PATCH v7] rust: kernel: add support for bits/genmask macros
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <CAH5fLgicRxTsjpBKXDrcJSibOq7HQOsTXdKEBnH1-K8Jt=S-xA@mail.gmail.com>
+Date: Wed, 2 Jul 2025 10:05:33 -0300
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Alexandre Courbot <acourbot@nvidia.com>,
+ Benno Lossin <lossin@kernel.org>,
+ linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <067C1035-2FD5-4186-A45C-F6F7444F05E2@collabora.com>
+References: <20250623-topic-panthor-rs-genmask-v7-1-9f986951e7b5@collabora.com>
+ <CAH5fLgicRxTsjpBKXDrcJSibOq7HQOsTXdKEBnH1-K8Jt=S-xA@mail.gmail.com>
+To: Alice Ryhl <aliceryhl@google.com>
+X-Mailer: Apple Mail (2.3826.600.51.1.1)
+X-ZohoMailClient: External
 
-Hi Hilda,
+Hi Alice,
 
-On Tue, Jul 1, 2025 at 11:35=E2=80=AFPM Hilda Wu <hildawu@realtek.com> wrot=
-e:
->
-> Hi Marcel, Luiz and Maintainers,
->
-> I hope this message finds you well.
->
-> I submitted two patches for the Bluetooth subsystem recently and wanted t=
-o kindly follow up to see if you had a chance to review them:
->
-> - https://patchwork.kernel.org/project/bluetooth/patch/20250606090559.896=
-242-2-hildawu@realtek.com/
-> - https://patchwork.kernel.org/project/bluetooth/patch/20250606090559.896=
-242-3-hildawu@realtek.com/
->
-> These patches address the future chips firmware format enhancement and do=
-wnload firmware improve.
->
-> Please let me know if you need any further info or changes from my side.
-> Thank you very much for your time and consideration.
-
-Don't send reminders, just resend the patches, also the kernel test
-bot did respond with an error message, please fix it before resending
-it.
-
-
-> Best regards,
-> Hilda
->
-> -----Original Message-----
-> From: Hilda Wu <hildawu@realtek.com>
-> Sent: Friday, June 6, 2025 5:06 PM
-> To: marcel@holtmann.org
-> Cc: luiz.dentz@gmail.com; linux-bluetooth@vger.kernel.org; linux-kernel@v=
-ger.kernel.org; Max Chou <max.chou@realtek.com>; alex_lu@realsil.com.cn
-> Subject: [PATCH v2 0/2] Bluetooth: Add support for RTK firmware version 3=
- and enhanced ACL-based download acceleration
->
-> Dear Maintainers,
->
-> I am submitting a patch for the Bluetooth that introduces support for RTK=
- firmware version 3 and implements an enhanced download mechanism through A=
-CL to improve firmware loading times.
->
-> Patch Overview:
->
-> 1. Bluetooth: btrtl: Firmware format v3 support
->    - This addition ensures the latest RTK chipsets with firmware version =
-3
->      are fully supported. It includes necessary modifications to
->      accommodate new firmware structure changes.
->
-> 2. Bluetooth: btrtl: Add enhanced download support
->    - By leveraging ACL links for firmware transmission, the download
->      process is significantly accelerated, reducing the overall time and
->      enhancing performance.
->
-> Testing and Validation:
->
-> - The implementation has been tested on various RTK chipsets under Linux
->   based distribution.
->
-> Impact and Benefits:
->
-> These enhancements are beneficial for future firmware v3 chips and compat=
-ible with previous firmware versions. Users can expect shortened initializa=
-tion times.
->
-> Your feedback and suggestions are welcome to further refine these changes=
-.
-> Thank you for considering these enhancements.
->
-> Best regards,
-> Hilda
->
-> ---
-> Change in V2:
-> - Move structure to btrtl.h
-> - Fill in the missing symbols
-> - Fix build warnings
->
-> Hilda Wu (2):
->   Bluetooth: btrtl: Firmware format v3 support
->   Bluetooth: btrtl: Add enhanced download support
->
->  drivers/bluetooth/btrtl.c | 857 +++++++++++++++++++++++++++++++++++++-
->  drivers/bluetooth/btrtl.h | 122 ++++++
->  drivers/bluetooth/btusb.c |   3 +
->  3 files changed, 974 insertions(+), 8 deletions(-)
->
-> --
-> 2.34.1
->
+> On 2 Jul 2025, at 07:27, Alice Ryhl <aliceryhl@google.com> wrote:
+>=20
+> On Mon, Jun 23, 2025 at 10:18=E2=80=AFPM Daniel Almeida
+> <daniel.almeida@collabora.com> wrote:
+>>=20
+>> In light of bindgen being unable to generate bindings for macros, and
+>> owing to the widespread use of these macros in drivers, manually =
+define
+>> the bit and genmask C macros in Rust.
+>>=20
+>> The *_checked version of the functions provide runtime checking while
+>> the const version performs compile-time assertions on the arguments =
+via
+>> the build_assert!() macro.
+>>=20
+>> Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
+>=20
+> Is it intentional that the macros are not available for usize?
+>=20
+> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
 
 
---=20
-Luiz Augusto von Dentz
+Not intentional, but do we need it?
+
+I really have no idea whether it=E2=80=99d be useful really.
+
+=E2=80=94 Daniel=
