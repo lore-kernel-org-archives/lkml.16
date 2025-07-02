@@ -1,238 +1,276 @@
-Received: from mail186-10.suw21.mandrillapp.com (mail186-10.suw21.mandrillapp.com [198.2.186.10])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2063.outbound.protection.outlook.com [40.107.223.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8212923A9A3
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 22:42:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.2.186.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751496139; cv=none; b=u8nQGlEfY7J3wQvFTEr0JdJaHYFNIiAwY6eCWLZ1gpMxs1+VfYNY6sL5RqHlqxWET97mSFL+mqaPUkkCSzTKXXJxPX7zi4zcMS2FevsKwduTlLU5C3RJE4PTbeDidWMyJ0WgFB3I8+/untW2eycxFTbaBYPJ/CMK60pnjKdRW30=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751496139; c=relaxed/simple;
-	bh=kh5WZR7d9dorGuI7Q6IIci1P7Y/xEBeQAyK9ligdiU8=;
-	h=From:Subject:Message-Id:To:Cc:References:In-Reply-To:Date:
-	 MIME-Version:Content-Type; b=Hey/zkK/JOjeGZHMpdlBHRd+2kddu6hfemnXKgcB5DKnIShwvFnU0cpGs3wbK06BoFg3UCGct/De4uKNPe/0xulrFSM4EPGpe8+xuYwJsh5+57dcYeDK93ZNGvxviMznou2zSpBYgNNF9cFNJckrKP5DO0hLZu/XnjsRUP//jFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vates.tech; spf=pass smtp.mailfrom=bounce.vates.tech; dkim=pass (2048-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b=m52R/Zbg; dkim=pass (2048-bit key) header.d=vates.tech header.i=ngoc-tu.dinh@vates.tech header.b=Bk63xhpX; arc=none smtp.client-ip=198.2.186.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vates.tech
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bounce.vates.tech
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69FB1F76A5;
+	Wed,  2 Jul 2025 22:43:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.63
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751496217; cv=fail; b=lzQs+Ifwi00fZ583YvOG38KkT183pNuBe04DL9uXFcAz+7rZBUoVi6FOtzz/r81N8+Ws0H6EIgDUnYalFhiWXHHKnH2uPVdEQBWNSWpUrlVvdXWkBSyTzJTK7UhkkKrl61wIn2NmAMQBpWm/jlg5El378/E/+qghizJYaRioAPo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751496217; c=relaxed/simple;
+	bh=mlgdoaPxHr4zHGTqpJ46Y1dsinrc1kttHpJdKDHzM3Y=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Zym/yF8MlH9QvwDm/7K0AA+08fj52yFzeMeJ3Oe2pf9ulTgxhj5SwViwyLhgtfwE9ZE0w+z9nFvn3ivLCHBmLtWRqNBvss2KHwkpZR9KABkV2WgIXIhWk4mAiVs0XhEdVwpWy+p6r0n4uO1G47PyyEFwXp+1gWs+s8Dww7Fatxw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=g4li614Z; arc=fail smtp.client-ip=40.107.223.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="m52R/Zbg";
-	dkim=pass (2048-bit key) header.d=vates.tech header.i=ngoc-tu.dinh@vates.tech header.b="Bk63xhpX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com;
-	s=mte1; t=1751496136; x=1751766136;
-	bh=SHAawigTxxv6yh6TdZAJGRPMMIrw2ifj78O7i+3plPQ=;
-	h=From:Subject:Message-Id:To:Cc:References:In-Reply-To:Feedback-ID:
-	 Date:MIME-Version:Content-Type:Content-Transfer-Encoding:CC:Date:
-	 Subject:From;
-	b=m52R/ZbgEqSLPzTueva15ms/alji5VupZIRXBRzw6ZO9qLmvEIVEaPIgJc1k/q39B
-	 1+MO5Q5zw/gIMySM7Y+XJZ/togwXHWbufOhQdQk9DYLpKGcDrgi+gQ4/b14XH1WsZZ
-	 efAn3yrrkDYZjTEK7fyulZnWOSwnDJxxwjj16ZxGR3cZKpZt22Ud99j3K0PoCR+t2r
-	 tY8d7Vv4ZZQhM6280DbzMima51gm+FDU1wwGcsoNgq+LzKVbIyS6Qn1mTyiqg2up6m
-	 FszCOUks42X3jIxVFYwlSh3f4Hxuu4qwe5ArjsSeaOTQ7quXXl6Uf3pk9pDsA4Cdz3
-	 TMp2IEDdYFvCA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vates.tech; s=mte1;
-	t=1751496136; x=1751756636; i=ngoc-tu.dinh@vates.tech;
-	bh=SHAawigTxxv6yh6TdZAJGRPMMIrw2ifj78O7i+3plPQ=;
-	h=From:Subject:Message-Id:To:Cc:References:In-Reply-To:Feedback-ID:
-	 Date:MIME-Version:Content-Type:Content-Transfer-Encoding:CC:Date:
-	 Subject:From;
-	b=Bk63xhpXfcLqo20k0VGWRGuB+rsZ+fB5rlsbpPAWLOD09l0q/4vNYwULJ91j2fQgN
-	 6aN43Q03mLoZu6gVE+HKBNCN+stc/8NZif/CNXcKsSykRJlYtslJBKd/xR+GhBYn2T
-	 M9GoZBt8cV9o7xteTRp5KqNCJeVKDfyCo2XbA5Q29TVWingIEj21HU5Tj08J0rrNRT
-	 HOVWs7o6V8WZxNs5ujtpsM7q3kFb4q01h9K8u6gbAQt2alTfn9m8ZqgU1DsuloQCWl
-	 egmRYYM4OJsgwi2L17zgtpRgwvNmg3Ihof+V3Ndy4uMVD0q/08laCfa1jPrlHolJ0f
-	 aOfzttmf/STdw==
-Received: from pmta10.mandrill.prod.suw01.rsglab.com (localhost [127.0.0.1])
-	by mail186-10.suw21.mandrillapp.com (Mailchimp) with ESMTP id 4bXZf03r69z5QkLn0
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 22:42:16 +0000 (GMT)
-From: "Tu Dinh" <ngoc-tu.dinh@vates.tech>
-Subject: =?utf-8?Q?Re:=20[RFC=20PATCH]=20xen/gntdev:=20reduce=20stack=20usage=20by=20dynamically=20allocating=20gntdev=5Fcopy=5Fbatch?=
-Received: from [37.26.189.201] by mandrillapp.com id c5b97b06e3454a01bccd03bf6ec2a807; Wed, 02 Jul 2025 22:42:16 +0000
-X-Bm-Disclaimer: Yes
-X-Bm-Milter-Handled: 4ffbd6c1-ee69-4e1b-aabd-f977039bd3e2
-X-Bm-Transport-Timestamp: 1751496134720
-Message-Id: <ab668ddb-1ea5-4444-95fc-f31469b4f05e@vates.tech>
-To: Abinash <abinashlalotra@gmail.com>
-Cc: jgross@suse.com, sstabellini@kernel.org, oleksandr_tyshchenko@epam.com, xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org, "Abinash Singh" <abinashsinghlalotra@gmail.com>
-References: <20250629204215.1651573-1-abinashsinghlalotra@gmail.com> <5e67d651-830a-4d99-af37-26f2d0efd640@vates.tech> <CAJZ91LC610AsBZ8X3u8ZxAUhc6QT0FHeffQT0ARmnMgsGrdZQQ@mail.gmail.com>
-In-Reply-To: <CAJZ91LC610AsBZ8X3u8ZxAUhc6QT0FHeffQT0ARmnMgsGrdZQQ@mail.gmail.com>
-X-Native-Encoded: 1
-X-Report-Abuse: =?UTF-8?Q?Please=20forward=20a=20copy=20of=20this=20message,=20including=20all=20headers,=20to=20abuse@mandrill.com.=20You=20can=20also=20report=20abuse=20here:=20https://mandrillapp.com/contact/abuse=3Fid=3D30504962.c5b97b06e3454a01bccd03bf6ec2a807?=
-X-Mandrill-User: md_30504962
-Feedback-ID: 30504962:30504962.20250702:md
-Date: Wed, 02 Jul 2025 22:42:16 +0000
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="g4li614Z"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cAfuFA5FDy42NaIbBZasldtaA7tESzZ6b8hjIaTrOy47jmORABOzuG1mXwoiI2nKiNwX2aHqf1jT0ViJexR+u8wNNg3JD4iCOG/HvDNo+zkbGFDWKxw5jY8xKDWHQxr8xuJdpwtQh4XTQV6losWLED5FEWDlLFqu113qQZ6XSYse6Mvc/AHTdHTSCdQLQtHY6BhNhZdhDIAin5XuW31T7bHKkroDS6zxu/E18rLdfdd8QP3+cgzkC9ryrjQMLW+3lBjPDdrT1L+YFcRcCBo1P5rTxte925g//2h99jo57yfsWoShv5veeTLtLVBSfqpC2bT3L9eq7lp1kREkoAW6wA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AybJB+08Wdfyh99eFd/3rIoK6DTA12mLu3tHTs8b0dQ=;
+ b=XJNcbt6ud4G31cYMyJnCs5p82pMa2WzzPqeg16GSIkHAp+z/ourkEviH7WuPGNfY/zNSVf04LEQIDMxM5QW7DG47S0GoP5fFAOrwxBGXCfIv5XUKEMvsmX2jsRiSPjjGfvZTcZuAW+doc5AnXvtG9uumnEzwmt+XymMoeTn6ZW1oCMhkCg2/NIpuuDRY3NDeQnGUDYd5mmuPtkotrhPlC/Zk7u4f6mqA/NLGClL0WivYDJ3jbX6ahrVafCqNAK/vrM4nvK2H6Eu1dS2hdSCxev9lsIJg3E1/FnxTbDTLviaMTigQfV/w5qlsrRaGr17WHYS1DF1N34XYQrtyTOp5oQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AybJB+08Wdfyh99eFd/3rIoK6DTA12mLu3tHTs8b0dQ=;
+ b=g4li614ZW55iUhIZZcItCas4tvrMYsOAJnN/C7GtbTVo3lotMkKVnlnuz4W/BOq1W78ujhcYMc465I8lYNJP/o8LSlPgncpkbnbz2MhLj9tqE7O+kWYkNVXAtF5+4oqKMhJbuoHQoK6qtO1Tj/4S0j0jUrTgfK9868ejv7B+Mw0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL3PR12MB9049.namprd12.prod.outlook.com (2603:10b6:208:3b8::21)
+ by MW6PR12MB8950.namprd12.prod.outlook.com (2603:10b6:303:24a::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.30; Wed, 2 Jul
+ 2025 22:43:32 +0000
+Received: from BL3PR12MB9049.namprd12.prod.outlook.com
+ ([fe80::ae6a:9bdd:af5b:e9ad]) by BL3PR12MB9049.namprd12.prod.outlook.com
+ ([fe80::ae6a:9bdd:af5b:e9ad%6]) with mapi id 15.20.8880.030; Wed, 2 Jul 2025
+ 22:43:32 +0000
+Message-ID: <7598ff2a-fab1-4890-a245-9853d8546269@amd.com>
+Date: Wed, 2 Jul 2025 17:43:29 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 7/7] KVM: SEV: Add SEV-SNP CipherTextHiding support
+To: Kim Phillips <kim.phillips@amd.com>, corbet@lwn.net, seanjc@google.com,
+ pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ thomas.lendacky@amd.com, john.allen@amd.com, herbert@gondor.apana.org.au,
+ davem@davemloft.net, akpm@linux-foundation.org, rostedt@goodmis.org,
+ paulmck@kernel.org
+Cc: nikunj@amd.com, Neeraj.Upadhyay@amd.com, aik@amd.com, ardb@kernel.org,
+ michael.roth@amd.com, arnd@arndb.de, linux-doc@vger.kernel.org,
+ linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org
+References: <cover.1751397223.git.ashish.kalra@amd.com>
+ <b43351fec4d513c6efcf9550461cb4c895357196.1751397223.git.ashish.kalra@amd.com>
+ <790fd770-de75-4bdf-a1dd-492f880b5fd6@amd.com>
+Content-Language: en-US
+From: "Kalra, Ashish" <ashish.kalra@amd.com>
+In-Reply-To: <790fd770-de75-4bdf-a1dd-492f880b5fd6@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SN7PR04CA0173.namprd04.prod.outlook.com
+ (2603:10b6:806:125::28) To BL3PR12MB9049.namprd12.prod.outlook.com
+ (2603:10b6:208:3b8::21)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL3PR12MB9049:EE_|MW6PR12MB8950:EE_
+X-MS-Office365-Filtering-Correlation-Id: 10685976-ce87-4900-ee63-08ddb9b9df72
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?U2VNOWFyUXZjbWdMbzJKbnhLb2lrcnk3bmlqMkRPL2ZLR1JqNURhaHUza21M?=
+ =?utf-8?B?c3NJWWdOTkh4NHcxVUdJaVBhRWJjc0NCaTJjUk5lamtJTHJyRE90T1BqZWhi?=
+ =?utf-8?B?dUJHanR3VmNFSEZobm5nQ0tjd1F4N1Y0STh4a2RnU3dUZURGYVE0SHVwN09M?=
+ =?utf-8?B?dURCbm40TlVaTERVaGt5RDA2dTFkL2k4bERaNFpUOGdnd1JqcC9sYnF0THRq?=
+ =?utf-8?B?d3NkZlREaXMydG5kR2tMOHNBWUIrS1B4Q1pJczcxYTFkYURZWGdjcitDanVR?=
+ =?utf-8?B?S0hRREhldXJDUXVFTktYekcyMjgzV1BrK2F3Q2RMNGtlYmR5RXFESC9KM21p?=
+ =?utf-8?B?cHk3eEsxUDRZakZaWk1iblR4L0dheHFTYjRRUmRucnJDYmpqUmR1SzB2SWF1?=
+ =?utf-8?B?SUd0MDFGRjFGV05aTHB5NHZLMktvemI3Q051dHZyOXVJV1dyaUp4STI3Tzdp?=
+ =?utf-8?B?cysvWkh2VUtDMWdsS2VBTmhHaGlxZnYvSkc3VlkzMkp6clE1eHBsdzlsR3Zv?=
+ =?utf-8?B?NktZQzY1d3hBSlR2aTE4UlREbElEbEo3RzJwTG1SWGdWa1I0Z2UzSFR0emNZ?=
+ =?utf-8?B?c29VTWJWVUg3THg1RXB2a3Avc3N3d0d4V2huS1BWVG9kbXpDSktDWkFrQ0hT?=
+ =?utf-8?B?UUZmQ0tjR1I4cUd0OFo2anNtTjM5VlBaRDVlRTFKV016VmYrb29iY01mdlAr?=
+ =?utf-8?B?K2c4aUJtTnoyL1Z2TFJVSENYU3U1R1ZMS2NkcUh0Qk0xWXpKOVJLcGcwSUx4?=
+ =?utf-8?B?SmR2UUU5NjRCRFl5anZzYTFwWmoydjQ2RVNaNTI4a0Q2R2N4dWpkS3BHOXR6?=
+ =?utf-8?B?bHJOcFN6VFpxSVNRbXhQbGRnaWN5ZStsUjQzMlY2M0JaVCtSWURXQlkrOHht?=
+ =?utf-8?B?ck1EYjBZUlRodExJVStsSmhhbHk3bGxvQ1BoWjBBT2U1N0NRb0FlaVBPS0xI?=
+ =?utf-8?B?eWRnZG00OVpvVnpmaVVKWWpmK1BFWUpFNHRhcmVuSVFGQ3dZdGZKRmVpaXpW?=
+ =?utf-8?B?WUhPL0ZtdVo0ZGpoT3R4d3JmeWVHMy82S051M21xS0dmWVFpbDBnL1BEeDRz?=
+ =?utf-8?B?UGlRQUlvcmNXaDdWU2ZmeEVXS0h3bk9kWHQzQlJad2Rnb1RGZWw2Vi9LNWlD?=
+ =?utf-8?B?QmhRSHlyU3IxdndxSTdjV095eGlkRFlQNUoyQ1JQOVZqTmpobEJLTnRtYjVa?=
+ =?utf-8?B?alVDK0x4d2ZGeGNJN2MrcTVKK1h1ZnptUEIxcGNKY3JwblFPa0JlS3lSY0w4?=
+ =?utf-8?B?MjJiY2phWDI3ZDI2bEVFak9YcG1TSStrTnpPUVdTMzkwaTJpeTVQYlZNaEhS?=
+ =?utf-8?B?TWdLMWhCZ2xuMXYyazhIY09wSzBuSll5SjVuUTRVbFQxRTduMjBhWnQxQkRw?=
+ =?utf-8?B?dHF1SWNaU3NBb2RjKzdiajZPN2V6dUV6dkoxSlNkT3NxWjB5a2VWL1RIRWtL?=
+ =?utf-8?B?NTM1a2N2a1N4L2Nxa1FGaFZ2RkpHL2lhTFZFdFFTNmlJSFVmbkN2aCtXTXAw?=
+ =?utf-8?B?SnBYYzA2Ni9jWFQ1NlJRYmhzenVrcDA5QkdmaXVuRUR3RkhwQXlpQkloZlpT?=
+ =?utf-8?B?MiszSVZ5NUdkS2JSRmJVM3RIaWtxUVNPdkRZck1jZVhiOWRNRHFFbFg3S1JC?=
+ =?utf-8?B?dUxBLzZQSDFtY2pyRjdja1doSFZveEtIZWpxVU9qYTRzNFZTRVpLVElLaWJO?=
+ =?utf-8?B?aDRLaExydHdRMnM1MHJ2SVE3eVRrWnZJZ3B2cTRaQjdEQmxhUHcxa2MwdFdu?=
+ =?utf-8?B?MlBxOFhWZ3dFZmhiZFExRTZDc3Iva0Jta1hzdFp2b1B3eDZlSDZuQjRScUNW?=
+ =?utf-8?B?SVBKaVhZNFpkN0tiUzFsWUtlWnpGQWVSV2ZaakpCMWJPbTlZRmFxUTBLa2FB?=
+ =?utf-8?B?cW9tZ3hRczBwYXZpeUZTUlY0V2c0K2YzS04xcTdKQ2JvOE1xS1dhbmdubkdH?=
+ =?utf-8?B?QWZFUVlzUjh0WmptOUE5akE2V3FwR01HZkdkQWNVSlJ3eXBjdFIyVS9HNk51?=
+ =?utf-8?B?b016MCtqeUxBPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL3PR12MB9049.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?OGpyeEQrMFZxWU5zK2drT3F0SlRKcUt0b1Y2Sy9yYzVoR1pldk9PaFRRUVJt?=
+ =?utf-8?B?aGlHYW1LcTRGemdjenIvVFlLVlQvRVZ0Nm8zZzZWUTRncVcrdHAxYmJJOG91?=
+ =?utf-8?B?U2k1YkNkN3pWTXlBMzZaUVhvcmc4bVQ5NlZ1M3I3YTEyQVdIOWgyeUlUa1ZN?=
+ =?utf-8?B?K0FSZmRnSHVFcjFGU29aQThoSzloTzZsKzJJK21jM2Rjd3JBQk8wNXN5bUhV?=
+ =?utf-8?B?YVR4MGpvR2pFRFpJQUYwNGtYVE5za3F6KzdKcXF2c2w1N08xZ0xKZG1QOHNP?=
+ =?utf-8?B?MDJTNHkxUmFmVFVaQkF3VUIvcFoySnU3Vmd2V0lNWjdtb2JqUDNyT1RqRHVZ?=
+ =?utf-8?B?bXhuQXNRUEVBRkhMTVVmT3A1cXBZY3FmUUtLdndKdVo2QWNJM0g1eVY0YXdn?=
+ =?utf-8?B?QUFXTzZabDNGV1pvVUx0OE9zK3BmS2JtM1lTeStFNHRKODFmOE1vblZ1bisz?=
+ =?utf-8?B?OGlQYXc5cTh2L2dGa2tmQ3lWWkdQNmFOeXlJN0lPU1ErclFPcS80NDgwWVRr?=
+ =?utf-8?B?QlM3ZkhBZml3S1paaUF3am1NTDFrTnRPQWJoL3NLQVpQdWJLL0ZKb3Vqd2sr?=
+ =?utf-8?B?K05Vanc3QnBobHBhK3VaQUo2Y2VuNlhVRUhIRUxnejBMcjNsNTdLVTVNVG9i?=
+ =?utf-8?B?VzQ5c25jRy9xV1FsOXd4VGcvZWxuaGJWYnViZUFuclpsbi9jK0NoUFFnalg1?=
+ =?utf-8?B?RDZ2R2NzaGc3aWllQzBLWUgzdXo4ZjdTSEprNEpxaDY2SEJyMFNYRDRETE54?=
+ =?utf-8?B?KzVmdUNZZ3N0czM3KytKdGNod284Q1hJdUMxb2RnaTBDaGdLWG90MHNBQVk2?=
+ =?utf-8?B?SnVWQ0xXWU10MUtnaUVqdk9kUm1kREZST0lwR0xHM0J6Y2tkRGVDZ3h2eXMz?=
+ =?utf-8?B?LytGaThiMmpJU2FXQjNydzY3ZHNBR0JDeWxhMU0rRk5nL2xVL3g5N0srNERH?=
+ =?utf-8?B?RWNrUGQ2aVkxODFTK1hSd0hlaXZyam13OWZIcnNjT2g3TldqelpvaVZVYXJY?=
+ =?utf-8?B?QUlIOUlEMXVWdkZ5bmwvYUFXTEdwbzVGVnEyZS9MbGwvd2E1cHhUODJQNkpZ?=
+ =?utf-8?B?MThWNGxUckhncE1DSVQ2MkNaZm9ZVmltMTE0eDBOWi9WcW5meFVmRGJiT2du?=
+ =?utf-8?B?bFZoQ0Z4NUFrUC84ZEJYSEVocEhNL3J4Z0FtQitUYUxUU0JXd2t4QVlJRXU2?=
+ =?utf-8?B?OHdBZ28wYmdtZ3V1bUh4TmR1aW92Q25TSVliU3k4ZlF5V0l0NksvZXh0NnJD?=
+ =?utf-8?B?Q0dISDdLK05yQTZBNUpQZ1hOMzFLcWpYcUkwOEt3U0NBOEpvd3dUbjlvMlBj?=
+ =?utf-8?B?RkZIQXoyeHJscERCdkpteE5PTFhsWERtbVFpbEl0NUhRbDJyYU5IUlZjRXU4?=
+ =?utf-8?B?QjlSRGcxRWlHbnQ3QVN6bGhCRHduSFhOYmMvSGVqcGNzYWpkWHlMWXhabjNv?=
+ =?utf-8?B?eWtLYU5oc2p3azUraDJFL2hNUS96N2NMTWUvUEZJakZIYVpHc2hBTjFYZFdk?=
+ =?utf-8?B?dDJrQ1c5OXlmd0NyMFB2bGtBWDd1Yjd0ZHQwZFo0RG5JUHlwcUxGUGtIU0dN?=
+ =?utf-8?B?Sm8zNzRZTFN2MmpVU2hQVHJXY2EraExOSlFqRTVpbFNsMkwvL3kreG51Uzgx?=
+ =?utf-8?B?SkxFdk5BRlZlNTRLSWdvVWJ1SUpEQVZkYS9TSzFwRERnK3ZjNGQ3M2JyaWll?=
+ =?utf-8?B?K1VwMGh6REp2RlB0dkN2TlZCZEhSYzJaUkVRSEVSY2kyZ3RGcHFDbU01NzJB?=
+ =?utf-8?B?cHhVOERpQXUyN3daWjIwL1VwVWg4dzhaMzkzTlJlNVc5aGJwTGtWUUpub000?=
+ =?utf-8?B?aUV5Y05TTjQ4R2NPa2IweTJGVytQVHAyMzk4c0RpRDQ2RElMRzA3eTZSV0pR?=
+ =?utf-8?B?VTNJdFM4eWpBeWpuYU5NbUdBbEZuSU1IRTZ4QjIyYlJnYWtDN0JGeDlQcHNM?=
+ =?utf-8?B?SjFkRG5yWnhRdW5GUEVPMGZZWEFyTVVIOHpHdlhzZk1iclBheVNjSFFOd1Fa?=
+ =?utf-8?B?eHh4RXlBY2lLbUtMa25LZmpVaGlZZ1F1Rjg1aXJsakI0VjU2YWRRSGFPdHlY?=
+ =?utf-8?B?VDc2SDQweDUwSlpGaGNmc1cybFVFNmhEQkx4R2x4TzZzcVU2RzloNjQ3MXBy?=
+ =?utf-8?Q?qxpIKPgJ1rGyOvIT70rt4b0Ye?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 10685976-ce87-4900-ee63-08ddb9b9df72
+X-MS-Exchange-CrossTenant-AuthSource: BL3PR12MB9049.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 22:43:32.7109
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: cNTJ+V45OKF6QrLXxbsFsyXDzNjd3Nd6iP4JvzTGUT5+tTqmNFywXAiOfi5Ghjg1p3eXDrzDtszyS06Ok0V65Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8950
 
-On 01/07/2025 23:53, Abinash wrote:
-> Hi ,
+Hello Kim,
+
+On 7/2/2025 4:46 PM, Kim Phillips wrote:
+> Hi Ashish,
 > 
-> Thanks for pointing that out.
+> I can confirm that this v5 series fixes v4's __sev_do_cmd_locked
+> assertion failure problem, thanks.  More comments inline:
 > 
-> I haven=E2=80=99t measured the performance impact yet =E2=80=94 my main f=
-ocus was on
-> getting rid of the stack usage warning triggered by LLVM due to
-> inlining. But you're right, gntdev_ioctl_grant_copy() is on a hot
-> path, and calling kmalloc() there could definitely slow things down,
-> especially under memory pressure.
+> On 7/1/25 3:16 PM, Ashish Kalra wrote:
+>> From: Ashish Kalra <ashish.kalra@amd.com>
 > 
-> I=E2=80=99ll run some benchmarks to compare the current approach with the
-> dynamic allocation, and also look into alternatives =E2=80=94 maybe
-> pre-allocating the struct or limiting inlining instead. If you have
-> any ideas or suggestions on how best to approach this, I=E2=80=99d be hap=
-py to
-> hear them.
+> Extra From: line not necessary.
 > 
-> Do you have any suggestions on how to test the performance?
+>> @@ -2913,10 +2921,46 @@ static bool is_sev_snp_initialized(void)
+>>       return initialized;
+>>   }
+>>   +static bool check_and_enable_sev_snp_ciphertext_hiding(void)
+>> +{
+>> +    unsigned int ciphertext_hiding_asid_nr = 0;
+>> +
+>> +    if (!sev_is_snp_ciphertext_hiding_supported()) {
+>> +        pr_warn("Module parameter ciphertext_hiding_asids specified but ciphertext hiding not supported or enabled\n");
+>> +        return false;
+>> +    }
+>> +
+>> +    if (isdigit(ciphertext_hiding_asids[0])) {
+>> +        if (kstrtoint(ciphertext_hiding_asids, 10, &ciphertext_hiding_asid_nr)) {
+>> +            pr_warn("Module parameter ciphertext_hiding_asids (%s) invalid\n",
+>> +                ciphertext_hiding_asids);
+>> +            return false;
+>> +        }
+>> +        /* Do sanity checks on user-defined ciphertext_hiding_asids */
+>> +        if (ciphertext_hiding_asid_nr >= min_sev_asid) {
+>> +            pr_warn("Requested ciphertext hiding ASIDs (%u) exceeds or equals minimum SEV ASID (%u)\n",
+>> +                ciphertext_hiding_asid_nr, min_sev_asid);
+>> +            return false;
+>> +        }
+>> +    } else if (!strcmp(ciphertext_hiding_asids, "max")) {
+>> +        ciphertext_hiding_asid_nr = min_sev_asid - 1;
+>> +    } else {
+>> +        pr_warn("Module parameter ciphertext_hiding_asids (%s) invalid\n",
+>> +            ciphertext_hiding_asids);
+>> +        return false;
+>> +    }
 > 
-> Best,
-> Abinash
+> This code can be made much simpler if all the invalid
+> cases were combined to emit a single pr_warn().
 > 
+
+There definitely has to be a different pr_warn() for the sanity check case and invalid parameter cases and sanity check has to be done if the
+specified parameter is an unsigned int, so the check needs to be done separately.
+
+I can definitely add a branch just for the invalid cases.
+
+>> @@ -3036,7 +3090,9 @@ void __init sev_hardware_setup(void)
+>>               min_sev_asid, max_sev_asid);
+>>       if (boot_cpu_has(X86_FEATURE_SEV_ES))
+>>           pr_info("SEV-ES %s (ASIDs %u - %u)\n",
+>> -            str_enabled_disabled(sev_es_supported),
+>> +            sev_es_supported ? min_sev_es_asid < min_sev_asid ? "enabled" :
+>> +                                        "unusable" :
+>> +                                        "disabled",
+>>               min_sev_es_asid, max_sev_es_asid);
+>>       if (boot_cpu_has(X86_FEATURE_SEV_SNP))
+>>           pr_info("SEV-SNP %s (ASIDs %u - %u)\n",
+> 
+> If I set ciphertext_hiding_asids=99, I get the new 'unusable':
+> 
+> kvm_amd: SEV-SNP ciphertext hiding enabled
+> ...
+> kvm_amd: SEV enabled (ASIDs 100 - 1006)
+> kvm_amd: SEV-ES unusable (ASIDs 100 - 99)
+> kvm_amd: SEV-SNP enabled (ASIDs 1 - 99)
+> 
+> Ok.
+
+Which is correct. 
+
+This is similar to the SEV case where min_sev_asid can be greater than max_sev_asid and that also emits similarly : 
+SEV unusable (ASIDs 1007 - 1006) (this is an example of that case).
+
+> 
+> Now, if I set ciphertext_hiding_asids=0, I get:
+> 
+> kvm_amd: SEV-SNP ciphertext hiding enabled
+> ...
+> kvm_amd: SEV enabled (ASIDs 100 - 1006)
+> kvm_amd: SEV-ES enabled (ASIDs 1 - 99)
+> kvm_amd: SEV-SNP enabled (ASIDs 1 - 0)
+> 
+> ..where SNP is unusable this time, yet it's not flagged as such.
 > 
 
-Preallocating may work but I'd be wary of synchronization if the 
-preallocated struct is shared.
+Actually SNP still needs to be usable/enabled in this case, as specifying ciphertext_hiding_asids=0 is same as specifying that ciphertext hiding feature should
+not be enabled, so code-wise this is behaving correctly, but messaging needs to be fixed, which i will fix.
 
-I'd look at optimizing status[] which should save quite a few bytes.
+Thanks,
+Ashish
 
-Reducing GNTDEV_COPY_BATCH could be a last resort, but that may also 
-impact performance.
-
-As for benchmarks, I think you can use iperf and fio with varying packet 
-sizes/block sizes.
-
-> On Mon, 30 Jun 2025 at 16:05, Tu Dinh <ngoc-tu.dinh@vates.tech> wrote:
->>
->> Hi,
->>
->> On 30/06/2025 06:54, Abinash Singh wrote:
->>> While building the kernel with LLVM, a warning was reported due to
->>> excessive stack usage in `gntdev_ioctl`:
->>>
->>>        drivers/xen/gntdev.c:991: warning: stack frame size (1160) excee=
-ds limit (1024) in function 'gntdev_ioctl'
->>>
->>> Further analysis revealed that the large stack frame was caused by
->>> `struct gntdev_copy_batch`, which was declared on the stack inside
->>> `gntdev_ioctl_grant_copy()`. Since this function was inlined into
->>> `gntdev_ioctl`, the stack usage was attributed to the latter.
->>>
->>> This patch fixes the issue by dynamically allocating `gntdev_copy_batch=
-`
->>> using `kmalloc()`, which significantly reduces the stack footprint and
->>> eliminates the warning.
->>>
->>> This approach is consistent with similar fixes upstream, such as:
->>>
->>> commit fa26198d30f3 ("iommu/io-pgtable-arm: dynamically allocate selfte=
-st device struct")
->>>
->>> Fixes: a4cdb556cae0 ("xen/gntdev: add ioctl for grant copy")
->>> Signed-off-by: Abinash Singh <abinashsinghlalotra@gmail.com>
->>> ---
->>> The stack usage was confirmed using the `-fstack-usage`  flag and mannu=
-al analysis, which showed:
->>>
->>>     drivers/xen/gntdev.c:953: gntdev_ioctl_grant_copy.isra   1048 bytes
->>>     drivers/xen/gntdev.c:826: gntdev_copy                     56 bytes
->>>
->>> Since `gntdev_ioctl` was calling the inlined `gntdev_ioctl_grant_copy`,=
- the total
->>> frame size exceeded 1024 bytes, triggering the warning.
->>>
->>> This patch addresses the warning and keeps stack usage within acceptabl=
-e limits.
->>> Is this patch fine or kmalloc may affect performance ?
->>> ---
->>
->> Have you measured the performance impact? gntdev_ioctl_grant_copy is
->> called quite often especially by the backend. I'm afraid calling the
->> allocator here may cause even more slowdown than there already is,
->> especially when memory is tight.
->>
->>>    drivers/xen/gntdev.c | 24 +++++++++++++++---------
->>>    1 file changed, 15 insertions(+), 9 deletions(-)
->>>
->>> diff --git a/drivers/xen/gntdev.c b/drivers/xen/gntdev.c
->>> index 61faea1f0663..9811f3d7c87c 100644
->>> --- a/drivers/xen/gntdev.c
->>> +++ b/drivers/xen/gntdev.c
->>> @@ -953,15 +953,19 @@ static int gntdev_grant_copy_seg(struct gntdev_co=
-py_batch *batch,
->>>    static long gntdev_ioctl_grant_copy(struct gntdev_priv *priv, void _=
-_user *u)
->>>    {
->>>        struct ioctl_gntdev_grant_copy copy;
->>> -     struct gntdev_copy_batch batch;
->>> +     struct gntdev_copy_batch *batch;
->>>        unsigned int i;
->>>        int ret =3D 0;
->>>
->>>        if (copy_from_user(&copy, u, sizeof(copy)))
->>>                return -EFAULT;
->>> -
->>> -     batch.nr_ops =3D 0;
->>> -     batch.nr_pages =3D 0;
->>> +
->>> +     batch =3D kmalloc(sizeof(*batch), GFP_KERNEL);
->>> +     if (!batch)
->>> +             return -ENOMEM;
->>> +
->>> +     batch->nr_ops =3D 0;
->>> +     batch->nr_pages =3D 0;
->>>
->>>        for (i =3D 0; i < copy.count; i++) {
->>>                struct gntdev_grant_copy_segment seg;
->>> @@ -971,18 +975,20 @@ static long gntdev_ioctl_grant_copy(struct gntdev=
-_priv *priv, void __user *u)
->>>                        goto out;
->>>                }
->>>
->>> -             ret =3D gntdev_grant_copy_seg(&batch, &seg, &copy.segment=
-s[i].status);
->>> +             ret =3D gntdev_grant_copy_seg(batch, &seg, &copy.segments=
-[i].status);
->>>                if (ret < 0)
->>>                        goto out;
->>>
->>>                cond_resched();
->>>        }
->>> -     if (batch.nr_ops)
->>> -             ret =3D gntdev_copy(&batch);
->>> -     return ret;
->>> +     if (batch->nr_ops)
->>> +             ret =3D gntdev_copy(batch);
->>> +     goto free_batch;
->>>
->>>      out:
->>> -     gntdev_put_pages(&batch);
->>> +     gntdev_put_pages(batch);
->>> +  free_batch:
->>> +     kfree(batch);
->>>        return ret;
->>>    }
->>>
->>
->>
->>
->> Ngoc Tu Dinh | Vates XCP-ng Developer
->>
->> XCP-ng & Xen Orchestra - Vates solutions
->>
->> web: https://vates.tech
->>
-
-
-
-Ngoc Tu Dinh | Vates XCP-ng Developer
-
-XCP-ng & Xen Orchestra - Vates solutions
-
-web: https://vates.tech
-
+> If there's no difference between "unusable" and not enabled, then
+> I think it's better to keep the not enabled messaging behaviour
+> and just not emit the line at all:  It's confusing to see the
+> invalid "100 - 99" and "1 - 0" ranges.
+> 
+> Thanks,
+> 
+> Kim
 
