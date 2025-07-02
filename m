@@ -1,107 +1,204 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 545132F7D14;
-	Wed,  2 Jul 2025 18:40:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74AB12F7CE0
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 18:43:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751481632; cv=none; b=re8lV1yVYcfYnvgFzUp8UxK3N2VOt3Ee9KIBApyDwMkQyogVMPi4yp3qBEdBLmF26G9Zzkc+2BehAbA3yX7Jzjz1vGlWMzMene1ADCo8/uziJM4iQ6/US/4V7a6yzNMMx4yYaGaYThqEOI6cZ8obdE54pIvrWAufRvJKwKaQWN0=
+	t=1751481806; cv=none; b=QUD9Fh/UBLlPgH/KXbYYU7aHS1qqshDO/0GKIKEBOWjD0z5IpbZdvSK+Di9RvllVKViNWPDji4ABOqxxsVCurk8xFLwkb0jPdptH6Iuk+H9WRBbDtIz9hI1nAT9J+OiPEmf3ljr+3OtEkw2TC9vgDbPjfI5tJUJN2VP8PuVz2tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751481632; c=relaxed/simple;
-	bh=JD88yMHNIqJLGJNkFMm447HbjKIEZj0pTYj6EiAF6fU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mQHZ813vZCeByAZ26had87hsxlebbCoMSlLk8IW39LSoB9tL3w1XlgwytUjEgGMz90fBPh15NOoabPRNbmKHvrs6xp6epUtnDf3yBHqOEDn2Y9Mni4xSccnpC8Pan9PAyQXbuLKBYjmwb8hz4KJBZbyX3sVecwBp7dvY2EVaDIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=kGAy9CNP; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1751481806; c=relaxed/simple;
+	bh=TNInFk5CSqolYCTcQiouErpywLUQzlF2nTjGjEYSQjk=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=K5i98lAGenIJJf1m7yBYEBJgNsswfzr0PoWNgqcnLqo7l538HMZT+8rn7scS6lcWjZOnxWk9FrA00izS8+FTdYFKxcH7TN4BEvBN3IFd539mrA95DIdQTXPNhGvi9RVxJ5pA5psJmKbqrl74pc000Ur9bZO2VBYG/tB1roBtMiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=otB81ZRH; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="kGAy9CNP"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-23c703c471dso2299635ad.0;
-        Wed, 02 Jul 2025 11:40:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="otB81ZRH"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-313d346dc8dso8261422a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 11:43:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1751481630; x=1752086430; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JD88yMHNIqJLGJNkFMm447HbjKIEZj0pTYj6EiAF6fU=;
-        b=kGAy9CNPt7ZisOyQHlRAK9+/BnBge2i474Gabm97NMobHNZPUHatGM1osUaQivd2ur
-         sd80npVlPngyYXTd2OuGOp6K1jX8pabEh+FWwJOhB+B+cF6y0sVxMSoSlRVlBDCnY0ja
-         0tvA3qim3moghcoQox0F2kYgMmXAOEKSGcwNyUfbFlVaRDzg9d9ZJxN2v+P2SerNPtcf
-         mijnWuJVIFQFr05lu9fN2sOodRPfa9UoPIwf8cVz3ka0KYPX1B0EHX46bQR7xKzyxIPg
-         YhB5ZpxswXp4mNvJ9/KbqfRXlUhCJJFGVX0zIPhDTEKiyxCgoniOiJbkCz0NJLIwbTzE
-         RU0A==
+        d=google.com; s=20230601; t=1751481805; x=1752086605; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BkXeL5WEZDbS42FI4cLgeaVQ59trAJI79NiaZaMMINw=;
+        b=otB81ZRHskW28Q4nyzxJAUN6r+V70IexTtm8IBwKnkU8uBTOZbtb3CSL2+J5qZ48xD
+         zehjmjzsx2WxxKvK9Ce3+313TQGRMj0dYznQyYa0/GP9M3AZCXapteP31Kpec9qCwc8E
+         CNp56/wDe3QOelo+grY8T8TDTNeCwmSx43i7HgDEem5RMuJs7o79pTyRvljqLNMswE50
+         tezXgg7d5HXJ3RbIk87IgdcPOVPKxyjEdJ37n/t8VJZCDjlceEjRhSOQooOtY2d2fwaf
+         +dtVXiHkJw7L1hGZPhu8L+DxV3hDHf3KIHS075m2kzxlEYZG5VOUf5xZYJeTUsJTLKeW
+         zyFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751481630; x=1752086430;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JD88yMHNIqJLGJNkFMm447HbjKIEZj0pTYj6EiAF6fU=;
-        b=pli2UtHEKaPl5M+6apcj131DUUsAqL/yKzPVjH9mxm090AWf3QFim9FrRzNJoGv07H
-         fOX4mpp+JYzCFPJy7y7MXDIjMfuNAM08rDLdBFnTeD2wxg6oWDCOgozSciMkIJQyrc4Q
-         Z4y8CVD8mXyJDhuF/RmvvYMDZoNEnxUv7MW4iOVVYPbOfXa3JcuTjqY4RLVQqp2x9w4E
-         FKSH3qRs4JDjj2OljuyRALsIDqi/S2eDn7nlJ8WNSmokNk0s9S5Q8jyo76nbjUn0GT3B
-         G79FQEZ+w8EDRRoa8ukRe3LmjfKrAleoYmrHl1fzfEzH+Ys0jiGhyxe9IA6UC7Mo+Naq
-         tMxg==
-X-Forwarded-Encrypted: i=1; AJvYcCUQ3MXVSxkfYBqzqC1NpPzQNX6+VTCZ6/+a/ZHlm1i2wk/CC0OjiBjwPEy6VCMocoR85BC24TKAvSryijs=@vger.kernel.org, AJvYcCUiHTIqpWXjlj4GuGgg9bxI7Quk+PGyrh5EgaGu7z0rkN3v0NClJSlPfO5TFhDOUKfoqJC4oTocLz/I@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3p7iphhesN4VHnDN+QTsCx7tOyVTVXIL4OofKlQig5S4SvS6d
-	3V8CAUahqgCxNvVHk/sZVqSnulA9IS3Yq0HWOv67B9MV656tnhZGoTU6HvGFcBTl/8r4sFSKUnh
-	ecmmV4Kr0qao9K8n56AAoBIbWGpn8hAs=
-X-Gm-Gg: ASbGncvU/9Bul2yHWLCXqLH5sN0QjzA8M7t/Q10AK+xAkICXKUV70K6NVixEyVe76Lm
-	LEdElHFBxYbAwa7tjXmW5crmg/kOTWJxsr7btNAvupLOHiDTjf+sFzh2Iy/sBCxIRiS97h/FH5S
-	Empj0+4Ereawhj3QzzEublYGWxFldmG67orvLdP7GE8/zY4GfNK3Hlt1CAcQIJTzN17QM/P6482
-	BAgl/bdsfgNoF8=
-X-Google-Smtp-Source: AGHT+IG65z5JM5OzIy1s20zy0osr0gbaem7rZyJo8s4662EGg8M9d+IcT5RnhEheXmCheH3vHusHJ+Ckhe0dlVQMHpE=
-X-Received: by 2002:a17:902:fc4c:b0:215:b1e3:c051 with SMTP id
- d9443c01a7336-23c793c0efcmr7045825ad.11.1751481630377; Wed, 02 Jul 2025
- 11:40:30 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751481805; x=1752086605;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=BkXeL5WEZDbS42FI4cLgeaVQ59trAJI79NiaZaMMINw=;
+        b=w1EWw4mfE9x5Ffr0IYBNaVF3narmKWnhdrOISVxCJYpTHUccZm4lXvYQABJ4/SeIC8
+         pvF2KyovkgwFkpyv0z5lnxQIu6PFxV8ZwnO9v5TDRyDFZwKjT/rO5yn8efUQ0mTYv60Q
+         z6aY6rXlIC47EighljctAHLAu0hh7rEZlkfJ9EYC4DOJfcAQ7NUAjwDcfV/DdI+8yLqM
+         AyIH7C1FFjr8nnadvtWvofwLpcDv+zK88ZusJSmHs15Nk7TY5eW+1Yc9jvVg1s5dfUiC
+         e+Y7jFryt7H6UmS+l/nLrnYzHLU+19hasTB3ktD3AAongcv7OTkanA+ZclGWc/nJOGH8
+         2Klw==
+X-Forwarded-Encrypted: i=1; AJvYcCW9Qyjb4kyA9yzobYUal44ChFs/pOMeIItWqb3KzsOrLPMhWzYWVptY/cl5HOHAFeCQgdv0kqhr0WRzyaQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCrcxpCDlMW5cmi35FwwkOFHCQT1AozJioP/KinizGpYVM4TK5
+	9M9+wyxWRQOScfiWQFaLtvp254SyZ92o1zKKbP5Z0ZWHzKAiaDcSrMqkApVGj3Ye5l1O7DDIlJX
+	F36Q/RGHtnFkvETWqzxkfr2l/Wg==
+X-Google-Smtp-Source: AGHT+IH1D7bLpxYmTDXOzRwdkEP/A6qvQMUvpigPT+QEJbt+kvTzeOztuKmrRtS0JYzImd2vqlH1A1VwyuT8Z8v8gA==
+X-Received: from pjbsj10.prod.google.com ([2002:a17:90b:2d8a:b0:311:a879:981f])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90b:5183:b0:311:c1ec:7d05 with SMTP id 98e67ed59e1d1-31a90c1faf7mr5874277a91.35.1751481804762;
+ Wed, 02 Jul 2025 11:43:24 -0700 (PDT)
+Date: Wed, 02 Jul 2025 11:43:23 -0700
+In-Reply-To: <aGUW5PlofbcNJ7s1@yzhao56-desk.sh.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250628015328.249637-1-da@libre.computer> <CANAwSgTH67T9SBQSFQgFjvyrxNCbtfd9ZaCDZFACWA=ZQ-PYtQ@mail.gmail.com>
- <CAFBinCBwTkVwcBTWOzS+G13+rRM2eftMXZ3GHzW+F+BY0bBBzg@mail.gmail.com>
- <1j4ivued2q.fsf@starbuckisacylon.baylibre.com> <CACqvRUa8EqMbCd2x=di-a6jbMWW8CMo4kgLH=0qnsqHdO16kxA@mail.gmail.com>
-In-Reply-To: <CACqvRUa8EqMbCd2x=di-a6jbMWW8CMo4kgLH=0qnsqHdO16kxA@mail.gmail.com>
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date: Wed, 2 Jul 2025 20:40:19 +0200
-X-Gm-Features: Ac12FXyR3mTzwKK3QsWJnUHD7XVn0YOVkSs2GNj-PlIQxt00gwgIj8Cr0AYFXDE
-Message-ID: <CAFBinCAkW+G9oV+SOJdac50oLezQnbc358dBgs56-RfjPd-zgA@mail.gmail.com>
-Subject: Re: [RFC] mmc: meson-gx-mmc: add delay during poweroff
-To: Da Xue <da@libre.computer>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Anand Moon <linux.amoon@gmail.com>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Kevin Hilman <khilman@baylibre.com>, linux-mmc@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+References: <4cbdfd3128a6dcc67df41b47336a4479a07bf1bd.camel@intel.com>
+ <diqz5xghjca4.fsf@ackerleytng-ctop.c.googlers.com> <aGJxU95VvQvQ3bj6@yzhao56-desk.sh.intel.com>
+ <a40d2c0105652dfcc01169775d6852bd4729c0a3.camel@intel.com>
+ <diqzms9pjaki.fsf@ackerleytng-ctop.c.googlers.com> <fe6de7e7d72d0eed6c7a8df4ebff5f79259bd008.camel@intel.com>
+ <aGNrlWw1K6nkWdmg@yzhao56-desk.sh.intel.com> <CAGtprH-csoPxG0hCexCUg_n4hQpsss83inRUMPRqJSFdBN0yTQ@mail.gmail.com>
+ <aGN6GIFxh57ElHPA@yzhao56-desk.sh.intel.com> <diqzms9n4l8i.fsf@ackerleytng-ctop.c.googlers.com>
+ <aGUW5PlofbcNJ7s1@yzhao56-desk.sh.intel.com>
+Message-ID: <diqzecuy4eno.fsf@ackerleytng-ctop.c.googlers.com>
+Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge pages
+From: Ackerley Tng <ackerleytng@google.com>
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: Vishal Annapurve <vannapurve@google.com>, "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, 
+	"quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, "Li, Xiaoyao" <xiaoyao.li@intel.com>, 
+	"Shutemov, Kirill" <kirill.shutemov@intel.com>, "Hansen, Dave" <dave.hansen@intel.com>, 
+	"david@redhat.com" <david@redhat.com>, "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, 
+	"vbabka@suse.cz" <vbabka@suse.cz>, "tabba@google.com" <tabba@google.com>, "Du, Fan" <fan.du@intel.com>, 
+	"michael.roth@amd.com" <michael.roth@amd.com>, "seanjc@google.com" <seanjc@google.com>, 
+	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "Peng, Chao P" <chao.p.peng@intel.com>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "Yamahata, Isaku" <isaku.yamahata@intel.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Weiny, Ira" <ira.weiny@intel.com>, 
+	"pbonzini@redhat.com" <pbonzini@redhat.com>, "Li, Zhiquan1" <zhiquan1.li@intel.com>, 
+	"jroedel@suse.de" <jroedel@suse.de>, "Miao, Jun" <jun.miao@intel.com>, 
+	"pgonda@google.com" <pgonda@google.com>, "x86@kernel.org" <x86@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 2, 2025 at 7:22=E2=80=AFPM Da Xue <da@libre.computer> wrote:
+Yan Zhao <yan.y.zhao@intel.com> writes:
+
+> On Tue, Jul 01, 2025 at 03:09:01PM -0700, Ackerley Tng wrote:
+>> Yan Zhao <yan.y.zhao@intel.com> writes:
+>>=20
+>> > On Mon, Jun 30, 2025 at 10:22:26PM -0700, Vishal Annapurve wrote:
+>> >> On Mon, Jun 30, 2025 at 10:04=E2=80=AFPM Yan Zhao <yan.y.zhao@intel.c=
+om> wrote:
+>> >> >
+>> >> > On Tue, Jul 01, 2025 at 05:45:54AM +0800, Edgecombe, Rick P wrote:
+>> >> > > On Mon, 2025-06-30 at 12:25 -0700, Ackerley Tng wrote:
+>> >> > > > > So for this we can do something similar. Have the arch/x86 si=
+de of TDX grow
+>> >> > > > > a
+>> >> > > > > new tdx_buggy_shutdown(). Have it do an all-cpu IPI to kick C=
+PUs out of
+>> >> > > > > SEAMMODE, wbivnd, and set a "no more seamcalls" bool. Then an=
+y SEAMCALLs
+>> >> > > > > after
+>> >> > > > > that will return a TDX_BUGGY_SHUTDOWN error, or similar. All =
+TDs in the
+>> >> > > > > system
+>> >> > > > > die. Zap/cleanup paths return success in the buggy shutdown c=
+ase.
+>> >> > > > >
+>> >> > > >
+>> >> > > > Do you mean that on unmap/split failure:
+>> >> > >
+>> >> > > Maybe Yan can clarify here. I thought the HWpoison scenario was a=
+bout TDX module
+>> >> > My thinking is to set HWPoison to private pages whenever KVM_BUG_ON=
+() was hit in
+>> >> > TDX. i.e., when the page is still mapped in S-EPT but the TD is bug=
+ged on and
+>> >> > about to tear down.
+>> >> >
+>> >> > So, it could be due to KVM or TDX module bugs, which retries can't =
+help.
+>> >> >
+>> >> > > bugs. Not TDX busy errors, demote failures, etc. If there are "no=
+rmal" failures,
+>> >> > > like the ones that can be fixed with retries, then I think HWPois=
+on is not a
+>> >> > > good option though.
+>> >> > >
+>> >> > > >  there is a way to make 100%
+>> >> > > > sure all memory becomes re-usable by the rest of the host, usin=
+g
+>> >> > > > tdx_buggy_shutdown(), wbinvd, etc?
+>> >> >
+>> >> > Not sure about this approach. When TDX module is buggy and the page=
+ is still
+>> >> > accessible to guest as private pages, even with no-more SEAMCALLs f=
+lag, is it
+>> >> > safe enough for guest_memfd/hugetlb to re-assign the page to allow =
+simultaneous
+>> >> > access in shared memory with potential private access from TD or TD=
+X module?
+>> >>=20
+>> >> If no more seamcalls are allowed and all cpus are made to exit SEAM
+>> >> mode then how can there be potential private access from TD or TDX
+>> >> module?
+>> > Not sure. As Kirill said "TDX module has creative ways to corrupt it"
+>> > https://lore.kernel.org/all/zlxgzuoqwrbuf54wfqycnuxzxz2yduqtsjinr5uq4s=
+s7iuk2rt@qaaolzwsy6ki/.
+>> >
+>> > Or, could TDX just set a page flag, like what for XEN
+>> >
+>> >         /* XEN */
+>> >         /* Pinned in Xen as a read-only pagetable page. */
+>> >         PG_pinned =3D PG_owner_priv_1,
+>> >
+>> > e.g.
+>> > 	PG_tdx_firmware_access =3D PG_owner_priv_1,
+>> >
+>> > Then, guest_memfd checks this flag on every zap and replace it with PG=
+_hwpoison
+>> > on behalf of TDX?
+>>=20
+>> I think this question probably arose because of a misunderstanding I
+>> might have caused. I meant to set the HWpoison flag from the kernel, not
+>> from within the TDX module. Please see [1].
+> I understood.
+> But as Rick pointed out
+> https://lore.kernel.org/all/04d3e455d07042a0ab8e244e6462d9011c914581.came=
+l@intel.com/,
+> Manually setting the poison flag in KVM's TDX code (in host kernel) seems=
+ risky.
 >
-> On Wed, Jul 2, 2025 at 1:07=E2=80=AFPM Jerome Brunet <jbrunet@baylibre.co=
-m> wrote:
-> ...
-> > If, as the description suggest, the regulator framework somehow ignore
-> > the timing set in DT, maybe this is what needs to be checked ?
+
+Will address this in a reply to Rick's email, there's more context
+there that I'd like to clarify.
+
+>> In addition, if the TDX module (now referring specifically to the TDX
+>> module and not the kernel) sets page flags, that won't work with
+> Marking at per-folio level seems acceptable to me.
 >
-> The regulator framework only cares about timing for regulator on.
-> Regulator off just turns off the regulator and returns without delay.
-There's an exception to this: gpio-regulators without an enable-gpios
-property. My understanding is that regulator_disable() is a no-op in
-that case (meson_mmc_set_ios() even has a comment above the
-switch/case statement), see [0].
 
-> The code makes incorrect assumptions. Then the kernel resets the board
-> without having enough time.
-Can you please name the board you're testing? I'm worried that I'll be
-looking at one .dts but you're looking at another one.
+Will address this in a reply to Rick's email, there's more context there
+that I'd like to clarify.
 
+>> vmemmap-optimized folios. Setting a page flag on a vmemmap-optimized
+>> folio will be setting the flag on a few pages.
+> BTW, I have a concern regarding to the overhead vmemmap-optimization.
+>
+> In my system,
+> with hugetlb_free_vmemmap=3Dfalse, the TD boot time is around 30s;
+> with hugetlb_free_vmemmap=3Dtrue, the TD boot time is around 1m20s;
+>
+>
 
-Best regards,
-Martin
+I'm aware of this, was investigating this for something similar
+internally. In your system and test, were you working with 1G pages, or
+2M pages?
 
-
-[0] https://elixir.bootlin.com/linux/v6.15/source/drivers/regulator/core.c#=
-L2980
+>> [1] https://lore.kernel.org/all/diqzplej4llh.fsf@ackerleytng-ctop.c.goog=
+lers.com/
