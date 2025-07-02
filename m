@@ -1,103 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 472F918DB24;
-	Wed,  2 Jul 2025 03:03:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4EFF2770B;
+	Wed,  2 Jul 2025 03:04:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751425382; cv=none; b=epS8W60z0yeXouGp89KHDQUcTsWEQu+QoF2Z4fZxC/aQCo8eQzbP2Sq6icOMOudsXaFnvBoYvrDPpbSnnAUvpHDGphQ/ar3HvqGjjokNOV7ak6VXDtP74niZpH8VVhzECfBtSBBcPp5Z8oL+AGB2weU0BpleeAR5wUe11QWb2L0=
+	t=1751425470; cv=none; b=H3Ca4+u6sCBkuDwvrbOpxq9HmY3f3Cx3XlyixS5EllFCgpZ6LGZ0xL2ujHTT7cbuNYn6raPrelc4c0ZuEbnbSL6QhdC54GRfdqeVPrWJZavonS/8qRNNtAZKqiMYU8jlOtr9GIOPZ0xfPnNsdizprAVz/jolaaeWx7Wr0yf3MXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751425382; c=relaxed/simple;
-	bh=Z7EPp0HQjcqsgwPn42IotAoCEJLB9Eq5EuXBotZk5Q8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hcTPSzF0/ox9QKPdPf+2iAwNXYVhJGxsML4a0yQFFpKuD9KXKkyIdQeRp3uCLKFrLKQcdolPYS0JvOUuNQpOwK/UVWPcA+KEaSoC5pyigxtjG5Z2S7uMZAydpBkWKbtRE9LpS12Won6NTopbuwLUI+FizwuwQFIO2wAMXGGtQQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P1yNF0Oq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751425470; c=relaxed/simple;
+	bh=O3rfVKsvccI6uQyYh//4AFptB8tUAcJndLZh8J0HwjY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EQ4X5WMBwp26VWji8soYIlM/hmXptcu1HdaXXNeayxh7SaYr1hricYCMNOTHeZmKZ6RbpOEUMyq1ut7jrXd7VYYkXjvHrhJ60RmXfjJyq203jrO02nbFuLSyJ2T2Vlo6kixk9dezQ5p47eOpus13gVOTDl1B98/r66NqgF1Kpv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hg+FzbO2; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P1yNF0Oq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84124C4CEEB;
-	Wed,  2 Jul 2025 03:03:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751425381;
-	bh=Z7EPp0HQjcqsgwPn42IotAoCEJLB9Eq5EuXBotZk5Q8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=P1yNF0Oqdd2Wo0e10UqSe4g8qqy96uOrSENJPNZ68J9sQQmJcwf93BzTd1Z7CX1tp
-	 6vwSVHQC6Z2Dyv3PLrKAOjilNtcT4w77Bg6gXekgToSRO8N2ZgvGKAEVLIfQjvKoPI
-	 YheUprZ9H83kITwkoC1fmn4EkoG/FILuA2nGhkPa48HNyhNNsnLzznQ/+jNp7Ti48r
-	 s8T7EymyDsOZqwu9JfYIxiyXy5SvUaYSnUQs4fI0G4dad8goFOA89s0rHk9ahaDiXm
-	 IlqnOl287ZaD6A6tsq6fQN2VbZXDwaJPg6nRE6BGo0rp367d7DN6Fwx0PgAYnEk59b
-	 R6dbY2iM0YgxA==
-From: SeongJae Park <sj@kernel.org>
-To: Bijan Tabatabai <bijan311@gmail.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Bijan Tabatabai <bijantabatab@micron.com>,
-	damon@lists.linux.dev,
-	kernel-team@meta.com,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hg+FzbO2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751425468; x=1782961468;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=O3rfVKsvccI6uQyYh//4AFptB8tUAcJndLZh8J0HwjY=;
+  b=hg+FzbO24c8Wn3AX/i9YRuLI8YPtOR+sGle1VEvdUqLSkivpIhRSH1G6
+   //N+SI+zgN2NbaTAwmsQSGSp2l/hWcsERvzJ5Lx2DL2sAOamGZk863+tD
+   J+rSLZQOu+EtQVCXcloOKJRhe1OQ5N/O0Hsyq7wfzuE05roxWHkNmAx/7
+   VvfV/8L+AY04nb2N7L8WycYntKT5GV9vqxVT0EmDcURyrm0NId4q9wJ2Y
+   nJZPHz5muua+lQCMYj3CjUnZmxMfgDUgXqgJMfewgC5zu4Y46F1w38vrS
+   ZgfuPVbcMoKVTsI13X4eVvuNyT78Fx2Pt507zqEKvmqr2o0xxM8dxwZyG
+   Q==;
+X-CSE-ConnectionGUID: XeuMerBHQQOWjbzVzpAK/A==
+X-CSE-MsgGUID: gBudwoqbTO2il3t7x8E84Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="71132790"
+X-IronPort-AV: E=Sophos;i="6.16,280,1744095600"; 
+   d="scan'208";a="71132790"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 20:04:27 -0700
+X-CSE-ConnectionGUID: /fSFODvNS+GsdXXvubXrFw==
+X-CSE-MsgGUID: WsPOGeWLTgmJt3NnWhl64Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,280,1744095600"; 
+   d="scan'208";a="153407624"
+Received: from p12ill20yoongsia.png.intel.com ([10.88.227.38])
+  by orviesa006.jf.intel.com with ESMTP; 01 Jul 2025 20:04:19 -0700
+From: Song Yoong Siang <yoong.siang.song@intel.com>
+To: "David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [RFC PATCH 1/4] mm/damon: add struct damos_migrate_dest
-Date: Tue,  1 Jul 2025 20:02:59 -0700
-Message-Id: <20250702030259.23149-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <CAMvvPS7U9iV9K70-4J-n8pKLVBhY3Hfky4Hc3dxAbzVE1o3oeA@mail.gmail.com>
-References: 
+	bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH bpf-next,v2 0/2] Clarify and Enhance XDP Rx Metadata Handling
+Date: Wed,  2 Jul 2025 11:03:47 +0800
+Message-Id: <20250702030349.3275368-1-yoong.siang.song@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On Tue, 1 Jul 2025 20:43:46 -0500 Bijan Tabatabai <bijan311@gmail.com> wrote:
+This patch set improves the documentation and selftests for XDP Rx metadata
+handling. The first patch clarifies the documentation around XDP metadata
+layout and the use of bpf_xdp_adjust_meta. The second patch enhances the
+BPF selftests to make XDP metadata handling more robust and portable across
+different NICs.
 
-> On Tue, Jul 1, 2025 at 7:25 PM SeongJae Park <sj@kernel.org> wrote:
-> >
-> > On Tue,  1 Jul 2025 17:43:30 -0500 Bijan Tabatabai <bijan311@gmail.com> wrote:
-> >
-> > > On Sat, 21 Jun 2025 10:31:28 -0700 SeongJae Park <sj@kernel.org> wrote:
-> > >
-> > > > Introduce a new struct, namely damos_migrate_dest, for specifying
-> > > > multiple DAMOS' migration destination nodes and their weights.
-> > > >
-> > > > Signed-off-by: SeongJae Park <sj@kernel.org>
-> > > > ---
-> > > >  include/linux/damon.h | 16 ++++++++++++++++
-> > > >  1 file changed, 16 insertions(+)
-> > > >
-> > > > diff --git a/include/linux/damon.h b/include/linux/damon.h
-> > > > index bb58e36f019e..d60addd0b7c8 100644
-> > > > --- a/include/linux/damon.h
-> > > > +++ b/include/linux/damon.h
-> > > > @@ -447,6 +447,22 @@ struct damos_access_pattern {
-> > > >     unsigned int max_age_region;
-> > > >  };
-> > > >
-> > > > +/**
-> > > > + * struct damos_migrate_dest - Migration destination nodes and their weights.
-> > >
-> > > Nit: Can this be renamed to damos_migrate_dests?
-> > > I think plural fits better because it stores a list of destinations.
-> >
-> > Makes sense, agreed.  I guess you will do that on your own when you add this on
-> > your patch series?  Please let me know if you prefer different ways.  I could
-> > also do that and send it again as RFC v2 of this series.
-> 
-> I can do this in my patch series.
+Prior to this patch set, the user application retrieved the xdp_meta by
+calculating backward from the data pointer, while the XDP program fill in
+the xdp_meta by calculating backward from data_meta. This approach will
+cause mismatch if there is device-reserved metadata.
 
-Thank you!
+                        |<---sizeof(xdp_meta)--|
+                        |                      |
+                 struct xdp_meta               rx_desc->address
+                        ^                      ^
+                        |                      |
++----------+----------------------+------------+------+
+| headroom |    custom metadata   |  reserved  | data |
++----------+----------------------+------------+------+
+           ^                      ^            ^
+           |                      |            |
+    struct xdp_meta     xdp_buff->data_meta    xdp_buff->data
+           |                      |
+           |<---sizeof(xdp_meta)--|
 
-> Would the best way for me to do that be to send modified versions of
-> this patch series with my patches, or should I send one additional
-> patch that just renames the struct with my patches?
+V2:
+  - unconditionally do bpf_xdp_adjust_meta with -XDP_METADATA_SIZE (Stanislav)
 
-I think the former (making modification in place of this patch) is better, for
-people who will read the commit log in future.  Please don't forget adding your
-Singed-off-by: tag, and let me know if any help is needed!
+V1: https://lore.kernel.org/netdev/20250701042940.3272325-1-yoong.siang.song@intel.com/
 
+Song Yoong Siang (2):
+  doc: clarify XDP Rx metadata layout and bpf_xdp_adjust_meta usage
+  selftests/bpf: Enhance XDP Rx Metadata Handling
 
-Thanks,
-SJ
+ Documentation/networking/xdp-rx-metadata.rst  | 38 +++++++++++++++++++
+ .../selftests/bpf/prog_tests/xdp_metadata.c   |  2 +-
+ .../selftests/bpf/progs/xdp_hw_metadata.c     |  2 +-
+ .../selftests/bpf/progs/xdp_metadata.c        |  2 +-
+ tools/testing/selftests/bpf/xdp_hw_metadata.c |  2 +-
+ tools/testing/selftests/bpf/xdp_metadata.h    |  7 ++++
+ 6 files changed, 49 insertions(+), 4 deletions(-)
 
-[...]
+-- 
+2.34.1
+
