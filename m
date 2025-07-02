@@ -1,63 +1,63 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD7E1DF97C;
-	Wed,  2 Jul 2025 05:04:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F1121F153A;
+	Wed,  2 Jul 2025 05:04:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751432669; cv=none; b=jSCa69aK6E7qavKLzDzXkaEyR/hCk4vCYUcf8NaHBb5gXY4+Jn3H17qTNWXI2bRm4tErM4q0pjt6gUvuNJgJNY9bDss9ojkHLJ5OAmB86FiymcFnxhh8ok0FDInKVsuFV0Kg1EJnUvGNzhEf0lL0mPsjWeL5TLhmbCEZTNAJ5wk=
+	t=1751432670; cv=none; b=tuTjnfaMrpa6Fq74AarrMRrJaCj+Ga1htOwpEzo5evNqfhHbKqqGlmDhgL7A99BDtJ1xTZlCSCshb2kXJQ7niRuDgyIkojA7pKd54OOWcsonl7bemPragKN/DWqeOulIYG1Opzq4a76ptd1Styewrb6bmD3fzt0HFJPfsxNKUpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751432669; c=relaxed/simple;
-	bh=euWdO1Iyusso38SAg6feil4VSbjjkVkZKVp9bmcTszo=;
+	s=arc-20240116; t=1751432670; c=relaxed/simple;
+	bh=RPZnWyEnrV401R5diozOcrTYy96YFnpOjsG3yTQ6AFs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VidDR9IVtMTD7SQKc4dkDMa5EEqlGhRh1HqKzSZy8uXGmz81dYS24fCJRjN2DyA70xhlM/YfOtzBLfoVXTTIDyXsBNrhMu69Pho+5UaUJaANyz0vAOcE/Jg4K/kiCFeQm2FExPqXFtF+vkw5qcAgP0WKilsnpKJwCJdAWaqqx3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JmhyznBq; arc=none smtp.client-ip=209.85.216.52
+	 MIME-Version; b=OvzfcoggA+kFmvDLqhRA+EPjkJiv1FcNCX/9f7O8+ZU5ZUk8iRQ6eUgRaZjKSrMbXtwhHzX5Ty24FPa3Q3jfdR9hgvo+h+0WssPMueVCoFPD56NpS8Tmpbr9kK01zyRUufyXR5h9zwNIuOFKwJ4Wf5AmKc/kdcwm9Wsf1mylYbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SgBFR6bX; arc=none smtp.client-ip=209.85.216.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JmhyznBq"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-315cd33fa79so4327688a91.3;
-        Tue, 01 Jul 2025 22:04:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SgBFR6bX"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3141b84bf65so6235262a91.1;
+        Tue, 01 Jul 2025 22:04:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751432667; x=1752037467; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1751432669; x=1752037469; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QXmso8g2COR1WBKWaY8Z/xRycJZ8eCt0dgwiFP5AhaQ=;
-        b=JmhyznBquAB26qUDcjxopEk3vbQRcKYQ4/vVy2G4vjO9+jGvewXIsqoKuj8jNd87AA
-         iq0zQCJKUZ1w69rM02wrzULtJON0EBwaAHRieQLI071Y00BRja7qt59n1qMNUy046eLS
-         PHOprsd6rrK1jHBtz3rXyMlNiK6dcrA7qkT2dypESGspmtPP/bCVla1ZwwVaSyQ9hj8C
-         96welZuwj4scRcSRouAisNx0sQoM03c6/Qguj4/gOGqqYk1Ou4IY5NSHiWeNQN4XJ0cE
-         e1uOcFR6SzEsqSvIE77WG6Dc+mMbnc1BdWENYaVTx7sTLnUPoBu0eot5mDZy3Ts2T8Z4
-         uqBw==
+        bh=uWSrZ7MoIPETCcOnlwZzNW8Pica/y+0lnik37Sdi1T4=;
+        b=SgBFR6bX6jdkJAfW5BKtCQPj9c5F78ADemq+luyYlNAYOOO9tn7Fu2MCrLrWpO01Q0
+         ucTR4i1+7QrrK5ndofp5zcYBTqy5woGdPlc1G03j/Gn3hi6TTPaAb+Eer3D+xHKQxseP
+         W+wikW3GLlkk+aHFdbDRpB0TRkPOq2gAoG8Dhb0RzEnEFEkZtx7yuEB1Y7kAm7xXT0KH
+         a3dHbmRMRcxGjEV4zo/A6heNkJZoknSFsSRosWIJshvUCkAJ2fdGKxE0Kzah6enGe0Eo
+         7ateKojS3hnmhfATNCDEgWFGhhRWwooDZaXr/RPFM7Nxu2qXsBBw/eCqTBuAJE56zL+i
+         YLkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751432667; x=1752037467;
+        d=1e100.net; s=20230601; t=1751432669; x=1752037469;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QXmso8g2COR1WBKWaY8Z/xRycJZ8eCt0dgwiFP5AhaQ=;
-        b=Hstl0vZ3ScSnr7oioQWWz95vMW8Zb0SfKuUC3uR2GF5lgE1DwDp1ta6v7rtx6TYAh1
-         0LvyZjovtRUVuFD70YUxpJ46oUXyqjJFO1nIDl/w47kJrQWWc2mTo/Hx9i/NjEvBESJy
-         0QMMcurAXQ9KbxL9jyzsQBtvF37mCpYXZV70BPjvlrGkhKuaJ8GyMNE7n+ool88CXEvy
-         D6Fbwu/j5QM3NEWUmHEhOWZfvZWtlhcXRIIj8toabL6SAZwcu4/1b5gxt1a7YKNTziWJ
-         pPuJSYqrWivliK6cpixyLflOGaHvLOAooV7am4jtuBBmQkCCqxyX7uR1dnWBdM8T4R/w
-         1aAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW4qadWTqF0L2B7o+j3oNPr13E22wFr2JGxH1p7e9ie3+McC+DJ+MjA7V+cC45a/sS2OvHf0viAy4It@vger.kernel.org, AJvYcCWluEoH/N1YqA/kZ/xAple5a4wxrpvZ5VVWWzCcrBHkK7JnIUVKQQOM+vuORb6wIfBioZVegaoBq9k8xN+m@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQ/MnrrvKtcnqyeEXuppzuZUdwfhxdJHoyPfXF3XdgVt2p1L/l
-	OgmgZ6wM9mtxDopceH3TpySjlJqwaWRw2ukh70nviUMkNexAbE1FYmuv
-X-Gm-Gg: ASbGnctjKOyh+XStVU745K6VBhJpUT7tR68Drpoav4KWRQEabm8imgvLRTSaR0DwJZ7
-	PKPCb9+EBiDVpOdGrljmJpgoOE9iTJBPC4iEPL0BeSetVSUTTnyCtRBgIl/g+bnOYzn3S0hXp6G
-	3L0Ay9Wr1jMXjSoAhEt2aeySjX8bI3FdWYMIBnNXTJ7nx1Y29p0qlG/7MJ6nq5M+Uor5UhGBPNE
-	ldne/hVkc5X09dcmBnpOykDyQzk8gHc13/Wb8LV0JWYlzR0RFxGzGm5YZNA4gVZ8Hk+VMkoiy56
-	JvaD3MmkGYplbBWPEBF7YYuxTUNxJLobITs7RhdDkQiCZ31XhLdzEV9XGH7+DGJKsnUrPRzKFuc
-	IcX7NmD0RGthhsqz2GuMDAouibUtxtBMizjZ6vOI=
-X-Google-Smtp-Source: AGHT+IHUG5YCrucrr/166eG7coq7r8DcPuqMV7G9sKstOJsamQmMYN1ozIbRh3jEQoxq+KuGWSkBRg==
-X-Received: by 2002:a17:90b:2812:b0:2f8:34df:5652 with SMTP id 98e67ed59e1d1-31a90bd4786mr2068529a91.21.1751432666963;
-        Tue, 01 Jul 2025 22:04:26 -0700 (PDT)
+        bh=uWSrZ7MoIPETCcOnlwZzNW8Pica/y+0lnik37Sdi1T4=;
+        b=d0Advxj9YRX+gWjNT5EAqJ+axsT9LfDowMz8VSLBp1KuNtkUyNMN7N09tzpGIvNc5B
+         9zBV1s0zRzOtLXXbm+r0xEhXtDhlqZhS+DYuD/VfpAqdtDxJ1aWYYSwPfItfYusCS+qk
+         7bJ3LGpFeuNtAeH5HNFxlI04yqwCK/av1NyaxX2xsnkj+1Ph35kgfFRuiRkxCE/McM32
+         +BGhH1dfIYHuy8mQeg1mLLMccV3bRoVEq2+xCOqnFwNTvWKA9QWTsvb1+QDRra/3QaZ+
+         pPffkx8tRb8Pkb+3xOz0Htg5LURLZbKGq26lKaLO79sGjwn0NUhtid/ZeTIuQu4PpRNu
+         5mNw==
+X-Forwarded-Encrypted: i=1; AJvYcCVQ1hirDnsqyR/pR4GhK1ZTB4vjK5jgG89dJXdQZ8aBraTP+s3y/CCg+fh6gLdSBzZNAkNItQvdzm25JNgW@vger.kernel.org, AJvYcCVpmie5DiqAHYbvbvhSJRZKgQapA5hZ/AmM/HrIpkOz1mjwh5d650VTut/OXT9iROHdrICp+GAY5Tbn@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz36TNERL9obWkRMq6aaBTbjhqg/FaaAGWgs0ZK3xSmu4hqPrcB
+	a1WyGfE7UuxoR1/RooNA4kDyUH59m9q4MOQR3qQKECTJryz1ZTwN2JD/
+X-Gm-Gg: ASbGncvV6mVVLfFU5lNxTmM9pctpo2SmJUEnr/WNBKfBCUq0vT4YLKW63QYlsIxHXnl
+	DP00HZlKRMw+bNxam6kjKi6EKLY3kb3dx2PNI3QGWxh5Z/Px68R9F7neCR4Tx8dC+yZWvkFhP/7
+	kjm/uzTqxLjqf9kZc+G23JZKfnKLMTy+kfvcKNITeGLj1SmgGUlkdPyqIlTehSjOqdYtXxRkxT/
+	vd6kp93DbDyVtC1E1YAi68KmeFCPpu5WHGs+1h2iDnTwEfSojXqfjzPl75LfaX+dXW38fRVmfuz
+	1CF1gPSQfiHbyBgqiRW3wtQN8N9h0QqPYlgJcpcoKOZdfRH6Aejk4CektmgbJa4SVCln8EwsgiQ
+	Xs7pUD+E2u24psyJDgA2CiMJjniyCK/OsJ2ILcZY=
+X-Google-Smtp-Source: AGHT+IGuJYvsdkS94RVkJwX3+DQ9VYFkHN7fl6zwMk3S0tAKLSb9AffKnRoc93xoFKLH+aUzWSJPCA==
+X-Received: by 2002:a17:90b:224d:b0:311:ad7f:329f with SMTP id 98e67ed59e1d1-31a90c08804mr2307161a91.31.1751432668615;
+        Tue, 01 Jul 2025 22:04:28 -0700 (PDT)
 Received: from localhost.localdomain (c-76-133-73-115.hsd1.ca.comcast.net. [76.133.73.115])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f54270a5sm18168323a91.25.2025.07.01.22.04.25
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f54270a5sm18168323a91.25.2025.07.01.22.04.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 22:04:26 -0700 (PDT)
+        Tue, 01 Jul 2025 22:04:28 -0700 (PDT)
 From: rentao.bupt@gmail.com
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -70,9 +70,9 @@ To: Rob Herring <robh@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	Tao Ren <taoren@meta.com>
 Cc: Tao Ren <rentao.bupt@gmail.com>
-Subject: [PATCH 1/5] ARM: dts: aspeed: Expand data0 partition in facebook-bmc-flash-layout-128.dtsi
-Date: Tue,  1 Jul 2025 22:04:12 -0700
-Message-ID: <20250702050421.13729-2-rentao.bupt@gmail.com>
+Subject: [PATCH 2/5] ARM: dts: aspeed: Remove eMMC from ast2600-facebook-netbmc-common.dtsi
+Date: Tue,  1 Jul 2025 22:04:13 -0700
+Message-ID: <20250702050421.13729-3-rentao.bupt@gmail.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250702050421.13729-1-rentao.bupt@gmail.com>
 References: <20250702050421.13729-1-rentao.bupt@gmail.com>
@@ -86,43 +86,38 @@ Content-Transfer-Encoding: 8bit
 
 From: Tao Ren <rentao.bupt@gmail.com>
 
-Expand data0 partition to 64MB in facebook-bmc-flash-layout-128.dtsi for
-larger persistent storage.
+Remove eMMC device entries from ast2600-facebook-netbmc-common.dtsi
+because eMMC will be removed from future Meta/Facebook AST2600 network
+OpenBMC platforms.
 
 Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
 ---
- .../boot/dts/aspeed/facebook-bmc-flash-layout-128.dtsi | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ .../dts/aspeed/ast2600-facebook-netbmc-common.dtsi   | 12 ------------
+ 1 file changed, 12 deletions(-)
 
-diff --git a/arch/arm/boot/dts/aspeed/facebook-bmc-flash-layout-128.dtsi b/arch/arm/boot/dts/aspeed/facebook-bmc-flash-layout-128.dtsi
-index 7f3652dea550..efd92232cda2 100644
---- a/arch/arm/boot/dts/aspeed/facebook-bmc-flash-layout-128.dtsi
-+++ b/arch/arm/boot/dts/aspeed/facebook-bmc-flash-layout-128.dtsi
-@@ -32,19 +32,19 @@ image-meta@f0000 {
- 	};
+diff --git a/arch/arm/boot/dts/aspeed/ast2600-facebook-netbmc-common.dtsi b/arch/arm/boot/dts/aspeed/ast2600-facebook-netbmc-common.dtsi
+index 00e5887c926f..83c9789d45b1 100644
+--- a/arch/arm/boot/dts/aspeed/ast2600-facebook-netbmc-common.dtsi
++++ b/arch/arm/boot/dts/aspeed/ast2600-facebook-netbmc-common.dtsi
+@@ -152,18 +152,6 @@ &vhub {
+ 	status = "okay";
+ };
  
- 	/*
--	 * FIT image: 119 MB.
-+	 * FIT image: 63 MB.
- 	 */
- 	fit@100000 {
--		reg = <0x100000 0x7700000>;
-+		reg = <0x100000 0x3f00000>;
- 		label = "fit";
- 	};
- 
- 	/*
--	 * "data0" partition (8MB) is used by Facebook BMC platforms as
-+	 * "data0" partition (64MB) is used by Facebook BMC platforms as
- 	 * persistent data store.
- 	 */
--	data0@7800000 {
--		reg = <0x7800000 0x800000>;
-+	data0@4000000 {
-+		reg = <0x4000000 0x4000000>;
- 		label = "data0";
- 	};
- 
+-&emmc_controller {
+-	status = "okay";
+-};
+-
+-&emmc {
+-	status = "okay";
+-
+-	non-removable;
+-	max-frequency = <25000000>;
+-	bus-width = <4>;
+-};
+-
+ &rtc {
+ 	status = "okay";
+ };
 -- 
 2.47.1
 
