@@ -1,94 +1,119 @@
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B366624C664
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 10:19:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E0E19CC11;
+	Wed,  2 Jul 2025 10:20:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751451598; cv=none; b=f/Q4jHtBhMsoOhYee/urn7ASGDmKjmDPcyre7IYjBBUW8uY0DZ3M73jNSmBsMuJO0rfnm9XoN5oQANTF6ZbvWoejNzIlHgZqdMOwnrbCRDIK6t3hzHE5JJa/3Rp85VNWY+MGOZmi8kcGX54IGFU5us2gynqUX7t/PSkh7FsVJQA=
+	t=1751451633; cv=none; b=pbEwtAbeigOBR0/EKAcdLo+dNTNbaR++yHWXU5PVoXedcgDgcj1WMKRHFqcpu2K/OaRjcqDlOfQl4a0ruYaHGVCQverz29e3VPbN7Jm1ebOdT0uEw21H1fnxjVWU843z3RmzZe3gNe+YjiYl7tnTJmzk0yMxCwo5S6Qm9rFT8nI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751451598; c=relaxed/simple;
-	bh=QMSg+H9E85nSP8AMVhfKPz+3Q4Lbs/NOUsOvvYe5PHE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eKUgRfjGRFFQlKRjFV3roaJI02Zbs8mzKzlHedNnOXAnmWvoUKg3sIWoVyKXoEPpCsn/9L5Zg3ncywY46oPnVT3q+4gcUYv4qLHL2ooA2KDCfC+iBc3VsOy9ROPLv9TDSlbsWoSKwsV3FjdvUnNwfUqToAz9oBCz7c5SMvaaIE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=f3EfSGv4; arc=none smtp.client-ip=209.85.128.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751451633; c=relaxed/simple;
+	bh=isVC2OxjtYeqrfimdWGEstYRYwCNvNScMRWqnkaXR5Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J+bvHatC/ZitxfW3tLY20B5fz8soXRhoGn8D76zezFLJxUERf9w9VD7cMOGjc/zmjkY5xmwslvebtcTZmug+yIzRieXPQMyTVj5gMRTDhdt9SJ+CKwbANlJ2NdXPApGKpW9ouaxPPMSIHd60HERazoT+k5AGlVOz7Zw3bs/dCRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ldHuEhFu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f3EfSGv4"
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-70f862dbeaeso44439497b3.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 03:19:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751451596; x=1752056396; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=QMSg+H9E85nSP8AMVhfKPz+3Q4Lbs/NOUsOvvYe5PHE=;
-        b=f3EfSGv4GqYgqO4MpVUaeaCURwtltoNVPUFLJDWZKbvKM2wwvfXRTI6Ucg3x4Iftu/
-         VhyTnD7eFf/M+kEnoCsCNUGV9T53rUo0iXT/qTa+cVmegjUE/8McUYQWu5oeh7M1xJyo
-         G7qwbb3wXv6/l4bIA8oxKnxJY9tX3r+5q5FhXPvZCsQ9/vV9p08GYahxrKRp10NhXcGY
-         TiASsYjaqAhwzWruG2q//MeDhnfIkBLYkLFEsXH3vjM5wfMZX46sND6KROsim3SLlKY+
-         VC9fmMQWqC1ViRILbAlaT2QzGxEG/+TPakDm1UGFaSwu+BMnKevPadk4nXgxa2vx57HU
-         L3wA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751451596; x=1752056396;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QMSg+H9E85nSP8AMVhfKPz+3Q4Lbs/NOUsOvvYe5PHE=;
-        b=TdseiOXuyLg7WN5VAAIDJg5EiktzKUE2151KnryGxUO7VHmQxHVuJ5N/7OSIqutg0/
-         7zKu5K11b1AwBtERNwWsKE3kXIXvP5CRtfOVuXQjYdy557iYUH6kGW5LrX+yYkXUEPNl
-         DU9B/YdY4OtXZV14K94rD0qmAnDxCmMT6Tt5Hmgfr+ycgTCa0scbtQgQmm3HyMVxiDuH
-         68e0FsBcUklADeoMXOthykz02Oa81oumEWoIoc+91yybkPZZhb0znlwFVoRZpokGkXZf
-         wUKNodi5aWuHXbjQHbFe4oDIjV1OYwrmQIT8ftw6jDftQkrFOJCXEZsBI37UTpFOy/RK
-         L/lQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUFVOEf3aeLpd9z0mn8t02NRPE61MCt/IBLKh8xCnuMz513Od8wyITKgG5ldYMLYWBHKn2LN0zrvjO+f/A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwX5GKm9xJD05g5s6rkGiU9izpiV0GARjX46qUaC3sF2l0E6Ulf
-	ywijidiOIhzaDb0z2cT/nU1y6gvtisccnWHxkTDprTBOWvFqwohmY+K6TA5tfWwAItPov1EM9CV
-	unawQNAJfBpQlAoAaGcf1vMMCnJQg7TrMp8zewjUFHg==
-X-Gm-Gg: ASbGncuFmyZJFiwK3kt7TGCz5cnH+BS4Oyrjh5Yp/jbTBa6ZBSLr8QpdBc5HkxZr6ru
-	/uoDVNulYrzT21NyK4Eng29g3gDt3+p8qUlwrzMfrQ+D9cDNOlRD9ljHj+OQWcWytcHGEgyw0pk
-	ij9iYp22O8LxeBulauT0bp7tqnkHeGb8hKrjoF0h4yaCI=
-X-Google-Smtp-Source: AGHT+IHG/1GissPVmpknsYzFHMpB6ytPy9MhshgzbgoGfNZ2rCgq5NLTEQSFfMSr0XJegByETigg6aj5tsl8WILZc8k=
-X-Received: by 2002:a05:690c:6802:b0:70c:d256:e7fc with SMTP id
- 00721157ae682-7164d3f9161mr27758297b3.21.1751451595695; Wed, 02 Jul 2025
- 03:19:55 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ldHuEhFu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C11C2C4CEED;
+	Wed,  2 Jul 2025 10:20:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751451633;
+	bh=isVC2OxjtYeqrfimdWGEstYRYwCNvNScMRWqnkaXR5Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ldHuEhFu2SGpKZLoH1Ob+UWzanKdn4CbBABLItbBdbvqk3EYLiAREtyvVyNJVJsIO
+	 QrfOqR5WxC997Tn11w9ouYm+N85Vqt49rr2e9zg3opiRPnIPU9fQampZJR72A3VlTj
+	 zdlyJ/H5U3hvRbdazjEt7nnd6gwVcNf3kUtzYgWI=
+Date: Wed, 2 Jul 2025 12:20:30 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Lee Jones <lee@kernel.org>
+Cc: Chao Yu <chao@kernel.org>, stable@vger.kernel.org,
+	Sasha Levin <sashal@kernel.org>, jaegeuk@kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org
+Subject: Re: [STABLE 5.15+] f2fs: sysfs: add encoding_flags entry
+Message-ID: <2025070253-erased-armadillo-0984@gregkh>
+References: <20250416054805.1416834-1-chao@kernel.org>
+ <20250624100039.GA3680448@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250701142313.9880-1-terry.tritton@linaro.org>
- <87ikkblkff.ffs@tglx> <aGUggwe_gJon_2E3@MiWiFi-CR6608-srv>
-In-Reply-To: <aGUggwe_gJon_2E3@MiWiFi-CR6608-srv>
-From: Terry Tritton <terry.tritton@linaro.org>
-Date: Wed, 2 Jul 2025 11:19:44 +0100
-X-Gm-Features: Ac12FXyuLh0QFcbaVWbl5yokqfl7teNpNT1gidQEcqC-rhZCYHiTlieQ4JcBwVo
-Message-ID: <CABeuJB15QXyxSgB60VokSRFVGBRQJfcTNcwuX_wMzrNqmSz0PQ@mail.gmail.com>
-Subject: Re: [PATCH v2] selftests/futex: Convert 32bit timespec struct to
- 64bit version for 32bit compatibility mode
-To: Wei Gao <wegao@suse.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Shuah Khan <shuah@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
-	ttritton@google.com, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250624100039.GA3680448@google.com>
 
-> > > Signed-off-by: Wei Gao <wegao@suse.com>
-> > > Signed-off-by: Terry Tritton <terry.tritton@linaro.org>
-> >
-> > This is still wrong.
-> >
-> > If it is based on someone else work, then you need to attribute it
-> > Originally-by and omit the Signed-off-by of the original author.
-> >
-> > If you just picked it up and adopted it to a later kernel version then
-> > you need to add 'From: Original Author' and preserve his Signed-off-by.
->
-> @Terry @Thomas, Thank you both for the mention in the commit. I appreciate being included.
-> I guess above options both good.
+On Tue, Jun 24, 2025 at 11:00:39AM +0100, Lee Jones wrote:
+> On Wed, 16 Apr 2025, Chao Yu wrote:
+> 
+> > This patch adds a new sysfs entry /sys/fs/f2fs/<disk>/encoding_flags,
+> > it is a read-only entry to show the value of sb.s_encoding_flags, the
+> > value is hexadecimal.
+> > 
+> > ===========================      ==========
+> > Flag_Name                        Flag_Value
+> > ===========================      ==========
+> > SB_ENC_STRICT_MODE_FL            0x00000001
+> > SB_ENC_NO_COMPAT_FALLBACK_FL     0x00000002
+> > ===========================      ==========
+> > 
+> > case#1
+> > mkfs.f2fs -f -O casefold -C utf8:strict /dev/vda
+> > mount /dev/vda /mnt/f2fs
+> > cat /sys/fs/f2fs/vda/encoding_flags
+> > 1
+> > 
+> > case#2
+> > mkfs.f2fs -f -O casefold -C utf8 /dev/vda
+> > fsck.f2fs --nolinear-lookup=1 /dev/vda
+> > mount /dev/vda /mnt/f2fs
+> > cat /sys/fs/f2fs/vda/encoding_flags
+> > 2
+> > 
+> > Signed-off-by: Chao Yu <chao@kernel.org>
+> > ---
+> >  Documentation/ABI/testing/sysfs-fs-f2fs | 13 +++++++++++++
+> >  fs/f2fs/sysfs.c                         |  9 +++++++++
+> >  2 files changed, 22 insertions(+)
+> 
+> This patch, commit 617e0491abe4 ("f2fs: sysfs: export linear_lookup in
+> features directory") upstream, needs to find its way into all Stable
+> branches containing upstream commit 91b587ba79e1 ("f2fs: Introduce
+> linear search for dentries"), which is essentially linux-5.15.y and
+> newer.
+> 
+> stable/linux-5.4.y:
+> MISSING:     f2fs: Introduce linear search for dentries
+> MISSING:     f2fs: sysfs: export linear_lookup in features directory
+> 
+> stable/linux-5.10.y:
+> MISSING:     f2fs: Introduce linear search for dentries
+> MISSING:     f2fs: sysfs: export linear_lookup in features directory
+> 
+> stable/linux-5.15.y:
+> b0938ffd39ae f2fs: Introduce linear search for dentries [5.15.179]
+> MISSING:     f2fs: sysfs: export linear_lookup in features directory
+> 
+> stable/linux-6.1.y:
+> de605097eb17 f2fs: Introduce linear search for dentries [6.1.129]
+> MISSING:     f2fs: sysfs: export linear_lookup in features directory
+> 
+> stable/linux-6.6.y:
+> 0bf2adad03e1 f2fs: Introduce linear search for dentries [6.6.76]
+> MISSING:     f2fs: sysfs: export linear_lookup in features directory
+> 
+> stable/linux-6.12.y:
+> 00d1943fe46d f2fs: Introduce linear search for dentries [6.12.13]
+> MISSING:     f2fs: sysfs: export linear_lookup in features directory
+> 
+> mainline:
+> 91b587ba79e1 f2fs: Introduce linear search for dentries
+> 617e0491abe4 f2fs: sysfs: export linear_lookup in features directory
 
-No problem!
-Not sure how often this situation comes up where an ltp patch is also
-needed in kselftest.
+Great, then can someone submit these in a format we can apply them in?
+or do clean cherry-picks work properly?
+
+thanks,
+
+greg k-h
