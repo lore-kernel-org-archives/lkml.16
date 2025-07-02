@@ -1,81 +1,225 @@
-Received: from zg8tmja5ljk3lje4mi4ymjia.icoremail.net (zg8tmja5ljk3lje4mi4ymjia.icoremail.net [209.97.182.222])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41282374EA;
-	Wed,  2 Jul 2025 03:44:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.182.222
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFA1211C
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 03:47:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751427897; cv=none; b=CSWTMpdMwhPXwBTciPXgRLc3cNEvw3QU+DlV0FwhLWNfaz9BmE7eOl8RX7cgLNqrXaNxhiTu41fyUlOSaYinqFFCrCriiUicBhabNFYTZuZxfBsZlMeq4wqffLh68q6iVT9i58VW0lyT39iNBGRZ2dd/aOEI4FU27YhC9G/DOGM=
+	t=1751428050; cv=none; b=gb20FO18OqBYBV/efejCCcVdAEAXTvtpIaP9c5opuh4aoYPYavOI1rfNuLptfNRKFhlpQzNE6fyy4zsr+tU6X4kH5wAZr+P7wcrPoi7n5R9hcqR7EM75pDS5mQXZQ5IA1FJvC/4lOERWB8Blm1lhXfBrqh0k3d22fGYO+XPCzfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751427897; c=relaxed/simple;
-	bh=WMdTLlgEmYXJn42Md2+RAiIMmctVOthM4Z76RUekRBY=;
-	h=Date:From:To:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=UaJZipkk8cfy7JQ84/2vzIss9fvVeo1RYziJs5biEA/QYINuBZlSCvljvRjgvPTeQF/Acxht31GhytKIwNOKnedcr9B+nas+mrf5JNe7NHiyH7735RPPDVShBOH9uW8MyhIgKvayWm+K20DPY0pFYHHHQt4sOsFQSlXzqWytib0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=209.97.182.222
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from zju.edu.cn (unknown [115.197.243.13])
-	by mtasvr (Coremail) with SMTP id _____wDnOCwhq2RoYenQAw--.7425S3;
-	Wed, 02 Jul 2025 11:44:33 +0800 (CST)
-Received: from linma$zju.edu.cn ( [115.197.243.13] ) by
- ajax-webmail-mail-app1 (Coremail) ; Wed, 2 Jul 2025 11:44:31 +0800
- (GMT+08:00)
-Date: Wed, 2 Jul 2025 11:44:31 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: "Lin Ma" <linma@zju.edu.cn>
-To: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, horms@kernel.org, mingo@kernel.org,
-	tglx@linutronix.de, pwn9uin@gmail.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: atm: Fix incorrect net_device lec check
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2024.3-cmXT6 build
- 20250620(94335109) Copyright (c) 2002-2025 www.mailtech.cn zju.edu.cn
-In-Reply-To: <20250702033600.254-1-linma@zju.edu.cn>
-References: <20250702033600.254-1-linma@zju.edu.cn>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1751428050; c=relaxed/simple;
+	bh=UvasDVD1l8IAV6VDhCrREMXxQz6oobsXtjpYcXI2+vA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=or1/4xVm2cwDYyk70zQ5Dmwp4V8GGUXdbKs6XSfYSDKcoM67EUIJI9/3lF2bchCHZwaGubO9rm0x891UcMRcMOXjhYEFzBiOUmUqUq96Yhh+cJMsMirzw0xZRZ2Kz0K2sGqNLySRJ19w1MtueTkhjsFl9vfM8CP5Mj97HeEkfp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=O7om+5jU; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="O7om+5jU"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-234d3261631so45895715ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 20:47:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1751428048; x=1752032848; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Kexqqmx3bPtand0ohHNJ0SqRsuizuyI7ooeqf8i3LGA=;
+        b=O7om+5jUVAGxd9zl6qg6PtXZOulEy5xDIXkLsQnh8LUuB/15t7M12ggjwBuOYVAtRG
+         kv0VKkYMiCxBTocthaZIUUcPN2ZGDc/n8htzDYCi69+JSAhjNfNA4HoZJkLn2Y+vVx/W
+         mLR5RyAX8DJctpFpjyXa/mYIDxEf4iKWj6mo0klF7DQ8Zw7LgT/0A3hYAz1rGj+WI4jW
+         ZT3Q2vcS+ASaHXPIFyLSWOa7F0EsbGPyrM3f0Wzugzhl/xgbCbczCcMrrTGXJ4BFKBez
+         rIvy0w+vdfIj+f0kdbhJoRKSYz17SYLZkqoflRd7ipQUcgsl69XpKjhnNojcZnd9qHNF
+         L3bQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751428048; x=1752032848;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Kexqqmx3bPtand0ohHNJ0SqRsuizuyI7ooeqf8i3LGA=;
+        b=qFYKDOEb880pahCtvY8FXFPzlM7+PoIWrixk2gRg2qGga6lC5gG4rEYuC1wrmEWgkx
+         o9SdhNwMDc/dIugyOrJTmNSl37xvSgrp1ElTfWy0Slo+Xb84lrM+e5LR/ByloA7yp3ik
+         NVqs7MlsrY7i1f+bqKIMjI1sfTAVexw+3sC+2x0MA4tt5PBSYQPtXHw7gQjlDxks5q4D
+         Wse8tSO2rfMYN9URlPG0WItiFVGg5euvrHaqcwSvfxxmsAo+FFNOPyCdlz8p8P90RtBP
+         TbsvWSHxgCuMFVWZaJVj2IJ6Qd0skwTNkDaeLbFRLhtyiVzNoU/H5vdBcrpL99TcJj+H
+         i1LQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVxFc6cN6k+oP4ONvei+tZTe7r5WDZ6YLFgfBjKM/fFHAnELRG1v42vxILHIJyXYJtDj630Drt22/Hb0jc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxUytrbejfK8/S1dHnw3ZkzD60ZTPpAVON5dCIypXZLGShAYDM
+	ZK//ldnL4URGCM47X9RnJxp4UJNiFuLTecFpV12STs5vUyxEtQVYJsQ6LL9vUuKc/J8=
+X-Gm-Gg: ASbGncvWU5GhSZRImnn3mk6ZNsM41BwHfO40b/dFqMs4zKfqDNWxoVly/hVy2QYb30d
+	W0FK+PZwKNApms1U7MUgxQi7LqYvLIzWhCLDlBHitRRQ7RTWcgIdfGAZRDXWZKGXa5tTw7FORKr
+	Dr0OmEKQ8bAW30p7BbY+OkKli8fDw06hkW6g6qEtPEF3QUYJYBZ1a7YtVuDy0+eTiHCf2EAPTmE
+	ool/Nhfl1MHGQ30UMCygpeMD1JRwVeUy8nkRCclwU52c7zfubYmJg1sig8G/q+vNq76nQrwvmoA
+	nUjjSw/Gv3YrPUyxHpxYukU2teWqzn3qDyrKFRBplNVj6MbpQJx3040FED6/GnmQuoZswk7W8N8
+	Q5ZcX4T/BDgzKEw==
+X-Google-Smtp-Source: AGHT+IG5k/sGS6ZTbC1NnWIrkklDYe/239zASpSpq/5gVtSrILKpH7fBevk4fAKdNzplcIqjDd8i+g==
+X-Received: by 2002:a17:902:db05:b0:235:2403:779f with SMTP id d9443c01a7336-23c6e5f4c50mr16191305ad.29.1751428048147;
+        Tue, 01 Jul 2025 20:47:28 -0700 (PDT)
+Received: from localhost.localdomain ([203.208.189.14])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3acbf5sm117298665ad.144.2025.07.01.20.47.23
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Tue, 01 Jul 2025 20:47:27 -0700 (PDT)
+From: lizhe.67@bytedance.com
+To: dan.carpenter@linaro.org
+Cc: alex.williamson@redhat.com,
+	david@redhat.com,
+	jgg@ziepe.ca,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lizhe.67@bytedance.com,
+	lkp@intel.com,
+	oe-kbuild-all@lists.linux.dev,
+	oe-kbuild@lists.linux.dev,
+	peterx@redhat.com
+Subject: Re: [PATCH 3/4] vfio/type1: introduce a new member has_rsvd for struct vfio_dma
+Date: Wed,  2 Jul 2025 11:47:20 +0800
+Message-ID: <20250702034720.53574-1-lizhe.67@bytedance.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <c209cfd6-05b1-4491-91ce-c672414d718c@suswa.mountain>
+References: <c209cfd6-05b1-4491-91ce-c672414d718c@suswa.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <7ebd4e0b.7b84.197c93c74b1.Coremail.linma@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:yy_KCgBXF2Ifq2RoOctTAA--.12406W
-X-CM-SenderInfo: qtrwiiyqvtljo62m3hxhgxhubq/1tbiAwAPEmhjuY4KnQAAs1
-X-CM-DELIVERINFO: =?B?z8iDYgXKKxbFmtjJiESix3B1w3tPqcowV1L23Bze5QtIr9Db75bEBiiEybVhThS0pI
-	APHjeUlN/wNeQBhT9FIlu3pf4LNuu1YKU3/fDomEhaaFQTVrdHfrYENqm1lgz3qTF75UVO
-	0ChPZAmyJb/o1g9t2s4U7KlY6GRyn4xzPOZbPst1UJgiMxk0OLeryKixdVGfTQ==
-X-Coremail-Antispam: 1Uk129KBj9xXoW7Xw45tryfGw4kAry7KFW3Arc_yoW3GFg_ur
-	1Iyr97Ww4IkFnIgw4UJrs0yF9agF4UtFyxJw45Kr1xt347XFWUurWDZF9Fvw17WanIkF98
-	uF1jqrn3Gw17KosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbPxYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WxJr0_GcWl84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjcxG0xvY0x0EwI
-	xGrVCF72vEw4AK0wACY4xI67k04243AVAKzVAKj4xxM4xvF2IEb7IF0Fy26I8I3I1lFIxG
-	xcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
-	1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
-	14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
-	IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E
-	87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJwCE64xvF2IEb7IF0F
-	y7YxBIdaVFxhVjvjDU0xZFpf9x07jjQ6JUUUUU=
+Content-Transfer-Encoding: 8bit
 
-SGVsbG8gdGhlcmUsCgpNb3Jlb3ZlciwgdGhlcmUgaXMgYW5vdGhlciBzaW1pbGFyIGJ1ZyBmb3Vu
-ZCB2aWEgdmFyaWFudCBhbmFseXNpcwoKYGBgCi8vIG5ldC9hcHBsZXRhbGsvZGRwLmMKc3RhdGlj
-IGludCBoYW5kbGVfaXBfb3Zlcl9kZHAoc3RydWN0IHNrX2J1ZmYgKnNrYikKewogICAgc3RydWN0
-IG5ldF9kZXZpY2UgKmRldiA9IF9fZGV2X2dldF9ieV9uYW1lKCZpbml0X25ldCwgImlwZGRwMCIp
-OwogICAgc3RydWN0IG5ldF9kZXZpY2Vfc3RhdHMgKnN0YXRzOwogICAgLi4uCmBgYAoKVGhlIGNv
-ZGUgYmVsaWV2ZXMgdGhhdCBfX2Rldl9nZXRfYnlfbmFtZSgpIG11c3QgcmV0dXJuIGRldmljZSBj
-cmVhdGVkCmluIGlwZGRwX2luaXQoKSBmdW5jdGlvbiwgaWdub3JpbmcgdGhlIGZhY3QgdGhhdCBh
-IG1hbGljaW91cyB1c2VyIGNvdWxkCmhpamFjayB0aGUgaW50ZXJmYWNlIG5hbWUuCgpUaGlzIGJ1
-ZyBpcyAiZml4ZWQiIGluIHVwc3RyZWFtIGJ5CmNvbW1pdCA4NTYwNWZiNjk0ZjAgKCJhcHBsZXRh
-bGs6IHJlbW92ZSBzcGVjaWFsIGhhbmRsaW5nIGNvZGUgZm9yIGlwZGRwIikuCkhvd2V2ZXIsIHRo
-ZSBzdGFibGUgdmVyc2lvbiwgbGlrZSB2NS4xNS4xODYsIHN0aWxsIGNvbnRhaW5zIGl0LgoKU2hh
-bGwgSSBzZW5kIGFub3RoZXIgcGF0Y2g/IE9yIHNob3VsZCB0aGUgc3RhYmxlIGJyYW5jaCBlbXBs
-b3kgdGhlIGV4aXN0aW5nCmNvbW1pdHM/CgpSZWdhcmRzCkxpbgoKCgo=
+On Tue, 1 Jul 2025 18:13:48 +0300, dan.carpenter@linaro.org wrote:
 
+> New smatch warnings:
+> drivers/vfio/vfio_iommu_type1.c:788 vfio_pin_pages_remote() error: uninitialized symbol 'rsvd'.
+> 
+> Old smatch warnings:
+> drivers/vfio/vfio_iommu_type1.c:2376 vfio_iommu_type1_attach_group() warn: '&group->next' not removed from list
+> 
+> vim +/rsvd +788 drivers/vfio/vfio_iommu_type1.c
+> 
+> 8f0d5bb95f763c Kirti Wankhede  2016-11-17  684  static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
+> 0635559233434a Alex Williamson 2025-02-18  685  				  unsigned long npage, unsigned long *pfn_base,
+> 4b6c33b3229678 Daniel Jordan   2021-02-19  686  				  unsigned long limit, struct vfio_batch *batch)
+> 73fa0d10d077d9 Alex Williamson 2012-07-31  687  {
+> 4d83de6da265cd Daniel Jordan   2021-02-19  688  	unsigned long pfn;
+> 4d83de6da265cd Daniel Jordan   2021-02-19  689  	struct mm_struct *mm = current->mm;
+> 6c38c055cc4c0a Alex Williamson 2016-12-30  690  	long ret, pinned = 0, lock_acct = 0;
+> 89c29def6b0101 Alex Williamson 2018-06-02  691  	bool rsvd;
+> a54eb55045ae9b Kirti Wankhede  2016-11-17  692  	dma_addr_t iova = vaddr - dma->vaddr + dma->iova;
+> 166fd7d94afdac Alex Williamson 2013-06-21  693  
+> 6c38c055cc4c0a Alex Williamson 2016-12-30  694  	/* This code path is only user initiated */
+> 4d83de6da265cd Daniel Jordan   2021-02-19  695  	if (!mm)
+> 166fd7d94afdac Alex Williamson 2013-06-21  696  		return -ENODEV;
+> 73fa0d10d077d9 Alex Williamson 2012-07-31  697  
+> 4d83de6da265cd Daniel Jordan   2021-02-19  698  	if (batch->size) {
+> 4d83de6da265cd Daniel Jordan   2021-02-19  699  		/* Leftover pages in batch from an earlier call. */
+> 4d83de6da265cd Daniel Jordan   2021-02-19  700  		*pfn_base = page_to_pfn(batch->pages[batch->offset]);
+> 4d83de6da265cd Daniel Jordan   2021-02-19  701  		pfn = *pfn_base;
+> 89c29def6b0101 Alex Williamson 2018-06-02  702  		rsvd = is_invalid_reserved_pfn(*pfn_base);
+
+When batch->size is not zero, we initialize rsvd here.
+
+> 4d83de6da265cd Daniel Jordan   2021-02-19  703  	} else {
+> 4d83de6da265cd Daniel Jordan   2021-02-19  704  		*pfn_base = 0;
+
+When the value of batch->size is zero, we set the value of *pfn_base
+to zero and do not initialize rsvd for the time being.
+
+> 5c6c2b21ecc9ad Alex Williamson 2013-06-21  705  	}
+> 5c6c2b21ecc9ad Alex Williamson 2013-06-21  706  
+> eb996eec783c1e Alex Williamson 2025-02-18  707  	if (unlikely(disable_hugepages))
+> eb996eec783c1e Alex Williamson 2025-02-18  708  		npage = 1;
+> eb996eec783c1e Alex Williamson 2025-02-18  709  
+> 4d83de6da265cd Daniel Jordan   2021-02-19  710  	while (npage) {
+> 4d83de6da265cd Daniel Jordan   2021-02-19  711  		if (!batch->size) {
+> 4d83de6da265cd Daniel Jordan   2021-02-19  712  			/* Empty batch, so refill it. */
+> eb996eec783c1e Alex Williamson 2025-02-18  713  			ret = vaddr_get_pfns(mm, vaddr, npage, dma->prot,
+> eb996eec783c1e Alex Williamson 2025-02-18  714  					     &pfn, batch);
+> be16c1fd99f41a Daniel Jordan   2021-02-19  715  			if (ret < 0)
+> 4d83de6da265cd Daniel Jordan   2021-02-19  716  				goto unpin_out;
+> 166fd7d94afdac Alex Williamson 2013-06-21  717  
+> 4d83de6da265cd Daniel Jordan   2021-02-19  718  			if (!*pfn_base) {
+> 4d83de6da265cd Daniel Jordan   2021-02-19  719  				*pfn_base = pfn;
+> 4d83de6da265cd Daniel Jordan   2021-02-19  720  				rsvd = is_invalid_reserved_pfn(*pfn_base);
+
+Therefore, for the first loop, when batch->size is zero, *pfn_base must
+be zero, which will then lead to the initialization of rsvd.
+
+> 4d83de6da265cd Daniel Jordan   2021-02-19  721  			}
+> 
+> If "*pfn_base" is true then "rsvd" is uninitialized.
+> 
+> eb996eec783c1e Alex Williamson 2025-02-18  722  
+> eb996eec783c1e Alex Williamson 2025-02-18  723  			/* Handle pfnmap */
+> eb996eec783c1e Alex Williamson 2025-02-18  724  			if (!batch->size) {
+> eb996eec783c1e Alex Williamson 2025-02-18  725  				if (pfn != *pfn_base + pinned || !rsvd)
+> eb996eec783c1e Alex Williamson 2025-02-18  726  					goto out;
+> 
+> goto out;
+> 
+> eb996eec783c1e Alex Williamson 2025-02-18  727  
+> eb996eec783c1e Alex Williamson 2025-02-18  728  				pinned += ret;
+> eb996eec783c1e Alex Williamson 2025-02-18  729  				npage -= ret;
+> eb996eec783c1e Alex Williamson 2025-02-18  730  				vaddr += (PAGE_SIZE * ret);
+> eb996eec783c1e Alex Williamson 2025-02-18  731  				iova += (PAGE_SIZE * ret);
+> eb996eec783c1e Alex Williamson 2025-02-18  732  				continue;
+> eb996eec783c1e Alex Williamson 2025-02-18  733  			}
+> 166fd7d94afdac Alex Williamson 2013-06-21  734  		}
+> 166fd7d94afdac Alex Williamson 2013-06-21  735  
+> 4d83de6da265cd Daniel Jordan   2021-02-19  736  		/*
+> eb996eec783c1e Alex Williamson 2025-02-18  737  		 * pfn is preset for the first iteration of this inner loop
+> eb996eec783c1e Alex Williamson 2025-02-18  738  		 * due to the fact that vaddr_get_pfns() needs to provide the
+> eb996eec783c1e Alex Williamson 2025-02-18  739  		 * initial pfn for pfnmaps.  Therefore to reduce redundancy,
+> eb996eec783c1e Alex Williamson 2025-02-18  740  		 * the next pfn is fetched at the end of the loop.
+> eb996eec783c1e Alex Williamson 2025-02-18  741  		 * A PageReserved() page could still qualify as page backed
+> eb996eec783c1e Alex Williamson 2025-02-18  742  		 * and rsvd here, and therefore continues to use the batch.
+> 4d83de6da265cd Daniel Jordan   2021-02-19  743  		 */
+> 4d83de6da265cd Daniel Jordan   2021-02-19  744  		while (true) {
+> 6a2d9b72168041 Li Zhe          2025-06-30  745  			long nr_pages, acct_pages = 0;
+> 6a2d9b72168041 Li Zhe          2025-06-30  746  
+> 4d83de6da265cd Daniel Jordan   2021-02-19  747  			if (pfn != *pfn_base + pinned ||
+> 4d83de6da265cd Daniel Jordan   2021-02-19  748  			    rsvd != is_invalid_reserved_pfn(pfn))
+> 4d83de6da265cd Daniel Jordan   2021-02-19  749  				goto out;
+> 4d83de6da265cd Daniel Jordan   2021-02-19  750  
+> 6a2d9b72168041 Li Zhe          2025-06-30  751  			nr_pages = contig_pages(dma, batch, iova);
+> 6a2d9b72168041 Li Zhe          2025-06-30  752  			if (!rsvd) {
+> 6a2d9b72168041 Li Zhe          2025-06-30  753  				acct_pages = nr_pages;
+> 6a2d9b72168041 Li Zhe          2025-06-30  754  				acct_pages -= vpfn_pages(dma, iova, nr_pages);
+> 6a2d9b72168041 Li Zhe          2025-06-30  755  			}
+> 6a2d9b72168041 Li Zhe          2025-06-30  756  
+> 4d83de6da265cd Daniel Jordan   2021-02-19  757  			/*
+> 4d83de6da265cd Daniel Jordan   2021-02-19  758  			 * Reserved pages aren't counted against the user,
+> 4d83de6da265cd Daniel Jordan   2021-02-19  759  			 * externally pinned pages are already counted against
+> 4d83de6da265cd Daniel Jordan   2021-02-19  760  			 * the user.
+> 4d83de6da265cd Daniel Jordan   2021-02-19  761  			 */
+> 6a2d9b72168041 Li Zhe          2025-06-30  762  			if (acct_pages) {
+> 48d8476b41eed6 Alex Williamson 2018-05-11  763  				if (!dma->lock_cap &&
+> 6a2d9b72168041 Li Zhe          2025-06-30  764  						mm->locked_vm + lock_acct + acct_pages > limit) {
+> 6c38c055cc4c0a Alex Williamson 2016-12-30  765  					pr_warn("%s: RLIMIT_MEMLOCK (%ld) exceeded\n",
+> 6c38c055cc4c0a Alex Williamson 2016-12-30  766  						__func__, limit << PAGE_SHIFT);
+> 0cfef2b7410b64 Alex Williamson 2017-04-13  767  					ret = -ENOMEM;
+> 0cfef2b7410b64 Alex Williamson 2017-04-13  768  					goto unpin_out;
+> 166fd7d94afdac Alex Williamson 2013-06-21  769  				}
+> 6a2d9b72168041 Li Zhe          2025-06-30  770  				lock_acct += acct_pages;
+> a54eb55045ae9b Kirti Wankhede  2016-11-17  771  			}
+> 4d83de6da265cd Daniel Jordan   2021-02-19  772  
+> 6a2d9b72168041 Li Zhe          2025-06-30  773  			pinned += nr_pages;
+> 6a2d9b72168041 Li Zhe          2025-06-30  774  			npage -= nr_pages;
+> 6a2d9b72168041 Li Zhe          2025-06-30  775  			vaddr += PAGE_SIZE * nr_pages;
+> 6a2d9b72168041 Li Zhe          2025-06-30  776  			iova += PAGE_SIZE * nr_pages;
+> 6a2d9b72168041 Li Zhe          2025-06-30  777  			batch->offset += nr_pages;
+> 6a2d9b72168041 Li Zhe          2025-06-30  778  			batch->size -= nr_pages;
+> 4d83de6da265cd Daniel Jordan   2021-02-19  779  
+> 4d83de6da265cd Daniel Jordan   2021-02-19  780  			if (!batch->size)
+> 4d83de6da265cd Daniel Jordan   2021-02-19  781  				break;
+> 4d83de6da265cd Daniel Jordan   2021-02-19  782  
+> 4d83de6da265cd Daniel Jordan   2021-02-19  783  			pfn = page_to_pfn(batch->pages[batch->offset]);
+> 4d83de6da265cd Daniel Jordan   2021-02-19  784  		}
+> a54eb55045ae9b Kirti Wankhede  2016-11-17  785  	}
+> 166fd7d94afdac Alex Williamson 2013-06-21  786  
+> 6c38c055cc4c0a Alex Williamson 2016-12-30  787  out:
+> 20448310d6b71d Li Zhe          2025-06-30 @788  	dma->has_rsvd |= rsvd;
+>                                                                        ^^^^
+
+In summary, it is likely to be a false alarm.
+Please correct me if I am wrong.
+
+Thanks,
+Zhe
