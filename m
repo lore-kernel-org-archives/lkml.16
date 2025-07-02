@@ -1,92 +1,151 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F571DF977;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE95223DCD;
 	Wed,  2 Jul 2025 07:21:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751440916; cv=none; b=mwMliEePsU6qy8l2OzvqApqBHxXVxRBxZtsYke/0TKvGFRTxceh6pg425qCwFi3p4AikLVwzterO0srjamUV1p6V2+hrztsgW74kcKnliQm+0x/+sTTY+UoT1SSq2d7eAFzXtKAOpF45H9gI+uXU8DoJ094Kms2eX8uZKWl0Bx4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751440916; c=relaxed/simple;
-	bh=hg/fpzh0iibuHgzu9OoE8pUDa3xBOZXjJIvugVRypCg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PNhZX5MVQpq0oQT2FbQXu1apQYCskhhOrl3b/y4JrIMY6n+VUuuRLHFJ2Y17LCKzzdifRI6CzmVYNttTEMtT98CeXJoR7WISjOlqpM0AAyha+XaBo0YYohWGo5p+YgrYBft1VUiOlnwtc4Kk0gSTgy7ZdrU0dC2naPwoybSOw8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-32addf54a00so34284241fa.1;
-        Wed, 02 Jul 2025 00:21:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751440907; x=1752045707;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hg/fpzh0iibuHgzu9OoE8pUDa3xBOZXjJIvugVRypCg=;
-        b=Vejqni5DMN1uW2nmcJA7oQdfqsYG9yb3CjIt4Rpo3LWm6LPDQ64Kk6q503lY9A5aob
-         GX5tphyWWXVzk82FyptVu6G3hGkbiWIwG/pTukDvwD5JSd+XnWXEQYWf6Sp/oe65dg7L
-         iaAiXG/f3VApjAL4bCXfh5YiaCog+sI7c8oC1/Z7LcP8Px7qIFV0PL3gny/Bh05E3fre
-         Lr7VhSniFuPs26GLYUGhuxeoGZj73yi0j+H48zTD69zl4+fq71G8nt8whN326W14PeSB
-         qnIiLtMskXN8ruO4+ZakoW4nVkQM/9AFKZGzqAFx4Gy/rsZMGx/59oBlndj5cKHtQ7ab
-         XCzw==
-X-Forwarded-Encrypted: i=1; AJvYcCUGyyXLOQmeqZhUQhXbymfvC+yuBA27zDOy1PYaJ49tpSLEKDtWkSwWR3AWKYLL5IRNHHv4B3tMDrN8I5WM@vger.kernel.org, AJvYcCUtVZAw4y1kZwg450/VWycek/waB5jdjBepgIRBvzVHKKXAeBI/i2cabH56/0ahzSDoxn4pkMsbU2hOLA==@vger.kernel.org, AJvYcCVGVnWdSCs6FUQEMSKhdrPfSbfiyMIDtzW4zdISde4SKvkKnmYljx0AiT/RJkCuCEXTlYY8hPxrcOPH@vger.kernel.org, AJvYcCXdrJ2nfZMjvStzm9NTswAiNacjb/3REuGFv2LVFSwLopp9RYFDrncifVI411EwTTSh2iJMYL/mE8h6@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvDmJqnFctUbin0gtOgva+v48+dvPEzvwQkmCyqu9I15mn7SwP
-	knWt5LUUriuLHNQQ13kC6MDw99mkOdxwemSSvZapWl7DhhF/8JZ3MjXzz9rNjAP/
-X-Gm-Gg: ASbGncv/LaoyPB6FIh4v6f86SXHQFHzworeq4U4Kwc9cygAiLrW5T7CDTGa+f5tdOiP
-	5vSc4RPOXv1o1jgGK1JrrJUT2FnmqYPfZLOAj084mc1EoKqmBbhEonL2NYwinka2OYOwBX44Gcj
-	i7v4E1UUClcbVPlSfNU/NFejUtKbI0hoIOTyBWpbQ+Q5Ca6aKTV6M7nyluDYYrVSMNSH6l5TPZx
-	FfRleYsuIgKgBOoMX3hc0nSS/izQmXIAzwNMixnttNTpT/1liKqCrUTuXIhrEJRk4MGj2wDalmn
-	xn5xm/pVfvgplOapYRCktS+SaNoJ6ogbYHSIz+XdJu+ksHoUu9zw8kBLe0yOvzyT25GS7g2jOQB
-	DrBFLqe6vYCxM3e1lSk4=
-X-Google-Smtp-Source: AGHT+IHgLRqkzL+NlyH8Y6vVuR8370P3PmAbmab6X52g4MP/vDndubojlp9QRSfXIxwvisq4oLRqMA==
-X-Received: by 2002:a05:6512:3ba6:b0:553:24bb:daa1 with SMTP id 2adb3069b0e04-5562829f64dmr616313e87.11.1751440906742;
-        Wed, 02 Jul 2025 00:21:46 -0700 (PDT)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b2c5e6esm2056383e87.156.2025.07.02.00.21.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jul 2025 00:21:45 -0700 (PDT)
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-32b43cce9efso33353911fa.3;
-        Wed, 02 Jul 2025 00:21:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU0wwoySBpjLrgSHrtrl/b0FSEySBxY6scQIaEULw88HLqwX9P73b0fM9jtFjbjr7iubQpmrxifM+fFzg==@vger.kernel.org, AJvYcCUolpaqVoLQqb1N8wwTecjngshn9OzEu7QVTJ698PjumqY0lqVtcKznYNCXljHGDrFEpNmPrJrl2uf2@vger.kernel.org, AJvYcCWOXOZ6+6W5B7k30IbhssfBQWiO8gVIfTeVEYtF5z/TQjcCia4FlYorpVQVFA3G/+3sqfXnKqsNjmhL@vger.kernel.org, AJvYcCXA0xoWBOtN5TQAt06UVlQrN/nRHnvjZRz4QLotZx7EqbOhqO/YVkc8gGQNlaBISUS+sYCBMD9EerWMuv9K@vger.kernel.org
-X-Received: by 2002:a2e:881a:0:b0:32a:6e77:3e57 with SMTP id
- 38308e7fff4ca-32e00059701mr5163051fa.21.1751440904870; Wed, 02 Jul 2025
- 00:21:44 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751440914; cv=pass; b=Qfo9qSruqjitwux9SjLqMnRGO7WAgD6uCvpC1qoyJbC4VcfFcc0aAnch74v/I72cAbKr3nukyWHWM39925fbmS3WpSFFsEJsyAOTWZOzVpir9X5a8vcmc8QDvV9OYRdcrGJCEzfvFwOwke4VzznlwQTVzzbH5c1RlBGfnI5ihk8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751440914; c=relaxed/simple;
+	bh=yqQBLnCWIwzmelNjOqBsAdm2CxKpCnetfezc6JNWm2A=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=OMvsuH2V6b9XGsAlvg80wbl9iLM7c6S+Qt6V/PmOBMn58ObL/hTgKjZwl9EGn/d+MA1IBAeU/zvLZQougvOdvcvgyX8X412yb1vRnyKx4ybzhfctc4a5v1MPgCp/FP7BjqKUGmE9pJje5+23IA6vOGHGw3gE5K22pYlojsxMixw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=MixBbam2; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="MixBbam2"
+ARC-Seal: i=1; a=rsa-sha256; t=1751440868; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=LeMGg4wK3KwmHi/w8yFL1MOqR/e7jRRm+5xfN8vOLkfaOBPUaS0eCrQ/njPlaO8A2M+aKdGIAoGKjOAc39wMihV4eaGLn1E9wUS7SA5XKWzLHszuU7h2qU7RNhymfZoVE6sXpBEQl0oliFFi1RutHdN8VCSGSGItvSkPeTI9yow=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1751440868; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=0Pmojcacwl6r3Ued+iszIAObwj+kmlNOSKi/S7iYpwc=; 
+	b=GFUf0z4Xo/p1obyGBe5x04WCHlOv8zZTgOhd/bW2DXdD99QNNOVkDW0qrjexYCs1PzwLCf1ST7oAg2HhZp23McivxU/xmVwI/OBnh1fm5yPZT5yedlhCSHpa13CEwbP3QmJIABjYzWoGYGlR1jd2PoyBMnvY3E4wkj+0gyDACBc=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751440868;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
+	bh=0Pmojcacwl6r3Ued+iszIAObwj+kmlNOSKi/S7iYpwc=;
+	b=MixBbam2con3kJzVgyspLM6OfIRRT9NmMZBzDLySWR0+HJjpX0ek/yILoyjCVlf7
+	iGdKdmJqvKWagYOLU1rFZ8m9RfQntzji326mGdemmZn4xpZZ7LvuprIPuorMKToqX+J
+	bhLzAozoyjw/BPXCkuweZxCIhNxsaj804yn+Zp7A=
+Received: by mx.zohomail.com with SMTPS id 1751440866770473.6101901530126;
+	Wed, 2 Jul 2025 00:21:06 -0700 (PDT)
+From: Li Ming <ming.li@zohomail.com>
+To: akpm@linux-foundation.org,
+	andriy.shevchenko@linux.intel.com,
+	bhelgaas@google.com,
+	ilpo.jarvinen@linux.intel.com,
+	dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com,
+	shiju.jose@huawei.com
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Li Ming <ming.li@zohomail.com>
+Subject: [PATCH v2 3/3] cxl/core: Using resource_contains_addr() to check address availability
+Date: Wed,  2 Jul 2025 15:20:08 +0800
+Message-Id: <20250702072008.468371-3-ming.li@zohomail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250702072008.468371-1-ming.li@zohomail.com>
+References: <20250702072008.468371-1-ming.li@zohomail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250701201124.812882-1-paulk@sys-base.io> <20250701201124.812882-2-paulk@sys-base.io>
-In-Reply-To: <20250701201124.812882-2-paulk@sys-base.io>
-Reply-To: wens@csie.org
-From: Chen-Yu Tsai <wens@csie.org>
-Date: Wed, 2 Jul 2025 15:21:32 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65KrLwM+gQEWFVrzCcGPL+Fdhmb9b0FTJGkxrDqv4ucig@mail.gmail.com>
-X-Gm-Features: Ac12FXzCUNmtlDRkeXVtg02FaWchFlhOllywrVEAHXAtLHX_qmyxYGIEnu1zURg
-Message-ID: <CAGb2v65KrLwM+gQEWFVrzCcGPL+Fdhmb9b0FTJGkxrDqv4ucig@mail.gmail.com>
-Subject: Re: [PATCH 1/5] pinctrl: sunxi: v3s: Fix wrong comment about UART2 pinmux
-To: Paul Kocialkowski <paulk@sys-base.io>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org, 
-	Yong Deng <yong.deng@magewell.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Maxime Ripard <mripard@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Linus Walleij <linus.walleij@linaro.org>, Icenowy Zheng <icenowy@aosc.xyz>, 
-	Andre Przywara <andre.przywara@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Feedback-ID: rr080112271b71f97e36ef67dfbb8370c10000368428d90d561e1d914b655c596f1e241841b3db92a1ba9a83:zu08011227467ff9a043bdf37b25ef5ce9000097679fe9e5150e8b929bcfb1d670cddb2ba10612247452418b:rf0801122d235dee91d5c5aa06f75b4abe0000491dc140a12ed4c98263857ab0e6ad0f9521a202ab43144e77ebccf802068d:ZohoMail
+X-ZohoMailClient: External
 
-On Wed, Jul 2, 2025 at 4:13=E2=80=AFAM Paul Kocialkowski <paulk@sys-base.io=
-> wrote:
->
-> The original comment doesn't match the pin attribution, probably due
-> to a hasty copy/paste.
->
-> Signed-off-by: Paul Kocialkowski <paulk@sys-base.io>
+Helper function resource_contains_addr() can be used to check if a
+resource range contains an input address. Use it to replace all
+code that checks whether a resource range contains the input
+DPA/HPA/SPA.
 
-Acked-by Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Li Ming <ming.li@zohomail.com>
+---
+ drivers/cxl/core/edac.c   | 4 ++--
+ drivers/cxl/core/memdev.c | 2 +-
+ drivers/cxl/core/region.c | 6 +++---
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
+index 1cf65b1538b9..a3c19ec8033f 100644
+--- a/drivers/cxl/core/edac.c
++++ b/drivers/cxl/core/edac.c
+@@ -1523,7 +1523,7 @@ static int cxl_mem_sparing_set_dpa(struct device *dev, void *drv_data, u64 dpa)
+ 	struct cxl_memdev *cxlmd = ctx->cxlmd;
+ 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+ 
+-	if (dpa < cxlds->dpa_res.start || dpa > cxlds->dpa_res.end)
++	if (!resource_contains_addr(&cxlds->dpa_res, dpa))
+ 		return -EINVAL;
+ 
+ 	ctx->dpa = dpa;
+@@ -1892,7 +1892,7 @@ static int cxl_ppr_set_dpa(struct device *dev, void *drv_data, u64 dpa)
+ 	struct cxl_memdev *cxlmd = cxl_ppr_ctx->cxlmd;
+ 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+ 
+-	if (dpa < cxlds->dpa_res.start || dpa > cxlds->dpa_res.end)
++	if (!resource_contains_addr(&cxlds->dpa_res, dpa))
+ 		return -EINVAL;
+ 
+ 	cxl_ppr_ctx->dpa = dpa;
+diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+index f88a13adf7fa..4a5dc1d93af1 100644
+--- a/drivers/cxl/core/memdev.c
++++ b/drivers/cxl/core/memdev.c
+@@ -267,7 +267,7 @@ static int cxl_validate_poison_dpa(struct cxl_memdev *cxlmd, u64 dpa)
+ 		dev_dbg(cxlds->dev, "device has no dpa resource\n");
+ 		return -EINVAL;
+ 	}
+-	if (dpa < cxlds->dpa_res.start || dpa > cxlds->dpa_res.end) {
++	if (!resource_contains_addr(&cxlds->dpa_res, dpa)) {
+ 		dev_dbg(cxlds->dev, "dpa:0x%llx not in resource:%pR\n",
+ 			dpa, &cxlds->dpa_res);
+ 		return -EINVAL;
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 6e5e1460068d..79d8211f8ed0 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -2847,7 +2847,7 @@ static int __cxl_dpa_to_region(struct device *dev, void *arg)
+ 	if (!cxled || !cxled->dpa_res || !resource_size(cxled->dpa_res))
+ 		return 0;
+ 
+-	if (dpa > cxled->dpa_res->end || dpa < cxled->dpa_res->start)
++	if (!resource_contains_addr(cxled->dpa_res, dpa))
+ 		return 0;
+ 
+ 	/*
+@@ -2959,7 +2959,7 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+ 	if (cxlrd->hpa_to_spa)
+ 		hpa = cxlrd->hpa_to_spa(cxlrd, hpa);
+ 
+-	if (hpa < p->res->start || hpa > p->res->end) {
++	if (!resource_contains_addr(p->res, hpa)) {
+ 		dev_dbg(&cxlr->dev,
+ 			"Addr trans fail: hpa 0x%llx not in region\n", hpa);
+ 		return ULLONG_MAX;
+@@ -3499,7 +3499,7 @@ u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint, u64 spa)
+ 	xa_for_each(&endpoint->regions, index, iter) {
+ 		struct cxl_region_params *p = &iter->region->params;
+ 
+-		if (p->res->start <= spa && spa <= p->res->end) {
++		if (resource_contains_addr(p->res, spa)) {
+ 			if (!p->cache_size)
+ 				return ~0ULL;
+ 
+-- 
+2.34.1
+
