@@ -1,143 +1,125 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56ECB2D94A2;
-	Wed,  2 Jul 2025 17:23:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E74FA2D94A2;
+	Wed,  2 Jul 2025 17:23:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751477017; cv=none; b=oUfn7ls4cu5OVnafOGQP4gtHn43QbXeQgxLKRAXkLjunOLzz+iUREgifpfaKkyNZhOlirEfOMAuW4o91ZpNw5BJvQkpPneER0KDGzL+lqZXnMD3EOyafUXsQm2npxgjywGUHkGxE3+Ts0tIaFUcSSN7PCcF10qDdt9fRcJhLsGI=
+	t=1751477024; cv=none; b=Z5v2FvTp5ymWPLDTv8qh33TViw3M3ayB2AGzXoU0exTGeL3kWC5XEIMMzWTeMCvxLHeguqew4SlBBM9D01m3Qk/DVJm8XfhCezv8EeYHRRmADRpfommLxj1mST3RoxYqYLmU8o16KlPWuBDbgeHe4Pw9efE53JKccil9URZzass=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751477017; c=relaxed/simple;
-	bh=jTL/BjnoYLrTDmFG5CUqBUofpw+g+e26oS+JFNgwAxY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=g6hlVdRZunXm7Zq3NAr02j4T0ViRnrXFMYWf/yJjoj2gB9VphaoKZVYIEebmwfskDn6h9oEcW9FpDbrpR+OZu2SZ6CQrsgv/7nxAxfqd8bgoM0aOdvv5C9nOYNmrnUQei3OHk83JQC0iUs+MG8SH18Kv/U17uVSK2A+Iqc0pOdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dBYZi5J3; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1751477024; c=relaxed/simple;
+	bh=LW0GWMm33jWE9qVOKBL31FcXidkh6ToKqiCP3h0ZkD4=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=Wfs1PeH6hhjisA55Q7WH50s+Vv0YxaocIyMy+kDprwfQPIJCvpzr4utyY4I+gKG849SRgS5WculEae9xxatYeDAZee9im0x/aMezOO8S5f6NEFe9nD40jwNkITpBbkaKiOUmtfNrghOtkOdb1HpXrbzF+kaanQwboQARRYdukTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ta2udvop; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/YcXn9Uz; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dBYZi5J3"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 562D7ur0028446;
-	Wed, 2 Jul 2025 17:23:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	PP/Rlk2Qvw8fk9IfnwEARB/z987wF3uzfYQz7DCFvtw=; b=dBYZi5J34H579YGI
-	+VFqoV62ahyzAhr6r+Q2q2WpV3YINr8GNIYPB8VHahRI9KgtFWoJ1oM1lSHSq089
-	9dV273yVy/pwvW+xlbzJEPBlLgitOiTuUbaVSnDO4KWHGN00K9xEyZkdwS9tXC4O
-	l7FBht/CWGetsuuTsEdStJKxkgZg5TbO4tcHFBnSpHm0OfsJLsXiiDAjblbVDURb
-	K+0+9ooIrCIfGDTSAqWfbtvtn9sesjmVQ/JnRhMhGXEP2964D5a9gNXuSb/IakEO
-	GejBPWl2dx9mT9P8G91orCwNMWNd0tzvuQlFjYw6usDx60omFSn02yH+0971YFT4
-	0CWhQQ==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j7bvwgpb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Jul 2025 17:23:28 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 562HNRYT000649
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 2 Jul 2025 17:23:28 GMT
-Received: from [10.50.58.161] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 2 Jul 2025
- 10:23:24 -0700
-Message-ID: <1f64ff29-e268-4323-fe0f-cad21f04eb94@quicinc.com>
-Date: Wed, 2 Jul 2025 22:53:20 +0530
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ta2udvop";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/YcXn9Uz"
+Date: Wed, 02 Jul 2025 17:23:39 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751477021;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2COFfY1UgkdIHYWi+ShV5oCtrFbUVRG+GfJGPhoyO24=;
+	b=ta2udvopDdDVeJ519DsOpliVRVcMMc4YjuH4VXljo5QyewRQL8kiuaiixaJbizPFHv18DQ
+	Z1udSfm/L4ABfoaeEMLE+ByGaJ09/8ZjCdRajPL88ctblxiFeB0AxmIrtiz9mOu/I8nGAq
+	L8rARMqRA/Qc3mFvcdmwYS6ag1WWMQihL94WxYTgFiHK+WQCqoNHZ2ftMY/BOVrZuw61ME
+	aR2LllCQsv1VsEaCc/19ZDDx1nQK3/4CUCD+X6HpMXG8Eq+E5aumHSmZGvXAN5idEJdMxE
+	W7VXiTrRW5uxLbEcHXWJg8mXmy7N5WEwOww59X5cfyY2h5kCL8cXto27jrBqFQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751477021;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2COFfY1UgkdIHYWi+ShV5oCtrFbUVRG+GfJGPhoyO24=;
+	b=/YcXn9Uzl8msF9162XGZKctVv4wVcrfQ/auL7RX9wz+6MmFiXYFIXnq/jpJJZQSCmqte8F
+	ZUD8qQYAV9hdp6BQ==
+From: "tip-bot2 for Yury Norov [NVIDIA]" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: smp/core] smp: Defer check for local execution in
+ smp_call_function_many_cond()
+Cc: "Yury Norov [NVIDIA]" <yury.norov@gmail.com>,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250623000010.10124-5-yury.norov@gmail.com>
+References: <20250623000010.10124-5-yury.norov@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH] media: iris: Call correct power off callback in cleanup
- path
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Dikshita Agarwal
-	<quic_dikshita@quicinc.com>,
-        Abhinav Kumar <abhinav.kumar@linux.dev>,
-        "Bryan
- O'Donoghue" <bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab
-	<mchehab@kernel.org>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        "Hans
- Verkuil" <hverkuil@xs4all.nl>, <linux-media@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <stable@vger.kernel.org>
-References: <20250702134158.210966-2-krzysztof.kozlowski@linaro.org>
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-In-Reply-To: <20250702134158.210966-2-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <175147701995.406.2190759503320187064.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: R0Wk81rfsyaN98fsvWqBrsES9AHNExiH
-X-Authority-Analysis: v=2.4 cv=RJCzH5i+ c=1 sm=1 tr=0 ts=68656b10 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8
- a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=RHpiFe251XGUUtE-J_sA:9 a=QEXdDO2ut3YA:10
- a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: R0Wk81rfsyaN98fsvWqBrsES9AHNExiH
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDE0MyBTYWx0ZWRfX1MW7+LWzaTBs
- Y6YXDiHhXYL8Vsz2cPIAeopW6epFHhsUB409LXpoR+hof4wzATnXw+F318xG8tf6odOf9LVvdrF
- 3k4YlQEodwbWo2fcEdD9ekBpmsCAXopT60L0b6iZwZhIL6ymx3afrMVUwFMmFSPe4i/fa9Xb9a4
- p+686H4dRIZKPU6ZocGQy7B9MeETrg1BJz1L4Xf44Lq94NCoBaOEWJSEGNgnpUg92smrYK04zWd
- 8zTkGBEHA7aP0L2PO3KoMtAx+79n7VQk8KvJu9w0MhbY3btkslnC8tMiF62Dx9/Rsff8hA0jjJm
- sd0/1dkM8MJRqKxztqpAAd9c40aMjlGXu0NQ7pb+3PK34X5gAZg8zftrCAYXytUOrT6fFh5fFeC
- GHlf9vVZ3xR62CaWTKvIJ6Xi39Zk7HQ+gpk6Gnt4vrxC8Aqx7KhNkEFvRxlkD/5uMROJB7ys
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-02_02,2025-07-02_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 impostorscore=0 priorityscore=1501 mlxlogscore=726 adultscore=0
- malwarescore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 phishscore=0
- bulkscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507020143
 
+The following commit has been merged into the smp/core branch of tip:
 
-On 7/2/2025 7:11 PM, Krzysztof Kozlowski wrote:
-> Driver implements different callbacks for the power off controller
-> (.power_off_controller):
-> 
->  - iris_vpu_power_off_controller,
->  - iris_vpu33_power_off_controller,
-> 
-> The generic wrapper for handling power off - iris_vpu_power_off() -
-> calls them via 'iris_platform_data->vpu_ops', so shall the cleanup code
-> in iris_vpu_power_on().
-> 
-> This makes also sense if looking at caller of iris_vpu_power_on(), which
-> unwinds also with the wrapper calling respective platfortm code (unwinds
-> with iris_vpu_power_off()).
-> 
-> Otherwise power off sequence on the newer VPU3.3 in error path is not
-> complete.
-> 
-> Fixes: c69df5de4ac3 ("media: platform: qcom/iris: add power_off_controller to vpu_ops")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  drivers/media/platform/qcom/iris/iris_vpu_common.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/platform/qcom/iris/iris_vpu_common.c b/drivers/media/platform/qcom/iris/iris_vpu_common.c
-> index 268e45acaa7c..42a7c53ce48e 100644
-> --- a/drivers/media/platform/qcom/iris/iris_vpu_common.c
-> +++ b/drivers/media/platform/qcom/iris/iris_vpu_common.c
-> @@ -359,7 +359,7 @@ int iris_vpu_power_on(struct iris_core *core)
->  	return 0;
->  
->  err_power_off_ctrl:
-> -	iris_vpu_power_off_controller(core);
-> +	core->iris_platform_data->vpu_ops->power_off_controller(core);
->  err_unvote_icc:
->  	iris_unset_icc_bw(core);
->  err:
+Commit-ID:     e0e9506523fea415e0d5abaa103fd67dc8a39696
+Gitweb:        https://git.kernel.org/tip/e0e9506523fea415e0d5abaa103fd67dc8a39696
+Author:        Yury Norov [NVIDIA] <yury.norov@gmail.com>
+AuthorDate:    Sun, 22 Jun 2025 20:00:09 -04:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 02 Jul 2025 19:13:14 +02:00
 
-Reviewed-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+smp: Defer check for local execution in smp_call_function_many_cond()
+
+Defer check for local execution to the actual place where it is needed,
+which removes the extra local variable.
+
+Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250623000010.10124-5-yury.norov@gmail.com
+
+---
+ kernel/smp.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
+
+diff --git a/kernel/smp.c b/kernel/smp.c
+index 5871acf..99d1fd0 100644
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -779,7 +779,6 @@ static void smp_call_function_many_cond(const struct cpumask *mask,
+ 	bool wait = scf_flags & SCF_WAIT;
+ 	int nr_cpus = 0;
+ 	bool run_remote = false;
+-	bool run_local = false;
+ 
+ 	lockdep_assert_preemption_disabled();
+ 
+@@ -801,11 +800,6 @@ static void smp_call_function_many_cond(const struct cpumask *mask,
+ 	 */
+ 	WARN_ON_ONCE(!in_task());
+ 
+-	/* Check if we need local execution. */
+-	if ((scf_flags & SCF_RUN_LOCAL) && cpumask_test_cpu(this_cpu, mask) &&
+-	    (!cond_func || cond_func(this_cpu, info)))
+-		run_local = true;
+-
+ 	/* Check if we need remote execution, i.e., any CPU excluding this one. */
+ 	if (cpumask_any_and_but(mask, cpu_online_mask, this_cpu) < nr_cpu_ids) {
+ 		run_remote = true;
+@@ -851,7 +845,9 @@ static void smp_call_function_many_cond(const struct cpumask *mask,
+ 			send_call_function_ipi_mask(cfd->cpumask_ipi);
+ 	}
+ 
+-	if (run_local) {
++	/* Check if we need local execution. */
++	if ((scf_flags & SCF_RUN_LOCAL) && cpumask_test_cpu(this_cpu, mask) &&
++	    (!cond_func || cond_func(this_cpu, info))) {
+ 		unsigned long flags;
+ 
+ 		local_irq_save(flags);
