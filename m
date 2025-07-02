@@ -1,94 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5126E2BE626;
-	Wed,  2 Jul 2025 18:52:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 925762BE658;
+	Wed,  2 Jul 2025 18:52:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751482325; cv=none; b=mAtVuAjGIDvNdePe1bqY9HgpuBzZMDcqIpEF2X+dZrMOjwRQoB8HCYWPqoBpU6cwvQJuYVeQoUswQSCa/7dG9+2GmznPodb4eWovrv1sH7Zhhf5s9J1z4wZTASXtpxfLBuR/uL4E67irgH1onIMdfovEoZgAe+lem4UQuQ0X3GU=
+	t=1751482326; cv=none; b=oHk4EP90k5/NlXGBcGdyNW5EohrYE5wu9hJ+HOhlCjvAGNoHE+4aaslWYkTxlOnHTuuKis/F+exdc4aqcww3RCoGLibJqLO9+LWIwgaCu3M/0pvSBKTD0kBqWXjWQeKiw9JfIB/l/Nd+hF+IWjO02/W9Og94isE/jFIXcGG2rHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751482325; c=relaxed/simple;
-	bh=Tr/jSXt2sR6pI5xPiIGtAmoJPkl4Wo3HBvqjjFVXZfQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SIX/IvCbauxVy9s5kz1lmZUOWIYs2LmgxFP/4Pz6dcSz19Lu05LuM3fS5PNZxQDFJfFBMvzaZ2ynydcB/2w/2H8l7MRSEghN6BUpm289RnpDzjI12M2GjB4thP9nBtGMzvRMIcxYXJ4+jb8030hZG/aRrmZJqzc+no9T1LHwOV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M+BdkLx4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751482326; c=relaxed/simple;
+	bh=SGyeQlibR1BxJUiKs8Y3RHmbhvqdYbs9YQezGtbJUF0=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=hBQ8JLQXEqRgCzsKFsShw4sSquJGqgu5c/LLTDc0TngfUrgi47X9mqd8dyg+ZkXiBVLjJqXNVy5dYv+qxTLzFnutcqLf3ErTpARldrHuZb4LyqGkkKQi10lfIIB5Vh5mrqn/ixFOiFh29DiSCNj/R292VNVqGiMsv5BRRxgWKNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h13kiYuq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M+BdkLx4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5A46C4CEF1;
-	Wed,  2 Jul 2025 18:52:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h13kiYuq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C9AFC4CEE7;
+	Wed,  2 Jul 2025 18:52:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751482324;
-	bh=Tr/jSXt2sR6pI5xPiIGtAmoJPkl4Wo3HBvqjjFVXZfQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=M+BdkLx4YPOcgIaiuCVDnMOBOMAs/aCYb82Lj+MpStd0wBlQ3qxzDg99aEu7RmYsy
-	 OzXtU/jgkgP4AKqA6iw2WBBlJKeE5F6QlVO9uU6d/wrPhDUbfisxobQ7KGqWOviAoq
-	 XflmtdRDoWmOWdEMqO8mX9C4u+7RmFUuiI/jHipcs4GnznpOIoVxz7r68uMMCGJR+D
-	 D8SiU10aXFxeoYPlFNRMbb5HUkwOtJSsQh1wchcUrPDE37bF0ueHur5nNQ+YOyOe18
-	 XsdBAcoNevCYKrwCcy2FEhv8b/ptCl7MQLYGlLq8Y70ljDONAs6edt9TcrR1ppkNzD
-	 8uyiOVU09NOMw==
-Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-6119b103132so154906eaf.1;
-        Wed, 02 Jul 2025 11:52:04 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVqbLztcohxjXI4AMU7XwHfNo3SQ4FAwDyblIx3b9U75dmXYDyawsEh/rZuI/zTxKL15vmY4PMujvlD20Q=@vger.kernel.org, AJvYcCX6+pDwWPxRB+4NsCeRE51ivHLck9n2FgPbRueP+maOnYuiw/jV9ON/NJ5TkICsh/1TYiVBmDpkbBM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCDygjqyRMZilSxD2Fp616vXrV5Tvu+XIXkE8DMWRs6ey/GqhA
-	tP3Xqe7YtBNyU8iHpPPOQ1Xu2ERGfoBwH3ldiJeLCTWbXLwKFSpn5AWMrVXVsdaAgDFdou3+ojt
-	srAWiOqA+3AcbrhnQ772FYYN/8vSBwhg=
-X-Google-Smtp-Source: AGHT+IHOMCJ8yeX1yw8ax6BvbRw3cnCHOoxVsmjjHb+MatlzhLVOWeGSgmW8oA7g4HuSXgc5iHRb2RrrWCm0EyUYu0U=
-X-Received: by 2002:a05:6820:1996:b0:611:a5f4:42c0 with SMTP id
- 006d021491bc7-6137e88b272mr531992eaf.2.1751482323932; Wed, 02 Jul 2025
- 11:52:03 -0700 (PDT)
+	s=k20201202; t=1751482326;
+	bh=SGyeQlibR1BxJUiKs8Y3RHmbhvqdYbs9YQezGtbJUF0=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=h13kiYuqSnh82zieUjhHSdEouxLX44BEeA0ySmnp9JDXpj33nyfp311XK3rf/Fe78
+	 /G7oAzfRKSyN6lQpAlvdVxDn0sA0+gb68Tru2my4x9pboDfeNAELEyL1kQdbJChha+
+	 6X20edkJsOliLp2herjFfowxsExIy7hsNGbyFsrP2i2PeX7UriHxe5atJNsQ/tM+Fm
+	 82woA3Zr+LCMrf3grYKFZurV53ze6a7Vh5FZrtWA659bL3HKJ9mCwSXL5eoo+wbAVz
+	 2t+jPW00OGmccSMv7QbZKudlc94xgiq4+AZsXcb8dME4wHl+m61jxEdKErqLyYn8vh
+	 ph/TMUH0MUBpA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAE31383B273;
+	Wed,  2 Jul 2025 18:52:31 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250530100036.11954-1-zhangzihuan@kylinos.cn>
-In-Reply-To: <20250530100036.11954-1-zhangzihuan@kylinos.cn>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 2 Jul 2025 20:51:52 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0h1xAx7HRRgH_7=D8U71j3yU1qji_5vYyt0ym+Hnrne6g@mail.gmail.com>
-X-Gm-Features: Ac12FXwke7zsok5_lzNB9WRmt9X-rHv5pRzyuLS3JSRQQeV1Gyp9a_hxRVbSC2A
-Message-ID: <CAJZ5v0h1xAx7HRRgH_7=D8U71j3yU1qji_5vYyt0ym+Hnrne6g@mail.gmail.com>
-Subject: Re: [PATCH v1] PM: hibernate: Avoid redundant resume_device
- assignment in resume_store()
-To: Zihuan Zhang <zhangzihuan@kylinos.cn>
-Cc: rafael@kernel.org, pavel@kernel.org, len.brown@intel.com, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] riscv: cpu_ops_sbi: Use static array for boot_data
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <175148235075.828808.9774709298630060770.git-patchwork-notify@kernel.org>
+Date: Wed, 02 Jul 2025 18:52:30 +0000
+References: <20250624-riscv-hsm-boot-data-array-v1-1-50b5eeafbe61@iscas.ac.cn>
+In-Reply-To: 
+ <20250624-riscv-hsm-boot-data-array-v1-1-50b5eeafbe61@iscas.ac.cn>
+To: Vivian Wang <wangruikang@iscas.ac.cn>
+Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+ alexghiti@rivosinc.com, atishp@rivosinc.com, anup@brainfault.org,
+ uwu@dram.page, rabenda.cn@gmail.com, ziyao@disroot.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
 
-On Fri, May 30, 2025 at 12:00=E2=80=AFPM Zihuan Zhang <zhangzihuan@kylinos.=
-cn> wrote:
->
-> In resume_store(), if the device number written to /sys/power/resume
-> is the same as the current swsusp_resume_device, we can skip reassignment=
-.
-> This avoids unnecessary locking and improves efficiency slightly.
->
-> Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
-> ---
->  kernel/power/hibernate.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
-> index 519fb09de5e0..504a1c2465ce 100644
-> --- a/kernel/power/hibernate.c
-> +++ b/kernel/power/hibernate.c
-> @@ -1291,6 +1291,9 @@ static ssize_t resume_store(struct kobject *kobj, s=
-truct kobj_attribute *attr,
->         if (error)
->                 return error;
->
-> +       if (dev =3D=3D swsusp_resume_device)
-> +               return n;
-> +
+Hello:
 
-The main purpose of this function is to run software_resume(), not to
-set swsusp_resume_device.  You're breaking it with this change.
+This patch was applied to riscv/linux.git (fixes)
+by Alexandre Ghiti <alexghiti@rivosinc.com>:
 
->         sleep_flags =3D lock_system_sleep();
->         swsusp_resume_device =3D dev;
->         unlock_system_sleep(sleep_flags);
-> --
-> 2.25.1
->
+On Tue, 24 Jun 2025 16:04:46 +0800 you wrote:
+> Since commit 6b9f29b81b15 ("riscv: Enable pcpu page first chunk
+> allocator"), if NUMA is enabled, the page percpu allocator may be used
+> on very sparse configurations, or when requested on boot with
+> percpu_alloc=page.
+> 
+> In that case, percpu data gets put in the vmalloc area. However,
+> sbi_hsm_hart_start() needs the physical address of a sbi_hart_boot_data,
+> and simply assumes that __pa() would work. This causes the just started
+> hart to immediately access an invalid address and hang.
+> 
+> [...]
+
+Here is the summary with links:
+  - riscv: cpu_ops_sbi: Use static array for boot_data
+    https://git.kernel.org/riscv/c/2b29be967ae4
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
