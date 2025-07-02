@@ -1,90 +1,60 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1795E21C187
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 08:11:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A1F9235C1E;
+	Wed,  2 Jul 2025 08:12:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751443912; cv=none; b=kWzZ9soH+tXB9tiSHJZmWDE7B+K55XLYcCgjWN6AnJjXs/n0ULVPcHWqJDCy8EhmFUificho2q7amo5yiltRdT4iPdOalf0sZQ5N71xXRd89x5VhHhamnMFD02yNGN1WvX8D1Msw+fbGWkb10wlAACUygc3jEmkTKDUhO5Zx4qM=
+	t=1751443933; cv=none; b=XcuBJ8j9t+6albnDxALUi9QPHshQAA1alSzxSeO1sPL6DfudIk0fIrpNsbWcm57ONiGGP1jb1fOEv/oWNIHDdM0deNcnh+ca6VHXzuXod51uILdy4aiuvLzql/hiZjUvOpmfH1mo6BA19RSUwnc3wb2UkC6W+uG8dVG29M16RT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751443912; c=relaxed/simple;
-	bh=QG1iZiP+R2rzXaTe56gOjHC0fYF3d/JOXWrEX8czvSw=;
+	s=arc-20240116; t=1751443933; c=relaxed/simple;
+	bh=tFK2QrFWWvDmP6CtwVKqwbt9Ox9i2kJm+VJCmIta57Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JzKULMpIbkB/2mx/pi/vwn35G3PqxlsHh7h0ouUjFFidVCkWg9p3vqPx/ORPGuP9Xv0z6pTOxGqRaebriapYwrxkAuOXlOqyr254e9DkoncyYI0FpLlcwhDjqq4LUPlLKXjC5JnSzr1MXzW/zD1d0ENxavK3WfwJXKF6Ui2288s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=XmCcyH2e; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XmCcyH2e"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-235e1d710d8so77394455ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 01:11:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1751443910; x=1752048710; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ndb+JaIMrjzxA+tCLX6/GeFttkCVzpWqjwe11W0C+PU=;
-        b=XmCcyH2eZ+1iYyBqxZGqz3hKWHLiT6hDZ9LdpBV3k95bYP9/xlpjKst8L6GxYj3dHl
-         lB++zWksjl1GR314xlEomUGtOiUcQ2IFC+dh/Ls7PxjVns8cTzHFXgcr6UuqYWcTOm1m
-         oJzwy6dxnLRNYNK5mkgvZ+X6u0BFWre4F8DTI=
+	 Content-Type:Content-Disposition:In-Reply-To; b=gGtbkor95PEPinCkscP3d9+HCXBklj0Nm++aCsglOrSlfmslEYqf8/OhEQtpd+DKaEyAzPcMo10VbA92Ou0zctryFe6TbeoyvVTtlUIW9pThySVYJbF2ubUa/HxJs9gJd6HAQiJ4WcA2GId089I3SilrWfHduXQrEqufkd0TRlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ae0d4451a3fso711080066b.1;
+        Wed, 02 Jul 2025 01:12:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751443910; x=1752048710;
+        d=1e100.net; s=20230601; t=1751443929; x=1752048729;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ndb+JaIMrjzxA+tCLX6/GeFttkCVzpWqjwe11W0C+PU=;
-        b=or7QYH25rP1W80tmA79flyRH6e9Rjl7BPquiXQ9LvQpBdrkv+zRCyoNnABYtPtT4lv
-         jU9BxtKACv+9igglpyhnO74XT4J91LJnsda4lGBJVvxSoMElQo7N+WWXaw+qCX0yuWaq
-         AjIewo+KATQGVQctYMKlcndzH30PVwXRzuj5Yj3HQDkB1xx8dsfNuaXICnEnOXLuWh+Q
-         krksMkR6LQaG+voxoZemQqA8HhEk808nB2ZSOni+5f1FImEbUcZM7wG07BQjNfMhsOZ+
-         f6vLNiUrH0eCfyneaB0whmYdI3ix0M6NZL+XfDGn6RiSQqn9bfC8HlbphZRLwRR2d+91
-         rTlw==
-X-Gm-Message-State: AOJu0Ywn82vYfnu4hwr+g0zU6Yo2jGMkl6WgRfXTjoxJYYmCg5mGXfGf
-	uqjyb+qZrueHffhYjoE4thsy9fJ8VM0qA42tBxOnm/X6JI81eaYhN/sfWD57ZCxNm4cmbQV/J8E
-	bMqc=
-X-Gm-Gg: ASbGncvbqwLwN4tdvk8dfcvWcEFhpTWakHS/3bYIwccJ7+KOqaBUG5i7ozXh0TraK6u
-	nW+j5m1cngh2a499+GwVKfD7C17iddFFZD5NmSTF5FIESbico2JYgNIJ8kdV+vDST6SEsUCBd28
-	Qzxo5FO9Imp+wsfIH3ruOTKR0btewRKZTbCbfmJiIgOWiJSYMcmaate8QyvS9bICWgvfe23ZkPg
-	CoAJk7o2WUwBbvkGaS9XOf6kzbYSBoJZeABYMpRTmrDLahujXuYjjddSd9gevu2unnWEYkEOxhs
-	LBzbhlk/PXvMt1Z/fv6noGNw3F+ZiuZEjp+rx8NgZUWEKmt39FbNOM3l0c3BSiRQxw==
-X-Google-Smtp-Source: AGHT+IFyaxLPiNw4RnMZfl9Tf3kKU0bVL2nwN672ya66HP6pYgxM8O8hDYVQs76FVVGhmt0dmGwu+w==
-X-Received: by 2002:a17:903:320b:b0:234:f1ac:c036 with SMTP id d9443c01a7336-23c6e5e23d7mr21917615ad.50.1751443910448;
-        Wed, 02 Jul 2025 01:11:50 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:8825:8cdb:cb6b:8e71])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e3013d7csm12080632a12.11.2025.07.02.01.11.40
+        bh=/DBqyISpLzZ1F6OIkdnY4d5pPYWOFwQa60NPg+vWa3c=;
+        b=mKqaZv3CDwcP5aoarbxdrz/zX3HGs32+/qjPm5FKgEDHAyaBxz/Bgxh6gFlRo0t8aW
+         D8bSSHIdhoQPIofmP/hBBcPkTr4FQBticAIkxZmFCBXgcU6rdjTerT7kKy+HFiLku1UY
+         CfU6H0ZnK8XfeE9mJ3swSEq/d0Qu6aTFa+xKnLRI5vjfpn6Xy6AwddE2dwEM4tWuXlF4
+         Tx7WrXPkv2XHDW1OXU9yWCDJ7iActF3jxW8ipd9Rbi8oab6UQ+Y4VxZ+jrPWtr39Fi4B
+         ZxLPB8jtTGi9PQl+UXrBVbx2q3BIB1I4RpLEdEx2smq/Z3TSev8aeT6d6DDV8TTzPwy7
+         GBKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUaIoOIxv77Jpn+J3VLnwnSDulQj3WHbUl3zbZc3r+BMtBt4/gXxc6k5DrS16x7ftjFGR6xesG2Ea+Rq8M=@vger.kernel.org, AJvYcCXizBd3wTwT2eyUiSOOVzgFmMRUsXRgbgWP92MphF7go/VDb5/TXwBUvE1YhNQ4YQA+6KR5cQC+@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyg038nXftR1Y8I1vuj7OXUoy2FfhWjTTT11zAZUWoyseKyzlsw
+	CGUCve3aLraXe/N84pmlv0wO12ilEmAUYTyD6A0WI0iSupoowLefUI6B
+X-Gm-Gg: ASbGnct0U4KgP9NuF854om4Kz56/yfKBbTXyjXeNwidxU1XFH9MlE9pQiAM4wiu1n0G
+	yHm0PowIpZAoGf6gOr2ak+IxPCzxGk7CLseNzS2qDtv3KEAmshOUnFOi3diniJRSwfEVpQKu2oO
+	4pefkX0kBjBkZoBZLqudLUfMyV9vN3Yi0NZQDZB5DUTGL75YixFxk5kguwcQ2ZpRzPr20jWuMre
+	qGp6xC2UUIWztW6L8w9G5ZEnTIYtJNZu036gT4BiSnxk2XSxaK8Ut3q3Mwde72e2prDXB3tcj69
+	3DtzxJUIu+8c0raWngpEnzRjKSgPDQ5yun8tALZfQS3nhATsdWdf
+X-Google-Smtp-Source: AGHT+IGrO9ErcnjBzEPzLxx1bncjHYEKO95UD6i9tGNB/o6pu26Usxro5kPM6D4u12Yv1s6fmSi/HQ==
+X-Received: by 2002:a17:907:d8a:b0:ae3:b94b:36f5 with SMTP id a640c23a62f3a-ae3c2c4bdcamr141731066b.34.1751443929236;
+        Wed, 02 Jul 2025 01:12:09 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:9::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae35363b416sm1019235566b.28.2025.07.02.01.12.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 01:11:49 -0700 (PDT)
-Date: Wed, 2 Jul 2025 17:11:38 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, virtualization@lists.linux.dev, 
-	linux-fsdevel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Jerrin Shaji George <jerrin.shaji-george@broadcom.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
-	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
-	Alistair Popple <apopple@nvidia.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Minchan Kim <minchan@kernel.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
-	Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>, 
-	Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>, 
-	Oscar Salvador <osalvador@suse.de>, Rik van Riel <riel@surriel.com>, 
-	Harry Yoo <harry.yoo@oracle.com>, Qi Zheng <zhengqi.arch@bytedance.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>
-Subject: Re: [PATCH v1 12/29] mm/zsmalloc: stop using __ClearPageMovable()
-Message-ID: <zmsay3nrpmjec5n7v44svfa7iwl6vklqan4dgjn4wpvsr5hqt7@cqfwdvhncgrg>
-References: <20250630130011.330477-1-david@redhat.com>
- <20250630130011.330477-13-david@redhat.com>
+        Wed, 02 Jul 2025 01:12:08 -0700 (PDT)
+Date: Wed, 2 Jul 2025 01:12:06 -0700
+From: Breno Leitao <leitao@debian.org>
+To: David Wei <dw@davidwei.uk>
+Cc: Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH net-next] netdevsim: implement peer queue flow control
+Message-ID: <aGTp1oyDGPwErXNO@gmail.com>
+References: <20250701-netdev_flow_control-v1-1-240329fc91b1@debian.org>
+ <e87a5ba3-956e-401e-9a1e-fc40dadf3d87@davidwei.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -93,18 +63,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250630130011.330477-13-david@redhat.com>
+In-Reply-To: <e87a5ba3-956e-401e-9a1e-fc40dadf3d87@davidwei.uk>
 
-On (25/06/30 14:59), David Hildenbrand wrote:
-[..]
->  static int zs_page_migrate(struct page *newpage, struct page *page,
-> @@ -1736,6 +1736,13 @@ static int zs_page_migrate(struct page *newpage, struct page *page,
->  	unsigned long old_obj, new_obj;
->  	unsigned int obj_idx;
->  
-> +	/*
-> +	 * TODO: nothing prevents a zspage from getting destroyed while
-> +	 * isolated: we should disallow that and defer it.
-> +	 */
+Hello David,
 
-Can you elaborate?
+On Tue, Jul 01, 2025 at 03:26:07PM -0700, David Wei wrote:
+> On 2025-07-01 11:10, Breno Leitao wrote:
+> [...]> diff --git a/drivers/net/netdevsim/netdev.c b/drivers/net/netdevsim/netdev.c
+> > index e36d3e846c2dc..43f31bc134b0a 100644
+> > --- a/drivers/net/netdevsim/netdev.c
+> > +++ b/drivers/net/netdevsim/netdev.c
+> > @@ -351,6 +406,9 @@ static int nsim_rcv(struct nsim_rq *rq, int budget)
+> >   			dev_dstats_rx_dropped(dev);
+> >   	}
+> > +	rcu_read_lock();
+> > +	nsim_start_peer_tx_queue(dev, rq);
+> > +	rcu_read_unlock();
+> 
+> Could the rcu_read_{un}lock() be moved into the
+> nsim_start/stop_peer_tx_queue() functions to keep it together with
+> rcu_dereference()?
+
+Yes, for sure. In fact, I will update and move the locking primitives to
+inside the functions.
+
+Thanks for the feedback,
+--breno
