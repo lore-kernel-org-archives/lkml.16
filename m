@@ -1,168 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3486B2F3C36;
-	Wed,  2 Jul 2025 16:58:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B23F289E14
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 17:00:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751475535; cv=none; b=b39cmHt72u4N/Eqyg6305RYC0Qpy2qASnegX3mHyLV+JeojC2WFMsAGZcUEEU4wLO2HmqE3071fxuF/fvaqx+SbXXPPav/CkhzajFMq68HTSk9CuZK/ZgTddPn5K8ottYHrwhyphhIfGNve1J3CvKckw8gi4oY1hVi4CtKHBCio=
+	t=1751475641; cv=none; b=kZ6DK723qn1Ax+SN32cQDSRQGVJOnMixsyU5eDMOSrccOrb8TX44KJfKleBSXiLZPBfxDR//i2lzzOrO2hULWz5V1ChocwA5i+C3tDCb8JUa0g4scROM4p3AsoZAZ1ZneSx7bnY0PN+VtQ0y0wa2bcCmi50kUtMzWZPhNXD9E5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751475535; c=relaxed/simple;
-	bh=NRCwcBa+605nVVuq9je4xdUTbE9ogB25Tw0Q/57qzjo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fS/5xfHmCtBq2huTmZyUS9rfudB5MBVXXFZYHBgktV41BaQwpeJl/K8OMpqeG+UyzO+8Qefh6N1pLQz06DDDN5FKU52RTqU/uuJ4OP/ldLnIfmU5eGUr58AidIfP8fIsrzK56FXw+LDmNCbg0TvyZLOxOhsxU2vFq1PrI5lGru0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Va46DDik; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751475641; c=relaxed/simple;
+	bh=7R8O9Sy7GmzduITiDik8nmm+DUNuPAZ3smpgXxsr+yA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=T62UJs9VNEzsuvrVSRhq/FEfG5nxFIUeQ9KDb+KxqB2lQWZyI2Sth5SZpsX10mgcA80dk/80APx0s/M9fP+3BlgPpgsnr26uJ1GS4Hzjn1zJRnFZQDmjJmnUBSLVNtutzuGfV6gQNMELN0EF3wFxgQtnHzQRmGiYS0cU/v0yiro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tVAO2/3v; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Va46DDik"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751475534; x=1783011534;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=NRCwcBa+605nVVuq9je4xdUTbE9ogB25Tw0Q/57qzjo=;
-  b=Va46DDikOrXIvfSbOucqM1atsEf6wuQZFPMhiuFjsRBgPxieIWJEuhq2
-   K5MKInUEWn3IXCwkCKmr5mYJsoJ07xB3pLVzxnNkhWhfajsSUwCy3CBzn
-   MYktuT7gUC/mb5bMkva+LGmvo7ZSEoXSaFfmAYdjYg506HMUaLFnNhWRI
-   9oEsKozvvr+ZWiSCe2W2wW0Ny2ie9oXPnl9i+rYz4+FfiPO0K71MMohRh
-   8SlaEtcOSxGzgFWBZ7itxzgLPcyHdKmZIt+PJpTqIKkxvtz6b9Xfmw4ID
-   IbDBUoMKlPEMnjY+u29znO3SkEZafnlSHiQD2rkviifZJiC16Mw6HNv74
-   g==;
-X-CSE-ConnectionGUID: 12lNxwf/S0OsXOrdB8qR6A==
-X-CSE-MsgGUID: QC5ondRCQEm5NZ4A3IbjCQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="65132676"
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="65132676"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 09:58:54 -0700
-X-CSE-ConnectionGUID: 1sbzCVlVTSCIMJVzDvo/3g==
-X-CSE-MsgGUID: 5LYgvkbZQkqdQZuay9eh1A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="153538594"
-Received: from p12ill20yoongsia.png.intel.com ([10.88.227.38])
-  by orviesa010.jf.intel.com with ESMTP; 02 Jul 2025 09:58:47 -0700
-From: Song Yoong Siang <yoong.siang.song@intel.com>
-To: "David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH bpf-next,v3 2/2] selftests/bpf: Enhance XDP Rx metadata handling
-Date: Thu,  3 Jul 2025 00:57:57 +0800
-Message-Id: <20250702165757.3278625-3-yoong.siang.song@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250702165757.3278625-1-yoong.siang.song@intel.com>
-References: <20250702165757.3278625-1-yoong.siang.song@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tVAO2/3v"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-60b86fc4b47so270a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 10:00:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751475637; x=1752080437; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ClpTUPxlw9qKpJZHFHAxlvtkPFSTpQG0D0TAtGQlJmQ=;
+        b=tVAO2/3vjnudvBmv1aqgE5qaaEm0lc+U4BWXqj01KUcj1NLnHXjLLiW7ZxPI4Pat6z
+         OaX9MfSVDfrhM95YStTu5dLMsOmfG05OkLCA4cqbEMyTarar6DsLGo6t636A9Dp1N7DD
+         j8Xv4RwPGsOoI6v+OZyn7AYSWyykuAYwxGOSZSMLGRBMLTnGadzlI5hN49e+1gsA8853
+         5As0c5AMuE3QLQPHprT6xdGmioT8Ywy/8/NzkJIy6SCByWwWvzvKlYd3Fluov7MbgJjp
+         SgOvKPp3G41rLKq3W7PfBsuGko9tjMTYta7yF/oMp5eb6zUUOU0pNRXQOdJ23cPH8mmV
+         ktCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751475637; x=1752080437;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ClpTUPxlw9qKpJZHFHAxlvtkPFSTpQG0D0TAtGQlJmQ=;
+        b=c3ZmTW6eThh75yMaj7kJocJ5EFybgITJotTi+MRGLf4gXhDOYfSwW4gs6TYaZBk5Wc
+         YudIcY9JN/b9Gwe/tZEBZzEFWOeRTFtpYhVvUfcRFemQxxpSSgWBJNd785O/ejA1Xyh6
+         Bmloi2xDVoQ8WlKUOVJeqNovuF5+1dBkDWhJbKYd81h16gplsL2Wwr4CGhKJHklgwr0E
+         yt9F+JUGmsVf7oFaYUX2jkW/e/PWW9Vb9mK/1XRL3irWjEB3+UZnf0Q3E0iVhunZnhig
+         2pT2cYsRXkDPm6jaYqC47owtDSjn362mRBvijLQxI3V1M/jo5t9osB/juRpIHoZSj3vE
+         Mpvg==
+X-Forwarded-Encrypted: i=1; AJvYcCV7aVO1VfIoetZEJJICzcjOa43z7XeZWfBH6M8VgD6DcKt7FLfowdlkrKeyyI6jhnO8T3eSFUOxe3LnFPQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCIoP5P2dksiyfQFkWzNkw3GTs50Bs4tYMqE0mQUCcbJLUGXkk
+	en+TH14yXh2aeZYLy8k8OEyterv83wVEhEavyG7em1rZZbQAiQ9IQUCTOk4c0u/PvTAN3J0ia7a
+	VVgjBt48CQNLqzwuxE3UrYOtrjqWn1zOccazZl0FY
+X-Gm-Gg: ASbGncs9jEck8ZYdEfPSHuTPeYvseJDKiTvKK2rKk3OshHeP/vwzRB5BZzf05Z7SD6/
+	isBWWB3/Gqfucq3CDGRnKtvncwAhDnIkaHavEp+KwOP1VnGyB+hAxKW1qT2C1Z1WAxu2g8JtXXk
+	eFctCA031Ya8esXH/CxhY483EQ0KeGZoY/OzsUopz/+sJsEzuc1JETnHfDvWaE+iF2HQl4I3Y=
+X-Google-Smtp-Source: AGHT+IG+KOhc493DGFqZhnwt/78T8773N8GPugOIwolsxQo6/kvF01euKel9h9IDyBdJVu9Tl31HX26v2DXluMoxtlI=
+X-Received: by 2002:a05:6402:4496:b0:5e6:15d3:ffe7 with SMTP id
+ 4fb4d7f45d1cf-60e38a8846fmr273711a12.7.1751475636478; Wed, 02 Jul 2025
+ 10:00:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <68653927.a70a0220.3b7e22.245d.GAE@google.com> <366d45aea0b64cfc82c0988ae5fe6863bbd28261.camel@surriel.com>
+ <CAG48ez2_4D17XMrEb7+5fwq0RFDFDCsY5OjTB7uaXEzdybxshA@mail.gmail.com>
+In-Reply-To: <CAG48ez2_4D17XMrEb7+5fwq0RFDFDCsY5OjTB7uaXEzdybxshA@mail.gmail.com>
+From: Jann Horn <jannh@google.com>
+Date: Wed, 2 Jul 2025 19:00:00 +0200
+X-Gm-Features: Ac12FXwfImLCEQ6KEDh5ISUpKfCCFi1cN4aPqsw2TjQT9F76WByIAQEOJPJXEEc
+Message-ID: <CAG48ez1VMw=aE88eTfk9BscrmS7axJG=j_TrTui+htLF9-4Wqw@mail.gmail.com>
+Subject: Re: [syzbot] [kernel?] KASAN: slab-use-after-free Write in flush_tlb_func
+To: Rik van Riel <riel@surriel.com>, yury.norov@gmail.com, tglx@linutronix.de
+Cc: syzbot <syzbot+084b6e5bc1016723a9c4@syzkaller.appspotmail.com>, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, linux-kernel@vger.kernel.org, 
+	luto@kernel.org, mingo@redhat.com, neeraj.upadhyay@kernel.org, 
+	paulmck@kernel.org, peterz@infradead.org, syzkaller-bugs@googlegroups.com, 
+	x86@kernel.org, kernel-team <kernel-team@meta.com>, David Hildenbrand <david@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Introduce the XDP_METADATA_SIZE macro as a conservative measure to
-accommodate any metadata areas reserved by Ethernet devices.
+On Wed, Jul 2, 2025 at 6:53=E2=80=AFPM Jann Horn <jannh@google.com> wrote:
+>
+> On Wed, Jul 2, 2025 at 5:24=E2=80=AFPM Rik van Riel <riel@surriel.com> wr=
+ote:
+> >
+> > On Wed, 2025-07-02 at 06:50 -0700, syzbot wrote:
+> > >
+> > > The issue was bisected to:
+> > >
+> > > commit a12a498a9738db65152203467820bb15b6102bd2
+> > > Author: Yury Norov [NVIDIA] <yury.norov@gmail.com>
+> > > Date:   Mon Jun 23 00:00:08 2025 +0000
+> > >
+> > >     smp: Don't wait for remote work done if not needed in
+> > > smp_call_function_many_cond()
+> >
+> > While that change looks like it would increase the
+> > likelihood of hitting this issue, it does not look
+> > like the root cause.
+> >
+> > Instead, the stack traces below show that the
+> > TLB flush code is being asked to flush the TLB
+> > for an mm that is exiting.
+> >
+> > One CPU is running the TLB flush handler, while
+> > another CPU is freeing the mm_struct.
+> >
+> > The CPU that sent the simultaneous TLB flush
+> > is not visible in the stack traces below,
+> > but we seem to have various places around the
+> > MM where we flush the TLB for another mm,
+> > without taking any measures to protect against
+> > that mm being freed while the flush is ongoing.
+>
+> TLB flushes via IPIs on x86 are always synchronous, right?
+> flush_tlb_func is only referenced from native_flush_tlb_multi() in
+> calls to on_each_cpu_mask() (with wait=3Dtrue) or
+> on_each_cpu_cond_mask() (with wait=3D1).
+> So I think this is not an issue, unless you're claiming that we call
+> native_flush_tlb_multi() with an already-freed info->mm?
+>
+> And I think the bisected commit really is the buggy one: It looks at
+> "nr_cpus", which tracks *how many CPUs we have to IPI*, but assumes
+> that "nr_cpus" tracks *how many CPUs we posted work to*. Those numbers
+> are not the same: If we post work to a CPU that already had IPI work
+> pending, we just add a list entry without sending another IPI.
 
-Signed-off-by: Song Yoong Siang <yoong.siang.song@intel.com>
----
- tools/testing/selftests/bpf/prog_tests/xdp_metadata.c | 2 +-
- tools/testing/selftests/bpf/progs/xdp_hw_metadata.c   | 2 +-
- tools/testing/selftests/bpf/progs/xdp_metadata.c      | 2 +-
- tools/testing/selftests/bpf/xdp_hw_metadata.c         | 2 +-
- tools/testing/selftests/bpf/xdp_metadata.h            | 7 +++++++
- 5 files changed, 11 insertions(+), 4 deletions(-)
+Or in other words: After that blamed commit, if CPU 1 posts a TLB
+flush to CPU 3, and then CPU 2 also quickly posts a TLB flush to CPU
+3, then CPU 2 will erroneously not wait for the TLB flush to complete
+before reporting flush completion, which AFAICS means we can get both
+stale TLB entries and (less often) UAF.
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/xdp_metadata.c b/tools/testing/selftests/bpf/prog_tests/xdp_metadata.c
-index 19f92affc2da..8d6c2633698b 100644
---- a/tools/testing/selftests/bpf/prog_tests/xdp_metadata.c
-+++ b/tools/testing/selftests/bpf/prog_tests/xdp_metadata.c
-@@ -302,7 +302,7 @@ static int verify_xsk_metadata(struct xsk *xsk, bool sent_from_af_xdp)
- 
- 	/* custom metadata */
- 
--	meta = data - sizeof(struct xdp_meta);
-+	meta = data - XDP_METADATA_SIZE;
- 
- 	if (!ASSERT_NEQ(meta->rx_timestamp, 0, "rx_timestamp"))
- 		return -1;
-diff --git a/tools/testing/selftests/bpf/progs/xdp_hw_metadata.c b/tools/testing/selftests/bpf/progs/xdp_hw_metadata.c
-index 330ece2eabdb..3766f58d3486 100644
---- a/tools/testing/selftests/bpf/progs/xdp_hw_metadata.c
-+++ b/tools/testing/selftests/bpf/progs/xdp_hw_metadata.c
-@@ -72,7 +72,7 @@ int rx(struct xdp_md *ctx)
- 		return XDP_PASS;
- 	}
- 
--	err = bpf_xdp_adjust_meta(ctx, -(int)sizeof(struct xdp_meta));
-+	err = bpf_xdp_adjust_meta(ctx, -(int)XDP_METADATA_SIZE);
- 	if (err) {
- 		__sync_add_and_fetch(&pkts_fail, 1);
- 		return XDP_PASS;
-diff --git a/tools/testing/selftests/bpf/progs/xdp_metadata.c b/tools/testing/selftests/bpf/progs/xdp_metadata.c
-index 09bb8a038d52..5cada85fe0f4 100644
---- a/tools/testing/selftests/bpf/progs/xdp_metadata.c
-+++ b/tools/testing/selftests/bpf/progs/xdp_metadata.c
-@@ -73,7 +73,7 @@ int rx(struct xdp_md *ctx)
- 
- 	/* Reserve enough for all custom metadata. */
- 
--	ret = bpf_xdp_adjust_meta(ctx, -(int)sizeof(struct xdp_meta));
-+	ret = bpf_xdp_adjust_meta(ctx, -(int)XDP_METADATA_SIZE);
- 	if (ret != 0)
- 		return XDP_DROP;
- 
-diff --git a/tools/testing/selftests/bpf/xdp_hw_metadata.c b/tools/testing/selftests/bpf/xdp_hw_metadata.c
-index 3d8de0d4c96a..a529d55d4ff4 100644
---- a/tools/testing/selftests/bpf/xdp_hw_metadata.c
-+++ b/tools/testing/selftests/bpf/xdp_hw_metadata.c
-@@ -223,7 +223,7 @@ static void verify_xdp_metadata(void *data, clockid_t clock_id)
- {
- 	struct xdp_meta *meta;
- 
--	meta = data - sizeof(*meta);
-+	meta = data - XDP_METADATA_SIZE;
- 
- 	if (meta->hint_valid & XDP_META_FIELD_RSS)
- 		printf("rx_hash: 0x%X with RSS type:0x%X\n",
-diff --git a/tools/testing/selftests/bpf/xdp_metadata.h b/tools/testing/selftests/bpf/xdp_metadata.h
-index 87318ad1117a..2dfd3bf5e7bb 100644
---- a/tools/testing/selftests/bpf/xdp_metadata.h
-+++ b/tools/testing/selftests/bpf/xdp_metadata.h
-@@ -50,3 +50,10 @@ struct xdp_meta {
- 	};
- 	enum xdp_meta_field hint_valid;
- };
-+
-+/* XDP_METADATA_SIZE must be at least the size of struct xdp_meta. An additional
-+ * 32 bytes of padding is included as a conservative measure to accommodate any
-+ * metadata areas reserved by Ethernet devices. If the device-reserved metadata
-+ * exceeds 32 bytes, this value will need adjustment.
-+ */
-+#define XDP_METADATA_SIZE	(sizeof(struct xdp_meta) + 32)
--- 
-2.34.1
-
+I think the correct version of that commit would be to revert that
+commit and instead just move the "run_remote =3D true;" line down, below
+the cond_func() check.
