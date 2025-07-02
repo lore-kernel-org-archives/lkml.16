@@ -1,245 +1,376 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2060.outbound.protection.outlook.com [40.107.237.60])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34BF2D6415;
-	Wed,  2 Jul 2025 20:56:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.60
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751489795; cv=fail; b=FrVcLF4+41XcBzCk1WOJWofNGIqnhW7CkIBnNfgMpZEf3Kyv6Ravj/DfBAl/JyopmJYyh6WZj29Mg8yxED4Kk8cfVcXwAQY5ilyviP08Nszqt46eVyymrTeWlK8T9+h0I7B9NlojQAmWo9N3Tb+3U8wlvRX189t/VXPOAS4yPh8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751489795; c=relaxed/simple;
-	bh=qViJt+/tQ9MozjifwGEO4f74aTISEeLHe3mcRDihTv4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=iygVjT4/IqqxR+zPRrUW6TW5sTMLruUuRRRXJ9jOzSbZR6rdMlyOmqSTonAzUz5iLXLJ7q9HgudDzwj6OXPLNBD2bayb8whMFTzi6SvkO6yAQpHtwkXlBqIosM6Ne7nbk3FiPZjdJPRaWzzu8RSNVjoN8VxDRNuLRPpSfqJux2U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=hcgjhTQV; arc=fail smtp.client-ip=40.107.237.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C262DE6F5
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 20:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751489852; cv=none; b=FaVHmfTHHyimsG9EV5JFBZzMNrR3trVvi3IhY4JyOEKfev1dPzFSHIjizq/vn8wlPqWqMmVyI/iO+m6NPcruoSp4heYm0V33APDJm5EtcMP1lFSuLLXQkSfqyFbz6OR3u/ADZHgvKZKCYcJUJ+vVOAylcLgObnxdB2MaiRKCSqk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751489852; c=relaxed/simple;
+	bh=KDcXOE1zhROiHK+fRoIz8A4aWDXPZSi9W8bZeIQIp2o=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Y9bDTXl2wK61yPmM6pWSi1RlWDiPCIZgyMZe2kWSgAM9X1IPQae5stu2Xzlq4nmgOg9w94xAl0XDyqLP25BsSmelFh+eN6OjtCTdJlf6ZsNAgRiU4s2eHQXGQZNfkx44nW5jhnV5vcP6O90/N+usu5EnEr8asUJPkBGcFafzxu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nn2j6vj7; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="hcgjhTQV"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xo71WYEzCfe7qD2ufNlvRnwjBTikcH8XkIkyDBeGvc6im4QbgO5pJMinu1PEWesZQodTPvtqoSGixbPuQy4DgNbBe3oqv+WfLJN8bS/94oP2nJOsocwcFtxBMxT26s5FPMuDQEmk770cOUUIaqtbaGS2Xx2EvHIpdQJGuxwOV0SNWQy7nqSoNFeM4unRR4CD3bV292sA5bv8VV2D8tkyPJvHQp32jQtIUU0SCvRqjUiwKrYlZox4Is+ol212znXuYqH9sYX65nuSGYXdnG5dmyLxVadnyU+kV/2MpccL1eWxoMgmSDIOCzMRDrtOv667ZOhmZgLNI1x90mor5CB6FA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=P2HAbMgAqyBPq+Mu0F+upLYxR/t1repXC5UKlPyNAns=;
- b=kaWS8eIocRUlyGD+EAMJ5waP3dNeOWcGC3yGW9DYFJ8hKPsWrMQLKzOtGbILEmR9gWU/lO+0iMhajDIQEPu2uynyuCIFNiAj3oI6OdF+4/h6zgA0f1etSRAVyDP9nh1yA+sZLPPLi8YyFmg2RD2ZGTAH7ZZYjlKWNcXkWHVAFAtLgC3vE2sRIBukHPbZez7EVdf/HAIUvoF1euI+n+yUPnEoiwKKEVnIZv2EH2tqHFebabHoyLuCoDYD+i+5wQauvasOqJURjvYnMGlMyBfjCaCZgxCEeX7u6kYeJnkPEZOs+v+UaPP09oXAtpVEjzuX2VJYXb/7NULXJB9jNT1A6g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P2HAbMgAqyBPq+Mu0F+upLYxR/t1repXC5UKlPyNAns=;
- b=hcgjhTQVJaYbR84GSGwHCsDzH1au7GOaQ+YwBMfv7zn1zlszX5kGdx7Y/btO8Vsvv4vnuXb4nCqw534NhFQFpMRr7rlQSRsWyAYbox4Ky/0mQwC+XYoDWrfQXp0CEVqZIdhygwTJTbLCQpz4eJwkE8dOYNeVRKN/TN/S9CAvEup4wh6B9sUmXMy3CXyOtk3ArhR4r6g2Hn2mK9g6QGO07KdKG5GVrk8k4xLTpu2dGmscql4odEzcSswIeg2IwdBr3AoyjjH6bYbWrxw00UdCKK9nBkStSHCltnUyDfomSCLvr10aodRS3GNmsOiPDPeSlCijAnq4fNTzaSGVQ7LUqg==
-Received: from CH3PR12MB7738.namprd12.prod.outlook.com (2603:10b6:610:14e::9)
- by CYXPR12MB9442.namprd12.prod.outlook.com (2603:10b6:930:e3::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.21; Wed, 2 Jul
- 2025 20:56:30 +0000
-Received: from CH3PR12MB7738.namprd12.prod.outlook.com
- ([fe80::fad1:1acb:f5eb:98ee]) by CH3PR12MB7738.namprd12.prod.outlook.com
- ([fe80::fad1:1acb:f5eb:98ee%3]) with mapi id 15.20.8901.018; Wed, 2 Jul 2025
- 20:56:30 +0000
-From: Asmaa Mnebhi <asmaa@nvidia.com>
-To: Andrew Lunn <andrew@lunn.ch>
-CC: "davem@davemloft.net" <davem@davemloft.net>, "edumazet@google.com"
-	<edumazet@google.com>, "kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, David Thompson <davthompson@nvidia.com>
-Subject: RE: [PATCH net v1] mlxbf-gige: Support workaround for MDIO GPIO
- degradation bug
-Thread-Topic: [PATCH net v1] mlxbf-gige: Support workaround for MDIO GPIO
- degradation bug
-Thread-Index:
- AQHbPTCwkw/5mDAiDkuucKlF479Xq7LJ1/+AgP/0uKCAAAhugIAAAetQgE7YCVCAAOb/AIAG7chA
-Date: Wed, 2 Jul 2025 20:56:30 +0000
-Message-ID:
- <CH3PR12MB7738E1776CD326A2566254D5D740A@CH3PR12MB7738.namprd12.prod.outlook.com>
-References: <20241122224829.457786-1-asmaa@nvidia.com>
- <7c7e94dc-a87f-425b-b833-32e618497cf8@lunn.ch>
- <CH3PR12MB7738C758D2A87A9263414AFBD78BA@CH3PR12MB7738.namprd12.prod.outlook.com>
- <6e3435a0-b04e-44cc-9e9d-981a8e9c3165@lunn.ch>
- <CH3PR12MB7738C25C6403C3C29538DA4BD78BA@CH3PR12MB7738.namprd12.prod.outlook.com>
- <CH3PR12MB773870BA2AA47223FF9A72D7D745A@CH3PR12MB7738.namprd12.prod.outlook.com>
- <668cd20c-3863-4d16-ab05-30399e4449f6@lunn.ch>
-In-Reply-To: <668cd20c-3863-4d16-ab05-30399e4449f6@lunn.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CH3PR12MB7738:EE_|CYXPR12MB9442:EE_
-x-ms-office365-filtering-correlation-id: 461a803b-b07c-4155-8e23-08ddb9aaeba4
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?6pvtMi6fcXvs2cnBX3ztA1GCJQMtJSalCV2c/zr2lkoWSvpkeAhm+d1Axlfu?=
- =?us-ascii?Q?lyEhWQ3J77FOCmBVdOXFAY2VMPtgdBx0owjh8+EDvmjEoj5eyu4jXpPzBs9y?=
- =?us-ascii?Q?XWtp4Qxk/gUXmM/ckQhC9pUdDAk827RB+PeynOvTLy15KK4XyDpZL0R3S8ng?=
- =?us-ascii?Q?AigfIcBr5V8RBzIeGbOd0RhCExV0kqYcjwfNa3IjYvcSjCrYkvmDlzbVKycc?=
- =?us-ascii?Q?5WoS2P+TAIoSSdYebuKwCe2EDGjpOsdfd1wQuQsxQMS28mJ/pytcL5TE87je?=
- =?us-ascii?Q?+9w44IlP116Me/Py/1XeEA0hRIQYFz6O8FRH4SNLNAF+ULSjd5NBQvkArE80?=
- =?us-ascii?Q?uUj5KwpC7CZkDkaLKXxLhRrJLES3r7TJl8KYgDZYbxlGxlLB+OLhvrD1onV5?=
- =?us-ascii?Q?KrFIsMxtvnUxncw6jvASqx8cIZTauNH58fZXer+DE7C1b7PZ5hCNyvy3bOTP?=
- =?us-ascii?Q?iRrLkmOwC1QnjQWWbQdbYIRLHjHgWjOMP5WcGdmAokycPzgHHRRYJEs7MYJ7?=
- =?us-ascii?Q?b0kWh1tITXVZKdmkb0W3lu94StcSdB3eHRgNtVB8jGgidUqn+A0xuAnWgaop?=
- =?us-ascii?Q?hSK1R8RsvVgLNKhnIzqluLmwkkY+Dgvp8pPiDx1olSwK0jaN9W7oDOwEmRk3?=
- =?us-ascii?Q?tDHk4uS+kOdWCarOVpPWup94/qiCQPfhuR4F3rIsHXdqtnLrCt/u6iPom90r?=
- =?us-ascii?Q?zBmqeK32pdCRsNs5jKfqke36nJmLYQRkQ8jYJgnIAVLHICqp/KpqwZrEpRn/?=
- =?us-ascii?Q?SOG2aGV4fRIZgpbmov2vaKIFTRHvoXvbkLuGTinTBM2NlN/sijmK2rfEAAZi?=
- =?us-ascii?Q?xnA/hCbrgBjO0fQ2X0/VIey00puRRIXzbZxvDIJdabgcvxX115QuELPkRvKQ?=
- =?us-ascii?Q?3KnGo042NZISmeqTUJobLV636vyVzBUoUZEUTi03mFzYiQ/gopNJ4HOOpS56?=
- =?us-ascii?Q?RvdQNV8IR/ZYJA7rqlXODomx8Y1FG/+eBsIrzW4nneOCTK4zQPs/9dRRQ810?=
- =?us-ascii?Q?fnrZiZ2iEzyPQr7xzjtdswt6vcH5cSc+Vptf26i6htzVtZGH20ppje6L2Z5m?=
- =?us-ascii?Q?KDOw2JosIH4F/RyN9R1H6G+wTkxLZoYC7AK8J9DOVfRhZwgpkd+0Ls6I0+tM?=
- =?us-ascii?Q?FMFQvH4I+Pq0Pf1UPuyzAj2aUKwotJFf36mII93ySe5lzH/bX/q2zuxtXp4C?=
- =?us-ascii?Q?an9YPKpXuh/K1k/tCVUz3Xue7RlzXkeBbYfNud4i1F3L5Ep6dhFIV35nB546?=
- =?us-ascii?Q?VYd3u+AFo/sroa6fjDIj+6+0e/522MH8eIw+IfkqtjrPrDXZmHGDhRX4SQHf?=
- =?us-ascii?Q?weX3Y93lSbFNQb+burPoJRkGxcvbytxeGi7tUitkyWJyqXJ1lXE3juIF+YEL?=
- =?us-ascii?Q?ne6HQ8yVvAqvqCRRBIpx8upl07IfLiKQUJnyOggIGZXFZqnaamO0jIuF3eaj?=
- =?us-ascii?Q?/Yd1qJSk8JAWRodFEgAFlD1Qd7Ou3fNrvQ/iSrmFLRqq/b/GTsgAYnUdRo9t?=
- =?us-ascii?Q?hwkCsXi88KReOUM=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB7738.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?nZmzT8nIIuq3xnNSIKk0JpJvUiP3hvdtSZIfdZDzjC8XVdw2MipLdYceOyRL?=
- =?us-ascii?Q?MhhjFaVBuiziPToTosp5Ryz7l4ymhq6bfojaeVTb2zVpXAtUWg1v9GZeb/F6?=
- =?us-ascii?Q?yR9GF47ENEJi4kck0vRabo/aoM9ME3vyqF1zn9AKxy0YngH3tqztLsa4k9xU?=
- =?us-ascii?Q?vy6ILaGn4uVbciqB0VYoJV1079LkkhtHK+Sij7Xtcc/3CAcR0t7+/f6QKGU8?=
- =?us-ascii?Q?466IaIdJRSRGgnZO20/1bjb1fxtqrcw2Pd25Wu9sqycuVTibMP1xbhZ4hGnh?=
- =?us-ascii?Q?8jQMU6pDt0zjXY30F5uplA/z1unLVOXUQ6gSzxb53U4t+bCuvzOAfiA360mi?=
- =?us-ascii?Q?QsDkRbg8OFwzxQ2Vr11EhfHGr6jvbq0OAM3/VbO04FTeW3+M1hEjW/vgdIPJ?=
- =?us-ascii?Q?BZUGGb39L/125m34FEZXkpylB4I0ldnTYys9pQkSiIahZ4/5L4XwlHLsNpeY?=
- =?us-ascii?Q?DDIR1XqxG5ZcOx8FWmvGfuPtBejjwHSv8newSRr39ysJw9tCZi0z40V2HPJM?=
- =?us-ascii?Q?PbuLRmNW5JC1JtV0XkoEai6acv6DNLtIbpEQc4SLSwmt56pkrwR+EMBVqGH5?=
- =?us-ascii?Q?DlCPYkRNW0kDCXCM8moBqG3Kys50F9uEpL8zOgb+6Nor1+3kRtybLoeOkruV?=
- =?us-ascii?Q?QxRI2OFQkowAgxL4J8/I+tURBoKgEpQCC6gL11ZZdbi0RQLm4ouYR9PPNV+F?=
- =?us-ascii?Q?YJHwSk2IUqUCHH+Dvr37PNOhNnCBV7DfdTJzlgheS/JK6KRbncr+o6T6wm63?=
- =?us-ascii?Q?ZpdYE8BCYMj509o+rGDBUwoUGx8hOTUNQHdrQWagYwfbeWG4+veQdMvwYzuM?=
- =?us-ascii?Q?hI8I8N543/EYFFNvmZhyayKeZ01xwlHpfABc3asf8HKyrC5ltW0F4A5SFFjC?=
- =?us-ascii?Q?jjZT0NHG5XuV5ZLUOcYsXe+eouIk1Ut7O76GLcuhcYZvmnR0TVmIZ2HowbeB?=
- =?us-ascii?Q?+5bish4RFxz2j0nZbulG1olVn/tANNweMUiEmOGmSceCVTxc9h4RwxnuXWjN?=
- =?us-ascii?Q?M/2mHkO6XOpxKMyacXZxuXBbLA1gJT/N+fpjb3QWQ42SBczgAaYqTZHUjY9A?=
- =?us-ascii?Q?wchC6AMSm/oYnE91yGNd6BZJfb8utwR5Hkj9laO+mPFA2UvDCbW4eITbXD7I?=
- =?us-ascii?Q?HwLqIlF+T2PH5Ibp74U1MMNTSgyhd2IdfkDFGlMeLF8xbOiy8ZnsDzK2O5En?=
- =?us-ascii?Q?OOi/z5UcsNCUtjVa3qDIHEMUtlejPYFOSlyoYRFK3xQo6fhiRyoyDcaJHIQB?=
- =?us-ascii?Q?YuOa4Wq5xIYCSZuTbSgJzLcNvMwCV/SGKjnPSXoEbSlDbqQmSgpon3EvXrA5?=
- =?us-ascii?Q?kdXJL8bJpLoYkTNMzqsCgC5KR0Vs2waYi4quVyqtVkFwFyb1+TDrySKieR6l?=
- =?us-ascii?Q?0rVcXY52I35pReFq7bsK3urSdKHtDLkwcJWjMT3ro5coy74EIrJn5KTUd3++?=
- =?us-ascii?Q?Kak4cWEsABsyf9iWuBlQNM2y1Oxory5kg55SBjUvBT6BIfJWQOQqNRpl4hnR?=
- =?us-ascii?Q?PeXye7X8Q20Etnb2PI7P8vtEUUsu/aEzJM5/NKrFJ5YiUVE6VAVlsGrws4FC?=
- =?us-ascii?Q?HU0XuaCs/gmvhRvBLM4=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nn2j6vj7"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b2fdba7f818so5567431a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 13:57:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751489850; x=1752094650; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sW4QNQizmwSJEDRBMKEYI4xwGlCEtKex6a+194UsQcU=;
+        b=nn2j6vj7lB1M+St5b7ynLC8TWX064VPvd1tM9pFRCzgiHVwj7Jl6Qg9rvjUuY+MCyA
+         yd+Qazl8mDT5HE2Y3LIZw1Y2KWigLT0pXiLM4LOFMG3PuJobXUxRz1jB9XfAYK1oyixj
+         jWKzyBqNUq7qOnxzKZFtSOjbIP1as0n/bLZOwewZFM1a1Omhc6o7gD2OPpejay7YGDI5
+         LN25vAlm/NdRnxiOFIKHr1zg3sTgCM1QrD2N4RLtFBVSfELz36pzO3hlpwUHMz0HRP7e
+         sh7gneqX6ODWBpX14Koif8FjCHU/6wfflRWCgslhw/iSUyPc6XzCkudZvjzoi6yMqdDE
+         AU4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751489850; x=1752094650;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=sW4QNQizmwSJEDRBMKEYI4xwGlCEtKex6a+194UsQcU=;
+        b=HAh7W8lsa6R5PMmoedsMvtBtNFEUTgFeu++6Qa9nIwLm+VTKN8ByeUrZAgIrPImvKS
+         0SYomcZdLBeN8Ex7ommFrMz962OrUXBFkrwga0oJic/HTs+vPdLNlRJ20Ir8fyRbxw/f
+         Ny1HBlisSI9qAjNvdnlO18kXNsGY28eSTDEH7OC9HpWrLVdOoa8rtD6XdGtJm3xnyO7H
+         YCUbZJ3ZhZuvFCOvQSpklXI5ar+7cPLwlnUkWSa4GCmvwdn/xFJn4717+oGaeyFD3egT
+         Gp7gyIZcsLS3UKPI9EZAnbXryPOs3aSetReK76J9AWXImnk3cmAq6D71H87EFEn91+v7
+         Ebzw==
+X-Forwarded-Encrypted: i=1; AJvYcCWLfn5Qs6xqyQzPgmSbxnCYwWmu6eh81GrY/Ee9Lc7mMl0uoxp4ZsLwHVs/aQyku38JY/6mSJXV0TeAquw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKZh8qxXDSxU2HWRM7E72ZCQovSIJJF9KKfjGxs8M9WxiaZ6Z1
+	m5023NtqBAdHy80bkY0xpmyAFMKDY6Go0TUTacB6pOgKp3mozl896cuMzxIeEG3zjeQl4ObjZ/z
+	Lm/IaGehcoTHS0ckyihhGrqRdrQ==
+X-Google-Smtp-Source: AGHT+IFb6SLIfuP52bs7wPWNruqTvRPL2KxyKrl6XOJ9FUw5uFkFZJRds7UighTHcqwZzHj8XWrac1IRDdOAVI0Q4w==
+X-Received: from pghq9.prod.google.com ([2002:a63:e209:0:b0:b36:36f4:9862])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6300:6199:b0:215:ead1:b867 with SMTP id adf61e73a8af0-222d7de178bmr7733706637.14.1751489849762;
+ Wed, 02 Jul 2025 13:57:29 -0700 (PDT)
+Date: Wed, 02 Jul 2025 13:57:28 -0700
+In-Reply-To: <04d3e455d07042a0ab8e244e6462d9011c914581.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB7738.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 461a803b-b07c-4155-8e23-08ddb9aaeba4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jul 2025 20:56:30.5008
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aMZ/Ai3ZHbbylJmtPC0VMypWlzaeADE7VluALzPekgCmcOE5KLxhHJOth/AnRreo/3sKG8Mm3SGjQZOMW0cdDw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR12MB9442
+Mime-Version: 1.0
+References: <a3cace55ee878fefc50c68bb2b1fa38851a67dd8.camel@intel.com>
+ <diqzms9vju5j.fsf@ackerleytng-ctop.c.googlers.com> <447bae3b7f5f2439b0cb4eb77976d9be843f689b.camel@intel.com>
+ <zlxgzuoqwrbuf54wfqycnuxzxz2yduqtsjinr5uq4ss7iuk2rt@qaaolzwsy6ki>
+ <4cbdfd3128a6dcc67df41b47336a4479a07bf1bd.camel@intel.com>
+ <diqz5xghjca4.fsf@ackerleytng-ctop.c.googlers.com> <aGJxU95VvQvQ3bj6@yzhao56-desk.sh.intel.com>
+ <a40d2c0105652dfcc01169775d6852bd4729c0a3.camel@intel.com>
+ <diqzms9pjaki.fsf@ackerleytng-ctop.c.googlers.com> <fe6de7e7d72d0eed6c7a8df4ebff5f79259bd008.camel@intel.com>
+ <aGNrlWw1K6nkWdmg@yzhao56-desk.sh.intel.com> <cd806e9a190c6915cde16a6d411c32df133a265b.camel@intel.com>
+ <diqzy0t74m61.fsf@ackerleytng-ctop.c.googlers.com> <04d3e455d07042a0ab8e244e6462d9011c914581.camel@intel.com>
+Message-ID: <diqz7c0q48g7.fsf@ackerleytng-ctop.c.googlers.com>
+Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge pages
+From: Ackerley Tng <ackerleytng@google.com>
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, "Zhao, Yan Y" <yan.y.zhao@intel.com>
+Cc: "quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, "Li, Xiaoyao" <xiaoyao.li@intel.com>, 
+	"Li, Zhiquan1" <zhiquan1.li@intel.com>, "Du, Fan" <fan.du@intel.com>, 
+	"Hansen, Dave" <dave.hansen@intel.com>, "david@redhat.com" <david@redhat.com>, 
+	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, "tabba@google.com" <tabba@google.com>, 
+	"vbabka@suse.cz" <vbabka@suse.cz>, "Shutemov, Kirill" <kirill.shutemov@intel.com>, 
+	"michael.roth@amd.com" <michael.roth@amd.com>, "seanjc@google.com" <seanjc@google.com>, 
+	"Weiny, Ira" <ira.weiny@intel.com>, "Peng, Chao P" <chao.p.peng@intel.com>, 
+	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "Yamahata, Isaku" <isaku.yamahata@intel.com>, 
+	"pbonzini@redhat.com" <pbonzini@redhat.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"Annapurve, Vishal" <vannapurve@google.com>, "jroedel@suse.de" <jroedel@suse.de>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Miao, Jun" <jun.miao@intel.com>, 
+	"pgonda@google.com" <pgonda@google.com>, "x86@kernel.org" <x86@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-> > However, we have another issue. I noticed that even if
-> > mdio_read/write() functions are not being called,
-> > runtime_resume/suspend() are still called regularly. After
-> > investigation, I found out that this is due to ethtool being called
-> > regularly. Ethtool automatically triggers the resume/suspend even if
-> > we do no MDIO access. A different team wrote a script which monitors
-> > "ethtool -S eth0" every 60 seconds. So every minute, we are running
-> > resume/suspend and enabling/disabling the MDIO clock. Seems counter
-> > productive. That team said that it is a requirement that they
-> > collect these statistics about the mlxbf_gige interface.
->=20
-> > Is there any way to prevent ethtool from calling resume/suspend
-> > without changing core kernel code?
-> >=20
-> You need to put the MDIO bus device into its own pm_domain. Try
-> calling dev_pm_domain_set() to separate the MDIO bus from the MAC
-> driver in terms of power domains. ethtool will then power on/off the
-> MAC but leave the MDIO bus alone.
->=20
-Using dev_pm_domain_set() has the same effect as SET_RUNTIME_PM_OPS. The de=
-v struct is shared so ethtool is still calling the suspend/resume.
+"Edgecombe, Rick P" <rick.p.edgecombe@intel.com> writes:
 
-int mlxbf_gige_mdio_probe(struct platform_device *pdev, struct mlxbf_gige *=
-priv)
- {
-        struct device *dev =3D &pdev->dev;
-@@ -390,14 +418,27 @@ int mlxbf_gige_mdio_probe(struct platform_device *pde=
-v, struct mlxbf_gige *priv)
-        snprintf(priv->mdiobus->id, MII_BUS_ID_SIZE, "%s",
-                 dev_name(dev));
+> On Tue, 2025-07-01 at 14:48 -0700, Ackerley Tng wrote:
+>> Perhaps we had different understandings of f/g :P
+>
+> Ah yes, I thought you were saying that guestmemfd would use poison intern=
+ally
+> via some gmem_buggy_page() or similar. I guess I thought it is more of
+> guestmemfd's job. But as Yan pointed out, we need to handle non gmem page=
+ errors
+> too. Currently we leak, but it would be nice to keep the handling symmetr=
+ical.
+> Which would be easier if we did it all in TDX code.
+>
 
-+       pm_runtime_set_autosuspend_delay(priv->mdiobus->parent, 100);
-+       pm_runtime_use_autosuspend(priv->mdiobus->parent);
-+       pm_runtime_set_active(priv->mdiobus->parent);
-+       pm_runtime_enable(priv->mdiobus->parent);
-+       dev_pm_domain_set(priv->mdiobus->parent, &mlxbf_gige_pm_domain);
-+
-        ret =3D mdiobus_register(priv->mdiobus);
--       if (ret)
-+       if (ret) {
-+               pm_runtime_disable(priv->mdiobus->parent);
-+               pm_runtime_set_suspended(priv->mdiobus->parent);
-+               pm_runtime_dont_use_autosuspend(priv->mdiobus->parent);
-                dev_err(dev, "Failed to register MDIO bus\n");
-+       }
+I meant to set HWpoison externally from guest_memfd because I feel that
+it is a separate thing. Unmap failures are similar to discovering a
+memory error. If setting HWpoison on memory error is external to
+guest_memfd, setting HWpoison on unmap failure should also be
+conceptually external to guest_memfd.
 
-        return ret;
- }
+After Yan pointed out that non-guest_memfd page errors need to be
+handled, it aligns with the idea that setting HWpoison is external to
+guest_memfd.
 
-I removed the pm related apis and just added disabling/reenabling the clock=
- directly in the mdio read/write and it works (see code snippet below). It =
-might be slower and not as efficient as the pm runtime infrastructure since=
- we don't have autosuspend.
+I agree keeping the handling symmetrical would be best, so in both cases
+the part of KVM TDX code that sees the unmap failure should directly set
+HWpoison and not go through guest_memfd.
 
-@@ -224,6 +243,10 @@ static int mlxbf_gige_mdio_read(struct mii_bus *bus, i=
-nt phy_add, int phy_reg)
-        if (phy_reg & MII_ADDR_C45)
-                return -EOPNOTSUPP;
+>>=20
+>> I meant that TDX module should directly set the HWpoison flag on the
+>> folio (HugeTLB or 4K, guest_memfd or not), not call into guest_memfd.
+>>=20
+>> guest_memfd will then check this flag when necessary, specifically:
+>>=20
+>> * On faults, either into guest or host page tables=20
+>> * When freeing the page
+>> =C2=A0=C2=A0=C2=A0 * guest_memfd will not return HugeTLB pages that are =
+poisoned to
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 HugeTLB and just leak it
+>> =C2=A0=C2=A0=C2=A0 * 4K pages will be freed normally, because free_pages=
+_prepare() will
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 check for HWpoison and skip freeing, from=
+ __folio_put() ->
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 free_frozen_pages() -> __free_frozen_page=
+s() ->
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 free_pages_prepare()
+>> * I believe guest_memfd doesn't need to check HWpoison on conversions [1=
+]
+>>=20
+>> [1] https://lore.kernel.org/all/diqz5xghjca4.fsf@ackerleytng-ctop.c.goog=
+lers.com/
+>
+> If a poisoned page continued to be used, it's a bit weird, no?=20
 
-+       spin_lock_irqsave(&priv->lock, flag);
-+
-+       mlxbf_gige_mdio_enable(priv);
-+
-        /* Send mdio read request */
-        cmd =3D mlxbf_gige_mdio_create_cmd(priv->mdio_gw, 0, phy_add, phy_r=
-eg,
-                                         MLXBF_GIGE_MDIO_CL22_READ);
-@@ -236,6 +259,8 @@ static int mlxbf_gige_mdio_read(struct mii_bus *bus, in=
-t phy_add, int phy_reg)
+Do you mean "continued to be used" in the sense that it is present in a
+filemap and belongs to a (guest_memfd) inode?
 
-        if (ret) {
-                writel(0, priv->mdio_io + priv->mdio_gw->gw_address);
-+               mlxbf_gige_mdio_disable(priv);
-+               spin_unlock_irqrestore(&priv->lock, flag);
-                return ret;
-        }
+A poisoned page is not faulted in anywhere, and in that sense the page
+is not "used". In the case of regular poisoning as in a call to
+memory_failure(), the page is unmapped from the page tables. If that
+page belongs to guest_memfd, in today's code [2], guest_memfd
+intentionally does not truncate it from the filemap. For guest_memfd,
+handling the HWpoison at fault time is by design; keeping it present in
+the filemap is by design.
 
-@@ -246,6 +271,9 @@ static int mlxbf_gige_mdio_read(struct mii_bus *bus, in=
-t phy_add, int phy_reg)
-        /* The MDIO lock is set on read. To release it, clear gw register *=
-/
-        writel(0, priv->mdio_io + priv->mdio_gw->gw_address);
+In the case of TDX unmap failures leading to HWpoison, the only place it
+may remain mapped is in the Secure-EPTs. I use "may" because I'm not
+sure about how badly the unmap failed. But either way, the TD gets
+bugged, all vCPUs of the TD are stopped, so the HWpoison-ed page is no
+longer "used".
 
-+       mlxbf_gige_mdio_disable(priv);
-+       spin_unlock_irqrestore(&priv->lock, flag);
-+
-        return ret;
- }
+[2] https://github.com/torvalds/linux/blob/b4911fb0b060899e4eebca0151eb56de=
+b86921ec/virt/kvm/guest_memfd.c#L334
+
+> It could take an
+> #MC for another reason from userspace and the handling code would see the=
+ page
+> flag is already set. If it doesn't already trip up some MM code somewhere=
+, it
+> might put undue burden on the memory failure code to have to expect repea=
+ted
+> poisoning of the same memory.
+>
+
+If it does take another #MC and go to memory_failure(), memory_failure()
+already checks for the HWpoison flag being set [3]. This is handled by
+killing the process. There is similar handling for a HugeTLB
+folio. We're not introducing anything new by using HWpoison; we're
+buying into the HWpoison framework, which already handles seeing a
+HWpoison when handling a poison.
+
+[3] https://github.com/torvalds/linux/blob/b4911fb0b060899e4eebca0151eb56de=
+b86921ec/mm/memory-failure.c#L2270
+
+>>=20
+>> > What about a kvm_gmem_buggy_cleanup() instead of the system wide one. =
+KVM calls
+>> > it and then proceeds to bug the TD only from the KVM side. It's not as=
+ safe for
+>> > the system, because who knows what a buggy TDX module could do. But TD=
+X module
+>> > could also be buggy without the kernel catching wind of it.
+>> >=20
+>> > Having a single callback to basically bug the fd would solve the atomi=
+c context
+>> > issue. Then guestmemfd could dump the entire fd into memory_failure() =
+instead of
+>> > returning the pages. And developers could respond by fixing the bug.
+>> >=20
+>>=20
+>> This could work too.
+>>=20
+>> I'm in favor of buying into the HWpoison system though, since we're
+>> quite sure this is fair use of HWpoison.
+>
+> Do you mean manually setting the poison flag, or calling into memory_fail=
+ure(),
+> and friends?
+
+I mean manually setting the poison flag.
+
+* If regular 4K page, set the flag.
+* If THP page (not (yet) supported by guest_memfd), set the poison flag
+  on the specific subpage causing the error, and in addition set THP'S has_=
+hwpoison
+  flag
+* If HugeTLB page, call folio_set_hugetlb_hwpoison() on the subpage.
+
+This is already the process in memory_failure() and perhaps some
+refactoring could be done.
+
+I think calling memory_failure() would do too much, since in addition to
+setting the flag, memory_failure() also sometimes does freeing and may
+kill processes, and triggers the users of the page to further handle the
+HWpoison.
+
+> If we set them manually, we need to make sure that it does not have
+> side effects on the machine check handler. It seems risky/messy to me. Bu=
+t
+> Kirill didn't seem worried.
+>
+
+I believe the memory_failure() is called from the machine check handler:
+
+DEFINE_IDTENTRY_MCE(exc_machine_check)
+  -> exc_machine_check_kernel()
+     -> do_machine_check()
+        -> kill_me_now() or kill_me_maybe()
+           -> memory_failure()
+
+(I might have quoted just one of the paths and I'll have to look into it
+more.)
+
+For now, IIUC setting the poison flag is a subset of memory_failure(), whic=
+h is a
+subset of what the machine check handler does.
+
+memory_failure() handles an already poisoned page, so I don't see any
+side effects.
+
+I'm happy that Kirill didn't seem worried :) Rick, let me know if you
+see any specific risks.
+
+> Maybe we could bring the poison page flag up to DavidH and see if there i=
+s any
+> concern before going down this path too far?
+>
+
+I can do that. David's cc-ed on this email, and I hope to get a chance
+to talk about handling HWpoison (generally, not TDX specifically) at the
+guest_memfd bi-weekly upstream call on 2025-07-10 so I can bring this up
+too.
+
+>>=20
+>> Are you saying kvm_gmem_buggy_cleanup() will just set the HWpoison flag
+>> on the parts of the folios in trouble?
+>
+> I was saying kvm_gmem_buggy_cleanup() can set a bool on the fd, similar t=
+o
+> VM_BUG_ON() setting vm_dead.
+
+Setting a bool on the fd is a possible option too. Comparing an
+inode-level boolean and HWpoison, I still prefer HWpoison because
+
+1. HWpoison gives us more information about which (sub)folio was
+   poisoned. We can think of the bool on the fd as an fd-wide
+   poisoning. If we don't know which subpage has an error, we're forced
+   to leak the entire fd when the inode is released, which could be a
+   huge amount of memory leaked.
+2. HWpoison is already checked on faults, so there is no need to add an
+   extra check on a bool
+3. For HugeTLB, HWpoison will have to be summarized/itemized on merge/split=
+ to handle
+   regular non-TDX related HWpoisons, so no additional code there.
+
+> After an invalidate, if gmem see this, it needs to
+> assume everything failed, and invalidate everything and poison all guest =
+memory.
+> The point was to have the simplest possible handling for a rare error.
+
+I agree a bool will probably result in fewer lines of code being changed
+and could be a fair first cut, but I feel like we would very quickly
+need another patch series to get more granular information and not have
+to leak an entire fd worth of memory.
+
+Along these lines, Yan seems to prefer setting HWpoison on the entire
+folio without going into the details of the exact subfolios being
+poisoned. I think this is a possible in-between solution that doesn't
+require leaking the entire fd worth of memory, but it still leaks more
+than just where the actual error happened.
+
+I'm willing to go with just setting HWpoison on the entire large folio
+as a first cut and leak more memory than necessary (because if we don't
+know which subpage it is, we are forced to leak everything to be safe).
+
+However, this patch series needs a large page provider in guest_memfd, and
+will only land either after THP or HugeTLB support lands in
+guest_memfd.
+
+For now if you're testing on guest_memfd+HugeTLB,
+folio_set_hugetlb_hwpoison() already exists, why not use it?
+
+> Although
+> it's only a proposal. The TDX emergency shutdown option may be simpler st=
+ill.
+> But killing all TDs is not ideal. So thought we could at least consider o=
+ther
+> options.
+>
+> If we have a solution where TDX needs to do something complicated because
+> something of its specialness, it may get NAKed.
+
+Using HWpoison is generic, since guest_memfd needs to handle HWpoison
+for regular memory errors anyway. Even if it is not a final solution, it
+should be good enough, if not for this patch series to merge, at least
+for the next RFC of this patch series. :)
+
+> This is my main concern with the
+> direction of this problem/solution. AFAICT, we are not even sure of a con=
+crete
+> problem, and it appears to be special to TDX. So the complexity budget sh=
+ould be
+> small. It's in sharp contrast to the length of the discussion.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
