@@ -1,104 +1,155 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315C923C51D;
-	Wed,  2 Jul 2025 12:23:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323AC1DF27F;
+	Wed,  2 Jul 2025 12:23:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751458982; cv=none; b=sbGHQqeWhyYGCuyou3xB0dQf931tWdSsNb1k19FT//VgkBbH03LfjvH28eRUkKXlQN61MsYkCzVS2HaxG3vkCn/cYuazG7vkr1/COk0Bm6YEp2o8J3FilFjWRfcD5BR89UtWrIPWwEFRTMn2qYp2031J8lvxjzq5lyscOMnKIhg=
+	t=1751459040; cv=none; b=krGU4WSgWOUQIsQvc/N4FhVUsEXvxq1YjlYDbZ5SuMUOOO8fWlhc5gQusPQWGkBJSssNinYqm1LxGvTcL1PmB6pk2frn/onVuQkQRiKvndNb7Pqx8fB0g+fJtk41sV9UIaBRVLygIXHp9XfBkJTsTShco7hWVpCexKS4GZUlPNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751458982; c=relaxed/simple;
-	bh=fREP5uY0BPsOOovX90mnsOMYhXpfAS5vZic75Y4Sdfw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DUJTiYCI0LkfuNNT7qQ5LMOeCYGIGbhTz6cnZQ6G0lZqDILa5Dd1Hj7Hn6OATtZRjNPcgeav8tAWC9rhYkbNSw3dd2gwhK6nT0IkvU8N9fVuX11GsJhmdODFtqAhZ+J7kkOfpcONvOTbgpD3sdsoFQUutWFNlFm2g6CoebGR47Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MW+iytsb; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751459040; c=relaxed/simple;
+	bh=7MXsvefg93WoDNxgQrzmnxeJinMCDTf4uZTRkhJS/pQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DyU0JjqkrhA9gkWFC+kk/tDC2GZjjt2A8d/eCZb0yIpv/qx1IHQ5Ia9RGKFVBy3IYKpHk3HeK5Y3BZY51oJrCF+22e/uVbFlCTm7jF0vHpUxZ17MhaZ8f/BhYdluRfSmHhTBCaEA1/R11caEl0zTwLslzVFNyLpA7Dmp85t2PPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=BDM7WFDA; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MW+iytsb"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-237d849253fso8380405ad.1;
-        Wed, 02 Jul 2025 05:23:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751458980; x=1752063780; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FBtX4bnh7p2M5lSlgCIn0wi3z0x3439amoEBAePG8to=;
-        b=MW+iytsbeM2j3PtrybtvRTGfHgrgBVhxJVYqdIriOXef4XhjCxNly2l4wx9IBRnRn4
-         mAdgFktImtl/UKmJruCKGTRRIucrefpvqtD7mfcMXQkP9I6Wq5p34XZL8bRzP4CDzOfI
-         AJbiEc+dSH78OCyDckMnP8qPMHQCy1Qj90MI+7jBNtV914KjDqDYyzKx6eCmfrLIJdPN
-         80QvUUFEhhYANyavSI/5JC1Us34T+wZowRBzU/eELzSgHLXiD5pg+CNE/ObMK05Ms5PI
-         FWVtHfZpfDtPlTedsxgXoTZ0QAHxxphQDQJellaKXwDJI7zKAsdnJKWfaJDjPc8ySRJ6
-         PjuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751458980; x=1752063780;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FBtX4bnh7p2M5lSlgCIn0wi3z0x3439amoEBAePG8to=;
-        b=h1GsVDMPi14VBZYhEA8Nld0C3WEuQcfp7hKYSBrPvRkppHcedMxHW1eEJU+Cw6A588
-         +9AGl4g6qY5oCDH9xMQuD5HHndXK8jScrQSNwHGjvaz7U6usroAJrA/OfOrR6lM0SFlA
-         TAepJ94NGLlZG/3wZ8sGKxovGdgfl6eyWWOlgoNqX1fezUVMXP3ghZXLvGHTJUiGFWSC
-         nj16YzxtCA1MLVzElZNTwlFrJ8NhxYrcQ7CYTNttZPh/L31q1AKrXH+CUZCj0erCB6To
-         jz420pB+sKPV0+rUs5RB4CZwilU2fNWTLlh7Lh+BT/tfJjIZTPYzkD9Ip802dR9brTdH
-         F5lw==
-X-Forwarded-Encrypted: i=1; AJvYcCV4zWUA5Y+AoSa/Q7m701L5ysSPAK905PGMRwor2GjXv4BHRvYDUEusDf/vYk/n4VV6vkT6DTvq5+exrhg=@vger.kernel.org, AJvYcCWkoUXhCpyF4exUxl9KPIHhHXeBO3GYgn1dtCE+tH/llchcrTYtw71RFBW6QgQBRp0OuvOd53hIk5v0zrat6+s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBqxEa7J2SA4sVPZUGdssps+GLoBJ+TGo82exhwk5LtvRotALT
-	Rnymnl9XBBvumAud2JHWAhK8q4cNiGDXiisAX9Pl8oPTRCT3BO2nYau4Qcw2amHYeNB9iT2YjhT
-	B6vBi5l8ODgEhlvYDv6IPjSDJCYvX+qk=
-X-Gm-Gg: ASbGncsUIP32pyoJX5ihDH5TJWE7t8idQtY9Mv66CuL6JRf2fH/gjT4v9SwSs9cWrDJ
-	PnfpzKriRud6GoWFedna5UwTFsDcT94Ck5D2VL9tLZ91MIEa7qn8zotJrXMabs+sI177y1APaV5
-	f9uaobzMzl5CA5XGQCnoIjQ4dFCnZpWY5nt3D1auhYimTi8Z2qJPFf+w==
-X-Google-Smtp-Source: AGHT+IGaqJyYhggeG721JJ4/fmgCESbVOWGVHhm0ynvxKE68LqDEj8YXYZyBFKj4YpmC8KsySEtf8DWxJD/hRu3T7zw=
-X-Received: by 2002:a17:902:d2c6:b0:235:e8da:8f4 with SMTP id
- d9443c01a7336-23c6e399caemr15514945ad.0.1751458980446; Wed, 02 Jul 2025
- 05:23:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="BDM7WFDA"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5629TjxU013644;
+	Wed, 2 Jul 2025 12:23:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=UdBAqe
+	jzoUw+UgaBlhXeMSEbuN5A8uBlJuHZIqvXh4A=; b=BDM7WFDAb1M1owrIjk0IoQ
+	I60vhnYcmtOvIXIBdsOnySMhNbLlJHwf805Eq353MhEg+Y7tIbYooSqqvW0jOLEe
+	KBEtuu//NN29vPtL+EhJufYXhnScDRqjtBp5OdGm/w7kLNZnHj4tP23WKLBGIo/A
+	uQNM6zkmLE4hGVZFTt4p5SmnhlS97FSbl0zvkQLACXE2utH7sOouoDcl14b16Yyn
+	TMl1wfc4SqrtJ/OXSVbGpkXGGRiHbLldjTtZvSlst+3UVoxaq5PMK7TnabOL6MJy
+	HwEdblujIDPYD4w9aUqpAaGTn7eP7k6opl4eHkrWcGl7q31gxq51Sl78NRaqYRiQ
+	==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j6u1w3xw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Jul 2025 12:23:29 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5629JcjL021078;
+	Wed, 2 Jul 2025 12:23:29 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 47jtqufmps-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Jul 2025 12:23:28 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 562CNPnv44106226
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 2 Jul 2025 12:23:25 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 369572004E;
+	Wed,  2 Jul 2025 12:23:25 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D9FCF20043;
+	Wed,  2 Jul 2025 12:23:24 +0000 (GMT)
+Received: from [9.152.222.224] (unknown [9.152.222.224])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  2 Jul 2025 12:23:24 +0000 (GMT)
+Message-ID: <51903e66-56bc-42a4-b80c-9c3223e2a48a@linux.ibm.com>
+Date: Wed, 2 Jul 2025 14:23:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <kyrCsGDYN5QdXPkUe4OxMxU2UzHfJ-vH5z643gA-_KFJIaew0duyMXU0yfTrGN5ZCNaecP8Yu2kIXKXMoWS2lA==@protonmail.internalid>
- <20250701001809.496389-1-fujita.tomonori@gmail.com> <874ivvvvjw.fsf@kernel.org>
-In-Reply-To: <874ivvvvjw.fsf@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 2 Jul 2025 14:22:48 +0200
-X-Gm-Features: Ac12FXzjaQ5tesk3zQF6RCPQntL7FqLypPEeYCvAD6PznWlZKWbTlzKXlgeLcX4
-Message-ID: <CANiq72ntFkvN983N3x=AKMd6fW2yXb8d0LB1LT3c20oYmPCiGg@mail.gmail.com>
-Subject: Re: [PATCH v1] rust: time: Add examples with doctest for Delta
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: FUJITA Tomonori <fujita.tomonori@gmail.com>, alex.gaynor@gmail.com, ojeda@kernel.org, 
-	aliceryhl@google.com, anna-maria@linutronix.de, bjorn3_gh@protonmail.com, 
-	boqun.feng@gmail.com, dakr@kernel.org, frederic@kernel.org, gary@garyguo.net, 
-	jstultz@google.com, linux-kernel@vger.kernel.org, lossin@kernel.org, 
-	lyude@redhat.com, rust-for-linux@vger.kernel.org, sboyd@kernel.org, 
-	tglx@linutronix.de, tmgross@umich.edu
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 08/11] perf tools: Minimal CALLCHAIN_DEFERRED support
+To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        x86@kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Indu Bhagat <indu.bhagat@oracle.com>,
+        "Jose E. Marchesi" <jemarch@gnu.org>,
+        Beau Belgrave <beaub@linux.microsoft.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
+References: <20250701180410.755491417@goodmis.org>
+ <20250701180456.884974538@goodmis.org>
+Content-Language: en-US
+From: Jens Remus <jremus@linux.ibm.com>
+Organization: IBM Deutschland Research & Development GmbH
+In-Reply-To: <20250701180456.884974538@goodmis.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: axbO-Vk8p0TWJ0uevcQWCloOnJFQGtqY
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDEwMCBTYWx0ZWRfX+YfD2C4mM3TP DZMmJfN2CnKikoPEdppg5lNczoasu01L0XpLgqT29WXQqORGJOfKEA4/RMU4qfS7FJ+rZD4MfZT G2YhSgzJDw43PYZ6JRdXV6PaPUgJXQpBzsEhi+QPCFIyXZdNHkg1USkvdmXFkBkI9wzLtRRLGDw
+ hd8OgRTJCsNpjQ//sBw41BpoMycktdAKXZMMPlLFIxVfuvbydDA3OCkvl4Z2soQYmmmXzoWyTsV UVm3VJ+3mo6NhF1n2QLsykDOeNKaaUsISjtTV131z/LqFVL+NOniBs5w/31JpJa1AkBcXM77VUh bYztdFIZCsr2K+U9QZaqy5t3RLuiQPNud++2dMoXqmVeIQNMyFjhT6EakrQ7eNFTMaQCd7KU4h4
+ /M5swsKeo4rwEK/UdU28Au3O8KW+v1LSSNbnDOkGRwzAACV4dyySrniFg0xb1yfbjcg5dZMN
+X-Proofpoint-GUID: axbO-Vk8p0TWJ0uevcQWCloOnJFQGtqY
+X-Authority-Analysis: v=2.4 cv=GrRC+l1C c=1 sm=1 tr=0 ts=686524c2 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8 a=0MvmVg10__VCTnNSAJcA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-02_01,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ priorityscore=1501 adultscore=0 mlxlogscore=999 mlxscore=0 impostorscore=0
+ phishscore=0 spamscore=0 suspectscore=0 bulkscore=0 malwarescore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507020100
 
-On Wed, Jul 2, 2025 at 10:36=E2=80=AFAM Andreas Hindborg <a.hindborg@kernel=
-.org> wrote:
->
-> I think this kind of test would be better suited for the new `#[test]`
-> macro. Would you agree?
+Hello Steve!
 
-I don't mind seeing the edge cases, since the behavior is mentioned in
-the docs, just like sometimes we show e.g. the `Err`/`None` cases in
-other functions etc., and it may help to further highlight that this
-can actually return possibly unexpected values.
+On 01.07.2025 20:04, Steven Rostedt wrote:
+> From: Namhyung Kim <namhyung@kernel.org>
+> 
+> Add a new event type for deferred callchains and a new callback for the
+> struct perf_tool.  For now it doesn't actually handle the deferred
+> callchains but it just marks the sample if it has the PERF_CONTEXT_
+> USER_DEFFERED in the callchain array.
 
-It is also what the standard library does, at least in some similar cases, =
-e.g.
+> diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
 
-    https://doc.rust-lang.org/std/primitive.i64.html#method.saturating_add
+> @@ -151,6 +151,12 @@ struct perf_record_switch {
+>  	__u32			 next_prev_tid;
+>  };
+>  
+> +struct perf_record_callchain_deferred {
+> +	struct perf_event_header header;
 
-Maybe instead we can help making it a bit more readable, e.g. avoiding
-the intermediate variable to have a single line plus using a `# use
-Delta` to further reduce the line length?
+At minimum the timestamp field added to perf with "[PATCH v12 07/11]
+perf: Support deferred user callchains for per CPU events" needs to be
+added here as well:
 
-Also adding a newline between the "normal" case and the saturation
-cases would probably help too.
+	__u64			 timestamp;
 
-Cheers,
-Miguel
+Otherwise this and any subsequent enhancements of the perf tools do no
+longer work at all.  But probably the timestamp field also needs to be
+used for some purpose?
+
+> +	__u64			 nr;
+> +	__u64			 ips[];
+> +};
+> +
+
+Thanks and regards,
+Jens
+-- 
+Jens Remus
+Linux on Z Development (D3303)
++49-7031-16-1128 Office
+jremus@de.ibm.com
+
+IBM
+
+IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
+IBM Data Privacy Statement: https://www.ibm.com/privacy/
+
