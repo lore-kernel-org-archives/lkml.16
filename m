@@ -1,135 +1,185 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2081.outbound.protection.outlook.com [40.107.220.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD52114F90
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 00:44:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751417068; cv=none; b=nAG5kci/InM3bUjSc2RPJ8sMEXp/jvZReCLRmT190n+u67TYVmXlfYJyihWpsrolO/j39sGDij+DCBwFtvNH+I77BwK45BuhKZhsgP+qu1Z500QlPl7qEUnK7SUjh8t982ZOwkxAqkII//+2v78XkWN7AnquL/KLSoAty0/PLrs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751417068; c=relaxed/simple;
-	bh=GMM9Xc4S93NZsBFQxZ/Narp+exl6rKh0KT3abCEuCg4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X58M5iZLFNGm/LsXA2G08bQr2PBjF7UTA/on/HxMjspQU1Jfy+4OqLHIaL8stcLQkU61bNM1a4TdDKJjdq4Er1FpAe8C6Ft5mgHki4BC0ir+HJetObgqJHsBkSv0s7JymO9fD58IzLME/7YnjFVT7ujsU9MpApTBXG6NtWNH+Fc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JWlQHYhm; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900F6DDD3;
+	Wed,  2 Jul 2025 00:46:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.81
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751417196; cv=fail; b=fC1MRXGq8R6PFPPVGIL5nIB3ngMVngoz1K+6w2UlYgjcEIunI+JYoYPvBZnEcdbzwCyZT/GQHwUbpjDy4IsoLtai9ZD1tS24WvAb6NpNl+pojXDlD7lkDJTdxKK+GJuciaFb7yQ9H43Gu+lytbre8C+lHCn0sX/ESL7Dqklq2oo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751417196; c=relaxed/simple;
+	bh=pvhL1bTe5C4KpHcR0G/zk4DIVquGyTgxTCQSJ5q+Bf8=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uKfE79WeeWYJjUIX/ONNunSFr/kp//h2BYSpxmYK9aYoNUP3Q5PzGtW7zjaoMCY7M+t7VO7+J4Xhs2nczCZIX2u+SjjHE3U4ZNS5YUff1M17zAu81fFP3ouqAYXXjcFAdYGbdTjp83EwiL1hFZSzGXHJeST1zsy2jjm4wNI7FeU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ST762DfM; arc=fail smtp.client-ip=40.107.220.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JWlQHYhm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751417065;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WE68W0bXQaTpxl/iIASF1f+Xh1LT+vGRhkdJSNq736g=;
-	b=JWlQHYhmNIADWjwlmqrAXB3rlavuGQXzFuKTfEESbej8eaf/PQlt31vC5i2c8BH2zf+jJ7
-	FiB8AQ/SDh1NAr5pHDd3OGukYbvi8+OgKeAo9I0zcTNwA2dEVUnZNwnFk5sfv1t1Y0zNmb
-	BhObrJQ34prpbogWUzTUyBXlAZeIfNc=
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
- [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-351-OjGtB950MWSTE0X8nfmv-w-1; Tue, 01 Jul 2025 20:44:23 -0400
-X-MC-Unique: OjGtB950MWSTE0X8nfmv-w-1
-X-Mimecast-MFC-AGG-ID: OjGtB950MWSTE0X8nfmv-w_1751417062
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-235eefe6a8fso45382455ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 17:44:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751417062; x=1752021862;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WE68W0bXQaTpxl/iIASF1f+Xh1LT+vGRhkdJSNq736g=;
-        b=GSwAakRSeRs61mlca4dG5Rfnux2uAKh1RtjOVRlhvZ16dnTGDO+W13XdR7ecsKnuZ1
-         vrjf5WEiHM+ysDa0v+2TnvphgTGX9HDnC04fnd1ibGlRKbylJCm47AYJGD8YHFCl24Bi
-         m939g5/frNBEZHTerUDXEH1CDE2Bz/XAee4Dn3V0ZChD4oPmxxvDFtFRBdadZn1pnZgb
-         UoICRWA2yVfgvP/diQhBZ0zZ+HCp14Ox3Rgx9VualN9NQrXMUWZM9AFVRE7qV9+ypbUV
-         yz16CnTRsJ551RFa3UTGpDRytP0Qj366ccRWqninuT78X2juLBig1E+RAjVlapUHxiVO
-         7j2A==
-X-Forwarded-Encrypted: i=1; AJvYcCUh3QWfSd64UqTF8yUascQI3v/xwYYHPj+DBrF06sHu8GlAszsVC2c0W/17ALU5CIRXq5NYD9nAeF+gWuI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGnp1Excw75EtXcrtB6mWCOTVi/UG3Q1PKDey6iw4eOj5eQBKh
-	/mOvF9Ekz6GFEGe1vXF6Ix/pFKnSoGQe6HusqZDjn+BJMPelJX+NgQG2HY+b2+m8I5RMX6CaUNd
-	59gvDKErsq4g8fZ8KMfRzSlZsIl/CFDqS6/PgaNVIkU+D2FvBFknKKbdx+cWiiBbzHg==
-X-Gm-Gg: ASbGnct86bYMeoYC4QsH31rD7Yrnl5gntVUYwUvHIasYGlAoxepc6jrOWBW4as0l5LP
-	zYHeyL46mmay+waUttlKDbZtrdKXNLU2skQmamX/UmrtuxXsOAf80CeQLHFCY4o30drqG/+UCx2
-	NDsdwgsQitDQsL5Ead7lSj0HeVSrTrD81+bqDvZSGjFh7hSRJqsG81K6CZzgzYp1wGLd9P2oDkb
-	64pmfcpadjI12ASPKHku8eBPcrR4dSGmYM/OH6mWsIggwZGCUzFzrdbztPO3D6s486UqiMTnK4P
-	+Yc2oHTN9Fb3ccU0CrhaRaXAQ9MhGThxA8pndsmY9u0Asi8/Kse7FU0HVMCF4g==
-X-Received: by 2002:a17:902:f644:b0:234:ef42:5d75 with SMTP id d9443c01a7336-23c6e583731mr8506485ad.20.1751417062328;
-        Tue, 01 Jul 2025 17:44:22 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG8Xe02tQUQpMvQ7JmZ6r+aJbfGWHLqnMc6SvZ+9EXS76Rb9Lau8L3Ze+pH8UDez4MEnO2doA==
-X-Received: by 2002:a17:902:f644:b0:234:ef42:5d75 with SMTP id d9443c01a7336-23c6e583731mr8506155ad.20.1751417061963;
-        Tue, 01 Jul 2025 17:44:21 -0700 (PDT)
-Received: from [192.168.68.51] (n175-34-62-5.mrk21.qld.optusnet.com.au. [175.34.62.5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3b871csm114358215ad.187.2025.07.01.17.44.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 17:44:21 -0700 (PDT)
-Message-ID: <5eef96b4-2a33-4d52-a68a-323709beee5b@redhat.com>
-Date: Wed, 2 Jul 2025 10:44:12 +1000
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ST762DfM"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ab6mggi9kFf45viq708BMkwis1YY4Zn70Uue1/VitJGOznOKRKaxwbwHWwuuGuFTr44LgbNOGpZfXdiVd5BdFAmGO/Uvy8a9T0qr0UyQbcHQxjGgetIDRDqetZ42ZiCeEPIFo9cMsQxNgRa9SfiUUrKhyZbKMfbTfO1lnGjrS4Qy0Fb1LIrXk5KtJ0oECOqvsKHVSph0J1iVf4dndBLj/hg0kJYa3hWXNAzzlVoAyh7nIGzKfz/k93QeoRG/Na5NCdwuZyJ26XWXZ+rAgh2f8XCiQkxqzFyBCWX6E64y8iiZnHqyvHRHFSFwPAv68Iyu/btZ1dBYs8pvsqz67G8iBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qaIwyDXc0jA8KvTlhANwsTPzXaYZb5nagliJv/mgXVQ=;
+ b=nEYSB/PJoBdE5dVf78GPR/893ks5cK4hVaZ0x5lx/uBTbP5LgbNdS4/91VvEXxZWWSI+HoDnS856FwwDKvouFA+Vdc4ONQ9/UzzS8p40MXAQZMyfnZURfzs9K1QOsoVt4j8XX0f7UzKteb1MINrr3EIeO7fJtUaWk8va8+ufttuzeioLWWpgpsGjBx9KQOhIvhjjxBVUfW+kTRozCu2DShT/A0gf1gO3q0fiBc/21w1tBtZnajtQV0VX7gB/Ezr8KJc8ZYEEA8AYh/qZvFgd2eI9Cv6kuovJRz6VbXsTSEypiXjPnLNvwm9/zbz7Hv2XREKrlB36cbCcxdwGXVPxSQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qaIwyDXc0jA8KvTlhANwsTPzXaYZb5nagliJv/mgXVQ=;
+ b=ST762DfMk/ke9dqkMXEMVhaswPulN/+vYcMZ6UFERJgCE07qIOSPKvkfOs0OE3zb6e3JTnV4Iq6ifPTJBD4u1GpfkceNt38M/XOqseljyvzKqvXDIdXE040DNrwDuirRuG5cPNPiPD+vUSJZuC/Ruyl330dt38x9Sm/sP8Zk2EM7D26AJZIQsla2MKZZZzS/Ousu+VC92jY2l20GpJNaIOFHAeV2nDVcDwJEkNaPClYMr5mtm4QCpRJh9YcqoZ4qiVRd5292g4Ao/Fup2N3z7vosFdmA86HgrgP0qQOoPwivXFi/7ndiNJVKujyOz6trNeAxeaPCl3/RGbzJhXirOg==
+Received: from PH7PR02CA0030.namprd02.prod.outlook.com (2603:10b6:510:33d::24)
+ by PH8PR12MB7182.namprd12.prod.outlook.com (2603:10b6:510:229::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.33; Wed, 2 Jul
+ 2025 00:46:26 +0000
+Received: from SN1PEPF0002529F.namprd05.prod.outlook.com
+ (2603:10b6:510:33d:cafe::86) by PH7PR02CA0030.outlook.office365.com
+ (2603:10b6:510:33d::24) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.19 via Frontend Transport; Wed,
+ 2 Jul 2025 00:46:26 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ SN1PEPF0002529F.mail.protection.outlook.com (10.167.242.6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8901.15 via Frontend Transport; Wed, 2 Jul 2025 00:46:25 +0000
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 1 Jul 2025
+ 17:46:10 -0700
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail202.nvidia.com
+ (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 1 Jul
+ 2025 17:46:09 -0700
+Received: from Asurada-Nvidia (10.127.8.12) by mail.nvidia.com (10.129.68.8)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Tue, 1 Jul 2025 17:46:07 -0700
+Date: Tue, 1 Jul 2025 17:46:06 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Pranjal Shrivastava <praan@google.com>
+CC: <jgg@nvidia.com>, <kevin.tian@intel.com>, <corbet@lwn.net>,
+	<will@kernel.org>, <bagasdotme@gmail.com>, <robin.murphy@arm.com>,
+	<joro@8bytes.org>, <thierry.reding@gmail.com>, <vdumpa@nvidia.com>,
+	<jonathanh@nvidia.com>, <shuah@kernel.org>, <jsnitsel@redhat.com>,
+	<nathan@kernel.org>, <peterz@infradead.org>, <yi.l.liu@intel.com>,
+	<mshavit@google.com>, <zhangzekun11@huawei.com>, <iommu@lists.linux.dev>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-tegra@vger.kernel.org>,
+	<linux-kselftest@vger.kernel.org>, <patches@lists.linux.dev>,
+	<mochs@nvidia.com>, <alok.a.tiwari@oracle.com>, <vasant.hegde@amd.com>,
+	<dwmw2@infradead.org>, <baolu.lu@linux.intel.com>
+Subject: Re: [PATCH v7 27/28] iommu/tegra241-cmdqv: Add user-space use support
+Message-ID: <aGSBTpY0nkdp2TTL@Asurada-Nvidia>
+References: <539ee2ec112162abdba511574e2205a77b425059.1750966133.git.nicolinc@nvidia.com>
+ <aGQGm1-i4M75b9Qp@google.com>
+ <aGQ6KCI9OZEwHdxS@Asurada-Nvidia>
+ <aGQ_F7Qx3scbbA-J@google.com>
+ <aGRDtYRXFLoT+PrI@Asurada-Nvidia>
+ <aGRIctg4T6cQECx4@google.com>
+ <aGRcPSwaJkTeUrMx@Asurada-Nvidia>
+ <aGRmaOORg-YDfncY@google.com>
+ <aGRozoIDIlgl9H9x@Asurada-Nvidia>
+ <aGR55PUBnwb8qT8U@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 17/43] arm64: RME: Handle RMI_EXIT_RIPAS_CHANGE
-To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
- Alexandru Elisei <alexandru.elisei@arm.com>,
- Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
- linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
- <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
- Emi Kisanuki <fj0570is@fujitsu.com>
-References: <20250611104844.245235-1-steven.price@arm.com>
- <20250611104844.245235-18-steven.price@arm.com>
-Content-Language: en-US
-From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <20250611104844.245235-18-steven.price@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <aGR55PUBnwb8qT8U@google.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002529F:EE_|PH8PR12MB7182:EE_
+X-MS-Office365-Filtering-Correlation-Id: 08527f4f-8097-4154-c215-08ddb901dffe
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|82310400026|1800799024|36860700013|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?+/3mpHmXS4QNBUs5lO7ZS+cqHiutYkuprzIHUFqPUVzTqamJrr7QKqP3mvfR?=
+ =?us-ascii?Q?tC82Y1R3JeMJ4lOJL0HzrwnJDMj6jSYO3ovGc7y6DI3yHyllqIjmwY7v5/IZ?=
+ =?us-ascii?Q?LGbyEQ/Dk0/JEX6C0fS6hRT6nzeid9DNN+x1Pko5OON5Msj7p8EOSRG1RV0g?=
+ =?us-ascii?Q?7xKfzcuc/DG3gX+YoeraSSpnGQsXqpyelMdz3InIhrw576HwbWxAqjiYgdz7?=
+ =?us-ascii?Q?vHqe7MgeSjeBEhSQJgwFfQxZpyj43FTnWQKUu22tWNcJ2KE0wDjw9l2w3l4Q?=
+ =?us-ascii?Q?vB306EhMloTq+b2adTjIhO02ur0hnx12yzpbugeCg22rInAo8/L9Ug0H3UiH?=
+ =?us-ascii?Q?1jdBQniQOhUufXBUYgjkewYve+uGpH5oZCaIYaAEA/06UXFXzMrq0ZbEhIfG?=
+ =?us-ascii?Q?HbDxgn2BCyWi2YQQOTXMg5AZnMKe6JsRocuA5KgP5vSzq8Qod2+7JVFN9nkn?=
+ =?us-ascii?Q?NeezGgDaFQrBT8hp9wZiI3g2gfoKfivyL5S/DaIxd94qirhA7VsKuPI8pco4?=
+ =?us-ascii?Q?FrWcLPkHtx9LLI8v3XRCX/0VWWHnZwTBqjaHqMvu+c2O9Ld8WMEh5S6CKdUs?=
+ =?us-ascii?Q?KYegVimYSvCiCm1wBo9m30gBZLvZYorcuSqIpswsoH98a7XEyUL8QjdSPMJY?=
+ =?us-ascii?Q?Ro2kiMY5Jv/C8e2L1nhrh3uN828wRhPSMArfltSC8zrEbzQCU+yHRDrn95ob?=
+ =?us-ascii?Q?BHLv06r9JsK2/NG8Qn7dVPj84RDGYPB/SNkVxl3hQ12pTrgmzgc3kNQno5+Z?=
+ =?us-ascii?Q?6VwxMA8po50NwaLfh4SXnWU1TtQD1YB60AhoOBD2yUNHszvtvjPr0Ej9Srvj?=
+ =?us-ascii?Q?ObNxqDOgWeMiZ2ssvSyX8L8oVbPW6EBjf2zK2qlxDx3YPoS28OSBYqVb6C5d?=
+ =?us-ascii?Q?rYdyY8Qch0rU+xjN8ZOs7gZYOr8jBfogXbD5+uw4MA3S9snAPM8z9EKnz/8h?=
+ =?us-ascii?Q?dAtdFFcJmzjvwBGtVgSiiRhh5duAM4OhAvKcpWAch4ZrG5J8naP0vylsdm9m?=
+ =?us-ascii?Q?omwGsf0z7Ftw4wyCBr1J5/P6TsJieE72glqV/tH7haV4on5IEJooakoN2Y3D?=
+ =?us-ascii?Q?tWdW3Y6F+Pj8hoxIPl+g4q29P8nev5GpFYuaL63tTIMTHhik+IGnfJI0yw0m?=
+ =?us-ascii?Q?mXNtlViddxjRjMf7w+dVhpHGJ7ZfufBElQ/+oRQq7ftOI98CrY+T/VmXtPkU?=
+ =?us-ascii?Q?Zfk2jsJ/ZfJeiZu5kr9ZUNTaXm7DiwSNwSC5HKd7sJhffsvh3Q1LkNIpDJS4?=
+ =?us-ascii?Q?Dme3HXDPs/gb4UxroLsVyNxXz4FZ93cbnoejvjE5x2SUhbM8fsJq/SiustWM?=
+ =?us-ascii?Q?FLUq+z9mePDeoJBAF+GvH+uT489gLI4sihYkpYp0BT1gd02ObJsMu8XCDn+5?=
+ =?us-ascii?Q?ak/Pr1dfjebp23MhKa7c20G2Uz0PFhCeLuF93iiRCWuhOVchRwEpQbzDZgxQ?=
+ =?us-ascii?Q?GpSR9je3wcQMeLvmTFi92UJekVspDRJJXlkUKCaGuhMbTiVcFYIZCpj7Xn5Q?=
+ =?us-ascii?Q?LjRKZjZ/36iG2ZyPdx/tb/cj4mDk4pkJRxQM?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(82310400026)(1800799024)(36860700013)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 00:46:25.9772
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 08527f4f-8097-4154-c215-08ddb901dffe
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF0002529F.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7182
 
-On 6/11/25 8:48 PM, Steven Price wrote:
-> The guest can request that a region of it's protected address space is
-> switched between RIPAS_RAM and RIPAS_EMPTY (and back) using
-> RSI_IPA_STATE_SET. This causes a guest exit with the
-> RMI_EXIT_RIPAS_CHANGE code. We treat this as a request to convert a
-> protected region to unprotected (or back), exiting to the VMM to make
-> the necessary changes to the guest_memfd and memslot mappings. On the
-> next entry the RIPAS changes are committed by making RMI_RTT_SET_RIPAS
-> calls.
+On Wed, Jul 02, 2025 at 12:14:28AM +0000, Pranjal Shrivastava wrote:
+> Thus, coming back to the two initial points:
 > 
-> The VMM may wish to reject the RIPAS change requested by the guest. For
-> now it can only do with by no longer scheduling the VCPU as we don't
-> currently have a usecase for returning that rejection to the guest, but
-> by postponing the RMI_RTT_SET_RIPAS changes to entry we leave the door
-> open for adding a new ioctl in the future for this purpose.
-> 
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
-> Changes since v8:
->   * Make use of ripas_change() from a previous patch to implement
->     realm_set_ipa_state().
->   * Update exit.ripas_base after a RIPAS change so that, if instead of
->     entering the guest we exit to user space, we don't attempt to repeat
->     the RIPAS change (triggering an error from the RMM).
-> Changes since v7:
->   * Rework the loop in realm_set_ipa_state() to make it clear when the
->     'next' output value of rmi_rtt_set_ripas() is used.
-> New patch for v7: The code was previously split awkwardly between two
-> other patches.
-> ---
->   arch/arm64/kvm/rme.c | 46 ++++++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 46 insertions(+)
-> 
+> 1) Issuing "non-invalidation" commands through .cache_invalidate could
+>    be confusing, I'm not asking to change the op name here, but if we
+>    plan to label it, let's label them as "Trapped commands" OR
+>    "non-accelerated" commands as you suggested.
 
-Reviewed-by: Gavin Shan <gshan@redhat.com>
+VCMDQ only accelerates limited invalidation commands, not all of
+them: STE cache invalidation and CD cache invalidation commands
+still go down to that op.
 
+> 2) The "FIXME" confusion: The comment in arm_vsmmu_cache_invalidate
+>    mentions we'd like to "fix" the issuing of commands through the main
+>    cmdq and instead like to group by "type", if that "type" is the queue
+>    type (which I assume it is because IOMMU_TYPE has to be arm-smmu-v3),
+
+I recall that FIXME is noted by Jason at that time. And it should
+be interpreted as "group by opcode", IIUIC.
+
+The thing is that for a host kernel that enabled in-kernel VCMDQs,
+those trapped user commands can be just issued to the smmu->cmdq
+or a vcmdq (picked via the get_secondary_cmdq impl_op).
+
+>    what do we plan to do differently there, given that the op is only
+>    for trapped commands *have* to go through the main CMDQ?
+
+If we do something differently there, it could just do a one-time
+get_secondary_cmdq call to pick a in-kernel vcmdq over smmu->cmdq
+to fill in all the trapped commands.
+
+And this is not related to this series at all.
+
+Nicolin
