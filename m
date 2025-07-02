@@ -1,132 +1,93 @@
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA6161C5D62;
-	Wed,  2 Jul 2025 09:03:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 901D519D8A7;
+	Wed,  2 Jul 2025 09:04:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751446999; cv=none; b=WQnqpdy4GKMibBoqhAC93EPFn0M7UNpzjQguxeoc2YwYzpvmANwKzzPluTUq628ZVIFp0Lb/t6vpNs870t4yf8yPzDsMVAdUX9mEYMegHsekNWgUuY4nrFeTN065x185k/1kicGgqgo8fgD4DjF8xVnlw70/9+zPubeF3cw7Noc=
+	t=1751447075; cv=none; b=ccecAXkFG+433ZDuDo2kBPbngJLDkj49ZLakkDhEXX+Uj/DoT+zwpXuxz2JO7ZwT5hKdykvoPDjTemYXnryBUW1gm36AL7HEHbJiXKau1vSahF7/hw0D6LT8uhaKWB3w4pzH/t4FPXJad8bBAmnjv7augLMuaB8U+fKjwwRZP5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751446999; c=relaxed/simple;
-	bh=WvCSPAdXA7YMAOl08dmb3AIBfa+EJ3tyacOjS7cxvrQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nL5r69JMFNTiF4trykeZdu4FIE4q05W4j0hqCMTzQHqH2oKTAY88mcHnYfgHaIkuAD5NdNfl5S3mZSXZrCc5EoiZgmWxzWwoD53BWWcBIR5yGulq6wdXuyFnFLmsPJlvjGS7U2nj/kKEb/IJ+Q31GDabQRAmS11a5Ypoqy9fdaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-53145c74e15so1925900e0c.0;
-        Wed, 02 Jul 2025 02:03:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751446994; x=1752051794;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pWkqrPH+Peqo0aIdz6HAaPwffu/WSJWGQUNNsg59/84=;
-        b=XGecPL6Z+oTE0KbsCpPiCiuuEW8cEz9yW1hcohj4YOP0lwFG1VGeDRf39Un5uuBQO3
-         zDdScwU4c+kT0DO0BPnbeQ7Yyl/9vynCVfi4HZZHkspkxIpHJc8j3Xt0MSIocyvCB6iH
-         UzWWjpRH6toTzCE8Z3esifQKlrx3DZowErG4YDvhMual+3enkTj5LihfYcP/dJYEQJkL
-         qcozGjNJzZUianajPU1c9F4WALlnwoGs2PN5Qlmuu4txjoXPe1jiVpb+az9VtnOatI2h
-         Zu/AWppN+y+HrdzuNkbmrz86hUgJJL0aYgZmXK9HLmXEaXEtE8+qeGwJAnJjmQwSl1WS
-         7HFg==
-X-Forwarded-Encrypted: i=1; AJvYcCUPWnF82jbtjpqFCPZW81Qgd1lg2OLOS1lBe5a02MOsLIQliQV54D1JeBVP/zA0A+UHGwUXAse36+9z@vger.kernel.org, AJvYcCVf2bMVgsNLMFBmdP3TXBJnRkLEdhFKb4NyJd6DlHKPI4IEe+Gc1pdlRBcHm+Ley6W/Hy/iEZu0u8ZA@vger.kernel.org, AJvYcCW4wfVGFvmXgxRR4i+mcwPo706pDdoJiu+XEISUpkQiuEoAwNx2TpafRReJsBelVHoK/zZ8BC6zWWcDmHzR@vger.kernel.org, AJvYcCWR6iHUXX4GnwIf0VChUu1jBnbQpiPR0vkcRUoSst132HDmXsp7P2qUInYR+/ZzEzgqSTdsaR/2@vger.kernel.org, AJvYcCXxVOEARwUAgnlCLK5n8sltqCK8CxdgbU+e8aSowblPvTLS8z817927FUnnVKxekpf7eUimXFvZ2DgsZs8hsZ5Y5xU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBQ2fBHmPCAlGauA7x+SZKnqFBz3Ui0ypi3TpzZOBnMZpy3mlM
-	K5SEndVnE26tNENQygj5dRQm7Gyr2ZUBYwLAp0LmLDnG0/EBddCesdJnZiRK3g2x
-X-Gm-Gg: ASbGncsKvYxn5Kr8QbJNx19B9FEwOuz2SwBIbR63nUMenM+aqidlWI4wpLdHbcJ7teV
-	LKb80paDRV95JWZwiGSZL8V95kB9SDEUUfujDERx57iBQgvgdVvyKuyAHVM0IhsCT66VnwSPEX2
-	JEoKQsSDy/dovL9lkcgnV3ClFxYPzwLuHGqKzirImi60yjjJCAqD5JrJcS/tFECQtnx4M7n2D5A
-	J7RmSktAU2G9jfP5mjq81DFPSonaCK0XTeGBiiQYgVFa5l37wHyrwnf58elQY8yQSs7YemdBa/D
-	5mOVvjTnP8cGO8TAUcXWJrMFQrdZwCXfdKRRPDavsbZI804a+D7+2BxHATFBwm0W31agJBskLXZ
-	3FApooyLg85ewh0mRK6nFF5gb
-X-Google-Smtp-Source: AGHT+IGCHzlWZAjVbeSdUuhmcP0DTrGFm7as/qlrZIjC+w1VciHkZP9Xg119GdeyNys0FAwG97jScw==
-X-Received: by 2002:a05:6122:80b2:b0:531:4041:c4c7 with SMTP id 71dfb90a1353d-53458353a95mr1339612e0c.7.1751446993964;
-        Wed, 02 Jul 2025 02:03:13 -0700 (PDT)
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-533090c46b5sm2042205e0c.20.2025.07.02.02.03.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jul 2025 02:03:13 -0700 (PDT)
-Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-4e8110ac0f5so1744649137.0;
-        Wed, 02 Jul 2025 02:03:13 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU0ksvN7lKj5idj7MfkhNPD/VnUOZOvatBgvhMgGyASMeH1ubvub5ms7aoU7ihzQTD6Ph47mM/DIDogKhRbou9Mebg=@vger.kernel.org, AJvYcCVT+j2FT7z1WN63LzBeMApsOpYiVAuQFdnW4USDIruNgJd1uvo24T+JytkkzjoYWL+UIzMbgFog68Pq@vger.kernel.org, AJvYcCVa8z/9OGBMQhZAjR34wSmVEzPBNAL9bOKzxD0dfuqRMhsMMIU06nqFlHMzYpIMhIpWVJ9dVFZFgKf6@vger.kernel.org, AJvYcCWQt91Y0PuKsNESdV0rkDaUWHvPTdOJKBK4dWYTfTjOGbf9KikP2P3fcT+HyUfJqMhjHHEp84g9C85OLkek@vger.kernel.org, AJvYcCXK3MeguY+2q6W0GURYo/d9jHy0y4VUPhPhNHPoa7b6bnLX34Vxu51bRQrAXB2/C+0g6vvG/mMf@vger.kernel.org
-X-Received: by 2002:a05:6102:32c4:b0:4e2:a235:2483 with SMTP id
- ada2fe7eead31-4f1612aa178mr748536137.19.1751446993429; Wed, 02 Jul 2025
- 02:03:13 -0700 (PDT)
+	s=arc-20240116; t=1751447075; c=relaxed/simple;
+	bh=kcztfJkBZkuN7XUV0CYXcYL9JZrdKKPYOBrbgy9LZO0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=RaZE06guKUbkH893VvqOLVSsckoSvsdk0o8UCGNJSZz7P1654IBz5YyeAMo+IRhcIPQzR/hC7dIq9AhY1KiirY/Cy/U6DhJGyQtLBL0yAH8sUaucd8h7AY1h2viAbkSsl4nSOeHKZjwXRtp9dpaGHsLyxct1QBYcahHUBKdPJAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4bXDSM0c2Mz2TSrp;
+	Wed,  2 Jul 2025 17:02:43 +0800 (CST)
+Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id 52FBA1A016C;
+	Wed,  2 Jul 2025 17:04:29 +0800 (CST)
+Received: from kwepemn200010.china.huawei.com (7.202.194.133) by
+ dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 2 Jul 2025 17:04:29 +0800
+Received: from [10.174.178.56] (10.174.178.56) by
+ kwepemn200010.china.huawei.com (7.202.194.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 2 Jul 2025 17:04:28 +0800
+Message-ID: <de7ba157-bede-4ab2-9b8a-cc63c7fafb79@huawei.com>
+Date: Wed, 2 Jul 2025 17:04:27 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250702005706.1200059-1-john.madieu.xa@bp.renesas.com> <20250702005706.1200059-5-john.madieu.xa@bp.renesas.com>
-In-Reply-To: <20250702005706.1200059-5-john.madieu.xa@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 2 Jul 2025 11:03:00 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWzGLQwmGep9L0A9bzp5mYybA00W=S2cZnGH0tbMJvzEw@mail.gmail.com>
-X-Gm-Features: Ac12FXwiA2_DO3vhH2MiiQxz-3dxHaqMTUJ7xX0QMzU3J14CqHlagpboID9b-mo
-Message-ID: <CAMuHMdWzGLQwmGep9L0A9bzp5mYybA00W=S2cZnGH0tbMJvzEw@mail.gmail.com>
-Subject: Re: [PATCH v4 4/4] arm64: dts: renesas: rzg3e-smarc-som: Enable
- eth{0-1} (GBETH) interfaces
-To: John Madieu <john.madieu.xa@bp.renesas.com>
-Cc: magnus.damm@gmail.com, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, 
-	richardcochran@gmail.com, prabhakar.mahadev-lad.rj@bp.renesas.com, 
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
-	netdev@vger.kernel.org, biju.das.jz@bp.renesas.com, john.madieu@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [QUESTION] problems report: rcu_read_unlock_special() called in
+ irq_exit() causes dead loop
+To: Joel Fernandes <joelagnelf@nvidia.com>, <paulmck@kernel.org>, "Xiongfeng
+ Wang" <wangxiongfeng2@huawei.com>
+CC: Joel Fernandes <joel@joelfernandes.org>, <ankur.a.arora@oracle.com>,
+	Frederic Weisbecker <frederic@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
+	<neeraj.upadhyay@kernel.org>, <urezki@gmail.com>, <rcu@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, "Wangshaobo (bobo)"
+	<bobo.shaobowang@huawei.com>, Xie XiuQi <xiexiuqi@huawei.com>
+References: <9acd5f9f-6732-7701-6880-4b51190aa070@huawei.com>
+ <CAEXW_YRC=f6i3KOd_uhuH=xAOCG7mW7-LwtA4+_fc8FMjfRHeg@mail.gmail.com>
+ <3ce6f3ce-5dfb-8c59-cb7b-4619b70f8d25@huawei.com>
+ <20250603185939.GA1109523@joelnvbox>
+ <066e8121-c6c5-48ac-b35a-e6430d986dff@nvidia.com>
+ <a82784fd-d51e-4ea2-9d5c-43db971a3074@nvidia.com>
+ <c448118b-9f7e-4c29-d6b3-a66e70f7163f@huawei.com>
+ <a963b475-72cd-474d-96d4-9e651fc8f857@paulmck-laptop>
+ <e7354668-2573-4564-834b-44d76d983222@nvidia.com>
+ <09e4d018-3db4-404e-a8f0-041cdee15a62@huawei.com>
+ <279d2f06-d4f7-46e1-9678-999a2d19b710@nvidia.com>
+Content-Language: en-GB
+From: Qi Xi <xiqi2@huawei.com>
+In-Reply-To: <279d2f06-d4f7-46e1-9678-999a2d19b710@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ kwepemn200010.china.huawei.com (7.202.194.133)
 
-Hi John,
+Hi Joel,
 
-On Wed, 2 Jul 2025 at 02:57, John Madieu <john.madieu.xa@bp.renesas.com> wrote:
-> Enable the Gigabit Ethernet Interfaces (GBETH) populated on the RZ/G3E SMARC EVK
+After applying those 2 patches on the latest kernel, the problem still 
+occurs. Compared to the previous version which solves this problem, the 
+difference is the following:
+
+
+
+On 2025/7/1 21:29, Joel Fernandes wrote:
 >
-> Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
-
-> v4:
->  - Update pinmux to add OEN support
->  - Drops Tb and Rb tags initially collected
-
-Thanks for the update!
-
-> --- a/arch/arm64/boot/dts/renesas/rzg3e-smarc-som.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/rzg3e-smarc-som.dtsi
->  &pinctrl {
-> +       eth0_pins: eth0 {
-> +               clk0 {
-
-No need for the 0 ...
-
-> +                       pinmux = <RZG3E_PORT_PINMUX(B, 1, 1)>; /* TXC */
-> +                       output-enable;
-> +               };
-> +
-> +               ctrl0 {
-
-... suffixes...
-
-> +       eth1_pins: eth1 {
-> +               clk1 {
-
-... or the 1...
-
-> +                       pinmux = <RZG3E_PORT_PINMUX(E, 1, 1)>; /* TXC */
-> +                       output-enable;
-> +               };
-> +
-> +               ctrl1 {
-
-... suffixes.
-
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v6.17 with the above fixed.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> On 7/1/2025 5:20 AM, Qi Xi wrote:
+>> Hello everyone,
+>>
+>> Friendly ping about this problem :)
+>>
+> Ah, thanks for checking. The fix is slated for kernel 6.17.
+>
+> If you want to test it, could you apply it in advance from the RCU tree?
+>
+> You need these 2:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/rcu/linux.git/commit/?h=next&id=6758c93749f8bf09b9282f100c5dd0a5c501f91c
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/rcu/linux.git/commit/?h=next&id=3cd298bf3bb69e3bca6abfe97e1b44ffa37f3dee
+>
+> Thanks.
