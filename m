@@ -1,96 +1,75 @@
-Received: from out.smtpout.orange.fr (out-70.smtpout.orange.fr [193.252.22.70])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47C526B747;
-	Wed,  2 Jul 2025 12:24:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77A43260592;
+	Wed,  2 Jul 2025 12:24:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751459053; cv=none; b=lRd0j7vjm9sK/RMrHyERGQEGK6F96W+d1P/Vpa5I8qSRmi/CGIkuZ3E318OmokpI2plrmENImxMB8UI2DNqOOVHgX3xbsVeU96kW41g5+P7cglz/AqRJL8J+eHQObvYlBEBdOtt5kkMQNl879Wp4aYynStghZL73R7TKVpHSGwc=
+	t=1751459079; cv=none; b=lqXYjbVvWEE0JDfM4u025GaTAd0XkVUF0ZOnWLOOy/S6dHeH7UKKWT6/sM76hiHr2Hvnfq/n/C9+RbbIEsl7dNmMxZKDfUbvEg8+HUDyevI4FWGod/LkYL2t8y42WR60N8KdIdMsXw6f/WUoE7sUElEknqnNJShOjyLIZpPbWOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751459053; c=relaxed/simple;
-	bh=FnTPS7XrucGy4Vkovkr4+yG8KSsot54yCzj6ft7QxKQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ekEy5oqFL3CA6aWQYGdQbOGG/pVBwQrnBi7bibYcYpeSS63sfmrKCuZIf/ciuOKK65AvA/lR3u7jp3iPBWJneY3p3YsJvmh4GRu4M1xHHoAGfv4OUTLaxtoa78xkHR0j7VoblgY7+M1dAzebO564FNGxvEbygXoxLKx3PkgJAQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=F0SCA7CM; arc=none smtp.client-ip=193.252.22.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1751459079; c=relaxed/simple;
+	bh=+4g/O9KavdfNBDEeSgTgC6+6CMsSSnI/shhS+omw080=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U/Z+bAfZAX+IDdtj1XGib0r4XnIG0emmAr31eKjwZnMMKSfGJeFNGSI27tkxEqXaNaaTvKBZjHRcf+5SSiwxdr3iDUAWNPCXfhAdLAWOANrLSncJj8mFha4v4ztMcRjKGo0KuzjwUPxm+dg0spXcmDm7sgIKklpgTVxr6qq8pEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kbuLl7NI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="F0SCA7CM"
-Received: from [172.16.82.72] ([124.33.176.97])
-	by smtp.orange.fr with ESMTPA
-	id WwUKuU4efLcVHWwULu3zCl; Wed, 02 Jul 2025 14:23:01 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1751458981;
-	bh=6AUGzcNiTKnyYAvQQAMQveENbbz1AubdZ1CqkeZ4AEo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=F0SCA7CMjk17ST1ESJdj+eX//PXF9chUocEUvBpjdh5rL4IVLdMtIia1TN5zJO63d
-	 T6d61cwVkyQjCftcAhb2/Z2pCL8Q25tyb2g0DloaWReUEblvJ6V4/6ZwkQBLKy2/T5
-	 c/5xiaMvxcHNfckmhGNqjRe/rSZrZOBLgSycwgjXlr3JHCMBugQ7g6uL4V0YplWDeq
-	 2xmE8SL9z007D34L7dsonXCovBvg3PcCfxMkINQtOTBW0QYOJshJBx8jfqLOm6L9w3
-	 jkyIOjUudFyA7areOCqSBZmb50djcikGZkxsC0zQAjXmli96rzwU6tCW3ExM7N6bI7
-	 WQ4W8E0PPJHpQ==
-X-ME-Helo: [172.16.82.72]
-X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
-X-ME-Date: Wed, 02 Jul 2025 14:23:01 +0200
-X-ME-IP: 124.33.176.97
-Message-ID: <23dbf1ed-543c-4765-91a6-b54db2d49150@wanadoo.fr>
-Date: Wed, 2 Jul 2025 21:22:56 +0900
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kbuLl7NI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC5D7C4CEED;
+	Wed,  2 Jul 2025 12:24:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751459078;
+	bh=+4g/O9KavdfNBDEeSgTgC6+6CMsSSnI/shhS+omw080=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kbuLl7NIBnEYmnPsgKXjoq0qMYuLvGVLef1YLrQdw90i4COG97ap70uC43+frYYOu
+	 Sd0O2rrR8wdT1adpP97yHioNjM2+K1/XvJpRuOAP2H2qhS9ZmwP5Rmqb5NnJqlmbVh
+	 bKPQAq+P8vl+tMW2Vwnm1+Ow6FtjRpgWEKkB/UXdjyn53DE1IbZHylle0eJ+hjg5ls
+	 6ysAJe0Ovr5Ua1oxVYn9soULYh2jXiW/TqCItj+2tPZrcA69U8KE+r/71ubdNmu+R0
+	 resL4bBiogg/H4jipdni0N/OERFPyynRck/ckAZFilSAhmLSWI0DzJjJFcCjjwiBqm
+	 fhMRCIGA23zlA==
+Date: Wed, 2 Jul 2025 14:24:33 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>, 
+	"Darrick J. Wong" <djwong@kernel.org>, Andrey Albershteyn <aalbersh@redhat.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Casey Schaufler <casey@schaufler-ca.com>, 
+	Jan Kara <jack@suse.cz>, Paul Moore <paul@paul-moore.com>, linux-api@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
+	selinux@vger.kernel.org, Andrey Albershteyn <aalbersh@kernel.org>
+Subject: Re: [PATCH v6 5/6] fs: prepare for extending file_get/setattr()
+Message-ID: <20250702-herzrasen-anlocken-d4971baeba1b@brauner>
+References: <20250630-xattrat-syscall-v6-0-c4e3bc35227b@kernel.org>
+ <20250630-xattrat-syscall-v6-5-c4e3bc35227b@kernel.org>
+ <20250701183105.GP10009@frogsfrogsfrogs>
+ <CAOQ4uxiCpGcZ7V8OqssP2xKsN0ZiAO7mQ_1Qt705BrcHeSPmBg@mail.gmail.com>
+ <20250701194002.GS10009@frogsfrogsfrogs>
+ <20250701195405.xf27mjknu5bnunue@pali>
+ <CAOQ4uxjZWGz2bqen4F+fkQqZYQjKyufFVky4tOTnwng4D5G4nQ@mail.gmail.com>
+ <CAOQ4uxhrW--Du4XvSWficnRenv24U4hwnCQtNsH4F5d4jaPjFg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] can: rcar_canfd: Drop unused macros
-To: Biju Das <biju.das.jz@bp.renesas.com>,
- Marc Kleine-Budde <mkl@pengutronix.de>,
- Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: linux-can@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
- Biju Das <biju.das.au@gmail.com>, Magnus Damm <magnus.damm@gmail.com>
-References: <20250702120539.98490-1-biju.das.jz@bp.renesas.com>
-Content-Language: en-US
-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
- xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
- LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
- GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
- bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
- BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
- 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
- yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
- CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
- ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
-In-Reply-To: <20250702120539.98490-1-biju.das.jz@bp.renesas.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAOQ4uxhrW--Du4XvSWficnRenv24U4hwnCQtNsH4F5d4jaPjFg@mail.gmail.com>
 
-On 02/07/2025 at 21:05, Biju Das wrote:
-> Drop unused macros from the rcar_canfd.c.
+> Christian,
 > 
-> Reported-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-> Closes: https://lore.kernel.org/all/7ff93ff9-f578-4be2-bdc6-5b09eab64fe6@wanadoo.fr/
-> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+> Can you please amend the return value in the following chunk:
+> 
+> @@ -119,11 +120,16 @@ static int copy_fsxattr_from_user(struct fileattr *fa,
+>                                   struct fsxattr __user *ufa)
+>  {
+>         struct fsxattr xfa;
+> +       __u32 mask = FS_XFLAGS_MASK;
+> 
+>         if (copy_from_user(&xfa, ufa, sizeof(xfa)))
+>                 return -EFAULT;
+> 
+> +       if (xfa.fsx_xflags & ~mask)
+> +               return -EOPNOTSUPP;
+> +
 
-Reviewed-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-
-> ---
-> v1->v2:
->  * Dropped the Rb tags.
->  * Restored simple simple bit definitions as it serve as documentation.
->  * Restored register offsets will become anonymous gaps when the register
->    offsets are replaced by C structs.
-
-When you refactor into the C structs, there is no problem to give a proper name
-to a field which is unused. First, the struct clearly shows that this field is
-part of a group whereas this relation is less obvious with the macros, second,
-it takes little real estate: just one field name (less distraction when a human
-parses the code compared to the macro) and finally, as a bonus point, you do not
-get a W=2 warning spam.
-
-
-Yours sincerely,
-Vincent Mailhol
-
+Done.
