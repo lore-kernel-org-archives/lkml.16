@@ -1,97 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59AE72749E6;
-	Wed,  2 Jul 2025 14:19:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E09BD2F4A07
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751465999; cv=none; b=DsrFR/Sj02HBu4EOxbahqnaP2BKHolSQMO1pG3jNbN+Zp4Cu8nFYQUpdGMb+kIuEl3MlWHUv/nK+5GHmZ+WUW/TA2DPkJMx9qRH2arhw3j85PcqrGYHzym6x54aJkHHh1d8PQ7Badzdy1xUg3kouiwEOZ9Y8aI26YKFHJJQCRjU=
+	t=1751466032; cv=none; b=ORymUe9brlZKYKza+XsxPfGfCcFkp79Soj8ZDzWJ68pKe7pPvG0ycEYTyrGJLecEMeBkzEoz0fjntfSgcp3idloIL+F+SUePWy725wiWS9MICRScorMVu9HO0BxmHx2I1kVPlZzwTUpMlKAxC9YTnJOZy8Awc7eMHwIXMSZy4IE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751465999; c=relaxed/simple;
-	bh=TPciPNVldYlLCshBF0wNkXQDpxHCap/jBcx6/N7ZGKk=;
+	s=arc-20240116; t=1751466032; c=relaxed/simple;
+	bh=avnRLKakTmibTGU63hfRD4q6SIXreBXAHQdAGo9SCpY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X8E/dvULG7Kfor9eQt8VOczeKs3vGPumPgWqnREsUrjXZueZ+bQqfnTII8B+vb/XlzuNMzZ6/Z9oe2cUIQSS74pQTH5uxn10eL8FBq8kteo8etAW+mUHx3npzsgFP0hVVE0MbBzKlcx6bqnsN9zbiCLUrQmlk7MeB6Kgh7t0TBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RSoutkQH; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=AfqjhE1sXuGHo8HJuoAc2hV0ah0Z+RO8qCrQSA+wviq0JO1ZUOlpy5VOe6KRSH1wo2kUF1xYgKyCJc+lN7D5DXlhy538wMgP0N3I8Ck8YlyuxFR+arn07prLLDbE6cSRf8JOCsmYg6DiZSBxbyD2SqQkdYuEED6NbWpqzLEKQ/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=wLSloOXy; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Tw93rIRJ; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=vI0EpeuB; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=YnR8PVsU; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RSoutkQH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BA4DC4CEED;
-	Wed,  2 Jul 2025 14:19:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751465998;
-	bh=TPciPNVldYlLCshBF0wNkXQDpxHCap/jBcx6/N7ZGKk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RSoutkQHiqJIZLfUz4vLG5XDmN61dCtG2vxH88aVVxYgbY2s9SRl0IbEMYSiyhzQo
-	 s2OXWG+BCzsu9j5vribhCGAEsebId23u2ttvwXSmYEm0/Jj0i4kIwwAB/N0HH4SYP/
-	 xE+fk4ZoBdyLkf/9hWtB1rNOcAEUU0lFA8uwxjgGuIwfUS9d8uFsmoVZWOx2ntk+36
-	 /deJGiEystKHF5JPG8MxB6KF0mhlAAtwzeioTnYf1u+TWI+FjItJg1TJRAT5aEeVIo
-	 e1tWtCoNL2LjC00UCpQb7t6Y+pCTupCvQbGk1qH9whnF/yHOEIeUAyFOPi6RMIJHlu
-	 VbGGSePVMB9jQ==
-Date: Wed, 2 Jul 2025 09:19:57 -0500
-From: Rob Herring <robh@kernel.org>
-To: Albert Yang <yangzh0906@thundersoft.com>
-Cc: krzk@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 6/8] arm64: dts: bst: add support for Black Sesame
- Technologies C1200 CDCU1.0 board
-Message-ID: <20250702141957.GA1416711-robh@kernel.org>
-References: <a570b833-0619-4d1a-909f-971ba08f4202@kernel.org>
- <20250702123133.3613126-1-yangzh0906@thundersoft.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="wLSloOXy";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Tw93rIRJ";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="vI0EpeuB";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="YnR8PVsU"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id EAD721F38D;
+	Wed,  2 Jul 2025 14:20:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751466029; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+2NSSFfIrDFk0JWc9gz8bcD7t0dPLi/sMrLX5yogfHw=;
+	b=wLSloOXyK5rfDlzwMUnHDy/nICkLlE+sNp6LuKYuEmRT1Y3JKtHB1jEhwDfzCWyZUlzjOk
+	WK4ObxmghWXCxYk+J+tl7xhIulA8LHJ4nFuJgkN0DZUEcxAGHYlxVPS3oUA0GctkxG5aRp
+	e6+kpb7yxO3ZyXbQmbFlKcDnRA5GRHU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751466029;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+2NSSFfIrDFk0JWc9gz8bcD7t0dPLi/sMrLX5yogfHw=;
+	b=Tw93rIRJneVvpujkvzWy1bcXU7dl+YhAc14tZ1IR1ZWp+dBBJDGYQQrSpBbe6GJgaCvzL/
+	MwAk8vy/y1CLc3AA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=vI0EpeuB;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=YnR8PVsU
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751466027; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+2NSSFfIrDFk0JWc9gz8bcD7t0dPLi/sMrLX5yogfHw=;
+	b=vI0EpeuBcQEzl7eL6fjQU8Ok+3MOJseFuW4FJ/CgCYKzs1vty/BsxUWiwaOxfgoMlCC2+5
+	gb66kdmS0bTlJEJYhmI1z4egJ0RjXO+N5ePb6WKDjHQFtyBEHJ7G4rF9A2ILaqMVNTfyrL
+	g803HoHgXcJDyuIoMMd1Ecz3mwdB3BU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751466027;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+2NSSFfIrDFk0JWc9gz8bcD7t0dPLi/sMrLX5yogfHw=;
+	b=YnR8PVsUB256hPoh5fBSysAMk23XVFzbIyzycClk4go0voyQuJy80PZlu8F8nJ4+lJxWf3
+	cWoZ5mu1mTxRxpDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AC8DA13A24;
+	Wed,  2 Jul 2025 14:20:27 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 4gcfKitAZWgkQwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Wed, 02 Jul 2025 14:20:27 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 8481BA0A55; Wed,  2 Jul 2025 16:20:21 +0200 (CEST)
+Date: Wed, 2 Jul 2025 16:20:21 +0200
+From: Jan Kara <jack@suse.cz>
+To: Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca, jack@suse.cz, 
+	ojaswin@linux.ibm.com, sashal@kernel.org, yi.zhang@huawei.com, libaokun1@huawei.com, 
+	yukuai3@huawei.com, yangerkun@huawei.com
+Subject: Re: [PATCH v3 06/10] ext4: enhance tracepoints during the folios
+ writeback
+Message-ID: <jxtj25ptoel2l3723i26lxstemmvieejnql4iypinrejm5lvx5@72key7fyl3qi>
+References: <20250701130635.4079595-1-yi.zhang@huaweicloud.com>
+ <20250701130635.4079595-7-yi.zhang@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250702123133.3613126-1-yangzh0906@thundersoft.com>
+In-Reply-To: <20250701130635.4079595-7-yi.zhang@huaweicloud.com>
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,huawei.com:email,suse.com:email]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: EAD721F38D
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -4.01
 
-On Wed, Jul 02, 2025 at 08:31:33PM +0800, Albert Yang wrote:
-> Hi Krzysztof,
+On Tue 01-07-25 21:06:31, Zhang Yi wrote:
+> From: Zhang Yi <yi.zhang@huawei.com>
 > 
-> Thank you for your detailed review and feedback. I have addressed all the issues you mentioned:
+> After mpage_map_and_submit_extent() supports restarting handle if
+> credits are insufficient during allocating blocks, it is more likely to
+> exit the current mapping iteration and continue to process the current
+> processing partially mapped folio again. The existing tracepoints are
+> not sufficient to track this situation, so enhance the tracepoints to
+> track the writeback position and the return value before and after
+> submitting the folios.
 > 
-> > This is messed. SoB does not go to changelog. Apply your patch and look
-> > at result - do you see SoB? No, because changelog is stripped.
-> > submitting patches explains how this is supposed to look like.
-> 
-> Fixed. Moved Signed-off-by lines to the correct position in commit message, 
-> outside of the changelog section.
-> 
-> > Nothing improved. I asked to follow DTS coding style in ordering.
-> 
-> Fixed. Reordered all nodes according to DTS coding style:
-> - Root level nodes: alphabetically ordered (clk_mmc → cpus → psci → soc → timer)
-> - SoC nodes: ordered by address (uart0@20008000 → mmc0@22200000 → gic@32800000)
-> - Applied consistent ordering throughout the dtsi file
-> 
-> > l2-cache. Otherwise it is incomplete, so add the second one.
-> 
-> Fixed. Renamed l2-cache-1 to l2-cache as per standard naming convention.
-> 
-> > Why do you have multiple memory nodes, not one?
-> 
-> Fixed. Consolidated multiple memory nodes into a single memory node with 
-> multiple reg entries as required by Device Tree specification:
-> 
-> Before (incorrect):
->   memory@800151000 { reg = <0x8 0x00151000 0x0 0x1000>; };
->   memory@800254000 { reg = <0x8 0x00254000 0x0 0x1000>; };
->   ...
-> 
-> After (correct):
->   memory@800151000 {
->     reg = <0x8 0x00151000 0x0 0x1000>,
->           <0x8 0x00254000 0x0 0x1000>,
+> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
 
-These are very odd. Are these really main memory vs. some on chip SRAM 
-or some other specific purpose? 
+Looks good. Feel free to add:
 
-A 4KB block doesn't really work if the OS uses 16 or 64KB pages, but I 
-guess that would be up to the OS to ignore them.
+Reviewed-by: Jan Kara <jack@suse.cz>
 
->           <0x8 0x10000000 0x0 0x30000000>,
->           <0x8 0xc0000000 0x1 0x0>,
->           <0xc 0x00000000 0x0 0x40000000>;
->   };
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
