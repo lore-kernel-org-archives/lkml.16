@@ -1,115 +1,83 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F25A1F78E0;
-	Wed,  2 Jul 2025 05:38:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCAB0140E34
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 05:42:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751434728; cv=none; b=go6bY2lunQwy1CKrz2342R1wk7yxp1C50dZAErAaFYhjsK3wg4iNHGJCEYHQZb4xcd532RYjlSDDIlZNxIoas8+8UYmb8qel/avmj7z9Je3IZqEU6m3IIbC+OkCHH+aIfzh0q7iPfCpj2wkwf9XxAGL4ySLF67JCNHvkLUQZ46s=
+	t=1751434956; cv=none; b=NatSOl3wPArl+Yqak8QENGDf8qmpjEpR+HQpq6WziB47N4cWykd2gQHW7az/K6Nohwv65whG4V3qmefu1bOnEOcniBkW9HORgf4ryW30lJMxT++EKo4UbRZ1pAbl7kyEWXovHgKbX3vxu/aafbS+azHeE05RUMrvjdcTHVbAMn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751434728; c=relaxed/simple;
-	bh=hTA2CZ3v5y4ItL9+NDilGn2wlcY1554mf2+p4paVvX4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=lHcrI2u1d+VpHTIWbDQPI5LpilKcf4AGEnacPBPiSEUY/loDQql1kOpljI7BvrsqLbL30XiXY13vCBzjSCjoOwsAHN79KT3zlSK+BIG3OpC0Es1ECvC5j4gbQ6IEmXwdaUYagA66wllMHRlh+/pmYcxjNW2/qWZmyrtuiRDnr4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=WPa37nwb; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1751434956; c=relaxed/simple;
+	bh=S+zPo5ERTStSzH9D1C3v8My4jIfYm5tnWHrJvNIMhwU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ckZQBY3QRZ4yY7XVqQa2SSYYjOLyz1ckP3ZbVcZp/fi8yW03BpcgEDDyXSNwrwqDD77HZQlCdoSgKfIwJoqCTk7aKji6CuJCRBC/5LFPQKI+UVCOV+f+rFgDx3gz+JjIqFrPxQxl2l9iPmUnKMbFEeuJJKyrKU7IW4IBzmniPEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=qGy9YGZX; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WPa37nwb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1751434704;
-	bh=0PxzEV4blDMy5UoNkpuYTQMcVlsXTpkSz471UW67rjk=;
-	h=Date:From:To:Cc:Subject:From;
-	b=WPa37nwbVMgrnukt+gF/L10XtJN/paxKtuFx2wPbqIfvZf7dZZYk5TyyvIhERQRYI
-	 Moh5O/rAa3GsHLBrxUz+QNhtoMKvQhaUJRIpRBg7t5qO2kEFZFeuQ+jbh48irZvjg5
-	 VkGdLwa+GqsCchJE0AsDO/AcX6M23mvAQX7Rdfru5EwpqQoQ1aQoJ00WUaBjIIQA6G
-	 sqwGsMPh9bQVFcYHCy3TNcSnv37QUGOJ7ijxMlwm2ob2IxIKV9SVA5M89Ayh9NdBoc
-	 jGCGS8CSoOEeBUdU2hQz+000CjoSAr6aDNhu58nPjSNO87jG3Q7YgDZaSi8G9JxzbL
-	 dxX+3HF1B/SVw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bX7wb430Gz4wcr;
-	Wed,  2 Jul 2025 15:38:23 +1000 (AEST)
-Date: Wed, 2 Jul 2025 15:38:36 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Kishon Vijay Abraham I <kishon@kernel.org>, Vinod Koul
- <vkoul@kernel.org>, Jonathan Corbet <corbet@lwn.net>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>, "Rob Herring (Arm)"
- <robh@kernel.org>, Xose Vazquez Perez <xose.vazquez@gmail.com>
-Subject: linux-next: manual merge of the phy-next tree with the jc_docs tree
-Message-ID: <20250702153836.146165af@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="qGy9YGZX"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-4a43afb04a7so28466041cf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 22:42:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google; t=1751434953; x=1752039753; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=S+zPo5ERTStSzH9D1C3v8My4jIfYm5tnWHrJvNIMhwU=;
+        b=qGy9YGZXINSWPLzA2HADUEchXJ96N+b+mEM1ug5pTErWrDPRhnutDpibx5ubIuN49c
+         iqYdldnKdhAcv2svT8pgw7Up9Z48hgcncyZhK5gQ6EmnhF2H27b2xg5rzNiymhRdiaOh
+         tHSlw+6XCOtFSKrWGjU3c7A5rB9PBjfWB23vs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751434953; x=1752039753;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=S+zPo5ERTStSzH9D1C3v8My4jIfYm5tnWHrJvNIMhwU=;
+        b=RVeUxIlORF9hyvECeG0PPF+VDbAdeD5+0aqB50kRwGnxHjcV7tbchAMhsxktltQdpw
+         j5JX84pBkstx18gbc7RoSEinh+LrHjjJQ9wLhmwzFtHrKcXX/Z9t0QuSmXtP2F7ze2JE
+         CJjYi0AMdH9DAXdhqHqiuHd7dKZOySZSHy1bv7KBHRbJoyS6BKQAYVuyaFv+DSRPRxSK
+         9K0hLsNimS9mOh0vlKW2ggGaf6r9l1/q5C6XfUSL7Hq1GNMlxE7jUhyZOjYYVRiSA5le
+         RUSU8fQzR8E7x9h+eUn46TGRRAkX72qd6gGPbBPIzHgHRlSwE0cQacwsbv3Gp/IcpEpI
+         cUcA==
+X-Forwarded-Encrypted: i=1; AJvYcCU84K0hugHrLgNjg70MbdswXU8z4/a+2ULlHrpa4ywsSqgtuH9RTDYrmlykpmxZmc5E5vIx5S+m58qorrQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZjIjpxCFkt52QWkl+rLL5D1S6SiNUlo2kPGQgldosGXFlFYSI
+	eru19tQUe3QvMq2k1hPMXdefGPs73DXqja2o+td3t5GUIVB86D88pPuRsnL9L3Eig+TqGm5Ji/I
+	BjqGz1mhl+sIsIcKk516RM/M+MafRoKif91HdRUqRHA==
+X-Gm-Gg: ASbGnct95yPDcktjqbJ/316ZYwgvredQzJCQk6R7XTXLqHTLMAp7bAtn4Bz2ZDoU9F7
+	usJyGe29MUOcbXv6LUp0yFf0J6Sk9pA1RNKB7Z196J5p1JgkUI2ynBUEMYrlPV3JSXRsv4/+Vux
+	hbz7jxtuVtDk+5b6GynyXtm6Mo/D8CQ1IceElX3aFRIU06JPgvzDFV4ayp2SF/wmlMGzKZfiS0D
+	EST
+X-Google-Smtp-Source: AGHT+IHIs1Nc8ZsOhKfJDquXC4dpDHews6mYsGdn6IsKTHmk+3HLxuHFUSsoGWU8khtMjUXM+53CCCsHY5/gWF+66IM=
+X-Received: by 2002:a05:622a:1889:b0:4a7:6f1e:6fa7 with SMTP id
+ d75a77b69052e-4a97690acf4mr30954751cf.19.1751434952762; Tue, 01 Jul 2025
+ 22:42:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/TmU0+OIib8lzcE/zv0b12vN";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20250615132039.2051-1-lirongqing@baidu.com>
+In-Reply-To: <20250615132039.2051-1-lirongqing@baidu.com>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Wed, 2 Jul 2025 07:42:22 +0200
+X-Gm-Features: Ac12FXzxs43CUldwYNNzjBZVxbrBptY9qCnaMpf-lB08P-9mnEL0MjBx8JxcZDc
+Message-ID: <CAJfpegvBFDLDQCKTi-rY1zZWukQkn0nN7kU8QcXLs_QYZK5w8g@mail.gmail.com>
+Subject: Re: [PATCH][v2] virtio_fs: Remove redundant spinlock in virtio_fs_request_complete()
+To: lirongqing <lirongqing@baidu.com>
+Cc: vgoyal@redhat.com, stefanha@redhat.com, eperezma@redhat.com, 
+	virtualization@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
---Sig_/TmU0+OIib8lzcE/zv0b12vN
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, 15 Jun 2025 at 15:22, lirongqing <lirongqing@baidu.com> wrote:
+>
+> From: Li RongQing <lirongqing@baidu.com>
+>
+> Since clear_bit is an atomic operation, the spinlock is redundant and
+> can be removed, reducing lock contention is good for performance.
+>
+> Signed-off-by: Li RongQing <lirongqing@baidu.com>
 
-Hi all,
+Applied, thanks.
 
-Today's linux-next merge of the phy-next tree got a conflict in:
-
-  MAINTAINERS
-
-between commit:
-
-  739ca710a777 ("MAINTAINERS: replace git protocol for github")
-
-from the jc_docs tree and commit:
-
-  3ed7be12756d ("dt-bindings: phy: Convert qca,ar7100-usb-phy to DT schema")
-
-from the phy-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc MAINTAINERS
-index ea884d4e18f3,04cda64989c5..000000000000
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@@ -3833,8 -3822,8 +3833,8 @@@ ATHEROS 71XX/9XXX USB PHY DRIVE
-  M:	Alban Bedel <albeu@free.fr>
-  S:	Maintained
-  W:	https://github.com/AlbanBedel/linux
- -T:	git git://github.com/AlbanBedel/linux
- +T:	git https://github.com/AlbanBedel/linux.git
-- F:	Documentation/devicetree/bindings/phy/phy-ath79-usb.txt
-+ F:	Documentation/devicetree/bindings/phy/qca,ar7100-usb-phy.yaml
-  F:	drivers/phy/qualcomm/phy-ath79-usb.c
- =20
-  ATHEROS ATH GENERIC UTILITIES
-
---Sig_/TmU0+OIib8lzcE/zv0b12vN
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhkxdwACgkQAVBC80lX
-0GweHgf/YcHnj5AB2kb8q/KPjwc05qpQLugWZhQRkqlss5mlnstvdmyNqs9aY77Y
-Y5dx7joa+hVosD3YLVcnQQc5BAaLv8UfEYd/7KpUKNtt5m4ZgM5A/IAhpxHdPwmS
-xVdtxe8dYCRJ5dWQfp7a7RJ+UdwLUMnYyKft7lXMBEmQhKa44ZrcJ5p/oanRYRh/
-YPxH6QbIK4xQuZ0AESeDf7H33HX4jErQ/qNRg7LI6ngo4GfQETRRCCRlO6YMGh40
-ismIs40wG5mBsRvDSACMkCFBtwvtXY13V+D4CGYbKN8vWsRQxML5G/RsVOJ195Ah
-MnSvdovFHL/ybeMleqjtLSdpHG48ng==
-=mZZ8
------END PGP SIGNATURE-----
-
---Sig_/TmU0+OIib8lzcE/zv0b12vN--
+Miklos
