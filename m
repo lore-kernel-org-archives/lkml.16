@@ -1,74 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442B02F3C36;
-	Wed,  2 Jul 2025 16:57:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 376831DACB1;
+	Wed,  2 Jul 2025 16:58:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751475426; cv=none; b=ZrMTrxD8++KEXORP//VxxImc8H8L7/Bx2wlZLRScpiztGZWBaiwcMefE8hIED0OUIzip9szVc5JY3HVohWqcvUna3BzLBqfVjYxJ5279r8eUupDzyXdr4ZflpgR5GbUjFIhW0oC8CUqPVw28/JGsjfEmWQfemtuhOo1TlcU607s=
+	t=1751475523; cv=none; b=VeLAEoVIPmjVocnKBzgeqw4C27CKF2U7n0td0kFpWchCMNq3QvwEo3WJLWmg82IjIWTk5mpODMRmnVbtp6h3r6aR1LAbKKlpUljreKdzrf80DvDqgw3ODnFj8P6TcspzQOkQ4UecD4IgJjMJ3iAoSSEAFTooU6aor0aYkce1fcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751475426; c=relaxed/simple;
-	bh=ocNwR/XXz0H6vYXtxoEREo6XhUYrxZeTqCH9xLXk4Dw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lozq8+czG9jALCWu010UBMMdDPh49f2gRDei9g/K5UDKhzH+VJhmuRzNiUGLKe71Av5ZOooXxWyf8R9WYbOJafRtKynwbcXjPmdB3Z2cd93+ljTpoYnbGebC36VXmgo55zhnOJ2cjTccSdcHeWyMfpg7pyc0IjaaftpETpOAJQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oRdRrBd4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751475523; c=relaxed/simple;
+	bh=/ef4CrFmebCh1AqCX+/iSl6DfpNGDmZ7ZDGmWGiqK8E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=g6UMd/sigIs/vdgQBAp3j95EUyNe5TRv6wbGdfMecyVgpDzqoPArQiQfnrQ2P2EP1dLQCcqF/+c1WbsdjWUDQjHY6EvVQntDpyCbAygYQ9z8pEqMr7vFJU3a3mSXLm/Il04O37vc8pcybbiCzzqIEcZmwSMFfI0HJjZEtCkChLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RSHOxZEC; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oRdRrBd4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1317FC4CEEF;
-	Wed,  2 Jul 2025 16:57:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751475425;
-	bh=ocNwR/XXz0H6vYXtxoEREo6XhUYrxZeTqCH9xLXk4Dw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oRdRrBd4rqlB8P6ErGgt4dvwpJ1u94yU+jWyu49x4SA6gFJNM0mkK6DqYNPhRr2cx
-	 ASDxNstDubarmmecPdK72Xh7hjJPR7qRiDFqkILrbugZJAitqUdPhke+aIfhnm/oPj
-	 teu1773om9O6m6zKuBi0N2Cw7YHP0vtecXbXdaS0PtKUg+na4X229xfbyfv2rhQsJm
-	 stZy47lY2torkY8GlO5HjTfcWb2uIi08rf39WN2ywlh5BFuSnIwrG7TAhSQZtWrJC4
-	 RnVJ+LRovqcXfETHgEkNAFhWgnih5HrjuobsWNkhaISKTZFqlA6XMHBxFGsD5IgHpd
-	 zwtUHA+TAL1YA==
-Date: Wed, 2 Jul 2025 18:57:01 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: =?utf-8?Q?Cl=C3=A9ment?= Le Goffic <clement.legoffic@foss.st.com>
-Cc: Pierre-Yves MORDRET <pierre-yves.mordret@foss.st.com>, 
-	Alain Volmat <alain.volmat@foss.st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, 
-	Wolfram Sang <wsa@kernel.org>, Pierre-Yves MORDRET <pierre-yves.mordret@st.com>, 
-	linux-i2c@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
-Subject: Re: [PATCH v3 1/3] i2c: stm32: fix the device used for the DMA map
-Message-ID: <n4mx3xukr5zffajpwomuwp27fywmogm6nmv7hgkcwpghjaorwv@2mqmgg3u5far>
-References: <20250630-i2c-upstream-v3-0-7a23ab26683a@foss.st.com>
- <20250630-i2c-upstream-v3-1-7a23ab26683a@foss.st.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RSHOxZEC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751475523; x=1783011523;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=/ef4CrFmebCh1AqCX+/iSl6DfpNGDmZ7ZDGmWGiqK8E=;
+  b=RSHOxZECzkePmjIkf3SuP9X5TEBl+oECLEC79f5PVMK1N5WIb6anjXO9
+   QgR/UWIoUKXan33D/1ES2AR1dzyAh8qfcIBOTpbO1oRDOete+fUY1Z0tf
+   SRORQKrZIy6cIy35AxgI+mWlsYxBlEt2RPZ3im6MJbkEuLTZEAmfHVaLv
+   ReNKIdjXkq2LnzySjZLjIRC0JYOc0c+iJXQbRNqOLcnlDida/4Grgf+CC
+   JnKGyis3p9OBRAuR9+7y6sLErUY3+hftwg/04jiby+yUGdKiYXIZgVyJC
+   +CF9uVpmFjg1RkIaszybWy8msNgImev0uGG5/DGpqTYbjRbZY2tQpUE9v
+   Q==;
+X-CSE-ConnectionGUID: VLW5SnE8SsCw5SwEiV+5xg==
+X-CSE-MsgGUID: 3vB3Ur6QTcKnb3LBM+utVw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="65132604"
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="65132604"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 09:58:42 -0700
+X-CSE-ConnectionGUID: AZcKulOWRi+cKuI+6SBM1A==
+X-CSE-MsgGUID: aYFH497xR6ehS/lwI7YwMQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="153538515"
+Received: from p12ill20yoongsia.png.intel.com ([10.88.227.38])
+  by orviesa010.jf.intel.com with ESMTP; 02 Jul 2025 09:58:35 -0700
+From: Song Yoong Siang <yoong.siang.song@intel.com>
+To: "David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH bpf-next,v3 0/2] Clarify and Enhance XDP Rx Metadata Handling
+Date: Thu,  3 Jul 2025 00:57:55 +0800
+Message-Id: <20250702165757.3278625-1-yoong.siang.song@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250630-i2c-upstream-v3-1-7a23ab26683a@foss.st.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Clement,
+This patch set improves the documentation and selftests for XDP Rx metadata
+handling. The first patch clarifies the documentation around XDP metadata
+layout and METADATA_SIZE. The second patch enhances the BPF selftests to
+make XDP metadata handling more robust across different NICs.
 
-...
+Prior to this patch set, the XDP program might accidentally overwrite the
+device-reserved metadata.
 
-> @@ -118,7 +118,7 @@ int stm32_i2c_prep_dma_xfer(struct device *dev, struct stm32_i2c_dma *dma,
->  	dma->dma_len = len;
->  	chan_dev = dma->chan_using->device->dev;
->  
-> -	dma->dma_buf = dma_map_single(chan_dev, buf, dma->dma_len,
-> +	dma->dma_buf = dma_map_single(dev, buf, dma->dma_len,
->  				      dma->dma_data_dir);
->  	if (dma_mapping_error(chan_dev, dma->dma_buf)) {
-			      ^^^^^^^^
+V3:
+  - update doc and commit msg accordingly.
 
-this one should be "dev" too, which renders the chan_dev variable
-unused.
+V2: https://lore.kernel.org/netdev/20250702030349.3275368-1-yoong.siang.song@intel.com/
+  - unconditionally do bpf_xdp_adjust_meta with -XDP_METADATA_SIZE (Stanislav)
 
-Thanks,
-Andi
+V1: https://lore.kernel.org/netdev/20250701042940.3272325-1-yoong.siang.song@intel.com/
 
->  		dev_err(dev, "DMA mapping failed\n");
+Song Yoong Siang (2):
+  doc: enhance explanation of XDP Rx metadata layout and METADATA_SIZE
+  selftests/bpf: Enhance XDP Rx metadata handling
+
+ Documentation/networking/xdp-rx-metadata.rst  | 36 +++++++++++++++----
+ .../selftests/bpf/prog_tests/xdp_metadata.c   |  2 +-
+ .../selftests/bpf/progs/xdp_hw_metadata.c     |  2 +-
+ .../selftests/bpf/progs/xdp_metadata.c        |  2 +-
+ tools/testing/selftests/bpf/xdp_hw_metadata.c |  2 +-
+ tools/testing/selftests/bpf/xdp_metadata.h    |  7 ++++
+ 6 files changed, 41 insertions(+), 10 deletions(-)
+
+-- 
+2.34.1
+
