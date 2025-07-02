@@ -1,117 +1,101 @@
-Received: from mail-qv1-f73.google.com (mail-qv1-f73.google.com [209.85.219.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailrelay1-3.pub.mailoutpod3-cph3.one.com (mailrelay1-3.pub.mailoutpod3-cph3.one.com [46.30.212.0])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD9912D0C65
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 16:07:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21EBE1E0DD8
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 16:08:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.212.0
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751472469; cv=none; b=muJypofQXPxOHB3cMBqdztkVGZ0nZIwKbnVIFXkyMSj5Y4w8U0hYrxSeYb7mJ5D0A+FOXqXH9SZwzt9ssFRDbh8bXnlRrS7phEynn/sGTnxcUHJUVfTl/r9hxNvKms0FBBj026QFmH0y6uNwQqwGAJ8RZc7fcdKRjSDwv9rdyLY=
+	t=1751472495; cv=none; b=hH3TqKS5wRgBZ7F9LVAzo7cw2oL8g1Mfe/hurwoqLIR51b15IKFFpynMUBkfXSzSYn38Mlon8nRhTYL/3cpFuXhInX8smDTb3rudhhdnbIMumBbE4bKwoeITHO2k1GPYfm1InJepj7bFrp8E3YOt7he65lJvTGAnJ45ZAiIxDiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751472469; c=relaxed/simple;
-	bh=O6by9/0kauJYWEkgSglvXw/V8coiyjeIzxGi9vuHvLY=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=uCs/JfsDSn0MlxNhne8NBR8kV5/l3bk+c9g5JREehKFkNJWvrPRaCqC4HUfmia0lHXZntYuoIX4xc97n5ohBp9C+9qLeRQybHKqdMO5A1GrUCF1yKMKksOaKCBdgb+NwDmZyPxVkU6mEAGhO/Hhi48UFQHI1Q7Q9jmSQSeZ5B94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--gfengyuan.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fipUxRVm; arc=none smtp.client-ip=209.85.219.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--gfengyuan.bounces.google.com
+	s=arc-20240116; t=1751472495; c=relaxed/simple;
+	bh=7ju5f5QQv4Ss1Sfs/AisS8mYw0FUZAUiblaLEeJC/bg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Otvd3KAouDCTQU0WV+OAI2dY2ev6GV9NzfW5D/UXfIDCdXKfXlxpxQVjl2KSek44TIE4YdcGGOvNiuvxXbrG4n7bPqW8GRFe/auvGrotDezKodtsYesJlyNkJzbjWbGzHuN9J4pTTH4rROF5BtUidaVvz2PomYGMdZQKirneuK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se; spf=none smtp.mailfrom=konsulko.se; dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=TEHyX9EJ; dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=o9wVhxWH; arc=none smtp.client-ip=46.30.212.0
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=konsulko.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fipUxRVm"
-Received: by mail-qv1-f73.google.com with SMTP id 6a1803df08f44-6fd5e0bc378so128915596d6.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 09:07:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751472467; x=1752077267; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=SpkubWRCAgA3n9kTQKYoyEm6Wf3b95Ji8UJpkdBVSfE=;
-        b=fipUxRVmy6wVOCKuvi82XMq93LABnoVVGyqkqJALogfYlsso3sQLDZlLzyYT+Z/B2s
-         fEHhucflZPzO+gUKjBzv63h3Scb5a5MAx1ORmKjoF9CL81HNbgpX6QyS7ej3yu2jAMom
-         Pipn7mRimJ2OEGNL1X68JH8EF84CfrdIhhyfFuvISEjbM84K2E9szCwKvFz4V1R/voVD
-         dRgxQ2wnRpTcrHvE0x/mWWbT93J53vqwRUh6nGV0kVaUyICSWvgMywJudf3EJ1QE7GlQ
-         NGCYS89J68EcgZuOUwkfuFpqdKbRsghFA0S70GFsGV0tXUY223gjyt4lTfNrciLKSCAg
-         Kwrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751472467; x=1752077267;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SpkubWRCAgA3n9kTQKYoyEm6Wf3b95Ji8UJpkdBVSfE=;
-        b=osT4wKCWY6osMVCbTBvDmDc4M6bWOVx5MD8RDQljd0UprQm0/dwWGlz1SAQysnlBbL
-         RPPUePT0gc8QeaVdN5P20A8s8uj8sFS2PDcPLV+0gOu0iCSj5/tlwxd/ptVXAH+e+gXr
-         Kt+fpBLD5naKo+Y8hZ/ReEVZn7WJyoBDNy7OSQj0X4Qa+BRQxqGfY7rbHFHJ31+faTBi
-         ET4biImUvASp7OmXYYwZMYy8ajIMsvNsaU43cIF4+4LBuE7OfIR+Huy8Kg86Y46nE/43
-         ZNcyrzlYf/uUatYCe0ctN0eckYe81tJNmwBfMlsfMlqzu2nZJJVo/NFaV+FVp2Rsfjg7
-         RdJg==
-X-Forwarded-Encrypted: i=1; AJvYcCUjzRu3HAD2ztegTdJj975L7f/Kzkkd0hIlWXVTgQI5BCHqQf/mBCxVouSNc3MIJXIaQsS8DE1fz03est4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPYPQ8VJqLMrZUzsRaH8qsvrAteCbxqsaPJA2GRyMEkm1MaLLK
-	lbx4ya32qHhcwRX2CWF2CjTDKR/Ib91kOwRfATcy9J1bBh7wtm1vy8vh5nrY51w+TZOdeu4NGBr
-	nY8p8ylm0EdsmQNxIuA==
-X-Google-Smtp-Source: AGHT+IHGNihSVZdYeWYYvtq4JoWLcrdHbmonFDlPgo0zGbDWddFZcCsax7mf8uhd5h7l7WG3jcryV6vZXPJM6UE=
-X-Received: from qvbpj1.prod.google.com ([2002:a05:6214:4b01:b0:6fd:50bd:be0a])
- (user=gfengyuan job=prod-delivery.src-stubby-dispatcher) by
- 2002:ad4:5e8a:0:b0:6fb:25f:ac8c with SMTP id 6a1803df08f44-702b1b71361mr56520516d6.31.1751472466382;
- Wed, 02 Jul 2025 09:07:46 -0700 (PDT)
-Date: Wed,  2 Jul 2025 16:07:41 +0000
+	dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="TEHyX9EJ";
+	dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="o9wVhxWH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1751472483; x=1752077283;
+	d=konsulko.se; s=rsa1;
+	h=content-transfer-encoding:mime-version:message-id:date:subject:cc:to:from:
+	 from;
+	bh=UMBEZuVHLa1xcNzYUfGpph4y51+09sTsebcehzU27+k=;
+	b=TEHyX9EJ9RxKc06IJU12JHt+sKNP7R1ybONjhhdJkpdPUPxM5ZFDXKFMosynsX/2kOIdT9Wo/ChCI
+	 ZCcDNO0PQ29W77jmdZbgkl7QQMp22pqikcGGCCAjzk15LBua/y2t86pBH+cA2L75C5IPbqFc6SP1yD
+	 pZ04UnzIqgOzuQNlFVYpAkMQAgBkvGt4LjlQmDd8yr6tFfLkA0PSxdQze2uQmMsNkmSI8LzkNTHzPs
+	 8foY2+WElvUMZw5k63lVbq59mj1LYF2V8BQBcs6kzJ/7k0r7P3jNWTPLdzTB84EVf0GmeEu3ZhEtsF
+	 XCWH8yLOL60ToxJ7V+AZcSoGr6xi1GA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1751472483; x=1752077283;
+	d=konsulko.se; s=ed1;
+	h=content-transfer-encoding:mime-version:message-id:date:subject:cc:to:from:
+	 from;
+	bh=UMBEZuVHLa1xcNzYUfGpph4y51+09sTsebcehzU27+k=;
+	b=o9wVhxWHulFoS0B6io9RBZvwBbzmcRW8jq/tQGxLNXxOt/eda5RTtFYtZWMlBSQAjXpeX9xFNb0Eg
+	 YrMyQbJAQ==
+X-HalOne-ID: ba3eee65-575e-11f0-918a-152d8afab6bc
+Received: from slottsdator.home (host-90-238-19-233.mobileonline.telia.com [90.238.19.233])
+	by mailrelay1.pub.mailoutpod3-cph3.one.com (Halon) with ESMTPSA
+	id ba3eee65-575e-11f0-918a-152d8afab6bc;
+	Wed, 02 Jul 2025 16:08:03 +0000 (UTC)
+From: Vitaly Wool <vitaly.wool@konsulko.se>
+To: linux-mm@kvack.org
+Cc: akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	rust-for-linux@vger.kernel.org,
+	Vitaly Wool <vitaly.wool@konsulko.se>
+Subject: [PATCH v10 0/4] support large align and nid in Rust allocators
+Date: Wed,  2 Jul 2025 18:07:58 +0200
+Message-Id: <20250702160758.3609992-1-vitaly.wool@konsulko.se>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250702160741.1204919-1-gfengyuan@google.com>
-Subject: [PATCH net-next] net: account for encap headers in qdisc pkt len
-From: Fengyuan Gong <gfengyuan@google.com>
-To: Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	toke@toke.dk, edumazet@google.com, "David S . Miller" <davem@davemloft.net>
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>, 
-	Jiri Pirko <jiri@resnulli.us>, Stanislav Fomichev <sdf@fomichev.me>, 
-	Kuniyuki Iwashima <kuniyu@google.com>, Ahmed Zaki <ahmed.zaki@intel.com>, 
-	Alexander Lobakin <aleksander.lobakin@intel.com>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, cake@lists.bufferbloat.net, willemb@google.com, 
-	Fengyuan Gong <gfengyuan@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Refine qdisc_pkt_len_init to include headers up through
-the inner transport header when computing header size
-for encapsulations. Also refine net/sched/sch_cake.c
-borrowed from qdisc_pkt_len_init().
+The coming patches provide the ability for Rust allocators to set
+NUMA node and large alignment.
 
-Signed-off-by: Fengyuan Gong <gfengyuan@google.com>
----
- net/core/dev.c       | 5 ++++-
- net/sched/sch_cake.c | 5 ++++-
- 2 files changed, 8 insertions(+), 2 deletions(-)
+Changelog:
+v2 -> v3:
+* fixed the build breakage for non-MMU configs
+v3 -> v4:
+* added NUMA node support for k[v]realloc (patch #2)
+* removed extra logic in Rust helpers
+* patch for Rust allocators split into 2 (align: patch #3 and
+  NUMA ids: patch #4)
+v4 -> v5:
+* reworked NUMA node support for k[v]realloc for all 3 <alloc>_node
+  functions to have the same signature
+* all 3 <alloc>_node slab/vmalloc functions now support alignment
+  specification
+* Rust helpers are extended with new functions, the old ones are left
+  intact
+* Rust support for NUMA nodes comes first now (as patch #3)
+v5 -> v6:
+* added <alloc>_node_align functions to keep the existing interfaces
+  intact
+* clearer separation for Rust support of MUNA ids and large alignments
+v6 -> v7:
+* NUMA identifier as a new Rust type (NumaNode)
+* better documentation for changed and new functions and constants
+v7 -> v8:
+* removed NumaError
+* small cleanups per reviewers' comments
+v8 -> v9:
+* realloc functions can now reallocate memory for a different NUMA
+  node
+* better comments/explanations in the Rust part
+v9 -> v10:
+* refined behavior when memory is being reallocated for a different
+  NUMA node, comments added
+* cleanups in the Rust part, rustfmt ran
+* typos corrected
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 11da1e272ec20..dfec541f68e3a 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -3944,7 +3944,10 @@ static void qdisc_pkt_len_init(struct sk_buff *skb)
- 		unsigned int hdr_len;
- 
- 		/* mac layer + network layer */
--		hdr_len = skb_transport_offset(skb);
-+		if (!skb->encapsulation)
-+			hdr_len = skb_transport_offset(skb);
-+		else
-+			hdr_len = skb_inner_transport_offset(skb);
- 
- 		/* + transport layer */
- 		if (likely(shinfo->gso_type & (SKB_GSO_TCPV4 | SKB_GSO_TCPV6))) {
-diff --git a/net/sched/sch_cake.c b/net/sched/sch_cake.c
-index 48dd8c88903fe..dbcfb948c8670 100644
---- a/net/sched/sch_cake.c
-+++ b/net/sched/sch_cake.c
-@@ -1407,7 +1407,10 @@ static u32 cake_overhead(struct cake_sched_data *q, const struct sk_buff *skb)
- 		return cake_calc_overhead(q, len, off);
- 
- 	/* borrowed from qdisc_pkt_len_init() */
--	hdr_len = skb_transport_offset(skb);
-+	if (!skb->encapsulation)
-+		hdr_len = skb_transport_offset(skb);
-+	else
-+		hdr_len = skb_inner_transport_offset(skb);
- 
- 	/* + transport layer */
- 	if (likely(shinfo->gso_type & (SKB_GSO_TCPV4 |
--- 
-2.50.0.727.gbf7dc18ff4-goog
-
+Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
