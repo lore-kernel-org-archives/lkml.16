@@ -1,33 +1,60 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD3F2AE8B;
-	Wed,  2 Jul 2025 06:22:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 234B4219A72;
+	Wed,  2 Jul 2025 06:22:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751437352; cv=none; b=eFxopJiv9FIGNSxrGW/lLafDUfgBlb+5IgjfZ4XrvMJLSj8abJMC304wFlH1mHJzPDHLOnexLlb49UxFXZEoois7mlmSeDb/XjIt8KOoGJ5eTaZBfb4dQYYH2mmF8DlXYuCE2q69gMa2rh5IJeQowyA5w6iYjkCNsdWRKRQEmII=
+	t=1751437370; cv=none; b=OlXlsDbmaU5mIdKh/fdZja6Mi7JcVxnTzs8qfQVJLQZOqQWxeaksmXPzSqBfyRImeiX1qbHTb3r/uPoI03zTNb0MBNv7vXEkZS8ZuP5+EjWCdKfD6ZwrirKfSu8SOtOGHoKFpwJL6i+lUAJRlpjSFnjVdX6yhIbwpxPEe/yclUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751437352; c=relaxed/simple;
-	bh=YxS2qPZmDkIwQXB33JykK2wCJt5fRCCG7LCQRbDB53o=;
+	s=arc-20240116; t=1751437370; c=relaxed/simple;
+	bh=2udpDP6aJq7yw4yrO5mcybhjlkPzUQ90UwKUqm9EFK8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eeC5GiyIAT6ZZt79Fy4ttHospUZctZr9LR4uw7LcSzMQ/5jb6ivFiivW0XZmgmhf0iHFK8E5YJEFLsJVLGwvJZSbN8ZMGHK2S4/bGI6KpZZjQ/+1sgOHGSZD0w0tUsF4ZdWw4Rz86x2F5FNZVa7dJhEabPvq88EmL7mmB4u5kG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YhyF7UW+; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ue4ZusNORQFXGoSU8YLndnjTkfDlIXDGmnhjGUAA2vIUJODHBSzA8OYgU1DU5gExx5wejvB4K8pyGC9Z26QUTnZ1ngnVNqsZfUi/qQjr+37l4ckgHTBXMdOpmT8V23K8/C4kKQtStQlzcrBy+ITaT4dNyT2eBANz8hgzbvlsLEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aZ6PFaim; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YhyF7UW+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83AF3C4CEEE;
-	Wed,  2 Jul 2025 06:22:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751437352;
-	bh=YxS2qPZmDkIwQXB33JykK2wCJt5fRCCG7LCQRbDB53o=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YhyF7UW+56VlG7sbrJjtyJXsq/gPYdYTiCc57Yww1gIE/F6er2NeGjvt+lPbtTEnH
-	 ALrm1Rj9JZX+48Elg8h2UJBGy30jNpmZvhrzdMMvIb9vsEqp2UEKt/mK14G7majwkg
-	 fa8Ior9dsdpcw+AssMMwSV05PvZlTBw4nVeubRfWJBlyroJmAzvGUJncurdwzr+4qK
-	 RqVxw4nNL0UGRQ8AEUaUvyJhqzSH2NCePZl8gUB6NHuFzjeo3YxIgidRUOmMbYczB1
-	 olQuq8XeWeb9Q32w1HBvHRABdXLHlDVrCVEs1B0UhmDCpK8vUcNc7cuMtDGia16gbI
-	 ZQ87E3ffpucmw==
-Message-ID: <8d869d3b-c815-49fb-a367-c404bfb55d98@kernel.org>
-Date: Wed, 2 Jul 2025 08:22:26 +0200
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aZ6PFaim"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5622b0mE011357;
+	Wed, 2 Jul 2025 06:22:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=OtIkKF
+	5ibBxODszHLe1JM79ZjIjDUmvycEYPuH+g/Yk=; b=aZ6PFaim3JyAFxC6TijGX4
+	jcPiRPoYU29zHgEckyu5D/B3UjMecoAqrg++9kJeHnWtxZ+nAtuctAAbeGlGyXGE
+	39QGD8RoiVBUsjYCgxYIvUHMY6I4uhCPgcRHVVqWz3OdnVwuUxk6oUrmmlAOsKCp
+	zIthzOZa/Wc7vMBxaCS/xMCEtSoekToapto3JFOwGasnQJXP1sBHXDqrLZ+8rjl6
+	qQFTtCQel15tSicVv/eRnvzWXG/nmsVlTcW0f3fVYZ6ZGwICwmDBWIT2lb8s82H3
+	wxEyVFLT2aOaSdqNJ6P5xj4FGuuMZihb8uRxjY0095J4X89jFuOC4X+Vtc921+qA
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j7wrkqnq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Jul 2025 06:22:16 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 56229FnA006904;
+	Wed, 2 Jul 2025 06:22:15 GMT
+Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 47jvxme135-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Jul 2025 06:22:15 +0000
+Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
+	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5626MEld16122418
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 2 Jul 2025 06:22:14 GMT
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 53B8758045;
+	Wed,  2 Jul 2025 06:22:14 +0000 (GMT)
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E475F5805F;
+	Wed,  2 Jul 2025 06:22:09 +0000 (GMT)
+Received: from [9.109.198.197] (unknown [9.109.198.197])
+	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  2 Jul 2025 06:22:09 +0000 (GMT)
+Message-ID: <7b09167f-bf8d-4d94-9317-3cfbb4f83cd8@linux.ibm.com>
+Date: Wed, 2 Jul 2025 11:52:08 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,100 +62,110 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] dt-bindings: sound: add bindings for pm4125 audio
- codec
-To: Alexey Klimov <alexey.klimov@linaro.org>
-Cc: Srinivas Kandagatla <srini@kernel.org>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
- Lee Jones <lee@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, linux-arm-msm@vger.kernel.org,
- linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
-References: <20250626-pm4125_audio_codec_v1-v1-0-e52933c429a0@linaro.org>
- <20250626-pm4125_audio_codec_v1-v1-1-e52933c429a0@linaro.org>
- <wcmalvywoginosy5pp7wskgdzjbwbydividmk4dtwguoltiobf@muw5lzkvgu5c>
- <DAYBDV1I7HH0.1GG9U3LI5NQ97@linaro.org>
- <d24b2a88-fda7-4a8a-bb5b-73d8a928ff89@kernel.org>
- <DB13YER95DCW.1IBRJ65LED5GX@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] nbd: fix false lockdep deadlock warning
+To: Ming Lei <ming.lei@redhat.com>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: josef@toxicpanda.com, axboe@kernel.dk, hch@infradead.org, hare@suse.de,
+        linux-block@vger.kernel.org, nbd@other.debian.org,
+        linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
+        yangerkun@huawei.com, johnny.chenyi@huawei.com,
+        "yukuai (C)" <yukuai3@huawei.com>
+References: <20250627092348.1527323-1-yukuai1@huaweicloud.com>
+ <aF56oVEzTygIOUTN@fedora>
+ <c2fbaacc-62a1-4a98-4157-2637b7f242b7@huaweicloud.com>
+ <197b6dca-56be-438d-a60f-21011367c5ed@linux.ibm.com>
+ <99b4afce-de05-ddcb-2634-b19214cf4534@huaweicloud.com>
+ <aGSaVhiH2DeTvtdr@fedora>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <DB13YER95DCW.1IBRJ65LED5GX@linaro.org>
+From: Nilay Shroff <nilay@linux.ibm.com>
+In-Reply-To: <aGSaVhiH2DeTvtdr@fedora>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=E/PNpbdl c=1 sm=1 tr=0 ts=6864d018 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=PL8FM_zyLEa3LRvGiX0A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: 25iKB3x1FaUALPZA2WTuXGyERogZkYcq
+X-Proofpoint-ORIG-GUID: 25iKB3x1FaUALPZA2WTuXGyERogZkYcq
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDA0OCBTYWx0ZWRfX50OdNXDO+dAq CZ2jrsSDupmt0aF42DN2Mk8JtfgAuACe6/6v5SVJAoSVy2ytkz3HlDFkzZ0P6pkOupjFTzpTmyq ve/T0RCB4AU9mf//7X9Zb1VxCBMbYmgxRvyvwiYgk2gWnx0O8V7UzAs4j5cNgc5rhUEYE86W0aH
+ Ux8BblrleShXmz6XuN3CZ94kYCywE3hnfxof4li5cnOb6HiEuMtsl9e1CmXqG8ZnKZ5YNIH3zhV 0xGKD8hv1GxmNAFRWaGzJCG+xHJgeCENneEtG2Y3Z7kl81jWcPN/qi9Njs4vc+47SDfkOUms/Z7 C0A622TMdk99o6yAw+zbSV6CHRt2WsbPMDKt4weqJWW/VhAu+5AqbFEJaNEWnqIT0kVSWPKNZfL
+ gjWHaQRQilyCKe06ILizjco+EwKf2F3ynUV8m1SrMC1JNeEoN5CpUY91FKZY9idARaINqg/Y
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-01_02,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ bulkscore=0 priorityscore=1501 phishscore=0 suspectscore=0 mlxlogscore=999
+ lowpriorityscore=0 mlxscore=0 clxscore=1015 adultscore=0 impostorscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507020048
 
-On 02/07/2025 01:30, Alexey Klimov wrote:
->>>>> +  It has RX and TX Soundwire slave devices. This bindings is for the
->>>>> +  slave devices.
->>>>
->>>> Last sentence is redundant and makes no sense. Codec has only slave
->>>> devices, so how this can be anything else than for slave devices?
->>>
->>> This came from other similar files that describe bindings for child codec nodes
->>> of soundwire nodes. For example from qcom,wcd937x-sdw.yaml.
->>> Should this be rephrased to "This bindings is for the soundwire slave devices." ?
+
+
+On 7/2/25 8:02 AM, Ming Lei wrote:
+> On Wed, Jul 02, 2025 at 09:12:09AM +0800, Yu Kuai wrote:
+>> Hi,
 >>
->> You just pasted the same, so I don't get how you want to rephrase into
->> the same sentence.
+>> 在 2025/07/01 21:28, Nilay Shroff 写道:
+>>>
+>>>
+>>> On 6/28/25 6:18 AM, Yu Kuai wrote:
+>>>> Hi,
+>>>>
+>>>> 在 2025/06/27 19:04, Ming Lei 写道:
+>>>>> I guess the patch in the following link may be simper, both two take
+>>>>> similar approach:
+>>>>>
+>>>>> https://lore.kernel.org/linux-block/aFjbavzLAFO0Q7n1@fedora/
+>>>>
+>>>> I this the above approach has concurrent problems if nbd_start_device
+>>>> concurrent with nbd_start_device:
+>>>>
+>>>> t1:
+>>>> nbd_start_device
+>>>> lock
+>>>> num_connections = 1
+>>>> unlock
+>>>>      t2:
+>>>>      nbd_add_socket
+>>>>      lock
+>>>>      config->num_connections++
+>>>>      unlock
+>>>>          t3:
+>>>>          nbd_start_device
+>>>>          lock
+>>>>          num_connections = 2
+>>>>          unlock
+>>>>          blk_mq_update_nr_hw_queues
+>>>>
+>>>> blk_mq_update_nr_hw_queues
+>>>> //nr_hw_queues updated to 1 before failure
+>>>> return -EINVAL
+>>>>
+>>>
+>>> In the above case, yes I see that t1 would return -EINVAL (as
+>>> config->num_connections doesn't match with num_connections)
+>>> but then t3 would succeed to update nr_hw_queue (as both
+>>> config->num_connections and num_connections set to 2 this
+>>> time). Isn't it? If yes, then the above patch (from Ming)
+>>> seems good.
+>>
+>> Emm, I'm confused, If you agree with the concurrent process, then
+>> t3 update nr_hw_queues to 2 first and return sucess, later t1 update
+>> nr_hw_queues back to 1 and return failure.
 > 
-> Not really.
-> Original sentence: "This bindings is for the slave devices."
-> Sentence from my email: "This bindings is for the soundwire slave devices."
+> It should be easy to avoid failure by simple retrying.
 > 
-> The difference is 1 word.
-> If it doesn't work, then maybe any suggestions?
-> 
-> Maybe "This bindings is for audio codec node that must be a child node of the
-> associated soundwire master node."?
-No, drop, it's not the pattern in the bindings. We don't explain that
-I2C device should be in I2C bus, because that's obvious. Saying this is
-a Soundwire device should be enough.
+Yeah I think retry should be a safe bet here. 
 
-Best regards,
-Krzysztof
+On another note, synchronizing nbd_start_device and nbd_add_socket
+using nbd->task_setup looks more complex and rather we may use 
+nbd->pid to synchronize both. We need to move setting of nbd->pid
+before we invoke blk_mq_update_nr_hw_queues in nbd_start_device.
+Then in nbd_add_socket we can evaluate nbd->pid and if it's 
+non-NULL then we could assume that either nr_hw_queues update is in 
+progress or device has been setup and so return -EBUSY. I think
+anyways updating number of connections once device is configured
+would not be possible, so once nbd_start_device is initiated, we
+shall prevent user adding more connections. If we follow this
+approach then IMO we don't need to add retry discussed above.
+
+Thanks,
+--Nilay
