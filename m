@@ -1,409 +1,182 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1158C2F6F86;
-	Wed,  2 Jul 2025 23:08:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D6E243964;
+	Wed,  2 Jul 2025 23:09:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751497717; cv=none; b=qV36ivUhtKelfm1B61y0ya/Y1/mGFBVOtisHBTSi5c0YscL1bdaQciZsN8clqlz1nQgeRE8QGUDzxymsLqcBbxBq+8KB8reEylvu4B4SIvIDV48T7377ITcoyOwKJF6tC0pN0Qvo5erhdjbjzZVK6AGxpbsIDM5qN44Pi3ZiMGk=
+	t=1751497787; cv=none; b=Psi7rVl+yeNeMpplOatMxTdWeQowSdut/fQjvM0Q+kGLAL38bDX7ox2CQ+qIaeH8zJR/+WrXwRWzCcNR3Bf0WfzFTh29fY7zBDWMYclGLUeUGJ1PUDuKcadc5HSAB3cqSHddM9PGeVyCD3EllFeNeUSVWgqKVPxEN08zg6Sy2Qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751497717; c=relaxed/simple;
-	bh=jkBbAhmMyc0MVV9hyhNL21f7zsQ0Ubyu8peDPdVynZc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R3mCtZBbqR6q+CAClgKscHRm5JVY0bayFleh7GtBZ4cx0Eh0o5hU53BxSzYGqeZxXzsILCCVqoWbmmLNTrKqfyqlQYapyHos9lxUeQJxJ15I+ksGTawcF7Bp9VNkU3UcNgETYi8enyPMznFXhdbrqT6iHHPkl/Z4giG97M2Cb4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Iel2kQnM; arc=none smtp.client-ip=209.85.208.49
+	s=arc-20240116; t=1751497787; c=relaxed/simple;
+	bh=MhO+pwJmoll1p+yzF93yS9d1MkkzU6Tx+rIh+F8aVg8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fcs93UT5Rd76tNylGxYUoEs2q4RBRkztJ8fa1V6TQNT58SAzY8mR4Han6JsRb4cBR227ggTprPQv2yeOyC7eahw4R4te1bHMfTQLs2tuYpqWcCTCscyDG5m0eB2UGX1eCvQ0Eofa+T9HFdR5cG/Xi9wpz9sg6CHYJJpA3VANAFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hw2E8w9d; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iel2kQnM"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-606c6bb1d03so1171402a12.1;
-        Wed, 02 Jul 2025 16:08:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hw2E8w9d"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-234b440afa7so74810285ad.0;
+        Wed, 02 Jul 2025 16:09:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751497713; x=1752102513; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OVBwNL6M5w5Yn3pFicOPIVN6N33/P4g9gmRLRuIsmOM=;
-        b=Iel2kQnMvhwk7ebEEFkoXegIe1V5hT9go+MxQf+6HKxhVdS4hkForUCFrGbBicmsd9
-         eDjzeF60VW+MAfx8jEV6rlIClD4Mv94V9WsRAu6Slkc6brDHqInjTlrrueDH5sy0deaO
-         8Y4ep6DZapYwvkLZBKv5oB5QEP2fLtHE4hyfpoRhYH6oDWufVG5GfIgefqV065GH+Pla
-         XFc3yA2ZdPUR1AEMMyuU0q5KwigDZwChwdCLqbqC8kjG8EvN7of8CsJ8dZekC1ZIlvBS
-         V8fqmym97wvEsgWlSP+sglEOanzZE1OOgUWGTz+1soCZSSDfFB+anZU3IDRLyboRl+Bs
-         l1pw==
+        d=gmail.com; s=20230601; t=1751497785; x=1752102585; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XeivJRV1NlwEM68DYnpxYNj/SFkkK7NrLDkX6W6GBRM=;
+        b=hw2E8w9dJnzqHd+Y+vypjVmsCnko1G46gLjMZ9E3NWow3FfDCHs3g/YRYvlKZVWNSj
+         BKw12QCGNzSm6lWnY1r5oqWvhJV7tshnaNzIhf4n6yT5Q3ouSdxkdYzGSZ7CoZmA6nEZ
+         tqKyFcTKgkVKzZrWJ15G9AGRj5yVSRLXl91h00JY9TLgw621rcZASXdWQ0Ds8qdes5ph
+         oxax5xB/B4T7zpRNR+BGlHjOiuqQdlPvATw1kiFKGQLna5T54txE2f2ZiuJWgzsMepm5
+         mID6riMT6Z/SkircN7sdjh8Pi450DvcDX+6QhSZkSSLU+rEInJ8meYlcudRbIR/MFNxq
+         pvDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751497713; x=1752102513;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OVBwNL6M5w5Yn3pFicOPIVN6N33/P4g9gmRLRuIsmOM=;
-        b=Iu1xqsSGWfn2MViBkmMR9EfdCsLx1M3vFEVcHezcehynRu9Hy8o8Lgtajvc3IU0mP2
-         8u0wk+sD0AWagxkk6NtOTh6/40mvw4OM1LpVyYWS5YJGudnD9BgV3cU/6vug/URU1wlX
-         QrAU7ccx6aVHQ2T1UzROF93GrJY6448PAS9ex6YuvpvI+DQ4TM57hzVV0URiHao+uNHR
-         aqI6i0S7JuT7fcW97s2HR2RK5SrA/sq/4pxhDbTqX4LL0+bk1YVYsIsuCqdareA0zOdk
-         a9wnKZDTFRRsWz7Rvg9KyL0O2t+n61j0S+z7mRimaD5+zwjkIcrab6uBn/cSr7vhyLM4
-         lxrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUDqbJAAODfrdjt9XTyX7rGPSvbqURWA/al0e8ncSacY50a8TdEPVmUDMyEiDwoFN15BGjVuXrtNpuUG7Y+@vger.kernel.org, AJvYcCUVq+7Hl+/D0c/LlfxuEnADuiTLp2918MmDKiWE7mKUfVIiF2X46iK2MjU2bk3xYKP7pv0MaJdtBPEz@vger.kernel.org, AJvYcCVF/ANGzv/hb5zS6DB9OyIb7BNAo/gM6+Hd1ZnFgRDMV+sYago6JkHiJGY+Hs6hTOi/vCrf6sBulN0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOmSG3F8jems+uJrNf4f8pZwfHICY02CN7t/QjkgrDB1yDPpTU
-	tdZibKq+NP010RBiPd5vbOlOKQN5w3Ut7CZtI+FN5UZee15M9fuPMPtz
-X-Gm-Gg: ASbGnctItdoilG+PbmZcaJpHyam0wFAxwF0JGrWdMlhvpQwEXCo71x4PoJPLaaKI9PO
-	tuYp29Fqvpn6Sts0qWPnsqbmhyBSxB/fdlD3JB7ysaGsGCZBAtFOEsObJg7wSXqickp1XRaCiU4
-	jSq6M2YDHsIoQL2wgmLPpCXqwWvk3xB6vka51w/1hHtkb5Gm5dAb326RIeH0InoAJD0ZvheJ3HE
-	k6NqfW+9j6GtLFC4NL8fUBl6y8fid51MI62zbsb4tbwsZAst5ObDlilGH3qM6wQsEXiaePxA1/k
-	ztSKpJtsd+wG+QjhEOB9J85r6EdC+OabEWQlcWvryINiGwLJWiWx5MqR0qALabfD5uh0w/cDuHc
-	mYnKTxN4oxrACCOD6WlYUA6s3AIzdykZ8
-X-Google-Smtp-Source: AGHT+IEpv3HHtORLiwaicK/Hll0VtR5UFuFah+y3+rr4z8H2KVvW5KE6CfAyqZLCfiM/b7L9QwRwUg==
-X-Received: by 2002:a17:907:3d8c:b0:ae0:ba0e:ae59 with SMTP id a640c23a62f3a-ae3e2587026mr6383966b.7.1751497713121;
-        Wed, 02 Jul 2025 16:08:33 -0700 (PDT)
-Received: from localhost.localdomain (84-72-156-211.dclient.hispeed.ch. [84.72.156.211])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353ca18bbsm1158355566b.151.2025.07.02.16.08.31
+        d=1e100.net; s=20230601; t=1751497785; x=1752102585;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XeivJRV1NlwEM68DYnpxYNj/SFkkK7NrLDkX6W6GBRM=;
+        b=YhOpJoxKBfs6L1lTgtMOePle0KHZ9qiisfFAF6TnrIdUqlkeTxpD6p2MSlfsiusXCr
+         t1SVDwNobG9HyUaCXGVleSKGW+o52EfcuVu1cjTgZ6+FewRuAlCR6R0982bdB9MtGhpA
+         FZ1jiwYqIyxNNuPBrwxTa5onzSPmffmTNRU7XtbnMzkxOURXrB4brBFtR7uhrFWePyVo
+         AOmn9RbI0KVRx2j0+c4jIkhHVqEJOZlBLywcUDjWT5rKO+5dJQkwI68Wem92dzd2LnWV
+         WZPPL0DCambF0vRObZr72go/0+rvYUSdhcsprKyLh6ZKQE/8s2vEGhT/I/tSPV2cb3cf
+         x+OQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUa0U/cKqJ1mTfnrjfyBXBRFm5hTpccCMcY+HInfA3/m6BLUcT/kXzBq8hgqU2v/04FfgOoeMV1eMi5@vger.kernel.org, AJvYcCWBMh3ROUwnXeYHc//dvM+FYcNYA5huO+/Siz6EC9Y6sxjmnJrYdek8vJ8W1645GabYNoqEqe7KmDYC7j3u@vger.kernel.org
+X-Gm-Message-State: AOJu0YxncNucH1z1bw2MsdPoPCBcwhGC2bCqVcHONGDBH+Zjt8ghkpiT
+	MwUAYsBGt731DFIs3RqC22eu6cA0pzn09Y9TE+BQaBqnDoqkx5qPdvne
+X-Gm-Gg: ASbGncum0qveftpexNXOFUONvUwTpgHqivnTEhejGlUpOfzT6WMuAQoD7WpFp3ZahgA
+	e+y3lOx9PB0HXni1WOWGLXeXYpt9zK1c8layK83zTnJol3NjqKj91fs5u+zGNwx3YQLQbFjl/lU
+	AEXAvbJYv3Bi8cpGoaA3HytE7W6+hLrb3FnufZC/jlUfTAVdgNggou3EBrOiJy27D04X1U8HCRX
+	4JV6ceDfeGdvvYx4OVF6SoNbBKdUTlBGacpX67UzxA5qQObLAZ6cgYdHeqCy8kJLj5mvkEZzldF
+	UpLPZ2TSmYp/AobIk2VgpEXFKGtlvH8vqLAi7LYVaw7n00lUAxBox1yZIziPjARoNF1B0aDg0fn
+	QOkU/iVNy3e5AUP9mOCfbBVDH3iJP4SOvlZXd09I=
+X-Google-Smtp-Source: AGHT+IEVdT1zTpOAW82Mu/cKqzXbhhazsjZMaKYPAm5vkqC5kKsvAAVyqV0n0+btI2SrjFS8l0lO5Q==
+X-Received: by 2002:a17:903:1ac4:b0:234:cb4a:bc48 with SMTP id d9443c01a7336-23c6e593323mr74668905ad.31.1751497785135;
+        Wed, 02 Jul 2025 16:09:45 -0700 (PDT)
+Received: from localhost.localdomain (c-76-133-73-115.hsd1.ca.comcast.net. [76.133.73.115])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb2e244fsm142696605ad.12.2025.07.02.16.09.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 16:08:32 -0700 (PDT)
-From: Lothar Rubusch <l.rubusch@gmail.com>
-To: jic23@kernel.org,
-	dlechner@baylibre.com,
-	nuno.sa@analog.com,
-	andy@kernel.org,
-	corbet@lwn.net,
-	lucas.p.stankus@gmail.com,
-	lars@metafoo.de,
-	Michael.Hennerich@analog.com,
-	bagasdotme@gmail.com
-Cc: l.rubusch@gmail.com,
-	linux-iio@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v7 8/8] docs: iio: add ADXL313 accelerometer
-Date: Wed,  2 Jul 2025 23:08:19 +0000
-Message-Id: <20250702230819.19353-9-l.rubusch@gmail.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250702230819.19353-1-l.rubusch@gmail.com>
-References: <20250702230819.19353-1-l.rubusch@gmail.com>
+        Wed, 02 Jul 2025 16:09:44 -0700 (PDT)
+Date: Wed, 2 Jul 2025 16:09:42 -0700
+From: Tao Ren <rentao.bupt@gmail.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+	Tao Ren <taoren@meta.com>
+Subject: Re: [PATCH 5/5] ARM: dts: aspeed: Add Facebook Darwin (AST2600) BMC
+Message-ID: <aGW8Nm8ZWMwRYVOo@localhost.localdomain>
+References: <20250702050421.13729-1-rentao.bupt@gmail.com>
+ <20250702050421.13729-6-rentao.bupt@gmail.com>
+ <a6f6966b-50ee-4b4f-9422-96c6ac9391a2@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a6f6966b-50ee-4b4f-9422-96c6ac9391a2@lunn.ch>
 
-Add documentation for the ADXL313 accelerometer driver.
+On Wed, Jul 02, 2025 at 09:40:40AM +0200, Andrew Lunn wrote:
+> On Tue, Jul 01, 2025 at 10:04:16PM -0700, rentao.bupt@gmail.com wrote:
+> > From: Tao Ren <rentao.bupt@gmail.com>
+> > 
+> > Add initial device tree for the Meta (Facebook) Darwin AST2600 BMC.
+> > 
+> > Darwin is Meta's rack switch platform with an AST2600 BMC integrated for
+> > health monitoring purpose.
+> > 
+> > Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+> > ---
+> >  arch/arm/boot/dts/aspeed/Makefile             |  1 +
+> >  .../dts/aspeed/aspeed-bmc-facebook-darwin.dts | 92 +++++++++++++++++++
+> >  2 files changed, 93 insertions(+)
+> >  create mode 100644 arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-darwin.dts
+> > 
+> > diff --git a/arch/arm/boot/dts/aspeed/Makefile b/arch/arm/boot/dts/aspeed/Makefile
+> > index 2e5f4833a073..debbfc0151f8 100644
+> > --- a/arch/arm/boot/dts/aspeed/Makefile
+> > +++ b/arch/arm/boot/dts/aspeed/Makefile
+> > @@ -20,6 +20,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
+> >  	aspeed-bmc-facebook-bletchley.dtb \
+> >  	aspeed-bmc-facebook-catalina.dtb \
+> >  	aspeed-bmc-facebook-cmm.dtb \
+> > +	aspeed-bmc-facebook-darwin.dtb \
+> >  	aspeed-bmc-facebook-elbert.dtb \
+> >  	aspeed-bmc-facebook-fuji.dtb \
+> >  	aspeed-bmc-facebook-galaxy100.dtb \
+> > diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-darwin.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-darwin.dts
+> > new file mode 100644
+> > index 000000000000..f902230dada3
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-darwin.dts
+> > @@ -0,0 +1,92 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +// Copyright (c) 2021 Facebook Inc.
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include "ast2600-facebook-netbmc-common.dtsi"
+> > +
+> > +/ {
+> > +	model = "Facebook Darwin BMC";
+> > +	compatible = "facebook,darwin-bmc", "aspeed,ast2600";
+> > +
+> > +	aliases {
+> > +		serial0 = &uart5;
+> > +		serial1 = &uart1;
+> > +		serial2 = &uart2;
+> > +		serial3 = &uart3;
+> > +	};
+> > +
+> > +	chosen {
+> > +		stdout-path = &uart5;
+> > +	};
+> > +
+> > +	iio-hwmon {
+> > +		compatible = "iio-hwmon";
+> > +		io-channels = <&adc0 0>, <&adc0 1>, <&adc0 2>, <&adc0 3>,
+> > +			      <&adc0 4>, <&adc0 5>, <&adc0 6>, <&adc0 7>,
+> > +			      <&adc1 0>, <&adc1 1>, <&adc1 2>, <&adc1 3>,
+> > +			      <&adc1 4>, <&adc1 5>, <&adc1 6>, <&adc1 7>;
+> > +	};
+> > +
+> > +	spi_gpio: spi {
+> > +		num-chipselects = <1>;
+> > +		cs-gpios = <&gpio0 ASPEED_GPIO(X, 0) GPIO_ACTIVE_LOW>;
+> > +	};
+> > +};
+> > +
+> > +/*
+> > + * BMC's "mac3" controller is connected to BCM53134P's IMP_RGMII port
+> > + * directly (fixed link, no PHY in between).
+> > + * Note: BMC's "mdio0" controller is connected to BCM53134P's MDIO
+> > + * interface, and the MDIO channel will be enabled in dts later (when
+> > + * "bcm53xx" driver's probe failure is solved on the platform).
+> > + */
+> > +&mac3 {
+> > +	status = "okay";
+> > +	phy-mode = "rgmii";
+> 
+> How do RGMII delays work? Connections to switches have to be handled
+> different to PHYs, to avoid double delays. But is there extra long
+> clock lines? Or are you expecting the switch to add the delays?
+> 
+>       Andrew
 
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
-Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
----
- Documentation/iio/adxl313.rst | 289 ++++++++++++++++++++++++++++++++++
- Documentation/iio/index.rst   |   1 +
- 2 files changed, 290 insertions(+)
- create mode 100644 Documentation/iio/adxl313.rst
+Hi Andrew,
 
-diff --git a/Documentation/iio/adxl313.rst b/Documentation/iio/adxl313.rst
-new file mode 100644
-index 000000000000..41b9cc37981c
---- /dev/null
-+++ b/Documentation/iio/adxl313.rst
-@@ -0,0 +1,289 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===============
-+ADXL313 driver
-+===============
-+
-+This driver supports Analog Device's ADXL313 on SPI/I2C bus.
-+
-+1. Supported devices
-+====================
-+
-+* `ADXL313 <https://www.analog.com/ADXL313>`_
-+
-+The ADXL313is a low noise density, low power, 3-axis accelerometer with
-+selectable measurement ranges. The ADXL313 supports the ±0.5 g, ±1 g, ±2 g and
-+±4 g ranges.
-+
-+2. Device attributes
-+====================
-+
-+Accelerometer measurements are always provided.
-+
-+Each IIO device, has a device folder under ``/sys/bus/iio/devices/iio:deviceX``,
-+where X is the IIO index of the device. Under these folders reside a set of
-+device files, depending on the characteristics and features of the hardware
-+device in questions. These files are consistently generalized and documented in
-+the IIO ABI documentation.
-+
-+The following tables show the adxl313 related device files, found in the
-+specific device folder path ``/sys/bus/iio/devices/iio:deviceX``.
-+
-++---------------------------------------------------+----------------------------------------------------------+
-+| 3-Axis Accelerometer related device files         | Description                                              |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_scale                                    | Scale for the accelerometer channels.                    |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_x_calibbias                              | Calibration offset for the X-axis accelerometer channel. |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_x_raw                                    | Raw X-axis accelerometer channel value.                  |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_y_calibbias                              | y-axis acceleration offset correction                    |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_y_raw                                    | Raw Y-axis accelerometer channel value.                  |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_z_calibbias                              | Calibration offset for the Z-axis accelerometer channel. |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_z_raw                                    | Raw Z-axis accelerometer channel value.                  |
-++---------------------------------------------------+----------------------------------------------------------+
-+
-++---------------------------------------+----------------------------------------------+
-+| Miscellaneous device files            | Description                                  |
-++---------------------------------------+----------------------------------------------+
-+| name                                  | Name of the IIO device.                      |
-++---------------------------------------+----------------------------------------------+
-+| in_accel_sampling_frequency           | Currently selected sample rate.              |
-++---------------------------------------+----------------------------------------------+
-+| in_accel_sampling_frequency_available | Available sampling frequency configurations. |
-++---------------------------------------+----------------------------------------------+
-+
-+The iio event related settings, found in ``/sys/bus/iio/devices/iio:deviceX/events``.
-+
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_mag_adaptive_falling_period              | AC coupled inactivity time.                              |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_mag_adaptive_falling_value               | AC coupled inactivity threshold.                         |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_mag_adaptive_rising_value                | AC coupled activity threshold.                           |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_mag_falling_period                       | Inactivity time.                                         |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_mag_falling_value                        | Inactivity threshold.                                    |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_mag_rising_value                         | Activity threshold.                                      |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_x\&y\&z_mag_adaptive_falling_en          | Enable or disable AC coupled inactivity events.          |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_x\|y\|z_mag_adaptive_rising_en           | Enable or disable AC coupled activity events.            |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_x\&y\&z_mag_falling_en                   | Enable or disable inactivity events.                     |
-++---------------------------------------------------+----------------------------------------------------------+
-+| in_accel_x\|y\|z_mag_rising_en                    | Enable or disable activity events.                       |
-++---------------------------------------------------+----------------------------------------------------------+
-+
-+The default coupling is DC coupled events. In this case the threshold will
-+be in place as such, where for the AC coupled case an adaptive threshold
-+(described in the datasheet) will be applied by the sensor. In general activity,
-+i.e. ``ACTIVITY`` or ``ACTIVITY_AC`` and inactivity i.e. ``INACTIVITY`` or
-+``INACTIVITY_AC``, will be linked with auto-sleep enabled when both are enabled.
-+This means in particular ``ACTIVITY`` can also be linked to ``INACTIVITY_AC``
-+and vice versa, without problem.
-+
-+Note here, that ``ACTIVITY`` and ``ACTIVITY_AC`` are mutually exclusive. This
-+means, that the most recent configuration will be set. For instance, if
-+``ACTIVITY`` is enabled, and ``ACTIVITY_AC`` will be enabled, the sensor driver
-+will have ``ACTIVITY`` disabled, but ``ACTIVITY_AC`` enabled. The same is valid
-+for inactivity. In case of turning off an event, it has to match to what is
-+actually enabled, i.e. enabling ``ACTIVITY_AC`` and then disabling ``ACTIVITY``
-+is simply ignored as it is already disabled. Or, as if it was any other not
-+enabled event, too.
-+
-+Channels processed values
-+-------------------------
-+
-+A channel value can be read from its _raw attribute. The value returned is the
-+raw value as reported by the devices. To get the processed value of the channel,
-+apply the following formula:
-+
-+.. code-block::
-+
-+        processed value = (_raw + _offset) * _scale
-+
-+Where _offset and _scale are device attributes. If no _offset attribute is
-+present, simply assume its value is 0.
-+
-+The ADXL313 driver offers data for a single types of channels, the table below
-+shows the measurement units for the processed value, which are defined by the
-+IIO framework:
-+
-++-------------------------------------+---------------------------+
-+| Channel type                        | Measurement unit          |
-++-------------------------------------+---------------------------+
-+| Acceleration on X, Y, and Z axis    | Meters per Second squared |
-++-------------------------------------+---------------------------+
-+
-+Usage examples
-+--------------
-+
-+Show device name:
-+
-+.. code-block:: bash
-+
-+        root:/sys/bus/iio/devices/iio:device0> cat name
-+        adxl313
-+
-+Show accelerometer channels value:
-+
-+.. code-block:: bash
-+
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_x_raw
-+        2
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_y_raw
-+        -57
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_z_raw
-+        2
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_scale
-+        0.009576806
-+
-+The accelerometer values will be:
-+
-+- X-axis acceleration = in_accel_x_raw * in_accel_scale = 0.0191536 m/s^2
-+- Y-axis acceleration = in_accel_y_raw * in_accel_scale = -0.5458779 m/s^2
-+- Z-axis acceleration = in_accel_z_raw * in_accel_scale = 0.0191536 m/s^2
-+
-+Set calibration offset for accelerometer channels. Note, that the calibration
-+will be rounded according to the graduation of LSB units:
-+
-+.. code-block:: bash
-+
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_x_calibbias
-+        0
-+
-+        root:/sys/bus/iio/devices/iio:device0> echo 50 > in_accel_x_calibbias
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_x_calibbias
-+        48
-+
-+Set sampling frequency:
-+
-+.. code-block:: bash
-+
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_sampling_frequency
-+        100.000000
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_sampling_frequency_available
-+        6.250000 12.500000 25.000000 50.000000 100.000000 200.000000 400.000000 800.000000 1600.000000 3200.000000
-+
-+        root:/sys/bus/iio/devices/iio:device0> echo 400 > in_accel_sampling_frequency
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_sampling_frequency
-+        400.000000
-+
-+3. Device buffers and triggers
-+==============================
-+
-+This driver supports IIO buffers.
-+
-+All devices support retrieving the raw acceleration measurements using buffers.
-+
-+Usage examples
-+--------------
-+
-+Select channels for buffer read:
-+
-+.. code-block:: bash
-+
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > scan_elements/in_accel_x_en
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > scan_elements/in_accel_y_en
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > scan_elements/in_accel_z_en
-+
-+Set the number of samples to be stored in the buffer:
-+
-+.. code-block:: bash
-+
-+        root:/sys/bus/iio/devices/iio:device0> echo 10 > buffer/length
-+
-+Enable buffer readings:
-+
-+.. code-block:: bash
-+
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > buffer/enable
-+
-+Obtain buffered data:
-+
-+.. code-block:: bash
-+
-+        root:/sys/bus/iio/devices/iio:device0> hexdump -C /dev/iio\:device0
-+        ...
-+        000000d0  01 fc 31 00 c7 ff 03 fc  31 00 c7 ff 04 fc 33 00  |..1.....1.....3.|
-+        000000e0  c8 ff 03 fc 32 00 c5 ff  ff fc 32 00 c7 ff 0a fc  |....2.....2.....|
-+        000000f0  30 00 c8 ff 06 fc 33 00  c7 ff 01 fc 2f 00 c8 ff  |0.....3...../...|
-+        00000100  02 fc 32 00 c6 ff 04 fc  33 00 c8 ff 05 fc 33 00  |..2.....3.....3.|
-+        00000110  ca ff 02 fc 31 00 c7 ff  02 fc 30 00 c9 ff 09 fc  |....1.....0.....|
-+        00000120  35 00 c9 ff 08 fc 35 00  c8 ff 02 fc 31 00 c5 ff  |5.....5.....1...|
-+        00000130  03 fc 32 00 c7 ff 04 fc  32 00 c7 ff 02 fc 31 00  |..2.....2.....1.|
-+        00000140  c7 ff 08 fc 30 00 c7 ff  02 fc 32 00 c5 ff ff fc  |....0.....2.....|
-+        00000150  31 00 c5 ff 04 fc 31 00  c8 ff 03 fc 32 00 c8 ff  |1.....1.....2...|
-+        00000160  01 fc 31 00 c7 ff 05 fc  31 00 c3 ff 04 fc 31 00  |..1.....1.....1.|
-+        00000170  c5 ff 04 fc 30 00 c7 ff  03 fc 31 00 c9 ff 03 fc  |....0.....1.....|
-+        ...
-+
-+Enabling activity detection:
-+
-+.. code-block:: bash
-+        root:/sys/bus/iio/devices/iio:device0> echo 1.28125 > ./events/in_accel_mag_rising_value
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > ./events/in_accel_x\|y\|z_mag_rising_en
-+
-+        root:/sys/bus/iio/devices/iio:device0> iio_event_monitor adxl313
-+        Found IIO device with name adxl313 with device number 0
-+        <only while moving the sensor>
-+        Event: time: 1748795762298351281, type: accel(x|y|z), channel: 0, evtype: mag, direction: rising
-+        Event: time: 1748795762302653704, type: accel(x|y|z), channel: 0, evtype: mag, direction: rising
-+        Event: time: 1748795762304340726, type: accel(x|y|z), channel: 0, evtype: mag, direction: rising
-+        ...
-+
-+Disabling activity detection:
-+
-+.. code-block:: bash
-+        root:/sys/bus/iio/devices/iio:device0> echo 0 > ./events/in_accel_x\|y\|z_mag_rising_en
-+        root:/sys/bus/iio/devices/iio:device0> iio_event_monitor adxl313
-+        <nothing>
-+
-+Enabling inactivity detection:
-+
-+.. code-block:: bash
-+        root:/sys/bus/iio/devices/iio:device0> echo 1.234375 > ./events/in_accel_mag_falling_value
-+        root:/sys/bus/iio/devices/iio:device0> echo 5 > ./events/in_accel_mag_falling_period
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > ./events/in_accel_x\&y\&z_mag_falling_en
-+
-+        root:/sys/bus/iio/devices/iio:device0> iio_event_monitor adxl313
-+        Found IIO device with name adxl313 with device number 0
-+        Event: time: 1748796324115962975, type: accel(x&y&z), channel: 0, evtype: mag, direction: falling
-+        Event: time: 1748796329329981772, type: accel(x&y&z), channel: 0, evtype: mag, direction: falling
-+        Event: time: 1748796334543399706, type: accel(x&y&z), channel: 0, evtype: mag, direction: falling
-+        ...
-+        <every 5s now indicates inactivity>
-+
-+Now, enabling activity, e.g. the AC coupled counter-part ``ACTIVITY_AC``
-+
-+.. code-block:: bash
-+        root:/sys/bus/iio/devices/iio:device0> echo 1.28125 > ./events/in_accel_mag_rising_value
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > ./events/in_accel_x\|y\|z_mag_rising_en
-+
-+        root:/sys/bus/iio/devices/iio:device0> iio_event_monitor adxl313
-+        Found IIO device with name adxl313 with device number 0
-+        <some activity with the sensor>
-+        Event: time: 1748796880354686777, type: accel(x|y|z), channel: 0, evtype: mag_adaptive, direction: rising
-+        <5s of inactivity, then>
-+        Event: time: 1748796885543252017, type: accel(x&y&z), channel: 0, evtype: mag, direction: falling
-+        <some other activity detected by accelerating the sensor>
-+        Event: time: 1748796887756634678, type: accel(x|y|z), channel: 0, evtype: mag_adaptive, direction: rising
-+        <again, 5s of inactivity>
-+        Event: time: 1748796892964368352, type: accel(x&y&z), channel: 0, evtype: mag, direction: falling
-+        <stays like this until next activity in auto-sleep>
-+
-+Note, when AC coupling is in place, the event type will be of ``mag_adaptive``.
-+AC- or DC-coupled (the default) events are used similarly.
-+
-+4. IIO Interfacing Tools
-+========================
-+
-+See Documentation/iio/iio_tools.rst for the description of the available IIO
-+interfacing tools.
-diff --git a/Documentation/iio/index.rst b/Documentation/iio/index.rst
-index 2d6afc5a8ed5..c106402a91f7 100644
---- a/Documentation/iio/index.rst
-+++ b/Documentation/iio/index.rst
-@@ -31,6 +31,7 @@ Industrial I/O Kernel Drivers
-    adis16475
-    adis16480
-    adis16550
-+   adxl313
-    adxl380
-    bno055
-    ep93xx_adc
--- 
-2.39.5
+The delays are introduced in BMC MAC by setting SCU control registers in
+u-boot. The delays on the switch side are disabled.
 
+I will add some comments for the delays in v2 (after addressing the dts
+schema warnings). Is that okay?
+
+
+Thanks,
+
+Tao
