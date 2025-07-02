@@ -1,183 +1,200 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75E7024DD07
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 10:21:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A11245003;
+	Wed,  2 Jul 2025 10:21:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751451666; cv=none; b=Ii8fQPqOIuk/j2UiWsG3bQ2lWxK0Z/5olKyk/UtTPFcJ+yH71PIFE30UxC4qA5ZkhpUQN+Rg13OjEm1eYDSN/C732pEz7a6w1NX/4zt7YPqComeHFx/wby7pi6lukYeU7B68CDf19Pj94SIs2FfCa7iwZypr6bYV6cmwFKQwi4A=
+	t=1751451668; cv=none; b=gNULrySnYc6eAiO5XariN8OJkWd47YyF0U7YI4abQv7NDp1igyUBtUeauos2BSBAvl2S5hxvBrVfSX9FQHQxZk62G5jcUIuERXPduYfKgNM873iapCHl6bA6YQEnNtS7SUfjMallIosVLMF+LI38esFc1sw/axzRd9KM7Y7Lo48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751451666; c=relaxed/simple;
-	bh=QTZub8qteyJ2SpbKYksOY3pPnrsQfuP9btWZHNiTahM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mRiLOBhLpc2i9tpbnn3IVU66vDA3+Qnqqf3aSeWiGJEZR+UFumhrtQcCp50aH4c0QdrmRU/M42s13ESEZNusJSidZEV7PNhsHEKJzYF+D4pb9pSYbtJd4SvY3KDxALdB3gnwJ70FaSE6C7kqdGBJrf//M/Q7vngJevDfJSoY+3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f1hoRY3f; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751451668; c=relaxed/simple;
+	bh=yR4QX8AXCTa9zd/85SYFl0Yy3vsYSL9PyHxARwsxIfA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=V7DsfN0EDmBheqHBrA1CPh1yuQEIn111PNGEfOIl7WpPOUwOSm0BqEoOM4CfTsTaeNCm+7x0PyPcCNp5Dgh/jSkeMXNmJ3xP1qnXrIXxozod/7b/P09a2AmPK+raeFoUOAE0XoWxO/Y38GuiTlcfE2xFJ5nQszk2uZr8jfMI75o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gymx7RVv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f1hoRY3f"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751451663;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=z33Cff3RmOVjIT9wRyC2s6MYaglNGGjjzC0Meo8MshM=;
-	b=f1hoRY3fPXnDr8Lkl39SFK2ayRsVoCaqCAKq1no9NVEIC3J0PKoeYdebz2x3Xjp5Cjv4e4
-	hpXsP2MZVTzTdmgHmlAyEMlhwCYVEKOVeWwctvQcX41z7LehKQ49dltXYnYX5qtAmFSdT1
-	s+GidquKCbk/SZ9V83QTC69aK5lkPsQ=
-Received: from mail-oa1-f72.google.com (mail-oa1-f72.google.com
- [209.85.160.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-609-_T_e3V2-MreUO9j4NPnsEw-1; Wed, 02 Jul 2025 06:21:01 -0400
-X-MC-Unique: _T_e3V2-MreUO9j4NPnsEw-1
-X-Mimecast-MFC-AGG-ID: _T_e3V2-MreUO9j4NPnsEw_1751451661
-Received: by mail-oa1-f72.google.com with SMTP id 586e51a60fabf-2da802bd11eso2872159fac.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 03:21:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751451661; x=1752056461;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z33Cff3RmOVjIT9wRyC2s6MYaglNGGjjzC0Meo8MshM=;
-        b=TqZloo9nDlpvzfYzMVbGzy3aRuw3IlmMdlawzEGSIR8KDVmHNxVBANyfK59EuzqyoB
-         SMHr/Ve5bZiWzI/bVEYQquPF3CDxWZc9eVC3YRPodGs2UGnbkD2RIRajtTRx1m49F2cK
-         qUS8xyrh23NNiI1KuR1eqgZ5S1upd2bNRJ2mC9NNSmFdpwOykaFS8T9ar6vptt66pVyO
-         0AYdYBhMLKIAYeGGNZZ8GO/gCL5POGMKPWMJTAaIJDMn2lSNASbTYSvFxnKhSt+a3Crg
-         xIYW3lUYSUueCYGXicjdAmlq2uh9UXiTS/EV3IXVMDMyZyiAvt13EPllXvQYSutygHRy
-         Iy5A==
-X-Forwarded-Encrypted: i=1; AJvYcCUiETg5AIUrb3/B3KJQlPQo3IOhb5Xvcr9Vsdt11oQwlARgazf8/LP1r4+MQSAhV28q9no9jGKq/XkUeRE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbUjOw/SZQA5HAbyjikJZTMJDn1OIN1yV0XqDWX5ym8cHnLZuk
-	IQc3rriLSkbUs7G1qd31e28O/JyArFJ0Mn4sjfoKYz7/xUDVSeXg6zr1IEwfqi3nzmaijmlY1xR
-	JnL0Dxta0Fy0v87TSf3DjnEUXMFMSbyVjie766r2CLhv97AbasvnHn7rQszIydvaYyQ==
-X-Gm-Gg: ASbGncubPhqWVuSIEbEvf7PO0WGKNxFMVY33Q31dscvFJ1beRHMfH92E+NLmDJwWkTU
-	URmcINnZ0J8rKVNTUXV0SC7yK8Bo8izCTuO3lP1YQFxHnGuRlrDwOCdEXQoOWIDSyKPob+Q2iT3
-	W3B7I4waYovUE6Kz4+NNvN8cGzvXmYB9aHmzNef6l5Mfg4BKh1m20vUCfpwiBNCqmUWW1ZOelHB
-	Diy/6OOc8fivk9PuT+M0ZBOfEt1dHEqxXPNIgpB+ajexILmVm2YDdIIcuF7cBj9sn1V545yUMlY
-	Ih1ndabBIebdU2hY1ibNQQNc7d4q
-X-Received: by 2002:a05:6871:2101:b0:2d9:8578:9478 with SMTP id 586e51a60fabf-2f5a89a2456mr1620085fac.4.1751451660849;
-        Wed, 02 Jul 2025 03:21:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEjnqBPdraA9wKo6pHyy4bnNYvJ2ThZk+lGjpFEgWafOmcLKgFaCiU2WyDUSEWN1BVbih6pWA==
-X-Received: by 2002:a05:6871:2101:b0:2d9:8578:9478 with SMTP id 586e51a60fabf-2f5a89a2456mr1620073fac.4.1751451660486;
-        Wed, 02 Jul 2025 03:21:00 -0700 (PDT)
-Received: from sgarzare-redhat ([193.207.164.126])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2efd4efb7cfsm3767218fac.16.2025.07.02.03.20.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 03:20:59 -0700 (PDT)
-Date: Wed, 2 Jul 2025 12:20:47 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Xuewei Niu <niuxuewei97@gmail.com>
-Cc: mst@redhat.com, pabeni@redhat.com, jasowang@redhat.com, 
-	xuanzhuo@linux.alibaba.com, davem@davemloft.net, netdev@vger.kernel.org, stefanha@redhat.com, 
-	leonardi@redhat.com, decui@microsoft.com, virtualization@lists.linux.dev, 
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, fupan.lfp@antgroup.com, 
-	Xuewei Niu <niuxuewei.nxw@antgroup.com>
-Subject: Re: [RESEND PATCH net-next v4 3/4] test/vsock: Add retry mechanism
- to ioctl wrapper
-Message-ID: <2cpqw23kr4qiatpzcty6wve4qdyut5su7g7fr4kg52dx33ikdu@ljicf6mktu5z>
-References: <20250630075727.210462-1-niuxuewei.nxw@antgroup.com>
- <20250630075727.210462-4-niuxuewei.nxw@antgroup.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gymx7RVv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAE3EC4CEFB;
+	Wed,  2 Jul 2025 10:21:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751451667;
+	bh=yR4QX8AXCTa9zd/85SYFl0Yy3vsYSL9PyHxARwsxIfA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=gymx7RVvDN4idY4KXMg5H3w1GiKCaihmgnle1aF81JViV02n8GLqRg2sSKraLP27p
+	 3TLJLz77nLpAb14TgF7sJ6hBEJp9kh8FyJF4sHJI83ByJuw62cX+AnFfpvgL1qMYLh
+	 BDG8eVupTnFW/dCx7sL17+CJcLSIz91pCA/Z20IumIE7EXuswNHQyNDVr6cRcJuE1t
+	 WQEfZGvqqPhsk/fJUnQp+7AtghIwkZpizM7RODr5uUGbMVSfysuxcx6/+Io9qygfmn
+	 g8Aggvlt92ZW9UMEAwtUXJxjQFikPyw9FcpFwdQou8db7nfP00sUrOr0REbAjoLCCK
+	 WFdc/JSm1DaZQ==
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-612033bb26cso190766eaf.3;
+        Wed, 02 Jul 2025 03:21:07 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU2OOoMnWTQKs5rQndrZwA66v8KLvSzflgHbzqKDCiupcQBsJYH3GV1yKSJ3ZgRGaimCGCD2scCtIGaUSPc@vger.kernel.org, AJvYcCVthKOvDKH1PgH190aZTlErQxOSzBqF0F/6AxN/rfmNMBfBp+gV/ciNY4GJztNyPADKFKXZN5D8E4SduA==@vger.kernel.org, AJvYcCW/ZERNHz6bqbU8KhyN6D4JX+g5TLTX3WI/A+mdrGxnOV7YXhMVapbv+4quhEKazdAdhJEeQi8EWgPT@vger.kernel.org, AJvYcCXCB6bxdQMdyZcWPrfVsDXZVHRzNDSGY0oTWtpkGN2uddo0AMZFigW1eQcBgAfW/tuZKIZcEPpEsmUP@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9JviliAFMtzAAvxGO011+O8SdGrfaPnpI+cXiAOKL6uEBY6nB
+	ihe14/L03DgVsZ0ZAtkaQ0TFVockicMwlrZPdMDVDKeSpbSkmSpfTJucCyFNNrrFC2tSDNEOgfM
+	sbXz3QYnGEesBNN+cC0RZBWhFpB8wbuw=
+X-Google-Smtp-Source: AGHT+IEIAYeGapqbvzgRtPBZhUUR/7BOdbNNDra2py939LpzhZKiwziH27/5pwK7uUznA1K8dVixQvtQR4qL3igFyhY=
+X-Received: by 2002:a05:6820:2713:b0:611:bbad:7b62 with SMTP id
+ 006d021491bc7-6120112a218mr1475999eaf.3.1751451666947; Wed, 02 Jul 2025
+ 03:21:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250630075727.210462-4-niuxuewei.nxw@antgroup.com>
+References: <20250702051345.1460497-1-apatel@ventanamicro.com> <20250702051345.1460497-16-apatel@ventanamicro.com>
+In-Reply-To: <20250702051345.1460497-16-apatel@ventanamicro.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 2 Jul 2025 12:20:55 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0iYYuK2GF2Pg3NiO4vLFzoYm6Q3Dnk5O2DkMJm1R3qSfQ@mail.gmail.com>
+X-Gm-Features: Ac12FXzQ49ZuTSEHsHpxG_hICq-H4KxJ6ZjrT4VtlTSQu1Nb2pu-7KR4sK-HNfM
+Message-ID: <CAJZ5v0iYYuK2GF2Pg3NiO4vLFzoYm6Q3Dnk5O2DkMJm1R3qSfQ@mail.gmail.com>
+Subject: Re: [PATCH v7 15/24] ACPI: property: Add support for cells property
+To: Anup Patel <apatel@ventanamicro.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jassi Brar <jassisinghbrar@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>, 
+	Rahul Pathak <rpathak@ventanamicro.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>, 
+	Atish Patra <atish.patra@linux.dev>, Andrew Jones <ajones@ventanamicro.com>, 
+	Samuel Holland <samuel.holland@sifive.com>, Anup Patel <anup@brainfault.org>, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 30, 2025 at 03:57:26PM +0800, Xuewei Niu wrote:
->Wrap the ioctl in `ioctl_int()`, which takes a pointer to the actual
->int value and an expected int value. The function will not return until
->either the ioctl returns the expected value or a timeout occurs, thus
->avoiding immediate failure.
+On Wed, Jul 2, 2025 at 7:16=E2=80=AFAM Anup Patel <apatel@ventanamicro.com>=
+ wrote:
 >
->Signed-off-by: Xuewei Niu <niuxuewei.nxw@antgroup.com>
->---
-> tools/testing/vsock/util.c | 32 +++++++++++++++++++++++---------
-> tools/testing/vsock/util.h |  1 +
-> 2 files changed, 24 insertions(+), 9 deletions(-)
+> From: Sunil V L <sunilvl@ventanamicro.com>
 >
->diff --git a/tools/testing/vsock/util.c b/tools/testing/vsock/util.c
->index 0c7e9cbcbc85..481c395227e4 100644
->--- a/tools/testing/vsock/util.c
->+++ b/tools/testing/vsock/util.c
->@@ -16,6 +16,7 @@
-> #include <unistd.h>
-> #include <assert.h>
-> #include <sys/epoll.h>
->+#include <sys/ioctl.h>
-> #include <sys/mman.h>
-> #include <linux/sockios.h>
->
->@@ -97,28 +98,41 @@ void vsock_wait_remote_close(int fd)
-> 	close(epollfd);
-> }
->
->-/* Wait until transport reports no data left to be sent.
->- * Return false if transport does not implement the unsent_bytes() 
->callback.
->+/* Wait until ioctl gives an expected int value.
->+ * Return false if the op is not supported.
->  */
->-bool vsock_wait_sent(int fd)
->+bool vsock_ioctl_int(int fd, unsigned long op, int *actual, int expected)
+> Currently, ACPI doesn't support cells property when
+> fwnode_property_get_reference_args() is called.
 
-Why we need the `actual` parameter?
+What exactly do you mean by "cells property" here and below?
 
-> {
->-	int ret, sock_bytes_unsent;
->+	int ret;
->+	char name[32];
->+
->+	snprintf(name, sizeof(name), "ioctl(%lu)", op);
+> ACPI always expects
+> the number of arguments to be passed. However, the above mentioned
+> call being a common interface for OF and ACPI, it is better to have
+> single calling convention which works for both. Hence, add support
+> for cells property on the reference device to get the number of
+> arguments dynamically.
 >
-> 	timeout_begin(TIMEOUT);
-> 	do {
->-		ret = ioctl(fd, SIOCOUTQ, &sock_bytes_unsent);
->+		ret = ioctl(fd, op, actual);
-> 		if (ret < 0) {
-> 			if (errno == EOPNOTSUPP)
-> 				break;
+> Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
+> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+> ---
+>  drivers/acpi/property.c | 22 ++++++++++++++++++----
+>  drivers/base/property.c |  2 +-
+>  2 files changed, 19 insertions(+), 5 deletions(-)
 >
->-			perror("ioctl(SIOCOUTQ)");
->+			perror(name);
-> 			exit(EXIT_FAILURE);
-> 		}
->-		timeout_check("SIOCOUTQ");
->-	} while (sock_bytes_unsent != 0);
->+		timeout_check(name);
->+	} while (*actual != expected);
-> 	timeout_end();
+> diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
+> index d4863746fb11..d08b0ea5c915 100644
+> --- a/drivers/acpi/property.c
+> +++ b/drivers/acpi/property.c
+> @@ -882,6 +882,17 @@ static struct fwnode_handle *acpi_parse_string_ref(c=
+onst struct fwnode_handle *f
+>         return &dn->fwnode;
+>  }
 >
->-	return !ret;
->+	return ret >= 0;
->+}
->+
->+/* Wait until transport reports no data left to be sent.
->+ * Return false if transport does not implement the unsent_bytes() callback.
->+ */
->+bool vsock_wait_sent(int fd)
->+{
->+	int sock_bytes_unsent;
->+
->+	return vsock_ioctl_int(fd, SIOCOUTQ, &sock_bytes_unsent, 0);
-> }
+> +static unsigned int acpi_fwnode_get_args_count(const struct acpi_device =
+*device,
+> +                                              const char *nargs_prop)
+> +{
+> +       const union acpi_object *obj;
+> +
+> +       if (acpi_dev_get_property(device, nargs_prop, ACPI_TYPE_INTEGER, =
+&obj))
+> +               return 0;
+> +
+> +       return obj->integer.value;
+> +}
+> +
+>  static int acpi_fwnode_get_reference_args(const struct fwnode_handle *fw=
+node,
+>                                           const char *propname, const cha=
+r *nargs_prop,
+>                                           unsigned int args_count, unsign=
+ed int index,
+> @@ -892,6 +903,7 @@ static int acpi_fwnode_get_reference_args(const struc=
+t fwnode_handle *fwnode,
+>         const struct acpi_device_data *data;
+>         struct fwnode_handle *ref_fwnode;
+>         struct acpi_device *device;
+> +       unsigned int nargs_count;
+>         int ret, idx =3D 0;
 >
-> /* Create socket <type>, bind to <cid, port> and return the file descriptor. */
->diff --git a/tools/testing/vsock/util.h b/tools/testing/vsock/util.h
->index 5e2db67072d5..d59581f68d61 100644
->--- a/tools/testing/vsock/util.h
->+++ b/tools/testing/vsock/util.h
->@@ -54,6 +54,7 @@ int vsock_stream_listen(unsigned int cid, unsigned int port);
-> int vsock_seqpacket_accept(unsigned int cid, unsigned int port,
-> 			   struct sockaddr_vm *clientaddrp);
-> void vsock_wait_remote_close(int fd);
->+bool vsock_ioctl_int(int fd, unsigned long op, int *actual, int expected);
-> bool vsock_wait_sent(int fd);
-> void send_buf(int fd, const void *buf, size_t len, int flags,
-> 	      ssize_t expected_ret);
->-- 
->2.34.1
+>         data =3D acpi_device_data_of_node(fwnode);
+> @@ -960,11 +972,12 @@ static int acpi_fwnode_get_reference_args(const str=
+uct fwnode_handle *fwnode,
+>                         if (!device)
+>                                 return -EINVAL;
 >
+> +                       nargs_count =3D acpi_fwnode_get_args_count(device=
+, nargs_prop);
 
+I think it should work the same way as it used to for the callers that
+pass args_count, so maybe
+
+if (!args_count)
+        args_count =3D acpi_fwnode_get_args_count(device, nargs_prop);
+
+>                         element++;
+> -
+>                         ret =3D acpi_get_ref_args(idx =3D=3D index ? args=
+ : NULL,
+>                                                 acpi_fwnode_handle(device=
+),
+> -                                               &element, end, args_count=
+);
+> +                                               &element, end,
+> +                                               nargs_count ? nargs_count=
+ : args_count);
+
+And this change would not be necessary?
+
+And analogously below.
+
+>                         if (ret < 0)
+>                                 return ret;
+>
+> @@ -978,11 +991,12 @@ static int acpi_fwnode_get_reference_args(const str=
+uct fwnode_handle *fwnode,
+>                         if (!ref_fwnode)
+>                                 return -EINVAL;
+>
+> +                       device =3D to_acpi_device_node(ref_fwnode);
+> +                       nargs_count =3D acpi_fwnode_get_args_count(device=
+, nargs_prop);
+>                         element++;
+> -
+>                         ret =3D acpi_get_ref_args(idx =3D=3D index ? args=
+ : NULL,
+>                                                 ref_fwnode, &element, end=
+,
+> -                                               args_count);
+> +                                               nargs_count ? nargs_count=
+ : args_count);
+>                         if (ret < 0)
+>                                 return ret;
+>
+> diff --git a/drivers/base/property.c b/drivers/base/property.c
+> index f626d5bbe806..6a63860579dd 100644
+> --- a/drivers/base/property.c
+> +++ b/drivers/base/property.c
+> @@ -578,7 +578,7 @@ EXPORT_SYMBOL_GPL(fwnode_property_match_property_stri=
+ng);
+>   * @prop:      The name of the property
+>   * @nargs_prop:        The name of the property telling the number of
+>   *             arguments in the referred node. NULL if @nargs is known,
+> - *             otherwise @nargs is ignored. Only relevant on OF.
+> + *             otherwise @nargs is ignored.
+>   * @nargs:     Number of arguments. Ignored if @nargs_prop is non-NULL.
+>   * @index:     Index of the reference, from zero onwards.
+>   * @args:      Result structure with reference and integer arguments.
+> --
