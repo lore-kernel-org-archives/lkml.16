@@ -1,119 +1,117 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2302F50A8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB5072600;
 	Wed,  2 Jul 2025 16:47:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751474870; cv=none; b=N2diBuiJeuWygCRJlxsBl3OUMMh2ibI7kvdrSkHnLouvTn4IBOW0+BvH+L7ZrmNbIw1qfnhz7A2xiRMXIWw5EMBuAlbXHLmHllQwUlIaWhWXZ85ych5p6IgkWWh+6fv36n2ewzWgL9faKHZ+jpyjr/C1uBgBXTmK925YxNN0dZc=
+	t=1751474873; cv=none; b=dSznHsPX27IU+iXDqkM3mhvxL1ndUpGhiE15wBWpuKhECXOcN/B9HkVp/hk8nUYtKalj9MXBwKiqGEWdfv1kmN7jegoiH3onRpgoQ2SqDS5HqSEDVnEjxCKbVQKGUn35t9/MLn2oHfLuiT2iPKO+K8Ybm8l9jovV1fpZvOH06kw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751474870; c=relaxed/simple;
-	bh=g1+k2nPM6RxeEUCvtw0vrTy0LPvjf9hZ6rmLV2y9xgU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QeP0IB3XWtZi6CzLh7kPAbjNQXgVRG9iYcMCEEYnszNR41TKLfyDLHJx+WWYE439HMvR3udW8QQj5fAtb4Edhov8bEiDWohqi73FSgEl3e55AjwGbnW7uTbykGTJgNHLVMmrqKFn9vWmthXB8zc77iFuwML1lOboGs9NFMLTtn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id B8157140367;
-	Wed,  2 Jul 2025 16:47:43 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 1BC9B1A;
-	Wed,  2 Jul 2025 16:47:39 +0000 (UTC)
-Date: Wed, 2 Jul 2025 12:47:37 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jens Remus <jremus@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, x86@kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
- Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, "Jose
- E. Marchesi" <jemarch@gnu.org>, Beau Belgrave <beaub@linux.microsoft.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
- <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>, Florian Weimer
- <fweimer@redhat.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
- <gor@linux.ibm.com>
-Subject: Re: [PATCH v7 00/12] unwind_deferred: Implement sframe handling
-Message-ID: <20250702124737.565934b5@batman.local.home>
-In-Reply-To: <7eea50a5-e1b0-4319-9a25-cb8b327a836d@linux.ibm.com>
-References: <20250701184939.026626626@goodmis.org>
-	<7eea50a5-e1b0-4319-9a25-cb8b327a836d@linux.ibm.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1751474873; c=relaxed/simple;
+	bh=kdtzP1DOdxUyE0j4okOCKRrjES3jFyJi9K58SvycYIg=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=n2hFvEb43UptHzyK4go1crmlToCyEOFnv17zJyyRm1pOxnfQ7ub9rjpPTTANWXwKcNLUPZkjvnQ6QLAV/p9joCxwvQmeoQcfxm+tb+8B29FoHIFJnheizRoV9GLMs+/qGCISPkFa98OQNeDLsTe6oqu2/UT2wXLGUhIZCt3j2iQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from [192.168.2.102] (213.87.129.136) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Wed, 2 Jul
+ 2025 19:47:37 +0300
+Message-ID: <8244b3f4-ea69-46ee-9ba2-6711f516f00b@omp.ru>
+Date: Wed, 2 Jul 2025 19:47:36 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] NFSv4: prevent integer overflow while calling
+ nfs4_set_lease_period()
+From: Sergey Shtylyov <s.shtylyov@omp.ru>
+To: <linux-nfs@vger.kernel.org>, Trond Myklebust <trondmy@kernel.org>, Anna
+ Schumaker <anna@kernel.org>
+CC: <linux-kernel@vger.kernel.org>
+References: <f769ad67-fc6b-4101-8bdc-8b41eba73a21@omp.ru>
+Content-Language: en-US
+Organization: Open Mobile Platform
+In-Reply-To: <f769ad67-fc6b-4101-8bdc-8b41eba73a21@omp.ru>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 1BC9B1A
-X-Stat-Signature: 6ab6bcboemhxxcrt1jugnewqbfujyn9q
-X-Rspamd-Server: rspamout06
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+RCYfk1ij87wG5Mg8mX6pSoPsPrUnbTOI=
-X-HE-Tag: 1751474859-717133
-X-HE-Meta: U2FsdGVkX1/xQcC/1vbjLDT42vnA5rZK0DJXCURp+LYg8DRsJ82VPBa8c9m0LqtAKwuu5W39stjZMdi2qQAA4h0SNVrkO4DH8HZfRi58Ha2QuWM+3w2SwhFZhM3C3hlCcNnhRd85h1AQemZyfLQxZJgM2eg2S8ivRlduwklYD8It9hB18FH1yVZJHEFrhVTZCjygyKVXwUU3ATdCKPxHTOHJtqgYE7a8CuLZYltQG+2p4WXgdPUVJK5h/RA42GtKtD944lR67kYGwUJyXZxkXdqNE/6x4vrCOCS5fssDUmUhIaspx9KOf2HNFrPyMylrtKKLhSRTFDLwd66YgtVMz2eByVMV9KviO6TT2QM9iGqiw0DrblOZcbRZRg9+haEyGawdPxklVxjawGkZ6V9WzYtD9GmQMbM2+87sz2hDTiZlnuAzc76R4IoPj3tpNpyxPP7ZKP3galnMvGI32EN8qkbLlSQVp+5icS7PpOyu/ZmauLO7jY7X4IrLMG4VFeHr
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.1, Database issued on: 07/02/2025 16:33:19
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 19
+X-KSE-AntiSpam-Info: Lua profiles 194502 [Jul 02 2025]
+X-KSE-AntiSpam-Info: Version: 6.1.1.11
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 63 0.3.63
+ 9cc2b4b18bf16653fda093d2c494e542ac094a39
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_uf_ne_domains}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info: {SMTP from is not routable}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 213.87.129.136 in (user)
+ b.barracudacentral.org}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 213.87.129.136 in (user)
+ dbl.spamhaus.org}
+X-KSE-AntiSpam-Info:
+	d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;omp.ru:7.1.1
+X-KSE-AntiSpam-Info: {Tracking_ip_hunter}
+X-KSE-AntiSpam-Info: FromAlignment: s
+X-KSE-AntiSpam-Info: ApMailHostAddress: 213.87.129.136
+X-KSE-AntiSpam-Info: {DNS response errors}
+X-KSE-AntiSpam-Info: Rate: 19
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 07/02/2025 16:36:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 7/2/2025 2:58:00 PM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-On Wed, 2 Jul 2025 14:57:22 +0200
-Jens Remus <jremus@linux.ibm.com> wrote:
+On 7/1/25 11:35 PM, Sergey Shtylyov wrote:
 
-> Hello Steve!
+> The nfs_client::cl_lease_time field (as well as the jiffies variable it's
+> used with) is declared as *unsigned long*, which is 32-bit type on 32-bit
+> arches and 64-bit type on 64-bit arches. When nfs4_set_lease_period() that
+> sets nfs_client::cl_lease_time is called, 32-bit nfs_fsinfo::lease_time
+> field is multiplied by HZ -- that might overflow before being implicitly
+> cast to *unsigned long*. Actually, there's no need to multiply by HZ at all
+> the call sites of nfs4_set_lease_period() -- it makes more sense to do that
+> once, inside that function, calling check_mul_overflow() and capping result
+> at ULONG_MAX on actual overflow...
 > 
-> On 01.07.2025 20:49, Steven Rostedt wrote:
-> > This code is based on top of:
-> > 
-> >  https://lore.kernel.org/linux-trace-kernel/20250701005321.942306427@goodmis.org/
-> >  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git unwind/core
-> > 
-> > This is the implementation of parsing the SFrame section in an ELF file.  
+> Found by Linux Verification Center (linuxtesting.org) with the Svace static
+> analysis tool.
 > 
-> ...
+> Signed-off-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+> Cc: stable@vger.kernel.org
 > 
-> > The code for this patch series can be found here:
-> > 
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git unwind/sframe  
+> ---
+> The patch is against the master branch of Trond Myklebust's linux-nfs.git repo.
 > 
-> Wouldn't it make sense to include your related perf (tools) series [1]
-> in that branch to ease testing?  Provided you also include the minor
-> fix [2] to make perf tools work. :-)
+> Changes in version 2:
+> - made use of check_mul_overflow() instead of mul_u32_u32();
+> - capped the multiplication result at ULONG_MAX instead of returning -ERANGE,
+>   keeping nfs4_set_lease_period() *void*;
+> - rewrote the patch description accordingly.
 
-I was planning on making a branch with perf and sframe merged (haven't
-pushed it out yet). Since sframe doesn't technically rely on it (I use
-tracing too test it too) I'm keeping them separate.
+   Forgot to say that I had to adjust the patch description to make it clear
+that the overflow happens on 64-bit arches as well...
 
-> 
-> Additionally it would make sense to include the patches from Josh that
-> add SFrame information to the vDSO on x86 [3].
-> 
-> [1]: [PATCH v12 00/11] perf: Support the deferred unwinding infrastructure,
-> https://lore.kernel.org/linux-trace-kernel/20250701180410.755491417@goodmis.org/
-> 
-> [2]: https://lore.kernel.org/linux-trace-kernel/51903e66-56bc-42a4-b80c-9c3223e2a48a@linux.ibm.com/
-> 
-> [3]: [PATCH v6 0/6] x86/vdso: VDSO updates and fixes for sframes,
-> https://lore.kernel.org/all/20250425023750.669174660@goodmis.org/
+[...]
 
-I have them in separate branches too and will be posting them
-separately. Again, the "merged" branch will contain them all.
+MBR, Sergey
 
-> 
-> > Changes since v6: https://lore.kernel.org/linux-trace-kernel/20250617225009.233007152@goodmis.org/  
-> 
-> > - Moved the addition of the prctl(), that allows libraries to add the elf
-> >   sections to the kernel, to the last patch and labeled it as "DO NOT APPLY".
-> >   This should instead be a proper system call and work to make it robust and
-> >   flexible still needs to be done. The prctl() patch is added for debugging
-> >   purposes only.  
-> 
-> Does PR_SET_VMA [4] create a precedent case for the SFrame prctls?
-> 
-> [4]: https://man7.org/linux/man-pages/man2/pr_set_vma.2const.html
-> 
-
-At the last sframe meeting we came to the decision to make it a proper
-system call. Just seems cleaner that way. If others feel prctl() is the
-way to go, we can definitely do that too.
-
--- Steve
