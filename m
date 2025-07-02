@@ -1,166 +1,164 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D61F1E520C
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 12:20:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F7926A090;
+	Wed,  2 Jul 2025 12:20:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751458843; cv=none; b=Ca5rgwv68wmBE/F9lE30dlt9jRev9kfNOZ4h2//mzEfiZsi9h/WW4gAhf37nijmZfDVZhI1yDKdjzLCWceq7tV1tdgNPi2/++tCkX+pCUbuCK7ewz9n43GUf0Yv9wd6B4RpHQMXxoqRrXQ3ovcb+BBd30a34ucI4p2DMWXC10as=
+	t=1751458853; cv=none; b=bfYGIBcOjBZI+TQi02pByey+kDM3zr2KCnFwiQVtjszYw1zG7FTxopVdkuFj01G2O9dje2iXNDnJYom0H94nHdNM01ala/xEeBff0XnaagyhcZnQ2mI6RF6pQO1Qxn8Gb4kDAOwKfyMUwRKwkOjbnRwsK1OYwMB9kzLd/94jcig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751458843; c=relaxed/simple;
-	bh=9OTuof7wiH6Hbx52Xl5u/63yLGECDDRiBJS39/TBm0M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YOwGBzH4QZZVTa+Zb5b5pmQHv+wUGoAOG84/R0NNDUxMsvHuHGUf9VBIlBvm5+3QJU7IX8PfbMANNyRoLQl1O3xJMZPi6Y/L3yuVbWsE55Wuml1K4XbgqjD6pTA7AxsuGOCyFO2stDLC1vUYs35MrSmMQOQArU5qmDDnMgNK728=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=FcZcpLok; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1751458853; c=relaxed/simple;
+	bh=r1RRnmHC+fZLpTW3fqjbqGzuJWKTcRrBGANv/Cc9i70=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WzyV4xp6Tt+Fx7AQE3o+FB5GzyAV2K8V5cTNbFuQ22xpvJhVsKei1gwipVjl1b/6hcEbiFU+X/G1W20SdReQNHcvIEha64G59hSX7Jr7U7pGBBBN45BTMInL5mFPFm6PbySf5tNKVM+TH68WBMj8ctZs3LhZ17BFSmtWU+SIkPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=tQAUgaYG; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="FcZcpLok"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-32b4876dfecso73550471fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 05:20:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1751458839; x=1752063639; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZlDIE+NRAJTFxIDdo85+1avglgQbOvm9gC4lDC40yv8=;
-        b=FcZcpLokZPKQKUziKGccVI3aFdMxzTlObbbxhxjmG3hBv0bye5TDFOM8VFet3Pg3L5
-         /tlSvY9WDiY0XynoIrnn3mifQ16626/wG6lDHoEV+HJGxQtqzZZoBfgtMCNN/rh9VycR
-         OkD8T3DrQ5Q13kU4Fjhx9DiqQf7HhPhI3MGb/jDjdjuo3174cJtak9admxP0wujPXR48
-         aUNRS4uEJ9W6qBF3rlUDxnUsVwTo3qvlDo4an/YYcsiZRb5VP99XfLfdXVIe/xkzyThr
-         I1JVBa7FIIXHgCXsMMKcW4LXR9MOi0BxiKswA5mTN7B5pEp6qzRgkuv52K2zqeouZaJ7
-         92Hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751458839; x=1752063639;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZlDIE+NRAJTFxIDdo85+1avglgQbOvm9gC4lDC40yv8=;
-        b=rcP30uyFutVZDDahu3etTywKH0R0G3HUodlvc7UXbeVD2V7PEANLcZTFmiiRfsmMco
-         2gceTRzfefkLGJVwf2Em5GPVeGc3V/FpbhUfLFm3hKlmacj2J2zoGuhI+KzW+wwj7YM3
-         hKIGnWD8KpjrctxXwcjKEAW9nDj08Zquk+apCJE1KOZ7JBCDr/Cwzb7guABJ3fMEKE/E
-         rqHv6e4nNw0Bu8+oV0aHaqCdZlf0QHBprNL3gXUUS3SeeTg2KxlyVJ2HWioKYG7sW3st
-         oEVeLr0uzvemkMe4jXoKCGzidzJ25ism1a8yfOT0yl/BFsGCr/9nnmmsmBlEkcqYb1sS
-         ZOfw==
-X-Forwarded-Encrypted: i=1; AJvYcCVNW6BzvFrtrmiOAFL4cAhbz0nF9ijwGut4mErToBpzMjgVMV9vraAnD5cAivgyLdqh/DfHQPobRuvr8OA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLUYMh4Msee6/1McVEOka25mJgmathGWPbP+v6omlKBcGquct6
-	DklmGJIlGwED78c8tNbbjEXDJu+qNdKtWf+p4v8RzzZgn75nWpC2eVl32wka9ANXes8A0/829C9
-	xpi0bHX2RlZ57cy7Fz4tkJAReFAsj6TAzicu0dHVG9g==
-X-Gm-Gg: ASbGnctetlwh3Ea3j5zCJdWZmsit60pYhMqlUIedrMQJCQxr1dxTLQS78mISp2ysp5D
-	Mguy+xirfDTisxZKu/UXK99dRM79o44KM5vrCvCBl/JKS22yS0tY5HzCnGjXi5g3GWpLhOEMrcn
-	hhixqCyy0hKaT2EPPwT6siGrX6U5AGqkcIR8eoKSPzVgMQ
-X-Google-Smtp-Source: AGHT+IH1lD190ckWcim2q6Zk3SmkYALF/z3+aLiK7gzYQJFBAZHqekWx0X5SLSlbsPJp/7c6iQAutReznlxbFSvgSgc=
-X-Received: by 2002:a05:6512:b0d:b0:554:e7ce:97f8 with SMTP id
- 2adb3069b0e04-55628ed6c86mr899229e87.15.1751458839282; Wed, 02 Jul 2025
- 05:20:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tQAUgaYG"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 562C5jqN015498;
+	Wed, 2 Jul 2025 12:20:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=M9zIsC
+	qEmF+CdKIAtl8yghoK30TMlyYCs0mt36XHacI=; b=tQAUgaYGKEnIao30/9C4pC
+	oGle8rpDgwOqIM6YkSefu0BV3ETUbMAxSabMh1w+LbjQzNBFdSVfouXmPW1iG1Qo
+	zkTt44jk2e3I+UMimK0lZQP/cZeG3lsQhsHaoEL3o4uFRTdWGp0GRB3ayBfGzaZJ
+	wJCgt5cwv8Go/7X8gc4XhwdE6dkYjMjwoqp9LHwJr+jsEZfIcbYEkE3p+68o96Kg
+	7K83cAvkYnwr4xlCNt0g0VebhxOQP6dP4Qw50i3y0ndcJ44Lmj4japf/wI25byXB
+	zKiTkETJMBmEYmWJtLteycCQWiaJh3AJiWihvHgomhQpgQskecmH2pTBOC12rHVg
+	==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j7wrndxh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Jul 2025 12:20:14 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 562ALCTp011840;
+	Wed, 2 Jul 2025 12:20:12 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47jv7mybsq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Jul 2025 12:20:12 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 562CK8Tl21365086
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 2 Jul 2025 12:20:08 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8F2B920040;
+	Wed,  2 Jul 2025 12:20:08 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 337852004E;
+	Wed,  2 Jul 2025 12:20:08 +0000 (GMT)
+Received: from [9.152.222.224] (unknown [9.152.222.224])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  2 Jul 2025 12:20:08 +0000 (GMT)
+Message-ID: <8446a4a9-023f-4f74-a15c-82450f239c13@linux.ibm.com>
+Date: Wed, 2 Jul 2025 14:20:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250702114633.1490974-1-apatel@ventanamicro.com>
-In-Reply-To: <20250702114633.1490974-1-apatel@ventanamicro.com>
-From: Anup Patel <apatel@ventanamicro.com>
-Date: Wed, 2 Jul 2025 17:50:26 +0530
-X-Gm-Features: Ac12FXxE_Q89fF2kuLXVjucIT31RfsCBiQVg9DaPXxssTSlaWFGUaeKT2XWMNbE
-Message-ID: <CAK9=C2WH5QuQcKwTuGUAwF_ewkTDurDig0CU_+rJRtP3HHEpLA@mail.gmail.com>
-Subject: Re: [PATCH v2] irqchip/riscv-imsic: Add kernel parameter to disable IPIs
-To: Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Anup Patel <anup@brainfault.org>, Atish Patra <atish.patra@linux.dev>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Andrew Jones <ajones@ventanamicro.com>, linux-doc@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 07/11] perf: Support deferred user callchains for per
+ CPU events
+To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        x86@kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Indu Bhagat <indu.bhagat@oracle.com>,
+        "Jose E. Marchesi" <jemarch@gnu.org>,
+        Beau Belgrave <beaub@linux.microsoft.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
+References: <20250701180410.755491417@goodmis.org>
+ <20250701180456.716085204@goodmis.org>
+Content-Language: en-US
+From: Jens Remus <jremus@linux.ibm.com>
+Organization: IBM Deutschland Research & Development GmbH
+In-Reply-To: <20250701180456.716085204@goodmis.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=E/PNpbdl c=1 sm=1 tr=0 ts=686523fe cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VnNF1IyMAAAA:8 a=0MvmVg10__VCTnNSAJcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: VEqhm_vXFi0XNEmMTr8_J5BmE51JLvYV
+X-Proofpoint-ORIG-GUID: VEqhm_vXFi0XNEmMTr8_J5BmE51JLvYV
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDEwMCBTYWx0ZWRfX8jq7pcZePAxi 6OtP5B0EWMzldnhljWrsUOjNsFHwBYw9PW/4y0FXHE2k22hHBitvxqpsKDBEeEI8XIHxysGPC5n Yenh0LYlt5ZMz8uetyrGaXvqvipQXJeM1Ls6ZFhs5GJHdhVp7JhaPaQrK8U0wmYLeYxtn8+PXtn
+ yUU6SfO1rQlvK+1f4s1KriZOwbb3hpwuIMspFy5yDYYz8ZxXe0nZg8ro9DjLp1rq6oP4hyAo3T2 FADS4gtHAVD2yLHzBTDbQvC11c6J0PxZeCr1lmo8Y4F/t2/n0G2sJs6DJ5ZJFF2cmXps4rP4gTo s0SguKd/jURs9SRanwDRedUtJnF4LO7Wl+aUN4YCTGyYZMt01CC5HJKMgnnf1Tl3YW6E4AeMsvs
+ iPy2y50nexebu8h022/wqgltzR9DPH29fWrgKm5hgzRSNdClHw8QjkaKgzuLOg8iAxSObjT2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-02_01,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ bulkscore=0 priorityscore=1501 phishscore=0 suspectscore=0 mlxlogscore=999
+ lowpriorityscore=0 mlxscore=0 clxscore=1015 adultscore=0 impostorscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507020100
 
-On Wed, Jul 2, 2025 at 5:16=E2=80=AFPM Anup Patel <apatel@ventanamicro.com>=
- wrote:
->
-> When injecting IPIs to a set of harts, the IMSIC IPI support will do
-> a separate MMIO write to the SETIPNUM_LE register of each target hart.
-> This means on a platform where IMSIC is trap-n-emulated, there will be
-> N MMIO traps when injecting IPI to N target harts hence IMSIC IPIs will
-> be slow on such platform compared to the SBI IPI extension.
->
-> Unfortunately, there is no DT, ACPI, or any other way of discovering
-> whether the underlying IMSIC is trap-n-emulated. Using MMIO write to
-> the SETIPNUM_LE register for injecting IPI is purely a software choice
-> in the IMSIC driver hence add a kernel parameter to allow users disable
-> IMSIC IPIs on platforms with trap-n-emulated IMSIC.
->
-> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
-> ---
->  Documentation/admin-guide/kernel-parameters.txt |  7 +++++++
->  drivers/irqchip/irq-riscv-imsic-early.c         | 12 ++++++++++++
->  2 files changed, 19 insertions(+)
->
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentat=
-ion/admin-guide/kernel-parameters.txt
-> index f1f2c0874da9..7f0e12d0d260 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -2538,6 +2538,13 @@
->                         requires the kernel to be built with
->                         CONFIG_ARM64_PSEUDO_NMI.
->
-> +       irqchip.riscv_imsic_noipi
-> +                       [RISC-V,EARLY]
-> +                       Force the kernel to not use IMSIC software inject=
-ed MSIs
-> +                       as IPIs. Intended for system where IMSIC is trap-=
-n-emulated,
-> +                       and thus want to reduce MMIO traps when triggerin=
-g IPIs
-> +                       to multiple harts.
-> +
->         irqfixup        [HW]
->                         When an interrupt is not handled search all handl=
-ers
->                         for it. Intended to get systems with badly broken
-> diff --git a/drivers/irqchip/irq-riscv-imsic-early.c b/drivers/irqchip/ir=
-q-riscv-imsic-early.c
-> index 1dbc41d7fe80..c6fba92dd5a9 100644
-> --- a/drivers/irqchip/irq-riscv-imsic-early.c
-> +++ b/drivers/irqchip/irq-riscv-imsic-early.c
-> @@ -9,6 +9,7 @@
->  #include <linux/cpu.h>
->  #include <linux/export.h>
->  #include <linux/interrupt.h>
-> +#include <linux/init.h>
->  #include <linux/io.h>
->  #include <linux/irq.h>
->  #include <linux/irqchip.h>
-> @@ -22,6 +23,14 @@
->  #include "irq-riscv-imsic-state.h"
->
->  static int imsic_parent_irq;
-> +static bool imsic_noipi;
-> +
-> +static int __init imsic_noipi_cfg(char *buf)
-> +{
-> +       imsic_noipi =3D true;
-> +       return 0;
-> +}
-> +early_param("irqchip.riscv_imsic_noipi", imsic_noipi_cfg);
->
->  #ifdef CONFIG_SMP
->  static void imsic_ipi_send(unsigned int cpu)
-> @@ -47,6 +56,9 @@ static int __init imsic_ipi_domain_init(void)
->  {
->         int virq;
->
-> +       if (imsic_noipi)
-> +               return 0;
-> +
+Hello Steve!
 
-We can skip enabling/disabling IMSIC_IPI_ID in imsic_ipi_starting_cpu()
-and imsic_ipi_dying_cpu() when imsic_noipi is set.
+On 01.07.2025 20:04, Steven Rostedt wrote:
 
-In addition to the above, we can also re-use the reserved IPI ID for
-devices.
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
 
-I will quickly send v3. Apologies for the noise.
+> @@ -5609,62 +5784,119 @@ static void perf_pending_unwind_sync(struct perf_event *event)
+>  
+>  struct perf_callchain_deferred_event {
+>  	struct perf_event_header	header;
+> +	u64				timestamp;
+>  	u64				nr;
+>  	u64				ips[];
+>  };
 
-Regards,
-Anup
+Nit: Please update the following related comments when making changes to
+struct perf_callchain_deferred_event.
+
+diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+index 184740d1e79d..08ce721e79bc 100644
+--- a/include/uapi/linux/perf_event.h
++++ b/include/uapi/linux/perf_event.h
+@@ -1248,6 +1248,7 @@ enum perf_event_type {
+ 	 *
+ 	 * struct {
+ 	 *	struct perf_event_header	header;
++	 *	u64				timestamp;
+ 	 *	u64				nr;
+ 	 *	u64				ips[nr];
+ 	 *	struct sample_id		sample_id;
+diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
+index 184740d1e79d..08ce721e79bc 100644
+--- a/tools/include/uapi/linux/perf_event.h
++++ b/tools/include/uapi/linux/perf_event.h
+@@ -1248,6 +1248,7 @@ enum perf_event_type {
+ 	 *
+ 	 * struct {
+ 	 *	struct perf_event_header	header;
++	 *	u64				timestamp;
+ 	 *	u64				nr;
+ 	 *	u64				ips[nr];
+ 	 *	struct sample_id		sample_id;
+
+Thanks and regards,
+Jens
+-- 
+Jens Remus
+Linux on Z Development (D3303)
++49-7031-16-1128 Office
+jremus@de.ibm.com
+
+IBM
+
+IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
+IBM Data Privacy Statement: https://www.ibm.com/privacy/
+
