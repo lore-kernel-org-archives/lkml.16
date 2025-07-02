@@ -1,146 +1,117 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D369D1953BB
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 02:15:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B01F0219FC;
+	Wed,  2 Jul 2025 02:15:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751422513; cv=none; b=IFRxelkD2qC2XuIYhAhkKfyRpll1JXAHxDmfSV7d+3/mA+GpxOohtRB1C4t8uUhXXVKJfY+BzYvoFo24tTmMleEOMRX88D+ABpJZF9MKh97qrtJt9YCeKY1RN440Scn4ApAM7BeSbLCgyC9RZIs4L6A0vSijRPXsCGlbJ7TgHDU=
+	t=1751422533; cv=none; b=q6T5peGw8HaLyzN89eBWpqm1konsd7oRO2uO1uKT5kSdGaw8bOpUgRg13HbL0UC/6yt4iB0s3g7P2wkHmeCJsApZSHuHDuHSb/luWfO791UvAzZFqSpdwaT3mG9lVgg1MjuzpD+jOHjN7wl6aF2t0o2OveNM13KF164MGJLp54Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751422513; c=relaxed/simple;
-	bh=jqOmHfl6MqpU00nfbSrc3bGz28jU+Q5UotEHKQLp9U8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eyUQruNkbL9yeA5nEElsvBW8pJS2H2+vnAHj1B+ikeUhTSomyug0qOAU15O7KYYJ10qWuP2fXKeI5sGeP3/B9ezNPHurZ6hCpKBI6e50jcvhRT94Cmy/6sKCaF4njugVM56tce+/7irKtybPVJnnLYfns0hyQKvbt+xFZNH2jE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pOf/w6cw; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751422533; c=relaxed/simple;
+	bh=mf227kKncoURIdLp1KReMZcMntXVrdskgCzq2WR7B3Q=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=LgslTRGhABJBIKRFyTcjMdI5Ive2XZwg81oYeeKwXNO8MT8zE4gjshlYaQOl/W1p+OkZGm/F6aYFJVyyssUx7icWrIeZ9UM5GtjTp5P+eSUFYrDZT34wjGqPcnTa6OjSsMmEkPXr0fWpIOyypayX1iOPGr4vofzRQfMjKHEHyr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JYeoi0lR; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pOf/w6cw"
-Message-ID: <983eacae-5b5d-4d26-a3e4-3c3eb808c5f2@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751422508;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tBwSK9N/m8nUDhskzFpAoJI0BngUsU1KOySDZuAUtKA=;
-	b=pOf/w6cwS2Dmsb3ERB016LiVzkVmTGRN1LTYBmEqiNxePEOnm1n6pjNMyNNwBbHx/rc8ZP
-	m+qKNPjOtVBstKu6YXnAy7tcoHfguvwMMmd9jmN31xw5hYQXAqNe9abSqm11UOQvhOIl0n
-	muM6xJDag0n5/Te1k75F3eiW9qGmx0c=
-Date: Wed, 2 Jul 2025 10:14:58 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JYeoi0lR"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-236470b2dceso33197565ad.0;
+        Tue, 01 Jul 2025 19:15:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751422531; x=1752027331; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=g31GsV5you24XaAPrCY89ZjlDVNyI0JUrwAbjHIC07c=;
+        b=JYeoi0lR79XNfDsYssMZML3oXb6B1V0mZ7fFS2c7xA0zmc8tgT/gFh3esfHofje5n7
+         /roWrvJKx0hbGOYn6E/KjwcVbTmaH47mg4E+J/eyrxb4DpCaaZjnRHP4QvhZ+gJ5ImCU
+         EHp6ct8oj0xmlAIcvY98FCYmvuaiCka0upNMtxB5Ei8Esjw2XMqnbx9k9EKstztIP1G+
+         sXyW42RmgclA+FwY15CauK4+BnPyGIWmlIxqtizv66H/ogbouYZgA+/pFfI+zUuVZzFJ
+         b5DLk9i6mpuHmSEXNLb+ui4hNMkvNA+OyEXLZNbEh5QOLU51pP0PHm+C4Y3UyZkME4lc
+         RHeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751422531; x=1752027331;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=g31GsV5you24XaAPrCY89ZjlDVNyI0JUrwAbjHIC07c=;
+        b=qDJCrsfucVukS09uVeYi5Kpf/xdeC7hc877BZWmfGJ6SEkbfRm7/+40q4FPSkU/HvJ
+         9c/ZLx/vCwMUKOvNBCKQ+pRMmbiKpCciUxo0hvJ0knyvc3sSOkY1sEZBf+gyKcg1zWNM
+         8iu4G1hQ/RYXOblQcq7f7rd5CTmsrWiE9E2I3PC81rG5STCDgqJFeZ28QvVPGQYq/AeO
+         Ch1WgpspO77J2Lwx+OJiqg+oxlRk3dhSq5Gmv73+fvVQCti6LEbm7ia7WiGEJr3ZlbKB
+         P2TNLWyjPVQLMzNjtbPqFZhBOSAzTtZh1TwSqniLsh6TW7ZrvGKZDMCblcWfZVMNIW5k
+         wI7w==
+X-Forwarded-Encrypted: i=1; AJvYcCUCkPRJ6XmUPUjehd+dP9cDFVTXzQWbHmz0OA3daC4nAPa0i4qEPU8GsTsOFCk4hpWdSRhT8b3g@vger.kernel.org, AJvYcCURzDy9ubZevjKscK7kt2Sn89SEnIhfobryVrqXbhxbrDj56IHKqi/INZxY0Hal9K07EBHjh5FzdC338dKQ@vger.kernel.org, AJvYcCWX5MAhEGT+ifP57iy+A37ME28OYxrG3DHhLIZ/HZvGs2wTqAM6gpsSR3H+5GJN7pgZPjA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yywqq0UXW1zHJ495scJGi04pVMlI73O+hwthWtlr5D3pnNGIE3N
+	ChcP9I4iG+VH3rjS196YPgUa+QiWYUVT6oVxjv0lvL1qJn+7sLMjI7ovl24jUHm0ONHo/XRc
+X-Gm-Gg: ASbGnctB2L0MxRCdqZjHYxdLj6VHsTeJao9WeS2PuLdqep6UkpvSyUvbK6x0daTn21v
+	uqz6IbDHuNiFFssrlYumk6fGtxk7zZWS1pHrhNMdKgk5m1Nzjww6o8Fpa1PSL+Q+i9beZBfKLT4
+	TLnHlBOEdkRe8cgwK/fZG+3Ne0rv3aUVzXb0yo8OkvCaFcTp4/CzXnmYUtzy4o8Yyx8AOuRjeyY
+	s2C7G9ePHVJQ+6820i4h8WloZvQCe31cmKzUeSgcmB3s5oDDKPM/+k4bGuPE6o/XpmytlVLZl7v
+	pSKN8C2f8wfuVfczXb5dyh8aCmgQkWIDcqvEAWO42SwsDcGJEaiz/ZMMG0fyzS5OKevpETk=
+X-Google-Smtp-Source: AGHT+IFU7cSFIO4KkQO2gT16lJGhF5dZmQEW6QhVLm1Oe+2lHVb75yDHEuhj6lpjbfnNle+xNLPuDA==
+X-Received: by 2002:a17:903:2341:b0:234:9375:e081 with SMTP id d9443c01a7336-23c6e5c8868mr13451135ad.42.1751422530838;
+        Tue, 01 Jul 2025 19:15:30 -0700 (PDT)
+Received: from smtpclient.apple ([23.132.124.130])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e31da818sm10336762a12.61.2025.07.01.19.15.26
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 01 Jul 2025 19:15:30 -0700 (PDT)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next v6 1/3] bpf: Show precise link_type for
- {uprobe,kprobe}_multi fdinfo
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- John Fastabend <john.fastabend@gmail.com>,
- Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
- <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
- KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
- Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
- Matt Bobrowski <mattbobrowski@google.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-References: <20250627082252.431209-1-chen.dylane@linux.dev>
- <CAADnVQLWZH0sQk6ni-AWb+SRJ+H_sE=Gvwn3wdu+UC=mJiPPrg@mail.gmail.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Chen <chen.dylane@linux.dev>
-In-Reply-To: <CAADnVQLWZH0sQk6ni-AWb+SRJ+H_sE=Gvwn3wdu+UC=mJiPPrg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [RESEND PATCH net-next v4 0/4] vsock: Introduce SIOCINQ ioctl
+ support
+From: Xuewei Niu <niuxuewei97@gmail.com>
+In-Reply-To: <20250701180927.2cafbb5c@kernel.org>
+Date: Wed, 2 Jul 2025 10:15:14 +0800
+Cc: sgarzare@redhat.com,
+ mst@redhat.com,
+ pabeni@redhat.com,
+ jasowang@redhat.com,
+ xuanzhuo@linux.alibaba.com,
+ davem@davemloft.net,
+ netdev@vger.kernel.org,
+ stefanha@redhat.com,
+ leonardi@redhat.com,
+ decui@microsoft.com,
+ virtualization@lists.linux.dev,
+ kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ fupan.lfp@antgroup.com,
+ Xuewei Niu <niuxuewei.nxw@antgroup.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <E6A8AF53-7AB0-46C1-AE41-FAB5F443911C@gmail.com>
+References: <20250630075727.210462-1-niuxuewei.nxw@antgroup.com>
+ <20250701180927.2cafbb5c@kernel.org>
+To: Jakub Kicinski <kuba@kernel.org>
+X-Mailer: Apple Mail (2.3826.600.51.1.1)
 
-在 2025/7/2 04:39, Alexei Starovoitov 写道:
-> On Fri, Jun 27, 2025 at 1:23 AM Tao Chen <chen.dylane@linux.dev> wrote:
->>
->> Alexei suggested, 'link_type' can be more precise and differentiate
->> for human in fdinfo. In fact BPF_LINK_TYPE_KPROBE_MULTI includes
->> kretprobe_multi type, the same as BPF_LINK_TYPE_UPROBE_MULTI, so we
->> can show it more concretely.
->>
->> link_type:      kprobe_multi
->> link_id:        1
->> prog_tag:       d2b307e915f0dd37
->> ...
->> link_type:      kretprobe_multi
->> link_id:        2
->> prog_tag:       ab9ea0545870781d
->> ...
->> link_type:      uprobe_multi
->> link_id:        9
->> prog_tag:       e729f789e34a8eca
->> ...
->> link_type:      uretprobe_multi
->> link_id:        10
->> prog_tag:       7db356c03e61a4d4
->>
->> As Andrii suggested attach_type can be recorded in bpf_link, there is
->> still a 6 byte hole in bpf_link, we can fill the hole with attach_type
->> soon.
->>
->> Co-authored-by: Jiri Olsa <jolsa@kernel.org>
->> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
->> ---
->>   include/linux/bpf.h      |  1 +
->>   kernel/bpf/syscall.c     |  9 ++++++++-
->>   kernel/trace/bpf_trace.c | 10 ++++------
->>   3 files changed, 13 insertions(+), 7 deletions(-)
->>
->> Change list:
->>    v5 -> v6:
->>      - Move flags into bpf_link to get retprobe info
->>        directly.(Alexei, Jiri)
->>    v5:
->>    https://lore.kernel.org/bpf/20250623134342.227347-1-chen.dylane@linux.dev
->>
->>    v4 -> v5:
->>      - Add patch1 to show precise link_type for
->>        {uprobe,kprobe}_multi.(Alexei)
->>      - patch2,3 just remove type field, which will be showed in
->>        link_type
->>    v4:
->>    https://lore.kernel.org/bpf/20250619034257.70520-1-chen.dylane@linux.dev
->>
->>    v3 -> v4:
->>      - use %pS to print func info.(Alexei)
->>    v3:
->>    https://lore.kernel.org/bpf/20250616130233.451439-1-chen.dylane@linux.dev
->>
->>    v2 -> v3:
->>      - show info in one line for multi events.(Jiri)
->>    v2:
->>    https://lore.kernel.org/bpf/20250615150514.418581-1-chen.dylane@linux.dev
->>
->>    v1 -> v2:
->>      - replace 'func_cnt' with 'uprobe_cnt'.(Andrii)
->>      - print func name is more readable and security for kprobe_multi.(Alexei)
->>    v1:
->>    https://lore.kernel.org/bpf/20250612115556.295103-1-chen.dylane@linux.dev
->>
->> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
->> index 5b25d278409..3d8fecc9b17 100644
->> --- a/include/linux/bpf.h
->> +++ b/include/linux/bpf.h
->> @@ -1702,6 +1702,7 @@ struct bpf_link {
->>           * link's semantics is determined by target attach hook
->>           */
->>          bool sleepable;
->> +       u32 flags :8;
+
+> On Jul 2, 2025, at 09:09, Jakub Kicinski <kuba@kernel.org> wrote:
 > 
-> There is a 7-byte hole here.
-> Let's use 'u32 flags' right now and optimize later if necessary.
+> On Mon, 30 Jun 2025 15:57:23 +0800 Xuewei Niu wrote:
+>> Introduce SIOCINQ ioctl support for vsock, indicating the length of unread
+>> bytes.
+>> 
+>> Similar with SIOCOUTQ ioctl, the information is transport-dependent.
+> 
+> This series does not apply cleanly on current net-next.
+> Please rebase & repost.
+> Please note that we request that repost do not happen more often than
+> 24 hours apart:
+> https://www.kernel.org/doc/html/next/process/maintainer-netdev.html
 
-Ok, will change it in v7.
+I'll rebase, and send out v5 in a few days, in order to have more comments.
 
--- 
-Best Regards
-Tao Chen
+Thanks,
+Xuewei
+
+> -- 
+> pw-bot: cr
+
