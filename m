@@ -1,173 +1,183 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC032BDC30
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:13:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC49427A121
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:13:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751465587; cv=none; b=lp30nKOKyVwvrtMxONG2Jt8F+yh+OXsGihOCEfa9D8wm16Cxs59Usf9GoJ43yoZOCawIli8Hg3lB/BSnyagejf7/2fQAs4ibuwyVjLXpnRlY5YoJnV+sbDg7Xwhkf6M+tzgac5xCDa2qSmffVOD9uE3hFnyLNiJKcnIV4mkQV3c=
+	t=1751465606; cv=none; b=LcToOncrRBjWoPQRl/71yqSzQ0sBXQgrQbrbfCOhTcu0rhjQox5BsVhBwg1jq2nOtcAdIjSuwNKStScwpr7WNVbpdnLVP60uMOCcdud1Vs5knCYhQnVnbSGWeJwv/xTnBAxNgyNjmNbacWWSMVSyfBuJHp6EMNlYSWTl+L4AkGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751465587; c=relaxed/simple;
-	bh=xIX6GxkYy+RMVioZ/VaEmi8TDF7cbtgtQXVNUQIlmus=;
+	s=arc-20240116; t=1751465606; c=relaxed/simple;
+	bh=T2cbnqQkqCu7yJ1ibRZfqew237LIDEtBM6zvXy3oISY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AbWKEeMcLvQwuQJLmFPj7Cnlcefb7mvyzY4eHCI0NtzSX+QKilHWs+lZDtKAhe1/1Ox34IF297fPlqObQYKPQEVHmCI1GDeJ1tVEtwBex7bh+S5s5xy9Q1SjqlvypqZ9BTVD5Os3Cvt7CzfmxlLJVxcxBVIPtTKiasV5bWpsDB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=0g8/CW6n; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
+	 Content-Type:Content-Disposition:In-Reply-To; b=euPvtPzZPLVU/O/icuFkyThurpCCFP1sXGeIOwnWAiOJhul2SD+FuelZsilOOqWXi2xtv2XixTI7KHpees8Gk0M0sr5S2I0fDXN6ZaHE/RQzy5yhyXEW+V32QCG283pnbWuXUVwitHxVW/cdrgenSBJCHjv4T+pOkXs8DhIWgjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=b2PaRKIH; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="0g8/CW6n"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-453634d8609so49339045e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 07:13:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="b2PaRKIH"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-4a58d95ea53so74979741cf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 07:13:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1751465583; x=1752070383; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KCX8EDCd8/i/wYRS9YBmGDW0iWUiXiEN/46xP+vv74E=;
-        b=0g8/CW6n4xengA9/rppoYsTHQxislg1Z2I5aP0twp4c8xYsmszHOV/Mpf+zRNJV7cw
-         Q5NpzqCvER6Hwbt+TGuNv95T0LPr2gZtIN775W3NCc4Oy6BZN9tReQxeGchZZ9TGl+G7
-         IVVsH5CErKsV0gwC8iSYFI3qUaoH1oMvVIpTvGJEoeWHBZ3T78rvkfO5BE3a15uv3eeV
-         2iuN0R7Ef47Z8WLCkj3PX8X5G0UauUE6c5zWyFEKKKMcVZ+psObLob816QgkeW7zIfGI
-         aKVKBjrsSwhrF7xrGDig/xh5ruQCa4dSyRgtOik80DqnLuVSVAwACKdYmABsd1dVdZ6x
-         ZQXg==
+        d=ziepe.ca; s=google; t=1751465603; x=1752070403; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=LI2D5V4EggMWsDP/C9ghbDqwYMTHQ8Upr7Uk1D8akao=;
+        b=b2PaRKIHNS83igXP3/qMRz9J+6Llacyao2+jWyTXEBLy23E7u50tuB07aAONdHK9yL
+         bX6+QsJpcwBlZLT2r8WVVztPiB+myLlg/aIdcKA/FYrZcjPkILIfLj8XW6Nf6G/5PEbw
+         EzaantsYhzeHe8POJSFwxpkYtrUDw29BoFk2YFyWDT4hHvxBgb31szrd2dciGRriPgR7
+         m5pyxwkgzLt5iYIUWEWHMbQum8TgivKQYkrO4Od5Kwk2igFFwXQk6eGAdtlCecUACW6i
+         MAjXjqj2HpeTts1286h2hQSY0HmKB++2IOIgseGHYcqoCu2zokua7GnnucQQgnSanEsC
+         5W5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751465583; x=1752070383;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KCX8EDCd8/i/wYRS9YBmGDW0iWUiXiEN/46xP+vv74E=;
-        b=RXLLOPArGfQQJGIMkeAMbK7CPylBHUUgF3pERLJSb91vQBkVMtFyEj0+wdRCi8Kl4z
-         RQn2ti8oWZW8rd+s5ywi6Oca356+zIVQw23IRKAVQ5+H37amoiIqi/1iSic4fsv2hv6Y
-         kvqWSnrxtwJk7mEnPfjH0Nsz2IIS+RVkWf1Rdpnw9lF3l/Q2Hx1IrlZqBqNraQQYqy7u
-         kNXOdW/MgOivQkB0YjcRa6FMsBelt5ZGksdP5EFsTAFZNRUmypMCsgK17h/K8+jLGrcY
-         kpX6BoEh1722mCjYZ3jPpbtqMd3VnWoDJSRamDxUFJ3l+9+pQzEn/1l0aByZApbjwVRM
-         b1OQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX66V/BokaHzd9qc+3f8VIFO9z2fDaZdMXMQSNArwq08dKtM9mCQWuWufzPFw2IdVb6kMzra74/YaK9a3k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1QGCKvQFbEGuE+TBCtuP89fE7/7JdwMJVJmUHoHx22tVOUOwY
-	wkpNEju1yILNcKrPGYJtW2QyfO/TPU8KeqZGrCzXTiVb5QcVAulie4OfJMlJr+Onz+0=
-X-Gm-Gg: ASbGncvJ6aFCcl1k0/gYt7pqLQvXgqi5c/BUfVQXL8WE/RTHi8x3jrSGiIGP+s9nNzf
-	MzG/7txgDHJk4c5rIqBfn8Wq/5v7ATMjfD3l1ThpRfLlsDXM7jqbwHgcs+Pn/4O/vOSV/HYTYfY
-	QQJRMA2B7uAVwjAcyYKu78tjLbWtG7lCwOOb7/k4zhWo6SGVpeUJYGUcGZH4lTsFR+9NwywseKM
-	0MXt3c2qio3/DPTrPo2na8XWURwy48Adkq24p6icG7Sx53C084TvwbCGSIe2ci23BRwlcQBuKIt
-	5WuQsRmEIpZC2vHB6WoSPaZlbxqLYLMSKXKivpz/fuoY5JAamSRPefNZdrMwRJGga9+ITA==
-X-Google-Smtp-Source: AGHT+IEk1Iz9F6Hzi17G8siVxy1kneMMVA9o7oJxCvLiimTGG5VAQ9oHTXa5JjHBEPPb8pmO2Hxa8w==
-X-Received: by 2002:a05:600c:638e:b0:453:b44:eb71 with SMTP id 5b1f17b1804b1-454a370c313mr35319005e9.19.1751465582882;
-        Wed, 02 Jul 2025 07:13:02 -0700 (PDT)
-Received: from jiri-mlt ([193.47.165.251])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823b6d50sm233164175e9.30.2025.07.02.07.12.56
+        d=1e100.net; s=20230601; t=1751465603; x=1752070403;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LI2D5V4EggMWsDP/C9ghbDqwYMTHQ8Upr7Uk1D8akao=;
+        b=qWwnw4MHIKYLItSaC0vIoICnUPSezsu/3+mu+wCiXUuR1wD/EMwDY/ALvIp6n5Wu33
+         xr6HfGOHmzE5vZ6sjToQChn9Huuzy/xKcu7meOXGdwXly/KWR/Sg/gJ10rlvz247EAAz
+         Zi6tTFhKZOaSSLZYrh0XPe5tis6jbcKXGm8rjIfUDaeAYE/9ATc540748c+BBvSp0N+/
+         O9lQRhBssIBa5WBzzi9KeYOtCaosMZm2C3indGlZuvI59DJ8wGhE752Gi2jnAFtdWBIO
+         D7wf/qeWFIHGa/A5by2pCA22dbJnb9dYhXXI+N+pTkgEChAejur1VW1btTbxR4W9fkM0
+         o0cw==
+X-Forwarded-Encrypted: i=1; AJvYcCWLlTzfndE82TFM5xuqfXfg95iM4ilPkHYD5k0VIGR6dmbrb/26zOPjtzX8ylEomN6oaXnjHoutUWeZ+TQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzZ0XXvl0mSirSkP+XWmdahHhhLDYuVMlB+xU/Pw7Rr85RsR6q
+	J54vMwvRGckIkR81CNAeAZDB8iGJqp1CLXQ2DEEWDSyiqNZEMQ908GFbSZOwq1Gqx6I=
+X-Gm-Gg: ASbGnctcqfuycXc0YiNMVTBqIKcc3Zdh0Yi9GAB1vHhj1JvktFZFCAZLKprN8QsxDn0
+	z7KnYGTeMxLtDSin6ZG9kYNyPMt2wbHuyCERE5BZU+4ZCzoyi190gVVhEtGnY5w5tnAniJ4TCWl
+	jRDaQgcSgBThnGZ9Yud2f64yqPXZAjMU88oK4ymjC0K8NW4PrUpLEurNmb9XWNngsKbMu/14bbx
+	zM+DWvuqkMdxsunzUDkjznutnStDIc2IrMwEcew6STtZKBpTL+IVReOe+ueLab7xYQ/nd2RDRqf
+	tP+pmHWxwZIAaKQQyx1tdtDPJKoMsmozM0aY
+X-Google-Smtp-Source: AGHT+IFGejWlBdta72VP8k4wECxNZ4C8RRbrgrTD+eMk+Zg9yBG/xm3+F7tKfuIfEoyh6KMev8oSSw==
+X-Received: by 2002:a05:622a:1109:b0:4a7:81f6:331e with SMTP id d75a77b69052e-4a977bdec57mr34518361cf.6.1751465603229;
+        Wed, 02 Jul 2025 07:13:23 -0700 (PDT)
+Received: from ziepe.ca ([130.41.10.202])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7fc1061d3sm92215001cf.15.2025.07.02.07.13.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 07:13:02 -0700 (PDT)
-Date: Wed, 2 Jul 2025 16:12:54 +0200
-From: Jiri Pirko <jiri@resnulli.us>
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: netdev@vger.kernel.org, 
-	Prathosh Satish <Prathosh.Satish@microchip.com>, Vadim Fedorenko <vadim.fedorenko@linux.dev>, 
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Shannon Nelson <shannon.nelson@amd.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, Michal Schmidt <mschmidt@redhat.com>, 
-	Petr Oros <poros@redhat.com>
-Subject: Re: [PATCH net-next v12 09/14] dpll: zl3073x: Register DPLL devices
- and pins
-Message-ID: <3sgsj5vxtkzfpfpn5igave2qppy27mq7erpcmhqtfswaayaynv@zcsldf44o7b3>
-References: <20250629191049.64398-1-ivecera@redhat.com>
- <20250629191049.64398-10-ivecera@redhat.com>
- <ne36b7ky5cg2g3juejcah7bnvsajihncmpzag3vpjnb3gabz2m@xtxhpfhvfmwl>
- <1848e2f6-a0bb-48e6-9bfc-5ea6cbea2e5c@redhat.com>
- <k2osi2mzfmudh7q3av5raxj33smbdjgnrmaqjx2evjaaloddb3@vublvfldqlnm>
- <e55caefa-2ea9-4d31-be76-48cdfd481b5c@redhat.com>
+        Wed, 02 Jul 2025 07:13:22 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uWyDB-00000004jk4-3JNi;
+	Wed, 02 Jul 2025 11:13:21 -0300
+Date: Wed, 2 Jul 2025 11:13:21 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Vishal Annapurve <vannapurve@google.com>
+Cc: Yan Zhao <yan.y.zhao@intel.com>, Alexey Kardashevskiy <aik@amd.com>,
+	Fuad Tabba <tabba@google.com>,
+	Ackerley Tng <ackerleytng@google.com>, kvm@vger.kernel.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+	linux-fsdevel@vger.kernel.org, ajones@ventanamicro.com,
+	akpm@linux-foundation.org, amoorthy@google.com,
+	anthony.yznaga@oracle.com, anup@brainfault.org,
+	aou@eecs.berkeley.edu, bfoster@redhat.com,
+	binbin.wu@linux.intel.com, brauner@kernel.org,
+	catalin.marinas@arm.com, chao.p.peng@intel.com,
+	chenhuacai@kernel.org, dave.hansen@intel.com, david@redhat.com,
+	dmatlack@google.com, dwmw@amazon.co.uk, erdemaktas@google.com,
+	fan.du@intel.com, fvdl@google.com, graf@amazon.com,
+	haibo1.xu@intel.com, hch@infradead.org, hughd@google.com,
+	ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz,
+	james.morse@arm.com, jarkko@kernel.org, jgowans@amazon.com,
+	jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com,
+	jun.miao@intel.com, kai.huang@intel.com, keirf@google.com,
+	kent.overstreet@linux.dev, kirill.shutemov@intel.com,
+	liam.merwick@oracle.com, maciej.wieczor-retman@intel.com,
+	mail@maciej.szmigiero.name, maz@kernel.org, mic@digikod.net,
+	michael.roth@amd.com, mpe@ellerman.id.au, muchun.song@linux.dev,
+	nikunj@amd.com, nsaenz@amazon.es, oliver.upton@linux.dev,
+	palmer@dabbelt.com, pankaj.gupta@amd.com, paul.walmsley@sifive.com,
+	pbonzini@redhat.com, pdurrant@amazon.co.uk, peterx@redhat.com,
+	pgonda@google.com, pvorel@suse.cz, qperret@google.com,
+	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com,
+	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com,
+	quic_pheragu@quicinc.com, quic_svaddagi@quicinc.com,
+	quic_tsoni@quicinc.com, richard.weiyang@gmail.com,
+	rick.p.edgecombe@intel.com, rientjes@google.com,
+	roypat@amazon.co.uk, rppt@kernel.org, seanjc@google.com,
+	shuah@kernel.org, steven.price@arm.com, steven.sistare@oracle.com,
+	suzuki.poulose@arm.com, thomas.lendacky@amd.com,
+	usama.arif@bytedance.com, vbabka@suse.cz, viro@zeniv.linux.org.uk,
+	vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org,
+	willy@infradead.org, xiaoyao.li@intel.com, yilun.xu@intel.com,
+	yuzenghui@huawei.com, zhiquan1.li@intel.com
+Subject: Re: [RFC PATCH v2 04/51] KVM: guest_memfd: Introduce
+ KVM_GMEM_CONVERT_SHARED/PRIVATE ioctls
+Message-ID: <20250702141321.GC904431@ziepe.ca>
+References: <d3832fd95a03aad562705872cbda5b3d248ca321.1747264138.git.ackerleytng@google.com>
+ <CA+EHjTxtHOgichL=UvAzczoqS1608RSUNn5HbmBw2NceO941ng@mail.gmail.com>
+ <CAGtprH8eR_S50xDnnMLHNCuXrN2Lv_0mBRzA_pcTtNbnVvdv2A@mail.gmail.com>
+ <CA+EHjTwjKVkw2_AK0Y0-eth1dVW7ZW2Sk=73LL9NeQYAPpxPiw@mail.gmail.com>
+ <CAGtprH_Evyc7tLhDB0t0fN+BUx5qeqWq8A2yZ5-ijbJ5UJ5f-g@mail.gmail.com>
+ <9502503f-e0c2-489e-99b0-94146f9b6f85@amd.com>
+ <20250624130811.GB72557@ziepe.ca>
+ <CAGtprH_qh8sEY3s-JucW3n1Wvoq7jdVZDDokvG5HzPf0HV2=pg@mail.gmail.com>
+ <aGTvTbPHuXbvj59t@yzhao56-desk.sh.intel.com>
+ <CAGtprH9-njcgQjGZvGbbVX+i8D-qPUOkKFHbOWA20962niLTcw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <e55caefa-2ea9-4d31-be76-48cdfd481b5c@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGtprH9-njcgQjGZvGbbVX+i8D-qPUOkKFHbOWA20962niLTcw@mail.gmail.com>
 
-Wed, Jul 02, 2025 at 02:16:53PM +0200, ivecera@redhat.com wrote:
->
->
->On 02. 07. 25 2:02 odp., Jiri Pirko wrote:
->> Wed, Jul 02, 2025 at 01:49:22PM +0200, ivecera@redhat.com wrote:
->> > 
->> > 
->> > On 02. 07. 25 12:57 odp., Jiri Pirko wrote:
->> > > Sun, Jun 29, 2025 at 09:10:44PM +0200, ivecera@redhat.com wrote:
->> > > 
->> > > [...]
->> > > 
->> > > > +/**
->> > > > + * zl3073x_dpll_device_register - register DPLL device
->> > > > + * @zldpll: pointer to zl3073x_dpll structure
->> > > > + *
->> > > > + * Registers given DPLL device into DPLL sub-system.
->> > > > + *
->> > > > + * Return: 0 on success, <0 on error
->> > > > + */
->> > > > +static int
->> > > > +zl3073x_dpll_device_register(struct zl3073x_dpll *zldpll)
->> > > > +{
->> > > > +	struct zl3073x_dev *zldev = zldpll->dev;
->> > > > +	u8 dpll_mode_refsel;
->> > > > +	int rc;
->> > > > +
->> > > > +	/* Read DPLL mode and forcibly selected reference */
->> > > > +	rc = zl3073x_read_u8(zldev, ZL_REG_DPLL_MODE_REFSEL(zldpll->id),
->> > > > +			     &dpll_mode_refsel);
->> > > > +	if (rc)
->> > > > +		return rc;
->> > > > +
->> > > > +	/* Extract mode and selected input reference */
->> > > > +	zldpll->refsel_mode = FIELD_GET(ZL_DPLL_MODE_REFSEL_MODE,
->> > > > +					dpll_mode_refsel);
->> > > 
->> > > Who sets this?
->> > 
->> > WDYM? refsel_mode register? If so this register is populated from
->> > configuration stored in flash inside the chip. And the configuration
->> > is prepared by vendor/OEM.
->> 
->> Okay. Any plan to implement on-fly change of this?
->
->Do you mean switching between automatic and manual mode?
->If so? Yes, later, need to extend DPLL API to allow this.
+On Wed, Jul 02, 2025 at 06:54:10AM -0700, Vishal Annapurve wrote:
+> On Wed, Jul 2, 2025 at 1:38 AM Yan Zhao <yan.y.zhao@intel.com> wrote:
+> >
+> > On Tue, Jun 24, 2025 at 07:10:38AM -0700, Vishal Annapurve wrote:
+> > > On Tue, Jun 24, 2025 at 6:08 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > > >
+> > > > On Tue, Jun 24, 2025 at 06:23:54PM +1000, Alexey Kardashevskiy wrote:
+> > > >
+> > > > > Now, I am rebasing my RFC on top of this patchset and it fails in
+> > > > > kvm_gmem_has_safe_refcount() as IOMMU holds references to all these
+> > > > > folios in my RFC.
+> > > > >
+> > > > > So what is the expected sequence here? The userspace unmaps a DMA
+> > > > > page and maps it back right away, all from the userspace? The end
+> > > > > result will be the exactly same which seems useless. And IOMMU TLB
+> > >
+> > >  As Jason described, ideally IOMMU just like KVM, should just:
+> > > 1) Directly rely on guest_memfd for pinning -> no page refcounts taken
+> > > by IOMMU stack
+> > In TDX connect, TDX module and TDs do not trust VMM. So, it's the TDs to inform
+> > TDX module about which pages are used by it for DMAs purposes.
+> > So, if a page is regarded as pinned by TDs for DMA, the TDX module will fail the
+> > unmap of the pages from S-EPT.
 
-That is why I ask. Looking forward to it.
+I don't see this as having much to do with iommufd.
 
->
->Ivan
->
->> > 
->> > > > +	zldpll->forced_ref = FIELD_GET(ZL_DPLL_MODE_REFSEL_REF,
->> > > > +				       dpll_mode_refsel);
->> > > > +
->> > > > +	zldpll->dpll_dev = dpll_device_get(zldev->clock_id, zldpll->id,
->> > > > +					   THIS_MODULE);
->> > > > +	if (IS_ERR(zldpll->dpll_dev)) {
->> > > > +		rc = PTR_ERR(zldpll->dpll_dev);
->> > > > +		zldpll->dpll_dev = NULL;
->> > > > +
->> > > > +		return rc;
->> > > > +	}
->> > > > +
->> > > > +	rc = dpll_device_register(zldpll->dpll_dev,
->> > > > +				  zl3073x_prop_dpll_type_get(zldev, zldpll->id),
->> > > > +				  &zl3073x_dpll_device_ops, zldpll);
->> > > > +	if (rc) {
->> > > > +		dpll_device_put(zldpll->dpll_dev);
->> > > > +		zldpll->dpll_dev = NULL;
->> > > > +	}
->> > > > +
->> > > > +	return rc;
->> > > > +}
->> > > 
->> > > [...]
->> > > 
->> > 
->> 
->
+iommufd will somehow support the T=1 iommu inside the TDX module but
+it won't have an IOAS for it since the VMM does not control the
+translation.
+
+The discussion here is for the T=0 iommu which is controlled by
+iommufd and does have an IOAS. It should be popoulated with all the
+shared pages from the guestmemfd.
+
+> > If IOMMU side does not increase refcount, IMHO, some way to indicate that
+> > certain PFNs are used by TDs for DMA is still required, so guest_memfd can
+> > reject the request before attempting the actual unmap.
+
+This has to be delt with between the TDX module and KVM. When KVM
+gives pages to become secure it may not be able to get them back..
+
+This problem has nothing to do with iommufd.
+
+But generally I expect that the T=1 iommu follows the S-EPT entirely
+and there is no notion of pages "locked for dma". If DMA is ongoing
+and a page is made non-secure then the DMA fails.
+
+Obviously in a mode where there is a vPCI device we will need all the
+pages to be pinned in the guestmemfd to prevent any kind of
+migrations. Only shared/private conversions should change the page
+around.
+
+Maybe this needs to be an integral functionality in guestmemfd?
+
+Jason
