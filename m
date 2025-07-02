@@ -1,122 +1,133 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A47AC221F03;
-	Wed,  2 Jul 2025 20:33:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71BC2221F03;
+	Wed,  2 Jul 2025 20:33:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751488401; cv=none; b=iTsNNl1EIjbnTTJC202hzRz2WpUsaw8kCqIJMgCBUZ3akA9rv2MpjNMs8WR4ksvNun05z+RJBN2ZVlGsPAadc64k9WnJtzDAXpTaBi5v7zlqWEYx/4aogMvyCcd7gTwQFynoLFQZ5Ow1GjH9Vx/fbLdkTKU+aQd6Tohp2TQ5mfk=
+	t=1751488438; cv=none; b=fTHHbyLIMapdnPlnEEoVZ4I2kfan2gYfHdurNFfLbTeE0qObwL7QTDOaR0CutB75D3ElcprV4plZgYl/GLnWrEvicZJyHiQ2XIJfAXEnJMEraZu3TTyLrdFBi7kaAUIIAGT4jOLIwmJDT/U2Ee+vmNxt98LJgp7EiEPik+mZKGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751488401; c=relaxed/simple;
-	bh=TnU/sk0OD7aWwA5HkeV/e3lpPQayYxGYFTTqDsslg/Y=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=SqCKDVQhxw+lsmhF14uhJkJP87Ltb2jZ4MkJhiSwQRAPtr5wqrk0972X0beFZs8s+XDgqNcReMNnkFKLodcJ16YpIR/ebu8CbajC1DA3X0U8SF2KgfcBA/fApAh/HCWrYU46gSLKZL10S9foLtLmR6uzO+XOj4TD2/szIjjQxbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VBi8wumQ; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751488438; c=relaxed/simple;
+	bh=gCZxcp80Zc/TvUBmFbhKY2bvAwhVupnUXUBlhnDmqDI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=B3skri9tooBT2GmPPGOyy/cInbUGPrFki7Gaor2GXuDkwdmksZrvTNIx1kyz044qJkU4WpQm0V/5/+yj7UKAbJXQw63V+59O6ZhjG8F2QJi/VrA/1xsLEidAk7cZJOJ8kWGza0Y9ABMUnPu2pJ0vOyWRXfoVbU81gRLTseYBpP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P0cJHMNx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VBi8wumQ"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7425bd5a83aso4560114b3a.0;
-        Wed, 02 Jul 2025 13:33:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751488399; x=1752093199; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=TnU/sk0OD7aWwA5HkeV/e3lpPQayYxGYFTTqDsslg/Y=;
-        b=VBi8wumQfckbHOsiOQdHR+OdhPuocGeiBG1tVLOMn77ZnVGnWX/q8PVfQ1FGsjxMZg
-         c0bw+pXvc60g66nX0zdW3XSqRpvJvQX3Fz3WTRXJlTII0QNF+DT6K+F88mgBPUzY6keb
-         rVuhMCO3AV34POAd99fY+ODwtmWqKqx5H2BXE4NrOSRc9gfumkjztmUr6tdExNXB5Fi9
-         8s5o29cI1chPWlGBinPv1SP2Mn/dTLcMDbfijbXooJFe9YgEVi6BH3POqS5jI88aa3pM
-         9i7NitVEnUV1HSuN/AwnqPld+Qk+hvo7mc1MUavPTRdbqXX3g3iaCOiDLQJMsDglpl+W
-         j/Hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751488399; x=1752093199;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TnU/sk0OD7aWwA5HkeV/e3lpPQayYxGYFTTqDsslg/Y=;
-        b=XPQAe2IVEvy9dxOm/zQkCy5Wj0pO6t3yWzpVFuoGtEI1ks2NwlVKDxYm4o+j6p2QfG
-         fjNeZrxXQ5XYMN5ZgeNsFRZnRNC3GXGMeCnARw7J+e59KTzYb2KbUdWsB1SJFxmLIlfJ
-         yK6YsnTpgfkZm0gN7sedHPPd8VQygdCVz1cDOrOZ4U+oXtI5EIFa2St8/PUqbIvBLssN
-         +CqSkKjpg7xjOPeX71/f+hil8Yl1sF2Q7ww5ZagfOpH1eLzmKDsxpTJMSkyWHplgfI9o
-         KdBHGrUNH3st67VISf+83wrW1KqNhWLm42eMH6AA1GoEl2s2rQ1A1yBllULnqBd8V9Ko
-         DezQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVoN0h1mSlHH/m4Nz/ctdUrQtYFTJ4BKxNIr5lisLf27TSwJ7pWqBHQiV+iWVf81w/yZZdJKIAKykYbE8o/@vger.kernel.org, AJvYcCWh4dXUYMHaZf2Ra655HL/gBAo5GuMnMEttQrOLKEFQ7aLz2ww2vmOSJ3xkDW7sMFQ9MWMUQDCvuN+qCRzkv7zf@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMLXzbk9Uwe16tUQ7UpkeJG21I4t2md/bktm/fZ72b1INlK9Zg
-	EuIbs4MpyDnmbRw/B++1Fvycm1BeN513W3+SgmqCv6w/wrLZmBTqtz8845r7UiL9R9Y=
-X-Gm-Gg: ASbGncseKn3NBV+cRJobszKcCE8dURRJwnsqXUsN17U+zRMFTF7/BClLDSRwQL+AbLP
-	xVKrI1FzkAbmKnBbu29VR5hFGALL5oiyxk/CvEO/ElIIVcpC5oED2in+MgjE3843xCUmr9ecqlZ
-	/EyNMjvpCeYmrGFb43Fq9Ii9G7Ah65Gy3fg05OPWFWx6VCe0GNlyvBGPqEGmuUElMCoBY1iKj2w
-	BEU7PpfuuDhpNqGoh4r/pCTPnFqlGnnRHDoQHK5zhFGPdXkVDvq2oNlwHtySZfMlueoIv6iqGa8
-	G8uwaFeedhOQHKZLYKYRU6KnpeX6/XtaKoxTu39MaO6SH44KzlMb7Zm1+JjzMW/muTWz
-X-Google-Smtp-Source: AGHT+IEZEazQ7PWX1sPklfJKlXDCWYPEl9W6FjIBrwCYKJIUDhI8e9KBqhIU+S4XVSSgpYDJtCQ3Xw==
-X-Received: by 2002:a05:6a00:17a6:b0:748:9d26:bb0a with SMTP id d2e1a72fcca58-74b5138bbdemr6543826b3a.18.1751488398753;
-        Wed, 02 Jul 2025 13:33:18 -0700 (PDT)
-Received: from [192.168.1.12] ([223.185.43.246])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af540ae41sm15342862b3a.19.2025.07.02.13.33.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 13:33:18 -0700 (PDT)
-Message-ID: <56091d9b2c9b4d565da7569a81d8b85f0f7d4c7b.camel@gmail.com>
-Subject: Re: [UNDERSTOOD] KASAN: slab-out-of-bounds in vsnprintf triggered
- by large stack frame
-From: Shardul Bankar <shardulsb08@gmail.com>
-To: Kees Cook <kees@kernel.org>, Petr Mladek <pmladek@suse.com>
-Cc: linux-kernel@vger.kernel.org, rostedt@goodmis.org, 
- john.ogness@linutronix.de, senozhatsky@chromium.org,
- viro@zeniv.linux.org.uk,  brauner@kernel.org, jack@suse.cz,
- linux-fsdevel@vger.kernel.org,  linux-hardening@vger.kernel.org
-Date: Thu, 03 Jul 2025 02:03:09 +0530
-In-Reply-To: <202507020716.1B1E38593@keescook>
-References: <9052e70eb1cf8571c1b37bb0cee19aaada7dfe3d.camel@gmail.com>
-	 <aGUfd7mxQOOpkHz8@pathway.suse.cz> <202507020716.1B1E38593@keescook>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P0cJHMNx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5B0DC4CEE7;
+	Wed,  2 Jul 2025 20:33:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751488437;
+	bh=gCZxcp80Zc/TvUBmFbhKY2bvAwhVupnUXUBlhnDmqDI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=P0cJHMNx98Io1+j6CqWgHphltaTzqD/n4k6LezCCOFYqmSZLPcaHq4sZf//mkWD7E
+	 V181RSGod454zU2b09H4xW52Cxw82+xXAkH3HNmQH6RWxQjkqFjaiPKqIXYfBGQrab
+	 6MCk920pj/UlXppIK4fLL9rkGJyp2uE+YuWSVzO3BsEU9rer1dnsV6XGh4DFEoyZ11
+	 WZKEIgyhn+G5z29KGSyFH+qKdONz3SNwcIrjPN5YIM73PrXymUG98lJkO+jUUATqh8
+	 /oVlT6NVue+vmNfoOJS+4iQTfcKq4QWq2QpROzE2ii8eyrdFWhdgFVrTKnT4vhGD4B
+	 S4mchEqILJiFA==
+Message-ID: <507205ff-fdb8-4f43-ab69-418cfd9da4af@kernel.org>
+Date: Wed, 2 Jul 2025 22:33:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] dt-bindings: remoteproc: qcom,sm8550-pas: document
+ SM7635 ADSP & CDSP
+To: Luca Weiss <luca.weiss@fairphone.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>,
+ ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250627-sm7635-remoteprocs-v2-0-0fa518f8bf6d@fairphone.com>
+ <20250627-sm7635-remoteprocs-v2-2-0fa518f8bf6d@fairphone.com>
+ <20250701-pretty-vivacious-panther-540ff4@krzk-bin>
+ <DB0N2N5JIUNS.3UFD0C81VYS9F@fairphone.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <DB0N2N5JIUNS.3UFD0C81VYS9F@fairphone.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+On 01/07/2025 12:16, Luca Weiss wrote:
+>>>    - if:
+>>>        properties:
+>>>          compatible:
+>>> @@ -185,6 +205,7 @@ allOf:
+>>>          compatible:
+>>>            contains:
+>>>              enum:
+>>> +              - qcom,sm7635-adsp-pas
+>>>                - qcom,sm8550-adsp-pas
+>>>                - qcom,sm8650-adsp-pas
+>>>                - qcom,sm8750-adsp-pas
+>>
+>> sm6350 fits, doesn't it?
+> 
+> Not quite, for sure the firmware-name and memory-region for adsp and
+> cdsp on this SoC requires the dtb firmware file as well, apart from that
+> it looks similar enough.
+
+I looked briefly, so indeed it might not fit well. That's on you to
+investigate and find the best candidate which will mean the least amount
+of changes or the simplest binding.
+
+> 
+> I'm also okay with creating a new (after the whole renaming thing)
+> qcom,milos-pas.yaml which contains the bindings for all 4 *-pas'es.
+
+If it does not fit sm6350 or others then yes, new binding it is.
 
 
 
-Hello all,
-
-Thank you to Pedro, Petr, and Kees for taking the time to provide such
-a detailed analysis and clarification. My apologies for the initial
-misinterpretation.
-
-I now understand that the issue reported is not a latent kernel bug,
-but the expected and correct behavior when a module overflows its
-fixed-size kernel stack. Your explanation that the KASAN report was a
-direct symptom of this overflow, rather than the trigger of a separate
-bug, was the key piece I was missing.
-
-> Try this and see how the crash changes:
->=20
-> static int __init final_poc_init(void)
-> {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0volatile char stack_eater=
-[STACK_FOOTPRINT];
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0for (int i =3D STACK_FOOT=
-PRINT - 1; i >=3D 0; i++)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0stack_eater[i] =3D 'A';
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0...
->=20
-> :)
->=20
-> >=20
-As you suggested, Kees, I did try the PoC with the stack-clashing loop.
-It was an insightful experiment, as it demonstrated how the specific
-symptoms of the crash could change depending on exactly which memory
-was corrupted by the overflow. It helped solidify my understanding of
-the root cause.
-
-I appreciate you all sharing your expertise and helping me learn from
-this.
-
-Thank you,
-Shardul Bankar
+Best regards,
+Krzysztof
