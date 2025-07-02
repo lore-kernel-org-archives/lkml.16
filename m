@@ -1,95 +1,107 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777122F7D08
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 18:40:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 545132F7D14;
+	Wed,  2 Jul 2025 18:40:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751481630; cv=none; b=upbBUEA3pxfCr4d7IM1Kdf3UKLdMkNatL0eNRj/6VLFmgTGyNZXzq3/kO8qyhvA4f6ZWxhCEK3K5S0id4HIl4m+nrV3XALelVVqR6zw05emJSEpdWCxT2nMt+3OBmTiKHO84iMoOA1EAB5t8I0/6N6fYMJFgyrioGijG3hlsCxI=
+	t=1751481632; cv=none; b=re8lV1yVYcfYnvgFzUp8UxK3N2VOt3Ee9KIBApyDwMkQyogVMPi4yp3qBEdBLmF26G9Zzkc+2BehAbA3yX7Jzjz1vGlWMzMene1ADCo8/uziJM4iQ6/US/4V7a6yzNMMx4yYaGaYThqEOI6cZ8obdE54pIvrWAufRvJKwKaQWN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751481630; c=relaxed/simple;
-	bh=nNA05Dnb2hIoX8oeaBHSBxtAqwh5LCT5so8nd8HtANM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hoZRp/F77H2N+deKcmLx14tUMxUi6ANsL+NKz/vytALpxuBeoJu/a5MCPsgznag3gyYQw5Xmyj4xCh3MRRY7/dh4B8zhaaLK4Ysp5sA3JijxwkYLcmBXD9tE62hK9oJWsES90gjbFQ6W1o6A0xPDw2nyYRfOOL/IrxL8pTNGuTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=iWA6s49V; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1751481632; c=relaxed/simple;
+	bh=JD88yMHNIqJLGJNkFMm447HbjKIEZj0pTYj6EiAF6fU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mQHZ813vZCeByAZ26had87hsxlebbCoMSlLk8IW39LSoB9tL3w1XlgwytUjEgGMz90fBPh15NOoabPRNbmKHvrs6xp6epUtnDf3yBHqOEDn2Y9Mni4xSccnpC8Pan9PAyQXbuLKBYjmwb8hz4KJBZbyX3sVecwBp7dvY2EVaDIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=kGAy9CNP; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="iWA6s49V"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id DF2A640E020E;
-	Wed,  2 Jul 2025 18:40:25 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id TQ8MgRyN4nh1; Wed,  2 Jul 2025 18:40:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1751481622; bh=yPUfwEn+TWpR+25qUC0YoUMBHySSl3XzmwBnngHtIWs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iWA6s49Vzd/Zx7X6v0oO8hbgyc6KWZo1OpaGDQgzr0Ut2I7dJKNuMH/tEouMquEYJ
-	 kFqvSUAQaj0LkCIBTVVqcc7D7DeowrVjbCADIB1hsjVaT6JsdRO+Iholm54vuBaMAy
-	 Qt5u6o8rTFSqny30EfPOxqG7ASaNVjWZMVLoQlDBFb3mg7gxfAd4Mg8XIr0gwucWwj
-	 eGPfcRvdl9DL5xsCBYKs4un9yjuz6SMPgt/SFJQA3cka2xt+hBnm4dhnekmjwu3I28
-	 XiwEwdp1EdqgpPkPrzITZN81YOK+3nnfNTkFx/DmSVqss4tmMbcYBMZ+ZNcEb+ReHu
-	 YFr+zs2CaSBwaIdcxPTLbslhdoTEGcUf5plhKJMOxqr/YEgOR0iaGmTluNFqW/SgFB
-	 stbg2klLBzT4pEkd7Miw6A9Ffbws6qTbxk1Wwfrn/bDu3MfpAAU7UggUTHz5SAb+Qs
-	 AMZdQ3mG56tDzwQcYEzcbWi69UTSZPPBUeQWHDwPKAXIv5CpRDA1Tuh7eSRQja3TCc
-	 2ZuTOuY66muEJljPJWKWVfeyEgZla2S/ZN3oS+51NggRyyQWu6Gv02qRFNPYA/Jz8t
-	 hTfXyZ83xuz4pxEaXd3HQ/1D1HsepKk8wIV56A6g01sDzNTruqSoXgNByBp32rogVW
-	 dEKkysALvIMaCxlgtG+cJB68=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6261140E0217;
-	Wed,  2 Jul 2025 18:40:10 +0000 (UTC)
-Date: Wed, 2 Jul 2025 20:40:03 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	kernel test robot <lkp@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>, llvm@lists.linux.dev,
-	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	x86@kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-	Jinjie Ruan <ruanjinjie@huawei.com>
-Subject: Re: [tip:master 19/19] include/linux/irq-entry-common.h:201:2:
- error: unexpected token
-Message-ID: <20250702184003.GIaGV9A4ysMZA8MF2w@fat_crate.local>
-References: <20250702132415.GFaGUy_6q0dZZI9AX3@fat_crate.local>
- <aGU_IY70Jt4bcbf2@J2N7QTR9R3.cambridge.arm.com>
- <20250702145425.GS1613376@noisy.programming.kicks-ass.net>
- <20250702150739.GT1613376@noisy.programming.kicks-ass.net>
- <20250702154137.71390C24-hca@linux.ibm.com>
- <20250702161012.GQ1613200@noisy.programming.kicks-ass.net>
- <20250702180136.GA3452438@ax162>
- <20250702181236.GGaGV2lAMxdCg_7MoX@fat_crate.local>
- <20250702182922.GHaGV6gl6axPokuBIr@fat_crate.local>
- <20250702183800.GA3958046@ax162>
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="kGAy9CNP"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-23c703c471dso2299635ad.0;
+        Wed, 02 Jul 2025 11:40:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1751481630; x=1752086430; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JD88yMHNIqJLGJNkFMm447HbjKIEZj0pTYj6EiAF6fU=;
+        b=kGAy9CNPt7ZisOyQHlRAK9+/BnBge2i474Gabm97NMobHNZPUHatGM1osUaQivd2ur
+         sd80npVlPngyYXTd2OuGOp6K1jX8pabEh+FWwJOhB+B+cF6y0sVxMSoSlRVlBDCnY0ja
+         0tvA3qim3moghcoQox0F2kYgMmXAOEKSGcwNyUfbFlVaRDzg9d9ZJxN2v+P2SerNPtcf
+         mijnWuJVIFQFr05lu9fN2sOodRPfa9UoPIwf8cVz3ka0KYPX1B0EHX46bQR7xKzyxIPg
+         YhB5ZpxswXp4mNvJ9/KbqfRXlUhCJJFGVX0zIPhDTEKiyxCgoniOiJbkCz0NJLIwbTzE
+         RU0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751481630; x=1752086430;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JD88yMHNIqJLGJNkFMm447HbjKIEZj0pTYj6EiAF6fU=;
+        b=pli2UtHEKaPl5M+6apcj131DUUsAqL/yKzPVjH9mxm090AWf3QFim9FrRzNJoGv07H
+         fOX4mpp+JYzCFPJy7y7MXDIjMfuNAM08rDLdBFnTeD2wxg6oWDCOgozSciMkIJQyrc4Q
+         Z4y8CVD8mXyJDhuF/RmvvYMDZoNEnxUv7MW4iOVVYPbOfXa3JcuTjqY4RLVQqp2x9w4E
+         FKSH3qRs4JDjj2OljuyRALsIDqi/S2eDn7nlJ8WNSmokNk0s9S5Q8jyo76nbjUn0GT3B
+         G79FQEZ+w8EDRRoa8ukRe3LmjfKrAleoYmrHl1fzfEzH+Ys0jiGhyxe9IA6UC7Mo+Naq
+         tMxg==
+X-Forwarded-Encrypted: i=1; AJvYcCUQ3MXVSxkfYBqzqC1NpPzQNX6+VTCZ6/+a/ZHlm1i2wk/CC0OjiBjwPEy6VCMocoR85BC24TKAvSryijs=@vger.kernel.org, AJvYcCUiHTIqpWXjlj4GuGgg9bxI7Quk+PGyrh5EgaGu7z0rkN3v0NClJSlPfO5TFhDOUKfoqJC4oTocLz/I@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3p7iphhesN4VHnDN+QTsCx7tOyVTVXIL4OofKlQig5S4SvS6d
+	3V8CAUahqgCxNvVHk/sZVqSnulA9IS3Yq0HWOv67B9MV656tnhZGoTU6HvGFcBTl/8r4sFSKUnh
+	ecmmV4Kr0qao9K8n56AAoBIbWGpn8hAs=
+X-Gm-Gg: ASbGncvU/9Bul2yHWLCXqLH5sN0QjzA8M7t/Q10AK+xAkICXKUV70K6NVixEyVe76Lm
+	LEdElHFBxYbAwa7tjXmW5crmg/kOTWJxsr7btNAvupLOHiDTjf+sFzh2Iy/sBCxIRiS97h/FH5S
+	Empj0+4Ereawhj3QzzEublYGWxFldmG67orvLdP7GE8/zY4GfNK3Hlt1CAcQIJTzN17QM/P6482
+	BAgl/bdsfgNoF8=
+X-Google-Smtp-Source: AGHT+IG65z5JM5OzIy1s20zy0osr0gbaem7rZyJo8s4662EGg8M9d+IcT5RnhEheXmCheH3vHusHJ+Ckhe0dlVQMHpE=
+X-Received: by 2002:a17:902:fc4c:b0:215:b1e3:c051 with SMTP id
+ d9443c01a7336-23c793c0efcmr7045825ad.11.1751481630377; Wed, 02 Jul 2025
+ 11:40:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250702183800.GA3958046@ax162>
+References: <20250628015328.249637-1-da@libre.computer> <CANAwSgTH67T9SBQSFQgFjvyrxNCbtfd9ZaCDZFACWA=ZQ-PYtQ@mail.gmail.com>
+ <CAFBinCBwTkVwcBTWOzS+G13+rRM2eftMXZ3GHzW+F+BY0bBBzg@mail.gmail.com>
+ <1j4ivued2q.fsf@starbuckisacylon.baylibre.com> <CACqvRUa8EqMbCd2x=di-a6jbMWW8CMo4kgLH=0qnsqHdO16kxA@mail.gmail.com>
+In-Reply-To: <CACqvRUa8EqMbCd2x=di-a6jbMWW8CMo4kgLH=0qnsqHdO16kxA@mail.gmail.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date: Wed, 2 Jul 2025 20:40:19 +0200
+X-Gm-Features: Ac12FXyR3mTzwKK3QsWJnUHD7XVn0YOVkSs2GNj-PlIQxt00gwgIj8Cr0AYFXDE
+Message-ID: <CAFBinCAkW+G9oV+SOJdac50oLezQnbc358dBgs56-RfjPd-zgA@mail.gmail.com>
+Subject: Re: [RFC] mmc: meson-gx-mmc: add delay during poweroff
+To: Da Xue <da@libre.computer>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Anand Moon <linux.amoon@gmail.com>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Kevin Hilman <khilman@baylibre.com>, linux-mmc@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 02, 2025 at 11:38:00AM -0700, Nathan Chancellor wrote:
-> On Wed, Jul 02, 2025 at 08:29:22PM +0200, Borislav Petkov wrote:
-> > Should be fixed now... famous last words. :-P
-> 
-> Thanks for sticking with it :) I can confirm that fad009b77942
-> builds correctly for me.
+On Wed, Jul 2, 2025 at 7:22=E2=80=AFPM Da Xue <da@libre.computer> wrote:
+>
+> On Wed, Jul 2, 2025 at 1:07=E2=80=AFPM Jerome Brunet <jbrunet@baylibre.co=
+m> wrote:
+> ...
+> > If, as the description suggest, the regulator framework somehow ignore
+> > the timing set in DT, maybe this is what needs to be checked ?
+>
+> The regulator framework only cares about timing for regulator on.
+> Regulator off just turns off the regulator and returns without delay.
+There's an exception to this: gpio-regulators without an enable-gpios
+property. My understanding is that regulator_disable() is a no-op in
+that case (meson_mmc_set_ios() even has a comment above the
+switch/case statement), see [0].
 
-No, thank you for double-checking us! Much appreciated. :-D
+> The code makes incorrect assumptions. Then the kernel resets the board
+> without having enough time.
+Can you please name the board you're testing? I'm worried that I'll be
+looking at one .dts but you're looking at another one.
 
--- 
-Regards/Gruss,
-    Boris.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Best regards,
+Martin
+
+
+[0] https://elixir.bootlin.com/linux/v6.15/source/drivers/regulator/core.c#=
+L2980
