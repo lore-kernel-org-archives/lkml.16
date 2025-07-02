@@ -1,175 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56D01C6B4;
-	Wed,  2 Jul 2025 03:58:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 882D01C6B4;
+	Wed,  2 Jul 2025 03:59:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751428687; cv=none; b=BrKaR5Lo3GkpfIxDvntmAllhvhF/dAgtI9+jNFnGb3jUTuqJrbGzYsSeRvJlSqQdA8DEhTBSmxiPteZTMqwwG/tY9mUNCugOhtBc0lmJUB7qJoW59uQs575cOrDwNazqsK8G/hURKLsEspGFSH/gipcMFc+piILyOGjf2F51mmY=
+	t=1751428743; cv=none; b=Z/Mvff0FXGnfnH3MvwSsWCDRAoNPCLgf+zt6ngQDyCWlPIsdT021Rtkvq5vDV+X1yoeMk9jhU47wS8/R8MSMR+HLlUwZM8U8B3i/pvcUBq7flt2LNfRHnig3TPP4Jxr3eHgnFVe5Qw+PrGnR6RZ2zLo3280A0MqVChbCdJfmLlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751428687; c=relaxed/simple;
-	bh=w2dfqLUduE1K0tzjQWf6mTcs+MvqxhPTIhPYmuODJXo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RzJCTsPBluee13pwk+rkTsqd4x6rnuToKTHSi2Up8rMT4lmXaxX1454QtoPgK3wlD8KNgQgpMtJJoiWdTZ/fxfx28f4gO2HEuhgbco7n0eJLU5heydzo48e9+q7YnLaTBZ1o9I7bGSe8FWyPHSYJTAD6pwpFo8M0gu5oajXLE5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BeMgVi2/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751428743; c=relaxed/simple;
+	bh=9UrBH6sgsTmZxYydV10kbmoWyNSF9MfbgLZif68jJ2A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cLMlkcUiZDcDZM0XvvkFA2wn0P+YF3CkaZwPmu4hg2ugiEWG+/aBXxPcs+cSroiLcDFTsOPtQ/vpuhuPt6Ed84BcKmyVzcE+jIXGAU542Ly6kcA6LVN9bN/Su8OGPDadWc7Mapi5mkYVuMI7Pu2Ap135yqsH4bnW3EqwPctQbH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jkM0vpqS; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BeMgVi2/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4B68C4CEEF;
-	Wed,  2 Jul 2025 03:58:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751428686;
-	bh=w2dfqLUduE1K0tzjQWf6mTcs+MvqxhPTIhPYmuODJXo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BeMgVi2/lPqbzjgKLEoGx42J082sAksCfmSnOszZYoztWaretvEIpY27FFoA16INS
-	 fu647AtLzup1BkBD/kb6Q29r8GWpfa/JataNh8mcuBZObqPFnOs0dbxlkGeMFWUxW9
-	 dBthWztZBRTXx5NzwUsX4nlkrVYz7/h1aSmvoC8EdmdobXWgRLJLjzD4u3/au8/bUv
-	 z2nxXc3XlXDv1JHY7yNDvfXpXt4fr3wM6VN9xip1S83300xwvskIEIKsDWX6YSu+Oy
-	 /HQEIO5s/YNs2orrbssXPI/+z4Kab9v+5REycyCndRxYW4OlVsVAcycwDsnUrEo+X1
-	 bnPAZlZN31aVw==
-Date: Wed, 2 Jul 2025 03:58:03 +0000
-From: Tzung-Bi Shih <tzungbi@kernel.org>
-To: Dawid =?utf-8?Q?Nied=C5=BAwiecki?= <dawidn@google.com>
-Cc: Benson Leung <bleung@chromium.org>, chrome-platform@lists.linux.dev,
-	linux-kernel@vger.kernel.org, chromeos-krk-upstreaming@google.com,
-	=?utf-8?Q?=C5=81ukasz?= Bartosik <ukaszb@chromium.org>
-Subject: Re: [PATCH] platform/chrome: Add ChromeOS EC USB driver
-Message-ID: <aGSuS81Psqm_Ie4N@google.com>
-References: <20250624110028.409318-1-dawidn@google.com>
- <aF5N5jrRUlj3SUGS@google.com>
- <CAJ_BA_CppC58kc-Uv49PSmWFcCih-ySuGDuRcO5-AWQQqcqWVQ@mail.gmail.com>
- <aGOiu-sXFj1EUQAB@google.com>
- <CAJ_BA_CZWvC2=i8riNe5LReLKzPXK1vPwymiG2dzLEntda7TRg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jkM0vpqS"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-23526264386so36414595ad.2;
+        Tue, 01 Jul 2025 20:59:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751428741; x=1752033541; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=O/g0USg4y0OViHOr147Wq+ru//jXnDL6z9uYFIyXzTs=;
+        b=jkM0vpqSyY09P9kLDbTMLm2OKx3sVB2t+GRioHPY4chQ2eN1QOh4k0Ep6RwV0Yy1FU
+         y70+hNytHhw3Txu4GjeDGAYcfibRkRgLPGN9haN+vOp3PEWGrQNwV+6WOsR1qeF4qFRI
+         gBG2b3RietLeh1BCWpPD9z9NPKT2BpRAtgDvnazHilL5yu291/ehxVYfxhk/afGUlTWE
+         deFLir0a0yxA7TLkWygBUeMDpBuaboY+odE9E6Ey7MbJwAYtvnIMvpnJTSq4U0/XyE62
+         bWI1Hz+gc8zOfEIUWlqEbMasmIWcAm4tGR17BHC80pmN/YOFFDANu8xtSkonbF59oBIL
+         nQhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751428741; x=1752033541;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=O/g0USg4y0OViHOr147Wq+ru//jXnDL6z9uYFIyXzTs=;
+        b=nrhgCUelD2F4oaajc13k7t6nEow0EcwBYYSXa/WTu3EzLSl+cAyq5F/66/7XiK7GJJ
+         chUo8UBT4jnNJOATjMlG+NiicAxNFutH40AryWM18EGzA2bwDXiBVk6QTlGJYhIn8dbH
+         Czm0kqG4pC5bjenxTnznC7f1oAErE3iaZE3C3hCe7NTBNyz3G/29EF1KEV2pONJI9Nmy
+         tKPmyyRxrjw7vT8HXFxinPp/JTOQvzmCXPdadHir5IZvL50OHClXYqY9F6d1V9wVA/7e
+         7fPGuqjCiM5BsFpJ4q2zqcT2/e1OAo0RXNAfjf+lUYVrHAsc8EI2161A5KXdTN2TzXVB
+         7okQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWy2sBcoAB45XAhwNBkFId+s4zgItHNru2lL9jtDGFHu51Aev883oLIMT6cXrYMJ5ep+50uLYTOXSya@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/AfbV0WyCJd5aVnjVbB7l+XFtbpYHwe7/FzCSRCQnlmnipQwv
+	AMO7f15ahnRuOqSq128DJxdgxgQCgVoXztQq16xfgnu0Fyp0E1iqC69C
+X-Gm-Gg: ASbGncvGwN16QvVkHI1vaNs6XgBxrtmGwxhC0fdXIZycGpTT0TtLIgLG64ILUwgAOXr
+	VacKY1LpKwCoKSgSJmIsnF9G5RwaNaC925fPC7jNn+4zkoNv7HJRtUP8QXW6i/TosVcQfx7HcxV
+	p3v0wpRZIOK3RNrsfmZHKbZvgXgXc5wXZU13NMq7Ickc+48/iRqaYqV3jICF/OJ/sTH9D4apGbe
+	FebeEojMpxqP/n8wX9BM9NItyCVIDvbrkzL6poIjqhu7CgiyAn7YUL01i0YtlYRFXA7Q16H4UZz
+	xddLtsP/pmeEhMISBvXqlkodz2c62jzoxGaicnYX8DJNAI1kamAQ6WBXS34k3g==
+X-Google-Smtp-Source: AGHT+IGx98bxxnSOmOljPeabVSziAlzcRFf3M8M04natoa+ILhOvQOm3UACJ7qTFCkfxlBTMtAn1BQ==
+X-Received: by 2002:a17:902:e84f:b0:234:8f5d:e3bd with SMTP id d9443c01a7336-23c6e5b0c27mr14084715ad.39.1751428740669;
+        Tue, 01 Jul 2025 20:59:00 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3bc406sm116264955ad.195.2025.07.01.20.58.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 20:58:59 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id E691E420A74B; Wed, 02 Jul 2025 10:58:56 +0700 (WIB)
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux SCSI <linux-scsi@vger.kernel.org>
+Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Rob Landley <rob@landley.net>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: [PATCH v2] scsi: Format scsi_track_queue_full() return values as bullet list
+Date: Wed,  2 Jul 2025 10:58:23 +0700
+Message-ID: <20250702035822.18072-2-bagasdotme@gmail.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1511; i=bagasdotme@gmail.com; h=from:subject; bh=9UrBH6sgsTmZxYydV10kbmoWyNSF9MfbgLZif68jJ2A=; b=owGbwMvMwCX2bWenZ2ig32LG02pJDBkp60S2NmtXx63sMV7+qrgx/3vDLT/lvWrlaaG/jyyZx 7y74rhFRykLgxgXg6yYIsukRL6m07uMRC60r3WEmcPKBDKEgYtTACay+Dgjw5Qv73w3ccgHRXam bXrNaVlzPTf7s3fMt58s6348MF07eTsjwx1RwymLS1s8vLI0JDs4nH+nL7PcrnxC1WvNz8S+fUL 7uAA=
+X-Developer-Key: i=bagasdotme@gmail.com; a=openpgp; fpr=701B806FDCA5D3A58FFB8F7D7C276C64A5E44A1D
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJ_BA_CZWvC2=i8riNe5LReLKzPXK1vPwymiG2dzLEntda7TRg@mail.gmail.com>
 
-On Tue, Jul 01, 2025 at 12:29:51PM +0200, Dawid Niedźwiecki wrote:
-> >What are the shortcomings if it re-creates /dev/cros_X everytime?
-> 
-> In that case, to avoid memory leakage, you would need to free the
-> cros_ec_device structure every disconnect.
-> An application with an opened cros_ec file would try to access the
-> freed resources (use-after-free) via the char driver [1], e.g.
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/platform/chrome/cros_ec_chardev.c#n345
-> 
-> It would also require additional work from the userspace application
-> e.g. reopen the cros_ec file every time there was a communication
-> problem. I think recovering an already created file sounds like a
-> better idea.
-> 
-> > Isn't it also a way for userland programs to be aware of the EC device crashes?
-> 
-> No. First of all, we don't know a reason for the disconnect / reprobe,
-> so it is not always a crash. Also we signal that there is a problem
-> with the connection by returning -ENODEV when an EC device is
-> disconnected.
-> There are dedicated commands to check reboot reason, and detect
-> potential crashes.
-> 
-> > Why other cros_ec_X drivers doesn't need the mechanism?
-> 
-> It is a very USB specific problem. USB host/hub detects a new device
-> on the bus and starts probing procedure.
-> It is not a case for other drivers, e.g. SPI probes only once, at the
-> beginning of the boot, based on ACPI entry, there is no hardware
-> detection that a device is alive after reboot.
-> Additionally, the USB related structures are new every probe, so we
-> need to replace those.
+Sphinx reports indentation warning on scsi_track_queue_full() return
+values:
 
-Please don't top-posting [2]. The discussion thread is somehow messed.
+Documentation/driver-api/scsi:101: ./drivers/scsi/scsi.c:247: ERROR: Unexpected indentation. [docutils]
 
-[2]: https://docs.kernel.org/process/submitting-patches.html#use-trimmed-interleaved-replies-in-email-discussions
+Fix the warning by making the return values listing a bullet list.
 
-> On Tue, Jul 1, 2025 at 10:56 AM Tzung-Bi Shih <tzungbi@kernel.org> wrote:
-> >
-> > On Mon, Jun 30, 2025 at 01:59:39PM +0200, Dawid Niedźwiecki wrote:
-> > > On Fri, Jun 27, 2025 at 9:53 AM Tzung-Bi Shih <tzungbi@kernel.org> wrote:
-> > > > On Tue, Jun 24, 2025 at 11:00:28AM +0000, Dawid Niedzwiecki wrote:
-> > > > > +     /*
-> > > > > +      * Do not register the same EC device twice. The probing is performed every
-> > > > > +      * reboot, sysjump, crash etc. Recreating the /dev/cros_X file every time
-> > > > > +      * would force all application to reopen the file, which is not a case for
-> > > > > +      * other cros_ec_x divers. Instead, keep the cros_ec_device and cros_ec_usb
-> > > > > +      * structures constant and replace USB related structures for the same EC
-> > > > > +      * that is reprobed.
-> > > > > +      *
-> > > > > +      * The driver doesn't support handling two devices with the same idProduct,
-> > > > > +      * but it will never be a real usecase.
-> > > > > +      */
-> > > >
-> > > > I don't quite understand why does it need to memorize the registered ECs.
-> > > > Supposedly, the probe function is only called few times during booting, and
-> > > > gets success once. Hot-plugs?
-> > > >
-> > >
-> > > The probe is called every time the EC device boots from the beginning
-> > > - sysjumps, crashes, reboots etc. It succeeds the first time.
-> > > Once the /dev/cros_X file is created, we need the possibility to
-> > > access the same EC device, with the same, previously created file.
-> > > The only way to do that is to reused the already created
-> > > cros_ec_device structure.
-> >
-> > What are the shortcomings if it re-creates /dev/cros_X everytime? Isn't it
-> > also a way for userland programs to be aware of the EC device crashes?
-> >
-> > Why other cros_ec_X drivers doesn't need the mechanism?
+Fixes: eb44820c28bc ("[SCSI] Add Documentation and integrate into docbook build")
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
+---
+Changes since v1 [1]:
+  * Follow kernel-doc style on return list (Bart)
 
-Copied your reply here:
+[1]: https://lore.kernel.org/r/20250626041857.44259-2-bagasdotme@gmail.com/
 
-> >What are the shortcomings if it re-creates /dev/cros_X everytime?
-> 
-> In that case, to avoid memory leakage, you would need to free the
-> cros_ec_device structure every disconnect.
-> An application with an opened cros_ec file would try to access the
-> freed resources (use-after-free) via the char driver [1], e.g.
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/platform/chrome/cros_ec_chardev.c#n345
-> 
-> It would also require additional work from the userspace application
-> e.g. reopen the cros_ec file every time there was a communication
-> problem. I think recovering an already created file sounds like a
-> better idea.
+ drivers/scsi/scsi.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-They doesn't look like shortcomings to me. The corresponding destructor
-callbacks have to be called when a device is removed anyway.
+diff --git a/drivers/scsi/scsi.c b/drivers/scsi/scsi.c
+index 518a252eb6aa05..c2527dd289d9eb 100644
+--- a/drivers/scsi/scsi.c
++++ b/drivers/scsi/scsi.c
+@@ -242,9 +242,11 @@ EXPORT_SYMBOL(scsi_change_queue_depth);
+  * 		specific SCSI device to determine if and when there is a
+  * 		need to adjust the queue depth on the device.
+  *
+- * Returns:	0 - No change needed, >0 - Adjust queue depth to this new depth,
+- * 		-1 - Drop back to untagged operation using host->cmd_per_lun
+- * 			as the untagged command depth
++ * Returns:
++ * * 0 - No change needed
++ * * >0 - Adjust queue depth to this new depth,
++ * * -1 - Drop back to untagged operation using host->cmd_per_lun as the
++ *   untagged command depth
+  *
+  * Lock Status:	None held on entry
+  *
+-- 
+An old man doll... just what I always wanted! - Clara
 
-Instead, re-using the same inode for the userland interface however
-*silently* swapping the underlying devices makes less sense to me.
-
-> > Isn't it also a way for userland programs to be aware of the EC device crashes?
-> 
-> No. First of all, we don't know a reason for the disconnect / reprobe,
-> so it is not always a crash. Also we signal that there is a problem
-> with the connection by returning -ENODEV when an EC device is
-> disconnected.
-> There are dedicated commands to check reboot reason, and detect
-> potential crashes.
-
-My point here is: to let userland programs be aware of the underlying
-device has been removed.
-
-What are the reasons for disconnect and reprobe? From your previous message
-and code comment, are they "reboot, sysjump, crash"? Would it happen
-frequently after AP boot?
-
-Note: we are talking about a EC-like device here. For a real EC either reboot
-or crash, the AP will be reset.
-
-> > Why other cros_ec_X drivers doesn't need the mechanism?
-> 
-> It is a very USB specific problem. USB host/hub detects a new device
-> on the bus and starts probing procedure.
-> It is not a case for other drivers, e.g. SPI probes only once, at the
-> beginning of the boot, based on ACPI entry, there is no hardware
-> detection that a device is alive after reboot.
-
-No, I don't think so. I think all EC-like devices share the same concern
-regardless of the transport medium (e.g. SCP over RPMSG, ISH over ISHTP).
