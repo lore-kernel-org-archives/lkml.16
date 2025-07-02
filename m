@@ -1,205 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53EF123E320;
-	Wed,  2 Jul 2025 10:56:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD4DD23E320
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 10:56:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751453770; cv=none; b=aabF6NMe+/8VjtjC4f3STxr2CpqZsWePP0ww7tewNh1zkvjuI6dY2ikEdafEigwp1vhl0/klumiLk0hUuU2dXWH4SSoiP8UVkkzxFbRhZu3pJqxnF8aW+MQ/tkfmSYBplmEnHad3B8oo11iBt8DatbWjGoz6YZ2A31ata/2r1QM=
+	t=1751453775; cv=none; b=Li1glzitG2k/omF221iLv0bwwz3plF/V/WC5pyQvhh7IPijMUrDM4xSFJY5No0Y/pc3s+SSURpZROoENsvd9kTGwts/hOpisxtvSvKPCi1nhlBfCdY1krJ+vMEnAe+0lkks3HsHOtfjKGILWDEXBv2iR+9dpUh7PNQS5vuwo3K0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751453770; c=relaxed/simple;
-	bh=NY1tznOwjMjpvVGq3j5Lfb9np4QZ/i8PgzIEPy6obns=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=deFVGa/YcVcdcV1CD7ruhTXv/AM0XqQmfogyKrxFnW7bnfsFsmGxQYi2y0NBRcr1mZWIv1EvDRGV5d2msIqGCLs+LJ08ZeeIubtRax250qT6RdfAE6UQxIs3HpkA4gFCB214j1j/es22VJ1abVJrrZV6zmYsE+ZHIPagnQcIewI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fBpFpgaI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751453775; c=relaxed/simple;
+	bh=yz5YFA4oK6aUwp5EM6RoGwk2x3CcGuJZ9jnhzV4Yj8U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UFWfhbTWw+mJbDch+9hnNvs4DEn9rrbJuH8eaWPHZFUSNpIGVD7fCG54HYRsSxtwUVyWIXpXRc3VIb0TdbpZKBfytk/oS+lKbxppeb3dObNzYCKWFx1RhoW9ndFn0voka4bAIOKAUzc7ss3Q448E4IvN8x2+f6gLp8NKGlq1BRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=avtyLTtJ; arc=none smtp.client-ip=209.85.166.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fBpFpgaI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7DA2C4CEF0;
-	Wed,  2 Jul 2025 10:56:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751453769;
-	bh=NY1tznOwjMjpvVGq3j5Lfb9np4QZ/i8PgzIEPy6obns=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=fBpFpgaICxHkH0C5G+xLTRB5Es1CdYjb9nInYcABsCJKzXWMqLgCP7d6kmDrA/b/r
-	 I5WbW/gtY2+NMkHLVdJohOONXFO2URcHbcgyjr+nLDwdyQl/8BePwmKoZZjA5URJ+t
-	 3TqcFcKD/Lk6MX1XObasvpJTe5JAtTeNheQ/7XEQ0TsK5DN1xb3CXh5LUV8LuQH1Q8
-	 9H2pycd4VaebOoUH4DC2HEeD/jWl3zg48j2DxiCQPV6NZvBofip8JxWWACnZg6GMp8
-	 gNzTV2k47HIREhNSsOVuZri0xDa25KiSqnn3/mFvmRE2x712QJdOugeBz+WyTLurMJ
-	 oxxKvGBiz5KwA==
-From: Mark Brown <broonie@kernel.org>
-Date: Wed, 02 Jul 2025 11:39:08 +0100
-Subject: [PATCH v18 3/8] selftests: Provide helper header for shadow stack
- testing
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="avtyLTtJ"
+Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-8760d31bd35so237334739f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 03:56:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1751453773; x=1752058573; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eVakVqHDVi/nEEBTUBbK2KldnbMSaWZ1ZSLAJh1Ij5o=;
+        b=avtyLTtJ7LMiuKKzhuylDVlyQY6V2TLEv1el011c0IpUdSs8kvL6eoi2xpYuCdDOXE
+         x2qAnkPzctJiiv8Ip0DBvlIl5GZFKNsOmWWZ2ZgUId0pmpqq4KkTNYQU+tgKXkCc3cKr
+         7Jk3l4twwf26lcEcvyNzJVL3ups9SlrMI1NvnkJWL7g0qTrnmX159DZbzPSrxQFhgWx/
+         ++O4WTsxtfGikX9ImQILCodeFMvFBwsbAfsJEoQX8ZJ1iioIg+dQmjidUojGWFRye7QZ
+         9MdLKCRzmKJ2/WASq5/p1QuE/FA/D5lyCmG07Euuh4JSeA/gQWrbwq+8mP11uYaNzvG4
+         DpzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751453773; x=1752058573;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eVakVqHDVi/nEEBTUBbK2KldnbMSaWZ1ZSLAJh1Ij5o=;
+        b=JUPIYjnrN/oH7vFDL+y9T/A0hAoXvUzYEgMw5Hko6juH4JJzAv4mw8VvH7yQzsKI8P
+         YTnLAooRCwtikNXITcw8qYGd5kJ9EfNPQqFtaNlt7OSu3O8f9dR98XaLoG+zoKGvwQ6t
+         vCqPiJ8MY7y88tvowvVuHSEKVC9I3GMt2Bjtc2NhcF8Snmw6LecUveT3iUhIlhhFqhbv
+         clf6SE3w0Fm70lNYCI16Bt8p0TcpufV688exA1lZdDc4vB2vjySz5YeGRoUDSscE1jTF
+         GGK9YSYbH25enAx4LudCWTF8q2jKoV4kpuN7uT7S0XDft85AIgS/+5SbtCmoqLoymSb/
+         8/bA==
+X-Forwarded-Encrypted: i=1; AJvYcCVx/YvVNVZuykEfp58nzdLBAakWCyxp8HfYO8fudxLLJUgtSQ7DYgEfG42DNJ+G0n9LmqNqe+jEQikDvGs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOPx7Skw0MzfnEG8aSvS4WNhtQFgpC2eXBW8okjLktvYkCIfS3
+	hjRQrboj2QfWDRVVDfW8q106HAKxhYe5NAb3bukwUQYasz+QdsX2E//1lOkXDJUVnDA=
+X-Gm-Gg: ASbGncs3Fy2VeT6jdudtp1O1GGeu+KnG2ZLhUtQLflX0uvUFJCFV+Uzwm8o1OQ71AD9
+	oY+TYEWGCC2Bsdrff4G7RQ9OsSGtC0JrPq2fvzD7IuA1JSprTbDQ4Ex5Yq330HI6YtyXMNxpKqb
+	/yQaOq9d9xqmo6pbsxaRK8vcZi3gT78XhO/43+ITbkyHWe2p5gMvLJdqibQyKkj8BIz/k8bm1CY
+	Ai18d7ks5PzyGleICwfKv0KPYvWLXgSGmjnpoljxioDHUr28cVDiVua7TLKv9/EG+KN4Xabs3iv
+	mft07Qq+8yNvGqDTjOQ4Ofhe5fpwf02BVt9ufPtXSTEULAISnRiQLFDjONi3Jhk2ealONyVaGkQ
+	iPm8eH4PW4gNUpDc5OtiozEwMgQ==
+X-Google-Smtp-Source: AGHT+IH8nNKJXNfh+T2vOZJlqIemJT4UY7Zp92Fh4jhfNOQw5R6U/NR89uGXnsLbbnrSsXhZHL8VPA==
+X-Received: by 2002:a5e:c641:0:b0:86c:f0d9:553 with SMTP id ca18e2360f4ac-876c6a0c90cmr288271039f.5.1751453772830;
+        Wed, 02 Jul 2025 03:56:12 -0700 (PDT)
+Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-50204aa8a44sm2926145173.108.2025.07.02.03.56.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Jul 2025 03:56:12 -0700 (PDT)
+Message-ID: <1a88fde8-7fc6-4f55-b25b-cd67b72b73d5@riscstar.com>
+Date: Wed, 2 Jul 2025 05:56:10 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250702-clone3-shadow-stack-v18-3-7965d2b694db@kernel.org>
-References: <20250702-clone3-shadow-stack-v18-0-7965d2b694db@kernel.org>
-In-Reply-To: <20250702-clone3-shadow-stack-v18-0-7965d2b694db@kernel.org>
-To: "Rick P. Edgecombe" <rick.p.edgecombe@intel.com>, 
- Deepak Gupta <debug@rivosinc.com>, Szabolcs Nagy <Szabolcs.Nagy@arm.com>, 
- "H.J. Lu" <hjl.tools@gmail.com>, Florian Weimer <fweimer@redhat.com>, 
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
- Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
- Vincent Guittot <vincent.guittot@linaro.org>, 
- Dietmar Eggemann <dietmar.eggemann@arm.com>, 
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, 
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, 
- Christian Brauner <brauner@kernel.org>, Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, jannh@google.com, bsegall@google.com, 
- Andrew Morton <akpm@linux-foundation.org>, 
- Yury Khrustalev <yury.khrustalev@arm.com>, 
- Wilco Dijkstra <wilco.dijkstra@arm.com>, linux-kselftest@vger.kernel.org, 
- linux-api@vger.kernel.org, Mark Brown <broonie@kernel.org>, 
- Kees Cook <kees@kernel.org>, Kees Cook <kees@kernel.org>, 
- Shuah Khan <skhan@linuxfoundation.org>
-X-Mailer: b4 0.15-dev-cff91
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4382; i=broonie@kernel.org;
- h=from:subject:message-id; bh=NY1tznOwjMjpvVGq3j5Lfb9np4QZ/i8PgzIEPy6obns=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBoZRAsEhEQTaL+JLVjAesgNpfBlHZJR+YilvFWP
- aRZukSvrZKJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCaGUQLAAKCRAk1otyXVSH
- 0ApYB/9/zO9KXoKhQHPRuCaUcOUwKu5ajBBzbsAibi1m+JW1meSXDGWTyw/DDGDlgJYTGk4ZABm
- KLVm2yOj476Ke92EvHJuFTUuakjaO6nJ6orGa7mtPg9FoCDSP9BG6BacAaoqdI/qb2we6dNHbEs
- 5OC0rowy78xLfD6xfgkoavYz5PGPIwP62XCwVE+HZlHzRezWgCcMpBvn6jslqStTw2vLJjYvjQo
- dVuCfofx6CTxzyTtyV4K6iwX2OqVqQgol/3q30nXvJij6jKa6h2p6nNeFFN1cDu/660xbUvvYhB
- wfKikkJsOZLEGF3qbHAA8tv/bGEn9Z+0cGMQ7DfOF3kgmgal
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 0/6] reset: spacemit: add K1 reset support
+To: Philipp Zabel <p.zabel@pengutronix.de>, Yixun Lan <dlan@gentoo.org>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ mturquette@baylibre.com, sboyd@kernel.org, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, heylenay@4d2.org,
+ inochiama@outlook.com, guodong@riscstar.com, devicetree@vger.kernel.org,
+ linux-clk@vger.kernel.org, spacemit@lists.linux.dev,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250613011139.1201702-1-elder@riscstar.com>
+ <20250618111737-GYA157089@gentoo> <20250702061717-GYA304216@gentoo>
+ <0580d4e254705be3765be168ce17c8a1c2e12f8f.camel@pengutronix.de>
+Content-Language: en-US
+From: Alex Elder <elder@riscstar.com>
+In-Reply-To: <0580d4e254705be3765be168ce17c8a1c2e12f8f.camel@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-While almost all users of shadow stacks should be relying on the dynamic
-linker and libc to enable the feature there are several low level test
-programs where it is useful to enable without any libc support, allowing
-testing without full system enablement. This low level testing is helpful
-during bringup of the support itself, and also in enabling coverage by
-automated testing without needing all system components in the target root
-filesystems to have enablement.
+On 7/2/25 5:14 AM, Philipp Zabel wrote:
+> On Mi, 2025-07-02 at 06:17 +0000, Yixun Lan wrote:
+>> Hi Philipp,
+>>
+>> On 11:17 Wed 18 Jun     , Yixun Lan wrote:
+>>> Hi ALL,
+>>>    As the reset driver going through several review cycles,
+>>> it becomes quite calm down now, I'd like to request to merge
+>>> it into v6.17, because various drivers (pwm, emac..) will depend
+>>> on it, even in the worst case if there is problem, I believe Alex
+>>> will help to address..
+>>>
+>>> Hi Philipp,
+>>>    I'd like to query if you willing to take the reset driver -
+>>> patch [5/6] through the reset tree? It sounds more intuitive,
+>>> which also will avoid potential conflicts with Kconfig/Makefile..
+>>>    I've created a prerequisite immutable tag which could be
+>>> shared between clock and reset subsytem. It's tag -
+>>> spacemit-reset-deps-for-6.17 at SpacemiT's SoC tree [1], which
+>>> effectively are patches [1-4] of this series.
+>>> But, to make your life easy, I've also applied patch [5/6] at tag
+>>> spacemit-reset-drv-for-6.17 [2] which has a small macro adjustment
+>>> requested by Alex at [3]
+>>>    Let me know what you think of this, thanks
+>>>
+>> Just want to ping this, what do you want from my side to proceed?
+>>
+>> or do you want me to send a more formal Pull-Request for [1],
+>> then you can apply patch [5/6] (still need to fix the macro of [3])
+> 
+> Please send a v12, so that the latest modifications are on the list.
+> 
+> I'd prefer to either pick patches 1 and 5 from the list, or, if you
+> provide a tag with only patch 1 to be pulled into both clk and reset
+> trees, to merge that and then pick patch 5.
 
-Provide a header with helpers for this purpose, intended for use only by
-test programs directly exercising shadow stack interfaces.
+I will send v12 this morning.	-Alex
 
-Reviewed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Reviewed-by: Kees Cook <kees@kernel.org>
-Tested-by: Kees Cook <kees@kernel.org>
-Acked-by: Shuah Khan <skhan@linuxfoundation.org>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- tools/testing/selftests/ksft_shstk.h | 98 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 98 insertions(+)
 
-diff --git a/tools/testing/selftests/ksft_shstk.h b/tools/testing/selftests/ksft_shstk.h
-new file mode 100644
-index 000000000000..fecf91218ea5
---- /dev/null
-+++ b/tools/testing/selftests/ksft_shstk.h
-@@ -0,0 +1,98 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Helpers for shadow stack enablement, this is intended to only be
-+ * used by low level test programs directly exercising interfaces for
-+ * working with shadow stacks.
-+ *
-+ * Copyright (C) 2024 ARM Ltd.
-+ */
-+
-+#ifndef __KSFT_SHSTK_H
-+#define __KSFT_SHSTK_H
-+
-+#include <asm/mman.h>
-+
-+/* This is currently only defined for x86 */
-+#ifndef SHADOW_STACK_SET_TOKEN
-+#define SHADOW_STACK_SET_TOKEN (1ULL << 0)
-+#endif
-+
-+static bool shadow_stack_enabled;
-+
-+#ifdef __x86_64__
-+#define ARCH_SHSTK_ENABLE	0x5001
-+#define ARCH_SHSTK_SHSTK	(1ULL <<  0)
-+
-+#define ARCH_PRCTL(arg1, arg2)					\
-+({								\
-+	long _ret;						\
-+	register long _num  asm("eax") = __NR_arch_prctl;	\
-+	register long _arg1 asm("rdi") = (long)(arg1);		\
-+	register long _arg2 asm("rsi") = (long)(arg2);		\
-+								\
-+	asm volatile (						\
-+		"syscall\n"					\
-+		: "=a"(_ret)					\
-+		: "r"(_arg1), "r"(_arg2),			\
-+		  "0"(_num)					\
-+		: "rcx", "r11", "memory", "cc"			\
-+	);							\
-+	_ret;							\
-+})
-+
-+#define ENABLE_SHADOW_STACK
-+static __always_inline void enable_shadow_stack(void)
-+{
-+	int ret = ARCH_PRCTL(ARCH_SHSTK_ENABLE, ARCH_SHSTK_SHSTK);
-+	if (ret == 0)
-+		shadow_stack_enabled = true;
-+}
-+
-+#endif
-+
-+#ifdef __aarch64__
-+#define PR_SET_SHADOW_STACK_STATUS      75
-+# define PR_SHADOW_STACK_ENABLE         (1UL << 0)
-+
-+#define my_syscall2(num, arg1, arg2)                                          \
-+({                                                                            \
-+	register long _num  __asm__ ("x8") = (num);                           \
-+	register long _arg1 __asm__ ("x0") = (long)(arg1);                    \
-+	register long _arg2 __asm__ ("x1") = (long)(arg2);                    \
-+	register long _arg3 __asm__ ("x2") = 0;                               \
-+	register long _arg4 __asm__ ("x3") = 0;                               \
-+	register long _arg5 __asm__ ("x4") = 0;                               \
-+									      \
-+	__asm__  volatile (                                                   \
-+		"svc #0\n"                                                    \
-+		: "=r"(_arg1)                                                 \
-+		: "r"(_arg1), "r"(_arg2),                                     \
-+		  "r"(_arg3), "r"(_arg4),                                     \
-+		  "r"(_arg5), "r"(_num)					      \
-+		: "memory", "cc"                                              \
-+	);                                                                    \
-+	_arg1;                                                                \
-+})
-+
-+#define ENABLE_SHADOW_STACK
-+static __always_inline void enable_shadow_stack(void)
-+{
-+	int ret;
-+
-+	ret = my_syscall2(__NR_prctl, PR_SET_SHADOW_STACK_STATUS,
-+			  PR_SHADOW_STACK_ENABLE);
-+	if (ret == 0)
-+		shadow_stack_enabled = true;
-+}
-+
-+#endif
-+
-+#ifndef __NR_map_shadow_stack
-+#define __NR_map_shadow_stack 453
-+#endif
-+
-+#ifndef ENABLE_SHADOW_STACK
-+static inline void enable_shadow_stack(void) { }
-+#endif
-+
-+#endif
-
--- 
-2.39.5
+> regards
+> Philipp
 
