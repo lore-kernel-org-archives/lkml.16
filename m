@@ -1,137 +1,234 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA63B242D86;
-	Wed,  2 Jul 2025 09:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDCC244678;
+	Wed,  2 Jul 2025 09:00:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751446805; cv=none; b=pjetWxocF9TrN3d9rQ0YJw0h784WLlcsBORORJkYFLkNYJ2oZ0ZoExhZTfoIbI0GilBPPpHd8ix9AdF4HjQkKLdONjy+YZuwYBlsCf5gU/GB7agcUXl9zWuyVeH9m0sqYgSxfxSeJymUjkeyVpWJ/xFXzI/ULGt0zMzSmPT3Pi4=
+	t=1751446809; cv=none; b=PRtaTWPDQiV2ks07Bji4PTZnPXU1o4/RXW3guesN13YPT35jPfkvGk82RIYa6sKkRJKrnfBX8ovVekR1Q0xGRyQGhfXpGwgax+1rBwQVtWQ6MP/csjam/u5rrQvmUfrfTs5lr1QVa5JeYRIPd37yfe9bMxSwmDApcO9kMZkT3ik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751446805; c=relaxed/simple;
-	bh=bII4dviX1J1y/8PVse2wWAO2zXUYN7E3jBriBPaoMBA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j3HsvPecoM6JXCePAEYbR72sDSSElut50JxQj3SZfcGAsR5SGV/c4K4z+qP1w6I7UPj8rwNwxvjIa9rmxwbJg9uPLzy2Y5mwprsNRqxkoe5qQGBri3HGQAr6F0A9ATmxTUWB1UHGgjoBL4+4WzSmvIDLUMnLIIeip59GVj8Uxtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=nSOjp2W9; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1751446809; c=relaxed/simple;
+	bh=ozh9/+qetdy1B44Hk1ck9qSNB6VPcxBClhcVl6wJg/8=;
+	h=Content-Type:Message-ID:Date:MIME-Version:Subject:From:To:
+	 References:In-Reply-To; b=uuU7US6HB1fYyQuh6GK0fUJtZZx6ZasiEPQ8rvMBsiVpTkwge0diTvod1a9Q2kPKxehLd/Pjks7lu3l/UGRhERQ/evYM2ab+v+3O6QwAVDF13mrpTGIzr5rMYtkeRA5Y05IGOnprLVEhLSHkNOaVte6bnDotz8GrjP0/qvFOFIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NibrHSar; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="nSOjp2W9"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5623fDZf010383;
-	Wed, 2 Jul 2025 09:00:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=LKVbcoYV5xgvRGYT0ElzmeIS
-	o6yn3EZh3/wZEJS/PCs=; b=nSOjp2W9+4CT0J+MtEvHU7iPdz87Q2f5EUWdIGQH
-	qeD4z2N76C0jcWhXKgmSMTsDE1xP1sghGRm2SEWrblcbBuMbttFZsHT1eHbL4iGp
-	ortc4KStCKoI+nMXhpyW1njupoEMtxAKurv4jBqlxLWYqAcUMEKMUbhYd+vWTixb
-	vVJU47SqBQ3N73KeTp1lg1D7U5sIynqS66e6z6X6eqB1nZU45UAE3u3F/ho8STgg
-	9tb7LoZEU/3lKGyZqH8BuKliyLyIMRe7kjJnDUKT3GG+pfrVwsleezGRfvkY+TmO
-	o89Gn9svInT80t6/divStEsEwZAT93/u5A1uXh6drfkZfA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47mw308vqp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Jul 2025 09:00:01 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 562901N3006187
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 2 Jul 2025 09:00:01 GMT
-Received: from hu-sayalil-hyd.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Wed, 2 Jul 2025 01:59:58 -0700
-From: Sayali Lokhande <quic_sayalil@quicinc.com>
-To: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mmc-owner@vger.kernel.org>
-Subject: [PATCH V3 3/3] arm64: dts: qcom: qcs8300-ride: Enable SDHC1 node
-Date: Wed, 2 Jul 2025 14:29:27 +0530
-Message-ID: <20250702085927.10370-4-quic_sayalil@quicinc.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250702085927.10370-1-quic_sayalil@quicinc.com>
-References: <20250702085927.10370-1-quic_sayalil@quicinc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NibrHSar"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751446807; x=1782982807;
+  h=message-id:date:mime-version:subject:from:to:references:
+   in-reply-to;
+  bh=ozh9/+qetdy1B44Hk1ck9qSNB6VPcxBClhcVl6wJg/8=;
+  b=NibrHSarcbASkUMY6PsYzDfDSSIelJvkne6Et1OXD7zvqID7Iz4F+w2s
+   3RrhAzZlXbdaDGkGAl9D1G9IwHuEtFzfG3xERdoYPEQfgO9J8BLbNI9hE
+   22SzEmpb1zwr/UbNKGk4b6xu+faaMb7l2hXdTnrs+N5BdkeNc2ciJx7N2
+   LDzngQaoyIHsPH0dkhrkhxDUMTkdK7hypbvZ/qxaLLqymHF1aAf/DjL5e
+   gwiGQ8wHv3Y9/HwPUn4k7PPuRJg9M2+Hw7E42be7ilZuucJbl2UA+Tfqh
+   rb4vHFYWFKT/pXTlUg+lX8iQo/24+56vIoJSLwKxkvZbHsqb9rnzVvxNi
+   w==;
+X-CSE-ConnectionGUID: 4UBIrfQ+QSSmHCDpa9gB5g==
+X-CSE-MsgGUID: uhFdxgAHQpi6DZs6mMl4jw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="63979299"
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208,223";a="63979299"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 02:00:06 -0700
+X-CSE-ConnectionGUID: RifH1KUrRtuZRm+aVX2CrQ==
+X-CSE-MsgGUID: ZQGBJ625SRK6jkZ5y9Bn8Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208,223";a="154342502"
+Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.124.243.252]) ([10.124.243.252])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 02:00:03 -0700
+Content-Type: multipart/mixed; boundary="------------3m0g6PfBR00YwHw0BbrfPgi0"
+Message-ID: <96d68cb2-9240-4179-bca0-8ad2d70ab281@linux.intel.com>
+Date: Wed, 2 Jul 2025 17:00:00 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=CY4I5Krl c=1 sm=1 tr=0 ts=6864f511 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8 a=_IW4Oi3bjg1409mID4wA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: Mtv-LTJR46oYns7svL6ntRH0xrUnNR4G
-X-Proofpoint-GUID: Mtv-LTJR46oYns7svL6ntRH0xrUnNR4G
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDA3MiBTYWx0ZWRfX/Wo6f4g2xEfo
- +Pg4BS3DSDkbZ2oqQ8sBZNUY2Mk1urx7vY0wD7snx/WPnQy+KQ1dGOqxXhxbcdMjcxrNs/ejh76
- PEbWMO77mW/PKHloKduBlOkBHv9caeW/+a3+dWzCbfncxfZZ5kqdnJ5R4r4aJLEzXytxqN/rtOH
- F/rG5cVvgeRBrERdL861efwAB9vFuxRab56u7ij43h3bv7o9hJAEDFH36toRnwp+JScE4POUq4v
- Jr2/T7jsRUHfzU65vjn7jUSlw9WtNO19nBtTiWdbnFBWDKUsuc/nHDSUjhuKDqWHRRGH8C34l+P
- uUzazk/2GxbhphoG0gyUDasFzCeLkeBVYvu/AHjEsSgp1imdtsyR93IbfXFi4RbjWZEmU8u+DkJ
- hGkXh+rnc5sTqjLlA/tjvvef6TvwaeAm68qqxA0bgE9Jr37vc12urW8RUx/OnNCQJWCXMBGA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-02_01,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 mlxlogscore=608 priorityscore=1501 clxscore=1015
- lowpriorityscore=0 mlxscore=0 phishscore=0 suspectscore=0 bulkscore=0
- malwarescore=0 impostorscore=0 spamscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2507020072
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION][BISECTED] Performance Regression in IOMMU/VT-d Since
+ Kernel 6.10
+From: Baolu Lu <baolu.lu@linux.intel.com>
+To: Ioanna Alifieraki <ioanna-maria.alifieraki@canonical.com>,
+ kevin.tian@intel.com, jroedel@suse.de, robin.murphy@arm.com,
+ will@kernel.org, joro@8bytes.org, dwmw2@infradead.org,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, stable@vger.kernel.org
+References: <20250701171154.52435-1-ioanna-maria.alifieraki@canonical.com>
+ <7d2214f3-3b54-4b74-a18b-aca1fdf4fdb4@linux.intel.com>
+Content-Language: en-US
+In-Reply-To: <7d2214f3-3b54-4b74-a18b-aca1fdf4fdb4@linux.intel.com>
 
-Enable sdhc1 support for qcs8300 ride platform.
+This is a multi-part message in MIME format.
+--------------3m0g6PfBR00YwHw0BbrfPgi0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Signed-off-by: Sayali Lokhande <quic_sayalil@quicinc.com>
----
- arch/arm64/boot/dts/qcom/qcs8300-ride.dts | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+On 7/2/2025 1:14 PM, Baolu Lu wrote:
+> On 7/2/25 01:11, Ioanna Alifieraki wrote:
+>> #regzbot introduced: 129dab6e1286
+>>
+>> Hello everyone,
+>>
+>> We've identified a performance regression that starts with linux
+>> kernel 6.10 and persists through 6.16(tested at commit e540341508ce).
+>> Bisection pointed to commit:
+>> 129dab6e1286 ("iommu/vt-d: Use cache_tag_flush_range_np() in 
+>> iotlb_sync_map").
+>>
+>> The issue occurs when running fio against two NVMe devices located
+>> under the same PCIe bridge (dual-port NVMe configuration). Performance
+>> drops compared to configurations where the devices are on different
+>> bridges.
+>>
+>> Observed Performance:
+>> - Before the commit: ~6150 MiB/s, regardless of NVMe device placement.
+>> - After the commit:
+>>    -- Same PCIe bridge: ~4985 MiB/s
+>>    -- Different PCIe bridges: ~6150 MiB/s
+>>
+>>
+>> Currently we can only reproduce the issue on a Z3 metal instance on
+>> gcp. I suspect the issue can be reproducible if you have a dual port
+>> nvme on any machine.
+>> At [1] there's a more detailed description of the issue and details
+>> on the reproducer.
+> 
+> This test was running on bare metal hardware instead of any
+> virtualization guest, right? If that's the case,
+> cache_tag_flush_range_np() is almost a no-op.
+> 
+> Can you please show me the capability register of the IOMMU by:
+> 
+> #cat /sys/bus/pci/devices/[pci_dev_name]/iommu/intel-iommu/cap
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs8300-ride.dts b/arch/arm64/boot/dts/qcom/qcs8300-ride.dts
-index 8c166ead912c..9c37a0f5ba25 100644
---- a/arch/arm64/boot/dts/qcom/qcs8300-ride.dts
-+++ b/arch/arm64/boot/dts/qcom/qcs8300-ride.dts
-@@ -17,6 +17,7 @@
- 
- 	aliases {
- 		serial0 = &uart7;
-+		mmc0 = &sdhc_1;
- 	};
- 
- 	chosen {
-@@ -332,6 +333,26 @@
- 	status = "okay";
- };
- 
-+&sdhc_1 {
-+	pinctrl-0 = <&sdc1_state_on>;
-+	pinctrl-1 = <&sdc1_state_off>;
-+	pinctrl-names = "default", "sleep";
+Also, can you please try whether the below changes make any difference?
+I've also attached a patch file to this email so you can apply the
+change more easily.
+
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index 7aa3932251b2..f60201ee4be0 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -1796,6 +1796,18 @@ static int domain_setup_first_level(struct 
+intel_iommu *iommu,
+  					  (pgd_t *)pgd, flags, old);
+  }
+
++static bool domain_need_iotlb_sync_map(struct dmar_domain *domain,
++				       struct intel_iommu *iommu)
++{
++	if (cap_caching_mode(iommu->cap) && !domain->use_first_level)
++		return true;
 +
-+	bus-width = <8>;
-+	mmc-ddr-1_8v;
-+	mmc-hs200-1_8v;
-+	mmc-hs400-1_8v;
-+	mmc-hs400-enhanced-strobe;
-+	vmmc-supply = <&vreg_l8a>;
-+	vqmmc-supply = <&vreg_s4a>;
++	if (rwbf_quirk || cap_rwbf(iommu->cap))
++		return true;
 +
-+	non-removable;
-+	no-sd;
-+	no-sdio;
++	return false;
++}
 +
-+	status = "okay";
-+};
+  static int dmar_domain_attach_device(struct dmar_domain *domain,
+  				     struct device *dev)
+  {
+@@ -1833,6 +1845,8 @@ static int dmar_domain_attach_device(struct 
+dmar_domain *domain,
+  	if (ret)
+  		goto out_block_translation;
+
++	domain->iotlb_sync_map |= domain_need_iotlb_sync_map(domain, iommu);
 +
- &tlmm {
- 	ethernet0_default: ethernet0-default-state {
- 		ethernet0_mdc: ethernet0-mdc-pins {
+  	return 0;
+
+  out_block_translation:
+@@ -3945,7 +3959,10 @@ static bool risky_device(struct pci_dev *pdev)
+  static int intel_iommu_iotlb_sync_map(struct iommu_domain *domain,
+  				      unsigned long iova, size_t size)
+  {
+-	cache_tag_flush_range_np(to_dmar_domain(domain), iova, iova + size - 1);
++	struct dmar_domain *dmar_domain = to_dmar_domain(domain);
++
++	if (dmar_domain->iotlb_sync_map)
++		cache_tag_flush_range_np(dmar_domain, iova, iova + size - 1);
+
+  	return 0;
+  }
+diff --git a/drivers/iommu/intel/iommu.h b/drivers/iommu/intel/iommu.h
+index 3ddbcc603de2..7ab2c34a5ecc 100644
+--- a/drivers/iommu/intel/iommu.h
++++ b/drivers/iommu/intel/iommu.h
+@@ -614,6 +614,9 @@ struct dmar_domain {
+  	u8 has_mappings:1;		/* Has mappings configured through
+  					 * iommu_map() interface.
+  					 */
++	u8 iotlb_sync_map:1;		/* Need to flush IOTLB cache or write
++					 * buffer when creating mappings.
++					 */
+
+  	spinlock_t lock;		/* Protect device tracking lists */
+  	struct list_head devices;	/* all devices' list */
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.43.0
 
+Thanks,
+baolu
+--------------3m0g6PfBR00YwHw0BbrfPgi0
+Content-Type: text/plain; charset=UTF-8;
+ name="0001-iommu-vt-d-Avoid-unnecessary-cache_tag_flush_range_n.patch"
+Content-Disposition: attachment;
+ filename*0="0001-iommu-vt-d-Avoid-unnecessary-cache_tag_flush_range_n.pa";
+ filename*1="tch"
+Content-Transfer-Encoding: base64
+
+RnJvbSBkZGM0MjEwYTMzNjUxNDdkZjk3OGJkMGJmNDVkODI0YjljODY5ODc3IE1vbiBTZXAg
+MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBMdSBCYW9sdSA8YmFvbHUubHVAbGludXguaW50ZWwu
+Y29tPgpEYXRlOiBXZWQsIDIgSnVsIDIwMjUgMTY6NTE6NDggKzA4MDAKU3ViamVjdDogW1BB
+VENIIDEvMV0gaW9tbXUvdnQtZDogQXZvaWQgdW5uZWNlc3NhcnkgY2FjaGVfdGFnX2ZsdXNo
+X3JhbmdlX25wKCkKCkZvciB0ZXN0IHB1cnBvc2Ugb25seSEKClNpZ25lZC1vZmYtYnk6IEx1
+IEJhb2x1IDxiYW9sdS5sdUBsaW51eC5pbnRlbC5jb20+Ci0tLQogZHJpdmVycy9pb21tdS9p
+bnRlbC9pb21tdS5jIHwgMTkgKysrKysrKysrKysrKysrKysrLQogZHJpdmVycy9pb21tdS9p
+bnRlbC9pb21tdS5oIHwgIDMgKysrCiAyIGZpbGVzIGNoYW5nZWQsIDIxIGluc2VydGlvbnMo
+KyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2lvbW11L2ludGVsL2lv
+bW11LmMgYi9kcml2ZXJzL2lvbW11L2ludGVsL2lvbW11LmMKaW5kZXggN2FhMzkzMjI1MWIy
+Li5mNjAyMDFlZTRiZTAgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvaW9tbXUvaW50ZWwvaW9tbXUu
+YworKysgYi9kcml2ZXJzL2lvbW11L2ludGVsL2lvbW11LmMKQEAgLTE3OTYsNiArMTc5Niwx
+OCBAQCBzdGF0aWMgaW50IGRvbWFpbl9zZXR1cF9maXJzdF9sZXZlbChzdHJ1Y3QgaW50ZWxf
+aW9tbXUgKmlvbW11LAogCQkJCQkgIChwZ2RfdCAqKXBnZCwgZmxhZ3MsIG9sZCk7CiB9CiAK
+K3N0YXRpYyBib29sIGRvbWFpbl9uZWVkX2lvdGxiX3N5bmNfbWFwKHN0cnVjdCBkbWFyX2Rv
+bWFpbiAqZG9tYWluLAorCQkJCSAgICAgICBzdHJ1Y3QgaW50ZWxfaW9tbXUgKmlvbW11KQor
+eworCWlmIChjYXBfY2FjaGluZ19tb2RlKGlvbW11LT5jYXApICYmICFkb21haW4tPnVzZV9m
+aXJzdF9sZXZlbCkKKwkJcmV0dXJuIHRydWU7CisKKwlpZiAocndiZl9xdWlyayB8fCBjYXBf
+cndiZihpb21tdS0+Y2FwKSkKKwkJcmV0dXJuIHRydWU7CisKKwlyZXR1cm4gZmFsc2U7Cit9
+CisKIHN0YXRpYyBpbnQgZG1hcl9kb21haW5fYXR0YWNoX2RldmljZShzdHJ1Y3QgZG1hcl9k
+b21haW4gKmRvbWFpbiwKIAkJCQkgICAgIHN0cnVjdCBkZXZpY2UgKmRldikKIHsKQEAgLTE4
+MzMsNiArMTg0NSw4IEBAIHN0YXRpYyBpbnQgZG1hcl9kb21haW5fYXR0YWNoX2RldmljZShz
+dHJ1Y3QgZG1hcl9kb21haW4gKmRvbWFpbiwKIAlpZiAocmV0KQogCQlnb3RvIG91dF9ibG9j
+a190cmFuc2xhdGlvbjsKIAorCWRvbWFpbi0+aW90bGJfc3luY19tYXAgfD0gZG9tYWluX25l
+ZWRfaW90bGJfc3luY19tYXAoZG9tYWluLCBpb21tdSk7CisKIAlyZXR1cm4gMDsKIAogb3V0
+X2Jsb2NrX3RyYW5zbGF0aW9uOgpAQCAtMzk0NSw3ICszOTU5LDEwIEBAIHN0YXRpYyBib29s
+IHJpc2t5X2RldmljZShzdHJ1Y3QgcGNpX2RldiAqcGRldikKIHN0YXRpYyBpbnQgaW50ZWxf
+aW9tbXVfaW90bGJfc3luY19tYXAoc3RydWN0IGlvbW11X2RvbWFpbiAqZG9tYWluLAogCQkJ
+CSAgICAgIHVuc2lnbmVkIGxvbmcgaW92YSwgc2l6ZV90IHNpemUpCiB7Ci0JY2FjaGVfdGFn
+X2ZsdXNoX3JhbmdlX25wKHRvX2RtYXJfZG9tYWluKGRvbWFpbiksIGlvdmEsIGlvdmEgKyBz
+aXplIC0gMSk7CisJc3RydWN0IGRtYXJfZG9tYWluICpkbWFyX2RvbWFpbiA9IHRvX2RtYXJf
+ZG9tYWluKGRvbWFpbik7CisKKwlpZiAoZG1hcl9kb21haW4tPmlvdGxiX3N5bmNfbWFwKQor
+CQljYWNoZV90YWdfZmx1c2hfcmFuZ2VfbnAoZG1hcl9kb21haW4sIGlvdmEsIGlvdmEgKyBz
+aXplIC0gMSk7CiAKIAlyZXR1cm4gMDsKIH0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvaW9tbXUv
+aW50ZWwvaW9tbXUuaCBiL2RyaXZlcnMvaW9tbXUvaW50ZWwvaW9tbXUuaAppbmRleCAzZGRi
+Y2M2MDNkZTIuLjdhYjJjMzRhNWVjYyAxMDA2NDQKLS0tIGEvZHJpdmVycy9pb21tdS9pbnRl
+bC9pb21tdS5oCisrKyBiL2RyaXZlcnMvaW9tbXUvaW50ZWwvaW9tbXUuaApAQCAtNjE0LDYg
+KzYxNCw5IEBAIHN0cnVjdCBkbWFyX2RvbWFpbiB7CiAJdTggaGFzX21hcHBpbmdzOjE7CQkv
+KiBIYXMgbWFwcGluZ3MgY29uZmlndXJlZCB0aHJvdWdoCiAJCQkJCSAqIGlvbW11X21hcCgp
+IGludGVyZmFjZS4KIAkJCQkJICovCisJdTggaW90bGJfc3luY19tYXA6MTsJCS8qIE5lZWQg
+dG8gZmx1c2ggSU9UTEIgY2FjaGUgb3Igd3JpdGUKKwkJCQkJICogYnVmZmVyIHdoZW4gY3Jl
+YXRpbmcgbWFwcGluZ3MuCisJCQkJCSAqLwogCiAJc3BpbmxvY2tfdCBsb2NrOwkJLyogUHJv
+dGVjdCBkZXZpY2UgdHJhY2tpbmcgbGlzdHMgKi8KIAlzdHJ1Y3QgbGlzdF9oZWFkIGRldmlj
+ZXM7CS8qIGFsbCBkZXZpY2VzJyBsaXN0ICovCi0tIAoyLjQzLjAKCg==
+
+--------------3m0g6PfBR00YwHw0BbrfPgi0--
