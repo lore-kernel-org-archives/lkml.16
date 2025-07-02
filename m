@@ -1,237 +1,91 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297842E7BAF;
-	Wed,  2 Jul 2025 15:33:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B972D0C9E;
+	Wed,  2 Jul 2025 15:33:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751470403; cv=none; b=BECb2XRFnkudC/UfzFdWfs6RpG4O/D0+VlSI6PHnLHrQAWvwd94/7AS8T2CbLtoEad4x3j7u1EDO6L2bD1gPm+jJIXcGlwV3AUKCJtLawzSEiVTPzuy6t+lcYhNR2iX9lTrx6OQBhhhtVQ1gD1hJPudvIRjC6dLOJDPHsmfYVFA=
+	t=1751470419; cv=none; b=fV1ihhJetIMif23aFqEQScJimd1Ve47+4Ml+LCCkMYZeZrYG+DjLTomuOdHcl3Y97GXuDQeLkPEP/rcPE5fc53LhoG98szXRwB8KssFm2crR69y7xytw9XcCDHsfvXR9MNTIpKXhr63JVFol80+FnDy/D81v7zxuU/FF8HO++Q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751470403; c=relaxed/simple;
-	bh=Aj62Fd0EdJ+ratg/xny/rQ3QaLZYtIjr8G4b56xNw/E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kOdHBfSs1Y3g3W2dVG7UEDaFsEEn+ZXgi68/5IizD/3Vlvp08nLmQKV/ggRn0rg8Qa6fpUqkry3EW/ZzNB5I58fN/ranl2t45OBjm9RtlvGwGTuFZzbmdeDMJMvgSCfBqDu82sPYttkAyMkBVXZTVyvxOVHMlucSkyySPj4UIUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Du41MWGD; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751470419; c=relaxed/simple;
+	bh=m4jNXgT+w4Hs09jExxagGWXs5YRAnZ/7SVfxbiR92Co=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o0jm/UZ2T7m1rShcOdLMkhczFoXvB6gGASUcZ28ncNBqnQ9eS+NOUJ9EzXeTrqyU3aCusaqUtNYrh0DFkRY/GjbMNiEkfY+5ZjQBo4CrPZwey3WlrSY3At0bFNO+Eo2uxD0S4jBBnKGXtLPeIlTv4JOVj1Yizs2J+hFZG3iKmUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LCGgA+c9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Du41MWGD"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-235d6de331fso59551595ad.3;
-        Wed, 02 Jul 2025 08:33:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751470401; x=1752075201; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=E1EH/x0hqLVEztTMm5hLeKJHePzrbb36LWWaQlCSnz8=;
-        b=Du41MWGDH9RTAEtojXKV6tFAqFjvAwX5BpcmZyM+1M+0qtiYYRTpXsyoQ15mbzkhfu
-         DKjBGLx/0j8vHOMMD8DRZbda5FzxFkbkPZXyywJbddeXMZfAcPZ1ece8PseAg0fY8Zi5
-         zSXF0llBupGqIXTkZFgt54nry/PRoa798hj8uO2j9sx7mGZLnPfhtImacnZc5vydQ7wg
-         C61geQ4WwRo9fGTpTR+hw5hK7f5rz0/M/TnDYBfh5Sk3KRgl6vGaUMp8vpOv49IcByiI
-         7G6+D425e9uEFD6lKkmVxf60hBz5aVFFCYfankLyilADUbUHMnt8u2yZ57kI3OTLXIqW
-         0DnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751470401; x=1752075201;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=E1EH/x0hqLVEztTMm5hLeKJHePzrbb36LWWaQlCSnz8=;
-        b=SKVzcgBbdxn9IeRkHy6S5BuwiP0irr/29Uk3lAN65a7C1z03VzAErx6QeCQhXVPooK
-         w6zSjjYH+AegW2zUq5PDatlx86HVS1n0lEIg4DIpwBTyh3YV0/hbeunXMC2WLxqolab2
-         HloTax+AQAp7Nc1rtUmTpo1MM6bQTulZOkLT7rQ/ciTQUKFcaf2F2fecfHQzVCIYYTCd
-         6e++XQ/yE+RkzBEeN9yl6rtjY0+SkCEIqu/TXLvWa6LkxPESy2h0UTll+fyZjWohur/P
-         XVanHchpCqPkOPP8NfPL3DOCW6wmC2jDyrPLDcOOv7CtXCkqsPg7cp11HCSidO8ldrOR
-         HIlw==
-X-Forwarded-Encrypted: i=1; AJvYcCXKTwnvc6XKGmW7wJpJAkz097S5yeDhmaZ6kbke8elGRCj0FEBuxroD2QrCMuNw+Yh/Y83pSA5vdWo3/i8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOG3QXYUHEZq7RXzamf+NwL19q4GhfrTUTORDRZq0Lbp/e72us
-	vHUgQs8m7c4ePyg9/SXulQeNy44yXa34xqi4xGowiLLefb65X/D8iqxgwIohRIcXsEs=
-X-Gm-Gg: ASbGncsr+dveuZhn9IuR4NjL6NQVUpdHfCJ4gY2TU/oFZ/2FiGOCfaOoq1Yt5WGRyf9
-	kFFJyIzRLV/9dVZu0uCUR9MYOOhRWT112X4v+yhzHxL+YBH2ZS9Lzi1QMEiR7LOwzexJVdOJseJ
-	LkPfrTpX0AxRNSNb05YefXPsAls4ZDhJFXP08k05s5UOwqA0DN6KtqM95df275NRTqy1VLglxmT
-	wagrGvQ1qxO+aNuFlY37mC/V2PTwg6rKVobB0JbOMYPdyVjSqxAj+3nvhzSu2ex9Blp1NggKPof
-	c1kU+85OJtqxpvdADeKRyosbIQl+VlXUNiWCFlfeL6k5W+wT+ZWpRdb9Q4QqSTo3OySJ+CgmmDI
-	V
-X-Google-Smtp-Source: AGHT+IGeKN0mY3ixdNXqrHP5b6d6Qr4CNStUVGGtIlA+/rTKBFeorHdTl8pqiv+lDFmFNXENyUADrQ==
-X-Received: by 2002:a17:903:40cf:b0:234:f4da:7eef with SMTP id d9443c01a7336-23c6e5826e1mr59257965ad.52.1751470400941;
-        Wed, 02 Jul 2025 08:33:20 -0700 (PDT)
-Received: from localhost.localdomain ([121.185.186.233])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb39bf5fsm140889545ad.115.2025.07.02.08.33.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 08:33:20 -0700 (PDT)
-From: Jeongjun Park <aha310510@gmail.com>
-To: stable@vger.kernel.org
-Cc: urezki@gmail.com,
-	akpm@linux-foundation.org,
-	edumazet@google.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Jeongjun Park <aha310510@gmail.com>
-Subject: [PATCH 6.15.y] mm/vmalloc: fix data race in show_numa_info()
-Date: Thu,  3 Jul 2025 00:33:12 +0900
-Message-ID: <20250702153312.351080-1-aha310510@gmail.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LCGgA+c9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77315C4CEE7;
+	Wed,  2 Jul 2025 15:33:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751470418;
+	bh=m4jNXgT+w4Hs09jExxagGWXs5YRAnZ/7SVfxbiR92Co=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LCGgA+c9TFzb/8uksnZ2Tj1ghRaQm6VM0g/MJYbMQ1521YHgfeqEZR7CQJrApug9P
+	 0+Pcpa11cSgNytCUmkvrP7LZzgluUoktRaxJR9yAWJZMlGaWaVhj6fMzpXtx6kUHJy
+	 9jsSwjGpDw2+ryhZoogfhphKmZOiofVVfH5WPa7TgOlkTOCY7pbey7nOH1FvmYPB2R
+	 K3FnnKfK08IF8KdiLIltGVesNdNtPWJreWfJD0QDrXq7/wg/3RPHfJ9vwb9cqOJuJZ
+	 schKz4Wufn+rbeAtuTZnq8+IjUpyqMVVceL85N8aAP1koCkDUawU4C7oGxY39NFkTC
+	 HR4cYpJRstw6g==
+Date: Wed, 2 Jul 2025 21:03:24 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com, quic_mrana@quicinc.com
+Subject: Re: [PATCH v5 2/2] PCI: qcom: Add support for multi-root port
+Message-ID: <ws2kdznvbrvuvb6k4jov5cd4qzvadeaffjqgeso7u72stormlg@2ffiexejkrk6>
+References: <20250702-perst-v5-0-920b3d1f6ee1@qti.qualcomm.com>
+ <20250702-perst-v5-2-920b3d1f6ee1@qti.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250702-perst-v5-2-920b3d1f6ee1@qti.qualcomm.com>
 
-commit 5c5f0468d172ddec2e333d738d2a1f85402cf0bc upstream.
+On Wed, Jul 02, 2025 at 04:50:42PM GMT, Krishna Chaitanya Chundru wrote:
 
-The following data-race was found in show_numa_info():
+[...]
 
-==================================================================
-BUG: KCSAN: data-race in vmalloc_info_show / vmalloc_info_show
+> -	ret = phy_init(pcie->phy);
+> -	if (ret)
+> -		goto err_pm_runtime_put;
+> +	for_each_available_child_of_node(dev->of_node, of_port) {
+> +		ret = qcom_pcie_parse_port(pcie, of_port);
+> +		of_node_put(of_port);
+> +		if (ret) {
+> +			if (ret != -ENOENT) {
+> +				dev_err_probe(pci->dev, ret,
+> +					      "Failed to parse port nodes %d\n",
+> +					      ret);
+> +				goto err_port_del;
+> +			}
+> +			break;
+> +		}
+> +	}
+> +
+> +	/*
+> +	 * In the case of properties not populated in root port, fallback to the
+> +	 * legacy method of parsing the host bridge node. This is to maintain DT
+> +	 * backwards compatibility.
+> +	 */
+> +	if (ret) {
+> +		pcie->phy = devm_phy_optional_get(dev, "pciephy");
+> +		if (IS_ERR(pcie->phy)) {
+> +			ret = PTR_ERR(pcie->phy);
+> +			goto err_pm_runtime_put;
 
-read to 0xffff88800971fe30 of 4 bytes by task 8289 on cpu 0:
- show_numa_info mm/vmalloc.c:4936 [inline]
- vmalloc_info_show+0x5a8/0x7e0 mm/vmalloc.c:5016
- seq_read_iter+0x373/0xb40 fs/seq_file.c:230
- proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
-....
+Shouldn't this and below be err_port_del?
 
-write to 0xffff88800971fe30 of 4 bytes by task 8287 on cpu 1:
- show_numa_info mm/vmalloc.c:4934 [inline]
- vmalloc_info_show+0x38f/0x7e0 mm/vmalloc.c:5016
- seq_read_iter+0x373/0xb40 fs/seq_file.c:230
- proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
-....
+- Mani
 
-value changed: 0x0000008f -> 0x00000000
-==================================================================
-
-According to this report,there is a read/write data-race because
-m->private is accessible to multiple CPUs.  To fix this, instead of
-allocating the heap in proc_vmalloc_init() and passing the heap address to
-m->private, vmalloc_info_show() should allocate the heap.
-
-Link: https://lkml.kernel.org/r/20250508165620.15321-1-aha310510@gmail.com
-Fixes: 8e1d743 ("mm: vmalloc: support multiple nodes in vmallocinfo")
-Signed-off-by: Jeongjun Park <aha310510@gmail.com>
-Suggested-by: Eric Dumazet <edumazet@google.com>
-Suggested-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
- mm/vmalloc.c | 63 +++++++++++++++++++++++++++++-----------------------
- 1 file changed, 35 insertions(+), 28 deletions(-)
-
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 00cf1b575c89..3fb534dcf14d 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -3100,7 +3100,7 @@ static void clear_vm_uninitialized_flag(struct vm_struct *vm)
- 	/*
- 	 * Before removing VM_UNINITIALIZED,
- 	 * we should make sure that vm has proper values.
--	 * Pair with smp_rmb() in show_numa_info().
-+	 * Pair with smp_rmb() in vread_iter() and vmalloc_info_show().
- 	 */
- 	smp_wmb();
- 	vm->flags &= ~VM_UNINITIALIZED;
-@@ -4934,28 +4934,29 @@ bool vmalloc_dump_obj(void *object)
- #endif
- 
- #ifdef CONFIG_PROC_FS
--static void show_numa_info(struct seq_file *m, struct vm_struct *v)
--{
--	if (IS_ENABLED(CONFIG_NUMA)) {
--		unsigned int nr, *counters = m->private;
--		unsigned int step = 1U << vm_area_page_order(v);
- 
--		if (!counters)
--			return;
-+/*
-+ * Print number of pages allocated on each memory node.
-+ *
-+ * This function can only be called if CONFIG_NUMA is enabled
-+ * and VM_UNINITIALIZED bit in v->flags is disabled.
-+ */
-+static void show_numa_info(struct seq_file *m, struct vm_struct *v,
-+				 unsigned int *counters)
-+{
-+	unsigned int nr;
-+	unsigned int step = 1U << vm_area_page_order(v);
- 
--		if (v->flags & VM_UNINITIALIZED)
--			return;
--		/* Pair with smp_wmb() in clear_vm_uninitialized_flag() */
--		smp_rmb();
-+	if (!counters)
-+		return;
- 
--		memset(counters, 0, nr_node_ids * sizeof(unsigned int));
-+	memset(counters, 0, nr_node_ids * sizeof(unsigned int));
- 
--		for (nr = 0; nr < v->nr_pages; nr += step)
--			counters[page_to_nid(v->pages[nr])] += step;
--		for_each_node_state(nr, N_HIGH_MEMORY)
--			if (counters[nr])
--				seq_printf(m, " N%u=%u", nr, counters[nr]);
--	}
-+	for (nr = 0; nr < v->nr_pages; nr += step)
-+		counters[page_to_nid(v->pages[nr])] += step;
-+	for_each_node_state(nr, N_HIGH_MEMORY)
-+		if (counters[nr])
-+			seq_printf(m, " N%u=%u", nr, counters[nr]);
- }
- 
- static void show_purge_info(struct seq_file *m)
-@@ -4983,6 +4984,10 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
- 	struct vmap_area *va;
- 	struct vm_struct *v;
- 	int i;
-+	unsigned int *counters;
-+
-+	if (IS_ENABLED(CONFIG_NUMA))
-+		counters = kmalloc(nr_node_ids * sizeof(unsigned int), GFP_KERNEL);
- 
- 	for (i = 0; i < nr_vmap_nodes; i++) {
- 		vn = &vmap_nodes[i];
-@@ -4999,6 +5004,11 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
- 			}
- 
- 			v = va->vm;
-+			if (v->flags & VM_UNINITIALIZED)
-+				continue;
-+
-+			/* Pair with smp_wmb() in clear_vm_uninitialized_flag() */
-+			smp_rmb();
- 
- 			seq_printf(m, "0x%pK-0x%pK %7ld",
- 				v->addr, v->addr + v->size, v->size);
-@@ -5033,7 +5043,9 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
- 			if (is_vmalloc_addr(v->pages))
- 				seq_puts(m, " vpages");
- 
--			show_numa_info(m, v);
-+			if (IS_ENABLED(CONFIG_NUMA))
-+				show_numa_info(m, v, counters);
-+
- 			seq_putc(m, '\n');
- 		}
- 		spin_unlock(&vn->busy.lock);
-@@ -5043,19 +5055,14 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
- 	 * As a final step, dump "unpurged" areas.
- 	 */
- 	show_purge_info(m);
-+	if (IS_ENABLED(CONFIG_NUMA))
-+		kfree(counters);
- 	return 0;
- }
- 
- static int __init proc_vmalloc_init(void)
- {
--	void *priv_data = NULL;
--
--	if (IS_ENABLED(CONFIG_NUMA))
--		priv_data = kmalloc(nr_node_ids * sizeof(unsigned int), GFP_KERNEL);
--
--	proc_create_single_data("vmallocinfo",
--		0400, NULL, vmalloc_info_show, priv_data);
--
-+	proc_create_single("vmallocinfo", 0400, NULL, vmalloc_info_show);
- 	return 0;
- }
- module_init(proc_vmalloc_init);
---
+-- 
+மணிவண்ணன் சதாசிவம்
