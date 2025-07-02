@@ -1,244 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C4473093CF;
-	Wed,  2 Jul 2025 15:07:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6C2030B9B0
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 15:07:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751468839; cv=none; b=bPBvHwWjR+rknS6sSOgkuZxxTtqMYGdsvhRBVM/4WB4CaKSaOu5UfgtRY3zobiDhDVXLwnEv/qCen655Dxe3om9isJk1nMYAbSIZdQMNrT0AcjtE3/sySd16WwINaMizOXRjsvC1XAMAkNlAn6W6ihdG8R4Vebs/1jIg3Aoe4RE=
+	t=1751468842; cv=none; b=EvSwMdUMAhz2AlmnLGsUc0LOm5jhCUU4HbTrTXvQMqdIW452fdQYts6FC1vPJO06tAtw+R3FPrWFPT7KIyUuUGYOSFTSXvZMscdSznyes8HO3FL0Zh5iZ33yXTrhyqjZNEhGtEJQZJw7wWWgtaBDWF2CBAHTK2p5dNngAT1/PNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751468839; c=relaxed/simple;
-	bh=07BIaW5fAzrHSMxQBsZV6MlEtvhFBYxqbhT4d+ChSyk=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=Vqp4hc+b40hcahE87Th1iwLR3YrYKLe88g00iU3srt75zJ/afpbpXJ201H/MSE2Oqiz+07RXMiesYlnscH9qfjVzhlhaFqxY2L40NEvB/lCZX39rQdC11aSvozqhEKydQ/xBeCqFjLlxZu6GdrAVmDsKp2oR0kCZLMDjViJ+WJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EbTC8VmN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751468842; c=relaxed/simple;
+	bh=cn2NRI5mu8mp2JvptDQmdNR3iEYDCKiW6RwP36IdYcE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RRgdVd/AXAeTQUQT07LcDnHhdlECfoEQ2BmUCj6N4XHiKLWQTXHqUWmLN9F5ukylfwOICLQ+1srdRsaojo5stbtN1/NkIg3NNESWyzN+i0Is5e6AxOZn88HCXimQFkVazJLCwiRIJlSsKpfoUuyIH4B+MrRDidrMQ05NjaEoVHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=rpglmKEv; arc=none smtp.client-ip=209.85.161.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EbTC8VmN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CB0CC4CEF1;
-	Wed,  2 Jul 2025 15:07:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751468839;
-	bh=07BIaW5fAzrHSMxQBsZV6MlEtvhFBYxqbhT4d+ChSyk=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=EbTC8VmN5Y4QzM9FwcP0au4LQ4SwbVlbp8gFL2n41R5wiNGu/t4mr5GDOQ/eXaInI
-	 oef23grCvPWGNKrSRFgG2PkVFUhKKMs6aNDlXiaQzwwu+1TuoM37C57W651maPPSMc
-	 qd4yPnBrjyLC1iwB5giBnY0NahMUn5ZaTDj//quRMro3IFMRvKcStX2TLxNUgbCVMY
-	 FNQX5m2sqKP7256Zau+ZcKYx6zVS3YnCkcpzK4mQFpuD41t407O7b51VPlgMb9AgC1
-	 BK04efPYAgPG6qYpJM/QrI+THk6IiWTER4E7TsXZ6RD1BoI8HQNl6oWcbMJLJoMa34
-	 APkGQFI5DLAtA==
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="rpglmKEv"
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-61208b86da2so158360eaf.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 08:07:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751468840; x=1752073640; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Z+yF8Byfsy0CuO73SgfsROHb/6ylMyJG4365Xzkg/tU=;
+        b=rpglmKEvds1+pdW7sRoDilSXNV5TzQif0EQwoG8XN2LeqUU2czx1bgjNhLhrW4lDYo
+         eP+ZKGkcTeq06R/knz5JOXuOfAH6J4HzfFpwDV1OygWgLfshsYK5zD+HoaZahX+vF1qC
+         BkgyYnKmlyUNlwOle0bSVvcKOW5CobavEyL0Pb4ElGjUCGVdWp+e8HO8ZMZCjiSFnT17
+         OBrF1tOZyLob92vmiYSDTZP9ZYqwmuwuEzbZ7kuylC9LSXXSuxNJXnHoKGzo4JQXFAsi
+         O1ZOI2CU91ZqVDCs0Iecuic4KsUe6Duv4c7xidaTRd08/dsNKTg31q3DRM9uv21BAswI
+         ZqtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751468840; x=1752073640;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z+yF8Byfsy0CuO73SgfsROHb/6ylMyJG4365Xzkg/tU=;
+        b=n6BKWwYRWqMQtjA3C7thDNqfYQ/ZsCBouGf9lHwTgj1qmeoYfH2JE00c9g2yjOvVuQ
+         dBO9rNIvzRoG78rjwKGhTZrkzhxVdOpKdnpReN/9vE0NH5HnIqIqXtTqCvIeqCbUGVTg
+         /SxtO1OrDLnXa+WiVIQE3g926xkozW8drGJmhq/K+ol3KUdGi7o63MhNmxAsr64cOhaS
+         F43RhtUwLor4UEovmrkJlQn/QaOFK9/BphLB3Y3wDcR7iXs+WZcWCQZHf4Bkr5rI6T0P
+         pqRNulKMmuZUHkDJPQMdCQavUDqyz8JiTD/8bFwBMDXPw7lWOztCSBGrjwkBp30Ks6PR
+         NcJw==
+X-Forwarded-Encrypted: i=1; AJvYcCUVzjp4qhMde5vQ+GbOlqsaYtTKSeKs8vtusp3+pQVtQag0Zq9FFkKOzvSlwmu2WpLomg2EpZl+y3vJle0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcPjtKnQ+QmJuNGxQWamk/8Tw787+Unmt4bHnmlGuOQobLKPG7
+	D4IHY6QqvRzWHPHrtKcwTM/hxmI/R7LTP0X59qm5YYMhRC75s7FnzhXJ19S61w9N0Jo=
+X-Gm-Gg: ASbGncvXlHOHeasi88LxkttysT+3Alsln4cLDr5D+gf+V59eq7Y8FML/zNLHn74NjVW
+	/Evrp8D6IHsfFd2BdysIv6Yy5ELYMDvVK+JgjgoEAm8tuoss3XyFnrDumS9yfuxUubpTK9n1/UN
+	ti1zGlrCv4QZFM6HHv4/qJVTscxNyC3zc/HkcThJi/SPDvlY2JggTYvTD+WZwXGqJxKYVZ2bQ5I
+	48syUj+aLK8YyGrVwVK2opfL/CMJMLAGK9J4+yj6CWIS+WjdkT82ua9+oTzedn7DTbTCnVc2Xb8
+	vbOJu/yXNuR+lQlzrccW1iXt381gIvPu8cS2Jmh+/a+UAXziV4v2PgevMH/TJFO5O6cUKZ+qU2A
+	NxhQv0oqb4rt9mpC3kq5RQKS635sQpV/qlmrHNN8=
+X-Google-Smtp-Source: AGHT+IE1PW5FUH+qwlJtTOdD0wGyWz6EDOBzlYeJCn84Z90rIwVxi1VgT+rOkeUbBg33/zG427zvaQ==
+X-Received: by 2002:a05:6820:1994:b0:611:9a4d:fc44 with SMTP id 006d021491bc7-61201244fcfmr2268633eaf.3.1751468839839;
+        Wed, 02 Jul 2025 08:07:19 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:5c00:24f0:997b:5458? ([2600:8803:e7e4:1d00:5c00:24f0:997b:5458])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-611b8474da2sm1700798eaf.6.2025.07.02.08.07.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Jul 2025 08:07:18 -0700 (PDT)
+Message-ID: <3778ad13-3b62-4f68-946d-b861b0df4272@baylibre.com>
+Date: Wed, 2 Jul 2025 10:07:17 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iio: imu: adis16550: rework clock range test
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Robert Budai <robert.budai@analog.com>,
+ Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250702-iio-imu-adis16550-rework-clock-range-test-v1-1-b45f3a3b0dc1@baylibre.com>
+ <aGVIBVsFPcVw3lN6@smile.fi.intel.com> <aGVJPRmn1-HUBb40@smile.fi.intel.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <aGVJPRmn1-HUBb40@smile.fi.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Date: Wed, 02 Jul 2025 17:07:12 +0200
-Message-Id: <DB1NVTWHU7BN.2WGPMAY9LQYNW@kernel.org>
-Cc: "Trevor Gross" <tmgross@umich.edu>, "Adam Bratschi-Kaye"
- <ark.email@gmail.com>, <rust-for-linux@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-kbuild@vger.kernel.org>, "Petr
- Pavlu" <petr.pavlu@suse.com>, "Sami Tolvanen" <samitolvanen@google.com>,
- "Daniel Gomez" <da.gomez@samsung.com>, "Simona Vetter"
- <simona.vetter@ffwll.ch>, "Greg KH" <gregkh@linuxfoundation.org>, "Fiona
- Behrens" <me@kloenk.dev>, "Daniel Almeida" <daniel.almeida@collabora.com>,
- <linux-modules@vger.kernel.org>
-Subject: Re: [PATCH v14 1/7] rust: sync: add `OnceLock`
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Andreas Hindborg" <a.hindborg@kernel.org>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Alice Ryhl"
- <aliceryhl@google.com>, "Masahiro Yamada" <masahiroy@kernel.org>, "Nathan
- Chancellor" <nathan@kernel.org>, "Luis Chamberlain" <mcgrof@kernel.org>,
- "Danilo Krummrich" <dakr@kernel.org>, "Nicolas Schier"
- <nicolas.schier@linux.dev>
-X-Mailer: aerc 0.20.1
-References: <20250702-module-params-v3-v14-0-5b1cc32311af@kernel.org>
- <20250702-module-params-v3-v14-1-5b1cc32311af@kernel.org>
-In-Reply-To: <20250702-module-params-v3-v14-1-5b1cc32311af@kernel.org>
+Content-Transfer-Encoding: 7bit
 
-On Wed Jul 2, 2025 at 3:18 PM CEST, Andreas Hindborg wrote:
-> Introduce the `OnceLock` type, a container that can only be written once.
-> The container uses an internal atomic to synchronize writes to the intern=
-al
-> value.
->
-> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
-> ---
->  rust/kernel/sync.rs           |   1 +
->  rust/kernel/sync/once_lock.rs | 104 ++++++++++++++++++++++++++++++++++++=
-++++++
->  2 files changed, 105 insertions(+)
->
-> diff --git a/rust/kernel/sync.rs b/rust/kernel/sync.rs
-> index c7c0e552bafe..f2ee07315091 100644
-> --- a/rust/kernel/sync.rs
-> +++ b/rust/kernel/sync.rs
-> @@ -15,6 +15,7 @@
->  mod condvar;
->  pub mod lock;
->  mod locked_by;
-> +pub mod once_lock;
+On 7/2/25 9:59 AM, Andy Shevchenko wrote:
+> On Wed, Jul 02, 2025 at 05:53:57PM +0300, Andy Shevchenko wrote:
+>> On Wed, Jul 02, 2025 at 09:27:45AM -0500, David Lechner wrote:
+>>> Rework the clock rate range test to test if sync_mode_data != NULL
+>>> instead of testing if the for loop index variable. This makes it easier
+>>> for static analyzers to see that we aren't using an uninitialized
+>>> sync_mode_data [1].
+>>
+>> But at the same time it makes it not to be the usual pattern.,,
+> 
+> Reading the static analyser output I think the first hunk is only what we need,
+> but this is still false positive and it's problem of that static
+> analyser. Have you filed a bug there? (My point is that modifying the code for
+> the advantage of false positives of some static analyser is wrong road to go
+> in my opinion.)
+> 
 
-As Alice already said, we should reexport the type. And then make the
-module private, no need to have `kernel::sync::OnceLock` and
-`kernel::sync::once_lock::OnceLock`...
+I agree that we shouldn't fix this _only_ to make the static analyzer
+happy. But I had to think quite a bit harder to see that the existing
+code was correct compared to what I have proposed here.
 
-Also, I agree with the name change to `SetOnce` or something similar.
+But if this is a common pattern that I just haven't learned to identify
+at a glance yet and everybody else can easily see that the existing code
+is correct, then perhaps it isn't worth the change.
 
->  pub mod poll;
->  pub mod rcu;
-> =20
-> diff --git a/rust/kernel/sync/once_lock.rs b/rust/kernel/sync/once_lock.r=
-s
-> new file mode 100644
-> index 000000000000..cd311bea3919
-> --- /dev/null
-> +++ b/rust/kernel/sync/once_lock.rs
-> @@ -0,0 +1,104 @@
-> +//! A container that can be initialized at most once.
-> +
-> +use super::atomic::ordering::Acquire;
-> +use super::atomic::ordering::Release;
-> +use super::atomic::Atomic;
-> +use kernel::types::Opaque;
-> +
-> +/// A container that can be populated at most once. Thread safe.
-> +///
-> +/// Once the a [`OnceLock`] is populated, it remains populated by the sa=
-me object for the
-> +/// lifetime `Self`.
-> +///
-> +/// # Invariants
-> +///
-> +/// `init` tracks the state of the container:
-> +///
-> +/// - If the container is empty, `init` is `0`.
-> +/// - If the container is mutably accessed, `init` is `1`.
-
-I think we should swap the order and change the ifs to iffs:
-
-    - `init =3D=3D 0` iff the container is empty.
-    - `init =3D=3D 1` iff the container is being accessed mutably.
-
-> +/// - If the container is populated and ready for shared access, `init` =
-is `2`.
-
-You also need that `init` is only increased and never decreases.
-Otherwise you could read a `2` and then access the value, but `init`
-changed under your nose to `0`.
-
-Then the INVARIANT comments below also need to be updated.
-
-> +///
-> +/// # Example
-> +///
-> +/// ```
-> +/// # use kernel::sync::once_lock::OnceLock;
-> +/// let value =3D OnceLock::new();
-> +/// assert_eq!(None, value.as_ref());
-> +///
-> +/// let status =3D value.populate(42u8);
-> +/// assert_eq!(true, status);
-> +/// assert_eq!(Some(&42u8), value.as_ref());
-> +/// assert_eq!(Some(42u8), value.copy());
-> +///
-> +/// let status =3D value.populate(101u8);
-> +/// assert_eq!(false, status);
-> +/// assert_eq!(Some(&42u8), value.as_ref());
-> +/// assert_eq!(Some(42u8), value.copy());
-> +/// ```
-> +pub struct OnceLock<T> {
-> +    init: Atomic<u32>,
-> +    value: Opaque<T>,
-> +}
-> +
-> +impl<T> Default for OnceLock<T> {
-> +    fn default() -> Self {
-> +        Self::new()
-> +    }
-> +}
-> +
-> +impl<T> OnceLock<T> {
-> +    /// Create a new [`OnceLock`].
-> +    ///
-> +    /// The returned instance will be empty.
-> +    pub const fn new() -> Self {
-> +        // INVARIANT: The container is empty and we set `init` to `0`.
-> +        Self {
-> +            value: Opaque::uninit(),
-> +            init: Atomic::new(0),
-> +        }
-> +    }
-> +
-> +    /// Get a reference to the contained object.
-> +    ///
-> +    /// Returns [`None`] if this [`OnceLock`] is empty.
-> +    pub fn as_ref(&self) -> Option<&T> {
-> +        if self.init.load(Acquire) =3D=3D 2 {
-> +            // SAFETY: As determined by the load above, the object is re=
-ady for shared access.
-
-    // SAFETY: By the safety requirements of `Self`, `self.init =3D=3D 2` m=
-eans that `self.value` contains
-    // a valid value.
-
-> +            Some(unsafe { &*self.value.get() })
-> +        } else {
-> +            None
-> +        }
-> +    }
-> +
-> +    /// Populate the [`OnceLock`].
-> +    ///
-> +    /// Returns `true` if the [`OnceLock`] was successfully populated.
-> +    pub fn populate(&self, value: T) -> bool {
-> +        // INVARIANT: We obtain exclusive access to the contained alloca=
-tion and write 1 to
-> +        // `init`.
-> +        if let Ok(0) =3D self.init.cmpxchg(0, 1, Acquire) {
-> +            // SAFETY: We obtained exclusive access to the contained obj=
-ect.
-> +            unsafe { core::ptr::write(self.value.get(), value) };
-> +            // INVARIANT: We release our exclusive access and transition=
- the object to shared
-> +            // access.
-> +            self.init.store(2, Release);
-> +            true
-> +        } else {
-> +            false
-> +        }
-> +    }
-> +}
-> +
-> +impl<T: Copy> OnceLock<T> {
-> +    /// Get a copy of the contained object.
-> +    ///
-> +    /// Returns [`None`] if the [`OnceLock`] is empty.
-> +    pub fn copy(&self) -> Option<T> {
-> +        if self.init.load(Acquire) =3D=3D 2 {
-> +            // SAFETY: As determined by the load above, the object is re=
-ady for shared access.
-> +            Some(unsafe { *self.value.get() })
-> +        } else {
-> +            None
-> +        }
-
-The impl can just be:
-
-    self.as_ref().copied()
-
-Would it make sense for this function to take `self` instead & we make
-the `OnceLock` also `Copy` if `T: Copy`? Maybe not...
-
-> +    }
-> +}
-
-You can move this method into the block above and just add `where T:
-Copy` on the method.
-
----
-Cheers,
-Benno
