@@ -1,110 +1,158 @@
-Received: from outbound.pv.icloud.com (p-west1-cluster5-host6-snip4-10.eps.apple.com [57.103.66.151])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81DC2273D9D
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 12:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.66.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4CB3253350
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 12:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751458595; cv=none; b=SQoIqcpUTaat2KBMxt2bHzfC642N266t9oWHkNkUyUtTvdUrZ5O9bcqrvaldUV3TnW5tznvJWrooKx5nLsJcfk6O3tQRDAc5+tZAcyCrqPCxZfu/Bix/3r5azkf9qBniHrLdr3b9kXkMtOj1sljigJ1y2SJy7PvMvyffECiQc0E=
+	t=1751458630; cv=none; b=eXlGtABxVsvQRpdFCWxqzyb2yf1qv3lSDBdyKem60afdGlSyEA2DLd0OqiUdoUCtegoXS9csMw83oHfR7yd+mtIIS7E5jAh1IpXsgYJOHuXnXYcepJmlIUivrEcisRvMwHsI+IWFBlfsvT/0/X/frT9cqXpfAjvkMXCBPUkk+jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751458595; c=relaxed/simple;
-	bh=rUPc6HarIFgYCi5PCcb/6kreZya/jVbJye2++gX7mpw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LXETsWsGZeDc2UugrmAGa1JfcDcVslMpi55zV8MjhXRNlgX863SL0Clx947FIWgu5QpItalV0gAmvDkYqZlnWALYBTPcX7+3xXVIeNBcs9ztXKcJ6ImsmJGiK4SvMWkZ/LeeKwjYEN4ZVdXrBUWLWgA1V03urcRllCjbqfzujJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=ygTm1hMl; arc=none smtp.client-ip=57.103.66.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1751458630; c=relaxed/simple;
+	bh=arrFBjkFe46MqYLWVBWkj7DSOrnRYSGqfpNIx8b+8OQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qcXqrBiOb7KB+zBguw67/4sazlyyPSiVtrro1n7ShDNnUliCKZH95ErZvxZaPYowzSEZiXNd60MJ2UJ4z0KR/csgaQtT+EZgiGU1q/ulUAQKYTbanBYZVeegMKGJg3X35vFyA2jbu7Po9wPjzeWAgRXrruc+sNtUOM8S4/S+r+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cT6vCvgt; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="ygTm1hMl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=MxR3vmUTXOypUpeb+mW6WO9zX6HevJTvOmfA6oc0iJM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
-	b=ygTm1hMlAgK3bOAbflYvbUoUF2HQHzhCEjMeszabytsCrEmSfEmfziaOzro5ljQql
-	 uzDm5mcmcHKZ2fTc6+2z7+qa1WIaNr5P78GZJ199ULDOjE1zeH6wK2zBQGcdbOkohI
-	 9CAtBvxUyp3nE1zjeo12EHEPodyHXYhnN0PaUNBFYmBOggHzzyD0mqGht5x6c03h2L
-	 VYvOj/xdR/XZaHs/rp3tl+pONK5M9e9NOi6Laxg3Q0SeKyVAyttB6bt+9tqjpaJn5s
-	 gkfWnnmBcxm5o+WygaZeiexTp//rCNU57ZKM4PLXC5qhFlklu9amr6g+RT7sfSy7dy
-	 Z+UvPYZ9AAyOw==
-Received: from outbound.pv.icloud.com (unknown [127.0.0.2])
-	by outbound.pv.icloud.com (Postfix) with ESMTPS id 83A96180030C;
-	Wed,  2 Jul 2025 12:16:29 +0000 (UTC)
-Received: from [192.168.1.26] (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
-	by outbound.pv.icloud.com (Postfix) with ESMTPSA id 5B86B18001DF;
-	Wed,  2 Jul 2025 12:16:25 +0000 (UTC)
-From: Zijun Hu <zijun_hu@icloud.com>
-Date: Wed, 02 Jul 2025 20:15:36 +0800
-Subject: [PATCH v3 8/8] sparc: kernel: apc: Remove macro APC_MINOR
- definition
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cT6vCvgt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751458627;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CXv4HPGX8MKUJrgwv//0ODreoCsIVgbAC0DLr2hgEhY=;
+	b=cT6vCvgtKsBghEVP2GaIj6OBqSPyoSJytLJgXhDFkovHVq1EUmFKs/BF32zVClvMXqEwdZ
+	jxqSSEE8RmS5agmY/qEA7bbaqprauSzV5KqKqSMdBceAhL+2z9ij2zhugiI0IIEhmWPbJQ
+	WAQiPSMDK5bJceYUMsakEQ10em8yUEg=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-551-9oQVOhhVOhK-fBfnP8c5Yw-1; Wed,
+ 02 Jul 2025 08:17:04 -0400
+X-MC-Unique: 9oQVOhhVOhK-fBfnP8c5Yw-1
+X-Mimecast-MFC-AGG-ID: 9oQVOhhVOhK-fBfnP8c5Yw_1751458622
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9F3BE1808985;
+	Wed,  2 Jul 2025 12:17:01 +0000 (UTC)
+Received: from [10.45.226.95] (unknown [10.45.226.95])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1086C18003FC;
+	Wed,  2 Jul 2025 12:16:54 +0000 (UTC)
+Message-ID: <e55caefa-2ea9-4d31-be76-48cdfd481b5c@redhat.com>
+Date: Wed, 2 Jul 2025 14:16:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v12 09/14] dpll: zl3073x: Register DPLL devices
+ and pins
+To: Jiri Pirko <jiri@resnulli.us>
+Cc: netdev@vger.kernel.org, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Shannon Nelson <shannon.nelson@amd.com>, Dave Jiang <dave.jiang@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ Michal Schmidt <mschmidt@redhat.com>, Petr Oros <poros@redhat.com>
+References: <20250629191049.64398-1-ivecera@redhat.com>
+ <20250629191049.64398-10-ivecera@redhat.com>
+ <ne36b7ky5cg2g3juejcah7bnvsajihncmpzag3vpjnb3gabz2m@xtxhpfhvfmwl>
+ <1848e2f6-a0bb-48e6-9bfc-5ea6cbea2e5c@redhat.com>
+ <k2osi2mzfmudh7q3av5raxj33smbdjgnrmaqjx2evjaaloddb3@vublvfldqlnm>
+Content-Language: en-US
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <k2osi2mzfmudh7q3av5raxj33smbdjgnrmaqjx2evjaaloddb3@vublvfldqlnm>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250702-rfc_miscdev-v3-8-d8925de7893d@oss.qualcomm.com>
-References: <20250702-rfc_miscdev-v3-0-d8925de7893d@oss.qualcomm.com>
-In-Reply-To: <20250702-rfc_miscdev-v3-0-d8925de7893d@oss.qualcomm.com>
-To: Arnd Bergmann <arnd@arndb.de>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
- Helge Deller <deller@gmx.de>, "David S. Miller" <davem@davemloft.net>, 
- Andreas Larsson <andreas@gaisler.com>
-Cc: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>, 
- Zijun Hu <zijun_hu@icloud.com>, linux-kernel@vger.kernel.org, 
- linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org, 
- Zijun Hu <zijun.hu@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDA5OSBTYWx0ZWRfX7jPqGiP88Bvt
- Mrf1fBR0qVNhm09VK837cmQ4sdZUtGUMbl7z2TGTkB7cD60w3wvDQAT+wEGHIU93q8Y/LvtZ74T
- STWYXmjeCBLQBEc/KORCrdGkRxzZbpXMq5h+vDTEKUW9MSdAgW7IDWz0FhH4LEfP05a48Kah6ZS
- k7LB7SwLis2pH6s/Aa+1SXiFpornkcpKetRdbq8i5UDiX6ZEIjF4P/yICUcW5tnx6TfsBWmoOvo
- MInE3+vN5yM4z/fATQUbKCPvcCt5AaEA918+QilAkz4b9j8se7Bz1HnIhoEU1XtIqj1hJALBg=
-X-Proofpoint-GUID: peyGdAL9Mvibq29xXykg2jRsJePrf_mP
-X-Proofpoint-ORIG-GUID: peyGdAL9Mvibq29xXykg2jRsJePrf_mP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-02_01,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0
- mlxscore=0 clxscore=1015 suspectscore=0 bulkscore=0 phishscore=0
- mlxlogscore=999 spamscore=0 malwarescore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.22.0-2506060001 definitions=main-2507020099
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-From: Zijun Hu <zijun.hu@oss.qualcomm.com>
 
-Macro APC_MINOR is defined as MISC_DYNAMIC_MINOR to request dynamic
-minor, but its name 'APC_MINOR' looks like fixed minor.
 
-Remove the macro definition and directly use MISC_DYNAMIC_MINOR instead.
+On 02. 07. 25 2:02 odp., Jiri Pirko wrote:
+> Wed, Jul 02, 2025 at 01:49:22PM +0200, ivecera@redhat.com wrote:
+>>
+>>
+>> On 02. 07. 25 12:57 odp., Jiri Pirko wrote:
+>>> Sun, Jun 29, 2025 at 09:10:44PM +0200, ivecera@redhat.com wrote:
+>>>
+>>> [...]
+>>>
+>>>> +/**
+>>>> + * zl3073x_dpll_device_register - register DPLL device
+>>>> + * @zldpll: pointer to zl3073x_dpll structure
+>>>> + *
+>>>> + * Registers given DPLL device into DPLL sub-system.
+>>>> + *
+>>>> + * Return: 0 on success, <0 on error
+>>>> + */
+>>>> +static int
+>>>> +zl3073x_dpll_device_register(struct zl3073x_dpll *zldpll)
+>>>> +{
+>>>> +	struct zl3073x_dev *zldev = zldpll->dev;
+>>>> +	u8 dpll_mode_refsel;
+>>>> +	int rc;
+>>>> +
+>>>> +	/* Read DPLL mode and forcibly selected reference */
+>>>> +	rc = zl3073x_read_u8(zldev, ZL_REG_DPLL_MODE_REFSEL(zldpll->id),
+>>>> +			     &dpll_mode_refsel);
+>>>> +	if (rc)
+>>>> +		return rc;
+>>>> +
+>>>> +	/* Extract mode and selected input reference */
+>>>> +	zldpll->refsel_mode = FIELD_GET(ZL_DPLL_MODE_REFSEL_MODE,
+>>>> +					dpll_mode_refsel);
+>>>
+>>> Who sets this?
+>>
+>> WDYM? refsel_mode register? If so this register is populated from
+>> configuration stored in flash inside the chip. And the configuration
+>> is prepared by vendor/OEM.
+> 
+> Okay. Any plan to implement on-fly change of this?
 
-Signed-off-by: Zijun Hu <zijun.hu@oss.qualcomm.com>
----
- arch/sparc/kernel/apc.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Do you mean switching between automatic and manual mode?
+If so? Yes, later, need to extend DPLL API to allow this.
 
-diff --git a/arch/sparc/kernel/apc.c b/arch/sparc/kernel/apc.c
-index d44725d37e30f388bf8cf19d72baf720f94da084..849db20e7165cdf48d4d36cf770dd6aaaa191b41 100644
---- a/arch/sparc/kernel/apc.c
-+++ b/arch/sparc/kernel/apc.c
-@@ -28,7 +28,6 @@
-  * #define APC_DEBUG_LED
-  */
- 
--#define APC_MINOR	MISC_DYNAMIC_MINOR
- #define APC_OBPNAME	"power-management"
- #define APC_DEVNAME "apc"
- 
-@@ -138,7 +137,7 @@ static const struct file_operations apc_fops = {
- 	.llseek =		noop_llseek,
- };
- 
--static struct miscdevice apc_miscdev = { APC_MINOR, APC_DEVNAME, &apc_fops };
-+static struct miscdevice apc_miscdev = { MISC_DYNAMIC_MINOR, APC_DEVNAME, &apc_fops };
- 
- static int apc_probe(struct platform_device *op)
- {
+Ivan
 
--- 
-2.34.1
+>>
+>>>> +	zldpll->forced_ref = FIELD_GET(ZL_DPLL_MODE_REFSEL_REF,
+>>>> +				       dpll_mode_refsel);
+>>>> +
+>>>> +	zldpll->dpll_dev = dpll_device_get(zldev->clock_id, zldpll->id,
+>>>> +					   THIS_MODULE);
+>>>> +	if (IS_ERR(zldpll->dpll_dev)) {
+>>>> +		rc = PTR_ERR(zldpll->dpll_dev);
+>>>> +		zldpll->dpll_dev = NULL;
+>>>> +
+>>>> +		return rc;
+>>>> +	}
+>>>> +
+>>>> +	rc = dpll_device_register(zldpll->dpll_dev,
+>>>> +				  zl3073x_prop_dpll_type_get(zldev, zldpll->id),
+>>>> +				  &zl3073x_dpll_device_ops, zldpll);
+>>>> +	if (rc) {
+>>>> +		dpll_device_put(zldpll->dpll_dev);
+>>>> +		zldpll->dpll_dev = NULL;
+>>>> +	}
+>>>> +
+>>>> +	return rc;
+>>>> +}
+>>>
+>>> [...]
+>>>
+>>
+> 
 
