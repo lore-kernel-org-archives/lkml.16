@@ -1,219 +1,339 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2050.outbound.protection.outlook.com [40.107.93.50])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2089.outbound.protection.outlook.com [40.107.94.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B2D624E4A1
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 09:38:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF38248883;
+	Wed,  2 Jul 2025 09:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.89
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751449127; cv=fail; b=P9fe9CcOsgw5VH8cEVovcClUJffHW3h4ADJKYLK1HPeOywykVacuLqjPRULD6aj65h8E6Cy08xGDX7THwg0rqqKwe1OV1cZZ2chntPdux+rqBoNk/rCu7ltcnTM33REZXEmkvimhjb7PJHhawNn2ADDLNOLsA4Xe/lWxuIHRzRc=
+	t=1751449132; cv=fail; b=BLHgxI84tR4KoHzogmKFwLJUQmv8ypgZo/lrvN2pKmmRJC9Oshzq+ClFH1GSU2Fs7lvcygZh5Uzra/FYkShkWF94Velfm1/Uzp7LOHomMiIj7bNvtQRcctYDpWumull4IHVev96BJSaQZTb7va04KtLcjSQIFNj7oi22sDIyfto=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751449127; c=relaxed/simple;
-	bh=fZcOoid2iiMnOEkU4yDbi1eIaGDGbcPoDrcrQGoNCIc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MHXni05sFua2gK7+VSDYXPiHFmgBIFIzRQaplEbFxwnQV/5pTPb8QOXGnDOoGQnMZjcSDCeqBERGJZe50MEjCBybFnctiyJB14G2/wqUIT1PJL5nqwRwO/EakizYRaNDYwYeHCjtQQhvVbui7NKeGWUxPlJFm54U0/SKkm+Dq8c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NvDsdOrz; arc=fail smtp.client-ip=40.107.93.50
+	s=arc-20240116; t=1751449132; c=relaxed/simple;
+	bh=1xPzSY6gzDqXOnsaI29A/TRIZwhLeIX8/3mZACwb4as=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=rXfpi3ZJGxoA01/Casz4r7fnyc1G/KwyBoDEaLyJdyxETSTfFyB2juHH4w1hNBpOh9eUHJOcslbb8Q0IMUq3yXGTwDcJ+Bsr3F4rM8iMflC4z8EOoY+NerX+x+GhCK9TNib50t3iNVLtedgQjJhP+j7JAa/pgQBYhol55MsJxI4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=pmOA0xyq; arc=fail smtp.client-ip=40.107.94.89
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NvDsdOrz"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pmOA0xyq"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=renPQZJ/e98jxVxFedCVjVSwlVCOb9S1PwOgzJkC+sx65RLb0YIRLdu5r7ZWbGcTfbqzwPU6AInfZYTi5hK3WSDmns0lr08mv7CPwC9Oi09hRjdFLsf7wuyaWLGpuojStrlE4LGF0+nNllRqeFEVRnHDxFa0sHesWx2UrR/o2hF1UBH4H6QeIqDPDxcx2a3/0RnxNM/S9wATK1ugIQOE/FLblcTzQiVum+lcGf3SJoJh8GTZ0UShcof3B8kT0uCeUX6a7yMzf+hOf4QdDkjF5gRQ+mv6bV44aMgLPx1omOqmV6Vh4VsVbTK6ecM/ZTNDuAgGmlobBhWwLy2BNJSEyQ==
+ b=vSNpLvg6AW9db4BxEYiBamM242+r+JnNL8BhMvqrXT4rzKi2rQcXTji2nCKjP7T1ojoaU+r3gdRBAxdZWuBZLJ9TpSpnuvz12bhbekSOgXuaw5gzHiRf8Pq04PhOrMAirVjA1dhmQGRsqNCb79bedbEBjEuaEWA0dZw8WygcsAwIEurefTBgN7XmiGoM2rLxm6zvxDMNztrjU1yNaZo2vawse5xZL02aai7kvRdi7RkKIHK74XpsgKovvA6UxenNhs5YkkFDj2lC+Okhy+9l1rtJsmVeX/t6B9g4K/l4oN50qwgjn8VlfborJm2i10BRLE8kXwnyF3gBsrm1A9P8dA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=n/22qpuEXc2iSpGELsQIKflWqo39wLrEdAbW5wTRVTI=;
- b=FP+maqyojHZ2hqAW0pudb6MgKSGQ08paZRsI1/u0Ytqrs4/SiOc4tFCixY2ximiAoLBCFxE9CX2FBrAPTiZ1p43onlIZGlPY+Kv8j3OK0GAMXDKjhwbOzHCCvJBRdTX1Yw74jZM2EmP/a7CVNmGLQqJgymXkDuS/lKqy7TOa4W5NwcwbgNtS5Nwi0TRuakkRdHeTgTQ6OlattJtXAtCtwEG+TrnYKua6wm50r58tvii4ZJUjHr62PTRT1FBGvhKMDHC+QxDQMd/+Xe4ZE8yspn5H0/MT6EPeX0C9LCfmUTYNCudwvynV+62PVBDokh++j3ulqfKR3653gIWt7weWdA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=8bytes.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
+ bh=YYJX267Hegu92Pk1e/ognHa6ZFMAVn1h8YDxyU54wYc=;
+ b=NFnGvSN/jGkLgATp+JYnSQGiLoq9AkXEJNG9AH7J7D7dNF3MKDqyeKximv2wLhRFkR0WGpg8cyR8OiJHZIdz8rey5cuC4zezU0LBUcL9pEQmYYA+GPsyAGkQY1HftgMUpLwR4bwnZ+C8kbYYrk4W6bvHZ7hKnp4KdUH0mT+iADGBHwij2eBqtyQeOxNNqHNaI1f3S6diM3zloK+yTXfTirjSbPlaA1J6ZwEIroQ06wWbov58sAN9NGeU7PQsDTfWlkEC1HKUXHTtIGjq2O96vVVGbrHoykInLtcrvR2HTo7W7FqTXcAsuZikF2LvyAbQCpZlCTyT7dN2hcWmXnQmyQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n/22qpuEXc2iSpGELsQIKflWqo39wLrEdAbW5wTRVTI=;
- b=NvDsdOrzHixOe6Q/83ClQN61wUjThh2Iv4cOcJlrBuQwrq+ZJ4jKUJ58XFO9+vRQV6feIcWXcCyTYq4OCK40vMh6vprTFZ7HV87CkeS5foaLK+pp569pYemyhlX/Q8jmlLk+fn4YYwNYrREjdxchvpIdFLlzTdQOyhMsUecofz0=
-Received: from CH2PR05CA0059.namprd05.prod.outlook.com (2603:10b6:610:38::36)
- by LV5PR12MB9754.namprd12.prod.outlook.com (2603:10b6:408:305::12) with
+ bh=YYJX267Hegu92Pk1e/ognHa6ZFMAVn1h8YDxyU54wYc=;
+ b=pmOA0xyqgIX1geTQ4C3nUrXwIItcNx1Fz3Gz+CxMJFGJ/u8iRAkWBKrQ0iU/agu2rwBNzigMFRyIoAzjpcLx0z/rbaELsqcF8K73mbXMb+pLjX25V8cj+oE4PD1C2lF80ORzbTnia7JrrPLpg8zpkEH/ssbFxnCtBsk59qF6+pE=
+Received: from SA1PR12MB8120.namprd12.prod.outlook.com (2603:10b6:806:331::16)
+ by DM4PR12MB5748.namprd12.prod.outlook.com (2603:10b6:8:5f::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.21; Wed, 2 Jul
- 2025 09:38:42 +0000
-Received: from CH1PEPF0000AD7E.namprd04.prod.outlook.com
- (2603:10b6:610:38:cafe::6b) by CH2PR05CA0059.outlook.office365.com
- (2603:10b6:610:38::36) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.18 via Frontend Transport; Wed,
- 2 Jul 2025 09:38:42 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH1PEPF0000AD7E.mail.protection.outlook.com (10.167.244.87) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8901.15 via Frontend Transport; Wed, 2 Jul 2025 09:38:41 +0000
-Received: from BLRDHSRIVAS.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 2 Jul
- 2025 04:38:37 -0500
-From: Dheeraj Kumar Srivastava <dheerajkumar.srivastava@amd.com>
-To: <joro@8bytes.org>, <suravee.suthikulpanit@amd.com>, <will@kernel.org>,
-	<robin.murphy@arm.com>, <linux-kernel@vger.kernel.org>,
-	<iommu@lists.linux.dev>, <Vasant.Hegde@amd.com>
-CC: <dheerajkumar.srivastava@amd.com>, Vasant Hegde <vasant.hegde@amd.com>
-Subject: [PATCH v7 1/8] iommu/amd: Refactor AMD IOMMU debugfs initial setup
-Date: Wed, 2 Jul 2025 15:07:57 +0530
-Message-ID: <20250702093804.849-2-dheerajkumar.srivastava@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250702093804.849-1-dheerajkumar.srivastava@amd.com>
-References: <20250702093804.849-1-dheerajkumar.srivastava@amd.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.32; Wed, 2 Jul
+ 2025 09:38:49 +0000
+Received: from SA1PR12MB8120.namprd12.prod.outlook.com
+ ([fe80::a160:b30e:1d9c:eaea]) by SA1PR12MB8120.namprd12.prod.outlook.com
+ ([fe80::a160:b30e:1d9c:eaea%4]) with mapi id 15.20.8901.018; Wed, 2 Jul 2025
+ 09:38:48 +0000
+From: "Verma, Devendra" <Devendra.Verma@amd.com>
+To: Vinod Koul <vkoul@kernel.org>
+CC: "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"mani@kernel.org" <mani@kernel.org>
+Subject: RE: [RESEND PATCH] dmaengine: dw-edma: Add Simple Mode Support
+Thread-Topic: [RESEND PATCH] dmaengine: dw-edma: Add Simple Mode Support
+Thread-Index: AQHb5AaGsGs5kTrW3UWG39W5gh/nlLQWBTmAgAiaQpA=
+Date: Wed, 2 Jul 2025 09:38:48 +0000
+Message-ID:
+ <SA1PR12MB81208BAD2A5D264482333FF79540A@SA1PR12MB8120.namprd12.prod.outlook.com>
+References: <20250623061733.1864392-1-devverma@amd.com>
+ <aF3Eg_xtxZjZTEop@vaman>
+In-Reply-To: <aF3Eg_xtxZjZTEop@vaman>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=True;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2025-07-02T09:29:10.0000000Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
+ Internal Distribution
+ Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=3;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR12MB8120:EE_|DM4PR12MB5748:EE_
+x-ms-office365-filtering-correlation-id: 59cd0dc0-8e2b-41c8-3c76-08ddb94c3f5f
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?SPaXSPnI3iLpjWagGcNJR35KC3eVIZVoJ0GUeqo1nTrtRAQwNwZvVlz26fob?=
+ =?us-ascii?Q?vH6Yu8wnuUbtFF7ekvDzt6OUcw+yrCCR4MxO4Xrh59lZAUf5p8saRun41mok?=
+ =?us-ascii?Q?IVWyKDNNfojYO6PJ8zsm86LpburubsEDMfw+JMwIJ51/xyNJETSoQML7UAWC?=
+ =?us-ascii?Q?83ieCCOJ27Qb5kmHW2tuNJGtsLAJHnH7k5pi/Z39TNDd6rYiHVQzECSv55b8?=
+ =?us-ascii?Q?P9b8HpDUt3GdmYC/LIHudgSehwmRqM1rugZLFWJmq4/RDwBv06YZqCvC/VDY?=
+ =?us-ascii?Q?yWcGSIMFs0aF/O3/kF8yu3xf326JyJ69cRkEhYNqZg/zAnHFfXcXB6dMzMsu?=
+ =?us-ascii?Q?Fh1P6iBTxun7SBZ1/wPj2/frxPEc27sTo2EN4xThbSLi6I9z+KH5VRmoSTGC?=
+ =?us-ascii?Q?FSmmLDjSLkBCil1DYlgTcBjfqjWWRjPSeXP2M8G0XK8wDJMWBZeKt0JA0hlh?=
+ =?us-ascii?Q?DM4lQiL6egQT47Gv8xpUfk7lYSJBceJX/CYgcQE/CHazMcHUACkjhYS4sy36?=
+ =?us-ascii?Q?Sf31i7x7/o1Q4fDzUlyY7ExeAUBsq0ATDFhqFtAsXdgkX8JUZgjOqc1vJF4w?=
+ =?us-ascii?Q?tqtJTq2EQTF1esbpaVucfZ6/in7yz1vi8E9Hit/cMw4HZt48fSlxeqDuLf0k?=
+ =?us-ascii?Q?bJRlUNZ60u+g/G66P2A9ytYYtYUOWNRFz2W4mZuarW4/KO2llDG8JaZrTkzr?=
+ =?us-ascii?Q?u+NNkoF5dNAlF1gOZn8OgndU1hQ+mELivhHphDj4zUByq6+Gmp/gcso4w9DK?=
+ =?us-ascii?Q?bz3u9LwU4I/AWuMsw54FUSrb0T2y+Tpf8cJse3dydSaymoIsjCnY1Z7K3wNI?=
+ =?us-ascii?Q?EHSPRsVtaxS9iv/3TpBQVEDC/GYApziZ5Ef+2uRD6e3F7CY6N4ZmcwhCw7i8?=
+ =?us-ascii?Q?0bilbuMu9xK/NMpcmOUq2wjPivbkB7xkdTXPZtXxk5+O9FAZXf1D8IQo13AK?=
+ =?us-ascii?Q?hBXagUXpjlh9FbaRPxkjfXB7X/oAuoSafDXBt+JUDb9idQfmsQzNTLpe/y1w?=
+ =?us-ascii?Q?6Cm4HyL9k2EaGo8fXepGi36VOK4c6KM8mchcsge+/qzaZW22pe5XIsAOEJsB?=
+ =?us-ascii?Q?pMEdz1f1y5P3BhiOyz3ZWmXl0U0+fvSzmT0pkw35fIq1xweqzGRgiV40s/o8?=
+ =?us-ascii?Q?xGSD0zmtCMlCyZFN2ijw178isdAESgJt2znCZDC5pa4zIjr2x3GFTfiu79o9?=
+ =?us-ascii?Q?dHUhiyLc2jX8xwO1CnW8FyEJ27hT0pNcLC0fryJKG6RHqJZcup4B8HFqN+AW?=
+ =?us-ascii?Q?4EazGRFxJF2wTkLMnEVxPIglV2v4spMw+wrhawEfP/aOOHehApnx8vQiku8i?=
+ =?us-ascii?Q?guug2XxSzy2N1IexYNSN7kncSwpsGecCrTHbQlBnjVpL8hpdksHF1GdLf+HZ?=
+ =?us-ascii?Q?CXnb3A5fKKotIN8BCUix//diXlXISyAEeKEaxLQ0pEx+A8zk3dj12CJiUZL/?=
+ =?us-ascii?Q?D01DmE1IQtEoGQu2rsTU58IJ8/KDjkr2yjhK/XLqdOAReN9uSnFnDXMUZR9n?=
+ =?us-ascii?Q?t3dKuhiBOmAjgA4=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR12MB8120.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?Pq+Uieq+3/4pkgPR+jF2DgsvW1NZOCR5p0uq8H/Sn0ce7pFtrkLYHnTCza9c?=
+ =?us-ascii?Q?fuXnvOHBReoaG5Pv+4pb+kx7Vc6POALTag7VBVu+6+3TLylxDx0d/lLLtvHL?=
+ =?us-ascii?Q?jvOEMrbHDv+EOibyD9Nh8SIRmQLth2Qke2YiAW//I5ravYHuaLZkAzMjLjvG?=
+ =?us-ascii?Q?QtEb3NS51AQyuKE7zfRBXxyVlQaTAVAR46YQYgXn2OlPDf0kNpFw4XJpFYl5?=
+ =?us-ascii?Q?S51xtJqrDJUckhdKeX3vAl1sGWY19LnLfGpIKH95Ifczuhp8y79OqGRLf2db?=
+ =?us-ascii?Q?BeLd/sDIU6banOXcwib47V0lXx8li74Qup2JD7h6kvKbxPqV3ruVltSIyVa3?=
+ =?us-ascii?Q?iGYr+K/RSrNi21j9FkzrKzXqxJoFLPCX/pOf1i+uajyuaBGUCpa4KRkPIBeN?=
+ =?us-ascii?Q?aa9Fk18imvPK4xDlcJnNP6LuCd2imiaM2nMKPKd84vbkpLlwMUXR+chtY13f?=
+ =?us-ascii?Q?LfHfJy4TF2kdD+Me5GmL1dp1ZZ/i2588h6ZXo24tz77zO/9D2YZq2tOgJjMM?=
+ =?us-ascii?Q?YeOn3Sv47s+nlJzsGQiqBwELmw8zdRFuFjMWZ5TwfjysFTcAJR3cEFakzPl0?=
+ =?us-ascii?Q?AmdxpnsuYb7Qys86Vyx3fz60kjETJPAD4rHpe9VPzNaycBOqDLMH/p6ISTih?=
+ =?us-ascii?Q?yIRwR8/HerBQjWW7uKr9WcQGOtC4t6o1bgYEkQiOtHYclYStfbsFt5a5R/N5?=
+ =?us-ascii?Q?kxIQOaLVZGeqGN4cJtUa7mxvsnOUq3fiGX6AmzJGeRpsvym2xJZuhVgxhGvB?=
+ =?us-ascii?Q?5jn1ZG4WKxP6fCHUN123Awo5pFsVOUqGARXm+dL6ZOKINynI6SQQEf30ZlGp?=
+ =?us-ascii?Q?KXZKPEkpfnzuqCTsx4vBmWx6D+prhx9ECG1VAOJtX8OiFGK90TXfHpeihL35?=
+ =?us-ascii?Q?MYPTY9JxvchwwJwDST7Ba/dpO6eja+5ZJqbJ15DO9E8qtxiHXF0lM5gtj00R?=
+ =?us-ascii?Q?OvIexg6CEtTcz9ix77mRQp6XS5rWWPp10kbowTB8Plb19MQVmOeiO8vRl7rZ?=
+ =?us-ascii?Q?a4d1Bz4XvYFgtj3s0JmguIOowp194LtdN6TG1qItTwFEJyeWYwgs8cBcbgTe?=
+ =?us-ascii?Q?MpRR9D3S31KN2LRqXoqRu4iWfuN3Oz/bhk08COfwC4fV0qT0vbXdXkTIpWJf?=
+ =?us-ascii?Q?fXYaiuxwbvQah7Wf3EIvLFz0W8+9yzrgOcaRL1uQAwmELNT977/NFhCykm4p?=
+ =?us-ascii?Q?6Y2tmzh1MVbB64khSGbeDY/gBuimn6HCpWtrlV5xeidhSnc/ZDvHLdetudOX?=
+ =?us-ascii?Q?g8aNpo6lIIlQym/d6dgymNDucdl7XVkRzEGn03ZCxbhWUZkJhyK/q9yeJ9ss?=
+ =?us-ascii?Q?uVT1youXhm3rNDj/MXvF6EBCWuGoRqice7qc49H04r0wkcoAvJjKnrbDKv2n?=
+ =?us-ascii?Q?W5JK0kOT9yaBYlyfSd+IqacYUjHa0HJcH/1ajnFkZ8hqkV1ouq8ZALi3uHIB?=
+ =?us-ascii?Q?ZxgKz7zZ5y3vhwJ+Vg0UCWvxxYxDdbYPRRmtXRPOmaj3TbMpg96fF3svC6WN?=
+ =?us-ascii?Q?JpSdtnVicCiZAcAHUVYZ/ct2MFJRh77rXBUWuTbvtoPfBR9DxPmGlLF/4H1Y?=
+ =?us-ascii?Q?Q4s1v2ta6W7j6vtIBGI=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD7E:EE_|LV5PR12MB9754:EE_
-X-MS-Office365-Filtering-Correlation-Id: 18f2bde5-29ff-46cb-eb9a-08ddb94c3b53
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|376014|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?nfL7xv56Rl9pVwPCtkzfYnsSGh8gp7nYf70ewJZoSEKTJbno2V2al0TW5Avh?=
- =?us-ascii?Q?zfXl3knW/tZq25BSF5eg1/nXtRJSShUTpa0DRwBJGMANYeP2ovHJJMpWOY0F?=
- =?us-ascii?Q?WC86WIxF3Syalrk/TylP9OgOsY+RprCx7tKEypwDquOWVh/TbUi2AJEvAIrF?=
- =?us-ascii?Q?CWUhI0T6BZj7njOHUw26xm2iYvWQjzTQbSKxdfK9w7Tvy7E6hm80ro9hvWx6?=
- =?us-ascii?Q?5hvF/gHO09+56rqYqeZZIxtPQQQZqTAcAxtb5TB5KelEiX9MtslbJi5svmNm?=
- =?us-ascii?Q?M003Oxg1EdDUWdgvpnNjuWGfLTrh+cFDTsv/UVAmBhfpEMM/IJXehPPuFFum?=
- =?us-ascii?Q?4PbRqCRqn1zR6S/7P8g3lmfAjsxcc5rSbrze65/aEHqc4BFq1bXolf2ZbaEg?=
- =?us-ascii?Q?8BvPB1shmL4BJI/LZrlwKgN3LIn/6xjLr5z+MB2L1edPFv92rJh3vQ1mECI0?=
- =?us-ascii?Q?wleNdBYBNJihTaPyO4qIZSReRMbPmdR4zQAPmoN95FpD+y2v7v/KpkhVpmip?=
- =?us-ascii?Q?wOpQDGNnVpKFeh9sW9doOHyazhsB2PGmyIWrQs4XRJ4fsnmX4twR1SS7nDW9?=
- =?us-ascii?Q?HKLymAUiZoxtlhCX1UH+Va+ysk5vsZ0lBynvVBEboxKQH/SVNYIo0HCucgsE?=
- =?us-ascii?Q?/aWpnkX3EadkmWTveArTAAwZq/VXRyurDa2SXBPJZjzFtAweu63tvmIi1Aab?=
- =?us-ascii?Q?Z8ba5OVEY3XC0lnZwALSPgG/NAF1jo0Ay/BV6Sudl+bRNcxK6SJ1hz6L1Q0F?=
- =?us-ascii?Q?WvJ4jmqdmJuNE7kTV2b6Hrso5pxRZT3GegKhycmBo+r4TzLCi58tSSw/LlQA?=
- =?us-ascii?Q?z3+QS0pLIyyd50xpqrQV6qgomEPeHcxrC42nvNzag5hNyms3+120FDDMGiZW?=
- =?us-ascii?Q?WdFgHYkxNSYmuCbY2crL2S5BehhwEvzqRvFewhMNv06VWGcO3rWx9YeM9tXv?=
- =?us-ascii?Q?gDv5NIFdPwMmDHZJSyIn8+VKZNL+e8d0t58nfZaWx+q1c+f3T4bGPM4DaiXD?=
- =?us-ascii?Q?jO3HQ3FnIXGUR4EWpiSb6RV8rT1OF4ybQAbRN39NV19c/fbWzl0eNF4hdHKL?=
- =?us-ascii?Q?csUpUsX+EnV9/3WTRO1bt88ZGU3796HnNlPvYRE1oTXlUho9nPv0KTDDbaik?=
- =?us-ascii?Q?ClD2Z4kmi4QglJx92XEEQC3/GDgKy2ZHTxCFzL8QLz4izWxbU8xhSdoUcuyP?=
- =?us-ascii?Q?gVSO3dwB7GrbBzVe3GnRHXbYBWxLwt65AD4CNBsLz8jBKwKUGLSqs2G6wM+S?=
- =?us-ascii?Q?898OPEmlns1IvP0C/iz9HfaDbxnpP7QDgH/q2+MGb9lHFEpV+pc+hOFqfjvA?=
- =?us-ascii?Q?xVzJne413hikbJQ0OQ8JAm2dZLNKdNWBhDK2Fpwa81fXNnqfo0es2D/qs3QN?=
- =?us-ascii?Q?viKL23HWtqmUx5TZZrouy5N8GqgQpphfpJXTgWvoAd7U/D7CgdYVSqeI11q/?=
- =?us-ascii?Q?UspcQZHJMj1n3TTC2iovgktpDEB9+xyyjC9vCaEa1CqFvumEx5lx1Rni577+?=
- =?us-ascii?Q?4rieJIOxTCHO+fWivMDVUqVSuy+WPxcB/uX2?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(82310400026);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 09:38:41.9942
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR12MB8120.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 59cd0dc0-8e2b-41c8-3c76-08ddb94c3f5f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jul 2025 09:38:48.8203
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 18f2bde5-29ff-46cb-eb9a-08ddb94c3b53
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH1PEPF0000AD7E.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV5PR12MB9754
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: G2CDtM+erkJ+BIoOqH9BLKUvpmYXDXY+VPPFKvt//AjwuGgWA0r/RfVifIuDqRkwNW6ooge3t4sdnGgfm9TfWw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5748
 
-Rearrange initial setup of AMD IOMMU debugfs to segregate per IOMMU
-setup and setup which is common for all IOMMUs. This ensures that common
-debugfs paths (introduced in subsequent patches) are created only once
-instead of being created for each IOMMU.
+[AMD Official Use Only - AMD Internal Distribution Only]
 
-With the change, there is no need to use lock as amd_iommu_debugfs_setup()
-will be called only once during AMD IOMMU initialization. So remove lock
-acquisition in amd_iommu_debugfs_setup().
+Hi Vinod
 
-Signed-off-by: Dheeraj Kumar Srivastava <dheerajkumar.srivastava@amd.com>
-Reviewed-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Reviewed-by: Vasant Hegde <vasant.hegde@amd.com>
----
- drivers/iommu/amd/amd_iommu.h |  4 ++--
- drivers/iommu/amd/debugfs.c   | 16 +++++++---------
- drivers/iommu/amd/init.c      |  5 ++---
- 3 files changed, 11 insertions(+), 14 deletions(-)
+Thanks for the review.
 
-diff --git a/drivers/iommu/amd/amd_iommu.h b/drivers/iommu/amd/amd_iommu.h
-index 220c598b7e14..70873bb78b3c 100644
---- a/drivers/iommu/amd/amd_iommu.h
-+++ b/drivers/iommu/amd/amd_iommu.h
-@@ -28,9 +28,9 @@ void *__init iommu_alloc_4k_pages(struct amd_iommu *iommu,
- 				  gfp_t gfp, size_t size);
- 
- #ifdef CONFIG_AMD_IOMMU_DEBUGFS
--void amd_iommu_debugfs_setup(struct amd_iommu *iommu);
-+void amd_iommu_debugfs_setup(void);
- #else
--static inline void amd_iommu_debugfs_setup(struct amd_iommu *iommu) {}
-+static inline void amd_iommu_debugfs_setup(void) {}
- #endif
- 
- /* Needed for interrupt remapping */
-diff --git a/drivers/iommu/amd/debugfs.c b/drivers/iommu/amd/debugfs.c
-index 545372fcc72f..ff9520e002be 100644
---- a/drivers/iommu/amd/debugfs.c
-+++ b/drivers/iommu/amd/debugfs.c
-@@ -13,20 +13,18 @@
- #include "amd_iommu.h"
- 
- static struct dentry *amd_iommu_debugfs;
--static DEFINE_MUTEX(amd_iommu_debugfs_lock);
- 
- #define	MAX_NAME_LEN	20
- 
--void amd_iommu_debugfs_setup(struct amd_iommu *iommu)
-+void amd_iommu_debugfs_setup(void)
- {
-+	struct amd_iommu *iommu;
- 	char name[MAX_NAME_LEN + 1];
- 
--	mutex_lock(&amd_iommu_debugfs_lock);
--	if (!amd_iommu_debugfs)
--		amd_iommu_debugfs = debugfs_create_dir("amd",
--						       iommu_debugfs_dir);
--	mutex_unlock(&amd_iommu_debugfs_lock);
-+	amd_iommu_debugfs = debugfs_create_dir("amd", iommu_debugfs_dir);
- 
--	snprintf(name, MAX_NAME_LEN, "iommu%02d", iommu->index);
--	iommu->debugfs = debugfs_create_dir(name, amd_iommu_debugfs);
-+	for_each_iommu(iommu) {
-+		snprintf(name, MAX_NAME_LEN, "iommu%02d", iommu->index);
-+		iommu->debugfs = debugfs_create_dir(name, amd_iommu_debugfs);
-+	}
- }
-diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
-index 14aa0d77df26..ecc6c246f87e 100644
---- a/drivers/iommu/amd/init.c
-+++ b/drivers/iommu/amd/init.c
-@@ -3387,7 +3387,6 @@ int amd_iommu_enable_faulting(unsigned int cpu)
-  */
- static int __init amd_iommu_init(void)
- {
--	struct amd_iommu *iommu;
- 	int ret;
- 
- 	ret = iommu_go_to_state(IOMMU_INITIALIZED);
-@@ -3401,8 +3400,8 @@ static int __init amd_iommu_init(void)
- 	}
- #endif
- 
--	for_each_iommu(iommu)
--		amd_iommu_debugfs_setup(iommu);
-+	if (!ret)
-+		amd_iommu_debugfs_setup();
- 
- 	return ret;
- }
--- 
-2.25.1
+> -----Original Message-----
+> From: Vinod Koul <vkoul@kernel.org>
+> Sent: Friday, June 27, 2025 03:37
+> To: Verma, Devendra <Devendra.Verma@amd.com>
+> Cc: dmaengine@vger.kernel.org; linux-kernel@vger.kernel.org; mani@kernel.=
+org
+> Subject: Re: [RESEND PATCH] dmaengine: dw-edma: Add Simple Mode Support
+>
+> Caution: This message originated from an External Source. Use proper caut=
+ion
+> when opening attachments, clicking links, or responding.
+>
+>
+> On 23-06-25, 11:47, Devendra K Verma wrote:
+> > The HDMA IP supports the simple mode (non-linked list).
+> > In this mode the channel registers are configured to initiate a single
+> > DMA data transfer. The channel can be configured in simple mode via
+> > peripheral param of dma_slave_config param.
+> >
+> > Signed-off-by: Devendra K Verma <devverma@amd.com>
+> > ---
+> >  drivers/dma/dw-edma/dw-edma-core.c    | 10 +++++
+> >  drivers/dma/dw-edma/dw-edma-core.h    |  2 +
+> >  drivers/dma/dw-edma/dw-hdma-v0-core.c | 53
+> ++++++++++++++++++++++++++-
+> >  include/linux/dma/edma.h              |  8 ++++
+> >  4 files changed, 72 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/dma/dw-edma/dw-edma-core.c
+> > b/drivers/dma/dw-edma/dw-edma-core.c
+> > index c2b88cc99e5d..4dafd6554277 100644
+> > --- a/drivers/dma/dw-edma/dw-edma-core.c
+> > +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> > @@ -235,9 +235,19 @@ static int dw_edma_device_config(struct dma_chan
+> *dchan,
+> >                                struct dma_slave_config *config)  {
+> >       struct dw_edma_chan *chan =3D dchan2dw_edma_chan(dchan);
+> > +     struct dw_edma_peripheral_config *pconfig =3D config->peripheral_=
+config;
+> > +     unsigned long flags;
+> > +
+> > +     if (WARN_ON(config->peripheral_config &&
+> > +                 config->peripheral_size !=3D sizeof(*pconfig)))
+> > +             return -EINVAL;
+> >
+> > +     spin_lock_irqsave(&chan->vc.lock, flags);
+> >       memcpy(&chan->config, config, sizeof(*config));
+> > +
+> > +     chan->non_ll_en =3D pconfig ? pconfig->non_ll_en : false;
+> >       chan->configured =3D true;
+> > +     spin_unlock_irqrestore(&chan->vc.lock, flags);
+> >
+> >       return 0;
+> >  }
+> > diff --git a/drivers/dma/dw-edma/dw-edma-core.h
+> > b/drivers/dma/dw-edma/dw-edma-core.h
+> > index 71894b9e0b15..c0266976aa22 100644
+> > --- a/drivers/dma/dw-edma/dw-edma-core.h
+> > +++ b/drivers/dma/dw-edma/dw-edma-core.h
+> > @@ -86,6 +86,8 @@ struct dw_edma_chan {
+> >       u8                              configured;
+> >
+> >       struct dma_slave_config         config;
+> > +
+> > +     bool                            non_ll_en;
+>
+> why do you need this? What is the decision to use non ll vs ll one?
+>
 
+The IP supports both the modes, LL mode and non-LL mode.
+In the current driver code, the support for non-LL mode is not
+present. This patch enables the non-LL aka simple mode support
+by means of the peripheral_config option in the dmaengine_slave_config.
+
+> >  };
+> >
+> >  struct dw_edma_irq {
+> > diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> > b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> > index e3f8db4fe909..3237c807a18e 100644
+> > --- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> > +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> > @@ -225,7 +225,7 @@ static void dw_hdma_v0_sync_ll_data(struct
+> dw_edma_chunk *chunk)
+> >               readl(chunk->ll_region.vaddr.io);  }
+> >
+> > -static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool
+> > first)
+> > +static void dw_hdma_v0_ll_start(struct dw_edma_chunk *chunk, bool
+> > +first)
+> >  {
+> >       struct dw_edma_chan *chan =3D chunk->chan;
+> >       struct dw_edma *dw =3D chan->dw;
+> > @@ -263,6 +263,57 @@ static void dw_hdma_v0_core_start(struct
+> dw_edma_chunk *chunk, bool first)
+> >       SET_CH_32(dw, chan->dir, chan->id, doorbell,
+> > HDMA_V0_DOORBELL_START);  }
+> >
+> > +static void dw_hdma_v0_non_ll_start(struct dw_edma_chunk *chunk) {
+> > +     struct dw_edma_chan *chan =3D chunk->chan;
+> > +     struct dw_edma *dw =3D chan->dw;
+> > +     struct dw_edma_burst *child;
+> > +     u32 val;
+> > +
+> > +     list_for_each_entry(child, &chunk->burst->list, list) {
+> > +             SET_CH_32(dw, chan->dir, chan->id, ch_en, BIT(0));
+> > +
+> > +             /* Source address */
+> > +             SET_CH_32(dw, chan->dir, chan->id, sar.lsb, lower_32_bits=
+(child->sar));
+> > +             SET_CH_32(dw, chan->dir, chan->id, sar.msb,
+> > + upper_32_bits(child->sar));
+> > +
+> > +             /* Destination address */
+> > +             SET_CH_32(dw, chan->dir, chan->id, dar.lsb, lower_32_bits=
+(child->dar));
+> > +             SET_CH_32(dw, chan->dir, chan->id, dar.msb,
+> > + upper_32_bits(child->dar));
+> > +
+> > +             /* Transfer size */
+> > +             SET_CH_32(dw, chan->dir, chan->id, transfer_size,
+> > + child->sz);
+> > +
+> > +             /* Interrupt setup */
+> > +             val =3D GET_CH_32(dw, chan->dir, chan->id, int_setup) |
+> > +                             HDMA_V0_STOP_INT_MASK |
+> HDMA_V0_ABORT_INT_MASK |
+> > +                             HDMA_V0_LOCAL_STOP_INT_EN |
+> > + HDMA_V0_LOCAL_ABORT_INT_EN;
+> > +
+> > +             if (!(dw->chip->flags & DW_EDMA_CHIP_LOCAL))
+> > +                     val |=3D HDMA_V0_REMOTE_STOP_INT_EN |
+> > + HDMA_V0_REMOTE_ABORT_INT_EN;
+> > +
+> > +             SET_CH_32(dw, chan->dir, chan->id, int_setup, val);
+> > +
+> > +             /* Channel control setup */
+> > +             val =3D GET_CH_32(dw, chan->dir, chan->id, control1);
+> > +             val &=3D ~HDMA_V0_LINKLIST_EN;
+> > +             SET_CH_32(dw, chan->dir, chan->id, control1, val);
+> > +
+> > +             /* Ring the doorbell */
+> > +             SET_CH_32(dw, chan->dir, chan->id, doorbell,
+> HDMA_V0_DOORBELL_START);
+> > +     }
+> > +}
+> > +
+> > +static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool
+> > +first) {
+> > +     struct dw_edma_chan *chan =3D chunk->chan;
+> > +
+> > +     if (!chan->non_ll_en)
+> > +             dw_hdma_v0_ll_start(chunk, first);
+> > +     else
+> > +             dw_hdma_v0_non_ll_start(chunk); }
+> > +
+> >  static void dw_hdma_v0_core_ch_config(struct dw_edma_chan *chan)  {
+> >       struct dw_edma *dw =3D chan->dw;
+> > diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h index
+> > 3080747689f6..82d808013a66 100644
+> > --- a/include/linux/dma/edma.h
+> > +++ b/include/linux/dma/edma.h
+> > @@ -101,6 +101,14 @@ struct dw_edma_chip {
+> >       struct dw_edma          *dw;
+> >  };
+> >
+> > +/**
+> > + * struct dw_edma_peripheral_config - peripheral spicific configuratio=
+ns
+> > + * @non_ll_en:                enable non-linked list mode of operation=
+s
+> > + */
+> > +struct dw_edma_peripheral_config {
+> > +     bool                    non_ll_en;
+> > +};
+> > +
+> >  /* Export to the platform drivers */
+> >  #if IS_REACHABLE(CONFIG_DW_EDMA)
+> >  int dw_edma_probe(struct dw_edma_chip *chip);
+> > --
+> > 2.43.0
+>
+> --
+> ~Vinod
