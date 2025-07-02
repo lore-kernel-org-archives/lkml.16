@@ -1,67 +1,112 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 329D0487A5;
-	Wed,  2 Jul 2025 01:24:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D32F82F5E;
+	Wed,  2 Jul 2025 01:26:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751419482; cv=none; b=Veo0xrzZDGDMZ4/tX2I4aTnpe2JNq0q40SteCo47NXu1zTrL9lbt/1ses7DdBHGZgDePoFImLvyXxQBG8F47aRGIzNGTxxfv0r02R1t1w9xN6241kwMkJC4jp/Tr8pRaxbovwMnT0TgldBETDot7kCfrqwoLx6cq5UjDXdm/iGI=
+	t=1751419580; cv=none; b=FUeUTOv3PHN+hLghSktKMhgVTUQ31XimouaVo6mg4dYz3ehQYLkYptMa15KHm8vc/nJO4zC3X657NoDAIgZxHSr6TkWXIlbpIqblO01QDZhs6UTcl0WNe1obEMl4hVrZ9YTKFOPeshbVptuvSz5bSQKjPyNI/6s16aXlxdoVbUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751419482; c=relaxed/simple;
-	bh=0UL0XMhpIwk4bK3SsQ5tofRptiTYrAuCESz+i6PWB5s=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LgSiBgecHizuJ6bxw9t9ZTZKb4hj5kqeSB75wsmJh2pMvM0roRNmdJg/gc6nup7WER9SXLkHXI+HO5WYpuAkILW5taSnB/9yZ9dlaBi00LZtVf1R7NXoq+kiIzs3Igmpv/35h+lREzvXt+AW4LV2BLCLk8TPogOqJW3rXn9T1Fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=h-partners.com; spf=pass smtp.mailfrom=h-partners.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=h-partners.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h-partners.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4bX2Fb5QT9z2Bcmp;
-	Wed,  2 Jul 2025 09:22:43 +0800 (CST)
-Received: from kwepemh200005.china.huawei.com (unknown [7.202.181.112])
-	by mail.maildlp.com (Postfix) with ESMTPS id 473C8140295;
-	Wed,  2 Jul 2025 09:24:30 +0800 (CST)
-Received: from localhost.localdomain (10.50.165.33) by
- kwepemh200005.china.huawei.com (7.202.181.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 2 Jul 2025 09:24:24 +0800
-From: Yihang Li <liyihang9@h-partners.com>
-To: <martin.petersen@oracle.com>, <James.Bottomley@HansenPartnership.com>
-CC: <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linuxarm@huawei.com>, <liyihang9@h-partners.com>, <liuyonglong@huawei.com>
-Subject: [PATCH] scsi: MAINTAINERS: Update hisi_sas entry
-Date: Wed, 2 Jul 2025 09:24:23 +0800
-Message-ID: <20250702012423.1947238-1-liyihang9@h-partners.com>
-X-Mailer: git-send-email 2.33.0
+	s=arc-20240116; t=1751419580; c=relaxed/simple;
+	bh=kpNeMrG3Dt4hd8A0for0V8nnG/pC3jvPKfmzTIld6sQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UunxqCgobFGG7gavkiltuLXJ/XgbGeXluLVCGftdZCDiBv6slrow1SGkiZLVKAcYVAVcz/vu+I1Woxb/pX/xviTcRzvZeFghngRt4yK5qbtISLwdMmag5/8cDAvZBZ7KkSqtkrPOWu05wgBvq8KY9NRRwmhzHkp756P3EWXCbto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JAFl5gD1; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JAFl5gD1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20D41C4CEEB;
+	Wed,  2 Jul 2025 01:26:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751419578;
+	bh=kpNeMrG3Dt4hd8A0for0V8nnG/pC3jvPKfmzTIld6sQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=JAFl5gD1wB3U8t6EiLCi29YJ/X5QLu0Z63y6SqPAmuc/N2fMiP16+u7BL47rUV4Rp
+	 vAlrSI6DVvVoOCceeh1E4Be/ZN5Br36iRp+779w22nlcJglSBB7RDOxPZ1fwGsv/iN
+	 Vkoo7bjUwPWrxSmym682JDot3LKIiYXIYzXNgtq++Mq1EtGC7uQgSgIsiJB8mUa+Og
+	 LLXcj2Xn8YETjw6lJN035doe3udvvTukOV12jWnyOvj00q73roMS0NSv2lgYoAVR5y
+	 t2ov+K555lNCDDStMC5g6BO/C8ke7Lm5Vqc0YjCvUUDIFldczSu2Bb1oScjO7DamBv
+	 WkFe5wl7tiNXw==
+Date: Tue, 1 Jul 2025 18:26:17 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Oliver Neukum <oneukum@suse.com>
+Cc: Paolo Abeni <pabeni@redhat.com>, "Peter GJ. Park"
+ <gyujoon.park@samsung.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ netdev@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: usb: usbnet: fix use-after-free in race on
+ workqueue
+Message-ID: <20250701182617.07d6e437@kernel.org>
+In-Reply-To: <ebd0bb9b-8e66-4119-b011-c1a737749fb2@suse.com>
+References: <CGME20250625093354epcas1p1c9817df6e1d1599e8b4eb16c5715a6fd@epcas1p1.samsung.com>
+	<20250625-usbnet-uaf-fix-v1-1-421eb05ae6ea@samsung.com>
+	<87a7f8a6-71b1-4b90-abc7-0a680f2a99cf@redhat.com>
+	<ebd0bb9b-8e66-4119-b011-c1a737749fb2@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemh200005.china.huawei.com (7.202.181.112)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-liyihang9@huawei.com no longer works. So update information for hisi_sas.
+On Tue, 1 Jul 2025 15:22:54 +0200 Oliver Neukum wrote:
+> On 26.06.25 11:21, Paolo Abeni wrote:
+> >>   drivers/net/usb/usbnet.c | 3 +++
+> >>   1 file changed, 3 insertions(+)
+> >>
+> >> diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
+> >> index c04e715a4c2ade3bc5587b0df71643a25cf88c55..3c5d9ba7fa6660273137c80106746103f84f5a37 100644
+> >> --- a/drivers/net/usb/usbnet.c
+> >> +++ b/drivers/net/usb/usbnet.c
+> >> @@ -1660,6 +1660,9 @@ void usbnet_disconnect (struct usb_interface *intf)
+> >>   	usb_free_urb(dev->interrupt);
+> >>   	kfree(dev->padding_pkt);
+> >>   
+> >> +	timer_delete_sync(&dev->delay);
+> >> +	tasklet_kill(&dev->bh);
+> >> +	cancel_work_sync(&dev->kevent);
+> >>   	free_netdev(net);  
+> > This happens after unregister_netdev(), which calls usbnet_stop() that
+> > already performs the above cleanup. How the race is supposed to take place?  
+> 
+> That is indeed a core question, which we really need an answer to.
+> Do I interpret dev_close_many() correctly, if I state that the
+> ndo_stop() method will _not_ be called if the device has never been
+> opened?
 
-Signed-off-by: Yihang Li <liyihang9@h-partners.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Correct, open and close are paired. Most drivers would crash if we
+tried to close them before they ever got opened. 
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a92290fffa16..05325fab7a6b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10949,7 +10949,7 @@ F:	Documentation/devicetree/bindings/infiniband/hisilicon-hns-roce.txt
- F:	drivers/infiniband/hw/hns/
+> I am sorry to be a stickler here, but if that turns out to be true,
+> usbnet is not the only driver that has this bug.
+
+Shooting from the hip slightly, but its unusual for a driver to start
+link monitoring before open. After all there can be no packets on a
+device that's closed. Why not something like:
+
+diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
+index 9564478a79cc..b75b0b5c3abc 100644
+--- a/drivers/net/usb/usbnet.c
++++ b/drivers/net/usb/usbnet.c
+@@ -896,6 +896,9 @@ int usbnet_open (struct net_device *net)
+        int                     retval;
+        const struct driver_info *info = dev->driver_info;
  
- HISILICON SAS Controller
--M:	Yihang Li <liyihang9@huawei.com>
-+M:	Yihang Li <liyihang9@h-partners.com>
- S:	Supported
- W:	http://www.hisilicon.com
- F:	Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
--- 
-2.33.0
-
++       if (dev->driver_info->flags & FLAG_LINK_INTR)
++               usbnet_link_change(dev, 0, 0);
++
+        if ((retval = usb_autopm_get_interface(dev->intf)) < 0) {
+                netif_info(dev, ifup, dev->net,
+                           "resumption fail (%d) usbnet usb-%s-%s, %s\n",
+@@ -1862,8 +1865,7 @@ usbnet_probe (struct usb_interface *udev, const struct usb_device_id *prod)
+ 
+        netif_device_attach (net);
+ 
+-       if (dev->driver_info->flags & FLAG_LINK_INTR)
+-               usbnet_link_change(dev, 0, 0);
++       netif_carrier_off(net);
+ 
+        return 0;
+ 
