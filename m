@@ -1,47 +1,47 @@
 Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2084.outbound.protection.outlook.com [40.107.223.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DE222F7CEC
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 23:30:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D338C24DCF7
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 23:30:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.84
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751499019; cv=fail; b=YRUIE4A2ofHHNYtBzL6zBntrK8ChiHqqfC0ku/vi8dyuTx4455rQ5/AZM3+xlIH2FA2a8HDWTs/B1QpfScLXJco+dSQi32Mk10ncXImuhHqZzEPK+TdgIJhpgs2CqyCVVDY9L+kJcaXhEdVrKXl/HcZ3CMuFY4XEYUqmo6sYIwQ=
+	t=1751499021; cv=fail; b=iztFwidCE/9tOVeFJgyeNIpRjuHPxJ1krYCtmkf0bCzIdIDN4IB+WgzZzJl4PGuvaopAOGAnxob9ZNfslYdJsgfKvVlyhWkCRm4Bzv4nOpgUZ77wbKhUsE054AqOS2+CL0KqKnGL3o8G2tQoLQRdaMNtXBL47dO6OXqQESbxi60=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751499019; c=relaxed/simple;
-	bh=WiuIRPcdeirIBevGHy0btqvwKzTHefu/isgl5TdGmtU=;
+	s=arc-20240116; t=1751499021; c=relaxed/simple;
+	bh=dx2qd2N6vXy8Ln0zl0hedDnbBFz7S9ktaZPxWmXyEw8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=uVXDRI4fVcQHujFf9PVqBZHGsje3MbWi30dQihq4cHnlhsPgjXpSwrWSls0M/oC0qgCXFNSapBocHn0UeGUyUsyR2OFyXJyyEtbDJiuewrq9uGAhlL7kCqOxk8KO0rI0+S7V7tcOfkVBf+txrNWU4u1FgsPE5xd1nI1KQ81tXcY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=gOHC85En; arc=fail smtp.client-ip=40.107.223.84
+	 Content-Type:MIME-Version; b=NiikddJTYB07YNJJI3xtXI6IRlVE2sOP3l96gRKxcmimN8TrR4EpnLmH7fJ4Iizu8ZiRfxIJlB79WxwBcMwzLD1BZqNWKz3AIB57rUjGkaGLoYwE43tBtb7RRqmJU/rdsszgk1P5Hsl0sqZbb3B8zrjWdfQ7ekR6neGZrz2CJxM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=FW9xrS4h; arc=fail smtp.client-ip=40.107.223.84
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="gOHC85En"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="FW9xrS4h"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=goXmWMUeuQusEELphVQ/NKlGZDcqs969TQs36gUGUX+hBaLY56kP1kIXnExMl+yDUf43NdSn1BNwKrZAaxbEgRYH+eCsKT9YCJXEbxXO8PKoLhjW8GZMb8G9PQ8Ys0JK9j2sPSIakeP5wEe1o1ZDDyy0QB7ME0LsM2VsZkQk3bNI54WCSJ9L281CPotYChU9Z21h5shXm+tYYSNpHUXso0GVwlTwsLDf9H3RsqZ+OSjnyxfbvcBsPXDagPzprJxDp17LioXqcpZ8J/GPkxzZwSMI1CB8Ywk9KYYO4G0sXPUXJz90wtB29QdD/ia33gy0C+EK7EJWYQ4bgitBkRJwzA==
+ b=et42PELQElF6CLcDmV4ZuuhZx2InwODRZGLPYwIk5I2uvPlvwmjLFDpPg71texzPPThyn5StL1+rdf4LuxBlJzI1O4n3nvV2xdQwfm+UyjC2aUGNn5g+43OgGZC7P4FnjQfycEeazgTA0MrjV9de2+M60MkXkiVfagsUem1Kpo3fLWl7JPIBlYC/tVYzUW1xwMd4wvFjAAKbUBWHXG90mfIp/7f/M/viPt+3I+G9PcajZJoO6RH2G3mjONZA4Tm+II/EBycDagLrH3Vc0YdjwrTS4aO68Sg0RMRLw0AeAeeGH6SQ3ZsvuFRwkGy00IM9FoIAjNeqMzxuNY9Q3tcOsg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=78bJuQ7K2JzPi9stiPG2bzC7Nv2eLNcLJTMYgHJ8KSA=;
- b=ytEN6hZbT0X/gSkiYpHUt7CA/4hO5AdA+HcZ8zOa8nnTgaaOOUJhTR+NQz13SS5z/n+4e7NtXrYJd7j9F7n6yOOvci0DqNPbnVlZ0ziLvCJ6l0QIq4hiTWNkNUBWxTrV7IS5+u525qWoDE351zQyerkTFz2ygrS2w1bLjiaDpsuhm2gNix99UJ9pavprpE1R6dRbIAvNXa7OjwflCoRoK64JJnnkJNuNO+Fe3qOsiVN6P3samK09Dt7Xr1yoBEWIZOnu2x/CzLRqYQgk49cCBEagWLbjqyE8ohOfxwEfR71jED1wFoGqIWDjYDioeOu+RXuvKcpfTnUbcZfBB6OI1w==
+ bh=JEnBqv2LQ1qGVZj7lybCtlQb2+soYleZwctmioifFB8=;
+ b=C3UvZraQCTbivaINMXQrajaf7d8uuUVSN5jEH89mXbAP+oUWGKEn7g3DblAZV6GxspIRWPKciCV5v2VQ6aGGmdQ0PFDMOozx7kZtaba+wuZTKFBz8jgmLkn8PntyPqusMrQ4pJyznPtqGrOiklFaOGdVTSInr6hi94BVypYgrT+e/peSYnwwGZtpuuRF43bjMqMFfIyTfq0En8nDvsPBaE6JHOHluLwsPwOSn+pOk0vxHN0XUNMhwRPc635ANSvq0vDwLPeYHEj+LsiaWDCKrrabw82QxiMGAXkgGlrccBWqh055Lje58rDY6bt2viiTk81w5LVCnPQ8X1V2DTLu/A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=78bJuQ7K2JzPi9stiPG2bzC7Nv2eLNcLJTMYgHJ8KSA=;
- b=gOHC85EnQmXqjgjbIGiLS3Q9cNTEsaEVy7WlTnCRl+j1XT5a+By7P1cQc+c3rLHXD2HqaRkgv2FlbA7RYR4ehR58SQn+NCeGVlpSRa+sZBTVK/yOQjrXoTD6rXDo2zteZgNObjfnt+7mxvJftszIsbtgiW/TDQvMWEJdHmb+7t3NvMGEgDOUL96xpvjNwN3KCnoiC4yLE8MNZJt4o5PHNUnyjuSzjQxLHiykPo9pN0NF2SNNxu/4ber5QjvVITyqkexcLC3UYpC02JGNp7PUAICCQIPTecTBwtzO9i1b5VwJoLIz5BmHzF8Ls9a+NRYuacnsxR6aIlCFQoq+anSUpg==
+ bh=JEnBqv2LQ1qGVZj7lybCtlQb2+soYleZwctmioifFB8=;
+ b=FW9xrS4hHlv2uVCTCXOBhRBP3YOOTIppivUaF1aIpOekH5LI3QQHzWGU+hO1xaj/DaBU+WKejB3W2IU1Q5Rt5udEFn0Ms056KuoJAR9fU3GoDdx2wfRmGBjHWVJ+SI4+jQ2TumXT2Wuj6RGA0JHHLjL+X90fmpRiSkmMfCVQ2rLz2IdMtglBp0IYyRG07rXzmnj/K32gE+nE4sOC82CAjVXh6SYPseJLzZ2qZhjXHfp7eg7H+PtO2eIiG+Koz7PVhq6Ezn5lXnbLi3BU1CI0FIkq1sw7yY2B4w6Y6l5iLcUqvlgoQ/1HI2nD9e8XTbwoSis6gOeWayVeUgA0h5R2Cg==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
  by MW6PR12MB7069.namprd12.prod.outlook.com (2603:10b6:303:238::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.20; Wed, 2 Jul
- 2025 23:30:13 +0000
+ 2025 23:30:15 +0000
 Received: from SN7PR12MB8059.namprd12.prod.outlook.com
  ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
  ([fe80::4ee2:654e:1fe8:4b91%7]) with mapi id 15.20.8901.018; Wed, 2 Jul 2025
- 23:30:13 +0000
+ 23:30:15 +0000
 From: Joel Fernandes <joelagnelf@nvidia.com>
 To: linux-kernel@vger.kernel.org,
 	Ingo Molnar <mingo@redhat.com>,
@@ -58,16 +58,16 @@ Cc: Joel Fernandes <joelagnelf@nvidia.com>,
 	David Vernet <void@manifault.com>,
 	Andrea Righi <arighi@nvidia.com>,
 	Changwoo Min <changwoo@igalia.com>
-Subject: [PATCH v6 09/14] sched/debug: Add support to change sched_ext server params
-Date: Wed,  2 Jul 2025 19:29:34 -0400
-Message-ID: <20250702232944.3221001-10-joelagnelf@nvidia.com>
+Subject: [PATCH v6 10/14] sched/deadline: Add support to remove DLserver's bandwidth contribution
+Date: Wed,  2 Jul 2025 19:29:35 -0400
+Message-ID: <20250702232944.3221001-11-joelagnelf@nvidia.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250702232944.3221001-1-joelagnelf@nvidia.com>
 References: <20250702232944.3221001-1-joelagnelf@nvidia.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: BL6PEPF00016419.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:22e:400:0:1004:0:8) To SN7PR12MB8059.namprd12.prod.outlook.com
+X-ClientProxiedBy: BL1PR13CA0191.namprd13.prod.outlook.com
+ (2603:10b6:208:2be::16) To SN7PR12MB8059.namprd12.prod.outlook.com
  (2603:10b6:806:32b::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -77,349 +77,154 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|MW6PR12MB7069:EE_
-X-MS-Office365-Filtering-Correlation-Id: effbc4e2-630e-4d15-aa3a-08ddb9c06514
+X-MS-Office365-Filtering-Correlation-Id: 6147de9e-94a5-476a-12b8-08ddb9c0663d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?TeHxkuyDtNZ/F3ofi12bLo5baoUrSdGSdbSj/xgvyEw7oM/JUPzTQ23BfCH6?=
- =?us-ascii?Q?Znv0kBUPNP3cRc+/oFDnzq+du4lN8cQuyQ+//gizb40i6I70AfOWuLlgE3cc?=
- =?us-ascii?Q?yQ5MVbHK9NRQ0TWtNhQHyX8cVAnGrAJBaw/ev9YreSlrTzDxZmamoDzmBJ9u?=
- =?us-ascii?Q?g+c9eC6IpM8jlCedvBWA/JJjwgESrb9O07hpKnbPi3X9XqcjApF7B0P/1Pow?=
- =?us-ascii?Q?EOHYao1hoza8nz7NyybFIvOAlr+gBhKL7fSWrwesCryUYQiSlyq+TKge11Z3?=
- =?us-ascii?Q?AC5xdgEn3Ckok4M0SmGqD5n1qsUeXrDCKYFhfRtNgtg+3XWa7Yz1taj8gdIM?=
- =?us-ascii?Q?RnxfsGZ0QGAf5CC7igb5VerawQ8plCTVSyhAPQrRXlxSrDMSNuagjQTQuVgl?=
- =?us-ascii?Q?6ruWgFgJeQZUPe8engbF0Tboi/tcpGu04ro50//oPHcalZttgQTzM1pE1/7s?=
- =?us-ascii?Q?tYEJUKJ5oTbxauFonkj61lJn4b+sejkNriQ0oG8EDCGS7pk70IpHa7MOO78i?=
- =?us-ascii?Q?w/Eg/W2GR4J5deFYaGw6jAGfyzeKL3yR+3IDQeTdeQgr7h5bO60gkxHKwvZX?=
- =?us-ascii?Q?HqEx7fGr7MuUH5iSQHctIPGyTDdfHtSdjMbUfwtkHsGDfo0QB79g3J17jwBt?=
- =?us-ascii?Q?VKFnYyDZXMmjgVZ7NsgwuRoNQ8mAvhWPrlX3p1OYuIOPbdA0UsvyEcwu5E3H?=
- =?us-ascii?Q?+qjnUirG2cUZcqWL95f3G4QjmFP1F79FJyBO28mr9qqSyB1giFNS0Ca9aABN?=
- =?us-ascii?Q?3774PVHRMggujJdZLfp0Bh+S6ewSkI8ZA0Yuye6DBbrQguiw3A/CsAC5x5FO?=
- =?us-ascii?Q?0K2YoLNMRriq1aTbPNDExVbvkg9GuXML+bw2K7VrkS7m91qSt5ZU72nMJjrR?=
- =?us-ascii?Q?PxPlo1N50s37pYI8mCR9Ap6X9Ft5xECQCvEQud6M6WAcfE5kiEQymh6Tnbrq?=
- =?us-ascii?Q?xtK7xuGqD31Ga2Qe4YlDEp6TRRnQrZRc68XeyZ0U5Ig2XReykAxH2P5UOZYu?=
- =?us-ascii?Q?WsYg+SHLmhhdGakPtamVofrdU67NsDe8e1XvEWKj44DzPlbFFbl0RnsrCMXw?=
- =?us-ascii?Q?8onrY5lLKbOPKmYuX35Ev3Z6AFkwcLh9OgFGa0y/zXsD47k/UTq+UZEK8OTD?=
- =?us-ascii?Q?Olzv5tm/FFbPLCLmfxDOQUhnHZGDG3NNxR8VjnBO+labIZeu4JUrlGAEL503?=
- =?us-ascii?Q?FuQHlFrjgWwUqSOgDsdvVeZgxMqEeFnAB1Rliqv9fq0sDez+/WRHBYrlQLoh?=
- =?us-ascii?Q?yTcm4W2N0QeNVohKu80xRxdtOAHLazfoW5Zj6v3K2sWSAxAhqzDfkD0jf/4n?=
- =?us-ascii?Q?ipjTyffeGysjaqFzIMVAmuNzQJ4t3x6fTWX6ES1Y/pUKlZClYibhMUNassLU?=
- =?us-ascii?Q?TpfRKhbjC8uTa6BBbIYyea5gNq1iAXJOIlicUbJ/iZvETS1fmqaZbRhpJY8y?=
- =?us-ascii?Q?vxLSLkceENI176KmZ78jHI6s7ZwIuQBnTfPpUO0hKrwMmB61gMaL8Q=3D=3D?=
+	=?us-ascii?Q?sViz5eD+a0v0c77xYaBIBPlMypyoI+0EwVLSh6vJsgIZNXp+XIjfMvUEK48h?=
+ =?us-ascii?Q?IDTE/hLYUmycxfpjdx1PmFRls13DX6XN8JnfOSsRoXIXbr9cNDAp3m888eLo?=
+ =?us-ascii?Q?KMgmO2rlSpBsGGxWPY2go6Hhhj0ISkAOgTJJlCiom+gDc2HolFqNyML3SH7t?=
+ =?us-ascii?Q?k6AjbIUWky547TlLJ3fINouGgMh8RBic6SCj7IQqIOCqBFXeIq7sLytwp2/C?=
+ =?us-ascii?Q?NS1C7WqVPZVnAZpSU/3kfGMs6eF5Jc29PbmqBSagdsG1nysiFxEPMCwOGUu/?=
+ =?us-ascii?Q?hLCVaeaPZs8I5yxPugrtYntI2ecifH5ap+b2cQQ1LCZuNgKLzXQH1XkXUoVT?=
+ =?us-ascii?Q?xnQ9TTR3Kbp6TJ630SG/nrSMhauRtprO3P2oTtYD97N2fIkZMnBFO2fBEJDY?=
+ =?us-ascii?Q?rMeMKGJUwyjEXMfzm+lOOuWNb3pfdxJCNlEjeVaObpd5J5UD0kGtxqxgq49M?=
+ =?us-ascii?Q?FfG5ZNRbtgenT7CAY6D229HuIx3r4FmML+CqmdV9D4I/D1teZ1Tdj+XYUSDK?=
+ =?us-ascii?Q?xN4nBv9GGM9lFOsk0tYzt+oht4+amSnzE1Kk4xpmy0DaAJqM7nBJ8k/+I4Av?=
+ =?us-ascii?Q?OJ3cC079A39yI9v+sxb83o3d8TH7j/fGXQr/0Gl5vVxoiVtfhzReeOavS9Dc?=
+ =?us-ascii?Q?FnTzXVmSO3UpTwrtYNFOULuTYDAGGBjKzhGNnUkEv34hZeMl9b6hc2L2Bbtt?=
+ =?us-ascii?Q?KHD47XRHMCknd14khMbpMiPuT9amDPnwSIIWO9FXJyPBWjtk1HO5VHSdAbXb?=
+ =?us-ascii?Q?o9k4XcNIXgO7oBMxeY5tGv1j/EklGDUvI1Y1bJ1d6M6uQvKPZOMpz/boPCfR?=
+ =?us-ascii?Q?Vtvbc8tbNB9jsjETYjJ0BnZhZrNsdDl9DLIEAJBXuLFVEY3ojBIimX1xC8Zl?=
+ =?us-ascii?Q?8QwxCWqUZbadH+imSZ6YBEkyAvR2PiZctC1/3omJui0IHGKbXEFN41z9sQhi?=
+ =?us-ascii?Q?NFkYAeBiudEincLHk7Ecb6xE6oPw8AjI1vVuImDwf0L3UoqtwfBjrRZfUPSe?=
+ =?us-ascii?Q?V++WQ/K+lhvnB025r8PbG0kGxSGae5s6rpTnJvCeWjAegl8ApO/VDIH9ht0J?=
+ =?us-ascii?Q?MdLMTXtNW46ef3fg22WlQ5FCCxaTwPMx700Ev58i6HWyjh3V8yuZppMwHZjC?=
+ =?us-ascii?Q?eWa2287aNYEcB+oLck5sKffiN4Y4DbJBlXRBfjpLkT8US1hs9aiKyeXNzlGP?=
+ =?us-ascii?Q?wR1nTv6x2x6/ssoZTW4KO80aMiVCteggtHEyDyCNwS/YEwojFHRW0F36GqCl?=
+ =?us-ascii?Q?z38z5E0Nmckvm851lBIYy4CbRFPEF8A6Yp19uXpSl1z7ScLNIk3ryIPENscc?=
+ =?us-ascii?Q?LsWH/ePO7LZyoE9BGyqtomzGQEsvsst6RqY0B9Vk1OuqmqrKleRtWxtY1F4Y?=
+ =?us-ascii?Q?AJp5NsmBxfvqP0rH3iYArETjIEK78qabgBXhoI3rAMSVjBpiPoscGLt4m9wI?=
+ =?us-ascii?Q?SvXgHwj2+uvn4K9u4ELUbQCD9qmsG+V2Fhr81+byxMEXSG5xe9X2aA=3D=3D?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(921020);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?p8Lm9xrYEao9RJCAUidpON2gwag2+8/FUU/SvHiD8ZYpJHoxXlWh96DVJOo9?=
- =?us-ascii?Q?c8cmeksvJutZmu6TfLjVjheEM9AwthmpTGzzGoNdv02bcmQvpwrqjlocgw6q?=
- =?us-ascii?Q?t/YktGCzZl9GfYaz0jXhZVH42hzMMsd6+yiBShZbvrazwhqvfkmOJYFhOArI?=
- =?us-ascii?Q?htmv2mBix67Uc9U24P3SvjIzi2HDPvnd7n/VPVSU2pdyc3tKVDNcJ5ZqTKAl?=
- =?us-ascii?Q?1KHCGJDStmMHPunooE36CCwzCM1mQn72r9qwynvoXK3zMCZNJPmGeyBG2eNs?=
- =?us-ascii?Q?nrpXXTsOrVHkc2oBIczyBZx1B7/8qChbUGWk973gAiEsWBLftmkmK7XoIydp?=
- =?us-ascii?Q?pns/xEeVcSHaAOrFlnvrDh6jGxItiO0YH2nJ9dBnYQSoitoUid8uHFl+NtQ/?=
- =?us-ascii?Q?ALrpsS1G1+/SzvoldYSyJDFIN55cq9h0e63Y+GkvuOQNzw3Gda9G/X86pUaa?=
- =?us-ascii?Q?ghN3HO7SnIyVD5WtcJrGgBsfwH+c9xIhHjkJh4o+527fVtxl/VsmUZMN2njw?=
- =?us-ascii?Q?6cRGuXl7VRRc7QlMxe4EoaI5Xj4RSL1PbFN+SdxvU2O5iaJMsiDqe73+9bNO?=
- =?us-ascii?Q?vmDSL3icq6AvOfS1N8RIUpWEF52qA4fSKVIqM++R2XzmtgO451kgYIPlDLFH?=
- =?us-ascii?Q?4CqdL/h7cutDmV/h9ixOSUYPJ26Zh5PVKqUxJdX9TsXXvW0JiAjKf4E1Jhxk?=
- =?us-ascii?Q?qJ7wF+d3EINEmQCp3SPKcdl78s8rIqZP+4/vM8rRQtH2BGhgCIQfxI+wwM8Y?=
- =?us-ascii?Q?kaKAxwreKOBr0U293c9HiANNwDwQ0/BzYjpLXcXf+WhgYwvTme6aaca1DkqW?=
- =?us-ascii?Q?+mSeKHSCVwJkGo7T5BFLClEI+mUjg7vq1vVFm7GoWel4JdEfgvJV9G/2kXCc?=
- =?us-ascii?Q?gjERWrtGKpu/ffJaQfxfYYGKNKOoieZpsx2Qeb6B6fXaZRymTwUJqod9Wl54?=
- =?us-ascii?Q?DqC1pr4RhaNiUK53jJveM1UHc8aFPRHpAh/B2TV/iJZHT0bD9h8K1gB5j1hD?=
- =?us-ascii?Q?rCbsb1VFewfUDbi2qtftPbjwdcS2FvYuoyLZm/FoEmO8f0aa4NSoJhi5pPJT?=
- =?us-ascii?Q?7LPq02gV9mXCsF60bbjMmW/XxcENuxKnGjiMY7DvWA8iJ2Pfx26hCV5I+yfT?=
- =?us-ascii?Q?uJWmopLPM+V4SjCFuCiz3YTZRfMvQtwHp1LZjJmxDtg9c9wQsO+z5RE9Sjm1?=
- =?us-ascii?Q?4JuCyCcwyd5pUxOyyd8UNhDgxnguBntKMatbL1wqM+d+tYIdMCzvePFPEqQP?=
- =?us-ascii?Q?3vB44GUPVAwfJ6gAKyZwPLzlMoit8uZYR8lDhuNg6ZFVTwuhmO41gpsYGxHZ?=
- =?us-ascii?Q?UBdHJOqitaMZBkGIxbw3/4g54m3PaKVASEznkjWgQxFVHpHdhWlgBLiucXJq?=
- =?us-ascii?Q?x90Yv3AnzJBjGIiRBdYE7OeS3OovXgPdvvMbX6A3kFWE8F0DkFjgzvIolnBg?=
- =?us-ascii?Q?skna0Tr4HYoSPic0RUmPcRo9q2GAr1Vm1MrcCQgVbm0O+e9sOC1IV41BoqJv?=
- =?us-ascii?Q?IA+WL31yLvOAICjLN3P6NNAaExP5FhmnWsx1tXXA+EtpW6mk6vAwKCOwLLn8?=
- =?us-ascii?Q?eZACHzJdL4leJ1ny1qNkJdxOYDjQEmOcTCpprv42?=
+	=?us-ascii?Q?OHUgVy5Lynf4MmXlaeyQbK9yfn10pWCEVnQ1lxoIs/zJRV3P7u3oSRHF6Dq4?=
+ =?us-ascii?Q?NVLu9sPOd8YH+k1r4IpjQb9N0xVKpFLXk9A27j31O/Vf8+CplI4QPdmyGqEo?=
+ =?us-ascii?Q?9Gk05cL8ycadMh64JnJ7o0RVeinC92XqX3NFNGEdEUNWHYawZjj5BFy3Xf4M?=
+ =?us-ascii?Q?pATq4+lQvnVorfdYB7+be1ERgkCIJ8bGh6Z63dSr0b5sbGz4fJw1ZpuJry1E?=
+ =?us-ascii?Q?beVSpah17QeP/1Cf7dJ8emfV706IL63+vr4oKUPIDncPo3rb8Uy0bt7WTKOB?=
+ =?us-ascii?Q?sF2SijS20EQ54EML4DJXfqkk2wpUew/emfpSIgSy+KhMojC47ImhvlfZDNuy?=
+ =?us-ascii?Q?Gvvqn7eXrijNzMyKbv/A4IabKIE2kwkwxEbNDSihfXE4NRnLC62+HAXfojy5?=
+ =?us-ascii?Q?caiaZ2wEZ37/N/8yNuMoVYev33AAmXQKFf5/e+g6qcZMpN4yiLE25bApZdUQ?=
+ =?us-ascii?Q?ySt/EwzirgMoiGtbfF18sFvcu8/tCgzLVSTGa59L97yauVebKeyZMwvVs60N?=
+ =?us-ascii?Q?uS0tEOh2r67YKzj1touxgHDvVPascrBYK1oq6X3G1U7x2Vl1chC42ksXyoB1?=
+ =?us-ascii?Q?8U2NoqV9xe98omftbEHXODVTrcT98F2ivsyr5fVYyZCdhqTD7TtKIirPjOwB?=
+ =?us-ascii?Q?LXKg3Uuah/tnviITm3pIgFnZj5Wz0cQ9PLY/66VDvv4v1l8WGmDWknzCqUYv?=
+ =?us-ascii?Q?v5EYyfrbR/mLdb89ms5L2nhTyybxwVlB8TMF0CUBxlC2soNqGeO41/2zQdSX?=
+ =?us-ascii?Q?c65ovqvrcEkYRhcNvHlHxIXGiT5h8FKb2F8iB7dNAqduxftIx25h1BNcLOJG?=
+ =?us-ascii?Q?JAOdGEmKrPgfml42W4E4LOkdSX38Rbvkoop+t+CeWMUy3qO6jt1KY4m4x62x?=
+ =?us-ascii?Q?V/Bz3W/HL4bdguTiFkyOJGQoTFkbj7wvMlFqB2lzsUz3bAvd+iALLKgjunYX?=
+ =?us-ascii?Q?h35ZJ+qKKkEJ+8KIYUJlpH41zCCwIDxwCqg5OnpepIV0yU/tjQX6u2A/YUZW?=
+ =?us-ascii?Q?WTmZXzvudrCQ3T17lZc9epPSg3lN3kJoguuBEQ0DYbjgr/ntFl2cGoFWjG3L?=
+ =?us-ascii?Q?rUn1/Bxla8t/OvJwxf3yS9PCJiWlKpsDv+orw/M3l7+6yqMjYbRN0LIDS8bM?=
+ =?us-ascii?Q?iWJ0pHDiPIufiywzwb6wDQNi9q9ZqOLUGwOQ3Egqf84fZBDDIO56bbZUkA8T?=
+ =?us-ascii?Q?5N/DX+fJLFMgoOms8Zt70Y2P1sdys9elPG9XyL/ldg2NzlbV96DM502dXwym?=
+ =?us-ascii?Q?dXfNWXdpdQnHoHtaihX6CUgQs1Kq6Z6/37Fgldot7hOy8fZxVuAoe57re0gD?=
+ =?us-ascii?Q?Zpo3HErB/B1PMAOy4LpWzkXbafT+5EDlJ8TUh1j0CP0eIW1X2T5t51ZCVeMD?=
+ =?us-ascii?Q?aI3lXcH2aNC7wIx21u/V0Z6cJoJAZ60W9TUCI/almT/o11VHGLxf0YmHHIOR?=
+ =?us-ascii?Q?X4JkWLoNatNf6Kpxq4oWfRmlQLrDpGU9WePjtckPicq+fzpc8Ti6rmsiYcft?=
+ =?us-ascii?Q?TFZ3qmbgch9OpVnEFb+37GnLoi8eLWRG7OD5or5b2s18lnJsvatl0qCs8Z4Z?=
+ =?us-ascii?Q?Azl/YfPrnXKqg17wzf9EQCvy7NFveht1+iQLtDfy?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: effbc4e2-630e-4d15-aa3a-08ddb9c06514
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6147de9e-94a5-476a-12b8-08ddb9c0663d
 X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 23:30:13.8800
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 23:30:15.8153
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: d1oNxzShMqtDQTN09LV3SlVEzXQTQjyQ7t8KcF892pKqBtO9/UEfWQbztakYCC/uM39Q7suTtXVe9q8QSOFUnA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: jawcTvc/YiK4n+rFGG7Jm292QoebL3yxwUmIs867bM4YkPA+9yCMpf8smgOHT5Jcg4aDilqm4zv74wttSFwR8A==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB7069
 
-When a sched_ext server is loaded, tasks in CFS are converted to run in
-sched_ext class. Add support to modify the ext server parameters similar
-to how the fair server parameters are modified.
+From: Andrea Righi <arighi@nvidia.com>
 
-Re-use common code between ext and fair servers as needed.
+During switching from sched_ext to FAIR tasks and vice-versa, we need
+support for removing the bandwidth contribution of either DL server. Add
+support for the same.
 
-Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
+Co-developed-by: Joel Fernandes <joelagnelf@nvidia.com>
+Signed-off-by: Andrea Righi <arighi@nvidia.com>
 ---
- kernel/sched/debug.c | 153 ++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 129 insertions(+), 24 deletions(-)
+ kernel/sched/deadline.c | 31 +++++++++++++++++++++++++++++++
+ kernel/sched/sched.h    |  1 +
+ 2 files changed, 32 insertions(+)
 
-diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index dcb6b2b2ff59..c3e0c02da07b 100644
---- a/kernel/sched/debug.c
-+++ b/kernel/sched/debug.c
-@@ -341,14 +341,16 @@ enum dl_param {
- 	DL_PERIOD,
- };
- 
--static unsigned long fair_server_period_max = (1UL << 22) * NSEC_PER_USEC; /* ~4 seconds */
--static unsigned long fair_server_period_min = (100) * NSEC_PER_USEC;     /* 100 us */
-+static unsigned long dl_server_period_max = (1UL << 22) * NSEC_PER_USEC; /* ~4 seconds */
-+static unsigned long dl_server_period_min = (100) * NSEC_PER_USEC;     /* 100 us */
- 
--static ssize_t sched_fair_server_write(struct file *filp, const char __user *ubuf,
--				       size_t cnt, loff_t *ppos, enum dl_param param)
-+static ssize_t sched_server_write_common(struct file *filp, const char __user *ubuf,
-+					 size_t cnt, loff_t *ppos, enum dl_param param,
-+					 void *server)
- {
- 	long cpu = (long) ((struct seq_file *) filp->private_data)->private;
- 	struct rq *rq = cpu_rq(cpu);
-+	struct sched_dl_entity *dl_se = (struct sched_dl_entity *)server;
- 	u64 runtime, period;
- 	int retval = 0;
- 	size_t err;
-@@ -361,8 +363,8 @@ static ssize_t sched_fair_server_write(struct file *filp, const char __user *ubu
- 	scoped_guard (rq_lock_irqsave, rq) {
- 		bool is_active;
- 		
--		runtime  = rq->fair_server.dl_runtime;
--		period = rq->fair_server.dl_period;
-+		runtime  = dl_se->dl_runtime;
-+		period = dl_se->dl_period;
- 
- 		switch (param) {
- 		case DL_RUNTIME:
-@@ -378,25 +380,25 @@ static ssize_t sched_fair_server_write(struct file *filp, const char __user *ubu
- 		}
- 
- 		if (runtime > period ||
--		    period > fair_server_period_max ||
--		    period < fair_server_period_min) {
-+		    period > dl_server_period_max ||
-+		    period < dl_server_period_min) {
- 			return  -EINVAL;
- 		}
- 
--		is_active = dl_server_active(&rq->fair_server);
-+		is_active = dl_server_active(dl_se);
- 		if (is_active) {
- 			update_rq_clock(rq);
--			dl_server_stop(&rq->fair_server);
-+			dl_server_stop(dl_se);
- 		}
- 
--		retval = dl_server_apply_params(&rq->fair_server, runtime, period, 0);
-+		retval = dl_server_apply_params(dl_se, runtime, period, 0);
- 
- 		if (!runtime)
--			printk_deferred("Fair server disabled in CPU %d, system may crash due to starvation.\n",
--					cpu_of(rq));
-+			printk_deferred("%s server disabled on CPU %d, system may crash due to starvation.\n",
-+					server == &rq->fair_server ? "Fair" : "Ext", cpu_of(rq));
- 
- 		if (is_active)
--			dl_server_start(&rq->fair_server);
-+			dl_server_start(dl_se);
- 
- 		if (retval < 0)
- 			return retval;
-@@ -406,36 +408,46 @@ static ssize_t sched_fair_server_write(struct file *filp, const char __user *ubu
- 	return cnt;
- }
- 
--static size_t sched_fair_server_show(struct seq_file *m, void *v, enum dl_param param)
-+
-+
-+static size_t sched_server_show_common(struct seq_file *m, void *v, enum dl_param param,
-+				       void *server)
- {
--	unsigned long cpu = (unsigned long) m->private;
--	struct rq *rq = cpu_rq(cpu);
-+	struct sched_dl_entity *dl_se = (struct sched_dl_entity *)server;
- 	u64 value;
- 
- 	switch (param) {
- 	case DL_RUNTIME:
--		value = rq->fair_server.dl_runtime;
-+		value = dl_se->dl_runtime;
- 		break;
- 	case DL_PERIOD:
--		value = rq->fair_server.dl_period;
-+		value = dl_se->dl_period;
- 		break;
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index b7f1724c54a6..aee1aa6c74e8 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -1744,6 +1744,12 @@ int dl_server_apply_params(struct sched_dl_entity *dl_se, u64 runtime, u64 perio
+ 		dl_rq_change_utilization(rq, dl_se, new_bw);
  	}
  
- 	seq_printf(m, "%llu\n", value);
- 	return 0;
--
- }
- 
-+
-+
- static ssize_t
- sched_fair_server_runtime_write(struct file *filp, const char __user *ubuf,
- 				size_t cnt, loff_t *ppos)
- {
--	return sched_fair_server_write(filp, ubuf, cnt, ppos, DL_RUNTIME);
-+	long cpu = (long) ((struct seq_file *) filp->private_data)->private;
-+	struct rq *rq = cpu_rq(cpu);
-+
-+	return sched_server_write_common(filp, ubuf, cnt, ppos, DL_RUNTIME,
-+					&rq->fair_server);
- }
- 
- static int sched_fair_server_runtime_show(struct seq_file *m, void *v)
- {
--	return sched_fair_server_show(m, v, DL_RUNTIME);
-+	unsigned long cpu = (unsigned long) m->private;
-+	struct rq *rq = cpu_rq(cpu);
-+
-+	return sched_server_show_common(m, v, DL_RUNTIME, &rq->fair_server);
- }
- 
- static int sched_fair_server_runtime_open(struct inode *inode, struct file *filp)
-@@ -451,16 +463,55 @@ static const struct file_operations fair_server_runtime_fops = {
- 	.release	= single_release,
- };
- 
-+static ssize_t
-+sched_ext_server_runtime_write(struct file *filp, const char __user *ubuf,
-+			       size_t cnt, loff_t *ppos)
-+{
-+	long cpu = (long) ((struct seq_file *) filp->private_data)->private;
-+	struct rq *rq = cpu_rq(cpu);
-+
-+	return sched_server_write_common(filp, ubuf, cnt, ppos, DL_RUNTIME,
-+					&rq->ext_server);
-+}
-+
-+static int sched_ext_server_runtime_show(struct seq_file *m, void *v)
-+{
-+	unsigned long cpu = (unsigned long) m->private;
-+	struct rq *rq = cpu_rq(cpu);
-+
-+	return sched_server_show_common(m, v, DL_RUNTIME, &rq->ext_server);
-+}
-+
-+static int sched_ext_server_runtime_open(struct inode *inode, struct file *filp)
-+{
-+	return single_open(filp, sched_ext_server_runtime_show, inode->i_private);
-+}
-+
-+static const struct file_operations ext_server_runtime_fops = {
-+	.open		= sched_ext_server_runtime_open,
-+	.write		= sched_ext_server_runtime_write,
-+	.read		= seq_read,
-+	.llseek		= seq_lseek,
-+	.release	= single_release,
-+};
-+
- static ssize_t
- sched_fair_server_period_write(struct file *filp, const char __user *ubuf,
- 			       size_t cnt, loff_t *ppos)
- {
--	return sched_fair_server_write(filp, ubuf, cnt, ppos, DL_PERIOD);
-+	long cpu = (long) ((struct seq_file *) filp->private_data)->private;
-+	struct rq *rq = cpu_rq(cpu);
-+
-+	return sched_server_write_common(filp, ubuf, cnt, ppos, DL_PERIOD,
-+					&rq->fair_server);
- }
- 
- static int sched_fair_server_period_show(struct seq_file *m, void *v)
- {
--	return sched_fair_server_show(m, v, DL_PERIOD);
-+	unsigned long cpu = (unsigned long) m->private;
-+	struct rq *rq = cpu_rq(cpu);
-+
-+	return sched_server_show_common(m, v, DL_PERIOD, &rq->fair_server);
- }
- 
- static int sched_fair_server_period_open(struct inode *inode, struct file *filp)
-@@ -476,6 +527,38 @@ static const struct file_operations fair_server_period_fops = {
- 	.release	= single_release,
- };
- 
-+static ssize_t
-+sched_ext_server_period_write(struct file *filp, const char __user *ubuf,
-+			      size_t cnt, loff_t *ppos)
-+{
-+	long cpu = (long) ((struct seq_file *) filp->private_data)->private;
-+	struct rq *rq = cpu_rq(cpu);
-+
-+	return sched_server_write_common(filp, ubuf, cnt, ppos, DL_PERIOD,
-+					&rq->ext_server);
-+}
-+
-+static int sched_ext_server_period_show(struct seq_file *m, void *v)
-+{
-+	unsigned long cpu = (unsigned long) m->private;
-+	struct rq *rq = cpu_rq(cpu);
-+
-+	return sched_server_show_common(m, v, DL_PERIOD, &rq->ext_server);
-+}
-+
-+static int sched_ext_server_period_open(struct inode *inode, struct file *filp)
-+{
-+	return single_open(filp, sched_ext_server_period_show, inode->i_private);
-+}
-+
-+static const struct file_operations ext_server_period_fops = {
-+	.open		= sched_ext_server_period_open,
-+	.write		= sched_ext_server_period_write,
-+	.read		= seq_read,
-+	.llseek		= seq_lseek,
-+	.release	= single_release,
-+};
-+
- static struct dentry *debugfs_sched;
- 
- static void debugfs_fair_server_init(void)
-@@ -499,6 +582,27 @@ static void debugfs_fair_server_init(void)
- 	}
- }
- 
-+static void debugfs_ext_server_init(void)
-+{
-+	struct dentry *d_ext;
-+	unsigned long cpu;
-+
-+	d_ext = debugfs_create_dir("ext_server", debugfs_sched);
-+	if (!d_ext)
-+		return;
-+
-+	for_each_possible_cpu(cpu) {
-+		struct dentry *d_cpu;
-+		char buf[32];
-+
-+		snprintf(buf, sizeof(buf), "cpu%lu", cpu);
-+		d_cpu = debugfs_create_dir(buf, d_ext);
-+
-+		debugfs_create_file("runtime", 0644, d_cpu, (void *) cpu, &ext_server_runtime_fops);
-+		debugfs_create_file("period", 0644, d_cpu, (void *) cpu, &ext_server_period_fops);
++	/* Clear these so that the dl_server is reinitialized */
++	if (new_bw == 0) {
++		dl_se->dl_defer = 0;
++		dl_se->dl_server = 0;
 +	}
++
+ 	dl_se->dl_runtime = runtime;
+ 	dl_se->dl_deadline = period;
+ 	dl_se->dl_period = period;
+@@ -1757,6 +1763,31 @@ int dl_server_apply_params(struct sched_dl_entity *dl_se, u64 runtime, u64 perio
+ 	return retval;
+ }
+ 
++/**
++ * dl_server_remove_params - Remove bandwidth reservation for a DL server
++ * @dl_se: The DL server entity to remove bandwidth for
++ *
++ * This function removes the bandwidth reservation for a DL server entity,
++ * cleaning up all bandwidth accounting and server state.
++ *
++ * Returns: 0 on success, negative error code on failure
++ */
++int dl_server_remove_params(struct sched_dl_entity *dl_se)
++{
++	if (!dl_se->dl_server)
++		return 0; /* Already disabled */
++
++	/*
++	 * First dequeue if still queued. It should not be queued since
++	 * we call this only after the last dl_server_stop().
++	 */
++	if (WARN_ON_ONCE(on_dl_rq(dl_se)))
++		dequeue_dl_entity(dl_se, DEQUEUE_SLEEP);
++
++	/* Remove bandwidth reservation */
++	return dl_server_apply_params(dl_se, 0, dl_se->dl_period, false);
 +}
 +
- static __init int sched_init_debug(void)
+ /*
+  * Update the current task's runtime statistics (provided it is still
+  * a -deadline task and has not been removed from the dl_rq).
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 576b69cee6b1..13dc32a6346a 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -393,6 +393,7 @@ extern void ext_server_init(struct rq *rq);
+ extern void __dl_server_attach_root(struct sched_dl_entity *dl_se, struct rq *rq);
+ extern int dl_server_apply_params(struct sched_dl_entity *dl_se,
+ 		    u64 runtime, u64 period, bool init);
++extern int dl_server_remove_params(struct sched_dl_entity *dl_se);
+ 
+ static inline bool dl_server_active(struct sched_dl_entity *dl_se)
  {
- 	struct dentry __maybe_unused *numa;
-@@ -539,6 +643,7 @@ static __init int sched_init_debug(void)
- 	debugfs_create_file("debug", 0444, debugfs_sched, NULL, &sched_debug_fops);
- 
- 	debugfs_fair_server_init();
-+	debugfs_ext_server_init();
- 
- 	return 0;
- }
 -- 
 2.34.1
 
