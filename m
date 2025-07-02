@@ -1,96 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DABBF303DFD;
-	Wed,  2 Jul 2025 18:04:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67EF2303DFD
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 18:04:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751479457; cv=none; b=Vg7X11ySHnIBF/eRHRwN19AEQ5BBksuZ56YKT2DmYfdE15hipvJ5LmBpEw5DQqlp3Txt70i/vFHrgchLslk4PlLwX+gSk6Ht52JfiDqnmo/cZ11OTwatUL9FYLRs1FEHUQeFma1Ag8QSXVNqm+fP7GG2CE0o+yvQplB9oEWSa2g=
+	t=1751479476; cv=none; b=MP4W5DXyAQ1tlqcGicuiRy7pk5+A+8KQxoZ1bQ3mkLEZm1ZV4HlsODacOp52HuBN09GuJRvHxLebgtDr7bewcHLcct1+FV6Zw4H7beYI5XHMe3sK0+e0YjtMBZ1xi11RGn5rlPOXCEdzF7e0oaTtumuN6Z0c3GRc+29OUfp41kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751479457; c=relaxed/simple;
-	bh=rB7kDTHQ/uishKmXwIwf+woKkI5vPemOVne+kvr5XMw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DSqxE5zJ/jO8UBfypelknwnTtsa7doEKMQ1RvnViq8CIixsk/iGodqby/BwanSltq7UeJhx9F3KacvPouvphAe2SzQKcIK4yQ5szeSWvPITQwcX9BwoYUsvbcgTAe7zShjJqqvTQA37ZysMYn0WdAi+zYcW8l8b8TGfgFNMxUsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B51d1mwc; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B51d1mwc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7848C4CEE7;
-	Wed,  2 Jul 2025 18:04:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751479456;
-	bh=rB7kDTHQ/uishKmXwIwf+woKkI5vPemOVne+kvr5XMw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=B51d1mwcN1fRUwVhtU0Jp4Jmc/LOF7u9soJ+unACltt7krszWojbDQX3hqYEuOxMk
-	 4+050x4ZZaBrQ2cOlxJsLd+BnvGv0eBYf5BDnNGpmuHRqZIuBSLK5GfrzJw/iXFTZC
-	 BcA1sZC1Z76T19jPZjh194FNepYTNZrrGggebwG9n8adY3gAq3NFY64CA1cEt1qh1J
-	 8miVTNiLHS85CzbIy3Yv+mnMyF8UNM2jzKboRjHobK83Y7j5ClNL4ZJ/4vp8A4xvHV
-	 WCETJcmCvvJYesIcvgT6nIY2ctiRTIKfIFnFDI7DhaTGz8OSe8Y7n7PtSilnbwJbD1
-	 XSn0OWtgIBDQQ==
-Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-60f24b478e3so2308904eaf.3;
-        Wed, 02 Jul 2025 11:04:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV1Z0j7UDHsObjmjQDRC2cZn82nQdvbZ1xusYi+W5RHgrU9OFT/lPDBtIKvobM3qU3Sf8dX24Wrm1Xj@vger.kernel.org, AJvYcCVVFuwb1s958jBjYDPQuveo5IRk61G+cIyV6Ga6dYjc2zJsxxkWa8GmKRDs3w2SPjfAtCiTuaxfI1xv0GJX@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbIFdmeSMQ4gnc1aIJDQP6QsTHR9+4W9E0FZkgSKcI6YQTo0RT
-	jXLKov+vsw656pwIU2Zr7ogkZFoz33CpToTnU9VNM0NePoug6UGxy1r9mW+FNjN5UdlbwGdZ15b
-	whegaSCiRevxykrEM3sXMT/nLZBBWbXY=
-X-Google-Smtp-Source: AGHT+IEns6wOYy4KSm5xHGLBBW4O7MP8WE+AxP1Ldh9mvi+EG8ZwJYGZjnClAScUQLVNPqJRq+Ykwfex8U8yV8fedMo=
-X-Received: by 2002:a05:6820:210a:b0:611:b00b:baa with SMTP id
- 006d021491bc7-612010c1c74mr2670255eaf.3.1751479456022; Wed, 02 Jul 2025
- 11:04:16 -0700 (PDT)
+	s=arc-20240116; t=1751479476; c=relaxed/simple;
+	bh=MeGhe2mttaKHpCVGJgrYdXNCwVK11eBfRyYgPxHqVJI=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=prNMgMhELOcIDH7sdnjjcu3N+eInsaHic9xocrtYreUro38anSB8xmBpRIKoYIKNj6tO5RjmaM4Ww4AYfK4uZoZe+4vo2B4B2654miEf0tXk8Mx+6NYDU2t6L53W2gACD22tgAB/FY3vDynQLPshI1SGb/+w15QbVIK8bK4GBMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3df4d2a8b5eso51455135ab.3
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 11:04:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751479473; x=1752084273;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tWF48hCLYWTcAUa93f/lkLlH9TGxtsXE9JeXqdiBcZI=;
+        b=M/yJBRCqdiE0BDAA93ARnyVPS2kMpvVUQqFpZgElg0MRaLa+/7sw/1erkYYjPGIYsH
+         fG+OQJbPpWxlDNsGptwWSq6HBZEMbvCXq9BYN/l2xAgZx839TyEvrb972HWwPeaAFIpN
+         jhm/crtJf89F6+Hy9TcIPG/jzckxrhJ/1B3t38kvSe9lFeAlRYbD+7koLAY6dyqcUhZN
+         blDqenZSa2HbplpXCQxF9Nr23FvNHE/Himsn2xhUCpIhbYH9AfC9LiWB5S5mVa2gP8Ce
+         +LznFaOknYDzPNB2IiZ1OLUDhaDRNNTqtNlruRWFpLoDhKokDFcfobTrM6i/aIKynJm4
+         RvEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV7jPpZa7I4hNUpWWcFCCtMrKNq8K6S/8Hlg+h5OwPOMmZ7A69aBasg1lKY/eMD/t9vIrz2itVZdCsCXNY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVlPKuHOTsyzFIrgI3FZcTBP8TMVKSx8lZZpVWvotdy7l7cEK4
+	lntblQ9BDwXw8bC8f8UESsalLnlusrV7HMIc0vnR2Awf2L1WA3p96t1vUq7SHlYuyuM175yaL25
+	FlLEEmYXXcOJ97qZr4mZFZaA4uNL/NMgUlNJdP+Y8+9ZGXscp44EAazYSw18=
+X-Google-Smtp-Source: AGHT+IEDDPHJ6rByvRwtWViZclAbpUat+tBrzPzW5bYNpP27gP4LoBLScAVZMw2cVIFqPF5yFIuoPmFXMeliS+GLfYdnNv8By5RB
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624142134.11317-1-listout@listout.xyz>
-In-Reply-To: <20250624142134.11317-1-listout@listout.xyz>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 2 Jul 2025 20:04:05 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gHpaAs9DtP7z1NoBPVEF0FQjBXEyRWoUTWhRCLF80Ajw@mail.gmail.com>
-X-Gm-Features: Ac12FXxFn50hgoqYdCib2K_DvxZ-UZ8NCXtwyD3sCmb4Dj-M25Ntwt7i2bn5g_M
-Message-ID: <CAJZ5v0gHpaAs9DtP7z1NoBPVEF0FQjBXEyRWoUTWhRCLF80Ajw@mail.gmail.com>
-Subject: Re: [PATCH] ACPI / sysfs: Replace deprecated strcpy() with sysfs_emit
-To: Brahmajit Das <listout@listout.xyz>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, rafael@kernel.org, lenb@kernel.org, 
-	lv.zheng@intel.com, kees@kernel.org, rui.zhang@intel.com, len.brown@intel.com
+X-Received: by 2002:a05:6e02:3008:b0:3df:4ad5:3a71 with SMTP id
+ e9e14a558f8ab-3e0549c5d57mr46047685ab.11.1751479473494; Wed, 02 Jul 2025
+ 11:04:33 -0700 (PDT)
+Date: Wed, 02 Jul 2025 11:04:33 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <686574b1.a70a0220.2b31f5.0002.GAE@google.com>
+Subject: [syzbot] [fs?] possible deadlock in __simple_recursive_removal
+From: syzbot <syzbot+6d7771315ecb9233f395@syzkaller.appspotmail.com>
+To: brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
+	viro@zeniv.linux.org.uk
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 24, 2025 at 4:21=E2=80=AFPM Brahmajit Das <listout@listout.xyz>=
- wrote:
->
-> strcpy() is deprecated; use sysfs_emit() instead. No functional changes
-> intended.
+Hello,
 
-It may be deprecated, but is it used incorrectly in this particular case?
+syzbot found the following issue on:
 
-> Link: https://github.com/KSPP/linux/issues/88
-> Signed-off-by: Brahmajit Das <listout@listout.xyz>
-> ---
->  drivers/acpi/sysfs.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/acpi/sysfs.c b/drivers/acpi/sysfs.c
-> index a48ebbf768f9..7ce90998ab97 100644
-> --- a/drivers/acpi/sysfs.c
-> +++ b/drivers/acpi/sysfs.c
-> @@ -181,10 +181,9 @@ static int param_set_trace_method_name(const char *v=
-al,
->
->         /* This is a hack.  We can't kmalloc in early boot. */
->         if (is_abs_path)
-> -               strcpy(trace_method_name, val);
-> +               sysfs_emit(trace_method_name, "%s", val);
->         else {
-> -               trace_method_name[0] =3D '\\';
-> -               strcpy(trace_method_name+1, val);
-> +               sysfs_emit(trace_method_name, "\%s", val);
->         }
+HEAD commit:    50c8770a42fa Add linux-next specific files for 20250702
+git tree:       linux-next
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=152d348c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=70c16e4e191115d4
+dashboard link: https://syzkaller.appspot.com/bug?extid=6d7771315ecb9233f395
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=106bd770580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=164b048c580000
 
-The code does strlen() checks before this, I don't think that the
-change is an improvement.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/3d4ef6bedc5b/disk-50c8770a.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/15b7565dc0ef/vmlinux-50c8770a.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/3b397342a62b/bzImage-50c8770a.xz
 
->
->         /* Restore the original tracer state */
-> --
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+6d7771315ecb9233f395@syzkaller.appspotmail.com
+
+============================================
+WARNING: possible recursive locking detected
+6.16.0-rc4-next-20250702-syzkaller #0 Not tainted
+--------------------------------------------
+syz-executor365/5837 is trying to acquire lock:
+ffff8880792cc650 (&sb->s_type->i_mutex_key#15){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:869 [inline]
+ffff8880792cc650 (&sb->s_type->i_mutex_key#15){+.+.}-{4:4}, at: __simple_recursive_removal+0x95/0x510 fs/libfs.c:614
+
+but task is already holding lock:
+ffff888027bf0148 (&sb->s_type->i_mutex_key#15){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:869 [inline]
+ffff888027bf0148 (&sb->s_type->i_mutex_key#15){+.+.}-{4:4}, at: bm_entry_write+0x289/0x540 fs/binfmt_misc.c:737
+
+other info that might help us debug this:
+ Possible unsafe locking scenario:
+
+       CPU0
+       ----
+  lock(&sb->s_type->i_mutex_key#15);
+  lock(&sb->s_type->i_mutex_key#15);
+
+ *** DEADLOCK ***
+
+ May be due to missing lock nesting notation
+
+2 locks held by syz-executor365/5837:
+ #0: ffff88807e5fc428 (sb_writers#8){.+.+}-{0:0}, at: file_start_write include/linux/fs.h:3098 [inline]
+ #0: ffff88807e5fc428 (sb_writers#8){.+.+}-{0:0}, at: vfs_write+0x211/0xa90 fs/read_write.c:682
+ #1: ffff888027bf0148 (&sb->s_type->i_mutex_key#15){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:869 [inline]
+ #1: ffff888027bf0148 (&sb->s_type->i_mutex_key#15){+.+.}-{4:4}, at: bm_entry_write+0x289/0x540 fs/binfmt_misc.c:737
+
+stack backtrace:
+CPU: 0 UID: 0 PID: 5837 Comm: syz-executor365 Not tainted 6.16.0-rc4-next-20250702-syzkaller #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
+ print_deadlock_bug+0x28b/0x2a0 kernel/locking/lockdep.c:3044
+ check_deadlock kernel/locking/lockdep.c:3096 [inline]
+ validate_chain+0x1a3f/0x2140 kernel/locking/lockdep.c:3898
+ __lock_acquire+0xab9/0xd20 kernel/locking/lockdep.c:5240
+ lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
+ down_write+0x96/0x1f0 kernel/locking/rwsem.c:1577
+ inode_lock include/linux/fs.h:869 [inline]
+ __simple_recursive_removal+0x95/0x510 fs/libfs.c:614
+ remove_binfmt_handler fs/binfmt_misc.c:694 [inline]
+ bm_entry_write+0x4f7/0x540 fs/binfmt_misc.c:749
+ vfs_write+0x27e/0xa90 fs/read_write.c:684
+ ksys_write+0x145/0x250 fs/read_write.c:738
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f147e7aa369
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffed0db9fa8 EFLAGS: 00000246 ORIG_RAX
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
