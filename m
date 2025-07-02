@@ -1,102 +1,117 @@
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239BE210FB;
-	Wed,  2 Jul 2025 13:38:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB29F2727E2
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 13:38:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751463511; cv=none; b=A8VHhoYPJFtWglT7AW4zTpoGw0yUWkLrcj3s3J63fqe4jJhVm9FFqpNTSFhShcQ+HPpBFoE1WDtvgLsugyMnKI40KCHGiNiKrsIpYXiAXBJgA8BG6k8Z7WVzaWSobTqVfCyC05on6/XDOVSug6qTH7qjNlqUV4aznL1JqgvEGYU=
+	t=1751463527; cv=none; b=XRafprb7+UvEau3qvTxsXeZtmeDVwFnCFsq81HaTBWyPUSSXYxJYhiBtegIXsKHBno3DSA+43bjem+zBG+K45ZUGHH5Y+PvpM7jxHgXDh2FR0T+6SyxTf0WzZ3FS/NMTvA5tDw2qXjIhDr7e9Uqk92gDYYt58/HU8mUr7HcYxsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751463511; c=relaxed/simple;
-	bh=fuOTSmJv7T+0NyENvlRT2dBogIf54mUZAlku7TamFMM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bVgojMspSzwYI/ddyu4K59COXI6VQX6NwR7KKVBC2IBky4J/XUD1PNyoWXVvO3pqFLiYiz6oBkvWiTbc34m1+eZlMZRge/TyzLeHWj2ZlWV8pXptTvQRCVe97b/AK6TqiasOtPHiZpXRVKpDjBwayrzKe+svbvv+1hIpivBZsPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-52b2290e28eso1580412e0c.3;
-        Wed, 02 Jul 2025 06:38:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751463507; x=1752068307;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ePQG1MsUBShhdoAQGKCKXv0vOZyacAN5Vmj3ODr9rzI=;
-        b=dWijLhxYOA9h6N2HrjiVbPiA4CeMc1uubLW/hShhaVT7LJizfGe2Zo+Ix6x16WCjgn
-         i7GuztyPsDwRkFZYq4i+Hp1z+2UDvesmNS5juEllvTu/5YbN0WRhiTwLlQDzzO8GgWnM
-         NPYG30G03j2y6HrfyFPEB6BwQWpdCNdsnbuWWc5XQlBeSKwiqWGBStutOX4Fr/N3PmG7
-         NyR0Sm5VwcwxEeIE0m7kDkx8ns2Knb2WvWea0vN2x3A1WFusgcpw1s1daDbZSUueLteK
-         IJCckLF2ssRu1Ai4HKZVw1QiyDBbYg8MGX3wdXE7yxjsgTR44KSHrirmpwJWfHMsGk3b
-         K90g==
-X-Forwarded-Encrypted: i=1; AJvYcCU+p0jQTOrA143gq5x+FOZecWnSZAMQo63jhAQkY00Y+SGN4PYJ44qo+5LwwYY6IqJAtriQXOlkzsSI+H1b6LkF7Po=@vger.kernel.org, AJvYcCW3Hmu/SfwYNwu4vfSxWwAxDpZ0N82n21NhnJTMWWB01olyS36YthyZpKoxyVDxIiqpct4ZlS5Y+fip@vger.kernel.org, AJvYcCWsa0nfjgkp+ss6tfZ4cmghBzFv+p58F7/85f/kTmcLmL7TkbZEgIeANtp+9UMeL5/lYtbUMMvfjANQ@vger.kernel.org, AJvYcCXtZvWXZh0+JuHQyfoAsdup6zeZotYQyG8K2tVJlOf5Lnn/wDOGSUM8Y6nl25ozEypEDWwVJzDPb7heWZgB@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+lIO8L/XLFrLnrFO1eo4OMZy7zRgWLyEGEVxuX4wUlHIe9oAS
-	AoYE2q4dX3NdTTS6Jup9K2jNmYJ1mzXrfuTMDuRzSDd+WaBfxK+TjKw+nw0kuO53
-X-Gm-Gg: ASbGncsVq7dREnS+/yY3aKgTWUs+uHrVq9d7TJzXlCzFaKvNQ5RlNAsvKdPujCgPMBd
-	naUX4CLRhzpm9Fo0Pcg60NYtnpJ9K7CIJvMbSduSHir/dtXecXe0IIDz+/f1strlx7/7NCqB1gt
-	lRKXriGf+fucHA69tsPVYSnT3/ScV2bKMk0mo5dBp/j2yHrRioj+7s7fNmGK+twpwycoyzIFyVG
-	CbuAwGLD+vQvbs0wnoMpiMJz9xObJILa0bnUYtKjfN6hCASTUqQluFqFPmlnxjq4s3FAa2oBLUc
-	3zzbnEBPSBC8T+XAf4pZ1qjgOzckxrO0XEuKmVGetkMStlMi6jbCnJrg9o5A8lX8y0C+zr2+EVC
-	9iZgFum7vgLaMi4i4IBXgzE3v
-X-Google-Smtp-Source: AGHT+IFdkuGGv6RNbzQx1lUS3R3vP8Lhwi0OtlNirI7EvQ8Qdy4JV559aBIP/OwtLZdNwD2jMCaNTw==
-X-Received: by 2002:a05:6122:905:b0:531:188b:c1a9 with SMTP id 71dfb90a1353d-53457c20a73mr1862384e0c.0.1751463507462;
-        Wed, 02 Jul 2025 06:38:27 -0700 (PDT)
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-533090ba68esm2133233e0c.16.2025.07.02.06.38.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jul 2025 06:38:26 -0700 (PDT)
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-87ec9aee6dbso1489556241.0;
-        Wed, 02 Jul 2025 06:38:26 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVNC2DKWrGx2mlKT3gHnYV6epwTkrREiMGFAM94DpTPxf+volCClBeuTBJHDjxVm4KWNcFq5cKZs4BQCimJ@vger.kernel.org, AJvYcCVh8kDVtBDy36A8DtM0vpxK0KXyhS7fF+110ks1mbOHXpr5c6vO4kCgb1UGYRZTCQ75zNK2v7wwbtKLSQYvSoE4KAo=@vger.kernel.org, AJvYcCW5lMpN8bySxaTfNxJiLgBzZ4z3I/6nAD4z+h8YPdnns0Y91xQCYZfS+cv++/JT+754c+SwJC8TMkT/@vger.kernel.org, AJvYcCXfBTc2T6leO7ZBr+mEsWAyZc6g6kQTujhElu5qyC0neUyeAEPho2KyY+RSMGRg0NBiNwMtmo3Hr7NE@vger.kernel.org
-X-Received: by 2002:a05:6102:4b0a:b0:4e6:e126:6238 with SMTP id
- ada2fe7eead31-4f1610076c3mr1456363137.3.1751463506197; Wed, 02 Jul 2025
- 06:38:26 -0700 (PDT)
+	s=arc-20240116; t=1751463527; c=relaxed/simple;
+	bh=9UXv6Lv8Mgx5xwLb6Alh24jufOJ2+q7DhT8Nl4HXuvY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=eL8mvjIBO/pT8ugQEzO2fKX4IurUqRJXTucp6EKWK1yTWaVKj1J+KvpeUZJ9MNsrDzKoVAzswRgI9ptM/YgXEjP+QRVE0WDd6wsdY5anXp/5nEX6GFRwJlbhyH8n9mufuYUq8XzGBOQKZtkoE5+D5/vR53WhZJO78PmwyOh6vEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=uOsqb9wO; arc=none smtp.client-ip=185.226.149.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="uOsqb9wO"
+Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
+	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <mhal@rbox.co>)
+	id 1uWxfV-00GcGZ-As; Wed, 02 Jul 2025 15:38:33 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
+	s=selector2; h=Cc:To:Content-Transfer-Encoding:Content-Type:MIME-Version:
+	Message-Id:Date:Subject:From; bh=rLI/a9ECryxZRQ9J4BCJbHJwt0Oclm9wiohMCVJ1XXA=
+	; b=uOsqb9wOvgHeZuau00vHqMtqAy75L00axpt98nL9aqznLT7tk/UllZTTi8Vx4Rcz1+oPLzxVs
+	fcP7sVuf77kt4ektZYfHpFoXJ3u98QpDFVZJjT0egF0xzhusweqXBoMUDRqtK6XTLzTp3o6ZgC4jK
+	ihLtc6Jt5ReVmJ/ktfEH/wUFUhVqalFfhO2/xynWTdNwQN6mQ2kE5As6MCPBdqfpaau3thNFuOAWp
+	g/jHEkaI8rgC4R9cHXlnEnEmOygn7QzbL+WFmlbb7VAq76GS7pndcPvL1oJ0s+6wO3Om5LuKcEUoo
+	v2ZoioVJq1Wy6WRsAPmVM65aio0kR06jgVUT/A==;
+Received: from [10.9.9.73] (helo=submission02.runbox)
+	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <mhal@rbox.co>)
+	id 1uWxfT-0006EX-TZ; Wed, 02 Jul 2025 15:38:32 +0200
+Received: by submission02.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.93)
+	id 1uWxfC-009LCR-Li; Wed, 02 Jul 2025 15:38:14 +0200
+From: Michal Luczaj <mhal@rbox.co>
+Subject: [PATCH net-next v3 0/6] net: Remove unused function parameters in
+ skbuff.c
+Date: Wed, 02 Jul 2025 15:38:06 +0200
+Message-Id: <20250702-splice-drop-unused-v3-0-55f68b60d2b7@rbox.co>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250625141705.151383-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250625141705.151383-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250625141705.151383-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 2 Jul 2025 15:38:14 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVpc2asQpmYjhGT3iyu1t8RUtSGNivugncWpK9dmk+VjQ@mail.gmail.com>
-X-Gm-Features: Ac12FXxqYAq2Gz5s7j6S5XN9equ44orB6qfa6dbubkHdrjFtiDs4VZ-k5UG_TYs
-Message-ID: <CAMuHMdVpc2asQpmYjhGT3iyu1t8RUtSGNivugncWpK9dmk+VjQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] clk: renesas: r9a09g077-cpg: Add PLL2 and SDHI clock support
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAD82ZWgC/23OQQ7CIBAF0KuYWYsBioiuvIdxgTBYEgMNtKSm6
+ d0luNBFlz8/8/4skDF5zHDZLZCw+OxjqKHb78D0OjyReFszcMqPVDJF8vDyBolNcSBTmDJaQlG
+ gVppxqRjUwyGh83NDbxBwJAHnEe616X0eY3q3tcJa/4W52IILI5QYJwXT8iQtFdf0iPPBxIYV/
+ g/ITYBXoKt/OW2Ydur8A9Z1/QB6xmzK/QAAAA==
+X-Change-ID: 20250618-splice-drop-unused-0e4ea8a12681
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+ Ayush Sawal <ayush.sawal@chelsio.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+ David Ahern <dsahern@kernel.org>, Neal Cardwell <ncardwell@google.com>, 
+ Kuniyuki Iwashima <kuniyu@google.com>, Wenjia Zhang <wenjia@linux.ibm.com>, 
+ Jan Karcher <jaka@linux.ibm.com>, "D. Wythe" <alibuda@linux.alibaba.com>, 
+ Tony Lu <tonylu@linux.alibaba.com>, Wen Gu <guwen@linux.alibaba.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org, 
+ Michal Luczaj <mhal@rbox.co>, Sidraya Jayagond <sidraya@linux.ibm.com>, 
+ Dust Li <dust.li@linux.alibaba.com>
+X-Mailer: b4 0.14.2
 
-On Wed, 25 Jun 2025 at 16:17, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Add support for PLL2 to the R9A09G077 (RZ/T2H) clock definitions and
-> register it as the source for the high-speed SDHI clock (SDHI_CLKHS)
-> operating at 800MHz.
->
-> Also add fixed-factor clock PCLKAM derived from CLK_PLL4D1, and define
-> module clocks for SDHI0 and SDHI1, both of which use PCLKAM as their
-> clock source.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Couple of cleanup patches to get rid of unused function parameters around
+skbuff.c, plus little things spotted along the way.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-clk for v6.17.
+Offshoot of my question in [1], but way more contained. Found by adding
+"-Wunused-parameter -Wno-error" to KBUILD_CFLAGS and grepping for specific
+skbuff.c warnings.
 
-Gr{oetje,eeting}s,
+[1]: https://lore.kernel.org/netdev/972af569-0c90-4585-9e1f-f2266dab6ec6@rbox.co/
 
-                        Geert
+Signed-off-by: Michal Luczaj <mhal@rbox.co>
+---
+Changes in v3:
+- Keep skb_splice_bits() @flags [Jakub, Paolo]
+- Link to v2: https://lore.kernel.org/r/20250626-splice-drop-unused-v2-0-3268fac1af89@rbox.co
 
+Changes in v2:
+- Fix typos in commit messages
+- Remove one more unused parameter in skbuff.c (patch 9)
+- Collect R-b, add a one-line cleanup of smc_rx_splice() (patch 7) [Simon]
+- Link to v1: https://lore.kernel.org/r/20250624-splice-drop-unused-v1-0-cf641a676d04@rbox.co
+
+---
+Michal Luczaj (6):
+      net: splice: Drop unused @pipe
+      net: splice: Drop unused @gfp
+      net: splice: Drop nr_pages_max initialization
+      net/smc: Drop nr_pages_max initialization
+      net: skbuff: Drop unused @skb
+      net: skbuff: Drop unused @skb
+
+ .../chelsio/inline_crypto/chtls/chtls_io.c         |  3 +-
+ include/linux/skbuff.h                             |  2 +-
+ net/core/skbuff.c                                  | 34 +++++++++-------------
+ net/ipv4/ip_output.c                               |  3 +-
+ net/ipv4/tcp.c                                     |  3 +-
+ net/ipv6/ip6_output.c                              |  3 +-
+ net/kcm/kcmsock.c                                  |  3 +-
+ net/smc/smc_rx.c                                   |  1 -
+ net/unix/af_unix.c                                 |  3 +-
+ 9 files changed, 20 insertions(+), 35 deletions(-)
+---
+base-commit: e96ee511c906c59b7c4e6efd9d9b33917730e000
+change-id: 20250618-splice-drop-unused-0e4ea8a12681
+
+Best regards,
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Michal Luczaj <mhal@rbox.co>
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
