@@ -1,335 +1,262 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2072.outbound.protection.outlook.com [40.107.243.72])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B89288CA4;
-	Wed,  2 Jul 2025 14:07:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.72
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751465277; cv=fail; b=d91eY3TVh/7lyp9ge074MiGdQDrqlasBV5ioN3+PTSoSgC6mkzsf7yzfhtY2EzI/Us0tCPY/JTsEedPfyScBWtkhVoPB7f0Br5ROQv2UDOPlUIboQ+Vxcz648LCp+YMOMkWTeyYdrGubcoxhmy6st436V+9fAj2PTDZ40e/uBu0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751465277; c=relaxed/simple;
-	bh=zv9Ub2UjSUasQLafzgPJwE79YI4udOlk1L4yjx+1KxM=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=fpyMzaoPWh58h8HfBv+g3W0i66FlsL38yK1IqMzedN2+lqExwn0SF/MmNtSOJ0k+NEwwHDOu3cfPWnpKM6d6vGgbEUDVigti/2cm2NWqBgWdo2k6IUjUersDVl23ru2oJ0K2jAiQv/x9ZHpNyTH5SXcBgAQgvWgtxLljNpY5owg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=dIpB6TOU; arc=fail smtp.client-ip=40.107.243.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="dIpB6TOU"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ScQsvjgz/cBj6k20KdBX9YhdahkvE6lLX5ZPpN7Gdl/wxnOidtZsKgAzqcoVKJsGzAPaj2+4hNzl0RbrjE33L6R5cyCfK3ILKJtDPCa9fsvh3eKZBDp8CAXV4DvtQ11ri622MRUlkxdocTWwFv8QoXvITqprpb00qxBEyZDmRslfh5Xl0K6FDHDZutUWIn5guYKNnb6c8j32ra9KiRIFxOWcEhg7U9NiKZbmK9ewtNTn8CuZelxdPAHLmHsBZH30+5cD5MRpEHgiMDLWrITaW39iz4kxUJ+D1Pf/Psgt/ZrhBhl76qY92ArK9Esa+Iw/A8Llgw6iCgjE6wGzn1K7Sw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vQZdYMLRcst0xvvLdGgZxcvQuHEaoiPg7wll016keEE=;
- b=Q24IPJDtdlEw6Rpn3D3gWPqMq8Nf2M366/5oFH/+N6Ed58IXugBkHMpQvN0y2DayqGqtkC01uE9NN3iqzosXq4vtJPRAo2IapN7Bp8HXg6fpDHcjnrd08Efyn6PP76f7Ss9ibrCmQyW59jdDA2R9NVeSHFXdb0P0z7/KeyPCuUglNrImWTQP29QIuO8u0FOpqyWAPR9zW8Wu+TwGSLtfDfbBR+kpKk0gbIiTgSXO4XwnniyIYkdteDkk87oJvRqyVO6UmRd6n9Cu/DLgsCMNdNJf6OJ5/cFQUqInJ0UJN+HpYZTCHQc8MOLHiPljsgfMb52ivYj2+q3icn8mrQWOuQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vQZdYMLRcst0xvvLdGgZxcvQuHEaoiPg7wll016keEE=;
- b=dIpB6TOUY2V8h5n43u67cuwg+90piyLIR6lipf0BAmiNODs9o7bflFVe/M7YXXn73YlFAZXtxflNbBNrkvMchTGbbrKlzdkkYALJea/qjvXEHqzpq5jdIWQ7j4/rMx4IQbxehy0v1l563UE/KjHeG+ssSuVl65qlB/vfSzt3KFc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS0PR12MB7804.namprd12.prod.outlook.com (2603:10b6:8:142::5) by
- PH7PR12MB7331.namprd12.prod.outlook.com (2603:10b6:510:20e::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.29; Wed, 2 Jul
- 2025 14:07:50 +0000
-Received: from DS0PR12MB7804.namprd12.prod.outlook.com
- ([fe80::8327:d71a:ce21:a290]) by DS0PR12MB7804.namprd12.prod.outlook.com
- ([fe80::8327:d71a:ce21:a290%4]) with mapi id 15.20.8880.023; Wed, 2 Jul 2025
- 14:07:50 +0000
-Message-ID: <84d111fd-f71d-4f4b-ab33-a6ff800731f8@amd.com>
-Date: Wed, 2 Jul 2025 19:37:41 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] drm/amdgpu: skip kfd resume_process for
- dev_pm_ops.thaw()
-To: Alex Deucher <alexdeucher@gmail.com>, Sam <guoqzhan@amd.com>
-Cc: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- "Zhang, GuoQing (Sam)" <GuoQing.Zhang@amd.com>,
- "rafael@kernel.org" <rafael@kernel.org>,
- "len.brown@intel.com" <len.brown@intel.com>,
- "pavel@kernel.org" <pavel@kernel.org>,
- "Deucher, Alexander" <Alexander.Deucher@amd.com>,
- "Limonciello, Mario" <Mario.Limonciello@amd.com>,
- "Zhao, Victor" <Victor.Zhao@amd.com>, "Chang, HaiJun"
- <HaiJun.Chang@amd.com>, "Ma, Qing (Mark)" <Qing.Ma@amd.com>,
- "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250630104116.3050306-1-guoqing.zhang@amd.com>
- <20250630104116.3050306-4-guoqing.zhang@amd.com>
- <8806781b-90d1-4b99-a798-dd1d29d4c8c0@amd.com>
- <8eb1700d-4d60-4a1e-9d09-718f65baaf1e@amd.com>
- <019a15d5-142f-4761-9408-58c103d3922b@amd.com>
- <CADnq5_PHfNTbLL7Xmb9HFgtZemDVaLSqbrONWWEf9hjwk1rF1Q@mail.gmail.com>
- <1e82f0af-daf6-4dd6-bc43-2969ac970589@amd.com>
- <CADnq5_M_NWSbqJUrBcDy_bARrPcQDDhSvHCKCqEoTWijBWHxGg@mail.gmail.com>
-Content-Language: en-US
-From: "Lazar, Lijo" <lijo.lazar@amd.com>
-In-Reply-To: <CADnq5_M_NWSbqJUrBcDy_bARrPcQDDhSvHCKCqEoTWijBWHxGg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN2PR01CA0229.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:eb::11) To DS0PR12MB7804.namprd12.prod.outlook.com
- (2603:10b6:8:142::5)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A22275846;
+	Wed,  2 Jul 2025 14:09:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751465354; cv=none; b=dnGpZu1bmM8Viv2TkwLN/TZck5fTUCj7TyHKmSq8VeeTaik/2G2l7KpqT5/MO6s8gF5SJ8sE6/PecVzXe70RV06thWMP5GYpB1NZLdTqb0q1bNxAWcscPv1oteiWWs3W3QYyYB+Nq5zqVBsyxD4j41pbmoVmv7oTB+MOSIf8ZpI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751465354; c=relaxed/simple;
+	bh=KrByScEse9zQAz1mFpAbnHuiASOxgUN38QwBq7EKRwY=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bHxzEPZC7eDPjgeSc6/nAqQw/+m0Me9Onkl0kEoWPU7frGOShvPeGYDwv2zdf4kgWZ4DF7m875mjzKWPMsag5D65ubf2r4P4D7SRyZCkGLSe2T3HMvS0j3yIiSC3Wa8PaxB0QjaLcwx7FPW4I/uxHeU4V6/oSSwLLxn+O6cKLww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bXMDt2j8gz6M4dR;
+	Wed,  2 Jul 2025 22:08:14 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 155B41402EA;
+	Wed,  2 Jul 2025 22:09:10 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 2 Jul
+ 2025 16:09:09 +0200
+Date: Wed, 2 Jul 2025 15:09:07 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+CC: Thomas Gleixner <tglx@linutronix.de>, Catalin Marinas
+	<catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, Will Deacon <will@kernel.org>, Arnd Bergmann
+	<arnd@arndb.de>, Sascha Bischoff <sascha.bischoff@arm.com>, Timothy Hayes
+	<timothy.hayes@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, "Liam R.
+ Howlett" <Liam.Howlett@oracle.com>, Peter Maydell <peter.maydell@linaro.org>,
+	Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v6 20/31] irqchip/gic-v5: Add GICv5 PPI support
+Message-ID: <20250702150907.000060d8@huawei.com>
+In-Reply-To: <aGUycEuLadcG+IfV@lpieralisi>
+References: <20250626-gicv5-host-v6-0-48e046af4642@kernel.org>
+	<20250626-gicv5-host-v6-20-48e046af4642@kernel.org>
+	<20250702124019.00006b01@huawei.com>
+	<aGUqEkascwGFD9x+@lpieralisi>
+	<20250702140022.00001c65@huawei.com>
+	<aGUycEuLadcG+IfV@lpieralisi>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB7804:EE_|PH7PR12MB7331:EE_
-X-MS-Office365-Filtering-Correlation-Id: d3773be9-4baa-4f80-3ec3-08ddb971d41c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YzhrbElVSmo1RmpkaHViRWk5dUtQbnRoOTFFRjNNYytUYWpjK2VDeGxtWlNQ?=
- =?utf-8?B?aWs5SHpMUHJTRThUN1ZYclJ0UWI3eGdQa0FYWTBISFE0UHRXZ3lUQkxJT0RV?=
- =?utf-8?B?VCtVenJQYXI3YzV1NHQ2UUVkc2g3d1ozSHBQT2k1cCtJMERPQitudCt5eTBD?=
- =?utf-8?B?N0JTcXg5VzA0Z0ZTVHdwWElpalc2RnU5N1lTYS9sd3pTWG80QjM4anJ6dk5F?=
- =?utf-8?B?c1k0Y3V3Z0FucW9qUXIwVnpITEVod0JJNHg0S3orYlkyZlVmbDFLaHBLWUYr?=
- =?utf-8?B?RmdFWWZPQXY5RkhoU3hTcGF2dUoxTnVOYXo0T2ttYWx5OGsrQ05BdEV4cnlh?=
- =?utf-8?B?OVRWcXM1S3ljM25ldnFXUHdYWlVQSng5MWdSSThhZTI2NXVjaDVnMFZBZUh1?=
- =?utf-8?B?MnhRMk1RQTliUGJkUVlrZ0NXQU4xZUUxQWZvMmJmR0Mxc3lyQTYrWDU5V0ZJ?=
- =?utf-8?B?UHdUVVZCd005NkNDdTlQRzgzWjBVMEY3OHExVFJMYmgrUGlFbm1taGtZRU9L?=
- =?utf-8?B?U3NMMUFpam1wVk1vTDZqTVF0R1FoZ1NPVUdhL2RuRWtReG15MlZNTHBYajNn?=
- =?utf-8?B?NmNIUytqWkZ0ZUplTUExN0IzZGxPelpPRU9yV0k4YlR0aWVwcFdRSnY4YWpn?=
- =?utf-8?B?TlIzMVBTWFRLSWxmQ0dsUFVGanQ4MmxTVEZkRnk0bUV5UjIwMFFBTVVHNzR1?=
- =?utf-8?B?WG9yMWtEOEpEcld4T2xqSFN0R0VPOU1ydjR2REV1Wlo0MXR6c3o2RFNuVlRy?=
- =?utf-8?B?T1pPdjlQaFFPNmpjYzErMCthcysrdjk0Mld0SHAwZnoxRDRhMXdMQzVDN3l0?=
- =?utf-8?B?WGlYOTRLU3pTVzdvbVdvbExkK3poaWduN1lZNVNuNjZwSC9TR0JSdVBhQito?=
- =?utf-8?B?VFo2UHU0N0NCQ2VQWGl3Zm44cDVoZVJKc09pYWdEZzlpQnNHdlY2Y2JJaVB3?=
- =?utf-8?B?dlJLL01wb1J5cys3V2VIK0lPUEVqYjYvVGo0d0IrNzBZanJaV0tnaVRENVF3?=
- =?utf-8?B?aDc3UkxNdnZTTjFqbGNtdkx0NzlxekEyc1h0d05lOEU4Rkh2QzhHYVcrdnpR?=
- =?utf-8?B?RVJ4UFpLRjZtNGlnOU1OcjY3UGlmZzFSVW5EWXljUWJWeWgweEh4eUl1R0FD?=
- =?utf-8?B?NU5BaWZ5bzE5OThKQSs4RlljNTlJQWpURFFpS2ZFNEdtVmI5UkQrZGVlYURi?=
- =?utf-8?B?L0orMjVCT1NKRlVWcVNFNWtTRmRnQStENmpqRi9QQWkvZlNnVFU2RmN0MCtw?=
- =?utf-8?B?QThQUHR2b3hkVDZIZk8wa3RYTlN5a0diK0NZT1dNTGJVWnc1WTloZXVvVnhB?=
- =?utf-8?B?ZXVGVmw4M1MyclRINmRzTTdIUXNKY01IN3ErMnVBVE9STFRYd0xSNS9QTnlk?=
- =?utf-8?B?eFJFalM2cXBCcDZMa2M5VnZIOVNIV2hqd1o5ejdSZ09VVFg5UWFWelZJKzM5?=
- =?utf-8?B?QUMyV0NZaHlJSFFNUjZhaXcwMWN0VnVVYUZ1WmRBTnFjdE1Ya1ZsSGNxSXRE?=
- =?utf-8?B?T3hsL3pGSHZQN2IyYjcxVlRQQjdKUzhnaURDV29COGtMK1Z2ajJxcGNFOVNE?=
- =?utf-8?B?ODRrTXloMU52eitKaCthc0ZWeFJxRFIxK1NiRWhEdzNPUlJTR1ArQlp1bWZP?=
- =?utf-8?B?Zk45cGdFVnArUFNSMUIzZ1h4emw1ZWpKTWxOdFpqd3dFeDNBWHVXZFNpYll4?=
- =?utf-8?B?OWhGNmZhU0xINVNGVjRGdWRpWXFxNVVIWmJxZU9qV1p0QjliaDN4Y292VXlv?=
- =?utf-8?B?WG1ndGV2UmI1WXJQdlFwYXBoUmpZMWllcUV6cmYyOWk0UlF3Nzkxa2pVclM2?=
- =?utf-8?B?Zmd0WUNMbi84YU9ZUXd5aWpBV2htOTZrb0RidEgzOFVZMXBFb1JObHFuTHJr?=
- =?utf-8?Q?nu1eY2LOTt3Fh?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7804.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(13003099007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aHEvOGFCME1XSHlRSVlzMFRQQjFnbG5XUGYzUUIrSU9HZEVZRGF2OWFrZERt?=
- =?utf-8?B?SnZqQnZibHVIaThiZG1tNzhFUjBhS0hxNkNjVS9GSHdwSEFPYkMxeDdEUHF5?=
- =?utf-8?B?Wlp3cEZnZWJTS0RWVDF0bmhxczFVRkJ1RitPVXRrR0YzZnduNEVCeGtlNnJw?=
- =?utf-8?B?M3Eyai9vMDNtWitTMDMwdkVMazdEa2R0U1JNNzN2UDhnamdDZUxSYm42ZGZL?=
- =?utf-8?B?NU0xbVNjd1ZFUHJvSlRtTWJ5cFNnVm9SbjB6ZENQcEtwajBWYlExdm9kWWxB?=
- =?utf-8?B?UThpTkVxQjd3dmpMZ3BqWG5hcVYzNjY4ZjVLZURBOVgxZW1tZXIrYmE0TmlY?=
- =?utf-8?B?QnRUY1ZGekVPK0Nha0pZWnhVbG11M1JvTDFyVkZYRTNDTGFNdmIzZjZOQVhU?=
- =?utf-8?B?T2ovZHBqamJsVGlpaDhHQmtOdFhZUnp2RXF0bjlrY1R1Umtoc09idTVIUEJY?=
- =?utf-8?B?MkF5SzV1OXV2dmpaRW1yUmQ0OGdkR003cjJqcjlIM050d2ptMHBEK055bG0w?=
- =?utf-8?B?TW82UGg3cnYyLzJnOTF6K0QyeGFXWjZ5eSsvdlIzY1FhRFpWVkxBcitoakNi?=
- =?utf-8?B?djdaZDB1ZGkySmN3dWxEdzVGenpiVjZaOHcreFU3RWdFMWhPbVhHK3RwNXBK?=
- =?utf-8?B?czRzaWFCNTJxMzB6bkpuakJBQU9JQnBsNkwyeUxRUWNxeW5TV2kxZlhoRmdC?=
- =?utf-8?B?eE5KRVNzemxsZU9Mc3JqWFpGZGxUYkxjVG5IKytGRGlMS1hZR0JoZGlDdVBn?=
- =?utf-8?B?L0ZXcVNSZkZYMDRyMHJ4YU1TYjA2TnBYVTJFcFFCU1JmZnlOSWp0OC9ST094?=
- =?utf-8?B?b2IvaXhqdmY1TTMyWTBwejYrSUt3Q1BCTnZVY0h4eC9mRGd2QlNWSk9jVU1G?=
- =?utf-8?B?dVlqRmVYZEtDS0UxRTR1c2ZDQzQ1a2g5dnExTGVNUVlwdWZOY0R1K28xWUdL?=
- =?utf-8?B?V2QzWkRrcFp0UlFLZ2dXQW1ZZ3FNYW5lcGpWeU0xVUNveUVCMWpGODhibkJ1?=
- =?utf-8?B?U1k2SldxVjR5VGtUREw4QTJVaWRTWVIxMUx6SGFMSnJkS09VaHBJdmJUbHda?=
- =?utf-8?B?OTRRNlJueFVSdFFPUTA5M0Z5YktId0U3Q21lR3cyaHV2KzIrQk1tOWY3ZVFo?=
- =?utf-8?B?Y0l5OUlESWhwT2tUQnp1dDZrQmxzUHBEYjJjZ2dKaWRHMU9TVjczV21nS1dK?=
- =?utf-8?B?Z3dQb1hTZ3daMUJ1M091ZUpMaGlhRS9FUllFVDA4MTBlbk1GeHU5T2VxOW1p?=
- =?utf-8?B?S3ZWQ1BVWU11emd6Z3ZqVk5UN2ZoWkVCU0hVajludmlZbHFaKzlod3NOUDEx?=
- =?utf-8?B?ZmE5U1pmNE5aSTM3bXdnL1Z1ZjczVmExVHBSUEtjM2pqYUh6MmhPMXRnVHYy?=
- =?utf-8?B?QS9XdUVEVWFrQXR6ZFM3cG5wZmdKZWxSZTRGTTJseWFaYjNXL1h4SFQ4aVFS?=
- =?utf-8?B?Njk2TmREM29wWUxBTHZONW1aSWVXQi9nR1gvbU1mRFVxeWNFck96cGFjZDlq?=
- =?utf-8?B?MDM0Q1JTRHl6aTE1QjNZVktHM1JwWWN1eUxJSHRBM2NyOW9mSDNqc2krMGNq?=
- =?utf-8?B?MmZSUFJ3bWNSZUpseGlzRnBNdWVod283dmZnZm9MU2FZaWtNZCtkS0JndkNN?=
- =?utf-8?B?WitXc1VZQUlyT3d3YllEZm8ybVF0R3M0UzVSbHR4VzZXejFsaTVGSlBJczNH?=
- =?utf-8?B?NW51a2NIRmwrQjdRWGtZS3lick1XUGtrd21IQXRRMUNJakNoOXdlK2VMWUxQ?=
- =?utf-8?B?R0Vmbnp0K29GeDJDVjE0bzdiRDdQcHh4MFJOSHJvRjlweVNyL29XeG5xRkJW?=
- =?utf-8?B?c0t4REhMYzF1dGxkbDE3SEFGVmNZWTVCdytFOGpKUUhjWkd5a0pqVGVZS2sx?=
- =?utf-8?B?SmVFYmNzcWR0ZlFsRHMxendBWFVHNE1yRVJsblFyNmhKWWZWWXZqYUE4UzFt?=
- =?utf-8?B?ZVJTS0lCYzRHK1pSWU4yUSs2a3cxQWJmc3hjc3M0SytmZXc5Rk1qYjl4NE1r?=
- =?utf-8?B?Y3NQL1BYRXpYT2hiUGtLM2VZUWhHV3IwZFd2OHJKd3Bqd3lwWjFlejBqVzhG?=
- =?utf-8?B?blQ0VGM0cFVsa1NYUzE5ZU1iSFhNQzFldjJrNTh1YU1kN1dNUzJtaG5pcUln?=
- =?utf-8?Q?ajHDFv7QUyZ+pGKQil8d1c7te?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d3773be9-4baa-4f80-3ec3-08ddb971d41c
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7804.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 14:07:50.3332
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YRGuJQjx4uWBH2+IGTiFkxrsb8IkoaW1ZkHOAcQRl6Zlc0KKw0JLD759ERZ6W2pq
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7331
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
+On Wed, 2 Jul 2025 15:21:52 +0200
+Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
 
-
-On 7/2/2025 7:24 PM, Alex Deucher wrote:
-> On Wed, Jul 2, 2025 at 3:24 AM Sam <guoqzhan@amd.com> wrote:
->>
->>
->> On 2025/7/2 00:07, Alex Deucher wrote:
->>> On Tue, Jul 1, 2025 at 4:32 AM Christian König <christian.koenig@amd.com> wrote:
->>>> On 01.07.25 10:03, Zhang, GuoQing (Sam) wrote:
->>>>> thaw() is called before writing the hiberation image to swap disk. See
->>>>> the doc here.
->>>>> https://github.com/torvalds/linux/blob/v6.14/Documentation/driver-api/pm/devices.rst?plain=1#L552 <https://github.com/torvalds/linux/blob/v6.14/Documentation/driver-api/pm/devices.rst?plain=1#L552>
->>>>>
->>>>> And amdgpu implemented thaw() callback by calling amdgpu_device_resume().
->>>>> https://github.com/torvalds/linux/blob/v6.14/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c#L2572 <https://github.com/torvalds/linux/blob/v6.14/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c#L2572>
->>>>>
->>>>> This patch is skip amdgpu_amdkfd_resume_process() call in thaw() during
->>>>> hibernation. it is not skipped in restore() during resume from
->>>>> hibernation when system boot again.
->>>>>
->>>>>
->>>>> I just found the following kernel doc. Thaw() is intended to resume the
->>>>> storage device for saving the hibernation image.
->>>> Ah, that makes much more sense.
->>>>
->>>>> Our GPU is not involved
->>>>> in it, it is not necessary to resume our GPU in thaw().
->>>>> https://github.com/torvalds/linux/blob/v6.14/Documentation/power/pci.rst?plain=1#L588 <https://github.com/torvalds/linux/blob/v6.14/Documentation/power/pci.rst?plain=1#L588>
->>>>>
->>>>> So another implementation is to remove the amdgpu_device_resume() call
->>>>> in amdgpu_pmops_thaw(), and skip amdgpu_device_ip_suspend() call in
->>>>> amdgpu_pci_shutdown()for hibernation.
->>>>> Initial tests show it's working fine for hibernation successful case.
->>>>> Should I switch to this implementation?
->>>> No idea. Alex and the KFD guys need to take a look at that.
->>>>
->>>>> But thaw() is also called to restore the GPU when hibernation is aborted
->>>>> due to some error in hibernation image creation stage. In this case,
->>>>> amdgpu_device_resume() is needed in thaw().
->>>>>
->>>>> So I need a method to check if hibernation is aborted or not to
->>>>> conditionally skip amdgpu_device_resume() in thaw(). Currently I don't
->>>>> know how to do this.
->>>> Yeah that approach here looks fishy to me, but I don't know how to properly fix it either.
->>>>
->>>> @Alex any idea?
->>> Yeah, I'm not sure how to handle that.  I don't see a way to avoid
->>> having all of the callbacks.  We could ideally skip some of the steps.
->>> Maybe we could optimize the freeze and thaw routines if we had some
->>> hint from the pm core about why we were getting called.  E.g., thaw
->>> after a failed hibernation restore.
->>>
->>> Alex
->>
->>
->> I just found pm_transition variable can be used to check if hibernation
->> is cancelled (PM_EVENT_RECOVER) or not(PM_EVENT_THAW) in thaw(). I just
->> need to export this variable in kernel.
->> https://github.com/torvalds/linux/blob/master/drivers/base/power/main.c#L64
->>
->> Provided pm_transition is available, should we skip
->> amdgpu_amdkfd_resume_process() only, or skip amdgpu_device_resume()
->> completely?
+> On Wed, Jul 02, 2025 at 02:00:22PM +0100, Jonathan Cameron wrote:
+> > On Wed, 2 Jul 2025 14:46:10 +0200
+> > Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+> >   
+> > > On Wed, Jul 02, 2025 at 12:40:19PM +0100, Jonathan Cameron wrote:  
+> > > > On Thu, 26 Jun 2025 12:26:11 +0200
+> > > > Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+> > > >     
+> > > > > The GICv5 CPU interface implements support for PE-Private Peripheral
+> > > > > Interrupts (PPI), that are handled (enabled/prioritized/delivered)
+> > > > > entirely within the CPU interface hardware.    
+> > > > 
+> > > > I can't remember where I got to last time so if I repeat stuff that
+> > > > you already responded to, feel free to just ignore me this time ;)
+> > > > 
+> > > > All superficial stuff. Feel free to completely ignore if you like.    
+> > > 
+> > > We are at v6.16-rc4, series has been on the lists for 3 months, it has
+> > > been reviewed and we would like to get it into v6.17 if possible and
+> > > deemed reasonable, I am asking you folks please, what should I do ?
+> > > 
+> > > I can send a v7 with the changes requested below (no bug fixes there)
+> > > - it is fine by me - but I need to know please asap if we have a
+> > > plan to get this upstream this cycle.  
+> > 
+> > I'm absolutely fine with leaving these be.  The mask stuff I would like
+> > to clean up as it applies quite widely in the series but that
+> > can be a follow up as no bugs (so far!).   
 > 
-> Hmmm.  Still not sure how best to handle this.  For entering
-> hibernation, all we really need is freeze().  Once we are done with
-> that we don't need thaw() or poweroff() for hibernation as we've
-> already suspended in freeze() so there is nothing else to do.  For
-> exiting hibernation, we need freeze() to suspend and then either
-> thaw() (if the hibernation image is bad) or restore() (if the
-> hibernation image is good) to resume.
+> I am certain that at a given state in the development I used the
+> FIELD_PREP() on the hwirq_id and then was asked to remove it because
+> it does not serve any purpose - this, for the records.
+
+Fair enough.  Though on that front the code is inconsistent as
+there are places where it is masked.  Anyhow, no problem either
+way. The bit of feedback I gave on patch 22 might be more useful
+to address (comments not matching code).
+
+
+Jonathan
+
 > 
-
-If pm_transition is available, we can keep thaw() as we have now and do
-resume only if pm_transition =  PM_EVENT_RECOVER. shutdown() may check
-in_s4 and do nothing.
-
-Thanks,
-Lijo
-
-
-> Alex
+> Thanks,
+> Lorenzo
 > 
->>
->> Regards
->> Sam
->>
->>
->>>
->>>> Regards,
->>>> Christian.
->>>>
->>>>>
->>>>> Regards
->>>>> Sam
->>>>>
->>>>>
->>>>> On 2025/6/30 19:58, Christian König wrote:
->>>>>> On 30.06.25 12:41, Samuel Zhang wrote:
->>>>>>> The hibernation successful workflow:
->>>>>>> - prepare: evict VRAM and swapout GTT BOs
->>>>>>> - freeze
->>>>>>> - create the hibernation image in system memory
->>>>>>> - thaw: swapin and restore BOs
->>>>>> Why should a thaw happen here in between?
->>>>>>
->>>>>>> - complete
->>>>>>> - write hibernation image to disk
->>>>>>> - amdgpu_pci_shutdown
->>>>>>> - goto S5, turn off the system.
->>>>>>>
->>>>>>> During prepare stage of hibernation, VRAM and GTT BOs will be swapout to
->>>>>>> shmem. Then in thaw stage, all BOs will be swapin and restored.
->>>>>> That's not correct. This is done by the application starting again and not during thaw.
->>>>>>
->>>>>>> On server with 192GB VRAM * 8 dGPUs and 1.7TB system memory,
->>>>>>> the swapin and restore BOs takes too long (50 minutes) and it is not
->>>>>>> necessary since the follow-up stages does not use GPU.
->>>>>>>
->>>>>>> This patch is to skip BOs restore during thaw to reduce the hibernation
->>>>>>> time.
->>>>>> As far as I can see that doesn't make sense. The KFD processes need to be resumed here and that can't be skipped.
->>>>>>
->>>>>> Regards,
->>>>>> Christian.
->>>>>>
->>>>>>> Signed-off-by: Samuel Zhang <guoqing.zhang@amd.com>
->>>>>>> ---
->>>>>>>    drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 2 +-
->>>>>>>    drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c    | 2 ++
->>>>>>>    2 files changed, 3 insertions(+), 1 deletion(-)
->>>>>>>
->>>>>>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
->>>>>>> index a8f4697deb1b..b550d07190a2 100644
->>>>>>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
->>>>>>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
->>>>>>> @@ -5328,7 +5328,7 @@ int amdgpu_device_resume(struct drm_device *dev, bool notify_clients)
->>>>>>>                amdgpu_virt_init_data_exchange(adev);
->>>>>>>                amdgpu_virt_release_full_gpu(adev, true);
->>>>>>>
->>>>>>> -            if (!adev->in_s0ix && !r && !adev->in_runpm)
->>>>>>> +            if (!adev->in_s0ix && !r && !adev->in_runpm && !adev->in_s4)
->>>>>>>                        r = amdgpu_amdkfd_resume_process(adev);
->>>>>>>        }
->>>>>>>
->>>>>>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
->>>>>>> index 571b70da4562..23b76e8ac2fd 100644
->>>>>>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
->>>>>>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
->>>>>>> @@ -2734,7 +2734,9 @@ static int amdgpu_pmops_poweroff(struct device *dev)
->>>>>>>    static int amdgpu_pmops_restore(struct device *dev)
->>>>>>>    {
->>>>>>>        struct drm_device *drm_dev = dev_get_drvdata(dev);
->>>>>>> +    struct amdgpu_device *adev = drm_to_adev(drm_dev);
->>>>>>>
->>>>>>> +    adev->in_s4 = false;
->>>>>>>        return amdgpu_device_resume(drm_dev, true);
->>>>>>>    }
->>>>>>>
+> > As Marc said, these are in a good state.
+> > 
+> > Jonathan
+> >   
+> > > 
+> > > Thanks,
+> > > Lorenzo
+> > >   
+> > > > > diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
+> > > > > new file mode 100644
+> > > > > index 000000000000..a08daa562d21
+> > > > > --- /dev/null
+> > > > > +++ b/drivers/irqchip/irq-gic-v5.c
+> > > > > @@ -0,0 +1,461 @@
+> > > > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > > > +/*
+> > > > > + * Copyright (C) 2024-2025 ARM Limited, All Rights Reserved.
+> > > > > + */
+> > > > > +
+> > > > > +#define pr_fmt(fmt)	"GICv5: " fmt
+> > > > > +
+> > > > > +#include <linux/irqdomain.h>
+> > > > > +#include <linux/wordpart.h>
+> > > > > +
+> > > > > +#include <linux/irqchip.h>
+> > > > > +#include <linux/irqchip/arm-gic-v5.h>
+> > > > > +
+> > > > > +#include <asm/cpufeature.h>
+> > > > > +#include <asm/exception.h>
+> > > > > +
+> > > > > +static u8 pri_bits __ro_after_init = 5;
+> > > > > +
+> > > > > +#define GICV5_IRQ_PRI_MASK	0x1f
+> > > > > +#define GICV5_IRQ_PRI_MI	(GICV5_IRQ_PRI_MASK & GENMASK(4, 5 - pri_bits))
+> > > > > +
+> > > > > +#define PPI_NR	128
+> > > > > +
+> > > > > +static bool gicv5_cpuif_has_gcie(void)
+> > > > > +{
+> > > > > +	return this_cpu_has_cap(ARM64_HAS_GICV5_CPUIF);
+> > > > > +}
+> > > > > +
+> > > > > +struct gicv5_chip_data {
+> > > > > +	struct fwnode_handle	*fwnode;
+> > > > > +	struct irq_domain	*ppi_domain;
+> > > > > +};
+> > > > > +
+> > > > > +static struct gicv5_chip_data gicv5_global_data __read_mostly;    
+> > > >     
+> > > > > +static void gicv5_hwirq_eoi(u32 hwirq_id, u8 hwirq_type)
+> > > > > +{
+> > > > > +	u64 cddi = hwirq_id | FIELD_PREP(GICV5_GIC_CDDI_TYPE_MASK, hwirq_type);    
+> > > > 
+> > > > Slight preference for not needing to care where hwirq_id goes in CDDI or how big
+> > > > it is (other than when I checked the header defines).
+> > > >  
+> > > > 	u64 cddi = FIELD_PREP(GICV5_GIC_CDDI_ID_MASK, hwirq_id) |
+> > > >         	   FIELD_PREP(GICV5_GIC_CDDI_TYPE_MASK, hwirq_type);
+> > > > 
+> > > >     
+> > > > > +
+> > > > > +	gic_insn(cddi, CDDI);
+> > > > > +
+> > > > > +	gic_insn(0, CDEOI);
+> > > > > +}    
+> > > >     
+> > > > > +static int gicv5_ppi_irq_get_irqchip_state(struct irq_data *d,
+> > > > > +					   enum irqchip_irq_state which,
+> > > > > +					   bool *state)
+> > > > > +{
+> > > > > +	u64 hwirq_id_bit = BIT_ULL(d->hwirq % 64);
+> > > > > +
+> > > > > +	switch (which) {
+> > > > > +	case IRQCHIP_STATE_PENDING:
+> > > > > +		*state = !!(read_ppi_sysreg_s(d->hwirq, PPI_PENDING) & hwirq_id_bit);    
+> > > > 
+> > > > Technically don't need the !! but if you really like it I don't mind that much.
+> > > >     
+> > > > > +		return 0;
+> > > > > +	case IRQCHIP_STATE_ACTIVE:
+> > > > > +		*state = !!(read_ppi_sysreg_s(d->hwirq, PPI_ACTIVE) & hwirq_id_bit);
+> > > > > +		return 0;
+> > > > > +	default:
+> > > > > +		pr_debug("Unexpected PPI irqchip state\n");
+> > > > > +		return -EINVAL;
+> > > > > +	}
+> > > > > +}    
+> > > > 
+> > > >     
+> > > > > +static int gicv5_irq_ppi_domain_translate(struct irq_domain *d,
+> > > > > +					  struct irq_fwspec *fwspec,
+> > > > > +					  irq_hw_number_t *hwirq,
+> > > > > +					  unsigned int *type)
+> > > > > +{
+> > > > > +	if (!is_of_node(fwspec->fwnode))
+> > > > > +		return -EINVAL;
+> > > > > +
+> > > > > +	if (fwspec->param_count < 3)    
+> > > > 
+> > > > I don't care that much, but could relax this seeing as fwspec->param[2]
+> > > > isn't used anyway? Maybe a tiny comment on why it matters?
+> > > >     
+> > > > > +		return -EINVAL;
+> > > > > +
+> > > > > +	if (fwspec->param[0] != GICV5_HWIRQ_TYPE_PPI)
+> > > > > +		return -EINVAL;
+> > > > > +
+> > > > > +	*hwirq = fwspec->param[1];
+> > > > > +
+> > > > > +	/*
+> > > > > +	 * Handling mode is hardcoded for PPIs, set the type using
+> > > > > +	 * HW reported value.
+> > > > > +	 */
+> > > > > +	*type = gicv5_ppi_irq_is_level(*hwirq) ? IRQ_TYPE_LEVEL_LOW : IRQ_TYPE_EDGE_RISING;
+> > > > > +
+> > > > > +	return 0;    
+> > > > 
+> > > >     
+> > > > > +static int __init gicv5_of_init(struct device_node *node, struct device_node *parent)
+> > > > > +{
+> > > > > +	int ret = gicv5_init_domains(of_fwnode_handle(node));
+> > > > > +	if (ret)
+> > > > > +		return ret;
+> > > > > +
+> > > > > +	gicv5_set_cpuif_pribits();
+> > > > > +
+> > > > > +	ret = gicv5_starting_cpu(smp_processor_id());
+> > > > > +	if (ret)
+> > > > > +		goto out_dom;
+> > > > > +
+> > > > > +	ret = set_handle_irq(gicv5_handle_irq);
+> > > > > +	if (ret)
+> > > > > +		goto out_int;
+> > > > > +
+> > > > > +	return 0;
+> > > > > +
+> > > > > +out_int:
+> > > > > +	gicv5_cpu_disable_interrupts();
+> > > > > +out_dom:
+> > > > > +	gicv5_free_domains();    
+> > > > 
+> > > > Naming is always tricky but I'd not really expect gicv5_free_domains() as the
+> > > > pair of gicv5_init_domains() (which is doing creation rather than just initializing).
+> > > > 
+> > > > Ah well, names are never prefect and I don't really mind.
+> > > >     
+> > > > > +
+> > > > > +	return ret;
+> > > > > +}
+> > > > > +IRQCHIP_DECLARE(gic_v5, "arm,gic-v5", gicv5_of_init);    
+> > > >     
+> > >   
+> >   
 
