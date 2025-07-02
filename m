@@ -1,136 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F7DD2E498A;
-	Wed,  2 Jul 2025 18:22:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3EE62E4993;
+	Wed,  2 Jul 2025 18:23:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751480579; cv=none; b=Nw6xzuHazS9ddiLUUCL/2AFKKUfaSKa+3j4oC4y+XWWJaD06WcA2KUH2vXn7MLQe3RwwnlgmMYZk87oWpli26+DHaWvE6LN00Toe5d6+ILaBMDOp/boh0jh8tDGdlmNf2dWd5EKcdf3SDp5Nq5nFIP6w7FXpYIWeT2SpnC23hf0=
+	t=1751480618; cv=none; b=FvaWYaH7o2TkVv9RcaEq6tHjt+XE5ixUYCf3qkJJ0lPErm/Como3M8ahxNXC6Fnkxj8nBjRF7FWZEhLrsgWODbAXTibC5RagKXHT7zmZfQ4iWkmIoynfk5wD4MHd4/+FfHJfCkL/0UMwY0ZgB4fW+Rh+rOT3rowBmG5DAQgnhK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751480579; c=relaxed/simple;
-	bh=YP2MPlGskJVnWUdfQs7e4oSd7UUpWeF7Jwjc0h89YJ0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=i3hEf/yc8PjFyGwJuZPrSWKksLNQ9K1cgviiLRU4kymD9Wd4we/GkUWgmQp+t1aMx3Ed8UmGWvR+86gtQ8eJ8dfSHZpcLeUwag5NykG7kAaTu4wB5NK3PFAln7vyNFvhGMYIYcME4ikkRsTLSvGbdsOHXTiMVhzFw2Sw8C0E1TI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y8tDE0kA; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y8tDE0kA"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AF3A1C4CEE7;
-	Wed,  2 Jul 2025 18:22:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751480578;
-	bh=YP2MPlGskJVnWUdfQs7e4oSd7UUpWeF7Jwjc0h89YJ0=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=Y8tDE0kAH4/TrIa93i3aDgxU8CLD/LJ9ixes9THs8dcrY6RHG5vzkHtvnMFCKRcB7
-	 rpZhd8OcC7Lux0V4c0DmSo5CWr3fiBgWmD3NtXghL49BrXNKs4bukEcwJOH7S2RgcZ
-	 QXQktT4kSKhZm0MUhnMjfjLdnXI0cX2qpxnJm9ai3tqhn8qaKenT4fKg16ojYAGR+W
-	 imM4SRgtle8Eb/y7JD0p0hLHgaDpphX0Vnh3kSlJeoW6OwS4O3v7+Oj3q5ZBap2CDh
-	 FMvz+CLtfeKYyOcvIwPL0AhrcfbIgl0Bai8t0P7kdNCADJI/DoBJNmqbTvJfbMO4SY
-	 SlKa8pbX5k80Q==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D957C8303C;
-	Wed,  2 Jul 2025 18:22:58 +0000 (UTC)
-From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
-Date: Wed, 02 Jul 2025 13:22:51 -0500
-Subject: [PATCH v4] gpio: palmas: Allow building as a module
+	s=arc-20240116; t=1751480618; c=relaxed/simple;
+	bh=3lV19QM6EHNa7B/8xG5FF9Kq6Yb2/cvg45CtinwXUkg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ntAfrmM6eZK9fzmPdrWz1v7WwdLLPa4CDlnH22pyyengaZSBsss0zWzr3jjoKwZMTuKjxqy+Q2fgJi1lseefW+8n5iqvjgPJ0gMbhXZlgFy27nTpA/43+KOWO95hCM/uFG6fnONCMnmwm6wxTBqVFRNkHEf0bRqFnA8HNRBuR/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4e9c689d538so1194777137.0;
+        Wed, 02 Jul 2025 11:23:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751480615; x=1752085415;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dAXOJIQnkDn1DxS/zo7Sy1BwwDpVI6t8KYkWgveCytQ=;
+        b=vHk20WpAFNYNn9uiunhPF0ajutqtY93xEFtxGtURgMm29gaJDmF9mbhbcgQV0lOiXD
+         jVYUNsqZuYYQhsuAZ0CcEEXuvZVbKORddo2cRbuJrW828gtP7ExojqULxjn874ahaU9s
+         8wiBJTdSbYaB3rCq23dX8b7TiaxBQ/nZpyAbZwhC2RS7VTErdEm1T81WHkAtTgzVMKNQ
+         6es5vXSjVnIN5Tpm/ehyU/AdiVrXmEv5MkoKJWXlWKCLSmaCqayaODsqHogtJHXjoaBu
+         Y19Lc2U4nCWlu/gc4Nsf5ZD8zXEcjA2Vhjq8NSwuXHc8quudNy4B8cuScgZfOlQ4GVAf
+         w01w==
+X-Forwarded-Encrypted: i=1; AJvYcCVxYR//8MCN1rkXAjcwhY0NQDIGj6kZk1/3xlZnzKDQ6WwYOZz3UEz3+yYDnFqBtL3IDbJM2euu5aoK+opq@vger.kernel.org, AJvYcCW2Ep503IsBIz2HD9jpkOp0RdxWn42k+v7EUMZ4GQ4BKpduccpQfVP6mVpgIK2Dc95ZweQ/YNc/DU69ZBDKgwwsHWc=@vger.kernel.org, AJvYcCX6e7J3r4MfZoSW1tUavyqKYoSYJxq/vsVZACgXQdctTr7cCizVpmCPYHKQtmi7YzXHNFaGc1W9d+b4@vger.kernel.org, AJvYcCXH5DI32vavA0WeK3tAHa6KscqRqEAY3Vr4J9QHhQnjaJSqR0VkmJf8sM35V4/ZtPmuSOS0wcUkN8KZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YyA6btnJqrMmRTQ0q85eytGqmT5uEKD+QHMKtZJgqgGdRjd18zE
+	Hfn6Qy4FRweEOTiUMiSlT3EcX38vorN+76yYqVhvdwWST0RuqRxPOcQJcQi1Xo5L
+X-Gm-Gg: ASbGncu63rjGsVO7IQbSZL0+Y+P2Ofh7luNxNktcR8eb87SgJGvvVRFPXHrPZk6vviY
+	xiLbzz80+B6hvwos2rDxtxvnD6QQlyYh7GVXWtXuyz04id9gH1Zbkl3lNbaHqQYxfqSKo5rXZ+R
+	odKNvcdAmCvEY/Bgrjq7ct9TOdOK+1yItEnrcVMImu8dH4nule3dWrd09Jnbn23tV6PDvcj9hvz
+	vou5CnqS9Vy/nUDPTjFIrZScwV7GGNTB48GV88H6RHhJS5BelmqcfbL89+mBoO12lpw6VxmfWVf
+	R7F5XDXZEj3rtE5vycqmPJKkt+avdJTymuVBnJ7c0U6E0VLJIx7DQs4OW3kk1juAhxoSnGnrpcX
+	qhKqX02YeveBI+wPEdO8e86aY
+X-Google-Smtp-Source: AGHT+IE+GUQplyEF11LWIwRxh+f0YOm/73WUJ15DAP1QJ0kUPKytuBEKEtOETco8CPezM3I8g92hCA==
+X-Received: by 2002:a05:6102:5e8b:b0:4bc:82f:b4e0 with SMTP id ada2fe7eead31-4f1612992e2mr2885554137.22.1751480613792;
+        Wed, 02 Jul 2025 11:23:33 -0700 (PDT)
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4ee4c7e774csm1963957137.8.2025.07.02.11.23.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Jul 2025 11:23:33 -0700 (PDT)
+Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-4e7f4adaedaso1304367137.3;
+        Wed, 02 Jul 2025 11:23:33 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUOP0H8c94kRO5zBgaRJBtuB6PezoLGQGm79RKQ2CTVTcZeKC7xf56ppZwIC3rC/EP1nj4bNatWd1m+Z2S8rpfqw9Y=@vger.kernel.org, AJvYcCXabTBwWVKz9TFtLPNcf+Yha5J2W9Q0oZIIWOz945bK2beRns4JI6eiv/fBD7wjT26U5VLRkMpWAjcT@vger.kernel.org, AJvYcCXivNuVstECy2nGCoccGfqA7VhIVNpYGdwE5pl2WmfIsjsaH0L7ox2uiYLGMDkoNtD/1Sb+DXRnmT6PJNUz@vger.kernel.org, AJvYcCXwW+jKzq82zu9IKPC5Sv4D7sfgQKGePJ0iSCjAARUvT+rBJEdPebHQDuan7JKAIqJSMe/NyvhaoNsB@vger.kernel.org
+X-Received: by 2002:a05:6102:8017:b0:4e5:ae05:fff9 with SMTP id
+ ada2fe7eead31-4f161055764mr2580625137.8.1751480612895; Wed, 02 Jul 2025
+ 11:23:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250702-gpio-palmas-gpio-v4-1-26ba48252f27@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAPp4ZWgC/4XPywrCMBAF0F+RrI3k2RhX/oe4SPNoA21TEglK6
- b+bVkRRwd3cgXuGmUCy0dsEDpsJRJt98mEogW03QLdqaCz0pmRAEOGIEwSb0Qc4qq5X6TErKZ1
- GrDJaOFBqY7TOX1fydC659ekS4m29kPGyfWLkG8sYYmiqGisqRGUdPza98t1Ohx4sWCb/AFKAv
- XQEScOUZPIToC9AoF8ALYAt/1BqUa05ewfmeb4D6FVqUTIBAAA=
-X-Change-ID: 20250520-gpio-palmas-gpio-a99fc046dc7f
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Aaron Kling <webgeek1234@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751480578; l=2399;
- i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
- bh=ivC7eqcoxMdy7HJHAY3izwyHHqtk1ICVncUYA+Giqr0=;
- b=7/hqoROkVeC0zMqs0IU+Xu0Uq8nlXGOZLpZ73PiK44wpaf8kKhKH4HADhq0fUZUSvVPkPH3UU
- iP6hE9FDpkUBIM0WpDBtjICRNpeop1Tif5EApuZsa8wnr/WXODVlDwD
-X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
- pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
-X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
- auth_id=342
-X-Original-From: Aaron Kling <webgeek1234@gmail.com>
-Reply-To: webgeek1234@gmail.com
+References: <20250625141705.151383-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250625141705.151383-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdXbr5Rb7SNzYTQz+rBNuRrLCC4mf+XauTFA8FArFZzfNQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdXbr5Rb7SNzYTQz+rBNuRrLCC4mf+XauTFA8FArFZzfNQ@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 2 Jul 2025 20:23:20 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdU3H0OqabLneTXeuhN5zUFx2-tq9OZjLbhR3OgLJ22Cdw@mail.gmail.com>
+X-Gm-Features: Ac12FXxaGVaatnm---TqkHJJZtbKjSqzEKuKgGIudRuS-IKJfMIFZdR6GUTmBJI
+Message-ID: <CAMuHMdU3H0OqabLneTXeuhN5zUFx2-tq9OZjLbhR3OgLJ22Cdw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: clock: renesas,r9a09g077/87: Add
+ SDHI_CLKHS clock ID
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Aaron Kling <webgeek1234@gmail.com>
+On Wed, 2 Jul 2025 at 15:37, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Wed, 25 Jun 2025 at 16:17, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Add the SDHI high-speed clock (SDHI_CLKHS) definition for the Renesas
+> > RZ/T2H (R9A09G077) and RZ/N2H (R9A09G087) SoCs. SDHI_CLKHS is used as
+> > a core clock for the SDHI IP and operates at 800MHz.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Thanks for your patch!
+>
+> >  include/dt-bindings/clock/renesas,r9a09g077-cpg-mssr.h | 1 +
+> >  include/dt-bindings/clock/renesas,r9a09g087-cpg-mssr.h | 1 +
+>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> i.e. will split, and queue in renesas-r9a09g077-dt-binding-defs resp.
+> renesas-r9a09g087-dt-binding-defs, to be shared by renesas-clk and
+> renesas-devel.
 
-The driver works fine as a module, so allowing building as such. This
-adds an exit handler to support module unload.
+Looks like I can do without the split, as renesas-r9a09g087-dt-binding-defs
+is based on renesas-r9a09g077-dt-binding-defs.
 
-Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
----
-Changes in v4:
-- Rebased on next-20250702
-- Link to v3: https://lore.kernel.org/r/20250702-gpio-palmas-gpio-v3-1-e04633e0bc54@gmail.com
+Gr{oetje,eeting}s,
 
-Changes in v3:
-- Drop use of module init macro and add exit handler
-- Link to v2: https://lore.kernel.org/r/20250522-gpio-palmas-gpio-v2-1-89f209d4a949@gmail.com
+                        Geert
 
-Changes in v2:
-- Drop module alias and add module device table
-- Link to v1: https://lore.kernel.org/r/20250522-gpio-palmas-gpio-v1-1-d6b1a3776ef5@gmail.com
----
- drivers/gpio/Kconfig       |  2 +-
- drivers/gpio/gpio-palmas.c | 11 +++++++++++
- 2 files changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 44f922e10db2f8dcbdacf79ccd27b0fd9cd93564..dcea3c1bb31c81cafb88a66a4c25ed28090612c0 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1501,7 +1501,7 @@ config GPIO_MAX77759
- 	  called gpio-max77759.
- 
- config GPIO_PALMAS
--	bool "TI PALMAS series PMICs GPIO"
-+	tristate "TI PALMAS series PMICs GPIO"
- 	depends on MFD_PALMAS
- 	help
- 	  Select this option to enable GPIO driver for the TI PALMAS
-diff --git a/drivers/gpio/gpio-palmas.c b/drivers/gpio/gpio-palmas.c
-index a076daee00658a9e423a0d78f14ad48d61956d7a..9329d8ce8f59842cfe95f41b85c8e5ea6bf440b8 100644
---- a/drivers/gpio/gpio-palmas.c
-+++ b/drivers/gpio/gpio-palmas.c
-@@ -139,6 +139,7 @@ static const struct of_device_id of_palmas_gpio_match[] = {
- 	{ .compatible = "ti,tps80036-gpio", .data = &tps80036_dev_data,},
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, of_palmas_gpio_match);
- 
- static int palmas_gpio_probe(struct platform_device *pdev)
- {
-@@ -196,3 +197,13 @@ static int __init palmas_gpio_init(void)
- 	return platform_driver_register(&palmas_gpio_driver);
- }
- subsys_initcall(palmas_gpio_init);
-+
-+static void __exit palmas_gpio_exit(void)
-+{
-+	platform_driver_unregister(&palmas_gpio_driver);
-+}
-+module_exit(palmas_gpio_exit);
-+
-+MODULE_DESCRIPTION("TI PALMAS series GPIO driver");
-+MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
-+MODULE_LICENSE("GPL");
-
----
-base-commit: 50c8770a42faf8b1c7abe93e7c114337f580a97d
-change-id: 20250520-gpio-palmas-gpio-a99fc046dc7f
-
-Best regards,
 -- 
-Aaron Kling <webgeek1234@gmail.com>
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
