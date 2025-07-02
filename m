@@ -1,137 +1,135 @@
-Received: from mail.tnxip.de (mail.tnxip.de [49.12.77.104])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D9402BE651;
-	Wed,  2 Jul 2025 18:59:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.77.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E98602BE630;
+	Wed,  2 Jul 2025 19:00:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751482788; cv=none; b=qnyJnC3GPFCI3fZ3zPYwhRzGLBMaygt7hEvx3T9ab3hMhash+Ag67/9EFXh1X8JY6E9nK/2cEJTpnITGKU1Fr/ft98Tb/wQ29LLbypj5s8fJSno2Fgg67YwQMfUwU62K5sJyP7Onf8dbf3liRIWYGfE9s9SVN8Rg2pS0nkxSvB4=
+	t=1751482831; cv=none; b=Ec75Sd/dLuT54Go5gUU0YRME3vysH/iy/G5MsgopsdSbM9PQPpy7Gmlow6vgTDn/q1OQ6CAs6UotxfhWHkISnYKenMLWrBwZ3qlR54J54PAgYS+p1DdT7QbTiylBrEZOmb5A5Yl3dwZwSdukX7a0b5k/dWfYm4Fcq4uTwd2tnnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751482788; c=relaxed/simple;
-	bh=QHrXzmhcjq+tf7zFyEmmqMNmhAWNPWCstCoYDwuWjt4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cXQ4nqDK014vOIaA4u9ai0rhoHw+XAyK2Onk1DeVzYujocoU9fwB3OJglVPHJt+nptawRwpWIYSKLr+gmn+LR+EF7nmLFgOx4gxBzqJrfgGvzNa6sGKG4qNC9qSgnR4xQYm1wbeDWi0f9JGhY8X4diIbOOrw/vWJLYx0KP6ow28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=tnxip.de; spf=pass smtp.mailfrom=tnxip.de; dkim=pass (1024-bit key) header.d=tnxip.de header.i=@tnxip.de header.b=iE/jubqi; dkim=permerror (0-bit key) header.d=tnxip.de header.i=@tnxip.de header.b=fjDuO26c; dkim=pass (1024-bit key) header.d=tnxip.de header.i=@tnxip.de header.b=SW26/YE6; dkim=permerror (0-bit key) header.d=tnxip.de header.i=@tnxip.de header.b=b/DrPuw6; arc=none smtp.client-ip=49.12.77.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=tnxip.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tnxip.de
+	s=arc-20240116; t=1751482831; c=relaxed/simple;
+	bh=d8RdH4bygtc6dzbH1AbeiVyiXe9i4xNli8uyMLHR01g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=r6DIW8Zctz1eJVgB31u41XH/zpCveUbN10xWZgizpJgYs+6t/UoBlbBPnezh6YlL1mvBm8dztVHpurbr/7ZlpoZMiaiQTcJu17y/ut7ZaSEOIE8Zcn+9FDq/9VZrcmnM3EQRS4Qrnkl3u3S71IsFCWojBLnc9E1qf4wKgbQD43U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=clvk4KIC; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tnxip.de header.i=@tnxip.de header.b="iE/jubqi";
-	dkim=permerror (0-bit key) header.d=tnxip.de header.i=@tnxip.de header.b="fjDuO26c";
-	dkim=pass (1024-bit key) header.d=tnxip.de header.i=@tnxip.de header.b="SW26/YE6";
-	dkim=permerror (0-bit key) header.d=tnxip.de header.i=@tnxip.de header.b="b/DrPuw6"
-Received: from gw.tnxip.de (unknown [IPv6:fdc7:1cc3:ec03:1:41c4:f6bf:9765:d776])
-	by mail.tnxip.de (Postfix) with ESMTPS id D18DD1F508;
-	Wed,  2 Jul 2025 20:49:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tnxip.de; s=mail-vps;
-	t=1751482193;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QHrXzmhcjq+tf7zFyEmmqMNmhAWNPWCstCoYDwuWjt4=;
-	b=iE/jubqic12yzgfhguECgeXwFLfaUdG2lbDggyuFT+JWIUHNFDBlFSVu/9MgMtlVdOLcoz
-	H/coId7izuylyqJ+hqijSp5ID+bPXU+7vwcurTVEsOiqTbiC501yu7CMJBKfpVXLBuYPh7
-	HxHpmOpr1Z7xUOBZ4aP78nMgzHHHhOk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=tnxip.de;
-	s=mail-vps-ed; t=1751482193;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QHrXzmhcjq+tf7zFyEmmqMNmhAWNPWCstCoYDwuWjt4=;
-	b=fjDuO26crbRSF0bVmRO+lJSefRPFWJRBYPGhr+dDlMSMAnchwjBB8rNZPjfMX733mGTh60
-	+bY5NGp4tGSfhZCw==
-Received: from [IPV6:2a04:4540:8c04:1600:d42:34ad:c501:6cc5] (unknown [IPv6:2a04:4540:8c04:1600:d42:34ad:c501:6cc5])
-	by gw.tnxip.de (Postfix) with ESMTPSA id 8478B3800000000017FE8;
-	Wed, 02 Jul 2025 20:49:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tnxip.de; s=mail-gw;
-	t=1751482193;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QHrXzmhcjq+tf7zFyEmmqMNmhAWNPWCstCoYDwuWjt4=;
-	b=SW26/YE6Nkw2wtr2YrG7+Q3tv/OJT1Wg1NHQYybgyPXTvQr/+iTwJCJm5/QjI+LD25TJn2
-	kTk6d88O3HIkpMXnUUP1+f1PiPQ2Q/Btf8PaghEhxVeKpevNAirIpx4huYwgtaH9V4NK2F
-	l9xwKzgQPaHi7ZjV8QZ9TUtDr6ZnErA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=tnxip.de;
-	s=mail-gw-ed; t=1751482193;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QHrXzmhcjq+tf7zFyEmmqMNmhAWNPWCstCoYDwuWjt4=;
-	b=b/DrPuw6PzjFdtZoIVuocUtrnF94Giab5lQ0S7r/Lr8J1GpMMxzkHVXIR/QdR13+r5EcWi
-	fDXrA+72zNNjplDw==
-Message-ID: <a448243d-8ef8-48d8-afbc-2c45068c882c@tnxip.de>
-Date: Wed, 2 Jul 2025 20:49:32 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="clvk4KIC"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-31332cff2d5so5994051a91.1;
+        Wed, 02 Jul 2025 12:00:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751482829; x=1752087629; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dNvEoNaOIW82DnFZ370ho50EsopFgUiF2vv7ai8Lmhs=;
+        b=clvk4KICnU8snL/FbktHJZ7PdbQyZSrARigUBS09siWgeJMBZB+TLzUepKlwGoYfYo
+         qL2WuPalebxGY5y/Tg9JTuGwBrlwPaV0B+AuT88cgGmJK2s0ONQb91D5PNxL40/8MRFC
+         MYiG4oQuViy2/twLcweMnY54O4glLZpmxtxIELAawncWq6FZBQBumPptMt9XrgJYWSzn
+         4AinxKZHkaSXUHJkcUFBovcYLUH6yG9RUPme42OtP5Vv8Ge17AoKesgQfVNWLqt9GrFE
+         Dem4bH+UoSFoLAfWrdkUYcHjz8ItOEUTw3jGS5LnpjHWoTFno8x35rmzht9Rr9z8+81L
+         ltMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751482829; x=1752087629;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dNvEoNaOIW82DnFZ370ho50EsopFgUiF2vv7ai8Lmhs=;
+        b=tAshOQPTsfFsqZ/dbVGgGM81CiZrEKdgs8poZv3T1ZdAkbgFPcbtwfJiM1tyOBHlhp
+         Gcy0Oi6Zg1d43xlyIk7wXRhfqZYTyJWOEF3j9ezG/tPlTiSaFRO2Ll+us/CbkLxQ6X3O
+         eYsW3Ma1iGaUYaTCqEVE6IWJDctoxlTzHTPLlmJv1sBJd8n2AV0b9hP3AX5aucE4Bzkd
+         v9FB+NeB1xMZMhACEFXDtpL1uwdew3E0G0bV+e89qZ5/zJeiZw9Mb96ih5xmJA3H6Hmk
+         zd4hGBg8RkKXo1cv9PqQ7nkI4PG25gLnoABx9Phbh5hqwWMz1xMNAD5XR90WwDKBDVeW
+         uEFA==
+X-Forwarded-Encrypted: i=1; AJvYcCUXHTybjjj6dzW9SYo8DJTbSixKD/66IXe/PnIvaqOou3rkFMnIaNFfRKJ7+GnIYZddbJi31WtFZ7iC0TU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpUKjkujb44oBsz3De1IAiiGEEY+cJ9cDyoTfsFcgRo3vn2AWr
+	keA4EWsOXo2+nhvWLYhqI189aVHLpBhtFGEB6BsxLsLQxjUbhDRuf28Ymg6wYbNV
+X-Gm-Gg: ASbGncsZ7XSyXeW2Cxx8TFhHkJpuekYgX/qx+I8WHg1wQKmwqF8J7Hg+h6L2nv36ocT
+	8TTwQs0Cy0CHEhja//YdCqadHLKMI2x+GglkAWpQAOG/IzrjrDGzwqyRPwwABfVrE2hQyrwRRZY
+	ZnjXxxlwTmuLQnmLQTJ+LVAH9Rq8tpi/C2xxY7hJui4zwxCGASCmisq0zSU7PYRCWpo2l2ScpQk
+	NtD0rSbdO2hNb1Xhc5BLo8QKr6I9PCL4snLlC3YrvnUlG6rsFjxksIvlRWt08p9Ce5iPcQI3ilx
+	IKqI4LNp3fJ18D8dhbUurNEk4hpl9jcfo//c9sGet9c5PTjFZvq8ryhO6y4DHsTXCkwBiCZz
+X-Google-Smtp-Source: AGHT+IHisT+jL2i9exD2iEGFPt0p0HhJMwOgwOqxm5sMieaqvdl02QcRn6IPSerxf/AqzuegXaPCvw==
+X-Received: by 2002:a17:90b:52c6:b0:316:3972:b9d0 with SMTP id 98e67ed59e1d1-31a90a2d5d4mr7166223a91.0.1751482828855;
+        Wed, 02 Jul 2025 12:00:28 -0700 (PDT)
+Received: from pop-os.. ([49.207.217.131])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31a9cc66830sm415374a91.16.2025.07.02.12.00.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 12:00:28 -0700 (PDT)
+From: Aditya Dutt <duttaditya18@gmail.com>
+To: stable@vger.kernel.org
+Cc: Edward Adam Davis <eadavis@qq.com>,
+	Dave Kleikamp <dave.kleikamp@oracle.com>,
+	Dave Kleikamp <shaggy@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	jfs-discussion@lists.sourceforge.net,
+	skhan@linuxfoundation.org,
+	Manas Ghandat <ghandatmanas@gmail.com>,
+	syzbot+30b3e48dc48dd2ad45b6@syzkaller.appspotmail.com,
+	syzbot+bba84aef3a26fb93deb9@syzkaller.appspotmail.com,
+	Aditya Dutt <duttaditya18@gmail.com>
+Subject: [PATCH 5.15.y] jfs: fix null ptr deref in dtInsertEntry
+Date: Thu,  3 Jul 2025 00:29:36 +0530
+Message-Id: <20250702185936.68245-1-duttaditya18@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Linux)
-Subject: Re: [GIT PULL] bcachefs fixes for 6.16-rc4
-To: Kent Overstreet <kent.overstreet@linux.dev>,
- "Carl E. Thompson" <cet@carlthompson.net>
-Cc: John Stoffel <john@stoffel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <ahdf2izzsmggnhlqlojsnqaedlfbhomrxrtwd2accir365aqtt@6q52cm56jmuf>
- <CAHk-=wi+k8E4kWR8c-nREP0+EA4D+=rz5j0Hdk3N6cWgfE03-Q@mail.gmail.com>
- <xl2fyyjk4kjcszcgypirhoyflxojzeyxkzoevvxsmo26mklq7i@jw2ou76lh2py>
- <26723.62463.967566.748222@quad.stoffel.home>
- <gq2c4qlivewr2j5tp6cubfouvr42jww4ilhx3l55cxmbeotejk@emoy2z2ztmi2>
- <751434463.112.1751478094192@mail.carlthompson.net>
- <fomli5univuatcdc7syty56wffm4uvslocxkufks27otyix7fl@6c5i7w7g64qo>
-Content-Language: en-US, de-DE
-From: =?UTF-8?Q?Malte_Schr=C3=B6der?= <malte.schroeder@tnxip.de>
-In-Reply-To: <fomli5univuatcdc7syty56wffm4uvslocxkufks27otyix7fl@6c5i7w7g64qo>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 02.07.25 19:53, Kent Overstreet wrote:
-> On Wed, Jul 02, 2025 at 10:41:34AM -0700, Carl E. Thompson wrote:
->> Kent, at this point in bcachefs' development you want complete control
->> over your development processes and timetable that you simply can't
->> get in the mainline kernel. It's in your own best interest for you to
->> develop out-of-tree for now.
-> Carl, all I'm doing is stating up front what it's going to take to get
-> this done right.
->
-> I'm not particularly pushing one way or the other for bcachefs to stay
-> in; there are pros and cons either way. It'll be disruptive for it to be
-> out, but if the alternative is disrupting process too much and driving
-> Linus and I completely completely nuts, that's ok.
->
-> Everyone please be patient. This is a 10+ year process, no one thing is
-> make or break.
->
-So as a user usually hanging out on IRC and running Kent's trees:
+From: Edward Adam Davis <eadavis@qq.com>
 
-I think most of those people actually testing bcachefs are either
-running bcachefs-master, -rc or some outdated distro kernel. From my
-perspective I'd think it would be good enough to push for-upstream
-during the merge window and then only provide further patches if there
-where regressions or some really bad bug appears that actually eats data
-(like the one that bit me). If it's "just" stability fixes, well, if
-people running a distro kernel hit those bugs they'll need to build a
--rc kernel anyways to get fixes, those could just build bcachefs-master.
-When running Linus' tree I am aware and accept that I am not running the
-absolutely latest code.
+[ Upstream commit ce6dede912f064a855acf6f04a04cbb2c25b8c8c ]
 
-I've had some pretty bad experience with amdgpu requiring out of tree
-patches to get my system running free of glitches, which took months to
-get into upstream. It's annoying, but I accept that.
+[syzbot reported]
+general protection fault, probably for non-canonical address 0xdffffc0000000001: 0000 [#1] PREEMPT SMP KASAN PTI
+KASAN: null-ptr-deref in range [0x0000000000000008-0x000000000000000f]
+CPU: 0 PID: 5061 Comm: syz-executor404 Not tainted 6.8.0-syzkaller-08951-gfe46a7dd189e #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+RIP: 0010:dtInsertEntry+0xd0c/0x1780 fs/jfs/jfs_dtree.c:3713
+...
+[Analyze]
+In dtInsertEntry(), when the pointer h has the same value as p, after writing
+name in UniStrncpy_to_le(), p->header.flag will be cleared. This will cause the
+previously true judgment "p->header.flag & BT-LEAF" to change to no after writing
+the name operation, this leads to entering an incorrect branch and accessing the
+uninitialized object ih when judging this condition for the second time.
 
-I'd rather have a slightly outdated bcachefs in kernel than not at all.
-It is good to have a distro kernel I can fall back to if I mess up my
-own kernel building ;)
+[Fix]
+After got the page, check freelist first, if freelist == 0 then exit dtInsert()
+and return -EINVAL.
 
+Closes: https://syzkaller.appspot.com/bug?extid=30b3e48dc48dd2ad45b6
+Reported-by: syzbot+30b3e48dc48dd2ad45b6@syzkaller.appspotmail.com
+Reported-by: syzbot+bba84aef3a26fb93deb9@syzkaller.appspotmail.com
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+Signed-off-by: Dave Kleikamp <dave.kleikamp@oracle.com>
+Signed-off-by: Aditya Dutt <duttaditya18@gmail.com>
+---
 
-my 0.02€
+I tested the patch manually using the C reproducer:
+https://syzkaller.appspot.com/text?tag=ReproC&x=135c9b70580000
+given in the syzkaller dashboard above.
 
-/Malte
+ fs/jfs/jfs_dtree.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/fs/jfs/jfs_dtree.c b/fs/jfs/jfs_dtree.c
+index 27ca98614b0b..cb57d4f1161f 100644
+--- a/fs/jfs/jfs_dtree.c
++++ b/fs/jfs/jfs_dtree.c
+@@ -835,6 +835,8 @@ int dtInsert(tid_t tid, struct inode *ip,
+ 	 * the full page.
+ 	 */
+ 	DT_GETSEARCH(ip, btstack->top, bn, mp, p, index);
++	if (p->header.freelist == 0)
++		return -EINVAL;
+ 
+ 	/*
+ 	 *	insert entry for new key
+-- 
+2.34.1
 
