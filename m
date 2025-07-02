@@ -1,63 +1,63 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4BEC246335
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 23:42:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B40E62DE707
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 23:46:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751499753; cv=none; b=d1mKDF5kVPFdtR/Bts1bV2/MOp9sa1P0MST5XOibLL0gIGffktQ7k1k3MmPwMBjzUE5VcTwKfPzQsCDJIXeL9P1lQVs/io38Qrl1pJTL4XY1dJyJdDzS81QpzZXrabr5wVdRrRinIxOXPnmeDnhxzGWiaWC7/WKRp7F/Eb0wLuo=
+	t=1751499978; cv=none; b=Gn0IfdZIKqJsNtOke4/AgqCz7Wq53UHokHpH+ucr4n0PtknNorODXREYTj9d3UHrlbEau9aW1Uh9hJjYGzKXgxXJdrGA6qEFy5SJjq55bKcmwe+EugpQJfChl7glM7WXIOXtkf9MlyFEgd98LwZcSs6GKAZ1r3bV6NpV2hCsOjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751499753; c=relaxed/simple;
-	bh=jmzUUBjsU5AyPvp94lR4mNCcHNkoZYmCp2eYxl1XYZ0=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=jwZC7glbivdBK6Hzp3gCGsKYRk7HvYgwzmhrYqb0WqI5NjObkSxKiDeH7kXGDhJ0EB8QGoHUD1zATnOtj1m3H4i7wa0gkDhMQ8KYmJNduPEEStVl0kTYeuURzhTjaZ3Rt2pKHnW5BAQG0j24B6vJsiz590+8q6FH9HPJ1iKNvXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=bfA/fko+; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+	s=arc-20240116; t=1751499978; c=relaxed/simple;
+	bh=lFZnER1Vm9wautJa0uy43bzsbxJsHX1JsZvXcSTRQek=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sPRQWlJUE8LXZIUsvT0DRXr6+WAOOorUAi/K/VDvZSDSn1a8bQTU8/h2gQVsFiTP72i6wYTfZr6C1y6aWmNLPpS8U5MzAU/sx6kZCeLtjpnQAAAod1cu18n1vrju5K1SohPL+wlGPP03XbgkDpF68cJIVOoQrmERgyb79SEI/q0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=LplORr8l; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="bfA/fko+"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4537edf2c3cso73485825e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 16:42:31 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="LplORr8l"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-74b56b1d301so751720b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 16:46:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1751499750; x=1752104550; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1751499976; x=1752104776; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:subject:references:cc:to:user-agent:mime-version
+         :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=jmzUUBjsU5AyPvp94lR4mNCcHNkoZYmCp2eYxl1XYZ0=;
-        b=bfA/fko+VFAMwPzzQl34AiZR/905KKKuXeEcZqjuynx9SQV3gCPBokVmvybWAPrIa3
-         ZFreT4sIw4xbwrMVgwM4qq2StiixPTmqQSruN1quhlepax0l9asodW2nJg2DFfRr020h
-         G2HZFDT0Br53opYPAtqNByDenpdJi8yi67Kpw=
+        bh=ViVAtpVE4VcSDimsjTVY9mf2hp2g98u/R7DQs9HH3k8=;
+        b=LplORr8lDwrGj1sTZUYtwEd/VXxfAe5D9DMBI6/bF4SlIuom/w4wB1v5Xi8UXQhBNH
+         GOxTe53v4gALsi0QMp3ga4QR5lMVz8Ss/BJF2tIQyA+3cqWZkVAZK1gxxw2S+z97Gp7C
+         S31Pg1WIMXpPNKayEBCmzXxRYnpDVV3UjhF7I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751499750; x=1752104550;
+        d=1e100.net; s=20230601; t=1751499976; x=1752104776;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:subject:references:cc:to:user-agent:mime-version
+         :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jmzUUBjsU5AyPvp94lR4mNCcHNkoZYmCp2eYxl1XYZ0=;
-        b=cbBdR3ICbUfaCXA8PUqxD5H7ZjWOp6joGfMKQ+/krf+mtl3SxQIhIiMurIYadMHluU
-         xWk8UhgBSrGckFNK9rXv3KbDayGoNLBgKeLlRvMMp8x2PzjSfbtu2v8xm7kZSZ6aJpfu
-         xGuTMCEsH7sVr3uqP0+i03NzQ0eDhx6d2MAUnmWzzWtF/y+C1pPVscGewi5EvJdOMajl
-         upvD064bK8sC7VRFmtFOiB7zZEpc9v45Z6SHzIOD5M8VJeGYg8kmgRg/SZB0UfTZFYCm
-         OhtXkkQ3W9TPXX4qzlNYB7qAiJrfSGDz97k8wDBmaFLf3k4jU2JXD17w27jlsWoScUj1
-         zxrw==
-X-Forwarded-Encrypted: i=1; AJvYcCWZkLs3hJ+69d+/GUegH6PMqf6VDWFe8tH3kpE0HYvCXzgdLrEAZrSQAc513JVVdI+bH4jUtHFk0a22oq0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4+T9FMH1Udiy7JrKXuRgsFDJjdiSD8baX3bOyNDKOqULdTx/+
-	T4j2NcYSBN7Nh8xLecsNEYE4yoaurA2xfDZn9iNhH3LNlk5SMbO04B4hf8ZGqZJlxS0=
-X-Gm-Gg: ASbGncuRtcgcUxk32JrdqbfP7se0bc0LgIGHjvRtbi8Ks0iqiSvaWLIFESOjwbxvfkt
-	VTs+EP+A33yM/J48Pdgsc93XGT20M/QzhV9LBYQkB+vWgDSyM3gV57tdvjBHliqWJrBro/N8kPi
-	8Kk1kNvlwyMn3UWQoqVZDs5XvLvywUpFJw4+UQrCdoCHLXMhW6W3uO0fnO67UPMz0co6KF79ZNG
-	PnrlGkf+fFjb9Qw4HH8MKsvDbTvqWBGS5j/5itDYzp7ZmmGuATo5zxwNLrmt6twwyc+EPph9e/t
-	5NmNzXX1LsmAUQjBLP3y2fV4dyGEMs0GfQQwjb5kcJ8N2tH6KqNzEN6kgnLyARCoo4DETKd7zWT
-	o6xHVwXome+MuQfe2Zl/8T4iH3aE=
-X-Google-Smtp-Source: AGHT+IGeCkAGfhe6E529Edv+z8LxXw+ebOxsR4mZdYkZXix8QuKi+zHwvXZzZmFAB06yOq69Z9iXtA==
-X-Received: by 2002:a05:600c:3ba6:b0:442:f98e:f37 with SMTP id 5b1f17b1804b1-454a4e75639mr37321335e9.21.1751499749858;
-        Wed, 02 Jul 2025 16:42:29 -0700 (PDT)
-Received: from [192.168.1.183] (host-92-26-98-202.as13285.net. [92.26.98.202])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a999d399sm10529085e9.25.2025.07.02.16.42.28
+        bh=ViVAtpVE4VcSDimsjTVY9mf2hp2g98u/R7DQs9HH3k8=;
+        b=XmnyOUK9s+HKCakAPJsOxtcLWIWQlL9haLjc4soQwz+3OBokFjVQE1vPAAdX7eA2zt
+         IA7wy4Rp4kzsdrNBhkNzK9jCEPaU9XBfIO7phxPxzaVkeefNfluej9j5Y9q4p3kmjrYj
+         mL2pgPka0RgnlFlWprHzdZLtL4qefB6xIgGNB27ScKpZUqAPnuDdk8UdL0fKIzG/f+x0
+         zL26s8UPrpKv3NAi+mZwE327UcIvUQYNZvPiRGuFqAXbSDr69l6PubduoXesg31fxwhU
+         etx3IdvN4Xn6HE8nV//vlE7+NqD7qJKyNplCZ5Igf17m3/BD0T4kwkiPPG9ucFiT1/K6
+         ZrPA==
+X-Forwarded-Encrypted: i=1; AJvYcCXtHxPQxMDFgjjtCHYRwi1+TbrYH6/fjWjZFCOua3JBuBGAY8jSDwkFHi7K59HKZ4p2x3i5rF7QyxM/21w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyC3JW465+fkfkF5ccvb2yHfFWuPbiKYqe/xEcKzZwI06OIsrAc
+	jm60b2zhoAlMDzqngjTf+7VCpIPwGAU8+FOfmfmtkwQBJT381IbXU+JzD5mLGLncZQ==
+X-Gm-Gg: ASbGncvLWTFw8cwQURf2+YJB8wlxDQJHJo9h2l2aVj6gV0mQnzRW5Zv3qi/X0FpfiOD
+	1Z42xN9x1fufID8DUEZZl1a5L7cHCzU7QUqtwGuYSxCwiAPbabJbRXnpeIXapdZ65a/w7VUz5kf
+	p2QJAtgFMWNlq5PydMvh3jV+68VBjauJTNB0SgN1v8N88XUgRQmQCAXaBWJB/UVHoRc/QBPNB30
+	sU9uOmm53I3wR0We7+7OtUiUGoFxGJHAFOiGEufBZE4PrfmQH6ZUKaIkM81Uz3ZiGOuPJ2w1cT5
+	HRNoSkgRD33ZRC4WgrslbTASTCGxUTaCZeqlFkopqR1XE/iYD3zERPvCVgs4OyuJQ8oUPc0LYxv
+	m3tiriNXlhv1a+jS2dQ+86XK1rA==
+X-Google-Smtp-Source: AGHT+IFkUvmMZIS6AbfTX8UKjfSYNxAO54bpehBn2hbDwdGBFpbaUT9Igp1/olZCeelBx57rXIfgTQ==
+X-Received: by 2002:a05:6a00:1488:b0:748:f854:b765 with SMTP id d2e1a72fcca58-74b50db5d76mr7542014b3a.4.1751499976000;
+        Wed, 02 Jul 2025 16:46:16 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af57ee760sm14609644b3a.155.2025.07.02.16.46.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jul 2025 16:42:29 -0700 (PDT)
-Message-ID: <4dcd23cb-eb55-42e7-aa76-dbaf2e2a7e07@citrix.com>
-Date: Thu, 3 Jul 2025 00:42:27 +0100
+        Wed, 02 Jul 2025 16:46:15 -0700 (PDT)
+Message-ID: <da323894-7256-493d-a601-fe0b0e623b00@broadcom.com>
+Date: Wed, 2 Jul 2025 16:46:12 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,87 +65,82 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: hpa@zytor.com
-Cc: acme@redhat.com, aik@amd.com, akpm@linux-foundation.org,
- alexander.shishkin@linux.intel.com, ardb@kernel.org, ast@kernel.org,
- bp@alien8.de, brijesh.singh@amd.com, changbin.du@huawei.com,
- christophe.leroy@csgroup.eu, corbet@lwn.net, daniel.sneddon@linux.intel.com,
- dave.hansen@linux.intel.com, ebiggers@google.com, geert+renesas@glider.be,
- houtao1@huawei.com, jgg@ziepe.ca, jgross@suse.com, jpoimboe@kernel.org,
- kai.huang@intel.com, kees@kernel.org, kirill.shutemov@linux.intel.com,
- leitao@debian.org, linux-doc@vger.kernel.org, linux-efi@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux@rasmusvillemoes.dk,
- luto@kernel.org, mcgrof@kernel.org, mhiramat@kernel.org,
- michael.roth@amd.com, mingo@kernel.org, mingo@redhat.com,
- namhyung@kernel.org, paulmck@kernel.org, pawan.kumar.gupta@linux.intel.com,
- peterz@infradead.org, rick.p.edgecombe@intel.com, rppt@kernel.org,
- sandipan.das@amd.com, shijie@os.amperecomputing.com, sohil.mehta@intel.com,
- tglx@linutronix.de, tj@kernel.org, tony.luck@intel.com,
- vegard.nossum@oracle.com, x86@kernel.org, xin3.li@intel.com,
- xiongwei.song@windriver.com, ytcoode@gmail.com
-References: <4DE45AFD-C1E0-4FB8-BE01-44A72C5C6E1E@zytor.com>
-Subject: Re: [PATCHv8 14/17] x86/traps: Handle LASS thrown #SS
-Content-Language: en-GB
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
- 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
- 6+ahAA==
-In-Reply-To: <4DE45AFD-C1E0-4FB8-BE01-44A72C5C6E1E@zytor.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH net v5 0/4] net: phy: bcm54811: Fix the PHY initialization
+To: Jakub Kicinski <kuba@kernel.org>, =?UTF-8?Q?Kamil_Hor=C3=A1k_-_2N?=
+ <kamilh@axis.com>, florian.fainelli@broadcom.com
+Cc: bcm-kernel-feedback-list@broadcom.com, andrew@lunn.ch,
+ hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
+ edumazet@google.com, pabeni@redhat.com, krzk+dt@kernel.org,
+ conor+dt@kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, robh@kernel.org, andrew+netdev@lunn.ch,
+ horms@kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org
+References: <20250701075015.2601518-1-kamilh@axis.com>
+ <20250702150216.2a5410b3@kernel.org>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20250702150216.2a5410b3@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-> Note: for a FRED system, ERETU can generate #SS for a non-canonical user space RSP
+On 7/2/25 15:02, Jakub Kicinski wrote:
+> On Tue, 1 Jul 2025 09:50:11 +0200 Kamil Horák - 2N wrote:
+>> PATCH 1 - Add MII-Lite PHY interface mode as defined by Broadcom for
+>>     their two-wire PHYs. It can be used with most Ethernet controllers
+>>     under certain limitations (no half-duplex link modes etc.).
+>>
+>> PATCH 2 - Add MII-Lite PHY interface type
+>>
+>> PATCH 3 - Activation of MII-Lite interface mode on Broadcom bcm5481x
+>>     PHYs
+>>
+>> PATCH 4 - Fix the BCM54811 PHY initialization so that it conforms
+>>     to the datasheet regarding a reserved bit in the LRE Control
+>>     register, which must be written to zero after every device reset.
+>>     Also fix the LRE Status register reading, there is another bit to
+>>     be ignored on bcm54811.
+> 
+> I'm a bit lost why the first 3 patches are included in a series for net.
+> My naive reading is we didn't support this extra mode, now we do,
+> which sounds like a new feature.. Patch 4, sure, but the dependency
+> is not obvious.
 
-How?  Or to phrase it differently, I hope not.
+I don't see the dependency either, at least not in an explicit way. 
+Kamil, could patch #4 stand on its own and routed through "net" while 
+patches 1-3 are routed through "net-next"?
 
-%rsp is a 64bit value and does not have canonical restrictions elsewhere
-in the architecture, so far as I'm aware.  IRET really can restore a
-non-canonical %rsp, and userspace can run for an indeterminate period of
-time with a non-canonical %rsp as long as there are no stack accesses.
+Thanks
+-- 
+Florian
 
-Accesses relative to the the stack using a non-canonical pointer will
-suffer #SS, but ERETU doesn't modify the userspace stack AFAICT.  I
-can't see anything in the ERETU pseudocode in the FRED spec that
-mentions a canonical check or memory access using %rsp.
-
-~Andrew
