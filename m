@@ -1,69 +1,80 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2040.outbound.protection.outlook.com [40.107.100.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638261B424F;
-	Wed,  2 Jul 2025 07:29:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751441346; cv=fail; b=JN85lgCiDoa7f4Dayy5UICluNBHQgQTbOg3xM/FdEFDBRMYSvpIFa9oHD05CJoB2GUhkDIduQXRxaGWzTbpRPYS9ORnzwXsz6G539xhHGYLSh4CynsC0od1aFLO47fDXdywpmoLz3SOUG7LGas5ea4ChVfJr8Fppqhnd9hlZxRo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751441346; c=relaxed/simple;
-	bh=M/x8KZ6/uTPkW6VG6sMFR84G5/O5cOCLHroqX+56bFI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=G9YydS+H6gsRA/6Oxb4S+JZIOTd+z9yr23prGTU0lHWuzxJEDFaVDeIA4UhHmdtHvZr3PdEP7TW44uWyiQCjkj6IdN0iJJyKLvzXswON98z25uoRRtxaob5CaRA6tcuMQ4egNFfppYVY9EsVZ3i7hjmvkUHhtSlV4VYXyBZP5cE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=vntlFDdd; arc=fail smtp.client-ip=40.107.100.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F6A22E3F0
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 07:29:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751441349; cv=none; b=stCuJIUKDBsr/Dk4zbE+9qWOi7xxo/gfyep7ZY7epdpVXWC+rQRt9D54n2bv496f/vEHXpr6zNrkRONGson+JiLlg14c8RDCCV+vZswAEv+ezSVWlorVJ+QzxH+OEwKL9rgkqw44rlS4iCnmPcg1gZFif7uyVb99jlSPDb6EOjc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751441349; c=relaxed/simple;
+	bh=xRQapr6D0j6OmROc6lj3PVObtZoVb816wxd2vQ5M7Ms=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Zb79DKUYfEzvouE4AK7RHvUHhyp1BVN36/TfNmYZNjZHyOjj8kyq6giMWQCpGlb8JXPRWxuOH+Qk4KhETAk4gtGDGdTGTGaXVaBw4p1Ni3DlzcAcAPqt1PoYIePK02vSb99WiQt4qhhCVtyunGeYj3QkNHHZtYXdQ0GEiDKE+4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=XiLMRqTq; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=O1aNKbuL; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=XiLMRqTq; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=O1aNKbuL; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="vntlFDdd"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nZ9vi3cr7Ryjk7gso9T1tgAGUPIw8gsw5cEyhqRy6ff42Rp7Nc5HXBE2vboocvNnsyBlyKdyVcOrXhhbmvFGoMpVJflUNAABaW7JYPq5lt6wdVJwtLj8iG8jC0sKVDfZpVmJ+Q0SuJoF0Zi29hzJJuBAOs+y1FSEcA5SopNtbAp8D1qzG+FdfUqEdwSiLJJZiBdbMlg8npn5x8IFKHIzTSSsRsX7ObpNMz/kbZASeuZv4vb/H5kwlN69S13fXp33GP4rHtUAyo7SIXarViDebQ8X77bBtJUp47Vlzq1y8xEt7fwtDk73rqK4wIjMyyUiku4TLG85CXRDx5g7m3XBsA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=87vRPEoSoVMRg2cW+tsTcXFq+Wsb9sTy1u4FjqeZfZg=;
- b=qmT4/FpAmu+/Mj0ucfkWg5NgT6UarRCyjMfyWJRxCYYcnhZEqYuufo+N9vXF9WAQe/wq7pm4e2x4SdF89tD9tL+LNHbbKBQsafcOlgg9SU3RuNu0oVjs/aBVZiHmU6gTx32aMfSgleP8feAq3GqnegV8U1Nc+zz3Qx/bpvlzDVoXCmw/wFASh/SzGeX8gNc6QfWJEte1R7uImDGu6d3ayuWo8ljeu5TKlJgPuh1fTPwvaYzaIBk4EsQ6/Gh0HOiB55MgIDlS7pwLJSrRMdS2t3CBb2GsxFTyFYBJmhmYdIlTGLgotSVL7islywmSdEMCd26EzfHWgc1Fi4f/oMXgsg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=87vRPEoSoVMRg2cW+tsTcXFq+Wsb9sTy1u4FjqeZfZg=;
- b=vntlFDddvLwooIOUMhz7KXSskRL/ihD+ijejqjJnG0Z0Vmw7uirnb56rVw2fRxAt7+NoUCwF0zuVVdcX5CxlZ6Glpt/k/shX58ufQ7kS48XCWD/JQZ5Vsd04s5AOxxRBnmL1HE8f90yMJ9G2wsacUOt737SJCOAhnbe3FICTxHU=
-Received: from PH7P220CA0105.NAMP220.PROD.OUTLOOK.COM (2603:10b6:510:32d::20)
- by CH1PPF12253E83C.namprd12.prod.outlook.com (2603:10b6:61f:fc00::606) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.25; Wed, 2 Jul
- 2025 07:28:56 +0000
-Received: from CO1PEPF000044F9.namprd21.prod.outlook.com
- (2603:10b6:510:32d:cafe::4c) by PH7P220CA0105.outlook.office365.com
- (2603:10b6:510:32d::20) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.21 via Frontend Transport; Wed,
- 2 Jul 2025 07:28:56 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1PEPF000044F9.mail.protection.outlook.com (10.167.241.199) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8922.1 via Frontend Transport; Wed, 2 Jul 2025 07:28:55 +0000
-Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 2 Jul
- 2025 02:28:55 -0500
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB05.amd.com
- (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 2 Jul
- 2025 02:28:54 -0500
-Received: from [10.65.159.153] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Wed, 2 Jul 2025 02:28:51 -0500
-Message-ID: <558ad3d6-7349-40f1-ba06-0fa46701b247@amd.com>
-Date: Wed, 2 Jul 2025 15:28:50 +0800
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="XiLMRqTq";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="O1aNKbuL";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="XiLMRqTq";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="O1aNKbuL"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id B417F1F445;
+	Wed,  2 Jul 2025 07:29:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751441345; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lVIsBl9hllwNnK2RPVGCxz20gNq3g7ebI1tf7GBZSuw=;
+	b=XiLMRqTqr/R+laACxUArPADJvhuczPIpV8BIM/OFa04GcQAJ5bKHB+s9KwpHmLkoGUTIJe
+	dpqvkxW3xoGTM8EVjIF4BQGpLGIyiVFQHRVdgvjXTufa2tV5uo+BflkguvRafAIh5CA8WV
+	05yu8ea8XgNV8OUizXg/g+SZgDpyMPA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751441345;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lVIsBl9hllwNnK2RPVGCxz20gNq3g7ebI1tf7GBZSuw=;
+	b=O1aNKbuLz7uO3z9xmridSpDFKfIzEEsNMTZyUI/55JHCpN7yDdH+lVC7BxN6L8hBnRjls7
+	0NDRNSWvkdxjH1Bw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751441345; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lVIsBl9hllwNnK2RPVGCxz20gNq3g7ebI1tf7GBZSuw=;
+	b=XiLMRqTqr/R+laACxUArPADJvhuczPIpV8BIM/OFa04GcQAJ5bKHB+s9KwpHmLkoGUTIJe
+	dpqvkxW3xoGTM8EVjIF4BQGpLGIyiVFQHRVdgvjXTufa2tV5uo+BflkguvRafAIh5CA8WV
+	05yu8ea8XgNV8OUizXg/g+SZgDpyMPA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751441345;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lVIsBl9hllwNnK2RPVGCxz20gNq3g7ebI1tf7GBZSuw=;
+	b=O1aNKbuLz7uO3z9xmridSpDFKfIzEEsNMTZyUI/55JHCpN7yDdH+lVC7BxN6L8hBnRjls7
+	0NDRNSWvkdxjH1Bw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1A0CF1369C;
+	Wed,  2 Jul 2025 07:29:05 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id VtfvBMHfZGiuOwAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Wed, 02 Jul 2025 07:29:05 +0000
+Message-ID: <630b4379-751a-4bf1-a249-f2e051ec77d6@suse.cz>
+Date: Wed, 2 Jul 2025 09:30:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,293 +82,141 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] drm/amdgpu: move GTT to SHM after eviction for
- hibernation
-To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, "Zhang,
- GuoQing (Sam)" <GuoQing.Zhang@amd.com>, "rafael@kernel.org"
-	<rafael@kernel.org>, "len.brown@intel.com" <len.brown@intel.com>,
-	"pavel@kernel.org" <pavel@kernel.org>, "Deucher, Alexander"
-	<Alexander.Deucher@amd.com>, "Limonciello, Mario"
-	<Mario.Limonciello@amd.com>, "Lazar, Lijo" <Lijo.Lazar@amd.com>
-CC: "Zhao, Victor" <Victor.Zhao@amd.com>, "Chang, HaiJun"
-	<HaiJun.Chang@amd.com>, "Ma, Qing (Mark)" <Qing.Ma@amd.com>,
-	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250630104116.3050306-1-guoqing.zhang@amd.com>
- <20250630104116.3050306-2-guoqing.zhang@amd.com>
- <ce04e266-6c3f-4256-aade-bafca8609ab3@amd.com>
- <DM4PR12MB5937FFB3E121E489A261785DE541A@DM4PR12MB5937.namprd12.prod.outlook.com>
- <ba843972-f564-4817-8651-b3b776c5f375@amd.com>
+Subject: Re: [syzbot] [mm?] WARNING in xfs_init_fs_context
+To: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>, Zi Yan
+ <ziy@nvidia.com>, Barry Song <baohua@kernel.org>,
+ Carlos Maiolino <cem@kernel.org>, linux-xfs@vger.kernel.org,
+ Dave Chinner <david@fromorbit.com>
+Cc: syzbot <syzbot+359a67b608de1ef72f65@syzkaller.appspotmail.com>,
+ akpm@linux-foundation.org, apopple@nvidia.com, byungchul@sk.com,
+ david@redhat.com, gourry@gourry.net, joshua.hahnjy@gmail.com,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, matthew.brost@intel.com,
+ rakie.kim@sk.com, syzkaller-bugs@googlegroups.com,
+ ying.huang@linux.alibaba.com, Harry Yoo <harry.yoo@oracle.com>,
+ Michal Hocko <mhocko@suse.com>, Matthew Wilcox <willy@infradead.org>
+References: <6861c281.a70a0220.3b7e22.0ab8.GAE@google.com>
+ <DDD5FAAF-F698-4FC8-B49C-FD1D3B283A8E@nvidia.com>
+ <1921ec99-7abb-42f1-a56b-d1f0f5bc1377@I-love.SAKURA.ne.jp>
 Content-Language: en-US
-From: Samuel Zhang <guoqzhan@amd.com>
-In-Reply-To: <ba843972-f564-4817-8651-b3b776c5f375@amd.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <1921ec99-7abb-42f1-a56b-d1f0f5bc1377@I-love.SAKURA.ne.jp>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Received-SPF: None (SATLEXMB05.amd.com: guoqzhan@amd.com does not designate
- permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000044F9:EE_|CH1PPF12253E83C:EE_
-X-MS-Office365-Filtering-Correlation-Id: 041192a2-30cd-43f6-dd17-08ddb93a1a6c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MGM5VVJuN0RLZHZ3K0hmUEZZazRoMThEZktmZmx5RVRaSk4rVC9PQyt5MzJZ?=
- =?utf-8?B?WnZyQ0d3ckpaQ3dIVllnSVBaMVhna3ExRGltMW5VemRUUERreWpoR3dmR1BK?=
- =?utf-8?B?TWpWRmZCbEIxYVhGQU4yWFFlQzJIcFNjSlJKT3p3KzNaUUZ0Zkl5NTB2V1Zi?=
- =?utf-8?B?S0czTUkxZ0N1Y2FlTHcrbU5SOE10VFoxV1MvNUZWR1pOd1pObXRKTXBqcDlO?=
- =?utf-8?B?SlBPNjhwUi9JelQrYzJjTWl6alZNazVHWEVDTk0xWmd1ZXFnb1VIS0NEdXk1?=
- =?utf-8?B?dkMzV1hoSEVIMXZMY0pUY0JkVkU2WW9KUWR5am1kRHlhVDM5dERGMDBoSzZ5?=
- =?utf-8?B?RzE4RXNwVWVrczdvRU5MQjVMSXFnQnlPVE02eHJLdzlIQkFXRCtrSnd4VlFs?=
- =?utf-8?B?TlorcUx1dkpZTWhuckw2RUp4QUxvV056bFl2a2NSQUhwQkxZTjRQcmFOazhk?=
- =?utf-8?B?aUk0aUpCcVhJdWdxendXa3c3T1RXQzJ6SXNhd1VJdWpRbFFHVmg3SHJYWVdC?=
- =?utf-8?B?R29MaHlSeFc3dTQ2aXF5K05VaHFuaUF1OVFXRUFBWmV6QWxvOEpETkVqUlJE?=
- =?utf-8?B?NGozMW1DV0MrQXpoTWVnd1FOYndBZlBQM3FFRy96b05ndGpuTE85bGUyNzFt?=
- =?utf-8?B?WUZsQzVGVmVyQkkrdUNacmpEaERWYU43NVRHQUVlV01QcU9zOE5wM3N4TjdV?=
- =?utf-8?B?a0xYRzNibHYyK0wwQU9qK0xKcW9na1V2Nkl6eWlZamdXa2RCbEJySUpYeDF6?=
- =?utf-8?B?U25Yc2VKT0VWYzFCVEZ5Ri9KTVE2ajNadWg2SHlOSC9SWUhnd0VlbDZkU2ht?=
- =?utf-8?B?cm8zK3A0dGpkaGFoSWEzMGM4Q1FlVmpRaEZnSVk5cVBuZXlDdVIvSXlIL3Rw?=
- =?utf-8?B?NkRGbld6NnJjYWVERVZ4R0h0TWNTWHUyQi9MVWtuYWpPeFN2U3JzTkJuS3h2?=
- =?utf-8?B?RXR0NnhTclYvai9LWmZEa2NNWDNJdWYvSDFBN0czUGs4K3BxSUtkR1VzTUtJ?=
- =?utf-8?B?QWZtWlRQay9wZUx2bkFYK0F6NWFmUGFIVVFrT2lYcjBxWUNiaTRjMjN0dTNw?=
- =?utf-8?B?MzhjY2lhRlNSeVhjMFpBK1VDclVvOXM0THFmUG1uVHNzS3UvZCs5V0NQZUlw?=
- =?utf-8?B?SmxTS2gyWkUzd1R2QSszVkFhcVpwWEM4TFh0SlBTTW9pUzJPSVYxeWt6NnRP?=
- =?utf-8?B?UTl2UXlwV0FRVXF2RHFjamc5aGhtcHRiMWgvOCtwUHJxQTFkV3VLUmZKOU5W?=
- =?utf-8?B?czBVN2h4anZxeFFNVGZuZ3pnUkhpdHdwRnBSc1NpenFDYm82WEpzdDlaQWVG?=
- =?utf-8?B?b2dBdEUzTDhJVEVhcTdtOVBwODZLMEZ6d01PSy9EdktWdE9INFZEVDJOck1Z?=
- =?utf-8?B?NlBLanJiMHZBcXFHcTRBUHdjMm5UOFQyYkF3M0N2NURzU3FYNXFzeGE3UXll?=
- =?utf-8?B?VG9mSjZVQ0RVcHJyd3U2MlV3cHhEKzh4WHA5dnk4YkI0S2hwNU1SSlNocVlE?=
- =?utf-8?B?N05zMGExRFAzdU1TQ2Y5M1hiOVpyTmNBaDhrc05SMHlBLzI3eWd6c3RReXM2?=
- =?utf-8?B?clNJZENVS2Z6NnErMXB2ZFlSY0Z4UnAwUm43azV0MFgzNXpybGo1NlJBcEs4?=
- =?utf-8?B?MENNVHhDdGVwV1gxTkwrd1NwODJhc2ZLSHhkWWw1OXFVTXZQS0VjTVJmNmdC?=
- =?utf-8?B?Vk53R0xQY2MyeFA5bE9JbXpJWk50MndFVmtMa0tZSXhWK2lnbmIyZ3NCeVVN?=
- =?utf-8?B?Q09ERDFKUm1UTWxhcDdYby9yUnJPUmxaR0xJd0V5UlVaV1kxNzB0WTZ4aDJI?=
- =?utf-8?B?Skd2Q1phekd0cFhPalJ6SVVFREFBUkFoaFphN09nSkpkUnhNUnVCOEY3MFhJ?=
- =?utf-8?B?SEhuVkNtV3ZqRnY0bXVVZWJsTXpweWNXQThMMWl4b0lyQ0tSejVqYS9wMTdM?=
- =?utf-8?B?Qzg3RlZTamo1VlVGQjR1ZWZmTWlodG1DOXljd3ZsbTc4eTZSMnJZbmNCSmFP?=
- =?utf-8?B?c2k3NmQwTnIxQmVVMXJsdk95NjRRT3ZFVlpPbjFpK2ZsWHdFN21hQ1dVeUUv?=
- =?utf-8?B?M2xOUzNZaFg2RzR3VXZUem5KM0hIUkcxdGlFZz09?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 07:28:55.7726
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 041192a2-30cd-43f6-dd17-08ddb93a1a6c
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000044F9.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PPF12253E83C
+X-Spam-Flag: NO
+X-Spam-Score: -2.80
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TAGGED_RCPT(0.00)[359a67b608de1ef72f65];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[22];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[syzkaller.appspotmail.com,linux-foundation.org,nvidia.com,sk.com,redhat.com,gourry.net,gmail.com,vger.kernel.org,kvack.org,intel.com,googlegroups.com,linux.alibaba.com,oracle.com,suse.com,infradead.org];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:mid];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	SUBJECT_HAS_QUESTION(0.00)[]
+X-Spam-Level: 
 
++CC xfs and few more
 
-On 2025/7/1 16:22, Christian König wrote:
-> On 01.07.25 10:18, Zhang, GuoQing (Sam) wrote:
->> [AMD Official Use Only - AMD Internal Distribution Only]
+On 7/2/25 3:41 AM, Tetsuo Handa wrote:
+> On 2025/07/02 0:01, Zi Yan wrote:
+>>>  __alloc_frozen_pages_noprof+0x319/0x370 mm/page_alloc.c:4972
+>>>  alloc_pages_mpol+0x232/0x4a0 mm/mempolicy.c:2419
+>>>  alloc_slab_page mm/slub.c:2451 [inline]
+>>>  allocate_slab+0xe2/0x3b0 mm/slub.c:2627
+>>>  new_slab mm/slub.c:2673 [inline]
 >>
+>> new_slab() allows __GFP_NOFAIL, since GFP_RECLAIM_MASK has it.
+>> In allocate_slab(), the first allocation without __GFP_NOFAIL
+>> failed, the retry used __GFP_NOFAIL but kmem_cache order
+>> was greater than 1, which led to the warning above.
 >>
->> Hi Christian,
->>
->>   
->>
->> Thank you for the feedback.
->>
->>   
->>
->> For “return ret < 0 ? ret : 0;”, it is equivalent to “return ret;” since ret is always <= 0 after the loop.
-> No it isn't.
->
-> ttm_global_swapout() returns the number of pages swapped out and only a negative error code if something went wrong.
+>> Maybe allocate_slab() should just fail when kmem_cache
+>> order is too big and first trial fails? I am no expert,
+>> so add Vlastimil for help.
 
+Thanks Zi. Slab shouldn't fail with __GFP_NOFAIL, that would only lead
+to subsystems like xfs to reintroduce their own forever retrying
+wrappers again. I think it's going the best it can for the fallback
+attempt by using the minimum order, so the warning will never happen due
+to the calculated optimal order being too large, but only if the
+kmalloc()/kmem_cache_alloc() requested/object size is too large itself.
 
-/**
-  * move GTT BOs to shmem for hibernation.
-  *
-  * returns 0 on success, negative on failure.
-  */
-int ttm_device_prepare_hibernation(void)
-{
-     struct ttm_operation_ctx ctx = {
-         .interruptible = false,
-         .no_wait_gpu = false,
-         .force_alloc = true
-     };
-     int ret;
+Hm but perhaps enabling slab_debug can inflate it over the threshold, is
+it the case here? I think in that rare case we could convert such
+fallback allocations to large kmalloc to avoid adding the debugging
+overhead - we can't easily create an individual slab page without the
+debugging layout for a kmalloc cache with debugging enabled.
 
-     do {
-         ret = ttm_global_swapout(&ctx, GFP_KERNEL);
-     } while (ret > 0);
-     return ret;
-}
+>> Barry, who added the nofail
+>> warning is cc’d.
 
-This is the new code version.
-If ttm_global_swapout() return positive number, the while loop will 
-continue to the next iteration.
-The while loop stops only when ttm_global_swapout() returns 0 or 
-negative number. In both case, the new function can just return the ret.
+Barry's commit 903edea6c53f0 reorganized the warnings, but it existed
+already long before.
 
-The ret values printed in the do while loop:
-[   53.745892] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 512
-[   53.950975] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 35840
-[   53.951713] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 9
-[   67.712196] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 2187264
-[   67.713726] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 512
-[   67.759212] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 32768
-[   67.761946] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 1024
-[   67.762685] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 85
-[   67.763518] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 175
-[   67.767318] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 2367
-[   67.767942] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 1
-[   67.768499] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 1
-[   67.769054] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 1
-...
-[   67.783554] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 1
-[   67.785755] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 1
-[   67.788607] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 1
-[   67.789906] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 0
+> Indeed. In allocate_slab(struct kmem_cache *s, gfp_t flags, int node),
+> 
+> 	/*
+> 	 * Let the initial higher-order allocation fail under memory pressure
+> 	 * so we fall-back to the minimum order allocation.
+> 	 */
+> 	alloc_gfp = (flags | __GFP_NOWARN | __GFP_NORETRY) & ~__GFP_NOFAIL;
+> 	if ((alloc_gfp & __GFP_DIRECT_RECLAIM) && oo_order(oo) > oo_order(s->min))
+> 		alloc_gfp = (alloc_gfp | __GFP_NOMEMALLOC) & ~__GFP_RECLAIM;
+> 
+> 	slab = alloc_slab_page(alloc_gfp, node, oo);
+> 	if (unlikely(!slab)) {
+> 		oo = s->min;
+> 		alloc_gfp = flags;
+> 		/*
+> 		 * Allocation may have failed due to fragmentation.
+> 		 * Try a lower order alloc if possible
+> 		 */
+> 		slab = alloc_slab_page(alloc_gfp, node, oo);
+> 
+> __GFP_NOFAIL needs to be dropped unless s->min is either 0 or 1.
 
+No, that would violate __GFP_NOFAIL semantics.
 
-Regards
-Sam
+> 
+> 		if (unlikely(!slab))
+> 			return NULL;
+> 		stat(s, ORDER_FALLBACK);
+> 	}
+> 
+> 
+> 
+> By the way, why is xfs_init_fs_context() using __GFP_NOFAIL ?
+> 
+> 	mp = kzalloc(sizeof(struct xfs_mount), GFP_KERNEL | __GFP_NOFAIL);
+> 	if (!mp)
+> 		return -ENOMEM;
+> 
+> This looks an allocation attempt which can fail safely.
 
+Indeed. Dave Chinner's commit f078d4ea82760 ("xfs: convert kmem_alloc()
+to kmalloc()") dropped the xfs wrapper. This allocation didn't use
+KM_MAYFAIL so it got __GFP_NOFAIL. The commit mentions this high-order
+nofail issue for another allocation site that had to use xlog_kvmalloc().
 
+I think either this allocation really can fail as the code (return
+-ENOMEM) suggests and thus can drop __GFP_NOFAIL, or it can use
+kvmalloc() - I think the wrapper for that can be removed now too after
+the discussion in [1] resulted in commit 46459154f997 ("mm: kvmalloc:
+make kmalloc fast path real fast path").
 
->
-> And it's probably not a good idea to return that from the new function.
->
-> Regards,
-> Christian.
->
->>   
->>
->> For all other comments, I will revise the patch accordingly in v2.
->>
->>   
->>
->> Regards
->>
->> Sam
->>
->>   
->>
->>   
->>
->> *From: *Koenig, Christian <Christian.Koenig@amd.com>
->> *Date: *Monday, June 30, 2025 at 19:54
->> *To: *Zhang, GuoQing (Sam) <GuoQing.Zhang@amd.com>, rafael@kernel.org <rafael@kernel.org>, len.brown@intel.com <len.brown@intel.com>, pavel@kernel.org <pavel@kernel.org>, Deucher, Alexander <Alexander.Deucher@amd.com>, Limonciello, Mario <Mario.Limonciello@amd.com>, Lazar, Lijo <Lijo.Lazar@amd.com>
->> *Cc: *Zhao, Victor <Victor.Zhao@amd.com>, Chang, HaiJun <HaiJun.Chang@amd.com>, Ma, Qing (Mark) <Qing.Ma@amd.com>, amd-gfx@lists.freedesktop.org <amd-gfx@lists.freedesktop.org>, dri-devel@lists.freedesktop.org <dri-devel@lists.freedesktop.org>, linux-pm@vger.kernel.org <linux-pm@vger.kernel.org>, linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>
->> *Subject: *Re: [PATCH 1/3] drm/amdgpu: move GTT to SHM after eviction for hibernation
->>
->> On 30.06.25 12:41, Samuel Zhang wrote:
->>> When hibernate with data center dGPUs, huge number of VRAM BOs evicted
->>> to GTT and takes too much system memory. This will cause hibernation
->>> fail due to insufficient memory for creating the hibernation image.
->>>
->>> Move GTT BOs to shmem in KMD, then shmem to swap disk in kernel
->>> hibernation code to make room for hibernation image.
->> This should probably be two patches, one for TTM and then an amdgpu patch to forward the event.
->>
->>> Signed-off-by: Samuel Zhang <guoqing.zhang@amd.com>
->>> ---
->>>    drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c | 13 ++++++++++++-
->>>    drivers/gpu/drm/ttm/ttm_resource.c      | 18 ++++++++++++++++++
->>>    include/drm/ttm/ttm_resource.h          |  1 +
->>>    3 files changed, 31 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
->>> index 4d57269c9ca8..5aede907a591 100644
->>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
->>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
->>> @@ -2889,6 +2889,7 @@ int amdgpu_fill_buffer(struct amdgpu_bo *bo,
->>>    int amdgpu_ttm_evict_resources(struct amdgpu_device *adev, int mem_type)
->>>    {
->>>          struct ttm_resource_manager *man;
->>> +     int r;
->>>    
->>>          switch (mem_type) {
->>>          case TTM_PL_VRAM:
->>> @@ -2903,7 +2904,17 @@ int amdgpu_ttm_evict_resources(struct amdgpu_device *adev, int mem_type)
->>>                  return -EINVAL;
->>>          }
->>>    
->>> -     return ttm_resource_manager_evict_all(&adev->mman.bdev, man);
->>> +     r = ttm_resource_manager_evict_all(&adev->mman.bdev, man);
->>> +     if (r) {
->>> +             DRM_ERROR("Failed to evict memory type %d\n", mem_type);
->>> +             return r;
->>> +     }
->>> +     if (adev->in_s4 && mem_type == TTM_PL_VRAM) {
->>> +             r = ttm_resource_manager_swapout();
->>> +             if (r)
->>> +                     DRM_ERROR("Failed to swap out, %d\n", r);
->>> +     }
->>> +     return r;
->>>    }
->>>    
->>>    #if defined(CONFIG_DEBUG_FS)
->>> diff --git a/drivers/gpu/drm/ttm/ttm_resource.c b/drivers/gpu/drm/ttm/ttm_resource.c
->>> index fd41b56e2c66..07b1f5a5afc2 100644
->>> --- a/drivers/gpu/drm/ttm/ttm_resource.c
->>> +++ b/drivers/gpu/drm/ttm/ttm_resource.c
->>> @@ -534,6 +534,24 @@ void ttm_resource_manager_init(struct ttm_resource_manager *man,
->>>    }
->>>    EXPORT_SYMBOL(ttm_resource_manager_init);
->>>    
->>> +int ttm_resource_manager_swapout(void)
->> This needs documentation, better placement and a better name.
->>
->> First of all put it into ttm_device.c instead of the resource manager.
->>
->> Then call it something like ttm_device_prepare_hibernation or similar.
->>
->>
->>> +{
->>> +     struct ttm_operation_ctx ctx = {
->>> +             .interruptible = false,
->>> +             .no_wait_gpu = false,
->>> +             .force_alloc = true
->>> +     };
->>> +     int ret;
->>> +
->>> +     while (true) {
->> Make that:
->>
->> do {
->>          ret = ...
->> } while (ret > 0);
->>
->>> +             ret = ttm_global_swapout(&ctx, GFP_KERNEL);
->>> +             if (ret <= 0)
->>> +                     break;
->>> +     }
->>> +     return ret;
->> It's rather pointless to return the number of swapped out pages.
->>
->> Make that "return ret < 0 ? ret : 0;
->>
->> Regards,
->> Christian.
->>
->>> +}
->>> +EXPORT_SYMBOL(ttm_resource_manager_swapout);
->>> +
->>>    /*
->>>     * ttm_resource_manager_evict_all
->>>     *
->>> diff --git a/include/drm/ttm/ttm_resource.h b/include/drm/ttm/ttm_resource.h
->>> index b873be9597e2..46181758068e 100644
->>> --- a/include/drm/ttm/ttm_resource.h
->>> +++ b/include/drm/ttm/ttm_resource.h
->>> @@ -463,6 +463,7 @@ void ttm_resource_manager_init(struct ttm_resource_manager *man,
->>>    
->>>    int ttm_resource_manager_evict_all(struct ttm_device *bdev,
->>>                                     struct ttm_resource_manager *man);
->>> +int ttm_resource_manager_swapout(void);
->>>    
->>>    uint64_t ttm_resource_manager_usage(struct ttm_resource_manager *man);
->>>    void ttm_resource_manager_debug(struct ttm_resource_manager *man,
+[1] https://lore.kernel.org/all/Z_XI6vBE8v_cIhjZ@dread.disaster.area/
