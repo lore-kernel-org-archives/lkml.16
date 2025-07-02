@@ -1,162 +1,213 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2685A275112;
-	Wed,  2 Jul 2025 12:57:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0F32750F2
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 12:58:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751461072; cv=none; b=ViOWbUkf4bXcVncBrLf7KtMCeGHoYIWakftUSNTcBWnKujmuI0ql4pMbyAI9sD01Ng8i602TE0qWi0GGmuLlerlVURDejWtd3ZOGMMMJh8JWi9LNhhnqcjWJw83axNTC1EquvICNSRIP55c43qpMwg5fbqOjZhrFfcUwFGhiXP0=
+	t=1751461097; cv=none; b=rtszK3tCCYlLdXlgXYA7cRzHG/zy7Yqx1GjH5yR1tH+BStT5//IKeK5xWvz+HeY0c9WbsNeeB+yh1gbM6u+nStWSHs4Us6nhND2bpYkuhHudH1LgfLMXT3k7uS9XpNkBqMLrLR2NLrChwGjz+fmuf0o9p6QUcCc2caxfsKVKgBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751461072; c=relaxed/simple;
-	bh=0fV3N+hhZTmP3CQyJcJtFrhr7wGpoiGzXrO2T7RbqXI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Jh5aNqj+Wyy9KouJzZgJOBqfgFATjQfORIx/8GIz1rwXxut4FgVBfbMoHM+JKwPI2FXgpcSFybQomuRWK99mQd5snEE2v4u9TnLk2VGpICAmkIeRi9PNXyx0WLUdkp+OIWIYBrs/+xzECNaC6gDBDJmsfhOZPpc9M7mdywOATqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=n+US6jnL; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1751461097; c=relaxed/simple;
+	bh=V7r/fq1V/3GvSDpgRjWu2WC8E8m1RPRUaD194Yp/3rM=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=OjVabPF9auvU8/U+JO3Tz5IYavvIn9W5A1trfHLPfPwfCKrAvlTKw7ie2KfM/+136zNuyXcGuyOmUQ67FC5k/25FjhhRIPq7Ig6lyTFXJyT//SEFnKSKrCycxFrvQY3TJJGWhWU61esa7QUPPgulejTyaZg/Z1GwW7/O/7BSChE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AZnD0coe; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="n+US6jnL"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 562CeI0O013209;
-	Wed, 2 Jul 2025 12:57:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=SLo8ad
-	wDyZ2a+aEcqiFtRAlQqRjdUifFA/wDj5U+6E8=; b=n+US6jnLLdYL7kglYNbjuT
-	mu+7W7oKznhnLHXcTZ+yxYXJhXecORrkuKs0qK4PQKG2kznZxiy5O6rbM6ly4yPy
-	WUI+nGbpnTED/nxw+fIr2Le7LJ7Ycvku6SoYeLDiy/hnPkUkueJcI4UBcaujseX5
-	whjyWjwmSMkBW/9BV4ziW4Ws8mf6Jt+BnbZojZPxniB2vHbWffzeS5O0AD6jsHL4
-	1lH7E+KY1kYqFw9vh5K5ZQg73srEDMgnuvT8z68OYLyaicfXMs7op0ikbSQCYwki
-	xqbO44kiA5h7/uH51Fa8Vmf+hYPyQlY08VgPLxpoGa0424clmAws8xWHv80ZTL/A
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j6u1w93x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Jul 2025 12:57:28 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5629VnOB032148;
-	Wed, 2 Jul 2025 12:57:27 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47ju40qq2n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Jul 2025 12:57:27 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 562CvNfS39846152
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 2 Jul 2025 12:57:23 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5CF4120043;
-	Wed,  2 Jul 2025 12:57:23 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 08BEC20040;
-	Wed,  2 Jul 2025 12:57:23 +0000 (GMT)
-Received: from [9.152.222.224] (unknown [9.152.222.224])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  2 Jul 2025 12:57:22 +0000 (GMT)
-Message-ID: <7eea50a5-e1b0-4319-9a25-cb8b327a836d@linux.ibm.com>
-Date: Wed, 2 Jul 2025 14:57:22 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AZnD0coe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751461096; x=1782997096;
+  h=date:from:to:cc:subject:message-id;
+  bh=V7r/fq1V/3GvSDpgRjWu2WC8E8m1RPRUaD194Yp/3rM=;
+  b=AZnD0coerJaTX16wJvybulg3NMSKtUD1BONRPxC4A3TbRwJkR2wpNRD8
+   XzBy+rg+itUJ45BnEo09cDT2pmOtRwy/Yz4Rs8EC55l9acpzQGScTPMyH
+   XNL9oAIQwH9+QBjga/Cbb/HRp12izdE4foZWdB66oFH8tuT/iQ6fYt3Er
+   3N7Yp7T8PssVd18johC7+R/2yuQPAyd0ZQ6LogZ68sUPsx3wlKqBUGhup
+   uNxLKBIEMTJZ/9mRG5bUCM0urXyOVM8TP1IRjG0GXP/wLdu4r6C1EuEUO
+   Yoo7bB9qpWc0j2OtQlfYob16iBMKbANva35Zh2nFveUC1hvw6zkcU95a3
+   w==;
+X-CSE-ConnectionGUID: FvEIHGPbTWSlWHIwGMY8XA==
+X-CSE-MsgGUID: GTtQPzqNSf+FDrg8LLb+ew==
+X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="57560870"
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="57560870"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 05:58:15 -0700
+X-CSE-ConnectionGUID: pm7ZYKxaR2OA5I8FuKrZRA==
+X-CSE-MsgGUID: R8f9axd5QISTbdi6y/ASUQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="153521239"
+Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 02 Jul 2025 05:58:13 -0700
+Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uWx2R-0000e3-0o;
+	Wed, 02 Jul 2025 12:58:11 +0000
+Date: Wed, 02 Jul 2025 20:58:00 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:tip/urgent] BUILD SUCCESS
+ dcbeca101fec9464eb0356f897b36cad29024bad
+Message-ID: <202507022048.xKHlASjn-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 00/12] unwind_deferred: Implement sframe handling
-To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        x86@kernel.org, Indu Bhagat <indu.bhagat@oracle.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        "Jose E. Marchesi" <jemarch@gnu.org>,
-        Beau Belgrave <beaub@linux.microsoft.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
-References: <20250701184939.026626626@goodmis.org>
-Content-Language: en-US
-From: Jens Remus <jremus@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20250701184939.026626626@goodmis.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: j3dTyobZwAYIbBORySSJbo7qt5Esgp4q
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDEwMCBTYWx0ZWRfX6AqeVuxaFy6R L7a8jktW83LvqDP1UBtNsl/c9tmm4ywmoxtAlag09SVF5pmKLG+qU2mwlWZfkuxUDA4phdzqWv1 rJv2JBhXSryQOSPVKpQwheusTbYWUFDH1UOGdS0jEP4Gb8zzSU2wmog5bUYnOyd9YKM/4uByhim
- oN9cQRKfsE85f9fo3quLNyTBupVI8C6fgNkCoXOWRh/4G6u2GULg/XiXxnYGEkS/y/hjX4IVxFE Pm72SvUfXi5M+BlmcN6Sy9/3bcl26hdQkLDu0WW/HdNDU08MSZIKLCSS8VKN+95P9fGjs2UvKWp PQXQKJKjqSyLUWt6kG6rSCe3NiwtfVpGU8n6j6rWpm6Dghn4A85S9mH01PdznUhdY8mO/2T6eQp
- DmpgOI44g4xcFd25TVk1CiT+zZg0FkHQsRzlUGDK2xUlxD1fA5bO1wNAgx940zL3Ep0wz7KP
-X-Proofpoint-GUID: j3dTyobZwAYIbBORySSJbo7qt5Esgp4q
-X-Authority-Analysis: v=2.4 cv=GrRC+l1C c=1 sm=1 tr=0 ts=68652cb8 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=meVymXHHAAAA:8 a=VnNF1IyMAAAA:8 a=GcyzOjIWAAAA:8
- a=gqIrRWIkWWbV9rJkhgAA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=-476f2AVtAYA:10 a=2JgSa4NbpEOStq-L5dxp:22 a=hQL3dl6oAZ8NdCsdz28n:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-02_01,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 adultscore=0 mlxlogscore=999 mlxscore=0 impostorscore=0
- phishscore=0 spamscore=0 suspectscore=0 bulkscore=0 malwarescore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507020100
 
-Hello Steve!
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tip/urgent
+branch HEAD: dcbeca101fec9464eb0356f897b36cad29024bad  Merge x86/urgent into tip/urgent
 
-On 01.07.2025 20:49, Steven Rostedt wrote:
-> This code is based on top of:
-> 
->  https://lore.kernel.org/linux-trace-kernel/20250701005321.942306427@goodmis.org/
->  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git unwind/core
-> 
-> This is the implementation of parsing the SFrame section in an ELF file.
+elapsed time: 1454m
 
-...
+configs tested: 136
+configs skipped: 2
 
-> The code for this patch series can be found here:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git unwind/sframe
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Wouldn't it make sense to include your related perf (tools) series [1]
-in that branch to ease testing?  Provided you also include the minor
-fix [2] to make perf tools work. :-)
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+alpha                               defconfig    gcc-15.1.0
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    gcc-15.1.0
+arc                                 defconfig    gcc-15.1.0
+arc                   randconfig-001-20250701    gcc-13.3.0
+arc                   randconfig-002-20250701    gcc-15.1.0
+arc                        vdk_hs38_defconfig    gcc-15.1.0
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-15.1.0
+arm                                 defconfig    clang-21
+arm                      integrator_defconfig    clang-21
+arm                        multi_v7_defconfig    gcc-15.1.0
+arm                        mvebu_v7_defconfig    clang-21
+arm                   randconfig-001-20250701    clang-17
+arm                   randconfig-002-20250701    gcc-8.5.0
+arm                   randconfig-003-20250701    clang-21
+arm                   randconfig-004-20250701    clang-21
+arm                         wpcm450_defconfig    gcc-15.1.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                 randconfig-001-20250701    clang-21
+arm64                 randconfig-002-20250701    gcc-15.1.0
+arm64                 randconfig-003-20250701    clang-18
+arm64                 randconfig-004-20250701    gcc-8.5.0
+csky                              allnoconfig    gcc-15.1.0
+csky                                defconfig    gcc-15.1.0
+csky                  randconfig-001-20250701    gcc-11.5.0
+csky                  randconfig-002-20250701    gcc-10.5.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon                             defconfig    clang-21
+hexagon               randconfig-001-20250701    clang-21
+hexagon               randconfig-002-20250701    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386        buildonly-randconfig-001-20250701    gcc-12
+i386        buildonly-randconfig-002-20250701    gcc-12
+i386        buildonly-randconfig-003-20250701    gcc-12
+i386        buildonly-randconfig-004-20250701    gcc-12
+i386        buildonly-randconfig-005-20250701    gcc-12
+i386        buildonly-randconfig-006-20250701    clang-20
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-15.1.0
+loongarch                         allnoconfig    gcc-15.1.0
+loongarch             randconfig-001-20250701    gcc-13.3.0
+loongarch             randconfig-002-20250701    gcc-15.1.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+m68k                        m5307c3_defconfig    gcc-15.1.0
+m68k                           virt_defconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+mips                         rt305x_defconfig    clang-21
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250701    gcc-14.2.0
+nios2                 randconfig-002-20250701    gcc-13.3.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-15.1.0
+openrisc                 simple_smp_defconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20250701    gcc-14.3.0
+parisc                randconfig-002-20250701    gcc-10.5.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    clang-21
+powerpc                       ebony_defconfig    clang-21
+powerpc               randconfig-001-20250701    gcc-13.3.0
+powerpc               randconfig-002-20250701    clang-21
+powerpc               randconfig-003-20250701    clang-21
+powerpc                     sequoia_defconfig    clang-17
+powerpc64             randconfig-001-20250701    clang-21
+powerpc64             randconfig-002-20250701    clang-21
+powerpc64             randconfig-003-20250701    gcc-10.5.0
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-21
+riscv                 randconfig-001-20250701    gcc-14.3.0
+riscv                 randconfig-002-20250701    gcc-10.5.0
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-15.1.0
+s390                                defconfig    clang-21
+s390                  randconfig-001-20250701    gcc-9.3.0
+s390                  randconfig-002-20250701    clang-17
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                                  defconfig    gcc-15.1.0
+sh                        edosk7705_defconfig    gcc-15.1.0
+sh                    randconfig-001-20250701    gcc-15.1.0
+sh                    randconfig-002-20250701    gcc-13.3.0
+sh                           se7722_defconfig    gcc-15.1.0
+sh                        sh7763rdp_defconfig    gcc-15.1.0
+sh                  sh7785lcr_32bit_defconfig    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                 randconfig-001-20250701    gcc-10.3.0
+sparc                 randconfig-002-20250701    gcc-15.1.0
+sparc64                             defconfig    gcc-15.1.0
+sparc64               randconfig-001-20250701    gcc-8.5.0
+sparc64               randconfig-002-20250701    gcc-12.4.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250701    gcc-12
+um                    randconfig-002-20250701    gcc-12
+um                           x86_64_defconfig    clang-21
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250701    gcc-12
+x86_64      buildonly-randconfig-002-20250701    gcc-12
+x86_64      buildonly-randconfig-003-20250701    gcc-12
+x86_64      buildonly-randconfig-004-20250701    gcc-12
+x86_64      buildonly-randconfig-005-20250701    clang-20
+x86_64      buildonly-randconfig-006-20250701    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-18
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                  cadence_csp_defconfig    gcc-15.1.0
+xtensa                randconfig-001-20250701    gcc-15.1.0
+xtensa                randconfig-002-20250701    gcc-13.3.0
 
-Additionally it would make sense to include the patches from Josh that
-add SFrame information to the vDSO on x86 [3].
-
-[1]: [PATCH v12 00/11] perf: Support the deferred unwinding infrastructure,
-https://lore.kernel.org/linux-trace-kernel/20250701180410.755491417@goodmis.org/
-
-[2]: https://lore.kernel.org/linux-trace-kernel/51903e66-56bc-42a4-b80c-9c3223e2a48a@linux.ibm.com/
-
-[3]: [PATCH v6 0/6] x86/vdso: VDSO updates and fixes for sframes,
-https://lore.kernel.org/all/20250425023750.669174660@goodmis.org/
-
-> Changes since v6: https://lore.kernel.org/linux-trace-kernel/20250617225009.233007152@goodmis.org/
-
-> - Moved the addition of the prctl(), that allows libraries to add the elf
->   sections to the kernel, to the last patch and labeled it as "DO NOT APPLY".
->   This should instead be a proper system call and work to make it robust and
->   flexible still needs to be done. The prctl() patch is added for debugging
->   purposes only.
-
-Does PR_SET_VMA [4] create a precedent case for the SFrame prctls?
-
-[4]: https://man7.org/linux/man-pages/man2/pr_set_vma.2const.html
-
-Thanks and regards,
-Jens
--- 
-Jens Remus
-Linux on Z Development (D3303)
-+49-7031-16-1128 Office
-jremus@de.ibm.com
-
-IBM
-
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
