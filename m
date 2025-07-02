@@ -1,113 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B4BF25F97F;
-	Wed,  2 Jul 2025 11:04:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C5CD253956
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 11:04:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751454267; cv=none; b=SzjunkxsoFgLFTjv+EJbLN14YdJbjzrr/lnOn01qI+qOUBCGAmta0kuZXc6hsDD2owqTkACrb0hj6HkwK/dqhgK/RzHmcIDsFyf1f49zuFkVXhTO8YqJJRLbcLetUyHCzcqmmkePqGm2KBXx5LibxLNyGJsgH72h5vkPeu5KMLA=
+	t=1751454286; cv=none; b=QWdKoat5r0qSVTipfGMp6PXe2YV7ENZzoc1yNWWanlOhMeTbMFwsbvOv/ZRS4ksM5Fo58uhoSTuDYLtcVn7g7+J48mnYoOY95HeswuvpobqUSpon80E8GetIamvp1Lprf8odcMPT1L0fdHdjdaiUJOTbaKgFpXb/oQOiPHHiNJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751454267; c=relaxed/simple;
-	bh=VnrLLpvVSLYOlpdQt2Fw/U4XhbYdJYLDafJ/3N4W8Vc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ijZ1+w/IyuM3h5MXYCoFvjmrlGR9Jb9ZAarZSPkKfb84s+qiac83hBfHozFaPITddeqvMziar78XkU4PxobNwkwUYvQ+NdVEDJ3c0zdVqXzkWcqPQZUYJEbnv+g8adgpsylkAhGpYRwnx1cyO7acCmlpTyd50XMJLp+G7C24WM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kkn9q4u8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751454286; c=relaxed/simple;
+	bh=kIO4kRErh11jy7TmCP0YkdztWKE/kaiytblz1fDz4a0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lcQeHVM0RoAXCqgJnQW3OY0PvbLG7Cnp4TKib5QBViHtgy/L1bEGo1ZaxIThGInWXpEJ6jT6SeC1/pI+zt0GRgIMJgxpr8rea9Am5XVY9CBEAJvgG24Lav0fEbJGmZX8jUFD5UCzTOwAatR85bFaNvIdjiF5WB9Dw6TzTzlPQ3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=oPK3CLK3; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kkn9q4u8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCEE3C4CEED;
-	Wed,  2 Jul 2025 11:04:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751454266;
-	bh=VnrLLpvVSLYOlpdQt2Fw/U4XhbYdJYLDafJ/3N4W8Vc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Kkn9q4u8iaQeWMYm3tZPKBbdeaME23/2zMEjew2hg1/o4z/q2BSAGydCHCddzP6iE
-	 VXXO0oDaHiZxYCnrmaH3D7kuirLDEYToyHWCkx7SjTGEMA7WPaynTWnpsECWK9+iW3
-	 gBGsj7l1MKv22wg/zD+9+RMheoqgf2ydp9iUYOE96EhSTKXTuWKjRdmC6X9myc6rGB
-	 OeD8yY/W/Z2iRuv7xK/LY6VSEHAp2TeVY2grpjA8OzgpoKgDJ2oaf5cduDpN9sgOD8
-	 HlKVoZwwxS8Abc/1b+gDoSjcXomeocYoUly/KJtSDO7YaRxIKgFj85AcNXM0DXT/Vq
-	 8zfvKlqor7ixw==
-Message-ID: <156729ff-86f6-49a9-8b3c-7d0fd6737fb9@kernel.org>
-Date: Wed, 2 Jul 2025 13:04:18 +0200
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="oPK3CLK3"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-553b60de463so4907074e87.3
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 04:04:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1751454282; x=1752059082; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kIO4kRErh11jy7TmCP0YkdztWKE/kaiytblz1fDz4a0=;
+        b=oPK3CLK3RDQCKYt/TK1SwrNYLnJNgMN2/XBuAYx2DVxT3nqZjg2UYXhDYw7H0Tga+p
+         SvBraC/NM46Cn5SPF4xsx1kkUH7RmVSsyqvOvNU5/QbPbzBwDObf4754LWVDjd7gKt8l
+         B770v6aBKuPpA3fUm/l9IYRAgYTn2AOqNrOX4cOG8x760hdeqWiW9jTUWYoqirfZZ6H9
+         3HxCHTRYTgBI/CVREtIfuqT8eUl+yQRtRV+tUPzdDt6jVwmYX1Ev8pqkwax3UqjfnIaa
+         GNDjCi2sMWfKyXJSPcey4PhZ5UUXmmvvvhqM/pGmzQOH9bMaQvGFByxJQLdftqje+oFu
+         gQDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751454282; x=1752059082;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kIO4kRErh11jy7TmCP0YkdztWKE/kaiytblz1fDz4a0=;
+        b=tAVgVVICxWFjjFqK5XeKpiAryBx6gflly6WoEXL/2Tw3RS7vfHg/aMS8qYfvvnLaUu
+         IWk/CvNU2sg21YVBUaH3jpK+rW2i5JmUGSwdQll6uFCfdCR3Oetliby8qp397+U+WnPm
+         1AijCWLL5lsQyWcvfCQQR02MuZONX/YeXJkrUEnjwowLyG5pJHGLLextXzHC8rHPvqiO
+         sru7oUB3LsM5boihID3ySXWgovSvJFlkWNYWtludzDEe9N1iydTHJIGymks4z0y5w/k/
+         fWXRoChomDHcd1enVYknbSx8UM4fKR6FBRFCyzEnv5D3DBxWW6va1N1ay1Hgeew7Lsu+
+         CTNA==
+X-Forwarded-Encrypted: i=1; AJvYcCXmcyzlgGqhbhJCD45lKmmj+CyOndWHYRkN8fCif6UO8nkDAJ3yM97TgtYbbrYzgIhDoRS9o6+wbLOz3mU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqnrStCaTrGwiz2WcjV74iQdZuZ82/E0PaQ85xrTBV6D0K5Ji3
+	AYZ1vKZ7bnijs2PskIHb1MI17RC3rKdX3Ti/M37ljKUPW033dIeXRHjI/gbOXBBS2imHl5soSmv
+	bUWfuV2FrQZ8QLjH8MqBbXAiB7Mches3VvYVmN03aqA==
+X-Gm-Gg: ASbGncusueHoexcjXHNwvG6lFkVoJjCS7EJia2Y/w4G5UXLCxOL0xnZZnlgmko1993B
+	/75aaaBFJmgbHWsHgPG6WjUC8ixZkKaB6U0c47Y4SLURLrNeT+pCIVIKySCqjJtiXXTChlrf9T/
+	Ny0CpsKdCv2b7M3VO0LVHMxtVGw6HG4oTt0Wwceg416OeK
+X-Google-Smtp-Source: AGHT+IGSDJNqIbDFzqak4r2BGWXjw343zIhJGh0HVunBXOW/GFwnNwsW8KCXGLfWRyUIYjnvV9Y3uHTO0FTpSpd8arQ=
+X-Received: by 2002:a05:6512:33c3:b0:553:3621:efee with SMTP id
+ 2adb3069b0e04-55628376b73mr910658e87.50.1751454282296; Wed, 02 Jul 2025
+ 04:04:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/5] media: iris: register and configure non-pixel node
- as platform device
-To: Vikash Garodia <quic_vgarodia@quicinc.com>,
- Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Abhinav Kumar <abhinav.kumar@linux.dev>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250627-video_cb-v3-0-51e18c0ffbce@quicinc.com>
- <20250627-video_cb-v3-2-51e18c0ffbce@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250627-video_cb-v3-2-51e18c0ffbce@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250625161715.1003948-1-apatel@ventanamicro.com>
+ <87wm8tmcsr.ffs@tglx> <CAK9=C2Ue36iF8X17n-D70BkMk69bGKb+8dSmro6SEo5i2d+OSg@mail.gmail.com>
+ <87ikkcmkje.ffs@tglx>
+In-Reply-To: <87ikkcmkje.ffs@tglx>
+From: Anup Patel <apatel@ventanamicro.com>
+Date: Wed, 2 Jul 2025 16:34:29 +0530
+X-Gm-Features: Ac12FXxlQtBoP2wnUwftAZfKRl4x57RrJbhO7WA0tbv3mASPe9I66ZZKjnYy204
+Message-ID: <CAK9=C2U7Ze=q12N+_MM5c+nsJEBkuCoHs-GUsM0qdfVSyR2QVQ@mail.gmail.com>
+Subject: Re: [PATCH] irqchip: riscv-imsic: Add kernel parameter to disable IPIs
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jonathan Corbet <corbet@lwn.net>, Anup Patel <anup@brainfault.org>, 
+	Atish Patra <atish.patra@linux.dev>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Andrew Jones <ajones@ventanamicro.com>, linux-doc@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 27/06/2025 17:48, Vikash Garodia wrote:
->  
-> +static int iris_init_non_pixel_node(struct iris_core *core)
-> +{
-> +	struct platform_device_info info;
-> +	struct platform_device *pdev;
-> +	struct device_node *np_node;
-> +	int ret;
-> +
-> +	np_node = of_get_child_by_name(core->dev->of_node, "non_pixel");
+On Tue, Jul 1, 2025 at 1:04=E2=80=AFPM Thomas Gleixner <tglx@linutronix.de>=
+ wrote:
+>
+> On Tue, Jul 01 2025 at 12:00, Anup Patel wrote:
+> > On Mon, Jun 30, 2025 at 9:39=E2=80=AFPM Thomas Gleixner <tglx@linutroni=
+x.de> wrote:
+> >> > When injecting IPIs to a set of harts, the IMSIC IPI support will
+> >> > do a separate MMIO write to SETIPNUM_LE register of each target
+> >> > hart. This means on a platform where IMSIC is trap-n-emulated,
+> >> > there will be N MMIO traps when injecting IPI to N target harts
+> >> > hence IPIs based on IMSIC software injected MSI is slow compared
+> >> > to the SBI IPI extension.
+> >> >
+> >> > Add a kernel parameter to disable IPIs in IMSIC driver for platforms
+> >> > with trap-n-emulated IMSIC.
+> >>
+> >> Why do you need a kernel parameter for that. If the platform uses trap=
+-n
+> >> emulation, then disable the IPI muck automatically, no?
+> >>
+> > Unfortunately, we don't have DT, ACPI, or any other way of discovering
+> > whether underlying IMSIC is trap-n-emulated. In fact, the DT or ACPI
+> > passed to a KVM Guest is the same irrespective of whether underlying
+> > IMSIC is trap-n-emulated or backed by hardware IMSIC VS-file.
+>
+> Sigh.
+>
+> > Using software injected MSIs as IPIs is purely a software choice in the
+> > IMSIC driver so this new kernel parameter allows users to override it.
+>
+> Please add that information to the change log.
+>
 
-Never tested.
+Okay, I will add these details to the patch description.
 
-Best regards,
-Krzysztof
+Regards,
+Anup
