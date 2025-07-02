@@ -1,112 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37D321EDA12;
-	Wed,  2 Jul 2025 08:31:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53A334CF5
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 08:32:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751445108; cv=none; b=dOULYTdL7UDjLHLk9Nnscz/uQxpd6ZvzAPYWsIvXYVXosk0FI409x49Ud13abpQ21Beb+byXXrMFf2zmgKW/sgojph1eYM8HT2yHVt/BC5/ONeb9XtxAhXldMmTDJDmA/AJaRMroEz5I7XwBXMpRxwSWakzYBXU9Yrxac8s3vus=
+	t=1751445161; cv=none; b=cDn81fooeQ9phrW537r4P0DOGkGtawr1+lruQ2/w/31+aJdenOm9+enIZ0xH814dawqjPScpXp8x7Hr7xPUAkwoq5jowTtS2GhMKv9mHrc4L7MghsBfbJ8pJAzXpYsHWZCFq/4SUWe9UpoL1o78U0BCPZWh+QWsX6XRCBenSm6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751445108; c=relaxed/simple;
-	bh=a/eRWd8UASswXjdzw5QzgVVAhavoHjL2Qy+4/uDrzto=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xn1p5TB0gxyt7ApRMj31xEBOdWpMLZ3wQHz+QDXMZmBEFXiAiri9ZPPj58c/qEIfOyL0v8z4aeT3tmcFJj7iBXhdc1bz0msLqyq9pqpRGO7/AvmZ/cJYfZgVMK2IgH8kE93EOtS9rhhkTAw1JyE3PMHqGdX7F+ZB+SgIABC4Mxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NDAnK9Ee; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751445161; c=relaxed/simple;
+	bh=eAWfGBOp2OE5o/uIStw/ne4ImpbU6xw1RGKMdwD5PrM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=jZvuPb7fTVEWaDfeniU3JlXDyfe5nty7G+MQFZNvdH//MURo21p0Ay0Fsq74TXpiXEESujxagC4kJNbdGSBNRh2ZomSPEXd6W1X9t5Rh+DLCVb6IZGr87UGNEr1ecYQjahuVtxWr+IzIczWpUljBLAlLEAjS1ajENzBSREBzGww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pKJmf6CS; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NDAnK9Ee"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3524BC4CEED;
-	Wed,  2 Jul 2025 08:31:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751445107;
-	bh=a/eRWd8UASswXjdzw5QzgVVAhavoHjL2Qy+4/uDrzto=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=NDAnK9Ee0VhEu+OQoZKjvUMsT0uxnYqmlsHX+kppvR27pu7/MOy/MyUV0l80ITn2w
-	 wFB+xFuuvqfNLfdUhNr/v2eO/gZnwa+xZxQRubZ/ADGLZwbnun2ezuW4GB+J9rPm26
-	 V9cOO7NRTNytnL70BloANdUQpRvqMT/IKaS7OGM5DTSl3/bUjUBwpaFBL7F/Lw+ZfA
-	 qu6y1H2UXL/RcIi0deCEZ5dk2VePfsRga6VBTxfhaPOqf2REuEaU/ISwbNuM2iX1Zn
-	 nAv+dbr6VBY/BMk899QMzQYbO6Q2eRfgCrozr/JfcQIAxUf/XpY/a9ikQENBq0NPib
-	 bIb0TMyMD3dWw==
-Message-ID: <6d086b12-e5b3-4367-95bd-eba6cbecde5a@kernel.org>
-Date: Wed, 2 Jul 2025 10:31:38 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pKJmf6CS"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-453663b7bf1so154205e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 01:32:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751445158; x=1752049958; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XvcsilU1sW9ZroJrInpDuRq5bTBfyCF/BMtQir5LxGI=;
+        b=pKJmf6CSnbKkUTpRWEhYuPD3V7TxP6eps2N3K8Bo9XygZT5XfR+vdSQhnay49QNroC
+         zlKsFPwC43QQRX6CYn0+TLVzRh8FCENVFAfyc9u21KavLZLueyRT7AStfUNdSITbGUGz
+         G9NXZQ+1+i1sGstITI9mbvQoY2ne6sRbaCrsjv1ccbTL+idQVXnHavh4XwthdTfBYCho
+         4G9j1jJP0UmjP3sc3tPzUrBv6E2vRGFqswwWeN3zuRfY2VI3ZXyILjy7rOW6H77YCbVd
+         GkMJGyVBA8oePbKvlhTyL/85fo9aJz9QpIVrWNOKmGNeIAASq/KO/uxhbIl0Tm5+1Rvt
+         v3HA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751445158; x=1752049958;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XvcsilU1sW9ZroJrInpDuRq5bTBfyCF/BMtQir5LxGI=;
+        b=sImaLH68w56vBQPn5htCvMQAM5uNR58AJjmCTFjzeQ7MHirEd6gRCy6edMobu2+NfB
+         ey4kh4z13nA/Je64YigiMjjdOjS6ZeJ3uqJkqqnUEj2C5qdu1gsjZ54oeuyhPzoRuKvv
+         g9UkQCAfT/Z4S+Px7b4lqeDs8+9AyKuvORpezu5nK6/VQS/3Cd3k3xl7lHoO5Yca5taa
+         iZS4/NK3MztrFUOhWz260vny0gD0DGkXvyMw3iP5om/sLR4G7EUkI172/pjjC6YftDja
+         1rew3hJm+McUYzabhMKFFpJmR6bs0gHWwHLGbGhzzuh/YxQP6rt6P5tYYpteNVtSz9/d
+         TWMw==
+X-Forwarded-Encrypted: i=1; AJvYcCW8I+g1P/s7Iur5phDfFdbsiyCjxeYyn64YItsFEIUKkdrXhZg4mYBzVUL/HwBs1rsYJXJMJ9pJdwOMXaE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzULuhGvo6/BBHAHNAg0OSEj7GbpWjtcb6Xrkf3By40LJ3oP52S
+	ygyg5fPEe4AqDnf8peIYIgdbvV6Q6QTuXtajaEirdCQVz6E0AnqUVbfs/RzV+TZ64g==
+X-Gm-Gg: ASbGncuhnwUdYlrO5kShyC99eIabpLnCSq2haaaEpMP9BClwJvfYhiEQ5faCjq9B3rx
+	VPUke1m26xTzMQddRlJPhf4LmR1q8Cy2tCUgw4hn/4qf30S/7dG53QxGgR+aitH/cjypeUKF/EL
+	8Hblr9+RUtPsplu5CblpDnAfa3LchYEnH8yn00zSRXf0gW9OYOyWmtbooVYVFCE0Nf/Je5j3fss
+	R/GXZDwr9rCF8OqAqFR+KQ1HC59dPITarxlbZZ83e8mQy+7mLEcwiAPoo0b/cpIBeLkkW6eqQ1E
+	9XmY6tUNSkuDj5QRd6V7vMkz8OW+gsTg1vhe4v7B0xh64k89jg==
+X-Google-Smtp-Source: AGHT+IFpZv2X4ec+NbYvtOFfMUhTvi0IIqKMta9hdoetaYBvp/OQbbyq8JB7TaOnylqpXCpoJ83zzg==
+X-Received: by 2002:a05:600c:a301:b0:453:5ffb:e007 with SMTP id 5b1f17b1804b1-453e03a982cmr2406815e9.4.1751445157740;
+        Wed, 02 Jul 2025 01:32:37 -0700 (PDT)
+Received: from localhost ([2a00:79e0:9d:4:a624:383a:b7f6:98b6])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4538a3fe587sm194408345e9.19.2025.07.02.01.32.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 01:32:37 -0700 (PDT)
+From: Jann Horn <jannh@google.com>
+Date: Wed, 02 Jul 2025 10:32:04 +0200
+Subject: [PATCH v2] x86/mm: Disable hugetlb page table sharing on 32-bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: display: simple: Add Olimex
- LCD-OLinuXino-5CTS
-To: Paul Kocialkowski <paulk@sys-base.io>, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,
- Jessica Zhang <quic_jesszhan@quicinc.com>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Thierry Reding
- <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>
-References: <20250702082230.1291953-1-paulk@sys-base.io>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250702082230.1291953-1-paulk@sys-base.io>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250702-x86-2level-hugetlb-v2-1-1a98096edf92@google.com>
+X-B4-Tracking: v=1; b=H4sIAIPuZGgC/32NQQ6DIBBFr2Jm3WkAg5queg/josIIJFQasMTGc
+ PdSD9Dle8l//4BE0VGCW3NApOySC2sFcWlA2cdqCJ2uDIIJybqW4T50KDxl8mjfhjY/48z1sNA
+ spFQEdfiKtLj9jI5TZevSFuLn/Mj8Z//mMkeOrO+Vlq0eavVuQjCerio8YSqlfAGMxjZptQAAA
+ A==
+X-Change-ID: 20250630-x86-2level-hugetlb-b1d8feb255ce
+To: Dave Hansen <dave.hansen@linux.intel.com>, 
+ Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>
+Cc: Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
+ Vitaly Chikunov <vt@altlinux.org>, linux-kernel@vger.kernel.org, 
+ linux-mm@kvack.org, Dave Hansen <dave.hansen@intel.com>, 
+ stable@vger.kernel.org, Jann Horn <jannh@google.com>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751445128; l=2325;
+ i=jannh@google.com; s=20240730; h=from:subject:message-id;
+ bh=eAWfGBOp2OE5o/uIStw/ne4ImpbU6xw1RGKMdwD5PrM=;
+ b=3IjgsDhfn/5nRf4zEn2iPWeV2Su1iX72bqKFpVCmdzkQTIJkAmz8QikSuctlSlKeSLatqT9Nr
+ pRjGbWN0vROA/pzHLwqxQRbqBtzR/FFfjEDRD+fhdunfjKxp7ptnLTV
+X-Developer-Key: i=jannh@google.com; a=ed25519;
+ pk=AljNtGOzXeF6khBXDJVVvwSEkVDGnnZZYqfWhP1V+C8=
 
-On 02/07/2025 10:22, Paul Kocialkowski wrote:
-> Add the Olimex LCD-OLinuXino-5CTS, a 5-inch TFT LCD panel.
-> 
-> Signed-off-by: Paul Kocialkowski <paulk@sys-base.io>
-> ---
-> 
-> Changes since v1:
-> - Fixed yaml indentation.
+Only select ARCH_WANT_HUGE_PMD_SHARE on 64-bit x86.
+Page table sharing requires at least three levels because it involves
+shared references to PMD tables; 32-bit x86 has either two-level paging
+(without PAE) or three-level paging (with PAE), but even with
+three-level paging, having a dedicated PGD entry for hugetlb is only
+barely possible (because the PGD only has four entries), and it seems
+unlikely anyone's actually using PMD sharing on 32-bit.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Having ARCH_WANT_HUGE_PMD_SHARE enabled on non-PAE 32-bit X86 (which
+has 2-level paging) became particularly problematic after commit
+59d9094df3d7 ("mm: hugetlb: independent PMD page table shared count"),
+since that changes `struct ptdesc` such that the `pt_mm` (for PGDs) and
+the `pt_share_count` (for PMDs) share the same union storage - and with
+2-level paging, PMDs are PGDs.
 
-Best regards,
-Krzysztof
+(For comparison, arm64 also gates ARCH_WANT_HUGE_PMD_SHARE on the
+configuration of page tables such that it is never enabled with 2-level
+paging.)
+
+Reported-by: Vitaly Chikunov <vt@altlinux.org>
+Closes: https://lore.kernel.org/r/srhpjxlqfna67blvma5frmy3aa@altlinux.org
+Suggested-by: Dave Hansen <dave.hansen@intel.com>
+Tested-by: Vitaly Chikunov <vt@altlinux.org>
+Fixes: cfe28c5d63d8 ("x86: mm: Remove x86 version of huge_pmd_share.")
+Cc: stable@vger.kernel.org
+Signed-off-by: Jann Horn <jannh@google.com>
+---
+I'm carrying over Vitaly Chikunov's "Tested-by" from v1.
+
+Changes in v2:
+- disable it for 32-bit entirely (Dave Hansen)
+- Link to v1: https://lore.kernel.org/r/20250630-x86-2level-hugetlb-v1-1-077cd53d8255@google.com
+---
+ arch/x86/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 71019b3b54ea..4e0fe688cc83 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -147,7 +147,7 @@ config X86
+ 	select ARCH_WANTS_DYNAMIC_TASK_STRUCT
+ 	select ARCH_WANTS_NO_INSTR
+ 	select ARCH_WANT_GENERAL_HUGETLB
+-	select ARCH_WANT_HUGE_PMD_SHARE
++	select ARCH_WANT_HUGE_PMD_SHARE		if X86_64
+ 	select ARCH_WANT_LD_ORPHAN_WARN
+ 	select ARCH_WANT_OPTIMIZE_DAX_VMEMMAP	if X86_64
+ 	select ARCH_WANT_OPTIMIZE_HUGETLB_VMEMMAP	if X86_64
+
+---
+base-commit: d0b3b7b22dfa1f4b515fd3a295b3fd958f9e81af
+change-id: 20250630-x86-2level-hugetlb-b1d8feb255ce
+
+-- 
+Jann Horn <jannh@google.com>
+
