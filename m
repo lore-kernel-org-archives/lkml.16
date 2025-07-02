@@ -1,129 +1,244 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m49207.qiye.163.com (mail-m49207.qiye.163.com [45.254.49.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A142309B0
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 09:50:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00E501C862E;
+	Wed,  2 Jul 2025 09:51:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751449852; cv=none; b=PGggHtc2L46c435HuNsvgeqMn4TOGTTv2/G32qq4zlyc2aLuFoAmc4lxsP5696lj0ztYY9u+dnG8sxVAVngcIyzBaHfdOxne1bzH+qry7WXnub5u2ReJ/vdnA136bKbhVu/Kq6/gl+JdDxqAMVwN7DjovTYuYFhb0lEU/AxwDZA=
+	t=1751449903; cv=none; b=o3Ubg2VlQNfkN1ZROPX3c522m/WSYQcvUu3YoEaDwViO7pqpT3MZZQ1O1aB5WIQJ+SgXg9OLE0uw3Bcc7iR05U98N6mi+umJHmJ0J85I0HbFsMYXVvtBQufwP0mzlFMLEL5/xWPh3zur2DUVlqQxfs9dOwT6AaW6jQ6R4uJryxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751449852; c=relaxed/simple;
-	bh=FZN7ov2fejb1PPwc6riwGfFAbnmQoUBR/y4B+tXjjuM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MEIVKazOp8jXeWW7VP7HGTQP/1fmFnVIaoWs4eaJpDdRYZtEPV2azTeUzJYIlqaMOW61CVUixT14ZY/LsjZMhIguM7Tmq5WCD1PwOhDSHd+S532xC60lyIFFkIzH3wHwHec+inu2cea0XzwM/+fqSzenj2Oc6kHDfh3XMd0Dq+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YIw+uuGt; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1751449903; c=relaxed/simple;
+	bh=DQ4Fbet7w98kyyULmyFDZuR7DJV+8egvEdngnk+ZEec=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rzkOqpANw4iwk402RBPhnhnsJo4CPFaHJNo4LHuzsYOc0MtG6rU/Fk6yAAY2Jz2/sHiYI50vOpe6Y2uh8bHb/2x4Y/toC+7ioiwcy1cZzF/XZEKRiVGGFLO6WYIdCSl99MhKYSrJMCiHNtG1ojD9tKd0PYB/KSyjdJlLyZ8lkK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thundersoft.com; spf=pass smtp.mailfrom=thundersoft.com; dkim=pass (1024-bit key) header.d=thundersoft.com header.i=@thundersoft.com header.b=iHKKT1GP; arc=none smtp.client-ip=45.254.49.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thundersoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thundersoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YIw+uuGt"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a6d77b43c9so3891556f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 02:50:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751449849; x=1752054649; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FZN7ov2fejb1PPwc6riwGfFAbnmQoUBR/y4B+tXjjuM=;
-        b=YIw+uuGt4vaCEu75NagIdWAl0vMOZyqmwFls8YfBgHkp2zpDAU9CJoGEdH1rK2nLEm
-         t4x/4cH/BgKWTvXAPfv9HNUbXBvQERvMgrems2ohOhxR8ZT9YzkW464JbERgYDQYRFS0
-         q3yya+u05p1nYoefaSZeZnWMQGNm+qGFVF/Nww0uAE5Qczv2f15eka+hjaj2mgKW5Oas
-         gEJUQXXuE84btwzDxnvkCGlkTVLcZcVTnuXR8U9jQhCKUjlK5Co5OF7aYBKpEpIMxVeg
-         mTaqqGNMe/RIY23LDmvFktHZNGMpnlN59tjv0wI4nlhXInUJBGsm6Nv8l7YdXsK5xXfN
-         Zq0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751449849; x=1752054649;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FZN7ov2fejb1PPwc6riwGfFAbnmQoUBR/y4B+tXjjuM=;
-        b=txLmvZp8ohT5oc3v+eRw1PHDdTIlCAE+0jTjqy7RnoAYeECBt8b1q3bDcjqm8U2hkF
-         InCheTGugnFj9smLbKyXElrsUr0HRwimef3CtX849luOxA+v+hBMinJXnGaMiMhcvuOM
-         eHadcSmirQ4QXaTxFwWWqkLlUKhxAzOyCF92W9U0xlnG3VT1lZreDh3x5wnnPddmHUDw
-         qQgISHDl+GHKAh4Rbeox81GsRLdVbVU7ttSkjTuAqAw1Qp7clZXHVRDr2nmrq2Ws5acd
-         HF6aIKX4SqSzeR4nrXzICNiXeITENPJJI7y+39REpgqp7pyBzfr8zSfcShRGVnmHdM19
-         W93Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW+6sQ0YiGkTJp7o0EXwkKePMvDtBm9fV34Q36b9P8z0iop7to65WtgceVpTDUtnkMHzxuG6EegVsK3EJc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDjUX6YD+jdZuVVeuNShprCPQdB3M9NRxcj49zZdFxDdtlTH8W
-	ucHXxydblNE3nmtYuWlORo5ZwfsFl1MNSsaxa46gv35dn755EpLXjjnzRTnWy6bi9EYM8YaLSs3
-	uOuaw/hb+Glk1jc7+Fxn0MZGYlizo0ws76sMydPH9
-X-Gm-Gg: ASbGnct/wOKmPZ5z6HErCjz3mYWDTQ5Dro74g7ItGXqFC/i7j6pnlg4KxQAOzex0jSG
-	VIskPekKM0dBngBq72xLreI/fHvKeDcc071OJ+xrYoaHLnapAiVVZV/8+ElTSxoQwQdE1txUcFB
-	xitoRd0VTs845DnT12lO3fQvCcF3t1uRqNqLUznp3sVyAtb28klmOG1bv7kWXvEwJPHwBJ3q8l
-X-Google-Smtp-Source: AGHT+IFinFQvCiDd7DyIlomk5YKpY4AunxXUpyYDBethh+ZqD2nFnCbSEvSWbZeGQLXBm4KeF+X+5F+eyTNv0077ACg=
-X-Received: by 2002:a05:6000:43d4:10b0:3a5:1240:6802 with SMTP id
- ffacd0b85a97d-3b2015e19b8mr1128287f8f.57.1751449848583; Wed, 02 Jul 2025
- 02:50:48 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=thundersoft.com header.i=@thundersoft.com header.b="iHKKT1GP"
+Received: from localhost.localdomain (unknown [117.184.129.134])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 1aaa9ed20;
+	Wed, 2 Jul 2025 17:46:26 +0800 (GMT+08:00)
+From: Albert Yang <yangzh0906@thundersoft.com>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	krzk@kernel.org,
+	conor+dt@kernel.org,
+	gordon.ge@bst.ai,
+	catalin.marinas@arm.com,
+	geert.uytterhoeven@gmail.com,
+	will@kernel.org,
+	ulf.hansson@linaro.org,
+	adrian.hunter@intel.com,
+	arnd@arndb.de
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-mmc@vger.kernel.org,
+	soc@lists.linux.dev,
+	bst-upstream@bstai.top,
+	neil.armstrong@linaro.org,
+	jonathan.cameron@huawei.com,
+	bigfoot@classfun.cn,
+	kever.yang@rock-chips.com,
+	mani@kernel.org,
+	geert+renesas@glider.be,
+	andersson@kernel.org,
+	nm@ti.com,
+	nfraprado@collabora.com,
+	quic_tdas@quicinc.com,
+	ebiggers@google.com,
+	victor.shih@genesyslogic.com.tw,
+	shanchun1218@gmail.com,
+	ben.chuang@genesyslogic.com.tw,
+	Albert Yang <yangzh0906@thundersoft.com>
+Subject: [PATCH v2 0/8] arm64: Introduce Black Sesame Technologies C1200 SoC and CDCU1.0 board
+Date: Wed,  2 Jul 2025 17:44:36 +0800
+Message-Id: <20250702094444.3523973-1-yangzh0906@thundersoft.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250528085403.481055-1-yangzh0906@thundersoft.com>
+References: <20250528085403.481055-1-yangzh0906@thundersoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250630131011.405219-1-fujita.tomonori@gmail.com>
- <CAH5fLgirsNn9WwEUgFaY2z9+9gG3SWssCoNSzpE56F=sS02kEw@mail.gmail.com>
- <WFqBzZDwsggoxcPQzynlG5_2FqsVdmQlUKufvcDECQUsXJOPHCA4dzoAByNPpuPrAcBoeKoDSR9v3OkJxsYxNg==@protonmail.internalid>
- <20250701.083940.2222161064880631447.fujita.tomonori@gmail.com> <87sejfuf3n.fsf@kernel.org>
-In-Reply-To: <87sejfuf3n.fsf@kernel.org>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Wed, 2 Jul 2025 11:50:35 +0200
-X-Gm-Features: Ac12FXycwJqNF5jcIgfkkGlHIx2iR5_a-gqm_uvnzaU0d1vhvUVxcwhatQ6m4wM
-Message-ID: <CAH5fLgjdpso4waCrP6iVaMEOpYLUmqCz8PxqXuSbQBMaxxCHBw@mail.gmail.com>
-Subject: Re: [PATCH v1] rust: time: make ClockSource unsafe trait
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: FUJITA Tomonori <fujita.tomonori@gmail.com>, alex.gaynor@gmail.com, ojeda@kernel.org, 
-	boqun.feng@gmail.com, anna-maria@linutronix.de, bjorn3_gh@protonmail.com, 
-	dakr@kernel.org, frederic@kernel.org, gary@garyguo.net, jstultz@google.com, 
-	linux-kernel@vger.kernel.org, lossin@kernel.org, lyude@redhat.com, 
-	rust-for-linux@vger.kernel.org, sboyd@kernel.org, tglx@linutronix.de, 
-	tmgross@umich.edu
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZTkhOVksZT0pMGUxKGEgZGFYVFAkWGhdVEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlKSkxVSkNPVUpJQlVKSE9ZV1kWGg8SFR0UWUFZT0tIVUpLSUJDQ01VSk
+	tLVUtZBg++
+X-HM-Tid: 0a97ca87cb5509cckunmee1cabff3eba3f
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ky46Nio4ODE1OE8VDRkCHQIU
+	ChYaFElVSlVKTE5KT09CTkNDQ05CVTMWGhIXVQIaFRwBE0tCS007DxMOFR8eCQgUHQ9VGBQWRVlX
+	WRILWUFZSkpMVUpDT1VKSUJVSkhPWVdZCAFZQUNDS083Bg++
+DKIM-Signature:a=rsa-sha256;
+	b=iHKKT1GP4KttxGichlFKsKKQUX3VlHslxuzfV2b0Stiu7ntwzMlWnzOP5cW8eu8zAHtbo7WhfUtplVfy3Ar52X6zXBBqL5ej3hFi4IvUJu/mRP1HdfO9T9mXowEwW31TrRxMmnZRSLTPL+g+C3vLctZ01FVkgCPt2JFwjf0vebQ=; c=relaxed/relaxed; s=default; d=thundersoft.com; v=1;
+	bh=0IAmHcK+vzj2JRzJWMHVRyNXmp3uUsUGFRVCGAFIqUw=;
+	h=date:mime-version:subject:message-id:from;
 
-On Wed, Jul 2, 2025 at 11:17=E2=80=AFAM Andreas Hindborg <a.hindborg@kernel=
-.org> wrote:
->
-> "FUJITA Tomonori" <fujita.tomonori@gmail.com> writes:
->
-> > On Mon, 30 Jun 2025 15:33:31 +0200
-> > Alice Ryhl <aliceryhl@google.com> wrote:
-> >
-> >> On Mon, Jun 30, 2025 at 3:10=E2=80=AFPM FUJITA Tomonori
-> >> <fujita.tomonori@gmail.com> wrote:
-> >>>
-> >>> Mark the ClockSource trait as unsafe and document its safety
-> >>> requirements. Specifically, implementers must guarantee that their
-> >>> `ktime_get()` implementation returns a value in the inclusive range
-> >>> [0, KTIME_MAX].
-> >>>
-> >>> Update all existing implementations to use `unsafe impl` with
-> >>> corresponding safety comments.
-> >>>
-> >>> Note that there could be potential users of a customized clock source=
- [1]
-> >>> so we don't seal the trait.
-> >>>
-> >>> Link: https://lore.kernel.org/rust-for-linux/Z9xb1r1x5tOzAIZT@boqun-a=
-rchlinux/ [1]
-> >>> Suggested-by: Boqun Feng <boqun.feng@gmail.com>
-> >>> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
-> >>
-> >> LGTM:
-> >> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-> >
-> > Thanks!
-> >
-> >> Though you're missing `` around [0; KTIME_MAX] in some places, which
-> >> may be worth adding.
-> >
-> > Andreas, would you like me to send v2 with the above changes?
->
-> Perhaps we should use rust ranges instead [1]? Like this, no brackets: `0=
-..=3DKTIME_MAX`.
+Black Sesame Technologies C1200 is a high-performance Armv8 SoC designed for automotive
+and industrial applications. The CDCU1.0 (Central Domain Control Unit) board is the
+development platform built by Black Sesame Technologies. You can find more information
+about the SoC and related boards at:
+https://bst.ai
 
-Well, maybe. But I think it's also worth considering just using
-english to describe it:
+Currently, to run the upstream kernel on the CDCU1.0 board, you need to use the
+bootloader provided by Black Sesame Technologies. The board supports various
+interfaces including MMC/SD card, which is implemented using the BST C1200 DWCMSHC
+SDHCI controller.
 
-Implementers must ensure that `ktime_get()` returns a positive value
-less than or equal to `KTIME_MAX`.
+In this series, we add initial SoC and board support for kernel building. The series
+includes:
 
-Alice
+Patch 1: Add Black Sesame Technologies vendor prefix in vendor-prefixes.yaml
+- Adds "bst" vendor prefix for Black Sesame Technologies Co., Ltd.
+- Required for device tree bindings to properly identify BST hardware
+
+Patch 2: Add device tree bindings for BST SoC platforms
+- Creates new binding file Documentation/devicetree/bindings/arm/bst.yaml
+- Defines compatible strings for BST C1200 family and C1200 CDCU1.0 board
+- Documents BST's focus on automotive-grade SoCs for ADAS applications
+
+Patch 3: Add ARCH_BST configuration for BST silicon support
+- Adds Kconfig option for BST architecture support
+- Enables building kernel for BST platforms
+
+Patch 4: Add device tree binding for BST DWCMSHC SDHCI controller
+- Documents the BST C1200 SDHCI controller binding
+- Required for MMC/SD card support on BST platforms
+
+Patch 5: Add BST C1200 SDHCI controller driver
+- Implements the MMC host controller driver for BST C1200
+- Enables SD card support on BST platforms
+
+Patch 6: Add device tree support for BST C1200 CDCU1.0 board
+- Adds device tree source files for C1200 SoC and CDCU1.0 board
+- Configures hardware components including MMC controller
+
+Patch 7: Enable BST SoC in arm64 defconfig
+- Adds ARCH_BST configuration to default arm64 config
+
+Patch 8: Enable BST C1200 DWCMSHC controller in defconfig
+- Enables MMC controller driver in default arm64 config
+
+Patch 9: Update MAINTAINERS for BST support
+- Adds maintainer information for BST ARM SoC support
+- Consolidates BST-related entries
+
+Changes for v2:
+- Pass dts build check and mmc driver build check with below commands:
+make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=build_dir CHECK_DTBS=y bst/bstc1200-cdcu1.0-adas_4c2g.dtb W=1
+make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- drivers/mmc/host/ W=1 O=build_dir
+- Patch 2: 
+  1. Removed unnecessary pipe (`|`) in description
+  2. Dropped invalid `compatible` entry for standalone SoC
+  3. Removed root node (`$nodename: '/'`) definition
+- Patch 3:
+  1. Placed the configuration entry in correct alphabetical order
+  2. Used generic family name (ARCH_BST) instead of SoC-specific naming
+  3. Followed upstream kernel naming and description conventions
+- Patch 4:
+  1. Simplified description, removed redundant paragraphs
+  2. Updated $schema to reference mmc-specific scheme
+  3. Corrected compatible to add soc name
+     (bst,c1200-dwcmshc-sdhci)
+  4. Removed all redundant property descriptions
+  5. Dropped invalid mmc_crm_base/size properties, use reg for all address
+     ranges
+  6. Cleaned up required properties to only essential entries
+  7. Standardized example DTS format, fixed reg syntax and property
+     ordering
+  8. Removed additionalProperties: true
+- Patch 5:
+  1. Dependency Simplification:
+     - Removed COMMON_CLK dependency from Kconfig (MMC_SDHCI_BST)
+     - Add ARCH_BST || COMPILE_TES dependency from Kconfig (MMC_SDHCI_BST)
+
+  2. Resource Management Improvements:
+     - Replaced temporary ioremap with persistent mapping
+       * Mapped CRM registers once during probe instead of per-access
+       * Added proper cleanup in remove callback
+     - Refactored bounce buffer allocation:
+       * Simplified error handling and memory management
+       * Removed unnecessary DMA configuration layers
+
+  3. Code Cleanup & Optimization:
+     - Pruned unused headers and legacy vendor debug code
+     - Removed deprecated sdhci_bst_print_vendor() export
+     - Converted internal functions to static scope
+     - Standardized naming conventions:
+       * Renamed DRIVER_NAME to match kernel standards
+       * Changed default_max_freq to DEFAULT_MAX_FREQ
+     - Optimized clock configuration routines
+
+  4. Hardware Integration Fixes:
+     - Fixed register access macros for EMMC_CTRL
+       * Added proper offset calculation via SDHCI_VENDOR_PTR_R
+     - Corrected device tree compatibility string to:
+       "bst,c1200-dwcmshc-sdhci"
+
+  5. Error Handling Enhancements:
+     - Added robust ioremap error checking
+     - Improved bounce buffer allocation failure handling
+     - Streamlined probe/remove flow
+
+  6. Maintainability:
+     - Updated MODULE_DESCRIPTION and AUTHOR fields
+     - Added explanatory comments for hardware limitations
+     - Removed redundant multi-host setup infrastructure
+  7. fix build warnings from lkp
+    | Reported-by: kernel test robot <lkp@intel.com>
+    | Closes:
+    https://lore.kernel.org/oe-kbuild-all/202505290615.GZzN5rNL-lkp@intel.com/
+
+- Patch 6:
+  1. Reorganized memory map into discrete regions
+  2. Updated MMC controller definition:
+     - Split into core/CRM register regions
+     - Removed deprecated properties
+     - Updated compatible string
+  3. Standardized interrupt definitions and numeric formats
+  4. Removed reserved-memory node (superseded by bounce buffers)
+  5. Added root compatible string for platform identification
+  6. Add soc defconfig
+
+Albert Yang (8):
+  dt-bindings: vendor-prefixes: Add Black Sesame Technologies Co., Ltd.
+  dt-bindings: arm: add Black Sesame Technologies (bst) SoC
+  arm64: Kconfig: add ARCH_BST for bst silicons
+  dt-bindings: mmc: add binding for BST DWCMSHC SDHCI controller
+  mmc: sdhci: add Black Sesame Technologies BST C1200 controller driver
+  arm64: dts: bst: add support for Black Sesame Technologies C1200
+    CDCU1.0 board and defconfig
+  arm64: defconfig: enable BST C1200 DWCMSHC SDHCI controller
+  MAINTAINERS: add and consolidate Black Sesame Technologies (BST) ARM
+    SoC support
+
+ .../devicetree/bindings/arm/bst.yaml          |  30 +
+ .../bindings/mmc/bst,dwcmshc-sdhci.yaml       |  67 +++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |  10 +
+ arch/arm64/Kconfig.platforms                  |  10 +
+ arch/arm64/boot/dts/Makefile                  |   1 +
+ arch/arm64/boot/dts/bst/Makefile              |   2 +
+ .../dts/bst/bstc1200-cdcu1.0-adas_4c2g.dts    |  60 ++
+ arch/arm64/boot/dts/bst/bstc1200.dtsi         | 117 ++++
+ arch/arm64/configs/defconfig                  |   2 +
+ drivers/mmc/host/Kconfig                      |  11 +
+ drivers/mmc/host/Makefile                     |   1 +
+ drivers/mmc/host/sdhci-of-bst-c1200.c         | 557 ++++++++++++++++++
+ 13 files changed, 870 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/bst.yaml
+ create mode 100644 Documentation/devicetree/bindings/mmc/bst,dwcmshc-sdhci.yaml
+ create mode 100644 arch/arm64/boot/dts/bst/Makefile
+ create mode 100644 arch/arm64/boot/dts/bst/bstc1200-cdcu1.0-adas_4c2g.dts
+ create mode 100644 arch/arm64/boot/dts/bst/bstc1200.dtsi
+ create mode 100644 drivers/mmc/host/sdhci-of-bst-c1200.c
+
+-- 
+2.25.1
+
