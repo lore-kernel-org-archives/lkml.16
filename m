@@ -1,131 +1,73 @@
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C841C24111D
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 22:01:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6742DE6FC;
+	Wed,  2 Jul 2025 22:02:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751493673; cv=none; b=KAk3d7Q8A+wjqupzsUBV4pcbjK6H65Kggq0+mhUq4WK8HwTXJgQxpq+rj9Mlcuoci5CehYIfff4byRkYUEOPzW4Rd88ie8VaaPQLy5fU1ip7xemWtNdhmnBLOVt4TBiJi3rre54csp5dnjMn6QvF26muwd6+uZ+NJdzYQ8Wxsqk=
+	t=1751493738; cv=none; b=QfAaCEnnp1MZa6sUpbRmFaVx4Y3+wwdr0ecuj8YXk157fyIi2EtP4rYRiOEW1uExyfqx15wI907749eqqXJ05uSavwK2fSdQ5r0ZiPJAxiDOEegdfOmyI0+lj3yqniGYR0BuFKX1SmAHWcZ+wqYzoGy6uYL6vuyhLlVnmiuUFY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751493673; c=relaxed/simple;
-	bh=hjhHlOolfaZNDUs+RdvLckgniM7ltNQJFdfTBZFssqw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=LWpnTwRMGHPiv8B/zvfdtZH+/ykj/RKBq464zrTJygTMtdJDYeVlFHNYD6exKjdxh74ZV0gCux92BWylTp+QmiM6DINJthCpe233F4fnd2lPPWB9beY4bwkGbeVPQiNsgx4fzRcpvoZEW/26YykHcex7eaJmMhC+49OtTRVtCo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=y48xNPQ1; arc=none smtp.client-ip=209.85.210.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1751493738; c=relaxed/simple;
+	bh=xeTgrPLNJbEYFyDVNYttaXsWH2eclECKsNKHT2+fuC0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jH9VFg2RGTme5MWyQ9T5cAltL8W9ZjMYQJHyc73OUE6fmG0ti+pbHGa6il1WMqbA9rn5N+kjqFmbIszyfGedWWxEf6YyEUlu2cJb582XMu8t5Wr8IrccqoFrwjp5az31Wrd8htfFremqiKqOHl/y6dEF+2d5Pkch+U77iJ5gldY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zz6KaTOn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="y48xNPQ1"
-Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-73a8d0e3822so3796202a34.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 15:01:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751493669; x=1752098469; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=DKgWS7/qdk7+Eg50DbHdDl8mGYC2JyCvr3ER8bCDhe0=;
-        b=y48xNPQ1VGFonG90ers22n9CaIGu/U0THcQn5c8nBkrNDl4s9PaFjS+j1I6g9WKNKk
-         AIt90eg9oaV1EgKUwMKqT6KK+6qZm0ycbC3hNp4m6EMABEfx09alAUON+kWaoxtIKcLc
-         KpF0R66j9mNHBxgK3gVzHPFVU3zoE/wqhAbjqow81uQxg+cfY447RdnKngepHdBwkEoA
-         erkhwbWUhLFkvzceqJ0cHWv3nN9vR0F3ZV9QQRRlcAkjmr2yRwkjT/VoCkPEvvC4uya0
-         +4NGqWis8xoTuzKwFm7oiFKXthN/Lw8UdUwMqdkbwyOEA+arjT+4IL8OlrccbhJhMKY1
-         F5nQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751493669; x=1752098469;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DKgWS7/qdk7+Eg50DbHdDl8mGYC2JyCvr3ER8bCDhe0=;
-        b=KTwJmo50VKha1g1EWfPinW7/YJmkJ1zTABF6DkCIMI1Me2fPmIOZRYLwsabksuGObs
-         F3cbR7gJapzoCXfnW+vw3LZGuSB1aTIP+hMh3G6l0eYyMAu9DfRDu+xdhmLBeN+yqEis
-         DPLkIfsevJHVpVkJmtm2/nhNpjVtTWyOg4pLXE2dCzrEjJWQK9qeU7Nf79TidoLpt6RT
-         xNDeUm+jQQ3UbJmi8bLwyH30jCED/XQq7LLlZQQp6tY7aFo74omWmXQ1tTZmD3VuRtYI
-         Uhdlg78U4Benx/wR1BqBzLYDdT0jeBpYmduUc43wdo6Fnajkha0ceF+E1AfgdgXONxUD
-         XCXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU1CagLyoaDeGctquNE3ilPKg8kl57Xj6mV3AB4v3XjSklqdStdONZKXHkAhWyyAVLetHaYT40wxqhMnEI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyhNOi22ZO5nSnZKsynZaRpvZ+1p5qX0KoI3iJ4eBL1MEjJqkT
-	vnDPW2S2DLZH39b6+0wE50OcaMXJ23jwl9AH1YLe2KA8rIoVlfg2snGqfaLGQ70V110=
-X-Gm-Gg: ASbGncufbQkn2p1+eG1AxCyeH60ru+Vjlds9o4XOxfSt0806LLLqemUeT2BfM94lIxv
-	y0mx8IWdoE3RYu0g0HrNcXM8yJ9U4GaPJiLpef6hkDgyRh6axG4gpqWMUFjQ9t56h6CP7rV4DXY
-	4tXVC3hU9Fo7caxTRtHGty4/iYrpMd+TBEuIN0d88jdOA+tnhxlcOSlNj9VLhGHYpLrc8yOBygk
-	B545g29oVE6I7N37znrxJscyrPCoi3VSx7xV80CSdJy+OeJRYRZfG2sbMkFDaGgM1J/M0MIAmYr
-	q7QEgrpAl96Lc2JSJ6pmW/ljMPnTVIIkli/orqryM5pTMtU4p7pfJTnb3dak2+uiAaLKQiy/BXW
-	DvpDngaouLgl+/m7q7XQ6gJcz+EzRtND4vxYbHcs=
-X-Google-Smtp-Source: AGHT+IHKZNhePlF0+T6dWuoOeOIoDbpvywH95ABuicUB05Dmc1aVoalsdNueqPirXs97Btv0KkGWcg==
-X-Received: by 2002:a05:6808:e8a:b0:403:3673:65f0 with SMTP id 5614622812f47-40b88b25dc6mr3169424b6e.31.1751493668851;
-        Wed, 02 Jul 2025 15:01:08 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:5c00:24f0:997b:5458? ([2600:8803:e7e4:1d00:5c00:24f0:997b:5458])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-40b32420c83sm2747613b6e.36.2025.07.02.15.01.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jul 2025 15:01:08 -0700 (PDT)
-Message-ID: <a30cbe3a-7d1b-4072-880e-99688657a093@baylibre.com>
-Date: Wed, 2 Jul 2025 17:01:07 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zz6KaTOn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FFDFC4CEE7;
+	Wed,  2 Jul 2025 22:02:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751493738;
+	bh=xeTgrPLNJbEYFyDVNYttaXsWH2eclECKsNKHT2+fuC0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Zz6KaTOnMIDhFXcFFu6zgW3TSDOvPG2xhDBjfb4KENd7mySsnY6gG+7GeFa9885Y5
+	 lU8zvdd2RKUiwmhct7/LP9MSIXQwJ4uVDXhcln80ae7IrJXPGQl+Cmga5fXizpM3DX
+	 Wb8+sfqqwDEqk7adrYXgsRqaMYNRfkdDtnokc2+NPcd0EXWiqTZkySscBFMiDpShE0
+	 vt2EJeeO0/2B3O+w7zOHCjGJehSAe5YQpQo4TUz5szipzLyLJ2eMVHVmE9Ic9GYzOo
+	 OMMrN+Ho1auYbGEVN5JHo21VuP4aSDQkcVvqg0zAh3SEgQrmpVE600gVCbZKZ3SHAU
+	 N/7D/gLsgaXcg==
+Date: Wed, 2 Jul 2025 15:02:16 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Kamil =?UTF-8?B?SG9yw6Fr?= - 2N <kamilh@axis.com>,
+ <florian.fainelli@broadcom.com>
+Cc: <bcm-kernel-feedback-list@broadcom.com>, <andrew@lunn.ch>,
+ <hkallweit1@gmail.com>, <linux@armlinux.org.uk>, <davem@davemloft.net>,
+ <edumazet@google.com>, <pabeni@redhat.com>, <krzk+dt@kernel.org>,
+ <conor+dt@kernel.org>, <netdev@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <f.fainelli@gmail.com>, <robh@kernel.org>, <andrew+netdev@lunn.ch>,
+ <horms@kernel.org>, <corbet@lwn.net>, <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH net v5 0/4] net: phy: bcm54811: Fix the PHY
+ initialization
+Message-ID: <20250702150216.2a5410b3@kernel.org>
+In-Reply-To: <20250701075015.2601518-1-kamilh@axis.com>
+References: <20250701075015.2601518-1-kamilh@axis.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: iio: adc: Add support for MT7981
-To: Aleksander Jan Bajkowski <olek2@wp.pl>, jic23@kernel.org,
- nuno.sa@analog.com, andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, matthias.bgg@gmail.com,
- angelogioacchino.delregno@collabora.com, zhiyong.tao@mediatek.com,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-References: <20250702214830.255898-1-olek2@wp.pl>
- <20250702214830.255898-2-olek2@wp.pl>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20250702214830.255898-2-olek2@wp.pl>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-On 7/2/25 4:48 PM, Aleksander Jan Bajkowski wrote:
-> The temperature sensor in the MT7981 is same as in the MT7986.
-> Add compatible string for mt7981.
-> 
-> Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> ---
->  .../devicetree/bindings/iio/adc/mediatek,mt2701-auxadc.yaml      | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/mediatek,mt2701-auxadc.yaml b/Documentation/devicetree/bindings/iio/adc/mediatek,mt2701-auxadc.yaml
-> index b489c984c1bb..ceb914dde15b 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/mediatek,mt2701-auxadc.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/mediatek,mt2701-auxadc.yaml
-> @@ -26,6 +26,7 @@ properties:
->            - mediatek,mt2712-auxadc
->            - mediatek,mt6765-auxadc
->            - mediatek,mt7622-auxadc
-> +          - mediatek,mt7981-auxadc
->            - mediatek,mt7986-auxadc
->            - mediatek,mt8173-auxadc
->        - items:
+On Tue, 1 Jul 2025 09:50:11 +0200 Kamil Hor=C3=A1k - 2N wrote:
+> PATCH 1 - Add MII-Lite PHY interface mode as defined by Broadcom for
+>    their two-wire PHYs. It can be used with most Ethernet controllers
+>    under certain limitations (no half-duplex link modes etc.).
+>=20
+> PATCH 2 - Add MII-Lite PHY interface type
+>=20
+> PATCH 3 - Activation of MII-Lite interface mode on Broadcom bcm5481x
+>    PHYs
+>=20
+> PATCH 4 - Fix the BCM54811 PHY initialization so that it conforms
+>    to the datasheet regarding a reserved bit in the LRE Control
+>    register, which must be written to zero after every device reset.
+>    Also fix the LRE Status register reading, there is another bit to
+>    be ignored on bcm54811.
 
-The new compatible with fallback should look like this:
-
-diff --git a/Documentation/devicetree/bindings/iio/adc/mediatek,mt2701-auxadc.yaml b/Documentation/devicetree/bindings/iio/adc/mediatek,mt2701-auxadc.yaml
-index b489c984c1bb..14363389f30a 100644
---- a/Documentation/devicetree/bindings/iio/adc/mediatek,mt2701-auxadc.yaml
-+++ b/Documentation/devicetree/bindings/iio/adc/mediatek,mt2701-auxadc.yaml
-@@ -32,6 +32,10 @@ properties:
-           - enum:
-               - mediatek,mt7623-auxadc
-           - const: mediatek,mt2701-auxadc
-+      - items:
-+          - enum:
-+              - mediatek,mt7981-auxadc
-+          - const: mediatek,mt7986-auxadc
-       - items:
-           - enum:
-               - mediatek,mt6893-auxadc
----
-
-Then you can validate that the next patch matches the bindings with
-`make CHECK_DTBS=1`. I would expect it to fail currently since the
-binding is specifying a compatible without a fallback but the .dts
-uses a fallback.
+I'm a bit lost why the first 3 patches are included in a series for net.
+My naive reading is we didn't support this extra mode, now we do,
+which sounds like a new feature.. Patch 4, sure, but the dependency
+is not obvious.
