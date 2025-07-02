@@ -1,112 +1,186 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 183D0245032;
-	Wed,  2 Jul 2025 09:26:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B15C423CEF8;
+	Wed,  2 Jul 2025 09:28:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751448369; cv=none; b=RvlAyxt3XWyjRgcHsbfU/76wMEACO+om4z8UKfD8UzPNHquxsPwsksuWH5osVCtEDaDhBJIRbHfxeVgFYstpFrpcb7nS9+LhvCBT8EW0dLFt+rhkbJcA+KGBg+0MpeRkUpU9qVqX2UB5bvTcMUcU5z9HI+Eivj61fsOzQjXqhIM=
+	t=1751448485; cv=none; b=buDM+ycPQ4FuiR7FkVnLMS4OQRFNT9m216+lfQhzm9TAH8vdBUXkbBimeF47R37qIby8izfppY2h3ENTHI+pQ01rL5aLHbUWha+aylbISODbM7YV7uslGnjeiI9fehX89S9hhf3RYXRu+1g+ZpnW2Qtff2XQFcVisTLQoJALhcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751448369; c=relaxed/simple;
-	bh=bdap8No3+hAEFEUzbP1Pd//m/9aj4ASrR7MCs2OFXRg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dbr5kREwrP+GitLXzh/iwXN17V5eXdqRkUUwQAvxf9t3qdQByiWqm21tm570E3Jt1gNcp9pg7lMd+nd5v/mIzsaiS+RB4yjbyhJrsZA6jQoP/cB8vRUOW0lYVxVucLHrspAN+FFBsqTDm8c7/8OsfVlc3qJXxHh2A1BLkaKu1tM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EQ0c2XHO; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EQ0c2XHO"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4530921461aso43438845e9.0;
-        Wed, 02 Jul 2025 02:26:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751448366; x=1752053166; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=r2NUWZQo4rEi0elBJOEbc1HR3dKemWrO4/Vi3XFgMFE=;
-        b=EQ0c2XHOhv3BntP9jBG34zJKBIUkKQzz8JI6K+vYTtI1pvLff63aystUWvSTm9TaLJ
-         /ykiRBnMi+fu8tOTRVwapcHWS99Pab41Y81ITv+PfRfRx/W+w1X4Muv0CUyp70JlH1o9
-         ygjQzZAAAiHPv/uPXBStoTFYU9GgNQCGIj/bahpExZcnRL89qoa3BIQAID0W3aovVopv
-         5Ah+55HcvhZRlXhNPqUQkWnQSO4/sfPEnVm+2vyZcJRw9ovH37H37NQLjUnbkXOBzPIs
-         7ACS6jnxZJK8WmD1K2Cil6fE55BrAhNy84q6xkkcP+Sgiqj/Voq4KhblSSxeE5UJB2AK
-         eGtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751448366; x=1752053166;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=r2NUWZQo4rEi0elBJOEbc1HR3dKemWrO4/Vi3XFgMFE=;
-        b=dLZi/39ZuvyL3GUYKx8aP8CLE0g+M9WNXc8O/nNdagK2yyxmpPP+rfyrPdeZosLgvl
-         qd1FT6x06k97G+4XJ+Rbkgs16w8ahC594OV/+FPFuSD37q9xOs970xZqIqJw0BIOhQgv
-         GOy/nXbfG9M8y24B2GbvJ8vsBJp4EA7b4WatkoIQQufTAWmQ0bWC4rrd4PVyUFhQ973S
-         4mJqhAtB3PhWA863o0cz3/4XnpmzvhQXIesXM5sY0cTtvckWkCyBNyANkp0yei/HajaK
-         Df2xu3DVs4+PreHQOtxg8Bs7OA77O0mKaKMOArwgMK7aBGf6arJIJkxiYnepAnaK3tVA
-         CH0A==
-X-Forwarded-Encrypted: i=1; AJvYcCWYnEMK5JgFKwtX2ybbL0V/REiYRl/RX/oncT4ZYqTiKPgCCsq5pmaODWRycfuQ5g3aprrKMr0pyWmpzoU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzP0am1Q98m1q8DXpaj1d1yDjtX9nc5fRbe9BAuh/27c5XrMHEb
-	KgPTF6yl9nsqYj8s4quV2w+6NOhwQdT7ffq+w2nsBvKyAxAxkHuZsT9C
-X-Gm-Gg: ASbGncu+AXoGN1sPVm5gQzi3YOHWAmLU+CA/xfYDMHjbKpF8lkssb6N/9Va98kVgZP7
-	FJ9VnrJwaioZUtQP/eNpgv8Y8CWwutvMiBGlnCr+HNcHWcGB8RRWEFwGOUoJCre/VHAocDfqLtR
-	kgUjkSzK4tYZjOLXzVYuX0Va7hIjcv/pOPhv7sdqL+KT5q27Mc9TaSANbCUK5pOMNSeC9874d7o
-	O50V53GM6ib8mrFPUCFJnmLiemDWNnimlh/C5xbcwa6eBTbgXbMDZnOLcUGcsmptv2YIG4gv649
-	qKO9wJMMtbVXD8qoNOohCODdXPy534hAUZMjfTx7Afif5IMl/OUhcZVmcKRSVHOoCb/HB4E=
-X-Google-Smtp-Source: AGHT+IG07cQ+CwOEqMsx1VHMq868M5t6QnC5WQEr47cn1qXuSoJcWBD6jVc9AGetWcgUNe/GbL8M+w==
-X-Received: by 2002:a05:600c:538e:b0:453:697:6f08 with SMTP id 5b1f17b1804b1-454a3728b85mr20537325e9.26.1751448366227;
-        Wed, 02 Jul 2025 02:26:06 -0700 (PDT)
-Received: from localhost ([87.254.0.133])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4538234b1b9sm218566675e9.11.2025.07.02.02.26.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 02:26:05 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Christian Koenig <christian.koenig@amd.com>,
-	Huang Rui <ray.huang@amd.com>,
-	Matthew Auld <matthew.auld@intel.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	dri-devel@lists.freedesktop.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] drm/ttm: remove redundant ternaray operation on ret
-Date: Wed,  2 Jul 2025 10:25:41 +0100
-Message-ID: <20250702092541.968932-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.50.0
+	s=arc-20240116; t=1751448485; c=relaxed/simple;
+	bh=998uWJjRFOw5w+jHsc6gCACuy7MJzmnNtJzp2XH3cyo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m7usfD3C36Px9dW+IDmYgIpxPXLLzVor+US3euGSx0ZYjIUEE5mnPC9+BS0LfmP+bRPfkE+vcevUpQIBZcftH54a5DOzgZv4sWBVDBwjOVBCbryA+c6JZzKRQ6bRDTPincDVqqtESDwdbZRmvG5KZm+Z4dF4RrOUa+w3fU7o15I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+X-CSE-ConnectionGUID: NitnyPPpTae6aSBJwSx/hA==
+X-CSE-MsgGUID: TvqiaY7XT5mjO4hvgffLIw==
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 02 Jul 2025 18:28:01 +0900
+Received: from localhost.localdomain (unknown [10.226.92.89])
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 6C56241B60C0;
+	Wed,  2 Jul 2025 18:27:58 +0900 (JST)
+From: Biju Das <biju.das.jz@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Biju Das <biju.das.jz@bp.renesas.com>,
+	linux-renesas-soc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Biju Das <biju.das.au@gmail.com>
+Subject: [PATCH v2] arm64: dts: renesas: r9a09g047e57-smarc: Add gpio keys
+Date: Wed,  2 Jul 2025 10:27:53 +0100
+Message-ID: <20250702092755.70847-1-biju.das.jz@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Currently the only exit path to the end of the function
-__ttm_bo_lru_cursor_next is when pointer res is NULL. The
-ternary operation at the end of the function that checks on
-the value of res is redundant as res can never be non-null
-and hence the expression referencing pointer bo is never
-executed. Clean up the code by replacing the ternary operator
-with just a simple return of NULL
+RZ/G3E SMARC EVK  has 3 user buttons called USER_SW1, USER_SW2 and
+USER_SW3 and SLEEP button with NMI support. Add a DT node in device tree
+to instantiate the gpio-keys driver for these buttons.
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+The system can enter into STR state by pressing the sleep button and
+wakeup from STR is done by pressing power button. The USER_SW{1,2,3}
+configured as wakeup-source, so it can wakeup the system during s2idle.
+
+Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
 ---
- drivers/gpu/drm/ttm/ttm_bo_util.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v1->v2:
+ * Added support for sleep button
+ * Dropped the extra spaces after the define keywords for KEY_*_GPIO.
+ * Dropped /delete-node/ keys as KEY_SLEEP will always present.
+ * Moved input.h to r9a09g047e57-smarc.dts
+---
+ .../boot/dts/renesas/r9a09g047e57-smarc.dts   | 37 +++++++++++++++++++
+ .../boot/dts/renesas/renesas-smarc2.dtsi      | 31 ++++++++++++++++
+ 2 files changed, 68 insertions(+)
 
-diff --git a/drivers/gpu/drm/ttm/ttm_bo_util.c b/drivers/gpu/drm/ttm/ttm_bo_util.c
-index cdee664d2e8b..fb8bef50c744 100644
---- a/drivers/gpu/drm/ttm/ttm_bo_util.c
-+++ b/drivers/gpu/drm/ttm/ttm_bo_util.c
-@@ -1016,7 +1016,7 @@ __ttm_bo_lru_cursor_next(struct ttm_bo_lru_cursor *curs)
- 	}
+diff --git a/arch/arm64/boot/dts/renesas/r9a09g047e57-smarc.dts b/arch/arm64/boot/dts/renesas/r9a09g047e57-smarc.dts
+index 2454a9743df2..8efc4f0c6517 100644
+--- a/arch/arm64/boot/dts/renesas/r9a09g047e57-smarc.dts
++++ b/arch/arm64/boot/dts/renesas/r9a09g047e57-smarc.dts
+@@ -8,6 +8,7 @@
+ /dts-v1/;
  
- 	spin_unlock(lru_lock);
--	return res ? bo : NULL;
-+	return NULL;
- }
+ /* Switch selection settings */
++#define SW_LCD_EN		0
+ #define SW_GPIO8_CAN0_STB	0
+ #define SW_GPIO9_CAN1_STB	0
+ #define SW_LCD_EN		0
+@@ -15,7 +16,16 @@
+ #define SW_SD0_DEV_SEL		0
+ #define SW_SDIO_M2E		0
  
- /**
++#define PMOD_GPIO4		0
++#define PMOD_GPIO6		0
++#define PMOD_GPIO7		0
++
++#define KEY_1_GPIO		RZG3E_GPIO(3, 1)
++#define KEY_2_GPIO		RZG3E_GPIO(8, 4)
++#define KEY_3_GPIO		RZG3E_GPIO(8, 5)
++
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
+ #include <dt-bindings/pinctrl/renesas,r9a09g047-pinctrl.h>
+ #include "r9a09g047e57.dtsi"
+ #include "rzg3e-smarc-som.dtsi"
+@@ -79,6 +89,29 @@ &i2c0 {
+ 	pinctrl-names = "default";
+ };
+ 
++&keys{
++	key-sleep {
++		pinctrl-0 = <&nmi_pins>;
++		pinctrl-names = "default";
++
++		interrupts-extended = <&icu 0 IRQ_TYPE_EDGE_FALLING>;
++		linux,code = <KEY_SLEEP>;
++		label = "SLEEP";
++		debounce-interval = <20>;
++	};
++#if PMOD_GPIO4
++	/delete-node/ key-1;
++#endif
++
++#if SW_LCD_EN || PMOD_GPIO6
++	/delete-node/ key-2;
++#endif
++
++#if SW_LCD_EN || PMOD_GPIO7
++	/delete-node/ key-3;
++#endif
++};
++
+ &pinctrl {
+ 	canfd_pins: canfd {
+ 		can1_pins: can1 {
+@@ -97,6 +130,10 @@ i2c0_pins: i2c0 {
+ 			 <RZG3E_PORT_PINMUX(D, 5, 4)>; /* SDA0 */
+ 	};
+ 
++	nmi_pins: nmi {
++		pinmux = <RZG3E_PORT_PINMUX(S, 0, 0)>; /* NMI */
++	};
++
+ 	scif_pins: scif {
+ 		pins = "SCIF_TXD", "SCIF_RXD";
+ 		renesas,output-impedance = <1>;
+diff --git a/arch/arm64/boot/dts/renesas/renesas-smarc2.dtsi b/arch/arm64/boot/dts/renesas/renesas-smarc2.dtsi
+index 3cac292f20b3..58561da3007a 100644
+--- a/arch/arm64/boot/dts/renesas/renesas-smarc2.dtsi
++++ b/arch/arm64/boot/dts/renesas/renesas-smarc2.dtsi
+@@ -23,6 +23,9 @@
+  * SW_GPIO9_CAN1_STB:
+  *	0 - Connect to GPIO9 PMOD (default)
+  *	1 - Connect to CAN1 transceiver STB pin
++ *
++ * GPIO keys are enabled by default. Use PMOD_GPIO macros to disable them
++ * if needed.
+  */
+ 
+ / {
+@@ -53,6 +56,34 @@ can_transceiver1: can-phy1 {
+ 		max-bitrate = <8000000>;
+ 		status = "disabled";
+ 	};
++
++	keys: keys {
++		compatible = "gpio-keys";
++
++		key-1 {
++			interrupts-extended = <&pinctrl KEY_1_GPIO IRQ_TYPE_EDGE_FALLING>;
++			linux,code = <KEY_1>;
++			label = "USER_SW1";
++			wakeup-source;
++			debounce-interval = <20>;
++		};
++
++		key-2 {
++			interrupts-extended = <&pinctrl KEY_2_GPIO IRQ_TYPE_EDGE_FALLING>;
++			linux,code = <KEY_2>;
++			label = "USER_SW2";
++			wakeup-source;
++			debounce-interval = <20>;
++		};
++
++		key-3 {
++			interrupts-extended = <&pinctrl KEY_3_GPIO IRQ_TYPE_EDGE_FALLING>;
++			linux,code = <KEY_3>;
++			label = "USER_SW3";
++			wakeup-source;
++			debounce-interval = <20>;
++		};
++	};
+ };
+ 
+ &canfd {
 -- 
-2.50.0
+2.43.0
 
