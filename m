@@ -1,404 +1,330 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E0D283FD6;
-	Wed,  2 Jul 2025 14:06:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BB5D2857DA
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:06:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751465192; cv=none; b=ed8XdHsjphd3+yX72KlpjTAOPlFgbLDg2/5exCQcWOHg7U77BK60pKang/GA48sztCvMk8EDj0K100wORNjSrcIpgNACxNab4Lh+Lp04U8adwHSu2FISd+A4TUvNhvQyndCeF/uCiZyY5U6TbcJd4ldCbZn89zXY9DbgEl7Y5BI=
+	t=1751465195; cv=none; b=I4MqZb8T57SiqMZncFluWqQX7vQvh0tVISNYo5PKD+OZ+e/yaC/NwoM5wOVrhI3MOcR2C1+XlmFLXGbCzfvY6tjBHSZKwCWXdb7FPo7iLYf9mAC8L+032EHCBcp/eP6KFJJcVjMvzo7ZxTkgHu4O7FZcIWR4mHC6/EYAlxnV1Dc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751465192; c=relaxed/simple;
-	bh=rXyo8ORdVakXK3X9Qi3/z2DRpIcRtRQbRD9iDzu8h4o=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=o7D/OVimjLVYEr/wlRDUPDzZEeTQEp12jQz5ki/NckLMpDQPTs32XCWwy3uewgKxvOIlZkLCfXAUg28bCwZ6seDMeb0PgmhTth7yIZ//GiZ6fhEImTxWhkprNZTZdjUD5gU8JCDKKpxftNnzgL1e4WhNrA0scnv3AE+FJqKvtCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bXMBK1glKz6L5vy;
-	Wed,  2 Jul 2025 22:06:01 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 42615140446;
-	Wed,  2 Jul 2025 22:06:27 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 2 Jul
- 2025 16:06:26 +0200
-Date: Wed, 2 Jul 2025 15:06:24 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-CC: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "Rob
- Herring" <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
- Dooley" <conor+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "Sascha
- Bischoff" <sascha.bischoff@arm.com>, Timothy Hayes <timothy.hayes@arm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, "Liam R. Howlett"
-	<Liam.Howlett@oracle.com>, Peter Maydell <peter.maydell@linaro.org>, "Mark
- Rutland" <mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v6 28/31] irqchip/gic-v5: Add GICv5 ITS support
-Message-ID: <20250702150624.00007ceb@huawei.com>
-In-Reply-To: <20250626-gicv5-host-v6-28-48e046af4642@kernel.org>
-References: <20250626-gicv5-host-v6-0-48e046af4642@kernel.org>
-	<20250626-gicv5-host-v6-28-48e046af4642@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1751465195; c=relaxed/simple;
+	bh=mb63fXyaHPxUt/nbVnR007vHkGzSK3CuZfT1pJ89Pto=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=Qq8x0iiQ0LwIiRbbT0vwAw/AkOBW8kz2QEB+AYl5PWWGjYLo7ZnExs9xiKbMKqHHZQq5MYUFzQBi+vwTTtD0R/jNBfdhieKQaLoY7QAMrEkjMuaReeBUL1CJWit/P4nezmq6I8112bZ37F9TwulwadcbBbVWDoQDsP9/lqxSMA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XjSgflKh; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XjSgflKh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751465194; x=1783001194;
+  h=date:from:to:cc:subject:message-id;
+  bh=mb63fXyaHPxUt/nbVnR007vHkGzSK3CuZfT1pJ89Pto=;
+  b=XjSgflKh5SzU4W6h0TrlPVliCzTUUCgnES/4Xilzwk/cQqUbqgPa4U5c
+   zFvVCEGdslOMaaygaCRr6cFvdGpzAhppbcgubUfBo+7o6/YqjaYJgvWw5
+   VZDLVrq2MVnw0Hfxj+SvWe55s0cOeVZunuQPHgkTj6PnLMvcYzsB5/n5q
+   re5cu8yWhI5cR5n/PEX7VsQXuJbodgebDRdK4wBjJBhCzAyNYjwRfrx1o
+   OPADa4YowHt7n6y5bocpfv41/eBTuWOvhLXjrfRFiSIv5jaSzgvVnLuEd
+   i8cC8+HQlSKs2WbZxXS0nCYtsYKKPXlYSMUnPCUoZNoiI6p7tdAXc3IaI
+   w==;
+X-CSE-ConnectionGUID: xj8B+CsMSf+n/n1G5V0IoQ==
+X-CSE-MsgGUID: LE3AQterR/qZUIXtqxjF3A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="76309042"
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="76309042"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 07:06:22 -0700
+X-CSE-ConnectionGUID: rvtsxM7LQFm5VhbNSG4F7g==
+X-CSE-MsgGUID: cApoc9hTQXaWhieGJwnCoA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="153539559"
+Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 02 Jul 2025 07:06:20 -0700
+Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uWy6M-0000iV-1b;
+	Wed, 02 Jul 2025 14:06:18 +0000
+Date: Wed, 02 Jul 2025 22:05:38 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:objtool/urgent] BUILD SUCCESS
+ ccdd09e0fc0d5ce6dfc8360f0c88da9a5045b6ea
+Message-ID: <202507022225.IpvyRGoi-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, 26 Jun 2025 12:26:19 +0200
-Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git objtool/urgent
+branch HEAD: ccdd09e0fc0d5ce6dfc8360f0c88da9a5045b6ea  objtool: Add missing endian conversion to read_annotate()
 
-> The GICv5 architecture implements Interrupt Translation Service
-> (ITS) components in order to translate events coming from peripherals
-> into interrupt events delivered to the connected IRSes.
-> 
-> Events (ie MSI memory writes to ITS translate frame), are translated
-> by the ITS using tables kept in memory.
-> 
-> ITS translation tables for peripherals is kept in memory storage
-> (device table [DT] and Interrupt Translation Table [ITT]) that
-> is allocated by the driver on boot.
-> 
-> Both tables can be 1- or 2-level; the structure is chosen by the
-> driver after probing the ITS HW parameters and checking the
-> allowed table splits and supported {device/event}_IDbits.
-> 
-> DT table entries are allocated on demand (ie when a device is
-> probed); the DT table is sized using the number of supported
-> deviceID bits in that that's a system design decision (ie the
-> number of deviceID bits implemented should reflect the number
-> of devices expected in a system) therefore it makes sense to
-> allocate a DT table that can cater for the maximum number of
-> devices.
-> 
-> DT and ITT tables are allocated using the kmalloc interface;
-> the allocation size may be smaller than a page or larger,
-> and must provide contiguous memory pages.
-> 
-> LPIs INTIDs backing the device events are allocated one-by-one
-> and only upon Linux IRQ allocation; this to avoid preallocating
-> a large number of LPIs to cover the HW device MSI vector
-> size whereas few MSI entries are actually enabled by a device.
-> 
-> ITS cacheability/shareability attributes are programmed
-> according to the provided firmware ITS description.
-> 
-> The GICv5 partially reuses the GICv3 ITS MSI parent infrastructure
-> and adds functions required to retrieve the ITS translate frame
-> addresses out of msi-map and msi-parent properties to implement
-> the GICv5 ITS MSI parent callbacks.
-> 
-> Co-developed-by: Sascha Bischoff <sascha.bischoff@arm.com>
-> Signed-off-by: Sascha Bischoff <sascha.bischoff@arm.com>
-> Co-developed-by: Timothy Hayes <timothy.hayes@arm.com>
-> Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
-> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Marc Zyngier <maz@kernel.org>
+elapsed time: 1449m
 
-Hi Lorenzo,
+configs tested: 253
+configs skipped: 8
 
-It almost certainly doesn't matter, but there are a couple of release
-paths in here where things don't happen in the same order as the
-equivalent error tear down paths (i.e. not reverse of setup).
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-There may well be a good reason for that but I couldn't immediately
-spot what it was.  Also a follow up similar to earlier comment about
-the table sizing code not matching the comments above it. Same thing
-going on here.
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    clang-19
+alpha                            allyesconfig    gcc-15.1.0
+alpha                               defconfig    gcc-15.1.0
+arc                              allmodconfig    clang-19
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    clang-19
+arc                                 defconfig    gcc-15.1.0
+arc                   randconfig-001-20250701    gcc-13.3.0
+arc                   randconfig-001-20250702    clang-19
+arc                   randconfig-002-20250701    gcc-15.1.0
+arc                   randconfig-002-20250702    clang-19
+arc                        vdk_hs38_defconfig    gcc-15.1.0
+arm                              allmodconfig    clang-19
+arm                               allnoconfig    clang-21
+arm                               allnoconfig    gcc-15.1.0
+arm                              allyesconfig    clang-19
+arm                                 defconfig    gcc-15.1.0
+arm                          gemini_defconfig    gcc-15.1.0
+arm                      integrator_defconfig    gcc-15.1.0
+arm                        multi_v7_defconfig    gcc-15.1.0
+arm                        mvebu_v7_defconfig    gcc-15.1.0
+arm                          pxa3xx_defconfig    clang-18
+arm                   randconfig-001-20250701    clang-17
+arm                   randconfig-001-20250702    clang-19
+arm                   randconfig-002-20250701    gcc-8.5.0
+arm                   randconfig-002-20250702    clang-19
+arm                   randconfig-003-20250701    clang-21
+arm                   randconfig-003-20250702    clang-19
+arm                   randconfig-004-20250701    clang-21
+arm                   randconfig-004-20250702    clang-19
+arm                           tegra_defconfig    clang-18
+arm                           u8500_defconfig    gcc-15.1.0
+arm                         vf610m4_defconfig    clang-18
+arm                         wpcm450_defconfig    gcc-15.1.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                               defconfig    gcc-15.1.0
+arm64                 randconfig-001-20250701    clang-21
+arm64                 randconfig-001-20250702    clang-19
+arm64                 randconfig-002-20250701    gcc-15.1.0
+arm64                 randconfig-002-20250702    clang-19
+arm64                 randconfig-003-20250701    clang-18
+arm64                 randconfig-003-20250702    clang-19
+arm64                 randconfig-004-20250701    gcc-8.5.0
+arm64                 randconfig-004-20250702    clang-19
+csky                              allnoconfig    gcc-15.1.0
+csky                                defconfig    gcc-15.1.0
+csky                  randconfig-001-20250701    gcc-11.5.0
+csky                  randconfig-001-20250702    gcc-14.2.0
+csky                  randconfig-002-20250701    gcc-10.5.0
+csky                  randconfig-002-20250702    gcc-14.2.0
+hexagon                          allmodconfig    clang-17
+hexagon                          allmodconfig    clang-19
+hexagon                           allnoconfig    clang-21
+hexagon                           allnoconfig    gcc-15.1.0
+hexagon                          allyesconfig    clang-19
+hexagon                          allyesconfig    clang-21
+hexagon                             defconfig    gcc-15.1.0
+hexagon               randconfig-001-20250701    clang-21
+hexagon               randconfig-001-20250702    gcc-14.2.0
+hexagon               randconfig-002-20250701    clang-21
+hexagon               randconfig-002-20250702    gcc-14.2.0
+i386                             allmodconfig    clang-20
+i386                              allnoconfig    clang-20
+i386                             allyesconfig    clang-20
+i386        buildonly-randconfig-001-20250701    gcc-12
+i386        buildonly-randconfig-001-20250702    clang-20
+i386        buildonly-randconfig-002-20250701    gcc-12
+i386        buildonly-randconfig-002-20250702    clang-20
+i386        buildonly-randconfig-003-20250701    gcc-12
+i386        buildonly-randconfig-003-20250702    clang-20
+i386        buildonly-randconfig-004-20250701    gcc-12
+i386        buildonly-randconfig-004-20250702    clang-20
+i386        buildonly-randconfig-005-20250701    gcc-12
+i386        buildonly-randconfig-005-20250702    clang-20
+i386        buildonly-randconfig-006-20250701    clang-20
+i386        buildonly-randconfig-006-20250702    clang-20
+i386                                defconfig    clang-20
+i386                  randconfig-001-20250702    clang-20
+i386                  randconfig-002-20250702    clang-20
+i386                  randconfig-003-20250702    clang-20
+i386                  randconfig-004-20250702    clang-20
+i386                  randconfig-005-20250702    clang-20
+i386                  randconfig-006-20250702    clang-20
+i386                  randconfig-007-20250702    clang-20
+i386                  randconfig-011-20250702    gcc-12
+i386                  randconfig-012-20250702    gcc-12
+i386                  randconfig-013-20250702    gcc-12
+i386                  randconfig-014-20250702    gcc-12
+i386                  randconfig-015-20250702    gcc-12
+i386                  randconfig-016-20250702    gcc-12
+i386                  randconfig-017-20250702    gcc-12
+loongarch                        allmodconfig    gcc-15.1.0
+loongarch                         allnoconfig    gcc-15.1.0
+loongarch                           defconfig    gcc-15.1.0
+loongarch             randconfig-001-20250701    gcc-13.3.0
+loongarch             randconfig-001-20250702    gcc-14.2.0
+loongarch             randconfig-002-20250701    gcc-15.1.0
+loongarch             randconfig-002-20250702    gcc-14.2.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+m68k                                defconfig    gcc-15.1.0
+m68k                        m5307c3_defconfig    gcc-15.1.0
+m68k                           virt_defconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+mips                           gcw0_defconfig    clang-18
+mips                            gpr_defconfig    clang-18
+mips                           ip32_defconfig    gcc-15.1.0
+mips                         rt305x_defconfig    gcc-15.1.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-15.1.0
+nios2                               defconfig    gcc-15.1.0
+nios2                 randconfig-001-20250701    gcc-14.2.0
+nios2                 randconfig-001-20250702    gcc-14.2.0
+nios2                 randconfig-002-20250701    gcc-13.3.0
+nios2                 randconfig-002-20250702    gcc-14.2.0
+openrisc                          allnoconfig    clang-21
+openrisc                         allyesconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-12
+openrisc                 simple_smp_defconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    clang-21
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-12
+parisc                randconfig-001-20250701    gcc-14.3.0
+parisc                randconfig-001-20250702    gcc-14.2.0
+parisc                randconfig-002-20250701    gcc-10.5.0
+parisc                randconfig-002-20250702    gcc-14.2.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    clang-21
+powerpc                          allyesconfig    clang-21
+powerpc                          allyesconfig    gcc-15.1.0
+powerpc                      chrp32_defconfig    gcc-15.1.0
+powerpc                       ebony_defconfig    gcc-15.1.0
+powerpc                     mpc512x_defconfig    gcc-15.1.0
+powerpc                    mvme5100_defconfig    gcc-15.1.0
+powerpc               randconfig-001-20250701    gcc-13.3.0
+powerpc               randconfig-001-20250702    gcc-14.2.0
+powerpc               randconfig-002-20250701    clang-21
+powerpc               randconfig-002-20250702    gcc-14.2.0
+powerpc               randconfig-003-20250701    clang-21
+powerpc               randconfig-003-20250702    gcc-14.2.0
+powerpc                     sequoia_defconfig    clang-18
+powerpc                     sequoia_defconfig    gcc-15.1.0
+powerpc64             randconfig-001-20250701    clang-21
+powerpc64             randconfig-001-20250702    gcc-14.2.0
+powerpc64             randconfig-002-20250701    clang-21
+powerpc64             randconfig-002-20250702    gcc-14.2.0
+powerpc64             randconfig-003-20250701    gcc-10.5.0
+powerpc64             randconfig-003-20250702    gcc-14.2.0
+riscv                            allmodconfig    clang-21
+riscv                            allmodconfig    gcc-15.1.0
+riscv                             allnoconfig    clang-21
+riscv                            allyesconfig    clang-16
+riscv                            allyesconfig    gcc-15.1.0
+riscv                               defconfig    gcc-12
+riscv                 randconfig-001-20250701    gcc-14.3.0
+riscv                 randconfig-001-20250702    clang-21
+riscv                 randconfig-002-20250701    gcc-10.5.0
+riscv                 randconfig-002-20250702    clang-21
+s390                             allmodconfig    clang-18
+s390                             allmodconfig    gcc-15.1.0
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-15.1.0
+s390                                defconfig    gcc-12
+s390                  randconfig-001-20250701    gcc-9.3.0
+s390                  randconfig-001-20250702    clang-21
+s390                  randconfig-002-20250701    clang-17
+s390                  randconfig-002-20250702    clang-21
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                                  defconfig    gcc-12
+sh                        edosk7705_defconfig    gcc-15.1.0
+sh                             espt_defconfig    clang-18
+sh                             espt_defconfig    gcc-15.1.0
+sh                    randconfig-001-20250701    gcc-15.1.0
+sh                    randconfig-001-20250702    clang-21
+sh                    randconfig-002-20250701    gcc-13.3.0
+sh                    randconfig-002-20250702    clang-21
+sh                           se7722_defconfig    gcc-15.1.0
+sh                     sh7710voipgw_defconfig    gcc-15.1.0
+sh                        sh7763rdp_defconfig    gcc-15.1.0
+sh                  sh7785lcr_32bit_defconfig    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                 randconfig-001-20250701    gcc-10.3.0
+sparc                 randconfig-001-20250702    clang-21
+sparc                 randconfig-002-20250701    gcc-15.1.0
+sparc                 randconfig-002-20250702    clang-21
+sparc64                             defconfig    gcc-12
+sparc64               randconfig-001-20250701    gcc-8.5.0
+sparc64               randconfig-001-20250702    clang-21
+sparc64               randconfig-002-20250701    gcc-12.4.0
+sparc64               randconfig-002-20250702    clang-21
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    clang-19
+um                               allyesconfig    gcc-12
+um                                  defconfig    gcc-12
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250701    gcc-12
+um                    randconfig-001-20250702    clang-21
+um                    randconfig-002-20250701    gcc-12
+um                    randconfig-002-20250702    clang-21
+um                           x86_64_defconfig    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250701    gcc-12
+x86_64      buildonly-randconfig-001-20250702    gcc-11
+x86_64      buildonly-randconfig-002-20250701    gcc-12
+x86_64      buildonly-randconfig-002-20250702    gcc-11
+x86_64      buildonly-randconfig-003-20250701    gcc-12
+x86_64      buildonly-randconfig-003-20250702    gcc-11
+x86_64      buildonly-randconfig-004-20250701    gcc-12
+x86_64      buildonly-randconfig-004-20250702    gcc-11
+x86_64      buildonly-randconfig-005-20250701    clang-20
+x86_64      buildonly-randconfig-005-20250702    gcc-11
+x86_64      buildonly-randconfig-006-20250701    clang-20
+x86_64      buildonly-randconfig-006-20250702    gcc-11
+x86_64                              defconfig    clang-20
+x86_64                                  kexec    clang-20
+x86_64                randconfig-004-20250702    gcc-12
+x86_64                randconfig-005-20250702    gcc-12
+x86_64                randconfig-006-20250702    gcc-12
+x86_64                randconfig-007-20250702    gcc-12
+x86_64                randconfig-008-20250702    gcc-12
+x86_64                randconfig-071-20250702    clang-20
+x86_64                randconfig-072-20250702    clang-20
+x86_64                randconfig-073-20250702    clang-20
+x86_64                randconfig-074-20250702    clang-20
+x86_64                randconfig-075-20250702    clang-20
+x86_64                randconfig-076-20250702    clang-20
+x86_64                randconfig-077-20250702    clang-20
+x86_64                randconfig-078-20250702    clang-20
+x86_64                               rhel-9.4    clang-20
+x86_64                           rhel-9.4-bpf    gcc-12
+x86_64                         rhel-9.4-kunit    gcc-12
+x86_64                           rhel-9.4-ltp    gcc-12
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                  cadence_csp_defconfig    gcc-15.1.0
+xtensa                randconfig-001-20250701    gcc-15.1.0
+xtensa                randconfig-001-20250702    clang-21
+xtensa                randconfig-002-20250701    gcc-13.3.0
+xtensa                randconfig-002-20250702    clang-21
 
-Jonathan
-
-
-git a/drivers/irqchip/irq-gic-v5-its.c b/drivers/irqchip/irq-gic-v5-its.c
-> new file mode 100644
-> index 000000000000..cba632eb0273
-> --- /dev/null
-> +++ b/drivers/irqchip/irq-gic-v5-its.c
-
-> +/*
-> + * Function to check whether the device table or ITT table support
-> + * a two-level table and if so depending on the number of id_bits
-> + * requested, determine whether a two-level table is required.
-> + *
-> + * Return the 2-level size value if a two level table is deemed
-> + * necessary.
-> + */
-> +static bool gicv5_its_l2sz_two_level(bool devtab, u32 its_idr1, u8 id_bits, u8 *sz)
-> +{
-> +	unsigned int l2_bits, l2_sz;
-> +
-> +	if (devtab && !FIELD_GET(GICV5_ITS_IDR1_DT_LEVELS, its_idr1))
-> +		return false;
-> +
-> +	if (!devtab && !FIELD_GET(GICV5_ITS_IDR1_ITT_LEVELS, its_idr1))
-> +		return false;
-> +
-> +	/*
-> +	 * Pick an L2 size that matches the pagesize; if a match
-> +	 * is not found, go for the smallest supported l2 size granule.
-
-Similar to before, this description is confusing.  If Page size is 64K
-and 16 + 4 are supported we choose 16 which is not he smallest
-supported (4 is).  The condition the comment refers to only applies
-if only larger than pagesized things are supported.
-
-> +	 *
-> +	 * This ensures that we will always be able to allocate
-> +	 * contiguous memory at L2.
-> +	 */
-> +	switch (PAGE_SIZE) {
-> +	case SZ_64K:
-> +		if (GICV5_ITS_IDR1_L2SZ_SUPPORT_64KB(its_idr1)) {
-> +			l2_sz = GICV5_ITS_DT_ITT_CFGR_L2SZ_64k;
-> +			break;
-> +		}
-> +		fallthrough;
-> +	case SZ_16K:
-> +		if (GICV5_ITS_IDR1_L2SZ_SUPPORT_16KB(its_idr1)) {
-> +			l2_sz = GICV5_ITS_DT_ITT_CFGR_L2SZ_16k;
-> +			break;
-> +		}
-> +		fallthrough;
-> +	case SZ_4K:
-> +		if (GICV5_ITS_IDR1_L2SZ_SUPPORT_4KB(its_idr1)) {
-> +			l2_sz = GICV5_ITS_DT_ITT_CFGR_L2SZ_4k;
-> +			break;
-> +		}
-> +		if (GICV5_ITS_IDR1_L2SZ_SUPPORT_16KB(its_idr1)) {
-> +			l2_sz = GICV5_ITS_DT_ITT_CFGR_L2SZ_16k;
-> +			break;
-> +		}
-> +		if (GICV5_ITS_IDR1_L2SZ_SUPPORT_64KB(its_idr1)) {
-> +			l2_sz = GICV5_ITS_DT_ITT_CFGR_L2SZ_64k;
-> +			break;
-> +		}
-> +
-> +		l2_sz = GICV5_ITS_DT_ITT_CFGR_L2SZ_4k;
-> +		break;
-> +	}
-> +
-> +	l2_bits = gicv5_its_l2sz_to_l2_bits(l2_sz);
-> +
-> +	if (l2_bits > id_bits)
-> +		return false;
-> +
-> +	*sz = l2_sz;
-> +
-> +	return true;
-> +}
-
-
-
-> +/*
-> + * Register a new device in the device table. Allocate an ITT and
-> + * program the L2DTE entry according to the ITT structure that
-> + * was chosen.
-> + */
-> +static int gicv5_its_device_register(struct gicv5_its_chip_data *its,
-> +				     struct gicv5_its_dev *its_dev)
-> +{
-> +	u8 event_id_bits, device_id_bits, itt_struct, itt_l2sz;
-> +	phys_addr_t itt_phys_base;
-> +	bool two_level_itt;
-> +	u32 idr1, idr2;
-> +	__le64 *dte;
-> +	u64 val;
-> +	int ret;
-> +
-> +	device_id_bits = devtab_cfgr_field(its, DEVICEID_BITS);
-> +
-> +	if (its_dev->device_id >= BIT(device_id_bits)) {
-> +		pr_err("Supplied DeviceID (%u) outside of Device Table range (%u)!",
-> +		       its_dev->device_id, (u32)GENMASK(device_id_bits - 1, 0));
-> +		return -EINVAL;
-> +	}
-> +
-> +	dte = gicv5_its_devtab_get_dte_ref(its, its_dev->device_id, true);
-> +	if (!dte)
-> +		return -ENOMEM;
-> +
-> +	if (FIELD_GET(GICV5_DTL2E_VALID, le64_to_cpu(*dte)))
-> +		return -EBUSY;
-> +
-> +	/*
-> +	 * Determine how many bits we need, validate those against the max.
-> +	 * Based on these, determine if we should go for a 1- or 2-level ITT.
-> +	 */
-> +	event_id_bits = order_base_2(its_dev->num_events);
-> +
-> +	idr2 = its_readl_relaxed(its, GICV5_ITS_IDR2);
-> +
-> +	if (event_id_bits > FIELD_GET(GICV5_ITS_IDR2_EVENTID_BITS, idr2)) {
-> +		pr_err("Required EventID bits (%u) larger than supported bits (%u)!",
-> +		       event_id_bits,
-> +		       (u8)FIELD_GET(GICV5_ITS_IDR2_EVENTID_BITS, idr2));
-> +		return -EINVAL;
-> +	}
-> +
-> +	idr1 = its_readl_relaxed(its, GICV5_ITS_IDR1);
-> +
-> +	/*
-> +	 * L2 ITT size is programmed into the L2DTE regardless of
-> +	 * whether a two-level or linear ITT is built, init it.
-> +	 */
-> +	itt_l2sz = 0;
-> +
-> +	two_level_itt = gicv5_its_l2sz_two_level(false, idr1, event_id_bits,
-> +						  &itt_l2sz);
-> +	if (two_level_itt)
-> +		ret = gicv5_its_create_itt_two_level(its, its_dev, event_id_bits,
-> +						     itt_l2sz,
-> +						     its_dev->num_events);
-> +	else
-> +		ret = gicv5_its_create_itt_linear(its, its_dev, event_id_bits);
-> +	if (ret)
-> +		return ret;
-> +
-> +	itt_phys_base = two_level_itt ? virt_to_phys(its_dev->itt_cfg.l2.l1itt) :
-> +					virt_to_phys(its_dev->itt_cfg.linear.itt);
-> +
-> +	itt_struct = two_level_itt ? GICV5_ITS_DT_ITT_CFGR_STRUCTURE_TWO_LEVEL :
-> +				     GICV5_ITS_DT_ITT_CFGR_STRUCTURE_LINEAR;
-> +
-> +	val = FIELD_PREP(GICV5_DTL2E_EVENT_ID_BITS, event_id_bits)	|
-> +	      FIELD_PREP(GICV5_DTL2E_ITT_STRUCTURE, itt_struct)		|
-> +	      (itt_phys_base & GICV5_DTL2E_ITT_ADDR_MASK)		|
-> +	      FIELD_PREP(GICV5_DTL2E_ITT_L2SZ, itt_l2sz)		|
-> +	      FIELD_PREP(GICV5_DTL2E_VALID, 0x1);
-> +
-> +	its_write_table_entry(its, dte, val);
-> +
-> +	ret = gicv5_its_device_cache_inv(its, its_dev);
-> +	if (ret) {
-> +		gicv5_its_free_itt(its_dev);
-> +		its_write_table_entry(its, dte, 0);
-
-If it makes no difference, unwind in reverse order of setup so swap the
-two lines above.
-
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-
-> +static struct gicv5_its_dev *gicv5_its_alloc_device(struct gicv5_its_chip_data *its, int nvec,
-> +						    u32 dev_id)
-> +{
-> +	struct gicv5_its_dev *its_dev;
-> +	void *entry;
-> +	int ret;
-> +
-> +	its_dev = gicv5_its_find_device(its, dev_id);
-> +	if (!IS_ERR(its_dev)) {
-> +		pr_err("A device with this DeviceID (0x%x) has already been registered.\n",
-> +		       dev_id);
-> +
-> +		return ERR_PTR(-EBUSY);
-> +	}
-> +
-> +	its_dev = kzalloc(sizeof(*its_dev), GFP_KERNEL);
-> +	if (!its_dev)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	its_dev->device_id = dev_id;
-> +	its_dev->num_events = nvec;
-> +
-> +	ret = gicv5_its_device_register(its, its_dev);
-> +	if (ret) {
-> +		pr_err("Failed to register the device\n");
-> +		goto out_dev_free;
-> +	}
-> +
-> +	gicv5_its_device_cache_inv(its, its_dev);
-> +
-> +	its_dev->its_node = its;
-> +
-> +	its_dev->event_map = (unsigned long *)bitmap_zalloc(its_dev->num_events, GFP_KERNEL);
-> +	if (!its_dev->event_map) {
-> +		ret = -ENOMEM;
-> +		goto out_unregister;
-> +	}
-> +
-> +	entry = xa_store(&its->its_devices, dev_id, its_dev, GFP_KERNEL);
-> +	if (xa_is_err(entry)) {
-> +		ret = xa_err(entry);
-> +		goto out_bitmap_free;
-> +	}
-> +
-> +	return its_dev;
-> +
-> +out_bitmap_free:
-> +	bitmap_free(its_dev->event_map);
-> +out_unregister:
-> +	gicv5_its_device_unregister(its, its_dev);
-> +out_dev_free:
-> +	kfree(its_dev);
-> +	return ERR_PTR(ret);
-> +}
-> +
-> +static int gicv5_its_msi_prepare(struct irq_domain *domain, struct device *dev,
-> +				 int nvec, msi_alloc_info_t *info)
-> +{
-> +	u32 dev_id = info->scratchpad[0].ul;
-> +	struct msi_domain_info *msi_info;
-> +	struct gicv5_its_chip_data *its;
-> +	struct gicv5_its_dev *its_dev;
-> +
-> +	msi_info = msi_get_domain_info(domain);
-> +	its = msi_info->data;
-> +
-> +	guard(mutex)(&its->dev_alloc_lock);
-> +
-> +	its_dev = gicv5_its_alloc_device(its, nvec, dev_id);
-> +	if (IS_ERR(its_dev))
-> +		return PTR_ERR(its_dev);
-> +
-> +	its_dev->its_trans_phys_base = info->scratchpad[1].ul;
-> +	info->scratchpad[0].ptr = its_dev;
-> +
-> +	return 0;
-> +}
-> +
-> +static void gicv5_its_msi_teardown(struct irq_domain *domain, msi_alloc_info_t *info)
-> +{
-> +	struct gicv5_its_dev *its_dev = info->scratchpad[0].ptr;
-> +	struct msi_domain_info *msi_info;
-> +	struct gicv5_its_chip_data *its;
-> +
-> +	msi_info = msi_get_domain_info(domain);
-> +	its = msi_info->data;
-> +
-> +	guard(mutex)(&its->dev_alloc_lock);
-> +
-> +	if (WARN_ON_ONCE(!bitmap_empty(its_dev->event_map, its_dev->num_events)))
-> +		return;
-> +
-> +	gicv5_its_device_unregister(its, its_dev);
-> +	bitmap_free(its_dev->event_map);
-> +	xa_erase(&its->its_devices, its_dev->device_id);
-
-I was expecting this to be in reverse order of what happens in *msi_prepare (and *msi_alloc under
-that). That would give the order
-
-	xa_erase();
-	bitmap_free();
-	gicv5_its_device_unregister();
-	kfree(its_dev);
-
-If there is a reason for this ordering it might be good to add a comment calling it out.
-
- 
-> +	kfree(its_dev);
-> +}
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
