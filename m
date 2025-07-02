@@ -1,91 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B972D0C9E;
-	Wed,  2 Jul 2025 15:33:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C79303DE4;
+	Wed,  2 Jul 2025 15:33:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751470419; cv=none; b=fV1ihhJetIMif23aFqEQScJimd1Ve47+4Ml+LCCkMYZeZrYG+DjLTomuOdHcl3Y97GXuDQeLkPEP/rcPE5fc53LhoG98szXRwB8KssFm2crR69y7xytw9XcCDHsfvXR9MNTIpKXhr63JVFol80+FnDy/D81v7zxuU/FF8HO++Q0=
+	t=1751470429; cv=none; b=kVoDno/K0HiCa3++63xEGm51UswAHV7Xwz7I7hBZbKJdnKtAEmUmgiLX8MfqKHULzyVwMmw1WhpPgut/xzDGojUCPygrju0MixrEA/Sp0yW8H8RQAw8CD4+IhbA35U7zaVtCVxk2KZqd2QcIP79MAUtEnXD5LkiQRAu3NZe0DGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751470419; c=relaxed/simple;
-	bh=m4jNXgT+w4Hs09jExxagGWXs5YRAnZ/7SVfxbiR92Co=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o0jm/UZ2T7m1rShcOdLMkhczFoXvB6gGASUcZ28ncNBqnQ9eS+NOUJ9EzXeTrqyU3aCusaqUtNYrh0DFkRY/GjbMNiEkfY+5ZjQBo4CrPZwey3WlrSY3At0bFNO+Eo2uxD0S4jBBnKGXtLPeIlTv4JOVj1Yizs2J+hFZG3iKmUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LCGgA+c9; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LCGgA+c9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77315C4CEE7;
-	Wed,  2 Jul 2025 15:33:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751470418;
-	bh=m4jNXgT+w4Hs09jExxagGWXs5YRAnZ/7SVfxbiR92Co=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LCGgA+c9TFzb/8uksnZ2Tj1ghRaQm6VM0g/MJYbMQ1521YHgfeqEZR7CQJrApug9P
-	 0+Pcpa11cSgNytCUmkvrP7LZzgluUoktRaxJR9yAWJZMlGaWaVhj6fMzpXtx6kUHJy
-	 9jsSwjGpDw2+ryhZoogfhphKmZOiofVVfH5WPa7TgOlkTOCY7pbey7nOH1FvmYPB2R
-	 K3FnnKfK08IF8KdiLIltGVesNdNtPWJreWfJD0QDrXq7/wg/3RPHfJ9vwb9cqOJuJZ
-	 schKz4Wufn+rbeAtuTZnq8+IjUpyqMVVceL85N8aAP1koCkDUawU4C7oGxY39NFkTC
-	 HR4cYpJRstw6g==
-Date: Wed, 2 Jul 2025 21:03:24 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com, quic_mrana@quicinc.com
-Subject: Re: [PATCH v5 2/2] PCI: qcom: Add support for multi-root port
-Message-ID: <ws2kdznvbrvuvb6k4jov5cd4qzvadeaffjqgeso7u72stormlg@2ffiexejkrk6>
-References: <20250702-perst-v5-0-920b3d1f6ee1@qti.qualcomm.com>
- <20250702-perst-v5-2-920b3d1f6ee1@qti.qualcomm.com>
+	s=arc-20240116; t=1751470429; c=relaxed/simple;
+	bh=XvErPKwXmrSaWnLPQRt75z9XMYPtu63Ke0m16RaoJ+k=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=B6T/VlI3QrDKGC72BNhHvDukPn+Zt2ROmdQl+cet1TqaQe/nLlf5xCZmNUDsy3dM9MpeKZPJAU0kwZwFm+6fZZHA+uSqD5KXxwSdxULHDagLEjrSmmFYYqg1iAupuRMzECWwItbf0ofBVhGnDdSnh3vnzpaOyMeyAGE+GSydBV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bXP6S3Hm3z6M4tH;
+	Wed,  2 Jul 2025 23:32:48 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3C5D914011A;
+	Wed,  2 Jul 2025 23:33:44 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 2 Jul
+ 2025 17:33:43 +0200
+Date: Wed, 2 Jul 2025 16:33:42 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: David Lechner <dlechner@baylibre.com>
+CC: Andy Shevchenko <andriy.shevchenko@intel.com>, Akshay Bansod
+	<akbansd@gmail.com>, Lorenzo Bianconi <lorenzo@kernel.org>, "Jonathan
+ Cameron" <jic23@kernel.org>, Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	<linux-kernel-mentees@lists.linuxfoundation.org>,
+	<linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iio: st_lsm6dsx: Replace scnprintf with sysfs_emit
+Message-ID: <20250702163342.00003c66@huawei.com>
+In-Reply-To: <e474db53-1b52-48b0-9253-2f62a3861bb4@baylibre.com>
+References: <20250702135855.59955-1-akbansd@gmail.com>
+	<f96b68a5-d750-45f0-8cdd-9761b5daca1d@baylibre.com>
+	<aGVIcBLgXZj_YR7B@smile.fi.intel.com>
+	<e474db53-1b52-48b0-9253-2f62a3861bb4@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250702-perst-v5-2-920b3d1f6ee1@qti.qualcomm.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Wed, Jul 02, 2025 at 04:50:42PM GMT, Krishna Chaitanya Chundru wrote:
+On Wed, 2 Jul 2025 10:04:23 -0500
+David Lechner <dlechner@baylibre.com> wrote:
 
-[...]
+> On 7/2/25 9:55 AM, Andy Shevchenko wrote:
+> > On Wed, Jul 02, 2025 at 09:16:51AM -0500, David Lechner wrote:  
+> >> On 7/2/25 8:58 AM, Akshay Bansod wrote:  
+> >>> Update the sysfs interface for sampling frequency and scale attributes.
+> >>> Replace `scnprintf()` with `sysfs_emit_at()` which is PAGE_SIZE-aware
+> >>> and recommended for use in sysfs.  
+> > 
+> > ...
+> >   
+> >>> +		len += sysfs_emit_at(buf, len, "%d.%03d ",
+> >>>  				 odr_table->odr_avl[i].milli_hz / 1000,
+> >>>  				 odr_table->odr_avl[i].milli_hz % 1000);  
+> >>
+> >> Let's keep checkpatch happy and change the indent of the wrapped lines to
+> >> line up with ( since the ( moved.  
+> > 
+> > While I see the point, wouldn't be better to have 1000 replaced with MILLI
+> > at the same time?
+> >   
+> 
+> For anything with 3 zeros, I don't consider MILLI better (or worse).
+> Science shows that the average human can easily see 3 or 4 things
+> without having to count them [1]. So it is only when we start getting
+> more 0s than that is when I think we should be picky about using macros
+> instead.
+> 
+> And in this particular case, we are converting milli to micro so `1000`
+> should be replaced by `(MICRO / MILLI)` if we are going to do that.
+No we aren't.
 
-> -	ret = phy_init(pcie->phy);
-> -	if (ret)
-> -		goto err_pm_runtime_put;
-> +	for_each_available_child_of_node(dev->of_node, of_port) {
-> +		ret = qcom_pcie_parse_port(pcie, of_port);
-> +		of_node_put(of_port);
-> +		if (ret) {
-> +			if (ret != -ENOENT) {
-> +				dev_err_probe(pci->dev, ret,
-> +					      "Failed to parse port nodes %d\n",
-> +					      ret);
-> +				goto err_port_del;
-> +			}
-> +			break;
-> +		}
-> +	}
-> +
-> +	/*
-> +	 * In the case of properties not populated in root port, fallback to the
-> +	 * legacy method of parsing the host bridge node. This is to maintain DT
-> +	 * backwards compatibility.
-> +	 */
-> +	if (ret) {
-> +		pcie->phy = devm_phy_optional_get(dev, "pciephy");
-> +		if (IS_ERR(pcie->phy)) {
-> +			ret = PTR_ERR(pcie->phy);
-> +			goto err_pm_runtime_put;
+This one is converting from milli_hz to hz + sticking to milli for the decimal
+part.
 
-Shouldn't this and below be err_port_del?
+Lots of other IIO cases where you would have been right, but I think not here.
+> 
+> [1]: https://www.scientificamerican.com/article/your-brain-finds-it-easy-to-size-up-four-objects-but-not-five-heres-why/
+> 
+> 
 
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
