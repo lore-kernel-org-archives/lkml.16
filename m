@@ -1,69 +1,69 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C6ED2571BD
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 10:49:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993012571D4
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 10:49:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751453378; cv=none; b=eM2hL3C2o0ipw4faphaUFLmTvr63xqpHefN1kFA69e8FpJYEJzyMuWg65YAr7FyEmZTs5KGxngkF7eGu62karJ+c5CpQtMqETPIlPgJM6i0ZjbDZiahGX7UulMWg10EN1a6QiK48orjfJC+l1M1/8qcXBVzDDSehkEy+PH+gbe4=
+	t=1751453379; cv=none; b=t3252SmwaGwZ+K3U8p6f7m+0U8HszjneN0MhcAiP4vMp6PBPrRszMLRQf7aRsd6EYu0IFXSbjv9tsf1tt7YfbODeUExPHTBdb8SYOAjEY/NidGzfmRYp8qdb6Z6MDL3iICW6UlQdewZvkomC1yYim8TMBhcC/LITLo1gxVg9Qgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751453378; c=relaxed/simple;
-	bh=EB1ODOYm0doluo9SmRJUpo62bm3CObYhBVAFw5pWSRQ=;
+	s=arc-20240116; t=1751453379; c=relaxed/simple;
+	bh=mbpxhWXUwl1lWdA+zRmdbhqQLXQzQ8VkXVmBdJJDKwg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YyVsANu1Z1Y/EngH0cfuGB9nyXnWVBkv6Wgs69sgRZqTim5WbbKQ5HOEuG4r5DASCioWIEg3zQDB3Pu7UT43EsLIhmwznDzDdTUKdt+O4wPSuELVCPneOAZbV6p5u8Upb4xpe3dZjavRDxfmpDg4yM2jN6a/nkF/s8Hz7ywDsgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YHPsLoFw; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=A22BVLKhyql3we1ohN+FeLCUYP1HnRPJFQMpWK3Ue+tWonRXAagCGIs/3Pt/+AcGZCaPKM3/NE/dIXrBxxrETNlXMk452gNblK5urC7ZOKYSnvnD/pzRUHaLhjGsi/OUPBGjOYkczk/FBNC8mvwPqlS8sK/CWGe9NIyV78r3aKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N4KSuoON; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YHPsLoFw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N4KSuoON"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751453375;
+	s=mimecast20190719; t=1751453376;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/J+W0F15YhPX18Zq/VlVVl9dXxQqgtke2+o/p/5jgRs=;
-	b=YHPsLoFwRqg5/FZRTqmKEQhc+ZygMKwoRZ1IX0mhIXWGSFGrDl40fldGw2jRAa6pLppd5+
-	6EunFqHHtz0iIWeMU+S7uiktVm38hioq6QTxHky5DBgQIEsJtDEityQYekJyGyqtmxinYW
-	jO0bn9nse48SbhkdeQ5+X7HatPlkcwk=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=VPISzlN4Ef+CieamPDhRbk3MzYno0ZPxQFyByj0IeiE=;
+	b=N4KSuoONw+0+Mhq4nHRO35wE9LmU4aRolMRm2YYuL4dzBOs5fjzmB5SU0V6wouJiZptdtP
+	zmz0+JZLMSaiJDzZno0ee0xxSxCbfrUBxKEE9y5yBn/B/ckA2aPaQAPajZRezyJ+BvKEUp
+	wkcdDgbzbZb+b4XWiKtypPdq76v9C3c=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-382-TTb8MWACPn6W3DiVRtmCNQ-1; Wed, 02 Jul 2025 06:49:33 -0400
-X-MC-Unique: TTb8MWACPn6W3DiVRtmCNQ-1
-X-Mimecast-MFC-AGG-ID: TTb8MWACPn6W3DiVRtmCNQ_1751453372
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-45320bfc18dso33580395e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 03:49:32 -0700 (PDT)
+ us-mta-59-0ZTNDZsmNtSWSUrM_BCQuA-1; Wed, 02 Jul 2025 06:49:35 -0400
+X-MC-Unique: 0ZTNDZsmNtSWSUrM_BCQuA-1
+X-Mimecast-MFC-AGG-ID: 0ZTNDZsmNtSWSUrM_BCQuA_1751453374
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4537f56ab74so29915765e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 03:49:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751453371; x=1752058171;
+        d=1e100.net; s=20230601; t=1751453374; x=1752058174;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/J+W0F15YhPX18Zq/VlVVl9dXxQqgtke2+o/p/5jgRs=;
-        b=aULxQQ0iHTpiOUocEezEQHQdr5WEt64wmikfhMagMmGKeWWhoyJ5jtIBd3uvK//Tur
-         3JpsHZr220BfkSCUdSl8/7wA+OvwzITEIeWgNvKdHPPHCTwGDZDGd+7xlpvtnKA9oXnD
-         nRvUWrSHqYvOME2qqUjezThuyiNt7vdM37uKxuIDm9Xbok1K7l3Jal3TmxXMm+g0WkTY
-         8N1SS2vkL1Q4xVwZYa7tdRo15yDa3U8wt5ZUA9gIGRV+gIqieUUPH9X/1ftd+MC449fu
-         SgQmXgT9mi6NIk4rfHhT35GOkGxghwcX5XG5dkzRaJQfaEGjIquZpta/VbqGj+XcWdAk
-         /rYw==
-X-Gm-Message-State: AOJu0YwYOrISEg6gov64POhVFxDFfqG4Gs4JBqAfyvhIonRr2jzfyk8N
-	s7uumDYt+bvkeJOI7LeK34/0tBzzMXFhXMOkeRuPSM6NNt9hdZPkvnbX6Bw0IpCdsJD9eczgIk7
-	98qGudXXvYdySrJJ8VkViKSVJ58ia/bUPh5w88CHmngK6GQRlf+f5M4ppagutBUUY8yWCmWy39a
-	GwcbdstqSWSKrNvtKZZ9q2YmYvGnk/RMKtDdj+QwtJ4U9THexx
-X-Gm-Gg: ASbGncssHaYc8GQKyC14jhYp/ms73bR/FIkrvhVebNC3LH/kra78Do7RMlYErZ8ATLp
-	4G/iLkkh643CPzqJAl7QK4nfz06yde0bvs9rar4RiEz+2Swa31IktYNUSjfqP/Yfu4caREf7vke
-	YO4AyQY9oZUOeQc6ynIkwIhkvyrGMG4qEHnjteCfZWD2OM0FhQEDdTCYYZzdC4ECSTeuq30Byuk
-	F38eN1iK/HnJT06c0pzmsj+gzaNI4M2HH5DP9GuQi7G/dgaSyvuFm6vCOimSDeomSyjZF05LjAd
-	mp+i1yaEg6VnSSEW
-X-Received: by 2002:a05:600c:c176:b0:442:f4a3:a2c0 with SMTP id 5b1f17b1804b1-454a41609efmr20817315e9.13.1751453371424;
-        Wed, 02 Jul 2025 03:49:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEPxIF24NU0cgA7LgQoEvYVTqVBLrm0QWneoTQ4N5UtqQayGKXh6ikNCsFoGZpvs78Obi1muw==
-X-Received: by 2002:a05:600c:c176:b0:442:f4a3:a2c0 with SMTP id 5b1f17b1804b1-454a41609efmr20816655e9.13.1751453370775;
-        Wed, 02 Jul 2025 03:49:30 -0700 (PDT)
+        bh=VPISzlN4Ef+CieamPDhRbk3MzYno0ZPxQFyByj0IeiE=;
+        b=o4rA3+Mx1xtZQGvWBYJQ0XruC9SrFKCSGNOvGdOel5U3dJte7PluUvBszTO5mROmV0
+         bN16wQfA0m/kSDel6hA2brIsliglTJ4sy6Z1V/UQAHrrv+/ER2tHKDuXeyIc2GKV5NiP
+         9rslvadnjWBx7D1y3GT4/m6DxOsYK9gKDitZX9LwkzoOXNbiPdLlT7VFvpDRFWXZIG2/
+         vOzAQiaPepJFaQ71+gDbeYlI00fPyqiMhFhLUTKDkOviYpMXfKIac2rRuUyMM0LeT5nu
+         r/TCBVxUiDw4qnYJhSi+ADeI3LjktKQEmOVKroKuffBI4W1VC8K3SvA+/fTfm4nQe1fE
+         6hjg==
+X-Gm-Message-State: AOJu0YzkcbXKCYRFLlfl7rZ+fj7kb78TYpnjPPZN48GsfSgZmnB/FIw3
+	inN6zcnUT3ssZq7mPl4mKtfIMGDB2OveJW1i6bj73Y9SI88elIupBzUyPvqapvShZhqoStmvvjh
+	V5/QvxQixRiyLuqxivySzd92j5scLL7bDYTeCfYU9CeQwsDlGRuBJk3oLdP+kpfJoNzTw1IjaT+
+	m2sOg55uZx+ViCD4w0dArlCGM2Spcy9WiesAQXXbyxFrABTYmm
+X-Gm-Gg: ASbGncv7iKALfRxnXFtkvMgJtwxgHMDQRULQv5vfGy+0deLQZQrv0WzCQusr9+jAOjd
+	emM5s09Ejfrf7o/GnMBPEvGzCmOj3xc4SGPgvc2XDZduamKPwISd1P2+YMOxfJ7RZhQyrGq0rZi
+	JAYF73kgi26wVgCb3x+G8HNWlbVJhxI1fne42WTO5OztrK7je+8+4d7XzcQ0v5A7vPd/pXX93uq
+	20AshWCbFT1a/vyERStquk3hIJ0e9xNF4ixbzKWfaHYz/N9OrmddS236ieYY/sNeZmujC/09NCm
+	YglZCPaSc84aF/Ll
+X-Received: by 2002:a05:600c:6992:b0:453:8a63:b484 with SMTP id 5b1f17b1804b1-454a373837cmr28268995e9.30.1751453373768;
+        Wed, 02 Jul 2025 03:49:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHHQPoDIN7PwQ921rzZl2n7gXmku1+dhq1oXexaGTT/h4Oq5IhCFDNuSHNV22agwohZ0LPOxg==
+X-Received: by 2002:a05:600c:6992:b0:453:8a63:b484 with SMTP id 5b1f17b1804b1-454a373837cmr28268245e9.30.1751453372813;
+        Wed, 02 Jul 2025 03:49:32 -0700 (PDT)
 Received: from localhost ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a892e52ebcsm15430008f8f.46.2025.07.02.03.49.29
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-453823b6d50sm227736465e9.30.2025.07.02.03.49.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jul 2025 03:49:30 -0700 (PDT)
+        Wed, 02 Jul 2025 03:49:32 -0700 (PDT)
 From: David Hildenbrand <david@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: linux-mm@kvack.org,
@@ -90,9 +90,9 @@ Cc: linux-mm@kvack.org,
 	Lance Yang <ioworker0@gmail.com>,
 	Oscar Salvador <osalvador@suse.de>,
 	Lance Yang <lance.yang@linux.dev>
-Subject: [PATCH v2 1/4] mm: convert FPB_IGNORE_* into FPB_RESPECT_*
-Date: Wed,  2 Jul 2025 12:49:23 +0200
-Message-ID: <20250702104926.212243-2-david@redhat.com>
+Subject: [PATCH v2 2/4] mm: smaller folio_pte_batch() improvements
+Date: Wed,  2 Jul 2025 12:49:24 +0200
+Message-ID: <20250702104926.212243-3-david@redhat.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250702104926.212243-1-david@redhat.com>
 References: <20250702104926.212243-1-david@redhat.com>
@@ -104,208 +104,111 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Respecting these PTE bits is the exception, so let's invert the meaning.
+Let's clean up a bit:
 
-With this change, most callers don't have to pass any flags. This is
-a preparation for splitting folio_pte_batch() into a non-inlined
-variant that doesn't consume any flags.
+(1) No need for start_ptep vs. ptep anymore, we can simply use ptep.
 
-Long-term, we want folio_pte_batch() to probably ignore most common
-PTE bits (e.g., write/dirty/young/soft-dirty) that are not relevant for
-most page table walkers: uffd-wp and protnone might be bits to consider in
-the future. Only walkers that care about them can opt-in to respect them.
+(2) Let's switch to "unsigned int" for everything. Negative values do
+    not make sense.
+
+(3) We can simplify the code by leaving the pte unchanged after the
+    pte_same() check.
+
+(4) Clarify that we should never exceed a single VMA; it indicates a
+    problem in the caller.
 
 No functional change intended.
 
 Reviewed-by: Lance Yang <lance.yang@linux.dev>
-Reviewed-by: Zi Yan <ziy@nvidia.com>
+Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 Reviewed-by: Oscar Salvador <osalvador@suse.de>
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- mm/internal.h  | 16 ++++++++--------
- mm/madvise.c   |  3 +--
- mm/memory.c    | 11 +++++------
- mm/mempolicy.c |  4 +---
- mm/mlock.c     |  3 +--
- mm/mremap.c    |  3 +--
- mm/rmap.c      |  3 +--
- 7 files changed, 18 insertions(+), 25 deletions(-)
+ mm/internal.h | 37 +++++++++++++++----------------------
+ 1 file changed, 15 insertions(+), 22 deletions(-)
 
 diff --git a/mm/internal.h b/mm/internal.h
-index e84217e27778d..170d55b6851ff 100644
+index 170d55b6851ff..dba1346ded972 100644
 --- a/mm/internal.h
 +++ b/mm/internal.h
-@@ -202,17 +202,17 @@ static inline void vma_close(struct vm_area_struct *vma)
- /* Flags for folio_pte_batch(). */
- typedef int __bitwise fpb_t;
- 
--/* Compare PTEs after pte_mkclean(), ignoring the dirty bit. */
--#define FPB_IGNORE_DIRTY		((__force fpb_t)BIT(0))
-+/* Compare PTEs respecting the dirty bit. */
-+#define FPB_RESPECT_DIRTY		((__force fpb_t)BIT(0))
- 
--/* Compare PTEs after pte_clear_soft_dirty(), ignoring the soft-dirty bit. */
--#define FPB_IGNORE_SOFT_DIRTY		((__force fpb_t)BIT(1))
-+/* Compare PTEs respecting the soft-dirty bit. */
-+#define FPB_RESPECT_SOFT_DIRTY		((__force fpb_t)BIT(1))
- 
- static inline pte_t __pte_batch_clear_ignored(pte_t pte, fpb_t flags)
- {
--	if (flags & FPB_IGNORE_DIRTY)
-+	if (!(flags & FPB_RESPECT_DIRTY))
- 		pte = pte_mkclean(pte);
--	if (likely(flags & FPB_IGNORE_SOFT_DIRTY))
-+	if (likely(!(flags & FPB_RESPECT_SOFT_DIRTY)))
- 		pte = pte_clear_soft_dirty(pte);
- 	return pte_wrprotect(pte_mkold(pte));
- }
-@@ -236,8 +236,8 @@ static inline pte_t __pte_batch_clear_ignored(pte_t pte, fpb_t flags)
-  * pages of the same large folio.
+@@ -221,7 +221,7 @@ static inline pte_t __pte_batch_clear_ignored(pte_t pte, fpb_t flags)
+  * folio_pte_batch - detect a PTE batch for a large folio
+  * @folio: The large folio to detect a PTE batch for.
+  * @addr: The user virtual address the first page is mapped at.
+- * @start_ptep: Page table pointer for the first entry.
++ * @ptep: Page table pointer for the first entry.
+  * @pte: Page table entry for the first page.
+  * @max_nr: The maximum number of table entries to consider.
+  * @flags: Flags to modify the PTE batch semantics.
+@@ -233,24 +233,24 @@ static inline pte_t __pte_batch_clear_ignored(pte_t pte, fpb_t flags)
+  *		  first one is dirty.
+  *
+  * Detect a PTE batch: consecutive (present) PTEs that map consecutive
+- * pages of the same large folio.
++ * pages of the same large folio in a single VMA and a single page table.
   *
   * All PTEs inside a PTE batch have the same PTE bits set, excluding the PFN,
-- * the accessed bit, writable bit, dirty bit (with FPB_IGNORE_DIRTY) and
-- * soft-dirty bit (with FPB_IGNORE_SOFT_DIRTY).
-+ * the accessed bit, writable bit, dirty bit (unless FPB_RESPECT_DIRTY is set)
-+ * and soft-dirty bit (unless FPB_RESPECT_SOFT_DIRTY is set).
+  * the accessed bit, writable bit, dirty bit (unless FPB_RESPECT_DIRTY is set)
+  * and soft-dirty bit (unless FPB_RESPECT_SOFT_DIRTY is set).
   *
-  * start_ptep must map any page of the folio. max_nr must be at least one and
-  * must be limited by the caller so scanning cannot exceed a single page table.
-diff --git a/mm/madvise.c b/mm/madvise.c
-index e61e32b2cd91f..661bb743d2216 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -347,10 +347,9 @@ static inline int madvise_folio_pte_batch(unsigned long addr, unsigned long end,
- 					  pte_t pte, bool *any_young,
- 					  bool *any_dirty)
+- * start_ptep must map any page of the folio. max_nr must be at least one and
+- * must be limited by the caller so scanning cannot exceed a single page table.
++ * @ptep must map any page of the folio. max_nr must be at least one and
++ * must be limited by the caller so scanning cannot exceed a single VMA and
++ * a single page table.
+  *
+  * Return: the number of table entries in the batch.
+  */
+-static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
+-		pte_t *start_ptep, pte_t pte, int max_nr, fpb_t flags,
++static inline unsigned int folio_pte_batch(struct folio *folio, unsigned long addr,
++		pte_t *ptep, pte_t pte, unsigned int max_nr, fpb_t flags,
+ 		bool *any_writable, bool *any_young, bool *any_dirty)
  {
--	const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
- 	int max_nr = (end - addr) / PAGE_SIZE;
+-	pte_t expected_pte, *ptep;
+-	bool writable, young, dirty;
+-	int nr, cur_nr;
++	unsigned int nr, cur_nr;
++	pte_t expected_pte;
  
--	return folio_pte_batch(folio, addr, ptep, pte, max_nr, fpb_flags, NULL,
-+	return folio_pte_batch(folio, addr, ptep, pte, max_nr, 0, NULL,
- 			       any_young, any_dirty);
- }
+ 	if (any_writable)
+ 		*any_writable = false;
+@@ -267,29 +267,22 @@ static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
+ 	max_nr = min_t(unsigned long, max_nr,
+ 		       folio_pfn(folio) + folio_nr_pages(folio) - pte_pfn(pte));
  
-diff --git a/mm/memory.c b/mm/memory.c
-index 0f9b32a20e5b7..0a47583ca9937 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -990,10 +990,10 @@ copy_present_ptes(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma
- 	 * by keeping the batching logic separate.
- 	 */
- 	if (unlikely(!*prealloc && folio_test_large(folio) && max_nr != 1)) {
--		if (src_vma->vm_flags & VM_SHARED)
--			flags |= FPB_IGNORE_DIRTY;
--		if (!vma_soft_dirty_enabled(src_vma))
--			flags |= FPB_IGNORE_SOFT_DIRTY;
-+		if (!(src_vma->vm_flags & VM_SHARED))
-+			flags |= FPB_RESPECT_DIRTY;
-+		if (vma_soft_dirty_enabled(src_vma))
-+			flags |= FPB_RESPECT_SOFT_DIRTY;
+-	nr = pte_batch_hint(start_ptep, pte);
++	nr = pte_batch_hint(ptep, pte);
+ 	expected_pte = __pte_batch_clear_ignored(pte_advance_pfn(pte, nr), flags);
+-	ptep = start_ptep + nr;
++	ptep = ptep + nr;
  
- 		nr = folio_pte_batch(folio, addr, src_pte, pte, max_nr, flags,
- 				     &any_writable, NULL, NULL);
-@@ -1535,7 +1535,6 @@ static inline int zap_present_ptes(struct mmu_gather *tlb,
- 		struct zap_details *details, int *rss, bool *force_flush,
- 		bool *force_break, bool *any_skipped)
- {
--	const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
- 	struct mm_struct *mm = tlb->mm;
- 	struct folio *folio;
- 	struct page *page;
-@@ -1565,7 +1564,7 @@ static inline int zap_present_ptes(struct mmu_gather *tlb,
- 	 * by keeping the batching logic separate.
- 	 */
- 	if (unlikely(folio_test_large(folio) && max_nr != 1)) {
--		nr = folio_pte_batch(folio, addr, pte, ptent, max_nr, fpb_flags,
-+		nr = folio_pte_batch(folio, addr, pte, ptent, max_nr, 0,
- 				     NULL, NULL, NULL);
+ 	while (nr < max_nr) {
+ 		pte = ptep_get(ptep);
+-		if (any_writable)
+-			writable = !!pte_write(pte);
+-		if (any_young)
+-			young = !!pte_young(pte);
+-		if (any_dirty)
+-			dirty = !!pte_dirty(pte);
+-		pte = __pte_batch_clear_ignored(pte, flags);
  
- 		zap_present_folio_ptes(tlb, vma, folio, page, pte, ptent, nr,
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 1ff7b2174eb77..2a25eedc3b1c0 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -675,7 +675,6 @@ static void queue_folios_pmd(pmd_t *pmd, struct mm_walk *walk)
- static int queue_folios_pte_range(pmd_t *pmd, unsigned long addr,
- 			unsigned long end, struct mm_walk *walk)
- {
--	const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
- 	struct vm_area_struct *vma = walk->vma;
- 	struct folio *folio;
- 	struct queue_pages *qp = walk->private;
-@@ -713,8 +712,7 @@ static int queue_folios_pte_range(pmd_t *pmd, unsigned long addr,
- 			continue;
- 		if (folio_test_large(folio) && max_nr != 1)
- 			nr = folio_pte_batch(folio, addr, pte, ptent,
--					     max_nr, fpb_flags,
--					     NULL, NULL, NULL);
-+					     max_nr, 0, NULL, NULL, NULL);
- 		/*
- 		 * vm_normal_folio() filters out zero pages, but there might
- 		 * still be reserved folios to skip, perhaps in a VDSO.
-diff --git a/mm/mlock.c b/mm/mlock.c
-index 3cb72b579ffd3..2238cdc5eb1c1 100644
---- a/mm/mlock.c
-+++ b/mm/mlock.c
-@@ -307,14 +307,13 @@ void munlock_folio(struct folio *folio)
- static inline unsigned int folio_mlock_step(struct folio *folio,
- 		pte_t *pte, unsigned long addr, unsigned long end)
- {
--	const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
- 	unsigned int count = (end - addr) >> PAGE_SHIFT;
- 	pte_t ptent = ptep_get(pte);
+-		if (!pte_same(pte, expected_pte))
++		if (!pte_same(__pte_batch_clear_ignored(pte, flags), expected_pte))
+ 			break;
  
- 	if (!folio_test_large(folio))
- 		return 1;
+ 		if (any_writable)
+-			*any_writable |= writable;
++			*any_writable |= pte_write(pte);
+ 		if (any_young)
+-			*any_young |= young;
++			*any_young |= pte_young(pte);
+ 		if (any_dirty)
+-			*any_dirty |= dirty;
++			*any_dirty |= pte_dirty(pte);
  
--	return folio_pte_batch(folio, addr, pte, ptent, count, fpb_flags, NULL,
-+	return folio_pte_batch(folio, addr, pte, ptent, count, 0, NULL,
- 			       NULL, NULL);
- }
- 
-diff --git a/mm/mremap.c b/mm/mremap.c
-index 36585041c760d..d4d3ffc931502 100644
---- a/mm/mremap.c
-+++ b/mm/mremap.c
-@@ -173,7 +173,6 @@ static pte_t move_soft_dirty_pte(pte_t pte)
- static int mremap_folio_pte_batch(struct vm_area_struct *vma, unsigned long addr,
- 		pte_t *ptep, pte_t pte, int max_nr)
- {
--	const fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
- 	struct folio *folio;
- 
- 	if (max_nr == 1)
-@@ -183,7 +182,7 @@ static int mremap_folio_pte_batch(struct vm_area_struct *vma, unsigned long addr
- 	if (!folio || !folio_test_large(folio))
- 		return 1;
- 
--	return folio_pte_batch(folio, addr, ptep, pte, max_nr, flags, NULL,
-+	return folio_pte_batch(folio, addr, ptep, pte, max_nr, 0, NULL,
- 			       NULL, NULL);
- }
- 
-diff --git a/mm/rmap.c b/mm/rmap.c
-index 34311f654d0c2..98ed3e49e8bbe 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -1849,7 +1849,6 @@ static inline unsigned int folio_unmap_pte_batch(struct folio *folio,
- 			struct page_vma_mapped_walk *pvmw,
- 			enum ttu_flags flags, pte_t pte)
- {
--	const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
- 	unsigned long end_addr, addr = pvmw->address;
- 	struct vm_area_struct *vma = pvmw->vma;
- 	unsigned int max_nr;
-@@ -1869,7 +1868,7 @@ static inline unsigned int folio_unmap_pte_batch(struct folio *folio,
- 	if (pte_unused(pte))
- 		return 1;
- 
--	return folio_pte_batch(folio, addr, pvmw->pte, pte, max_nr, fpb_flags,
-+	return folio_pte_batch(folio, addr, pvmw->pte, pte, max_nr, 0,
- 			       NULL, NULL, NULL);
- }
- 
+ 		cur_nr = pte_batch_hint(ptep, pte);
+ 		expected_pte = pte_advance_pfn(expected_pte, cur_nr);
 -- 
 2.49.0
 
