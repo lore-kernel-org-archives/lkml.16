@@ -1,128 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D5E254B18;
-	Wed,  2 Jul 2025 10:19:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B366624C664
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 10:19:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751451580; cv=none; b=iYrzfD5yn0WXVWbHIRIZVzUCcJv8j8Mfu1rqfLvHvY9p6Gjr925bpDeHhnNIJnblXyYkDfz0g7ZiowW/5hEhyLPHCTcVxcI8upn/l/F5LyrSEekpsX6cxCkl3xxWBW8G4+Lxl1WikUh9Pnnlu61zCSfmQ1CcOIrFaSbn8tLDPJU=
+	t=1751451598; cv=none; b=f/Q4jHtBhMsoOhYee/urn7ASGDmKjmDPcyre7IYjBBUW8uY0DZ3M73jNSmBsMuJO0rfnm9XoN5oQANTF6ZbvWoejNzIlHgZqdMOwnrbCRDIK6t3hzHE5JJa/3Rp85VNWY+MGOZmi8kcGX54IGFU5us2gynqUX7t/PSkh7FsVJQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751451580; c=relaxed/simple;
-	bh=Orzfc9NbJPFzMB+kpICo8Nk0nLdcz5NZlQUaGxGCqkM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hiS7cZ/OkvFFuMOMCLEbDmQFOUUyCpHHUQXoUHcu+FWSv5vIazykujhxrKFqcgOcan7Ysijz/HJCWmvluZ+UCLaydFtnqDRD/E8CKcOoRlO0vBr2kWS1+M05M+XgkZGL0ylR/AdJzkadDGA1RK8Gpvqtmy2z9canRTeLzCtHXxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g9eBEQ9J; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751451598; c=relaxed/simple;
+	bh=QMSg+H9E85nSP8AMVhfKPz+3Q4Lbs/NOUsOvvYe5PHE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eKUgRfjGRFFQlKRjFV3roaJI02Zbs8mzKzlHedNnOXAnmWvoUKg3sIWoVyKXoEPpCsn/9L5Zg3ncywY46oPnVT3q+4gcUYv4qLHL2ooA2KDCfC+iBc3VsOy9ROPLv9TDSlbsWoSKwsV3FjdvUnNwfUqToAz9oBCz7c5SMvaaIE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=f3EfSGv4; arc=none smtp.client-ip=209.85.128.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g9eBEQ9J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C383CC4CEF1;
-	Wed,  2 Jul 2025 10:19:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751451580;
-	bh=Orzfc9NbJPFzMB+kpICo8Nk0nLdcz5NZlQUaGxGCqkM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=g9eBEQ9Jnl1aDOSlbmRpxtU5xztEMHYpfW8nI9RwJ3Twh5/NVwGUQMJwVhQrSgKsz
-	 Nk/73yJE7bmr2y8z4pPZkVFO7bsupDbYSwHSQ1xsfRMcQER3Hf1kPzcxABRfLH1ft0
-	 Lzr+WNWZaYYiCRLftRtOcXtFu6/wFISd3nbLT2AAFF5lgedJfjeBTP/VXAkw8Sna6Z
-	 tadcJrZUoi6mP9ZeZA7AERNfyjTh0XF+ohEH83cuk98HpD2aqx/oV57IRFych05wu7
-	 3n++teW81HvYztBVIdWcNgiNjO9se3pJHb4ebr2deQsgqexEnlW/xs/qZCBqw5Ne9D
-	 Pn+IztZu5T1lA==
-Message-ID: <a68f46f0-8053-4d9f-96f7-55de33bb301f@kernel.org>
-Date: Wed, 2 Jul 2025 12:19:33 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f3EfSGv4"
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-70f862dbeaeso44439497b3.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 03:19:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751451596; x=1752056396; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=QMSg+H9E85nSP8AMVhfKPz+3Q4Lbs/NOUsOvvYe5PHE=;
+        b=f3EfSGv4GqYgqO4MpVUaeaCURwtltoNVPUFLJDWZKbvKM2wwvfXRTI6Ucg3x4Iftu/
+         VhyTnD7eFf/M+kEnoCsCNUGV9T53rUo0iXT/qTa+cVmegjUE/8McUYQWu5oeh7M1xJyo
+         G7qwbb3wXv6/l4bIA8oxKnxJY9tX3r+5q5FhXPvZCsQ9/vV9p08GYahxrKRp10NhXcGY
+         TiASsYjaqAhwzWruG2q//MeDhnfIkBLYkLFEsXH3vjM5wfMZX46sND6KROsim3SLlKY+
+         VC9fmMQWqC1ViRILbAlaT2QzGxEG/+TPakDm1UGFaSwu+BMnKevPadk4nXgxa2vx57HU
+         L3wA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751451596; x=1752056396;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QMSg+H9E85nSP8AMVhfKPz+3Q4Lbs/NOUsOvvYe5PHE=;
+        b=TdseiOXuyLg7WN5VAAIDJg5EiktzKUE2151KnryGxUO7VHmQxHVuJ5N/7OSIqutg0/
+         7zKu5K11b1AwBtERNwWsKE3kXIXvP5CRtfOVuXQjYdy557iYUH6kGW5LrX+yYkXUEPNl
+         DU9B/YdY4OtXZV14K94rD0qmAnDxCmMT6Tt5Hmgfr+ycgTCa0scbtQgQmm3HyMVxiDuH
+         68e0FsBcUklADeoMXOthykz02Oa81oumEWoIoc+91yybkPZZhb0znlwFVoRZpokGkXZf
+         wUKNodi5aWuHXbjQHbFe4oDIjV1OYwrmQIT8ftw6jDftQkrFOJCXEZsBI37UTpFOy/RK
+         L/lQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUFVOEf3aeLpd9z0mn8t02NRPE61MCt/IBLKh8xCnuMz513Od8wyITKgG5ldYMLYWBHKn2LN0zrvjO+f/A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwX5GKm9xJD05g5s6rkGiU9izpiV0GARjX46qUaC3sF2l0E6Ulf
+	ywijidiOIhzaDb0z2cT/nU1y6gvtisccnWHxkTDprTBOWvFqwohmY+K6TA5tfWwAItPov1EM9CV
+	unawQNAJfBpQlAoAaGcf1vMMCnJQg7TrMp8zewjUFHg==
+X-Gm-Gg: ASbGncuFmyZJFiwK3kt7TGCz5cnH+BS4Oyrjh5Yp/jbTBa6ZBSLr8QpdBc5HkxZr6ru
+	/uoDVNulYrzT21NyK4Eng29g3gDt3+p8qUlwrzMfrQ+D9cDNOlRD9ljHj+OQWcWytcHGEgyw0pk
+	ij9iYp22O8LxeBulauT0bp7tqnkHeGb8hKrjoF0h4yaCI=
+X-Google-Smtp-Source: AGHT+IHG/1GissPVmpknsYzFHMpB6ytPy9MhshgzbgoGfNZ2rCgq5NLTEQSFfMSr0XJegByETigg6aj5tsl8WILZc8k=
+X-Received: by 2002:a05:690c:6802:b0:70c:d256:e7fc with SMTP id
+ 00721157ae682-7164d3f9161mr27758297b3.21.1751451595695; Wed, 02 Jul 2025
+ 03:19:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/7] dt-bindings: sram: qcom,imem: Document Qualcomm IPQ
- SoC's IMEM compatibles
-To: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250702-imem-v1-0-12d49b1ceff0@oss.qualcomm.com>
- <20250702-imem-v1-1-12d49b1ceff0@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250702-imem-v1-1-12d49b1ceff0@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250701142313.9880-1-terry.tritton@linaro.org>
+ <87ikkblkff.ffs@tglx> <aGUggwe_gJon_2E3@MiWiFi-CR6608-srv>
+In-Reply-To: <aGUggwe_gJon_2E3@MiWiFi-CR6608-srv>
+From: Terry Tritton <terry.tritton@linaro.org>
+Date: Wed, 2 Jul 2025 11:19:44 +0100
+X-Gm-Features: Ac12FXyuLh0QFcbaVWbl5yokqfl7teNpNT1gidQEcqC-rhZCYHiTlieQ4JcBwVo
+Message-ID: <CABeuJB15QXyxSgB60VokSRFVGBRQJfcTNcwuX_wMzrNqmSz0PQ@mail.gmail.com>
+Subject: Re: [PATCH v2] selftests/futex: Convert 32bit timespec struct to
+ 64bit version for 32bit compatibility mode
+To: Wei Gao <wegao@suse.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Shuah Khan <shuah@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>, 
+	Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
+	ttritton@google.com, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 02/07/2025 12:17, Kathiravan Thirumoorthy wrote:
-> IMEM is present in the Qualcomm's IPQ SoCs as well. Document the same.
-> 
-> Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-> ---
->  Documentation/devicetree/bindings/sram/qcom,imem.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
+> > > Signed-off-by: Wei Gao <wegao@suse.com>
+> > > Signed-off-by: Terry Tritton <terry.tritton@linaro.org>
+> >
+> > This is still wrong.
+> >
+> > If it is based on someone else work, then you need to attribute it
+> > Originally-by and omit the Signed-off-by of the original author.
+> >
+> > If you just picked it up and adopted it to a later kernel version then
+> > you need to add 'From: Original Author' and preserve his Signed-off-by.
+>
+> @Terry @Thomas, Thank you both for the mention in the commit. I appreciate being included.
+> I guess above options both good.
 
-
-Where is the changelog? This is not a v1.
-
-> diff --git a/Documentation/devicetree/bindings/sram/qcom,imem.yaml b/Documentation/devicetree/bindings/sram/qcom,imem.yaml
-> index 72d35e30c439ccf4901d937f838fe7c7a81f33b1..48e2f332e0e9fc9fa4147fa12d9c6c70a77fafda 100644
-> --- a/Documentation/devicetree/bindings/sram/qcom,imem.yaml
-> +++ b/Documentation/devicetree/bindings/sram/qcom,imem.yaml
-> @@ -18,6 +18,12 @@ properties:
->      items:
->        - enum:
->            - qcom,apq8064-imem
-> +          - qcom,ipq8074-imem
-> +          - qcom,ipq6018-imem
-> +          - qcom,ipq5018-imem
-> +          - qcom,ipq9574-imem
-> +          - qcom,ipq5332-imem
-> +          - qcom,ipq5424-imem
-
-Random order, no, follow existing style. This applies for every qcom
-binding and you received such feedbacks in the past.
-
-
-Best regards,
-Krzysztof
+No problem!
+Not sure how often this situation comes up where an ltp patch is also
+needed in kselftest.
