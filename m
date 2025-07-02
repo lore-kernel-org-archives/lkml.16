@@ -1,134 +1,145 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6160F2D0C9C;
-	Wed,  2 Jul 2025 15:04:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBE9917A316;
+	Wed,  2 Jul 2025 15:05:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751468694; cv=none; b=LMJpMIebDOCInI1gj6P4MpbNgBLSG0V4R+T1NQZHq+k+v4Zd11mO3xndPdVGjmyHPfYM2xjW7+FNxuYhUZki0TKhcAB8lD2i4eXjZNoelL2LSHIdSW51AljOjuoUl/Qf9H5oJI6cEfZBvdDCSQHSD01zxrIExiVTjXR07v/Rkas=
+	t=1751468708; cv=none; b=MbAP98T84i52H4FvcP4ugeTAV376QLnV+ph/hIe39ZFE25udP87erlNXPU3XA13LtXK9CwtVq6JsQrH399js2WcADdMLtCcLO+sfjGwK02Z0c/XrLnzN768JTJE9lEK8V9ewZP5jZQ5celmH9cEls8pNW7FEEn2l9tdA73xTqko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751468694; c=relaxed/simple;
-	bh=yO6uTKYQhiusu7eCe6xECv5LUII9BjG7D5i9iisHetY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bhaYsVNLa/pfAcjYWVCahWoaF/MRdB9HMku1bHDF1xd9y1yd3yFR7Jpf86zoWPcc3IUrH0uayZDe8F2hJEZ0OCCMtYdBq5nnjJqt0h1FZqSc8++cMVMw09hnKWWbgv9Ff9LoL9hicFNwvvWnefZG6/DYPXfuQ6qtBiBRtLcnwQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kqO0uarx; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751468708; c=relaxed/simple;
+	bh=NPSUKasHC9tbkTT8JYPAn0RlP9lrHU+bvQRVcKKzDTw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qacuMZHf3VPfON6/ckLRCCXEI6MtX5XdBnh3vPCax8kypAhkEympU2uQ11FHDQRAoDQsEIJIK9U4kt71GJIiL3Z6Y75RGWLajn7X1Ye696iAyu4WFogbKwjkr/2/VMPI9UNTU9W4mlnDVxLI5AqQPNXVoD5EBxTMYXDgXccHZ2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NQGNITbX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kqO0uarx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751468692; x=1783004692;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=yO6uTKYQhiusu7eCe6xECv5LUII9BjG7D5i9iisHetY=;
-  b=kqO0uarxwjgc9CpojIGiraxRLskNr7n3QF3BKP2fcGvh1IFc5CIs4r5U
-   3n4peqs4EsPCnmdhfopAEHHUU/JxAFe8ISFeLOYKxiJPrgVugROMX9G4p
-   ExWv6zOxwKwSfLvRtzShKmi4lGwOmPENopYf3KDp+mDW0iZ3s9ZF/x0KE
-   UZ8zZJEQLFKpE2PmAaWP74xzDD/JuKvuNuhkJJp6JyM1okxvNQmDiXZ0/
-   TjjJeZ4nfikPKblYHXC+87XBACIe0cXd7I+wiSYj6DpB0QK2AblI+3ENO
-   0yoFv4rNl1xD6g7qXfAPHDgpy/GAO/FJRIu9nzoiBRlGtZd7l4M/Ioic0
-   w==;
-X-CSE-ConnectionGUID: TLU1jQoPQcieGuNJz0xWUQ==
-X-CSE-MsgGUID: 38E2AHsmR9eXPYY6HbHHig==
-X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="79212457"
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="79212457"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 08:04:51 -0700
-X-CSE-ConnectionGUID: M7Lk57hFSyaUDXwNi9tsLQ==
-X-CSE-MsgGUID: we2hrY3LSKOjVS/yzFTsIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="153555466"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 08:04:47 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uWz0u-0000000Bwus-3KQj;
-	Wed, 02 Jul 2025 18:04:44 +0300
-Date: Wed, 2 Jul 2025 18:04:44 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Akhil R <akhilrajeev@nvidia.com>
-Cc: andi.shyti@kernel.org, digetx@gmail.com, jonathanh@nvidia.com,
-	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-tegra@vger.kernel.org, p.zabel@pengutronix.de,
-	thierry.reding@gmail.com, conor+dt@kernel.org,
-	devicetree@vger.kernel.org, krzk+dt@kernel.org,
-	ldewangan@nvidia.com, robh@kernel.org
-Subject: Re: [PATCH v5 1/3] i2c: tegra: Fix reset error handling with ACPI
-Message-ID: <aGVKjIwRjMOMlZRF@smile.fi.intel.com>
-References: <20250702133450.64257-1-akhilrajeev@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NQGNITbX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D22CDC4CEE7;
+	Wed,  2 Jul 2025 15:05:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751468707;
+	bh=NPSUKasHC9tbkTT8JYPAn0RlP9lrHU+bvQRVcKKzDTw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=NQGNITbX/oHoAYhuSSIoG5XwYg3KxkVI7LHrZVxXLgbuvFl+sWD9uL2F7ofMWfYGJ
+	 IAfJDOoQDPwtVfExc2Ewt7KdVae97IcIJV576t4s3Odev9vql9gFQTHQAIQIy4Rdul
+	 9UCOGk3t9cRcoYJ8C55fW3tnOAb5D3zLiFaHbCRPoPy/f3AB6y4vSe/wj3BiJauMDE
+	 YqlcDQrIVtn4HSfkNVlXqVWs4xZxKhzei/pQMRN9MRsnpUOxu1i8PuYOyusGjhykI/
+	 /GsN7YO6WlJ1GnLiJ4oOWXfOuqJa1x+DFKV4EO8Y+peP2fdg0mPzkiYSNuKfFE4ybC
+	 b0D4zKWFfnfQA==
+Message-ID: <668a149e-f39f-45dc-8c55-d914df116b47@kernel.org>
+Date: Wed, 2 Jul 2025 17:05:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250702133450.64257-1-akhilrajeev@nvidia.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 7/8] auxdisplay: Add Titanmec TM16xx 7-segment display
+ controllers driver
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: ojeda@kernel.org, =?UTF-8?Q?Jean-Fran=C3=A7ois_Lessard?=
+ <jefflessard3@gmail.com>, Andy Shevchenko <andy@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, devicetree@vger.kernel.org,
+ linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+ =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+ Boris Gjenero <boris.gjenero@gmail.com>,
+ Christian Hewitt <christianshewitt@gmail.com>,
+ Heiner Kallweit <hkallweit1@gmail.com>,
+ Paolo Sabatino <paolo.sabatino@gmail.com>
+References: <20250629130002.49842-1-jefflessard3@gmail.com>
+ <20250629131830.50034-1-jefflessard3@gmail.com>
+ <47d24e31-1c6f-4299-aeaf-669c474c4459@kernel.org>
+ <aGI8a4iaOpN5HMQe@smile.fi.intel.com>
+ <57f0289a-7d82-4294-a1dc-c6986da0c5ce@kernel.org>
+ <aGJe2krBnrPXQiU6@smile.fi.intel.com>
+ <532c88b8-d938-4633-ac09-12bb3080a023@kernel.org>
+ <aGKcfuQdNtQjmVC8@smile.fi.intel.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <aGKcfuQdNtQjmVC8@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 02, 2025 at 07:04:47PM +0530, Akhil R wrote:
-> The acpi_evaluate_object() returns an ACPI error code and not the
-> Linux one. For the some platforms the error will have positive code
-> which may be interpreted incorrectly. Use ACPI_FAILURE() to determine
-> the failure and return the error. Also move the reset to a separate
-> function to handle this better.
-
-...
-
-> +static int tegra_i2c_reset(struct tegra_i2c_dev *i2c_dev)
-> +{
-> +	acpi_handle handle = ACPI_HANDLE(i2c_dev->dev);
-> +	int err;
-> +
-> +	if (handle) {
-> +		err = acpi_evaluate_object(handle, "_RST", NULL, NULL);
-> +		if (ACPI_FAILURE(err))
-> +			return -EIO;
-> +
-> +		return 0;
-> +	}
-> +
-> +	return reset_control_reset(i2c_dev->rst);
-
-
-It's better to be written other way around:
-
-	acpi_handle handle;
-	int err;
-
-	handle = ACPI_HANDLE(i2c_dev->dev);
-	if (!handle)
-		return reset_control_reset(i2c_dev->rst);
-
-	err = acpi_evaluate_object(handle, "_RST", NULL, NULL);
-	if (ACPI_FAILURE(err))
-		return -EIO;
-
-	return 0;
-
-> +}
-
-Other than that, LGTM,
-
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-...
-
-> +	err = tegra_i2c_reset(i2c_dev);
->  	WARN_ON_ONCE(err);
-
-Suggestion to improve in a separate change in the future:
-
-Add a comment explaining why we WARN() here. I.o.w. why this condition
-is so critical that we need to WARN().
-
--- 
-With Best Regards,
-Andy Shevchenko
+On 30/06/2025 16:17, Andy Shevchenko wrote:
+> On Mon, Jun 30, 2025 at 01:39:25PM +0200, Krzysztof Kozlowski wrote:
+>> On 30/06/2025 11:54, Andy Shevchenko wrote:
+>>> On Mon, Jun 30, 2025 at 11:27:21AM +0200, Krzysztof Kozlowski wrote:
+>>>> On 30/06/2025 09:27, Andy Shevchenko wrote:
+>>>>> On Mon, Jun 30, 2025 at 08:12:16AM +0200, Krzysztof Kozlowski wrote:
+>>>>>> On 29/06/2025 15:18, Jean-François Lessard wrote:
+> 
+> ...
+> 
+>>>>>>> +	display->leds =
+>>>>>>> +		devm_kcalloc(dev, display->num_leds, sizeof(*display->leds), GFP_KERNEL);
+>>>>>>
+>>>>>> Wrong wrapping. Use kernel style, not clang style.
+>>>>>>
+>>>>>>
+>>>>>>> +	if (!display->leds)
+>>>>>>> +		return -ENOMEM;
+>>>>>
+>>>>> Just wondering how .clang-format is official? Note some of the maintainers even
+>>>>
+>>>> First time I hear above clang style is preferred. Where is it expected?
+>>>
+>>> Documented here:
+>>> https://www.kernel.org/doc/html/latest/process/coding-style.html#you-ve-made-a-mess-of-it
+>>
+>> I mean, which maintainers prefer such style of wrapping. Above I know,
+>> but it does not solve the discussion we have here - above line wrapping
+>> preferred by clang and opposite to most of the kernel code.
+> 
+> IIRC Dan Williams (as you might have deduced already from the links).
+BTW, if that's your preference, then obviously it is perfectly fine.
+It's your subsystem.
 
 
+Best regards,
+Krzysztof
