@@ -1,63 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161AC21B9C9;
-	Wed,  2 Jul 2025 06:24:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9C9021D3F6
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 06:24:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751437461; cv=none; b=hqOLLqI8xvR0xf6o5hbXc2GHSYSBUFgn66OnsXh7UU5xvzuRFscFwUH7+4zT/SM9LrxSoGkrFyJ0NpGQAuloEQzSmKOJayDjHejLOci6pPBlk0m7nEdC5vpBpHFJ0Tc0YL+CA2wfTQjfpIWkXosIp+GZHH24Dl2WaQCI8ydFKjk=
+	t=1751437480; cv=none; b=KWSVqdEG7gHwBfOXIfNWeJ2qc05eN7IJTW4ZRfqzXm1egiP8BXFEwnsvtuVvt7TIN1AduC4CDDHSnoGh01QImxiw178j1PXWgcnajtWX1ABzdSKZu7SBNUHBd0QUqgEOcCjYuqlWPuTQbkgZN2XUv5xjlp3uVksDaAHacehVOao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751437461; c=relaxed/simple;
-	bh=f9nF1jmi5t1o2OHha8JUx6MPxJ+a2LufuswIt71nqfc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=WOJEoaSnRRVo0IBjP8F+QHkt7bvgh6ninX1IctTiWiNxbg6/nbc0n7zr8wSAZ7qarZS1jPgkx0N34yPV05EJbQrqfkek4dccz7JuekXtAqDpbsD6gPGt8syOc2YxSZizklne/MKrqEtaQDF2tfwSfrSQ7cpoT9unANAC9F+/gZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i8fxqiAV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751437480; c=relaxed/simple;
+	bh=k3L69VK1wkPc8lRm/1FDNbJEO+xgJFXnO/wFhkwFc8Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hQDMn0QKC3CpQA0+8ag11y9oPvZYTrp8SfXltbsLlSvz10vyTSp6ykUf7iJgRqzSaGW/tAJoXzyCfdk9j1JaQPjPEYhdnFbgZvK4RiVzMeeOFbYWdgiB5WtDzLcKi89N3CTJ7xPKsL+HsnEnD6s9itGkE3PFlw0HBXckj6yxD2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=SDNElFwj; arc=none smtp.client-ip=220.197.31.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i8fxqiAV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E01FC4CEEE;
-	Wed,  2 Jul 2025 06:24:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751437460;
-	bh=f9nF1jmi5t1o2OHha8JUx6MPxJ+a2LufuswIt71nqfc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=i8fxqiAVf6DIQMVsPqjVb9z41Ifas67grtNePFTC1dChLcrvlLFLfYi/t0gcpyISI
-	 WkOPTmVEAriMCngovPvwgK88IRAapJVJO01Opnsrg3aofCVYDTBQTXH2Mjy31BFc+q
-	 gbS4//UGXL5eT9Rp5qCaX+nKoHKs8Y29FfmRi5DkWsgHD+J9hwL+3MKoEazO9yxoNL
-	 dv+S3ZFEcVc8OtuPOLweP5l3rBBHSb0dWcVo8eLdUpAeEouaoazFTLxGlmgHeOCzJg
-	 TmD+sbFqR4lHFyKogfutI21tZMqP2ae/D6YNCwmrLyQ15cgi4NXlNDybuicqauSW5S
-	 PevTgAo5u3+PA==
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: long.yunjian@zte.com.cn
-Cc: fang.yumeng@zte.com.cn, mhi@lists.linux.dev, 
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- mou.yi@zte.com.cn, xu.lifeng1@zte.com.cn, ouyang.maochun@zte.com.cn
-In-Reply-To: <20250623202814633ukJqUDLU7BRlLLhvWkbD7@zte.com.cn>
-References: <20250623202814633ukJqUDLU7BRlLLhvWkbD7@zte.com.cn>
-Subject: Re: [PATCH] bus: mhi: host: Use str_true_false() helper
-Message-Id: <175143745650.8922.11983003637531738651.b4-ty@kernel.org>
-Date: Wed, 02 Jul 2025 11:54:16 +0530
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="SDNElFwj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=GA
+	yDNsxr/LBxtPmypf/npxg36f0bzKvFxsKMt/9v9E4=; b=SDNElFwj3xcsZTBz0h
+	OR7bvJzltlVfllnadSkqtgLzgl4dud0jiCNYHWpr14eXaPj3ueoiTc2NnsFaDUZ/
+	drEIZe7+9HnCO5KdCfkV+lGOwAzQQbBBkbfXln4XbLORsS9l54xgjzk66TGdnCzi
+	YMn1LUod/ZuCath30lrX34BFM=
+Received: from ly-pc.. (unknown [])
+	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wDXjQmB0GRo2CFPCA--.3028S4;
+	Wed, 02 Jul 2025 14:24:05 +0800 (CST)
+From: Xuanye Liu <liuqiye2025@163.com>
+To: Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@gentwo.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Xuanye Liu <liuqiye2025@163.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] mm: remove outdated filename comment in percpu-stats.c
+Date: Wed,  2 Jul 2025 14:23:59 +0800
+Message-ID: <20250702062400.207619-1-liuqiye2025@163.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDXjQmB0GRo2CFPCA--.3028S4
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUeNtIDUUUU
+X-CM-SenderInfo: 5olx1xd1hsijqv6rljoofrz/xtbBDRR+UGhky0GO-gAAsB
 
+The comment had the old filename. It's also unnecessary, so drop it.
 
-On Mon, 23 Jun 2025 20:28:14 +0800, long.yunjian@zte.com.cn wrote:
-> Remove hard-coded strings by using the str_true_false() helper.
-> 
-> 
+Signed-off-by: Xuanye Liu <liuqiye2025@163.com>
+---
+ mm/percpu-stats.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Applied, thanks!
-
-[1/1] bus: mhi: host: Use str_true_false() helper
-      commit: 99b1cac2680b297b74a87fdd0f80e501d20e7561
-
-Best regards,
+diff --git a/mm/percpu-stats.c b/mm/percpu-stats.c
+index dd3590dfc23d..9b9d5d6accae 100644
+--- a/mm/percpu-stats.c
++++ b/mm/percpu-stats.c
+@@ -1,6 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * mm/percpu-debug.c
+  *
+  * Copyright (C) 2017		Facebook Inc.
+  * Copyright (C) 2017		Dennis Zhou <dennis@kernel.org>
 -- 
-Manivannan Sadhasivam <mani@kernel.org>
+2.43.0
 
