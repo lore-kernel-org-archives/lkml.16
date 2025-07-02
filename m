@@ -1,46 +1,46 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2087.outbound.protection.outlook.com [40.107.220.87])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2071.outbound.protection.outlook.com [40.107.101.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D102FF461;
-	Wed,  2 Jul 2025 15:56:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B3732EE5E7;
+	Wed,  2 Jul 2025 15:56:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.71
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751471808; cv=fail; b=JAYsyXcIkU+YiRU+F2f8BGtmq3dCbT1GDb3NMHE8VancvSJj4eKRNxHJ/KAgthQo49/RLTqCe0D/S+y2eNz5HfTkRb+lw1WHYhP2djxywDWJxp7oScBBl6L7R9gQNy4Ea9sOC0rsPJ1pywMa7pepW0ZAz9SZrJvbAidrfb5nwDQ=
+	t=1751471812; cv=fail; b=QCnF60OLFeLEg6UgArlLq2z/VHbzjZf+MOBzKwwpb1r6xc1djYqlQnbWQ1yfp6Pnn7g4uVZbISqBV4vpWZyIRLxW08Hlt+ib1hafaV8lKT96CBn07CTL/kVRxxq36s6itGx+tPabmyDvO3jKED3HIcKWlL92AXUmD/OHEQvwDuc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751471808; c=relaxed/simple;
-	bh=FWAH+ZZU+Q+949+mRKqmpRzwVz6RcRR1m+Nzlu1z0zs=;
+	s=arc-20240116; t=1751471812; c=relaxed/simple;
+	bh=JTgkRR+IIs9uwTdM7Bh1SVsAL5EEJ5/0BOQ4BMj5iAs=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uMbUGHWYIOl57pHfP4bhWjkImJ98m6vO0h/sF9xZD5Iieuw7eUDQL+zAwufNLIxDQmk2JZbKLt9oOsDClxu7yCbE0+GlIG3Di7OBJpV27r0Ov7KAxwW5NZISxv9eOb8u0n+gwOJTogPc3x3+U3yswyA43J4DWqq9XYcv5JpX1zk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=HcYY723s; arc=fail smtp.client-ip=40.107.220.87
+	 MIME-Version:Content-Type; b=eRHyTHLeS/pleTk82nAQSvpCRh6Tyt62VR7fVmbE1753ZNJZNYWQz/U2ZRiuMO5gnoSP7CyYA1PN0UzaMI+0djRqd0L8JBbIvohXw0yxgdhgw/+f1NwlR98+E6ba4RWBi98YwfB5qZhtlJqtJU/Vqf6DznLkwuIFkkThGScNqW4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xn4Rgq9K; arc=fail smtp.client-ip=40.107.101.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="HcYY723s"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xn4Rgq9K"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tftf/svLTBNaZxdapMlE04c5WvX7x9IFddG3A0GDIX3bZEqcYzCxgNwt7lh9oiuBVqVe1h/JT0I6Oizul69ZjpN4GeCURL1u4+UFlghhNA0mlppdiPZ338BCEGNLN/D/BqeXKEKCRgUMyTuNmYyvroQvS1z1OwkuiL6ZTqK6a419eM404Fv/EhRva4D0OIzc+P++QLf7TkeAZkhdpqdPCCgnYKxBi8O9/1YZVDb+1jBI0UaapSeJokIBIvf3/fVV2J1UhCqh3U0WpbKZQaP223fyeJjmgSTifIFTO37wZRxxvjQ/DgQ/wNRFodr6d53417fR8+JcoT4F1Vunxbs/0g==
+ b=jyLWjkBsiFIkJSPem/IM//tBtv8lnErULrnywG3v5/88DXv7Do+R2/IfzDyOY4drNCHVSaTjQyqqgPYyRZtxMIWSq/FFH26ojr5aNo5ioLkcbBgzHG0AoUevvHGtHCte9VyTKpiRe2tfdEiYXmx1yV9nqmd+2GAB+LxYy66Z6NIns9NPvi1Ti6A6EDwnT6hvP9oaBDKZwVxJ7EtaNnO80ed22qImvhcNGjgbzWelG5xEtNuvp55tIkrk21WgzeNTvxqgwlLZetRLO/RSjz/NMQyx66k5yLaTFPVu/HnQ9SAk30VUiMN0i4P6iIVh5waDadQAFwR+QeCiYjZyvJjxlg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bHgBlvSJaE5Cx6MbWGkLuZrkIpw73ZGCgYzo53uf+eY=;
- b=uUpEpZzanVbD/5dUlSmuxnn76f00qgJ3Lpkizp47rHlOgOAPMTok4ei6r0w/3+6tTvdiAtC/JK7F7UvHnXuKcoSt0PWdJkKPGkI4fL58h+HL36mib/YY+Ih9W1aftgKjGKgTMeUp1QsqbBOgww3QtbOkOGmLSPIG9FnKMXzOZphwt+MOGfqrhB/4Xx0dJ5wKLYMFDKPq+1xZ6mc7I02rqo5Av99V98dh+ZUZbsbeul2YjANjfeH0A4EuCh8NAqYZ6Szv+lgekk6zxvi/FcLhosIxnkUR7m5QrDVIR01i+fm5tD7RRqZsBDGAH79+8ZJUcnVyuKiIML7Me6XPxWWiTw==
+ bh=DotgvFoPXMhZbRyDI/9p+/+TlIOWCyEoJALVG03oRog=;
+ b=GRkuD+BBmJnTc/KB8IvRfFTtaSEXGvjJxbPx4YXuKvLEmewjyJT96USLc99xqEJcXcbaLSSf9tcG5uQ8vC93KYSp1EUXS8aC/Rwcub/LLEwulnp1GWbrYvL1MoTpEDg6nv3fZzy1/YcZpEUxw27rgxFGWDafscbz4a0xYuTcJdbojAf41FDExgnONL7mXBmCWEF2JT6jS6Dz+1EhhUwCbh/n5w/tNlaoE84A0UVyyPUvnePgqKNF9fS2nnIcDTPzmdio3iEA3ZGmmSYX6wK8BebCh6IObMrONymFR2qudf3Hi5qtFy8VHDQrsn2ToGNwTA9wrJVfxxO6jCXVp3oucQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bHgBlvSJaE5Cx6MbWGkLuZrkIpw73ZGCgYzo53uf+eY=;
- b=HcYY723szzBUSSqXNyvt3y1x0OTPCihW4BQ+QAR2Bkh2/bnJuiZyAZ3fSGlS0vbteOYJkrao2rLfSfghrSxOu0zp0s0KQLoTYgFirNIR24FGhKWmriEWCMpjqXiQdA5L9rZz0dxOD3jC+2zkRYEXvD3xudVSY5k6gqAjEXterFc=
-Received: from CH0PR03CA0263.namprd03.prod.outlook.com (2603:10b6:610:e5::28)
- by BY5PR12MB4177.namprd12.prod.outlook.com (2603:10b6:a03:201::14) with
+ bh=DotgvFoPXMhZbRyDI/9p+/+TlIOWCyEoJALVG03oRog=;
+ b=xn4Rgq9K7JiTVwxhNnDPZ+dsYTUzR7zg3v5r5wY8twmfjdMGVaF/27K335vvR0AC14amKUMUrE5pR8j0ZOMzqLQqm3lzUTV9jLdQTC3knJGi+maMZdFB8+a3+REHX/7ZhGuk2SVWUmomTfoCJsDevYMBpOss89GPzQBBP86jdAo=
+Received: from CH0PR13CA0026.namprd13.prod.outlook.com (2603:10b6:610:b1::31)
+ by SJ2PR12MB8955.namprd12.prod.outlook.com (2603:10b6:a03:542::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.26; Wed, 2 Jul
- 2025 15:56:44 +0000
-Received: from CH3PEPF00000015.namprd21.prod.outlook.com
- (2603:10b6:610:e5:cafe::9e) by CH0PR03CA0263.outlook.office365.com
- (2603:10b6:610:e5::28) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Wed, 2 Jul
+ 2025 15:56:48 +0000
+Received: from CH3PEPF00000017.namprd21.prod.outlook.com
+ (2603:10b6:610:b1:cafe::d3) by CH0PR13CA0026.outlook.office365.com
+ (2603:10b6:610:b1::31) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.20 via Frontend Transport; Wed,
- 2 Jul 2025 15:56:44 +0000
+ 2 Jul 2025 15:56:47 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,24 +48,28 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
 Received: from SATLEXMB03.amd.com (165.204.84.17) by
- CH3PEPF00000015.mail.protection.outlook.com (10.167.244.120) with Microsoft
+ CH3PEPF00000017.mail.protection.outlook.com (10.167.244.122) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8922.1 via Frontend Transport; Wed, 2 Jul 2025 15:56:44 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
+ 15.20.8922.1 via Frontend Transport; Wed, 2 Jul 2025 15:56:47 +0000
+Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB03.amd.com
  (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 2 Jul
- 2025 10:56:43 -0500
+ 2025 10:56:47 -0500
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB05.amd.com
+ (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 2 Jul
+ 2025 10:56:46 -0500
 Received: from xsjgregoryw50.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
  (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Wed, 2 Jul 2025 10:56:42 -0500
+ Transport; Wed, 2 Jul 2025 10:56:46 -0500
 From: Gregory Williams <gregory.williams@amd.com>
 To: <ogabbay@kernel.org>, <michal.simek@amd.com>, <robh@kernel.org>
 CC: Gregory Williams <gregory.williams@amd.com>,
 	<dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>
-Subject: [PATCH V1 4/9] dt-bindings: soc: xilinx: Add AI engine DT binding
-Date: Wed, 2 Jul 2025 08:56:25 -0700
-Message-ID: <20250702155630.1737227-5-gregory.williams@amd.com>
+Subject: [PATCH V1 7/9] accel: amd-ai-engine: Add support for AIEML devices
+Date: Wed, 2 Jul 2025 08:56:28 -0700
+Message-ID: <20250702155630.1737227-8-gregory.williams@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250702155630.1737227-1-gregory.williams@amd.com>
 References: <20250702155630.1737227-1-gregory.williams@amd.com>
@@ -77,224 +81,332 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-Received-SPF: None (SATLEXMB03.amd.com: gregory.williams@amd.com does not
+Received-SPF: None (SATLEXMB05.amd.com: gregory.williams@amd.com does not
  designate permitted sender hosts)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PEPF00000015:EE_|BY5PR12MB4177:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9e214a20-003b-4df2-b2c1-08ddb9810b19
+X-MS-TrafficTypeDiagnostic: CH3PEPF00000017:EE_|SJ2PR12MB8955:EE_
+X-MS-Office365-Filtering-Correlation-Id: ee813fe6-c30e-43a9-b66f-08ddb9810cf9
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|36860700013|1800799024;
+	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?eAJZmNEdTIw/8Ai+IeHXb0ol4hgvtkqA5P0Pa4R2heYkPRP8Fcm3wkymDeBb?=
- =?us-ascii?Q?cqPdokQ8H7tHIZVUv3Orph8eDwGUgCLWSDMRulV/nEA7biYWa6r7JbKDXVPo?=
- =?us-ascii?Q?1P2OwEccdexa5pBmDyiK6uF6OwymKJ8NwDDhSkkc83udUKhMDa0XZI5mMDB2?=
- =?us-ascii?Q?LmmaXlMIGhbuRzk+WO5vvQKUWNfQyq0wIfNDRVe0uTDt2ewv1mYfguwK8oKv?=
- =?us-ascii?Q?znsjzqLIwApjZHTruEgJ2qhsmQ8I3Hy2lIxjwqW0on5yiS/QWH5z/WsYBhAN?=
- =?us-ascii?Q?7ZJqzE6UGVQZZMsuNaLCziwot0spIBvtkwOUpqZPxU9h2ywkgZpBsTxxso8l?=
- =?us-ascii?Q?lQ42gyqclfIDzl+z9+p/empD6CJZdGWktrFdLD431VOAfEknlfy9wlPDeYGs?=
- =?us-ascii?Q?U9WwHEcefpuutnTmEyd+9M614TI1jXqiJxmdkBOF81i7radBAUAX+D82vzzD?=
- =?us-ascii?Q?VZmXC2u7OpRYHlGVJkEJwWJcb68jZSAiWKKs4XHLTr2iVXJtVgsUz6bDk3u2?=
- =?us-ascii?Q?q1vap57Ay1yj2rZx2Hr3Qnl5iOrA8QMAAznQjM2/R28h3unxcw983BQ2H5hK?=
- =?us-ascii?Q?DUAD59sRjhrvQ1uErhZSNWPFD7xp7WeiCbFgbG4aeOUQcfDJJa5pJoWUc1nB?=
- =?us-ascii?Q?Mono1BYcnK3A/Hdxto+29bVvLp5pttltkWDsa24xM2kzlU5ZP+5JzfrjtmCW?=
- =?us-ascii?Q?wsdQNMcAWvcKkZEo/AMDMtBWvib5i+arbejNFleLqXve1J4kzHNSGl3phHYC?=
- =?us-ascii?Q?9W4MGkisdJrpBkvAekNbV4uZpp/9mfLEkFhkmnU0pqrqepBCDTkkZvjx6k7E?=
- =?us-ascii?Q?91uacCshnRn1qC00vJyr+NHlJWHc5sQ7b8NkvYdYxSBPaqM/MMYFcBZrkima?=
- =?us-ascii?Q?mUccfDbNVeXvyv7/ZX3cN8VQYwK0hPyMVY3JkZP1QSIL7Rj3BCkbjbir/MAQ?=
- =?us-ascii?Q?tItigPT1VRYRi5QlxV3/OigXhL5PA68nbrzd4nBybGhYmCdjmMAxwMNpTXg2?=
- =?us-ascii?Q?yXhzFecMEJzvcCbryaI/3N7YwzL50+jt8UQUXMiy7HQlOE2HcgtBCqAubjyX?=
- =?us-ascii?Q?bJDH3c9R1FE3u8hLvoYm+eeZ67WGtz6eGB+9S31BmlqGQ9vqYPEHwo4toDn/?=
- =?us-ascii?Q?UvMYPFeZsqPIf8IXAeD8zjqljJworKPyKFTV0Yh437dCab+4Y9Jg/EFHS47a?=
- =?us-ascii?Q?FDtC4tpdnce96cBibDPLlKqaI8D0XheKrx6fl42Oyb2wd5zhGI5qVodRz2/q?=
- =?us-ascii?Q?BNA/ySXzvkzk4J8Rf8AJgcPiOzf3FjGpK7a6xhJXi0tJY8101mB4cy8w6sje?=
- =?us-ascii?Q?IZ0sC+31Seumz1xIwJU175/zDGrDsKZ3Yddrl0tEeGe8u0id+iLODaPGYM4y?=
- =?us-ascii?Q?Z5yW7H11BpPDXJ1w+6o4SsIhUJ4t1ORLGijpJXX3D96cvmIeBlYGU8d9k1HH?=
- =?us-ascii?Q?g7FsRhZXAwaJf6GjXYmdZ7nmRStNG9Skz1MfZ0xcMiX9iHNFdeI3Ag=3D=3D?=
+	=?us-ascii?Q?eirDAPMntYaj3uBqxOt++PWUy+oa3PoO2M6ErCGBQ0uRaN6Ae6ot/aGaqj41?=
+ =?us-ascii?Q?4QrrZgGZJJwnMQj1RIX9mLb/EZmw/77ufAK5xQyBR6W5ZmA9PwVWRMhOqV+H?=
+ =?us-ascii?Q?2oSgLgZ5ijdtVMz3/TyxE1quhLx5B0DfhO6XWnRUK7WnwkAG+i3vjFiiaK4p?=
+ =?us-ascii?Q?cvD6s5vQMXS/5TU3mRA1iwDOg63MYypJmEZy6TtF6z5hyIi0mm49aSCFLpge?=
+ =?us-ascii?Q?rHspFDDLXSt+N3mo77ZLguH90PURY+wnXfMhO+T0pdTDf/WbX8cktThQ/l0Q?=
+ =?us-ascii?Q?4ZWSu4+l3j9XvmYCHh70AfnLdOySHmitf2GpupQ8G5B/LSRpLrGbB/b/KlHJ?=
+ =?us-ascii?Q?hk1t9fpTUlQ3v7/Pfwr4YZIXl6cqqd/acljKubap1D6yxpBAobzKCpLodGGw?=
+ =?us-ascii?Q?OtEw85Gv0W+jWn8L8AYIFCBfrQg68Qh7McuEnN0KCuY6x+JU2bGGiqczWsLZ?=
+ =?us-ascii?Q?qg9+lH5gOAgC8DS9Fp0EegvbvIxeDD5F0sg7A9U6IOTeLwbA9fjWc4zjbk45?=
+ =?us-ascii?Q?NCvkzOsOADbrv0h7pOfV/BCxwIy7dxPzjwqUptkpj6q8m7maoxeVyJyB7FT8?=
+ =?us-ascii?Q?T9VI6Cfft7rrZvjDy6ByoMtVYISg7tvMjWmgdhGqAiTIRLHHgudT/cs49pRs?=
+ =?us-ascii?Q?IWIWY6jQ+X7hGhZ7owuuYV2RNRB7kIl7c4ZSRdzsVs+B3DgPXB+awMSG5Pmi?=
+ =?us-ascii?Q?M5fvkIFNfxyp7PF9HZjxa1O4bDtSUIJqnIJvVNiaS5B3Rc4G+5JOA3+5hzuC?=
+ =?us-ascii?Q?04frBueKBFBY/uhDMg6bNi0PEQZGnk7Eht3QgrvrAQysNNJxESN+WLCOogqt?=
+ =?us-ascii?Q?tLWAPEg84j1+OFYDlOtGBJ0CoJf8YNEqfOlcKiU5AlgDbCXdAlAKzk+1QBWx?=
+ =?us-ascii?Q?BnvO9hsX4prUSi1yBfoSx8KKcJpKsAybX9OWYXLgT+lDw/LCve0Vc9cK72Fc?=
+ =?us-ascii?Q?opE7qjIofgszoUitoo2rDV8ce7/JpdH3rihuIKvb4LnuxxvU7t1tNrd1TIws?=
+ =?us-ascii?Q?pVfkwj8EtJhdbXziYln067WLgCB8wz2OVhOHO7d4EP/UsfHD6/2GdhXmF6uZ?=
+ =?us-ascii?Q?OOMSuMdKieA1Poc3bGIAzID5GlZjNhEYT0sSIi3tiLtpH4Zkn6NdAD0S9zqr?=
+ =?us-ascii?Q?7+t01VsT5XP1aWkVqEByryhGOaXhFPtPfRRM83DGBswFWOtfr4X8n4zsyRnl?=
+ =?us-ascii?Q?t4NosHkr86hnWMCDiNnYwBy/8iB5UDUkt4+tLi1Y2nGO4DjmQc5fErgnjc/Q?=
+ =?us-ascii?Q?2MmOohUmLAq4butUtuy0ByXa9eZcT+2P5FRYOIo1Kx9+cRZPbuaefqFUHpaF?=
+ =?us-ascii?Q?oYxEU2r3XHghcxLF5a7O0ODYM98U2EB8f0WcQ0P7lTUO8yqSqeh0T/Rc59a8?=
+ =?us-ascii?Q?TmEVf1NzwWggK+oVrMQ8qf6cIL8LyFIBZ+aTmk7pODJvEa4d3AaKVLSFhztZ?=
+ =?us-ascii?Q?Gf9o/BDmEif8DGmFPFJHWKfrg1xe9KDfUneEPnH4IaP2PshVOfOpBtcOe+v0?=
+ =?us-ascii?Q?vct2MJPpFlKjgbC4BcaYKWr0eWDcZQH6BZHJ?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 15:56:44.4082
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 15:56:47.5535
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9e214a20-003b-4df2-b2c1-08ddb9810b19
+X-MS-Exchange-CrossTenant-Network-Message-Id: ee813fe6-c30e-43a9-b66f-08ddb9810cf9
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CH3PEPF00000015.namprd21.prod.outlook.com
+	CH3PEPF00000017.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4177
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8955
 
-In the device tree, there will be device node for the AI engine device,
-and device nodes for the statically configured AI engine apertures.
-Apertures are an isolated set of columns with in the AI engine device
-with their own address space and interrupt.
+Adds driver support for AIEML generation devices. The following modules
+are enabled:
+- Get tile type from location (support for new memory tile type)
+- Clock state tracking and request and release of tiles
 
 Signed-off-by: Gregory Williams <gregory.williams@amd.com>
 ---
- .../bindings/soc/xilinx/xlnx,ai-engine.yaml   | 151 ++++++++++++++++++
- 1 file changed, 151 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/xilinx/xlnx,ai-engine.yaml
+ drivers/accel/amd-ai-engine/Makefile          |   1 +
+ drivers/accel/amd-ai-engine/ai-engine-aieml.c | 210 ++++++++++++++++++
+ drivers/accel/amd-ai-engine/ai-engine-dev.c   |   2 +
+ .../accel/amd-ai-engine/ai-engine-internal.h  |   2 +
+ 4 files changed, 215 insertions(+)
+ create mode 100644 drivers/accel/amd-ai-engine/ai-engine-aieml.c
 
-diff --git a/Documentation/devicetree/bindings/soc/xilinx/xlnx,ai-engine.yaml b/Documentation/devicetree/bindings/soc/xilinx/xlnx,ai-engine.yaml
+diff --git a/drivers/accel/amd-ai-engine/Makefile b/drivers/accel/amd-ai-engine/Makefile
+index 9a830f7432d2..66cbce4705ea 100644
+--- a/drivers/accel/amd-ai-engine/Makefile
++++ b/drivers/accel/amd-ai-engine/Makefile
+@@ -6,6 +6,7 @@ obj-$(CONFIG_DRM_ACCEL_AMDAIE)	+= amd-aie.o
+ 
+ amd-aie-$(CONFIG_DRM_ACCEL_AMDAIE) := \
+ 	ai-engine-aie.o		\
++	ai-engine-aieml.o	\
+ 	ai-engine-aperture.o	\
+ 	ai-engine-clock.o	\
+ 	ai-engine-dev.o		\
+diff --git a/drivers/accel/amd-ai-engine/ai-engine-aieml.c b/drivers/accel/amd-ai-engine/ai-engine-aieml.c
 new file mode 100644
-index 000000000000..7d9a36c56366
+index 000000000000..328688942a6a
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/xilinx/xlnx,ai-engine.yaml
-@@ -0,0 +1,151 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/soc/xilinx/xlnx,ai-engine.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/accel/amd-ai-engine/ai-engine-aieml.c
+@@ -0,0 +1,210 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * AMD AI Engine driver AIEML device specific implementation
++ *
++ * Copyright(C) 2025 Advanced Micro Devices, Inc. All rights reserved.
++ */
 +
-+title: AMD AI Engine
++#include <linux/amd-ai-engine.h>
++#include <linux/bitmap.h>
++#include <linux/device.h>
++#include <linux/firmware/xlnx-zynqmp.h>
++#include <linux/io.h>
 +
-+maintainers:
-+  - Gregory Williams <gregory.williams@amd.com>
++#include "ai-engine-internal.h"
 +
-+description:
-+  The AMD AI Engine is a tile processor with many cores (up to 400) that
-+  can run in parallel. The data routing between cores is configured through
-+  internal switches, and shim tiles interface with external interconnect, such
-+  as memory or PL. One AI engine device can have multiple apertures, each
-+  has its own address space and interrupt. At runtime application can create
-+  multiple partitions within an aperture which are groups of columns of AI
-+  engine tiles. Each AI engine partition is the minimum resetable unit for an
-+  AI engine application.
++#define AIEML_ARRAY_SHIFT	32U
++#define AIEML_COL_SHIFT		25U
++#define AIEML_ROW_SHIFT		20U
 +
-+properties:
-+  compatible:
-+    const: xlnx,ai-engine-v2.0
++#define NUM_TYPES_OF_MEM	3U
 +
-+  reg:
-+    maxItems: 1
++#define NUM_MODS_CORE_TILE	2U
++#define NUM_MODS_MEM_TILE	1U
++#define NUM_MODS_SHIMPL_TILE	1U
 +
-+  '#address-cells':
-+    const: 2
++/*
++ * Register offsets
++ */
++#define AIEML_SHIMPL_COLCLOCK_CTRL_REGOFF		0x000fff20U
 +
-+  '#size-cells':
-+    const: 2
++/*
++ * Register masks
++ */
++#define AIEML_SHIMPL_COLRESET_CTRL_MASK			GENMASK(1, 0)
++#define AIEML_SHIMPL_COLCLOCK_CTRL_MASK			GENMASK(1, 0)
 +
-+  power-domains:
-+    description:
-+      Platform management node id used to request power management services
-+      from the firmware driver.
++static u32 aieml_get_tile_type(struct aie_device *adev,
++			       struct aie_location *loc)
++{
++	u8 num_mem_rows = adev->ttype_attr[AIE_TILE_TYPE_MEMORY].num_rows;
 +
-+  xlnx,aie-gen:
-+    $ref: /schemas/types.yaml#/definitions/uint8
-+    description:
-+      Hardware generation of AI engine device. E.g. the current values supported
-+      are 1 (AIE) and 2 (AIEML).
++	if (loc->row > num_mem_rows)
++		return AIE_TILE_TYPE_TILE;
++	if (loc->row && loc->row <= num_mem_rows)
++		return AIE_TILE_TYPE_MEMORY;
++	if (loc->row == 0)
++		if ((loc->col % 4) < 2)
++			return AIE_TILE_TYPE_SHIMPL;
 +
-+  xlnx,shim-rows:
-+    $ref: /schemas/types.yaml#/definitions/uint8-array
-+    description:
-+      start row and the number of rows of SHIM tiles of the AI engine device
++	return AIE_TILE_TYPE_SHIMNOC;
++}
 +
-+  xlnx,core-rows:
-+    $ref: /schemas/types.yaml#/definitions/uint8-array
-+    description:
-+      start row and the number of rows of core tiles of the AI engine device
++/* aieml_scan_part_clocks() - scan clocks of a partition
++ * @apart: AI engine partition
++ *
++ * Return: 0 for success, negative value for errors.
++ */
++static int aieml_scan_part_clocks(struct aie_partition *apart)
++{
++	struct aie_aperture *aperture = apart->aperture;
++	struct aie_range *range = &apart->range;
++	struct aie_device *adev = apart->adev;
++	struct aie_location loc;
++	int ret;
 +
-+  xlnx,mem-rows:
-+    $ref: /schemas/types.yaml#/definitions/uint8-array
-+    description:
-+      start row and the number of rows of memory tiles of the AI engine device
++	/* Clear the bitmap of cores and memories clock state */
++	aie_resource_put_region(&apart->cores_clk_state, 0,
++				apart->cores_clk_state.total);
 +
-+required:
-+  - compatible
-+  - reg
-+  - power-domains
-+  - xlnx,aie-gen
-+  - xlnx,shim-rows
-+  - xlnx,core-rows
-+  - xlnx,mem-rows
++	/*
++	 * In aieml if clock buffer on shim tile is enabled, the clock for all
++	 * tiles in the same column is enabled.
++	 */
++	for (loc.col = range->start.col;
++	     loc.col < range->start.col + range->size.col;
++	     loc.col++) {
++		void __iomem *va;
++		u32 val, nbitpos;
 +
-+patternProperties:
-+  "^aperture@[0-9]+$":
-+    type: object
-+    description:
-+      AI engine aperture which is a group of column based tiles of the
-+      AI engine device. Each AI engine apertures isolated from the
-+      other AI engine apertures. An AI engine aperture is defined by
-+      AMD/Xilinx platform design tools.
++		nbitpos = (loc.col - range->start.col) * (range->size.row - 1);
 +
-+    properties:
-+      compatible:
-+        const: xlnx,ai-engine-aperture
++		va = aperture->base +
++		     aie_cal_regoff(adev, loc,
++				    AIEML_SHIMPL_COLCLOCK_CTRL_REGOFF);
++		val = readl(va);
 +
-+      reg:
-+        description:
-+          Physical base address and length of the aperture registers.
-+          The AI engine address space assigned to Linux is defined by
-+          Xilinx/AMD platform design tool.
++		if (!(val & AIEML_SHIMPL_COLCLOCK_CTRL_MASK))
++			continue;
 +
-+      interrupts:
-+        maxItems: 3
++		ret = aie_resource_set(&apart->cores_clk_state, nbitpos,
++				       range->size.row - 1);
++		if (ret) {
++			dev_err(aperture->dev,
++				"failed to set clock state bitmaps for column %u",
++				loc.col);
++			return ret;
++		}
++	}
++	/*
++	 * Set the tiles in use bitmap.
++	 * In case of scanning, tiles which are powered on are considered as
++	 * tiles in use.
++	 */
++	bitmap_copy(apart->tiles_inuse.bitmap, apart->cores_clk_state.bitmap,
++		    apart->tiles_inuse.total);
 +
-+      interrupt-names:
-+        items:
-+          - const: interrupt1
-+          - const: interrupt2
-+          - const: interrupt3
++	return 0;
++}
 +
-+      xlnx,columns:
-+        $ref: /schemas/types.yaml#/definitions/uint32-array
-+        description:
-+          It describes the location of the aperture. It specifies the start
-+          column and the number of columns. E.g. an aperture starts from
-+          column 0 and there are 50 columns, it will be presented as <0 50>.
++/* aieml_set_part_clocks() - set clocks of a partition
++ * @apart: AI engine partition
++ *
++ * Return: 0 for success, negative value for errors.
++ */
++static int aieml_set_part_clocks(struct aie_partition *apart)
++{
++	struct aie_aperture *aperture = apart->aperture;
++	struct aie_range *range = &apart->range;
++	u32 node_id = apart->adev->pm_node_id;
++	struct aie_location loc;
++	int ret;
 +
-+      xlnx,node-id:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description:
-+          AI engine aperture node ID, which is defined by AMD/Xilinx platform
-+          design tool to identify the AI engine aperture in the firmware.
++	for (loc.col = range->start.col;
++	     loc.col < range->start.col + range->size.col;
++	     loc.col++) {
++		u32 startbit, col_inuse = 0;
 +
-+    required:
-+      - compatible
-+      - reg
-+      - xlnx,columns
-+      - xlnx,node-id
++		startbit = (loc.col - range->start.col) * (range->size.row - 1);
 +
-+    additionalProperties: false
++		for (loc.row = range->start.row + 1;
++		     loc.row < range->start.row + range->size.row;
++		     loc.row++) {
++			u32 nbitpos = startbit + loc.row - 1;
 +
-+additionalProperties: false
++			if (aie_resource_testbit(&apart->tiles_inuse, nbitpos)) {
++				col_inuse = 1;
++				break;
++			}
++		}
 +
-+examples:
-+  - |
-+    #include <dt-bindings/power/xlnx-versal-power.h>
-+    bus {
-+      #address-cells = <2>;
-+      #size-cells = <2>;
-+      ai_engine: ai-engine@20000000000 {
-+        compatible = "xlnx,ai-engine-v2.0";
-+        reg = <0x200 0x00 0x01 0x00>;
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+        power-domains = <&versal_firmware PM_DEV_AI>;
-+        xlnx,aie-gen = /bits/ 8 <0x1>;
-+        xlnx,core-rows = /bits/ 8 <1 8>;
-+        xlnx,mem-rows = /bits/ 8 <0 0>;
-+        xlnx,shim-rows = /bits/ 8 <0 1>;
++		if (col_inuse) {
++			ret = zynqmp_pm_aie_operation(node_id, loc.col,
++						      1,
++						      XILINX_AIE_OPS_ENB_COL_CLK_BUFF);
++			if (ret < 0) {
++				dev_err(aperture->dev,
++					"failed to enable clock for column: %d",
++					loc.col);
++				return ret;
++			}
 +
-+        aperture0: aperture@200000000000 {
-+          /* 50 columns and 8 core tile rows + 1 SHIM row */
-+          compatible = "xlnx,ai-engine-aperture";
-+          reg = <0x200 0x0 0x1 0x0>;
-+          interrupts = <0x0 0x94 0x4>,
-+                       <0x0 0x95 0x4>,
-+                       <0x0 0x96 0x4>;
-+          interrupt-names = "interrupt1", "interrupt2", "interrupt3";
-+          interrupt-parent = <&gic>;
-+          xlnx,columns = <0 50>;
-+          xlnx,node-id = <1>;
-+        };
-+      };
-+    };
++			ret = aie_resource_set(&apart->tiles_inuse,
++					       startbit, apart->range.size.row - 1) |
++			      aie_resource_set(&apart->cores_clk_state,
++					       startbit, apart->range.size.row - 1);
++			if (ret) {
++				dev_err(aperture->dev,
++					"failed to set bitmaps for column: %d",
++					loc.col);
++				return ret;
++			}
++		} else {
++			ret = zynqmp_pm_aie_operation(node_id, loc.col,
++						      1,
++						      XILINX_AIE_OPS_DIS_COL_CLK_BUFF);
++			if (ret < 0) {
++				dev_err(aperture->dev,
++					"failed to disable clock for column: %d",
++					loc.col);
++				return ret;
++			}
++
++			ret = aie_resource_clear(&apart->tiles_inuse,
++						 startbit, apart->range.size.row - 1) |
++			      aie_resource_clear(&apart->cores_clk_state,
++						 startbit, apart->range.size.row - 1);
++			if (ret) {
++				dev_err(aperture->dev,
++					"failed to clear bitmaps for column: %d",
++					loc.col);
++				return ret;
++			}
++		}
++	}
++
++	return 0;
++}
++
++static const struct aie_tile_operations aieml_ops = {
++	.get_tile_type = aieml_get_tile_type,
++	.scan_part_clocks = aieml_scan_part_clocks,
++	.set_part_clocks = aieml_set_part_clocks,
++};
++
++/**
++ * aieml_device_init() - Initialize AI engine device struct AIEML specific
++ * @adev: AI engine device
++ *
++ * This function initialize the AI engine device structure device version
++ * specific elements such as register addressing related array shift,
++ * column shift, and row shift; AIEML device specific device operations, device
++ * columns resource.
++ */
++void aieml_device_init(struct aie_device *adev)
++{
++	adev->array_shift = AIEML_ARRAY_SHIFT;
++	adev->col_shift = AIEML_COL_SHIFT;
++	adev->row_shift = AIEML_ROW_SHIFT;
++	adev->ops = &aieml_ops;
++}
+diff --git a/drivers/accel/amd-ai-engine/ai-engine-dev.c b/drivers/accel/amd-ai-engine/ai-engine-dev.c
+index ba28257cbd04..f713d38ff8c3 100644
+--- a/drivers/accel/amd-ai-engine/ai-engine-dev.c
++++ b/drivers/accel/amd-ai-engine/ai-engine-dev.c
+@@ -154,6 +154,8 @@ static int amd_ai_engine_probe(struct platform_device *pdev)
+ 	adev->dev_gen = aie_gen;
+ 	if (aie_gen == AIE_DEVICE_GEN_AIE) {
+ 		aie_device_init(adev);
++	} else if (aie_gen == AIE_DEVICE_GEN_AIEML) {
++		aieml_device_init(adev);
+ 	} else {
+ 		dev_err(&pdev->dev, "Invalid device generation");
+ 		return -EINVAL;
+diff --git a/drivers/accel/amd-ai-engine/ai-engine-internal.h b/drivers/accel/amd-ai-engine/ai-engine-internal.h
+index 495d56d5f993..31a45575cc43 100644
+--- a/drivers/accel/amd-ai-engine/ai-engine-internal.h
++++ b/drivers/accel/amd-ai-engine/ai-engine-internal.h
+@@ -19,6 +19,7 @@
+ #include <linux/platform_device.h>
+ 
+ #define AIE_DEVICE_GEN_AIE	1U
++#define AIE_DEVICE_GEN_AIEML	2U
+ 
+ #define KBYTES(n)		((n) * SZ_1K)
+ 
+@@ -246,6 +247,7 @@ static inline u32 aie_cal_regoff(struct aie_device *adev,
+ }
+ 
+ void aie_device_init(struct aie_device *adev);
++void aieml_device_init(struct aie_device *adev);
+ struct aie_partition *
+ aie_aperture_request_part(struct aie_aperture *aperture,
+ 			  struct aie_partition_req *req);
 -- 
 2.34.1
 
