@@ -1,80 +1,41 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F57A12CD88
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 10:41:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A7A5182D0
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 10:42:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751452913; cv=none; b=QNGJOhwHqXTTKkSQBFqPg52TeW1z+rOMVfyQwWIp42Uta2hlQTbbD60nyBjaOkahSV+tXuJAeNr9uEmz6cHjkxVP+TC6G/8X0OXXZc7/aevNOCc0qoGoHQuLn4X20fCZHvqUz66g3iFWRIWVFkYBjNjM+jvExEcX/5/Igt+RNic=
+	t=1751452970; cv=none; b=gq7j4siEkoTjjPlxzPeVSuCUPq2qoPKb/PpVgwThnAnCEvRhYz+uZns1EbgcyJXEpTeS1K12PQ5OoJR/tesRoflZqPw6gEpAz37W1wKrshiINQ+ug+Zok+kFz860uX4ystHgQP97q+adstRefNI/b51lyZZit0dmYkf5z35t+Vc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751452913; c=relaxed/simple;
-	bh=opI8kZ94jXxc3W+bhK8KIvd92l7nPa8l691dPsRb30U=;
+	s=arc-20240116; t=1751452970; c=relaxed/simple;
+	bh=EkEXZ6RXULGLL014nDgby1Mjw2I8uRkWR4rl2MXCcWM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iihmRsqKYE+8ZZsyDdVFNlq/7k1WvPOSvDKrENZTfe0ceo6J3qC4ntus/M1UIrfpzWaU204ao/66IkyY/ylWcIHWSTh5P+YnODlS07Fbse2eXOnv0T4hIL1Z6MXDtqD5VIH2dA5k0v2iEVzn1keR+tOpr+E6ou95Wg8c9ax0UY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=PZIKXDfH; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="PZIKXDfH"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-451d41e1ad1so44175075e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 03:41:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1751452910; x=1752057710; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vKybssvnFprModTIZAiiqhMc9ohtbZTXrEhnTtnvSDI=;
-        b=PZIKXDfHzzrMWMb8wWmm9ujwZ6GGJl5NC9cuOftFYEVlr1vNngMTVjw3ej7F+Fk8dx
-         TjCGtHInRC2muFv9YuywxxvhjzO5GLv0h/yc7mA3gOUO93vT7ZtyKvIoBPF2jYQaX4JN
-         9n78uqtXP2gQAVaYlX8v9GOjbHH3AzUdyj14Ad+O1YKEbPRX9cX4kb9TGCCuIeQ0OL/5
-         XY/lOhBhTNf8kPWTL5HdXMu/YWyazpAcnqTQGZkvBT1E0WqJOIN/xOI95VpOgiWM8DFm
-         KguCe0C02dOXPoxsweSjAqvybOeiFUeHtqp8yfnV6TLSQYERoUWSpiq5TVq3pOs+dtM/
-         qZtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751452910; x=1752057710;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vKybssvnFprModTIZAiiqhMc9ohtbZTXrEhnTtnvSDI=;
-        b=s1auL4Mv6fXwE9b7mCl+jrLa6e94TgmIG/oDDGPt49V8pMmBblUF+Gt/k+pX61Umsf
-         dKm/vqqR5lFGUPVOOb/sOb/5VR9zBzRR/yWS7TEBww9keZnYtOnTXD6v76i1Ay4T7OPH
-         OK1zZmwKYiVwgoaT0NUvIfsZpCHMhzyNncQOTk0BA1BvhoMskn81PgiaqMGyB8au2BiX
-         +lJwRd5u9/Vt5gF8VUZntFWnqLm+V2KG8yda7NJnWNEST/oEr0GaUnWbcoq+zAwO3rLR
-         G+5a3vJ7yYZC5fJv1K6cLfLZ49CVqZDocxWfT7J2UzhKYAj8AuDlG7Xtm8B5QUowPMGE
-         g46w==
-X-Forwarded-Encrypted: i=1; AJvYcCXFirus7yX0Jucdxj/VC67qauiwikblEnnFFcNtUzefJGVSilHt0traSQ5UWEfsjEyn18G8QbTEAuxbiJk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxuscsOpZjlbje4oWuWF/c8nzbvgjt+yW/KI7v1OdHYUSqf93ry
-	emh9H2z744almghyh4rP3UMxjZsJRxSoD4zoHir7CnydtniSHPNOMjlC6xnNjOtTLqY=
-X-Gm-Gg: ASbGncseUUQ4q2hBnjohcPSeFTeYCUVT3RebF51BGbGIlm2WncnS0HTWD3bmQ2Hzu7K
-	wy+H3XaOd0eqf+1ETpBMqfIVRrFt6veyTac3VFb1mI8av/TFyNZ3JpH9heqlCNQ3Q6e7NSTazda
-	DUAVtBv+M42csWIWAyWD5D6OgcI2eh93grJoe7RA8kiDFYZ+EDQydq5Wfag9Kh5omdBOEz/79xC
-	XVBEXhLzEXbfjF1+RBoCoDKUuW+VjG8ILsj44ilOyIBbhA1JVDomPZ58OFSJ9QjkZvP4OESj9zl
-	rGsa2jvo2gKzbiYL+VTS+VOarpawWl28N4Fzgii9VC6csaWwKVsLxG7l10CelVVP0XKdmA==
-X-Google-Smtp-Source: AGHT+IHp+NonL/psql4ZWWlHXVavL55jVvlBbLDx9BjCEnFRZEGhViNaWfW5qLGhu87010kP2/wTbw==
-X-Received: by 2002:a05:600c:538e:b0:453:697:6f08 with SMTP id 5b1f17b1804b1-454a3728b85mr23020135e9.26.1751452910342;
-        Wed, 02 Jul 2025 03:41:50 -0700 (PDT)
-Received: from jiri-mlt ([193.47.165.251])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453a85b3d44sm33167695e9.0.2025.07.02.03.41.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 03:41:49 -0700 (PDT)
-Date: Wed, 2 Jul 2025 12:41:40 +0200
-From: Jiri Pirko <jiri@resnulli.us>
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>, 
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Prathosh Satish <Prathosh.Satish@microchip.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Shannon Nelson <shannon.nelson@amd.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, Michal Schmidt <mschmidt@redhat.com>, 
-	Petr Oros <poros@redhat.com>
-Subject: Re: [PATCH net-next v12 08/14] dpll: zl3073x: Read DPLL types and
- pin properties from system firmware
-Message-ID: <vpzjeh5kc6s4cpah5wagdy6sm3rzt6vlfyfcdbenppwnzftzow@u4xu7mhzg77u>
-References: <20250629191049.64398-1-ivecera@redhat.com>
- <20250629191049.64398-9-ivecera@redhat.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Chheo5zzLNUuYqrZ3eizGl2kjmKPiwzg+15eFT+cJLFVsaWC88QLp7ug8qhEDdKB7dRbUnhYYVr65PpRxR6rKW+4gvZtYPfIUKjsEdc8PHsySLgNuDIXo0Ho1JXytiluZwzCd3jfMF6kfccfTbqc3Upugph4Teb95MtK1OvsdcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E726522D9;
+	Wed,  2 Jul 2025 03:42:33 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 70E6C3F58B;
+	Wed,  2 Jul 2025 03:42:48 -0700 (PDT)
+Date: Wed, 2 Jul 2025 11:42:46 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Yabin Cui <yabinc@google.com>, Keita Morisaki <keyz@google.com>,
+	Yuanfang Zhang <quic_yuanfang@quicinc.com>,
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 03/28] coresight: etm3x: Always set tracer's device
+ mode on target CPU
+Message-ID: <20250702104246.GW794930@e132581.arm.com>
+References: <20250701-arm_cs_pm_fix_v3-v2-0-23ebb864fcc1@arm.com>
+ <20250701-arm_cs_pm_fix_v3-v2-3-23ebb864fcc1@arm.com>
+ <aGUHbWR0vreo29kl@e129823.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,49 +44,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250629191049.64398-9-ivecera@redhat.com>
+In-Reply-To: <aGUHbWR0vreo29kl@e129823.arm.com>
 
-Sun, Jun 29, 2025 at 09:10:43PM +0200, ivecera@redhat.com wrote:
+On Wed, Jul 02, 2025 at 11:18:21AM +0100, Yeoreum Yun wrote:
+> Hi Leo,
+> 
+> [...]
+> > @@ -464,17 +477,29 @@ static int etm_enable_perf(struct coresight_device *csdev,
+> >  			   struct perf_event *event,
+> >  			   struct coresight_path *path)
+> >  {
+> > +	int ret = 0;
+> >  	struct etm_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+> >
+> > -	if (WARN_ON_ONCE(drvdata->cpu != smp_processor_id()))
+> > -		return -EINVAL;
+> > +	if (!coresight_take_mode(csdev, CS_MODE_PERF))
+> > +		return -EBUSY;
+> > +
+> > +	if (WARN_ON_ONCE(drvdata->cpu != smp_processor_id())) {
+> > +		ret = -EINVAL;
+> > +		goto out;
+> > +	}
+> 
+> Small question: why drvdata->cpu != smp_processor_id() check after
+> changing mode? Would it better to check before change of it?
 
-[...]
+You are right. I will update in next version.
 
+Thanks for pointing out this!
 
->+/**
->+ * zl3073x_prop_dpll_type_get - get DPLL channel type
->+ * @zldev: pointer to zl3073x device
->+ * @index: DPLL channel index
->+ *
->+ * Return: DPLL type for given DPLL channel
->+ */
->+enum dpll_type
->+zl3073x_prop_dpll_type_get(struct zl3073x_dev *zldev, u8 index)
->+{
->+	const char *types[ZL3073X_MAX_CHANNELS];
->+	int count;
->+
->+	/* Read dpll types property from firmware */
->+	count = device_property_read_string_array(zldev->dev, "dpll-types",
->+						  types, ARRAY_SIZE(types));
->+
->+	/* Return default if property or entry for given channel is missing */
->+	if (index >= count)
->+		return DPLL_TYPE_PPS;
-
-Not sure how this embedded stuff works, but isn't better to just bail
-out in case this is not present/unknown_value? Why assuming PPS is
-correct?
-
-
->+
->+	if (!strcmp(types[index], "pps"))
->+		return DPLL_TYPE_PPS;
->+	else if (!strcmp(types[index], "eec"))
->+		return DPLL_TYPE_EEC;
->+
->+	dev_info(zldev->dev, "Unknown DPLL type '%s', using default\n",
->+		 types[index]);
->+
->+	return DPLL_TYPE_PPS; /* Default */
->+}
-
-[...]
+Leo
