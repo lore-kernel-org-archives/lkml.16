@@ -1,75 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B488B2FF490;
-	Wed,  2 Jul 2025 17:14:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 452BD2DCF7A;
+	Wed,  2 Jul 2025 17:15:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751476471; cv=none; b=uVs2Qv38RXWMTZFhpudcOqMm33EeM4dy3uhogjyxzlWLpOuvrR0LO6P0y8b9QPrhvuHJuUBla4GHEYkciVLJNpMpjC1amNVOjFKOEwIdVmXTHeMsjfz5HMDAMykHu+lcfXnbl0T/UXEIxOHfJZi8CCI/iGg26nJxa83kQVAmgn8=
+	t=1751476552; cv=none; b=Xn/yJYPQHqIGtuyy4I5/YNABGCoHn+qw9Gp3G0dr+TdW8jwupK7Dr7PCLc7816ahZioHzZVRcbTFXy1TOx4/dLhFMvriGr227AsN8F+4FVP0t/rZIBZs6qxS/UJCTp2Koks+p/qnk06KxtyDQ/Hu3c1Y3cmnl1uqbekDqr79+Tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751476471; c=relaxed/simple;
-	bh=PrCZpvNyjYfUaaLn7PMgQspsagzM2AeP465bCGdyST8=;
+	s=arc-20240116; t=1751476552; c=relaxed/simple;
+	bh=MvrKqU9KXRVMqW4wYVRfFpUOXGEDg+T9aX7yo71XcrY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JzkNVMQPmZ60TFbtwV+p+4Msyi2u6QwGgFEp242n5enDlczMKcdQXdxtRPVqFbjwLHuRD8B9MS9jNXXnHgrONem096s56uUeykdJ53K8k034cViRkFIl0Rh6eH4/L6TbpAxSB30cq2D9GldYO6yG3+mmTGhBn7c3YoTaohHFk7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZFa93k7p; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=IAgH/PN09a9x6mWxMI0npkvxK3GWzeu1QkxcrsSOAe9cTUV8HpoKns/7xl5DrCtyJWo3A1Cw/J0gUX5yC+RDm4qzXpH8644tXrwJos8HisG2V8xjxYIj8fC0EchDZ52G766n2HacsELtLHC8shMWUWkF7zG9X/UuM3fBP5Qv7M8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MZ9RcvdQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZFa93k7p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B466C4CEE7;
-	Wed,  2 Jul 2025 17:14:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MZ9RcvdQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 130EFC4CEE7;
+	Wed,  2 Jul 2025 17:15:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751476471;
-	bh=PrCZpvNyjYfUaaLn7PMgQspsagzM2AeP465bCGdyST8=;
+	s=k20201202; t=1751476551;
+	bh=MvrKqU9KXRVMqW4wYVRfFpUOXGEDg+T9aX7yo71XcrY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZFa93k7pHQsnWvDkyWsuQF6QgXzetPQCMJskiOaJ1VM+3PLN4VXJQ4bG88BXOLydy
-	 LtIjmllWrZrKlGpufY6hjlCSqekM8AR93RfG5wsuOU9SovGYci4NfHnM/MSajgnfn2
-	 lVh4HU6KgiamaKrBIxtYbzC9ft22tyQsh1SWMlbfSG69FM4W2DfBpGR47gQdiBFxpv
-	 5XNj7ghmU4PyomU5oL0Lak5EMRXnj5LpnVdrt8s1NCeQ1bz8zA0npppO6PbXmT2x11
-	 Am8HBiWxOL25C2lDSHEZXulMrCCemm0wrksiAWoWlb8rTUdyFfVvdrh9nwhsqiIAbL
-	 VWvua0nZaStPg==
-Date: Wed, 2 Jul 2025 10:14:29 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Sam James <sam@gentoo.org>, fweimer@redhat.com,
-	akpm@linux-foundation.org, andrii@kernel.org, axboe@kernel.dk,
-	beaub@linux.microsoft.com, bpf@vger.kernel.org,
-	indu.bhagat@oracle.com, jemarch@gnu.org, jolsa@kernel.org,
-	jpoimboe@kernel.org, jremus@linux.ibm.com,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
-	mingo@kernel.org, peterz@infradead.org, tglx@linutronix.de,
-	torvalds@linux-foundation.org, x86@kernel.org
-Subject: Re: [PATCH v11 00/14] unwind_user: x86: Deferred unwinding
- infrastructure
-Message-ID: <aGVo9b1xiT1Moq-P@google.com>
-References: <878ql9mlzn.fsf@oldenburg.str.redhat.com>
- <87wm8qlsuk.fsf@gentoo.org>
- <20250702121502.6e9d6102@batman.local.home>
+	b=MZ9RcvdQOreMvSgDQRdVOEc/3VFScLsnmhwqM/sa66bIpvbg3w1OV8quHFH0LNOoB
+	 8FB/kdxkY6aDGF+O/uTnDyUWZVrlDyfq/qNztceUP0tY6uIYbOwi0fSIuszRSCrdzG
+	 QDzzB0LlXvYk1jazJvoITjrYUJfKwNCJSk97GM3O2TstHMJZio4EWnJO849WI7F9RO
+	 ULDfzU7qYCzxNDwwsd/zKqS0TNDWvyGZ+hemOL7S+sw2LuEnJRW00f4KV/rwvU9sJd
+	 aw51UzEocEFbb8N3yvhs28mzsG+HFmuKRJwCtE+QjYr62LYG138yA36eL+aA/KYhZW
+	 Z5PLvkvXx/Yag==
+Date: Wed, 2 Jul 2025 19:15:47 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: =?utf-8?Q?Cl=C3=A9ment?= Le Goffic <clement.legoffic@foss.st.com>
+Cc: Pierre-Yves MORDRET <pierre-yves.mordret@foss.st.com>, 
+	Alain Volmat <alain.volmat@foss.st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, 
+	Wolfram Sang <wsa@kernel.org>, Pierre-Yves MORDRET <pierre-yves.mordret@st.com>, 
+	linux-i2c@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+Subject: Re: [PATCH v3 3/3] i2c: stm32f7: support i2c_*_dma_safe_msg_buf APIs
+Message-ID: <4lqsyuabfwnclt2pbxmgqz5zpd6zm5y6q5djiwopuq5eelz7ui@fgep3x24ur3e>
+References: <20250630-i2c-upstream-v3-0-7a23ab26683a@foss.st.com>
+ <20250630-i2c-upstream-v3-3-7a23ab26683a@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <20250702121502.6e9d6102@batman.local.home>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250630-i2c-upstream-v3-3-7a23ab26683a@foss.st.com>
 
-On Wed, Jul 02, 2025 at 12:15:02PM -0400, Steven Rostedt wrote:
-> On Wed, 02 Jul 2025 12:44:51 +0100
-> Sam James <sam@gentoo.org> wrote:
-> 
-> > In one of the commit messages in the perf series, Steven also gave
-> > `perf record -g -vv true` which was convenient for making sure it's
-> > correctly discovered deferred unwinding support.
-> 
-> Although I posted the patch, the command "perf record -g -vv true" was
-> Namhyung's idea. Just wanted to give credit where credit was due.
+Hi Clement,
 
-Yep, it's to check if perf tool ask the deferred callchain to the
-kernel.  To check if the kernel returns the callchain properly is:
+On Mon, Jun 30, 2025 at 02:55:15PM +0200, Clément Le Goffic wrote:
+> Use the i2c-core-base APIs to allocate a DMA safe buffer when needed.
 
-  $ perf report -D | grep -A5 CALLCHAIN_DEFERRED
+same here, I don't understand anything... you could have written
+"do some coding" and it would have been the same :-)
 
 Thanks,
-Namhyung
-
+Andi
