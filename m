@@ -1,136 +1,122 @@
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CBC21531C1
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 07:43:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 326E82309B0;
+	Wed,  2 Jul 2025 07:45:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751442235; cv=none; b=DTOfA73g8kPNq+mmdMT05KSeGlaQW0yoGSDXLYf/19OUFxb556fxLTRVxRuDpoXofPyAx6IgW908c+lsGHY9NtA50qbQXuUPdI7KA9fwz0lq5cjQ9yU7paEWA/JysEiIxH2fGhFSa2kSmFXJSFhvCZ9CdUZd2QfntSjhqtcVhuc=
+	t=1751442304; cv=none; b=eh17+VCvCcMLdzfUGaL5DeRO60ApMq8vQEqjE/jmTh3fVTR2OyBfrB8OjZBr53KclkMn9bkFaK74HdojYnlSDwGNz7Esqsrq3XwgR6W42XOCNUQFWdeUpysWX/xzfzWfddEpiFaYmQF6MG+cjI3i/6KJo3keIx6td1FSylS29cY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751442235; c=relaxed/simple;
-	bh=4bOfOA6U54hFIfw4gEsPE0Fd+J9SoOGc6V4U9sjzK4o=;
+	s=arc-20240116; t=1751442304; c=relaxed/simple;
+	bh=pre4vDjtyp7Wl/CybJAIGJMG+1MDhzdhQIns4h3G9bs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NI1cZT/Hvhd/6kep5a0KOC/hFt2rgnQGwLpq1OImP/KB7s9R8pWr1D4V7w7lxYxqtdcEQdrvCMlsU6L9Lt6BuN/gJgtA1YxoGJalV2blwNY+rmpAm3FeEy4BpuX3d9NNeDZfgcgfV1iPDQMPcE76v+hm+gGPj2lh6W3lSEgchhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jYo9qMu3; arc=none smtp.client-ip=209.85.128.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=EjThfuQjgs0/ot7rGdxDWlXtg4Di1uVOEbOs5DZbfHrDRgUw4hKCgN/GNyYEYzGk9ZNyEzGwW23qHhvFoBee0ARdZUO6TbQBJIg0vANKxFIXHjZ9sixRIWMOt0bzlss8eBdrq38ZBbjo7NJj5I/+0pYDBqzB7nyVr99/A6wDzLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U+Vp1UEq; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jYo9qMu3"
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-714066c7bbbso73185387b3.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 00:43:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U+Vp1UEq"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2355360ea88so8713555ad.2;
+        Wed, 02 Jul 2025 00:45:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751442233; x=1752047033; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=4bOfOA6U54hFIfw4gEsPE0Fd+J9SoOGc6V4U9sjzK4o=;
-        b=jYo9qMu3oSD8dmfa+Vs4iYltAi357RrquaD+U6G7reWEi/2NuL8wPJgTvuE+yR+YEA
-         eSduAYiSU9FV5/9WyWhIsUZUDD0aAGztVRIAWg5oS3I+RAr4vDeGPRdmo2rhtqq228VV
-         qNHhRVpqli5oOgEo/mlVFTdLK9kT2Yl8EKXDTpZwTwkN5r5oZ2tXGOo+SkZhDvoPIe0C
-         kFvfEVE+yoeFz8JegMILqsuIvw6Tn7goLb35So7u+rMImwQ+HUALZmT2IpZrWfp92hmE
-         lRr7saHnK25meWaGTcdWlKQOKHOBaLOTvz/uJIZhoBNZctxtI+7efoJUHO4hEId5BbfM
-         2YJA==
+        d=gmail.com; s=20230601; t=1751442302; x=1752047102; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rf4aXWUpjl6NdJSpomTP+fBehBlw99KYZBik9rzoGeo=;
+        b=U+Vp1UEq9Ppv8rtOsqazdQuSaoULscIfBkeE64KsyyAOJUD/9jNCv4lYgPLuuqvXQO
+         C+n8wW2AQQaT+aoNyANpzrmlU50J0HS/eKa5iHx/O4g1DVkC9bCwAg5JLuWR1Bv4mFh1
+         QlvMmc9+/jCWj1yJ40cVgmE5qF4J9xAgifNBJgtUr83eie03xzPszoVmlK2dQLAb1u0r
+         oLuZKKg6lpgWrYkhKlq7IoAZKleVoicfRGWTsTbq4qgqZnoC9KI88pogrA0SsiNcyV+z
+         bFyV4a3HhGHN0dOXn+wVKkXTBQeXdaFIZ4G0APkWE9jhN2yZdXQJvyP901hzxhzAK5wa
+         FvCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751442233; x=1752047033;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4bOfOA6U54hFIfw4gEsPE0Fd+J9SoOGc6V4U9sjzK4o=;
-        b=MitYS3imA3jRPFWdsSSSdeELitLxzH3RGk/L0o7RWs5cgm8MYgtZdJuBWpeEHd3a6Z
-         fvYTQW1a3s3T7TTXSKjZBhJyV+k++DextVvnKtruoUcA4rlamDmzrEzBW6hsczstT8J2
-         VlqwTP5qi9yjOh4yC7AC6EdX2il3ehWM/qyg3WZ/wO0MsJnOlvCGyejiTT2jXGS8e9yp
-         v4dMGSadCoXxV8POXXeXoAMlHf+xwe4YcM0Xi9x59vEJ3HsLccO7qXiajFJaFaQ4519l
-         KVUZXr+pSRfY6MiEQ+ipLk5ghay5eChlPHC86umO3tKET4FceP3X+199TJHqJrC1hfGC
-         a2Gw==
-X-Forwarded-Encrypted: i=1; AJvYcCWDReyPvytgI0XXiEwdAUHVfkudaYQdFXhe5gb7zxhUlbnWXRPfqsDxE3DBK/UcJm5NuSjs6ciH7xZemeg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwH0rZ0bg1tk8Qp+GSP349AxotVkwL5TvX2Q3Ov3swK9tg0VX27
-	1GgMtVWIXsPcFFsDFpglUQprT4NGDe6Eq5q910BLMMrjseJ0y6yDBTN/4Tju7Yce5ilkZtAeZmT
-	G56HNhDwcqaQw7Okhq+7Pda3IPsdzX9i8iIu1lz/V
-X-Gm-Gg: ASbGncttvYhl+CyBeeDOLd5L44rr5CGqk+vn0MxtOMJ7JWQ5c29z0jXd5f/dWc50p1I
-	ZgwuseCkxXGDp97jnadAbctLzFSRjpLhPrGn2KlwysVAoFK8PnjPhsH/l+SItNtO054jpxSxCd2
-	UWu5yAq6RQpQNoZCcP2z4Yegf6uRbiyTEP5EigBzk18nHG
-X-Google-Smtp-Source: AGHT+IHJ5KSoH5fJcH5bRD8u0uju23Ajgzfe2GuZ+dlV9bVuz6oF/DawUNtQuOoM8rfBTiKumHPVsJaPfZVKygoRYhU=
-X-Received: by 2002:a05:690c:4:b0:70f:6ebb:b29a with SMTP id
- 00721157ae682-7164d5c9ad7mr21914977b3.29.1751442232013; Wed, 02 Jul 2025
- 00:43:52 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751442302; x=1752047102;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rf4aXWUpjl6NdJSpomTP+fBehBlw99KYZBik9rzoGeo=;
+        b=S60veEXbmoYHZut2Kh+EKBFNZjbbtKQ85yymDp3D/ttpKLwLE3Rd5WDIHVBVpgTNGJ
+         BMyx1PAXOSqCIFAnIL7bRoKTQ8gnRZ3p3lEWNC3cARpnLQ2WD2t37YkXCtBVuttzvOQh
+         FKTTQh6WPxoCvzcM0WrM5nlpFbO3O/wEdoFN3gnWc5UmgGE51LIm/+9lXPltDLm5vY0v
+         4P+O7L6lCg7ZqGqbQQo4pN0F6JK4Sc2HhO38Pnqxr3YDhgcwUQUPSdA4ChaMdvM5t8rk
+         gNmpMSx8/+QJf8VrW8AVV/77Kq4/IHhNtXHdNdzWmdgzv+8+DfKp65QhgDSlcidfykTe
+         KAnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU/oyUscyrUBElI7Cf3bPioUwVeH7enEPKnPSUsAZ+iCnK/E7tONODwgSiUY8I7EsdcvXM07bP0+VkoHn8=@vger.kernel.org, AJvYcCXjIDiSPXRkgZirQ+DMl+ZdFF9sTfF4GQLAM+TwO3HbLW+Dtdr6BTYAHivZh1k0ddmd+QmZSJOS5rQy99Vsw3A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEJtcvMFrW00ISHvqxYeKS7x6nFVlvri1VtlNHRh8IXAWvgPwt
+	X2XsQELHVBD2l6CvZdHSx2UTw5/W0yX5jOen2du0n0219a1ZRHGQb+7IybfqF1kUCGC7QOcoZYK
+	fD/u3ABZdUoHWwRSgJPzcAU4l3xOTkzmI8bwYayGTZQ==
+X-Gm-Gg: ASbGncu22o8fI7A+2y3UdgLcSfCV9+ysaFrMKwTiV+E1J9GkAOkWTScQzUESfTnlViL
+	DA2Yqz+OY6umvj23M1C/SHja/k+1GQf2eTJRmvoraDhVCc/H65YkOLgfHkLW85I6aP2phBHCZjx
+	yPHB+iJlc9adhKoSdiprYnRsev0o3rh+fFlA7cKbf+kro=
+X-Google-Smtp-Source: AGHT+IENrXAwSSqPcBNdxcOkrjNtYy0CFllmWa+91OhtdmHsoRwKRsK7YXdSbGdM7D+vibb+wQySOuakjG1+iHnUmnY=
+X-Received: by 2002:a17:902:c40f:b0:236:71f1:d347 with SMTP id
+ d9443c01a7336-23c6e4f3d7emr9722695ad.10.1751442302440; Wed, 02 Jul 2025
+ 00:45:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624110028.409318-1-dawidn@google.com> <aF5N5jrRUlj3SUGS@google.com>
- <CAJ_BA_CppC58kc-Uv49PSmWFcCih-ySuGDuRcO5-AWQQqcqWVQ@mail.gmail.com>
- <aGOiu-sXFj1EUQAB@google.com> <CAJ_BA_CZWvC2=i8riNe5LReLKzPXK1vPwymiG2dzLEntda7TRg@mail.gmail.com>
- <aGSuS81Psqm_Ie4N@google.com>
-In-Reply-To: <aGSuS81Psqm_Ie4N@google.com>
-From: =?UTF-8?Q?Dawid_Nied=C5=BAwiecki?= <dawidn@google.com>
-Date: Wed, 2 Jul 2025 09:43:40 +0200
-X-Gm-Features: Ac12FXyjHURaGeGORQBNZGxM0SsXHPq_jf4zJZWaq-J26bz0217ia66mA1Lhlmk
-Message-ID: <CAJ_BA_BQOQe61r9t9rL=UiOqpHwOoTSbQcZNe=CrCcjMha_YQg@mail.gmail.com>
-Subject: Re: [PATCH] platform/chrome: Add ChromeOS EC USB driver
-To: Tzung-Bi Shih <tzungbi@kernel.org>
-Cc: Benson Leung <bleung@chromium.org>, chrome-platform@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, chromeos-krk-upstreaming@google.com, 
-	=?UTF-8?Q?=C5=81ukasz_Bartosik?= <ukaszb@chromium.org>
+References: <20250701-topics-tyr-platform_iomem-v11-0-6cd5d5061151@collabora.com>
+ <20250701-topics-tyr-platform_iomem-v11-1-6cd5d5061151@collabora.com>
+In-Reply-To: <20250701-topics-tyr-platform_iomem-v11-1-6cd5d5061151@collabora.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 2 Jul 2025 09:44:49 +0200
+X-Gm-Features: Ac12FXxP4qnWpWLcaGljrca2qE1GskXhDNLdfN0123yWpoj-KbgX2CNUmx_w8o0
+Message-ID: <CANiq72khZQMQcyp7uVjMz--U1dbbnx7K3pU1Eu=ZN6SXi98TZw@mail.gmail.com>
+Subject: Re: [PATCH v11 1/4] rust: io: add resource abstraction
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	Ying Huang <huang.ying.caritas@gmail.com>, Benno Lossin <lossin@kernel.org>, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	Fiona Behrens <me@kloenk.dev>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> They doesn't look like shortcomings to me. The corresponding destructor
-> callbacks have to be called when a device is removed anyway.
+Hi Daniel,
+
+A couple nits Danilo can take care of them on apply.
+
+On Tue, Jul 1, 2025 at 4:35=E2=80=AFPM Daniel Almeida
+<daniel.almeida@collabora.com> wrote:
 >
+> +//! Abstractions for system resources.
 
-Yes, anything related to USB communication itself has to be freed, but
-freeing the cros_ec_device structure and calling the cros_ec_unregister
-function can crash the system if any of a userland application has the
-original file cros_ec open and tries to send a command. The chardev driver
-is not aware that the device has been removed and will try to access the
-removed structures.
+Potential link:
 
-> Instead, re-using the same inode for the userland interface however
-> *silently* swapping the underlying devices makes less sense to me.
->
+    https://docs.kernel.org/core-api/kernel-api.html#resources-management
 
-We are sure it is the same EC device, so why do you think accessing the
-same inode makes less sense? It is a case for specific interface, that reboot
-causes reprobing, which is not a case for other interfaces. I believe
-it should be
-transparent for the cros_ec device user, what interface type is used
-e.g. if it is
-SPI, you can reboot the EC device and wait until it responds to a next command,
-but if it is USB, you would need to reopen the cros_ec file after reboot.
+I think there are a couple kernel-doc includes missing in the `.rst`
+for this, so it is not great.
 
-> My point here is: to let userland programs be aware of the underlying
-> device has been removed.
->
+> +/// This is a type alias to `u64` depending on the config option
 
-I got your point, but they are informed with a proper return code. The
-host command
-communication doesn't have context. Every command is independent, so userland
-programs can not assume any state of the EC device e.g. reboot can
-happen. I think
-behaviour of the cros_ec file is not a good way to inform the userland
-programs that
-there were reboot, sysjump etc. There are special commands/events for that.
+"to `u32` or `u64`"? (also below)
 
-> What are the reasons for disconnect and reprobe? From your previous message
-> and code comment, are they "reboot, sysjump, crash"? Would it happen
-> frequently after AP boot?
->
+> +    /// The caller must ensure that for the duration of 'a, the pointer =
+will
 
-Yes, every boot "from the beginning" , including sysjumps. It depends
-on a EC device
-type, but it can happen e.g. after AP reboot (RWSIG jumps to RW, it
-depends on boot time),
-during firmware update procedure, rollback region update etc.
+`'a` (same below).
 
-> Note: we are talking about a EC-like device here. For a real EC either reboot
-> or crash, the AP will be reset.
+> +        // SAFETY: Safe as per the invariant of `Resource`
 
-That's true. The problem doesn't exist for the real EC device.
+"Safe", periods at the end. (few instances)
 
-> No, I don't think so. I think all EC-like devices share the same concern
-> regardless of the transport medium (e.g. SCP over RPMSG, ISH over ISHTP).
+The last patch on the series has nice examples, thanks! It could be
+nice to have some here too (e.g. on how `Flags` and its operators) and
+nowadays also KUnit tests, but that can be a good first issue for
+later.
 
-Yes, you can run a userland program that opens a cros_ec file and constantly
-sends commands e.g. ectool stress, and then manually unbind the ec
-device, but I believe it can cause some crashes/memory leakage. I don't think
-all drivers are adjusted to hot-plugging.
+Cheers,
+Miguel
