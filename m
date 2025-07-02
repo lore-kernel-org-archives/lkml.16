@@ -1,92 +1,116 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01806101DE;
-	Wed,  2 Jul 2025 16:23:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54C0E101DE;
+	Wed,  2 Jul 2025 16:24:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751473404; cv=none; b=THwd+z+TNi4dICT/q5+yjqrGHm6oQdM93bNHe7dGPIa8zlhUxTUtwb0NFwFyMt6nEOqs4S7HNPA+7CYoCf+WDcAsSlRmcBOhW/xV5BwrfeBNGY6nbOHs/3i1CtjgOzXS7ehUwLmIwTYYz1zPaIcTzM3PJKg7new5BmJdwH5vnFQ=
+	t=1751473470; cv=none; b=bBQkahvj9wTvRhDesIZCX5hI9t0t4dzdqsAwLmhEkY964daOtyeoNJM8lsHkwcG2M2/ii23Rko+yRz6VPCd4iQpKqFGfCF1adVQxVwkN8MrP9iS865H9xv3YyWx/1JcXNJFzgWAzMhE4PtWfXWlXFbxGKpcuO1eyGsr/2eu+uP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751473404; c=relaxed/simple;
-	bh=fYVUHcGXuXgCgpqOkZIAJT1XR4RaxdGG0zliMP2efjM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q3pCXGpt5GdjcJQmnAN1/meEotBhGQQfE2amRK80b868j9Liy3fTbF5kMx4TLSUasAnqs+7uPO3CV4YqjPBBtX2OeFUDCyYExSjgJ2gJxXfRHaEH8D9m7EZvTND2sT5wqMQv3vEMsg+JfMN/OD11eSaKhOCEFEZIb+MJgs2pg78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RsGEZ2Ce; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751473470; c=relaxed/simple;
+	bh=M6iEZcjkRbFz5jFtS+j4R+UxNJcxCweP+Ki5IzSq3mA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Bg328A1iJz+Ju4OKQPOXm0aw8UXK04BjUjuSlw1knWoLYLi2HXdsNjXbsPSWXuGBb6NxFnpoSRpM53wJXfOeRxKHxqg4HvLOkQqxNIk1fx8+FgrSCC6HS2J3c0peIYM/1DrPbnTb6jCDIzK2bEZjJyfpue7C2oBYRKqxFZ8w+Js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b1+Ck7Ii; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RsGEZ2Ce"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3ED8C4CEE7;
-	Wed,  2 Jul 2025 16:23:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b1+Ck7Ii"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7934C4CEEF;
+	Wed,  2 Jul 2025 16:24:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751473403;
-	bh=fYVUHcGXuXgCgpqOkZIAJT1XR4RaxdGG0zliMP2efjM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RsGEZ2Ceh+RsllyA1Uv4oQdkpwdt0S2EPdURLWB1uNlzdx9d0dusMscw3dW/aknlj
-	 COs92Rquf2x6maGv0YQEBRqzcFQG2Bky2wEMh0uAXrUS3Cu9w5Nmc785pYCRmNBHhN
-	 GpiMnUClAKWDGj6kJ6zQCGtivXPzfUf3BPjjGOH2aRcbcCsiC6Y2xb6kp837g9EVw4
-	 qGtE+dKJ4dKBqxLJJJD+OjtA6VDYkNRrOruXD5+pS6jEFYX4E4VMM8HSe49EXFvpuI
-	 CZv48pZGEOSsGc2YejCZgBlzjIpbGt06TuWzsIi4z8sbsjcZcuTbdS7iBZ9qV95f4h
-	 XTfGYDIstc/kw==
-Date: Wed, 2 Jul 2025 17:23:18 +0100
-From: Lee Jones <lee@kernel.org>
-To: kernel test robot <lkp@intel.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
-	Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Corey Minyard <minyard@acm.org>, oe-kbuild-all@lists.linux.dev,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net, jeffbai@aosc.io,
-	kexybiscuit@aosc.io, wangyao@lemote.com,
-	Chong Qiao <qiaochong@loongson.cn>
-Subject: Re: [PATCH v6 2/3] mfd: ls2kbmc: Add Loongson-2K BMC reset function
- support
-Message-ID: <20250702162318.GZ10134@google.com>
-References: <78b06d1c7ae0677868e0c7498b589af163313c8d.1750939357.git.zhoubinbin@loongson.cn>
- <202507021011.sDAHGinj-lkp@intel.com>
+	s=k20201202; t=1751473469;
+	bh=M6iEZcjkRbFz5jFtS+j4R+UxNJcxCweP+Ki5IzSq3mA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=b1+Ck7IiroyoCY2aTSWcgrd+53FNVecNW0MuH/4pFWFLjUOJT2hRavODGgpzDB3w6
+	 zs+iZ8+bpc6U2fXIrD3ZxokZMajWq2L1GGYry5CLzSyM9EIPRFOc2368Cnmls/CZAf
+	 M5oGXVtIDDZN7CX/VicYKxF27z8COAgD1RMUIGhqHAaYb4Xmw/UeK6phsz7dugvJqP
+	 8WrJGulfx+x9EcZXkD4ki+VyUeu4sREEgTF2EHw//vgDmoLkzs6f7eiPO/9P8rWUSy
+	 LNw8MWbE8oS2mN0rr7k3xotn4aj4U6TTacFwxYlLLXNES8oKwdqn0FkEHbOtZ5Likm
+	 hZgsrZjdWo4Og==
+Message-ID: <3d68babb-3dc7-40cb-aaad-ed31eef1d62a@kernel.org>
+Date: Wed, 2 Jul 2025 18:24:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <202507021011.sDAHGinj-lkp@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] dt-bindings: clock: qcom,videocc: Add sc8180x
+ compatible
+To: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>
+Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
+ Imran Shaik <quic_imrashai@quicinc.com>, Taniya Das <quic_tdas@quicinc.com>,
+ Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-clk@vger.kernel.org
+References: <20250702-sc8180x-videocc-dt-v3-0-916d443d8a38@quicinc.com>
+ <20250702-sc8180x-videocc-dt-v3-1-916d443d8a38@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
+ QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
+ +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
+ ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
+ 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
+ hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
+ tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
+ 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
+ naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
+ hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
+ whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
+ qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
+ RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
+ Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
+ H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
+ dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
+ AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
+ jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
+ zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
+ XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
+In-Reply-To: <20250702-sc8180x-videocc-dt-v3-1-916d443d8a38@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, 02 Jul 2025, kernel test robot wrote:
+On 02/07/2025 17:13, Satya Priya Kakitapalli wrote:
+>  
+>    clocks:
+>      minItems: 1
+> @@ -111,6 +115,7 @@ allOf:
+>        properties:
+>          compatible:
+>            enum:
+> +            - qcom,sc8180x-videocc
 
-> Hi Binbin,
-> 
-> kernel test robot noticed the following build errors:
-> 
-> [auto build test ERROR on 3d77b3cc7cc8115d89fa14eaf601e56372953484]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Binbin-Zhou/mfd-ls2kbmc-Introduce-Loongson-2K-BMC-core-driver/20250626-203353
-> base:   3d77b3cc7cc8115d89fa14eaf601e56372953484
-> patch link:    https://lore.kernel.org/r/78b06d1c7ae0677868e0c7498b589af163313c8d.1750939357.git.zhoubinbin%40loongson.cn
-> patch subject: [PATCH v6 2/3] mfd: ls2kbmc: Add Loongson-2K BMC reset function support
-> config: sparc64-allmodconfig (https://download.01.org/0day-ci/archive/20250702/202507021011.sDAHGinj-lkp@intel.com/config)
-> compiler: sparc64-linux-gcc (GCC) 15.1.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250702/202507021011.sDAHGinj-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202507021011.sDAHGinj-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
->    drivers/mfd/ls2k-bmc-core.c: In function 'ls2k_bmc_pdata_initial':
-> >> drivers/mfd/ls2k-bmc-core.c:349:15: error: implicit declaration of function 'acpi_register_gsi' [-Wimplicit-function-declaration]
->      349 |         irq = acpi_register_gsi(NULL, gsi, ACPI_EDGE_SENSITIVE, ACPI_ACTIVE_LOW);
->          |               ^~~~~~~~~~~~~~~~~
-> >> drivers/mfd/ls2k-bmc-core.c:376:9: error: implicit declaration of function 'acpi_unregister_gsi'; did you mean 'arch_unregister_cpu'? [-Wimplicit-function-declaration]
->      376 |         acpi_unregister_gsi(gsi);
->          |         ^~~~~~~~~~~~~~~~~~~
->          |         arch_unregister_cpu
+This is not correct, does not match the compatibles - test yourself. You
+want here contains.
 
-Is this error valid?
-
--- 
-Lee Jones [李琼斯]
+Best regards,
+Krzysztof
