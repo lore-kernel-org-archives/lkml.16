@@ -1,177 +1,121 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9CB1E5711;
-	Wed,  2 Jul 2025 21:07:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27B9B223DFB
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 21:08:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751490434; cv=none; b=KxLf5RFVEC29pCp2TLWV4PJS2mrLljPXavcK4EwNKEnbSC2MTF2m685unzCw9XQ7oK5m3m64epU/zOdnye/uVzcurYFhsjR7hO0w7GmqWo916EFDJyaayWnY+5nLFgDk0vnDA58whWQfbYAVzAyQT3TIC6sG+bLf8f0HdvUNwBY=
+	t=1751490498; cv=none; b=gdNG677xgMXXqxzLBg5nq6fJmbMIR/Nwa3C3cmLxHZ9j1yEe6/8hWp3//oyekyY4gUIPZzAHqndAiYOR2FZxy42Xv0M1OBgBFLFo3GXrFacWBpe70EqTVhbVRTBIDk0Y6L4VVl2n6Bxm2NgoKtovT0WwcIwYSS76fQwHEM961B8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751490434; c=relaxed/simple;
-	bh=TyhQ0oEweF8WrmC/HiunY3p0d3snoCt53CLFHfUzCwI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=imNYOomfSfEoehoXefXQeIN/EuV5E8LmOCNMHWIFUol60VvqbtvU+OwNRCymdD3xXTooIga8M416hk7Fk49vVVgVtF6RqGlxbpJFd8emH4G7wjvQu5+b8D+jNEye/IGDsl8fAa9HZ1aqv68j1CohHBaeKwiXUIe8Ue/rFiDVff4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O84DrKlU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751490498; c=relaxed/simple;
+	bh=b83RacbNG03KPTeK8UeYwhO/GSWglUyqpPb3h6i1Zyc=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=sE1ns0kBh7GCcufBJrKg7mTjgNmLlkyGtQxBRaZI1aJuX653MAvoLijBNkocU4CHELg3V5nBQQL6kTxJryL0yoqQ8mT+FjDu6bkhY7BW0M2wvZcbANEXmhN9ZEXfdZt9U+5uRA3TCtGaUWyZGKRl9ijlMzbwsvRdfz3WNWppd/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=n8FOj81N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O84DrKlU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 464E5C4CEE7;
-	Wed,  2 Jul 2025 21:07:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751490433;
-	bh=TyhQ0oEweF8WrmC/HiunY3p0d3snoCt53CLFHfUzCwI=;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="n8FOj81N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 358A8C4CEE7;
+	Wed,  2 Jul 2025 21:08:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1751490497;
+	bh=b83RacbNG03KPTeK8UeYwhO/GSWglUyqpPb3h6i1Zyc=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=O84DrKlUVzlLq9YCWdCTO+8N4ei50n3uc/ttvxLy23A7DzpLYhs9eusQeaAMVc1Wh
-	 KJxkFHK0BIOg67XbTd5Ba/+R4DvyEkir9lddxzSfDsJdBwKLRoSebDEilCWPN3mp75
-	 qNdkFJqoyl7ePHMEe1/Fn6Enb7uK/NJ2yT6T4Xp6O8XgF4c/YlA9cF+PHHhUB6MGr9
-	 yR5VrZTLRLMYKRhlTUYSSkhaU6tKBjnJVkMK/Q80f2imLbnhpk8eYqirLbNK1mqZGo
-	 /RaeIGqHCIGE0KhRAFMzKWMtIhYIzThsQHQvxnHQzuYTgH5adOU0K+9aKqRLC487od
-	 PRrk8DkjCPcVA==
-Date: Wed, 2 Jul 2025 14:07:12 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- dw@davidwei.uk, kernel-team@meta.com
-Subject: Re: [PATCH net-next] netdevsim: implement peer queue flow control
-Message-ID: <20250702140712.55570adf@kernel.org>
-In-Reply-To: <20250701-netdev_flow_control-v1-1-240329fc91b1@debian.org>
-References: <20250701-netdev_flow_control-v1-1-240329fc91b1@debian.org>
+	b=n8FOj81NZYWRxHdNP2Kw7fX7VJysPCr74TKUarD0+nah9IvTTAg340+b+XJgP7Rtf
+	 RdpMvs62w1/XtvYdEC86zQxafT16z184EsYY3S8Mg83F5wkrHtiYyxYBCBI8vvTfda
+	 Z3szn5ysFgDQKst4Af6MeilAnnblFzmSCQEiZiiM=
+Date: Wed, 2 Jul 2025 14:08:16 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Chen Yu <yu.c.chen@intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel
+ Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, Tim
+ Chen <tim.c.chen@intel.com>, linux-kernel@vger.kernel.org, Jirka Hladky
+ <jhladky@redhat.com>, Srikanth Aithal <Srikanth.Aithal@amd.com>, Suneeth D
+ <Suneeth.D@amd.com>, Libo Chen <libo.chen@oracle.com>
+Subject: Re: [PATCH] sched/numa: Fix NULL pointer access to mm_struct durng
+ task swap
+Message-Id: <20250702140816.cea1c371bdcc92ec55a59434@linux-foundation.org>
+In-Reply-To: <20250702163247.324439-1-yu.c.chen@intel.com>
+References: <20250702163247.324439-1-yu.c.chen@intel.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 01 Jul 2025 11:10:56 -0700 Breno Leitao wrote:
-> +static void nsim_wake_queue(struct net_device *net, struct netdev_queue *txq, void *unused)
-> +{
-> +	if (!(netif_tx_queue_stopped(txq)))
-> +		return;
-> +	netif_tx_wake_queue(txq);
-> +}
-> +
-> +static void nsim_wake_all_queues(struct net_device *dev, struct net_device *peer_dev)
-> +{
-> +	netdev_for_each_tx_queue(peer_dev, nsim_wake_queue, NULL);
-> +	netdev_for_each_tx_queue(dev, nsim_wake_queue, NULL);
+On Thu,  3 Jul 2025 00:32:47 +0800 Chen Yu <yu.c.chen@intel.com> wrote:
 
-I think you can use netif_tx_wake_all_queues() directly in the caller
-
-> +}
-> +
->  static ssize_t unlink_device_store(const struct bus_type *bus, const char *buf, size_t count)
->  {
->  	struct netdevsim *nsim, *peer;
-> @@ -367,6 +380,9 @@ static ssize_t unlink_device_store(const struct bus_type *bus, const char *buf,
->  	RCU_INIT_POINTER(nsim->peer, NULL);
->  	RCU_INIT_POINTER(peer->peer, NULL);
->  
-> +	synchronize_net();
-> +	nsim_wake_all_queues(dev, peer->netdev);
-> +
->  out_put_netns:
->  	put_net(ns);
->  	rtnl_unlock();
-
-
-> -static int nsim_napi_rx(struct nsim_rq *rq, struct sk_buff *skb)
-> +static void nsim_start_peer_tx_queue(struct net_device *dev, struct nsim_rq *rq)
-> +{
-> +	struct netdevsim *ns = netdev_priv(dev);
-> +	struct net_device *peer_dev;
-> +	struct netdevsim *peer_ns;
-> +	struct netdev_queue *txq;
-> +	u16 idx;
-> +
-> +	idx = rq->napi.index;
-> +	peer_ns = rcu_dereference(ns->peer);
-> +	if (!peer_ns)
-> +		return;
-> +
-> +	/* TX device */
-> +	peer_dev = peer_ns->netdev;
-> +
-> +	if (dev->real_num_tx_queues != peer_dev->num_rx_queues)
-> +		return;
-> +
-> +	txq = netdev_get_tx_queue(peer_dev, idx);
-> +	if (!(netif_tx_queue_stopped(txq)))
-> +		return;
-> +
-> +	netif_tx_wake_queue(txq);
-> +}
-> +
-> +static void nsim_stop_peer_tx_queue(struct net_device *dev, struct nsim_rq *rq,
-> +				    u16 idx)
-> +{
-> +	struct netdevsim *ns = netdev_priv(dev);
-> +	struct net_device *peer_dev;
-> +	struct netdevsim *peer_ns;
-> +
-> +	peer_ns = rcu_dereference(ns->peer);
-> +	if (!peer_ns)
-> +		return;
-> +
-> +	/* TX device */
-> +	peer_dev = peer_ns->netdev;
-
-For the wake we need to find the peer, that's true. But stop happens in
-the Tx path IOW we're coming from nsim_start_xmit() which had the
-right Tx device already, right? The peer we'll get here was the original
-dev that was padded to nsim_start_xmit(), we just need to pass it into
-nsim_napi_rx().
-
-> +	/* If different queues size, do not stop, since it is not
-> +	 * easy to find which TX queue is mapped here
-> +	 */
-> +	if (dev->real_num_tx_queues != peer_dev->num_rx_queues)
-> +		return;
-> +
-> +	netif_subqueue_try_stop(peer_dev, idx,
-> +				NSIM_RING_SIZE - skb_queue_len(&rq->skb_queue),
-> +				NSIM_RING_SIZE / 2);
-> +}
-> +
-> +static int nsim_napi_rx(struct net_device *dev, struct nsim_rq *rq,
-> +			struct sk_buff *skb)
->  {
->  	if (skb_queue_len(&rq->skb_queue) > NSIM_RING_SIZE) {
-> +		rcu_read_lock();
-> +		nsim_stop_peer_tx_queue(dev, rq, skb_get_queue_mapping(skb));
-> +		rcu_read_unlock();
->  		dev_kfree_skb_any(skb);
->  		return NET_RX_DROP;
->  	}
-> @@ -51,7 +106,7 @@ static int nsim_napi_rx(struct nsim_rq *rq, struct sk_buff *skb)
->  static int nsim_forward_skb(struct net_device *dev, struct sk_buff *skb,
->  			    struct nsim_rq *rq)
->  {
-> -	return __dev_forward_skb(dev, skb) ?: nsim_napi_rx(rq, skb);
-> +	return __dev_forward_skb(dev, skb) ?: nsim_napi_rx(dev, rq, skb);
->  }
->  
->  static netdev_tx_t nsim_start_xmit(struct sk_buff *skb, struct net_device *dev)
-> @@ -351,6 +406,9 @@ static int nsim_rcv(struct nsim_rq *rq, int budget)
->  			dev_dstats_rx_dropped(dev);
->  	}
->  
-> +	rcu_read_lock();
-> +	nsim_start_peer_tx_queue(dev, rq);
-> +	rcu_read_unlock();
->  	return i;
->  }
->  
+> It was reported that after Commit ad6b26b6a0a7
+> ("sched/numa: add statistics of numa balance task"),
+> a NULL pointer exception[1] occurs when accessing
+> p->mm. The following race condition was found to
+> trigger this bug: After a swap task candidate is
+> chosen during NUMA balancing, its mm_struct is
+> released due to task exit. Later, when the task
+> swapping is performed, p->mm is NULL, which causes
+> the problem:
 > 
-> ---
-> base-commit: f6e98f17ad6829c48573952ede3f52ed00c1377f
-> change-id: 20250630-netdev_flow_control-2b2d37965377
+> CPU0                                   CPU1
+> :
+> ...
+> task_numa_migrate
+>    task_numa_find_cpu
+>     task_numa_compare
+>       # a normal task p is chosen
+>       env->best_task = p
 > 
-> Best regards,
-> --  
-> Breno Leitao <leitao@debian.org>
+>                                         # p exit:
+>                                         exit_signals(p);
+>                                            p->flags |= PF_EXITING
+>                                         exit_mm
+>                                            p->mm = NULL;
 > 
+>     migrate_swap_stop
+>       __migrate_swap_task((arg->src_task, arg->dst_cpu)
+>        count_memcg_event_mm(p->mm, NUMA_TASK_SWAP)# p->mm is NULL
+> 
+> Fix this issue by checking if the task has the PF_EXITING
+> flag set in migrate_swap_stop(). If it does, skip updating
+> the memcg events. Additionally, log a warning if p->mm is
+> NULL to facilitate future debugging.
+>
+> ...
+>
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -3364,7 +3364,14 @@ static void __migrate_swap_task(struct task_struct *p, int cpu)
+>  {
+>  	__schedstat_inc(p->stats.numa_task_swapped);
+>  	count_vm_numa_event(NUMA_TASK_SWAP);
+> -	count_memcg_event_mm(p->mm, NUMA_TASK_SWAP);
+> +	/* exiting task has NULL mm */
+> +	if (!(p->flags & PF_EXITING)) {
+> +		WARN_ONCE(!p->mm, "swap task %d %s %x has no mm\n",
+> +			  p->pid, p->comm, p->flags);
+> +
+> +		if (p->mm)
+> +			count_memcg_event_mm(p->mm, NUMA_TASK_SWAP);
+> +	}
 
+I don't think we should warn on a condition which is known to occur and
+which we successfully handle.  What action can anyone take upon that
+warning?
+
+Which means the change might as well become
+
++	/* comment goes here */
++	if (p->mm)
++		count_memcg_event_mm(p->mm, NUMA_TASK_SWAP);
+
+But is that a real fix?  Can the other thread call exit(), set
+PF_EXITING and null its p->mm right between the above two lines?  After
+the p->mm test and before the count_memcg_event_mm() call?
+
+IOW, there needs to be some locking in place to stabilize p->mm
+throughout the p->mm test and the count_memcg_event_mm() call?
