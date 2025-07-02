@@ -1,49 +1,49 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20ED2288E3;
-	Wed,  2 Jul 2025 06:38:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D78962236F3;
+	Wed,  2 Jul 2025 06:38:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751438334; cv=none; b=JkhoTv3aj/DnFz042FBLEJ8iSIJhPPveNsAmoDpwYeF4WERsEpMxftMp3juVLlnQuNQuiS/5Q2RCjHGgcRxk5djslBc/QRdjq2RUD0FwYu/X/mAq1dB13c8FzhSxaMpsAOb3fjnylDoWVS2CdI7ac1D2xVo4hVM1JWXzBKu3elE=
+	t=1751438340; cv=none; b=fb/Yg1kSsgWNoG63O1AP+IN5NG9OvzvPW7nKK3g351lNpH63fOUJCFVXuiu5yreDZxYI+zglQ52xjzS3vf1njQVEZuhRP7WbwcTEXBz8FSvX38HIXzcjkr6k6Ugrk4FRma/NrrIUYVFNCM2H6Sk9W9An+Fk7uN4oK6oPcx0IH8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751438334; c=relaxed/simple;
-	bh=fXb0I7IfMOyzonYIlW1dn/b+rY/r3WcXXrPbiFSCh1Y=;
+	s=arc-20240116; t=1751438340; c=relaxed/simple;
+	bh=pL0ZMotY71CP45hBo02QTexa6+MqXmOEhp0hVHal67Q=;
 	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=T7ljE3g0XBSgEBTrr9jX70OeEHOTb1P1CEbA3qK5u3vhgRu6T9Z98eATGgLXoNjxpQa4IM7gHEL2UX4IQHlnUJagQRr4igaOx6f5M4RxnMuqAwNA72roZIFWkXFGrj9sygXxWC6mS/6YwaBiWHkRt8lDsIDmpBciIS3kPalUkSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=willwhang.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.182
+	 MIME-Version:Content-Type; b=UmkDrpLCBJlsn8A9fEyykp4oC5pVP4zB/AqedU/5/ftHr63pwDcUVkpsVCdNVXKrSITs8dB86dHbvYXGZ5Bug9LjQXD+qcXv+GVFVtWpD38PQ5Okd1v6ELEmFnE2k/ved7oz1056rj+cOMftobgWNeJRx5D6LzaitrWm8uAOLI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=willwhang.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=willwhang.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b34a71d9208so3117058a12.3;
-        Tue, 01 Jul 2025 23:38:52 -0700 (PDT)
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7426c44e014so6588697b3a.3;
+        Tue, 01 Jul 2025 23:38:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751438332; x=1752043132;
+        d=1e100.net; s=20230601; t=1751438337; x=1752043137;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DOKZQZFJxlzIK2NfeOqsvol6QqRTu35rT3af2i6E6xs=;
-        b=CYf1y2cwSoNlh/lIJQPkMKl9NAY8tXv4iOdJ5TZKBeyi6mKXYvrzJzpo4EmqObaLD8
-         tYsU3l6zk0HD2FoOAKKAjeDGuqMjPotw8alvL5V5Gkx5dMYz2g6DSKLQvnLppfk4QoOa
-         Zbvrga7HoljCWbsfp9oXeuTj2vs1kGbqUuQqlm4TbyDJoElxmDDEC4TVMSS4M63qCjZV
-         tdPRIhaE7F0yMmuDHfs57F7bpX5Cuzp8izlbXVG8ejQkgNhGBqz3aHR1VqOAtzxvKz4O
-         wFbZ1vB98/WWfuU/4bI74yC9OEd/JShmHmdW0TlyDA/l+lVyRItPM653/wHlBaz751ky
-         zVqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUS6SphcUT0TB0m61TVYVFue444IH0Or5hvDNfHCPB9+aU2f64PV8hNcC4Eq1uExROwhN1aNWsqR3k3Hss=@vger.kernel.org, AJvYcCWiS7vwZ5CWtTw1aMf32O9ptO3BrdaBfRSo0QTYuNlWgTpUIwyHUhyAvD21iTFgrV3Yro/A1K9o/EG0j4ld@vger.kernel.org, AJvYcCXtkYjJtdNPoJb9RGoMvQqdr0F6N4hUjF/p9ZMusAUgzvrDWQozSvOem86sB0eChpCbxT0YVcQO1msU@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNc0ME3aPOzlbiyFogt2wsP0V/skbn7GaGfh0u7oP3oHOl0PnG
-	+Ux7hhpvqTBPSfjVDkfKsyEOoBNPcM0ZOy5MntHmc6y53agjJIremy6Nm5NXPbui
-X-Gm-Gg: ASbGncsLxmlqrlU/Ys7gntPODIbfrv27Eda0Lvs9ZzZO9on1R1vM8G0NYl7dxw2vwTg
-	LTnq4EryN5q4ViJgwAATdK855hIxgUFzCzMQBWtf4AmLpyRifJ5qDfQcefHqZEhd0MMhU3uHrIk
-	lGjISH8U7fY6/RpjpV+k5b2DSuG9LZAzYdsmzhYKqf0IARI4OWBDwOxqFySFG9fIAFEZscoj1fe
-	85KYN1aB1GY93XM+qGLAjmHYYRRDMxwj8TAidCAb9KTdyCdVnk0QYz64sT3UsHq3xddtMYR1CCA
-	obLPzRCj3jB4R9bfl5O4BMmb2nRah5du5vUilLmHyIw/dFFOKQ1TJmTasdDEFDfnDeiYAgKakAN
-	fq/0ssXcuCl6cummkEt3WiAN1/f63Zw==
-X-Google-Smtp-Source: AGHT+IFn5mnE5q8jbIcXZzmzV4ptZGfBiTuVRfBgz+SoRRNB4A98QbdY+OIBl5NeE+r+tQnIGfO7wg==
-X-Received: by 2002:a05:6a21:48b:b0:21d:1fbf:c71a with SMTP id adf61e73a8af0-222d7dc5062mr3182489637.4.1751438332076;
-        Tue, 01 Jul 2025 23:38:52 -0700 (PDT)
+        bh=TXwezkP7c8pGscSKlBvamtKez7/0qfT6TtR30gL2C34=;
+        b=TrbcNwrKPqY+lklj25d9czk2tXL4DS9mj6/cRp4ZbGgH3pyMpKGS+yuSs4/QWNjyG3
+         1j5JNLQ3ikY3IwrpydRPGj+2dWM9g61Rnmi2r7ztjL1cnWYLjtfGbIl5NIAt0EUbqnIM
+         2lRuNccXizYXNlNiAtk6WSeGa1+zqQiPMPjqk/1PmgNW4bP0onUR04lN3Upsil83vzu3
+         9A0zYBENO5oFlYKW3560FFFkTixjoHiaXbr/jlD7bHl6WuzJqKUubeF1ldCbnceL6Qpl
+         KF6PXCepNTytx4X7IBEsPsHv8uSscYAcgz1vdj9CerIq13Z7ba8+6jA9lMPxomKK1x/M
+         DI7A==
+X-Forwarded-Encrypted: i=1; AJvYcCXP6znjVQwd9ePWZ0I/0pZPp7uVbT6MjGSSfkP7KEI7VssDWRGFE1TOSx1R84X4QDzphjbUe1g3jQa61T4=@vger.kernel.org, AJvYcCXXshEbibhaKk3lyZSfyvolaLd+zq1aB3uk3ZM9QTdhtQ4lzHfqMraFiJwZZrKMQ2LOAfe6qq/j4VTvUFN5@vger.kernel.org, AJvYcCXatJmz6ndIr8G+QQF8QvfCyjsLp3pYVYe3uHk8uOfP4X85PA4ErzTG4CvcqCyqhnWbAyOmH0QfKdKw@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0HuXnaVph3JnXcV0wtWpvAbnVWSfPUJsqVUx2mC41LGl9HsKA
+	lf9jeOoNXCQhq3YOp4dVFDI8r9Ec21jZ4Zsyfec5k6Uhs0M0+cxQ5S2k
+X-Gm-Gg: ASbGncvgVYBmXbpLux6n4fcgv+I17UovONpKxAuoHeMcSD253avFoDSECAcBFHwZriV
+	rW3psI9uz1JxGWGaXwJAYY8yrfV6BGsVFLHG64wS1MG6MTYRHYWZt4OnY3njHC8/QiQZqn+asQp
+	ObFZV7kMMYnY8H5O0dLnGkGM2Mpvd7Iv0JR0I0W0onjcOkPthuQlalqi4ADtB7kvzA3e5env3Bn
+	P3M9CXxVNPIMg5XpNsAIIu8Py3ho15FFrVohu9Ykki4l4A9sFp1E+EPi6p4eR9CLQHJ+aX9rUjr
+	brBFV5Yvoutom3K9DwUWJEfakDNBYaZCZ1c2X9670LkNm+smIl7LDGtibfsYzSUswc24WM11OQm
+	EHbdeqdgTnPBOnEfcNPcnjQ8IDMazXw==
+X-Google-Smtp-Source: AGHT+IEuZYwGM2AS0Kzh5zxNMXbQXDcl00Lu716BusQDkwurQQA7D5GDryC+Vasxb2gvxpSwIi3/6Q==
+X-Received: by 2002:a05:6a00:1253:b0:736:5e28:cfba with SMTP id d2e1a72fcca58-74b50f54180mr2680527b3a.18.1751438337114;
+        Tue, 01 Jul 2025 23:38:57 -0700 (PDT)
 Received: from localhost.localdomain (c-24-4-34-163.hsd1.ca.comcast.net. [24.4.34.163])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af541bd0fsm13044966b3a.40.2025.07.01.23.38.50
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af541bd0fsm13044966b3a.40.2025.07.01.23.38.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 23:38:50 -0700 (PDT)
+        Tue, 01 Jul 2025 23:38:55 -0700 (PDT)
 From: Will Whang <will@willwhang.com>
 To: Will Whang <will@willwhang.com>,
 	Sakari Ailus <sakari.ailus@linux.intel.com>,
@@ -54,9 +54,9 @@ To: Will Whang <will@willwhang.com>,
 	linux-media@vger.kernel.org (open list:SONY IMX585 SENSOR DRIVER),
 	linux-kernel@vger.kernel.org (open list),
 	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
-Subject: [PATCH v1 2/4] media: uapi: Add custom IMX585 control IDs
-Date: Wed,  2 Jul 2025 07:38:34 +0100
-Message-Id: <20250702063836.3984-3-will@willwhang.com>
+Subject: [PATCH v1 4/4] media: docs: Add userspace-API guide for the IMX585 driver
+Date: Wed,  2 Jul 2025 07:38:36 +0100
+Message-Id: <20250702063836.3984-5-will@willwhang.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250702063836.3984-1-will@willwhang.com>
 References: <20250702063836.3984-1-will@willwhang.com>
@@ -66,61 +66,122 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Reserve a private control ID block and define the helper enums
-used by the upcoming IMX585 driver.
+The new IMX585 V4L2 sub-device driver introduces several
+driver-specific controls for configuring Clear-HDR blending,
+gradation compression thresholds, and HCG enabling.  This patch adds
+an rst document under Documentation/userspace-api/media/drivers/
+that details each control, allowed values, and their effect
 
 Signed-off-by: Will Whang <will@willwhang.com>
 ---
- include/uapi/linux/imx585.h        | 20 ++++++++++++++++++++
- include/uapi/linux/v4l2-controls.h |  6 ++++++
- 2 files changed, 26 insertions(+)
- create mode 100644 include/uapi/linux/imx585.h
+ .../userspace-api/media/drivers/imx585.rst    | 95 +++++++++++++++++++
+ 1 file changed, 95 insertions(+)
+ create mode 100644 Documentation/userspace-api/media/drivers/imx585.rst
 
-diff --git a/include/uapi/linux/imx585.h b/include/uapi/linux/imx585.h
+diff --git a/Documentation/userspace-api/media/drivers/imx585.rst b/Documentation/userspace-api/media/drivers/imx585.rst
 new file mode 100644
-index 000000000..30e12df88
+index 000000000..bb08afa93
 --- /dev/null
-+++ b/include/uapi/linux/imx585.h
-@@ -0,0 +1,20 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/*
-+ * IMX585 V4L2 controls user space header file.
-+ *
-+ */
++++ b/Documentation/userspace-api/media/drivers/imx585.rst
+@@ -0,0 +1,95 @@
++.. SPDX-License-Identifier: GPL-2.0-only
 +
-+#ifndef __UAPI_IMX585_H_
-+#define __UAPI_IMX585_H_
++Sony IMX585 driver
++==================
 +
-+#include <linux/v4l2-controls.h>
++The IMX585 image-sensor driver provides the following *driver-specific*
++V4L2 controls.  They are visible only when the IMX585 driver is loaded
++and sit in the sensor-private control class.
 +
-+#define V4L2_CID_IMX585_HDR_DATASEL_TH   (V4L2_CID_USER_IMX585_BASE + 0)
-+#define V4L2_CID_IMX585_HDR_DATASEL_BK   (V4L2_CID_USER_IMX585_BASE + 1)
-+#define V4L2_CID_IMX585_HDR_GRAD_TH      (V4L2_CID_USER_IMX585_BASE + 2)
-+#define V4L2_CID_IMX585_HDR_GRAD_COMP_L  (V4L2_CID_USER_IMX585_BASE + 3)
-+#define V4L2_CID_IMX585_HDR_GRAD_COMP_H  (V4L2_CID_USER_IMX585_BASE + 4)
-+#define V4L2_CID_IMX585_HDR_GAIN         (V4L2_CID_USER_IMX585_BASE + 5)
-+#define V4L2_CID_IMX585_HCG_GAIN         (V4L2_CID_USER_IMX585_BASE + 6)
++HDR data blending
++-----------------
 +
-+#endif /* __UAPI_IMX585_H_ */
-diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-index f836512e9..091a044e5 100644
---- a/include/uapi/linux/v4l2-controls.h
-+++ b/include/uapi/linux/v4l2-controls.h
-@@ -228,6 +228,12 @@ enum v4l2_colorfx {
-  */
- #define V4L2_CID_USER_RKISP1_BASE		(V4L2_CID_USER_BASE + 0x1220)
- 
-+/*
-+ * The base for IMX585 driver controls.
-+ * We reserve 16 controls for this driver.
-+ */
-+#define V4L2_CID_USER_IMX585_BASE               (V4L2_CID_USER_BASE + 0x1230)
++``V4L2_CID_IMX585_HDR_DATASEL_TH``  (``U16[2]``)
++    Lower/upper **thresholds** (0 – 4095) that decide which exposure is
++    chosen—or blended—for each pixel in Clear-HDR mode.
 +
- /* MPEG-class control IDs */
- /* The MPEG controls are applicable to all codec controls
-  * and the 'MPEG' part of the define is historical */
++``V4L2_CID_IMX585_HDR_DATASEL_BK``  (menu)
++    **Blending ratio** between the long-gain (LG) and
++    high-gain (HG) read-outs.
++
++    .. flat-table::
++        :stub-columns: 0
++        :widths: 1 5
++
++        * - ``0``  - HG ½, LG ½
++        * - ``1``  - HG ¾, LG ¼
++        * - ``2``  - HG ½, LG ½  *(duplicate ratio present in the
++          datasheet)*
++        * - ``3``  - HG ⅞, LG ⅛
++        * - ``4``  - HG 15⁄16, LG 1⁄16
++        * - ``5``  - **2ⁿᵈ** HG ½, LG ½  *(second 50 %-50 % entry as
++          documented)*
++        * - ``6``  - HG 1⁄16, LG 15⁄16
++        * - ``7``  - HG ⅛, LG ⅞
++        * - ``8``  - HG ¼, LG ¾
++
++Gradation compression
++---------------------
++
++``V4L2_CID_IMX585_HDR_GRAD_TH``  (``U32[2]``)
++    17-bit **break-points** (0 – 0x1ffff) that shape the 16-bit
++    gradation-compression curve.
++
++``V4L2_CID_IMX585_HDR_GRAD_COMP_L``  (menu)
++``V4L2_CID_IMX585_HDR_GRAD_COMP_H``  (menu)
++    **Compression ratios** below the first break-point and between the
++    two break-points, respectively.
++
++    .. flat-table::
++        :stub-columns: 0
++        :widths: 1 4
++
++        * - ``0``  - 1 : 1
++        * - ``1``  - 1 : 2
++        * - ``2``  - 1 : 4   *(default for COMP_L)*
++        * - ``3``  - 1 : 8
++        * - ``4``  - 1 : 16
++        * - ``5``  - 1 : 32
++        * - ``6``  - 1 : 64  *(default for COMP_H)*
++        * - ``7``  - 1 : 128
++        * - ``8``  - 1 : 256
++        * - ``9``  - 1 : 512
++        * - ``10`` - 1 : 1024
++        * - ``11`` - 1 : 2048
++
++Gain settings
++-------------
++
++``V4L2_CID_IMX585_HDR_GAIN``  (menu)
++    **Additional gain** (in dB) applied to the high-gain path when
++    Clear-HDR is active.
++
++    .. flat-table::
++        :stub-columns: 0
++        :widths: 1 3
++
++        * - ``0``  - +0 dB
++        * - ``1``  - +6 dB
++        * - ``2``  - +12 dB *(default)*
++        * - ``3``  - +18 dB
++        * - ``4``  - +24 dB
++        * - ``5``  - +29.1 dB
++
++``V4L2_CID_IMX585_HCG_GAIN``  (boolean)
++    Toggle **High-Conversion-Gain** mode.
++
++    *0 = LCG (default), 1 = HCG.*
++
++Notes
++-----
++
++* Controls are writable while streaming; changes take effect from the
++  next frame.
++* HDR-specific controls are hidden when HDR is disabled.
++* Inter-control dependencies are enforced by the driver.
 -- 
 2.39.5
 
