@@ -1,93 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 362C12F7CE7;
-	Wed,  2 Jul 2025 19:17:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B98121F8ADD;
+	Wed,  2 Jul 2025 19:19:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751483860; cv=none; b=FJf2hu4IfN+DposEZMi2HcvK+soQkB2HbFgW6/MtuZtpaPb7/7A01iMNkWxsWGgroFuKljFQTIgcHQICpTOtXKixXFpD7//m1QTED2ZgzA5mQBfTcPE25QhpMieMCNb/pjXEd0Sug4yct61zE90n9PQNn70zY6mwjz1NkmIWXrM=
+	t=1751483994; cv=none; b=QsaA0ugnnGObZwrdaS3nOvbjpnQUy/4Apy/XNOo6z++05oQykpE2RUcZ9ICaJV3YGAeWo2g3LWu1KnuIFsFe4+B56L8ns42czODsCHjyBh0BIVTxGs69dGhVAg7UWydIlwWEdprydQ6xLpnI0969KQo21jZgJezDC2j9/pQ1A9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751483860; c=relaxed/simple;
-	bh=ae0YSSTMJY0yFeF41XCO6ZMo0RwLJkVnxIpyijNUtO8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sa+y2Qig4alNb4zVmtOApSP96dmoIRbITPOsuPTAB2OMTqkpohyd70PLMXVHLz1xLfxRFA7I1lGhUe+JEwvXVtnpk1RIsgT3rpTemZVPwcZ1KfdbTnzpUH5e7TPjULoDX3LEIrjcYT3kednxc94MrviDqYduJrIMrZTnm1QsTrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EQK3o/rm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751483994; c=relaxed/simple;
+	bh=U2A2n/nNOOE5Lr+/Zh6nkttWy5BZRLjM2gogFdEHc2c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nqt1ubEC6GrgSIpq+1j7rGFRcWI8VSo14xNo4g3oRi+PaAIDs3F1h9zZJd5G5zjBdQHpuBUlbn27j18FF9bfi3IwXpqeO+Wp6wUbBuEDFN77R6Dlxqdhabpme/mRnSiouR3fyzCh8FDxwUZpEzYGai2COCClT/px76qDwHS0fSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ca2MqxPc; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EQK3o/rm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FFB7C4CEE7;
-	Wed,  2 Jul 2025 19:17:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751483859;
-	bh=ae0YSSTMJY0yFeF41XCO6ZMo0RwLJkVnxIpyijNUtO8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EQK3o/rm1pQred0z44XroT0vRwuPmpANmof0x/4kjSmShZtsh4DWVCsXgfNB2UIwZ
-	 TCeGyR01Da5ihnX6EnJ8XDefR6yKEK4Yd4Kq6PI9ht1hewaWP/tp0gfopmqBQoaY6J
-	 rwwLTis3tvS8Rz3wFLftQuKIYeabpMHV9SvqmN+zDdj1vtGOkL7poODG1XifT0OvJl
-	 1h4elV3AjXpC6BtXvnqE010t23WfTrNMTGBPodiZghReuoeCTf0H+aKO+pgREqUJnq
-	 hjy2/WqdfxQHBVnorcpZCYtWprPEHa3wOhXJrrF+1KLNHP/8rzEbg8dF5gm6+p56+8
-	 NfDkrGIB3isfw==
-Date: Wed, 2 Jul 2025 12:17:36 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Yuzhuo Jing <yuzhuo@google.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf genelf: Fix NO_LIBDW=1 build
-Message-ID: <aGWF0Czs_7moo8uO@google.com>
-References: <20250702175402.761818-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ca2MqxPc"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5561c20e2d5so3715893e87.0;
+        Wed, 02 Jul 2025 12:19:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751483991; x=1752088791; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U2A2n/nNOOE5Lr+/Zh6nkttWy5BZRLjM2gogFdEHc2c=;
+        b=Ca2MqxPcS1ig3F6vxABMoDxkIBXzeuR8Y5qT+AWDTOP8ANITznVzlj6kcCQO+NvRnS
+         OXDIRtV3HJKYFm76AqZzFcEdNWHlcwG9Rl6jyrxxa1aOm4ySJ25kZwH0ytZXTQr1Ecku
+         o9tguhuRTZ5lLP+MRZhyO4FuMygSk9hydjiE5CdLmf/NuCmcfC6A4qckh7t02pESAnvE
+         NiUsZibRY3wbZg2yTGOnnPpMvswnt7QEc9RO/q/yVfdvbldTpNZJbx5ZJ0DjVjiYOFn6
+         foNW3pCUVvtkJhWUhX/tELrHcj31r3AYiLP3fhtaGXQEIiLkTVuIBtTYWsT48Ltn9tcp
+         yKEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751483991; x=1752088791;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=U2A2n/nNOOE5Lr+/Zh6nkttWy5BZRLjM2gogFdEHc2c=;
+        b=e8zTMXNNCK8/r7H0DQhLJt/HtBn+17cAijf1duUyh42km9LFFcyDsoa7HBDszSlCvg
+         rv0PHHAj84Yj0x127fp+eynWj42YCfeYMjySCgT95I565wKBp5DKdPsT58JQ5rgJBErf
+         7bW5XIToHWtETp8glJKkdN5Ab8Sz9aSW8WW4vlBuTs10k7ol/n6XwxLaKrDv6PzIjtfc
+         bFCeVKVa2AIhawI5mZm5KGiCw/a09zpMHPO6pFFRSyZFAF1hZ3TYOG1Y5h6ZAPw2XV9Z
+         rj5LKAXlRjOccCZVqiby+AA6AzHEQkyCRdPhYMpi7qxgoSKR5YDYc9jtbFM/SQTWy2Y+
+         SN2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUU9ZYS7F3rM/jEMIgCT5AqbsrC8hBY5YGuFXcXCOfbiPPKiJSlagBlN92blWvQvbhotTUFSR8x/STBI8y+@vger.kernel.org, AJvYcCWO/AoUfZ6HicpPGGq6ykFWIZRk8XzMvrMrZWiCTp/BhJNhTS+nCnQv+nP9EJc7MsqaVzQCXDNn4Rdg@vger.kernel.org
+X-Gm-Message-State: AOJu0YztRy6WH7ONTKs5s4X/jo7/j/NULjwCWWTOSu4+c1c34xWvNg7Y
+	wt/0+onUGpxXc71f7AleNg2+JKKdeZ4SWh/GpMTu00KCPmMlZ9b+Rmt4XN096DP6QTf08daI1EM
+	Lm6ARwkhB3F5fzFo4ZGY3EQ2PSLhDLn4=
+X-Gm-Gg: ASbGncth9Uztq/gEoG9tMQbBECjfl60UMvlyC0SoipTgWlqfU+HW6So6Fv7Rt7K85IB
+	FhtfmMuFQLdhrE//bvoqKVYBiI4SFQ5GU63jDdYrLJ76TQgk8ZxIT9N+J+/UsDT9YMYZtnUhnNp
+	OXQ6AvAaAJWMVtuKfLz2mE9cbu1tcKDRsIDeGHfBMPDvMZdxUtTIwNDulqLEB98bUTty9c3hqdT
+	O29oRI2omLGPw==
+X-Google-Smtp-Source: AGHT+IHvelr2Sf9x0pHkrhNzudbB0N7XiiusqPIR1wY9p47fZeSLcVsNT/JVRmmR8/qM5y2EGSD02riNIPD+nyU56ig=
+X-Received: by 2002:a05:6512:3994:b0:553:5d00:be7e with SMTP id
+ 2adb3069b0e04-5562ef25a02mr169873e87.39.1751483990547; Wed, 02 Jul 2025
+ 12:19:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250702175402.761818-1-irogers@google.com>
+References: <20250702-hb-dts-lic-v1-1-bf15c0a74577@prolan.hu> <ae71768f-303e-445d-971f-e5feaab39e22@prolan.hu>
+In-Reply-To: <ae71768f-303e-445d-971f-e5feaab39e22@prolan.hu>
+From: Fabio Estevam <festevam@gmail.com>
+Date: Wed, 2 Jul 2025 16:19:38 -0300
+X-Gm-Features: Ac12FXyKYcQK1-FZVNpekraID_F80XT5-HRO1qYNpYDshT-udtpBPslocc_9D9I
+Message-ID: <CAOMZO5AYXvq7W+SY7H3yb3n1-WwGx6yFGA_q0VGDWmj1FvJtEQ@mail.gmail.com>
+Subject: Re: [PATCH] arm: DT: imx6: hummingboard: Replace license text comment
+ with SPDX identifier
+To: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
+Cc: Russell King <linux@armlinux.org.uk>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, devicetree@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Rabeeh Khoury <rabeeh@solid-run.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 02, 2025 at 10:54:02AM -0700, Ian Rogers wrote:
-> With NO_LIBDW=1 a new unused-parameter warning/error has appeared:
-> ```
-> util/genelf.c: In function ‘jit_write_elf’:
-> util/genelf.c:163:32: error: unused parameter ‘load_addr’ [-Werror=unused-parameter]
->   163 | jit_write_elf(int fd, uint64_t load_addr, const char *sym,
-> ```
+On Wed, Jul 2, 2025 at 4:17=E2=80=AFPM Cs=C3=B3k=C3=A1s Bence <csokas.bence=
+@prolan.hu> wrote:
 
-Thanks for the fix.
+> Several (7) files have been left out. I will resend it tomorrow; it has
+> only been 12 hours and I don't want to spam the lists too much. In the
+> meantime, please tell me if there's anything else that I should
+> incorporate in the v2.
 
-And I found there's no entry for NO_LIBDW=1 in the build-test.
-Can you please add one?
+Just a nitpick: the Subject pattern should be:
 
-Thanks,
-Namhyung
-
-> 
-> Fixes: e3f612c1d8f3 ("perf genelf: Remove libcrypto dependency and use built-in sha1()")
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/genelf.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/genelf.c b/tools/perf/util/genelf.c
-> index fcf86a27f69e..591548b10e34 100644
-> --- a/tools/perf/util/genelf.c
-> +++ b/tools/perf/util/genelf.c
-> @@ -160,7 +160,7 @@ jit_add_eh_frame_info(Elf *e, void* unwinding, uint64_t unwinding_header_size,
->   * csize: the code size in bytes
->   */
->  int
-> -jit_write_elf(int fd, uint64_t load_addr, const char *sym,
-> +jit_write_elf(int fd, uint64_t load_addr __maybe_unused, const char *sym,
->  	      const void *code, int csize,
->  	      void *debug __maybe_unused, int nr_debug_entries __maybe_unused,
->  	      void *unwinding, uint64_t unwinding_header_size, uint64_t unwinding_size)
-> -- 
-> 2.50.0.727.gbf7dc18ff4-goog
-> 
+ARM: dts: imx6-hummingboard: Replace ....
