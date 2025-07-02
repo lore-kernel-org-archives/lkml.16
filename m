@@ -1,149 +1,94 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9DBF17A2E6;
-	Wed,  2 Jul 2025 10:27:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 948A023BD0F
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 10:27:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751452038; cv=none; b=fkKgu4suyJxdyEQRk50dTqLJtKRmK23DuiEpsJcZUYP4FIaoNrVSsYcGoEcOG2WAnwufxgccETzfvyGfiogCAFvY5Fz75XUa9TYiVpAe3wi/qCDAV01Q5WJlxSLAfslHo4D8wKlUFG3R/H1qXMGXcQ25HUzzWUNt+mQzZCn6St8=
+	t=1751452044; cv=none; b=U4NtxHJkmBcYrUp1f38Q4yotI9k39pt+KTNs4EtxDGjRxw1okpk5L2XtX+Ya6+OOgEODPvwIHY4RYkqGA/Ps/8snb3Vt9oxwleoAqfTWLLYXNi/MpDjme5yieMQz/tYactviyigkUzephxNSyJmwuRUQYbkVVc6J1TPU5+26f7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751452038; c=relaxed/simple;
-	bh=VwCvQamL3OLboOtaKpp5/6Nma/BoEDweaCfWoWZixfc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rRlbgpcOBZdavtmlREtiunbg6SObVUwnUK6FkDErNInBYBI/exjQ0ZUmlrfX+Kg/issklUMu0T4LtZoM/WTGEfJWVk5y/3evaWM4HbIrXyUBnOXE2YN7vUkDJ0UUz/sJECanM3343325aDg7LOkvz89U8JEPanX8JxSiL69yrqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4bXGHp59Cxz2BdVx;
-	Wed,  2 Jul 2025 18:25:26 +0800 (CST)
-Received: from dggpemf500016.china.huawei.com (unknown [7.185.36.197])
-	by mail.maildlp.com (Postfix) with ESMTPS id 99D4C180042;
-	Wed,  2 Jul 2025 18:27:12 +0800 (CST)
-Received: from huawei.com (10.175.124.27) by dggpemf500016.china.huawei.com
- (7.185.36.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 2 Jul
- 2025 18:27:11 +0800
-From: Wang Liang <wangliang74@huawei.com>
-To: <davem@davemloft.net>, <dsahern@kernel.org>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <horms@kernel.org>
-CC: <yuehaibing@huawei.com>, <zhangchangzhong@huawei.com>,
-	<wangliang74@huawei.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next] net: replace ADDRLABEL with dynamic debug
-Date: Wed, 2 Jul 2025 18:44:17 +0800
-Message-ID: <20250702104417.1526138-1-wangliang74@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1751452044; c=relaxed/simple;
+	bh=e/2DidzQn91ralezgjwJALoi1TnJjVxKoJXQdqSYZ3c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qZABE2VW1QOPbZechTVk4JcJm8JIthUBPvkw3OsZ64imDFm+pO74vO33I0maYNQTRgOH6/+iGiJ+Vn67txGxoDahDklLGbB5iWxuLm/kIWNcFz1/b+aQKCLefLtzVATLJx8qS2IqjotSSdrSbw7yOUiK35GILIbW26WkIitMte4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XfaFzWnQ; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XfaFzWnQ"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a365a6804eso3561953f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 03:27:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751452041; x=1752056841; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e/2DidzQn91ralezgjwJALoi1TnJjVxKoJXQdqSYZ3c=;
+        b=XfaFzWnQEuptvfWwIZRlXOtONgn6f/ci1l4ctOx6ghUq0jWxepAi8x/GI8HmuAkIiz
+         UOQ+ZD15fwAH7baXX5Xs1tOECYHtUBgp6vw60jGCSO990NLk8TNRLTNQgpJD8OrSqAmQ
+         0+TyY1H4Sht8vD9elPtTC7WuYvF5gP5j8ssU8G8+1s8Sz88A1K36W9NLUw72altdB1cg
+         Gao1dq5rZOpipHiu9hWWsWiFDDSm5jN8UwUW9fFEfV3uNpzuHzZIcQ9/G5nA8I1PG284
+         +M2ivZsi/yY/4KrLtgmcTMp1jcO8D/LEQAJflqfdbzSLT1ThwKZi8hF8xQ4bhVShbKrY
+         y12Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751452041; x=1752056841;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=e/2DidzQn91ralezgjwJALoi1TnJjVxKoJXQdqSYZ3c=;
+        b=MY1G+n4/XaEV89CZK+D4EgAUB0xJDoK8QzyHY/tHZiy396A0L1MWOwvR9AnItecggh
+         Su+Cw4MHt4WJHCBv1VWKKQmMQro+/nvHcw9XKX019o3ITHhKFRXzawiFyTVu00jW6GjC
+         FB/sZ0xOluHSxDMpTxthGYRqQMmeeWUt4qKzJlTZW3CgzhUalfCVsZaRAEER6kJLa0Ys
+         MCWXWGpucf6Xaz6QCyYjaeioMoLBt2mcXTjzEJTumKfn7FbThdFF5dlURPtEzsStTfNd
+         L64QVep7HSca5s2I3/OdrsVRf8ec82TEZHJBUydCLDQ/z3C5cYXy9Vfd+HO6ikEcoS3a
+         2UjA==
+X-Forwarded-Encrypted: i=1; AJvYcCUiyKo5Zz399697kexrNl6zb32nB6B+Y/F/7qCKDo1t2yGa2Y8XO9QPKQlfjnIlWskplWNNZJUlQxZ7oPY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKB/CFle8FHTtWwADP2DBtjM7TUVz5sdNit5z98CsLkuh1nQS3
+	mw/GBc6+w0z27vhTSxDkuGnSe5TLjR/XvJOVFzbFLXG7GR+5bIPWcFZ9rrgi/abgXpuA79L80OC
+	qesti4XkzouPfELNJvTlre0dcfW5caeLHpedGP8KC
+X-Gm-Gg: ASbGncu1yiyUB/NuAMdcflzv2aMJH2KuxIuWzEWXznID5FrrJFKxnW9Cs7dY9drmrB8
+	GV90EvdZ7pmiV68OwP3BHY4dGvOrvySnSoGmcseqx9tFyIXzzcVU2WPzeZu4q9+kbQYcJfHolOa
+	pEdvYDQim8i+0mnEwX0kONr6WadAOtKYCt3JrDppKRI3nrYNVn21ryVCjcraOjhYAkMLI4lgU=
+X-Google-Smtp-Source: AGHT+IHcDKa52ZbBh7xXAnCYNxMEK3W7ps/ysJeG6YWWhxazrmmr2AVmHplNPOuhkyB9cQitMM0Mw35ydX0IITJf55A=
+X-Received: by 2002:a05:6000:1ac9:b0:3a1:f5c4:b81b with SMTP id
+ ffacd0b85a97d-3b1fe1e69b5mr1844476f8f.23.1751452040702; Wed, 02 Jul 2025
+ 03:27:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- dggpemf500016.china.huawei.com (7.185.36.197)
+References: <20250623-topic-panthor-rs-genmask-v7-1-9f986951e7b5@collabora.com>
+In-Reply-To: <20250623-topic-panthor-rs-genmask-v7-1-9f986951e7b5@collabora.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Wed, 2 Jul 2025 12:27:07 +0200
+X-Gm-Features: Ac12FXzlflXkEllqBb8Mz1-lOflGv_eOwPN42WDgahWL-HLwQCBTeDY1VvFELhc
+Message-ID: <CAH5fLgicRxTsjpBKXDrcJSibOq7HQOsTXdKEBnH1-K8Jt=S-xA@mail.gmail.com>
+Subject: Re: [PATCH v7] rust: kernel: add support for bits/genmask macros
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, Benno Lossin <lossin@kernel.org>, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-ADDRLABEL only works when it was set in compilation phase. Replace it with
-net_dbg_ratelimited().
+On Mon, Jun 23, 2025 at 10:18=E2=80=AFPM Daniel Almeida
+<daniel.almeida@collabora.com> wrote:
+>
+> In light of bindgen being unable to generate bindings for macros, and
+> owing to the widespread use of these macros in drivers, manually define
+> the bit and genmask C macros in Rust.
+>
+> The *_checked version of the functions provide runtime checking while
+> the const version performs compile-time assertions on the arguments via
+> the build_assert!() macro.
+>
+> Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
 
-Signed-off-by: Wang Liang <wangliang74@huawei.com>
----
- net/ipv6/addrlabel.c | 32 +++++++++++---------------------
- 1 file changed, 11 insertions(+), 21 deletions(-)
+Is it intentional that the macros are not available for usize?
 
-diff --git a/net/ipv6/addrlabel.c b/net/ipv6/addrlabel.c
-index fb63ffbcfc64..567efd626ab4 100644
---- a/net/ipv6/addrlabel.c
-+++ b/net/ipv6/addrlabel.c
-@@ -20,12 +20,6 @@
- #include <linux/netlink.h>
- #include <linux/rtnetlink.h>
- 
--#if 0
--#define ADDRLABEL(x...) printk(x)
--#else
--#define ADDRLABEL(x...) do { ; } while (0)
--#endif
--
- /*
-  * Policy Table
-  */
-@@ -150,8 +144,8 @@ u32 ipv6_addr_label(struct net *net,
- 	label = p ? p->label : IPV6_ADDR_LABEL_DEFAULT;
- 	rcu_read_unlock();
- 
--	ADDRLABEL(KERN_DEBUG "%s(addr=%pI6, type=%d, ifindex=%d) => %08x\n",
--		  __func__, addr, type, ifindex, label);
-+	net_dbg_ratelimited("%s(addr=%pI6, type=%d, ifindex=%d) => %08x\n", __func__, addr, type,
-+			    ifindex, label);
- 
- 	return label;
- }
-@@ -164,8 +158,8 @@ static struct ip6addrlbl_entry *ip6addrlbl_alloc(const struct in6_addr *prefix,
- 	struct ip6addrlbl_entry *newp;
- 	int addrtype;
- 
--	ADDRLABEL(KERN_DEBUG "%s(prefix=%pI6, prefixlen=%d, ifindex=%d, label=%u)\n",
--		  __func__, prefix, prefixlen, ifindex, (unsigned int)label);
-+	net_dbg_ratelimited("%s(prefix=%pI6, prefixlen=%d, ifindex=%d, label=%u)\n", __func__,
-+			    prefix, prefixlen, ifindex, (unsigned int)label);
- 
- 	addrtype = ipv6_addr_type(prefix) & (IPV6_ADDR_MAPPED | IPV6_ADDR_COMPATv4 | IPV6_ADDR_LOOPBACK);
- 
-@@ -207,8 +201,7 @@ static int __ip6addrlbl_add(struct net *net, struct ip6addrlbl_entry *newp,
- 	struct hlist_node *n;
- 	int ret = 0;
- 
--	ADDRLABEL(KERN_DEBUG "%s(newp=%p, replace=%d)\n", __func__, newp,
--		  replace);
-+	net_dbg_ratelimited("%s(newp=%p, replace=%d)\n", __func__, newp, replace);
- 
- 	hlist_for_each_entry_safe(p, n,	&net->ipv6.ip6addrlbl_table.head, list) {
- 		if (p->prefixlen == newp->prefixlen &&
-@@ -247,9 +240,8 @@ static int ip6addrlbl_add(struct net *net,
- 	struct ip6addrlbl_entry *newp;
- 	int ret = 0;
- 
--	ADDRLABEL(KERN_DEBUG "%s(prefix=%pI6, prefixlen=%d, ifindex=%d, label=%u, replace=%d)\n",
--		  __func__, prefix, prefixlen, ifindex, (unsigned int)label,
--		  replace);
-+	net_dbg_ratelimited("%s(prefix=%pI6, prefixlen=%d, ifindex=%d, label=%u, replace=%d)\n",
-+			    __func__, prefix, prefixlen, ifindex, (unsigned int)label, replace);
- 
- 	newp = ip6addrlbl_alloc(prefix, prefixlen, ifindex, label);
- 	if (IS_ERR(newp))
-@@ -271,8 +263,8 @@ static int __ip6addrlbl_del(struct net *net,
- 	struct hlist_node *n;
- 	int ret = -ESRCH;
- 
--	ADDRLABEL(KERN_DEBUG "%s(prefix=%pI6, prefixlen=%d, ifindex=%d)\n",
--		  __func__, prefix, prefixlen, ifindex);
-+	net_dbg_ratelimited("%s(prefix=%pI6, prefixlen=%d, ifindex=%d)\n", __func__, prefix,
-+			    prefixlen, ifindex);
- 
- 	hlist_for_each_entry_safe(p, n, &net->ipv6.ip6addrlbl_table.head, list) {
- 		if (p->prefixlen == prefixlen &&
-@@ -294,8 +286,8 @@ static int ip6addrlbl_del(struct net *net,
- 	struct in6_addr prefix_buf;
- 	int ret;
- 
--	ADDRLABEL(KERN_DEBUG "%s(prefix=%pI6, prefixlen=%d, ifindex=%d)\n",
--		  __func__, prefix, prefixlen, ifindex);
-+	net_dbg_ratelimited("%s(prefix=%pI6, prefixlen=%d, ifindex=%d)\n", __func__, prefix,
-+			    prefixlen, ifindex);
- 
- 	ipv6_addr_prefix(&prefix_buf, prefix, prefixlen);
- 	spin_lock(&net->ipv6.ip6addrlbl_table.lock);
-@@ -312,8 +304,6 @@ static int __net_init ip6addrlbl_net_init(struct net *net)
- 	int err;
- 	int i;
- 
--	ADDRLABEL(KERN_DEBUG "%s\n", __func__);
--
- 	spin_lock_init(&net->ipv6.ip6addrlbl_table.lock);
- 	INIT_HLIST_HEAD(&net->ipv6.ip6addrlbl_table.head);
- 
--- 
-2.34.1
-
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
