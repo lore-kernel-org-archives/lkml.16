@@ -1,174 +1,112 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2179211F;
-	Wed,  2 Jul 2025 00:01:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B67163
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 00:06:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751414494; cv=none; b=FlAvoZdnKfWKRHN4e869m5tPnlc/3eLVrvkpMvZ2IUogIfrakO9eKucQEkAjWpKQtMzvoyc9ZrIpTquqd1ZOLERYvpMo2ED6NSwLtEJEB5a5OsrGKrksDZwHNS9/Q6kRgzKxLjeRH1cjroGTbQGHr8JX5v88xJu6uv7s9LKKRpc=
+	t=1751414765; cv=none; b=LsLhY97PS6FYnNehKPQKRezLOHxVOsSbfRZf1wJVQ20KnaaBnPe6+0kJqq+TOulLse2gPEWMjPQvkdsfb/u458unaNByJ7jIL5cLmm8qC1B6upc/u5aKTkkTWtTpQmNfIHABcnH94uotevhOdy3VYp2cHhOOdp9flRcJ4UGJjno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751414494; c=relaxed/simple;
-	bh=pD4OTUqghxRArnBO2knbUT5nhZJ3EFvqSsTKGMB67GY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ojCotdp8k9GOI5jgUgC+wr7sS+ELwsfp+nXb0cpDb6tKhq9u1PhWI/rcA0VH9SUKp/4aQcRPoLwWiekfBf2xh7rOzPlsFthEVGC8+edToN+4ezLjzaZERQHEv325Ah7JnTsGUh+nduobfyPgToOikP6RzgxJ/5b5SidfaxJ2Fm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pBvDHmEd; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1751414765; c=relaxed/simple;
+	bh=bIMTi4MWsgaUbmZu8ndOxvFLqagge7bVFXfE8u72634=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RCNOw8WZUzFaDUoY/o/bfVJznbviX18vPEK8IygXEPHIjuyZEYbJN/UqoJXy+Casl3ACSfQTrml+5nz06cIuOeF6XxXj6Gr2dU5+ZzePnNUl555kQ/ejE8jBIaLNPRbQjlfOV/BBFQjDfjCKbrdrZeXJ4nBKTIi4tv/2H39CCl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=CVNb94Iv; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pBvDHmEd"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 561J0mZS024884;
-	Wed, 2 Jul 2025 00:01:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=YP5vTTaT3fk211edh/xCkRbAzSkKQJHAUc+
-	t2nVRi2Y=; b=pBvDHmEdv3XPL5m2veKbMn0eesG/bjOagDP75UnvlZ1EuwleLst
-	u/kZlPoLB3AfcyoQSJnStnOOfwbPD0mYC1WpZ0GvetbNSsa+MogdqTXXqIf/AFYd
-	BWtSLxnbDpbi7pVgOalW2Z0dBwAZwYlNVkZ5IHYb9XUaq0HlIlcMKjhC9yfwWbs6
-	mZf9AdeBMHGdd4uMicr902OohVycqoxnr5HnC0SA4V4GNvMTmkMnAFWu3ONGrFzN
-	7fc25yKVkkRQaD2eXU8aQZxp3d9iZd/LQmIUnfdUHyKN6ymykEWshQAwIDrvc32T
-	uFvkKmj+vRTppqqjO/3N+cvay/1acMif10Q==
-Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j8022fpc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Jul 2025 00:01:28 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 56201PAB027811;
-	Wed, 2 Jul 2025 00:01:25 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 47m1bxcmje-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Jul 2025 00:01:25 +0000
-Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 56201P26027806;
-	Wed, 2 Jul 2025 00:01:25 GMT
-Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-pussin-hyd.qualcomm.com [10.147.247.182])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 56201OO0027805
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Jul 2025 00:01:25 +0000
-Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 4706513)
-	id C00CA4AB; Wed,  2 Jul 2025 05:31:23 +0530 (+0530)
-From: Pushpendra Singh <quic_pussin@quicinc.com>
-To: cros-qcom-dts-watchers@chromium.org, andersson@kernel.org,
-        konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-        conor+dt@kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Pushpendra Singh <quic_pussin@quicinc.com>, kernel@quicinc.com,
-        kernel@oss.qualcomm.com
-Subject: [PATCH v2] arm64: dts: qcom: sc7280: Add support for two additional DDR frequencies
-Date: Wed,  2 Jul 2025 05:31:20 +0530
-Message-Id: <20250702000120.2902158-1-quic_pussin@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="CVNb94Iv"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a6cd1a6fecso6632086f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 17:06:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1751414760; x=1752019560; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ce3zDRJVoRRIoVuOih+y1uZIYHn+OOhDiG27OLlb9rE=;
+        b=CVNb94IvQLjV3Kc0WC6Ibs+Hn96TZhMGBiKW0BKCKqBQ/sFqmF8HLm7AQUDUtwqAF5
+         P4svXkkMAxLVTWrrF7uLZUjdace7iRHzoET/dR+5G9BMn64vwp8OcDUU2h81O41g8kV+
+         RDHL7G9RcMRjTwfBpDBDQi2QDm0w/RyiptwPLehfdv7Y0yXGeRNwCMwvx4cnngNMO4lc
+         mVg8pEanOfRbrUKOmPkQFIIBAk6mqV7Q1BUjBaNQMGET9F/atmK+hTYylh5hOTa7VBbz
+         MAFBmwvN5C46Shv1i+iv7K07DHXgxLZWHFPygr6k1W6aVQcR0neULyutljOw5NvQ3kgL
+         JboA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751414760; x=1752019560;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ce3zDRJVoRRIoVuOih+y1uZIYHn+OOhDiG27OLlb9rE=;
+        b=osyrBhanX4XEsSB9wX/HD40pXw/fYwmAM2hDM8TZxiNEwiP7fvedyOVSZqS7S5w0A1
+         LaEGA0ke5bka2Q7/MkhIC9YcFJgj5Lf6DLp5obmcne3ayVRu014s6iolaB02ML7H2oTt
+         OllgGv4mdeCni8c+lwHWrILMPTeHayuROCZVQOAhM+kSIT/cofVqlrUK9zHGNdqaKQTS
+         1Yrh//aXbVcqKYs+1blsNbMyZ8lRAnlB9pFyhYtdAGDQsrPbIVPS4KKWdzgREvTlHk2R
+         8r6pzzsdpX2uySFJkkP8yKssY/gVMtTfIHdImx53G33OQguxGmo9/4LrgcVad40ZqTpN
+         2Ksg==
+X-Forwarded-Encrypted: i=1; AJvYcCUF/7C4sKqlyadA1xnBOrlM4Km9hK37qs075E6I691EvcXqGmDi1vmK70+xVDDazkCwqU721/blal6deP8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzxo+u1hZCFY8TQW+MAv5RVL01WxMIDj9SN5hOxrK+KMrEjrNMe
+	AIou3Ndl4JIizPjvM3Z2jiPqlxdamYX80atJa5a2pIqjqI/+JERKhUluXo33IxdroA==
+X-Gm-Gg: ASbGncvDLlgJdxGa8UClOUeByaBy5gf11go3xu8ayCf7NAkP6BaNCzGspf04IPl+0li
+	eTi2jd0sp1jdnEi6E3BptCOtwaIvou2r5dBerHAqDbRDEezAte5qdkjzqiSfroekiDk8awnFTqw
+	uxIo28Oqql91PA2TImrGe8WWc1O9BdsrzI8xWK7rbDnAqJYPQFER9OLMgBY0WUdutQvHcvgmLmp
+	wkcweNDHohNU4UVnMvJnWhaYvutlaShwiu+SqWmDciFrjkJQnTr88hJdIQeTaiWiwFeH1bCSgZT
+	Q9eXbgJ5v1g9D4e/fSTATAV2tWDrPkn7WFDNsgw/lB2Wemv3ke5SDcyaq3B1+w==
+X-Google-Smtp-Source: AGHT+IHgFK+x5iOOCR7s+Jwca4C328dxRJPFWJLVCE70nVrrFL6mJkkvUSJeMxzZnHxSrAYyY3US1Q==
+X-Received: by 2002:a05:6000:2dc1:b0:3a4:d83a:eb4c with SMTP id ffacd0b85a97d-3b2013f8c90mr292003f8f.57.1751414760277;
+        Tue, 01 Jul 2025 17:06:00 -0700 (PDT)
+Received: from MiWiFi-CR6608-srv ([202.127.77.110])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-318c14fd6b5sm12475850a91.35.2025.07.01.17.05.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 17:05:59 -0700 (PDT)
+Date: Wed, 2 Jul 2025 08:05:23 -0400
+From: Wei Gao <wegao@suse.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Terry Tritton <terry.tritton@linaro.org>, Shuah Khan <shuah@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
+	ttritton@google.com, linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] selftests/futex: Convert 32bit timespec struct to
+ 64bit version for 32bit compatibility mode
+Message-ID: <aGUggwe_gJon_2E3@MiWiFi-CR6608-srv>
+References: <20250701142313.9880-1-terry.tritton@linaro.org>
+ <87ikkblkff.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: eWtuExH8pFXpE8KAd5k84KBsuKLMc4h9
-X-Authority-Analysis: v=2.4 cv=YPWfyQGx c=1 sm=1 tr=0 ts=686476d8 cx=c_pps
- a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
- a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=Wdr-PkFzvk_Id5NoAFEA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: eWtuExH8pFXpE8KAd5k84KBsuKLMc4h9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAxMDE3NSBTYWx0ZWRfXzKa0hwpCZOQo
- HTLmnab580CQhGdXdq7vAE2ZZi2g9ORGEjvEnjkekCjsUGl2piVAynCz3ykxt2XKAIGs/at9GEI
- O4Dlbw7EfK440gNj/8G/BtjcIgNHyCmxlCJyvG4E8O+ae+aLnURjLvn1H9NqyKO0oNs3TvmTyBb
- uBhyNSJeldp3+y10m98y/7ecT6DFliJ/6on4kFOV1sGy5IJvaVL0mWcBpJglFdneH9hrDjYUe7X
- qIQAagN/V/r8RXoXnP/NR6QIrU400Rewd6g3Kro3eofjj6yjmwJZqyNThBwZIhQ+itea7s3zloa
- FUxQlgoQ6d6SACzfSMd7mTitVeiteo+pYW87Ip+jry9kRAjo1aCbJkkryq/qak3oQg93hs67vGE
- j8hn+1W4021KahAS8fTJoqPyIFBovarioQKyaYRe+jXtVOSxY/H3p1MM/2bJM57VPdrX4cSB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-01_02,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 mlxlogscore=999 mlxscore=0 malwarescore=0 suspectscore=0
- lowpriorityscore=0 clxscore=1015 impostorscore=0 adultscore=0
- priorityscore=1501 bulkscore=0 phishscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2507010175
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87ikkblkff.ffs@tglx>
 
-The SC7280 SoC now supports two additional frequencies. This patch
-add those frequencies to the BWMON OPP table and updates the frequency
-mapping table accordingly.
+On Tue, Jul 01, 2025 at 10:34:28PM +0200, Thomas Gleixner wrote:
+> On Tue, Jul 01 2025 at 15:23, Terry Tritton wrote:
+> > Futex_waitv can not accept old_timespec32 struct, so userspace should
+> > convert it from 32bit to 64bit before syscall in 32bit compatible mode.
+> >
+> > This fix is based off [1]
+> >
+> > Link: https://lore.kernel.org/all/20231203235117.29677-1-wegao@suse.com/ [1]
+> >
+> > Signed-off-by: Wei Gao <wegao@suse.com>
+> > Signed-off-by: Terry Tritton <terry.tritton@linaro.org>
+> 
+> This is still wrong.
+> 
+> If it is based on someone else work, then you need to attribute it
+> Originally-by and omit the Signed-off-by of the original author.
+> 
+> If you just picked it up and adopted it to a later kernel version then
+> you need to add 'From: Original Author' and preserve his Signed-off-by.
 
-These changes do not impact existing platforms, as the updated mapping
-only affects the highest OPP. On any given platform, this will continue
-to vote for the maximum available OPP.
+@Terry @Thomas, Thank you both for the mention in the commit. I appreciate being included.
+I guess above options both good.
 
-Signed-off-by: Pushpendra Singh <quic_pussin@quicinc.com>
----
-
-	changes in v2:
-	Fixed the commit message [removed cc and change id]
-	Link to v1: https://lore.kernel.org/all/20250701074334.1782967-1-quic_pussin@quicinc.com/
-
- arch/arm64/boot/dts/qcom/sc7280.dtsi | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-index 64a2abd30100..cb945abf0475 100644
---- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-@@ -620,12 +620,12 @@ cpu4_opp_2208mhz: opp-2208000000 {
- 
- 		cpu4_opp_2400mhz: opp-2400000000 {
- 			opp-hz = /bits/ 64 <2400000000>;
--			opp-peak-kBps = <8532000 48537600>;
-+			opp-peak-kBps = <12787200 48537600>;
- 		};
- 
- 		cpu4_opp_2611mhz: opp-2611200000 {
- 			opp-hz = /bits/ 64 <2611200000>;
--			opp-peak-kBps = <8532000 48537600>;
-+			opp-peak-kBps = <12787200 48537600>;
- 		};
- 	};
- 
-@@ -685,22 +685,22 @@ cpu7_opp_2381mhz: opp-2380800000 {
- 
- 		cpu7_opp_2400mhz: opp-2400000000 {
- 			opp-hz = /bits/ 64 <2400000000>;
--			opp-peak-kBps = <8532000 48537600>;
-+			opp-peak-kBps = <12787200 48537600>;
- 		};
- 
- 		cpu7_opp_2515mhz: opp-2515200000 {
- 			opp-hz = /bits/ 64 <2515200000>;
--			opp-peak-kBps = <8532000 48537600>;
-+			opp-peak-kBps = <12787200 48537600>;
- 		};
- 
- 		cpu7_opp_2707mhz: opp-2707200000 {
- 			opp-hz = /bits/ 64 <2707200000>;
--			opp-peak-kBps = <8532000 48537600>;
-+			opp-peak-kBps = <12787200 48537600>;
- 		};
- 
- 		cpu7_opp_3014mhz: opp-3014400000 {
- 			opp-hz = /bits/ 64 <3014400000>;
--			opp-peak-kBps = <8532000 48537600>;
-+			opp-peak-kBps = <12787200 48537600>;
- 		};
- 	};
- 
-@@ -4013,6 +4013,12 @@ opp-6 {
- 				opp-7 {
- 					opp-peak-kBps = <8532000>;
- 				};
-+				opp-8 {
-+					opp-peak-kBps = <10944000>;
-+				};
-+				opp-9 {
-+					opp-peak-kBps = <12787200>;
-+				};
- 			};
- 		};
- 
--- 
-2.34.1
-
+> 
+> If you collaborated with him, then you want to use Co-developed-by.
+> 
+> All of this is documented in Documentation/process/
+> 
