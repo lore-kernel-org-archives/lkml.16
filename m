@@ -1,108 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD549221F37;
-	Wed,  2 Jul 2025 11:30:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45630246781;
+	Wed,  2 Jul 2025 11:31:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751455841; cv=none; b=HuR18CpupyOkheR9WiJeESJqXUBcBdQjMxSfxBkp3Do1uY6xqHmzwl0H6+RLzVkSbdf7BdpOdUhpcB3KjKra29syuF+wmiccWvgSaTJrhQ/CuA6ZJKaKz/7/geetO9OQwaMBp6neK52lJ+lqVID1BkkGDTMlebATmxLGvzlocWc=
+	t=1751455865; cv=none; b=KW+LDgJq6k8mHZ5gM1XWvO21RQRrtOB2mp4+GRPxynYVpisp3edgCUKG4B4dLFtS55Nrx5EmxswV+0bvv3c/8HV1NggAcHX9KnSEx5Cn/5apm+zhonRV4g6mHZGlhJZHpge8snEN4Bk/pHfvzVVMRG/2Q4pLX/ZZhd67HIiK/oM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751455841; c=relaxed/simple;
-	bh=jS6HsOJudSh3pJt2UZUlf0WLtRDJKg8n2+rVm/g7mQ4=;
+	s=arc-20240116; t=1751455865; c=relaxed/simple;
+	bh=BQCMzYb6py2zdb+YdFBHZxoeQM3A3WG6DoBX46UnyrI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LM5SlAOg2vv8b5ALyfR2uiEtveD6UkNxztUf4Ikcxg526gn1iW0MIWDuKPqpAGuUaIDd7rV2XTEWfAByDlhaYDaxAU6ztobXJdjyIvJab2vMRHgjsugYOauZ5fy0JV0u3QkizWaNYD3S4KYltVwTh0v0+Kdv+i/aaMF6jkR7KPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=edqp5nXG; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=jB83k2jrCBSLBljYsnChVGjdjVWwSgSv5bevq1EXmiAiZSl/IDT2Y2vhFVB9kTn2QYYEpi/CS8kwRTymya0li2/qb/kjTe/v8iD9mg1PzUruczv0KoOYfMeGtZ+vECOfER4LvyHX81HR4TjMbyXYMCwXWaYP0SCYW0BbRhf+03g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NM1XnPg3; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="edqp5nXG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 658DAC4CEED;
-	Wed,  2 Jul 2025 11:30:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751455841;
-	bh=jS6HsOJudSh3pJt2UZUlf0WLtRDJKg8n2+rVm/g7mQ4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=edqp5nXGm3PK7QHRdw05jl6Dn/i98BFF9vLc5Nd2+sm0ltDQzNlDH6290VOTuy1dE
-	 7bWOZnjX7twJklwOY3t4+bsKt66v+Csx2Wod+W3w2WzZlYKUHIWkPFfvz3CUy7VtW8
-	 uEnMQSSOBAA/Jh262IihH+jk098VNyleLL/TaAr766MQFATIXVWZKFclJc6tMer8/8
-	 fvAFflUU/2b3tWzZ47xsAG/dXBgRk+MeurjCsIaompbAzZVmjooJn4OQDJkIa0nk0o
-	 F3Mx6RQ0NGbZajeuFwitVmu/bfkWtkkeRQSWj7H/9PKvKxblCRBLj0s7ltbyKE9EZ/
-	 6vEa4TE6c+uDg==
-Date: Wed, 2 Jul 2025 17:00:23 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Kishon Vijay Abraham I <kishon@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Anup Patel <apatel@ventanamicro.com>, Marc Zyngier <maz@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Shuah Khan <shuah@kernel.org>, 
-	Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Niklas Cassel <cassel@kernel.org>, dlemoal@kernel.org, jdmason@kudzu.us, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, imx@lists.linux.dev, devicetree@vger.kernel.org
-Subject: Re: [PATCH v19 03/10] PCI: endpoint: pci-ep-msi: Add MSI
- address/data pair mutable check
-Message-ID: <5axgxbtyqbwwncimjiiedvkm3ap7at553vgj72bht4kynke5cd@xfghwfmp6cy7>
-References: <20250609-ep-msi-v19-0-77362eaa48fa@nxp.com>
- <20250609-ep-msi-v19-3-77362eaa48fa@nxp.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NM1XnPg3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751455865; x=1782991865;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=BQCMzYb6py2zdb+YdFBHZxoeQM3A3WG6DoBX46UnyrI=;
+  b=NM1XnPg3myCeU+pXEhN9Tek1tPhAYdzp5DgAFBRLWV1cx/FpOyD6TCLP
+   rRipg3oUn14ZMclOzjiJX7Q8LsucCkhXpE4SkLi5uOsAszhnpcFe4nVCc
+   k4ThFFhpTKguj8C7nU72ziU5IPzQn8Lz1SxzSo2oOsoARKBo9Cc37v2UV
+   N8cyBN84ApPIAME/n6tKoG1x0aO6c21I1pRxoZnSAJpZM75Xjr1bkkd3F
+   PJhsb/XMntCS9mmude1JcsJLvlSqtTFEHaH4U+CtO0qon9/bApYZ2y8LE
+   TZUfccFU9rX3LMiEEz3S3O1+GLVg05mYcLKAazOeUmIDY1PzdCfvzP/CW
+   Q==;
+X-CSE-ConnectionGUID: Z6kCnSQ5Sf2PMssCiFudbw==
+X-CSE-MsgGUID: ap5u5udrS4uFiIQuNtFKGQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="79186476"
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="79186476"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 04:31:04 -0700
+X-CSE-ConnectionGUID: GgPq3gDpQmWwNZsum2/JhQ==
+X-CSE-MsgGUID: ITHP5AsvTvGxhlUG+acF+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="153456263"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 04:30:56 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uWvfw-0000000Bu4U-04v5;
+	Wed, 02 Jul 2025 14:30:52 +0300
+Date: Wed, 2 Jul 2025 14:30:51 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Anup Patel <apatel@ventanamicro.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Alexandre Ghiti <alex@ghiti.fr>, Len Brown <lenb@kernel.org>,
+	Sunil V L <sunilvl@ventanamicro.com>,
+	Rahul Pathak <rpathak@ventanamicro.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Atish Patra <atish.patra@linux.dev>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 06/24] byteorder: Add memcpy_to_le32() and
+ memcpy_from_le32()
+Message-ID: <aGUYa6PWYFy4TyLg@smile.fi.intel.com>
+References: <20250702051345.1460497-1-apatel@ventanamicro.com>
+ <20250702051345.1460497-7-apatel@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250609-ep-msi-v19-3-77362eaa48fa@nxp.com>
+In-Reply-To: <20250702051345.1460497-7-apatel@ventanamicro.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Mon, Jun 09, 2025 at 12:34:15PM GMT, Frank Li wrote:
-> Some MSI controller change address/data pair when irq_set_affinity().
-> Current PCI endpoint can't support this type MSI controller. Call
-> irq_domain_is_msi_immutable() check if address/data pair immutable.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> change in v18
-> - update commit message. remove 'include/linux/msi.h' part.
-> 
-> change from v14 to v17
-> - none
-> 
-> change from  v13 to v14
-> - bring v10 back
-> 
-> Change from v9 to v10
-> - new patch
-> ---
->  drivers/pci/endpoint/pci-ep-msi.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/pci/endpoint/pci-ep-msi.c b/drivers/pci/endpoint/pci-ep-msi.c
-> index 549b55b864d0e..c0e2d806ee658 100644
-> --- a/drivers/pci/endpoint/pci-ep-msi.c
-> +++ b/drivers/pci/endpoint/pci-ep-msi.c
-> @@ -44,6 +44,14 @@ int pci_epf_alloc_doorbell(struct pci_epf *epf, u16 num_db)
->  
->  	dev_set_msi_domain(dev, dom);
->  
-> +	if (!irq_domain_is_msi_parent(dom))
-> +		return -EINVAL;
+On Wed, Jul 02, 2025 at 10:43:27AM +0530, Anup Patel wrote:
+> Add common memcpy APIs for copying u32 array to/from __le32 array.
 
-This check is not justified in commit message.
-
-> +
-> +	if (!irq_domain_is_msi_immutable(dom)) {
-> +		dev_err(dev, "Can't support mutable address/data pair MSI controller\n");
-> +		return -EINVAL;
-
-GICv3 ITS is an immutable MSI controller. From the earlier patches, I could see
-that you have tested this series with ITS. How did that happen if it errors out
-here?
-
-- Mani
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 -- 
-மணிவண்ணன் சதாசிவம்
+With Best Regards,
+Andy Shevchenko
+
+
