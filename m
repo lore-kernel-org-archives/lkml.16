@@ -1,77 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 511FA2BE620;
-	Wed,  2 Jul 2025 18:52:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5126E2BE626;
+	Wed,  2 Jul 2025 18:52:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751482325; cv=none; b=YWILJ65WycpSmA8Q/8+3h/7buwegdEuu8r2stufuU4fpxTlyYrsUDObADzkaljZhnFrKk4U5AuYF1OuA7rrbdk8uK7fHcX3FJh+5cuwDK5QJT+kUq6vFxD0PX2Otse2uOrZ7JXSwrni82EDTWtNNepf2OdaWQmm0n6NVgDDdPaw=
+	t=1751482325; cv=none; b=mAtVuAjGIDvNdePe1bqY9HgpuBzZMDcqIpEF2X+dZrMOjwRQoB8HCYWPqoBpU6cwvQJuYVeQoUswQSCa/7dG9+2GmznPodb4eWovrv1sH7Zhhf5s9J1z4wZTASXtpxfLBuR/uL4E67irgH1onIMdfovEoZgAe+lem4UQuQ0X3GU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751482325; c=relaxed/simple;
-	bh=+uLr3dTzJTV7nrPr55V5auGbMBGpX7ZhNLHcum1L5wM=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=OrQSdm28J4ASXXQLvqy8hMD9NdwNf0lQ0fvlOt3WuBoMbaTaQ6VBm/tAX27fGXspwm/S1hGNOQuzRqyq0ovmu0oGOqZj+bWfH6RBZZlNEtv6HGH9fjch4wJ4gyjdTdjTyX13vual2qcwTVEY/Tbsvd/eKFacjheTAtLrwsizR3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JzXbebKN; arc=none smtp.client-ip=10.30.226.201
+	bh=Tr/jSXt2sR6pI5xPiIGtAmoJPkl4Wo3HBvqjjFVXZfQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SIX/IvCbauxVy9s5kz1lmZUOWIYs2LmgxFP/4Pz6dcSz19Lu05LuM3fS5PNZxQDFJfFBMvzaZ2ynydcB/2w/2H8l7MRSEghN6BUpm289RnpDzjI12M2GjB4thP9nBtGMzvRMIcxYXJ4+jb8030hZG/aRrmZJqzc+no9T1LHwOV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M+BdkLx4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JzXbebKN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8E0CC4CEE7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M+BdkLx4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5A46C4CEF1;
 	Wed,  2 Jul 2025 18:52:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1751482324;
-	bh=+uLr3dTzJTV7nrPr55V5auGbMBGpX7ZhNLHcum1L5wM=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=JzXbebKNFfiGvybLuFqc/g9V+1T3qFKFAh9dMjsrZ4JG1gCL4rS0ap7uA3TN6kqSK
-	 s8+XqtwcEMITD5WVifrMW165E30dYuod2nVTuoHkoTH/iZM+F2q2BhV79Ein/NhjV7
-	 67S+/lOaGKt+AGgTPAmBrRO/JoQ0DNUIKznHLB6YIPd/tdOdfX4C8V83C18w+po+bm
-	 TCmKFlEtH2j106BEHX6KlnwRv5YFdsjB3gK/2OyKG9qLSz12Y0ZL+Vu+DVzjIUS4RQ
-	 S/LrXe6HsI6Oj6BEuE+fiG7DlpALfgSES4H3Xf4QWEODyMnwlMgMXMdRB0alzcUi95
-	 0eZ6M5tFOiD9w==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADCE6383B273;
-	Wed,  2 Jul 2025 18:52:30 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	bh=Tr/jSXt2sR6pI5xPiIGtAmoJPkl4Wo3HBvqjjFVXZfQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=M+BdkLx4YPOcgIaiuCVDnMOBOMAs/aCYb82Lj+MpStd0wBlQ3qxzDg99aEu7RmYsy
+	 OzXtU/jgkgP4AKqA6iw2WBBlJKeE5F6QlVO9uU6d/wrPhDUbfisxobQ7KGqWOviAoq
+	 XflmtdRDoWmOWdEMqO8mX9C4u+7RmFUuiI/jHipcs4GnznpOIoVxz7r68uMMCGJR+D
+	 D8SiU10aXFxeoYPlFNRMbb5HUkwOtJSsQh1wchcUrPDE37bF0ueHur5nNQ+YOyOe18
+	 XsdBAcoNevCYKrwCcy2FEhv8b/ptCl7MQLYGlLq8Y70ljDONAs6edt9TcrR1ppkNzD
+	 8uyiOVU09NOMw==
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-6119b103132so154906eaf.1;
+        Wed, 02 Jul 2025 11:52:04 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVqbLztcohxjXI4AMU7XwHfNo3SQ4FAwDyblIx3b9U75dmXYDyawsEh/rZuI/zTxKL15vmY4PMujvlD20Q=@vger.kernel.org, AJvYcCX6+pDwWPxRB+4NsCeRE51ivHLck9n2FgPbRueP+maOnYuiw/jV9ON/NJ5TkICsh/1TYiVBmDpkbBM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCDygjqyRMZilSxD2Fp616vXrV5Tvu+XIXkE8DMWRs6ey/GqhA
+	tP3Xqe7YtBNyU8iHpPPOQ1Xu2ERGfoBwH3ldiJeLCTWbXLwKFSpn5AWMrVXVsdaAgDFdou3+ojt
+	srAWiOqA+3AcbrhnQ772FYYN/8vSBwhg=
+X-Google-Smtp-Source: AGHT+IHOMCJ8yeX1yw8ax6BvbRw3cnCHOoxVsmjjHb+MatlzhLVOWeGSgmW8oA7g4HuSXgc5iHRb2RrrWCm0EyUYu0U=
+X-Received: by 2002:a05:6820:1996:b0:611:a5f4:42c0 with SMTP id
+ 006d021491bc7-6137e88b272mr531992eaf.2.1751482323932; Wed, 02 Jul 2025
+ 11:52:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] gpio: spacemit: Add missing MODULE_DEVICE_TABLE
-From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: 
- <175148234928.828808.7437950953839931814.git-patchwork-notify@kernel.org>
-Date: Wed, 02 Jul 2025 18:52:29 +0000
-References: <20250613-k1-gpio-of-table-v1-1-9015da8fdfdb@iscas.ac.cn>
-In-Reply-To: <20250613-k1-gpio-of-table-v1-1-9015da8fdfdb@iscas.ac.cn>
-To: Vivian Wang <wangruikang@iscas.ac.cn>
-Cc: linux-riscv@lists.infradead.org, linus.walleij@linaro.org, brgl@bgdev.pl,
- dlan@gentoo.org, elder@riscstar.com, uwu@dram.page,
- linux-gpio@vger.kernel.org, spacemit@lists.linux.dev,
- linux-kernel@vger.kernel.org
+References: <20250530100036.11954-1-zhangzihuan@kylinos.cn>
+In-Reply-To: <20250530100036.11954-1-zhangzihuan@kylinos.cn>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 2 Jul 2025 20:51:52 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0h1xAx7HRRgH_7=D8U71j3yU1qji_5vYyt0ym+Hnrne6g@mail.gmail.com>
+X-Gm-Features: Ac12FXwke7zsok5_lzNB9WRmt9X-rHv5pRzyuLS3JSRQQeV1Gyp9a_hxRVbSC2A
+Message-ID: <CAJZ5v0h1xAx7HRRgH_7=D8U71j3yU1qji_5vYyt0ym+Hnrne6g@mail.gmail.com>
+Subject: Re: [PATCH v1] PM: hibernate: Avoid redundant resume_device
+ assignment in resume_store()
+To: Zihuan Zhang <zhangzihuan@kylinos.cn>
+Cc: rafael@kernel.org, pavel@kernel.org, len.brown@intel.com, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello:
+On Fri, May 30, 2025 at 12:00=E2=80=AFPM Zihuan Zhang <zhangzihuan@kylinos.=
+cn> wrote:
+>
+> In resume_store(), if the device number written to /sys/power/resume
+> is the same as the current swsusp_resume_device, we can skip reassignment=
+.
+> This avoids unnecessary locking and improves efficiency slightly.
+>
+> Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
+> ---
+>  kernel/power/hibernate.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
+> index 519fb09de5e0..504a1c2465ce 100644
+> --- a/kernel/power/hibernate.c
+> +++ b/kernel/power/hibernate.c
+> @@ -1291,6 +1291,9 @@ static ssize_t resume_store(struct kobject *kobj, s=
+truct kobj_attribute *attr,
+>         if (error)
+>                 return error;
+>
+> +       if (dev =3D=3D swsusp_resume_device)
+> +               return n;
+> +
 
-This patch was applied to riscv/linux.git (fixes)
-by Bartosz Golaszewski <bartosz.golaszewski@linaro.org>:
+The main purpose of this function is to run software_resume(), not to
+set swsusp_resume_device.  You're breaking it with this change.
 
-On Fri, 13 Jun 2025 17:25:33 +0800 you wrote:
-> The gpio-spacemit-k1 driver can be compiled as a module. Add missing
-> MODULE_DEVICE_TABLE so it can be matched by modalias and automatically
-> loaded by udev.
-> 
-> Fixes: d00553240ef8 ("gpio: spacemit: add support for K1 SoC")
-> Signed-off-by: Vivian Wang <wangruikang@iscas.ac.cn>
-> 
-> [...]
-
-Here is the summary with links:
-  - gpio: spacemit: Add missing MODULE_DEVICE_TABLE
-    https://git.kernel.org/riscv/c/e6382fcf9890
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+>         sleep_flags =3D lock_system_sleep();
+>         swsusp_resume_device =3D dev;
+>         unlock_system_sleep(sleep_flags);
+> --
+> 2.25.1
+>
