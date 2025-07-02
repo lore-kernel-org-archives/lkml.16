@@ -1,115 +1,98 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0893222F769
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 08:38:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 508DE23A994;
+	Wed,  2 Jul 2025 08:38:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751445497; cv=none; b=ds90RYXBll7uwD2PUBtyKo8cCap41+eCwROemdPTHAguksOMHTBMfRcsbyCLuit+IorW02Wty5w89ghjAWqODfJyHxZQeMkJACApheVAYrRdTdpBikM/bjhzWv37vSrTyz0RrnssX0Wc4CVDN9XxokgR9Nw2ZyPb7houIyQj/44=
+	t=1751445511; cv=none; b=TDVidu7rrf3CtwCt4WSODfTx2CBQAbxfUeUH4pf/U5+5NRNXXX/TH8TTFLvta0WB+aKFabnfTZ77Ur5YTlaOQS72EUu+z+xFW6nvHTgPXXDII4THrgW7GheHzq1czAUet67I1lSQgar/7b3+v/2xyIP2uzS3JFtaYAd3pdcKXEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751445497; c=relaxed/simple;
-	bh=8MWI5iiH098s95XJH568ru7FVxWbKtkalmjuKkx+M64=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=lRKcOk2L4f7Ls/Mp6qt0uIC/1VlsFmDUKWm4pIerlqRr29xw6PpYqOv0QlB/hx+fvq9nAlgPdaBaK5eCb2R/F+XTnj3Zd6/1UgR9O0RhnySyviKemS8lr8swYqwhjK4oe8GiDZWZN82FL3WQOWMUk0muS0zaTeRwQ0ZJzbtE0Wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=uugPSulg; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1751445511; c=relaxed/simple;
+	bh=/BD6ftK2dVOrVX+f/NTVDY8jSsVIcRsoStomtlMlHxE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=dE+7oOhP89x6W0ara4Kx4UaKtflKw4gjVnKT7zhXKF0trLm9qSLNLGGB6UocrxS5A9OjVtQj1idUWXy5AM0KU+2r3U0MDoJqAL/MRV93BXOAsrVlUoe44NRzD9j7DysyGiCwAiBKzFZ8SJwXIesX6L89vDvWqmyFSLb5eQK9zqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MulSpAeo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uugPSulg"
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 5628bnML3182023;
-	Wed, 2 Jul 2025 03:37:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1751445469;
-	bh=t1zdbnyiWh8u1SR9sO0+G5ymI2WgryouqWTt/VzIYx0=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=uugPSulg7qlwsxwqoc++DUagJCz2wJ2ttSS/L1kmCgcX7hCAHBrKyeoU50tDUHesc
-	 ub8IRTqHBy1yp9Dwk3OmECuGOaLmnc8WX/ikKQ2gh7GHdvSHKzPZOPZEsP8lKfRlXr
-	 zr6fNQQiTiKvOxZeOn7MbIBW+w1QJ6l8cvLon+7k=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 5628bmSH3746060
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Wed, 2 Jul 2025 03:37:48 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Wed, 2
- Jul 2025 03:37:47 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Wed, 2 Jul 2025 03:37:47 -0500
-Received: from [172.24.227.193] (devarsh-precision-tower-3620.dhcp.ti.com [172.24.227.193])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5628bibs3108249;
-	Wed, 2 Jul 2025 03:37:44 -0500
-Message-ID: <a04215a1-3100-45d5-968f-742e09baf9aa@ti.com>
-Date: Wed, 2 Jul 2025 14:07:43 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MulSpAeo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 676C5C4CEEE;
+	Wed,  2 Jul 2025 08:38:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751445510;
+	bh=/BD6ftK2dVOrVX+f/NTVDY8jSsVIcRsoStomtlMlHxE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=MulSpAeosrDskhirKu3/8QEEuXQeKVLGEUVgMRua0LiOyU4pJfWblcPgWw4tZz4N5
+	 nIPmhSJQBQnxlN0eoO347rqcpL6WGzXLXQ0TgjAy3uUxT3vlgM3HWjdGu3OdlxREtU
+	 XHC+p6ZNYgsMvpqV0EyR51nnIVFbOK+kAf8+hafA7/eN/2bVykGSVyRN2C3YDhEuyY
+	 0GiK4ZWD38Ximb3a5WY/z8KNDfFhWwbFF58W3YW7MiXy9BXvrXroBbjJZAlZstpBHB
+	 G6BkiuW0BPdLGHYgx3lk2PG0zwgtsksP9iVCXG2e+giwv9TzvojIgjJQNKoSuHhC2w
+	 7YW+zH2HMn+3w==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "FUJITA Tomonori" <fujita.tomonori@gmail.com>
+Cc: <aliceryhl@google.com>,  <alex.gaynor@gmail.com>,  <ojeda@kernel.org>,
+  <boqun.feng@gmail.com>,  <anna-maria@linutronix.de>,
+  <bjorn3_gh@protonmail.com>,  <dakr@kernel.org>,  <frederic@kernel.org>,
+  <gary@garyguo.net>,  <jstultz@google.com>,
+  <linux-kernel@vger.kernel.org>,  <lossin@kernel.org>,
+  <lyude@redhat.com>,  <rust-for-linux@vger.kernel.org>,
+  <sboyd@kernel.org>,  <tglx@linutronix.de>,  <tmgross@umich.edu>
+Subject: Re: [PATCH v1] rust: time: make ClockSource unsafe trait
+In-Reply-To: <20250701.083940.2222161064880631447.fujita.tomonori@gmail.com>
+	(FUJITA Tomonori's message of "Tue, 01 Jul 2025 08:39:40 +0900")
+References: <20250630131011.405219-1-fujita.tomonori@gmail.com>
+	<CAH5fLgirsNn9WwEUgFaY2z9+9gG3SWssCoNSzpE56F=sS02kEw@mail.gmail.com>
+	<WFqBzZDwsggoxcPQzynlG5_2FqsVdmQlUKufvcDECQUsXJOPHCA4dzoAByNPpuPrAcBoeKoDSR9v3OkJxsYxNg==@protonmail.internalid>
+	<20250701.083940.2222161064880631447.fujita.tomonori@gmail.com>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Wed, 02 Jul 2025 10:38:19 +0200
+Message-ID: <87y0t7ugw4.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/3] Decouple max_pclk check from constant display
- feats
-To: Jayesh Choudhary <j-choudhary@ti.com>, <jyri.sarha@iki.fi>,
-        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <tzimmermann@suse.de>, <dri-devel@lists.freedesktop.org>,
-        <tomi.valkeinen@ideasonboard.com>, <mwalle@kernel.org>
-CC: <airlied@gmail.com>, <simona@ffwll.ch>, <linux-kernel@vger.kernel.org>
-References: <20250701095541.190422-1-j-choudhary@ti.com>
- <a0489fea-8c06-4c89-a530-8be691f4705d@ti.com>
- <71b4bd21-573e-4b48-a57f-6496e97d2eff@ti.com>
-Content-Language: en-US
-From: Devarsh Thakkar <devarsht@ti.com>
-In-Reply-To: <71b4bd21-573e-4b48-a57f-6496e97d2eff@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 02/07/25 12:31, Jayesh Choudhary wrote:
-> Hello Devarsh,
-> 
-> On 01/07/25 19:00, Devarsh Thakkar wrote:
->> On 01/07/25 15:25, Jayesh Choudhary wrote:
->>> In an effort to make the existing compatibles more usable, we are
->>> removing the max_pclk_khz form dispc_features structure and doing the
->>> correspondig checks using "curr_max_pclk[]".
+"FUJITA Tomonori" <fujita.tomonori@gmail.com> writes:
+
+> On Mon, 30 Jun 2025 15:33:31 +0200
+> Alice Ryhl <aliceryhl@google.com> wrote:
+>
+>> On Mon, Jun 30, 2025 at 3:10=E2=80=AFPM FUJITA Tomonori
+>> <fujita.tomonori@gmail.com> wrote:
 >>>
->>> Changes are fully backwards compatible.
+>>> Mark the ClockSource trait as unsafe and document its safety
+>>> requirements. Specifically, implementers must guarantee that their
+>>> `ktime_get()` implementation returns a value in the inclusive range
+>>> [0, KTIME_MAX].
 >>>
->>> After integration of OLDI support[0], we need additional patches in
->>> oldi to identify the VP that has OLDI. We have to do this since
->>> OLDI driver owns the VP clock (its serial clock) and we cannot perform
->>> clock operations on those VP clock from tidss driver. This issue was
->>> also reported upstream when DSI fixes[1] had some clock related calls
->>> in tidss driver. When "clk_round_rate()" is called, ideally it should
->>> have gone to "sci_clk_determine_rate()" to query DM but it doesn't since
->>> clock is owned by OLDI not tidss.
+>>> Update all existing implementations to use `unsafe impl` with
+>>> corresponding safety comments.
 >>>
+>>> Note that there could be potential users of a customized clock source [=
+1]
+>>> so we don't seal the trait.
+>>>
+>>> Link: https://lore.kernel.org/rust-for-linux/Z9xb1r1x5tOzAIZT@boqun-arc=
+hlinux/ [1]
+>>> Suggested-by: Boqun Feng <boqun.feng@gmail.com>
+>>> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
 >>
->> As series is fixing above issue (abnormal behaviour while calling 
->> clk_round_rate from tidss for VP clock being used by OLDI), can we add 
->> "Fixes tag" for the patches?
-> 
-> 
-> This seems like a preemptive fix. So I was not sure what to add.
-> 
-> If it should be added then which commit?
-> 7246e0929945 ("drm/tidss: Add OLDI bridge support") ?
-> 
+>> LGTM:
+>> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+>
+> Thanks!
+>
+>> Though you're missing `` around [0; KTIME_MAX] in some places, which
+>> may be worth adding.
+>
+> Andreas, would you like me to send v2 with the above changes?
 
-Yes, this looks good. I think good to add it as a bug fix since 
-otherwise it causes an abnormal behavior while setting up the VP clock 
-from tidss.
-
-Regards
-Devarsh
+I can add the ticks.
 
 
-> Warm Regards,
-> Jayesh
-> 
->>
->> Regards
->> Devarsh
+Best regards,
+Andreas Hindborg
+
+
