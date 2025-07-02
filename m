@@ -1,159 +1,138 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C46EF2D0C88
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 15:06:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63BA627A12F;
+	Wed,  2 Jul 2025 15:07:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751468798; cv=none; b=KyyxToUjcHP9GzZC93bf1o0bRXcJ7hzsftJltYYuhtcwMvBRUy87xzR1f6KnYAd18bi49T0oGSKMGF1AS3U3J9IFPIm34bh/8bk5iQDrBIiibrtzo3rhVlQGabeHrsVHpDM6sWApacH31tXzyOi/3q7DK52C8NmIXNwuyLJoIBI=
+	t=1751468832; cv=none; b=HllLueXVZYGw5Od5qQU7q2Aua4zMoNMBIO9TNnASj+d8Bw7Er58GJQriDXbpgqpjMl+lwAyCR7Kq7WCyQwkDbyIwHwTVZZ6LAHZizNdWXWRmZipVVk1/XlkPyLirM+0AWgAFGXi6ffmK/bXfNUrZ/6J4tWYR0JJTZNoeiCn4FXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751468798; c=relaxed/simple;
-	bh=68MAtXNRMrOlaqudDNa6dyhIXhKNWKCJp2ZktqVgKfw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KHjkANctLPs/di2k4568r6samly48/vpkwncGzgcp8zhSZUFrjPlHZKrdTGrgnGp2Cbv98frzSkaz7osPA8/hIq8upO/Q6CjLMZmJEmkGK0arTMYukLx5UfJcLKTZhFwVp8gO9RVExaYQdf9+maeur304BhE/xwVX8Ud8WzW0wk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=mpA7MfC4; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1751468832; c=relaxed/simple;
+	bh=f4d/CHfiq2b/q2UQbSnLq4WkqfHHPzTPdRB/P2xPw+4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=i7RQX17V/jqZ5cwXdYPBT7f6BNqxqZp0Uju/biOOMWs48TvKj3umnGwB/Ld2FvnFREcRXt6aS610gK4q1XnxyiUcKqEdg/xbHwo0Uai5s/l87/diJg0v/jGJP3aCzVv7ds4Y3R3OJoOBoaR0pYnMacMoD5kgst1QNs2uZwMvCfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S1in1gCe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="mpA7MfC4"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-235e1d710d8so83156015ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 08:06:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1751468796; x=1752073596; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=DuxrgWn37wvxnmqKJavpfaOGptqxe8oR/pHOsdwVSXg=;
-        b=mpA7MfC4Zt8G8Q2vqphc//2YrzrTFQPdfBMtdqUOf2tQ52hLWPE9XbULaLXAEquHkL
-         uxyMzrOHQusOEk+1K2Ll635NnZ5zW/6ZemPEldrFtwIvArAy5EiwHANlxkeovsIUdjr8
-         N5bfC2QAhN629IM7vgormxDklMpVpdalPQEcg9wYZzJXXQtKGvHUzS+sy//68RSJzd8z
-         Da2jqfXgxTTGxCZfNyv6j+QnoEuZyqpnFCvOqA8tDRWh9SRqHbOy8TKGubZsr0HIFEdm
-         ctJ9lT3tdw3Qja8sFzifAlDr1aeTisM7KHH3FDieuTugZBSH33MAVuINYUk1V5uogTeu
-         O5vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751468796; x=1752073596;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DuxrgWn37wvxnmqKJavpfaOGptqxe8oR/pHOsdwVSXg=;
-        b=cBJjefwy/sI9gPetZjO1usPolRbHOaTUWBadl6pyLadLdK/xljBYcGB9/GbrwMfcpB
-         un1OsMcg7dt9ruqUBXYHhpl+ETAr2TGo4yUbXDzuTY9LG1/QJ1Q5+wMaMtejaALjA4WI
-         dMc6WVSaBvtyiT/MRqytCY/IsBHbWo4BYi6K7GZeFFUODr419rNAr9AFVGDygIqlqhoA
-         XWwr8YBi2xv5LpQD8jPISi07Wt0W0/RrHvGXJ6iTstjIlpcvEQJwNBRt/c6K/O406+J3
-         CdE/91y1IGtUTEiXZndaqhM6rI6VX15ppyJOBpM99P5l/AS5m6CfE0rrbGCuHqZI8mPb
-         CziQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXBwdm3Oz/twymC8CFc32NsQkAgAFLZ1WJAJRLwR1+FBn9oYasRU50mSzFC8yzVIAz9jXDms/7F7SO0PZM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWfTqZ9fhe1rbORjpwKTRU4RLqR+FwYt7x4TsQGJbX6br2XFhL
-	6ndMjcMJ5svS9ZSEVeD0Sw2ktiHUnEqvuuyPCuK3uHun2uUkPILvmOeNLaB1nMY44sk=
-X-Gm-Gg: ASbGncsCldLQYExRs4lpEoxkf4Rp0b7wsvohEmjG3LoTxQAsWeWXOFBqXNBrb5B3G3F
-	AteAtk0aDLEXYndncTT7bjkwcw79uU7GTw/eBT7fxI/W9hVqs9eEq53rMg7V8ch9gJkyIq62pEQ
-	Egb8n4K1Nb4Ojtml5B0WWHR++ChREi/kW64vzaQPkrxbmKaFmN32eI7Vsg/Cslb97QODL+j+7IV
-	xBWBA2EC3oXk7mEUWy5GaHc94m6arafxjVqI7xtyHL/v448OiAD5VEx+bPIj/q6MJNCWGR1HUnP
-	cwOqMFM7h7V/JonSUcxLqXiiqnOvoU808kP58q3DCcZDuGoTTJPcXxKRjvumaLv+3tzveg==
-X-Google-Smtp-Source: AGHT+IEayU19ekj4WiD0uxOsXBOzhuBGyVO7ozD4bXpw7JPLUlbTFpVZ7FSEPPWrdW6ZBL27rOJyQQ==
-X-Received: by 2002:a17:902:e78d:b0:234:8c3d:2912 with SMTP id d9443c01a7336-23c6e4e2a1bmr41479125ad.11.1751468796094;
-        Wed, 02 Jul 2025 08:06:36 -0700 (PDT)
-Received: from sunil-laptop ([103.97.166.196])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3ba530sm130521215ad.200.2025.07.02.08.06.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 08:06:35 -0700 (PDT)
-Date: Wed, 2 Jul 2025 20:36:20 +0530
-From: Sunil V L <sunilvl@ventanamicro.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Alexandre Ghiti <alex@ghiti.fr>, Len Brown <lenb@kernel.org>,
-	Rahul Pathak <rpathak@ventanamicro.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Atish Patra <atish.patra@linux.dev>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 15/24] ACPI: property: Add support for cells property
-Message-ID: <aGVK7NxRdDIGRzNR@sunil-laptop>
-References: <20250702051345.1460497-1-apatel@ventanamicro.com>
- <20250702051345.1460497-16-apatel@ventanamicro.com>
- <CAJZ5v0iYYuK2GF2Pg3NiO4vLFzoYm6Q3Dnk5O2DkMJm1R3qSfQ@mail.gmail.com>
- <aGUaFX9WgTW1I_ZO@smile.fi.intel.com>
- <CAJZ5v0h=qzS67Xu6NUfN_LmQUmKF9=AtkaRrTx81td0m-mRNNg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S1in1gCe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2745DC4CEE7;
+	Wed,  2 Jul 2025 15:07:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751468832;
+	bh=f4d/CHfiq2b/q2UQbSnLq4WkqfHHPzTPdRB/P2xPw+4=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=S1in1gCezUFrfiQNGpZOTj/oAZFDRFgjDAPYQpDRXpHWNBHOjmqqoGkqG6xUQNZSb
+	 PQAwZyCglgqLKiRCunyyFvMiy0ort/I6BAtLt/8m2TuTb9TVsv/W3Wyf6onn8l9tIl
+	 inyPTuBGrche1mqNvzci8jFCtoKwyVfcOhxxze7vKcqeBCvUgN62okYjjKJWnwcDvU
+	 6SY8C06BUv1ohnffzxKP8AEtRSAspodHw+vKSbzvMdYdAwlh74mEyN6KmocL5jXpdR
+	 IfpAai96sjEmr0HK3A7a0sm8BDsrpLpavv5VtxpUa4rwz8Q+aQnDxZ9p/aJnopwY8f
+	 4Mjnls3+yPmFA==
+Message-ID: <42a3fcf1-961b-40de-a9be-e05d0cbb52ee@kernel.org>
+Date: Wed, 2 Jul 2025 17:07:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0h=qzS67Xu6NUfN_LmQUmKF9=AtkaRrTx81td0m-mRNNg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 6/8] dt-bindings: auxdisplay: add Titan Micro
+ Electronics TM16XX
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: =?UTF-8?Q?Jean-Fran=C3=A7ois_Lessard?= <jefflessard3@gmail.com>,
+ Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org,
+ linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+ =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+ Boris Gjenero <boris.gjenero@gmail.com>,
+ Christian Hewitt <christianshewitt@gmail.com>,
+ Heiner Kallweit <hkallweit1@gmail.com>,
+ Paolo Sabatino <paolo.sabatino@gmail.com>
+References: <20250629130002.49842-1-jefflessard3@gmail.com>
+ <20250629130002.49842-8-jefflessard3@gmail.com>
+ <d3d8f72a-e4fe-4f85-8ead-6c104aa32893@kernel.org>
+ <F09B92C5-9FF0-4818-9BF9-EFA4A456399C@gmail.com>
+ <daa343f9-b5eb-4a46-8c3a-f5c07603a9f1@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <daa343f9-b5eb-4a46-8c3a-f5c07603a9f1@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 02, 2025 at 02:39:30PM +0200, Rafael J. Wysocki wrote:
-> On Wed, Jul 2, 2025 at 1:38 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > On Wed, Jul 02, 2025 at 12:20:55PM +0200, Rafael J. Wysocki wrote:
-> > > On Wed, Jul 2, 2025 at 7:16 AM Anup Patel <apatel@ventanamicro.com> wrote:
-> >
-> > ...
-> >
-> > > >  static int acpi_fwnode_get_reference_args(const struct fwnode_handle *fwnode,
-> > > >                                           const char *propname, const char *nargs_prop,
-> > > >                                           unsigned int args_count, unsigned int index,
-> >
-> > > >         const struct acpi_device_data *data;
-> > > >         struct fwnode_handle *ref_fwnode;
-> > > >         struct acpi_device *device;
-> > > > +       unsigned int nargs_count;
-> > > >         int ret, idx = 0;
-> >
-> > > > +                       nargs_count = acpi_fwnode_get_args_count(device, nargs_prop);
-> > >
-> > > I think it should work the same way as it used to for the callers that
-> > > pass args_count, so maybe
-> > >
-> > > if (!args_count)
-> > >         args_count = acpi_fwnode_get_args_count(device, nargs_prop);
-> >
-> > But this is different variable.
+On 02/07/2025 17:02, Krzysztof Kozlowski wrote:
+>>
+>> if:
+>>   properties:
+>>     compatible:
+>>       contains:
+>>         enum:
+>>           - titanmec,tm1618
+>>           - titanmec,tm1620
+>>           - titanmec,tm1628
+>>           - fdhisi,fd620
+>>           - fdhisi,fd628
+>>           - winrise,hbs658
+>> then:
+>>   allOf:
+>>     - $ref: /schemas/spi/spi-peripheral-props.yaml#
 > 
-> Of course it is different.  It is an acpi_fwnode_get_reference_args() parameter.
-> 
-> > > >                         element++;
-> > > > -
-> > > >                         ret = acpi_get_ref_args(idx == index ? args : NULL,
-> > > >                                                 acpi_fwnode_handle(device),
-> > > > -                                               &element, end, args_count);
-> > > > +                                               &element, end,
-> > > > +                                               nargs_count ? nargs_count : args_count);
-> > >
-> > > And this change would not be necessary?
-> >
-> > This is not the same check as proposed above.
-> 
-> No, it is not.
-> 
-> It just makes the function work the same way it did before the change
-> for the callers who passed nozero args_count and so they might be
-> forgiven expecting that it would be taken into account.
+> Why is this conditional? Are these devices with entirely different
+> programming model? Then they usually should not be in the same binding,
+> although depends on differences.
 
-But if we do like this, the expectation of
-fwnode_property_get_reference_args() will differ for DT and ACPI, right?
-I mean nargs_prop should take higher precedence than nargs.
+Although I looked again at driver and I think I understand - some of
+these do not have SPI interface. Then fine, just put it in allOf:
 
-Thanks!
-Sunil
+allOf:
+  - if:
+    ...
+    then:
+      $ref: ...
 
+Some other example for that:
+https://elixir.bootlin.com/linux/v5.19/source/Documentation/devicetree/bindings/mfd/google,cros-ec.yaml#L152
+
+Best regards,
+Krzysztof
