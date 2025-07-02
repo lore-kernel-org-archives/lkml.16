@@ -1,150 +1,117 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E09BD2F4A07
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:20:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACEAE2F4A15;
+	Wed,  2 Jul 2025 14:20:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751466032; cv=none; b=ORymUe9brlZKYKza+XsxPfGfCcFkp79Soj8ZDzWJ68pKe7pPvG0ycEYTyrGJLecEMeBkzEoz0fjntfSgcp3idloIL+F+SUePWy725wiWS9MICRScorMVu9HO0BxmHx2I1kVPlZzwTUpMlKAxC9YTnJOZy8Awc7eMHwIXMSZy4IE=
+	t=1751466049; cv=none; b=s5h9LfQkc9mYv08lGE09PNR+vsV/recYltYSXxKMBPV9ZuFEi1ikfSI4CrwqxuRYBI+AcXtAYzske9RFq1fyAiAP739DWb9WwYqAeFY+bt/xydH+CWysfM6/0HBMvCWGD3c2cgPPBO2dggskLaGGvKXSJGf62+WAh/xXPmuEdCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751466032; c=relaxed/simple;
-	bh=avnRLKakTmibTGU63hfRD4q6SIXreBXAHQdAGo9SCpY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AfqjhE1sXuGHo8HJuoAc2hV0ah0Z+RO8qCrQSA+wviq0JO1ZUOlpy5VOe6KRSH1wo2kUF1xYgKyCJc+lN7D5DXlhy538wMgP0N3I8Ck8YlyuxFR+arn07prLLDbE6cSRf8JOCsmYg6DiZSBxbyD2SqQkdYuEED6NbWpqzLEKQ/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=wLSloOXy; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Tw93rIRJ; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=vI0EpeuB; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=YnR8PVsU; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1751466049; c=relaxed/simple;
+	bh=Pip7qVEFQVYSY76zLUx9PHCExnbAXgnUt8LulPOmRNk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MbGzeo/X8B48c0mI4TircJwZk+lSylNNUJ3970gi3QYr5yaTOIrQE8aL8Vy/OeubVGG655DsGszMyzWER+e2EMSO40WjYAjaLWPxTTNBHEZ4tqDAta+RzLSwf9XBc04zRW420jEFOh2Qik6HiDUOhVP0bJ/cq08zD02bnZYlgbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kf7C140y; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="wLSloOXy";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Tw93rIRJ";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="vI0EpeuB";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="YnR8PVsU"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id EAD721F38D;
-	Wed,  2 Jul 2025 14:20:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751466029; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+2NSSFfIrDFk0JWc9gz8bcD7t0dPLi/sMrLX5yogfHw=;
-	b=wLSloOXyK5rfDlzwMUnHDy/nICkLlE+sNp6LuKYuEmRT1Y3JKtHB1jEhwDfzCWyZUlzjOk
-	WK4ObxmghWXCxYk+J+tl7xhIulA8LHJ4nFuJgkN0DZUEcxAGHYlxVPS3oUA0GctkxG5aRp
-	e6+kpb7yxO3ZyXbQmbFlKcDnRA5GRHU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751466029;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+2NSSFfIrDFk0JWc9gz8bcD7t0dPLi/sMrLX5yogfHw=;
-	b=Tw93rIRJneVvpujkvzWy1bcXU7dl+YhAc14tZ1IR1ZWp+dBBJDGYQQrSpBbe6GJgaCvzL/
-	MwAk8vy/y1CLc3AA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=vI0EpeuB;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=YnR8PVsU
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751466027; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+2NSSFfIrDFk0JWc9gz8bcD7t0dPLi/sMrLX5yogfHw=;
-	b=vI0EpeuBcQEzl7eL6fjQU8Ok+3MOJseFuW4FJ/CgCYKzs1vty/BsxUWiwaOxfgoMlCC2+5
-	gb66kdmS0bTlJEJYhmI1z4egJ0RjXO+N5ePb6WKDjHQFtyBEHJ7G4rF9A2ILaqMVNTfyrL
-	g803HoHgXcJDyuIoMMd1Ecz3mwdB3BU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751466027;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+2NSSFfIrDFk0JWc9gz8bcD7t0dPLi/sMrLX5yogfHw=;
-	b=YnR8PVsUB256hPoh5fBSysAMk23XVFzbIyzycClk4go0voyQuJy80PZlu8F8nJ4+lJxWf3
-	cWoZ5mu1mTxRxpDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AC8DA13A24;
-	Wed,  2 Jul 2025 14:20:27 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 4gcfKitAZWgkQwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Wed, 02 Jul 2025 14:20:27 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 8481BA0A55; Wed,  2 Jul 2025 16:20:21 +0200 (CEST)
-Date: Wed, 2 Jul 2025 16:20:21 +0200
-From: Jan Kara <jack@suse.cz>
-To: Zhang Yi <yi.zhang@huaweicloud.com>
-Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca, jack@suse.cz, 
-	ojaswin@linux.ibm.com, sashal@kernel.org, yi.zhang@huawei.com, libaokun1@huawei.com, 
-	yukuai3@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH v3 06/10] ext4: enhance tracepoints during the folios
- writeback
-Message-ID: <jxtj25ptoel2l3723i26lxstemmvieejnql4iypinrejm5lvx5@72key7fyl3qi>
-References: <20250701130635.4079595-1-yi.zhang@huaweicloud.com>
- <20250701130635.4079595-7-yi.zhang@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kf7C140y"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-3190fbe8536so3451237a91.3;
+        Wed, 02 Jul 2025 07:20:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751466047; x=1752070847; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yGQkzz5zRxRRS2uo+kWwt7fThwG7BuLxpPIngGvvrqc=;
+        b=Kf7C140yfoSvZmd3EKFpSUPnHLUFwfvFTJrWJDgq1SK0R0AGT8qBtazkhdonEgKeR0
+         XP1OXYYcEtzKCMxN4a22irggtK3NkKhFqZJiCAjuPMjMLVDY7xI2bmky978LtbT/+9bv
+         HqJpq5SQlGlta/zPkxwmHyE1CrktAPiozs7FxahyctFgnIak/ww8RT3CH2cATlrdgJ+Y
+         2IvpsN68Z19XtTSjB9X23pE5rmOIxzQtdPT7bc11c+KEwHwrdpnVWUIHF1TE7J5hlp+P
+         ZlxXpLxTQgx18ir9NQbS3DXS5Pfvqv93E0ONBYfJBh3as3///dHPQRvs3rP0wQIoErzg
+         pWgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751466047; x=1752070847;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yGQkzz5zRxRRS2uo+kWwt7fThwG7BuLxpPIngGvvrqc=;
+        b=ane2vxuQ5RzUFzosCa5aaSOUtYxPKYJ6wABicclLAQ4+MGkhQH0SWBUeFrOGJ0TVPa
+         RTTB7FikwlcQQ4PwXuVu/bWxmDCba3NP5TNWhHk+mjGubK0Fx9N4paFVsR8ZgCLTdBIG
+         8Ceiys9ZtSr2USE2ZpaKqXAnNNZMoSd5BIwfZxRO1+3sBIoMaDo9AY/HeliNGSTeaSY1
+         qotCUvKSlOxM2aTr9l56w+WfGIHUqaplQo9a3epqormpJ679nllmU1VpVwWkIXiI7T8H
+         lDwYaJao5rPBfjGA1XDlWPeETrK49FnXxVojjKc8obVdNY4UdF5deSmfqUyuf8cK61EG
+         pocw==
+X-Forwarded-Encrypted: i=1; AJvYcCVdEzV4GTNQQqHZCA8Lun/B7UO8O3FEdsC/nMSrgkIcnF3VE3E6/9VE2k49RGNSbAQynkUrVr7Ym303@vger.kernel.org, AJvYcCXpakeqp7Zp+4hkguvPiuwTwHRWSWThghRHVv2gRHe3iOH/Wt4WVOSpACmbnipSxcq5xh47R0i7cMqHr3w8@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAK1av1JUqEW0HMByUljYsKAH9ynUdAmNTswVtnC1Z6+r8YOrW
+	yI3ELjrnHh3RPpiLElfVRw2Awc/wSseVGP14Ig5EFR8VNhYvxgBT+iDo6hwR7UUbblvse1D+JWa
+	SpjGp98B9IcsT6ZT2UGryd0RUPptq1I0=
+X-Gm-Gg: ASbGncsdw8Uf+BeidB5Eyjoqa5MvjZeV5DaHqTnoBStgpNKdeahceoFuPNlRcsF5J0E
+	zSyH3YYAJQGxqGUIiYzRaW17qpTX92huiwUx9gHzcQUt1YYi2lF6cQUraQPyub1GdhINhQbEZaQ
+	m8UvWwRFpBy5HHzIXp6oABLC9OCK4aKnlsYQcnYrP9sOobJzO8cPzokQ==
+X-Google-Smtp-Source: AGHT+IHXe/1zFmqCjXQ3C8alvXOHiCKHLQ3bJLFyVQ/G6RNjB0hyZ7QrXCV2jrtHiA4TmMP8JM9c+KanMU9aiN4g/Xk=
+X-Received: by 2002:a17:90b:1c12:b0:31a:947d:6ca1 with SMTP id
+ 98e67ed59e1d1-31a947d71e7mr2657565a91.22.1751466046836; Wed, 02 Jul 2025
+ 07:20:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250701130635.4079595-7-yi.zhang@huaweicloud.com>
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,huawei.com:email,suse.com:email]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: EAD721F38D
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -4.01
+References: <20250620213447.56392-1-aford173@gmail.com>
+In-Reply-To: <20250620213447.56392-1-aford173@gmail.com>
+From: Adam Ford <aford173@gmail.com>
+Date: Wed, 2 Jul 2025 09:20:35 -0500
+X-Gm-Features: Ac12FXzt0gezjSCPgKwgvm9n1EIPWkC5-wwtbhI6dVypdKni0yvTumI1x5nEKA8
+Message-ID: <CAHCN7x+2A476SgUP3uWSLovpDU0qxxP=a+sXLbdE0UU6Bv+_YQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm64: dts: imx8mm-beacon: Fix HS400 USDHC clock speed
+To: linux-arm-kernel@lists.infradead.org
+Cc: aford@beaconembedded.com, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org, 
+	imx@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue 01-07-25 21:06:31, Zhang Yi wrote:
-> From: Zhang Yi <yi.zhang@huawei.com>
-> 
-> After mpage_map_and_submit_extent() supports restarting handle if
-> credits are insufficient during allocating blocks, it is more likely to
-> exit the current mapping iteration and continue to process the current
-> processing partially mapped folio again. The existing tracepoints are
-> not sufficient to track this situation, so enhance the tracepoints to
-> track the writeback position and the return value before and after
-> submitting the folios.
-> 
-> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+On Fri, Jun 20, 2025 at 4:34=E2=80=AFPM Adam Ford <aford173@gmail.com> wrot=
+e:
+>
+> The reference manual for the i.MX8MM states the clock rate in
+> MMC mode is 1/2 of the input clock, therefore to properly run
+> at HS400 rates, the input clock must be 400MHz to operate at
+> 200MHz.  Currently the clock is set to 200MHz which is half the
+> rate it should be, so the throughput is half of what it should be
+> for HS400 operation.
+>
 
-Looks good. Feel free to add:
+Shawn and/or Fabio,
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+Any chance this can get reviewed and possibly applied for the next kernel?
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+thank you,
+
+adam
+
+> Fixes: 593816fa2f35 ("arm64: dts: imx: Add Beacon i.MX8m-Mini development=
+ kit")
+> Signed-off-by: Adam Ford <aford173@gmail.com>
+>
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi b/arch/=
+arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi
+> index 21bcd82fd092..8287a7f66ed3 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi
+> @@ -294,6 +294,8 @@ &usdhc3 {
+>         pinctrl-0 =3D <&pinctrl_usdhc3>;
+>         pinctrl-1 =3D <&pinctrl_usdhc3_100mhz>;
+>         pinctrl-2 =3D <&pinctrl_usdhc3_200mhz>;
+> +       assigned-clocks =3D <&clk IMX8MM_CLK_USDHC3>;
+> +       assigned-clock-rates =3D <400000000>;
+>         bus-width =3D <8>;
+>         non-removable;
+>         status =3D "okay";
+> --
+> 2.48.1
+>
