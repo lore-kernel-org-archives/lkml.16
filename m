@@ -1,117 +1,155 @@
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF8224BCF5;
-	Wed,  2 Jul 2025 10:19:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03589254B18;
+	Wed,  2 Jul 2025 10:19:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751451553; cv=none; b=CYCbWGEyrUUJxglso74PYdiggwaOPYZdisJA8xPSi1thkkVDDIUezhQAU1ER5GX0G176569wN8vEVs3VLd9a9u/DXkJ1MoVq062ERQx9IjUvMn4wM3O5nn7xFq2a0IYmwsDtOy+fdkJqHT6dc5SnwILDgzc+BHEyxlXrcrBnCQo=
+	t=1751451565; cv=none; b=hI6+KpuiOKiYXOZQ6yR8xx2k+XtwwajYnL9S4hmGTn5FVZPo54YJ1eYlGc5iAnmmSa5sSnyI7wcwfdykNB3EUyAsNRhTHxdBvodvIJUrJHj4NswVi0aElb0BpkZPbwbu9+9pCursTRMiLvS15fEMpXemk0artOC/eJgElankoLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751451553; c=relaxed/simple;
-	bh=GmPP3P7NMkynjb1/dYzzh/uEXHkmc1XZUkN/yrIBi/E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qKckFBt/NqfdjVol2Woc4MbzberMIN1g53IaORYVIAEX1/spIcr/A5GO81qCkxKAbFCXRn022piDSXjbk7yCVsFdZIZtL8dx7URFlE0o1xUaSXqA7cy0axg83LqowJ1iXoTkRr+PxWoorJYUTKTAE3xAbZbOfc+yMDHk3QsmEeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-5313ea766d8so2176605e0c.0;
-        Wed, 02 Jul 2025 03:19:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751451549; x=1752056349;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tifjm69XZzbuybkFrvZ+2y7FSvfdb3h+AfJkHZkPX/g=;
-        b=NCP7GZbo+M70CSSWhMBDQHdsdgLutIF2MTftMS0R5yVfJf7wHZvPerbG8H3OgohzNa
-         aqnrt2htVBVYEWq5SzR2ZF/gUrEE4xGK/fR1L2d4w8eYlUZZKPXpk42D6LYf4yeXG1/W
-         WmY9jgfU1DVhPzCi4yyHMekOCLhKRsgfNZOXjWo5KQtJbLhshh7E7s6zb5ChKTUNKeuA
-         5NTd0TaicfwQ1/2AzJTd9dHDABi3rdMGWD7mk8U7FMDbM56qDZ+Z1gxCZKC3hea6Q7Vf
-         S3OaZOdfE80KpuWCb8Z3A9zy/0bCk3cKacgpBs3cVgAexML+NgXVd9QIndFoUeNOVC0D
-         BdmA==
-X-Forwarded-Encrypted: i=1; AJvYcCVMGCK/y/L/G+3B+LFLy+yhvelnI31ZsGHvpqy4VIUr4JX19f1ZxP8nVoTN+VLuVKqS7ZFv4T5FN1B4YATAn26K6h8=@vger.kernel.org, AJvYcCVnk5c4tvPGVmlTrH15Vh1A7jIw3WwJmvnPCsOvul+EPPLy1yjYE1ZA3jgB3UirnTqtWOEJpyiTj9EVZ6J8@vger.kernel.org, AJvYcCW+BJOQlwK11AzUbYmLouYkRqTEZGiTk8c12mXtAEe7mDb5wwW/vQmsu2HrpwryByJdqbKBfFeb7nw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhtBC+aC24kBV+LH42fNbt1QUTcBFAr5MQyW1bBM3XmWdJjSMV
-	rLik7nGzuDx3EayHB7DNy3rmU8SpVkgq8mkDMwY442NqoN5biVOUUPfDqpxBeHmb
-X-Gm-Gg: ASbGncv5KLq3q03bwqr3KIn4pk8QnXQu11/qoDT7ijROFwzLDALkhIKCxS4zXPUKHCJ
-	qaL20GHWhjhoIXrgUWB/QBJqVGgU7l7KO2z5kHSEB4vWmqDI40m8CPZZLOnpprO92NkP0xxxrEP
-	uepYJ+zx68X8nclMVnjnROcpFuQqC+5Y2nuNw3yXmCdnon3CjfQfKeNgjjlj12ONUdb5zVjdzNY
-	FOO38hI1EaJqAck7o88wTYMlIrSJWO6UoauH/gOobEdjsOX2ihlKU7p89kGqk9H0nf6nrof3sDg
-	nckbLUy4Nd6jEdH4PfQhfUiMo2xdAGRWmRbqxJ/lletGK+T4jCdvQrd8N9VoKtF/ES3u7ef0q/f
-	6ZtJpY4R2dsCWNgA06zvUrlDB
-X-Google-Smtp-Source: AGHT+IH6yKH2sZzfh2mezbyy0OC9i9G2+2qhTirxVg6dIG6UOYC/H0xt+/HbEpYrml5YdyZCkUllmA==
-X-Received: by 2002:a05:6122:1784:b0:530:720b:abe9 with SMTP id 71dfb90a1353d-5345837dacdmr1486473e0c.7.1751451548940;
-        Wed, 02 Jul 2025 03:19:08 -0700 (PDT)
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com. [209.85.217.54])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-884ee766fe7sm1540892241.29.2025.07.02.03.19.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jul 2025 03:19:08 -0700 (PDT)
-Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-4e9b26a5e45so2647538137.1;
-        Wed, 02 Jul 2025 03:19:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVXNJ+Ah/ps9YRxVrTj/RcSsNczxX9iHs4pt42g6LlB2F6Gp0mijtkR3bLUljkMVL5T/cdws2JxaTS51YFU@vger.kernel.org, AJvYcCWplPlPEChMxRc3SeZdly8w85cTfdB8DJFX5zJhB4bMUPfZ3oN4iWqDEu+1IhyjN5T009A+tCcvcjQ=@vger.kernel.org, AJvYcCX8aMXw1U1ex7IqqpvezpKiNazQGxNIcPa5G4qxxdABiIQ93iP1nh/D/GwZRFpdBqkwNVrBFZENLtd+pe1Gj9X8x7o=@vger.kernel.org
-X-Received: by 2002:a05:6102:41ab:b0:4e5:ac0f:582c with SMTP id
- ada2fe7eead31-4f160f69075mr818743137.13.1751451548210; Wed, 02 Jul 2025
- 03:19:08 -0700 (PDT)
+	s=arc-20240116; t=1751451565; c=relaxed/simple;
+	bh=MI9v+T1vRm2UOm6bwtBl32ZAGRMRsZgCocLfyH2LcB0=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=NfnrAWrmNwbv9Oo5zk1b57zqO6te/FfGDrHaqHbzdyYYEBNzzs8IrQRabXc7faueVA2XLLXdeqZ76EF7eJqdWZEqA2kYbp274YOJd8w7G2F6XErGCx4rtaqX3okNwUza+t0D1FJX50CyRirN3a6xIc5Bf7oVyzPlGymCkK6SfkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KcwzrEY1; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KcwzrEY1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751451564; x=1782987564;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=MI9v+T1vRm2UOm6bwtBl32ZAGRMRsZgCocLfyH2LcB0=;
+  b=KcwzrEY1n7ZBW1pFRz2Es2XwrTWARkLRqB5r4Ke7Tm5eeT0cgKwwELc4
+   TOy9t+fSf1KwIX+xKzZ6avZ1bLB6VqMoa5ErSfyCRfo+wsJlZUvbr+SAJ
+   oK2sv/Q4yr7+zjlflkJp28uINWkQ8Jv5nzNBBDyvhI12JHK2gWrxT8mqg
+   D3x234AAzsTjYzNGpo6Yzb7BY5A7BUX1arA9r8YxkxGzITEChbD/uTHMJ
+   /VGJ+xytiWt/xOLfzB7sEXsUthPNTwIk5m2GLSWZaOJAWk+2B/xAfJTLQ
+   6E+Pr6dr/2HxTPs3NgPBPHxDkwMtJa8AUg9JtiMDnOfSaKoigBGEP9klK
+   Q==;
+X-CSE-ConnectionGUID: cxknw5LhS8Kl7T6GjsgNGw==
+X-CSE-MsgGUID: rS7ZHop8TBKcNMecV3v60g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="65195588"
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="65195588"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 03:19:23 -0700
+X-CSE-ConnectionGUID: 5Tf4oaJNQBeALBNQklx4ZQ==
+X-CSE-MsgGUID: xqeQ+ZU7QeSeQTgNS/ALKA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="154115244"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.228])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 03:19:20 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 2 Jul 2025 13:19:16 +0300 (EEST)
+To: Dongcheng Yan <dongcheng.yan@intel.com>
+cc: LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org, 
+    sakari.ailus@linux.intel.com, hverkuil@xs4all.nl, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+    Hans de Goede <hdegoede@redhat.com>, u.kleine-koenig@baylibre.com, 
+    ricardo.ribalda@gmail.com, bingbu.cao@linux.intel.com, 
+    stable@vger.kernel.org, dongcheng.yan@linux.intel.com, hao.yao@intel.com
+Subject: Re: [PATCH v3 1/2] platform/x86: int3472: add hpd pin support
+In-Reply-To: <20250425104331.3165876-1-dongcheng.yan@intel.com>
+Message-ID: <5a04f105-3075-3226-6ad6-f2c3f31b29da@linux.intel.com>
+References: <20250425104331.3165876-1-dongcheng.yan@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <tencent_71CC9630D88A8792C2396A8844DCCD5C6D06@qq.com>
-In-Reply-To: <tencent_71CC9630D88A8792C2396A8844DCCD5C6D06@qq.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 2 Jul 2025 12:18:55 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUhZqLCkLWtFTaCq67=Nb0O0_XLSWeyweMiNp25XArfKA@mail.gmail.com>
-X-Gm-Features: Ac12FXxgqZ3A4cNQ8wmJ2xcMFp9VGDuQB0YEgiZ8HQzvthHYRBjWbnlsj94X_K8
-Message-ID: <CAMuHMdUhZqLCkLWtFTaCq67=Nb0O0_XLSWeyweMiNp25XArfKA@mail.gmail.com>
-Subject: Re: [PATCH] dmaengine: rcar-dmac: Fix PM usage counter imbalance
-To: Zhang Shurong <zhang_shurong@foxmail.com>
-Cc: vkoul@kernel.org, magnus.damm@gmail.com, robin.murphy@arm.com, 
-	ulf.hansson@linaro.org, kuninori.morimoto.gx@renesas.com, 
-	u.kleine-koenig@baylibre.com, dmaengine@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; boundary="8323328-729750740-1751451556=:939"
 
-Hi Zhang,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On Sun, 29 Jun 2025 at 17:57, Zhang Shurong <zhang_shurong@foxmail.com> wrote:
-> pm_runtime_get_sync will increment pm usage counter
-> even it failed. Forgetting to putting operation will
-> result in reference leak here. We fix it by replacing
-> it with pm_runtime_resume_and_get to keep usage counter
-> balanced.
->
-> Fixes: 87244fe5abdf ("dmaengine: rcar-dmac: Add Renesas R-Car Gen2 DMA Controller (DMAC) driver")
-> Signed-off-by: Zhang Shurong <zhang_shurong@foxmail.com>
+--8323328-729750740-1751451556=:939
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Thanks for your patch!
+On Fri, 25 Apr 2025, Dongcheng Yan wrote:
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Typically HDMI to MIPI CSI-2 bridges have a pin to signal image data is
+> being received. On the host side this is wired to a GPIO for polling or
+> interrupts. This includes the Lontium HDMI to MIPI CSI-2 bridges
+> lt6911uxe and lt6911uxc.
+>=20
+> The GPIO "hpd" is used already by other HDMI to CSI-2 bridges, use it
+> here as well.
+>=20
+> Signed-off-by: Dongcheng Yan <dongcheng.yan@intel.com>
+> ---
+>  drivers/platform/x86/intel/int3472/common.h   | 1 +
+>  drivers/platform/x86/intel/int3472/discrete.c | 6 ++++++
+>  2 files changed, 7 insertions(+)
+>=20
+> diff --git a/drivers/platform/x86/intel/int3472/common.h b/drivers/platfo=
+rm/x86/intel/int3472/common.h
+> index 51b818e62a25..4593d567caf4 100644
+> --- a/drivers/platform/x86/intel/int3472/common.h
+> +++ b/drivers/platform/x86/intel/int3472/common.h
+> @@ -23,6 +23,7 @@
+>  #define INT3472_GPIO_TYPE_CLK_ENABLE=09=09=09=090x0c
+>  #define INT3472_GPIO_TYPE_PRIVACY_LED=09=09=09=090x0d
+>  #define INT3472_GPIO_TYPE_HANDSHAKE=09=09=09=090x12
+> +#define INT3472_GPIO_TYPE_HOTPLUG_DETECT=09=09=090x13
+> =20
+>  #define INT3472_PDEV_MAX_NAME_LEN=09=09=09=0923
+>  #define INT3472_MAX_SENSOR_GPIOS=09=09=09=093
+> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/plat=
+form/x86/intel/int3472/discrete.c
+> index 394975f55d64..efa3bc7af193 100644
+> --- a/drivers/platform/x86/intel/int3472/discrete.c
+> +++ b/drivers/platform/x86/intel/int3472/discrete.c
+> @@ -191,6 +191,10 @@ static void int3472_get_con_id_and_polarity(struct i=
+nt3472_discrete_device *int3
+>  =09=09*con_id =3D "privacy-led";
+>  =09=09*gpio_flags =3D GPIO_ACTIVE_HIGH;
+>  =09=09break;
+> +=09case INT3472_GPIO_TYPE_HOTPLUG_DETECT:
+> +=09=09*con_id =3D "hpd";
+> +=09=09*gpio_flags =3D GPIO_ACTIVE_HIGH;
+> +=09=09break;
+>  =09case INT3472_GPIO_TYPE_POWER_ENABLE:
+>  =09=09*con_id =3D "avdd";
+>  =09=09*gpio_flags =3D GPIO_ACTIVE_HIGH;
+> @@ -221,6 +225,7 @@ static void int3472_get_con_id_and_polarity(struct in=
+t3472_discrete_device *int3
+>   * 0x0b Power enable
+>   * 0x0c Clock enable
+>   * 0x0d Privacy LED
+> + * 0x13 Hotplug detect
+>   *
+>   * There are some known platform specific quirks where that does not qui=
+te
+>   * hold up; for example where a pin with type 0x01 (Power down) is mappe=
+d to
+> @@ -290,6 +295,7 @@ static int skl_int3472_handle_gpio_resources(struct a=
+cpi_resource *ares,
+>  =09switch (type) {
+>  =09case INT3472_GPIO_TYPE_RESET:
+>  =09case INT3472_GPIO_TYPE_POWERDOWN:
+> +=09case INT3472_GPIO_TYPE_HOTPLUG_DETECT:
+>  =09=09ret =3D skl_int3472_map_gpio_to_sensor(int3472, agpio, con_id, gpi=
+o_flags);
+>  =09=09if (ret)
+>  =09=09=09err_msg =3D "Failed to map GPIO pin to sensor\n";
 
-> --- a/drivers/dma/sh/rcar-dmac.c
-> +++ b/drivers/dma/sh/rcar-dmac.c
-> @@ -1068,7 +1068,7 @@ static int rcar_dmac_alloc_chan_resources(struct dma_chan *chan)
->         if (ret < 0)
->                 return -ENOMEM;
->
-> -       return pm_runtime_get_sync(chan->device->dev);
-> +       return pm_runtime_resume_and_get(chan->device->dev);
+I was informed about existance of this patch through an off-band channel=20
+(as I was not among receipients). In future, please include all relevant=20
+maintainers and MLs as receipients as indicated by=20
+scripts/get_maintainers.pl.
 
-Note that there are other issues with this function: in case of failure,
-none of the memory allocated before is freed.  Probably the original
-author assumed none of this can really fail.
+This may go through a media tree,
 
->  }
->
->  static void rcar_dmac_free_chan_resources(struct dma_chan *chan)
+Acked-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
-Gr{oetje,eeting}s,
 
-                        Geert
+--=20
+ i.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--8323328-729750740-1751451556=:939--
