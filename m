@@ -1,178 +1,230 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa2.hgst.iphmx.com (esa2.hgst.iphmx.com [68.232.143.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF95A1E9B3D;
-	Wed,  2 Jul 2025 18:17:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751480247; cv=none; b=j3xr5z/QmiEvmS5ldL270SdI3/DBQ/la9WFXV5STY9PEDqsgZmwlvPXepeK6I3swnC256RTq5OvJXPu0y11Es4P/IZIW07JTlWa0Pls+EF9wMVcHFljrpXk2N5m8WHtG5M35A7CTV2Pi8zYpVzMZ+raM2Ao4Z+jSnXlqnAT5ng8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751480247; c=relaxed/simple;
-	bh=VOX4noNm5hdr9//VV8fJuTw8qZlpN0KBl19xUJwzM0g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GOxcUHQ/pjJCze69ylXdvplj0DN58D4zIrAibM3iwEURRXxET9J3UArCFldFzmcJ41Z+0OkpzV9FR5GVdYsVVCaONlZ9MZIiR/CmA3wsQZLZ/iRD+KeSgmH4BKhLyudF4oWQHfFe57EPrWS8b2xXrZOi9K1bSLF5NqAABKPGDCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WbEdL3RA; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B4B019A
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 18:21:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.143.124
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751480484; cv=fail; b=RI/L1vG/zNcTApJZnY56I4ZOPjosi6y6ZsWlGICHCo4XQC+oTIBzhRl7QeeGl8z9+kEK4C1QwYoVInJvYAqbjR1DYxe07C5Vos/vBm5LHbm4DIashjvrMBqCNZ9HxO/O3hx8UAukwXcYCyhhHAVjrn6v94kpkSyWUd++mm7vuKA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751480484; c=relaxed/simple;
+	bh=JjjYFjqBaUvCVAewHgQAsYtgAlSAvrQZT+fOk3f05SQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Nm1ohswIew/zjZtnSEgQ31GyoUOhBkCY1Zxz1GRx+UqJhCm8ikJSDvEw8HSsCWd+mg+qgXBBUVLBOorAL0UpCdufniXfy4MVo7OzCsdR2O4pUPvKw0CtdxiB3SwSWxzwagD/e0HFsfIh3NX1o7iGo2MCyx56bUPbjcmQydwgDb8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=WqL0rVz/; dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b=o4UVZjNm; arc=fail smtp.client-ip=68.232.143.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WbEdL3RA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54794C4CEFC;
-	Wed,  2 Jul 2025 18:17:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751480247;
-	bh=VOX4noNm5hdr9//VV8fJuTw8qZlpN0KBl19xUJwzM0g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=WbEdL3RAX7oh0LBqkU3I3xP9rxn+OnYM54L831FAt+pVpseWAnxG9do6M0hFrTw6V
-	 JzhR5pI+UY5MbjHtc84RUu8yHKAJpECxGX6va3IKYIH9a1q1mwa1q02Vlfe6zP4Eyc
-	 ZzcgLvQlzIW9LnRbQuE1v5pOnJknFded/cQTn/r9/hXtS0sBrH7BNZzjGiHYZJwMmz
-	 FRev7V7GBEpBFphCi9Oa0z1+Y8tLKN53iH/iqz18S90j8xm4UZj3NGYVkVYRAO6BfD
-	 6GxrzN9gjLGGChImowxx6JhrruR0uBxUHLLEb8FSoGwAiLoFd89GPoSmXzfsRGa8VW
-	 DHbOiS6ok/W4A==
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-73afbe1494fso2712294a34.0;
-        Wed, 02 Jul 2025 11:17:27 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU8cojmHQtKYVnGibw2wbd+zKyhkdgtOwNXkQ4zueQwsqgRdlTetb7O96oXLMwtTak3N5aRghZn8XJbvpDp@vger.kernel.org, AJvYcCUff5TJOBlDsnPrDfrG2MramNzrrkpeCk2+hAWXq3zCMAlXrb3h+CneSRytd57+W+i0+yAYcGdSbkvq2A==@vger.kernel.org, AJvYcCVzLI93VPeTOt5LI0tMX+Tett4faXvifi5iSzegm/YaA6/7g6T2FZPfTEHkJOmSpv9Phill9/X3Gaj+@vger.kernel.org, AJvYcCWiXyG4CVLTT7RqAsmcqpr7G1w0KXkM95/5M1uOPoQHE1GATMkh8HyVn1lfegfcL+48Vj038DshtOGX@vger.kernel.org, AJvYcCWrjdBTAWWXIyIX7UN5lOHVsZ3UzT0+6VbFbZvqCBxXH5ynU49UBOIrTAb4NQ7UpsIXLlmPqIPIqBB/@vger.kernel.org, AJvYcCXQko8St8L8Gtevx/azqg8f1pEPHgqmYgJA3ENgacvSNjGrLvSrcf8IqLeIh2UDdyeqymTZmzpojJ3w@vger.kernel.org, AJvYcCXYp76o/YxtnM+W9EnnE8188ZV0h8l9HGIBFAkEhFeHNe4AGnMGtmk8TUO7Rk089YOw86BVx6++fUs0@vger.kernel.org, AJvYcCXZFEjV3zGn3ya/s7vslVFDj+wnbLiDZTGThBiWUnOOajG6X7ADEoEhaTKtALr39mJXfjVZsIY8Tk1/@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzFJWn/KFgl8H2vF8eV7BqqdMk6ZKVzK4FztGJacVc8tSrZrpZ
-	f2FppIuKvYRrB1avl6Dto2zTchOG1lPkE3llXzO4Rvlvh/kayXVRhId7l829SDty2huPIpmhsWc
-	9Wj5v6RiTRVXT0mXIq8OUMun0cElU5+Y=
-X-Google-Smtp-Source: AGHT+IFE15rcuOH+m5poFA5DuefTIa1FPtQnOGtl5tYQRl/dPKV6mXQEiFHJyvorY6w4piWgIZxb7JHJlha8CbYbuSQ=
-X-Received: by 2002:a05:6830:8008:b0:72b:ae42:3530 with SMTP id
- 46e09a7af769-73b4d10411fmr2321774a34.15.1751480246377; Wed, 02 Jul 2025
- 11:17:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="WqL0rVz/";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="o4UVZjNm"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1751480483; x=1783016483;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=JjjYFjqBaUvCVAewHgQAsYtgAlSAvrQZT+fOk3f05SQ=;
+  b=WqL0rVz/Al/rZflhLeK8NwRtP8Kp5BET/nrLhLXulLLRfqKhJrgWfggC
+   1SVja5UrmcUcN8/zs5B/nEpse+Cy+YPx1nnn+6IQsclrSaUn1RxNG5v+T
+   ZNzfoL7L9JPyKRRsi8k2gyVqtJClqcP/Fs2q+eEip+O1CNx8S0Dhd0XXt
+   N9lF5lLTSg2yz+Tl0QlUw9LVxlhZAZtT1ZkLqLJKE4O7hcK2oqExGviff
+   knq23xdN9/f+NQVWxzU8U9UjvBaoS6E4vFd7JFMNnKrEAqE/UqoEnLaCb
+   wtkB0u6wqiaeKU6FznEkpq6cgBa8S+bFoL6EYuNvMcInjayh9HyCM4778
+   g==;
+X-CSE-ConnectionGUID: Uo23O51xTV+u3ZKPFbdllA==
+X-CSE-MsgGUID: lGpvAs1/Qte/4E8D+Qo+iA==
+X-IronPort-AV: E=Sophos;i="6.16,282,1744041600"; 
+   d="scan'208";a="91728569"
+Received: from mail-dm6nam10on2077.outbound.protection.outlook.com (HELO NAM10-DM6-obe.outbound.protection.outlook.com) ([40.107.93.77])
+  by ob1.hgst.iphmx.com with ESMTP; 03 Jul 2025 02:21:21 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Kc2eXywK9V3ve6NMGEBj1vAARdQNZjNYmm+0ch/gKpSdZcXNufqzvP8jJpa2sD7sN/raEQ3VFu8Spfm7pKlZz43lspIoCJs++dajG4IPzm9qOivM8oNnrqP8Phl3uCFW9av+WCxP2d7//fRss7hohdirAr7MbEiZxngIJq0dA25+QjcfzsNfh23BCKpOOZX8Xp7jgfnyaMyzLcX9DxajJyyvzxix02fPXyOgE3uVdde/AgUVdVWbMb7J/3Nk38bcOqebRbu02n4cl6nxC3u4DEhYVV1ryk09i/z9VDVnB3V0U5CWxpbpvtDpt39HLSvDldEMpgNSQ4mI8Er5UodGGg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JjjYFjqBaUvCVAewHgQAsYtgAlSAvrQZT+fOk3f05SQ=;
+ b=wjOMXwHfsTbPQTOFjKOw8QgU7+dX0G6kgVUrHIlhjuf9jLCjeQXeYgGKebHwjrVR5zrFmwvq1W+26XayjT1e52ipG7KksJeSSiNW1xCJfCpDVhNCs8W5l977Oe7u/2nT5cvA7CGLySJPibCRPGnNimOsuxnL+1T8Jq+tJEA1kmechyXgfZBB3gOPceCBfo7CLet+38S5TawttCBL4USs5VpDtfRr0Bln7YpqGK/c2wIbOyoI1cPT0XkW71itO6xgxfY30kxW0gRcxUbbgk2wbW/D1W9IFyoHyW+lWSRpFwPe5gY+mAp6jtUy5zBu76xw3KvcyYmlQU7KrNe8OHXAFQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JjjYFjqBaUvCVAewHgQAsYtgAlSAvrQZT+fOk3f05SQ=;
+ b=o4UVZjNmNaxzXJ4zudxbWtxIRTGANzOe6wyso11jFQ3c2mK9Y/JqnDcckp/Z4TMwEg/KkhBWzbTIYACYgfp+QKXVOb/ZGJvXa05K0OHIlLz6XD4Xrqjib8hQd8SjL3MDacxg48LtXIuSgLZeo7sqjkCFdEr6pd+VxjZJXMZX+3U=
+Received: from MN2PR04MB6862.namprd04.prod.outlook.com (2603:10b6:208:1ed::18)
+ by PH0PR04MB8452.namprd04.prod.outlook.com (2603:10b6:510:294::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.25; Wed, 2 Jul
+ 2025 18:21:19 +0000
+Received: from MN2PR04MB6862.namprd04.prod.outlook.com
+ ([fe80::67d7:8033:78e7:9eb8]) by MN2PR04MB6862.namprd04.prod.outlook.com
+ ([fe80::67d7:8033:78e7:9eb8%4]) with mapi id 15.20.8880.023; Wed, 2 Jul 2025
+ 18:21:19 +0000
+From: Kamaljit Singh <Kamaljit.Singh1@wdc.com>
+To: Damien Le Moal <dlemoal@kernel.org>, "kbusch@kernel.org"
+	<kbusch@kernel.org>, "axboe@kernel.dk" <axboe@kernel.dk>, hch <hch@lst.de>,
+	"sagi@grimberg.me" <sagi@grimberg.me>, "linux-nvme@lists.infradead.org"
+	<linux-nvme@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+CC: "cassel@kernel.org" <cassel@kernel.org>
+Subject: Re: [PATCH v2 2/3] nvme: prevent admin controller from smart log
+ fetch (LID 2)
+Thread-Topic: [PATCH v2 2/3] nvme: prevent admin controller from smart log
+ fetch (LID 2)
+Thread-Index: AQHb6uxwekBsdO86LEKXtCaOeLhxjbQeGA0AgAELCsg=
+Date: Wed, 2 Jul 2025 18:21:19 +0000
+Message-ID:
+ <MN2PR04MB68627C5DD4EEB073CC4E3EC7BC40A@MN2PR04MB6862.namprd04.prod.outlook.com>
+References: <20250702005830.889217-1-kamaljit.singh1@wdc.com>
+ <20250702005830.889217-3-kamaljit.singh1@wdc.com>
+ <36499d5b-4203-432a-a822-95b6d20d458f@kernel.org>
+In-Reply-To: <36499d5b-4203-432a-a822-95b6d20d458f@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wdc.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MN2PR04MB6862:EE_|PH0PR04MB8452:EE_
+x-ms-office365-filtering-correlation-id: bf39d407-0f9a-4e50-b772-08ddb9953de8
+x-ld-processed: b61c8803-16f3-4c35-9b17-6f65f441df86,ExtAddr
+wdcipoutbound: EOP-TRUE
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|19092799006|366016|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?1kpxJDMVBz/jrNoAX1uoNoxzeENx4W2KF3Ks+le11CvAM3MDMVm5lgcr0E?=
+ =?iso-8859-1?Q?kwweIKJdm9psx8nursYlwguS/jO38xhTg7yEoG12QLOYrXOG1G1gjWlxN3?=
+ =?iso-8859-1?Q?2PeoHrmqQoWHc5DVHZtkWxcq0aWWF4xgo1c6SRF1beg+yveQEye7WIfste?=
+ =?iso-8859-1?Q?5U0XFSVCc9FxJBnNVWMCiGkGI8IppOhxBFUgsFU8lxAIQOXbU1lBUDSVvB?=
+ =?iso-8859-1?Q?HS4NizyXlnrP0PSpuNt/PvQ+jyAol+ZJuOPypJ9gWI9XMOO8ZvmTftilU/?=
+ =?iso-8859-1?Q?NJR3o+eZ3d/GU2HVju2dx1nqFxE346HHNx+TG05rvdbJcusr7G+/UC7ves?=
+ =?iso-8859-1?Q?W3FhFF2gPzSXRAAyqwguhNGqBYPvHWWZdfVp9yAyqYsSG2R7jW6GSYoPOZ?=
+ =?iso-8859-1?Q?7aHJMCO2oBW9MJ2N/nOULbDw5FA3heeLtatNa70ErEZUv8F7tjw3lOIlRP?=
+ =?iso-8859-1?Q?5xVQ1sX745jIyfSAj9oqVCHZ1FNbjAT7M44WY/crEhqZQh3/oStyF4LG++?=
+ =?iso-8859-1?Q?TAGwlqz08afLwDprNO566MoOx2XApDwvVr9hEqxOESh4DSiAkCEM5Bqw6z?=
+ =?iso-8859-1?Q?bJO2kixrAxhyvmG6BmGe7uneCPNgmBCJGe57vJwGbtyIZPlIFLKYFSpGAc?=
+ =?iso-8859-1?Q?XqNeIb5Ua1dh6bhLQB4NWDKbCgYqkHrEUv779yeQGudGUhbaBMyuTQaqG1?=
+ =?iso-8859-1?Q?Gx4Fr0re8huS7QMyN5Ut18v+4h3VRcjF01N/WR/558DXjBp29UHXRzkwU/?=
+ =?iso-8859-1?Q?HvXPIlrgp0g17lOMhzIPKLspZniHfLPqRYYT/1lrPPZhjkal2aCVpX0MU3?=
+ =?iso-8859-1?Q?k72f1CavjBrzNSPHltF9Qh2z02jx8J8a1lz3Und9dhd4WNr/yD3gpCy9PN?=
+ =?iso-8859-1?Q?WW6bAPq3WClxRaU7r6p8u4pb0ItTJ54P8AQv5wly/MWzvydpq++prWPK+o?=
+ =?iso-8859-1?Q?xBjZ/605g5ypA3LrvOXAmmAgnrMLVPcwizm15jRrtJpxdmdgfIo5wSY4Uc?=
+ =?iso-8859-1?Q?OAgHumF5Foz6GHIgJP9Gyfa+PL9drcJma8Fm20qXIqz+BI7MnzA0l2or31?=
+ =?iso-8859-1?Q?dJ0FL0FdynZ5K1eDmNzBLURDXa6gfU09w+pZDsAovdXHHC++x+YxgmxLI1?=
+ =?iso-8859-1?Q?jedJqXW9m+2P0lNDGcnJ2hdkedN2H4kTGCypLfkF678wnlM5jU2i9UkBgC?=
+ =?iso-8859-1?Q?7oT/3yTKfmeGGEiEM9Lag+qiDHq/XWghsJRrqgqGgqU76L6qzlGwV+GL3z?=
+ =?iso-8859-1?Q?PQUvonJRMEYl9bQf3evU5NbSSdjzZl1Q/QNeTYBVvKcKoeZs+u28yhJ/Ne?=
+ =?iso-8859-1?Q?c5OgKuCWcbNLOK0LmOTWPBsJYaXPn+NI/wTDRsCV5qPgB7s/b3OwKlwAs7?=
+ =?iso-8859-1?Q?/oKkA+xaMz/PfmIBz8xrrdrEkW5GJt+0QxY0arVBV1lKqV2cOpClAthgYa?=
+ =?iso-8859-1?Q?fjTSUXoVdBJZr9EcIQYWUa3RSffy2bdF+E7z5+r3h6z+LvBhOFlzjkMGFr?=
+ =?iso-8859-1?Q?IpDmLlFGwCwwQvEOWOOSq1wBIT2YrAw6ykHBJs7WEG5Q=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR04MB6862.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(19092799006)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?dTnQjAP9FjDaTAMnr7bjmv99wHDGtN67LYwhZUloCB/WMtQ79LbZCGLZlV?=
+ =?iso-8859-1?Q?J1eUkERAIqBXVpfJheuxozfAxDbLSfdVBCHnk6ptz0ADa1B8czoYQ4DDOZ?=
+ =?iso-8859-1?Q?0b/LLU/cvnDkF9oAodFB0Tkws65Es0q8YlBbdZB2KOQUAzDgohqsrTmjsq?=
+ =?iso-8859-1?Q?L/qT/J9qNXxulYs9qpgUXAXGqEzNC3gQQldP4QU4RLym65dr+CBg0DJWZW?=
+ =?iso-8859-1?Q?GgkFFj5daA5DMQYmWnPzttiuoJ9Hh8kBMzMWjEoortJPIb0e/ZrstR0LAg?=
+ =?iso-8859-1?Q?KfEitEPdGqnr4NrNNU2eeDH+nGyl4vsX2djcfVgRn2HmNkw1Di/pvEuhTJ?=
+ =?iso-8859-1?Q?FEEjjx2RXOBoh6OgdGN1gWyDOUcHUlZQisx1B65hPbJGr9GDUP/Ve7F7da?=
+ =?iso-8859-1?Q?ObxbOvm2tddwQIZBUxsaQJUNuHzZRa+4GvmBKUKhkMBVW5bXBNW3hpqf2S?=
+ =?iso-8859-1?Q?4uFTwpVWwA1Fg+U+bNsNTlRqdMFAWjbZj0SeQJQYXN613470/5jePHIYfg?=
+ =?iso-8859-1?Q?mvABsqSCQZTPpqJ6tKk1hf5mej5A71EaLf1/MwqMiF1x9m+WPJJ1+4RwST?=
+ =?iso-8859-1?Q?uKafNoNLiQa2BfZyyGLcfE+P3wSu11kYQTDUsBIgluHd2nykO1T0jXYwRA?=
+ =?iso-8859-1?Q?7VaeghZNX5rnLocBVA/fSAfy5XwNWuGhIY500xDow+wK6lCocuqLcjrdBp?=
+ =?iso-8859-1?Q?Z8WAkdiTH6lCZCBKXG4iavwE3yxFdVDkk3l2byXKhrpkxpKj0zXUHeTFcF?=
+ =?iso-8859-1?Q?wwA3yiQV976Z739oWVEFlsn4c/Ck0ho9lzLEPodtL1sm5J7uG/BoNXHMS+?=
+ =?iso-8859-1?Q?JSYhVkI5Urv5NmXuIH+yXELb/D3t7TkHys1gMphvmvHxyA9tm4gv52luVl?=
+ =?iso-8859-1?Q?6DCgOYCFBBIRzB0fGhUPnsh1F5kWPYPsMxhZ+HPThYvP0ztvPzhddn7ETm?=
+ =?iso-8859-1?Q?2BNQNkqbEpirM2YRUGLXmOwX+vMosqFICLeIQCqgU8bcWHEnw0pOF281ZL?=
+ =?iso-8859-1?Q?A+Ssx+0yC8HMcUHVfCigGjqN9/uy6SUcaUqkubwg6zsPGlFPN9qtZQnyA+?=
+ =?iso-8859-1?Q?aclwfvdpiAxunrLdBugAHVAWxfAARrkAARjKfFSb9xQxvQTYhsPVQPmESZ?=
+ =?iso-8859-1?Q?qhtuYVTjj/0OFGsvsv45kaebNJsoIomjuC3yfunhT+jZv3DNO1FGlQ5KDc?=
+ =?iso-8859-1?Q?Z3T6JzymrP3mKHPtOquv/oCWPC6uwjilFdh4y+GrCydfRk5izvJYsT1c8k?=
+ =?iso-8859-1?Q?O79+9dpWsGyhJV3OSzriWbXhgMr5fbKgDQMYmUsTmtA4N315cxXFcqUKuY?=
+ =?iso-8859-1?Q?gG4B6T7LO8peLpIFfc1PXiciHK7jsYcPsYoCqiFUNWtxtI7UJdfNIBtt1/?=
+ =?iso-8859-1?Q?Zvl4x3w3KGFLk9hRn2b6vjLBpcmu2Iv6y45uY1Q+AvSrcZZ+t6c34T/3fL?=
+ =?iso-8859-1?Q?8eMGt4CxeEKnbth9nleTYy/l9zETVZoRVtrG+Q95zcyCTGV9zuio7263Cq?=
+ =?iso-8859-1?Q?AuL+m9Eppv5NzKyi7yA7RJ9oWbTt4cJx0+P5qbfPHmdDoEwGUCGylqMRnH?=
+ =?iso-8859-1?Q?n6Jw9GM4Omh5L+zlHvQoiYaogFpRYG2hR3LadLvkQcEBqJcHZhINAqeXdi?=
+ =?iso-8859-1?Q?0tMnRU7oqfnOdrlj5Up3UPW3DHfhSUVkDD?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250613134817.681832-1-herve.codina@bootlin.com> <20250613134817.681832-3-herve.codina@bootlin.com>
-In-Reply-To: <20250613134817.681832-3-herve.codina@bootlin.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 2 Jul 2025 20:17:15 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iaqT5VY3=UCkTGQKjE7thEPmsSqsrEw9ntWEpZ6bNR3A@mail.gmail.com>
-X-Gm-Features: Ac12FXwDgJ7Vxx3Bq6Wnh6b7GRhQ7F_SCrOgcKmm9L_ptDl7NqzS0VvNcXasFf0
-Message-ID: <CAJZ5v0iaqT5VY3=UCkTGQKjE7thEPmsSqsrEw9ntWEpZ6bNR3A@mail.gmail.com>
-Subject: Re: [PATCH v3 02/28] driver core: Rename get_dev_from_fwnode()
- wrapper to get_device_from_fwnode()
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
-	Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Davidlohr Bueso <dave@stgolabs.net>, 
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org, 
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-cxl@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>, 
-	Horatiu Vultur <horatiu.vultur@microchip.com>, 
-	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	oiCuYua6qT1m3Y3FvJP7GPmRl/YhVQL2lCcGuQiAr65EW0rdZAAu5hSnHI0vxLVoe3i2IC54/x4DfN2jkjOqKSX9t9S3J60yIeyzj6j8g44BjXVNzrPanJB14xTJ0StDpWoRckc+iWxEtbK5I2V9IZAbecHzwJEJTg+TkMBY0mX0zCk2yMYrIe5qItcAxnVsuLd479uUsUVzJ5b8hg5X/ZpDLIsw+OQPO22ik8EeIIIQSBjJKf7xr6ZWep86WIsiW5oALQHZyheCi0Hk028w8Zjint+N9P8IZhBZzDmrtvDxdHl2zI5FUsCPIeBoOIHBJ0uE0bbNbJQCdhi51ojd1AbzFEoPcMqpLtY4FbwJy+VHnzEED8ST57qci0ZxA60cI/F8GdNLt0lsWeVciaASLTVZBfZpOSHXJBmKULKpfLJS+wEr+AfEbAeWIGUE9qj7/U8evFz+jM5SummSFaqp2Xne8mRgdFDRC5zPT5hq4QzuCyBwbJ75ZoPozYqzJsnoiNGaXLFDS3uPH86Nd06JyT4vwv4zm9i10KZ7Ypt/TOQeCgitFMGW8/1mGgM1BK8kSYZ97CEX8KcxENF8ukfxC9BVeGe6CBhiWiHr6Hf7owaYATO4wUa2jumtbqpaXunl
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR04MB6862.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bf39d407-0f9a-4e50-b772-08ddb9953de8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jul 2025 18:21:19.5929
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 73TK0psGateggSJJ3DQV10i7zU6iVpIcLwZMhdrvsui8G/nTAErk8E+gYzEwfINQAwI/CdgWSl/6MgCnLgssjA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR04MB8452
 
-On Fri, Jun 13, 2025 at 3:48=E2=80=AFPM Herve Codina <herve.codina@bootlin.=
-com> wrote:
->
-> get_dev_from_fwnode() calls get_device() and so it acquires a reference
-> on the device returned.
->
-> In order to be more obvious that this wrapper is a get_device() variant,
-> rename it to get_device_from_fwnode().
->
-> Suggested-by: Mark Brown <broonie@kernel.org>
-> Link: https://lore.kernel.org/lkml/CAGETcx97QjnjVR8Z5g0ndLHpK96hLd4aYSV=
-=3DiEkKPNbNOccYmA@mail.gmail.com/
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Reviewed-by: Saravana Kannan <saravanak@google.com>
-> Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-> ---
->  drivers/base/core.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index cbc0099d8ef2..36ccee91ba9a 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -1881,7 +1881,7 @@ static void fw_devlink_unblock_consumers(struct dev=
-ice *dev)
->         device_links_write_unlock();
->  }
->
-> -#define get_dev_from_fwnode(fwnode)    get_device((fwnode)->dev)
-> +#define get_device_from_fwnode(fwnode) get_device((fwnode)->dev)
->
->  static bool fwnode_init_without_drv(struct fwnode_handle *fwnode)
->  {
-> @@ -1891,7 +1891,7 @@ static bool fwnode_init_without_drv(struct fwnode_h=
-andle *fwnode)
->         if (!(fwnode->flags & FWNODE_FLAG_INITIALIZED))
->                 return false;
->
-> -       dev =3D get_dev_from_fwnode(fwnode);
-> +       dev =3D get_device_from_fwnode(fwnode);
->         ret =3D !dev || dev->links.status =3D=3D DL_DEV_NO_DRIVER;
->         put_device(dev);
->
-> @@ -1960,7 +1960,7 @@ static struct device *fwnode_get_next_parent_dev(co=
-nst struct fwnode_handle *fwn
->         struct device *dev;
->
->         fwnode_for_each_parent_node(fwnode, parent) {
-> -               dev =3D get_dev_from_fwnode(parent);
-> +               dev =3D get_device_from_fwnode(parent);
->                 if (dev) {
->                         fwnode_handle_put(parent);
->                         return dev;
-> @@ -2016,8 +2016,8 @@ static bool __fw_devlink_relax_cycles(struct fwnode=
-_handle *con_handle,
->                 goto out;
->         }
->
-> -       sup_dev =3D get_dev_from_fwnode(sup_handle);
-> -       con_dev =3D get_dev_from_fwnode(con_handle);
-> +       sup_dev =3D get_device_from_fwnode(sup_handle);
-> +       con_dev =3D get_device_from_fwnode(con_handle);
->         /*
->          * If sup_dev is bound to a driver and @con hasn't started bindin=
-g to a
->          * driver, sup_dev can't be a consumer of @con. So, no need to ch=
-eck
-> @@ -2156,7 +2156,7 @@ static int fw_devlink_create_devlink(struct device =
-*con,
->         if (sup_handle->flags & FWNODE_FLAG_NOT_DEVICE)
->                 sup_dev =3D fwnode_get_next_parent_dev(sup_handle);
->         else
-> -               sup_dev =3D get_dev_from_fwnode(sup_handle);
-> +               sup_dev =3D get_device_from_fwnode(sup_handle);
->
->         if (sup_dev) {
->                 /*
-> @@ -2225,7 +2225,7 @@ static void __fw_devlink_link_to_consumers(struct d=
-evice *dev)
->                 bool own_link =3D true;
->                 int ret;
->
-> -               con_dev =3D get_dev_from_fwnode(link->consumer);
-> +               con_dev =3D get_device_from_fwnode(link->consumer);
->                 /*
->                  * If consumer device is not available yet, make a "proxy=
-"
->                  * SYNC_STATE_ONLY link from the consumer's parent device=
- to
-> --
-
-There are patches in flight that add new users of get_dev_from_fwnode(), se=
-e
-
-https://lore.kernel.org/linux-pm/20250701114733.636510-1-ulf.hansson@linaro=
-.org/T/#mc45a73769821cc520c35d8eb92d4bac75412bb7c
+Hi Damien,=0A=
+=0A=
+On 7/1/25 19:14, Damien Le Moal wrote:=0A=
+>> Similar to a discovery ctrl, prevent an admin-ctrl from getting a smart=
+=0A=
+>> log. LID 2 is optional for admin controllers to support.=0A=
+=0A=
+>If it is optional, when the admin controller support it, why prevent it ?=
+=0A=
+>This is what your code does... Or is it that at this stage of the=0A=
+>initialization, you do not know yet if the admin controller supports LTD 2=
+ ?=0A=
+Yes, the latter. If the admin controller does not support LID=3D2 then GLP=
+=0A=
+will fail. My suggestion is to revisit this later and add smarts based on=
+=0A=
+LID=3D0 (supported log pages) response from the controller.=0A=
+=0A=
+>=0A=
+> In the future when support for the newly added LID=3D0 (supported log=0A=
+> pages) is added, GLP accesses can be made smarter by basing such calls=0A=
+> on response from LID=3D0 reads.=0A=
+>=0A=
+> Reference: NVMe Base rev 2.2, sec 3.1.3.5, fig 31.=0A=
+>=0A=
+> Signed-off-by: Kamaljit Singh <kamaljit.singh1@wdc.com>=0A=
+> ---=0A=
+>=A0 drivers/nvme/host/core.c | 2 +-=0A=
+>=A0 1 file changed, 1 insertion(+), 1 deletion(-)=0A=
+>=0A=
+> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c=0A=
+> index a1155fb8d5be..c310634e75f3 100644=0A=
+> --- a/drivers/nvme/host/core.c=0A=
+> +++ b/drivers/nvme/host/core.c=0A=
+> @@ -3705,7 +3705,7 @@ int nvme_init_ctrl_finish(struct nvme_ctrl *ctrl, b=
+ool was_suspended)=0A=
+>=0A=
+>=A0=A0=A0=A0=A0=A0 nvme_configure_opal(ctrl, was_suspended);=0A=
+>=0A=
+> -=A0=A0=A0=A0 if (!ctrl->identified && !nvme_discovery_ctrl(ctrl)) {=0A=
+> +=A0=A0=A0=A0 if (!ctrl->identified && !nvme_discovery_ctrl(ctrl) && !nvm=
+e_admin_ctrl(ctrl)) {=0A=
+>=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 /*=0A=
+>=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 * Do not return errors unles=
+s we are in a controller reset,=0A=
+>=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 * the controller works perfe=
+ctly fine without hwmon.=0A=
+=0A=
+=0A=
+Thanks,=0A=
+Kamaljit =
