@@ -1,98 +1,202 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF2F0275B06
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 13:49:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4223827A919
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 13:49:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751464197; cv=none; b=NgYEIYLvdSwBT/jbpdGAqG4Gnyv2OAw3JeOuKgCmZSjmBwZtETCJyhXWr1sxKWGVxL5cgJfUL3d7VGveipO/X8TvemwvjvhZuEN2a/gNENKV8r0Bzw/adAGEpBQx1v9gzz4pmxMepWhXCm1mwaq3qbjtu6x0Knk1OC/TQPE5ll8=
+	t=1751464199; cv=none; b=A0GOY2XKjgxR2MNUStCrvBHqrfdcbr5FXxUpn7QF0RDxXkKLbOxgbb3F+qxQz7qDCtdl7bhwt3XuN/XAxUCetc27JDyYVS3jxr1lRGCDtt/WWBc65VdkF81aC/sg0d7eleR9UBfUxj/nhiLfu9BXUYNQUVCqt78ogkRl15Xl6lI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751464197; c=relaxed/simple;
-	bh=w7Xyb40cJn24nN7twBJleYXadnkJ+HhRYSlYtmT9oX0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YwRnlNU3ePzwMJu2z6PmVf47lrXmvgLa8mk+Eq8x0Sar0ulI18k5FbZs+6QakuCgR0to2gze5HwBNVeAwzG7b/+n8Rbo5Z7craTvvoEoLuqA0wYJ6/YOUXVcCdc68aXiSJBMxmbxy4F0iTwQpFSxJjVRhGsTWaFWXQnO01ae/uQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=3K63wgx0; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1751464199; c=relaxed/simple;
+	bh=yNpjB9RCPYu8yuSQ1YGzgp3ZJQQOJydTGLTUmWj3om8=;
+	h=From:Date:Subject:MIME-Version:Message-Id:In-Reply-To:To:Cc:
+	 Content-Type:References; b=WNc8kPX9JTyUC5eYtO2NLHNNCYN3uoxsamVSCHAY0Y8/0u8n9wqbwTXuswylIbqzfuwLE4kloxqTjeYNhLjJ3PSgbhqSSPkz/p/msZkkVks+qLaOoTQg4riN3QugjLG7DrcE3NPpTZ3C/OB4eiluDSBs3YyIFcvnT4Usfz+7i4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=knHNssPC; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="3K63wgx0"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4537deebb01so23673485e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 06:49:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751464193; x=1752068993; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tp6qbi+ZUsoL8Zvytk6fdxJM4TvJdtmSvks0lRTguZA=;
-        b=3K63wgx0kjClNkPRLLN6rQXGVANDR0ScVQwCYi6iPF1hEtRqqa3i+2Hhv3b60xdk1m
-         mUKQML+XOJJyr8dxdCuh+B7dCYueI3zAtgLT+OX4xQ050gcuJAfB+2royXCnivDRjaQS
-         CkIMkB/Y5XLSmtD0xyB+3BpPmHq/emlqjziZOUm8TOmmPgMyUtKUoDfgjI4Ir4xg7Fxo
-         vme0wAIvMAqYxLOu04KFh/LPOdhrbpInlHhxbmMoW2KOnnV/948ZEQjEC9rsl0k408Hv
-         jgs6MA9U7bswb76ko5Qec4Fj/Ai6emwYj28OdhLV42CpXB47cC93vdxMtun2UFZ8dmdx
-         P/rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751464193; x=1752068993;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tp6qbi+ZUsoL8Zvytk6fdxJM4TvJdtmSvks0lRTguZA=;
-        b=cMWtBebxqr916NQ/toiMJfbOAPspGB/EV0NY31FvZ90sGsY/1Nycgb7iLs4H7AUlOE
-         qJ+An6nvQhp+d0qzjkpnH1zJM1qWr4bgL5vyk4BEFypi6HLXcVWYU1jShJeHCf7nFvzf
-         voQSo6TvMgwgK7RIQwdBudi0LGDhmYi+qU/LKFLIrPcDqj26/5FcCXLy1urZh/nmMw0g
-         YyL5rF/hQKmE8lVWPnX8oUIGw2E6pymdGQ3nRlwWGtBvFRor/cCBLFQV3n8DsfbNkbcG
-         QZ851CQk1kO1UYGRw+h/i5C1TgNX8JRuY3by3xRHdo3uUDTd09tPplSN22pu0/TS7CF2
-         mUpw==
-X-Forwarded-Encrypted: i=1; AJvYcCXI9oiYsBAxqCQAP8Dt2e9aL6+1WpoXXoM9Lr+nZDUJ+q+GX3uczjuNRk0Rk7Dfc/cD+5c9CLiymiwjJUg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0BuAs/4iYVJXxzkOwVrdZKnMCLOmQcLWCSy/9yh5KyS+oGGp6
-	RaqK2HZabq895TQZSePFsemU1VLy9yk8PZOYUx8ZyyhA75a19Jmd8pdmphH7GSVzbdAmBeNhM6C
-	wC1yXLlo=
-X-Gm-Gg: ASbGncs3R/NlevDNg2eO6hbglFNU0d9s661B9lrqUdD3ijgAaQc7dSzdUO0YYl4X3LQ
-	CKyDuEKDadK2IlzrB/vbC/rz4dWf7pVKGyup2CfwWhhPKjqSNP3n5wFzgOMHuA5BNZ8sdcOWfI8
-	3nNsYrNP/9e6ifm5rum+dA2vHPguu65nel7+vD+0pmjUABy5NIqWsYBfWd/hZzkpPhHlI+QZ2uE
-	exaDR7Y+JANO8QVvlq6pVQM8VIRVIYOUMcHuGnF81TeWkw50gmDDZ+fURwMYZQIN1YNzvCmeX80
-	rxsBc+WrH3FacCL51+CCKnVhZguHE4v+UGK9jJpAcC0AF8p0c7S5BUfRCTo9xoSh
-X-Google-Smtp-Source: AGHT+IE0aYFuuB17fOVm7tTLCtf+dmCjdxDuykMapL/v/tu9OvfMxXQZ2W+1BibdIhnsoHzg8jgH7g==
-X-Received: by 2002:a05:600c:3b15:b0:453:66f:b96e with SMTP id 5b1f17b1804b1-454a36e59e5mr27310635e9.11.1751464192987;
-        Wed, 02 Jul 2025 06:49:52 -0700 (PDT)
-Received: from toaster.lan ([2a01:e0a:3c5:5fb1:5542:4bad:e07b:9489])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4538234be76sm229611545e9.15.2025.07.02.06.49.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 06:49:52 -0700 (PDT)
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Jerome Brunet <jbrunet@baylibre.com>
-Cc: linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-amlogic@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 0/3] clk: amlogic: drop clk_regmap tables
-Date: Wed,  2 Jul 2025 15:49:47 +0200
-Message-ID: <175146414026.853943.10828213278410339328.b4-ty@baylibre.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250623-amlogic-clk-drop-clk-regmap-tables-v4-0-ff04918211cc@baylibre.com>
-References: <20250623-amlogic-clk-drop-clk-regmap-tables-v4-0-ff04918211cc@baylibre.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="knHNssPC"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250702134955euoutp029b5c632ac782ce6dc203c3b58ee73756~Oc2gPy44N2698026980euoutp02a
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 13:49:55 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250702134955euoutp029b5c632ac782ce6dc203c3b58ee73756~Oc2gPy44N2698026980euoutp02a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1751464195;
+	bh=9Vo2d35sEyLP44uYKj+D2S0nhQkzl0XSExM9Iiwegts=;
+	h=From:Date:Subject:In-Reply-To:To:Cc:References:From;
+	b=knHNssPC/jAO3og3ag6EnZtO5+CTbWwrdFHyR3DxgbsFF5hA3bq4d4r87IXxicTGT
+	 Hcn+HddVOtQzDBmBaqX5lZbfj/pDZwDh1S++Cyk8xpQus4nJgZychHwRWnPd6ft1p0
+	 fD24YhrxqwEJY6oBttL2I0f4tG97ttBSda3LDO0s=
+Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250702134955eucas1p2ca553f63f44c63a56ba0b2c605edd097~Oc2flYolM0138301383eucas1p2u;
+	Wed,  2 Jul 2025 13:49:55 +0000 (GMT)
+Received: from AMDC4942.eu.corp.samsungelectronics.net (unknown
+	[106.210.136.40]) by eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250702134954eusmtip280bf8af38661f8acaf6fd2cc62a6ce1c~Oc2egQ78x1329113291eusmtip22;
+	Wed,  2 Jul 2025 13:49:53 +0000 (GMT)
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+Date: Wed, 02 Jul 2025 15:45:29 +0200
+Subject: [PATCH v7 1/8] pwm: Expose PWM_WFHWSIZE in public header
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250702-rust-next-pwm-working-fan-for-sending-v7-1-67ef39ff1d29@samsung.com>
+In-Reply-To: <20250702-rust-next-pwm-working-fan-for-sending-v7-0-67ef39ff1d29@samsung.com>
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,  Miguel Ojeda
+	<ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,  Boqun Feng
+	<boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,  Andreas
+	Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,  Trevor
+	Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,  Michal
+	Wilczynski <m.wilczynski@samsung.com>, Guo Ren <guoren@kernel.org>,  Fu Wei
+	<wefu@redhat.com>, Rob Herring <robh@kernel.org>,  Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,  Conor Dooley <conor+dt@kernel.org>,  Paul Walmsley
+	<paul.walmsley@sifive.com>,  Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+	<aou@eecs.berkeley.edu>,  Alexandre Ghiti <alex@ghiti.fr>,  Marek Szyprowski
+	<m.szyprowski@samsung.com>,  Benno Lossin <lossin@kernel.org>,  Michael
+	Turquette <mturquette@baylibre.com>,  Drew Fustini <fustini@kernel.org>,
+	Benno Lossin <lossin@kernel.org>,  Drew Fustini <fustini@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	devicetree@vger.kernel.org
+X-Mailer: b4 0.15-dev
+X-CMS-MailID: 20250702134955eucas1p2ca553f63f44c63a56ba0b2c605edd097
+X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+X-RootMTR: 20250702134955eucas1p2ca553f63f44c63a56ba0b2c605edd097
+X-EPHeader: CA
+X-CMS-RootMailID: 20250702134955eucas1p2ca553f63f44c63a56ba0b2c605edd097
+References: <20250702-rust-next-pwm-working-fan-for-sending-v7-0-67ef39ff1d29@samsung.com>
+	<CGME20250702134955eucas1p2ca553f63f44c63a56ba0b2c605edd097@eucas1p2.samsung.com>
 
-Applied to clk-meson (clk-meson-next), thanks!
+The WFHWSIZE constant defines the maximum size for the hardware-specific
+waveform representation buffer. It is currently local to
+drivers/pwm/core.c, which makes it inaccessible to external tools like
+bindgen.
 
-[1/3] clk: amlogic: get regmap with clk_regmap_init
-      https://github.com/BayLibre/clk-meson/commit/21ed19d11863
-[2/3] clk: amlogic: drop clk_regmap tables
-      https://github.com/BayLibre/clk-meson/commit/4cb53fff9db2
-[3/3] clk: amlogic: s4: remove unused data
-      https://github.com/BayLibre/clk-meson/commit/8a65268500b0
+Move the constant to include/linux/pwm.h to make it part of the public
+API. As part of this change, rename it to PWM_WFHWSIZE to follow
+standard kernel conventions for namespacing macros in public headers.
 
-Best regards,
---
-Jerome
+This allows bindgen to automatically generate a corresponding constant
+for the Rust PWM abstractions, ensuring the value remains synchronized
+between the C core and Rust code and preventing future maintenance
+issues.
+
+Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+---
+ drivers/pwm/core.c  | 26 ++++++++++++--------------
+ include/linux/pwm.h |  2 ++
+ 2 files changed, 14 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index b86f06ab2a324ac98115845f72d9386966a0a3b8..c1e8ab1a0945889d92dada003060b8b109f2a138 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -210,8 +210,6 @@ static int __pwm_write_waveform(struct pwm_chip *chip, struct pwm_device *pwm, c
+ 	return ret;
+ }
+ 
+-#define WFHWSIZE 20
+-
+ /**
+  * pwm_round_waveform_might_sleep - Query hardware capabilities
+  * Cannot be used in atomic context.
+@@ -248,10 +246,10 @@ int pwm_round_waveform_might_sleep(struct pwm_device *pwm, struct pwm_waveform *
+ 	struct pwm_chip *chip = pwm->chip;
+ 	const struct pwm_ops *ops = chip->ops;
+ 	struct pwm_waveform wf_req = *wf;
+-	char wfhw[WFHWSIZE];
++	char wfhw[PWM_WFHWSIZE];
+ 	int ret_tohw, ret_fromhw;
+ 
+-	BUG_ON(WFHWSIZE < ops->sizeof_wfhw);
++	BUG_ON(PWM_WFHWSIZE < ops->sizeof_wfhw);
+ 
+ 	if (!pwmchip_supports_waveform(chip))
+ 		return -EOPNOTSUPP;
+@@ -306,10 +304,10 @@ int pwm_get_waveform_might_sleep(struct pwm_device *pwm, struct pwm_waveform *wf
+ {
+ 	struct pwm_chip *chip = pwm->chip;
+ 	const struct pwm_ops *ops = chip->ops;
+-	char wfhw[WFHWSIZE];
++	char wfhw[PWM_WFHWSIZE];
+ 	int err;
+ 
+-	BUG_ON(WFHWSIZE < ops->sizeof_wfhw);
++	BUG_ON(PWM_WFHWSIZE < ops->sizeof_wfhw);
+ 
+ 	if (!pwmchip_supports_waveform(chip) || !ops->read_waveform)
+ 		return -EOPNOTSUPP;
+@@ -334,11 +332,11 @@ static int __pwm_set_waveform(struct pwm_device *pwm,
+ {
+ 	struct pwm_chip *chip = pwm->chip;
+ 	const struct pwm_ops *ops = chip->ops;
+-	char wfhw[WFHWSIZE];
++	char wfhw[PWM_WFHWSIZE];
+ 	struct pwm_waveform wf_rounded;
+ 	int err, ret_tohw;
+ 
+-	BUG_ON(WFHWSIZE < ops->sizeof_wfhw);
++	BUG_ON(PWM_WFHWSIZE < ops->sizeof_wfhw);
+ 
+ 	if (!pwmchip_supports_waveform(chip))
+ 		return -EOPNOTSUPP;
+@@ -650,9 +648,9 @@ static int __pwm_apply(struct pwm_device *pwm, const struct pwm_state *state)
+ 
+ 	if (pwmchip_supports_waveform(chip)) {
+ 		struct pwm_waveform wf;
+-		char wfhw[WFHWSIZE];
++		char wfhw[PWM_WFHWSIZE];
+ 
+-		BUG_ON(WFHWSIZE < ops->sizeof_wfhw);
++		BUG_ON(PWM_WFHWSIZE < ops->sizeof_wfhw);
+ 
+ 		pwm_state2wf(state, &wf);
+ 
+@@ -809,10 +807,10 @@ int pwm_get_state_hw(struct pwm_device *pwm, struct pwm_state *state)
+ 		return -ENODEV;
+ 
+ 	if (pwmchip_supports_waveform(chip) && ops->read_waveform) {
+-		char wfhw[WFHWSIZE];
++		char wfhw[PWM_WFHWSIZE];
+ 		struct pwm_waveform wf;
+ 
+-		BUG_ON(WFHWSIZE < ops->sizeof_wfhw);
++		BUG_ON(PWM_WFHWSIZE < ops->sizeof_wfhw);
+ 
+ 		ret = __pwm_read_waveform(chip, pwm, &wfhw);
+ 		if (ret)
+@@ -1696,8 +1694,8 @@ static bool pwm_ops_check(const struct pwm_chip *chip)
+ 		    !ops->write_waveform)
+ 			return false;
+ 
+-		if (WFHWSIZE < ops->sizeof_wfhw) {
+-			dev_warn(pwmchip_parent(chip), "WFHWSIZE < %zu\n", ops->sizeof_wfhw);
++		if (PWM_WFHWSIZE < ops->sizeof_wfhw) {
++			dev_warn(pwmchip_parent(chip), "PWM_WFHWSIZE < %zu\n", ops->sizeof_wfhw);
+ 			return false;
+ 		}
+ 	} else {
+diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+index 2492c91452f9641881e9923e5a97e0705047da59..8cafc483db53addf95591d1ac74287532c0fa0ee 100644
+--- a/include/linux/pwm.h
++++ b/include/linux/pwm.h
+@@ -274,6 +274,8 @@ struct pwm_capture {
+ 	unsigned int duty_cycle;
+ };
+ 
++#define PWM_WFHWSIZE 20
++
+ /**
+  * struct pwm_ops - PWM controller operations
+  * @request: optional hook for requesting a PWM
+
+-- 
+2.34.1
+
