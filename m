@@ -1,415 +1,318 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F1BE25DB0C;
-	Wed,  2 Jul 2025 10:56:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB6723ABB9
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 10:56:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751453800; cv=none; b=Ow12jHLutQF4uJLajDvYqtOmgX1lnfDA3qaSPoRKr0j5xJnTSwd5z5jwivoI3kpIavFQLOTIDN0HRxm9LOpFmcAoum7wFdGVfg3YTTjdBel2KRAyu5T8Awa1aHqXZQ7Qg29PCgq17srm66HNw9Eu4l2zMR32KXwl+IGOqZLREAw=
+	t=1751453822; cv=none; b=PbFjQbYnDM0DWFRUEzelaZSkC3sDjAoTltinM4ghu9OjlSCa7yJNzsQidDUv1iXHI16Y3GlBPh7peFIPi0TiPP9Y8D86985W2Omi5Ad/wvqZMRJNIzl3DInBtuQ5cqtcVCud9PRADb8n5cdxE2wWoRgeCrPN8uCUfQE7Us+FIl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751453800; c=relaxed/simple;
-	bh=qiy3S/IosP5v7tFLu6mQoJBkT+oZKHlJCEp70J0xwdQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fzgOUn7Q1Kr1yUt7lukfiKcVbefP35N7eyTn8iMzffSM7jzklt4Q9cH/tJX9UqnVIXd4Y6RZaKj1qLXJsaQHAPKc7P3G/rUsc7kh09P6A5yftapLDIuUoYMyukUoaWjOgCUT/MNcboG5ywQitqb06BvqpK8WuoqiX1jH+JvRW8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g2YW5KlH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751453822; c=relaxed/simple;
+	bh=ZVzwxr887wToG7MgwzRowZQD9nIxHj8I9RllumE22dk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rdz+UPqp0HLx0rKViRLIHkoYwHDSN62NaeT5ydxoznm+P0H/BsWSp5KckVvjIFjwDz62kmfpbPVJbSvgJKwGveHQAFl50eHFUPfwfIoveY3uerCdAFfJMaToy+5rjP5qXVSVMVP50IoqkRNk3l2PdTdqOM2QSarBSt6RiifaWFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VfBvWKzE; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g2YW5KlH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3AABC4CEED;
-	Wed,  2 Jul 2025 10:56:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751453800;
-	bh=qiy3S/IosP5v7tFLu6mQoJBkT+oZKHlJCEp70J0xwdQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=g2YW5KlHIJM3r8t0eJlMgpIdVm5RvvEXoYCxXlcL3jvpr+mMOpdrL6crxuXOPbtDv
-	 ZaCuXeIw1WE90J+msqi86zdK8mgJ2akX/WRteQzNBMRDWKdD40SNWbvcKF9V0S1Mk6
-	 nUwFZO3Jsj2sePjqN4xlUOHuiPK75UcEX4q9y2hu2W2fDRun4MTw8K/SvYmaKSkg62
-	 aJP0QrV6bePzlpbPG1ZWK13tI9JyzLcHBmqTZN9N5Mp//JkR20wMym3ar0hnwuAmOr
-	 edzkGdb8jYCU8KeY7LutfoDjEQysa29j8jMfm3X/M+1Fg6uMEJqzUl7nW8k8hjfOzH
-	 gY4pFi1eVyFvQ==
-From: Mark Brown <broonie@kernel.org>
-Date: Wed, 02 Jul 2025 11:39:13 +0100
-Subject: [PATCH v18 8/8] selftests/clone3: Test shadow stack support
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VfBvWKzE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751453819;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8yfqigI6iFuRnjvOscPGmKN9whaPUb4tE1+3hMy2w+w=;
+	b=VfBvWKzEQEsrPmWqdTvpcuGfoF2HwYw/VvDaUxwuQXYPw/Gs4D7jEFK0Gr5q81+CjbrayR
+	kpQiZZhKRgnUvcTS/u5J59So17rdLuALDSZps69nyI2tI/wP+CCuykhiTIZCyhtuJHQEWa
+	5AN7BvV/1ndCAeMUmGK5Q+4g9tLLCsU=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-194-nRWXxmenNR2MEeK7wR4v2Q-1; Wed, 02 Jul 2025 06:56:58 -0400
+X-MC-Unique: nRWXxmenNR2MEeK7wR4v2Q-1
+X-Mimecast-MFC-AGG-ID: nRWXxmenNR2MEeK7wR4v2Q_1751453817
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-6097b0f5aceso4591066a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 03:56:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751453817; x=1752058617;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8yfqigI6iFuRnjvOscPGmKN9whaPUb4tE1+3hMy2w+w=;
+        b=fWTSRjnEFi8Bzlld8Yrxk52YUINA9+YKa9/WvSsY8AF9MWHhY3s1hi/SgAcSyayFMn
+         TpMrLoGrceMgImQOWNKN2xP5dOhJfjalHNO8apHwiiOIF12j6xPXk2D/44GO7XRSyWl6
+         O/bA8ywYHya9VjtiotKcu3kUIo3a4z0tDlQzDz54LGaaY7ErBnJeV1k03YuLi0J3G/Ge
+         sWE4vwC4Dhq+jIV4v7L2DtxE1olxa9DHupatHbmNA3L2CqIO7uP5FBzBxgmfyHhiKlzG
+         Ui2J5twoTOA98bYk7DzgNTrlgLoSzQ17yPj4tgFhP25y4TEyDHe41puMSfSg5Zrp7SNq
+         GsHg==
+X-Forwarded-Encrypted: i=1; AJvYcCVw8i/evSDinnaYSnSR26X/zCtg1CaOSoAcusPxbr0NP2YONCc2cF2PinJME8GiiO4PXS72j8umt+UNUYo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1gqHu1BnQdL/daQuWgfUzwdpYzK+Vc43baHSRIl8RgrHg6/Gf
+	eRB2e4Dpan3Ojd7uiJPtQRPMvttbfwM8HASizLbphp8SoYm5kespsXKQ16RjpYCJfMoeUsd7m3F
+	VNPrrrf6mUftYltxRu/WeqOkrAruCgzyiC/ZMmJCun7HV9Ru4LdkmbWEiG7dA152V9WDe0J9c0A
+	==
+X-Gm-Gg: ASbGnct8pvfnbe4vNEsD5GCzGYro0dbjudoaQZI4fEl9doYbT/vgicUrVzVaCZrsNkr
+	FTFG9mJS1Hnf6BpF11BkhAYxuwkkiVlvlvtNIF1v/F1Qrrur3wuP7c1sQaFjR87TAqyWBOqDH/6
+	DNRjykeIZepT8eVFSnfB8BeaUU0S3mXkISDHJRFKXEAcU5eD6UuZNIC5WxuVFoYaAFUY/VOLDei
+	xLPyRoivngIhAeOBeyWdi69qBMF0NcdxOeZ1sEQFZ2eEnmHmkilo3Ys6NhGn/iBW+zbeBOB9CY0
+	WRjQtVgYDwYX
+X-Received: by 2002:a05:6402:34ce:b0:60c:3a73:a630 with SMTP id 4fb4d7f45d1cf-60e52cc480bmr2005361a12.9.1751453816570;
+        Wed, 02 Jul 2025 03:56:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEc4ZAJ5DDtXvenjBt+iRpz7JDzxPAN5HAkZUjXWksn5iJF7n9ojiMe/GbaACeYKf63X24xWA==
+X-Received: by 2002:a05:6402:34ce:b0:60c:3a73:a630 with SMTP id 4fb4d7f45d1cf-60e52cc480bmr2005336a12.9.1751453815986;
+        Wed, 02 Jul 2025 03:56:55 -0700 (PDT)
+Received: from redhat.com ([31.187.78.160])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c828bb60fsm9063535a12.3.2025.07.02.03.56.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 03:56:55 -0700 (PDT)
+Date: Wed, 2 Jul 2025 06:56:52 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Jason Wang <jasowang@redhat.com>
+Cc: xuanzhuo@linux.alibaba.com, eperezma@redhat.com,
+	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 19/19] virtio_ring: add in order support
+Message-ID: <20250702064413-mutt-send-email-mst@kernel.org>
+References: <20250616082518.10411-1-jasowang@redhat.com>
+ <20250616082518.10411-20-jasowang@redhat.com>
+ <20250701024602-mutt-send-email-mst@kernel.org>
+ <CACGkMEuzTYPcDMamptLMQpSZu3gWxYx1Sr2nJef+pyuo2m35XQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250702-clone3-shadow-stack-v18-8-7965d2b694db@kernel.org>
-References: <20250702-clone3-shadow-stack-v18-0-7965d2b694db@kernel.org>
-In-Reply-To: <20250702-clone3-shadow-stack-v18-0-7965d2b694db@kernel.org>
-To: "Rick P. Edgecombe" <rick.p.edgecombe@intel.com>, 
- Deepak Gupta <debug@rivosinc.com>, Szabolcs Nagy <Szabolcs.Nagy@arm.com>, 
- "H.J. Lu" <hjl.tools@gmail.com>, Florian Weimer <fweimer@redhat.com>, 
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
- Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
- Vincent Guittot <vincent.guittot@linaro.org>, 
- Dietmar Eggemann <dietmar.eggemann@arm.com>, 
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, 
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, 
- Christian Brauner <brauner@kernel.org>, Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, jannh@google.com, bsegall@google.com, 
- Andrew Morton <akpm@linux-foundation.org>, 
- Yury Khrustalev <yury.khrustalev@arm.com>, 
- Wilco Dijkstra <wilco.dijkstra@arm.com>, linux-kselftest@vger.kernel.org, 
- linux-api@vger.kernel.org, Mark Brown <broonie@kernel.org>, 
- Kees Cook <kees@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>
-X-Mailer: b4 0.15-dev-cff91
-X-Developer-Signature: v=1; a=openpgp-sha256; l=10188; i=broonie@kernel.org;
- h=from:subject:message-id; bh=qiy3S/IosP5v7tFLu6mQoJBkT+oZKHlJCEp70J0xwdQ=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBoZRAwcBwUlUqohRD1WKGejd1WgkKYILtTEJgPr
- r7hJqossraJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCaGUQMAAKCRAk1otyXVSH
- 0HDuB/9EIORBw29Uoo94OX9fKUuX1Yrg+nh/+0pxlM20q6UEAm0ksXkjiE03MCjHnwuL3MV5/AV
- 3UI4doBnhcMbUtJ/6tztaNSBh+wsRITwlOjnUMBg6LXYvRJiiBb4Bh+1jdsec64hpb2SXLGwmf6
- TRG/gC/IO00PB7CKcCaTznNq8+MYweonzJfKt7T15nw+IGef9JyBEtmHS59LEHGsprgRXsvi1cl
- /C0jI3f3Jof0RVSpz8mBv+k3YfiP2ikIOucbniIB5hi+PN48wJi4oqQZr10cT2XUuBqkMV7SPTF
- ZqTwpfqCMcOmAgJI/gn7Gi9hBbSKW4gGWT6hEopEaSp4enPM
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACGkMEuzTYPcDMamptLMQpSZu3gWxYx1Sr2nJef+pyuo2m35XQ@mail.gmail.com>
 
-Add basic test coverage for specifying the shadow stack for a newly
-created thread via clone3(), including coverage of the newly extended
-argument structure.  We check that a user specified shadow stack can be
-provided, and that invalid combinations of parameters are rejected.
+On Wed, Jul 02, 2025 at 05:29:18PM +0800, Jason Wang wrote:
+> On Tue, Jul 1, 2025 at 2:57 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> >
+> > On Mon, Jun 16, 2025 at 04:25:17PM +0800, Jason Wang wrote:
+> > > This patch implements in order support for both split virtqueue and
+> > > packed virtqueue.
+> >
+> > I'd like to see more motivation for this work, documented.
+> > It's not really performance, not as it stands, see below:
+> >
+> > >
+> > > Benchmark with KVM guest + testpmd on the host shows:
+> > >
+> > > For split virtqueue: no obvious differences were noticed
+> > >
+> > > For packed virtqueue:
+> > >
+> > > 1) RX gets 3.1% PPS improvements from 6.3 Mpps to 6.5 Mpps
+> > > 2) TX gets 4.6% PPS improvements from 8.6 Mpps to 9.0 Mpps
+> > >
+> >
+> > That's a very modest improvement for a lot of code.
+> > I also note you put in some batching just for in-order.
+> > Which could also explain the gains maybe?
+> > What if you just put in a simple implementation with no
+> > batching tricks? do you still see a gain?
+> 
+> It is used to implement the batch used updating.
+> 
+> """
+> Some devices always use descriptors in the same order in which they
+> have been made available. These devices can offer the
+> VIRTIO_F_IN_ORDER feature. If negotiated, this knowledge allows
+> devices to notify the use of a batch of buffers to the driver by only
+> writing out a single used ring entry with the id corresponding to the
+> head entry of the descriptor chain describing the last buffer in the
+> batch.
+> """
+> 
+> DPDK implements this behavior, so it's a must for the virtio driver.
+> 
+> > Does any hardware implement this? Maybe that can demonstrate
+> > bigger gains.
+> 
+> Maybe but I don't have one in my hand.
+> 
+> For performance, I think it should be sufficient as a starter. I can
+> say in the next version something like "more optimizations could be
+> done on top"
 
-In order to facilitate testing on systems without userspace shadow stack
-support we manually enable shadow stacks on startup, this is architecture
-specific due to the use of an arch_prctl() on x86. Due to interactions with
-potential userspace locking of features we actually detect support for
-shadow stacks on the running system by attempting to allocate a shadow
-stack page during initialisation using map_shadow_stack(), warning if this
-succeeds when the enable failed.
+What are some optimizations you have in mind?
 
-In order to allow testing of user configured shadow stacks on
-architectures with that feature we need to ensure that we do not return
-from the function where the clone3() syscall is called in the child
-process, doing so would trigger a shadow stack underflow.  To do this we
-use inline assembly rather than the standard syscall wrapper to call
-clone3().  In order to avoid surprises we also use a syscall rather than
-the libc exit() function., this should be overly cautious.
 
-Acked-by: Shuah Khan <skhan@linuxfoundation.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- tools/testing/selftests/clone3/clone3.c           | 143 +++++++++++++++++++++-
- tools/testing/selftests/clone3/clone3_selftests.h |  63 ++++++++++
- 2 files changed, 205 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/clone3/clone3.c b/tools/testing/selftests/clone3/clone3.c
-index 5b8b7d640e70..6fd2b3238e2c 100644
---- a/tools/testing/selftests/clone3/clone3.c
-+++ b/tools/testing/selftests/clone3/clone3.c
-@@ -3,6 +3,7 @@
- /* Based on Christian Brauner's clone3() example */
- 
- #define _GNU_SOURCE
-+#include <asm/mman.h>
- #include <errno.h>
- #include <inttypes.h>
- #include <linux/types.h>
-@@ -11,6 +12,7 @@
- #include <stdint.h>
- #include <stdio.h>
- #include <stdlib.h>
-+#include <sys/mman.h>
- #include <sys/syscall.h>
- #include <sys/types.h>
- #include <sys/un.h>
-@@ -19,8 +21,12 @@
- #include <sched.h>
- 
- #include "../kselftest.h"
-+#include "../ksft_shstk.h"
- #include "clone3_selftests.h"
- 
-+static bool shadow_stack_supported;
-+static size_t max_supported_args_size;
-+
- enum test_mode {
- 	CLONE3_ARGS_NO_TEST,
- 	CLONE3_ARGS_ALL_0,
-@@ -28,6 +34,10 @@ enum test_mode {
- 	CLONE3_ARGS_INVAL_EXIT_SIGNAL_NEG,
- 	CLONE3_ARGS_INVAL_EXIT_SIGNAL_CSIG,
- 	CLONE3_ARGS_INVAL_EXIT_SIGNAL_NSIG,
-+	CLONE3_ARGS_SHADOW_STACK,
-+	CLONE3_ARGS_SHADOW_STACK_MISALIGNED,
-+	CLONE3_ARGS_SHADOW_STACK_NO_TOKEN,
-+	CLONE3_ARGS_SHADOW_STACK_NORMAL_MEMORY,
- };
- 
- typedef bool (*filter_function)(void);
-@@ -44,6 +54,44 @@ struct test {
- 	filter_function filter;
- };
- 
-+
-+/*
-+ * We check for shadow stack support by attempting to use
-+ * map_shadow_stack() since features may have been locked by the
-+ * dynamic linker resulting in spurious errors when we attempt to
-+ * enable on startup.  We warn if the enable failed.
-+ */
-+static void test_shadow_stack_supported(void)
-+{
-+	long ret;
-+
-+	ret = syscall(__NR_map_shadow_stack, 0, getpagesize(), 0);
-+	if (ret == -1) {
-+		ksft_print_msg("map_shadow_stack() not supported\n");
-+	} else if ((void *)ret == MAP_FAILED) {
-+		ksft_print_msg("Failed to map shadow stack\n");
-+	} else {
-+		ksft_print_msg("Shadow stack supportd\n");
-+		shadow_stack_supported = true;
-+
-+		if (!shadow_stack_enabled)
-+			ksft_print_msg("Mapped but did not enable shadow stack\n");
-+	}
-+}
-+
-+static void *get_shadow_stack_page(unsigned long flags)
-+{
-+	unsigned long long page;
-+
-+	page = syscall(__NR_map_shadow_stack, 0, getpagesize(), flags);
-+	if ((void *)page == MAP_FAILED) {
-+		ksft_print_msg("map_shadow_stack() failed: %d\n", errno);
-+		return 0;
-+	}
-+
-+	return (void *)page;
-+}
-+
- static int call_clone3(uint64_t flags, size_t size, enum test_mode test_mode)
- {
- 	struct __clone_args args = {
-@@ -57,6 +105,7 @@ static int call_clone3(uint64_t flags, size_t size, enum test_mode test_mode)
- 	} args_ext;
- 
- 	pid_t pid = -1;
-+	void *p;
- 	int status;
- 
- 	memset(&args_ext, 0, sizeof(args_ext));
-@@ -89,6 +138,26 @@ static int call_clone3(uint64_t flags, size_t size, enum test_mode test_mode)
- 	case CLONE3_ARGS_INVAL_EXIT_SIGNAL_NSIG:
- 		args.exit_signal = 0x00000000000000f0ULL;
- 		break;
-+	case CLONE3_ARGS_SHADOW_STACK:
-+		p = get_shadow_stack_page(SHADOW_STACK_SET_TOKEN);
-+		p += getpagesize() - sizeof(void *);
-+		args.shadow_stack_token = (unsigned long long)p;
-+		break;
-+	case CLONE3_ARGS_SHADOW_STACK_MISALIGNED:
-+		p = get_shadow_stack_page(SHADOW_STACK_SET_TOKEN);
-+		p += getpagesize() - sizeof(void *) - 1;
-+		args.shadow_stack_token = (unsigned long long)p;
-+		break;
-+	case CLONE3_ARGS_SHADOW_STACK_NORMAL_MEMORY:
-+		p = malloc(getpagesize());
-+		p += getpagesize() - sizeof(void *);
-+		args.shadow_stack_token = (unsigned long long)p;
-+		break;
-+	case CLONE3_ARGS_SHADOW_STACK_NO_TOKEN:
-+		p = get_shadow_stack_page(0);
-+		p += getpagesize() - sizeof(void *);
-+		args.shadow_stack_token = (unsigned long long)p;
-+		break;
- 	}
- 
- 	memcpy(&args_ext.args, &args, sizeof(struct __clone_args));
-@@ -102,7 +171,12 @@ static int call_clone3(uint64_t flags, size_t size, enum test_mode test_mode)
- 
- 	if (pid == 0) {
- 		ksft_print_msg("I am the child, my PID is %d\n", getpid());
--		_exit(EXIT_SUCCESS);
-+		/*
-+		 * Use a raw syscall to ensure we don't get issues
-+		 * with manually specified shadow stack and exit handlers.
-+		 */
-+		syscall(__NR_exit, EXIT_SUCCESS);
-+		ksft_print_msg("CHILD FAILED TO EXIT PID is %d\n", getpid());
- 	}
- 
- 	ksft_print_msg("I am the parent (%d). My child's pid is %d\n",
-@@ -184,6 +258,26 @@ static bool no_timenamespace(void)
- 	return true;
- }
- 
-+static bool have_shadow_stack(void)
-+{
-+	if (shadow_stack_supported) {
-+		ksft_print_msg("Shadow stack supported\n");
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
-+static bool no_shadow_stack(void)
-+{
-+	if (!shadow_stack_supported) {
-+		ksft_print_msg("Shadow stack not supported\n");
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
- static size_t page_size_plus_8(void)
- {
- 	return getpagesize() + 8;
-@@ -327,6 +421,50 @@ static const struct test tests[] = {
- 		.expected = -EINVAL,
- 		.test_mode = CLONE3_ARGS_NO_TEST,
- 	},
-+	{
-+		.name = "Shadow stack on system with shadow stack",
-+		.size = 0,
-+		.expected = 0,
-+		.e2big_valid = true,
-+		.test_mode = CLONE3_ARGS_SHADOW_STACK,
-+		.filter = no_shadow_stack,
-+	},
-+	{
-+		.name = "Shadow stack with misaligned address",
-+		.flags = CLONE_VM,
-+		.size = 0,
-+		.expected = -EINVAL,
-+		.e2big_valid = true,
-+		.test_mode = CLONE3_ARGS_SHADOW_STACK_MISALIGNED,
-+		.filter = no_shadow_stack,
-+	},
-+	{
-+		.name = "Shadow stack with normal memory",
-+		.flags = CLONE_VM,
-+		.size = 0,
-+		.expected = -EFAULT,
-+		.e2big_valid = true,
-+		.test_mode = CLONE3_ARGS_SHADOW_STACK_NORMAL_MEMORY,
-+		.filter = no_shadow_stack,
-+	},
-+	{
-+		.name = "Shadow stack with no token",
-+		.flags = CLONE_VM,
-+		.size = 0,
-+		.expected = -EINVAL,
-+		.e2big_valid = true,
-+		.test_mode = CLONE3_ARGS_SHADOW_STACK_NO_TOKEN,
-+		.filter = no_shadow_stack,
-+	},
-+	{
-+		.name = "Shadow stack on system without shadow stack",
-+		.flags = CLONE_VM,
-+		.size = 0,
-+		.expected = -EFAULT,
-+		.e2big_valid = true,
-+		.test_mode = CLONE3_ARGS_SHADOW_STACK_NORMAL_MEMORY,
-+		.filter = have_shadow_stack,
-+	},
- };
- 
- int main(int argc, char *argv[])
-@@ -334,9 +472,12 @@ int main(int argc, char *argv[])
- 	size_t size;
- 	int i;
- 
-+	enable_shadow_stack();
-+
- 	ksft_print_header();
- 	ksft_set_plan(ARRAY_SIZE(tests));
- 	test_clone3_supported();
-+	test_shadow_stack_supported();
- 
- 	for (i = 0; i < ARRAY_SIZE(tests); i++)
- 		test_clone3(&tests[i]);
-diff --git a/tools/testing/selftests/clone3/clone3_selftests.h b/tools/testing/selftests/clone3/clone3_selftests.h
-index 939b26c86d42..8151c4fc971a 100644
---- a/tools/testing/selftests/clone3/clone3_selftests.h
-+++ b/tools/testing/selftests/clone3/clone3_selftests.h
-@@ -31,12 +31,75 @@ struct __clone_args {
- 	__aligned_u64 set_tid;
- 	__aligned_u64 set_tid_size;
- 	__aligned_u64 cgroup;
-+#ifndef CLONE_ARGS_SIZE_VER2
-+#define CLONE_ARGS_SIZE_VER2 88	/* sizeof third published struct */
-+#endif
-+	__aligned_u64 shadow_stack_token;
-+#ifndef CLONE_ARGS_SIZE_VER3
-+#define CLONE_ARGS_SIZE_VER3 96 /* sizeof fourth published struct */
-+#endif
- };
- 
-+/*
-+ * For architectures with shadow stack support we need to be
-+ * absolutely sure that the clone3() syscall will be inline and not a
-+ * function call so we open code.
-+ */
-+#ifdef __x86_64__
-+static __always_inline pid_t sys_clone3(struct __clone_args *args, size_t size)
-+{
-+	register long _num  __asm__ ("rax") = __NR_clone3;
-+	register long _args __asm__ ("rdi") = (long)(args);
-+	register long _size __asm__ ("rsi") = (long)(size);
-+	long ret;
-+
-+	__asm__ volatile (
-+		"syscall\n"
-+		: "=a"(ret)
-+		: "r"(_args), "r"(_size),
-+		  "0"(_num)
-+		: "rcx", "r11", "memory", "cc"
-+	);
-+
-+	if (ret < 0) {
-+		errno = -ret;
-+		return -1;
-+	}
-+
-+	return ret;
-+}
-+#elif defined(__aarch64__)
-+static __always_inline pid_t sys_clone3(struct __clone_args *args, size_t size)
-+{
-+	register long _num  __asm__ ("x8") = __NR_clone3;
-+	register long _args __asm__ ("x0") = (long)(args);
-+	register long _size __asm__ ("x1") = (long)(size);
-+	register long arg2 __asm__ ("x2") = 0;
-+	register long arg3 __asm__ ("x3") = 0;
-+	register long arg4 __asm__ ("x4") = 0;
-+
-+	__asm__ volatile (
-+		"svc #0\n"
-+		: "=r"(_args)
-+		: "r"(_args), "r"(_size),
-+		  "r"(_num), "r"(arg2),
-+		  "r"(arg3), "r"(arg4)
-+		: "memory", "cc"
-+	);
-+
-+	if ((int)_args < 0) {
-+		errno = -((int)_args);
-+		return -1;
-+	}
-+
-+	return _args;
-+}
-+#else
- static pid_t sys_clone3(struct __clone_args *args, size_t size)
- {
- 	return syscall(__NR_clone3, args, size);
- }
-+#endif
- 
- static inline void test_clone3_supported(void)
- {
+> Note that the patch that introduces packed virtqueue, there's not even
+> any numbers:
+> 
+> commit 1ce9e6055fa0a9043405c5604cf19169ec5379ff
+> Author: Tiwei Bie <tiwei.bie@intel.com>
+> Date:   Wed Nov 21 18:03:27 2018 +0800
+> 
+>     virtio_ring: introduce packed ring support
+> 
+>     Introduce the packed ring support. Packed ring can only be
+>     created by vring_create_virtqueue() and each chunk of packed
+>     ring will be allocated individually. Packed ring can not be
+>     created on preallocated memory by vring_new_virtqueue() or
+>     the likes currently.
+> 
+>     Signed-off-by: Tiwei Bie <tiwei.bie@intel.com>
+>     Signed-off-by: David S. Miller <davem@davemloft.net>
 
--- 
-2.39.5
+
+I think the assumption there was that intel has hardware that
+requires packed. That's why Dave merged this.
+
+> >
+> >
+> > > Signed-off-by: Jason Wang <jasowang@redhat.com>
+> > > ---
+> > >  drivers/virtio/virtio_ring.c | 423 +++++++++++++++++++++++++++++++++--
+> > >  1 file changed, 402 insertions(+), 21 deletions(-)
+> > >
+> > > diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+> > > index 27a9459a0555..21d456392ba0 100644
+> > > --- a/drivers/virtio/virtio_ring.c
+> > > +++ b/drivers/virtio/virtio_ring.c
+> > > @@ -70,11 +70,14 @@
+> > >  enum vq_layout {
+> > >       SPLIT = 0,
+> > >       PACKED,
+> > > +     SPLIT_IN_ORDER,
+> > > +     PACKED_IN_ORDER,
+> > >       VQ_TYPE_MAX,
+> > >  };
+> > >
+> > >  struct vring_desc_state_split {
+> > >       void *data;                     /* Data for callback. */
+> > > +     u32 total_len;                  /* Buffer Length */
+> > >
+> > >       /* Indirect desc table and extra table, if any. These two will be
+> > >        * allocated together. So we won't stress more to the memory allocator.
+> > > @@ -84,6 +87,7 @@ struct vring_desc_state_split {
+> > >
+> > >  struct vring_desc_state_packed {
+> > >       void *data;                     /* Data for callback. */
+> > > +     u32 total_len;                  /* Buffer Length */
+> > >
+> > >       /* Indirect desc table and extra table, if any. These two will be
+> > >        * allocated together. So we won't stress more to the memory allocator.
+> >
+> > We are bloating up the cache footprint for everyone,
+> > so there's a chance of regressions.
+> > Pls include benchmark for in order off, to make sure we
+> > are not regressing.
+> 
+> Ok.
+> 
+> > How big was the ring?
+> 
+> 256.
+
+that is very modest, you want to fill at least one cache way,
+preferably more.
+
+> > Worth trying with a biggish one, where there is more cache
+> > pressure.
+> 
+> Ok.
+> 
+> >
+> >
+> > Why not have a separate state for in-order?
+> 
+> It can work.
+> 
+> >
+> >
+> >
+> > > @@ -206,6 +210,12 @@ struct vring_virtqueue {
+> > >
+> > >       /* Head of free buffer list. */
+> > >       unsigned int free_head;
+> > > +
+> > > +     /* Head of the batched used buffers, vq->num means no batching */
+> > > +     unsigned int batch_head;
+> > > +
+> > > +     unsigned int batch_len;
+> > > +
+> >
+> > Are these two only used for in-order? Please document that.
+> 
+> Yes, I will do that.
+> 
+> > I also want some documentation about the batching trickery
+> > used please.
+> > What is batched, when, how is batching flushed, why are we
+> > only batching in-order ...
+> 
+> I'm not sure I get things like this, what you want seems to be the
+> behaviour of the device which has been stated by the spec or I may
+> miss something here.
+
+"a single used ring entry with the id corresponding to the
+ head entry of the descriptor chain describing the last buffer in the
+ batch"
+?
+
+so together they form this used ring entry describing the last buffer?
+"head" is the id and "len" the length?
+
+maybe
+
+	/*
+	 * With IN_ORDER, devices write a single used ring entry with
+	 * the id corresponding to the head entry of the descriptor chain
+	 * describing the last buffer in the batch
+	 */
+	struct used_entry {
+		u32 id;
+		u32 len;
+	} batch_last;
+
+?
+
+
+
+
+> >
+> >
+> >
+> >
+> > >       /* Number we've added since last sync. */
+> > >       unsigned int num_added;
+> > >
+> > > @@ -256,10 +266,14 @@ static void vring_free(struct virtqueue *_vq);
+> > >
+> > >  #define to_vvq(_vq) container_of_const(_vq, struct vring_virtqueue, vq)
+> > >
+> > > -
+> > >  static inline bool virtqueue_is_packed(const struct vring_virtqueue *vq)
+> > >  {
+> > > -     return vq->layout == PACKED;
+> > > +     return vq->layout == PACKED || vq->layout == PACKED_IN_ORDER;
+> > > +}
+> > > +
+> > > +static inline bool virtqueue_is_in_order(const struct vring_virtqueue *vq)
+> > > +{
+> > > +     return vq->layout == SPLIT_IN_ORDER || vq->layout == PACKED_IN_ORDER;
+> > >  }
+> > >
+> > >  static bool virtqueue_use_indirect(const struct vring_virtqueue *vq,
+> > > @@ -570,7 +584,7 @@ static inline int virtqueue_add_split(struct vring_virtqueue *vq,
+> > >       struct vring_desc_extra *extra;
+> > >       struct scatterlist *sg;
+> > >       struct vring_desc *desc;
+> > > -     unsigned int i, n, c, avail, descs_used, err_idx;
+> > > +     unsigned int i, n, c, avail, descs_used, err_idx, total_len = 0;
+> >
+> >
+> > I would add a comment here:
+> >
+> > /* Total length for in-order */
+> > unsigned int total_len = 0;
+> 
+> Ok.
+> 
+> Thanks
 
