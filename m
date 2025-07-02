@@ -1,172 +1,111 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309481E32DB
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 16:17:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 567861E51EA
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 16:17:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751473032; cv=none; b=mve/hjKp3gT697IGDpKiVvTiLFD9rDEe9KZZUGZbU2ePLLVB5jezwvoaTfYRIGTVB22XjYLdfcu87blXoYrZxxD8Zsp4+UEx7LPCFR8AdsXKVsuKjwSEh+Ic0Db0T8YzT6tSavJrGp+KCedDTO+oXQHIXNTOeGLtEoiozystEZs=
+	t=1751473070; cv=none; b=u747ZbHGl9EXZTbPkFug6puKSsOGtrRweonW6v3dbsMeffAgBJ5/aJWsYNM2mCxmEIKjdYlvVASrDljUOTCLW7szFQr6j1PX9d1vOvPcTlasXi82REfYVKTO+JD18aBSSWxsPrrX31I2WaN//no592xZF4Z66gB3kh5QaoPnvT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751473032; c=relaxed/simple;
-	bh=N6w5ocafwebBiNMgi0e1/9oq0U6deIfUb/h3sckv4Cg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=C9oPYINpcHH4CGuJ/pEpWXFsBlKf7vZpaW5pVKc93uP+Gi/RPexgnp9Yil2VefAYWfIjAzZt3bSEG+xmogGAnRg3BoOyPD0QgFRR6GCbtQWDwxwa53xe4nOym/Z91NzT9dsDnLN4OZ23LP5Xetw0eX3v4zDOM/g9vlIZFrOBGOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nyjw8tko; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751473070; c=relaxed/simple;
+	bh=65WluV3BvvXKhljAjH+/Or49/aYcpF02/db+XF1Iy/k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E0vzRiqitMdChx6S5HKyF6b6KDJTx6wTopdSr0GdyRZfK2MMdkoq+lRqDi95DeMWXxBd6AhkgGWDydy8LqAdXPoJvJwzjjZ+SIS66NXSnZ3kxjif5r/38DQXfpDLCNUmOPQBPlAny9cqCvfdeqSu6VyN94c65argyFjDUSMuuVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=6wind.com; spf=pass smtp.mailfrom=6wind.com; dkim=pass (2048-bit key) header.d=6wind.com header.i=@6wind.com header.b=YfxY0NsL; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=6wind.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=6wind.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nyjw8tko"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4531898b208so2496645e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 09:17:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=6wind.com header.i=@6wind.com header.b="YfxY0NsL"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a524caf77eso1047473f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 09:17:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751473028; x=1752077828; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=JZV7K9gzSH7zs3d+hR+/IvlGu7qHrPEIqi+iLPaQt08=;
-        b=nyjw8tko8e6v+5Sq3DE5u+ebWBHzitg2UA2WKLscmRdEqd+q/mFJtNmYOu+jiKOs9c
-         EzwZlVEHWakA3e6OOD91fRYVpxtzhZ1prTJL6kmmmy+qJSh5B1EJkVrCfsyyYI7uuu7k
-         Ey39lOaWGrN6gYcBAn/9VgZAj/XzGvbJawWWSYo/B73b3qEDstH8lrS/3UCn1n8lucSM
-         hsF3BQKqR9YfDxnDy+A3/IAivNVIPQ1wlNPTV+X+Hew3TTLkB4Y7rVyoLCffJpPxwMTI
-         hXb+nZBzKZrEYKy06pBMbzBNY189YzhDMqQPMRNe+8pFJtCoC3UmN5ak9bvfvxhyUzUP
-         qM8Q==
+        d=6wind.com; s=google; t=1751473067; x=1752077867; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:content-language
+         :from:references:cc:to:subject:reply-to:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=+DRtnG3/5fhrw2/e04xUvMWhA80ygiUHCaMrGaRsIHA=;
+        b=YfxY0NsLV1mAMRBl/86xKM2VPXaewCQG/0XeJd8Q6XoSxm3wEvSBMcIowynsmPLJur
+         pp7gCyASoI8ZpkY01JRdTtBL3QYBYZqgEqMyJ854lpkDeR46kS4skemu2a1/I5l7Vjq3
+         65psKvUq0U11YambA0Wk0toSVlaV6xkMC+veYCqlw5X8DDGZa2HQl9Ula8oc9eKfqMHu
+         qGL+ogzL7mGTTeTQqJ8AL/Ln5qc2TlfR0YJC/zcQVhiGSe+fwPGQcMi7B1Hk54uKgHqo
+         a3A1MDd67X9vY0ALqKLsd63tKPU0CG+a7IqWyNXUGT1wYDYKf+4bFA6y0bPAXHhGZbZh
+         dynQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751473028; x=1752077828;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1751473067; x=1752077867;
+        h=content-transfer-encoding:in-reply-to:organization:content-language
+         :from:references:cc:to:subject:reply-to:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=JZV7K9gzSH7zs3d+hR+/IvlGu7qHrPEIqi+iLPaQt08=;
-        b=IKzZwAQcS7KN13HCsTN17Iwp2jWrpCUKWRE/ESd+XWss9NSdKRcCLu8SXleq3VZamp
-         piINQCwx+m+C6P2xDOnQ7Rhr/Xxk+PzzANgBxbLW/JUzbOvNVhuu053N1CTe8UWHeuN0
-         YH6ZV7+tmExrhlRmSMPF5hDNQiW+MjcuCVI+AAAeRAiSO9beLekHcMV6CkVeEfwNco7L
-         qGSo6q3aod/49PeWtPvU/gpuKz8g78SiIqDA+3BlqCUjqikQe2AInr0tQD08JjS0X4D1
-         U8p5uOSelO+LkacEYFG+sIHZal5PICp0tnT7khBs8H25In6PUJBEMtN6SSaaygSuWJbZ
-         3Nig==
-X-Forwarded-Encrypted: i=1; AJvYcCVaDHvxCaJrWvab3eoLV9SIqVV/oUcILxoSWZxLQu3nyRN/LOEaZMmfqnvLOtXt5POTVBHBqUr5UeA0Uok=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxi04ReHMPBf4lWRJXbsJ6zb9gIPzq5mST9jG341IB7a3n+n85r
-	atHJIRsOVQ5rELsU4gj89jMxnLMeMbuclnkMkO2KW+wNLk/ggEG2r4536/C/ttDc9Lc=
-X-Gm-Gg: ASbGncvMa+qdjNx0PxCqp1Hvp9VArKgtOlPY3ZIebolX8T/Sa2upq7OEIJ6bSOSAa26
-	bk0J8bARDDfcydiZjYtZvqxNFttWctqlEa2Wwolymwh2U8mP20HpV59zYCyompXu7/0loEW2AI+
-	tBdFiTQBJG5nI2thxOKyXq9WBZzqJ28OxBuwgvxINgQjc5cOZHHSE0bYobJA4f3jYGzciLq4yTu
-	zkrBwL8DlEVYskEWnOj80btuySfd/x5JODwBKRp2YzjbalR+w2MaTSDQjRacktLRM+YKeBqonwO
-	KIJZL1RyyO/uAIwwTQj0uYkIiWpsS58ClgGx7C3E2xuMNEY8GPl+8xK3kSGx1FrADgttwY3Ks5Q
-	=
-X-Google-Smtp-Source: AGHT+IEHWqRy8MijAgqzuOdBkGI3eGTj6ssaO9cFV4rFL7c+pb9YGw5n+rDkzIwmr8Ysf4r0MgmJ9A==
-X-Received: by 2002:a05:600c:8412:b0:453:76e2:5b16 with SMTP id 5b1f17b1804b1-454a367a6e4mr15832565e9.0.1751473028343;
-        Wed, 02 Jul 2025 09:17:08 -0700 (PDT)
-Received: from krzk-bin.. ([178.197.222.89])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a9969aa1sm2470435e9.6.2025.07.02.09.17.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 09:17:07 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH] docs: dt: writing-bindings: Express better expectation of "specific"
-Date: Wed,  2 Jul 2025 18:17:01 +0200
-Message-ID: <20250702161700.229458-2-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.43.0
+        bh=+DRtnG3/5fhrw2/e04xUvMWhA80ygiUHCaMrGaRsIHA=;
+        b=XOq9TADPPWxaqlVxa6cDAYAcuNpCCyOZoYdeboJvLhLiH4M/dQmZTKYRytzBoir92b
+         PjFj/SIO+yKmwlJzdkqFmCnNuSCYNtENLCnUW76Fg6eacJx1dh+LDnevTevee2NkYjQ6
+         pVQGHVRybNV/UQMeCL8TMkFyVgVLLUjeL8Y6fJdQ6t8P1hSZcVGCK6FjJZI7b1hOCNE7
+         yXiATT86WJc1mOCz/pd1g+VWWDg7V1eJmzrXOlA56UVx+cVxAUa5OsSHVTlIhs4+Wy33
+         G/zP2raDDhD3c6KxD6p5fF6XO4JeT8mj0XWhHxk0Utq3FNP5QDTmAFqPiQqhYh3gfPYE
+         FFKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWWNZMcv2z3tcSHn8WGSCZM3EX6SpP5bUgYfej7dEvp1LI0Gu1xfvOwFiK/vwUHW/zuosDJozRAXD6Np0c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztnzC3UTXy2NngtINZtqreiRln4rtieIZtprxOVljvL1XtNdW9
+	n2wfm0Qtixezvlzbjy/3mcicayux/l+FGLxeV+UT0l2mx6LOAzrrWglD+qxXDjqSs1M=
+X-Gm-Gg: ASbGnctSjSnh0CqTF6M/lC0MF4hMT3r+0dElPHrviPBFZqhF4RNuJPU+8Z/F7mcjRu5
+	KuiwKM/9UYdeoqnfUP91WSTzdmz/oAC1NNhIB4TXl6fQBNxZQUSIst9KZTwgWqQFmCeg7PKA88n
+	auRMjLSLYOukNZgGYDlYXj7RVnUdGkno2wH2xhgU+bnZVuCx05C/373V8pOEGYa/8RbuHcSwvlk
+	zO5gjJnTwhk97vjDMvZlz1ksz1BC3i8jMkImMHYZWRCkd2q1BxR/Utf+8NgV28DGAVBOM1B26vb
+	yqGMr8sSY7wj9ARE5ftA719cGUIwBX5pssBeGPk6d8Bg7u3sSxA12HzOjPXIn/N/RV45m2qwUwz
+	PaXzky0PWl06GIOnxZJvuJvaDHsfOE18fJcRMgLs=
+X-Google-Smtp-Source: AGHT+IGmgT1DZZNaOfq26TUVuwOD6QhF7YzlfyrujVZ7SN1RUi3cre88qvNTmXSTqyDFUkfv1BFcUg==
+X-Received: by 2002:a05:600c:4751:b0:453:c08:a1fa with SMTP id 5b1f17b1804b1-454a3674ea1mr14677105e9.0.1751473066499;
+        Wed, 02 Jul 2025 09:17:46 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:b41:c160:5568:c43d:79bc:c2ec? ([2a01:e0a:b41:c160:5568:c43d:79bc:c2ec])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454a997e24bsm2310945e9.16.2025.07.02.09.17.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Jul 2025 09:17:45 -0700 (PDT)
+Message-ID: <6a42127f-77bd-4a25-af61-8bb8adb666c1@6wind.com>
+Date: Wed, 2 Jul 2025 18:17:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3645; i=krzysztof.kozlowski@linaro.org;
- h=from:subject; bh=N6w5ocafwebBiNMgi0e1/9oq0U6deIfUb/h3sckv4Cg=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoZVt8ZO/GbQXk9Y9D4xHMd48CvpStLM5FCBTqZ
- M6pV87i+aCJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaGVbfAAKCRDBN2bmhouD
- 1+LJD/wOovbh+vuiQg+t3Yk4ldzDuDjqvRtxTKNUguuU4XjCLLhTvydtyUwFUN+Tw7c7agPB/sb
- +6ppLvNvQDIl07Oj5a+WhOOkjgpM1OJylEi2h9E4FY4R8J5FBUs4nn2ypyskVKTEssCLpUJao/P
- KG8/z9q1L+r3KsAHuDbZiyF387P3SYIPE8+nSrqkQPPb0HYtUkCI0Z46WlF7JJME4+BmujASlD1
- 1XZyPOujeSIZ2aXZ0U5QGlDOKPhIMYYEa2rU0lZdrzTaOl2myElq7y1k2I5KCIeqJd0ucxBE+Vw
- 4tBxwWFiqxtkHTs6+x9R41RWMkdlfUBghscLZ/r1cAwzw261MrZN6eQCcetNZWIdqN83wNSGC7m
- pLbbjUm/i5uENobHnvAg7L0ZV0cT5Dnn2H7URs6GwpqJdsrNjEJC4YJ6tiOUtYYrSM+dDho/GUd
- LnTWC7VncIyj+O82Qz8UDmEE+rxBDxGSlNV6t2htlVes6Hyr58q88B1z6QHoPgCJFpNbUs1x7+U
- DorqAichsuv67mvmmeKzVIIiaCzm21DBg9APHBJ2NYvCty/49KW4ZmqLKJLbQ6YrqLbdKlTqJnP
- pCidBMPwC7rx8nUfXcg8OYkweiJDRecdlvEBMO8Xn+gOhwulmlw36CU5jJfX99Iv+LcvT7CKIvw svxilz+HervMJUQ==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+User-Agent: Mozilla Thunderbird
+Reply-To: nicolas.dichtel@6wind.com
+Subject: Re: [PATCH v3] ipv6: add `force_forwarding` sysctl to enable
+ per-interface forwarding
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Gabriel Goller <g.goller@proxmox.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, David Ahern <dsahern@kernel.org>,
+ netdev@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250702074619.139031-1-g.goller@proxmox.com>
+ <20250702073458.3294b431@kernel.org>
+ <7c47cfb6-c1f1-42a1-8137-37f8f03fa970@6wind.com>
+ <20250702091055.3d70a5ee@kernel.org>
+From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Content-Language: en-US
+Organization: 6WIND
+In-Reply-To: <20250702091055.3d70a5ee@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Devicetree bindings are supposed to be specific in terms of compatibles
-and other properties.  Short "specific" has many implications, so extend
-the description to cover them: no family names, avoid generic SoC
-fallbacks, avoid versioned compatibles, avoid properties implied by
-compatible.
-
-Also document desired lack of ABI impact and acceptable solution if such
-needs arises: clearly marking it in commit msg.
-
-All above follows established Devicetree bindings maintainers review
-practice, so no new rules are introduced here.
-
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
----
-
-I have vast (~10-page) document describing DT bindings and DTS rules,
-based on Rob's and other people's reviews (with references...). Let me
-try to funnel it here gradually. Why gradually? The intention of
-writing-bindings document is to be concise, so rephrasing my 10 pages
-covering each little detail into generic, concise rule is not that easy,
-especially for non-native speaker.
-
-Optionally I could also post my 10-page guide somewhere, but then it
-would be one more document to ignore. I think we have enough of such.
-Ah, and I would have one less topic for conference. :)
----
- .../devicetree/bindings/writing-bindings.rst  | 25 +++++++++++++++----
- 1 file changed, 20 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/writing-bindings.rst b/Documentation/devicetree/bindings/writing-bindings.rst
-index 1ad081de2dd0..dc0e4b63984c 100644
---- a/Documentation/devicetree/bindings/writing-bindings.rst
-+++ b/Documentation/devicetree/bindings/writing-bindings.rst
-@@ -39,10 +39,15 @@ Overall design
- Properties
- ==========
- 
--- DO make 'compatible' properties specific. DON'T use wildcards in compatible
--  strings. DO use fallback compatibles when devices are the same as or a subset
--  of prior implementations. DO add new compatibles in case there are new
--  features or bugs.
-+- DO make 'compatible' properties specific. DON'T use wildcards or
-+  device-family names in compatible strings. DO use fallback compatibles when
-+  devices are the same as or a subset of prior implementations. DO add new
-+  compatibles in case there are new features or bugs.
-+
-+   - Use SoC-specific compatible for all SoC devices, followed by a fallback if
-+     appropriate.
-+
-+   - Specific SoC compatible is also preferred for the fallbacks.
- 
- - DO use a vendor prefix on device-specific property names. Consider if
-   properties could be common among devices of the same class. Check other
-@@ -51,12 +56,22 @@ Properties
- - DON'T redefine common properties. Just reference the definition and define
-   constraints specific to the device.
- 
-+- DON'T add properties to avoid a specific compatible.  DON'T add properties if
-+  they are implied by (deducible from) the compatible.
-+
- - DO use common property unit suffixes for properties with scientific units.
-   Recommended suffixes are listed at
-   https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/property-units.yaml
- 
- - DO define properties in terms of constraints. How many entries? What are
--  possible values? What is the order?
-+  possible values? What is the order? All these constraints represent the ABI
-+  as well.
-+
-+- DON't change the ABI, but if ever needed to change, then DO explicitly
-+  document that in the commit msg with rationale WHY ABI has to be broken and
-+  what is the impact. ABI impact is beyond Linux kernel, because it covers also
-+  other open-source upstream projects.
-+
- 
- Typical cases and caveats
- =========================
--- 
-2.43.0
-
+Le 02/07/2025 à 18:10, Jakub Kicinski a écrit :
+> On Wed, 2 Jul 2025 17:14:42 +0200 Nicolas Dichtel wrote:
+>>> Should we invert the polarity? It appears that the condition below only
+>>> let's this setting _disable_ forwarding. IMO calling it "force" suggests
+>>> to the user that it will force it to be enabled.  
+>> Not sure to follow you. When force_forwarding is set to 1 the forwarding is
+>> always enabled.
+>>
+>> sysctl | all.forwarding | iface.force_forwarding | packet processing from iface
+>>        |      0         |           0            |        no forward
+>>        |      0         |           1            |         forward
+>>        |      1         |           0            |         forward
+>>        |      1         |           1            |         forward
+> 
+> Ugh, I can't read comparisons to zero.
+> Let's switch to more sane logic:
+> 
+> 	if (idev && !READ_ONCE(idev->cnf.force_forwarding) &&
+> 	    !READ_ONCE(net->ipv6.devconf_all->forwarding))
++1
