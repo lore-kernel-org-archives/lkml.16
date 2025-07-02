@@ -1,167 +1,119 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EBF5BA2E
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 16:47:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2302F50A8;
+	Wed,  2 Jul 2025 16:47:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751474855; cv=none; b=NaHIawmI9gF/K7/sk2MNjMTYVDWKXQK+W/dAuFElWeIYvFqS1r5SOCfssmJoX8FV/SKTH79t+uk/E+Sw6BHUGVwizSiMVAOdIC8CfA1kZKLgql0igCqC34MN+qB2OzltNQ4ab/OM1wc8iCTIh57cYdJOB1Lwf3LWkiCxxA+PRDU=
+	t=1751474870; cv=none; b=N2diBuiJeuWygCRJlxsBl3OUMMh2ibI7kvdrSkHnLouvTn4IBOW0+BvH+L7ZrmNbIw1qfnhz7A2xiRMXIWw5EMBuAlbXHLmHllQwUlIaWhWXZ85ych5p6IgkWWh+6fv36n2ewzWgL9faKHZ+jpyjr/C1uBgBXTmK925YxNN0dZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751474855; c=relaxed/simple;
-	bh=Hu/WytInUFsVyfj/rzJT6VjIoLegav7e02oTHIkQ/uc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mnfdv8FdHZZmssiJBHIWql5BkyPxtJF0cq2KRUbI63ccKEZvEaLklk2D8q+iEnvJ05+4XBqPPQy1ZHIdnhLUgnh/xUUt4DSMbmshQJiJCBJe2CeNMt8/DulWdRqVM/7Qg43kfqLQGOx0ulIc6YS4KcEsnPwkNrN/2W+OqycjMKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F0B9522C7;
-	Wed,  2 Jul 2025 09:47:16 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 615703F66E;
-	Wed,  2 Jul 2025 09:47:31 -0700 (PDT)
-Date: Wed, 2 Jul 2025 17:47:29 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Junhao He <hejunhao3@huawei.com>
-Cc: suzuki.poulose@arm.com, james.clark@arm.com, anshuman.khandual@arm.com,
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linuxarm@huawei.com,
-	jonathan.cameron@huawei.com, yangyicong@huawei.com,
-	prime.zeng@hisilicon.com
-Subject: Re: [PATCH v2 2/3] coresight: tmc: refactor the tmc-etr mode setting
- to avoid race conditions
-Message-ID: <20250702164729.GA1039028@e132581.arm.com>
-References: <20250620075412.952934-1-hejunhao3@huawei.com>
- <20250620075412.952934-3-hejunhao3@huawei.com>
+	s=arc-20240116; t=1751474870; c=relaxed/simple;
+	bh=g1+k2nPM6RxeEUCvtw0vrTy0LPvjf9hZ6rmLV2y9xgU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QeP0IB3XWtZi6CzLh7kPAbjNQXgVRG9iYcMCEEYnszNR41TKLfyDLHJx+WWYE439HMvR3udW8QQj5fAtb4Edhov8bEiDWohqi73FSgEl3e55AjwGbnW7uTbykGTJgNHLVMmrqKFn9vWmthXB8zc77iFuwML1lOboGs9NFMLTtn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id B8157140367;
+	Wed,  2 Jul 2025 16:47:43 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 1BC9B1A;
+	Wed,  2 Jul 2025 16:47:39 +0000 (UTC)
+Date: Wed, 2 Jul 2025 12:47:37 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Jens Remus <jremus@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, x86@kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, "Jose
+ E. Marchesi" <jemarch@gnu.org>, Beau Belgrave <beaub@linux.microsoft.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>, Florian Weimer
+ <fweimer@redhat.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
+ <gor@linux.ibm.com>
+Subject: Re: [PATCH v7 00/12] unwind_deferred: Implement sframe handling
+Message-ID: <20250702124737.565934b5@batman.local.home>
+In-Reply-To: <7eea50a5-e1b0-4319-9a25-cb8b327a836d@linux.ibm.com>
+References: <20250701184939.026626626@goodmis.org>
+	<7eea50a5-e1b0-4319-9a25-cb8b327a836d@linux.ibm.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250620075412.952934-3-hejunhao3@huawei.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 1BC9B1A
+X-Stat-Signature: 6ab6bcboemhxxcrt1jugnewqbfujyn9q
+X-Rspamd-Server: rspamout06
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+RCYfk1ij87wG5Mg8mX6pSoPsPrUnbTOI=
+X-HE-Tag: 1751474859-717133
+X-HE-Meta: U2FsdGVkX1/xQcC/1vbjLDT42vnA5rZK0DJXCURp+LYg8DRsJ82VPBa8c9m0LqtAKwuu5W39stjZMdi2qQAA4h0SNVrkO4DH8HZfRi58Ha2QuWM+3w2SwhFZhM3C3hlCcNnhRd85h1AQemZyfLQxZJgM2eg2S8ivRlduwklYD8It9hB18FH1yVZJHEFrhVTZCjygyKVXwUU3ATdCKPxHTOHJtqgYE7a8CuLZYltQG+2p4WXgdPUVJK5h/RA42GtKtD944lR67kYGwUJyXZxkXdqNE/6x4vrCOCS5fssDUmUhIaspx9KOf2HNFrPyMylrtKKLhSRTFDLwd66YgtVMz2eByVMV9KviO6TT2QM9iGqiw0DrblOZcbRZRg9+haEyGawdPxklVxjawGkZ6V9WzYtD9GmQMbM2+87sz2hDTiZlnuAzc76R4IoPj3tpNpyxPP7ZKP3galnMvGI32EN8qkbLlSQVp+5icS7PpOyu/ZmauLO7jY7X4IrLMG4VFeHr
 
-On Fri, Jun 20, 2025 at 03:54:11PM +0800, Junhao He wrote:
+On Wed, 2 Jul 2025 14:57:22 +0200
+Jens Remus <jremus@linux.ibm.com> wrote:
 
-[...]
-
-> To fix this, configure the tmc-etr mode before invoking enable_etr_perf()
-> or enable_etr_sysfs(), explicitly check if the tmc-etr sink is already
-> enabled in a different mode, and simplily the setup and checks for "mode".
-> To prevent race conditions between mode transitions.
-
-I have a similiar fixing for CTI driver, see:
-https://lore.kernel.org/linux-arm-kernel/20250701-arm_cs_pm_fix_v3-v2-0-23ebb864fcc1@arm.com/T/#maccd68b460fb8d74ccdd3504163d8f486f04178b
-
-[...]
-
-> @@ -1781,14 +1756,52 @@ static int tmc_enable_etr_sink_perf(struct coresight_device *csdev, void *data)
->  static int tmc_enable_etr_sink(struct coresight_device *csdev,
->  			       enum cs_mode mode, void *data)
->  {
-> +	struct tmc_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
-> +	enum cs_mode old_mode;
-> +	int rc = -EINVAL;
-> +
-> +	scoped_guard(spinlock_irqsave, &drvdata->spinlock) {
-
-scoped_guard(raw_spinlock_irqsave, &drvdata->spinlock) {
-
-I am concerned that the spinlock is acquired and released for several
-times in a single flow. It is possible to hit some corner case, e.g.,
-
-- CPU0 acquires the lock, set sink as SYSFS mode, and releases the lock;
-- CPU1 acquires the lock, detects the SYSFS mode has been set,
-  directly bail out, then enable ETM.
-
-The problem is the sink has not been enabled yet. This leads to CPU1
-to enable the tracer but prior to sink's enabling.
-
-The key piont is we should ensure the mode is consistent to the
-hardware state. I will take a bit time for if we can have a better idea
-for this.
-
-> +		old_mode = coresight_get_mode(csdev);
-> +		if (old_mode != CS_MODE_DISABLED && old_mode != mode)
-> +			return -EBUSY;
-> +
-> +		if (drvdata->reading)
-> +			return -EBUSY;
-> +
-> +		/* In sysFS mode we can have multiple writers per sink. */
-> +		if (old_mode == CS_MODE_SYSFS) {
-> +			csdev->refcnt++;
-
-I am just wandering if we can unify the "refcnt" code for both SYSFS
-mode and Perf mode, and as a result, we can consolidate the code cross
-different drivers.
-
-Something like:
-
-                if (!csdev->refcnt) {
-                        coresight_set_mode(csdev, mode);
-                } else {
-                        /* The device has been configured with an incompatible mode */
-                        if (coresight_get_mode(csdev) != mode)
-                                return -EBUSY;
-
-                        csdev->refcnt++;
-                }
-
-Then when disable the device:
-
-                csdev->refcnt--;
-                if (!csdev->refcnt)
-                        coresight_set_mode(csdev, CS_MODE_DISABLED);
-
-We should not check "drvdata->reading" when enable or disable sink, as
-it is a flag to track if reading the trace buffer, it is irrelevant to
-the sink device's enabling or disabling.
-
-Please verify perf mode (especially for system wide session) to avoid
-anything missed.
-
-Thanks,
-Leo
-
-> +			return 0;
-> +		}
-> +
-> +		/*
-> +		 * minor note: In sysFS mode, the task1 get locked first, it setup
-> +		 * etr mode to SYSFS. Then task2 get locked，it will directly return
-> +		 * success even when the tmc-etr is not enabled at this moment.
-> +		 * Ultimately, task1 will still successfully enable tmc-etr.
-> +		 * This is a transient state and does not cause an anomaly.
-> +		 */
-> +		coresight_set_mode(csdev, mode);
-> +	}
-> +
->  	switch (mode) {
->  	case CS_MODE_SYSFS:
-> -		return tmc_enable_etr_sink_sysfs(csdev);
-> +		rc = tmc_enable_etr_sink_sysfs(csdev);
-> +		break;
->  	case CS_MODE_PERF:
-> -		return tmc_enable_etr_sink_perf(csdev, data);
-> +		rc = tmc_enable_etr_sink_perf(csdev, data);
-> +		break;
->  	default:
-> -		return -EINVAL;
-> +		rc = -EINVAL;
->  	}
-> +
-> +	if (rc && old_mode != mode) {
-> +		scoped_guard(spinlock_irqsave, &drvdata->spinlock) {
-> +			coresight_set_mode(csdev, old_mode);
-> +		}
-> +	}
-> +
-> +	return rc;
->  }
->  
->  static int tmc_disable_etr_sink(struct coresight_device *csdev)
-> -- 
-> 2.33.0
+> Hello Steve!
 > 
+> On 01.07.2025 20:49, Steven Rostedt wrote:
+> > This code is based on top of:
+> > 
+> >  https://lore.kernel.org/linux-trace-kernel/20250701005321.942306427@goodmis.org/
+> >  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git unwind/core
+> > 
+> > This is the implementation of parsing the SFrame section in an ELF file.  
+> 
+> ...
+> 
+> > The code for this patch series can be found here:
+> > 
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git unwind/sframe  
+> 
+> Wouldn't it make sense to include your related perf (tools) series [1]
+> in that branch to ease testing?  Provided you also include the minor
+> fix [2] to make perf tools work. :-)
+
+I was planning on making a branch with perf and sframe merged (haven't
+pushed it out yet). Since sframe doesn't technically rely on it (I use
+tracing too test it too) I'm keeping them separate.
+
+> 
+> Additionally it would make sense to include the patches from Josh that
+> add SFrame information to the vDSO on x86 [3].
+> 
+> [1]: [PATCH v12 00/11] perf: Support the deferred unwinding infrastructure,
+> https://lore.kernel.org/linux-trace-kernel/20250701180410.755491417@goodmis.org/
+> 
+> [2]: https://lore.kernel.org/linux-trace-kernel/51903e66-56bc-42a4-b80c-9c3223e2a48a@linux.ibm.com/
+> 
+> [3]: [PATCH v6 0/6] x86/vdso: VDSO updates and fixes for sframes,
+> https://lore.kernel.org/all/20250425023750.669174660@goodmis.org/
+
+I have them in separate branches too and will be posting them
+separately. Again, the "merged" branch will contain them all.
+
+> 
+> > Changes since v6: https://lore.kernel.org/linux-trace-kernel/20250617225009.233007152@goodmis.org/  
+> 
+> > - Moved the addition of the prctl(), that allows libraries to add the elf
+> >   sections to the kernel, to the last patch and labeled it as "DO NOT APPLY".
+> >   This should instead be a proper system call and work to make it robust and
+> >   flexible still needs to be done. The prctl() patch is added for debugging
+> >   purposes only.  
+> 
+> Does PR_SET_VMA [4] create a precedent case for the SFrame prctls?
+> 
+> [4]: https://man7.org/linux/man-pages/man2/pr_set_vma.2const.html
+> 
+
+At the last sframe meeting we came to the decision to make it a proper
+system call. Just seems cleaner that way. If others feel prctl() is the
+way to go, we can definitely do that too.
+
+-- Steve
