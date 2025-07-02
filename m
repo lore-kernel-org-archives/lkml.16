@@ -1,122 +1,103 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 326E82309B0;
-	Wed,  2 Jul 2025 07:45:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDCC034CF9;
+	Wed,  2 Jul 2025 07:46:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751442304; cv=none; b=eh17+VCvCcMLdzfUGaL5DeRO60ApMq8vQEqjE/jmTh3fVTR2OyBfrB8OjZBr53KclkMn9bkFaK74HdojYnlSDwGNz7Esqsrq3XwgR6W42XOCNUQFWdeUpysWX/xzfzWfddEpiFaYmQF6MG+cjI3i/6KJo3keIx6td1FSylS29cY=
+	t=1751442367; cv=none; b=M4UzwFeSIRQWz9inWcoUA7nrwuE8y192ZtwreOG3YABCC7kxuovaPBzt1EDU2mKJ+yma83sEQtR0tf1DDW1sd9AaHaVWtSGdDL+/ey9t1llLmrMl9fnj7DWUwWBeyJsaCRZ0sHGLvClm97Vq/Ehxef/whBKh+kk6a4Y1xCtw/Eo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751442304; c=relaxed/simple;
-	bh=pre4vDjtyp7Wl/CybJAIGJMG+1MDhzdhQIns4h3G9bs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EjThfuQjgs0/ot7rGdxDWlXtg4Di1uVOEbOs5DZbfHrDRgUw4hKCgN/GNyYEYzGk9ZNyEzGwW23qHhvFoBee0ARdZUO6TbQBJIg0vANKxFIXHjZ9sixRIWMOt0bzlss8eBdrq38ZBbjo7NJj5I/+0pYDBqzB7nyVr99/A6wDzLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U+Vp1UEq; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751442367; c=relaxed/simple;
+	bh=a4vRJ7yBBMjckszCtHJaOpdrMjvLtsHTDEJwGzkriUM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R2wPGQ3tlGA4x6NBBA7iW90pRWN7yfkUWuaeTai/Nr+PV+2NLmlI5PWOTGIdCAreoFgxVHYxqyYArfRmquE/8Qm9zJrNjo4g254a34m7+Yk/gx1RDqhA5NLLKPrf++TKIlJzS1DKoPPpqYpQGCwFmwL9RpatO7qftlQu1CE26lU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fb8oPCif; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U+Vp1UEq"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2355360ea88so8713555ad.2;
-        Wed, 02 Jul 2025 00:45:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751442302; x=1752047102; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rf4aXWUpjl6NdJSpomTP+fBehBlw99KYZBik9rzoGeo=;
-        b=U+Vp1UEq9Ppv8rtOsqazdQuSaoULscIfBkeE64KsyyAOJUD/9jNCv4lYgPLuuqvXQO
-         C+n8wW2AQQaT+aoNyANpzrmlU50J0HS/eKa5iHx/O4g1DVkC9bCwAg5JLuWR1Bv4mFh1
-         QlvMmc9+/jCWj1yJ40cVgmE5qF4J9xAgifNBJgtUr83eie03xzPszoVmlK2dQLAb1u0r
-         oLuZKKg6lpgWrYkhKlq7IoAZKleVoicfRGWTsTbq4qgqZnoC9KI88pogrA0SsiNcyV+z
-         bFyV4a3HhGHN0dOXn+wVKkXTBQeXdaFIZ4G0APkWE9jhN2yZdXQJvyP901hzxhzAK5wa
-         FvCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751442302; x=1752047102;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rf4aXWUpjl6NdJSpomTP+fBehBlw99KYZBik9rzoGeo=;
-        b=S60veEXbmoYHZut2Kh+EKBFNZjbbtKQ85yymDp3D/ttpKLwLE3Rd5WDIHVBVpgTNGJ
-         BMyx1PAXOSqCIFAnIL7bRoKTQ8gnRZ3p3lEWNC3cARpnLQ2WD2t37YkXCtBVuttzvOQh
-         FKTTQh6WPxoCvzcM0WrM5nlpFbO3O/wEdoFN3gnWc5UmgGE51LIm/+9lXPltDLm5vY0v
-         4P+O7L6lCg7ZqGqbQQo4pN0F6JK4Sc2HhO38Pnqxr3YDhgcwUQUPSdA4ChaMdvM5t8rk
-         gNmpMSx8/+QJf8VrW8AVV/77Kq4/IHhNtXHdNdzWmdgzv+8+DfKp65QhgDSlcidfykTe
-         KAnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU/oyUscyrUBElI7Cf3bPioUwVeH7enEPKnPSUsAZ+iCnK/E7tONODwgSiUY8I7EsdcvXM07bP0+VkoHn8=@vger.kernel.org, AJvYcCXjIDiSPXRkgZirQ+DMl+ZdFF9sTfF4GQLAM+TwO3HbLW+Dtdr6BTYAHivZh1k0ddmd+QmZSJOS5rQy99Vsw3A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEJtcvMFrW00ISHvqxYeKS7x6nFVlvri1VtlNHRh8IXAWvgPwt
-	X2XsQELHVBD2l6CvZdHSx2UTw5/W0yX5jOen2du0n0219a1ZRHGQb+7IybfqF1kUCGC7QOcoZYK
-	fD/u3ABZdUoHWwRSgJPzcAU4l3xOTkzmI8bwYayGTZQ==
-X-Gm-Gg: ASbGncu22o8fI7A+2y3UdgLcSfCV9+ysaFrMKwTiV+E1J9GkAOkWTScQzUESfTnlViL
-	DA2Yqz+OY6umvj23M1C/SHja/k+1GQf2eTJRmvoraDhVCc/H65YkOLgfHkLW85I6aP2phBHCZjx
-	yPHB+iJlc9adhKoSdiprYnRsev0o3rh+fFlA7cKbf+kro=
-X-Google-Smtp-Source: AGHT+IENrXAwSSqPcBNdxcOkrjNtYy0CFllmWa+91OhtdmHsoRwKRsK7YXdSbGdM7D+vibb+wQySOuakjG1+iHnUmnY=
-X-Received: by 2002:a17:902:c40f:b0:236:71f1:d347 with SMTP id
- d9443c01a7336-23c6e4f3d7emr9722695ad.10.1751442302440; Wed, 02 Jul 2025
- 00:45:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fb8oPCif"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751442366; x=1782978366;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=a4vRJ7yBBMjckszCtHJaOpdrMjvLtsHTDEJwGzkriUM=;
+  b=fb8oPCifAMV2QoKZ7sEn9hpiVKjj2jBa68GS3aMYdJUs76A8x72S9jNK
+   52FCWPpVBfSDHPZDyHF/yH6WgnOUmaaTD226Coh2NaB6v5lOqfkIdZUU+
+   ELZufGck0bZ2Y8v320tVRn0hcnjG/L5Ju2lP198K1ZGF/ekRbJgb+dsMI
+   w4n7o5PFWwb/e44V605ueVvBRhCJ0ySW6m2S8qnRmoXpclVQ428did1JN
+   r7BSea0b5qtYM0JDuIB+HNtuJv7vb3GmFXFwR1SqGqg/w1vsLOidJLlNA
+   lW19QO70AA5YrVjPThQtL8VNdKpeWoivRr25CduogxDyDSQjI1F7L/iXu
+   Q==;
+X-CSE-ConnectionGUID: N8Sz7D2fQCiCNj9jZ5NpKg==
+X-CSE-MsgGUID: 5WKs+2exSKePR0TkBZ69QQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="64420838"
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="64420838"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 00:46:05 -0700
+X-CSE-ConnectionGUID: 7tqtdGTiTrOCENnk7LWVyg==
+X-CSE-MsgGUID: JlsxvKkUSTiOEbfwwBk6Pw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="154732978"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 00:46:03 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uWsAK-0000000Br5v-0333;
+	Wed, 02 Jul 2025 10:46:00 +0300
+Date: Wed, 2 Jul 2025 10:45:59 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
+	andy@kernel.org, conor@kernel.org, ~lkcamp/patches@lists.sr.ht,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] iio: adc: spear_adc: mask SPEAR_ADC_STATUS channel
+ and avg sample before setting register
+Message-ID: <aGTjt1D2VFq1WwzA@smile.fi.intel.com>
+References: <20250701213728.32064-1-rodrigo.gobbi.7@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250701-topics-tyr-platform_iomem-v11-0-6cd5d5061151@collabora.com>
- <20250701-topics-tyr-platform_iomem-v11-1-6cd5d5061151@collabora.com>
-In-Reply-To: <20250701-topics-tyr-platform_iomem-v11-1-6cd5d5061151@collabora.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 2 Jul 2025 09:44:49 +0200
-X-Gm-Features: Ac12FXxP4qnWpWLcaGljrca2qE1GskXhDNLdfN0123yWpoj-KbgX2CNUmx_w8o0
-Message-ID: <CANiq72khZQMQcyp7uVjMz--U1dbbnx7K3pU1Eu=ZN6SXi98TZw@mail.gmail.com>
-Subject: Re: [PATCH v11 1/4] rust: io: add resource abstraction
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Ying Huang <huang.ying.caritas@gmail.com>, Benno Lossin <lossin@kernel.org>, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	Fiona Behrens <me@kloenk.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250701213728.32064-1-rodrigo.gobbi.7@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Hi Daniel,
+On Tue, Jul 01, 2025 at 06:34:05PM -0300, Rodrigo Gobbi wrote:
+> avg sample info is a bit field coded inside the following
+> bits: 5,6,7 and 8 of a device status register.
+> 
+> channel num info the same, but over bits: 1, 2 and 3.
+> 
+> mask both values in order to avoid touching other register bits,
+> since the first info (avg sample), came from dt.
 
-A couple nits Danilo can take care of them on apply.
+...
 
-On Tue, Jul 1, 2025 at 4:35=E2=80=AFPM Daniel Almeida
-<daniel.almeida@collabora.com> wrote:
->
-> +//! Abstractions for system resources.
+> +#define SPEAR_ADC_STATUS_CHANNEL_NUM_MASK    GENMASK(3, 1)
 
-Potential link:
+You have a problem with indentation.
 
-    https://docs.kernel.org/core-api/kernel-api.html#resources-management
+...
 
-I think there are a couple kernel-doc includes missing in the `.rst`
-for this, so it is not great.
+> +#define SPEAR_ADC_STATUS_AVG_SAMPLE_MASK    GENMASK(8, 5)
 
-> +/// This is a type alias to `u64` depending on the config option
+Ditto,
 
-"to `u32` or `u64`"? (also below)
+...
 
-> +    /// The caller must ensure that for the duration of 'a, the pointer =
-will
+And I don't want to check all '+' lines in your changes, please make sure your
+editor, mail user agent, other tools you are using, do not mangle the patch and
+setup correctly for the indentation style used in the code.
 
-`'a` (same below).
+-- 
+With Best Regards,
+Andy Shevchenko
 
-> +        // SAFETY: Safe as per the invariant of `Resource`
 
-"Safe", periods at the end. (few instances)
-
-The last patch on the series has nice examples, thanks! It could be
-nice to have some here too (e.g. on how `Flags` and its operators) and
-nowadays also KUnit tests, but that can be a good first issue for
-later.
-
-Cheers,
-Miguel
