@@ -1,206 +1,363 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2040.outbound.protection.outlook.com [40.107.100.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D451A223DCD
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 07:28:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751441313; cv=none; b=o15AFNzwBqof1KZwlvXkVbi/dt+xFcMBMVToJhRDgPR3mTnvl6ZcvCibuwhgl0kDinZTBjnEr9jFXk391e858YNZaCPceLFmRnC+88C09jN+opIZD8XbRwh1Ov7tm0Wdnx+1h8xnrAWOLvqMZw45aKqqiTxv+3c8mG3myG09sm0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751441313; c=relaxed/simple;
-	bh=FDIXACwz7puhDj4N6F5Bd/6AaX9aqxOydTQwoK7Bra8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZcXPq/9Xs7EGE6bN9+xm81t2oW+yAx891DgYWiexdCdv74cexI/bWdJAUS5XDV5lqRSwrmwG3ypPM5FxQmKvKM5g65cKlG08bvF+fuQo5zql4fLkhIw9e/6t6hPPZCo9GiDY/GgkP2l0xAoVcLrHEq17xq55ZkFtkaM26Wj+O0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J5UutlcP; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638261B424F;
+	Wed,  2 Jul 2025 07:29:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751441346; cv=fail; b=JN85lgCiDoa7f4Dayy5UICluNBHQgQTbOg3xM/FdEFDBRMYSvpIFa9oHD05CJoB2GUhkDIduQXRxaGWzTbpRPYS9ORnzwXsz6G539xhHGYLSh4CynsC0od1aFLO47fDXdywpmoLz3SOUG7LGas5ea4ChVfJr8Fppqhnd9hlZxRo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751441346; c=relaxed/simple;
+	bh=M/x8KZ6/uTPkW6VG6sMFR84G5/O5cOCLHroqX+56bFI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=G9YydS+H6gsRA/6Oxb4S+JZIOTd+z9yr23prGTU0lHWuzxJEDFaVDeIA4UhHmdtHvZr3PdEP7TW44uWyiQCjkj6IdN0iJJyKLvzXswON98z25uoRRtxaob5CaRA6tcuMQ4egNFfppYVY9EsVZ3i7hjmvkUHhtSlV4VYXyBZP5cE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=vntlFDdd; arc=fail smtp.client-ip=40.107.100.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J5UutlcP"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6f8aa9e6ffdso73188986d6.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 00:28:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751441311; x=1752046111; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=O0c41L9VTbYMrAm4t2oLCDW8W0XVr26QOniUyuOXhc8=;
-        b=J5UutlcPDe+hnU0XKRuZD8AlnurqX4RgD/O1xCs05saazju4PkUa4qCPZd6aSL7Wog
-         NdqX2KMuFskHSRKljO0/4IlgPEIq4L0LWaKIkEfAQ7kClnWxMjHEIBNvQaJ5SyOpcR90
-         W2VCrKgKrxOUwpGU2DfCH91CRVVQtLamYYB3hf714M1YpLMJb00coCOys3/SxNc3/b6n
-         PA/dcKSFq712lY1qiyHXTpbJDltfCxFNNJhePIkM0Jyt+3i9sb+A291GFacjvtV1oMT1
-         5bSGiD5pXMvHMfC8Yj/NEWM8Me6e7ml67BWPRAuLPR8DyLLq498EtYQpwtfCk3vobkm0
-         N34A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751441311; x=1752046111;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=O0c41L9VTbYMrAm4t2oLCDW8W0XVr26QOniUyuOXhc8=;
-        b=RMlf/8dLkLxGsolCt8lBhHsYXhwCe9iM805uaVkTo/UI54f1/LTBbNn+WljO5BnRKQ
-         1kTWGax5Zt8VQ18AuANfJ9ZgCXWXcoP++4ccK9Rx5WLxXWjrH9VWnRNlPw8zJCWk6QTF
-         yXO91RzUMLRkX/aMHL7alOgCgyavanBQr0+Ux+eSgK1uNjd18CYf6tTblPeo7RaxV8Oq
-         GAhde8vNsXmUte2fJ7JVu5iW8Fu07jMxgZaf/uh5NNlchLt2RFvtkI5dntzlJzvoVmbn
-         Ekhzs5JFQTAdq7WlIP0bE5kIHcbSXUjRTty6kWM1n/hXuVMzglya2DYwuWVwNLgQ3W8P
-         7QWA==
-X-Forwarded-Encrypted: i=1; AJvYcCVcK1GTTDaChSRPZErD3RhoUWt4ggE9HaflRwYGIDoOG1cvwqGWWaFjZZ73TvkAS2Vp3nB7/spiN0iqvLA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2OHQx3EykKciqQGQspB7teg7xd1Hps4bLJaxyx/KivDTG2eNc
-	tpvRAQlCQHnZUdltqLv6ie+ToiB/U+Aw3mPV1YJW5kqeY6EX0R1zbTtx
-X-Gm-Gg: ASbGncsPfGcrCkztNcdIVjqvNdnhSxMsyN7iA8rN8tIaOnCRXe97s9LKeMK3Dk7Kh5p
-	aXc/4/j3YsUc3ATd6zw07otKd/JG6MoMt0N8WHWbs+L0aYDMQjyNgV8G7HZMCByEGXh7tWq9AIj
-	N10I+ffP80BLYBzWBmkNAhNe6OUPoCDVao0V3v7foDt8kacaxHu+isi+vG/As8JBy15wbhv+wKY
-	u0EOVzwRY0yFtSPwHqt2++MqsMnpxtYhhaie1AGKWA+MV7uTyCk7K2fnkPGAKyV3/9Uuu5EgA53
-	ejYeThQax9S/U1NYYInW779/L94rd5lyTB2vQv0Rx+952CzmfY0xiA1xk0zF+E6yU2QzRsYl
-X-Google-Smtp-Source: AGHT+IH96QKpHxensxCFYjfvqCsEceqBocyK2U3z8xvgLq5e6wKTGkMZxTJ7mrG1s9+xfl5blen4TQ==
-X-Received: by 2002:ad4:5948:0:b0:6e8:fe16:4d44 with SMTP id 6a1803df08f44-702b1c04e2dmr24082656d6.31.1751441310668;
-        Wed, 02 Jul 2025 00:28:30 -0700 (PDT)
-Received: from Gentoo.localdomain ([37.19.198.234])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd77307918sm96615876d6.101.2025.07.02.00.28.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 00:28:29 -0700 (PDT)
-From: Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To: akpm@linux-foundation.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Cc: Bhaskar Chowdhury <unixbhaskar@gmail.com>
-Subject: [PATCH V2] tools: mm: Added modern version of shell quote and a stanza
-Date: Wed,  2 Jul 2025 12:19:18 +0530
-Message-ID: <20250702072801.10216-1-unixbhaskar@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="vntlFDdd"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nZ9vi3cr7Ryjk7gso9T1tgAGUPIw8gsw5cEyhqRy6ff42Rp7Nc5HXBE2vboocvNnsyBlyKdyVcOrXhhbmvFGoMpVJflUNAABaW7JYPq5lt6wdVJwtLj8iG8jC0sKVDfZpVmJ+Q0SuJoF0Zi29hzJJuBAOs+y1FSEcA5SopNtbAp8D1qzG+FdfUqEdwSiLJJZiBdbMlg8npn5x8IFKHIzTSSsRsX7ObpNMz/kbZASeuZv4vb/H5kwlN69S13fXp33GP4rHtUAyo7SIXarViDebQ8X77bBtJUp47Vlzq1y8xEt7fwtDk73rqK4wIjMyyUiku4TLG85CXRDx5g7m3XBsA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=87vRPEoSoVMRg2cW+tsTcXFq+Wsb9sTy1u4FjqeZfZg=;
+ b=qmT4/FpAmu+/Mj0ucfkWg5NgT6UarRCyjMfyWJRxCYYcnhZEqYuufo+N9vXF9WAQe/wq7pm4e2x4SdF89tD9tL+LNHbbKBQsafcOlgg9SU3RuNu0oVjs/aBVZiHmU6gTx32aMfSgleP8feAq3GqnegV8U1Nc+zz3Qx/bpvlzDVoXCmw/wFASh/SzGeX8gNc6QfWJEte1R7uImDGu6d3ayuWo8ljeu5TKlJgPuh1fTPwvaYzaIBk4EsQ6/Gh0HOiB55MgIDlS7pwLJSrRMdS2t3CBb2GsxFTyFYBJmhmYdIlTGLgotSVL7islywmSdEMCd26EzfHWgc1Fi4f/oMXgsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=87vRPEoSoVMRg2cW+tsTcXFq+Wsb9sTy1u4FjqeZfZg=;
+ b=vntlFDddvLwooIOUMhz7KXSskRL/ihD+ijejqjJnG0Z0Vmw7uirnb56rVw2fRxAt7+NoUCwF0zuVVdcX5CxlZ6Glpt/k/shX58ufQ7kS48XCWD/JQZ5Vsd04s5AOxxRBnmL1HE8f90yMJ9G2wsacUOt737SJCOAhnbe3FICTxHU=
+Received: from PH7P220CA0105.NAMP220.PROD.OUTLOOK.COM (2603:10b6:510:32d::20)
+ by CH1PPF12253E83C.namprd12.prod.outlook.com (2603:10b6:61f:fc00::606) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.25; Wed, 2 Jul
+ 2025 07:28:56 +0000
+Received: from CO1PEPF000044F9.namprd21.prod.outlook.com
+ (2603:10b6:510:32d:cafe::4c) by PH7P220CA0105.outlook.office365.com
+ (2603:10b6:510:32d::20) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.21 via Frontend Transport; Wed,
+ 2 Jul 2025 07:28:56 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF000044F9.mail.protection.outlook.com (10.167.241.199) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8922.1 via Frontend Transport; Wed, 2 Jul 2025 07:28:55 +0000
+Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 2 Jul
+ 2025 02:28:55 -0500
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB05.amd.com
+ (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 2 Jul
+ 2025 02:28:54 -0500
+Received: from [10.65.159.153] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Wed, 2 Jul 2025 02:28:51 -0500
+Message-ID: <558ad3d6-7349-40f1-ba06-0fa46701b247@amd.com>
+Date: Wed, 2 Jul 2025 15:28:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] drm/amdgpu: move GTT to SHM after eviction for
+ hibernation
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, "Zhang,
+ GuoQing (Sam)" <GuoQing.Zhang@amd.com>, "rafael@kernel.org"
+	<rafael@kernel.org>, "len.brown@intel.com" <len.brown@intel.com>,
+	"pavel@kernel.org" <pavel@kernel.org>, "Deucher, Alexander"
+	<Alexander.Deucher@amd.com>, "Limonciello, Mario"
+	<Mario.Limonciello@amd.com>, "Lazar, Lijo" <Lijo.Lazar@amd.com>
+CC: "Zhao, Victor" <Victor.Zhao@amd.com>, "Chang, HaiJun"
+	<HaiJun.Chang@amd.com>, "Ma, Qing (Mark)" <Qing.Ma@amd.com>,
+	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250630104116.3050306-1-guoqing.zhang@amd.com>
+ <20250630104116.3050306-2-guoqing.zhang@amd.com>
+ <ce04e266-6c3f-4256-aade-bafca8609ab3@amd.com>
+ <DM4PR12MB5937FFB3E121E489A261785DE541A@DM4PR12MB5937.namprd12.prod.outlook.com>
+ <ba843972-f564-4817-8651-b3b776c5f375@amd.com>
+Content-Language: en-US
+From: Samuel Zhang <guoqzhan@amd.com>
+In-Reply-To: <ba843972-f564-4817-8651-b3b776c5f375@amd.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+Received-SPF: None (SATLEXMB05.amd.com: guoqzhan@amd.com does not designate
+ permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044F9:EE_|CH1PPF12253E83C:EE_
+X-MS-Office365-Filtering-Correlation-Id: 041192a2-30cd-43f6-dd17-08ddb93a1a6c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MGM5VVJuN0RLZHZ3K0hmUEZZazRoMThEZktmZmx5RVRaSk4rVC9PQyt5MzJZ?=
+ =?utf-8?B?WnZyQ0d3ckpaQ3dIVllnSVBaMVhna3ExRGltMW5VemRUUERreWpoR3dmR1BK?=
+ =?utf-8?B?TWpWRmZCbEIxYVhGQU4yWFFlQzJIcFNjSlJKT3p3KzNaUUZ0Zkl5NTB2V1Zi?=
+ =?utf-8?B?S0czTUkxZ0N1Y2FlTHcrbU5SOE10VFoxV1MvNUZWR1pOd1pObXRKTXBqcDlO?=
+ =?utf-8?B?SlBPNjhwUi9JelQrYzJjTWl6alZNazVHWEVDTk0xWmd1ZXFnb1VIS0NEdXk1?=
+ =?utf-8?B?dkMzV1hoSEVIMXZMY0pUY0JkVkU2WW9KUWR5am1kRHlhVDM5dERGMDBoSzZ5?=
+ =?utf-8?B?RzE4RXNwVWVrczdvRU5MQjVMSXFnQnlPVE02eHJLdzlIQkFXRCtrSnd4VlFs?=
+ =?utf-8?B?TlorcUx1dkpZTWhuckw2RUp4QUxvV056bFl2a2NSQUhwQkxZTjRQcmFOazhk?=
+ =?utf-8?B?aUk0aUpCcVhJdWdxendXa3c3T1RXQzJ6SXNhd1VJdWpRbFFHVmg3SHJYWVdC?=
+ =?utf-8?B?R29MaHlSeFc3dTQ2aXF5K05VaHFuaUF1OVFXRUFBWmV6QWxvOEpETkVqUlJE?=
+ =?utf-8?B?NGozMW1DV0MrQXpoTWVnd1FOYndBZlBQM3FFRy96b05ndGpuTE85bGUyNzFt?=
+ =?utf-8?B?WUZsQzVGVmVyQkkrdUNacmpEaERWYU43NVRHQUVlV01QcU9zOE5wM3N4TjdV?=
+ =?utf-8?B?a0xYRzNibHYyK0wwQU9qK0xKcW9na1V2Nkl6eWlZamdXa2RCbEJySUpYeDF6?=
+ =?utf-8?B?U25Yc2VKT0VWYzFCVEZ5Ri9KTVE2ajNadWg2SHlOSC9SWUhnd0VlbDZkU2ht?=
+ =?utf-8?B?cm8zK3A0dGpkaGFoSWEzMGM4Q1FlVmpRaEZnSVk5cVBuZXlDdVIvSXlIL3Rw?=
+ =?utf-8?B?NkRGbld6NnJjYWVERVZ4R0h0TWNTWHUyQi9MVWtuYWpPeFN2U3JzTkJuS3h2?=
+ =?utf-8?B?RXR0NnhTclYvai9LWmZEa2NNWDNJdWYvSDFBN0czUGs4K3BxSUtkR1VzTUtJ?=
+ =?utf-8?B?QWZtWlRQay9wZUx2bkFYK0F6NWFmUGFIVVFrT2lYcjBxWUNiaTRjMjN0dTNw?=
+ =?utf-8?B?MzhjY2lhRlNSeVhjMFpBK1VDclVvOXM0THFmUG1uVHNzS3UvZCs5V0NQZUlw?=
+ =?utf-8?B?SmxTS2gyWkUzd1R2QSszVkFhcVpwWEM4TFh0SlBTTW9pUzJPSVYxeWt6NnRP?=
+ =?utf-8?B?UTl2UXlwV0FRVXF2RHFjamc5aGhtcHRiMWgvOCtwUHJxQTFkV3VLUmZKOU5W?=
+ =?utf-8?B?czBVN2h4anZxeFFNVGZuZ3pnUkhpdHdwRnBSc1NpenFDYm82WEpzdDlaQWVG?=
+ =?utf-8?B?b2dBdEUzTDhJVEVhcTdtOVBwODZLMEZ6d01PSy9EdktWdE9INFZEVDJOck1Z?=
+ =?utf-8?B?NlBLanJiMHZBcXFHcTRBUHdjMm5UOFQyYkF3M0N2NURzU3FYNXFzeGE3UXll?=
+ =?utf-8?B?VG9mSjZVQ0RVcHJyd3U2MlV3cHhEKzh4WHA5dnk4YkI0S2hwNU1SSlNocVlE?=
+ =?utf-8?B?N05zMGExRFAzdU1TQ2Y5M1hiOVpyTmNBaDhrc05SMHlBLzI3eWd6c3RReXM2?=
+ =?utf-8?B?clNJZENVS2Z6NnErMXB2ZFlSY0Z4UnAwUm43azV0MFgzNXpybGo1NlJBcEs4?=
+ =?utf-8?B?MENNVHhDdGVwV1gxTkwrd1NwODJhc2ZLSHhkWWw1OXFVTXZQS0VjTVJmNmdC?=
+ =?utf-8?B?Vk53R0xQY2MyeFA5bE9JbXpJWk50MndFVmtMa0tZSXhWK2lnbmIyZ3NCeVVN?=
+ =?utf-8?B?Q09ERDFKUm1UTWxhcDdYby9yUnJPUmxaR0xJd0V5UlVaV1kxNzB0WTZ4aDJI?=
+ =?utf-8?B?Skd2Q1phekd0cFhPalJ6SVVFREFBUkFoaFphN09nSkpkUnhNUnVCOEY3MFhJ?=
+ =?utf-8?B?SEhuVkNtV3ZqRnY0bXVVZWJsTXpweWNXQThMMWl4b0lyQ0tSejVqYS9wMTdM?=
+ =?utf-8?B?Qzg3RlZTamo1VlVGQjR1ZWZmTWlodG1DOXljd3ZsbTc4eTZSMnJZbmNCSmFP?=
+ =?utf-8?B?c2k3NmQwTnIxQmVVMXJsdk95NjRRT3ZFVlpPbjFpK2ZsWHdFN21hQ1dVeUUv?=
+ =?utf-8?B?M2xOUzNZaFg2RzR3VXZUem5KM0hIUkcxdGlFZz09?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 07:28:55.7726
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 041192a2-30cd-43f6-dd17-08ddb93a1a6c
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000044F9.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PPF12253E83C
 
-Three things precisely:
 
-Replaced backquote with dollar-parentheses ...that is modern way of quoting in
-shell script. Improved readability.
+On 2025/7/1 16:22, Christian König wrote:
+> On 01.07.25 10:18, Zhang, GuoQing (Sam) wrote:
+>> [AMD Official Use Only - AMD Internal Distribution Only]
+>>
+>>
+>> Hi Christian,
+>>
+>>   
+>>
+>> Thank you for the feedback.
+>>
+>>   
+>>
+>> For “return ret < 0 ? ret : 0;”, it is equivalent to “return ret;” since ret is always <= 0 after the loop.
+> No it isn't.
+>
+> ttm_global_swapout() returns the number of pages swapped out and only a negative error code if something went wrong.
 
-Added a stranza of missing/required command for the operation,in this case
-gnuplot and that too in shell path.
 
-And lastly,use "command -v" to search the command i.e gnuplot and the REASON
-for that :
+/**
+  * move GTT BOs to shmem for hibernation.
+  *
+  * returns 0 on success, negative on failure.
+  */
+int ttm_device_prepare_hibernation(void)
+{
+     struct ttm_operation_ctx ctx = {
+         .interruptible = false,
+         .no_wait_gpu = false,
+         .force_alloc = true
+     };
+     int ret;
 
-The -v option tell show shell will invoke the command specified as its
-options.Basically to avoid dependency on something outside of the shell.It is
-also execute command found in the PATH. Essentially, ignoring other similar
-name stuff curated somewhere else in the system.
+     do {
+         ret = ttm_global_swapout(&ctx, GFP_KERNEL);
+     } while (ret > 0);
+     return ret;
+}
 
-Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
----
- V2: What changes from V1: Verbose changelog, especially using command -v to
- find the specific program i.e. gnuplot.
+This is the new code version.
+If ttm_global_swapout() return positive number, the while loop will 
+continue to the next iteration.
+The while loop stops only when ttm_global_swapout() returns 0 or 
+negative number. In both case, the new function can just return the ret.
 
- tools/mm/slabinfo-gnuplot.sh | 44 ++++++++++++++++++++++++------------
- 1 file changed, 30 insertions(+), 14 deletions(-)
+The ret values printed in the do while loop:
+[   53.745892] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 512
+[   53.950975] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 35840
+[   53.951713] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 9
+[   67.712196] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 2187264
+[   67.713726] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 512
+[   67.759212] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 32768
+[   67.761946] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 1024
+[   67.762685] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 85
+[   67.763518] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 175
+[   67.767318] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 2367
+[   67.767942] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 1
+[   67.768499] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 1
+[   67.769054] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 1
+...
+[   67.783554] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 1
+[   67.785755] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 1
+[   67.788607] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 1
+[   67.789906] [TTM DEVICE] ttm_device_prepare_hibernation:164 ret 0
 
-diff --git a/tools/mm/slabinfo-gnuplot.sh b/tools/mm/slabinfo-gnuplot.sh
-index 873a892147e5..6c9add4bb8ad 100644
---- a/tools/mm/slabinfo-gnuplot.sh
-+++ b/tools/mm/slabinfo-gnuplot.sh
-@@ -46,6 +46,22 @@ check_file_exist()
- 	fi
- }
 
-+# This variable could have space separated value
-+my_needed_commands="gnuplot"
-+
-+missing_counter=0
-+for needed_command in $my_needed_commands; do
-+  if ! hash "$needed_command" >/dev/null 2>&1; then
-+    printf "Command not found in PATH: %s\n" "$needed_command" >&2
-+    ((missing_counter++))
-+  fi
-+done
-+
-+if ((missing_counter > 0)); then
-+  printf "Minimum %d commands are missing in PATH, aborting\n" "$missing_counter" >&2
-+  exit 1
-+fi
-+
- do_slabs_plotting()
- {
- 	local file=$1
-@@ -58,13 +74,13 @@ do_slabs_plotting()
+Regards
+Sam
 
- 	check_file_exist "$file"
 
--	out_file=`basename "$file"`
-+	out_file=$(basename "$file")
- 	if [ $xmax -ne 0 ]; then
- 		range="$range::$xmax"
- 		lines=$((xmax-xmin))
- 	fi
 
--	wc_lines=`cat "$file" | wc -l`
-+	wc_lines=$(cat "$file" | wc -l)
- 	if [ $? -ne 0 ] || [ "$wc_lines" -eq 0 ] ; then
- 		wc_lines=$lines
- 	fi
-@@ -78,7 +94,7 @@ do_slabs_plotting()
- 		xtic_rotate=90
- 	fi
-
--gnuplot -p << EOF
-+$(command -v gnuplot) -p << EOF
- #!/usr/bin/env gnuplot
-
- set terminal png enhanced size $width,$height large
-@@ -113,14 +129,14 @@ do_totals_plotting()
- 	for i in "${t_files[@]}"; do
- 		check_file_exist "$i"
-
--		file="$file"`basename "$i"`
-+		file="$file"$(basename "$i")
- 		gnuplot_cmd="$gnuplot_cmd '$i' $range using 1 title\
- 			'$i Memory usage' with lines,"
- 		gnuplot_cmd="$gnuplot_cmd '' $range using 2 title \
- 			'$i Loss' with lines,"
- 	done
-
--gnuplot -p << EOF
-+$(command -v gnuplot) -p << EOF
- #!/usr/bin/env gnuplot
-
- set terminal png enhanced size $width,$height large
-@@ -148,26 +164,26 @@ do_preprocess()
-
- 	# use only 'TOP' slab (biggest memory usage or loss)
- 	let lines=3
--	out=`basename "$in"`"-slabs-by-loss"
--	`cat "$in" | grep -A "$lines" 'Slabs sorted by loss' |\
-+	out=$(basename "$in")"-slabs-by-loss"
-+	$(cat "$in" | grep -A "$lines" 'Slabs sorted by loss' |\
- 		grep -E -iv '\-\-|Name|Slabs'\
--		| awk '{print $1" "$4+$2*$3" "$4}' > "$out"`
-+		| awk '{print $1" "$4+$2*$3" "$4}' > "$out")
- 	if [ $? -eq 0 ]; then
- 		do_slabs_plotting "$out"
- 	fi
-
- 	let lines=3
--	out=`basename "$in"`"-slabs-by-size"
--	`cat "$in" | grep -A "$lines" 'Slabs sorted by size' |\
-+	out=$(basename "$in")"-slabs-by-size"
-+	$(cat "$in" | grep -A "$lines" 'Slabs sorted by size' |\
- 		grep -E -iv '\-\-|Name|Slabs'\
--		| awk '{print $1" "$4" "$4-$2*$3}' > "$out"`
-+		| awk '{print $1" "$4" "$4-$2*$3}' > "$out")
- 	if [ $? -eq 0 ]; then
- 		do_slabs_plotting "$out"
- 	fi
-
--	out=`basename "$in"`"-totals"
--	`cat "$in" | grep "Memory used" |\
--		awk '{print $3" "$7}' > "$out"`
-+	out=$(basename "$in")"-totals"
-+	$(cat "$in" | grep "Memory used" |\
-+		awk '{print $3" "$7}' > "$out")
- 	if [ $? -eq 0 ]; then
- 		t_files[0]=$out
- 		do_totals_plotting
---
-2.49.0
-
+>
+> And it's probably not a good idea to return that from the new function.
+>
+> Regards,
+> Christian.
+>
+>>   
+>>
+>> For all other comments, I will revise the patch accordingly in v2.
+>>
+>>   
+>>
+>> Regards
+>>
+>> Sam
+>>
+>>   
+>>
+>>   
+>>
+>> *From: *Koenig, Christian <Christian.Koenig@amd.com>
+>> *Date: *Monday, June 30, 2025 at 19:54
+>> *To: *Zhang, GuoQing (Sam) <GuoQing.Zhang@amd.com>, rafael@kernel.org <rafael@kernel.org>, len.brown@intel.com <len.brown@intel.com>, pavel@kernel.org <pavel@kernel.org>, Deucher, Alexander <Alexander.Deucher@amd.com>, Limonciello, Mario <Mario.Limonciello@amd.com>, Lazar, Lijo <Lijo.Lazar@amd.com>
+>> *Cc: *Zhao, Victor <Victor.Zhao@amd.com>, Chang, HaiJun <HaiJun.Chang@amd.com>, Ma, Qing (Mark) <Qing.Ma@amd.com>, amd-gfx@lists.freedesktop.org <amd-gfx@lists.freedesktop.org>, dri-devel@lists.freedesktop.org <dri-devel@lists.freedesktop.org>, linux-pm@vger.kernel.org <linux-pm@vger.kernel.org>, linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>
+>> *Subject: *Re: [PATCH 1/3] drm/amdgpu: move GTT to SHM after eviction for hibernation
+>>
+>> On 30.06.25 12:41, Samuel Zhang wrote:
+>>> When hibernate with data center dGPUs, huge number of VRAM BOs evicted
+>>> to GTT and takes too much system memory. This will cause hibernation
+>>> fail due to insufficient memory for creating the hibernation image.
+>>>
+>>> Move GTT BOs to shmem in KMD, then shmem to swap disk in kernel
+>>> hibernation code to make room for hibernation image.
+>> This should probably be two patches, one for TTM and then an amdgpu patch to forward the event.
+>>
+>>> Signed-off-by: Samuel Zhang <guoqing.zhang@amd.com>
+>>> ---
+>>>    drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c | 13 ++++++++++++-
+>>>    drivers/gpu/drm/ttm/ttm_resource.c      | 18 ++++++++++++++++++
+>>>    include/drm/ttm/ttm_resource.h          |  1 +
+>>>    3 files changed, 31 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
+>>> index 4d57269c9ca8..5aede907a591 100644
+>>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
+>>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
+>>> @@ -2889,6 +2889,7 @@ int amdgpu_fill_buffer(struct amdgpu_bo *bo,
+>>>    int amdgpu_ttm_evict_resources(struct amdgpu_device *adev, int mem_type)
+>>>    {
+>>>          struct ttm_resource_manager *man;
+>>> +     int r;
+>>>    
+>>>          switch (mem_type) {
+>>>          case TTM_PL_VRAM:
+>>> @@ -2903,7 +2904,17 @@ int amdgpu_ttm_evict_resources(struct amdgpu_device *adev, int mem_type)
+>>>                  return -EINVAL;
+>>>          }
+>>>    
+>>> -     return ttm_resource_manager_evict_all(&adev->mman.bdev, man);
+>>> +     r = ttm_resource_manager_evict_all(&adev->mman.bdev, man);
+>>> +     if (r) {
+>>> +             DRM_ERROR("Failed to evict memory type %d\n", mem_type);
+>>> +             return r;
+>>> +     }
+>>> +     if (adev->in_s4 && mem_type == TTM_PL_VRAM) {
+>>> +             r = ttm_resource_manager_swapout();
+>>> +             if (r)
+>>> +                     DRM_ERROR("Failed to swap out, %d\n", r);
+>>> +     }
+>>> +     return r;
+>>>    }
+>>>    
+>>>    #if defined(CONFIG_DEBUG_FS)
+>>> diff --git a/drivers/gpu/drm/ttm/ttm_resource.c b/drivers/gpu/drm/ttm/ttm_resource.c
+>>> index fd41b56e2c66..07b1f5a5afc2 100644
+>>> --- a/drivers/gpu/drm/ttm/ttm_resource.c
+>>> +++ b/drivers/gpu/drm/ttm/ttm_resource.c
+>>> @@ -534,6 +534,24 @@ void ttm_resource_manager_init(struct ttm_resource_manager *man,
+>>>    }
+>>>    EXPORT_SYMBOL(ttm_resource_manager_init);
+>>>    
+>>> +int ttm_resource_manager_swapout(void)
+>> This needs documentation, better placement and a better name.
+>>
+>> First of all put it into ttm_device.c instead of the resource manager.
+>>
+>> Then call it something like ttm_device_prepare_hibernation or similar.
+>>
+>>
+>>> +{
+>>> +     struct ttm_operation_ctx ctx = {
+>>> +             .interruptible = false,
+>>> +             .no_wait_gpu = false,
+>>> +             .force_alloc = true
+>>> +     };
+>>> +     int ret;
+>>> +
+>>> +     while (true) {
+>> Make that:
+>>
+>> do {
+>>          ret = ...
+>> } while (ret > 0);
+>>
+>>> +             ret = ttm_global_swapout(&ctx, GFP_KERNEL);
+>>> +             if (ret <= 0)
+>>> +                     break;
+>>> +     }
+>>> +     return ret;
+>> It's rather pointless to return the number of swapped out pages.
+>>
+>> Make that "return ret < 0 ? ret : 0;
+>>
+>> Regards,
+>> Christian.
+>>
+>>> +}
+>>> +EXPORT_SYMBOL(ttm_resource_manager_swapout);
+>>> +
+>>>    /*
+>>>     * ttm_resource_manager_evict_all
+>>>     *
+>>> diff --git a/include/drm/ttm/ttm_resource.h b/include/drm/ttm/ttm_resource.h
+>>> index b873be9597e2..46181758068e 100644
+>>> --- a/include/drm/ttm/ttm_resource.h
+>>> +++ b/include/drm/ttm/ttm_resource.h
+>>> @@ -463,6 +463,7 @@ void ttm_resource_manager_init(struct ttm_resource_manager *man,
+>>>    
+>>>    int ttm_resource_manager_evict_all(struct ttm_device *bdev,
+>>>                                     struct ttm_resource_manager *man);
+>>> +int ttm_resource_manager_swapout(void);
+>>>    
+>>>    uint64_t ttm_resource_manager_usage(struct ttm_resource_manager *man);
+>>>    void ttm_resource_manager_debug(struct ttm_resource_manager *man,
