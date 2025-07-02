@@ -1,285 +1,285 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5731F463A;
-	Wed,  2 Jul 2025 09:29:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1AF51F463A
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 09:29:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751448567; cv=none; b=VtvUxuMKQmzmuP4CZuWL969PGnJSAYqAR96HDPsx/0vgUhkCN533l9kzu+1ROiHGOxtvjYJuoBjG7Um+F4HnbCqre+sUggYC+EpPv3vgKaCreeBJGwSc+TT95JMjLEzQSW58HMnzh7PW9cym+9me1rwoCsjJUU+wS7hXXnrSnEc=
+	t=1751448576; cv=none; b=HX1dBzwwqWVeCwCFAUuh2QrIpm/AqumnbdwCHcRvz1Qti51IiXwb6IFgbX/r8TlRYTuM18e780Dewx07M0353+TVY7xbop4aMRrVj60uxFxSIRn0HaVhJIcNmE7pF8QmlsMBPWr0LM6r5elJaK3/oK50bMz8iNUTqYkKSqIgHnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751448567; c=relaxed/simple;
-	bh=jhZEqOpanLtxpoMSE2i9keu6zXt/035EKTZ4MYEoE3A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F75/HCtSlrIEbwTvknb12tRmtjWndlVxwRsKwMhe9EW9vRvtgpWRDBNKudJfAlpO9uJE7zvEd2iPnajz9XturLKDKB/Uo1dXrcFfp1ZkB8P97LPwdAdzSGHkLbvrefXA/AgXkR/LXPCNHoP9eRkepNTMJKgpZhbn86TYV5gmPiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=B5F/UCT8; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1751448576; c=relaxed/simple;
+	bh=3IOT08xYGGOvXZTXp7TKeWO/UH9Cj94SVaKjLaY4KTQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FCcXJ0+xpby49PqS1MFCOGuF9oX41Ge9VB1A8usWx4xyU9GR3+/p/dIXJPbHv482VyG61vKgXuyVt5OePFKpvA7eQeJ8N2kLP/WRjQofoflJqsPGQOS8xGctJsmTtPs3AL/oWfARBV1o3GIWAahG4GS00s3jSjJac2jkxr8LgaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QyCN716q; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="B5F/UCT8"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id BE22DE91;
-	Wed,  2 Jul 2025 11:29:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1751448541;
-	bh=jhZEqOpanLtxpoMSE2i9keu6zXt/035EKTZ4MYEoE3A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B5F/UCT8l7DJ5htS7Dj4yUWM6CukUvRBnW26+5YrSdv1sVbw8dn+l4FPXeuEQzFb1
-	 ViNEnrwo6V9ujEew+t5oBEAy7/7ZaRlLcK5INkJL5hIeEy9Uo6dbOSsbXvwHiTxAGC
-	 lANdkxTdl2xyXNlcBnfC6xFLCbxpl1eBlcj6EnLA=
-Date: Wed, 2 Jul 2025 12:28:58 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Will Whang <will@willwhang.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"open list:SONY IMX585 SENSOR DRIVER" <linux-media@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v1 1/4] dt-bindings: media: Add Sony IMX585 CMOS image
- sensor
-Message-ID: <20250702092858.GA15241@pendragon.ideasonboard.com>
-References: <20250702063836.3984-1-will@willwhang.com>
- <20250702063836.3984-2-will@willwhang.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QyCN716q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751448573;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ppRF9PFAqofYSOZMKV6AN5ZHS/0FmpTYSWJ/9tUppWg=;
+	b=QyCN716qdk4yu8y1da7kFq7g3tBCHyij7+LxduwU3yBFcIMQIZ19ELo45a6buhyFxzPjq6
+	gercPmHggnTUjyRBvSMaKyJ4ii70KZMbZYuEkOqOjijuCrnbsK5d1P8UfdPHrKuJx7k3i1
+	pXlR13m/j9rOJIFtqk8NTL8yEajkrmE=
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
+ [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-157-4ZMi5sHBPc2JknxQ1iOiWA-1; Wed, 02 Jul 2025 05:29:32 -0400
+X-MC-Unique: 4ZMi5sHBPc2JknxQ1iOiWA-1
+X-Mimecast-MFC-AGG-ID: 4ZMi5sHBPc2JknxQ1iOiWA_1751448571
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-3132c8437ffso4953050a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 02:29:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751448571; x=1752053371;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ppRF9PFAqofYSOZMKV6AN5ZHS/0FmpTYSWJ/9tUppWg=;
+        b=lM5Us/iDxBcpErgWJJIfuGypa0JNFJMD6uJAT7PAlUdrl4FXl4YGeGikDCR8f3euH9
+         xPav9kl/WjOugs4vH7/VitRU4/Ytx+fXJ4orGtyNQoSgkcUnXh5ayV+FDHfE5S7bV5Ub
+         Zwk7pVxd0AEoV2/ZFr91g5+I+iVC5r0ReufNnQhdllOVRyY91YF+9vVQY7Cqq3zK/E4d
+         oz5xqtCQboSZJoXjHN26TpdYUYUgHQr+G8zevUvuYpwCe5g6bQhqnkwo/I174LFETsCF
+         eI8OJjYFpQmfr3bTNO5uEcJUpCcc5PnWUjhy8VZEiL1q+DK6pUUj8VjYocGjh741wBwK
+         moNA==
+X-Forwarded-Encrypted: i=1; AJvYcCU/5P5tlAovFtKYZc8LCcGJV19IVNbDbBQcRpYlhA70UuMVmc6ScK04TtUskE34NlNwqhAz1BL11UYgNe0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoSGEh6/slwx9b/Z4dJ88QztWAiX4AhgTVuF01x2IeTMcWs+xr
+	vPWaYyqp1fFguuu/Zry5PyWJklK3ud8ZcgEBWa9LyscD7SqPPVkLMful1XVoTN+qWmAFX2nQ/ME
+	QBo2qatK1XRa/tciXHoCfb+aabz0+8TZe1d5Fh4fsF5OuTZamIYDmAiDbV7tVn//qkaX1MqTs6L
+	11S7n3YxniRCQVLPXpphgOAvsbp8MduAT8mSPFErld
+X-Gm-Gg: ASbGncuINf/6ubrmDa63h5EZ6InYZBADIZHGRURJgk/tAFhpJLQTEHaTC8EqpRrqs/S
+	6GiR19xHPOKH/DfQTrSqthzGegw3Il0R1L/p+tSKl+WfJrBUdv8j3vUEli19ePqOyjucp+Q5AqB
+	t+
+X-Received: by 2002:a17:90b:2703:b0:311:ffe8:20e6 with SMTP id 98e67ed59e1d1-31a90b1a2c3mr3265930a91.3.1751448571097;
+        Wed, 02 Jul 2025 02:29:31 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEdg0tKr6FWtYLrHrlNHOfmvrc4Alber6vRgRHUTpt+P817ZRuH7iGLs8DiPeATIDmYwaU1LJ0w14prxAgjh38=
+X-Received: by 2002:a17:90b:2703:b0:311:ffe8:20e6 with SMTP id
+ 98e67ed59e1d1-31a90b1a2c3mr3265895a91.3.1751448570603; Wed, 02 Jul 2025
+ 02:29:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250702063836.3984-2-will@willwhang.com>
+References: <20250616082518.10411-1-jasowang@redhat.com> <20250616082518.10411-20-jasowang@redhat.com>
+ <20250701024602-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20250701024602-mutt-send-email-mst@kernel.org>
+From: Jason Wang <jasowang@redhat.com>
+Date: Wed, 2 Jul 2025 17:29:18 +0800
+X-Gm-Features: Ac12FXwObd67L1Pf1WmOzhZvAaUA5FhEvAcHp_e4q4OSxXQCZdJt_PPbR_3zZi8
+Message-ID: <CACGkMEuzTYPcDMamptLMQpSZu3gWxYx1Sr2nJef+pyuo2m35XQ@mail.gmail.com>
+Subject: Re: [PATCH V3 19/19] virtio_ring: add in order support
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: xuanzhuo@linux.alibaba.com, eperezma@redhat.com, 
+	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Will,
+On Tue, Jul 1, 2025 at 2:57=E2=80=AFPM Michael S. Tsirkin <mst@redhat.com> =
+wrote:
+>
+> On Mon, Jun 16, 2025 at 04:25:17PM +0800, Jason Wang wrote:
+> > This patch implements in order support for both split virtqueue and
+> > packed virtqueue.
+>
+> I'd like to see more motivation for this work, documented.
+> It's not really performance, not as it stands, see below:
+>
+> >
+> > Benchmark with KVM guest + testpmd on the host shows:
+> >
+> > For split virtqueue: no obvious differences were noticed
+> >
+> > For packed virtqueue:
+> >
+> > 1) RX gets 3.1% PPS improvements from 6.3 Mpps to 6.5 Mpps
+> > 2) TX gets 4.6% PPS improvements from 8.6 Mpps to 9.0 Mpps
+> >
+>
+> That's a very modest improvement for a lot of code.
+> I also note you put in some batching just for in-order.
+> Which could also explain the gains maybe?
+> What if you just put in a simple implementation with no
+> batching tricks? do you still see a gain?
 
-Thank you for the patch.
+It is used to implement the batch used updating.
 
-On Wed, Jul 02, 2025 at 07:38:33AM +0100, Will Whang wrote:
-> Document the devicetree binding for the Sony IMX585.  The schema
-> covers the CSI-2 data-lanes, the optional 'mono-mode' flag,
-> and the internal-sync properties used by the driver.
-> 
-> Signed-off-by: Will Whang <will@willwhang.com>
-> ---
->  .../bindings/media/i2c/sony,imx585.yaml       | 120 ++++++++++++++++++
->  MAINTAINERS                                   |   8 ++
->  2 files changed, 128 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/sony,imx585.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx585.yaml b/Documentation/devicetree/bindings/media/i2c/sony,imx585.yaml
-> new file mode 100644
-> index 000000000..d050d1642
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/sony,imx585.yaml
-> @@ -0,0 +1,120 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2024 Ideas on Board Oy
+"""
+Some devices always use descriptors in the same order in which they
+have been made available. These devices can offer the
+VIRTIO_F_IN_ORDER feature. If negotiated, this knowledge allows
+devices to notify the use of a batch of buffers to the driver by only
+writing out a single used ring entry with the id corresponding to the
+head entry of the descriptor chain describing the last buffer in the
+batch.
+"""
 
-Unless there's something I'm not aware of, I don't think Ideas on Board
-wrote this. You can use your own copyright.
+DPDK implements this behavior, so it's a must for the virtio driver.
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/i2c/sony,imx585.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Sony IMX585 Sensor
-> +
-> +maintainers:
-> +  - Will Whang <will@willwhang.com>
-> +
-> +description:
-> +  IMX585 sensor is a Sony CMOS sensor with 4K and FHD outputs.
-> +
+> Does any hardware implement this? Maybe that can demonstrate
+> bigger gains.
 
-You should add
+Maybe but I don't have one in my hand.
 
-allOf:
-  - $ref: /schemas/media/video-interface-devices.yaml#
+For performance, I think it should be sufficient as a starter. I can
+say in the next version something like "more optimizations could be
+done on top"
 
-here to support generic sensor properties. You will need to replace
+Note that the patch that introduces packed virtqueue, there's not even
+any numbers:
 
-additionalProperties: false
+commit 1ce9e6055fa0a9043405c5604cf19169ec5379ff
+Author: Tiwei Bie <tiwei.bie@intel.com>
+Date:   Wed Nov 21 18:03:27 2018 +0800
 
-with
+    virtio_ring: introduce packed ring support
 
-unevaluatedProperties: false
+    Introduce the packed ring support. Packed ring can only be
+    created by vring_create_virtqueue() and each chunk of packed
+    ring will be allocated individually. Packed ring can not be
+    created on preallocated memory by vring_new_virtqueue() or
+    the likes currently.
 
-below.
+    Signed-off-by: Tiwei Bie <tiwei.bie@intel.com>
+    Signed-off-by: David S. Miller <davem@davemloft.net>
 
-> +properties:
-> +  compatible:
-> +    const: sony,imx585
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: xclk
+>
+>
+> > Signed-off-by: Jason Wang <jasowang@redhat.com>
+> > ---
+> >  drivers/virtio/virtio_ring.c | 423 +++++++++++++++++++++++++++++++++--
+> >  1 file changed, 402 insertions(+), 21 deletions(-)
+> >
+> > diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.=
+c
+> > index 27a9459a0555..21d456392ba0 100644
+> > --- a/drivers/virtio/virtio_ring.c
+> > +++ b/drivers/virtio/virtio_ring.c
+> > @@ -70,11 +70,14 @@
+> >  enum vq_layout {
+> >       SPLIT =3D 0,
+> >       PACKED,
+> > +     SPLIT_IN_ORDER,
+> > +     PACKED_IN_ORDER,
+> >       VQ_TYPE_MAX,
+> >  };
+> >
+> >  struct vring_desc_state_split {
+> >       void *data;                     /* Data for callback. */
+> > +     u32 total_len;                  /* Buffer Length */
+> >
+> >       /* Indirect desc table and extra table, if any. These two will be
+> >        * allocated together. So we won't stress more to the memory allo=
+cator.
+> > @@ -84,6 +87,7 @@ struct vring_desc_state_split {
+> >
+> >  struct vring_desc_state_packed {
+> >       void *data;                     /* Data for callback. */
+> > +     u32 total_len;                  /* Buffer Length */
+> >
+> >       /* Indirect desc table and extra table, if any. These two will be
+> >        * allocated together. So we won't stress more to the memory allo=
+cator.
+>
+> We are bloating up the cache footprint for everyone,
+> so there's a chance of regressions.
+> Pls include benchmark for in order off, to make sure we
+> are not regressing.
 
-When there's a single clock you can drop clock-names.
+Ok.
 
-> +
-> +  clock-frequency:
-> +    enum: [ 74250000, 37125000, 72000000, 27000000, 24000000 ]
+> How big was the ring?
 
-The clock-frequency property is frowned upon for sensors in DT. If the
-aim is to set the frequency of the clock, it should be done through
-assigned-clocks and assigned-clock-rates. If the aim is to convey the
-clock frequency to the driver, it should be done by calling
-clk_get_rate() in the driver.
+256.
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: I2C Address for IMX585
+> Worth trying with a biggish one, where there is more cache
+> pressure.
 
-You can drop the description, it's always the same for I2C devices.
+Ok.
 
-> +
-> +  VANA-supply:
-> +    description: Analog power supply (3.3V)
-> +
-> +  VDDL-supply:
-> +    description: Interface power supply (1.8V)
-> +
-> +  VDIG-supply:
-> +    description: Digital power supply (1.1V)
-> +
-> +  reset-gpios:
-> +    description: Sensor reset (XCLR) GPIO
-> +    maxItems: 1
-> +
-> +  port:
-> +    $ref: /schemas/graph.yaml#/$defs/port-base
-> +    additionalProperties: false
-> +
-> +    properties:
-> +      endpoint:
-> +        $ref: /schemas/media/video-interfaces.yaml#
-> +        unevaluatedProperties: false
-> +
-> +        properties:
-> +          data-lanes:
-> +            anyOf:
-> +              - items:
-> +                  - const: 1
-> +                  - const: 2
-> +                  - const: 3
-> +                  - const: 4
+>
+>
+> Why not have a separate state for in-order?
 
-Does that mean that the sensor supports data lane remapping ? I don't
-see it implemented by the driver. If it's not supported by the hardware,
-you should use
+It can work.
 
-        properties:
-          data-lanes:
-	    minItems: 1
-            items:
-              - const: 1
-              - const: 2
-              - const: 3
-              - const: 4
+>
+>
+>
+> > @@ -206,6 +210,12 @@ struct vring_virtqueue {
+> >
+> >       /* Head of free buffer list. */
+> >       unsigned int free_head;
+> > +
+> > +     /* Head of the batched used buffers, vq->num means no batching */
+> > +     unsigned int batch_head;
+> > +
+> > +     unsigned int batch_len;
+> > +
+>
+> Are these two only used for in-order? Please document that.
 
-To guarantee the order.
+Yes, I will do that.
 
-> +
-> +          sync-mode:
-> +            description: |
-> +              Select the synchronisation mode of the sensor
-> +                0 – internal sync, leader (default)
-> +                1 – internal sync, follower
-> +                2 – external sync
-> +            $ref: /schemas/types.yaml#/definitions/uint8
-> +            enum: [ 0, 1, 2 ]
+> I also want some documentation about the batching trickery
+> used please.
+> What is batched, when, how is batching flushed, why are we
+> only batching in-order ...
 
-This seems to be a sensor-level property, not an endpoint property. As
-it's not standard, it should also have a vendor prefix, i.e.
-sony,sync-mode. I'm wondering, though, if we shouldn't try to
-standardize it in video-interface-devices.yaml.
+I'm not sure I get things like this, what you want seems to be the
+behaviour of the device which has been stated by the spec or I may
+miss something here.
 
-> +
-> +          link-frequencies:
-> +            description: Select the MIPI-CSI2 link speed in Mhz
+>
+>
+>
+>
+> >       /* Number we've added since last sync. */
+> >       unsigned int num_added;
+> >
+> > @@ -256,10 +266,14 @@ static void vring_free(struct virtqueue *_vq);
+> >
+> >  #define to_vvq(_vq) container_of_const(_vq, struct vring_virtqueue, vq=
+)
+> >
+> > -
+> >  static inline bool virtqueue_is_packed(const struct vring_virtqueue *v=
+q)
+> >  {
+> > -     return vq->layout =3D=3D PACKED;
+> > +     return vq->layout =3D=3D PACKED || vq->layout =3D=3D PACKED_IN_OR=
+DER;
+> > +}
+> > +
+> > +static inline bool virtqueue_is_in_order(const struct vring_virtqueue =
+*vq)
+> > +{
+> > +     return vq->layout =3D=3D SPLIT_IN_ORDER || vq->layout =3D=3D PACK=
+ED_IN_ORDER;
+> >  }
+> >
+> >  static bool virtqueue_use_indirect(const struct vring_virtqueue *vq,
+> > @@ -570,7 +584,7 @@ static inline int virtqueue_add_split(struct vring_=
+virtqueue *vq,
+> >       struct vring_desc_extra *extra;
+> >       struct scatterlist *sg;
+> >       struct vring_desc *desc;
+> > -     unsigned int i, n, c, avail, descs_used, err_idx;
+> > +     unsigned int i, n, c, avail, descs_used, err_idx, total_len =3D 0=
+;
+>
+>
+> I would add a comment here:
+>
+> /* Total length for in-order */
+> unsigned int total_len =3D 0;
 
-You can drop the description, it's already described in
-video-interfaces.yaml.
+Ok.
 
-> +            items:
-> +              enum: [ 297000000, 360000000, 445500000, 594000000,
-> +                      720000000, 891000000, 1039500000 ]
+Thanks
 
-Are those frequencies the only ones the hardware can support, or do they
-come from the driver only supporting a fixed set of sensor PLL
-configurations ? In the latter case I would drop the enumeration.
-
-> +
-> +        required:
-> +          - data-lanes
-> +          - link-frequencies
-> +
-> +    required:
-> +      - endpoint
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-frequency
-> +  - port
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        imx585@1a {
-> +            compatible = "sony,imx585";
-> +            reg = <0x1a>;
-> +            clocks = <&imx585_clk>;
-> +            clock-frequency = <24000000>;
-> +
-> +            VANA-supply = <&camera_vadd_3v3>;
-> +            VDDL-supply = <&camera_vdd1_1v8>;
-> +            VDIG-supply = <&camera_vdd2_1v1>;
-> +
-> +            port {
-> +                imx585: endpoint {
-> +                    remote-endpoint = <&cam>;
-> +                    data-lanes = <1 2 3 4>;
-> +                    link-frequencies = /bits/ 64 <720000000>;
-> +                };
-> +            };
-> +        };
-> +    };
-> +...
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index da34c7227..9cc404790 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -23150,6 +23150,14 @@ T:	git git://linuxtv.org/media.git
->  F:	Documentation/devicetree/bindings/media/i2c/sony,imx415.yaml
->  F:	drivers/media/i2c/imx415.c
->  
-> +SONY IMX585 SENSOR DRIVER
-> +M:	Will Whang <will@willwhang.com>
-> +L:	linux-media@vger.kernel.org
-> +S:	Maintained
-> +T:	git git://linuxtv.org/media.git
-> +F:	Documentation/devicetree/bindings/media/i2c/sony,imx585.yaml
-> +F:	drivers/media/i2c/imx585.c
-> +
->  SONY MEMORYSTICK SUBSYSTEM
->  M:	Maxim Levitsky <maximlevitsky@gmail.com>
->  M:	Alex Dubov <oakad@yahoo.com>
-
--- 
-Regards,
-
-Laurent Pinchart
