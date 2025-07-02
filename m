@@ -1,116 +1,155 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C524D2620D5;
-	Wed,  2 Jul 2025 11:23:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C30BA19AD89;
+	Wed,  2 Jul 2025 11:24:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751455398; cv=none; b=FpWOKXWKcHXi9PfrWcbbc8gl2qY1vL/tApMhDtm53koxwbbRq4/+Nj1VOEj2siYiJNq4/aQjqJXfINQd11oxdr1B8DSFqu5c0uFY0T7ZGGaXkU11S/gHEBAJsTtOF1ZUmR9BQt85AXx+FeoT2KgB+6as2+cWcxZNtQplqZ9Nxms=
+	t=1751455440; cv=none; b=VBUOzs0QOIgMwuZF46NiUJlh48PAiU07zOO0OzeWXxwfzqIEsk8epZ5Iu0/Z2IXxRGcnjgh/5CuFBtzeHa5SdQb+WxTKJNwBifQfscVd8SRjxgwenu7flELglTi+4rJ17fFxLQbz6fKb9Tm4OHK2BxXtJZY4pbXP1lL2MPDN6BM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751455398; c=relaxed/simple;
-	bh=uWVJD/5l8mfS1+hU0OikvEF+t77G7TqsLYRSI3wmss0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=itf94dfRdyWChWDm2+aHaPiRmeMoZYynhRZrZZuXnKVz8Yu+jCsxWmcTG1P//DW5GvJL3TCN4Z8oDTfRrsJcbkLuXaGDzRbYOqj7jk6EJqpt981qFkGliDs5SxDbyt34D8yYwwheTHs047CBx1cID6cIEmzmPEsigXTy+tAXOGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IHyztj8B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751455440; c=relaxed/simple;
+	bh=vZ0JC8AmuIuaPuZVYOvDU8RiMysiHyIQYp9F09r95Go=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=iHpTYiDeLBvAPimPavcXeeZsN4j/wULwgGfrLqZiVHpKvmFCG4e8XT1CoEwuXYk3h0Dqg8jUqKQpbms6pb84BTXwPpTb7+WKjG3UTc/ECscit/uXt6vFYEJI0FWyJzKCdm/2G960IVQx3h4KMMtY+13h8Akk+vQGBf08n207vJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZzlzdXYH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IHyztj8B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D82D2C4CEED;
-	Wed,  2 Jul 2025 11:23:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZzlzdXYH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DA11C4CEF0;
+	Wed,  2 Jul 2025 11:23:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751455398;
-	bh=uWVJD/5l8mfS1+hU0OikvEF+t77G7TqsLYRSI3wmss0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IHyztj8Bg9kULRfdfK6nSG0pWeNJjNH4dR5ctWmNYb3sFqPFOtyKOeaOlEjfSltdT
-	 /wnwFaaBjcUKGKIlObJWE7hQX9uootBNapABQKE6GwfwaMMSCW50VrnFS94euYXIvR
-	 f3kTu+ZtHJ4srmqVjQ15s02t1cqtdvNq8vGKvw1d60eVCZs2HrFdQYL1+tprykG03z
-	 v1ELrgp3ovDP3NXgs88mP8gpFDRnLyOGsFnCM0wAOc3H/kR4U81HQRKTn7ju9xXu2O
-	 EVp6XKnyTAQQB3BRx2hVzB1N4Cw3JAWbBDWElYe6e1qvVs8I4GhwWLxLDyR//1hCFW
-	 tdmWTcceUPQyg==
-Message-ID: <6fd3fa34-69e1-484f-ad6f-8caa852f1a6c@kernel.org>
-Date: Wed, 2 Jul 2025 13:23:12 +0200
+	s=k20201202; t=1751455440;
+	bh=vZ0JC8AmuIuaPuZVYOvDU8RiMysiHyIQYp9F09r95Go=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=ZzlzdXYHK/ZaFUzq22Q2vNxYAl6AQlgG0D9U1QwYiw0ariXwX9nASIAKULd6aHAGK
+	 o4DL55zdS6Ax5UkVAZJs0Nqaa/Rg16y0//Kt8Xe46NDqVpp2VC7BdCSBmV99geor6w
+	 IyoVan6NnJP06C1pLwX0EcWw3mbowuPB2mL3UAt31RqUNkz7ri7nMrPUxS/KISxL5j
+	 E4GG75r3x3ZFyJn8cWv7NCoJaqAH3R+ysBGh3BJuAtkoJ0DL7NsvrSN/0aF4OqbQUh
+	 hRYok7tQ5P2lND/0KnTwGNWmqFw0JR5tVgq4vkIbeQVgxXdFo8s0uPLOhS2fATOxQi
+	 /bE4q51whaLLw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/5] media: dt-bindings: add non-pixel property in iris
- schema
-To: Vikash Garodia <quic_vgarodia@quicinc.com>,
- Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Abhinav Kumar <abhinav.kumar@linux.dev>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250627-video_cb-v3-0-51e18c0ffbce@quicinc.com>
- <20250627-video_cb-v3-1-51e18c0ffbce@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250627-video_cb-v3-1-51e18c0ffbce@quicinc.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Date: Wed, 02 Jul 2025 13:23:54 +0200
+Message-Id: <DB1J4UQLG76V.69HKATSZZVNO@kernel.org>
+Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v11 2/4] rust: Split `AlwaysRefCounted` into two traits
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Oliver Mangold" <oliver.mangold@pm.me>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
+ Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
+ "Trevor Gross" <tmgross@umich.edu>, "Asahi Lina"
+ <lina+kernel@asahilina.net>
+X-Mailer: aerc 0.20.1
+References: <20250618-unique-ref-v11-0-49eadcdc0aa6@pm.me>
+ <20250618-unique-ref-v11-2-49eadcdc0aa6@pm.me>
+In-Reply-To: <20250618-unique-ref-v11-2-49eadcdc0aa6@pm.me>
 
-On 27/06/2025 17:48, Vikash Garodia wrote:
+On Wed Jun 18, 2025 at 2:27 PM CEST, Oliver Mangold wrote:
+> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+> index c12ff4d2a3f2d79b760c34c0b84a51b507d0cfb1..40c0138bd336057e7d3a835a9=
+e81391baa2fd2b1 100644
+> --- a/rust/kernel/types.rs
+> +++ b/rust/kernel/types.rs
+> @@ -418,11 +418,9 @@ pub const fn raw_get(this: *const Self) -> *mut T {
+>      }
+>  }
+> =20
+> -/// Types that are _always_ reference counted.
+> +/// Types that are internally reference counted.
+>  ///
+>  /// It allows such types to define their own custom ref increment and de=
+crement functions.
+> -/// Additionally, it allows users to convert from a shared reference `&T=
+` to an owned reference
+> -/// [`ARef<T>`].
+>  ///
+>  /// This is usually implemented by wrappers to existing structures on th=
+e C side of the code. For
+>  /// Rust code, the recommendation is to use [`Arc`](crate::sync::Arc) to=
+ create reference-counted
+> @@ -438,9 +436,8 @@ pub const fn raw_get(this: *const Self) -> *mut T {
+>  /// at least until matching decrements are performed.
+>  ///
+>  /// Implementers must also ensure that all instances are reference-count=
+ed. (Otherwise they
+> -/// won't be able to honour the requirement that [`AlwaysRefCounted::inc=
+_ref`] keep the object
+> -/// alive.)
+> -pub unsafe trait AlwaysRefCounted {
+> +/// won't be able to honour the requirement that [`RefCounted::inc_ref`]=
+ keep the object alive.)
+> +pub unsafe trait RefCounted {
+>      /// Increments the reference count on the object.
+>      fn inc_ref(&self);
+
+This seems a bit problematic for `Owned`, since now I can do:
+
+    fn bad<T: Ownable + RefCounted>(t: &Owned<T>) {
+        t.inc_ref();
+    }
+
+And now the `Owned<T>` is no longer "unique" in the sense that the
+refcount is 1...
+
+Similarly, we should probably make this an associated function, such
+that people don't accidentally call `.inc_ref()` on `ARef<T>`.
+
+> @@ -453,11 +450,21 @@ pub unsafe trait AlwaysRefCounted {
+>      /// Callers must ensure that there was a previous matching increment=
+ to the reference count,
+>      /// and that the object is no longer used after its reference count =
+is decremented (as it may
+>      /// result in the object being freed), unless the caller owns anothe=
+r increment on the refcount
+> -    /// (e.g., it calls [`AlwaysRefCounted::inc_ref`] twice, then calls
+> -    /// [`AlwaysRefCounted::dec_ref`] once).
+> +    /// (e.g., it calls [`RefCounted::inc_ref`] twice, then calls [`RefC=
+ounted::dec_ref`] once).
+>      unsafe fn dec_ref(obj: NonNull<Self>);
+>  }
+> =20
+> +/// An extension to RefCounted, which declares that it is allowed to con=
+vert from a shared reference
+> +/// `&T` to an owned reference [`ARef<T>`].
+
+This is a bit too long for the first sentence... How about
+
+    Always reference counted type.
+
+    Allows the creation of `ARef<T>` from `&T`.
+
+Feel free to add more information.
+
+> +///
+> +/// # Safety
+> +///
+> +/// Implementers must ensure that no safety invariants are violated by u=
+pgrading an `&T` to an
+> +/// [`ARef<T>`]. In particular that implies [`AlwaysRefCounted`] and [`O=
+wnable`] cannot be
+> +/// implemented for the same type, as this would allow to violate the un=
+iqueness guarantee of
+> +/// [`Owned<T>`] by derefencing it into an `&T` and obtaining an [`ARef`=
+] from that.
+> +pub unsafe trait AlwaysRefCounted: RefCounted {}
+
+It's a bit sad that we can't just say `: !Ownable` (or rather a
+blanket-implemented marker trait, since that might land earlier). Anyone
+aware of progress in this area?
+
+---
+Cheers,
+Benno
+
 > +
->      video-codec@aa00000 {
->          compatible = "qcom,sm8550-iris";
->          reg = <0x0aa00000 0xf0000>;
-> @@ -144,12 +176,16 @@ examples:
->          resets = <&gcc GCC_VIDEO_AXI0_CLK_ARES>;
->          reset-names = "bus";
->  
-> -        iommus = <&apps_smmu 0x1940 0x0000>,
-> -                 <&apps_smmu 0x1947 0x0000>;
-> +        iommus = <&apps_smmu 0x1947 0x0000>;
-
-I missed, that's technically ABI break and nothing in commit msg
-explains that. You need to clearly explain the reasons and impact.
-
-Best regards,
-Krzysztof
+>  /// An owned reference to an always-reference-counted object.
+>  ///
+>  /// The object's reference count is automatically decremented when an in=
+stance of [`ARef`] is
