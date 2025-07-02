@@ -1,82 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from www637.your-server.de (www637.your-server.de [168.119.26.117])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 985C32DE6E2;
-	Wed,  2 Jul 2025 20:53:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 575A42DE6FD;
+	Wed,  2 Jul 2025 20:55:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.26.117
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751489611; cv=none; b=D3Gd1RQQmcBYvg482xOQ/dnmCU/oxyegPHkN+nblbZzlMjcTuOLRBPVpkuwpjEraYumk67A3aqBDQFO8XFdHnATDd3ig/GoF5jxA4H+8chdrxG7yxypCTElNxFJKrZqNQBBfq9XUCeOBn3yrbfw7p4e35jfh2IEuqVqV4GFos3A=
+	t=1751489737; cv=none; b=omL7AR226gMaSCRV/wpyWrLtkUaw9oMXe/QNjQ20jKovlJafe3n0Mv+/iGsGhVoXmxhXTXsArAR5PqYWhKcD86RXiteZPzumHD6SkzoRHcacqryCgYnFxcUOkAgbt4x25VL+rFnPgn6txL450c+hM9XbCxvtPXDHiE1TNFPzrUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751489611; c=relaxed/simple;
-	bh=rl3zKx7F20QaIupDu9ZefM9xSY3d7yuEuQmie46w34A=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KbcPJsqKIkKuHmkF1KdDt0ruXbXXYNLoKbDYIwttHId5v6//cf8UtiPkI65trpa0PfOYUN6SCerCn+ptu5oq1VUzucFLkaMQv2S5PtkFz0850QbJPB2LDHmaDS0AgDDVehiZPHeVyszFhBdVtUigI+di8nnTGs08pOWtB9rU1JQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eL2hXc4A; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751489737; c=relaxed/simple;
+	bh=jMqNUzCzdviSMaixKOdDfxxH8LW66AFo7krUQNRNHeI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=vDK8Pm91Kh1DBZhyg2MLDCU5ez0Vi/RpJ192XpI+L+Ya7JiPPoy5vmwZ/Mx9rL48AwyR6Ysa7nzyKSBjKq9H+kFKyb33/IXzeJxhJd9Nnsa/7IrO0qK2sFGIuH5rt+RdOssvppWlGfWOYpJjx7mEwtnSfTg3VcskY3DyfWJXizo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apitzsch.eu; spf=pass smtp.mailfrom=apitzsch.eu; dkim=pass (2048-bit key) header.d=apitzsch.eu header.i=@apitzsch.eu header.b=M7Imxov9; arc=none smtp.client-ip=168.119.26.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apitzsch.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=apitzsch.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eL2hXc4A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82EAEC4CEE7;
-	Wed,  2 Jul 2025 20:53:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751489611;
-	bh=rl3zKx7F20QaIupDu9ZefM9xSY3d7yuEuQmie46w34A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=eL2hXc4AxGmCBEN04ff4QAxFRxgEKV3jAXyQrSrUqVLZIDVVc5Nky3xnzpu2fmDf+
-	 82H0gW5DioNaITyeZcZWlcIsM3o9ls5EQ4dGA1aJhWuZzc6q5y7sJhlOZaAYMaiGKn
-	 2i3bLVm+iZCo+s2pfT/KTqH2RRfJ1lBIrIYZcwsPJ3ceIgmGB8FkG5Q2F5CxFoThHB
-	 jW1084vx9OyDJ0ihZBhNYNHrp/wFlWomwy8bo62hpU8LHgJYTsiFklAnBr8srl3fVw
-	 h5Ht05579CM6sAPsfyYxP8jeXro1gM9EUvWMOSsHuyLrDbgFJVXi4/29I/P7P+pLvt
-	 dHQO7tqMrDZvw==
-Date: Wed, 2 Jul 2025 13:53:29 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Dragos Tatulea <dtatulea@nvidia.com>
-Cc: almasrymina@google.com, asml.silence@gmail.com, Andrew Lunn
- <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon
- Horman <horms@kernel.org>, Saeed Mahameed <saeedm@nvidia.com>,
- tariqt@nvidia.com, cratiu@nvidia.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [RFC net-next 1/4] net: Allow non parent devices to be used for
- ZC DMA
-Message-ID: <20250702135329.76dbd878@kernel.org>
-In-Reply-To: <c5pxc7ppuizhvgasy57llo2domksote5uvo54q65shch3sqmkm@bgcnojnxt4hh>
-References: <20250702172433.1738947-1-dtatulea@nvidia.com>
-	<20250702172433.1738947-2-dtatulea@nvidia.com>
-	<20250702113208.5adafe79@kernel.org>
-	<c5pxc7ppuizhvgasy57llo2domksote5uvo54q65shch3sqmkm@bgcnojnxt4hh>
+	dkim=pass (2048-bit key) header.d=apitzsch.eu header.i=@apitzsch.eu header.b="M7Imxov9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=apitzsch.eu
+	; s=default2410; h=MIME-Version:Content-Transfer-Encoding:Content-Type:
+	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=jMqNUzCzdviSMaixKOdDfxxH8LW66AFo7krUQNRNHeI=; b=M7Imxov9Ftjj1N+R6ItFyHHOBO
+	3Jfb6H1RyvVQ+6aTwKoPc/yv0bEGaj1s5chIR7785vj3Rfc0wfX5f2McFnQlzAkuwKIlFPniSMmVm
+	PhlVklY4zGfE9NCL8sAyYWV/XKO2m2wwPtQ7ingNcnDArspO6/FV2Z5Ku7Tgfrby4u3F0yqyYG7B8
+	VuRBE3BvmPIoYKF8z2WpZLdYTQZUblE1xG/9L4hMa1gOnHc8lK1BpgXmYIE07WUGOSLOOmOitTJhv
+	UKqjJ2KuMmVzk0F79Wtc1YJBzS+lRh9BVH0vC8DQTLHVu/Epx01k/jqvJvorhnfIBdUaYt1WGWZZ5
+	/XLFABiQ==;
+Received: from sslproxy08.your-server.de ([78.47.166.52])
+	by www637.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <git@apitzsch.eu>)
+	id 1uX47U-0003SF-2m;
+	Wed, 02 Jul 2025 22:31:52 +0200
+Received: from localhost ([127.0.0.1])
+	by sslproxy08.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <git@apitzsch.eu>)
+	id 1uX47V-000Hyo-0Q;
+	Wed, 02 Jul 2025 22:31:52 +0200
+Message-ID: <a64eddca62e9ab72eefe2bf347f4633550965433.camel@apitzsch.eu>
+Subject: Re: [PATCH 1/5] media: dt-bindings: i2c: add DW9719/DW9718S VCM
+ binding
+From: =?ISO-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Sakari Ailus
+	 <sakari.ailus@linux.intel.com>
+Cc: Val Packett <val@packett.cool>, Daniel Scally <djrscally@gmail.com>, 
+ Mauro Carvalho Chehab
+	 <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+	 <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Wed, 02 Jul 2025 22:31:51 +0200
+In-Reply-To: <e6daacbf-2cfe-4489-942d-037b542143d4@kernel.org>
+References: <20250210082035.8670-1-val@packett.cool>
+	 <20250210082035.8670-2-val@packett.cool>
+	 <c2ff273a-bac5-4fa3-8339-ab722c9e63bf@kernel.org>
+	 <Z6nWp3bpoiqpvpS-@kekkonen.localdomain>
+	 <e6daacbf-2cfe-4489-942d-037b542143d4@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: Clear (ClamAV 1.0.7/27687/Wed Jul  2 10:35:26 2025)
 
-On Wed, 2 Jul 2025 20:01:48 +0000 Dragos Tatulea wrote:
-> On Wed, Jul 02, 2025 at 11:32:08AM -0700, Jakub Kicinski wrote:
-> > On Wed, 2 Jul 2025 20:24:23 +0300 Dragos Tatulea wrote:  
-> > > For zerocopy (io_uring, devmem), there is an assumption that the
-> > > parent device can do DMA. However that is not always the case:
-> > > for example mlx5 SF devices have an auxiliary device as a parent.  
-> > 
-> > Noob question -- I thought that the point of SFs was that you can pass
-> > them thru to a VM. How do they not have DMA support? Is it added on
-> > demand by the mediated driver or some such?  
-> They do have DMA support. Maybe didn't state it properly in the commit
-> message. It is just that the the parent device
-> (sf_netdev->dev.parent.device) is not a DMA device. The grandparent
-> device is a DMA device though (PCI dev of parent PFs). But I wanted to
-> keep it generic. Maybe it doesn't need to be so generic?
-> 
-> Regarding SFs and VM passtrhough: my understanding is that SFs are more
-> for passing them to a container.
+Hi Krzysztof, hi Sakari,
 
-Mm. We had macvlan offload for over a decade, there's no need for
-a fake struct device, auxbus and all them layers to delegate a
-"subdevice" to a container in netdev world.
-In my head subfunctions are a way of configuring a PCIe PASID ergo
-they _only_ make sense in context of DMA.
-Maybe someone with closer understanding can chime in. If the kind
-of subfunctions you describe are expected, and there's a generic 
-way of recognizing them -- automatically going to parent of parent
-would indeed be cleaner and less error prone, as you suggest.
+Am Montag, dem 10.02.2025 um 12:04 +0100 schrieb Krzysztof Kozlowski:
+> On 10/02/2025 11:36, Sakari Ailus wrote:
+> > Hi Krzysztof,
+> >=20
+> > On Mon, Feb 10, 2025 at 09:29:25AM +0100, Krzysztof Kozlowski
+> > wrote:
+> > > > +=C2=A0 dongwoon,vcm-freq:
+> > > > +=C2=A0=C2=A0=C2=A0 description:
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 The switching frequency for the voi=
+ce coil motor.
+> > >=20
+> > > Frequency is in Hertz, so use proper property unit suffix. BTW,
+> > > you cannot add incorrect properties post-factum based on already
+> > > accepted ACPI driver. This would be nice bypass of review, right?
+> >=20
+> > What's actually configured here is the divisor (10 MHz clock,
+> > divisor seems to be value + 2). It's similar to existing
+> > Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.yaml .
+> > I prefer this as it's much easier to use that in a driver (think of
+> > having values like 1428571 in DT, too).
+>=20
+>=20
+> Sure, but then this should be renamed to match purpose and
+> description rephrased.
+>=20
+
+What would be a better name for the property?
+
+Best regards,
+Andr=C3=A9
+
+> >=20
+> > >=20
+> > > > +=C2=A0=C2=A0=C2=A0 $ref: /schemas/types.yaml#/definitions/uint32
+>=20
+>=20
+> And this would stay + constraints.
+>=20
+>=20
+> Best regards,
+> Krzysztof
