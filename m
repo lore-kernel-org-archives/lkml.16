@@ -1,134 +1,190 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 970EC2E718B
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:32:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F45307AD0
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:32:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751466727; cv=none; b=auzjEjMuqjyXlWm0kLVt91gLHiU8VSyptBORu/bXpp8Q+FWx75HnZWe+k6nsewFpSDGroqMEb0ds9AHwaJTNIyF+UOcqvM8uOw9agxqKRmTGXR5AN3eS+Y3OigZdGkjnuO+d+gJo6Wg+HcbJ6+5/Fh2wjMqef+ZDqREQFd7eJQ4=
+	t=1751466773; cv=none; b=t/EfSf5PssDVV1W4td6gBg0Y10lqZuhzvsxCtSzE8V39Ow24H4m1dq/qhlr/lEnF0tsUfJcmfzh6JbHIGBZ+GTphj63C5vX7E9XTmtF4+xoxyRn2pUxge/pA2lWtcHOJ0gedFn2UCEiywDD/e3NZ7aLrLm5dw3JtQiEeL6ajaFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751466727; c=relaxed/simple;
-	bh=kNyuH7WLAtOiZ59gEXSG0VtJ7ygKLG7MtztYM37F/Ng=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t6dF3HAcTMVRI5kycIIeLcpz2b0M+CxK6tSz8u0MoHNBp8HKpCZVDAdh9BgT46gYLcFF5yJ/d6LVdBqpAvb6CqUAi9YzeabTaf0236rfb7WcMpZVKNiOEb6enKg5XbvI7FmOB9etguomi+/6tCX4/i7zt3EYJhdgUE5EJ6WLmtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=k522Uubj; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
+	s=arc-20240116; t=1751466773; c=relaxed/simple;
+	bh=2Xp9LKnZCCcV5QzGeE+WbMP668C5qrnyaJjRwCYTCkY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ail6CgnfiFhmGqpOGIGnDFl9Q3NYEOisC463wpp5fJ96JGCviKYvup6j5c0NtoNiqoxruN+4JtGVqoOac6xnONdV5NrlsJp+AOBFdz5e53oZgQDoT8NANA23Zgx7GlZ1/0NE8lxgs86kS/tePR4gZNCic7V0XFDj/cz+0P08WGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VQueI3ZW; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="k522Uubj"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6fafd3cc8f9so74239916d6.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 07:32:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VQueI3ZW"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-237f18108d2so425215ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 07:32:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rowland.harvard.edu; s=google; t=1751466724; x=1752071524; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OM0zfei5f0inErN/uNSMXzIQ9/mBfPLCdVqE3t8DrBI=;
-        b=k522Uubj8tc0tdptpXACapeAWwseeeUoSl5NGt8iP0ON2xIiwIja3V9LjVAOaiyCOx
-         nhw8qHVx/V3kzOekGdgRJSaPeTkpWa79dOUR0FbpNy0WiD4LHP4dn102LfokEAGXfn9N
-         VImBrJtFFtqygHGpK8y2QbL05uYVI0vCAfqugfrEQgs0TWPtBic5/whHVGJYmF49kzEv
-         dFbjTGCrUzieguUcYI/CG8xEcPqzCLkQWdJU2Sj8tbPZy5sbUZVIVOG4HIwNnzicWjyP
-         GDOIH1TathY8Ypy+vBgcYW4L9NVfgZVGg+PC9mKA6gT1iUCsw/QS01N4Y+x6/QX+Zcja
-         LYWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751466724; x=1752071524;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1751466771; x=1752071571; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OM0zfei5f0inErN/uNSMXzIQ9/mBfPLCdVqE3t8DrBI=;
-        b=JNUS0y29pAcmIKNEwIscMsnaBX0KuRXBHdW3ih4aWe+Z8YheOtEyIUpEYkIsLLHsn6
-         vxthiVSdh1Au6NRFV392FPJ8PrZj8SrzeiN5NakzDhcKBXSrKnLFr1ER1FUj+W5Hl9H2
-         adTShgqCAPeRFPM8QNT1XpH37FAS8XK3G0M28Hgl1RIaMpAHmjYWAZXRAdOyY5o31KPU
-         Y2CKtSi9KDUuRXuVGfcwF/tuUVOMnXfpinU577Q07JhjQ33TOxunJ475Bl0JNEfUW2J8
-         kf23TEFlQLMaK4OqkUNVkVDxVjLBhDrwl3CY2Tc1lR+B9NZhPqZkQiYOrMRRjE22cxnV
-         /cTA==
-X-Forwarded-Encrypted: i=1; AJvYcCVSD3VPEpAAelMWGPL1uefIlRk36BXrJ6LiDc+oJk9KhFCZNkogbFyuswm/i5aTM4/wQDjxi30xjCjKnSY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5BeYmqZtMCjs6zTz/9WCwyRAW7P6c/eBJAROvx4+H0HJloUqJ
-	0KDVnqA1nJmW5VD7U5loXsgcy2s/BB6xIZp2ioeb4DYimad3LUxc2EJCewBbBTip2R9SSDb+Zoc
-	9FtU=
-X-Gm-Gg: ASbGncv/5VrtgDRYcgIdvx7xlN6x2lC2jIC5d8POCB2f+IeAfxvjte/VFSWSRHJ6rJJ
-	lTJUID1wv6QZ5YYhnufPk1VhwVmf/kaobcNuzYzpOoU+Y7ZgGMiZ80XP2CG3gXx7eKzspNjW460
-	s24mXUxdXKmQC9tGhqFCEwGexGVZGKY6qsmJJnpZpwyQKtwnKNUNFjqlb5zRchm8eMNskAzY0tg
-	oOpVcPztNwM84qHiJWwjUKRZyDqRfuICYY8nBQYbUrnb8KCvMw098th+Y4q4aeeTVInDT4fJX/J
-	EJ8pCZEFmIdtxYKTrSLLYgDZFiUvCyeH60Bvr2jqXc3sFVmUPy+B/zqGBAAl6EISggCLmb9dDVQ
-	oU/+Z
-X-Google-Smtp-Source: AGHT+IGUPShe/+yBmwn3/UQ4X2UjDVvrgr8iJo66Gp3M0ocSLCxEcEabV1oGRD+eHhzqQPhNVXK6Ew==
-X-Received: by 2002:a05:6214:1c08:b0:6fd:75e1:16c4 with SMTP id 6a1803df08f44-702b1bb187emr42595926d6.20.1751466724441;
-        Wed, 02 Jul 2025 07:32:04 -0700 (PDT)
-Received: from rowland.harvard.edu ([140.247.181.15])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd772e4fddsm101024496d6.65.2025.07.02.07.32.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 07:32:04 -0700 (PDT)
-Date: Wed, 2 Jul 2025 10:32:01 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Xu Yang <xu.yang_2@nxp.com>
-Cc: ezequiel@vanguardiasur.com.ar, mchehab@kernel.org,
-	laurent.pinchart@ideasonboard.com, hdegoede@redhat.com,
-	gregkh@linuxfoundation.org, mingo@kernel.org, tglx@linutronix.de,
-	andriy.shevchenko@linux.intel.com, viro@zeniv.linux.org.uk,
-	thomas.weissschuh@linutronix.de, dafna.hirschfeld@collabora.com,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-usb@vger.kernel.org, imx@lists.linux.dev, jun.li@nxp.com
-Subject: Re: [PATCH v3 1/3] usb: core: add dma-noncoherent buffer alloc and
- free API
-Message-ID: <198ddef7-8623-400f-8e2e-ffd6c4bfd2cf@rowland.harvard.edu>
-References: <20250702110222.3926355-1-xu.yang_2@nxp.com>
- <20250702110222.3926355-2-xu.yang_2@nxp.com>
+        bh=ZqqnRujRE2SdSp3Ji3lnU4lMv7Si9SLf3Ig6FroSxIY=;
+        b=VQueI3ZWJ0ILSZjHBnp+xric/rzGi6APYEPxLxl4WlaRYvt5v2yyeG8uQBarENAnsS
+         OttyY22vK/89om0oFs4mYNDKpwSy6JNPjkaSxCPAtAjZnJwvZ/tFfn7PUB0ksO2PED6o
+         EFeGXhHH4cCLsD/LutdtwLL7A/TQ7j5HVLgvg7qdzQPbZJpVy4JGKIEmypJTT2CgYig1
+         184bKCS4E+KEFLpbaoh4OKNSUjk/+22HsAbHzakZxeS6GSEZV5deCYyRV7WC8avBZQL2
+         BHeOrwePll61eePmIxPnaVT5hZdk6EmPGZvUJk7Nyq2QvnDzycxGQbEW9+ZCq6ZaHKvS
+         5g4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751466771; x=1752071571;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZqqnRujRE2SdSp3Ji3lnU4lMv7Si9SLf3Ig6FroSxIY=;
+        b=kjvNV5LuX4w/t7nPb3a3TOJe9y61rOg1hz2SMQvuoIYlczHs2y4wCC+yk5sAg+j2Wo
+         kRWlfK2CuCGP6VfNgAmjD4MZwW0/v8H96V7EcAnejeBZ9czgnDjKWXlJ3xfReMuawknK
+         jzAAP/X7K8wRHMG1H9mQrQKnzYn7yiQOxB9WZ1urTheTrlBymN/7fo/uVH/kxq2MwSZB
+         GjTQAhSA+JKn733ZF2Qqd/RdqEZ/6K0J6b5KOejtLbnKA3mFjQG0tQ3+fH6ANXXQA/tE
+         Fe+CEoXtSi3Ynqy9z+hDu7fdj5YeT4rRYaOZUCvlyWNz9tIV09A5T5YHbYTANenyEuxL
+         I1RA==
+X-Forwarded-Encrypted: i=1; AJvYcCVXpPzhPXkknYPnvET19v2z98rYfOrMH+lPxEexA8PHl0Ha3lngy/rstyppVMbCrLnnlXVyjpmBD+/3Xw8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYdw55i/Kf6w86mEz+3JeARintv0/03qknsNcrHdZT5qvsi2dT
+	O/KIQdw66XKf5X4Sz2H/RVoiKmCJExaYY6VqGMLq8gJ5cvTaQcVV735nKcRWvnbhVzFvxPgZUly
+	Hn04qJ9cSJny9Lzl+VY0KkLSCisj7168FPgVHmEju
+X-Gm-Gg: ASbGncvKkXVIt5/FTweE9SPpThPwFWH8m7jCZtdqQLSJv7pd55dpKZXcUhcQaqzH1nO
+	RtTmiwchHEuhrJSKU/jzd1Gpm3+aTcvqc7HQi2B3z/zv3s6k/DMXbar09hT0Qeu3DhJ76ZP0MXF
+	lve2m3xPLvC26AIWyktMP1LJb95tMgsc+ukojjIzmAmYl2/NPJ7FCVwPbWocdvzaCEZhuw0Hu5o
+	/qK
+X-Google-Smtp-Source: AGHT+IGoIHXKMSNgSYMoVATe9zftjUbnEF1aXjzvZLi/NINKt4JogRrvHG2G1VAsWUCf6cD0R3CJCF3RSOi1f9/p6D4=
+X-Received: by 2002:a17:902:c407:b0:215:42a3:e844 with SMTP id
+ d9443c01a7336-23c5ffbdd35mr6602435ad.17.1751466769703; Wed, 02 Jul 2025
+ 07:32:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250702110222.3926355-2-xu.yang_2@nxp.com>
+References: <d3832fd95a03aad562705872cbda5b3d248ca321.1747264138.git.ackerleytng@google.com>
+ <CA+EHjTxtHOgichL=UvAzczoqS1608RSUNn5HbmBw2NceO941ng@mail.gmail.com>
+ <CAGtprH8eR_S50xDnnMLHNCuXrN2Lv_0mBRzA_pcTtNbnVvdv2A@mail.gmail.com>
+ <CA+EHjTwjKVkw2_AK0Y0-eth1dVW7ZW2Sk=73LL9NeQYAPpxPiw@mail.gmail.com>
+ <CAGtprH_Evyc7tLhDB0t0fN+BUx5qeqWq8A2yZ5-ijbJ5UJ5f-g@mail.gmail.com>
+ <9502503f-e0c2-489e-99b0-94146f9b6f85@amd.com> <20250624130811.GB72557@ziepe.ca>
+ <CAGtprH_qh8sEY3s-JucW3n1Wvoq7jdVZDDokvG5HzPf0HV2=pg@mail.gmail.com>
+ <aGTvTbPHuXbvj59t@yzhao56-desk.sh.intel.com> <CAGtprH9-njcgQjGZvGbbVX+i8D-qPUOkKFHbOWA20962niLTcw@mail.gmail.com>
+ <20250702141321.GC904431@ziepe.ca>
+In-Reply-To: <20250702141321.GC904431@ziepe.ca>
+From: Vishal Annapurve <vannapurve@google.com>
+Date: Wed, 2 Jul 2025 07:32:36 -0700
+X-Gm-Features: Ac12FXxsJnd1Ik5yTb-XA10TvLxSoUfxXWhX4Ea1BvmrwrYFJWzxZ35OP06jBy4
+Message-ID: <CAGtprH948W=5fHSB1UnE_DbB0L=C7LTC+a7P=g-uP0nZwY6fxg@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 04/51] KVM: guest_memfd: Introduce
+ KVM_GMEM_CONVERT_SHARED/PRIVATE ioctls
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Yan Zhao <yan.y.zhao@intel.com>, Alexey Kardashevskiy <aik@amd.com>, Fuad Tabba <tabba@google.com>, 
+	Ackerley Tng <ackerleytng@google.com>, kvm@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, linux-fsdevel@vger.kernel.org, 
+	ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com, 
+	anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu, 
+	bfoster@redhat.com, binbin.wu@linux.intel.com, brauner@kernel.org, 
+	catalin.marinas@arm.com, chao.p.peng@intel.com, chenhuacai@kernel.org, 
+	dave.hansen@intel.com, david@redhat.com, dmatlack@google.com, 
+	dwmw@amazon.co.uk, erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, 
+	graf@amazon.com, haibo1.xu@intel.com, hch@infradead.org, hughd@google.com, 
+	ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz, 
+	james.morse@arm.com, jarkko@kernel.org, jgowans@amazon.com, 
+	jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com, 
+	jun.miao@intel.com, kai.huang@intel.com, keirf@google.com, 
+	kent.overstreet@linux.dev, kirill.shutemov@intel.com, liam.merwick@oracle.com, 
+	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
+	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
+	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
+	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
+	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
+	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
+	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
+	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
+	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
+	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
+	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
+	steven.sistare@oracle.com, suzuki.poulose@arm.com, thomas.lendacky@amd.com, 
+	usama.arif@bytedance.com, vbabka@suse.cz, viro@zeniv.linux.org.uk, 
+	vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org, 
+	willy@infradead.org, xiaoyao.li@intel.com, yilun.xu@intel.com, 
+	yuzenghui@huawei.com, zhiquan1.li@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 02, 2025 at 07:02:20PM +0800, Xu Yang wrote:
-> This will add usb_alloc_noncoherent() and usb_free_noncoherent()
-> functions to support alloc and free buffer in a dma-noncoherent way.
-> 
-> To explicit manage the memory ownership for the kernel and device,
-> this will also add usb_dma_noncoherent_sync_for_cpu/device() functions
-> and call it at proper time.  The management requires the user save
-> sg_table returned by usb_alloc_noncoherent() to urb->sgt.
-> 
-> Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
-> 
-> ---
-> Changes in v3:
->  - put Return section at the end of description
->  - correct some abbreviations
->  - remove usb_dma_noncoherent_sync_for_cpu() and
->    usb_dma_noncoherent_sync_for_device()
->  - do DMA sync in usb_hcd_map_urb_for_dma() and
->    usb_hcd_unmap_urb_for_dma()
->  - call flush_kernel_vmap_range() for OUT transfers
->    and invalidate_kernel_vmap_range() for IN transfers
-> ---
->  drivers/usb/core/hcd.c | 19 ++++++++++
->  drivers/usb/core/usb.c | 80 ++++++++++++++++++++++++++++++++++++++++++
->  include/linux/usb.h    | 11 ++++++
->  3 files changed, 110 insertions(+)
-> 
-> diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
-> index c22de97432a0..e0fa6d6d273b 100644
-> --- a/drivers/usb/core/hcd.c
-> +++ b/drivers/usb/core/hcd.c
-> @@ -1366,6 +1366,14 @@ void usb_hcd_unmap_urb_for_dma(struct usb_hcd *hcd, struct urb *urb)
->  				urb->transfer_buffer_length,
->  				dir);
->  
-> +	if ((urb->transfer_flags & URB_NO_TRANSFER_DMA_MAP) &&
-> +	    urb->sgt) {
+On Wed, Jul 2, 2025 at 7:13=E2=80=AFAM Jason Gunthorpe <jgg@ziepe.ca> wrote=
+:
+>
+> On Wed, Jul 02, 2025 at 06:54:10AM -0700, Vishal Annapurve wrote:
+> > On Wed, Jul 2, 2025 at 1:38=E2=80=AFAM Yan Zhao <yan.y.zhao@intel.com> =
+wrote:
+> > >
+> > > On Tue, Jun 24, 2025 at 07:10:38AM -0700, Vishal Annapurve wrote:
+> > > > On Tue, Jun 24, 2025 at 6:08=E2=80=AFAM Jason Gunthorpe <jgg@ziepe.=
+ca> wrote:
+> > > > >
+> > > > > On Tue, Jun 24, 2025 at 06:23:54PM +1000, Alexey Kardashevskiy wr=
+ote:
+> > > > >
+> > > > > > Now, I am rebasing my RFC on top of this patchset and it fails =
+in
+> > > > > > kvm_gmem_has_safe_refcount() as IOMMU holds references to all t=
+hese
+> > > > > > folios in my RFC.
+> > > > > >
+> > > > > > So what is the expected sequence here? The userspace unmaps a D=
+MA
+> > > > > > page and maps it back right away, all from the userspace? The e=
+nd
+> > > > > > result will be the exactly same which seems useless. And IOMMU =
+TLB
+> > > >
+> > > >  As Jason described, ideally IOMMU just like KVM, should just:
+> > > > 1) Directly rely on guest_memfd for pinning -> no page refcounts ta=
+ken
+> > > > by IOMMU stack
+> > > In TDX connect, TDX module and TDs do not trust VMM. So, it's the TDs=
+ to inform
+> > > TDX module about which pages are used by it for DMAs purposes.
+> > > So, if a page is regarded as pinned by TDs for DMA, the TDX module wi=
+ll fail the
+> > > unmap of the pages from S-EPT.
+>
+> I don't see this as having much to do with iommufd.
+>
+> iommufd will somehow support the T=3D1 iommu inside the TDX module but
+> it won't have an IOAS for it since the VMM does not control the
+> translation.
+>
+> The discussion here is for the T=3D0 iommu which is controlled by
+> iommufd and does have an IOAS. It should be popoulated with all the
+> shared pages from the guestmemfd.
+>
+> > > If IOMMU side does not increase refcount, IMHO, some way to indicate =
+that
+> > > certain PFNs are used by TDs for DMA is still required, so guest_memf=
+d can
+> > > reject the request before attempting the actual unmap.
+>
+> This has to be delt with between the TDX module and KVM. When KVM
+> gives pages to become secure it may not be able to get them back..
+>
+> This problem has nothing to do with iommufd.
+>
+> But generally I expect that the T=3D1 iommu follows the S-EPT entirely
+> and there is no notion of pages "locked for dma". If DMA is ongoing
+> and a page is made non-secure then the DMA fails.
+>
+> Obviously in a mode where there is a vPCI device we will need all the
+> pages to be pinned in the guestmemfd to prevent any kind of
+> migrations. Only shared/private conversions should change the page
+> around.
 
-Shouldn't this be "else if"?  There aren't any circumstances where a 
-driver might want to do two DMA mappings for the same buffer, are there?
+Yes, guest_memfd ensures that all the faulted-in pages (irrespective
+of shared or private ranges) are not migratable. We already have a
+similar restriction with CPU accesses to encrypted memory ranges that
+need arch specific protocols to migrate memory contents.
 
-> +		dma_sync_sgtable_for_cpu(hcd->self.sysdev, urb->sgt, dir);
-> +		if (dir == DMA_FROM_DEVICE)
-> +			invalidate_kernel_vmap_range(urb->transfer_buffer,
-> +						     urb->transfer_buffer_length);
-> +	}
-> +
-
-Alan Stern
+>
+> Maybe this needs to be an integral functionality in guestmemfd?
+>
+> Jason
