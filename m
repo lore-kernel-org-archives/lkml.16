@@ -1,118 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1F8028726B;
-	Wed,  2 Jul 2025 13:19:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 292ED2874E0;
+	Wed,  2 Jul 2025 13:19:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751462376; cv=none; b=UssaUzVGDp+eFt5cMH1y8kEzF/d6zIFlh/RsANOGYFAOffL2ymown9VzEslA8o+bzEBCCH4ffLDwZp7y8C1MYLGeejj89wWDvYgV7UBNO7fMQdSAqlJ08rrsOIYMJ4duG/NE5oOS4TquijvPHyvHqnFqCqF8DL+1I/vHbsF7IMk=
+	t=1751462378; cv=none; b=PdsOgiZgXI568l8YZV30QBAUadedVCcRmCYTa/cDGAUU8AVd9rrbAYBXgCzgab5181noG8ZLlVz1NAqT3G70HlpBLfGTQH1Zod8h7fGKydUIpSpGEIEUsxfAwZwp+/eQvo1H51bDaE5x/FsjgY0ytljH+sFC5DlLpy+0KI6B1zY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751462376; c=relaxed/simple;
-	bh=L9AZcSPjf/9WKfgudNM7sFHRKU96doSlEH7lJ7L7ndQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cL5wmrHXPWMQzeKTdwf8kjUi8XdhS4d4OxLnKCUEdKRZyNsog0w4HllzitPLKi7/y4bk5h0ZiLtK7XRhVDx/QO/101ZFZjIamhrN6r0XsombqNpYgohyRXxTlnSXt/yjbc+XLlxOqYm90crAGVZedmX0eJozcxf30qhIyANjvoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M3eM0DKw; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M3eM0DKw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43823C4CEEF;
-	Wed,  2 Jul 2025 13:19:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751462375;
-	bh=L9AZcSPjf/9WKfgudNM7sFHRKU96doSlEH7lJ7L7ndQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=M3eM0DKwReMND1peJD0QYy5eWyAsc1j6g28SFhEUYPh9S80G34ZLC5F592mS+Q9P9
-	 /TGuMMCHNJBv9mV++Eji6g+LjpONNWomUdwBUkU/Sfz2/dx2avYKnRUNvhherxMleI
-	 a5TCyB2+5/oKWji/O9TIIs2TF/CHxY0WqaPnxrdFYHmzNNVMKkAT03Rad6NSMfAott
-	 nALP/oYCsATeUus80bAUZ242FDzhTEi+lwtUF3jGusWlvmClHXlcVSDFggzR58jKig
-	 Eb/mLkSn/ZWqLsEi8G+PeNVZ1JU1dqu8BsZEBlQf3gsvK2K5t8P6H4p23eqtcD3xk7
-	 LBCCVrgVDbYRQ==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Wed, 02 Jul 2025 15:18:38 +0200
-Subject: [PATCH v14 6/7] rust: samples: add a module parameter to the
- rust_minimal sample
+	s=arc-20240116; t=1751462378; c=relaxed/simple;
+	bh=tuVAUH59+l/O8UCrXTZ5Z+cA00nPP9nSSO/OIl+MgdQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VBCIy0Bb0mRHwFneiz8vMCvdQlJfftWVJE6amIukS7E8Bliha8ubTOecT4oxXWMdR1lGzFEQ2WMJTPpuKuyeUwGgV/+BZzpgr+fmvb7H91Iskjb2N1/Iwuy0kGgKhQ+UI9FHqZskANI3C6aWMdg05mUng0usblpZwp3LNgGgbMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1uWwab-00058l-00; Wed, 02 Jul 2025 14:29:25 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id 9F5D4C0C86; Wed,  2 Jul 2025 14:28:58 +0200 (CEST)
+Date: Wed, 2 Jul 2025 14:28:58 +0200
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
+	Huacai Chen <chenhuacai@kernel.org>, linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com
+Subject: Re: [PATCH v4 1/2] MIPS: Don't crash in stack_top() for tasks
+ without ABI or vDSO
+Message-ID: <aGUmClZQXMIQAIif@alpha.franken.de>
+References: <20250611-kunit-mips-v4-0-1d8997fb2ae4@linutronix.de>
+ <20250611-kunit-mips-v4-1-1d8997fb2ae4@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250702-module-params-v3-v14-6-5b1cc32311af@kernel.org>
-References: <20250702-module-params-v3-v14-0-5b1cc32311af@kernel.org>
-In-Reply-To: <20250702-module-params-v3-v14-0-5b1cc32311af@kernel.org>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Alice Ryhl <aliceryhl@google.com>, Masahiro Yamada <masahiroy@kernel.org>, 
- Nathan Chancellor <nathan@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
- Danilo Krummrich <dakr@kernel.org>, Benno Lossin <lossin@kernel.org>, 
- Benno Lossin <lossin@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>
-Cc: Trevor Gross <tmgross@umich.edu>, 
- Adam Bratschi-Kaye <ark.email@gmail.com>, rust-for-linux@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
- Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
- Daniel Gomez <da.gomez@samsung.com>, Simona Vetter <simona.vetter@ffwll.ch>, 
- Greg KH <gregkh@linuxfoundation.org>, Fiona Behrens <me@kloenk.dev>, 
- Daniel Almeida <daniel.almeida@collabora.com>, 
- linux-modules@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1264; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=L9AZcSPjf/9WKfgudNM7sFHRKU96doSlEH7lJ7L7ndQ=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBoZTG3tzq3Zf/Qc1bFX4sK+CqJSzeKu+qFoLGRJ
- fSppSY5ZDuJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaGUxtwAKCRDhuBo+eShj
- d/EmD/4owlmnQxt/hHK/xZytuUMQikRv2PLNJ3zq5fePmu5FkXxxJ64LNEZLwLq0VyGnxwzUMq8
- 6tNsEv4+QnbwCEGzuu5eC4XNpKwOj8P4LUf8ddag/CImDyEfiLb2eZa0/t7pPP3Dn2ISf8peGJy
- ePkWX/6Tv93odd39uxy8bFPKU+dIfJgCZGYwdBq5ZIdteidovptrSnfUm6Y/WQa1Y6+k/evhbcT
- 7bxg4Y4Q/Awm+JIZ3xFCxoBnH7lfj/CeG+Ob5RtxvEJw4gv6zTuvH9JmCIc0cfGe9hMaSum2REK
- AvVmZVS1FIEoFthN10Jy2ZgnCRJgMObI6l1wBF+o46EW1AcuplP0KFFBTb7GRyu3NsXYmvFDIoC
- 3QiGAlwRmHt+MI01eT2uqDOK5PJjFEQVtPo8Igyd8QLERXhlvVGeXgM6BrgeCCxvJV8hewo4lyY
- zJv3IMXJ09W+1lw/MDP6Rye1+XgpQBaGWslq0DJJaPBG/tBAjLuVMqQ2Dl5Ly5QWRHUvNxcxobq
- OAWtFDA+GfSbEaJVhpCxI62uNPtefNVoiS1D3jOyht20rT/8RRw8pXxStSUY1R4iczh9a11yhSF
- qGJDeAHTK/9VU9c+SFrZr/SUzLEjp0Re0dJ0NcIy5A0aC9KgvVdYGqa4BJ3jhjf0y2SHrIc0jO9
- HAhTUHT2iaKB+jA==
-X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
- fpr=3108C10F46872E248D1FB221376EB100563EF7A7
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250611-kunit-mips-v4-1-1d8997fb2ae4@linutronix.de>
 
-Showcase the rust module parameter support by adding a module parameter to
-the `rust_minimal` sample.
+On Wed, Jun 11, 2025 at 01:28:26PM +0200, Thomas Weiﬂschuh wrote:
+> Not all tasks have an ABI associated or vDSO mapped,
+> for example kthreads never do.
+> If such a task ever ends up calling stack_top(), it will derefence the
+> NULL ABI pointer and crash.
+> 
+> This can for example happen when using kunit:
+> 
+>     mips_stack_top+0x28/0xc0
+>     arch_pick_mmap_layout+0x190/0x220
+>     kunit_vm_mmap_init+0xf8/0x138
+>     __kunit_add_resource+0x40/0xa8
+>     kunit_vm_mmap+0x88/0xd8
+>     usercopy_test_init+0xb8/0x240
+>     kunit_try_run_case+0x5c/0x1a8
+>     kunit_generic_run_threadfn_adapter+0x28/0x50
+>     kthread+0x118/0x240
+>     ret_from_kernel_thread+0x14/0x1c
+> 
+> Only dereference the ABI point if it is set.
+> 
+> The GIC page is also included as it is specific to the vDSO.
+> Also move the randomization adjustment into the same conditional.
+> 
+> Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+> Reviewed-by: David Gow <davidgow@google.com>
+> ---
+>  arch/mips/kernel/process.c | 16 +++++++++-------
+>  1 file changed, 9 insertions(+), 7 deletions(-)
 
-Reviewed-by: Benno Lossin <lossin@kernel.org>
-Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
----
- samples/rust/rust_minimal.rs | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+applied to mips-next.
 
-diff --git a/samples/rust/rust_minimal.rs b/samples/rust/rust_minimal.rs
-index 1fc7a1be6b6d..c04cc07b3249 100644
---- a/samples/rust/rust_minimal.rs
-+++ b/samples/rust/rust_minimal.rs
-@@ -10,6 +10,12 @@
-     authors: ["Rust for Linux Contributors"],
-     description: "Rust minimal sample",
-     license: "GPL",
-+    params: {
-+        test_parameter: i64 {
-+            default: 1,
-+            description: "This parameter has a default of 1",
-+        },
-+    },
- }
- 
- struct RustMinimal {
-@@ -20,6 +26,10 @@ impl kernel::Module for RustMinimal {
-     fn init(_module: &'static ThisModule) -> Result<Self> {
-         pr_info!("Rust minimal sample (init)\n");
-         pr_info!("Am I built-in? {}\n", !cfg!(MODULE));
-+        pr_info!(
-+            "test_parameter: {}\n",
-+            *module_parameters::test_parameter.get()
-+        );
- 
-         let mut numbers = KVec::new();
-         numbers.push(72, GFP_KERNEL)?;
+Thomas.
 
 -- 
-2.47.2
-
-
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
