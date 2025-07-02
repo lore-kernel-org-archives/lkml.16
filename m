@@ -1,123 +1,211 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B03265CD0;
-	Wed,  2 Jul 2025 11:39:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32925266571;
+	Wed,  2 Jul 2025 11:40:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751456393; cv=none; b=aKNr4Vh2x6ls9MnqxdpNus2/8FQNZqsV0CEhlGC9+R2J1pWXlzGZJBxhq7gsjm1e/gABlZXGeZAXZBP6wM827LUfysMHEWF0lXdkRYnl4TOosk1PlP3Ow9/ud8Hgn4DLLMQ/zivg/jDjfwM1bGgA+gSNaL+uKV9B6Yq7/ygUWuo=
+	t=1751456426; cv=none; b=WZyb0RqyffwLVW0dRti8fXA/zxEqQ6pa1V/GpVu7JDQd80LrTWzDjFxB7nb64aEzFquOIDcW2T/To/tIQ5GHgE6an5c+TF3ocnC0d60z5yNj+1HSfcL7sWSYtr2ev0Hug9V/c68LXlCB/wmDhSNA5b7fkUZ56HwSzP/93qPMLLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751456393; c=relaxed/simple;
-	bh=p00VWiUPzkdDyPB1nCYCXxNBRT+8vis4nL3VseuWccI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Wj0NvrsdgQ17wydBVIzo5dL1enN81sEUQ2iwNGrlmvWfbDtcrU4B7DsXpWxn8eaW7Zm2UliBSDndRZL0qDxfvNVdTjUJF8DqmBAzxmMqtoEJNdudtoBpHzN5JLsvGCiiAk9vaSDsAsp6bx9p6tmkQUadbqkPNFjdAGE3pWkz4QI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=oOmx2oeS; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oOmx2oeS"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 562BLnSF010373;
-	Wed, 2 Jul 2025 11:39:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Nh0RTnBGgLzzQGynJ72K11XlI/jzJYOaADoX7NzOJ6o=; b=oOmx2oeSWM19Nbc/
-	h7SgAYoZ0ghxZDTIRTnVNWY3viiDH2aFQvEIN6WqvfHDOUaCY+x15Kuc8Ogu/iD+
-	utqmNEA+soBKMMgXbs7/S4qYo0a3Bv4tEuB4NjsF4WZ7uwKy/DWixlj/e+QMlmQC
-	LGxDtbX/B2OGDlN73MCoW5woYAXiUw4dvUzPOrxK1QUBI5NQiB45wVZH+6PFZ1PI
-	uhavbWEk9HJkIclsjcKtb7pACVgjCEypHRY0+H6o/QfgeY1sWKLYxf+3lHf6dCnC
-	/6+AiO+gvcTwJrwjBqK535x7sA6YZkg6WBXnID0KqYYkg6MovSYciyw1f/6Eby/H
-	GLP+xQ==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47mw309e36-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Jul 2025 11:39:46 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 562BdkTC016484
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 2 Jul 2025 11:39:46 GMT
-Received: from [10.50.58.161] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 2 Jul 2025
- 04:39:42 -0700
-Message-ID: <05ba89d5-3f1d-7f57-d5ae-685198dde01d@quicinc.com>
-Date: Wed, 2 Jul 2025 17:09:40 +0530
+	s=arc-20240116; t=1751456426; c=relaxed/simple;
+	bh=iDOlzwUy5LLAeQthPAZIxuoMknnV3oq4jZoGvo17QjY=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VewuF1q6V1PFjK4k1tVcg4VHt85K081EEWKiLE9IZ+uQUhY7Xotk1j5Qhspw3tizla697wsnBP6TAx3cJIq3w71tuUg905tHbZs+ncE1nijlLuvI3xc9iR5idWa6bFcr3dhqMtNm+tQuZq4zRm4YtoKBw1VHei4zRt5SLAtg9aM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bXHxB117sz6M4RD;
+	Wed,  2 Jul 2025 19:39:26 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id A671D14011A;
+	Wed,  2 Jul 2025 19:40:21 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 2 Jul
+ 2025 13:40:20 +0200
+Date: Wed, 2 Jul 2025 12:40:19 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+CC: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "Rob
+ Herring" <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
+ Dooley" <conor+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "Sascha
+ Bischoff" <sascha.bischoff@arm.com>, Timothy Hayes <timothy.hayes@arm.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, "Liam R. Howlett"
+	<Liam.Howlett@oracle.com>, Peter Maydell <peter.maydell@linaro.org>, "Mark
+ Rutland" <mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v6 20/31] irqchip/gic-v5: Add GICv5 PPI support
+Message-ID: <20250702124019.00006b01@huawei.com>
+In-Reply-To: <20250626-gicv5-host-v6-20-48e046af4642@kernel.org>
+References: <20250626-gicv5-host-v6-0-48e046af4642@kernel.org>
+	<20250626-gicv5-host-v6-20-48e046af4642@kernel.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v3 2/5] media: iris: register and configure non-pixel node
- as platform device
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Dikshita Agarwal
-	<quic_dikshita@quicinc.com>,
-        Abhinav Kumar <abhinav.kumar@linux.dev>,
-        "Bryan
- O'Donoghue" <bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab
-	<mchehab@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250627-video_cb-v3-0-51e18c0ffbce@quicinc.com>
- <20250627-video_cb-v3-2-51e18c0ffbce@quicinc.com>
- <156729ff-86f6-49a9-8b3c-7d0fd6737fb9@kernel.org>
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-In-Reply-To: <156729ff-86f6-49a9-8b3c-7d0fd6737fb9@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=CY4I5Krl c=1 sm=1 tr=0 ts=68651a83 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10
- a=xP6s1nvhhRLa_WC7hBcA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: bELSOmMpHGCbGnSJGPc6VDgMUwNOJPlZ
-X-Proofpoint-GUID: bELSOmMpHGCbGnSJGPc6VDgMUwNOJPlZ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDA5NCBTYWx0ZWRfX+GHeckRbH7BM
- Z+lmAYXQS7mpXscqPNPbpferBg5B6PJ3zQ5dmIC5pnVdUS9PKHl0rlT1yqMOtBQng54GUAxhUg+
- j3H4drn1rIuGhrL9v5m3xUry+Fr6sgxpEPAth3v/FbUXVoOK/3+TlZDBQ+FqMyo4d2L30DbKj5t
- 3a+Rv4LJnYXHN/IYOY9U8YJizV3soK6KIPcfCrtVUB0cYqF6KMJVXrcKWvLok3Tv6D6miN6/dCL
- PiRiXYch5znitcvOS02LFASWRqQiNJTWxr1Q3nck7Gpcx1EahE4RYmQsTkzzpVWpQ5vPbBr6qZf
- kUirdJYSo6+7W4eF38lJYekDA40zHGUFF+fBLvCvDJUE2VvwjOBv/trhqlmZZwxuGINA4WdKos6
- FeZB2BMTbRAof1RhMScx71qEPRGZIP9brpVQTM8Z6Bs98ff/4qOAvaaYLTlJAwgDvwkJ2VTF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-02_01,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 mlxlogscore=949 priorityscore=1501 clxscore=1015
- lowpriorityscore=0 mlxscore=0 phishscore=0 suspectscore=0 bulkscore=0
- malwarescore=0 impostorscore=0 spamscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2507020094
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ frapeml500008.china.huawei.com (7.182.85.71)
+
+On Thu, 26 Jun 2025 12:26:11 +0200
+Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+
+> The GICv5 CPU interface implements support for PE-Private Peripheral
+> Interrupts (PPI), that are handled (enabled/prioritized/delivered)
+> entirely within the CPU interface hardware.
+
+I can't remember where I got to last time so if I repeat stuff that
+you already responded to, feel free to just ignore me this time ;)
+
+All superficial stuff. Feel free to completely ignore if you like.
+
+> diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
+> new file mode 100644
+> index 000000000000..a08daa562d21
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-gic-v5.c
+> @@ -0,0 +1,461 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2024-2025 ARM Limited, All Rights Reserved.
+> + */
+> +
+> +#define pr_fmt(fmt)	"GICv5: " fmt
+> +
+> +#include <linux/irqdomain.h>
+> +#include <linux/wordpart.h>
+> +
+> +#include <linux/irqchip.h>
+> +#include <linux/irqchip/arm-gic-v5.h>
+> +
+> +#include <asm/cpufeature.h>
+> +#include <asm/exception.h>
+> +
+> +static u8 pri_bits __ro_after_init = 5;
+> +
+> +#define GICV5_IRQ_PRI_MASK	0x1f
+> +#define GICV5_IRQ_PRI_MI	(GICV5_IRQ_PRI_MASK & GENMASK(4, 5 - pri_bits))
+> +
+> +#define PPI_NR	128
+> +
+> +static bool gicv5_cpuif_has_gcie(void)
+> +{
+> +	return this_cpu_has_cap(ARM64_HAS_GICV5_CPUIF);
+> +}
+> +
+> +struct gicv5_chip_data {
+> +	struct fwnode_handle	*fwnode;
+> +	struct irq_domain	*ppi_domain;
+> +};
+> +
+> +static struct gicv5_chip_data gicv5_global_data __read_mostly;
+
+> +static void gicv5_hwirq_eoi(u32 hwirq_id, u8 hwirq_type)
+> +{
+> +	u64 cddi = hwirq_id | FIELD_PREP(GICV5_GIC_CDDI_TYPE_MASK, hwirq_type);
+
+Slight preference for not needing to care where hwirq_id goes in CDDI or how big
+it is (other than when I checked the header defines).
+ 
+	u64 cddi = FIELD_PREP(GICV5_GIC_CDDI_ID_MASK, hwirq_id) |
+        	   FIELD_PREP(GICV5_GIC_CDDI_TYPE_MASK, hwirq_type);
 
 
-On 7/2/2025 4:34 PM, Krzysztof Kozlowski wrote:
-> On 27/06/2025 17:48, Vikash Garodia wrote:
->>  
->> +static int iris_init_non_pixel_node(struct iris_core *core)
->> +{
->> +	struct platform_device_info info;
->> +	struct platform_device *pdev;
->> +	struct device_node *np_node;
->> +	int ret;
->> +
->> +	np_node = of_get_child_by_name(core->dev->of_node, "non_pixel");
-> 
-> Never tested.
-Yes, thats correct, but it have been sorted out now.
+> +
+> +	gic_insn(cddi, CDDI);
+> +
+> +	gic_insn(0, CDEOI);
+> +}
 
-> 
-> Best regards,
-> Krzysztof
+> +static int gicv5_ppi_irq_get_irqchip_state(struct irq_data *d,
+> +					   enum irqchip_irq_state which,
+> +					   bool *state)
+> +{
+> +	u64 hwirq_id_bit = BIT_ULL(d->hwirq % 64);
+> +
+> +	switch (which) {
+> +	case IRQCHIP_STATE_PENDING:
+> +		*state = !!(read_ppi_sysreg_s(d->hwirq, PPI_PENDING) & hwirq_id_bit);
+
+Technically don't need the !! but if you really like it I don't mind that much.
+
+> +		return 0;
+> +	case IRQCHIP_STATE_ACTIVE:
+> +		*state = !!(read_ppi_sysreg_s(d->hwirq, PPI_ACTIVE) & hwirq_id_bit);
+> +		return 0;
+> +	default:
+> +		pr_debug("Unexpected PPI irqchip state\n");
+> +		return -EINVAL;
+> +	}
+> +}
+
+
+> +static int gicv5_irq_ppi_domain_translate(struct irq_domain *d,
+> +					  struct irq_fwspec *fwspec,
+> +					  irq_hw_number_t *hwirq,
+> +					  unsigned int *type)
+> +{
+> +	if (!is_of_node(fwspec->fwnode))
+> +		return -EINVAL;
+> +
+> +	if (fwspec->param_count < 3)
+
+I don't care that much, but could relax this seeing as fwspec->param[2]
+isn't used anyway? Maybe a tiny comment on why it matters?
+
+> +		return -EINVAL;
+> +
+> +	if (fwspec->param[0] != GICV5_HWIRQ_TYPE_PPI)
+> +		return -EINVAL;
+> +
+> +	*hwirq = fwspec->param[1];
+> +
+> +	/*
+> +	 * Handling mode is hardcoded for PPIs, set the type using
+> +	 * HW reported value.
+> +	 */
+> +	*type = gicv5_ppi_irq_is_level(*hwirq) ? IRQ_TYPE_LEVEL_LOW : IRQ_TYPE_EDGE_RISING;
+> +
+> +	return 0;
+
+
+> +static int __init gicv5_of_init(struct device_node *node, struct device_node *parent)
+> +{
+> +	int ret = gicv5_init_domains(of_fwnode_handle(node));
+> +	if (ret)
+> +		return ret;
+> +
+> +	gicv5_set_cpuif_pribits();
+> +
+> +	ret = gicv5_starting_cpu(smp_processor_id());
+> +	if (ret)
+> +		goto out_dom;
+> +
+> +	ret = set_handle_irq(gicv5_handle_irq);
+> +	if (ret)
+> +		goto out_int;
+> +
+> +	return 0;
+> +
+> +out_int:
+> +	gicv5_cpu_disable_interrupts();
+> +out_dom:
+> +	gicv5_free_domains();
+
+Naming is always tricky but I'd not really expect gicv5_free_domains() as the
+pair of gicv5_init_domains() (which is doing creation rather than just initializing).
+
+Ah well, names are never prefect and I don't really mind.
+
+> +
+> +	return ret;
+> +}
+> +IRQCHIP_DECLARE(gic_v5, "arm,gic-v5", gicv5_of_init);
+
