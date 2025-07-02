@@ -1,211 +1,287 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32925266571;
-	Wed,  2 Jul 2025 11:40:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F90225A31
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 11:40:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751456426; cv=none; b=WZyb0RqyffwLVW0dRti8fXA/zxEqQ6pa1V/GpVu7JDQd80LrTWzDjFxB7nb64aEzFquOIDcW2T/To/tIQ5GHgE6an5c+TF3ocnC0d60z5yNj+1HSfcL7sWSYtr2ev0Hug9V/c68LXlCB/wmDhSNA5b7fkUZ56HwSzP/93qPMLLQ=
+	t=1751456443; cv=none; b=kcms3woaF1D4//gGdytpCsJo84nnDXEn/oeVrcafM/zetKXvVSz4+tVIOwk5Org2EZDvdafdP0VCd9Ctn2hXSRSfDBCnpUMhBXzFwduvr/JQKfXEK0v3hBjCmsXtPppGH8M5bnFJLhJrSbDIDAyoWtB96rWxhg1z5BufZRapwi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751456426; c=relaxed/simple;
-	bh=iDOlzwUy5LLAeQthPAZIxuoMknnV3oq4jZoGvo17QjY=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VewuF1q6V1PFjK4k1tVcg4VHt85K081EEWKiLE9IZ+uQUhY7Xotk1j5Qhspw3tizla697wsnBP6TAx3cJIq3w71tuUg905tHbZs+ncE1nijlLuvI3xc9iR5idWa6bFcr3dhqMtNm+tQuZq4zRm4YtoKBw1VHei4zRt5SLAtg9aM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bXHxB117sz6M4RD;
-	Wed,  2 Jul 2025 19:39:26 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id A671D14011A;
-	Wed,  2 Jul 2025 19:40:21 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 2 Jul
- 2025 13:40:20 +0200
-Date: Wed, 2 Jul 2025 12:40:19 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-CC: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "Rob
- Herring" <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
- Dooley" <conor+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "Sascha
- Bischoff" <sascha.bischoff@arm.com>, Timothy Hayes <timothy.hayes@arm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, "Liam R. Howlett"
-	<Liam.Howlett@oracle.com>, Peter Maydell <peter.maydell@linaro.org>, "Mark
- Rutland" <mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v6 20/31] irqchip/gic-v5: Add GICv5 PPI support
-Message-ID: <20250702124019.00006b01@huawei.com>
-In-Reply-To: <20250626-gicv5-host-v6-20-48e046af4642@kernel.org>
-References: <20250626-gicv5-host-v6-0-48e046af4642@kernel.org>
-	<20250626-gicv5-host-v6-20-48e046af4642@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1751456443; c=relaxed/simple;
+	bh=u8AI38z9yeUQMKFEvtc/Npp1so5aKMVDqybWaYoLr28=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ucwLm7zPuiAf6QnvDWAiv6EZL5lEt6wS8XTQi0OGIfOubCLq0RgQ9PU6WdmTK12uoN8yXm6bTxzVgDiY6ExDeKi88/Lsaij152Hl2wZkjuWfOtFzR48TLCa31HnrOAhqLHG5OxqNGk/e3DhQ8O4MYYP0QIEclhcBewHqwuuBnlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TUSkBhcg; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TUSkBhcg"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-553c31542b1so5040563e87.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 04:40:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751456439; x=1752061239; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/Jy2XDv76GfEXHS2fhU8oEAWy8scUGa8s5bkchLIRx4=;
+        b=TUSkBhcgfag+UEOsQBeTWjCbX96PnCURK2Ikr6+3nYWLIvXE/+8QBJb9rnZeWSOPR6
+         f4jdKo+lRvgicWRfF0HkNckU+wtVzKwM0cd4g6csNOdkV6ZbZlwNtBcfeH+cjnkXrMGb
+         84tAjaSWUDRvxkDLZpn+mfjf3tsHgoDChTHQMTM3LaxW+DS+K/gWNFZfyIHTi8Ow12OS
+         Feruvsv5IQpj0kyGbEi5NVFnASQoVy4Gz6ITnvh5e6YbCPszbZgziu9Wac9PDWKdFDwg
+         dZkl3DNI4LPg4OVRuCgOl2bJ9+WveuGJv1QG8hUj0u4y6IOsztzOv25NHP1HIc315ku5
+         tUoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751456439; x=1752061239;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/Jy2XDv76GfEXHS2fhU8oEAWy8scUGa8s5bkchLIRx4=;
+        b=PEjg6x07hdNJfndiUHmTNNddaujxNG0rh/HLVwddbw130rHQsvXvHC++lFfef42if6
+         zJDjc2+VBGK6SU7GhH6tERfQBafU2xmB9GS8MyLwht7dmN+SGETBn+8S+Y5x/Zzi1Qkk
+         1qnjeG7OeUCuQadLJUqnVSMmgzoxOmdwSvceNy0lUf4o6h3jqT2M2YkitErfLR/jdAVt
+         HqfDNLI3p2Qm1HzJvBf1mohIwPL4CN/zSarjy84qSbaRnP89ouatuPMWHrXHVbbx8phC
+         r7/rQXpD4OhP4IBDFXjYu3QI8O3pG5TuJooLM0rD6/OpZP8N6oSqzMVpdSHlo0qSrclP
+         MwnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUMx/dknr/7rSrFGnaZrQ0V34ahwCFiN9vTTip9Nok41viwaa9bBzKK6C/xZ9Kur1fd6nes0WGZHxErZx0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVTLEUJ0Hlt1gCzHBYt9SD5x/e1M9LGHXhRqd1jpd+s2qlfDrm
+	hUdmSoYCIw2gzScM5sWCCSEP9vuh+S26NE/gU4rHVUd4v5+cFllW7jWBr8vl8Q==
+X-Gm-Gg: ASbGncvA4gy+uCmPqEl7BqNYJ0rGHMjx2vaTYAwEomYK1P4eVRz8ZvnvJvYGoUUGnmW
+	RMKPupDYU+H67x6P//byYMRqhh+cF3J0EC176+M/I3yB6yey+9+K0Jjm5zf8nemX19EmgwIxgdz
+	KWd8/anT5MvE7PihawATK3SgdHm9RxilJRighcpNnKj36FDjdJH1m/8KlHdPJ3LfrgoLhimwllQ
+	KS+pRvMZl2Vr9VL9fpGmFUBG4xfE/BnMBU64vV870iulIccd5hh0kJ5L5tAMLUJKcMLW/p9rTXm
+	ZNsCcMwcQkWjESrjofiGAU/qjKgR4TDBcVvn9WoD+JCoRgDYMpSJrXi1IznNuUn+NNJJiM7wwRv
+	T+4Dt1pLGS5E=
+X-Google-Smtp-Source: AGHT+IGB8LMgoDGUxGACb96551FPJlIGGiA3rNJPCqbdbSbM0625POuaXaLxR/vzwTHli9sg34Kwiw==
+X-Received: by 2002:a05:6512:b0b:b0:553:350a:32d9 with SMTP id 2adb3069b0e04-55628304703mr844130e87.23.1751456438912;
+        Wed, 02 Jul 2025 04:40:38 -0700 (PDT)
+Received: from pc636 (host-95-203-1-180.mobileonline.telia.com. [95.203.1.180])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32cd2e0d0cesm18127441fa.37.2025.07.02.04.40.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 04:40:38 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Wed, 2 Jul 2025 13:40:35 +0200
+To: Jeongjun Park <aha310510@gmail.com>
+Cc: Uladzislau Rezki <urezki@gmail.com>, akpm@linux-foundation.org,
+	edumazet@google.com, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6] mm/vmalloc: fix data race in show_numa_info()
+Message-ID: <aGUas7_fcLS07mnL@pc636>
+References: <20250508165620.15321-1-aha310510@gmail.com>
+ <aBzuh0qb1UPrT86s@pc636>
+ <aBzxqiX7unwAqVCY@pc636>
+ <CAO9qdTF3vN5veO3HhGbrq-CkfR1fH_3ueCLjtcY8LOYKCG2mjg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAO9qdTF3vN5veO3HhGbrq-CkfR1fH_3ueCLjtcY8LOYKCG2mjg@mail.gmail.com>
 
-On Thu, 26 Jun 2025 12:26:11 +0200
-Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+On Wed, Jul 02, 2025 at 01:01:13AM +0900, Jeongjun Park wrote:
+> Uladzislau Rezki <urezki@gmail.com> wrote:
+> >
+> > On Thu, May 08, 2025 at 07:48:55PM +0200, Uladzislau Rezki wrote:
+> > > On Fri, May 09, 2025 at 01:56:20AM +0900, Jeongjun Park wrote:
+> > > > The following data-race was found in show_numa_info():
+> > > >
+> > > > ==================================================================
+> > > > BUG: KCSAN: data-race in vmalloc_info_show / vmalloc_info_show
+> > > >
+> > > > read to 0xffff88800971fe30 of 4 bytes by task 8289 on cpu 0:
+> > > >  show_numa_info mm/vmalloc.c:4936 [inline]
+> > > >  vmalloc_info_show+0x5a8/0x7e0 mm/vmalloc.c:5016
+> > > >  seq_read_iter+0x373/0xb40 fs/seq_file.c:230
+> > > >  proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
+> > > > ....
+> > > >
+> > > > write to 0xffff88800971fe30 of 4 bytes by task 8287 on cpu 1:
+> > > >  show_numa_info mm/vmalloc.c:4934 [inline]
+> > > >  vmalloc_info_show+0x38f/0x7e0 mm/vmalloc.c:5016
+> > > >  seq_read_iter+0x373/0xb40 fs/seq_file.c:230
+> > > >  proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
+> > > > ....
+> > > >
+> > > > value changed: 0x0000008f -> 0x00000000
+> > > > ==================================================================
+> > > >
+> > > > According to this report,there is a read/write data-race because m->private
+> > > > is accessible to multiple CPUs. To fix this, instead of allocating the heap
+> > > > in proc_vmalloc_init() and passing the heap address to m->private,
+> > > > vmalloc_info_show() should allocate the heap.
+> > > >
+> > > > Fixes: a47a126ad5ea ("vmallocinfo: add NUMA information")
+> > > > Suggested-by: Eric Dumazet <edumazet@google.com>
+> > > > Suggested-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> > > > Suggested-by: Andrew Morton <akpm@linux-foundation.org>
+> > > > Signed-off-by: Jeongjun Park <aha310510@gmail.com>
+> > > > ---
+> > > > v6: Change CONFIG_NUMA to must be check before doing any work related to the counters array.
+> > > > - Link to v5: https://lore.kernel.org/all/20250508160800.12540-1-aha310510@gmail.com/
+> > > > v5: Change heap to be allocated only when CONFIG_NUMA is enabled
+> > > > - Link to v4: https://lore.kernel.org/all/20250508065558.149091-1-aha310510@gmail.com/
+> > > > v4: Change the way counters array heap is allocated, per Andrew Morton's suggestion.
+> > > >     And fix it to call smp_rmb() in the correct location.
+> > > > - Link to v3: https://lore.kernel.org/all/20250507142552.9446-1-aha310510@gmail.com/
+> > > > v3: Following Uladzislau Rezki's suggestion, we check v->flags beforehand
+> > > >     to avoid printing uninitialized members of vm_struct.
+> > > > - Link to v2: https://lore.kernel.org/all/20250506082520.84153-1-aha310510@gmail.com/
+> > > > v2: Refactoring some functions and fix patch as per Eric Dumazet suggestion
+> > > > - Link to v1: https://lore.kernel.org/all/20250505171948.24410-1-aha310510@gmail.com/
+> > > > ---
+> > > >  mm/vmalloc.c | 63 +++++++++++++++++++++++++++++-----------------------
+> > > >  1 file changed, 35 insertions(+), 28 deletions(-)
+> > > >
+> > > > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > > > index 3ed720a787ec..c1ea9713a1c0 100644
+> > > > --- a/mm/vmalloc.c
+> > > > +++ b/mm/vmalloc.c
+> > > > @@ -3100,7 +3100,7 @@ static void clear_vm_uninitialized_flag(struct vm_struct *vm)
+> > > >     /*
+> > > >      * Before removing VM_UNINITIALIZED,
+> > > >      * we should make sure that vm has proper values.
+> > > > -    * Pair with smp_rmb() in show_numa_info().
+> > > > +    * Pair with smp_rmb() in vread_iter() and vmalloc_info_show().
+> > > >      */
+> > > >     smp_wmb();
+> > > >     vm->flags &= ~VM_UNINITIALIZED;
+> > > > @@ -4914,28 +4914,29 @@ bool vmalloc_dump_obj(void *object)
+> > > >  #endif
+> > > >
+> > > >  #ifdef CONFIG_PROC_FS
+> > > > -static void show_numa_info(struct seq_file *m, struct vm_struct *v)
+> > > > -{
+> > > > -   if (IS_ENABLED(CONFIG_NUMA)) {
+> > > > -           unsigned int nr, *counters = m->private;
+> > > > -           unsigned int step = 1U << vm_area_page_order(v);
+> > > >
+> > > > -           if (!counters)
+> > > > -                   return;
+> > > > +/*
+> > > > + * Print number of pages allocated on each memory node.
+> > > > + *
+> > > > + * This function can only be called if CONFIG_NUMA is enabled
+> > > > + * and VM_UNINITIALIZED bit in v->flags is disabled.
+> > > > + */
+> > > > +static void show_numa_info(struct seq_file *m, struct vm_struct *v,
+> > > > +                            unsigned int *counters)
+> > > > +{
+> > > > +   unsigned int nr;
+> > > > +   unsigned int step = 1U << vm_area_page_order(v);
+> > > >
+> > > > -           if (v->flags & VM_UNINITIALIZED)
+> > > > -                   return;
+> > > > -           /* Pair with smp_wmb() in clear_vm_uninitialized_flag() */
+> > > > -           smp_rmb();
+> > > > +   if (!counters)
+> > > > +           return;
+> > > >
+> > > > -           memset(counters, 0, nr_node_ids * sizeof(unsigned int));
+> > > > +   memset(counters, 0, nr_node_ids * sizeof(unsigned int));
+> > > >
+> > > > -           for (nr = 0; nr < v->nr_pages; nr += step)
+> > > > -                   counters[page_to_nid(v->pages[nr])] += step;
+> > > > -           for_each_node_state(nr, N_HIGH_MEMORY)
+> > > > -                   if (counters[nr])
+> > > > -                           seq_printf(m, " N%u=%u", nr, counters[nr]);
+> > > > -   }
+> > > > +   for (nr = 0; nr < v->nr_pages; nr += step)
+> > > > +           counters[page_to_nid(v->pages[nr])] += step;
+> > > > +   for_each_node_state(nr, N_HIGH_MEMORY)
+> > > > +           if (counters[nr])
+> > > > +                   seq_printf(m, " N%u=%u", nr, counters[nr]);
+> > > >  }
+> > > >
+> > > >  static void show_purge_info(struct seq_file *m)
+> > > > @@ -4962,8 +4963,12 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
+> > > >     struct vmap_node *vn;
+> > > >     struct vmap_area *va;
+> > > >     struct vm_struct *v;
+> > > > +   unsigned int *counters;
+> > > >     int i;
+> > > >
+> > > > +   if (IS_ENABLED(CONFIG_NUMA))
+> > > > +           counters = kmalloc(nr_node_ids * sizeof(unsigned int), GFP_KERNEL);
+> > > > +
+> > > >     for (i = 0; i < nr_vmap_nodes; i++) {
+> > > >             vn = &vmap_nodes[i];
+> > > >
+> > > > @@ -4979,6 +4984,11 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
+> > > >                     }
+> > > >
+> > > >                     v = va->vm;
+> > > > +                   if (v->flags & VM_UNINITIALIZED)
+> > > > +                           continue;
+> > > > +
+> > > > +                   /* Pair with smp_wmb() in clear_vm_uninitialized_flag() */
+> > > > +                   smp_rmb();
+> > > >
+> > > >                     seq_printf(m, "0x%pK-0x%pK %7ld",
+> > > >                             v->addr, v->addr + v->size, v->size);
+> > > > @@ -5013,7 +5023,9 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
+> > > >                     if (is_vmalloc_addr(v->pages))
+> > > >                             seq_puts(m, " vpages");
+> > > >
+> > > > -                   show_numa_info(m, v);
+> > > > +                   if (IS_ENABLED(CONFIG_NUMA))
+> > > > +                           show_numa_info(m, v, counters);
+> > > > +
+> > > >                     seq_putc(m, '\n');
+> > > >             }
+> > > >             spin_unlock(&vn->busy.lock);
+> > > > @@ -5023,19 +5035,14 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
+> > > >      * As a final step, dump "unpurged" areas.
+> > > >      */
+> > > >     show_purge_info(m);
+> > > > +   if (IS_ENABLED(CONFIG_NUMA))
+> > > > +           kfree(counters);
+> > > >     return 0;
+> > > >  }
+> > > >
+> > > >  static int __init proc_vmalloc_init(void)
+> > > >  {
+> > > > -   void *priv_data = NULL;
+> > > > -
+> > > > -   if (IS_ENABLED(CONFIG_NUMA))
+> > > > -           priv_data = kmalloc(nr_node_ids * sizeof(unsigned int), GFP_KERNEL);
+> > > > -
+> > > > -   proc_create_single_data("vmallocinfo",
+> > > > -           0400, NULL, vmalloc_info_show, priv_data);
+> > > > -
+> > > > +   proc_create_single("vmallocinfo", 0400, NULL, vmalloc_info_show);
+> > > >     return 0;
+> > > >  }
+> > > >  module_init(proc_vmalloc_init);
+> > > > --
+> > > LGTM:
+> > >
+> > > Reviewed-by: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+> > >
+> > > Thank you!
+> > >
+> > Also one thing i have just noticed. The "Fixes tag" should be updated to
+> > this: Fixes: 8e1d743f2c26 ("mm: vmalloc: support multiple nodes in vmallocinfo")
+> >
+> > the below one should not be blamed:
+> >
+> > Fixes: a47a126ad5ea ("vmallocinfo: add NUMA information")
+> >
+> > Thanks!
+> >
+> > --
+> > Uladzislau Rezki
+> 
+> I've been looking through the stable tree and it seems like this issue
+> still exists in the stable tree, so I think this patch needs to be
+> backported.
+> 
+> What do you think?
+> 
+If the stable does not have it, we should backport it. But it has to be
+done only for those where a vmap-node logic is in place. It was delivered
+starting from the v6.9 kernel version.
 
-> The GICv5 CPU interface implements support for PE-Private Peripheral
-> Interrupts (PPI), that are handled (enabled/prioritized/delivered)
-> entirely within the CPU interface hardware.
-
-I can't remember where I got to last time so if I repeat stuff that
-you already responded to, feel free to just ignore me this time ;)
-
-All superficial stuff. Feel free to completely ignore if you like.
-
-> diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
-> new file mode 100644
-> index 000000000000..a08daa562d21
-> --- /dev/null
-> +++ b/drivers/irqchip/irq-gic-v5.c
-> @@ -0,0 +1,461 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (C) 2024-2025 ARM Limited, All Rights Reserved.
-> + */
-> +
-> +#define pr_fmt(fmt)	"GICv5: " fmt
-> +
-> +#include <linux/irqdomain.h>
-> +#include <linux/wordpart.h>
-> +
-> +#include <linux/irqchip.h>
-> +#include <linux/irqchip/arm-gic-v5.h>
-> +
-> +#include <asm/cpufeature.h>
-> +#include <asm/exception.h>
-> +
-> +static u8 pri_bits __ro_after_init = 5;
-> +
-> +#define GICV5_IRQ_PRI_MASK	0x1f
-> +#define GICV5_IRQ_PRI_MI	(GICV5_IRQ_PRI_MASK & GENMASK(4, 5 - pri_bits))
-> +
-> +#define PPI_NR	128
-> +
-> +static bool gicv5_cpuif_has_gcie(void)
-> +{
-> +	return this_cpu_has_cap(ARM64_HAS_GICV5_CPUIF);
-> +}
-> +
-> +struct gicv5_chip_data {
-> +	struct fwnode_handle	*fwnode;
-> +	struct irq_domain	*ppi_domain;
-> +};
-> +
-> +static struct gicv5_chip_data gicv5_global_data __read_mostly;
-
-> +static void gicv5_hwirq_eoi(u32 hwirq_id, u8 hwirq_type)
-> +{
-> +	u64 cddi = hwirq_id | FIELD_PREP(GICV5_GIC_CDDI_TYPE_MASK, hwirq_type);
-
-Slight preference for not needing to care where hwirq_id goes in CDDI or how big
-it is (other than when I checked the header defines).
- 
-	u64 cddi = FIELD_PREP(GICV5_GIC_CDDI_ID_MASK, hwirq_id) |
-        	   FIELD_PREP(GICV5_GIC_CDDI_TYPE_MASK, hwirq_type);
-
-
-> +
-> +	gic_insn(cddi, CDDI);
-> +
-> +	gic_insn(0, CDEOI);
-> +}
-
-> +static int gicv5_ppi_irq_get_irqchip_state(struct irq_data *d,
-> +					   enum irqchip_irq_state which,
-> +					   bool *state)
-> +{
-> +	u64 hwirq_id_bit = BIT_ULL(d->hwirq % 64);
-> +
-> +	switch (which) {
-> +	case IRQCHIP_STATE_PENDING:
-> +		*state = !!(read_ppi_sysreg_s(d->hwirq, PPI_PENDING) & hwirq_id_bit);
-
-Technically don't need the !! but if you really like it I don't mind that much.
-
-> +		return 0;
-> +	case IRQCHIP_STATE_ACTIVE:
-> +		*state = !!(read_ppi_sysreg_s(d->hwirq, PPI_ACTIVE) & hwirq_id_bit);
-> +		return 0;
-> +	default:
-> +		pr_debug("Unexpected PPI irqchip state\n");
-> +		return -EINVAL;
-> +	}
-> +}
-
-
-> +static int gicv5_irq_ppi_domain_translate(struct irq_domain *d,
-> +					  struct irq_fwspec *fwspec,
-> +					  irq_hw_number_t *hwirq,
-> +					  unsigned int *type)
-> +{
-> +	if (!is_of_node(fwspec->fwnode))
-> +		return -EINVAL;
-> +
-> +	if (fwspec->param_count < 3)
-
-I don't care that much, but could relax this seeing as fwspec->param[2]
-isn't used anyway? Maybe a tiny comment on why it matters?
-
-> +		return -EINVAL;
-> +
-> +	if (fwspec->param[0] != GICV5_HWIRQ_TYPE_PPI)
-> +		return -EINVAL;
-> +
-> +	*hwirq = fwspec->param[1];
-> +
-> +	/*
-> +	 * Handling mode is hardcoded for PPIs, set the type using
-> +	 * HW reported value.
-> +	 */
-> +	*type = gicv5_ppi_irq_is_level(*hwirq) ? IRQ_TYPE_LEVEL_LOW : IRQ_TYPE_EDGE_RISING;
-> +
-> +	return 0;
-
-
-> +static int __init gicv5_of_init(struct device_node *node, struct device_node *parent)
-> +{
-> +	int ret = gicv5_init_domains(of_fwnode_handle(node));
-> +	if (ret)
-> +		return ret;
-> +
-> +	gicv5_set_cpuif_pribits();
-> +
-> +	ret = gicv5_starting_cpu(smp_processor_id());
-> +	if (ret)
-> +		goto out_dom;
-> +
-> +	ret = set_handle_irq(gicv5_handle_irq);
-> +	if (ret)
-> +		goto out_int;
-> +
-> +	return 0;
-> +
-> +out_int:
-> +	gicv5_cpu_disable_interrupts();
-> +out_dom:
-> +	gicv5_free_domains();
-
-Naming is always tricky but I'd not really expect gicv5_free_domains() as the
-pair of gicv5_init_domains() (which is doing creation rather than just initializing).
-
-Ah well, names are never prefect and I don't really mind.
-
-> +
-> +	return ret;
-> +}
-> +IRQCHIP_DECLARE(gic_v5, "arm,gic-v5", gicv5_of_init);
-
+--
+Uladzislau Rezki
