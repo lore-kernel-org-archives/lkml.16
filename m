@@ -1,139 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C7551DF27E;
-	Wed,  2 Jul 2025 10:16:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA9778F5D
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 10:17:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751451415; cv=none; b=KntrmWVQOO+7wxbfotUdDLML8lUigf4M3J8kn2z7kZA/PQoUJyaP8F2TqPmzeXq5wKJ3B0Q0QV5DTM1G2GPRTmQQjJTqm1Of1DeNpYfMiLkBupklQgetFQav1brQsjBbn6QWUtIPzcvApzOIGeJUQqujeDS30bf28Z9BOG0ByNg=
+	t=1751451440; cv=none; b=rsoTBqbb2WzW3yE8RdbDZ81lL0PErkJuzWML7+apXqif9WNi6Ut1gTJEWwsZPGB937S4NPLpydulfNMlwmhprGHLdDKiI/drcsiYm778VdXYdoJhwIDw3iWUFgqpC9mPzKU+5B4SmOuwj+HTuQWUPXT0JDv7Ir4NRUNL6tBwG8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751451415; c=relaxed/simple;
-	bh=nJMHPXeAJaBz7xhsn1CHhGywgMoqmwosoUeaAN0Iqwc=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=Z/ED+fm/FlAE7FXgjF8dFTXAnhDL7odCx9a7pheICJWK20DRPr+7Z3CN3jokY9xnH6jnCBj6nuXjOYcC228/4PnlDUrKsoqA5MNylMBypHXR9P0Z6Mvui8HuujRmX7GwEJSM1EA8XYx8LPSBzTLP+RV/tCj+RotQD3Ca6RamJg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z5rZtJFP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751451440; c=relaxed/simple;
+	bh=OQXKIEV7E/i3m2568pnhNxUhnfzOk+xoGPAzZX26p2g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=b5u8YUHPubrFd34MO98usxDbY6bndQQojjzmtAk8Gm2TkBP+P1gQevo5SYG9uCIcvL0TegYDnOxHvHRuqambz0r/ySa1jWCxgeUG/wvDAtTRlBe+JNF24OhpRp+tQ8MxXvWyD8BrtmQvT+wYR7bpB5lZ4AiAcwshniz3mlHrJlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PncWELkh; arc=none smtp.client-ip=209.85.128.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z5rZtJFP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D1D5C4CEED;
-	Wed,  2 Jul 2025 10:16:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751451414;
-	bh=nJMHPXeAJaBz7xhsn1CHhGywgMoqmwosoUeaAN0Iqwc=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=Z5rZtJFP5THphnMGrAwNEsylF5NxdVxbBcxvCTPSdp72Z/Sbophtc7TPZs1YatmIt
-	 t/tP8337Skyo6r1GjPXAfNfOVx43T2rT1K19ql0/FaCawx+sXQdGG+pHW0Ws5hyAd/
-	 ahlDuVLQujhoZ9CQPrdj2u657lcnOGFCyNPwUU/tHHYJZSz74rMBwxkvxnh5PEN6XN
-	 vhRjQk01XjKEt5GANo/pkJoXWazhPLJu3cF1ei/ez6ZUM9Lio6DTJbc2mWyGFQdEcI
-	 wcTYT011g2+G4DpvDZGwOOXVIuahSVw4cysXxXGaH3hvA9jxkDSX8rleUMbdbGaC5K
-	 yAmYCsyHJgzmQ==
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PncWELkh"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-713fba639f3so65373577b3.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 03:17:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751451438; x=1752056238; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=OQXKIEV7E/i3m2568pnhNxUhnfzOk+xoGPAzZX26p2g=;
+        b=PncWELkhYStIDYvpkt+cmLi7ceI/MofG9FKaUWvhVtX9ofMSsD5BZAujzKYZeVgJVs
+         t5HSNQhofqMPKHNfIeXWEvkAyYA0U9XM9KatJuTxoN0yDgyWnpndEdlu6LNMQQ9VMcqv
+         PM2TTpOvd9+Elb+lkD/ben5swF79YAN7A0oxo0KEqxzpgA4c7kqm/IxPUbTGrz+0JFQE
+         +N7Pb+kniaZcR9XiyO+hJjbksJ4dRskhEJ2qZ6kwndynMBfX0bdB2s/BNeUkGWgInv8g
+         XAy/UbR9lmPv9+hTiPwuXkgHbjS05hVg7h5BZaPizZUWt7ael40h08qsla7QkOxMnRXW
+         rKuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751451438; x=1752056238;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OQXKIEV7E/i3m2568pnhNxUhnfzOk+xoGPAzZX26p2g=;
+        b=ZCZ3FmiWF4Dq0QS4jo19V9cuIM+giphPggZiQ7GPcXVdgqMlIqV4t7KM6OkXrunPnz
+         ZDh/FbBkxJ9L4wQrSp/veaKBz+P5JlUO8/XwB/9OEvnBh+nMUj7RVgo/4Mmfg+d0b5hQ
+         j3AUNuJzTGPcpganPMvrJ6kXGdpZam3IpPPQNG8p2UIR01fNSv0zvvxi1eNJfKD4p+ut
+         R2R2YvfBMf+YLQmFjETqgkU+3dPQUGbEY9KRv3M7ajC9774uFEyAcJTIxg62Jef8xfSl
+         D8we/+NhLpHK9rWw9kmQNDOtmYKFwx1iiEaxbymRshcR7PL4wZyxltbsKTcENED2h5Fk
+         j0Wg==
+X-Forwarded-Encrypted: i=1; AJvYcCV7Qj3EJshCgrPtycRPkmO2HyWl+AkGBF14+0TzhYUlQVT1nvIINcBlpZlQpC0PScy3Txm7R58cRTayOhU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTk3VHt7wGUlU4XDdz3fUl+hYH3YvuOJXYPHBHC1R+3X1c+J2I
+	ssU+06HmY0tH1KmfUKBUgbpXmjm8GlZtZcw3HEza8iuY6GawkrRfdnPbBFKfxRJoVRs2vjoQRFf
+	Zg7qcC+DpYd5dmhC/i9jePYW+2eqkWiX9MbTKbJ/5Zw==
+X-Gm-Gg: ASbGnctWsFZxLZxAxBOiiTy/kPs/mkJU7yALwZOdl+KWx02TpsEXDi7iAkrJWw2BGUH
+	5NETs4DaU9Y5RjmSSmlf70v6mJ9pxPa6oSjCyR/3a1EsfdhRRilV6mP/T4vaVI05q62To9Xgzrv
+	EJF9op9dBPeWL1O0Ph8uodbahLncWTZMSUoj9Kovsgakb/lnA6WcEdfQ==
+X-Google-Smtp-Source: AGHT+IFkxNQMKBmmJ9CHpNmpP2Eu7W4sPO7KthCl2z1kt7FCPHBJbjsCw8uI9+EZQUZEtSbd0EqItRiyQR16Ssqrmf4=
+X-Received: by 2002:a05:690c:4a0b:b0:6fb:a696:b23b with SMTP id
+ 00721157ae682-7164d571f91mr29995547b3.33.1751451437681; Wed, 02 Jul 2025
+ 03:17:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 02 Jul 2025 12:16:47 +0200
-Message-Id: <DB1HPGT5MG09.25OEO7K36RNKX@kernel.org>
-Subject: Re: [RFC RESEND v10 00/14] Refcounted interrupts, SpinLockIrq for
- rust
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Lyude Paul" <lyude@redhat.com>, <rust-for-linux@vger.kernel.org>,
- "Thomas Gleixner" <tglx@linutronix.de>, "Boqun Feng"
- <boqun.feng@gmail.com>, <linux-kernel@vger.kernel.org>, "Daniel Almeida"
- <daniel.almeida@collabora.com>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
- "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250527222254.565881-1-lyude@redhat.com>
-In-Reply-To: <20250527222254.565881-1-lyude@redhat.com>
+MIME-Version: 1.0
+References: <20250701142313.9880-1-terry.tritton@linaro.org> <87ikkblkff.ffs@tglx>
+In-Reply-To: <87ikkblkff.ffs@tglx>
+From: Terry Tritton <terry.tritton@linaro.org>
+Date: Wed, 2 Jul 2025 11:17:06 +0100
+X-Gm-Features: Ac12FXzqBxkveVShIhOUpDdDjk97AbKpwZ2ofDUlNcnP0hGUSjlvZVzO9wDFzKE
+Message-ID: <CABeuJB3voQYT0FZ2ETBL_OVW6Lec6bOntLfKQd_J-huJJOyzHA@mail.gmail.com>
+Subject: Re: [PATCH v2] selftests/futex: Convert 32bit timespec struct to
+ 64bit version for 32bit compatibility mode
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Shuah Khan <shuah@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>, 
+	Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
+	ttritton@google.com, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Wei Gao <wegao@suse.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed May 28, 2025 at 12:21 AM CEST, Lyude Paul wrote:
-> Hi! While this patch series still needs some changes on the C side, I
-> wanted to update things and send out the latest version of it that's
-> been sitting on my machine for a while now. This adds back the
-> mistakenly missing commit messages along with a number of other changes
-> that were requested.
+> > Signed-off-by: Wei Gao <wegao@suse.com>
+> > Signed-off-by: Terry Tritton <terry.tritton@linaro.org>
 >
-> Please keep in mind, there are still some issues with this patch series
-> that I do need help with solving before it can move forward:
+> This is still wrong.
 >
-> * https://lore.kernel.org/rust-for-linux/ZxrCrlg1XvaTtJ1I@boqun-archlinux=
-/
-> * Concerns around double checking the HARDIRQ bits against all
->   architectures that have interrupt priority support. I know what IPL is
->   but I really don't have a clear understanding of how this actually
->   fits together in the kernel's codebase or even how to find the
->   documentation for many of the architectures involved here.
+> If it is based on someone else work, then you need to attribute it
+> Originally-by and omit the Signed-off-by of the original author.
 >
->   Please help :C! If you want these rust bindings, figuring out these
->   two issues will let this patch seires move forward.
+> If you just picked it up and adopted it to a later kernel version then
+> you need to add 'From: Original Author' and preserve his Signed-off-by.
 >
-> The previous version of this patch series can be found here:
+> If you collaborated with him, then you want to use Co-developed-by.
 >
-> https://lore.kernel.org/rust-for-linux/20250227221924.265259-4-lyude@redh=
-at.com/T/
+> All of this is documented in Documentation/process/
+>
 
-Overall I think it looks good, I haven't checked the details though.
-IIUC, the C side will also change a bit, inducing some more changes on
-the Rust side as well, so I'll just take a look when this becomes a
-normal patch series :)
+Ah sorry, I thought it was just the order that was wrong.
 
-Thanks for the hard work Lyude & Boqun!
-
----
-Cheers,
-Benno
-
-> Boqun Feng (6):
->   preempt: Introduce HARDIRQ_DISABLE_BITS
->   preempt: Introduce __preempt_count_{sub, add}_return()
->   irq & spin_lock: Add counted interrupt disabling/enabling
->   rust: helper: Add spin_{un,}lock_irq_{enable,disable}() helpers
->   rust: sync: lock: Add `Backend::BackendInContext`
->   locking: Switch to _irq_{disable,enable}() variants in cleanup guards
->
-> Lyude Paul (8):
->   rust: Introduce interrupt module
->   rust: sync: Add SpinLockIrq
->   rust: sync: Introduce lock::Backend::Context
->   rust: sync: Add a lifetime parameter to lock::global::GlobalGuard
->   rust: sync: lock/global: Rename B to G in trait bounds
->   rust: sync: Expose lock::Backend
->   rust: sync: lock/global: Add Backend parameter to GlobalGuard
->   rust: sync: lock/global: Add BackendInContext support to GlobalLock
->
->  arch/arm64/include/asm/preempt.h  |  18 +++
->  arch/s390/include/asm/preempt.h   |  19 +++
->  arch/x86/include/asm/preempt.h    |  10 ++
->  include/asm-generic/preempt.h     |  14 +++
->  include/linux/irqflags.h          |   1 -
->  include/linux/irqflags_types.h    |   6 +
->  include/linux/preempt.h           |  20 +++-
->  include/linux/spinlock.h          |  88 +++++++++++---
->  include/linux/spinlock_api_smp.h  |  27 +++++
->  include/linux/spinlock_api_up.h   |   8 ++
->  include/linux/spinlock_rt.h       |  16 +++
->  kernel/locking/spinlock.c         |  31 +++++
->  kernel/softirq.c                  |   3 +
->  rust/helpers/helpers.c            |   1 +
->  rust/helpers/interrupt.c          |  18 +++
->  rust/helpers/spinlock.c           |  15 +++
->  rust/kernel/interrupt.rs          |  83 +++++++++++++
->  rust/kernel/lib.rs                |   1 +
->  rust/kernel/sync.rs               |   5 +-
->  rust/kernel/sync/lock.rs          |  69 ++++++++++-
->  rust/kernel/sync/lock/global.rs   |  91 ++++++++++-----
->  rust/kernel/sync/lock/mutex.rs    |   2 +
->  rust/kernel/sync/lock/spinlock.rs | 186 ++++++++++++++++++++++++++++++
->  23 files changed, 680 insertions(+), 52 deletions(-)
->  create mode 100644 rust/helpers/interrupt.c
->  create mode 100644 rust/kernel/interrupt.rs
->
->
-> base-commit: a3b2347343e077e81d3c169f32c9b2cb1364f4cc
-
+Thanks for pointing me in the right direction!
