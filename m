@@ -1,112 +1,117 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+Received: from mail-qv1-f73.google.com (mail-qv1-f73.google.com [209.85.219.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80D5F274FC6;
-	Wed,  2 Jul 2025 16:07:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD9912D0C65
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 16:07:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751472469; cv=none; b=X7erveKL9c0aGk9rIY2IuwnMOw/U4FftkFJgB5LVgyDX+gPgTIIqQS36uMy51Mwzj2uEaO54434Uhw9rkRCpz2Rr5HVmx6y+uN+W/xFEiUyi/0v+JPygiPDFCKxvkG6MT1kJu7/7QnIl7SxXeTVwF0qTHSz98PJsRfDjoNJ/5bI=
+	t=1751472469; cv=none; b=muJypofQXPxOHB3cMBqdztkVGZ0nZIwKbnVIFXkyMSj5Y4w8U0hYrxSeYb7mJ5D0A+FOXqXH9SZwzt9ssFRDbh8bXnlRrS7phEynn/sGTnxcUHJUVfTl/r9hxNvKms0FBBj026QFmH0y6uNwQqwGAJ8RZc7fcdKRjSDwv9rdyLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751472469; c=relaxed/simple;
-	bh=HD+xgnYDji4Msf7wrsJXB90TJgJt6pJI4Z6MoS60Mb4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kKZr/K1tvFyiwEWt4J4EtcQ5W+845G0dVhWCdOpipw3yZjtRSZantyNysbGuzeQbvAhUPg2XUGKhs+UMqg/J9PoVqxlpiL35yKU6YFkD3vTfM62B4uSabI02f5Os8Rol+80sX1kikEzUvj2gE0pvmcagfuYDF2RwBAHY0OKArQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZvB26W3B; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=O6by9/0kauJYWEkgSglvXw/V8coiyjeIzxGi9vuHvLY=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=uCs/JfsDSn0MlxNhne8NBR8kV5/l3bk+c9g5JREehKFkNJWvrPRaCqC4HUfmia0lHXZntYuoIX4xc97n5ohBp9C+9qLeRQybHKqdMO5A1GrUCF1yKMKksOaKCBdgb+NwDmZyPxVkU6mEAGhO/Hhi48UFQHI1Q7Q9jmSQSeZ5B94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--gfengyuan.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fipUxRVm; arc=none smtp.client-ip=209.85.219.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--gfengyuan.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZvB26W3B"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e898de36cfbso161272276.1;
-        Wed, 02 Jul 2025 09:07:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fipUxRVm"
+Received: by mail-qv1-f73.google.com with SMTP id 6a1803df08f44-6fd5e0bc378so128915596d6.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 09:07:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751472466; x=1752077266; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HD+xgnYDji4Msf7wrsJXB90TJgJt6pJI4Z6MoS60Mb4=;
-        b=ZvB26W3B90ugNERZplI63eJ0T369q/8qp422VKvCVXLDydPczFYeC9+rKwWWLcLGgq
-         emxZWMXqdJafsLgMGKghabY5XSy6BoGnr1oMfFSPEx7KnpUiaruioCeramFXOLpU7kg7
-         eaDLusdkxzVvzJEql561l4qAk9ck4Xb9HKgqYeQGY7vxKrk4ZS4t5Irte129Fmd4ajY/
-         aXEN4OixOeXBCLHGa96oxOB0jY+kzrPKNuTF7jHp1WQSVotS8E3+4vSmrtWeftX9qT6s
-         wuzpfMFl8wgkwF4OXPR10qJPX1twawyYY1+UwU3OdvGF+aFE9F8FTg0XAvJGBEb3OX6k
-         e2Mw==
+        d=google.com; s=20230601; t=1751472467; x=1752077267; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=SpkubWRCAgA3n9kTQKYoyEm6Wf3b95Ji8UJpkdBVSfE=;
+        b=fipUxRVmy6wVOCKuvi82XMq93LABnoVVGyqkqJALogfYlsso3sQLDZlLzyYT+Z/B2s
+         fEHhucflZPzO+gUKjBzv63h3Scb5a5MAx1ORmKjoF9CL81HNbgpX6QyS7ej3yu2jAMom
+         Pipn7mRimJ2OEGNL1X68JH8EF84CfrdIhhyfFuvISEjbM84K2E9szCwKvFz4V1R/voVD
+         dRgxQ2wnRpTcrHvE0x/mWWbT93J53vqwRUh6nGV0kVaUyICSWvgMywJudf3EJ1QE7GlQ
+         NGCYS89J68EcgZuOUwkfuFpqdKbRsghFA0S70GFsGV0tXUY223gjyt4lTfNrciLKSCAg
+         Kwrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751472466; x=1752077266;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HD+xgnYDji4Msf7wrsJXB90TJgJt6pJI4Z6MoS60Mb4=;
-        b=Xt+DbEUaMWz0m3KVU+krMqTaqh5wCcxUyc4/T8CRHJezynIYXRkEv2/Fki11Hg54bo
-         yG9zIgWKZzvVcNqEjKMv46Ar1GTHnCshP9df45FJsL1L7SnrGDeACgqtjWKGTHLXZPzW
-         8eb7eS3XFg19lZC0vumpprcAV0onNs5Y7gnRbeyQC/1SocSQLLv2BHWchgKSmmyBt8p/
-         MM5Yb0IdEQ3LC+b4Y83StkIelbyIv30HSmX1E22ZhXaeSFD07RQikl/8JwojshO+Tfis
-         mjZ0FXNNtVKlGD97D5JejH6eIx7R9zwd41TQVPHNfsYxNhNedTRcgE1FOB2eEXlSzWaY
-         FrxA==
-X-Forwarded-Encrypted: i=1; AJvYcCWqkVLLWMZ+MQY4yhKqDPDuWZIrfzcEZDdIbWIrWstRkTXe5k/ZTCoWp9MHq9dCTYygvtAYTIgNHiaxDb0=@vger.kernel.org, AJvYcCXoLU+wecQ+RcGU3LJxBILVoIVweeT2jP3BNhumlGUQaL9JfqSV3lXS4qPBew39gzafVlj0xdQMbcY0QgqeLcx/@vger.kernel.org
-X-Gm-Message-State: AOJu0YxK3otYgPsaleXh5snaziJTm8zJsW93UJZ8QW0Sb4bX9Ix/jVpL
-	8/T/fhpGM994gX9mYRgoGvFYj5aczZRUURh/KPrBWV3+75F4+/GMsL9u1eqv2yrCuJErAA0jBkL
-	3oz3PhiCZGxjfrgbG61EBRVi5CJLOZ+4=
-X-Gm-Gg: ASbGncu016puCO7GMhWtT1mDPrbvi6FotTBWbjSs2EKc/2v9bxtQGRdxKGMktnEah8Z
-	XoA7+Wu8MOFMbS4xLrS+2axfCMT9uPOEYHU/7yNTSU9MUSWrNCsa6rGcVTXHWFynxH8QQ4Th7Dg
-	5V9almyfEW82c+XVuxDV9LbIq2kmyj0lavPfdDtk3no7JIQKkzLXQ+Rl+OnNff/0PJNT9mnnzVs
-	LI3zANyV6A8cXU=
-X-Google-Smtp-Source: AGHT+IGJlgMebHeafPhpvXNEnuwrkCWG7XoVPlNbjrpQZw1BfOjYrG9vvzbLo5wAqGetaoboXNjnvUJBf0NJewO55f8=
-X-Received: by 2002:a05:690c:fcc:b0:709:197d:5d3c with SMTP id
- 00721157ae682-7164d2c7e12mr49580597b3.11.1751472466302; Wed, 02 Jul 2025
- 09:07:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751472467; x=1752077267;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SpkubWRCAgA3n9kTQKYoyEm6Wf3b95Ji8UJpkdBVSfE=;
+        b=osT4wKCWY6osMVCbTBvDmDc4M6bWOVx5MD8RDQljd0UprQm0/dwWGlz1SAQysnlBbL
+         RPPUePT0gc8QeaVdN5P20A8s8uj8sFS2PDcPLV+0gOu0iCSj5/tlwxd/ptVXAH+e+gXr
+         Kt+fpBLD5naKo+Y8hZ/ReEVZn7WJyoBDNy7OSQj0X4Qa+BRQxqGfY7rbHFHJ31+faTBi
+         ET4biImUvASp7OmXYYwZMYy8ajIMsvNsaU43cIF4+4LBuE7OfIR+Huy8Kg86Y46nE/43
+         ZNcyrzlYf/uUatYCe0ctN0eckYe81tJNmwBfMlsfMlqzu2nZJJVo/NFaV+FVp2Rsfjg7
+         RdJg==
+X-Forwarded-Encrypted: i=1; AJvYcCUjzRu3HAD2ztegTdJj975L7f/Kzkkd0hIlWXVTgQI5BCHqQf/mBCxVouSNc3MIJXIaQsS8DE1fz03est4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPYPQ8VJqLMrZUzsRaH8qsvrAteCbxqsaPJA2GRyMEkm1MaLLK
+	lbx4ya32qHhcwRX2CWF2CjTDKR/Ib91kOwRfATcy9J1bBh7wtm1vy8vh5nrY51w+TZOdeu4NGBr
+	nY8p8ylm0EdsmQNxIuA==
+X-Google-Smtp-Source: AGHT+IHGNihSVZdYeWYYvtq4JoWLcrdHbmonFDlPgo0zGbDWddFZcCsax7mf8uhd5h7l7WG3jcryV6vZXPJM6UE=
+X-Received: from qvbpj1.prod.google.com ([2002:a05:6214:4b01:b0:6fd:50bd:be0a])
+ (user=gfengyuan job=prod-delivery.src-stubby-dispatcher) by
+ 2002:ad4:5e8a:0:b0:6fb:25f:ac8c with SMTP id 6a1803df08f44-702b1b71361mr56520516d6.31.1751472466382;
+ Wed, 02 Jul 2025 09:07:46 -0700 (PDT)
+Date: Wed,  2 Jul 2025 16:07:41 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250624201438.89391-1-moonhee.lee.ca@gmail.com> <744bd439-2613-45d7-8724-5959d25100aa@linuxfoundation.org>
-In-Reply-To: <744bd439-2613-45d7-8724-5959d25100aa@linuxfoundation.org>
-From: Moonhee Lee <moonhee.lee.ca@gmail.com>
-Date: Wed, 2 Jul 2025 09:07:35 -0700
-X-Gm-Features: Ac12FXwoDxTwwqAXE8JcpNRXiozFERVYFVPE9rjvlkt3rV15dPoHwueD88FdyYo
-Message-ID: <CAF3JpA72DWF8=2HF+_HMsH4DuOg5aVYZdgyhmJisDG-WxL=uYw@mail.gmail.com>
-Subject: Re: [PATCH] selftests/kexec: fix test_kexec_jump build and ignore
- generated binary
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: kexec@lists.infradead.org, dwmw@amazon.co.uk, mingo@kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kernel-mentees@lists.linux.dev, shuah@kernel.org
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
+Message-ID: <20250702160741.1204919-1-gfengyuan@google.com>
+Subject: [PATCH net-next] net: account for encap headers in qdisc pkt len
+From: Fengyuan Gong <gfengyuan@google.com>
+To: Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	toke@toke.dk, edumazet@google.com, "David S . Miller" <davem@davemloft.net>
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>, 
+	Jiri Pirko <jiri@resnulli.us>, Stanislav Fomichev <sdf@fomichev.me>, 
+	Kuniyuki Iwashima <kuniyu@google.com>, Ahmed Zaki <ahmed.zaki@intel.com>, 
+	Alexander Lobakin <aleksander.lobakin@intel.com>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, cake@lists.bufferbloat.net, willemb@google.com, 
+	Fengyuan Gong <gfengyuan@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Shuah,
+Refine qdisc_pkt_len_init to include headers up through
+the inner transport header when computing header size
+for encapsulations. Also refine net/sched/sch_cake.c
+borrowed from qdisc_pkt_len_init().
 
-On Tue, Jul 1, 2025 at 12:53=E2=80=AFPM Shuah Khan <skhan@linuxfoundation.o=
-rg> wrote:
-> The change looks good to me.
->
-> Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Fengyuan Gong <gfengyuan@google.com>
+---
+ net/core/dev.c       | 5 ++++-
+ net/sched/sch_cake.c | 5 ++++-
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-Thank you, Shuah. I'll carry your Acked-by tag in v2.
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 11da1e272ec20..dfec541f68e3a 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -3944,7 +3944,10 @@ static void qdisc_pkt_len_init(struct sk_buff *skb)
+ 		unsigned int hdr_len;
+ 
+ 		/* mac layer + network layer */
+-		hdr_len = skb_transport_offset(skb);
++		if (!skb->encapsulation)
++			hdr_len = skb_transport_offset(skb);
++		else
++			hdr_len = skb_inner_transport_offset(skb);
+ 
+ 		/* + transport layer */
+ 		if (likely(shinfo->gso_type & (SKB_GSO_TCPV4 | SKB_GSO_TCPV6))) {
+diff --git a/net/sched/sch_cake.c b/net/sched/sch_cake.c
+index 48dd8c88903fe..dbcfb948c8670 100644
+--- a/net/sched/sch_cake.c
++++ b/net/sched/sch_cake.c
+@@ -1407,7 +1407,10 @@ static u32 cake_overhead(struct cake_sched_data *q, const struct sk_buff *skb)
+ 		return cake_calc_overhead(q, len, off);
+ 
+ 	/* borrowed from qdisc_pkt_len_init() */
+-	hdr_len = skb_transport_offset(skb);
++	if (!skb->encapsulation)
++		hdr_len = skb_transport_offset(skb);
++	else
++		hdr_len = skb_inner_transport_offset(skb);
+ 
+ 	/* + transport layer */
+ 	if (likely(shinfo->gso_type & (SKB_GSO_TCPV4 |
+-- 
+2.50.0.727.gbf7dc18ff4-goog
 
-> There is another patch that adds the executable to .gitignore
-> https://lore.kernel.org/r/20250623232549.3263273-1-dyudaken@gmail.com
->
-
-I missed that patch. Thank you for pointing it out.
-I'll drop this change in v2.
-
-> I think you are missing kexec@lists.infradead.org - added it
-
-Thanks, I=E2=80=99ll add kexec@lists.infradead.org manually in future patch=
-es since
-get_maintainer.pl didn=E2=80=99t include it.
-
-$ ./scripts/get_maintainer.pl --scm tools/testing/selftests/kexec
-Shuah Khan <shuah@kernel.org> (maintainer:KERNEL SELFTEST FRAMEWORK)
-David Woodhouse <dwmw@amazon.co.uk> (commit_signer:1/1=3D100%,authored:1/1=
-=3D100%)
-Ingo Molnar <mingo@kernel.org> (commit_signer:1/1=3D100%)
-linux-kselftest@vger.kernel.org (open list:KERNEL SELFTEST FRAMEWORK)
-linux-kernel@vger.kernel.org (open list)
-git git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git
-git git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-
-Regards,
-Moonhee
