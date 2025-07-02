@@ -1,148 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC3A4230268;
-	Wed,  2 Jul 2025 21:03:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41592DE6F9
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 21:05:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751490206; cv=none; b=b8sLuiZ2biSfP8Oa2NReW6wncBNaB+iWI2RaYzHKk4TRRow+JxOZvlJs3YJDqqRQQ/skL1lhA0MGe1ORcjRTkRpgEUa+EM9kNhNVhYajTbD1YUBCM4Lud6jStuiX12hpYZIJF/HSJtQGzXAzz++Arj+6pTjQXoEigFz0FOZ29nE=
+	t=1751490303; cv=none; b=gy72NDY6G5Zpbxt/+qEUemxRENzPFsQah5xf74Y9QM1ide3efI3SVaP6bEvMm+fZTpWEofzC2FjcxGl7a5YFliglxvJwivkYagP1Ih5x2AXwh1iJQol0XovXtZevmYzoHxLtfAfI0DUWjGOn5EeikUpZ0OS5f7ix+fvfLxmeW8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751490206; c=relaxed/simple;
-	bh=naRdjLcPdsggu6n8OxVx2EKzl9/toXIJWmrz5C5JylM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MLMHVH+N53FBAR/ToOd3dGuWHeYisCRhOFMFpzQLBdlOL17wogQHkLE4e2pFW/qr2/bH1ycrm9Ta9Yq1FlXY07Njfspw69EhMXWqxvaFFW3QP5/LbKA2ai7Ja0xIaLf24MnDrfmba6mtgbfUAzOwNO95/E4rq/ebxizowejS548=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oX0I/rpg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751490303; c=relaxed/simple;
+	bh=KSFjoXjeVI9Q7mVA0gaQA96egYKc8irfnFONjI0h9KY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fCOErgi8WxG6kyCDCLMd6B4uaRt0gIhPrHCNi/oBrEANB9rSVcrIPxntnx/JPJJyKqABxpJoErW8otZpFLpurIz2hBwsalSa/7KThO55vVfxrC5GDL3IDzCHDwskoFjo2RDOUGjBPB6aBpx4EfhKIDZ9teg4849NikupGNsdgMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=libre.computer; spf=none smtp.mailfrom=libretech.co; dkim=pass (2048-bit key) header.d=libre.computer header.i=@libre.computer header.b=CnGwRoFV; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=libre.computer
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=libretech.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oX0I/rpg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F411C4CEEE;
-	Wed,  2 Jul 2025 21:03:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751490206;
-	bh=naRdjLcPdsggu6n8OxVx2EKzl9/toXIJWmrz5C5JylM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oX0I/rpgpOl+PVs1XtygJG+2K1aU2HQ8q4wtjjy4udHSeOjpmVYT24HzdG8aGF5MV
-	 U3/qGl9K+kfAfMvCsHPbzlkocFUNXKB5Qj3H6T68UZadTHn7dUYsv7U/eHfa+GNIML
-	 vF/N3EgqYEWzemLZDGS+Lt5YRqVjezKSckH2UBbmMzSmOPWjsU0Td0TBWJJWD5KNCG
-	 qaZFavuctiBNZd5sB6niME2Z9Bd5ypP0ihIXyz7GIiK2mmcc2wptqoVumug4TOk8j1
-	 J12Ad7CKXnwo3rLaUwB42yK89Ul1UdWwsS4UiEXAYipprdS4TZFkvVP9r3W85nJ9uL
-	 7iTRKTu+bsmBQ==
-From: SeongJae Park <sj@kernel.org>
-To: Bijan Tabatabai <bijan311@gmail.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	damon@lists.linux.dev,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	akpm@linux-foundation.org,
-	corbet@lwn.net,
-	joshua.hahnjy@gmail.com,
-	bijantabatab@micron.com,
-	venkataravis@micron.com,
-	emirakhur@micron.com,
-	ajayjoshi@micron.com,
-	vtavarespetr@micron.com
-Subject: Re: [RFC PATCH v3 07/13] mm/damon/core: Commit damos->target_nid/migrate_dests
-Date: Wed,  2 Jul 2025 14:03:23 -0700
-Message-Id: <20250702210323.55199-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250702201337.5780-8-bijan311@gmail.com>
-References: 
+	dkim=pass (2048-bit key) header.d=libre.computer header.i=@libre.computer header.b="CnGwRoFV"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-713fba639f3so72367897b3.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 14:05:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=libre.computer; s=google; t=1751490300; x=1752095100; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KSFjoXjeVI9Q7mVA0gaQA96egYKc8irfnFONjI0h9KY=;
+        b=CnGwRoFVYRhHo/WI8aPvrtFzmTKzvqntCdKD2IzdZPgI2RVG4h/j4rpo7VyWoVyhMh
+         WK8KEAdOpTATeQA0crAhDhhR4Mw5rBtZESWcCnIJ0IkgElbF6+D00GY/KNoNfDj9iJFH
+         4HbcW7uTYF1VuetG5yjeKe/V0l3Sx5y2QKqDP+VEDFB4KrNzg6Bkxh7U+EjkNlE3RqYz
+         jAV/ypwlYF97h7VOPvue/gA7Gkpb04VyaVRAEsGZdysE0njEHMtPurKrMJMKmMerhRAX
+         qm43ghmG3DesKLMrmHCN9WfYlA24G2Vgy3k+FPQ9lcWhSZNo4BF4b+WQBY69DHLvg8+T
+         4rzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751490300; x=1752095100;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KSFjoXjeVI9Q7mVA0gaQA96egYKc8irfnFONjI0h9KY=;
+        b=EMr+JX59s0N7OepOUz/7a2fYIGDkrS3TJmieKItQM4tXWMG41rngCjm3a5+OlfkBmb
+         Pfm6eH4C9qkjbrQ0KqYQ9M+rB8OvS3FNQnstsN8hbXIuEmbqtmitIbF0cJVJ+0P0iyra
+         0pDFwd220gXTMNrtFRECQEp9NsmjPz5OgpWTBM4vWOQHdlrcYtMDQYWeNdDuuVOdiU8Z
+         oIPFIYCXsjEX6vFiVS0boPr1Ad7eUBMn42CwaUlE8nxdmWFcNSF+Yussa6u7MGmptmAQ
+         FkByhBuFmJaj7jIHKCqcargTGH7odxx5IK8VC8fcqvryLjoo1AIVrcqWDm2k7I9pUKcp
+         PFcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWA3RmzriiZr+kLxRpgvGmsQq3qnzB6AKXlOveVWmIHWYXfBZd65HXiJWUpmPN9giItlVU4iSlWf2UpC2c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyy0FN1XfA1sa6waAZHGlNUCKBgm8dx2Q8JJ0TgECupZ45N+Cot
+	TU5IiXiBKC9+8l1lsgA0GtQqL9vK767fyks5v8k3gIAZLjEA0lZdln8vKGZAR+eYxBA4SKHLqyn
+	eY6izT6mPs5GHEh/Rwu93KK5Bq3F1iGNmOBInidVT
+X-Gm-Gg: ASbGncv0AVyBgG7UNhJSXErsm915QpmMEDysDxgd/dhpesGkuFu4GVds6RIgz7bbKyq
+	a+pG1tjzxdkULfJt8UFBJ/Xqa17mXeCCCLw34zC3j1TOFzgx+K7PGZ+FqoaQ7b+acXQzH788gwW
+	GNLbQLAEsaeQYy1V4FBfXpR9rtf3lMFd+AW5HGRsBhrbAqDAOtRejTwfznWvFDW8LVxYAWP62t6
+	ABI
+X-Google-Smtp-Source: AGHT+IEiQuh5LjlsCcA7qaI9oQhIPWCsjEyB7JTNTj6XFbJ9WVg7qPtMe5Tz7PrvBDjuqNqnia9yn5ArtcfzXOoCqd8=
+X-Received: by 2002:a05:690c:6ac2:b0:6fb:b37f:2072 with SMTP id
+ 00721157ae682-7164d4db0b0mr64094247b3.22.1751490300545; Wed, 02 Jul 2025
+ 14:05:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250628015328.249637-1-da@libre.computer> <CANAwSgTH67T9SBQSFQgFjvyrxNCbtfd9ZaCDZFACWA=ZQ-PYtQ@mail.gmail.com>
+ <CAFBinCBwTkVwcBTWOzS+G13+rRM2eftMXZ3GHzW+F+BY0bBBzg@mail.gmail.com>
+ <1j4ivued2q.fsf@starbuckisacylon.baylibre.com> <CACqvRUa8EqMbCd2x=di-a6jbMWW8CMo4kgLH=0qnsqHdO16kxA@mail.gmail.com>
+ <CAFBinCAkW+G9oV+SOJdac50oLezQnbc358dBgs56-RfjPd-zgA@mail.gmail.com>
+ <CACqvRUYwwgRqid8AbLJ7bp+gTyHw2c=o-pj435Z0PDriJcnnKQ@mail.gmail.com> <CAFBinCA-aFNd+UQR5oWBY+HtMcdefeiH4Oc6bvZTaYDxowYCjw@mail.gmail.com>
+In-Reply-To: <CAFBinCA-aFNd+UQR5oWBY+HtMcdefeiH4Oc6bvZTaYDxowYCjw@mail.gmail.com>
+From: Da Xue <da@libre.computer>
+Date: Wed, 2 Jul 2025 17:04:49 -0400
+X-Gm-Features: Ac12FXz2eBEQpE1uXBge_BXeozibSAfNnKLrTRR6ZVdJLMP7Abjjpj73aBSCXy4
+Message-ID: <CACqvRUbQD3HS=_DH-ZW-D8JTkC_o2PbBkOzcZ44h57JJWW4-mw@mail.gmail.com>
+Subject: Re: [RFC] mmc: meson-gx-mmc: add delay during poweroff
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Da Xue <da@libre.computer>, Jerome Brunet <jbrunet@baylibre.com>, 
+	Anand Moon <linux.amoon@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, 
+	linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed,  2 Jul 2025 15:13:30 -0500 Bijan Tabatabai <bijan311@gmail.com> wrote:
+On Wed, Jul 2, 2025 at 4:57=E2=80=AFPM Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+>
+> On Wed, Jul 2, 2025 at 9:07=E2=80=AFPM Da Xue <da@libre.computer> wrote:
+> >
+> > On Wed, Jul 2, 2025 at 2:40=E2=80=AFPM Martin Blumenstingl
+> > <martin.blumenstingl@googlemail.com> wrote:
+> > >
+> > > On Wed, Jul 2, 2025 at 7:22=E2=80=AFPM Da Xue <da@libre.computer> wro=
+te:
+> > > >
+> > > > On Wed, Jul 2, 2025 at 1:07=E2=80=AFPM Jerome Brunet <jbrunet@bayli=
+bre.com> wrote:
+> > > > ...
+> > > > > If, as the description suggest, the regulator framework somehow i=
+gnore
+> > > > > the timing set in DT, maybe this is what needs to be checked ?
+> > > >
+> > > > The regulator framework only cares about timing for regulator on.
+> > > > Regulator off just turns off the regulator and returns without dela=
+y.
+> > > There's an exception to this: gpio-regulators without an enable-gpios
+> > > property. My understanding is that regulator_disable() is a no-op in
+> > > that case (meson_mmc_set_ios() even has a comment above the
+> > > switch/case statement), see [0].
+> > >
+> > > > The code makes incorrect assumptions. Then the kernel resets the bo=
+ard
+> > > > without having enough time.
+> > > Can you please name the board you're testing? I'm worried that I'll b=
+e
+> > > looking at one .dts but you're looking at another one.
+> >
+> > https://github.com/libre-computer-project/libretech-linux/blob/master/a=
+rch/arm64/boot/dts/amlogic/meson-libretech-cottonwood.dtsi#L481
+> >
+> > vcc_card is a gpio regulator that gets toggled on->off->on.
+> Thanks, that clears things up as I was indeed looking at a gpio
+> regulator while this is a fixed regulator!
+>
+> > I traced the regulator framework a few weeks ago and forgot the final
+> > regulator disable function call, but that call basically returned
+> > immediately while the regulator-enable function complement had delays
+> > implemented.
+> Yep, for fixed regulators there's an "off-on-delay-us" device-tree
+> property (which translates to "off_on_delay" in the code).
+> Its implementation is smart enough to not waste time by adding delays
+> at runtime by implementing: on -> off + remember time -> wait
+> remaining time + on (meaning: if there was enough time between off and
+> the second on there's no additional wait) [0]. On system shutdown it
+> will not add any delay unfortunately (where Linux loses control over
+> time-keeping), meaning we can end up with too little waiting time.
 
-> From: Bijan Tabatabai <bijantabatab@micron.com>
-> 
-> When committing new scheme parameters from the sysfs, copy the
-> target_nid and migrate_dests of the source schemes into the destination
-> schemes.
+Yes, this is evident on quite a few Amlogic boards but occurred rarely
+enough that it can be overlooked but never-the-less should be
+addressed.
 
-Fixing the missed update of target_nid deserves Fixes: and Cc: stable@ in my
-opinion.  Could you please split and post the part as another patch?  For the
-Fixes, I think 83dc7bbaecae ("mm/damon/sysfs: use damon_commit_ctx()") should
-be appripriate.
+On our SM1 board, this occurs more often than not. With this patch, we
+can reboot the loop indefinitely.
 
-> 
-> Signed-off-by: Bijan Tabatabai <bijantabatab@micron.com>
+>
+> Also my understanding is that it's not something that can be fixed in
+> u-boot or TF-A. This is because bootrom already has trouble reading
+> the next stage from an SD card (which is a valid boot media).
 
-Assuming my above request is accepted,
+Correct, not fixable in TF-A or u-boot.
 
-Reviewed-by: SeongJae Park <sj@kernel.org>
-
-> ---
->  mm/damon/core.c | 40 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
-> 
-> diff --git a/mm/damon/core.c b/mm/damon/core.c
-> index a4c3cfe531df..0565aae8d1fa 100644
-> --- a/mm/damon/core.c
-> +++ b/mm/damon/core.c
-> @@ -943,6 +943,41 @@ static void damos_set_filters_default_reject(struct damos *s)
->  		damos_filters_default_reject(&s->ops_filters);
->  }
->  
-> +static int damos_commit_dests(struct damos *dst, struct damos *src)
-> +{
-> +	struct damos_migrate_dests *dst_dests, *src_dests;
-> +
-> +	dst_dests = &dst->migrate_dests;
-> +	src_dests = &src->migrate_dests;
-> +
-> +	if (dst_dests->nr_dests != src_dests->nr_dests) {
-> +		kfree(dst_dests->node_id_arr);
-> +		kfree(dst_dests->weight_arr);
-> +
-> +		dst_dests->node_id_arr = kmalloc_array(src_dests->nr_dests,
-> +			sizeof(*dst_dests->node_id_arr), GFP_KERNEL);
-> +		if (!dst_dests->node_id_arr) {
-> +			dst_dests->weight_arr = NULL;
-> +			return -ENOMEM;
-> +		}
-> +
-> +		dst_dests->weight_arr = kmalloc_array(src_dests->nr_dests,
-> +			sizeof(*dst_dests->weight_arr), GFP_KERNEL);
-> +		if (!dst_dests->weight_arr) {
-> +			/* ->node_id_arr will be freed by scheme destruction */
-> +			return -ENOMEM;
-> +		}
-> +	}
-> +
-> +	dst_dests->nr_dests = src_dests->nr_dests;
-> +	for (int i = 0; i < src_dests->nr_dests; i++) {
-> +		dst_dests->node_id_arr[i] = src_dests->node_id_arr[i];
-> +		dst_dests->weight_arr[i] = src_dests->weight_arr[i];
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int damos_commit_filters(struct damos *dst, struct damos *src)
->  {
->  	int err;
-> @@ -983,6 +1018,11 @@ static int damos_commit(struct damos *dst, struct damos *src)
->  
->  	dst->wmarks = src->wmarks;
->  
-> +	dst->target_nid = src->target_nid;
-> +	err = damos_commit_dests(dst, src);
-> +	if (err)
-> +		return err;
-> +
-
-As mentioned above, let's split and post this part as another individual patch.
-
->  	err = damos_commit_filters(dst, src);
->  	return err;
->  }
-> -- 
-> 2.43.5
-
-
-Thanks,
-SJ
+>
+>
+> [0] https://elixir.bootlin.com/linux/v6.15/source/drivers/regulator/core.=
+c#L2754
