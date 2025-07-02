@@ -1,129 +1,132 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF1B32EF662
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:16:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169092EFDAB
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:16:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751465804; cv=none; b=DxpbEKKwlkA49jGDhbAp58Cmq7BNqmdVGSBsMtH1izGOQAOE+l+0igxyQb2t77ROLyT1Z2Eqz3NlLkldpUAKROWu20Dl2+8hvmDtYRtRwlvu4ObFb5+p03iT6Yd14eFt/66Go0bfxa6xJl7EQrr2kPac5QKoUixs8pPsGPTn2T0=
+	t=1751465819; cv=none; b=miLXwc5n9zNQ7RHc7ponoKbaykEW6qZVMbM6mVSVeq8mRe/EOK8KjxMSS7Kw2a+BxwWwe5TzDU5d2PkA3KZAEsF4rdBNerCgyw31JPIzODNl2LXTdNW3m/pJZMwH4W0scrmgORlCZSuZ+WXorRfhRsmA1PP3aUOJaX3g39GBXyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751465804; c=relaxed/simple;
-	bh=tNQbo97LbzX5ZaNglX85pgNLYN18HQeZxfnHfOkxn1U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XkfYr6vxZXAMUIrHEEkcXlOiszPKz+d91e/g015vVZeW4tdVCRN3qtXFc6Xt9IjAUbTbTFnRbMwwpNKt8AqOGTK6M5tLv6GI5/Hl0lx4wA4Xn/AvTf17zvgoqzNaZfrN8u1tLJQ5oiy4KBa++1klZAWpvoioZqo0JrXnABlJtx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EogEHlTQ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751465819; c=relaxed/simple;
+	bh=ivkSgMTtV81CdANQ5XafOK5UJU4ttt5I90ZuP9XelP8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U9FeNApyVyt3GqjS9nSF7bRqi6XbzRhEwEAFDBkjj1c4PYGwwykzSvQ4nAgHBeTXXh8sfHXhs3lJ2WPlVDr1oC7aespwSjzqhW0r6EDKDR1qeZixheq3H89S5ih4ECJGXgYgWLYWyO3LJDwzPwZO3dD+K+mPOEZuEN9CjNdZGAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=QIJsd0F/; arc=none smtp.client-ip=209.85.160.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EogEHlTQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751465801;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tNQbo97LbzX5ZaNglX85pgNLYN18HQeZxfnHfOkxn1U=;
-	b=EogEHlTQQMiIMauEdvvva8KbN7mHG/Rnhyf79xWG7H9HRqt8hFDaovflQ53bkh3CYeBHqd
-	MNaGpHgRQPPCQtgg2Lm0QVmePCuOYw4f7F5WcoRKayvxS8Zy8Rkx3+QlEkYJ7npewqjJHB
-	PxCvYCt5BOC5F14vDDOzpaRj1hP1ZQ4=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-541-VG4MHBPzOPiRSiqxDxUukg-1; Wed, 02 Jul 2025 10:16:40 -0400
-X-MC-Unique: VG4MHBPzOPiRSiqxDxUukg-1
-X-Mimecast-MFC-AGG-ID: VG4MHBPzOPiRSiqxDxUukg_1751465799
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4a71914dd25so111427891cf.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 07:16:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="QIJsd0F/"
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-2e95ab2704fso3061351fac.3
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 07:16:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751465815; x=1752070615; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=sCNt8orVvRnPdLUcXvMNqNxbNUJlKlGrsoDHbOPwgJM=;
+        b=QIJsd0F/MbFF49Boy+x1Af49w/0wyrnkTsPYjdyr9VuNaiOCkgY23qxpljBn7nqmAp
+         liOIHpmk/RCAdlYe0wweHopiZBw0ShCotJCrr7CijEH0teqdvRPrhFYQIy3rHqk4nIrI
+         uZLHdY/RkOgJhvj7b7tmQSjHGRRqlTm7v12KSGANWWKbKJcHI0g9jaIZI7Yuvw5anyDI
+         uVwK6o6T7mH5TrL1r9rjtD1NkFPixUBzdloXmnqW5qA9dmX5vQ/D13kBYVx44mZGGbc2
+         hLg66JW1Mn+TSLgVmmd8fJYNcp6+AfBn0nFPibF7DWjenQKPDp8nVdxCQ9KcirRN4/ja
+         3Bxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751465799; x=1752070599;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tNQbo97LbzX5ZaNglX85pgNLYN18HQeZxfnHfOkxn1U=;
-        b=cjvAwVQkxHUxdlQKE/suSRYosttkhmznSkMpOlmvVZfaW5/Bgo+TQ8CS0KkTR/RRif
-         dItA7xWTRZDvPWFgfUZOw5MkCIHhJ0gUNJ9RoWpbdq1DFWemldOuTih9epm6yvmB7Wdb
-         vHNk7av8eZ+1duHMMSEenKZfMn1sU74gIPpfsk01Br0qtmRvJZAc7/cFbfxAxG1ZZQ5O
-         6Zmq+b2SvoPAjwF8YM2uDJRE4CGSvQ3t11YvurXse9akwij3CLMBxPUSJjsavHsH2sMG
-         PrCodKimQ2EJ5Pf4P6t0jm+X+n0GwDZNlNPnzklptV8gCpuTg0t23NXTC9O0/scgSC2K
-         RzsA==
-X-Forwarded-Encrypted: i=1; AJvYcCXIQVG0c4lhoJjcEUpK7Bc8WIpe/7YFHh76YWc19+NSbCXj+UlbF1cYC7QQ39oN2lWsibOIRACeeXhwUG8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxluQiVVDADxI8N8Rvi3xfqAvR1/V5UzV3kePJv9C+NgwJakZTs
-	8Yg3dNp0anUo/ugu3W/wKH8tLxuQ1K6IxqKfmastyFfTWTB6ZaWyu608G/+nUGCPiqrMLgSIMt7
-	cQam+T/qpeoOby73OwMJS0rBNS6t2kqlvxbjQ6EAyJsOtkfshLLd9n3moaqEm/V/JUATqFtqdQ5
-	mx8L0o0IRhaZQQeogFiB8rkSuKZ/3ST9PFw3bamrHI
-X-Gm-Gg: ASbGncsBVYC+LSSmrSX0swyeCeNffXTqazLEwNwGTUUyVBwYHrFh4BwC9Da5fvN4VnK
-	bFjEaXTLHlZAdXRCuvbMLLV3HQ6Q46GLQ+1JPcViuvYGNOJ86qielbrnRRlKWoMffkBc8uYGkWj
-	ZtIDJ761YilK/ywYpjMpOOnEXVr5FF8SySNQx2
-X-Received: by 2002:a05:622a:1441:b0:494:b924:1374 with SMTP id d75a77b69052e-4a9769badc8mr51474021cf.43.1751465794077;
-        Wed, 02 Jul 2025 07:16:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFHX5w9jng/ZR1ywwst/46yrWJUGZinoQ5Odmtit+CDr1mDil33vdxFF08u52zkDS4qeA1JDEAm04peNXJcoI0=
-X-Received: by 2002:a05:622a:1441:b0:494:b924:1374 with SMTP id
- d75a77b69052e-4a9769badc8mr51473351cf.43.1751465793526; Wed, 02 Jul 2025
- 07:16:33 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751465815; x=1752070615;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sCNt8orVvRnPdLUcXvMNqNxbNUJlKlGrsoDHbOPwgJM=;
+        b=u3AYwIeA16D4H8DeUrc78sPN71O+M9wyOLjLuGXLRzOspT+HYYFZcOUrzPq1DgHtCm
+         ptKBY27OA/MrBavU+fEXET+SRRntbtPVUG8X/hFO6JQ7FY5EaNzYw4Se89puB4yIh0U5
+         ICh/Yl4w4u7tBVzsXUkv0rxq85y5dYhQbmbepiTd9HSIs68tpMOQ50BRPT2eJKXXAftQ
+         GsuaffLD+rCMiFKM54JmZ7fVBo5IRdsDstZ5DbrO7YH7MXSd23mzeg1k2kEVBq18m+La
+         +4QmQkgNUL0DFtVJtrB5TuBjkF1Az4vRP7ZY6Xh2KJ1paQb1OxlyjGu4mrDyPmg9xdOW
+         B3OA==
+X-Forwarded-Encrypted: i=1; AJvYcCVri7HRg3+K0FH5wZ0Gh4zEiuQL5Zgodua5KQ05keSGb15Tz/wm0ocJENvCwIEQl+ckp8BFcwMq7ZLA29Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzs2Be50XBNsHN/jAqQe8n5MOMtHiAbR7xTPRMIl+1jhukxtx6z
+	hzdaJMfk4FJpqn9FoepL5+Ptii23PvG5mC0BXOqxzXOjwEwi4W5QW4hUow8Hph2C6i8=
+X-Gm-Gg: ASbGncv+RX6/rPJ0yyKhhR3uLkf3dgGe4Tv1bLYgnGEzNG6SejmQobfstlPgh96k/iM
+	jZQ5JCULcri0qXYyjCJs+WsrkCM++H+fTbZd2OtODJ7sDGuopMqHaPs40KbuHOfeVinLIsxXONh
+	VN0GvgycxEcL23hS9cZq3SL2K3CMORo2ynl1U9uwPOCuAgi8nwuX94/2lwXbQLLoP4cVRFuH0yq
+	ykwSD+WaMcLTUHScJudmh/HMnTlzMtuMuXde5S7/dFsE3j4qwcYxLFcAzK0pUy+7pJlG1oiQA2X
+	nujGoIleXMUsOWV7lSm6nsAnR+twslb7G4UiS7TGWSrtuqgAMHgBIpf2fRqaJOy01RSivp150li
+	sYgNLx+mUmq9nMuMoB2jf5S20WVb/hxRRRW0haK0=
+X-Google-Smtp-Source: AGHT+IE3wezFD6gq5YO9AtpQHZYWN89aAqaWHJI6eS+Rikhf0NRsNSoAVq5E1EldNNLhjkG+5ZMahA==
+X-Received: by 2002:a05:6870:288:b0:296:b568:7901 with SMTP id 586e51a60fabf-2f5a8c19495mr1923947fac.16.1751465814997;
+        Wed, 02 Jul 2025 07:16:54 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:70a7:ca49:a250:f1d5? ([2600:8803:e7e4:1d00:70a7:ca49:a250:f1d5])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2efd50f9748sm3929916fac.37.2025.07.02.07.16.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Jul 2025 07:16:53 -0700 (PDT)
+Message-ID: <f96b68a5-d750-45f0-8cdd-9761b5daca1d@baylibre.com>
+Date: Wed, 2 Jul 2025 09:16:51 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612104349.5047-1-gpaoloni@redhat.com> <20250612104349.5047-2-gpaoloni@redhat.com>
- <20250613114527.7e27a9a0ecc2b59d98677b0c@kernel.org> <CA+wEVJa0jL-JH_4=5sR+Mvb26n4mPPudmOL0LRBDV54nMZcw8g@mail.gmail.com>
- <20250620183503.6c84eb22cca206cd10418c04@kernel.org> <CA+wEVJaQcHdpVc3Za8qy0+Z-CGNeaDTrXtjJg2j7J6qsW4uAkQ@mail.gmail.com>
- <20250701175826.429a7b4b@batman.local.home>
-In-Reply-To: <20250701175826.429a7b4b@batman.local.home>
-From: Gabriele Paoloni <gpaoloni@redhat.com>
-Date: Wed, 2 Jul 2025 16:16:22 +0200
-X-Gm-Features: Ac12FXyfEtePa0XxvqJu6sGqCavh_IyDuIhKaeWfAiYCVIb-sDPUMESrR81HL5o
-Message-ID: <CA+wEVJZ1BpwKOApGmmv=m0yoTypJd22XFOGD9kpG1yRErEvikg@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/2] tracing: fixes of ftrace_enable_fops
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, mathieu.desnoyers@efficios.com, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	acarmina@redhat.com, chuck.wolber@boeing.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iio: st_lsm6dsx: Replace scnprintf with sysfs_emit
+To: Akshay Bansod <akbansd@gmail.com>, Lorenzo Bianconi <lorenzo@kernel.org>,
+ Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>
+Cc: linux-kernel-mentees@lists.linuxfoundation.org,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250702135855.59955-1-akbansd@gmail.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20250702135855.59955-1-akbansd@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jul 1, 2025 at 11:58=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
->
-> On Fri, 20 Jun 2025 15:26:27 +0200
-> Gabriele Paoloni <gpaoloni@redhat.com> wrote:
->
-> > I think that from my side I do not have comprehensive answers to all yo=
-ur
-> > questions (I need to read the code more in depth).
-> > So to be pragmatic I can split this effort into two parts (documentatio=
-n and
-> > redesign); I will propose documentation first with the TIPs that you me=
-ntioned
-> > above and later, if we find a better re-design solution, we can also am=
-end
-> > the documentation as needed.
->
-> Just to confirm, I agree with Masami. The enable file is quite special,
-> and I don't see the use of user space playing tricks with it, which
-> even includes lseek. Maybe to keep rewinding a read to get a new status
-> change?
+On 7/2/25 8:58 AM, Akshay Bansod wrote:
+> Update the sysfs interface for sampling frequency and scale attributes.
+> Replace `scnprintf()` with `sysfs_emit_at()` which is PAGE_SIZE-aware
+> and recommended for use in sysfs.
+> 
+> Signed-off-by: Akshay Bansod <akbansd@gmail.com>
+> ---
+> 
+> Testing:
+> - Built the driver (`st_lsm6dsx_i2c`) as a module.
+> - Tested using `i2c-stub` to mock the device.
+> - Verified that reading sysfs attributes like `sampling_frequency_available`
+>   works correctly and shows no change in functionality.
 
-Well the proposed patchset was aiming to prevent the user from doing
-stupid things (e.g. reading 1byte at a time or reading after a write has
-increased ppos). However documenting the correct AoUs would still work
+Nice to see it was actually tested. :-)
 
->
-> But it usually contains a single character (sometimes two) and a new
-> line. It's not something that's ever been reported as an issue. I
-> rather not touch it if it hasn't been reported as broken because
-> there's some hypothetical use case that can see it as broken.
->
-> Documenting its current behavior is perfectly fine with me.
+> 
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> index c65ad4982..1cef10919 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> @@ -2035,7 +2035,7 @@ st_lsm6dsx_sysfs_sampling_frequency_avail(struct device *dev,
+>  
+>  	odr_table = &sensor->hw->settings->odr_table[sensor->id];
+>  	for (i = 0; i < odr_table->odr_len; i++)
+> -		len += scnprintf(buf + len, PAGE_SIZE - len, "%d.%03d ",
+> +		len += sysfs_emit_at(buf, len, "%d.%03d ",
+>  				 odr_table->odr_avl[i].milli_hz / 1000,
+>  				 odr_table->odr_avl[i].milli_hz % 1000);
 
-Yep "[RFC PATCH v3] tracing: add testable specifications for
-event_enable_write/read" is already out.
+Let's keep checkpatch happy and change the indent of the wrapped lines to
+line up with ( since the ( moved.
 
-Thanks
-Gab
+>  	buf[len - 1] = '\n';
+> @@ -2054,7 +2054,7 @@ static ssize_t st_lsm6dsx_sysfs_scale_avail(struct device *dev,
+>  
+>  	fs_table = &hw->settings->fs_table[sensor->id];
+>  	for (i = 0; i < fs_table->fs_len; i++)
+> -		len += scnprintf(buf + len, PAGE_SIZE - len, "0.%09u ",
+> +		len += sysfs_emit_at(buf, len, "0.%09u ",
+>  				 fs_table->fs_avl[i].gain);
 
->
-> -- Steve
->
+ditto
+
+>  	buf[len - 1] = '\n';
+>  
 
