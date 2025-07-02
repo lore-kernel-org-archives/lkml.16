@@ -1,109 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CA702F7CE2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62DEA2BE652;
 	Wed,  2 Jul 2025 18:57:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751482641; cv=none; b=MIaGoEsJXBIu/p+lDVWrRpp6giQq/s27/Sox8Qz75wUeSA+rjHuq8VNIwZboVMxEsZt4NY0r7ogsnju28KI3X2fQdEbKv4tohPkD7boP224tDAK7RU3Y3gfrFfYL0kk3JvGVOqCFEw9a7kp5abZM/2HGgAhSpTOmCJi7lN8+dJA=
+	t=1751482645; cv=none; b=Y4ok3n2zzHIIyQW3P3XDtuPGDrUUTEhyaA+vGcwkBIrIwP6UfRRYDgXG6U4d8JMZbVNeWZ7pkKSI/wj7urmNKlpjsqy/XyDGBtqKgrbnp1izP5lv2HyjwjvSmRdLhyJckuc4YhawqYWtt45TX3gaJ/di6rJIqzGFQhfr0chDQhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751482641; c=relaxed/simple;
-	bh=oAuYWwMlcoUOMp7fNhysK7uclvqFv4Y+nGaAFChmaZk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mgPA+bLcy7REWSZIVsEEUjiS6Lt4TqWjlGRQ5l0P+2dxxV/VgFplh5reDAGnc+yfnnWN3Ygsyuputrk1xqYonH8f7aVOoIVQrCYu1BBE/HcGAuoYHivk4EM8/iPY/GP4xuQUp8lLIKXCF40SEGrPnGmkwGMzL+u4Z1QqpXBd1WU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dS4AbLBd; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dS4AbLBd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58111C4CEEE;
-	Wed,  2 Jul 2025 18:57:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751482641;
-	bh=oAuYWwMlcoUOMp7fNhysK7uclvqFv4Y+nGaAFChmaZk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=dS4AbLBdF5J/y7IDK4f9Xr4xeCHicSFDNyYvpT/kfowNEsMQYG9HevkEMhjtbP8CD
-	 ZSTJfI2qQXiyaoYCYIBdWi78PJ2MGzkPxmRBMlc2M3qi1jaF9jzUbKjIGLtxdKaOxA
-	 PUY8mi6d2nB40J6eTIeyJBgqin8gnrSaWsX+DOcfVhr2c3hvpTsrZrFH5V3gjNn7C1
-	 qjyA+7WobDqTLoFAmDWM4MZwSBwvkQhOUp0NTPalXCge9fored9PsEtBz2YC2YtTSk
-	 hF61su1kvAN9mQf/JfOHgoilu1doiJDp4IPgj9Jh8BQfk2TBUo33abe2CEuRhZHa8R
-	 4FEcPfGPqZP2g==
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-60be827f2b7so141884eaf.0;
-        Wed, 02 Jul 2025 11:57:21 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVfAkIChIkeSy6ikL6o+a+GmLLPIPSGwy0Ik4uBjtM45HJHfqx4/JugaOGU6QxKVzB07ryXKVdLO2DpySk=@vger.kernel.org, AJvYcCWj1458pAGOEaBfwXpx3r4KXTKlsY3UZReuJhQ9hKnqE61OMpvv+p2RGCiwO7Lg78Ksj0+JLG1Tuew=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwW+MN/YI8PZlurSSQFUwz2gwxuZR0SefeofWlXNzCn5BB6jcJj
-	cG1yrxPFMSqAw4kRLEPZPGUsEg0tNGor/B0RQ1xHRuuq+Yh32I2pBkxLrYH6JjZS58SyMiAIZgD
-	ZyB9vR4ivBftQytaa9/jDhvKqSMJc440=
-X-Google-Smtp-Source: AGHT+IFP1YS20zKCA03/uE1QUW5rL9pMJhvUrlaZQJ5bihmEEMLvJ/fS/OBD5RwvXkhn2ZjCno+yFWcWUj3+oDHl+QU=
-X-Received: by 2002:a4a:ec4c:0:b0:611:3e54:8d0a with SMTP id
- 006d021491bc7-6137e862d21mr549827eaf.1.1751482640540; Wed, 02 Jul 2025
- 11:57:20 -0700 (PDT)
+	s=arc-20240116; t=1751482645; c=relaxed/simple;
+	bh=lfmZKeb2RRDCWysaxWfgfh0H9ySYIV5bvHrrEE+QlIE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Nuxfj0Xwsk3YemJ5uLAMEuKv9DMEDPkZBatadhK4V+zyx7PW+Chr8I5+jsuQ3WWX2FCuyx0ZecB/kr5vQ36ERxLijjJna3fepHaCRLB65bc2MSHHKkivSS+LGmHYJKE2wx2FlFIbc/bI6+Jgip9g0cyjjdGJr0O4L1qNy3QwQd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 7EC0E1A03D3;
+	Wed,  2 Jul 2025 18:57:19 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id 3945820028;
+	Wed,  2 Jul 2025 18:57:15 +0000 (UTC)
+Date: Wed, 2 Jul 2025 14:57:13 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim
+ <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Andrii
+ Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, "Jose
+ E. Marchesi" <jemarch@gnu.org>, Beau Belgrave <beaub@linux.microsoft.com>,
+ Jens Remus <jremus@linux.ibm.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>, Florian Weimer
+ <fweimer@redhat.com>
+Subject: Re: [PATCH v12 06/14] unwind_user/deferred: Add deferred unwinding
+ interface
+Message-ID: <20250702145713.57062487@batman.local.home>
+In-Reply-To: <CAHk-=wiU6aox6-QqrUY1AaBq87EsFuFa6q2w40PJkhKMEX213w@mail.gmail.com>
+References: <20250701005321.942306427@goodmis.org>
+	<20250701005451.571473750@goodmis.org>
+	<20250702163609.GR1613200@noisy.programming.kicks-ass.net>
+	<20250702124216.4668826a@batman.local.home>
+	<CAHk-=wiXjrvif6ZdunRV3OT0YTrY=5Oiw1xU_F1L93iGLGUdhQ@mail.gmail.com>
+	<20250702132605.6c79c1ec@batman.local.home>
+	<20250702134850.254cec76@batman.local.home>
+	<CAHk-=wiU6aox6-QqrUY1AaBq87EsFuFa6q2w40PJkhKMEX213w@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250619035355.33402-1-zhangzihuan@kylinos.cn> <20250619035355.33402-5-zhangzihuan@kylinos.cn>
-In-Reply-To: <20250619035355.33402-5-zhangzihuan@kylinos.cn>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 2 Jul 2025 20:57:08 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hR37in6uikFGgtM+PjXuSCQSc7mk0uLwwniNUKZvnZng@mail.gmail.com>
-X-Gm-Features: Ac12FXz1Jq7KszMG7oyR4xMkecASU-xjA2tkI-uMdUtmxNDCJjvElllZ4S2qQSM
-Message-ID: <CAJZ5v0hR37in6uikFGgtM+PjXuSCQSc7mk0uLwwniNUKZvnZng@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] PM: suspend: Simplify state check using sleep_state_supported()
-To: Zihuan Zhang <zhangzihuan@kylinos.cn>
-Cc: rafael@kernel.org, pavel@kernel.org, len.brown@intel.com, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: tqycyxrww589xoz45k6js778uimaj3fu
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 3945820028
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+/5DHB7kU211/NodR5xO9YcdRNxQMWYSI=
+X-HE-Tag: 1751482635-577231
+X-HE-Meta: U2FsdGVkX18zNvFAdZATJxTQQ/TbOv73e+1chWo4pPdA8XZfmthF1JMQxwMQfRenqHsdWzOjipyRZy/Rc2He9l0U897hIFmikK66fysA6pVE5lQxIidCckr0P+AfxIRtoX/oRjhTdDLlwRJ+98o3KVm1viF8cGGelrH5+x3QPJ2cPhZwymmuzwcyyeQzL8LTxlPOWGMnRGzTXxS1i07dG98wBIJGZyUT7ikrDRyKM/azimoNr+LuhCN66eFqhNyVBPFRFvhNkcJh/6FHH1uFe8ZPfSKk22O4Uoxb+vs2Nkh3ZUxCVJNUq+vlHpv8NmPwXe1hrmWvlDsvJIHOmCJeZqNHaQ2Hq6F3ghpPF3+xZwK3l02NoMTrj3JJFyG7n3swzNSrqhSK3FOZ7C/cmjqKTZlkj0m7fVkhPqIzO1JSBKkNVINU3L3Um/xDxC5U0t5B
 
-On Thu, Jun 19, 2025 at 5:54=E2=80=AFAM Zihuan Zhang <zhangzihuan@kylinos.c=
-n> wrote:
->
-> Currently enter_state() open-codes state validation using
-> `if (state =3D=3D PM_SUSPEND_TO_IDLE) ... else if (!valid_state(state)) .=
-..`.
->
-> This can be simplified by calling sleep_state_supported(), which already
-> encodes this logic. This improves clarity and reduces duplication.
->
-> Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
-> ---
->  kernel/power/suspend.c | 14 ++++----------
->  1 file changed, 4 insertions(+), 10 deletions(-)
->
-> diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
-> index 16172ca22f21..b95c7a80ef20 100644
-> --- a/kernel/power/suspend.c
-> +++ b/kernel/power/suspend.c
-> @@ -571,16 +571,10 @@ static int enter_state(suspend_state_t state)
->         int error;
->
->         trace_suspend_resume(TPS("suspend_enter"), state, true);
-> -       if (state =3D=3D PM_SUSPEND_TO_IDLE) {
-> -#ifdef CONFIG_PM_DEBUG
-> -               if (pm_test_level !=3D TEST_NONE && pm_test_level <=3D TE=
-ST_CPUS) {
-> -                       pr_warn("Unsupported test mode for suspend to idl=
-e, please choose none/freezer/devices/platform.\n");
-> -                       return -EAGAIN;
-> -               }
-> -#endif
-> -       } else if (!valid_state(state)) {
-> -               return -EINVAL;
-> -       }
-> +
-> +       if (!sleep_state_supported(state))
-> +               return -ENOSYS;
-> +
+On Wed, 2 Jul 2025 11:21:34 -0700
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-The code before and after is obviously not the same, so no.
+> On Wed, 2 Jul 2025 at 10:49, Steven Rostedt <rostedt@goodmis.org> wrote:
+> >
+> > To still be able to use a 32 bit cmpxchg (for racing with an NMI), we
+> > could break this number up into two 32 bit words. One with the CPU that
+> > it was created on, and one with the per_cpu counter:  
+> 
+> Do you actually even need a cpu number at all?
+> 
+> If this is per-thread, maybe just a per-thread counter would be good?
+> And you already *have* that per-thread thing, in
+> 'current->unwind_info'.
 
-If you do a cleanup, don't change the behavior.
+I just hate to increase the task struct even more. I'm trying to keep
+only the data I can't put elsewhere in the task struct.
 
-If you want to change the behavior, there needs to be a good enough
-reason.  A cleanup is not it.
+> 
+> And the work is using task_work, so the worker callback is also per-thread.
+> 
+> Also, is racing with NMI even a thing for the sequence number? I would
+> expect that the only thing that NMI would race with is the 'pending'
+> field, not the sequence number.
 
->         if (!mutex_trylock(&system_transition_mutex))
->                 return -EBUSY;
->
-> --
+The sequence number is updated on the first time it's called after a
+task enters the kernel. Then it should return the same number every
+time after that. That's because this unique number is the identifier
+for the user space stack trace which doesn't change while the task is
+in the kernel, hence the id getting updated every time the task enters
+the kernel and not after that.
+
+> 
+> IOW, I think the logic could be
+> 
+>  - check 'pending' non-atomically, just because it's cheap
+
+Note, later patches move the "pending" bit into a mask that is used to
+figure out what callbacks to call.
+
+> 
+>  - do a try_cmpxchg() on pending to actually deal with nmi races
+> 
+> Actually, there are no SMP issues, just instruction atomicity - so a
+> 'local_try_cmpxchg() would be sufficient, but that's a 'long' not a
+> 'u32' ;^(
+
+Yeah, later patches do try to use more local_try_cmpxchg() at different
+parts. Even for the timestamp.
+
+> 
+>  - now you are exclusive for that thread, you're done, no more need
+> for any atomic counter or percpu things
+
+The trick and race with NMIs is, this needs to return that cookie for
+both callers, where the cookie is the same number.
+
+
+> 
+> And then the next step is to just say "pending is the low bit of the
+> id word" and having a separate 31-bit counter that gets incremented by
+> "get_cookie()".
+> 
+> So then you end up with something like
+> 
+>   // New name for 'get_timestamp()'
+>   get_current_cookie() { return current->unwind_info.cookie; }
+>   // New name for 'get_cookie()':
+>   // 31-bit counter by just leaving bit #0 alone
+>   get_new_cookie() { current->unwind_info.cookie += 2; }
+> 
+> and then unwind_deferred_request() would do something like
+> 
+>   unwind_deferred_request()
+>   {
+>         int old, new;
+> 
+>         if (current->unwind_info.id)
+>                 return 1;
+> 
+>         guard(irqsave)();
+>         // For NMI, if we race with 'get_new_cookie()'
+>         // we don't care if we get the old or the new one
+>         old = 0; new = get_current_cookie() | 1;
+>         if (!try_cmpxchg(&current->unwind_info.id, &old, new))
+>                 return 1;
+>         .. now schedule the thing with that cookie set.
+> 
+> Hmm?
+> 
+> But I didn't actually look at the users, so maybe I'm missing some
+> reason why you want to have a separate per-cpu value.
+
+Now we could just have the counter be the 32 bit cookie (old timestamp)
+in the task struct, and have bit 0 be if it is valued or not.
+
+static u32 get_cookie(struct unwind_task_info *info)
+{
+	u32 cnt = READ_ONCE(info->id);
+	u32 new_cnt;
+
+	if (cnt & 1)
+		return cnt;
+
+	new_cnt = cnt + 3;
+	if (try_cmpxchg(&info->id, &cnt, new_cnt))
+		return new_cnt;
+
+	return cnt; // return info->id; would work too
+}
+
+Then when going back to user space:
+
+	info->id &= ~1;
+
+Now the counter is stored in the task struct and no other info is needed.
+
+> 
+> Or maybe I missed something else entirely, and the above is complete
+> garbage and the ramblings of a insane mind.
+> 
+> It happens.
+> 
+> Off to get more coffee.
+
+Enjoy, I just grabbed my last cup of the day.
+
+-- Steve
