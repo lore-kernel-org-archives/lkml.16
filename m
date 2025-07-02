@@ -1,137 +1,152 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99172673B7;
-	Wed,  2 Jul 2025 11:55:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A776C26B747;
+	Wed,  2 Jul 2025 11:55:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751457354; cv=none; b=LeAqriy2mEjapv35/rfcffxkoUnPlTUKQ514u7WMHtuNRiGoFIZfVSi4G0yapwdUsaYFtSd9/F0U35gBvaluvNHgsFS9XcJJV7mDf3vfUBtUIKATdukdeOeVEEyQo1B1xyQzS3g/BnRp6e67ejuoQLaWzNr/L7oQo84YQoiv674=
+	t=1751457357; cv=none; b=U/ouRaowwLE1/Utdh8G5mJ7upreIUElqZeZkl5S3JfOgzQyVjWZHZNXIZAd/hxAFYbwpjya5TLMUX2DCQ3wE8wgClM39qhGVCe1ZuAU24Vi64iWuGIXPNUh3DXO6yGr+E5l4icOUx9wpIY9it5cit4bp+MhPj7OPJMQGNzU+o2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751457354; c=relaxed/simple;
-	bh=JKG4bTsUc4OMkDkUNEVDnvaZBSVqpkyFWjRSdRDgFyQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=BDwsyEkL6VHtj8EvjWECu8BfwBormkRzOapqwIjvbFn1drPhJ8l7rr6Y0Ms0H+ramAjE6OSFDerv+pKqKz7kLkziM3qwd09Dd0e+Y3osE+vsIbHf2baFUKVtvgKbRghutk0qZ+FffC3kwyavinx5An9QgjoGaQDCeK+KeL3G+eY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QKmBzVRm; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1751457357; c=relaxed/simple;
+	bh=g03WbLNZnymRJkzgiUNFPnT4bm9PVGkM7Z/dtaddMEo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jkKDPqWthRE1CdHsbtkovYtTfCOc8fyf1vmv3YBzlmauOM1YxoEevBmUuuLoI9NWT51I4L1mHkM1qupLJGWmpmm4bp2B+VKmtT33bz+EGMH9ZKLRE6Go/BiMhUvbB8JQGPLvSuADV1dNLYeOxO5cvVgRy2DbllThcZ73cctGsG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XkHRZmA5; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QKmBzVRm"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5626iHU4002161;
-	Wed, 2 Jul 2025 11:55:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	E1kdNW8YYBLwi5EQQTJ4MiR8ojIiKBMr9MuT+dS8cv8=; b=QKmBzVRmzeR9ZZzL
-	r4pd+Me1dZhKH3Zl3iY+CKm5mY3+OZwBsOU6lwN+/ZxWC3Rk/B+XnNdxJN2CA8g5
-	MxSxPkkBQdTOqLJLqnrohZCMtlEkqTJz453nEu3HKTJHCZc8ungScYfUiyM27+z7
-	lo2Wxxvs0MpWMrixTvTenYSVVhBxTv5AL9aw9yzlpjNJ2QdKZrGJDPrTGUYY2KX9
-	VjT+cDCpLc2i4j81jheWOO0o9ygAF/7ZauqVLDPW9X2RADp/19//EPqBP3G6leje
-	N6kRXdIIYo/TSLFmw9u606PABzwb0zrWjTogmwCd+b+IpQFgLzOdhBsktYUaj6cp
-	ihnkOw==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j9pcvcqe-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Jul 2025 11:55:47 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 562BtkT7021000
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 2 Jul 2025 11:55:46 GMT
-Received: from [10.50.58.161] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 2 Jul 2025
- 04:55:43 -0700
-Message-ID: <ae23ebae-3101-4a73-2bbd-0dabb4efaba1@quicinc.com>
-Date: Wed, 2 Jul 2025 17:25:29 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XkHRZmA5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751457355; x=1782993355;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=g03WbLNZnymRJkzgiUNFPnT4bm9PVGkM7Z/dtaddMEo=;
+  b=XkHRZmA5Gd7NI5HeZJ0A4WWx3ND1EVY2065gBgO2vCdKNlHWaQJLKXQR
+   yylttb33tiO8zU8vKitWLxkZB1NXhRxJtBMLkQNhz19D3gCgBKzm+/y68
+   leQCKPZZhKN/tpaoTep07AKM5CUd0Dj8/z8Cxc8rzY0CPY6CaK5HgzvK3
+   /qA6uUKau9FmsbIb08eNFKP1xcn0uYjPDxy+TjDUhLTGOG41XVVHjVU+6
+   O8dAtDwUL3KtjeqamN/6IhtWYyG6r23akoCmR1sIypFeTyHQKjk6adgOW
+   yaiCepsEHe8rDV5SKR+qiVKtcc7uIQPwFdo/rZgSGxDidm4ZH6ttuMaoK
+   g==;
+X-CSE-ConnectionGUID: Gk+RLseAR7KMiehQlFqHjA==
+X-CSE-MsgGUID: 9bTgAnmFSWSmRfy1XYI9/Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="52864650"
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="52864650"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 04:55:54 -0700
+X-CSE-ConnectionGUID: +2gLogIhRPGSmh5F8ZHXcw==
+X-CSE-MsgGUID: a67MzHEfTO2IY6hGuxzJ7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="177731054"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 04:55:52 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uWw45-0000000BuPh-20ff;
+	Wed, 02 Jul 2025 14:55:49 +0300
+Date: Wed, 2 Jul 2025 14:55:49 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Kent Gibson <warthog618@gmail.com>,
+	Ahmad Fatoum <a.fatoum@pengutronix.de>,
+	Jan =?iso-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>,
+	Marek Vasut <marex@denx.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v3 00/10] gpio: sysfs: add a per-chip export/unexport
+ attribute pair
+Message-ID: <aGUeRczCNJLg-KON@smile.fi.intel.com>
+References: <20250630-gpio-sysfs-chip-export-v3-0-b997be9b7137@linaro.org>
+ <aGPrFnDxG4W7S9Ym@smile.fi.intel.com>
+ <20250702035439.GA20273@rigel>
+ <CAMRc=MftawBB4rtj4EKS_OwMCU9h53sA8QxcFq_ZY0MRg2OLag@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v3 1/5] media: dt-bindings: add non-pixel property in iris
- schema
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Dikshita Agarwal
-	<quic_dikshita@quicinc.com>,
-        Abhinav Kumar <abhinav.kumar@linux.dev>,
-        "Bryan
- O'Donoghue" <bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab
-	<mchehab@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250627-video_cb-v3-0-51e18c0ffbce@quicinc.com>
- <20250627-video_cb-v3-1-51e18c0ffbce@quicinc.com>
- <6fd3fa34-69e1-484f-ad6f-8caa852f1a6c@kernel.org>
- <dc6e82a1-82be-b8b8-31c3-8b85447d4e43@quicinc.com>
- <8b88cea4-b9f2-4365-829c-2a255aed6c69@kernel.org>
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-In-Reply-To: <8b88cea4-b9f2-4365-829c-2a255aed6c69@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: KqOVzbqZ97s99M5XHOETyQxTHAWH92jO
-X-Proofpoint-ORIG-GUID: KqOVzbqZ97s99M5XHOETyQxTHAWH92jO
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDA5NyBTYWx0ZWRfX3D/85o0mbvOF
- Oe6pJO1QDxyRPQTUL85VnnXcvsFax3P/a1jT/2HxQLGlBIgV/Jc4uFoiEjIXtj+xmat+oyfR679
- HpNg+M63Q2JUZbXq8DwR762tqOHx/9RfxkMBKNo/LwHTvhW1dq05Zp/OzRjE3gA8oZQB0gN08Ze
- jhe8PLBtP0N4GrDxWx6nouhi+qaXqcioambuFY0BDipavglrTMSnhDJ2W9Ya6QGMEpb/PBBlCJr
- eLKncY7Alg2qMG7vApnIFSzEF6el2kn/4hRYe3V4ZhpJ6tKoWOjymVSwuB3HuX1tS9q4nudliqS
- oBzHh5zcUZd+kPcDuJFT3In4zRgugTYAWehotJsE/lCv0zP1HXeIMkJ8KJqPM0Sb/3Xj1ngjjZD
- p2wdPoHTuBtYx5Ohc1Q7NxYjHdAQbCz62fKV6qRcZJsX8jknzUiISoDbgRHUrlMpsylDb4SX
-X-Authority-Analysis: v=2.4 cv=QMFoRhLL c=1 sm=1 tr=0 ts=68651e43 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10
- a=yYeFI0odNK6BD0YTbn8A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-02_01,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 priorityscore=1501 bulkscore=0 spamscore=0 adultscore=0
- mlxlogscore=999 mlxscore=0 lowpriorityscore=0 suspectscore=0 impostorscore=0
- clxscore=1015 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507020097
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MftawBB4rtj4EKS_OwMCU9h53sA8QxcFq_ZY0MRg2OLag@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-
-
-On 7/2/2025 5:17 PM, Krzysztof Kozlowski wrote:
-> On 02/07/2025 13:45, Vikash Garodia wrote:
->>
->> On 7/2/2025 4:53 PM, Krzysztof Kozlowski wrote:
->>> On 27/06/2025 17:48, Vikash Garodia wrote:
->>>> +
->>>>      video-codec@aa00000 {
->>>>          compatible = "qcom,sm8550-iris";
->>>>          reg = <0x0aa00000 0xf0000>;
->>>> @@ -144,12 +176,16 @@ examples:
->>>>          resets = <&gcc GCC_VIDEO_AXI0_CLK_ARES>;
->>>>          reset-names = "bus";
->>>>  
->>>> -        iommus = <&apps_smmu 0x1940 0x0000>,
->>>> -                 <&apps_smmu 0x1947 0x0000>;
->>>> +        iommus = <&apps_smmu 0x1947 0x0000>;
->>>
->>> I missed, that's technically ABI break and nothing in commit msg
->>> explains that. You need to clearly explain the reasons and impact.
->> No, it is not. Interface works well with old or new approach.
+On Wed, Jul 02, 2025 at 11:45:02AM +0200, Bartosz Golaszewski wrote:
+> On Wed, Jul 2, 2025 at 5:54 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > On Tue, Jul 01, 2025 at 05:05:10PM +0300, Andy Shevchenko wrote:
+> > > It seems I never expressed my overall opinion about this. I think the poking
+> > > sysfs and making it working with a new schema won't solve the issues that
+> > > character device was developed to target. If so, doing this just brings yet
+> > > another broken interface. I would be happy to be mistaken!
+> > >
+> > > If I am mistaken, I would like to see a summary here that explains that clearly
+> > > that the new sysfs approach does not inherit design flaws of the original
+> > > implementation.
 > 
-> 
-> You changed the order of IOMMUs, so yes it is. Which interface works
-> well - FreeBSD? Or other? You are changing ABI for every user.
-Why do i need to change, when without changing would work as well ?
+> You cut out the link to the discussion that preceded this series where
+> a good summary is in the very first email. Anyway: the gist is: people
+> need to do some basic GPIO fiddling early on from initramfs that may
+> not have any tools other than basic shell utils from busybox. This
+> series is not about improving or extending the sysfs interface - it's
+> about removing its reliance on global GPIO numbers. And that's about
+> it. We don't add any new features really, just move the GPIO line
+> groups into their respective chip directories and make exporting use
+> the hardware offsets, not global numbers.
 
+I see it differently. This adds the second variant of how sysfs can be handled
+and it needs to be rotten in the same way as the original sysfs. I really don't
+see a point to prolonging the life of the broken interface in such a way. If somebody
+wants to check the GPIO without accessing character device interface, they probably
+are simply lazy to think of how to do that on early stages properly. The desire
+sounds like a workaround against proper thinking.
+
+> > Indeed.  I've already expressed my reservations about supporting the whole
+> > of the existing sysfs capabilties, but I've otherwise tried to remain out
+> > of the discussion.
+> >
+> > To reiterate my position:
+> > While I am all for maintaining sysfs in some form to cater for those
+> > rare cases where cdev is too heavyweight, IMHO it is a mistake to
+> > support the existing sysfs capabilities in toto.  Take the opportunity to
+> > remove the parts of the sysfs interface that don't work well.
 > 
-> Best regards,
-> Krzysztof
+> Doesn't the last patch do it? We cannot remove it without giving
+> user-space some time to switch.
+
+Famous Last Words. How many years the sysfs is being rotten?! This just makes
+it a Frankenstein.
+
+> This series does everything in a
+> backward compatible way and then isolates the old bits under ifdefs so
+> that when the time comes it's just a matter of removing everything
+> guarded by them.
+> 
+> > The new sysfs should only provide the features required by those rare use
+> > cases, which IIUC would be basic sets and gets, and exclude those features
+> > not required, particularly warts like edges.
+> >
+> > If you need more advanced features then use cdev.
+> > If all you need is basic sets and gets then sysfs is probably fine.
+> >
+> > If that isn't the case then there should be some explanation as to why those
+> > sysfs features are being maintained.  Treat this as a new interface.
+> 
+> I tend to not interpret it as adding new features. We really just
+> *move* what exists under a slightly different path when you think
+> about it.
+> 
+> So what are you suggesting, remove the `edge` attribute and polling
+> features from the new `value` attribute?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
