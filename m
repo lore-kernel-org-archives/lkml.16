@@ -1,83 +1,81 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 588C32DE718
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 22:15:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 214872DE718;
+	Wed,  2 Jul 2025 22:16:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751494558; cv=none; b=g7XDTa5o2Hvk8h5onK6NpO9/J7An7l9j5lXRLln41Hzv/WX5nrab4BiCKanN32FEDQ3ZcSyQUzEf7koKcv3d66+dgo1vsC2eGpNMHti83UhIDqqmuC7TCLC8i5YDYEdpZPmTnkP9UjPBg6qLuxt9vMPCNpauzXZp2uuJeEBIwcg=
+	t=1751494569; cv=none; b=SbInJvID34Tss37xEN/TstXcMZE2AKW7l6EKVNjFhtocFryYmu+my5g6clRFKCRnL/DkxzcW6aH4N0riml3QQvbATIr4QKSBX9SZ6RC0+CIJbv71P6Vs3qZ6TTGnYTym/UZqR2qNu8EK+pddKO/QKpC3a5t4dG/wD1H48MDgz+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751494558; c=relaxed/simple;
-	bh=L+4u4zc/5hJXlM56kcHcu61ezvhOUONCS8bY+hskGSg=;
+	s=arc-20240116; t=1751494569; c=relaxed/simple;
+	bh=5lizU1qMKUV6S+gaqmTFXzfHzt4Ze8nyfGVhP06tJo0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sjoswFF8GaLDcJ5LMHwCBcynmjvhZMLXPqMbgrufg9rtWHsDVngR+DOMFP5ZK/dwKNoDzwHGssPvFFFDRN8URH7X04yA1xz6KEWbVuaXHNMN24GTd6WG56vBAmbhoJbToepxpovwEP9JjpkyJzt3L9GitmBjwkdfu9sYmaTeHRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=kTnkt4os; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=IT8gegTZwY0QGn3bSCgXo55riR8DFvrScxBmOfbtVv1RFjj0SuN5MsjnNy/BRaeXEG2T+L4uyJo24ziPIn2jdVvkQJkA8Pwsq5AFFiL255s6v8fY0ABUyTCHeVOw+p0toymxuDw5TykKjIMxK5rTuc/ubsO2ge/BwhmmTcbfA5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N2h2uJ9p; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="kTnkt4os"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 562DvnTf007218
-	for <linux-kernel@vger.kernel.org>; Wed, 2 Jul 2025 22:15:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=Y+aCRc78dmbEpDm//tnp9kez
-	QIa7D6lei/ThduFagCQ=; b=kTnkt4osChxz+KTXJw4Rvz675jmAjgN6K8VimDQP
-	VgXQRJv6/3Prs4i9f9uA2knETlZuq1H12tfa6z6CwChtCOyVixMF//VnaJeuaOnF
-	D2jmLf7S37ez1wzV0TxNHdU+9q86/e2A/rC80jDMXVg4uqVMKGrSWLJhXQyOCc/b
-	dzLKrN/NYNA6aBoJ11Hz6pGlSAfGjVT/vSyF21HyJzTzLDhgv18/7tS6gHK5WDD1
-	Rgeu2v/6WxAdsxl44U7qaS6SW14Ky1pWdPzZpqfTZiNov7/o0sYxmzxBKU+RJJhq
-	obsspFxNW/CBX6mrwxL3udNe5Swa5IVPj9NC61Ncbi+47g==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47kn5jjn44-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 22:15:56 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c790dc38b4so61175985a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 15:15:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751494555; x=1752099355;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N2h2uJ9p"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-23602481460so76306085ad.0;
+        Wed, 02 Jul 2025 15:16:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751494566; x=1752099366; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y+aCRc78dmbEpDm//tnp9kezQIa7D6lei/ThduFagCQ=;
-        b=fa076G+13Ual4x5IWlkwvb3FGJKGZ1tHFOufTBbh9pkR1lUP8wtHymFg7/AMEHBvY6
-         lEM3gm+NXIppj2hxoPYmm6beL6uCJt8SJZNLE0S/UaCm5X0xgp7FC/IoWUGLxBNsrZTs
-         cf9xLAeKfnXmW1D3WQ0VLgE1uOEMQqCJf6rDRDOxgLWWrpEBEXjeWW506bKruNce5Tfd
-         1jXLnw1ZCs5cBFIMppevd8XgfD2X1ntd1FYyM2YpWRyaGX0Ba6skPVsCszOTAKBNzJxI
-         kHCKguNNzrqSbSTSNwvRAfYNvnF1JTDaBOctrlCV/p+g/H2DwAmV2BDCayXuUl/LPBNd
-         VfCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVBbDdiIFrp7E5fjSeRS6Ed6htOiJFn4Mx8/tq2T/q/DX4hpn5D4mxo2Mk6QG9K+UyFMjQ0Ic32191ZNuY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzraZqICCM/7wRMn2g5uegtV7hulPdUCxYTvKL6RG5DipwFV/7E
-	TZhQnlJyLaA7kjy//nRYoyi+V0fM6yffSwXwGem3Pu6NrPaAxRjAjap9t+0I/6Bolrg03xk8KUm
-	/6GnrLKGaUhmPqE28ozrksZnAuf2RE5JeTgIS05bv/CzQ9cmRxVKaSHWcSYJc9cnJwNQ=
-X-Gm-Gg: ASbGncvisulxbALgZ3ALlZxE1pomKqFGCRY/kical80YlCkVdMAKkS4Zw8dlNUubby8
-	cMzrcO7/usFLyBduENeQ0Ribcfiw3dh67GqaNYWJA+QvquT4dK/wAbvKFKDvUJvLMQweKY1RRAo
-	kzlKZzyhs7ddSdyFRoVE8gx9ZKMYNl40XrqatDc/u4HJgFzqWqwAhreXl9qeMrqV7C/WOBlqVij
-	Eu9+4xu5Qm1m0soX6+J4QeX1u06YRs2Wl8LeWYvGBb0kNhNpTd2eRb1vrUFgarZQ1ry4l0ynpz+
-	3bszK4YvrSL/JFy69NMDJMwZEN6fc3Mf7JSpzgIYOEiwvNYWN+JaKKwvKqqShzgWTeecT0y1BZW
-	0TTEEBO9Uf+mQu8Oa3M9SZXwUBPvHwQjwwbE=
-X-Received: by 2002:a05:620a:4896:b0:7d2:26b4:66d2 with SMTP id af79cd13be357-7d5d154690amr196481185a.22.1751494555115;
-        Wed, 02 Jul 2025 15:15:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGOLKvFFbYNXyXXi4XCmqx8Nbzeonm5Cd89hz5wxbQWDHeICyQD/+nt6+jX7y3D1xx8KrGEww==
-X-Received: by 2002:a05:620a:4896:b0:7d2:26b4:66d2 with SMTP id af79cd13be357-7d5d154690amr196454885a.22.1751494551760;
-        Wed, 02 Jul 2025 15:15:51 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b24019dsm2232912e87.3.2025.07.02.15.15.50
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ukcKYtTICZOFWx70YWfw/Y20DGGfiPP24nM2GfmRoZo=;
+        b=N2h2uJ9p7QIsHqfU1lus+aVqIfIJnMlOt8bjeaS6YYtc3KNby+15qWkOrT8yjwvsZX
+         ef7YY+Y2esadcJG9kI29ss4UzJ7L7tSY/s0NJ9IAafaGr3HdVOfTAZfQtQ3EEzFNGpRI
+         C7W7Dgn9jiewx2ggmrjZRgb6Lno4nDpvyqQegy3/nF97b5fcxRXTjLT83wRPIQjW8ev4
+         EY/0exO0+T/PSklirqn2MaDcJSOjAf8l3jom8x7vpSWLCHA1o7e7l3jqDdH3hfGFmC5J
+         3x9HHNLLxc2GhXELHGf2cDAPhciE/RWBsxDoGXrlaUFYi9KV7RijJBOmiYU4zRNxiCPL
+         1HTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751494566; x=1752099366;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ukcKYtTICZOFWx70YWfw/Y20DGGfiPP24nM2GfmRoZo=;
+        b=mnB7ne/Bvv7odWARpbtnxz8sdxfQCeHmx2cPnBpl3NZcCUUtVHpjDAn8XRjQg1KjI0
+         z/UGTPv1I+8rPghfvBXmErazoaYzXciORCUL/jaFDh1YOSrBNw5n9yyElMIJt2+oXBnt
+         Nna8CxXdMK+qGocmTQd3vb1VjdSTu5SDi/HYkiiv1ljJjI3hfxr+uMx7jwKQRDCqzSHc
+         BZISKmFXcsgSrnXPaqYKGGPRsX8/pcd6erz5fWfqIT5X9mo/zgwdvOw8rgNeI6ZelgUM
+         Fx+asS3we+FZhPtwsfvPSC/9EM3q/vpPLrCoMwr0zsNr3GmsBnkrInPAEYP2HNM71jIF
+         WBWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU3dMNJ/FRZ9sag8mQBQOVtxWDO0iV084OVb47MgX49NTdlgm2JMdaGcKcpIhwdMAwn84sNqAAUfJ60@vger.kernel.org, AJvYcCUCehqxlWvd4sFLeOWFpbvAjpN3/WA+d/U9vIUHGbTlo0eWbGlw30qhj4Rv69RxWpXDwJchijysq00=@vger.kernel.org, AJvYcCUCwMGD1AO+8UrLcUfjoj+4drLf8zNSnEYBbVJL1Q+OFegmWQqm633O/UM8si2TnAyFwAc6Un4EP/E2@vger.kernel.org, AJvYcCUzTMmY0Hc7XL7A2QgvE1QvuBgZkMHQXbhtIDhselpkIeV6KTnFQRiTNB6OK1znPt+B2KtAxAGsx9lzPTvyu3s=@vger.kernel.org, AJvYcCVMDQaZaJjossS3dCA095U44G18l9z9A8Hjy2vsyBHctNI5hs46AeONGKIlXbjEICKMcx22Hm3cLrDazQ==@vger.kernel.org, AJvYcCVTNSgtgzjWJtN7GKE1uw3jEP4qDi/rk6ydn0vfSjnZHu7aVtJuV93cIH6hlGtMEZDTpQ447ssJJL1tUM4=@vger.kernel.org, AJvYcCVaNwEcsM5RwmkNyFoEsA4ueejODl3k2WqvoH0EmaiQbwR/UgNOMAUjBr4XV8pErmvFgJ+KhuGQ+dgT@vger.kernel.org, AJvYcCXXbG6Y4Pf98e4WmeLn9rgNYirHyqRyFJqghD9B32a9PisNMMBfz8Qu8kMr9TaG9JdU+NrgOF/vJAnq1tWF@vger.kernel.org, AJvYcCXdvD6yaoH5LmtBGifFaFGW5OQ2Gj76t+FIHLfv02zT4jcxFX73riFkNAbn7PH6oJQkGoKq5bhN@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBbMrTB35b5F9bLTiChgd40hkcbrF7hlX+LxRXyYOh8U4/ZlZE
+	wXCjyqCh5ZtaLRFmB888eQRDwUz4ctmC1aNhhyfrvVbvBM30JwyXTfmrnUZKwA==
+X-Gm-Gg: ASbGnctAKAdHYTuOSzAVUti5kavXJwaCsHphVcBnM+7Ia5S27hiraF5uQSxDVwbEC8R
+	3RDLbckCvgkgnmB/PbyEeE1w7TF5JBkPVIPBhm7vJejOgeokxjuQMvN/iYg3HLk9dOiLj7KI8sx
+	uCeii8qeUGD8uaFyc3C6gMbzi1aszCXaIHZQgYinQiZm/sQCPIBA35Xas0BrXljcU1YHLY4f6pH
+	JwzmjL5b7+q68Jf48sdBWDuxA+K+Ofam4H0lqm5QvDMUc2uwTXxhyHZQBDBoje00fn37q4ttic4
+	Afk+n3XwECq5Y85q7zM7/C4qhAhe6yhFweuwDLmR8AteUAXhA3kwoLX1L8PHoVT6KmxbI7/Rd3e
+	WIktr27MyNA==
+X-Google-Smtp-Source: AGHT+IGQQtBYcyEpvl/DseiXOIUHuIfjHcKG+v891eBtTvMsoPWqjyLqnGXI8Byjt9M+YLgs+AiC9g==
+X-Received: by 2002:a17:903:2343:b0:234:914b:3841 with SMTP id d9443c01a7336-23c7a28cb75mr6322875ad.39.1751494566291;
+        Wed, 02 Jul 2025 15:16:06 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3ad405sm135345575ad.150.2025.07.02.15.16.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 15:15:50 -0700 (PDT)
-Date: Thu, 3 Jul 2025 01:15:49 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: jens.glathe@oldschoolsolutions.biz
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] arm64: dts: qcom: x1-hp-x14: Commonalize HP
- Omnibook X14 device tree
-Message-ID: <7tejkof2kec7ugpz6xugkjrcpzab27lsjpnkphj3vd3xoc4ly7@x3otjziiehju>
-References: <20250702-hp-x14-x1p-v2-0-af5b588d1979@oldschoolsolutions.biz>
- <20250702-hp-x14-x1p-v2-2-af5b588d1979@oldschoolsolutions.biz>
+        Wed, 02 Jul 2025 15:16:05 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Wed, 2 Jul 2025 15:16:04 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: a0282524688@gmail.com
+Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org,
+	brgl@bgdev.pl, andi.shyti@kernel.org, mkl@pengutronix.de,
+	mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, wim@linux-watchdog.org, jdelvare@suse.com,
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-can@vger.kernel.org, netdev@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH v13 5/7] watchdog: Add Nuvoton NCT6694 WDT support
+Message-ID: <3242fc11-4b9c-4883-ae52-4db3d9e25709@roeck-us.net>
+References: <20250627102730.71222-1-a0282524688@gmail.com>
+ <20250627102730.71222-6-a0282524688@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,88 +84,431 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250702-hp-x14-x1p-v2-2-af5b588d1979@oldschoolsolutions.biz>
-X-Authority-Analysis: v=2.4 cv=KtJN2XWN c=1 sm=1 tr=0 ts=6865af9c cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=Wb1JkmetP80A:10 a=gxl3bz0cAAAA:8 a=pGLkceISAAAA:8 a=Wy7iZ02dMdmRGSxYCMAA:9
- a=CjuIK1q_8ugA:10 a=PEH46H7Ffwr30OY-TuGO:22 a=kiRiLd-pWN9FGgpmzFdl:22
-X-Proofpoint-ORIG-GUID: rjKd3zNBGi47k2eWNJQmLmSY63MkHysX
-X-Proofpoint-GUID: rjKd3zNBGi47k2eWNJQmLmSY63MkHysX
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDE4NSBTYWx0ZWRfX3fdAHg3glGyV
- 4ulMMZkEYKdJuUXG6bsNqyI35zEn9C+zzMbf0W0ueOCcbHQsl/4oEXNIpP/x63gusSeCpXWvI89
- yXVm5SHkrBTWWVDCIikA2BAdndSSqtV1sysfk+stYLJ9KuteGAvGZZAPj8ThRvoIxKhnE1KCyk4
- cDo4Il/hYPF59kZllUPOWXlgPAdtKB+Wu125m+ptAV2cScDkMvdlIvVxVDe40c+dttwb6MmkKG4
- GifrVc0dHuquvuMiajX1V1/XqEOMWzZ4GmwN1SxBybBVOrNmMlOSotyeNg06ic3z4nW2KjysZE/
- Sd5t2glQGlNKTlGKdf455EYOb24p0GUWXubf7ZMOdIxDX+Q3nhSHZjr/x6A2KRHy/JJu3ySulu6
- Q+6BNDhM5JbHT6w5oAQ5cDK03rW558i/R5QvcJ0K7s3I0rk7lXlIdABEjqCX05FW1gXLdbNy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-02_04,2025-07-02_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 bulkscore=0 priorityscore=1501 malwarescore=0 suspectscore=0
- mlxscore=0 spamscore=0 adultscore=0 lowpriorityscore=0 phishscore=0
- clxscore=1015 mlxlogscore=855 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507020185
+In-Reply-To: <20250627102730.71222-6-a0282524688@gmail.com>
 
-On Wed, Jul 02, 2025 at 11:22:34PM +0200, Jens Glathe via B4 Relay wrote:
-> From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+On Fri, Jun 27, 2025 at 06:27:28PM +0800, a0282524688@gmail.com wrote:
+> From: Ming Yu <a0282524688@gmail.com>
 > 
-> Commonalize the HP Omnibook X14 device tree for derivation of Hamoa (x1e*/x1p6*)
-> and Purwa (x1p4*/x1*) variants. Required because the device trees are not
-> compatible.
+> This driver supports Watchdog timer functionality for NCT6694 MFD
+> device based on USB interface.
 > 
-> Signed-off-by: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+> Signed-off-by: Ming Yu <a0282524688@gmail.com>
+
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+
 > ---
->  arch/arm64/boot/dts/qcom/x1-hp-omnibook-x14.dtsi   | 1550 ++++++++++++++++++++
->  .../boot/dts/qcom/x1e80100-hp-omnibook-x14.dts     | 1544 +------------------
->  2 files changed, 1554 insertions(+), 1540 deletions(-)
+> Changes since version 12:
+> - Implement IDA in MFD driver to handle per-device IDs
+> - Use same email address in the signaturei
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/x1-hp-omnibook-x14.dtsi b/arch/arm64/boot/dts/qcom/x1-hp-omnibook-x14.dtsi
+> Changes since version 11:
+> - Use platform_device's id to replace IDA
+> 
+> Changes since version 10:
+> - Implement IDA to allocate id
+> - Add module parameters to configure WDT's timeout and pretimeout value
+> 
+> Changes since version 9:
+> 
+> Changes since version 8:
+> - Modify the signed-off-by with my work address
+> 
+> Changes since version 7:
+> - Add error handling for devm_mutex_init()
+> 
+> Changes since version 6:
+> - Fix warning
+> 
+> Changes since version 5:
+> - Modify the module name and the driver name consistently
+> 
+> Changes since version 4:
+> - Modify arguments in read/write function to a pointer to cmd_header
+> - Modify all callers that call the read/write function
+> 
+> Changes since version 3:
+> - Modify array buffer to structure
+> - Fix defines and comments
+> - Modify mutex_init() to devm_mutex_init()
+> - Drop watchdog_init_timeout()
+> 
+> Changes since version 2:
+> - Add MODULE_ALIAS()
+> - Modify the pretimeout validation procedure
+> 
+> Changes since version 1:
+> - Add each driver's command structure
+> - Fix platform driver registration
+> - Fix warnings
+> - Drop unnecessary logs
+> - Modify start() function to setup device
+> 
+>  MAINTAINERS                    |   1 +
+>  drivers/watchdog/Kconfig       |  11 ++
+>  drivers/watchdog/Makefile      |   1 +
+>  drivers/watchdog/nct6694_wdt.c | 307 +++++++++++++++++++++++++++++++++
+>  4 files changed, 320 insertions(+)
+>  create mode 100644 drivers/watchdog/nct6694_wdt.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ce276999625e..7c3edac315b4 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -17796,6 +17796,7 @@ F:	drivers/gpio/gpio-nct6694.c
+>  F:	drivers/i2c/busses/i2c-nct6694.c
+>  F:	drivers/mfd/nct6694.c
+>  F:	drivers/net/can/usb/nct6694_canfd.c
+> +F:	drivers/watchdog/nct6694_wdt.c
+>  F:	include/linux/mfd/nct6694.h
+>  
+>  NUVOTON NCT7201 IIO DRIVER
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 0c25b2ed44eb..05008d937e40 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -760,6 +760,17 @@ config MAX77620_WATCHDOG
+>  	  MAX77620 chips. To compile this driver as a module,
+>  	  choose M here: the module will be called max77620_wdt.
+>  
+> +config NCT6694_WATCHDOG
+> +	tristate "Nuvoton NCT6694 watchdog support"
+> +	depends on MFD_NCT6694
+> +	select WATCHDOG_CORE
+> +	help
+> +	  Say Y here to support Nuvoton NCT6694 watchdog timer
+> +	  functionality.
+> +
+> +	  This driver can also be built as a module. If so, the module
+> +	  will be called nct6694_wdt.
+> +
+>  config IMX2_WDT
+>  	tristate "IMX2+ Watchdog"
+>  	depends on ARCH_MXC || ARCH_LAYERSCAPE || COMPILE_TEST
+> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> index bbd4d62d2cc3..b680e4d3c1bc 100644
+> --- a/drivers/watchdog/Makefile
+> +++ b/drivers/watchdog/Makefile
+> @@ -235,6 +235,7 @@ obj-$(CONFIG_WM831X_WATCHDOG) += wm831x_wdt.o
+>  obj-$(CONFIG_WM8350_WATCHDOG) += wm8350_wdt.o
+>  obj-$(CONFIG_MAX63XX_WATCHDOG) += max63xx_wdt.o
+>  obj-$(CONFIG_MAX77620_WATCHDOG) += max77620_wdt.o
+> +obj-$(CONFIG_NCT6694_WATCHDOG) += nct6694_wdt.o
+>  obj-$(CONFIG_ZIIRAVE_WATCHDOG) += ziirave_wdt.o
+>  obj-$(CONFIG_SOFT_WATCHDOG) += softdog.o
+>  obj-$(CONFIG_MENF21BMC_WATCHDOG) += menf21bmc_wdt.o
+> diff --git a/drivers/watchdog/nct6694_wdt.c b/drivers/watchdog/nct6694_wdt.c
 > new file mode 100644
-> index 0000000000000000000000000000000000000000..7d4a474215ac97096c49e1f690229d07198c022e
+> index 000000000000..bc3689bd4b6b
 > --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/x1-hp-omnibook-x14.dtsi
-> @@ -0,0 +1,1550 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
+> +++ b/drivers/watchdog/nct6694_wdt.c
+> @@ -0,0 +1,307 @@
+> +// SPDX-License-Identifier: GPL-2.0
 > +/*
-> + * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
-> + * Copyright (c) 2024, Xilin Wu <wuxilin123@gmail.com>
-> + * Copyright (c) 2024, 2025 Jens Glathe
-
-Nit: what exactly is copyright by you?
-
-
-
-> diff --git a/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts b/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts
-> index 8d2a9b7f4730783bbaa81e488a0e99cc195a195f..b81cafea2135e869ba3652aeeec142d54033bef3 100644
-> --- a/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts
-> +++ b/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts
-> @@ -2,860 +2,19 @@
->  /*
->   * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
->   * Copyright (c) 2024, Xilin Wu <wuxilin123@gmail.com>
-> + * Copyright (c) 2025 Jens Glathe
-
-Same question.
-
->   */
->  
->  /dts-v1/;
->  
-> -#include <dt-bindings/gpio/gpio.h>
-> -#include <dt-bindings/input/gpio-keys.h>
-> -#include <dt-bindings/input/input.h>
-> -#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-> -#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
-> -
->  #include "x1e80100.dtsi"
->  #include "x1e80100-pmics.dtsi"
-> +#include "x1-hp-omnibook-x14.dtsi"
-
-If you need to send the series again, please pass -M -C
---find-copies-harder to git format-patch
-
--- 
-With best wishes
-Dmitry
+> + * Nuvoton NCT6694 WDT driver based on USB interface.
+> + *
+> + * Copyright (C) 2025 Nuvoton Technology Corp.
+> + */
+> +
+> +#include <linux/idr.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/nct6694.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +#include <linux/watchdog.h>
+> +
+> +#define DEVICE_NAME "nct6694-wdt"
+> +
+> +#define NCT6694_DEFAULT_TIMEOUT		10
+> +#define NCT6694_DEFAULT_PRETIMEOUT	0
+> +
+> +#define NCT6694_WDT_MAX_DEVS		2
+> +
+> +/*
+> + * USB command module type for NCT6694 WDT controller.
+> + * This defines the module type used for communication with the NCT6694
+> + * WDT controller over the USB interface.
+> + */
+> +#define NCT6694_WDT_MOD			0x07
+> +
+> +/* Command 00h - WDT Setup */
+> +#define NCT6694_WDT_SETUP		0x00
+> +#define NCT6694_WDT_SETUP_SEL(idx)	(idx ? 0x01 : 0x00)
+> +
+> +/* Command 01h - WDT Command */
+> +#define NCT6694_WDT_COMMAND		0x01
+> +#define NCT6694_WDT_COMMAND_SEL(idx)	(idx ? 0x01 : 0x00)
+> +
+> +static unsigned int timeout[NCT6694_WDT_MAX_DEVS] = {
+> +	[0 ... (NCT6694_WDT_MAX_DEVS - 1)] = NCT6694_DEFAULT_TIMEOUT
+> +};
+> +module_param_array(timeout, int, NULL, 0644);
+> +MODULE_PARM_DESC(timeout, "Watchdog timeout in seconds");
+> +
+> +static unsigned int pretimeout[NCT6694_WDT_MAX_DEVS] = {
+> +	[0 ... (NCT6694_WDT_MAX_DEVS - 1)] = NCT6694_DEFAULT_PRETIMEOUT
+> +};
+> +module_param_array(pretimeout, int, NULL, 0644);
+> +MODULE_PARM_DESC(pretimeout, "Watchdog pre-timeout in seconds");
+> +
+> +static bool nowayout = WATCHDOG_NOWAYOUT;
+> +module_param(nowayout, bool, 0);
+> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
+> +			   __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+> +
+> +enum {
+> +	NCT6694_ACTION_NONE = 0,
+> +	NCT6694_ACTION_SIRQ,
+> +	NCT6694_ACTION_GPO,
+> +};
+> +
+> +struct __packed nct6694_wdt_setup {
+> +	__le32 pretimeout;
+> +	__le32 timeout;
+> +	u8 owner;
+> +	u8 scratch;
+> +	u8 control;
+> +	u8 status;
+> +	__le32 countdown;
+> +};
+> +
+> +struct __packed nct6694_wdt_cmd {
+> +	__le32 wdt_cmd;
+> +	__le32 reserved;
+> +};
+> +
+> +union __packed nct6694_wdt_msg {
+> +	struct nct6694_wdt_setup setup;
+> +	struct nct6694_wdt_cmd cmd;
+> +};
+> +
+> +struct nct6694_wdt_data {
+> +	struct watchdog_device wdev;
+> +	struct device *dev;
+> +	struct nct6694 *nct6694;
+> +	union nct6694_wdt_msg *msg;
+> +	unsigned char wdev_idx;
+> +};
+> +
+> +static int nct6694_wdt_setting(struct watchdog_device *wdev,
+> +			       u32 timeout_val, u8 timeout_act,
+> +			       u32 pretimeout_val, u8 pretimeout_act)
+> +{
+> +	struct nct6694_wdt_data *data = watchdog_get_drvdata(wdev);
+> +	struct nct6694_wdt_setup *setup = &data->msg->setup;
+> +	const struct nct6694_cmd_header cmd_hd = {
+> +		.mod = NCT6694_WDT_MOD,
+> +		.cmd = NCT6694_WDT_SETUP,
+> +		.sel = NCT6694_WDT_SETUP_SEL(data->wdev_idx),
+> +		.len = cpu_to_le16(sizeof(*setup))
+> +	};
+> +	unsigned int timeout_fmt, pretimeout_fmt;
+> +
+> +	if (pretimeout_val == 0)
+> +		pretimeout_act = NCT6694_ACTION_NONE;
+> +
+> +	timeout_fmt = (timeout_val * 1000) | (timeout_act << 24);
+> +	pretimeout_fmt = (pretimeout_val * 1000) | (pretimeout_act << 24);
+> +
+> +	memset(setup, 0, sizeof(*setup));
+> +	setup->timeout = cpu_to_le32(timeout_fmt);
+> +	setup->pretimeout = cpu_to_le32(pretimeout_fmt);
+> +
+> +	return nct6694_write_msg(data->nct6694, &cmd_hd, setup);
+> +}
+> +
+> +static int nct6694_wdt_start(struct watchdog_device *wdev)
+> +{
+> +	struct nct6694_wdt_data *data = watchdog_get_drvdata(wdev);
+> +	int ret;
+> +
+> +	ret = nct6694_wdt_setting(wdev, wdev->timeout, NCT6694_ACTION_GPO,
+> +				  wdev->pretimeout, NCT6694_ACTION_GPO);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev_dbg(data->dev, "Setting WDT(%d): timeout = %d, pretimeout = %d\n",
+> +		data->wdev_idx, wdev->timeout, wdev->pretimeout);
+> +
+> +	return ret;
+> +}
+> +
+> +static int nct6694_wdt_stop(struct watchdog_device *wdev)
+> +{
+> +	struct nct6694_wdt_data *data = watchdog_get_drvdata(wdev);
+> +	struct nct6694_wdt_cmd *cmd = &data->msg->cmd;
+> +	const struct nct6694_cmd_header cmd_hd = {
+> +		.mod = NCT6694_WDT_MOD,
+> +		.cmd = NCT6694_WDT_COMMAND,
+> +		.sel = NCT6694_WDT_COMMAND_SEL(data->wdev_idx),
+> +		.len = cpu_to_le16(sizeof(*cmd))
+> +	};
+> +
+> +	memcpy(&cmd->wdt_cmd, "WDTC", 4);
+> +	cmd->reserved = 0;
+> +
+> +	return nct6694_write_msg(data->nct6694, &cmd_hd, cmd);
+> +}
+> +
+> +static int nct6694_wdt_ping(struct watchdog_device *wdev)
+> +{
+> +	struct nct6694_wdt_data *data = watchdog_get_drvdata(wdev);
+> +	struct nct6694_wdt_cmd *cmd = &data->msg->cmd;
+> +	const struct nct6694_cmd_header cmd_hd = {
+> +		.mod = NCT6694_WDT_MOD,
+> +		.cmd = NCT6694_WDT_COMMAND,
+> +		.sel = NCT6694_WDT_COMMAND_SEL(data->wdev_idx),
+> +		.len = cpu_to_le16(sizeof(*cmd))
+> +	};
+> +
+> +	memcpy(&cmd->wdt_cmd, "WDTS", 4);
+> +	cmd->reserved = 0;
+> +
+> +	return nct6694_write_msg(data->nct6694, &cmd_hd, cmd);
+> +}
+> +
+> +static int nct6694_wdt_set_timeout(struct watchdog_device *wdev,
+> +				   unsigned int new_timeout)
+> +{
+> +	int ret;
+> +
+> +	ret = nct6694_wdt_setting(wdev, new_timeout, NCT6694_ACTION_GPO,
+> +				  wdev->pretimeout, NCT6694_ACTION_GPO);
+> +	if (ret)
+> +		return ret;
+> +
+> +	wdev->timeout = new_timeout;
+> +
+> +	return 0;
+> +}
+> +
+> +static int nct6694_wdt_set_pretimeout(struct watchdog_device *wdev,
+> +				      unsigned int new_pretimeout)
+> +{
+> +	int ret;
+> +
+> +	ret = nct6694_wdt_setting(wdev, wdev->timeout, NCT6694_ACTION_GPO,
+> +				  new_pretimeout, NCT6694_ACTION_GPO);
+> +	if (ret)
+> +		return ret;
+> +
+> +	wdev->pretimeout = new_pretimeout;
+> +
+> +	return 0;
+> +}
+> +
+> +static unsigned int nct6694_wdt_get_time(struct watchdog_device *wdev)
+> +{
+> +	struct nct6694_wdt_data *data = watchdog_get_drvdata(wdev);
+> +	struct nct6694_wdt_setup *setup = &data->msg->setup;
+> +	const struct nct6694_cmd_header cmd_hd = {
+> +		.mod = NCT6694_WDT_MOD,
+> +		.cmd = NCT6694_WDT_SETUP,
+> +		.sel = NCT6694_WDT_SETUP_SEL(data->wdev_idx),
+> +		.len = cpu_to_le16(sizeof(*setup))
+> +	};
+> +	unsigned int timeleft_ms;
+> +	int ret;
+> +
+> +	ret = nct6694_read_msg(data->nct6694, &cmd_hd, setup);
+> +	if (ret)
+> +		return 0;
+> +
+> +	timeleft_ms = le32_to_cpu(setup->countdown);
+> +
+> +	return timeleft_ms / 1000;
+> +}
+> +
+> +static const struct watchdog_info nct6694_wdt_info = {
+> +	.options = WDIOF_SETTIMEOUT	|
+> +		   WDIOF_KEEPALIVEPING	|
+> +		   WDIOF_MAGICCLOSE	|
+> +		   WDIOF_PRETIMEOUT,
+> +	.identity = DEVICE_NAME,
+> +};
+> +
+> +static const struct watchdog_ops nct6694_wdt_ops = {
+> +	.owner = THIS_MODULE,
+> +	.start = nct6694_wdt_start,
+> +	.stop = nct6694_wdt_stop,
+> +	.set_timeout = nct6694_wdt_set_timeout,
+> +	.set_pretimeout = nct6694_wdt_set_pretimeout,
+> +	.get_timeleft = nct6694_wdt_get_time,
+> +	.ping = nct6694_wdt_ping,
+> +};
+> +
+> +static void nct6694_wdt_ida_free(void *d)
+> +{
+> +	struct nct6694_wdt_data *data = d;
+> +	struct nct6694 *nct6694 = data->nct6694;
+> +
+> +	ida_free(&nct6694->wdt_ida, data->wdev_idx);
+> +}
+> +
+> +static int nct6694_wdt_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct nct6694 *nct6694 = dev_get_drvdata(dev->parent);
+> +	struct nct6694_wdt_data *data;
+> +	struct watchdog_device *wdev;
+> +	int ret;
+> +
+> +	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	data->msg = devm_kzalloc(dev, sizeof(union nct6694_wdt_msg),
+> +				 GFP_KERNEL);
+> +	if (!data->msg)
+> +		return -ENOMEM;
+> +
+> +	data->dev = dev;
+> +	data->nct6694 = nct6694;
+> +
+> +	ret = ida_alloc(&nct6694->wdt_ida, GFP_KERNEL);
+> +	if (ret < 0)
+> +		return ret;
+> +	data->wdev_idx = ret;
+> +
+> +	ret = devm_add_action_or_reset(dev, nct6694_wdt_ida_free, data);
+> +	if (ret)
+> +		return ret;
+> +
+> +	wdev = &data->wdev;
+> +	wdev->info = &nct6694_wdt_info;
+> +	wdev->ops = &nct6694_wdt_ops;
+> +	wdev->timeout = timeout[data->wdev_idx];
+> +	wdev->pretimeout = pretimeout[data->wdev_idx];
+> +	if (timeout[data->wdev_idx] < pretimeout[data->wdev_idx]) {
+> +		dev_warn(data->dev, "pretimeout < timeout. Setting to zero\n");
+> +		wdev->pretimeout = 0;
+> +	}
+> +
+> +	wdev->min_timeout = 1;
+> +	wdev->max_timeout = 255;
+> +
+> +	platform_set_drvdata(pdev, data);
+> +
+> +	watchdog_set_drvdata(&data->wdev, data);
+> +	watchdog_set_nowayout(&data->wdev, nowayout);
+> +	watchdog_stop_on_reboot(&data->wdev);
+> +
+> +	return devm_watchdog_register_device(dev, &data->wdev);
+> +}
+> +
+> +static struct platform_driver nct6694_wdt_driver = {
+> +	.driver = {
+> +		.name	= DEVICE_NAME,
+> +	},
+> +	.probe		= nct6694_wdt_probe,
+> +};
+> +
+> +module_platform_driver(nct6694_wdt_driver);
+> +
+> +MODULE_DESCRIPTION("USB-WDT driver for NCT6694");
+> +MODULE_AUTHOR("Ming Yu <tmyu0@nuvoton.com>");
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:nct6694-wdt");
+> -- 
+> 2.34.1
+> 
