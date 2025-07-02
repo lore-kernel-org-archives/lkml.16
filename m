@@ -1,131 +1,83 @@
-Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5610264A6E
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 15:48:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015782D77F6;
+	Wed,  2 Jul 2025 15:48:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751471293; cv=none; b=JmohRtVK4FFqGsJiFRTAmR8inwY0fwmk5wzuC0mfAiZYtPR3gxTPcjJ/O7n60p8HAocVtNxTQ9F9to6j+ekkFQ+/QNQw+3yLijgtuqwhKcO0pCrFVzZvxBy2PB0OmtRPi3RU/2PKXcrpbQ55eiVnBTFKZ4HH5GYfIxT2XH1jyLc=
+	t=1751471302; cv=none; b=WREzYV2tW5aT2qV5Gk25KNezq4eM8+pbUuU6KuWMekH0jD6rpZ56OMhubn606QcMZ/Wmqlup9WsarYu0aJl0NmIQZbmTGah88AI7h4tC+00e/zQhYXQVD7KG+msA57MqFX2DazksLuVzkaM9Rrk7LYfCXxAjDu423I87wA24ygI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751471293; c=relaxed/simple;
-	bh=CrFtmeyPfBYUoJ7LTryEGmT/0pwcPxBwGEy8UlmESAI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N+KZkHKx0O3HSUC2WfijbUaixs7yI65TvnitJ//Ga+ipL40ELr5h9SJ1heCXH72DL+Eylh1PiHz7iMowpr+6ujU0pW5ryJbjsxy46DxYQjBuAcdTJg9PjvJEchjYMOr0ol66pt5+ZVkT7XM9/Q/O9bhKp2ajRzPpf5aG4WxL074=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=u5UeLT3t; arc=none smtp.client-ip=209.85.160.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1751471302; c=relaxed/simple;
+	bh=szBu4cc71UNcL+UQ95Dz075O5wiuTepXP1WCmzIERqM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=acQStpgzv4NAHTM/pDKSnq4PS5vmGXokPObe9SJo5NBAVKCDDmvxlKIp/Gw9qsMyCX7U7Q41tsa4XrxY38jWmFG+53TyeYyreuMZf0N3O4/1/yLr2RsZ5YADcb8qA7H1jj38M0hxTPxV0DgrDRqT6BvNIKKZvLhpgQ6gUEqAr5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=f73bxgMn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bATw47+y; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="u5UeLT3t"
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-2cc89c59cc0so39950fac.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 08:48:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751471291; x=1752076091; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NQRpPjiuNrOHNg3sriarET4axQkkS4yzIoHAaUkDTGc=;
-        b=u5UeLT3tOyUsy7B5fRheeL4nGjV03pFClgi/mQa/E+Xw0Z9iYH2s+SmFprYczo21lN
-         3Zz65eAgu9SHHVrjpm1DqGHHIJL+9E2EWFwHBu/KdyTtuAFqBw5u2sxq5rxEChlnKhkW
-         n95fAyCfyZOwsGs0weznpIoq267DnXdP08MFCkOE+SUuJstnRF7iKNulnyc0QGBCaHKJ
-         MgnlZcseq0DD+wvdWHXCikPPp02U6/bOB0PjKhRJo6QChOB2qBlN8HbFyxC0eDqMIyYu
-         PB3QYb3/ocHJgmS7Nic1lsgLwXPlTTWrE9XgilnZ3tZpHDluI4y0g36YaHWpk7tuXcrD
-         Mahw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751471291; x=1752076091;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NQRpPjiuNrOHNg3sriarET4axQkkS4yzIoHAaUkDTGc=;
-        b=SJN1OLIZRck6QKLMCiS8lFg48D6cBnIAAUhnSUlIIAmNh6YBOSuQ6xk7q31uaUCnOG
-         yOGXsueIKN129Dvpcu3dtfocuK6lorvAcb5L6ot0+JhiOAaLgIW/98tinsf3VdBgVPDn
-         Q5lBMoep6XwAuDoyTiXbqRDDwrHsDmTgR3CJ6YY1aUax02fw00PV5GDnVObHmjO7Uaiz
-         hTlRqCAj6hI3MfxYsr8HSrkcXii028EYjnpNuof46gQMjhD0iZLhkPL4/f+CuecEDV5V
-         aVDrJtTxjrIq5tf85lGcafkqxwZd2/BAbd35YbIE2ncs9P/yNw3Axp7z5TNbAqS9H1XT
-         dBBg==
-X-Forwarded-Encrypted: i=1; AJvYcCWfwFdUmuB1QBq7QLahJ1SzDeuozzwb/Vv1F+3nNg0Hm3XhgI0mhrxCehP5wOF5AGmDdUYNQmDaRY0f5jA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmGgDlFjYfAtFhCdcfBL0spIwQt8FmRu2eVeIYD5+tiTFd+6lP
-	6DVvYYDY58Cq+BG8cJCdWS6+H69MDO3w8EjKjP2uQqgSnPNflRYb/N8LqBmbrMXjQUs=
-X-Gm-Gg: ASbGncvuKvhQWeTMJt80lZpmeqHYMXbyEN3ETF7z+xOHZ7iV4TV/NY5leOjU4nyB7y7
-	ACrqCgoCaWQJvKL4S7l/Q8Mpkfa04y41iVarTZn9BEaOTxjo89i8jY7uFkY3m//EogFWX8p3Zop
-	cc/QBcyYZugB2nh65QLJ1riemG2EBea0hghxfqi9lVrRMT/zX8CadnfTV6VJse75RwI2EZHFREL
-	YkVf7xxOs9Y70DdKwvKNkIlcUnW0D0o0/WByUUR5nMgmx/yCrMUO1dMe9Y/3/bcrgMVc4lkM0rh
-	LlsNdcVxhFpStTbkHycXFCXb3HvE3PyBCN2CHJKr9a3xV9JCZGtSLarOHQgMy9cP0GT7PnjbNid
-	FkgTNxcxIXu4jjVNkCYb9X6AWn0qPQf8w+8W2qAFC98TAfEhLWg==
-X-Google-Smtp-Source: AGHT+IGWxd92U1QTaYipBmuhf+rsxHSGYIp6LfrrKBZYu+SlPYX9jUvdjobhmSYehAHe+frRt1JZsA==
-X-Received: by 2002:a05:6870:e38c:b0:2f7:53e7:1131 with SMTP id 586e51a60fabf-2f76bdeefdcmr24165fac.10.1751471290678;
-        Wed, 02 Jul 2025 08:48:10 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:5c00:24f0:997b:5458? ([2600:8803:e7e4:1d00:5c00:24f0:997b:5458])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2efd4ef29absm3899896fac.14.2025.07.02.08.48.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jul 2025 08:48:09 -0700 (PDT)
-Message-ID: <6f6d51de-7c7e-48a5-86b8-c1a77f51ab4f@baylibre.com>
-Date: Wed, 2 Jul 2025 10:48:08 -0500
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="f73bxgMn";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bATw47+y"
+Date: Wed, 2 Jul 2025 17:48:18 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751471298;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VSAVK0GU5TWvXP+ODZ1ziZYG6SMkFJRoffezLtLsz/8=;
+	b=f73bxgMnF1fBcS7WXOMnc6kEja+iUcHcyagqhNxHnFA2fkyvtpljiYainf94Q1wkk0k8oL
+	5yvSfYugRQWx6zI0tXr9RjcjOMu5nL1M3XVyRw6LvHjXEMTfL8SYhxvF/2lxvvV9r9iOT4
+	wlTxu1LZFmf2H5x6CRoeHn/y9X4FmGw79vOV0XEf9GC3ikXzcUiEp+JXKWtzGgLSl7+EcK
+	PC7ZP9JH9uNONhojtbblSkZwFEXzr+52EORT2ILSRwH9iZBv2NHSsJbFNsIP7jPgOhc4+G
+	3MyPOttZr2+/w7DREGC4Uhuuy9/pVxEDNONgZdHhQUSHRylJpu7DfGQMo8+G+Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751471298;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VSAVK0GU5TWvXP+ODZ1ziZYG6SMkFJRoffezLtLsz/8=;
+	b=bATw47+yUelqg3qqSU03c99ONUHLykGWnnniK+I7h40UvsM5J7rSF52vHgQ5eNr2ugVC1U
+	t0bxUVInbK1Mk9Dg==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Petr Mladek <pmladek@suse.com>
+Cc: John Ogness <john.ogness@linutronix.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>, David Gow <davidgow@google.com>, Arnd Bergmann <arnd@kernel.org>, 
+	Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 0/3] printk: KUnit: Followup fixes for the new KUnit test
+Message-ID: <20250702174519-0b0fb0a9-3e9b-4a1d-918c-f1a57d2c2935@linutronix.de>
+References: <20250702095157.110916-1-pmladek@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iio: imu: adis16550: rework clock range test
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Robert Budai <robert.budai@analog.com>,
- Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250702-iio-imu-adis16550-rework-clock-range-test-v1-1-b45f3a3b0dc1@baylibre.com>
- <aGVIBVsFPcVw3lN6@smile.fi.intel.com> <aGVJPRmn1-HUBb40@smile.fi.intel.com>
- <3778ad13-3b62-4f68-946d-b861b0df4272@baylibre.com>
- <aGVNhIwn7CXO_lpP@smile.fi.intel.com> <20250702163126.000007ac@huawei.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20250702163126.000007ac@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250702095157.110916-1-pmladek@suse.com>
 
-On 7/2/25 10:31 AM, Jonathan Cameron wrote:
-> On Wed, 2 Jul 2025 18:17:24 +0300
-> Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
+On Wed, Jul 02, 2025 at 11:51:54AM +0200, Petr Mladek wrote:
+> Hi,
 > 
->> On Wed, Jul 02, 2025 at 10:07:17AM -0500, David Lechner wrote:
->>> On 7/2/25 9:59 AM, Andy Shevchenko wrote:  
->>>> On Wed, Jul 02, 2025 at 05:53:57PM +0300, Andy Shevchenko wrote:  
->>>>> On Wed, Jul 02, 2025 at 09:27:45AM -0500, David Lechner wrote:  
->>>>>> Rework the clock rate range test to test if sync_mode_data != NULL
->>>>>> instead of testing if the for loop index variable. This makes it easier
->>>>>> for static analyzers to see that we aren't using an uninitialized
->>>>>> sync_mode_data [1].  
->>>>>
->>>>> But at the same time it makes it not to be the usual pattern.,,  
->>>>
->>>> Reading the static analyser output I think the first hunk is only what we need,
->>>> but this is still false positive and it's problem of that static
->>>> analyser. Have you filed a bug there? (My point is that modifying the code for
->>>> the advantage of false positives of some static analyser is wrong road to go
->>>> in my opinion.)  
->>>
->>> I agree that we shouldn't fix this _only_ to make the static analyzer
->>> happy. But I had to think quite a bit harder to see that the existing
->>> code was correct compared to what I have proposed here.
->>>
->>> But if this is a common pattern that I just haven't learned to identify
->>> at a glance yet and everybody else can easily see that the existing code
->>> is correct, then perhaps it isn't worth the change.  
->>
->> To me checking against index variable (when it's integer, obviously) is correct
->> thing to do and regular pattern. OTOH, if the "index" is a pointer and rather
->> we call it "iterator", the angle of view is different because in some cases
->> it may lead to stale or invalid value which might be mistakenly dereferenced or
->> speculated (see more in the discussion about list entry APIs [entry is a
->> keyword here] and if list_entry_is_head() is a good approach.)
->>
-> 
-> Original code looks fine to me and is a very common pattern.  So I'd argue
-> the static analyzer needs some work.
-> 
-> Jonathan
+> this patchset puts together some followup fixes for the new KUnit test
+> which were discussed on several locations.
 
-OK, we can drop the patch.
+<snip>
+
+> Arnd Bergmann (1):
+>   printk: kunit: support offstack cpumask
+> 
+> Petr Mladek (2):
+>   printk: ringbuffer: Explain why the KUnit test ignores failed writes
+>   printk: kunit: Fix __counted_by() in struct prbtest_rbdata
+> 
+>  kernel/printk/printk_ringbuffer_kunit_test.c | 78 +++++++++++++-------
+>  1 file changed, 52 insertions(+), 26 deletions(-)
+
+For the series:
+
+Reviewed-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
