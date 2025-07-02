@@ -1,155 +1,355 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 909B3229B13
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 11:07:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F98262FDC
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 11:07:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751454458; cv=none; b=UQIgVc5jiYOLKuXTsk/QNBgmKzmLl+T+GkpjEL6RCmj2iYoe718zxAoUIlqjbI6YTi9f2t93E32uptF6jRZpONhn/tgYGPWqXgJ0t7rx0sXpX0pHseXo7sv3R+TDcLabWPfdrjK/6ESC9Tq+trA2dP2aztxMfTcssIx5wyYjMDI=
+	t=1751454481; cv=none; b=ZrNkzlo5j5zdEDtqjfgP1elh4xTWE6DEI5Tt7HYz8X26zBXdhc4AU2FgSOletc29sNH20FIOjYxoV8TaRQVtcB6lGaKnHPtpDyaCvgs76mMC8scmyXyFT+txr2Q9goY+5TrvwUmQCsSUR1hbDzk2AwAmsUWCvq3zcFKGNMdufdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751454458; c=relaxed/simple;
-	bh=FcDWilOaDWcVuzP7mVz9zoKRX0Rnc7UAViC1O23BGxo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AsFcLT0UgsGMSLW6zGEn3WnciMNNuyKwtI1F2gyhXuR03mltB6qiPAe8DkSGTVdXQNy1Gua4xNQxwS058nbif5fqulfL8ti7nmATP5MMzx+Vq1wnhRV1OGqX59IIU9pUvjDYvvZM/dealhgWJ3srUEeNMljpfCTBAFGmGTV9eGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr; spf=pass smtp.mailfrom=sartura.hr; dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b=TE/+6YQJ; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sartura.hr
+	s=arc-20240116; t=1751454481; c=relaxed/simple;
+	bh=iq5EbOPuBdZmLwhjWwZ4Tu3NTW5FLwSPpNp7cvQvjwE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=eChPv8x+x4g0m+WUaDR+bvq3JEe3d5GAqVE23S7bFbnwX8RUzPfIidbglO6U2VX0UvOT5Jh3RDAcuuMlMCWznj4ELJv68F6i/q5elbbxbRhk85AtLgugUj4DZTIlO10NAm7+kV7+ZHS94UqQ7wfJcqrbMxaAHNK6QOfRaI/15JQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XvNRCZuo; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b="TE/+6YQJ"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-60dffae17f3so6031815a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 04:07:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura.hr; s=sartura; t=1751454455; x=1752059255; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rPV93Zxqd5A5yWh1+OQ3kXQBktcCdNYnO7HGfnoF97w=;
-        b=TE/+6YQJkkVhWbLqOJTGUEwxumYYTd2YCaBEDnC0z1GqaUKBjKQrUCEDYQWHj2fdqd
-         JkWVg60p3kgxDoVk2X9bpJSf0TU92JPjT3n+oUuisHxEt7x5dm7DuR5uyDR+3/mjXwH0
-         yP07bjEIZ7IN/9HlMbcsXJf3WaLOSAIg06Zx1wgEieqVVvtrZ3T6s0tMs2Jn3NjuyZMk
-         b6t0PS9kP69uY8Ff2vaTkHoNOBrU+GhwKXbrdH0L3Qt06R274X5rdg43GMoaXr4oG0Ni
-         mTWJ2OtRu7oAhWLxwWvB9CQ0TekDyXYrKiXMUyVHy1EJUWlnY/j51lyxN6Vxk6ZhKMiW
-         NqOw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XvNRCZuo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751454478;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3oAnJSM0KYfarg3+XnNxR/2W/7E08lIWfFxeFG4I6C8=;
+	b=XvNRCZuoWif6jMVdBzgA0sX+BfTatPGyYbm9sR7cqoyzJzbVU6il8rahgKlAmh2ViSkfR8
+	mAwmK4c80BqT+vggDVD0ysricbUa1cik8Xi5FlmHbG9kJcMdCpxnHDQeYQrU94nx7ybad/
+	ubcUOds4cjJglCRrlUMaXDX7zN/NOcY=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-582-QSLckNXnN22tIfbW3d-rNQ-1; Wed, 02 Jul 2025 06:49:39 -0400
+X-MC-Unique: QSLckNXnN22tIfbW3d-rNQ-1
+X-Mimecast-MFC-AGG-ID: QSLckNXnN22tIfbW3d-rNQ_1751453378
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a578958000so1707809f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 03:49:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751454455; x=1752059255;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1751453378; x=1752058178;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rPV93Zxqd5A5yWh1+OQ3kXQBktcCdNYnO7HGfnoF97w=;
-        b=T1ODdBp47b0pw3/AuSto10NEVmLIsxqT21Q/HLWjeT8RS5NMzpDOLskm9ys4AJflUp
-         f1ZNmyQgpOCCb9sCpCit5C5m2VdLcNxyvTWRoF15Xm0Ebl47M/oYYgVndMVRUPCtbUFP
-         FLNsJhqtr16ZUhqMoDqQ04ZukkUGbyCGK/HAFtexNWuccNBEu1E8UcxcD7Dxid9H06Jh
-         5/MrrHF7a16H4jPqKBfuddq682Ik7HVZLI6c4YqatfWE5Hrs0GHtH4SkcWJT6+qdABHn
-         xwEQ9sZ4BTeFkhXmxzmqmxMWMb68R9qH92KrHK0I76OJb9cFnyhaRIqK6DTITlvkrq+Z
-         CbeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXWpiX3Eoum40jgrR5WQZdKMV3WBkoxnDrKyR4qHvYFeSbV1PNaCJR++cLnqkHqrzB8qH3vYT3RX1H53DM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz69eOAibw1cetxEJXcrSj5fpxI+aFrc4kF+ZI7VNNT2GsPXvT2
-	uKFSY1ICxvxz3KzDVTCBaofBogz7Ew/i/o3+pIh2qS1wAD3zcBcciyY3xjUliEY5/briv1SGuWE
-	imq3eOV8VAGDt731oa4eEg6vf6x71xXGIJ/hDjWi+wg==
-X-Gm-Gg: ASbGncv0FHq9+B6r80EyzyePkQmjUfZWTKynH2dqVfgt4NI1sEj6Hd7O8UZvL4YTp3m
-	6MxhjmdRRHkmGkLGQqAolV7XNj4bvLvh74hXD6Amn0pUridxlgVOGuO3WBRYOBqH5hl6jqcySOb
-	qY8rnRVkjFWHSn5CRFhzppWs8YCWxGD2fFPgUmhCR2/Vq2
-X-Google-Smtp-Source: AGHT+IHeGpjjGYCSscOTPbZ6xb8rb5MXGznl/2SBz7yoEFM7auQsCbFTVHuUlPyoGrfnlhoMTudLPILywpv+/3CBf3c=
-X-Received: by 2002:a17:906:c358:b0:ade:470b:d5ac with SMTP id
- a640c23a62f3a-ae3c2c7d588mr194441366b.56.1751454454694; Wed, 02 Jul 2025
- 04:07:34 -0700 (PDT)
+        bh=3oAnJSM0KYfarg3+XnNxR/2W/7E08lIWfFxeFG4I6C8=;
+        b=K9euXdEKABhP4j0GtBEgM3IXI6jKhN0DXHwNASO0KxRBJ/x2vlqDVzjoOsIhgiHH6J
+         hUtEyVNV6oMJdfnohgDUbjemA5EZ89czFso8bf2eiC8U0sPV/K6IWL6dNbnBggImMC+o
+         P2PVBtXJeVAqwqjSbCerrgTXx7UbHkGchXz3jOc1BYm1uK4S4t8dvTebkSz6Y1UXOIj4
+         boUVBvZZdQ7gchxEHZishajHPgyYtA5r3KRbWpb0xxgH+MlW7xseAUsZuuZ6goKeBq7d
+         zTpCBwN+yFIxMoWnoTUcgUxWiZac5pL+2YHkenZMVZEN++WGNhJkk+YJb/sK9W8zcQnU
+         bc0g==
+X-Gm-Message-State: AOJu0Yzqw0KWC6edzCdIykgH7muWKYoxu1GWnutS8K4sHAvhI3TmmYWD
+	k2vYE7utPd6XFAtCzqRZeh1hy6BVUiT9f3WDDaahLsKwOPSt3ejOxZusVW/qID44ES2WnBnzblW
+	8c1ZNXEA5jJe5y9Qoy4Bm39gjhK9LQZ1GZbekq75A62pVD0PPDlQtoxls7Skmwa+xg+5uDhr4ov
+	eUj9K/qL5136Tono1BpoZlyrApFBwsHD77GasMTRUq21d80rk2
+X-Gm-Gg: ASbGncukpQatBlCuKuMBZT9NxTvrMMdQ9d51e7nks2rMCbvPa/cwzOt/vk+Nbi0X+Z0
+	BFuBqWu9W/cm9qaYq9+ru1D66WOWiCj+x6sooJA4Ei4gHI7nFOn9jcIP9Qw9/7ZsGRdrE3XcO+c
+	xzDLwUI74N9Ky0UpjTFDBVfkCyBOiB4bblR2zAKjyWQPstDJh/oLnPPZHUAmWvix6OfOjVd7BOv
+	zcb0LuLoNSZGP7Jpavucwcc+Y2E0fR5g9iY9PxvQeUlRUYtoO0zS+FM2Qsq/VDvhG4cZY7CD/++
+	hHBMsuXB7+BqpOfX
+X-Received: by 2002:a5d:5f4e:0:b0:3a4:fbaf:749e with SMTP id ffacd0b85a97d-3b20234d94cmr1583878f8f.49.1751453377782;
+        Wed, 02 Jul 2025 03:49:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGqpc4JaEHI4XLQrd/hrL7HETc6C5MvZ9hTJGeziQf4Dkb9UiYdEYneULGVBMvUpSbvMTd7UQ==
+X-Received: by 2002:a5d:5f4e:0:b0:3a4:fbaf:749e with SMTP id ffacd0b85a97d-3b20234d94cmr1583828f8f.49.1751453377074;
+        Wed, 02 Jul 2025 03:49:37 -0700 (PDT)
+Received: from localhost ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a88c8013fesm15956078f8f.38.2025.07.02.03.49.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Jul 2025 03:49:36 -0700 (PDT)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org,
+	David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Jann Horn <jannh@google.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Zi Yan <ziy@nvidia.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Joshua Hahn <joshua.hahnjy@gmail.com>,
+	Rakie Kim <rakie.kim@sk.com>,
+	Byungchul Park <byungchul@sk.com>,
+	Gregory Price <gourry@gourry.net>,
+	Ying Huang <ying.huang@linux.alibaba.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Pedro Falcato <pfalcato@suse.de>,
+	Rik van Riel <riel@surriel.com>,
+	Harry Yoo <harry.yoo@oracle.com>,
+	Lance Yang <ioworker0@gmail.com>,
+	Oscar Salvador <osalvador@suse.de>
+Subject: [PATCH v2 4/4] mm: remove boolean output parameters from folio_pte_batch_ext()
+Date: Wed,  2 Jul 2025 12:49:26 +0200
+Message-ID: <20250702104926.212243-5-david@redhat.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250702104926.212243-1-david@redhat.com>
+References: <20250702104926.212243-1-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250613114148.1943267-1-robert.marko@sartura.hr>
- <3ba837f8-70bb-4b9e-a9f9-0e71b9e073c4@app.fastmail.com> <CA+HBbNFd5hCKqUZY25Sws-o-0QALLue-JROyze_9biyuZZv4mg@mail.gmail.com>
- <3e522dcc-3b68-4137-bd3a-dcc2c889dbd3@app.fastmail.com>
-In-Reply-To: <3e522dcc-3b68-4137-bd3a-dcc2c889dbd3@app.fastmail.com>
-From: Robert Marko <robert.marko@sartura.hr>
-Date: Wed, 2 Jul 2025 13:07:23 +0200
-X-Gm-Features: Ac12FXxa3OU2rP7QnwGpqKyk1qKa-0zp1Qh_CY94xN7qIB9S3-V2AaGGog_Qezo
-Message-ID: <CA+HBbNF6zfy=D=+34HXBPdzsfHo6aDbhcJa7Tf7YitYedK1a6A@mail.gmail.com>
-Subject: Re: [PATCH v7 0/6] arm64: lan969x: Add support for Microchip LAN969x SoC
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Olivia Mackall <olivia@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	"David S . Miller" <davem@davemloft.net>, Vinod Koul <vkoul@kernel.org>, 
-	Andi Shyti <andi.shyti@kernel.org>, Mark Brown <broonie@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, ore@pengutronix.de, luka.perkov@sartura.hr, 
-	Daniel Machon <daniel.machon@microchip.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 30, 2025 at 3:54=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrote=
-:
->
-> On Mon, Jun 30, 2025, at 15:21, Robert Marko wrote:
-> > On Mon, Jun 16, 2025 at 8:34=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> w=
-rote:
-> >> On Fri, Jun 13, 2025, at 13:39, Robert Marko wrote:
-> >>
-> >> If the drivers on ARCH_LAN969X are largely shared with those on
-> >> ARCH_AT91, should they perhaps depend on a common symbol?
-> >>
-> >> That could be either the existing ARCH_AT91 as we do with LAN966,
-> >> or perhaps ARCH_MICROCHIP, which is already used for riscv/polarfire.
-> >
-> > Hi Arnd, I thought about this, but I am not sure whether its worth it
-> > since we need LAN969x arch anyway for other drivers that currently
-> > depend on LAN966x or SparX-5 but will be extended for LAN969x (I have
-> > this already queued locally but need this to land first).
->
-> I think in that case we would want one symbol for all of the above.
-> We have a couple of cases where there multiple SoC product families
-> get handled by a shared config symbol to make life easier for the
-> kernel:
->
-> - ARCH_IMX contains multiple chip families that are now owned
->   by NXP but that have a complex history with acquisitions and
->   product families that mix-and-match IP blocks, similar to
->   Microchip
->
-> - ARCH_EXYNOS contains chips from Samsung, Google, Tesla and Axis
->   that all share a lot of components because they are all based on
->   Samsung designs
->
-> - ARCH_BCM contains several chip families that all started out
->   in Broadcom but actually share very few common components.
->
-> On the other hand, we have TI with its davinci, omap, omap2
-> keystone2 and k3 platforms, or Marvell with orion, mvebu,
-> pxa, mmp, octeon, octeontx, thunderx and thunderx2 platforms
-> that overlap to varying degrees but use separate Kconfig symbols.
->
-> Since you already have an ARCH_MICROCHIP used by one of the
-> microchip platforms, the simplest approach seems to me to
-> include at91, lan969x, lan966x and sparx-5 under that as well.
-> You could just select that symbol from each of the four
-> and then change any driver that is used by more than one of
-> these families to use 'depends on ARCH_MICROCHIP' instead of
-> listing them individually.
+Instead, let's just allow for specifying through flags whether we want
+to have bits merged into the original PTE.
 
-Ok, I get the idea, I will rework the series to pivot to ARCH_MICROCHIP.
+For the madvise() case, simplify by having only a single parameter for
+merging young+dirty. For madvise_cold_or_pageout_pte_range() merging the
+dirty bit is not required, but also not harmful. This code is not that
+performance critical after all to really force all micro-optimizations.
 
-Regards,
-Robert
+As we now have two pte_t * parameters, use PageTable() to make sure we
+are actually given a pointer at a copy of the PTE, not a pointer into
+an actual page table.
 
->
-> I assume the mips based PIC32 and VCOREIII (ocelot/jaguar)
-> are distant enough that they wouldn't share any drivers with
-> the other families any more, but they could be put into that
-> as well if that helps.
->
->      Arnd
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ mm/internal.h | 65 +++++++++++++++++++++++++++++++++------------------
+ mm/madvise.c  | 26 ++++-----------------
+ mm/memory.c   |  8 ++-----
+ mm/util.c     |  2 +-
+ 4 files changed, 50 insertions(+), 51 deletions(-)
 
+diff --git a/mm/internal.h b/mm/internal.h
+index 6c92956ac4fd9..b7131bd3d1ad1 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -208,6 +208,18 @@ typedef int __bitwise fpb_t;
+ /* Compare PTEs respecting the soft-dirty bit. */
+ #define FPB_RESPECT_SOFT_DIRTY		((__force fpb_t)BIT(1))
+ 
++/*
++ * Merge PTE write bits: if any PTE in the batch is writable, modify the
++ * PTE at @ptentp to be writable.
++ */
++#define FPB_MERGE_WRITE			((__force fpb_t)BIT(2))
++
++/*
++ * Merge PTE young and dirty bits: if any PTE in the batch is young or dirty,
++ * modify the PTE at @ptentp to be young or dirty, respectively.
++ */
++#define FPB_MERGE_YOUNG_DIRTY		((__force fpb_t)BIT(3))
++
+ static inline pte_t __pte_batch_clear_ignored(pte_t pte, fpb_t flags)
+ {
+ 	if (!(flags & FPB_RESPECT_DIRTY))
+@@ -220,16 +232,12 @@ static inline pte_t __pte_batch_clear_ignored(pte_t pte, fpb_t flags)
+ /**
+  * folio_pte_batch_flags - detect a PTE batch for a large folio
+  * @folio: The large folio to detect a PTE batch for.
++ * @vma: The VMA. Only relevant with FPB_MERGE_WRITE, otherwise can be NULL.
+  * @ptep: Page table pointer for the first entry.
+- * @pte: Page table entry for the first page.
++ * @ptentp: Pointer to a COPY of the first page table entry whose flags this
++ *	    function updates based on @flags if appropriate.
+  * @max_nr: The maximum number of table entries to consider.
+  * @flags: Flags to modify the PTE batch semantics.
+- * @any_writable: Optional pointer to indicate whether any entry except the
+- *		  first one is writable.
+- * @any_young: Optional pointer to indicate whether any entry except the
+- *		  first one is young.
+- * @any_dirty: Optional pointer to indicate whether any entry except the
+- *		  first one is dirty.
+  *
+  * Detect a PTE batch: consecutive (present) PTEs that map consecutive
+  * pages of the same large folio in a single VMA and a single page table.
+@@ -242,28 +250,32 @@ static inline pte_t __pte_batch_clear_ignored(pte_t pte, fpb_t flags)
+  * must be limited by the caller so scanning cannot exceed a single VMA and
+  * a single page table.
+  *
++ * Depending on the FPB_MERGE_* flags, the pte stored at @ptentp will
++ * be updated: it's crucial that a pointer to a COPY of the first
++ * page table entry, obtained through ptep_get(), is provided as @ptentp.
++ *
+  * This function will be inlined to optimize based on the input parameters;
+  * consider using folio_pte_batch() instead if applicable.
+  *
+  * Return: the number of table entries in the batch.
+  */
+ static inline unsigned int folio_pte_batch_flags(struct folio *folio,
+-		pte_t *ptep, pte_t pte, unsigned int max_nr, fpb_t flags,
+-		bool *any_writable, bool *any_young, bool *any_dirty)
++		struct vm_area_struct *vma, pte_t *ptep, pte_t *ptentp,
++		unsigned int max_nr, fpb_t flags)
+ {
++	bool any_writable = false, any_young = false, any_dirty = false;
++	pte_t expected_pte, pte = *ptentp;
+ 	unsigned int nr, cur_nr;
+-	pte_t expected_pte;
+-
+-	if (any_writable)
+-		*any_writable = false;
+-	if (any_young)
+-		*any_young = false;
+-	if (any_dirty)
+-		*any_dirty = false;
+ 
+ 	VM_WARN_ON_FOLIO(!pte_present(pte), folio);
+ 	VM_WARN_ON_FOLIO(!folio_test_large(folio) || max_nr < 1, folio);
+ 	VM_WARN_ON_FOLIO(page_folio(pfn_to_page(pte_pfn(pte))) != folio, folio);
++	/*
++	 * Ensure this is a pointer to a copy not a pointer into a page table.
++	 * If this is a stack value, it won't be a valid virtual address, but
++	 * that's fine because it also cannot be pointing into the page table.
++	 */
++	VM_WARN_ON(virt_addr_valid(ptentp) && PageTable(virt_to_page(ptentp)));
+ 
+ 	/* Limit max_nr to the actual remaining PFNs in the folio we could batch. */
+ 	max_nr = min_t(unsigned long, max_nr,
+@@ -279,12 +291,12 @@ static inline unsigned int folio_pte_batch_flags(struct folio *folio,
+ 		if (!pte_same(__pte_batch_clear_ignored(pte, flags), expected_pte))
+ 			break;
+ 
+-		if (any_writable)
+-			*any_writable |= pte_write(pte);
+-		if (any_young)
+-			*any_young |= pte_young(pte);
+-		if (any_dirty)
+-			*any_dirty |= pte_dirty(pte);
++		if (flags & FPB_MERGE_WRITE)
++			any_writable |= pte_write(pte);
++		if (flags & FPB_MERGE_YOUNG_DIRTY) {
++			any_young |= pte_young(pte);
++			any_dirty |= pte_dirty(pte);
++		}
+ 
+ 		cur_nr = pte_batch_hint(ptep, pte);
+ 		expected_pte = pte_advance_pfn(expected_pte, cur_nr);
+@@ -292,6 +304,13 @@ static inline unsigned int folio_pte_batch_flags(struct folio *folio,
+ 		nr += cur_nr;
+ 	}
+ 
++	if (any_writable)
++		*ptentp = pte_mkwrite(*ptentp, vma);
++	if (any_young)
++		*ptentp = pte_mkyoung(*ptentp);
++	if (any_dirty)
++		*ptentp = pte_mkdirty(*ptentp);
++
+ 	return min(nr, max_nr);
+ }
+ 
+diff --git a/mm/madvise.c b/mm/madvise.c
+index fe363a14daab3..9de9b7c797c63 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -344,13 +344,12 @@ static inline bool can_do_file_pageout(struct vm_area_struct *vma)
+ 
+ static inline int madvise_folio_pte_batch(unsigned long addr, unsigned long end,
+ 					  struct folio *folio, pte_t *ptep,
+-					  pte_t pte, bool *any_young,
+-					  bool *any_dirty)
++					  pte_t *ptentp)
+ {
+ 	int max_nr = (end - addr) / PAGE_SIZE;
+ 
+-	return folio_pte_batch_flags(folio, ptep, pte, max_nr, 0, NULL,
+-				     any_young, any_dirty);
++	return folio_pte_batch_flags(folio, NULL, ptep, ptentp, max_nr,
++				     FPB_MERGE_YOUNG_DIRTY);
+ }
+ 
+ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
+@@ -488,13 +487,7 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
+ 		 * next pte in the range.
+ 		 */
+ 		if (folio_test_large(folio)) {
+-			bool any_young;
+-
+-			nr = madvise_folio_pte_batch(addr, end, folio, pte,
+-						     ptent, &any_young, NULL);
+-			if (any_young)
+-				ptent = pte_mkyoung(ptent);
+-
++			nr = madvise_folio_pte_batch(addr, end, folio, pte, &ptent);
+ 			if (nr < folio_nr_pages(folio)) {
+ 				int err;
+ 
+@@ -724,11 +717,7 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned long addr,
+ 		 * next pte in the range.
+ 		 */
+ 		if (folio_test_large(folio)) {
+-			bool any_young, any_dirty;
+-
+-			nr = madvise_folio_pte_batch(addr, end, folio, pte,
+-						     ptent, &any_young, &any_dirty);
+-
++			nr = madvise_folio_pte_batch(addr, end, folio, pte, &ptent);
+ 			if (nr < folio_nr_pages(folio)) {
+ 				int err;
+ 
+@@ -753,11 +742,6 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned long addr,
+ 					nr = 0;
+ 				continue;
+ 			}
+-
+-			if (any_young)
+-				ptent = pte_mkyoung(ptent);
+-			if (any_dirty)
+-				ptent = pte_mkdirty(ptent);
+ 		}
+ 
+ 		if (folio_test_swapcache(folio) || folio_test_dirty(folio)) {
+diff --git a/mm/memory.c b/mm/memory.c
+index 26a82b82863b0..0269edb520987 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -972,10 +972,9 @@ copy_present_ptes(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma
+ 		 pte_t *dst_pte, pte_t *src_pte, pte_t pte, unsigned long addr,
+ 		 int max_nr, int *rss, struct folio **prealloc)
+ {
++	fpb_t flags = FPB_MERGE_WRITE;
+ 	struct page *page;
+ 	struct folio *folio;
+-	bool any_writable;
+-	fpb_t flags = 0;
+ 	int err, nr;
+ 
+ 	page = vm_normal_page(src_vma, addr, pte);
+@@ -995,8 +994,7 @@ copy_present_ptes(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma
+ 		if (vma_soft_dirty_enabled(src_vma))
+ 			flags |= FPB_RESPECT_SOFT_DIRTY;
+ 
+-		nr = folio_pte_batch_flags(folio, src_pte, pte, max_nr, flags,
+-					   &any_writable, NULL, NULL);
++		nr = folio_pte_batch_flags(folio, src_vma, src_pte, &pte, max_nr, flags);
+ 		folio_ref_add(folio, nr);
+ 		if (folio_test_anon(folio)) {
+ 			if (unlikely(folio_try_dup_anon_rmap_ptes(folio, page,
+@@ -1010,8 +1008,6 @@ copy_present_ptes(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma
+ 			folio_dup_file_rmap_ptes(folio, page, nr, dst_vma);
+ 			rss[mm_counter_file(folio)] += nr;
+ 		}
+-		if (any_writable)
+-			pte = pte_mkwrite(pte, src_vma);
+ 		__copy_present_ptes(dst_vma, src_vma, dst_pte, src_pte, pte,
+ 				    addr, nr);
+ 		return nr;
+diff --git a/mm/util.c b/mm/util.c
+index cf41edceec7d2..ce826ca82a11d 100644
+--- a/mm/util.c
++++ b/mm/util.c
+@@ -1197,6 +1197,6 @@ EXPORT_SYMBOL(compat_vma_mmap_prepare);
+ unsigned int folio_pte_batch(struct folio *folio, pte_t *ptep, pte_t pte,
+ 		unsigned int max_nr)
+ {
+-	return folio_pte_batch_flags(folio, ptep, pte, max_nr, 0, NULL, NULL, NULL);
++	return folio_pte_batch_flags(folio, NULL, ptep, &pte, max_nr, 0);
+ }
+ #endif /* CONFIG_MMU */
+-- 
+2.49.0
 
-
---=20
-Robert Marko
-Staff Embedded Linux Engineer
-Sartura d.d.
-Lendavska ulica 16a
-10000 Zagreb, Croatia
-Email: robert.marko@sartura.hr
-Web: www.sartura.hr
