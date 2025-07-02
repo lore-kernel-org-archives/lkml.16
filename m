@@ -1,190 +1,149 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2044.outbound.protection.outlook.com [40.107.223.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2D58253F35
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 09:45:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751449512; cv=fail; b=X+t54nbLrthUFMmyE1CUcThzsY5Id4G8ZSyab2LsiWPEOWnSmrQkGZNjC/N6pavZPXTmh06GO12saQDjLiTDjy+UlqgWAlpRMLNVDPVsW4CekmdFkON1uOXu5v3Hcv/4uKNHUZ2uIxpUnm0Gl6XGl8xO0N8At2HNjlSofWm9LO4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751449512; c=relaxed/simple;
-	bh=4i9SqKP9egU62CLbc8J0O7CGQqKNFUq65F4LFrLNCH8=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=YKnByMP8tWbcCKSKbB1eB4HrHLessVQQnjDG29NuoR+iBcQhEBofRSlFUMnqQks9Jc8y5gGTn4DUp/6rJ15tDLNaORyXxkk7H0ySbQh0+8yabMHCXQUHE0ZDUTmWbU6woPgIg5MIoAgEIVUReMu+h1aap6mHA/V7z3U+QNogCuA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=0lYWb11D; arc=fail smtp.client-ip=40.107.223.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7636D25A33A
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 09:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751449517; cv=none; b=l9rLVB85oxMDUhag9H0DFTd+vHcuyzNg5A9HWR7nw28CoN3/DFM2vl33mWYy1C4f5dgh29pCgjRJIrYHHLsREXPpqWDFl8gN3QYgkcDxXaNf8q4CCwX3cjteJtJTUV2jeBAD5r/2x7FSVJaR4dRq9kJum5knIN91L8he8Ep9FgY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751449517; c=relaxed/simple;
+	bh=S/Gi5LeZyzcplGlcKQbBKNkO/XhokSlE8LgOXcbKviY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cAV3B55IgHTSQnQ5hZ2GI+1G1QaQwUUYVHVl/QISKgfuBDs5WgZ9cBgop/ariv3CY62DfHPPI4wOd4ew2x+EldxM0R2TZ793gEKj4DtmsN1KZ6vtHM0Q4tuHtnzOnfnwwIFtClHW3MIM1IshgJtviZcMQvTY1nCycMdc+3tdUKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=t2VQyLw/; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="0lYWb11D"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EeOk3tmZY4JTuODwnJ/z+KjikGv2dcpZTduaIVSlSHLXp9aKGAL/4wFMDXNewuWOpsAJjhjhP2G751xz2DQBwID425NmX2g6qeVaSvGTGMgvsWjHi4gcwt2MY04yiLIqvXi23OGZbS4Lv1VdHuf9ZnICjqcCjcCcq8GeTT27MYJMzEGBfiIVTFiuO0TmsOMWwan4oF0FXccGbBJrOOMQ7VHj1ZDhzBN4JaUpoSF71dW8qX9fYGiCLdRg+kt/vnRQKIqBZqSLByoH4WpI3HHwn+RzSARtShccEFOUGGdg4CqpYD4TsqB1PYelysXFl4L766yEFN5agIt+ioAP0B1Vug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=k8LJ+4uCjtV6W2ZzUUmy+EkSbODZ0ojMlqBV8YBUN8A=;
- b=uTaeSSpBzzldUN+40JOipEXKRZm2ZItrZMgxucBjb67sgpg2Gd5di6oNE5b4BT0VP9L8IWJitBN1xNJ6NWhGiPM2q0oHpaNP3Ea7LKNpffN617yLxX3v0XLYWTWvzPw/l0bqbcfDOnjdtOn/Wpr+tgM+0Fguz4LkJhdeoOYc2qLcvodrFl9j5jTUoGHmXad1P/6Lg1YflgTA5o+i3dWX/w/kvEjfeZzeoT7FOrVeXmSHOfGcyFjgwNWZJ9SwKzuocgoizF/fUZ5FT0g4RDmNf3n99MyTVLkA/j5KjrRPatMlirosPaUgvuzn5TDdO4+PP77yLrlKomLbvLAx/U4s7A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k8LJ+4uCjtV6W2ZzUUmy+EkSbODZ0ojMlqBV8YBUN8A=;
- b=0lYWb11DsWKiXHHWcOIyUKu7a85RBK2Kam43SleR/XHu8ywCGMivrbOy4jPos7xZhCzSuS4hmNxpzZR/YfZCBvYXPEMzajB20iJDAQFp/50b6dOWfvRnRNQTFWgCGy9uU1BTqU1TmBsYU0xu60urrtbSGBKHouxeYLcfd334Kxg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BN9PR12MB5163.namprd12.prod.outlook.com (2603:10b6:408:11c::7)
- by SJ0PR12MB6880.namprd12.prod.outlook.com (2603:10b6:a03:485::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.23; Wed, 2 Jul
- 2025 09:45:07 +0000
-Received: from BN9PR12MB5163.namprd12.prod.outlook.com
- ([fe80::61ca:6d43:a98d:3b7f]) by BN9PR12MB5163.namprd12.prod.outlook.com
- ([fe80::61ca:6d43:a98d:3b7f%4]) with mapi id 15.20.8880.026; Wed, 2 Jul 2025
- 09:45:06 +0000
-Message-ID: <bdeb6955-9288-41ec-ba36-56fc48127c0e@amd.com>
-Date: Wed, 2 Jul 2025 15:15:00 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/8] Introduce debugfs support in IOMMU
-To: Vasant Hegde <vasant.hegde@amd.com>, joro@8bytes.org,
- suravee.suthikulpanit@amd.com, will@kernel.org, robin.murphy@arm.com,
- linux-kernel@vger.kernel.org, iommu@lists.linux.dev
-References: <20250604163647.1439-1-dheerajkumar.srivastava@amd.com>
- <b3500475-f6e8-42fe-85bb-baca2b67d7a6@amd.com>
-Content-Language: en-US
-From: Dheeraj Kumar Srivastava <dheerajkumar.srivastava@amd.com>
-In-Reply-To: <b3500475-f6e8-42fe-85bb-baca2b67d7a6@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0117.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:96::21) To BN9PR12MB5163.namprd12.prod.outlook.com
- (2603:10b6:408:11c::7)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="t2VQyLw/"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-553b9eb2299so6836782e87.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 02:45:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751449514; x=1752054314; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=k7z1rGy5kwDJc130oRSONcDs2Yqk/KXeqwp11/pB9Ug=;
+        b=t2VQyLw/DFWahyXBS9z1gsSFz9SrekW5NRoSEXsDlfdw4hTF7P8XgNH2ES9Tqqy1CD
+         Is8ZnSQ2IHqOmHgvgdpi+XjnJetZ2TiJLluwOmGdJWPLJUwL5cRwS3wMHTeh3+6HqZ5k
+         cmWA3holCNtAeMWX3SDF5BsAxRt1tzL80TPesb56ekcFnyK0S+28PPE7+Bg3JEFkC6CD
+         2XDnvtu+338qNARkPz42PeVlJWzP9nkhDOir6RLPZypPrGLIGMZtVFuT6GxuXHmgh5us
+         tto6EPX1K/2KFgyGqyzuQ+GfUgdKhAw84kkB+P3wUwI/NaZL+QWjGJEunT25tdcpjJov
+         2FnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751449514; x=1752054314;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=k7z1rGy5kwDJc130oRSONcDs2Yqk/KXeqwp11/pB9Ug=;
+        b=dyRR49DKEFDFUmy4SWJkglJuzNhe7poE8nYnz6uO2X7+Rvm67llbD+J/aV0G5IHtb+
+         HM9l8EwFMHYVem9XMVhcFDrzv3RSxSl4SNIrnCjM0jdkb/CSmbxk0eFi+imJzAquz8xq
+         cg2eFMalyO1yf79OEi8W6vN8gXPmNGytrvHNLxESQWVq8DryYz5IDkbJiXBEEvPIE72+
+         cnMKLgXd+BX+xvCFwbJgvKrggVEaRU2QD/fxxiETKYK2O0MuO8US5w1g/CQ7jCzMC0Wf
+         v0WNnV2fHThCm/HJguvFX/OisUSziJtn4uAaJg5jXfz8o021QdhvFucS1hpFLkCV009c
+         Kp1w==
+X-Forwarded-Encrypted: i=1; AJvYcCVstwN6UHFDtoi3JmjWnh+RMKR8JXKT2qH/qqlU42gqNLAxkTQ29dGVkf9gZVcDnFicGi7FHbYeYjYrv00=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzg8/BmR+c37yq61ZKxG3l+DpjjBv1ieSHS0SlUIvmOuEm6WMhQ
+	8MiMjtcB2IM+u5gmx0g7y9+/BDFmMGpSuE9XwLTV1KgXccPKawzpLrORwNmuwoRiCXvEWu0G/fr
+	O0zAdAW4QoJvWRb9tDcwzEJMXCF87a74+z7PZFPlR8A==
+X-Gm-Gg: ASbGnct9WyzGmhxa5qEO/FbcyobC4dAskLYKJPua7af+n42V84rktUewwOVz8I5zHax
+	sBxPB3/4FD7OAJ02TWz9Wr1h3Tdn5QE6EddA10+hgKi8HKYNrhwLSLbnz6+pFZaJDkcoaY6Zcn0
+	laIC8pPrC07tUvMknIyJJ3SebCJ6kBr1HSYyecLnuri3QbLtYDkDNH3uXmGSv3cLUQLShV+itTD
+	wbzEpM6qdY=
+X-Google-Smtp-Source: AGHT+IE8W4lgL/E900nn9WZMrFeXvo0A1wUnDIjQRF5OvkEGaEQBoXV2VKS0H+V3dh3c1ZzkiuNZt46BZHhi2UX/HrE=
+X-Received: by 2002:a05:6512:2312:b0:553:6961:f6b1 with SMTP id
+ 2adb3069b0e04-55628e945f3mr642886e87.11.1751449513608; Wed, 02 Jul 2025
+ 02:45:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN9PR12MB5163:EE_|SJ0PR12MB6880:EE_
-X-MS-Office365-Filtering-Correlation-Id: 512ff3a6-f303-4c90-1b11-08ddb94d206f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SFB2RTR5a1hZblY1aU1INE40NU9sck9xMkdzY0ltWk16bVlVWmk5RlJ2VkMx?=
- =?utf-8?B?R2VzSnpGVTAremgvdmFPMDh3QWNxZmYrcGFKcC93NmJSWkMxSkxVOFdzakRN?=
- =?utf-8?B?QURMaGZhalduT0Y2SEhWaEcwMnplUEp5OWJQV2p4Rk5GOEdyTTlqcFNabFE4?=
- =?utf-8?B?bFRGTVRKRVZ5UUdsRzRJRFhSMloyZTB1QkZoZTRCWUVjeFdSbEs3b2NkcWpm?=
- =?utf-8?B?SW5tQTU4WmsxT3JrWnRGSFBtTVBkRGtDc3AxSklYL0N3Z25ldFZpZmg4YUJr?=
- =?utf-8?B?UmpiV1VaM2NPdDFYM2dxSzkzaUVXNVR3YmpmV0IxdHBSVEZSVEFMU3F0L3FY?=
- =?utf-8?B?Qk9jTE5jbUI4UmhDOEZtNDVOYm1ldWNpVEorbGRSSXhLSStPQlFnSE9qbjl2?=
- =?utf-8?B?VkV3ZE9OVCt2WFlwam45MVJyUEZVVEh2MWtOVUVBQ3BEb1NSdzdPd3JZVjRx?=
- =?utf-8?B?QWpFRmx1d254bEpoYUdnajFqcHU5elR1UE1sQ3RhcjFncVdVRVFHQmMzc1l4?=
- =?utf-8?B?eVJJbDBRSjI0djFqcXpzWENteFRDT0NVL2JjcnFCZDlNbjVxV2drYXk5Y1hP?=
- =?utf-8?B?UGpNS2NpcVlxWGd6eG56VGRiVTJ1Qno2Nkdha1AzbkRGSDluMkZSZWZHVjZ2?=
- =?utf-8?B?Wi9vR0lFWUN5Nm50Z0tjSGorVHYrQnlQbDdHTjVub2FKeTc2RXp6Z3ZEc29i?=
- =?utf-8?B?VE12UzdTdk5vdm9LWUZQV09BQWZWVFJvVC9DdWNTY1BIZGt3OG8zSDMwOFFn?=
- =?utf-8?B?MXlpNHdPMmJVWFh3MFJISW9SZHhhRW52a0tDeFdGS2xsZFdYVkloSkdNWHhZ?=
- =?utf-8?B?TEpKQ1pGcDBuMi9BWitYMUx3UTdJM01mWGs1dmR4dzduTHJmMEYyOXhWN2oy?=
- =?utf-8?B?blZpeGhodVY2VWhaT3FMbzR1bTIxNEFLMHZCMnhHYmExenFZNElXV3lGMDdQ?=
- =?utf-8?B?YVdWQkcvd044Q3VvWTFkK2IwbGpXN01FN0xUcG5JYnpFZEpjU1FicWhTaHBz?=
- =?utf-8?B?bmsvSkFSd3hMcUgxWXlkVG50dHB5QkpydDVOSFRIdHJreHRMaitTMTFWN09T?=
- =?utf-8?B?dnpHUS9MOHRjcktyMTJoM1QzNmdUa3A1M1hseFBvZHlibm9kKy9lOEkwSzZn?=
- =?utf-8?B?blMzTnRpcklGbnEzaEFnemZPTmdVT1p1NW8yU013MFJNdk5WUVUwUkd1czZh?=
- =?utf-8?B?b1BpRndNdnQ4ZDF4SkI4aGM1b2V3T2c2VjYvRXhEVzBJNnJUNC9oUHZyM0dO?=
- =?utf-8?B?amFRTDR2cVAxdCtlbVUvZWdOcEZjN25LOTdiNFpra1FpWWRGV29BVWpUTGQ4?=
- =?utf-8?B?QnNPU3JJQjRYT1BhVDh0TTdMeTNkdnpNV0xCcnlNUnlJZi8yQjhoNHAvM2d4?=
- =?utf-8?B?NE5zNHVDS1FubTU1SDBvVldBdVJ4UHU0dDdMWmVxRVJnclBKNUFFOVJxUkMy?=
- =?utf-8?B?cmdRNWhCQkxsMjcvZE8yZXdTMkVTdEtmcmdCYVRudmgza0w5bWpQUFJKU0J0?=
- =?utf-8?B?RDhtV1ZKNXYzUHV3MmV3N2hJd01qenBuZ2pmRCtGRUw5Wk1SblNUTFA4N3Rs?=
- =?utf-8?B?UWtlWkFkck0zMWZLQm9VcjdmWUNrRllDM0F4WU5LUTFyV3c5djNuKytnNEc0?=
- =?utf-8?B?TGtiamw3OWFjWnBnWEZGcmFrc1FJM0dETVBpVnRTdVRKRElVMkF0ajViSnRu?=
- =?utf-8?B?T2xna09BRDg4WmIxS2hzSUxhaGYrU0FNV1pUTmVaTm5uREJvZFdPTWFScjFP?=
- =?utf-8?B?R2R3cFZKUTVPRzFjeDRQdVFVT1hDNDZEdnkwTllNMGlBNGVId3NBMElzWmRL?=
- =?utf-8?B?eVZaY21LNzRmWVA4OEZRSGZlK3NtcjRUeXNFTXRJMFJLTkZpMmYzV21EWC9l?=
- =?utf-8?B?Q2ExZFZPR1duWHE2VWxSbVE0YmhyZExIaWVwYnBDTnJRRWZvak1veVRNY2pB?=
- =?utf-8?Q?5mvr8dHADf4=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR12MB5163.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bk93V1NodWd1RFNEV1F4WXdjdDd0Z29tV2NYNlhERTJFZVh5QzlYWHZienVW?=
- =?utf-8?B?Vm9CempmRGVWZUFHcW1XdkIrSFpCQlduTnNqSS9oTzV6a01CMEV3dEpwNXVI?=
- =?utf-8?B?SXNQWGpSSlMxcmNLSWdxN2xPZmRkT2VqNENpZWpYQTZCQ0xxcGNreDAwdWVD?=
- =?utf-8?B?RUJLR2pVdjZnbktzQ0xjVXU2NE0vNzd6bGIrekY0YmgvSXZuZ2VueWs2ZGRX?=
- =?utf-8?B?ZUVHNjBFaUd0djVnZXViNFpscjJBM1ZCY0l1NTBLMFVia09vOTJ3cEpEQS9L?=
- =?utf-8?B?Qjdmc2xkMzdBUVY4TXNQSUlEMVB5OTVJNHNCUURhWDFSS2JjcmNVZmNGeEl1?=
- =?utf-8?B?RmlFU01NQzEzaGp1VmwzYTdiUWhodHpmenBlVzVZS1h1S0xRYmFHVS9WUVQ4?=
- =?utf-8?B?ZFlWNDlpMXBTbzNSNGpxNUxocHBhcnJjVnJWZk9WN2cvZThROStpZFluV2Fx?=
- =?utf-8?B?aktjcGxLSnNuNHhXa3JYUFI3QmIrNUlQOW9yQTFQMGZhQmUyMG50cFpxdm9S?=
- =?utf-8?B?TmFNeTArQUU0dlFKcU9jUjdSQlRyNWdTc3Y3cWZiVlAvWk1TMU9mWUxKZEUw?=
- =?utf-8?B?am15VGYzdkdjU05RK3Zyc0tENWxzN3FjOEZYQkVJRnpoc3hkSm93ZjNReXRt?=
- =?utf-8?B?dFpNeE1QNkRBT1cyenRXL3d5UXV2cU5vTDZCREwyd2NrSFdneEl0MDRqQ3RL?=
- =?utf-8?B?MFZ3NHFBT3RMdVpPeTVSS1dROElEYmdoVUdYRnJpY08ycER0Zi9icmJIdU9S?=
- =?utf-8?B?eUlIelA4TWVwajBmVnJMRGVCZ1o1SzhZUXJ1N1ZxdS91cTZ2dlNjSWNNYkdU?=
- =?utf-8?B?WXhVK2tnSmRHbXhHRHQ0RHpNOVdBUmovMXBQTm1sQTdFVThUaGFBakE4NWVz?=
- =?utf-8?B?ZXdKUUN2aDArM25ORWsrTXNaVjhCcUpUSm1ieE5FclNwODdWdUd1Zmw3OTJF?=
- =?utf-8?B?NGhyZTUzNG5IekJ2QlFCQk0xVFNIWlUvY0x2OU01d0VSZ0xqVFAvc2E0akJz?=
- =?utf-8?B?TnhoUFU0MzdvRlE1c2NEN2xNQ2xPVGtYU1MvbHE2emNWQVZpTHVaYkw0azR4?=
- =?utf-8?B?SHdzN09WWGhqM3hEZHgwQTdIQ2krQUNIaUE3dmViT1lvSi9IczlwWVZzQnlP?=
- =?utf-8?B?MXdGVGRUTllxUUZld3hRM21OL1UvclNzQ2FZYVNGc3pmcGIvSHU5WnJDWUxK?=
- =?utf-8?B?TW5mUmNHdHhBOXFwcXZ0aWgyV2N5VzZsSmRtbEQyQmdzcHZUZVJvSS9qdlNp?=
- =?utf-8?B?bHZyUHNxUFc5ZmVPVDhtM09zU0p0ZGNIQWl5VVBUeG5Lck0yenJ5a1hoQjIy?=
- =?utf-8?B?MUJTbGtiQUthdm9BY2tvbERRZk1hU29pNmwremtMWjU5REprRlRrakpmR3cr?=
- =?utf-8?B?eDdCbDVha3dXcitjcjRkeG1yR2drZTlwRW1FZUR5NSsvOWZiUzlHUkkvaVQv?=
- =?utf-8?B?aHBwVmJOV3YwY0VuOElVbmVOaGFkNkh1OElzM0lBbkcwaEg1RFhCNWFscGtR?=
- =?utf-8?B?RFJPSmZpZnNvcnh1REdqNk1rZklJQTBQRm9SWDZKTTVWNWhDVnQ0VFJHZ3NJ?=
- =?utf-8?B?RjhpRmFRV2pQZ3Y3OTUvOXU2WDduQ1FuOUJOUGcwN2tieTdFakp1cVlkd3lq?=
- =?utf-8?B?RWpldTJ6aUNmOFlTUUNrempBanNTUCtnKy9JcnhJcVBjbFArbEtpaXNIWkk3?=
- =?utf-8?B?N3BTbzVGdk4vcXRaeFBmY0YzNmhyVTZYb2s3Q09qL0JQQlhTaFlVdy9uVVhE?=
- =?utf-8?B?Z1BnWXp4SUVna3I4MnJxMVZDaUdWYitjVkxrT0R1dDI2cWRybFlLekdnK2xs?=
- =?utf-8?B?T3FsYlVJQU5sRmlSdThFUEF3SkRIeCtwN2lkTXk5V1JVNGpHTXZQZ2kzVlA4?=
- =?utf-8?B?OGpsbU8wc2Vzd2RhVTJZdlVha2liUmEzVlc4TlNDd0pPTFlWbldQNXFvY3BZ?=
- =?utf-8?B?d1IvWjRqMzdIN0RGeDJBQ20zbXNhdWF1Y09Hbm4rQjBoRHhpTzlWSjRNU2ky?=
- =?utf-8?B?OUVrYm5QNnNWdU0zc3hxbkpBNUJXMzBlNUl3Rmp2dnVMS05jaitIR01mWDVJ?=
- =?utf-8?B?UFpGSGkxNkMxaVNDcU9rZEZpSWRNaUZlK000cVMwa3JJRE94ODZadEE1SkRK?=
- =?utf-8?Q?F6AsSfc5buBv2MHvwq9chRChJ?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 512ff3a6-f303-4c90-1b11-08ddb94d206f
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR12MB5163.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 09:45:06.8249
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UpfObTMWtCBSZx2eHQ9M8540kAQRka3wmRN+lTUatDlvRke+tlaQePNu5BsOACGdTsi6eV4Mf2hRvC3lIRmzgA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6880
+References: <20250630-gpio-sysfs-chip-export-v3-0-b997be9b7137@linaro.org>
+ <aGPrFnDxG4W7S9Ym@smile.fi.intel.com> <20250702035439.GA20273@rigel>
+In-Reply-To: <20250702035439.GA20273@rigel>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 2 Jul 2025 11:45:02 +0200
+X-Gm-Features: Ac12FXz-JnZMJjVFwkOV6LI85mHiP9ErZQPrWOCnEMfYgX5hOeAbNbHmgiBBoQg
+Message-ID: <CAMRc=MftawBB4rtj4EKS_OwMCU9h53sA8QxcFq_ZY0MRg2OLag@mail.gmail.com>
+Subject: Re: [PATCH v3 00/10] gpio: sysfs: add a per-chip export/unexport
+ attribute pair
+To: Kent Gibson <warthog618@gmail.com>, Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>, =?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, 
+	Marek Vasut <marex@denx.de>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Vasant,
+On Wed, Jul 2, 2025 at 5:54=E2=80=AFAM Kent Gibson <warthog618@gmail.com> w=
+rote:
+>
+> On Tue, Jul 01, 2025 at 05:05:10PM +0300, Andy Shevchenko wrote:
+> >
+> > It seems I never expressed my overall opinion about this. I think the p=
+oking
+> > sysfs and making it working with a new schema won't solve the issues th=
+at
+> > character device was developed to target. If so, doing this just brings=
+ yet
+> > another broken interface. I would be happy to be mistaken!
+> >
+> > If I am mistaken, I would like to see a summary here that explains that=
+ clearly
+> > that the new sysfs approach does not inherit design flaws of the origin=
+al
+> > implementation.
+> >
 
-On 6/29/2025 11:24 AM, Vasant Hegde wrote:
-> Dheeraj,
-> 
-> 
-> On 6/4/2025 10:06 PM, Dheeraj Kumar Srivastava wrote:
->> Introducing debugfs support in AMD/IOMMU driver that will allow
->> userspace to dump below IOMMU information
->> 1) MMIO and Capability register per IOMMU
->> 2) Command buffer
->> 3) Device table entry
->> 4) Interrupt remapping table entry
->>
-> 
-> Overall this series looks good to me. I have done some level of testing and its
-> all fine. I still have few minor comments. Please address them.
+You cut out the link to the discussion that preceded this series where
+a good summary is in the very first email. Anyway: the gist is: people
+need to do some basic GPIO fiddling early on from initramfs that may
+not have any tools other than basic shell utils from busybox. This
+series is not about improving or extending the sysfs interface - it's
+about removing its reliance on global GPIO numbers. And that's about
+it. We don't add any new features really, just move the GPIO line
+groups into their respective chip directories and make exporting use
+the hardware offsets, not global numbers.
 
-Addressed all your review comments on v6 series and posted v7 series. 
-Please review.
+>
+> Indeed.  I've already expressed my reservations about supporting the whol=
+e
+> of the existing sysfs capabilties, but I've otherwise tried to remain out
+> of the discussion.
+>
+> To reiterate my position:
+> While I am all for maintaining sysfs in some form to cater for those
+> rare cases where cdev is too heavyweight, IMHO it is a mistake to
+> support the existing sysfs capabilities in toto.  Take the opportunity to
+> remove the parts of the sysfs interface that don't work well.
 
-Thanks
-Dheeraj
+Doesn't the last patch do it? We cannot remove it without giving
+user-space some time to switch. This series does everything in a
+backward compatible way and then isolates the old bits under ifdefs so
+that when the time comes it's just a matter of removing everything
+guarded by them.
 
-> 
-> -Vasant
-> 
-> 
-> 
-> 
-> 
+> The new sysfs should only provide the features required by those rare use
+> cases, which IIUC would be basic sets and gets, and exclude those feature=
+s
+> not required, particularly warts like edges.
+>
+> If you need more advanced features then use cdev.
+> If all you need is basic sets and gets then sysfs is probably fine.
+>
+> If that isn't the case then there should be some explanation as to why th=
+ose
+> sysfs features are being maintained.  Treat this as a new interface.
+>
 
+I tend to not interpret it as adding new features. We really just
+*move* what exists under a slightly different path when you think
+about it.
+
+So what are you suggesting, remove the `edge` attribute and polling
+features from the new `value` attribute?
+
+Bart
