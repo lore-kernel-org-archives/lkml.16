@@ -1,46 +1,46 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2080.outbound.protection.outlook.com [40.107.93.80])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2087.outbound.protection.outlook.com [40.107.220.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F209A2FC3B9;
-	Wed,  2 Jul 2025 15:56:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D102FF461;
+	Wed,  2 Jul 2025 15:56:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.87
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751471806; cv=fail; b=afX/xS3MJk8wfHwKs8/h5nB7KmnAA01e4LlaCRoetxq1/iQnewbqSrRUuGkPqYMLQXktrU9JRhuieOeOVjl2iiV9CnmeJN1XGlfQBNTnkn1Jqx1yYc6ylhUaJZRpa65vRVyCAR88JKQbyNwWOxcnNI599a7LOO/bzT5/CL+Lub8=
+	t=1751471808; cv=fail; b=JAYsyXcIkU+YiRU+F2f8BGtmq3dCbT1GDb3NMHE8VancvSJj4eKRNxHJ/KAgthQo49/RLTqCe0D/S+y2eNz5HfTkRb+lw1WHYhP2djxywDWJxp7oScBBl6L7R9gQNy4Ea9sOC0rsPJ1pywMa7pepW0ZAz9SZrJvbAidrfb5nwDQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751471806; c=relaxed/simple;
-	bh=wbFR5NTi2ceDADJbNIfkEywvMzrMrqX6MKjPr6Ip9/0=;
+	s=arc-20240116; t=1751471808; c=relaxed/simple;
+	bh=FWAH+ZZU+Q+949+mRKqmpRzwVz6RcRR1m+Nzlu1z0zs=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ljhmWYKqmKxDmWrJr5VABqL7q0RosKMP83IQkPJFud3l4t4dJpsNc1FCFTEK5zbb6857y7g+Kx3SUB38M1bMvcl8Vo+u/0pPvRr1/k7xpcFtCZ5QWaTTpIQTc+L/I5N6RjI1SKJKNX3OJ3u4ddmXBEM5In1SgyppN5SrjtlAy/g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=AZG21Y7o; arc=fail smtp.client-ip=40.107.93.80
+	 MIME-Version:Content-Type; b=uMbUGHWYIOl57pHfP4bhWjkImJ98m6vO0h/sF9xZD5Iieuw7eUDQL+zAwufNLIxDQmk2JZbKLt9oOsDClxu7yCbE0+GlIG3Di7OBJpV27r0Ov7KAxwW5NZISxv9eOb8u0n+gwOJTogPc3x3+U3yswyA43J4DWqq9XYcv5JpX1zk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=HcYY723s; arc=fail smtp.client-ip=40.107.220.87
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="AZG21Y7o"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="HcYY723s"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Nc3/H8dcc4odCxM0VWqd0rDUjkWMK0nMHL9LXYPvE4cl7QVFefuUHrTPnR/zdIC08aivMoQjRpynOG9CJaml1vmbfAJKnD4sietyRFZ5fG822ngyGnHwvr6Omfej1KdF42qDUiPCRLfs2L/BmQpr5xY3zG6r6wTLq27fEi9LOyki2SGlVslK49EumP08eKWUO/lHbzqDEhYkaznlo14ph8ETLF1i31dTTHOzsBJNy/6crPgh0NBGgUO8m5obo7yg5liFCUrGLRfbtG8g3NaJqQsWuEjKDlh8JCAtBXyQip5hKgrDB7Y6ufDULjSGaYqRJQ9N/voEcjEPHTw5PBwZAQ==
+ b=tftf/svLTBNaZxdapMlE04c5WvX7x9IFddG3A0GDIX3bZEqcYzCxgNwt7lh9oiuBVqVe1h/JT0I6Oizul69ZjpN4GeCURL1u4+UFlghhNA0mlppdiPZ338BCEGNLN/D/BqeXKEKCRgUMyTuNmYyvroQvS1z1OwkuiL6ZTqK6a419eM404Fv/EhRva4D0OIzc+P++QLf7TkeAZkhdpqdPCCgnYKxBi8O9/1YZVDb+1jBI0UaapSeJokIBIvf3/fVV2J1UhCqh3U0WpbKZQaP223fyeJjmgSTifIFTO37wZRxxvjQ/DgQ/wNRFodr6d53417fR8+JcoT4F1Vunxbs/0g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nEI2mhOPrrHqvl0u9OkP1htgTLxzRGxy/lVma8+IdNw=;
- b=IItfX9TXTt1xBi9Xja+z7p5rMSe/JdxBPuC7pXCgeF/ENQ8+eQ3VN4oRuKUDEPxZVtSwhTvZSC5Kd9dYGfGDLk6OrRyxrZYyI+2Oh/Fv3/F6QQYKy2mYZI0ysL7G33BWQAv/kYOOrN1/nC213Q2PcOIXhdZxKvdAbCi9+sNvJlOhajupi7AquSV5vJCorEGtYBq3UGytGUc4ZEQ1hKLox6bVNlM7zpX/ILj3U5fZRt0x+MFA+Ou0XhMSOehAFGDpHJRErjj+lMv8FoyoWcQADUxJ/OlcD8KBouww6zJPuPSqdsRHJDrYVi6V5qfK22POXzgd6CBAKbI0MjGIPGPtCg==
+ bh=bHgBlvSJaE5Cx6MbWGkLuZrkIpw73ZGCgYzo53uf+eY=;
+ b=uUpEpZzanVbD/5dUlSmuxnn76f00qgJ3Lpkizp47rHlOgOAPMTok4ei6r0w/3+6tTvdiAtC/JK7F7UvHnXuKcoSt0PWdJkKPGkI4fL58h+HL36mib/YY+Ih9W1aftgKjGKgTMeUp1QsqbBOgww3QtbOkOGmLSPIG9FnKMXzOZphwt+MOGfqrhB/4Xx0dJ5wKLYMFDKPq+1xZ6mc7I02rqo5Av99V98dh+ZUZbsbeul2YjANjfeH0A4EuCh8NAqYZ6Szv+lgekk6zxvi/FcLhosIxnkUR7m5QrDVIR01i+fm5tD7RRqZsBDGAH79+8ZJUcnVyuKiIML7Me6XPxWWiTw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nEI2mhOPrrHqvl0u9OkP1htgTLxzRGxy/lVma8+IdNw=;
- b=AZG21Y7onU3HDYopYbWRbAXLcdWhqhqlMK3mzD3BAO7tUx0od0C3aVxq3ZCm+dBqFbCtRTkVDH1pa2C1+uhsycnWOCjAcgoOeGU9I/Kk2C/+Ar24+xSwqO/0kjz0tCXfeO4bUe11SMGduiTUPc/Ct7U9VBxkEPIeYxD/dHfaDPM=
-Received: from CH2PR15CA0002.namprd15.prod.outlook.com (2603:10b6:610:51::12)
- by DM6PR12MB4420.namprd12.prod.outlook.com (2603:10b6:5:2a7::8) with
+ bh=bHgBlvSJaE5Cx6MbWGkLuZrkIpw73ZGCgYzo53uf+eY=;
+ b=HcYY723szzBUSSqXNyvt3y1x0OTPCihW4BQ+QAR2Bkh2/bnJuiZyAZ3fSGlS0vbteOYJkrao2rLfSfghrSxOu0zp0s0KQLoTYgFirNIR24FGhKWmriEWCMpjqXiQdA5L9rZz0dxOD3jC+2zkRYEXvD3xudVSY5k6gqAjEXterFc=
+Received: from CH0PR03CA0263.namprd03.prod.outlook.com (2603:10b6:610:e5::28)
+ by BY5PR12MB4177.namprd12.prod.outlook.com (2603:10b6:a03:201::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.20; Wed, 2 Jul
- 2025 15:56:41 +0000
-Received: from CH3PEPF00000013.namprd21.prod.outlook.com
- (2603:10b6:610:51:cafe::12) by CH2PR15CA0002.outlook.office365.com
- (2603:10b6:610:51::12) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.26; Wed, 2 Jul
+ 2025 15:56:44 +0000
+Received: from CH3PEPF00000015.namprd21.prod.outlook.com
+ (2603:10b6:610:e5:cafe::9e) by CH0PR03CA0263.outlook.office365.com
+ (2603:10b6:610:e5::28) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.20 via Frontend Transport; Wed,
- 2 Jul 2025 15:56:41 +0000
+ 2 Jul 2025 15:56:44 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,24 +48,24 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
 Received: from SATLEXMB03.amd.com (165.204.84.17) by
- CH3PEPF00000013.mail.protection.outlook.com (10.167.244.118) with Microsoft
+ CH3PEPF00000015.mail.protection.outlook.com (10.167.244.120) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8922.1 via Frontend Transport; Wed, 2 Jul 2025 15:56:41 +0000
+ 15.20.8922.1 via Frontend Transport; Wed, 2 Jul 2025 15:56:44 +0000
 Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
  (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 2 Jul
- 2025 10:56:40 -0500
+ 2025 10:56:43 -0500
 Received: from xsjgregoryw50.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
  (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Wed, 2 Jul 2025 10:56:39 -0500
+ Transport; Wed, 2 Jul 2025 10:56:42 -0500
 From: Gregory Williams <gregory.williams@amd.com>
 To: <ogabbay@kernel.org>, <michal.simek@amd.com>, <robh@kernel.org>
-CC: Ronak Jain <ronak.jain@amd.com>, <dri-devel@lists.freedesktop.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<gregory.williams@amd.com>
-Subject: [PATCH V1 1/9] firmware: xilinx: Add IOCTL support for the AIE run time operations
-Date: Wed, 2 Jul 2025 08:56:22 -0700
-Message-ID: <20250702155630.1737227-2-gregory.williams@amd.com>
+CC: Gregory Williams <gregory.williams@amd.com>,
+	<dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH V1 4/9] dt-bindings: soc: xilinx: Add AI engine DT binding
+Date: Wed, 2 Jul 2025 08:56:25 -0700
+Message-ID: <20250702155630.1737227-5-gregory.williams@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250702155630.1737227-1-gregory.williams@amd.com>
 References: <20250702155630.1737227-1-gregory.williams@amd.com>
@@ -81,170 +81,220 @@ Received-SPF: None (SATLEXMB03.amd.com: gregory.williams@amd.com does not
  designate permitted sender hosts)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PEPF00000013:EE_|DM6PR12MB4420:EE_
-X-MS-Office365-Filtering-Correlation-Id: 300be8bf-a8ee-4a62-1703-08ddb9810918
+X-MS-TrafficTypeDiagnostic: CH3PEPF00000015:EE_|BY5PR12MB4177:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9e214a20-003b-4df2-b2c1-08ddb9810b19
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014;
+	BCL:0;ARA:13230040|376014|82310400026|36860700013|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?UKlUnOFmqMdBWwRMyYqN5OYLIZPHcwSw5NL9lfqXK6hDaA3/t5bKI94pVFqZ?=
- =?us-ascii?Q?+HN3yDvmzbwh1oYRVNPKwzpepBtKa8OrA+g2vPuETzxkc8WlWFoqlglJvb2l?=
- =?us-ascii?Q?2fM6OK8PvBYTI4psWYkps8+TAwEO0sY5r0xaiFm0Cj4770SvMUsOBZ81E9Ri?=
- =?us-ascii?Q?kWnlEFWfD9NaRJvdgwajtKh1OkI6LhhAHpZHIUJTRlUAcSgXpw8tAbpPd/0p?=
- =?us-ascii?Q?BZVaWiarw/xO2owVOjNG2DRHrLpZluZZdQ+3A8NRi3LUNAkP6WOtZbpyLhKK?=
- =?us-ascii?Q?hk7S9b3TZyE7x3h2b3GtA3qwtFvKCjM3+TOzEPIOfgsvbPw1FuJUW72Pf3pI?=
- =?us-ascii?Q?VpPupZcmgaJ51FIYlNGPDhQdNSjDmEOZk878I31U1bPkU9uyBpmGyPlT82Re?=
- =?us-ascii?Q?gmUJWGWUynmXcCOg4UCtIuMKbQhp7K7tDrlQt71gObwIsClZEDKo+XBZSoXP?=
- =?us-ascii?Q?Uu6oeXDfIwTvVRSf6NZ223ONWwpJFgLDClad+VaWN9MJsAmnnjJGfGceycWq?=
- =?us-ascii?Q?a9rHQUe0XWJUhdSBYGFCvmqPZI3IuMJ625VkTDYV7pd939CVAaETRo8g1ed6?=
- =?us-ascii?Q?kVlwVK1z6HMIKAdT8qqb9UoMI1Lawi7EG29UNNlw0tPwrthbTTiRf6LwzKT9?=
- =?us-ascii?Q?j69kIqTVO/q69FvI4Xoo1XdDbGOl6TPomlf9oCbY4AL1l9hIeOSMHINfUeKm?=
- =?us-ascii?Q?7sy/FAa0aKg/jU+zqlr/bVHr21SS0eaemoJRZIkPrvlWKzQpVYfIHMnk5J0X?=
- =?us-ascii?Q?nigspE2gvPaH9B68WUQrkVTV6r203c+uqpcrn2G872QjS38nIFTJjWHIn0EL?=
- =?us-ascii?Q?TReJEEUNhxQxKApgaW/US6KGuc9MAJnZfpGLuat+T1lg0+g0V6O2AxhYGRyn?=
- =?us-ascii?Q?lTvqdNiT//P87UZb4fQd1l3Wx7O69PKFvVz6xPX8pLijDBVEPdYhwtGQVf1L?=
- =?us-ascii?Q?fLfs7cSfpL9rPJ++1YE/fzQa1GsU70ONXfaxPXXxYTfKxweOu28nZIzkWUwa?=
- =?us-ascii?Q?jin4elPZyWvYDCrwjEgAG+HTcXpc83+xCWZ7vgEEZTEnFVy7rzqE0T0tKWJq?=
- =?us-ascii?Q?A9xe5QA34GFfzg5p+7RlXqDpZjCtZmI7EVTFPoU93tr+955KP0RSL/ZTDtpw?=
- =?us-ascii?Q?0u0LuOmIMlWQmHOHaK0WkRKLxkSBt1ls6HW7l7vYwPHIFsh+ZTOJMbUuUZNV?=
- =?us-ascii?Q?yOBgMCr2wtIZJQdveyevH3w3E5poVJWpaMyfzidP8Azam+pnXgP0J1YR5jW9?=
- =?us-ascii?Q?ChAILlNv/Y0KH9TDNoU9f+xyxqX8EjVIpjjaehIUpgIuzij/BM/rmJqhnz4p?=
- =?us-ascii?Q?t83ZhB8fESGCk7v3//9snUkhcH9c9Q1Ix+6xe8pIAkheI1i9LjQ3b7zFlYRr?=
- =?us-ascii?Q?W1NE60+c0Ww4p7sMgeTUL2OYQWkFpakM5/VCHrYZE/rcPAID7qP/1NHqxpED?=
- =?us-ascii?Q?KNiHlY1EQe3oefsbv3qLC4c5vmbHZq6vP3nG5FjRHeYGAdZMvaI2Dv8wIKZe?=
- =?us-ascii?Q?wk6cxw5XAvoigQOmtbde7bHcgNxRPRhw8hiC?=
+	=?us-ascii?Q?eAJZmNEdTIw/8Ai+IeHXb0ol4hgvtkqA5P0Pa4R2heYkPRP8Fcm3wkymDeBb?=
+ =?us-ascii?Q?cqPdokQ8H7tHIZVUv3Orph8eDwGUgCLWSDMRulV/nEA7biYWa6r7JbKDXVPo?=
+ =?us-ascii?Q?1P2OwEccdexa5pBmDyiK6uF6OwymKJ8NwDDhSkkc83udUKhMDa0XZI5mMDB2?=
+ =?us-ascii?Q?LmmaXlMIGhbuRzk+WO5vvQKUWNfQyq0wIfNDRVe0uTDt2ewv1mYfguwK8oKv?=
+ =?us-ascii?Q?znsjzqLIwApjZHTruEgJ2qhsmQ8I3Hy2lIxjwqW0on5yiS/QWH5z/WsYBhAN?=
+ =?us-ascii?Q?7ZJqzE6UGVQZZMsuNaLCziwot0spIBvtkwOUpqZPxU9h2ywkgZpBsTxxso8l?=
+ =?us-ascii?Q?lQ42gyqclfIDzl+z9+p/empD6CJZdGWktrFdLD431VOAfEknlfy9wlPDeYGs?=
+ =?us-ascii?Q?U9WwHEcefpuutnTmEyd+9M614TI1jXqiJxmdkBOF81i7radBAUAX+D82vzzD?=
+ =?us-ascii?Q?VZmXC2u7OpRYHlGVJkEJwWJcb68jZSAiWKKs4XHLTr2iVXJtVgsUz6bDk3u2?=
+ =?us-ascii?Q?q1vap57Ay1yj2rZx2Hr3Qnl5iOrA8QMAAznQjM2/R28h3unxcw983BQ2H5hK?=
+ =?us-ascii?Q?DUAD59sRjhrvQ1uErhZSNWPFD7xp7WeiCbFgbG4aeOUQcfDJJa5pJoWUc1nB?=
+ =?us-ascii?Q?Mono1BYcnK3A/Hdxto+29bVvLp5pttltkWDsa24xM2kzlU5ZP+5JzfrjtmCW?=
+ =?us-ascii?Q?wsdQNMcAWvcKkZEo/AMDMtBWvib5i+arbejNFleLqXve1J4kzHNSGl3phHYC?=
+ =?us-ascii?Q?9W4MGkisdJrpBkvAekNbV4uZpp/9mfLEkFhkmnU0pqrqepBCDTkkZvjx6k7E?=
+ =?us-ascii?Q?91uacCshnRn1qC00vJyr+NHlJWHc5sQ7b8NkvYdYxSBPaqM/MMYFcBZrkima?=
+ =?us-ascii?Q?mUccfDbNVeXvyv7/ZX3cN8VQYwK0hPyMVY3JkZP1QSIL7Rj3BCkbjbir/MAQ?=
+ =?us-ascii?Q?tItigPT1VRYRi5QlxV3/OigXhL5PA68nbrzd4nBybGhYmCdjmMAxwMNpTXg2?=
+ =?us-ascii?Q?yXhzFecMEJzvcCbryaI/3N7YwzL50+jt8UQUXMiy7HQlOE2HcgtBCqAubjyX?=
+ =?us-ascii?Q?bJDH3c9R1FE3u8hLvoYm+eeZ67WGtz6eGB+9S31BmlqGQ9vqYPEHwo4toDn/?=
+ =?us-ascii?Q?UvMYPFeZsqPIf8IXAeD8zjqljJworKPyKFTV0Yh437dCab+4Y9Jg/EFHS47a?=
+ =?us-ascii?Q?FDtC4tpdnce96cBibDPLlKqaI8D0XheKrx6fl42Oyb2wd5zhGI5qVodRz2/q?=
+ =?us-ascii?Q?BNA/ySXzvkzk4J8Rf8AJgcPiOzf3FjGpK7a6xhJXi0tJY8101mB4cy8w6sje?=
+ =?us-ascii?Q?IZ0sC+31Seumz1xIwJU175/zDGrDsKZ3Yddrl0tEeGe8u0id+iLODaPGYM4y?=
+ =?us-ascii?Q?Z5yW7H11BpPDXJ1w+6o4SsIhUJ4t1ORLGijpJXX3D96cvmIeBlYGU8d9k1HH?=
+ =?us-ascii?Q?g7FsRhZXAwaJf6GjXYmdZ7nmRStNG9Skz1MfZ0xcMiX9iHNFdeI3Ag=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 15:56:41.0437
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 15:56:44.4082
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 300be8bf-a8ee-4a62-1703-08ddb9810918
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9e214a20-003b-4df2-b2c1-08ddb9810b19
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CH3PEPF00000013.namprd21.prod.outlook.com
+	CH3PEPF00000015.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4420
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4177
 
-From: Ronak Jain <ronak.jain@amd.com>
+In the device tree, there will be device node for the AI engine device,
+and device nodes for the statically configured AI engine apertures.
+Apertures are an isolated set of columns with in the AI engine device
+with their own address space and interrupt.
 
-Add IOCTL support for the AIE run time operations listed below
-- Column Reset
-- Shim Reset
-- Enabling of column clock buffer
-- Zeroisation of Program and data memories
-- Disabling of column clock buffer
-- Enabling AXI-MM error event
-- Set L2 controller NPI INTR
-
-Signed-off-by: Ronak Jain <ronak.jain@amd.com>
+Signed-off-by: Gregory Williams <gregory.williams@amd.com>
 ---
- drivers/firmware/xilinx/zynqmp.c     | 20 +++++++++++++++++++
- include/linux/firmware/xlnx-zynqmp.h | 30 ++++++++++++++++++++++++++++
- 2 files changed, 50 insertions(+)
+ .../bindings/soc/xilinx/xlnx,ai-engine.yaml   | 151 ++++++++++++++++++
+ 1 file changed, 151 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/xilinx/xlnx,ai-engine.yaml
 
-diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-index 7356e860e65c..d9fdfd232d11 100644
---- a/drivers/firmware/xilinx/zynqmp.c
-+++ b/drivers/firmware/xilinx/zynqmp.c
-@@ -1039,6 +1039,26 @@ int zynqmp_pm_set_boot_health_status(u32 value)
- 	return zynqmp_pm_invoke_fn(PM_IOCTL, NULL, 3, 0, IOCTL_SET_BOOT_HEALTH_STATUS, value);
- }
- 
-+/**
-+ * zynqmp_pm_aie_operation - AI engine run time operations
-+ * @node:      AI engine node id
-+ * @start_col: Starting column of AI partition
-+ * @num_col:   Number of column in AI partition
-+ * @operation: ORed value of operations
-+ *
-+ * Return: Returns status, either success or error+reason
-+ */
-+int zynqmp_pm_aie_operation(u32 node, u16 start_col, u16 num_col, u32 operation)
-+{
-+	u32 partition;
+diff --git a/Documentation/devicetree/bindings/soc/xilinx/xlnx,ai-engine.yaml b/Documentation/devicetree/bindings/soc/xilinx/xlnx,ai-engine.yaml
+new file mode 100644
+index 000000000000..7d9a36c56366
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/xilinx/xlnx,ai-engine.yaml
+@@ -0,0 +1,151 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/soc/xilinx/xlnx,ai-engine.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	partition = num_col;
-+	partition = ((partition << 16U) | start_col);
-+	return zynqmp_pm_invoke_fn(PM_IOCTL, NULL, 4, node, IOCTL_AIE_OPS,
-+				   partition, operation);
-+}
-+EXPORT_SYMBOL_GPL(zynqmp_pm_aie_operation);
++title: AMD AI Engine
 +
- /**
-  * zynqmp_pm_reset_assert - Request setting of reset (1 - assert, 0 - release)
-  * @reset:		Reset to be configured
-diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-index 6d4dbc196b93..1d30366f741b 100644
---- a/include/linux/firmware/xlnx-zynqmp.h
-+++ b/include/linux/firmware/xlnx-zynqmp.h
-@@ -136,6 +136,16 @@
- #define SD_ITAPDLY	0xFF180314
- #define SD_OTAPDLYSEL	0xFF180318
- 
-+/**
-+ * XPM_VERSAL_EVENT_ERROR_MASK_AIE_CR: Error event mask for ME Correctable Error.
-+ */
-+#define XPM_VERSAL_EVENT_ERROR_MASK_AIE_CR	BIT(16)
++maintainers:
++  - Gregory Williams <gregory.williams@amd.com>
 +
-+/**
-+ * XPM_VERSAL_EVENT_ERROR_MASK_AIE_NCR: Error event mask for ME Non-Correctable Error.
-+ */
-+#define XPM_VERSAL_EVENT_ERROR_MASK_AIE_NCR	BIT(17)
++description:
++  The AMD AI Engine is a tile processor with many cores (up to 400) that
++  can run in parallel. The data routing between cores is configured through
++  internal switches, and shim tiles interface with external interconnect, such
++  as memory or PL. One AI engine device can have multiple apertures, each
++  has its own address space and interrupt. At runtime application can create
++  multiple partitions within an aperture which are groups of columns of AI
++  engine tiles. Each AI engine partition is the minimum resetable unit for an
++  AI engine application.
 +
- /**
-  * XPM_EVENT_ERROR_MASK_DDRMC_CR: Error event mask for DDRMC MC Correctable ECC Error.
-  */
-@@ -155,6 +165,17 @@ enum pm_module_id {
- 	TF_A_MODULE_ID = 0xa,
- };
- 
-+/* AIE Operation */
-+#define XILINX_AIE_OPS_COL_RST			BIT(0)
-+#define XILINX_AIE_OPS_SHIM_RST			BIT(1)
-+#define XILINX_AIE_OPS_ENB_COL_CLK_BUFF		BIT(2)
-+#define XILINX_AIE_OPS_ZEROISATION		BIT(3)
-+#define XILINX_AIE_OPS_DIS_COL_CLK_BUFF		BIT(4)
-+#define XILINX_AIE_OPS_ENB_AXI_MM_ERR_EVENT	BIT(5)
-+#define XILINX_AIE_OPS_SET_L2_CTRL_NPI_INTR	BIT(6)
-+#define XILINX_AIE_OPS_DATA_MEM_ZEROIZATION	BIT(8U)
-+#define XILINX_AIE_OPS_MEM_TILE_ZEROIZATION	BIT(9U)
++properties:
++  compatible:
++    const: xlnx,ai-engine-v2.0
 +
- enum pm_api_cb_id {
- 	PM_INIT_SUSPEND_CB = 30,
- 	PM_ACKNOWLEDGE_CB = 31,
-@@ -244,6 +265,8 @@ enum pm_ioctl_id {
- 	/* Dynamic SD/GEM configuration */
- 	IOCTL_SET_SD_CONFIG = 30,
- 	IOCTL_SET_GEM_CONFIG = 31,
-+	/* AIE/AIEML Operations */
-+	IOCTL_AIE_OPS = 33,
- 	/* IOCTL to get default/current QoS */
- 	IOCTL_GET_QOS = 34,
- };
-@@ -633,6 +656,7 @@ int zynqmp_pm_set_tcm_config(u32 node_id, enum rpu_tcm_comb tcm_mode);
- int zynqmp_pm_set_sd_config(u32 node, enum pm_sd_config_type config, u32 value);
- int zynqmp_pm_set_gem_config(u32 node, enum pm_gem_config_type config,
- 			     u32 value);
-+int zynqmp_pm_aie_operation(u32 node, u16 start_col, u16 num_col, u32 operation);
- #else
- static inline int zynqmp_pm_get_api_version(u32 *version)
- {
-@@ -951,6 +975,12 @@ static inline int zynqmp_pm_set_gem_config(u32 node,
- 	return -ENODEV;
- }
- 
-+static inline int zynqmp_pm_aie_operation(u32 node, u16 start_col,
-+					  u16 num_col, u32 operation)
-+{
-+	return -ENODEV;
-+}
++  reg:
++    maxItems: 1
 +
- #endif
- 
- #endif /* __FIRMWARE_ZYNQMP_H__ */
++  '#address-cells':
++    const: 2
++
++  '#size-cells':
++    const: 2
++
++  power-domains:
++    description:
++      Platform management node id used to request power management services
++      from the firmware driver.
++
++  xlnx,aie-gen:
++    $ref: /schemas/types.yaml#/definitions/uint8
++    description:
++      Hardware generation of AI engine device. E.g. the current values supported
++      are 1 (AIE) and 2 (AIEML).
++
++  xlnx,shim-rows:
++    $ref: /schemas/types.yaml#/definitions/uint8-array
++    description:
++      start row and the number of rows of SHIM tiles of the AI engine device
++
++  xlnx,core-rows:
++    $ref: /schemas/types.yaml#/definitions/uint8-array
++    description:
++      start row and the number of rows of core tiles of the AI engine device
++
++  xlnx,mem-rows:
++    $ref: /schemas/types.yaml#/definitions/uint8-array
++    description:
++      start row and the number of rows of memory tiles of the AI engine device
++
++required:
++  - compatible
++  - reg
++  - power-domains
++  - xlnx,aie-gen
++  - xlnx,shim-rows
++  - xlnx,core-rows
++  - xlnx,mem-rows
++
++patternProperties:
++  "^aperture@[0-9]+$":
++    type: object
++    description:
++      AI engine aperture which is a group of column based tiles of the
++      AI engine device. Each AI engine apertures isolated from the
++      other AI engine apertures. An AI engine aperture is defined by
++      AMD/Xilinx platform design tools.
++
++    properties:
++      compatible:
++        const: xlnx,ai-engine-aperture
++
++      reg:
++        description:
++          Physical base address and length of the aperture registers.
++          The AI engine address space assigned to Linux is defined by
++          Xilinx/AMD platform design tool.
++
++      interrupts:
++        maxItems: 3
++
++      interrupt-names:
++        items:
++          - const: interrupt1
++          - const: interrupt2
++          - const: interrupt3
++
++      xlnx,columns:
++        $ref: /schemas/types.yaml#/definitions/uint32-array
++        description:
++          It describes the location of the aperture. It specifies the start
++          column and the number of columns. E.g. an aperture starts from
++          column 0 and there are 50 columns, it will be presented as <0 50>.
++
++      xlnx,node-id:
++        $ref: /schemas/types.yaml#/definitions/uint32
++        description:
++          AI engine aperture node ID, which is defined by AMD/Xilinx platform
++          design tool to identify the AI engine aperture in the firmware.
++
++    required:
++      - compatible
++      - reg
++      - xlnx,columns
++      - xlnx,node-id
++
++    additionalProperties: false
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/power/xlnx-versal-power.h>
++    bus {
++      #address-cells = <2>;
++      #size-cells = <2>;
++      ai_engine: ai-engine@20000000000 {
++        compatible = "xlnx,ai-engine-v2.0";
++        reg = <0x200 0x00 0x01 0x00>;
++        #address-cells = <2>;
++        #size-cells = <2>;
++        power-domains = <&versal_firmware PM_DEV_AI>;
++        xlnx,aie-gen = /bits/ 8 <0x1>;
++        xlnx,core-rows = /bits/ 8 <1 8>;
++        xlnx,mem-rows = /bits/ 8 <0 0>;
++        xlnx,shim-rows = /bits/ 8 <0 1>;
++
++        aperture0: aperture@200000000000 {
++          /* 50 columns and 8 core tile rows + 1 SHIM row */
++          compatible = "xlnx,ai-engine-aperture";
++          reg = <0x200 0x0 0x1 0x0>;
++          interrupts = <0x0 0x94 0x4>,
++                       <0x0 0x95 0x4>,
++                       <0x0 0x96 0x4>;
++          interrupt-names = "interrupt1", "interrupt2", "interrupt3";
++          interrupt-parent = <&gic>;
++          xlnx,columns = <0 50>;
++          xlnx,node-id = <1>;
++        };
++      };
++    };
 -- 
 2.34.1
 
