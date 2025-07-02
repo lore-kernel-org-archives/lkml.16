@@ -1,205 +1,208 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FAA323D2B8
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 10:32:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751452326; cv=none; b=pGx1vIY5iaRevB2fme57yaMgRagaRt88e7CGvQ+Qj7pFW8lZ7VCui6/1sH+U4EN1Jmo5azSlD7GxhLlBn+/6P+4c+YZQFS9xx8PRN6uIJmYp5Jsqnm9/d2XqOGD6DLO6V0KY12DEoPUqO0p+ZlvW2FnSR1d8z38ZNWku1D3YND4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751452326; c=relaxed/simple;
-	bh=ZIPepwL1zAjT3/W18tkz2vKEYlRwn57a6PC+KSBfoZo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ahtoM5t1edtbyFbB386M1sGfH7xxPEiW7H4FAKz1drsS+PC2OED73wa1Rdk2jcY/OUmmMJ5Px6MAoaLk/5Z+jDRVYWVazNLTxJggN4FRlOD23HpYSKYyYbB8MNBEIKO80GmP4EYXoc95ZggSuv/3ccBy4OW+82MQkwOK09Sk2xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=J3d/vSYk; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 706B91FC7C5
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 10:33:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751452397; cv=fail; b=e+Qf3/W8HBOUZVOubC4LyiSlbrs3uDl90C31RrMuZ7lba7/BY6jfiOy9y//tbIlfTQrdif9pqTVXyUC76+ctC4ye2Hhc9Fi7uZlXz98H0Uy91OOnh+FCtgEMRLH5fvqzshbXUv55zNkLOwtP7tYdhG04U1x0HcPrNFYpuFTj4fw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751452397; c=relaxed/simple;
+	bh=sBxpu7gyITgf843fHbHD6tCKusYJ50othVp2DCMDbsQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=dQ27fkGj4lBwEYgQ4NhUjwsMo/IArcm5Fa1XCfLUQWg06b2OIWj87U36UzaFXGv7jlCmLGyh1wfMmhXFGEYVz6F0ftIA4lab2Qs25fdLEPMjwUC7qkHiMWXc62u8U+KHR7CEIbAmCsezMN6Ay0t3QM8JBXFTlecZ23x1WCEcIN4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=DQ81YEig; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=dNyEwPuI; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="J3d/vSYk"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a52874d593so3626513f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 03:32:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DQ81YEig";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="dNyEwPuI"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5627MY43025688;
+	Wed, 2 Jul 2025 10:32:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=sBxpu7gyITgf843fHb
+	HD6tCKusYJ50othVp2DCMDbsQ=; b=DQ81YEigfYkcCeTzbMxkAO605mMeL9pS/8
+	9Vbuon+aHjzg45qJQGzhKdDiodUTwW94eUBkKIZe6dfAiad/Gr8q1IzF/phIR0Ql
+	iTuL4OTndsQGFOxW2BRCRVYcs9bk1s67XRn9WbeVLz0+IZcpMYpjlOeNV6znANOg
+	HIn0ojBQhbEGu/n4vbcCMNPEjfu6kHYgbY5HJ/01ACyQILJ3pVByUsSv4/IyCHNl
+	SpKozIj/DRUaBn7gJI9AxIfw0Uq3CXhqMHmbmwYFGJZ+qMY7nRFUp2vaC3U0gU02
+	2KVXw9vADvowmbiOqlkDIBUIr9vLtapKGeE6CMlntBXy6DaxwbZA==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47j766epj0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 02 Jul 2025 10:32:43 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5629lhY8030141;
+	Wed, 2 Jul 2025 10:32:42 GMT
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11on2080.outbound.protection.outlook.com [40.107.220.80])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 47j6ub2sq1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 02 Jul 2025 10:32:42 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=X/ulfQKIshFaYKrxDSraSjvKvtHX0i7/gizPSEaqjocrKZQ1Lp2FsLryHwb+Ar1zQBMd65w3G/r16F2CTgDUSiof0rTRHnWnq3aDNI350eLgs2vAymKkvXuaOH7Hy2zTvvwMNGdQEEXHTlaCqwaytBO12fQvhYDqC1tko8bJBXIdmVSy9mWnk5VaW6UdV5HKlETVnjqIOeduDNlq5bkkQY4wyxDGfvhR7WxhMXf42GxLdnNvUuUERswF6cs6vUEyWQM1HNwfwXGGNX1a4bZ+hozvhAcfmf5Lk4TFxN59hBaujvW93/p1u+nPD5GSZdpk3p8eO6EG3gt7MpbSKri/+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sBxpu7gyITgf843fHbHD6tCKusYJ50othVp2DCMDbsQ=;
+ b=J6/CIAXCurwDlShu07QoithyBhKQ9M9DKQpIVdFD2GYCX9SXt+scbc3/f6VFuaaWjBZlssOfe1IzJk6mUTemkIZZRu8uQPPNpYOZMA1kxRv27DF0Z4kQkD4wRQ9rcfu3MHh6orSdvmnVOZvkP7SWaLIlFCCZQd79GDqokMSEDWq2qithObJrhL1PXPE3/3FV0AIcmyhfm4IeickjX6ydekJKrp7mU1Buw2QpszavBwLIlIZrE38zwzCjvZGQMZrqM7Pb6MUh35LIyTdk3CUdwpyYfsDQCTJS7bUaMO9E2IUoxSrGLfTbrwktzKlIUGsljH9y8O8rA5Sc7qJlR3VABg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1751452322; x=1752057122; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zXDzDU4TR6t6LCGPz2CtkRVWsYIWYd3/8o1AXqP8JIQ=;
-        b=J3d/vSYk8opocU0piDvqaKzjBrnanMQ1d0D5zxbXmNs04jPctePD1aatvNvRd6O4zI
-         VoZWvUe2VeYJ3UtEyo99293Di9gZX16zX3VZRD6FVxPCA2nzl2MU4K8vU4GdbdiLbPXi
-         wTG165FZqZkQhkZhuPMKoGbYrmwmFcujddWf0maC00rn6B3npN/9VT+xU0icuZbFm74w
-         1SS2cfvo0h6sSqyJJgENf8ORLRL1HK8MWdri5Tza1zUjF5UyaO/WEKys+Zq89GFu0iWT
-         Mvrtr3/QdBb1YA4x2pLZURJuvIMeKDH+h7rd++X6Da7FANh5KxhvNvP5B7L97eNfnAoP
-         53Hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751452322; x=1752057122;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zXDzDU4TR6t6LCGPz2CtkRVWsYIWYd3/8o1AXqP8JIQ=;
-        b=fiqD3FEVs+0TYzicMk4WOwnAAivyCJzR1EN36hKfCeVckypJfrslG+ZeXC5Oh9m7Fu
-         9C61PWGqA24FCnfKXSuR3Eu+j9eRYez1Oh72VY+FsAK0BigvIMS8VuqCqoq8QPMxFaYA
-         8DsMjmRPuhlNF+k6rF1gqEfewZOpieTB30AvPeSMKyKsZ3As2UVaWcrmrMYe6Mob+rV3
-         K18TWRl2PcQ4zc61RBrKdw+An5KU8HI4z2Qjf0Ggyt3DE2y32rqJvQxsHDUQYds568GJ
-         E/eD1I+k71xUQZHZRfCyn7bcBm2BXP4d9CL+03HeksSSBfT4f4351L/ybUhB5os4g4E6
-         6PbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVqG1xuxL1Q7bqEiXRjE15uUZOYGej2A7GdHk8Sy/rRW+E6JFDSn9QKik/FMCbjJXrXK1EX5r2CsjhOeC0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycoQ0M1HzJ6yfstBh6YdcUh2m8UjA4r3fdNGd4ixPdWLcEa0hX
-	lcInUZLkQGYIbK8ubPgySTJsYRVCh5CuKehHo85H0WVeNnl92bidDsLCcau0waZz1T4=
-X-Gm-Gg: ASbGncvtmUgaC89e1fFi9ZndGuBzb19aQnKtBr6RFpJs6ZGimopbM2v9w+8y8GEplnY
-	jdqznpdMt8r99tNHR0cf14NY2b7OQBqt6YpiMfjZgu8brw5eL7OEk5HwBqhaK2seHozTk5WQzWC
-	vUJHHvnNHjJWLwnIaHCqqyOY8b+tUQ5YgeXrREGdcXDEwhsE+8K+X4pqhbdgTbvjod9X0XAbtma
-	PCrowO8YK9TQ6zXzXUL+HvLnueMlCAe/LGxmgQRXL5WO/TVeVnHckXSDX8AjrCNwteiSqF7k3X4
-	IzrzRQPo7grQq5rVz109XVGUKlP6/jMkbMVcIVHQd71T+tVEUbr+P+JxyNkpwFjyC6WJ3Nz23Go
-	TlbC9
-X-Google-Smtp-Source: AGHT+IGsTcnn79M2AkJYx6VwIu5Aao26W0bXZaJfZo1nGUhdH+xTH9BKoW+BRHywWzGq0ruyEcPoQw==
-X-Received: by 2002:adf:e196:0:b0:3a8:38b3:6e32 with SMTP id ffacd0b85a97d-3b1fdf02726mr1536066f8f.8.1751452322382;
-        Wed, 02 Jul 2025 03:32:02 -0700 (PDT)
-Received: from jiri-mlt ([193.47.165.251])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a3fe28dsm195088325e9.20.2025.07.02.03.31.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 03:32:02 -0700 (PDT)
-Date: Wed, 2 Jul 2025 12:31:52 +0200
-From: Jiri Pirko <jiri@resnulli.us>
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>, 
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Prathosh Satish <Prathosh.Satish@microchip.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Shannon Nelson <shannon.nelson@amd.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, Michal Schmidt <mschmidt@redhat.com>, 
-	Petr Oros <poros@redhat.com>
-Subject: Re: [PATCH net-next v12 07/14] dpll: zl3073x: Add clock_id field
-Message-ID: <amsh2xeltgadepx22kvcq4cfyhb3psnxafqhr33ra6nznswsaq@hfq6yrb4zvo7>
-References: <20250629191049.64398-1-ivecera@redhat.com>
- <20250629191049.64398-8-ivecera@redhat.com>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sBxpu7gyITgf843fHbHD6tCKusYJ50othVp2DCMDbsQ=;
+ b=dNyEwPuI0W5CvVOcYohGG3ptFjuQwAB3inO3a8tvXrH4rKH1DU/xly0Bp1SAjEsgVTl2iaymBvdU9nQuBtPWylN44JfioTYBYxJEzbcMA4pWCtHhG4onT3pfSsNohKaPeJX2geC3KDoQpB4VDz70En0SZ8fMgozAR5tkptjY5do=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by IA3PR10MB8417.namprd10.prod.outlook.com (2603:10b6:208:573::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Wed, 2 Jul
+ 2025 10:32:39 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%6]) with mapi id 15.20.8880.027; Wed, 2 Jul 2025
+ 10:32:39 +0000
+Date: Wed, 2 Jul 2025 11:32:37 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org, david@redhat.com,
+        willy@infradead.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        catalin.marinas@arm.com, will@kernel.org, Liam.Howlett@oracle.com,
+        vbabka@suse.cz, jannh@google.com, anshuman.khandual@arm.com,
+        peterx@redhat.com, joey.gouly@arm.com, ioworker0@gmail.com,
+        baohua@kernel.org, kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
+        christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
+        linux-arm-kernel@lists.infradead.org, hughd@google.com,
+        yang@os.amperecomputing.com, ziy@nvidia.com
+Subject: Re: [PATCH v4 3/4] mm: Optimize mprotect() by PTE-batching
+Message-ID: <3ce333ae-dae2-4341-83c5-39877b6f2bd4@lucifer.local>
+References: <20250628113435.46678-4-dev.jain@arm.com>
+ <0315c016-d707-42b9-8038-7a2d5e4387f6@lucifer.local>
+ <ec2c3f60-43e9-47d9-9058-49d608845200@arm.com>
+ <5900e978-6349-4a3d-a384-758889b678a0@lucifer.local>
+ <3776ac82-4cd5-41e7-9b96-137a1ae6f473@arm.com>
+ <64c2ec85-87ed-4793-b0e9-a68eac1a8020@lucifer.local>
+ <a2165422-0d78-4549-bc34-a8bbcdb6513f@arm.com>
+ <61f50191-8bd0-4f25-b3b7-86605af8c0c6@lucifer.local>
+ <aed58edc-88c3-47bf-8cc3-bb8d80c4e221@arm.com>
+ <d54cf100-3c74-450c-a7d1-8fedbc97bdb8@lucifer.local>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d54cf100-3c74-450c-a7d1-8fedbc97bdb8@lucifer.local>
+X-ClientProxiedBy: LO4P302CA0041.GBRP302.PROD.OUTLOOK.COM
+ (2603:10a6:600:317::19) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250629191049.64398-8-ivecera@redhat.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|IA3PR10MB8417:EE_
+X-MS-Office365-Filtering-Correlation-Id: e1f37af1-ee67-4b10-168d-08ddb953c511
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?zxUPiQ3iFwbL/kIgSnnjiSYbMDY4ElRjjorwDwf5TQMgVUSGzkW63GvRTvqZ?=
+ =?us-ascii?Q?J8z/sSFqP6zfFmQ7LvCA8qyXFpa+iujSZYixdGb3rlJQ+Donkc51HnQCzQ0b?=
+ =?us-ascii?Q?kv42s+jGWYM7kLX9jGuTD9r2j4/LjJkmaSsoPL0L1sCCVRV2+/+rrFs6GyeL?=
+ =?us-ascii?Q?T2U8LOnYrrGekOHC1REDxOsvQJiuqx4ItLMLcNIJwhqZm6WDnCr1oy1zhbs8?=
+ =?us-ascii?Q?MP4d8q9cgK7/bBr1zLCJjoAD/PNZ+oNq+oddAusM4/j82h/nCSL36BFFpvAi?=
+ =?us-ascii?Q?83z6lSZiGEzgF/Rt9df8TOn3cCp8aE8+qiJQSPuVsPYBj1iVXs47++nRfCLv?=
+ =?us-ascii?Q?6ucp6et+MJtraQLgq3jqBvXfB5ZIhSdT/iyUZ5p3Lg4pQYdNmOWnDhjDXsHn?=
+ =?us-ascii?Q?8lGjo440J1a2grplhZEnOGCHvlJvjetPUrfiB9mtw2Rep+FQTDxdOK9H8FtQ?=
+ =?us-ascii?Q?4TnnyKONqnYLlg7Gld25822gRAWinFfW7YtMJZKEdRWnvdPNmLVo/+DVbhZG?=
+ =?us-ascii?Q?UwiL/ycMQEwJX15fjMeEEZsBceqo4LGJ2D+25Px1qPbq/aweY7315w7i1fP3?=
+ =?us-ascii?Q?WfIqV1AJsbkUXe3HZ8agBtY6RRELthot30xEAxJAL0pM8kHYRlU408X1aqQn?=
+ =?us-ascii?Q?r4YyKXe9zWo1N62D7cxK5o1YPJcdIk11KXSs51ZsQGvzfjqsERw8tXvBLTuF?=
+ =?us-ascii?Q?Ll6IXE5U0ovp4ZSjlP6SkhEf/vnSI2s6woRW1o/6xIAIAlzfJ5IFzEa16sr6?=
+ =?us-ascii?Q?sjczGSmeONakwPeQtJwYUgdPw0A5v4caYbo9zZhBgASe5UVd5eUPgxW1klnd?=
+ =?us-ascii?Q?y8A9SbB7kifsnf4X3740yRzVjN+lTsUFNTKOwssfhJq8bF5Cd/VkWOMcA0Tq?=
+ =?us-ascii?Q?i4FltRYTW2Ff5gEtp7qURNhdEn3X1vUua4c+qxG2BYempCKLT2frDg8QLwDX?=
+ =?us-ascii?Q?VKw+X4wzpNYwJyC9oaXQVA2Uh57McX/RaVhVkwbNeg4CGf7GE9ZKF9zCfIOo?=
+ =?us-ascii?Q?8tjD7B/GCsduKrsVcyK9mgqNr4hyHCdhla3TQVpOWIwuLvpqqoaE5yldHfCD?=
+ =?us-ascii?Q?SbDnLtsSw87/rrxmddbbVHN1WOpxuCQPGmghsCu+zX04kiJY3A/M+uupOJ69?=
+ =?us-ascii?Q?M2LdT/2Uw2EstJ4piK5FGp9YrzA26TN6T1Hng6PlDpiIi97rMeszRln3Mk3O?=
+ =?us-ascii?Q?MZy6WaVvjL1juaBmkk63n8rgC6DIi9FtVw6JyYwuCABwPvO+LnM1m4kGvVqO?=
+ =?us-ascii?Q?gDyCUcmHjNfdmH28soLovL1YC+hScQY/wKYmoeXd29aEYLOjxyTbavymWUS6?=
+ =?us-ascii?Q?s3Br2fclqxOSyffPSGQm2FlG277I56QrrYNBqCnFefWd38t0thDASF4TZaHF?=
+ =?us-ascii?Q?53LR5BPWl68z2LPtJx62c5x5UZwibfy0Xy+0C4uV9m+74DGPI6qd6waFqmSu?=
+ =?us-ascii?Q?+GhS24qS1Eg=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?zIwBR4Sx18RducB+Xy9Z54z5zkkieCoeeKXLELuRnEAMnyzaGjBZZXczvorj?=
+ =?us-ascii?Q?kQX8uIYWHPVv3i2pwiND8Wpi+H+GLJapIn37lUHtNUlvayTgj46rfxIyrzaZ?=
+ =?us-ascii?Q?sNT0kSMzc120/pCJiteNwE3R8yP7u0VBz7QhbJScU/AkuQNQmBnbWA/3S+UY?=
+ =?us-ascii?Q?PEMBZD3yn7MZsOq75oMcWakXBZ1HnvfKp4azwAwoD5VtJ6aR851vIsQ0lOlS?=
+ =?us-ascii?Q?LnnU4gDePbCS2wRuPncnVYYR214fV+jYW6mtZGzVOddH6YNbLBVZG5vtTzzI?=
+ =?us-ascii?Q?1pQ9+vPqlFOrEUlb2eR5KUgu8U2WqwqzGuxhacovL5YwblTpx+Jbfb5brazG?=
+ =?us-ascii?Q?Gcms45EW20+XSwbbt3V/sGb8mhF/gfTOPy1w4nvrxR5yWiGIsfhG1sySih6e?=
+ =?us-ascii?Q?hOKy1wLKXpyGZrfCF8cMGLNKVDhacX2/cRGTP9uSzGNiUwITjnyoVvwgLiOI?=
+ =?us-ascii?Q?/DfuesUyNdBfcZX0eNIU9jaMcnwyHmI7MOImaACXWr2zMKoO4uB7/TWDt8rL?=
+ =?us-ascii?Q?TEpTbMdHFblCWSTFpnVeMjDTSIYtgZL2lfaVM2vbv6WKADmgZsnuVBVWLwss?=
+ =?us-ascii?Q?5vU5KrTy3gxEwZZawsMeAmCaepm8K1+9zOK9K5vqIOHLMiPL9DmUlXl2uLMY?=
+ =?us-ascii?Q?BAx7xpFTOyplgftfXZet3rnFJtGxuhBrjK8EyIjTAEI2gxEPzWGe/gPxifF2?=
+ =?us-ascii?Q?xsfXLIIfS77fQvp9sm8xx47k7ITFPqw2pBSO5IrRoB9WBnyM57HMTrztPLbv?=
+ =?us-ascii?Q?R+l/dmxrqFhbpM7geZeoZKiJk84EbbO230mtloWg3jvp6Zsq9gF0FpLAr4u5?=
+ =?us-ascii?Q?EoItN1Ro4pk//disbvhjasouoIgDLtfxOcdwsLN1H/CHK4Hb1wApBCl6sWsp?=
+ =?us-ascii?Q?5WMX0vgkEl8NQY2wxGjmelcLnQ2yA6bzKeON4YTpIR0ePkY6G9PmyrGYBeL/?=
+ =?us-ascii?Q?7nauuhRAZVcOlyp+AOrmPmOaTXLDs707hUbazM0rghKKHZPGVfrbrDtwi/iN?=
+ =?us-ascii?Q?BuRe8fKD4d1WkSWAEnyoFOEPNzsMh2bEesWTIeOr8kTkb6E10595YmhZAy/0?=
+ =?us-ascii?Q?p6TZQebSiPFyopL6pvrdr9ZysdrZG/qkGrkmsBmNGiwJ5MrvXb+qAGXVAMmE?=
+ =?us-ascii?Q?hZYFR/uJu9mFlo4GYbSW12oEhVhQubh7wKgSIcKm/LA9obEhuxhdM3ngdZpY?=
+ =?us-ascii?Q?gTWnpIWs8XRBs4NOf85YMRQyMCrTqU6Dkww0IlMv4VCYhS+HcyeDreKYahFX?=
+ =?us-ascii?Q?QwA/n191lYxCSGRz1x17ypuje5Z6TI5dvA8xqZJRuYwJ2ChFESZ+wYEzz3QD?=
+ =?us-ascii?Q?TTSEzHI9gtBHVtc4YX8m9EnUJebBXfkSzX0bsWL5775JkTQCGsyq2nTgKqMY?=
+ =?us-ascii?Q?NhcAbf0HSN0Su3TVCxdisu2ZSWPEEYm+5zDF3f/MroVRCu+1pA2pRoHSww6G?=
+ =?us-ascii?Q?qyW7Rr+TEcjxvI+pdUyVuqCwgT7Ou0Y7azehaAATkji/1lRznx6G7MSkrkw+?=
+ =?us-ascii?Q?cTlvzYFOTb9rm9vCsuMLoemMghN/sJRAuSkcr38pVG0ShuHqYaQkVMzwtFsi?=
+ =?us-ascii?Q?uXPFzrBaYOHjj0kPirUNBdrrMBZYjyL8V662SMyi7sOfnkq67Az2Jpuz8nDH?=
+ =?us-ascii?Q?2w=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	87UNenBLI29A2LyllBFUpM+ZHaD0ue6IHbpf8iPMKdGzaqkfmFFcWhBySaMmrfcItlVrsgA4wGxwkwtsCE9mIMnME9MYW3XbX0kRJN/nx2ky81IWrUz9/fDtruDvndNnVqp+QJll1G2c28du/P0zScCKx2JenwYKypNB3wpsB7ak7J+t7wUnOe2wjDd8j+vkgjTnziEAA7vX7vuVx/ENGymaOUFu37M2+qoBaQ1BFQ/DIXtIP67ipzX4oSEP9/jwCZsRmePILBmuGc6BHOMx1YAE3RTKhuTYrUxHR4S1Bej+73Xekzf9AM1ioSx36/doYaTGE3NQiEjKRD5gE0S7L3bdcU2jtf5soK1IV+EPG2ZVx1Ecbfh1wgaM4dkm8dwd4kfS4m6QavkTa1wlfYphckFy7RbCMjegAhWVWJevIjMugufcYjyTVAW6ErQJkWMwxewUWZtuRb1XXNbe/H6RuSW5tglmRppneJBAmfVOfLFkujtfSJP8eSwrT5XS54Ss8iUUIduEdmbBd6SAStgeJcLHoNZ7PQkjDu9gR42lpc2Hyn1pwhGIIdXip+wTowv76sdv2s3zjpkfonnUeegTV/cwshJYjJNVrIoYU1gf7Fk=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e1f37af1-ee67-4b10-168d-08ddb953c511
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 10:32:39.7225
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +efWKlcas2F7Pp63pKgJZQiJg/6gHZomSqu+6tjVs+hNvbAQEPEjMjCiVNwhKxU4TCkZC0e2NBhrQW8FeQYN8IZyJ+Ye0g9wWGXyi/yBAyk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA3PR10MB8417
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-02_01,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 suspectscore=0
+ phishscore=0 mlxlogscore=946 mlxscore=0 adultscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2507020085
+X-Proofpoint-GUID: MbqPPvZDZa9eAo4da3LJPbAH1obXf4_6
+X-Proofpoint-ORIG-GUID: MbqPPvZDZa9eAo4da3LJPbAH1obXf4_6
+X-Authority-Analysis: v=2.4 cv=b82y4sGx c=1 sm=1 tr=0 ts=68650acb b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Wb1JkmetP80A:10 a=GoEa3M9JfhUA:10 a=UGjIexrLDdwWRe8ZFiAA:9 a=CjuIK1q_8ugA:10 cc=ntf awl=host:14723
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDA4NSBTYWx0ZWRfXzZwn537SnNoU oeYI2YsTZT/jb8diVYcKxKoE9dVaLUG3aHZZu7zS6mvi2MsB2G4+4x+vFppI3QviAV2Cl927eZN YExbeynHzR+uGN3SkFun3yN2FBhbgjS89xrhI+bhxMqFM2tzYKDhhMrWp7U5OE6xjP5Fxspv+Ts
+ WoBbBdNNbBtjCa0mfYE4hHo5WW8M/kPypVMYXIUexNTH4lbhxQXrPX4SLTE3gSewB8G66BOfGjt 41pFQrDzUM+gy7LEyg0yH0MpN4AFlrYl/B+4R9OPY79rvKQWVequSVTsVyEoPo90RUZcoBIP/YO z/bpbB7xZWtEVuKPBDcPEApZorm8lV9jcvuw7IW4/iop5/zoJeg42u+uTSldDT25RZgyuD72JUR
+ 0Ln9JlTbMa4Qw6D3I8bD+E4xBnTNYHxc8pppjW6ZBaXSaeMqH1lYayM+7tkja0AavdjhowVo
 
-Sun, Jun 29, 2025 at 09:10:42PM +0200, ivecera@redhat.com wrote:
->Add .clock_id to zl3073x_dev structure that will be used by later
->commits introducing DPLL feature. The clock ID is required for DPLL
->device registration.
->
->To generate this ID, use chip ID read during device initialization.
->In case where multiple zl3073x based chips are present, the chip ID
->is shifted and lower bits are filled by an unique value - using
->the I2C device address for I2C connections and the chip-select value
->for SPI connections.
+On Tue, Jul 01, 2025 at 02:40:14PM +0100, Lorenzo Stoakes wrote:
+> Let me fiddle with this code and see if I can suggest something sensible.
 
-You say that multiple chips may have the same chip ID? How is that
-possible? Isn't it supposed to be unique?
-I understand clock ID to be invariant regardless where you plug your
-device. When you construct it from i2c address, sounds wrong.
+OK this is _even more fiddly_ than I thought.
 
+Dev - feel free to do a respin (once David's stuff's landed in mm-new, which I
+think maybe it has now?), and we can maybe discuss a v6 with everything else in
+place if this is still problematic.
 
->
->Signed-off-by: Ivan Vecera <ivecera@redhat.com>
->---
-> drivers/dpll/zl3073x/core.c | 6 +++++-
-> drivers/dpll/zl3073x/core.h | 4 +++-
-> drivers/dpll/zl3073x/i2c.c  | 4 +++-
-> drivers/dpll/zl3073x/spi.c  | 4 +++-
-> 4 files changed, 14 insertions(+), 4 deletions(-)
->
->diff --git a/drivers/dpll/zl3073x/core.c b/drivers/dpll/zl3073x/core.c
->index b99dd81077d56..94c78a36d9158 100644
->--- a/drivers/dpll/zl3073x/core.c
->+++ b/drivers/dpll/zl3073x/core.c
->@@ -743,13 +743,14 @@ static void zl3073x_devlink_unregister(void *ptr)
->  * zl3073x_dev_probe - initialize zl3073x device
->  * @zldev: pointer to zl3073x device
->  * @chip_info: chip info based on compatible
->+ * @dev_id: device ID to be used as part of clock ID
->  *
->  * Common initialization of zl3073x device structure.
->  *
->  * Returns: 0 on success, <0 on error
->  */
-> int zl3073x_dev_probe(struct zl3073x_dev *zldev,
->-		      const struct zl3073x_chip_info *chip_info)
->+		      const struct zl3073x_chip_info *chip_info, u8 dev_id)
-> {
-> 	u16 id, revision, fw_ver;
-> 	struct devlink *devlink;
->@@ -793,6 +794,9 @@ int zl3073x_dev_probe(struct zl3073x_dev *zldev,
-> 		FIELD_GET(GENMASK(15, 8), cfg_ver),
-> 		FIELD_GET(GENMASK(7, 0), cfg_ver));
-> 
->+	/* Use chip ID and given dev ID as clock ID */
->+	zldev->clock_id = ((u64)id << 8) | dev_id;
->+
-> 	/* Initialize mutex for operations where multiple reads, writes
-> 	 * and/or polls are required to be done atomically.
-> 	 */
->diff --git a/drivers/dpll/zl3073x/core.h b/drivers/dpll/zl3073x/core.h
->index 2c831f1a4a5d1..1df2dc194980d 100644
->--- a/drivers/dpll/zl3073x/core.h
->+++ b/drivers/dpll/zl3073x/core.h
->@@ -57,6 +57,7 @@ struct zl3073x_synth {
->  * @dev: pointer to device
->  * @regmap: regmap to access device registers
->  * @multiop_lock: to serialize multiple register operations
->+ * @clock_id: clock id of the device
->  * @ref: array of input references' invariants
->  * @out: array of outs' invariants
->  * @synth: array of synths' invariants
->@@ -65,6 +66,7 @@ struct zl3073x_dev {
-> 	struct device		*dev;
-> 	struct regmap		*regmap;
-> 	struct mutex		multiop_lock;
->+	u64			clock_id;
-> 
-> 	/* Invariants */
-> 	struct zl3073x_ref	ref[ZL3073X_NUM_REFS];
->@@ -87,7 +89,7 @@ extern const struct regmap_config zl3073x_regmap_config;
-> 
-> struct zl3073x_dev *zl3073x_devm_alloc(struct device *dev);
-> int zl3073x_dev_probe(struct zl3073x_dev *zldev,
->-		      const struct zl3073x_chip_info *chip_info);
->+		      const struct zl3073x_chip_info *chip_info, u8 dev_id);
-> 
-> /**********************
->  * Registers operations
->diff --git a/drivers/dpll/zl3073x/i2c.c b/drivers/dpll/zl3073x/i2c.c
->index 7bbfdd4ed8671..13942ee43b9e5 100644
->--- a/drivers/dpll/zl3073x/i2c.c
->+++ b/drivers/dpll/zl3073x/i2c.c
->@@ -22,7 +22,9 @@ static int zl3073x_i2c_probe(struct i2c_client *client)
-> 		return dev_err_probe(dev, PTR_ERR(zldev->regmap),
-> 				     "Failed to initialize regmap\n");
-> 
->-	return zl3073x_dev_probe(zldev, i2c_get_match_data(client));
->+	/* Initialize device and use I2C address as dev ID */
->+	return zl3073x_dev_probe(zldev, i2c_get_match_data(client),
->+				 client->addr);
-> }
-> 
-> static const struct i2c_device_id zl3073x_i2c_id[] = {
->diff --git a/drivers/dpll/zl3073x/spi.c b/drivers/dpll/zl3073x/spi.c
->index af901b4d6dda0..670b44a7b270f 100644
->--- a/drivers/dpll/zl3073x/spi.c
->+++ b/drivers/dpll/zl3073x/spi.c
->@@ -22,7 +22,9 @@ static int zl3073x_spi_probe(struct spi_device *spi)
-> 		return dev_err_probe(dev, PTR_ERR(zldev->regmap),
-> 				     "Failed to initialize regmap\n");
-> 
->-	return zl3073x_dev_probe(zldev, spi_get_device_match_data(spi));
->+	/* Initialize device and use SPI chip select value as dev ID */
->+	return zl3073x_dev_probe(zldev, spi_get_device_match_data(spi),
->+				 spi_get_chipselect(spi, 0));
-> }
-> 
-> static const struct spi_device_id zl3073x_spi_id[] = {
->-- 
->2.49.0
->
+Ryan mentioned an iterator solution, which actually now seems sensible here, if
+fiddly. Please do try to attack that in v5 to see if something's workable there.
+
+Why are computers so complicated...
