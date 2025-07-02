@@ -1,166 +1,151 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E02D223BF83
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 09:59:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BEC824BD04
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 09:59:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751450358; cv=none; b=OrojNRy0ig0FZx7Cg1ysdrRLpjpDwzHI+lmk75VpH8sUdxpYuXpN3hHD9GRMIZzXLbnGxIkGiw5pkpHniawbY/2qm+hG5HDP1imZnx8Cb77/Pulw2GXI+OqyjT2qbFJ7Lngz9u15etft813fGLAO4tlg78qUvqFTbyUK0E/8Hd8=
+	t=1751450370; cv=none; b=P5Nx4QYddGU0tcHc3SotbQTJ/+1DXlntPJkY8v/VyHopPhuQuiisgMr/m64P6/ijxUEa3LoXa0fy8x0OzBV4OXgTkad5KUYsUVetWn/WWOJBbTxUea7Y8uzuxeab4X8b6BmAGP7wVTURj9Umn6HCSkLsd5qP2Yg8o7pvXQ3AAyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751450358; c=relaxed/simple;
-	bh=MPkoP+32gi4/DVKPXzxo9wfllMKOaCUc8HF+OAy1R00=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pdJYRKoIH80tm1jVPZpFdMKYctCi2slpXkmbg+uEhglDVjp5I0vlGWnP+IgXOxb8bnDDl8yxU1YcuE7DPiv68lz+VKm41cpTeldtjd0aSxh+Bquh2VAG7i7akIGU40SSjEtJ3MHox+rBmCM8lfEOXv1ORkwJrPXyljnyIFLg23k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=S7DnSeox; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S7DnSeox"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751450355;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2BELDn7cgIkAWV4mR8DE+PJmYwWVN5UbFvf5JUowPPU=;
-	b=S7DnSeoxbf4Hp/ZkvOX3xyQgSZ4ylyerZDmisnHQma4IqxqiifVbZN5zk87Ry9orere1ZS
-	lAWvpy3rbyo9cjtBTcLshqMsDWQwNhuSgys0hPHF+0F5oJGD8lP3E88W3oafSGtZW3jckQ
-	PBEaGSE0/UB4u5UoaOxE/p+0Sccz2Xo=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-453-R3JDvpimOf-HnqiguiQNSw-1; Wed, 02 Jul 2025 05:59:12 -0400
-X-MC-Unique: R3JDvpimOf-HnqiguiQNSw-1
-X-Mimecast-MFC-AGG-ID: R3JDvpimOf-HnqiguiQNSw_1751450352
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4a6f6d07bb0so96525011cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 02:59:12 -0700 (PDT)
+	s=arc-20240116; t=1751450370; c=relaxed/simple;
+	bh=v8wHHAg3wUEAUXBnxb/LPiRFe/A2Ca+XGxdCnLvpkBs=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ep2aNPz/pZxG/rQv3+1wzR58Ky1OJ4HC0Ubp9pGoltuB/ibDWzECVzCzXHVd57VcII8SRU9jO7tjfiY9FVZ1xKSGP+eA/8yKr281FeeLHNfbEics3wi9xOAHC15e53EGlh6+8SSEQl3n418cQscKdw4wvpiZVY72tHefFauT0XI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3df40226ab7so145554735ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 02:59:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751450352; x=1752055152;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2BELDn7cgIkAWV4mR8DE+PJmYwWVN5UbFvf5JUowPPU=;
-        b=dzNW3J6u9SP/To+vpyhch+e8BZSK66EXBLw8s7u/B6mo14lPL86zF2jJpikQ4m7N95
-         Mu/zfSg7IMofuaJzJdlxXMN6HhfSYZzuHwEivNuwTgNwrAuDF+TV8w17HrKsPnEKyvhn
-         7unQ8KvP2BuTlSVk+IKGCLTzgempers2kjRX1/VEH/4/+lZdC7J/LBqUsUbI77s4GdxQ
-         nfKzUNVDMBpUpOZFleS8QhgSb3eD5XDYH1BJFcIfjXYb3GQgMoW+q3LUEEJi/F6ylt4z
-         RmuXpCoQxTbZATGhdnhvXBvFMMhwH7IcU4gh7vlXxipcjgLl6cBuUAcSDxtAWGIJH9Ez
-         53Tw==
-X-Forwarded-Encrypted: i=1; AJvYcCWTqTW0t+Z1hfcuklPlVdxMeTUnlkhl+K4AvEwMfsVl3g6w3KRVF/hiv2UuKm8N2ydKXCsd3RFEmd1LYQU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx99tOuP8VdKPGskrLE1xxDMQAFOonq4JZqqFX832m7Y2jrdra7
-	Wpdj00dWi7IcssnV+bN9uUOH80jpqK96aCCXtBA9arWpc8FdpazbTi/kgD/Ttt8YbggEbQ6VB7n
-	wHTQidndC6U6zcuaIopEyNHnLx1+99+TJNX42fp3dbFnESChbZ+Iv6Vb+0+iBG7K5sw==
-X-Gm-Gg: ASbGncsaXfBpoZGo76T2fgab9ez7KCpjXGQy0f4MhwKftCB0usj3vfQZHU7wJ1QFmvg
-	bZLqz5KRrBkbMQYaP6sfVeo8n6EYc47RiAsOG0b+2vObkr94RHNekNKJQAIttUw9tL6NEFIM2e1
-	w4FTtK79HbB/WsdY2hXr8+dtnajwJROf6ibXcq4VrogbMzrG/kUzLr9T8eF0vxjEl+OEj2TfDlm
-	vf32DFTpCxr52GyOCZF5aVfH8GlvtbQGMgaes7EvNH6PwtQXNebKfDW6C3f7PguNIj6sudg55bE
-	ICZKD1FnlqCsj2K/EcJ0pNGeFmXj
-X-Received: by 2002:a05:622a:156:b0:48c:a62c:756b with SMTP id d75a77b69052e-4a976970385mr35619851cf.25.1751450351742;
-        Wed, 02 Jul 2025 02:59:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHUSe8FhbuOGev3Og+XILWaBisyuQK6SRMWeCzQJsy/WSDvlGf3UEpPXNUfSztf5p5of2PIog==
-X-Received: by 2002:a05:622a:156:b0:48c:a62c:756b with SMTP id d75a77b69052e-4a976970385mr35619611cf.25.1751450351299;
-        Wed, 02 Jul 2025 02:59:11 -0700 (PDT)
-Received: from sgarzare-redhat ([193.207.164.126])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7fc57dbe0sm89177611cf.55.2025.07.02.02.59.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 02:59:10 -0700 (PDT)
-Date: Wed, 2 Jul 2025 11:58:55 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Xuewei Niu <niuxuewei97@gmail.com>
-Cc: mst@redhat.com, pabeni@redhat.com, jasowang@redhat.com, 
-	xuanzhuo@linux.alibaba.com, davem@davemloft.net, netdev@vger.kernel.org, stefanha@redhat.com, 
-	leonardi@redhat.com, decui@microsoft.com, virtualization@lists.linux.dev, 
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, fupan.lfp@antgroup.com, 
-	Xuewei Niu <niuxuewei.nxw@antgroup.com>
-Subject: Re: [RESEND PATCH net-next v4 2/4] hv_sock: Return the readable
- bytes in hvs_stream_has_data()
-Message-ID: <mofyjvpvlrh75sfu7c7pi4ea6p5nkatkqqtnwpwne7uuhhl5ms@gaqcs3m6i6kx>
-References: <20250630075727.210462-1-niuxuewei.nxw@antgroup.com>
- <20250630075727.210462-3-niuxuewei.nxw@antgroup.com>
+        d=1e100.net; s=20230601; t=1751450367; x=1752055167;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8RaBvFayfwXcYBfnTATfUpC02Gn1aI1y3WW84NlTtyk=;
+        b=gVsxXNv/4vrbVLqqb0RSHceneHvtZ0lQr5QJ5hTmcstQOejRc9btJWB94U1neXMfGB
+         g50rw1ATrq+OPL+q1sBynCZnJSuuhR+3C7WaOX7pf0JEBd87jDDnqs3NOcvsq+78NAni
+         UCObzWYcfRDdtAI7AZYM2B1HSPldcLg8IMSqZjOEKUZl7vJFSb5yUTE1tiQHzvOqo8xW
+         FTrHj5WFgkCQ95JxDiuDccFYIuoMlXV3+bTO5AqxZFp5LvmsQKR33g8USvX7A2OQyi7O
+         Yhu0n/y0JRQFW/f+oMmmIFro+aQFVPs0yFOXKfa2EP823SM61fsrhWHHlNXwkadsZR6x
+         +1OQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUgmCmqmJpn8ONU5EvRvhpFlKEXOQt3ipxlC8IglpB9t/l/g3b2ZCjRBLemCPS1yu0VtDf8hevoULPDdJY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YydBHeKFIXD/l2pcgx5TFdr3islrSoVVoMy+5fo/EDOUbnfmS+a
+	Uux1sJEi/l/nO5ue6ZWBDdYF2zQPoLQo6T3Q/TUclJ+LL52kzfizFY0y8evvzo9HAmzAFuFWuiq
+	j39fJMA/OL5Ovf6isi1dnGYRuFgGQnrtkfRCAYKa170ZksMbT20KaQkqDQpw=
+X-Google-Smtp-Source: AGHT+IGpE9WpTeFmhervoumHh4OLvdGoHuY8jUVhFr1PjJpe8t72eca2VJLnXVVhmi4qCUlsuVcqgPjtOfRJsGVDJYm6n/y7WfdO
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250630075727.210462-3-niuxuewei.nxw@antgroup.com>
+X-Received: by 2002:a05:6e02:1c2b:b0:3df:3a4f:c884 with SMTP id
+ e9e14a558f8ab-3e05496bd83mr29413895ab.8.1751450367399; Wed, 02 Jul 2025
+ 02:59:27 -0700 (PDT)
+Date: Wed, 02 Jul 2025 02:59:27 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <686502ff.a70a0220.3b7e22.22bb.GAE@google.com>
+Subject: [syzbot] [fs?] BUG: sleeping function called from invalid context in procfs_procmap_ioctl
+From: syzbot <syzbot+6246a83e7bd9f8a3e239@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, andrii@kernel.org, david@redhat.com, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	surenb@google.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jun 30, 2025 at 03:57:25PM +0800, Xuewei Niu wrote:
+Hello,
 
-IMO here you should not reset the author to you, but you should keep
-Dexuan as authour of this patch.
+syzbot found the following issue on:
 
->When hv_sock was originally added, __vsock_stream_recvmsg() and
->vsock_stream_has_data() actually only needed to know whether there
->is any readable data or not, so hvs_stream_has_data() was written to
->return 1 or 0 for simplicity.
->
->However, now hvs_stream_has_data() should return the readable bytes
->because vsock_data_ready() -> vsock_stream_has_data() needs to know the
->actual bytes rather than a boolean value of 1 or 0.
->
->The SIOCINQ ioctl support also needs hvs_stream_has_data() to return
->the readable bytes.
->
->Let hvs_stream_has_data() return the readable bytes of the payload in
->the next host-to-guest VMBus hv_sock packet.
->
->Note: there may be multpile incoming hv_sock packets pending in the
->VMBus channel's ringbuffer, but so far there is not a VMBus API that
->allows us to know all the readable bytes in total without reading and
->caching the payload of the multiple packets, so let's just return the
->readable bytes of the next single packet. In the future, we'll either
->add a VMBus API that allows us to know the total readable bytes without
->touching the data in the ringbuffer, or the hv_sock driver needs to
->understand the VMBus packet format and parse the packets directly.
->
->Signed-off-by: Dexuan Cui <decui@microsoft.com>
->Signed-off-by: Xuewei Niu <niuxuewei.nxw@antgroup.com>
->---
-> net/vmw_vsock/hyperv_transport.c | 16 +++++++++++++---
-> 1 file changed, 13 insertions(+), 3 deletions(-)
->
->diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
->index 31342ab502b4..64f1290a9ae7 100644
->--- a/net/vmw_vsock/hyperv_transport.c
->+++ b/net/vmw_vsock/hyperv_transport.c
->@@ -694,15 +694,25 @@ static ssize_t hvs_stream_enqueue(struct vsock_sock *vsk, struct msghdr *msg,
-> static s64 hvs_stream_has_data(struct vsock_sock *vsk)
-> {
-> 	struct hvsock *hvs = vsk->trans;
->+	bool need_refill = !hvs->recv_desc;
+HEAD commit:    1343433ed389 Add linux-next specific files for 20250630
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1243e3d4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c1ce97baf6bd6397
+dashboard link: https://syzkaller.appspot.com/bug?extid=6246a83e7bd9f8a3e239
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11b1b88c580000
 
-For v5 remember to fix this as Paolo suggested. Dexuan proposed a fix on 
-his thread.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/c3387c64e9ec/disk-1343433e.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/abf15e85d8dd/vmlinux-1343433e.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/081c344403bc/bzImage-1343433e.xz
 
-Stefano
+The issue was bisected to:
 
-> 	s64 ret;
->
-> 	if (hvs->recv_data_len > 0)
->-		return 1;
->+		return hvs->recv_data_len;
->
-> 	switch (hvs_channel_readable_payload(hvs->chan)) {
-> 	case 1:
->-		ret = 1;
->-		break;
->+		if (!need_refill)
->+			return -EIO;
->+
->+		hvs->recv_desc = hv_pkt_iter_first(hvs->chan);
->+		if (!hvs->recv_desc)
->+			return -ENOBUFS;
->+
->+		ret = hvs_update_recv_data(hvs);
->+		if (ret)
->+			return ret;
->+		return hvs->recv_data_len;
-> 	case 0:
-> 		vsk->peer_shutdown |= SEND_SHUTDOWN;
-> 		ret = 0;
->-- 
->2.34.1
->
+commit 8b877c5aaaaf9b5170928d0e033ea9b0c538fc94
+Author: Suren Baghdasaryan <surenb@google.com>
+Date:   Tue Jun 24 19:33:59 2025 +0000
 
+    mm/maps: execute PROCMAP_QUERY ioctl under per-vma locks
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16095770580000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=15095770580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=11095770580000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+6246a83e7bd9f8a3e239@syzkaller.appspotmail.com
+Fixes: 8b877c5aaaaf ("mm/maps: execute PROCMAP_QUERY ioctl under per-vma locks")
+
+BUG: sleeping function called from invalid context at ./include/linux/sched/mm.h:321
+in_atomic(): 0, irqs_disabled(): 0, non_block: 0, pid: 6032, name: syz.0.16
+preempt_count: 0, expected: 0
+RCU nest depth: 1, expected: 0
+2 locks held by syz.0.16/6032:
+ #0: ffffffff8e13bee0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
+ #0: ffffffff8e13bee0 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
+ #0: ffffffff8e13bee0 (rcu_read_lock){....}-{1:3}, at: query_vma_setup+0x18/0x110 fs/proc/task_mmu.c:499
+ #1: ffff888076dbe308 (vm_lock){++++}-{0:0}, at: lock_next_vma+0x146/0xdc0 mm/mmap_lock.c:220
+CPU: 1 UID: 0 PID: 6032 Comm: syz.0.16 Not tainted 6.16.0-rc4-next-20250630-syzkaller #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
+ __might_resched+0x495/0x610 kernel/sched/core.c:8687
+ might_alloc include/linux/sched/mm.h:321 [inline]
+ slab_pre_alloc_hook mm/slub.c:4131 [inline]
+ slab_alloc_node mm/slub.c:4209 [inline]
+ __do_kmalloc_node mm/slub.c:4364 [inline]
+ __kmalloc_noprof+0xbc/0x4f0 mm/slub.c:4377
+ kmalloc_noprof include/linux/slab.h:909 [inline]
+ do_procmap_query fs/proc/task_mmu.c:690 [inline]
+ procfs_procmap_ioctl+0x877/0xd10 fs/proc/task_mmu.c:748
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:907 [inline]
+ __se_sys_ioctl+0xfc/0x170 fs/ioctl.c:893
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f107ed8e929
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fffd594c468 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007f107efb5fa0 RCX: 00007f107ed8e929
+RDX: 0000200000000180 RSI: 00000000c0686611 RDI: 0000000000000003
+RBP: 00007f107ee10b39 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f107efb5fa0 R14: 00007f107efb5fa0 R15: 0000000000000003
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
