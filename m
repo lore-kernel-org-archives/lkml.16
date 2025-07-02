@@ -1,137 +1,183 @@
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4119A19D8A7
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 21:34:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166422DE705;
+	Wed,  2 Jul 2025 21:36:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751492083; cv=none; b=ZK2xgN9s6Tu8Q94tIrbaZp0WhrlY2VxPY+XQ/HqjBvfYag7frOGsxpcKFZs7Dz03EsDBOq2tpeMYpVNEt5VCbuxK0o9eCK4M/Ds463jFh3sUY8SmFbCAMwBraWdTBBoU3E9f4lOREfdZDKqPLcH9pzC7XULNhMvRfyMNRHtCdAQ=
+	t=1751492188; cv=none; b=Lc3H6qHISWk3Zci3LAj71hUWoIc6JvG3rG8jnqC7fFqG3HUt0YYBgztnXB+kLw6tyq3jUtSC6gzXSqH7tDrsrNE4vHwMXwFTLVqktHXxwvnKN6e+Di2C8h9AedsZe/TKPhLaI7p5NVGW9aC8q2OWT5B8P6MXoBg8BgsxyVQmL00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751492083; c=relaxed/simple;
-	bh=dIvSAKAz9GvFL8eF8f11r9vPU2RPP8HamslypNFwZD4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KW9F1l5d2AkHsVBAgFhAEDCUcM5FAcPwgW7E1EMzWyG/3ExukPUAqA5KLxYKZKIooNLMy0OZbU6hgnWDpxfmdgUrP6FythdDjBu0OUspAIZv9N6rpKxSrHCDlSeN3HOIP+nHImeWvgKXWf6Z2piQarEdrGUsNRKOhKHusQeV8gU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g5vN7RTm; arc=none smtp.client-ip=209.85.217.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1751492188; c=relaxed/simple;
+	bh=+Q7ow2BtQ9RPcDzD+75SZg1MSy+L7HBftUp7mch2u8k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tV5hkdQImcMb64k8AXeLDgfYxhRwDyxVNt3AxoinsR6ZaWWPloZJJFAYcRTfBR95Sqvz+7d/WPP26K5nhQLO8gMFbIexYONAEgyIz9jndFOUFlelwpkMSd3wOtylwMcFt1ikNUA4mXj074gxrTWuj36nzY0gpoIUZC3kUI0Ubyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LOkCzqY0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g5vN7RTm"
-Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-4e7fc3309f2so1789048137.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 14:34:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751492081; x=1752096881; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SpucKaFQXs24/Gdxy0fvjSfjmEgyvs47syPRCcBg2xY=;
-        b=g5vN7RTmr2dk4axdoF6+fBQYjrqtuzDSkkKwE2qN3D5++wg+EINlYQpHCEZgregjir
-         PxB6BYNEx95JWOEouYFbV6CC1xmgglD/C3teLwafmArJFhrb+N8Fv55Awyz4Xr9eakbl
-         3/07rxUR45dHdjSYE9nzNqO4iQ2eRnjXrliXriidpAEy2SRAt6etWelOwEjy2ZhW7deB
-         IlC/WW5Nb65916AW1UmUusK/HlDf3ab+WImdDlMzv7mCE5N6wgENWumi8K3xYGclnWFQ
-         o0pqanBauyiXZ3revWzSysJm8NnBU7LLp4Ttx8L+gAliYCtjx5IULcf8SYcDydZ9V2fp
-         Nhrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751492081; x=1752096881;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SpucKaFQXs24/Gdxy0fvjSfjmEgyvs47syPRCcBg2xY=;
-        b=e28ZzOnqAEcsAEO4/RU8waqOd5xIYQm8nVWj6Sc6Vqt7VymOU5XDfJLqUmBVLPKbJO
-         pjWf4gYuXR4DRi4aAdijbbk0Rfa3RDjIfCiUcfhPuj8dmvTvmteUyUAGWdZbPjNGOAsC
-         JvN5QTCFlpCmmuBQ5ilodHHSNzMXCcpWcT+ODVchco7IgJsyTQVpxf5MgQir5CX7DUOV
-         H56wQ4YZAvYxdtVzFc/a3rg+ji51qzm80cC8sGwhnlLZkDloAoVh/yjI4KgT9e/jgO/o
-         d2t4BYnZW3Y1iXGjyvWySRCczOg48rXNfR5fgmiATgSpRiQHMmdJJ7YNnFJxxc/woNYu
-         Qigg==
-X-Forwarded-Encrypted: i=1; AJvYcCXEWgA6MnqDmJRbcXKECkPiyJPlLNBysSgvJRxoYFYpgP2NU5jC+d3ZtQalqF36b/ZJgbWfZF2TY0MuNJE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyP3WJ7h3EuimOLHtvgug5n0NCbBmFV/sQQneyquwIOyTnkN6Tw
-	k+pbGrccHUMzDPGFWm+cYH4B2UlrYfCSZ5Ef5NGjCiZtpAWiMkhblz7UIJTTh6HReTe9qJg5i5h
-	QFAr6mwON5Oe/iyr5QCpHuH3wGD4Tvwrnl2+HElad
-X-Gm-Gg: ASbGncvFUSs/Qq8fEcRFbeGOuOBgWVm98R6ROiLE4Xc1Ps/dQSqfEzpQ0EqQoxDwMue
-	eSuC5cnRGX+EYBAaUIITE8eqwcKvg4F+X8vLGngdfTYU2VgrPk+ksOaeQOyWNSTGB+Shch43wGG
-	M8wDYzDRbjWflvjhLeQdHcEL7ZAEIC43f7Yx0ZBmXsrgr6OFntG2DTWKIX5YgEKZCEPgHJaupR
-X-Google-Smtp-Source: AGHT+IH1fp/oO8knYExoVI4CZr0MWB4CCN3Ddzd0DoffyBdgk98L0zPZn5aGpXX4Klhx4XnOgbiAKitEu5ixJn7kSp4=
-X-Received: by 2002:a05:6102:5486:b0:4e5:59ce:471b with SMTP id
- ada2fe7eead31-4f1613c8319mr3578113137.23.1751492080860; Wed, 02 Jul 2025
- 14:34:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LOkCzqY0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F04AC4CEE7;
+	Wed,  2 Jul 2025 21:36:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751492187;
+	bh=+Q7ow2BtQ9RPcDzD+75SZg1MSy+L7HBftUp7mch2u8k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LOkCzqY05hTeL/CZ/jvQECf60LY51dIf8nFMAr9nszpNCCbchQe80uWwdYcks3icL
+	 5MSt9Wg8F/woBfkio/l1ExdV8xS97d28BORKH/sKEUk3PhiUl0IqNWI1w6XI8YEjGP
+	 VgtFwCrxgQwPZiKPBMBsOVug9WCugQjhs4Ejqs/WBhiPACPHe+d0zlv+5mSQh9T8li
+	 LW8HZvV8JzXp0bdqOKI4lC3bQDIvyQZGPwoi2R+PXt565vHmhAC0Zwa+LuWqZmEzNB
+	 nyLaF5wznDa6VOsu055KAjBYceHhA+4cavod6taRuSRfTW9gfCb2wm+lk7ui8GaK46
+	 UlwZYw5J7s2Yw==
+Date: Thu, 3 Jul 2025 00:36:23 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
+Cc: peterhuewe@gmx.de, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5] tpm: Replace scnprintf() with sysfs_emit() and
+ sysfs_emit_at() in sysfs show functions
+Message-ID: <aGWmV6DLiIc8f7N6@kernel.org>
+References: <20250626125130.28553-1-chelsyratnawat2001@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250701114733.636510-1-ulf.hansson@linaro.org>
- <20250701114733.636510-18-ulf.hansson@linaro.org> <2025070205-ignore-passive-17b4@gregkh>
- <aGWH2mH6iZJ3s3lL@pollux>
-In-Reply-To: <aGWH2mH6iZJ3s3lL@pollux>
-From: Saravana Kannan <saravanak@google.com>
-Date: Wed, 2 Jul 2025 14:34:04 -0700
-X-Gm-Features: Ac12FXzxNwy9Q8y7eUa-yNyxqV22KlOcq4v5ePhyN7HxiHMeoKsg2U5kRHPewzA
-Message-ID: <CAGETcx_yVXgvmbDFYe+Nbdp18D-m14W8xO_G9RyAujpag+M9ow@mail.gmail.com>
-Subject: Re: [PATCH v3 17/24] driver core: Export get_dev_from_fwnode()
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org, 
-	"Rafael J . Wysocki" <rafael@kernel.org>, Michael Grzeschik <m.grzeschik@pengutronix.de>, 
-	Bjorn Andersson <andersson@kernel.org>, Abel Vesa <abel.vesa@linaro.org>, 
-	Peng Fan <peng.fan@oss.nxp.com>, Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
-	Johan Hovold <johan@kernel.org>, Maulik Shah <maulik.shah@oss.qualcomm.com>, 
-	Michal Simek <michal.simek@amd.com>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Hiago De Franco <hiago.franco@toradex.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250626125130.28553-1-chelsyratnawat2001@gmail.com>
 
-On Wed, Jul 2, 2025 at 12:26=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> =
-wrote:
->
-> On Wed, Jul 02, 2025 at 09:34:12AM +0200, Greg Kroah-Hartman wrote:
-> > On Tue, Jul 01, 2025 at 01:47:19PM +0200, Ulf Hansson wrote:
-> > > It has turned out get_dev_from_fwnode() is useful at a few other plac=
-es
-> > > outside of the driver core, as in gpiolib.c for example. Therefore le=
-t's
-> > > make it available as a common helper function.
-> > >
-> > > Suggested-by: Saravana Kannan <saravanak@google.com>
-> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > Tested-by: Hiago De Franco <hiago.franco@toradex.com> # Colibri iMX8X
-> > > Tested-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com> # TI AM62=
-A,Xilinx ZynqMP ZCU106
-> > > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> > > ---
-> > >  drivers/base/core.c    | 8 ++++++--
-> > >  include/linux/device.h | 1 +
-> > >  2 files changed, 7 insertions(+), 2 deletions(-)
-> > >
-> >
-> > Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->
-> I'm a bit concerned about exporting get_dev_from_fwnode() -- at least wit=
-hout a
-> clear note on that this helper should be used with caution.
->
-> AFAIK, a struct fwnode_handle instance does not have a reference count fo=
-r its
-> struct device pointer.
->
-> Hence, calling get_dev_from_fwnode() with a valid fwnode handle is not en=
-ough.
+On Thu, Jun 26, 2025 at 05:51:30AM -0700, Chelsy Ratnawat wrote:
+> Documentation/filesystems/sysfs.rst mentions that show() should only
+> use sysfs_emit() or sysfs_emit_at() when formating the value to be
+> returned to user space. So replace scnprintf() with sysfs_emit().
+> 
+> Signed-off-by: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
+> ---
+> Changes in v5 : 
+> - Fix alignment and coding style problems
+> 
+>  drivers/char/tpm/tpm_ppi.c | 52 ++++++++++++++++++--------------------
+>  1 file changed, 25 insertions(+), 27 deletions(-)
+> 
+> diff --git a/drivers/char/tpm/tpm_ppi.c b/drivers/char/tpm/tpm_ppi.c
+> index bc7b1b4501b3..d53fce1c9d6f 100644
+> --- a/drivers/char/tpm/tpm_ppi.c
+> +++ b/drivers/char/tpm/tpm_ppi.c
+> @@ -52,7 +52,7 @@ static ssize_t tpm_show_ppi_version(struct device *dev,
+>  {
+>  	struct tpm_chip *chip = to_tpm_chip(dev);
+>  
+> -	return scnprintf(buf, PAGE_SIZE, "%s\n", chip->ppi_version);
+> +	return sysfs_emit(buf, "%s\n", chip->ppi_version);
+>  }
+>  
+>  static ssize_t tpm_show_ppi_request(struct device *dev,
+> @@ -87,12 +87,10 @@ static ssize_t tpm_show_ppi_request(struct device *dev,
+>  		else {
+>  			req = obj->package.elements[1].integer.value;
+>  			if (tpm_ppi_req_has_parameter(req))
+> -				size = scnprintf(buf, PAGE_SIZE,
+> -				    "%llu %llu\n", req,
+> -				    obj->package.elements[2].integer.value);
+> +				size = sysfs_emit(buf, "%llu %llu\n", req,
+> +						  obj->package.elements[2].integer.value);
+>  			else
+> -				size = scnprintf(buf, PAGE_SIZE,
+> -						"%llu\n", req);
+> +				size = sysfs_emit(buf, "%llu\n", req);
+>  		}
+>  	} else if (obj->package.count == 2 &&
+>  	    obj->package.elements[0].type == ACPI_TYPE_INTEGER &&
+> @@ -100,8 +98,8 @@ static ssize_t tpm_show_ppi_request(struct device *dev,
+>  		if (obj->package.elements[0].integer.value)
+>  			size = -EFAULT;
+>  		else
+> -			size = scnprintf(buf, PAGE_SIZE, "%llu\n",
+> -				 obj->package.elements[1].integer.value);
+> +			size = sysfs_emit(buf, "%llu\n",
+> +					  obj->package.elements[1].integer.value);
+>  	}
+>  
+>  	ACPI_FREE(obj);
+> @@ -211,10 +209,10 @@ static ssize_t tpm_show_ppi_transition_action(struct device *dev,
+>  	}
+>  
+>  	if (ret < ARRAY_SIZE(info) - 1)
+> -		status = scnprintf(buf, PAGE_SIZE, "%d: %s\n", ret, info[ret]);
+> +		status = sysfs_emit(buf, "%d: %s\n", ret, info[ret]);
+>  	else
+> -		status = scnprintf(buf, PAGE_SIZE, "%d: %s\n", ret,
+> -				   info[ARRAY_SIZE(info)-1]);
+> +		status = sysfs_emit(buf, "%d: %s\n", ret,
+> +				    info[ARRAY_SIZE(info) - 1]);
+>  	return status;
+>  }
+>  
+> @@ -255,23 +253,23 @@ static ssize_t tpm_show_ppi_response(struct device *dev,
+>  	res = ret_obj[2].integer.value;
+>  	if (req) {
+>  		if (res == 0)
+> -			status = scnprintf(buf, PAGE_SIZE, "%llu %s\n", req,
+> -					   "0: Success");
+> +			status = sysfs_emit(buf, "%llu %s\n", req,
+> +					    "0: Success");
+>  		else if (res == 0xFFFFFFF0)
+> -			status = scnprintf(buf, PAGE_SIZE, "%llu %s\n", req,
+> -					   "0xFFFFFFF0: User Abort");
+> +			status = sysfs_emit(buf, "%llu %s\n", req,
+> +					    "0xFFFFFFF0: User Abort");
+>  		else if (res == 0xFFFFFFF1)
+> -			status = scnprintf(buf, PAGE_SIZE, "%llu %s\n", req,
+> -					   "0xFFFFFFF1: BIOS Failure");
+> +			status = sysfs_emit(buf, "%llu %s\n", req,
+> +					    "0xFFFFFFF1: BIOS Failure");
+>  		else if (res >= 1 && res <= 0x00000FFF)
+> -			status = scnprintf(buf, PAGE_SIZE, "%llu %llu: %s\n",
+> -					   req, res, "Corresponding TPM error");
+> +			status = sysfs_emit(buf, "%llu %llu: %s\n",
+> +					    req, res, "Corresponding TPM error");
+>  		else
+> -			status = scnprintf(buf, PAGE_SIZE, "%llu %llu: %s\n",
+> -					   req, res, "Error");
+> +			status = sysfs_emit(buf, "%llu %llu: %s\n",
+> +					    req, res, "Error");
+>  	} else {
+> -		status = scnprintf(buf, PAGE_SIZE, "%llu: %s\n",
+> -				   req, "No Recent Request");
+> +		status = sysfs_emit(buf, "%llu: %s\n",
+> +				    req, "No Recent Request");
+>  	}
+>  
+>  cleanup:
+> @@ -284,7 +282,7 @@ static ssize_t show_ppi_operations(acpi_handle dev_handle, char *buf, u32 start,
+>  {
+>  	int i;
+>  	u32 ret;
+> -	char *str = buf;
+> +	int len = 0;
+>  	union acpi_object *obj, tmp;
+>  	union acpi_object argv = ACPI_INIT_DSM_ARGV4(1, &tmp);
+>  
+> @@ -314,11 +312,11 @@ static ssize_t show_ppi_operations(acpi_handle dev_handle, char *buf, u32 start,
+>  		}
+>  
+>  		if (ret > 0 && ret < ARRAY_SIZE(info))
+> -			str += scnprintf(str, PAGE_SIZE, "%d %d: %s\n",
+> -					 i, ret, info[ret]);
+> +			len += sysfs_emit_at(buf, len, "%d %d: %s\n",
+> +					     i, ret, info[ret]);
+>  	}
+>  
+> -	return str - buf;
+> +	return len;
+>  }
+>  
+>  static ssize_t tpm_show_ppi_tcg_operations(struct device *dev,
+> -- 
+> 2.47.1
+> 
 
-Not enough for what?
+Looks good to me.
 
-> The caller also needs to ensure that the device the fwnode has a pointer =
-to has
-> not been released yet.
+Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
 
-Why? The point of the API is to give you the driver core's notion of
-the primary device that corresponds to a fwnode at that instant.
-
-There's no refcount needed for that. This is just a simpler way than
-looping through all the devices to find the first device that has that
-specific fwnode.
-
-It's only the device that needs to be ref counted because the caller
-needs to do stuff with it.
-
--Saravana
+BR, Jarkko
