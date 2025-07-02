@@ -1,117 +1,196 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACEAE2F4A15;
-	Wed,  2 Jul 2025 14:20:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751466049; cv=none; b=s5h9LfQkc9mYv08lGE09PNR+vsV/recYltYSXxKMBPV9ZuFEi1ikfSI4CrwqxuRYBI+AcXtAYzske9RFq1fyAiAP739DWb9WwYqAeFY+bt/xydH+CWysfM6/0HBMvCWGD3c2cgPPBO2dggskLaGGvKXSJGf62+WAh/xXPmuEdCU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751466049; c=relaxed/simple;
-	bh=Pip7qVEFQVYSY76zLUx9PHCExnbAXgnUt8LulPOmRNk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MbGzeo/X8B48c0mI4TircJwZk+lSylNNUJ3970gi3QYr5yaTOIrQE8aL8Vy/OeubVGG655DsGszMyzWER+e2EMSO40WjYAjaLWPxTTNBHEZ4tqDAta+RzLSwf9XBc04zRW420jEFOh2Qik6HiDUOhVP0bJ/cq08zD02bnZYlgbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kf7C140y; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734A128A725;
+	Wed,  2 Jul 2025 14:21:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751466098; cv=pass; b=NANORY3Bq3GCB5StX7XVWU2iZVzBVmGVKZTn73mzS1Ta+ECQGc9PuAMYVMJEtEHsv4ij5jBU8h7HlI3iF7BrnG/2IChjqCwCANmb85PIwaNhaZjmHsebEe85Flqykjym5RvOksIW/JtNvjzpys5hR9hZGmOX8yT77PpRdtyD4L8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751466098; c=relaxed/simple;
+	bh=JPYsE1H9x9ALSEZAE4peMOPJnkOXnIORtP4J63kxwPs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=H0o9NU7Afze0bLqQnoHX+6UI+t58qqehKW3hQyhr4zNGIOD5kUZpqEJMnPOvlbHUJeTovwFhg+iJTsCgtMjLVdHdf7N4t4uiaTImqOG5SZkpJY157/B4Bu4MwQgWZoZ9XPztkgj0HXyhXKnQB3asXKfoYMXxjAUySv76Elt3h34=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=P0SRCvrM; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kf7C140y"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-3190fbe8536so3451237a91.3;
-        Wed, 02 Jul 2025 07:20:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751466047; x=1752070847; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yGQkzz5zRxRRS2uo+kWwt7fThwG7BuLxpPIngGvvrqc=;
-        b=Kf7C140yfoSvZmd3EKFpSUPnHLUFwfvFTJrWJDgq1SK0R0AGT8qBtazkhdonEgKeR0
-         XP1OXYYcEtzKCMxN4a22irggtK3NkKhFqZJiCAjuPMjMLVDY7xI2bmky978LtbT/+9bv
-         HqJpq5SQlGlta/zPkxwmHyE1CrktAPiozs7FxahyctFgnIak/ww8RT3CH2cATlrdgJ+Y
-         2IvpsN68Z19XtTSjB9X23pE5rmOIxzQtdPT7bc11c+KEwHwrdpnVWUIHF1TE7J5hlp+P
-         ZlxXpLxTQgx18ir9NQbS3DXS5Pfvqv93E0ONBYfJBh3as3///dHPQRvs3rP0wQIoErzg
-         pWgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751466047; x=1752070847;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yGQkzz5zRxRRS2uo+kWwt7fThwG7BuLxpPIngGvvrqc=;
-        b=ane2vxuQ5RzUFzosCa5aaSOUtYxPKYJ6wABicclLAQ4+MGkhQH0SWBUeFrOGJ0TVPa
-         RTTB7FikwlcQQ4PwXuVu/bWxmDCba3NP5TNWhHk+mjGubK0Fx9N4paFVsR8ZgCLTdBIG
-         8Ceiys9ZtSr2USE2ZpaKqXAnNNZMoSd5BIwfZxRO1+3sBIoMaDo9AY/HeliNGSTeaSY1
-         qotCUvKSlOxM2aTr9l56w+WfGIHUqaplQo9a3epqormpJ679nllmU1VpVwWkIXiI7T8H
-         lDwYaJao5rPBfjGA1XDlWPeETrK49FnXxVojjKc8obVdNY4UdF5deSmfqUyuf8cK61EG
-         pocw==
-X-Forwarded-Encrypted: i=1; AJvYcCVdEzV4GTNQQqHZCA8Lun/B7UO8O3FEdsC/nMSrgkIcnF3VE3E6/9VE2k49RGNSbAQynkUrVr7Ym303@vger.kernel.org, AJvYcCXpakeqp7Zp+4hkguvPiuwTwHRWSWThghRHVv2gRHe3iOH/Wt4WVOSpACmbnipSxcq5xh47R0i7cMqHr3w8@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAK1av1JUqEW0HMByUljYsKAH9ynUdAmNTswVtnC1Z6+r8YOrW
-	yI3ELjrnHh3RPpiLElfVRw2Awc/wSseVGP14Ig5EFR8VNhYvxgBT+iDo6hwR7UUbblvse1D+JWa
-	SpjGp98B9IcsT6ZT2UGryd0RUPptq1I0=
-X-Gm-Gg: ASbGncsdw8Uf+BeidB5Eyjoqa5MvjZeV5DaHqTnoBStgpNKdeahceoFuPNlRcsF5J0E
-	zSyH3YYAJQGxqGUIiYzRaW17qpTX92huiwUx9gHzcQUt1YYi2lF6cQUraQPyub1GdhINhQbEZaQ
-	m8UvWwRFpBy5HHzIXp6oABLC9OCK4aKnlsYQcnYrP9sOobJzO8cPzokQ==
-X-Google-Smtp-Source: AGHT+IHXe/1zFmqCjXQ3C8alvXOHiCKHLQ3bJLFyVQ/G6RNjB0hyZ7QrXCV2jrtHiA4TmMP8JM9c+KanMU9aiN4g/Xk=
-X-Received: by 2002:a17:90b:1c12:b0:31a:947d:6ca1 with SMTP id
- 98e67ed59e1d1-31a947d71e7mr2657565a91.22.1751466046836; Wed, 02 Jul 2025
- 07:20:46 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="P0SRCvrM"
+ARC-Seal: i=1; a=rsa-sha256; t=1751466079; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=JjFU/wTd7C2n15LaDCtVw4c5SLp4fYQqW6KjugfaTRu/jrmZUzM7J1qZEA5663zmu2VMSmqqPWfgFHC/G5zg8zG00gmgYt6fuulxDF7929o8jETu/Yi1Y1WhP/56M8bYWX/A6c6xlLDQaLbQ/GpVVn668HTpb2DNsduuG1EyR9A=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1751466079; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=2/PLCRDX5zQwb9vO9glSCFCybgO+wL+GFj+YcKmCwxY=; 
+	b=jw62NL3OcEjtChqVcuhIwONQ4/RJoR3PkVG8VXFYPHRdI2zHk7NE5BiXDxudPZlf9ucTTYJ6ChV2EMnmPiWjvGEBnsk8tWIitCoqvTdS7ILlteRDTqzOIk+qvzEttwVisP2xi5FXTESHTDmXiUSxjZH2Skx2GjewoYJ5IFMNq1A=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
+	dmarc=pass header.from=<usama.anjum@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751466079;
+	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=2/PLCRDX5zQwb9vO9glSCFCybgO+wL+GFj+YcKmCwxY=;
+	b=P0SRCvrMW8to+PMLKnzJMzI7zPfWcLYGtY2c80g3CSvPjZlBCZhPbCSkNPTbRjks
+	i2g+VeY3blhZx3RiCgPNMNULw9hjGdTTPkEm56Mv9Z5Ap0J3UgXkVI5UFi9q0qJCTgi
+	hlgvEaL4lqwXkNTwF/A02GAlIYAoMJiFO6XeP+Q8=
+Received: by mx.zohomail.com with SMTPS id 1751466077488209.397213001875;
+	Wed, 2 Jul 2025 07:21:17 -0700 (PDT)
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Shuah Khan <shuah@kernel.org>
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	kernel@collabora.com,
+	David Hildenbrand <david@redhat.com>,
+	linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] selftests/mm: pagemap_scan ioctl: add PFN ZERO test cases
+Date: Wed,  2 Jul 2025 19:20:51 +0500
+Message-ID: <20250702142052.45116-1-usama.anjum@collabora.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620213447.56392-1-aford173@gmail.com>
-In-Reply-To: <20250620213447.56392-1-aford173@gmail.com>
-From: Adam Ford <aford173@gmail.com>
-Date: Wed, 2 Jul 2025 09:20:35 -0500
-X-Gm-Features: Ac12FXzt0gezjSCPgKwgvm9n1EIPWkC5-wwtbhI6dVypdKni0yvTumI1x5nEKA8
-Message-ID: <CAHCN7x+2A476SgUP3uWSLovpDU0qxxP=a+sXLbdE0UU6Bv+_YQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] arm64: dts: imx8mm-beacon: Fix HS400 USDHC clock speed
-To: linux-arm-kernel@lists.infradead.org
-Cc: aford@beaconembedded.com, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org, 
-	imx@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-On Fri, Jun 20, 2025 at 4:34=E2=80=AFPM Adam Ford <aford173@gmail.com> wrot=
-e:
->
-> The reference manual for the i.MX8MM states the clock rate in
-> MMC mode is 1/2 of the input clock, therefore to properly run
-> at HS400 rates, the input clock must be 400MHz to operate at
-> 200MHz.  Currently the clock is set to 200MHz which is half the
-> rate it should be, so the throughput is half of what it should be
-> for HS400 operation.
->
+Add test cases to test the correctness of PFN ZERO flag of pagemap_scan
+ioctl. Test with normal pages backed memory and huge pages backed
+memory.
 
-Shawn and/or Fabio,
+Cc: David Hildenbrand <david@redhat.com>
+Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+---
+The bug has been fixed [1].
 
-Any chance this can get reviewed and possibly applied for the next kernel?
+[1] https://lore.kernel.org/all/20250617143532.2375383-1-david@redhat.com
+Changes since v1:
+- Skip if madvise() fails
+- Skip test if use_zero_page isn't set to 1
+- Keep on using memalign()+free() to allocate huge pages
+---
+ tools/testing/selftests/mm/pagemap_ioctl.c | 86 +++++++++++++++++++++-
+ 1 file changed, 85 insertions(+), 1 deletion(-)
 
-thank you,
+diff --git a/tools/testing/selftests/mm/pagemap_ioctl.c b/tools/testing/selftests/mm/pagemap_ioctl.c
+index 57b4bba2b45f3..976ab357f4651 100644
+--- a/tools/testing/selftests/mm/pagemap_ioctl.c
++++ b/tools/testing/selftests/mm/pagemap_ioctl.c
+@@ -1,4 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
++
+ #define _GNU_SOURCE
+ #include <stdio.h>
+ #include <fcntl.h>
+@@ -1480,6 +1481,86 @@ static void transact_test(int page_size)
+ 			      extra_thread_faults);
+ }
+ 
++bool is_use_zero_page_set(void)
++{
++	ssize_t bytes_read;
++	char buffer[2];
++	int fd;
++
++	fd = open("/sys/kernel/mm/transparent_hugepage/use_zero_page", O_RDONLY);
++	if (fd < 0)
++		return 0;
++
++	bytes_read = read(fd, buffer, sizeof(buffer) - 1);
++	if (bytes_read <= 0) {
++		close(fd);
++		return 0;
++	}
++
++	close(fd);
++	if (atoi(buffer) != 1)
++		return 0;
++
++	return 1;
++}
++
++void zeropfn_tests(void)
++{
++	unsigned long long mem_size;
++	struct page_region vec;
++	int i, ret;
++	char *mem;
++
++	/* Test with normal memory */
++	mem_size = 10 * page_size;
++	mem = mmap(NULL, mem_size, PROT_READ, MAP_PRIVATE | MAP_ANON, -1, 0);
++	if (mem == MAP_FAILED)
++		ksft_exit_fail_msg("error nomem\n");
++
++	/* Touch each page to ensure it's mapped */
++	for (i = 0; i < mem_size; i += page_size)
++		(void)((volatile char *)mem)[i];
++
++	ret = pagemap_ioctl(mem, mem_size, &vec, 1, 0,
++			    (mem_size / page_size), PAGE_IS_PFNZERO, 0, 0, PAGE_IS_PFNZERO);
++	if (ret < 0)
++		ksft_exit_fail_msg("error %d %d %s\n", ret, errno, strerror(errno));
++
++	ksft_test_result(ret == 1 && LEN(vec) == (mem_size / page_size),
++			 "%s all pages must have PFNZERO set\n", __func__);
++
++	munmap(mem, mem_size);
++
++	/* Test with huge page if user_zero_page is set to 1 */
++	if (!is_use_zero_page_set()) {
++		ksft_test_result_skip("%s use_zero_page not supported or set to 1\n", __func__);
++		return;
++	}
++
++	mem_size = 10 * hpage_size;
++	mem = memalign(hpage_size, mem_size);
++	if (!mem)
++		ksft_exit_fail_msg("error nomem\n");
++
++	ret = madvise(mem, mem_size, MADV_HUGEPAGE);
++	if (!ret) {
++		for (i = 0; i < mem_size; i += hpage_size)
++			(void)((volatile char *)mem)[i];
++
++		ret = pagemap_ioctl(mem, mem_size, &vec, 1, 0,
++				    (mem_size / page_size), PAGE_IS_PFNZERO, 0, 0, PAGE_IS_PFNZERO);
++		if (ret < 0)
++			ksft_exit_fail_msg("error %d %d %s\n", ret, errno, strerror(errno));
++
++		ksft_test_result(ret == 1 && LEN(vec) == (mem_size / page_size),
++				 "%s all huge pages must have PFNZERO set\n", __func__);
++
++		free(mem);
++	} else {
++		ksft_test_result_skip("%s huge page not supported\n", __func__);
++	}
++}
++
+ int main(int __attribute__((unused)) argc, char *argv[])
+ {
+ 	int shmid, buf_size, fd, i, ret;
+@@ -1494,7 +1575,7 @@ int main(int __attribute__((unused)) argc, char *argv[])
+ 	if (init_uffd())
+ 		ksft_exit_pass();
+ 
+-	ksft_set_plan(115);
++	ksft_set_plan(117);
+ 
+ 	page_size = getpagesize();
+ 	hpage_size = read_pmd_pagesize();
+@@ -1669,6 +1750,9 @@ int main(int __attribute__((unused)) argc, char *argv[])
+ 	/* 16. Userfaultfd tests */
+ 	userfaultfd_tests();
+ 
++	/* 17. ZEROPFN tests */
++	zeropfn_tests();
++
+ 	close(pagemap_fd);
+ 	ksft_exit_pass();
+ }
+-- 
+2.43.0
 
-adam
-
-> Fixes: 593816fa2f35 ("arm64: dts: imx: Add Beacon i.MX8m-Mini development=
- kit")
-> Signed-off-by: Adam Ford <aford173@gmail.com>
->
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi b/arch/=
-arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi
-> index 21bcd82fd092..8287a7f66ed3 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi
-> @@ -294,6 +294,8 @@ &usdhc3 {
->         pinctrl-0 =3D <&pinctrl_usdhc3>;
->         pinctrl-1 =3D <&pinctrl_usdhc3_100mhz>;
->         pinctrl-2 =3D <&pinctrl_usdhc3_200mhz>;
-> +       assigned-clocks =3D <&clk IMX8MM_CLK_USDHC3>;
-> +       assigned-clock-rates =3D <400000000>;
->         bus-width =3D <8>;
->         non-removable;
->         status =3D "okay";
-> --
-> 2.48.1
->
