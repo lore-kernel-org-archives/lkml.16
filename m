@@ -1,222 +1,234 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2042.outbound.protection.outlook.com [40.107.223.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A71321F03D9
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 21:41:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751492480; cv=none; b=POHETSSfne819x960dVH4xQr6p3eIB+4tT4XYPtQ+Nbnf5qWAmzB7kPVLDhPm+ebhi3O4L8eh717jea53iHU6qs2LdQgkBOSfk8frZFfkrtb5tJCGAmqzE7rMaioFI/LQ8Zbwqhn1mwNAYCWS2eMEYLb+ZhT8nlPp8M8/hI6+OU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751492480; c=relaxed/simple;
-	bh=/1HUQKCUI6joAN+ktnRzqWbl30gCfKfji8UWEWWh1MM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=mnUj+hzp+Haq9iMleYXa+xb8yzUOpYfs5N5iBfKqgyFUX5nzire6h+FRXXtcI+lFxGw/zqUcV47yyVCWNsGfXiLXBdD/POohReytITNSZPntFmTQjEvD2ZnHW0aMt7j/g0U+ZNjPCAXbyw2GrhTAWPLBgrTG5YWHV7S+/YeY888=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CnwGAv2j; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 688D21EC014;
+	Wed,  2 Jul 2025 21:41:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751492488; cv=fail; b=aLyW2V9bwdr6ipVxrf4/JCSqr6bylSI8Sfy2gpykcqospa98S+qJ7j3J5wie3rZAbKjrd/ZSn09ZPjc/CjcoXdZaFPF+/EYBANZBCVP06WB09T8XXAQkKsgnBRDgqeOY7uxMo/imO6BUAab1RMWqr6Y4BxkGQuVy1v1lPKGNIWY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751492488; c=relaxed/simple;
+	bh=eQJXytFTwoO3Ixpyf2WJ276ZwynTeem1ndxv3QaV42o=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=P6IyaYqgrrzUnQzOLA3k+B8bMgm206EkT6N8F2dX+QOo9nm9Q6RQexh9Ym5ceRHE9GT05sHpfwiV01pZsLuxJ5DVs5L8a6V7z3qMm7vTo0/UEYos35G3oA75dQHlAYczXgWYV8iVxNzqe0Gfa8Jnb51dY+RfZqdegsfsswvWTLI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=q0EskcyR; arc=fail smtp.client-ip=40.107.223.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CnwGAv2j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751492479; x=1783028479;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=/1HUQKCUI6joAN+ktnRzqWbl30gCfKfji8UWEWWh1MM=;
-  b=CnwGAv2jMy65OztP3FC7tDY4ymUVN1G43lAq15vXkbkJiGtTRjksYXCq
-   vmiq97897PXvCPJzAgCsFI4XX4fSFYEiNIFwArg9/L7GNQRx3LVAyYymt
-   cN5PVaCWl0Dei7yF9VfuBG8aupd42t89fM3kix4EU+oZVPbWVAxIebP9b
-   Lnnr//tF1ziUHqmWiSAz2HdT0iANLoGk9/ugKH4pZf+4J3Wy7lGNQWEuP
-   2TU+P7qgMDrTlGgQMcF3d2s6PuZAdftyL6fVj0q34P0krF1WxIfjH1/RR
-   geOa3EC9JQsSjhVJMZ6EqAE/7tNZBbnJ0iC1WBo/1elSb6+2mRai47L3m
-   A==;
-X-CSE-ConnectionGUID: /EEGcceyRvuZSEypA9E4+Q==
-X-CSE-MsgGUID: i18o0xDQS3mqwwyJdzo3ng==
-X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="64050364"
-X-IronPort-AV: E=Sophos;i="6.16,282,1744095600"; 
-   d="scan'208";a="64050364"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 14:41:18 -0700
-X-CSE-ConnectionGUID: DZ7t7OZwTteoYaWDew8nEQ==
-X-CSE-MsgGUID: eehJJ5uVSFq3NXcOc9e8rg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,282,1744095600"; 
-   d="scan'208";a="154547643"
-Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 02 Jul 2025 14:41:16 -0700
-Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uX5Cc-00016X-1o;
-	Wed, 02 Jul 2025 21:41:14 +0000
-Date: Thu, 3 Jul 2025 05:41:05 +0800
-From: kernel test robot <lkp@intel.com>
-To: Chaitanya Vadrevu <chaitanya.vadrevu@emerson.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Jason Smith <jason.smith@emerson.com>
-Subject: drivers/tty/serial/8250/8250_ni.c:277:12: warning: stack frame size
- (1072) exceeds limit (1024) in 'ni16550_probe'
-Message-ID: <202507030557.vIewJJQO-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="q0EskcyR"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=QDaZwRIpB/M3jG2qS3V2Cgr5TNbOOdeBLY1GST5vQIGIcz7R3XWHTEY+pVynMxgloOuN+E8ySiYu7ZHLAnqGmRjViFzNl6ZCDj+sa8zwr1Exs/2nFNW5hHZ2MqSJhrlNa/e4pgdh73TGdyQAupiXgJOBuDEX0kQM995qKG8aTlarHUMh+u29RW1NjdI4VWKZP9BC6iYYHRYO+ykrq+dn5gO8WB/Fjf8nRAVJZyY7fZuUCxpNmU/mmtvfSmDVlUVckYgVQg+5r1oOEVHjeeWmqRuUdtP1Z3W3sFeDUt95rNIVNpNzq25QMkodUqmYJsJODGJv2ExY53oYPqG30Bn5uA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZitaPXKzQ3YcjWAyWfEh9a1feGFrhchDexoycDEID5o=;
+ b=Cr/VifAd9iZnrBjcw3RmvL38TaqLNF24iP/5U0R712pF80YqKPE50Jlm2loAoezSyuiv1W8eTnwVVXW+ZRscewda+VLyC47A+rrv/xcbIJLQcl99h+xyPxJS6pZRbfq8sCfFgAnyzVIn8DqWTx+PX+qhQRX5Fbhi1Bhr1lNGxVIbFabUec7nA2YZIvSxkL3VF3Vxmz41GcNws+qkgZpIVOX6FgkF+PKDKxDESY5Yi9wcErPqnXxHwro3wzp2cOtXQAUGx8bf6UhFRbcyQrIDKScBTzqMukwzoCoF+hUpLk3T78uifOtfaUmCzrnMBJjJ8Xnp15A/Acvp4NrK2OBhEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZitaPXKzQ3YcjWAyWfEh9a1feGFrhchDexoycDEID5o=;
+ b=q0EskcyR1y15FYzcsDyhyiVkKbNUf3/Gl1sks3x3HcMHe0tuuHE7UDeMmm4/5InT5ONY8MhV3lQGJZQGUMxABvibKWkybY6HRPjfEhiTcGS/bRVS6Y8CJTg5su9FNbywJyRjA1xuLYc/N0jMxMbWtzoSDl/yXpl16IbSStVsCgc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
+ DM4PR12MB7599.namprd12.prod.outlook.com (2603:10b6:8:109::12) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8880.30; Wed, 2 Jul 2025 21:41:23 +0000
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f%5]) with mapi id 15.20.8880.027; Wed, 2 Jul 2025
+ 21:41:23 +0000
+Message-ID: <2c747d35-6793-4f0c-9351-a5be1ba44e7b@amd.com>
+Date: Wed, 2 Jul 2025 16:41:20 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 09/17] cxl/pci: Map CXL Endpoint Port and CXL Switch
+ Port RAS registers
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: dave@stgolabs.net, dave.jiang@intel.com, alison.schofield@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, shiju.jose@huawei.com,
+ ming.li@zohomail.com, Smita.KoralahalliChannabasappa@amd.com,
+ rrichter@amd.com, dan.carpenter@linaro.org,
+ PradeepVineshReddy.Kodamati@amd.com, lukas@wunner.de,
+ Benjamin.Cheatham@amd.com, sathyanarayanan.kuppuswamy@linux.intel.com,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20250626224252.1415009-1-terry.bowman@amd.com>
+ <20250626224252.1415009-10-terry.bowman@amd.com>
+ <20250627121741.00002f2a@huawei.com>
+Content-Language: en-US
+From: "Bowman, Terry" <terry.bowman@amd.com>
+In-Reply-To: <20250627121741.00002f2a@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN7P222CA0023.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:806:124::31) To DS0PR12MB6390.namprd12.prod.outlook.com
+ (2603:10b6:8:ce::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|DM4PR12MB7599:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1c747100-71fb-481d-24f1-08ddb9b130a8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dVZNSmJqZUM5bERSMjR3SlM3clRBeFlTVHpXTFdLVndKNGQvMFJJRG5DaHJL?=
+ =?utf-8?B?WlFaMngvb2RueFVuenYxMW9TKzEvck5QYjBqUUtvUnJZSWhnS2lmSDYrVVYz?=
+ =?utf-8?B?U0M5NWp6NTdkYTdLbDhaNDkrbVlMakVMcGo4UkhoazFCNks4NGxlVkw0ZXpB?=
+ =?utf-8?B?cUk3TFNvTEdmczkrZHVvelFzTVBnMjVuWkxWb2wwNENTS0NDVTFxQ3htTXhP?=
+ =?utf-8?B?VmdXdmhnVjYvaU54QVNBczZHNlJ5LzU2bHB4VFV3Wm9kclZVOFNzNlRPUTZ1?=
+ =?utf-8?B?ZFJhU25OVzVwQUg2L1padWJRVW5lZ3hCVE1sTTRCMW9WVG5ZYUlKdmhSWHF5?=
+ =?utf-8?B?WWMrQitUYUkrNHhTZDFkd0JlVG43TGZ4UU9NTUdRU09OR2NYMDhaaDJuQWVE?=
+ =?utf-8?B?bkk5dzVONXI1aXNrbmUyVEczUFpXNmFnTm9aVWhvcENXTEZRL1RYZ1o1b0RY?=
+ =?utf-8?B?NTZoY3Q3K1FoZmNBbGxsNU1oZ1lvRVA3RTNYSW5ERnpLN1BWUGV4QU9QYW9B?=
+ =?utf-8?B?c21rdjh2T25pc29PMWlWZVJEY3dxbmF2cml0eHdZejRQQnAyMjhMakFsaVg3?=
+ =?utf-8?B?dTJkb2VzQVdZZExQcnhYZ00zZG1tOHVMUVhFT3lKNTl1ZXEzVXRWL29pejRQ?=
+ =?utf-8?B?alg0ekN2bERVc04vN2x3RU8vM2sxcjJZU3Z6M3lJZFdWN1IwdVgyUjFZbVpO?=
+ =?utf-8?B?TDVnTUJQdkZmNXBKSFA3RzVqcjlMVC9aM2xYNGhNeHhmeUNoR1FITWxsNzBP?=
+ =?utf-8?B?NDRiT29Vb3JmRHFzYjc0NFhyWGR2bUxWSU5rRHkzdVpvRkZ5dFh4dXQxbmdx?=
+ =?utf-8?B?a0RzTHhNb2o3K1QrZHArLzR6VDJsTmpuaXBMTDZZYlpYK2lYa0lpcklSdmRn?=
+ =?utf-8?B?alBNdUZPelZuK3VLRUF4a0QvSThNMTdWZVNCamFqR2VlVHIycjBIaVRRU0FV?=
+ =?utf-8?B?VkYxSHVlM3grL3N2Wm95aVhMcmQ2Z1R2azdncFFIVE9pL1phbjJRYStoM2Qy?=
+ =?utf-8?B?cjY5b2k2dWZta01GSWlRbEMyUlp3alNrQlR6ck5sc1F1ZXN6MEFuTlM4bHdD?=
+ =?utf-8?B?YU1qa3FRdm5wb0JTM3pjVUNpLzdkczEyM3VnbHFkSDZHalVsUHZuSWRtNUxj?=
+ =?utf-8?B?OVFVYmNoMU4yR28vQWVQS2l3SkVxQU5LMDhBaWZPSWhBa2VtSjdzSU94ZWJ2?=
+ =?utf-8?B?YndNR0dsK1I4V2puZTB6QUsyc2dvQkNteXE3WFhJcjZoeTNydWF5TFRUZDFv?=
+ =?utf-8?B?and4Vk9UY2d4clppcGNNYXdLb05zNi94MHZuUUdlYWFaSFVUa3Ywc1ArQmR2?=
+ =?utf-8?B?UDlEd1BmM1ltMW5kSlNuUWJWVmZnc2VWdVYyUDBhNHhrWVMydkpGZlRtdlUz?=
+ =?utf-8?B?Z2YxRFNERXIwbXVmVDVWcmh5aHZ3bG44ei92UHdldVcreHl0ODV0Z21VUDBF?=
+ =?utf-8?B?cWc5SHZJaEFSODg2MHg4VzZCV0g1cFQ2YnQrSFpzdWFVSUVWOC9NNVNxbHdj?=
+ =?utf-8?B?YldpSzFCalEyU1IzVWxLa3NObTRyKzJOQXBpWHBRVTBoMGFhY1RVWXdpaDg5?=
+ =?utf-8?B?eklHcTlDQ1RHTmlheUdoOGE0VTcwaTJvNFFKUXhZeVNUbFFUeXpwWk10ODFZ?=
+ =?utf-8?B?ZXhENUlrb0E4eWlwaVdxczg1KzFZZlBDMmMxR1VWNVduL3BzTGRqWE1FMjJa?=
+ =?utf-8?B?eUpCdTM2b2hSQXlDbTVuUmNiL216VlZhVHhNSEpGOTRPbmdZTHhUSVdCTkpI?=
+ =?utf-8?B?UXV3RjRzaVZCS3RFaEVMeW5NUkVFbzY2NUo4UTgyYmtneVhTTkZMdCtsZVd0?=
+ =?utf-8?B?aXlIWWxhZmFEQ2ZLMnhuK1pJTWZyc3RMTksvNVBCMUNxZHdob0xJdkdCNUhl?=
+ =?utf-8?B?Y0Q1NjBpQzZ6SmlJczU0VUtCbS9xallndkRZNkZGSGtCWUJYMzZ2UnZnaWQy?=
+ =?utf-8?Q?XZ3DRjcDSkA=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?TnZLSDZWZWhKZ0h4OEZkTVY1U2QvZFdoYWpZSUpQcHJEck84QnFFd0VBK043?=
+ =?utf-8?B?TXphcWlOVVpXdlRwTFdhVzgvNkRXeHNlYnhqNGhEeHowVUgrcXBEbjlyR3FK?=
+ =?utf-8?B?YWY2NktXV3EzeXNBMFgzVlNGcVlmWEJPVnNGM0hSOUlKY3dkR2owbk1QNERI?=
+ =?utf-8?B?ZGpFME1nZ25ES0xPMGZ1OXA3MWUwbUwySWFSblNWVkovVEJveEFCVzlNaVkz?=
+ =?utf-8?B?OHo5em5jdTM0WHN2REFWTFRMdXNXUmtZakt3UEIrYjIrNDhvU0JZQ25Zak1T?=
+ =?utf-8?B?c25KYldjYlVWd21QWnJETHdhdXZRYzJEL2c4dWcxdEJvUlppK1VGeXNvNUtw?=
+ =?utf-8?B?Z00xaWVFV2RONXF0YWVGak0rNVdwQTdKN1lQZHhFc1BJWWVQUlAwQWRJZENP?=
+ =?utf-8?B?ZUYzSFVOdFJYRW83MVMzTkFZS0dJbFZBTXl6TGpHcEdONUtNSzhORWVYVytF?=
+ =?utf-8?B?a29VVVc2bHM5SUhXbnIzeWFXWXVXb1NEbEFDSFNObEJHK2lVYXZ2SW5wVUV3?=
+ =?utf-8?B?YU9xMVRNSEJ4eW5WUml2M1lsNDh2UGYvRVh3V1RWWlkvR3gra0lwTEN5ajBh?=
+ =?utf-8?B?K2xweEU1UHVYaldKLzVkb1Bnb0E5NkFnUUlRTGlZMmJVcGhuRkZDV1QwT2pq?=
+ =?utf-8?B?UXdabGV3S09QVTFOUTZibDZYczhad0dXWndGVS9ERjJOZWtQN0NqU1lKeGlL?=
+ =?utf-8?B?aENwY1QwbTAvUTkrTEYwY2lZaWRzU2RVR3RqWkl5aW8yTWlUL05xY0FwQUpJ?=
+ =?utf-8?B?N1lXYU55QU5nZ0JPQmJjd0d6U1hPYWFuWGdIZWxWTmtTWmVaTENWeFg5RFp3?=
+ =?utf-8?B?MnlyUGNCeUUycDVwVTFyMVpoTDhIekVXRU9rUFZmTk1Fek1XbFZUTGowd01J?=
+ =?utf-8?B?VkNtV3pHRjd0N1FQUDRzUGl1ZSs3S1ZQc0RYMmVoaDZoZlljVnBMRlhwV0ZC?=
+ =?utf-8?B?R1dvU2w0WndGY2pIWGJKeUF6YVgrSmhGYk9vZXNGRXU2SzMvTDJsZjhmcS8v?=
+ =?utf-8?B?ckdUTkwyZmhJRmphL2ZPZmJHRFFkNkQycGJRVjd3Q2dUcUFoRkR4Z21vWDcy?=
+ =?utf-8?B?S1djYzFmeVcraG5maGdMRXhaR0REYW9OajB0WWtiSWU4Z1lQbkxuS0ptUEIy?=
+ =?utf-8?B?ZWZFTVhhbG1Id0FjN0ExbC9wcDh4UTVLYkZldmNpZzBwaUtINS9xLyswdWN5?=
+ =?utf-8?B?am5IUThmTTVxd3o1eGNsa1Z0S2FncTJYRkFMYVFRTzhld2pObWFGOU5WU1px?=
+ =?utf-8?B?ZnFlcnl4K3FCamVJUmZKM2xFdlZCYzNVYVRrK1ErdEdoVmI5a0xlQTZVcEt2?=
+ =?utf-8?B?b2Z5cTZPUmRWWHJudzNIUm9FMDE3QmxDV0I0YjZJTUlmMzRacG9ROFJINFhU?=
+ =?utf-8?B?QWRmbk5RSklSY1JWZFp6dkFBNzQzdVhFS1FYSzFUeXhEOUJyV3NyenBkV0dl?=
+ =?utf-8?B?RmdaUjZEb0RsR1h6RkZ3ekhpVmp5dVBkYUlzekRxWFUwZzFmTVBUVnVxc1ph?=
+ =?utf-8?B?dkZwTDUwOFR1WWwzNSszV09ORkxpMklxclg0V1FhZWg1Z2JFYUNVR2EwSVRK?=
+ =?utf-8?B?RERIeHpJMXBNZW9rK1FocUF0bEdqNHh0QTZMVy90cFV2d2hYbEd4MklXMTdp?=
+ =?utf-8?B?R2lmc2VDRnFMK2hrVHVqcVZ4bjQweFduRitWeVZ1MHhFOUx3bkZuUEFVdENV?=
+ =?utf-8?B?eVJDakN2ekllb0dLa1pJWDZzeWo3WUtnbmUrd2NGUFZVQzI0Tyt6MmRzdmpp?=
+ =?utf-8?B?RTR2YVJXSWxxWHVuWWRGcEVkQkNiVTNyL0hPUmsvNGV1L2d2MHRaWVJsZVhn?=
+ =?utf-8?B?L0xtNk9SUUpSWGZYOTVkN2FzWEQvcEtCM2dseUVPTitqd0kxbUdwakZWQWh5?=
+ =?utf-8?B?T1lOUmhpdjBpUWUvaU5KVkN2WXRHQWM1bXRyUTY4RGpEQ2tzUGV4c04yZTlS?=
+ =?utf-8?B?cHJOd3NXRHF5V2Z1M0MvN0EzZ0JIMHF2Z2wyN0YxSk5FU0gvaHd0Zm4zTnhM?=
+ =?utf-8?B?OEZwM0lFMk1TL3BhREM0bzNyVU5CdXlYZHdjSW1HUUdxclVzTnpaQk9GUDMv?=
+ =?utf-8?B?dnk3Q1gyNy9qMDIzS3pCTGpJYzRrTzBvMjg5ZG5OS3F2UkxOYnVzd1ErWUhl?=
+ =?utf-8?Q?ImD6uSdRdbLhQaZU044ivH+l/?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1c747100-71fb-481d-24f1-08ddb9b130a8
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 21:41:23.6046
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tecCC1KVNo4cPoGzGrgmrr5+hjsVffnxG3/aHvzsfrUw1IYXvqosT9a8K5G4nqIa9oinHFj3x1lNVw4xju1lNQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7599
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   b4911fb0b060899e4eebca0151eb56deb86921ec
-commit: 3d5390f4dbe633472b2a4824e66ca5c4eac6fb19 serial: 8250: add driver for NI UARTs
-date:   3 months ago
-config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20250703/202507030557.vIewJJQO-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250703/202507030557.vIewJJQO-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507030557.vIewJJQO-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/tty/serial/8250/8250_ni.c:277:12: warning: stack frame size (1072) exceeds limit (1024) in 'ni16550_probe' [-Wframe-larger-than]
-     277 | static int ni16550_probe(struct platform_device *pdev)
-         |            ^
-   1 warning generated.
 
 
-vim +/ni16550_probe +277 drivers/tty/serial/8250/8250_ni.c
+On 6/27/2025 6:17 AM, Jonathan Cameron wrote:
+> On Thu, 26 Jun 2025 17:42:44 -0500
+> Terry Bowman <terry.bowman@amd.com> wrote:
+>
+>> CXL Endpoint (EP) Ports may include Root Ports (RP) or Downstream Switch
+>> Ports (DSP). CXL RPs and DSPs contain RAS registers that require memory
+>> mapping to enable RAS logging. This initialization is currently missing and
+>> must be added for CXL RPs and DSPs.
+>>
+>> Update cxl_dport_init_ras_reporting() to support RP and DSP RAS mapping.
+>> Add alongside the existing Restricted CXL Host Downstream Port RAS mapping.
+>>
+>> Update cxl_endpoint_port_probe() to invoke cxl_dport_init_ras_reporting().
+>> This will initiate the RAS mapping for CXL RPs and DSPs when each CXL EP is
+>> created and added to the EP port.
+>>
+>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> One trivial comment inline.  I'm not super confident that I follow exactly
+> what is going on here so more eyes needed.  However I think it's fine.
+>
+> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 
-   276	
- > 277	static int ni16550_probe(struct platform_device *pdev)
-   278	{
-   279		const struct ni16550_device_info *info;
-   280		struct device *dev = &pdev->dev;
-   281		struct uart_8250_port uart = {};
-   282		unsigned int txfifosz, rxfifosz;
-   283		unsigned int prescaler = 0;
-   284		struct ni16550_data *data;
-   285		const char *portmode;
-   286		bool rs232_property;
-   287		int ret;
-   288		int irq;
-   289	
-   290		data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-   291		if (!data)
-   292			return -ENOMEM;
-   293	
-   294		spin_lock_init(&uart.port.lock);
-   295	
-   296		irq = platform_get_irq(pdev, 0);
-   297		if (irq < 0)
-   298			return irq;
-   299	
-   300		ret = ni16550_get_regs(pdev, &uart.port);
-   301		if (ret < 0)
-   302			return ret;
-   303	
-   304		/* early setup so that serial_in()/serial_out() work */
-   305		serial8250_set_defaults(&uart);
-   306	
-   307		info = device_get_match_data(dev);
-   308	
-   309		uart.port.dev		= dev;
-   310		uart.port.irq		= irq;
-   311		uart.port.irqflags	= IRQF_SHARED;
-   312		uart.port.flags		= UPF_SHARE_IRQ | UPF_BOOT_AUTOCONF
-   313						| UPF_FIXED_PORT | UPF_FIXED_TYPE;
-   314		uart.port.startup	= ni16550_port_startup;
-   315		uart.port.shutdown	= ni16550_port_shutdown;
-   316	
-   317		/*
-   318		 * Hardware instantiation of FIFO sizes are held in registers.
-   319		 */
-   320		txfifosz = ni16550_read_fifo_size(&uart, NI16550_TFS_OFFSET);
-   321		rxfifosz = ni16550_read_fifo_size(&uart, NI16550_RFS_OFFSET);
-   322	
-   323		dev_dbg(dev, "NI 16550 has TX FIFO size %u, RX FIFO size %u\n",
-   324			txfifosz, rxfifosz);
-   325	
-   326		uart.port.type		= PORT_16550A;
-   327		uart.port.fifosize	= txfifosz;
-   328		uart.tx_loadsz		= txfifosz;
-   329		uart.fcr		= UART_FCR_ENABLE_FIFO | UART_FCR_R_TRIG_10;
-   330		uart.capabilities	= UART_CAP_FIFO | UART_CAP_AFE | UART_CAP_EFR;
-   331	
-   332		/*
-   333		 * Declaration of the base clock frequency can come from one of:
-   334		 * - static declaration in this driver (for older ACPI IDs)
-   335		 * - a "clock-frquency" ACPI
-   336		 */
-   337		if (info->uartclk)
-   338			uart.port.uartclk = info->uartclk;
-   339		if (device_property_read_u32(dev, "clock-frequency",
-   340					     &uart.port.uartclk)) {
-   341			data->clk = devm_clk_get_enabled(dev, NULL);
-   342			if (!IS_ERR(data->clk))
-   343				uart.port.uartclk = clk_get_rate(data->clk);
-   344		}
-   345	
-   346		if (!uart.port.uartclk) {
-   347			dev_err(dev, "unable to determine clock frequency!\n");
-   348			ret = -ENODEV;
-   349			goto err;
-   350		}
-   351	
-   352		if (info->prescaler)
-   353			prescaler = info->prescaler;
-   354		device_property_read_u32(dev, "clock-prescaler", &prescaler);
-   355	
-   356		if (prescaler != 0) {
-   357			uart.port.set_mctrl = ni16550_set_mctrl;
-   358			ni16550_config_prescaler(&uart, (u8)prescaler);
-   359		}
-   360	
-   361		/*
-   362		 * The determination of whether or not this is an RS-485 or RS-232 port
-   363		 * can come from the PMR (if present), otherwise we're solely an RS-485
-   364		 * port.
-   365		 *
-   366		 * This is a device-specific property, and there are old devices in the
-   367		 * field using "transceiver" as an ACPI property, so we have to check
-   368		 * for that as well.
-   369		 */
-   370		if (!device_property_read_string(dev, "transceiver", &portmode)) {
-   371			rs232_property = strncmp(portmode, "RS-232", 6) == 0;
-   372	
-   373			dev_dbg(dev, "port is in %s mode (via device property)\n",
-   374				rs232_property ? "RS-232" : "RS-485");
-   375		} else if (info->flags & NI_HAS_PMR) {
-   376			rs232_property = is_pmr_rs232_mode(&uart);
-   377	
-   378			dev_dbg(dev, "port is in %s mode (via PMR)\n",
-   379				rs232_property ? "RS-232" : "RS-485");
-   380		} else {
-   381			rs232_property = 0;
-   382	
-   383			dev_dbg(dev, "port is fixed as RS-485\n");
-   384		}
-   385	
-   386		if (!rs232_property) {
-   387			/*
-   388			 * Neither the 'transceiver' property nor the PMR indicate
-   389			 * that this is an RS-232 port, so it must be an RS-485 one.
-   390			 */
-   391			ni16550_rs485_setup(&uart.port);
-   392		}
-   393	
-   394		ret = serial8250_register_8250_port(&uart);
-   395		if (ret < 0)
-   396			goto err;
-   397		data->line = ret;
-   398	
-   399		platform_set_drvdata(pdev, data);
-   400		return 0;
-   401	
-   402	err:
-   403		return ret;
-   404	}
-   405	
+Thanks.
+>> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+>> index 021f35145c65..b52f82925891 100644
+>> --- a/drivers/cxl/port.c
+>> +++ b/drivers/cxl/port.c
+>>  
+>> +static void cxl_switch_port_init_ras(struct cxl_port *port)
+>> +{
+>> +	if (is_cxl_root(to_cxl_port(port->dev.parent)))
+>> +		return;
+>> +
+>> +	/* May have upstream DSP or RP */
+>> +	if (port->parent_dport && dev_is_pci(port->parent_dport->dport_dev)) {
+>  A lot of port->parent_dport in here. Maybe a local variable for that with
+> a suitable name to describe that its the next port in the upstream direction.
+Ok, I'll add a local pointer to make it more readable.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+-Terry
+>> +		struct pci_dev *pdev = to_pci_dev(port->parent_dport->dport_dev);
+>> +
+>> +		if ((pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT) ||
+>> +		    (pci_pcie_type(pdev) == PCI_EXP_TYPE_DOWNSTREAM))
+>> +			cxl_dport_init_ras_reporting(port->parent_dport, &port->dev);
+>> +	}
+>> +
+>> +	cxl_uport_init_ras_reporting(port, &port->dev);
+>> +}
+>> +
+>> +static void cxl_endpoint_port_init_ras(struct cxl_port *port)
+>> +{
+>> +	struct cxl_dport *dport;
+>> +	struct cxl_memdev *cxlmd = to_cxl_memdev(port->uport_dev);
+>> +	struct cxl_port *parent_port __free(put_cxl_port) =
+>> +		cxl_mem_find_port(cxlmd, &dport);
+>> +
+>> +	if (!dport || !dev_is_pci(dport->dport_dev)) {
+>> +		dev_err(&port->dev, "CXL port topology not found\n");
+>> +		return;
+>> +	}
+>> +
+>> +	cxl_dport_init_ras_reporting(dport, cxlmd->cxlds->dev);
+>> +}
+>>
+
