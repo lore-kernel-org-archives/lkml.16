@@ -1,96 +1,122 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45F9E22A4DB
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 13:16:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 576C327700B;
+	Wed,  2 Jul 2025 13:16:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751462182; cv=none; b=D54uUNQKfio8bKzhFupfxtWDz1aQFm0J/EPilhsA+6epr4g1q8oS+8nXdJUCT4MM0la+vLr8eVjYL4Bg/BFLOkFfaQOpr0VCNOckFMItrEAVvJV5DTwQCFQRymC7OhGfrEHiLFV5/6Azu3jBncXno1kKHD5WqhEnZQxlE44Uug4=
+	t=1751462184; cv=none; b=StGOa9KkFMRrSnru/r8014+VmJN52E/OuUSoF4+QGhmHnnYi0r5z1MkM2tM1eDx7C44DwiKeNeFLTQ7gWvIcRAca37ei+ZX9Dp1xR1HYq8q0emC6XKbaQ3vsVFQV0n6vFinhWMarnSsgPXQ65DbSAPKCd3HKLuKSPM+uZPGH6Vs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751462182; c=relaxed/simple;
-	bh=eoh/0ngUiWGnFNUZX8+EKdsHmE8O2b7KxJ6G+VXBozU=;
+	s=arc-20240116; t=1751462184; c=relaxed/simple;
+	bh=BalqjDGonmJyXEzDFjwpcwkTqv8MDEHIz2hYDyigmKU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J+CzmwOMCrMYI+EWiuzwRs4Lrpev35zT2Jnb+lV/wthEdJCmQ8hpHm7nEAKhs6RSz4K+oKcqYH0q1DPKs3aj3O77reI61jYUGEC/bXtzoJH9HzEe5cTMqNCq0lJAwzlL/dQej7fGW6B66mleqYiJ6m/QfMi/ZrIsjI9ehCdMQPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C381C152B;
-	Wed,  2 Jul 2025 06:16:04 -0700 (PDT)
-Received: from J2N7QTR9R3.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 402C23F58B;
-	Wed,  2 Jul 2025 06:16:18 -0700 (PDT)
-Date: Wed, 2 Jul 2025 14:16:15 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: kernel test robot <lkp@intel.com>, Thomas Gleixner <tglx@linutronix.de>,
-	llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Jinjie Ruan <ruanjinjie@huawei.com>
-Subject: Re: [tip:master 19/19] include/linux/irq-entry-common.h:201:2:
- error: unexpected token
-Message-ID: <aGUxH--v32Bv4T81@J2N7QTR9R3.cambridge.arm.com>
-References: <202507020528.N0LtekXt-lkp@intel.com>
- <20250702123240.GDaGUm6Le4KLL7o_91@fat_crate.local>
- <aGUtCveV8Ev17_FS@J2N7QTR9R3.cambridge.arm.com>
- <20250702130915.GEaGUve86iYnv337_Z@fat_crate.local>
+	 Content-Type:Content-Disposition:In-Reply-To; b=JS8yu7PS2fhR15yuNjrbBV+9UbYJLQBdw/Eng4wB6hTV97oQhW/KRuXNIpgKzuRl4bbWed/JBZJ9SZfUGB08GywelI3O95dwi0k28Elm3XOZwz2dAFzAIX54m5gNIZn/G5QNtPSxgAd9J7LpA+El/HgoJobklXzz4O02A1artNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V3owOUtM; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V3owOUtM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76C4BC4CEED;
+	Wed,  2 Jul 2025 13:16:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751462184;
+	bh=BalqjDGonmJyXEzDFjwpcwkTqv8MDEHIz2hYDyigmKU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V3owOUtMnbbvO0krTqvLoWpLm1WkZCnvikqym0I+oe5gDYS6XcLZM0ON4AOd3e1Mf
+	 hllI3RTOM+c8lyijWVGowILYr/ZOAHLki7Ud+J//IpPO9JA6BeK5PdVTDdperVX8SY
+	 Sw/14lBoOgyzoA1OF5kX/ZxmW+4kxHw6lOWj2atwl5gT7Im+nRCjoprVWU3A5cFet9
+	 62spxD0/kOK47Uh0NZTFQjUR+pXgGdr2OQk+BAyOmaPisTgVjPBRSTj34ab5DAC1c0
+	 nIIZZmTXw+ZelUkHzkwsSGCRK/wQXYWDBKK8khIdHO/UvRAec5DJK2w8mdzt5d45c2
+	 dNgaIEF2P+eUA==
+Date: Wed, 2 Jul 2025 18:46:04 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Kishon Vijay Abraham I <kishon@kernel.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Anup Patel <apatel@ventanamicro.com>, Marc Zyngier <maz@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Shuah Khan <shuah@kernel.org>, 
+	Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Niklas Cassel <cassel@kernel.org>, dlemoal@kernel.org, jdmason@kudzu.us, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, imx@lists.linux.dev, devicetree@vger.kernel.org
+Subject: Re: [PATCH v19 07/10] selftests: pci_endpoint: Add doorbell test case
+Message-ID: <u7crpzltdyqypkvrkfbs6sruc4z3cpzyvcnqkokzsicbqkoj7e@6uxhoifc5xl7>
+References: <20250609-ep-msi-v19-0-77362eaa48fa@nxp.com>
+ <20250609-ep-msi-v19-7-77362eaa48fa@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250702130915.GEaGUve86iYnv337_Z@fat_crate.local>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250609-ep-msi-v19-7-77362eaa48fa@nxp.com>
 
-On Wed, Jul 02, 2025 at 03:09:15PM +0200, Borislav Petkov wrote:
-> Hey,
+On Mon, Jun 09, 2025 at 12:34:19PM GMT, Frank Li wrote:
+> Add doorbell test case.
 > 
-> On Wed, Jul 02, 2025 at 01:58:50PM +0100, Mark Rutland wrote:
-> > Hi Boris,
-> > 
-> > [ adding Linux and Jinjie, since this is almost certainly due to the
-> >   irqentry split ]
 
-I was wrong about the above, sorry for the noise!
+This also warrants a documentation change.
 
-> It looks to me like that BUGVERBOSE stuff in tip/core/bugs and it warns
-> because core/entry starts using it when it gets merged to the rest of the tip
-> pile.
+- Mani
 
-Yep; my bisect fingers:
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> change from v14 to v16
+> - Add set IRQ type
+> 
+> change from v13 to v14
+> - merge to selftests framework
+> ---
+>  .../selftests/pci_endpoint/pci_endpoint_test.c     | 28 ++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c b/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
+> index ac26481d29d9d..da0db0e7c9693 100644
+> --- a/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
+> +++ b/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
+> @@ -229,4 +229,32 @@ TEST_F(pci_ep_data_transfer, COPY_TEST)
+>  					 test_size[i]);
+>  	}
+>  }
+> +
+> +FIXTURE(pcie_ep_doorbell)
+> +{
+> +	int fd;
+> +};
+> +
+> +FIXTURE_SETUP(pcie_ep_doorbell)
+> +{
+> +	self->fd = open(test_device, O_RDWR);
+> +
+> +	ASSERT_NE(-1, self->fd) TH_LOG("Can't open PCI Endpoint Test device");
+> +};
+> +
+> +FIXTURE_TEARDOWN(pcie_ep_doorbell)
+> +{
+> +	close(self->fd);
+> +};
+> +
+> +TEST_F(pcie_ep_doorbell, DOORBELL_TEST)
+> +{
+> +	int ret;
+> +
+> +	pci_ep_ioctl(PCITEST_SET_IRQTYPE, PCITEST_IRQ_TYPE_AUTO);
+> +	ASSERT_EQ(0, ret) TH_LOG("Can't set AUTO IRQ type");
+> +
+> +	pci_ep_ioctl(PCITEST_DOORBELL, 0);
+> +	EXPECT_FALSE(ret) TH_LOG("Test failed for Doorbell\n");
+> +}
+>  TEST_HARNESS_MAIN
+> 
+> -- 
+> 2.34.1
+> 
 
-  b940c7b8ea92 ("bugs/s390: Use 'cond_str' in __EMIT_BUG()")
-
-| git bisect start
-| # bad: [104f02a7798f7e8aba25545f9d485035532260b2] Merge core/entry into tip/master
-| git bisect bad 104f02a7798f7e8aba25545f9d485035532260b2
-| # bad: [959770cda97b75bc831267fd939408ec58139cb5] Merge locking/core into tip/master
-| git bisect bad 959770cda97b75bc831267fd939408ec58139cb5
-| # good: [86731a2a651e58953fc949573895f2fa6d456841] Linux 6.16-rc3
-| git bisect good 86731a2a651e58953fc949573895f2fa6d456841
-| # good: [7abdafd2343ab199367c8243d6a5f06a9aa6976b] Merge tag 'drm-fixes-2025-06-28' of https://gitlab.freedesktop.org/drm/kernel
-| git bisect good 7abdafd2343ab199367c8243d6a5f06a9aa6976b
-| # good: [2d41eb1b4a70fd8f3ca7f08ed209ae5c8037af62] Merge x86/kconfig into tip/master
-| git bisect good 2d41eb1b4a70fd8f3ca7f08ed209ae5c8037af62
-| # good: [b7770ed895ab888d0626802a83939f6a30c35576] Merge x86/bugs into tip/master
-| git bisect good b7770ed895ab888d0626802a83939f6a30c35576
-| # bad: [244efb663e9ead81d3d258d81f38a38af02e09de] Merge core/bugs into tip/master
-| git bisect bad 244efb663e9ead81d3d258d81f38a38af02e09de
-| # bad: [e7e26cfad96c57c81156693cbf63032d899fe7c9] bugs/s390: Remove private WARN_ON() implementation
-| git bisect bad e7e26cfad96c57c81156693cbf63032d899fe7c9
-| # good: [66e94df0dd272b057899b8cdbca906ea1306d7a1] bugs/LoongArch: Pass in 'cond_str' to __BUG_ENTRY()
-| git bisect good 66e94df0dd272b057899b8cdbca906ea1306d7a1
-| # bad: [4218dedd47c79946bc9e6214f50c0d16096873ce] bugs/riscv: Pass in 'cond_str' to __BUG_FLAGS()
-| git bisect bad 4218dedd47c79946bc9e6214f50c0d16096873ce
-| # good: [7d9e9021ad7e9dac89b8262fbf95630ead7a787a] bugs/s390: Pass in 'cond_str' to __EMIT_BUG()
-| git bisect good 7d9e9021ad7e9dac89b8262fbf95630ead7a787a
-| # bad: [b940c7b8ea921fae7a99d305e819883d8311669e] bugs/s390: Use 'cond_str' in __EMIT_BUG()
-| git bisect bad b940c7b8ea921fae7a99d305e819883d8311669e
-| # first bad commit: [b940c7b8ea921fae7a99d305e819883d8311669e] bugs/s390: Use 'cond_str' in __EMIT_BUG()  
-
-> Lemme show it to Peter.
-
-Sounds like a plan.
-
-Mark.
+-- 
+மணிவண்ணன் சதாசிவம்
