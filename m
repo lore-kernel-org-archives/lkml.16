@@ -1,65 +1,65 @@
-Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6C2030B9B0
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 15:07:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFBD30AAD1
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 15:07:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751468842; cv=none; b=EvSwMdUMAhz2AlmnLGsUc0LOm5jhCUU4HbTrTXvQMqdIW452fdQYts6FC1vPJO06tAtw+R3FPrWFPT7KIyUuUGYOSFTSXvZMscdSznyes8HO3FL0Zh5iZ33yXTrhyqjZNEhGtEJQZJw7wWWgtaBDWF2CBAHTK2p5dNngAT1/PNw=
+	t=1751468842; cv=none; b=RpUIjVsVyjC2VcmB3i0/NvA+0GWBew/HK29TeOVEaHY4rk4tNPznkJANifndubs6C/6JCX+5ozPT0fL+LnwbdYc+NcdiVgGoIsqu0UPtgkJW2uW5jfauXv0ySes5l8qbpFwZK7lLzOFPHTVjs3wZO+3A03aIoagGTeKztL1RXos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751468842; c=relaxed/simple;
-	bh=cn2NRI5mu8mp2JvptDQmdNR3iEYDCKiW6RwP36IdYcE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RRgdVd/AXAeTQUQT07LcDnHhdlECfoEQ2BmUCj6N4XHiKLWQTXHqUWmLN9F5ukylfwOICLQ+1srdRsaojo5stbtN1/NkIg3NNESWyzN+i0Is5e6AxOZn88HCXimQFkVazJLCwiRIJlSsKpfoUuyIH4B+MrRDidrMQ05NjaEoVHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=rpglmKEv; arc=none smtp.client-ip=209.85.161.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	bh=RA/GMUkKsIQ+lZ9UfzwqcIT00K6fR3Accy7HzYB6+/E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=UWZTIVbiytSTFNHGBeYsVUkAQrhfC+RCSmcdWzKCncz+OwA44ft1o9C6p0BefalN9y2C+hakxCPIY3cYS7uP/3Z+XF0xuauSw3tVyzwKMO51PjH3Uhqd2vwleeJ0EYSoMviJEpGsoMn0pY7T9+SJFvAeV0SHOKvLp3UBdcHUf34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xrYPB2hP; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="rpglmKEv"
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-61208b86da2so158360eaf.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 08:07:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xrYPB2hP"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4538bc1cffdso43725055e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 08:07:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751468840; x=1752073640; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1751468838; x=1752073638; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Z+yF8Byfsy0CuO73SgfsROHb/6ylMyJG4365Xzkg/tU=;
-        b=rpglmKEvds1+pdW7sRoDilSXNV5TzQif0EQwoG8XN2LeqUU2czx1bgjNhLhrW4lDYo
-         eP+ZKGkcTeq06R/knz5JOXuOfAH6J4HzfFpwDV1OygWgLfshsYK5zD+HoaZahX+vF1qC
-         BkgyYnKmlyUNlwOle0bSVvcKOW5CobavEyL0Pb4ElGjUCGVdWp+e8HO8ZMZCjiSFnT17
-         OBrF1tOZyLob92vmiYSDTZP9ZYqwmuwuEzbZ7kuylC9LSXXSuxNJXnHoKGzo4JQXFAsi
-         O1ZOI2CU91ZqVDCs0Iecuic4KsUe6Duv4c7xidaTRd08/dsNKTg31q3DRM9uv21BAswI
-         ZqtA==
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=fdmc6yakPu/5WDUcMb8FRc7nipfiDb99vi6NT3hqQ5c=;
+        b=xrYPB2hPyOYYlYkXxu7A6WLfegqBU6EQ94+NaTRhLRmGW+EkeI6AQbQiVMOO0djSlW
+         HebsGpf5q9tE3x8k6dMPzXJXCqLxkH+UV3CRDHGx9SLq+GDEGNXNoy4J+/n0nJQEVSQU
+         tPRlPOGXeZ/d5TTETJb0+XgcVQe4RTDdN8gEDYj3ueTls7IES4sGxsR2jSJODkVQhYkM
+         +b14jAGt2M6o0rkxDqAApX49H9/8XQeBKLqXVIrY0PGCLJt9od2D4FjFaBQkixAyTCEF
+         KbNsS8e9mfiyynN2txZrn0im9WN5LEZ0H3Po14XZ/jpj3f6JANCI9rZygvZtw0AJczRf
+         XDhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751468840; x=1752073640;
+        d=1e100.net; s=20230601; t=1751468838; x=1752073638;
         h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :references:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z+yF8Byfsy0CuO73SgfsROHb/6ylMyJG4365Xzkg/tU=;
-        b=n6BKWwYRWqMQtjA3C7thDNqfYQ/ZsCBouGf9lHwTgj1qmeoYfH2JE00c9g2yjOvVuQ
-         dBO9rNIvzRoG78rjwKGhTZrkzhxVdOpKdnpReN/9vE0NH5HnIqIqXtTqCvIeqCbUGVTg
-         /SxtO1OrDLnXa+WiVIQE3g926xkozW8drGJmhq/K+ol3KUdGi7o63MhNmxAsr64cOhaS
-         F43RhtUwLor4UEovmrkJlQn/QaOFK9/BphLB3Y3wDcR7iXs+WZcWCQZHf4Bkr5rI6T0P
-         pqRNulKMmuZUHkDJPQMdCQavUDqyz8JiTD/8bFwBMDXPw7lWOztCSBGrjwkBp30Ks6PR
-         NcJw==
-X-Forwarded-Encrypted: i=1; AJvYcCUVzjp4qhMde5vQ+GbOlqsaYtTKSeKs8vtusp3+pQVtQag0Zq9FFkKOzvSlwmu2WpLomg2EpZl+y3vJle0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcPjtKnQ+QmJuNGxQWamk/8Tw787+Unmt4bHnmlGuOQobLKPG7
-	D4IHY6QqvRzWHPHrtKcwTM/hxmI/R7LTP0X59qm5YYMhRC75s7FnzhXJ19S61w9N0Jo=
-X-Gm-Gg: ASbGncvXlHOHeasi88LxkttysT+3Alsln4cLDr5D+gf+V59eq7Y8FML/zNLHn74NjVW
-	/Evrp8D6IHsfFd2BdysIv6Yy5ELYMDvVK+JgjgoEAm8tuoss3XyFnrDumS9yfuxUubpTK9n1/UN
-	ti1zGlrCv4QZFM6HHv4/qJVTscxNyC3zc/HkcThJi/SPDvlY2JggTYvTD+WZwXGqJxKYVZ2bQ5I
-	48syUj+aLK8YyGrVwVK2opfL/CMJMLAGK9J4+yj6CWIS+WjdkT82ua9+oTzedn7DTbTCnVc2Xb8
-	vbOJu/yXNuR+lQlzrccW1iXt381gIvPu8cS2Jmh+/a+UAXziV4v2PgevMH/TJFO5O6cUKZ+qU2A
-	NxhQv0oqb4rt9mpC3kq5RQKS635sQpV/qlmrHNN8=
-X-Google-Smtp-Source: AGHT+IE1PW5FUH+qwlJtTOdD0wGyWz6EDOBzlYeJCn84Z90rIwVxi1VgT+rOkeUbBg33/zG427zvaQ==
-X-Received: by 2002:a05:6820:1994:b0:611:9a4d:fc44 with SMTP id 006d021491bc7-61201244fcfmr2268633eaf.3.1751468839839;
-        Wed, 02 Jul 2025 08:07:19 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:5c00:24f0:997b:5458? ([2600:8803:e7e4:1d00:5c00:24f0:997b:5458])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-611b8474da2sm1700798eaf.6.2025.07.02.08.07.18
+        bh=fdmc6yakPu/5WDUcMb8FRc7nipfiDb99vi6NT3hqQ5c=;
+        b=o0LdFea9GQJSzPAs5cLUGRBydCLDa/wvtJHwnjLe96tLc21LLpUat4IzwMMO6ekReh
+         lP150kaXsoCUEJBCvlPb1ICVszKyhdQa2NS4JS4vBjS9bkslXvfXk67UCExNWnJKEbvt
+         FsY7fUu7JpUFZwdlZXlJlVjOWynVkA7wzh4EH+/ilA7DG4FYDKn4zwOzGpwfLIpdScqv
+         0qXuPccfg/SOhe3T+xPAsEQClQbOsJkJoQVDOoDlJBkBEqRwWhrYZxwb665yTXZiYO96
+         rIxNP4OwmfB6RKwailzAlOTB6D1X+Zdd/KHsCEG6nNUFutf3pshU5fMMvh7XV5ZUv3tT
+         jcUA==
+X-Forwarded-Encrypted: i=1; AJvYcCVwj2w1kyuyZGOLxJfqhKD8n7pnDk17ypDNQEY+ag8XMG+YKzfeeWHWe38vS2Uk9CtgEAWDkcOoDio/Qec=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVxsoP5a9gQgnYPxow8HSfyZ+wknK/HvY89z2yMBI+g1OXdn97
+	wgs2/AiSbeul+XEnFaMEzO+lKFcXZGHxjGzc0rgwtP947/gkNFCNNMgYw+Ap9x9BrpQ=
+X-Gm-Gg: ASbGnctkwjFj4YouoE1J1pe3Bh55RZcwvhR62oXM8kSAKURIWxZ7q1z45uGOEmaAXGi
+	gMSLvqKoZRwlwP78OdjjNx/tPRCiHxgOLBxS8fEHN4z/VluhT+T+zgjnhiLMPSniSmnnJZLH+Gc
+	rHd4FqbxKvOc0gPWxeg4KnbHAFZ1smatJMmMm9TSuMkr8NADusNlLf4fNT6Im44reIe8lKdqDXY
+	HjcLeHxTt7jL/dUu7jRFv/RzWtIzInomOaKmWp78fwxYNKx0nFmymNcFY83e/jOvXvLBv2ScXPF
+	ZU0ylnQ0JT3mcVeWrthCxLaTcKejvciGGZ+rNiH3Twqnf4Z/y9f0JIIIWw94ktczghLNaL+hOVs
+	/m0KjG3Q/bKi6aZwEBvhF7YiGBUWH
+X-Google-Smtp-Source: AGHT+IEmwUS6XFEShtw6PZtQHOeYmfpo1hOEG9/PMGEWUTVc1nuwADqyGo/1EWh8Hv5mWdqbx+CR6w==
+X-Received: by 2002:a05:600c:1c02:b0:43d:2230:300f with SMTP id 5b1f17b1804b1-454a5c67c8cmr25403565e9.0.1751468837111;
+        Wed, 02 Jul 2025 08:07:17 -0700 (PDT)
+Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453b3542838sm34842315e9.1.2025.07.02.08.07.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jul 2025 08:07:18 -0700 (PDT)
-Message-ID: <3778ad13-3b62-4f68-946d-b861b0df4272@baylibre.com>
-Date: Wed, 2 Jul 2025 10:07:17 -0500
+        Wed, 02 Jul 2025 08:07:14 -0700 (PDT)
+Message-ID: <dd5717a7-9476-4207-967f-a30e7cb3b3e7@linaro.org>
+Date: Wed, 2 Jul 2025 16:07:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,44 +67,134 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iio: imu: adis16550: rework clock range test
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Robert Budai <robert.budai@analog.com>,
- Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250702-iio-imu-adis16550-rework-clock-range-test-v1-1-b45f3a3b0dc1@baylibre.com>
- <aGVIBVsFPcVw3lN6@smile.fi.intel.com> <aGVJPRmn1-HUBb40@smile.fi.intel.com>
+Subject: Re: [PATCH] media: iris: Be explicit in naming of VPU2 power off
+ handlers
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Abhinav Kumar <abhinav.kumar@linux.dev>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250702134227.211104-2-krzysztof.kozlowski@linaro.org>
 Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <aGVJPRmn1-HUBb40@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20250702134227.211104-2-krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 7/2/25 9:59 AM, Andy Shevchenko wrote:
-> On Wed, Jul 02, 2025 at 05:53:57PM +0300, Andy Shevchenko wrote:
->> On Wed, Jul 02, 2025 at 09:27:45AM -0500, David Lechner wrote:
->>> Rework the clock rate range test to test if sync_mode_data != NULL
->>> instead of testing if the for loop index variable. This makes it easier
->>> for static analyzers to see that we aren't using an uninitialized
->>> sync_mode_data [1].
->>
->> But at the same time it makes it not to be the usual pattern.,,
+On 02/07/2025 14:42, Krzysztof Kozlowski wrote:
+> Driver implements different callbacks for power off hardware
+> (.power_off_hw) and power off controller (.power_off_controller):
 > 
-> Reading the static analyser output I think the first hunk is only what we need,
-> but this is still false positive and it's problem of that static
-> analyser. Have you filed a bug there? (My point is that modifying the code for
-> the advantage of false positives of some static analyser is wrong road to go
-> in my opinion.)
+>   - iris_vpu_power_off_hw + iris_vpu_power_off_controller,
+>   - iris_vpu3_power_off_hardware,
+>   - iris_vpu33_power_off_hardware + iris_vpu33_power_off_controller,
 > 
+> The first group (iris_vpu_power_off_hw() and
+> iris_vpu_power_off_controller()) is used on older VPU2 designs but also
+> called from newer ones: iris_vpu3_power_off_hardware() calls
+> iris_vpu_power_off_controller().
+> 
+> In the same time there is wrapper iris_vpu_power_off() which calls
+> respective callbacks (the VPU2, VPU3 etc).
+> 
+> Let's make it more obvious which function is a generic wrapper over
+> specific VPU/platform callbacks (iris_vpu_power_off()) and which one is
+> the callback by adding "2" to callbacks used on VPU2.  No functional
+> changes.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>   drivers/media/platform/qcom/iris/iris_vpu2.c       | 4 ++--
+>   drivers/media/platform/qcom/iris/iris_vpu3x.c      | 6 +++---
+>   drivers/media/platform/qcom/iris/iris_vpu_common.c | 4 ++--
+>   drivers/media/platform/qcom/iris/iris_vpu_common.h | 4 ++--
+>   4 files changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/media/platform/qcom/iris/iris_vpu2.c b/drivers/media/platform/qcom/iris/iris_vpu2.c
+> index 7cf1bfc352d3..2570e65816f6 100644
+> --- a/drivers/media/platform/qcom/iris/iris_vpu2.c
+> +++ b/drivers/media/platform/qcom/iris/iris_vpu2.c
+> @@ -33,7 +33,7 @@ static u64 iris_vpu2_calc_freq(struct iris_inst *inst, size_t data_size)
+>   }
+>   
+>   const struct vpu_ops iris_vpu2_ops = {
+> -	.power_off_hw = iris_vpu_power_off_hw,
+> -	.power_off_controller = iris_vpu_power_off_controller,
+> +	.power_off_hw = iris_vpu2_power_off_hw,
+> +	.power_off_controller = iris_vpu2_power_off_controller,
+>   	.calc_freq = iris_vpu2_calc_freq,
+>   };
+> diff --git a/drivers/media/platform/qcom/iris/iris_vpu3x.c b/drivers/media/platform/qcom/iris/iris_vpu3x.c
+> index 9b7c9a1495ee..a2c8a1650153 100644
+> --- a/drivers/media/platform/qcom/iris/iris_vpu3x.c
+> +++ b/drivers/media/platform/qcom/iris/iris_vpu3x.c
+> @@ -104,7 +104,7 @@ static void iris_vpu3_power_off_hardware(struct iris_core *core)
+>   	writel(0x0, core->reg_base + CPU_CS_AHB_BRIDGE_SYNC_RESET);
+>   
+>   disable_power:
+> -	iris_vpu_power_off_hw(core);
+> +	iris_vpu2_power_off_hw(core);
+>   }
+>   
+>   static void iris_vpu33_power_off_hardware(struct iris_core *core)
+> @@ -142,7 +142,7 @@ static void iris_vpu33_power_off_hardware(struct iris_core *core)
+>   	writel(0x0, core->reg_base + CPU_CS_AHB_BRIDGE_SYNC_RESET);
+>   
+>   disable_power:
+> -	iris_vpu_power_off_hw(core);
+> +	iris_vpu2_power_off_hw(core);
+>   }
+>   
+>   static int iris_vpu33_power_off_controller(struct iris_core *core)
+> @@ -264,7 +264,7 @@ static u64 iris_vpu3x_calculate_frequency(struct iris_inst *inst, size_t data_si
+>   
+>   const struct vpu_ops iris_vpu3_ops = {
+>   	.power_off_hw = iris_vpu3_power_off_hardware,
+> -	.power_off_controller = iris_vpu_power_off_controller,
+> +	.power_off_controller = iris_vpu2_power_off_controller,
+>   	.calc_freq = iris_vpu3x_calculate_frequency,
+>   };
+>   
+> diff --git a/drivers/media/platform/qcom/iris/iris_vpu_common.c b/drivers/media/platform/qcom/iris/iris_vpu_common.c
+> index 42a7c53ce48e..22f190e0c7c6 100644
+> --- a/drivers/media/platform/qcom/iris/iris_vpu_common.c
+> +++ b/drivers/media/platform/qcom/iris/iris_vpu_common.c
+> @@ -211,7 +211,7 @@ int iris_vpu_prepare_pc(struct iris_core *core)
+>   	return -EAGAIN;
+>   }
+>   
+> -int iris_vpu_power_off_controller(struct iris_core *core)
+> +int iris_vpu2_power_off_controller(struct iris_core *core)
+>   {
+>   	u32 val = 0;
+>   	int ret;
+> @@ -253,7 +253,7 @@ int iris_vpu_power_off_controller(struct iris_core *core)
+>   	return 0;
+>   }
+>   
+> -void iris_vpu_power_off_hw(struct iris_core *core)
+> +void iris_vpu2_power_off_hw(struct iris_core *core)
+>   {
+>   	dev_pm_genpd_set_hwmode(core->pmdomain_tbl->pd_devs[IRIS_HW_POWER_DOMAIN], false);
+>   	iris_disable_power_domains(core, core->pmdomain_tbl->pd_devs[IRIS_HW_POWER_DOMAIN]);
+> diff --git a/drivers/media/platform/qcom/iris/iris_vpu_common.h b/drivers/media/platform/qcom/iris/iris_vpu_common.h
+> index 93b7fa27be3b..8f63f243dd0d 100644
+> --- a/drivers/media/platform/qcom/iris/iris_vpu_common.h
+> +++ b/drivers/media/platform/qcom/iris/iris_vpu_common.h
+> @@ -24,8 +24,8 @@ void iris_vpu_clear_interrupt(struct iris_core *core);
+>   int iris_vpu_watchdog(struct iris_core *core, u32 intr_status);
+>   int iris_vpu_prepare_pc(struct iris_core *core);
+>   int iris_vpu_power_on(struct iris_core *core);
+> -int iris_vpu_power_off_controller(struct iris_core *core);
+> -void iris_vpu_power_off_hw(struct iris_core *core);
+> +int iris_vpu2_power_off_controller(struct iris_core *core);
+> +void iris_vpu2_power_off_hw(struct iris_core *core);
+>   void iris_vpu_power_off(struct iris_core *core);
+>   
+>   #endif
 
-I agree that we shouldn't fix this _only_ to make the static analyzer
-happy. But I had to think quite a bit harder to see that the existing
-code was correct compared to what I have proposed here.
+I prefer these names with an explicit v2 more logical/consistent with 
+the hw names.
 
-But if this is a common pattern that I just haven't learned to identify
-at a glance yet and everybody else can easily see that the existing code
-is correct, then perhaps it isn't worth the change.
-
+Acked-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
