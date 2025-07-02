@@ -1,123 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48AC22D372E;
-	Wed,  2 Jul 2025 15:11:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0641D2D372C;
+	Wed,  2 Jul 2025 15:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751469105; cv=none; b=HI9HY8Bm43cCTYAVKlXVafZKo7KHeE8UqfOUGUzFIJQXxiNCeXqetm+0sjd9OZpMXM45vPFNq6qB4C99QF/C1bNfY1FB5nKsh88+0xKJ3v04NuYb6mHtpRNLDA8yF0aI1km4oe+w7K5P4eUEdW5FXIj8eFBNWdjuUzQeWkCMioQ=
+	t=1751469172; cv=none; b=cyphPplvsqZmT1CjOlAsCaFgI4Uq4nd+bLRB//nzf+xPSrH7pA2Tr2Czj7XZTSXIrTUa6FHmy3fXV4PN6phuiYMgeVAJqOHIKk8KIzuaf6lWjGcP+27B9SAzzSr/FT7zqRAg6tUwAYPEcnB6FyCP9IAxZ2+orgj24zXltVBkY08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751469105; c=relaxed/simple;
-	bh=KCqLE/wRYsVMzqwg3Wkn1fl5tpd3/S+Ubh3A4qMr6zo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G5/dv5pZTTKW8fjUq41oIv/e1oPpZ070YFy9JIqy0bX+HyyX7WlvvnSWFhsl5VQXNzQGrYIyfCZIM3S+5sHjrFNUUxTDSp0Sx6QkV49WpWTwzgiz014BLMAhgRZ3614v4wgIgASNIY4qtxDfyF5cBGB/XA34U0UaZOeXT4xiwX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ay4raOHI; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ay4raOHI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751469104; x=1783005104;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=KCqLE/wRYsVMzqwg3Wkn1fl5tpd3/S+Ubh3A4qMr6zo=;
-  b=Ay4raOHIfWlN9uGajkh2GR+3XJxhqmVIJ++RiIp805U/NN6Rz/DftJFT
-   42+/1+spXOJCrtyFa5V77xa7MHvJVMuWT/IibZLw28o8jrJNoTZ5OLbek
-   f3YJ3O48N3RFYCHE/rCvlhjrPnBnff4y1MJGHczkCCd0zogV8ZdymVKYO
-   jRWodrI0Zrpy8URC4QLJ9Kdmh7mRdLufsXSVk+UiuADRXXEr3KD3Gw5xO
-   +iZ09y/OtsBlT66qB67dGPaJOCFMPjZpBsWNVvz2kGb2W8gVCyBWJQ/tV
-   mlUl0xaKc0VhWBqgYluXAGj81hD9BtL5lz+es6d6Ejb3k3kHtYMC26ck0
-   Q==;
-X-CSE-ConnectionGUID: KwYRvsMVRjamzsdEgG4TmA==
-X-CSE-MsgGUID: NTgC7K0vTIWxJoR780DTLg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="53915009"
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="53915009"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 08:11:40 -0700
-X-CSE-ConnectionGUID: 0lyey7JLR9GLWWXjy4ylEA==
-X-CSE-MsgGUID: t+dxjrH9QeC0MJ43c/0dPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="154663466"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 08:11:37 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uWz7W-0000000Bx0u-1pKJ;
-	Wed, 02 Jul 2025 18:11:34 +0300
-Date: Wed, 2 Jul 2025 18:11:33 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Akhil R <akhilrajeev@nvidia.com>
-Cc: andi.shyti@kernel.org, digetx@gmail.com, jonathanh@nvidia.com,
-	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-tegra@vger.kernel.org, p.zabel@pengutronix.de,
-	thierry.reding@gmail.com, conor+dt@kernel.org,
-	devicetree@vger.kernel.org, krzk+dt@kernel.org,
-	ldewangan@nvidia.com, robh@kernel.org
-Subject: Re: [PATCH v5 2/3] i2c: tegra: make reset an optional property
-Message-ID: <aGVMJab9-G_bOqQh@smile.fi.intel.com>
-References: <20250702133450.64257-1-akhilrajeev@nvidia.com>
- <20250702133450.64257-2-akhilrajeev@nvidia.com>
+	s=arc-20240116; t=1751469172; c=relaxed/simple;
+	bh=ymsnVIG0erULraCd4BNu3B+drsHLAexyq03O+NpiP0w=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=o2Z7V9LIBT3bi8bS8V4vA9uxoEpA3xW4chMExWtSV+c3iSX3583bZUgjCRxlfQ20VLb6gtCd8T+CUOcdWpfEUdvje+kc/ZJtwmuYPb45poUrLpsIWNnltZU4qhDHMyID5B+QrhyDvV/vvDc38yWMOUkjQj24Oy+ckkmVmDEqnHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 74B55123D32;
+	Wed,  2 Jul 2025 15:12:48 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 706952000F;
+	Wed,  2 Jul 2025 15:12:46 +0000 (UTC)
+Date: Wed, 2 Jul 2025 11:12:45 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Gabriele Paoloni <gpaoloni@redhat.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ acarmina@redhat.com, chuck.wolber@boeing.com
+Subject: Re: [RFC PATCH 2/2] tracing: add testable specifications for
+ event_enable_write/read
+Message-ID: <20250702111245.1fa23138@batman.local.home>
+In-Reply-To: <CA+wEVJarZben=F3Dw0A8_tvAAR7-qb4PrjCj0AGFoq=DH1RJwg@mail.gmail.com>
+References: <20250612104349.5047-1-gpaoloni@redhat.com>
+	<20250612104349.5047-3-gpaoloni@redhat.com>
+	<20250701181119.7b0bc5d6@batman.local.home>
+	<CA+wEVJarZben=F3Dw0A8_tvAAR7-qb4PrjCj0AGFoq=DH1RJwg@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250702133450.64257-2-akhilrajeev@nvidia.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 706952000F
+X-Rspamd-Server: rspamout02
+X-Stat-Signature: 1madwbwa4gt3iih9kydkp3qf4qjw6wz6
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/1FB+LOdu3E8ndipBvVyP/V38SBjmAr/M=
+X-HE-Tag: 1751469166-946527
+X-HE-Meta: U2FsdGVkX1/1cNiMpd+Evb2QXlsQ6lNsAcRkdpUgwP2lWcDAIXGUy4k2+zRji8MXWkzX/JFCyGVdlyyieQwm1lATxyGyjNoaxlreRY+7q1RUQu+/leMwfLhBnyleO+g+kRzu8W7YJhummudVJwsGW/4T+igjzRjeMKMf/K/JJGQ8jD5butSJsIa0+Gg7dJKlvNDIVN/011tK0rBHhub1fV25bWbPHURa21AxePK5i6GcQHc/MxnN2GE855ifmgZjJMTKBomwLIiLsvqQZhvdk/rg8HdfGf6THKEOaJIuqEK5uysQa8qVTx5Bgeo0iNl0zKXi1nrECJIDAf5uN7cqv2DKLZ7SnIm7HDBgN/PDZNPYmMbtSeth1pVBlwz3WPNKUzb9ohGAHdw=
 
-On Wed, Jul 02, 2025 at 07:04:48PM +0530, Akhil R wrote:
-> For controllers that has an internal software reset, make the reset
-> property optional. This provides an option to use Tegra I2C in systems
-> that choose to restrict reset control from Linux or not to implement
-> the ACPI _RST method.
+On Wed, 2 Jul 2025 16:59:29 +0200
+Gabriele Paoloni <gpaoloni@redhat.com> wrote:
+
+> Mmm got it. What about
 > 
-> Internal reset was not required when the reset control was mandatory.
-> But on platforms where the resets are outside the control of Linux,
-> this had to be implemented by just returning success from BPMP or with
-> an empty _RST method in the ACPI table, basically ignoring the reset.
+> * Function's expectations:
+> * - This function shall lock the global event_mutex before performing any
+> *   operation on the target event file and unlock it after all operations on
+> *   the target event file have completed;
+
+Since 99% of the time that a lock is taken in a function it is
+released, I think that should be the default assumption here, and only
+when a lock is taken and not release, that should be explicitly called
+out.
+
+And also we should remove "This function" we know that these
+requirements are for this function.
+
+  - The global event_mutex shall be taken before performing any
+    operation on the target event.
+
+Should be good enough.
+
+If the lock can be released and taken again, that too should be
+explicit in the requirements otherwise it is assumed it is taken once
+and not released until the operation is completed.
+
+> *
+> * - This function shall format the string copied to userspace according to
+> *   the status flags retrieved from the target event file:
+> *    - The first character shall be set to "1" if the enabled flag is
+> set AND the
+> *      soft_disabled flag is not set, else it shall be set to "0";
+> *    - The second character is optional and shall be set to "*" if either the
+> *      soft_disabled flag or the soft_mode flag is set;
+> *   - The string shall be terminated by a newline ("\n") and any remaining
+> *      character shall be set to "0";
+
+ - The string copied to user space shall be formatted according to the
+   status flags from the target event file:
+
+   - If the enable flag is set AND the soft_disable flag is not set then
+     the first character shall be set to "1" ELSE it shall be set to "0"
+
+   - If either the soft_disable fag or the soft_mode flag is set then the
+     second character shall be set to "*" ELSE it is skipped.
+
+I think the above is easier to read and is a bit more consolidated.
+Stating the status then the effect is also easier to read.
+
+-- Steve
+
+
+> *
+> * - This function shall invoke simple_read_from_buffer() to perform the copy
+> *   of the kernel space string to ubuf.
 > 
-> While the internal reset is not identical to the hard reset of the
-> controller, this will reset all the internal state of the controller
-> including FIFOs. This may slightly alter the behaviour in systems
-> which were ignoring the reset but it should not cause any functional
-> difference since all the required I2C registers are configured after
-> this reset, just as in boot. Considering that this sequence is hit
-> during the boot or during the I2C recovery path from an error, the
-> internal reset provides a better alternative than just ignoring the
-> reset.
-
-...
-
-> +static int tegra_i2c_master_reset(struct tegra_i2c_dev *i2c_dev)
-> +{
-> +	if (!i2c_dev->hw->has_mst_reset)
-> +		return -EOPNOTSUPP;
-> +
-> +	i2c_writel(i2c_dev, 0x1, I2C_MASTER_RESET_CNTRL);
-
-> +	udelay(2);
-
-fsleep()
-and perhaps explain why this is needed.
-
-> +	i2c_writel(i2c_dev, 0x0, I2C_MASTER_RESET_CNTRL);
-
-> +	udelay(2);
-
-Ditto.
-
-> +	return 0;
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+> (pls note that the check on cnt has been removed in v3 that is out already)
 
