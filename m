@@ -1,66 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99F0FDF42;
-	Wed,  2 Jul 2025 07:05:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3009118EAB
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 07:13:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751439933; cv=none; b=ftfXB0IW3E+reEK//l9Iuijy6t+kdwQQRssHf0ppZ9AaivlRh5YbjOf95FtTu6DXMLimWo8QfRAmM/tnjjgvJlV+r1gx6GvAkFM+0UuaUPsqc+62IDNTkLnSoVI/5O1XIKQxhxyb68CX0ofFvIIEw/5VQFP17jHN5g78VU+r3lo=
+	t=1751440405; cv=none; b=csM9Fv+kzkGEdeI2xmIwlBbFEUcCDO16OM+Ywthu9zCAajYCYpCacW3SO9/PU6VUa7TF+6alKwwZAekO0L0tKMhquh1gfymYA3E9vJrdvKU3uvm3WDMA1l1x+ouqYj+Cdj7RIhuzgY+c/9Sen63l9ohHpwG1FXC2kf1/o+HQkis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751439933; c=relaxed/simple;
-	bh=iEjqPcF1aaJ3lSy0Olto6Xt8hIHwkTViaJph2F2T9rM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MpcDUUooPzQV9tmIEgf02HjUVl3sNF+XkMxK83GlKs/SOo6WEFr71gw6Uzsv3PF+jQC0gogFLwd+Lq5J8VeicXnYCIZ9cE86YX7NWBFlK1KJ9UyLSVatUmPeJ9svJS7qxgfOIEET/Y/DHjMPBy91jjtgqEsW35Obu1zGdr/lNkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KX5y/4JX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751440405; c=relaxed/simple;
+	bh=oYbA4qIalwatWhqVuo31BJpn7kgaIUpb9k17fw5loO8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SrY4SNuoag6ebZy34LudMAIcOgFXIkiEVU65ePzACGQD1pUM1NUegz2/pz2261d0O84MVbfz6Haif3dpdXMgV+PCI6vQ5gErJbVd7MmQO1kbQVOekTSXlprRWHMepgus3x8cT6lSWNmiZNGZAgbzu9DmDn1vvsUwnbAlaK4R344=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=lGTe6cOV; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KX5y/4JX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85C5DC4CEEE;
-	Wed,  2 Jul 2025 07:05:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751439932;
-	bh=iEjqPcF1aaJ3lSy0Olto6Xt8hIHwkTViaJph2F2T9rM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KX5y/4JXclUqcfvml4jsiNyOu3g6/DZR/L31CzOe/UO8ypBAHZYHzuO7AHd/XwJFj
-	 BXnPQo/0zWdnuzZmnrOxlorSBrClQ29JBhzv2RqRQ5s1G1oNq2hNUYY3TS9lWHt02n
-	 zhgFzzgG5d+yyTnsZaZ0hQzqbfo9xHTFWRM+aLLNRqY+elwDaVA5xb4Em6GtLSxkVf
-	 VGKIcQ1SwFQHHzLqzFZnt8hz28uo4lmZpNHj8GSyfT2obp/A3P42KzZNzrCkvK6lT1
-	 n7ajLMmt8UH0+WBsIDDe4ZHgILJmiWVgjBH4OG4FDvMyybyWF01qz1C+t8MDjOyEHU
-	 ueX6cAftysnVQ==
-Date: Wed, 2 Jul 2025 09:05:29 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: philippe baetens <philippebaetens@gmail.com>
-Cc: mchehab@kernel.org, robh@kernel.org, conor+dt@kernel.org, 
-	krzk+dt@kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] Add bindings for ams Mira220 cmos image sensor
-Message-ID: <20250702-festive-convivial-parrot-1241f7@krzk-bin>
-References: <aGP67H5_GxL4z2Nc@raspberrypi>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="lGTe6cOV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=Gn
+	U/xVylm2a5uxAqg+WGN6FxdwmoKubQgA02vztEiMU=; b=lGTe6cOV7mkQFR0Mg3
+	suQ9KWC/D83HCyo/c8akwoi9KjyrqI2AogvbE3gtjRTIBm6uBh43mq5e1datYr8H
+	XbNDPA8Digve8QPDDqmOxho/bFqk2ATOXZCehk2v63Kcp0bdNWvKXBaFJ5miQ4Pj
+	Zh6/DI5ps4SJV8bHEmWT25UHs=
+Received: from ly-pc.. (unknown [])
+	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wC3fA3l22RovTZYCA--.2725S4;
+	Wed, 02 Jul 2025 15:12:42 +0800 (CST)
+From: Xuanye Liu <liuqiye2025@163.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Xuanye Liu <liuqiye2025@163.com>,
+	Kemeng Shi <shikemeng@huaweicloud.com>,
+	Kairui Song <kasong@tencent.com>,
+	Nhat Pham <nphamcs@gmail.com>,
+	Baoquan He <bhe@redhat.com>,
+	Barry Song <baohua@kernel.org>,
+	Chris Li <chrisl@kernel.org>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] mm: Fix spelling issue in swap.h
+Date: Wed,  2 Jul 2025 15:12:35 +0800
+Message-ID: <20250702071235.212794-1-liuqiye2025@163.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aGP67H5_GxL4z2Nc@raspberrypi>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wC3fA3l22RovTZYCA--.2725S4
+X-Coremail-Antispam: 1Uf129KBjvdXoWrKFWkArW5Kr13uFy8XFyfXrb_yoW3Xwb_Aw
+	4xJ3yj9r409FWxXayIkFnaqw1fKF4xGr1UZ3Z5Kry7AFn8XFZIy3Z2qr97Xr1UGwsxCFy7
+	W3WIgr1fuw15CjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUUxwIPUUUUU==
+X-CM-SenderInfo: 5olx1xd1hsijqv6rljoofrz/xtbBDRB+UGhk1Uql0QAAsU
 
-On Tue, Jul 01, 2025 at 05:12:44PM +0200, philippe baetens wrote:
-> Mira220 is a global shutter NIR-enhanced image sensor made by AMS.
-> Driver is submitted in the next patch of this series and verified on a raspberry pi.
-> 
-> Signed-off-by: philippe baetens <philippebaetens@gmail.com>
-> ---
+recliam -> reclaim
 
-And also you totally broke the threading. Send patches in one command -
-git send-email - not two or more.
+Signed-off-by: Xuanye Liu <liuqiye2025@163.com>
+---
+ include/linux/swap.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-git format-patch -2 -v4 --cover-letter
-git send-email ..... v4*
-
-
-... or just use b4.
-
-Best regards,
-Krzysztof
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index dac7ba98783d..95c6061fa1dc 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -415,7 +415,7 @@ extern unsigned long try_to_free_pages(struct zonelist *zonelist, int order,
+ #define MIN_SWAPPINESS 0
+ #define MAX_SWAPPINESS 200
+ 
+-/* Just recliam from anon folios in proactive memory reclaim */
++/* Just reclaim from anon folios in proactive memory reclaim */
+ #define SWAPPINESS_ANON_ONLY (MAX_SWAPPINESS + 1)
+ 
+ extern unsigned long try_to_free_mem_cgroup_pages(struct mem_cgroup *memcg,
+-- 
+2.43.0
 
