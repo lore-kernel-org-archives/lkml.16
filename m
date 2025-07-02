@@ -1,94 +1,114 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 948A023BD0F
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 10:27:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A6524BBFD;
+	Wed,  2 Jul 2025 10:27:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751452044; cv=none; b=U4NtxHJkmBcYrUp1f38Q4yotI9k39pt+KTNs4EtxDGjRxw1okpk5L2XtX+Ya6+OOgEODPvwIHY4RYkqGA/Ps/8snb3Vt9oxwleoAqfTWLLYXNi/MpDjme5yieMQz/tYactviyigkUzephxNSyJmwuRUQYbkVVc6J1TPU5+26f7Y=
+	t=1751452079; cv=none; b=AEiUk1+x8xHJ9uqsVD2u7C5z9AMzBazL8E91bN9Fxg5oO6v29fjLQgqRE4FLCrxULt1orJ8g5VSkv0BMxjPDbZYVwrw3siT7GAF1/RfXy9ScD00/RpbFF0u5opqH7WerF360gYzJH85c9zdmF9E+LfW8JU04WQi7uj14/tXxy78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751452044; c=relaxed/simple;
-	bh=e/2DidzQn91ralezgjwJALoi1TnJjVxKoJXQdqSYZ3c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qZABE2VW1QOPbZechTVk4JcJm8JIthUBPvkw3OsZ64imDFm+pO74vO33I0maYNQTRgOH6/+iGiJ+Vn67txGxoDahDklLGbB5iWxuLm/kIWNcFz1/b+aQKCLefLtzVATLJx8qS2IqjotSSdrSbw7yOUiK35GILIbW26WkIitMte4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XfaFzWnQ; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1751452079; c=relaxed/simple;
+	bh=mKxFnJrFfq5yKXaS2svEXQwbcRkwD+z83At+PELKWzY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S92geAgOxmgnQdRHEqViyGguR+4cJ1cUgzmBM7+CHP5TV37aav50GQBtJYaxGfIpKXA3ta2nAR7vBVg3ju56DW84yXvtT37dD/DwOiirUB507u+hp0osI4XlPiTwxXshEbn5Lc06q4hvXTSB83jcl/HMjl8exczBAD9l2Zcjkds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=fCivF7Sn; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XfaFzWnQ"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a365a6804eso3561953f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 03:27:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751452041; x=1752056841; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e/2DidzQn91ralezgjwJALoi1TnJjVxKoJXQdqSYZ3c=;
-        b=XfaFzWnQEuptvfWwIZRlXOtONgn6f/ci1l4ctOx6ghUq0jWxepAi8x/GI8HmuAkIiz
-         UOQ+ZD15fwAH7baXX5Xs1tOECYHtUBgp6vw60jGCSO990NLk8TNRLTNQgpJD8OrSqAmQ
-         0+TyY1H4Sht8vD9elPtTC7WuYvF5gP5j8ssU8G8+1s8Sz88A1K36W9NLUw72altdB1cg
-         Gao1dq5rZOpipHiu9hWWsWiFDDSm5jN8UwUW9fFEfV3uNpzuHzZIcQ9/G5nA8I1PG284
-         +M2ivZsi/yY/4KrLtgmcTMp1jcO8D/LEQAJflqfdbzSLT1ThwKZi8hF8xQ4bhVShbKrY
-         y12Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751452041; x=1752056841;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=e/2DidzQn91ralezgjwJALoi1TnJjVxKoJXQdqSYZ3c=;
-        b=MY1G+n4/XaEV89CZK+D4EgAUB0xJDoK8QzyHY/tHZiy396A0L1MWOwvR9AnItecggh
-         Su+Cw4MHt4WJHCBv1VWKKQmMQro+/nvHcw9XKX019o3ITHhKFRXzawiFyTVu00jW6GjC
-         FB/sZ0xOluHSxDMpTxthGYRqQMmeeWUt4qKzJlTZW3CgzhUalfCVsZaRAEER6kJLa0Ys
-         MCWXWGpucf6Xaz6QCyYjaeioMoLBt2mcXTjzEJTumKfn7FbThdFF5dlURPtEzsStTfNd
-         L64QVep7HSca5s2I3/OdrsVRf8ec82TEZHJBUydCLDQ/z3C5cYXy9Vfd+HO6ikEcoS3a
-         2UjA==
-X-Forwarded-Encrypted: i=1; AJvYcCUiyKo5Zz399697kexrNl6zb32nB6B+Y/F/7qCKDo1t2yGa2Y8XO9QPKQlfjnIlWskplWNNZJUlQxZ7oPY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKB/CFle8FHTtWwADP2DBtjM7TUVz5sdNit5z98CsLkuh1nQS3
-	mw/GBc6+w0z27vhTSxDkuGnSe5TLjR/XvJOVFzbFLXG7GR+5bIPWcFZ9rrgi/abgXpuA79L80OC
-	qesti4XkzouPfELNJvTlre0dcfW5caeLHpedGP8KC
-X-Gm-Gg: ASbGncu1yiyUB/NuAMdcflzv2aMJH2KuxIuWzEWXznID5FrrJFKxnW9Cs7dY9drmrB8
-	GV90EvdZ7pmiV68OwP3BHY4dGvOrvySnSoGmcseqx9tFyIXzzcVU2WPzeZu4q9+kbQYcJfHolOa
-	pEdvYDQim8i+0mnEwX0kONr6WadAOtKYCt3JrDppKRI3nrYNVn21ryVCjcraOjhYAkMLI4lgU=
-X-Google-Smtp-Source: AGHT+IHcDKa52ZbBh7xXAnCYNxMEK3W7ps/ysJeG6YWWhxazrmmr2AVmHplNPOuhkyB9cQitMM0Mw35ydX0IITJf55A=
-X-Received: by 2002:a05:6000:1ac9:b0:3a1:f5c4:b81b with SMTP id
- ffacd0b85a97d-3b1fe1e69b5mr1844476f8f.23.1751452040702; Wed, 02 Jul 2025
- 03:27:20 -0700 (PDT)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="fCivF7Sn"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 812A240E0217;
+	Wed,  2 Jul 2025 10:27:47 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id tG13KCk_QJPf; Wed,  2 Jul 2025 10:27:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1751452063; bh=K6vtF+/FrP3SZLJ1xW3eTnYKlR656Bz2ybvMfEhgy7k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fCivF7SnbWweND0RenAM+SeXpWWhRNFm7diOBCTtNiFbTia1+A4ubAK+7EWc1Pczs
+	 j55PbI1oOTPZZBUvsyk44Yh2sMO3q/PX3Tb6adz20ZmwpV0DNdgmOsPSE6MpsQy9Yl
+	 8Yvcfttr4npkoc2LpcId+T6tMc6kcHy7yxHqRfOXnmbZN6HFlmdndo2mnCxQz2pZYA
+	 yJUFDzw0DObeiAvLa3j84d+LcnLH2p2h3x74+2zZJhDJPLPOZgMZCil+Hh5Tq+OpZG
+	 23ldmQjXzcBqPEBK1fN1pw3FCJY6w6J8JMMBQlaQMG2h/m20bMtJKVHsBymWiQr7p3
+	 ggpm23yjDoQ6zc29jCsdHF+8wBbdT2+wyt/38eYnSnnqF1nLKarnjLxtdtjHpjBEj7
+	 P3VS6rBs3+gJ8iNxjObUz+vriA9vt8OmihX9s3mfoMwDTQLqRSvVU29J4qpwitvvdN
+	 xTmoRFASFgManLq+nefrBKUuD9CjavMVGNWdoeQVs5cHG4r0jYxnWMnxU88ZvTBIQw
+	 5w/LbBxPwrJi3Qkvos6X+ek3gv1vt9O6lCy2qDNUIqyUjfWwMnVU26viP2y4rYo7qI
+	 8ztdARHlWLtTxYzh1mBf3Cyl4kTDk+EsAjT0DfxYHb3VmVYcKZ1vT+kU2AbBYI7MVz
+	 CMYxsyfYxSjc+ozQ42aLXP7M=
+Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 662C140E01FE;
+	Wed,  2 Jul 2025 10:27:28 +0000 (UTC)
+Date: Wed, 2 Jul 2025 12:27:21 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "Datta, Shubhrajyoti" <shubhrajyoti.datta@amd.com>,
+	"Gupta, Nipun" <Nipun.Gupta@amd.com>,
+	"Agarwal, Nikhil" <nikhil.agarwal@amd.com>
+Cc: "Ghannam, Yazen" <Yazen.Ghannam@amd.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"git (AMD-Xilinx)" <git@amd.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Tony Luck <tony.luck@intel.com>, James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>
+Subject: Re: [PATCH v7 2/5] cdx: Export Symbols for MCDI RPC and
+ Initialization
+Message-ID: <20250702102721.GKaGUJiXLkOEC5kdpd@fat_crate.local>
+References: <20250529070017.7288-1-shubhrajyoti.datta@amd.com>
+ <20250529070017.7288-3-shubhrajyoti.datta@amd.com>
+ <20250613201034.GC171759@yaz-khff2.amd.com>
+ <SA1PR12MB89474C0C76A66775B91A20C98170A@SA1PR12MB8947.namprd12.prod.outlook.com>
+ <SA1PR12MB8947279143D868E39D30F616817CA@SA1PR12MB8947.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250623-topic-panthor-rs-genmask-v7-1-9f986951e7b5@collabora.com>
-In-Reply-To: <20250623-topic-panthor-rs-genmask-v7-1-9f986951e7b5@collabora.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Wed, 2 Jul 2025 12:27:07 +0200
-X-Gm-Features: Ac12FXzlflXkEllqBb8Mz1-lOflGv_eOwPN42WDgahWL-HLwQCBTeDY1VvFELhc
-Message-ID: <CAH5fLgicRxTsjpBKXDrcJSibOq7HQOsTXdKEBnH1-K8Jt=S-xA@mail.gmail.com>
-Subject: Re: [PATCH v7] rust: kernel: add support for bits/genmask macros
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, Benno Lossin <lossin@kernel.org>, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <SA1PR12MB8947279143D868E39D30F616817CA@SA1PR12MB8947.namprd12.prod.outlook.com>
 
-On Mon, Jun 23, 2025 at 10:18=E2=80=AFPM Daniel Almeida
-<daniel.almeida@collabora.com> wrote:
->
-> In light of bindgen being unable to generate bindings for macros, and
-> owing to the widespread use of these macros in drivers, manually define
-> the bit and genmask C macros in Rust.
->
-> The *_checked version of the functions provide runtime checking while
-> the const version performs compile-time assertions on the arguments via
-> the build_assert!() macro.
->
-> Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
+On Fri, Jun 20, 2025 at 11:03:02AM +0000, Datta, Shubhrajyoti wrote:
+> I plan to have the current (in the cdx) mcdi.h to mcdid.h and move the common parts to
+> Include/linux/cdx/mcdi.h
+> 
+> And for the bitfield.h will move to include/linux/cdx/bitfield.h as most of it is needed
+> by others
+> 
+> 
+> I plan to rename the existing mcdi.h under cdx/controller/ to mcdid.h.
+> The common prototypes and definitions will be moved to the new global header at
+> include/linux/cdx/mcdi.h.
+> 
+> I am using most of (close to 90/95 percent) the bitfield.h, I'll move it to include/linux/cdx/bitfield.h to
+>  make it accessible for other subsystems.
+> 
+> Let me know if that sounds good.
 
-Is it intentional that the macros are not available for usize?
+Well, I'd expect the maintainers of that thing to move:
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+./scripts/get_maintainer.pl -f drivers/cdx/
+Nipun Gupta <nipun.gupta@amd.com> (maintainer:AMD CDX BUS DRIVER)
+Nikhil Agarwal <nikhil.agarwal@amd.com> (maintainer:AMD CDX BUS DRIVER)
+
+and maintain.
+
+Perhaps ping them on internal chat to catch their attention.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
