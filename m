@@ -1,330 +1,264 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EEBB221F37
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 11:33:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB40246781;
+	Wed,  2 Jul 2025 11:33:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751455983; cv=none; b=pDimTUGFV5VF1r1rJR0JjkcAjAkFEpIQSVTxgQkGBkylVXf1zKP5FFqpzwfRoWTyJqqDit60B0eTkNOr2VggELKXkJHtyIC+7bY7IgT5Sw2X7gFzYCj/3RAXr76CzH1dJiXHtMyPeKAS1dNNH8vlItOx1z1pnDvsHTO/HysPFOk=
+	t=1751455997; cv=none; b=pUmKh8Fcf1ih+rfL6fndr62SSccwL6CaPQhReLt9Cmge/feUae9bjUx2yAW/ZNw2Zfo8BfUHI4ljFpMin5OSeG3AvgPZg0AvK5fmL0F64ebC2puvDXJ9FXegwhVXP+8+VE/ilghd8HAStldoYKOjRs0xQF8Y/16nNMzpmNqd60c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751455983; c=relaxed/simple;
-	bh=rqR/bHPvJnN+kWF5c+Z3oM7RS06898Jd8iBY8bYVvcw=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=MoE2d23VWCNglDfFJlR6G2pnUlJoGOCQcTSqCCIOGbe6yy4AnoKQ1BX03XPMSb1ReAheS5aUHuCEsicQ1DdEFqvtHSdNx9D2sBVOTDmXe/Ain1LooCsEUKX3mzCWR7aqbT5G2tsmPdKYmY+021EbMZPdl1OY/QuuniJrXZFOt5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kQqKSTGB; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751455997; c=relaxed/simple;
+	bh=wZy0evcmmM3RCZYZjBEoN0YpldElg3xqVsYlgFOrza8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=SmpH58K7qQaRDzrNpSKfsGHpctGTIM+wVQVtlw2kuf3JC52rF+l+0qCEO1j3Rs4oAgTSNopEql1h2FHcY5Ns/h1WOyvSGs3h2vjNnJxFwoPu9Odf5h5owBuWRuF7GxfKXH0fJUreIGb79jqoRii5ePkAMnlkB9eDfFRDrFHNxB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ojf4MJjI; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kQqKSTGB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751455982; x=1782991982;
-  h=date:from:to:cc:subject:message-id;
-  bh=rqR/bHPvJnN+kWF5c+Z3oM7RS06898Jd8iBY8bYVvcw=;
-  b=kQqKSTGB8++mP0M852wFz7lTLINkfK4/haaHvhQsa4ZTmvB5xF0+8a0t
-   M2zt8g/ZfdxPApZNoPR+Krkc1kw2MZU1s0flOjOnNPcd3FxpR+ehM62Bd
-   +rVjQzdwKLNte44an3CiYW8rI7ojGJfpJ1SGNkyRlMJiiplUjCnNSXPWP
-   ywUwWGXs5i1lFauZSxDI0KTUgYjxAMGYlahZMc37F/alRLDLfu/mHNOaI
-   6uDWhrcsvWwmVZpQd9rUM0738mQSUJPm3GID+pnltH4PecNhMImV6Y/PP
-   LrcqhRqkCegQGrHOPY2fq64RrAXXcT01AvLN/oUhiSGpETo0MdunLKH9r
-   g==;
-X-CSE-ConnectionGUID: zNiR7cAOSfOHBhunlFmA/g==
-X-CSE-MsgGUID: RGw8Q3AURCGzFeikocIOpw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="53838772"
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="53838772"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 04:33:01 -0700
-X-CSE-ConnectionGUID: 3CkILaNrRvyfgYHOgjfXeA==
-X-CSE-MsgGUID: ZLvUscvQTXaYBJ3Kl3vQig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="154596601"
-Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 02 Jul 2025 04:33:00 -0700
-Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uWvhx-0000Z1-15;
-	Wed, 02 Jul 2025 11:32:57 +0000
-Date: Wed, 02 Jul 2025 19:32:50 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:sched/urgent] BUILD SUCCESS
- 009836b4fa52f92cba33618e773b1094affa8cd2
-Message-ID: <202507021937.PrSe2Kw1-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ojf4MJjI"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5625PjKM024651;
+	Wed, 2 Jul 2025 11:33:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	3TwXJCVc8lURQCSZEzO6IqQmFcyfhHGZB1644MJ+bs8=; b=ojf4MJjIWvvC8cwC
+	zmG8dDDU98Mhc9uU57DxO8VpjiOeYLplxq94es3hDpsWFeSh7ltcMMWxZDuOjwAr
+	08EXQ7ODPICFdSKM0lpwL6s6DHVIUEwhnkhg/dhGzjUGPLwrkZDrU5YSBq7XjonD
+	Bj7uypaKaZS/LnXrH6hY2TvgQ5+o8tMp0zaEMVwqrNzwzHLt7Ptd0TKyW/WpyNPv
+	x+X2pPW0G3WEVtfNG4l9VRctfsDui6Ypmu6hlOqOd6Z8rLjKxXieZrdhjNXYhMvy
+	b9BtPsnbHEHyVwUptRLL/NdrDQW4j4Rpz3wsgG8v1alnFoHqVDi5qAoFJ2+2ruLD
+	Qsro5w==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j8s9mfd9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Jul 2025 11:33:09 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 562BX8Pl001498
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 2 Jul 2025 11:33:08 GMT
+Received: from [10.50.58.161] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 2 Jul 2025
+ 04:33:04 -0700
+Message-ID: <08c8cdfd-099e-7b90-b163-23ecee3a5da4@quicinc.com>
+Date: Wed, 2 Jul 2025 17:02:50 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v3 1/5] media: dt-bindings: add non-pixel property in iris
+ schema
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+        Dikshita Agarwal
+	<quic_dikshita@quicinc.com>,
+        Abhinav Kumar <abhinav.kumar@linux.dev>,
+        "Bryan
+ O'Donoghue" <bryan.odonoghue@linaro.org>,
+        Mauro Carvalho Chehab
+	<mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250627-video_cb-v3-0-51e18c0ffbce@quicinc.com>
+ <20250627-video_cb-v3-1-51e18c0ffbce@quicinc.com>
+ <19dd2e69-ad13-46f2-b99f-04a5e26f10d3@kernel.org>
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+In-Reply-To: <19dd2e69-ad13-46f2-b99f-04a5e26f10d3@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=H/Pbw/Yi c=1 sm=1 tr=0 ts=686518f5 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=NEAV23lmAAAA:8
+ a=COk6AnOGAAAA:8 a=TnWEnolcAduC8S_e0_gA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: BDNTWFOn8hKfvmC4qIq2BRnXa_1IvfND
+X-Proofpoint-GUID: BDNTWFOn8hKfvmC4qIq2BRnXa_1IvfND
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDA5MyBTYWx0ZWRfXyfElA/YLB9HM
+ wPAKVCjaAAEYHumSAQEIg+QqzX6KFsXprhncLzMhaJZDz+krFjCxuQ3sGutnXEOmM3NKBDGuqt+
+ HM7TQCFU3o+zTewtBjf3u706kYfDqwOc+9yQmWg0PI4zWS2wY5l7dF/bAoZ2leIxjm+oElhQ9P/
+ g3Jq7YIHneMfz1t1SIjetjU03X09uXwZq6UFOi/U+jN9dPaSqvmZLwkUgc8igzg+HlWZFalwF/x
+ qoh7Zu0FXIqj2PYwcthS4Qwc5O/6juSz8mY32AliZWqG7TsFZiDESawIP9SyaNkltQZV8bEA42A
+ iiax+EpZqdP/GAWbPUX92v4iXrpF64sxVRtcht31yBXfUbPocCIEW8igoPk7xiLzMyG/4heZAfn
+ BOZTz4CnjNlZQqIltAARRT9r/nb3fpoHVFhI3yCkqmfZsVO1hWoLp/8qrlqw/z0Nw2FqBumR
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-02_01,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 malwarescore=0 suspectscore=0 mlxlogscore=999
+ priorityscore=1501 clxscore=1015 mlxscore=0 lowpriorityscore=0 spamscore=0
+ adultscore=0 bulkscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2507020093
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched/urgent
-branch HEAD: 009836b4fa52f92cba33618e773b1094affa8cd2  sched/core: Fix migrate_swap() vs. hotplug
 
-elapsed time: 1296m
+On 7/2/2025 4:43 PM, Krzysztof Kozlowski wrote:
+> On 27/06/2025 17:48, Vikash Garodia wrote:
+>> Existing definition limits the IOVA to an addressable range of 4GiB, and
+>> even within that range, some of the space is used by IO registers,
+>> thereby limiting the available IOVA to even lesser. Video hardware is
+>> designed to emit different stream-ID for pixel and non-pixel buffers,
+>> thereby introduce a non-pixel sub node to handle non-pixel stream-ID.
+>>
+>> With this, both iris and non-pixel device can have IOVA range of 0-4GiB
+>> individually. Certain video usecases like higher video concurrency needs
+>> IOVA higher than 4GiB.
+>>
+>> Add reference to the reserve-memory schema, which defines reserved IOVA
+> 
+> No. That schema is always selected. This makes no sense at all.
+I could not get this, are you suggesting to drop this reference ?
+> 
+>> regions that are *excluded* from addressable range. Video hardware
+>> generates different stream IDs based on the predefined range of IOVA
+>> addresses. Thereby IOVA addresses for firmware and data buffers need to
+>> be non overlapping. For ex. 0x0-0x25800000 address range is reserved for
+>> firmware stream-ID, while non-pixel (bitstream) stream-ID can be
+>> generated by hardware only when bitstream buffers IOVA address is from
+>> 0x25800000-0xe0000000.
+>> Non-pixel stream-ID can now be part of the new sub-node, hence iommus in
+>> iris node can have either 1 entry for pixel stream-id or 2 entries for
+>> pixel and non-pixel stream-ids.
+>>
+>> Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+>> ---
+>>  .../bindings/media/qcom,sm8550-iris.yaml           | 40 ++++++++++++++++++++--
+>>  1 file changed, 38 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml b/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
+>> index c79bf2101812d83b99704f38b7348a9f728dff44..4dda2c9ca1293baa7aee3b9ee10aff38d280fe05 100644
+>> --- a/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
+>> +++ b/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
+>> @@ -65,10 +65,31 @@ properties:
+>>        - const: core
+>>  
+>>    iommus:
+>> +    minItems: 1
+>>      maxItems: 2
+> 
+> No, why hardware suddenly has different amount?
+Its not about hardware started to have a new stream-ID. You can look for the
+description in the commit which explains the need for a new device and hence the
+split of stream-IDs in iris device OR non-pixel device.
+> 
+>>  
+>>    dma-coherent: true
+>>  
+>> +  non-pixel:
+> 
+> Why EXISTING hardware grows?
+Same here, the commit describes the limitation of existing design and also
+explains the need for having the non-pixel device. Its not that the hardware is
+growing here, rather the hardware stream-IDs are utilized differently to get
+higher device addressable range.
+> 
+>> +    type: object
+>> +    additionalProperties: false
+>> +
+>> +    description:
+>> +      Non pixel context bank is needed when video hardware have distinct iommus
+>> +      for non pixel buffers. Non pixel buffers are mainly compressed and
+>> +      internal buffers.
+>> +
+>> +    properties:
+>> +      iommus:
+>> +        maxItems: 1
+>> +
+>> +      memory-region:
+>> +        maxItems: 1
+>> +
+>> +    required:
+>> +      - iommus
+>> +      - memory-region
+>> +
+>>    operating-points-v2: true
+>>  
+>>    opp-table:
+>> @@ -86,6 +107,7 @@ required:
+>>  
+>>  allOf:
+>>    - $ref: qcom,venus-common.yaml#
+>> +  - $ref: /schemas/reserved-memory/reserved-memory.yaml
+> 
+> This makes no sense. how is this device a reserved memory?
+Again, explained the "excluded" portion from IOVA part in commit description.
+For such excluded region, reserved memory would be needed. I have followed the
+adsp example in the reserved-memory schema[1], its same for iris.
 
-configs tested: 253
-configs skipped: 8
+[1]
+https://github.com/devicetree-org/dt-schema/blame/main/dtschema/schemas/reserved-memory/reserved-memory.yaml
+> 
+>>    - if:
+>>        properties:
+>>          compatible:
+>> @@ -117,6 +139,16 @@ examples:
+>>      #include <dt-bindings/power/qcom-rpmpd.h>
+>>      #include <dt-bindings/power/qcom,rpmhpd.h>
+>>  
+>> +    reserved-memory {
+>> +      #address-cells = <2>;
+>> +      #size-cells = <2>;
+> 
+> Why do you need this?
+Was planning to drop this, as the reserved-memory region have it defined.
+> 
+>> +
+>> +      iris_resv: reservation-iris {
+> 
+> Mixing MMIO and non-MMIO is not the way to go. This is also not relevant
+> here. Don't embed other things into your binding example.
+> 
+> 
+>> +        iommu-addresses = <&iris_non_pixel 0x0 0x0 0x0 0x25800000>,
+>> +                          <&iris_non_pixel 0x0 0xe0000000 0x0 0x20000000>;
+>> +      };
+>> +    };
+>> +
+>>      video-codec@aa00000 {
+>>          compatible = "qcom,sm8550-iris";
+>>          reg = <0x0aa00000 0xf0000>;
+>> @@ -144,12 +176,16 @@ examples:
+>>          resets = <&gcc GCC_VIDEO_AXI0_CLK_ARES>;
+>>          reset-names = "bus";
+>>  
+>> -        iommus = <&apps_smmu 0x1940 0x0000>,
+>> -                 <&apps_smmu 0x1947 0x0000>;
+>> +        iommus = <&apps_smmu 0x1947 0x0000>;
+> 
+> Why did the device or hardware change? Nothing explains in commit msg
+> what is wrong with existing device and existing binding.
+Same query here, the commit well explains the limitation with existing device
+and how adding a new sub node mitigates the situation.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    clang-19
-alpha                            allyesconfig    gcc-15.1.0
-alpha                               defconfig    gcc-15.1.0
-arc                              allmodconfig    clang-19
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    clang-19
-arc                                 defconfig    gcc-15.1.0
-arc                   randconfig-001-20250701    gcc-13.3.0
-arc                   randconfig-001-20250702    clang-19
-arc                   randconfig-002-20250701    gcc-15.1.0
-arc                   randconfig-002-20250702    clang-19
-arc                        vdk_hs38_defconfig    gcc-15.1.0
-arm                              allmodconfig    clang-19
-arm                               allnoconfig    clang-21
-arm                               allnoconfig    gcc-15.1.0
-arm                              allyesconfig    clang-19
-arm                                 defconfig    gcc-15.1.0
-arm                          gemini_defconfig    gcc-15.1.0
-arm                      integrator_defconfig    gcc-15.1.0
-arm                        multi_v7_defconfig    gcc-15.1.0
-arm                        mvebu_v7_defconfig    gcc-15.1.0
-arm                          pxa3xx_defconfig    clang-18
-arm                   randconfig-001-20250701    clang-17
-arm                   randconfig-001-20250702    clang-19
-arm                   randconfig-002-20250701    gcc-8.5.0
-arm                   randconfig-002-20250702    clang-19
-arm                   randconfig-003-20250701    clang-21
-arm                   randconfig-003-20250702    clang-19
-arm                   randconfig-004-20250701    clang-21
-arm                   randconfig-004-20250702    clang-19
-arm                           tegra_defconfig    clang-18
-arm                           u8500_defconfig    gcc-15.1.0
-arm                         vf610m4_defconfig    clang-18
-arm                         wpcm450_defconfig    gcc-15.1.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                               defconfig    gcc-15.1.0
-arm64                 randconfig-001-20250701    clang-21
-arm64                 randconfig-001-20250702    clang-19
-arm64                 randconfig-002-20250701    gcc-15.1.0
-arm64                 randconfig-002-20250702    clang-19
-arm64                 randconfig-003-20250701    clang-18
-arm64                 randconfig-003-20250702    clang-19
-arm64                 randconfig-004-20250701    gcc-8.5.0
-arm64                 randconfig-004-20250702    clang-19
-csky                              allnoconfig    gcc-15.1.0
-csky                                defconfig    gcc-15.1.0
-csky                  randconfig-001-20250701    gcc-11.5.0
-csky                  randconfig-001-20250702    gcc-14.2.0
-csky                  randconfig-002-20250701    gcc-10.5.0
-csky                  randconfig-002-20250702    gcc-14.2.0
-hexagon                          allmodconfig    clang-17
-hexagon                          allmodconfig    clang-19
-hexagon                           allnoconfig    clang-21
-hexagon                           allnoconfig    gcc-15.1.0
-hexagon                          allyesconfig    clang-19
-hexagon                          allyesconfig    clang-21
-hexagon                             defconfig    gcc-15.1.0
-hexagon               randconfig-001-20250701    clang-21
-hexagon               randconfig-001-20250702    gcc-14.2.0
-hexagon               randconfig-002-20250701    clang-21
-hexagon               randconfig-002-20250702    gcc-14.2.0
-i386                             allmodconfig    clang-20
-i386                              allnoconfig    clang-20
-i386                             allyesconfig    clang-20
-i386        buildonly-randconfig-001-20250701    gcc-12
-i386        buildonly-randconfig-001-20250702    clang-20
-i386        buildonly-randconfig-002-20250701    gcc-12
-i386        buildonly-randconfig-002-20250702    clang-20
-i386        buildonly-randconfig-003-20250701    gcc-12
-i386        buildonly-randconfig-003-20250702    clang-20
-i386        buildonly-randconfig-004-20250701    gcc-12
-i386        buildonly-randconfig-004-20250702    clang-20
-i386        buildonly-randconfig-005-20250701    gcc-12
-i386        buildonly-randconfig-005-20250702    clang-20
-i386        buildonly-randconfig-006-20250701    clang-20
-i386        buildonly-randconfig-006-20250702    clang-20
-i386                                defconfig    clang-20
-i386                  randconfig-001-20250702    clang-20
-i386                  randconfig-002-20250702    clang-20
-i386                  randconfig-003-20250702    clang-20
-i386                  randconfig-004-20250702    clang-20
-i386                  randconfig-005-20250702    clang-20
-i386                  randconfig-006-20250702    clang-20
-i386                  randconfig-007-20250702    clang-20
-i386                  randconfig-011-20250702    gcc-12
-i386                  randconfig-012-20250702    gcc-12
-i386                  randconfig-013-20250702    gcc-12
-i386                  randconfig-014-20250702    gcc-12
-i386                  randconfig-015-20250702    gcc-12
-i386                  randconfig-016-20250702    gcc-12
-i386                  randconfig-017-20250702    gcc-12
-loongarch                        allmodconfig    gcc-15.1.0
-loongarch                         allnoconfig    gcc-15.1.0
-loongarch                           defconfig    gcc-15.1.0
-loongarch             randconfig-001-20250701    gcc-13.3.0
-loongarch             randconfig-001-20250702    gcc-14.2.0
-loongarch             randconfig-002-20250701    gcc-15.1.0
-loongarch             randconfig-002-20250702    gcc-14.2.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                                defconfig    gcc-15.1.0
-m68k                        m5307c3_defconfig    gcc-15.1.0
-m68k                           virt_defconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                           gcw0_defconfig    clang-18
-mips                            gpr_defconfig    clang-18
-mips                           ip32_defconfig    gcc-15.1.0
-mips                         rt305x_defconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-15.1.0
-nios2                               defconfig    gcc-15.1.0
-nios2                 randconfig-001-20250701    gcc-14.2.0
-nios2                 randconfig-001-20250702    gcc-14.2.0
-nios2                 randconfig-002-20250701    gcc-13.3.0
-nios2                 randconfig-002-20250702    gcc-14.2.0
-openrisc                          allnoconfig    clang-21
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-12
-openrisc                 simple_smp_defconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    clang-21
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-12
-parisc                randconfig-001-20250701    gcc-14.3.0
-parisc                randconfig-001-20250702    gcc-14.2.0
-parisc                randconfig-002-20250701    gcc-10.5.0
-parisc                randconfig-002-20250702    gcc-14.2.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    clang-21
-powerpc                          allyesconfig    clang-21
-powerpc                          allyesconfig    gcc-15.1.0
-powerpc                      chrp32_defconfig    gcc-15.1.0
-powerpc                       ebony_defconfig    gcc-15.1.0
-powerpc                     mpc512x_defconfig    gcc-15.1.0
-powerpc                    mvme5100_defconfig    gcc-15.1.0
-powerpc               randconfig-001-20250701    gcc-13.3.0
-powerpc               randconfig-001-20250702    gcc-14.2.0
-powerpc               randconfig-002-20250701    clang-21
-powerpc               randconfig-002-20250702    gcc-14.2.0
-powerpc               randconfig-003-20250701    clang-21
-powerpc               randconfig-003-20250702    gcc-14.2.0
-powerpc                     sequoia_defconfig    clang-18
-powerpc                     sequoia_defconfig    gcc-15.1.0
-powerpc64             randconfig-001-20250701    clang-21
-powerpc64             randconfig-001-20250702    gcc-14.2.0
-powerpc64             randconfig-002-20250701    clang-21
-powerpc64             randconfig-002-20250702    gcc-14.2.0
-powerpc64             randconfig-003-20250701    gcc-10.5.0
-powerpc64             randconfig-003-20250702    gcc-14.2.0
-riscv                            allmodconfig    clang-21
-riscv                            allmodconfig    gcc-15.1.0
-riscv                             allnoconfig    clang-21
-riscv                            allyesconfig    clang-16
-riscv                            allyesconfig    gcc-15.1.0
-riscv                               defconfig    gcc-12
-riscv                 randconfig-001-20250701    gcc-14.3.0
-riscv                 randconfig-001-20250702    clang-21
-riscv                 randconfig-002-20250701    gcc-10.5.0
-riscv                 randconfig-002-20250702    clang-21
-s390                             allmodconfig    clang-18
-s390                             allmodconfig    gcc-15.1.0
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    gcc-12
-s390                  randconfig-001-20250701    gcc-9.3.0
-s390                  randconfig-001-20250702    clang-21
-s390                  randconfig-002-20250701    clang-17
-s390                  randconfig-002-20250702    clang-21
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-12
-sh                        edosk7705_defconfig    gcc-15.1.0
-sh                             espt_defconfig    clang-18
-sh                             espt_defconfig    gcc-15.1.0
-sh                    randconfig-001-20250701    gcc-15.1.0
-sh                    randconfig-001-20250702    clang-21
-sh                    randconfig-002-20250701    gcc-13.3.0
-sh                    randconfig-002-20250702    clang-21
-sh                           se7722_defconfig    gcc-15.1.0
-sh                     sh7710voipgw_defconfig    gcc-15.1.0
-sh                        sh7763rdp_defconfig    gcc-15.1.0
-sh                  sh7785lcr_32bit_defconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                 randconfig-001-20250701    gcc-10.3.0
-sparc                 randconfig-001-20250702    clang-21
-sparc                 randconfig-002-20250701    gcc-15.1.0
-sparc                 randconfig-002-20250702    clang-21
-sparc64                             defconfig    gcc-12
-sparc64               randconfig-001-20250701    gcc-8.5.0
-sparc64               randconfig-001-20250702    clang-21
-sparc64               randconfig-002-20250701    gcc-12.4.0
-sparc64               randconfig-002-20250702    clang-21
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    clang-19
-um                               allyesconfig    gcc-12
-um                                  defconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250701    gcc-12
-um                    randconfig-001-20250702    clang-21
-um                    randconfig-002-20250701    gcc-12
-um                    randconfig-002-20250702    clang-21
-um                           x86_64_defconfig    gcc-12
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250701    gcc-12
-x86_64      buildonly-randconfig-001-20250702    gcc-11
-x86_64      buildonly-randconfig-002-20250701    gcc-12
-x86_64      buildonly-randconfig-002-20250702    gcc-11
-x86_64      buildonly-randconfig-003-20250701    gcc-12
-x86_64      buildonly-randconfig-003-20250702    gcc-11
-x86_64      buildonly-randconfig-004-20250701    gcc-12
-x86_64      buildonly-randconfig-004-20250702    gcc-11
-x86_64      buildonly-randconfig-005-20250701    clang-20
-x86_64      buildonly-randconfig-005-20250702    gcc-11
-x86_64      buildonly-randconfig-006-20250701    clang-20
-x86_64      buildonly-randconfig-006-20250702    gcc-11
-x86_64                              defconfig    clang-20
-x86_64                                  kexec    clang-20
-x86_64                randconfig-004-20250702    gcc-12
-x86_64                randconfig-005-20250702    gcc-12
-x86_64                randconfig-006-20250702    gcc-12
-x86_64                randconfig-007-20250702    gcc-12
-x86_64                randconfig-008-20250702    gcc-12
-x86_64                randconfig-071-20250702    clang-20
-x86_64                randconfig-072-20250702    clang-20
-x86_64                randconfig-073-20250702    clang-20
-x86_64                randconfig-074-20250702    clang-20
-x86_64                randconfig-075-20250702    clang-20
-x86_64                randconfig-076-20250702    clang-20
-x86_64                randconfig-077-20250702    clang-20
-x86_64                randconfig-078-20250702    clang-20
-x86_64                               rhel-9.4    clang-20
-x86_64                           rhel-9.4-bpf    gcc-12
-x86_64                         rhel-9.4-kunit    gcc-12
-x86_64                           rhel-9.4-ltp    gcc-12
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                  cadence_csp_defconfig    gcc-15.1.0
-xtensa                randconfig-001-20250701    gcc-15.1.0
-xtensa                randconfig-001-20250702    clang-21
-xtensa                randconfig-002-20250701    gcc-13.3.0
-xtensa                randconfig-002-20250702    clang-21
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Regards,
+Vikash
+> 
+>>          dma-coherent;
+>>  
+>>          operating-points-v2 = <&iris_opp_table>;
+>>  
+>> +        iris_non_pixel: non-pixel {
+>> +            iommus = <&apps_smmu 0x1940 0x0000>;
+>> +            memory-region = <&iris_resv>;
+>> +        };
+>> +
+>>          iris_opp_table: opp-table {
+>>              compatible = "operating-points-v2";
+>>  
+>>
+> 
+> 
+> Best regards,
+> Krzysztof
