@@ -1,287 +1,183 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013002.outbound.protection.outlook.com [40.107.159.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F90225A31
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 11:40:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751456443; cv=none; b=kcms3woaF1D4//gGdytpCsJo84nnDXEn/oeVrcafM/zetKXvVSz4+tVIOwk5Org2EZDvdafdP0VCd9Ctn2hXSRSfDBCnpUMhBXzFwduvr/JQKfXEK0v3hBjCmsXtPppGH8M5bnFJLhJrSbDIDAyoWtB96rWxhg1z5BufZRapwi4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751456443; c=relaxed/simple;
-	bh=u8AI38z9yeUQMKFEvtc/Npp1so5aKMVDqybWaYoLr28=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ucwLm7zPuiAf6QnvDWAiv6EZL5lEt6wS8XTQi0OGIfOubCLq0RgQ9PU6WdmTK12uoN8yXm6bTxzVgDiY6ExDeKi88/Lsaij152Hl2wZkjuWfOtFzR48TLCa31HnrOAhqLHG5OxqNGk/e3DhQ8O4MYYP0QIEclhcBewHqwuuBnlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TUSkBhcg; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F97225A31;
+	Wed,  2 Jul 2025 11:41:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.2
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751456495; cv=fail; b=KznkZ+/ITlLI3e8mhmUabmSByYe1hR5RXRbIe2MmmS5dNRhZOT5bTUmnOOLBQ29fMAO9Z22EtwFN1FUbistkx5FFYgvg/KkldhmHw7PEadYarxq4J4V7E45xm0/wSI0fYmKGKh+j/h/wDtfMDzF/jyI1MA1FUk6A+p6TrJuFMic=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751456495; c=relaxed/simple;
+	bh=bOyq/899DaMJKxssbP0rEa3MN8RZ2CbB4z4105CUGI8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fx9CmiJ1insg1cXyQt8L8Az9n8a/B9M+cvT+vDpBQVoXExoJNCdjQ2tjQPKlM91dkkfJAMYeVAvMBv/SmfiVMOivzKVHbWVpUhr2GzZ6VkvDg3D5DEX4EFvwJcPh5aNAMG9T9wgIPjoP9zkvMobYjCh5agGKcTqqlIOt9rwip/g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=leica-geosystems.com; spf=fail smtp.mailfrom=leica-geosystems.com; dkim=pass (1024-bit key) header.d=leica-geosystems.com header.i=@leica-geosystems.com header.b=kk5//f3u; arc=fail smtp.client-ip=40.107.159.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=leica-geosystems.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=leica-geosystems.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TUSkBhcg"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-553c31542b1so5040563e87.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 04:40:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751456439; x=1752061239; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/Jy2XDv76GfEXHS2fhU8oEAWy8scUGa8s5bkchLIRx4=;
-        b=TUSkBhcgfag+UEOsQBeTWjCbX96PnCURK2Ikr6+3nYWLIvXE/+8QBJb9rnZeWSOPR6
-         f4jdKo+lRvgicWRfF0HkNckU+wtVzKwM0cd4g6csNOdkV6ZbZlwNtBcfeH+cjnkXrMGb
-         84tAjaSWUDRvxkDLZpn+mfjf3tsHgoDChTHQMTM3LaxW+DS+K/gWNFZfyIHTi8Ow12OS
-         Feruvsv5IQpj0kyGbEi5NVFnASQoVy4Gz6ITnvh5e6YbCPszbZgziu9Wac9PDWKdFDwg
-         dZkl3DNI4LPg4OVRuCgOl2bJ9+WveuGJv1QG8hUj0u4y6IOsztzOv25NHP1HIc315ku5
-         tUoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751456439; x=1752061239;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/Jy2XDv76GfEXHS2fhU8oEAWy8scUGa8s5bkchLIRx4=;
-        b=PEjg6x07hdNJfndiUHmTNNddaujxNG0rh/HLVwddbw130rHQsvXvHC++lFfef42if6
-         zJDjc2+VBGK6SU7GhH6tERfQBafU2xmB9GS8MyLwht7dmN+SGETBn+8S+Y5x/Zzi1Qkk
-         1qnjeG7OeUCuQadLJUqnVSMmgzoxOmdwSvceNy0lUf4o6h3jqT2M2YkitErfLR/jdAVt
-         HqfDNLI3p2Qm1HzJvBf1mohIwPL4CN/zSarjy84qSbaRnP89ouatuPMWHrXHVbbx8phC
-         r7/rQXpD4OhP4IBDFXjYu3QI8O3pG5TuJooLM0rD6/OpZP8N6oSqzMVpdSHlo0qSrclP
-         MwnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUMx/dknr/7rSrFGnaZrQ0V34ahwCFiN9vTTip9Nok41viwaa9bBzKK6C/xZ9Kur1fd6nes0WGZHxErZx0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVTLEUJ0Hlt1gCzHBYt9SD5x/e1M9LGHXhRqd1jpd+s2qlfDrm
-	hUdmSoYCIw2gzScM5sWCCSEP9vuh+S26NE/gU4rHVUd4v5+cFllW7jWBr8vl8Q==
-X-Gm-Gg: ASbGncvA4gy+uCmPqEl7BqNYJ0rGHMjx2vaTYAwEomYK1P4eVRz8ZvnvJvYGoUUGnmW
-	RMKPupDYU+H67x6P//byYMRqhh+cF3J0EC176+M/I3yB6yey+9+K0Jjm5zf8nemX19EmgwIxgdz
-	KWd8/anT5MvE7PihawATK3SgdHm9RxilJRighcpNnKj36FDjdJH1m/8KlHdPJ3LfrgoLhimwllQ
-	KS+pRvMZl2Vr9VL9fpGmFUBG4xfE/BnMBU64vV870iulIccd5hh0kJ5L5tAMLUJKcMLW/p9rTXm
-	ZNsCcMwcQkWjESrjofiGAU/qjKgR4TDBcVvn9WoD+JCoRgDYMpSJrXi1IznNuUn+NNJJiM7wwRv
-	T+4Dt1pLGS5E=
-X-Google-Smtp-Source: AGHT+IGB8LMgoDGUxGACb96551FPJlIGGiA3rNJPCqbdbSbM0625POuaXaLxR/vzwTHli9sg34Kwiw==
-X-Received: by 2002:a05:6512:b0b:b0:553:350a:32d9 with SMTP id 2adb3069b0e04-55628304703mr844130e87.23.1751456438912;
-        Wed, 02 Jul 2025 04:40:38 -0700 (PDT)
-Received: from pc636 (host-95-203-1-180.mobileonline.telia.com. [95.203.1.180])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32cd2e0d0cesm18127441fa.37.2025.07.02.04.40.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 04:40:38 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Wed, 2 Jul 2025 13:40:35 +0200
-To: Jeongjun Park <aha310510@gmail.com>
-Cc: Uladzislau Rezki <urezki@gmail.com>, akpm@linux-foundation.org,
-	edumazet@google.com, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6] mm/vmalloc: fix data race in show_numa_info()
-Message-ID: <aGUas7_fcLS07mnL@pc636>
-References: <20250508165620.15321-1-aha310510@gmail.com>
- <aBzuh0qb1UPrT86s@pc636>
- <aBzxqiX7unwAqVCY@pc636>
- <CAO9qdTF3vN5veO3HhGbrq-CkfR1fH_3ueCLjtcY8LOYKCG2mjg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=leica-geosystems.com header.i=@leica-geosystems.com header.b="kk5//f3u"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=r6fVIAr844YC0NCot3hRRy/RmEWxK/jRZE+gubmQbeD5mAo+gyRg+pHyzlfK/PIYD1HpwEnNUp3/qwQyfMNU1fkA0m5yok4rhQ2NNednorw0FEmD7J7nENwGsFrW+OKiYwWoBANKl/1PaRy1F7e0bIhGbS8SCTkeVCI36ylibk/C/JDljIv8ykrwB7cnvrzeh04tp1mPGadjzbUDCXeGWFmExsnbpikSX0+HggBWXQI2Qxb0msxWw2aMAWx6Dt6oc0yzKhn2Z/PtZ5mklurxwotgnw+vP7wimwixN5ORqmrkEdApx4qRK0VC/uGit6FVceAka4Lt8rN97J9gI8LcWA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fraWZgSDlPhyjIFb18LKLCHq7bsu3shrTkN0xkrlKn8=;
+ b=FEYHlJYF/nPAvfNiLtijgS8Wan1XGhsDheJc0948avo2oMOX1cQijrJ2180RxZFtwtMwDsqHtN66f5HN+lH9l6IX9Kk50TL0rRwsmkO6aE+Qk7kkyRlGLEGRUyfTKMK81rVeSXAK01mVciGKWJgW4hhZu+ZCdxBfTlTx4F0Z3U83/UxmSL+DzpjgL9m/MqJWEigDjdiWyYIqV1Ar0V4qSyCuDSgRwYRX5vKHA4IbkDLd/gEZtOOJruk6qzK+XVzEP9Qeq+Kv4xjtQmr9pqEOjxelCZxlEhpLTa/DElc4SOch5Fskep072/AOTVi/tVkBZf9qeVsPq3jcr4o22fTokQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=temperror (sender ip
+ is 193.8.40.94) smtp.rcpttodomain=vger.kernel.org
+ smtp.mailfrom=leica-geosystems.com; dmarc=temperror action=none
+ header.from=leica-geosystems.com; dkim=none (message not signed); arc=none
+ (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=leica-geosystems.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fraWZgSDlPhyjIFb18LKLCHq7bsu3shrTkN0xkrlKn8=;
+ b=kk5//f3uqv1SMnTibUKB8LQloaARD8YbjU8uEPn+OpeJ3E0s9el2pVCBojiYLPbLeU/d27H+TIWE87DBwTkWNrr4NR8bEkJshKXUPDLuTX6zhgDqTyNUW/ejGR86+apVBvDc6I2INM6G3VISJIOk1yH4F0x1bpKCWMqJpV8yVos=
+Received: from DB9PR02CA0013.eurprd02.prod.outlook.com (2603:10a6:10:1d9::18)
+ by AS8PR06MB7271.eurprd06.prod.outlook.com (2603:10a6:20b:251::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.20; Wed, 2 Jul
+ 2025 11:41:29 +0000
+Received: from DB5PEPF00014B8E.eurprd02.prod.outlook.com
+ (2603:10a6:10:1d9:cafe::32) by DB9PR02CA0013.outlook.office365.com
+ (2603:10a6:10:1d9::18) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.20 via Frontend Transport; Wed,
+ 2 Jul 2025 11:41:29 +0000
+X-MS-Exchange-Authentication-Results: spf=temperror (sender IP is 193.8.40.94)
+ smtp.mailfrom=leica-geosystems.com; dkim=none (message not signed)
+ header.d=none;dmarc=temperror action=none header.from=leica-geosystems.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of leica-geosystems.com: DNS Timeout)
+Received: from hexagon.com (193.8.40.94) by
+ DB5PEPF00014B8E.mail.protection.outlook.com (10.167.8.202) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8901.15 via Frontend Transport; Wed, 2 Jul 2025 11:41:28 +0000
+Received: from AHERNOBLEIH55.lgs-net.com ([10.60.34.120]) by hexagon.com with Microsoft SMTPSVC(10.0.17763.1697);
+	 Wed, 2 Jul 2025 13:41:27 +0200
+From: Catalin Popescu <catalin.popescu@leica-geosystems.com>
+To: amitkumar.karwar@nxp.com,
+	neeraj.sanjaykale@nxp.com,
+	marcel@holtmann.org,
+	luiz.dentz@gmail.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	p.zabel@pengutronix.de
+Cc: linux-bluetooth@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	m.felsch@pengutronix.de,
+	Catalin Popescu <catalin.popescu@leica-geosystems.com>,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: [PATCH next v4 1/2] dt-bindings: net: bluetooth: nxp: add support for supply and reset
+Date: Wed,  2 Jul 2025 13:41:04 +0200
+Message-ID: <20250702114105.2229008-1-catalin.popescu@leica-geosystems.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAO9qdTF3vN5veO3HhGbrq-CkfR1fH_3ueCLjtcY8LOYKCG2mjg@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-OriginalArrivalTime: 02 Jul 2025 11:41:27.0810 (UTC) FILETIME=[3F32E620:01DBEB46]
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB5PEPF00014B8E:EE_|AS8PR06MB7271:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: dea9152e-c16c-4137-6ee0-08ddb95d61f9
+X-SET-LOWER-SCL-SCANNER: YES
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|376014|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?7aX7tIYkrtH3pqY+fev5gyLARdm58oPBtMjTb5zgb+fmvYlUrSr+AAuY+4eB?=
+ =?us-ascii?Q?2C7UFVeezmxUAJL0oN9JL/iYikuTegOaHlGkC0JlNC4IDBGe7uNwcWNymoOb?=
+ =?us-ascii?Q?me3bC7sW0NxS0MEGHK72smKpc8SgFAmNHUlEY2BzZDyWT+2r42ETqyOWJJ+q?=
+ =?us-ascii?Q?OFsLzCe1YPNk//rtsh9gr+CQtCp9klamR2mV9pvlcA/Bm1J4t0dlgSooG+TE?=
+ =?us-ascii?Q?IncGH+j1YLag3ttTa302Ost1syULkW54RHyxlj9ajivmWF66dq3Z+e01ROym?=
+ =?us-ascii?Q?hAKWM0azjZPrzTeLuJTGjZicZkErcDJ3+xTrtYEJHcL8+dSmQlmxCuTcqVg3?=
+ =?us-ascii?Q?nyTlti8Ut9JgSuB+LrKIE7y97Ib2zDdKuPv0GGEHP5Fic16MaiZDZ7m723F/?=
+ =?us-ascii?Q?eo9+W3cMie6f5bcZztTNViWtpJbhqVCeZUZ2sTzG9HFLUTVjyRrAeqQhrr0q?=
+ =?us-ascii?Q?gGklZVNvIPKkwJ+Thf5VK5iW4XxVXUUvk3+cnaLR3HppHuZIOD03dJdGbDtO?=
+ =?us-ascii?Q?nTyujhPHiXWdHOEFGZFDP9zP2yGa+wzarwekpKyrm9PfF6YQWO+UwjkJQdvY?=
+ =?us-ascii?Q?UOc6p8xpB+FTlMdqSIIpqeZVlj7t4GqsLgRlaeRZ5oky5yF0gbeKenUXDFfg?=
+ =?us-ascii?Q?+ORwtQymJKnZnYZMXBR3tA1r0nz6v1bBrFnE4rRhKbVEwUE4UYRpUYZr1bA0?=
+ =?us-ascii?Q?18ZLygfEi5+FPxkJF+qsOxU4BhFg8PeS9sqZ73Ux/t5mMqs5I9GCGQpoN+Wl?=
+ =?us-ascii?Q?FwLlrMuqEZdTaU/skoC3xXDchf5eXr+ZKY4LCxiPVOBNOBqo/9O9ox01q0Pu?=
+ =?us-ascii?Q?06+kSul46966R/Xy0ANEQcfAULNX5OWIChcCeQWdYkqhtCqhmYKXniKQ1YQ5?=
+ =?us-ascii?Q?WKP1QuZK4R00rt3Yc4TzFffcMrsevxYI6ePvwb1ynUJZ+9lIUAYUJj2gYAIh?=
+ =?us-ascii?Q?iCadKCZYvW9qro42SloNanvDBHLFph3SMSmSIg2Hp8xJ3lhgkcpBvbt1lWNq?=
+ =?us-ascii?Q?RM3E1dyA3Z87EbyFwulk3iHTaTFiEHe0iG/EBRYO1cqjepvvwirb5XZRH4vR?=
+ =?us-ascii?Q?BgypgYkmJ2YuHe2znaM/njlUd4rSaLPtcxvFp0z7juYkDtGml6+YCs5hjL+p?=
+ =?us-ascii?Q?7ArXy1W+mj5dw0+r8rKCx9IPRJmpzEgBQ+zo7XIApLX6bBgSinDnizUmc/EQ?=
+ =?us-ascii?Q?XTQGT4h28oYzgLNDmaUXyLUc5LWkEBTG+3Ksjw4RfPnsXenLu46HZGZ2yiRJ?=
+ =?us-ascii?Q?MOfCtFSnOiauIqVNtccyPH1RhsoKD0j0BDaJV6RCOtdgzqgMfUt6t101FveD?=
+ =?us-ascii?Q?lwGyNYlIQpszmSTAXs6Rws/jwFIOmFVJCiN7roA47xje8P3E6RbaPmpHaRxY?=
+ =?us-ascii?Q?cA+1b2N1REize19zuh2+lWDRMgyccB6kRkI3+XcjdMvLS3mOKB3WuR/mjgpW?=
+ =?us-ascii?Q?N8eS7WurEX6E9S2fJCA2exrUaRd4Fa8ryUnHbLge/BvzEKiSzkZJlPdbCm93?=
+ =?us-ascii?Q?Z81Wo7sJD1u1GoNTAykisfe9rh/oRe/z6tZv?=
+X-Forefront-Antispam-Report:
+	CIP:193.8.40.94;CTRY:CH;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:hexagon.com;PTR:ahersrvdom50.leica-geosystems.com;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: leica-geosystems.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 11:41:28.1783
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: dea9152e-c16c-4137-6ee0-08ddb95d61f9
+X-MS-Exchange-CrossTenant-Id: 1b16ab3e-b8f6-4fe3-9f3e-2db7fe549f6a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=1b16ab3e-b8f6-4fe3-9f3e-2db7fe549f6a;Ip=[193.8.40.94];Helo=[hexagon.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DB5PEPF00014B8E.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR06MB7271
 
-On Wed, Jul 02, 2025 at 01:01:13AM +0900, Jeongjun Park wrote:
-> Uladzislau Rezki <urezki@gmail.com> wrote:
-> >
-> > On Thu, May 08, 2025 at 07:48:55PM +0200, Uladzislau Rezki wrote:
-> > > On Fri, May 09, 2025 at 01:56:20AM +0900, Jeongjun Park wrote:
-> > > > The following data-race was found in show_numa_info():
-> > > >
-> > > > ==================================================================
-> > > > BUG: KCSAN: data-race in vmalloc_info_show / vmalloc_info_show
-> > > >
-> > > > read to 0xffff88800971fe30 of 4 bytes by task 8289 on cpu 0:
-> > > >  show_numa_info mm/vmalloc.c:4936 [inline]
-> > > >  vmalloc_info_show+0x5a8/0x7e0 mm/vmalloc.c:5016
-> > > >  seq_read_iter+0x373/0xb40 fs/seq_file.c:230
-> > > >  proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
-> > > > ....
-> > > >
-> > > > write to 0xffff88800971fe30 of 4 bytes by task 8287 on cpu 1:
-> > > >  show_numa_info mm/vmalloc.c:4934 [inline]
-> > > >  vmalloc_info_show+0x38f/0x7e0 mm/vmalloc.c:5016
-> > > >  seq_read_iter+0x373/0xb40 fs/seq_file.c:230
-> > > >  proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
-> > > > ....
-> > > >
-> > > > value changed: 0x0000008f -> 0x00000000
-> > > > ==================================================================
-> > > >
-> > > > According to this report,there is a read/write data-race because m->private
-> > > > is accessible to multiple CPUs. To fix this, instead of allocating the heap
-> > > > in proc_vmalloc_init() and passing the heap address to m->private,
-> > > > vmalloc_info_show() should allocate the heap.
-> > > >
-> > > > Fixes: a47a126ad5ea ("vmallocinfo: add NUMA information")
-> > > > Suggested-by: Eric Dumazet <edumazet@google.com>
-> > > > Suggested-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> > > > Suggested-by: Andrew Morton <akpm@linux-foundation.org>
-> > > > Signed-off-by: Jeongjun Park <aha310510@gmail.com>
-> > > > ---
-> > > > v6: Change CONFIG_NUMA to must be check before doing any work related to the counters array.
-> > > > - Link to v5: https://lore.kernel.org/all/20250508160800.12540-1-aha310510@gmail.com/
-> > > > v5: Change heap to be allocated only when CONFIG_NUMA is enabled
-> > > > - Link to v4: https://lore.kernel.org/all/20250508065558.149091-1-aha310510@gmail.com/
-> > > > v4: Change the way counters array heap is allocated, per Andrew Morton's suggestion.
-> > > >     And fix it to call smp_rmb() in the correct location.
-> > > > - Link to v3: https://lore.kernel.org/all/20250507142552.9446-1-aha310510@gmail.com/
-> > > > v3: Following Uladzislau Rezki's suggestion, we check v->flags beforehand
-> > > >     to avoid printing uninitialized members of vm_struct.
-> > > > - Link to v2: https://lore.kernel.org/all/20250506082520.84153-1-aha310510@gmail.com/
-> > > > v2: Refactoring some functions and fix patch as per Eric Dumazet suggestion
-> > > > - Link to v1: https://lore.kernel.org/all/20250505171948.24410-1-aha310510@gmail.com/
-> > > > ---
-> > > >  mm/vmalloc.c | 63 +++++++++++++++++++++++++++++-----------------------
-> > > >  1 file changed, 35 insertions(+), 28 deletions(-)
-> > > >
-> > > > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> > > > index 3ed720a787ec..c1ea9713a1c0 100644
-> > > > --- a/mm/vmalloc.c
-> > > > +++ b/mm/vmalloc.c
-> > > > @@ -3100,7 +3100,7 @@ static void clear_vm_uninitialized_flag(struct vm_struct *vm)
-> > > >     /*
-> > > >      * Before removing VM_UNINITIALIZED,
-> > > >      * we should make sure that vm has proper values.
-> > > > -    * Pair with smp_rmb() in show_numa_info().
-> > > > +    * Pair with smp_rmb() in vread_iter() and vmalloc_info_show().
-> > > >      */
-> > > >     smp_wmb();
-> > > >     vm->flags &= ~VM_UNINITIALIZED;
-> > > > @@ -4914,28 +4914,29 @@ bool vmalloc_dump_obj(void *object)
-> > > >  #endif
-> > > >
-> > > >  #ifdef CONFIG_PROC_FS
-> > > > -static void show_numa_info(struct seq_file *m, struct vm_struct *v)
-> > > > -{
-> > > > -   if (IS_ENABLED(CONFIG_NUMA)) {
-> > > > -           unsigned int nr, *counters = m->private;
-> > > > -           unsigned int step = 1U << vm_area_page_order(v);
-> > > >
-> > > > -           if (!counters)
-> > > > -                   return;
-> > > > +/*
-> > > > + * Print number of pages allocated on each memory node.
-> > > > + *
-> > > > + * This function can only be called if CONFIG_NUMA is enabled
-> > > > + * and VM_UNINITIALIZED bit in v->flags is disabled.
-> > > > + */
-> > > > +static void show_numa_info(struct seq_file *m, struct vm_struct *v,
-> > > > +                            unsigned int *counters)
-> > > > +{
-> > > > +   unsigned int nr;
-> > > > +   unsigned int step = 1U << vm_area_page_order(v);
-> > > >
-> > > > -           if (v->flags & VM_UNINITIALIZED)
-> > > > -                   return;
-> > > > -           /* Pair with smp_wmb() in clear_vm_uninitialized_flag() */
-> > > > -           smp_rmb();
-> > > > +   if (!counters)
-> > > > +           return;
-> > > >
-> > > > -           memset(counters, 0, nr_node_ids * sizeof(unsigned int));
-> > > > +   memset(counters, 0, nr_node_ids * sizeof(unsigned int));
-> > > >
-> > > > -           for (nr = 0; nr < v->nr_pages; nr += step)
-> > > > -                   counters[page_to_nid(v->pages[nr])] += step;
-> > > > -           for_each_node_state(nr, N_HIGH_MEMORY)
-> > > > -                   if (counters[nr])
-> > > > -                           seq_printf(m, " N%u=%u", nr, counters[nr]);
-> > > > -   }
-> > > > +   for (nr = 0; nr < v->nr_pages; nr += step)
-> > > > +           counters[page_to_nid(v->pages[nr])] += step;
-> > > > +   for_each_node_state(nr, N_HIGH_MEMORY)
-> > > > +           if (counters[nr])
-> > > > +                   seq_printf(m, " N%u=%u", nr, counters[nr]);
-> > > >  }
-> > > >
-> > > >  static void show_purge_info(struct seq_file *m)
-> > > > @@ -4962,8 +4963,12 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
-> > > >     struct vmap_node *vn;
-> > > >     struct vmap_area *va;
-> > > >     struct vm_struct *v;
-> > > > +   unsigned int *counters;
-> > > >     int i;
-> > > >
-> > > > +   if (IS_ENABLED(CONFIG_NUMA))
-> > > > +           counters = kmalloc(nr_node_ids * sizeof(unsigned int), GFP_KERNEL);
-> > > > +
-> > > >     for (i = 0; i < nr_vmap_nodes; i++) {
-> > > >             vn = &vmap_nodes[i];
-> > > >
-> > > > @@ -4979,6 +4984,11 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
-> > > >                     }
-> > > >
-> > > >                     v = va->vm;
-> > > > +                   if (v->flags & VM_UNINITIALIZED)
-> > > > +                           continue;
-> > > > +
-> > > > +                   /* Pair with smp_wmb() in clear_vm_uninitialized_flag() */
-> > > > +                   smp_rmb();
-> > > >
-> > > >                     seq_printf(m, "0x%pK-0x%pK %7ld",
-> > > >                             v->addr, v->addr + v->size, v->size);
-> > > > @@ -5013,7 +5023,9 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
-> > > >                     if (is_vmalloc_addr(v->pages))
-> > > >                             seq_puts(m, " vpages");
-> > > >
-> > > > -                   show_numa_info(m, v);
-> > > > +                   if (IS_ENABLED(CONFIG_NUMA))
-> > > > +                           show_numa_info(m, v, counters);
-> > > > +
-> > > >                     seq_putc(m, '\n');
-> > > >             }
-> > > >             spin_unlock(&vn->busy.lock);
-> > > > @@ -5023,19 +5035,14 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
-> > > >      * As a final step, dump "unpurged" areas.
-> > > >      */
-> > > >     show_purge_info(m);
-> > > > +   if (IS_ENABLED(CONFIG_NUMA))
-> > > > +           kfree(counters);
-> > > >     return 0;
-> > > >  }
-> > > >
-> > > >  static int __init proc_vmalloc_init(void)
-> > > >  {
-> > > > -   void *priv_data = NULL;
-> > > > -
-> > > > -   if (IS_ENABLED(CONFIG_NUMA))
-> > > > -           priv_data = kmalloc(nr_node_ids * sizeof(unsigned int), GFP_KERNEL);
-> > > > -
-> > > > -   proc_create_single_data("vmallocinfo",
-> > > > -           0400, NULL, vmalloc_info_show, priv_data);
-> > > > -
-> > > > +   proc_create_single("vmallocinfo", 0400, NULL, vmalloc_info_show);
-> > > >     return 0;
-> > > >  }
-> > > >  module_init(proc_vmalloc_init);
-> > > > --
-> > > LGTM:
-> > >
-> > > Reviewed-by: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-> > >
-> > > Thank you!
-> > >
-> > Also one thing i have just noticed. The "Fixes tag" should be updated to
-> > this: Fixes: 8e1d743f2c26 ("mm: vmalloc: support multiple nodes in vmallocinfo")
-> >
-> > the below one should not be blamed:
-> >
-> > Fixes: a47a126ad5ea ("vmallocinfo: add NUMA information")
-> >
-> > Thanks!
-> >
-> > --
-> > Uladzislau Rezki
-> 
-> I've been looking through the stable tree and it seems like this issue
-> still exists in the stable tree, so I think this patch needs to be
-> backported.
-> 
-> What do you think?
-> 
-If the stable does not have it, we should backport it. But it has to be
-done only for those where a vmap-node logic is in place. It was delivered
-starting from the v6.9 kernel version.
+Add support for chip power supply and chip reset/powerdown.
 
---
-Uladzislau Rezki
+Signed-off-by: Catalin Popescu <catalin.popescu@leica-geosystems.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+---
+v4:
+- rebase on linux-next tag next-20250701
+v3:
+- rebase on linux-next tag next-20250409
+v2:
+- rebase on linux-next tag next-20250227
+- add acked-by
+---
+ .../bindings/net/bluetooth/nxp,88w8987-bt.yaml         | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml b/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml
+index bb9ab5dd3b4a..857c6234ba9b 100644
+--- a/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml
++++ b/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml
+@@ -72,6 +72,14 @@ properties:
+     description:
+       The GPIO number of the NXP chipset used for BT_WAKE_OUT.
+ 
++  vcc-supply:
++    description:
++      phandle of the regulator that provides the supply voltage.
++
++  reset-gpios:
++    description:
++      Chip powerdown/reset signal (PDn).
++
+ required:
+   - compatible
+ 
+@@ -90,6 +98,8 @@ examples:
+             device-wakeup-gpios = <&gpio 11 GPIO_ACTIVE_HIGH>;
+             nxp,wakein-pin = /bits/ 8 <18>;
+             nxp,wakeout-pin = /bits/ 8 <19>;
++            vcc-supply = <&nxp_iw612_supply>;
++            reset-gpios = <&gpioctrl 2 GPIO_ACTIVE_LOW>;
+             local-bd-address = [66 55 44 33 22 11];
+             interrupt-parent = <&gpio>;
+             interrupts = <8 IRQ_TYPE_EDGE_FALLING>;
+
+base-commit: 3f804361f3b9af33e00b90ec9cb5afcc96831e60
+prerequisite-patch-id: 0000000000000000000000000000000000000000
+-- 
+2.43.0
+
