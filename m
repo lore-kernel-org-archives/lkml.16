@@ -1,80 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB38317B4EC;
-	Wed,  2 Jul 2025 20:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F7292D373C;
+	Wed,  2 Jul 2025 20:10:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751486896; cv=none; b=LMBDfm0g7Xl4bKIT9aKln8Hr7L1gTDE+OEXhpjqxQVeIQgAjTo9B+hkEE1l8K+W9ttpnixwgGCjlWZCVnqcHbzToaj0hU5KM/OMrwEmezjk0gp3+FM9kdVn+Vwj4iPOkyTB7l8U++aQgTi3m0Hh1mkKgPZjK178MdAKPH602Dfg=
+	t=1751487016; cv=none; b=GTuZLHEiGY6cEr783DMTWnbqoQjkjea/AVPy4P507XQtIUAmAWTZLwUl5lHrTjh+K2M2/uoHG/i4d+gOoWxuBYfiHHGJYwduCuweGQb6jdMiirm9U4eTvjdaUXITVuTnt9jq6tFatIC237NP63OokMh3zqfWZqjQ6WzF0n/cx8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751486896; c=relaxed/simple;
-	bh=+oBwcjeXye1ezY+NsOoZuIn8nraxussnxeqwIJCYMJA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F1AA4bjU+01+Clgg3JeEW16nA1epJw+ZrCNcXzWPy14qBMlA99/ZRx1F4q0rMWkNfmeE1rFvaNrl1Dl6Bg+fayz2mQKo/oCDqq9WL9iqOvTVlqiDbz5G0hKjnh5nuC25+uKTIT04YruTYNsVW1gGzHUVM5nMbXnWdEuGUoQLX1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F/RNYMYr; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F/RNYMYr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74E27C4CEE7;
-	Wed,  2 Jul 2025 20:08:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751486896;
-	bh=+oBwcjeXye1ezY+NsOoZuIn8nraxussnxeqwIJCYMJA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=F/RNYMYrSwjwbV5M8+fCYw3SAd7h2cIXRTNhPv0dC2pgHLn0ohZMWKbfpGeWei0XV
-	 XnPTvJKHOVRNWktwBm/ScK81vhVxnNspKQi/CF5PUL48McDQyWfTFjRbj87q6py5cS
-	 vtMrIG+XoXf1XKE2LJdlLY6BF46s+TD56dabaRcI54/+A9jMyTyBTKqeKEFG/PLKVp
-	 vYqg1TObebG28niU/1KQEp7gbXdVFizwUCkT3mTnY5n35Ojb78CFrtEkc429alRGHW
-	 poHsOH6lC6PuHRyuX7KR4ZqBQFhUPGY0FbiEFtXcXrtbdFtTxvnhAVaKbJ2kYlAEHi
-	 1KNc7ZpQGVK5w==
-Date: Wed, 2 Jul 2025 21:08:12 +0100
-From: Simon Horman <horms@kernel.org>
-To: Thomas Fourier <fourier.thomas@gmail.com>
-Cc: Chris Snook <chris.snook@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Oleksij Rempel <o.rempel@pengutronix.de>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: ag71xx: Add missing check after DMA map
-Message-ID: <20250702200812.GI41770@horms.kernel.org>
-References: <20250702075048.40677-2-fourier.thomas@gmail.com>
+	s=arc-20240116; t=1751487016; c=relaxed/simple;
+	bh=nzLtOk+CXiy19j1c+qXN2YOSaypKxf6gyl1O+1Hw96k=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kiqZAt9lZxb63Ik3LgOEYIKwrV9onx+q4DoUc2Bg7XcMCkiFN3GcBymlNGRoWS5w6uQ6XULCyoYPSmVQ2im3v3KTlBST93ssR2RpOCed6XNeol40h86nx04dVlo9YajKu9F091h8yZKdu6yJuT6LtDAUPCrAUqOtlP7Xzp3pZa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 79491C0464;
+	Wed,  2 Jul 2025 20:10:11 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 25BFB2000E;
+	Wed,  2 Jul 2025 20:10:07 +0000 (UTC)
+Date: Wed, 2 Jul 2025 16:10:05 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra
+ <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
+ Masami Hiramatsu <mhiramat@kernel.org>, Josh Poimboeuf
+ <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa
+ <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner
+ <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu Bhagat
+ <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
+ Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>,
+ Florian Weimer <fweimer@redhat.com>
+Subject: Re: [PATCH v12 06/14] unwind_user/deferred: Add deferred unwinding
+ interface
+Message-ID: <20250702161005.0ed06389@batman.local.home>
+In-Reply-To: <16b8f9a8-b1f8-43ac-9dad-4b83d8ca9f9f@efficios.com>
+References: <20250701005321.942306427@goodmis.org>
+	<20250701005451.571473750@goodmis.org>
+	<20250702163609.GR1613200@noisy.programming.kicks-ass.net>
+	<20250702124216.4668826a@batman.local.home>
+	<CAHk-=wiXjrvif6ZdunRV3OT0YTrY=5Oiw1xU_F1L93iGLGUdhQ@mail.gmail.com>
+	<20250702132605.6c79c1ec@batman.local.home>
+	<20250702134850.254cec76@batman.local.home>
+	<CAHk-=wiU6aox6-QqrUY1AaBq87EsFuFa6q2w40PJkhKMEX213w@mail.gmail.com>
+	<482f6b76-6086-47da-a3cf-d57106bdcb39@efficios.com>
+	<20250702150535.7d2596df@batman.local.home>
+	<47a43d27-7eac-4f88-a783-afdd3a97bb11@efficios.com>
+	<20250702152111.1bec7214@batman.local.home>
+	<20250702153600.28dcf1e3@batman.local.home>
+	<20250702154048.71c5a63d@batman.local.home>
+	<16b8f9a8-b1f8-43ac-9dad-4b83d8ca9f9f@efficios.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250702075048.40677-2-fourier.thomas@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 9h9bqzrzn8kj7pqoe7o7tdions79fckj
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: 25BFB2000E
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18bEf0NTakmzstSfpVPMrAT7yaOXg6Xl6E=
+X-HE-Tag: 1751487007-9541
+X-HE-Meta: U2FsdGVkX18YhDIwOmvt7Nq3GZemF2igDaPgUIAFQzyiTZ4jbqKL1zC8HHre1kjHbJLFH62lIHgDE3EMN41B1+Gl3vXap2n8H5+75xJXqCPhI8c0CvE43eN8FTLYolsqwnBa9R0zOvyv2+PfFNa0Tv/jwuMvoo4bDTyKfH1mhO7mtClbtGqZVSxZX95KBG94aXPU0RbxwGbXzNSGnac3v/ZK9/+i2F+at96jJhteB5dGzzIxQrCblbThzASRkLqZnhi4ps8Lhf3piHyWgtdi3SRloGcnqMrMws0kmLvTfwHsUkWWAKc0HnuZNGTx2714nbDmgFaY1+I9DsnKIUkT919ni3uckgdAl43kR6LPbTXYp5SatiNtXdnNKxwfJicf
 
-On Wed, Jul 02, 2025 at 09:50:46AM +0200, Thomas Fourier wrote:
-> The DMA map functions can fail and should be tested for errors.
+On Wed, 2 Jul 2025 15:48:16 -0400
+Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+
+> FWIW, I liked your idea of making the cookie 64-bit with:
 > 
-> Fixes: d51b6ce441d3 ("net: ethernet: add ag71xx driver")
-> Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
-> ---
->  drivers/net/ethernet/atheros/ag71xx.c | 16 +++++++++++++---
->  1 file changed, 13 insertions(+), 3 deletions(-)
+> - 32-bit cpu number,
+> - 32-bit per-CPU free running counter.
 > 
-> diff --git a/drivers/net/ethernet/atheros/ag71xx.c b/drivers/net/ethernet/atheros/ag71xx.c
-> index d8e6f23e1432..0e68ab225e0a 100644
-> --- a/drivers/net/ethernet/atheros/ag71xx.c
-> +++ b/drivers/net/ethernet/atheros/ag71xx.c
-> @@ -1198,7 +1198,8 @@ static int ag71xx_buffer_size(struct ag71xx *ag)
->  
->  static bool ag71xx_fill_rx_buf(struct ag71xx *ag, struct ag71xx_buf *buf,
->  			       int offset,
-> -			       void *(*alloc)(unsigned int size))
-> +			       void *(*alloc)(unsigned int size),
-> +			       void (*free)(void *))
+> This is simple, works on 32-bit archs, and it does not overflow as often
+> as time LSB because it counts execution contexts.
 
-FWIIW, I'm of two minds about this free parameter.
-On the one hand I like the symmetry with free.
-But on the other the two callers both pass
-skb_free_frag as this argument.
+I have no problem with implementing that. But Linus had his concerns.
+If he's OK with that version, then I'll go with that.
 
-But I lean towards what you have being a good choice.
-
-Reviewed-by: Simon Horman <horms@kernel.org>
+-- Steve
