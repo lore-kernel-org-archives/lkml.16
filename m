@@ -1,72 +1,76 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2059.outbound.protection.outlook.com [40.107.236.59])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B512D46BE
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 16:13:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.59
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751472825; cv=fail; b=W1q3S5U+VuImE/mYgx8NqYA9Dnp1VkJ/XluOnQguV4y95MZGWD6mQo3mopy7KnC/gzO7tC45pCHtJNQpRX473yxoOXYlPTriYNwNmP3JwGMB3KqSJ05dIPNmjyqPcpPD/gGQc++Q8b8tsLD0kA9comkDhRlDlNwFGEgZy/EFCIQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751472825; c=relaxed/simple;
-	bh=WW3H/3PUBAN8vbvlxSIkCZqtgDWeezWeZRaaVmjUs9g=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QGhmGFWeFMAd/ddV3io4EbFAvyXAdScj0eYKh3oeotJIoTKp4Oe0ycr4cDU9kzYPMOu8h1u+tq4wyW1meVoz5aZUptEjKDdGRVir/FRA0dhoAe7dLjyS7Sr6w+Ay1Lz3SbV2/+FcgfaxZy8afMOJFN46IsRXj4WOXUghFHsKhBs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xVsDIZQR; arc=fail smtp.client-ip=40.107.236.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA8EE2F365B;
+	Wed,  2 Jul 2025 16:14:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751472848; cv=none; b=d5yRT+5NNa8ORWK7faTym/oI9bb1H2CzTEpT8Z+HaTy48JfHoXhjhwyClysQ29OQJ/6u/e6E8NgSoOPjlIjGkQQ7x9CazkUzxgYq6Pu65rSE2YXZNkg/vf/NTL8Z+50biRTxv1zMHTYPehzNZqEpuhiiZ46HVcgrAAFJbBw9i5M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751472848; c=relaxed/simple;
+	bh=9P/Pp8H05sTTonSNOeiD8PXpPn6itkrTXxZVOJmVe80=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RXT4zBNe90lSRYt9l+5NzVc/5AUF1zB2Lq0DH1d2Y2ntrCrzXT94qS6CYKS3rgIIT4ITYWHcKOt9eT3MMdNfPeiR4FJgmSXKrT4US8E7UIjxS2SVSBvPSvfCs635h3n3jk6zdovJ+jnDhULfw6jchDt7WTyzXoQyE20mE/wbayM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NRDsjv9c; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xVsDIZQR"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Fj8gf5UxDu9efmB4JMNU5fERkgwKH5AjoIf//mYRCJgwB5hWhrWrerW+h2b4zxSxsuxes6svW2AI3eE24Q0NPj8mmXJywQlo0DidSFcCrbBNdoGnx4CvxhJwStXOymyrlNG9QwYWICuUMTlf8MflAqjB/XBJJZ1MKMuKp6atc82IbgLUr+5/9CRAys3KOg6PoXAPCvsndh2FfckcP9JQjRp9RBoL/Dgu3Z324DRkPn4N+EC2sfobiAVH/sghVFrmWGwLQnCpUMR34HBdYH29DpcVVr1UDaH3LdJCGdNdkGx3efJSnepU32tiJpxtqVbqzsKJJAnbgo4Kbp1Kq5AdjA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ik1fsrU3+1GM9eFwPLMAXJh38CC+gxZmcnGsD0S1ytI=;
- b=RwbgBvWpXlGq9zv4gk9N0WQP5J9vQEB18SlfsexS7NqcmAjdFvJsVtlwYUxRwuYnH7tJAH/jTVNv+eP7Dz4blWFnnzXdxqazOfKcxyT4CGoN0OEChcRsXeonSZZ1ORgB3jmCMXKkwAo85CJPaIquhzHb+JVVGw/EVDDVPNUuOfPMjrata2I7bAmXbISXXQzpQI55ZA+k4A4cNERfqvw6pwZtjOiQM8ZDnn+DtiXyMZOf+16SAYPCzZBZ6Qbib0rWPy8XoIjthUNIn9pJwLT0O2MWSmBRatxuOGShqghPeOWH7lJfXWXYuwq40yjZydr8sUyCCU56C2fYV9/be3FhRA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ik1fsrU3+1GM9eFwPLMAXJh38CC+gxZmcnGsD0S1ytI=;
- b=xVsDIZQRzKh25OQv06cpWeuPDVXg15C5/9ePZE80MCtT6VJkVrzIRy1F8rWJvip8osuA+yx7I6UAi7zi0F3WA+IenTQd+V0wB07XbKZkmO+9Id84rPexTwzfl2Ofn79FO4dNayUobXP94negjYYWIgqSLOUdgUGqa8dDt2OOhSA=
-Received: from SN7P222CA0016.NAMP222.PROD.OUTLOOK.COM (2603:10b6:806:124::16)
- by PH8PR12MB7325.namprd12.prod.outlook.com (2603:10b6:510:217::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.17; Wed, 2 Jul
- 2025 16:13:36 +0000
-Received: from SA2PEPF00001504.namprd04.prod.outlook.com
- (2603:10b6:806:124:cafe::9e) by SN7P222CA0016.outlook.office365.com
- (2603:10b6:806:124::16) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.21 via Frontend Transport; Wed,
- 2 Jul 2025 16:13:35 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SA2PEPF00001504.mail.protection.outlook.com (10.167.242.36) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8901.15 via Frontend Transport; Wed, 2 Jul 2025 16:13:35 +0000
-Received: from FRAPPELLOUX01.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 2 Jul
- 2025 11:13:33 -0500
-From: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
-	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
-	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-CC: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
-	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v1 3/3] drm/buddy: dont go over the higher orders multiple times
-Date: Wed, 2 Jul 2025 18:12:04 +0200
-Message-ID: <20250702161208.25188-4-pierre-eric.pelloux-prayer@amd.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250702161208.25188-1-pierre-eric.pelloux-prayer@amd.com>
-References: <20250702161208.25188-1-pierre-eric.pelloux-prayer@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NRDsjv9c"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-74b50c71b0aso642705b3a.0;
+        Wed, 02 Jul 2025 09:14:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751472846; x=1752077646; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0c/84mBXTtb1I5DJ3f//CNcOZAIu4pgnp07Yr6FAASE=;
+        b=NRDsjv9cKERfSlwXrrDW2QOY8hcAvPzsw2z0ZLgwhsT4J0mlmj8Sr0YoFTQ7ykFKXq
+         CF1nRQHrd1SlpdBqXYXxkLNhezm5OLbkNnR0yZFtITrDX/FwVZnYyjageXi0tF3tu1Sj
+         /2pzIa+AX1jcs+pAzvE2Fh3gKwS5zbOASimBfGtvaxdhNjmPACxOyoin44ZPqjOoMNBs
+         EiPCfe66TiKFRAOUdKJDuWdVf8VaiVXCJlBhk4gt6dCkWYscyVEu4Xknr84c0WM7JTRY
+         IQGzYqpkfzRSRsJOdOIbXmd8IlobJwwP/MRMsBXimo/xAnQrPr5CD5E5JfDqcZ4qOfxt
+         +evQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751472846; x=1752077646;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0c/84mBXTtb1I5DJ3f//CNcOZAIu4pgnp07Yr6FAASE=;
+        b=Ot5bNaT9um3WmcVxFTu2rkN8Jw5VvWlaJLwQttSjSIcERM1yBclRmwuMIutTQjyYV/
+         XtTkk8SI+BZs80BRbOgojJrj2lYMFuHLbfHIWQvh/AHuofeflcF0chuAYL21uo9F85pA
+         EYZhzz/lJISWJXJdmvDsoBlrcK/wcDvF1FxV2LBHhQB96qbLMDDvwK/miwnf0S2bHmhG
+         o3JMyEZZCM848AFcWrAx6kDeP+54czCtzZScd8m3VAC1A64TW0p+x+69/HObBIwWPP0c
+         bhcGJuVakshzbX30FaNvFJRBqA0FIAj4g7cH54tSrKm2/EyDXZxM8GXelWm+2gGjVJq+
+         koWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWjozXAB+8HMk2ToaBLhHrEAn35fLTswpajCDrZiMQ8cM+6xQpuaQ6P3VKpeLvPTwbbsHwsC3DLrFI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQpbp1dWa/zK3hqdy2ZeCGtEBxBk7iINgymuFETj4FzURTx35D
+	D5o3yBq4hO/S/LlUXNddgBccVBIBgbzClEmrR5zRrkqas1Ht65upWxsP
+X-Gm-Gg: ASbGncveCuVX8ErahJkGDcKuX8cKMT6BcNWSWylqhMlZY/Vu9sGXFcQO/xJzY5cxeX8
+	rEOIfdL1CRCEw5n3AEImD7lHg3nmvQXNJVcLMSZCMOs6kUOFl/oUcVnEwbJHtwa4enQnKRcV34w
+	2ROCCvnO05kNmgTXvYdpsaMWahEBnR0WEnh2YPa0Enw1Jc+mOjhDPcGOy6kt8cyaDNp9ysxE6py
+	X5RrZgaD45gjJ3gNhq73+k9b09oSgNOpLoUYWF07+1QMRFyAs/g1n8Qvo6PPjEv6ILsRVejBZkX
+	ev8Vz7uyBu9SA9loKbA4jICEFdxjWH5mEoUQXp+FDdNeGUcXePVCiX7BJTXay00ZJEbJ+pHgQVz
+	wkIZYD3k=
+X-Google-Smtp-Source: AGHT+IEVOoy1Wg3zr/ivZW5QJMDsut3/0p00VNy9N/gGgSjttY9YOrjPlh1fZzMAA62oF74U2z1nzQ==
+X-Received: by 2002:a05:6a21:62c6:b0:220:82c7:309c with SMTP id adf61e73a8af0-222d7db195bmr6344370637.7.1751472845622;
+        Wed, 02 Jul 2025 09:14:05 -0700 (PDT)
+Received: from localhost.localdomain ([2405:201:c408:a02c:2fc6:2cad:e985:b61d])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b35016ee1e0sm9385740a12.54.2025.07.02.09.14.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 09:14:05 -0700 (PDT)
+From: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>
+To: airlied@gmail.com,
+	simona@ffwll.ch,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	corbet@lwn.net,
+	dri-devel@lists.freedesktop.org,
+	linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	kevinpaul468@gmail.com
+Subject: [PATCH v3] workaround for Sphinx false positive preventing indexing
+Date: Wed,  2 Jul 2025 21:43:37 +0530
+Message-Id: <20250702161337.69943-1-kevinpaul468@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,175 +78,64 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00001504:EE_|PH8PR12MB7325:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6c03b0f0-1cdc-4d21-5705-08ddb98365c2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|36860700013|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?7FPfXiVCZxILjuV/nzvRpMK/FBYIgvadxKV6mFY60jur9EDwOx9FU1ENfUSd?=
- =?us-ascii?Q?DYz5eAfKawiylss9E0fMe0qdZ6CHYGnozQcjjKU8cU3TugPW8ZhV5kgWgdNr?=
- =?us-ascii?Q?9LTEI5CpZXLVhxrWVnGtTh/w7F74LABveejwvzGjfwVXWBo1Qj03+er1uxoI?=
- =?us-ascii?Q?/c1PwGeN2uitefhK63zB2gtCw3TF/AE6CAlTAA55TDxAXDpCkLJHyGxrZ4MF?=
- =?us-ascii?Q?fGrbPHSb22po2lquz+tOKJl5itAmpyw3D7AZkJy9Q0bisTXQk9UY0dyIFhQw?=
- =?us-ascii?Q?D6agBq4KzeZnQIYs9H0/knp4WnwGVEySpv7wsIzQN4S2jpt2TQedmodADg6W?=
- =?us-ascii?Q?0k8244uXw9244dkiRbMO/5tiUJI4N/ArHoPqoDn/hoXnLj6pY5dyOTYsGXpE?=
- =?us-ascii?Q?DwN/sRCErIvZ9tTzFuwk85s8hSrPe5w5p3Qh8V5JOVPEP6imXvdkfpSg4/Nf?=
- =?us-ascii?Q?XOa49+wU8o60bqL9xdgjyB5PFNNYHjEwhlE52NrBTbEXyLAaTRIsYsaRIO1Y?=
- =?us-ascii?Q?H6BTwItrXITbekWXnCTdUdL8vBE9288baZPXo7Zx3saPlMK3QVexnDWQqzFT?=
- =?us-ascii?Q?cG563HcHDHwfKrLZILI9T3MdwB/vDJ7MnxUICbpnUAWh+B1D8OY0RxLE4LnI?=
- =?us-ascii?Q?LaXYvCb/G9enKnutEvzXhZlVfly28SciPf8GGdwSHLAiglMgEk61SdLJVHRe?=
- =?us-ascii?Q?jcq9SkXgaE8Vgd4HwWaA7nVfajTWAa6i3U/hcNjVIpDdD98PWKWRRILDW8yU?=
- =?us-ascii?Q?uv+QmsQUiAj3jXNR7riIZjDVuoNg/h43ry4Rk7J8nmE5GMyjxXRaHReFQUqX?=
- =?us-ascii?Q?6y+ffKmCVXMiD5v3EJwwffvtj+pQluDwRW4wc+84uMunHhRo4GipqB3NYO3Q?=
- =?us-ascii?Q?O3+9ytkSlI4GTder17tSLj7e3hvH1MU78JfXoRAwsnBr6fiv9AaUQXNp9YrF?=
- =?us-ascii?Q?yK1xbDi102SUWU6V9t6CDWPkQzf9E2PCaO0tttqg/rV3gNHne3WLfb0FH1vN?=
- =?us-ascii?Q?AtVlciMIZQy/yvjSCsB+cG1Lms/1mSnnJ6K7y49pl9aGX0JmJ4BVwXTQQPZl?=
- =?us-ascii?Q?GATtm/JqiZLyA5jww1fCWTDwxp7vmCIHfkPwKK00jHdGMHJOIG87oGlUoFEf?=
- =?us-ascii?Q?/MhUn/B0tRsX2x0ePB1Zl3HTA+lID8xsjG8PwG8KNaD3f9pb99e49sbvnGcs?=
- =?us-ascii?Q?JeUBiG81+Wog3bIb+iWv75d0Et3OFpXJdahpZ5OEFkTF4sXvOqa1NCsrV2lr?=
- =?us-ascii?Q?/Js8aVzTkNVDqe7X9MU3YNGa40ni38IfJmlwDtHqxjzx3YybFdFKDL6o3oIh?=
- =?us-ascii?Q?3C5a1Pm66zgqqRZMmmm+JpWNG85ymfR30+EoHih66HfQK9L/F6FRVHNhvpzW?=
- =?us-ascii?Q?POxY+/PrxR2SjxiQNAMCH2zaWTjH3g36XWxJ2fSwMxnPvBhBU7LxOxBO7HPl?=
- =?us-ascii?Q?iBaeiVy2Qmn2sY4fXkS/UAavnLtmhcg4MqwembNyNrnq4wIVt7koCmBYs2ri?=
- =?us-ascii?Q?JbsKgUDvAf/LeaXuzCh8WWJTScHBkzXiy9RZ?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 16:13:35.4909
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6c03b0f0-1cdc-4d21-5705-08ddb98365c2
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF00001504.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7325
 
-AFAICT the rationale for the loop is to:
-1) try to allocate from the preferred order
-2) if it fails, try higher orders (order + 1 -> max order)
-3) if it fails, try smaller orders (order - 1 -> min order)
+Functions drm_format_info, drm_modeset_lock, drm_ioctl_flags are not being
+indexed in the documentation because there are structs with the same name
+and sphinx is only indexing one of them, Added them to namespaces as a
+workaround for suppressing the warnings and indexing the functions
 
-Steps 1 and 2 are covered by the loop going through [order, max_order].
-Currently step 3 tries again [order, max_order] but with decreasing
-values of order.
+This is a bug of Sphinx >=3.1, first reported by Mauro in September 2020
+Link: https://github.com/sphinx-doc/sphinx/issues/8241
+Open Pull Request
+Link: https://github.com/sphinx-doc/sphinx/pull/8313
 
-This is wasteful, so change it to evaluate only order.
-
-Signed-off-by: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
+Signed-off-by: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>
 ---
- drivers/gpu/drm/drm_buddy.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ Documentation/gpu/drm-kms.rst  | 4 ++++
+ Documentation/gpu/drm-uapi.rst | 2 ++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/drivers/gpu/drm/drm_buddy.c b/drivers/gpu/drm/drm_buddy.c
-index fd31322b3d41..9d3723f2cff9 100644
---- a/drivers/gpu/drm/drm_buddy.c
-+++ b/drivers/gpu/drm/drm_buddy.c
-@@ -590,13 +590,14 @@ __drm_buddy_alloc_range_bias(struct drm_buddy *mm,
+diff --git a/Documentation/gpu/drm-kms.rst b/Documentation/gpu/drm-kms.rst
+index abfe220764e1..b18a99869b6d 100644
+--- a/Documentation/gpu/drm-kms.rst
++++ b/Documentation/gpu/drm-kms.rst
+@@ -357,8 +357,10 @@ Format Functions Reference
+ .. kernel-doc:: include/drm/drm_fourcc.h
+    :internal:
  
- static struct drm_buddy_block *
- get_maxblock(struct drm_buddy *mm, unsigned int order,
-+	     unsigned int max_order,
- 	     unsigned long flags)
- {
- 	struct drm_buddy_block *max_block = NULL, *block = NULL;
- 	bool wants_clear;
- 	unsigned int i;
++.. c:namespace-push:: gpu_drm
+ .. kernel-doc:: drivers/gpu/drm/drm_fourcc.c
+    :export:
++.. c:namespace-pop::
  
--	for (i = order; i <= mm->max_order; ++i) {
-+	for (i = order; i <= max_order; ++i) {
- 		struct drm_buddy_block *tmp_block;
+ .. _kms_dumb_buffer_objects:
  
- 		wants_clear = flags & DRM_BUDDY_PREFER_CLEAR_ALLOCATION;
-@@ -635,6 +636,7 @@ get_maxblock(struct drm_buddy *mm, unsigned int order,
- static struct drm_buddy_block *
- alloc_from_freelist(struct drm_buddy *mm,
- 		    unsigned int order,
-+		    unsigned int max_order,
- 		    unsigned long flags)
- {
- 	struct drm_buddy_block *block = NULL;
-@@ -643,12 +645,12 @@ alloc_from_freelist(struct drm_buddy *mm,
- 	int err;
+@@ -473,8 +475,10 @@ KMS Locking
+ .. kernel-doc:: include/drm/drm_modeset_lock.h
+    :internal:
  
- 	if (flags & DRM_BUDDY_TOPDOWN_ALLOCATION) {
--		block = get_maxblock(mm, order, flags);
-+		block = get_maxblock(mm, order, max_order, flags);
- 		if (block)
- 			/* Store the obtained block order */
- 			tmp = drm_buddy_block_order(block);
- 	} else {
--		for (tmp = order; tmp <= mm->max_order; ++tmp) {
-+		for (tmp = order; tmp <= max_order; ++tmp) {
- 			struct drm_buddy_block *tmp_block;
- 			wants_clear = flags & DRM_BUDDY_PREFER_CLEAR_ALLOCATION;
++.. c:namespace:: gpu_drm
+ .. kernel-doc:: drivers/gpu/drm/drm_modeset_lock.c
+    :export:
++.. c:namespace-pop::
  
-@@ -956,6 +958,7 @@ static struct drm_buddy_block *
- __drm_buddy_alloc_blocks(struct drm_buddy *mm,
- 			 u64 start, u64 end,
- 			 unsigned int order,
-+			 unsigned int max_order,
- 			 unsigned long flags)
- {
- 	if (flags & DRM_BUDDY_RANGE_ALLOCATION)
-@@ -964,7 +967,7 @@ __drm_buddy_alloc_blocks(struct drm_buddy *mm,
- 						     order, flags);
- 	else
- 		/* Allocate from freelist */
--		return alloc_from_freelist(mm, order, flags);
-+		return alloc_from_freelist(mm, order, max_order, flags);
- }
+ KMS Properties
+ ==============
+diff --git a/Documentation/gpu/drm-uapi.rst b/Documentation/gpu/drm-uapi.rst
+index 69f72e71a96e..e9d7b7282a19 100644
+--- a/Documentation/gpu/drm-uapi.rst
++++ b/Documentation/gpu/drm-uapi.rst
+@@ -554,8 +554,10 @@ DRM specific patterns. Note that ENOTTY has the slightly unintuitive meaning of
+ .. kernel-doc:: include/drm/drm_ioctl.h
+    :internal:
  
- /**
-@@ -995,7 +998,7 @@ int drm_buddy_alloc_blocks(struct drm_buddy *mm,
- {
- 	struct drm_buddy_block *block = NULL;
- 	u64 original_size, original_min_size;
--	unsigned int min_order, order;
-+	unsigned int min_order, max_order, order;
- 	LIST_HEAD(allocated);
- 	unsigned long pages;
- 	int err;
-@@ -1044,6 +1047,7 @@ int drm_buddy_alloc_blocks(struct drm_buddy *mm,
++.. c:namespace-push:: gpu_drm
+ .. kernel-doc:: drivers/gpu/drm/drm_ioctl.c
+    :export:
++.. c:namespace-pop::
  
- 	do {
- 		order = min(order, (unsigned int)fls(pages) - 1);
-+		max_order = mm->max_order;
- 		BUG_ON(order > mm->max_order);
- 		BUG_ON(order < min_order);
- 
-@@ -1051,6 +1055,7 @@ int drm_buddy_alloc_blocks(struct drm_buddy *mm,
- 			block = __drm_buddy_alloc_blocks(mm, start,
- 							 end,
- 							 order,
-+							 max_order,
- 							 flags);
- 			if (!IS_ERR(block))
- 				break;
-@@ -1062,6 +1067,7 @@ int drm_buddy_alloc_blocks(struct drm_buddy *mm,
- 					block = __drm_buddy_alloc_blocks(mm, start,
- 									 end,
- 									 min_order,
-+									 mm->max_order,
- 									 flags);
- 					if (!IS_ERR(block)) {
- 						order = min_order;
-@@ -1082,6 +1088,7 @@ int drm_buddy_alloc_blocks(struct drm_buddy *mm,
- 				err = -ENOSPC;
- 				goto err_free;
- 			}
-+			max_order = order;
- 		} while (1);
- 
- 		mark_allocated(block);
+ .. kernel-doc:: drivers/gpu/drm/drm_ioc32.c
+    :export:
 -- 
-2.43.0
+2.39.5
 
