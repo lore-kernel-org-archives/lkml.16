@@ -1,94 +1,89 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF74A2E4982;
-	Wed,  2 Jul 2025 18:24:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC7A2E498D
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 18:24:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751480659; cv=none; b=OIUM65EK/X206Ug3gY7OGIExIGtFhps6TCoBIuIrlqBfdjvSLU/EqOwwOwFfivKtXyMdLFEg7tum6IYfWhkZTkMSvtNMuljEE14kU/uCG2T0WiQMZ4ZmyieVDAsC/85Gl4lzCXHgfgfo/rrSnHhx/QBOxdOzrcCwmtz2UeIlZVU=
+	t=1751480696; cv=none; b=XmXVVnrE3KRs0rtXF/kdoI3JmaGQT5S/W189Fw5Sx4ccFMNrgwyjKRGKIQFoP5vPHy7QqQhnnKa2OgU4bjAape5cB4XdJi5jpAWoexMdx93J8g+VFjh05aRR1Ov3wWBRiScMpAz5yZULVBQaf4TIs6dk3vgb2ptuwyNdgpfneJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751480659; c=relaxed/simple;
-	bh=nZ+1F6TEk7oWeJEKN4ZVu5Q4tlevoBhDJYFBgn0URJM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eFOqh5xWSWoFPtkw/rBIJMQDKQX0+YH7UpfXvAF2xXy4IY7AQYOIZHX2FFnavONg+34vbM2ygFyIf1gO0LX/M3s4+e+7xG5MwtPLRam+pFngAHdFBENSCDTKMwwYTTMUMHXINgrCSd9RResM464JjOIj/PajZEaG4T29v/HA1lE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WWbWbvaw; arc=none smtp.client-ip=209.85.167.50
+	s=arc-20240116; t=1751480696; c=relaxed/simple;
+	bh=gyag0GuSpmrLWG3YHnzuZL5pZQEr3eq32tUI0nk4uiI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FixZfLDy1n+8PGkjfwbjeytXoMeGBIICY+7V9IbIvH486pMMAkq40mfcK7R/y8AGH2+sSYxvoINxzaFzfwBstwdxkXu60l/KLOk9qcbvXFvarQSPyw09p6GCkh8N/+vBbEVwFb3Kqkcuz/L+OkfR+eWkEpTw2NktKW1Mtw9OQu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nUHemZbK; arc=none smtp.client-ip=209.85.210.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WWbWbvaw"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-553cf020383so7950960e87.2;
-        Wed, 02 Jul 2025 11:24:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nUHemZbK"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-747fba9f962so211082b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 11:24:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751480656; x=1752085456; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nZ+1F6TEk7oWeJEKN4ZVu5Q4tlevoBhDJYFBgn0URJM=;
-        b=WWbWbvaw5R1ug5I47o7TDN+F0IPFOIEzcbqKo/2bIhisOrvDokmyu+NPn65oPJJRUJ
-         PznJO7tjs2C6XDg8moE9tcqlVpOeNZQgFLCWkQ7Fy966RgrR1Exa3OCM/0lnc9CskHc9
-         d/p6YGObkynaeT+XHMTIWmd3ecRh2lD6pwfmg5Xmq3wPA4Y1RHMEUWi3XtwDJ1VYXMXu
-         DEGD8yOsQC43zRxPk/3l871GxB7CXXhJoWy2MGOd87KM9h36xaFoEZALCO8Ttnza8dPa
-         38cqK9oLpS2ublhu4xDS71vI4g6bwMr+sCNGimZejz+UVUJOEDlT7ZRWNlOgHy4GaqPN
-         bHgQ==
+        d=gmail.com; s=20230601; t=1751480695; x=1752085495; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8M2HZl18Q+8xVh0BAI9bQMFHHQ538GxGAd1O7AbamsE=;
+        b=nUHemZbKb2JtCq8XErGIBPorte8r8h70Cw40HVgjJmd0kG/CnMFlZn0aHdeRviRL80
+         fXdkf09vjEyJVMO38iS9yTVasKSeSklWaN12mg98VgikckQGw6qGKahfSkJABSqzUXKH
+         wxEtf3FN+SnHyCKOK0jm66vLNZl759UDMdb7DV/uDu03AvsV4BztrlmrvXiDiS+eLflj
+         dnKuwOd5lr+d2h0XS/WU0gWqgpe6UbkfryrSiPeNDnyh6r8qjwUuRyTsikRyJWODcUc6
+         qkqfPL/yWVxzac+U4ZtFDG6YyKkVWu7vViat+hKDN4GrWeZHrn4biw3tCRnGL/g3qcae
+         1ETg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751480656; x=1752085456;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nZ+1F6TEk7oWeJEKN4ZVu5Q4tlevoBhDJYFBgn0URJM=;
-        b=ULFphXWEfo3xxRnKfn3FwIBgvkCgazAPRYg0xj5mKgZhCZk+EbmOziheGqPfSM4kbb
-         VHw33OT19KXKiR/vNSDGcNiyrlYZXomM+drMVmoU+jR1wvEjnB0SJgyghGfGeA57oqnJ
-         P0fPTlvoAFBRUlD9YOKFLnNej2aZhcEglXjPBiZwTFqXDzIWoOxfBVkEaRRQreAPKTe+
-         fz46I1S4zasJOVe2ivlOCdB6BR6epYNvtTkNH1IhgyCgTfaZ4r/j9ptFfFeNmGNQZzp+
-         25ODa5Bz57RpQUSCPngXb/YRx7QJWZoheJy1G3mBiu05ZhTiaLb/1RQeH4Z+ekdZ6uIg
-         EmVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVxARBX1Z7sJI1n3Jv+JLtnlF0VXWSXjqFYioRpa1WyNjrI5EapPnC7be/4k/q5fm28Qb0CW1qZq++4whhk@vger.kernel.org, AJvYcCW2YsFeauCY5UkAGTzkK9FM965uVxCD+cY/XdRWzm1SvDPMZS0kAnUHH/H1KcvvdDZXVx8Aw+Xv3ILW@vger.kernel.org
-X-Gm-Message-State: AOJu0YxG9LrcZDirXdxyKnvqIEfCpUbfSxZ9Lzi27mhzjaFJ73WlgzV3
-	cYFoC8BDXH4WgYyIG0uZhLI102yDBSPL3LbI2o99L4Om/rChpVdCiYwO9o3EaBkaa/ovytVoQeh
-	VL5zvZ6bfg05Rh2/fGi5KJMo16zX6f8Jk/LZqckI=
-X-Gm-Gg: ASbGnctFSMk70WUSXwnUipqkqBSwea6lH4oqiDcWzm8FFrCjg5j/dk1O7d4R+VYp66J
-	gw3oENStkrWZOjGqHeWpPQXXe55GWKLHbX43vhdk7Ka7E0DAH+/TvKAxsRx+zzMqKCFlAezW2mU
-	gzbJPwSSkonAvZCMF926ZFJ1ze5hioAnUrr+xC84QUhPvOcqR5KEw6bg==
-X-Google-Smtp-Source: AGHT+IGBo9uAcINK55geEglffhPkpoqDNkbKPVdcnpj899nCHB9kZ1kBf2BGUQdSZCeztG3ZYr69TX9kaw2go5H26Gw=
-X-Received: by 2002:a05:6512:230c:b0:553:da39:38a with SMTP id
- 2adb3069b0e04-55628225641mr1593326e87.7.1751480655667; Wed, 02 Jul 2025
- 11:24:15 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751480695; x=1752085495;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8M2HZl18Q+8xVh0BAI9bQMFHHQ538GxGAd1O7AbamsE=;
+        b=vpKdwh5+LsRX8vBLGAusMmOMuh29urmD5k2nsjXMhxQttjn3TV4JlDAhNCqU50p7sn
+         CIjsexMhA9fkFhGZ3xGbj/TGCMGmPqjUv7A5Wkky8L1IPQ5/U/CStzIodZG3GFzn9vlf
+         1P60BuCt/2emFEyecX+XsFQNITl8jvCEL7iTkJ4SRvAv7MnrjWCAR4fCzmVTV9xmmIQ+
+         Eu2XVp53nzb7Ddjxf5KU2ncMoZ+YnxBo37L91+maD75Ywcj+wvqlbYm9E7AtvLR50P91
+         96PIHZQ6hdLuvNaH4O/o9KoLbyfVOJB4RBTY8RxDNYu1K6hQ/7q1UkPbBimmSu3MtSt+
+         jmBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUwX6kgLrogUOiVFkgt0SI6+dzcy5GaX4X8OCW552AVKBK58nfnI5Te/xLZSXbQlwJAqVuc8RaqJRASxNM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsWU+ad1l8GSy4vSsYcEA2TwGCBzyvZkl0WUINnhfa0EfIBM9y
+	OjpylLatXm4GTCOgvcRkBLDLLhapf12DL3OJg462TQ0qrvFurwdzgV9F
+X-Gm-Gg: ASbGncv90Hq1lb4bcIHp8xmTQN9tZD0ssyW+rsGANw2budP0KUtreL/w1oK0O2ntXLa
+	CncNF4JLJBPxuZNU5f7m8yinTsXjm66RKj/19HEUJaF6J8LRFGPjvKPSGm0NzezS/ys8qDKEIdW
+	NAumvMc7/PUByKf7dbzNTxTA3eZo5nlHiB+G6nwH9NbMmV8TMX9LkWqJFUr63lzglM1Us+ktgqs
+	iwBiwWPrilQ1KIDcqQhsGuLZFrlniy0adsTnd43s26t5SvYU6yuWzTuARvhS3471phujrmxFhzj
+	6biXS/cZ2vTEEaKFF2kvd3BIJOV5Gt6UOYXdkSQ2fAdyBVpbqZI+O/Yxop/9spxXfY9G0I0=
+X-Google-Smtp-Source: AGHT+IE9p88j4OoG79XagAiP6rPNpRZmBWzj/bVM31WE/CtYOj91yR7TtZ4HF6G+RjVH2DaQSzSXFQ==
+X-Received: by 2002:a05:6a00:3d4c:b0:746:25d1:b712 with SMTP id d2e1a72fcca58-74c998526ccmr600678b3a.7.1751480694555;
+        Wed, 02 Jul 2025 11:24:54 -0700 (PDT)
+Received: from pop-os.. ([49.207.223.16])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af541e5c1sm15119028b3a.70.2025.07.02.11.24.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 11:24:54 -0700 (PDT)
+From: Aditya Dutt <duttaditya18@gmail.com>
+To: syzbot+30b3e48dc48dd2ad45b6@syzkaller.appspotmail.com
+Cc: Aditya Dutt <duttaditya18@gmail.com>,
+	syzkaller-lts-bugs@googlegroups.com,
+	linux-kernel@vger.kernel.org
+Subject: Test: [v5.15] INFO: task hung in jfs_commit_inode
+Date: Wed,  2 Jul 2025 23:54:21 +0530
+Message-Id: <20250702182421.62557-1-duttaditya18@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250702-gpio-palmas-gpio-v3-1-e04633e0bc54@gmail.com> <CAMRc=Md4YP6fp5fnFf5p+EkSamg15dDUgxgeY+E1OqteiEPRJQ@mail.gmail.com>
-In-Reply-To: <CAMRc=Md4YP6fp5fnFf5p+EkSamg15dDUgxgeY+E1OqteiEPRJQ@mail.gmail.com>
-From: Aaron Kling <webgeek1234@gmail.com>
-Date: Wed, 2 Jul 2025 13:24:04 -0500
-X-Gm-Features: Ac12FXwu0_aB_I5lFg_5a_iXJ7o7gtM6Q5Sctt9CdNjf9KymXtVjK_WR6YGvlbk
-Message-ID: <CALHNRZ9kdwZikx=3J2UDKw4bTg9vD4t77_yN+JydeLHCifozRw@mail.gmail.com>
-Subject: Re: [PATCH v3] gpio: palmas: Allow building as a module
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 2, 2025 at 4:12=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
->
-> On Wed, Jul 2, 2025 at 7:56=E2=80=AFAM Aaron Kling via B4 Relay
-> <devnull+webgeek1234.gmail.com@kernel.org> wrote:
-> >
-> > From: Aaron Kling <webgeek1234@gmail.com>
-> >
-> > The driver works fine as a module, so allowing building as such. This
-> > adds an exit handler to support module unload.
-> >
-> > Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
-> > ---
->
-> This doesn't apply on top of linux-next.
+#syz test git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git linux-5.15.y
 
-Sent a v4 rebased on next-20250702. It rebased cleanly though, so I
-don't know why it wouldn't apply for you.
-
-Aaron
+diff --git a/fs/jfs/jfs_dtree.c b/fs/jfs/jfs_dtree.c
+index 27ca98614b0b..cb57d4f1161f 100644
+--- a/fs/jfs/jfs_dtree.c
++++ b/fs/jfs/jfs_dtree.c
+@@ -835,6 +835,8 @@ int dtInsert(tid_t tid, struct inode *ip,
+ 	 * the full page.
+ 	 */
+ 	DT_GETSEARCH(ip, btstack->top, bn, mp, p, index);
++	if (p->header.freelist == 0)
++		return -EINVAL;
+ 
+ 	/*
+ 	 *	insert entry for new key
