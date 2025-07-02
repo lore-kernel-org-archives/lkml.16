@@ -1,389 +1,199 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DDDD2DE6FF;
-	Wed,  2 Jul 2025 20:22:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1948D2DE6EC
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 20:23:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751487744; cv=none; b=o9BS9r4Ts9nfOHd6vIX3S+AUw6xPQM4YuLV5l4nAe0AqaLxDnxdCgAwFWgttqCQhZ+ZC8c8DqzyFPYDLZgdXN7mHeP+jugT2T3S+ycybYAE22VHX1Cy6qF4AR3yjsb6zRe0fbPPnjME6ecmH0PsM35uo0tDw/GgrR87md6djDS8=
+	t=1751487789; cv=none; b=Jq9sOhJhJcpLQsm49Gu0tkVC01Uv3rHjbTc41XGjnxSIpcWrxiZ34JpSXqFYQH3CBwHcZKEaM8n9/2VWph8Li30+bRG3dHM47Nzm2YGY0nwTyWFrV5KhaIl1XXLnnejxs0H7W+mYFvp4gTx4mr801bePIbuhFCiDosmDgTnGreA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751487744; c=relaxed/simple;
-	bh=ojlYCkWV1CNcr8mi2B4DTDjA9Rgu716dLVHUhTYmCEc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=dFR5zLI0lYGMYmxTZXCk1fbZFFV6UE43xWIuyX+v+V+jh6I4bAvo7npo7U3FumoAJ7Na/FP1fLTzEHBoQaQZsmO4hy/NARS5ItRRB1ZVVFecgovtYzf/64w8GFspS3HEcy6ZsUN71pqWXiJdrI1tS1/XHU51ob2ft9jfSBFjmF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=btR66t74; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+	s=arc-20240116; t=1751487789; c=relaxed/simple;
+	bh=rn8V9ONAJdJfGnD3WgI+sD1eqD2wgyD7LB8OM67Fw5E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d6jfw1zGCZPWr/5SyOLT41XUwc0PsjNHPcpmjZey0m/xXc8FSezYvh0MTpBlq2WOirkdQHcvsjuC+5IsBXAtC8nNNitT+b33bMEVw1hY6RuerCSlFGnt3lI6lQhkMCsgopyrQBaYPbt5xhDAdeEEfWT78E/47IohFJ5VOl/rHVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WxLTemWu; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="btR66t74"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id AC0FFA01EB;
-	Wed,  2 Jul 2025 22:22:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=mail; bh=aEV89sKly0N0mihYE8QkgjofZjv8WtbxsC4LRL3/fa8=; b=
-	btR66t74+f+6eLN++dYHOQ3Musxy3oRdTwtRo9upBmod/EdoysQuSfeXhJrNRelK
-	Z8Y61tLDYl1Z4gBtRpb3sxJ70S1DXGaW238iBWqtzHwQK0h7MmOqzvlihEusa229
-	sKfqQ4OTIPcwEW7yuNh1Sqh6DOgaP86Ys1TyC164YqKZ8SAM2QN9yidbmSgBemm/
-	enyDv9H/BsEB8bkPXWAR0ZmhDBrqjHd+eZypeUxWrYLARkl+ImvOWXxG5Gk4WOMI
-	oMLZno+UTzen2TSB1Q6uRG7zvAUf7TOwQeij8nolMUwWucftGgRTNk5mPOLV4mVW
-	19GO+OZRJSuCqPdhKwrbfsDwTNYpUfdNlZew/KZZjsryxlGfURb41JdS1onfYKl2
-	7pyEAvXddYS+5mgGYnigiAdhri+rDuONHIPVVFE183M0OruTxrCoRLPFDrV33srC
-	J1J1YNwlRkl+lC4KE6bAJoSrMq65ugp3FKzxB+SulyhFcFKiajbGt67DBCe5/z6w
-	gRI6Y0B9+fr81Qk86lHDqcNUK0dn5G/Y60lNd1N3b1/oLpK0p831iHSIZ/KAeHWe
-	rYlw7QMWeZq4Z91B93ZKTsmLD3pxpC1JBIl89m43fNrIiyEXiJTuO+MrCp4HwVnA
-	RJjYX3L26opvqhaXud9Opjp4SbAFeLsbMY1JrNqRqbk=
-From: =?utf-8?q?Bence_Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
-Date: Wed, 2 Jul 2025 22:22:13 +0200
-Subject: [PATCH] arm: DT: imx6-tsx9x0: Replace license text comment with
- SPDX identifier
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WxLTemWu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751487785;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fDhDBbwWPZp0OEwG0lfYKuusgWMoWpv67eEswYn9d5c=;
+	b=WxLTemWuRxtqWnEuO8a9SmpJBFlCG2Gkxsn7zaXTTX+ahGyqxUQuhRsuGOtGZyxofAbmFM
+	7pFhmTkNfbV3KLLvEKomp0GmWMXMEy9XG5DwkNe8e229llIQuuvHLFPhjBx7ILAq1a8/3F
+	IhadDR7axPU+Fy+g/UMtC7Wn1pYxEZg=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-554-oo7uTxmyPI2Yd5LMR_0TUQ-1; Wed, 02 Jul 2025 16:23:04 -0400
+X-MC-Unique: oo7uTxmyPI2Yd5LMR_0TUQ-1
+X-Mimecast-MFC-AGG-ID: oo7uTxmyPI2Yd5LMR_0TUQ_1751487784
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-700c2d3f3d6so50099546d6.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 13:23:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751487784; x=1752092584;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fDhDBbwWPZp0OEwG0lfYKuusgWMoWpv67eEswYn9d5c=;
+        b=epITPa2iD6a9PDzqQwtB9yD0BXlSGwHp7s+tdQ+qQRW94CdyEguNwWt93SCzhp900E
+         rZJ8KywgJ72ScFDfxAacQcHQTUyhbn9j5jvZFI3Nn7kM7eOe/r6STFutjoo99kcYpdjt
+         fYfvWgk00lpa2VhfdC6AERW1dFki8ufYcbQwpUtTytt0srVNHDxGELCTu7QI4FcDtFSo
+         q79b0sZCXcsmtfzyAiaF1c+i6svr9iU79c53YzP8Zc6iyNhiglee6YrY93ry7Gem76K2
+         igiyHNxZekQ5velL0FJcsppcaL1IW1LEaTCBhvJ4LADbgJamkEIsKVgxkta2KQsI2X8e
+         mPGw==
+X-Forwarded-Encrypted: i=1; AJvYcCU+sF3xmBQK0ILFZgsINeCzWnUyz5ZV1QfWfdyythxZ+zyRNKlYxObCn/DKZpUwLttb2Pd3QbGVUItC34Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPPKUbmv3+ZarOtBzwJduhiEYdfNkcJORKmUBKcvCgyJW5naMV
+	m0S4u5S7/HCLeD3Db/nChgBxrH681ciWTvXX1kcMfegIFEWr5EjCUKvUmRHXfEJgJNnYyaOXIxl
+	BNYFah44xnE8FozcelfXUoVIjkq+jfONwhK9W4pbpkOKKb1oyMqiQ0hbNvvl+wnHTAQ==
+X-Gm-Gg: ASbGncvKLo6YWq4w8X0bk+L+OutIxBHhhSiqWRBVZWYLq10pSc4/FL0icbNoFGdY8/s
+	4i4kB40JW030BThiD/I5+MOe6ejSBVhaJLkbQj+AU15zm7EydO4fFXGp7m2exzsYHgk1n4RxFqB
+	+VLnW0LAKsf53pOmPQZHMwoO0Jputb3I/5uSuh4/ty2d3chK+j6OLZYrtCaj/hrTzuvRCD+lMkg
+	E8D+BWw2te6dgp8CIvX9E/XaH5SC013vonj+ws7iQ4zFJISeS/Fx715CTO6WVFxaoTtDLuYntB2
+	S9cpackhTfuZnQ==
+X-Received: by 2002:a05:6214:2267:b0:6fb:5bb5:ccfb with SMTP id 6a1803df08f44-702b1b46f61mr62661716d6.34.1751487783774;
+        Wed, 02 Jul 2025 13:23:03 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGiKgeOx6dktDtgZgY72jURqNUMruopshT6W8nF+D7goln1uMqTumFSIXYnDlauRA2FyD48nA==
+X-Received: by 2002:a05:6214:2267:b0:6fb:5bb5:ccfb with SMTP id 6a1803df08f44-702b1b46f61mr62661226d6.34.1751487783174;
+        Wed, 02 Jul 2025 13:23:03 -0700 (PDT)
+Received: from x1.local ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd771ce2basm106472736d6.44.2025.07.02.13.23.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 13:23:02 -0700 (PDT)
+Date: Wed, 2 Jul 2025 16:22:58 -0400
+From: Peter Xu <peterx@redhat.com>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Suren Baghdasaryan <surenb@google.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
+	Muchun Song <muchun.song@linux.dev>,
+	Hugh Dickins <hughd@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	James Houghton <jthoughton@google.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Nikita Kalyazin <kalyazin@amazon.com>,
+	Michal Hocko <mhocko@suse.com>,
+	David Hildenbrand <david@redhat.com>,
+	Andrea Arcangeli <aarcange@redhat.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Ujwal Kundur <ujwal.kundur@gmail.com>
+Subject: Re: [PATCH v2 1/4] mm: Introduce vm_uffd_ops API
+Message-ID: <aGWVIjmmsmskA4bp@x1.local>
+References: <20250627154655.2085903-1-peterx@redhat.com>
+ <20250627154655.2085903-2-peterx@redhat.com>
+ <aaaca9d4-b8df-45b8-a3a4-a431c99f26c7@lucifer.local>
+ <CAJuCfpHN6vpDx+UNPEzJgZ_qD9USTJZ_+yZzQg2BpF_aRpufYw@mail.gmail.com>
+ <aGV3fyZ0eGAt7Wag@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Message-ID: <20250702-tsx9x0-dts-lic-v1-1-0b5c5be9257d@prolan.hu>
-X-B4-Tracking: v=1; b=H4sIAPSUZWgC/x3MQQrCQAxA0auUrA2MI1L1KuIiTVIb0FGSQQZK7
- +7o8i3+XyHUTQMuwwquHwt7lY79bgBeqNwVTbohp3xMY8pYo51bQqmBD2NkUTkJUz7MI/To7Tp
- b+w+vt+6JQnFyKrz8Nk+Kqg7b9gU/RllVeQAAAA==
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "Sascha
- Hauer" <s.hauer@pengutronix.de>, Pengutronix Kernel Team
-	<kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>
-CC: <devicetree@vger.kernel.org>, <imx@lists.linux.dev>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	Lucile Quirion <lucile.quirion@savoirfairelinux.com>, Sebastien Bourdelin
-	<sebastien.bourdelin@savoirfairelinux.com>,
-	=?utf-8?q?Bence_Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
-X-Mailer: b4 0.13.0
-X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1751487737;VERSION=7994;MC=423568003;ID=360865;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
-X-ESET-Antispam: OK
-X-EsetResult: clean, is OK
-X-EsetId: 37303A29BB64155D6C7260
+In-Reply-To: <aGV3fyZ0eGAt7Wag@kernel.org>
 
-Replace verbatim license text with a `SPDX-License-Identifier`.
+On Wed, Jul 02, 2025 at 09:16:31PM +0300, Mike Rapoport wrote:
+> On Tue, Jul 01, 2025 at 10:04:28AM -0700, Suren Baghdasaryan wrote:
+> > On Mon, Jun 30, 2025 at 3:16 AM Lorenzo Stoakes
+> > <lorenzo.stoakes@oracle.com> wrote:
+> > >
+> > > It seems like we're assuming a _lot_ of mm understanding in the underlying
+> > > driver here.
+> > >
+> > > I'm not sure it's really normal to be handing around page table state and
+> > > folios etc. to a driver like this, this is really... worrying to me.
+> > >
+> > > This feels like you're trying to put mm functionality outside of mm?
+> > 
+> > To second that, two things stick out for me here:
+> > 1. uffd_copy and uffd_get_folio seem to be at different abstraction
+> > levels. uffd_copy is almost the entire copy operation for VM_SHARED
+> > VMAs while uffd_get_folio is a small part of the continue operation.
+> > 2. shmem_mfill_atomic_pte which becomes uffd_copy for shmem in the
+> > last patch is quite a complex function which itself calls some IMO
+> > pretty internal functions like mfill_atomic_install_pte(). Expecting
+> > modules to implement such functionality seems like a stretch to me but
+> > maybe this is for some specialized modules which are written by mm
+> > experts only?
+> 
+> Largely shmem_mfill_atomic_pte() differs from anonymous memory version
+> (mfill_atomic_pte_copy()) by the way the allocated folio is accounted and
+> whether it's added to the page cache. So instead of uffd_copy(...) we might
+> add
+> 
+> 	int (*folio_alloc)(struct vm_area_struct *vma, unsigned long dst_addr);
+> 	void (*folio_release)(struct vm_area_struct *vma, struct folio *folio);
 
-The comment heades mis-attributes this license to be "X11", but the
-license text does not include the last line "Except as contained in this
-notice, the name of the X Consortium shall not be used in advertising or
-otherwise to promote the sale, use or other dealings in this Software
-without prior written authorization from the X Consortium.". Therefore,
-this license is actually equivalent to the SPDX "MIT" license (confirmed
-by text diffing).
+Thanks for digging into this, Mike.  It's just that IMHO it may not be
+enough..
 
-Cc: Lucile Quirion <lucile.quirion@savoirfairelinux.com>
-Cc: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
-Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
----
- arch/arm/boot/dts/nxp/imx/imx6dl-ts4900.dts   | 38 +--------------------------
- arch/arm/boot/dts/nxp/imx/imx6dl-ts7970.dts   | 38 +--------------------------
- arch/arm/boot/dts/nxp/imx/imx6q-ts4900.dts    | 38 +--------------------------
- arch/arm/boot/dts/nxp/imx/imx6q-ts7970.dts    | 38 +--------------------------
- arch/arm/boot/dts/nxp/imx/imx6qdl-ts4900.dtsi | 38 +--------------------------
- arch/arm/boot/dts/nxp/imx/imx6qdl-ts7970.dtsi | 38 +--------------------------
- 6 files changed, 6 insertions(+), 222 deletions(-)
+I actually tried to think about a more complicated API, but more I thought
+of that, more it looked like an overkill.  I can list something here to
+show why I chose the simplest solution with uffd_copy() as of now.
 
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6dl-ts4900.dts b/arch/arm/boot/dts/nxp/imx/imx6dl-ts4900.dts
-index 3d60cc725d9e..d7d6222d95c6 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6dl-ts4900.dts
-+++ b/arch/arm/boot/dts/nxp/imx/imx6dl-ts4900.dts
-@@ -1,42 +1,6 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
- /*
-  * Copyright 2015 Technologic Systems
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License
-- *     version 2 as published by the Free Software Foundation.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-  */
- 
- /dts-v1/;
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6dl-ts7970.dts b/arch/arm/boot/dts/nxp/imx/imx6dl-ts7970.dts
-index 5da6feba2e66..3a4dce840683 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6dl-ts7970.dts
-+++ b/arch/arm/boot/dts/nxp/imx/imx6dl-ts7970.dts
-@@ -1,43 +1,7 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
- /*
-  * Copyright 2015 Technologic Systems
-  * Copyright 2017 Savoir-faire Linux
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License
-- *     version 2 as published by the Free Software Foundation.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-  */
- 
- /dts-v1/;
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6q-ts4900.dts b/arch/arm/boot/dts/nxp/imx/imx6q-ts4900.dts
-index dce1e8671ebe..6ecf11db1a9a 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6q-ts4900.dts
-+++ b/arch/arm/boot/dts/nxp/imx/imx6q-ts4900.dts
-@@ -1,42 +1,6 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
- /*
-  * Copyright 2015 Technologic Systems
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License
-- *     version 2 as published by the Free Software Foundation.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-  */
- 
- /dts-v1/;
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6q-ts7970.dts b/arch/arm/boot/dts/nxp/imx/imx6q-ts7970.dts
-index 570bd3c309a6..9e919de968b3 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6q-ts7970.dts
-+++ b/arch/arm/boot/dts/nxp/imx/imx6q-ts7970.dts
-@@ -1,43 +1,7 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
- /*
-  * Copyright 2015 Technologic Systems
-  * Copyright 2017 Savoir-faire Linux
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License
-- *     version 2 as published by the Free Software Foundation.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-  */
- 
- /dts-v1/;
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6qdl-ts4900.dtsi b/arch/arm/boot/dts/nxp/imx/imx6qdl-ts4900.dtsi
-index f88da757edda..ed602cda9ab4 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6qdl-ts4900.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx6qdl-ts4900.dtsi
-@@ -1,42 +1,6 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
- /*
-  * Copyright 2015 Technologic Systems
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License
-- *     version 2 as published by the Free Software Foundation.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-  */
- 
- #include <dt-bindings/gpio/gpio.h>
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6qdl-ts7970.dtsi b/arch/arm/boot/dts/nxp/imx/imx6qdl-ts7970.dtsi
-index 11c70431feec..a48c35f80139 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6qdl-ts7970.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx6qdl-ts7970.dtsi
-@@ -1,43 +1,7 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
- /*
-  * Copyright 2015 Technologic Systems
-  * Copyright 2017 Savoir-Faire Linux
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License
-- *     version 2 as published by the Free Software Foundation.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-  */
- 
- #include <dt-bindings/gpio/gpio.h>
+Firstly, see shmem_inode_acct_blocks() at the entrance: that's shmem
+accounting we need to do before allocations, and with/without allocations.
+That accounting can't be put into folio_alloc() yet even if we'll have one,
+because we could have the folio allocated when reaching here (that is, when
+*foliop != NULL).  That was a very delicated decision of us to do shmem
+accounting separately in 2016:
 
----
-base-commit: 66701750d5565c574af42bef0b789ce0203e3071
-change-id: 20250702-tsx9x0-dts-lic-cded8dca23f7
+https://lore.kernel.org/all/20161216144821.5183-37-aarcange@redhat.com/
 
-Best regards,
+Then, there's also the complexity on how the page cache should be managed
+for any mem type.  For shmem, folio was only injected right before the
+pgtable installations.  We can't inject it when folio_alloc() because then
+others can fault-in without data populated. It means we at least need one
+more API to do page cache injections for the folio just got allocated from
+folio_alloc().
+
+We also may want to have different treatment on how the folio flags are
+setup.  It may not always happen in folio_alloc().  E.g. for shmem right
+now we do this right before the page cache injections:
+
+	VM_BUG_ON(folio_test_locked(folio));
+	VM_BUG_ON(folio_test_swapbacked(folio));
+	__folio_set_locked(folio);
+	__folio_set_swapbacked(folio);
+	__folio_mark_uptodate(folio);
+
+We may not want to do exactly the same for all the rest mem types.  E.g. we
+likely don't want to set swapbacked for guest-memfd folios.  We may need
+one more API to do it.
+
+Then if to think about failure path, when we have the question above on
+shmem acct issue, we may want to have yet another post_failure hook doing
+shmem_inode_unacct_blocks() properly for shmem.. maybe we don't need that
+for guest-memfd, but we still need that for shmem to properly unacct when
+folio allocation succeeded, but copy_from_user failed somehow.
+
+Then the question is, do we really need all these fuss almost for nothing?
+
+Note that if we want, IIUC we can still change this in the future. The
+initial isolation like this series would still be good to land earlier; we
+don't even plan to support MISSING for guest-memfd in the near future, but
+only MINOR mode for now.  We don't necessarily need to work out MISSING
+immediately to move on useful features landing Linux.  Even if we'll have
+it for guest-memfd, it shouldn't be a challenge to maintain both.  This is
+just not a contract we need to sign forever yet.
+
+Hope above clarifies a bit on why I chose the simplest solution as of
+now. I also don't like this API, as I mentioned in the cover letter. It's
+really a trade-off I made at least for now the best I can come up with.
+
+Said that, if any of us has better solution, please shoot.  I'm always open
+to better alternatives.
+
+Thanks,
+
 -- 
-Bence Csókás <csokas.bence@prolan.hu>
-
+Peter Xu
 
