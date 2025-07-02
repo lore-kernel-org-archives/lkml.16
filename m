@@ -1,39 +1,68 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B1C92D46C0;
-	Wed,  2 Jul 2025 15:22:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A69288C89;
+	Wed,  2 Jul 2025 15:22:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751469756; cv=none; b=Hi9HcOwLLU5AEHa2ALWcszKStLy2QUfV9ysR8RYG5DANk2tmCViZv9U8wZcqwcU2EZdmeFcIHjJZdmgvl+BdrBM2S+rWeLHcBctsavDndzymK0+TLqzLs1lWmoL941y2Y4a25jnejTiC3UrjZH0bUAcRbbNsqwaQeAqXomhhW98=
+	t=1751469765; cv=none; b=lKST/n4tpv0NXDxx97A9B0D7mtYC4kw0vIMmokfqH4MNc0YCS1ZPc6kcH4HW5EdsIjqd12Y9XNH15xBbfHpYtu2oSa9Rau2ECIK1Usfk+z2Mlp9ttw/B9hSjuQi4NeLNcfOm7WOV16l2SVqUy/EYKAI8Bfk/3JtWbc4AJrFsu/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751469756; c=relaxed/simple;
-	bh=sSrLCcP/ejuhHKPnuPLB8syGwWY1e6HZGL28oALP4r4=;
+	s=arc-20240116; t=1751469765; c=relaxed/simple;
+	bh=Gfd43r0aPmt7xwxQu+ivhcc61vxw7OkRTYOyvI6KUBs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Au5g1V7m9D131j/xnFj0XJXDXerNV+3pJNHNkYUzkdjeKlKPxKjny4Z6S2Ee/MbpcGSd2bh8PhHpNQ5VOnJd/XM2iGdWON2KQHyJ5rgBR28tJMFnvDjMP5EM4tl+xYxN5q1psahBGn2v150mwopXqJhwN1TP+673VwysMX7gofU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF58C1424;
-	Wed,  2 Jul 2025 08:22:19 -0700 (PDT)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E5B303F6A8;
-	Wed,  2 Jul 2025 08:22:32 -0700 (PDT)
-Date: Wed, 2 Jul 2025 16:22:30 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Peng Fan <peng.fan@nxp.com>
-Cc: Cristian Marussi <cristian.marussi@arm.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, <arm-scmi@vger.kernel.org>,
-	<imx@lists.linux.dev>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 5/7] firmware: arm_scmi: imx: Support getting syslog of
- MISC protocol
-Message-ID: <20250702-classic-sloth-of-snow-34ed1b@sudeepholla>
-References: <20250627-sm-misc-api-v1-v1-0-2b99481fe825@nxp.com>
- <20250627-sm-misc-api-v1-v1-5-2b99481fe825@nxp.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=sOrgFy7ZXWWrhHAalNnB1SKqN+x6Bh0tTdwcxpgW007cnUGJgfm+x45lo8d8xDHoA1RsbdMEslAMDXxkg0YHjUvSIob7+G8WJ8MQ5rbcrG6BwT11T8LJ5cxqM/cc/dejpVDJE/esy272/Whz8M1SNKYa+EhgDIINAj0jaPAL8LM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GFzV4YHg; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GFzV4YHg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751469764; x=1783005764;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Gfd43r0aPmt7xwxQu+ivhcc61vxw7OkRTYOyvI6KUBs=;
+  b=GFzV4YHgwJ48pgMqI2+KtNTOX1iXgHAlC4CmDQ//Hg/1E5aiaz8d5pet
+   feRNHIcsDanAk9xW44lycfYl0w5C6gk//y4PJm6KmZPpIzzUTX5VM0yp8
+   Up3CKpaG2uo6Ugt98gPnfuFCHoEErZzY+inZMtWpq/gaYwjUGINu/EaK9
+   jLg9TnNq0vxxBKlyJUKluXnXxaeeqbv3qmdnlm4tIPnqw1hcgk0A//DIh
+   Z5tJV8SXGA9zzVN04EV/lYizT1LIQ5VJfZAyIWzrXdpJcdpJKhE2YEVZ3
+   dkim2TWEUIeOr9YOgT5K2s5NGZ6xBhiFJcSivUNPaLYQURjFjgG6KXBTd
+   w==;
+X-CSE-ConnectionGUID: BDtrNjaJQNeEH0YCQa+fog==
+X-CSE-MsgGUID: 4BUPnWGMRrC1m83+7aJfHA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="53916728"
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="53916728"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 08:22:43 -0700
+X-CSE-ConnectionGUID: JazSnvquTuOe/GL6N+pS9w==
+X-CSE-MsgGUID: j0fBUXJ4QIWvk3ArkQJfew==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="185051371"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 08:22:41 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uWzIE-0000000BxC8-1T4K;
+	Wed, 02 Jul 2025 18:22:38 +0300
+Date: Wed, 2 Jul 2025 18:22:38 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Akshay Bansod <akbansd@gmail.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	linux-kernel-mentees@lists.linuxfoundation.org,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: st_lsm6dsx: Replace scnprintf with sysfs_emit
+Message-ID: <aGVOvgxhBO_qSoe3@smile.fi.intel.com>
+References: <20250702135855.59955-1-akbansd@gmail.com>
+ <f96b68a5-d750-45f0-8cdd-9761b5daca1d@baylibre.com>
+ <aGVIcBLgXZj_YR7B@smile.fi.intel.com>
+ <e474db53-1b52-48b0-9253-2f62a3861bb4@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,17 +71,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250627-sm-misc-api-v1-v1-5-2b99481fe825@nxp.com>
+In-Reply-To: <e474db53-1b52-48b0-9253-2f62a3861bb4@baylibre.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Fri, Jun 27, 2025 at 02:03:48PM +0800, Peng Fan wrote:
-> MISC protocol supports getting system log regarding system sleep latency
-> ,wakeup interrupt and etc.
+On Wed, Jul 02, 2025 at 10:04:23AM -0500, David Lechner wrote:
+> On 7/2/25 9:55 AM, Andy Shevchenko wrote:
+> > On Wed, Jul 02, 2025 at 09:16:51AM -0500, David Lechner wrote:
+> >> On 7/2/25 8:58 AM, Akshay Bansod wrote:
 
-We now have SCMI telemetry protocol to provide such information in a
-standard protocol. You must consider using that or switching to that
-in near future. I am OK with this but would like to warn use of custom
-interface for things like this is not scalable for long term.
+...
+
+> >>> +		len += sysfs_emit_at(buf, len, "%d.%03d ",
+> >>>  				 odr_table->odr_avl[i].milli_hz / 1000,
+> >>>  				 odr_table->odr_avl[i].milli_hz % 1000);
+> >>
+> >> Let's keep checkpatch happy and change the indent of the wrapped lines to
+> >> line up with ( since the ( moved.
+> > 
+> > While I see the point, wouldn't be better to have 1000 replaced with MILLI
+> > at the same time?
+> 
+> For anything with 3 zeros, I don't consider MILLI better (or worse).
+> Science shows that the average human can easily see 3 or 4 things
+> without having to count them [1]. So it is only when we start getting
+> more 0s than that is when I think we should be picky about using macros
+> instead.
+> 
+> And in this particular case, we are converting milli to micro so `1000`
+> should be replaced by `(MICRO / MILLI)` if we are going to do that.
+
+I see. This changes the picture drastically. Let's leave it for another day then.
+
+> [1]: https://www.scientificamerican.com/article/your-brain-finds-it-easy-to-size-up-four-objects-but-not-five-heres-why/
 
 -- 
-Regards,
-Sudeep
+With Best Regards,
+Andy Shevchenko
+
+
