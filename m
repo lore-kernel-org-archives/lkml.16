@@ -1,124 +1,141 @@
-Received: from smtpcmd03116.aruba.it (smtpcmd03116.aruba.it [62.149.158.116])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38A23307AF0
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:40:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.158.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43388307AF3
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:41:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751467255; cv=none; b=WC1crwJZx5wGW79pFcOLfnBPT1bcKF+HXbQIMvkN2t6mpvGpKycUzvIZzEp360h3bF0DTiA6Nf3+5Q5ayDyBtB5Hr6+FdZf4YBpXLfFjzqV3cr07su1le0Y6ooshKizSTr8haR+Y3t6eQ/myzj9pbNPmnpXU6tFsUTrFV7Y6/Go=
+	t=1751467264; cv=none; b=HKAEvFxgPSrbpH5PezXTGmD5e6GcNOJiakPha4kCIJLNOH2TVjTZuf+Kyy+ZseFlK38lO6ML7jdAigL088apL2Pk3uLxqPaA497dXiY4QERMhIRD6GdOrvQKBXHQmUP2MwdtEwqkW212peln8xxX82E7ucvXS1LaL/5djmaA/cQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751467255; c=relaxed/simple;
-	bh=iVHMHjey2MNE41Mhu0E5GtBHJGyxsabbICgb+nwHSMo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EKCq67+B6nEV8DUzO+gGiKiWxa3V6pd4StMWj+HseMHpdjQNP1jH8ZSV6eDfGTl+Z7VzTKhl/1lL9oKBmFdlR/RYcYiRJKZWVBgREgTJTAQ6OlcNEBEwa3xYFI/XUVOsLhBbvjPm/LwvAmQyBwZIYyhaML+SJMAapetVHd33oeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com; spf=pass smtp.mailfrom=enneenne.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=R341aV8Q; arc=none smtp.client-ip=62.149.158.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enneenne.com
+	s=arc-20240116; t=1751467264; c=relaxed/simple;
+	bh=mZF2UqPVsiH2rz0Y3FEEnO3lQKIhugaLHTZFjtoPwUk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eRsbJNZsgnGA2SKfC2o0xm1ZwSP8FQrYLCzi5asPZmHttxVBw52sj0zv27sATiubKKqO1sv2Er9OBNHNFihzkepUsT2lP3dBJBQY3eS9Yct2lQhlmJECZZ2w7W2K2f9aBYL89k97toXSjMWRE8y47SJ7HNmStpFObborckGVLQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gKOKf0uL; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="R341aV8Q"
-Received: from [192.168.1.57] ([79.0.204.227])
-	by Aruba SMTP with ESMTPSA
-	id WyajuG21xmHkSWyajujv0o; Wed, 02 Jul 2025 16:37:42 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
-	t=1751467062; bh=iVHMHjey2MNE41Mhu0E5GtBHJGyxsabbICgb+nwHSMo=;
-	h=Date:MIME-Version:Subject:To:From:Content-Type;
-	b=R341aV8Q97hZxsxZthlDX7PD36H8OFPPeo4v4lPf0yqe5+dxaRbVonDiqe4hZGPga
-	 Wv8udZTCQkiz4vj43/noZCualKaCDwMkTacinePnI7bHlpS15waiWEsR7KFoCMlHtu
-	 d5ea0lq3YACMf2b915IZG2YluaFelik84qm0XpQqTKzQAH3cYf/uPDlXd+R291jW8D
-	 0L1d3kSuJ+5j1EobsLXiqWD86WS3PfCLbSL/PK3PZGqcztmXRt929XSPxHWYq+PY/H
-	 3L/BfVv69tBZlmiJ56Q5v6YVAjEqZZHFrH4znuHJ1qJSyPF/e5nS9rrMPmzG4jgq/r
-	 RDRiTG7SY2Fow==
-Message-ID: <91ea3b14-20c5-4e5b-a88a-206748a6d36c@enneenne.com>
-Date: Wed, 2 Jul 2025 16:37:41 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gKOKf0uL"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-553dceb342aso4150288e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 07:41:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751467260; x=1752072060; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=98PzJdityG0SlvleABMB/pGAMlOmwWmHSfdYpaRc+uw=;
+        b=gKOKf0uLbp3VSylawENZ41zAqKqCorrUxfJjkhHYjceFMvLVryS8Y3e3lVsznus7VP
+         g/AgpNP28aR2WTuRsyD+LIRUAKMUdfI/7yEr1a//ozTxMr6X+SFdvfJLz0uORpNZQXh9
+         yBH0Uk0HQ+oWV5AIfSkZYkzUS9TncgwA6Ucjs4+BOYo2DR8dSj8H6+c5Aq7OzJmgE3Gs
+         5xaHAzOamdTzyh+s1joXDBrbKR6hOZCFDXb88SZZfPsX2xiieEZNfwdHwZJNkO6t7u/3
+         beZ3gt1mT4s6Gr+aLv0aZ8Zv5UfJwt+AxDqmksgU7w3YCK6G1f0pPdoOduELVfs7bKLo
+         NRUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751467260; x=1752072060;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=98PzJdityG0SlvleABMB/pGAMlOmwWmHSfdYpaRc+uw=;
+        b=uo6jZpNXPdfEPi/ueOXJjgnPexxAIjEs0DocqMOCZTxGeBqsLnhmGGGJuHbq7H/eUG
+         M+OMbvi47oNyY4lL4sxMJEjFOVdAtG6sTn4JZAjvbT7qBE68crTy9zcsfY/5LstEi7vC
+         t6S9vBjP+feUoJSDOYSQYsrBmplsNrxnnB+K1YTcJZ+6yFkEjWc8iC6tBQM+jWsIeGFB
+         +wdvyLn0lAHo2Axi36BDKxVeebWTOGqj55InWuBsDKUycB7JVWkBhDUWyMNK8gxsvUuy
+         q+ELfL9RkMtNouLotGNY08xdhuj7pt9z1NSRfeA7Lvadcv83dCtexAS7L59KSqfR9aEV
+         HsPw==
+X-Forwarded-Encrypted: i=1; AJvYcCVZ0B9pyV+/A6JqE3FThORn8u58iVh+n53jiSuRO7QGad1RbdLx9YyXIBURF1M18vd0mTt4XWoulL8wFVA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0l+f0T0dsSFHiEcm7gcN14LKSdmhmg7g+63/ZJp9a+zA3Vuvi
+	82MrpQ1VkqaFb12kZbP5YtCxiTmFD+fti35iNi1HKu36gz+6fnh1v7G/T1dGZTt7gW+9QcWe5dC
+	O+Fwg
+X-Gm-Gg: ASbGncsaTRH//W9lXg/E+hJcFYF70f8Q7Uz8IrzyfKT0eYJ8SwWgnxW+4rpRIRCChTd
+	KzdnD86e8q0YYOpCNNSsgh6r7f60paH/hH2AWloU2GzSNW9MIyVV7CPyd5IG3ZbJbETub/LNO5K
+	LpOhf5lA4tKhRowmN5ZWj8YHuf0KJLiOU+8c8hemHHhNr1GH0YIzTjcacpZy3AYaLFYlXidwLBz
+	vGpZUnphKeMNLWHMdf7FQ1oSewc3G0Of9CyeRwl4/jmZi56JUQW/pvYOeFqQZB+ucWhOQ4puXfB
+	uWKrk+HVsYD1X40DNQsUfLeCGkL4J7XW36v9pKU9eJk9OnncFg4RG5eSdGnxjsH1ZGRU8224f6b
+	nerE0yBj8pjxVIsisFkEIR0451XS8G70jYFqR
+X-Google-Smtp-Source: AGHT+IEQJk+3ZM5WHnNjbhQ/1w9G+7dhsU/8kGSvdH0GxP5RtDlizISYJdnkdwnZOlCw4iqiGgpsXw==
+X-Received: by 2002:a05:6512:1290:b0:553:d122:f8e1 with SMTP id 2adb3069b0e04-556283556e9mr1116776e87.43.1751467260205;
+        Wed, 02 Jul 2025 07:41:00 -0700 (PDT)
+Received: from uffe-tuxpro14.. (h-178-174-189-39.A498.priv.bahnhof.se. [178.174.189.39])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55627987c8csm295213e87.253.2025.07.02.07.40.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 07:40:59 -0700 (PDT)
+From: Ulf Hansson <ulf.hansson@linaro.org>
+To: Linus <torvalds@linux-foundation.org>,
+	linux-mmc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [GIT PULL] MMC fixes for v6.16-rc5
+Date: Wed,  2 Jul 2025 16:40:58 +0200
+Message-ID: <20250702144058.29486-1-ulf.hansson@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] Expand oscillator stop flag (OSF) validity check to
- ds1341
-Content-Language: en-US
-To: Tyler Hicks <code@tyhicks.com>,
- Meagan Lloyd <meaganlloyd@linux.microsoft.com>, alexandre.belloni@bootlin.com
-Cc: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1749665656-30108-1-git-send-email-meaganlloyd@linux.microsoft.com>
- <aGMVtfwB5gmBuW4T@redbud>
-From: Rodolfo Giometti <giometti@enneenne.com>
-In-Reply-To: <aGMVtfwB5gmBuW4T@redbud>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4xfLSFNQXFvQ0eYwrsDBdrlJebgl6jfsRd73w9K4CkWYzbl0bTjJnStRZK5ay/ZOY4wIZGQ/Rl/S/k1O7pu/0ZZilQGV0NRhxfzAOL1PMB5b3g3TLVuDe3
- XpNtFlyqRQgsWWEinEFKk8SlNhAThb4UFawN4+rs5oD5Uod3CVws/m9s6ljoYFOuD5LPYLRcUSMDgQ4nh8YijiWeDY1I7ZAGpIVObAGHWbQCaoxRQNCOEnh3
- Klr78EfL255Yzj2Pmv7K9AUT7zKaWUBs7PFbTbELPoXUqcUnGMczzd05W4hkQp521H/hayRhc49TZeoWzk7WqCJCRfGQNqmC3hRwhp13nDKs62HfZeeClcgy
- IwUKzUWf
+Content-Transfer-Encoding: 8bit
 
-On 01/07/25 00:54, Tyler Hicks wrote:
-> [Adding Rodolfo Giometti]
-> 
-> On 2025-06-11 11:14:14, Meagan Lloyd wrote:
->> We would like to use CONFIG_RTC_HCTOSYS to sync a supercapacitor-backed
->> DS1342 RTC to the kernel time early in boot. An obstacle is that the
->> sync in rtc_hctosys() is unconditional as long as rtc_read_time()
->> succeeds and in some power loss situations, our RTC comes up with either
->> an unpredictable future time or the default 01/01/00 from the datasheet.
->> Syncing a future time, followed by an NTP sync would not be desired as
->> it would result in a backwards time jump. The sync feature is useful in
->> boot scenarios where power is maintained so syncing only when the RTC
->> data is valid would allow us to make use of the feature.
->>
->> The DS1342 has the oscillator stop flag (OSF) which is a status flag
->> indicating that the oscillator stopped for a period of time. It can be
->> set due to power loss. Some chip types in the ds1307 driver already use
->> the OSF to determine whether .read_time should provide valid data or
->> return -EINVAL. This patch series expands that handling to the ds1341
->> chip type (DS1341 and DS1342 share a datasheet).
->>
->> These changes enable us to make use of CONFIG_RTC_HCTOSYS as they
->> prevent the invalid time from getting synced to the kernel time. It will
->> also prevent userspace programs from getting the invalid time as the fix
->> cuts it off at the source - the .read_time function.
-> 
-> These two patches look good to me, although I'm not an expert in RTC drivers.
-> I've reviewed the DS1341/DS1342 datasheet and the approach that Meagan has
-> taken makes sense to me given our (Meagan and I work together) desire to use
-> CONFIG_RTC_HCTOSYS and the need to avoid syncing from an invalid RTC state.
-> 
-> I've added Rodolfo because he first added the logic to clear the Oscillator
-> Stop Flag, during driver initialization, way back in 2007 with v2.6.23 commit
-> be5f59f4b67f ("rtc-ds1307: oscillator restart for ds13{37,38,39,40}") and may
-> have additional context to provide.
-> 
-> Alexandre and Rodolfo, does this approach make sense to you? If not, do you
-> have any other suggestions on how to make CONFIG_RTC_HCTOSYS work with this
-> driver? Thanks!
+Hi Linus,
 
-They look good to me. You can add my Acked-by line to all of them:
+Here's a PR with a couple of MMC fixes intended for v6.16-rc5. Details about the
+highlights are as usual found in the signed tag.
 
-     Acked-by: Rodolfo Giometti <giometti@enneenne.com>
+Please pull this in!
 
-Rodolfo
+Kind regards
+Ulf Hansson
 
-> Tyler
-> 
->>
->> Meagan Lloyd (2):
->>    rtc: ds1307: remove clear of oscillator stop flag (OSF) in probe
->>    rtc: ds1307: handle oscillator stop flag (OSF) for ds1341
->>
->>   drivers/rtc/rtc-ds1307.c | 15 ++++++++++++---
->>   1 file changed, 12 insertions(+), 3 deletions(-)
->>
->>
->> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
->> -- 
->> 2.49.0
->>
 
--- 
-GNU/Linux Solutions                  e-mail: giometti@enneenne.com
-Linux Device Driver                          giometti@linux.it
-Embedded Systems                     phone:  +39 349 2432127
-UNIX programming
+The following changes since commit 19272b37aa4f83ca52bdf9c16d5d81bdd1354494:
 
+  Linux 6.16-rc1 (2025-06-08 13:44:43 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v6.16-rc1
+
+for you to fetch changes up to ec54c0a20709ed6e56f40a8d59eee725c31a916b:
+
+  mtk-sd: reset host->mrq on prepare_data() error (2025-06-25 14:42:51 +0200)
+
+----------------------------------------------------------------
+MMC core:
+ - Apply BROKEN_SD_DISCARD quirk earlier during init
+ - Silence some confusing error messages for SD UHS-II cards
+
+MMC host:
+ - mtk-sd: Prevent memory corruption from DMA map failure
+ - mtk-sd: Fix a pagefault in dma_unmap_sg() for not prepared data
+ - sdhci: Revert "Disable SD card clock before changing parameters"
+ - sdhci-of-k1: Fix error code in probe()
+ - sdhci-uhs2: Silence some confusing error messages for SD UHS-II cards
+
+----------------------------------------------------------------
+Avri Altman (1):
+      mmc: core: sd: Apply BROKEN_SD_DISCARD quirk earlier
+
+Dan Carpenter (1):
+      mmc: sdhci-of-k1: Fix error code in probe()
+
+Masami Hiramatsu (Google) (2):
+      mtk-sd: Fix a pagefault in dma_unmap_sg() for not prepared data
+      mtk-sd: Prevent memory corruption from DMA map failure
+
+Sergey Senozhatsky (1):
+      mtk-sd: reset host->mrq on prepare_data() error
+
+Ulf Hansson (1):
+      Revert "mmc: sdhci: Disable SD card clock before changing parameters"
+
+Victor Shih (3):
+      mmc: core: Adjust some error messages for SD UHS-II cards
+      mmc: sdhci: Add a helper function for dump register in dynamic debug mode
+      mmc: sdhci-uhs2: Adjust some error messages and register dump for SD UHS-II card
+
+ drivers/mmc/core/quirks.h      | 12 ++++++------
+ drivers/mmc/core/sd_uhs2.c     |  4 ++--
+ drivers/mmc/host/mtk-sd.c      | 21 +++++++++++++++++++--
+ drivers/mmc/host/sdhci-of-k1.c |  3 ++-
+ drivers/mmc/host/sdhci-uhs2.c  | 20 ++++++++++----------
+ drivers/mmc/host/sdhci.c       |  9 ++-------
+ drivers/mmc/host/sdhci.h       | 16 ++++++++++++++++
+ 7 files changed, 57 insertions(+), 28 deletions(-)
