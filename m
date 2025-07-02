@@ -1,105 +1,187 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B26C1E1DE0;
-	Wed,  2 Jul 2025 12:03:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B4A225CC78;
+	Wed,  2 Jul 2025 12:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751457815; cv=none; b=T1QX+hyzZ43oJ/cEE/j1liEbYa3nNTJOsb9iMYvricJzqYF4Hx7Q9aA5wlHv99mINGNnbYzzFL0/26oRY/M1mykfgjWT/0EVzQkHO/XU0QK/O5KJfsnb9GWixkI/XBqirGOjwYXwxMeHsyi1qENdhmjO5dYGDXs6VPipUKpfplo=
+	t=1751457908; cv=none; b=sbms5wfYclikxTXmD7CF24PA9rtZ4Kvl4Q/Kwn4p75ncxfLVmbLD3MN1gwAkncVsyIPZu49QnAKJkSS3djpGy8AlQm2Jh0/hmrmc8iBp6SETDJiFzpyqhDP1oWbDV/jxVCFBpTWHBUYQNltE9eIEVo+uZ8anXFotqa2bQRKQxa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751457815; c=relaxed/simple;
-	bh=ejD2BbOWhhH2C3aYM/UenuDYs6xR5HBlVSofSY5zouA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p1/p/N24kKOfn4XlB5m94OQBzYyPvsbGP6ZibzvcttW59d/FdOw0tUCXEct3nSUjOvhbQyNTmZbjC8qOwD7Nx3HgxSdz8xxBXabEDfoyns+JAHOa5E0BhUx8/cUnp8uC3SwqLw2YSkFg4WcJzW6sw/URYrRNHxy/4ai9gJjb1Hw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JNHwal9f; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751457908; c=relaxed/simple;
+	bh=eXrSReE/2UtB0WR1repBoMLQ9GhS3cE3pbJuSLKxPRo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UiVsg6f5zGLO4wpJ7u2eo0PJqSdtRTzY4s1fR/wabVc4SIug0zGvOX9EC+4LBewzWHOlhH7yIBp/gX0OQQ9AZJCGP3VUSHVR8ddTS09PahhXjnmrSfY787DlhiiPQBcl8t8tW/H7w2ld0WXNOsKM/8gjmUBcLm5vmusVUSpRt0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n0hA37z4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JNHwal9f"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751457814; x=1782993814;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ejD2BbOWhhH2C3aYM/UenuDYs6xR5HBlVSofSY5zouA=;
-  b=JNHwal9f2KB7zlNMY6Me6280RZL1B09WCY3bJSYEtSyaYg9zm1I6KrD1
-   Kx/QnH9VZOJ42EFSSRhl4TE7/l5ZtLY8SOam3SeKuX6BGI2I1YgT1jLqL
-   7//YPVBFHsRjdR9bJH3N35cOYe5IgEgbJh2ez027CuvprzQrr7LOSSTcP
-   I8QqmgKKvTNrT3KbSUB1DdjL5xVep696X56M7x+q0WofGTWIPSmFVZdfJ
-   8FRQHteFL8A9lI7riIZbAtyeU1I2USsNjU0nm1Azdyf24MLMalGgP/Boo
-   SHsS9pY8Zmslvn/vPhv5GLwPf1lUqwqkkvQvscnI+yuH0uYUW5j1U6UYn
-   Q==;
-X-CSE-ConnectionGUID: VdSNpAm2Sq2KvvL5a1IqiQ==
-X-CSE-MsgGUID: /JfRz4d4RUi4mK/OeOy94g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="41376325"
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="41376325"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 05:03:33 -0700
-X-CSE-ConnectionGUID: y/UVNBj2THGcJc/iCveI0A==
-X-CSE-MsgGUID: TLSUro/aQVGE2wGprEhSKQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="154536438"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 05:03:26 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uWwBN-0000000BuWY-1IDx;
-	Wed, 02 Jul 2025 15:03:21 +0300
-Date: Wed, 2 Jul 2025 15:03:21 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Anup Patel <apatel@ventanamicro.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Alexandre Ghiti <alex@ghiti.fr>, Len Brown <lenb@kernel.org>,
-	Sunil V L <sunilvl@ventanamicro.com>,
-	Rahul Pathak <rpathak@ventanamicro.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Atish Patra <atish.patra@linux.dev>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Atish Patra <atishp@rivosinc.com>
-Subject: Re: [PATCH v7 03/24] RISC-V: Add defines for the SBI message proxy
- extension
-Message-ID: <aGUgCeDvNv4RxCwv@smile.fi.intel.com>
-References: <20250702051345.1460497-1-apatel@ventanamicro.com>
- <20250702051345.1460497-4-apatel@ventanamicro.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n0hA37z4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21963C4CEED;
+	Wed,  2 Jul 2025 12:05:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751457907;
+	bh=eXrSReE/2UtB0WR1repBoMLQ9GhS3cE3pbJuSLKxPRo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=n0hA37z4CjjouH9LR87gt16wZnmC1SKXUQLyl6I8xBjP0OFkhnaNST09qnvewzNk3
+	 w89VuTbLYzB8f+UfRO5QzhZwG2mJ9YXpy7aQMXODsQ+u4TAOpuAo01EVvDS530smTt
+	 ypssHVMfBd2vNQgy8RU4CPrZsIT/NNlAZW3uNRiPQAilcwkKxHp6kOapprGFUdLdu9
+	 gRhE8KCAgF5Qu+DROwNA43CqFNUfbB2RysKZs6btD+xkayRbrzWAY7if9Ofrs3Zf53
+	 myh4UUzAu1XTbUh9Y+5eww4r2+jKoP821esQZ/GEIo7svNMUCtfUz9ZlHc7WIMNs3E
+	 8e+h9URYD1bQQ==
+Message-ID: <729d83e1-f28c-4e95-bcba-52f7d7a166ee@kernel.org>
+Date: Wed, 2 Jul 2025 14:05:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250702051345.1460497-4-apatel@ventanamicro.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/5] Introduce "non-pixel" sub node within iris video
+ node
+To: Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Abhinav Kumar <abhinav.kumar@linux.dev>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250627-video_cb-v3-0-51e18c0ffbce@quicinc.com>
+ <5f90547d-945a-4e26-b36c-75f2d8a1af97@kernel.org>
+ <eab8d79f-7188-9537-9176-3e4d22f0978a@quicinc.com>
+ <5ad418d9-8199-43c9-a477-1e3b939c054c@kernel.org>
+ <7b6db4fa-2f73-376d-4eb3-64c1c7e6cda3@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <7b6db4fa-2f73-376d-4eb3-64c1c7e6cda3@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 02, 2025 at 10:43:24AM +0530, Anup Patel wrote:
-> Add defines for the new SBI message proxy extension which is part
-> of the SBI v3.0 specification.
+On 02/07/2025 14:01, Vikash Garodia wrote:
+> 
+> 
+> On 7/2/2025 5:22 PM, Krzysztof Kozlowski wrote:
+>> On 02/07/2025 13:37, Vikash Garodia wrote:
+>>>
+>>> On 7/2/2025 4:48 PM, Krzysztof Kozlowski wrote:
+>>>> On 27/06/2025 17:48, Vikash Garodia wrote:
+>>>>> This series introduces a sub node "non-pixel" within iris video node.
+>>>>> Video driver registers this sub node as a platform device and configure 
+>>>>> it for DMA operations. All non pixel buffers, i.e bitstream, HFI queues 
+>>>>> and internal buffers related to bitstream processing, would be managed 
+>>>>> by this non_pixel device.
+>>>>>
+>>>>> Purpose to add this sub-node:
+>>>>> Iris device limits the IOVA to an addressable range of 4GiB, and even 
+>>>>> within that range, some of the space is used by IO registers, thereby 
+>>>>> limiting the available IOVA to even lesser. For certain video usecase, 
+>>>>> this limited range in not sufficient enough, hence it brings the need to 
+>>>>> extend the possibility of higher IOVA range.
+>>>>>
+>>>>> Video hardware is designed to emit different stream-ID for pixel and 
+>>>>> non-pixel buffers, thereby introduce a non-pixel sub node to handle 
+>>>>> non-pixel stream-ID into a separate platform device.
+>>>>> With this, both iris and non-pixel device can have IOVA range of 
+>>>>> approximately 0-4GiB individually for each device, thereby doubling the 
+>>>>> range of addressable IOVA.
+>>>>>
+>>>>> Tested on SM8550 and SA8775p hardwares.
+>>>>>
+>>>>> Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+>>>>> ---
+>>>>> Changes in v3:
+>>>>> - Add info about change in iommus binding (Thanks Krzysztof)
+>>>>
+>>>> Nothing improved in commit msg. You are changing existing device and the
+>>>> reason for that change is not communicated at all.
+>>>>
+>>>> There was big feedback from qualcomm saying that some commit in the past
+>>>> received review, so future commits can repeat the same stuff. If qcom
+>>>> approaches that way, sorry, no you need to come with proper commit
+>>>> description.
+>>>>
+>>>> Please align internally how to solve it, because my response that past
+>>>> imperfect review is not justification for whatever future issues was not
+>>>> enough.
+>>> Sure, lets take this as an example and you can suggest to provide a better
+>>> commit message for this case, it would help me to compare where is the gap. I
+>>> have tried my best to capture and explain the limitations and how the changes
+>>> address those limitations. If that is not sufficient, we might have the perfect
+>>> message from you and compare to find the gaps and improve, I am sorry, but thats
+>>
+>> It is not question to me: I did not want imperfectness. Qualcomm
+>> engineer used issues in existing commits or imperfect commit in
+>> discussion, so that's my solution. I don't need that perfect commit, but
+>> it seems if I agree to that, then I will have to defend it later. Well,
+>> no, I don't want it.
+>>
+>>> how i feel at the moment.
+>> Sure, I feel confused now as well.
+>>
+>> Anyway, in other messages I explained what is missing. You are changing
+>> existing hardware and you clearly must explain how existing hardware is
+>> affected, how can we reproduce it, how users are affected.
+> Exactly all of these i have explained in the commit message. The limitation with
 
-LGTM,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Well, no.
 
--- 
-With Best Regards,
-Andy Shevchenko
+I did not see reproduce steps, users affected, which boards, nothing
+like that.
+
+Your commit says "certain video usecases"... how is this specific?
+
+You are deflecting now questions. Point me then part of commit msg which
+answers to:
+
+"explain how existing hardware is affected"
+
+"how can we reproduce it"
+
+"how users are affected."
 
 
+
+Best regards,
+Krzysztof
