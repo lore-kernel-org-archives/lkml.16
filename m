@@ -1,103 +1,114 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF411C32;
-	Wed,  2 Jul 2025 00:23:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CCC4A1A;
+	Wed,  2 Jul 2025 00:23:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751415787; cv=none; b=auRry7TAetkDt+1bXTQvZDBhAPMsD3lNCL9qm7fDEyrAbeLEay/iw6iat+uNamh2UJ2rKR6bbprKzLPwbYo9+CxVM6QtAvBMzECe1B+pB0805V8k1HM1kKd1NND8BmraF4rMR1h/pMBReYAlDkrGnMAf06nrldTHaMGlJfbuBEg=
+	t=1751415799; cv=none; b=ADMXgKQp+9LaK4uUweZdZ6LAlGbD8uIOPaCYV5dqkyQEhjOdkJxBBl2qdTuX9p6N4zfr4l/Ivi6SWEf7PybKShUl25/jUnH+Tizukddq0cFn0yxZeLl6OwQvXcuduQ+4lOeqFTb3FeIJEQcfGHoK0d0GhCQppUCYLoUU4beu1Ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751415787; c=relaxed/simple;
-	bh=yojyvkE35IyqeWXBaopmtqHNdC508aa/FvWO3L7mqDw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e1Ljbei3rAolbfmb5yurK8QU47B4tOHQtleopqp8B0fGNROgX2qybXj4fKwpXziLseW4Nd7Unv2Z4QAjsoFH4ZAhzoijnySJszAVWyw6sPuFaZBeGIBqXWkK9CMHm6U0jZc327L+LBlFpB3l/n9SOfPSenqmcVAo4loHbzTNGJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hNBwJEwy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751415799; c=relaxed/simple;
+	bh=3Dx6SOGktlpWitmJQ1//ZWkVkagwCpxpW8LCa46sgeQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=LDYbSQtQMLfQrl3tc54pOCpo+INIGeLQFjLJxmTB5BlwSvG0udHhYXE2g5bPF5PMfawKA2p9c747fB+rtFF4shHzANUdgI9IFiPrKEJ46YjpN7ERlmPsGoN08jmpFglrl7eHrzEH+p1zb+Sg0w+ji9tT6okV2liKn1c75nNO4uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rw3I0MJy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hNBwJEwy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0246CC4CEEB;
-	Wed,  2 Jul 2025 00:23:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rw3I0MJy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06665C4CEED;
+	Wed,  2 Jul 2025 00:23:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751415787;
-	bh=yojyvkE35IyqeWXBaopmtqHNdC508aa/FvWO3L7mqDw=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=hNBwJEwy40erhcmsUL9sJPWWvwZnR+Ndz0hgps90NRE5icxZ0qE8PvIbV7tdnlNSx
-	 xeqTNcAweA7NdrRJOHeXQLizoWkRlaQVwq2G20VwAhMGc/MZs6PQKm/QlSvqvmTUIX
-	 c4H7pZFuGCVZcFCYlWjatlbKSVRv1+KSkvVZGgrehEOMHm3n+h5/Yjp/EJYo6q1McD
-	 oPUksFD1QsSogsBMdsJVDfezc0mvV0n3iYy7CD1433JhSVJx2s5tN5yXRqS+X7jCen
-	 VhPuBOshb6H3Y96jaJJ83yteG9F3LbGRUPFb9usnV9uqwVQp1E5h70ZlL69vydJaDT
-	 /KLHlG2Gzb74Q==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id A31FBCE0E63; Tue,  1 Jul 2025 17:23:06 -0700 (PDT)
-Date: Tue, 1 Jul 2025 17:23:06 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: rcu@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com, rostedt@goodmis.org,
-	Christoph Hellwig <hch@infradead.org>
-Subject: [PATCH v2 0/5] Remove SRCU-lite in favor of SRCU-fast
-Message-ID: <2994ade2-bd06-4ba7-bcc9-be4d0d15ea0c@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <e5dd6af2-fdbf-4773-9732-13b84ca13a12@paulmck-laptop>
+	s=k20201202; t=1751415799;
+	bh=3Dx6SOGktlpWitmJQ1//ZWkVkagwCpxpW8LCa46sgeQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Rw3I0MJydoSdPJN4OEk94Fk1rh1bhKkg5CU2FAw7Xdepw9/MC0LggJYmc+t/ILPx9
+	 Kzk9dmv4k8UEMrEvUV2Fahzh9x+F77o9cOwVlkKTYyCPxMyzijgCdhiGZdCLsd/KAO
+	 wWq6mUeInWqQ9NvElb4M4PGTkPjrrDgLnud7SFDP3hvcItKthwXHqPz7Eaf9fqLaIQ
+	 DGkL3IjT0VnTmjbVDqplZlJATIGtWh7VIEr/TOtIs9/EYl7BTwA1o1RXU+S1bfJXtC
+	 Erp6aEL9Rztr4xEyFbxhazhqfXkKPpNOqrONYdhxQyoW2tUkLHImKGziJqVkteBYwM
+	 smnWDqcnFmUeA==
+From: SeongJae Park <sj@kernel.org>
+To: Bijan Tabatabai <bijan311@gmail.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Bijan Tabatabai <bijantabatab@micron.com>,
+	damon@lists.linux.dev,
+	kernel-team@meta.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [RFC PATCH 0/4] mm/damon: add DAMOS_MIGRATE_{HOT,COLD} destination nodes and weights
+Date: Tue,  1 Jul 2025 17:23:16 -0700
+Message-Id: <20250702002316.1139-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250701224014.9008-1-bijan311@gmail.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e5dd6af2-fdbf-4773-9732-13b84ca13a12@paulmck-laptop>
+Content-Transfer-Encoding: 8bit
 
-Hello!
+On Tue,  1 Jul 2025 17:39:37 -0500 Bijan Tabatabai <bijan311@gmail.com> wrote:
 
-This series removes the deprecated SRCU-lite flavor.
+> On Sat, 21 Jun 2025 10:31:27 -0700 SeongJae Park <sj@kernel.org> wrote:
+> 
+> > DAMOS_MIGRATE_{HOT,COLD} action can migrate pages to only single node.
+> > It could be useful to allow it migrates pages to multiple nodes with
+> > different weights.  A work for dynamic interleaving[1] is in progress.
+> > We also discussed this could be useful for memory tiering, e.g., when we
+> > want to move pages to multiple noes of same tier.
+> > 
+> > Extend the API and ABI interface for specifying the multiple destination
+> > nodes and their weights.
+> > 
+> > Note that this RFC is a prototype of the interface change for Bijan's
+> > interleaving work[1].  Hence this patch series is only implementing the
+> > interface part, not the real implementation of the migration behavior.
+> > 
+> > [1] https://lore.kernel.org/20250620180458.5041-1-bijan311@gmail.com
+> > [2] https://lore.kernel.org/20240408175228.91414-1-sj@kernel.org
+> > 
+> > SeongJae Park (4):
+> >   mm/damon: add struct damos_migrate_dest
+> >   mm/damon/core: add damos->migrate_dest field
+> >   mm/damon/sysfs-schemes: implement DAMOS action destinations directory
+> >   mm/damon/sysfs-schemes: set damos->migrate_dest
+> > 
+> >  include/linux/damon.h    |  29 ++++-
+> >  mm/damon/core.c          |   4 +
+> >  mm/damon/sysfs-schemes.c | 253 ++++++++++++++++++++++++++++++++++++++-
+> >  3 files changed, 282 insertions(+), 4 deletions(-)
+> > 
+> > 
+> > base-commit: 78745efafbb93197e476717385616ed57ea2df22
+> > -- 
+> > 2.39.5
+> 
+> Hi SeongJae,
+> 
+> Thanks for putting this patch together. Sorry for taking a while to
+> respond to it.
 
-Both SRCU-lite and SRCU-fast provide faster readers by dropping the
-smp_mb() call from their lock and unlock primitives.  The price of this
-is a pair of added RCU grace periods during the SRCU grace period.
+No worry!
 
-SRCU-fast also adds NMI safety for architectures that have NMIs but do
-not have NMI-safe per-CPU operations.  In addition, srcu_read_lock_fast()
-returns a per-CPU pointer rather than an integer, which provides a further
-speedup compared to SRCU-lite by getting rid of array-index calculations.
+> 
+> I am finishing up V3 of the interleave patchset using these patches. It
+> has mostly worked great, but I noticed that damos->migrate_dest was not
+> being updated in damos_commit(), so new weights would not be applied. This
+> meant that you could not update the interleave weights by committing the
+> damon state. I also saw that damos->target_nid was also not being updated
+> here. I will will have a patch fixing
 
-There is a trivial mapping from the SRCU-lite API to that of SRCU-fast,
-so we do not expect any transition issues.  In addition, while SRCU-lite
-remains in the kernel, checkpatch.pl will warn about added SRCU-lite
-use cases.
+Nice catch, thank you for finding the bug and making the fix!
 
-Further read-side speedups are possible, but they amount to only about
-half a nanosecond out of about two nanoseconds (measured on my x86
-laptop), and they might require some changes to existing SRCU code.
-These changes are trivial, but we need to see a solid need for the
-additional performance before inconveniencing existing users.
+> this with the V3 of the interleave
+> patchset that I will hopefully send out tomorrow.
 
-1.	Remove support for SRCU-lite.
-
-2.	Remove SRCU-lite scenarios.
-
-3.	Remove support for SRCU-lite.
-
-4.	Remove SRCU-lite implementation.
-
-5.	Remove SRCU-lite deprecation.
+I cannot wait, but please take your time! :)
 
 
-Changes since v1:
+Thanks,
+SJ
 
-o	Add short explanation of SRCU-lite and SRCU-fast.
-
-						Thanx, Paul
-
-------------------------------------------------------------------------
-
- b/include/linux/srcu.h                                     |    2 
- b/include/linux/srcutiny.h                                 |    3 
- b/include/linux/srcutree.h                                 |   38 ----------
- b/kernel/rcu/rcutorture.c                                  |    7 -
- b/kernel/rcu/refscale.c                                    |   32 --------
- b/scripts/checkpatch.pl                                    |    2 
- b/tools/testing/selftests/rcutorture/configs/rcu/CFLIST    |    1 
- include/linux/srcu.h                                       |   47 -------------
- tools/testing/selftests/rcutorture/configs/rcu/SRCU-L      |   10 --
- tools/testing/selftests/rcutorture/configs/rcu/SRCU-L.boot |    3 
- 10 files changed, 4 insertions(+), 141 deletions(-)
+[...]
