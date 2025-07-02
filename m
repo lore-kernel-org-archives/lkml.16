@@ -1,113 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCEF22E03E5;
-	Wed,  2 Jul 2025 17:59:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5DC30E84F;
+	Wed,  2 Jul 2025 18:00:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751479151; cv=none; b=ZrMp8TXDjIg7YnPHDBK93uNMaBXrDqbtjziodKHNnM+0LitxGqOaX+k4crDCU5gXbT3X+mbLeDhox+KtAnx2sAqe02iUqYkjykSJz09x1pNVaydnxi/tZJvxGQRLgM0uMVhRvtMwO06IiKdcb+syQQF17giG9IlHpvuCdtnbJL8=
+	t=1751479213; cv=none; b=VJb7T2di+g9ai/Q7FpK7sukVHs1hDTdusM9XlpVmIuNCFSsz+59CKIwc1QzmDc44/PTFgPrv5Vzk2zuEk2pQJkuHMYlNCa0juz5flLC4JfLv50TfJmL3Of6tLrYCsOoVofuaSIm4L2Lg6/TgNUcaerIqhuw/vPa4VRgfT61diNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751479151; c=relaxed/simple;
-	bh=ejLSgC1uoMdgciKFUaDzwmfUYCcPV5mhhLjNesM4X8M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c0dpTbsvQkjpJnO3QWuwpLqB4jPfpHmmD9g1ZDbm/lUjLqrRaRGcMpz2kP5P5IQPkjMoIh26uGXudpP1EonVvtnZ/H1KpZLSCtRvkupHS5uik6X8bb6tlSJtqPaHr1v3NkFyg5SloEsilZ7J7duMP4AzrW7PHlKBQrMOdeVObLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QYhANU1g; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751479213; c=relaxed/simple;
+	bh=6z0u7i8bRrCZDEQvcwpX8KlEXe44EN02rC/5MBOZao8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h4Y4/2mnwbzuM+VGz6DBA2xpOBwHb5+YAuYRw0O4g935OBrZOtk3JGNvOX180qJLG8PkSlrY24USYuWCejeOkxcHUtad9tIv2eRfC3Zvs3eeiO4z3dM9vaWa5bUKtiv+U4wyZJAXh4Ae//csdu9oFtnKfB5qU1J6Ap3kamYpUbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZEvIJcox; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QYhANU1g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 719F5C4CEF1;
-	Wed,  2 Jul 2025 17:59:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZEvIJcox"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C091C4CEE7;
+	Wed,  2 Jul 2025 18:00:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751479150;
-	bh=ejLSgC1uoMdgciKFUaDzwmfUYCcPV5mhhLjNesM4X8M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=QYhANU1gkMsyNf2QTxORspLV1YQi+KUwNxR4CTrNOoaSlrEsEojioEx4TUGNslaNN
-	 PJx8OOzSjUSU9aaEX7c4oGtNypZIoC2QTNeqJjm6HGjgGeKzJ3+R0mVAXHmmHxlFkS
-	 sd0Bjq3XN+xcfW1/GmOVHaDViDwpWCw+VBy414fVXW9x09Z2+JEI+9WH/z2gXJkL/D
-	 9n+MR/ibfEGUMJfoDuHYNkavhACCVbbEdyW29cz2ChB5oWPznX56V+ODZddeB0NyIq
-	 T3Sd7TRtTc3qAMgoR2fVp3NtH3TSux5PCbZapJANAI/3XwxuiJXS0NMUiMQWTSJS3h
-	 tykd2akEL5dNg==
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-60402c94319so4137426eaf.1;
-        Wed, 02 Jul 2025 10:59:10 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWcQabF4G5frarYTrLk+KkQLrfiyQEloMHgLjNwoy7uZhz8MM3jeTiIceVq+K444f0hhwC7BkdKqrii@vger.kernel.org, AJvYcCXjwpzTtDPANLF/VV18waFLO21XgEhoz3PrQHLcqNtyokde/j7uGmzA1P1Wn+SITalgqkEI/2rO4SyDxmLt@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBVrdrpBYe9XrS0DCN2dhVRZBAqchipcqJ7azqPLOY4fPsnPka
-	buEzaJtEKfNxXugXVkoJMGm4SfjsnACgj5VPXVk9Y7JfVM2KFKBThAyYN/vic9ORBfpIfNTDPTl
-	jMrDUDfIumDq2usmtfG4qe7pd3Q2VjCk=
-X-Google-Smtp-Source: AGHT+IFtwxOfuU+hTN8l7xbxS21k5gWHtIuZhX36TQSUQWxipsCo4HX2rihGRkG3+sE19pPMEJ1wSBinwkY4UI8wLzw=
-X-Received: by 2002:a05:6820:2915:b0:612:1:fec with SMTP id
- 006d021491bc7-6120112db80mr2850651eaf.2.1751479149498; Wed, 02 Jul 2025
- 10:59:09 -0700 (PDT)
+	s=k20201202; t=1751479212;
+	bh=6z0u7i8bRrCZDEQvcwpX8KlEXe44EN02rC/5MBOZao8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZEvIJcoxqFK8gxdzAoJknzErXcYSp7FXzSZgeVoW4UH1vPNRtzWW5RwzWnd7/f5ye
+	 Oa9Dg9xY4f1UnyATyPtxaD4RPrJZYIsOoSUh5bYHZUFdcECYfKm9PL53KwiD9f1eJv
+	 Vw8ae5k5rVi6Tbfr9Ly9HqW6CByhM5bFkS/+X+KbAwZ/bXpYl0G3XT+Tnsy8WfDtd/
+	 w6Ri2JzugMuE4JpmcE8dbAja2PPZDicoHp2pALgYDk74AdBAcFlvXkFftq66oOS86/
+	 ivse1+7m5UeW4PoNr5ueMOmbQyw3Ca5X7I2gpbYijRJoZEC1EY9ji0C7iVqcaLIfhK
+	 NydLqt7dDK9UA==
+Date: Wed, 2 Jul 2025 21:00:07 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Abhijit Gangurde <abhijit.gangurde@amd.com>, shannon.nelson@amd.com,
+	brett.creeley@amd.com, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, corbet@lwn.net,
+	andrew+netdev@lunn.ch, allen.hubbe@amd.com, nikhil.agarwal@amd.com,
+	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Andrew Boyer <andrew.boyer@amd.com>
+Subject: Re: [PATCH v3 10/14] RDMA/ionic: Register device ops for control path
+Message-ID: <20250702180007.GK6278@unreal>
+References: <20250624121315.739049-1-abhijit.gangurde@amd.com>
+ <20250624121315.739049-11-abhijit.gangurde@amd.com>
+ <20250701103844.GB118736@unreal>
+ <20250702131803.GB904431@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250621055200.166361-1-abdelrahmanfekry375@gmail.com>
-In-Reply-To: <20250621055200.166361-1-abdelrahmanfekry375@gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 2 Jul 2025 19:58:58 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hKLpD87YtPQfNJwNKyEDrQBKSdZLEKnUxTqj=tZ7DOeA@mail.gmail.com>
-X-Gm-Features: Ac12FXyufNfEIcOtZX2dLmjnXJaaxREr56De8YNUVLJikqXysHxRXClR8YrVPe8
-Message-ID: <CAJZ5v0hKLpD87YtPQfNJwNKyEDrQBKSdZLEKnUxTqj=tZ7DOeA@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: fan: Replace sprintf/scnprintf with sysfs_emit in
- show functions
-To: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
-Cc: rafael@kernel.org, lenb@kernel.org, skhan@linuxfoundation.com, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kernel-mentees@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250702131803.GB904431@ziepe.ca>
 
-On Sat, Jun 21, 2025 at 7:52=E2=80=AFAM Abdelrahman Fekry
-<abdelrahmanfekry375@gmail.com> wrote:
->
-> Update two sysfs show() functions in the ACPI fan driver to use sysfs_emi=
-t()
-> and sysfs_emit_at() instead of sprintf() and scnprintf().
->
-> - show_fan_speed(): replaced sprintf() with sysfs_emit().
-> - show_state(): replaced scnprintf() with sysfs_emit() for the first writ=
-e,
->   and retained sysfs_emit_at() for incremental writes.
->
-> This change is in accordance with Documentation/filesystems/sysfs.rst,
-> which recommends using sysfs_emit/sysfs_emit_at in all sysfs show()
-> callbacks for buffer safety, clarity, and consistency.
->
-> Signed-off-by: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
-> ---
->  drivers/acpi/fan_attr.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/acpi/fan_attr.c b/drivers/acpi/fan_attr.c
-> index 22d29ac2447c..6a53da3d6d82 100644
-> --- a/drivers/acpi/fan_attr.c
-> +++ b/drivers/acpi/fan_attr.c
-> @@ -22,9 +22,9 @@ static ssize_t show_state(struct device *dev, struct de=
-vice_attribute *attr, cha
->         int count;
->
->         if (fps->control =3D=3D 0xFFFFFFFF || fps->control > 100)
-> -               count =3D scnprintf(buf, PAGE_SIZE, "not-defined:");
-> +               count =3D sysfs_emit(buf, "not-defined:");
->         else
-> -               count =3D scnprintf(buf, PAGE_SIZE, "%lld:", fps->control=
-);
-> +               count =3D sysfs_emit(buf, "%lld:", fps->control);
->
->         if (fps->trip_point =3D=3D 0xFFFFFFFF || fps->trip_point > 9)
->                 count +=3D sysfs_emit_at(buf, count, "not-defined:");
-> @@ -59,7 +59,7 @@ static ssize_t show_fan_speed(struct device *dev, struc=
-t device_attribute *attr,
->         if (status)
->                 return status;
->
-> -       return sprintf(buf, "%lld\n", fst.speed);
-> +       return sysfs_emit(buf, "%lld\n", fst.speed);
->  }
->
->  static ssize_t show_fine_grain_control(struct device *dev, struct device=
-_attribute *attr, char *buf)
-> --
+On Wed, Jul 02, 2025 at 10:18:03AM -0300, Jason Gunthorpe wrote:
+> On Tue, Jul 01, 2025 at 01:38:44PM +0300, Leon Romanovsky wrote:
+> > > +static void ionic_flush_qs(struct ionic_ibdev *dev)
+> > > +{
+> > > +	struct ionic_qp *qp, *qp_tmp;
+> > > +	struct ionic_cq *cq, *cq_tmp;
+> > > +	LIST_HEAD(flush_list);
+> > > +	unsigned long index;
+> > > +
+> > > +	/* Flush qp send and recv */
+> > > +	rcu_read_lock();
+> > > +	xa_for_each(&dev->qp_tbl, index, qp) {
+> > > +		kref_get(&qp->qp_kref);
+> > > +		list_add_tail(&qp->ibkill_flush_ent, &flush_list);
+> > > +	}
+> > > +	rcu_read_unlock();
+> > 
+> > Same question as for CQ. What does RCU lock protect here?
+> 
+> It should protect the kref_get against free of qp. The qp memory must
+> be RCU freed.
 
-Applied as 6.17 material, thanks!
+I'm not sure that this was intension here. Let's wait for an answer from the author.
+
+> 
+> But this pattern requires kref_get_unless_zero()
+> 
+> Jason
