@@ -1,138 +1,172 @@
-Received: from mail-m49207.qiye.163.com (mail-m49207.qiye.163.com [45.254.49.207])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5352E24DD1F;
-	Wed,  2 Jul 2025 09:46:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC97823B63E;
+	Wed,  2 Jul 2025 09:47:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751449604; cv=none; b=g5ktyZGYmjID7R5uzgpuYfF3nS6c/CcGAXWsxGfoMQCPIBR8uKRx7klPtu0gKs/YFldCuzqzePBVUVzvzORnpXw1j5G+Xq23qVb6DLhnKsmD2Y/b6BUnJQA7Z0UyymUEIB7Gbve2vT8B2owG3vOxhMXD6k5naP04to0IptS6wCg=
+	t=1751449661; cv=none; b=S70gQQbNRuroIa7qJwv6ixM/u5t7ZwF54zUdGD+jaT2XoRb/Xv3Dnq2/Ps/1IBYefOlLIZk+4bCCyFtfxHvHzkWZhatvwSOHIL3YDTvPTweO91Br38NxAuHV5bksZf+U9J4vu8emtMz/F8SJPCdPT13Geo/D8Qg59jyh95PTuJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751449604; c=relaxed/simple;
-	bh=R0CWMLD/EEHYNbcG8KgTMPj2hzXibcGsXODlklTI5q4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GEWLFRnLQJV3C0p2BbmcTABZf2xjC5Hk1LYE+FYlfcwYtTDkLXAkM6QBaDHcvo3bWU7feaiX4jIbXvxITNPikbwq42EuV8/cH+yJVTkiITVZqtx047CbTJAPQOVnVYWcdccSVytovd581AT/mtSHyrAyhSSbEx3yYtv/4ayvtYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thundersoft.com; spf=pass smtp.mailfrom=thundersoft.com; dkim=pass (1024-bit key) header.d=thundersoft.com header.i=@thundersoft.com header.b=km48lblw; arc=none smtp.client-ip=45.254.49.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thundersoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thundersoft.com
+	s=arc-20240116; t=1751449661; c=relaxed/simple;
+	bh=QquxLZIFBNYCLtfN2WN90KA9i4NdGTFGsp2moSfYXE4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iPPNVc4hjkx4ZU9eL3RaehdIUsx+OeHEQxWcu+YOAhMSxlQy5+ijrZBGO5WC1qMxhTfE13mwlSU4UE0qohMrOVXqOei3IuC/Kb5T9Ds6zx2S42KPSH4WU4vJkasijH0ANC8Xa5SbRIMs4dFwM06j2kG3WxWxASxGN3bYZw0g0XI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fyhjKVqI; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=thundersoft.com header.i=@thundersoft.com header.b="km48lblw"
-Received: from localhost.localdomain (unknown [117.184.129.134])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 1aaa9ed36;
-	Wed, 2 Jul 2025 17:46:31 +0800 (GMT+08:00)
-From: Albert Yang <yangzh0906@thundersoft.com>
-To: robh@kernel.org,
-	krzk+dt@kernel.org,
-	krzk@kernel.org,
-	conor+dt@kernel.org,
-	gordon.ge@bst.ai,
-	catalin.marinas@arm.com,
-	geert.uytterhoeven@gmail.com,
-	will@kernel.org,
-	ulf.hansson@linaro.org,
-	adrian.hunter@intel.com,
-	arnd@arndb.de
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-mmc@vger.kernel.org,
-	soc@lists.linux.dev,
-	bst-upstream@bstai.top,
-	neil.armstrong@linaro.org,
-	jonathan.cameron@huawei.com,
-	bigfoot@classfun.cn,
-	kever.yang@rock-chips.com,
-	mani@kernel.org,
-	geert+renesas@glider.be,
-	andersson@kernel.org,
-	nm@ti.com,
-	nfraprado@collabora.com,
-	quic_tdas@quicinc.com,
-	ebiggers@google.com,
-	victor.shih@genesyslogic.com.tw,
-	shanchun1218@gmail.com,
-	ben.chuang@genesyslogic.com.tw,
-	Albert Yang <yangzh0906@thundersoft.com>
-Subject: [PATCH v2 2/8] dt-bindings: arm: add Black Sesame Technologies (bst) SoC
-Date: Wed,  2 Jul 2025 17:44:38 +0800
-Message-Id: <20250702094444.3523973-3-yangzh0906@thundersoft.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250702094444.3523973-1-yangzh0906@thundersoft.com>
-References: <20250528085403.481055-1-yangzh0906@thundersoft.com>
- <20250702094444.3523973-1-yangzh0906@thundersoft.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fyhjKVqI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751449660; x=1782985660;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=QquxLZIFBNYCLtfN2WN90KA9i4NdGTFGsp2moSfYXE4=;
+  b=fyhjKVqIUkxJb1JKT2G3z8DrvoAhm64ajH18/4AL9eTwL4sKR3L+zEKd
+   WoFJzqiZoqsYj38FYd6ATJhl9wx/7FLhganpuoIRJlY/WMG7w3PwszVJ+
+   RiPR798CF8rF+OMhUYRiQxTxTaDxOdxiea7AXahS0cnzjM4XYTjPdA2YJ
+   2IP7EnC/O8XcZ/C+Xvhq+j1/b88dxgCRLZU8RSQrJPSYr5UbEaQCeSuMq
+   HvghIS88wu+qdatejZ4yU9L7LBkEMDVGccJssUVtKrvBpf41yjvxHCK4n
+   RP9nrxGvm1gjtav27jhE7dioWsRgoFik+H+uU3nzCEilEWI2M9iu4K026
+   Q==;
+X-CSE-ConnectionGUID: n+fzfk3QQ1CDo6Vjuen9HQ==
+X-CSE-MsgGUID: nlaHByvfR5W1VGMsWkXO0g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="52968088"
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="52968088"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 02:47:38 -0700
+X-CSE-ConnectionGUID: LkxK1xTYTBadfjlqZ0+zdg==
+X-CSE-MsgGUID: kgMQFbTfRx2+ltJURfIKBQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="154180676"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa007.jf.intel.com with ESMTP; 02 Jul 2025 02:47:26 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 427B11E0; Wed, 02 Jul 2025 12:47:24 +0300 (EEST)
+Date: Wed, 2 Jul 2025 12:47:24 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Sohil Mehta <sohil.mehta@intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel <ardb@kernel.org>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Xiongwei Song <xiongwei.song@windriver.com>, Xin Li <xin3.li@intel.com>, 
+	"Mike Rapoport (IBM)" <rppt@kernel.org>, Brijesh Singh <brijesh.singh@amd.com>, 
+	Michael Roth <michael.roth@amd.com>, Tony Luck <tony.luck@intel.com>, 
+	Alexey Kardashevskiy <aik@amd.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Ingo Molnar <mingo@kernel.org>, 
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Daniel Sneddon <daniel.sneddon@linux.intel.com>, 
+	Kai Huang <kai.huang@intel.com>, Sandipan Das <sandipan.das@amd.com>, 
+	Breno Leitao <leitao@debian.org>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Hou Tao <houtao1@huawei.com>, Juergen Gross <jgross@suse.com>, 
+	Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>, Eric Biggers <ebiggers@google.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Yuntao Wang <ytcoode@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>, Changbin Du <changbin.du@huawei.com>, 
+	Huang Shijie <shijie@os.amperecomputing.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
+	linux-mm@kvack.org
+Subject: Re: [PATCHv8 04/17] x86/cpu: Defer CR pinning setup until after EFI
+ initialization
+Message-ID: <5s25fkpxv6p3ai2iagtgyqhpt3c4cv54q6lgeeebizsseediyy@wl4epcc7i35a>
+References: <20250701095849.2360685-1-kirill.shutemov@linux.intel.com>
+ <20250701095849.2360685-5-kirill.shutemov@linux.intel.com>
+ <080df169-0f47-40ea-b7b3-4d1a35bee151@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUhXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDGR1JVk4YGENDTEpJHh5OQ1YVFAkWGhdVEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlKSkxVSkNPVUpJQlVKSE9ZV1kWGg8SFR0UWUFZT0tIVUpLSUhCSklVT1
-	VKT1kG
-X-HM-Tid: 0a97ca87dd3009cckunmee1cabff3ebaba
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Pxg6KTo6TzE*T089KxksHQw9
-	CD4aCQ5VSlVKTE5KT09CTkJIS0NKVTMWGhIXVQIaFRwBE0tCS007DxMOFR8eCQgUHQ9VGBQWRVlX
-	WRILWUFZSkpMVUpDT1VKSUJVSkhPWVdZCAFZQUhKSEw3Bg++
-DKIM-Signature:a=rsa-sha256;
-	b=km48lblwqhJ9eMNaOOixs21bDUWw710nq+WF3nGAJkUGzohpfAFY+A5CVIoRyltnZs22ksywNjzOgET76hamxpDBF9R2HS4wUCyQgTxvo7xVqyRedMN6Tw+WsJO1RgD0TEFox7TMi1Djhh6zAs54h+QEhBwVrqNNP5Gokbgz6uA=; c=relaxed/relaxed; s=default; d=thundersoft.com; v=1;
-	bh=7HId0QjN1Uxd1UcS1PVWLgSUuLheSa0vzbbArIAI4e0=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <080df169-0f47-40ea-b7b3-4d1a35bee151@intel.com>
 
-Add device tree bindings for Black Sesame Technologies Arm SoC,
-it consists several SoC models like C1200, etc.
+On Tue, Jul 01, 2025 at 12:03:01PM -0700, Sohil Mehta wrote:
+> On 7/1/2025 2:58 AM, Kirill A. Shutemov wrote:
+> > From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> > 
+> > In order to map the EFI runtime services, set_virtual_address_map()
+> > needs to be called, which resides in the lower half of the address
+> > space. This means that LASS needs to be temporarily disabled around
+> > this call. This can only be done before the CR pinning is set up.
+> > 
+> > Move CR pinning setup behind the EFI initialization.
+> > 
+> > Wrapping efi_enter_virtual_mode() into lass_disable/enable_enforcement()
+> 
+> I believe this should be lass_stac()/clac() since we reverted to the
+> original naming.
 
----
-Changes for v2:
-- Removed unnecessary pipe (`|`) in description
-- Dropped invalid `compatible` entry for standalone SoC
-- Removed root node (`$nodename: '/'`) definition
+Doh. Will fix.
 
-Signed-off-by: Ge Gordon <gordon.ge@bst.ai>
-Signed-off-by: Albert Yang <yangzh0906@thundersoft.com>
----
- .../devicetree/bindings/arm/bst.yaml          | 30 +++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/bst.yaml
+> > is not enough because AC flag gates data accesses, but not instruction
+> > fetch. Clearing the CR4 bit is required.
+> > 
+> > Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> > Suggested-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> > ---
+> >  arch/x86/kernel/cpu/common.c | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+> > index 4f430be285de..9918121e0adc 100644
+> > --- a/arch/x86/kernel/cpu/common.c
+> > +++ b/arch/x86/kernel/cpu/common.c
+> > @@ -2081,7 +2081,6 @@ static __init void identify_boot_cpu(void)
+> >  	enable_sep_cpu();
+> >  #endif
+> >  	cpu_detect_tlb(&boot_cpu_data);
+> > -	setup_cr_pinning();
+> >  
+> >  	tsx_init();
+> >  	tdx_init();
+> > @@ -2532,10 +2531,14 @@ void __init arch_cpu_finalize_init(void)
+> >  
+> >  	/*
+> >  	 * This needs to follow the FPU initializtion, since EFI depends on it.
+> > +	 *
+> > +	 * EFI twiddles CR4.LASS. Do it before CR pinning.
+> >  	 */
+> >  	if (efi_enabled(EFI_RUNTIME_SERVICES))
+> >  		efi_enter_virtual_mode();
+> >  
+> > +	setup_cr_pinning();
+> > +
+> 
+> Instead of EFI toggling CR4.LASS, why not defer the first LASS
+> activation itself?
+> 
+> i.e.
+> 
+> 	if (efi_enabled(EFI_RUNTIME_SERVICES))
+> 		efi_enter_virtual_mode();
+> 
+> 	setup_lass();
+> 
+> 	setup_cr_pinning();
+> 
+> 
+> This way, we can avoid the following patch (#5) altogether.
 
-diff --git a/Documentation/devicetree/bindings/arm/bst.yaml b/Documentation/devicetree/bindings/arm/bst.yaml
-new file mode 100644
-index 000000000000..e6f48f569768
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/bst.yaml
-@@ -0,0 +1,30 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/arm/bst.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: BST platforms
-+
-+description:
-+  Black Sesame Technologies (BST) is a semiconductor company that produces
-+  automotive-grade system-on-chips (SoCs) for intelligent driving, focusing
-+  on computer vision and AI capabilities. The BST C1200 family includes SoCs
-+  for ADAS (Advanced Driver Assistance Systems) and autonomous driving applications.
-+
-+maintainers:
-+  - Ge Gordon <gordon.ge@bst.ai>
-+
-+properties:
-+  $nodename:
-+    const: '/'
-+  compatible:
-+    oneOf:
-+      - description: BST C1200 CDCU1.0 ADAS 4C2G board
-+        items:
-+          - const: bst,c1200-cdcu1.0-adas-4c2g
-+          - const: bst,c1200
-+
-+additionalProperties: true
-+
-+...
+That's definitely an option.
+
+The benefit of current approach is that the enforcement is enabled
+earlier and cover more boot code, providing marginal protection
+improvement.
+
+I also like that related security features (SMEP/SMAP/UMIP/LASS) are
+enabled in the same place.
+
+In the end it is a judgement call.
+
+Maintainers, any preference?
+
 -- 
-2.25.1
-
+  Kiryl Shutsemau / Kirill A. Shutemov
