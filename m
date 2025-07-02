@@ -1,63 +1,63 @@
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86A6C2D9EE1;
-	Wed,  2 Jul 2025 20:14:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333E32F5C49;
+	Wed,  2 Jul 2025 20:14:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751487253; cv=none; b=RqYijY/Rby2ISoNpJTfyDSrAzCmBgsLO0Dh5FctbDZgZuhr8pB7ph2pPVuRL6hJvq3DcywH4srU+07WX/kNbPVvP66CRVbO3DfwnVWgPEoATzmzU80ieeF/9788lt2XArMaNtla461Wlza7ugmZjT85DfWkvVCVaedWEvjS8QVY=
+	t=1751487261; cv=none; b=R/eFeXFQ80yv1BOkM4E1vppowSD8PC0Pi0kc6Q5K8l36ZiGXJTdLYY/nNX1c+3nrU9J834HJoqDPaBdfA5MGAV+tsimQytarpsj+LbGj3E1PF7F+TH8eygLQlMzkUcQDTAsuMOhLBCmudZfzY2ViqWrviq+ICuzzY3ga+9LJLF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751487253; c=relaxed/simple;
-	bh=U18qlnRMvF8tUiyKZU0+IbBdjXfq6BXcXM/9WyxXLgU=;
+	s=arc-20240116; t=1751487261; c=relaxed/simple;
+	bh=3euwdPgDUGI0g1cVnpDdDa3NasDn+36g8DZQS4wsxSM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=J+fIYQNirKncwbXjCf0KcPLUudOrmG+KumVg6RtVBtdxXlgoz6vlseKOHyoP0D/KuO28lMDvqxkI6uvgCUS5rxz1wepnwkh1l7EnvHI4ou9Rr5EjEHlk9lXddph1ZueUxxxsHa0HWKkdtEU1IoY4VSVWBw9X2enMuBB1V4lBvCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cGNHIKnJ; arc=none smtp.client-ip=209.85.219.181
+	 MIME-Version; b=G9Y8lS04Igty2MP23T1UArzaDsxFmAM4QsekYvcwXT0WKsb0WH7DtFG3F9TxNMhwEtgR+cFfuP7AZc4xFd4mcApUH5SLVJfkF3J1rZB0Np6zUXsjQIrBut+VHZSAgF44p30o7+BlGBQ0qR07LuNQlRE+saoOGjZwZ/+5hQ8cuLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P8yqgB9b; arc=none smtp.client-ip=209.85.128.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cGNHIKnJ"
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e8259b783f6so4162501276.3;
-        Wed, 02 Jul 2025 13:14:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P8yqgB9b"
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-70e64b430daso53464787b3.3;
+        Wed, 02 Jul 2025 13:14:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751487249; x=1752092049; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1751487258; x=1752092058; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pvXOgWEj8gwTOX4Hs4by3xf7fHgpjkffGomgqbs6dfI=;
-        b=cGNHIKnJDI/om6HTLITGeRvIoB9sXejlK13BJ7mKgFPajjZbH5f91K6Cx0TICeM/5H
-         1WL41JFx2qqKEyeeo4UYBgrmyypUMKRkK0ZezgbTLwDkheXmK1bEGcQjG1IkbHNs+ems
-         tpuOepO1lk5xM/cIMheYSKIaqKUvVB2HG6tyGcjhj8nL5zSSHC5phgkDd/et9T/1rOxf
-         9gDpisCKBljkEi4VLUlH4zoPoPZx8+VIq1zmZQHXZxwtFBYYUcmsPBFdYpAFKDr5tDoG
-         8TMO8I4uyqPZ8ZAI9botrtZNGXZ13LkNHxa78p6a5mzZvZIizHbGom23mBZdAazFuoaN
-         cANQ==
+        bh=Ka2lHJKibszvD814XqK78W02tftJp26/CMGv/fNrDPI=;
+        b=P8yqgB9b98EVjThUFLF7N+mT4LjCn/e78cx04KtTmdLNT/JJ7HGS1ET55LXZmFPkgU
+         du2vDoOvMR6x2xIbcVr/wpSyb/G9HGb2pD+jkCt0tnZ6KKYZlGrn1wWUhsV/7UR9l0o9
+         XTBIwTahIxdqHySvS3BJzOIIQCw9Ux1RD58MeVEodqzuYLyQ2lPrQYCYGGjxiHD8FD9k
+         TM9GRN96ewlGWPNHOkZIj+eCEqZTp4l2Ura0PyS2X0vilT1/JJZMsL+Vd2eaGVkf756G
+         PYn5Svz1hnV/WYvaIeyUYTJtV+271Rje+3lP58nqfFcrYcj0BMJJq6IbLpaSQjP8eLsx
+         PYEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751487249; x=1752092049;
+        d=1e100.net; s=20230601; t=1751487258; x=1752092058;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pvXOgWEj8gwTOX4Hs4by3xf7fHgpjkffGomgqbs6dfI=;
-        b=Wu3HReqlKNBXl2T82nlknDW/b9gRmXNJ0dDIkKipVDXXHh7cgzVB8OQcAe9Swdg+Mm
-         aygaj38rUfDw7f7u5T99g9ImHY7Q97FsU1JMVFVzmxwpWVWCBr1t1o87Cy+n9lJvU0gT
-         3vPXOob++ponDivWvFi/su92Yra+hdlxg9QusXrSM73GLWNipmNGLOWsp4wHbs8iCOs2
-         LxMsi5rP7u4SQAN8cVwwNBy0PbDi5VY+qyeZHnM1BDBVUDzEu5ibg66lAPHY83LL4kjq
-         26qRHK2aDAYQaWigsFmra0C7f0cg1P0xcjziSNvgNer+gCn4QWgJ5biDgzQPjZZd2eOv
-         5eRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVAuA2GGPVpL30mLw8FyXTB2aBg+hOIalokWrUFOcNk0E3It/vjkDH5MyGcB2fDgFGgE7bAFhCZFIo=@vger.kernel.org, AJvYcCWeKYBhuXwUTZeR1J9ecY4QhKvtmyNjk9bfbteOyZ5xln6EImuY2mrTqBGs5dK85brvpGrIKu7QaAnf9kBL@vger.kernel.org
-X-Gm-Message-State: AOJu0YziA283EQQJtTiA4GvQKn8B8aBWUptUKJmgTDPhAOl3K+VdWWid
-	xRJqnHFChMAi0JiBuopbmkq5cBe7RrQIZ5uQQ2MRzmJYxeQJN7CrWqbo
-X-Gm-Gg: ASbGncuRda4XFEVfeDKqcRtczEyxgbRDxHfGYj858HRvHRIBalFjv+78//2OSINPO5m
-	0stn+QtV7vVxTPScmvETjDSQS8OI35sLRLDdImTY82457UupKu7s75XzAIjz+A0ACoOHYnOV27c
-	/ki8UZhXe73oDH7w3dtWt4la8U48lEbKkI5Af1B5lRIE6c7Zg//v7TIR1oHV/11n/YoBoPWp1Cm
-	BzHxHi9tqN8vl2baOGWkAvUT1Dk4Z5PQVCD39884UvTFjWvNSR3LuL/rSf8bupe5j5mSdZ62O7W
-	O2eJC3BeYv+yuxfFg3e4TPAsIBJvP/o7RDqfoHdfMEJx/MS1C0laIcR8LJpugVII3Vkea5aTtba
-	L5FPUqAY=
-X-Google-Smtp-Source: AGHT+IEMpagG6TfDMWsd4PaHLbt64WDw3wuuBzpUTGHseeLoF3CNFN3ySWAagT01W26Pujp1VTRWLQ==
-X-Received: by 2002:a05:690c:7092:b0:709:1529:c24f with SMTP id 00721157ae682-7164d26dba4mr55420177b3.4.1751487249337;
-        Wed, 02 Jul 2025 13:14:09 -0700 (PDT)
+        bh=Ka2lHJKibszvD814XqK78W02tftJp26/CMGv/fNrDPI=;
+        b=AKH6EgeCWqMKEQjSQcghwZgMGkc5oPR7WerQXCHumd8EcPdkb10q3F5F+cF+u64+gj
+         QC825mK3IXxKDBfPLYpsH6t6t8N8X0BbOO2HAffM3GjgBGAFDBByY/wQKzWYXe2w5YAu
+         fSj7ZIk3R6aOIfIw/+4j1dPwXxEsMAizwW4SRP4Ltdz0rYgnwFRXaWELzJZ0PbkqncTd
+         NXb3+ieJLigwGxBZrRkpBXU8c5QG6xOZZuC9nkzd9qINcp2IrC5MNJmSzgoeXHzWQ8Lc
+         9ftNDsUUPSq1mrr9GQe8Y4N5ngRM8bms0kxrqR86Is5OMl57WP/TQo/J89wqSnwggcZf
+         SfMw==
+X-Forwarded-Encrypted: i=1; AJvYcCWxECp0bd+RDn39fGloeRx+ywuXXCsZbrFLxxWF/FaqyFNp2rUc8oMbNfqsH9HAgt8LABB/VcdUY0A=@vger.kernel.org, AJvYcCXKo2oH1jraTCNmeYOTP2IfHC1S8BdFJ2IYeVwu0uZtnQ1Bhsm+Pct11l9N6puUsF06dqhhTQMl/AdQ8Kjg@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMoIF/gqCQCNVDYO6iq2cCERavnvTvYsO0XViNNFup3vxd8vWG
+	JyeVLo4eSbJDLzDywFoboAyOE3+2k30TmReIGTrq+mJ8WaM93PBS4ct7
+X-Gm-Gg: ASbGncutaZMj4k2Km/xQO0tunpofcw//VQu0A3wIJFgIf7yGBuqm/deVLEj3qHIwewV
+	Ei8+8jmy42uRoTfiH7/rkwgmJso70EFek5g0qp7rSZYeYqpFqDPut33GJ5ZC6gPpWd7dCwiGurq
+	DOzd0WKvhhYJM/91JLkRWVodu5LPLe7Fi/Ib2wah5s/HKuafpSub0M65iMQbmw1w1PTa/TeiGlz
+	u2jAcDK0Dmrn+gwJSUGsCby08UyiAcQoAgy8vRynoKMSpV2nNayHPPuaDGj6tRsxwvlhlT6//g7
+	es0qvsvhC+q5vzcZGUc1c4jIXogyMxrUYPM3EqGr/B9a5strIOKb6tpncvr3af/C0hJQV3G5DTY
+	6SzFWcv1UIjzDfsXThQ==
+X-Google-Smtp-Source: AGHT+IE3dlhWUQcRHaBMecK1cT77BYAqbxJi6TZDV3Mx4tnnVo3pxRt5aw3J+eVaop43IyeQiBIT1A==
+X-Received: by 2002:a05:690c:6513:b0:70f:8884:a5fc with SMTP id 00721157ae682-7164d27d031mr57275137b3.4.1751487257720;
+        Wed, 02 Jul 2025 13:14:17 -0700 (PDT)
 Received: from bijan-laptop.attlocal.net ([2600:1700:680e:c000:873e:8f35:7cd8:3fe3])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-71515cb4347sm26124157b3.83.2025.07.02.13.14.05
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-71515cb4347sm26124157b3.83.2025.07.02.13.14.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 13:14:08 -0700 (PDT)
+        Wed, 02 Jul 2025 13:14:17 -0700 (PDT)
 From: Bijan Tabatabai <bijan311@gmail.com>
 To: damon@lists.linux.dev,
 	linux-mm@kvack.org,
@@ -72,9 +72,9 @@ Cc: sj@kernel.org,
 	emirakhur@micron.com,
 	ajayjoshi@micron.com,
 	vtavarespetr@micron.com
-Subject: [RFC PATCH v3 02/13] mm/damon/core: add damos->migrate_dests field
-Date: Wed,  2 Jul 2025 15:13:25 -0500
-Message-ID: <20250702201337.5780-3-bijan311@gmail.com>
+Subject: [RFC PATCH v3 03/13] mm/damon/sysfs-schemes: implement DAMOS action destinations directory
+Date: Wed,  2 Jul 2025 15:13:26 -0500
+Message-ID: <20250702201337.5780-4-bijan311@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250702201337.5780-1-bijan311@gmail.com>
 References: <20250702201337.5780-1-bijan311@gmail.com>
@@ -88,80 +88,294 @@ Content-Transfer-Encoding: 8bit
 
 From: SeongJae Park <sj@kernel.org>
 
-Add a new field to 'struct damos', namely migrate_dests, to allow DAMON
-API callers specify multiple migration destination nodes and their
-weights.  Also update 'struct damos' creation and destruction functions
-accordingly to initialize the new field and free up the API
-caller-allocated buffers on those, respectively.
+DAMOS_MIGRATE_{HOT,COLD} can have multiple action destinations and their
+weights.  Implement sysfs directory named 'dests' under each scheme
+directory to let DAMON sysfs ABI users utilize the feature.  The
+interface is similar to other multiple parameters directory like
+kdamonds or filters.  The directory contains only nr_dests file
+initially.  Writing a number of desired destinations to nr_dests creates
+directories of the number.  Each of the created directories has two
+files named id and weight.  Users can then write the destination's
+identifier (node id in case of DAMOS_MIGRATE_*) and weight to the files.
 
 Signed-off-by: SeongJae Park <sj@kernel.org>
-Signed-off-by: Bijan Tabatabai <bijantabatab@micron.com>
 ---
- include/linux/damon.h | 13 ++++++++++---
- mm/damon/core.c       |  4 ++++
- 2 files changed, 14 insertions(+), 3 deletions(-)
+ mm/damon/sysfs-schemes.c | 225 ++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 224 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/damon.h b/include/linux/damon.h
-index 24d387a972dd..6f0b0806236d 100644
---- a/include/linux/damon.h
-+++ b/include/linux/damon.h
-@@ -470,6 +470,7 @@ struct damos_migrate_dests {
-  * @apply_interval_us:	The time between applying the @action.
-  * @quota:		Control the aggressiveness of this scheme.
-  * @wmarks:		Watermarks for automated (in)activation of this scheme.
-+ * @migrate_dests:	Destination nodes if @action is "migrate_{hot,cold}".
-  * @target_nid:		Destination node if @action is "migrate_{hot,cold}".
-  * @filters:		Additional set of &struct damos_filter for &action.
-  * @ops_filters:	ops layer handling &struct damos_filter objects list.
-@@ -488,9 +489,12 @@ struct damos_migrate_dests {
-  * monitoring context are inactive, DAMON stops monitoring either, and just
-  * repeatedly checks the watermarks.
-  *
-+ * @migrate_dests specifies multiple migration target nodes with different
-+ * weights for migrate_hot or migrate_cold actions.  @target_nid is ignored if
-+ * this is set.
-+ *
-  * @target_nid is used to set the migration target node for migrate_hot or
-- * migrate_cold actions, which means it's only meaningful when @action is either
-- * "migrate_hot" or "migrate_cold".
-+ * migrate_cold actions, and @migrate_dests is unset.
-  *
-  * Before applying the &action to a memory region, &struct damon_operations
-  * implementation could check pages of the region and skip &action to respect
-@@ -533,7 +537,10 @@ struct damos {
- 	struct damos_quota quota;
- 	struct damos_watermarks wmarks;
- 	union {
--		int target_nid;
-+		struct {
-+			int target_nid;
-+			struct damos_migrate_dests migrate_dests;
-+		};
- 	};
- 	struct list_head filters;
- 	struct list_head ops_filters;
-diff --git a/mm/damon/core.c b/mm/damon/core.c
-index bc2e58c1222d..a4c3cfe531df 100644
---- a/mm/damon/core.c
-+++ b/mm/damon/core.c
-@@ -407,6 +407,7 @@ struct damos *damon_new_scheme(struct damos_access_pattern *pattern,
- 	scheme->wmarks = *wmarks;
- 	scheme->wmarks.activated = true;
+diff --git a/mm/damon/sysfs-schemes.c b/mm/damon/sysfs-schemes.c
+index 601360e9b521..b9434cdaacdc 100644
+--- a/mm/damon/sysfs-schemes.c
++++ b/mm/damon/sysfs-schemes.c
+@@ -1655,6 +1655,204 @@ static const struct kobj_type damon_sysfs_access_pattern_ktype = {
+ 	.default_groups = damon_sysfs_access_pattern_groups,
+ };
  
-+	scheme->migrate_dests = (struct damos_migrate_dests){};
- 	scheme->target_nid = target_nid;
- 
- 	return scheme;
-@@ -449,6 +450,9 @@ void damon_destroy_scheme(struct damos *s)
- 
- 	damos_for_each_filter_safe(f, next, s)
- 		damos_destroy_filter(f);
++/*
++ * dest (action destination) directory
++ */
 +
-+	kfree(s->migrate_dests.node_id_arr);
-+	kfree(s->migrate_dests.weight_arr);
- 	damon_del_scheme(s);
- 	damon_free_scheme(s);
++struct damos_sysfs_dest {
++	struct kobject kobj;
++	unsigned int id;
++	unsigned int weight;
++};
++
++static struct damos_sysfs_dest *damos_sysfs_dest_alloc(void)
++{
++	return kzalloc(sizeof(struct damos_sysfs_dest), GFP_KERNEL);
++}
++
++static ssize_t id_show(
++		struct kobject *kobj, struct kobj_attribute *attr, char *buf)
++{
++	struct damos_sysfs_dest *dest = container_of(kobj,
++			struct damos_sysfs_dest, kobj);
++
++	return sysfs_emit(buf, "%u\n", dest->id);
++}
++
++static ssize_t id_store(struct kobject *kobj,
++		struct kobj_attribute *attr, const char *buf, size_t count)
++{
++	struct damos_sysfs_dest *dest = container_of(kobj,
++			struct damos_sysfs_dest, kobj);
++	int err = kstrtouint(buf, 0, &dest->id);
++
++	return err ? err : count;
++}
++
++static ssize_t weight_show(
++		struct kobject *kobj, struct kobj_attribute *attr, char *buf)
++{
++	struct damos_sysfs_dest *dest = container_of(kobj,
++			struct damos_sysfs_dest, kobj);
++
++	return sysfs_emit(buf, "%u\n", dest->weight);
++}
++
++static ssize_t weight_store(struct kobject *kobj,
++		struct kobj_attribute *attr, const char *buf, size_t count)
++{
++	struct damos_sysfs_dest *dest = container_of(kobj,
++			struct damos_sysfs_dest, kobj);
++	int err = kstrtouint(buf, 0, &dest->weight);
++
++	return err ? err : count;
++}
++
++static void damos_sysfs_dest_release(struct kobject *kobj)
++{
++	struct damos_sysfs_dest *dest = container_of(kobj,
++			struct damos_sysfs_dest, kobj);
++	kfree(dest);
++}
++
++static struct kobj_attribute damos_sysfs_dest_id_attr =
++		__ATTR_RW_MODE(id, 0600);
++
++static struct kobj_attribute damos_sysfs_dest_weight_attr =
++		__ATTR_RW_MODE(weight, 0600);
++
++static struct attribute *damos_sysfs_dest_attrs[] = {
++	&damos_sysfs_dest_id_attr.attr,
++	&damos_sysfs_dest_weight_attr.attr,
++	NULL,
++};
++ATTRIBUTE_GROUPS(damos_sysfs_dest);
++
++static const struct kobj_type damos_sysfs_dest_ktype = {
++	.release = damos_sysfs_dest_release,
++	.sysfs_ops = &kobj_sysfs_ops,
++	.default_groups = damos_sysfs_dest_groups,
++};
++
++/*
++ * dests (action destinations) directory
++ */
++
++struct damos_sysfs_dests {
++	struct kobject kobj;
++	struct damos_sysfs_dest **dests_arr;
++	int nr;
++};
++
++static struct damos_sysfs_dests *
++damos_sysfs_dests_alloc(void)
++{
++	return kzalloc(sizeof(struct damos_sysfs_dests), GFP_KERNEL);
++}
++
++static void damos_sysfs_dests_rm_dirs(
++		struct damos_sysfs_dests *dests)
++{
++	struct damos_sysfs_dest **dests_arr = dests->dests_arr;
++	int i;
++
++	for (i = 0; i < dests->nr; i++)
++		kobject_put(&dests_arr[i]->kobj);
++	dests->nr = 0;
++	kfree(dests_arr);
++	dests->dests_arr = NULL;
++}
++
++static int damos_sysfs_dests_add_dirs(
++		struct damos_sysfs_dests *dests, int nr_dests)
++{
++	struct damos_sysfs_dest **dests_arr, *dest;
++	int err, i;
++
++	damos_sysfs_dests_rm_dirs(dests);
++	if (!nr_dests)
++		return 0;
++
++	dests_arr = kmalloc_array(nr_dests, sizeof(*dests_arr),
++			GFP_KERNEL | __GFP_NOWARN);
++	if (!dests_arr)
++		return -ENOMEM;
++	dests->dests_arr = dests_arr;
++
++	for (i = 0; i < nr_dests; i++) {
++		dest = damos_sysfs_dest_alloc();
++		if (!dest) {
++			damos_sysfs_dests_rm_dirs(dests);
++			return -ENOMEM;
++		}
++
++		err = kobject_init_and_add(&dest->kobj,
++				&damos_sysfs_dest_ktype,
++				&dests->kobj, "%d", i);
++		if (err) {
++			kobject_put(&dest->kobj);
++			damos_sysfs_dests_rm_dirs(dests);
++			return err;
++		}
++
++		dests_arr[i] = dest;
++		dests->nr++;
++	}
++	return 0;
++}
++
++static ssize_t nr_dests_show(struct kobject *kobj,
++		struct kobj_attribute *attr, char *buf)
++{
++	struct damos_sysfs_dests *dests = container_of(kobj,
++			struct damos_sysfs_dests, kobj);
++
++	return sysfs_emit(buf, "%d\n", dests->nr);
++}
++
++static ssize_t nr_dests_store(struct kobject *kobj,
++		struct kobj_attribute *attr, const char *buf, size_t count)
++{
++	struct damos_sysfs_dests *dests;
++	int nr, err = kstrtoint(buf, 0, &nr);
++
++	if (err)
++		return err;
++	if (nr < 0)
++		return -EINVAL;
++
++	dests = container_of(kobj, struct damos_sysfs_dests, kobj);
++
++	if (!mutex_trylock(&damon_sysfs_lock))
++		return -EBUSY;
++	err = damos_sysfs_dests_add_dirs(dests, nr);
++	mutex_unlock(&damon_sysfs_lock);
++	if (err)
++		return err;
++
++	return count;
++}
++
++static void damos_sysfs_dests_release(struct kobject *kobj)
++{
++	kfree(container_of(kobj, struct damos_sysfs_dests, kobj));
++}
++
++static struct kobj_attribute damos_sysfs_dests_nr_attr =
++		__ATTR_RW_MODE(nr_dests, 0600);
++
++static struct attribute *damos_sysfs_dests_attrs[] = {
++	&damos_sysfs_dests_nr_attr.attr,
++	NULL,
++};
++ATTRIBUTE_GROUPS(damos_sysfs_dests);
++
++static const struct kobj_type damos_sysfs_dests_ktype = {
++	.release = damos_sysfs_dests_release,
++	.sysfs_ops = &kobj_sysfs_ops,
++	.default_groups = damos_sysfs_dests_groups,
++};
++
+ /*
+  * scheme directory
+  */
+@@ -1672,6 +1870,7 @@ struct damon_sysfs_scheme {
+ 	struct damon_sysfs_stats *stats;
+ 	struct damon_sysfs_scheme_regions *tried_regions;
+ 	int target_nid;
++	struct damos_sysfs_dests *dests;
+ };
+ 
+ struct damos_sysfs_action_name {
+@@ -1762,6 +1961,22 @@ static int damon_sysfs_scheme_set_access_pattern(
+ 	return err;
  }
+ 
++static int damos_sysfs_set_dests(struct damon_sysfs_scheme *scheme)
++{
++	struct damos_sysfs_dests *dests = damos_sysfs_dests_alloc();
++	int err;
++
++	if (!dests)
++		return -ENOMEM;
++	err = kobject_init_and_add(&dests->kobj, &damos_sysfs_dests_ktype,
++			&scheme->kobj, "dests");
++	if (err)
++		kobject_put(&dests->kobj);
++	else
++		scheme->dests = dests;
++	return err;
++}
++
+ static int damon_sysfs_scheme_set_quotas(struct damon_sysfs_scheme *scheme)
+ {
+ 	struct damon_sysfs_quotas *quotas = damon_sysfs_quotas_alloc();
+@@ -1894,9 +2109,12 @@ static int damon_sysfs_scheme_add_dirs(struct damon_sysfs_scheme *scheme)
+ 	err = damon_sysfs_scheme_set_access_pattern(scheme);
+ 	if (err)
+ 		return err;
+-	err = damon_sysfs_scheme_set_quotas(scheme);
++	err = damos_sysfs_set_dests(scheme);
+ 	if (err)
+ 		goto put_access_pattern_out;
++	err = damon_sysfs_scheme_set_quotas(scheme);
++	if (err)
++		goto put_dests_out;
+ 	err = damon_sysfs_scheme_set_watermarks(scheme);
+ 	if (err)
+ 		goto put_quotas_access_pattern_out;
+@@ -1927,6 +2145,9 @@ static int damon_sysfs_scheme_add_dirs(struct damon_sysfs_scheme *scheme)
+ put_quotas_access_pattern_out:
+ 	kobject_put(&scheme->quotas->kobj);
+ 	scheme->quotas = NULL;
++put_dests_out:
++	kobject_put(&scheme->dests->kobj);
++	scheme->dests = NULL;
+ put_access_pattern_out:
+ 	kobject_put(&scheme->access_pattern->kobj);
+ 	scheme->access_pattern = NULL;
+@@ -1937,6 +2158,8 @@ static void damon_sysfs_scheme_rm_dirs(struct damon_sysfs_scheme *scheme)
+ {
+ 	damon_sysfs_access_pattern_rm_dirs(scheme->access_pattern);
+ 	kobject_put(&scheme->access_pattern->kobj);
++	kobject_put(&scheme->dests->kobj);
++	damos_sysfs_dests_rm_dirs(scheme->dests);
+ 	damon_sysfs_quotas_rm_dirs(scheme->quotas);
+ 	kobject_put(&scheme->quotas->kobj);
+ 	kobject_put(&scheme->watermarks->kobj);
 -- 
 2.43.5
 
