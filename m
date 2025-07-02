@@ -1,163 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7820D8F77
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 02:31:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4F4716E863
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 02:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751423503; cv=none; b=pqBNYfciswNK0y2pIRZA3TMi2IyyrN379VSQNC4sKTGoEmUgKTRQi20HhVw/bApJnVRqzvsVO518KUx4m/aXvrpZTD2QXFohwhiM4v9oBFJMYVVR7LOL8YkFFZQlASzWxoNHQYiDkyN9Hq7r6m6XYYFMeF1leUZH+IWsVWld0gY=
+	t=1751423600; cv=none; b=DvWe13QS/Jy16xmUvuyu1IoZ+JKb6sTKZgjIrAWF3b2EssWW0wuq2R6iVCGgB7JgDMpq04olrE+S5N71FnpUBJp3WkiX1FL+rJ5zdbUD5b2N/gn2Vi2zkVx61Ma589xT/6U8fopTDTlixW/xVXGh+D2JhKKCMa1wQFnSpcuY9I8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751423503; c=relaxed/simple;
-	bh=6iQ7WmwuVdriz7MaoWsLX07A7ttd5u5ifqXXe5zPMAw=;
+	s=arc-20240116; t=1751423600; c=relaxed/simple;
+	bh=kYJRSf3Gn5sMpfF/6A1FwMCKjt3zxN26Pr+Lm2aRllY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PCvH/iO1Sqc5CvkDdqMT7gBbRahCc+icHy27pO1Vg8edreSKZg9L80++qaUdzO+TMSK+jqEI4HeTYfCp9qiW9Gv91IBcdH/F9l5vBXMGLMtiyE/b1mdTmN9SZXg6hboFLbgnWUIyKmqubMb+29DxR39Vmw2Ve0dMW6UfwW6dwvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WP1czUgT; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=riGAYQm/caBBka9z3ojHC8ur41tZSO7xlGykav/Dkzx2Bv6fp3wxI/Xoe0/bZQ1IHRrj97YmPxZ5OBgzSJ0YEQX4zyIHUK7iGGLfVcoOnoGHwK+r1vZamc4CDzQzbit7Ffty/0cOLurdRIF0HNbt4JatXx0T8tKyMIw2BxYebhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OZKHoe2n; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WP1czUgT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751423501; x=1782959501;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6iQ7WmwuVdriz7MaoWsLX07A7ttd5u5ifqXXe5zPMAw=;
-  b=WP1czUgT3Llk4pcVMg2S4i64LReU24ShclBZKOSmzLEPISfU/G+ausNV
-   piDZeYAM+mYedsryxj76QI8/tX1fAgp8WJEXr3h3pg6XbsTdRq/ZeLFyw
-   TONlyvAUq1siuYPYLpitlfcE3lmbjxfT0QqYTtZVXE65qL5we/uWKQZmE
-   52aHTSsVbclkj9m0Kkxg/tAtXojQTyCjfurNS589oI10w9vwcobwIwiug
-   V7sbpmuDFabYC/d2P4gjUcrJx8VoUoXClNn1cCJ5up4Ze1iQr3vvSpUV1
-   AzUU3olRiH898RTN4/MxRouCIPZMaJCVaKbbihhMf/9n8sBHDXFxQbvQ7
-   g==;
-X-CSE-ConnectionGUID: HlGREMdpR0+cj0xabIeD+w==
-X-CSE-MsgGUID: gopRJx1NQyKGqCGwhHg7lQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="65053522"
-X-IronPort-AV: E=Sophos;i="6.16,280,1744095600"; 
-   d="scan'208";a="65053522"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 19:31:41 -0700
-X-CSE-ConnectionGUID: F+T+WGjNRAaqpghHlNfwsw==
-X-CSE-MsgGUID: m7KRpRdwTCG7dUqw7NMSbw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,280,1744095600"; 
-   d="scan'208";a="184980877"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa002.jf.intel.com with ESMTP; 01 Jul 2025 19:31:38 -0700
-Date: Wed, 2 Jul 2025 10:23:41 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: "Tian, Kevin" <kevin.tian@intel.com>,
-	"will@kernel.org" <will@kernel.org>,
-	"aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"joro@8bytes.org" <joro@8bytes.org>,
-	"robin.murphy@arm.com" <robin.murphy@arm.com>,
-	"shuah@kernel.org" <shuah@kernel.org>,
-	"nicolinc@nvidia.com" <nicolinc@nvidia.com>,
-	"aik@amd.com" <aik@amd.com>,
-	"Williams, Dan J" <dan.j.williams@intel.com>,
-	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-	"Xu, Yilun" <yilun.xu@intel.com>
-Subject: Re: [PATCH v3 2/5] iommufd: Destroy vdevice on idevice destroy
-Message-ID: <aGSYLVmV17g832Ta@yilunxu-OptiPlex-7050>
-References: <20250627033809.1730752-1-yilun.xu@linux.intel.com>
- <20250627033809.1730752-3-yilun.xu@linux.intel.com>
- <BL1PR11MB52712CE938B57E41C34580908C46A@BL1PR11MB5271.namprd11.prod.outlook.com>
- <aGJkitx6wjfQ888t@yilunxu-OptiPlex-7050>
- <20250630145051.GY167785@nvidia.com>
- <aGOoCa3BkV7KrwVz@yilunxu-OptiPlex-7050>
- <20250701121315.GD167785@nvidia.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OZKHoe2n"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751423597;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jbPIEReb3xkWAZWAXZfMhbsS92bXSTORD10Gzf+15sA=;
+	b=OZKHoe2njTVJFprwPNfNjFfwHsLSFOtai0CJ059i1UAunC3yE0+8E8NgK6rMvnw3oHrp4d
+	c7HnVwVs2cNfIR/Kl1bNroLAb3y7GiR5i6pg7RfMJyiR15WGlbEg0PCdDC/SdowWIyVG8J
+	oqsg/w1QELHnNTct/SvO/cgDRmqiYBI=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-626-gfpB-GDIMGK_xLIBuMXB0w-1; Tue,
+ 01 Jul 2025 22:33:12 -0400
+X-MC-Unique: gfpB-GDIMGK_xLIBuMXB0w-1
+X-Mimecast-MFC-AGG-ID: gfpB-GDIMGK_xLIBuMXB0w_1751423590
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 993F31944A83;
+	Wed,  2 Jul 2025 02:33:09 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.27])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D7137195608F;
+	Wed,  2 Jul 2025 02:33:00 +0000 (UTC)
+Date: Wed, 2 Jul 2025 10:32:54 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: Nilay Shroff <nilay@linux.ibm.com>, josef@toxicpanda.com,
+	axboe@kernel.dk, hch@infradead.org, hare@suse.de,
+	linux-block@vger.kernel.org, nbd@other.debian.org,
+	linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
+	yangerkun@huawei.com, johnny.chenyi@huawei.com,
+	"yukuai (C)" <yukuai3@huawei.com>
+Subject: Re: [PATCH] nbd: fix false lockdep deadlock warning
+Message-ID: <aGSaVhiH2DeTvtdr@fedora>
+References: <20250627092348.1527323-1-yukuai1@huaweicloud.com>
+ <aF56oVEzTygIOUTN@fedora>
+ <c2fbaacc-62a1-4a98-4157-2637b7f242b7@huaweicloud.com>
+ <197b6dca-56be-438d-a60f-21011367c5ed@linux.ibm.com>
+ <99b4afce-de05-ddcb-2634-b19214cf4534@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250701121315.GD167785@nvidia.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <99b4afce-de05-ddcb-2634-b19214cf4534@huaweicloud.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Tue, Jul 01, 2025 at 09:13:15AM -0300, Jason Gunthorpe wrote:
-> On Tue, Jul 01, 2025 at 05:19:05PM +0800, Xu Yilun wrote:
-> > On Mon, Jun 30, 2025 at 11:50:51AM -0300, Jason Gunthorpe wrote:
-> > > On Mon, Jun 30, 2025 at 06:18:50PM +0800, Xu Yilun wrote:
-> > > 
-> > > > I need to reconsider this, seems we need a dedicated vdev lock to
-> > > > synchronize concurrent vdev abort/destroy.
-> > > 
-> > > It is not possible to be concurrent
-> > > 
-> > > destroy is only called once after it is no longer possible to call
-> > > abort.
-> > 
-> > I'm almost about to drop the "abort twice" idea. [1]
-> > 
-> > [1]: https://lore.kernel.org/linux-iommu/20250625123832.GF167785@nvidia.com/
-> > 
-> > See from the flow below,
-> > 
-> >   T1. iommufd_device_unbind(idev)
-> > 	iommufd_device_destroy(obj)
-> > 		mutex_lock(&idev->igroup->lock)
-> >  		iommufd_vdevice_abort(idev->vdev.obj)
-> > 		mutex_unlock(&idev->igroup->lock)
-> > 	kfree(obj)
-> > 
-> >   T2. iommufd_destroy(vdev_id)
-> > 	iommufd_vdevice_destroy(obj)
-> > 		mutex_lock(&vdev->idev->igroup->lock)
-> > 		iommufd_vdevice_abort(obj);
-> > 		mutex_unlock(&vdev->idev->igroup->lock)
-> > 	kfree(obj)
-> > 
-> > iommufd_vdevice_destroy() will access idev->igroup->lock, but it is
-> > possible the idev is already freed at that time:
-> > 
-> >                                             iommufd_destroy(vdev_id)
-> >                                             iommufd_vdevice_destroy(obj)
-> >   iommufd_device_unbind(idev)
-> >   iommufd_device_destroy(obj)
-> >   mutex_lock(&idev->igroup->lock)
-> >                                             mutex_lock(&vdev->idev->igroup->lock) (wait)
-> >   iommufd_vdevice_abort(idev->vdev.obj)
-> >   mutex_unlock(&idev->igroup->lock)
-> >   kfree(obj)
-> >                                             mutex_lock(&vdev->idev->igroup->lock) (PANIC)
-> >                                             iommufd_vdevice_abort(obj)
-> >                                             ...
+On Wed, Jul 02, 2025 at 09:12:09AM +0800, Yu Kuai wrote:
+> Hi,
 > 
-> Yes, you can't touch idev inside the destroy function at all, under
-> any version. idev is only valid if you have a refcount on vdev.
+> 在 2025/07/01 21:28, Nilay Shroff 写道:
+> > 
+> > 
+> > On 6/28/25 6:18 AM, Yu Kuai wrote:
+> > > Hi,
+> > > 
+> > > 在 2025/06/27 19:04, Ming Lei 写道:
+> > > > I guess the patch in the following link may be simper, both two take
+> > > > similar approach:
+> > > > 
+> > > > https://lore.kernel.org/linux-block/aFjbavzLAFO0Q7n1@fedora/
+> > > 
+> > > I this the above approach has concurrent problems if nbd_start_device
+> > > concurrent with nbd_start_device:
+> > > 
+> > > t1:
+> > > nbd_start_device
+> > > lock
+> > > num_connections = 1
+> > > unlock
+> > >      t2:
+> > >      nbd_add_socket
+> > >      lock
+> > >      config->num_connections++
+> > >      unlock
+> > >          t3:
+> > >          nbd_start_device
+> > >          lock
+> > >          num_connections = 2
+> > >          unlock
+> > >          blk_mq_update_nr_hw_queues
+> > > 
+> > > blk_mq_update_nr_hw_queues
+> > > //nr_hw_queues updated to 1 before failure
+> > > return -EINVAL
+> > > 
+> > 
+> > In the above case, yes I see that t1 would return -EINVAL (as
+> > config->num_connections doesn't match with num_connections)
+> > but then t3 would succeed to update nr_hw_queue (as both
+> > config->num_connections and num_connections set to 2 this
+> > time). Isn't it? If yes, then the above patch (from Ming)
+> > seems good.
 > 
-> But why are you touching this lock? Arrange things so abort doesn't
-> touch the idev??
+> Emm, I'm confused, If you agree with the concurrent process, then
+> t3 update nr_hw_queues to 2 first and return sucess, later t1 update
+> nr_hw_queues back to 1 and return failure.
 
-idev has a pointer idev->vdev to track the vdev's lifecycle.
-idev->igroup->lock protects the pointer. At the end of
-iommufd_vdevice_destroy() this pointer should be NULLed so that idev
-knows vdev is really destroyed.
+It should be easy to avoid failure by simple retrying.
 
-I haven't found a safer way for vdev to sync up its validness with idev
-w/o touching idev.
-
-I was thinking of using vdev->idev and some vdev lock for tracking
-instead. Then iommufd_vdevice_abort() doesn't touch idev. But it is
-still the same, just switch to put idev in risk:
-
-
-                                               iommufd_destroy(vdev_id)
-                                               iommufd_vdevice_destroy(obj)
-  iommufd_device_unbind(idev)
-  iommufd_device_destroy(obj)
-                                               mutex_lock(&vdev->some_lock)
-  mutex_lock(&idev->vdev->some_lock) (wait)
-                                               iommufd_vdevice_abort(obj)
-                                               mutex_unlock(&vdev->some_lock)
-                                               kfree(obj)
-  mutex_lock(&idev->vdev->some_lock) (PANIC)
-  iommufd_vdevice_abort(idev->vdev.obj)
-  ...
 
 Thanks,
-Yilun
+Ming
+
