@@ -1,83 +1,102 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF06BA2E;
-	Wed,  2 Jul 2025 22:49:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5ED515624B;
+	Wed,  2 Jul 2025 22:50:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751496548; cv=none; b=DMIC2L8w7AcM1h9o1KUu7nnGSl31d9fvA4UfXLa+vLlRxrv575XhdBy1ayOr9ET9mZrRjBeJx6NnBACEfCMfhVG4fUhcTHAXR1TZfHq4xIoCEKtQStTegN+ztLKRP+srWFtkeD6GLPMvarF78HE9Duo+zIIRonejSK9KXOZMOFM=
+	t=1751496601; cv=none; b=CHe4ieK5MskB12CiqQnwRgUImdR5AosrQVXpyff/TdwbB9//qLZ3ce4zNsxlCVOp0hxy7JblRsegr1t/MaeRy/wsmcr4f/7Ml9wuvhuZflE2r4EUQcKfNu0QISE4rmPp8XRCuhfieRiW3v0XXqh1aOq5RESGRoKrNUT4nGWhFKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751496548; c=relaxed/simple;
-	bh=7sfsTdx+tUPNIiil3RGMB/r2QOyuXxj5Gn4QvPuVR+8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=PFLnG+xDEBGm80qSTxZT3AIbBey3AgehbNMRD2BXNp5INKO+tXH6ZZgMEuJu20g2jCb0UtXjA/9j2Msbp1ybORtP17Ow0/O0wDR8kaRhGrqxEPLEJhY3tZlA7w3HPuxzARQYAi9cQ1UTIZ3Vi6Zu64c2pMkgpkx8u114fG6yl58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=rxDPe0ai; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1751496601; c=relaxed/simple;
+	bh=wU8Zhraeh1yNzCGp2EgiAgwWtGMVkPgxeEnPDkPMUmQ=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=FtbGFh1pWWnY/3TXC57UB0MQpn/j9+tOUigkzE7C/pTKEddKeFCMRQm259Y1Fup9VqzFCJ3lXMFD8gCco9GoPrGXhzp2HbvNXItYJZQZ22expYU4pgNV32CQEv71Kwqr1q71fyZfN2dhnEIRAHLhJagOynq3fWu/3iISWnjLVtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jVrQyKke; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="rxDPe0ai"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1751496523;
-	bh=PFNQR8oxtz8YDNknHkqQwZkQ8U1AxZzWZP68KGjo1nk=;
-	h=Date:From:To:Cc:Subject:From;
-	b=rxDPe0aijAdmo7KI6Vwhkfie2/PrI0JQsDhHx1H0qELJboGFgg5MtfPyku8YumuC8
-	 SZfNHbGrDLLOStbOKxK43AiyvpAJslrLKyw+uClnJois42NFi9LswVNSppoNxt3w0l
-	 Q3rRR4BuElJvbqbdaOUiXGf8rivC/zusYehRpRw1ciPye0hB/9UYNNeX0GODGOnNr7
-	 +uK3yMXBfX0aWhsQ6Dcn0LMmD/poNc94AhcpJwIBVz9AiXYVAd6TyCOnVlSu8U3rN3
-	 wsUsk39YzmZ/2pxfDjRJDmhrn4rVzyDjiAEKJV7Nde1S3p0WMWd2RZb/IhbbVkiELH
-	 mst5f9NZwtu/w==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bXZnQ6lgDz4wxJ;
-	Thu,  3 Jul 2025 08:48:42 +1000 (AEST)
-Date: Thu, 3 Jul 2025 08:49:01 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the tip tree
-Message-ID: <20250703084901.7db6e8c7@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jVrQyKke"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A7A4C4CEE7;
+	Wed,  2 Jul 2025 22:50:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751496601;
+	bh=wU8Zhraeh1yNzCGp2EgiAgwWtGMVkPgxeEnPDkPMUmQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=jVrQyKke7z/XJrrGX4841VHebRnBXnTnWdXEQ/R+A7DGSSWvUUOgZWC3bSto1/8Tm
+	 K/1NV62e4vEE5Tc86WqGxfGaqm+ngndIi19aVgFJhoIXiX9qXu35xeg47vqYB2O3tb
+	 NzICAZPxprMVXUQuH/lURQmVCFJ/URxLk02DJsoHh78u+aqt28RUivbvUVTQlNsWJd
+	 gp+E2rLhc0xW5StqAKPyOO3tDGfOYS9YEuE4o/mog+IwwfUHBDGj2eXYZoX4eZ+qEp
+	 1vB8e4kTExtVgqEKPsizDwSRhPevYRwJjGoqm1TrhkdA+P1ibgZnCgfKqPch+COtAu
+	 riLWeU4TbXHkg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB06A383B273;
+	Wed,  2 Jul 2025 22:50:26 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/vzuV2AOnJieYBT.ulbGtpgP";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v12 0/8] Support rate management on traffic
+ classes
+ in devlink and mlx5
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <175149662576.890932.9074896205205825131.git-patchwork-notify@kernel.org>
+Date: Wed, 02 Jul 2025 22:50:25 +0000
+References: <20250629142138.361537-1-mbloch@nvidia.com>
+In-Reply-To: <20250629142138.361537-1-mbloch@nvidia.com>
+To: Mark Bloch <mbloch@nvidia.com>
+Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
+ edumazet@google.com, andrew+netdev@lunn.ch, horms@kernel.org,
+ saeedm@nvidia.com, gal@nvidia.com, leonro@nvidia.com, tariqt@nvidia.com,
+ donald.hunter@gmail.com, jiri@resnulli.us, corbet@lwn.net, leon@kernel.org,
+ chuck.lever@oracle.com, jlayton@kernel.org, neil@brown.name,
+ okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com, shuah@kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-nfs@vger.kernel.org, linux-kselftest@vger.kernel.org
 
---Sig_/vzuV2AOnJieYBT.ulbGtpgP
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hello:
 
-Hi all,
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Commit
+On Sun, 29 Jun 2025 17:21:30 +0300 you wrote:
+> V12:
+> - Fixed YAML indentation in devlink.yaml.
+> - Removed unused total variable from devlink_nl_rate_tc_bw_set().
+> - Quoted shell variables in devlink.sh and split declarations to fix
+>   shellcheck warnings.
+> - Added missing DevlinkFamily imports in selftests to fix pylint
+>   warnings.
+> - Pulled changes from net-next to enable these adjustments:
+>    Inclusion of DevlinkFamily in YNL test libs.
+>    Introduction of nlmsg_for_each_attr_type() macro and its use in nfsd.
+> 
+> [...]
 
-  9dd69f29433d ("bugs/s390: Pass in 'cond_str' to __EMIT_BUG()")
+Here is the summary with links:
+  - [net-next,v12,1/8] netlink: introduce type-checking attribute iteration for nlmsg
+    https://git.kernel.org/netdev/net-next/c/42401c423896
+  - [net-next,v12,2/8] devlink: Extend devlink rate API with traffic classes bandwidth management
+    https://git.kernel.org/netdev/net-next/c/566e8f108fc7
+  - [net-next,v12,3/8] selftest: netdevsim: Add devlink rate tc-bw test
+    https://git.kernel.org/netdev/net-next/c/236156d80d5e
+  - [net-next,v12,4/8] net/mlx5: Add no-op implementation for setting tc-bw on rate objects
+    https://git.kernel.org/netdev/net-next/c/71092821244a
+  - [net-next,v12,5/8] net/mlx5: Add support for setting tc-bw on nodes
+    https://git.kernel.org/netdev/net-next/c/96619c485fa6
+  - [net-next,v12,6/8] net/mlx5: Add traffic class scheduling support for vport QoS
+    https://git.kernel.org/netdev/net-next/c/97733d1e00a0
+  - [net-next,v12,7/8] net/mlx5: Manage TC arbiter nodes and implement full support for tc-bw
+    https://git.kernel.org/netdev/net-next/c/cf7e73770d1b
+  - [net-next,v12,8/8] selftests: drv-net: Add test for devlink-rate traffic class bandwidth distribution
+    https://git.kernel.org/netdev/net-next/c/23ca32e4ead4
 
-is missing a Signed-off-by from its committer.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
---=20
-Cheers,
-Stephen Rothwell
 
---Sig_/vzuV2AOnJieYBT.ulbGtpgP
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhlt10ACgkQAVBC80lX
-0GyDmQf/YyqqUeTLaDAgTMjlFKUfWEVR16q5MsKO/hAISKPCPXqXz3hGmSCOqURm
-MJcg+p5wwHe/4ukG5UF302pdX96kcBxil40vpezsYZ3Rowq+pG2qeUCMG/vOOqhW
-sXPZfScFyeqzjeuGV/cMnwtJd6YcEc+v8FTMhRxihNFz8+6mP58NDNAYI0LdoH+W
-R0hEqAeTreKXUKvYdllSMmQrKU0XX/knOwvmxo2KDOx+9HbFT7DSGoDIT3Au1nOX
-08970n5YONJi4m1btPWFKKsUoxYjKpmvttK03+ddrn3lJj0pheWStWwCrCsTAh6a
-W+QIhG/6gqidcRLHC59nNuDBXjokWg==
-=z+To
------END PGP SIGNATURE-----
-
---Sig_/vzuV2AOnJieYBT.ulbGtpgP--
