@@ -1,308 +1,192 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012045.outbound.protection.outlook.com [52.101.71.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 878CA23183C
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 07:38:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751441915; cv=none; b=LtdtmkYLQgdyK6eWjs+IR6bX2FjtBYANVHiQTCXr8I0t6M6oM3ZOqM2rpeyylmzifbkeTaWIBI2LOjR0MbBppUl/YP1Xv9FFXjUfdqEArLlw3lqNlNcUqPBFzQII1QSN220SHecG0PZ9sMbBTdNlmZ2G38I2i//K8lFW6tC0TB0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751441915; c=relaxed/simple;
-	bh=c30IPQaiUGNEl7fM1rGcDnGKrSqEBWIG7aAcPhqTprk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MaSjenGqZpLRoyT40DhrhgnDoIrr0fFD5axIVXXGWPIEYu9y1MCyydNhFomIZoCwSo6ed+8YN+6xGrH4/hV+5LmWV+1usqZU+94nlcHPE/1BKurM6q/U3JKb/+m8vEStATbAh86ZUyFpl6yt5wxH29YvR3puYnHr/Krig2Sw0Ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=GCJLlQ96; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=1JCKLVk2; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=VWm92vTb; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=vxyUkx6B; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F3CC2236E8;
+	Wed,  2 Jul 2025 07:38:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751441941; cv=fail; b=kpEC5Mn1jK10yL2IqTnHkUDLbId524NctYkEJVtEgcMsuBtWrJe4a/GvqIEzR7lE086k0IWsvzjx/DQiRBnQCe1XuPp+IudDReYHBaZBp1FWIXZ8Y7hBgkDcC7ZlfKWiUUHLEhsmaBslpyDi+23lL/2yTXR61xAAEkqUCi/kBzo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751441941; c=relaxed/simple;
+	bh=9Ky7zSBSuxzt5fJz9HXyu92W+UTWA1vD0tBpqr72auY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=D1RYc4oVu9OGQyBPVkr8+umjHlEU9ztxaxi+0F60Ttd6F5jmPUlH8B2x0SDNnMbUriyK/PLUq2QHOpt1lM6t1mlz/Sliwu8v9IaMqYayvYHua8mqz8ONN+/+cZW4L+FwqOeJan1T1i+f0KRGCvoG4vkE8lW6YKkyV26S2EyVfH8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=XNytxICP; arc=fail smtp.client-ip=52.101.71.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="GCJLlQ96";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1JCKLVk2";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="VWm92vTb";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="vxyUkx6B"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 641031F445;
-	Wed,  2 Jul 2025 07:38:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751441911; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=riCapoqq0VlUAltgWjjftkGcPXlfvx7MXVrHr5p55Zw=;
-	b=GCJLlQ96j767NsD+YRuCaWWiQi2EEHS4CJfMdv/EXq250TFJ1HVa77KJgU6K//9ooe6iA9
-	rcbRlySnI2ynAxesDEoPTcXsUpQ9HapvVnS6MUdvyRcBbgSQRZ/6lSGYRlsY2D8UwzbI2s
-	okUGTUCU01GPBb4znTuxyMEhFE/GI/E=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751441911;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=riCapoqq0VlUAltgWjjftkGcPXlfvx7MXVrHr5p55Zw=;
-	b=1JCKLVk2CSZbv77w2hNJwVFemFzkEfI+bEqWWUZoB3M3qnTVaAt2dFoh/50VC/h77gLTsn
-	sPCnI1FbC148ZSDg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751441910; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=riCapoqq0VlUAltgWjjftkGcPXlfvx7MXVrHr5p55Zw=;
-	b=VWm92vTb6PuU9St9w0UT7zK6D85HKjM8oF8r9nQjZh/SUqvGqHpliVAdH3dQqrwDqMkhxp
-	OQSJVFDWyQbEUZsNmI7zf3ihF4gTevwRkPmI0ziUDzcuaaU/qvz7c5tXrwRUEpJbHNpBVZ
-	lHXrLs2R4IeVGIv/BJbMk8bDtct4Ohc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751441910;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=riCapoqq0VlUAltgWjjftkGcPXlfvx7MXVrHr5p55Zw=;
-	b=vxyUkx6BCvyWWIPmqWmpwMLDJu/BSqWMRPfsdFbWLLQgdOoIoTOkmJRNJ2X/wkNj1d5Tp0
-	CXvKxIjAPNxfPHCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1690713A24;
-	Wed,  2 Jul 2025 07:38:30 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id V5cZBPbhZGhrPgAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Wed, 02 Jul 2025 07:38:30 +0000
-Message-ID: <d1a180d8-77fb-4416-8c6a-7f39315f8f0c@suse.de>
-Date: Wed, 2 Jul 2025 09:38:29 +0200
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="XNytxICP"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=EzXCXElIY6nFmI32tCczPhygzGJ9pH5QxMl2ZVWCmXODiaT19wVAqjw7zmPwLK6LRUNqe20++KDeNO80ZE+INat+iIB4P3gg/qoOMnAxXHSoBrm6kXE3y9x9NGGRKo8HKMuBFwFodq5bboM30HkfA7bycRc2mrgz7ZQoSDKCIGBLvYoDwThl0BAdVjTYdrsu6Yo+rDsq5X/RsTaE9nxhqZJobwAYtIEDSeRT3N0uUQT3M+zAkR9FU+L5/4QyBzO42S2dKBskTJjBUSMm4BBD/XeTCF4aHeYS8naTLULDulbYCFkrSyismEmmuCb5drOjmOmcHdE+qEWOo9AnCD5xoQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9Ky7zSBSuxzt5fJz9HXyu92W+UTWA1vD0tBpqr72auY=;
+ b=fLjUVG35RBv87pP8wAtx8BCvQkFTXWOfp6CusqrOOlsuN8BceGqDz0QLggBmvlqdNGHwpNo15VuAkT7xmlykdRWgxJ+lTeEVS0PmCK8oMjHi9qkUvM0jKcM/LvHjJWV4HI6b+k5tK2K2UCMYOR+GxU5TCfNGbUSrsh7CtQWf9C0otrZg3NRBgjESbR/eU3y9rbpEpB+lqmHr6Da1eeq0NbFIgM1rvrsnH4LWteDLz/7s5Snm0y608QuQIok3GpNVK2NegKI5Lt5v2dJ8jL+dACxvHkKduGsJd0NPd0ZURRLEqDr2pL2JBQWH0qybTzrdNtE5t1dIP9KgjiB2JZgFUg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9Ky7zSBSuxzt5fJz9HXyu92W+UTWA1vD0tBpqr72auY=;
+ b=XNytxICPmZ1nH9CSRosS4Gq4Ft/DMN1B65+pjYbzdiNm4OwCEwxTQ0QFMeqD2DLrDPFxg8b9e+BSoJA/uJKrZ1yBF5vJqL1Y25lFrDLZVSGW2Pfjx8RiDpp7F10Z2yDa56rmnO5HG7XM9of4TIjU3btJSzyRvEvQq6sO0eub+COs2/W0YtbGKSFnYrOPNILRCugzDr8xW3ORGqcFp1KWg+uHI41M4PHjdyjdhOkIbSxKJ0XClPvoPXFBhbeufzZdpMN2TGLWls2tWeuwS9gL9QGqpNSeP7m7kJelOsUIPWgfcagvMDczT+9lO4BPI5JuNNmpmg3uGI2uMSf3kljc1Q==
+Received: from PA4PR04MB9709.eurprd04.prod.outlook.com (2603:10a6:102:26b::10)
+ by AS8PR04MB8200.eurprd04.prod.outlook.com (2603:10a6:20b:3f8::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.20; Wed, 2 Jul
+ 2025 07:38:56 +0000
+Received: from PA4PR04MB9709.eurprd04.prod.outlook.com
+ ([fe80::1009:ebb:d7ae:4628]) by PA4PR04MB9709.eurprd04.prod.outlook.com
+ ([fe80::1009:ebb:d7ae:4628%3]) with mapi id 15.20.8901.018; Wed, 2 Jul 2025
+ 07:38:56 +0000
+From: Horia Geanta <horia.geanta@nxp.com>
+To: Lukas Bulwahn <lbulwahn@redhat.com>, Pankaj Gupta <pankaj.gupta@nxp.com>,
+	Gaurav Jain <gaurav.jain@nxp.com>, Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S . Miller" <davem@davemloft.net>, "linux-crypto@vger.kernel.org"
+	<linux-crypto@vger.kernel.org>
+CC: "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Lukas Bulwahn
+	<lukas.bulwahn@redhat.com>
+Subject: Re: [PATCH] crypto: caam - avoid option aliasing with the
+ CONFIG_CAAM_QI build option
+Thread-Topic: [PATCH] crypto: caam - avoid option aliasing with the
+ CONFIG_CAAM_QI build option
+Thread-Index: AQHb6no2vx1VfesUD0C7Eksx8njdsLQec8WA
+Date: Wed, 2 Jul 2025 07:38:56 +0000
+Message-ID: <6a8c3e5b-bb6b-400f-a338-9320e20ad2f6@nxp.com>
+References: <20250701112045.18386-1-lukas.bulwahn@redhat.com>
+In-Reply-To: <20250701112045.18386-1-lukas.bulwahn@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Mozilla Thunderbird
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PA4PR04MB9709:EE_|AS8PR04MB8200:EE_
+x-ms-office365-filtering-correlation-id: abfe5527-abda-401a-c691-08ddb93b8065
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|366016|19092799006|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?blA2SmFJUmE2RUFzai9XWDFsZWVXQzFpVTRtaTNUaDA2cjRUcEt1dUh1Y3JN?=
+ =?utf-8?B?Sm5FS0ljMnJxN29NMWoyM3NXK1JVTGxoNzhRZVhzb2h4em43WXZ5MEZtcTFI?=
+ =?utf-8?B?RVM4VDZ3RkN4ZWVhYzI4dzMyUEVWS3dTZzVzdVhzeDhnS0ZiUDhmbzlZVm8x?=
+ =?utf-8?B?NnhZMVpCZFNNZllWR1hZWDF2MW13WS94WXVLUmlMc2wyV3cybWhSUjZOSEhE?=
+ =?utf-8?B?Z2l4V0wwSHB6bDZTbXQ5SDlJZUJYK0JTVit0Mk9nNHlxUkljS3h5dmhJKzhx?=
+ =?utf-8?B?ZWlKVWY0ZXhaWmhvaFUzWUI3ZGpJTkV5ZGhmZGdoUXNFb0tJNkhXZllLOWVy?=
+ =?utf-8?B?R1BWYVROcGN6S3FpLzF0TkttZnY4WGVDUWNsN0VEcVNSR3VpVGs2K0V6WE5H?=
+ =?utf-8?B?WTd6NTZ3cjBEWkxiZzNqUEJnOFNzNEtkMTdvd2crcTYzMDIrV2t2UENtOGU5?=
+ =?utf-8?B?VXZ4YWtldEZvVFd2WEhQNmJOT0ppeDN2c2tZOHNCMVhEd2hPcld2RTgrL1pz?=
+ =?utf-8?B?ZG16WktxMlA2c0dsVEtqN01EU2ZVSzljV2xHSXRaZGM2dXczS2czU0U2QWt6?=
+ =?utf-8?B?RjlTdjhFQ3Z3ejhtRy9nOUs3SHhaOU1jU2pXMzFkM2ZMczZDSmpNTFUwWU5E?=
+ =?utf-8?B?Umt5OUp3cDRhZ0tRVzBTMjJ2dnVaVjZzeFNVaUlIMGhRbXgwSW9jNnlEWmVJ?=
+ =?utf-8?B?NW5WYWI2eENQa0hBRG5aVkNKYi9laDN1bEFRbUVaRjVjckFRVlhaaWVMeGYz?=
+ =?utf-8?B?UVF5WEh6bEdpL2tvKzdLWkFvOWJmV1IrVnFWWEpJU0kzVjZTZk85cmxMalZI?=
+ =?utf-8?B?MWJxOEo1MTQwWnRZK2NKMTYwRFNqZHNSZ0lhcXBPVkhNbmVva2lXci9YNWNS?=
+ =?utf-8?B?b3VLMURLUGhNT1BjRzI0bFgxbnF5RXRUamwxYndUN3pPRGNJZEhHTmxvY0Yy?=
+ =?utf-8?B?RHZrd0Z6MkdPTm5FSG5QNjdmMkVpOHdEVlVNaThKYUhWR2RJQ0J1ZkdrTks2?=
+ =?utf-8?B?RThKTXcxUURpZ3pMVTFndmMxOUV4OTU0enVLTFJwbWlIbVpZY2Y5ZSs4OVlE?=
+ =?utf-8?B?cHRaUUE1V2dzZ2FMdUZyelZ0MUNnQXdMWlJZYmhxdlA1SEtNbWsyNGxHR1RP?=
+ =?utf-8?B?andPZjZVVXJKbEFQQzZINzFobSt2RzExU0ZidEJYMmJMKzhSbmNpZU9jZ2w0?=
+ =?utf-8?B?bTlrc1VqZ0h4K2J5VWdSKzBndmo0S1o4ayswSHRKSEJ2R2w4ZkoxTWRFYVF0?=
+ =?utf-8?B?U2xGdFpaZ2xYTlNxT21oMVYxMGRjZVZFcURMMjRFM21LS0o4WWwvN3RuWTE1?=
+ =?utf-8?B?ZkQ2S1k0VEhGTjIwazJRTXduVW14YVZJWGxwSUkzSnBNdWV2ZURYUktNNXRF?=
+ =?utf-8?B?UmlZR2FyQ1gvL0FYbjUrMnk5ZXZUVkdielEwKzUrekF2RnA4TkdBS1lTYmtz?=
+ =?utf-8?B?RTBkTFhEV2t4Rml5SkZhSTNGaXl4cTdIUXNXTEd5RjRvMy91ZlY5QXBZVFFZ?=
+ =?utf-8?B?ZmhyUXRsc0I0Z2lFejBsZm05YzZVS1ZDYVdVcEtHQzVML3k3UmtCQ1dUWHRl?=
+ =?utf-8?B?VEZaZlpKVFVNMkpxQVAzR3hoOUJkNm9oOURGWGlZeE4wc2tSRXlPNi9rd1Qy?=
+ =?utf-8?B?b2lHVVZ1NlplZFR6cUFaTCtKZzE0WkJqa3BxS3ZHY0cyS1FPM2ViQU94RnU5?=
+ =?utf-8?B?ZGFYZlBreFdXbXZkMnhYVGt0UDcrTGVNS0FXQ3RaeWNSZEJEWE55Q2hLNnc0?=
+ =?utf-8?B?dElqVUk3T0dVU3FsSkJ6VWNVdW52Y3FVMFZkQzdQUWhIVXJRNVkvTm1jbzhH?=
+ =?utf-8?B?SkFYTUh5TzgrMTZIQmF6ZFBha0lIdDFsNThPdWJ6dUo4UkYzSjhCL2p6UCtZ?=
+ =?utf-8?B?aDRVMklaZGM4dlRZVDFOazdndWExSmN3RHhtQWRFakk4V1cwMUtKU0ZGQmNs?=
+ =?utf-8?B?WmNaZmRObWoxYXgrQTNRTkZ0dHhNb2o1dUU5aC9rRlpBdUFNVDZjNU1tbVVU?=
+ =?utf-8?B?RmtxMitJRklBPT0=?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9709.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(19092799006)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?Q1hLTndpOG1RcnFEcjJLMk8wcm1hdjJvU09BQUhCWi9wdmZhL0pvQUZ1bXoy?=
+ =?utf-8?B?VjZZaXYwc0g0WnUwZE8zZTlaeFZRTzhOMFEyckQ3dWI1bWovN1Nqc0tpNGN4?=
+ =?utf-8?B?M01FY1VaY3loaTNJY3M3Yk5HcTlvMEludWk4YjduNVFUT1BsRG45U1A5c2JJ?=
+ =?utf-8?B?djJaWEptNkJwSE1LSUw0anlNUy9kRWFDNkY2SFI0TUlZeEdlblA3NGFyaHJT?=
+ =?utf-8?B?cjloSVh0OTF6Qy8xaStWK3VYUE5BeHAzVXBQZEJZMlFsa2dmQnRaSUowbER3?=
+ =?utf-8?B?QUNCTEZuQjFnUnRWWHBob09QUE9NdXpTSEZ4MjZsY3RGRkE2MjBkZ0Joajda?=
+ =?utf-8?B?dmRLeit4ejZDaUszdHgzVjROZ3k3eHNKbFRRWXFSU0lxWCt3M3poRUFZbjZh?=
+ =?utf-8?B?OGMrM3JJNWdTclpLbTVCemNCZSt5YTFGZ0d6NmNTaHppYWVrMmVaRGQ2ak1u?=
+ =?utf-8?B?Y1lXZkNOM2p1YmxSWmNIajB6QWNya0k4YkIxSGV5WnNWWldhaFlaR0ZyVWhH?=
+ =?utf-8?B?Vmt4aUM3MllFVnk3SWZQd1pVeE1QTmQ4d0Y0N20yaXZRemVqR2wwMkFzOFpK?=
+ =?utf-8?B?cmF0Mm96aU45K0ZYRkY1RWhxZml6UTI0bnRjaGJoenhSYkZSNCt0MGJoTkxO?=
+ =?utf-8?B?cXRWWUhRS0psZGtOT2czOGYxMGphbDhmV0Y3Rjc2Z0NXVS9SalNNT1h2WmNH?=
+ =?utf-8?B?My9kaHdyS2tKaTdiKzhQd0ZhODVzYld0SW9lNzQzOVZicmdDOWxqNmRrL3NX?=
+ =?utf-8?B?dVdoNlQ0TVV3cVhvNytSMlF2SEd0Y0N5MFdlV1Nqd3NWR2toR2JycVpwN01W?=
+ =?utf-8?B?Tkc3OEFSbUNIa3BWNUpoMjF1V011bDNwZTBzaDUrSjRvY2l0NGNUSlFrL2JX?=
+ =?utf-8?B?NTFBU0M3cGQyaXFUZU9RMUttYU80U3FmTERUZFQ2d1duVlgwMi9XdE41RnBs?=
+ =?utf-8?B?cGpKOFpFUS9BQlRYMlRMSHVRSE5yZlhFeUg5Y1M1MUlhNDVuL0oyTDVSSDZ3?=
+ =?utf-8?B?OHZoNFpsS2lUUFRCQVdZTkY3THhDR2M1REhPYnBQYTlpNkVWdG1XaTAzQ0tM?=
+ =?utf-8?B?VmdFUWpiZjRtcVFkVGludmkvNHVQMC8xT0NSZUpvYitRSHhWQ0ZyVmN2a1di?=
+ =?utf-8?B?T0c5L09YMTdON2FxWTQxbmdnS2xLY1M4NEN3Wkl3ek5Db2RST2JHTkN4VEJi?=
+ =?utf-8?B?UWg1TG9BcHdTZHZPZ3MvNXhtNVpidFRMZ1VMaWVUODAxQnhiL3dJQWZkRXd5?=
+ =?utf-8?B?N1NEWFc1V3phbW9jRFlFOTlXcnl6VHUxSFV3VFdnVUxIb0RJZXBQSUlQdUxB?=
+ =?utf-8?B?ekxxWVkzSVZwaGd1THhlUk10M2I2bVdDV2JteGUvVkNNOUxMS1lRejN6ZHh1?=
+ =?utf-8?B?MEM5Rjc5NUJQanh4ZXhBUkFYMUJTb0RmN2F4MU9jS3RvN3NjVnp6QzJEVFN5?=
+ =?utf-8?B?d3RCV0UraE9zTjdnK08xQzF6YmE4dFg4RDBWb09WVDR3ZkZEdnE0dnFkQkNM?=
+ =?utf-8?B?ZU03SXpTZU8rVXlkN1pLVjZDc3g0eVpEeFZBREt0TDZHbzlodjdaaTUwYWx1?=
+ =?utf-8?B?WEx3TmF1VVVrL1ZZaDg4U0g3aTlSdVlIc3VFaGwyMWJEb1BkR1dFQWJ3VjMv?=
+ =?utf-8?B?NXFnV2gxSGNGcDdWSUl0YjYxY0dNb0didWpYWGxsSHB2WldBYTdINlRxM3NY?=
+ =?utf-8?B?U0ZHdnlwRTEzRWtXREMwR0t2alVhSEo1c0d3Wmx5am9MbnN0dFI0Mmw1UGtJ?=
+ =?utf-8?B?NjVhYkxIMlVOc1VwcG1xWnh3cG4ySnlTcUlONlFKM1BPUVBpa2FWNjVqL3lk?=
+ =?utf-8?B?WmdLZzlCdGFKNFRoWW5tWEhJc0dUNDF6YUJDcFZ3RTUxQnZ5Nm5XRjJWL1RF?=
+ =?utf-8?B?Nk1QV3BtOFF4cWRyQnBpK0FjQUloYjRGanJPajVJRDREZ1ZmOXM1UjNqaGVL?=
+ =?utf-8?B?WnV3cDNyYWVNd29TSTBvTXFtT2JDa09yYlg2SUlrL2tuWG0ydHErdTdneHJI?=
+ =?utf-8?B?ekVzK2s5YUkramxOU0NubkptUkREVmRUMW4ybkVERWczUHZOb21NM3hzVlRS?=
+ =?utf-8?B?cEdnbkJwWUYzeHB1eGNTazdpcDJTL1VYOE5kb1QyTGhMa3VCMVRTSHh5cVB4?=
+ =?utf-8?B?bzI1bXdHa1hLWU5VVW9FVVdVVnRoOTJIV2RRdXpPU0o2aUNMS3kxRUZhTmVz?=
+ =?utf-8?B?K0E9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9FE15A5F20C0004D91DBFB3989C19BA8@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] drm/vkms: convert to use faux_device
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-kernel@vger.kernel.org
-Cc: Louis Chauvet <louis.chauvet@bootlin.com>,
- Haneen Mohammed <hamohammed.sa@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Melissa Wen <melissa.srw@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
- dri-devel@lists.freedesktop.org, Lyude Paul <lyude@redhat.com>
-References: <2025070147-antics-pleat-edd2@gregkh>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <2025070147-antics-pleat-edd2@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_TLS_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[bootlin.com,gmail.com,ffwll.ch,linux.intel.com,kernel.org,lists.freedesktop.org,redhat.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid,patchwork.freedesktop.org:url,lists.freedesktop.org:email,imap1.dmz-prg2.suse.org:helo,ffwll.ch:email,bootlin.com:email,linuxfoundation.org:email,intel.com:email]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -2.80
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9709.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: abfe5527-abda-401a-c691-08ddb93b8065
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jul 2025 07:38:56.4020
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3e9tMT8uib0xO5KFiS17kXUPHAI3SAfHvBTku8KQpINbDc4wgJ80FOFBSgzINp4gxHSUAedpKGWw0AokH96i7w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8200
 
-Hi
-
-Am 01.07.25 um 12:49 schrieb Greg Kroah-Hartman:
-> The vkms driver does not need to create a platform device, as there is
-> no real platform resources associated it,  it only did so because it was
-> simple to do that in order to get a device to use for resource
-> management of drm resources.  Change the driver to use the faux device
-> instead as this is NOT a real platform device.
->
-> Tested-by: Louis Chauvet <louis.chauvet@bootlin.com>
-> Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
-> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
-> Cc: Haneen Mohammed <hamohammed.sa@gmail.com>
-> Cc: Simona Vetter <simona@ffwll.ch>
-> Cc: Melissa Wen <melissa.srw@gmail.com>
-> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Cc: David Airlie <airlied@gmail.com>
-> Cc: dri-devel@lists.freedesktop.org
-> Reviewed-by: Lyude Paul <lyude@redhat.com>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
-> v5: - rebased against 6.16-rc4
->      - added reviewed-by and tested-by lines
->      - was somehow dropped from drm trees, resending to make sure it
->        isn't lost
-
-Also see my comment in the vgem change. The patches will go in soon 
-after "drm/gem-shmem: Do not map s/g table by default". [1] Thanks for 
-the update.
-
-Best regards
-Thomas
-
-[1] https://patchwork.freedesktop.org/series/150968/
-
->
-> v4: - first version of the patch, was part of a larger patch series that
->        has been mostly all applied to the tree.
->
->   drivers/gpu/drm/vkms/vkms_drv.c | 28 ++++++++++++++--------------
->   drivers/gpu/drm/vkms/vkms_drv.h |  4 ++--
->   2 files changed, 16 insertions(+), 16 deletions(-)
->
-> diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
-> index a24d1655f7b8..e8472d9b6e3b 100644
-> --- a/drivers/gpu/drm/vkms/vkms_drv.c
-> +++ b/drivers/gpu/drm/vkms/vkms_drv.c
-> @@ -10,7 +10,7 @@
->    */
->   
->   #include <linux/module.h>
-> -#include <linux/platform_device.h>
-> +#include <linux/device/faux.h>
->   #include <linux/dma-mapping.h>
->   
->   #include <drm/clients/drm_client_setup.h>
-> @@ -149,27 +149,27 @@ static int vkms_modeset_init(struct vkms_device *vkmsdev)
->   static int vkms_create(struct vkms_config *config)
->   {
->   	int ret;
-> -	struct platform_device *pdev;
-> +	struct faux_device *fdev;
->   	struct vkms_device *vkms_device;
->   	const char *dev_name;
->   
->   	dev_name = vkms_config_get_device_name(config);
-> -	pdev = platform_device_register_simple(dev_name, -1, NULL, 0);
-> -	if (IS_ERR(pdev))
-> -		return PTR_ERR(pdev);
-> +	fdev = faux_device_create(dev_name, NULL, NULL);
-> +	if (!fdev)
-> +		return -ENODEV;
->   
-> -	if (!devres_open_group(&pdev->dev, NULL, GFP_KERNEL)) {
-> +	if (!devres_open_group(&fdev->dev, NULL, GFP_KERNEL)) {
->   		ret = -ENOMEM;
->   		goto out_unregister;
->   	}
->   
-> -	vkms_device = devm_drm_dev_alloc(&pdev->dev, &vkms_driver,
-> +	vkms_device = devm_drm_dev_alloc(&fdev->dev, &vkms_driver,
->   					 struct vkms_device, drm);
->   	if (IS_ERR(vkms_device)) {
->   		ret = PTR_ERR(vkms_device);
->   		goto out_devres;
->   	}
-> -	vkms_device->platform = pdev;
-> +	vkms_device->faux_dev = fdev;
->   	vkms_device->config = config;
->   	config->dev = vkms_device;
->   
-> @@ -203,9 +203,9 @@ static int vkms_create(struct vkms_config *config)
->   	return 0;
->   
->   out_devres:
-> -	devres_release_group(&pdev->dev, NULL);
-> +	devres_release_group(&fdev->dev, NULL);
->   out_unregister:
-> -	platform_device_unregister(pdev);
-> +	faux_device_destroy(fdev);
->   	return ret;
->   }
->   
-> @@ -231,19 +231,19 @@ static int __init vkms_init(void)
->   
->   static void vkms_destroy(struct vkms_config *config)
->   {
-> -	struct platform_device *pdev;
-> +	struct faux_device *fdev;
->   
->   	if (!config->dev) {
->   		DRM_INFO("vkms_device is NULL.\n");
->   		return;
->   	}
->   
-> -	pdev = config->dev->platform;
-> +	fdev = config->dev->faux_dev;
->   
->   	drm_dev_unregister(&config->dev->drm);
->   	drm_atomic_helper_shutdown(&config->dev->drm);
-> -	devres_release_group(&pdev->dev, NULL);
-> -	platform_device_unregister(pdev);
-> +	devres_release_group(&fdev->dev, NULL);
-> +	faux_device_destroy(fdev);
->   
->   	config->dev = NULL;
->   }
-> diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
-> index a74a7fc3a056..5a46016e1890 100644
-> --- a/drivers/gpu/drm/vkms/vkms_drv.h
-> +++ b/drivers/gpu/drm/vkms/vkms_drv.h
-> @@ -197,13 +197,13 @@ struct vkms_config;
->    * struct vkms_device - Description of a VKMS device
->    *
->    * @drm - Base device in DRM
-> - * @platform - Associated platform device
-> + * @faux_dev - Associated faux device
->    * @output - Configuration and sub-components of the VKMS device
->    * @config: Configuration used in this VKMS device
->    */
->   struct vkms_device {
->   	struct drm_device drm;
-> -	struct platform_device *platform;
-> +	struct faux_device *faux_dev;
->   	const struct vkms_config *config;
->   };
->   
-
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
-
+T24gNy8xLzIwMjUgMjoyMCBQTSwgTHVrYXMgQnVsd2FobiB3cm90ZToNCj4gRnJvbTogTHVrYXMg
+QnVsd2FobiA8bHVrYXMuYnVsd2FobkByZWRoYXQuY29tPg0KPiANCj4gSW4gdGhlIE1ha2VmaWxl
+LCB0aGUgbmV3IGJ1aWxkIG9wdGlvbiBDT05GSUdfQ0FBTV9RSSBpcyBkZWZpbmVkIGNvbmRpdGlv
+bmVkDQo+IG9uIHRoZSBleGlzdGVuY2Ugb2YgdGhlIENPTkZJR19DUllQVE9fREVWX0ZTTF9DQUFN
+X0NSWVBUT19BUElfUUksIHdoaWNoIGlzDQo+IHByb3Blcmx5IGRlZmluZWQgaW4gdGhlIEtjb25m
+aWcgZmlsZS4gU28sIENPTkZJR19DQUFNX1FJIGlzIGp1c3QgYSBsb2NhbA0KPiBhbGlhcyBmb3Ig
+Q09ORklHX0NSWVBUT19ERVZfRlNMX0NBQU1fQ1JZUFRPX0FQSV9RSS4NCj4gDQo+IFRoZXJlIGlz
+IGxpdHRsZSBiZW5lZml0IGluIHRoZSBzb3VyY2UgY29kZSBvZiBoYXZpbmcgdGhpcyBzbGlnaHRs
+eSBzaG9ydGVyDQo+IGFsaWFzIGZvciB0aGlzIGNvbmZpZ3VyYXRpb24sIGJ1dCBpdCBjb21wbGlj
+YXRlcyBmdXJ0aGVyIG1haW50ZW5hbmNlLCBhcw0KPiBzZWFyY2hpbmcgZm9yIHRoZSBpbXBhY3Qg
+b2YgQ09ORklHX0NSWVBUT19ERVZfRlNMX0NBQU1fQ1JZUFRPX0FQSV9RSQ0KPiByZXF1aXJlcyB0
+byBncmVwIG9uY2UsIGFuZCB0aGVuIGlkZW50aWZ5IHRoZSBvcHRpb24gaW50cm9kdWNlZCBhbmQg
+Y29udGludWUNCj4gc2VhcmNoaW5nIGZvciB0aGF0LiBGdXJ0aGVyLCB0b29scywgc3VjaCBhcyBj
+cm9zcyByZWZlcmVuY2VycywgYW5kIHNjcmlwdHMNCj4gdG8gY2hlY2sgS2NvbmZpZyBkZWZpbml0
+aW9ucyBhbmQgdGhlaXIgdXNlIHNpbXBseSBkbyBub3QgaGFuZGxlIHRoaXMNCj4gc2l0dWF0aW9u
+LiBHaXZlbiB0aGF0IHRoaXMgaXMgdGhlIG9ubHkgaW5jaWRlbmNlIG9mIHN1Y2ggYSBjb25maWcg
+YWxpYXMgaW4NCj4gdGhlIHdob2xlIGtlcm5lbCB0cmVlLCBqdXN0IHByZWZlciB0byBhdm9pZCB0
+aGlzIHBhdHRlcm4gb2YgYWxpYXNpbmcgaGVyZS4NCj4gDQo+IFVzZSBDT05GSUdfQ1JZUFRPX0RF
+Vl9GU0xfQ0FBTV9DUllQVE9fQVBJX1FJIHRocm91Z2hvdXQgdGhlIEZyZWVzY2FsZQ0KPiBDQUFN
+LU11bHRpY29yZSBwbGF0Zm9ybSBkcml2ZXIgYmFja2VuZCBzb3VyY2UgY29kZS4NCj4gDQo+IE5v
+IGZ1bmN0aW9uYWwgY2hhbmdlLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogTHVrYXMgQnVsd2FobiA8
+bHVrYXMuYnVsd2FobkByZWRoYXQuY29tPg0KUmV2aWV3ZWQtYnk6IEhvcmlhIEdlYW50xIMgPGhv
+cmlhLmdlYW50YUBueHAuY29tPg0KDQpUaGFua3MsDQpIb3JpYQ0KDQo=
