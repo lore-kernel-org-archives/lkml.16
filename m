@@ -1,116 +1,196 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 151EC2AE8E;
-	Wed,  2 Jul 2025 06:47:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ADD7205E3B
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 06:48:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751438840; cv=none; b=fQSmjBMMXnpNteNG2V4WunBINU89z6Y0gaVdrCFa5oZT+Q1SEVv8tay1po4R/5kycleZMDXnY93l0yVNd88elRxLlnbdfFtU7i4B3z04jRcV8pNph+5tqVdjp7t/8u/fOi7rnaPZrnjGk54Au0s41p01pXO0iIEJCUknqbyOO/E=
+	t=1751438888; cv=none; b=YtI6jAhyvvCAn3ll3+RwibsQbxXkaXgi9l3b8TXmxyWs321W4aH0Uaq6XrDil5qS9PLy1kcSrkvttIQ0GOVBW7jDWqmMxCLp/RaO8joXDLj6HE/TkInWI7wiadg3LSPfViYuKCO+csaDbNrntbvsL8rXBVS8Vc3+92ivGnr/VNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751438840; c=relaxed/simple;
-	bh=s31Q4oV8fzNeXmOADLiOr+c25591rSyayzqcziFLGco=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EfMrE36hTMHWKOew5w30YvwFKT0PtloAcPKKnnJifxeL5bJLQIqBxjvRg229WvLIJWLn2mxHUCkisfjgm+gKdlsoCec/ZPHJH6P+dKsni0bVV/nr/uUbU1rMLnCgfbTRVxus623E7NjsX5kKK5fI2HVW6rjskg5jYHiKQLnTfWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u/LGcijB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751438888; c=relaxed/simple;
+	bh=MSNCDYWhC0BoJvzHv6aZ+GAZarN9XPq20ZD8k2S4QAM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VluLYz6+GTCYAO1n2wLEPfHhFvA5LT9XGY3FpMQq+AieDUsPyMcReZVO8RIWwj5cdKnEqzRHc5dxT+FKtMSKeWKr3tlomVy6jmF1Nb0KxmVYRked6VA4SmdimJ8Ay1RIs6r1rLZM0QSO5wiE+BjWJIiGdub1DNb0svpFTfrIWJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=NBuDnsMU; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u/LGcijB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22386C4CEEE;
-	Wed,  2 Jul 2025 06:47:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751438838;
-	bh=s31Q4oV8fzNeXmOADLiOr+c25591rSyayzqcziFLGco=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=u/LGcijB0TS0mZUTbXeJ60nLjcMoPbYo9jOy31IEGFUG0Lp43UWv8tvnYisyh3jaj
-	 dKyTakwsa3jfMbAPuHjLkTa8W5nUh4exHQGpQJhLoWytJxpl1KSsRNY5QLdcEvFZdw
-	 8NMuqpFJrJ3eGerSJA8xldXSWR5HLK/sgZyJkjD0vBiTnZBd+NNkgmiUetZqvmT67m
-	 oxsLQZxPM8R6Sf/Ts39QATid+rrtPH+fc43mW6FsReFq0lTLaqShDPsXMPoo2Gp5Ks
-	 W9pkX7AFZZj//eTYgovXjVLH4TEAMXUyLY0Z5G/kn6Tk+aQHI6H5iVmMUj62QY739O
-	 I3bVvSErQzEog==
-Date: Wed, 2 Jul 2025 12:17:00 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	bhelgaas@google.com, lukas@wunner.de, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org, Jim Quinlan <james.quinlan@broadcom.com>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2] PCI/pwrctrl: Skip creating pwrctrl device unless
- CONFIG_PCI_PWRCTRL is enabled
-Message-ID: <myhg3xn3subujf3buarctgexipvjhale6zyqkhfpnm6qwitlg6@27kjexp337aj>
-References: <20250701064731.52901-1-manivannan.sadhasivam@linaro.org>
- <20250701203526.GA1849466@bhelgaas>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NBuDnsMU"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5625UxjF014229;
+	Wed, 2 Jul 2025 06:47:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=SFZDe/
+	Gde86Kbjaz3BKebqVXNaKNf1/X45PreI5c5OE=; b=NBuDnsMUg7GxC7SHtUBZcc
+	MJF1L6bgMg6dm7/aqvwDd90k0FmLjdI98jgR9PukaibDnATpF/y9/+iFIzhwCoR6
+	MMg2wE2q4vT+jXEtFTpt7XLiQjy6AwAzTU8lkRaj5aVduzwg8y1QuG0sIgtHsxP7
+	g38Bb8IOylkPsAWgU91t4DPqKLWfhTwFQJENbOI09fnyTGSK30LFNt3OuWtdK40h
+	l7We/ElNM78rQ6sxNT3JmVYo7Aw+sk1aT5tMzdnGQjEhEH6uJz9W3U49IWitN6+7
+	L6GKAFSPcIapRRIrU+/8RBZc4k6S4gPrsmAgzjXPh1fw9i8yTSoFTl+OUK+PcHHQ
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j84dbsbm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Jul 2025 06:47:39 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5626kfpO019564;
+	Wed, 2 Jul 2025 06:47:38 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j84dbsbb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Jul 2025 06:47:38 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5624LJAf021109;
+	Wed, 2 Jul 2025 06:47:37 GMT
+Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 47jtquegav-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Jul 2025 06:47:37 +0000
+Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
+	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5626la2w29557450
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 2 Jul 2025 06:47:36 GMT
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9D86F58059;
+	Wed,  2 Jul 2025 06:47:36 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5418758058;
+	Wed,  2 Jul 2025 06:47:28 +0000 (GMT)
+Received: from [9.43.0.55] (unknown [9.43.0.55])
+	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  2 Jul 2025 06:47:27 +0000 (GMT)
+Message-ID: <85bff038-6bc8-4643-8a15-89ac435206fd@linux.ibm.com>
+Date: Wed, 2 Jul 2025 12:17:26 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250701203526.GA1849466@bhelgaas>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC patch v3 05/20] sched: Add hysteresis to switch a task's
+ preferred LLC
+To: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+        Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+        Tim Chen <tim.c.chen@intel.com>,
+        Vincent Guittot
+ <vincent.guittot@linaro.org>,
+        Libo Chen <libo.chen@oracle.com>, Abel Wu <wuyun.abel@bytedance.com>,
+        Hillf Danton <hdanton@sina.com>, Len Brown <len.brown@intel.com>,
+        linux-kernel@vger.kernel.org, Chen Yu <yu.c.chen@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+        K Prateek Nayak <kprateek.nayak@amd.com>,
+        "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
+        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+References: <cover.1750268218.git.tim.c.chen@linux.intel.com>
+ <7371f30196b317c0c5a0ae3fa463ec76a4dc69ef.1750268218.git.tim.c.chen@linux.intel.com>
+Content-Language: en-US
+From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+In-Reply-To: <7371f30196b317c0c5a0ae3fa463ec76a4dc69ef.1750268218.git.tim.c.chen@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 6DmLWmk7hBSCDR5zfQGC9iqHYfdeBr7c
+X-Proofpoint-GUID: Ljqh5qdsVQd0OSVYqiz9iHARcCrKJLnu
+X-Authority-Analysis: v=2.4 cv=Ib6HWXqa c=1 sm=1 tr=0 ts=6864d60b cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=QyXUC8HyAAAA:8 a=SekPmXZEEjEHJW-B8U4A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDA1MyBTYWx0ZWRfXxI6lkJwOw1Uq b+fsKmNDv3mrAryock56pxegiAngsvG+ZjccNFt48dsQVEola2Le+YByeU5slUK60HWa869Wvnj 4Eurg01Ome0sDXDmyfdqrCVCvVSecRbECPmISyZfm1PET9whxRnMjV84RVKpKk0kBsio0YMTpDS
+ MFTT2H1HnsOqwtlnyfy8mRZPdEgOO9bVtO/qcHvRLZBX/9OsElBJNSh33g1Okyv4UACXYnJTkKe gJYiVCpii23X4pk2vDJm99GRQscZY+U5z9qWtutGpmrJbT+upxgZEspJsK2p5HBhMT48l6DSl9C nsvI/eEfyaJj7RLoFb0vxC7WAzRYXvL9td4xqZ0CN/7hgZAsMr5IeseWNy51kQD6+rw6WLXlyJD
+ txl2kN70kzqSkLt0ikvjGTfN458ZX9ZwJrbySVERB82ed261ze6Psr7WkEsC0CsqooYjE5//
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-01_02,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
+ clxscore=1015 mlxlogscore=999 lowpriorityscore=0 impostorscore=0
+ mlxscore=0 malwarescore=0 spamscore=0 priorityscore=1501 adultscore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507020053
 
-On Tue, Jul 01, 2025 at 03:35:26PM -0500, Bjorn Helgaas wrote:
-> [+cc Bart]
+Hi Tim,
+
+On 18/06/25 23:57, Tim Chen wrote:
+> Switching a process's preferred LLC generates lots of task
+> migrations across LLCs. To avoid frequent switches
+> of home LLC, implement the following policy:
 > 
-> On Tue, Jul 01, 2025 at 12:17:31PM +0530, Manivannan Sadhasivam wrote:
-> > If devicetree describes power supplies related to a PCI device, we
-> > previously created a pwrctrl device even if CONFIG_PCI_PWRCTL was
-> > not enabled.
-> > 
-> > When pci_pwrctrl_create_device() creates and returns a pwrctrl device,
-> > pci_scan_device() doesn't enumerate the PCI device. It assumes the pwrctrl
-> > core will rescan the bus after turning on the power. However, if
-> > CONFIG_PCI_PWRCTL is not enabled, the rescan never happens.
+> 1. Require a 2x occ change threshold to switch preferred LLC
+> 2. Don't discard preferred LLC for a task
 > 
-> Separate from this patch, can we refine the comment in
-> pci_scan_device() to explain *why* we should skip scanning if a
-> pwrctrl device was created?  The current comment leaves me with two
-> questions:
+> Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
+> ---
+>  kernel/sched/fair.c | 24 ++++++++++++++++--------
+>  1 file changed, 16 insertions(+), 8 deletions(-)
 > 
->   1) How do we know the pwrctrl device is currently off?  If it is
->      already on, why should we defer enumerating the device?
-> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 6a2678f9d44a..7fb2322c5d9e 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -1175,6 +1175,14 @@ static s64 update_curr_se(struct rq *rq, struct sched_entity *curr)
+>  #define EPOCH_PERIOD	(HZ/100)	/* 10 ms */
+>  #define EPOCH_OLD	5		/* 50 ms */
+>  
+> +static int llc_id(int cpu)
+> +{
+> +	if (cpu < 0)
+> +		return -1;
+> +
+> +	return per_cpu(sd_llc_id, cpu);
+> +}
+> +
+>  void mm_init_sched(struct mm_struct *mm, struct mm_sched __percpu *_pcpu_sched)
+>  {
+>  	unsigned long epoch;
+> @@ -1299,6 +1307,7 @@ static void task_cache_work(struct callback_head *work)
+>  	struct task_struct *p = current;
+>  	struct mm_struct *mm = p->mm;
+>  	unsigned long m_a_occ = 0;
+> +	unsigned long last_m_a_occ = 0;
+>  	int cpu, m_a_cpu = -1;
+>  	cpumask_var_t cpus;
+>  
+> @@ -1337,11 +1346,13 @@ static void task_cache_work(struct callback_head *work)
+>  					     per_cpu(sd_llc_id, i), occ, m_occ, m_cpu, nr);
+>  			}
+>  
+> -			a_occ /= nr;
+> +			// a_occ /= nr;
 
-I believe you meant to ask "how do we know the PCI device is currently off". If
-the pwrctrl device is created, then we for sure know that the pwrctrl driver
-will power on the PCI device at some point (depending on when the driver gets
-loaded). Even if the device was already powered on, we do not want to probe the
-client driver because, we have seen race between pwrctrl driver and PCI client
-driver probing in parallel. So I had imposed a devlink dependency (see
-b458ff7e8176) that makes sure that the PCI client driver wouldn't get probed
-until the pwrctrl driver (if the pwrctrl device was created) is probed. This
-will ensure that the PCI device state is reset and initialized by the pwrctrl
-driver before the client driver probes.
+Is the above by mistake?
+I think we need to have average only and not the total value as that favors LLCs with
+larger size.
 
->   2) If the pwrctrl device is currently off, won't the Vendor ID read
->      just fail like it does for every other non-existent device?  If
->      so, why can't we just let that happen?
-> 
+Thanks,
+Madadi Vineeth Reddy
 
-Again, it is not the pwrctrl device that is off, it is the PCI device. If it is
-not turned on, yes VID read will fail, but why do we need to read the VID in the
-first place if we know that the PCI device requires pwrctrl and the pwrctrl
-driver is going to be probed later.
+>  			if (a_occ > m_a_occ) {
+>  				m_a_occ = a_occ;
+>  				m_a_cpu = m_cpu;
+>  			}
+> +			if (llc_id(cpu) == llc_id(mm->mm_sched_cpu))
+> +				last_m_a_occ = a_occ;
+>  
+>  			trace_printk("(%d) a_occ: %ld m_a_occ: %ld\n",
+>  				     per_cpu(sd_llc_id, cpu), a_occ, m_a_occ);
+> @@ -1355,13 +1366,10 @@ static void task_cache_work(struct callback_head *work)
+>  		}
+>  	}
+>  
+> -	/*
+> -	 * If the max average cache occupancy is 'small' we don't care.
+> -	 */
+> -	if (m_a_occ < (NICE_0_LOAD >> EPOCH_OLD))
+> -		m_a_cpu = -1;
+> -
+> -	mm->mm_sched_cpu = m_a_cpu;
+> +	if (m_a_occ > (2 * last_m_a_occ)) {
+> +		/* avoid the bouncing of mm_sched_cpu */
+> +		mm->mm_sched_cpu = m_a_cpu;
+> +	}
+>  
+>  	free_cpumask_var(cpus);
+>  }
 
-> This behavior is from 2489eeb777af ("PCI/pwrctrl: Skip scanning for
-> the device further if pwrctrl device is created"), which just says
-> "there's no need to continue scanning."  Prior to 2489eeb777af, it
-> looks like we *did* what try to enumerate the device even if a pwrctrl
-> device was created, and 2489eeb777af doesn't mention a bug fix, so I
-> assume it's just an optimization.
-> 
-
-Yes, it is indeed an optimization.
-
-To summarize, we have imposed a dependency between the PCI client driver and
-pwrctrl driver to make sure that the PCI device state is fully reset and
-initialized before the client driver probes. So irrespective of whether the PCI
-device is already powered on or not, it is guaranteed by devlink that the PCI
-client driver will only get probed *after* the pwrctrl driver (if the device
-requires it). So we skip scanning the device further if the pwrctrl device is
-created (which means, the device depends on pwrctrl driver to power manage it).
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
