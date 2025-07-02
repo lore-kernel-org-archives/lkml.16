@@ -1,197 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay16.mail.gandi.net (relay16.mail.gandi.net [217.70.178.236])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD6823182D;
-	Wed,  2 Jul 2025 07:46:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C694E223DEA;
+	Wed,  2 Jul 2025 07:48:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.236
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751442409; cv=none; b=p/sv586Fo+wX+TrmIsHYxprLdwDH7qvZw7Ey6OlFd/EY7SsiziTYunKmxP5FfsFtN+J3yY/onmB172lUjHn7/4+BBKeKTygZSr7nlx/9p3gEk5ZD0HTkMmmPByTNzcvHA/2Fac/sFe6iNrIkk8W08tATTbh0niGyzUAnXJhT2DI=
+	t=1751442500; cv=none; b=LLddxLg/9KtETc4IOilizR4HMUXLjRLq5cXficerztI2/SQaWsP3vzjMI97iYzpJ3gU/cORx+vd3O2atbh8Mq3dbPMYKPVcZiozO8OWm6WwtZxJ1ApxcPbPpbY17tbh3xBQ2NbPEqTCH5BwWR6dawnOmDKrIslnsCPzWc+jZdtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751442409; c=relaxed/simple;
-	bh=CCT5ACpN4bOrIoFhtMjKzW9kbni6iu0szWJHP/pcWaw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bNKK0XtsbxTSEOhr9sg9Wx4hdW8CCDGsl41bEiLrBpjnYdS2Qar0ct2m98NQOHOdvKutW9cfaXn39W3nbeSe0y1apaTfrL4ccMFwkyGn5B09buLoabIObMApnMt/ouyzUdQZMDClBkswGK8JEcPkQDOieITbj94GGRGH7Xv+8LU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rWPG3TAM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751442500; c=relaxed/simple;
+	bh=Ygo+3EXyX2A//CA0ixDyqzlihUEypIyuHoFDa84UCtQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=NEt680OTWTJWP8HJcynwLLeQ0dlltLgL+VaxdPsx3q/OXn7mSLYfuVQKpvg2stlaDdKsfThF6tbLRZN9+28pf73KEMOQ5Tz7QdbCF3y/0orzODRdSAa+oXpvL9c+uVUyvcyJiL9zhNgt42uczzI6v7Yl9ZKYkRO+svqJshFyY+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OwIxVvlZ; arc=none smtp.client-ip=217.70.178.236
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rWPG3TAM"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9AA66C4CEF2;
-	Wed,  2 Jul 2025 07:46:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751442408;
-	bh=CCT5ACpN4bOrIoFhtMjKzW9kbni6iu0szWJHP/pcWaw=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=rWPG3TAMeXfN1DWpY9KU50ZAXL8Xeby4SVD94ze5D7xXGI/eqNHSPFKjAx8AHKAgD
-	 xM+RWN2zrqSGponOWrVZj7izjQ1ZqmCJINPmxLjsSKJnLj3ceUCHnXs2w+uY0gKCWQ
-	 eCkQN3UcvWCwgt+GJ5rSmN9d5d0lk3qfdoYPWFTppSnVIqZLfasnAX1lKksaONGnXZ
-	 QBXQPAJM7nMWrNhJhNbo+QaJKnTsRlXu8D5h7thoyY1JOK7fQnRhYjiCRhCIfYIWWE
-	 2UhEh1QrFsdQUJUNXuPOf3cKnE1QmSUlzzmBvB1T8Xk742ooh0pvnFPuW7LKdT+e7T
-	 V62dcEnHFv3Zw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E3B5C8303F;
-	Wed,  2 Jul 2025 07:46:48 +0000 (UTC)
-From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
-Date: Wed, 02 Jul 2025 02:46:26 -0500
-Subject: [PATCH v5 3/3] cpufreq: tegra124: Allow building as a module
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OwIxVvlZ"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id DE69F449E7;
+	Wed,  2 Jul 2025 07:48:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1751442489;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FjGikRjaB+jO1uDjOO0DjL+ti5fz5Aw/2bvXKkr4ak4=;
+	b=OwIxVvlZy5LxGK4FXI4zX/t+d9G0wKbfB3U8Du/5RVNNCOyIa38P4SPyY4yBlpGZ0AC9eL
+	voNgIzfSQEqP9qLa22x2wjPykl46YEIiuh2Xhupo51qzUmXzQi9utPiCazlbQ0iBeisnwp
+	PtNYqJrFh3cKII6ij0iu433zX+5tI4lDnGB8gbi2nrT3zLcnSBzU+uPZR/VYlj8oOGastt
+	9djwEeNezT70Ce0uxU8q7VTUqlYJdUg5h3rhlnOYbm6soUg31p1st1hbV7LlF2AwX1tmT6
+	BkSnHpqmNsPi04gOg99iBjZcks1yGSLDZ2mPVlRFsTG+JGP2zbjrLxpHQenowg==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Thomas Fourier <fourier.thomas@gmail.com>
+Cc: stable@vger.kernel.org,  Richard Weinberger <richard@nod.at>,  Vignesh
+ Raghavendra <vigneshr@ti.com>,  Wolfram Sang
+ <wsa+renesas@sang-engineering.com>,  linux-mtd@lists.infradead.org,
+  linux-renesas-soc@vger.kernel.org,  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mtd: rawnand: renesas: Add missing check after DMA map
+In-Reply-To: <20250702071722.24921-3-fourier.thomas@gmail.com> (Thomas
+	Fourier's message of "Wed, 2 Jul 2025 09:17:22 +0200")
+References: <20250702071722.24921-3-fourier.thomas@gmail.com>
+User-Agent: mu4e 1.12.7; emacs 30.1
+Date: Wed, 02 Jul 2025 09:48:07 +0200
+Message-ID: <878ql7nidk.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250702-tegra124-cpufreq-v5-3-66ab3640a570@gmail.com>
-References: <20250702-tegra124-cpufreq-v5-0-66ab3640a570@gmail.com>
-In-Reply-To: <20250702-tegra124-cpufreq-v5-0-66ab3640a570@gmail.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, 
- Viresh Kumar <viresh.kumar@linaro.org>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- Jonathan Hunter <jonathanh@nvidia.com>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-tegra@vger.kernel.org, Aaron Kling <webgeek1234@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751442407; l=4356;
- i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
- bh=9YZ0nqGE5aiW/b0NHl7GJtHyqEJaSop9yzdt0kviJuE=;
- b=jgSpInoztgv7fEM71kFrbW8fbsIyKN/iuw2frQLeJN0xB3/tYBdYcyPpz1yQ58NIcGyWlMjYm
- JXdU31Ah099ClQZBb8E69C1pv0Kvd8mS/QiXbcZP3VrgX0UkVeYmxv3
-X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
- pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
-X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
- auth_id=342
-X-Original-From: Aaron Kling <webgeek1234@gmail.com>
-Reply-To: webgeek1234@gmail.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduieekfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefujghffgffkfggtgfgsehtqhertddtreejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepffeghfejtdefieeguddukedujeektdeihfelleeuieeuveehkedvleduheeivdefnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepkedprhgtphhtthhopehfohhurhhivghrrdhthhhomhgrshesghhmrghilhdrtghomhdprhgtphhtthhopehsthgrsghlvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehrihgthhgrrhgusehnohgurdgrthdprhgtphhtthhopehvihhgnhgvshhhrhesthhirdgtohhmpdhrtghpthhtohepfihsrgdorhgvnhgvshgrshesshgrnhhgqdgvnhhgihhnvggvrhhinhhgrdgtohhmpdhrtghpt
+ hhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdhrvghnvghsrghsqdhsohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
 
-From: Aaron Kling <webgeek1234@gmail.com>
+Hi Thomas,
 
-This requires three changes:
-* Using the cpufreq-dt register helper to establish a hard dependency
-  for depmod to track
-* Adding a remove routine to remove the cpufreq-dt device
-* Adding a exit routine to handle cleaning up the driver
+On 02/07/2025 at 09:17:22 +02, Thomas Fourier <fourier.thomas@gmail.com> wr=
+ote:
 
-Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
----
- drivers/cpufreq/Kconfig.arm        |  2 +-
- drivers/cpufreq/tegra124-cpufreq.c | 44 +++++++++++++++++++++++++++++---------
- 2 files changed, 35 insertions(+), 11 deletions(-)
+> The DMA map functions can fail and should be tested for errors.
+>
+> Fixes: d8701fe890ec ("mtd: rawnand: renesas: Add new NAND controller driv=
+er")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
+> ---
+>  drivers/mtd/nand/raw/renesas-nand-controller.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/drivers/mtd/nand/raw/renesas-nand-controller.c b/drivers/mtd=
+/nand/raw/renesas-nand-controller.c
+> index 44f6603736d1..f4a775571733 100644
+> --- a/drivers/mtd/nand/raw/renesas-nand-controller.c
+> +++ b/drivers/mtd/nand/raw/renesas-nand-controller.c
+> @@ -426,6 +426,10 @@ static int rnandc_read_page_hw_ecc(struct nand_chip =
+*chip, u8 *buf,
+>  	/* Configure DMA */
+>  	dma_addr =3D dma_map_single(rnandc->dev, rnandc->buf, mtd->writesize,
+>  				  DMA_FROM_DEVICE);
+> +	if (dma_mapping_error(rnandc->dev, dma_addr)) {
+> +		dev_err(rnandc->dev, "DMA mapping failed.\n");
 
-diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-index 4f9cb943d945c244eb2b29f543d14df6cac4e5d4..625f6fbdaaf5fd774e3b0bb996eb7ce980da41ee 100644
---- a/drivers/cpufreq/Kconfig.arm
-+++ b/drivers/cpufreq/Kconfig.arm
-@@ -238,7 +238,7 @@ config ARM_TEGRA20_CPUFREQ
- 	  This adds the CPUFreq driver support for Tegra20/30 SOCs.
- 
- config ARM_TEGRA124_CPUFREQ
--	bool "Tegra124 CPUFreq support"
-+	tristate "Tegra124 CPUFreq support"
- 	depends on ARCH_TEGRA || COMPILE_TEST
- 	depends on CPUFREQ_DT
- 	default y
-diff --git a/drivers/cpufreq/tegra124-cpufreq.c b/drivers/cpufreq/tegra124-cpufreq.c
-index 514146d98bca2d8aa59980a14dff3487cd8045f6..ebce62be9a9c17724d50dadeea1bb2ec81538421 100644
---- a/drivers/cpufreq/tegra124-cpufreq.c
-+++ b/drivers/cpufreq/tegra124-cpufreq.c
-@@ -16,6 +16,10 @@
- #include <linux/pm_opp.h>
- #include <linux/types.h>
- 
-+#include "cpufreq-dt.h"
-+
-+static struct platform_device *platform_device;
-+
- struct tegra124_cpufreq_priv {
- 	struct clk *cpu_clk;
- 	struct clk *pllp_clk;
-@@ -55,7 +59,6 @@ static int tegra124_cpufreq_probe(struct platform_device *pdev)
- 	struct device_node *np __free(device_node) = of_cpu_device_node_get(0);
- 	struct tegra124_cpufreq_priv *priv;
- 	struct device *cpu_dev;
--	struct platform_device_info cpufreq_dt_devinfo = {};
- 	int ret;
- 
- 	if (!np)
-@@ -95,11 +98,7 @@ static int tegra124_cpufreq_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto out_put_pllp_clk;
- 
--	cpufreq_dt_devinfo.name = "cpufreq-dt";
--	cpufreq_dt_devinfo.parent = &pdev->dev;
--
--	priv->cpufreq_dt_pdev =
--		platform_device_register_full(&cpufreq_dt_devinfo);
-+	priv->cpufreq_dt_pdev = cpufreq_dt_pdev_register(&pdev->dev);
- 	if (IS_ERR(priv->cpufreq_dt_pdev)) {
- 		ret = PTR_ERR(priv->cpufreq_dt_pdev);
- 		goto out_put_pllp_clk;
-@@ -173,6 +172,21 @@ static int __maybe_unused tegra124_cpufreq_resume(struct device *dev)
- 	return err;
- }
- 
-+static void tegra124_cpufreq_remove(struct platform_device *pdev)
-+{
-+	struct tegra124_cpufreq_priv *priv = dev_get_drvdata(&pdev->dev);
-+
-+	if (!IS_ERR(priv->cpufreq_dt_pdev)) {
-+		platform_device_unregister(priv->cpufreq_dt_pdev);
-+		priv->cpufreq_dt_pdev = ERR_PTR(-ENODEV);
-+	}
-+
-+	clk_put(priv->pllp_clk);
-+	clk_put(priv->pllx_clk);
-+	clk_put(priv->dfll_clk);
-+	clk_put(priv->cpu_clk);
-+}
-+
- static const struct dev_pm_ops tegra124_cpufreq_pm_ops = {
- 	SET_SYSTEM_SLEEP_PM_OPS(tegra124_cpufreq_suspend,
- 				tegra124_cpufreq_resume)
-@@ -182,12 +196,12 @@ static struct platform_driver tegra124_cpufreq_platdrv = {
- 	.driver.name	= "cpufreq-tegra124",
- 	.driver.pm	= &tegra124_cpufreq_pm_ops,
- 	.probe		= tegra124_cpufreq_probe,
-+	.remove		= tegra124_cpufreq_remove,
- };
- 
- static int __init tegra_cpufreq_init(void)
- {
- 	int ret;
--	struct platform_device *pdev;
- 
- 	if (!(of_machine_is_compatible("nvidia,tegra124") ||
- 		of_machine_is_compatible("nvidia,tegra210")))
-@@ -201,15 +215,25 @@ static int __init tegra_cpufreq_init(void)
- 	if (ret)
- 		return ret;
- 
--	pdev = platform_device_register_simple("cpufreq-tegra124", -1, NULL, 0);
--	if (IS_ERR(pdev)) {
-+	platform_device = platform_device_register_simple("cpufreq-tegra124", -1, NULL, 0);
-+	if (IS_ERR(platform_device)) {
- 		platform_driver_unregister(&tegra124_cpufreq_platdrv);
--		return PTR_ERR(pdev);
-+		return PTR_ERR(platform_device);
- 	}
- 
- 	return 0;
- }
- module_init(tegra_cpufreq_init);
- 
-+static void __exit tegra_cpufreq_module_exit(void)
-+{
-+	if (platform_device && !IS_ERR(platform_device))
-+		platform_device_unregister(platform_device);
-+
-+	platform_driver_unregister(&tegra124_cpufreq_platdrv);
-+}
-+module_exit(tegra_cpufreq_module_exit);
-+
- MODULE_AUTHOR("Tuomas Tynkkynen <ttynkkynen@nvidia.com>");
- MODULE_DESCRIPTION("cpufreq driver for NVIDIA Tegra124");
-+MODULE_LICENSE("GPL");
+This error message is not informative, please drop
+it. dma_mapping_error() does give more information if you enable some
+DMA DEBUG Kconfig symbol already.
 
--- 
-2.50.0
+> +		return -ENOMEM;
+> +	}
+>  	writel(dma_addr, rnandc->regs + DMA_ADDR_LOW_REG);
+>  	writel(mtd->writesize, rnandc->regs + DMA_CNT_REG);
+>  	writel(DMA_TLVL_MAX, rnandc->regs + DMA_TLVL_REG);
+> @@ -606,6 +610,10 @@ static int rnandc_write_page_hw_ecc(struct nand_chip=
+ *chip, const u8 *buf,
+>  	/* Configure DMA */
+>  	dma_addr =3D dma_map_single(rnandc->dev, (void *)rnandc->buf, mtd->writ=
+esize,
+>  				  DMA_TO_DEVICE);
+> +	if (dma_mapping_error(rnandc->dev, dma_addr)) {
+> +		dev_err(rnandc->dev, "DMA mapping failed.\n");
 
+Ditto.
 
+> +		return -ENOMEM;
+> +	}
+>  	writel(dma_addr, rnandc->regs + DMA_ADDR_LOW_REG);
+>  	writel(mtd->writesize, rnandc->regs + DMA_CNT_REG);
+>  	writel(DMA_TLVL_MAX, rnandc->regs + DMA_TLVL_REG);
+
+Thanks,
+Miqu=C3=A8l
