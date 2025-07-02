@@ -1,242 +1,334 @@
-Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011047.outbound.protection.outlook.com [52.101.65.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B7C309DD2;
-	Wed,  2 Jul 2025 14:50:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751467827; cv=fail; b=thwqdNYqFS+yxUQGWhCH/NJhOnry+6NCMwnK0ROWptNFNxLA7unDDu5G8Cx1bopACUYEkGnBdcQw2XiuatEJzQleBPBXtUCsjv9miABJonB0EL4jT2j61W2xlxumkomBgaCm4tgp/irTxrE2hlfWg1rVg1D1458SHzxslZwzKpY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751467827; c=relaxed/simple;
-	bh=oYNJ3bWqgjV9sj0Bhq0ichnP74U2+F50bPDsjskEwoo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Uk7ZWfHjBBeAg3ENhUh6nKMqYDy7tWs85U9jb1DDMOIwpD61YL9jB5K8ZCvFpZRGAjTMD2pONNv67h8FOuiFDg/3kHhQ3hn31Z7b3g4PMDqGVC+/sAqL5+sRkSV2M7fcL/J5bx3Akhuj57O2VgtxsrjC5XIbzs5pgZ6peeUh1Y0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=ddz1/QPm; arc=fail smtp.client-ip=52.101.65.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8591B30AAAC
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:50:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751467830; cv=none; b=YpaCSkCGxWZ2SfU0MKnfmTW15JGoTW/gGiuqe8TA7SSM8oqr62Bt9V5vAx4qO5zkVyCD7iPpWplCZsETmlRf1XaTNYk2vadvi6o1dLvM3QhzHl+GzEzYHGg62RI8pdiLblKzNxNeuOqT4haCVdOPcEA9+k1junZBf6W1jnOftsY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751467830; c=relaxed/simple;
+	bh=pT4yzj1lNpIXcGjJ5NDJQt7dDxIa2I5li6dwbOXXR5k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ltw6fXaDGAoSvhOQXMkqDQpeGz8Y86d62Ay7jSlmRPt3KgxG0Ow7z/7g0ZV0j2ejQcL0XQ1cQ6ND5psikqkA9yz6La4kbC6NR8Eiv00MD5jlToCVoYlCJKEkixrrBhAzNeMrJW1PJy6ek27EfsUQ4QJIxxpRD0Q/FmWZPiPRqDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=IzPoI/X0; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=vBd71ZZa; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=IzPoI/X0; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=vBd71ZZa; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="ddz1/QPm"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yeJVR7iL1sHwon0ZA35vFyzVvtgEfV78pmeKu9poVKR2l3sEFwZvIdxOFtoUAWs122Ws8qgvrh8Rypfgl5SFNA6fJyR08KDHdGg5aMGEq1fkeSkxxl/1q/M8rd3nw2D0lkl8WiYT38dVPJapfcSrG1Yw1FbYqhsI0PzY1wBmHQCAREjHxU4wfDkaIpfynYqqqWD/6BT4r4BmpK+1g+7ICbUv/+Dax20SzU4k0vaYfSEueyttqzNIn6NlCbhoBoa35lxVCizfoxod9L36EPJdQXnu+F9srvV94jj+9JbX1eN74F3SIRtZuoFdvDYwtUOs77NPISPy99apt564r8XtRQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KzJ8h3K17CuD0ipoWyXa/s4C51oo0tVwa7hDJOfoZto=;
- b=EzTtM4W27+TxprK2D4SLdVBdl2Y8gGat3okunnYG5BrJNzwKLB/8yWc3c2TxnuTBgtlAWOvY7ecpkQHYs71wicUzT1dApwQP/rVVysWJKqZh0Lcj6xvflAKP71a903qfj79mAs4+BzfLf+HNNPmJJ2Nl004gQMTl+xTNx/A0zUuGT1iRDqwNohBrgxL3ZEnnbwyOSlrRb81T30Ti+FCsVzOGzGUh9z711vErJgypT1D3sALbcWvzBNIY2r2noouQi7E2Q7OjU62fVbCi8z51IWkvEbfUmlYjD0wuXFprYWMGuJAfM1Mhg0fv2ito6uGGPYxtR2EOxVhnDBm9KKYvJA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KzJ8h3K17CuD0ipoWyXa/s4C51oo0tVwa7hDJOfoZto=;
- b=ddz1/QPmhxpYnznVCAwMbMYyyMV5U/DX+EAyx20c5C+IdAbtEigTijKm7udcdiU0EW45B34Te0t7qlMhM7BII1ONDA023rIJ6z3GPqrpARWMQMGxgPns3Q52tJYRR7ZB4Q00Vy6NAlFOv0x/URoNkC4Q2JvMbAsS39vwjsOAdtBkd8UPlBw5770/4AZaq5naI1tlt+/RH+BsYZIWlqaj36talaNBaHBVG3lTDhe2uNc6B01ljHdQyPzprCa1kO7lr0A7EqbN4l7s7bOIe6who6oM1q5sQ7CfFEgpA5+w7D1Kmlbbhr3lwjfTn+RwEfFlrsJlhGHEHadmLR4d5fgqpg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by PA4PR04MB9711.eurprd04.prod.outlook.com (2603:10a6:102:267::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.20; Wed, 2 Jul
- 2025 14:50:21 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%7]) with mapi id 15.20.8880.029; Wed, 2 Jul 2025
- 14:50:21 +0000
-Date: Wed, 2 Jul 2025 10:50:14 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Kishon Vijay Abraham I <kishon@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Anup Patel <apatel@ventanamicro.com>, Marc Zyngier <maz@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-	Shuah Khan <shuah@kernel.org>, Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>, dlemoal@kernel.org,
-	jdmason@kudzu.us, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, imx@lists.linux.dev,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v19 09/10] pci: imx6: Add LUT setting for MSI/IOMMU in
- Endpoint mode
-Message-ID: <aGVHG+GTANAx7zzp@lizhi-Precision-Tower-5810>
-References: <20250609-ep-msi-v19-0-77362eaa48fa@nxp.com>
- <20250609-ep-msi-v19-9-77362eaa48fa@nxp.com>
- <tovqcf6mjrajaie26t7gvl6uuoniqyturogzyaef6bksjm2nux@ggsmbgudgf7n>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <tovqcf6mjrajaie26t7gvl6uuoniqyturogzyaef6bksjm2nux@ggsmbgudgf7n>
-X-ClientProxiedBy: AS4P191CA0014.EURP191.PROD.OUTLOOK.COM
- (2603:10a6:20b:5d5::20) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="IzPoI/X0";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="vBd71ZZa";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="IzPoI/X0";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="vBd71ZZa"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id BDF352118A;
+	Wed,  2 Jul 2025 14:50:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751467826; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QNiWvVaJQ0hv8VndO0kB03luYJm/SCoG/PASRPiJfM4=;
+	b=IzPoI/X04qX+BE7RNhoQglY4Hmnhl4Y6XoZUsX8KBxwtbM356/ceHcyIvwZvCsaQB8LhgS
+	aAkDWgFBqIPCQ+ISDm+4oNW/1jcql0kTrQbm83vLXOKU/4tkylF3QMPshSJWBVvMDzoSWg
+	m+28UG2wjWsYblyZCUREufplzJUnzu0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751467826;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QNiWvVaJQ0hv8VndO0kB03luYJm/SCoG/PASRPiJfM4=;
+	b=vBd71ZZasTrs4yLhYJgxEMoP/b+r5ADYr1FAOCq4TJqxKr831xeC6AZopY3UkdMpzVVXj8
+	ZE19RQShTpMqocDg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751467826; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QNiWvVaJQ0hv8VndO0kB03luYJm/SCoG/PASRPiJfM4=;
+	b=IzPoI/X04qX+BE7RNhoQglY4Hmnhl4Y6XoZUsX8KBxwtbM356/ceHcyIvwZvCsaQB8LhgS
+	aAkDWgFBqIPCQ+ISDm+4oNW/1jcql0kTrQbm83vLXOKU/4tkylF3QMPshSJWBVvMDzoSWg
+	m+28UG2wjWsYblyZCUREufplzJUnzu0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751467826;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QNiWvVaJQ0hv8VndO0kB03luYJm/SCoG/PASRPiJfM4=;
+	b=vBd71ZZasTrs4yLhYJgxEMoP/b+r5ADYr1FAOCq4TJqxKr831xeC6AZopY3UkdMpzVVXj8
+	ZE19RQShTpMqocDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 19D661369C;
+	Wed,  2 Jul 2025 14:50:26 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id LXr6BTJHZWgLTQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Wed, 02 Jul 2025 14:50:26 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 0796DA0A55; Wed,  2 Jul 2025 16:50:21 +0200 (CEST)
+Date: Wed, 2 Jul 2025 16:50:21 +0200
+From: Jan Kara <jack@suse.cz>
+To: Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca, jack@suse.cz, 
+	ojaswin@linux.ibm.com, sashal@kernel.org, yi.zhang@huawei.com, libaokun1@huawei.com, 
+	yukuai3@huawei.com, yangerkun@huawei.com
+Subject: Re: [PATCH v3 09/10] ext4: replace ext4_writepage_trans_blocks()
+Message-ID: <bq37dhlk3uxrwmejrhqkvjthlq7j3fac7dggkchpdzx7m223jl@njfevshlrkgh>
+References: <20250701130635.4079595-1-yi.zhang@huaweicloud.com>
+ <20250701130635.4079595-10-yi.zhang@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PA4PR04MB9711:EE_
-X-MS-Office365-Filtering-Correlation-Id: ef6de253-8c50-4b17-2c49-08ddb977c514
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|19092799006|376014|7416014|52116014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NkU2c0xxNTNKeHRlN1pVa1krdVpsbkdiOEVqNWhPWmlNZXV4WWtTc21aLzFY?=
- =?utf-8?B?WG5DeFU5cE5RSE92TmU5ajR0bm1Ia05hUXRxS3lYTTcySzNlSnU4aFVQZ0Jj?=
- =?utf-8?B?QlR0amo4bC9veE5ueTB1bS8yRUNiUTVxbngzM2o4YjRNK29Qb0xydGxidXFn?=
- =?utf-8?B?MURYbFhvOE9NdWtUTUZVMzlTenhtRkdmKzkxTUs4MU00ODZkSEZnMXFXOElq?=
- =?utf-8?B?ZmljV2NlTGRzWUhnUEo5SmEwVmJ1QzdOWWNCVXNwbStGUTc4d05KbTNieVFz?=
- =?utf-8?B?cEg4YzdVZVhPYmJlOUNEbm9UZkNuYm5Lcjk5djNPSjZDRnV3bnpldDFESGxL?=
- =?utf-8?B?SVlzbGNrT0tPb1pnV1FSSXVqR01NL240cjBuTHlSK3IxYnAya2hTNkNHdGU0?=
- =?utf-8?B?OXhTeGtJV1E3SWJZZHNKdUwrUmVLb3RvVGptT3Vmd3hBcHdNUEx1ZGI3ckpj?=
- =?utf-8?B?Mlc2eU10ZDE3a3JnZzBNN0t2YmpTU0dnenROR2VRTlMzdU1iamp2SmJPanEr?=
- =?utf-8?B?cUFrZTI2NVZiTm9ENEFNQUFhSUJNSGhaTU85MTVrRitWMDVkRDAzeXpYdzFT?=
- =?utf-8?B?Y1d2VGQrWjE0M3gvUm5KZCtGb0xkTzNwTnEzdUg1MU51RVFtNjV0c0toZTlC?=
- =?utf-8?B?SlkyOUMzZENwN1hIcjhtOHA3SnhIeWZ0QnFPZlc5dE1icEU4YUZuWEJ2Nk1O?=
- =?utf-8?B?dDBFTmNJbHRSMk1IQitIN0dwUi96TTNHYVR6QVN2bGFPUFM5eE5KV3NsUnc2?=
- =?utf-8?B?TTZlZW43U1NsTVVtRzFWM2FiQytCKzB3TzI5ZCtrVzVZdFVvbFdxNmVncFND?=
- =?utf-8?B?Q1FvbjBmSlhSMW96QjJHak0xL0JSVDMyZ3hVWkk3YVBrNFoyNktFdmFVbUxS?=
- =?utf-8?B?dUNSRHVGTStVcVVNTUJHanR0OHVJNXZMVDBZU0xvaXc2RDBzRXVRTmxRVFlh?=
- =?utf-8?B?eW9rSGRCWDVLQWs3TjZkYjVFTXJIa0NZNnpraGluWmczOFRjSzJIb1JUWlpS?=
- =?utf-8?B?NmM3UENQMDFlZTBhSnMzSmViTjlnRG9iTzZpTG1vOEtNZ09STlVyOFlFRkVq?=
- =?utf-8?B?WWF3NGI3eXRuaGQ0cUhjdzlOdGFPVnZIQjZNNVk0dXNjbUtJd1JleWdlc3hv?=
- =?utf-8?B?eEp2M2RueTJTRlJ1Si9QL3RwdnRSMlQ3UGJrNzVWVkR1SCsrR2FjMU91K0JV?=
- =?utf-8?B?Q2NyaSt3cmYxckMwWDAzV1d1WEF1SmdET0grTC80Uno0STBCTWVZOGFic3Vs?=
- =?utf-8?B?cXY2QlFTVlZROEtBZEEzSzN1OXE2aXo1L25aWGdXOXRHbDEvZ25SUmhLTlVz?=
- =?utf-8?B?aFVoUnZhc01BUG5iU09lZ0gyK1JpNTYxeTVtMmg0NGZoNjZIcFFmQy9FUEVL?=
- =?utf-8?B?TThUMFdCaWVpM3c0VE9iamdyQ0hFcUswZjdQbHBOb052NzZzdXVSTENuU3Nq?=
- =?utf-8?B?TlNic1B1YmNmTTI1UjhEdTFzTkhJMEMrQ2xoUUsyTGQ5K3FvRHY0YkVTdkU4?=
- =?utf-8?B?cmM1anI0UlZSUkgrUUlPbGNBVXJHMS9KZ2hYcnNwZGdTc2xaVm1kNTJlVFM0?=
- =?utf-8?B?cXFNVUhnQnFEQkdzZXJWekh0M3lRcnh4alVxM3VlODFzSm4yRkJHU3JRQW5Z?=
- =?utf-8?B?OVlPTlhkaUJpbjlraHVyOGRJejV6dWwvWnowTm54VmVFeVBzeGdZREVVZHJI?=
- =?utf-8?B?YVZUU0JIM2hlbDQ2dnFtOE9ZQlZnbm0xNzdENjBrakhUWmR3NnZlRGk5OVhJ?=
- =?utf-8?B?Rk8xalFoeTZLWGRsOEl0WC9YSWlzWStDMHUxSzFFSmVJcmlOenVqVU9TcytQ?=
- =?utf-8?B?VEhkY3FRWWZnRDhrT2VxeUx3ZkU4ZHN1Y0tTbjZuMmo5Q1l2aFpKdmNoKytz?=
- =?utf-8?B?KzlhTTJoWTN2S0VuNnM3UENsOTBYSFlTNlJITUhiTTlNZVFnWXhZajN4eW5T?=
- =?utf-8?B?bXlyYktwTkU1NzFuZEVQTjhSNnUrSHZUbFpzNnJXQjZnYzNqSGxmOS9zRGFs?=
- =?utf-8?B?WUhpY09lUHpRPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(19092799006)(376014)(7416014)(52116014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?U2YzSWhDeU9iN0NYcDhSUklza3M3NHlLOUFmMXk4SkhYcEFpZWs4K1VIWGNx?=
- =?utf-8?B?VW9hRTlPYUZGdnNIOHdEMDhUeUlOS1UvakhJU3FrNWEvU2YzaUd4Z0ZWQnEy?=
- =?utf-8?B?d1ZCd01CL3FjWUl6dnVXbmxHOXNzQjZXa29LbThiNUhEL2hFVVpQL3hZem9G?=
- =?utf-8?B?bGFSSlpNcEJCakQxVkZ5cTkxbGxKaXFiTFRNR2ZEb3NDZWtTSmVzdVBTWCtx?=
- =?utf-8?B?b2xydVVaYklxQlNpMDE2S2VrZFhtMUFsVngzOU5ORHFicDZDUnVhVm9rckpY?=
- =?utf-8?B?bTlTWVMzZVNWU3QvMUs1NEIyQ1hSeUxML1FsMmFwR0o0YndPZUJQTTRiMVhR?=
- =?utf-8?B?TXZRNVdJRWRtMWVxVVo2eEt3Sjh3czIvaWx5RTl4VGlvaytDOXJGODhvLzdM?=
- =?utf-8?B?YzN6MzlwZExFaTc0TXcvM0UvbnpmNW5lKzlSM01JK0s4TFMzRGh3TmdWcXgw?=
- =?utf-8?B?Wk11a1hiaG5LTnYxL3grRVgxQzJtQkI2NUUxTDZyQnlrR1FiT1RtU1BQY1Fv?=
- =?utf-8?B?RDVxQ2FkZHFMaENBbXUwU3Y0RHlsYnUwN0dCVDdDV0VaZ0NrTnNKbDZscGNT?=
- =?utf-8?B?KzdyVzBSVWJoMkg0S3BybG5jV3VJeVJleG9rL2VJVUxwbWh0LzB3blZtV0x6?=
- =?utf-8?B?OGJZSHpWSVllK2t2RHpYOFkzWEFvQnB1djd6dWpxdm1LdVFEY1B3Y2t2T0c1?=
- =?utf-8?B?d2hyVmhGdEhTcmpIVjF3MElTNjB1VDNVTHVsQWZiVzdjVldRQTUvbWJYY1B1?=
- =?utf-8?B?a1J0aVZ6enZBaE1LZm5mUllPOXVmcGtoMTdSUVJETGdxQy9FWEg4T0puUzZI?=
- =?utf-8?B?TWF2ZGdJZ1ZSNE5VZTczN1JkSkZ3a0pueUdHc1A5QlZWT25wZGVQM2o4OTBp?=
- =?utf-8?B?clJxOUtMS0pEVVhUdzIzZWIxcDZxUUR1YzRCYVZZMXBSS0t6M1N4dUFHeUg5?=
- =?utf-8?B?QU1NZTEzL09yWUJON2g4T1Q2VkpDcGdpMVFlKzVvR3laeXhRc3hNcHU0SjJr?=
- =?utf-8?B?Nm11eG04LytJUWRlT3JqYlBlaUtHQmFsM1AzZlhEMXY3VDQ2WGlLMXJGMi9G?=
- =?utf-8?B?ai95bnJxSnowSFN4dVNpdUJCZmU0bU5nRG1rUWQ2WXdEcTF2eDI3T2d5bVU3?=
- =?utf-8?B?bXNyYWExbU5hUkdqQnNFUEt0ZG00bVkvN0l3U2lUcEo1VGVVdGlBZWhhQWVG?=
- =?utf-8?B?cDdiajlUc2grWDB4T0Fsakg3d2lBaGRmQ2pKTzd6RDJaUUtCUGZOSDBQYjN0?=
- =?utf-8?B?L3pBNEg5YlhiWVZSeHkzNnkxSkwxL0dYam5LNDI3d3hmcHF4dCtTTGhIRVRs?=
- =?utf-8?B?b3ViZ0V0R1h1Tms3Wk8vT1B3YkpBQXhweFN6ZXlORjhqNi81MXltMVNmRzBJ?=
- =?utf-8?B?eUZSWlNJRFlIdHhLTjBSWHpJQmJ6YW43c2Z2S3NZN2VwWVBiRy9mTTdLdDRH?=
- =?utf-8?B?N2RBRGNidFMrd2p3T1VmT0J5SWFmTmJ3T2xRQVpsV1VqWVpDRWlTZ0Z3U0VK?=
- =?utf-8?B?eGFhcnA0ZEhDMFAwQ3AxckxWUktiR0pMSHZkbUwxWmJhV010ZmtyOWhUL1I0?=
- =?utf-8?B?QnRPZS9kUjhjVnRBK1BnbkEwZHNKZTZKY0d0emdBWG5KeFFwcndySTc4bXM2?=
- =?utf-8?B?Z3ROM1IrVytveWhRL3h2UFo0aWVuZ3Rhd0cvL01UNUVEZWt6U2NrTzdZMHJ3?=
- =?utf-8?B?bTZkQm53bi9zQlA4SWpacHBpcUJEcnBWNEF6SzB6RzRWM3Rkcjh6blkwQ2g3?=
- =?utf-8?B?b3BLY1Q1MGZraW9rSWxZU1ZDSWJDTDhpZnJOdU9hWGtrU3lFUktnYjhVaDFZ?=
- =?utf-8?B?UzlCdEZkOUFyeWIrSXJqZ1RLemJqWDMyWmlvL3NMYmJBd2MwY1VwVWlmQmxs?=
- =?utf-8?B?eU1kU1hGeHM4VjdpbzB4YWFqdThxM1hFbThQNHFzeGh5TXhQTjVkZUhJR1gr?=
- =?utf-8?B?b0pTNE90UU13V2ZNUjloMkJLU204ODJ1M25DOTFKZ2lwbU1nUnJpbG90K08y?=
- =?utf-8?B?SHM0ZXhFWU8rRlR4S3ExOHdiQ3Jtb2w5Q0s4VzVrN0hXUGg4WHJJelVlWFJK?=
- =?utf-8?B?QjRaYkpoVFZzdm5namtkZG1SakdLS1crT1JMTDRYc2MyZHVsRzhWWHdzWVpx?=
- =?utf-8?Q?5fR7oub1q/H5P1KuDUuWSszMW?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ef6de253-8c50-4b17-2c49-08ddb977c514
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 14:50:21.6782
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +F8lm7O9Rr4R+4jpmY+UIRPKlLeTLayL9OW2wmgnNXsUW2HvxWB4KWYNtAKyeBDKiAApqZMcna403vBc+rKujQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB9711
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250701130635.4079595-10-yi.zhang@huaweicloud.com>
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	RCVD_COUNT_THREE(0.00)[3];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,imap1.dmz-prg2.suse.org:helo,suse.com:email]
+X-Spam-Level: 
 
-On Wed, Jul 02, 2025 at 06:52:01PM +0530, Manivannan Sadhasivam wrote:
-> On Mon, Jun 09, 2025 at 12:34:21PM GMT, Frank Li wrote:
-> > Support only one physical function, so call imx_pcie_add_lut_by_rid(0)
-> > to add a single LUT entry when operating in EP mode.
-> >
->
-> So previously LUT config was not present and endpoint mode continued to work?
+On Tue 01-07-25 21:06:34, Zhang Yi wrote:
+> From: Zhang Yi <yi.zhang@huawei.com>
+> 
+> After ext4 supports large folios, the semantics of reserving credits in
+> pages is no longer applicable. In most scenarios, reserving credits in
+> extents is sufficient. Therefore, introduce ext4_chunk_trans_extent()
+> to replace ext4_writepage_trans_blocks(). move_extent_per_page() is the
+> only remaining location where we are still processing extents in pages.
+> 
+> Suggested-by: Jan Kara <jack@suse.cz>
+> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
 
-Yes, LUT only use when enable msi and iommu. I will add such information
-at next version.
+Looks good. Feel free to add:
 
-Frank
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-> Please explain why this is necessary now.
->
-> - Mani
->
-> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > ---
-> > change from v14 to v16
-> > - none
-> >
-> > change from v13 to v14
-> > - new patch
-> > ---
-> >  drivers/pci/controller/dwc/pci-imx6.c | 8 +++++++-
-> >  1 file changed, 7 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> > index 032b906c44dfa..3123bf49e209c 100644
-> > --- a/drivers/pci/controller/dwc/pci-imx6.c
-> > +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> > @@ -1063,7 +1063,10 @@ static int imx_pcie_add_lut(struct imx_pcie *imx_pcie, u16 rid, u8 sid)
-> >  	data1 |= IMX95_PE0_LUT_VLD;
-> >  	regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA1, data1);
-> >
-> > -	data2 = IMX95_PE0_LUT_MASK; /* Match all bits of RID */
-> > +	if (imx_pcie->drvdata->mode == DW_PCIE_EP_TYPE)
-> > +		data2 = 0x7; /* EP side's RID from RC, only 'D' is meansful */
-> > +	else
-> > +		data2 = IMX95_PE0_LUT_MASK; /* Match all bits of RID */
-> >  	data2 |= FIELD_PREP(IMX95_PE0_LUT_REQID, rid);
-> >  	regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA2, data2);
-> >
-> > @@ -1767,6 +1770,9 @@ static int imx_pcie_probe(struct platform_device *pdev)
-> >  		ret = imx_add_pcie_ep(imx_pcie, pdev);
-> >  		if (ret < 0)
-> >  			return ret;
-> > +
-> > +		/* Only support one physical function */
-> > +		imx_pcie_add_lut_by_rid(imx_pcie, 0);
-> >  	} else {
-> >  		pci->pp.use_atu_msg = true;
-> >  		ret = dw_pcie_host_init(&pci->pp);
-> >
-> > --
-> > 2.34.1
-> >
->
-> --
-> மணிவண்ணன் சதாசிவம்
+								Honza
+
+> ---
+>  fs/ext4/ext4.h        |  2 +-
+>  fs/ext4/extents.c     |  6 +++---
+>  fs/ext4/inline.c      |  6 +++---
+>  fs/ext4/inode.c       | 33 +++++++++++++++------------------
+>  fs/ext4/move_extent.c |  3 ++-
+>  fs/ext4/xattr.c       |  2 +-
+>  6 files changed, 25 insertions(+), 27 deletions(-)
+> 
+> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+> index 18373de980f2..f705046ba6c6 100644
+> --- a/fs/ext4/ext4.h
+> +++ b/fs/ext4/ext4.h
+> @@ -3064,9 +3064,9 @@ extern int ext4_punch_hole(struct file *file, loff_t offset, loff_t length);
+>  extern void ext4_set_inode_flags(struct inode *, bool init);
+>  extern int ext4_alloc_da_blocks(struct inode *inode);
+>  extern void ext4_set_aops(struct inode *inode);
+> -extern int ext4_writepage_trans_blocks(struct inode *);
+>  extern int ext4_normal_submit_inode_data_buffers(struct jbd2_inode *jinode);
+>  extern int ext4_chunk_trans_blocks(struct inode *, int nrblocks);
+> +extern int ext4_chunk_trans_extent(struct inode *inode, int nrblocks);
+>  extern int ext4_meta_trans_blocks(struct inode *inode, int lblocks,
+>  				  int pextents);
+>  extern int ext4_zero_partial_blocks(handle_t *handle, struct inode *inode,
+> diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
+> index b543a46fc809..f0f155458697 100644
+> --- a/fs/ext4/extents.c
+> +++ b/fs/ext4/extents.c
+> @@ -5171,7 +5171,7 @@ ext4_ext_shift_path_extents(struct ext4_ext_path *path, ext4_lblk_t shift,
+>  				credits = depth + 2;
+>  			}
+>  
+> -			restart_credits = ext4_writepage_trans_blocks(inode);
+> +			restart_credits = ext4_chunk_trans_extent(inode, 0);
+>  			err = ext4_datasem_ensure_credits(handle, inode, credits,
+>  					restart_credits, 0);
+>  			if (err) {
+> @@ -5431,7 +5431,7 @@ static int ext4_collapse_range(struct file *file, loff_t offset, loff_t len)
+>  
+>  	truncate_pagecache(inode, start);
+>  
+> -	credits = ext4_writepage_trans_blocks(inode);
+> +	credits = ext4_chunk_trans_extent(inode, 0);
+>  	handle = ext4_journal_start(inode, EXT4_HT_TRUNCATE, credits);
+>  	if (IS_ERR(handle))
+>  		return PTR_ERR(handle);
+> @@ -5527,7 +5527,7 @@ static int ext4_insert_range(struct file *file, loff_t offset, loff_t len)
+>  
+>  	truncate_pagecache(inode, start);
+>  
+> -	credits = ext4_writepage_trans_blocks(inode);
+> +	credits = ext4_chunk_trans_extent(inode, 0);
+>  	handle = ext4_journal_start(inode, EXT4_HT_TRUNCATE, credits);
+>  	if (IS_ERR(handle))
+>  		return PTR_ERR(handle);
+> diff --git a/fs/ext4/inline.c b/fs/ext4/inline.c
+> index a1bbcdf40824..d5b32d242495 100644
+> --- a/fs/ext4/inline.c
+> +++ b/fs/ext4/inline.c
+> @@ -562,7 +562,7 @@ static int ext4_convert_inline_data_to_extent(struct address_space *mapping,
+>  		return 0;
+>  	}
+>  
+> -	needed_blocks = ext4_writepage_trans_blocks(inode);
+> +	needed_blocks = ext4_chunk_trans_extent(inode, 1);
+>  
+>  	ret = ext4_get_inode_loc(inode, &iloc);
+>  	if (ret)
+> @@ -1864,7 +1864,7 @@ int ext4_inline_data_truncate(struct inode *inode, int *has_inline)
+>  	};
+>  
+>  
+> -	needed_blocks = ext4_writepage_trans_blocks(inode);
+> +	needed_blocks = ext4_chunk_trans_extent(inode, 1);
+>  	handle = ext4_journal_start(inode, EXT4_HT_INODE, needed_blocks);
+>  	if (IS_ERR(handle))
+>  		return PTR_ERR(handle);
+> @@ -1979,7 +1979,7 @@ int ext4_convert_inline_data(struct inode *inode)
+>  			return 0;
+>  	}
+>  
+> -	needed_blocks = ext4_writepage_trans_blocks(inode);
+> +	needed_blocks = ext4_chunk_trans_extent(inode, 1);
+>  
+>  	iloc.bh = NULL;
+>  	error = ext4_get_inode_loc(inode, &iloc);
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index ceaede80d791..572a70b6a934 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -1295,7 +1295,8 @@ static int ext4_write_begin(struct file *file, struct address_space *mapping,
+>  	 * Reserve one block more for addition to orphan list in case
+>  	 * we allocate blocks but write fails for some reason
+>  	 */
+> -	needed_blocks = ext4_writepage_trans_blocks(inode) + 1;
+> +	needed_blocks = ext4_chunk_trans_extent(inode,
+> +			ext4_journal_blocks_per_folio(inode)) + 1;
+>  	index = pos >> PAGE_SHIFT;
+>  
+>  	if (ext4_test_inode_state(inode, EXT4_STATE_MAY_INLINE_DATA)) {
+> @@ -4462,7 +4463,7 @@ int ext4_punch_hole(struct file *file, loff_t offset, loff_t length)
+>  		return ret;
+>  
+>  	if (ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS))
+> -		credits = ext4_writepage_trans_blocks(inode);
+> +		credits = ext4_chunk_trans_extent(inode, 2);
+>  	else
+>  		credits = ext4_blocks_for_truncate(inode);
+>  	handle = ext4_journal_start(inode, EXT4_HT_TRUNCATE, credits);
+> @@ -4611,7 +4612,7 @@ int ext4_truncate(struct inode *inode)
+>  	}
+>  
+>  	if (ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS))
+> -		credits = ext4_writepage_trans_blocks(inode);
+> +		credits = ext4_chunk_trans_extent(inode, 1);
+>  	else
+>  		credits = ext4_blocks_for_truncate(inode);
+>  
+> @@ -6238,25 +6239,19 @@ int ext4_meta_trans_blocks(struct inode *inode, int lblocks, int pextents)
+>  }
+>  
+>  /*
+> - * Calculate the total number of credits to reserve to fit
+> - * the modification of a single pages into a single transaction,
+> - * which may include multiple chunks of block allocations.
+> - *
+> - * This could be called via ext4_write_begin()
+> - *
+> - * We need to consider the worse case, when
+> - * one new block per extent.
+> + * Calculate the journal credits for modifying the number of blocks
+> + * in a single extent within one transaction. 'nrblocks' is used only
+> + * for non-extent inodes. For extent type inodes, 'nrblocks' can be
+> + * zero if the exact number of blocks is unknown.
+>   */
+> -int ext4_writepage_trans_blocks(struct inode *inode)
+> +int ext4_chunk_trans_extent(struct inode *inode, int nrblocks)
+>  {
+> -	int bpp = ext4_journal_blocks_per_folio(inode);
+>  	int ret;
+>  
+> -	ret = ext4_meta_trans_blocks(inode, bpp, bpp);
+> -
+> +	ret = ext4_meta_trans_blocks(inode, nrblocks, 1);
+>  	/* Account for data blocks for journalled mode */
+>  	if (ext4_should_journal_data(inode))
+> -		ret += bpp;
+> +		ret += nrblocks;
+>  	return ret;
+>  }
+>  
+> @@ -6634,10 +6629,12 @@ static int ext4_block_page_mkwrite(struct inode *inode, struct folio *folio,
+>  	handle_t *handle;
+>  	loff_t size;
+>  	unsigned long len;
+> +	int credits;
+>  	int ret;
+>  
+> -	handle = ext4_journal_start(inode, EXT4_HT_WRITE_PAGE,
+> -				    ext4_writepage_trans_blocks(inode));
+> +	credits = ext4_chunk_trans_extent(inode,
+> +			ext4_journal_blocks_per_folio(inode));
+> +	handle = ext4_journal_start(inode, EXT4_HT_WRITE_PAGE, credits);
+>  	if (IS_ERR(handle))
+>  		return PTR_ERR(handle);
+>  
+> diff --git a/fs/ext4/move_extent.c b/fs/ext4/move_extent.c
+> index 1f8493a56e8f..adae3caf175a 100644
+> --- a/fs/ext4/move_extent.c
+> +++ b/fs/ext4/move_extent.c
+> @@ -280,7 +280,8 @@ move_extent_per_page(struct file *o_filp, struct inode *donor_inode,
+>  	 */
+>  again:
+>  	*err = 0;
+> -	jblocks = ext4_writepage_trans_blocks(orig_inode) * 2;
+> +	jblocks = ext4_meta_trans_blocks(orig_inode, block_len_in_page,
+> +					 block_len_in_page) * 2;
+>  	handle = ext4_journal_start(orig_inode, EXT4_HT_MOVE_EXTENTS, jblocks);
+>  	if (IS_ERR(handle)) {
+>  		*err = PTR_ERR(handle);
+> diff --git a/fs/ext4/xattr.c b/fs/ext4/xattr.c
+> index 8d15acbacc20..3fb93247330d 100644
+> --- a/fs/ext4/xattr.c
+> +++ b/fs/ext4/xattr.c
+> @@ -962,7 +962,7 @@ int __ext4_xattr_set_credits(struct super_block *sb, struct inode *inode,
+>  	 * so we need to reserve credits for this eventuality
+>  	 */
+>  	if (inode && ext4_has_inline_data(inode))
+> -		credits += ext4_writepage_trans_blocks(inode) + 1;
+> +		credits += ext4_chunk_trans_extent(inode, 1) + 1;
+>  
+>  	/* We are done if ea_inode feature is not enabled. */
+>  	if (!ext4_has_feature_ea_inode(sb))
+> -- 
+> 2.46.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
