@@ -1,294 +1,245 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2060.outbound.protection.outlook.com [40.107.237.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF4862D77F3;
-	Wed,  2 Jul 2025 20:56:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751489783; cv=none; b=MLHUmPhPeY+kM1kKIR/NxMQ8h9Vsw1aITROA9i+fmTEqinXQqflhzkpLLVSx/DZbVDQ/OWfZ2TWmcVgV+Eb0bwD1LTH6o1zOAov8E/iOkB/3e+C/Jn0l7DBFBYpgviYYLra7TFWlDcV5gKsgIYASSxkDBmpBsDJTKYGWJJVV2gc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751489783; c=relaxed/simple;
-	bh=JOV0VuhVDC6mZNe70ZzDphEukvf4rO0jaSyCJMEPmAA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=T4lAJirK2I4arjUpyAalMLXkET1xBa9aPbTfnLp14ck7yjYwbGFQd4B89bmSze2HSYuhvN7xrlQshqrxbQNWKxjFyzU02dmVsaU/AGxL2Xa1DvTtXhhmoE3cYl9hO1MwLjffuGGlyZsmK/+fU4Jz6E74+CBFGSwDQyPUs8wZhMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=mRLwgsVW; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34BF2D6415;
+	Wed,  2 Jul 2025 20:56:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751489795; cv=fail; b=FrVcLF4+41XcBzCk1WOJWofNGIqnhW7CkIBnNfgMpZEf3Kyv6Ravj/DfBAl/JyopmJYyh6WZj29Mg8yxED4Kk8cfVcXwAQY5ilyviP08Nszqt46eVyymrTeWlK8T9+h0I7B9NlojQAmWo9N3Tb+3U8wlvRX189t/VXPOAS4yPh8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751489795; c=relaxed/simple;
+	bh=qViJt+/tQ9MozjifwGEO4f74aTISEeLHe3mcRDihTv4=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=iygVjT4/IqqxR+zPRrUW6TW5sTMLruUuRRRXJ9jOzSbZR6rdMlyOmqSTonAzUz5iLXLJ7q9HgudDzwj6OXPLNBD2bayb8whMFTzi6SvkO6yAQpHtwkXlBqIosM6Ne7nbk3FiPZjdJPRaWzzu8RSNVjoN8VxDRNuLRPpSfqJux2U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=hcgjhTQV; arc=fail smtp.client-ip=40.107.237.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="mRLwgsVW"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id B0A0BA01EB;
-	Wed,  2 Jul 2025 22:56:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=mail; bh=h56TH9MwsANX4p1H+NWXa4BQ5Q7QI1tiBtnBxDo3Qg4=; b=
-	mRLwgsVWte3DsAcpC6g/iR2Mg6Aj2o0LYOnOmW4PyGK8Fsoh1q26LdqkFfHBdhIi
-	2GU+3znuyN+Buo9qye4tK2mfBayGpMQIb+42bsNwe5Hr1QypWdv7k2eujhEPUo+1
-	59e50Kcw9h9U9TReFcHRnJyrGUvIctcdvfaQ8Tb1cvR1waZ78F4nEhZLlQVjPRyj
-	Jj9uyH9PJR1aIUjTUY6JqUKqRdcE6DFo5bGEfwUqE8l59CqK3zyRuZA0X8E1XmTA
-	2Wf313LK5amDYzO1/UezUUDYcEE22/Oc+KmkzyqOLlz7E+7p1QNTs93pjkqsSi2J
-	2KJu+30PdA2t13LArZCms3wJgeKugpb0OI1sXr//w9PlQh19crjLgm8xoemzQuY/
-	xeTlAAvcldfIgwLVnXYomYnqWk9NEczSUIx43RmpQzAjrZa+NfdebNzc329bOnqk
-	I96vsKj5QWIn1ghxmDX3l3E3oIPdA9R/CceWERg8j9ZuHURA3Ap08NkyAWB5Wdpf
-	zB5T8pviI1IBei8vjMP1btN26Lu/V4ZGLRx1/zy7VNRav4DkaxfFANw/vG9ivQ9O
-	e2PUmypPJ58PytPmAknxpCl5cebifCnhi0MZcdHfkML9vDpQtLectjyDf8ipgUjF
-	CbXUM9S+v5nMXRCMcnfCKCoZ5dFKLO/fuixkmsbq2J0=
-From: =?utf-8?q?Bence_Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
-Date: Wed, 2 Jul 2025 22:55:45 +0200
-Subject: [PATCH] arm: DT: imx6-bx50v3: Replace license text comment with
- SPDX identifier
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="hcgjhTQV"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xo71WYEzCfe7qD2ufNlvRnwjBTikcH8XkIkyDBeGvc6im4QbgO5pJMinu1PEWesZQodTPvtqoSGixbPuQy4DgNbBe3oqv+WfLJN8bS/94oP2nJOsocwcFtxBMxT26s5FPMuDQEmk770cOUUIaqtbaGS2Xx2EvHIpdQJGuxwOV0SNWQy7nqSoNFeM4unRR4CD3bV292sA5bv8VV2D8tkyPJvHQp32jQtIUU0SCvRqjUiwKrYlZox4Is+ol212znXuYqH9sYX65nuSGYXdnG5dmyLxVadnyU+kV/2MpccL1eWxoMgmSDIOCzMRDrtOv667ZOhmZgLNI1x90mor5CB6FA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=P2HAbMgAqyBPq+Mu0F+upLYxR/t1repXC5UKlPyNAns=;
+ b=kaWS8eIocRUlyGD+EAMJ5waP3dNeOWcGC3yGW9DYFJ8hKPsWrMQLKzOtGbILEmR9gWU/lO+0iMhajDIQEPu2uynyuCIFNiAj3oI6OdF+4/h6zgA0f1etSRAVyDP9nh1yA+sZLPPLi8YyFmg2RD2ZGTAH7ZZYjlKWNcXkWHVAFAtLgC3vE2sRIBukHPbZez7EVdf/HAIUvoF1euI+n+yUPnEoiwKKEVnIZv2EH2tqHFebabHoyLuCoDYD+i+5wQauvasOqJURjvYnMGlMyBfjCaCZgxCEeX7u6kYeJnkPEZOs+v+UaPP09oXAtpVEjzuX2VJYXb/7NULXJB9jNT1A6g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P2HAbMgAqyBPq+Mu0F+upLYxR/t1repXC5UKlPyNAns=;
+ b=hcgjhTQVJaYbR84GSGwHCsDzH1au7GOaQ+YwBMfv7zn1zlszX5kGdx7Y/btO8Vsvv4vnuXb4nCqw534NhFQFpMRr7rlQSRsWyAYbox4Ky/0mQwC+XYoDWrfQXp0CEVqZIdhygwTJTbLCQpz4eJwkE8dOYNeVRKN/TN/S9CAvEup4wh6B9sUmXMy3CXyOtk3ArhR4r6g2Hn2mK9g6QGO07KdKG5GVrk8k4xLTpu2dGmscql4odEzcSswIeg2IwdBr3AoyjjH6bYbWrxw00UdCKK9nBkStSHCltnUyDfomSCLvr10aodRS3GNmsOiPDPeSlCijAnq4fNTzaSGVQ7LUqg==
+Received: from CH3PR12MB7738.namprd12.prod.outlook.com (2603:10b6:610:14e::9)
+ by CYXPR12MB9442.namprd12.prod.outlook.com (2603:10b6:930:e3::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.21; Wed, 2 Jul
+ 2025 20:56:30 +0000
+Received: from CH3PR12MB7738.namprd12.prod.outlook.com
+ ([fe80::fad1:1acb:f5eb:98ee]) by CH3PR12MB7738.namprd12.prod.outlook.com
+ ([fe80::fad1:1acb:f5eb:98ee%3]) with mapi id 15.20.8901.018; Wed, 2 Jul 2025
+ 20:56:30 +0000
+From: Asmaa Mnebhi <asmaa@nvidia.com>
+To: Andrew Lunn <andrew@lunn.ch>
+CC: "davem@davemloft.net" <davem@davemloft.net>, "edumazet@google.com"
+	<edumazet@google.com>, "kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, David Thompson <davthompson@nvidia.com>
+Subject: RE: [PATCH net v1] mlxbf-gige: Support workaround for MDIO GPIO
+ degradation bug
+Thread-Topic: [PATCH net v1] mlxbf-gige: Support workaround for MDIO GPIO
+ degradation bug
+Thread-Index:
+ AQHbPTCwkw/5mDAiDkuucKlF479Xq7LJ1/+AgP/0uKCAAAhugIAAAetQgE7YCVCAAOb/AIAG7chA
+Date: Wed, 2 Jul 2025 20:56:30 +0000
+Message-ID:
+ <CH3PR12MB7738E1776CD326A2566254D5D740A@CH3PR12MB7738.namprd12.prod.outlook.com>
+References: <20241122224829.457786-1-asmaa@nvidia.com>
+ <7c7e94dc-a87f-425b-b833-32e618497cf8@lunn.ch>
+ <CH3PR12MB7738C758D2A87A9263414AFBD78BA@CH3PR12MB7738.namprd12.prod.outlook.com>
+ <6e3435a0-b04e-44cc-9e9d-981a8e9c3165@lunn.ch>
+ <CH3PR12MB7738C25C6403C3C29538DA4BD78BA@CH3PR12MB7738.namprd12.prod.outlook.com>
+ <CH3PR12MB773870BA2AA47223FF9A72D7D745A@CH3PR12MB7738.namprd12.prod.outlook.com>
+ <668cd20c-3863-4d16-ab05-30399e4449f6@lunn.ch>
+In-Reply-To: <668cd20c-3863-4d16-ab05-30399e4449f6@lunn.ch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CH3PR12MB7738:EE_|CYXPR12MB9442:EE_
+x-ms-office365-filtering-correlation-id: 461a803b-b07c-4155-8e23-08ddb9aaeba4
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?6pvtMi6fcXvs2cnBX3ztA1GCJQMtJSalCV2c/zr2lkoWSvpkeAhm+d1Axlfu?=
+ =?us-ascii?Q?lyEhWQ3J77FOCmBVdOXFAY2VMPtgdBx0owjh8+EDvmjEoj5eyu4jXpPzBs9y?=
+ =?us-ascii?Q?XWtp4Qxk/gUXmM/ckQhC9pUdDAk827RB+PeynOvTLy15KK4XyDpZL0R3S8ng?=
+ =?us-ascii?Q?AigfIcBr5V8RBzIeGbOd0RhCExV0kqYcjwfNa3IjYvcSjCrYkvmDlzbVKycc?=
+ =?us-ascii?Q?5WoS2P+TAIoSSdYebuKwCe2EDGjpOsdfd1wQuQsxQMS28mJ/pytcL5TE87je?=
+ =?us-ascii?Q?+9w44IlP116Me/Py/1XeEA0hRIQYFz6O8FRH4SNLNAF+ULSjd5NBQvkArE80?=
+ =?us-ascii?Q?uUj5KwpC7CZkDkaLKXxLhRrJLES3r7TJl8KYgDZYbxlGxlLB+OLhvrD1onV5?=
+ =?us-ascii?Q?KrFIsMxtvnUxncw6jvASqx8cIZTauNH58fZXer+DE7C1b7PZ5hCNyvy3bOTP?=
+ =?us-ascii?Q?iRrLkmOwC1QnjQWWbQdbYIRLHjHgWjOMP5WcGdmAokycPzgHHRRYJEs7MYJ7?=
+ =?us-ascii?Q?b0kWh1tITXVZKdmkb0W3lu94StcSdB3eHRgNtVB8jGgidUqn+A0xuAnWgaop?=
+ =?us-ascii?Q?hSK1R8RsvVgLNKhnIzqluLmwkkY+Dgvp8pPiDx1olSwK0jaN9W7oDOwEmRk3?=
+ =?us-ascii?Q?tDHk4uS+kOdWCarOVpPWup94/qiCQPfhuR4F3rIsHXdqtnLrCt/u6iPom90r?=
+ =?us-ascii?Q?zBmqeK32pdCRsNs5jKfqke36nJmLYQRkQ8jYJgnIAVLHICqp/KpqwZrEpRn/?=
+ =?us-ascii?Q?SOG2aGV4fRIZgpbmov2vaKIFTRHvoXvbkLuGTinTBM2NlN/sijmK2rfEAAZi?=
+ =?us-ascii?Q?xnA/hCbrgBjO0fQ2X0/VIey00puRRIXzbZxvDIJdabgcvxX115QuELPkRvKQ?=
+ =?us-ascii?Q?3KnGo042NZISmeqTUJobLV636vyVzBUoUZEUTi03mFzYiQ/gopNJ4HOOpS56?=
+ =?us-ascii?Q?RvdQNV8IR/ZYJA7rqlXODomx8Y1FG/+eBsIrzW4nneOCTK4zQPs/9dRRQ810?=
+ =?us-ascii?Q?fnrZiZ2iEzyPQr7xzjtdswt6vcH5cSc+Vptf26i6htzVtZGH20ppje6L2Z5m?=
+ =?us-ascii?Q?KDOw2JosIH4F/RyN9R1H6G+wTkxLZoYC7AK8J9DOVfRhZwgpkd+0Ls6I0+tM?=
+ =?us-ascii?Q?FMFQvH4I+Pq0Pf1UPuyzAj2aUKwotJFf36mII93ySe5lzH/bX/q2zuxtXp4C?=
+ =?us-ascii?Q?an9YPKpXuh/K1k/tCVUz3Xue7RlzXkeBbYfNud4i1F3L5Ep6dhFIV35nB546?=
+ =?us-ascii?Q?VYd3u+AFo/sroa6fjDIj+6+0e/522MH8eIw+IfkqtjrPrDXZmHGDhRX4SQHf?=
+ =?us-ascii?Q?weX3Y93lSbFNQb+burPoJRkGxcvbytxeGi7tUitkyWJyqXJ1lXE3juIF+YEL?=
+ =?us-ascii?Q?ne6HQ8yVvAqvqCRRBIpx8upl07IfLiKQUJnyOggIGZXFZqnaamO0jIuF3eaj?=
+ =?us-ascii?Q?/Yd1qJSk8JAWRodFEgAFlD1Qd7Ou3fNrvQ/iSrmFLRqq/b/GTsgAYnUdRo9t?=
+ =?us-ascii?Q?hwkCsXi88KReOUM=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB7738.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?nZmzT8nIIuq3xnNSIKk0JpJvUiP3hvdtSZIfdZDzjC8XVdw2MipLdYceOyRL?=
+ =?us-ascii?Q?MhhjFaVBuiziPToTosp5Ryz7l4ymhq6bfojaeVTb2zVpXAtUWg1v9GZeb/F6?=
+ =?us-ascii?Q?yR9GF47ENEJi4kck0vRabo/aoM9ME3vyqF1zn9AKxy0YngH3tqztLsa4k9xU?=
+ =?us-ascii?Q?vy6ILaGn4uVbciqB0VYoJV1079LkkhtHK+Sij7Xtcc/3CAcR0t7+/f6QKGU8?=
+ =?us-ascii?Q?466IaIdJRSRGgnZO20/1bjb1fxtqrcw2Pd25Wu9sqycuVTibMP1xbhZ4hGnh?=
+ =?us-ascii?Q?8jQMU6pDt0zjXY30F5uplA/z1unLVOXUQ6gSzxb53U4t+bCuvzOAfiA360mi?=
+ =?us-ascii?Q?QsDkRbg8OFwzxQ2Vr11EhfHGr6jvbq0OAM3/VbO04FTeW3+M1hEjW/vgdIPJ?=
+ =?us-ascii?Q?BZUGGb39L/125m34FEZXkpylB4I0ldnTYys9pQkSiIahZ4/5L4XwlHLsNpeY?=
+ =?us-ascii?Q?DDIR1XqxG5ZcOx8FWmvGfuPtBejjwHSv8newSRr39ysJw9tCZi0z40V2HPJM?=
+ =?us-ascii?Q?PbuLRmNW5JC1JtV0XkoEai6acv6DNLtIbpEQc4SLSwmt56pkrwR+EMBVqGH5?=
+ =?us-ascii?Q?DlCPYkRNW0kDCXCM8moBqG3Kys50F9uEpL8zOgb+6Nor1+3kRtybLoeOkruV?=
+ =?us-ascii?Q?QxRI2OFQkowAgxL4J8/I+tURBoKgEpQCC6gL11ZZdbi0RQLm4ouYR9PPNV+F?=
+ =?us-ascii?Q?YJHwSk2IUqUCHH+Dvr37PNOhNnCBV7DfdTJzlgheS/JK6KRbncr+o6T6wm63?=
+ =?us-ascii?Q?ZpdYE8BCYMj509o+rGDBUwoUGx8hOTUNQHdrQWagYwfbeWG4+veQdMvwYzuM?=
+ =?us-ascii?Q?hI8I8N543/EYFFNvmZhyayKeZ01xwlHpfABc3asf8HKyrC5ltW0F4A5SFFjC?=
+ =?us-ascii?Q?jjZT0NHG5XuV5ZLUOcYsXe+eouIk1Ut7O76GLcuhcYZvmnR0TVmIZ2HowbeB?=
+ =?us-ascii?Q?+5bish4RFxz2j0nZbulG1olVn/tANNweMUiEmOGmSceCVTxc9h4RwxnuXWjN?=
+ =?us-ascii?Q?M/2mHkO6XOpxKMyacXZxuXBbLA1gJT/N+fpjb3QWQ42SBczgAaYqTZHUjY9A?=
+ =?us-ascii?Q?wchC6AMSm/oYnE91yGNd6BZJfb8utwR5Hkj9laO+mPFA2UvDCbW4eITbXD7I?=
+ =?us-ascii?Q?HwLqIlF+T2PH5Ibp74U1MMNTSgyhd2IdfkDFGlMeLF8xbOiy8ZnsDzK2O5En?=
+ =?us-ascii?Q?OOi/z5UcsNCUtjVa3qDIHEMUtlejPYFOSlyoYRFK3xQo6fhiRyoyDcaJHIQB?=
+ =?us-ascii?Q?YuOa4Wq5xIYCSZuTbSgJzLcNvMwCV/SGKjnPSXoEbSlDbqQmSgpon3EvXrA5?=
+ =?us-ascii?Q?kdXJL8bJpLoYkTNMzqsCgC5KR0Vs2waYi4quVyqtVkFwFyb1+TDrySKieR6l?=
+ =?us-ascii?Q?0rVcXY52I35pReFq7bsK3urSdKHtDLkwcJWjMT3ro5coy74EIrJn5KTUd3++?=
+ =?us-ascii?Q?Kak4cWEsABsyf9iWuBlQNM2y1Oxory5kg55SBjUvBT6BIfJWQOQqNRpl4hnR?=
+ =?us-ascii?Q?PeXye7X8Q20Etnb2PI7P8vtEUUsu/aEzJM5/NKrFJ5YiUVE6VAVlsGrws4FC?=
+ =?us-ascii?Q?HU0XuaCs/gmvhRvBLM4=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-ID: <20250702-bx50v3-dts-lic-v1-1-2fe63de3606d@prolan.hu>
-X-B4-Tracking: v=1; b=H4sIANCcZWgC/x3MwQrCMAyA4VcZORvIWurAVxEPTZe5gFZJxhiMv
- bt1x+/w/zu4mIrDrdvBZFXXT23oLx2UOdenoI7NECgkGiggb4nWiOPi+NKC14ED9TGScIIWfU0
- m3c7h/dHM2QXZci3zf/POvojBcfwAsh/twHkAAAA=
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "Sascha
- Hauer" <s.hauer@pengutronix.de>, Pengutronix Kernel Team
-	<kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>
-CC: <devicetree@vger.kernel.org>, <imx@lists.linux.dev>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	Akshay Bhat <akshay.bhat@timesys.com>, Ian Ray <ian.ray@ge.com>, Jaret Cantu
-	<jaret.cantu@timesys.com>, Justin Waters <justin.waters@timesys.com>,
-	=?utf-8?q?Bence_Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
-X-Mailer: b4 0.13.0
-X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1751489777;VERSION=7994;MC=762491779;ID=216168;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
-X-ESET-Antispam: OK
-X-EsetResult: clean, is OK
-X-EsetId: 37303A296767155D6C7260
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB7738.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 461a803b-b07c-4155-8e23-08ddb9aaeba4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jul 2025 20:56:30.5008
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aMZ/Ai3ZHbbylJmtPC0VMypWlzaeADE7VluALzPekgCmcOE5KLxhHJOth/AnRreo/3sKG8Mm3SGjQZOMW0cdDw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR12MB9442
 
-Replace verbatim license text with a `SPDX-License-Identifier`.
+> > However, we have another issue. I noticed that even if
+> > mdio_read/write() functions are not being called,
+> > runtime_resume/suspend() are still called regularly. After
+> > investigation, I found out that this is due to ethtool being called
+> > regularly. Ethtool automatically triggers the resume/suspend even if
+> > we do no MDIO access. A different team wrote a script which monitors
+> > "ethtool -S eth0" every 60 seconds. So every minute, we are running
+> > resume/suspend and enabling/disabling the MDIO clock. Seems counter
+> > productive. That team said that it is a requirement that they
+> > collect these statistics about the mlxbf_gige interface.
+>=20
+> > Is there any way to prevent ethtool from calling resume/suspend
+> > without changing core kernel code?
+> >=20
+> You need to put the MDIO bus device into its own pm_domain. Try
+> calling dev_pm_domain_set() to separate the MDIO bus from the MAC
+> driver in terms of power domains. ethtool will then power on/off the
+> MAC but leave the MDIO bus alone.
+>=20
+Using dev_pm_domain_set() has the same effect as SET_RUNTIME_PM_OPS. The de=
+v struct is shared so ethtool is still calling the suspend/resume.
 
-The comment heades mis-attributes this license to be "X11", but the
-license text does not include the last line "Except as contained in this
-notice, the name of the X Consortium shall not be used in advertising or
-otherwise to promote the sale, use or other dealings in this Software
-without prior written authorization from the X Consortium.". Therefore,
-this license is actually equivalent to the SPDX "MIT" license (confirmed
-by text diffing).
+int mlxbf_gige_mdio_probe(struct platform_device *pdev, struct mlxbf_gige *=
+priv)
+ {
+        struct device *dev =3D &pdev->dev;
+@@ -390,14 +418,27 @@ int mlxbf_gige_mdio_probe(struct platform_device *pde=
+v, struct mlxbf_gige *priv)
+        snprintf(priv->mdiobus->id, MII_BUS_ID_SIZE, "%s",
+                 dev_name(dev));
 
-Cc: Akshay Bhat <akshay.bhat@timesys.com>
-Cc: Ian Ray <ian.ray@ge.com>
-Cc: Jaret Cantu <jaret.cantu@timesys.com>
-Cc: Justin Waters <justin.waters@timesys.com>
-Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
----
- arch/arm/boot/dts/nxp/imx/imx6q-b450v3.dts  | 38 +----------------------------
- arch/arm/boot/dts/nxp/imx/imx6q-b650v3.dts  | 38 +----------------------------
- arch/arm/boot/dts/nxp/imx/imx6q-b850v3.dts  | 38 +----------------------------
- arch/arm/boot/dts/nxp/imx/imx6q-bx50v3.dtsi | 38 +----------------------------
- 4 files changed, 4 insertions(+), 148 deletions(-)
++       pm_runtime_set_autosuspend_delay(priv->mdiobus->parent, 100);
++       pm_runtime_use_autosuspend(priv->mdiobus->parent);
++       pm_runtime_set_active(priv->mdiobus->parent);
++       pm_runtime_enable(priv->mdiobus->parent);
++       dev_pm_domain_set(priv->mdiobus->parent, &mlxbf_gige_pm_domain);
++
+        ret =3D mdiobus_register(priv->mdiobus);
+-       if (ret)
++       if (ret) {
++               pm_runtime_disable(priv->mdiobus->parent);
++               pm_runtime_set_suspended(priv->mdiobus->parent);
++               pm_runtime_dont_use_autosuspend(priv->mdiobus->parent);
+                dev_err(dev, "Failed to register MDIO bus\n");
++       }
 
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6q-b450v3.dts b/arch/arm/boot/dts/nxp/imx/imx6q-b450v3.dts
-index d994b32ad825..3dee78302074 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6q-b450v3.dts
-+++ b/arch/arm/boot/dts/nxp/imx/imx6q-b450v3.dts
-@@ -1,43 +1,7 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
- /*
-  * Copyright 2015 Timesys Corporation.
-  * Copyright 2015 General Electric Company
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License
-- *     version 2 as published by the Free Software Foundation.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-  */
- 
- /dts-v1/;
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6q-b650v3.dts b/arch/arm/boot/dts/nxp/imx/imx6q-b650v3.dts
-index b0d345f5d071..bae85646d2c0 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6q-b650v3.dts
-+++ b/arch/arm/boot/dts/nxp/imx/imx6q-b650v3.dts
-@@ -1,43 +1,7 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
- /*
-  * Copyright 2015 Timesys Corporation.
-  * Copyright 2015 General Electric Company
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License
-- *     version 2 as published by the Free Software Foundation.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-  */
- 
- /dts-v1/;
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6q-b850v3.dts b/arch/arm/boot/dts/nxp/imx/imx6q-b850v3.dts
-index cad112e05475..0ececa644681 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6q-b850v3.dts
-+++ b/arch/arm/boot/dts/nxp/imx/imx6q-b850v3.dts
-@@ -1,43 +1,7 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
- /*
-  * Copyright 2015 Timesys Corporation.
-  * Copyright 2015 General Electric Company
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License
-- *     version 2 as published by the Free Software Foundation.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-  */
- 
- /dts-v1/;
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/nxp/imx/imx6q-bx50v3.dtsi
-index aa1adcc74019..6920570477dd 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6q-bx50v3.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx6q-bx50v3.dtsi
-@@ -1,43 +1,7 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
- /*
-  * Copyright 2015 Timesys Corporation.
-  * Copyright 2015 General Electric Company
-- *
-- * This file is dual-licensed: you can use it either under the terms
-- * of the GPL or the X11 license, at your option. Note that this dual
-- * licensing only applies to this file, and not this project as a
-- * whole.
-- *
-- *  a) This file is free software; you can redistribute it and/or
-- *     modify it under the terms of the GNU General Public License
-- *     version 2 as published by the Free Software Foundation.
-- *
-- *     This file is distributed in the hope that it will be useful,
-- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *     GNU General Public License for more details.
-- *
-- * Or, alternatively,
-- *
-- *  b) Permission is hereby granted, free of charge, to any person
-- *     obtaining a copy of this software and associated documentation
-- *     files (the "Software"), to deal in the Software without
-- *     restriction, including without limitation the rights to use,
-- *     copy, modify, merge, publish, distribute, sublicense, and/or
-- *     sell copies of the Software, and to permit persons to whom the
-- *     Software is furnished to do so, subject to the following
-- *     conditions:
-- *
-- *     The above copyright notice and this permission notice shall be
-- *     included in all copies or substantial portions of the Software.
-- *
-- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-- *     OTHER DEALINGS IN THE SOFTWARE.
-  */
- 
- #include "imx6q-ba16.dtsi"
+        return ret;
+ }
 
----
-base-commit: 66701750d5565c574af42bef0b789ce0203e3071
-change-id: 20250702-bx50v3-dts-lic-67b201330eb5
+I removed the pm related apis and just added disabling/reenabling the clock=
+ directly in the mdio read/write and it works (see code snippet below). It =
+might be slower and not as efficient as the pm runtime infrastructure since=
+ we don't have autosuspend.
 
-Best regards,
--- 
-Bence Csókás <csokas.bence@prolan.hu>
+@@ -224,6 +243,10 @@ static int mlxbf_gige_mdio_read(struct mii_bus *bus, i=
+nt phy_add, int phy_reg)
+        if (phy_reg & MII_ADDR_C45)
+                return -EOPNOTSUPP;
 
++       spin_lock_irqsave(&priv->lock, flag);
++
++       mlxbf_gige_mdio_enable(priv);
++
+        /* Send mdio read request */
+        cmd =3D mlxbf_gige_mdio_create_cmd(priv->mdio_gw, 0, phy_add, phy_r=
+eg,
+                                         MLXBF_GIGE_MDIO_CL22_READ);
+@@ -236,6 +259,8 @@ static int mlxbf_gige_mdio_read(struct mii_bus *bus, in=
+t phy_add, int phy_reg)
+
+        if (ret) {
+                writel(0, priv->mdio_io + priv->mdio_gw->gw_address);
++               mlxbf_gige_mdio_disable(priv);
++               spin_unlock_irqrestore(&priv->lock, flag);
+                return ret;
+        }
+
+@@ -246,6 +271,9 @@ static int mlxbf_gige_mdio_read(struct mii_bus *bus, in=
+t phy_add, int phy_reg)
+        /* The MDIO lock is set on read. To release it, clear gw register *=
+/
+        writel(0, priv->mdio_io + priv->mdio_gw->gw_address);
+
++       mlxbf_gige_mdio_disable(priv);
++       spin_unlock_irqrestore(&priv->lock, flag);
++
+        return ret;
+ }
 
