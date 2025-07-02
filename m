@@ -1,117 +1,80 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAA8D23ABB2;
-	Wed,  2 Jul 2025 22:03:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12C831885B8
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 22:04:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751493784; cv=none; b=FrclYYiQZNrt6/2U644vOAK6gEMQCp7OX2FlByWPqJHQOd/C9v+ZWdK4V76qJKqMJLIGff2tVMEJHyrmJs1r5X253jFVv9TvQbh1DTtk2Gw6vyuwdXQ9kDYQIX7ZXlHEDl5PPTfyygdrKRDTfEmqa1OX7V3W/R9xlLeM3+KbrP4=
+	t=1751493845; cv=none; b=fl/qfQkSktlTW7J28LI0McJCX1hXxGFoe5T8qJ90u0kslyNhQ4VW1rpitq3JgzaCOcQ/AZHeUwrB4TiaCkdJLyEO5M3PFmKQr0awlT9GrNe0ESZBw9QStTQBEdGmm/44WU/cmHjgejG9yQWIm+P8ISVESOaUoGad/WVzY5elvZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751493784; c=relaxed/simple;
-	bh=x7HupsqVs1LEjBDNAVRHFYN4PZfHHIoeYWbXcaftJ8Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mfLpg7I0f/kTgJL87mFRXQOswYk18WvAZye0b5h5DibokmDi3+12WisIYF7m4t/MIbhiVwtLht7v+2sAMQjP8+k5U6Mc4vzVpZlYU1zpykPhnWsspKO+tUjz7UKk4sXdndlEYNIvTI3n+Wvze/yYAtNao0IgSGHuYhlh+iuWYXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XtoQgSV1; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XtoQgSV1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=cUNAuvI3kzAcweaN1llgP41f7lMAeSiXPWgf5Wf7q+E=; b=XtoQgSV1Mvi9QeeI1aiYIHCm7F
-	gTVLqUIrrx/x1t5ItB7K1+b6bwFeuAPfiNANYvPr4jp84+lDdd+JWUgF7S2BKSA5cROwVhz3ddhvp
-	lAD0sSKzYdyD2o4NUolNcysUlfWT74twfM3Z354ToQmePp9FxJBg/c4S3MJ/f7lJfYmwMtCjUjAv4
-	kn6Be8Flc2w60BVChfMX7U5Po6CEmxyIokt9hr9OhlfLGSNSPeEns53+VWYawEtPGx2K9Fgc/+eXU
-	yz6HksLg1DZ4otJrQhgI9XAknC9mU5y0DGI/6AFRZojOAO35CvMio3HPU/dXE2kajjOq8/JmtGHPW
-	U4qGaN2w==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uX5Xg-00000007Zcd-1pZ7;
-	Wed, 02 Jul 2025 22:03:00 +0000
-Message-ID: <46b059f4-2f93-44e0-9a7b-78acb2c02719@infradead.org>
-Date: Wed, 2 Jul 2025 15:02:58 -0700
+	s=arc-20240116; t=1751493845; c=relaxed/simple;
+	bh=SsfceBP+qhOoMo7OoM5UWUZ1eymVxtTJuiLiM1pfvGI=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=RpqP9lDrEJ8If7X3jfwzSdKUmqszPt2lgp5bD5roAdxc9sQehVabs5K8vdJaLZoJm9l9dD8RsDv5gUOWC7mhw2t24jycYXILHObREPJ0p9EGP+71xzuckChKdk+2aXUhuI1KlI56jZe9rPqXxlJfWdT/d5lQA9TDsS1aImNy5ec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddafe52d04so126233375ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 15:04:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751493843; x=1752098643;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=n/J03lRbzuvB4PtTp7I4ZDRquz2XgnWn7PW50AxA3/A=;
+        b=Kr4Gh0FkhrcT5ip1r3BgLRfLUuFm1hJ0KPyjkIYSi8IQXmFukLfE8BeiLl7H4MUrVT
+         rk61VXralDwEWFJC6BpYWfi89UbPDAeyI1ZA6wnFrri8NYM3WA0GqTMZ5iHifGNFmEpn
+         yIu88Z3/Un5mO6D9RwLTsuS6gkPE8GWFcMrsxg4GZT2zN3hk7K74moe1tN1row5Z2yks
+         V48hTQa0QeHiBbHmqPTD0EzSI/M9vwr9JWmr+vrrlIElYgbcDMD0HioGRQBzCv0Lo0vJ
+         Ne+lRC2nDOs/MDXc2+79vfX1myr9oQ1pp3zdGp5wBaoCHV8GONGTdliDcx2TsHK3qcje
+         ulbg==
+X-Forwarded-Encrypted: i=1; AJvYcCXIs1LLjgyVeBtIdXPImaLI8FLfukrx1Njpaio7eBNEV5mMhC/JXqT6fiLfvDBAsW5qlvShPx985016aWQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlwtsGlEsa4/0yZIXdpTA7pJbAOM4ircovXsAnhD+8NsO5Honw
+	xEJq6HwfMCgJc+9zvzApwrCxuvkjdZyfT+/4u4Dui+J9/WfeJkSONYAHw2gVp3wIsLJ8iQbQtOu
+	B0lislPcbqOig3bNbqXxf4UExpVDuFuSk0mDpzKsfMB8nHFMio9F3egCmhw8=
+X-Google-Smtp-Source: AGHT+IEw/ZHDnLHRk/xRKLu4Ya2e0GjrHeyDhj/YYErj5HvA2TZDeohNuR8anf7y3BU+aQdE712Xkz53vyUBKu1Q4hNP8ysjci3Y
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/66] kconfig: set MENU_CHANGED to choice when the
- selected member is changed
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250624150645.1107002-1-masahiroy@kernel.org>
- <20250624150645.1107002-2-masahiroy@kernel.org>
- <85d530f3-0c27-48e0-b09b-470c16e08004@infradead.org>
- <CAK7LNASsM-1Gsw85=G3KU7x6hBAmBSn4vSHcMdoEVaaFymVeyw@mail.gmail.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <CAK7LNASsM-1Gsw85=G3KU7x6hBAmBSn4vSHcMdoEVaaFymVeyw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:1c0c:b0:3df:5314:1b88 with SMTP id
+ e9e14a558f8ab-3e05c324012mr16573595ab.15.1751493843172; Wed, 02 Jul 2025
+ 15:04:03 -0700 (PDT)
+Date: Wed, 02 Jul 2025 15:04:03 -0700
+In-Reply-To: <686491d6.a70a0220.3b7e22.20ea.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6865acd3.a70a0220.2b31f5.0005.GAE@google.com>
+Subject: Re: [syzbot] [bpf?] WARNING in check_helper_call
+From: syzbot <syzbot+69014a227f8edad4d8c6@syzkaller.appspotmail.com>
+To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
+	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
+	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
+	linux-kernel@vger.kernel.org, martin.lau@linux.dev, netdev@vger.kernel.org, 
+	paul.chaignon@gmail.com, sdf@fomichev.me, song@kernel.org, 
+	syzkaller-bugs@googlegroups.com, yonghong.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
+syzbot has bisected this issue to:
 
+commit 0df1a55afa832f463f9ad68ddc5de92230f1bc8a
+Author: Paul Chaignon <paul.chaignon@gmail.com>
+Date:   Tue Jul 1 18:36:15 2025 +0000
 
-On 7/2/25 6:23 AM, Masahiro Yamada wrote:
-> On Mon, Jun 30, 2025 at 3:34 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->>
->>
->>
->> On 6/24/25 8:04 AM, Masahiro Yamada wrote:
->>> In gconf, choice entries display the selected symbol in the 'Value'
->>> column, but it is not updated when the selected symbol is changed.
->>>
->>> Set the MENU_CHANGED flag, so it is updated.
->>>
->>> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
->>
->> Probably not related to this change (AFAICT), but I was trying to
->> reproduce this problem and I cannot do it.
-> 
-> You can try this simple test code.
-> 
-> choice
->         prompt "choose"
-> 
-> config A
->         bool "A"
-> 
-> config B
->         bool "B"
-> 
-> endchoice
-> 
-> In Full mode, open the tree and double-clock the two
-> radio buttons alternatively. (select A or B back-and-forth)
-> In the main line code, the Value column of "choose" remains "B".
-> 
-> After this commit, it starts to react to the change, but the fix is not perfect.
-> 
-> In the gconfig-v3 branch, this should work perfectly.
-> 
+    bpf: Warn on internal verifier errors
 
-OK, confirmed in gconfig-v2 branch.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=155a848c580000
+start commit:   cce3fee729ee selftests/bpf: Enable dynptr/test_probe_read_..
+git tree:       bpf-next
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=175a848c580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=135a848c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=79da270cec5ffd65
+dashboard link: https://syzkaller.appspot.com/bug?extid=69014a227f8edad4d8c6
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=144053d4580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13d45770580000
 
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
+Reported-by: syzbot+69014a227f8edad4d8c6@syzkaller.appspotmail.com
+Fixes: 0df1a55afa83 ("bpf: Warn on internal verifier errors")
 
-
-One other thing:  if I Quit in today's linux-next (probably similar
-to mainline), if the .config file has changed, the Warning box
-choices (Yes, No, Cancel) have their first letters underlined and
-the Cancel block (just the rectangle itself) is bold, more distinct
-than the others, so it must be the default if Enter is pressed.
-
-In the gconfig-v2 branch, the Warning block choices are neither
-underlined in their first letter (for us keyboard users) nor is
-any one of them Bold (default).  It is a much better UX in the
-linux-next/mainline than gconfig-v2.
-
-Is this a change from GTK2 to GTK3?  Unintended?  Fixable?
-
-thanks.
-
--- 
-~Randy
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
