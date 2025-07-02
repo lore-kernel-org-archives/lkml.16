@@ -1,174 +1,94 @@
-Received: from lahtoruutu.iki.fi (lahtoruutu.iki.fi [185.185.170.37])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4E0D2DCF54;
-	Wed,  2 Jul 2025 15:31:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=185.185.170.37
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751470273; cv=pass; b=kzoKNnkit66spH9W6TShud5VH11k4KwQyHEXr91YAgrF5I+LKWFWeFsSGFX6aKZpd2XRAB22JPsPQCQJbVSZpIngqw77iOV0Sb2+dTquoviEEKD+75ZhbeUzCRN+rG48HivVvWIFoCqnnTgPVaFqq2TMOniWMmYyg5Y/olhupy4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751470273; c=relaxed/simple;
-	bh=MPn4dwWS4SsgFUv2ktEgYlMmldSTWVa0DGbq8Yo9njs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=U/Hu5pdoRc9WXhYJgWrhEJuA7MF7OA1D//qGG/5G69JC7bIzB4btGbCNmoCO9vM7bwgeu8WN0HRmwWjyVyVjhxa3dcViWHNyicrYwAde5qaQg5bJniLYLCyeFJ/2OvnQdl6lpUy+4h39kj3xfz9DTIXdEKzoWWQlj8T/CC41cTc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi; spf=pass smtp.mailfrom=iki.fi; dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b=qwCmYvbl; arc=pass smtp.client-ip=185.185.170.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iki.fi
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b="qwCmYvbl"
-Received: from [192.168.1.195] (unknown [IPv6:2a0c:f040:0:2790::a03d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pav@iki.fi)
-	by lahtoruutu.iki.fi (Postfix) with ESMTPSA id 4bXNv66SDgz49Q1w;
-	Wed,  2 Jul 2025 18:22:58 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=lahtoruutu;
-	t=1751469781;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=74URfcO5JqEqPB6bVC6qfZC838MIsWWJe/PpASUbCcg=;
-	b=qwCmYvblW1ha/yOsewISSpkENjgZG6kjiLfwgD0E+sVtnNzh7Zr2APWtQjd75KzRr4ENID
-	bREMQTMzIGyQq7GVpw0pWWqcKKMdAgslFC2A6NPz2cYwlBY6lQ+Z6XSyoG2bebOhh3hGbR
-	yzxJghasL1SVrZw0yElS2xcort6THfuzb0NWrF95KsPt01HEXhdNSluFnPci+PsrcU3jeg
-	CkTQKPb/sDydrKGVVGDFVxEvtxnYpTRD5pyrBHOLLY1c0Jv8IWsr/Oi1JFoSFuJRk64k6d
-	nxI5+9DuJrSsWWuw2EqbJ/GqWCZxaVeikWDhLI++PbAGa10N5/mIvIThj5dZqw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
-	s=lahtoruutu; t=1751469781;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=74URfcO5JqEqPB6bVC6qfZC838MIsWWJe/PpASUbCcg=;
-	b=Bv+zQLY/uODqENaM6A+8FpHCZeTVMohTR+6yB6cacaQUKKREpAdN4s86urYViTDo+sYBgi
-	P1tFQrjn7ks7/8ZtC6i9GYh5r+X/CCUVubuWHEBi6zLdSYK2OLSWuIrue5GZ/iYgeQ+asE
-	/e5p9W6wrQbFlBd5RWDivSqEZCYpI2qpUyN7b36rcgnUWKa6V3GIcknISLH+iU9N4g5s3/
-	8mJRLrtS0Yhec1VZUbXs7U5WeZJwHVf6303Sj6Ifoa/qdBNg9CUTtCTRPq/O6qiBQqpgrA
-	RVr/N+EyUAdyEoUMX3hmWRD4JNUaWTs0ruomOJ/FwsrSI8S+T/o/u+ZhsiiTyQ==
-ARC-Authentication-Results: i=1;
-	ORIGINATING;
-	auth=pass smtp.auth=pav@iki.fi smtp.mailfrom=pav@iki.fi
-ARC-Seal: i=1; s=lahtoruutu; d=iki.fi; t=1751469781; a=rsa-sha256;
-	cv=none;
-	b=Un44gB7xX3oHblb63J1ZUJcaxwh9h1IM/GXh/z3WacNRJoluk3xC/FZdg8sMXiWE3fKARu
-	rwMhFyPesxQWyabrE/grEPy3rW7F556dvD487yqFxyUN8AKFHOZQgoIjHgeWeNlxMFq1HP
-	IIQB+tI+B1ApF8GG+3L0yLiCl/Nel4TRfvLezNuMwf2Ea6QiMrMEHcuRn6k39rWnIbqql1
-	+ffCgM61X2xXFvdjV3GTZiDvx7s40ovSl4QX21Hz4fueFT36s4pWFJCxifa4SUbaR4mjbQ
-	0kfuv4T60XWlFAN45QjQ1MnOrOz6NtNiFzU40/C45S5XYpQSr6nkdrNfwxDoBg==
-Message-ID: <d6906cfb7fae090b9fe0c1c5b8708182eb939b42.camel@iki.fi>
-Subject: Re: [PATCH v2] Bluetooth: ISO: Support SOCK_RCVTSTAMP via CMSG for
- ISO sockets
-From: Pauli Virtanen <pav@iki.fi>
-To: yang.li@amlogic.com, Marcel Holtmann <marcel@holtmann.org>, Johan
- Hedberg	 <johan.hedberg@gmail.com>, Luiz Augusto von Dentz
- <luiz.dentz@gmail.com>,  "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
-Cc: linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Wed, 02 Jul 2025 18:22:56 +0300
-In-Reply-To: <20250702-iso_ts-v2-1-723d199c8068@amlogic.com>
-References: <20250702-iso_ts-v2-1-723d199c8068@amlogic.com>
-Autocrypt: addr=pav@iki.fi; prefer-encrypt=mutual;
- keydata=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
- bzyGkKh2h8XdrYhtDjw9LmrprPQ==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1ECA2DCF54;
+	Wed,  2 Jul 2025 15:31:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751470293; cv=none; b=umzcJMc/nUS8oIlAUqhBqnGeETAg1/07CmP0Zw8Sz2pXB141fKKNHHJ82fjQyCIhpyr2dFeYje7VngZigxfv2llIDqWCw/PkjBJ9C1vr9pZm66WaVkhPE2Gl06qG8MjoJLGy+FNm4WjdrHVrFrwMVju2bwjqXhB15ONSBj4iE1k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751470293; c=relaxed/simple;
+	bh=uen+p/SpnS8I1WQoDUDT9JW1oagT5qtNuCnGAgbM+E4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LnOwQQ3YxycF3ey9Ga8rz8Nc77XWMQ//Q8h27Z1dSPP8DqaZ9eadfdojIsPLRxfzKgqKONgMoxehglcqk8G3p4jbzcCWhTqpmwSG0sQiu0Zk1cbBYToBSFo9qNXfEX7NbxcpWkegqou71NbDrKK4FY/I/CtgD82+YXeK40x2llY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bXP1Z48Fjz6L54f;
+	Wed,  2 Jul 2025 23:28:34 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 2070814022E;
+	Wed,  2 Jul 2025 23:31:28 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 2 Jul
+ 2025 17:31:27 +0200
+Date: Wed, 2 Jul 2025 16:31:26 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+CC: David Lechner <dlechner@baylibre.com>, Lars-Peter Clausen
+	<lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan
+ Cameron <jic23@kernel.org>, Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Robert Budai <robert.budai@analog.com>, "Andy Shevchenko" <andy@kernel.org>,
+	<linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iio: imu: adis16550: rework clock range test
+Message-ID: <20250702163126.000007ac@huawei.com>
+In-Reply-To: <aGVNhIwn7CXO_lpP@smile.fi.intel.com>
+References: <20250702-iio-imu-adis16550-rework-clock-range-test-v1-1-b45f3a3b0dc1@baylibre.com>
+	<aGVIBVsFPcVw3lN6@smile.fi.intel.com>
+	<aGVJPRmn1-HUBb40@smile.fi.intel.com>
+	<3778ad13-3b62-4f68-946d-b861b0df4272@baylibre.com>
+	<aGVNhIwn7CXO_lpP@smile.fi.intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Hi,
+On Wed, 2 Jul 2025 18:17:24 +0300
+Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
 
-ke, 2025-07-02 kello 19:35 +0800, Yang Li via B4 Relay kirjoitti:
-> From: Yang Li <yang.li@amlogic.com>
->=20
-> User-space applications (e.g., PipeWire) depend on
-> ISO-formatted timestamps for precise audio sync.
->=20
-> Signed-off-by: Yang Li <yang.li@amlogic.com>
-> ---
-> Changes in v2:
-> - Support SOCK_RCVTSTAMPNS via CMSG for ISO sockets
-> - Link to v1: https://lore.kernel.org/r/20250429-iso_ts-v1-1-e586f30de6cb=
-@amlogic.com
-> ---
->  net/bluetooth/iso.c | 3 +++
->  1 file changed, 3 insertions(+)
->=20
-> diff --git a/net/bluetooth/iso.c b/net/bluetooth/iso.c
-> index fc22782cbeeb..6927c593a1d6 100644
-> --- a/net/bluetooth/iso.c
-> +++ b/net/bluetooth/iso.c
-> @@ -2308,6 +2308,9 @@ void iso_recv(struct hci_conn *hcon, struct sk_buff=
- *skb, u16 flags)
->  				goto drop;
->  			}
-> =20
-> +			/* Record the timestamp to skb*/
-> +			skb->skb_mstamp_ns =3D le32_to_cpu(hdr->ts);
+> On Wed, Jul 02, 2025 at 10:07:17AM -0500, David Lechner wrote:
+> > On 7/2/25 9:59 AM, Andy Shevchenko wrote:  
+> > > On Wed, Jul 02, 2025 at 05:53:57PM +0300, Andy Shevchenko wrote:  
+> > >> On Wed, Jul 02, 2025 at 09:27:45AM -0500, David Lechner wrote:  
+> > >>> Rework the clock rate range test to test if sync_mode_data != NULL
+> > >>> instead of testing if the for loop index variable. This makes it easier
+> > >>> for static analyzers to see that we aren't using an uninitialized
+> > >>> sync_mode_data [1].  
+> > >>
+> > >> But at the same time it makes it not to be the usual pattern.,,  
+> > > 
+> > > Reading the static analyser output I think the first hunk is only what we need,
+> > > but this is still false positive and it's problem of that static
+> > > analyser. Have you filed a bug there? (My point is that modifying the code for
+> > > the advantage of false positives of some static analyser is wrong road to go
+> > > in my opinion.)  
+> > 
+> > I agree that we shouldn't fix this _only_ to make the static analyzer
+> > happy. But I had to think quite a bit harder to see that the existing
+> > code was correct compared to what I have proposed here.
+> > 
+> > But if this is a common pattern that I just haven't learned to identify
+> > at a glance yet and everybody else can easily see that the existing code
+> > is correct, then perhaps it isn't worth the change.  
+> 
+> To me checking against index variable (when it's integer, obviously) is correct
+> thing to do and regular pattern. OTOH, if the "index" is a pointer and rather
+> we call it "iterator", the angle of view is different because in some cases
+> it may lead to stale or invalid value which might be mistakenly dereferenced or
+> speculated (see more in the discussion about list entry APIs [entry is a
+> keyword here] and if list_entry_is_head() is a good approach.)
+> 
 
-Hardware timestamps are supposed to go in
+Original code looks fine to me and is a very common pattern.  So I'd argue
+the static analyzer needs some work.
 
-	skb_hwtstamps(skb)->hwtstamp
-
-See Documentation/networking/timestamping.rst
-"3.1 Hardware Timestamping Implementation: Device Drivers" and how it
-is done in drivers/net/
-
-This documentation also explains how user applications can obtain the
-hardware timestamps.
-
-AFAIK, skb->tstamp (skb->skb_mstamp_ns is union for it) must be in
-system clock. The hdr->ts is in some unsynchronized controller clock,
-so they should go to HW timestamps.
-
-> +
->  			len =3D __le16_to_cpu(hdr->slen);
->  		} else {
->  			struct hci_iso_data_hdr *hdr;
->=20
-> ---
-> base-commit: 3bc46213b81278f3a9df0324768e152de71eb9fe
-> change-id: 20250421-iso_ts-c82a300ae784
->=20
-> Best regards,
-
---=20
-Pauli Virtanen
+Jonathan
