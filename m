@@ -1,158 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C1532D3A72;
-	Wed,  2 Jul 2025 13:24:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB2D82798F8
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 13:24:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751462642; cv=none; b=Ap38AswWC4twPBdmIL6z+L/OOMQKUZl7AxC1RkOibAs2sro3P1pJ4ypi6b5fchi+hyzjSec4NZuaGN2qDppc6w6fDiL+rW+3bdpTAXqa6KN337kzzt0pv7n5SxIslL9hY6ZwC+ZjNLZUhUotVNyCQHXsVDFMQGOcaz1zk5cSVcg=
+	t=1751462681; cv=none; b=h/CBYZ+7HlZOqnGsXtdavtWE7R1a3Fuu0OgCJcApDtJwA4ncmJoLUFSwGVSTY5gpzcuvOd8U+vdYj5HpaXcfKfocBljzEecuQVmc3kcaCC3EZ+qH4MKx9WoEICyfyQ+vtHMbFNDHQ+vAaM89jsjLDrbccAIAIR6hymYXoDYhRbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751462642; c=relaxed/simple;
-	bh=uBfXUdrW1hpLXfIR0aGIbcnqYvtXDq4jqr7rWsFf3uU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iRWYfly+G3anljJw5RmdljPpIQE2NnmrKIXq6uaAUrLAHhdmEmClClPIDA4h3bYV4Erbh3SezLEsJY+3MHXpfbL0r89npI5E/haHZJKT4lllyksLouc0bG/8t2tty1wN6WgS1PviNUDiR/f3UHZy+yxbzz7+/Kaq432VKfAnMdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P/hgumhc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751462681; c=relaxed/simple;
+	bh=Niz+m0D1JqkH5aTX+Uv8Rcb69sVNw/rYIAm7h3Hs6Mo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a6jP1A1+xVtMj9p1NRU4q0+rgGL7ubEKJXPuLS7yQC+UeQzw40Z6ErXCzWCkB9n0J2wD52AvLjtzvYth00zHeKOMMr2aQwXZUmGb6cbNB77z2HM1JYFVaFsYPKMqpJsmoMc0UKFTvgIa17hA4gRnSkXlhMs2oClZCOLKr0IP3VQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=c1yDFmGs; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P/hgumhc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91718C4CEEF;
-	Wed,  2 Jul 2025 13:24:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751462641;
-	bh=uBfXUdrW1hpLXfIR0aGIbcnqYvtXDq4jqr7rWsFf3uU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=P/hgumhczY8JSRsinu/UpSDiGLSetO4Dh1X7AjAFnDrh3bMPOdmG1XhUKF/klP2BV
-	 XLDIB2giBjsWtWftprXQv3W+6y48t/5SpXAE/v8o9/9Vn3/tNE4TeV6aolSXkMXUVr
-	 /e5C9qpFGxRq8+JIAG9t0m1b0lF8meEOeqwH3Rsy+M8j6gPgm0rx3tPAzDv+2xlBp/
-	 n0Hwj8lZupl2HlVdt6yQ9sEnVjjqlfSJkO6M8fJD1p0noV4tMzmRqih8ZIrbrfq00D
-	 sDBg0TpXpsiz0ZJrOQM8b291iVzVwG7a1yjztWkPiD5avlqUAaDUj386R2SgMzsD2S
-	 +4ZBLQfLqK9wg==
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-553b165c80cso6965070e87.2;
-        Wed, 02 Jul 2025 06:24:01 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU0i5mkKzyR3kCTNzmV3Fa+ir07xOy/CrElKPPcdw+V/bm8o6oKeCwBotlHsYl5OpF8QjErK0zgotBcO+0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkiBwp6xWSBt5K49ajEP1w8Oly4Mbpas7urlnQPhlo1AgoC6/V
-	lMNoGTKU5OTbSPgRdBGnIzsvxGGQv72Ld6Mr1S/c3n3i6o94mZSO2blDxk0eVxwM/DXEiVpSwX4
-	6CKlfbhFO7AWXl4BUtuiVJZhXAGZI5xs=
-X-Google-Smtp-Source: AGHT+IFIX0rmQ5HWhDN0BrvcL+9eGDrmWk2w0n/Dk9eX8N0TAUG2zzcj1oGi74PmAdl+FneDvoXFX/9Zcp3PGzPoQHY=
-X-Received: by 2002:a05:6512:3ba7:b0:553:5135:69fb with SMTP id
- 2adb3069b0e04-5562829dd0dmr1116168e87.10.1751462640111; Wed, 02 Jul 2025
- 06:24:00 -0700 (PDT)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="c1yDFmGs"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 2799B40E021D;
+	Wed,  2 Jul 2025 13:24:36 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id mqwxr6HJcW_k; Wed,  2 Jul 2025 13:24:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1751462672; bh=5eqncYxutXgmX6kJnSEQAbsb0Ij4/aMXV0r2ck6ZhQY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=c1yDFmGsnzJXOSIA3Db9yDsJRM5HUtD9DCDsqz5acK6Q8RDhrd1UzhHXK+DORXBNj
+	 n6JxT1jW+ME9Ghq9MoDQJEc9mLwCr5hQVmAeDDOvOmq5JcD2sJ1kguoEsqpHRe09io
+	 em2blc4SK67v5Gw2zdwksl03wmhO4gkihMBSww8oDGtwXca3+w7msc6QoA4Vs6XMD5
+	 UFh6uYYglxKDLT1VZh0y157pq9DRMkBuuEgtmHGO+1UD9droeuXl/yL5iDLUVTeJVa
+	 nsnmLAyWl0okfbi/cnteU+OvkyHhi9PMpPTmV+S13paU7+VBG9OtVfA6oaDY/8eHVH
+	 BJ6dHjn4GCe0A3gc1g2Z584oXOEbTe4hs34PR1Eygxd7c3feGbTrKBn6iH8ZMnP6nA
+	 XpOUJ4uB/4+K5jgKEI2IE/QFh/1MJWLbdYvlwfe0jr28Lkyb6ZRlVxReIiqr9xCI8F
+	 dikg/byc493ndCFdc8X/lFxz6sJb5gQAzbWtIgjtsnNsQlvTYma+kmiD/H+fBGjODK
+	 GiYHsxrwfcxPwtp4aNfE+ENb/SD1us6+heSCJSkjj+vvSrBeBqPuxHi0BZDRkprVXR
+	 Wjd548mn6cXZ/v8+bicOCck3OJ68gJVcTGairKCIoYR6UTtjGmM8DKFACjF1etiz+9
+	 wlZk1QuNIG1hnaiLGlFIJWng=
+Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7EA4940E0218;
+	Wed,  2 Jul 2025 13:24:22 +0000 (UTC)
+Date: Wed, 2 Jul 2025 15:24:15 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>
+Cc: kernel test robot <lkp@intel.com>, Thomas Gleixner <tglx@linutronix.de>,
+	llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Jinjie Ruan <ruanjinjie@huawei.com>
+Subject: Re: [tip:master 19/19] include/linux/irq-entry-common.h:201:2:
+ error: unexpected token
+Message-ID: <20250702132415.GFaGUy_6q0dZZI9AX3@fat_crate.local>
+References: <202507020528.N0LtekXt-lkp@intel.com>
+ <20250702123240.GDaGUm6Le4KLL7o_91@fat_crate.local>
+ <aGUtCveV8Ev17_FS@J2N7QTR9R3.cambridge.arm.com>
+ <20250702130915.GEaGUve86iYnv337_Z@fat_crate.local>
+ <aGUxH--v32Bv4T81@J2N7QTR9R3.cambridge.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624150645.1107002-1-masahiroy@kernel.org>
- <20250624150645.1107002-2-masahiroy@kernel.org> <85d530f3-0c27-48e0-b09b-470c16e08004@infradead.org>
-In-Reply-To: <85d530f3-0c27-48e0-b09b-470c16e08004@infradead.org>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Wed, 2 Jul 2025 22:23:22 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASsM-1Gsw85=G3KU7x6hBAmBSn4vSHcMdoEVaaFymVeyw@mail.gmail.com>
-X-Gm-Features: Ac12FXzrKh4zkjLBrJ0X7vhr05oe2kWgBXv3rKEbcuBp8YR-b8kGZJwbrI3_qVw
-Message-ID: <CAK7LNASsM-1Gsw85=G3KU7x6hBAmBSn4vSHcMdoEVaaFymVeyw@mail.gmail.com>
-Subject: Re: [PATCH 01/66] kconfig: set MENU_CHANGED to choice when the
- selected member is changed
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aGUxH--v32Bv4T81@J2N7QTR9R3.cambridge.arm.com>
 
-On Mon, Jun 30, 2025 at 3:34=E2=80=AFPM Randy Dunlap <rdunlap@infradead.org=
-> wrote:
->
->
->
-> On 6/24/25 8:04 AM, Masahiro Yamada wrote:
-> > In gconf, choice entries display the selected symbol in the 'Value'
-> > column, but it is not updated when the selected symbol is changed.
-> >
-> > Set the MENU_CHANGED flag, so it is updated.
-> >
-> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
->
-> Probably not related to this change (AFAICT), but I was trying to
-> reproduce this problem and I cannot do it.
+On Wed, Jul 02, 2025 at 02:16:15PM +0100, Mark Rutland wrote:
+> Sounds like a plan.
 
-You can try this simple test code.
+As we figured out on IRC:
 
-choice
-        prompt "choose"
+https://lore.kernel.org/all/20250616-loongarch-fix-warn-cond-llvm-ias-v1-1-6c6d90bb4466@kernel.org/
 
-config A
-        bool "A"
+"clang's integrated assembler only supports concatenating strings with
+'.ascii'. There was discussion of allowing '.string' / '.asciz' but it
+was decided against [1] because it was undesirable to match the behavior
+of released binutils at the time, where"
 
-config B
-        bool "B"
+and this seems to fix it here:
 
-endchoice
-
-In Full mode, open the tree and double-clock the two
-radio buttons alternatively. (select A or B back-and-forth)
-In the main line code, the Value column of "choose" remains "B".
-
-After this commit, it starts to react to the change, but the fix is not per=
-fect.
-
-In the gconfig-v3 branch, this should work perfectly.
+---
+diff --git a/arch/s390/include/asm/bug.h b/arch/s390/include/asm/bug.h
+index a185855ab158..46d9eb64bd18 100644
+--- a/arch/s390/include/asm/bug.h
++++ b/arch/s390/include/asm/bug.h
+@@ -9,7 +9,7 @@
+ #else
+ #define __BUGVERBOSE_LOCATION(file, line)			\
+ 		.pushsection .rodata.str, "aMS", @progbits, 1;	\
+-	10002:	.string file;					\
++	10002:	.ascii file;					\
+ 		.popsection;					\
+ 								\
+ 		.long 10002b - .;				\
 
 
+I leave it to Mr. Z to sort out.
 
+-- 
+Regards/Gruss,
+    Boris.
 
-> To enable an option (any options, choice or not), I have to double-click
-> on it or (sometimes, not for choice) I can use Y / N / M on the keyboard.
-> When I do either of those, the value (including a choice value) is change=
-d.
->
-> I mention double-click only because the Help text (Information) says that
-> clicking will cycle thru Y/M/N.
-
-Presumably, this should be double-click in gconfig.
-(So, the help message should be fixed.)
-
-A single click in the "option" column is used for other functionality.
-(open/close the tree item in Split and Full views).
-
-
-
->
-> The Information also says that "dot indicates that it is to be compiled a=
-s a module".
-> I see more of a Dash or Hyphen or just a horizontal bar.
-
-Right. The help message should be fixed.
-
-
-
->
-> Thanks for reading...
->
-> > ---
-> >
-> >  scripts/kconfig/symbol.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/scripts/kconfig/symbol.c b/scripts/kconfig/symbol.c
-> > index d57f8cbba291..26ab10c0fd76 100644
-> > --- a/scripts/kconfig/symbol.c
-> > +++ b/scripts/kconfig/symbol.c
-> > @@ -195,6 +195,10 @@ static void sym_set_changed(struct symbol *sym)
-> >
-> >       list_for_each_entry(menu, &sym->menus, link)
-> >               menu->flags |=3D MENU_CHANGED;
-> > +
-> > +     menu =3D sym_get_choice_menu(sym);
-> > +     if (menu)
-> > +             menu->flags |=3D MENU_CHANGED;
-> >  }
-> >
-> >  static void sym_set_all_changed(void)
->
-> --
-> ~Randy
->
-
-
---
-Best Regards
-
-Masahiro Yamada
+https://people.kernel.org/tglx/notes-about-netiquette
