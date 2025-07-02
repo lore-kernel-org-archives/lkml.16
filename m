@@ -1,156 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91CCF20311;
-	Wed,  2 Jul 2025 01:03:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B8A20311;
+	Wed,  2 Jul 2025 01:04:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751418231; cv=none; b=QDFW52KUb+XgiapJUXmaP+w5YC1rl92Kvwnj4ATlNIq5eia6eoo/1yx+fKvseHZznOo++coFfgiqB+PXY5mK+BZoy4i4U2QvuXQqMqqZbYH+GPFZgEbqNZk3rtrWAuaRiRn/h7vVAgcZ7KBgyAY1n+QRBTjsS3Yh8MB853nbrk0=
+	t=1751418282; cv=none; b=D/hH4jGCGW5cWdHZJgDunFPzlPlNiffLxYnYUwW5gIJLQWEUxUkcjvobtQzSNlKX/raCk/pB0opb83VwgxYvVK5n0f1CY3GFdXjVJhXidUgJ6Stn2urLM/dunMarudzOzfrlSl1HIlqkvvGuPQqDy8prA+GZQXl+crJYZRVlrmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751418231; c=relaxed/simple;
-	bh=2y6feaZkEBj50zzPAoHzbU/fiJaJPVZKtdm0UtSiPBU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VdSt0yfNnMVZA9KsWQ0TfXnAbrfCRtTfW+BUBhG8ylOt2+xIELpH/xB6M6XmjYBhhioLEMjeWaLcnN5CMRelSHfP4aW9ySVwhuq/1WVdf5YvHYa6NjCn+lkGw3BJnwk41CqWqCTf3IJx0zRhW9NltgjwhRZmvYKK27Uk4PexvzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WfwI7noM; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WfwI7noM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6100C4CEEB;
-	Wed,  2 Jul 2025 01:03:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751418231;
-	bh=2y6feaZkEBj50zzPAoHzbU/fiJaJPVZKtdm0UtSiPBU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WfwI7noM1KywEpx1xkvANlMdvQn8cn5G93S3UlILtYKQoSTLYMMhQoRZVS/ardHim
-	 2hjdQLcEy+Aj4qf0id3aQJio48UvXeQ/HdFARPWDXgJspQk6eNgiaGS9EaflCnc14j
-	 T6ntvKuwfq28GAxzSpdLtzyWZwO4S5yyiLWy+SEXhsZYXxMWsCWZDVlnVFZOsXI4eg
-	 fWcJfgrOzheKYl5Up/dYwXhxAyH1OP4Ow7A0WW5Qc4S+TtAi4t9+ZhlIa6OdsNg6if
-	 EztZj4CnDJkYNjk7QWpzWH+5eyqp4Tf+AOFFRDAFFmOi8beHq3EG6WaS362QUBoRVV
-	 Up5rNrA4jehuQ==
-Date: Wed, 2 Jul 2025 06:33:37 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Adam Xue <zxue@semtech.com>
-Cc: Thomas Perrot <thomas.perrot@bootlin.com>, 
-	Aleksander Morgado <aleksander@aleksander.es>, 
-	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, "slark_xiao@163.com" <slark_xiao@163.com>, 
-	"johan+linaro@kernel.org" <johan+linaro@kernel.org>, "quic_vpernami@quicinc.com" <quic_vpernami@quicinc.com>, 
-	"tglx@linutronix.de" <tglx@linutronix.de>, "fabio.porcedda@gmail.com" <fabio.porcedda@gmail.com>, 
-	"quic_msarkar@quicinc.com" <quic_msarkar@quicinc.com>, "mhi@lists.linux.dev" <mhi@lists.linux.dev>, 
-	"linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	Iulian Mocanu <imocanu@semtech.com>
-Subject: Re: [PATCH v1] bus: mhi: host: pci_generic: Add support for EM929x
- and set MRU to 32768 for better performance.
-Message-ID: <sbs5tvq2qul5fchzq7mchanaqd6o6ax7fwtdjilsdl2z7xlwch@3fppqszbzwg4>
-References: <20250528175943.12739-1-zxue@semtech.com>
- <gt6uyoohzyjlqsbb4wro7vjsyhgwpvca46ixmivo6ybvmejsc3@nc3syx4lk4t3>
- <CY5PR20MB4867E63E4B5107728904826EC678A@CY5PR20MB4867.namprd20.prod.outlook.com>
- <CY5PR20MB48671EEF395AC1824F16E0D9C67AA@CY5PR20MB4867.namprd20.prod.outlook.com>
+	s=arc-20240116; t=1751418282; c=relaxed/simple;
+	bh=XAafEd/BG8qoJXRKDepV1XfLCyhQ+O787ct9l00N54o=;
+	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=aj4vkkxeKgHMinbIhnLm4z8EyMAG2Jlkgu8wqSAE6dfnEda1jOi3/AO9SfN+fMPqPISqkY9NVb/xB2JNkSqDF7eKnFkza/731IyXANWjpQDSRJAeWe0sBR3LSH5R08a/qwtsESMY66oBck2ji1jQINhgA/poLeKLNtc4kcxwn5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4bX1m40KKgzmZB9;
+	Wed,  2 Jul 2025 09:00:36 +0800 (CST)
+Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id C6F2D140277;
+	Wed,  2 Jul 2025 09:04:36 +0800 (CST)
+Received: from [10.67.120.192] (10.67.120.192) by
+ kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 2 Jul 2025 09:04:36 +0800
+Message-ID: <0c0d95ce-7c38-42d7-b45e-e7d388b57ede@huawei.com>
+Date: Wed, 2 Jul 2025 09:04:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CY5PR20MB48671EEF395AC1824F16E0D9C67AA@CY5PR20MB4867.namprd20.prod.outlook.com>
+User-Agent: Mozilla Thunderbird
+CC: <shaojijie@huawei.com>, <davem@davemloft.net>, <edumazet@google.com>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <andrew+netdev@lunn.ch>,
+	<horms@kernel.org>, <shenjian15@huawei.com>, <liuyonglong@huawei.com>,
+	<chenhao418@huawei.com>, <jonathan.cameron@huawei.com>,
+	<shameerali.kolothum.thodi@huawei.com>, <salil.mehta@huawei.com>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 net-next 1/3] net: hibmcge: support scenario without
+ PHY
+To: Andrew Lunn <andrew@lunn.ch>
+References: <20250701125446.720176-1-shaojijie@huawei.com>
+ <20250701125446.720176-2-shaojijie@huawei.com>
+ <9b45bab6-dc6e-40b5-b37c-2b296213e8ed@lunn.ch>
+From: Jijie Shao <shaojijie@huawei.com>
+In-Reply-To: <9b45bab6-dc6e-40b5-b37c-2b296213e8ed@lunn.ch>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
+ kwepemk100013.china.huawei.com (7.202.194.61)
 
-On Thu, Jun 26, 2025 at 07:58:49PM +0000, Adam Xue wrote:
-> Any update on this?
-> 
 
-Since there seems to be no easy way to test the patch on EM919X, I went ahead
-and applied the patch.
+on 2025/7/2 6:07, Andrew Lunn wrote:
+>> +	phydev = fixed_phy_register(&hbg_fixed_phy_status, NULL);
+>> +	if (IS_ERR(phydev)) {
+>> +		dev_err_probe(dev, IS_ERR(phydev),
+> IS_ERR() returns a bool, where as dev_err_probe() expects an int.
 
-- Mani
+Yeah,
+PTR_ERR(phydev) should be used in there
 
-> Thanks, 
-> 
-> Adam
-> 
-> -----Original Message-----
-> From: Adam Xue <zxue@semtech.com> 
-> Sent: June 24, 2025 9:57 AM
-> To: Manivannan Sadhasivam <mani@kernel.org>; Thomas Perrot <thomas.perrot@bootlin.com>; Aleksander Morgado <aleksander@aleksander.es>
-> Cc: manivannan.sadhasivam@linaro.org; slark_xiao@163.com; johan+linaro@kernel.org; quic_vpernami@quicinc.com; tglx@linutronix.de; fabio.porcedda@gmail.com; quic_msarkar@quicinc.com; mhi@lists.linux.dev; linux-arm-msm@vger.kernel.org; linux-kernel@vger.kernel.org; Iulian Mocanu <imocanu@semtech.com>
-> Subject: RE: [PATCH v1] bus: mhi: host: pci_generic: Add support for EM929x and set MRU to 32768 for better performance.
-> 
-> Hi Mani and Aleksander, 
-> 
-> I may collect the logs if required. Or we can ship an EM91 module for you to validate?
-> 
-> Thanks, 
-> 
-> Adam
-> 
-> -----Original Message-----
-> From: Manivannan Sadhasivam <mani@kernel.org>
-> Sent: June 17, 2025 2:27 AM
-> To: Adam Xue <zxue@semtech.com>; Thomas Perrot <thomas.perrot@bootlin.com>; Aleksander Morgado <aleksander@aleksander.es>
-> Cc: manivannan.sadhasivam@linaro.org; slark_xiao@163.com; johan+linaro@kernel.org; quic_vpernami@quicinc.com; tglx@linutronix.de; fabio.porcedda@gmail.com; quic_msarkar@quicinc.com; mhi@lists.linux.dev; linux-arm-msm@vger.kernel.org; linux-kernel@vger.kernel.org; Iulian Mocanu <imocanu@semtech.com>
-> Subject: Re: [PATCH v1] bus: mhi: host: pci_generic: Add support for EM929x and set MRU to 32768 for better performance.
-> 
-> Caution: This email originated outside of Semtech.
-> 
-> 
-> On Wed, May 28, 2025 at 10:59:43AM -0700, Adam Xue wrote:
-> 
-> + Thomas and Aleksander (for EM919X related question)
-> 
-> > Add MHI controller config for EM929x. It uses the same configuration 
-> > as EM919x. Also set the MRU to 32768 to improve downlink throughput.
-> >
-> 
-> This also affects the EM919X modem. So I want either Thomas or Aleksander to confirm that it doesn't cause any regression.
-> 
-> Rest looks good to me.
-> 
-> - Mani
-> 
-> > 02:00.0 Unassigned class [ff00]: Qualcomm Technologies, Inc Device 0308
-> >       Subsystem: Device 18d7:0301
-> >
-> > Signed-off-by: Adam Xue <zxue@semtech.com>
-> > ---
-> >  drivers/bus/mhi/host/pci_generic.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/drivers/bus/mhi/host/pci_generic.c
-> > b/drivers/bus/mhi/host/pci_generic.c
-> > index 03aa88795209..9bf8e7991745 100644
-> > --- a/drivers/bus/mhi/host/pci_generic.c
-> > +++ b/drivers/bus/mhi/host/pci_generic.c
-> > @@ -695,6 +695,7 @@ static const struct mhi_pci_dev_info mhi_sierra_em919x_info = {
-> >       .config = &modem_sierra_em919x_config,
-> >       .bar_num = MHI_PCI_DEFAULT_BAR_NUM,
-> >       .dma_data_width = 32,
-> > +     .mru_default = 32768,
-> >       .sideband_wake = false,
-> >  };
-> >
-> > @@ -813,6 +814,9 @@ static const struct pci_device_id mhi_pci_id_table[] = {
-> >       /* EM919x (sdx55), use the same vid:pid as qcom-sdx55m */
-> >       { PCI_DEVICE_SUB(PCI_VENDOR_ID_QCOM, 0x0306, 0x18d7, 0x0200),
-> >               .driver_data = (kernel_ulong_t) &mhi_sierra_em919x_info 
-> > },
-> > +     /* EM929x (sdx65), use the same configuration as EM919x */
-> > +     { PCI_DEVICE_SUB(PCI_VENDOR_ID_QCOM, 0x0308, 0x18d7, 0x0301),
-> > +             .driver_data = (kernel_ulong_t) &mhi_sierra_em919x_info 
-> > + },
-> >       /* Telit FN980 hardware revision v1 */
-> >       { PCI_DEVICE_SUB(PCI_VENDOR_ID_QCOM, 0x0306, 0x1C5D, 0x2000),
-> >               .driver_data = (kernel_ulong_t) 
-> > &mhi_telit_fn980_hw_v1_info },
-> > --
-> > 2.45.2
-> >
-> >
-> > To view our privacy policy, including the types of personal information we collect, process and share, and the rights and options you have in this respect, see www.semtech.com/legal.
-> 
-> --
-> மணிவண்ணன் சதாசிவம்
-> 
-> To view our privacy policy, including the types of personal information we collect, process and share, and the rights and options you have in this respect, see www.semtech.com/legal.
+Thanks,
+Jijie Shao
 
--- 
-மணிவண்ணன் சதாசிவம்
+>
+>> +			      "failed to register fixed PHY device\n");
+>> +		return IS_ERR(phydev);
+> This also looks wrong.
+>
+>      Andrew
+>
+> ---
+> pw-bot: cr
