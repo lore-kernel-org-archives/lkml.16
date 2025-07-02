@@ -1,150 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB4A42750F2;
-	Wed,  2 Jul 2025 12:56:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19BB275104
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 12:57:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751461018; cv=none; b=POeOYOAVSCXhfBzAZBcT6bwBoAEtCj2Z+NvO8Bail43kN5c1MmVSr1WcQANoIPzCwLmbPoINgmkOPQM31nqwOVT9URXTzYmjgOL+9ufkYequsfc1jA7p7ZgdouOw//8IkLvNNKRTUoUr6wLwLQSDk6mfytt252DfVu9Z4RW0g4c=
+	t=1751461051; cv=none; b=MZ5tQdrGBOJRlTvxtmaCve5UsL+vpHNF8pd3Lk/OoQhuezMj/RmUWpItM7NF1vyP+5syFdI2oXmgMcqY2MOePZu7WBRabwy2vEOVqbnCIDQmT7RJTbKgBFwK3Au+onrT2yA1Hne7regn98CHShJdSi3iqZNPG1JLYAN8gLZ2bds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751461018; c=relaxed/simple;
-	bh=87AuNJuW+2yV1B9Zb2+kKYqb3dCQ3S9+ENTr/v9ygw8=;
+	s=arc-20240116; t=1751461051; c=relaxed/simple;
+	bh=MkBWoexUNuPm89yzPO9r953l1XFedX2yqDktEhA1TuA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VoG8qMVN4WPFh3B7mTyCZde3awc1Vl9lMXCLfN+EBYM5nYIDNOD/ZTeq9T7JPV130OQ90rLJDokUKWa+E/+jGfI8MfPlcV5xg2dUJfV4mytrvky3RZHrzdEGfZG40sVNil2+J4At71+hHqT2VKoL6UA/6g+pT9uLO5l0lou0wB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A7MSSLLj; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zgqgec8C2CemXeyFG8RrwQC/QuQLLl8Wy4a36p8I5g4gTZUeIzAYwEwL76ZX2YqGDbblFXbSujtfH9E7ayoHzfSncLfStSTpThUzxUTQ44Xx0iboS9/u4y65g+bSqh7vUR10SlU/vXrsTUZOqxNflBRWZIZQqC526V72P/I8IMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=P9mFCleB; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A7MSSLLj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751461017; x=1782997017;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=87AuNJuW+2yV1B9Zb2+kKYqb3dCQ3S9+ENTr/v9ygw8=;
-  b=A7MSSLLjgmgy1cI4PG+rH5xJN3O9HtYltk0DJ9+Cn4E1Z4afNNH7NZtZ
-   +hpvmsQCIaLuCIakotv07WQVRIgRdH30mprFQl0UNZ+YF+Io4N8EdvRh7
-   sWU8rk0Y1eN45idjFU6JbYhW4RLhBZbzjF+q5ymeEgFbbZq0Rfx7pGsSU
-   SYhQv44cEDiOD6wf527r0vnZe2TU379hAnZD+VwydipiPvRouAcH1+wbT
-   5lSPZ8r5ydrC2h6czEOJ0Cs7KwjXeGGCeYBRB4jz33F7n186CNu9o+e+i
-   Ig8cUnTcWlvN0XqecDIRQ1eD4wIUeBLSrPLSrexy4w1iBR9rqg51/VPZd
-   Q==;
-X-CSE-ConnectionGUID: xVFwBIAiRP6ETwkCqRFZHA==
-X-CSE-MsgGUID: WdS/eiK6QIW9xIn/er9tiA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="79193524"
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="79193524"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 05:56:46 -0700
-X-CSE-ConnectionGUID: k5aMYtXJR2qEFNakZQpjgw==
-X-CSE-MsgGUID: aq3oM6NuTeeQ7eQWflv3ig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="158331640"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 05:56:40 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uWx0t-0000000BvFQ-3atU;
-	Wed, 02 Jul 2025 15:56:35 +0300
-Date: Wed, 2 Jul 2025 15:56:35 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Anup Patel <apatel@ventanamicro.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Alexandre Ghiti <alex@ghiti.fr>, Len Brown <lenb@kernel.org>,
-	Sunil V L <sunilvl@ventanamicro.com>,
-	Rahul Pathak <rpathak@ventanamicro.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Atish Patra <atish.patra@linux.dev>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 15/24] ACPI: property: Add support for cells property
-Message-ID: <aGUsg121lenWHL-w@smile.fi.intel.com>
-References: <20250702051345.1460497-1-apatel@ventanamicro.com>
- <20250702051345.1460497-16-apatel@ventanamicro.com>
- <CAJZ5v0iYYuK2GF2Pg3NiO4vLFzoYm6Q3Dnk5O2DkMJm1R3qSfQ@mail.gmail.com>
- <aGUaFX9WgTW1I_ZO@smile.fi.intel.com>
- <CAJZ5v0h=qzS67Xu6NUfN_LmQUmKF9=AtkaRrTx81td0m-mRNNg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="P9mFCleB"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7d3900f90f6so412239585a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 05:57:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1751461047; x=1752065847; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=p1U/jcJUt63/R9ojtJdyruc5PkgT9HoGw/OOSpSJ154=;
+        b=P9mFCleBocJg7k62fstc6AF8qbEQelyuzhLdz0POfDWpOv6o68Fb3iWlQAeCpWwZ2g
+         EWhIbNE4eu2d6kvawbhIMbEz6B6qJBKsUA16lUiGgFm4M6pDy43N/8xVh/UTEyTbm6wJ
+         WsboMueXheasQPWLSF/PbtDiOmUZ1cbdqC8rnLVAAGZZ/xmz7pnMkXOj2hJJYWRWgNfA
+         BNBn3P+pwaTX6YORtEAMmR+fQC4xlY3GfWen3TUG6DkClcLPZmBD91b3abfWNnDOvF9S
+         i6U1vyOaqqTYKLVCS02hT4pixeT4g2/VBdtpg3vvHHwgSuPK000ERFHx7lVr1CSuIRw1
+         UMEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751461047; x=1752065847;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p1U/jcJUt63/R9ojtJdyruc5PkgT9HoGw/OOSpSJ154=;
+        b=otVFtYf19ldZ1mx3wrUJpxlD1+kc8Al4c5sV37OF+jISz7s3JgZhgHPd7pgNqYtX7x
+         PGAtI6hnTlsFDmsNVdN1KnwEXGTiT/Iirra6qecNpjdiVhCykRi3tj1b/KE7E3be8C7p
+         j2nWthP5yZ0jWNzHUem9iMBax63jKilkZ3r88Q45Otb2DHXgak+7vIApkhPON9e6CuhN
+         6H5QAbBmXArGZOQi/YF3bI5Diauyjx9/ErZs4PeCYIwJp/zXxFniFVIx4jMIeizypazf
+         hNPT/lHZd5InBLCRyPXuhjuqui8Ubfn0wIe2zllGfDvW96aiurMShHguC4wHEzmF+8aQ
+         23qw==
+X-Gm-Message-State: AOJu0YzAF1aEAc5/bqJb3IZcf7c8a6DuznVB9SJyUiV+BS370yeEPfEj
+	qTW/zbUok7o4+XZGBcrnRIi50xbEozoDyBUBGLeUz81nKoaLuMzAaQJO+qAfltAS9dA=
+X-Gm-Gg: ASbGncsGJhvFbNAKjUf/snOAy36nlyO6t6xpPENYmmMyjrmZZv2/9akwo/iLNZSF4MR
+	yF5PRyoioFnomOGELGkhzwZts2FM9tnt63MIyP+U+ZpeSEPHko1xLdndZrnVfojtp1Fn4sNORw7
+	AbMvEMWKWMjCBlervdcqKCzBS/6oUDQmmkSEMvIxKOy8nqIu1cN/KN4BIWY1enOtXhWTeYetFnm
+	GJFfsUX2J1XP4fdsKs8M3yDGVzPbXDpufizzyxRvLE7PySQhMOrH55faae2P0kzPiYx7VI1SEdl
+	ViHINy5RsO6q2wmFmpLs1qzKdZpcaUGRPhzS
+X-Google-Smtp-Source: AGHT+IHUMiBPjG0eWEZJypXuRy9Vl0pcPIQatE88RekI/5Jeu9Byi7LTA10RE7s734tKjAic64bqaQ==
+X-Received: by 2002:a05:620a:2492:b0:7d4:4c7b:9701 with SMTP id af79cd13be357-7d5c47831e7mr344047785a.35.1751461047340;
+        Wed, 02 Jul 2025 05:57:27 -0700 (PDT)
+Received: from ziepe.ca ([130.41.10.202])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d443204feesm933663885a.56.2025.07.02.05.57.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 05:57:26 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uWx1h-00000004bTR-3GW4;
+	Wed, 02 Jul 2025 09:57:25 -0300
+Date: Wed, 2 Jul 2025 09:57:25 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
+	Stefan Berger <stefanb@linux.ibm.com>,
+	Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>,
+	Peter Huewe <peterhuewe@gmx.de>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	David Howells <dhowells@redhat.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	"open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
+	"open list:SECURITY SUBSYSTEM" <linux-security-module@vger.kernel.org>
+Subject: Re: [PATCH v4] tpm: Managed allocations for tpm_buf instances
+Message-ID: <20250702125725.GA904431@ziepe.ca>
+References: <20250701145136.82726-1-jarkko@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0h=qzS67Xu6NUfN_LmQUmKF9=AtkaRrTx81td0m-mRNNg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <20250701145136.82726-1-jarkko@kernel.org>
 
-On Wed, Jul 02, 2025 at 02:39:30PM +0200, Rafael J. Wysocki wrote:
-> On Wed, Jul 2, 2025 at 1:38 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Wed, Jul 02, 2025 at 12:20:55PM +0200, Rafael J. Wysocki wrote:
-> > > On Wed, Jul 2, 2025 at 7:16 AM Anup Patel <apatel@ventanamicro.com> wrote:
+On Tue, Jul 01, 2025 at 05:51:35PM +0300, Jarkko Sakkinen wrote:
+> @@ -32,28 +32,30 @@ struct tpm_readpubek_out {
+>  static ssize_t pubek_show(struct device *dev, struct device_attribute *attr,
+>  			  char *buf)
+>  {
+> -	struct tpm_buf tpm_buf;
+> +	struct tpm_buf *tpm_buf __free(kfree) = NULL;
+>  	struct tpm_readpubek_out *out;
+>  	int i;
+>  	char *str = buf;
+>  	struct tpm_chip *chip = to_tpm_chip(dev);
+>  	char anti_replay[20];
+>  
+> +	tpm_buf = tpm_buf_alloc();
+> +	if (!tpm_buf)
+> +		return -ENOMEM;
 
-...
+apprently this isn't the style guide, you are supposed to write:
 
-> > > >  static int acpi_fwnode_get_reference_args(const struct fwnode_handle *fwnode,
-> > > >                                           const char *propname, const char *nargs_prop,
-> > > >                                           unsigned int args_count, unsigned int index,
-> >
-> > > >         const struct acpi_device_data *data;
-> > > >         struct fwnode_handle *ref_fwnode;
-> > > >         struct acpi_device *device;
-> > > > +       unsigned int nargs_count;
-> > > >         int ret, idx = 0;
-> >
-> > > > +                       nargs_count = acpi_fwnode_get_args_count(device, nargs_prop);
-> > >
-> > > I think it should work the same way as it used to for the callers that
-> > > pass args_count, so maybe
-> > >
-> > > if (!args_count)
-> > >         args_count = acpi_fwnode_get_args_count(device, nargs_prop);
-> >
-> > But this is different variable.
-> 
-> Of course it is different.  It is an acpi_fwnode_get_reference_args() parameter.
-> 
-> > > >                         element++;
-> > > > -
-> > > >                         ret = acpi_get_ref_args(idx == index ? args : NULL,
-> > > >                                                 acpi_fwnode_handle(device),
-> > > > -                                               &element, end, args_count);
-> > > > +                                               &element, end,
-> > > > +                                               nargs_count ? nargs_count : args_count);
-> > >
-> > > And this change would not be necessary?
-> >
-> > This is not the same check as proposed above.
-> 
-> No, it is not.
-> 
-> It just makes the function work the same way it did before the change
-> for the callers who passed nozero args_count and so they might be
-> forgiven expecting that it would be taken into account.
+  	char anti_replay[20];
 
-I see your point now. But do we have such a user? I dunno.
+	struct tpm_buf *tpm_buf __free(kfree) =  tpm_buf_alloc();
+	if (!tpm_buf)
+		return -ENOMEM;
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Jason
