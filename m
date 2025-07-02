@@ -1,151 +1,248 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9310C1E5B70
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 13:09:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751461780; cv=none; b=gFgvhejAf72eWrYRpAH+6O9YlDFkRFn42YX4I5icS+S/E5LQGoCY7CsUf1rZMHFIA1j6Cm5QgD/NbRqsI5Pmzxrw/+g4sEIrmyXESTUg3KIk01iAqXCniL2ou+XU94Siyae3vX46oai9y6xx3DxdM0IJ0T7XItJlD4V7dlawrJU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751461780; c=relaxed/simple;
-	bh=T0T50epQYXSTIcomIRVA4pTMk0v0FrjObGdzIlNlzY0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j+GR9bAmaQxEdUxhPbi1abnBMs/4AykoKkJv6tEe6BHRqwlOMqxAETQ0cKeUKKTrBu0+3zAKXc9o1HCCGjQabIH/V1PlTIxzPGAH27RqBa8FceKVakfvUUPS12VXmXCZZnXILUVlNukcMI76BEYQgwRz8lq8ilW3dmrQfVewoXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=PeMl1KbJ; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA937275850;
+	Wed,  2 Jul 2025 13:09:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751461784; cv=fail; b=nLfqOlMC4Tc29OOSU3IRcQIx6Ovbqk7SsVBcSKxL0RwA8HYPunlz93xmcqC4Wj3QyUNGX8sAkR3pX/DebHqCfGbqlySv7OaimoivWl3/9v0dRxiiAWM8FzzP4xcJNuqtZZFyfaxDjvU5YEDpGw3agCtsYIqz+lrHk4Ve/1GZHMU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751461784; c=relaxed/simple;
+	bh=PY1EJ26qPoFgll/Xnadsrd1E1IYKtXFVoKt/44QMD2k=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=uvkVo1/CppMLSlBAeuHEabPigzJBoJLv/BtqoEK5lxVKBYOdFOInTn5gbyK8U7PjG3rt5DHD7jnrSsHuUuIuouikgODZSEKSrX8NEIQK3ZRbYmhS/0JoiQtyUynVHIiZ713jigvDWf3WAQuUZWaHLAIVdb4218cib51JHno2Je8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RwOsIme3; arc=fail smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="PeMl1KbJ"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4235A40E0205;
-	Wed,  2 Jul 2025 13:09:36 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id T9VHxsU5LReM; Wed,  2 Jul 2025 13:09:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1751461771; bh=wjkdRehXZRzRYjP4NRRWzsslHj3FiEjq733eglR4EgQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PeMl1KbJpVbPUqHbEEtF+uKgxwoYsdqkxHkhM6OdQptt5pxSi+Oy2L64LjmkdoSp+
-	 wyaNZaGdAbSIM4Inbi8XmJMz09zSmlvnhV0RAtwdF4BNV0vzMsB9e4ulskUT/dSc3d
-	 b7Tt9LK+BPcVZVhAcNhgH5Bsw7rYx5C7kVftvSADBc0BFUIyTR87pxIFy7AAaXnL+k
-	 /xAjyjBXx2BWHQFNBI9yEkPllZNam4U46RczSxUdbc1i5HcDOeEzERlvAyloj4kNku
-	 KgAnupimy9b9S5pPnS74bKpC5j7jjfSGLgumbp8tEeeBgQBI/1g/fNHlFBofV+t6ov
-	 GkPavETo4hpEkO7fjheARhsME3mmzRFCknxnh/kMmmAF2LpHRM/EuOnSgNesZM3DBy
-	 w9IQl8YixJZeZbPQ6VKoe3KtgyNdRG/KPolVndj4k4AcwqgjXxJU2f6G+LZNcGvlQ/
-	 Snrj8Ti0WLQKJpFfkM80/c/3wESP62VXkdaH3fOVhFZ+UH9aAI/g9i9JI392js38Fr
-	 RW8tgQEP6VSTBORN1TxDwp85eCReYhfEpN/QOExge+vbY9F+DPClc9bREMLZ66uwl4
-	 TaCuqqUWEP9/Cwc9K/BTkKI1SFf//uX6YKOuDJtbSwpXP1JHI7/AQ/RtZ3RypWQK0e
-	 S3UymDOZgyK5651yCvx0PTnE=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6A27240E021C;
-	Wed,  2 Jul 2025 13:09:22 +0000 (UTC)
-Date: Wed, 2 Jul 2025 15:09:15 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: kernel test robot <lkp@intel.com>, Thomas Gleixner <tglx@linutronix.de>,
-	llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Jinjie Ruan <ruanjinjie@huawei.com>
-Subject: Re: [tip:master 19/19] include/linux/irq-entry-common.h:201:2:
- error: unexpected token
-Message-ID: <20250702130915.GEaGUve86iYnv337_Z@fat_crate.local>
-References: <202507020528.N0LtekXt-lkp@intel.com>
- <20250702123240.GDaGUm6Le4KLL7o_91@fat_crate.local>
- <aGUtCveV8Ev17_FS@J2N7QTR9R3.cambridge.arm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RwOsIme3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751461783; x=1782997783;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=PY1EJ26qPoFgll/Xnadsrd1E1IYKtXFVoKt/44QMD2k=;
+  b=RwOsIme38G+u+yJ/j/epxjQAbn5wKkxpwc3mvO4uGq8PScjpc30njDfq
+   I/Mk5y6mYgB48LML+4j75H/4r4eHGHBhlp14a3yRBDi1WYkQcCdB7FsbR
+   24FAsZYFZ0RTaakVakwnPj6foB2BG+lMp51Svm49I2Hf5EwET8c5EnJzh
+   eUiIuXJOMInDMxSXyne+FwGFViglpE8JowdYHI7zKXuhdflHLthvVBOr8
+   wiri0fDiI5MOdZBp2kH8Y2/PRAT30U82EOvjzhTq7zPnZa71NDLBJiy2/
+   D0txOfuhSfGqsw1xIKgIqJy3eao1xfosG0ZM8LX/EYGzcIwXTFcP7h/Ib
+   Q==;
+X-CSE-ConnectionGUID: zrEgFqtRRSSmmEfEP/cGvw==
+X-CSE-MsgGUID: gzRkEIzFQqaSe/V5+DkJGA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="57563551"
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="57563551"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 06:09:14 -0700
+X-CSE-ConnectionGUID: mJeA0g8YRiCyI0O3XenecQ==
+X-CSE-MsgGUID: VWhKlF/kQ6S9lSzzP6cTDA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
+   d="scan'208";a="185016557"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 06:09:13 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 2 Jul 2025 06:09:13 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Wed, 2 Jul 2025 06:09:13 -0700
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (40.107.102.77)
+ by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 2 Jul 2025 06:09:12 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=j9Yio+VG9n5Oq1pSDz/QEMJamJahEJQ4PafrumbVY0EVjx9nekxJVeEhXGaPxoj4d6NpcV80eG6ljGuDCbgpASsYvHX3cpidPOp/hK2n/SkpLQ7aySY44rcoa97cnZvdqa/byFqLg0UI0FG4ZgeK21gxSluBLaW9CJra9770oL0BRNKrD3KfRcuHp5vj84GESxWh1Q4fF34kitDJgxr/PrzUGJ/5NbzeMwX14mGRK/QCIHANYypzciDLiOMgzFXUNZ2i0mZAOOQO5pEX1gTCt1AteQwX/pSLKZaz4oDeFY6qPG2rivYEgHOTuvPQA1CYLRNB5Uk1s6YAuG/SLaPAOw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nw3EBDuZN5M+9A8O60p/C6I7h1rsZzoP3zzG18Oh+Ho=;
+ b=lwCtznkWKcmh7WsnfLuVDkqKvA5Xm+6V9J4ZC2FnrE/icGsPM7rFdGQ0tJoIJkjVrX/zF9wy98yII1hAwlx/VvP6HDaXXzi8LYF9Iq0eW3uvQfPxIMm1jxL4C0qX4dGwISmIG9XX8inLw5shIVpIIV258khm2NCC+KcTadlV8xEVruJm4khnoV3Aiqf96bOLzKaNPuxU8eiiOKRvxP2lYhPvIFP59l9bqHetso0mtiZZ7ii9X/8QG8R3BTtLmGJMofaq/VZB//gAb947PoitXAYKMHZOv6fvyyDwiRQ2aSv0UpvUDGsG8zRzzqkWfJkk+kXlL20CUWS2NeoUn4iLhg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from DM3PPF208195D8D.namprd11.prod.outlook.com
+ (2603:10b6:f:fc00::f13) by CYYPR11MB8329.namprd11.prod.outlook.com
+ (2603:10b6:930:c7::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.31; Wed, 2 Jul
+ 2025 13:09:11 +0000
+Received: from DM3PPF208195D8D.namprd11.prod.outlook.com
+ ([fe80::9c2a:ba60:c5fe:6a64]) by DM3PPF208195D8D.namprd11.prod.outlook.com
+ ([fe80::9c2a:ba60:c5fe:6a64%5]) with mapi id 15.20.8857.026; Wed, 2 Jul 2025
+ 13:09:10 +0000
+From: "Kandpal, Suraj" <suraj.kandpal@intel.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>
+CC: Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann
+	<tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
+	<simona@ffwll.ch>, "Nikula, Jani" <jani.nikula@intel.com>, "Deak, Imre"
+	<imre.deak@intel.com>, "Murthy, Arun R" <arun.r.murthy@intel.com>, "Dmitry
+ Baryshkov" <lumag@kernel.org>, Andy Yan <andy.yan@rock-chips.com>, "Dave
+ Airlie" <airlied@redhat.com>, "dri-devel@lists.freedesktop.org"
+	<dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "kernel-janitors@vger.kernel.org"
+	<kernel-janitors@vger.kernel.org>
+Subject: RE: [PATCH] drm/dp: Clean up white space in
+ drm_edp_backlight_probe_state()
+Thread-Topic: [PATCH] drm/dp: Clean up white space in
+ drm_edp_backlight_probe_state()
+Thread-Index: AQHb61CYyo10iQGAfkCqedIKzRgWr7QezizA
+Date: Wed, 2 Jul 2025 13:09:10 +0000
+Message-ID: <DM3PPF208195D8D423BDB8FC477429FCA3BE340A@DM3PPF208195D8D.namprd11.prod.outlook.com>
+References: <30b896c2-ae71-4cf2-9511-2713da7e1632@sabinyo.mountain>
+In-Reply-To: <30b896c2-ae71-4cf2-9511-2713da7e1632@sabinyo.mountain>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM3PPF208195D8D:EE_|CYYPR11MB8329:EE_
+x-ms-office365-filtering-correlation-id: 69581193-4fa8-46ee-cda6-08ddb969a2ac
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014|38070700018;
+x-microsoft-antispam-message-info: =?us-ascii?Q?Sy2h5bP/h9SdjuY4dQeVViOcZ8VeXAdLdEAayt2TY+YSV1QGATj2Og3SyjY/?=
+ =?us-ascii?Q?6FQA+m27ShVrWpUyPW0MbVnq4k05xOAivIiEeNNpTWmdJ3Cgm0WViNP6RWry?=
+ =?us-ascii?Q?WHF0nhKwvcBtZgU9w7Kd5fnnKYm9bQh/lJGWN1+CnvLa6XRrHY0cqWN5EKFm?=
+ =?us-ascii?Q?abA1+mbsEu8vuVfqKPW3q0O/ItyyaMAD+D7kVsDtLDrAeUOLI2oKVQAcItok?=
+ =?us-ascii?Q?IpW55nOkrB4E3+G23VESQ+S7abj3+rQ3Ila/Dt2aTFPZAcsYd7gYecDoGaFf?=
+ =?us-ascii?Q?f4EmYahzLMP/u+8TZ/mRUHUHg+w4q9mqv4LeArKIWmKGcaHhvoPG9NV5y7xd?=
+ =?us-ascii?Q?jkkaw6zK5uCB2G+HlUATMPbTddXuq1rx8r8RAj34S63aUjKmUwb/CreB5yJO?=
+ =?us-ascii?Q?1W+iolxz53td0bOjPq2YTu9F1JPKGI2uxa0gKMfoDfMN5uLAqpu5WwRDnKDX?=
+ =?us-ascii?Q?akyLAxoG/QJXvOJObDMmXaorCOshKdsETBMkcc1wq4NW8FzfM9Iy9R5ZUHCY?=
+ =?us-ascii?Q?u+nJnGbYU4OFtNt6lH+4fN1fuyLe1MSTh3rMER0FLjOvRzQZi/Bfpjo/PGNV?=
+ =?us-ascii?Q?bvX0D60oK2Bskqka4qlZxEN9F7CvZ/34Tumh0BshapbFa65aZifndhEgrqEL?=
+ =?us-ascii?Q?5lw4mRB3Zkstq8ybi1iNZJqh1DAUDtfOwtO3/6ipFUjTrogoG5to9nSZdcRD?=
+ =?us-ascii?Q?vXdii0OU51vv7rLuVvHpyC4CYZgw1VZbc6XXk+xtexWDS0BOe1Q2uIQfU6dw?=
+ =?us-ascii?Q?zJezPknHxFyHPayHirR+nfZtG0HDZFkz03cy/athqf8OG6vLOZGvKS/elCMe?=
+ =?us-ascii?Q?7axongub1vNrfLb0ghM3nhjXxbapCvQYO/62IJHEQfcCH6FqtASbhoZO3fvn?=
+ =?us-ascii?Q?QYGWfy32FQAuOS7EUsZOHkpFhrrMFPYwfLHaPUl1UNHQH0NI3O6IXTQ0i6sm?=
+ =?us-ascii?Q?g4cX4uoHD6PKgpCBpM7s7k10ghfmNhitJWT1H/fGlRH7rWYIqMkdSTgfp4if?=
+ =?us-ascii?Q?7CrVY63OnZq3MRex8G82dudrd2bQNQu2Djcm2BIgQXuoTD5Lz+pbT0uxYUXW?=
+ =?us-ascii?Q?xiViGhKzxYoPXOc4unOC+BlQuNzwg5K0TA/V/Yu0+RtB7w+pN7eP6FAR4IaM?=
+ =?us-ascii?Q?QfJ+TwryIzO2uPruCe3wRVbHvHLkcI6+2NF6hBz11baiT854ObgE+l7sE5vE?=
+ =?us-ascii?Q?8gQyyWxyTZvwEACf2ZP/s+7N0JR79VhOx3lq/2wsZ/9WsUYfsTON7kTp60bk?=
+ =?us-ascii?Q?xrrGngHHCPl9GD8O5j7jGbNkPDAdty4Thasn7RVKjQRM5hW8G7nwxzOcpq18?=
+ =?us-ascii?Q?my51UG8Kxdvnv17t3ZYsYC29qWane7zPJTfXBq1Id265TamvxbL1F8e3rcIF?=
+ =?us-ascii?Q?VdDEBEc4X9zhtr+V0Pv32zXCEpV/0DCLOPgEDXPpp2XWeZVdUbch35oEPRGF?=
+ =?us-ascii?Q?BcwtNG8FJ98QGYgJpo8zf0LbBVohyV6RBB4wDjZlG7G5E+LxiEKUmQ=3D=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM3PPF208195D8D.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?KZSS5b+5WZRDYkwcbG9qRBjYMSNRjyGu0B2oi40ghS5M36neoSW4PMKgWK3z?=
+ =?us-ascii?Q?7/LpLr186x45QwgTL7iP+F/iIT7fT5JpWHfEgg+spvCIEg5+FRqv/hEvQw4f?=
+ =?us-ascii?Q?VX91s4xs7vTRtDrVbKoiGkKNhqTxecPSKal0fiIFTMyoJZcIg0NtY8QLKHld?=
+ =?us-ascii?Q?8DTXPFcqe2XKfJoBOdLJyxE82b1xWGZMaieykY+7fxg7QCWrK6H8L/QhvfKw?=
+ =?us-ascii?Q?uF7dRc1Sh4lfK8LRA4g2tZRrQGVxwzYLnvyckpldmwwCqP8OeFXfkYLBxf6n?=
+ =?us-ascii?Q?weRkzoVqMVYMgJ+SgLpq150ExP1qVSfqqBbcbVHQADiPzJpqKPRbA2haNwAD?=
+ =?us-ascii?Q?zCHK/RGVpnBMVGG9hlORZeInPN7mmTivFotIJbASWW4cjGxMjPj5p7MPUYD+?=
+ =?us-ascii?Q?cCLg+nV2jn19wuIPs5LMVJ1kOuLVjvNV0zYHDmJfv91LpMDWIz7CgcrnlkEO?=
+ =?us-ascii?Q?GjKY5wsvNVMDuNlDADw3R08UHexMRLU1yGkgJNwZRbIRSeuONIHXChVozskx?=
+ =?us-ascii?Q?LX10VwxqR3ysm+1MDn0EmxGlzMLeWM+MhCriDfVzfTYrivuD/c0eGQmxbRFe?=
+ =?us-ascii?Q?wzW8uxSMSV8eEtMREuNL6FFRkaOVMI+YkzdCKtfG8hWlQC252KWiys50fxNF?=
+ =?us-ascii?Q?o/0TC2WeUHwvoaoP2tqrFyYrATH3Rco7jHYlgvGB7COGV61vzpyW3ILK6mt7?=
+ =?us-ascii?Q?Fvlbv7B2tPo1WjQQVnUsgUT07UW7YdcOf/P6cl+hr4NdoT53y7my5Syze8jV?=
+ =?us-ascii?Q?Swky8p8LgQBBE0VeOPlpFsEK/LZEBDvEk/qombE7Hib3jD+totUFoValxXu5?=
+ =?us-ascii?Q?3NJE11n27bvpyduZS9wJQ2kdXeJF04Z8LR2QP5/R6EI4MsAsdZpeLBWbgO9D?=
+ =?us-ascii?Q?BL6nmKCgaplHdiBuCL5TMHdPLx2gesPSwhgEp0CMLmy4zNwcyo2W3oONecZS?=
+ =?us-ascii?Q?Mm2Xyvr4sBFrMNs6eKmtY9YLqYvzvK88neBXKC8NlCqnCgJryjxfpl3O7jPQ?=
+ =?us-ascii?Q?wlf925IbBbVv6TRkqLZbV5OUuGZ4tZzjnme5fHrt/1wvhOAQUZ01QOCwEIV0?=
+ =?us-ascii?Q?F4zuFAPq869rDRUwQ7B4GkZiXAk6mvNGFjuQm9JK5wvaY/nib3ll841gezOc?=
+ =?us-ascii?Q?LLT2knT9BeF+7FCLrgycUDoagvXp5OA9NsFcl8waq1j4P11aeNvu0CwPqApG?=
+ =?us-ascii?Q?Wg0aWMPGy68gjY4uRytwu6VYrjP2gxEZ/t79s5qW3Quxv9fpePsKRxpBE3pH?=
+ =?us-ascii?Q?4rX0WfTIJwYE51mOCbM6g1jI0ftlhYP9kKx0uB7j3uEhxQbpHLKKrSouYA2/?=
+ =?us-ascii?Q?Bmck36bzIfQXELrsrY/wRH4h0gJLMaDVFVtO6iGwSGT7d0yT7WPhP/IdR03b?=
+ =?us-ascii?Q?6ZzVLuOoW9Jn76pivJabaxSgHrmWBnWcHbvFCYgci9I42e8xrWh/XkzhLqOX?=
+ =?us-ascii?Q?LekY5KOIpebxRpbmnGFHphwuUzm/Ie8B3eKYYlmB9lgtadfi7VV7S4ox2K4A?=
+ =?us-ascii?Q?0ROfeRKOjliawD7OQZ+aGO/GlQGwP2hQ9Mpk5nS9+pref/OwzHbhcl+NFc8a?=
+ =?us-ascii?Q?EBAgErKlvGHvAu3/wqx1HyLFUdjfZPanaGs8XuP4?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aGUtCveV8Ev17_FS@J2N7QTR9R3.cambridge.arm.com>
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM3PPF208195D8D.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 69581193-4fa8-46ee-cda6-08ddb969a2ac
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jul 2025 13:09:10.8045
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ctIP4rmk9sHIm41ZA6WegNTguHAvhyhncErDPt2huOJLgXpMflOW432FPgLbyPYj7uB8aoLnE+L3ix3GzCewww==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR11MB8329
+X-OriginatorOrg: intel.com
 
-Hey,
 
-On Wed, Jul 02, 2025 at 01:58:50PM +0100, Mark Rutland wrote:
-> Hi Boris,
-> 
-> [ adding Linux and Jinjie, since this is almost certainly due to the
->   irqentry split ]
-> 
-> On Wed, Jul 02, 2025 at 02:32:40PM +0200, Borislav Petkov wrote:
-> > On Wed, Jul 02, 2025 at 05:56:06AM +0800, kernel test robot wrote:
-> > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
-> > > head:   104f02a7798f7e8aba25545f9d485035532260b2
-> > > commit: 104f02a7798f7e8aba25545f9d485035532260b2 [19/19] Merge core/entry into tip/master
-> > > config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20250702/202507020528.N0LtekXt-lkp@intel.com/config)
-> > > compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-> > > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250702/202507020528.N0LtekXt-lkp@intel.com/reproduce)
-> > 
-> > I'm trying to follow your reproducer and installed binutils-s390x-linux-gnu.
-> > 
-> > However: 
-> > 
-> > make CC=clang HOSTCC=clang W=1 ARCH=s390 arch/s390/ 
-> >   SYNC    include/config/auto.conf.cmd
-> >   CALL    scripts/checksyscalls.sh
-> >   VDSO    arch/s390/kernel/vdso64/vdso64.so.dbg
-> > ld: unrecognised emulation mode: elf64_s390
-> > Supported emulations: elf_x86_64 elf32_x86_64 elf_i386 elf_iamcu i386pep i386pe
-> > make[2]: *** [arch/s390/kernel/vdso64/Makefile:53: arch/s390/kernel/vdso64/vdso64.so.dbg] Error 1
-> > make[1]: *** [arch/s390/Makefile:150: vdso_prepare] Error 2
-> > make: *** [Makefile:248: __sub-make] Error 2
-> > 
-> > My linker can't do s390. So I need something else which your system has.
-> 
-> IIUC you can build with `LLVM=1` rather than `CC=clang` to force the use of
-> LLD (which should support s390 even if you don't have a GNU LD that does).
 
-I was just typing:
+> -----Original Message-----
+> From: Dan Carpenter <dan.carpenter@linaro.org>
+> Sent: Wednesday, July 2, 2025 6:25 PM
+> To: Kandpal, Suraj <suraj.kandpal@intel.com>; Maarten Lankhorst
+> <maarten.lankhorst@linux.intel.com>
+> Cc: Maxime Ripard <mripard@kernel.org>; Thomas Zimmermann
+> <tzimmermann@suse.de>; David Airlie <airlied@gmail.com>; Simona Vetter
+> <simona@ffwll.ch>; Nikula, Jani <jani.nikula@intel.com>; Deak, Imre
+> <imre.deak@intel.com>; Murthy, Arun R <arun.r.murthy@intel.com>; Dmitry
+> Baryshkov <lumag@kernel.org>; Andy Yan <andy.yan@rock-chips.com>; Dave
+> Airlie <airlied@redhat.com>; dri-devel@lists.freedesktop.org; linux-
+> kernel@vger.kernel.org; kernel-janitors@vger.kernel.org
+> Subject: [PATCH] drm/dp: Clean up white space in
+> drm_edp_backlight_probe_state()
+>=20
+> This code needs to be indented one more tab.
+>=20
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 
-Nathan says:
+LGTM,
+Reviewed-by: Suraj Kandpal <suraj.kandpal@intel.com>
 
-"You need to supply CROSS_COMPILE=s390x-linux-gnu- or use LLVM=-19 to avoid the ld error."
+> ---
+>  drivers/gpu/drm/display/drm_dp_helper.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/display/drm_dp_helper.c
+> b/drivers/gpu/drm/display/drm_dp_helper.c
+> index db7896c7edb8..1c3920297906 100644
+> --- a/drivers/gpu/drm/display/drm_dp_helper.c
+> +++ b/drivers/gpu/drm/display/drm_dp_helper.c
+> @@ -4245,14 +4245,14 @@ drm_edp_backlight_probe_state(struct
+> drm_dp_aux *aux, struct drm_edp_backlight_i
+>  					    "%s: Failed to read backlight level:
+> %d\n",
+>  					    aux->name, ret);
+>  				return ret;
+> -		}
+> +			}
+>=20
+> -		/*
+> -		 * Incase luminance is set we want to send the value back in
+> nits but since
+> -		 * DP_EDP_PANEL_TARGET_LUMINANCE stores values in
+> millinits we need to divide
+> -		 * by 1000.
+> -		 */
+> -		return (buf[0] | buf[1] << 8 | buf[2] << 16) / 1000;
+> +			/*
+> +			 * Incase luminance is set we want to send the value
+> back in nits but
+> +			 * since DP_EDP_PANEL_TARGET_LUMINANCE stores
+> values in millinits we
+> +			 * need to divide by 1000.
+> +			 */
+> +			return (buf[0] | buf[1] << 8 | buf[2] << 16) / 1000;
+>  		} else {
+>  			ret =3D drm_dp_dpcd_read_data(aux,
+> DP_EDP_BACKLIGHT_BRIGHTNESS_MSB,
+>  						    buf, size);
+> --
+> 2.47.2
 
-:-)
-
-> I have script to use the kernel.org GCC/LLVM builds from:
-> 
->   https://www.kernel.org/pub/tools/crosstool/
->   https://cdn.kernel.org/pub/tools/llvm/
-> 
-> ... and I can reproduce this with:
-> 
->   [mark@lakrids:~/src/linux]% git clean -qfdx
->   [mark@lakrids:~/src/linux]% usekorg-llvm 18.1.6 make LLVM=1 ARCH=s390 -s allmodconfig
->   [mark@lakrids:~/src/linux]% usekorg-llvm 18.1.6 make LLVM=1 ARCH=s390 -s  
-> 
-> ... where that last step blows up with:
-> 
-> | init/main.c:972:6: error: unexpected token
-> |   972 |         if (WARN(!irqs_disabled(),
-> |       |             ^
-> 
-> ... plus a whole bucnh of other gunk.
-> 
-> I'll take a look, and hopefully Linus and Jinie can too.
-
-Thanks.
-
-It looks to me like that BUGVERBOSE stuff in tip/core/bugs and it warns
-because core/entry starts using it when it gets merged to the rest of the tip
-pile.
-
-Lemme show it to Peter.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
