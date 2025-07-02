@@ -1,181 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DDD61EDA12;
-	Wed,  2 Jul 2025 08:57:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8662723C8C5;
+	Wed,  2 Jul 2025 08:58:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751446671; cv=none; b=G1hJ5ZEuRt6ysMnIGh/Y6rsJMxSenyFamUYbsy4BpaHyoQhMIGrZqnzTIH0cnfrM6aI7pZAbJdKoQRMWrJHivJpadJJmp33Kz9SINTtay4F4GPKQZIi94wrQQ2te/rGyN/URgZdoIENdZcE33agqK+IVxsXE+ECpGgkpRB8AN6U=
+	t=1751446689; cv=none; b=k/Kixy7CTW6k2+Bc7cCh24d0cI2xkHv+B8xN6J2nVoga32BvgFJ57GdAQ0OAoy7qWk3PAVBKTz/LJ1WTtK31RlNWse+frrdN6HhlUvBvu1MJ46vzLQporE/rZ4hdyNwAOxZheJvPgknXz9JmCaEmtzlyU/f/wkQ2Q5CcGvyr6RY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751446671; c=relaxed/simple;
-	bh=ohQnaJqAbPxNdMBqJxUtCfGtmagAFDuPLn6d1144XZQ=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=I29ku8wMY1i0TTEAPCS3YqHnFzpnjb7QKG3cPCV9du0+eS5NDfloFtEBEDYVi7xbi62ksIvvNbXSj9m20TYh+mPSBVqnqZd065Cl59wLISHCrP2O4wGdluZAFVOi9sz2XXjE4zocpZI9kV3RY/IgdQSmgwgCSqSTBQRxYMXPGmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bzODRhrK; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751446689; c=relaxed/simple;
+	bh=hN6X+y4YJsDLqBUBF+puGdtAc8xXvaGCEdfGLztGYmo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LCuJbO5M7Y/dsVaOeIzzYfPURrsVCzZ1yApyEe+VMGYkH5lRQ1TSNvXLmxcZ8LbNUEhfrHNy5130z0rXtgGZC7MViHZ9JXBo0+WNAR4dd7bxVjpunkofpm/iEUc0C/YNV7K+Jvo11+hgRR2uf2lXGrrgk1bfYVa4yNBVITWP/hA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aHoNOOqj; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bzODRhrK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751446670; x=1782982670;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ohQnaJqAbPxNdMBqJxUtCfGtmagAFDuPLn6d1144XZQ=;
-  b=bzODRhrKE/HpNcRKqkv8MrjSUJNkdY66TqhXSnACYWdNq/5FQ9YPT/YG
-   IPOPVwJkeegzzYRnPrMNmxl3zG+scIY8ZaeYGXo2dsZGd5NuNUleZgp47
-   WYEWzxLqm5JTMcvH4Q30oddaZ0J1ulUilD5YGaYHTaphg+p15xWu9zY+6
-   NK10okXsFIW/X2j3qyumBO+2YC35pTCY4eTjTu1RgRx3WYY0tfD4C4w4g
-   iG3wpIbQXQlmagv6Xv45Z4KopKDIKlrl5n2fyazYvAJMwibFfEvM8op7/
-   ateZCQb0YSz7daMA2ImA6gU7Lw9p+3jTzjHELyLUP7OyJtVTrSp4G1q+g
-   A==;
-X-CSE-ConnectionGUID: 0mf7HjxCSkiqgTCKOTXiyw==
-X-CSE-MsgGUID: kHRQTbXoSSSGJXc4agYB7A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="71161017"
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="71161017"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 01:57:49 -0700
-X-CSE-ConnectionGUID: 6TDflI0gTYCyz+W8dwSDiQ==
-X-CSE-MsgGUID: t5A2l6Z+Qq60mB5+4i/J7w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,281,1744095600"; 
-   d="scan'208";a="154566630"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.228])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 01:57:42 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 2 Jul 2025 11:57:39 +0300 (EEST)
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-cc: Vishnu Sankar <vishnuocv@gmail.com>, 
-    Mark Pearson <mpearson-lenovo@squebb.ca>, pali@kernel.org, 
-    Henrique de Moraes Holschuh <hmh@hmh.eng.br>, hansg@kernel.org, 
-    tglx@linutronix.de, mingo@kernel.org, jon_xie@pixart.com, 
-    jay_lee@pixart.com, zhoubinbin@loongson.cn, linux-input@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, 
-    "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, 
-    Vishnu Sankar <vsankar@lenovo.com>
-Subject: Re: [PATCH] x86/Mouse: thinkpad_acpi/Trackpoint: Trackpoint Doubletap
- handling
-In-Reply-To: <u6exrggeh7wcs76bbecpwc7egixyvsp4q6xi6xxrzvqhdbwdsg@jecmkl5wzeqs>
-Message-ID: <a85c0207-880c-53a4-3c52-6c1e13cb1232@linux.intel.com>
-References: <20250620004209.28250-1-vishnuocv@gmail.com> <5jgix7znkfrkopmwnmwkxx35dj2ovvdpplhadcozbpejm32o2j@yxnbfvmealtl> <4ad6e1e1-aca8-4774-aa4a-60edccaa6d0e@app.fastmail.com> <bviu4igchqy6bvu54fw6afts7ooctlmmcutdq6tc4rutzhjvfs@o56kezrit6un>
- <CABxCQKvJzf1G3XLWmqngpy-Ou9U+a7Lzt6gjwZoEcU-+WL6Apw@mail.gmail.com> <u6exrggeh7wcs76bbecpwc7egixyvsp4q6xi6xxrzvqhdbwdsg@jecmkl5wzeqs>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aHoNOOqj"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5625SuGh024499;
+	Wed, 2 Jul 2025 08:58:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=vcyYqz
+	MTUtZIDyj+coq/f+ClbS9PwNEG6AskO6e1rCA=; b=aHoNOOqjsWwXcyKmN5quzA
+	k8xyIsckkTv4W2fAxCGlhcpeyiO4BbqQHXXiK8lPrUd0Kn3xeR+cFY2o0jypLGyF
+	rQxmMj8gc68/Mw9vC8mE+Titbh3lf+dXV1tXPfcR/UidDS711GgWsXiuCbHsa8JF
+	SO9/nc+FngSlXLyu0vkJKbrLFuSA8QSFh2y/8w5r9gKuSki81WaBTabH5LcGlu9c
+	20U/azaryf+XIP7kZIH6sQAWDW3F+nl1rqMDIow0f0Y3QWymbxkRPqbW2s92ZQXP
+	L2MYfTKUV903KEIsFY7+0xDBvqs5iyzfb3i0HKZU5pAqVZhd/sINY7uwnqMc9kaQ
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j830v9ty-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Jul 2025 08:58:05 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5628sM21020554;
+	Wed, 2 Jul 2025 08:58:04 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j830v9tv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Jul 2025 08:58:04 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5625UGY3021906;
+	Wed, 2 Jul 2025 08:58:03 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47juqpppgj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Jul 2025 08:58:03 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5628vx6O46531040
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 2 Jul 2025 08:57:59 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0E07C20043;
+	Wed,  2 Jul 2025 08:57:59 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D650420040;
+	Wed,  2 Jul 2025 08:57:58 +0000 (GMT)
+Received: from [9.152.212.130] (unknown [9.152.212.130])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  2 Jul 2025 08:57:58 +0000 (GMT)
+Message-ID: <a63ecea7-8ab0-4691-897c-09f6efa82068@linux.ibm.com>
+Date: Wed, 2 Jul 2025 10:57:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-440591755-1751446659=:939"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-440591755-1751446659=:939
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Ping][PATCH] perf list: Add IBM z17 event descriptions
+To: Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, agordeev@linux.ibm.com,
+        gor@linux.ibm.com, hca@linux.ibm.com
+References: <20250623132731.899525-1-tmricht@linux.ibm.com>
+ <CAP-5=fV_hXzq0A-91NakejcQGnvPp+uJGGe=vccwM+47JVCmtA@mail.gmail.com>
+ <ad905a68-a89b-458d-8a8b-2081a6656b91@linux.ibm.com>
+ <283e109b-9eb5-4e7d-b7df-215f54496503@linux.ibm.com>
+ <CAP-5=fVcNqE9txXQgO+EUV6xz3Mvsqin9FP8FNUztPp35LW2Ng@mail.gmail.com>
+Content-Language: en-US
+From: Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <CAP-5=fVcNqE9txXQgO+EUV6xz3Mvsqin9FP8FNUztPp35LW2Ng@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: xhxVdaFy5r3v5RLH9nAGTYN47Piw0eDJ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDA3MCBTYWx0ZWRfX+j4mUWqGyzWF dhnEosHuZ4W6EmJ3BzgBRIxMoRE+nba4Iy/46YdffLf9Y8IxrNAgAVdnHJpu/lFCT2w7QZ22Vye tqlvHEubbZlNj4z30ux7BzdyBSUMWW5DNByQ8cM8mkDkfphT553PyL23Hg72eAWUlv101kbXUBS
+ SQx/D6sBF6sUdv9L8j1KxDqf1AxNzKU9c1uGjydeg3u2oBXQmHnfWlhSodrT9b2v3Z8a3KgYwfp rigA/XXcdFixjOx/J8tljEXFrWzyWWf81iw+pd09lS/HXy3sLh6aDkY6CPnYqKtSonGsPu9BY8i fynUBiviZihrm/rdmOFBwb7qEPUZPP9+QT2ZKQSAuICRxG30BiIALpwRUEv1yylicIIrPM23gCd
+ oePcVY4ImTwC2I9STalD8TYTheAtJpPpZnUWDW5d2CD8sO0J8O4UVXbriUYvbQfgl4IqWv0u
+X-Authority-Analysis: v=2.4 cv=MOlgmNZl c=1 sm=1 tr=0 ts=6864f49d cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VnNF1IyMAAAA:8 a=1XWaLZrsAAAA:8 a=VTD5pCTsERiSmnhXbdAA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: Li_SBf8Twpxvmp5U0LO_3fcQzeIwJ4OT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-02_01,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ adultscore=0 suspectscore=0 bulkscore=0 clxscore=1015 impostorscore=0
+ priorityscore=1501 mlxlogscore=999 spamscore=0 malwarescore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507020070
 
-On Mon, 30 Jun 2025, Dmitry Torokhov wrote:
-> On Mon, Jun 30, 2025 at 08:50:27PM +0900, Vishnu Sankar wrote:
-> > On Mon, Jun 30, 2025 at 2:20=E2=80=AFPM Dmitry Torokhov
-> > <dmitry.torokhov@gmail.com> wrote:
-> > > On Mon, Jun 30, 2025 at 05:42:45AM +0900, Mark Pearson wrote:
-> > > > On Fri, Jun 27, 2025, at 2:14 PM, Dmitry Torokhov wrote:
-> > > > > On Fri, Jun 20, 2025 at 09:42:08AM +0900, Vishnu Sankar wrote:
-> > > > >> Newer ThinkPads have a doubletap feature that needs to be turned
-> > > > >> ON/OFF via the trackpoint registers.
-> > > > >> Systems released from 2023 have doubletap disabled by default an=
-d
-> > > > >> need the feature enabling to be useful.
-> > > > >>
-> > > > >> This patch introduces support for exposing and controlling the
-> > > > >> trackpoint doubletap feature via a sysfs attribute.
-> > > > >> /sys/devices/platform/thinkpad_acpi/tp_doubletap
-> > > > >> This can be toggled by an "enable" or a "disable".
-> > > > >>
-> > > > >> With this implemented we can remove the masking of events, and r=
-ely on
-> > > > >> HW control instead, when the feature is disabled.
-> > > > >>
-> > > > >> Note - Early Thinkpads (pre 2015) used the same register for hys=
-teris
-> > > > >> control, Check the FW IDs to make sure these are not affected.
-> > > > >>
-> > > > >> trackpoint.h is moved to linux/input/.
-> > > > >
-> > > > > No, please keep everything private to trackpoint.c and do not inv=
-olve
-> > > > > thinkpad_acpi driver. By doing so you are introducing unwanted
-> > > > > dependencies (for both module loading, driver initialization, and
-> > > > > operation) and unsafe use of non-owned pointers/dangling pointers=
-, etc.
-> > > > >
-> > > >
-> > > > Do you have recommendations on how to handle this case then?
-> > > >
-> > > > This is a Thinkpad specific feature and hence the logic for involvi=
-ng
-> > > > thinkpad_acpi. There are Thinkpad hotkeys that will enable/disable =
-the
-> > > > trackpoint doubletap feature - so there is some linkage. I'm not su=
-re
-> > > > how to avoid that.
-> > > >
-> > > > Is there a cleaner way to do this that you'd recommend we look at
-> > > > using? It's a feature (albeit a minor one) on the laptops that we'd
-> > > > like to make available to Linux users.
-> > >
-> > > I believe if you define the doubletap as an attribute (see
-> > > TRACKPOINT_INT_ATTR or TRACKPOINT_BIT_ATTR in
-> > > drivers/input/mouse/trackpoint.c) then whatever process is handling t=
-he
-> > > hot keys switching this function on or off should be able to toggle t=
-he
-> > > behavior. The difference is that it will have to locate trackpoint no=
-de
-> > > in /sys/bus/serio/devices/* (or maybe scan
-> > > /sys/devices/platform/i8042/serio*) instead of expecting the attribut=
-es
-> > > be atached to thinkpad_acpi instance.
-> > >
-> > > You just don't want to have one driver directly peeking into another,
-> > > because then it starts breaking if you unbind or force use of a
-> > > different protocol, etc.
-> > >
-> > > Thanks.
-> > >
-> > > --
-> > > Dmitry
-> >=20
-> > Thanks for the suggestion. I understand the concern about avoiding
-> > direct driver-to-driver calls and unwanted dependencies.
-> >=20
-> > Just to clarify: if we move the sysfs attribute to the trackpoint
-> > driver itself (under /sys/bus/serio/devices/...), then thinkpad_acpi
-> > would no longer be able to directly enable/disable the doubletap
-> > feature in response to the Fn+G hotkey press. Don't we need userspace
-> > to listen for the hotkey event, find the trackpoint sysfs node, and
-> > toggle the attribute there?
->=20
-> Yes.
->=20
-> > That's possible, of course, but it means the feature won't work
-> > out-of-the-box without extra userspace integration. For example, there
-> > would be no automatic linkage between pressing Fn+G and toggling the
-> > feature unless a udev rule or userspace daemon is configured to do it.
-> > Or is there an approach you'd recommend to preserve the automatic
-> > hotkey integration while avoiding the direct dependency between
-> > thinkpad_acpi and trackpoint?
-> > Sorry, I missed something.
->=20
-> Well, I guess you can look into interacting with sysfs file from
-> thinkpad_acpi.c... There is kernel_read_file_from_path() and others, you
-> will need to implement write counterpart of it. Pretty ugly but safer
-> than following pointers that may go away.
+On 6/27/25 18:55, Ian Rogers wrote:
+> On Fri, Jun 27, 2025 at 1:13 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
+>>
+>> On 6/24/25 08:35, Thomas Richter wrote:
+>>
+>> Gently Ping
+>>
+>> Ian, I have responded to your comments some days ago.
+> 
+> Thanks Thomas, minor nit in your explanation the events must exist as
+> they are in json, but the json events are only exposed if the PMU is
+> present, so the has_event is more of a has_pmu test. Maybe we should
+> add a function like this to the metrics to make this kind of case
+> clearer. Maybe `perf list` should test the events of a metric and hide
+> metrics when the events aren't available to avoid the have_event
+> logic. I'm a bit uncomfortable with that as the events may not be
+> available because of permission issues, but it'd still be useful to
+> know the metrics are around. Anyway I'm digressing.
+> 
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> 
+> Thanks,
+> Ian
+> 
 
-Could device links be used here to ensure the correct shutdown order?
+Arnaldo, Namhyung,
 
---=20
- i.
+with Ian Rogers Reviewed-by: approval, it is possible to
+accept this patch soon, so it will land in the next merge-window.
 
---8323328-440591755-1751446659=:939--
+That will give me an commit-id which I need for my addon work.
+
+Thanks a lot for your help.
+
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+IBM Deutschland Research & Development GmbH
+
+Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+
+Geschäftsführung: David Faller
+
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
