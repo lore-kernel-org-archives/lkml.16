@@ -1,42 +1,54 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F63F30AAAC
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 14:55:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B108017A316;
+	Wed,  2 Jul 2025 14:55:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751468107; cv=none; b=ms5cNq9oNTBnOLfbPiyuYqeZPOI6IRaeXrLYsZUTCP/rgx4DSnuNqk7wzhPU250g3NOR64ltVDvXfx9NJBqz73MvGIZhosRI1jQhUqgoL0RYBHamV5osDXI8exBaoLkPsiFtVdY5FWapXVqWvUCJOxfsW81Jfq6Qvbmol+TT61o=
+	t=1751468137; cv=none; b=eUZyFWGTQRH1Z97lryY/PXKEDiH32n0ZxTPyVWN+VOcizz5Kx+zATt6U5AF2dFPxlYWv3ApbEBNbCjwZqNF9LevB6u59kspDJkXTn4qPw/22ZUgdW360ywvSESwyDEoNJTJEcZyjWaN870J9iPS9Ydq/ZaCQPxvBTlZu+TRr8Rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751468107; c=relaxed/simple;
-	bh=QNHzVW56c5rTcVuAlCo3xaNfY7ZATMG/ihK7rdgAfbQ=;
+	s=arc-20240116; t=1751468137; c=relaxed/simple;
+	bh=odc42PZm0xJO0diX1K58N47iddxW3a0F4HZfOHM34QQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TFapEfackp9bgNh8jgVLNvIU8nlkWQGIRGQTOHEnKxYNr3cmBYSsY4w7w492wpoNhV95RKgrr1HYJp8FUqhDHE+ZYCZiAiNw22OPF6WVh6t4XRz6HRAy/QUiIVirSv/IdjgOuRro0eLBwUCFxK9zTAYwyEqKS3ZCg+wwVkPLBwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gmyoh1Kl; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=mhmtbFsk30+RmabzEz3wqq1ScH147T2X8n47JiyojZVeoZRRbXhvJ0qxja9sg48C3Jkzm53y9EdpxYlI+wk9iiTXc4GZpNlu4UMP24Xg2K6po+Wa5voeJRF0JjtpmVJVfDIAb/mnM1yOXZaCvLrTdnGbLpIbX3NTR40micnw85I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X4dOc7rR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gmyoh1Kl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 447F4C4CEE7;
-	Wed,  2 Jul 2025 14:55:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X4dOc7rR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7004C4CEE7;
+	Wed,  2 Jul 2025 14:55:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751468107;
-	bh=QNHzVW56c5rTcVuAlCo3xaNfY7ZATMG/ihK7rdgAfbQ=;
+	s=k20201202; t=1751468137;
+	bh=odc42PZm0xJO0diX1K58N47iddxW3a0F4HZfOHM34QQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gmyoh1KlDP2KvKCht7OY/FTI8ziIZySNk7tkNkslz4IF/Munz9usuNUyxzbRFwQT3
-	 uAaEalIwPMA6rdIjIvTuwfW26YPMk3XB7YoWFMG251PkLDdr0rYM+zk8UAE+Iw99Bz
-	 3A7ggh40E3pd3kvzl3ZQJPSOk2sndGIQRnbQ7TS2p8lO4o4T3h17uQzUl68GYw1nWg
-	 4kNyvE2uB9fHHHaVsoEwPZ5IjQ+9b4HgeKwXHtYikezFbVfvo58kgts6/vc31zdSaN
-	 XAJSeQ6250Z9LJ5mSqeKAHy5FR2XmbJSlfakkcKWrmitXgWQ7ZCecmTI9HIhNGw575
-	 peEEXhAIYKXeA==
-Date: Wed, 2 Jul 2025 15:55:03 +0100
-From: Lee Jones <lee@kernel.org>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: "Dr. David Alan Gilbert" <linux@treblig.org>, kernel.org@treblig.org,
-	arnd@arndb.de, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Input: pcf50633-input - Remove
-Message-ID: <20250702145503.GR10134@google.com>
-References: <20250629212820.319584-1-linux@treblig.org>
- <j3pkekg2mmbdbmguewoc5rks7263rxhveggkimbhmvkgxb5ikh@nwz553og3qtz>
- <aGP3fvnDpYqzQlYU@gallifrey>
- <6utlzamf6luhexdvtpjbqnlkrdh5bj6gcoj2h7ql7kjxyjo2zt@csylxspamkch>
+	b=X4dOc7rRMoTUrPqkvoVH5KlxVpdU6iDMm2rDEi+KlTjIIDv+7QNH9XaqWCWQj4OoT
+	 zbzjAWxc3IYGTwZrkS3cvU9VHATYI/yGlBu2sn96cJrffqibdZeCa/0G4jjmoziguF
+	 GlZ3vbYwRHql8BA9Q4SCt1HgQ7URRolg7gqp0ShtPK2P37mdoegDMOHpDzVqW/vTRa
+	 BrrmyEINlk52COqWZhKyeTsDkIsaKHvntPkZmJYEYD533pltwZ5NWi8gTlrABTWN5V
+	 Yucf/dcJQpMPS0K9YHh5kyNeSkz9kiXrM1c4UZgPuQrVSMQEwf4s4UXaij+akTO8KS
+	 jFhyFmMdklDiA==
+Date: Wed, 2 Jul 2025 20:25:17 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Kishon Vijay Abraham I <kishon@kernel.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Anup Patel <apatel@ventanamicro.com>, Marc Zyngier <maz@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Shuah Khan <shuah@kernel.org>, 
+	Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Niklas Cassel <cassel@kernel.org>, dlemoal@kernel.org, jdmason@kudzu.us, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, imx@lists.linux.dev, devicetree@vger.kernel.org
+Subject: Re: [PATCH v19 01/10] PCI: endpoint: Set ID and of_node for function
+ driver
+Message-ID: <75opnvi46fbmsnmykjwn3gmir7r3uqhzp7tfoua42cado6aopu@dmos2v2qd3jn>
+References: <20250609-ep-msi-v19-0-77362eaa48fa@nxp.com>
+ <20250609-ep-msi-v19-1-77362eaa48fa@nxp.com>
+ <ne5yrjtdevmndqds4uwo2ppq6gay2wuwjouyf33lqr5g3nfkwr@lkwqlwqjqbmx>
+ <aGVE6veZm3bL0mVJ@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,40 +58,65 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <6utlzamf6luhexdvtpjbqnlkrdh5bj6gcoj2h7ql7kjxyjo2zt@csylxspamkch>
+In-Reply-To: <aGVE6veZm3bL0mVJ@lizhi-Precision-Tower-5810>
 
-On Tue, 01 Jul 2025, Dmitry Torokhov wrote:
-
-> On Tue, Jul 01, 2025 at 02:58:06PM +0000, Dr. David Alan Gilbert wrote:
-> > Lee:
-> > 
-> > * Dmitry Torokhov (dmitry.torokhov@gmail.com) wrote:
-> > > On Sun, Jun 29, 2025 at 10:28:20PM +0100, linux@treblig.org wrote:
-> > > > From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> > > > 
-> > > > The pcf50633 was used as part of the OpenMoko devices but
-> > > > the support for its main chip was recently removed in:
-> > > > commit 61b7f8920b17 ("ARM: s3c: remove all s3c24xx support")
-> > > > 
-> > > > Remove the input code.
-> > > > 
-> > > > This was originally posted as a set of pcf50633 removals in March,
-> > > > and is the only major component that hasn't been picked up.
-> > > > https://lore.kernel.org/all/20250311014959.743322-1-linux@treblig.org/
-> > > > 
-> > > > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> > > 
-> > > Applied, thank you.
-> > 
-> > I see Dmitry has got that into -next, so I've posted a patch to take
-> > out the pcf50633 header which is the last bit left.
+On Wed, Jul 02, 2025 at 10:40:53AM GMT, Frank Li wrote:
+> On Wed, Jul 02, 2025 at 04:30:48PM +0530, Manivannan Sadhasivam wrote:
+> > On Mon, Jun 09, 2025 at 12:34:13PM GMT, Frank Li wrote:
+> > > Set device ID as 'vfunc_no << 3 | func_no' and use
+> > > 'device_set_of_node_from_dev()' to set 'of_node' the same as the EPC parent
+> > > device.
+> > >
+> > > Currently, EPF 'of_node' is NULL, but many functions depend on 'of_node'
+> > > settings, such as DMA, IOMMU, and MSI. At present, all DMA allocation
+> > > functions use the EPC's device node, but they should use the EPF one.
+> > > For multiple function drivers, IOMMU/MSI should be different for each
+> > > function driver.
+> > >
+> >
+> > We don't define OF node for any function, so device_set_of_node_from_dev() also
+> > ends up reusing the EPC node. So how can you make use of it in multi EPF setup?
 > 
-> Lee, do you want me to take it through my tree as well to avoid juggling
-> inter-tree dependencies?
+> In mfd devices, children devices reuse parent's of_node
+> drivers/gpio/gpio-adp5585.c
+> drivers/input/keyboard/adp5589-keys.c
+> drivers/pwm/pwm-adp5585.c
+> 
+> multi EPF should be similar to create multi children devices of mfd.
+> 
 
-If the driver is unused, it shouldn't cause too many issues.  Let's
-ensure that all of these get applied for this cycle and all should be
-well.
+No, they are not similar. MFD are real physical devices, but EPFs are (so far)
+software based entities.
+
+> > I don't understand.
+> 
+> >
+> > > If multiple function devices share the same EPC device, there will be
+> > > no isolation between them. Setting the ID and 'of_node' prepares for
+> > > proper support.
+> 
+> Only share the same of_node.
+> 
+> Actually pci host bridge have similar situation, all pci ep devices reuse
+> bridge's of node. framework use rid to distringuish it. EPF can use device::id
+> to do similar things.
+> 
+> Actually iommu face the similar problem. So far, there are not EP device enable
+> iommu yet, because it needs special mapping.
+> 
+> Prevously, I consider create dymatic of_node for each EPF and copy iommu/msi
+> information to each children. But when I see adp5585 case, I think direct
+> use parent's of_node should be simple and good enough.
+> 
+> In future, I suggest add children dt binding for it. For example: EPF provide
+> a mailbox interface. how other dts node to refer to this mailbox's phandle?
+> 
+
+As I said above, EPFs are not real devices. There is currently only one
+exception, MHI, which is backed by a hardware entity. So we cannot add
+devicetree nodes for EPF, unless each EPF is a hardware entity.
+
+- Mani
 
 -- 
-Lee Jones [李琼斯]
+மணிவண்ணன் சதாசிவம்
