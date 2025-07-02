@@ -1,60 +1,51 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from leonov.paulk.fr (leonov.paulk.fr [185.233.101.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A2A2376FF;
-	Wed,  2 Jul 2025 08:23:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F7CC238144;
+	Wed,  2 Jul 2025 08:24:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.101.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751444630; cv=none; b=V1GEhCUXoEapGhFXf8SUKCVubvtgN9h8DdknwM0pFky2BkeAgXDZcRi+1gPgCRrsgo/d1WIywrDZ7KkfNoeg0YfXPV3Nn/j0e3SvKbTLcguozxN0PTQsLXz4Ea+bQMCfNMXfUL+KXMh89A1fx6vPuzHZFQZE9RmVZh8O/zanpc8=
+	t=1751444645; cv=none; b=S3GC2MT7gbhFWQ33jC0Uv+pxLPWh6H7pBAaMoKhfMSovx6rc9rVvatzgFRbDYwvVNbVm4TJ+EVX7Ap+4aRKhQ+i5gXrrQGpYEPSpakqLR02TsB814/lwgy2AIIJSFYYkHGHt6cSSzG/uQMrDDKFMVEnE0emhRh65oZE29Kg0CYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751444630; c=relaxed/simple;
-	bh=L9i92jFaAACyOw7d3NDbDtgeZVEFheqR8s3fdi4XEaY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RvIH/2ZV+ec7M81vOmhtXITBDL3SMBdGOf6cVSwqrRAUxYJkt2Qc0KRBaG/yAHDj7N0YqjwnWaVp7XGy/FH8gyl9rsZpTmhEC03aPNarsnU3swMj2ZoUo8DPe3kORZIExB0DbNQbka9haCNOi3XMlqXOJEXvPRFSWdjjUNMSk2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=W06VDGbE; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="W06VDGbE"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56289uZ2024893;
-	Wed, 2 Jul 2025 08:23:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	BOfH8A59zCMGBNgUzITq75nBa7NlULlrPT9xI7uNOsQ=; b=W06VDGbE4jiliXBY
-	DsFP4g8X6p8G1bVm0CSXEnBFB++Y63i8mmJgFD2jjkhJHwu7DkwvlVjACMKhT8r/
-	uRPFtZLgFDwEqyVch1EWI28R01/Cpb6boBOXfRZ5VSyISPyjR0rvO9UM5/0qb8Zs
-	8YrqTjicbVyIwZCmPXvGTq9RB7Ng2h577OMuChoXNz8znI1kQDY+MKKEHQZG8j+r
-	BBCij3TQ11SlU3gA727D23YeDsaQFmNoOEa+b5SReBy/O3K+4020UYLOYdPVeFcv
-	WelBZDpMQPFHizKurOy2NtqdTNbKHoqzsAJRI0sbLbh113TDcPSVYd7GGt4g5npy
-	rW884g==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j8023n96-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Jul 2025 08:23:42 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5628NfYO026711
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 2 Jul 2025 08:23:41 GMT
-Received: from hu-gkohli-hyd.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Wed, 2 Jul 2025 01:23:37 -0700
-From: Gaurav Kohli <quic_gkohli@quicinc.com>
-To: <amitk@kernel.org>, <daniel.lezcano@linaro.org>, <rui.zhang@intel.com>,
-        <lukasz.luba@arm.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <andersson@kernel.org>, <konradybcio@kernel.org>
-CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <quic_manafm@quicinc.com>,
-        Gaurav Kohli
-	<quic_gkohli@quicinc.com>
-Subject: [PATCH v6 2/2] arm64: dts: qcom: qcs615: Enable TSENS support for QCS615 SoC
-Date: Wed, 2 Jul 2025 13:53:11 +0530
-Message-ID: <20250702082311.4123461-3-quic_gkohli@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250702082311.4123461-1-quic_gkohli@quicinc.com>
-References: <20250702082311.4123461-1-quic_gkohli@quicinc.com>
+	s=arc-20240116; t=1751444645; c=relaxed/simple;
+	bh=8kK/21NkJz+jMn49WLjQQ6ERfOGrwVnuFssPmLcQ7io=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=f182/Yur9wsy9CWCIFaDGhNMWqR1WWp0yO5ezslQ84OYWr9qWJO3eqJvKzM8x8d2EQvIkcxAeiuxUf+sC31ckEfcQAWsHv7KmzHhKdXXMw9jNYaat0YAMAEEGJVJMfy5Eg7OWUAtSQiZyJoF2DM17JbZIPB47XQX2Bqr2opundA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io; spf=pass smtp.mailfrom=sys-base.io; arc=none smtp.client-ip=185.233.101.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sys-base.io
+Received: from laika.paulk.fr (12.234.24.109.rev.sfr.net [109.24.234.12])
+	by leonov.paulk.fr (Postfix) with ESMTPS id 876F11F00036;
+	Wed,  2 Jul 2025 08:24:01 +0000 (UTC)
+Received: by laika.paulk.fr (Postfix, from userid 65534)
+	id 18055AC98C9; Wed,  2 Jul 2025 08:24:01 +0000 (UTC)
+X-Spam-Level: *
+Received: from localhost.localdomain (unknown [192.168.1.64])
+	by laika.paulk.fr (Postfix) with ESMTP id 104AFAC98BE;
+	Wed,  2 Jul 2025 08:22:33 +0000 (UTC)
+From: Paul Kocialkowski <paulk@sys-base.io>
+To: dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Paul Kocialkowski <paulk@sys-base.io>
+Subject: [PATCH v2 2/2] drm/panel: simple: Add Olimex LCD-OLinuXino-5CTS support
+Date: Wed,  2 Jul 2025 10:22:30 +0200
+Message-ID: <20250702082230.1291953-2-paulk@sys-base.io>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250702082230.1291953-1-paulk@sys-base.io>
+References: <20250702082230.1291953-1-paulk@sys-base.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,262 +53,59 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: OlFzicdvidR-IyZFpk4BzI7rMtw2HImZ
-X-Authority-Analysis: v=2.4 cv=YPWfyQGx c=1 sm=1 tr=0 ts=6864ec8e cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8 a=3mcCAZ4DCuo2i6UhkvcA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: OlFzicdvidR-IyZFpk4BzI7rMtw2HImZ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAyMDA2NiBTYWx0ZWRfXzaObO/ayU2vB
- NjxkugzJUH9Q6/sLFHuyPq/8YiO0aZQ86Z16gsqlPh0m9LD0FuMGE+qTHF4fcNmDgJWwj5xTdyE
- rnHwFh6RYG3qDToBz+YX8rZSnaAHInj45KNk4quYa4UlBEnbgvmMWp9FqKsmGAlgVLfXtiZ7F+y
- 3KNyiwmhpbtU67KMMzwmMpDAL5P0BgZYx1u1wKXCAIiJ5IxRsy/dQJFoyl8vrzCuAn4Qv/FnUj3
- Oa+on6FuZzcekP76kcYkIfWsq14XmUP01W19bW1D2WhZmKnV0duCHOXZ6DfDNWlS3NZvySkRjhG
- D+P/k95PfSe3luSsyxecuAGhZkmFyex7TVy7vqLEij/mOp7mFQY5/0z2bedauDKa6KBYcZV8Zeg
- cakjGFJl8BWJl7JTBFkTz4/CkWb48WaM9GABvfLBC02iAvepFivSt+2ID8g3Qi4bI4CpYadT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-01_02,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 mlxlogscore=756 mlxscore=0 malwarescore=0 suspectscore=0
- lowpriorityscore=0 clxscore=1015 impostorscore=0 adultscore=0
- priorityscore=1501 bulkscore=0 phishscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2507020066
 
-Add TSENS and thermal devicetree node for QCS615 SoC.
+Add support for the Olimex LCD-OLinuXino-5CTS, a 5-inch TFT LCD panel
+with a mode operating at 33.3 MHz.
 
-Signed-off-by: Gaurav Kohli <quic_gkohli@quicinc.com>
+Signed-off-by: Paul Kocialkowski <paulk@sys-base.io>
 ---
- arch/arm64/boot/dts/qcom/qcs615.dtsi | 205 +++++++++++++++++++++++++++
- 1 file changed, 205 insertions(+)
+ drivers/gpu/drm/panel/panel-simple.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs615.dtsi b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-index bb8b6c3ebd03..6997627935bd 100644
---- a/arch/arm64/boot/dts/qcom/qcs615.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-@@ -3692,6 +3692,17 @@ usb_2_dwc3: usb@a800000 {
- 				maximum-speed = "high-speed";
- 			};
- 		};
-+
-+		tsens0: thermal-sensor@c263000 {
-+			compatible = "qcom,qcs615-tsens", "qcom,tsens-v2";
-+			reg = <0x0 0x0c263000 0x0 0x1000>,
-+			      <0x0 0x0c222000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "uplow", "critical";
-+			#qcom,sensors = <16>;
-+			#thermal-sensor-cells = <1>;
-+		};
- 	};
- 
- 	arch_timer: timer {
-@@ -3701,4 +3712,198 @@ arch_timer: timer {
- 			     <GIC_PPI 3 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
- 			     <GIC_PPI 0 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
- 	};
-+
-+	thermal-zones {
-+		aoss-thermal {
-+			thermal-sensors = <&tsens0 0>;
-+
-+			trips {
-+				aoss-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpuss-0-thermal {
-+			thermal-sensors = <&tsens0 1>;
-+
-+			trips {
-+				cpuss0-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpuss-1-thermal {
-+			thermal-sensors = <&tsens0 2>;
-+
-+			trips {
-+				cpuss1-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpuss-2-thermal {
-+			thermal-sensors = <&tsens0 3>;
-+
-+			trips {
-+				cpuss2-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpuss-3-thermal {
-+			thermal-sensors = <&tsens0 4>;
-+
-+			trips {
-+				cpuss3-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu-1-0-thermal {
-+			thermal-sensors = <&tsens0 5>;
-+
-+			trips {
-+				cpu-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu-1-1-thermal {
-+			thermal-sensors = <&tsens0 6>;
-+
-+			trips {
-+				cpu-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu-1-2-thermal {
-+			thermal-sensors = <&tsens0 7>;
-+
-+			trips {
-+				cpu-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu-1-3-thermal {
-+			thermal-sensors = <&tsens0 8>;
-+
-+			trips {
-+				cpu-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		gpu-thermal {
-+			thermal-sensors = <&tsens0 9>;
-+
-+			trips {
-+				gpu-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		q6-hvx-thermal {
-+			thermal-sensors = <&tsens0 10>;
-+
-+			trips {
-+				q6-hvx-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		mdm-core-thermal {
-+			thermal-sensors = <&tsens0 11>;
-+
-+			trips {
-+				mdm-core-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		camera-thermal {
-+			thermal-sensors = <&tsens0 12>;
-+
-+			trips {
-+				camera-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		wlan-thermal {
-+			thermal-sensors = <&tsens0 13>;
-+
-+			trips {
-+				wlan-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		display-thermal {
-+			thermal-sensors = <&tsens0 14>;
-+
-+			trips {
-+				display-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		video-thermal {
-+			thermal-sensors = <&tsens0 15>;
-+
-+			trips {
-+				video-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+	};
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 0a3b26bb4d73..b3d7a0eeabd5 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -3655,6 +3655,29 @@ static const struct panel_desc olimex_lcd_olinuxino_43ts = {
+ 	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
  };
+ 
++static const struct drm_display_mode olimex_lcd_olinuxino_5cts_mode = {
++	.clock = 33300,
++	.hdisplay = 800,
++	.hsync_start = 800 + 210,
++	.hsync_end = 800 + 210 + 20,
++	.htotal = 800 + 210 + 20 + 26,
++	.vdisplay = 480,
++	.vsync_start = 480 + 22,
++	.vsync_end = 480 + 22 + 10,
++	.vtotal = 480 + 22 + 10 + 13,
++};
++
++static const struct panel_desc olimex_lcd_olinuxino_5cts = {
++	.modes = &olimex_lcd_olinuxino_5cts_mode,
++	.num_modes = 1,
++	.size = {
++		.width = 154,
++		.height = 86,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
++};
++
++
+ static const struct display_timing ontat_kd50g21_40nt_a1_timing = {
+ 	.pixelclock = { 30000000, 30000000, 50000000 },
+ 	.hactive = { 800, 800, 800 },
+@@ -5214,6 +5237,9 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "olimex,lcd-olinuxino-43-ts",
+ 		.data = &olimex_lcd_olinuxino_43ts,
++	}, {
++		.compatible = "olimex,lcd-olinuxino-5-cts",
++		.data = &olimex_lcd_olinuxino_5cts,
+ 	}, {
+ 		.compatible = "ontat,kd50g21-40nt-a1",
+ 		.data = &ontat_kd50g21_40nt_a1,
 -- 
-2.34.1
+2.49.0
 
