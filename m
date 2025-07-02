@@ -1,130 +1,96 @@
-Received: from trager.us (trager.us [52.5.81.116])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51BFE1A3168;
-	Wed,  2 Jul 2025 19:26:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.5.81.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9D8270ECB;
+	Wed,  2 Jul 2025 19:26:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751484377; cv=none; b=MjpGhBLja83ABo7Qrbt0AelQax+OK8OD+ik0AE7FaGusniywjPlX9eEd60jwfs0k9E1vqBoXQ+A/Y1XcCXqhcuGGIi3r4lnkui22eD2p6rhG7bb41xls0kf0yAd7/gv6rPma7VZ7x/Ao8j8i6jeEh55EmvBELdBE3yyx++7cRFE=
+	t=1751484385; cv=none; b=fypbWIbUpQ6T5jP1TxwUr8aZvwYyqJWhrvJwHs2elqNu2JZ55fgxtcTYibDlHhYWFD4Mej1mC32MYsBXZxdYyg/7YysOX4JUXpRn6/AGJZx7v3qzjcPAG/mtMz9QLCpFRa1xugLtgqq5Hq3QmWpTU1tRz9O3ncsAo3CT8CvTLkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751484377; c=relaxed/simple;
-	bh=1FprbJCOjhBvFKmkocfnqc/yP2VIf6fib2j6Q3hUr84=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GWdWkKv5ZmfPqNO4eBYpjHbRSU6Ei3t5Vj3NMnOpVnzrqpm4vgIyA6RMxrzihU7e+/ro3YOwl9qJj/Fqb/M4HEUoRmtrqHYQ68FUhVao7YdxQ72BPGlwZ9pm1pgY9B80cfmq35c0P6Ufz0fmpjYzz/oeC2CD20Gb3/Gcc9YoEPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trager.us; spf=pass smtp.mailfrom=trager.us; arc=none smtp.client-ip=52.5.81.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trager.us
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trager.us
-Received: from c-76-104-255-50.hsd1.wa.comcast.net ([76.104.255.50] helo=localhost)
-	by trager.us with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-	(Exim 4.92.3)
-	(envelope-from <lee@trager.us>)
-	id 1uX35s-000810-Ab; Wed, 02 Jul 2025 19:26:08 +0000
-From: Lee Trager <lee@trager.us>
-To: Alexander Duyck <alexanderduyck@fb.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	kernel-team@meta.com,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Sanman Pradhan <sanman.p211993@gmail.com>,
-	Mohsin Bashir <mohsin.bashr@gmail.com>,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Su Hui <suhui@nfschina.com>,
-	Simon Horman <horms@kernel.org>,
-	Lee Trager <lee@trager.us>,
-	Jacob Keller <jacob.e.keller@intel.com>
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	Kalesh AP <kalesh-anakkur.purayil@broadcom.com>,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH net-next 2/6] eth: fbnic: Use FIELD_PREP to generate minimum firmware version
-Date: Wed,  2 Jul 2025 12:12:08 -0700
-Message-ID: <20250702192207.697368-3-lee@trager.us>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250702192207.697368-1-lee@trager.us>
-References: <20250702192207.697368-1-lee@trager.us>
+	s=arc-20240116; t=1751484385; c=relaxed/simple;
+	bh=GpPi9wOBi7C3jjvU4V8pYmSE5merOth92NItvmAnnJY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KlMdqOBJ4VNs0RT9pCn8ioLHY9AAE7gaDoADpStgdCJck/YXudJ7r9RvU2uZAn4Ocf2xU0dTUtX6e7+6gXX/3NUvaya03ZPrXma1vfZ50lh4wI5GB9i+Ot9sdEGNTyZSXEmRQwTmgGl5owk4gvRXtwtstluwkaJSF9oqC0L+7sg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s9VqZc2u; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s9VqZc2u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4298EC4CEE7;
+	Wed,  2 Jul 2025 19:26:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751484385;
+	bh=GpPi9wOBi7C3jjvU4V8pYmSE5merOth92NItvmAnnJY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=s9VqZc2uScNupz5RiyJKrkeyc/RhXPj7B8PqYC0NSU7jgadvkuC5KRG9GQsExvrH4
+	 1JD14vqYuic+VfdWdHa1DD2tg67s8eD7SKPRtnqCTuWBMsUtoaP9Z2pNnv+CZLvN6j
+	 sL67Ka5P1gaP5I+LRFKE9U8YV6iLHlwYewPM27PN9oOJ2oLGb5i+PG+QeFGN4CaX6e
+	 DnhW+tqAh3AkCeAaW3FOMLBUx31l4gRP7a0YOs7VmNnjxSmC8a7yshNwjk2P01wKfE
+	 HTmCXGoTXHQrcb4KyBxQeJ47YX4CCRI3ExB+HY/F3z5I9B4ZtVF6rNLvfmfYRyBK/d
+	 I5OUyVFXbobBQ==
+Date: Wed, 2 Jul 2025 21:26:18 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Michael Grzeschik <m.grzeschik@pengutronix.de>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Abel Vesa <abel.vesa@linaro.org>, Peng Fan <peng.fan@oss.nxp.com>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Johan Hovold <johan@kernel.org>,
+	Maulik Shah <maulik.shah@oss.qualcomm.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Hiago De Franco <hiago.franco@toradex.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 17/24] driver core: Export get_dev_from_fwnode()
+Message-ID: <aGWH2mH6iZJ3s3lL@pollux>
+References: <20250701114733.636510-1-ulf.hansson@linaro.org>
+ <20250701114733.636510-18-ulf.hansson@linaro.org>
+ <2025070205-ignore-passive-17b4@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025070205-ignore-passive-17b4@gregkh>
 
-Create a new macro based on FIELD_PREP to generate easily readable minimum
-firmware version ints. This macro will prevent the mistake from the
-previous patch from happening again.
+On Wed, Jul 02, 2025 at 09:34:12AM +0200, Greg Kroah-Hartman wrote:
+> On Tue, Jul 01, 2025 at 01:47:19PM +0200, Ulf Hansson wrote:
+> > It has turned out get_dev_from_fwnode() is useful at a few other places
+> > outside of the driver core, as in gpiolib.c for example. Therefore let's
+> > make it available as a common helper function.
+> > 
+> > Suggested-by: Saravana Kannan <saravanak@google.com>
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Tested-by: Hiago De Franco <hiago.franco@toradex.com> # Colibri iMX8X
+> > Tested-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com> # TI AM62A,Xilinx ZynqMP ZCU106
+> > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> > ---
+> >  drivers/base/core.c    | 8 ++++++--
+> >  include/linux/device.h | 1 +
+> >  2 files changed, 7 insertions(+), 2 deletions(-)
+> > 
+> 
+> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Lee Trager <lee@trager.us>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
----
- drivers/net/ethernet/meta/fbnic/fbnic_csr.h | 13 +++++++------
- drivers/net/ethernet/meta/fbnic/fbnic_fw.c  | 13 ++++++-------
- 2 files changed, 13 insertions(+), 13 deletions(-)
+I'm a bit concerned about exporting get_dev_from_fwnode() -- at least without a
+clear note on that this helper should be used with caution.
 
-diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_csr.h b/drivers/net/ethernet/meta/fbnic/fbnic_csr.h
-index e2b251eddbb3..06b9c49e51a2 100644
---- a/drivers/net/ethernet/meta/fbnic/fbnic_csr.h
-+++ b/drivers/net/ethernet/meta/fbnic/fbnic_csr.h
-@@ -12,13 +12,14 @@
- #define DESC_BIT(nr)		BIT_ULL(nr)
- #define DESC_GENMASK(h, l)	GENMASK_ULL(h, l)
+AFAIK, a struct fwnode_handle instance does not have a reference count for its
+struct device pointer.
 
-+#define FW_VER_CODE(_major, _minor, _patch, _build) (		      \
-+		FIELD_PREP(FBNIC_FW_CAP_RESP_VERSION_MAJOR, _major) | \
-+		FIELD_PREP(FBNIC_FW_CAP_RESP_VERSION_MINOR, _minor) | \
-+		FIELD_PREP(FBNIC_FW_CAP_RESP_VERSION_PATCH, _patch) | \
-+		FIELD_PREP(FBNIC_FW_CAP_RESP_VERSION_BUILD, _build))
-+
- /* Defines the minimum firmware version required by the driver */
--#define MIN_FW_MAJOR_VERSION    0
--#define MIN_FW_MINOR_VERSION    10
--#define MIN_FW_PATCH_VERSION    6
--#define MIN_FW_VERSION_CODE     (MIN_FW_MAJOR_VERSION * (1u << 24) + \
--				 MIN_FW_MINOR_VERSION * (1u << 16) + \
--				 MIN_FW_PATCH_VERSION * (1u << 8))
-+#define MIN_FW_VER_CODE				FW_VER_CODE(0, 10, 6, 0)
+Hence, calling get_dev_from_fwnode() with a valid fwnode handle is not enough.
+The caller also needs to ensure that the device the fwnode has a pointer to has
+not been released yet.
 
- #define PCI_DEVICE_ID_META_FBNIC_ASIC		0x0013
+If this really needs to be exported, can we please add documentation covering
+this properly?
 
-diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_fw.c b/drivers/net/ethernet/meta/fbnic/fbnic_fw.c
-index cdc1e2938a64..ac7804a8a22c 100644
---- a/drivers/net/ethernet/meta/fbnic/fbnic_fw.c
-+++ b/drivers/net/ethernet/meta/fbnic/fbnic_fw.c
-@@ -573,16 +573,15 @@ static int fbnic_fw_parse_cap_resp(void *opaque, struct fbnic_tlv_msg **results)
- 	if (!fbd->fw_cap.running.mgmt.version)
- 		return -EINVAL;
-
--	if (fbd->fw_cap.running.mgmt.version < MIN_FW_VERSION_CODE) {
-+	if (fbd->fw_cap.running.mgmt.version < MIN_FW_VER_CODE) {
-+		char required_ver[FBNIC_FW_VER_MAX_SIZE];
- 		char running_ver[FBNIC_FW_VER_MAX_SIZE];
-
- 		fbnic_mk_fw_ver_str(fbd->fw_cap.running.mgmt.version,
- 				    running_ver);
--		dev_err(fbd->dev, "Device firmware version(%s) is older than minimum required version(%02d.%02d.%02d)\n",
--			running_ver,
--			MIN_FW_MAJOR_VERSION,
--			MIN_FW_MINOR_VERSION,
--			MIN_FW_PATCH_VERSION);
-+		fbnic_mk_fw_ver_str(MIN_FW_VER_CODE, required_ver);
-+		dev_err(fbd->dev, "Device firmware version(%s) is older than minimum required version(%s)\n",
-+			running_ver, required_ver);
- 		/* Disable TX mailbox to prevent card use until firmware is
- 		 * updated.
- 		 */
-@@ -1167,7 +1166,7 @@ int fbnic_mbx_poll_tx_ready(struct fbnic_dev *fbd)
- 	 * to indicate we entered the polling state waiting for a response
- 	 */
- 	for (fbd->fw_cap.running.mgmt.version = 1;
--	     fbd->fw_cap.running.mgmt.version < MIN_FW_VERSION_CODE;) {
-+	     fbd->fw_cap.running.mgmt.version < MIN_FW_VER_CODE;) {
- 		if (!tx_mbx->ready)
- 			err = -ENODEV;
- 		if (err)
---
-2.47.1
+- Danilo
