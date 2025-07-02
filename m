@@ -1,156 +1,142 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F21B2DE6F9;
-	Wed,  2 Jul 2025 20:28:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED5C2DE714;
+	Wed,  2 Jul 2025 20:30:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751488121; cv=none; b=eJAUJQH8h5YzQ43FDyMKPy2yuBZvk6RCmC0S3cRNi5s1Kq4mYAJ0Yc9CxE1RoOnBWukhrxxfxP1q3CVb6cVuv2FMKyNRxF47jaoKqaVXXfHrm8mZvkw6soKaDtCTvDBllUfezqj8V+J9IE+fCF5qIWOz8yJ3ssVtSpbZ1+EU7K0=
+	t=1751488243; cv=none; b=UhX7Wgv/UMuhczX6Fhi7PU/yc2CtvFzG+v7/3T0kKy14R3P/JTg5jDI94eDaqnVymwHOpCkninF1L2WX4tovyyDShB9Apotf4NeVc5r9siuqWlND7irXHo5v2xCp32qPA3oqX1o/q7yo2Q/vAFX7PV92/AGZgc6KgvMmT+q3WO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751488121; c=relaxed/simple;
-	bh=ROkGUzLvmUxE4wznrKVXwS7nEdwLuTZhM5xIYa2wHvk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ucbl5XeAUXHBBApXo1cM7QUh9jSy8lzxU+ZXvkRAHirx8VRaEfmtZi1vxlY01WNfU9Tm6SxRAXYjveVp5qNZjSSRHGymqzDD/hqYQqr8oalfQ4ID7KvRwzfbrJofP0OcIx3lTqwayBF14ieePCKutG+rhSDmjgBNK4HVNmTCU28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OKKea4et; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751488243; c=relaxed/simple;
+	bh=40B926dekfZk7Pc/F4+emVpgtLxhyiFMEso0dncmUIA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oWge2T9iWqxeRe2fFvbQyXfX5jNBwHW1+ObGEC8CIYiVptqzPE9TH8BzEmXfPk+AnQdLHUWHAiLcglyVFTE/2J44T5YECvClJiNymmJtClgWEmF4GskSyD5ETjUW1A0wE8UMSkpxpXTKTzNxSBgAftGb4tn4ESxzaKwjbIaq4Q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p6AqKF+c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OKKea4et"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82657C4CEEE;
-	Wed,  2 Jul 2025 20:28:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p6AqKF+c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0023DC4CEE7;
+	Wed,  2 Jul 2025 20:30:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751488121;
-	bh=ROkGUzLvmUxE4wznrKVXwS7nEdwLuTZhM5xIYa2wHvk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OKKea4etTumn63tPGWaQhMxfzqNeH9R22N6OU2sVXEmAQoLTSRbusDooxkfv79rmL
-	 L1MAbj1ez+//gH4n6cns1sUnhqFlb3IOEtzo7q6SR0k/ZtMhoH8Rnp1hizQAnUtnAe
-	 MpwyNAmRBKmYQDJdgoI1wYwextBTsIh7MaShy/i8Tj4j2nYMGUZZxrLftkxNjHznAr
-	 72DyRBXxmru0h01OAlJH6ojuHmNffvgqb1KE/Ug+n9GroPojQHz6pUwL5MFgODaYKj
-	 N3gtEfr89+/xXR2TVrGpx1hXQHCXfQttdnUWBwDeGNzsXHjxXKDDx51m8+XTkskrYr
-	 /HuR5UQo7HgVQ==
-Date: Wed, 2 Jul 2025 13:28:35 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Petr Mladek <pmladek@suse.com>
-Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
-	John Ogness <john.ogness@linutronix.de>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	David Gow <davidgow@google.com>, Arnd Bergmann <arnd@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 2/3] printk: kunit: support offstack cpumask
-Message-ID: <20250702202835.GA593751@ax162>
-References: <20250702095157.110916-1-pmladek@suse.com>
- <20250702095157.110916-3-pmladek@suse.com>
+	s=k20201202; t=1751488242;
+	bh=40B926dekfZk7Pc/F4+emVpgtLxhyiFMEso0dncmUIA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=p6AqKF+cwI6HQXTqSt5ZPVF9JLfz3+WXIMuVDLSo9DziV9jgI0nOlVDgMAESYW7gT
+	 saIRoebpuGVzZMKWJ9qidFdeYouV7Bhvw0+f7s5MnZFIXeLkJsLaKIRxYORqpmOhLn
+	 MNrFoqSKaSeLK0lwz1CtHvl6loQ5Kiqr/7xV6jr3oE9mpx3vbxdKHw6l2CkrXPBZg/
+	 mKYkp2evTMXnnhatUO8zM+3ewUyONf+Lx1P7YAAiza+aPlhKaLDySnwAbtyxDCxl3c
+	 EV6voz3nrjSW490VyW+CLJUFVhRvqaEj3s35hC7WZpVVnZLp/68ivxkpI6z05fUeun
+	 YAHxOa0hOA6MQ==
+Message-ID: <04a0d550-3fb4-4cf9-8adf-4ed54e3af7ba@kernel.org>
+Date: Wed, 2 Jul 2025 22:30:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250702095157.110916-3-pmladek@suse.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] arm64: dts: ti: k3-j721e-main: Make the "scm_conf"
+ node a "simple-bus"
+To: Jayesh Choudhary <j-choudhary@ti.com>, nm@ti.com, vigneshr@ti.com,
+ devicetree@vger.kernel.org
+Cc: kristo@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, s-vadapalli@ti.com, rogerq@kernel.org, afd@ti.com,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20250603095609.33569-1-j-choudhary@ti.com>
+ <20250603095609.33569-2-j-choudhary@ti.com>
+ <15da3051-c35e-4876-9185-9079493dc66c@kernel.org>
+ <0c69137d-93ad-4843-8512-9885b9cba452@ti.com>
+ <d8a8293d-2759-4408-b1a7-a2689383b043@ti.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <d8a8293d-2759-4408-b1a7-a2689383b043@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 02, 2025 at 11:51:56AM +0200, Petr Mladek wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On 01/07/2025 12:23, Jayesh Choudhary wrote:
+> Hello Krzysztof,
 > 
-> For large values of CONFIG_NR_CPUS, the newly added kunit test fails
-> to build:
+> On 04/06/25 15:18, Jayesh Choudhary wrote:
+>> Hello Krzysztof,
+>>
+>> On 03/06/25 16:32, Krzysztof Kozlowski wrote:
+>>> On 03/06/2025 11:56, Jayesh Choudhary wrote:
+>>>> The "scm_conf" bus need not be "syscon". Now that we have "pcie*_ctrl"
+>>>> child nodes for "ti,syscon-pcie-ctrl" property in "pcie" nodes, change
+>>>> "scm_conf" node to "simple-bus".
+>>>> Also remove "reg" property as it is not needed by "simple-bus".
+>>>
+>>> This (possibly) affects all other users of DTS which were expecting this
+>>> ABI. It's not only about forward-compatibility, but other projects.
+>>>
+>>> Maybe this doe snot matter for you, so explain that in commit msg and
+>>> provide rationale why you are affecting other users.
+>>>
+>>>
+>>
+>> This should not affect other users of DTS. J784S4 already has this
+>> change and it serves as a validation that DT nodes are compatible
+>> with other projects (for example uboot driver handles it).
+>> Other SoCs are being modified with taking J784S4 as a working reference.
+>>
+>> Considering this, do I still need to add something? Or is it okay
+>> since I am not exactly affecting other projects?
+>> Should I add something along the lines of "similar to j784s4...."?
+>>
 > 
-> kernel/printk/printk_ringbuffer_kunit_test.c: In function 'test_readerwriter':
-> kernel/printk/printk_ringbuffer_kunit_test.c:279:1: error: the frame size of 1432 bytes is larger than 1280 bytes [-Werror=frame-larger-than=]
+> Gentle ping on the above comment.
 > 
-> Change this to use cpumask_var_t and allocate it dynamically when
-> CONFIG_CPUMASK_OFFSTACK is set.
-> 
-> Fixes: 5ea2bcdfbf46 ("printk: ringbuffer: Add KUnit test")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> [pmladek@suse.com: Correctly handle allocation failures and freeing using KUnit test API.]
-> Signed-off-by: Petr Mladek <pmladek@suse.com>
-> ---
->  kernel/printk/printk_ringbuffer_kunit_test.c | 18 ++++++++++++------
->  1 file changed, 12 insertions(+), 6 deletions(-)
-> 
-> diff --git a/kernel/printk/printk_ringbuffer_kunit_test.c b/kernel/printk/printk_ringbuffer_kunit_test.c
-> index 217dcc14670c..0c3030fde8c2 100644
-> --- a/kernel/printk/printk_ringbuffer_kunit_test.c
-> +++ b/kernel/printk/printk_ringbuffer_kunit_test.c
-> @@ -216,6 +216,7 @@ static int prbtest_reader(struct prbtest_data *test_data, unsigned long timeout_
->  	return 0;
->  }
->  
-> +KUNIT_DEFINE_ACTION_WRAPPER(prbtest_cpumask_cleanup, free_cpumask_var, cpumask_var_t);
+> I have checked other projects like Barebox. That supports TI K3 SoC
+> but only AM62x and AM62L. Nothing in this series affects it.
 
-This appears to break the build for me when CONFIG_CPUMASK_OFFSTACK is not
-set, like when enabling this test on top of x86_64 defconfig:
+Your answer is really not sufficient, just something to reply so I will
+bug off, so I decided to ignore it.
 
-  In file included from kernel/printk/printk_ringbuffer_kunit_test.c:14:
-  kernel/printk/printk_ringbuffer_kunit_test.c: In function 'prbtest_cpumask_cleanup':
-  include/kunit/resource.h:409:32: error: cast specifies array type
-    409 |                 arg_type arg = (arg_type)in;                    \
-        |                                ^
-  kernel/printk/printk_ringbuffer_kunit_test.c:226:1: note: in expansion of macro 'KUNIT_DEFINE_ACTION_WRAPPER'
-    226 | KUNIT_DEFINE_ACTION_WRAPPER(prbtest_cpumask_cleanup, free_cpumask_var, cpumask_var_t);
-        | ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+This affects other projects - it is clearly visible in the diff. You
+removed a compatible and you cannot do that.
 
-Clang's error might be a little clearer with the "aka" note it provides.
-
-  kernel/printk/printk_ringbuffer_kunit_test.c:226:1: error: used type 'cpumask_var_t' (aka 'struct cpumask[1]') where arithmetic or pointer type is required
-    226 | KUNIT_DEFINE_ACTION_WRAPPER(prbtest_cpumask_cleanup, free_cpumask_var, cpumask_var_t);
-        | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  include/kunit/resource.h:409:18: note: expanded from macro 'KUNIT_DEFINE_ACTION_WRAPPER'
-    409 |                 arg_type arg = (arg_type)in;                    \
-        |                                ^         ~~
-
->  KUNIT_DEFINE_ACTION_WRAPPER(prbtest_kthread_cleanup, kthread_stop, struct task_struct *);
->  
->  static void prbtest_add_kthread_cleanup(struct kunit *test, struct task_struct *kthread)
-> @@ -240,8 +241,13 @@ static void test_readerwriter(struct kunit *test)
->  	struct prbtest_thread_data *thread_data;
->  	struct prbtest_data *test_data;
->  	struct task_struct *thread;
-> -	cpumask_t test_cpus;
-> +	cpumask_var_t test_cpus;
->  	int cpu, reader_cpu;
-> +	int err;
-> +
-> +	KUNIT_ASSERT_TRUE(test, alloc_cpumask_var(&test_cpus, GFP_KERNEL));
-> +	err = kunit_add_action_or_reset(test, prbtest_cpumask_cleanup, test_cpus);
-> +	KUNIT_ASSERT_EQ(test, err, 0);
->  
->  	cpus_read_lock();
->  	/*
-> @@ -250,15 +256,15 @@ static void test_readerwriter(struct kunit *test)
->  	 * Instead use a snapshot of the online CPUs.
->  	 * If they change during test execution it is unfortunate but not a grave error.
->  	 */
-> -	cpumask_copy(&test_cpus, cpu_online_mask);
-> +	cpumask_copy(test_cpus, cpu_online_mask);
->  	cpus_read_unlock();
->  
->  	/* One CPU is for the reader, all others are writers */
-> -	reader_cpu = cpumask_first(&test_cpus);
-> -	if (cpumask_weight(&test_cpus) == 1)
-> +	reader_cpu = cpumask_first(test_cpus);
-> +	if (cpumask_weight(test_cpus) == 1)
->  		kunit_warn(test, "more than one CPU is recommended");
->  	else
-> -		cpumask_clear_cpu(reader_cpu, &test_cpus);
-> +		cpumask_clear_cpu(reader_cpu, test_cpus);
->  
->  	/* KUnit test can get restarted more times. */
->  	prbtest_prb_reinit(&test_rb);
-> @@ -271,7 +277,7 @@ static void test_readerwriter(struct kunit *test)
->  
->  	kunit_info(test, "running for %lu ms\n", runtime_ms);
->  
-> -	for_each_cpu(cpu, &test_cpus) {
-> +	for_each_cpu(cpu, test_cpus) {
->  		thread_data = kunit_kmalloc(test, sizeof(*thread_data), GFP_KERNEL);
->  		KUNIT_ASSERT_NOT_NULL(test, thread_data);
->  		thread_data->test_data = test_data;
-> -- 
-> 2.50.0
-> 
+Best regards,
+Krzysztof
