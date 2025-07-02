@@ -1,212 +1,60 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5DDD284689;
-	Wed,  2 Jul 2025 13:19:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F48027603B;
+	Wed,  2 Jul 2025 13:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751462358; cv=none; b=GUseZo4T+HVrGtggFj+SYg2Ori+MjhGN/apEMqhdMj73+2RcAkquvKy5C2cFZYSTOPGa17DgKRFuax4m5I3OpxeXkZw4nj9KWAynlOcGODjqW86OIildCp6agsg9cv3svodhXROxk/eC3hGqg1hEXhSR6Vw0gGbFx6HWGiXXt9c=
+	t=1751462363; cv=none; b=b64FlZ1NPoDEY/SvVgI791IAMOxBapR/ddHUlWVpbtG4asx0Q6uKXQn9lhgvfnRLMB+zewd0gTnsZDvOw8KZVOd7r9iPz5xktKO8OFn/vhG4nI1+bkjD1fxGuJgDwGRUnUkE4uWIiOyin2VKtcweR97owz416TNyrIGSKEHBT4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751462358; c=relaxed/simple;
-	bh=9S3TEgnqLYbIT6Io+nOlVEeblcZ/nrr2prk36tq+oH8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IrvARwfVlzuIj6WDBA2tWscW42XQD1NnZ0eRJZScXWaQpCfXfM2hzE0NRAVTiH5F9CmWXttcZgjK7fxQe/IWkahe5/sriDAN/6skYPmq+w+KYM9gnJELBlF+1RUX3eOUoqUQsGkSFZKvat+LxCnACCoqUI0mqTr7SHVusnJPqJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DBmmWh8/; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DBmmWh8/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C6FFC4CEED;
-	Wed,  2 Jul 2025 13:19:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751462358;
-	bh=9S3TEgnqLYbIT6Io+nOlVEeblcZ/nrr2prk36tq+oH8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=DBmmWh8/GJlFKbvHf+i6gGkybyQTg3g7OJ3ys8wpGBve2Y/hNXZswhx9DQu6bGtXV
-	 LYoC/1o3lwwANpTYC1EfIcAv8NRdSGAJN6tOcs+UyUuTfRnXUoNRfFX/iSvxh4Fc6b
-	 3RpD0RiCMbwT2rUwPrAaUgkkPLTgJxORHhdD2qdsWi6+KpRKOfNQLsp1tW6MA13aiS
-	 XkO7wYdg7ALI2V/EXNih1P3So30XIMYe3Vyb5YBn7UB9+nPDNctgbDGOYV8SByfkSR
-	 CkyXnR9BZifVmKlteaOS0zsan8nBk5y5h36slo4BrIiU8N8yhc6jMQtLYZlSGgoS3I
-	 ZvL/zxwMqGJAw==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Wed, 02 Jul 2025 15:18:33 +0200
-Subject: [PATCH v14 1/7] rust: sync: add `OnceLock`
+	s=arc-20240116; t=1751462363; c=relaxed/simple;
+	bh=xh8Nx0MkhW4nPCK0WeyG9XGZD1r8RsIQFFetDPDIgt4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QX3qd+sjRek4TVHQksJ8f6dGR+j7y7ZXwuOjkjLNdHTvsn82nSJtobhwy1EUINF4VOQpDEutn0c1y2wNmZYYhZItPBI245YIyPFylcVAoqzmRcYYiIqVeHBFtE6LF+Jc+3jCgYix818MP40udptTElhPU/xypsWfR62ArfSG2GY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1uWwaa-000588-00; Wed, 02 Jul 2025 14:29:24 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id 23B72C0176; Wed,  2 Jul 2025 13:10:18 +0200 (CEST)
+Date: Wed, 2 Jul 2025 13:10:18 +0200
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	bcm-kernel-feedback-list@broadcom.com
+Subject: Re: [PATCH v1 1/1] firmware/nvram: bcm47xx: Don't use "proxy" headers
+Message-ID: <aGUTmtdyZEi8yMnT@alpha.franken.de>
+References: <20250626175926.372183-1-andriy.shevchenko@linux.intel.com>
+ <ff0cdcc3-db09-44fa-b5f7-8fe150e619f8@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250702-module-params-v3-v14-1-5b1cc32311af@kernel.org>
-References: <20250702-module-params-v3-v14-0-5b1cc32311af@kernel.org>
-In-Reply-To: <20250702-module-params-v3-v14-0-5b1cc32311af@kernel.org>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Alice Ryhl <aliceryhl@google.com>, Masahiro Yamada <masahiroy@kernel.org>, 
- Nathan Chancellor <nathan@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
- Danilo Krummrich <dakr@kernel.org>, Benno Lossin <lossin@kernel.org>, 
- Benno Lossin <lossin@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>
-Cc: Trevor Gross <tmgross@umich.edu>, 
- Adam Bratschi-Kaye <ark.email@gmail.com>, rust-for-linux@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
- Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
- Daniel Gomez <da.gomez@samsung.com>, Simona Vetter <simona.vetter@ffwll.ch>, 
- Greg KH <gregkh@linuxfoundation.org>, Fiona Behrens <me@kloenk.dev>, 
- Daniel Almeida <daniel.almeida@collabora.com>, 
- linux-modules@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4168; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=9S3TEgnqLYbIT6Io+nOlVEeblcZ/nrr2prk36tq+oH8=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBoZTGzBIyPCDW6CbV9USY9a6bw3bRnhSdW4qSxa
- icxywq0esCJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaGUxswAKCRDhuBo+eShj
- d6XhEADFrV+1h2hwOY+GnAAVhukDmoaKdiIjl3+EsCzGbUGDd+KNxnvTas7TVnClCcwjBh9pB1f
- OSfGloxPrcyx2i8KoRaOuzX4CdV6kLtHW4sOM3UAt8PAc4ijjD/kbjuaSKrh5xfiC9KG6HiQa7F
- VeVNeOq/8vI6yYEyvoL4CjEe2TEDr9jQekFTJVe86s8VXrNax1vJ7VlRUu8hDxXzH602c3bHuEJ
- ModCbWl4TdYwtF6t2uKcnL1CkSAeCLCVVXUr853xP5yF4irPYcnwgZTohqpSk/CIEVIByynzSKO
- MMTln11PjDqQaLd9HTLEZwC0UIX6qI2dsjksLmK6NyAwN4z66z3pKyh6NcisN8VaMe06XlgDPMB
- zNcC8mWocCwdO+RhLfKSt2HFpn08egmytCFsISkc8Lq6EMGRacgrFVP8zqFGkPkm86Do97snDyb
- PUPQv+nEbC+deVu/Ih6gdnOgshXevaVFFNLbhwo7ILvdrAb5w0FQqk+GZMr0ixIKl7uDNsKIAk7
- fKt1blLyOHrgtVgxFqcXPvOK+OmPeu49fCoSu9ic1DcaUVWm8rv0JQ1t7ApvBI4DtGr9SGJ38iO
- UHUb3AkstIk4hyNuz9fbo/B5pN4RGDH1Vn59gnZHwk1ubxys63BFZKS8F3DFh+o/NT37naOYGns
- pvjwnmK5Aws25EA==
-X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
- fpr=3108C10F46872E248D1FB221376EB100563EF7A7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ff0cdcc3-db09-44fa-b5f7-8fe150e619f8@broadcom.com>
 
-Introduce the `OnceLock` type, a container that can only be written once.
-The container uses an internal atomic to synchronize writes to the internal
-value.
+On Mon, Jun 30, 2025 at 12:03:46PM -0700, Florian Fainelli wrote:
+> On 6/26/25 10:59, Andy Shevchenko wrote:
+> > Update header inclusions to follow IWYU (Include What You Use)
+> > principle.
+> > 
+> > Note that kernel.h is discouraged to be included as it's written
+> > at the top of that file.
+> > 
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> 
+> Thomas, can you pick this up? Thanks!
 
-Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
----
- rust/kernel/sync.rs           |   1 +
- rust/kernel/sync/once_lock.rs | 104 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 105 insertions(+)
+applied to mips-next.
 
-diff --git a/rust/kernel/sync.rs b/rust/kernel/sync.rs
-index c7c0e552bafe..f2ee07315091 100644
---- a/rust/kernel/sync.rs
-+++ b/rust/kernel/sync.rs
-@@ -15,6 +15,7 @@
- mod condvar;
- pub mod lock;
- mod locked_by;
-+pub mod once_lock;
- pub mod poll;
- pub mod rcu;
- 
-diff --git a/rust/kernel/sync/once_lock.rs b/rust/kernel/sync/once_lock.rs
-new file mode 100644
-index 000000000000..cd311bea3919
---- /dev/null
-+++ b/rust/kernel/sync/once_lock.rs
-@@ -0,0 +1,104 @@
-+//! A container that can be initialized at most once.
-+
-+use super::atomic::ordering::Acquire;
-+use super::atomic::ordering::Release;
-+use super::atomic::Atomic;
-+use kernel::types::Opaque;
-+
-+/// A container that can be populated at most once. Thread safe.
-+///
-+/// Once the a [`OnceLock`] is populated, it remains populated by the same object for the
-+/// lifetime `Self`.
-+///
-+/// # Invariants
-+///
-+/// `init` tracks the state of the container:
-+///
-+/// - If the container is empty, `init` is `0`.
-+/// - If the container is mutably accessed, `init` is `1`.
-+/// - If the container is populated and ready for shared access, `init` is `2`.
-+///
-+/// # Example
-+///
-+/// ```
-+/// # use kernel::sync::once_lock::OnceLock;
-+/// let value = OnceLock::new();
-+/// assert_eq!(None, value.as_ref());
-+///
-+/// let status = value.populate(42u8);
-+/// assert_eq!(true, status);
-+/// assert_eq!(Some(&42u8), value.as_ref());
-+/// assert_eq!(Some(42u8), value.copy());
-+///
-+/// let status = value.populate(101u8);
-+/// assert_eq!(false, status);
-+/// assert_eq!(Some(&42u8), value.as_ref());
-+/// assert_eq!(Some(42u8), value.copy());
-+/// ```
-+pub struct OnceLock<T> {
-+    init: Atomic<u32>,
-+    value: Opaque<T>,
-+}
-+
-+impl<T> Default for OnceLock<T> {
-+    fn default() -> Self {
-+        Self::new()
-+    }
-+}
-+
-+impl<T> OnceLock<T> {
-+    /// Create a new [`OnceLock`].
-+    ///
-+    /// The returned instance will be empty.
-+    pub const fn new() -> Self {
-+        // INVARIANT: The container is empty and we set `init` to `0`.
-+        Self {
-+            value: Opaque::uninit(),
-+            init: Atomic::new(0),
-+        }
-+    }
-+
-+    /// Get a reference to the contained object.
-+    ///
-+    /// Returns [`None`] if this [`OnceLock`] is empty.
-+    pub fn as_ref(&self) -> Option<&T> {
-+        if self.init.load(Acquire) == 2 {
-+            // SAFETY: As determined by the load above, the object is ready for shared access.
-+            Some(unsafe { &*self.value.get() })
-+        } else {
-+            None
-+        }
-+    }
-+
-+    /// Populate the [`OnceLock`].
-+    ///
-+    /// Returns `true` if the [`OnceLock`] was successfully populated.
-+    pub fn populate(&self, value: T) -> bool {
-+        // INVARIANT: We obtain exclusive access to the contained allocation and write 1 to
-+        // `init`.
-+        if let Ok(0) = self.init.cmpxchg(0, 1, Acquire) {
-+            // SAFETY: We obtained exclusive access to the contained object.
-+            unsafe { core::ptr::write(self.value.get(), value) };
-+            // INVARIANT: We release our exclusive access and transition the object to shared
-+            // access.
-+            self.init.store(2, Release);
-+            true
-+        } else {
-+            false
-+        }
-+    }
-+}
-+
-+impl<T: Copy> OnceLock<T> {
-+    /// Get a copy of the contained object.
-+    ///
-+    /// Returns [`None`] if the [`OnceLock`] is empty.
-+    pub fn copy(&self) -> Option<T> {
-+        if self.init.load(Acquire) == 2 {
-+            // SAFETY: As determined by the load above, the object is ready for shared access.
-+            Some(unsafe { *self.value.get() })
-+        } else {
-+            None
-+        }
-+    }
-+}
+Thomas.
 
 -- 
-2.47.2
-
-
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
