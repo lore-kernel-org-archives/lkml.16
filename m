@@ -1,134 +1,129 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B23F289E14
-	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 17:00:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165B61DDC07;
+	Wed,  2 Jul 2025 17:01:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751475641; cv=none; b=kZ6DK723qn1Ax+SN32cQDSRQGVJOnMixsyU5eDMOSrccOrb8TX44KJfKleBSXiLZPBfxDR//i2lzzOrO2hULWz5V1ChocwA5i+C3tDCb8JUa0g4scROM4p3AsoZAZ1ZneSx7bnY0PN+VtQ0y0wa2bcCmi50kUtMzWZPhNXD9E5A=
+	t=1751475700; cv=none; b=WSheRe9nNTTDAWlXLTNXRq+bD38/t+JFq5UXND4Yiqly2MYx1WOjde/wukn4J56qusyGcqVrGmTR3/nX3slCu/RY+ajDDIF5t/pUosUynnbyB+vOaI4WyADI6eVFJPE4I461cFrMsqJjDda8D5kvS32aoNSeQ7wR/aW9xQ4sM8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751475641; c=relaxed/simple;
-	bh=7R8O9Sy7GmzduITiDik8nmm+DUNuPAZ3smpgXxsr+yA=;
+	s=arc-20240116; t=1751475700; c=relaxed/simple;
+	bh=K6npPwHBi2DGHnFB8cl+vvK8I6ibe7HqdGsOF64ZxCs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T62UJs9VNEzsuvrVSRhq/FEfG5nxFIUeQ9KDb+KxqB2lQWZyI2Sth5SZpsX10mgcA80dk/80APx0s/M9fP+3BlgPpgsnr26uJ1GS4Hzjn1zJRnFZQDmjJmnUBSLVNtutzuGfV6gQNMELN0EF3wFxgQtnHzQRmGiYS0cU/v0yiro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tVAO2/3v; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=PgcEkWDoFBHVJWhX7mjSm8ECWBrpHsEOFAMJRnHXbvUREFToRlKkBYkf3pl29SBVX2kjXqYukn5iYnqfLvc9vZSEfNj613gEi3+Lf+XZy2NpNaBv9huLHGWuo8VcxMk8nnuih4gMTcqVSulscabAXBhpxUetcVrBDL6S78wAYF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o+8BCDQy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tVAO2/3v"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-60b86fc4b47so270a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 10:00:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751475637; x=1752080437; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ClpTUPxlw9qKpJZHFHAxlvtkPFSTpQG0D0TAtGQlJmQ=;
-        b=tVAO2/3vjnudvBmv1aqgE5qaaEm0lc+U4BWXqj01KUcj1NLnHXjLLiW7ZxPI4Pat6z
-         OaX9MfSVDfrhM95YStTu5dLMsOmfG05OkLCA4cqbEMyTarar6DsLGo6t636A9Dp1N7DD
-         j8Xv4RwPGsOoI6v+OZyn7AYSWyykuAYwxGOSZSMLGRBMLTnGadzlI5hN49e+1gsA8853
-         5As0c5AMuE3QLQPHprT6xdGmioT8Ywy/8/NzkJIy6SCByWwWvzvKlYd3Fluov7MbgJjp
-         SgOvKPp3G41rLKq3W7PfBsuGko9tjMTYta7yF/oMp5eb6zUUOU0pNRXQOdJ23cPH8mmV
-         ktCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751475637; x=1752080437;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ClpTUPxlw9qKpJZHFHAxlvtkPFSTpQG0D0TAtGQlJmQ=;
-        b=c3ZmTW6eThh75yMaj7kJocJ5EFybgITJotTi+MRGLf4gXhDOYfSwW4gs6TYaZBk5Wc
-         YudIcY9JN/b9Gwe/tZEBZzEFWOeRTFtpYhVvUfcRFemQxxpSSgWBJNd785O/ejA1Xyh6
-         Bmloi2xDVoQ8WlKUOVJeqNovuF5+1dBkDWhJbKYd81h16gplsL2Wwr4CGhKJHklgwr0E
-         yt9F+JUGmsVf7oFaYUX2jkW/e/PWW9Vb9mK/1XRL3irWjEB3+UZnf0Q3E0iVhunZnhig
-         2pT2cYsRXkDPm6jaYqC47owtDSjn362mRBvijLQxI3V1M/jo5t9osB/juRpIHoZSj3vE
-         Mpvg==
-X-Forwarded-Encrypted: i=1; AJvYcCV7aVO1VfIoetZEJJICzcjOa43z7XeZWfBH6M8VgD6DcKt7FLfowdlkrKeyyI6jhnO8T3eSFUOxe3LnFPQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCIoP5P2dksiyfQFkWzNkw3GTs50Bs4tYMqE0mQUCcbJLUGXkk
-	en+TH14yXh2aeZYLy8k8OEyterv83wVEhEavyG7em1rZZbQAiQ9IQUCTOk4c0u/PvTAN3J0ia7a
-	VVgjBt48CQNLqzwuxE3UrYOtrjqWn1zOccazZl0FY
-X-Gm-Gg: ASbGncs9jEck8ZYdEfPSHuTPeYvseJDKiTvKK2rKk3OshHeP/vwzRB5BZzf05Z7SD6/
-	isBWWB3/Gqfucq3CDGRnKtvncwAhDnIkaHavEp+KwOP1VnGyB+hAxKW1qT2C1Z1WAxu2g8JtXXk
-	eFctCA031Ya8esXH/CxhY483EQ0KeGZoY/OzsUopz/+sJsEzuc1JETnHfDvWaE+iF2HQl4I3Y=
-X-Google-Smtp-Source: AGHT+IG+KOhc493DGFqZhnwt/78T8773N8GPugOIwolsxQo6/kvF01euKel9h9IDyBdJVu9Tl31HX26v2DXluMoxtlI=
-X-Received: by 2002:a05:6402:4496:b0:5e6:15d3:ffe7 with SMTP id
- 4fb4d7f45d1cf-60e38a8846fmr273711a12.7.1751475636478; Wed, 02 Jul 2025
- 10:00:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o+8BCDQy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90D77C4CEFC;
+	Wed,  2 Jul 2025 17:01:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751475699;
+	bh=K6npPwHBi2DGHnFB8cl+vvK8I6ibe7HqdGsOF64ZxCs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=o+8BCDQyeUWWo69CKGFQez5Cbr20o/NSDZkTrZ0tTOe8blmA9sQucX/SN9hQvQM3z
+	 3UNH+1M7T9wUWomD/rBq7FXAztDaRmQNJYaMlvLPIMfwwHxxpHD93CEjlVkwc5LHqJ
+	 b5ChwVZdRQH0xpa83i8d5YfPIJ0jeWbqP6eNYWCaEnt33HMn6EFjk4+oJPok8lE/W3
+	 x3As9zOkVRITFiQOizLS0IeaySaMNi9tZ18xg9Qdm4D7SPJr+ewiRpv3m98niSMBG6
+	 ikU4p1dlCNjNJdnTmJNAjpTqrVD1gdR128NVqBTlrP/B2BB/vXjL0kuMBRZMayNKwO
+	 zI+IFgmJdp7tA==
+Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-60d6303a11eso3324488eaf.0;
+        Wed, 02 Jul 2025 10:01:39 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUYwefQOofi5XyJ3rPyOknxKfk4NITVrzf8JyP/GWUYvkBvK+bGA0hNvazM8ZsibPsXg9/ZNFTiCBwYW78b@vger.kernel.org, AJvYcCViqZzvApYk1WL6x4lHgseeK7D8yXBFYw0keYwIziui6JFhhaQdfSu2XleW5Y6SWniMh7ArNilvqbd5Tw==@vger.kernel.org, AJvYcCWMY1Lo7WWxfDtHVhcIXTJ0pYuxwHKy4iFOoUJLWcuk06sBCe3ZcK5eTzC9iH8JKO7Op4PBD/ijdOuE@vger.kernel.org, AJvYcCX+YvXnvqXSWLqqYPf6qxu4bRy12W5csRwU8O0Ai+0MQZG5MAjLkkUGYvZKrLyRo99Nn2slF9tiBE0C@vger.kernel.org
+X-Gm-Message-State: AOJu0YzI4xZtmI8ZvEWe4ep03txrSqps5/UCmi7JSDgtQNR68xuP5k1t
+	uxvMcsA1HA9LvfZd7md+I8qUDZWOAQuEiD/huS/KjVKlfpci9JLcbQjUDA4QQuasXGms/K7EJeG
+	cJSJJwtQPzxOD1OyRJqnXedipNT9Y3Mg=
+X-Google-Smtp-Source: AGHT+IGPd++aiCNQ4qfuEIoYUI2K930oDrPPW3BNMd8Apd55Lv82AJ7wV9K+7i8ylCY8TGknSq7EnGbvDAKM/sPSrwE=
+X-Received: by 2002:a4a:ca89:0:b0:611:aabf:2b7d with SMTP id
+ 006d021491bc7-612012d05e1mr2142271eaf.7.1751475698640; Wed, 02 Jul 2025
+ 10:01:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <68653927.a70a0220.3b7e22.245d.GAE@google.com> <366d45aea0b64cfc82c0988ae5fe6863bbd28261.camel@surriel.com>
- <CAG48ez2_4D17XMrEb7+5fwq0RFDFDCsY5OjTB7uaXEzdybxshA@mail.gmail.com>
-In-Reply-To: <CAG48ez2_4D17XMrEb7+5fwq0RFDFDCsY5OjTB7uaXEzdybxshA@mail.gmail.com>
-From: Jann Horn <jannh@google.com>
-Date: Wed, 2 Jul 2025 19:00:00 +0200
-X-Gm-Features: Ac12FXwfImLCEQ6KEDh5ISUpKfCCFi1cN4aPqsw2TjQT9F76WByIAQEOJPJXEEc
-Message-ID: <CAG48ez1VMw=aE88eTfk9BscrmS7axJG=j_TrTui+htLF9-4Wqw@mail.gmail.com>
-Subject: Re: [syzbot] [kernel?] KASAN: slab-use-after-free Write in flush_tlb_func
-To: Rik van Riel <riel@surriel.com>, yury.norov@gmail.com, tglx@linutronix.de
-Cc: syzbot <syzbot+084b6e5bc1016723a9c4@syzkaller.appspotmail.com>, bp@alien8.de, 
-	dave.hansen@linux.intel.com, hpa@zytor.com, linux-kernel@vger.kernel.org, 
-	luto@kernel.org, mingo@redhat.com, neeraj.upadhyay@kernel.org, 
-	paulmck@kernel.org, peterz@infradead.org, syzkaller-bugs@googlegroups.com, 
-	x86@kernel.org, kernel-team <kernel-team@meta.com>, David Hildenbrand <david@redhat.com>
+References: <20250702051345.1460497-1-apatel@ventanamicro.com>
+ <20250702051345.1460497-15-apatel@ventanamicro.com> <CAJZ5v0ifCN7OWEw0DHpULSmXn4nCb9EdJMjQPJwmdoF_y0nfjA@mail.gmail.com>
+ <aGVF8Gqzs2YZf1Os@sunil-laptop>
+In-Reply-To: <aGVF8Gqzs2YZf1Os@sunil-laptop>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 2 Jul 2025 19:01:27 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0iYjc2JurNAJyr1o03Mr7DJyc=MdHvbTsCsC76JR0suNQ@mail.gmail.com>
+X-Gm-Features: Ac12FXwjgoj03UiKdGXfM8DuaJdwtG5xtG-ENxekbig-Cp5sM0uIGBwVeivKWu8
+Message-ID: <CAJZ5v0iYjc2JurNAJyr1o03Mr7DJyc=MdHvbTsCsC76JR0suNQ@mail.gmail.com>
+Subject: Re: [PATCH v7 14/24] ACPI: property: Refactor acpi_fwnode_get_reference_args()
+To: Sunil V L <sunilvl@ventanamicro.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Anup Patel <apatel@ventanamicro.com>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jassi Brar <jassisinghbrar@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Len Brown <lenb@kernel.org>, Rahul Pathak <rpathak@ventanamicro.com>, 
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>, Atish Patra <atish.patra@linux.dev>, 
+	Andrew Jones <ajones@ventanamicro.com>, Samuel Holland <samuel.holland@sifive.com>, 
+	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 2, 2025 at 6:53=E2=80=AFPM Jann Horn <jannh@google.com> wrote:
+On Wed, Jul 2, 2025 at 4:45=E2=80=AFPM Sunil V L <sunilvl@ventanamicro.com>=
+ wrote:
 >
-> On Wed, Jul 2, 2025 at 5:24=E2=80=AFPM Rik van Riel <riel@surriel.com> wr=
-ote:
-> >
-> > On Wed, 2025-07-02 at 06:50 -0700, syzbot wrote:
+> On Wed, Jul 02, 2025 at 12:07:36PM +0200, Rafael J. Wysocki wrote:
+> > On Wed, Jul 2, 2025 at 7:15=E2=80=AFAM Anup Patel <apatel@ventanamicro.=
+com> wrote:
 > > >
-> > > The issue was bisected to:
+> > > From: Sunil V L <sunilvl@ventanamicro.com>
 > > >
-> > > commit a12a498a9738db65152203467820bb15b6102bd2
-> > > Author: Yury Norov [NVIDIA] <yury.norov@gmail.com>
-> > > Date:   Mon Jun 23 00:00:08 2025 +0000
-> > >
-> > >     smp: Don't wait for remote work done if not needed in
-> > > smp_call_function_many_cond()
+> > > Currently acpi_fwnode_get_reference_args() calls the public function
+> > > __acpi_node_get_property_reference() which ignores the nargs_prop
+> > > parameter.
 > >
-> > While that change looks like it would increase the
-> > likelihood of hitting this issue, it does not look
-> > like the root cause.
+> > Which I suppose is a problem.  Why is it so?
 > >
-> > Instead, the stack traces below show that the
-> > TLB flush code is being asked to flush the TLB
-> > for an mm that is exiting.
-> >
-> > One CPU is running the TLB flush handler, while
-> > another CPU is freeing the mm_struct.
-> >
-> > The CPU that sent the simultaneous TLB flush
-> > is not visible in the stack traces below,
-> > but we seem to have various places around the
-> > MM where we flush the TLB for another mm,
-> > without taking any measures to protect against
-> > that mm being freed while the flush is ongoing.
+> fwnode_property_get_reference_args() documents as below.
 >
-> TLB flushes via IPIs on x86 are always synchronous, right?
-> flush_tlb_func is only referenced from native_flush_tlb_multi() in
-> calls to on_each_cpu_mask() (with wait=3Dtrue) or
-> on_each_cpu_cond_mask() (with wait=3D1).
-> So I think this is not an issue, unless you're claiming that we call
-> native_flush_tlb_multi() with an already-freed info->mm?
+> * @nargs_prop: The name of the property telling the number of
+>  *              arguments in the referred node. NULL if @nargs is known,
+>  *              otherwise @nargs is ignored. Only relevant on OF.
+>  * @nargs:      Number of arguments. Ignored if @nargs_prop is non-NULL.
 >
-> And I think the bisected commit really is the buggy one: It looks at
-> "nr_cpus", which tracks *how many CPUs we have to IPI*, but assumes
-> that "nr_cpus" tracks *how many CPUs we posted work to*. Those numbers
-> are not the same: If we post work to a CPU that already had IPI work
-> pending, we just add a list entry without sending another IPI.
+> You can see that nargs_prop is not supported with ACPI currently. Since
+> fwnode_property_get_reference_args() calls
+> __acpi_node_get_property_reference(), there is no way to determine the
+> nargs from the nargs_prop currently with ACPI. Since
+> fwnode_property_get_reference_args() is a common API across DT and ACPI,
+> it is a problem for users.
 
-Or in other words: After that blamed commit, if CPU 1 posts a TLB
-flush to CPU 3, and then CPU 2 also quickly posts a TLB flush to CPU
-3, then CPU 2 will erroneously not wait for the TLB flush to complete
-before reporting flush completion, which AFAICS means we can get both
-stale TLB entries and (less often) UAF.
+So the problem is that if nargs_prop is passed to
+fwnode_property_get_reference_args() and it is a valid "cells"
+property, OF will use it to obtain the number of reference arguments
+and ACPI will ignore it.  To make it work the same way in both cases,
+acpi_fwnode_get_reference_args() needs to be modified to take
+nargs_prop into account properly.  This is the key information that
+needs to go into the patch changelog.
 
-I think the correct version of that commit would be to revert that
-commit and instead just move the "run_remote =3D true;" line down, below
-the cond_func() check.
+> > > To fix this, make __acpi_node_get_property_reference() to
+> > > call the static acpi_fwnode_get_reference() so that callers of
+> > > fwnode_get_reference_args() can still pass a valid property name to
+> > > fetch the number of arguments.
+> >
+> > Are the current callers of acpi_fwnode_get_reference_args() going to
+> > be affected by this change and if so, then how?
+> >
+> Good question!. If some one is currently passing both valid nargs_prop an=
+d
+> nargs with ACPI, now with this change it will start getting the value
+> from nargs_prop which was simply ignored earlier. However, I see only 2
+> combinations how fwnode_property_get_reference_args() is being used.
+>
+> (nargs_prop =3D NULL) && (args_count !=3D0)
+> or
+> (nargs_prop !=3D NULL) && (args_count =3D 0)
+
+OK
