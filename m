@@ -1,203 +1,212 @@
-Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010006.outbound.protection.outlook.com [52.101.69.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95E6D1DD543;
-	Wed,  2 Jul 2025 14:14:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.6
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751465681; cv=fail; b=stPwcIP2PCnI1hkdfayqHzZQITN1uKc7ZseI1lG3pA/HyoKTmLzNburOPVKJIp7RpQSzvc/rgMHocRJ7CfiH5KrxmBRrgD01+iZlkqORFmrQEuwo2o3EU02N86JoUG2cirmcv5u+2sv3TjTTbO1yB7gTCt2M9ftYUmdfsWyE0Zs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751465681; c=relaxed/simple;
-	bh=H1kQdPcb04IPH25dKdaQF7NTURxFroV7N/BLWbovyWk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ZJMxIDo27B8HWRNZ4dSbh10gtRJIx0vRZ9+eOEvqekFYuHHtm/EjRTERrdBHIjBMBF91WJ42c7+mxCHpPA2GtLPTKra0e9KhWTL7krXaJ0MdZyew6MUSUeUpKi2bsfbwVGnbC3Lf/lNg7j+cXmQCTt7ec2ckdj9wmujNGS5yTOk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=VqNTCkfn; arc=fail smtp.client-ip=52.101.69.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EDE52BDC09;
+	Wed,  2 Jul 2025 14:14:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751465693; cv=none; b=J/1VpdpxTnpyZS9st9Q3RRzQUOIukqiSQ+gnmDuJsJJ+ZwlLOKzi/z6bYdUMDITcl8nHT2FwcarC2Zyocfh5wSYhNpZuzmTZAxNmh/b6KVDVffNhxDFz7MmDkaB2Z4Q7dfBHHaZxSXTpWhd5DARgsbdHGpdfoVQn139rysnRlkM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751465693; c=relaxed/simple;
+	bh=cprrfdfnU9GFDLUmsyw/iJaU4waUiVKSI0/qOUtlZWQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MFY//nACPORmjBtLr8tgkhUM8gUufmXMlL3iwMfAsYF2lIDm4Gp4SNZw8COaibf32Nsye0arcX2hKOwZaQX9F3Ftq/dP8bCY9dHKDZlmXFBeEbnREL4F0iqlnKQPtfqGzv9pItky0XMRgGg0nU8a0Qu4PtpOKjkmA4GObCQdqI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CU8U4zrg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="VqNTCkfn"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ejfBeKjzkjFbCaFbB0OjqeEODvUo8jlgHF+1sv6+eVDIxWkkU2AVtshH89Go5XjYkbJBvBEIDpOj57BW5ylZUmQGMyj/yhdeo07mQCRf6L4j9EuTEyhpVaqaO4dLbIO08fab/SJUGs8ie27rTWBaYf1MhLbwK1mxkIGpem2b2BqCMErPr/ZK0W7PfPrZ4rgTHMhDHM1JZ4ezNxsU6kK6alCcrSpoe5BrLZvY/pQtBo69CEzXGbrG6hN06wpEQf/fAVVLEDi9r/aA6Z6PLw4nfwisjcRlMsC7GHtJhNpOXl9aCTNRRSJQ2VRoBl9A0reKEfh7TJIs5zXAtZGBG8+H7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=31vb9h0crh+ir1Eb7gONkVWQ84b+yxq+Pxd+BSmg+2M=;
- b=slldxkq2IHcmy8BfOTNiuiFP7KyZQ3so7kQ4M+fU22LRzQ4DYYTkQXwjmVtHwvrYLNwx9vy08wpTU3um2FzDHvafCXVyXKkAlIwXiyI+WhZeUD4JE9fqv8a0upNtql9HdR+JEKMrOrV731ig89o06FyfvL+4qkELPRf/BO0XxNceQg6uir30bZQnTnTaPCZUvewQ+lL2Vas+Jlu9WUwKcNgn9PqlAh0oxn/30STd9odPK/CTZJdNA3kWUtcnaibSWm47xK9krZ24t3wXDU6jMvsNw28QRW6KOsPJYncmEsj/CG5+G5myR+XJGY2yEkhlnlO4QkffyYoaubCvPvzaRg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=31vb9h0crh+ir1Eb7gONkVWQ84b+yxq+Pxd+BSmg+2M=;
- b=VqNTCkfn/BwbEBamTx71niNV0Jj212wJHadkHASxrm8XY33tdtkpCscKscGdtrAhU1VLaoW9Ya7h7fjlPTOWpNuGjsV75DGwWtU5K+IRQ+ldGSuVo8qdPAdyFrXia7468Fap6xaJ7rMdpLh71dUJj1Kg0Ic+e1ygQIOq+9OEYEGfhCX5J1g9BBcEd/EFPqiJo+sLuAzDo8e/GPMc2/VODgpAiSDq9bTcEr63I7xasMYcL5GCD4i8GYSlQqPRmyXDXugWmQAPwltPFmFc2sobHcb1F6HM5k5nzrB106KmkorkpdepAvo8P4SqsP96KsCIiiSU+lOU4KoYTSQtHYm8Vw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DB8PR04MB6987.eurprd04.prod.outlook.com (2603:10a6:10:118::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.20; Wed, 2 Jul
- 2025 14:14:35 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%7]) with mapi id 15.20.8880.029; Wed, 2 Jul 2025
- 14:14:34 +0000
-Date: Wed, 2 Jul 2025 10:14:29 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org,
-	Richard Weinberger <richard@nod.at>,
-	Conor Dooley <conor+dt@kernel.org>, linux-mtd@lists.infradead.org,
-	imx@lists.linux.dev,
-	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	linux-kernel@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>,
-	Vladimir Zapolskiy <vz@mleia.com>
-Subject: Re: [PATCH v2 1/1] dt-bindings: mtd: convert lpc32xx-slc.txt to yaml
- format
-Message-ID: <aGU+vIDIA92SMH8B@lizhi-Precision-Tower-5810>
-References: <20250701212455.3106629-1-Frank.Li@nxp.com>
- <175146290647.1131327.11939010351638573167.robh@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <175146290647.1131327.11939010351638573167.robh@kernel.org>
-X-ClientProxiedBy: AM0PR04CA0086.eurprd04.prod.outlook.com
- (2603:10a6:208:be::27) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CU8U4zrg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7D1EC4CEED;
+	Wed,  2 Jul 2025 14:14:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751465692;
+	bh=cprrfdfnU9GFDLUmsyw/iJaU4waUiVKSI0/qOUtlZWQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=CU8U4zrgdeOOrMqsBqjl8oN28O7OcNV/P6D01cs7aHG6F7ElIR2/cSzbuEEyOVhU2
+	 +reIKaSU69qgR0WZl/X/ANpmKRT+okQj2Ly6Q3TsZf3gce4X1qjPYImKzqkrnd2HC/
+	 YxsGOzHVeY0S5Q+W5zXaX/2ShboY3qvtgseNqEN8ATsOcecLSjPPQ5cEjoj1T1xYhc
+	 VC3XmAIXIcQeGibL8OCprYAwmrIQOGehD/aNXyj6rebrX2TRws+YmXvSuGoQHBNruy
+	 LDn1n7W5YVVmVkJxvZhCzhiz+BaVB6o/qXC2VIO6I90r0cSRGSIw+W/dAbnUM0Q0/Y
+	 ZOgbGQZUB+ONA==
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-6118b000506so1655420eaf.0;
+        Wed, 02 Jul 2025 07:14:52 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUxu/QJ2AukRvYTJ1zOzJtL/ZvH1iWDrFAG52Oq75ZAAOjutXtBRLTI7+2J3HfY4qg/AK4w3mDPawhF6bHA@vger.kernel.org, AJvYcCV3lRs+IGlViacqBr6sDsiGSdI+AAEE48cW4a1fgeAy+Lv9prqMgz3/bP0sZfaqMSroLI2fuKhLbAM=@vger.kernel.org, AJvYcCVNSGl+dAiLB1kBYPWCTByUwdvmOFmNm2sNcG26sIPvdqYCl+cLkJAYjtq1sOh7rElsLhA6Z8PTKzUZ@vger.kernel.org, AJvYcCVhrHqIL9O6XPHFXGBTb0ZP0rN93rj7aBmKg3Cg7fpYsjqHeRhWfnEcsJx5tiredb5YEVajljxtfDZm@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVau6FaZEFz0cSeVM8QWPMZo4Vcu1qF5QPhmvERCZ33nDhfF2E
+	BIGKvVN7zH6AI7nmhmbOs/J3FMffmvDRC3K26Sc9Lf8QeKrhJkOnU7USr51RaWK8elRbDUH4km+
+	all0ix2lt7bLAzsjxR75Y7eIq0eQK2EM=
+X-Google-Smtp-Source: AGHT+IEQO+KXDVZLq6/myG09rxbBy9SiNjHPGLbzpRLxLdOAI4nqsRB01fCB2AilRBxPlGh/izIPC0xuI9X8tQrQ0l4=
+X-Received: by 2002:a05:6820:8c5:b0:611:e30a:f9c7 with SMTP id
+ 006d021491bc7-612010ace40mr2343538eaf.7.1751465691971; Wed, 02 Jul 2025
+ 07:14:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DB8PR04MB6987:EE_
-X-MS-Office365-Filtering-Correlation-Id: df1cb34d-33c9-4c9b-6463-08ddb972c563
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|52116014|19092799006|1800799024|366016|38350700014|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?KMcO6REVnisOlJSdVFc5+D9ttS2GwuraGTjYkTqPRspuwMDSMkYOdYZG4oqY?=
- =?us-ascii?Q?ebRtiHu1uC7/KNiY4QLO0yX/DPVMnT1YYK4Gtf40U5y1y1Db8tSAQlWbTtxk?=
- =?us-ascii?Q?KGaLolwkG1VVXAQfibtttvIA1+xVg2XmADioiDQn3urhKO1sUarNRaUYsdTw?=
- =?us-ascii?Q?5wq2qE2w7rauI7FpJgEBqW3O661BvwRpXHSkdcLUK9cK+raTtZouca53vmSe?=
- =?us-ascii?Q?DPJi5UbPRvuzsrJ1FavkbKnVV5HhWq/W+IsK0MqldXw6YvW7hQDm5TBA7WQg?=
- =?us-ascii?Q?FRwjkb4FXkCdvuWI4tZiTs3QfBh2/NJKmWFM2A2Q15mTyAimy8Pmmj+nuerr?=
- =?us-ascii?Q?L512mdyk88Mgf3ZjLtgz1gHc9gcYZ1j85S1n/05eAHvPB18pqoiJCwjOmzzs?=
- =?us-ascii?Q?kOK55frcRcu11s/Afen01ZUFWAx+HSu98VF3Tx7ZO1q0/M9mt/KLj2JTrWYq?=
- =?us-ascii?Q?M5fhzQesS8BUJg5dqStOlWyiLUsuanZGZffyqbAku1dcwQg35gDplwxyjT3o?=
- =?us-ascii?Q?H6oJ3x1EWSxX2ZSIe62NLpFbh9mf0prue+9nqb0EtoTJyhyAM+ofkanhXpjk?=
- =?us-ascii?Q?IMHAMbJR+DFCVOxOCt0yTmQKb5JVq/h1gyk/XhFZBA89rTJaZ4smVHAE5sbg?=
- =?us-ascii?Q?1cIoK0ONW1NsoZHbcqGPDkpPJhx+qgayi62S2C+KFZtTkOng9Mc04ICe/l2r?=
- =?us-ascii?Q?KbReWXcg68g+DVzj08tL+u6kaZvAtj4kRAzQ0H77GXAyQ54sKaOHMu1F/WMm?=
- =?us-ascii?Q?l3W9wEGBJUn/afOkJR3Xl9FeWA01U+vu9wRCwMuR25ZMlLNtntNDHXkVHXyq?=
- =?us-ascii?Q?GmuFS/BKooO/qPepU4F0n521WVq/EwYwceho+BNZl9ctk4OikHgn4VVJflD+?=
- =?us-ascii?Q?166puQZ27nvxDG4kJcYgA+2MWXxKkRWyNS98jN2vRxi368uefxzTPfRMmsXY?=
- =?us-ascii?Q?dKhzW5I8KdDxvSApSV+9jKq3WK/sPqtOSMQepHFRckYeZkSZ62NfJsvs+CVi?=
- =?us-ascii?Q?acjxi+Hs4JqOMKUJ43GuK8Y33/iNXTRgVR6tUF7drh5Cs3OT/GOxlHw5lH1S?=
- =?us-ascii?Q?ZvPFxYsJO6+Muk5PUDBRAmE4Ue6ma6ca1xi1OXSpjgRp7iYl/gVN6Gp4YBJ2?=
- =?us-ascii?Q?SkEiqh6z6FiD8lMle6vjA8V+w0vxZ38N2eKfJqC7XvbTd/Kq5G6gCE9z1C9q?=
- =?us-ascii?Q?DUshxdbKcEB2Avg02ZIEr6qJICAnTq01ZYXHyReE2sYo+zj0Demx1+9HEWw8?=
- =?us-ascii?Q?y9YSgT6tKxp+Yc9imz02OcVJ3c0hDlPvqEuQrGLdj4DvZocXJd/cnyF7ALmj?=
- =?us-ascii?Q?DVKkOtfiZH1iH339uGZA0/rOudTINwFxtoUPRXf+XOvV6LkRKlZ/rF6fPlyg?=
- =?us-ascii?Q?8+EQ9/PJ1FBMSlyP6o35R++zeIBz+nqV/ySHw9Sy1lMQi4geefNNM5Ao5fG2?=
- =?us-ascii?Q?EOUjF2iXCl4=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(52116014)(19092799006)(1800799024)(366016)(38350700014)(13003099007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?IWVAcmqsnGlTkKPEW7QNlUdUZWIMMUDqVsUPJMyLsOa2Otsf4OnYR2O9lhuo?=
- =?us-ascii?Q?23ShjcjSe8iBDonX9lCzNzai0SWvIRBLA50+UA7b9yW3PE13onfPnV3ovn6z?=
- =?us-ascii?Q?RSfTcWYaMfjXC6xVa2r8MD3PqvuicMoyNqF2sKvQZ2fw6dJOwdXb8/Pksdza?=
- =?us-ascii?Q?XxkQmAzxXASIXRb4r/y3F4sMyIF/cDK2U9Z7xUiCUTTTJMsGJj5IeJHAC1RW?=
- =?us-ascii?Q?5KdPTyMtS0LVT2VeCXfv0GDYv0XjmGRaj3Jhh9lUu3trGyQ4cdHWSdxamZT3?=
- =?us-ascii?Q?QoE4ifbKA08OI8V/vkYDScyOy3YwrQn3d7DH1bheK5lFfw8FwdtBwZ+44zqB?=
- =?us-ascii?Q?PrXiK5A4PkmMuV+A1zXez8zeF5uEoPQada4ydSj4NPKQ6mySTXSPsYkoEMZ5?=
- =?us-ascii?Q?wV+ZX8FPzQ2hUaIseDFsbm43PDUZjvMihQ8GucfChSgvoNhuE+jMVOOgVoyV?=
- =?us-ascii?Q?hmTzbUztQWNe7wJ0EBYHVbeEaPR0JfhsIMFFFpoVdw5TntLWqIaFAWJPjSnB?=
- =?us-ascii?Q?xNswJVLRvDoPe2LeBCCLYjazdEaP9u17bB3qiI5nSZGEbAkg+acDbERgnqMo?=
- =?us-ascii?Q?UGRhd3lDbZ7aCBoca0Mwg0e/D6Slxq6VOBCJRlSjGpI28hXENg4ADywoNnwT?=
- =?us-ascii?Q?5EE0Y1AK5IlDDgnHcOsE2+byS1ZZzmsIPPldhpJcRLwaDglmvWcTbQWPFOXp?=
- =?us-ascii?Q?1OCKZXZYvTQyDUC2ZDUvED01d94FyuHJBes5hCpPedrSYoKIGh8FPIC4t5vS?=
- =?us-ascii?Q?6Qm0ugvGnxI6fu0vjXOzno93BlKhlGpgJLhZIgCcCGPG2xbuG6Lu1WifH415?=
- =?us-ascii?Q?8myG1Xqsh6txmipbhyTtiAwfZf05bb+n6osNhz+Gczr4QTfcxC333ANxV7aI?=
- =?us-ascii?Q?9lj6J8W40tHQAiDo8OZcjNtG44Hvr1JrsNH5tGB9NiieqmXGhUKIZHXYsIdU?=
- =?us-ascii?Q?d/UtP+6KMicJECh86EA2LuzgrDDCjzkaQTD+LaoMRSa96lC4qWKX7P72H6bq?=
- =?us-ascii?Q?Rd2Lxrnu5NbQbYRhXk9f7SNnWZNMM6uy3Bir54EqP9d084fRXAygLiHy+9KD?=
- =?us-ascii?Q?NuOHhAVuQMEESu35edzK1jENmaGFrBLYB/0Tl2h2/TdIbcr7SmnubEWQ/qy+?=
- =?us-ascii?Q?iV5U0HW+bwHsAVvakFqRwSUxl9QSkJ8D5BG/yMh4pmWksYt+GQvXKHvCZKBf?=
- =?us-ascii?Q?u//dHJG/FDfVlsypx2qskajvUEEOwpa7yMOcbuaFr5OFo3z48vAIv7/y1xzo?=
- =?us-ascii?Q?TXp2xI/BlGAXIuDNHGzl9xPhaVDrhHGuOixh3pHnWsdtdGpmfGlQvkaKLHZe?=
- =?us-ascii?Q?x+X/D2TVCRMKSMTH3UJBmo80EjjatWGqFnRkt+SUskp4MZppshfm1uanhIxD?=
- =?us-ascii?Q?V4y3uBzoSTyX0Uby3VB1n0NXk1v54S3n0bL+KnLVr45IuoPeIZffGjaHQq+6?=
- =?us-ascii?Q?X4R6cmevlXMvYWA1Q4r2IulGU2t2g1SXefr9agEgCCOU8sPMgWRt9RzGHfz7?=
- =?us-ascii?Q?qkc/TnIEV2siD1w9IqucPzOkpoUvBIErXeql/nFah7SGFZG+PPQoI+oswFUA?=
- =?us-ascii?Q?PlWPbFSTW2FXnJes3QFfar76k0SREx6VsCBGizaM?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: df1cb34d-33c9-4c9b-6463-08ddb972c563
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 14:14:34.8141
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /isngxaS+9rjZKMXGJ02ySBE/SNBkUGIYIYAqIA9h65I8PFlV4/AG7FlRoecHH76nQFA0BchmLcixo9dGcbXRg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6987
+References: <5018768.GXAFRqVoOG@rjwysocki.net> <CAPDyKFp35SjpQmEQ02u7ZbsaFftaett_rBBf-7hbsBpGWH08hw@mail.gmail.com>
+In-Reply-To: <CAPDyKFp35SjpQmEQ02u7ZbsaFftaett_rBBf-7hbsBpGWH08hw@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 2 Jul 2025 16:14:40 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0iDGb5KgE0pWKME5sL6wGE-nVOswqcs6K1uTTXB6zZBng@mail.gmail.com>
+X-Gm-Features: Ac12FXzx7QK9Gzgzo2obLKRzjthdFPV8AyJTMHoK965542I2TdIqjRdZ2IHt05U
+Message-ID: <CAJZ5v0iDGb5KgE0pWKME5sL6wGE-nVOswqcs6K1uTTXB6zZBng@mail.gmail.com>
+Subject: Re: [PATCH v3 0/9] PM: Reconcile different driver options for runtime
+ PM integration with system sleep
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, 
+	Linux PCI <linux-pci@vger.kernel.org>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 02, 2025 at 08:28:28AM -0500, Rob Herring (Arm) wrote:
+On Wed, Jul 2, 2025 at 4:12=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro.org>=
+ wrote:
 >
-> On Tue, 01 Jul 2025 17:24:54 -0400, Frank Li wrote:
-> > Convert lpc32xx-slc.txt to yaml format.
-> > - add clocks and partitions to match existed dts.
-> > - allow nand-on-flash-bbt.
+> On Fri, 27 Jun 2025 at 21:29, Rafael J. Wysocki <rjw@rjwysocki.net> wrote=
+:
 > >
-> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > ---
-> > change in v2
-> > - fix miss 's' at partition.yaml
-> > - remove ref nand-controller.yaml because existed dts have not nand child
-> > nodes.
-> > ---
-> >  .../devicetree/bindings/mtd/lpc32xx-slc.txt   | 52 ----------
-> >  .../bindings/mtd/nxp,lpc3220-slc.yaml         | 96 +++++++++++++++++++
-> >  2 files changed, 96 insertions(+), 52 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/mtd/lpc32xx-slc.txt
-> >  create mode 100644 Documentation/devicetree/bindings/mtd/nxp,lpc3220-slc.yaml
+> > Hi Everyone,
+> >
+> > This is an update of the series the v2 of which was posted yesterday:
+> >
+> > https://lore.kernel.org/linux-pm/5015172.GXAFRqVoOG@rjwysocki.net/
+> >
+> > and the v1 is here:
+> >
+> > https://lore.kernel.org/linux-pm/22759968.EfDdHjke4D@rjwysocki.net/
+> >
+> > This update reorders the patches (again), updates the changelogs of som=
+e of
+> > them and changes the subject of one patch slightly.  It also adds a ker=
+neldoc
+> > comment to a new function in patch [5/9].
+> >
+> > This part of the cover letter still applies:
+> >
+> > "This series addresses a couple of issues related to the integration of=
+ runtime
+> > PM with system sleep I was talking about at the OSMP-summit 2025:
+> >
+> > https://lwn.net/Articles/1021332/
+> >
+> > Most importantly, DPM_FLAG_SMART_SUSPEND cannot be used along with
+> > pm_runtime_force_suspend/resume() due to some conflicting expectations
+> > about the handling of device runtime PM status between these functions
+> > and the PM core.
+> >
+> > Also pm_runtime_force_suspend/resume() currently cannot be used in PCI
+> > drivers and in drivers that collaborate with the general ACPI PM domain
+> > because they both don't expect their mid-layer runtime PM callbacks to
+> > be invoked during system-wide suspend and resume.
+> >
+> > Patch [1/9] is a preparatory cleanup changing the code to use 'true' an=
+d
+> > 'false' as needs_force_resume flag values for consistency."
+> >
+> > Patch [2/9] (which was [3/9] in v2) puts pm_runtime_force_resume() and =
+one
+> > other function that is only used during system sleep transitions under
+> > CONFIG_PM_SLEEP.
+> >
+> > Patch [3/9] (which was [5/9] in v2) causes the smart_suspend flag to be=
+ taken
+> > into account by pm_runtime_force_resume() which allows it to resume dev=
+ices
+> > with smart_suspend set whose runtime PM status has been changed to RPM_=
+ACTIVE
+> > by the PM core at the beginning of system resume.  After this patch, dr=
+ivers
+> > that use pm_runtime_force_suspend/resume() can also set DPM_FLAG_SMART_=
+SUSPEND
+> > which may be useful, for example, if devices handled by them are involv=
+ed in
+> > dependency chains with other devices setting DPM_FLAG_SMART_SUSPEND.
+> >
+> > Since patches [1,3/9] have been reviewed already and patch [2/9] should=
+ not
+> > be particularly controversial, I think that patches [1-3/9] are good to=
+ go.
+> >
+> > Patch [4/9] (which was [2/9] in v2), makes pm_runtime_reinit() clear
+> > needs_force_resume in case it was set during driver remove.
+> >
+> > Patch [5/9] (which was [4/9] in v2) makes pm_runtime_force_suspend() ch=
+eck
+> > needs_force_resume along with the device's runtime PM status upfront, a=
+nd bail
+> > out if it is set, which allows runtime PM status updates to be eliminat=
+ed from
+> > both that function and pm_runtime_force_resume().  I recalled too late =
+that
+> > it was actually necessary for the PCI PM and ACPI PM to work with
+> > pm_runtime_force_suspend() correctly after the subsequent changes and t=
+hat
+> > patch [3/9] did not depend on it.  I have also realized that patch [5/9=
+]
+> > potentially unbreaks drivers that call pm_runtime_force_suspend() from =
+their
+> > "remove" callbacks (see the patch changelog for a bit of an explanation=
+).
+> >
+> > Patch [6/9] (which has not been changed since v2) makes the code for ge=
+tting a
+> > runtime PM callback for a device a bit more straightforward, in prepara=
+tion for
+> > the subsequent changes.
+> >
+> > Patch [7/9] introduces a new device PM flag called strict_midlayer that
+> > can be set by middle layer code which doesn't want its runtime PM
+> > callbacks to be used during system-wide PM transitions, like the PCI bu=
+s
+> > type and the ACPI PM domain, and updates pm_runtime_force_suspend/resum=
+e()
+> > to take that flag into account.  Its changelog has been updated since v=
+2 and
+> > there is a new kerneldoc comment for dev_pm_set_strict_midlayer().
+> >
+> > Patch [8/9] modifies the ACPI PM "prepare" and "complete" callback func=
+tions,
+> > used by the general ACPI PM domain and by the ACPI LPSS PM domain, to s=
+et and
+> > clear strict_midlayer, respectively, which allows drivers collaborating=
+ with it
+> > to use pm_runtime_force_suspend/resume().  The changelog of this patch =
+has been
+> > made a bit more precise since v2.
+> >
+> > That may be useful if such a driver wants to be able to work with diffe=
+rent
+> > PM domains on different systems.  It may want to work with the general =
+ACPI PM
+> > domain on systems using ACPI, or with another PM domain (or even multip=
+le PM
+> > domains at the same time) on systems without ACPI, and it may want to u=
+se
+> > pm_runtime_force_suspend/resume() as its system-wide PM callbacks.
+> >
+> > Patch [9/9] updates the PCI bus type to set and clear, respectively, st=
+rict_midlayer
+> > for all PCI devices in its "prepare" and "complete" PM callbacks, in ca=
+se some
+> > PCI drivers want to use pm_runtime_force_suspend/resume() in the future=
+.  They
+> > will still need to set DPM_FLAG_SMART_SUSPEND to avoid resuming their d=
+evices during
+> > system suspend, but now they may also use pm_runtime_force_suspend/resu=
+me() as
+> > suspend callbacks for the "regular suspend" phase of device suspend (or=
+ invoke
+> > these functions from their suspend callbacks).  The changelog of this p=
+atch has
+> > been made a bit more precise since v2, like the changelog of patch [8/9=
+].
+> >
+> > As usual, please refer to individual patch changelogs for more details.
+> >
+> > Thanks!
 > >
 >
-> My bot found errors running 'make dt_binding_check' on your patch:
->
-> yamllint warnings/errors:
->
-> dtschema/dtc warnings/errors:
-> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mtd/nxp,lpc3220-slc.example.dtb: nand-controller@20020000 (nxp,lpc3220-slc): '#address-cells' is a required property
-> 	from schema $id: http://devicetree.org/schemas/mtd/nand-controller.yaml#
-> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mtd/nxp,lpc3220-slc.example.dtb: nand-controller@20020000 (nxp,lpc3220-slc): '#size-cells' is a required property
-> 	from schema $id: http://devicetree.org/schemas/mtd/nand-controller.yaml#
+> For the v3 series, please add:
+> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-Rob:
- 	I remove ref to nand-controller.yaml at nxp,lpc3220-slc.yaml. does
-it match by node name?
-
-Frank
-
->
-> doc reference errors (make refcheckdocs):
->
-> See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250701212455.3106629-1-Frank.Li@nxp.com
->
-> The base for the series is generally the latest rc1. A different dependency
-> should be noted in *this* patch.
->
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure 'yamllint' is installed and dt-schema is up to
-> date:
->
-> pip3 install dtschema --upgrade
->
-> Please check and re-submit after running the above command yourself. Note
-> that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-> your schema. However, it must be unset to test all examples with your schema.
->
+Thank you!
