@@ -1,200 +1,178 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2070.outbound.protection.outlook.com [40.107.92.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A7A42BDC09;
-	Wed,  2 Jul 2025 14:14:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751465701; cv=fail; b=uo9zxnBM9zOlMOCvlfvIjqagTHmKL2jJaWjPzzNs8ggPYLlt9lNnfSYzreMmQJH9+l8dffuqGicoBKbk1gNB1jLhvTugE0zmaZxjVUyxuH12mXwlcbSRwEhqd7BKofx4nn9h5R46ofaGke6wR8v2IhMTG8g/BMjgeIh9yBUXcuM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751465701; c=relaxed/simple;
-	bh=CUJcf/awwZIRUrU7GBWO1Xrh50LGEIhoX2qkewulIdE=;
-	h=Date:From:To:Cc:Subject:Message-ID:Content-Type:
-	 Content-Disposition:MIME-Version; b=QC2/KOEySIYUGokR2scEm8zpTRGsvDSS7sWqpoOLeMLptO3jWBY81XziyboY3XeMkQtDhSI40kDkpsvyePJjcWNVHEOBsFCodrnxHmnQ0YvPbpO2NWzIdN2j0iXA3AZNT8oUczOT2xX6JtcssMpgbbT6rwoIAp69wqmlTipaqdQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=LAIUfVus; arc=fail smtp.client-ip=40.107.92.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B302C178E;
+	Wed,  2 Jul 2025 14:15:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751465708; cv=none; b=UiombGsVTMQkUsqSSn80tO1I/dx29oSK8tOQn1jKtOguY7LRgP7PAIyKehoPLByUvbGs7zUTEE+c5th8Lhxl/zqiFtmG5PdBI7ETFoO0Qbll/ewMiSG2oqkz9MhqjpxAW7d+dIdsiZcsMXomrToU9zSzxcz1xZVtchrd9la/lzc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751465708; c=relaxed/simple;
+	bh=d5uoh19yxFqx6sK5ttcyq10lXnHTCWAggukYDRXajT0=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=XzfhhMgKUD7znr5D3MwQ9Z4MNfuAi0mt5kBBd6In5UVPMoYpcPz6KgUEqk6MVOdODpK63fDsgcdJ3jb8EVF7DhHYRmds32AVbNj+hxUsUp+fxYvcw9x0jCNEhw4UbWL5iOOlBdQogyeuEDIPcDjb7KcDeo93P3qPhlO9lSG5O0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RE77afpI; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="LAIUfVus"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=S8M5PHI9PnPn6r/k1oALnWNWxvineIhHFhUVG8/I6oDp89V2hsYoehifOs2BHTMrZIlfLCyK4A5+ndTrzds+hjhkrcMvGVFx/gkLb3s6cxtJv1bFr8bx6sm+xOLP29vbXZoSOKxLpw65EEstpWtgezn+zdQXMx+bwPK+v7QdZlFDNfyM48u032a/8YrKz1SFJ83Y5FJJRuh+LDRM3aZxdbmGmcb9cO8pAb0LxuewlKIcbkt6MBMesnlV/QGlu/yOFcT+779Je0YMQqSIFtKHB/XHncxThpgbCxAIPPCazEpu8gp8NLFCCdkjTAeIt72vpj+HydnbmRbZ72pAnF1Kfw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kdaOufJjSx1XcCUaKkaSdCC0BlFbhHCQe6G9g05jPS4=;
- b=M5wk88vqRg8YE1llNkf4684LGanc++JuyMx0yKebGv04LlDh+aIfRb4xTY95wG6OPptYr88sDC2MbxhkklXH/Mo/0QxjoHsgS60VAeweVozzjwypcrvD7ki+XW1roEB7cgjc8pQmoTv0mQVCAKcPmxEf6BPRdNjySdsP+fEhMg61UtvYjHWr9v6Fb19N7egCrbjC2vu3RMNd2tWWfE4NqP5A9q/MpXVwC4R/fL6a/KOWi3mNNU3aZGDf5xpzCiqR4Ehh/+FTnR7iVuRdVIQLdUg2UhFt6nZ2BHXOmU03JF3V8h0/fSte83UQiyKf/TSoNLwS/MnXpQ5UBwUEYYCFGA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kdaOufJjSx1XcCUaKkaSdCC0BlFbhHCQe6G9g05jPS4=;
- b=LAIUfVusYfo1DfvUSnfV+e9qkqXWVzIyUcrhPWemD/U2NEs7IV6Bq8sWISHfKnjRzPJw54dxXnjDANwM8T3V9lY2rlapejb/SvOFcbhWRFHuAwt7ZiaD3FsuL8NvuAWD01kgQ6MAvduRLWmroIfq2eP2fZTsdqHro7XRf0D3RU4M+duVTRTDaj2Cw1YuYdeEOA0i8mQLP+CPVSnzNq0+GD47hWtXMpb7s1b5y6nEeUvb5qlaraBJyUR4t6E8ZScU3V64Fxjy6ZFhDkFVyRAa09Fberl+Y1QdnWDwtQvRQxD+irFBTYzc1+fOlOhIo+jAHR99Z4cHGcFpAvvYtWI8pw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by DM4PR12MB6207.namprd12.prod.outlook.com (2603:10b6:8:a6::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.21; Wed, 2 Jul
- 2025 14:14:55 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%7]) with mapi id 15.20.8880.030; Wed, 2 Jul 2025
- 14:14:55 +0000
-Date: Wed, 2 Jul 2025 11:14:53 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: iommu@lists.linux.dev, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Kevin Tian <kevin.tian@intel.com>
-Subject: [GIT PULL] Please pull IOMMUFD subsystem changes
-Message-ID: <20250702141453.GA1129243@nvidia.com>
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="1XIgBtimj0PC800I"
-Content-Disposition: inline
-X-ClientProxiedBy: BLAPR03CA0088.namprd03.prod.outlook.com
- (2603:10b6:208:329::33) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RE77afpI"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-60707b740a6so7089460a12.0;
+        Wed, 02 Jul 2025 07:15:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751465705; x=1752070505; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Ge8cq6uMbt9t+bUAaC+G6fQUxnqQJz/zQaWC4Noi8MI=;
+        b=RE77afpI//crx9yjNRjqNIkVzlnQQWL1pOdrZ8FRK04AJqZYDRiaprgHZPAsp3tqqm
+         3AaaJ0hjQ3x7bHzUpgPtyT7WzHkpv+Lo14/P+cmWNs4US6pXYN75jdvg1JogEnQB42/1
+         Lz604AEw75amqTU1bEFzLxnZt4XZmzSwp7DlYsYE8Gs9ge8SyWe9vAQTEY28qHddR/vo
+         ucVqlaXavNtYVBcYhduLUggc2NJwyet53fZNpfFEOG/e/4Xd/+ij01wbnPfqUk+WFq92
+         /MMiFqHyzCTnOxgVGNJI6kfqnelxSJmFHhqDOZ72THl0xkkk+AhTZpuIIh2752pLCw8l
+         0STQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751465705; x=1752070505;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ge8cq6uMbt9t+bUAaC+G6fQUxnqQJz/zQaWC4Noi8MI=;
+        b=mqhCWeIFgmb9T3PX31sNiFY/OQJpmeKf43Gf6R0WTyYYqQ4/62q1w9Fcwtfu4IIgtI
+         dXNx238g0dg/DCN0Ao+R+9exOmcxv2wEzQZQd0wrP/5YFlmrKHhhIDAgWPs7dP1LEx6a
+         giSXQqGaEAAJLi58fYEyA93ZVIGiR/7MVQr00uAnV0HQBqApgMS2Yby9znci2WttB+8t
+         tF4U7y403U4EIgjj7cQX03v24/8sucx8aFFHkQwC3Kl0OXR8sY2b4Hp2vUV6w5H96MfC
+         5li3YrZp8OLty7WzLvj51oUm+uQGRGGkNm0Fw4+QTeOt1maTT7Mhojr+pz6U8PXLfp7a
+         IY8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWKHJQvqJL4vck/ls0lok0lX1bEYmwTs7fSYSrgFLcDnlvaEaXhJ0vhW9YGP+4VGEn3BXlN5FdGAQJXhnEY@vger.kernel.org, AJvYcCWQpFPWHqUIHAnf63NS+9ZZb5VHE/nNzHfHXoLYTyZVCMrZruDhDRhqcFoC+K+63CSJYkOwi1yZehI=@vger.kernel.org, AJvYcCXID5xQVm2FpPbuBkPRhdXp1nmoly6JdU4m/T9HSFisoYjNqY8KOlYk7Kg9G+OsxOE3oX67rAmTOOwfIg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzN18teKZ6OS/+gxwODxPYoZ4Jb8DcbuA2wFh9NriEMQ4M0SHw7
+	22ZPofPx6MxJ4sd0xbrvBMUODJ4HfCMCv2a8M8sMRUXeI7gQObD/sHEN
+X-Gm-Gg: ASbGnctyBBZlqAsn5EZWnfCiVQ7Gp1teDBKsuyGwNDe9nzk83PAXlVnJUe7QfS/PQmq
+	42VNzbuSh4ZeCPEvjBiBBEDRyZorfHttRYcK0y25Rv409PyC3jQ7gC0gpBaUvq4WdKezLRpWXPe
+	YGx6yByK8yJWz8VUyWI3o9sJTVdGLz/DW2xXs+gKwQVT4MO9AWusJJ2aEj8f3weJP9XI9uINVWh
+	9btROQd8xro8HT37o9GmiNJQZLc1pt5rb2+nN+WaFr+aljNTKrKy5eTWZYNXPXN2O4w2HH1/PV5
+	iJF4QVPuuaZFEjDWldOK0F9kTJKyKZmuExVUovy57ciryQyFjaLaUKyMAEnFBH2+oMr2SNMPh/y
+	WKONRP4mcxYLkJVRYl888cvLGhz8XYzK6
+X-Google-Smtp-Source: AGHT+IHd8th8DxuBlZIOOIpxG5BirHhAP4zcid9RIJhvhiltbyTblS1FYKs0knm08Gq5EYUrkam3vw==
+X-Received: by 2002:a05:6402:2748:b0:60b:9f77:e514 with SMTP id 4fb4d7f45d1cf-60e52cc6896mr2681925a12.10.1751465704824;
+        Wed, 02 Jul 2025 07:15:04 -0700 (PDT)
+Received: from ?IPV6:2a03:83e0:1126:4:7e:645c:aa81:5180? ([2620:10d:c092:500::7:3d29])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60e5818db90sm895836a12.56.2025.07.02.07.15.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Jul 2025 07:15:04 -0700 (PDT)
+Message-ID: <6d8832bb-b5a7-4cd9-b92c-c93f2c1fe182@gmail.com>
+Date: Wed, 2 Jul 2025 15:15:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|DM4PR12MB6207:EE_
-X-MS-Office365-Filtering-Correlation-Id: 31d9fb8c-6a3f-4364-6e03-08ddb972d194
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?We5OoetCjv+SOIAQAvLKW28+RCf4tBrSrAtWZfogmjssidepH51GnLZl7a2i?=
- =?us-ascii?Q?0epdHgF7i2odjNPKU9zeDWvAnbdXPWl9rCoDmYkyTI9Yp+qxx3tckwVBRpv3?=
- =?us-ascii?Q?2BKRPOM6Z9rPJT3C538VE1JdxQfEUv4k3m0wIqeiAXgCiF0vcGlVEgRacnIb?=
- =?us-ascii?Q?9xGqqNEBd5dYToClzK0JcjoX6jRtTkKMYkZPM6qF4rJN+yR902fbK+EUUAk2?=
- =?us-ascii?Q?Zxp5s7LCNLSJduQeKiqWZW3XK9U01r4/sf++C2txjuiv7lUFpGBDui30vUjX?=
- =?us-ascii?Q?8GAMvWEbHiS407091YyqSq7Dn5EV7qAcO8iCeCUzI/RIfW6UFIL6t37Y8k1w?=
- =?us-ascii?Q?EEkEf9cpuIMuoJ2yk68jWPeVBdSsaL4IqK3mrHNrp3I1fvRko+jMzJg6IeQJ?=
- =?us-ascii?Q?aKMsUBvGil74dZ16WdIbssf6CNZyDe0mExvOPc+LQW+lIg4Y3wPtKf3hkeKV?=
- =?us-ascii?Q?nsbQVHk+IEp2/4lgaWpcqtE5L3EIJgLeNMqrmHfMQWlHjKYDxz4iWvX2zdgU?=
- =?us-ascii?Q?2ywD6KiUFLr1ELN1w/9HLr18zA3VKym7RpQH8APcAl7husEYOfZEYCwUtVZO?=
- =?us-ascii?Q?RcZXYtl78/lfqvmf5r0Wybcaf1wh9rKeYm0IyqHJN4+K1TiGDCk2swaan1Wr?=
- =?us-ascii?Q?o397Dl3QftB7itux/388UVDrIC6Z5+hej+bfpTFdyEzoMhBu34Wk8KTnKg7o?=
- =?us-ascii?Q?3uRqbrrDmVz05IDuLhaAWzDzy6SovEIcpZrwBvieQNoFlYrDJtzrM2W8sXoq?=
- =?us-ascii?Q?Y9VJlQfgJdJFBJBaEHB4Yja9ECzZdbN/hfB6wE0FkUq5i3gdpAvr6F4b+jOk?=
- =?us-ascii?Q?AvALbWPdv05CR5E4uUBGkuo/Slmr8j6bD/NzBAYryYjYAdvH6ea3Ak32Z/eQ?=
- =?us-ascii?Q?YHNF/7Rbae2cQ1QDz6uSQJbugEe7Zwp+Tjo3EZZuszSSfb6d69TSnE97XPjc?=
- =?us-ascii?Q?MZtjqjJGtL0zoD2jum0aDiNkVRUFqyixuxgR2CFBGqbTCwLsJBgiAnLnwlxm?=
- =?us-ascii?Q?RyEy48SYY5Xrp23iuPPoCf4SANl2AM+hPWXnxXM2Glpc5gwEBbBWcSFkQaHi?=
- =?us-ascii?Q?DpEJK/opoCgRE9sos6Hyi3RrMuOnyh0zm8gYwtv+2FZh7Q1XH39Fnm1owO9H?=
- =?us-ascii?Q?2d6rOHBmbT3OEEunOmZ1CteWtNizQ96mbLWNf8JHtsIOzdDrHoeV5cmXpP5P?=
- =?us-ascii?Q?xtEuEEWp2C8Z8SysIHSAyRbXaVUxrh73EyW/cnuBByiiTXXbgZx8UbiW29c0?=
- =?us-ascii?Q?3l77+v2c4Jy2x/i09bB8tAJyvpuEC0XJqWTva64eKz9f3yxEW9unrz64ybZA?=
- =?us-ascii?Q?PLGqerjqb1CZ/aa2GZOCQ0thXYKnrCfh7mqgrfeiapiDjfHCONy66S0dmin3?=
- =?us-ascii?Q?sC3+OwH4o0HgoJ8dcxClmB00/7w56QqDFLFJcm0feQr45yXaaWgPf2thcZIG?=
- =?us-ascii?Q?pKD40jbsctM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?JBKlYaBa+pQJ9nihwgDAIumWgXHSF/Qs2r1o7WYgFSoC7L/BQVK2oA8LNq2W?=
- =?us-ascii?Q?35wCLnJ73e7XuSd4OoTyN7MLGZhtyKS5gnWu0e5JrcGRIF8WJOvuL15s+IHz?=
- =?us-ascii?Q?2TTCz0mjRCRbxTgLPT8GC0uEw6ou2D6QpT8WQIOD0Zk1x/gqeq13ukyFJOX0?=
- =?us-ascii?Q?Mdy5Y9UoBMHH3Qm/zPJyCo+demWlLVAyz5HeWtpmH909woSkWLv/C7dRptxW?=
- =?us-ascii?Q?LLLPZl1uaGCE0VpHBToZrEgUMi7jT/ik7LobbT/sGCK9RkOoScBrkP1Uy2zJ?=
- =?us-ascii?Q?qMscyRydjGXxEBlr2jP5JXZo21kqh5udVPaOk23ZPv3/PsW5Mre/JxhXGu1c?=
- =?us-ascii?Q?uGHypFoJjp1r15YRUOM4OSPBMx0YF90ZSXALd/CzvomkqdpVy3JA/JrSJR7p?=
- =?us-ascii?Q?CaheReE254FgRIX83u1zRjoMeKropPT/xMpgkV8PBYPDo1wLHrLUJOvfIZES?=
- =?us-ascii?Q?0FsNmbG+IQ9wWuvtRfb6tcSlDUiAjg+TrSkWpCWh1Sc64W5ICDkffNYoOMu2?=
- =?us-ascii?Q?3qX8MLtEgVyeDSqrz+3PMUn4otJMYyPsAuf2Rc5CSFFLnEe9ruS2c2/bHlGF?=
- =?us-ascii?Q?Ur4hIE9jQkjRi2Qod8swhfWRsqFGIC/Onwef/f3zeztfzOrDaM9HVjc1d0KD?=
- =?us-ascii?Q?0P6j28WNXl5D5n+FJE12qXlOOlLmg/ORhWTvq4P0ymi5RAvEekt3xShlmb08?=
- =?us-ascii?Q?p8ZyNKEIBooTEAzLxiW72b+Y0lYF5riMnW7pbvGLiKLyqHuc/xIe5Ku4T5WN?=
- =?us-ascii?Q?Ih1jSrA1SJaQczFNPDdBQPMvJKqEiEqZLBGYAHh+fzLCSk2/rA/pHwk5iSoQ?=
- =?us-ascii?Q?Tf1gAGLmoZJeIfVciwXLfsMhqN61lBd0DP/8AibAkWDJu1D/QRkWIMU3mx1r?=
- =?us-ascii?Q?iuuKTZFE37JNUqmY/e6LMebiano/sKy6JfMylGbcfx5RJGId9byQmxAqh4m7?=
- =?us-ascii?Q?mnyEBcoMd4U2CuhY8FKhc5iN/TxFmFeuZGPwzd8095dVBsC9MnpBk5WIEaxt?=
- =?us-ascii?Q?BbkR9NpAOeKLe8Esn1ZJrNZPAnJLFq77GrZtzYsqBivQ2nA3o6qr7XzMYshv?=
- =?us-ascii?Q?q1SjS2pI6DRWb3iXspyx9ygEe52IB1hSfOiVP4wXdVtKy0o1MI7QyJM+ozEJ?=
- =?us-ascii?Q?m24jUVbn/7k1rE6x8xdgl8RQ/sak/t3Y/Bk59C0Fb0ekCJ70fIYbFfz3cRza?=
- =?us-ascii?Q?S8tjJPDQbj9qQfthJSxlI1gy4OatVWznrQgV0z+PWY0sXbsIlR+DpU9UFC/F?=
- =?us-ascii?Q?Q8iRymkZnjbW/SOck5EJph/I1qaC+0GKSQxKjNCdhkvbejCZjnFLwJRbhgrt?=
- =?us-ascii?Q?IP8WPToVlz7FRD/ONBTftnASEaw9mh6/c15mxNa7NpGJt2Mx7f0rKmFzlYSf?=
- =?us-ascii?Q?FVWWHlzulNNWQgpXQpwm36rm/52KUZqv5poh9Y8yXCT5QI3TMMEC0JlNyI7l?=
- =?us-ascii?Q?MBVi4+Q6bPy01wkUKAQmG7ggkxBqqaIw/hxHS8v5UzWeVm5rPs62ZrfNyB6d?=
- =?us-ascii?Q?4utSVxnjKj3sjOhPylAxVNzSc89i10/xsXCmF3dTG7JYbawVTI6FqcYiqjbE?=
- =?us-ascii?Q?cQG6H5bo2v+H24wF12Q=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 31d9fb8c-6a3f-4364-6e03-08ddb972d194
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 14:14:55.4152
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kBrJt3VGOye4XgGOSkmOhuX37WGEY2MiFNXGew785Mbmqghs/+MNpHfONiR5es3A
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6207
+User-Agent: Mozilla Thunderbird
+From: Usama Arif <usamaarif642@gmail.com>
+Subject: Re: [DISCUSSION] proposed mctl() API
+To: David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Shakeel Butt <shakeel.butt@linux.dev>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Arnd Bergmann <arnd@arndb.de>, Christian Brauner <brauner@kernel.org>,
+ SeongJae Park <sj@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+ Johannes Weiner <hannes@cmpxchg.org>, Barry Song <21cnbao@gmail.com>,
+ linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-api@vger.kernel.org, Pedro Falcato <pfalcato@suse.de>,
+ Matthew Wilcox <willy@infradead.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+References: <85778a76-7dc8-4ea8-8827-acb45f74ee05@lucifer.local>
+ <e166592f-aeb3-4573-bb73-270a2eb90be3@gmail.com>
+ <d7ccb47b-7124-45e9-ace0-b0fa49f881ef@lucifer.local>
+ <f8db6b39-f11a-4378-8976-4169f4674e85@gmail.com>
+ <fcaa7ce6-3f03-4e3d-aa9f-1b1b53ed88f5@lucifer.local>
+ <2fd7f80c-2b13-4478-900a-d65547586db3@gmail.com>
+Content-Language: en-US
+In-Reply-To: <2fd7f80c-2b13-4478-900a-d65547586db3@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
---1XIgBtimj0PC800I
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> As I replied to Matthew in [1], it would be amazing if it was not needed, but thats not
+> how it works in the medium term and I dont think it will work even in the long term.
+> I will paste my answer from [1] below as well:
+> 
+> If we have 2 workloads on the same server, For e.g. one is database where THPs 
+> just dont do well, but the other one is AI where THPs do really well. How
+> will the kernel monitor that the database workload is performing worse
+> and the AI one isnt?
+> 
+> I added THP shrinker to hopefully try and do this automatically, and it does
+> really help. But unfortunately it is not a complete solution.
+> There are severely memory bound workloads where even a tiny increase
+> in memory will lead to an OOM. And if you colocate the container thats running
+> that workload with one in which we will benefit with THPs, we unfortunately
+> can't just rely on the system doing the right thing.
+> 
+> It would be awesome if THPs are truly transparent and don't require
+> any input, but unfortunately I don't think that there is a solution
+> for this with just kernel monitoring.
+> 
+> This is just a big hint from the user. If the global system policy is madvise
+> and the workload owner has done their own benchmarks and see benefits
+> with always, they set DEFAULT_MADV_HUGEPAGE for the process to optin as "always".
+> If the global system policy is always and the workload owner has done their own 
+> benchmarks and see worse results with always, they set DEFAULT_MADV_NOHUGEPAGE for 
+> the process to optin as "madvise". 
+> 
+> [1] https://lore.kernel.org/all/162c14e6-0b16-4698-bd76-735037ea0d73@gmail.com/
+> 
+> 
+> I havent seen activity on this thread over the past week, but I was hoping
+> we can reach a consensus on which approach to use, prctl or mctl.
+> If its mctl and if you don't think this should be done, please let me know
+> if you would like me to work on this instead. This is a valid big realworld
+> usecase that is a real blocker for deploying THPs in workloads in servers.
+> 
 
-Hi Linus,
+Hi!
 
-Some small iommufd selftest changes to make it work again in 6.16-rc.
+Just wanted to check if anyone has any thoughts on this?
+
+I think we are all in agreement for the long term eventual goal, have THP just work
+and be default enabled. From our perspective, we (meta) have spent a significant
+amount of time and effort over the last 18 months trying to make changes/optimizations
+where we could actually have it so and can transparently and reliably get hugepages.
+This includes the THP shrinker [1], changes to allocator and reclaim/compaction code
+to reduce fragmentation [2] and reducing type mixing [3].
+We want to continue spending more time and resources in trying to achieve this.
+
+But in the current state, not being able to selectively enable THPs always for certain
+workloads is a significant blocker in trying to roll it out at hyperscaler levels, and
+from the attempts made by others, I do believe its a problem others are facing as well.
+Our long term aim is to have transparent_hugepage/enabled set to always across the fleet.
+But for that we need to have the ability to enable it selectively for workloads that
+show benefit, try and solve problems that come up in production when it is enabled,
+and see why for those that regress. This can not be done with just transparent_hugepage/enabled
+for hyperscalers which run vastly different types of containerized workloads on the same
+machine.
+
+There have been multiple efforts from different people on trying to address similar
+problems (including via cgroup[4] and bpf[5]). IMHO, its quite clear that unfortunately
+just having a system wide setting for THP is not enough at the moment or in the near future,
+especially when running workloads that have completely different characteristic on the same server.
+
+
+In terms of the approach of doing this, IMHO, I dont think the way to do this
+is controversial. After the great feedback from Lorenzo on the prctl series, the
+approach would be for userpsace to make a call that just does for_each_vma of the process,
+madvises the VMAs, and changes the mm->def_flags for the process. We are not making changes
+to the pagefaulting path (thp_vma_allowable_orders has no code change which is awesome).
+In terms of what the call is going to be, there has been a lot of debate (and my preference
+of prctl is clear), I am ok with either with prctl or mctl, as it should not change
+the actual implementation. If there is consensus, I would love to send a RFC for how the
+prctl or mctl solution would look like.
+
+
+[1] https://lore.kernel.org/all/20240830100438.3623486-1-usamaarif642@gmail.com/
+[2] https://lore.kernel.org/all/20250313210647.1314586-1-hannes@cmpxchg.org/
+[3] https://lore.kernel.org/all/20240320180429.678181-1-hannes@cmpxchg.org/
+[4] https://lore.kernel.org/linux-mm/20241030083311.965933-1-gutierrez.asier@huawei-partners.com/
+[5] https://lore.kernel.org/all/20250520060504.20251-1-laoar.shao@gmail.com/
 
 Thanks,
-Jason
-
-The following changes since commit 86731a2a651e58953fc949573895f2fa6d456841:
-
-  Linux 6.16-rc3 (2025-06-22 13:30:08 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/jgg/iommufd.git tags/for-linus-iommufd
-
-for you to fetch changes up to 9a96876e3c6578031fa5dc5dde7759d383b2fb75:
-
-  iommufd/selftest: Fix build warnings due to uninitialized mfd (2025-06-24 15:45:13 -0300)
-
-----------------------------------------------------------------
-iommufd 6.16 first rc pull
-
-Some changes to the userspace selftest framework cause the iommufd tests
-to start failing. This turned out to be bugs in the iommufd side that were
-just getting uncovered.
-
-- Deal with MAP_HUGETLB mmaping more than requested even when in MAP_FIXED
-  mode
-
-- Fixup missing error flow cleanup in the test
-
-- Check that the memory allocations suceeded
-
-- Suppress some bogus gcc 'may be used uninitialized' warnings
-
-----------------------------------------------------------------
-Nicolin Chen (4):
-      iommufd/selftest: Fix iommufd_dirty_tracking with large hugepage sizes
-      iommufd/selftest: Add missing close(mfd) in memfd_mmap()
-      iommufd/selftest: Add asserts testing global mfd
-      iommufd/selftest: Fix build warnings due to uninitialized mfd
-
- tools/testing/selftests/iommu/iommufd.c       | 40 +++++++++++++++++++--------
- tools/testing/selftests/iommu/iommufd_utils.h |  9 ++++--
- 2 files changed, 36 insertions(+), 13 deletions(-)
-
---1XIgBtimj0PC800I
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRRRCHOFoQz/8F5bUaFwuHvBreFYQUCaGU+2AAKCRCFwuHvBreF
-YRIqAP9Y8lOHEBBJiqP3S3OpCP1dqgszhAh0iqJhfXVyJaPwCQD8DgtXZXbhNqYU
-vnn1pXxw/8kgg2FdW0N5aSEwrfPvMwg=
-=Qi1Z
------END PGP SIGNATURE-----
-
---1XIgBtimj0PC800I--
+Usama
