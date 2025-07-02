@@ -1,40 +1,40 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B198274668
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 192C427465A
 	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 12:13:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751458382; cv=none; b=r6o2KKn6M2jaQ+ZBT3oRTuTD5CB99QXIzd7ZYun/4QN3nZaFiOxNpMWi3SKsj+kGaNn4LAPMfY1A702iu6Qx+blCnWwUKKUcjM7NfZgJeAod2yz8FzkCl6oyzHXxU8reVfPOcaBMUn0ziIWcjaQZ2Rl6SfrjCz6aUeb/U9ySao8=
+	t=1751458383; cv=none; b=WT9aHkLDAEvY0XEIYabyterAvOfccUvJPNfGtUOxNftf4eQ3Q/Ywu3QPDdWbI3pyjQ+YF4BKjrinwm/ncCZ5Zudrrln7YHm1cB7Kjfd0DkJdEV4IzZKTefxgdYiYkjXaNA2TIWVhYtEK44GQDEJi0CSc4GszRNRaJ1tEuAkeyM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751458382; c=relaxed/simple;
-	bh=98o4EUwZvkaJiNLHs0TNmxNMeC//8w5lyaohIp/i0gc=;
+	s=arc-20240116; t=1751458383; c=relaxed/simple;
+	bh=P8jphMyMMPpfZst8bg+ufd2/3jz+uX9EB9UuFN8r+0g=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=reJHuaEoV95pyn95bSTdBF4ZMAguQMOmUGnl+eu0ki+hofgB5+RAYQ08F5zpjus0cMiVtS8ldh98xcpi/citpbfCIM5nQmnu9M9BKRrdHiMR5V76OIx7g3GwQ9qYaCCeMWis0viCIkl3lqMh6KvRvl8wEZ+xCmnq5HJ+EUFE4Ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lpIgoQbS; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type; b=JSQWcNB0oXuTmDCPbewMpAzQwwsa8+CW9/RgPgp3E6Am0iVTeko/1kE432IuRNxtbk+vbH2ptwI8xs1v8Bp82Fu4tRJMCb2uts366d0z5cZ7iNWpN1dkXEpEPRe72KHerTpv7B6xP9nNILG6fL1XlVghNI75JMBzBuEkJN6pQ+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=UPZGRsJ3; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lpIgoQbS"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UPZGRsJ3"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
 	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:In-Reply-To;
-	bh=QQTEg01HMGHcuECpwoqe+vJNXoQ2Sir/0YX71f4+jJQ=; b=lpIgoQbS7GXrdriJDYOyAFWJ6j
-	07riU9eKQpNScyeKeEC46zoeabwfcpKGP+sf95E2DxPnwjxyooJtAUwpa9hV2oH9q+n9O2cSBAeAZ
-	9rtPDG9ognst698Hdf31ckB4zwoQJh99bZeS8eNaEcYiA4WJtrvzsKJczi4NBG8XtQESTsOm4+8Zf
-	/kbmeNydesD5NpOEk3euXA5dJBXCcwhGYnSQLBzdCcf4mD+morqgqFX117k54oOuVrR9JQvT5OF9q
-	e+J42+MijhuNVLsiCPv4iXU9GbZlL3oqdFoIfbUxQHT9CVifY1IYAUxmpA7MALsHbrjqT/JbUfvGP
-	8gKJXY/g==;
+	bh=6xCtwYthTWBcEmQ5LUN1G1tEYsMC0rBESkEr3zoStCA=; b=UPZGRsJ3JQo4jYqfnYr22wPqps
+	fdJIVOGFTZ4Dq+vueGR4oXN5AjidByT9lu0XsN0NGqmtD/Gl/PvB9bQ7l8AxGmXOeC/YztEDHmDdX
+	beUzaugyJ60aOEpMnzf6aIEu+R7zq/xQecJqN5qxWUDSBJ87IXKsrTZyIt5piQwUJaLhjpZKImfdO
+	UTXlcK4c6f35K7x/gnh1wb3cFjRInoLvys4KZhh9ThH2CZjhqdx+KDDXLec9nvx5Ih4dH/gSEzuKK
+	S082KVk2OGMX2yqpZoSUhyeU4JinBVe/hIStQhpb21ZupcBuOdc7SxcZixvp3XYSgLr/93TIDDQFo
+	cH4WuCBg==;
 Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
 	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uWwKV-00000009lF1-3VB2;
-	Wed, 02 Jul 2025 12:12:47 +0000
+	id 1uWwKV-00000009lFA-3yzX;
+	Wed, 02 Jul 2025 12:12:48 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
-	id BF363300158; Wed, 02 Jul 2025 14:12:46 +0200 (CEST)
-Message-ID: <20250702121158.465086194@infradead.org>
+	id D4E1F3001F7; Wed, 02 Jul 2025 14:12:46 +0200 (CEST)
+Message-ID: <20250702121159.050144163@infradead.org>
 User-Agent: quilt/0.68
-Date: Wed, 02 Jul 2025 13:49:26 +0200
+Date: Wed, 02 Jul 2025 13:49:31 +0200
 From: Peter Zijlstra <peterz@infradead.org>
 To: mingo@redhat.com,
  juri.lelli@redhat.com,
@@ -47,7 +47,7 @@ To: mingo@redhat.com,
  clm@meta.com
 Cc: linux-kernel@vger.kernel.org,
  peterz@infradead.org
-Subject: [PATCH v2 02/12] sched/deadline: Less agressive dl_server handling
+Subject: [PATCH v2 07/12] psi: Split psi_ttwu_dequeue()
 References: <20250702114924.091581796@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -57,147 +57,104 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-Chris reported that commit 5f6bd380c7bd ("sched/rt: Remove default
-bandwidth control") caused a significant dip in his favourite
-benchmark of the day. Simply disabling dl_server cured things.
+Currently psi_ttwu_dequeue() is called while holding p->pi_lock and
+takes rq->lock. Split the function in preparation for calling
+ttwu_do_migration() while already holding rq->lock.
 
-His workload hammers the 0->1, 1->0 transitions, and the
-dl_server_{start,stop}() overhead kills it -- fairly obviously a bad
-idea in hind sight and all that.
-
-Change things around to only disable the dl_server when there has not
-been a fair task around for a whole period. Since the default period
-is 1 second, this ensures the benchmark never trips this, overhead
-gone.
-
-Fixes: 557a6bfc662c ("sched/fair: Add trivial fair server")
-Reported-by: Chris Mason <clm@meta.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20250520101727.507378961@infradead.org
 ---
- include/linux/sched.h   |    1 +
- kernel/sched/deadline.c |   25 ++++++++++++++++++++++---
- kernel/sched/fair.c     |    9 ---------
- 3 files changed, 23 insertions(+), 12 deletions(-)
+ kernel/sched/core.c  |   18 ++++++++++++++----
+ kernel/sched/stats.h |   24 +++++++++++++-----------
+ 2 files changed, 27 insertions(+), 15 deletions(-)
 
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -701,6 +701,7 @@ struct sched_dl_entity {
- 	unsigned int			dl_defer	  : 1;
- 	unsigned int			dl_defer_armed	  : 1;
- 	unsigned int			dl_defer_running  : 1;
-+	unsigned int			dl_server_idle    : 1;
- 
- 	/*
- 	 * Bandwidth enforcement timer. Each -deadline task has its
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -1215,6 +1215,8 @@ static void __push_dl_task(struct rq *rq
- /* a defer timer will not be reset if the runtime consumed was < dl_server_min_res */
- static const u64 dl_server_min_res = 1 * NSEC_PER_MSEC;
- 
-+static bool dl_server_stopped(struct sched_dl_entity *dl_se);
-+
- static enum hrtimer_restart dl_server_timer(struct hrtimer *timer, struct sched_dl_entity *dl_se)
- {
- 	struct rq *rq = rq_of_dl_se(dl_se);
-@@ -1234,6 +1236,7 @@ static enum hrtimer_restart dl_server_ti
- 
- 		if (!dl_se->server_has_tasks(dl_se)) {
- 			replenish_dl_entity(dl_se);
-+			dl_server_stopped(dl_se);
- 			return HRTIMER_NORESTART;
- 		}
- 
-@@ -1639,8 +1642,10 @@ void dl_server_update_idle_time(struct r
- void dl_server_update(struct sched_dl_entity *dl_se, s64 delta_exec)
- {
- 	/* 0 runtime = fair server disabled */
--	if (dl_se->dl_runtime)
-+	if (dl_se->dl_runtime) {
-+		dl_se->dl_server_idle = 0;
- 		update_curr_dl_se(dl_se->rq, dl_se, delta_exec);
-+	}
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3774,17 +3774,27 @@ static int ttwu_runnable(struct task_str
+ 	return 1;
  }
  
- void dl_server_start(struct sched_dl_entity *dl_se)
-@@ -1663,7 +1668,7 @@ void dl_server_start(struct sched_dl_ent
- 		setup_new_dl_entity(dl_se);
+-static inline bool ttwu_do_migrate(struct task_struct *p, int cpu)
++static inline bool ttwu_do_migrate(struct rq *rq, struct task_struct *p, int cpu)
+ {
++	struct rq *p_rq = rq ? : task_rq(p);
++
+ 	if (task_cpu(p) == cpu)
+ 		return false;
+ 
+ 	if (p->in_iowait) {
+ 		delayacct_blkio_end(p);
+-		atomic_dec(&task_rq(p)->nr_iowait);
++		atomic_dec(&p_rq->nr_iowait);
  	}
  
--	if (!dl_se->dl_runtime)
-+	if (!dl_se->dl_runtime || dl_se->dl_server_active)
- 		return;
+-	psi_ttwu_dequeue(p);
++	if (psi_ttwu_need_dequeue(p)) {
++		if (rq) {
++			lockdep_assert(task_rq(p) == rq);
++			__psi_ttwu_dequeue(p);
++		} else {
++			guard(__task_rq_lock)(p);
++			__psi_ttwu_dequeue(p);
++		}
++	}
+ 	set_task_cpu(p, cpu);
+ 	return true;
+ }
+@@ -4283,7 +4293,7 @@ int try_to_wake_up(struct task_struct *p
+ 		 * their previous state and preserve Program Order.
+ 		 */
+ 		smp_cond_load_acquire(&p->on_cpu, !VAL);
+-		if (ttwu_do_migrate(p, cpu))
++		if (ttwu_do_migrate(NULL, p, cpu))
+ 			wake_flags |= WF_MIGRATED;
  
- 	dl_se->dl_server_active = 1;
-@@ -1684,6 +1689,20 @@ void dl_server_stop(struct sched_dl_enti
- 	dl_se->dl_server_active = 0;
+ 		ttwu_queue(p, cpu, wake_flags);
+--- a/kernel/sched/stats.h
++++ b/kernel/sched/stats.h
+@@ -191,23 +191,24 @@ static inline void psi_dequeue(struct ta
+ 	psi_task_change(p, p->psi_flags, 0);
  }
  
-+static bool dl_server_stopped(struct sched_dl_entity *dl_se)
-+{
-+	if (!dl_se->dl_server_active)
+-static inline void psi_ttwu_dequeue(struct task_struct *p)
++static inline bool psi_ttwu_need_dequeue(struct task_struct *p)
+ {
+ 	if (static_branch_likely(&psi_disabled))
+-		return;
++		return false;
+ 	/*
+ 	 * Is the task being migrated during a wakeup? Make sure to
+ 	 * deregister its sleep-persistent psi states from the old
+ 	 * queue, and let psi_enqueue() know it has to requeue.
+ 	 */
+-	if (unlikely(p->psi_flags)) {
+-		struct rq_flags rf;
+-		struct rq *rq;
+-
+-		rq = __task_rq_lock(p, &rf);
+-		psi_task_change(p, p->psi_flags, 0);
+-		__task_rq_unlock(rq, &rf);
+-	}
++	if (!likely(!p->psi_flags))
 +		return false;
 +
-+	if (dl_se->dl_server_idle) {
-+		dl_server_stop(dl_se);
-+		return true;
-+	}
-+
-+	dl_se->dl_server_idle = 1;
-+	return false;
++	return true;
 +}
 +
- void dl_server_init(struct sched_dl_entity *dl_se, struct rq *rq,
- 		    dl_server_has_tasks_f has_tasks,
- 		    dl_server_pick_f pick_task)
-@@ -2435,7 +2454,7 @@ static struct task_struct *__pick_task_d
- 	if (dl_server(dl_se)) {
- 		p = dl_se->server_pick_task(dl_se);
- 		if (!p) {
--			if (dl_server_active(dl_se)) {
-+			if (!dl_server_stopped(dl_se)) {
- 				dl_se->dl_yielded = 1;
- 				update_curr_dl_se(rq, dl_se, 0);
- 			}
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5879,7 +5879,6 @@ static bool throttle_cfs_rq(struct cfs_r
- 	struct cfs_bandwidth *cfs_b = tg_cfs_bandwidth(cfs_rq->tg);
- 	struct sched_entity *se;
- 	long queued_delta, runnable_delta, idle_delta, dequeue = 1;
--	long rq_h_nr_queued = rq->cfs.h_nr_queued;
++static inline void __psi_ttwu_dequeue(struct task_struct *p)
++{
++	psi_task_change(p, p->psi_flags, 0);
+ }
  
- 	raw_spin_lock(&cfs_b->lock);
- 	/* This will start the period timer if necessary */
-@@ -5963,10 +5962,6 @@ static bool throttle_cfs_rq(struct cfs_r
- 
- 	/* At this point se is NULL and we are at root level*/
- 	sub_nr_running(rq, queued_delta);
--
--	/* Stop the fair server if throttling resulted in no runnable tasks */
--	if (rq_h_nr_queued && !rq->cfs.h_nr_queued)
--		dl_server_stop(&rq->fair_server);
- done:
- 	/*
- 	 * Note: distribution will already see us throttled via the
-@@ -7060,7 +7055,6 @@ static void set_next_buddy(struct sched_
- static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
- {
- 	bool was_sched_idle = sched_idle_rq(rq);
--	int rq_h_nr_queued = rq->cfs.h_nr_queued;
- 	bool task_sleep = flags & DEQUEUE_SLEEP;
- 	bool task_delayed = flags & DEQUEUE_DELAYED;
- 	struct task_struct *p = NULL;
-@@ -7144,9 +7138,6 @@ static int dequeue_entities(struct rq *r
- 
- 	sub_nr_running(rq, h_nr_queued);
- 
--	if (rq_h_nr_queued && !rq->cfs.h_nr_queued)
--		dl_server_stop(&rq->fair_server);
--
- 	/* balance early to pull high priority tasks */
- 	if (unlikely(!was_sched_idle && sched_idle_rq(rq)))
- 		rq->next_balance = jiffies;
+ static inline void psi_sched_switch(struct task_struct *prev,
+@@ -223,7 +224,8 @@ static inline void psi_sched_switch(stru
+ #else /* !CONFIG_PSI: */
+ static inline void psi_enqueue(struct task_struct *p, bool migrate) {}
+ static inline void psi_dequeue(struct task_struct *p, bool migrate) {}
+-static inline void psi_ttwu_dequeue(struct task_struct *p) {}
++static inline bool psi_ttwu_need_dequeue(struct task_struct *p) { return false; }
++static inline void __psi_ttwu_dequeue(struct task_struct *p) {}
+ static inline void psi_sched_switch(struct task_struct *prev,
+ 				    struct task_struct *next,
+ 				    bool sleep) {}
 
 
