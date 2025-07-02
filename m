@@ -1,159 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B70D23D2A3;
-	Wed,  2 Jul 2025 12:11:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5783F182D0
+	for <linux-kernel@vger.kernel.org>; Wed,  2 Jul 2025 12:12:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751458300; cv=none; b=GYL8e7FWyecC6yVZj3eusrT5ct3UR0e3R3V5ACji+Up+mIs3wqVkx4X7cuAgLmje1Dp9DCB66cuvjs3kmX+XCFVGkSMqptce+xHEY4L97az0EbqLN5Q3LknGjmyCQeitQiCMD3j6phNXWRca63+zJq54R7Rv98W31MYNlvlDJJk=
+	t=1751458374; cv=none; b=ECYVx+OB6ES/ObhrqAY2+qCN9QCITVmV/EIgKYrFppY9wFRxNrYw2vXj8k2UtLnISx3aB8b2G7hLG6WYR9zUZBm8NCNfDfqJrXvB6ewgc97ISyBTp10QnqR5qPO0ej00DIgEbVyuCQkvdgl0cQr25Hf+FG2yFlJhMBrNdpjqOfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751458300; c=relaxed/simple;
-	bh=C6TFBmrfVjExnWTXpHpcNDBsptXWGqMJMSNbdjB9Dsc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GRRnSQvOk0TbakKzreDPrXjdPfNhzFsgUIY9xUQQsq8tBImBrlfH3DRCNwaAyf83eCvtoMeydisdAAccsV3T71tC2BhBSK6RWweMfYO6nk5RY24st4QlKRhapakzWv7NLcJSsZYMoAbQuktXyrqCB2gERxDBU79ArIiRrnN2Dl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sRi+xsZ9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751458374; c=relaxed/simple;
+	bh=hjrOH/DyRiwQN7L97mVRQ8B6fYAQ5hdNaE2oSEhJssU=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=Hc6IfnvjbaJAfMsf9Il14WKn+mb+LgVZpKjRlqnWoFjDeCnkv0bvFwdWi27RENRTcjqrakNg+TbkC1F/IqAW5VZf+G3WclPmaOm0YbzbwNwKF9KL8UxcN7y/e1F7cFo79z6BtukAozRWAtFDdgTFmCDY4cyeRvlWjZTCUzd3qxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=riB24QJW; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sRi+xsZ9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EEB1C4CEED;
-	Wed,  2 Jul 2025 12:11:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751458299;
-	bh=C6TFBmrfVjExnWTXpHpcNDBsptXWGqMJMSNbdjB9Dsc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sRi+xsZ9QbF3yUiq3dqKYF/zZrk8tOZF45+9yTlxFrJoS5sBraE58BkNmSIofx3Yq
-	 HGCgTyMkOyDjGMSU7hI1YJENxKCTG5XF/+1JdLPu155hvc94K8lFNmTbFdsYvWuac2
-	 FwZh9B7T+GllpGaw2JdtHo8FDQgXureyBOMnE4BX99e3eSpimPHIUIHeEJi54CkPFQ
-	 gziXP66tWp6o29He2NAqbx+kL6n9JhK7BZuxrSWTJULHRu6iRVWrTvlNC68ommt+Lq
-	 BwQcCzavA2Kjb5Z6l6GXdh6DCjFIPsj2aeBM7RrMbLrhbrfTF4Dz0GymJ3P3mfVhdY
-	 eqBAH/vWgG7Yw==
-Message-ID: <1cc6f462-dfd2-46ed-8534-a44812ef1cbd@kernel.org>
-Date: Wed, 2 Jul 2025 14:11:35 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="riB24QJW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Subject:Cc:To:From:Date:Message-ID:
+	Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=baQ2kUn8mW4HR3oLyl8RqpRcPxER907THYJHhIqRP/g=; b=riB24QJWZ+wlRScg4S/ARiDEfV
+	EqF/L8X627+MrcHCtKEf+2iktw3W1/P/r21VKJuMhSEX0Cksnd9BL8L6icw5Z2mV8vtSnfDs0oCAw
+	rmh3xi3MIyDSoBGZnIEoa62xEP/4TrRjEKIODEzXu8IasUI4OurbVCS/rXl01O5/kxyMI4q0tiil9
+	kZ5t0z0Zd9Ysy3WqoFIHGtSdRfKKTjl5eKQ8k9qcGV281rqh+zxCQPb7LpsE2EO2Ju7jUgTeWHq3A
+	Sjo9D4KyIF7qwzM7EktiR4CfWF+CjW5rdmFu1353317iwjya49SKGW6nri5wO5YiaAHO7GHVKUyFg
+	YqZu3K1w==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uWwKV-00000007Lo7-0onb;
+	Wed, 02 Jul 2025 12:12:47 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
+	id B597B300125; Wed, 02 Jul 2025 14:12:46 +0200 (CEST)
+Message-ID: <20250702114924.091581796@infradead.org>
+User-Agent: quilt/0.68
+Date: Wed, 02 Jul 2025 13:49:24 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: mingo@redhat.com,
+ juri.lelli@redhat.com,
+ vincent.guittot@linaro.org,
+ dietmar.eggemann@arm.com,
+ rostedt@goodmis.org,
+ bsegall@google.com,
+ mgorman@suse.de,
+ vschneid@redhat.com,
+ clm@meta.com
+Cc: linux-kernel@vger.kernel.org,
+ peterz@infradead.org
+Subject: [PATCH v2 00/12] sched: Address schbench regression
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/5] media: dt-bindings: add non-pixel property in iris
- schema
-To: Vikash Garodia <quic_vgarodia@quicinc.com>,
- Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Abhinav Kumar <abhinav.kumar@linux.dev>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250627-video_cb-v3-0-51e18c0ffbce@quicinc.com>
- <20250627-video_cb-v3-1-51e18c0ffbce@quicinc.com>
- <6fd3fa34-69e1-484f-ad6f-8caa852f1a6c@kernel.org>
- <dc6e82a1-82be-b8b8-31c3-8b85447d4e43@quicinc.com>
- <8b88cea4-b9f2-4365-829c-2a255aed6c69@kernel.org>
- <ae23ebae-3101-4a73-2bbd-0dabb4efaba1@quicinc.com>
- <45fdf98c-32f7-4b5f-889c-6d2f1fa5fbd6@kernel.org>
- <87d0795e-82d5-3274-4909-dd795d082295@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <87d0795e-82d5-3274-4909-dd795d082295@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 02/07/2025 14:08, Vikash Garodia wrote:
-> 
-> On 7/2/2025 5:28 PM, Krzysztof Kozlowski wrote:
->> On 02/07/2025 13:55, Vikash Garodia wrote:
->>>
->>>
->>> On 7/2/2025 5:17 PM, Krzysztof Kozlowski wrote:
->>>> On 02/07/2025 13:45, Vikash Garodia wrote:
->>>>>
->>>>> On 7/2/2025 4:53 PM, Krzysztof Kozlowski wrote:
->>>>>> On 27/06/2025 17:48, Vikash Garodia wrote:
->>>>>>> +
->>>>>>>      video-codec@aa00000 {
->>>>>>>          compatible = "qcom,sm8550-iris";
->>>>>>>          reg = <0x0aa00000 0xf0000>;
->>>>>>> @@ -144,12 +176,16 @@ examples:
->>>>>>>          resets = <&gcc GCC_VIDEO_AXI0_CLK_ARES>;
->>>>>>>          reset-names = "bus";
->>>>>>>  
->>>>>>> -        iommus = <&apps_smmu 0x1940 0x0000>,
->>>>>>> -                 <&apps_smmu 0x1947 0x0000>;
->>>>>>> +        iommus = <&apps_smmu 0x1947 0x0000>;
->>>>>>
->>>>>> I missed, that's technically ABI break and nothing in commit msg
->>>>>> explains that. You need to clearly explain the reasons and impact.
->>>>> No, it is not. Interface works well with old or new approach.
->>>>
->>>>
->>>> You changed the order of IOMMUs, so yes it is. Which interface works
->>>> well - FreeBSD? Or other? You are changing ABI for every user.
->>> Why do i need to change, when without changing would work as well ?
->> ? I don't understand. I made a statement, not a question. You are doing
->> this - you are changing the ABI.
->>
->> Which item was the first IOMMU before and which was second?
->>
->> Which item is the first IOMMU now?
-> Old approach - max 2 iommus interface - <SID-A, SID-B>
-> New approach - min 1/max 2, iommu interface - <SID-B>, child - <SID-A>
+Hi!
 
-So you changed first IOMMU entry, first IOMMU master and that is
-technically ABI break.
+Previous version:
 
-> 
-> If both works, how is interchanging impacting any existing hardware OR breaking
-> ABI ?
-
-Because you change the entries. The ordering of lists - not iommus which
-do not matter for Linux here - was discussed many times, so just refer
-to that discussions.
+  https://lkml.kernel.org/r/20250520094538.086709102@infradead.org
 
 
+Changes:
+ - keep dl_server_stop(), just remove the 'normal' usage of it (juril)
+ - have the sched_delayed wake list IPIs do select_task_rq() (vingu)
+ - fixed lockdep splat (dietmar)
+ - added a few preperatory patches
 
-Best regards,
-Krzysztof
+
+Patches apply on top of tip/master (which includes the disabling of private futex)
+and clm's newidle balance patch (which I'm awaiting vingu's ack on).
+
+Performance is similar to the last version; as tested on my SPR on v6.15 base:
+
+v6.15:
+schbench-6.15.0-1.txt:average rps: 2891403.72
+schbench-6.15.0-2.txt:average rps: 2889997.02
+schbench-6.15.0-3.txt:average rps: 2894745.17
+
+v6.15 + patches 1-10:
+schbench-6.15.0-dirty-4.txt:average rps: 3038265.95
+schbench-6.15.0-dirty-5.txt:average rps: 3037327.50
+schbench-6.15.0-dirty-6.txt:average rps: 3038160.15
+
+v6.15 + all patches:
+schbench-6.15.0-dirty-deferred-1.txt:average rps: 3043404.30
+schbench-6.15.0-dirty-deferred-2.txt:average rps: 3046124.17
+schbench-6.15.0-dirty-deferred-3.txt:average rps: 3043627.10
+
+
+Patches can also be had here:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git sched/core
+
+
+I'm hoping we can get this merged for next cycle so we can all move on from this.
+
