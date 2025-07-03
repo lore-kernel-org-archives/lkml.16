@@ -1,98 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F254230D14;
-	Thu,  3 Jul 2025 21:57:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F172367CF
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 22:00:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751579825; cv=none; b=iL7cl76U0CVslNUqrRAqG2463V9R0gscKYnEDNo173UPjl1BYYz5RsbXx4MCVWL2oWyGoWzw5KyfWhHivcwWuXqroJ/SwCY3wku6PMbsFOg/knDTUGTEeJpNvyyT+XDFFmvobJiPK7AlrtxqeUkMqwNpouKpTbCi5T40LUwOhho=
+	t=1751580045; cv=none; b=j1Con51oc/nsPNDGYQpUVw+LQrYd6Oite9Z2LxPptSYeeBkPqoaMiZQGZSF0SSQeZsQnYoQUfm1NfxelGpwVBGkTtrlWwU+3bRIPkpTSOuLoCcNfiSD2G/TtJlIt3huWzOeqrnOzGtyBq27SntqMQniAM7lS9gysQrf0ucPa96I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751579825; c=relaxed/simple;
-	bh=F1kd85XvbU8QnYJXR1ZMhaX6ypNcPAllX5PBqQkj0gI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZUmHjEs134l3+qUwnGEld6/7FzkPM0MCG/AjQkpxCckwLPQsuFvdzLMIXn+TZtXYlnyYjE/Pm1djbBuG6kfUAwraDiQHCc+opcjwpjZ8/nduZPQQVanhIfBuoAdfrGCNZ2cpRT8usbwoqK/6UrIo4mvDtRwPhZfADRW6kTkJ82E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U28/K6/J; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751580045; c=relaxed/simple;
+	bh=QM2hfhKy3jhksca8jVMMVVgPl4y67/QsYQzpDbu/sTE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PnNy0kkbmV6Vi4TLe2iO/8uC+PZMn47tsrOqVhPm2v3DYhdute1qxrWGz/nIcph1gMpsQERK+c8dSP0BFRc35pUROaHtXQ8Kma9AhMYrtPlWbK48J/Cne17vktQSfuI0k2Dh50QQ7lGDBGbCoaXeD8f5GJE/2YntN1eHKGbCsOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=B499p7Y8; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U28/K6/J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DE31C4CEE3;
-	Thu,  3 Jul 2025 21:57:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751579825;
-	bh=F1kd85XvbU8QnYJXR1ZMhaX6ypNcPAllX5PBqQkj0gI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=U28/K6/JfF56Rc+NVoYoPLT8SKPqnqwsagT17avDyskR/ynownshy4LFLdhKRnlRP
-	 iilMUUHz4bw5FS6V8uj+mpC0qnBJnyklKkOEsNZHvynwU13LsgDNTsJxuCaYc0dYuB
-	 WNqI6EJaxGEqQnE4K/u04PjgXmu/dTUXnGMf1xu3DIK0ZUvQ2DI5Oc4CfdVX7hBh9b
-	 bRAe2BYkyWYperkwd3i0Stt7nfNIOn1gnUIIPFPrbMC39Ng3ssjfiJHLJMjpVpPnq6
-	 3LyfesIzKM0WFbPJESM24wymGY5rcRWSqPMG7crxlN+h0jNHBSz3ToSK6r4OQaYFVS
-	 0huPc8uzI1BCw==
-Date: Thu, 3 Jul 2025 14:57:04 -0700
-From: Kees Cook <kees@kernel.org>
-To: Thorsten Blum <thorsten.blum@linux.dev>,
-	Suman Kumar Chakraborty <suman.kumar.chakraborty@intel.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Nick Terrell <terrelln@fb.com>, David Sterba <dsterba@suse.com>,
-	linux-hardening@vger.kernel.org, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crypto: zstd - replace zero-length array with flexible
- array member
-Message-ID: <202507031448.C3DAD52@keescook>
-References: <20250703171933.253654-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B499p7Y8"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-32adebb15c5so2762701fa.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 15:00:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751580040; x=1752184840; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QM2hfhKy3jhksca8jVMMVVgPl4y67/QsYQzpDbu/sTE=;
+        b=B499p7Y8cO8MO11Kk4wVEiUQd39Zw6vdFHuzkxwsIMTMwC42xfdfBFVojJnJAysE6r
+         4VMsxAQRRcIjENMz5qtcJ1tJV61to36xZfpg2Q2dyg0k8USQLtDEaDbCHFduCMa3ELJG
+         Y4dbEV/lwuE7Lz26UYYDMt3a6zMTOj5/xajZiVUJeAqGCNkJzIp9IrIhWNPjfRbpRnoS
+         5UL16+AmFVoexihnQVkwLLUg855Rl48E2K9RLF3Q/j60YF13seyBLHde0pHnImQzpyyD
+         zv5dKp7FuV1tcKV2yE2aC5v+ePTQsQsJ7Ft3k8Ki5eNFp/R+/4g2af27A1giyctW2C5R
+         fiPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751580040; x=1752184840;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QM2hfhKy3jhksca8jVMMVVgPl4y67/QsYQzpDbu/sTE=;
+        b=rdWfz89YiA6SvOO3Q7QtmOLFPQuGIrfRNl0+eE6jkUoUsjIGPtzy3yUidnVI/NRxPj
+         +zGMMFJlZ78JZmsI+y6cachDoK4uu8wpbRicEsek8/qJhnlXSjHUiA2p/2fxmJyRe8pV
+         AEtn/T6TiZTVRAw+O5hn21E2X19beLpb+yDl59DwDlQZN9pCsxqyw30z4EBNhyjTp4qY
+         rKxUtAuxkZLo6IlSmoDY4PieciDMjkVI52wVwBA1foJqMJ5si2gox+U2piCIUnWqwq0J
+         //V5TrIUkV41E7bNuXblvjh5yRu/K5NzP9O8u2IB2UqpfTnQDb7a5AcPHYMYANL5iZMa
+         nWiw==
+X-Forwarded-Encrypted: i=1; AJvYcCWUM9gIYlNimg+IgHzwXXJ4kucD7wDMAnccmoaA+eKwfRyRBPB/fmxsncH7X/CkIYqamytjcPQH3uuVLts=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlpCKUXhS6qiuWGJCOJqZGmgIQMvUMow2+zmLcgSZxEna3oBKU
+	V0ntVetXJOGuFgqqzW548y8r9EDIAdzlurn3KPSnjaH49KnDEqfIge6KC4GZGX2ZqGM8nQDQGQk
+	EZ1hGWePUha4iRx+TyfKtS6sUPMdxOEiXcFtQe1NvuA==
+X-Gm-Gg: ASbGncuL3Smj2FMFgc+uCELFseJnAEF4UqwN2vq8F3yx+g93Zr+asR+U3oLMBCTDG9g
+	XOG3YWK8AYuV/vEmd3GJH0k6bjQ9UCjhVtKTSB+gDNDa5VkqBJnRdyckcWwpNAZ4tqaCKBuNa1T
+	ScEO6i7fyilH+PUQA6TKlFGcBPjrl+C4Yi0qpg+jLKeOzR5BBFpxvJGg==
+X-Google-Smtp-Source: AGHT+IFOg19UiUE3TiCmES8XgOiPoWe7IXHAEBmzFu74XNzMO6mLnJFytBrmkTs0o5+cmuS3yBGZJGpr3iPUNTe0hDI=
+X-Received: by 2002:a05:651c:2149:b0:32b:7ddd:279e with SMTP id
+ 38308e7fff4ca-32e5a501965mr343691fa.14.1751580040326; Thu, 03 Jul 2025
+ 15:00:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250703171933.253654-2-thorsten.blum@linux.dev>
+References: <20250606160359.1356555-1-Frank.Li@nxp.com>
+In-Reply-To: <20250606160359.1356555-1-Frank.Li@nxp.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 4 Jul 2025 00:00:29 +0200
+X-Gm-Features: Ac12FXzt-R2yT2p2gdap6KBqFivqmoQqCjxQv9f3OTqOhOSRfpfG-x99NP7EpuQ
+Message-ID: <CACRpkdYD7eC49n7pxvjvrPE_Z-5MgOZ+VdESPD7AH5CeneVojQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] dt-bindings: pinctrl: convert nxp,lpc1850-scu.txt
+ to yaml format
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, 
+	"open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	imx@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 03, 2025 at 07:19:34PM +0200, Thorsten Blum wrote:
-> Replace the deprecated zero-length array with a modern flexible array
-> member in the struct zstd_ctx.
+On Fri, Jun 6, 2025 at 6:04=E2=80=AFPM Frank Li <Frank.Li@nxp.com> wrote:
 
-Oh, weird. This is a very recent change. This should include:
+> Convert nxp,lpc1850-scu.txt to yaml format.
+>
+> Additional changes:
+> - keep child name *_cfg to align legancy very old platform dts file.
+> - remove label in examples.
+> - just keep one examples.
+>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-Fixes: f5ad93ffb541 ("crypto: zstd - convert to acomp")
+Patch applied, thanks Frank!
 
-> 
-> No functional changes intended.
-> 
-> Link: https://github.com/KSPP/linux/issues/78
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> ---
->  crypto/zstd.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/crypto/zstd.c b/crypto/zstd.c
-> index 657e0cf7b952..c489976c3e8b 100644
-> --- a/crypto/zstd.c
-> +++ b/crypto/zstd.c
-> @@ -25,7 +25,7 @@ struct zstd_ctx {
->  	zstd_dctx *dctx;
->  	size_t wksp_size;
->  	zstd_parameters params;
-> -	u8 wksp[0] __aligned(8);
-> +	u8 wksp[] __aligned(8);
-
-And likely, to use __counted_by(wksp_size)
-
-I'm surprised checkpatch.pl didn't warn, but I guess the __aligned
-confused the script?
-
-Reviewed-by: Kees Cook <kees@kernel.org>
-
--Kees
-
->  };
->  
->  static DEFINE_MUTEX(zstd_stream_lock);
-> -- 
-> 2.50.0
-> 
-> 
-
--- 
-Kees Cook
+Yours,
+Linus Walleij
