@@ -1,156 +1,67 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75ADE2C17A8
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 22:46:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99DA32C15AA
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 22:46:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751582795; cv=none; b=Co2+E0FEFZS/R/LOwYmiWBSkMvKjForXorNzySv0fOf/+kCHMaldoGkyjwZ9wJFraU1JCO4Z9wkxAaqIfLsQMyYSYFlTDThT6TP1JmuSWUlty78rqpkFp9elLepjFcfDePM3opGQn86+GDHUqoIMe11XBBEpTuWv09EnmpmWJTI=
+	t=1751582820; cv=none; b=NIgX0b0EiNEq4GUqjEPyALJ513ZHSjKA2jZUFK2XDrBvLVJ8lC+gY8e3sLnxgEbgkOfGMdYGzw0Qt8xa/bIHXVOPpH23CRNc/BelcrznvK2VHPu1NlR9cgTUGuYB4iqO0N9IgagiEaytmGpJYdQwTUC+zZwMuJyMf02iRki7ZcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751582795; c=relaxed/simple;
-	bh=KaBidEahIKr7N4eELNwxzF36oly3VI2dfL3D6DcxkmY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mmtncQjTdIeniMlJtKH4oBEWRuJ/V3ed82JQDVA1ieBcSvKucSa1NIitND0lobh0Hu5KVRe3xCoQbaOg8/rV+ZtEhJXmLvPpKnH4z/y5/8IKEK67J28NsVNWi5Sptf2qKkY6ANKbCI004DZeU63o08ukWbqAxZwVyYXbqXF7tSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kghDbcnD; arc=none smtp.client-ip=95.215.58.181
+	s=arc-20240116; t=1751582820; c=relaxed/simple;
+	bh=DSNEbePw/wOeNUq2xUCLQ1pB/OY0aOxgKSwxCOYMEyk=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=VAxN4cB+oGatJwUtrWJc/Ax7rxJl0dhg8Jgj5FQl7HcPhe2sAhYNvSxQYsOQ+yZscvT4kqEs5DdzTuCuwQoxIDUVKtLAaDiP9Ue41Yo7BsvmqmalS5tfkemMIjtWshspl/qgjxyeEFoJOAXc85iq8Q3eiuRKeKESFAMAqFeOuCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=P+cRfvDL; arc=none smtp.client-ip=91.218.175.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kghDbcnD"
-Date: Thu, 3 Jul 2025 15:46:07 -0700
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="P+cRfvDL"
+Content-Type: text/plain;
+	charset=us-ascii
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751582778;
+	t=1751582815;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=iHwIqAp/B8daR4LVuH57/rc6G148Q4tQ/FTZcGDdVkk=;
-	b=kghDbcnDvBVgHJ0dowMXteUg0gVzJ5n0x45H2J3+4Mb1Yx4kndrQkcqehVgjpJX8YzDOcl
-	FdM4zive8jcp6WYd30Oc/kik2OkBoXPdyLHmlNPvu+l/OPYYZFpxVPmJVh3jqP1989jheL
-	a4VUcbKYLjXSs9vkL5MHNS12tsBtcAw=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Tejun Heo <tj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	JP Kobryn <inwardvessel@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Ying Huang <huang.ying.caritas@gmail.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Alexei Starovoitov <ast@kernel.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-	Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, bpf@vger.kernel.org, linux-mm@kvack.org, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH 2/2] cgroup: explain the race between updater and flusher
-Message-ID: <l3ta543lv3fn3qhcbokmt2ihmkynkfsv3wz2hmrgsfxu4epwgg@udpv5a4aai7t>
-References: <20250703200012.3734798-1-shakeel.butt@linux.dev>
- <20250703200012.3734798-2-shakeel.butt@linux.dev>
- <ae928815-d3ba-4ae4-aa8a-67e1dee899ec@paulmck-laptop>
+	bh=DSNEbePw/wOeNUq2xUCLQ1pB/OY0aOxgKSwxCOYMEyk=;
+	b=P+cRfvDLupgeT4JgtUg3U1cRMw2ljYea7E1fphtBvveFfsovi6RSEGeW9kdDcNe5CfORjH
+	wpWp79rRbq2DCEUf+i5peSKEw3DBPZ9YlMJzH5CWoryhldmIHracidQOtiKdYlP1Rf9a/d
+	JDUKi/WlDcaa0c+YoIZcR5nZKsOGXtg=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ae928815-d3ba-4ae4-aa8a-67e1dee899ec@paulmck-laptop>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [PATCH] crypto: zstd - replace zero-length array with flexible
+ array member
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+In-Reply-To: <202507031448.C3DAD52@keescook>
+Date: Fri, 4 Jul 2025 00:46:42 +0200
+Cc: Suman Kumar Chakraborty <suman.kumar.chakraborty@intel.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ "David S. Miller" <davem@davemloft.net>,
+ Nick Terrell <terrelln@fb.com>,
+ David Sterba <dsterba@suse.com>,
+ linux-hardening@vger.kernel.org,
+ linux-crypto@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <1ED66B1B-339B-4C86-AA04-36E1345E0A02@linux.dev>
+References: <20250703171933.253654-2-thorsten.blum@linux.dev>
+ <202507031448.C3DAD52@keescook>
+To: Kees Cook <kees@kernel.org>
 X-Migadu-Flow: FLOW_OUT
 
-On Thu, Jul 03, 2025 at 03:29:16PM -0700, Paul E. McKenney wrote:
-> On Thu, Jul 03, 2025 at 01:00:12PM -0700, Shakeel Butt wrote:
-> > Currently the rstat updater and the flusher can race and cause a
-> > scenario where the stats updater skips adding the css to the lockless
-> > list but the flusher might not see those updates done by the skipped
-> > updater. This is benign race and the subsequent flusher will flush those
-> > stats and at the moment there aren't any rstat users which are not fine
-> > with this kind of race. However some future user might want more
-> > stricter guarantee, so let's add appropriate comments and data_race()
-> > tags to ease the job of future users.
-> > 
-> > Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
-> > ---
-> >  kernel/cgroup/rstat.c | 32 +++++++++++++++++++++++++++++---
-> >  1 file changed, 29 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
-> > index c8a48cf83878..b98c03b1af25 100644
-> > --- a/kernel/cgroup/rstat.c
-> > +++ b/kernel/cgroup/rstat.c
-> > @@ -60,6 +60,12 @@ static inline struct llist_head *ss_lhead_cpu(struct cgroup_subsys *ss, int cpu)
-> >   * Atomically inserts the css in the ss's llist for the given cpu. This is
-> >   * reentrant safe i.e. safe against softirq, hardirq and nmi. The ss's llist
-> >   * will be processed at the flush time to create the update tree.
-> > + *
-> > + * NOTE: if the user needs the guarantee that the updater either add itself in
-> > + * the lockless list or the concurrent flusher flushes its updated stats, a
-> > + * memory barrier is needed before the call to css_rstat_updated() i.e. a
-> > + * barrier after updating the per-cpu stats and before calling
-> > + * css_rstat_updated().
-> >   */
-> >  __bpf_kfunc void css_rstat_updated(struct cgroup_subsys_state *css, int cpu)
-> >  {
-> > @@ -86,8 +92,13 @@ __bpf_kfunc void css_rstat_updated(struct cgroup_subsys_state *css, int cpu)
-> >  		return;
-> >  
-> >  	rstatc = css_rstat_cpu(css, cpu);
-> > -	/* If already on list return. */
-> > -	if (llist_on_list(&rstatc->lnode))
-> > +	/*
-> > +	 * If already on list return. This check is racy and smp_mb() is needed
-> > +	 * to pair it with the smp_mb() in css_process_update_tree() if the
-> > +	 * guarantee that the updated stats are visible to concurrent flusher is
-> > +	 * needed.
-> > +	 */
-> > +	if (data_race(llist_on_list(&rstatc->lnode)))
-> 
-> OK, I will bite...
-> 
-> Why is this needed given the READ_ONCE() that the earlier patch added to
-> llist_on_list()?
-> 
-> >  		return;
-> >  
-> >  	/*
-> > @@ -145,9 +156,24 @@ static void css_process_update_tree(struct cgroup_subsys *ss, int cpu)
-> >  	struct llist_head *lhead = ss_lhead_cpu(ss, cpu);
-> >  	struct llist_node *lnode;
-> >  
-> > -	while ((lnode = llist_del_first_init(lhead))) {
-> > +	while ((lnode = data_race(llist_del_first_init(lhead)))) {
-> 
-> And for this one, why not make init_llist_node(), which is invoked from
-> llist_del_first_init(), do a WRITE_ONCE()?
-> 
+On 3. Jul 2025, at 23:57, Kees Cook wrote:
+> And likely, to use __counted_by(wksp_size)
 
-Let me answer this one first. The previous patch actually made
-init_llist_node() do WRITE_ONCE().
+I hesitated because semantically "size" isn't a "count" although the
+values are the same here.
 
-So the actual question is why do we need
-data_race([READ|WRITE]_ONCE()) instead of just [READ|WRITE]_ONCE()?
-Actually I had the similar question myself and found the following
-comment in include/linux/compiler.h:
+> Reviewed-by: Kees Cook <kees@kernel.org>
 
-/**
- * data_race - mark an expression as containing intentional data races
- *
- * This data_race() macro is useful for situations in which data races
- * should be forgiven.  One example is diagnostic code that accesses
- * shared variables but is not a part of the core synchronization design.
- * For example, if accesses to a given variable are protected by a lock,
- * except for diagnostic code, then the accesses under the lock should
- * be plain C-language accesses and those in the diagnostic code should
- * use data_race().  This way, KCSAN will complain if buggy lockless
- * accesses to that variable are introduced, even if the buggy accesses
- * are protected by READ_ONCE() or WRITE_ONCE().
- *
- * This macro *does not* affect normal code generation, but is a hint
- * to tooling that data races here are to be ignored.  If the access must
- * be atomic *and* KCSAN should ignore the access, use both data_race()
- * and READ_ONCE(), for example, data_race(READ_ONCE(x)).
- */
-
-IIUC correctly, I need to protect llist_node against tearing and as well
-as tell KCSAN to ignore the access for race then I should use both.
-Though I think KCSAN treat [READ|WRITE]_ONCE similar to data_race(), so
-it kind of seem redundant but I think at least I want to convey that we
-need protection against tearing and ignore KCSAN and using both conveys
-that. Let me know if you think otherwise.
-
-thanks a lot for taking a look.
-
+Thanks!
 
