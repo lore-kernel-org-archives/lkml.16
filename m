@@ -1,184 +1,193 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA68A17332C
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 13:52:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7945518DB0D;
+	Thu,  3 Jul 2025 13:54:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751550778; cv=none; b=rnNWWZTpnhnOpw3ZkUmuf0mkq9FS1z2cMBTa19b+LJ9cKsjINweovpS06INOY808rJKF2jZ8oPZTvFWpbP+VlXa5E+fgEFiQGwWZt6qMaZoIUImJP3ofAA1ZHZKteuoXlSdUjwgTLLzxWGlTVlTehM8Cy5R5PFMhRzWAyvCoS1k=
+	t=1751550865; cv=none; b=dKIYSO5bhkCmrdwPeu8KlLzILDQnm5nnhlTr6YYDm6CD/BfIlgYaTWRGaZuZultIqco0rBcY9eJwl0U0VSMXVZIedyVNi6vSglRuaye+z4n22SDAr8+XC/st5Bm2+vF1ZnSGphuQIQoQ9uqqmhsZK0oqf4d86LbKK9loR7KowJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751550778; c=relaxed/simple;
-	bh=o+a5Zq/v2MCypGAV2/0NFIUkiSZcJ/6Lp2TYlsZnyj4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AQw2wGStQFJLdAtgpcjTv3azIY9wn8etC1BOM0S87yZFN2J/Q407/82+gdYXhKZXKY2UoHiht8EPk+pm7NxoqhceaITDPz3tkXQHe7ExQQnzSgl4hi3FTEx3VNeeUiSDeOAPmKP7oUDsMIpuTa3zX9lvYXOpVPwIRftvFIGTPlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BOHuiiyV; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751550865; c=relaxed/simple;
+	bh=y78VCoYM7VevEWRRosTle7tdkMGhmFsw5rVCtfwQPJE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=cB0vRXQA+asG8iymECk3kzmfWchbYGxH8cKsxvQMTseM+vXaPxoxsf2AdDZtPWHU1yjbJQ43SFOlPEhnirLmOKqBEcwckEq0iLjkhagzY+n1ei09ka7IgTp491MCkcCYwHDPha6bg4mygnHf8laiPn8yp+ROq0AaXKs13jXs+L8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Vn1T+Adm; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BOHuiiyV"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7426c44e014so7983984b3a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 06:52:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751550776; x=1752155576; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7z5C0mIfBVL5G+fpRGoC/61ZD3VCkhZjpD6PCIuTajc=;
-        b=BOHuiiyVW8YzlRH3Fs0J/GJEfeslJKj9ru4ZpTj1H12RJAb76zUKSlFbBclYALr46p
-         dAl+phCFWWXH2v1sJaBzYTCgfxLOyvd0YbSpAQmwPLJT/YmHb5YDBWywpFu78Pi5qIPE
-         JID8Ar1asmK/D/jV/3n855wI6M1GMfm+CUT/+TvtRGUHBsoupriTkZWWLa4ajCyD2aLA
-         QSpdvU9OwbStkU6gtVHUQ1dkCFBpcagE7DY2kte8lxIwv1rUNsCfZ5chptF5+0ZoPP/g
-         YAJa4YsapYnZLSBlI8RJwnEgnJXkP1oPNwxl8G18Y6FvMHfk3LpEybx1KjO9M74Nsvmr
-         v45Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751550776; x=1752155576;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7z5C0mIfBVL5G+fpRGoC/61ZD3VCkhZjpD6PCIuTajc=;
-        b=wsP2KPVLpQht/w7rMRUQbsCfJSQ+ul+0Cgy92zvG+aOL+pRp2X60s4DlMNs12gb1rL
-         dTQMWpC3QYqcDqUuGLjVWYn8+iMJZppGsUsid/KIjNMMNrx3JdFPd2LXu/y1BjXiBFLz
-         JetBQOj2K1fSyfpzR4EXRh76Vc8qJQ90qckNvYVuyn9DPjYlhONuGnxCgeMJszHTakll
-         hDFQ+m15kFDTHfN9/hP6/ncPJj0HfD48USc+2/DxKUhUmJmhD73jaCPVGp/oexclipk7
-         vTC2wYcbNFhZoEJnJAp4BfEG9RenZyaJylMoyUFyZ8gXwiEQWMMwC/d8gh/Rn7XgpUnp
-         Pdew==
-X-Forwarded-Encrypted: i=1; AJvYcCV0RVKJezmt1wfb+RLK6B3/y0Ys2HjPk4jPYivC1Yz+NgB3uUrq83EkG9PLJ5AZVWIvdFhJC36mI+Mlrus=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8b2o55ldp85aVi/Ctt7OU5dv+fmRrAHQJNWpJThTp9iPeqIYf
-	0W6B+LyArS5Wtq+9j+xWevGxPqWc4VOTm7SOk6VvQcNQqnPR9CJmwgoN
-X-Gm-Gg: ASbGnctAu03lZszDTOdTJKECa0eSnbhQIZ41INGQSDloKZ2yFry8r+BE2ZcTV69mDyv
-	8T6HG9SpDtqsS5GWxNASp+PMnLw/+tmPKQF7056VAOyB3oU6e00NXLmueyrRMpTiN+duDDeCrVN
-	ZySkySl21a9aXcBN78VMuOpDtFZ57hb3WUmTsKaJQE5+gWa4lrvXK0wcNT7SMdGbXWds6zMmVCb
-	f+64SjiQL/wrb3UpwMXIlKPIKwNx5BHLhCtuRieWWknUKSmqq5IjbuzitNO9vGtjr8j3dsijCOC
-	pJKOld5B2R29VgbhzjBXDHRVbelUKD8Uhkxj+ahrXL58Z2sPbiKylTccZCI4Iw==
-X-Google-Smtp-Source: AGHT+IFQ8vfw7SmUaJw/mYSEqSDdH1wtY1Foe7axFG74AI01FW7fPbAKmU7PcAPoQUyMjJuTYQ32mA==
-X-Received: by 2002:a05:6a21:6d98:b0:21f:5adb:52c4 with SMTP id adf61e73a8af0-2243eab4ae5mr5377966637.30.1751550776051;
-        Thu, 03 Jul 2025 06:52:56 -0700 (PDT)
-Received: from localhost ([216.228.127.129])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e300d808sm15390596a12.14.2025.07.03.06.52.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 06:52:55 -0700 (PDT)
-Date: Thu, 3 Jul 2025 09:52:53 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Rik van Riel <riel@surriel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jann Horn <jannh@google.com>,
-	syzbot <syzbot+084b6e5bc1016723a9c4@syzkaller.appspotmail.com>,
-	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-	linux-kernel@vger.kernel.org, luto@kernel.org, mingo@redhat.com,
-	neeraj.upadhyay@kernel.org, paulmck@kernel.org,
-	peterz@infradead.org, syzkaller-bugs@googlegroups.com,
-	x86@kernel.org, kernel-team <kernel-team@meta.com>,
-	David Hildenbrand <david@redhat.com>
-Subject: Re: [PATCH] smp: Wait for enqueued work regardless of IPI sent
-Message-ID: <aGaLNRWhskWisP_0@yury>
-References: <68653927.a70a0220.3b7e22.245d.GAE@google.com>
- <366d45aea0b64cfc82c0988ae5fe6863bbd28261.camel@surriel.com>
- <CAG48ez2_4D17XMrEb7+5fwq0RFDFDCsY5OjTB7uaXEzdybxshA@mail.gmail.com>
- <CAG48ez1VMw=aE88eTfk9BscrmS7axJG=j_TrTui+htLF9-4Wqw@mail.gmail.com>
- <874ivuldog.ffs@tglx>
- <aGVwAtUi8eKNT8Jy@yury>
- <20250702135954.7a00497d@fangorn>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Vn1T+Adm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1751550861;
+	bh=y78VCoYM7VevEWRRosTle7tdkMGhmFsw5rVCtfwQPJE=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=Vn1T+Adm7dAOD3R6Sydh5vATGD9TWJZ4xQXiRE2DGkOlDTfk8bXDfo1eKlk5S0p09
+	 Cs1wSRHanBGrFcD7QGpKHsDdMM6DPuPD5fq9rgNa+XNfdApZ+QCISKe+Ehdavsq38a
+	 3/U6GI2l5Fd+yxnDlYMfCO+flzBFFXnm8D4eKs771kVmY/bUWBqJVEA1pSJTc/Umkh
+	 Z0NjYxF51gOFpCuK07R3mhiGz1KP9VVVfkS0z6+nJACp5nzBw8zKn0b7lA50o6lNzI
+	 x4oH7h8fKJJgQtvZ34p/4pPJ0J8CqnjwaSl+xugSXkP65tazWhdrDHqH96Kj65JoGQ
+	 R6D9TUmYAR9FQ==
+Received: from 2a01cb0892f2d600c8f85cf092d4af51.ipv6.abo.wanadoo.fr (2a01cb0892f2D600c8F85cf092d4aF51.ipv6.abo.wanadoo.fr [IPv6:2a01:cb08:92f2:d600:c8f8:5cf0:92d4:af51])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: jmassot)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id AA95C17E04C0;
+	Thu,  3 Jul 2025 15:54:20 +0200 (CEST)
+Message-ID: <c661e7f3faec269f73d6240fbe7b84e3bc97157a.camel@collabora.com>
+Subject: Re: [PATCH v5 00/24] media: i2c: add Maxim GMSL2/3 serializer and
+ deserializer drivers
+From: Julien Massot <julien.massot@collabora.com>
+To: Cosmin Tanislav <demonsingur@gmail.com>, Cosmin Tanislav	
+ <cosmin.tanislav@analog.com>, Tomi Valkeinen	
+ <tomi.valkeinen+renesas@ideasonboard.com>, Mauro Carvalho Chehab	
+ <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Niklas
+ =?ISO-8859-1?Q?S=F6derlund?=	 <niklas.soderlund@ragnatech.se>, Sakari Ailus
+ <sakari.ailus@linux.intel.com>,  Laurent Pinchart
+ <laurent.pinchart@ideasonboard.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-staging@lists.linux.dev, linux-gpio@vger.kernel.org
+Date: Thu, 03 Jul 2025 15:54:20 +0200
+In-Reply-To: <d4052ab3-9cd1-45e8-81b0-b6512822e646@gmail.com>
+References: <20250702132104.1537926-1-demonsingur@gmail.com>
+	 <5e1b26637706f6eac92acbbb3d5a7dafa0c2c232.camel@collabora.com>
+	 <d4052ab3-9cd1-45e8-81b0-b6512822e646@gmail.com>
+Organization: Collabora Ltd.
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250702135954.7a00497d@fangorn>
 
-On Wed, Jul 02, 2025 at 01:59:54PM -0400, Rik van Riel wrote:
-> On Wed, 2 Jul 2025 13:44:34 -0400
-> Yury Norov <yury.norov@gmail.com> wrote:
-> 
-> > Thank you guys for explaining that and sorry for the buggy patch.
-> > I was actually under impression that run_remote duplicates nr_cpus !=0,
-> > and even have a patch that removes run_remote.
-> > 
-> > Maybe worth to add a comment on what run_remote and nr_cpus track?
-> 
-> This thread did surface some useful content, and Jann also pointed out
-> a good optimization that can be made, by not setting run_remote if
-> "func" tells us to skip remote CPUs.
-> 
-> Thomas, please let me know if you already reverted Yury's patch,
-> and want me to re-send this without the last hunk.
-> 
-> ---8<---
-> From 2ae6417fa7ce16f1bfa574cbabba572436adbed9 Mon Sep 17 00:00:00 2001
-> From: Rik van Riel <riel@surriel.com>
-> Date: Wed, 2 Jul 2025 13:52:54 -0400
-> Subject: [PATCH] smp: Wait for enqueued work regardless of IPI sent
-> 
-> Whenever work is enqueued with a remote CPU, smp_call_function_many_cond()
-> may need to wait for that work to be completed, regardless of whether or
-> not the remote CPU needed to be woken up with an IPI, or the work was
-> being added to the queue of an already woken up CPU.
-> 
-> However, if no work is enqueued with a remote CPU, because "func"
-> told us to skip all CPUs, do not wait.
-> 
-> Document the difference between "work enqueued", and "CPU needs to be
-> woken up"
-> 
-> Signed-off-by: Rik van Riel <riel@surriel.com>
-> Suggested-by: Jann Horn <jannh@google.com>
-> Reported-by: syzbot+084b6e5bc1016723a9c4@syzkaller.appspotmail.com
-> Fixes: a12a498a9738 ("smp: Don't wait for remote work done if not needed in smp_call_function_many_cond()")
-> ---
->  kernel/smp.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/smp.c b/kernel/smp.c
-> index 84561258cd22..c5e1da7a88da 100644
-> --- a/kernel/smp.c
-> +++ b/kernel/smp.c
-> @@ -802,7 +802,6 @@ static void smp_call_function_many_cond(const struct cpumask *mask,
->  
->  	/* Check if we need remote execution, i.e., any CPU excluding this one. */
->  	if (cpumask_any_and_but(mask, cpu_online_mask, this_cpu) < nr_cpu_ids) {
-> -		run_remote = true;
->  		cfd = this_cpu_ptr(&cfd_data);
->  		cpumask_and(cfd->cpumask, mask, cpu_online_mask);
->  		__cpumask_clear_cpu(this_cpu, cfd->cpumask);
-> @@ -816,6 +815,9 @@ static void smp_call_function_many_cond(const struct cpumask *mask,
->  				continue;
->  			}
->  
-> +			/* Work is enqueued on a remote CPU. */
-> +			run_remote = true;
-> +
+On Thu, 2025-07-03 at 15:17 +0300, Cosmin Tanislav wrote:
+>=20
+>=20
+> On 7/3/25 3:07 PM, Julien Massot wrote:
+> > Hi Cosmin,
+> >=20
+> > On Wed, 2025-07-02 at 16:20 +0300, Cosmin Tanislav wrote:
+> > > This series adds new drivers for multiple Maxim GMSL2 and GMSL3 devic=
+es,
+> > > replacing the few GMSL2 drivers already in upstream, and introducing =
+a
+> > > common framework that can be used to implement such GMSL chips, which
+> > > avoids code duplication while also adding support for previously
+> > > unsupported features.
+> > >=20
+> > > While the normally acceptable and polite way would be to extend the
+> > > current mainline drivers, the choice was made here to add a totally n=
+ew
+> > > set of drivers. The current drivers support only a small subset of th=
+e
+> > > possible features, and only a few devices, so the end result after
+> > > extending them would in any case be essentially fully rewritten, new
+> > > drivers.
+> > >=20
+> > Thanks for your work,
+> > The common framework will help a lot to drive new GMSL chips, and most =
+of the
+> > features are covered.
+> >=20
+> > > This series depends on support for internal pads, for which a patch h=
+as
+> > > been added.
+> > >=20
+> > > The previous version is at:
+> > > https://lore.kernel.org/lkml/20250618095858.2145209-1-demonsingur@gma=
+il.com
+> > >=20
+> > > The following deserializers are supported:
+> > > =C2=A0=C2=A0* MAX96712 (already exists in staging)
+> > > =C2=A0=C2=A0* MAX96714 (already exists)
+> > > =C2=A0=C2=A0* MAX96714F (already exists)
+> > > =C2=A0=C2=A0* MAX96714R (GMSL2)
+> > > =C2=A0=C2=A0* MAX96716 (GMSL2)
+> > > =C2=A0=C2=A0* MAX96724 (already exists as part of existing MAX96712 d=
+river)
+> > > =C2=A0=C2=A0* MAX96724F (GMSL2)
+> > > =C2=A0=C2=A0* MAX96724R (GMSL2)
+> > > =C2=A0=C2=A0* MAX9296A (GMSL2)
+> > > =C2=A0=C2=A0* MAX96792A (GMSL3)
+> > >=20
+> > > The following serializers are supported:
+> > > =C2=A0=C2=A0* MAX96717 (already exists)
+> > > =C2=A0=C2=A0* MAX9295A (GMSL2)
+> > > =C2=A0=C2=A0* MAX96793 (GMSL3)
+> > >=20
+> > > Known backward compatibility breakages:
+> > > =C2=A0=C2=A0* No default routing. Default routing has been intentiona=
+lly ommitted
+> > > =C2=A0=C2=A0=C2=A0 as the devices support quite complex routing and i=
+t would be
+> > > =C2=A0=C2=A0=C2=A0 unfeasible to provide sane defaults for multi-link=
+ deserialziers.
+> > > =C2=A0=C2=A0=C2=A0 It is expected that userspace programs would set a=
+ppropritate
+> > > =C2=A0=C2=A0=C2=A0 routing.
+> > >=20
+> > This part is the most annoying one: at the moment, there is no way to s=
+et the routing except by
+> > manually enabling a boolean within the kernel source.
+> > You can't guess what routing the user really wants, but please at least=
+ provide a default
+> > routing
+> > table that allows using your drivers =E2=80=94 for example, the device'=
+s default routing.
+> >=20
+>=20
+> It's a very delicate issue... I'll try to see if I can do that.
+> It would be great if we could enable the streams API globally since it's
+> been merged since Jan 15 2023. It's been over two years.
+>=20
+>=20
+> Thanks,
+>=20
+> >=20
+> >=20
+> > > The following list enumerates new features that are supported by the
+> > > common framework and their respective chip-specific drivers:
+> > > =C2=A0=C2=A0* Full Streams API support. Most deserializers have suppo=
+rt for more
+> > > =C2=A0=C2=A0=C2=A0 than one link, and more than one PHY. Streams supp=
+ort allows
+> > > =C2=A0=C2=A0=C2=A0 configuration of routing between these links and P=
+HYs.
+> > >=20
+> > > =C2=A0=C2=A0* .get_frame_desc() support. Both the serializers and des=
+erializers
+> > > =C2=A0=C2=A0=C2=A0 implement this to query and provide frame descript=
+or data. This is
+> > > =C2=A0=C2=A0=C2=A0 used in features explained in-depth below.
+> >=20
+> > So are almost all the sensor drivers incompatible?
+> >=20
+>=20
+> Yes, sensor drivers need to have .get_frame_desc() implemented... It's
+> not a huge feat and it's the only way this type of bridge could work
+> properly.
+>=20
+> Alternatively, we could add a fallback that bases its decision on the
+> stream format, but I'd prefer if we didn't and we would just implement
+> .get_frame_desc(). After this series is merged I can submit my patches
+> for imx219.
+There is already one pending on the mailing list
+"media: i2c: imx219: Report streams using frame descriptors"
+I guess it's fine if we require the sensor to implement this function.
 
-I actually ended up with the same on my cratch branch:
+But I had to do it for vgxy61.
 
-https://github.com/norov/linux/commit/8a32ca4b60dc68ac54f3b70b4be7a5863dc3934e
+Btw I tested:
+TI AM62x + max96716 + 1 x max96717f + stvg5661 (tunnel mode)
+With special lanes mapping and polarities.
 
-So,
+And I had to:
 
-Reviewed-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
-
->  			csd_lock(csd);
->  			if (wait)
->  				csd->node.u_flags |= CSD_TYPE_SYNC;
-> @@ -827,6 +829,10 @@ static void smp_call_function_many_cond(const struct cpumask *mask,
->  #endif
->  			trace_csd_queue_cpu(cpu, _RET_IP_, func, csd);
->  
-> +			/*
-> +			 * Kick the remote CPU if this is the first work
-> +			 * item enqueued.
-> +			 */
->  			if (llist_add(&csd->node.llist, &per_cpu(call_single_queue, cpu))) {
->  				__cpumask_set_cpu(cpu, cfd->cpumask_ipi);
->  				nr_cpus++;
-> @@ -843,8 +849,6 @@ static void smp_call_function_many_cond(const struct cpumask *mask,
->  			send_call_function_single_ipi(last_cpu);
->  		else if (likely(nr_cpus > 1))
->  			send_call_function_ipi_mask(cfd->cpumask_ipi);
-> -		else
-> -			run_remote = false;
->  	}
->  
->  	/* Check if we need local execution. */
-> -- 
-> 2.49.0
-> 
+- Apply pending patches for j721e to support the enable_stream API instead =
+of s_stream
+- Enable the experimental v4l2_subdev_enable_streams_api
+- Add get_frame_desc to the sensor driver
