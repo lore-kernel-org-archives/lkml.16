@@ -1,103 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E372F229B36;
-	Thu,  3 Jul 2025 20:20:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B982BD58E
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 20:20:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751574003; cv=none; b=l5t8zjKZv0pgbQxrI28r1Y8xX/CLYMqkYL1YFiNJSSwzTEH28J53/b/AkoisdByhpUSzYFXoEFh4WI1Hp/cymQK4rvhO/YHemtSecTE3by4gyElcMxKilyFjvBq1wnGFARywdvimAg3elhutIFKzEOm9R4oJvA1JmL5XW6E39ag=
+	t=1751574005; cv=none; b=FQpyJgAwvZHWO2G94WeuMfvFrtPyylYIqSYSEA16XIPTwTwD2gQnVkjC3Enq7Fwchh9tFvym66S4OYcKtpA1XIeom8waP491JiYdXoJG0DIXrMDGwFGBQlxyPV9If5gY6WBM8mm+nJn9NQ6qzfI1ixmyub8McysJRuWNUT0HvNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751574003; c=relaxed/simple;
-	bh=/Z6dqwWKcpslEvJUI8LhwqbM2J/z4HV3/9EflldkIS4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VsKVhX6m2p+g8P5qx5nqjgVQ0YHIP8nWQG7ZyfxXBGfvNMGH+WhpiaMIj5VTyVdFkEXEVMBiXx/mqrtLDTRYohs9ap9wwGArHROxVZGcHnLyVrb85QoR/ocgJ7hsplwdRn4iwy5JmMZuQ/cK+P9Q56pEPIFd3S88kVqHgaajf2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gL1N+Tkz; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gL1N+Tkz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73F6BC4CEF1;
-	Thu,  3 Jul 2025 20:20:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751574002;
-	bh=/Z6dqwWKcpslEvJUI8LhwqbM2J/z4HV3/9EflldkIS4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=gL1N+Tkz0OLj2NMAhLtIDCKg5/fS+DhRasCnj+SqRlpM8NFvysOtOlTCR5iYjE8ed
-	 xnfhUAewgXuKSGrWeNGmZoEST0fJhvNY9eAEkrzZTIj/Qs5yYvOti1bbwBIDWZd6no
-	 b9AZ6LqyGe/3aOe4Xgjsv/wIJ8DJh4R8tYO+zv1VkJgInVHm2eOEKA/JSjvcD7lDwG
-	 Hc9EWXC1HmCdYS3Ymzsg3gfeSebgRURaV2bSFSHl+PbqMyZ0dFw3geasAyJNOJ0E9j
-	 A5591Ld/1BadRwFSBKP5ged+niipxIlcxHPQyhDU3DaG2EA71By+6UQi1dZKyo7b11
-	 v/IlvtbIMeleA==
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-60c5b7cae8bso417391a12.1;
-        Thu, 03 Jul 2025 13:20:02 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW+JCbqLn+r0S2QtpFGQm84jJkeof/qE4VZeYxC/vvJqQoeSOqBMbGVFUEiKFxWU/O0Tg+fXGHySeOsY2BIsg==@vger.kernel.org, AJvYcCWEDsr/67B32EShW9O5re8IbTbm1lZSmXmDS8S6nNNstPRiqqrezqOmxiAnEaDwTQ/I70mT6lUfcEBCn30=@vger.kernel.org, AJvYcCWUVZ71ehxEae113sbPFB73gUwwbH4b/rIe7QhwQlGyUU0hsoNSmrzlHg0qgnY/804xIXW1l16cueU7do0O@vger.kernel.org, AJvYcCXU6PltZ+8DHau95W7wAezUkWdU6OggdYnc2JFMF8sUqhWIMCYR0v/AHXRUnFLFgk2Fv3hWBWwTxxiW@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcYXBVatCt7asSDIXLKtUxcUL1t2Cls++9O2NIa0DNkD/jDX3j
-	LIJjYTXIiVFyUZA0ZdJxdIEDK8lvp8knFvtPQz3NnToZc0IvP6LeTnl2G9Qq3ZaKxkIDxUVCjBL
-	emCAjlw8RAnbl7bnhnAnVZijCoTqjlg==
-X-Google-Smtp-Source: AGHT+IE9hz7l5h4gKfA2Gok0trbBLrord6Qv4/OAvtCHoDspRQQMpgsUWP4XL2MXTLDAW0VEjFlalhjZGgWnYj7Qmpg=
-X-Received: by 2002:a17:907:2d2c:b0:adb:2a66:85bc with SMTP id
- a640c23a62f3a-ae3d89953bamr452586966b.34.1751574000959; Thu, 03 Jul 2025
- 13:20:00 -0700 (PDT)
+	s=arc-20240116; t=1751574005; c=relaxed/simple;
+	bh=ktUtWHn6ctGIrk0DA195Z10iPpgYiR4PsnMaxDvortA=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=RSQ1//sPJ5cauM9dEYvd6NtAplVA4hNrGZ7Xu/l6ca/Y7C+nqQlvdJsGwbIaxF1/nkTVrWK8nLlvUaqnVQ2WFw1BwQYnEQP1lTkiyQiLau1DXDBpbuHEO0MHNRigwpNxOh3F6j0jiGj8iDc8DoNDCWxmRdALUGgEdJQccIE8MOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3df2d0b7c7eso3348865ab.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 13:20:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751574003; x=1752178803;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IMerz2n+tFN8TsF5zv7+dKlx5F1JGkpVWG+36MCX5+8=;
+        b=IJSsjqfESEW+I5ACDLHpKL585MxUsGakZ5Oc2rDrAGImD5jyh76ZQrJXfarfVwYvms
+         NFsfFwzp7d2XiAdp50hx5TaSBkE0EdOtmjnWhDLv02k4u4ouLTXPY6E+16VuOQ74YgD+
+         8QLcHkdY7ZHFCZfVb4nyV3300OpylI6v1j2WqK6lg9YyQp6xCQ+AbXb4sQDG0RN9uO7a
+         0ZeD03IDOnc4XFPeAEyawOzVTtcOM59S/2qwfBrRZp5gQrhVuFGaZ7P+eclvBDFKgPfY
+         AU+zTN843vzATTx1ekaTGf6Load3d10Wna7JLhIXcz3inK5z1XtHvogljW66gOHorSgx
+         DCqw==
+X-Forwarded-Encrypted: i=1; AJvYcCX8e62QUZ8zMgJtqJ2J5Sy6iOIRQm69UlSYSUnFzfZfgvnhP3iz3lt/VBt0ck8p1xsFJ2nc41i78itDImA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzezm+hgsMUnLjF9p9FZQPhKk6dI0UpMaOQun9aF5CUVmh9nE3A
+	9NGGmD/yCYjxxmqHWEgshl7dMbCdRZf8HOoRvrVYuPc/YrrvI+ws0Imo17KCbS1popeArendKrJ
+	hZ2SvL7zIuGy2wzvLTylqZrllgJlUVia88p37sAZ4I2ldB/nw5oJ7TxizjWI=
+X-Google-Smtp-Source: AGHT+IHSYeMvwEbudyKZxAAc16iQbkAMBdLxZVFQBfHXNJuS6bF4GAOQva2GfzxgT2xZB1qthR7gV5Llchlthg6MYhNLNnCBGksU
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612-sm8550-camss-v2-1-ed370124075e@quicinc.com> <175021976651.732077.6463322520296960558.b4-ty@kernel.org>
-In-Reply-To: <175021976651.732077.6463322520296960558.b4-ty@kernel.org>
-From: Rob Herring <robh@kernel.org>
-Date: Thu, 3 Jul 2025 15:19:49 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+46ThxSwJm2RjPDjmK9LmhkFhc9UidjBirEq7-kescPw@mail.gmail.com>
-X-Gm-Features: Ac12FXzxV16zTuZlQN8D9DXY_qZpyOqeBk68ONoeu6ESaQCeuGhWEMIIFPY_tlk
-Message-ID: <CAL_Jsq+46ThxSwJm2RjPDjmK9LmhkFhc9UidjBirEq7-kescPw@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: qcom: sm8550: Add support for camss
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Konrad Dybcio <konradybcio@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, todor.too@gmail.com, rfoss@kernel.org, 
-	bryan.odonoghue@linaro.org, Wenmeng Liu <quic_wenmliu@quicinc.com>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	Depeng Shao <quic_depengs@quicinc.com>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
-	Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
+X-Received: by 2002:a05:6e02:3008:b0:3df:4ad5:3a71 with SMTP id
+ e9e14a558f8ab-3e0549c5d57mr92223615ab.11.1751574003214; Thu, 03 Jul 2025
+ 13:20:03 -0700 (PDT)
+Date: Thu, 03 Jul 2025 13:20:03 -0700
+In-Reply-To: <f368bd06-73b4-47bb-acf1-b8eba2cfe669@kernel.dk>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6866e5f3.050a0220.37fcff.0006.GAE@google.com>
+Subject: Re: [syzbot] [io-uring?] INFO: task hung in vfs_coredump
+From: syzbot <syzbot+c29db0c6705a06cb65f2@syzkaller.appspotmail.com>
+To: anna-maria@linutronix.de, axboe@kernel.dk, frederic@kernel.org, 
+	io-uring@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, tglx@linutronix.de
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 17, 2025 at 11:09=E2=80=AFPM Bjorn Andersson <andersson@kernel.=
-org> wrote:
->
->
-> On Thu, 12 Jun 2025 16:01:26 +0800, Wenmeng Liu wrote:
-> > Add support for the camera subsystem on the SM8550 Qualcomm SoC. This
-> > includes bringing up the CSIPHY, CSID, VFE/RDI interfaces.
-> >
-> > SM8550 provides
-> > - 3 x VFE, 3 RDI per VFE
-> > - 2 x VFE Lite, 4 RDI per VFE
-> > - 3 x CSID
-> > - 2 x CSID Lite
-> > - 8 x CSI PHY
-> >
-> > [...]
->
-> Applied, thanks!
->
-> [1/1] arm64: dts: qcom: sm8550: Add support for camss
->       commit: c5aeb681fcdd23d042d780f89ddcf908a13baee2
+Hello,
 
-And adds warnings:
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-      6  clock-controller@ade0000 (qcom,sm8550-camcc): required-opps:
-[[33]] is too short
-      6  clock-controller@ade0000 (qcom,sm8550-camcc): power-domains:
-[[56, 6]] is too short
-      6  clock-controller@ade0000 (qcom,sm8550-camcc): Unevaluated
-properties are not allowed ('power-domains', 'required-opps' were
-unexpected)
-      6  clock-controller@aaf0000 (qcom,sm8550-videocc):
-required-opps: [[33]] is too short
-      6  clock-controller@aaf0000 (qcom,sm8550-videocc):
-power-domains: [[56, 6]] is too short
-      6  clock-controller@aaf0000 (qcom,sm8550-videocc): Unevaluated
-properties are not allowed ('power-domains', 'required-opps' were
-unexpected)
+Reported-by: syzbot+c29db0c6705a06cb65f2@syzkaller.appspotmail.com
+Tested-by: syzbot+c29db0c6705a06cb65f2@syzkaller.appspotmail.com
 
-Rob
+Tested on:
+
+commit:         8d6c5833 Add linux-next specific files for 20250703
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=11670582580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d7dc16394230c170
+dashboard link: https://syzkaller.appspot.com/bug?extid=c29db0c6705a06cb65f2
+compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=16837770580000
+
+Note: testing is done by a robot and is best-effort only.
