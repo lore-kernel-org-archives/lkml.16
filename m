@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F05B25A2C0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3366228A3E2;
 	Thu,  3 Jul 2025 18:33:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751567593; cv=none; b=W+CKt5xEnZSAMMHuptLEhMytTrxG//+DQluBySzB+jxkfw8RLWoEMYnbsgC/b069G9A0IV8DWLooZ6qEXChmlOBlDp+sTMeBCyLjQ/ePdusKVgr69qeZrRSfurTasYTfgdMY8Di2fbKzdtQ5eDaK1qx6BnhKDw/EuXZeIOPB7lc=
+	t=1751567593; cv=none; b=ZSnCxJ5OuRLeq154Gur+yqeBBl0B3fDGzVj1DhWJIfP3VJ7vjf2/2wJVlT1F8Vrdd0Gzh2ovzunfT9eoJNOex6MyBt8mxnn+W0ScRXPKR6qPu21b5OxCyAwe+qO9sz28VDENV0c7NHRvtRN66xe87qDIR/JfsO4jxMo5CYk/vms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751567593; c=relaxed/simple;
-	bh=GncYf9X2oA31TYye7DaUgi5Js+6gPq6VIcXaYOMi3r4=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=B1Nz+kQA5sa2xMEhXj+zZvHWSB/w4WLAqVIlve9anK8SpcSyUli3uHzgH2kbSaDkWGFpBqFAbpi/0Shqy1iRw3VrZ2rN0DwhoFxxlaAgvFvCfYmEyJc0PESAQJjfifCYPYzJGYzjEH8DgsvjR/Tby3iVIo1cChqbxYX2U5vNLCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UN1ALmzw; arc=none smtp.client-ip=10.30.226.201
+	bh=lnATMb/XmCNNMy1igSdCLxsZP2Vd/a/i5coedasJ6Ec=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=RiFznfOxZn+ZcrMocce+s2D9803ISFSvahxuJshF2ubWiAL5iRHbkiOhAR2vlGONqMgToDHCJNJbXNW56FuFudtVhfqJOL4HzW5Rl2B1/MvEIXQ7+iPdEN7ozh9IQIKtT1wxeZUjhNpxD1RtvqiJK1Q+VnlWJ91dgqMu02cL9/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qwwzqZjc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UN1ALmzw"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 95AC2C4CEE3;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qwwzqZjc"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C0AAAC4AF09;
 	Thu,  3 Jul 2025 18:33:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1751567592;
-	bh=GncYf9X2oA31TYye7DaUgi5Js+6gPq6VIcXaYOMi3r4=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=UN1ALmzwZ6bsOhZ9sEsVrEJIN/1ItpN6otlmAD/U6NXSxvQ4jlsM6oMR8MyxF/3eb
-	 EZZKwktdxyxbU7eZzqjYHMeuL0BHfAs7dCbQBcSz1kMy7O2rwjH8hI6cgSpyrOBMZd
-	 zivpykfNtBPczC71dUotDtrE+1VFASdAQgpBzB9I2I/emuhYQ5wNMJGN+x3ay7zkQO
-	 iJ7yCuqQOjrl5hctz3klm3HwYoMZEvmoN39gfsOyeyKFPYPA7OMQ8UyPOUPTDxTwpy
-	 Frp3sdKuMEoX6H6SemNKT6K98xqkcZw9akMVgnm9HYSuEQWk6ZwjdtMCNizXAAz9XT
-	 7O8a8RVJjJosQ==
+	bh=lnATMb/XmCNNMy1igSdCLxsZP2Vd/a/i5coedasJ6Ec=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=qwwzqZjcKtOl8/553fhUXtGV5cSS+O56najS82u0rLCWI5zFaQwv7KxGgmdECxS3U
+	 s2dkH5ydHtL1Xrb/O4ydhNxlIcwhLzhYLJEK75Yudxr95MZRHdFMyT/FH9aUq9OYtZ
+	 Lj4Gc4ESm9tQ1RCKRSeY1bmk/iF/oZbLqowhr0TVgrcBPr3mO3xtn/yXtcB6Yhy3nX
+	 y4mbGrRkH7p8JaNBQ/TAhSYiX5iVSecnD78N1MfwLRCfWx/CTGTRCiZG3+d05TPVlk
+	 OhIMHdeNtrbFiHQBTfgXD3J1C3AYtEEohNsePKJiThhvWfLsAZoJn7yGtefFj2E0sR
+	 /35+V/uFd7Edg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E6DC83030;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF646C83F0A;
 	Thu,  3 Jul 2025 18:33:12 +0000 (UTC)
 From: Frank Li via B4 Relay <devnull+Frank.Li.nxp.com@kernel.org>
-Subject: [PATCH v2 0/4] media: imx8qxp: add parallel camera support
-Date: Thu, 03 Jul 2025 14:33:05 -0400
-Message-Id: <20250703-imx8qxp_pcam-v2-0-188be85f06f1@nxp.com>
+Date: Thu, 03 Jul 2025 14:33:08 -0400
+Subject: [PATCH v2 3/4] arm64: dts: imx8: add parallel CSI node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,10 +40,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAOHMZmgC/1XMSwrCMBSF4a2UOzaShy2pI/chRcpNtHeQNCYSI
- iV7NxYnDv8D59sg2Ug2wbnbINpMiVbfQh46wGX2D8vItAbJZc8HOTByRT9LuAWcHTO6F1JpdVK
- ooF1CtHcqO3edWi+UXmt873oW3/UHKf4PZcE4s4hGaTOOkouLL+GIq4Op1voBiKkSVKYAAAA=
-X-Change-ID: 20250626-imx8qxp_pcam-d851238343c3
+Message-Id: <20250703-imx8qxp_pcam-v2-3-188be85f06f1@nxp.com>
+References: <20250703-imx8qxp_pcam-v2-0-188be85f06f1@nxp.com>
+In-Reply-To: <20250703-imx8qxp_pcam-v2-0-188be85f06f1@nxp.com>
 To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
  Mauro Carvalho Chehab <mchehab@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
  Sascha Hauer <s.hauer@pengutronix.de>, 
@@ -54,15 +53,13 @@ To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
  Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
 Cc: linux-media@vger.kernel.org, imx@lists.linux.dev, 
  linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, Frank Li <Frank.Li@nxp.com>, 
- Alice Yuan <alice.yuan@nxp.com>, Robert Chiras <robert.chiras@nxp.com>, 
- Zhipeng Wang <zhipeng.wang_1@nxp.com>
+ devicetree@vger.kernel.org, Frank Li <Frank.Li@nxp.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751567591; l=2021;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751567591; l=2229;
  i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
- bh=GncYf9X2oA31TYye7DaUgi5Js+6gPq6VIcXaYOMi3r4=;
- b=d8M8uU0lP7VvBvBdTdRf18XypZa/rv3UYjM9qkcsk0J/9tqRXx5HW9r63W5fCReeAhwYq/IO5
- DOCsPxh/PvKCNSAfqe07sTFdPwEEaZXYxDCVwdXWu4qk0kh0pwPszx9
+ bh=egvyIYm9Ny7RwG4VqCUmjTBkLSU8NimkbRJ5GJUfMCg=;
+ b=0DiK8tKXGe724gjHRzMZk45Ar6ghYBLBifnXK2kF2u5SRCj3q649yBEdL/Rg9kJnjnsrMYMyP
+ KvscQ92k649AaIVhdfok6kql5Di1O3TLWV46TiUjkLyRHXO0YE1oDIc
 X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
  pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
 X-Endpoint-Received: by B4 Relay for Frank.Li@nxp.com/20240130 with
@@ -70,55 +67,87 @@ X-Endpoint-Received: by B4 Relay for Frank.Li@nxp.com/20240130 with
 X-Original-From: Frank Li <Frank.Li@nxp.com>
 Reply-To: Frank.Li@nxp.com
 
-Add parallel camera support for i.MX8 chips.
+From: Frank Li <Frank.Li@nxp.com>
 
-The below patch to add new format support to test ov5640 sensor
-   media: nxp: isi: add support for UYVY8_2X8 and YUYV8_2X8 bus codes
-
-The bindings and driver for parallel CSI
-   dt-bindings: media: add i.MX parallel csi support
-   media: nxp: add V4L2 subdev driver for parallel CSI
-
-DTS part need depend on previous MIPI CSI patches.
-  https://lore.kernel.org/imx/20250522-8qxp_camera-v5-13-d4be869fdb7e@nxp.com/
-
-  arm64: dts: imx8: add parellel csi nodes
-  arm64: dts: imx8qxp-mek: add parallel ov5640 camera support
+Add parallel CSI nodes.
 
 Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
-Changes in v2:
-- remove patch media: nxp: isi: add support for UYVY8_2X8 and YUYV8_2X8 bus codes
-  because pcif controller convert 2x8 to 1x16 to match isi's input
-- rename comaptible string to fsl,imx8qxp-pcif
-- See each patches's change log for detail
-- Link to v1: https://lore.kernel.org/r/20250630-imx8qxp_pcam-v1-0-eccd38d99201@nxp.com
-
+changes in v2
+- update compatible string to match binding's change
 ---
-Alice Yuan (2):
-      dt-bindings: media: add i.MX parallel csi support
-      media: nxp: add V4L2 subdev driver for parallel CSI
+ arch/arm64/boot/dts/freescale/imx8-ss-img.dtsi    | 13 +++++++++++
+ arch/arm64/boot/dts/freescale/imx8qxp-ss-img.dtsi | 27 +++++++++++++++++++++++
+ 2 files changed, 40 insertions(+)
 
-Frank Li (2):
-      arm64: dts: imx8: add parallel CSI node
-      arm64: dts: imx8qxp-mek: add parallel ov5640 camera support
+diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-img.dtsi b/arch/arm64/boot/dts/freescale/imx8-ss-img.dtsi
+index 2cf0f7208350a416d77b11140279d2f66f41498f..1f7bf9efdbca266fbda82d2bc84acd9a27ed0bd1 100644
+--- a/arch/arm64/boot/dts/freescale/imx8-ss-img.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8-ss-img.dtsi
+@@ -224,6 +224,19 @@ irqsteer_parallel: irqsteer@58260000 {
+ 		status = "disabled";
+ 	};
+ 
++	parallel_csi: csi@58261000 {
++		compatible = "fsl,imx8qxp-pcif";
++		reg = <0x58261000 0x1000>;
++		clocks = <&pi0_pxl_lpcg IMX_LPCG_CLK_0>,
++			 <&pi0_ipg_lpcg IMX_LPCG_CLK_4>;
++		clock-names = "pixel", "ipg";
++		assigned-clocks = <&clk IMX_SC_R_PI_0 IMX_SC_PM_CLK_PER>;
++		assigned-clock-parents = <&clk IMX_SC_R_PI_0_PLL IMX_SC_PM_CLK_PLL>;
++		assigned-clock-rates = <160000000>;
++		power-domains = <&pd IMX_SC_R_PI_0>;
++		status = "disabled";
++	};
++
+ 	pi0_ipg_lpcg: clock-controller@58263004 {
+ 		compatible = "fsl,imx8qxp-lpcg";
+ 		reg = <0x58263004 0x4>;
+diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-ss-img.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp-ss-img.dtsi
+index 50015f8dd4e43b507c879479e7320cb58ec8bf74..60aa43c45d15c8b0c2c425be52ed79458d8c96b9 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qxp-ss-img.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8qxp-ss-img.dtsi
+@@ -62,6 +62,14 @@ isi_in_2: endpoint {
+ 				remote-endpoint = <&mipi_csi0_out>;
+ 			};
+ 		};
++
++		port@4 {
++			reg = <4>;
++
++			isi_in_4: endpoint {
++				remote-endpoint = <&parallel_csi_out>;
++			};
++		};
+ 	};
+ };
+ 
+@@ -94,3 +102,22 @@ &jpegenc {
+ &mipi_csi_1 {
+ 	status = "disabled";
+ };
++
++&parallel_csi {
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			reg = <0>;
++		};
++
++		port@1 {
++			reg = <1>;
++
++			parallel_csi_out: endpoint {
++				remote-endpoint = <&isi_in_4>;
++			};
++		};
++	};
++};
 
- .../devicetree/bindings/media/fsl,imx93-pcif.yaml  | 109 +++
- MAINTAINERS                                        |   2 +
- arch/arm64/boot/dts/freescale/Makefile             |   3 +
- arch/arm64/boot/dts/freescale/imx8-ss-img.dtsi     |  13 +
- .../dts/freescale/imx8qxp-mek-ov5640-parallel.dtso |  82 ++
- arch/arm64/boot/dts/freescale/imx8qxp-ss-img.dtsi  |  27 +
- drivers/media/platform/nxp/Kconfig                 |  11 +
- drivers/media/platform/nxp/Makefile                |   1 +
- drivers/media/platform/nxp/imx-parallel-csi.c      | 944 +++++++++++++++++++++
- 9 files changed, 1192 insertions(+)
----
-base-commit: 93355cfe8aec9e47fc93fbc940f1bbeedd62e249
-change-id: 20250626-imx8qxp_pcam-d851238343c3
-
-Best regards,
 -- 
-Frank Li <Frank.Li@nxp.com>
+2.34.1
 
 
