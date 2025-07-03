@@ -1,182 +1,120 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B082E3AFF;
-	Thu,  3 Jul 2025 11:23:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC63A2E2EFE;
+	Thu,  3 Jul 2025 11:24:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751541826; cv=none; b=NzjX2yy/VJrWdgzL9/ZApDFFkUl/IAVcrue9sQRKL0arxOGnva85my+fCJakiOYyn42Taz0xNHtnZZacLaWWmD/KfWYkok/qrFDgPR5Yimfw+e0eTAKL9vB+DbhH7jejKRdYbTVcFO9C8/mTUSP9GY1GymZwZuEXqqn93JsEVPU=
+	t=1751541841; cv=none; b=WHFFWQQRisHaxiJRd1+eUwIyncUsSLg7Rw4ktaSytVShcnjNN/366RQnKzlOgEXYc8kh0Piz9mISGVMo/xG45VusBIf9HBO8qoIOMZgZ+c1/Nr8GWIBo8L0oY/EVz4aJl7dmMuDYhU6ChkFJGOYU3FHL6NdLxit8I6g2t8WSM8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751541826; c=relaxed/simple;
-	bh=oLOZlkz4/kMnU9rgSW96ifr6RqN12imGk9bUzWGFcuU=;
-	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=NpcKrbmo5Er+pgAUsRmkihASYAJxy5YfQYBQCMmbhRx4u/IvOjp3QiQ8bZI94kzVIY+xuiaEOo5IzXcA2ZzvqvCGEgYRqXJwNPerMijvcKOZwVOvrTCKtic1ndIS2seMpA9h2cilJprtgzKDtoFWoAStk4D0pdUQ+H+c/JLCvsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=FLua1SpB; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1751541841; c=relaxed/simple;
+	bh=qdMPMaWhAdjs0zICvQE3fxorvk/Gs4a0C1/nlgKrdDc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WOiE+qnUq4LFm+CAiyvEfMqfqDjxD+hp15IQRfIlQSX8gux3SQCaNmhNppGvRofhJrdMz1/Oc8cNlE4Ds6JLZe5ETBmFJZVxggoiW6H/Bf2wSouLxHglnV1SLBtQafufISBpA6tXTCAk0Q3M0B83Ph3OKRlene0MLhjmTjuckEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EBbMtqu4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="FLua1SpB"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56307CLS009905;
-	Thu, 3 Jul 2025 11:23:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=4emJw4
-	ErehVOKAjtCy8M8j74Pv47NHFVJ+00dCO9c8g=; b=FLua1SpBxBfqAYVTSreT6f
-	SVKfMdpkHUd1jIeU0LcbAKHhzNRLOcVsJQBsmb5LRdrAMu++uvjdI2HXrbbJs1Ix
-	0C5TjBsV7FMJmdDfRvYbSfhtXA0RfkpXPNIe+mtk4TglE0gZC567BGj5b8ahrqEv
-	pzmn4iggUrr79ycaSBCXCOTo2cVggXGCvuhYBA3GKPJj5JjKjovIf9DuOJQ5nwuN
-	oF3ZSRlpl/QV3YzdOBb5jmsl0qT6hpICkUyaejrij0spaBSpezkgZiAx7rYVJ/k8
-	3/nh8FNcF3zr7saIjPiK+rAniGmYYvozsznSZgTkWhvXvt/k5OOjNnv+W/vD3Y2g
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j5ttk553-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Jul 2025 11:23:26 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 563BHdQd025413;
-	Thu, 3 Jul 2025 11:23:26 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j5ttk551-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Jul 2025 11:23:26 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 563AmEmC011873;
-	Thu, 3 Jul 2025 11:23:25 GMT
-Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47jv7n4ex4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Jul 2025 11:23:25 +0000
-Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
-	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 563BNOQS28115516
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 3 Jul 2025 11:23:24 GMT
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6FB2558043;
-	Thu,  3 Jul 2025 11:23:24 +0000 (GMT)
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 18DA858061;
-	Thu,  3 Jul 2025 11:23:23 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.102.16])
-	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  3 Jul 2025 11:23:22 +0000 (GMT)
-Message-ID: <8401c23009db3b8447b0b06710b37b1585a081ab.camel@linux.ibm.com>
-Subject: Re: [PATCH] Revert "integrity: Do not load MOK and MOKx when
- secure boot be disabled"
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Lennart Poettering <mzxreary@0pointer.de>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>,
-        Roberto Sassu	
- <roberto.sassu@huawei.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        Eric Snowberg <eric.snowberg@oracle.com>,
-        Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn"	 <serge@hallyn.com>, linux-integrity@vger.kernel.org,
-        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Lee,
- Chun-Yi" <joeyli.kernel@gmail.com>
-In-Reply-To: <aGYurikYK1ManAp3@gardel-login>
-References: <Z9wDxeRQPhTi1EIS@gardel-login>
-	 <1a6cf2097487816e4b93890ad760f18fe750bd70.camel@linux.ibm.com>
-	 <aGYurikYK1ManAp3@gardel-login>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 03 Jul 2025 07:23:22 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EBbMtqu4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D7ECC4CEE3;
+	Thu,  3 Jul 2025 11:23:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751541840;
+	bh=qdMPMaWhAdjs0zICvQE3fxorvk/Gs4a0C1/nlgKrdDc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=EBbMtqu4GeUGpMSibpJn/E4iY5cmMx5SCnl5CxGwmkirVAo3iA2EWCJmcwTZUuMop
+	 vkxBJLxP0Vbzn0sYN/l5bjHKNwADqP/ZOa3ok6x7o2oFrUtk2yU+PhbCaVKch2z9nu
+	 ThHD3X/NlpbmUH03npYj/BtA8Ik/lBCgXdr+z0lSkq90UxiXCnwS0hrwE7jyW73C01
+	 eAqgjw2m8hQamZJTfJyW+VOXsnXzzOlvvYDOZtdwOLEP0CKfUSbZ+u9gs9aRb1k69S
+	 Pv6J5Re87kS0H+LydT/KkIlaNqRIi09gBvLzIRGD4Mq0IrwkNEiGNQpptwSK5Rw3I7
+	 N1Ik1wK2I82rg==
+Message-ID: <3116cbdc-f18f-43d4-a26d-79e66561183f@kernel.org>
+Date: Thu, 3 Jul 2025 13:23:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: HZ8B1dRlKfYZ0lNGt2l8fRKVvedpbDAT
-X-Authority-Analysis: v=2.4 cv=UtNjN/wB c=1 sm=1 tr=0 ts=6866682e cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VnNF1IyMAAAA:8 a=JnBA2F1U-474F7nXX6wA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: d21f4K65zcBRJYncthFVJkaJrlCK98v8
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAzMDA5MyBTYWx0ZWRfXz9kgAsO/VuU/ QlEYHcaC7527+wF/Gjc7B7bcEuYcXOswmwfVT/uppKPb3b9CFXOyBic0T9k07+xPC3VMZ+mc6sz YDiJVF/V4nrlQRssFQZprr1L5WGCaDgMedCc7MyR1l7owP+TGZkaw38zqzL/aLReMzF/NWXDKtT
- BZCiS1RVZj5Lsg+/Azk+y0LJXI/tc8rih+GlkV2K3wyzJgXwNa5lkyFH9BgTFlQXSfIeUgWOOGz jdRK36T9AYAtec1FdZKbw/3QBfGeyunzx8FYz1ko7UOl/DTxXMEJNmGnwDszNxAYibooEZiQn6Y 2FVyjGsN8PFDC9sSKkO/5ihyZeGPE8+sAvVP3SWkNz/SgBs6Ph8sCujQmXUOtsE4ts5o4v4b7DJ
- lMcqHSSOGnqaxDHPTdU9O9Sc93eC9dAq/jPnS+tmAgsUHny+EqwT/K3K6EtP8jRCggNRvxTA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-03_03,2025-07-02_04,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- priorityscore=1501 phishscore=0 mlxscore=0 spamscore=0 mlxlogscore=999
- adultscore=0 clxscore=1015 lowpriorityscore=0 bulkscore=0 impostorscore=0
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507030093
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: document the Milos Top Level
+ Mode Multiplexer
+To: Luca Weiss <luca.weiss@fairphone.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, ~postmarketos/upstreaming@lists.sr.ht,
+ phone-devel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250702-sm7635-pinctrl-v2-0-c138624b9924@fairphone.com>
+ <20250702-sm7635-pinctrl-v2-1-c138624b9924@fairphone.com>
+ <20250703-daring-burgundy-limpet-a1c97e@krzk-bin>
+ <DB293G0PC5P8.13IW22M6DDESM@fairphone.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
+ QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
+ +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
+ ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
+ 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
+ hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
+ tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
+ 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
+ naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
+ hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
+ whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
+ qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
+ RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
+ Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
+ H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
+ dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
+ AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
+ jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
+ zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
+ XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
+In-Reply-To: <DB293G0PC5P8.13IW22M6DDESM@fairphone.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 2025-07-03 at 09:18 +0200, Lennart Poettering wrote:
-> On Mi, 02.07.25 21:40, Mimi Zohar (zohar@linux.ibm.com) wrote:
->=20
-> > On Thu, 2025-03-20 at 13:02 +0100, Lennart Poettering wrote:
-> > > This reverts commit 92ad19559ea9a8ec6f158480934ae26ebfe2c14f.
-> > >=20
-> > > This original commit this reverts creates a strange situation: it
-> > > ensures more restrictive behaviour if SecureBoot is off then when it
-> > > is on, which is the opposite of what one would expect.
-> > >=20
-> > > Typically, one would expect that if SB is off the validation of
-> > > resources during the pre-kernel and kernel initialization is less
-> > > restrictive, not more restrictive. But this check turned the world on
-> > > its head.
-> >=20
-> > Hi Lennart,
-> >=20
-> > I'm really sorry for the long delay ...
-> >=20
-> > > From an IMA perspective, the default is to only trust keys built into=
- the kernel
-> > or certificates signed by the builtin keys and loaded onto the
-> > .secondary_trusted_keys keyring.
-> >=20
-> > The ability of loading MOK keys onto the .machine keyring and linked to=
- the
-> > .secondary_trusted_keys keyring is an exception based on the assumption=
- that
-> > that there is a secure boot chain of trust.  Allowing untrusted keys on=
-to or
-> > linked to the .secondary_trusted_keys keyring, would potentially allow =
-loading
-> > code signing keys onto the IMA keyring signed by untrusted MOK keys.
-> >=20
-> > I was really hesitant to allow this exception of loading MOK keys onto =
-the
-> > .machine keyring in the first place.  I'm now even more concerned.
-> >=20
-> > This is not just an issue of being more or less restrictive, but of add=
-ing a new
-> > integrity gap when one didn't exist previously.
->=20
-> But we are talking of the case here where SecureBoot is *off*,
+On 03/07/2025 09:44, Luca Weiss wrote:
+> On Thu Jul 3, 2025 at 9:41 AM CEST, Krzysztof Kozlowski wrote:
+>> On Wed, Jul 02, 2025 at 05:56:16PM +0200, Luca Weiss wrote:
+>>> Document the Top Level Mode Multiplexer on the Milos Platform.
+>>
+>> What is Milos platform? Does it have some sort of model number how we
+>> usually expect? Wasn't this SM7325 or similar?
+>>
+>> The problem with such new naming that it awfully sounds like family
+>> names, so just expand the name and explain it.
+> 
+> Please go argue with Bjorn/Konrad about this, wasn't my idea.
+> 
+> https://lore.kernel.org/linux-arm-msm/aGMI1Zv6D+K+vWZL@hu-bjorande-lv.qualcomm.com/
+> https://lore.kernel.org/linux-arm-msm/b98d305b-247f-415b-8675-50d073452feb@oss.qualcomm.com/
 
-Exactly, so there is no trust in any keys other than those built into the
-kernel. True that is of course dependent on trusting the kernel.  In the ca=
-se of
-MOK, trusting additional keys requires at minimum a "safe" secure boot
-environment and other things to prevent its abuse.
+I don't think you got my point. I want it to be explicit in commit msg.
 
-> i.e. there is a concious decision in place that there is no trust
-> chain, and that the firmware *happily* *already* accepts unsigned boot
-> loaders/kernels and just runs with them. If SecureBoot is already off,
-> then an attacker can patch around in the kernel invoked at boot
-> completely freely anyway, there is *no* authentication done. Hence
-> it's really weird to then insist that the path into the kernel keyring
-> via mok keys is off in *only* this case, because an attacker can get
-> into that anyway in this case, it's just a lot more cumbersome.
->=20
-> It's really strange that currently when people ask for tight security
-> (i.e. SB on) the linux kernel is super relaxed and allows any keys to
-> be inserted, but if people ask for security checks to be off (i.e. SB
-> off) the kernel starts being super strict and doesn't allow any keys
-> to propagate into mok. That's really confusing and contradictory, no?
-
-That all may be true, but you're ignoring what I said about only "trusting"=
- MOK
-in certain situations.  If you have another safer, better mechanism for
-establishing a new root of trust for keys (e.g. TPM), then by all means sha=
-re it
-and we can make additional exceptions.
-
-Mimi
+Best regards,
+Krzysztof
