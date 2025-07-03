@@ -1,90 +1,134 @@
-Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
+Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D9D919DF4A;
-	Thu,  3 Jul 2025 15:20:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B93E22258C;
+	Thu,  3 Jul 2025 15:20:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.69.130.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751556014; cv=none; b=axRDg3QW6GPENhh3ut3cgI6M6qssFtTVwYhDkF8bWo/5hAvBo/FqiSJrcW+PK+HZBuJyu49tbtkk+fTf2GQjRKNW++443zcip4H++2NL2xKm8NWfJaEmW5wi9Bh1Q4AnLblD7oYzeVCuhTQ0lVO6tVpMT09xCVRerVJK0uejzuI=
+	t=1751556046; cv=none; b=f4drJMk6qx5XQYArQDCBwew6gTMZF8gLeh1013RR1XjbGIWNVHcDD3C6cR1pIV78iyEp/wwUsETL3j+VUH2USQSRJQruM5lqdggFBCp3+lT2NPQJOo0okgCglYlviQ4nRL/zHGhN3GrVSR7Du+U3HGIFHP4VKKzDjpJBm1aXauU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751556014; c=relaxed/simple;
-	bh=zyW2JF7ggDwKeUggong4msxGGdYZUfGPspwnvMilfl4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mv33TNhh3DQN36aj/RwjV5ElekmRfJji63/x5zj7Qp6UiuqckiSiFcBA9apeDRPIon/TGPCEbVMN71Oa0lprZM2JRfmXB1KGCKLhx6bnIloklq8nvpTeW8v4XolFs41b4R8xcGHQoEh5/dRixFQFY4RJA1G5A3dL+s+Qs6szS9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=axyeHQwX; arc=none smtp.client-ip=185.226.149.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
+	s=arc-20240116; t=1751556046; c=relaxed/simple;
+	bh=PB9TNaTNKH+VQLSh3v9KswAy35tz1G3hodK352qbFh0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oD5+KZN6P+kpUdOFhSdJYidFnHF/oZgn76BPWCTHoSVQ4ARoOYVnT4azjsCi4NlWSD6AsQSGb6wtf1GU8v12P9CeB9GyN1670WNTCP+3rw3rllJ0r9bKW3y7sP8PHP1NpGf2kPLKh5g/AsagV/qXMpnNnxIJQHI8VWO3QxyZmyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=hsMjQ1Uj; arc=none smtp.client-ip=158.69.130.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="axyeHQwX"
-Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
-	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <mhal@rbox.co>)
-	id 1uXLjI-000o8Q-BG; Thu, 03 Jul 2025 17:20:04 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
-	s=selector2; h=Cc:To:In-Reply-To:References:Message-Id:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From;
-	bh=PlGs9wh18mkqUl6kxctD4ftbMTeyT7vxlrNxpH3tPMg=; b=axyeHQwXaWu/SQM7ZduRiHASei
-	+1PMePqhF9E3n4J/VumWPk+U+YeWedeIizyD/LlBRgZIPFYYccRYnx55M6yNJ5hKMRPtNWlEP6MNU
-	73vZ1gjJRXxYnSKR3Msttf7htzO6nVY1RsYL4T+q+HxtdyOp1cmDhrhw2JisCsdlU4csk0yRYSL0l
-	BO706XgTq5DsTHYwJryd+mLL2CXeE9PDWsPrb0n/sOnVaOeEBJMIVfvtxGa4o7senGS2idiqKVxM9
-	YNQHQm5hLzRiQYxWbh113PaK1wuJ116LD24lTqCvDTFZtnINts/Eqer0KuHd/7X2XTkj/ABH3QhBR
-	QnSYLBgw==;
-Received: from [10.9.9.73] (helo=submission02.runbox)
-	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <mhal@rbox.co>)
-	id 1uXLjF-0006dZ-Az; Thu, 03 Jul 2025 17:20:03 +0200
-Received: by submission02.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1uXLhl-001WIY-1w; Thu, 03 Jul 2025 17:18:29 +0200
-From: Michal Luczaj <mhal@rbox.co>
-Date: Thu, 03 Jul 2025 17:18:20 +0200
-Subject: [PATCH net v4 3/3] vsock: Fix IOCTL_VM_SOCKETS_GET_LOCAL_CID to
- check also `transport_local`
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="hsMjQ1Uj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1751556043;
+	bh=PB9TNaTNKH+VQLSh3v9KswAy35tz1G3hodK352qbFh0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=hsMjQ1UjeYUAI6Oe7nSGWF1+Nr/+Sqw2MrVx4+1/0gJQdMTK06RLvaprhIRASGqG9
+	 RcZnPQSuyrUPT1OOgJ22ChGvxS63+GAJD5WJ3XPfRLmvetcWBoj4YdBrAcsNW5C/cg
+	 XGEJCRfowXtFTXR96pYYqPUqYT+EmhG2bH+ysBilDq1Js3Pyr6WFT5gzLpKlRlFMoB
+	 9csxnfdECM8MLwwZPi5XFNh5eOu0II0K7X10WuyvC7YyttI49x7TXcL+87Ryc/atba
+	 wgV4UZhxI4jJJVKBfux+rZ8vNAEWviU50/OWQXk+ZhuCHu50ATLyEfm1hdLH1hVXeJ
+	 BPGro5PrcCVow==
+Received: from thinkos.internal.efficios.com (192-222-132-26.qc.cable.ebox.net [192.222.132.26])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4bY0p26xl8z1MSc;
+	Thu,  3 Jul 2025 11:20:42 -0400 (EDT)
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@linux.com>,
+	Martin Liu <liumartin@google.com>,
+	David Rientjes <rientjes@google.com>,
+	christian.koenig@amd.com,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Sweet Tea Dorminy <sweettea@google.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R . Howlett" <Liam.Howlett@Oracle.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Christian Brauner <brauner@kernel.org>,
+	Wei Yang <richard.weiyang@gmail.com>,
+	David Hildenbrand <david@redhat.com>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	Yu Zhao <yuzhao@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>
+Subject: [RFC PATCH v4 0/2] mm: Fix OOM killer inaccuracy on large many-core systems
+Date: Thu,  3 Jul 2025 11:20:30 -0400
+Message-Id: <20250703152032.10507-1-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250703-vsock-transports-toctou-v4-3-98f0eb530747@rbox.co>
-References: <20250703-vsock-transports-toctou-v4-0-98f0eb530747@rbox.co>
-In-Reply-To: <20250703-vsock-transports-toctou-v4-0-98f0eb530747@rbox.co>
-To: Stefano Garzarella <sgarzare@redhat.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, Stefan Hajnoczi <stefanha@redhat.com>
-Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Michal Luczaj <mhal@rbox.co>
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
 
-Support returning VMADDR_CID_LOCAL in case no other vsock transport is
-available.
+Introduce hierarchical per-cpu counters and use them for rss tracking to
+fix the per-mm RSS tracking which has become too inaccurate for OOM
+killer purposes on large many-core systems.
 
-Fixes: 0e12190578d0 ("vsock: add local transport support in the vsock core")
-Suggested-by: Stefano Garzarella <sgarzare@redhat.com>
-Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
-Signed-off-by: Michal Luczaj <mhal@rbox.co>
----
- net/vmw_vsock/af_vsock.c | 2 ++
- 1 file changed, 2 insertions(+)
+The approach proposed here is to replace this by the hierarchical
+per-cpu counters, which bounds the inaccuracy based on the system
+topology with O(N*logN).
 
-diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
-index 66404c06bdaa0dc453a625c08a04c7eb14a95498..1053662725f8f03b78dc6ef80d46c31167ba0055 100644
---- a/net/vmw_vsock/af_vsock.c
-+++ b/net/vmw_vsock/af_vsock.c
-@@ -2581,6 +2581,8 @@ static long vsock_dev_do_ioctl(struct file *filp,
- 		cid = vsock_registered_transport_cid(&transport_g2h);
- 		if (cid == VMADDR_CID_ANY)
- 			cid = vsock_registered_transport_cid(&transport_h2g);
-+		if (cid == VMADDR_CID_ANY)
-+			cid = vsock_registered_transport_cid(&transport_local);
- 
- 		if (put_user(cid, p) != 0)
- 			retval = -EFAULT;
+Testing and feedback are welcome!
+
+Thanks,
+
+Mathieu
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Dennis Zhou <dennis@kernel.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Martin Liu <liumartin@google.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: christian.koenig@amd.com
+Cc: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Sweet Tea Dorminy <sweettea@google.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: "Liam R . Howlett" <Liam.Howlett@Oracle.com>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Wei Yang <richard.weiyang@gmail.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Miaohe Lin <linmiaohe@huawei.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: linux-mm@kvack.org
+Cc: linux-trace-kernel@vger.kernel.org
+Cc: Yu Zhao <yuzhao@google.com>
+Cc: Roman Gushchin <roman.gushchin@linux.dev>
+Cc: Mateusz Guzik <mjguzik@gmail.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+
+Mathieu Desnoyers (2):
+  lib: Introduce hierarchical per-cpu counters
+  mm: Fix OOM killer inaccuracy on large many-core systems
+
+ include/linux/mm.h                  |   8 +-
+ include/linux/mm_types.h            |   4 +-
+ include/linux/percpu_counter_tree.h | 108 ++++++++
+ include/trace/events/kmem.h         |   2 +-
+ kernel/fork.c                       |  31 ++-
+ lib/Makefile                        |   1 +
+ lib/percpu_counter_tree.c           | 393 ++++++++++++++++++++++++++++
+ 7 files changed, 530 insertions(+), 17 deletions(-)
+ create mode 100644 include/linux/percpu_counter_tree.h
+ create mode 100644 lib/percpu_counter_tree.c
 
 -- 
-2.50.0
-
+2.39.5
