@@ -1,131 +1,129 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDCC52BE64A
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 20:58:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB3F770E2
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 20:59:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751576321; cv=none; b=AZiCb4pcEZE+8zyvo9Jbl53Pa/v6KAaHMbCN3cLbWVxNjr4Dmbjacy7sf5r9LqKYAee5kI7lBaJWFSI/xrvz0O6bG6b8y0cEs5/ls/r9hlyj4iiyPNCzwYPTur2GkC3IGRx7qreqpk/rD07AkIsgkjU+y1rjSR9lIH6iW8SmDWU=
+	t=1751576384; cv=none; b=uKjAfAh1eYyT+K3scOgwcgEpfl/4cXHtN6rPdEMo8Hg4FZFoXjqfqIWGWcEVMAYcmYkAQtnxAXaV+YNhmIoa03alSzVfTdiC2u+9+R60LMjOZOWWn9tQqANePYZqieUmpnG2P393tXIO43OqhBc++fOXyAYsJP22LMnT+pHhb1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751576321; c=relaxed/simple;
-	bh=DiJjAsxd3NLx6OvlELv3sKg3BSU/dtVOQuiuh5Nz4Ls=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eikIsDkVWJwbiMjvdyk6fU4aKQoVwrerEM43Sd8KsvZf4dlo+85/uvh8zBQMxyORCpQi7HC1wWvtslluRoq1Qx0y68SU41hS5cmkBKuw+QD8TwfV+W1ClbVqveJtZEY42HVf2Y7YxodmBJmU9NkIKtkaJzGWeEDQUNZj9yBJqeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=AVzQ77Im; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1751576384; c=relaxed/simple;
+	bh=q1HXzZCKe+WU8zeTxusGqPb3t5lQPTGT04MNAOAOVVs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=e0ocff5wmyfeevfCX/alQVoTgRI9Arj42CgxLvoq1yPtd52EvXvcCzRNP/rVAYeaYlrq/Q54R4ft+nkY2Qby/TWv1WaAsXK+22FEdV5C3ozWp1pDzCh3NJDyagy63macixiSjz0zSZUZpfKobUQaWiYJdwAbx6D4P6UR+X9ygUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gyUwQHXq; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xxZgy+uk; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="AVzQ77Im"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ae3b336e936so55924666b.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 13:58:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1751576315; x=1752181115; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=XpibsVHxYqxJwhE/Mgkya5GxIWQIBQtSRQMl/dLvVIY=;
-        b=AVzQ77Imqo9REfO/kKiLsqagdUITM63fRGqXnI52YTKLrX9TsV5V98i2s/XRl1vJHZ
-         Ntxm0yd/MnaDmGZYWrxy/AuWeKbuN0Ulz1h35PLPS/eZMyMzA9UMYJivB64P0vxxJdGi
-         ZJ0YCk6TMhCZiXr93SpB4yhtfxODcyRFrvqWQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751576315; x=1752181115;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XpibsVHxYqxJwhE/Mgkya5GxIWQIBQtSRQMl/dLvVIY=;
-        b=dfkY0PZ8LK5Pxj9E+YfNffSMkiHQQ5jQon7VNSfFGZxneY8KOA8QEyBZQOx8PS6Qfd
-         qQgXDbq7dnfAni7kz2ANn5ep7Rx5UC68TzA2mbrAquJgx2z+ZYSt+EuZjdyD5/m7glQ7
-         Kgewx999QTSYckicqHNE7axJ+fjlCRXf71OME0/ABm5j+3v6n/LsFzG5TEQKW2YL+2c7
-         /OAVX43oGzfmWBA64aZBgn020NdhnayMEDG94YtnoWCmbC21F8uw1P/XQrZo8O+b44y6
-         2iYfqkXI2CIvHoKSlO2/abURluIWF/SWEnqDSf8XpHHjtC1ndf1EkcotseLVWIuCXWoR
-         EewA==
-X-Gm-Message-State: AOJu0YxFzFBQJyOKs84xvOzVSUQSkTUtdUyCJrrfqjvztHnKo9W5rRjF
-	tWhncx7UYmqJLGOwnSha2TqyWTZ4k9Ec0m1kSvMQDLC0ocpiw+2bjCwQD3vgZ1N1+79o+JoHhrp
-	CpVYsXOE=
-X-Gm-Gg: ASbGncuCJea8jZM2oCjz8UvAsEPfo+St7gor2oOWKhQM0pkW3FstyboWnr+rJqTdp/b
-	swfmR60NtMdpwvAVLgS1NM9Ug/GXWyf4hedfPUhatCwCTvc3zfadBhbY5TNrgxRWVarzSa/q8jN
-	BEdT6d/2ucq7mw0I6Sftb64mIs0TxYxGN1JdYlT0cwJrjPxCn3NnuLlRfUhs9ndc/9IKsPbh9Iv
-	sxhRmxF+6DmafhCF7QrxThqE2rGFoz/UB42qKFQ2htC4Ie+R1emijjUICgcAavTT0r//TxW0RME
-	WpuRRRn77hhQ8pvUwn2ZcQPQlcLBqRYQw6THjPx8cOmyQscZaBAwKmA0u0qODdK9+k9aEV8QX2J
-	RQpepC/eslEFrshHquGLJFPGzANPZqHa6GO1n
-X-Google-Smtp-Source: AGHT+IEgBVirFugL+eT3cUuk+NJWLmc8tgXjHOC7CjC3s7olunlFCCuWN55orfgOwkSfWlW0B3j74Q==
-X-Received: by 2002:a17:907:94cb:b0:ade:44f8:569 with SMTP id a640c23a62f3a-ae3c2c9d41bmr922446766b.42.1751576314555;
-        Thu, 03 Jul 2025 13:58:34 -0700 (PDT)
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com. [209.85.208.45])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f6b5e757sm38739066b.156.2025.07.03.13.58.33
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jul 2025 13:58:34 -0700 (PDT)
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-60bfcada295so442586a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 13:58:33 -0700 (PDT)
-X-Received: by 2002:a05:6402:d0b:b0:607:f257:ad1e with SMTP id
- 4fb4d7f45d1cf-60fd33621b5mr42848a12.22.1751576313551; Thu, 03 Jul 2025
- 13:58:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gyUwQHXq";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xxZgy+uk"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751576381;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CCRmMU2DqQB/WGYJD/I/B9KAT5c7zyCLdXM1Ty+fbzk=;
+	b=gyUwQHXqlKlMgNVo6c+8R6S7PRDZM98IX0JPdLsDat90oIN2tKjeeXzJ6u6Dsd2RFvRMTJ
+	zpuj9dr1lkAnrd9kfwb8vcTsPQ/h8QRwK0iWcM93mRqvhxKjy16nkyhF5D8fM7ti3FawHs
+	y34VT/VU2dNujTNpsRklvcsbJXpK6e53eQQNhRfbVXTND/nxT+4fnCIIlswFbV88NA6pYg
+	orzXyigoFdWKAzpkapqqRab+PNiSzX7VDCsNqeEg3Y4lMLxms2EG6/ZyxY4mJ800mwWTJk
+	qZG/lDqSKoFQWk0OAMkYOrr7PSAWL2VrZoom1RxzIiBJwMnU4fcCS039YTVUVQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751576381;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CCRmMU2DqQB/WGYJD/I/B9KAT5c7zyCLdXM1Ty+fbzk=;
+	b=xxZgy+ukjndFizJvg452/dOHMfF8atJjUT4EB3JdR5DollsgfG6qnDk1aS7vM/C9PQuTd0
+	2oSsSwXEq/tutrDw==
+To: "Christoph Lameter (Ampere)" <cl@gentwo.org>
+Cc: Christoph Lameter via B4 Relay <devnull+cl.gentwo.org@kernel.org>,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker
+ <frederic@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, sh@gentwo.org, Darren
+ Hart <dvhart@infradead.org>, Arjan van de Ven <arjan@infradead.org>
+Subject: Re: [PATCH] Skew tick for systems with a large number of processors
+In-Reply-To: <96b6702a-8e3d-0ff9-2a86-75120bac189e@gentwo.org>
+References: <87sejew87r.ffs@tglx>
+ <fb0dba1d-0edf-52a8-b546-750a68e55323@gentwo.org> <87ms9lwscq.ffs@tglx>
+ <96b6702a-8e3d-0ff9-2a86-75120bac189e@gentwo.org>
+Date: Thu, 03 Jul 2025 22:59:40 +0200
+Message-ID: <8734bdt2gz.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250703115222.2d7c8cd5@batman.local.home> <CAHk-=wjXjq7wJM-xnTCcGCxg2viUcN6JfHBETpvD94HX7HTHFQ@mail.gmail.com>
- <20250703152643.0a4a45fe@gandalf.local.home>
-In-Reply-To: <20250703152643.0a4a45fe@gandalf.local.home>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 3 Jul 2025 13:58:17 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgdM_A1iWs6=y__nDcVq9pZRynd1mO8F9XnAeZuHumHtA@mail.gmail.com>
-X-Gm-Features: Ac12FXwYVzSrl3kui7aMRaxe8iQweZ7A051wIMsfyQxmbAoaWneINGskzeXmSE4
-Message-ID: <CAHk-=wgdM_A1iWs6=y__nDcVq9pZRynd1mO8F9XnAeZuHumHtA@mail.gmail.com>
-Subject: Re: [RFC][PATCH] ftrace: Make DYNAMIC_FTRACE always enabled for
- architectures that support it
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexandre Ghiti <alex@ghiti.fr>, ChenMiao <chenmiao.ku@gmail.com>, linux-arch@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 
-" part
-
-On Thu, 3 Jul 2025 at 12:26, Steven Rostedt <rostedt@goodmis.org> wrote:
+On Thu, Jul 03 2025 at 07:51, Christoph Lameter wrote:
+> On Thu, 3 Jul 2025, Thomas Gleixner wrote:
+>> It's not rocket science to validate whether these power saving concerns
+>> still apply and to reach out to people who have been involved in this
+>> and ask them to revalidate. I just Cc'ed Arjan for you.
 >
-> I always thought the "HAVE_" configs was a way for architectures to state
-> that it supports something but doesn't necessarily enable it. Whereas the
-> not "HAVE_" configs are user selectable.
+> They definitely apply on an Android phone with fewer cores. There you
+> would want to reduce the number of wakeups as much as possible to
+> conserver power so it needs synchronized mode.
 
-I don't actually think we have those kinds of rules in practice.
+That's kinda obvious, but with the new timer migration model, which
+stops to place timers by crystalball logic, this might not longer be
+true and needs actual data to back up that claim.
 
-We have very random Kconfig things. A lot of things are "architecture
-just selects the feature directly", and the naming is a random
-collection of ARCH_HAS_abc, ARCH_USE_abc, ARCH_WANT_abc, HAVE_ARCH_abc
-and HAVE_abc.
+> That is why my initial thought was to make it dependent on the number of
+> active processors.
+>
+>> There is only a limited range of scenarios, which need to be looked at:
+>>
+>>       - Big servers and the power saving issues on lightly loaded
+>>         machines
+>
+> If it is only a few active cores and the system is basically idle then
+> it is better to have a synchronized tick but if the system has lots of
+> active processors then the tick should be skewed.
 
-And those are the patterns that _try_ to be some kind of pattern, and
-ignores all the "architecture just selects the feature directly".
+I agree with the latter, but is your 'few active cores' claim backed by
+actual data taken from a current kernel or based on historical evidence
+and hearsay?
 
-Honestly, when we have *five* different syntaxes for "this
-architecture supports feature 'abc'", I'd argue that not only isn't
-there a standard way, all those different syntax forms are just
-confusing.
+> So maybe one idea would be to have a counter of active ticks and skew
+> them if that number gets too high.
 
-I get the strong feeling that the reason people have those different
-prefixes is literally to just group things together alphabetically -
-ie some people use "ARCH_HAS_xyz" just because that way they can put
-the "select" statement next to another ARCH_HAS_xyz that they also
-maintain.
+The idea itself is not that horrible. Though we should tap into the
+existing accounting resources to figure that out instead of adding yet
+another ill defined global counter to the mess. All the required metrics
+should be there already.
 
-And then in addition to those various "arch has", we have the
-"GENERIC_xyz" Kconfig entries that architectures also select.
+Actually it should be solvable if you look at it just from a per CPU
+perspective. This assumes that NOHZ_IDLE is active, because if it is not
+then you can just go and skew unconditionally.
 
-I think those GENERIC_xyz Kconfig options may actually have more of a
-pattern: that _tends_ to be about "I'm not implementing my own
-version, please just pick the generic version". That one is one of our
-better patterns, I think.
+If a CPU is busy, then it just arms the tick skewed. If it goes idle,
+then it looks at the expected idle time, which is what NOHZ does already
+today. If it decides to stop the tick until the next timer list expires,
+then it aligns it. Earlier expiring high resolution timers obviously
+override the initial decision, but that's not much different from what
+is happening today already.
 
-So the reason I dislike the HAVE_xyz pattern is exactly that there
-_isn't_ a pattern. When there are fifteen different patterns, it's not
-a pattern at all.
+>>       - Battery operated devices
+>
+> These usually have 1-4 cores. So synchronized is obviously the best.
 
-That said, maybe it's better to have one place that has that "if
-FUNCTION_TRACER, even if I despise the nonsensical "helper
-indirection" just because of the random naming.
+Same question as above.
 
-              Linus
+>> If we could have predicted the future and the consequences of ad hoc
+>> decisions, we wouldn't have had a BKL, which took only 20 years of
+>> effort to get rid of (except for the well hidden leftovers in tty).
+>
+> Oh the BKL was good. Synchronization was much faster after all and less
+> complex. I am sure a BKL approach on small systems would still improve
+> performance.
+
+Feel free to scale back to 4 cores and enjoy the undefined BKL
+semantics forever in your own fork of 2.2.final :)
+
+Thanks,
+
+        tglx
