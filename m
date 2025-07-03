@@ -1,142 +1,114 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9C84293C4F;
-	Thu,  3 Jul 2025 06:55:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 102E5EEB5
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 06:56:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751525739; cv=none; b=Syr38fDXpPzBevQLmRwVHH7a59SX0uVq4WkyYNj5r6E4mmSTbQPj89ZdowxxWrHHAk5CFlIXGZBd7NGKwrPstJxQYqPkmjtHssDpNNBmJYMj1NOhY0guT8r+Bc/x25aIIKG6HI32Y4Tte9BjnRY2QV6GWRggtgG6NnXu/2hFW5I=
+	t=1751525782; cv=none; b=gCP2cALWqMrhxxfJOK5+F068KS8V/IOjwr0WbEMmHaDhLnKAcuADzc8n+ktHhr+IX3LdNfqrt6m+E5cRd30FSJlqhW6UHWm2ZYoqDhZe6fiIJ19+ZGVe5NPF2TzPG3VbPYBFIPTO7N0e1nFgD7pHTEXgJNQIBgt8vjLJwmp2pis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751525739; c=relaxed/simple;
-	bh=iS+0DkOwQzbP1Q5ALEQrz8N0WPbKUv/4LJTGcD9I6mo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VB9/InGjTz4wZ/tW/wMhDX+NR7wpkiByYwzW8VeewtZKhvdwR2gpBetlXCVZHB3TkgAD2Sx3N76TxKf7bq5rFRfkf+03Eyb0sibNEM8DNZeiampC9tsB373JJ4xfAMiSeUT1iA1sLyUrlUq7JOGEIDHpAqhWZcbT8ttM4D2a0uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dkr+HZR2; arc=none smtp.client-ip=209.85.221.42
+	s=arc-20240116; t=1751525782; c=relaxed/simple;
+	bh=cAevsQpXkJf/rFMwcRcpPCO3p8/9HHm9XvinH6Ochmo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LH/FGHjF2LbxryBlD0CSfVj7rMvQJ7ZTbXVd99bd07dfKVy/VyDPkZ6QXz1sBlQ5/DhO4gG5f7KgUY76+9hstc7lXpFxt0tSX/jUduhEsPkFLPg5yeFY5h82Nsdwt/Uws9Ocr8dN0AsHHp3PF0DSwwyS21ts/fK5kab/vyivLFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OeetoT3N; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dkr+HZR2"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a575a988f9so4954566f8f.0;
-        Wed, 02 Jul 2025 23:55:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OeetoT3N"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-236470b2dceso45589075ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 23:56:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751525736; x=1752130536; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8tDNNLWUm0q27spE/jkR5VVfW2HO39G95sAIMz10wc8=;
-        b=dkr+HZR2pao5fg9xP8uisZ+F2Rprqc8PZeZzLVve3Xmdp78pgKyMPhOmKeD4G0UYDX
-         eSBWQb5M8Uo94AvzII47VK6lNM22cNvpBG2p7Lzj2hVh3eac5eigSdByYsqJXmFw5wVK
-         73bPAVB7VvVC0s0ZTe9uCnEeWeOivV5w0ugULNHGI76MkZNOmxE5OvLSZPIeCt4EC8IN
-         hfwBpGERy3N4pw6S9MPHR5NWzchEQodNts7Dcq+aDSYPnZC63eFbzCxYEntocvg3hFKF
-         3h54mdGxvq8UArZ67CGV8p40dswEZXyTGx2dLst+BSOYWKYmOmL8qthaEyBqtaSLjjD1
-         BSSw==
+        d=gmail.com; s=20230601; t=1751525780; x=1752130580; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZigHOECn4qaJ1lW58l9LngcMkl41FGTMjqmol0gepA4=;
+        b=OeetoT3NbLxeXNgnNLABROS8Ecf4CPZqTdlgpk1JnPMTqc5qwL7UY3bFVtRTGxQZpa
+         COQMve4VLkknZqaXbqj6ePWKMb3iY3SDiWMPpMKrcoBhJ54q61gyr00j9CS5qevWRpUQ
+         2KMs+VMCcf67LgzqWzjl6CA5jXy5AjvAGskdE5dKrlAWTMu4embOtalR8QMjxd6koh1w
+         cGIDK3h6YtJbi5wP4yb+S4R3yTJlEAXPtxAKWswgz4OxoXn0yVvi2qXnnBSspXjxe3Ii
+         5BzdEG15QRng/vQKc5xPRYciF4aQlo/ljazhzo9oC/ReGLX4YUAL8jfvcxG4L0voSCHl
+         X9YQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751525736; x=1752130536;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8tDNNLWUm0q27spE/jkR5VVfW2HO39G95sAIMz10wc8=;
-        b=hP1E8g9Ve+iaM21keKf6C37Z2lWVDpw1JAF5vB3GWeeGrEk4AWq7S+AGOB3DLOnsN3
-         YAA39QfUkO2sEQlUdu8KxCxa5IOgm+WITQ4OTPyLhOzdvj7LOM1ab4y//uv6sDBck5UQ
-         SaxZ6jGhaZ9N3nxRfjGz5RAs6+HE8OCdAibBfLHET9MYzdtNqiftSawGZTbFuM7+qSNS
-         4I+D85C1M8gdKJmd4U+AoJFLEXDuFBCveg9Uk3J2p8LaXhIEVVaf8ogkhyQZvI/qmc1N
-         OR0qLL3BPQ6jT+g5kfgszfjZ6KJe+jvYJ5NFYNmQgpB6nFflq84sINwiTQNIhev5OuCH
-         9frw==
-X-Forwarded-Encrypted: i=1; AJvYcCVCtzeazOMtEKu19T+ASN4QRM1Bg+7h/PJZQ5t/qLvMtEbb0+C0teOFLhux6UAna0q9KO5mEPHpNlpYWd4=@vger.kernel.org, AJvYcCW9ARI8CIFfUnxoYX32CjGr1hUzHUfHgoY8ymbcLYegtTrAXwSj7QEOU6Ph7fdlhQEKZXLohR9IRNK2vm4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSQ/F7wbar/GyLb/SSrvvbuyRfoZqxRv1LZkUi2pQ034aC/qXI
-	LZLkKgANC3HIit/IFLrvFiPQUrvZ69DSohiDwL7wE9q4Fmmnegr56qwM
-X-Gm-Gg: ASbGncvv74umUcvXrq+cMH/C3ot+VjMbPEOjdtl2S1IruvwwIZVGkPhCpdlCClUvP3z
-	ySnL1oeNUjuz0Bvf3arCiikqdu2WI0ejUB4kCSRv45q3nSCS2pEkiDnEifV0gWGsa1qeA9tru35
-	2KS1P6vGlJPONZo4f6xIFzO6mKaVzV6QK+fc63YiGZs/W8W4WCXByKYchg0NkQZc2laWrrOFdhg
-	uGap7bCsWvJlFmx0LEjsARQRfN9ZpQetKIdvz/luzMAnEaBk08KUftZ6UMixlAZVnFHTerpSbtB
-	dUDJACNNcORGJsrCBqdk3d0jSLRGUpmHn2d5OvYAu5yw1Bsd54R3g6dVi8rBBJJiLhLphXWItAH
-	W0fLAEcGbGSPBuWdB57jtDs3V/7He+eC172WsSRFdicbA8etZ
-X-Google-Smtp-Source: AGHT+IGUsBntbwRa0zJq1OFmwUtwxkCo7cj5uM+Sxp5aky3l/QgvL2vXvRlxhgULkj5fFJtCF9DtjA==
-X-Received: by 2002:adf:9787:0:b0:3a4:dde7:ee12 with SMTP id ffacd0b85a97d-3b32fe1179emr1228664f8f.53.1751525735870;
-        Wed, 02 Jul 2025 23:55:35 -0700 (PDT)
-Received: from orome (p200300e41f4e9b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f4e:9b00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e52a35sm18100101f8f.57.2025.07.02.23.55.33
+        d=1e100.net; s=20230601; t=1751525780; x=1752130580;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZigHOECn4qaJ1lW58l9LngcMkl41FGTMjqmol0gepA4=;
+        b=wxbPOWdH4AxeaedgGHDz+fJHlpkN1ps/VC+uEqcj078ausUcGXshxcKlKPk0F3//Uw
+         2TNnRID81vb2qJl8o0xNoK2SbZIL0qB9W7eiFxgYXrQDjVd/OO0jmoTrKjXq4m9SmPer
+         MJJqsqwX77O2eYl+ECuj/p1U8xz0eCNrxEYjPys3BVBjoO0ze5u8qKY3udvCMxdPOjsk
+         wkOL3+PCakX8SyI/Di1XGmy7iUIqBszME36HZeTqYFEazoheeZVED2CCJ3XBtuThibJa
+         mB8ysN125dzhz3Mm/xa2u+etfKOv8VgXkIK69M8BkeUj7QhGLLlVS/tLCuhGSSF7dL+r
+         x8ag==
+X-Forwarded-Encrypted: i=1; AJvYcCUPkD1Vz4uomZa90TnRfQNhegd2J42BAeFdslqFhiAXHOCGIpbcyl3sWjoG6nC7/hJgq3Nv/bRSoIASe98=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmiOxMBxQh+OwmRCwxJBUGKCrBpX+7Eks6dOvr4h2UUEfSNBdQ
+	w68R8MxKFL/SlWgz4av5Xk5unTlBY70ncNg7GGSXMMosKWqqW1e6EZmP
+X-Gm-Gg: ASbGnctcNFlTLBSyQwV+CxsSyr2v4Oeryig7+pn2o3JeHJx+aMEmU+0EopViZnnCej9
+	uO1tcaeFdYtf7CKpfTA+G6SgPoKgXYmY+Xp+At1Pd2NftCIsfuKasWfeCk5A610+sRDtuwlmI1c
+	Dw3VAqG3MEhUa+6aQDj44QiljhKtK2nIbDYf7sGfQHVcPg4EPY5YMkgSuPKIRj6bnCTZFyyp8Kb
+	SxRejCZRtI+o1RMcQWvvbaVA06m4rkEU2nJLFiInu+s7FsRUMIqcdy6v2dizEcGrVII6//Qap4j
+	sHi8Sd/Cr1N4+/wn8aPFGjuWvJSJdhCPCJA1cVxHy85hfpr5wFLktbZJN2+BeZiqAQ5lG1g8zg=
+	=
+X-Google-Smtp-Source: AGHT+IGBWMWVc1m9CMmXyTiauW22K9buQdCepkxXFX9TQAbo/jW/0Q44iOnRmWphSr67cKNoAf/HjQ==
+X-Received: by 2002:a17:903:1a70:b0:234:ba37:879e with SMTP id d9443c01a7336-23c6e5b0f47mr105442155ad.38.1751525780222;
+        Wed, 02 Jul 2025 23:56:20 -0700 (PDT)
+Received: from localhost.localdomain ([118.46.108.16])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb39bfbesm159281565ad.109.2025.07.02.23.56.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 23:55:34 -0700 (PDT)
-Date: Thu, 3 Jul 2025 08:55:31 +0200
-From: Thierry Reding <thierry.reding@gmail.com>
-To: Kartik Rajput <kkartik@nvidia.com>
-Cc: daniel.lezcano@linaro.org, tglx@linutronix.de, jonathanh@nvidia.com, 
-	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH] clocksource: timer-tegra186: Enable WDT at probe
-Message-ID: <3wesm6syeqmjdzyyj2mjp4sjfwl7ebeahqxwcvub6gwvoifuh4@43tunmtjsq4h>
-References: <20250630110135.201930-1-kkartik@nvidia.com>
+        Wed, 02 Jul 2025 23:56:19 -0700 (PDT)
+From: Jeongjun Park <aha310510@gmail.com>
+To: dennis@kernel.org,
+	tj@kernel.org,
+	cl@gentwo.org
+Cc: akpm@linux-foundation.org,
+	roman.gushchin@linux.dev,
+	rientjes@google.com,
+	vbabka@suse.cz,
+	shakeel.butt@linux.dev,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	syzbot+e5bd32b79413e86f389e@syzkaller.appspotmail.com,
+	Jeongjun Park <aha310510@gmail.com>
+Subject: [PATCH v2] mm/percpu: prevent concurrency problem for pcpu_nr_populated read with spin lock
+Date: Thu,  3 Jul 2025 15:56:00 +0900
+Message-ID: <20250703065600.132221-1-aha310510@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="uz6esihmdkbfdsuq"
-Content-Disposition: inline
-In-Reply-To: <20250630110135.201930-1-kkartik@nvidia.com>
+Content-Transfer-Encoding: 8bit
 
+pcpu_nr_pages() reads pcpu_nr_populated without any protection, which
+causes a data race between read/write.
 
---uz6esihmdkbfdsuq
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] clocksource: timer-tegra186: Enable WDT at probe
-MIME-Version: 1.0
+However, since this is an intended race, we should add a data_race
+annotation instead of add a spin lock.
 
-On Mon, Jun 30, 2025 at 04:31:35PM +0530, Kartik Rajput wrote:
-> Currently, if the system crashes or hangs during kernel boot before
-> userspace initializes and configures the watchdog timer, then the
-> watchdog won=E2=80=99t be able to recover the system as it=E2=80=99s not =
-running. This
-> becomes crucial during an over-the-air update, where if the newly
-> updated kernel crashes on boot, the watchdog is needed to reset the
-> device and boot into an alternative system partition. If the watchdog
-> is disabled in such scenarios, it can lead to the system getting
-> bricked.
->=20
-> Enable the WDT during driver probe to allow recovery from any crash/hang
-> seen during early kernel boot. Also, disable interrupts once userspace
-> starts pinging the watchdog.
->=20
-> Signed-off-by: Kartik Rajput <kkartik@nvidia.com>
-> ---
->  drivers/clocksource/timer-tegra186.c | 42 ++++++++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
+Reported-by: syzbot+e5bd32b79413e86f389e@syzkaller.appspotmail.com
+Fixes: 7e8a6304d541 ("/proc/meminfo: add percpu populated pages count")
+Suggested-by: Shakeel Butt <shakeel.butt@linux.dev>
+Signed-off-by: Jeongjun Park <aha310510@gmail.com>
+---
+v2: Change it as suggested by Shakeel Butt
+- Link to v1: https://lore.kernel.org/all/20250702082749.141616-1-aha310510@gmail.com/
+---
+ mm/percpu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This seems dangerous to me. It means that if the operating system
-doesn't start some sort of watchdog service in userspace that pings the
-watchdog, the system will reboot 120 seconds after the watchdog probe.
-
-I think the convention is to enable the watchdog only via userspace
-request, precisely to avoid this kind of unexpected behavior.
-
-If we really want this, maybe a better solution would be to add one more
-watchdog that is specifically kernel-controlled? We have 3 watchdog
-instances on all these newer chips but currently only use one of them,
-so grabbing another that is then entirely under the control of the
-kernel should work for these cases.
-
-Thierry
-
---uz6esihmdkbfdsuq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmhmKWMACgkQ3SOs138+
-s6FpUA//Y6SFQ3l/uVRfwyNHSFwv605/5L3gJzEg4fArocFt8k//xfwbylAkeo5q
-TGz+7P0xtF/KBDL1UAbM6R31qbNEb1yKILRSH9UhyChtoRU5tcbuYEMFydqDCFBz
-X6YxPT2b43RgiubvJXN6FAFX0T03VpnAM7TdZUmB72SHw8E30YOf4OoCT6tMmn5R
-/WLzsPltuQFCJM+mOUSTgtfNZjJhNCObPVusAkYhqIK+QNX04pUCc2UF25viA6x9
-FN1CrwhEmZhrXqlXE3KRNcQB4NNc10dhnGPr0UVmnkmcm5FtWCixTPhgHXc9OLwc
-MwsG/IsL3HIT8lmdsKX3ncYybcgPcI4qDCR0+FYz2IJI49oOR1UNj7ZBWtcHSts/
-VmSbzISThKbwLyYnxIQzNXK3oiB4kd0d3PVv2P0AWb65j0D/AUliLi9pZ3FsVXaF
-CkPOV0ZHoDAwRbdnZ1xuE49jVkRtZ5FixuEibrym4Qxvl1GH+eUg9exMBrSOl2qi
-YejRC9GkyFjRbnwwnvDCTPoZuEkDPfxuPS1tacGPzf/OhFOmD85XSo9Mz59VJeQI
-zkgvuXjg22rRmMUp1moNvXcFw92k/qd4iWKs/oF/bNp7W8cHCU7v8xSm96G3Cz4T
-nvNFo4vxiW8xfIKRO69vQrTQ/x+JSDe1VzJ176XnH2Sy8r3juBk=
-=1giI
------END PGP SIGNATURE-----
-
---uz6esihmdkbfdsuq--
+diff --git a/mm/percpu.c b/mm/percpu.c
+index b35494c8ede2..782cc148b39c 100644
+--- a/mm/percpu.c
++++ b/mm/percpu.c
+@@ -3355,7 +3355,7 @@ void __init setup_per_cpu_areas(void)
+  */
+ unsigned long pcpu_nr_pages(void)
+ {
+-	return pcpu_nr_populated * pcpu_nr_units;
++	return data_race(READ_ONCE(pcpu_nr_populated) * pcpu_nr_units);
+ }
+ 
+ /*
+--
