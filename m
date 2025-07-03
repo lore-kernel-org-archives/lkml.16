@@ -1,112 +1,132 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2CBC223DEC;
-	Thu,  3 Jul 2025 15:41:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86CAC19D8AC;
+	Thu,  3 Jul 2025 15:42:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751557315; cv=none; b=MzvWcTq5PkkalC+Au0o7OMi2sOdfJTAIlOLlJbd1BI3SDKMbEGgkpTISsc9WZjl5PfNGod+Fybht4XYjVcP5PRm4hX83AtFBQrPoJSDd7Zl8ZV8n7050F+IzgWV5MUcPirMUfDjLU0Znj78lBiM8i34aXCKapshDokLwQj7Zl6o=
+	t=1751557342; cv=none; b=hlqMfuRzijFszyqYeDwh54UG8Giz2Xqg/BOcwX29duglrWzZ2TQ86noXMzg2SGTreH+Am6C9HDQw47oFpxnJh9kqtypuvRFbMHXgHsWDuNam8eC/ycHHqHXizSEsv5V/X9iOE6nbQkdEyv/wY8tmFoJhfi6shdeyYVGoBUL0SYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751557315; c=relaxed/simple;
-	bh=NkBIMm7TBqeJYMH6RPL+hi3KACmin4rFhLtSG64UvI8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R94FRdBSFvsi/BdL0VAPDGrwEiUOMDIWTVPRMWlhFf7+lPWcEeXlIpVX0wpEiy90cx+VSfJGJe3jy7TGazWXhurHBcBqis9iiz/z4ol82jnyFZLgJ+OasZoPGwQkbcS6MGvWtWOVqa08Pi9NtYkAB8mlgw+8yZWxXyCaLgdIB9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lhjthhsD; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751557342; c=relaxed/simple;
+	bh=yC6hDoqxABim+0U/P7Lq08hxLKtYT+7rRFFFMob3zbM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=HvcpqiVU1VafJNn7KImUQQMFzS+yfwyYypvHEzLo346BgJKB+KRH0qFj3N9+Q3h3qbMCz+k9Aj1TaLlb7x/qDNSbDh+jWOeWsiMhuVypTAZixnMZOCPo2MPoYLeQZyqiBYwNp65XRtE8LndGY2GOQJNSuGxdwZA6V+D6KrA9dic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=lp4Wh9IS; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lhjthhsD"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-747c2cc3419so133017b3a.2;
-        Thu, 03 Jul 2025 08:41:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751557313; x=1752162113; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fGkOYL8RQfSMzeM60XRGKVUUpz0QC6vboVSRHTQXPEs=;
-        b=lhjthhsD4avGlx+IydK8L48d0GlAK/mCJzIqBZSHnzKKWnOPgMQ/xAgumUjcuLP2ap
-         yon9DgG7pEzCa0z0dEin+TjW5gJ12MpLWOsXBoBadn0cIaHBiy0fr+v1cS1bvBxhXSgt
-         YsaZZQgtQ7sPpAVvYj5YmzI3dyZQdYhhe5Tby5pLdR6kvJj8sfHghbSgn/thnb36/wEw
-         O6Pi57rftqlwpMsfRveXtsCFnFploFbnEpneAj4QZS6dt3jR1NJJYbHkvku1AQKBY8OQ
-         /TXsbbWlV0G3kSyn4vkrfMPxkIy7SwU1ulVogTUCkWOK+rskvgdVkbdOc62eZg4lDx/2
-         BZIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751557313; x=1752162113;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fGkOYL8RQfSMzeM60XRGKVUUpz0QC6vboVSRHTQXPEs=;
-        b=Ty7iamvnV7bfIOvSVJEnQLjKdOMqfpJmER+jbimFWTV9K9SHOziDKyYUdeyX3AcB5Y
-         6950vkiUPKjs89Sx2shDjqhPqZuW+2GBAWL+/+24BKYyGRkEyTYPQDO9nrL/6TV2MIXc
-         s3MgEQih5TquOKSnPSN0vfSgdrRj/nosuRvNReAKlhJdol7K0rQnWnPGAWBsV0SHaYkQ
-         mY9XuIdraEOBRwDMbT410M1H4VpygB8fkX0rxsZRosEexZ1VyAbPooviJkKlKKjIrjSe
-         TL21uXF9zaeA44bKHotd6hOKK9HTrTlvSRVfUx/fI0MWGPCiS96zzcv8xNdIq4zTeBn/
-         jZ0w==
-X-Forwarded-Encrypted: i=1; AJvYcCUNYE/Tk4UsEZxMZZaeIrBoNXlcsnEcRUqXeOq+0wayOL/DqQ7kYh0ExLq22yAbZtGkezrFgb9Oy0L8q/aT@vger.kernel.org, AJvYcCUvvbvVQr0LG8sRaBGCWubngXcglTiF1vwyT2OoUSG7rgpgUpZU17XGrqM5FFltJZiHXDjYhPjiKrQGRxRhPQrO@vger.kernel.org, AJvYcCVUwGZ7s7qkHBAigzmnjwAcETiia+gXe/ICz+Lucf99/k3XsFpxt3a5Wb5uja0CgypV9Hu173m+@vger.kernel.org, AJvYcCWEshaDoslSwAmmMGq2S503ZCwbSO/qeS0owljjWYUC0Y1bLULiQs+IUMXS5WtG5eBJF5A=@vger.kernel.org, AJvYcCWNKLF3LY+V7P5zckAmZWDbVdG8ZKEOIDqEp0NJ+OzPlYf+HTLVLttiPTH1bbw0sKhX+IdtyduqhFDG@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/eDIoAFFkFf3QLUtOvO6TLuO1wIg8EhcNR7Uyg0l/JuQCsFJm
-	ddZTeKJ8ifHHenWnQ7BqGj5xCxMiFCxqyCxvUPeWCPIY6ZvHn3OdRdA=
-X-Gm-Gg: ASbGncuUYauE4kB+yuh1idi/yeoxFoYlolGcy9d+nlYWXNeW20/7sQaBckC9KvBKDDY
-	oLvNEmRvX59Ff/ert4HcxV8EPDT21MMCYx5VeAQJz2o5wD6yjNsiKB6G8ZuQUhAMYBYgKdXS5Ki
-	AIRb5s46CC/nvM/8Esa8M8bWntZbsnMrvLYpp1fmnbmKewkaeRMKrIK5M4WNpfskhkckcqCzXKt
-	Zpfxl12IKc7mGEgZrsoYofZ/ZM6lo2WybLWRSKWwatQ4sGJUwIvX8KVvMQkCUfZrRogagSinxIE
-	q9ccdDBU5MytEWntd0KNSJqZLpEmYK40whsk0KsW9mB6sys3IPDm2cjaSUvxxtv1/X0+Nra9Hpv
-	kRl9CsW/dOSASi5z4N1O04T0=
-X-Google-Smtp-Source: AGHT+IGqhk2BDmOENKj6dYSheYCLfnncK7OpyMpM5YpFnDZqbsHN5I4tWJo7BQAolfltYHjax/y53g==
-X-Received: by 2002:a05:6a00:3e27:b0:749:1c27:bcc5 with SMTP id d2e1a72fcca58-74ca84dbbcamr4511329b3a.22.1751557313153;
-        Thu, 03 Jul 2025 08:41:53 -0700 (PDT)
-Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-74af541e5b6sm18218323b3a.54.2025.07.03.08.41.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 08:41:52 -0700 (PDT)
-Date: Thu, 3 Jul 2025 08:41:51 -0700
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: Song Yoong Siang <yoong.siang.song@intel.com>
-Cc: "David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>, Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>,
-	Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH bpf-next,v3 0/2] Clarify and Enhance XDP Rx Metadata
- Handling
-Message-ID: <aGakv3SCbr3mAzcA@mini-arch>
-References: <20250702165757.3278625-1-yoong.siang.song@intel.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="lp4Wh9IS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1751557338;
+	bh=yC6hDoqxABim+0U/P7Lq08hxLKtYT+7rRFFFMob3zbM=;
+	h=From:Subject:Date:To:Cc:From;
+	b=lp4Wh9ISyxh8GAlBiZixOaSuvDEVGvLxbiUisrTfOXUh0suvB4qdQ05QDBNEzg88I
+	 qYDAaRVA90p9v+vhQnkIawveaOCv6KcDeYuNrcXHTZn+jRQVtZ/EXenoKrLDlGNcA4
+	 yhYe1iu5ESObGYApX0WzqCbkyTPBewZ3xOONcV5kJsTxmU7yittHc619VzpcUarLKM
+	 hQrZsxLfxiCdipUvLsoI/BycRcYOt2dw0arI9q7ejzmF73zYRupeRD8JOf7DUJHqXF
+	 4BW8/MGsYCJPBxIvLR4AF3RDgkwMxuhEQf7HQ6DZV68RBOnNAGy46T3mvfLI+lNOHR
+	 gPxygPUU4gWMQ==
+Received: from yukiji.home (amontpellier-657-1-116-247.w83-113.abo.wanadoo.fr [83.113.51.247])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: laeyraud)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 0692217E09C6;
+	Thu,  3 Jul 2025 17:42:17 +0200 (CEST)
+From: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+Subject: [PATCH 0/3] Mediatek Genio EVKs: add MT6359 PMIC keys support
+Date: Thu, 03 Jul 2025 17:41:02 +0200
+Message-Id: <20250703-add-mt6359-pmic-keys-support-v1-0-21a4d2774e34@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250702165757.3278625-1-yoong.siang.song@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAI6kZmgC/zWNyw6CMBAAf4Xs2U1aGhT4FcOhtqtuTB+2hWAI/
+ 24j8ThzmNkgU2LKMDYbJFo4c/AV5KkB89T+Qci2MrSi7cRFKNTWoitn1Q0YHRt80SdjnmMMqaA
+ VvZCD7a0yEmoiJrrz+stfp4MTved6KYeEm86EJjjHZWw8rQX/J5j2/QuIuI+ynwAAAA==
+X-Change-ID: 20250703-add-mt6359-pmic-keys-support-d08019d8d3c1
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: kernel@collabora.com, linux-input@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, 
+ Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751557337; l=2597;
+ i=louisalexis.eyraud@collabora.com; s=20250113; h=from:subject:message-id;
+ bh=yC6hDoqxABim+0U/P7Lq08hxLKtYT+7rRFFFMob3zbM=;
+ b=MY4zHQus25afqpRiSKmt8PqHFRihEiUuXBb1JBgogdxKIQbKxFtjdKk8JlWDR5Uh1h+K6CQrI
+ Yb4r/W4tJVyD4QI4xtgLf9YLRrBX+nu2R4zhBL+3zS0jRF0gwZu6hJc
+X-Developer-Key: i=louisalexis.eyraud@collabora.com; a=ed25519;
+ pk=CHFBDB2Kqh4EHc6JIqFn69GhxJJAzc0Zr4e8QxtumuM=
 
-On 07/03, Song Yoong Siang wrote:
-> This patch set improves the documentation and selftests for XDP Rx metadata
-> handling. The first patch clarifies the documentation around XDP metadata
-> layout and METADATA_SIZE. The second patch enhances the BPF selftests to
-> make XDP metadata handling more robust across different NICs.
-> 
-> Prior to this patch set, the XDP program might accidentally overwrite the
-> device-reserved metadata.
-> 
-> V3:
->   - update doc and commit msg accordingly.
-> 
-> V2: https://lore.kernel.org/netdev/20250702030349.3275368-1-yoong.siang.song@intel.com/
->   - unconditionally do bpf_xdp_adjust_meta with -XDP_METADATA_SIZE (Stanislav)
-> 
-> V1: https://lore.kernel.org/netdev/20250701042940.3272325-1-yoong.siang.song@intel.com/
+This patchset adds the support of the MT6359 PMIC keys (Power and Home)
+that can be found on the Mediatek Genio 510, 700 and 1200 EVK boards
+by:
+- adding the MT6359 SoC support in the mtk-pmic-keys driver
+- completing the existing definitions (only the Power key
+  support was present) in Genio 510/700 EVK board common
+  devicetree include file (mt8390-genio-common.dtsi)
+- add the needed definitions in Genio 1200 EVK board devicetree
+  (mt8395-genio-1200-evk.dts)
 
-Acked-by: Stanislav Fomichev <sdf@fomichev.me>
+I've tested this patchset on Mediatek Genio 1200-EVK board with a
+kernel based on linux-next (tag: next-20250703) plus [1] patch.
+
+Output of evtest tool:
+```
+No device specified, trying to scan all of /dev/input/event*
+Available devices:
+/dev/input/event0:	mtk-pmic-keys
+/dev/input/event1:	gpio-keys
+/dev/input/event2:	Logitech USB Receiver
+/dev/input/event3:	Logitech USB Receiver Mouse
+/dev/input/event4:	Logitech USB Receiver Consumer Control
+/dev/input/event5:	Logitech USB Receiver System Control
+/dev/input/event6:	Goodix Capacitive TouchScreen
+Select the device event number [0-6]: 0
+Input driver version is 1.0.1
+Input device ID: bus 0x19 vendor 0x1 product 0x1 version 0x1
+Input device name: "mtk-pmic-keys"
+Supported events:
+  Event type 0 (EV_SYN)
+  Event type 1 (EV_KEY)
+    Event code 102 (KEY_HOME)
+    Event code 116 (KEY_POWER)
+Properties:
+Testing ... (interrupt to exit)
+Event: time 1751548607.957644, type 1 (EV_KEY), code 102 (KEY_HOME),
+  value 1
+Event: time 1751548607.957644, -------------- SYN_REPORT ------------
+Event: time 1751548620.030611, type 1 (EV_KEY), code 116 (KEY_POWER),
+  value 1
+Event: time 1751548620.030611, -------------- SYN_REPORT ---
+```
+
+[1] https://lore.kernel.org/linux-mediatek/r4k3pgd3ew3ypne7ernxuzwgniiyvzosbce4cfajbcu7equblt@yato35tjb3lw/
+
+Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+---
+Louis-Alexis Eyraud (3):
+      Input: mtk-pmic-keys - add support for MT6359 PMIC keys
+      arm64: dts: mediatek: mt8390-genio-common: Add Home MT6359 PMIC key support
+      arm64: dts: mediatek: mt8395-genio-1200-evk: Add MT6359 PMIC key support
+
+ arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi  |  4 ++++
+ arch/arm64/boot/dts/mediatek/mt8395-genio-1200-evk.dts | 15 +++++++++++++++
+ drivers/input/keyboard/mtk-pmic-keys.c                 | 17 +++++++++++++++++
+ 3 files changed, 36 insertions(+)
+---
+base-commit: b803ad80123e6efccfeeffa7cd37f98f642e37f4
+change-id: 20250703-add-mt6359-pmic-keys-support-d08019d8d3c1
+
+Best regards,
+-- 
+Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+
