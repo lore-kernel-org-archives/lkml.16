@@ -1,140 +1,148 @@
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC362BDC15;
-	Thu,  3 Jul 2025 20:21:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C2DD2BCF51
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 20:21:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751574089; cv=none; b=JaM8siO8v+n+SVmPeTTsDvhDbDbSo0otRYBjImkEQIqatQ4epp8wDFIYbvmJcJMT2/IVFr1gf7p3V14hMvjKs8kCEOXSOMwvxDYqhfRT8Gqf7+p1kDlnGZhU/4EV6sdZy4Vh/naYTa+5WC2kf9v4aSNU2ejRYQTnpP667eGh9rU=
+	t=1751574098; cv=none; b=SOTZsYfnGXefkD7/5FCVeJf/hnQVr4lFUwBTBemnHx1taTMyFXsAemLZ86dBQ3cKJK9uq8WgnRIp0ztdNG7AdU8FzSYX+lhpn6PbL93JW+MvB+FWqT+9cfGox8j+9lqZMxDrtohTFtgBE1uynFlSpg97VZIL5Ahk7rDk+B0qX10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751574089; c=relaxed/simple;
-	bh=nxQiQkdudWPZBcNRA9KIQ7hVUyuUQb/8xkQyaumgNEE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TA/wa/Owi0AAMtIRcUR7dPc0GH82hkHN/YftZyJH4sY2znUNV71s6P8MMnz6dTlxgqlD9SW3WXxfoexCqwEq8hvNzxwFRg7+h85Xz5+alSQH7H/AClHHrXb4lOfvFhxKZe/o7H050kxxeIvWa/c0H4DBzKmJIN+MGBPvMQxE0M0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=FiCglh9T; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
+	s=arc-20240116; t=1751574098; c=relaxed/simple;
+	bh=pyS7Y6GIrPU10d/ryQJM3Wqvm4C9Tt6BQzqo0p89Cyk=;
+	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=BOHHI/d7HNVxcr4JVGrt/gLvlCwOCjLSjVp/I8gUn1DZlcV0JRfEHDUtHX/rg4bhyB7ws61Mt7JFCkpdTWaCaP7bciuGqWKhdmQnJYgtmXIdkgH9rXAMxBbIj99mlTHqoUBcSwv/ougw8Xv4MC7nS6XsESP1kOYzCymHfkGty3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Zx4FMsX4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4qoKC9bm; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="FiCglh9T"
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id 0D95D1C00AB; Thu,  3 Jul 2025 22:12:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-	t=1751573549;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Zx4FMsX4";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4qoKC9bm"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751574092;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ZgOphpMZQaLhZ23QXn+GUqOhSFA5+GAho7L5ktP0kac=;
-	b=FiCglh9Tms8WiSo2BtH3bmVpvbGxSAA+H8ByhHyEwFc5/ma9s41tmJrEqtguzLkvlWIiF6
-	uZM/wv6OEGMQQYm2Qghymc0jY08FVc4oavnkRCYR8Y7ZzPaJpKJ8U6nNQrFrqq4huTTvjh
-	UGiCg7Qtk6C7N7wGXUrLGYvqVroZ5Zg=
-Date: Thu, 3 Jul 2025 22:12:28 +0200
-From: Pavel Machek <pavel@ucw.cz>
-To: Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: t.antoine@uclouvain.be, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Dimitri Fedrau <dima.fedrau@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Peter Griffin <peter.griffin@linaro.org>,
-	=?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH v4 2/5] power: supply: add support for max77759 fuel gauge
-Message-ID: <aGbkLIFkMlihbJUt@duo.ucw.cz>
-References: <20250523-b4-gs101_max77759_fg-v4-0-b49904e35a34@uclouvain.be>
- <20250523-b4-gs101_max77759_fg-v4-2-b49904e35a34@uclouvain.be>
- <4cahu6dog7ly4ww6xyjmjigjfxs4m55mrnym2bjmzskscfvk34@guazy6wxbzfh>
+	bh=aSp3/iXHDvBtL6PbWGs8D+kj6lt5OBJlh2r7j0tPdGE=;
+	b=Zx4FMsX4jXEQ1xo270ycn9VnZ07F8ww81sc1+SzvfjAzVum7GL8LueoXr2H6qRQhlQwp/0
+	UNnwMoOQ7PxBcD/e0/SqBe1QVcjQEtcTtJpBuiUwcdRJBC6PqcAh061MdFO+ZLpNtU+CRs
+	x3K9ge9VM0BNDxDOJR2K3Y67zD9NvvqdhdFRpWPUfgfqFFo/23Ad7P99V+hQ87sqoKlOUH
+	IQFdQzv6F5PbpNqx8lkZC2r499PMOPTU/Nq9xFe0JwFHTd0dw520spimbv/m8zReU74V9o
+	wi1mfPdHaf7xk6W9k+XhfMnKtTqOhXA+F9ukzpp7J1g5nCzIU8ABR8KVSe0O8Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751574092;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aSp3/iXHDvBtL6PbWGs8D+kj6lt5OBJlh2r7j0tPdGE=;
+	b=4qoKC9bmn1Nf+GqK8v3tvWutfgG00IqGFI7x8lyHJGzEP1bHjMhgVffpKBNUCFUZX7PeHW
+	l7hGh0HuHzF5O5BQ==
+To: Himanshu Madhani <himanshu.madhani@oracle.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: System hang with latest kernel v6.16.0-rc1 (rc2 & rc3)
+In-Reply-To: <7279DC28-17BF-4A28-96ED-7AE9857BC2E3@oracle.com>
+References: <ABB1DAF0-048A-4373-9007-988D20F359DD@oracle.com>
+ <7279DC28-17BF-4A28-96ED-7AE9857BC2E3@oracle.com>
+Date: Thu, 03 Jul 2025 22:21:31 +0200
+Message-ID: <87a55lt48k.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="eiYFnwelYqG2iU/c"
-Content-Disposition: inline
-In-Reply-To: <4cahu6dog7ly4ww6xyjmjigjfxs4m55mrnym2bjmzskscfvk34@guazy6wxbzfh>
+Content-Type: text/plain
 
+On Thu, Jul 03 2025 at 18:32, Himanshu Madhani wrote:
+> On Jul 3, 2025, at 11:27, Himanshu Madhani <himanshu.madhani@oracle.com> wrote:
+> Git-bisect point to this merge commit
+>
+> commit 6376c0770656f3bdf7f411faf068371b6932aeca
+> Merge: 5e8bbb2caa4e 29857e6f4e30
+> Author: Linus Torvalds <torvalds@linux-foundation.org>
+> Date:   Tue May 27 09:01:26 2025 -0700
+>
+>    Merge tag 'timers-clocksource-2025-05-25' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+>
+>    Pull clocksource updates from Thomas Gleixner:
+>     "Updates for clocksource/clockevent drivers:
+>
+>       - The final conversion of text formatted device tree binding to
+>         schemas
+>
+>       - A new driver fot the System Timer Module on S32G NXP SoCs
+>
+>       - A new driver fot the Econet HPT timer
+>
+>       - The usual improvements and device tree binding updates"
 
---eiYFnwelYqG2iU/c
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That obviously does not make sense, so your bisect got side ways.
 
-Hi!
+> Following further in this commit, I only see this following series
+> that had changes which may or may not be related to hang.
+>
+> https://lore.kernel.org/all/20250429065337.117370076@linutronix.de/
 
-> > Other differences include the lack of V_BATT register to read the batte=
-ry
-> > level. The voltage must instead be read from V_CELL, the lowest voltage=
- of
-> > all cells. The mask to identify the chip is different. The computation =
-of
-> > the charge must also be changed to take into account TASKPERIOD, which
-> > can add a factor 2 to the result.
-> >=20
-> > Add support for the MAX77759 by taking into account all of those
-> > differences based on chip type.
-> >=20
-> > Do not advertise temp probes using the non-volatile memory as those are
-> > not available.
-> >=20
-> > The regmap was proposed by Andr=E9 Draszik in
-> >=20
-> > Link: https://lore.kernel.org/all/d1bade77b5281c1de6b2ddcb4dbbd033e455a=
-116.camel@linaro.org/
-> >=20
-> > Signed-off-by: Thomas Antoine <t.antoine@uclouvain.be>
-> > ---
-> >  drivers/power/supply/max1720x_battery.c | 265 ++++++++++++++++++++++++=
-++++----
-> >  1 file changed, 238 insertions(+), 27 deletions(-)
-> >=20
-> > diff --git a/drivers/power/supply/max1720x_battery.c b/drivers/power/su=
-pply/max1720x_battery.c
-> > index 68b5314ecf3a234f906ec8fe400e586855b69cd9..c9ad452ada9d0a2a51f37d0=
-4fd8c3260be522405 100644
-> > --- a/drivers/power/supply/max1720x_battery.c
-> > +++ b/drivers/power/supply/max1720x_battery.c
-> > @@ -37,6 +37,7 @@
-> >  #define MAX172XX_REPCAP			0x05	/* Average capacity */
-> >  #define MAX172XX_REPSOC			0x06	/* Percentage of charge */
-> >  #define MAX172XX_TEMP			0x08	/* Temperature */
-> > +#define MAX172XX_VCELL			0x09	/* Lowest cell voltage */
-> [...]
-> >  	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
-> [...]
-> > +			ret =3D regmap_read(info->regmap, MAX172XX_VCELL, &reg_val);
-> > +			val->intval =3D max172xx_cell_voltage_to_ps(reg_val);
->=20
-> I haven't reviewed this fully due to all the feedback you already
-> got from Peter Griffin and the DT binding being broken, but something
-> that catched my eye:
->=20
-> POWER_SUPPLY_PROP_VOLTAGE_NOW provides the voltage of the whole
-> battery and not of a single cell. E.g. a typical Li-Ion battery
-> with two serial cells has a nominal voltage of roughly 7.4V while
-> each cell has just 3.7V.
+They are not. There is a hint in both backtraces:
 
-Phones normally only have one cell...
+> [  514.305717]  schedule_preempt_disabled+0x15/0x30
+> [  514.360954]  __mutex_lock.constprop.0+0x4be/0x8a0
+> [  514.417232]  msi_domain_get_virq+0xcc/0x110
+> [  514.467279]  pci_msix_write_tph_tag+0x3c/0x100
 
-Best regards,
-								Pavel
---=20
-I don't work for Nazis and criminals, and neither should you.
-Boycott Putin, Trump, and Musk!
+and
 
---eiYFnwelYqG2iU/c
-Content-Type: application/pgp-signature; name="signature.asc"
+> [  525.930478]  schedule_preempt_disabled+0x15/0x30
+> [  525.985718]  __mutex_lock.constprop.0+0x4be/0x8a0
+> [  526.041993]  msi_domain_get_virq+0xcc/0x110
+> [  526.092031]  pci_msix_write_tph_tag+0x3c/0x100
 
------BEGIN PGP SIGNATURE-----
+pci_msix_write_tph_tag() is the function which ends up trying to lock
+the mutex and gets stuck. This function was introduced with commit
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaGbkLAAKCRAw5/Bqldv6
-8sYEAKCh0wimF36YRI80R6pAVmloU8qRRgCgnXM0UWB0vtffIz/feHaS3ubBHak=
-=t4+u
------END PGP SIGNATURE-----
+  d5124a9957b2 ("PCI/MSI: Provide a sane mechanism for TPH")
 
---eiYFnwelYqG2iU/c--
+and the subsequent commit
+
+  71296eae5887 ("PCI/TPH: Replace the broken MSI-X control word update")
+
+flipped the TPH code over to use that.
+
+The problem is obvious and if you would have enabled
+CONFIG_PROVE_LOCKING then you would have got the reason presented on a
+silver tablet in dmesg. I encourage you to do so nevertheless.
+
+I definitely screwed that one up in the most stupid way.
+
+As I had no idea how to exercise that code path I did not test it. It
+seems this code is not really tested by any of the CI stuff either
+before it hits Linus tree and as some folks start testing only post rc1
+it takes some time to surface :( 
+
+The fix is as obvious as the problem. See uncompiled and untested patch
+below. If it solves the problem, which it should, feel free to take it
+and create a proper patch with changelog and Fixes tag yourself (Adding
+Suggested-by: Thomas ... is good enough). Otherwise let me know, and I
+take care of it in my copious spare time :)
+
+Thanks,
+
+        tglx
+---
+diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
+index 6ede55a7c5e6..eb26f3816922 100644
+--- a/drivers/pci/msi/msi.c
++++ b/drivers/pci/msi/msi.c
+@@ -934,10 +934,11 @@ int pci_msix_write_tph_tag(struct pci_dev *pdev, unsigned int index, u16 tag)
+ 	if (!pdev->msix_enabled)
+ 		return -ENXIO;
+ 
+-	guard(msi_descs_lock)(&pdev->dev);
+ 	virq = msi_get_virq(&pdev->dev, index);
+ 	if (!virq)
+ 		return -ENXIO;
++
++	guard(msi_descs_lock)(&pdev->dev);
+ 	/*
+ 	 * This is a horrible hack, but short of implementing a PCI
+ 	 * specific interrupt chip callback and a huge pile of
