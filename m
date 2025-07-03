@@ -1,132 +1,129 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13EFC2E1C69;
-	Thu,  3 Jul 2025 10:06:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EECF31B95B;
+	Thu,  3 Jul 2025 10:06:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751537171; cv=none; b=n32VckriyCl4czQMQxJbiGmHifAhd3B22oTMh56VAcHZZSaz6XvRVCohKAizyurEXQBl2NSt0VD7mhzWR0wZxcs9oMoD1GguKcZWlgGTAr3Zg3IiMHqYt+8cv01qOrKY6ophSrVwayKIFqQCCbx5JanfdjqtMU8CRQ/lnYmeAm4=
+	t=1751537196; cv=none; b=RMm86MahkTH30+YPsIpCWYIYVWfv0MioprKD4enAfVYKbwT+pxX7WSv+REnyJtpTF0ppMHjJ5Qj9e6ljZmFDMYigYy4ka4XeAZDNHdtD2Y0Vp3TUD8HEaw6ivrdNW2RkdJuDt+u//3TwwxOj9pY5CUZrTXExGM1s0FL/QZJOaP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751537171; c=relaxed/simple;
-	bh=Fpj1uwcH2xla2wofNQJx+8YAitM91souW9TIhCmfFPk=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GOY9cQOmAOdXVbba8fjHMxDH9sr+05AUWZD+fTjHovP5RmCR1uhUGU7oJ7pinEP8Efe/YZCItoYRnsmNm+allIwYhnyX5uYLCngLH64VeJiDh4Z8jh0MaaGqhfJGldtdnj/WnhY72ErAzaaJJXWkTKtAJkbUd2O2aRA9uK9KDBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bXspS1C2Xz67Q1Y;
-	Thu,  3 Jul 2025 18:05:36 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id D6BAD1402F5;
-	Thu,  3 Jul 2025 18:06:04 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 3 Jul
- 2025 12:06:04 +0200
-Date: Thu, 3 Jul 2025 11:06:02 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: "Bowman, Terry" <terry.bowman@amd.com>
-CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <shiju.jose@huawei.com>,
-	<ming.li@zohomail.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<rrichter@amd.com>, <dan.carpenter@linaro.org>,
-	<PradeepVineshReddy.Kodamati@amd.com>, <lukas@wunner.de>,
-	<Benjamin.Cheatham@amd.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v10 05/17] CXL/AER: Introduce kfifo for forwarding CXL
- errors
-Message-ID: <20250703110602.0000699c@huawei.com>
-In-Reply-To: <a76be312-9f27-491a-99d2-79815ed98d3e@amd.com>
-References: <20250626224252.1415009-1-terry.bowman@amd.com>
-	<20250626224252.1415009-6-terry.bowman@amd.com>
-	<20250627112429.00007155@huawei.com>
-	<a76be312-9f27-491a-99d2-79815ed98d3e@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1751537196; c=relaxed/simple;
+	bh=VLvsZbCMVCjlhFRnfBeprQJpihfEwzytG12xF52C9jY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XK2Dljn7bzp7/0YqKokPOTpsrGTjmmuFQxrO0e0fj4MwyUXB5dGlR3tsP1p6/N12aUoo7MiOBznkCMqEzWdM+/2QaE1ZhV/nEnvCvC7weOFSNatN8uWc811lvpMyTbaI63b9Wj4vhtVvMvTiXyuDAF1rJYW86+02tbi5Y9uWgzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=bXnSup6a; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=nSUOFKLK; arc=none smtp.client-ip=103.168.172.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="bXnSup6a";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nSUOFKLK"
+Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 0F16F14000B9;
+	Thu,  3 Jul 2025 06:06:34 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-08.internal (MEProxy); Thu, 03 Jul 2025 06:06:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1751537194; x=1751623594; bh=9lrf5wzMoZ
+	6J/QpHfivU+gednLxgwZTZ/c4/OmLJKLo=; b=bXnSup6aQieDoOuvAIMgY5JcDz
+	LxThvKxitMaxLgrqGbilntah1YvrSP8RWMVLxvinNO8zo/xo9GZgbTkZv4QzCEdO
+	Jzgu0MDRjTG8L/64LDPBVzZHUjrF9fPPkR6fY9r1LT4xsMObR/T9hwwwoYQpJQ1f
+	38beKDam6zSnxoAfZsEwdksOnzrLiuDYwvRqH3MLLRyhH1j7Ug3yT36eqD43EZDD
+	Dufax9oXZHRL8nVJPyestwDu4OFenpf0KySOJEzSClZoBCUd3inssJq+U7eYW4TP
+	5nOCY0Kb7B1B54iwekU7bJz5HbtPx600Awiq5kziy5CJNL7Id4UqwjNxswcw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1751537194; x=1751623594; bh=9lrf5wzMoZ6J/QpHfivU+gednLxgwZTZ/c4
+	/OmLJKLo=; b=nSUOFKLKBUBSel8rm8kefj5N/uEAiplic4esh2Ri1yHOt1p2hxF
+	OGvQqL9m+marQ8ly3uW9RExA9B793bwlw7gTAGI3BwKzpvisDZJPyYUrdNtJNR2f
+	fqdB3V2IliQhOlDs87w89cmgbXkONy5LaLheF/g9Kmw1XWcEpqiUl4couezFOYPp
+	6KqqKZwx/jlvoTdtGlMV5wY9/WO7uq7x55gavQMwhBxOrb3H1YQ17XVMPwSH6qji
+	UXVW1U2BmPeBvx/xLY+pfLSJareJ/TOyTFCiQ71rkVQh/kBJq8mziUnpXErNGJE1
+	R0LJSezzFG8CyLDNn7HeOb78vhzk6qVucVQ==
+X-ME-Sender: <xms:KVZmaGqupRg-M6qJ-_8KEAsiELlwvpEa9SFJsTfja2S1G5K5MLXDQA>
+    <xme:KVZmaEqb7FZkS6DEfVL1RhtkqWOkUg64OfORzgjAZeqUtXmAyoHQ87MTHi1RQQjSH
+    frqRBalgqv9Pg>
+X-ME-Received: <xmr:KVZmaLPy2uGfuAdti_WIV8vQxw1sC_wH-dQa07Z6Yc-w-uHptvD1uPuLCyWGLcMVpXfFjr2ZYQvtwp4YByggqmjDIGn5l68>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduleellecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecunecujfgurhepfffhvfevuffkfhggtggujgesthdtredttd
+    dtvdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecu
+    ggftrfgrthhtvghrnhepgeehueehgfdtledutdelkeefgeejteegieekheefudeiffdvud
+    effeelvedttddvnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghr
+    ufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtg
+    homhdpnhgspghrtghpthhtohepudegpdhmohguvgepshhmthhpohhuthdprhgtphhtthho
+    pegrhhgrfedutdehuddtsehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhtrggslhgvse
+    hvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuhhrvgiikhhisehgmhgrihhl
+    rdgtohhmpdhrtghpthhtoheprghkphhmsehlihhnuhigqdhfohhunhgurghtihhonhdroh
+    hrghdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthht
+    oheplhhinhhugidqmhhmsehkvhgrtghkrdhorhhgpdhrtghpthhtoheplhhinhhugidqkh
+    gvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:KVZmaF6ULRxKtCv43SwrThS4tf5az2060MbroCT_GlOZnwzhEHwnEQ>
+    <xmx:KVZmaF5koHkl5laVBkUVQklBHhcs6TxXzNLwdseVSas1XiLXYz7_7Q>
+    <xmx:KVZmaFjMBW-ji12BxIqtxOLChPKNHElkDmYcePmLFQSxV7JTh_QLfQ>
+    <xmx:KVZmaP6izJ50zmyiZmgbMvb0Tq1AakvbK0BAYVjBVff8OgDgIGHk0g>
+    <xmx:KlZmaCFHBW7XdzBvpybxPSbNQA0gvAuktj4EOi_vhXEvr_raSXyColYC>
+Feedback-ID: i787e41f1:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 3 Jul 2025 06:06:33 -0400 (EDT)
+Date: Thu, 3 Jul 2025 12:06:32 +0200
+From: Greg KH <greg@kroah.com>
+To: Jeongjun Park <aha310510@gmail.com>
+Cc: stable@vger.kernel.org, urezki@gmail.com, akpm@linux-foundation.org,
+	edumazet@google.com, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6.12.y] mm/vmalloc: fix data race in show_numa_info()
+Message-ID: <2025070315-breezy-bogged-75f3@gregkh>
+References: <20250702153428.352047-1-aha310510@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250702153428.352047-1-aha310510@gmail.com>
 
-On Wed, 2 Jul 2025 11:21:20 -0500
-"Bowman, Terry" <terry.bowman@amd.com> wrote:
+On Thu, Jul 03, 2025 at 12:34:28AM +0900, Jeongjun Park wrote:
+> commit 5c5f0468d172ddec2e333d738d2a1f85402cf0bc upstream.
+> 
+> The following data-race was found in show_numa_info():
+> 
+> ==================================================================
+> BUG: KCSAN: data-race in vmalloc_info_show / vmalloc_info_show
+> 
+> read to 0xffff88800971fe30 of 4 bytes by task 8289 on cpu 0:
+>  show_numa_info mm/vmalloc.c:4936 [inline]
+>  vmalloc_info_show+0x5a8/0x7e0 mm/vmalloc.c:5016
+>  seq_read_iter+0x373/0xb40 fs/seq_file.c:230
+>  proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
+> ....
+> 
+> write to 0xffff88800971fe30 of 4 bytes by task 8287 on cpu 1:
+>  show_numa_info mm/vmalloc.c:4934 [inline]
+>  vmalloc_info_show+0x38f/0x7e0 mm/vmalloc.c:5016
+>  seq_read_iter+0x373/0xb40 fs/seq_file.c:230
+>  proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
+> ....
+> 
+> value changed: 0x0000008f -> 0x00000000
+> ==================================================================
+> 
+> According to this report,there is a read/write data-race because
+> m->private is accessible to multiple CPUs.  To fix this, instead of
+> allocating the heap in proc_vmalloc_init() and passing the heap address to
+> m->private, vmalloc_info_show() should allocate the heap.
+> 
+> Link: https://lkml.kernel.org/r/20250508165620.15321-1-aha310510@gmail.com
+> Fixes: 8e1d743 ("mm: vmalloc: support multiple nodes in vmallocinfo")
 
-> On 6/27/2025 5:24 AM, Jonathan Cameron wrote:
-> > On Thu, 26 Jun 2025 17:42:40 -0500
-> > Terry Bowman <terry.bowman@amd.com> wrote:
-> > =20
-> >> CXL error handling will soon be moved from the AER driver into the CXL
-> >> driver. This requires a notification mechanism for the AER driver to s=
-hare
-> >> the AER interrupt with the CXL driver. The notification will be used
-> >> as an indication for the CXL drivers to handle and log the CXL RAS err=
-ors.
-> >>
-> >> First, introduce cxl/core/native_ras.c to contain changes for the CXL
-> >> driver's RAS native handling. This as an alternative to dropping the
-> >> changes into existing cxl/core/ras.c file with purpose to avoid #ifdef=
-s.
-> >> Introduce CXL Kconfig CXL_NATIVE_RAS, dependent on PCIEAER_CXL, to
-> >> conditionally compile the new file.
-> >>
-> >> Add a kfifo work queue to be used by the AER driver and CXL driver. Th=
-e AER
-> >> driver will be the sole kfifo producer adding work and the cxl_core wi=
-ll be
-> >> the sole kfifo consumer removing work. Add the boilerplate kfifo suppo=
-rt.
-> >>
-> >> Add CXL work queue handler registration functions in the AER driver. E=
-xport
-> >> the functions allowing CXL driver to access. Implement registration
-> >> functions for the CXL driver to assign or clear the work handler funct=
-ion.
-> >>
-> >> Introduce 'struct cxl_proto_err_info' to serve as the kfifo work data.=
- This
-> >> will contain the erring device's PCI SBDF details used to rediscover t=
-he
-> >> device after the CXL driver dequeues the kfifo work. The device redisc=
-overy
-> >> will be introduced along with the CXL handling in future patches.
-> >>
-> >> Signed-off-by: Terry Bowman <terry.bowman@amd.com> =20
-> > Hi Terry,
-> >
-> > Whilst it obviously makes patch preparation a bit more time consuming
-> > for series like this with many patches it can be useful to add a brief
-> > change log to the individual patches as well as the cover letter.
-> > That helps reviewers figure out where they need to look again.
-> >
-> > A few trivial things inline.
-> >
-> > With those fixed up
-> > Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> >
-> > Jonathan =20
->=20
-> Hi Jonathan,
->=20
-> Do you have an example you can point me to with a change log in the
-> individual patch? I want to make certain I change correctly.
->=20
-> =A0
-> > =20
-> >> ---
+Same comments on the 6.15 version, why change this line?
 
-You just put it here.  No particular formatting standard for it other than =
-making
-sure its after the --- so it doesn't end up in the git log.
-https://lore.kernel.org/all/2025070138-vigorous-negative-eae7@gregkh/
+thanks,
 
-Is first example I scrolled down to.  This is a single patch series but
-the principle is the same.
-
-
+greg k-h
