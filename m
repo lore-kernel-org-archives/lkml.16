@@ -1,109 +1,79 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5BA6AA7;
-	Thu,  3 Jul 2025 07:10:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E832951DD;
+	Thu,  3 Jul 2025 07:10:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751526632; cv=none; b=IVg++JTrLTOwlFtrUcz6SeRmBQ7Q11DgJGo9Ll45z+nucJ28M2ZvpM6nRc6jfeCkcqxF6AOE205Olurg1PzGcKDQLmvP+YUZZ7raZNHIOmV7u6F5as7Ln8/i6ZL5Lkdf3QdsRtB4jRhyXLQJGMwddhHZe9716kmYchiNFbYmH3o=
+	t=1751526641; cv=none; b=IYIlXCx0htZC37I88ifUCQltI/r6JbCrWisayPz9Qrdi/e9nITFjEWyeoRDAPU9faKyE1FCLIHs3KvYTy1a1l0UVjHA6x0HAyFDIwCqyiY2FQtWXGEkyb+0tV+lCm6avVYPJQNNQs7B+LISZDk4DN4dZm8zMC9R4M+ylLhOtpt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751526632; c=relaxed/simple;
-	bh=wEvSWZ7JzGMu8CHv0gVajuf+bhWIc4Vi10R59vRcnxM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=s7TPDzIMM8nHG5BCYTEEzG+QUkSIKto5jnkm+QfoVE0EbyTxJhyH7yp+Z/Jtg8DTIUNxw+uOArmzQCygCiIGHF0IGkPkYaBDPKSrBPkq3BTC4oLOHz22NMlSVnf0BjUSyT7JmPOb9Ghi3xpU87d6fFXqFGEmhXPuBBinkmtTlnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=sfptmzrc; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1751526641; c=relaxed/simple;
+	bh=xq0PpWjYz8cPKeWInNSvsosTUjM8RN/gpvBqji2Yyt4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qD5zYTKwfSHSzPrt8mdExf45Fz7Ws7bj4w/n4NHOA0ryc+jkTEzPTQ8QkfY3QHmd35Z9Tg6woE55Sb4xB42KDrSeLV5BVlcSpg9WQEicIj0urO4+i6ks5FGL0PEqEVnXDQUwGjak/QiEEjcWPrzFfs9chEanru6DOf60jflmSzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ei5I9jhN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="sfptmzrc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1751526603;
-	bh=29BaWEnnxhvgKvXxEIkvRDdXYqd3nlHanBa1Fx/1ZvU=;
-	h=Date:From:To:Cc:Subject:From;
-	b=sfptmzrcLb0gBs9vqlcts8HbtkxdAz9qLPwiKNnfIXp0eINwMwNDjGO4bGRACp3qh
-	 PAnFu0b+Du5mvr+YxK3odsEZAP2OytnWUE18QiEXNXs0IdvZmw1U9RjsZ2gbR+p8og
-	 CV1rlagcgVlrDJCINKkm4cziw0xgSQH1vQg6QP20NHLd3ZRbaAjSXM4UkysNKGak7s
-	 FBd80m2a4h1gWH0cxIob5lhqWuunyvsWJtSC0mgWkkScDmm0yhXjhiSbtdiWL5ulaF
-	 m094xNtiVv+QyIIRTMx9Mcaq91z4Sta0DBCtqCVM4o/9GQ6FacBXUNnC+YCHmHfdBs
-	 oQQk5smeOmjvA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bXnvr3gP0z4wbX;
-	Thu,  3 Jul 2025 17:10:00 +1000 (AEST)
-Date: Thu, 3 Jul 2025 17:10:21 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lizhi Xu
- <lizhi.xu@windriver.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the char-misc tree
-Message-ID: <20250703171021.0aee1482@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ei5I9jhN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91CEFC4CEE3;
+	Thu,  3 Jul 2025 07:10:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751526641;
+	bh=xq0PpWjYz8cPKeWInNSvsosTUjM8RN/gpvBqji2Yyt4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ei5I9jhNEL66axIal8D0bu1cywryGpLO0jw4d38AJqDTtLTLGJu4pjnLUihJCLXMF
+	 oN3+5QqhdYmE/PJFYZSpArVe7HmItSkWpQYd/NqSbAQ9dGPyPtEjQ3fMDCyMIXaT+V
+	 Idk/clNNPBsDlPQIeH9QmhNs/0Yo0tzgJv7k5np9vEGMCa8w5DhIBrUeHGL0ejhOg8
+	 ls6K1oBycDVJ97z9EzSuJmktWFF+BTPM4+2hYqBvQTLd6ax3fmmJ4TA58F5yxmkiow
+	 XPbwPmzm2Kt8n1pij6Lgb1SWcK+Fr61tX3uAFSTEnJvjDTkWaRBmU9H3po7jZYoouY
+	 JPTb4d2SFt2ew==
+Date: Thu, 3 Jul 2025 09:10:38 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Nick <nick.li@foursemi.com>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, perex@perex.cz, tiwai@suse.com, 
+	like.sin@gmail.com, xiaoming.yang@foursemi.com, danyang.zheng@foursemi.com, 
+	linux-sound@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 3/4] ASoC: dt-bindings: Add dt bindings for FS2104/5S
+ audio amplifiers
+Message-ID: <20250703-primitive-puzzling-toucanet-2c4870@krzk-bin>
+References: <20250703035639.7252-1-nick.li@foursemi.com>
+ <20250703035639.7252-4-nick.li@foursemi.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/71H9A/CjLxqDomEHXUxuwYG";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250703035639.7252-4-nick.li@foursemi.com>
 
---Sig_/71H9A/CjLxqDomEHXUxuwYG
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Jul 03, 2025 at 11:56:38AM +0800, Nick wrote:
+> From: Nick Li <nick.li@foursemi.com>
+> 
+> This patch adds bindings for FourSemi FS2104/5S audio amplifiers
+> which can support both I2S and I2C interface.
+> 
+> Signed-off-by: Nick Li <nick.li@foursemi.com>
+> ---
+>  .../bindings/sound/foursemi,fs210x.yaml       | 95 +++++++++++++++++++
+>  1 file changed, 95 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/foursemi,fs210x.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/foursemi,fs210x.yaml b/Documentation/devicetree/bindings/sound/foursemi,fs210x.yaml
+> new file mode 100644
+> index 000000000..3a1aba9b8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/foursemi,fs210x.yaml
+> @@ -0,0 +1,95 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
 
-Hi all,
+Please run scripts/checkpatch.pl on the patches and fix reported
+warnings. After that, run also 'scripts/checkpatch.pl --strict' on the
+patches and (probably) fix more warnings. Some warnings can be ignored,
+especially from --strict run, but the code here looks like it needs a
+fix. Feel free to get in touch if the warning is not clear.
 
-After merging the char-misc tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+Best regards,
+Krzysztof
 
-In file included from include/linux/string.h:392,
-                 from include/linux/bitmap.h:13,
-                 from include/linux/cpumask.h:12,
-                 from arch/x86/include/asm/paravirt.h:21,
-                 from arch/x86/include/asm/irqflags.h:102,
-                 from include/linux/irqflags.h:18,
-                 from include/linux/spinlock.h:59,
-                 from include/linux/wait.h:9,
-                 from include/linux/wait_bit.h:8,
-                 from include/linux/fs.h:7,
-                 from include/linux/highmem.h:5,
-                 from drivers/misc/vmw_vmci/vmci_context.c:10:
-In function 'fortify_memset_chk',
-    inlined from 'ctx_fire_notification.isra' at drivers/misc/vmw_vmci/vmci=
-_context.c:254:3:
-include/linux/fortify-string.h:480:25: error: call to '__write_overflow_fie=
-ld' declared with attribute warning: detected write beyond size of field (1=
-st parameter); maybe use struct_group()? [-Werror=3Dattribute-warning]
-  480 |                         __write_overflow_field(p_size_field, size);
-      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-cc1: all warnings being treated as errors
-
-Caused by commit
-
-  bfb4cf9fb97e ("vmci: Prevent the dispatching of uninitialized payloads")
-
-I have used the char-misc tree from next-20250702 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/71H9A/CjLxqDomEHXUxuwYG
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhmLN0ACgkQAVBC80lX
-0GwgZwgAh5gmEHbXMtRGa6eihN9LHWxtJBnX197tnv3XNC2CEO9cYCXEOZZvTS9F
-beaA2EERoYWGhzNzjiUf6lDoIwydkVdGv1+8UuBp/zS3lAnx5d/w8UoGdcb4geiu
-WPqKVcdTOlnmOtapajRsBbWSf+J3vPpVR7nmkLX96XHH7u5vQqvLX9/2uCwYyi+k
-3tdT8FptKtSWXv/Z44fDfQR9b0ekjz/QnmhvuXttJFk9YopEqBitzPoTvTAu2/cS
-Fzc5biZQGMxUSlinBg8QsdbHwdbMUCUm5BPOSwwArWBB8/6xENVamV61KRgpGPY8
-Jyobo25gRs2KNAE+5fUMxWQFzSk2nw==
-=bKPw
------END PGP SIGNATURE-----
-
---Sig_/71H9A/CjLxqDomEHXUxuwYG--
