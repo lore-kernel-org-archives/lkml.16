@@ -1,93 +1,75 @@
-Received: from mail3-164.sinamail.sina.com.cn (mail3-164.sinamail.sina.com.cn [202.108.3.164])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6693A1F956
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 01:08:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.108.3.164
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 565948C11
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 01:17:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751504898; cv=none; b=lE8dpgfRC2idJBzZ9f3brNc+ElSmDwD0ViLiavjJqGEP6yXX1tb9DzDscF+Nw/X66niyVVY8N//EksWdFYWAwCDTpTTjBtT+y2/4iwtOAPS55KxwChnDGjZ2SVTyQqLvGeONl0AFowIuqC7pSRvxFNURYfW2qYBfWr1ITHmTG5o=
+	t=1751505448; cv=none; b=TCMB5Nr8nQChZ/z7rRaV1+D0aDbkS7lZItIoaaKM2S79qHA+KQr27wU2i05JKFXuLVhUQqfjycW6qFqee2Oyf+HzulvIpG/oxCB0oITpKc10XtjK2METKyJG7WUA1ulnFHrItoMRqN4DdlnEyK+oWaQsIL7ejjgGVgzquZkYa8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751504898; c=relaxed/simple;
-	bh=SUVlWdQqDyKJ4LhgmTpbGQqJAa4sQ+Phf/BlrfPW6h0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Pzvj0xGsrhHoZSlJjaRyCIQlyOeXvLcCPyotpIiuu7lkIMC1wJ1VSKomRCMuYva7gb8PCP81o9QDn/jCAYKLI56vuvnldLJid6Xp5FeqCgnPFrQj5TTn8ej4htKmoxZwLO1uLEdubi7dS2iMKEvGsb/wMRa1whfJ+SUQqHfEEt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b=ude8dWvI; arc=none smtp.client-ip=202.108.3.164
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=sina.com header.i=@sina.com header.b="ude8dWvI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sina.com; s=201208; t=1751504893;
-	bh=1jJ//o1g6ALetyXYXwk4Tl4JBYGREwme42sNYEyCAjg=;
-	h=From:Subject:Date:Message-ID;
-	b=ude8dWvIkBhvmNrvzxoZDoY95EGpWER09emEpS6MTX9wd63LXNDpmIkzV3ikbpOP0
-	 DP7/qVqAA38bkfi08gqKgf+GoSyCBvKNfNL3rfY7akB4+3qufxwFZF/iQlIuupYXLC
-	 VtpdYLAYpS8OgFwc6X55MYWkGRJYvMHTBn1D0vuc=
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([114.249.58.236])
-	by sina.com (10.54.253.32) with ESMTP
-	id 6865D6AD00000771; Thu, 3 Jul 2025 09:02:39 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 1764334457055
-X-SMAIL-UIID: 325FC3E2E72347A98D65E01A22244399-20250703-090239-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+169412e85b1803dfda81@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [kernel?] general protection fault in __cpa_flush_tlb
-Date: Thu,  3 Jul 2025 09:02:26 +0800
-Message-ID: <20250703010227.2223-1-hdanton@sina.com>
-In-Reply-To: <6865460d.a00a0220.270cb1.0001.GAE@google.com>
-References: 
+	s=arc-20240116; t=1751505448; c=relaxed/simple;
+	bh=DJNKakqU3YkAerqiUC6OSmZ1gRpO+3vICX9ml1dECuU=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=K0J48eJZxu/j+Ze8bBwHCwl1bMenyX4KjJ/Ro80LiQ7wOgvJs/MUCRmsGsLtkZHoJGg535biD8eeZN1tFqRbQSmasdLfmsLGK4ADQoVi/bt8Nt0/Cua7pB4qgHOJiVfg+TKq4H8eE2sJM2HMfg++YnJbcl+261TdZFXwhuP45wA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-86cfe68a8bbso519431839f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 18:17:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751505446; x=1752110246;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rkAxNpgnFcgnY2m4dXwwl866T3/ZuVH9y1Vs9ZVnAk8=;
+        b=bvdzUicUazfqmLlHzlLmLlZN3D4fD9oTE1w3nWOiYtqpovjlma6fhGN9lksMnlxMV/
+         GSVNklUGS8Ef7Acb2zqBO6SjmUdxIYa2rdJ4/kh/S4fyPuXftiyQaIIawmVLpsFU/yiR
+         Y7+uWNAouZnUfuLtidWChqy4kjsZbFzCA7WgqDd51bUul69bfWKk1gLsKfUiaRQy+ndh
+         pKCwzcuEn0n+T1QDQ4AW+x44xMD/QJrcsn6b/Q0Qf+T/Dq3aPkJTnHVDrdgW9PxdgEmk
+         GlpRJ9UQ34Uk0LJSEoQmaHUPsttIRCKUgS/qb9emV5fowzcGjLKp/GV0UmaD0evo3UjA
+         Tymg==
+X-Gm-Message-State: AOJu0YySyx7MPhYT4s53KqqcjDc7+OApZvwoJhhziYlEGAv121QxwenK
+	IL6TMFXeQvO8nH9PPEiMJtUsU9E2ektgnrM1DDsmcSBuAICJ5Q2w9cgO91/VwWL5wFUhdtCEawn
+	Lrt2Nq0dtU/h5EkGmUW6ua/Ga5no1VyOZ77UE7WG3Vc6N5+fid+UXuj+EI+Q=
+X-Google-Smtp-Source: AGHT+IHOB46WzM55UxMiHTC2Rvq04Vb8fWwzFX9Otcxqx1QKWm+DK75o0TUybkk3gjWeNnYZ8212cYutMQyb4gypIRZokRTiqcwx
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6602:148f:b0:86a:84f:7a45 with SMTP id
+ ca18e2360f4ac-876d1f2a62bmr254346439f.8.1751505446483; Wed, 02 Jul 2025
+ 18:17:26 -0700 (PDT)
+Date: Wed, 02 Jul 2025 18:17:26 -0700
+In-Reply-To: <68656f4c.a70a0220.2b31f5.0000.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6865da26.a70a0220.2b31f5.0009.GAE@google.com>
+Subject: Re: [syzbot] Re: [syzbot] [nfs?] [net?] possible deadlock in rpc_close_pipes
+From: syzbot <syzbot+169de184e9defe7fe709@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-> Date: Wed, 02 Jul 2025 07:45:33 -0700
-> syzbot found the following issue on:
-> 
-> HEAD commit:    1343433ed389 Add linux-next specific files for 20250630
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=10aa93d4580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=c1ce97baf6bd6397
-> dashboard link: https://syzkaller.appspot.com/bug?extid=169412e85b1803dfda81
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10ed648c580000
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
+
+***
+
+Subject: Re: [syzbot] [nfs?] [net?] possible deadlock in rpc_close_pipes
+Author: lizhi.xu@windriver.com
 
 #syz test
 
---- a/kernel/smp.c
-+++ b/kernel/smp.c
-@@ -802,7 +802,6 @@ static void smp_call_function_many_cond(
- 
- 	/* Check if we need remote execution, i.e., any CPU excluding this one. */
- 	if (cpumask_any_and_but(mask, cpu_online_mask, this_cpu) < nr_cpu_ids) {
--		run_remote = true;
- 		cfd = this_cpu_ptr(&cfd_data);
- 		cpumask_and(cfd->cpumask, mask, cpu_online_mask);
- 		__cpumask_clear_cpu(this_cpu, cfd->cpumask);
-@@ -816,6 +815,7 @@ static void smp_call_function_many_cond(
- 				continue;
- 			}
- 
-+			run_remote = true;
- 			csd_lock(csd);
- 			if (wait)
- 				csd->node.u_flags |= CSD_TYPE_SYNC;
-@@ -843,8 +843,6 @@ static void smp_call_function_many_cond(
- 			send_call_function_single_ipi(last_cpu);
- 		else if (likely(nr_cpus > 1))
- 			send_call_function_ipi_mask(cfd->cpumask_ipi);
--		else
--			run_remote = false;
+diff --git a/net/sunrpc/rpc_pipe.c b/net/sunrpc/rpc_pipe.c
+index 0bd1df2ebb47..ae5643e0bc43 100644
+--- a/net/sunrpc/rpc_pipe.c
++++ b/net/sunrpc/rpc_pipe.c
+@@ -693,7 +693,7 @@ void
+ rpc_unlink(struct rpc_pipe *pipe)
+ {
+ 	if (pipe->dentry) {
+-		simple_recursive_removal(pipe->dentry, rpc_close_pipes);
++		locked_recursive_removal(pipe->dentry, rpc_close_pipes);
+ 		pipe->dentry = NULL;
  	}
- 
- 	/* Check if we need local execution. */
---
+ }
