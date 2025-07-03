@@ -1,134 +1,151 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA8A2288EE
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 03:22:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 883AC22B8C5
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 03:23:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751512959; cv=none; b=oyMf7By51TbVwxqrHmAiUTORzM3VmMh2qgmn1qts8MCov+Ne0eMBsMyVWdMk6IQIuFhLFtojoAL6RPox39XWSibDyfOEkIWX/CRlDLkFyY4U8e99jqQTCOZpJQxP3MQoAcIwM7oZJxEZxCQrAGwZM5X1XFigvieiOJ9H+hy9NmI=
+	t=1751513025; cv=none; b=QxNLv9nT52ZmXHvgSVagr7DjEEu0lGjatZkhHe/TcwAXp67pGitlt7fX8nRaHUhyj+o+vGlxfA6OHKEAK/qBGWSyxRHXby1bftUQSQVbynKrGtA/GnL2qvi3FJQFcLGIHWTO1GKwBIh613wQPxFXXU9fjRHbPYXbuwdNNjwG5uQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751512959; c=relaxed/simple;
-	bh=jRAp1AVjN+o0z0U9utUV1cQ17XRWoHhVViGsl36T9Fs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JI6GCYOBrg99uEAGgA6CfzZShbUPHR6uDNvo0YM5E45dGa+sqRTxScJzFtYpce5VC7raP8YBayIOTyOvNVCQ16M8ORqUU7/BszI+2Lvt0qPhQCgh8cDchmAqIY3IJo4P7Jhv13eO/80vfM8w/B0z6Aa7eT1JF8My4VPmdhsP5Kk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=SxMv53Xx; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1751513025; c=relaxed/simple;
+	bh=ZERNRpXu+O9L8hzxBmJsquggruQ2OePikz7yoCgMaRc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U0L66gsbl75RQolY23WNEn0ibMvhUtqqERRE+pSrSbAXJ8vRzEjNOQLscf2s4fyHryC9RNGxTIoGHNnrMj3c4/VJkbNzLO7u0i3N+QK1ApmT0TpalSpZUGdxVu1UEAc+ucTUB0VdDsolf+RCFz/pflT/eQXR7DVKWCPsFMczlsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XqRlNRDi; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SxMv53Xx"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b2c4e46a89fso4593605a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 20:22:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1751512956; x=1752117756; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=u3/FURbw0Qjice8ym2SrrqkCxrOCjqZwE+s45rYEO0E=;
-        b=SxMv53Xx6Degcdj47VTRozTEgcj9lqtxUGfqgW+mN15Ck/uN+S80/jxpVUbrPGDAse
-         Tf3uQ0wMhzwJgoc1+99tdez86AOQV4WPinPUdktvYk37Dlv8Wfh0IDvP91+59DOAPC8M
-         1yYMHzssFyQve7RxVvVq6GTiEh3Tntv1JfOiI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751512956; x=1752117756;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u3/FURbw0Qjice8ym2SrrqkCxrOCjqZwE+s45rYEO0E=;
-        b=nHjOrsS7Lol9RCi68AETJEA4S6VpkfQj0DO9BkmsND1rQM4fAerd7jGuZiEUSsu8Qs
-         1dTWitMv8sg78Y8Z3pEbtS5mOil/4jmogtOzXsxeIh2rNwBST/nD1nkz/7/8IwhuRwAZ
-         AbIWWQo2C4TGPKPFhhrRXYjnax9YS9iafDR0OtTrTGAVfV29rB1lp0JD7mE0CqF4Uqr2
-         oIuwElFI0W22zem8qAR5egZMim4MLlVCboemQC8tDM88OR6t5DIeXu8QJhGKsWEm8sRM
-         zpRRKJpJMk3e15aIT1PHlrhDJ4zp3ffOtGQ4IsQ768XDqTmptJ3KA8oBqkvcdvNIX1/K
-         912Q==
-X-Gm-Message-State: AOJu0YxhzdvGJCKw+qynV0ODnbz/i5I4Nxg6O1Wj3ST69yVWEba9Ab0w
-	8/X0xAmXbJmtv7kJeYYqmRhY9QC82STPmX486qIUnLDEWKmqRwc7ldlLlGduQh7R9w==
-X-Gm-Gg: ASbGncvs8utptb6915oD3FXgB81RcSB70mOAyUNcL1qZq9ck2ykhIIjmNqzsyaIwY3E
-	Vpd+QcC/cEIuv5LknRDQQMSoBFAqk5B3e4JCMGHswiNXqKxY85TJtU2tMDtNYcM1+bpFzDy9KLk
-	bYq3sGjMEouCRuHvER4YNtS+zTbmMi2j/yqf8/delXwBC5k01l2iRNvNX58t6N4YjXbyLuSBdat
-	L2ooubwxpxeuhG4I96Q//lirpRjxrR4/OizVGMRVFoOWoG4vFiaQ3WDpl+60PgifG4xkZ+pLiBR
-	rVi0WkoEP6Kpy1g2TUzk2XyB9rMUFLNdv68ZaXfRFCHTfH/faWRE0VdHxrZWco2aBQuVvvC0Mzg
-	O
-X-Google-Smtp-Source: AGHT+IEAy0Xvd7q1RC5hmp7SawamH/oI/muiFAFExRx9I64wiUZ1PQhrNgi3qS6Dq4f35q/YwfITMQ==
-X-Received: by 2002:a17:90b:3946:b0:311:e8cc:4264 with SMTP id 98e67ed59e1d1-31a9d545d21mr2763491a91.12.1751512955991;
-        Wed, 02 Jul 2025 20:22:35 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:8e3f:7c33:158f:349b])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31a9cc5204bsm1117959a91.8.2025.07.02.20.22.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 20:22:35 -0700 (PDT)
-Date: Thu, 3 Jul 2025 12:22:23 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, virtualization@lists.linux.dev, 
-	linux-fsdevel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Jerrin Shaji George <jerrin.shaji-george@broadcom.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
-	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
-	Alistair Popple <apopple@nvidia.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Minchan Kim <minchan@kernel.org>, Brendan Jackman <jackmanb@google.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Naoya Horiguchi <nao.horiguchi@gmail.com>, Oscar Salvador <osalvador@suse.de>, 
-	Rik van Riel <riel@surriel.com>, Harry Yoo <harry.yoo@oracle.com>, 
-	Qi Zheng <zhengqi.arch@bytedance.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: Re: [PATCH v1 12/29] mm/zsmalloc: stop using __ClearPageMovable()
-Message-ID: <vscedd6m3cq73c5ggjjz6ndordivgeh4dmvzeok222bnderr5c@dujm4ndthtxb>
-References: <20250630130011.330477-1-david@redhat.com>
- <20250630130011.330477-13-david@redhat.com>
- <zmsay3nrpmjec5n7v44svfa7iwl6vklqan4dgjn4wpvsr5hqt7@cqfwdvhncgrg>
- <757cf6b9-730b-4b12-9a3d-27699e20e3ac@redhat.com>
- <ugm7j66msq2w2hd3jg3thsxd2mv7vudozal3nblnfemclvut64@yp7d6vgesath>
- <11de6ae0-d4ec-43d5-a82e-146d82f17fff@redhat.com>
- <5thkl2h5qan5gm7putqd4o6yn5ht2c5zeei5qbjoni677xr7po@kbfokuekiubj>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XqRlNRDi"
+Message-ID: <5f4f048e-02ff-4669-b4b1-e411c6be536b@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751513019;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=02Z56k5zvMHyfb242f86xyhwrkS4NA9iR003Aq/JcII=;
+	b=XqRlNRDinGAVovYfLF3OPit+0XuQ9nfTEYK01MdmtohibmluJ0UcGwC+09A09/7mho5H+u
+	LfZIKd29oZO3RSSGxXeONGCes6nZbQbeo2Wy9AKQVUhzk4ddVqtirrUcicgeFGVquo3SoE
+	37IoBEaeQMTbeV1Mg26yStntpW9lc10=
+Date: Thu, 3 Jul 2025 11:23:32 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5thkl2h5qan5gm7putqd4o6yn5ht2c5zeei5qbjoni677xr7po@kbfokuekiubj>
+Subject: Re: [PATCH v3 0/5] generalize panic_print's dump function to be used
+ by other kernel parts
+Content-Language: en-US
+To: Feng Tang <feng.tang@linux.alibaba.com>
+Cc: paulmck@kernel.org, john.ogness@linutronix.de,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Petr Mladek <pmladek@suse.com>,
+ Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org
+References: <20250703021004.42328-1-feng.tang@linux.alibaba.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Lance Yang <lance.yang@linux.dev>
+In-Reply-To: <20250703021004.42328-1-feng.tang@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On (25/07/03 11:28), Sergey Senozhatsky wrote:
-> > > > > >    static int zs_page_migrate(struct page *newpage, struct page *page,
-> > > > > > @@ -1736,6 +1736,13 @@ static int zs_page_migrate(struct page *newpage, struct page *page,
-> > > > > >    	unsigned long old_obj, new_obj;
-> > > > > >    	unsigned int obj_idx;
-> > > > > > +	/*
-> > > > > > +	 * TODO: nothing prevents a zspage from getting destroyed while
-> > > > > > +	 * isolated: we should disallow that and defer it.
-> > > > > > +	 */
-> > > > > 
-> > > > > Can you elaborate?
-> > > > 
-> > > > We can only free a zspage in free_zspage() while the page is locked.
-> > > > 
-> > > > After we isolated a zspage page for migration (under page lock!), we drop
-> > >                        ^^ a physical page? (IOW zspage chain page?)
-> > > 
-> > > > the lock again, to retake the lock when trying to migrate it.
-> > > > 
-> > > > That means, there is a window where a zspage can be freed although the page
-> > > > is isolated for migration.
-> > > 
-> > > I see, thanks.  Looks somewhat fragile.  Is this a new thing?
-> > 
-> > No, it's been like that forever. And I was surprised that only zsmalloc
-> > behaves that way
+Just hit a build failure with this patch series when building for arm64
+with a minimal configuration:
+
+kernel/panic.c: In function ‘setup_panic_sys_info’:
+kernel/panic.c:151:23: error: implicit declaration of function 
+‘sys_info_parse_param’ [-Wimplicit-function-declaration]
+151 |         panic_print = sys_info_parse_param(buf);
+|                       ^~~~~~~~~~~~~~~~~~~~
+make[3]: *** [scripts/Makefile.build:287: kernel/panic.o] Error 1
+make[2]: *** [scripts/Makefile.build:554: kernel] Error 2
+
+
+To reproduce it:
+$ make ARCH=arm64 allnoconfig
+$ make ARCH=arm64 -j$(nproc)
+
+Thanks,
+Lance
+
+
+On 2025/7/3 10:09, Feng Tang wrote:
+> When working on kernel stability issues, panic, task-hung and
+> software/hardware lockup are frequently met. And to debug them, user
+> may need lots of system information at that time, like task call stacks,
+> lock info, memory info etc.
 > 
-> Oh, that makes two of us.
+> panic case already has panic_print_sys_info() for this purpose, and has
+> a 'panic_print' bitmask to control what kinds of information is needed,
+> which is also helpful to debug other task-hung and lockup cases.
+> 
+> So this patchset extract the function out to a new file 'lib/sys_info.c',
+> and make it available for other cases which also need to dump system info
+> for debugging.
+> 
+> Also as suggested by Petr Mladek, add 'panic_sys_info=' interface to
+> take human readable string like "tasks,mem,locks,timers,ftrace,....",
+> and eventually obsolete the current 'panic_print' bitmap interface.
+> 
+> In RFC and V1 version, hung_task and SW/HW watchdog modules are enabled
+> with the new sys_info dump interface. In v2, they are kept out for
+> better review of current change, and will be posted later.
+> 
+> Locally these have been used in our bug chasing for stability issues
+> and was proven helpful.
+> 
+> Many thanks to Petr Mladek for great suggestions on both the code and
+> architectures!
+> 
+> - Feng
+> 
+> One to do left is about adding note for obsoleting 'panic_print' cmdline
+> as discussed in https://lore.kernel.org/lkml/aFvBuOnD0cAEWJfl@U-2FWC9VHC-2323.local/
+> and will be posted later.
+> 
+> Changelog:
+> 
+>    Since v2:
+>       * Rename to PANIC_CONSOLE_REPLAY (Petr Mladek)
+>       * Don't let kernel.h include sys_info.h (Petr Mladek)
+>       * Improve documents and coding style (Petr Mladek/Lance Yang)
+>       * Add 'panic_console_replay' parameter (Petr Mladek)
+>       * Fix compiling problem (0Day bot)
+>       * Add reviewed-by tag from Petr for patch 1/5
+> 
+>    Since V1:
+>       * Separate the 'sys_show_info' related code to new file sys_info.[ch]
+>         (Petr Mladek)
+>       * Clean up the code for panic console replay (Petr Mladek)
+>       * Add 'panic_sys_info=' cmdline and sysctl interface for taking
+>         human readable parameters (Petr Mladek)
+>       * Add note about the obsoleting of 'panic_print' (Petr Mladek)
+>       * Hold the changes to hungtask/watchdog
+> 
+>    Since RFC:
+>       * Don't print all cpu backtrace if 'sysctl_hung_task_all_cpu_backtracemay'
+>         is 'false' (Lance Yang)
+>       * Change the name of 2 new kernel control knob to have 'mask' inside, and
+>         add kernel document and code comments for them (Lance Yang)
+>       * Make the sys_show_info() support printk msg replay and all CPU backtrace.
+> 
+> Feng Tang (5):
+>    panic: clean up code for console replay
+>    panic: generalize panic_print's function to show sys info
+>    panic: add 'panic_sys_info' sysctl to take human readable string
+>      parameter
+>    panic: add 'panic_sys_info=' setup option for kernel cmdline
+>    panic: add note that panic_print sysctl interface is deprecated
+> 
+>   .../admin-guide/kernel-parameters.txt         |  21 ++-
+>   Documentation/admin-guide/sysctl/kernel.rst   |  20 ++-
+>   include/linux/sys_info.h                      |  27 ++++
+>   kernel/panic.c                                |  71 +++++-----
+>   lib/Makefile                                  |   2 +-
+>   lib/sys_info.c                                | 122 ++++++++++++++++++
+>   6 files changed, 221 insertions(+), 42 deletions(-)
+>   create mode 100644 include/linux/sys_info.h
+>   create mode 100644 lib/sys_info.c
+> 
 
-I sort of wonder if zs_page_migrate() VM_BUG_ON_PAGE() removal and
-zspage check addition need to be landed outside of this series, as
-a zsmalloc fixup.
