@@ -1,123 +1,165 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3F92DE6F9;
-	Thu,  3 Jul 2025 02:40:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D96E218584
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 02:40:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751510413; cv=none; b=flQrU3Lx1+Z0TxiedxxUZylGrNLFGarJZV70oyGrwes4FvsQsL6ZUJBVUiAjiaH9DIZA1CZDYMzkMepzu6BoLzfKiPVjqPfQUin16sW1LNafd3AEX8q62pmojV6RfsG2owv65e0NxrCTeONHTEr9NI2aKrH0LvXdJbxU7osHXGA=
+	t=1751510417; cv=none; b=XIS7mVgfftDxqMk6wcHFjROnrQAiS8L5RQz4vjWamdffW3ljWVFcAPkdn7+COyibccvwxmRiKNYjJ+28O72yBSjzQwkcOWchwgYiSIoFTKMo3hSUnY4eVGKstbBf0c3ArVOS4XrsxMDnQCrAlgMAYIBl83C6q924o0dtYw6a+YA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751510413; c=relaxed/simple;
-	bh=vnQR0Tr+PpymeHZa8w9DI9rZ5j98BWtaiz9bufGuSc0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=O55tPrOGvZKEJWQZi3WBd53wTXxY/ACnPOLTbay763GoYd+2Q+2zp0fozW3e5LsUuitsbykKYyFdICiw6hzqF66Qix2P3ttPlFChSo37oRnoNFsqFvc1AQMtq7b9f+ETxMrQd+4HIdJphvIC0ujdil4nEdQbHKuDMM41Ne/QvRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VHsQXu8j; arc=none smtp.client-ip=209.85.128.176
+	s=arc-20240116; t=1751510417; c=relaxed/simple;
+	bh=9zbpsDQ/VLO8HS3X8a/sdtuKYGSkgguA3kE8ZvQJbVs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=N4+WvjWJEect2QjegSf5WCBhILIzj9bRjZS6NH8bVon2NkKX0Vwc2/Nja8ZKY1ICXr64jnzzXV+WyOnrS3YR+radET0+h3U+JF4kxQ4OLaMs/sa/2+O8YEVUdOzCBA2K3bH2QcFOCZbZXSRUq9AjEvVlRVHDI9RlwansEHAOazk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lzIa/Msx; arc=none smtp.client-ip=209.85.210.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VHsQXu8j"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-713fba639f3so74305567b3.1;
-        Wed, 02 Jul 2025 19:40:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lzIa/Msx"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-74ad4533ac5so432104b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Jul 2025 19:40:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751510411; x=1752115211; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Za0Nw2qGXMtrH3M2cv6/kU8VGW5fkBA+DQjX7CKQXrM=;
-        b=VHsQXu8jfZVtWZ5yfob34AOLoKCHoFAzDueDNQFHc/4bdrQdQPB9Frgm2XkgQW3qB8
-         giQnS3TxVsqEcgfoYRZAQJBmzh03238orzIWRhLtzFRR8IXU7imxFxgfp9/OWmqxU38E
-         FxliagbkfMfuWT3WdYIs3ssMu4TyKiWMW9+uyjRIOP4JCLS15TtN2FhRys/aofoe/20c
-         VzV+Rux5Cikxdki2T+vmCfpDdawb98HAHbawhKQlY6oYpnobDj8sz+g5orH2iKVVGl8k
-         RuVc/FoCGTvm8+izSlgCGnhqJYu5EadPcfPzU6D1rjvf+rTzKNcD3JiloZrjE9Le/3T5
-         YSNw==
+        d=gmail.com; s=20230601; t=1751510415; x=1752115215; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YIGZjKYpefB43h3SleWEiKb7qfKsUPvOFzJhtBGdavI=;
+        b=lzIa/MsxBLIWH9EbtpwrZqdllXRQ11v1mq4y1Yys0d1iw54T5SxMnNurn7XZmt6szI
+         Vi1QhCWpEbZAkkmgMtatbiTsX1DsIZmOoLx6fW7pWwWaGv86M/Z5imhCIOTFKzLe38hg
+         HOg4HIgIv23pFo7tNG1xso1WbB63W3JPnJmh6LTCePoxh2tfaDtcVStq2rMFRLB/Rapr
+         MVfHzNrt0RJaacD+hLpkUdD3kAADOj0xueFjQDxvNOPx2TwcT8rrUejoQNwad9hcgvJn
+         /Y/bghB5MAsiYR4TCJ73EQiGkGpVeTA83ed4HqWxALRevCpybEpKJcc/R+Nw7anSPDsw
+         x1iQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751510411; x=1752115211;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Za0Nw2qGXMtrH3M2cv6/kU8VGW5fkBA+DQjX7CKQXrM=;
-        b=bZp+bgpKJlg+PeWXb+Qk2wF7OFY74umBXhEzOKTV4SICBllaQjYbTNVImp8H7phk4T
-         jkf4CfRj7bOKlkbfih7xVdXTjQfl5zTbNRYgRvT3ZDUZ5VUrKXLbfrDXorl7xa6nr3Hb
-         9kyZacNIK8S5dEYvymc2NKLeRwgfwxQWouMDNXLHGItqdVoINBqDHdPErnU9eLM822cC
-         DBu9FKJ7KzfV7ZdZz+suuuGm/9cWbsXByaCSkyvPSj9LxEVZNAWxv8AJxYs0lgBwqyOu
-         Wykjl/SGsBdRJ4AThyzXhmWtCW+0zeRS1OqnpXivWrte8MCQCJHMnoG7WMsF5I8hhhaw
-         W32w==
-X-Forwarded-Encrypted: i=1; AJvYcCUxI/G8AQSdzMfjBSgSxPDj2DDVu5JzXL/8hAW8gQTPOKMs04hqJJg7HXDvJC0BftkpZ5uQFN985DxKaA==@vger.kernel.org, AJvYcCV5ujWUGEM0dPD4bWXBnLBH0X7Hic0lyBRSiWh4YUcMQIMh3hUC/a+VAkJ+YAXo/mRUON9wIcMrU8T9+2VUr/k=@vger.kernel.org, AJvYcCVOGYIoocC1fJz6YIvPWf0Biwf4xQFF/brxrUPc9TpYRx9t7wtsYX32vUtnHSSK65R2ZYapcX21lLE=@vger.kernel.org, AJvYcCWPixUX0BVF9+enEliGjpIzx+ZoPkoCJ8HCn7DrOc9HZj+9Ypat5cnLeFo5OqvvlWkApFcQDNETSivZ@vger.kernel.org, AJvYcCWX8NwdANefk5JZ0G7yPQ53nUWUQCcjAnMXzVyAbApYzBVmfYFMlPXio8AGHyx4OiWBX4Q7aEognpRKjJXh@vger.kernel.org, AJvYcCXIIQQ6xGnlNayhtVfnrJLeoSFlvsc5KbwpS/DA6OSkmfrVqv519HIFS7Ol9/C6gzRfNLDK1KY2gurJ@vger.kernel.org, AJvYcCXKjEMol2J181IfkDxl0hHsa0Sh+IUlb1MXqNe2w3KqmRDW7kxGToHi44j3WWHFGVTbMZt3PIgk@vger.kernel.org, AJvYcCXQ1eeq9WXRL1uXG6ByZmU3JP21P9p62/hc9RSXPwjabWppsWiCdbZa2oAYzFJ+stAXhcDAn14hSzjS6g0=@vger.kernel.org, AJvYcCXgbEB1HmpHKQXOBMW8FT+G19WOtOKCWualFYzA75r8CzSD/pvXEvd7ftUXrZDaqRzWKRQfygMahRIW@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIBG7y9CSpNqtWxWOw7P21yOgfUyis6b4Yd/S6X1PclhZCIY3X
-	JgdjytHuVvDW8LfSsoHup6bCmu6AvvR5kKPWRnsVX5yJNDRb2MkVOd9zgAhSSN7N2MeupRU0aN4
-	6AYfuyz4WSFz6Byg93HwI+7K+1pYypPY=
-X-Gm-Gg: ASbGncsoz0PFyekoCTvL9TNiAyZgcciv6xZl7/xbnkO53F0OXu6xrS8jsNKapzG5zD0
-	upDs4p5yBQefEfmwc2AmO+VYqaZwv6uGwYFaFGLMawC2wVi3LtDEodTtcJd3cNAUeLKbITuKZ9h
-	MbPdSa/BCwC++aVRrxp7u2pImdnItNC3cqbYkn093Bh0B6om9DVD2M3zxib6dFO69HsUvMswoVt
-	Zs=
-X-Google-Smtp-Source: AGHT+IFInAJFwtSvbRbpfWkJeWkQyPFJ4uUnPZCJSkqyT+CMSBuNG5K9HrPW5jNVrCExkOcwDsaWwLcorYB4rVgpR90=
-X-Received: by 2002:a05:690c:48ca:b0:70e:7706:824e with SMTP id
- 00721157ae682-7164d313418mr81180297b3.6.1751510410717; Wed, 02 Jul 2025
- 19:40:10 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751510415; x=1752115215;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YIGZjKYpefB43h3SleWEiKb7qfKsUPvOFzJhtBGdavI=;
+        b=vr2UYPuU6S1Jjn9Yol13CTdhq4r/sNjbt+BY9utwK3eqiUYD6oXvI5qAHhonu7920t
+         b8nZe6Qkd14sjbaNP8OsV/+cUwGxTPH18p0HcPX1f843nxIW/8ZRwYP2+O2FH1Dv7n5X
+         jfEXfjA6+rnJ+7kIEmnhpIXZVDm2Q1V82ZcxAxZKBshmLdQP0sT72aw9Lk8mQREB+s+N
+         3bd6mqWxF7vItIqKqG4GQeOWzX1tkOUyO64Uoo5w9LOxUs5nqmdigz5+O0V1UtcXGxeH
+         m0glSRXvc+IQF0z6MsLo+j07eDAyNxVk/FMNdGKQcpyGJ0HZOaL8/kda3jlnYI1epMet
+         CZGw==
+X-Forwarded-Encrypted: i=1; AJvYcCU7kcgHhIkPtC9pKWP4ajrBM4OP3Bambbvwn8oSg4wUd1v/1fZLWo0KHECWQ1K3YpPWprmEGHyxX+6rxlU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxs0uy1yUH6bzcj7WTCuFWZ9Z6kvvu4APy/LSg23BZ1G3aBnONL
+	7nLPLOM7zQXZBidm3kESG//X561Tz0he5ix44AXNOQjWt17i308sEJwg
+X-Gm-Gg: ASbGncsl1NyzN17lqEO0gGMxxSMemEkGUP3fcbHgiMiAReZscRwHFAA1XT+x8IjMeYt
+	T8th9Jrnj8svpvAoyHuBHcXx8w6GIwji5SuFd3IsJHOH94DHt10zmqRRBALnRTQbpBViVf/fQ9e
+	658tQ8dEsW1+djvznfLCV9XP2PvKqfVKF46yLTX9+8fkm9LlyS26c8FGThvR08ewdVyxO0H8HJ7
+	eqWlmi48X8OTb1wV8NrzNqU9+9YAAqFU91HO/ci6knL4J2SvjGhGcL9Uc4inwi5PZwCV7qbqBGu
+	m9P27RC5NipNeM6xyqDeZeXKrrNDe26XiTD3T0rwIcZWBh4NcqxxOhQqtqy4h7G9QTWX6RBIlon
+	yr4vaBuduOJaKl80=
+X-Google-Smtp-Source: AGHT+IFj9S+Fx0WGqU+h/+2EUe4iTujac5xzUy8L36JCmyRv8r5DxDrUoDq6sz1S8Iu3CG0JGYTd9Q==
+X-Received: by 2002:a05:6a20:2588:b0:218:17a2:4421 with SMTP id adf61e73a8af0-22482a34a8dmr816405637.10.1751510415118;
+        Wed, 02 Jul 2025 19:40:15 -0700 (PDT)
+Received: from localhost.localdomain ([210.184.73.204])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b362cef26dfsm4709952a12.46.2025.07.02.19.40.08
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 02 Jul 2025 19:40:14 -0700 (PDT)
+From: Hao Jia <jiahao.kernel@gmail.com>
+To: akpm@linux-foundation.org,
+	yuzhao@google.com,
+	yuanchu@google.com,
+	shakeel.butt@linux.dev,
+	mhocko@kernel.org,
+	lorenzo.stoakes@oracle.com,
+	kinseyho@google.com,
+	hannes@cmpxchg.org,
+	gthelen@google.com,
+	david@redhat.com,
+	axelrasmussen@google.com,
+	zhengqi.arch@bytedance.com
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Hao Jia <jiahao1@lixiang.com>
+Subject: [PATCH v2] mm/mglru: Stop try_to_inc_min_seq() if min_seq[type] has not increased
+Date: Thu,  3 Jul 2025 10:39:46 +0800
+Message-Id: <20250703023946.65315-1-jiahao.kernel@gmail.com>
+X-Mailer: git-send-email 2.39.2 (Apple Git-143)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250627102730.71222-1-a0282524688@gmail.com> <20250627102730.71222-2-a0282524688@gmail.com>
- <20250702161513.GX10134@google.com>
-In-Reply-To: <20250702161513.GX10134@google.com>
-From: Ming Yu <a0282524688@gmail.com>
-Date: Thu, 3 Jul 2025 10:39:59 +0800
-X-Gm-Features: Ac12FXyfXTYeuK_eNNsj2MZDnEQB-Di_TdAXd7UH2wEmeYhkuTmXoczjV6dlS0E
-Message-ID: <CAOoeyxXWbjWvOgsSvXb9u2y6yFExq347ceZe96bm9w+GQAp2Rg@mail.gmail.com>
-Subject: Re: [PATCH v13 1/7] mfd: Add core driver for Nuvoton NCT6694
-To: Lee Jones <lee@kernel.org>
-Cc: tmyu0@nuvoton.com, linus.walleij@linaro.org, brgl@bgdev.pl, 
-	andi.shyti@kernel.org, mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, 
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org, 
-	linux@roeck-us.net, jdelvare@suse.com, alexandre.belloni@bootlin.com, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Dear Lee,
+From: Hao Jia <jiahao1@lixiang.com>
 
-Thanks for your feedback and review.
-Currently, the status of the sub-device drivers is as follows (A/R/T):
-    [v13,1/7] mfd: Add core driver for Nuvoton NCT6694 (- - -)
-    [v13,2/7] gpio: Add Nuvoton NCT6694 GPIO support (1 1 -)
-    [v13,3/7] i2c: Add Nuvoton NCT6694 I2C support (1 - -)
-    [v13,4/7] can: Add Nuvoton NCT6694 CANFD support (- 2 -)
-    [v13,5/7] watchdog: Add Nuvoton NCT6694 WDT support (1 - -)
-    [v13,6/7] hwmon: Add Nuvoton NCT6694 HWMON support (- 1 -)
-    [v13,7/7] rtc: Add Nuvoton NCT6694 RTC support (1 - -)
+In try_to_inc_min_seq(), if min_seq[type] has not increased. In other
+words, min_seq[type] == lrugen->min_seq[type]. Then we should return
+directly to avoid unnecessary overhead later.
 
+Corollary: If min_seq[type] of both anonymous and file is not increased,
+try_to_inc_min_seq() will fail.
 
-Best regards,
-Ming
+Proof:
+It is known that min_seq[type] has not increased, that is, min_seq[type]
+is equal to lrugen->min_seq[type], then the following:
 
-Lee Jones <lee@kernel.org> =E6=96=BC 2025=E5=B9=B47=E6=9C=883=E6=97=A5 =E9=
-=80=B1=E5=9B=9B =E4=B8=8A=E5=8D=8812:15=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> On Fri, 27 Jun 2025, a0282524688@gmail.com wrote:
->
-> > From: Ming Yu <a0282524688@gmail.com>
-> >
-> > The Nuvoton NCT6694 provides an USB interface to the host to
-> > access its features.
-> >
-> > Sub-devices can use the USB functions nct6694_read_msg() and
-> > nct6694_write_msg() to issue a command. They can also request
-> > interrupt that will be called when the USB device receives its
-> > interrupt pipe.
-> >
-> > Signed-off-by: Ming Yu <a0282524688@gmail.com>
->
-> This looks okay now.
->
-> Do you have all of the other Acks?  If not, please let me know when you d=
-o?
->
-> --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+case 1: min_seq[type] has not been reassigned and changed before
+judgment min_seq[type] <= lrugen->min_seq[type].
+Then the subsequent min_seq[type] <= lrugen->min_seq[type] judgment
+will always be true.
+
+case 2: min_seq[type] is reassigned to seq, before judgment
+min_seq[type] <= lrugen->min_seq[type].
+Then at least the condition of min_seq[type] > seq must be met
+before min_seq[type] will be reassigned to seq.
+That is to say, before the reassignment, lrugen->min_seq[type] > seq
+is met, and then min_seq[type] = seq.
+Then the following min_seq[type](seq) <= lrugen->min_seq[type] judgment
+is always true.
+
+Therefore, in try_to_inc_min_seq(), If min_seq[type] of both anonymous
+and file is not increased, we can return false directly to avoid
+unnecessary overhead.
+
+Suggested-by: Yuanchu Xie <yuanchu@google.com>
+Signed-off-by: Hao Jia <jiahao1@lixiang.com>
+---
+v1 to v2:
+ - Modify commit message to make proof clearer.
+ - Use one bool to detect any increments in min_seq[type], suggested by Yuanchu Xie.
+
+Link to v1: https://lore.kernel.org/all/20250630080603.36171-1-jiahao.kernel@gmail.com
+
+ mm/vmscan.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index d48e8d365502..d5b6924aeb8f 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -3919,6 +3919,7 @@ static bool try_to_inc_min_seq(struct lruvec *lruvec, int swappiness)
+ {
+ 	int gen, type, zone;
+ 	bool success = false;
++	bool seq_inc_flag = false;
+ 	struct lru_gen_folio *lrugen = &lruvec->lrugen;
+ 	DEFINE_MIN_SEQ(lruvec);
+ 
+@@ -3935,11 +3936,20 @@ static bool try_to_inc_min_seq(struct lruvec *lruvec, int swappiness)
+ 			}
+ 
+ 			min_seq[type]++;
++			seq_inc_flag = true;
+ 		}
+ next:
+ 		;
+ 	}
+ 
++	/*
++	 * If min_seq[type] of both anonymous and file is not increased,
++	 * we can directly return false to avoid unnecessary checking
++	 * overhead later.
++	 */
++	if (!seq_inc_flag)
++		return success;
++
+ 	/* see the comment on lru_gen_folio */
+ 	if (swappiness && swappiness <= MAX_SWAPPINESS) {
+ 		unsigned long seq = lrugen->max_seq - MIN_NR_GENS;
+-- 
+2.34.1
+
