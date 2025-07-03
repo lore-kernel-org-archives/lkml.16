@@ -1,282 +1,170 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DADDE2E339E
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 11:32:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 739292E7BD0
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Jul 2025 11:32:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751542342; cv=none; b=d2cOJgiyARtBu2Nyx0+wDFb/jLK5QN4HX/o01AGqFKhfDrl29VSODPdBWCG59LgpNliZhiFUj/Y324Gnrkct9MbESqWwmqX5CvQE28g3N9iyzGYm9v/8XNvkPk9nsC/W9Su4G/yNK7wGjNvGF7AnKxdDqTJN+XWrv7OnUidu7tA=
+	t=1751542347; cv=none; b=uYplLImP/3ku+R46m+kYQ7TaWY7zO1E7hM+DoUNDUdJfM0djspZi4ZKaUq01KzzStBZlEGkwe7nZSSZLXz8jX4KXVE6Tpb9MzBlcnpQUnpca2juKjWum2G0clGPmiutvAoEqpw2XoXThDHezDKB6uD4SO+TeouJsNu+0eBRNnaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751542342; c=relaxed/simple;
-	bh=KJzjzf9bW3qMR/ty207m83vi9+0PfbsKBzq78I8hpFg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QEP4eES5Ai4Et+2QNPpg3H3/La/y8FersoOzjXRRTPs2NUA/R7xXAN6S2swqMESToaCoBeVqVcMQulSMacNSMbd375O6iAMlfmoDOCj+XXwAtzJK4+FixudgCle6o5JhnNke8RGkbb/Bcb0GSgP+/sNqn2kPH0Em2iDZGIFssmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IbeGeBVG; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IbeGeBVG"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-553ba7f11cbso9339380e87.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 04:32:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1751542338; x=1752147138; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=77UnFw9JQduiCE+rJYJRimYgiLY5u6VunHggtrV7ibM=;
-        b=IbeGeBVGP0zH4ihunM865cFGJQxZW31W0YThGjS9o4k3nUkrmbq5vetntKeT8uCLaI
-         BMoim6u6b7MW4OIDhm5xl3qPd0n+0Zc0uyX7c43It4pcHvd3Z6gtYtn6Y5RD6leON9Fy
-         BE73wIcJ2WQReO43XII/9SGaUuYIKLRkB8ePM=
+	s=arc-20240116; t=1751542347; c=relaxed/simple;
+	bh=15sgvDrCMngNi2KRD1pTbi8iQeaa7H+WRKVs/zLyUuk=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=mLBCLkJYyrUQLL01S61zwaskUzmjWuBtqkg/XGi85AKIyiIo/zADNvSOqyBskFaX09A5tiAj05iB5T2HIC0k0Y8IIwJNtuad7KT1ugP2tqX0eAycR8g7GxuZBMmv3CO0salgwv2SwjRB/y+DOewIO2RW05S9BflxJFozlKf4pFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3df4d2a8b5eso59478075ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 04:32:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751542338; x=1752147138;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=77UnFw9JQduiCE+rJYJRimYgiLY5u6VunHggtrV7ibM=;
-        b=rj28ptAw1QSlbmpVx6V3yk7klVRkrTmHLdhNbCjlN84Byd/f68+GcJ7MFLqp8aRk5T
-         bCmbWsGeV3PBv4syNq9bKAbkIjBHTcoFPREPDyTHzCj5d/832l4dIxPcGqcJObxNipGG
-         Vz+10MxQrsWYjBrZhL9dN9GDk4ns7PJaotytKZoRkBnP6yGcASRXktx1mwNaoIh9mqIf
-         7uWsa6fpv/8XoK8xcy7q2MLS/Euc2Wj35TczPUhcd2CXZBfQy/Pr/BJ81skKuwAFyrmK
-         4ehUGQG0UZA8n0gtie+fNh+w+ppMiIVqvnM6vBJ9SzX5fXiOOQv6WC9TbCeHzVQJsDmu
-         jQRg==
-X-Forwarded-Encrypted: i=1; AJvYcCW+A4tyrVV6kGJM5OjwaP5GVPEXBt0XRK7WFJ7uuqjJYMOI9AEhOuUt4Sn1buqqe+N2HrT3Vf7ey76aUMs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwW2kngBvNVpfrmalIiTeIvroRNKhOYr8/hsmQkpms+vmoqFdDW
-	3YrTHkTU7mJp6dLt8MrnQ3pP6/zf4kt2T0bzWVwMQeaCB8+H0d0DCyxpJtK6mZZVGyWt5H6QofA
-	IsjQQmw==
-X-Gm-Gg: ASbGncu2VGa7BijWG7TegWN2BTQ4tj9Tu4vxoJDuxMzfMbeB2HoiXpcBrODdCoA3yQ2
-	iHsL84vqPZPv7D7iOhWP/20H6r92VGxiZmST+4Or6vMKEw22CoVdyDaKdpXUxh2/nzG13URLjiW
-	DICzAwcj9BACQhLOzqlxFFfsnboMdPwGKqeqiIC89xCCms/Ni3tUFoQnxcZcbU+yKbGXLpmByF+
-	mQlIXdQmEMjy/DERaQnMELATSqVgD+tfEipOqwKAtxDO6TEpjpY07hwUDvqChdnyUr2mekKl00H
-	7lm8Y75r1dGNywvY3Bohl/qx3OdFj7grv1GjeNZfblk8cRGek/pPJK24BrXb3ZBXvqVv5hjSgfn
-	UJRdF0feU8oMfmi988MajGFUM
-X-Google-Smtp-Source: AGHT+IGY6jV0XFHSOBMvSSayGgylTVqzkotL3Nl2fHihDWqSE0/LK/sQ/KRZyo1qSNwIjJKS2b8OjA==
-X-Received: by 2002:a05:6512:3d03:b0:553:37e7:867a with SMTP id 2adb3069b0e04-55628350466mr2461373e87.49.1751542337653;
-        Thu, 03 Jul 2025 04:32:17 -0700 (PDT)
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b24ee12sm2420208e87.86.2025.07.03.04.32.16
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jul 2025 04:32:16 -0700 (PDT)
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-553ba7f11cbso9339294e87.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Jul 2025 04:32:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU/qYarFg519TFiglJYYdA7A199t8BXtOD+FllmJ+8e6h77caYAdE1UNzwCpqNw8jO4s4wcTydb22mg5G0=@vger.kernel.org
-X-Received: by 2002:a05:6512:108b:b0:554:f9c5:6b41 with SMTP id
- 2adb3069b0e04-5562834a7edmr2259331e87.46.1751542335622; Thu, 03 Jul 2025
- 04:32:15 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751542344; x=1752147144;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=T90dKRdxOLTTjBQjmngo+1QGU8lPyFFkQr4AZvGHzek=;
+        b=lo9mgsL3wWaRqwW63z+EWFuHQWPhuFhTOUaA6smC5RUlpEQSaoyYIeQuFcMOE55Yv9
+         kjUkvAkJ/ReV666Nu3kbo0tDpbH0w4daMJbTqfXvA7QWdHXSXO4cO33z9S+aUJ93iVFP
+         DSfsMElfXmQssPq23oRZYb7plpj6Z/7M/PG2hIbmZ2JOfiaTnFoEr/UA6/Akg92elktS
+         rFOJh3brXAv+VAkYPOz34/mwVyYZWL5rm+wnNOKpRaH2Ca79C9ZZUVZTN7dcuOZVCjj2
+         d2/a8cUmzl514q/YqRlQYvON0SsmZZyWQtBh+uZiCWYrCw8MuOIpk2Nj4yECsm0Rz53z
+         3yhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXb4FaIkPnLFV7Yw5dJj/EtE3ZcM9Xe4Jl/o4dzeR1DqTnXz8bpH2kJqGuPdhzccsSae04EB8HtpwFbdI8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6y2q1BL//UJmvLfNLwagzNuVtcuHw+/y4QQM/XIlGHoreNYXj
+	y7T/k3XqP13uckYPZugPKgoipjF9QIc5IAvuXtTeWjZrXK8Y/S4/hoodmLo0c7wg/4NH+0EHzyF
+	ajoJoLqRihXLRUebmT0BSbZ73AasXfUbRBmfkysNzC+lqJSNfoK+MoR7FUHQ=
+X-Google-Smtp-Source: AGHT+IExYvMiTZITzHpsANSMR31vFVL+NSWXXVpk2PsE0K+TrVzTQvqxDNjNdvqnt57qbsCdBauIP9AWak1A2GjLmJHXXxv6bW+B
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250702110222.3926355-1-xu.yang_2@nxp.com> <20250702110222.3926355-3-xu.yang_2@nxp.com>
- <CANiDSCum3xkgr1QgdvsuZ3ySNJyoLUe_RWyeSDiM0S87YJ-uTw@mail.gmail.com> <rvg5yvwij5wsegqclcwv4qnuim3mlohxpdgrd77d7mctxofbj3@r4d56gjavldb>
-In-Reply-To: <rvg5yvwij5wsegqclcwv4qnuim3mlohxpdgrd77d7mctxofbj3@r4d56gjavldb>
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Thu, 3 Jul 2025 13:32:02 +0200
-X-Gmail-Original-Message-ID: <CANiDSCt98rP2RtUfC2EFL+H2U4TMV3BKEhAfpPK1Nm+tU=4j4Q@mail.gmail.com>
-X-Gm-Features: Ac12FXyU9jtrH9KJyPUY_j3S31gGzwl5u1stIZzn0hYn0Is9alW4iNoy3AaTnF0
-Message-ID: <CANiDSCt98rP2RtUfC2EFL+H2U4TMV3BKEhAfpPK1Nm+tU=4j4Q@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] media: uvcvideo: use usb_alloc_noncoherent/usb_free_noncoherent()
-To: Xu Yang <xu.yang_2@nxp.com>
-Cc: ezequiel@vanguardiasur.com.ar, mchehab@kernel.org, 
-	laurent.pinchart@ideasonboard.com, hdegoede@redhat.com, 
-	gregkh@linuxfoundation.org, mingo@kernel.org, tglx@linutronix.de, 
-	andriy.shevchenko@linux.intel.com, viro@zeniv.linux.org.uk, 
-	thomas.weissschuh@linutronix.de, dafna.hirschfeld@collabora.com, 
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-usb@vger.kernel.org, imx@lists.linux.dev, jun.li@nxp.com
+X-Received: by 2002:a05:6e02:180e:b0:3dd:ceb0:f603 with SMTP id
+ e9e14a558f8ab-3e05493524dmr78384945ab.2.1751542344640; Thu, 03 Jul 2025
+ 04:32:24 -0700 (PDT)
+Date: Thu, 03 Jul 2025 04:32:24 -0700
+In-Reply-To: <68663c93.a70a0220.5d25f.0857.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68666a48.a00a0220.c7b3.0003.GAE@google.com>
+Subject: Re: [syzbot] [net?] general protection fault in htb_qlen_notify
+From: syzbot <syzbot+d8b58d7b0ad89a678a16@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
+	jhs@mojatatu.com, jiri@resnulli.us, kuba@kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
+	syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 
-Hi Xu
+syzbot has found a reproducer for the following issue on:
 
-On Thu, 3 Jul 2025 at 10:51, Xu Yang <xu.yang_2@nxp.com> wrote:
->
-> Hi Ricardo,
->
-> On Wed, Jul 02, 2025 at 02:30:45PM +0200, Ricardo Ribalda wrote:
-> > Hi Xu
-> >
-> > The code looks much cleaner :)
-> >
-> > It seems that the hcd.c uses the urb transfer_flags to know the
-> > direction of the transfer.
-> > But the uvc driver is not setting it, you probably want to set it.
->
-> The USB HCD will get transfer direction from endpoint capability. So
-> we needn't add such info to transfer_flags.
+HEAD commit:    bd475eeaaf3c Merge branch '200GbE' of git://git.kernel.org..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=15cc0582580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=36b0e72cad5298f8
+dashboard link: https://syzkaller.appspot.com/bug?extid=d8b58d7b0ad89a678a16
+compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1113748c580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10909ebc580000
 
-For future me...
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/d59bc82a55e0/disk-bd475eea.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/2a83759fceb6/vmlinux-bd475eea.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/07576fd8e432/bzImage-bd475eea.xz
 
-usb_submit_urb() set that flag. :)
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+d8b58d7b0ad89a678a16@syzkaller.appspotmail.com
 
-Thanks!
->
-> >
-> > On Wed, 2 Jul 2025 at 13:01, Xu Yang <xu.yang_2@nxp.com> wrote:
-> > >
-> > > This will use USB noncoherent API to alloc/free urb buffers, then
-> > > uvc driver needn't to do dma sync operations by itself.
-> > >
-> > > Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
-> > >
-> > > ---
-> > > Changes in v3:
-> > >  - no changes
-> > > ---
-> > >  drivers/media/usb/uvc/uvc_video.c | 56 ++++++++-----------------------
-> > >  1 file changed, 14 insertions(+), 42 deletions(-)
-> > >
-> > > diff --git a/drivers/media/usb/uvc/uvc_video.c b/drivers/media/usb/uvc/uvc_video.c
-> > > index e3567aeb0007..614cf4781221 100644
-> > > --- a/drivers/media/usb/uvc/uvc_video.c
-> > > +++ b/drivers/media/usb/uvc/uvc_video.c
-> > > @@ -1280,15 +1280,6 @@ static inline struct device *uvc_stream_to_dmadev(struct uvc_streaming *stream)
-> > >         return bus_to_hcd(stream->dev->udev->bus)->self.sysdev;
-> > >  }
-> >
-> > The uvc_stream_to_dmadev() function is not used anymore, please drop it.
->
-> Sure.
->
-> Thanks,
-> Xu Yang
->
-> >
-> >
-> >
-> > >
-> > > -static int uvc_submit_urb(struct uvc_urb *uvc_urb, gfp_t mem_flags)
-> > > -{
-> > > -       /* Sync DMA. */
-> > > -       dma_sync_sgtable_for_device(uvc_stream_to_dmadev(uvc_urb->stream),
-> > > -                                   uvc_urb->sgt,
-> > > -                                   uvc_stream_dir(uvc_urb->stream));
-> > > -       return usb_submit_urb(uvc_urb->urb, mem_flags);
-> > > -}
-> > > -
-> > >  /*
-> > >   * uvc_video_decode_data_work: Asynchronous memcpy processing
-> > >   *
-> > > @@ -1310,7 +1301,7 @@ static void uvc_video_copy_data_work(struct work_struct *work)
-> > >                 uvc_queue_buffer_release(op->buf);
-> > >         }
-> > >
-> > > -       ret = uvc_submit_urb(uvc_urb, GFP_KERNEL);
-> > > +       ret = usb_submit_urb(uvc_urb->urb, GFP_KERNEL);
-> > >         if (ret < 0)
-> > >                 dev_err(&uvc_urb->stream->intf->dev,
-> > >                         "Failed to resubmit video URB (%d).\n", ret);
-> > > @@ -1736,12 +1727,6 @@ static void uvc_video_complete(struct urb *urb)
-> > >         /* Re-initialise the URB async work. */
-> > >         uvc_urb->async_operations = 0;
-> > >
-> > > -       /* Sync DMA and invalidate vmap range. */
-> > > -       dma_sync_sgtable_for_cpu(uvc_stream_to_dmadev(uvc_urb->stream),
-> > > -                                uvc_urb->sgt, uvc_stream_dir(stream));
-> > > -       invalidate_kernel_vmap_range(uvc_urb->buffer,
-> > > -                                    uvc_urb->stream->urb_size);
-> > > -
-> > >         /*
-> > >          * Process the URB headers, and optionally queue expensive memcpy tasks
-> > >          * to be deferred to a work queue.
-> > > @@ -1750,7 +1735,7 @@ static void uvc_video_complete(struct urb *urb)
-> > >
-> > >         /* If no async work is needed, resubmit the URB immediately. */
-> > >         if (!uvc_urb->async_operations) {
-> > > -               ret = uvc_submit_urb(uvc_urb, GFP_ATOMIC);
-> > > +               ret = usb_submit_urb(uvc_urb->urb, GFP_ATOMIC);
-> > >                 if (ret < 0)
-> > >                         dev_err(&stream->intf->dev,
-> > >                                 "Failed to resubmit video URB (%d).\n", ret);
-> > > @@ -1765,17 +1750,15 @@ static void uvc_video_complete(struct urb *urb)
-> > >   */
-> > >  static void uvc_free_urb_buffers(struct uvc_streaming *stream)
-> > >  {
-> > > -       struct device *dma_dev = uvc_stream_to_dmadev(stream);
-> > > +       struct usb_device *udev = stream->dev->udev;
-> > >         struct uvc_urb *uvc_urb;
-> > >
-> > >         for_each_uvc_urb(uvc_urb, stream) {
-> > >                 if (!uvc_urb->buffer)
-> > >                         continue;
-> > >
-> > > -               dma_vunmap_noncontiguous(dma_dev, uvc_urb->buffer);
-> > > -               dma_free_noncontiguous(dma_dev, stream->urb_size, uvc_urb->sgt,
-> > > -                                      uvc_stream_dir(stream));
-> > > -
-> > > +               usb_free_noncoherent(udev, stream->urb_size, uvc_urb->buffer,
-> > > +                                    uvc_stream_dir(stream), uvc_urb->sgt);
-> > >                 uvc_urb->buffer = NULL;
-> > >                 uvc_urb->sgt = NULL;
-> > >         }
-> > > @@ -1786,26 +1769,13 @@ static void uvc_free_urb_buffers(struct uvc_streaming *stream)
-> > >  static bool uvc_alloc_urb_buffer(struct uvc_streaming *stream,
-> > >                                  struct uvc_urb *uvc_urb, gfp_t gfp_flags)
-> > >  {
-> > > -       struct device *dma_dev = uvc_stream_to_dmadev(stream);
-> > > -
-> > > -       uvc_urb->sgt = dma_alloc_noncontiguous(dma_dev, stream->urb_size,
-> > > -                                              uvc_stream_dir(stream),
-> > > -                                              gfp_flags, 0);
-> > > -       if (!uvc_urb->sgt)
-> > > -               return false;
-> > > -       uvc_urb->dma = uvc_urb->sgt->sgl->dma_address;
-> > > -
-> > > -       uvc_urb->buffer = dma_vmap_noncontiguous(dma_dev, stream->urb_size,
-> > > -                                                uvc_urb->sgt);
-> > > -       if (!uvc_urb->buffer) {
-> > > -               dma_free_noncontiguous(dma_dev, stream->urb_size,
-> > > -                                      uvc_urb->sgt,
-> > > -                                      uvc_stream_dir(stream));
-> > > -               uvc_urb->sgt = NULL;
-> > > -               return false;
-> > > -       }
-> > > +       struct usb_device *udev = stream->dev->udev;
-> > >
-> > > -       return true;
-> > > +       uvc_urb->buffer = usb_alloc_noncoherent(udev, stream->urb_size,
-> > > +                                               gfp_flags, &uvc_urb->dma,
-> > > +                                               uvc_stream_dir(stream),
-> > > +                                               &uvc_urb->sgt);
-> > > +       return !!uvc_urb->buffer;
-> > >  }
-> > >
-> > >  /*
-> > > @@ -1953,6 +1923,7 @@ static int uvc_init_video_isoc(struct uvc_streaming *stream,
-> > >                 urb->complete = uvc_video_complete;
-> > >                 urb->number_of_packets = npackets;
-> > >                 urb->transfer_buffer_length = size;
-> > > +               urb->sgt = uvc_urb->sgt;
-> > >
-> > >                 for (i = 0; i < npackets; ++i) {
-> > >                         urb->iso_frame_desc[i].offset = i * psize;
-> > > @@ -2009,6 +1980,7 @@ static int uvc_init_video_bulk(struct uvc_streaming *stream,
-> > >                                   size, uvc_video_complete, uvc_urb);
-> > >                 urb->transfer_flags = URB_NO_TRANSFER_DMA_MAP;
-> > >                 urb->transfer_dma = uvc_urb->dma;
-> > > +               urb->sgt = uvc_urb->sgt;
-> > >
-> > >                 uvc_urb->urb = urb;
-> > >         }
-> > > @@ -2120,7 +2092,7 @@ static int uvc_video_start_transfer(struct uvc_streaming *stream,
-> > >
-> > >         /* Submit the URBs. */
-> > >         for_each_uvc_urb(uvc_urb, stream) {
-> > > -               ret = uvc_submit_urb(uvc_urb, gfp_flags);
-> > > +               ret = usb_submit_urb(uvc_urb->urb, gfp_flags);
-> > >                 if (ret < 0) {
-> > >                         dev_err(&stream->intf->dev,
-> > >                                 "Failed to submit URB %u (%d).\n",
-> > > --
-> > > 2.34.1
-> > >
-> > >
-> >
-> >
-> > --
-> > Ricardo Ribalda
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000035: 0000 [#1] SMP KASAN PTI
+KASAN: null-ptr-deref in range [0x00000000000001a8-0x00000000000001af]
+CPU: 1 UID: 0 PID: 6017 Comm: syz.0.16 Not tainted 6.16.0-rc3-syzkaller-00144-gbd475eeaaf3c #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+RIP: 0010:htb_deactivate net/sched/sch_htb.c:613 [inline]
+RIP: 0010:htb_qlen_notify+0x31/0xc0 net/sched/sch_htb.c:1489
+Code: 41 56 41 55 41 54 53 49 89 f6 49 89 ff 49 bc 00 00 00 00 00 fc ff df e8 3d c6 46 f8 49 8d 9e a8 01 00 00 49 89 dd 49 c1 ed 03 <43> 0f b6 44 25 00 84 c0 75 4d 8b 2b 31 ff 89 ee e8 5a ca 46 f8 85
+RSP: 0018:ffffc900034f6fb0 EFLAGS: 00010206
+RAX: ffffffff89798833 RBX: 00000000000001a8 RCX: ffff88802714bc00
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88807a6ac000
+RBP: dffffc0000000000 R08: ffff88802714bc00 R09: 0000000000000002
+R10: 00000000ffffffff R11: ffffffff89798810 R12: dffffc0000000000
+R13: 0000000000000035 R14: 0000000000000000 R15: ffff88807a6ac000
+FS:  00007fa0c3df16c0(0000) GS:ffff888125d50000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fa0c3dd0d58 CR3: 00000000743e8000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ qdisc_tree_reduce_backlog+0x29c/0x480 net/sched/sch_api.c:811
+ fq_change+0x1519/0x1f50 net/sched/sch_fq.c:1147
+ fq_init+0x699/0x960 net/sched/sch_fq.c:1201
+ qdisc_create+0x7ac/0xea0 net/sched/sch_api.c:1324
+ __tc_modify_qdisc net/sched/sch_api.c:1749 [inline]
+ tc_modify_qdisc+0x1426/0x2010 net/sched/sch_api.c:1813
+ rtnetlink_rcv_msg+0x779/0xb70 net/core/rtnetlink.c:6953
+ netlink_rcv_skb+0x208/0x470 net/netlink/af_netlink.c:2534
+ netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+ netlink_unicast+0x75b/0x8d0 net/netlink/af_netlink.c:1339
+ netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1883
+ sock_sendmsg_nosec net/socket.c:712 [inline]
+ __sock_sendmsg+0x21c/0x270 net/socket.c:727
+ ____sys_sendmsg+0x505/0x830 net/socket.c:2566
+ ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2620
+ __sys_sendmsg net/socket.c:2652 [inline]
+ __do_sys_sendmsg net/socket.c:2657 [inline]
+ __se_sys_sendmsg net/socket.c:2655 [inline]
+ __x64_sys_sendmsg+0x19b/0x260 net/socket.c:2655
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fa0c2f8e929
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fa0c3df1038 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007fa0c31b5fa0 RCX: 00007fa0c2f8e929
+RDX: 0000000000044080 RSI: 0000200000000040 RDI: 0000000000000006
+RBP: 00007fa0c3010b39 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007fa0c31b5fa0 R15: 00007ffd14aa8178
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:htb_deactivate net/sched/sch_htb.c:613 [inline]
+RIP: 0010:htb_qlen_notify+0x31/0xc0 net/sched/sch_htb.c:1489
+Code: 41 56 41 55 41 54 53 49 89 f6 49 89 ff 49 bc 00 00 00 00 00 fc ff df e8 3d c6 46 f8 49 8d 9e a8 01 00 00 49 89 dd 49 c1 ed 03 <43> 0f b6 44 25 00 84 c0 75 4d 8b 2b 31 ff 89 ee e8 5a ca 46 f8 85
+RSP: 0018:ffffc900034f6fb0 EFLAGS: 00010206
+RAX: ffffffff89798833 RBX: 00000000000001a8 RCX: ffff88802714bc00
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88807a6ac000
+RBP: dffffc0000000000 R08: ffff88802714bc00 R09: 0000000000000002
+R10: 00000000ffffffff R11: ffffffff89798810 R12: dffffc0000000000
+R13: 0000000000000035 R14: 0000000000000000 R15: ffff88807a6ac000
+FS:  00007fa0c3df16c0(0000) GS:ffff888125d50000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fa0c3dd0d58 CR3: 00000000743e8000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess):
+   0:	41 56                	push   %r14
+   2:	41 55                	push   %r13
+   4:	41 54                	push   %r12
+   6:	53                   	push   %rbx
+   7:	49 89 f6             	mov    %rsi,%r14
+   a:	49 89 ff             	mov    %rdi,%r15
+   d:	49 bc 00 00 00 00 00 	movabs $0xdffffc0000000000,%r12
+  14:	fc ff df
+  17:	e8 3d c6 46 f8       	call   0xf846c659
+  1c:	49 8d 9e a8 01 00 00 	lea    0x1a8(%r14),%rbx
+  23:	49 89 dd             	mov    %rbx,%r13
+  26:	49 c1 ed 03          	shr    $0x3,%r13
+* 2a:	43 0f b6 44 25 00    	movzbl 0x0(%r13,%r12,1),%eax <-- trapping instruction
+  30:	84 c0                	test   %al,%al
+  32:	75 4d                	jne    0x81
+  34:	8b 2b                	mov    (%rbx),%ebp
+  36:	31 ff                	xor    %edi,%edi
+  38:	89 ee                	mov    %ebp,%esi
+  3a:	e8 5a ca 46 f8       	call   0xf846ca99
+  3f:	85                   	.byte 0x85
 
 
-
--- 
-Ricardo Ribalda
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
